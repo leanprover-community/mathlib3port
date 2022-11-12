@@ -34,12 +34,15 @@ instance :
 
 theorem coe_one : ↑(1 : SubMulAction R M) = Set.Range fun r : R => r • (1 : M) :=
   rfl
+#align sub_mul_action.coe_one SubMulAction.coe_one
 
 @[simp]
 theorem mem_one {x : M} : x ∈ (1 : SubMulAction R M) ↔ ∃ r : R, r • 1 = x :=
   Iff.rfl
+#align sub_mul_action.mem_one SubMulAction.mem_one
 
 theorem subset_coe_one : (1 : Set M) ⊆ (1 : SubMulAction R M) := fun x hx => ⟨1, (one_smul _ _).trans hx.symm⟩
+#align sub_mul_action.subset_coe_one SubMulAction.subset_coe_one
 
 end One
 
@@ -58,9 +61,11 @@ instance :
 @[norm_cast]
 theorem coe_mul (p q : SubMulAction R M) : ↑(p * q) = (p * q : Set M) :=
   rfl
+#align sub_mul_action.coe_mul SubMulAction.coe_mul
 
 theorem mem_mul {p q : SubMulAction R M} {x : M} : x ∈ p * q ↔ ∃ y z, y ∈ p ∧ z ∈ q ∧ y * z = x :=
   Set.mem_mul
+#align sub_mul_action.mem_mul SubMulAction.mem_mul
 
 end Mul
 
@@ -111,12 +116,14 @@ theorem coe_pow (p : SubMulAction R M) : ∀ {n : ℕ} (hn : n ≠ 0), ↑(p ^ n
   | 0, hn => (hn rfl).elim
   | 1, hn => by rw [pow_one, pow_one]
   | n + 2, hn => by rw [pow_succ _ (n + 1), pow_succ _ (n + 1), coe_mul, coe_pow n.succ_ne_zero]
+#align sub_mul_action.coe_pow SubMulAction.coe_pow
 
 theorem subset_coe_pow (p : SubMulAction R M) : ∀ {n : ℕ}, (p ^ n : Set M) ⊆ ↑(p ^ n)
   | 0 => by
     rw [pow_zero, pow_zero]
     exact subset_coe_one
   | n + 1 => (coe_pow p n.succ_ne_zero).Superset
+#align sub_mul_action.subset_coe_pow SubMulAction.subset_coe_pow
 
 end Monoid
 

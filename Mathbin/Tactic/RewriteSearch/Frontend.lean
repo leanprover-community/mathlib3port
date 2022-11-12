@@ -75,6 +75,7 @@ unsafe def rewrite_search (explain : parse <| optional (tk "?"))
   let (_, proof, steps) ← g.find_proof
   tactic.exact proof
   if explain then explain_search_result cfg rules proof steps else skip
+#align tactic.interactive.rewrite_search tactic.interactive.rewrite_search
 
 add_tactic_doc
   { Name := "rewrite_search", category := DocCategory.tactic, declNames := [`tactic.interactive.rewrite_search],

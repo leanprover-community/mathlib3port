@@ -41,9 +41,11 @@ variable {M : Type _} [CancelMonoidWithZero M] [Finite M]
 
 theorem mul_right_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b => a * b :=
   Finite.injective_iff_bijective.1 <| mul_right_injective₀ ha
+#align mul_right_bijective_of_finite₀ mul_right_bijective_of_finite₀
 
 theorem mul_left_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b => b * a :=
   Finite.injective_iff_bijective.1 <| mul_left_injective₀ ha
+#align mul_left_bijective_of_finite₀ mul_left_bijective_of_finite₀
 
 /-- Every finite nontrivial cancel_monoid_with_zero is a group_with_zero. -/
 def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [DecidableEq M] [Fintype M] [Nontrivial M] :
@@ -54,6 +56,7 @@ def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [Decidab
       simp [Inv.inv, dif_neg ha]
       exact Fintype.right_inverse_bij_inv _ _,
     inv_zero := by simp [Inv.inv, dif_pos rfl] }
+#align fintype.group_with_zero_of_cancel Fintype.groupWithZeroOfCancel
 
 end CancelMonoidWithZero
 
@@ -69,6 +72,7 @@ TODO: Prove Wedderburn's little theorem,
 which shows a finite domain is in fact commutative, hence a field. -/
 def Fintype.divisionRingOfIsDomain (R : Type _) [Ring R] [IsDomain R] [DecidableEq R] [Fintype R] : DivisionRing R :=
   { show GroupWithZero R from Fintype.groupWithZeroOfCancel R, ‹Ring R› with }
+#align fintype.division_ring_of_is_domain Fintype.divisionRingOfIsDomain
 
 /-- Every finite commutative domain is a field.
 
@@ -76,10 +80,12 @@ TODO: Prove Wedderburn's little theorem, which shows a finite domain is automati
 dropping one assumption from this theorem. -/
 def Fintype.fieldOfDomain (R) [CommRing R] [IsDomain R] [DecidableEq R] [Fintype R] : Field R :=
   { Fintype.groupWithZeroOfCancel R, ‹CommRing R› with }
+#align fintype.field_of_domain Fintype.fieldOfDomain
 
 theorem Finite.isFieldOfDomain (R) [CommRing R] [IsDomain R] [Finite R] : IsField R := by
   cases nonempty_fintype R
   exact @Field.toIsField R (@Fintype.fieldOfDomain R _ _ (Classical.decEq R) _)
+#align finite.is_field_of_domain Finite.isFieldOfDomain
 
 end Ring
 
@@ -98,14 +104,13 @@ theorem card_nth_roots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective
     apply hf
     assumption
     
+#align card_nth_roots_subgroup_units card_nth_roots_subgroup_units
 
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
 theorem is_cyclic_of_subgroup_is_domain [Finite G] (f : G →* R) (hf : Injective f) : IsCyclic G := by
-  classical
-  cases nonempty_fintype G
-  apply is_cyclic_of_card_pow_eq_one_le
-  intro n hn
-  convert le_trans (card_nth_roots_subgroup_units f hf hn 1) (card_nth_roots n (f 1))
+  classical cases nonempty_fintype G
+    intro n hn
+#align is_cyclic_of_subgroup_is_domain is_cyclic_of_subgroup_is_domain
 
 /-- The unit group of a finite integral domain is cyclic.
 
@@ -126,6 +131,7 @@ instance subgroup_units_cyclic : IsCyclic S := by
   · intros
     simp
     
+#align subgroup_units_cyclic subgroup_units_cyclic
 
 end
 
@@ -145,64 +151,38 @@ theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G
     simp only [hg, mem_filter, one_mul, MonoidHom.map_mul, mem_univ, mul_right_inv, eq_self_iff_true,
       exists_prop_of_true, MonoidHom.map_mul_inv, and_self_iff, mul_inv_cancel_right, inv_mul_cancel_right]
     
+#align card_fiber_eq_of_mem_range card_fiber_eq_of_mem_range
 
 /-- In an integral domain, a sum indexed by a nontrivial homomorphism from a finite group is zero.
 -/
 theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) = 0 := by
-  classical
-  obtain ⟨x, hx⟩ : ∃ x : MonoidHom.range f.to_hom_units, ∀ y : MonoidHom.range f.to_hom_units, y ∈ Submonoid.powers x
-  exact IsCyclic.exists_monoid_generator
-  have hx1 : x ≠ 1 := by
-    rintro rfl
-    apply hf
-    ext g
-    rw [MonoidHom.one_apply]
-    cases' hx ⟨f.to_hom_units g, g, rfl⟩ with n hn
-    rwa [Subtype.ext_iff, Units.ext_iff, Subtype.coe_mk, MonoidHom.coe_to_hom_units, one_pow, eq_comm] at hn
-  replace hx1 : (x : R) - 1 ≠ 0
-  exact fun h => hx1 (Subtype.eq (Units.ext (sub_eq_zero.1 h)))
-  let c := (univ.filter fun g => f.to_hom_units g = 1).card
-  calc
-    (∑ g : G, f g) = ∑ g : G, f.to_hom_units g := rfl
-    _ = ∑ u : Rˣ in univ.image f.to_hom_units, (univ.filter fun g => f.to_hom_units g = u).card • u :=
-      sum_comp (coe : Rˣ → R) f.to_hom_units
-    _ = ∑ u : Rˣ in univ.image f.to_hom_units, c • u := sum_congr rfl fun u hu => congr_arg₂ _ _ rfl
-    -- remaining goal 1, proven below
-        _ =
-        ∑ b : MonoidHom.range f.to_hom_units, c • ↑b :=
-      Finset.sum_subtype _ (by simp) _
-    _ = c • ∑ b : MonoidHom.range f.to_hom_units, (b : R) := smul_sum.symm
-    _ = c • 0 := congr_arg₂ _ rfl _
-    -- remaining goal 2, proven below
-        _ =
-        0 :=
-      smul_zero _
-    
-  · -- remaining goal 1
-    show (univ.filter fun g : G => f.to_hom_units g = u).card = c
-    apply card_fiber_eq_of_mem_range f.to_hom_units
-    · simpa only [mem_image, mem_univ, exists_prop_of_true, Set.mem_range] using hu
+  classical obtain ⟨x, hx⟩ :
+      ∃ x : MonoidHom.range f.to_hom_units, ∀ y : MonoidHom.range f.to_hom_units, y ∈ Submonoid.powers x
+    have hx1 : x ≠ 1
+    replace hx1 : (x : R) - 1 ≠ 0
+    let c := (univ.filter fun g => f.to_hom_units g = 1).card
+    · -- remaining goal 1
+      show (univ.filter fun g : G => f.to_hom_units g = u).card = c
+      apply card_fiber_eq_of_mem_range f.to_hom_units
+      · simpa only [mem_image, mem_univ, exists_prop_of_true, Set.mem_range] using hu
+        
+      · exact ⟨1, f.to_hom_units.map_one⟩
+        
       
-    · exact ⟨1, f.to_hom_units.map_one⟩
+    calc
+      (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = ∑ n in range (orderOf x), x ^ n :=
+        Eq.symm <|
+          sum_bij (fun n _ => x ^ n) (by simp only [mem_univ, forall_true_iff])
+            (by simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.coe_pow, coe_coe])
+            (fun m n hm hn =>
+              pow_injective_of_lt_order_of _ (by simpa only [mem_range] using hm) (by simpa only [mem_range] using hn))
+            fun b hb =>
+            let ⟨n, hn⟩ := hx b
+            ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (order_of_pos _)), by rw [← pow_eq_mod_order_of, hn]⟩
+      _ = 0 := _
       
-    
-  -- remaining goal 2
-  show (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = 0
-  calc
-    (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = ∑ n in range (orderOf x), x ^ n :=
-      Eq.symm <|
-        sum_bij (fun n _ => x ^ n) (by simp only [mem_univ, forall_true_iff])
-          (by simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.coe_pow, coe_coe])
-          (fun m n hm hn =>
-            pow_injective_of_lt_order_of _ (by simpa only [mem_range] using hm) (by simpa only [mem_range] using hn))
-          fun b hb =>
-          let ⟨n, hn⟩ := hx b
-          ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (order_of_pos _)), by rw [← pow_eq_mod_order_of, hn]⟩
-    _ = 0 := _
-    
-  rw [← mul_left_inj' hx1, zero_mul, geom_sum_mul, coe_coe]
-  norm_cast
-  simp [pow_order_of_eq_one]
+    norm_cast
+#align sum_hom_units_eq_zero sum_hom_units_eq_zero
 
 /-- In an integral domain, a sum indexed by a homomorphism from a finite group is zero,
 unless the homomorphism is trivial, in which case the sum is equal to the cardinality of the group.
@@ -213,6 +193,7 @@ theorem sum_hom_units (f : G →* R) [Decidable (f = 1)] : (∑ g : G, f g) = if
     
   · exact sum_hom_units_eq_zero f h
     
+#align sum_hom_units sum_hom_units
 
 end
 

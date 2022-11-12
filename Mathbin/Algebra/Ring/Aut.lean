@@ -31,6 +31,7 @@ ring_aut
 @[reducible]
 def RingAut (R : Type _) [Mul R] [Add R] :=
   RingEquiv R R
+#align ring_aut RingAut
 
 namespace RingAut
 
@@ -54,12 +55,15 @@ instance : Inhabited (RingAut R) :=
 
 /-- Monoid homomorphism from ring automorphisms to additive automorphisms. -/
 def toAddAut : RingAut R →* AddAut R := by refine_struct { toFun := RingEquiv.toAddEquiv } <;> intros <;> rfl
+#align ring_aut.to_add_aut RingAut.toAddAut
 
 /-- Monoid homomorphism from ring automorphisms to multiplicative automorphisms. -/
 def toMulAut : RingAut R →* MulAut R := by refine_struct { toFun := RingEquiv.toMulEquiv } <;> intros <;> rfl
+#align ring_aut.to_mul_aut RingAut.toMulAut
 
 /-- Monoid homomorphism from ring automorphisms to permutations. -/
 def toPerm : RingAut R →* Equiv.Perm R := by refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
+#align ring_aut.to_perm RingAut.toPerm
 
 end mul_add
 
@@ -76,13 +80,16 @@ instance applyMulSemiringAction : MulSemiringAction (RingAut R) R where
   smul_mul := RingEquiv.map_mul
   one_smul _ := rfl
   mul_smul _ _ _ := rfl
+#align ring_aut.apply_mul_semiring_action RingAut.applyMulSemiringAction
 
 @[simp]
 protected theorem smul_def (f : RingAut R) (r : R) : f • r = f r :=
   rfl
+#align ring_aut.smul_def RingAut.smul_def
 
 instance apply_has_faithful_smul : HasFaithfulSmul (RingAut R) R :=
   ⟨fun _ _ => RingEquiv.ext⟩
+#align ring_aut.apply_has_faithful_smul RingAut.apply_has_faithful_smul
 
 variable (G R)
 
@@ -95,6 +102,7 @@ def _root_.mul_semiring_action.to_ring_aut [MulSemiringAction G R] : G →* Ring
   toFun := MulSemiringAction.toRingEquiv G R
   map_mul' g h := RingEquiv.ext <| mul_smul g h
   map_one' := RingEquiv.ext <| one_smul _
+#align ring_aut._root_.mul_semiring_action.to_ring_aut ring_aut._root_.mul_semiring_action.to_ring_aut
 
 end Semiring
 

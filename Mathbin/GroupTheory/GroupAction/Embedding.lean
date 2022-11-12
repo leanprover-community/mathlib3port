@@ -29,14 +29,17 @@ instance [Group G] [MulAction G β] : HasSmul G (α ↪ β) :=
 @[to_additive]
 theorem smul_def [Group G] [MulAction G β] (g : G) (f : α ↪ β) : g • f = f.trans (MulAction.toPerm g).toEmbedding :=
   rfl
+#align function.embedding.smul_def Function.Embedding.smul_def
 
 @[simp, to_additive]
 theorem smul_apply [Group G] [MulAction G β] (g : G) (f : α ↪ β) (a : α) : (g • f) a = g • f a :=
   rfl
+#align function.embedding.smul_apply Function.Embedding.smul_apply
 
 @[to_additive]
 theorem coe_smul [Group G] [MulAction G β] (g : G) (f : α ↪ β) : ⇑(g • f) = g • f :=
   rfl
+#align function.embedding.coe_smul Function.Embedding.coe_smul
 
 instance [Group G] [Group G'] [HasSmul G G'] [MulAction G β] [MulAction G' β] [IsScalarTower G G' β] :
     IsScalarTower G G' (α ↪ β) :=

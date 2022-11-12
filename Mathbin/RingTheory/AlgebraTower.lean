@@ -50,12 +50,14 @@ If an element `r : R` is invertible in `S`, then it is invertible in `A`. -/
 def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] : Invertible (algebraMap R A r) :=
   Invertible.copy (Invertible.map (algebraMap S A) (algebraMap R S r)) (algebraMap R A r)
     (IsScalarTower.algebra_map_apply R S A r)
+#align is_scalar_tower.invertible.algebra_tower IsScalarTower.Invertible.algebraTower
 
 /-- A natural number that is invertible when coerced to `R` is also invertible
 when coerced to any `R`-algebra. -/
 def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) :=
   haveI : Invertible (algebraMap ℕ R n) := inv
   invertible.algebra_tower ℕ R A n
+#align is_scalar_tower.invertible_algebra_coe_nat IsScalarTower.invertibleAlgebraCoeNat
 
 end Semiring
 
@@ -76,6 +78,7 @@ theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiring 
     adjoin R (algebraMap S A '' s) = (adjoin R s).map (IsScalarTower.toAlgHom R S A) :=
   le_antisymm (adjoin_le <| Set.image_subset_iff.2 fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
     (Subalgebra.map_le.2 <| adjoin_le fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
+#align algebra.adjoin_algebra_map Algebra.adjoin_algebra_map
 
 theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E] [Algebra C D]
     [Algebra C E] [Algebra D E] [IsScalarTower C D E] (S : Set E) :
@@ -95,6 +98,7 @@ theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring 
   · rintro ⟨⟨y, ⟨z, ⟨h0, h1⟩⟩⟩, h2⟩
     exact ⟨z, Eq.trans h1 h2⟩
     
+#align algebra.adjoin_restrict_scalars Algebra.adjoin_restrict_scalars
 
 theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E] [CommSemiring F]
     [Algebra C D] [Algebra C E] [Algebra C F] [Algebra D F] [Algebra E F] [IsScalarTower C D F] [IsScalarTower C E F]
@@ -105,6 +109,7 @@ theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiri
   rw [adjoin_restrict_scalars C E, adjoin_restrict_scalars C D, ← hS, ← hT, ← Algebra.adjoin_image, ←
     Algebra.adjoin_image, ← AlgHom.coe_to_ring_hom, ← AlgHom.coe_to_ring_hom, IsScalarTower.coe_to_alg_hom,
     IsScalarTower.coe_to_alg_hom, ← adjoin_union_eq_adjoin_adjoin, ← adjoin_union_eq_adjoin_adjoin, Set.union_comm]
+#align algebra.adjoin_res_eq_adjoin_res Algebra.adjoin_res_eq_adjoin_res
 
 end Algebra
 
@@ -120,6 +125,7 @@ theorem Algebra.fgTrans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [Com
   ⟨s.Image (algebraMap S A) ∪ t, by
     rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin, Algebra.adjoin_algebra_map, hs,
       Algebra.map_top, IsScalarTower.adjoin_range_to_alg_hom, ht, Subalgebra.restrict_scalars_top]⟩
+#align algebra.fg_trans' Algebra.fgTrans'
 
 end
 
@@ -136,13 +142,16 @@ then a basis for `M` as `R`-module is also a basis for `M` as `R'`-module. -/
 @[simps]
 noncomputable def Basis.algebraMapCoeffs : Basis ι A M :=
   b.mapCoeffs (RingEquiv.ofBijective _ h) fun c x => by simp
+#align basis.algebra_map_coeffs Basis.algebraMapCoeffs
 
 theorem Basis.algebra_map_coeffs_apply (i : ι) : b.algebraMapCoeffs A h i = b i :=
   b.map_coeffs_apply _ _ _
+#align basis.algebra_map_coeffs_apply Basis.algebra_map_coeffs_apply
 
 @[simp]
 theorem Basis.coe_algebra_map_coeffs : (b.algebraMapCoeffs A h : ι → M) = b :=
   b.coe_map_coeffs _ _
+#align basis.coe_algebra_map_coeffs Basis.coe_algebra_map_coeffs
 
 end AlgebraMapCoeffs
 
@@ -177,6 +186,7 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
     exact hb _ _ (hc _ _ h1 k (Finset.mem_image_of_mem _ hik)) i (Finset.mem_image_of_mem _ hik)
     
   exact hg _ hik
+#align linear_independent_smul linear_independent_smul
 
 /-- `basis.smul (b : basis ι R S) (c : basis ι S A)` is the `R`-basis on `A`
 where the `(i, j)`th basis vector is `b i • c j`. -/
@@ -185,14 +195,17 @@ noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R 
     (c.repr.restrictScalars R ≪≫ₗ
       (Finsupp.lcongr (Equiv.refl _) b.repr ≪≫ₗ
         ((finsuppProdLequiv R).symm ≪≫ₗ Finsupp.lcongr (Equiv.prodComm ι' ι) (LinearEquiv.refl _ _))))
+#align basis.smul Basis.smul
 
 @[simp]
 theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x ij) :
     (b.smul c).repr x ij = b.repr (c.repr x ij.2) ij.1 := by simp [Basis.smul]
+#align basis.smul_repr Basis.smul_repr
 
 theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x i j) :
     (b.smul c).repr x (i, j) = b.repr (c.repr x j) i :=
   b.smul_repr c x (i, j)
+#align basis.smul_repr_mk Basis.smul_repr_mk
 
 @[simp]
 theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (ij) :
@@ -207,6 +220,7 @@ theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (
     
   · simp [hi]
     
+#align basis.smul_apply Basis.smul_apply
 
 end Semiring
 
@@ -220,6 +234,7 @@ theorem Basis.algebra_map_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial
     Function.Injective (algebraMap R S) :=
   have : NoZeroSmulDivisors R S := b.NoZeroSmulDivisors
   NoZeroSmulDivisors.algebra_map_injective R S
+#align basis.algebra_map_injective Basis.algebra_map_injective
 
 end Ring
 
@@ -282,6 +297,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   refine' fun r hr =>
     Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span <| mem_insert_self _ _) fun p q hp hq =>
       hyy <| Submodule.mul_mem_mul hp hq
+#align exists_subalgebra_of_fg exists_subalgebra_of_fg
 
 end Semiring
 
@@ -304,6 +320,7 @@ theorem fgOfFgOfFg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg) (hBC :
       have : IsNoetherianRing B₀ := is_noetherian_ring_of_fg hAB₀
       have : IsNoetherian B₀ C := is_noetherian_of_fg_of_noetherian' hB₀C
       fg_of_injective (IsScalarTower.toAlgHom B₀ B C).toLinearMap hBCi
+#align fg_of_fg_of_fg fgOfFgOfFg
 
 end Ring
 
@@ -318,10 +335,12 @@ variable (f : C →ₐ[A] D) (B) [CommSemiring B] [Algebra A B] [Algebra B C] [I
 /-- Restrict the domain of an `alg_hom`. -/
 def AlgHom.restrictDomain : B →ₐ[A] D :=
   f.comp (IsScalarTower.toAlgHom A B C)
+#align alg_hom.restrict_domain AlgHom.restrictDomain
 
 /-- Extend the scalars of an `alg_hom`. -/
 def AlgHom.extendScalars : @AlgHom B C D _ _ _ _ (f.restrictDomain B).toRingHom.toAlgebra :=
   { f with commutes' := fun _ => rfl }
+#align alg_hom.extend_scalars AlgHom.extendScalars
 
 variable {B}
 
@@ -341,6 +360,7 @@ def algHomEquivSigma : (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ 
       ext
       exact (hg x).symm
     rfl
+#align alg_hom_equiv_sigma algHomEquivSigma
 
 end AlgHomTower
 

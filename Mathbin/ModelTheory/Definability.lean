@@ -45,6 +45,7 @@ variable {α : Type _} {β : Type _}
   membership in the set is given by a first-order formula with parameters from `A`. -/
 def Definable (s : Set (α → M)) : Prop :=
   ∃ φ : L[[A]].Formula α, s = SetOf φ.realize
+#align set.definable Set.Definable
 
 variable {L} {A} {B : Set M} {s : Set (α → M)}
 
@@ -54,29 +55,35 @@ theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.StructureCat M] (
   refine' ⟨(φ.add_constants A).onFormula ψ, _⟩
   ext x
   simp only [mem_set_of_eq, Lhom.realize_on_formula]
+#align set.definable.map_expansion Set.Definable.map_expansion
 
 theorem empty_definable_iff : (∅ : Set M).Definable L s ↔ ∃ φ : L.Formula α, s = SetOf φ.realize := by
   rw [definable, Equiv.exists_congr_left (Lequiv.add_empty_constants L (∅ : Set M)).onFormula]
   simp
+#align set.empty_definable_iff Set.empty_definable_iff
 
 theorem definable_iff_empty_definable_with_params : A.Definable L s ↔ (∅ : Set M).Definable (L[[A]]) s :=
   empty_definable_iff.symm
+#align set.definable_iff_empty_definable_with_params Set.definable_iff_empty_definable_with_params
 
 theorem Definable.mono (hAs : A.Definable L s) (hAB : A ⊆ B) : B.Definable L s := by
   rw [definable_iff_empty_definable_with_params] at *
   exact hAs.map_expansion (L.Lhom_with_constants_map (Set.inclusion hAB))
+#align set.definable.mono Set.Definable.mono
 
 @[simp]
 theorem definable_empty : A.Definable L (∅ : Set (α → M)) :=
   ⟨⊥, by
     ext
     simp⟩
+#align set.definable_empty Set.definable_empty
 
 @[simp]
 theorem definable_univ : A.Definable L (Univ : Set (α → M)) :=
   ⟨⊤, by
     ext
     simp⟩
+#align set.definable_univ Set.definable_univ
 
 @[simp]
 theorem Definable.inter {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.Definable L g) : A.Definable L (f ∩ g) := by
@@ -85,6 +92,7 @@ theorem Definable.inter {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
   refine' ⟨φ ⊓ θ, _⟩
   ext
   simp
+#align set.definable.inter Set.Definable.inter
 
 @[simp]
 theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.Definable L g) : A.Definable L (f ∪ g) := by
@@ -93,30 +101,31 @@ theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
   refine' ⟨φ ⊔ θ, _⟩
   ext
   rw [hφ, hθ, mem_set_of_eq, formula.realize_sup, mem_union, mem_set_of_eq, mem_set_of_eq]
+#align set.definable.union Set.Definable.union
 
 theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (s.inf f) := by
-  classical
-  refine' Finset.induction definable_univ (fun i s is h => _) s
-  rw [Finset.inf_insert]
-  exact (hf i).inter h
+  classical refine' Finset.induction definable_univ (fun i s is h => _) s
+    exact (hf i).inter h
+#align set.definable_finset_inf Set.definable_finset_inf
 
 theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (s.sup f) := by
-  classical
-  refine' Finset.induction definable_empty (fun i s is h => _) s
-  rw [Finset.sup_insert]
-  exact (hf i).union h
+  classical refine' Finset.induction definable_empty (fun i s is h => _) s
+    exact (hf i).union h
+#align set.definable_finset_sup Set.definable_finset_sup
 
 theorem definable_finset_bInter {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (⋂ i ∈ s, f i) := by
   rw [← Finset.inf_set_eq_bInter]
   exact definable_finset_inf hf s
+#align set.definable_finset_bInter Set.definable_finset_bInter
 
 theorem definable_finset_bUnion {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (⋃ i ∈ s, f i) := by
   rw [← Finset.sup_set_eq_bUnion]
   exact definable_finset_sup hf s
+#align set.definable_finset_bUnion Set.definable_finset_bUnion
 
 @[simp]
 theorem Definable.compl {s : Set (α → M)} (hf : A.Definable L s) : A.Definable L (sᶜ) := by
@@ -124,10 +133,12 @@ theorem Definable.compl {s : Set (α → M)} (hf : A.Definable L s) : A.Definabl
   refine' ⟨φ.not, _⟩
   rw [hφ]
   rfl
+#align set.definable.compl Set.Definable.compl
 
 @[simp]
 theorem Definable.sdiff {s t : Set (α → M)} (hs : A.Definable L s) (ht : A.Definable L t) : A.Definable L (s \ t) :=
   hs.inter ht.compl
+#align set.definable.sdiff Set.Definable.sdiff
 
 theorem Definable.preimage_comp (f : α → β) {s : Set (α → M)} (h : A.Definable L s) :
     A.Definable L ((fun g : β → M => g ∘ f) ⁻¹' s) := by
@@ -135,6 +146,7 @@ theorem Definable.preimage_comp (f : α → β) {s : Set (α → M)} (h : A.Defi
   refine' ⟨φ.relabel f, _⟩
   ext
   simp only [Set.preimage_set_of_eq, mem_set_of_eq, formula.realize_relabel]
+#align set.definable.preimage_comp Set.Definable.preimage_comp
 
 theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f : α ≃ β) :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
@@ -142,12 +154,13 @@ theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f
   rw [image_eq_preimage_of_inverse]
   · intro i
     ext b
-    simp only [Function.comp_app, Equiv.apply_symm_apply]
+    simp only [Function.comp_apply, Equiv.apply_symm_apply]
     
   · intro i
     ext a
     simp
     
+#align set.definable.image_comp_equiv Set.Definable.image_comp_equiv
 
 /-- This lemma is only intended as a helper for `definable.image_comp. -/
 theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → M)} (h : A.Definable L s) :
@@ -164,65 +177,51 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → 
   · rintro ⟨y, hy⟩
     exact ⟨Sum.elim x y, (congr rfl (funext finZeroElim)).mp hy, Sum.elim_comp_inl _ _⟩
     
+#align set.definable.image_comp_sum_inl_fin Set.Definable.image_comp_sum_inl_fin
 
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s) (f : α ↪ β) [Finite β] :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
-  classical
-  cases nonempty_fintype β
-  refine'
-    (congr rfl (ext fun x => _)).mp
-      (((h.image_comp_equiv (Equiv.Set.sumCompl (range f))).image_comp_equiv
-            (Equiv.sumCongr (Equiv.ofInjective f f.injective) (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
-        _)
-  simp only [mem_preimage, mem_image, exists_exists_and_eq_and]
-  refine' exists_congr fun y => and_congr_right fun ys => Eq.congr_left (funext fun a => _)
-  simp
+  classical cases nonempty_fintype β
+    simp only [mem_preimage, mem_image, exists_exists_and_eq_and]
+    simp
+#align set.definable.image_comp_embedding Set.Definable.image_comp_embedding
 
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α → β) [Finite α] [Finite β] :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
-  classical
-  cases nonempty_fintype α
-  cases nonempty_fintype β
-  have h :=
-    (((h.image_comp_equiv (Equiv.Set.sumCompl (range f))).image_comp_equiv
-              (Equiv.sumCongr (_root_.equiv.refl _) (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
-          _).preimage_comp
-      (range_splitting f)
-  have h' : A.definable L { x : α → M | ∀ a, x a = x (range_splitting f (range_factorization f a)) } := by
-    have h' : ∀ a, A.definable L { x : α → M | x a = x (range_splitting f (range_factorization f a)) } := by
-      refine' fun a => ⟨(var a).equal (var (range_splitting f (range_factorization f a))), ext _⟩
+  classical cases nonempty_fintype α
+    have h :=
+      (((h.image_comp_equiv (Equiv.Set.sumCompl (range f))).image_comp_equiv
+                (Equiv.sumCongr (_root_.equiv.refl _) (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
+            _).preimage_comp
+        (range_splitting f)
+    · have h' : ∀ a, A.definable L { x : α → M | x a = x (range_splitting f (range_factorization f a)) } := by
+        refine' fun a => ⟨(var a).equal (var (range_splitting f (range_factorization f a))), ext _⟩
+        simp
+      refine' (congr rfl (ext _)).mp (definable_finset_bInter h' Finset.univ)
       simp
-    refine' (congr rfl (ext _)).mp (definable_finset_bInter h' Finset.univ)
-    simp
-  refine' (congr rfl (ext fun x => _)).mp (h.inter h')
-  simp only [Equiv.coe_trans, mem_inter_iff, mem_preimage, mem_image, exists_exists_and_eq_and, mem_set_of_eq]
-  constructor
-  · rintro ⟨⟨y, ys, hy⟩, hx⟩
-    refine' ⟨y, ys, _⟩
-    ext a
-    rw [hx a, ← Function.comp_apply x, ← hy]
-    simp
-    
-  · rintro ⟨y, ys, rfl⟩
-    refine' ⟨⟨y, ys, _⟩, fun a => _⟩
-    · ext
-      simp [Set.apply_range_splitting f]
       
-    · rw [Function.comp_apply, Function.comp_apply, apply_range_splitting f, range_factorization_coe]
+    simp only [Equiv.coe_trans, mem_inter_iff, mem_preimage, mem_image, exists_exists_and_eq_and, mem_set_of_eq]
+    · rintro ⟨⟨y, ys, hy⟩, hx⟩
+      refine' ⟨y, ys, _⟩
+      ext a
+      rw [hx a, ← Function.comp_apply x, ← hy]
+      simp
       
-    
+#align set.definable.image_comp Set.Definable.image_comp
 
 variable (L) {M} (A)
 
 /-- A 1-dimensional version of `definable`, for `set M`. -/
 def Definable₁ (s : Set M) : Prop :=
   A.Definable L { x : Fin 1 → M | x 0 ∈ s }
+#align set.definable₁ Set.Definable₁
 
 /-- A 2-dimensional version of `definable`, for `set (M × M)`. -/
 def Definable₂ (s : Set (M × M)) : Prop :=
   A.Definable L { x : Fin 2 → M | (x 0, x 1) ∈ s }
+#align set.definable₂ Set.Definable₂
 
 end Set
 
@@ -238,6 +237,7 @@ variable (L : FirstOrder.Language.{u, v}) {M : Type w} [L.StructureCat M] (A : S
   given by a first-order formula. -/
 def DefinableSet :=
   { s : Set (α → M) // A.Definable L s }
+#align first_order.language.definable_set FirstOrder.Language.DefinableSet
 
 namespace DefinableSet
 
@@ -270,54 +270,67 @@ instance : Inhabited (L.DefinableSet A α) :=
 
 theorem le_iff : s ≤ t ↔ (s : Set (α → M)) ≤ (t : Set (α → M)) :=
   Iff.rfl
+#align first_order.language.definable_set.le_iff FirstOrder.Language.DefinableSet.le_iff
 
 @[simp]
 theorem mem_top : x ∈ (⊤ : L.DefinableSet A α) :=
   mem_univ x
+#align first_order.language.definable_set.mem_top FirstOrder.Language.DefinableSet.mem_top
 
 @[simp]
 theorem not_mem_bot {x : α → M} : ¬x ∈ (⊥ : L.DefinableSet A α) :=
   not_mem_empty x
+#align first_order.language.definable_set.not_mem_bot FirstOrder.Language.DefinableSet.not_mem_bot
 
 @[simp]
 theorem mem_sup : x ∈ s ⊔ t ↔ x ∈ s ∨ x ∈ t :=
   Iff.rfl
+#align first_order.language.definable_set.mem_sup FirstOrder.Language.DefinableSet.mem_sup
 
 @[simp]
 theorem mem_inf : x ∈ s ⊓ t ↔ x ∈ s ∧ x ∈ t :=
   Iff.rfl
+#align first_order.language.definable_set.mem_inf FirstOrder.Language.DefinableSet.mem_inf
 
 @[simp]
 theorem mem_compl : x ∈ sᶜ ↔ ¬x ∈ s :=
   Iff.rfl
+#align first_order.language.definable_set.mem_compl FirstOrder.Language.DefinableSet.mem_compl
 
 @[simp]
 theorem mem_sdiff : x ∈ s \ t ↔ x ∈ s ∧ ¬x ∈ t :=
   Iff.rfl
+#align first_order.language.definable_set.mem_sdiff FirstOrder.Language.DefinableSet.mem_sdiff
 
 @[simp, norm_cast]
 theorem coe_top : ((⊤ : L.DefinableSet A α) : Set (α → M)) = univ :=
   rfl
+#align first_order.language.definable_set.coe_top FirstOrder.Language.DefinableSet.coe_top
 
 @[simp, norm_cast]
 theorem coe_bot : ((⊥ : L.DefinableSet A α) : Set (α → M)) = ∅ :=
   rfl
+#align first_order.language.definable_set.coe_bot FirstOrder.Language.DefinableSet.coe_bot
 
 @[simp, norm_cast]
 theorem coe_sup (s t : L.DefinableSet A α) : (↑(s ⊔ t) : Set (α → M)) = s ∪ t :=
   rfl
+#align first_order.language.definable_set.coe_sup FirstOrder.Language.DefinableSet.coe_sup
 
 @[simp, norm_cast]
 theorem coe_inf (s t : L.DefinableSet A α) : (↑(s ⊓ t) : Set (α → M)) = s ∩ t :=
   rfl
+#align first_order.language.definable_set.coe_inf FirstOrder.Language.DefinableSet.coe_inf
 
 @[simp, norm_cast]
 theorem coe_compl (s : L.DefinableSet A α) : (↑(sᶜ) : Set (α → M)) = sᶜ :=
   rfl
+#align first_order.language.definable_set.coe_compl FirstOrder.Language.DefinableSet.coe_compl
 
 @[simp, norm_cast]
 theorem coe_sdiff (s t : L.DefinableSet A α) : (↑(s \ t) : Set (α → M)) = s \ t :=
   rfl
+#align first_order.language.definable_set.coe_sdiff FirstOrder.Language.DefinableSet.coe_sdiff
 
 instance : BooleanAlgebra (L.DefinableSet A α) :=
   Subtype.coe_injective.BooleanAlgebra _ coe_sup coe_inf coe_top coe_bot coe_compl coe_sdiff

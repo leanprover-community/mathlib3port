@@ -43,6 +43,7 @@ theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) : (∫ x in a..X,
   · apply Continuous.continuous_on
     continuity
     
+#align integral_exp_neg_le integral_exp_neg_le
 
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
 theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) : IntegrableOn (fun x : ℝ => exp (-b * x)) (IoiCat a) := by
@@ -52,6 +53,7 @@ theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) : IntegrableOn (fu
   apply integrable_on_Ioi_of_interval_integral_norm_bounded (exp (-b * a) / b) a this tendsto_id
   simp only [eventually_at_top, norm_of_nonneg (exp_pos _).le]
   exact ⟨a, fun b2 hb2 => integral_exp_neg_le a b2 h⟩
+#align exp_neg_integrable_on_Ioi expNegIntegrableOnIoi
 
 /-- If `f` is continuous on `[a, ∞)`, and is `O (exp (-b * x))` at `∞` for some `b > 0`, then
 `f` is integrable on `(a, ∞)`. -/
@@ -82,4 +84,5 @@ theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : C
   rw [mem_Ioi] at h1x
   specialize bdr x ((le_max_right a r).trans h1x.le)
   exact bdr.trans (mul_le_mul_of_nonneg_right (le_abs_self c) (norm_nonneg _))
+#align integrable_of_is_O_exp_neg integrableOfIsOExpNeg
 

@@ -44,6 +44,7 @@ instance (priority := 100) smallCategory (α : Type u) [Preorder α] : SmallCate
   Hom U V := ULift (PLift (U ≤ V))
   id X := ⟨⟨le_refl X⟩⟩
   comp X Y Z f g := ⟨⟨le_trans _ _ _ f.down.down g.down.down⟩⟩
+#align preorder.small_category Preorder.smallCategory
 
 end Preorder
 
@@ -57,44 +58,54 @@ variable {X : Type u} [Preorder X]
 -/
 def homOfLe {x y : X} (h : x ≤ y) : x ⟶ y :=
   ULift.up (PLift.up h)
+#align category_theory.hom_of_le CategoryTheory.homOfLe
 
 alias hom_of_le ← _root_.has_le.le.hom
 
 @[simp]
 theorem hom_of_le_refl {x : X} : (le_refl x).Hom = 𝟙 x :=
   rfl
+#align category_theory.hom_of_le_refl CategoryTheory.hom_of_le_refl
 
 @[simp]
 theorem hom_of_le_comp {x y z : X} (h : x ≤ y) (k : y ≤ z) : h.Hom ≫ k.Hom = (h.trans k).Hom :=
   rfl
+#align category_theory.hom_of_le_comp CategoryTheory.hom_of_le_comp
 
 /-- Extract the underlying inequality from a morphism in a preorder category.
 -/
 theorem le_of_hom {x y : X} (h : x ⟶ y) : x ≤ y :=
   h.down.down
+#align category_theory.le_of_hom CategoryTheory.le_of_hom
 
 alias le_of_hom ← _root_.quiver.hom.le
 
 @[simp]
 theorem le_of_hom_hom_of_le {x y : X} (h : x ≤ y) : h.Hom.le = h :=
   rfl
+#align category_theory.le_of_hom_hom_of_le CategoryTheory.le_of_hom_hom_of_le
 
 @[simp]
 theorem hom_of_le_le_of_hom {x y : X} (h : x ⟶ y) : h.le.Hom = h := by
   cases h
   cases h
   rfl
+#align category_theory.hom_of_le_le_of_hom CategoryTheory.hom_of_le_le_of_hom
 
 /-- Construct a morphism in the opposite of a preorder category from an inequality. -/
 def opHomOfLe {x y : Xᵒᵖ} (h : unop x ≤ unop y) : y ⟶ x :=
   h.Hom.op
+#align category_theory.op_hom_of_le CategoryTheory.opHomOfLe
 
 theorem le_of_op_hom {x y : Xᵒᵖ} (h : x ⟶ y) : unop y ≤ unop x :=
   h.unop.le
+#align category_theory.le_of_op_hom CategoryTheory.le_of_op_hom
 
 instance uniqueToTop [OrderTop X] {x : X} : Unique (x ⟶ ⊤) := by tidy
+#align category_theory.unique_to_top CategoryTheory.uniqueToTop
 
 instance uniqueFromBot [OrderBot X] {x : X} : Unique (⊥ ⟶ x) := by tidy
+#align category_theory.unique_from_bot CategoryTheory.uniqueFromBot
 
 end CategoryTheory
 
@@ -107,10 +118,12 @@ variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 def Monotone.functor {f : X → Y} (h : Monotone f) : X ⥤ Y where
   obj := f
   map x₁ x₂ g := (h g.le).Hom
+#align monotone.functor Monotone.functor
 
 @[simp]
 theorem Monotone.functor_obj {f : X → Y} (h : Monotone f) : h.Functor.obj = f :=
   rfl
+#align monotone.functor_obj Monotone.functor_obj
 
 end
 
@@ -124,6 +137,7 @@ variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 -/
 @[mono]
 theorem Functor.monotone (f : X ⥤ Y) : Monotone f.obj := fun x y hxy => (f.map hxy.Hom).le
+#align category_theory.functor.monotone CategoryTheory.Functor.monotone
 
 end Preorder
 
@@ -133,6 +147,7 @@ variable {X : Type u} {Y : Type v} [PartialOrder X] [PartialOrder Y]
 
 theorem Iso.to_eq {x y : X} (f : x ≅ y) : x = y :=
   le_antisymm f.Hom.le f.inv.le
+#align category_theory.iso.to_eq CategoryTheory.Iso.to_eq
 
 /-- A categorical equivalence between partial orders is just an order isomorphism.
 -/
@@ -144,16 +159,19 @@ def Equivalence.toOrderIso (e : X ≌ Y) : X ≃o Y where
   map_rel_iff' a a' :=
     ⟨fun h => ((Equivalence.unit e).app a ≫ e.inverse.map h.Hom ≫ (Equivalence.unitInv e).app a').le, fun h : a ≤ a' =>
       (e.Functor.map h.Hom).le⟩
+#align category_theory.equivalence.to_order_iso CategoryTheory.Equivalence.toOrderIso
 
 -- `@[simps]` on `equivalence.to_order_iso` produces lemmas that fail the `simp_nf` linter,
 -- so we provide them by hand:
 @[simp]
 theorem Equivalence.to_order_iso_apply (e : X ≌ Y) (x : X) : e.toOrderIso x = e.Functor.obj x :=
   rfl
+#align category_theory.equivalence.to_order_iso_apply CategoryTheory.Equivalence.to_order_iso_apply
 
 @[simp]
 theorem Equivalence.to_order_iso_symm_apply (e : X ≌ Y) (y : Y) : e.toOrderIso.symm y = e.inverse.obj y :=
   rfl
+#align category_theory.equivalence.to_order_iso_symm_apply CategoryTheory.Equivalence.to_order_iso_symm_apply
 
 end PartialOrder
 

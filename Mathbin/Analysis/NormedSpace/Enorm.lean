@@ -44,6 +44,7 @@ structure Enorm (𝕜 : Type _) (V : Type _) [NormedField 𝕜] [AddCommGroup V]
   eq_zero' : ∀ x, to_fun x = 0 → x = 0
   map_add_le' : ∀ x y : V, to_fun (x + y) ≤ to_fun x + to_fun y
   map_smul_le' : ∀ (c : 𝕜) (x : V), to_fun (c • x) ≤ ∥c∥₊ * to_fun x
+#align enorm Enorm
 
 namespace Enorm
 
@@ -54,17 +55,21 @@ instance : CoeFun (Enorm 𝕜 V) fun _ => V → ℝ≥0∞ :=
 
 theorem coe_fn_injective : Function.Injective (coeFn : Enorm 𝕜 V → V → ℝ≥0∞) := fun e₁ e₂ h => by
   cases e₁ <;> cases e₂ <;> congr <;> exact h
+#align enorm.coe_fn_injective Enorm.coe_fn_injective
 
-@[ext]
+@[ext.1]
 theorem ext {e₁ e₂ : Enorm 𝕜 V} (h : ∀ x, e₁ x = e₂ x) : e₁ = e₂ :=
   coe_fn_injective <| funext h
+#align enorm.ext Enorm.ext
 
 theorem ext_iff {e₁ e₂ : Enorm 𝕜 V} : e₁ = e₂ ↔ ∀ x, e₁ x = e₂ x :=
   ⟨fun h x => h ▸ rfl, ext⟩
+#align enorm.ext_iff Enorm.ext_iff
 
 @[simp, norm_cast]
 theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ ↔ e₁ = e₂ :=
   coe_fn_injective.eq_iff
+#align enorm.coe_inj Enorm.coe_inj
 
 @[simp]
 theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ∥c∥₊ * e x :=
@@ -81,15 +86,18 @@ theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ∥c∥₊ * e x :=
       
     · rw [← mul_assoc, nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top, one_mul] <;> simp [hc]
       
+#align enorm.map_smul Enorm.map_smul
 
 @[simp]
 theorem map_zero : e 0 = 0 := by
   rw [← zero_smul 𝕜 (0 : V), e.map_smul]
   norm_num
+#align enorm.map_zero Enorm.map_zero
 
 @[simp]
 theorem eq_zero_iff {x : V} : e x = 0 ↔ x = 0 :=
   ⟨e.eq_zero' x, fun h => h.symm ▸ e.map_zero⟩
+#align enorm.eq_zero_iff Enorm.eq_zero_iff
 
 @[simp]
 theorem map_neg (x : V) : e (-x) = e x :=
@@ -97,11 +105,14 @@ theorem map_neg (x : V) : e (-x) = e x :=
     e (-x) = ∥(-1 : 𝕜)∥₊ * e x := by rw [← map_smul, neg_one_smul]
     _ = e x := by simp
     
+#align enorm.map_neg Enorm.map_neg
 
 theorem map_sub_rev (x y : V) : e (x - y) = e (y - x) := by rw [← neg_sub, e.map_neg]
+#align enorm.map_sub_rev Enorm.map_sub_rev
 
 theorem map_add_le (x y : V) : e (x + y) ≤ e x + e y :=
   e.map_add_le' x y
+#align enorm.map_add_le Enorm.map_add_le
 
 theorem map_sub_le (x y : V) : e (x - y) ≤ e x + e y :=
   calc
@@ -109,6 +120,7 @@ theorem map_sub_le (x y : V) : e (x - y) ≤ e x + e y :=
     _ ≤ e x + e (-y) := e.map_add_le x (-y)
     _ = e x + e y := by rw [e.map_neg]
     
+#align enorm.map_sub_le Enorm.map_sub_le
 
 instance : PartialOrder (Enorm 𝕜 V) where
   le e₁ e₂ := ∀ x, e₁ x ≤ e₂ x
@@ -139,6 +151,7 @@ noncomputable instance : Inhabited (Enorm 𝕜 V) :=
 
 theorem top_map {x : V} (hx : x ≠ 0) : (⊤ : Enorm 𝕜 V) x = ⊤ :=
   if_neg hx
+#align enorm.top_map Enorm.top_map
 
 noncomputable instance : OrderTop (Enorm 𝕜 V) where
   top := ⊤
@@ -158,10 +171,12 @@ noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
 @[simp, norm_cast]
 theorem coe_max (e₁ e₂ : Enorm 𝕜 V) : ⇑(e₁ ⊔ e₂) = fun x => max (e₁ x) (e₂ x) :=
   rfl
+#align enorm.coe_max Enorm.coe_max
 
 @[norm_cast]
 theorem max_map (e₁ e₂ : Enorm 𝕜 V) (x : V) : (e₁ ⊔ e₂) x = max (e₁ x) (e₂ x) :=
   rfl
+#align enorm.max_map Enorm.max_map
 
 /-- Structure of an `emetric_space` defined by an extended norm. -/
 @[reducible]
@@ -175,6 +190,7 @@ def emetricSpace : EmetricSpace V where
       e (x - z) = e (x - y + (y - z)) := by rw [sub_add_sub_cancel]
       _ ≤ e (x - y) + e (y - z) := e.map_add_le (x - y) (y - z)
       
+#align enorm.emetric_space Enorm.emetricSpace
 
 /-- The subspace of vectors with finite enorm. -/
 def finiteSubspace : Subspace 𝕜 V where
@@ -186,6 +202,7 @@ def finiteSubspace : Subspace 𝕜 V where
       e (c • x) = ∥c∥₊ * e x := e.map_smul c x
       _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.Ne
       
+#align enorm.finite_subspace Enorm.finiteSubspace
 
 /-- Metric space structure on `e.finite_subspace`. We use `emetric_space.to_metric_space`
 to ensure that this definition agrees with `e.emetric_space`. -/
@@ -197,9 +214,11 @@ instance : MetricSpace e.finiteSubspace := by
 
 theorem finite_dist_eq (x y : e.finiteSubspace) : dist x y = (e (x - y)).toReal :=
   rfl
+#align enorm.finite_dist_eq Enorm.finite_dist_eq
 
 theorem finite_edist_eq (x y : e.finiteSubspace) : edist x y = e (x - y) :=
   rfl
+#align enorm.finite_edist_eq Enorm.finite_edist_eq
 
 /-- Normed group instance on `e.finite_subspace`. -/
 instance : NormedAddCommGroup e.finiteSubspace :=
@@ -208,6 +227,7 @@ instance : NormedAddCommGroup e.finiteSubspace :=
 
 theorem finite_norm_eq (x : e.finiteSubspace) : ∥x∥ = (e x).toReal :=
   rfl
+#align enorm.finite_norm_eq Enorm.finite_norm_eq
 
 /-- Normed space instance on `e.finite_subspace`. -/
 instance :

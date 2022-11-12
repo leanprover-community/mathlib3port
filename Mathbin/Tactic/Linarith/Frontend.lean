@@ -141,6 +141,7 @@ unsafe def get_contr_lemma_name_and_type : expr → Option (Name × expr)
   | quote.1 ¬@GE.ge (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
   | quote.1 ¬@GT.gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
   | _ => none
+#align linarith.get_contr_lemma_name_and_type linarith.get_contr_lemma_name_and_type
 
 /-- `apply_contr_lemma` inspects the target to see if it can be moved to a hypothesis by negation.
 For example, a goal `⊢ a ≤ b` can become `a > b ⊢ false`.
@@ -157,6 +158,7 @@ unsafe def apply_contr_lemma : tactic (Option (expr × expr)) := do
       let v ← intro1
       return <| some (tp, v)
     | none => return none
+#align linarith.apply_contr_lemma linarith.apply_contr_lemma
 
 /-- `partition_by_type l` takes a list `l` of proofs of comparisons. It sorts these proofs by
 the type of the variables in the comparison, e.g. `(a : ℚ) < 1` and `(b : ℤ) > c` will be separated.
@@ -168,6 +170,7 @@ unsafe def partition_by_type (l : List expr) : tactic (rb_lmap expr expr) :=
       let tp ← ineq_prf_tp h
       return <| m tp h)
     mk_rb_map
+#align linarith.partition_by_type linarith.partition_by_type
 
 /-- Given a list `ls` of lists of proofs of comparisons, `try_linarith_on_lists cfg ls` will try to
 prove `false` by calling `linarith` on each list in succession. It will stop at the first proof of
@@ -175,6 +178,7 @@ prove `false` by calling `linarith` on each list in succession. It will stop at 
 -/
 unsafe def try_linarith_on_lists (cfg : linarith_config) (ls : List (List expr)) : tactic expr :=
   (first <| ls.map <| prove_false_by_linarith cfg) <|> fail "linarith failed to find a contradiction"
+#align linarith.try_linarith_on_lists linarith.try_linarith_on_lists
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a list `hyps` of proofs of comparisons, `run_linarith_on_pfs cfg hyps pref_type`
@@ -201,6 +205,7 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_
   hyps fun hs => do
       set_goals [hs.1]
       single_process hs.2 >>= exact
+#align linarith.run_linarith_on_pfs linarith.run_linarith_on_pfs
 
 /-- `filter_hyps_to_type restr_type hyps` takes a list of proofs of comparisons `hyps`, and filters it
 to only those that are comparisons over the type `restr_type`.
@@ -211,12 +216,14 @@ unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (
     match get_contr_lemma_name_and_type ht with
       | some (_, htype) => succeeds <| unify htype restr_type
       | none => return ff
+#align linarith.filter_hyps_to_type linarith.filter_hyps_to_type
 
 /-- A hack to allow users to write `{restr_type := ℚ}` in configuration structures. -/
 unsafe def get_restrict_type (e : expr) : tactic expr := do
   let m ← mk_mvar
   unify (quote.1 (some (%%ₓm) : Option Type)) e
   instantiate_mvars m
+#align linarith.get_restrict_type linarith.get_restrict_type
 
 end Linarith
 
@@ -268,6 +275,7 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
               return hyps
         linarith_trace_proofs "linarith is running on the following hypotheses:" hyps
         run_linarith_on_pfs cfg hyps pref_type
+#align tactic.linarith tactic.linarith
 
 setup_tactic_parser
 
@@ -292,6 +300,7 @@ Config options:
 unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse pexpr_list ?)
     (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse []) cfg
+#align tactic.interactive.linarith tactic.interactive.linarith
 
 add_hint_tactic linarith
 
@@ -364,6 +373,7 @@ unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (
     (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse [])
     { cfg with preprocessors := some <| cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
+#align tactic.interactive.nlinarith tactic.interactive.nlinarith
 
 add_hint_tactic nlinarith
 

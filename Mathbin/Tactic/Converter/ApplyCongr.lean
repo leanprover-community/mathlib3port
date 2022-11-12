@@ -98,6 +98,7 @@ unsafe def apply_congr (q : parse texpr ?) : conv Unit := do
           do
           let quote.1 (_ = _) ← target
           tactic.skip)
+#align conv.interactive.apply_congr conv.interactive.apply_congr
 
 add_tactic_doc
   { Name := "apply_congr", category := DocCategory.tactic, declNames := [`conv.interactive.apply_congr],

@@ -33,6 +33,7 @@ universe u v w w₁ w₂
 class LieModule.IsIrreducible (R : Type u) (L : Type v) (M : Type w) [CommRing R] [LieRing L] [LieAlgebra R L]
   [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M] : Prop where
   Irreducible : ∀ N : LieSubmodule R L M, N ≠ ⊥ → N = ⊤
+#align lie_module.is_irreducible LieModule.IsIrreducible
 
 namespace LieAlgebra
 
@@ -44,6 +45,7 @@ variable [CommRing R] [LieRing L] [LieAlgebra R L]
 action, and it is non-Abelian. -/
 class IsSimple extends LieModule.IsIrreducible R L L : Prop where
   non_abelian : ¬IsLieAbelian L
+#align lie_algebra.is_simple LieAlgebra.IsSimple
 
 /-- A semisimple Lie algebra is one with trivial radical.
 
@@ -54,9 +56,11 @@ for the weakest of the various properties which are all equivalent over a field 
 zero. -/
 class IsSemisimple : Prop where
   semisimple : radical R L = ⊥
+#align lie_algebra.is_semisimple LieAlgebra.IsSemisimple
 
 theorem is_semisimple_iff_no_solvable_ideals : IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsSolvable R I → I = ⊥ :=
   ⟨fun h => Sup_eq_bot.mp h.semisimple, fun h => ⟨Sup_eq_bot.mpr h⟩⟩
+#align lie_algebra.is_semisimple_iff_no_solvable_ideals LieAlgebra.is_semisimple_iff_no_solvable_ideals
 
 theorem is_semisimple_iff_no_abelian_ideals : IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsLieAbelian I → I = ⊥ := by
   rw [is_semisimple_iff_no_solvable_ideals]
@@ -70,12 +74,14 @@ theorem is_semisimple_iff_no_abelian_ideals : IsSemisimple R L ↔ ∀ I : LieId
     apply h₁
     exact abelian_derived_abelian_of_ideal I
     
+#align lie_algebra.is_semisimple_iff_no_abelian_ideals LieAlgebra.is_semisimple_iff_no_abelian_ideals
 
 @[simp]
 theorem center_eq_bot_of_semisimple [h : IsSemisimple R L] : center R L = ⊥ := by
   rw [is_semisimple_iff_no_abelian_ideals] at h
   apply h
   infer_instance
+#align lie_algebra.center_eq_bot_of_semisimple LieAlgebra.center_eq_bot_of_semisimple
 
 /-- A simple Lie algebra is semisimple. -/
 instance (priority := 100) is_semisimple_of_is_simple [h : IsSimple R L] : IsSemisimple R L := by
@@ -85,15 +91,18 @@ instance (priority := 100) is_semisimple_of_is_simple [h : IsSimple R L] : IsSem
   by_contra contra
   rw [h₁ I contra, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquiv] at hI
   exact h₂ hI
+#align lie_algebra.is_semisimple_of_is_simple LieAlgebra.is_semisimple_of_is_simple
 
 /-- A semisimple Abelian Lie algebra is trivial. -/
 theorem subsingleton_of_semisimple_lie_abelian [IsSemisimple R L] [h : IsLieAbelian L] : Subsingleton L := by
   rw [is_lie_abelian_iff_center_eq_top R L, center_eq_bot_of_semisimple] at h
   exact (LieSubmodule.subsingleton_iff R L L).mp (subsingleton_of_bot_eq_top h)
+#align lie_algebra.subsingleton_of_semisimple_lie_abelian LieAlgebra.subsingleton_of_semisimple_lie_abelian
 
 theorem abelian_radical_of_semisimple [IsSemisimple R L] : IsLieAbelian (radical R L) := by
   rw [is_semisimple.semisimple]
   exact is_lie_abelian_bot R L
+#align lie_algebra.abelian_radical_of_semisimple LieAlgebra.abelian_radical_of_semisimple
 
 /-- The two properties shown to be equivalent here are possible definitions for a Lie algebra
 to be reductive.
@@ -111,8 +120,10 @@ theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
     apply h
     infer_instance
     
+#align lie_algebra.abelian_radical_iff_solvable_is_abelian LieAlgebra.abelian_radical_iff_solvable_is_abelian
 
 theorem ad_ker_eq_bot_of_semisimple [IsSemisimple R L] : (ad R L).ker = ⊥ := by simp
+#align lie_algebra.ad_ker_eq_bot_of_semisimple LieAlgebra.ad_ker_eq_bot_of_semisimple
 
 end LieAlgebra
 

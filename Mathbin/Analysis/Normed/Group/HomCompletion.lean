@@ -76,20 +76,24 @@ def NormedAddGroupHom.completion (f : NormedAddGroupHom G H) : NormedAddGroupHom
         simp only [completion.norm_coe]
         exact f.le_op_norm x
          }
+#align normed_add_group_hom.completion NormedAddGroupHom.completion
 
 theorem NormedAddGroupHom.completion_def (f : NormedAddGroupHom G H) (x : Completion G) :
     f.Completion x = Completion.map f x :=
   rfl
+#align normed_add_group_hom.completion_def NormedAddGroupHom.completion_def
 
 @[simp]
 theorem NormedAddGroupHom.completion_coe_to_fun (f : NormedAddGroupHom G H) :
     (f.Completion : Completion G → Completion H) = Completion.map f := by
   ext x
   exact NormedAddGroupHom.completion_def f x
+#align normed_add_group_hom.completion_coe_to_fun NormedAddGroupHom.completion_coe_to_fun
 
 @[simp]
 theorem NormedAddGroupHom.completion_coe (f : NormedAddGroupHom G H) (g : G) : f.Completion g = f g :=
   Completion.map_coe f.UniformContinuous _
+#align normed_add_group_hom.completion_coe NormedAddGroupHom.completion_coe
 
 /-- Completion of normed group homs as a normed group hom. -/
 @[simps]
@@ -101,6 +105,7 @@ def normedAddGroupHomCompletionHom : NormedAddGroupHom G H →+ NormedAddGroupHo
   map_add' f g := by
     apply to_add_monoid_hom_injective
     exact f.to_add_monoid_hom.completion_add g.to_add_monoid_hom f.continuous g.continuous
+#align normed_add_group_hom_completion_hom normedAddGroupHomCompletionHom
 
 @[simp]
 theorem NormedAddGroupHom.completion_id : (NormedAddGroupHom.id G).Completion = NormedAddGroupHom.id (Completion G) :=
@@ -108,6 +113,7 @@ theorem NormedAddGroupHom.completion_id : (NormedAddGroupHom.id G).Completion = 
   ext x
   rw [NormedAddGroupHom.completion_def, NormedAddGroupHom.coe_id, completion.map_id]
   rfl
+#align normed_add_group_hom.completion_id NormedAddGroupHom.completion_id
 
 theorem NormedAddGroupHom.completion_comp (f : NormedAddGroupHom G H) (g : NormedAddGroupHom H K) :
     g.Completion.comp f.Completion = (g.comp f).Completion := by
@@ -116,35 +122,43 @@ theorem NormedAddGroupHom.completion_comp (f : NormedAddGroupHom G H) (g : Norme
     NormedAddGroupHom.completion_coe_to_fun,
     completion.map_comp (NormedAddGroupHom.uniform_continuous _) (NormedAddGroupHom.uniform_continuous _)]
   rfl
+#align normed_add_group_hom.completion_comp NormedAddGroupHom.completion_comp
 
 theorem NormedAddGroupHom.completion_neg (f : NormedAddGroupHom G H) : (-f).Completion = -f.Completion :=
   map_neg (normedAddGroupHomCompletionHom : NormedAddGroupHom G H →+ _) f
+#align normed_add_group_hom.completion_neg NormedAddGroupHom.completion_neg
 
 theorem NormedAddGroupHom.completion_add (f g : NormedAddGroupHom G H) :
     (f + g).Completion = f.Completion + g.Completion :=
   normedAddGroupHomCompletionHom.map_add f g
+#align normed_add_group_hom.completion_add NormedAddGroupHom.completion_add
 
 theorem NormedAddGroupHom.completion_sub (f g : NormedAddGroupHom G H) :
     (f - g).Completion = f.Completion - g.Completion :=
   map_sub (normedAddGroupHomCompletionHom : NormedAddGroupHom G H →+ _) f g
+#align normed_add_group_hom.completion_sub NormedAddGroupHom.completion_sub
 
 @[simp]
 theorem NormedAddGroupHom.zero_completion : (0 : NormedAddGroupHom G H).Completion = 0 :=
   normedAddGroupHomCompletionHom.map_zero
+#align normed_add_group_hom.zero_completion NormedAddGroupHom.zero_completion
 
 /-- The map from a normed group to its completion, as a normed group hom. -/
 def NormedAddCommGroup.toCompl : NormedAddGroupHom G (Completion G) where
   toFun := coe
   map_add' := Completion.toCompl.map_add
   bound' := ⟨1, by simp [le_refl]⟩
+#align normed_add_comm_group.to_compl NormedAddCommGroup.toCompl
 
 open NormedAddCommGroup
 
 theorem NormedAddCommGroup.norm_to_compl (x : G) : ∥toCompl x∥ = ∥x∥ :=
   Completion.norm_coe x
+#align normed_add_comm_group.norm_to_compl NormedAddCommGroup.norm_to_compl
 
 theorem NormedAddCommGroup.dense_range_to_compl : DenseRange (toCompl : G → Completion G) :=
   Completion.dense_inducing_coe.dense
+#align normed_add_comm_group.dense_range_to_compl NormedAddCommGroup.dense_range_to_compl
 
 @[simp]
 theorem NormedAddGroupHom.completion_to_compl (f : NormedAddGroupHom G H) :
@@ -152,6 +166,7 @@ theorem NormedAddGroupHom.completion_to_compl (f : NormedAddGroupHom G H) :
   ext x
   change f.completion x = _
   simpa
+#align normed_add_group_hom.completion_to_compl NormedAddGroupHom.completion_to_compl
 
 @[simp]
 theorem NormedAddGroupHom.norm_completion (f : NormedAddGroupHom G H) : ∥f.Completion∥ = ∥f∥ := by
@@ -170,6 +185,7 @@ theorem NormedAddGroupHom.norm_completion (f : NormedAddGroupHom G H) : ∥f.Com
     intro x
     simpa using hN x
     
+#align normed_add_group_hom.norm_completion NormedAddGroupHom.norm_completion
 
 theorem NormedAddGroupHom.ker_le_ker_completion (f : NormedAddGroupHom G H) :
     (toCompl.comp <| incl f.ker).range ≤ f.Completion.ker := by
@@ -181,6 +197,7 @@ theorem NormedAddGroupHom.ker_le_ker_completion (f : NormedAddGroupHom G H) :
   rw [f.mem_ker] at g_in
   change f.completion (g : completion G) = 0
   simp [NormedAddGroupHom.mem_ker, f.completion_coe g, g_in, completion.coe_zero]
+#align normed_add_group_hom.ker_le_ker_completion NormedAddGroupHom.ker_le_ker_completion
 
 theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ} (h : f.SurjectiveOnWith f.range C) :
     (f.Completion.ker : Set <| Completion G) = Closure (toCompl.comp <| incl f.ker).range := by
@@ -233,6 +250,7 @@ theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ} (
   · rw [← f.completion.is_closed_ker.closure_eq]
     exact closure_mono f.ker_le_ker_completion
     
+#align normed_add_group_hom.ker_completion NormedAddGroupHom.ker_completion
 
 end Completion
 
@@ -255,24 +273,29 @@ def NormedAddGroupHom.extension (f : NormedAddGroupHom G H) : NormedAddGroupHom 
       · rw [completion.norm_coe, AddMonoidHom.to_fun_eq_coe, AddMonoidHom.extension_coe]
         exact le_op_norm f a
          }
+#align normed_add_group_hom.extension NormedAddGroupHom.extension
 
 theorem NormedAddGroupHom.extension_def (f : NormedAddGroupHom G H) (v : G) :
     f.extension v = Completion.extension f v :=
   rfl
+#align normed_add_group_hom.extension_def NormedAddGroupHom.extension_def
 
 @[simp]
 theorem NormedAddGroupHom.extension_coe (f : NormedAddGroupHom G H) (v : G) : f.extension v = f v :=
   AddMonoidHom.extension_coe _ f.Continuous _
+#align normed_add_group_hom.extension_coe NormedAddGroupHom.extension_coe
 
 theorem NormedAddGroupHom.extension_coe_to_fun (f : NormedAddGroupHom G H) :
     (f.extension : Completion G → H) = Completion.extension f :=
   rfl
+#align normed_add_group_hom.extension_coe_to_fun NormedAddGroupHom.extension_coe_to_fun
 
 theorem NormedAddGroupHom.extension_unique (f : NormedAddGroupHom G H) {g : NormedAddGroupHom (Completion G) H}
     (hg : ∀ v, f v = g v) : f.extension = g := by
   ext v
   rw [NormedAddGroupHom.extension_coe_to_fun,
     completion.extension_unique f.uniform_continuous g.uniform_continuous fun a => hg a]
+#align normed_add_group_hom.extension_unique NormedAddGroupHom.extension_unique
 
 end Extension
 

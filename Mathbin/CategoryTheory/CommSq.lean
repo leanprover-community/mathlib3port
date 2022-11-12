@@ -41,6 +41,7 @@ is a commuting square.
 -/
 structure CommSq {W X Y Z : C} (f : W ⟶ X) (g : W ⟶ Y) (h : X ⟶ Z) (i : Y ⟶ Z) : Prop where
   w : f ≫ h = g ≫ i
+#align category_theory.comm_sq CategoryTheory.CommSq
 
 attribute [reassoc] comm_sq.w
 
@@ -50,18 +51,22 @@ variable {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
 theorem flip (p : CommSq f g h i) : CommSq g f i h :=
   ⟨p.w.symm⟩
+#align category_theory.comm_sq.flip CategoryTheory.CommSq.flip
 
 theorem of_arrow {f g : Arrow C} (h : f ⟶ g) : CommSq f.Hom h.left h.right g.Hom :=
   ⟨h.w.symm⟩
+#align category_theory.comm_sq.of_arrow CategoryTheory.CommSq.of_arrow
 
 /-- The commutative square in the opposite category associated to a commutative square. -/
 theorem op (p : CommSq f g h i) : CommSq i.op h.op g.op f.op :=
   ⟨by simp only [← op_comp, p.w]⟩
+#align category_theory.comm_sq.op CategoryTheory.CommSq.op
 
 /-- The commutative square associated to a commutative square in the opposite category. -/
 theorem unop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z} (p : CommSq f g h i) :
     CommSq i.unop h.unop g.unop f.unop :=
   ⟨by simp only [← unop_comp, p.w]⟩
+#align category_theory.comm_sq.unop CategoryTheory.CommSq.unop
 
 end CommSq
 
@@ -73,6 +78,7 @@ variable (F : C ⥤ D) {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {
 
 theorem map_comm_sq (s : CommSq f g h i) : CommSq (F.map f) (F.map g) (F.map h) (F.map i) :=
   ⟨by simpa using congr_arg (fun k : W ⟶ Z => F.map k) s.w⟩
+#align category_theory.functor.map_comm_sq CategoryTheory.Functor.map_comm_sq
 
 end Functor
 
@@ -84,11 +90,12 @@ variable {A B X Y : C} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
 
 /-- The datum of a lift in a commutative square, i.e. a up-right-diagonal
 morphism which makes both triangles commute. -/
-@[ext, nolint has_nonempty_instance]
+@[ext.1, nolint has_nonempty_instance]
 structure LiftStruct (sq : CommSq f i p g) where
   l : B ⟶ X
   fac_left' : i ≫ l = f
   fac_right' : l ≫ p = g
+#align category_theory.comm_sq.lift_struct CategoryTheory.CommSq.LiftStruct
 
 namespace LiftStruct
 
@@ -103,6 +110,7 @@ def op {sq : CommSq f i p g} (l : LiftStruct sq) : LiftStruct sq.op where
   l := l.l.op
   fac_left' := by rw [← op_comp, l.fac_right]
   fac_right' := by rw [← op_comp, l.fac_left]
+#align category_theory.comm_sq.lift_struct.op CategoryTheory.CommSq.LiftStruct.op
 
 /-- A `lift_struct` for a commutative square in the opposite category
 gives a `lift_struct` for the corresponding square in the original category. -/
@@ -112,6 +120,7 @@ def unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B �
   l := l.l.unop
   fac_left' := by rw [← unop_comp, l.fac_right]
   fac_right' := by rw [← unop_comp, l.fac_left]
+#align category_theory.comm_sq.lift_struct.unop CategoryTheory.CommSq.LiftStruct.unop
 
 /-- Equivalences of `lift_struct` for a square and the corresponding square
 in the opposite category. -/
@@ -121,6 +130,7 @@ def opEquiv (sq : CommSq f i p g) : LiftStruct sq ≃ LiftStruct sq.op where
   invFun := unop
   left_inv := by tidy
   right_inv := by tidy
+#align category_theory.comm_sq.lift_struct.op_equiv CategoryTheory.CommSq.LiftStruct.opEquiv
 
 /-- Equivalences of `lift_struct` for a square in the oppositive category and
 the corresponding square in the original category. -/
@@ -130,6 +140,7 @@ def unopEquiv {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g :
   invFun := op
   left_inv := by tidy
   right_inv := by tidy
+#align category_theory.comm_sq.lift_struct.unop_equiv CategoryTheory.CommSq.LiftStruct.unopEquiv
 
 end LiftStruct
 
@@ -137,17 +148,20 @@ instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] : Subsing
   ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_epi i, lift_struct.fac_left]⟩
+#align category_theory.comm_sq.subsingleton_lift_struct_of_epi CategoryTheory.CommSq.subsingleton_lift_struct_of_epi
 
 instance subsingleton_lift_struct_of_mono (sq : CommSq f i p g) [Mono p] : Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_mono p, lift_struct.fac_right]⟩
+#align category_theory.comm_sq.subsingleton_lift_struct_of_mono CategoryTheory.CommSq.subsingleton_lift_struct_of_mono
 
 variable (sq : CommSq f i p g)
 
 /-- The assertion that a square has a `lift_struct`. -/
 class HasLift : Prop where
   exists_lift : Nonempty sq.LiftStruct
+#align category_theory.comm_sq.has_lift CategoryTheory.CommSq.HasLift
 
 namespace HasLift
 
@@ -155,21 +169,25 @@ variable {sq}
 
 theorem mk' (l : sq.LiftStruct) : HasLift sq :=
   ⟨Nonempty.intro l⟩
+#align category_theory.comm_sq.has_lift.mk' CategoryTheory.CommSq.HasLift.mk'
 
 variable (sq)
 
 theorem iff : HasLift sq ↔ Nonempty sq.LiftStruct := by
   constructor
   exacts[fun h => h.exists_lift, fun h => mk h]
+#align category_theory.comm_sq.has_lift.iff CategoryTheory.CommSq.HasLift.iff
 
 theorem iff_op : HasLift sq ↔ HasLift sq.op := by
   rw [Iff, Iff]
   exact Nonempty.congr (lift_struct.op_equiv sq).toFun (lift_struct.op_equiv sq).invFun
+#align category_theory.comm_sq.has_lift.iff_op CategoryTheory.CommSq.HasLift.iff_op
 
 theorem iff_unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} (sq : CommSq f i p g) :
     HasLift sq ↔ HasLift sq.unop := by
   rw [Iff, Iff]
   exact Nonempty.congr (lift_struct.unop_equiv sq).toFun (lift_struct.unop_equiv sq).invFun
+#align category_theory.comm_sq.has_lift.iff_unop CategoryTheory.CommSq.HasLift.iff_unop
 
 end HasLift
 
@@ -177,14 +195,17 @@ end HasLift
 the square has a lift. -/
 noncomputable def lift [hsq : HasLift sq] : B ⟶ X :=
   hsq.exists_lift.some.l
+#align category_theory.comm_sq.lift CategoryTheory.CommSq.lift
 
 @[simp, reassoc]
 theorem fac_left [hsq : HasLift sq] : i ≫ sq.lift = f :=
   hsq.exists_lift.some.fac_left
+#align category_theory.comm_sq.fac_left CategoryTheory.CommSq.fac_left
 
 @[simp, reassoc]
 theorem fac_right [hsq : HasLift sq] : sq.lift ≫ p = g :=
   hsq.exists_lift.some.fac_right
+#align category_theory.comm_sq.fac_right CategoryTheory.CommSq.fac_right
 
 end CommSq
 

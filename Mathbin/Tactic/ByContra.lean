@@ -71,6 +71,7 @@ unsafe def by_contra' (h : parse (parser.optional ident)) (t : parse (parser.opt
         ← push_neg.normalize_negations t <|> refl_conv t
       unify e e'
       () <$ (mk_eq_symm pr >>= mk_eq_trans pr' >>= replace_hyp h₁ t)
+#align tactic.interactive.by_contra' tactic.interactive.by_contra'
 
 add_tactic_doc
   { Name := "by_contra'", category := DocCategory.tactic, declNames := [`tactic.interactive.by_contra'],

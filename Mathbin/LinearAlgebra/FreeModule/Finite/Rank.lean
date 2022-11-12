@@ -40,11 +40,13 @@ theorem rank_lt_aleph_0 : Module.rank R M < ℵ₀ := by
   letI := nontrivial_of_invariant_basis_number R
   rw [← (choose_basis R M).mk_eq_dim'', lt_aleph_0_iff_fintype]
   exact Nonempty.intro inferInstance
+#align module.free.rank_lt_aleph_0 Module.Free.rank_lt_aleph_0
 
 /-- If `M` is finite and free, `finrank M = rank M`. -/
 @[simp]
 theorem finrank_eq_rank : ↑(finrank R M) = Module.rank R M := by
   rw [finrank, cast_to_nat_of_lt_aleph_0 (rank_lt_aleph_0 R M)]
+#align module.free.finrank_eq_rank Module.Free.finrank_eq_rank
 
 /-- The finrank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/
 theorem finrank_eq_card_choose_basis_index :
@@ -53,14 +55,17 @@ theorem finrank_eq_card_choose_basis_index :
   by
   letI := nontrivial_of_invariant_basis_number R
   simp [finrank, rank_eq_card_choose_basis_index]
+#align module.free.finrank_eq_card_choose_basis_index Module.Free.finrank_eq_card_choose_basis_index
 
 /-- The finrank of `(ι →₀ R)` is `fintype.card ι`. -/
 @[simp]
 theorem finrank_finsupp {ι : Type v} [Fintype ι] : finrank R (ι →₀ R) = card ι := by
   rw [finrank, rank_finsupp, ← mk_to_nat_eq_card, to_nat_lift]
+#align module.free.finrank_finsupp Module.Free.finrank_finsupp
 
 /-- The finrank of `(ι → R)` is `fintype.card ι`. -/
 theorem finrank_pi {ι : Type v} [Fintype ι] : finrank R (ι → R) = card ι := by simp [finrank]
+#align module.free.finrank_pi Module.Free.finrank_pi
 
 /-- The finrank of the direct sum is the sum of the finranks. -/
 @[simp]
@@ -70,11 +75,13 @@ theorem finrank_direct_sum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i
   letI := nontrivial_of_invariant_basis_number R
   simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_direct_sum, ← mk_sigma, mk_to_nat_eq_card,
     card_sigma]
+#align module.free.finrank_direct_sum Module.Free.finrank_direct_sum
 
 /-- The finrank of `M × N` is `(finrank R M) + (finrank R N)`. -/
 @[simp]
 theorem finrank_prod : finrank R (M × N) = finrank R M + finrank R N := by
   simp [finrank, rank_lt_aleph_0 R M, rank_lt_aleph_0 R N]
+#align module.free.finrank_prod Module.Free.finrank_prod
 
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 /-- The finrank of a finite product is the sum of the finranks. -/
@@ -84,11 +91,13 @@ theorem finrank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i
   letI := nontrivial_of_invariant_basis_number R
   simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_pi_finite, ← mk_sigma, mk_to_nat_eq_card,
     card_sigma]
+#align module.free.finrank_pi_fintype Module.Free.finrank_pi_fintype
 
 /-- If `m` and `n` are `fintype`, the finrank of `m × n` matrices is
   `(fintype.card m) * (fintype.card n)`. -/
 theorem finrank_matrix (m n : Type v) [Fintype m] [Fintype n] : finrank R (Matrix m n R) = card m * card n := by
   simp [finrank]
+#align module.free.finrank_matrix Module.Free.finrank_matrix
 
 end Ring
 
@@ -103,18 +112,16 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
 theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
-  classical
-  letI := nontrivial_of_invariant_basis_number R
-  have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
-  let b := (Matrix.stdBasis _ _ _).map h.symm
-  rw [finrank, dim_eq_card_basis b, ← mk_fintype, mk_to_nat_eq_card, finrank, finrank, rank_eq_card_choose_basis_index,
-    rank_eq_card_choose_basis_index, mk_to_nat_eq_card, mk_to_nat_eq_card, card_prod, mul_comm]
+  classical letI := nontrivial_of_invariant_basis_number R
+    let b := (Matrix.stdBasis _ _ _).map h.symm
+#align module.free.finrank_linear_hom Module.Free.finrank_linear_hom
 
 /-- The finrank of `M ⊗[R] N` is `(finrank R M) * (finrank R N)`. -/
 @[simp]
 theorem finrank_tensor_product (M : Type v) (N : Type w) [AddCommGroup M] [Module R M] [Module.Free R M]
     [AddCommGroup N] [Module R N] [Module.Free R N] : finrank R (M ⊗[R] N) = finrank R M * finrank R N := by
   simp [finrank]
+#align module.free.finrank_tensor_product Module.Free.finrank_tensor_product
 
 end CommRing
 

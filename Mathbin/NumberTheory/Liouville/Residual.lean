@@ -25,12 +25,14 @@ theorem set_of_liouville_eq_Inter_Union :
   ext x
   simp only [mem_Inter, mem_Union, Liouville, mem_set_of_eq, exists_prop, mem_diff, mem_singleton_iff, mem_ball,
     Real.dist_eq, and_comm']
+#align set_of_liouville_eq_Inter_Union set_of_liouville_eq_Inter_Union
 
 theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } := by
   rw [set_of_liouville_eq_Inter_Union]
   refine' is_Gδ_Inter fun n => IsOpen.is_Gδ _
   refine' is_open_Union fun a => is_open_Union fun b => is_open_Union fun hb => _
   exact is_open_ball.inter is_closed_singleton.is_open_compl
+#align is_Gδ_set_of_liouville is_Gδ_set_of_liouville
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem set_of_liouville_eq_irrational_inter_Inter_Union :
@@ -46,6 +48,7 @@ theorem set_of_liouville_eq_irrational_inter_Inter_Union :
     refine' diff_subset_diff subset.rfl (singleton_subset_iff.2 ⟨a / b, _⟩)
     norm_cast
     
+#align set_of_liouville_eq_irrational_inter_Inter_Union set_of_liouville_eq_irrational_inter_Inter_Union
 
 /-- The set of Liouville numbers is a residual set. -/
 theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x := by
@@ -73,8 +76,10 @@ theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x :=
         
       
     
+#align eventually_residual_liouville eventually_residual_liouville
 
 /-- The set of Liouville numbers in dense. -/
 theorem dense_liouville : Dense { x | Liouville x } :=
   dense_of_mem_residual eventually_residual_liouville
+#align dense_liouville dense_liouville
 

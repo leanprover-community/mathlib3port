@@ -33,10 +33,11 @@ universe u v
 variable (R : Type u) [CommRing R]
 
 /-- The maximal spectrum of a commutative ring `R` is the type of all maximal ideals of `R`. -/
-@[ext]
+@[ext.1]
 structure MaximalSpectrum where
   asIdeal : Ideal R
   IsMaximal : as_ideal.IsMaximal
+#align maximal_spectrum MaximalSpectrum
 
 attribute [instance] MaximalSpectrum.is_maximal
 
@@ -50,9 +51,11 @@ instance [Nontrivial R] : Nonempty <| MaximalSpectrum R :=
 /-- The natural inclusion from the maximal spectrum to the prime spectrum. -/
 def toPrimeSpectrum (x : MaximalSpectrum R) : PrimeSpectrum R :=
   ⟨x.asIdeal, x.IsMaximal.IsPrime⟩
+#align maximal_spectrum.to_prime_spectrum MaximalSpectrum.toPrimeSpectrum
 
 theorem to_prime_spectrum_injective : (@toPrimeSpectrum R _).Injective := fun ⟨_, _⟩ ⟨_, _⟩ h => by
   simpa only [MaximalSpectrum.mk.inj_eq] using Subtype.mk.inj h
+#align maximal_spectrum.to_prime_spectrum_injective MaximalSpectrum.to_prime_spectrum_injective
 
 open PrimeSpectrum Set
 
@@ -61,11 +64,13 @@ theorem to_prime_spectrum_range : Set.Range (@toPrimeSpectrum R _) = { x | IsClo
   simp only [is_closed_singleton_iff_is_maximal]
   ext ⟨x, _⟩
   exact ⟨fun ⟨y, hy⟩ => hy ▸ y.IsMaximal, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
+#align maximal_spectrum.to_prime_spectrum_range MaximalSpectrum.to_prime_spectrum_range
 
 /-- The Zariski topology on the maximal spectrum of a commutative ring is defined as the subspace
 topology induced by the natural inclusion into the prime spectrum. -/
 instance zariskiTopology : TopologicalSpace <| MaximalSpectrum R :=
   PrimeSpectrum.zariskiTopology.induced toPrimeSpectrum
+#align maximal_spectrum.zariski_topology MaximalSpectrum.zariskiTopology
 
 instance : T1Space <| MaximalSpectrum R :=
   ⟨fun x =>
@@ -75,6 +80,7 @@ instance : T1Space <| MaximalSpectrum R :=
 
 theorem to_prime_spectrum_continuous : Continuous <| @toPrimeSpectrum R _ :=
   continuous_induced_dom
+#align maximal_spectrum.to_prime_spectrum_continuous MaximalSpectrum.to_prime_spectrum_continuous
 
 variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R K]
 
@@ -109,6 +115,7 @@ theorem infi_localization_eq_bot :
   · rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩
     
+#align maximal_spectrum.infi_localization_eq_bot MaximalSpectrum.infi_localization_eq_bot
 
 end MaximalSpectrum
 
@@ -130,6 +137,7 @@ theorem infi_localization_eq_bot :
     rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩
     
+#align prime_spectrum.infi_localization_eq_bot PrimeSpectrum.infi_localization_eq_bot
 
 end PrimeSpectrum
 

@@ -65,11 +65,13 @@ def skyscraperPresheaf : Presheaf C X where
     · rw [dif_neg hW]
       apply ((if_neg hW).symm.rec terminal_is_terminal).hom_ext
       
+#align skyscraper_presheaf skyscraperPresheaf
 
 theorem skyscraper_presheaf_eq_pushforward [hd : ∀ U : Opens (TopCat.of PUnit.{u + 1}), Decidable (PUnit.unit ∈ U)] :
     skyscraperPresheaf p₀ A = ContinuousMap.const (TopCat.of PUnit) p₀ _* skyscraperPresheaf PUnit.unit A := by
   convert_to @skyscraperPresheaf X p₀ (fun U => hd <| (opens.map <| ContinuousMap.const _ p₀).obj U) C _ _ A = _ <;>
     first |congr |rfl
+#align skyscraper_presheaf_eq_pushforward skyscraper_presheaf_eq_pushforward
 
 /-- Taking skyscraper presheaf at a point is functorial: `c ↦ skyscraper p₀ c` defines a functor by
 sending every `f : a ⟶ b` to the natural transformation `α` defined as: `α(U) = f : a ⟶ b` if
@@ -89,6 +91,7 @@ def SkyscraperPresheafFunctor.map' {a b : C} (f : a ⟶ b) : skyscraperPresheaf 
       
     · apply ((if_neg hV).symm.rec terminal_is_terminal).hom_ext
       
+#align skyscraper_presheaf_functor.map' SkyscraperPresheafFunctor.map'
 
 theorem SkyscraperPresheafFunctor.map'_id {a : C} : SkyscraperPresheafFunctor.map' p₀ (𝟙 a) = 𝟙 _ := by
   ext1
@@ -99,6 +102,7 @@ theorem SkyscraperPresheafFunctor.map'_id {a : C} : SkyscraperPresheafFunctor.ma
     
   · apply ((if_neg h).symm.rec terminal_is_terminal).hom_ext
     
+#align skyscraper_presheaf_functor.map'_id SkyscraperPresheafFunctor.map'_id
 
 theorem SkyscraperPresheafFunctor.map'_comp {a b c : C} (f : a ⟶ b) (g : b ⟶ c) :
     SkyscraperPresheafFunctor.map' p₀ (f ≫ g) =
@@ -112,6 +116,7 @@ theorem SkyscraperPresheafFunctor.map'_comp {a b c : C} (f : a ⟶ b) (g : b ⟶
     
   · apply ((if_neg h).symm.rec terminal_is_terminal).hom_ext
     
+#align skyscraper_presheaf_functor.map'_comp SkyscraperPresheafFunctor.map'_comp
 
 /-- Taking skyscraper presheaf at a point is functorial: `c ↦ skyscraper p₀ c` defines a functor by
 sending every `f : a ⟶ b` to the natural transformation `α` defined as: `α(U) = f : a ⟶ b` if
@@ -123,6 +128,7 @@ def skyscraperPresheafFunctor : C ⥤ Presheaf C X where
   map _ _ := SkyscraperPresheafFunctor.map' p₀
   map_id' _ := SkyscraperPresheafFunctor.map'_id p₀
   map_comp' _ _ _ := SkyscraperPresheafFunctor.map'_comp p₀
+#align skyscraper_presheaf_functor skyscraperPresheafFunctor
 
 end
 
@@ -148,6 +154,7 @@ def skyscraperPresheafCoconeOfSpecializes {y : X} (h : p₀ ⤳ y) :
           
         · exact h.mem_open V.unop.1.2 V.unop.2
            }
+#align skyscraper_presheaf_cocone_of_specializes skyscraperPresheafCoconeOfSpecializes
 
 /-- The cocone at `A` for the stalk functor of `skyscraper_presheaf p₀ A` when `y ∈ closure {p₀}` is a
 colimit
@@ -166,12 +173,14 @@ noncomputable def skyscraperPresheafCoconeIsColimitOfSpecializes {y : X} (h : p�
       
   uniq' c f h := by
     rw [← h, skyscraper_presheaf_cocone_of_specializes_ι_app, eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp]
+#align skyscraper_presheaf_cocone_is_colimit_of_specializes skyscraperPresheafCoconeIsColimitOfSpecializes
 
 /-- If `y ∈ closure {p₀}`, then the stalk of `skyscraper_presheaf p₀ A` at `y` is `A`.
 -/
 noncomputable def skyscraperPresheafStalkOfSpecializes [HasColimits C] {y : X} (h : p₀ ⤳ y) :
     (skyscraperPresheaf p₀ A).stalk y ≅ A :=
   colimit.isoColimitCocone ⟨_, skyscraperPresheafCoconeIsColimitOfSpecializes p₀ A h⟩
+#align skyscraper_presheaf_stalk_of_specializes skyscraperPresheafStalkOfSpecializes
 
 /-- The cocone at `*` for the stalk functor of `skyscraper_presheaf p₀ A` when `y ∉ closure {p₀}`
 -/
@@ -179,6 +188,7 @@ noncomputable def skyscraperPresheafStalkOfSpecializes [HasColimits C] {y : X} (
 def skyscraperPresheafCocone (y : X) : Cocone ((OpenNhds.inclusion y).op ⋙ skyscraperPresheaf p₀ A) where
   x := terminal C
   ι := { app := fun U => terminal.from _, naturality' := fun U V inc => terminalIsTerminal.hom_ext _ _ }
+#align skyscraper_presheaf_cocone skyscraperPresheafCocone
 
 /-- The cocone at `*` for the stalk functor of `skyscraper_presheaf p₀ A` when `y ∉ closure {p₀}` is a
 colimit
@@ -200,6 +210,7 @@ noncomputable def skyscraperPresheafCoconeIsColimitOfNotSpecializes {y : X} (h :
       rw [← category.id_comp f, ← H, ← category.assoc]
       congr 1
       apply terminal_is_terminal.hom_ext }
+#align skyscraper_presheaf_cocone_is_colimit_of_not_specializes skyscraperPresheafCoconeIsColimitOfNotSpecializes
 
 /-- If `y ∉ closure {p₀}`, then the stalk of `skyscraper_presheaf p₀ A` at `y` is isomorphic to a
 terminal object.
@@ -207,30 +218,431 @@ terminal object.
 noncomputable def skyscraperPresheafStalkOfNotSpecializes [HasColimits C] {y : X} (h : ¬p₀ ⤳ y) :
     (skyscraperPresheaf p₀ A).stalk y ≅ terminal C :=
   colimit.isoColimitCocone ⟨_, skyscraperPresheafCoconeIsColimitOfNotSpecializes _ A h⟩
+#align skyscraper_presheaf_stalk_of_not_specializes skyscraperPresheafStalkOfNotSpecializes
 
 /-- If `y ∉ closure {p₀}`, then the stalk of `skyscraper_presheaf p₀ A` at `y` is a terminal object
 -/
 def skyscraperPresheafStalkOfNotSpecializesIsTerminal [HasColimits C] {y : X} (h : ¬p₀ ⤳ y) :
     IsTerminal ((skyscraperPresheaf p₀ A).stalk y) :=
   IsTerminal.ofIso terminalIsTerminal <| (skyscraperPresheafStalkOfNotSpecializes _ _ h).symm
+#align skyscraper_presheaf_stalk_of_not_specializes_is_terminal skyscraperPresheafStalkOfNotSpecializesIsTerminal
 
-theorem skyscraper_presheaf_is_sheaf : (skyscraperPresheaf p₀ A).IsSheaf := by
-  classical <;>
-    exact
-      (presheaf.is_sheaf_iso_iff (eq_to_iso <| skyscraper_presheaf_eq_pushforward p₀ A)).mpr
-        (sheaf.pushforward_sheaf_of_sheaf _
-          (presheaf.is_sheaf_on_punit_of_is_terminal _
-            (by
-              dsimp
-              rw [if_neg]
-              exact terminal_is_terminal
-              exact Set.not_mem_empty PUnit.unit)))
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `skyscraper_presheaf_is_sheaf [])
+      (Command.declSig [] (Term.typeSpec ":" (Term.proj (Term.app `skyscraperPresheaf [`p₀ `A]) "." `IsSheaf)))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.«tactic_<;>_»
+            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+            "<;>"
+            (Tactic.exact
+             "exact"
+             (Term.app
+              (Term.proj
+               (Term.app
+                `presheaf.is_sheaf_iso_iff
+                [(«term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A]))])
+               "."
+               `mpr)
+              [(Term.app
+                `sheaf.pushforward_sheaf_of_sheaf
+                [(Term.hole "_")
+                 (Term.app
+                  `presheaf.is_sheaf_on_punit_of_is_terminal
+                  [(Term.hole "_")
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                       []
+                       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+                       []
+                       (Tactic.exact "exact" `terminal_is_terminal)
+                       []
+                       (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))])])])))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+           "<;>"
+           (Tactic.exact
+            "exact"
+            (Term.app
+             (Term.proj
+              (Term.app
+               `presheaf.is_sheaf_iso_iff
+               [(«term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A]))])
+              "."
+              `mpr)
+             [(Term.app
+               `sheaf.pushforward_sheaf_of_sheaf
+               [(Term.hole "_")
+                (Term.app
+                 `presheaf.is_sheaf_on_punit_of_is_terminal
+                 [(Term.hole "_")
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                      []
+                      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+                      []
+                      (Tactic.exact "exact" `terminal_is_terminal)
+                      []
+                      (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))])])])))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+       "<;>"
+       (Tactic.exact
+        "exact"
+        (Term.app
+         (Term.proj
+          (Term.app
+           `presheaf.is_sheaf_iso_iff
+           [(«term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A]))])
+          "."
+          `mpr)
+         [(Term.app
+           `sheaf.pushforward_sheaf_of_sheaf
+           [(Term.hole "_")
+            (Term.app
+             `presheaf.is_sheaf_on_punit_of_is_terminal
+             [(Term.hole "_")
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                  []
+                  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+                  []
+                  (Tactic.exact "exact" `terminal_is_terminal)
+                  []
+                  (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))])])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        (Term.proj
+         (Term.app
+          `presheaf.is_sheaf_iso_iff
+          [(«term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A]))])
+         "."
+         `mpr)
+        [(Term.app
+          `sheaf.pushforward_sheaf_of_sheaf
+          [(Term.hole "_")
+           (Term.app
+            `presheaf.is_sheaf_on_punit_of_is_terminal
+            [(Term.hole "_")
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                 []
+                 (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+                 []
+                 (Tactic.exact "exact" `terminal_is_terminal)
+                 []
+                 (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))])])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (Term.app
+         `presheaf.is_sheaf_iso_iff
+         [(«term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A]))])
+        "."
+        `mpr)
+       [(Term.app
+         `sheaf.pushforward_sheaf_of_sheaf
+         [(Term.hole "_")
+          (Term.app
+           `presheaf.is_sheaf_on_punit_of_is_terminal
+           [(Term.hole "_")
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                []
+                (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+                []
+                (Tactic.exact "exact" `terminal_is_terminal)
+                []
+                (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))])])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `sheaf.pushforward_sheaf_of_sheaf
+       [(Term.hole "_")
+        (Term.app
+         `presheaf.is_sheaf_on_punit_of_is_terminal
+         [(Term.hole "_")
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.dsimp "dsimp" [] [] [] [] [])
+              []
+              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+              []
+              (Tactic.exact "exact" `terminal_is_terminal)
+              []
+              (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `presheaf.is_sheaf_on_punit_of_is_terminal
+       [(Term.hole "_")
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.dsimp "dsimp" [] [] [] [] [])
+            []
+            (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+            []
+            (Tactic.exact "exact" `terminal_is_terminal)
+            []
+            (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.dsimp "dsimp" [] [] [] [] [])
+          []
+          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+          []
+          (Tactic.exact "exact" `terminal_is_terminal)
+          []
+          (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Set.not_mem_empty [`PUnit.unit])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `PUnit.unit
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Set.not_mem_empty
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" `terminal_is_terminal)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `terminal_is_terminal
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `if_neg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.dsimp "dsimp" [] [] [] [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.dsimp "dsimp" [] [] [] [] [])
+          []
+          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+          []
+          (Tactic.exact "exact" `terminal_is_terminal)
+          []
+          (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))
+      []]
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `presheaf.is_sheaf_on_punit_of_is_terminal
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(Term.app
+       `presheaf.is_sheaf_on_punit_of_is_terminal
+       [(Term.hole "_")
+        (Term.paren
+         "("
+         [(Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.dsimp "dsimp" [] [] [] [] [])
+              []
+              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+              []
+              (Tactic.exact "exact" `terminal_is_terminal)
+              []
+              (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))
+          []]
+         ")")])
+      []]
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `sheaf.pushforward_sheaf_of_sheaf
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(Term.app
+       `sheaf.pushforward_sheaf_of_sheaf
+       [(Term.hole "_")
+        (Term.paren
+         "("
+         [(Term.app
+           `presheaf.is_sheaf_on_punit_of_is_terminal
+           [(Term.hole "_")
+            (Term.paren
+             "("
+             [(Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.dsimp "dsimp" [] [] [] [] [])
+                  []
+                  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `if_neg)] "]") [])
+                  []
+                  (Tactic.exact "exact" `terminal_is_terminal)
+                  []
+                  (Tactic.exact "exact" (Term.app `Set.not_mem_empty [`PUnit.unit]))])))
+              []]
+             ")")])
+          []]
+         ")")])
+      []]
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.app
+        `presheaf.is_sheaf_iso_iff
+        [(«term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A]))])
+       "."
+       `mpr)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app
+       `presheaf.is_sheaf_iso_iff
+       [(«term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A]))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `A
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `p₀
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `skyscraper_presheaf_eq_pushforward
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `eq_to_iso
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(«term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A])) []]
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `presheaf.is_sheaf_iso_iff
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(Term.app
+       `presheaf.is_sheaf_iso_iff
+       [(Term.paren "(" [(«term_<|_» `eq_to_iso "<|" (Term.app `skyscraper_presheaf_eq_pushforward [`p₀ `A])) []] ")")])
+      []]
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  skyscraper_presheaf_is_sheaf
+  : skyscraperPresheaf p₀ A . IsSheaf
+  :=
+    by
+      skip
+        <;>
+        exact
+          presheaf.is_sheaf_iso_iff eq_to_iso <| skyscraper_presheaf_eq_pushforward p₀ A . mpr
+            sheaf.pushforward_sheaf_of_sheaf
+              _
+                presheaf.is_sheaf_on_punit_of_is_terminal
+                  _ by dsimp rw [ if_neg ] exact terminal_is_terminal exact Set.not_mem_empty PUnit.unit
+#align skyscraper_presheaf_is_sheaf skyscraper_presheaf_is_sheaf
 
 /-- The skyscraper presheaf supported at `p₀` with value `A` is the sheaf that assigns `A` to all opens
 `U` that contain `p₀` and assigns `*` otherwise.
 -/
 def skyscraperSheaf : Sheaf C X :=
   ⟨skyscraperPresheaf p₀ A, skyscraper_presheaf_is_sheaf _ _⟩
+#align skyscraper_sheaf skyscraperSheaf
 
 /-- Taking skyscraper sheaf at a point is functorial: `c ↦ skyscraper p₀ c` defines a functor by
 sending every `f : a ⟶ b` to the natural transformation `α` defined as: `α(U) = f : a ⟶ b` if
@@ -241,6 +653,7 @@ def skyscraperSheafFunctor : C ⥤ Sheaf C X where
   map a b f := Sheaf.hom.mk <| (skyscraperPresheafFunctor p₀).map f
   map_id' c := SheafCat.Hom.ext _ _ <| (skyscraperPresheafFunctor p₀).map_id _
   map_comp' _ _ _ f g := SheafCat.Hom.ext _ _ <| (skyscraperPresheafFunctor p₀).map_comp _ _
+#align skyscraper_sheaf_functor skyscraperSheafFunctor
 
 namespace StalkSkyscraperPresheafAdjunctionAuxs
 
@@ -266,6 +679,8 @@ def toSkyscraperPresheaf {𝓕 : Presheaf C X} {c : C} (f : 𝓕.stalk p₀ ⟶ 
     · split_ifs
       apply ((if_neg hV).symm.rec terminal_is_terminal).hom_ext
       
+#align
+  stalk_skyscraper_presheaf_adjunction_auxs.to_skyscraper_presheaf StalkSkyscraperPresheafAdjunctionAuxs.toSkyscraperPresheaf
 
 /-- If `f : 𝓕 ⟶ skyscraper_presheaf p₀ c` is a natural transformation, then there is a morphism
 `𝓕.stalk p₀ ⟶ c` defined as the morphism from colimit to cocone at `c`.
@@ -282,6 +697,7 @@ def fromStalk {𝓕 : Presheaf C X} {c : C} (f : 𝓕 ⟶ skyscraperPresheaf p�
           split_ifs
           simpa only [comp_eq_to_hom_iff, category.assoc, eq_to_hom_trans, eq_to_hom_refl, category.comp_id] }
   colimit.desc _ χ
+#align stalk_skyscraper_presheaf_adjunction_auxs.from_stalk StalkSkyscraperPresheafAdjunctionAuxs.fromStalk
 
 theorem to_skyscraper_from_stalk {𝓕 : Presheaf C X} {c : C} (f : 𝓕 ⟶ skyscraperPresheaf p₀ c) :
     toSkyscraperPresheaf p₀ (fromStalk _ f) = f :=
@@ -296,6 +712,8 @@ theorem to_skyscraper_from_stalk {𝓕 : Presheaf C X} {c : C} (f : 𝓕 ⟶ sky
         dsimp
         split_ifs
         apply ((if_neg h).symm.rec terminal_is_terminal).hom_ext
+#align
+  stalk_skyscraper_presheaf_adjunction_auxs.to_skyscraper_from_stalk StalkSkyscraperPresheafAdjunctionAuxs.to_skyscraper_from_stalk
 
 theorem from_stalk_to_skyscraper {𝓕 : Presheaf C X} {c : C} (f : 𝓕.stalk p₀ ⟶ c) :
     fromStalk p₀ (toSkyscraperPresheaf _ f) = f :=
@@ -309,6 +727,8 @@ theorem from_stalk_to_skyscraper {𝓕 : Presheaf C X} {c : C} (f : 𝓕.stalk p
     rw [unop_op]
     ext
     rfl
+#align
+  stalk_skyscraper_presheaf_adjunction_auxs.from_stalk_to_skyscraper StalkSkyscraperPresheafAdjunctionAuxs.from_stalk_to_skyscraper
 
 /-- The unit in `presheaf.stalk ⊣ skyscraper_presheaf_functor`
 -/
@@ -327,6 +747,7 @@ protected def unit : 𝟭 (Presheaf C X) ⟶ Presheaf.stalkFunctor C p₀ ⋙ sk
       
     · apply ((if_neg h).symm.rec terminal_is_terminal).hom_ext
       
+#align stalk_skyscraper_presheaf_adjunction_auxs.unit StalkSkyscraperPresheafAdjunctionAuxs.unit
 
 /-- The counit in `presheaf.stalk ⊣ skyscraper_presheaf_functor`
 -/
@@ -341,6 +762,7 @@ protected def counit : skyscraperPresheafFunctor p₀ ⋙ (Presheaf.stalkFunctor
         skyscraper_presheaf_cocone_of_specializes_ι_app, comp_eq_to_hom_iff, category.assoc, eq_to_hom_comp_iff, ←
         category.assoc, eq_to_hom_trans, eq_to_hom_refl, category.id_comp, comp_eq_to_hom_iff, category.assoc,
         eq_to_hom_trans, eq_to_hom_refl, category.comp_id, CategoryTheory.Functor.id_map]
+#align stalk_skyscraper_presheaf_adjunction_auxs.counit StalkSkyscraperPresheafAdjunctionAuxs.counit
 
 end StalkSkyscraperPresheafAdjunctionAuxs
 
@@ -373,6 +795,7 @@ def skyscraperPresheafStalkAdjunction [HasColimits C] :
     simp only [Equiv.coe_fn_symm_mk, counit_app]
     erw [colimit.ι_desc, ← category.assoc, colimit.ι_map, whisker_left_app, category.assoc, colimit.ι_desc]
     rfl
+#align skyscraper_presheaf_stalk_adjunction skyscraperPresheafStalkAdjunction
 
 instance [HasColimits C] : IsRightAdjoint (skyscraperPresheafFunctor p₀ : C ⥤ Presheaf C X) :=
   ⟨_, skyscraperPresheafStalkAdjunction _⟩
@@ -398,6 +821,7 @@ def stalkSkyscraperSheafAdjunction [HasColimits C] :
     ext1
     exact (skyscraperPresheafStalkAdjunction p₀).hom_equiv_unit
   hom_equiv_counit' 𝓐 c f := (skyscraperPresheafStalkAdjunction p₀).hom_equiv_counit
+#align stalk_skyscraper_sheaf_adjunction stalkSkyscraperSheafAdjunction
 
 instance [HasColimits C] : IsRightAdjoint (skyscraperSheafFunctor p₀ : C ⥤ Sheaf C X) :=
   ⟨_, stalkSkyscraperSheafAdjunction _⟩

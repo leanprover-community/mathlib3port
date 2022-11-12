@@ -36,6 +36,7 @@ namespace HasLimits
 
 instance categoryObjects {F : J ⥤ Cat.{u, u}} {j} : SmallCategory ((F ⋙ Cat.objects.{u, u}).obj j) :=
   (F.obj j).str
+#align category_theory.Cat.has_limits.category_objects CategoryTheory.CatCat.HasLimits.categoryObjects
 
 /-- Auxiliary definition:
 the diagram whose limit gives the morphism space between two objects of the limit category. -/
@@ -55,6 +56,7 @@ def homDiagram {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v})) :
     dsimp
     simp [functor.congr_hom (F.map_comp f g) h, eq_to_hom_map]
     rfl
+#align category_theory.Cat.has_limits.hom_diagram CategoryTheory.CatCat.HasLimits.homDiagram
 
 @[simps]
 instance (F : J ⥤ Cat.{v, v}) : Category (limit (F ⋙ Cat.objects)) where
@@ -76,6 +78,7 @@ instance (F : J ⥤ Cat.{v, v}) : Category (limit (F ⋙ Cat.objects)) where
 /-- Auxiliary definition: the limit category. -/
 @[simps]
 def limitConeX (F : J ⥤ Cat.{v, v}) : CatCat.{v, v} where α := limit (F ⋙ Cat.objects)
+#align category_theory.Cat.has_limits.limit_cone_X CategoryTheory.CatCat.HasLimits.limitConeX
 
 /-- Auxiliary definition: the cone over the limit category. -/
 @[simps]
@@ -86,6 +89,7 @@ def limitCone (F : J ⥤ Cat.{v, v}) : Cone F where
       naturality' := fun j j' f =>
         CategoryTheory.Functor.ext (fun X => (congr_fun (limit.w (F ⋙ Cat.objects) f) X).symm) fun X Y h =>
           (congr_fun (limit.w (homDiagram X Y) f) h).symm }
+#align category_theory.Cat.has_limits.limit_cone CategoryTheory.CatCat.HasLimits.limitCone
 
 /-- Auxiliary definition: the universal morphism to the proposed limit cone. -/
 @[simps]
@@ -117,12 +121,15 @@ def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.x ⟶ limitConeX F whe
       
   map_id' X := by simp
   map_comp' X Y Z f g := by simp
+#align category_theory.Cat.has_limits.limit_cone_lift CategoryTheory.CatCat.HasLimits.limitConeLift
 
 @[simp]
 theorem limit_π_hom_diagram_eq_to_hom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v})) (j : J) (h : X = Y) :
     limit.π (homDiagram X Y) j (eqToHom h) = eqToHom (congr_arg (limit.π (F ⋙ Cat.objects.{v, v}) j) h) := by
   subst h
   simp
+#align
+  category_theory.Cat.has_limits.limit_π_hom_diagram_eq_to_hom CategoryTheory.CatCat.HasLimits.limit_π_hom_diagram_eq_to_hom
 
 /-- Auxiliary definition: the proposed cone is a limit cone. -/
 def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F) where
@@ -142,6 +149,7 @@ def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F) where
       simp [fun j => functor.congr_hom (w j).symm f]
       congr
       
+#align category_theory.Cat.has_limits.limit_cone_is_limit CategoryTheory.CatCat.HasLimits.limitConeIsLimit
 
 end HasLimits
 

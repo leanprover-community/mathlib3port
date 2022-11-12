@@ -48,6 +48,7 @@ theorem radius_eq_liminf : p.radius = liminf (fun n => 1 / (∥p n∥₊ ^ (1 / 
     refine' (eventually_lt_of_lt_liminf hr).mp ((eventually_gt_at_top 0).mono fun n hn₀ hn => _)
     simpa using Nnreal.coe_le_coe.2 ((this _ hn₀).1 hn.le)
     
+#align formal_multilinear_series.radius_eq_liminf FormalMultilinearSeries.radius_eq_liminf
 
 end FormalMultilinearSeries
 

@@ -79,6 +79,7 @@ action of a Type on another one and a relation on the acted-upon Type.
 See the `covariant_class` doc-string for its meaning. -/
 def Covariant : Prop :=
   ∀ (m) {n₁ n₂}, r n₁ n₂ → r (μ m n₁) (μ m n₂)
+#align covariant Covariant
 -/
 
 #print Contravariant /-
@@ -88,6 +89,7 @@ action of a Type on another one and a relation on the acted-upon Type.
 See the `contravariant_class` doc-string for its meaning. -/
 def Contravariant : Prop :=
   ∀ (m) {n₁ n₂}, r (μ m n₁) (μ m n₂) → r n₁ n₂
+#align contravariant Contravariant
 -/
 
 #print CovariantClass /-
@@ -105,6 +107,7 @@ If `m : M` and `h : r n₁ n₂`, then `covariant_class.elim m h : r (μ m n₁)
 @[protect_proj]
 class CovariantClass : Prop where
   elim : Covariant M N μ r
+#align covariant_class CovariantClass
 -/
 
 #print ContravariantClass /-
@@ -123,6 +126,7 @@ If `m : M` and `h : r (μ m n₁) (μ m n₂)`, then `contravariant_class.elim m
 @[protect_proj]
 class ContravariantClass : Prop where
   elim : Contravariant M N μ r
+#align contravariant_class ContravariantClass
 -/
 
 /- warning: rel_iff_cov -> rel_iff_cov is a dubious translation:
@@ -134,6 +138,7 @@ Case conversion may be inaccurate. Consider using '#align rel_iff_cov rel_iff_co
 theorem rel_iff_cov [CovariantClass M N μ r] [ContravariantClass M N μ r] (m : M) {a b : N} :
     r (μ m a) (μ m b) ↔ r a b :=
   ⟨ContravariantClass.elim _, CovariantClass.elim _⟩
+#align rel_iff_cov rel_iff_cov
 
 section flip
 
@@ -146,6 +151,7 @@ but is expected to have type
   forall {M : Type.{u_1}} {N : Type.{u_2}} {μ : M -> N -> N} {r : N -> N -> Prop}, (Covariant.{u_1 u_2} M N μ r) -> (Covariant.{u_1 u_2} M N μ (flip.{succ u_2 succ u_2 1} N N Prop r))
 Case conversion may be inaccurate. Consider using '#align covariant.flip Covariant.flipₓ'. -/
 theorem Covariant.flip (h : Covariant M N μ r) : Covariant M N μ (flip r) := fun a b c hbc => h a hbc
+#align covariant.flip Covariant.flip
 
 /- warning: contravariant.flip -> Contravariant.flip is a dubious translation:
 lean 3 declaration is
@@ -154,6 +160,7 @@ but is expected to have type
   forall {M : Type.{u_1}} {N : Type.{u_2}} {μ : M -> N -> N} {r : N -> N -> Prop}, (Contravariant.{u_1 u_2} M N μ r) -> (Contravariant.{u_1 u_2} M N μ (flip.{succ u_2 succ u_2 1} N N Prop r))
 Case conversion may be inaccurate. Consider using '#align contravariant.flip Contravariant.flipₓ'. -/
 theorem Contravariant.flip (h : Contravariant M N μ r) : Contravariant M N μ (flip r) := fun a b c hbc => h a hbc
+#align contravariant.flip Contravariant.flip
 
 end flip
 
@@ -164,6 +171,7 @@ variable {M N μ r} [CovariantClass M N μ r]
 #print act_rel_act_of_rel /-
 theorem act_rel_act_of_rel (m : M) {a b : N} (ab : r a b) : r (μ m a) (μ m b) :=
   CovariantClass.elim _ ab
+#align act_rel_act_of_rel act_rel_act_of_rel
 -/
 
 /- warning: group.covariant_iff_contravariant -> Group.covariant_iff_contravariant is a dubious translation:
@@ -181,6 +189,7 @@ theorem Group.covariant_iff_contravariant [Group N] : Covariant N N (· * ·) r 
   · rw [← inv_mul_cancel_left a b, ← inv_mul_cancel_left a c] at bc
     exact h a⁻¹ bc
     
+#align group.covariant_iff_contravariant Group.covariant_iff_contravariant
 
 /- warning: group.covconv -> Group.covconv is a dubious translation:
 lean 3 declaration is
@@ -191,6 +200,7 @@ Case conversion may be inaccurate. Consider using '#align group.covconv Group.co
 @[to_additive]
 instance (priority := 100) Group.covconv [Group N] [CovariantClass N N (· * ·) r] : ContravariantClass N N (· * ·) r :=
   ⟨Group.covariant_iff_contravariant.mp CovariantClass.elim⟩
+#align group.covconv Group.covconv
 
 /- warning: group.covariant_swap_iff_contravariant_swap -> Group.covariant_swap_iff_contravariant_swap is a dubious translation:
 lean 3 declaration is
@@ -208,6 +218,7 @@ theorem Group.covariant_swap_iff_contravariant_swap [Group N] :
   · rw [← mul_inv_cancel_right b a, ← mul_inv_cancel_right c a] at bc
     exact h a⁻¹ bc
     
+#align group.covariant_swap_iff_contravariant_swap Group.covariant_swap_iff_contravariant_swap
 
 /- warning: group.covconv_swap -> Group.covconv_swap is a dubious translation:
 lean 3 declaration is
@@ -219,6 +230,7 @@ Case conversion may be inaccurate. Consider using '#align group.covconv_swap Gro
 instance (priority := 100) Group.covconv_swap [Group N] [CovariantClass N N (swap (· * ·)) r] :
     ContravariantClass N N (swap (· * ·)) r :=
   ⟨Group.covariant_swap_iff_contravariant_swap.mp CovariantClass.elim⟩
+#align group.covconv_swap Group.covconv_swap
 
 section IsTrans
 
@@ -233,6 +245,7 @@ Case conversion may be inaccurate. Consider using '#align act_rel_of_rel_of_act_
 --  Lemmas with 3 elements.
 theorem act_rel_of_rel_of_act_rel (ab : r a b) (rl : r (μ m b) c) : r (μ m a) c :=
   trans (act_rel_act_of_rel m ab) rl
+#align act_rel_of_rel_of_act_rel act_rel_of_rel_of_act_rel
 
 /- warning: rel_act_of_rel_of_rel_act -> rel_act_of_rel_of_rel_act is a dubious translation:
 lean 3 declaration is
@@ -242,6 +255,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rel_act_of_rel_of_rel_act rel_act_of_rel_of_rel_actₓ'. -/
 theorem rel_act_of_rel_of_rel_act (ab : r a b) (rr : r c (μ m a)) : r c (μ m b) :=
   trans rr (act_rel_act_of_rel _ ab)
+#align rel_act_of_rel_of_rel_act rel_act_of_rel_of_rel_act
 
 end IsTrans
 
@@ -261,6 +275,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align act_rel_act_of_rel_of_rel act_rel_act_of_rel_of_relₓ'. -/
 theorem act_rel_act_of_rel_of_rel (ab : r a b) (cd : r c d) : r (mu a c) (mu b d) :=
   trans (act_rel_act_of_rel c ab : _) (act_rel_act_of_rel b cd)
+#align act_rel_act_of_rel_of_rel act_rel_act_of_rel_of_rel
 
 end MEqN
 
@@ -271,6 +286,7 @@ variable {M N μ r} [ContravariantClass M N μ r]
 #print rel_of_act_rel_act /-
 theorem rel_of_act_rel_act (m : M) {a b : N} (ab : r (μ m a) (μ m b)) : r a b :=
   ContravariantClass.elim _ ab
+#align rel_of_act_rel_act rel_of_act_rel_act
 -/
 
 section IsTrans
@@ -286,6 +302,7 @@ Case conversion may be inaccurate. Consider using '#align act_rel_of_act_rel_of_
 --  Lemmas with 3 elements.
 theorem act_rel_of_act_rel_of_rel_act_rel (ab : r (μ m a) b) (rl : r (μ m b) (μ m c)) : r (μ m a) c :=
   trans ab (rel_of_act_rel_act m rl)
+#align act_rel_of_act_rel_of_rel_act_rel act_rel_of_act_rel_of_rel_act_rel
 
 /- warning: rel_act_of_act_rel_act_of_rel_act -> rel_act_of_act_rel_act_of_rel_act is a dubious translation:
 lean 3 declaration is
@@ -295,6 +312,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rel_act_of_act_rel_act_of_rel_act rel_act_of_act_rel_act_of_rel_actₓ'. -/
 theorem rel_act_of_act_rel_act_of_rel_act (ab : r (μ m a) (μ m b)) (rr : r b (μ m c)) : r a (μ m c) :=
   trans (rel_of_act_rel_act m ab) rr
+#align rel_act_of_act_rel_act_of_rel_act rel_act_of_act_rel_act_of_rel_act
 
 end IsTrans
 
@@ -315,6 +333,7 @@ Case conversion may be inaccurate. Consider using '#align covariant.monotone_of_
 /-- The partial application of a constant to a covariant operator is monotone. -/
 theorem Covariant.monotone_of_const [CovariantClass M N μ (· ≤ ·)] (m : M) : Monotone (μ m) := fun a b ha =>
   CovariantClass.elim m ha
+#align covariant.monotone_of_const Covariant.monotone_of_const
 
 /- warning: monotone.covariant_of_const -> Monotone.covariant_of_const is a dubious translation:
 lean 3 declaration is
@@ -327,6 +346,7 @@ of a covariant operator. E.g., `∀ (m : ℕ), monotone f → monotone (λ n, f 
 theorem Monotone.covariant_of_const [CovariantClass M N μ (· ≤ ·)] (hf : Monotone f) (m : M) :
     Monotone fun n => f (μ m n) :=
   hf.comp <| Covariant.monotone_of_const m
+#align monotone.covariant_of_const Monotone.covariant_of_const
 
 /- warning: monotone.covariant_of_const' -> Monotone.covariant_of_const' is a dubious translation:
 lean 3 declaration is
@@ -339,6 +359,7 @@ the operator.  E.g., `∀ (m : ℕ), monotone f → monotone (λ n, f (n + m))`.
 theorem Monotone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (swap μ) (· ≤ ·)] (hf : Monotone f) (m : N) :
     Monotone fun n => f (μ n m) :=
   hf.comp <| Covariant.monotone_of_const m
+#align monotone.covariant_of_const' Monotone.covariant_of_const'
 
 /- warning: antitone.covariant_of_const -> Antitone.covariant_of_const is a dubious translation:
 lean 3 declaration is
@@ -350,6 +371,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.covariant_of_
 theorem Antitone.covariant_of_const [CovariantClass M N μ (· ≤ ·)] (hf : Antitone f) (m : M) :
     Antitone fun n => f (μ m n) :=
   hf.comp_monotone <| Covariant.monotone_of_const m
+#align antitone.covariant_of_const Antitone.covariant_of_const
 
 /- warning: antitone.covariant_of_const' -> Antitone.covariant_of_const' is a dubious translation:
 lean 3 declaration is
@@ -361,6 +383,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.covariant_of_
 theorem Antitone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (swap μ) (· ≤ ·)] (hf : Antitone f) (m : N) :
     Antitone fun n => f (μ n m) :=
   hf.comp_monotone <| Covariant.monotone_of_const m
+#align antitone.covariant_of_const' Antitone.covariant_of_const'
 
 end Monotone
 
@@ -372,6 +395,7 @@ theorem covariant_le_of_covariant_lt [PartialOrder N] : Covariant M N μ (· < �
     
   · exact (h _ bc).le
     
+#align covariant_le_of_covariant_lt covariant_le_of_covariant_lt
 -/
 
 #print contravariant_lt_of_contravariant_le /-
@@ -380,18 +404,21 @@ theorem contravariant_lt_of_contravariant_le [PartialOrder N] :
   refine' fun h a b c bc => lt_iff_le_and_ne.mpr ⟨h a bc.le, _⟩
   rintro rfl
   exact lt_irrefl _ bc
+#align contravariant_lt_of_contravariant_le contravariant_lt_of_contravariant_le
 -/
 
 #print covariant_le_iff_contravariant_lt /-
 theorem covariant_le_iff_contravariant_lt [LinearOrder N] : Covariant M N μ (· ≤ ·) ↔ Contravariant M N μ (· < ·) :=
   ⟨fun h a b c bc => not_le.mp fun k => not_le.mpr bc (h _ k), fun h a b c bc =>
     not_lt.mp fun k => not_lt.mpr bc (h _ k)⟩
+#align covariant_le_iff_contravariant_lt covariant_le_iff_contravariant_lt
 -/
 
 #print covariant_lt_iff_contravariant_le /-
 theorem covariant_lt_iff_contravariant_le [LinearOrder N] : Covariant M N μ (· < ·) ↔ Contravariant M N μ (· ≤ ·) :=
   ⟨fun h a b c bc => not_lt.mp fun k => not_lt.mpr bc (h _ k), fun h a b c bc =>
     not_le.mp fun k => not_le.mpr bc (h _ k)⟩
+#align covariant_lt_iff_contravariant_le covariant_lt_iff_contravariant_le
 -/
 
 /- warning: covariant_flip_mul_iff -> covariant_flip_mul_iff is a dubious translation:
@@ -403,6 +430,7 @@ Case conversion may be inaccurate. Consider using '#align covariant_flip_mul_iff
 @[to_additive]
 theorem covariant_flip_mul_iff [CommSemigroup N] : Covariant N N (flip (· * ·)) r ↔ Covariant N N (· * ·) r := by
   rw [IsSymmOp.flip_eq]
+#align covariant_flip_mul_iff covariant_flip_mul_iff
 
 /- warning: contravariant_flip_mul_iff -> contravariant_flip_mul_iff is a dubious translation:
 lean 3 declaration is
@@ -413,12 +441,14 @@ Case conversion may be inaccurate. Consider using '#align contravariant_flip_mul
 @[to_additive]
 theorem contravariant_flip_mul_iff [CommSemigroup N] :
     Contravariant N N (flip (· * ·)) r ↔ Contravariant N N (· * ·) r := by rw [IsSymmOp.flip_eq]
+#align contravariant_flip_mul_iff contravariant_flip_mul_iff
 
 #print contravariant_mul_lt_of_covariant_mul_le /-
 @[to_additive]
 instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrder N] [CovariantClass N N (· * ·) (· ≤ ·)] :
     ContravariantClass N N (· * ·)
       (· < ·) where elim := (covariant_le_iff_contravariant_lt N N (· * ·)).mp CovariantClass.elim
+#align contravariant_mul_lt_of_covariant_mul_le contravariant_mul_lt_of_covariant_mul_le
 -/
 
 #print covariant_mul_lt_of_contravariant_mul_le /-
@@ -426,6 +456,7 @@ instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrder N] [Covar
 instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrder N] [ContravariantClass N N (· * ·) (· ≤ ·)] :
     CovariantClass N N (· * ·)
       (· < ·) where elim := (covariant_lt_iff_contravariant_le N N (· * ·)).mpr ContravariantClass.elim
+#align covariant_mul_lt_of_contravariant_mul_le covariant_mul_lt_of_contravariant_mul_le
 -/
 
 /- warning: covariant_swap_mul_le_of_covariant_mul_le -> covariant_swap_mul_le_of_covariant_mul_le is a dubious translation:
@@ -437,6 +468,7 @@ Case conversion may be inaccurate. Consider using '#align covariant_swap_mul_le_
 @[to_additive]
 instance covariant_swap_mul_le_of_covariant_mul_le [CommSemigroup N] [LE N] [CovariantClass N N (· * ·) (· ≤ ·)] :
     CovariantClass N N (swap (· * ·)) (· ≤ ·) where elim := (covariant_flip_mul_iff N (· ≤ ·)).mpr CovariantClass.elim
+#align covariant_swap_mul_le_of_covariant_mul_le covariant_swap_mul_le_of_covariant_mul_le
 
 /- warning: contravariant_swap_mul_le_of_contravariant_mul_le -> contravariant_swap_mul_le_of_contravariant_mul_le is a dubious translation:
 lean 3 declaration is
@@ -449,6 +481,7 @@ instance contravariant_swap_mul_le_of_contravariant_mul_le [CommSemigroup N] [LE
     [ContravariantClass N N (· * ·) (· ≤ ·)] :
     ContravariantClass N N (swap (· * ·))
       (· ≤ ·) where elim := (contravariant_flip_mul_iff N (· ≤ ·)).mpr ContravariantClass.elim
+#align contravariant_swap_mul_le_of_contravariant_mul_le contravariant_swap_mul_le_of_contravariant_mul_le
 
 /- warning: contravariant_swap_mul_lt_of_contravariant_mul_lt -> contravariant_swap_mul_lt_of_contravariant_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -461,6 +494,7 @@ instance contravariant_swap_mul_lt_of_contravariant_mul_lt [CommSemigroup N] [LT
     [ContravariantClass N N (· * ·) (· < ·)] :
     ContravariantClass N N (swap (· * ·))
       (· < ·) where elim := (contravariant_flip_mul_iff N (· < ·)).mpr ContravariantClass.elim
+#align contravariant_swap_mul_lt_of_contravariant_mul_lt contravariant_swap_mul_lt_of_contravariant_mul_lt
 
 /- warning: covariant_swap_mul_lt_of_covariant_mul_lt -> covariant_swap_mul_lt_of_covariant_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -471,6 +505,7 @@ Case conversion may be inaccurate. Consider using '#align covariant_swap_mul_lt_
 @[to_additive]
 instance covariant_swap_mul_lt_of_covariant_mul_lt [CommSemigroup N] [LT N] [CovariantClass N N (· * ·) (· < ·)] :
     CovariantClass N N (swap (· * ·)) (· < ·) where elim := (covariant_flip_mul_iff N (· < ·)).mpr CovariantClass.elim
+#align covariant_swap_mul_lt_of_covariant_mul_lt covariant_swap_mul_lt_of_covariant_mul_lt
 
 /- warning: left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le -> LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le is a dubious translation:
 lean 3 declaration is
@@ -484,6 +519,8 @@ instance LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le [LeftCancelSem
     CovariantClass N N (· * ·) (· < ·) where elim a b c bc := by
     cases' lt_iff_le_and_ne.mp bc with bc cb
     exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_right a).mpr cb⟩
+#align
+  left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le
 
 /- warning: right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le -> RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le is a dubious translation:
 lean 3 declaration is
@@ -497,6 +534,8 @@ instance RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le [Ri
     CovariantClass N N (swap (· * ·)) (· < ·) where elim a b c bc := by
     cases' lt_iff_le_and_ne.mp bc with bc cb
     exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_left a).mpr cb⟩
+#align
+  right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
 
 /- warning: left_cancel_semigroup.contravariant_mul_le_of_contravariant_mul_lt -> LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -513,6 +552,8 @@ instance LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt [LeftC
       
     · exact (ContravariantClass.elim _ h).le
       
+#align
+  left_cancel_semigroup.contravariant_mul_le_of_contravariant_mul_lt LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt
 
 /- warning: right_cancel_semigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt -> RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt is a dubious translation:
 lean 3 declaration is
@@ -529,6 +570,8 @@ instance RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mu
       
     · exact (ContravariantClass.elim _ h).le
       
+#align
+  right_cancel_semigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt
 
 end Variants
 

@@ -18,13 +18,14 @@ unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Opt
   get_decl tgt <|>
       "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   -- if the source doesn't have the attribute we do not error and simply return
-        mwhen
+        whenM
         (succeeds (has_attribute attr_name src)) <|
       do
       let (p', prio) ← has_attribute attr_name src
       let p := p p'
       let s ← try_or_report_error (set_basic_attribute attr_name tgt p prio)
-      let Sum.inr msg ← return s | skip
+      let Sum.inr msg ← return s |
+        skip
       if msg = (f! "set_basic_attribute tactic failed, '{attr_name}' is not a basic attribute").toString then do
           let user_attr_const ← get_user_attribute_name attr_name >>= mk_const
           let tac ←
@@ -35,6 +36,7 @@ unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Opt
                       (%%ₓquote.1 prio)))
           tac
         else fail msg
+#align tactic.copy_attribute' tactic.copy_attribute'
 
 open Expr
 
@@ -56,6 +58,7 @@ unsafe def additive_test_aux (f : Name → Option Name) (ignore : name_map <| Li
   | b, pi n bi e t => additive_test_aux false t
   | b, elet n g e f => additive_test_aux false e && additive_test_aux false f
   | b, macro d args => true
+#align tactic.additive_test_aux tactic.additive_test_aux
 
 /-- `additive_test f replace_all ignore e` tests whether the expression `e` contains no constant
 `nm` that is not applied to any arguments, and such that `f nm = none`.
@@ -70,6 +73,7 @@ If `replace_all` is `tt` the test always return `tt`.
 unsafe def additive_test (f : Name → Option Name) (replace_all : Bool) (ignore : name_map <| List ℕ) (e : expr) :
     Bool :=
   if replace_all then true else additive_test_aux f ignore false e
+#align tactic.additive_test tactic.additive_test
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -92,7 +96,8 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
   tgt := src.mapPrefix fun n => if n = pre then some tgt_pre else none
   let-- we skip if we already transformed this declaration before
     ff
-    ← return <| env.contains tgt | skip
+    ← return <| env.contains tgt |
+    skip
   let decl ← get_decl src
   (-- we first transform all the declarations of the form `pre._proof_i`
           decl
@@ -124,6 +129,7 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
             decorate_error
             "proof doesn't type-check. " <|
           type_check decl
+#align tactic.transform_decl_with_prefix_fun_aux tactic.transform_decl_with_prefix_fun_aux
 
 /-- Make a new copy of a declaration,
 replacing fragments of the names of identifiers in the type and the body using the function `f`.
@@ -154,6 +160,7 @@ unsafe def transform_decl_with_prefix_fun (f : Name → Option Name) (replace_al
   -- copy attributes for the main declaration, this needs the equational lemmas to exist already
       attrs
       fun n => copy_attribute' n src tgt
+#align tactic.transform_decl_with_prefix_fun tactic.transform_decl_with_prefix_fun
 
 /-- Make a new copy of a declaration, replacing fragments of the names of identifiers in the type and
 the body using the dictionary `dict`.
@@ -162,6 +169,7 @@ This is used to implement `@[to_additive]`.
 unsafe def transform_decl_with_prefix_dict (dict : name_map Name) (replace_all trace : Bool) (relevant : name_map ℕ)
     (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic :=
   transform_decl_with_prefix_fun dict.find replace_all trace relevant ignore reorder src tgt attrs
+#align tactic.transform_decl_with_prefix_dict tactic.transform_decl_with_prefix_dict
 
 end Tactic
 

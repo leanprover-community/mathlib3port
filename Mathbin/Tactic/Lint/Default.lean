@@ -100,4 +100,5 @@ unsafe def mathlib_linters : List Name := by
     let ls ← get_checks true [] false
     let ls := ls.map fun ⟨n, _⟩ => `linter ++ n
     exact (reflect ls)
+#align mathlib_linters mathlib_linters
 

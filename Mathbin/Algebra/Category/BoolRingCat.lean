@@ -25,6 +25,7 @@ open CategoryTheory Order
 /-- The category of Boolean rings. -/
 def BoolRingCat :=
   Bundled BooleanRing
+#align BoolRing BoolRingCat
 
 namespace BoolRingCat
 
@@ -37,10 +38,12 @@ instance (X : BoolRingCat) : BooleanRing X :=
 /-- Construct a bundled `BoolRing` from a `boolean_ring`. -/
 def of (α : Type _) [BooleanRing α] : BoolRingCat :=
   Bundled.of α
+#align BoolRing.of BoolRingCat.of
 
 @[simp]
 theorem coe_of (α : Type _) [BooleanRing α] : ↥(of α) = α :=
   rfl
+#align BoolRing.coe_of BoolRingCat.coe_of
 
 instance : Inhabited BoolRingCat :=
   ⟨of PUnit⟩
@@ -53,6 +56,7 @@ deriving instance LargeCategory, ConcreteCategory for BoolRingCat
 @[simps]
 instance hasForgetToCommRing : HasForget₂ BoolRingCat CommRingCat :=
   BundledHom.forget₂ _ _
+#align BoolRing.has_forget_to_CommRing BoolRingCat.hasForgetToCommRing
 
 /-- Constructs an isomorphism of Boolean rings from a ring isomorphism between them. -/
 @[simps]
@@ -65,6 +69,7 @@ def Iso.mk {α β : BoolRingCat.{u}} (e : α ≃+* β) : α ≅ β where
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
+#align BoolRing.iso.mk BoolRingCat.Iso.mk
 
 end BoolRingCat
 
@@ -75,12 +80,14 @@ end BoolRingCat
 instance BoolRingCat.hasForgetToBoolAlg :
     HasForget₂ BoolRingCat
       BoolAlgCat where forget₂ := { obj := fun X => BoolAlgCat.of (AsBoolalg X), map := fun X Y => RingHom.asBoolalg }
+#align BoolRing.has_forget_to_BoolAlg BoolRingCat.hasForgetToBoolAlg
 
 @[simps]
 instance BoolAlgCat.hasForgetToBoolRing :
     HasForget₂ BoolAlgCat
       BoolRingCat where forget₂ :=
     { obj := fun X => BoolRingCat.of (AsBoolring X), map := fun X Y => BoundedLatticeHom.asBoolring }
+#align BoolAlg.has_forget_to_BoolRing BoolAlgCat.hasForgetToBoolRing
 
 /-- The equivalence between Boolean rings and Boolean algebras. This is actually an isomorphism. -/
 @[simps Functor inverse]
@@ -88,4 +95,5 @@ def boolRingEquivBoolAlg : BoolRingCat ≌ BoolAlgCat :=
   Equivalence.mk (forget₂ BoolRingCat BoolAlgCat) (forget₂ BoolAlgCat BoolRingCat)
     ((NatIso.ofComponents fun X => BoolRingCat.Iso.mk <| (RingEquiv.asBoolringAsBoolalg X).symm) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => BoolAlgCat.Iso.mk <| OrderIso.asBoolalgAsBoolring X) fun X Y f => rfl)
+#align BoolRing_equiv_BoolAlg boolRingEquivBoolAlg
 

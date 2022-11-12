@@ -42,6 +42,7 @@ variable (V : Type v) [AddCommGroup V] [Module K V] [FiniteDimensional K V]
 def coevaluation : K →ₗ[K] V ⊗[K] Module.Dual K V :=
   let bV := Basis.ofVectorSpace K V
   ((Basis.singleton Unit K).constr K) fun _ => ∑ i : Basis.OfVectorSpaceIndex K V, bV i ⊗ₜ[K] bV.Coord i
+#align coevaluation coevaluation
 
 theorem coevaluation_apply_one :
     (coevaluation K V) (1 : K) =
@@ -52,6 +53,7 @@ theorem coevaluation_apply_one :
   rw [(Basis.singleton Unit K).constr_apply_fintype K]
   simp only [Fintype.univ_punit, Finset.sum_const, one_smul, Basis.singleton_repr, Basis.equiv_fun_apply,
     Basis.coe_of_vector_space, one_nsmul, Finset.card_singleton]
+#align coevaluation_apply_one coevaluation_apply_one
 
 open TensorProduct
 
@@ -68,7 +70,7 @@ theorem contract_left_assoc_coevaluation :
   intro j
   apply LinearMap.ext_ring
   rw [LinearMap.compr₂_apply, LinearMap.compr₂_apply, TensorProduct.mk_apply]
-  simp only [LinearMap.coe_comp, Function.comp_app, LinearEquiv.coe_to_linear_map]
+  simp only [LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_to_linear_map]
   rw [rid_tmul, one_smul, lid_symm_apply]
   simp only [LinearEquiv.coe_to_linear_map, LinearMap.ltensor_tmul, coevaluation_apply_one]
   rw [TensorProduct.tmul_sum, LinearEquiv.map_sum]
@@ -78,6 +80,7 @@ theorem contract_left_assoc_coevaluation :
   simp only [Basis.coe_dual_basis, Basis.coord_apply, Basis.repr_self_apply, TensorProduct.ite_tmul]
   rw [Finset.sum_ite_eq']
   simp only [Finset.mem_univ, if_true]
+#align contract_left_assoc_coevaluation contract_left_assoc_coevaluation
 
 /-- This lemma corresponds to one of the coherence laws for duals in rigid categories, see
   `category_theory.monoidal.rigid`. -/
@@ -91,7 +94,7 @@ theorem contract_left_assoc_coevaluation' :
   apply (Basis.ofVectorSpace K V).ext
   intro j
   rw [LinearMap.compr₂_apply, LinearMap.compr₂_apply, TensorProduct.mk_apply]
-  simp only [LinearMap.coe_comp, Function.comp_app, LinearEquiv.coe_to_linear_map]
+  simp only [LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_to_linear_map]
   rw [lid_tmul, one_smul, rid_symm_apply]
   simp only [LinearEquiv.coe_to_linear_map, LinearMap.rtensor_tmul, coevaluation_apply_one]
   rw [TensorProduct.sum_tmul, LinearEquiv.map_sum]
@@ -101,6 +104,7 @@ theorem contract_left_assoc_coevaluation' :
   simp only [Basis.coord_apply, Basis.repr_self_apply, TensorProduct.tmul_ite]
   rw [Finset.sum_ite_eq]
   simp only [Finset.mem_univ, if_true]
+#align contract_left_assoc_coevaluation' contract_left_assoc_coevaluation'
 
 end coevaluation
 

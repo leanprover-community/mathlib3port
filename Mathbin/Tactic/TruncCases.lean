@@ -16,6 +16,7 @@ private unsafe def trunc_cases_subsingleton (e : expr) (ids : List Name) : tacti
     [(_, [e], _)]
     ← tactic.induction e ids `trunc.rec_on_subsingleton
   return e
+#align tactic.trunc_cases_subsingleton tactic.trunc_cases_subsingleton
 
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tactic expr := do
@@ -40,6 +41,7 @@ private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tacti
     | none => tactic.intro1
   tactic.swap
   return e
+#align tactic.trunc_cases_nondependent tactic.trunc_cases_nondependent
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Auxiliary tactic for `trunc_cases`. -/
@@ -55,6 +57,7 @@ private unsafe def trunc_cases_dependent (e : expr) (ids : List Name) : tactic e
   tactic.cases e_p >> sorry
   swap
   return e
+#align tactic.trunc_cases_dependent tactic.trunc_cases_dependent
 
 namespace Interactive
 
@@ -104,6 +107,7 @@ unsafe def trunc_cases (e : parse texpr) (ids : parse with_ident_list) : tactic 
       else if e.occurs tgt then trunc_cases_dependent e ids else trunc_cases_nondependent e ids
   let c ← infer_type e >>= is_class
   when c reset_instance_cache
+#align tactic.interactive.trunc_cases tactic.interactive.trunc_cases
 
 end Interactive
 

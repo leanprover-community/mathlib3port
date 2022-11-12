@@ -76,6 +76,7 @@ inductive Poly
   | pow : poly → ℕ → poly
   | neg : poly → poly
   deriving DecidableEq
+#align polyrith.poly Polyrith.Poly
 
 /-- This converts a poly object into a string representing it. The string
 maintains the semantic structure of the poly object.
@@ -91,6 +92,7 @@ unsafe def poly.mk_string : Poly → String
   | poly.mul p q => "(" ++ poly.mk_string p ++ " * " ++ poly.mk_string q ++ ")"
   | poly.pow p n => toString <| f!"({(poly.mk_string p)} ^ {n})"
   | poly.neg p => "-" ++ poly.mk_string p
+#align polyrith.poly.mk_string polyrith.poly.mk_string
 
 unsafe instance : Add Poly :=
   ⟨Poly.add⟩
@@ -140,6 +142,7 @@ unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) 
       (match index_of_e with
       | some k => (vars, poly.var k)
       | none => (vars e, poly.var vars))
+#align polyrith.poly_form_of_atom polyrith.poly_form_of_atom
 
 /-- `poly_form_of_expr red map e` computes the polynomial form of `e`.
 
@@ -176,6 +179,7 @@ unsafe def poly_form_of_expr (red : Transparency) : List expr → expr → tacti
     match e.to_rat with
     | some z => return ⟨m, Poly.const z⟩
     | none => poly_form_of_atom red m e
+#align polyrith.poly_form_of_expr polyrith.poly_form_of_expr
 
 /-!
 # Un-Parsing algorithms
@@ -221,6 +225,7 @@ unsafe def poly.to_pexpr : List expr → Poly → tactic pexpr
   | m, poly.neg p => do
     let p_pexpr ← poly.to_pexpr m p
     return (pquote.1 (-%%ₓp_pexpr))
+#align polyrith.poly.to_pexpr polyrith.poly.to_pexpr
 
 /-!
 # Parsing SageMath output into a poly
@@ -239,6 +244,7 @@ Here, `n` is a natural number
 -/
 unsafe def var_parser : Parser Poly := do
   str "poly.var " >> poly.var <$> Parser.nat
+#align polyrith.var_parser polyrith.var_parser
 
 /-- A parser object that parses `string`s of the form `"poly.const r"`
 to the appropriate `poly` object representing a rational coefficient.
@@ -246,6 +252,7 @@ Here, `r` is a rational number
 -/
 unsafe def const_fraction_parser : Parser Poly :=
   str "poly.const " >> poly.const <$> Parser.rat
+#align polyrith.const_fraction_parser polyrith.const_fraction_parser
 
 /-- A parser object that parses `string`s of the form `"poly.add p q"`
 to the appropriate `poly` object representing the sum of two `poly`s.
@@ -253,6 +260,7 @@ Here, `p` and `q` are themselves string forms of `poly`s.
 -/
 unsafe def add_parser (cont : Parser Poly) : Parser Poly :=
   str "poly.add " >> poly.add <$> cont <*> (ch ' ' >> cont)
+#align polyrith.add_parser polyrith.add_parser
 
 /-- A parser object that parses `string`s of the form `"poly.sub p q"`
 to the appropriate `poly` object representing the subtraction of two `poly`s.
@@ -260,6 +268,7 @@ Here, `p` and `q` are themselves string forms of `poly`s.
 -/
 unsafe def sub_parser (cont : Parser Poly) : Parser Poly :=
   str "poly.sub " >> poly.sub <$> cont <*> (ch ' ' >> cont)
+#align polyrith.sub_parser polyrith.sub_parser
 
 /-- A parser object that parses `string`s of the form `"poly.mul p q"`
 to the appropriate `poly` object representing the product of two `poly`s.
@@ -267,6 +276,7 @@ Here, `p` and `q` are themselves string forms of `poly`s.
 -/
 unsafe def mul_parser (cont : Parser Poly) : Parser Poly :=
   str "poly.mul " >> poly.mul <$> cont <*> (ch ' ' >> cont)
+#align polyrith.mul_parser polyrith.mul_parser
 
 /-- A parser object that parses `string`s of the form `"poly.pow p n"`
 to the appropriate `poly` object representing a `poly` raised to the
@@ -275,6 +285,7 @@ and `n` is a natural number.
 -/
 unsafe def pow_parser (cont : Parser Poly) : Parser Poly :=
   str "poly.pow " >> poly.pow <$> cont <*> (ch ' ' >> Nat)
+#align polyrith.pow_parser polyrith.pow_parser
 
 /-- A parser object that parses `string`s of the form `"poly.neg p"`
 to the appropriate `poly` object representing the negation of a `poly`.
@@ -282,6 +293,7 @@ Here, `p` is the string form of a `poly`.
 -/
 unsafe def neg_parser (cont : Parser Poly) : Parser Poly :=
   str "poly.neg " >> poly.neg <$> cont
+#align polyrith.neg_parser polyrith.neg_parser
 
 /-- A parser for `poly` that uses an s-essresion style formats such as
 `(poly.add (poly.var 0) (poly.const 1)`. -/
@@ -292,6 +304,7 @@ unsafe def poly_parser : Parser Poly :=
           add_parser poly_parser <|>
             sub_parser poly_parser <|> mul_parser poly_parser <|> pow_parser poly_parser <|> neg_parser poly_parser) <*
     ch ')'
+#align polyrith.poly_parser polyrith.poly_parser
 
 unsafe instance : non_null_json_serializable Poly where
   to_json p := json.null
@@ -312,6 +325,7 @@ structure SageJsonSuccess where
   trace : Option String := none
   data : Option (List Poly) := none
   deriving non_null_json_serializable, Inhabited
+#align polyrith.sage_json_success Polyrith.SageJsonSuccess
 
 /-- A schema for failure messages from the python script -/
 structure SageJsonFailure where
@@ -319,6 +333,7 @@ structure SageJsonFailure where
   errorName : String
   errorValue : String
   deriving non_null_json_serializable, Inhabited
+#align polyrith.sage_json_failure Polyrith.SageJsonFailure
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -338,6 +353,7 @@ unsafe def convert_sage_output (j : json) : tactic (Option (List Poly)) := do
     | Sum.inl s => do
       s trace
       pure s
+#align polyrith.convert_sage_output polyrith.convert_sage_output
 
 /-!
 # Parsing context into poly
@@ -352,6 +368,7 @@ and converts them into `poly` objects.
 unsafe def equality_to_left_side : expr → tactic expr
   | quote.1 ((%%ₓlhs) = %%ₓrhs) => to_expr (pquote.1 ((%%ₓlhs) - %%ₓrhs))
   | e => fail "expression is not an equality"
+#align polyrith.equality_to_left_side polyrith.equality_to_left_side
 
 /-- `(vars, poly, typ) ← parse_target_to_poly` interprets the current target (an equality over
 some field) into a `poly`. The result is a list of the atomic expressions in the target,
@@ -361,6 +378,7 @@ unsafe def parse_target_to_poly : tactic (List expr × poly × expr) := do
   let left_side ← equality_to_left_side e
   let (m, p) ← poly_form_of_expr Transparency.reducible [] left_side
   return (m, p, R)
+#align polyrith.parse_target_to_poly polyrith.parse_target_to_poly
 
 /-- Filter `l` to the elements which are equalities of type `expt`. -/
 unsafe def get_equalities_of_type (expt : expr) (l : List expr) : tactic (List expr) :=
@@ -368,6 +386,7 @@ unsafe def get_equalities_of_type (expt : expr) (l : List expr) : tactic (List e
     succeeds <| do
       let quote.1 (@Eq (%%ₓR) _ _) ← infer_type h_eq
       unify expt R
+#align polyrith.get_equalities_of_type polyrith.get_equalities_of_type
 
 /-- The purpose of this tactic is to collect all the hypotheses
 and proof terms (specified by the user) that are equalities
@@ -406,6 +425,7 @@ unsafe def parse_ctx_to_polys (expt : expr) (m : List expr) (only_on : Bool) (hy
           return (m', poly_list ++ [new_poly]))
         (m, [])
   return (eq_names, m, poly_list)
+#align polyrith.parse_ctx_to_polys polyrith.parse_ctx_to_polys
 
 /-!
 # Connecting with Python
@@ -428,6 +448,7 @@ unsafe def sage_output (arg_list : List String := []) : tactic json := do
   let some j ← pure (json.parse s) |
     "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   pure j
+#align polyrith.sage_output polyrith.sage_output
 
 /-- Adds parentheses around additions and subtractions, for printing at
 precedence 65.
@@ -436,6 +457,7 @@ unsafe def add_parens : expr → tactic format
   | e@(quote.1 (_ + _)) => f!"({← e})"
   | e@(quote.1 (_ - _)) => f!"({← e})"
   | e => f!"{← e}"
+#align polyrith.add_parens polyrith.add_parens
 
 /-- Given a pair of `expr`s, where one represents the hypothesis/proof term,
 and the other representes the coefficient attached to it, this tactic
@@ -459,6 +481,7 @@ unsafe def component_to_lc_format : expr × expr → tactic (Bool × format)
   | (ex, cf) => do
     let f ← add_parens cf
     Prod.mk ff <$> f!"{(← f)} * {← ex}"
+#align polyrith.component_to_lc_format polyrith.component_to_lc_format
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -466,6 +489,7 @@ private unsafe def intersperse_ops_aux : List (Bool × format) → format
   | [] => ""
   | (ff, fmt)::t => " +" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
   | (tt, fmt)::t => " -" ++ format.soft_break ++ fmt ++ intersperse_ops_aux t
+#align polyrith.intersperse_ops_aux polyrith.intersperse_ops_aux
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -476,10 +500,12 @@ unsafe def intersperse_ops : List (Bool × format) → format
   | [] => ""
   | (ff, fmt)::t => fmt ++ intersperse_ops_aux t
   | (tt, fmt)::t => "-" ++ fmt ++ intersperse_ops_aux t
+#align polyrith.intersperse_ops polyrith.intersperse_ops
 
 /-- This tactic repeats the process above for a `list` of pairs of `expr`s.-/
 unsafe def components_to_lc_format (components : List (expr × expr)) : tactic format :=
   intersperse_ops <$> components.mmap component_to_lc_format
+#align polyrith.components_to_lc_format polyrith.components_to_lc_format
 
 /-!
 # Connecting with Python
@@ -499,6 +525,7 @@ unsafe def create_args (only_on : Bool) (hyps : List pexpr) : tactic (List expr 
   let (eq_names, m, polys) ← parse_ctx_to_polys R m only_on hyps
   let args := [toString R, toString m.length, (polys.map poly.mk_string).toString, p.mk_string]
   return <| (eq_names, m, R, toString (is_trace_enabled_for `polyrith)::args)
+#align polyrith.create_args polyrith.create_args
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -523,6 +550,7 @@ unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sag
     done <|>
         "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
     return <| "linear_combination " ++ format.nest 2 (format.group expr_string)
+#align polyrith.process_output polyrith.process_output
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when no hypotheses are available. -/
@@ -531,6 +559,7 @@ unsafe def no_hypotheses_case : tactic (Option format) :=
       sorry
       return <| some "ring") <|>
     fail "polyrith did not find any relevant hypotheses and the goal is not provable by ring"
+#align polyrith.no_hypotheses_case polyrith.no_hypotheses_case
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when there are no variables. -/
@@ -539,6 +568,7 @@ unsafe def no_variables_case : tactic (Option format) :=
       sorry
       return <| some "ring") <|>
     fail "polyrith did not find any variables and the goal is not provable by ring"
+#align polyrith.no_variables_case polyrith.no_variables_case
 
 /-- This is the main body of the `polyrith` tactic. It takes in the following inputs:
 * `(only_on : bool)` - This represents whether the user used the key word "only"
@@ -577,6 +607,7 @@ unsafe def _root_.tactic.polyrith (only_on : Bool) (hyps : List pexpr) : tactic 
             convert_sage_output sage_out
             return none
           else some <$> process_output eq_names m R sage_out
+#align polyrith._root_.tactic.polyrith polyrith._root_.tactic.polyrith
 
 /-! # Interactivity -/
 
@@ -623,9 +654,11 @@ by polyrith only [scary c d, h]
 -/
 unsafe def _root_.tactic.interactive.polyrith (restr : parse (tk "only")?) (hyps : parse pexpr_list ?) : tactic Unit :=
   do
-  let some f ← tactic.polyrith restr.isSome (hyps.getOrElse []) | skip
+  let some f ← tactic.polyrith restr.isSome (hyps.getOrElse []) |
+    skip
   ← do
       dbg_trace "Try this: {← f}"
+#align polyrith._root_.tactic.interactive.polyrith polyrith._root_.tactic.interactive.polyrith
 
 add_tactic_doc
   { Name := "polyrith", category := DocCategory.tactic, declNames := [`tactic.interactive.polyrith],

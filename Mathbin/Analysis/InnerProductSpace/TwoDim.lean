@@ -87,6 +87,7 @@ irreducible_def areaForm : E →ₗ[ℝ] E →ₗ[ℝ] ℝ := by
   let y : AlternatingMap ℝ E ℝ (Fin 1) →ₗ[ℝ] E →ₗ[ℝ] ℝ :=
     LinearMap.llcomp ℝ E (AlternatingMap ℝ E ℝ (Fin 0)) ℝ z ∘ₗ AlternatingMap.curryLeftLinearMap
   exact y ∘ₗ AlternatingMap.curryLeftLinearMap o.volume_form
+#align orientation.area_form Orientation.areaForm
 
 omit o
 
@@ -94,6 +95,7 @@ omit o
 local notation "ω" => o.areaForm
 
 theorem area_form_to_volume_form (x y : E) : ω x y = o.volumeForm ![x, y] := by simp [area_form]
+#align orientation.area_form_to_volume_form Orientation.area_form_to_volume_form
 
 @[simp]
 theorem area_form_apply_self (x : E) : ω x x = 0 := by
@@ -103,6 +105,7 @@ theorem area_form_apply_self (x : E) : ω x x = 0 := by
     
   · norm_num
     
+#align orientation.area_form_apply_self Orientation.area_form_apply_self
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem area_form_swap (x y : E) : ω x y = -ω y x := by
@@ -113,25 +116,31 @@ theorem area_form_swap (x y : E) : ω x y = -ω y x := by
     
   · norm_num
     
+#align orientation.area_form_swap Orientation.area_form_swap
 
 @[simp]
 theorem area_form_neg_orientation : (-o).areaForm = -o.areaForm := by
   ext (x y)
   simp [area_form_to_volume_form]
+#align orientation.area_form_neg_orientation Orientation.area_form_neg_orientation
 
 /-- Continuous linear map version of `orientation.area_form`, useful for calculus. -/
 def areaForm' : E →L[ℝ] E →L[ℝ] ℝ :=
   (↑(LinearMap.toContinuousLinearMap : (E →ₗ[ℝ] ℝ) ≃ₗ[ℝ] E →L[ℝ] ℝ) ∘ₗ o.areaForm).toContinuousLinearMap
+#align orientation.area_form' Orientation.areaForm'
 
 @[simp]
 theorem area_form'_apply (x : E) : o.areaForm' x = (o.areaForm x).toContinuousLinearMap :=
   rfl
+#align orientation.area_form'_apply Orientation.area_form'_apply
 
 theorem abs_area_form_le (x y : E) : |ω x y| ≤ ∥x∥ * ∥y∥ := by
   simpa [area_form_to_volume_form, Fin.prod_univ_succ] using o.abs_volume_form_apply_le ![x, y]
+#align orientation.abs_area_form_le Orientation.abs_area_form_le
 
 theorem area_form_le (x y : E) : ω x y ≤ ∥x∥ * ∥y∥ := by
   simpa [area_form_to_volume_form, Fin.prod_univ_succ] using o.volume_form_apply_le ![x, y]
+#align orientation.area_form_le Orientation.area_form_le
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
@@ -149,6 +158,7 @@ theorem abs_area_form_of_orthogonal {x y : E} (h : ⟪x, y⟫ = 0) : |ω x y| = 
     
   · simpa
     
+#align orientation.abs_area_form_of_orthogonal Orientation.abs_area_form_of_orthogonal
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem area_form_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F) (x y : F) :
@@ -157,6 +167,7 @@ theorem area_form_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ 
     ext i
     fin_cases i <;> rfl
   simp [area_form_to_volume_form, volume_form_map, this]
+#align orientation.area_form_map Orientation.area_form_map
 
 /-- The area form is invariant under pullback by a positively-oriented isometric automorphism. -/
 theorem area_form_comp_linear_isometry_equiv (φ : E ≃ₗᵢ[ℝ] E) (hφ : 0 < (φ.toLinearEquiv : E →ₗ[ℝ] E).det) (x y : E) :
@@ -170,6 +181,7 @@ theorem area_form_comp_linear_isometry_equiv (φ : E ≃ₗᵢ[ℝ] E) (hφ : 0 
     
   · simp
     
+#align orientation.area_form_comp_linear_isometry_equiv Orientation.area_form_comp_linear_isometry_equiv
 
 /-- Auxiliary construction for `orientation.right_angle_rotation`, rotation by 90 degrees in an
 oriented real inner product space of dimension 2. -/
@@ -177,15 +189,21 @@ irreducible_def rightAngleRotationAux₁ : E →ₗ[ℝ] E :=
   let to_dual : E ≃ₗ[ℝ] E →ₗ[ℝ] ℝ :=
     (InnerProductSpace.toDual ℝ E).toLinearEquiv ≪≫ₗ LinearMap.toContinuousLinearMap.symm
   ↑to_dual.symm ∘ₗ ω
+#align orientation.right_angle_rotation_aux₁ Orientation.rightAngleRotationAux₁
 
 @[simp]
 theorem inner_right_angle_rotation_aux₁_left (x y : E) : ⟪o.rightAngleRotationAux₁ x, y⟫ = ω x y := by
-  simp [right_angle_rotation_aux₁]
+  simp only [right_angle_rotation_aux₁, LinearEquiv.trans_symm, LinearEquiv.coe_trans, LinearEquiv.coe_coe,
+    InnerProductSpace.to_dual_symm_apply, eq_self_iff_true, LinearMap.coe_to_continuous_linear_map',
+    LinearIsometryEquiv.coe_to_linear_equiv, LinearMap.comp_apply, LinearEquiv.symm_symm,
+    LinearIsometryEquiv.to_linear_equiv_symm]
+#align orientation.inner_right_angle_rotation_aux₁_left Orientation.inner_right_angle_rotation_aux₁_left
 
 @[simp]
 theorem inner_right_angle_rotation_aux₁_right (x y : E) : ⟪x, o.rightAngleRotationAux₁ y⟫ = -ω x y := by
   rw [real_inner_comm]
   simp [o.area_form_swap y x]
+#align orientation.inner_right_angle_rotation_aux₁_right Orientation.inner_right_angle_rotation_aux₁_right
 
 /-- Auxiliary construction for `orientation.right_angle_rotation`, rotation by 90 degrees in an
 oriented real inner product space of dimension 2. -/
@@ -221,6 +239,7 @@ def rightAngleRotationAux₂ : E →ₗᵢ[ℝ] E :=
         rw [← o.inner_right_angle_rotation_aux₁_left x w]
         exact abs_real_inner_le_norm (o.right_angle_rotation_aux₁ x) w
          }
+#align orientation.right_angle_rotation_aux₂ Orientation.rightAngleRotationAux₂
 
 @[simp]
 theorem right_angle_rotation_aux₁_right_angle_rotation_aux₁ (x : E) :
@@ -230,6 +249,8 @@ theorem right_angle_rotation_aux₁_right_angle_rotation_aux₁ (x : E) :
   have : ⟪o.right_angle_rotation_aux₁ y, o.right_angle_rotation_aux₁ x⟫ = ⟪y, x⟫ :=
     LinearIsometry.inner_map_map o.right_angle_rotation_aux₂ y x
   rw [o.inner_right_angle_rotation_aux₁_right, ← o.inner_right_angle_rotation_aux₁_left, this, inner_neg_right]
+#align
+  orientation.right_angle_rotation_aux₁_right_angle_rotation_aux₁ Orientation.right_angle_rotation_aux₁_right_angle_rotation_aux₁
 
 /-- An isometric automorphism of an oriented real inner product space of dimension 2 (usual notation
 `J`). This automorphism squares to -1.  We will define rotations in such a way that this
@@ -237,6 +258,7 @@ automorphism is equal to rotation by 90 degrees. -/
 irreducible_def rightAngleRotation : E ≃ₗᵢ[ℝ] E :=
   LinearIsometryEquiv.ofLinearIsometry o.rightAngleRotationAux₂ (-o.rightAngleRotationAux₁)
     (by ext <;> simp [right_angle_rotation_aux₂]) (by ext <;> simp [right_angle_rotation_aux₂])
+#align orientation.right_angle_rotation Orientation.rightAngleRotation
 
 -- mathport name: exprJ
 local notation "J" => o.rightAngleRotation
@@ -245,80 +267,90 @@ local notation "J" => o.rightAngleRotation
 theorem inner_right_angle_rotation_left (x y : E) : ⟪J x, y⟫ = ω x y := by
   rw [right_angle_rotation]
   exact o.inner_right_angle_rotation_aux₁_left x y
+#align orientation.inner_right_angle_rotation_left Orientation.inner_right_angle_rotation_left
 
 @[simp]
 theorem inner_right_angle_rotation_right (x y : E) : ⟪x, J y⟫ = -ω x y := by
   rw [right_angle_rotation]
   exact o.inner_right_angle_rotation_aux₁_right x y
+#align orientation.inner_right_angle_rotation_right Orientation.inner_right_angle_rotation_right
 
 @[simp]
 theorem right_angle_rotation_right_angle_rotation (x : E) : J (J x) = -x := by
   rw [right_angle_rotation]
   exact o.right_angle_rotation_aux₁_right_angle_rotation_aux₁ x
+#align orientation.right_angle_rotation_right_angle_rotation Orientation.right_angle_rotation_right_angle_rotation
 
 @[simp]
 theorem right_angle_rotation_symm :
     LinearIsometryEquiv.symm J = LinearIsometryEquiv.trans J (LinearIsometryEquiv.neg ℝ) := by
   rw [right_angle_rotation]
   exact LinearIsometryEquiv.to_linear_isometry_injective rfl
+#align orientation.right_angle_rotation_symm Orientation.right_angle_rotation_symm
 
 @[simp]
 theorem inner_right_angle_rotation_self (x : E) : ⟪J x, x⟫ = 0 := by simp
+#align orientation.inner_right_angle_rotation_self Orientation.inner_right_angle_rotation_self
 
 theorem inner_right_angle_rotation_swap (x y : E) : ⟪x, J y⟫ = -⟪J x, y⟫ := by simp
+#align orientation.inner_right_angle_rotation_swap Orientation.inner_right_angle_rotation_swap
 
 theorem inner_right_angle_rotation_swap' (x y : E) : ⟪J x, y⟫ = -⟪x, J y⟫ := by
   simp [o.inner_right_angle_rotation_swap x y]
+#align orientation.inner_right_angle_rotation_swap' Orientation.inner_right_angle_rotation_swap'
 
 theorem inner_comp_right_angle_rotation (x y : E) : ⟪J x, J y⟫ = ⟪x, y⟫ :=
   LinearIsometryEquiv.inner_map_map J x y
+#align orientation.inner_comp_right_angle_rotation Orientation.inner_comp_right_angle_rotation
 
 @[simp]
 theorem area_form_right_angle_rotation_left (x y : E) : ω (J x) y = -⟪x, y⟫ := by
   rw [← o.inner_comp_right_angle_rotation, o.inner_right_angle_rotation_right, neg_neg]
+#align orientation.area_form_right_angle_rotation_left Orientation.area_form_right_angle_rotation_left
 
 @[simp]
 theorem area_form_right_angle_rotation_right (x y : E) : ω x (J y) = ⟪x, y⟫ := by
   rw [← o.inner_right_angle_rotation_left, o.inner_comp_right_angle_rotation]
+#align orientation.area_form_right_angle_rotation_right Orientation.area_form_right_angle_rotation_right
 
 @[simp]
 theorem area_form_comp_right_angle_rotation (x y : E) : ω (J x) (J y) = ω x y := by simp
+#align orientation.area_form_comp_right_angle_rotation Orientation.area_form_comp_right_angle_rotation
 
 @[simp]
 theorem right_angle_rotation_trans_right_angle_rotation : LinearIsometryEquiv.trans J J = LinearIsometryEquiv.neg ℝ :=
   by ext <;> simp
+#align
+  orientation.right_angle_rotation_trans_right_angle_rotation Orientation.right_angle_rotation_trans_right_angle_rotation
 
 theorem right_angle_rotation_neg_orientation (x : E) : (-o).rightAngleRotation x = -o.rightAngleRotation x := by
   apply ext_inner_right ℝ
   intro y
   rw [inner_right_angle_rotation_left]
   simp
+#align orientation.right_angle_rotation_neg_orientation Orientation.right_angle_rotation_neg_orientation
 
 @[simp]
 theorem right_angle_rotation_trans_neg_orientation :
     (-o).rightAngleRotation = o.rightAngleRotation.trans (LinearIsometryEquiv.neg ℝ) :=
   LinearIsometryEquiv.ext <| o.right_angle_rotation_neg_orientation
+#align orientation.right_angle_rotation_trans_neg_orientation Orientation.right_angle_rotation_trans_neg_orientation
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(exprJ() (φ.symm x), φ.symm y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(φ (exprJ() (φ.symm x)), φ (φ.symm y))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem right_angle_rotation_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F)
     (x : F) : (Orientation.map (Fin 2) φ.toLinearEquiv o).rightAngleRotation x = φ (o.rightAngleRotation (φ.symm x)) :=
   by
   apply ext_inner_right ℝ
   intro y
   rw [inner_right_angle_rotation_left]
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(exprJ() (φ.symm x), φ.symm y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  trans ⟪J (φ.symm x), φ.symm y⟫
   · simp [o.area_form_map]
     
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr inner.real(φ (exprJ() (φ.symm x)), φ (φ.symm y))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  trans ⟪φ (J (φ.symm x)), φ (φ.symm y)⟫
   · rw [φ.inner_map_map]
     
   · simp
     
+#align orientation.right_angle_rotation_map Orientation.right_angle_rotation_map
 
 /-- `J` commutes with any positively-oriented isometric automorphism. -/
 theorem linear_isometry_equiv_comp_right_angle_rotation (φ : E ≃ₗᵢ[ℝ] E) (hφ : 0 < (φ.toLinearEquiv : E →ₗ[ℝ] E).det)
@@ -330,15 +362,20 @@ theorem linear_isometry_equiv_comp_right_angle_rotation (φ : E ≃ₗᵢ[ℝ] E
     rwa [← o.map_eq_iff_det_pos φ.to_linear_equiv] at hφ
     rw [Fact.out (finrank ℝ E = 2), Fintype.card_fin]
     
+#align
+  orientation.linear_isometry_equiv_comp_right_angle_rotation Orientation.linear_isometry_equiv_comp_right_angle_rotation
 
 theorem right_angle_rotation_map' {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F) :
     (Orientation.map (Fin 2) φ.toLinearEquiv o).rightAngleRotation = (φ.symm.trans o.rightAngleRotation).trans φ :=
   LinearIsometryEquiv.ext <| o.right_angle_rotation_map φ
+#align orientation.right_angle_rotation_map' Orientation.right_angle_rotation_map'
 
 /-- `J` commutes with any positively-oriented isometric automorphism. -/
 theorem linear_isometry_equiv_comp_right_angle_rotation' (φ : E ≃ₗᵢ[ℝ] E) (hφ : 0 < (φ.toLinearEquiv : E →ₗ[ℝ] E).det) :
     LinearIsometryEquiv.trans J φ = φ.trans J :=
   LinearIsometryEquiv.ext <| o.linear_isometry_equiv_comp_right_angle_rotation φ hφ
+#align
+  orientation.linear_isometry_equiv_comp_right_angle_rotation' Orientation.linear_isometry_equiv_comp_right_angle_rotation'
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
@@ -360,10 +397,12 @@ def basisRightAngleRotation (x : E) (hx : x ≠ 0) : Basis (Fin 2) ℝ E :=
         · simpa
           ))
     (Fact.out (finrank ℝ E = 2)).symm
+#align orientation.basis_right_angle_rotation Orientation.basisRightAngleRotation
 
 @[simp]
 theorem coe_basis_right_angle_rotation (x : E) (hx : x ≠ 0) : ⇑(o.basisRightAngleRotation x hx) = ![x, J x] :=
   coe_basis_of_linear_independent_of_card_eq_finrank _ _
+#align orientation.coe_basis_right_angle_rotation Orientation.coe_basis_right_angle_rotation
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ∥a∥ ^ 2 * ⟪x, y⟫`. (See
@@ -387,13 +426,16 @@ theorem inner_mul_inner_add_area_form_mul_area_form' (a x : E) :
     rw [o.area_form_swap]
     ring
     
+#align orientation.inner_mul_inner_add_area_form_mul_area_form' Orientation.inner_mul_inner_add_area_form_mul_area_form'
 
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ∥a∥ ^ 2 * ⟪x, y⟫`. -/
 theorem inner_mul_inner_add_area_form_mul_area_form (a x y : E) : ⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ∥a∥ ^ 2 * ⟪x, y⟫ :=
   congr_arg (fun f : E →ₗ[ℝ] ℝ => f y) (o.inner_mul_inner_add_area_form_mul_area_form' a x)
+#align orientation.inner_mul_inner_add_area_form_mul_area_form Orientation.inner_mul_inner_add_area_form_mul_area_form
 
 theorem inner_sq_add_area_form_sq (a b : E) : ⟪a, b⟫ ^ 2 + ω a b ^ 2 = ∥a∥ ^ 2 * ∥b∥ ^ 2 := by
   simpa [sq, real_inner_self_eq_norm_sq] using o.inner_mul_inner_add_area_form_mul_area_form a b b
+#align orientation.inner_sq_add_area_form_sq Orientation.inner_sq_add_area_form_sq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ω a y - ω a x * ⟪a, y⟫ = ∥a∥ ^ 2 * ω x y`. (See
@@ -415,10 +457,12 @@ theorem inner_mul_area_form_sub' (a x : E) : ⟪a, x⟫ • ω a - ω a x • @i
       innerₛₗ_apply, LinearMap.smul_apply, LinearMap.sub_apply, Matrix.cons_val_one, Matrix.head_cons]
     ring
     
+#align orientation.inner_mul_area_form_sub' Orientation.inner_mul_area_form_sub'
 
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ω a y - ω a x * ⟪a, y⟫ = ∥a∥ ^ 2 * ω x y`. -/
 theorem inner_mul_area_form_sub (a x y : E) : ⟪a, x⟫ * ω a y - ω a x * ⟪a, y⟫ = ∥a∥ ^ 2 * ω x y :=
   congr_arg (fun f : E →ₗ[ℝ] ℝ => f y) (o.inner_mul_area_form_sub' a x)
+#align orientation.inner_mul_area_form_sub Orientation.inner_mul_area_form_sub
 
 theorem nonneg_inner_and_area_form_eq_zero_iff_same_ray (x y : E) : 0 ≤ ⟪x, y⟫ ∧ ω x y = 0 ↔ SameRay ℝ x y := by
   by_cases hx:x = 0
@@ -450,6 +494,8 @@ theorem nonneg_inner_and_area_form_eq_zero_iff_same_ray (x y : E) : 0 ≤ ⟪x, 
       Algebra.id.smul_eq_mul, mul_zero, eq_self_iff_true, and_true_iff]
     positivity
     
+#align
+  orientation.nonneg_inner_and_area_form_eq_zero_iff_same_ray Orientation.nonneg_inner_and_area_form_eq_zero_iff_same_ray
 
 /-- A complex-valued real-bilinear map on an oriented real inner product space of dimension 2. Its
 real part is the inner product and its imaginary part is `orientation.area_form`.
@@ -458,43 +504,48 @@ On `ℂ` with the standard orientation, `kahler w z = conj w * z`; see `complex.
 def kahler : E →ₗ[ℝ] E →ₗ[ℝ] ℂ :=
   LinearMap.llcomp ℝ E ℝ ℂ Complex.ofRealClm ∘ₗ @innerₛₗ ℝ E _ _ +
     LinearMap.llcomp ℝ E ℝ ℂ ((LinearMap.lsmul ℝ ℂ).flip Complex.i) ∘ₗ ω
+#align orientation.kahler Orientation.kahler
 
 theorem kahler_apply_apply (x y : E) : o.kahler x y = ⟪x, y⟫ + ω x y • Complex.i :=
   rfl
+#align orientation.kahler_apply_apply Orientation.kahler_apply_apply
 
 theorem kahler_swap (x y : E) : o.kahler x y = conj (o.kahler y x) := by
   simp only [kahler_apply_apply]
   rw [real_inner_comm, area_form_swap]
   simp
+#align orientation.kahler_swap Orientation.kahler_swap
 
 @[simp]
 theorem kahler_apply_self (x : E) : o.kahler x x = ∥x∥ ^ 2 := by simp [kahler_apply_apply, real_inner_self_eq_norm_sq]
+#align orientation.kahler_apply_self Orientation.kahler_apply_self
 
 @[simp]
 theorem kahler_right_angle_rotation_left (x y : E) : o.kahler (J x) y = -Complex.i * o.kahler x y := by
   simp only [o.area_form_right_angle_rotation_left, o.inner_right_angle_rotation_left, o.kahler_apply_apply,
     Complex.of_real_neg, Complex.real_smul]
   linear_combination ω x y * Complex.I_sq
+#align orientation.kahler_right_angle_rotation_left Orientation.kahler_right_angle_rotation_left
 
 @[simp]
 theorem kahler_right_angle_rotation_right (x y : E) : o.kahler x (J y) = Complex.i * o.kahler x y := by
   simp only [o.area_form_right_angle_rotation_right, o.inner_right_angle_rotation_right, o.kahler_apply_apply,
     Complex.of_real_neg, Complex.real_smul]
   linear_combination-ω x y * Complex.I_sq
+#align orientation.kahler_right_angle_rotation_right Orientation.kahler_right_angle_rotation_right
 
 @[simp]
 theorem kahler_comp_right_angle_rotation (x y : E) : o.kahler (J x) (J y) = o.kahler x y := by
   simp only [kahler_right_angle_rotation_left, kahler_right_angle_rotation_right]
   linear_combination-o.kahler x y * Complex.I_sq
+#align orientation.kahler_comp_right_angle_rotation Orientation.kahler_comp_right_angle_rotation
 
 @[simp]
 theorem kahler_neg_orientation (x y : E) : (-o).kahler x y = conj (o.kahler x y) := by simp [kahler_apply_apply]
+#align orientation.kahler_neg_orientation Orientation.kahler_neg_orientation
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »((«expr↑ »(«expr ^ »(«expr∥ ∥»(a), 2)) : exprℂ()), o.kahler x y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem kahler_mul (a x y : E) : o.kahler x a * o.kahler a y = ∥a∥ ^ 2 * o.kahler x y := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »((«expr↑ »(«expr ^ »(«expr∥ ∥»(a), 2)) : exprℂ()), o.kahler x y)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  trans (↑(∥a∥ ^ 2) : ℂ) * o.kahler x y
   · ext
     · simp only [o.kahler_apply_apply, Complex.add_im, Complex.add_re, Complex.I_im, Complex.I_re, Complex.mul_im,
         Complex.mul_re, Complex.of_real_im, Complex.of_real_re, Complex.real_smul]
@@ -509,9 +560,11 @@ theorem kahler_mul (a x y : E) : o.kahler x a * o.kahler a y = ∥a∥ ^ 2 * o.k
     
   · norm_cast
     
+#align orientation.kahler_mul Orientation.kahler_mul
 
 theorem norm_sq_kahler (x y : E) : Complex.normSq (o.kahler x y) = ∥x∥ ^ 2 * ∥y∥ ^ 2 := by
   simpa [kahler_apply_apply, Complex.normSq, sq] using o.inner_sq_add_area_form_sq x y
+#align orientation.norm_sq_kahler Orientation.norm_sq_kahler
 
 theorem abs_kahler (x y : E) : Complex.abs (o.kahler x y) = ∥x∥ * ∥y∥ := by
   rw [← sq_eq_sq, Complex.sq_abs]
@@ -521,8 +574,10 @@ theorem abs_kahler (x y : E) : Complex.abs (o.kahler x y) = ∥x∥ * ∥y∥ :=
     
   · positivity
     
+#align orientation.abs_kahler Orientation.abs_kahler
 
 theorem norm_kahler (x y : E) : ∥o.kahler x y∥ = ∥x∥ * ∥y∥ := by simpa using o.abs_kahler x y
+#align orientation.norm_kahler Orientation.norm_kahler
 
 theorem eq_zero_or_eq_zero_of_kahler_eq_zero {x y : E} (hx : o.kahler x y = 0) : x = 0 ∨ y = 0 := by
   have : ∥x∥ * ∥y∥ = 0 := by simpa [hx] using (o.norm_kahler x y).symm
@@ -533,29 +588,35 @@ theorem eq_zero_or_eq_zero_of_kahler_eq_zero {x y : E} (hx : o.kahler x y = 0) :
   · right
     simpa using h
     
+#align orientation.eq_zero_or_eq_zero_of_kahler_eq_zero Orientation.eq_zero_or_eq_zero_of_kahler_eq_zero
 
 theorem kahler_eq_zero_iff (x y : E) : o.kahler x y = 0 ↔ x = 0 ∨ y = 0 := by
   refine' ⟨o.eq_zero_or_eq_zero_of_kahler_eq_zero, _⟩
   rintro (rfl | rfl) <;> simp
+#align orientation.kahler_eq_zero_iff Orientation.kahler_eq_zero_iff
 
 theorem kahler_ne_zero {x y : E} (hx : x ≠ 0) (hy : y ≠ 0) : o.kahler x y ≠ 0 := by
   apply mt o.eq_zero_or_eq_zero_of_kahler_eq_zero
   tauto
+#align orientation.kahler_ne_zero Orientation.kahler_ne_zero
 
 theorem kahler_ne_zero_iff (x y : E) : o.kahler x y ≠ 0 ↔ x ≠ 0 ∧ y ≠ 0 := by
   refine' ⟨_, fun h => o.kahler_ne_zero h.1 h.2⟩
   contrapose
   simp only [not_and_or, not_not, kahler_apply_apply, Complex.real_smul]
   rintro (rfl | rfl) <;> simp
+#align orientation.kahler_ne_zero_iff Orientation.kahler_ne_zero_iff
 
 theorem kahler_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F) (x y : F) :
     (Orientation.map (Fin 2) φ.toLinearEquiv o).kahler x y = o.kahler (φ.symm x) (φ.symm y) := by
   simp [kahler_apply_apply, area_form_map]
+#align orientation.kahler_map Orientation.kahler_map
 
 /-- The bilinear map `kahler` is invariant under pullback by a positively-oriented isometric
 automorphism. -/
 theorem kahler_comp_linear_isometry_equiv (φ : E ≃ₗᵢ[ℝ] E) (hφ : 0 < (φ.toLinearEquiv : E →ₗ[ℝ] E).det) (x y : E) :
     o.kahler (φ x) (φ y) = o.kahler x y := by simp [kahler_apply_apply, o.area_form_comp_linear_isometry_equiv φ hφ]
+#align orientation.kahler_comp_linear_isometry_equiv Orientation.kahler_comp_linear_isometry_equiv
 
 end Orientation
 
@@ -570,6 +631,7 @@ protected theorem area_form (w z : ℂ) : Complex.orientation.areaForm w z = (co
     Matrix.det_fin_two, Basis.to_matrix_apply, to_basis_orthonormal_basis_one_I, Matrix.cons_val_zero,
     coe_basis_one_I_repr, Matrix.cons_val_one, Matrix.head_cons, mul_im, conj_re, conj_im]
   ring
+#align complex.area_form Complex.area_form
 
 @[simp]
 protected theorem right_angle_rotation (z : ℂ) : Complex.orientation.rightAngleRotation z = I * z := by
@@ -579,11 +641,13 @@ protected theorem right_angle_rotation (z : ℂ) : Complex.orientation.rightAngl
   simp only [Complex.area_form, Complex.inner, mul_re, mul_im, conj_re, conj_im, map_mul, conj_I, neg_re, neg_im, I_re,
     I_im]
   ring
+#align complex.right_angle_rotation Complex.right_angle_rotation
 
 @[simp]
 protected theorem kahler (w z : ℂ) : Complex.orientation.kahler w z = conj w * z := by
   rw [Orientation.kahler_apply_apply]
   ext1 <;> simp
+#align complex.kahler Complex.kahler
 
 end Complex
 
@@ -603,6 +667,7 @@ theorem area_form_map_complex (f : E ≃ₗᵢ[ℝ] ℂ) (hf : Orientation.map (
     (x y : E) : ω x y = (conj (f x) * f y).im := by
   rw [← Complex.area_form, ← hf, o.area_form_map]
   simp
+#align orientation.area_form_map_complex Orientation.area_form_map_complex
 
 /-- The rotation by 90 degrees on an oriented real inner product space of dimension 2 can be
 evaluated in terms of a complex-number representation of the space. -/
@@ -610,6 +675,7 @@ theorem right_angle_rotation_map_complex (f : E ≃ₗᵢ[ℝ] ℂ)
     (hf : Orientation.map (Fin 2) f.toLinearEquiv o = Complex.orientation) (x : E) : f (J x) = I * f x := by
   rw [← Complex.right_angle_rotation, ← hf, o.right_angle_rotation_map]
   simp
+#align orientation.right_angle_rotation_map_complex Orientation.right_angle_rotation_map_complex
 
 /-- The Kahler form on an oriented real inner product space of dimension 2 can be evaluated in terms
 of a complex-number representation of the space. -/
@@ -617,6 +683,7 @@ theorem kahler_map_complex (f : E ≃ₗᵢ[ℝ] ℂ) (hf : Orientation.map (Fin
     (x y : E) : o.kahler x y = conj (f x) * f y := by
   rw [← Complex.kahler, ← hf, o.kahler_map]
   simp
+#align orientation.kahler_map_complex Orientation.kahler_map_complex
 
 end Orientation
 

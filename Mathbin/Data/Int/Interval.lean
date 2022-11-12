@@ -82,72 +82,92 @@ variable (a b : ℤ)
 theorem Icc_eq_finset_map :
     icc a b = (Finset.range (b + 1 - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
   rfl
+#align int.Icc_eq_finset_map Int.Icc_eq_finset_map
 
 theorem Ico_eq_finset_map :
     ico a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
   rfl
+#align int.Ico_eq_finset_map Int.Ico_eq_finset_map
 
 theorem Ioc_eq_finset_map :
     ioc a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
+#align int.Ioc_eq_finset_map Int.Ioc_eq_finset_map
 
 theorem Ioo_eq_finset_map :
     ioo a b = (Finset.range (b - a - 1).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
+#align int.Ioo_eq_finset_map Int.Ioo_eq_finset_map
 
 @[simp]
 theorem card_Icc : (icc a b).card = (b + 1 - a).toNat := by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
+#align int.card_Icc Int.card_Icc
 
 @[simp]
 theorem card_Ico : (ico a b).card = (b - a).toNat := by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
+#align int.card_Ico Int.card_Ico
 
 @[simp]
 theorem card_Ioc : (ioc a b).card = (b - a).toNat := by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
+#align int.card_Ioc Int.card_Ioc
 
 @[simp]
 theorem card_Ioo : (ioo a b).card = (b - a - 1).toNat := by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
+#align int.card_Ioo Int.card_Ioo
 
 theorem card_Icc_of_le (h : a ≤ b + 1) : ((icc a b).card : ℤ) = b + 1 - a := by rw [card_Icc, to_nat_sub_of_le h]
+#align int.card_Icc_of_le Int.card_Icc_of_le
 
 theorem card_Ico_of_le (h : a ≤ b) : ((ico a b).card : ℤ) = b - a := by rw [card_Ico, to_nat_sub_of_le h]
+#align int.card_Ico_of_le Int.card_Ico_of_le
 
 theorem card_Ioc_of_le (h : a ≤ b) : ((ioc a b).card : ℤ) = b - a := by rw [card_Ioc, to_nat_sub_of_le h]
+#align int.card_Ioc_of_le Int.card_Ioc_of_le
 
 theorem card_Ioo_of_lt (h : a < b) : ((ioo a b).card : ℤ) = b - a - 1 := by rw [card_Ioo, sub_sub, to_nat_sub_of_le h]
+#align int.card_Ioo_of_lt Int.card_Ioo_of_lt
 
 @[simp]
 theorem card_fintype_Icc : Fintype.card (Set.IccCat a b) = (b + 1 - a).toNat := by
   rw [← card_Icc, Fintype.card_of_finset]
+#align int.card_fintype_Icc Int.card_fintype_Icc
 
 @[simp]
 theorem card_fintype_Ico : Fintype.card (Set.IcoCat a b) = (b - a).toNat := by rw [← card_Ico, Fintype.card_of_finset]
+#align int.card_fintype_Ico Int.card_fintype_Ico
 
 @[simp]
 theorem card_fintype_Ioc : Fintype.card (Set.IocCat a b) = (b - a).toNat := by rw [← card_Ioc, Fintype.card_of_finset]
+#align int.card_fintype_Ioc Int.card_fintype_Ioc
 
 @[simp]
 theorem card_fintype_Ioo : Fintype.card (Set.IooCat a b) = (b - a - 1).toNat := by
   rw [← card_Ioo, Fintype.card_of_finset]
+#align int.card_fintype_Ioo Int.card_fintype_Ioo
 
 theorem card_fintype_Icc_of_le (h : a ≤ b + 1) : (Fintype.card (Set.IccCat a b) : ℤ) = b + 1 - a := by
   rw [card_fintype_Icc, to_nat_sub_of_le h]
+#align int.card_fintype_Icc_of_le Int.card_fintype_Icc_of_le
 
 theorem card_fintype_Ico_of_le (h : a ≤ b) : (Fintype.card (Set.IcoCat a b) : ℤ) = b - a := by
   rw [card_fintype_Ico, to_nat_sub_of_le h]
+#align int.card_fintype_Ico_of_le Int.card_fintype_Ico_of_le
 
 theorem card_fintype_Ioc_of_le (h : a ≤ b) : (Fintype.card (Set.IocCat a b) : ℤ) = b - a := by
   rw [card_fintype_Ioc, to_nat_sub_of_le h]
+#align int.card_fintype_Ioc_of_le Int.card_fintype_Ioc_of_le
 
 theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintype.card (Set.IooCat a b) : ℤ) = b - a - 1 := by
   rw [card_fintype_Ioo, sub_sub, to_nat_sub_of_le h]
+#align int.card_fintype_Ioo_of_lt Int.card_fintype_Ioo_of_lt
 
 theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (ico n (n + a)).Image (· % a) = ico 0 a := by
   obtain rfl | ha := eq_or_lt_of_le h
@@ -184,6 +204,7 @@ theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (ico n (n + a)).Image (· % a)
     · rw [Int.add_mul_mod_self_left, Int.mod_eq_of_lt hia.left hia.right]
       
     
+#align int.image_Ico_mod Int.image_Ico_mod
 
 end Int
 

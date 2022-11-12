@@ -28,6 +28,7 @@ unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cf
     -- This is necessary because of the locked tactic state.
         return
         (new_t, prf)
+#align tactic.nth_rewrite.congr.rewrite_without_new_mvars tactic.nth_rewrite.congr.rewrite_without_new_mvars
 
 /-- Returns true if the argument is a proof that the entire expression was rewritten.
 
@@ -39,6 +40,7 @@ unsafe def rewrite_is_of_entire : expr → Bool
     | quote.1 fun p => _ = p => true
     | _ => false
   | _ => false
+#align tactic.nth_rewrite.congr.rewrite_is_of_entire tactic.nth_rewrite.congr.rewrite_is_of_entire
 
 /-- Function which tries to perform the rewrite associated to the equality `r : expr × bool` (the
 bool indicates whether we should flip the equality first), at the position pointed to by
@@ -63,11 +65,13 @@ unsafe def rewrite_at_lens (cfg : nth_rewrite.cfg) (r : expr × Bool) (l : expr_
             let qr ← mk_eq_trans qr qr'
             return (w', qr)
       return [⟨w, pure qr, l⟩]
+#align tactic.nth_rewrite.congr.rewrite_at_lens tactic.nth_rewrite.congr.rewrite_at_lens
 
 /-- List of all rewrites of an expression `e` by `r : expr × bool`.
 Here `r.1` is the substituting expression and `r.2` flags the direction of the rewrite. -/
 unsafe def all_rewrites (e : expr) (r : expr × Bool) (cfg : nth_rewrite.cfg := {  }) : tactic (List tracked_rewrite) :=
   e.app_map (rewrite_at_lens cfg r)
+#align tactic.nth_rewrite.congr.all_rewrites tactic.nth_rewrite.congr.all_rewrites
 
 end NthRewrite.Congr
 

@@ -36,24 +36,29 @@ variable [TopologicalSpace B'] [TopologicalSpace (TotalSpace E)]
 /-- Definition of `pullback.total_space.topological_space`, which we make irreducible. -/
 irreducible_def pullbackTopology : TopologicalSpace (TotalSpace (f *ᵖ E)) :=
   induced TotalSpace.proj ‹TopologicalSpace B'› ⊓ induced (Pullback.lift f) ‹TopologicalSpace (TotalSpace E)›
+#align pullback_topology pullbackTopology
 
 /-- The topology on the total space of a pullback bundle is the coarsest topology for which both
 the projections to the base and the map to the original bundle are continuous. -/
 instance Pullback.TotalSpace.topologicalSpace : TopologicalSpace (TotalSpace (f *ᵖ E)) :=
   pullbackTopology E f
+#align pullback.total_space.topological_space Pullback.TotalSpace.topologicalSpace
 
 theorem Pullback.continuous_proj (f : B' → B) : Continuous (@TotalSpace.proj _ (f *ᵖ E)) := by
   rw [continuous_iff_le_induced, Pullback.TotalSpace.topologicalSpace, pullbackTopology]
   exact inf_le_left
+#align pullback.continuous_proj Pullback.continuous_proj
 
 theorem Pullback.continuous_lift (f : B' → B) : Continuous (@Pullback.lift B E B' f) := by
   rw [continuous_iff_le_induced, Pullback.TotalSpace.topologicalSpace, pullbackTopology]
   exact inf_le_right
+#align pullback.continuous_lift Pullback.continuous_lift
 
 theorem inducing_pullback_total_space_embedding (f : B' → B) : Inducing (@pullbackTotalSpaceEmbedding B E B' f) := by
   constructor
   simp_rw [Prod.topologicalSpace, induced_inf, induced_compose, Pullback.TotalSpace.topologicalSpace, pullbackTopology]
   rfl
+#align inducing_pullback_total_space_embedding inducing_pullback_total_space_embedding
 
 variable (F) [NontriviallyNormedField 𝕜] [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B]
   [∀ x, AddCommMonoid (E x)] [∀ x, Module 𝕜 (E x)]
@@ -63,6 +68,7 @@ theorem Pullback.continuous_total_space_mk [∀ x, TopologicalSpace (E x)] [Topo
   simp only [continuous_iff_le_induced, Pullback.TotalSpace.topologicalSpace, induced_compose, induced_inf,
     Function.comp, total_space_mk, total_space.proj, induced_const, top_inf_eq, pullbackTopology]
   exact le_of_eq (TopologicalVectorBundle.total_space_mk_inducing 𝕜 F E (f x)).induced
+#align pullback.continuous_total_space_mk Pullback.continuous_total_space_mk
 
 variable {E 𝕜 F} {K : Type _} [ContinuousMapClass K B' B]
 
@@ -108,9 +114,11 @@ def Trivialization.pullback (e : Trivialization F (π E)) (f : K) : Trivializati
     rfl
   target_eq := rfl
   proj_to_fun y h := rfl
+#align trivialization.pullback Trivialization.pullback
 
 instance Trivialization.pullback_linear (e : Trivialization F (π E)) [e.is_linear 𝕜] (f : K) :
     (@Trivialization.pullback _ _ _ B' _ _ _ _ _ _ _ e f).is_linear 𝕜 where linear x h := e.linear 𝕜 h
+#align trivialization.pullback_linear Trivialization.pullback_linear
 
 instance TopologicalVectorBundle.pullback [∀ x, TopologicalSpace (E x)] [TopologicalVectorBundle 𝕜 F E] (f : K) :
     TopologicalVectorBundle 𝕜 F ((f : B' → B) *ᵖ E) where
@@ -134,4 +142,5 @@ instance TopologicalVectorBundle.pullback [∀ x, TopologicalSpace (E x)] [Topol
     show ((e.pullback f).coordChangeL 𝕜 (e'.pullback f) b) v = (e.coord_changeL 𝕜 e' (f b)) v
     rw [e.coord_changeL_apply e' hb, (e.pullback f).coord_changeL_apply' _]
     exacts[rfl, hb]
+#align topological_vector_bundle.pullback TopologicalVectorBundle.pullback
 

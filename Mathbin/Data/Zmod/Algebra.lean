@@ -32,6 +32,7 @@ def algebra' (h : m ∣ n) : Algebra (Zmod n) R :=
         rw [map_int_cast]
         exact Commute.cast_int_left r k,
     smul_def' := fun a r => rfl }
+#align zmod.algebra' Zmod.algebra'
 
 end
 

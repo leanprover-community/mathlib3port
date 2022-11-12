@@ -59,6 +59,7 @@ variable (X : SimplicialObject C)
 def objX : ∀ n : ℕ, Subobject (X.obj (op (SimplexCategory.mk n)))
   | 0 => ⊤
   | n + 1 => Finset.univ.inf fun k : Fin (n + 1) => kernelSubobject (X.δ k.succ)
+#align algebraic_topology.normalized_Moore_complex.obj_X AlgebraicTopology.NormalizedMooreComplex.objX
 
 /-- The differentials in the normalized Moore complex.
 -/
@@ -86,6 +87,7 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
     rw [category.assoc]
     convert comp_zero
     exact kernel_subobject_arrow_comp _
+#align algebraic_topology.normalized_Moore_complex.obj_d AlgebraicTopology.NormalizedMooreComplex.objD
 
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   -- It's a pity we need to do a case split here;
@@ -104,6 +106,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
     
+#align algebraic_topology.normalized_Moore_complex.d_squared AlgebraicTopology.NormalizedMooreComplex.d_squared
 
 /-- The normalized Moore complex functor, on objects.
 -/
@@ -114,6 +117,7 @@ def obj (X : SimplicialObject C) : ChainComplex C ℕ :=
       objD
       X)
     (d_squared X)
+#align algebraic_topology.normalized_Moore_complex.obj AlgebraicTopology.NormalizedMooreComplex.obj
 
 variable {X} {Y : SimplicialObject C} (f : X ⟶ Y)
 
@@ -142,6 +146,7 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
     · ext
       simp
       
+#align algebraic_topology.normalized_Moore_complex.map AlgebraicTopology.NormalizedMooreComplex.map
 
 end NormalizedMooreComplex
 
@@ -170,12 +175,14 @@ def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ where
   map_comp' X Y Z f g := by
     ext n
     cases n <;> simp
+#align algebraic_topology.normalized_Moore_complex AlgebraicTopology.normalizedMooreComplex
 
 variable {C}
 
 @[simp]
 theorem normalized_Moore_complex_obj_d (X : SimplicialObject C) (n : ℕ) :
     ((normalizedMooreComplex C).obj X).d (n + 1) n = NormalizedMooreComplex.objD X n := by apply ChainComplex.of_d
+#align algebraic_topology.normalized_Moore_complex_obj_d AlgebraicTopology.normalized_Moore_complex_obj_d
 
 end AlgebraicTopology
 

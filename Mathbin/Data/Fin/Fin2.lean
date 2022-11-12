@@ -43,6 +43,7 @@ inductive Fin2 : ℕ → Type
   |
   /-- `n` as a member of `fin (succ n)` -/
   fs {n} : Fin2 n → Fin2 (succ n)
+#align fin2 Fin2
 -/
 
 namespace Fin2
@@ -54,12 +55,14 @@ zero (`H1`) and by giving a dependent function on the rest (`H2`). -/
 protected def cases' {n} {C : Fin2 (succ n) → Sort u} (H1 : C fz) (H2 : ∀ n, C (fs n)) : ∀ i : Fin2 (succ n), C i
   | fz => H1
   | fs n => H2 n
+#align fin2.cases' Fin2.cases'
 -/
 
 #print Fin2.elim0 /-
 /-- Ex falso. The dependent eliminator for the empty `fin2 0` type. -/
 def elim0 {C : Fin2 0 → Sort u} : ∀ i : Fin2 0, C i :=
   fun.
+#align fin2.elim0 Fin2.elim0
 -/
 
 #print Fin2.toNat /-
@@ -67,6 +70,7 @@ def elim0 {C : Fin2 0 → Sort u} : ∀ i : Fin2 0, C i :=
 def toNat : ∀ {n}, Fin2 n → ℕ
   | _, @fz n => 0
   | _, @fs n i => succ (to_nat i)
+#align fin2.to_nat Fin2.toNat
 -/
 
 #print Fin2.optOfNat /-
@@ -75,6 +79,7 @@ def optOfNat : ∀ {n} (k : ℕ), Option (Fin2 n)
   | 0, _ => none
   | succ n, 0 => some fz
   | succ n, succ k => fs <$> @opt_of_nat n k
+#align fin2.opt_of_nat Fin2.optOfNat
 -/
 
 #print Fin2.add /-
@@ -82,6 +87,7 @@ def optOfNat : ∀ {n} (k : ℕ), Option (Fin2 n)
 def add {n} (i : Fin2 n) : ∀ k, Fin2 (n + k)
   | 0 => i
   | succ k => fs (add k)
+#align fin2.add Fin2.add
 -/
 
 #print Fin2.left /-
@@ -89,6 +95,7 @@ def add {n} (i : Fin2 n) : ∀ k, Fin2 (n + k)
 def left (k) : ∀ {n}, Fin2 n → Fin2 (k + n)
   | _, @fz n => fz
   | _, @fs n i => fs (left i)
+#align fin2.left Fin2.left
 -/
 
 #print Fin2.insertPerm /-
@@ -104,6 +111,7 @@ def insertPerm : ∀ {n}, Fin2 n → Fin2 n → Fin2 n
     match insert_perm i j with
     | fz => fz
     | fs k => fs (fs k)
+#align fin2.insert_perm Fin2.insertPerm
 -/
 
 #print Fin2.remapLeft /-
@@ -114,6 +122,7 @@ def remapLeft {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m + k) → Fin2 (n + 
   | 0, i => f i
   | succ k, @fz _ => fz
   | succ k, @fs _ i => fs (remap_left _ i)
+#align fin2.remap_left Fin2.remapLeft
 -/
 
 #print Fin2.IsLt /-
@@ -121,16 +130,19 @@ def remapLeft {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m + k) → Fin2 (n + 
   of the form `m < n` where `m n : ℕ`. -/
 class IsLt (m n : ℕ) where
   h : m < n
+#align fin2.is_lt Fin2.IsLt
 -/
 
 #print Fin2.IsLt.zero /-
 instance IsLt.zero (n) : IsLt 0 (succ n) :=
   ⟨succ_pos _⟩
+#align fin2.is_lt.zero Fin2.IsLt.zero
 -/
 
 #print Fin2.IsLt.succ /-
 instance IsLt.succ (m n) [l : IsLt m n] : IsLt (succ m) (succ n) :=
   ⟨succ_lt_succ l.h⟩
+#align fin2.is_lt.succ Fin2.IsLt.succ
 -/
 
 #print Fin2.ofNat' /-
@@ -140,6 +152,7 @@ def ofNat' : ∀ {n} (m) [IsLt m n], Fin2 n
   | 0, m, ⟨h⟩ => absurd h (Nat.not_lt_zero _)
   | succ n, 0, ⟨h⟩ => fz
   | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succ h⟩)
+#align fin2.of_nat' Fin2.ofNat'
 -/
 
 -- mathport name: «expr& »

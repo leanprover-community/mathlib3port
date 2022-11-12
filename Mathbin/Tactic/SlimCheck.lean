@@ -125,6 +125,7 @@ open Expr
 /-- Tree structure representing a `testable` instance. -/
 unsafe inductive instance_tree
   | node : Name → expr → List instance_tree → instance_tree
+#align tactic.interactive.instance_tree tactic.interactive.instance_tree
 
 /-- Gather information about a `testable` instance. Given
 an expression of type `testable ?p`, gather the
@@ -140,6 +141,7 @@ unsafe def summarize_instance : expr → tactic instance_tree
     pure <| instance_tree.node e p xs
   | e => do
     failed
+#align tactic.interactive.summarize_instance tactic.interactive.summarize_instance
 
 /-- format a `instance_tree` -/
 unsafe def instance_tree.to_format : instance_tree → tactic format
@@ -148,9 +150,11 @@ unsafe def instance_tree.to_format : instance_tree → tactic format
     let ys ← f!"testable ({← p})"
     f!"+ {(← n)} :{(← format.indent ys 2)}
         {← xs}"
+#align tactic.interactive.instance_tree.to_format tactic.interactive.instance_tree.to_format
 
 unsafe instance instance_tree.has_to_tactic_format : has_to_tactic_format instance_tree :=
   ⟨instance_tree.to_format⟩
+#align tactic.interactive.instance_tree.has_to_tactic_format tactic.interactive.instance_tree.has_to_tactic_format
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -231,6 +235,7 @@ unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
   let code ← eval_expr (Io PUnit) e
   unsafe_run_io code
   tactic.admit
+#align tactic.interactive.slim_check tactic.interactive.slim_check
 
 end Tactic.Interactive
 

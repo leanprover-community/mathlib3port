@@ -36,6 +36,7 @@ theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β �
       dsimp [Metric.Ball]
       rw [dist_comm, dist_eq_norm]
       solve_by_elim)
+#align cau_seq.tendsto_limit CauSeq.tendsto_limit
 
 variable [NormedField β]
 
@@ -51,6 +52,7 @@ instance NormedField.is_absolute_value : IsAbsoluteValue (norm : β → ℝ) whe
   abv_eq_zero _ := norm_eq_zero
   abv_add := norm_add_le
   abv_mul := norm_mul
+#align normed_field.is_absolute_value NormedField.is_absolute_value
 
 open Metric
 
@@ -65,6 +67,7 @@ theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f
   rw [← dist_eq_norm]
   apply @htsub (f j, f N)
   apply Set.mk_mem_prod <;> solve_by_elim [le_refl]
+#align cauchy_seq.is_cau_seq CauchySeq.isCauSeq
 
 theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f := by
   refine' cauchy_iff.2 ⟨by infer_instance, fun s hs => _⟩
@@ -85,10 +88,12 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f := by
     rw [dist_eq_norm]
     apply hN <;> assumption
     
+#align cau_seq.cauchy_seq CauSeq.cauchySeq
 
 /-- In a normed field, `cau_seq` coincides with the usual notion of Cauchy sequences. -/
 theorem cau_seq_iff_cauchy_seq {α : Type u} [NormedField α] {u : ℕ → α} : IsCauSeq norm u ↔ CauchySeq u :=
   ⟨fun h => CauSeq.cauchySeq ⟨u, h⟩, fun h => h.IsCauSeq⟩
+#align cau_seq_iff_cauchy_seq cau_seq_iff_cauchy_seq
 
 -- see Note [lower instance priority]
 /-- A complete normed field is complete as a metric space, as Cauchy sequences converge by
@@ -103,4 +108,5 @@ instance (priority := 100) complete_space_of_cau_seq_complete [CauSeq.IsComplete
   cases' (CauSeq.equiv_lim ⟨u, C⟩) _ εpos with N hN
   exists N
   simpa [dist_eq_norm] using hN
+#align complete_space_of_cau_seq_complete complete_space_of_cau_seq_complete
 

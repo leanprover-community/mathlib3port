@@ -40,13 +40,16 @@ open Classical TopologicalSpace Nnreal
 /-- Upper bound used in several Grönwall-like inequalities. -/
 noncomputable def gronwallBound (δ K ε x : ℝ) : ℝ :=
   if K = 0 then δ + ε * x else δ * exp (K * x) + ε / K * (exp (K * x) - 1)
+#align gronwall_bound gronwallBound
 
 theorem gronwall_bound_K0 (δ ε : ℝ) : gronwallBound δ 0 ε = fun x => δ + ε * x :=
   funext fun x => if_pos rfl
+#align gronwall_bound_K0 gronwall_bound_K0
 
 theorem gronwall_bound_of_K_ne_0 {δ K ε : ℝ} (hK : K ≠ 0) :
     gronwallBound δ K ε = fun x => δ * exp (K * x) + ε / K * (exp (K * x) - 1) :=
   funext fun x => if_neg hK
+#align gronwall_bound_of_K_ne_0 gronwall_bound_of_K_ne_0
 
 theorem hasDerivAtGronwallBound (δ K ε x : ℝ) : HasDerivAt (gronwallBound δ K ε) (K * gronwallBound δ K ε x + ε) x := by
   by_cases hK:K = 0
@@ -63,11 +66,13 @@ theorem hasDerivAtGronwallBound (δ K ε x : ℝ) : HasDerivAt (gronwallBound δ
     simp only [id, mul_add, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel' _ hK]
     ring
     
+#align has_deriv_at_gronwall_bound hasDerivAtGronwallBound
 
 theorem hasDerivAtGronwallBoundShift (δ K ε x a : ℝ) :
     HasDerivAt (fun y => gronwallBound δ K ε (y - a)) (K * gronwallBound δ K ε (x - a) + ε) x := by
   convert (hasDerivAtGronwallBound δ K ε _).comp x ((hasDerivAtId x).sub_const a)
   rw [id, mul_one]
+#align has_deriv_at_gronwall_bound_shift hasDerivAtGronwallBoundShift
 
 theorem gronwall_bound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ := by
   by_cases hK:K = 0
@@ -75,6 +80,7 @@ theorem gronwall_bound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ := by
     
   · simp only [gronwallBound, if_neg hK, mul_zero, exp_zero, sub_self, mul_one, add_zero]
     
+#align gronwall_bound_x0 gronwall_bound_x0
 
 theorem gronwall_bound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) := by
   by_cases hK:K = 0
@@ -82,8 +88,10 @@ theorem gronwall_bound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K
     
   · simp only [gronwall_bound_of_K_ne_0 hK, zero_div, zero_mul, add_zero]
     
+#align gronwall_bound_ε0 gronwall_bound_ε0
 
 theorem gronwall_bound_ε0_δ0 (K x : ℝ) : gronwallBound 0 K 0 x = 0 := by simp only [gronwall_bound_ε0, zero_mul]
+#align gronwall_bound_ε0_δ0 gronwall_bound_ε0_δ0
 
 theorem gronwall_bound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronwallBound δ K ε x := by
   by_cases hK:K = 0
@@ -93,6 +101,7 @@ theorem gronwall_bound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronw
   · simp only [gronwall_bound_of_K_ne_0 hK]
     exact continuous_const.add ((continuous_id.mul continuous_const).mul continuous_const)
     
+#align gronwall_bound_continuous_ε gronwall_bound_continuous_ε
 
 /-! ### Inequality and corollaries -/
 
@@ -128,6 +137,7 @@ theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε
   · simp only [closure_Ioi, left_mem_Ici]
     
   exact (gronwall_bound_continuous_ε δ K (x - a)).ContinuousWithinAt
+#align le_gronwall_bound_of_liminf_deriv_right_le le_gronwall_bound_of_liminf_deriv_right_le
 
 /-- A Grönwall-like inequality: if `f : ℝ → E` is continuous on `[a, b]`, has right derivative
 `f' x` at every point `x ∈ [a, b)`, and satisfies the inequalities `∥f a∥ ≤ δ`,
@@ -138,8 +148,9 @@ theorem norm_le_gronwall_bound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K �
     (bound : ∀ x ∈ IcoCat a b, ∥f' x∥ ≤ K * ∥f x∥ + ε) : ∀ x ∈ IccCat a b, ∥f x∥ ≤ gronwallBound δ K ε (x - a) :=
   le_gronwall_bound_of_liminf_deriv_right_le (continuous_norm.comp_continuous_on hf)
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha bound
+#align norm_le_gronwall_bound_of_norm_deriv_right_le norm_le_gronwall_bound_of_norm_deriv_right_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -164,6 +175,7 @@ theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s :
     this.trans
       ((add_le_add (add_le_add (f_bound t ht) (g_bound t ht)) (hv t (f t) (hfs t ht) (g t) (hgs t ht))).trans _)
   rw [dist_eq_norm, add_comm]
+#align dist_le_of_approx_trajectories_ODE_of_mem_set dist_le_of_approx_trajectories_ODE_of_mem_set
 
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
@@ -180,8 +192,9 @@ theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (
   have hfs : ∀ t ∈ IcoCat a b, f t ∈ @Univ E := fun t ht => trivial
   dist_le_of_approx_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' f_bound hfs hg hg'
     g_bound (fun t ht => trivial) ha
+#align dist_le_of_approx_trajectories_ODE dist_le_of_approx_trajectories_ODE
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -203,6 +216,7 @@ theorem dist_le_of_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ �
   intro t ht
   have := dist_le_of_approx_trajectories_ODE_of_mem_set hv hf hf' f_bound hfs hg hg' g_bound hgs ha t ht
   rwa [zero_add, gronwall_bound_ε0] at this
+#align dist_le_of_trajectories_ODE_of_mem_set dist_le_of_trajectories_ODE_of_mem_set
 
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
@@ -216,8 +230,9 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : �
   have hfs : ∀ t ∈ IcoCat a b, f t ∈ @Univ E := fun t ht => trivial
   dist_le_of_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
     (fun t ht => trivial) ha
+#align dist_le_of_trajectories_ODE dist_le_of_trajectories_ODE
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) in a set `s ⊆ ℝ × E` with
 a given initial value provided that RHS is Lipschitz continuous in `x` within `s`,
 and we consider only solutions included in `s`. -/
@@ -230,6 +245,7 @@ theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E}
   intro t ht
   have := dist_le_of_trajectories_ODE_of_mem_set hv hf hf' hfs hg hg' hgs (dist_le_zero.2 ha) t ht
   rwa [zero_mul, dist_le_zero] at this
+#align ODE_solution_unique_of_mem_set ODE_solution_unique_of_mem_set
 
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) with
 a given initial value provided that RHS is Lipschitz continuous in `x`. -/
@@ -239,4 +255,5 @@ theorem ODE_solution_unique {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, Lip
     (ha : f a = g a) : ∀ t ∈ IccCat a b, f t = g t :=
   have hfs : ∀ t ∈ IcoCat a b, f t ∈ @Univ E := fun t ht => trivial
   ODE_solution_unique_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg' (fun t ht => trivial) ha
+#align ODE_solution_unique ODE_solution_unique
 

@@ -26,6 +26,7 @@ namespace Linarith
 /-- A shorthand for tracing when the `trace.linarith` option is set to true. -/
 unsafe def linarith_trace {α} [has_to_tactic_format α] (s : α) : tactic Unit :=
   tactic.when_tracing `linarith (tactic.trace s)
+#align linarith.linarith_trace linarith.linarith_trace
 
 /-- A shorthand for tracing the types of a list of proof terms
 when the `trace.linarith` option is set to true.
@@ -34,6 +35,7 @@ unsafe def linarith_trace_proofs (s : String := "") (l : List expr) : tactic Uni
   tactic.when_tracing `linarith <| do
     tactic.trace s
     l tactic.infer_type >>= tactic.trace
+#align linarith.linarith_trace_proofs linarith.linarith_trace_proofs
 
 /-! ### Linear expressions -/
 
@@ -48,6 +50,7 @@ This is not enforced by the type but the operations here preserve it.
 @[reducible]
 def Linexp : Type :=
   List (ℕ × ℤ)
+#align linarith.linexp Linarith.Linexp
 
 namespace Linexp
 
@@ -71,10 +74,12 @@ unsafe def add : Linexp → Linexp → Linexp
       else
         let sum := z1 + z2
         if Sum = 0 then add t1 t2 else (n1, Sum)::add t1 t2
+#align linarith.linexp.add linarith.linexp.add
 
 /-- `l.scale c` scales the values in `l` by `c` without modifying the order or keys. -/
 def scale (c : ℤ) (l : Linexp) : Linexp :=
   if c = 0 then [] else if c = 1 then l else l.map fun ⟨n, z⟩ => (n, z * c)
+#align linarith.linexp.scale Linarith.Linexp.scale
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `l.get n` returns the value in `l` associated with key `n`, if it exists, and `none` otherwise.
@@ -84,11 +89,13 @@ that is, it will return `none` as soon as it finds a key smaller than `n`.
 def get (n : ℕ) : Linexp → Option ℤ
   | [] => none
   | (a, b)::t => if a < n then none else if a = n then some b else get t
+#align linarith.linexp.get Linarith.Linexp.get
 
 /-- `l.contains n` is true iff `n` is the first element of a pair in `l`.
 -/
 def contains (n : ℕ) : Linexp → Bool :=
   Option.isSome ∘ get n
+#align linarith.linexp.contains Linarith.Linexp.contains
 
 /-- `l.zfind n` returns the value associated with key `n` if there is one, and 0 otherwise.
 -/
@@ -96,10 +103,12 @@ def zfind (n : ℕ) (l : Linexp) : ℤ :=
   match l.get n with
   | none => 0
   | some v => v
+#align linarith.linexp.zfind Linarith.Linexp.zfind
 
 /-- `l.vars` returns the list of variables that occur in `l`. -/
 def vars (l : Linexp) : List ℕ :=
   l.map Prod.fst
+#align linarith.linexp.vars Linarith.Linexp.vars
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -111,7 +120,8 @@ def cmp : Linexp → Linexp → Ordering
   | _, [] => Ordering.gt
   | (n1, z1)::t1, (n2, z2)::t2 =>
     if n1 < n2 then Ordering.lt
-    else if n2 < n1 then Ordering.gt else if z1 < z2 then Ordering.lt else if z2 < z1 then Ordering.gt else cmp t1 t2
+    else if n2 < n1 then Ordering.gt else if z1 < z2 then Ordering.lt else if z2 < z1 then Ordering.gt else Cmp t1 t2
+#align linarith.linexp.cmp Linarith.Linexp.cmp
 
 end Linexp
 
@@ -125,6 +135,7 @@ inductive Ineq : Type
   | le
   | lt
   deriving DecidableEq, Inhabited
+#align linarith.ineq Linarith.Ineq
 
 namespace Ineq
 
@@ -137,6 +148,7 @@ def max : Ineq → Ineq → Ineq
   | le, a => le
   | a, le => le
   | Eq, Eq => eq
+#align linarith.ineq.max Linarith.Ineq.max
 
 /-- `ineq` is ordered `eq < le < lt`. -/
 def cmp : Ineq → Ineq → Ordering
@@ -146,18 +158,21 @@ def cmp : Ineq → Ineq → Ordering
   | le, lt => Ordering.lt
   | lt, lt => Ordering.eq
   | _, _ => Ordering.gt
+#align linarith.ineq.cmp Linarith.Ineq.cmp
 
 /-- Prints an `ineq` as the corresponding infix symbol. -/
 def toString : Ineq → String
   | Eq => "="
   | le => "≤"
   | lt => "<"
+#align linarith.ineq.to_string Linarith.Ineq.toString
 
 /-- Finds the name of a multiplicative lemma corresponding to an inequality strength. -/
 unsafe def to_const_mul_nm : Ineq → Name
   | lt => `` mul_neg
   | le => `` mul_nonpos
   | Eq => `` mul_eq
+#align linarith.ineq.to_const_mul_nm linarith.ineq.to_const_mul_nm
 
 instance : ToString Ineq :=
   ⟨Ineq.toString⟩
@@ -180,18 +195,22 @@ structure Comp : Type where
   str : Ineq
   coeffs : Linexp
   deriving Inhabited
+#align linarith.comp Linarith.Comp
 
 /-- `c.vars` returns the list of variables that appear in the linear expression contained in `c`. -/
 def Comp.vars : Comp → List ℕ :=
   linexp.vars ∘ comp.coeffs
+#align linarith.comp.vars Linarith.Comp.vars
 
 /-- `comp.coeff_of c a` projects the coefficient of variable `a` out of `c`. -/
 def Comp.coeffOf (c : Comp) (a : ℕ) : ℤ :=
   c.coeffs.zfind a
+#align linarith.comp.coeff_of Linarith.Comp.coeffOf
 
 /-- `comp.scale c n` scales the coefficients of `c` by `n`. -/
 def Comp.scale (c : Comp) (n : ℕ) : Comp :=
   { c with coeffs := c.coeffs.scale n }
+#align linarith.comp.scale Linarith.Comp.scale
 
 /-- `comp.add c1 c2` adds the expressions represented by `c1` and `c2`.
 The coefficient of variable `a` in `c1.add c2`
@@ -199,23 +218,27 @@ is the sum of the coefficients of `a` in `c1` and `c2`.
  -/
 unsafe def comp.add (c1 c2 : Comp) : Comp :=
   ⟨c1.str.max c2.str, c1.coeffs.add c2.coeffs⟩
+#align linarith.comp.add linarith.comp.add
 
 /-- `comp` has a lex order. First the `ineq`s are compared, then the `coeff`s. -/
 unsafe def comp.cmp : Comp → Comp → Ordering
   | ⟨str1, coeffs1⟩, ⟨str2, coeffs2⟩ =>
-    match str1.cmp str2 with
+    match str1.Cmp str2 with
     | Ordering.lt => Ordering.lt
     | Ordering.gt => Ordering.gt
-    | Ordering.eq => coeffs1.cmp coeffs2
+    | Ordering.eq => coeffs1.Cmp coeffs2
+#align linarith.comp.cmp linarith.comp.cmp
 
 /-- A `comp` represents a contradiction if its expression has no coefficients and its strength is <,
 that is, it represents the fact `0 < 0`.
  -/
 unsafe def comp.is_contr (c : Comp) : Bool :=
   c.coeffs.Empty ∧ c.str = ineq.lt
+#align linarith.comp.is_contr linarith.comp.is_contr
 
 unsafe instance comp.to_format : has_to_format Comp :=
   ⟨fun p => to_fmt p.coeffs ++ toString p.str ++ "0"⟩
+#align linarith.comp.to_format linarith.comp.to_format
 
 /-! ### Parsing into linear form -/
 
@@ -231,6 +254,7 @@ A "no-op" preprocessor should return its input as a singleton list.
 unsafe structure preprocessor : Type where
   Name : String
   transform : expr → tactic (List expr)
+#align linarith.preprocessor linarith.preprocessor
 
 /-- Some preprocessors need to examine the full list of hypotheses instead of working item by item.
 As with `preprocessor`, the input to a `global_preprocessor` is replaced by, not added to, its
@@ -239,6 +263,7 @@ output.
 unsafe structure global_preprocessor : Type where
   Name : String
   transform : List expr → tactic (List expr)
+#align linarith.global_preprocessor linarith.global_preprocessor
 
 /-- Some preprocessors perform branching case splits. A `branch` is used to track one of these case
 splits. The first component, an `expr`, is the goal corresponding to this branch of the split,
@@ -248,6 +273,7 @@ goal.
 -/
 unsafe def branch : Type :=
   expr × List expr
+#align linarith.branch linarith.branch
 
 /-- Some preprocessors perform branching case splits.
 A `global_branching_preprocessor` produces a list of branches to run.
@@ -258,17 +284,19 @@ metavariable.
 unsafe structure global_branching_preprocessor : Type where
   Name : String
   transform : List expr → tactic (List branch)
+#align linarith.global_branching_preprocessor linarith.global_branching_preprocessor
 
 /-- A `preprocessor` lifts to a `global_preprocessor` by folding it over the input list.
 -/
 unsafe def preprocessor.globalize (pp : preprocessor) : global_preprocessor where
   Name := pp.Name
   transform :=
-    List.mfoldl
+    List.foldlM
       (fun ret e => do
         let l' ← pp.transform e
         return (l' ++ ret))
       []
+#align linarith.preprocessor.globalize linarith.preprocessor.globalize
 
 /-- A `global_preprocessor` lifts to a `global_branching_preprocessor` by producing only one branch.
 -/
@@ -277,6 +305,7 @@ unsafe def global_preprocessor.branching (pp : global_preprocessor) : global_bra
   transform l := do
     let g ← tactic.get_goal
     singleton <$> Prod.mk g <$> pp l
+#align linarith.global_preprocessor.branching linarith.global_preprocessor.branching
 
 /-- `process pp l` runs `pp.transform` on `l` and returns the result,
 tracing the result if `trace.linarith` is on.
@@ -287,12 +316,15 @@ unsafe def global_branching_preprocessor.process (pp : global_branching_preproce
   when (l > 1) <| linarith_trace f! "Preprocessing: {pp} has branched, with branches:"
   l fun l => tactic.set_goals [l.1] >> linarith_trace_proofs (toString f! "Preprocessing: {pp}") l.2
   return l
+#align linarith.global_branching_preprocessor.process linarith.global_branching_preprocessor.process
 
 unsafe instance preprocessor_to_gb_preprocessor : Coe preprocessor global_branching_preprocessor :=
   ⟨global_preprocessor.branching ∘ preprocessor.globalize⟩
+#align linarith.preprocessor_to_gb_preprocessor linarith.preprocessor_to_gb_preprocessor
 
 unsafe instance global_preprocessor_to_gb_preprocessor : Coe global_preprocessor global_branching_preprocessor :=
   ⟨global_preprocessor.branching⟩
+#align linarith.global_preprocessor_to_gb_preprocessor linarith.global_preprocessor_to_gb_preprocessor
 
 /-- A `certificate_oracle` is a function `produce_certificate : list comp → ℕ → tactic (rb_map ℕ ℕ)`.
 `produce_certificate hyps max_var` tries to derive a contradiction from the comparisons in `hyps`
@@ -305,6 +337,7 @@ The default `certificate_oracle` used by `linarith` is
 -/
 unsafe def certificate_oracle : Type :=
   List Comp → ℕ → tactic (rb_map ℕ ℕ)
+#align linarith.certificate_oracle linarith.certificate_oracle
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linarith`. -/
@@ -318,6 +351,7 @@ unsafe structure linarith_config : Type where
   split_ne : Bool := false
   preprocessors : Option (List global_branching_preprocessor) := none
   oracle : Option certificate_oracle := none
+#align linarith.linarith_config linarith.linarith_config
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `cfg.update_reducibility reduce_semi` will change the transparency setting of `cfg` to
@@ -326,6 +360,7 @@ since this is typically needed when using stronger unification.
 -/
 unsafe def linarith_config.update_reducibility (cfg : linarith_config) (reduce_semi : Bool) : linarith_config :=
   if reduce_semi then { cfg with Transparency := semireducible, discharger := sorry } else cfg
+#align linarith.linarith_config.update_reducibility linarith.linarith_config.update_reducibility
 
 /-!
 ### Auxiliary functions
@@ -348,6 +383,7 @@ unsafe def get_rel_sides : expr → tactic (expr × expr)
   | quote.1 ((%%ₓa) ≥ %%ₓb) => return (a, b)
   | quote.1 ((%%ₓa) > %%ₓb) => return (a, b)
   | _ => tactic.failed
+#align linarith.get_rel_sides linarith.get_rel_sides
 
 /-- `parse_into_comp_and_expr e` checks if `e` is of the form `t < 0`, `t ≤ 0`, or `t = 0`.
 If it is, it returns the comparison along with `t`.
@@ -357,6 +393,7 @@ unsafe def parse_into_comp_and_expr : expr → Option (ineq × expr)
   | quote.1 ((%%ₓe) ≤ 0) => (Ineq.le, e)
   | quote.1 ((%%ₓe) = 0) => (Ineq.eq, e)
   | _ => none
+#align linarith.parse_into_comp_and_expr linarith.parse_into_comp_and_expr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.
@@ -379,6 +416,7 @@ unsafe def mk_single_comp_zero_pf (c : ℕ) (h : expr) : tactic (ineq × expr) :
         let (_, ex) ← solve_aux cpos sorry
         let e' ← mk_app iq [h, ex]
         return (iq, e')
+#align linarith.mk_single_comp_zero_pf linarith.mk_single_comp_zero_pf
 
 end Linarith
 

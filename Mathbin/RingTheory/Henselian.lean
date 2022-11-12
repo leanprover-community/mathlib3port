@@ -80,6 +80,7 @@ theorem isLocalRingHomOfLeJacobsonBot {R : Type _} [CommRing R] (I : Ideal R) (h
   specialize h1 1
   simp at h1
   exact h1.1
+#align is_local_ring_hom_of_le_jacobson_bot isLocalRingHomOfLeJacobsonBot
 
 /-- A ring `R` is *Henselian* at an ideal `I` if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the quotient ring `R/I`,
@@ -94,6 +95,7 @@ class HenselianRing (R : Type _) [CommRing R] (I : Ideal R) : Prop where
   is_henselian :
     ∀ (f : R[X]) (hf : f.Monic) (a₀ : R) (h₁ : f.eval a₀ ∈ I)
       (h₂ : IsUnit (Ideal.Quotient.mk I (f.derivative.eval a₀))), ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ I
+#align henselian_ring HenselianRing
 
 /-- A local ring `R` is *Henselian* if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the residue field,
@@ -107,12 +109,14 @@ class HenselianLocalRing (R : Type _) [CommRing R] extends LocalRing R : Prop wh
   is_henselian :
     ∀ (f : R[X]) (hf : f.Monic) (a₀ : R) (h₁ : f.eval a₀ ∈ maximalIdeal R) (h₂ : IsUnit (f.derivative.eval a₀)),
       ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ maximalIdeal R
+#align henselian_local_ring HenselianLocalRing
 
 -- see Note [lower instance priority]
 instance (priority := 100) Field.henselian (K : Type _) [Field K] :
     HenselianLocalRing K where is_henselian f hf a₀ h₁ h₂ := by
     refine' ⟨a₀, _, _⟩ <;> rwa [(maximal_ideal K).eq_bot_of_prime, Ideal.mem_bot] at *
     rw [sub_self]
+#align field.henselian Field.henselian
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -223,7 +227,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                ["["
                 [(Tactic.simpLemma [] [] `aeval_def)
                  ","
-                 (Tactic.simpLemma [] [] `RingHom.algebra_map_to_algebra)
+                 (Tactic.simpLemma [] [] `residue_field.algebra_map_eq)
                  ","
                  (Tactic.simpLemma [] [] `eval₂_at_apply)
                  ","
@@ -415,7 +419,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
               ["["
                [(Tactic.simpLemma [] [] `aeval_def)
                 ","
-                (Tactic.simpLemma [] [] `RingHom.algebra_map_to_algebra)
+                (Tactic.simpLemma [] [] `residue_field.algebra_map_eq)
                 ","
                 (Tactic.simpLemma [] [] `eval₂_at_apply)
                 ","
@@ -1007,7 +1011,7 @@ theorem
               [
                 aeval_def
                   ,
-                  RingHom.algebra_map_to_algebra
+                  residue_field.algebra_map_eq
                   ,
                   eval₂_at_apply
                   ,
@@ -1042,6 +1046,7 @@ theorem
                     ]
                   at h₂
         tfae_finish
+#align henselian_local_ring.tfae HenselianLocalRing.tfae
 
 instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R (maximalIdeal R) where
   jac := by
@@ -1056,8 +1061,6 @@ instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R
     rw [h₂]
     exact not_is_unit_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(2, «expr + »(n, 1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 -- see Note [lower instance priority]
 /-- A ring `R` that is `I`-adically complete is Henselian at `I`. -/
 instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R] (I : Ideal R) [IsAdicComplete I R] :
@@ -1065,102 +1068,27 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
   jac := IsAdicComplete.le_jacobson_bot _
   is_henselian := by
     intro f hf a₀ h₁ h₂
-    classical
-    let f' := f.derivative
-    -- we define a sequence `c n` by starting at `a₀` and then continually
-    -- applying the function sending `b` to `b - f(b)/f'(b)` (Newton's method).
-    -- Note that `f'.eval b` is a unit, because `b` has the same residue as `a₀` modulo `I`.
-    let c : ℕ → R := fun n => Nat.recOn n a₀ fun _ b => b - f.eval b * Ring.inverse (f'.eval b)
-    have hc : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n)) := by
-      intro n
-      dsimp only [c, Nat.rec_add_one]
-      rfl
-    -- we now spend some time determining properties of the sequence `c : ℕ → R`
-    -- `hc_mod`: for every `n`, we have `c n ≡ a₀ [SMOD I]`
-    -- `hf'c`  : for every `n`, `f'.eval (c n)` is a unit
-    -- `hfcI`  : for every `n`, `f.eval (c n)` is contained in `I ^ (n+1)`
-    have hc_mod : ∀ n, c n ≡ a₀ [SMOD I] := by
-      intro n
-      induction' n with n ih
-      · rfl
+    classical let f' := f.derivative
+      have hc : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n))
+      -- we now spend some time determining properties of the sequence `c : ℕ → R`
+      -- `hc_mod`: for every `n`, we have `c n ≡ a₀ [SMOD I]`
+      -- `hf'c`  : for every `n`, `f'.eval (c n)` is a unit
+      -- `hfcI`  : for every `n`, `f.eval (c n)` is contained in `I ^ (n+1)`
+      have hc_mod : ∀ n, c n ≡ a₀ [SMOD I]
+      have hf'c : ∀ n, IsUnit (f'.eval (c n))
+      have hfcI : ∀ n, f.eval (c n) ∈ I ^ (n + 1)
+      -- we are now in the position to show that `c : ℕ → R` is a Cauchy sequence
+      have aux : ∀ m n, m ≤ n → c m ≡ c n [SMOD (I ^ m • ⊤ : Ideal R)]
+      -- hence the sequence converges to some limit point `a`, which is the `a` we are looking for
+      obtain ⟨a, ha⟩ := IsPrecomplete.prec' c aux
+      · show f.is_root a
+        suffices ∀ n, f.eval a ≡ 0 [SMOD (I ^ n • ⊤ : Ideal R)] by exact IsHausdorff.haus' _ this
+        intro n
+        specialize ha n
+        rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one] at ha⊢
+        refine' (ha.symm.eval f).trans _
+        rw [Smodeq.zero]
+        exact Ideal.pow_le_pow le_self_add (hfcI _)
         
-      rw [Nat.succ_eq_add_one, hc, sub_eq_add_neg, ← add_zero a₀]
-      refine' ih.add _
-      rw [Smodeq.zero, Ideal.neg_mem_iff]
-      refine' I.mul_mem_right _ _
-      rw [← Smodeq.zero] at h₁⊢
-      exact (ih.eval f).trans h₁
-    have hf'c : ∀ n, IsUnit (f'.eval (c n)) := by
-      intro n
-      haveI := isLocalRingHomOfLeJacobsonBot I (IsAdicComplete.le_jacobson_bot I)
-      apply is_unit_of_map_unit (Ideal.Quotient.mk I)
-      convert h₂ using 1
-      exact smodeq.def.mp ((hc_mod n).eval _)
-    have hfcI : ∀ n, f.eval (c n) ∈ I ^ (n + 1) := by
-      intro n
-      induction' n with n ih
-      · simpa only [pow_one]
-        
-      simp only [Nat.succ_eq_add_one]
-      rw [← taylor_eval_sub (c n), hc]
-      simp only [sub_eq_add_neg, add_neg_cancel_comm]
-      rw [eval_eq_sum, sum_over_range' _ _ _ (lt_add_of_pos_right _ zero_lt_two), ←
-        Finset.sum_range_add_sum_Ico _ (Nat.le_add_left _ _)]
-      swap
-      · intro i
-        rw [zero_mul]
-        
-      refine' Ideal.add_mem _ _ _
-      · simp only [Finset.sum_range_succ, taylor_coeff_one, mul_one, pow_one, taylor_coeff_zero, mul_neg,
-          Finset.sum_singleton, Finset.range_one, pow_zero]
-        rw [mul_left_comm, Ring.mul_inverse_cancel _ (hf'c n), mul_one, add_neg_self]
-        exact Ideal.zero_mem _
-        
-      · refine' Submodule.sum_mem _ _
-        simp only [Finset.mem_Ico]
-        rintro i ⟨h2i, hi⟩
-        have aux : n + 2 ≤ i * (n + 1) := by
-          trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr * »(2, «expr + »(n, 1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" <;>
-            nlinarith only [h2i]
-        refine' Ideal.mul_mem_left _ _ (Ideal.pow_le_pow aux _)
-        rw [pow_mul']
-        refine' Ideal.pow_mem_pow ((Ideal.neg_mem_iff _).2 <| Ideal.mul_mem_right _ _ ih) _
-        
-    -- we are now in the position to show that `c : ℕ → R` is a Cauchy sequence
-    have aux : ∀ m n, m ≤ n → c m ≡ c n [SMOD (I ^ m • ⊤ : Ideal R)] := by
-      intro m n hmn
-      rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one]
-      obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn
-      clear hmn
-      induction' k with k ih
-      · rw [add_zero]
-        
-      rw [Nat.succ_eq_add_one, ← add_assoc, hc, ← add_zero (c m), sub_eq_add_neg]
-      refine' ih.add _
-      symm
-      rw [Smodeq.zero, Ideal.neg_mem_iff]
-      refine' Ideal.mul_mem_right _ _ (Ideal.pow_le_pow _ (hfcI _))
-      rw [add_assoc]
-      exact le_self_add
-    -- hence the sequence converges to some limit point `a`, which is the `a` we are looking for
-    obtain ⟨a, ha⟩ := IsPrecomplete.prec' c aux
-    refine' ⟨a, _, _⟩
-    · show f.is_root a
-      suffices ∀ n, f.eval a ≡ 0 [SMOD (I ^ n • ⊤ : Ideal R)] by exact IsHausdorff.haus' _ this
-      intro n
-      specialize ha n
-      rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one] at ha⊢
-      refine' (ha.symm.eval f).trans _
-      rw [Smodeq.zero]
-      exact Ideal.pow_le_pow le_self_add (hfcI _)
-      
-    · show a - a₀ ∈ I
-      specialize ha 1
-      rw [hc, pow_one, ← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one, sub_eq_add_neg] at ha
-      rw [← Smodeq.sub_mem, ← add_zero a₀]
-      refine' ha.symm.trans (smodeq.rfl.add _)
-      rw [Smodeq.zero, Ideal.neg_mem_iff]
-      exact Ideal.mul_mem_right _ _ h₁
-      
+#align is_adic_complete.henselian_ring IsAdicComplete.henselianRing
 

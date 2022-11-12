@@ -32,6 +32,7 @@ private unsafe def get_unused_name_reserved_aux (n : Name) (reserved : name_set)
         | none => some 1
         | some n => some (n + 1)
       get_unused_name_reserved_aux new_suffix
+#align tactic.get_unused_name_reserved_aux tactic.get_unused_name_reserved_aux
 
 /-- `get_unused_name_reserved ns reserved` returns the first name from `ns` that
 occurs neither in `reserved` nor in the environment. If there is no such name in
@@ -73,6 +74,7 @@ unsafe def get_unused_name_reserved (ns : List Name) (reserved : name_set) : tac
       | [] => `x
       | x :: _ => x
     get_unused_name_reserved_aux fallback reserved none
+#align tactic.get_unused_name_reserved tactic.get_unused_name_reserved
 
 /-- `intro_fresh_reserved ns reserved` introduces a hypothesis. The hypothesis
 receives a fresh name from `ns`, excluding the names in `reserved`. `ns` must be
@@ -80,6 +82,7 @@ nonempty. See `tactic.get_unused_name_reserved` for the full algorithm.
 -/
 unsafe def intro_fresh_reserved (ns : List Name) (reserved : name_set) : tactic expr :=
   get_unused_name_reserved ns reserved >>= intro
+#align tactic.intro_fresh_reserved tactic.intro_fresh_reserved
 
 /-- `intro_lst_fresh_reserved ns reserved` introduces one hypothesis for every
 element of `ns`. If the element is `sum.inl n`, the hypothesis receives the name
@@ -99,6 +102,7 @@ unsafe def intro_lst_fresh_reserved (ns : List (Sum Name (List Name))) (reserved
     match spec with
     | Sum.inl n => intro n
     | Sum.inr ns => intro_fresh_reserved ns reserved
+#align tactic.intro_lst_fresh_reserved tactic.intro_lst_fresh_reserved
 
 /-- `rename_fresh renames reserved`, given a map `renames` which associates the
 unique names of some hypotheses `hᵢ` with either a name `nᵢ` or a nonempty (!)
@@ -136,6 +140,7 @@ unsafe def rename_fresh (renames : name_map (Sum Name (List Name))) (reserved : 
   let reserved := reserved.insert_list <| renames.filterMap Sum.getLeft
   let new_hyps ← intro_lst_fresh_reserved renames reserved
   pure <| reverted new_hyps
+#align tactic.rename_fresh tactic.rename_fresh
 
 end Tactic
 

@@ -76,19 +76,23 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
           
         · exact (Submodule.range_subtype _).symm
            }
+#align Module.subobject_Module ModuleCat.subobjectModule
 
 instance well_powered_Module : WellPowered (ModuleCat.{v} R) :=
   ⟨fun M => ⟨⟨_, ⟨(subobjectModule M).toEquiv⟩⟩⟩⟩
+#align Module.well_powered_Module ModuleCat.well_powered_Module
 
 attribute [local instance] has_kernels_Module
 
 /-- Bundle an element `m : M` such that `f m = 0` as a term of `kernel_subobject f`. -/
 noncomputable def toKernelSubobject {M N : ModuleCat R} {f : M ⟶ N} : LinearMap.ker f →ₗ[R] kernelSubobject f :=
   (kernelSubobjectIso f ≪≫ ModuleCat.kernelIsoKer f).inv
+#align Module.to_kernel_subobject ModuleCat.toKernelSubobject
 
 @[simp]
 theorem to_kernel_subobject_arrow {M N : ModuleCat R} {f : M ⟶ N} (x : LinearMap.ker f) :
     (kernelSubobject f).arrow (toKernelSubobject x) = x.1 := by simp [to_kernel_subobject]
+#align Module.to_kernel_subobject_arrow ModuleCat.to_kernel_subobject_arrow
 
 /-- An extensionality lemma showing that two elements of a cokernel by an image
 are equal if they differ by an element of the image.
@@ -96,12 +100,13 @@ are equal if they differ by an element of the image.
 The application is for homology:
 two elements in homology are equal if they differ by a boundary.
 -/
-@[ext]
+@[ext.1]
 theorem cokernel_π_image_subobject_ext {L M N : ModuleCat.{v} R} (f : L ⟶ M) [HasImage f]
     (g : (imageSubobject f : ModuleCat.{v} R) ⟶ N) [HasCokernel g] {x y : N} (l : L)
     (w : x = y + g (factorThruImageSubobject f l)) : cokernel.π g x = cokernel.π g y := by
   subst w
   simp
+#align Module.cokernel_π_image_subobject_ext ModuleCat.cokernel_π_image_subobject_ext
 
 end ModuleCat
 

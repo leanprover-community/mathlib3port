@@ -25,11 +25,13 @@ theorem dvd_choose_add {p a b : ℕ} (hap : a < p) (hbp : b < p) (h : p ≤ a + 
   rw [← choose_mul_factorial_mul_factorial (le.intro rfl), mul_assoc, hp.dvd_mul, hp.dvd_mul,
       add_tsub_cancel_left a b] at h₁ <;>
     exact h₁.resolve_right (not_or.2 ⟨h₂, h₃⟩)
+#align nat.prime.dvd_choose_add Nat.Prime.dvd_choose_add
 
 theorem dvd_choose_self {p k : ℕ} (hk : 0 < k) (hkp : k < p) (hp : Prime p) : p ∣ choose p k := by
   have r : k + (p - k) = p := by rw [← add_tsub_assoc_of_le (Nat.le_of_lt hkp) k, add_tsub_cancel_left]
   have e : p ∣ choose (k + (p - k)) k := dvd_choose_add hkp (Nat.sub_lt (hk.trans hkp) hk) (by rw [r]) hp
   rwa [r] at e
+#align nat.prime.dvd_choose_self Nat.Prime.dvd_choose_self
 
 end Prime
 

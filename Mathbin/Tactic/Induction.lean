@@ -50,6 +50,7 @@ initialize
 -/
 unsafe def trace_eliminate_hyp {α} [has_to_format α] (msg : Thunk' α) : tactic Unit :=
   when_tracing `eliminate_hyp <| trace <| to_fmt "eliminate_hyp: " ++ to_fmt (msg ())
+#align tactic.eliminate.trace_eliminate_hyp tactic.eliminate.trace_eliminate_hyp
 
 /-- `trace_state_eliminate_hyp msg` traces `msg` followed by the tactic state if the
 option `trace.eliminate_hyp` is `true`.
@@ -57,6 +58,7 @@ option `trace.eliminate_hyp` is `true`.
 unsafe def trace_state_eliminate_hyp {α} [has_to_format α] (msg : Thunk' α) : tactic Unit := do
   let state ← read
   trace_eliminate_hyp <| format.join [to_fmt (msg ()), "\n-----\n", to_fmt State, "\n-----"]
+#align tactic.eliminate.trace_state_eliminate_hyp tactic.eliminate.trace_state_eliminate_hyp
 
 /-!
 ## Information Gathering
@@ -104,6 +106,7 @@ unsafe structure constructor_argument_info where
   index_occurrences : List ℕ
   recursive_leading_pis : Option ℕ
   deriving has_reflect
+#align tactic.eliminate.constructor_argument_info tactic.eliminate.constructor_argument_info
 
 namespace ConstructorArgumentInfo
 
@@ -112,6 +115,7 @@ recursive.
 -/
 unsafe def is_recursive (c : constructor_argument_info) :=
   c.recursive_leading_pis.isSome
+#align tactic.eliminate.constructor_argument_info.is_recursive tactic.eliminate.constructor_argument_info.is_recursive
 
 end ConstructorArgumentInfo
 
@@ -139,12 +143,15 @@ unsafe structure constructor_info where
   rec_args : List constructor_argument_info
   num_rec_args : ℕ
   deriving has_reflect
+#align tactic.eliminate.constructor_info tactic.eliminate.constructor_info
 
 /-- When we construct the goal for the minor premise of a given constructor, this is
 the number of hypotheses we must name.
 -/
 unsafe def constructor_info.num_nameable_hypotheses (c : constructor_info) : ℕ :=
   c.num_non_param_args + c.num_rec_args
+#align
+  tactic.eliminate.constructor_info.num_nameable_hypotheses tactic.eliminate.constructor_info.num_nameable_hypotheses
 
 /-- Information about an inductive type. Contains:
 
@@ -163,6 +170,7 @@ unsafe structure inductive_info where
   num_params : ℕ
   num_indices : ℕ
   deriving has_reflect
+#align tactic.eliminate.inductive_info tactic.eliminate.inductive_info
 
 /-- Information about a major premise (i.e. the hypothesis on which we are
 performing induction). Contains:
@@ -179,6 +187,7 @@ unsafe structure major_premise_info where
   mpexpr : expr
   type : expr
   args : rb_map ℕ expr
+#align tactic.eliminate.major_premise_info tactic.eliminate.major_premise_info
 
 -- We could extend this check to be more permissive. E.g. if a constructor
 -- argument has type `list α` and the index has type `list β`, we may want to
@@ -189,6 +198,7 @@ equal.
 -/
 unsafe def index_occurrence_type_match (t s : expr) : tactic Bool :=
   succeeds <| is_def_eq t s
+#align tactic.eliminate.index_occurrence_type_match tactic.eliminate.index_occurrence_type_match
 
 /-- From the return type of a constructor `C` of an inductive type `I`, determine
 the index occurrences of the constructor arguments of `C`.
@@ -214,6 +224,7 @@ unsafe def get_index_occurrences (num_params : ℕ) (ret_type : expr) : tactic (
                 let eq ← index_occurrence_type_match c ret_arg_type
                 pure <| if Eq then occ_map c i else occ_map)
       mk_rb_map
+#align tactic.eliminate.get_index_occurrences tactic.eliminate.get_index_occurrences
 
 /-- `match_recursive_constructor_arg I T`, given `I` the name of an inductive type
 and `T` the type of an argument of a constructor of `I`, returns `none` if the
@@ -229,6 +240,7 @@ unsafe def match_recursive_constructor_arg (I : Name) (T : expr) : tactic (Optio
       match base with
       | const c _ => if c = I then some pis else none
       | _ => none
+#align tactic.eliminate.match_recursive_constructor_arg tactic.eliminate.match_recursive_constructor_arg
 
 /-- Get information about the arguments of a constructor `C` of an inductive type
 `I`.
@@ -250,6 +262,7 @@ unsafe def get_constructor_argument_info (inductive_name : Name) (num_params : �
       let type := c
       let recursive_leading_pis ← match_recursive_constructor_arg inductive_name type
       pure ⟨c, type, dep, occs, recursive_leading_pis⟩
+#align tactic.eliminate.get_constructor_argument_info tactic.eliminate.get_constructor_argument_info
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -275,6 +288,7 @@ unsafe def get_constructor_info (iname : Name) (num_params : ℕ) (c : Name) : t
   let non_param_args := args.drop num_params
   let rec_args := non_param_args.filter fun ainfo => ainfo.is_recursive
   pure { cname := decl, non_param_args, num_non_param_args := non_param_args, rec_args, num_rec_args := rec_args }
+#align tactic.eliminate.get_constructor_info tactic.eliminate.get_constructor_info
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -292,6 +306,7 @@ unsafe def get_inductive_info (I : Name) : tactic inductive_info := do
   let constructor_names := env.constructors_of I
   let constructors ← constructor_names.mmap (get_constructor_info I num_params)
   pure { iname := I, constructors, num_constructors := constructors, type, num_params, num_indices }
+#align tactic.eliminate.get_inductive_info tactic.eliminate.get_inductive_info
 
 /-- Get information about a major premise. The given `expr` must be a local
 hypothesis.
@@ -300,6 +315,7 @@ unsafe def get_major_premise_info (major_premise : expr) : tactic major_premise_
   let type ← infer_type major_premise
   let ⟨f, args⟩ ← get_app_fn_args_whnf type
   pure { mpname := major_premise, mpexpr := major_premise, type, args }
+#align tactic.eliminate.get_major_premise_info tactic.eliminate.get_major_premise_info
 
 /-!
 ## Constructor Argument Naming
@@ -316,6 +332,7 @@ unsafe structure constructor_argument_naming_info where
   iinfo : inductive_info
   cinfo : constructor_info
   ainfo : constructor_argument_info
+#align tactic.eliminate.constructor_argument_naming_info tactic.eliminate.constructor_argument_naming_info
 
 /-- A constructor argument naming rule takes a `constructor_argument_naming_info`
 structure and returns a list of suitable names for the argument. If the rule is
@@ -324,11 +341,13 @@ not applicable to the given constructor argument, the returned list is empty.
 @[reducible]
 unsafe def constructor_argument_naming_rule : Type :=
   constructor_argument_naming_info → tactic (List Name)
+#align tactic.eliminate.constructor_argument_naming_rule tactic.eliminate.constructor_argument_naming_rule
 
 /-- Naming rule for recursive constructor arguments.
 -/
 unsafe def constructor_argument_naming_rule_rec : constructor_argument_naming_rule := fun i =>
   pure <| if i.ainfo.is_recursive then [i.mpinfo.mpname] else []
+#align tactic.eliminate.constructor_argument_naming_rule_rec tactic.eliminate.constructor_argument_naming_rule_rec
 
 /-- Naming rule for constructor arguments associated with an index.
 -/
@@ -351,6 +370,7 @@ unsafe def constructor_argument_naming_rule_index : constructor_argument_naming_
     | none => []
     | some [] => []
     | some ((uname, ppname) :: is) => if is.all fun ⟨uname', _⟩ => uname' = uname then [ppname] else []
+#align tactic.eliminate.constructor_argument_naming_rule_index tactic.eliminate.constructor_argument_naming_rule_index
 
 /-- Naming rule for constructor arguments which are named in the constructor
 declaration.
@@ -359,22 +379,28 @@ unsafe def constructor_argument_naming_rule_named : constructor_argument_naming_
   let arg_name := i.ainfo.aname
   let arg_dep := i.ainfo.dependent
   pure <| if !arg_dep && arg_name.is_likely_generated_binder_name then [] else [arg_name]
+#align tactic.eliminate.constructor_argument_naming_rule_named tactic.eliminate.constructor_argument_naming_rule_named
 
 /-- Naming rule for constructor arguments whose type is associated with a list of
 typical variable names. See `tactic.typical_variable_names`.
 -/
 unsafe def constructor_argument_naming_rule_type : constructor_argument_naming_rule := fun i =>
   typical_variable_names i.ainfo.type <|> pure []
+#align tactic.eliminate.constructor_argument_naming_rule_type tactic.eliminate.constructor_argument_naming_rule_type
 
 /-- Naming rule for constructor arguments whose type is in `Prop`.
 -/
 unsafe def constructor_argument_naming_rule_prop : constructor_argument_naming_rule := fun i => do
-  let sort level.zero ← infer_type i.ainfo.type | pure []
+  let sort level.zero ← infer_type i.ainfo.type |
+    pure []
   pure [`h]
+#align tactic.eliminate.constructor_argument_naming_rule_prop tactic.eliminate.constructor_argument_naming_rule_prop
 
 /-- Fallback constructor argument naming rule. This rule never fails.
 -/
 unsafe def constructor_argument_naming_rule_fallback : constructor_argument_naming_rule := fun _ => pure [`x]
+#align
+  tactic.eliminate.constructor_argument_naming_rule_fallback tactic.eliminate.constructor_argument_naming_rule_fallback
 
 /-- `apply_constructor_argument_naming_rules info rules` applies the constructor
 argument naming rules in `rules` to the constructor argument given by `info`.
@@ -392,6 +418,7 @@ unsafe def apply_constructor_argument_naming_rules (info : constructor_argument_
   match names with
     | none => fail "apply_constructor_argument_naming_rules: no applicable naming rule"
     | some names => pure names
+#align tactic.eliminate.apply_constructor_argument_naming_rules tactic.eliminate.apply_constructor_argument_naming_rules
 
 /-- Get possible names for a constructor argument. This tactic applies all the
 previously defined rules in order. It cannot fail and always returns a nonempty
@@ -402,12 +429,14 @@ unsafe def constructor_argument_names (info : constructor_argument_naming_info) 
     [constructor_argument_naming_rule_rec, constructor_argument_naming_rule_index,
       constructor_argument_naming_rule_named, constructor_argument_naming_rule_type,
       constructor_argument_naming_rule_prop, constructor_argument_naming_rule_fallback]
+#align tactic.eliminate.constructor_argument_names tactic.eliminate.constructor_argument_names
 
 /-- `intron_fresh n` introduces `n` hypotheses with names generated by
 `tactic.mk_fresh_name`.
 -/
 unsafe def intron_fresh (n : ℕ) : tactic (List expr) :=
   iterate_exactly n (mk_fresh_name >>= intro)
+#align tactic.eliminate.intron_fresh tactic.eliminate.intron_fresh
 
 /-- Introduce the new hypotheses generated by the minor premise for a given
 constructor. The new hypotheses are given fresh (unique, non-human-friendly)
@@ -436,16 +465,19 @@ unsafe def constructor_intros (generate_induction_hyps : Bool) (cinfo : construc
   let args := cinfo.non_param_args
   let arg_hyps ← intron_fresh cinfo.num_non_param_args
   let args := (arg_hyps.map expr.local_pp_name).zip args
-  let tt ← pure generate_induction_hyps | pure (args, [])
+  let tt ← pure generate_induction_hyps |
+    pure (args, [])
   let rec_args := args.filter fun x => x.2.is_recursive
   let ih_hyps ← intron_fresh cinfo.num_rec_args
   let ihs := (ih_hyps.map expr.local_pp_name).zip rec_args
   pure (args, ihs)
+#align tactic.eliminate.constructor_intros tactic.eliminate.constructor_intros
 
 /-- `ih_name arg_name` is the name `ih_<arg_name>`.
 -/
 unsafe def ih_name (arg_name : Name) : Name :=
   mkSimpleName ("ih_" ++ arg_name.toString)
+#align tactic.eliminate.ih_name tactic.eliminate.ih_name
 
 /-- Representation of a pattern in the `with n ...` syntax supported by
 `induction'` and `cases'`. A `with_pattern` can be:
@@ -459,6 +491,7 @@ unsafe inductive with_pattern
   | clear
   | exact (n : Name)
   deriving has_reflect
+#align tactic.eliminate.with_pattern tactic.eliminate.with_pattern
 
 namespace WithPattern
 
@@ -469,10 +502,12 @@ open Lean.Parser
 /-- Parser for a `with_pattern`. -/
 protected unsafe def parser : lean.parser with_pattern :=
   tk "-" *> pure with_pattern.clear <|> tk "_" *> pure with_pattern.auto <|> with_pattern.exact <$> ident
+#align tactic.eliminate.with_pattern.parser tactic.eliminate.with_pattern.parser
 
 /-- Parser for a `with` clause. -/
 unsafe def clause_parser : lean.parser (List with_pattern) :=
   tk "with" *> many with_pattern.parser <|> pure []
+#align tactic.eliminate.with_pattern.clause_parser tactic.eliminate.with_pattern.clause_parser
 
 /-- `to_name_spec auto_candidates p` returns a description of how the hypothesis to
 which the `with_pattern` `p` applies should be named. If this function returns
@@ -488,6 +523,7 @@ unsafe def to_name_spec (auto_candidates : tactic (List Name)) : with_pattern �
   | auto => (some ∘ Sum.inr) <$> auto_candidates
   | clear => pure none
   | exact n => pure <| some <| Sum.inl n
+#align tactic.eliminate.with_pattern.to_name_spec tactic.eliminate.with_pattern.to_name_spec
 
 end WithPattern
 
@@ -495,8 +531,10 @@ end WithPattern
 hypotheses which depend on it. Otherwise, the tactic does nothing.
 -/
 unsafe def clear_dependent_if_exists (h : Name) : tactic Unit := do
-  let some h ← try_core <| get_local h | pure ()
+  let some h ← try_core <| get_local h |
+    pure ()
   clear' tt [h]
+#align tactic.eliminate.clear_dependent_if_exists tactic.eliminate.clear_dependent_if_exists
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -537,7 +575,8 @@ unsafe def constructor_renames (generate_induction_hyps : Bool) (mpinfo : major_
             -- steps, so get_local may fail.
             some
             old
-          ← try_core <| get_local old_ppname | pure none
+          ← try_core <| get_local old_ppname |
+          pure none
         pure <| some (old, new)
   let arg_renames := rb_map.of_list arg_renames
   let arg_hyp_map ← rename_fresh arg_renames mk_name_set
@@ -546,7 +585,8 @@ unsafe def constructor_renames (generate_induction_hyps : Bool) (mpinfo : major_
   let arg_hyp_map : name_map expr := rb_map.of_list <| arg_hyp_map.map fun ⟨old, new⟩ => (old.local_pp_name, new)
   let-- Rename induction hypotheses (if we generated them)
     tt
-    ← pure generate_induction_hyps | pure (new_arg_hyps, [])
+    ← pure generate_induction_hyps |
+    pure (new_arg_hyps, [])
   let ih_pp_name_set := name_set.of_list <| ihs.map Prod.fst
   let ihs := ihs.map₂Left (fun ih p => (ih, p.getOrElse with_pattern.auto)) with_patterns
   let single_ih := ihs.length = 1
@@ -563,12 +603,14 @@ unsafe def constructor_renames (generate_induction_hyps : Bool) (mpinfo : major_
                   -- back to the name the IH would ordinarily receive.
                   [ih_name arg_hyp.local_pp_name]) |
           clear_dependent_if_exists ih_hyp_ppname >> pure none
-        let some ih_hyp ← try_core <| get_local ih_hyp_ppname | pure none
+        let some ih_hyp ← try_core <| get_local ih_hyp_ppname |
+          pure none
         pure <| some (ih_hyp, new)
   let ih_hyp_map ← rename_fresh (rb_map.of_list ih_renames) mk_name_set
   let new_ih_hyps :=
     ih_hyp_map.filterMap fun ⟨old, new⟩ => if ih_pp_name_set.contains old.local_pp_name then some new else none
   pure (new_arg_hyps, new_ih_hyps)
+#align tactic.eliminate.constructor_renames tactic.eliminate.constructor_renames
 
 /-!
 ## Generalisation
@@ -601,6 +643,7 @@ inductive GeneralizationMode
   | generalize_all_except (hs : List Name) : generalization_mode
   | generalize_only (hs : List Name) : generalization_mode
   deriving has_reflect
+#align tactic.eliminate.generalization_mode Tactic.Eliminate.GeneralizationMode
 
 instance : Inhabited GeneralizationMode :=
   ⟨GeneralizationMode.generalize_all_except []⟩
@@ -645,6 +688,7 @@ unsafe def to_generalize (major_premise : expr) : GeneralizationMode → tactic 
               pure <|
               if rev then some h_name else none
     pure <| name_set.of_list to_revert
+#align tactic.eliminate.generalization_mode.to_generalize tactic.eliminate.generalization_mode.to_generalize
 
 end GeneralizationMode
 
@@ -655,6 +699,7 @@ unsafe def generalize_hyps (major_premise : expr) (gm : GeneralizationMode) : ta
   let to_revert ← gm.to_generalize major_premise
   let ⟨n, _⟩ ← unfreezing (revert_name_set to_revert)
   pure n
+#align tactic.eliminate.generalize_hyps tactic.eliminate.generalize_hyps
 
 /-!
 ## Complex Index Generalisation
@@ -768,6 +813,7 @@ unsafe def generalize_complex_index_args (major_premise : expr) (num_params : �
     revert_lst index_equations
     let index_vars := index_vars.map local_pp_name
     pure (major_premise, index_vars, index_vars, relevant_ctx_size)
+#align tactic.eliminate.generalize_complex_index_args tactic.eliminate.generalize_complex_index_args
 
 /-!
 ## Simplification of Induction Hypotheses
@@ -831,6 +877,7 @@ unsafe def process_index_equation : expr → tactic (expr × Option expr)
     "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   | e =>
     "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+#align tactic.eliminate.process_index_equation tactic.eliminate.process_index_equation
 
 /-- `assign_local_to_unassigned_mvar mv pp_name binfo`, where `mv` is a
 metavariable, acts as follows:
@@ -842,17 +889,20 @@ metavariable, acts as follows:
 -/
 unsafe def assign_local_to_unassigned_mvar (mv : expr) (pp_name : Name) (binfo : BinderInfo) : tactic (Option expr) :=
   do
-  let ff ← is_assigned mv | pure none
+  let ff ← is_assigned mv |
+    pure none
   let type ← infer_type mv
   let c ← mk_local' pp_name binfo type
   unify mv c
   pure c
+#align tactic.eliminate.assign_local_to_unassigned_mvar tactic.eliminate.assign_local_to_unassigned_mvar
 
 /-- Apply `assign_local_to_unassigned_mvar` to a list of metavariables. Returns the
 newly created local constants.
 -/
 unsafe def assign_locals_to_unassigned_mvars (mvars : List (expr × Name × BinderInfo)) : tactic (List expr) :=
   mvars.mmapFilter fun ⟨mv, pp_name, binfo⟩ => assign_local_to_unassigned_mvar mv pp_name binfo
+#align tactic.eliminate.assign_locals_to_unassigned_mvars tactic.eliminate.assign_locals_to_unassigned_mvars
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -941,6 +991,7 @@ unsafe def simplify_ih (num_leading_pis : ℕ) (num_generalized : ℕ) (num_inde
         ih.local_pp_name none new_ih
   clear ih
   pure ih'
+#align tactic.eliminate.simplify_ih tactic.eliminate.simplify_ih
 
 /-!
 ## Temporary utilities
@@ -966,6 +1017,7 @@ unsafe def set_cases_tags (in_tag : Tag) (rs : List (Name × List expr)) : tacti
       let tgs : List (Name × List expr × expr) := rs (fun ⟨n, new_hyps⟩ g => ⟨n, new_hyps, g⟩) gs
       tgs fun ⟨n, new_hyps, g⟩ =>
         with_enable_tags <| set_tag g <| (case_tag.from_tag_hyps (n :: in_tag) (new_hyps expr.local_uniq_name)).render
+#align tactic.eliminate.set_cases_tags tactic.eliminate.set_cases_tags
 
 end Eliminate
 
@@ -1166,6 +1218,7 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
                 some (cinfo, constructor_arg_hyps ++ ih_hyps)
     set_cases_tags in_tag cases
     pure ()
+#align tactic.eliminate_hyp tactic.eliminate_hyp
 
 /-- A variant of `tactic.eliminate_hyp` which performs induction or case analysis on
 an arbitrary expression. `eliminate_hyp` requires that the major premise is a
@@ -1192,6 +1245,7 @@ unsafe def eliminate_expr (generate_induction_hyps : Bool) (major_premise : expr
             generalize' major_premise x
   intron num_reverted
   eliminate_hyp generate_induction_hyps hyp gm with_patterns
+#align tactic.eliminate_expr tactic.eliminate_expr
 
 end Tactic
 
@@ -1207,6 +1261,7 @@ unsafe def generalisation_mode_parser : lean.parser GeneralizationMode :=
         generalization_mode.generalize_all_except <$> many ident) <|>
     tk "generalizing" *> generalization_mode.generalize_only <$> many ident <|>
       pure (GeneralizationMode.generalize_all_except [])
+#align tactic.interactive.generalisation_mode_parser tactic.interactive.generalisation_mode_parser
 
 /-- A variant of `tactic.interactive.induction`, with the following differences:
 
@@ -1265,6 +1320,7 @@ unsafe def induction' (major_premise : parse cases_arg_p) (gm : parse generalisa
   let ⟨eq_name, e⟩ := major_premise
   let e ← to_expr e
   eliminate_expr tt e eq_name gm with_patterns
+#align tactic.interactive.induction' tactic.interactive.induction'
 
 /-- A variant of `tactic.interactive.cases`, with minor changes:
 
@@ -1293,6 +1349,7 @@ unsafe def cases' (major_premise : parse cases_arg_p) (with_patterns : parse wit
   let ⟨eq_name, e⟩ := major_premise
   let e ← to_expr e
   eliminate_expr ff e eq_name (generalization_mode.generalize_only []) with_patterns
+#align tactic.interactive.cases' tactic.interactive.cases'
 
 end Tactic.Interactive
 

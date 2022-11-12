@@ -53,36 +53,44 @@ theorem P_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) : ((p (q + 1)).f n 
     simp only [add_right_eq_self, comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id]
     exact (higher_faces_vanish.of_P q n).comp_Hσ_eq_zero (nat.succ_le_iff.mp hqn)
     
+#align algebraic_topology.dold_kan.P_is_eventually_constant AlgebraicTopology.DoldKan.P_is_eventually_constant
 
 theorem Q_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) : ((q (q + 1)).f n : X _[n] ⟶ _) = (q q).f n := by
   simp only [Q, HomologicalComplex.sub_f_apply, P_is_eventually_constant hqn]
+#align algebraic_topology.dold_kan.Q_is_eventually_constant AlgebraicTopology.DoldKan.Q_is_eventually_constant
 
 /-- The endomorphism `P_infty : K[X] ⟶ K[X]` obtained from the `P q` by passing to the limit. -/
 def pInfty : K[X] ⟶ K[X] :=
   ChainComplex.ofHom _ _ _ _ _ _ (fun n => ((p n).f n : X _[n] ⟶ _)) fun n => by
     simpa only [← P_is_eventually_constant (show n ≤ n by rfl), alternating_face_map_complex.obj_d_eq] using
       (P (n + 1)).comm (n + 1) n
+#align algebraic_topology.dold_kan.P_infty AlgebraicTopology.DoldKan.pInfty
 
 @[simp]
 theorem P_infty_f_0 : (pInfty.f 0 : X _[0] ⟶ X _[0]) = 𝟙 _ :=
   rfl
+#align algebraic_topology.dold_kan.P_infty_f_0 AlgebraicTopology.DoldKan.P_infty_f_0
 
 theorem P_infty_f (n : ℕ) : (pInfty.f n : X _[n] ⟶ X _[n]) = (p n).f n :=
   rfl
+#align algebraic_topology.dold_kan.P_infty_f AlgebraicTopology.DoldKan.P_infty_f
 
 @[simp, reassoc]
 theorem P_infty_f_naturality (n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ pInfty.f n = pInfty.f n ≫ f.app (op [n]) :=
   P_f_naturality n n f
+#align algebraic_topology.dold_kan.P_infty_f_naturality AlgebraicTopology.DoldKan.P_infty_f_naturality
 
 @[simp, reassoc]
 theorem P_infty_f_idem (n : ℕ) : (pInfty.f n : X _[n] ⟶ _) ≫ pInfty.f n = pInfty.f n := by
   simp only [P_infty_f, P_f_idem]
+#align algebraic_topology.dold_kan.P_infty_f_idem AlgebraicTopology.DoldKan.P_infty_f_idem
 
 @[simp, reassoc]
 theorem P_infty_idem : (pInfty : K[X] ⟶ _) ≫ P_infty = P_infty := by
   ext n
   exact P_infty_f_idem n
+#align algebraic_topology.dold_kan.P_infty_idem AlgebraicTopology.DoldKan.P_infty_idem
 
 variable (C)
 
@@ -94,11 +102,13 @@ def natTransPInfty : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C
   naturality' X Y f := by
     ext n
     exact P_infty_f_naturality n f
+#align algebraic_topology.dold_kan.nat_trans_P_infty AlgebraicTopology.DoldKan.natTransPInfty
 
 /-- The natural transformation in each degree that is induced by `nat_trans_P_infty`. -/
 @[simps]
 def natTransPInftyF (n : ℕ) :=
   natTransPInfty C ◫ 𝟙 (HomologicalComplex.eval _ _ n)
+#align algebraic_topology.dold_kan.nat_trans_P_infty_f AlgebraicTopology.DoldKan.natTransPInftyF
 
 variable {C}
 
@@ -107,6 +117,7 @@ theorem map_P_infty_f {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G
     (n : ℕ) :
     (pInfty : K[((whiskering C D).obj G).obj X] ⟶ _).f n = G.map ((pInfty : AlternatingFaceMapComplex.obj X ⟶ _).f n) :=
   by simp only [P_infty_f, map_P]
+#align algebraic_topology.dold_kan.map_P_infty_f AlgebraicTopology.DoldKan.map_P_infty_f
 
 /-- Given an object `Y : karoubi (simplicial_object C)`, this lemma
 computes `P_infty` for the associated object in `simplicial_object (karoubi C)`
@@ -146,6 +157,7 @@ theorem karoubi_P_infty_f {Y : Karoubi (SimplicialObject C)} (n : ℕ) :
   simp only [karoubi.comp] at eq
   dsimp [π] at eq
   rw [← Eq, reassoc_of (app_idem Y (op [n]))]
+#align algebraic_topology.dold_kan.karoubi_P_infty_f AlgebraicTopology.DoldKan.karoubi_P_infty_f
 
 end DoldKan
 

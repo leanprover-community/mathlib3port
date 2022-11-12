@@ -61,6 +61,7 @@ theorem rfind' {f} (hf : Nat.Partrec f) :
                     (primrec.snd.comp <| primrec.unpair.comp Primrec.fst))).to_comp).to₂)
     simp at this
     exact this
+#align nat.partrec.rfind' Nat.Partrec.rfind'
 
 /-- Code for partial recursive functions from ℕ to ℕ.
 See `nat.partrec.code.eval` for the interpretation of these constructors.
@@ -74,6 +75,7 @@ inductive Code : Type
   | comp : code → code → code
   | prec : code → code → code
   | rfind' : code → code
+#align nat.partrec.code Nat.Partrec.Code
 
 end Nat.Partrec
 
@@ -90,6 +92,7 @@ instance : Inhabited Code :=
 protected def const : ℕ → Code
   | 0 => zero
   | n + 1 => comp succ (const n)
+#align nat.partrec.code.const Nat.Partrec.Code.const
 
 theorem const_inj : ∀ {n₁ n₂}, Nat.Partrec.Code.const n₁ = Nat.Partrec.Code.const n₂ → n₁ = n₂
   | 0, 0, h => by simp
@@ -97,15 +100,18 @@ theorem const_inj : ∀ {n₁ n₂}, Nat.Partrec.Code.const n₁ = Nat.Partrec.C
     dsimp [Nat.Partrec.Code.const] at h
     injection h with h₁ h₂
     simp only [const_inj h₂]
+#align nat.partrec.code.const_inj Nat.Partrec.Code.const_inj
 
 /-- A code for the identity function. -/
 protected def id : Code :=
   pair left right
+#align nat.partrec.code.id Nat.Partrec.Code.id
 
 /-- Given a code `c` taking a pair as input, returns a code using `n` as the first argument to `c`.
 -/
 def curry (c : Code) (n : ℕ) : Code :=
   comp c (pair (Code.const n) Code.id)
+#align nat.partrec.code.curry Nat.Partrec.Code.curry
 
 /-- An encoding of a `nat.partrec.code` as a ℕ. -/
 def encodeCode : Code → ℕ
@@ -117,6 +123,7 @@ def encodeCode : Code → ℕ
   | comp cf cg => bit0 (bit1 <| mkpair (encode_code cf) (encode_code cg)) + 4
   | prec cf cg => bit1 (bit0 <| mkpair (encode_code cf) (encode_code cg)) + 4
   | rfind' cf => bit1 (bit1 <| encode_code cf) + 4
+#align nat.partrec.code.encode_code Nat.Partrec.Code.encodeCode
 
 /-- A decoder for `nat.partrec.code.encode_code`, taking any ℕ to the `nat.partrec.code` it represents.
 -/
@@ -139,9 +146,8 @@ def ofNatCode : ℕ → Code
     | ff, tt => comp (of_nat_code m.unpair.1) (of_nat_code m.unpair.2)
     | tt, ff => prec (of_nat_code m.unpair.1) (of_nat_code m.unpair.2)
     | tt, tt => rfind' (of_nat_code m)
+#align nat.partrec.code.of_nat_code Nat.Partrec.Code.ofNatCode
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Proof that `nat.partrec.code.of_nat_code` is the inverse of `nat.partrec.code.encode_code`-/
 private theorem encode_of_nat_code : ∀ n, encodeCode (ofNatCode n) = n
   | 0 => by simp [of_nat_code, encode_code]
@@ -160,12 +166,12 @@ private theorem encode_of_nat_code : ∀ n, encodeCode (ofNatCode n) = n
     have IH := encode_of_nat_code m
     have IH1 := encode_of_nat_code m.unpair.1
     have IH2 := encode_of_nat_code m.unpair.2
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    trans
     swap
     rw [← Nat.bit_decomp n, ← Nat.bit_decomp n.div2]
     simp [encode_code, of_nat_code, -add_comm]
     cases n.bodd <;> cases n.div2.bodd <;> simp [encode_code, of_nat_code, -add_comm, IH, IH1, IH2, m, Nat.bit]
+#align nat.partrec.code.encode_of_nat_code nat.partrec.code.encode_of_nat_code
 
 instance : Denumerable Code :=
   mk'
@@ -174,9 +180,11 @@ instance : Denumerable Code :=
 
 theorem encode_code_eq : encode = encode_code :=
   rfl
+#align nat.partrec.code.encode_code_eq Nat.Partrec.Code.encode_code_eq
 
 theorem of_nat_code_eq : ofNat Code = of_nat_code :=
   rfl
+#align nat.partrec.code.of_nat_code_eq Nat.Partrec.Code.of_nat_code_eq
 
 theorem encode_lt_pair (cf cg) : encode cf < encode (pair cf cg) ∧ encode cg < encode (pair cf cg) := by
   simp [encode_code_eq, encode_code, -add_comm]
@@ -184,18 +192,21 @@ theorem encode_lt_pair (cf cg) : encode cf < encode (pair cf cg) ∧ encode cg <
   rw [one_mul, mul_assoc, ← bit0_eq_two_mul, ← bit0_eq_two_mul] at this
   have := lt_of_le_of_lt this (lt_add_of_pos_right _ (by decide : 0 < 4))
   exact ⟨lt_of_le_of_lt (Nat.left_le_mkpair _ _) this, lt_of_le_of_lt (Nat.right_le_mkpair _ _) this⟩
+#align nat.partrec.code.encode_lt_pair Nat.Partrec.Code.encode_lt_pair
 
 theorem encode_lt_comp (cf cg) : encode cf < encode (comp cf cg) ∧ encode cg < encode (comp cf cg) := by
   suffices
   exact (encode_lt_pair cf cg).imp (fun h => lt_trans h this) fun h => lt_trans h this
   change _
   simp [encode_code_eq, encode_code]
+#align nat.partrec.code.encode_lt_comp Nat.Partrec.Code.encode_lt_comp
 
 theorem encode_lt_prec (cf cg) : encode cf < encode (prec cf cg) ∧ encode cg < encode (prec cf cg) := by
   suffices
   exact (encode_lt_pair cf cg).imp (fun h => lt_trans h this) fun h => lt_trans h this
   change _
   simp [encode_code_eq, encode_code]
+#align nat.partrec.code.encode_lt_prec Nat.Partrec.Code.encode_lt_prec
 
 theorem encode_lt_rfind' (cf) : encode cf < encode (rfind' cf) := by
   simp [encode_code_eq, encode_code, -add_comm]
@@ -203,6 +214,7 @@ theorem encode_lt_rfind' (cf) : encode cf < encode (rfind' cf) := by
   rw [one_mul, mul_assoc, ← bit0_eq_two_mul, ← bit0_eq_two_mul] at this
   refine' lt_of_le_of_lt (le_trans this _) (lt_add_of_pos_right _ (by decide : 0 < 4))
   exact le_of_lt (Nat.bit0_lt_bit1 <| le_of_lt <| Nat.bit0_lt_bit1 <| le_rfl)
+#align nat.partrec.code.encode_lt_rfind' Nat.Partrec.Code.encode_lt_rfind'
 
 section
 
@@ -217,6 +229,7 @@ theorem pair_prim : Primrec₂ pair :=
             Primrec₂.mkpair.comp (encode_iff.2 <| (Primrec.of_nat Code).comp fst)
               (encode_iff.2 <| (Primrec.of_nat Code).comp snd))
         (Primrec₂.const 4)
+#align nat.partrec.code.pair_prim Nat.Partrec.Code.pair_prim
 
 theorem comp_prim : Primrec₂ comp :=
   Primrec₂.of_nat_iff.2 <|
@@ -227,6 +240,7 @@ theorem comp_prim : Primrec₂ comp :=
             Primrec₂.mkpair.comp (encode_iff.2 <| (Primrec.of_nat Code).comp fst)
               (encode_iff.2 <| (Primrec.of_nat Code).comp snd))
         (Primrec₂.const 4)
+#align nat.partrec.code.comp_prim Nat.Partrec.Code.comp_prim
 
 theorem prec_prim : Primrec₂ prec :=
   Primrec₂.of_nat_iff.2 <|
@@ -237,10 +251,12 @@ theorem prec_prim : Primrec₂ prec :=
             Primrec₂.mkpair.comp (encode_iff.2 <| (Primrec.of_nat Code).comp fst)
               (encode_iff.2 <| (Primrec.of_nat Code).comp snd))
         (Primrec₂.const 4)
+#align nat.partrec.code.prec_prim Nat.Partrec.Code.prec_prim
 
 theorem rfind_prim : Primrec rfind' :=
   of_nat_iff.2 <|
     encode_iff.1 <| nat_add.comp (nat_bit1.comp <| nat_bit1.comp <| encode_iff.2 <| Primrec.of_nat Code) (const 4)
+#align nat.partrec.code.rfind_prim Nat.Partrec.Code.rfind_prim
 
 theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ} (hz : Primrec z)
     {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ} (hr : Primrec r)
@@ -322,6 +338,7 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
   change of_nat code (n + 4) with of_nat_code (n + 4)
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
+#align nat.partrec.code.rec_prim' Nat.Partrec.Code.rec_prim'
 
 /-- Recursion on `nat.partrec.code` is primitive recursive. -/
 theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ} (hz : Primrec z)
@@ -408,6 +425,7 @@ theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc
   change of_nat code (n + 4) with of_nat_code (n + 4)
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
+#align nat.partrec.code.rec_prim Nat.Partrec.Code.rec_prim
 
 end
 
@@ -501,6 +519,7 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
   change of_nat code (n + 4) with of_nat_code (n + 4)
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
+#align nat.partrec.code.rec_computable Nat.Partrec.Code.rec_computable
 
 end
 
@@ -532,11 +551,13 @@ def eval : Code → ℕ →. ℕ
         eval cg (mkpair a (mkpair y i))
   | rfind' cf =>
     Nat.unpaired fun a m => (Nat.rfind fun n => (fun m => m = 0) <$> eval cf (mkpair a (n + m))).map (· + m)
+#align nat.partrec.code.eval Nat.Partrec.Code.eval
 
 /-- Helper lemma for the evaluation of `prec` in the base case. -/
 @[simp]
 theorem eval_prec_zero (cf cg : Code) (a : ℕ) : eval (prec cf cg) (mkpair a 0) = eval cf a := by
   rw [eval, Nat.unpaired, Nat.unpair_mkpair, Nat.elim_zero]
+#align nat.partrec.code.eval_prec_zero Nat.Partrec.Code.eval_prec_zero
 
 /-- Helper lemma for the evaluation of `prec` in the recursive case. -/
 theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
@@ -546,6 +567,7 @@ theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
   by
   rw [eval, Nat.unpaired, Part.bind_eq_bind, Nat.unpair_mkpair, Nat.elim_succ]
   simp
+#align nat.partrec.code.eval_prec_succ Nat.Partrec.Code.eval_prec_succ
 
 instance : Membership (ℕ →. ℕ) Code :=
   ⟨fun f c => eval c = f⟩
@@ -554,19 +576,24 @@ instance : Membership (ℕ →. ℕ) Code :=
 theorem eval_const : ∀ n m, eval (Code.const n) m = Part.some n
   | 0, m => rfl
   | n + 1, m => by simp! [*]
+#align nat.partrec.code.eval_const Nat.Partrec.Code.eval_const
 
 @[simp]
 theorem eval_id (n) : eval Code.id n = Part.some n := by simp! [(· <*> ·)]
+#align nat.partrec.code.eval_id Nat.Partrec.Code.eval_id
 
 @[simp]
 theorem eval_curry (c n x) : eval (curry c n) x = eval c (mkpair n x) := by simp! [(· <*> ·)]
+#align nat.partrec.code.eval_curry Nat.Partrec.Code.eval_curry
 
 theorem const_prim : Primrec Code.const :=
   (Primrec.id.nat_iterate (Primrec.const zero) (comp_prim.comp (Primrec.const succ) Primrec.snd).to₂).of_eq fun n => by
     simp <;> induction n <;> simp [*, code.const, Function.iterate_succ']
+#align nat.partrec.code.const_prim Nat.Partrec.Code.const_prim
 
 theorem curry_prim : Primrec₂ curry :=
   comp_prim.comp Primrec.fst <| pair_prim.comp (const_prim.comp Primrec.snd) (Primrec.const Code.id)
+#align nat.partrec.code.curry_prim Nat.Partrec.Code.curry_prim
 
 theorem curry_inj {c₁ c₂ n₁ n₂} (h : curry c₁ n₁ = curry c₂ n₂) : c₁ = c₂ ∧ n₁ = n₂ :=
   ⟨by injection h, by
@@ -574,12 +601,14 @@ theorem curry_inj {c₁ c₂ n₁ n₂} (h : curry c₁ n₁ = curry c₂ n₂) 
     injection h with h₁ h₂
     injection h₂ with h₃ h₄
     exact const_inj h₃⟩
+#align nat.partrec.code.curry_inj Nat.Partrec.Code.curry_inj
 
 /-- The $S_n^m$ theorem: There is a computable function, namely `nat.partrec.code.curry`, that takes a
 program and a ℕ `n`, and returns a new program using `n` as the first argument.
 -/
 theorem smn : ∃ f : Code → ℕ → Code, Computable₂ f ∧ ∀ c n x, eval (f c n) x = eval c (mkpair n x) :=
   ⟨curry, Primrec₂.to_comp curry_prim, eval_curry⟩
+#align nat.partrec.code.smn Nat.Partrec.Code.smn
 
 /-- A function is partial recursive if and only if there is a code implementing it. -/
 theorem exists_code {f : ℕ →. ℕ} : Nat.Partrec f ↔ ∃ c : Code, eval c = f :=
@@ -615,6 +644,7 @@ theorem exists_code {f : ℕ →. ℕ} : Nat.Partrec f ↔ ∃ c : Code, eval c 
     case comp cf cg pf pg => exact pf.comp pg
     case prec cf cg pf pg => exact pf.prec pg
     case rfind' cf pf => exact pf.rfind'⟩
+#align nat.partrec.code.exists_code Nat.Partrec.Code.exists_code
 
 /-- A modified evaluation for the code which returns an `option ℕ` instead of a `part ℕ`. To avoid
 undecidability, `evaln` takes a parameter `k` and fails if it encounters a number ≥ k in the course
@@ -642,12 +672,14 @@ def evaln : ∀ k : ℕ, Code → ℕ → Option ℕ
       n.unpaired fun a m => do
         let x ← evaln (k + 1) cf (mkpair a m)
         if x = 0 then pure m else evaln k (rfind' cf) (mkpair a (m + 1))
+#align nat.partrec.code.evaln Nat.Partrec.Code.evaln
 
 theorem evaln_bound : ∀ {k c n x}, x ∈ evaln k c n → n < k
   | 0, c, n, x, h => by simp [evaln] at h <;> cases h
   | k + 1, c, n, x, h => by
     suffices ∀ {o : Option ℕ}, x ∈ guard (n ≤ k) >> o → n < k + 1 by cases c <;> rw [evaln] at h <;> exact this h
     simpa [(· >> ·)] using Nat.lt_succ_of_le
+#align nat.partrec.code.evaln_bound Nat.Partrec.Code.evaln_bound
 
 theorem evaln_mono : ∀ {k₁ k₂ c n x}, k₁ ≤ k₂ → x ∈ evaln k₁ c n → x ∈ evaln k₂ c n
   | 0, k₂, c, n, x, hl, h => by simp [evaln] at h <;> cases h
@@ -687,6 +719,7 @@ theorem evaln_mono : ∀ {k₁ k₂ c n x}, k₁ ≤ k₂ → x ∈ evaln k₁ c
       by_cases x0:x = 0 <;> simp [x0]
       exact evaln_mono hl'
       
+#align nat.partrec.code.evaln_mono Nat.Partrec.Code.evaln_mono
 
 theorem evaln_sound : ∀ {k c n x}, x ∈ evaln k c n → x ∈ eval c n
   | 0, _, n, x, h => by simp [evaln] at h <;> cases h
@@ -735,6 +768,7 @@ theorem evaln_sound : ∀ {k c n x}, x ∈ evaln k c n → x ∈ eval c n
           
         
       
+#align nat.partrec.code.evaln_sound Nat.Partrec.Code.evaln_sound
 
 theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n :=
   ⟨fun h => by
@@ -804,6 +838,7 @@ theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n :=
         evaln_mono (Nat.succ_le_succ <| le_max_right _ _) hk₂
       ,
     fun ⟨k, h⟩ => evaln_sound h⟩
+#align nat.partrec.code.evaln_complete Nat.Partrec.Code.evaln_complete
 
 section
 
@@ -813,10 +848,12 @@ private def lup (L : List (List (Option ℕ))) (p : ℕ × code) (n : ℕ) := do
   let l ← L.nth (encode p)
   let o ← l.nth n
   o
+#align nat.partrec.code.lup nat.partrec.code.lup
 
 private theorem hlup : Primrec fun p : _ × (_ × _) × _ => lup p.1 p.2.1 p.2.2 :=
   option_bind (list_nth.comp fst (Primrec.encode.comp <| fst.comp snd))
     (option_bind (list_nth.comp snd <| snd.comp <| snd.comp fst) snd)
+#align nat.partrec.code.hlup nat.partrec.code.hlup
 
 private def G (L : List (List (Option ℕ))) : Option (List (Option ℕ)) :=
   Option.some <|
@@ -848,6 +885,7 @@ private def G (L : List (List (Option ℕ))) : Option (List (Option ℕ)) :=
           do
           let x ← lup L (k, cf) (mkpair z m)
           x (some m) fun _ => lup L (k', c) (mkpair z (m + 1))
+#align nat.partrec.code.G nat.partrec.code.G
 
 private theorem hG : Primrec g := by
   have a := (Primrec.of_nat (ℕ × code)).comp list_length
@@ -917,6 +955,7 @@ private theorem hG : Primrec g := by
                 ((k'.pair c).comp <| fst.comp fst).pair (primrec₂.mkpair.comp (z.comp fst) (primrec.succ.comp m)))).comp
           fst)
     
+#align nat.partrec.code.hG nat.partrec.code.hG
 
 private theorem evaln_map (k c n) : ((((List.range k).nth n).map (evaln k c)).bind fun b => b) = evaln k c n := by
   by_cases kn:n < k
@@ -930,6 +969,7 @@ private theorem evaln_map (k c n) : ((((List.range k).nth n).map (evaln k c)).bi
       
     simpa using kn
     
+#align nat.partrec.code.evaln_map nat.partrec.code.evaln_map
 
 /-- The `nat.partrec.code.evaln` function is primitive recursive. -/
 theorem evaln_prim : Primrec fun a : (ℕ × code) × ℕ => evaln a.1.1 a.1.2 a.2 :=
@@ -1003,6 +1043,7 @@ theorem evaln_prim : Primrec fun a : (ℕ × code) × ℕ => evaln a.1.1 a.1.2 a
         
   (option_bind (list_nth.comp (this.comp (const ()) (encode_iff.2 fst)) snd) snd.to₂).of_eq fun ⟨⟨k, c⟩, n⟩ => by
     simp [evaln_map]
+#align nat.partrec.code.evaln_prim Nat.Partrec.Code.evaln_prim
 
 end
 
@@ -1015,10 +1056,12 @@ theorem eval_eq_rfind_opt (c n) : eval c n = Nat.rfindOpt fun k => evaln k c n :
     refine' evaln_complete.trans (Nat.rfind_opt_mono _).symm
     intro a m n hl
     apply evaln_mono hl
+#align nat.partrec.code.eval_eq_rfind_opt Nat.Partrec.Code.eval_eq_rfind_opt
 
 theorem eval_part : Partrec₂ eval :=
   (rfind_opt (evaln_prim.to_comp.comp ((snd.pair (fst.comp fst)).pair (snd.comp fst))).to₂).of_eq fun a => by
     simp [eval_eq_rfind_opt]
+#align nat.partrec.code.eval_part Nat.Partrec.Code.eval_part
 
 /-- Roger's fixed-point theorem: Any total, computable `f` has a fixed point: That is, under the
 interpretation given by `nat.partrec.code.eval`, there is a code `c` such that `c` and `f c` have
@@ -1038,11 +1081,13 @@ theorem fixed_point {f : Code → Code} (hf : Computable f) : ∃ c : Code, eval
   ⟨curry cg (encode cF),
     funext fun n =>
       show eval (f (curry cg (encode cF))) n = eval (curry cg (encode cF)) n by simp [eg', eF', Part.map_id', g]⟩
+#align nat.partrec.code.fixed_point Nat.Partrec.Code.fixed_point
 
 theorem fixed_point₂ {f : Code → ℕ →. ℕ} (hf : Partrec₂ f) : ∃ c : Code, eval c = f c :=
   let ⟨cf, ef⟩ := exists_code.1 hf
   (fixed_point (curry_prim.comp (Primrec.const cf) Primrec.encode).to_comp).imp fun c e =>
     funext fun n => by simp [e.symm, ef, Part.map_id']
+#align nat.partrec.code.fixed_point₂ Nat.Partrec.Code.fixed_point₂
 
 end
 

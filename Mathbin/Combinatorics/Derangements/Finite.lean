@@ -39,6 +39,7 @@ instance : Fintype (Derangements α) := by delta_instance derangements
 theorem card_derangements_invariant {α β : Type _} [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β]
     (h : card α = card β) : card (Derangements α) = card (Derangements β) :=
   Fintype.card_congr (Equiv.derangementsCongr <| equivOfCardEq h)
+#align card_derangements_invariant card_derangements_invariant
 
 theorem card_derangements_fin_add_two (n : ℕ) :
     card (Derangements (Fin (n + 2))) =
@@ -57,32 +58,39 @@ theorem card_derangements_fin_add_two (n : ℕ) :
         _),-- push the cardinality through the Σ and ⊕ so that we can use `card_n`
     card_sigma,
     card_sum, card_derangements_invariant (h1 _), Finset.sum_const, nsmul_eq_mul, Finset.card_fin, mul_add, Nat.cast_id]
+#align card_derangements_fin_add_two card_derangements_fin_add_two
 
 /-- The number of derangements of an `n`-element set. -/
 def numDerangements : ℕ → ℕ
   | 0 => 1
   | 1 => 0
   | n + 2 => (n + 1) * (numDerangements n + numDerangements (n + 1))
+#align num_derangements numDerangements
 
 @[simp]
 theorem num_derangements_zero : numDerangements 0 = 1 :=
   rfl
+#align num_derangements_zero num_derangements_zero
 
 @[simp]
 theorem num_derangements_one : numDerangements 1 = 0 :=
   rfl
+#align num_derangements_one num_derangements_one
 
 theorem num_derangements_add_two (n : ℕ) :
     numDerangements (n + 2) = (n + 1) * (numDerangements n + numDerangements (n + 1)) :=
   rfl
+#align num_derangements_add_two num_derangements_add_two
 
-theorem num_derangements_succ (n : ℕ) : (numDerangements (n + 1) : ℤ) = (n + 1) * (numDerangements n : ℤ) - -1 ^ n := by
+theorem num_derangements_succ (n : ℕ) : (numDerangements (n + 1) : ℤ) = (n + 1) * (numDerangements n : ℤ) - (-1) ^ n :=
+  by
   induction' n with n hn
   · rfl
     
   · simp only [num_derangements_add_two, hn, pow_succ, Int.coe_nat_mul, Int.coe_nat_add, Int.coe_nat_succ]
     ring
     
+#align num_derangements_succ num_derangements_succ
 
 theorem card_derangements_fin_eq_num_derangements {n : ℕ} : card (Derangements (Fin n)) = numDerangements n := by
   induction' n using Nat.strong_induction_on with n hyp
@@ -96,11 +104,13 @@ theorem card_derangements_fin_eq_num_derangements {n : ℕ} : card (Derangements
   -- `card_derangements_fin_add_two`
   rw [num_derangements_add_two, card_derangements_fin_add_two, mul_add, hyp _ (Nat.lt_add_of_pos_right zero_lt_two),
     hyp _ (lt_add_one _)]
+#align card_derangements_fin_eq_num_derangements card_derangements_fin_eq_num_derangements
 
 theorem card_derangements_eq_num_derangements (α : Type _) [Fintype α] [DecidableEq α] :
     card (Derangements α) = numDerangements (card α) := by
   rw [← card_derangements_invariant (card_fin _)]
   exact card_derangements_fin_eq_num_derangements
+#align card_derangements_eq_num_derangements card_derangements_eq_num_derangements
 
 theorem num_derangements_sum (n : ℕ) :
     (numDerangements n : ℤ) = ∑ k in Finset.range (n + 1), (-1 : ℤ) ^ k * Nat.ascFactorial k (n - k) := by
@@ -114,4 +124,5 @@ theorem num_derangements_sum (n : ℕ) :
   have h_le : x ≤ n := finset.mem_range_succ_iff.mp hx
   rw [Nat.succ_sub h_le, Nat.asc_factorial_succ, add_tsub_cancel_of_le h_le, Int.coe_nat_mul, Int.coe_nat_succ,
     mul_left_comm]
+#align num_derangements_sum num_derangements_sum
 

@@ -24,6 +24,7 @@ private def denumerable_aux : ℚ ≃ { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs
   invFun x := ⟨x.1.1, x.1.2, x.2.1, x.2.2⟩
   left_inv := fun ⟨_, _, _, _⟩ => rfl
   right_inv := fun ⟨⟨_, _⟩, _, _⟩ => rfl
+#align rat.denumerable_aux rat.denumerable_aux
 
 /-- **Denumerability of the Rational Numbers** -/
 instance : Denumerable ℚ := by
@@ -38,4 +39,5 @@ end Rat
 open Cardinal
 
 theorem Cardinal.mk_rat : (#ℚ) = ℵ₀ := by simp
+#align cardinal.mk_rat Cardinal.mk_rat
 

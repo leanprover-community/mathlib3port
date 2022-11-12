@@ -43,6 +43,7 @@ instance projective_ultrafilter (X : Type u) :
     simp only [forget_map_eq_coe, ContinuousMap.coe_mk, coe_comp]
     refine' dense_range_pure.equalizer (g.continuous.comp hh) f.continuous _
     rw [comp.assoc, ultrafilter_extend_extends, ← comp.assoc, hg'.comp_eq_id, comp.left_id]
+#align Profinite.projective_ultrafilter ProfiniteCat.projective_ultrafilter
 
 /-- For any profinite `X`, the natural map `ultrafilter X → X` is a projective presentation. -/
 def projectivePresentation (X : ProfiniteCat.{u}) : ProjectivePresentation X where
@@ -52,6 +53,7 @@ def projectivePresentation (X : ProfiniteCat.{u}) : ProjectivePresentation X whe
   Epi :=
     (ConcreteCategory.epi_of_surjective _) fun x =>
       ⟨(pure x : Ultrafilter X), congr_fun (ultrafilter_extend_extends (𝟙 X)) x⟩
+#align Profinite.projective_presentation ProfiniteCat.projectivePresentation
 
 instance : EnoughProjectives ProfiniteCat.{u} where presentation X := ⟨projectivePresentation X⟩
 

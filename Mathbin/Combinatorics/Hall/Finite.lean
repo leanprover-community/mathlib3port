@@ -68,6 +68,7 @@ theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.Nonempty
     subst s'
     simp
     
+#align hall_marriage_theorem.hall_cond_of_erase HallMarriageTheorem.hall_cond_of_erase
 
 /-- First case of the inductive step: assuming that
 `∀ (s : finset ι), s.nonempty → s ≠ univ → s.card < (s.bUnion t).card`
@@ -120,16 +121,15 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
       exact hfr.2
       
     
+#align hall_marriage_theorem.hall_hard_inductive_step_A HallMarriageTheorem.hall_hard_inductive_step_A
 
 theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (s : Set ι)) :
     s'.card ≤ (s'.bUnion fun a' => t a').card := by
-  classical
-  rw [← card_image_of_injective s' Subtype.coe_injective]
-  convert ht (s'.image coe) using 1
-  apply congr_arg
-  ext y
-  simp
+  classical rw [← card_image_of_injective s' Subtype.coe_injective]
+    apply congr_arg
+    simp
+#align hall_marriage_theorem.hall_cond_of_restrict HallMarriageTheorem.hall_cond_of_restrict
 
 theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι} (hus : s.card = (s.bUnion t).card)
     (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (s' : Finset (sᶜ : Set ι)) :
@@ -156,6 +156,7 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι} 
   · apply bUnion_subset_bUnion_of_subset_left
     apply subset_union_left
     
+#align hall_marriage_theorem.hall_cond_of_compl HallMarriageTheorem.hall_cond_of_compl
 
 /-- Second case of the inductive step: assuming that
 `∃ (s : finset ι), s ≠ univ → s.card = (s.bUnion t).card`
@@ -214,6 +215,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
     · exact sdiff_subset _ _ (hsf'' ⟨x, h⟩)
       
     
+#align hall_marriage_theorem.hall_hard_inductive_step_B HallMarriageTheorem.hall_hard_inductive_step_B
 
 end Fintype
 
@@ -245,6 +247,7 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).car
       exact hall_hard_inductive_step_B hn ht ih' s sne snu (Nat.le_antisymm (ht _) sle)
       
     
+#align hall_marriage_theorem.hall_hard_inductive HallMarriageTheorem.hall_hard_inductive
 
 end HallMarriageTheorem
 
@@ -270,4 +273,5 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [F
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
     
+#align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_bUnion_card_iff_exists_injective'
 

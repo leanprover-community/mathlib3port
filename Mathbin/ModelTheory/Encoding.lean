@@ -57,6 +57,7 @@ Case conversion may be inaccurate. Consider using '#align first_order.language.t
 def listEncode : L.term α → List (Sum α (Σi, L.Functions i))
   | var i => [Sum.inl i]
   | func f ts => Sum.inr (⟨_, f⟩ : Σi, L.Functions i)::(List.finRange _).bind fun i => (ts i).listEncode
+#align first_order.language.term.list_encode FirstOrder.Language.Term.listEncode
 
 /- warning: first_order.language.term.list_decode -> FirstOrder.Language.Term.listDecode is a dubious translation:
 lean 3 declaration is
@@ -76,6 +77,7 @@ def listDecode : List (Sum α (Σi, L.Functions i)) → List (Option (L.term α)
     if h : ∀ i : Fin n, ((list_decode l).nth i).join.isSome then
       (func f fun i => Option.get (h i))::(list_decode l).drop n
     else [none]
+#align first_order.language.term.list_decode FirstOrder.Language.Term.listDecode
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem list_decode_encode_list (l : List (L.term α)) : listDecode (l.bind listEncode) = l.map Option.some := by
@@ -106,14 +108,14 @@ theorem list_decode_encode_list (l : List (L.term α)) : listDecode (l.bind list
         by
         intro i
         rw [h, nth_append, nth_map]
-        · simp only [Option.map_eq_some', Function.comp_app, nth_eq_some]
+        · simp only [Option.map_eq_some', Function.comp_apply, nth_eq_some]
           refine' ⟨i, ⟨lt_of_lt_of_le i.2 (ge_of_eq (length_fin_range _)), _⟩, rfl⟩
           rw [nth_le_fin_range, Fin.eta]
           
         · refine' lt_of_lt_of_le i.2 _
           simp
           
-      refine' (dif_pos fun i => Option.is_some_iff_exists.2 ⟨ts i, _⟩).trans _
+      refine' (dif_pos fun i => Option.isSome_iff_exists.2 ⟨ts i, _⟩).trans _
       · rw [Option.join_eq_some, h']
         
       refine' congr (congr rfl (congr rfl (congr rfl (funext fun i => Option.get_of_mem _ _)))) _
@@ -124,6 +126,7 @@ theorem list_decode_encode_list (l : List (L.term α)) : listDecode (l.bind list
         
       
     
+#align first_order.language.term.list_decode_encode_list FirstOrder.Language.Term.list_decode_encode_list
 
 /-- An encoding of terms as lists. -/
 @[simps]
@@ -135,12 +138,15 @@ protected def encoding : Encoding (L.term α) where
     have h := list_decode_encode_list [t]
     rw [bind_singleton] at h
     simp only [h, Option.join, head', List.map, Option.some_bind, id.def]
+#align first_order.language.term.encoding FirstOrder.Language.Term.encoding
 
 theorem list_encode_injective : Function.Injective (listEncode : L.term α → List (Sum α (Σi, L.Functions i))) :=
   Term.encoding.encode_injective
+#align first_order.language.term.list_encode_injective FirstOrder.Language.Term.list_encode_injective
 
 theorem card_le : (#L.term α) ≤ max ℵ₀ (#Sum α (Σi, L.Functions i)) :=
   lift_le.1 (trans Term.encoding.card_le_card_list (lift_le.2 (mk_list_le_max _)))
+#align first_order.language.term.card_le FirstOrder.Language.Term.card_le
 
 theorem card_sigma : (#Σn, L.term (Sum α (Fin n))) = max ℵ₀ (#Sum α (Σi, L.Functions i)) := by
   refine' le_antisymm _ _
@@ -182,6 +188,7 @@ theorem card_sigma : (#Σn, L.term (Sum α (Fin n))) = max ℵ₀ (#Sum α (Σi,
         
       
     
+#align first_order.language.term.card_sigma FirstOrder.Language.Term.card_sigma
 
 instance [Encodable α] [Encodable (Σi, L.Functions i)] : Encodable (L.term α) :=
   Encodable.ofLeftInjection listEncode (fun l => (listDecode l).head'.join) fun t => by
@@ -195,6 +202,7 @@ instance [h1 : Countable α] [h2 : Countable (Σl, L.Functions l)] : Countable (
 
 instance small [Small.{u} α] : Small.{u} (L.term α) :=
   small_of_injective list_encode_injective
+#align first_order.language.term.small FirstOrder.Language.Term.small
 
 end Term
 
@@ -215,6 +223,7 @@ def listEncode : ∀ {n : ℕ}, L.BoundedFormula α n → List (Sum (Σk, L.term
   | n, rel R ts => [Sum.inr (Sum.inl ⟨_, R⟩), Sum.inr (Sum.inr n)] ++ (List.finRange _).map fun i => Sum.inl ⟨n, ts i⟩
   | n, imp φ₁ φ₂ => (Sum.inr (Sum.inr 0)::φ₁.listEncode) ++ φ₂.listEncode
   | n, all φ => Sum.inr (Sum.inr 1)::φ.listEncode
+#align first_order.language.bounded_formula.list_encode FirstOrder.Language.BoundedFormula.listEncode
 
 /- warning: first_order.language.bounded_formula.sigma_all -> FirstOrder.Language.BoundedFormula.sigmaAll is a dubious translation:
 lean 3 declaration is
@@ -227,6 +236,7 @@ or returns `default` if not possible. -/
 def sigmaAll : (Σn, L.BoundedFormula α n) → Σn, L.BoundedFormula α n
   | ⟨n + 1, φ⟩ => ⟨n, φ.all⟩
   | _ => default
+#align first_order.language.bounded_formula.sigma_all FirstOrder.Language.BoundedFormula.sigmaAll
 
 /- warning: first_order.language.bounded_formula.sigma_imp -> FirstOrder.Language.BoundedFormula.sigmaImp is a dubious translation:
 lean 3 declaration is
@@ -238,6 +248,7 @@ Case conversion may be inaccurate. Consider using '#align first_order.language.b
 or returns `default` if not possible. -/
 def sigmaImp : (Σn, L.BoundedFormula α n) → (Σn, L.BoundedFormula α n) → Σn, L.BoundedFormula α n
   | ⟨m, φ⟩, ⟨n, ψ⟩ => if h : m = n then ⟨m, φ.imp (Eq.mp (by rw [h]) ψ)⟩ else default
+#align first_order.language.bounded_formula.sigma_imp FirstOrder.Language.BoundedFormula.sigmaImp
 
 /- warning: first_order.language.bounded_formula.list_decode -> FirstOrder.Language.BoundedFormula.listDecode is a dubious translation:
 lean 3 declaration is
@@ -286,6 +297,7 @@ def listDecode :
   | Sum.inr (Sum.inr 1)::l =>
     ⟨sigmaAll (list_decode l).1, (list_decode l).2, (list_decode l).2.2.trans (max_le_max le_rfl le_add_self)⟩
   | _ => ⟨default, [], le_max_left _ _⟩
+#align first_order.language.bounded_formula.list_decode FirstOrder.Language.BoundedFormula.listDecode
 
 @[simp]
 theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
@@ -330,7 +342,7 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
             length_append, length_map, length_fin_range]
           refine' ⟨lt_of_lt_of_le i.2 le_self_add, _⟩
           rw [nth_le_append, nth_le_map]
-          · simp only [Sum.getLeft, nth_le_fin_range, Fin.eta, Function.comp_app, eq_self_iff_true, heq_iff_eq,
+          · simp only [Sum.getLeft, nth_le_fin_range, Fin.eta, Function.comp_apply, eq_self_iff_true, heq_iff_eq,
               and_self_iff]
             
           · exact lt_of_lt_of_le i.is_lt (ge_of_eq (length_fin_range _))
@@ -340,7 +352,7 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
             
         rw [dif_pos]
         swap
-        · exact fun i => Option.is_some_iff_exists.2 ⟨⟨_, ts i⟩, h i⟩
+        · exact fun i => Option.isSome_iff_exists.2 ⟨⟨_, ts i⟩, h i⟩
           
         rw [dif_pos]
         swap
@@ -371,6 +383,8 @@ theorem list_decode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
       exact ⟨rfl, rfl⟩
       
     
+#align
+  first_order.language.bounded_formula.list_decode_encode_list FirstOrder.Language.BoundedFormula.list_decode_encode_list
 
 /-- An encoding of bounded formulas as lists. -/
 @[simps]
@@ -383,9 +397,12 @@ protected def encoding : Encoding (Σn, L.BoundedFormula α n) where
     rw [bind_singleton] at h
     rw [h]
     rfl
+#align first_order.language.bounded_formula.encoding FirstOrder.Language.BoundedFormula.encoding
 
 theorem list_encode_sigma_injective : Function.Injective fun φ : Σn, L.BoundedFormula α n => φ.2.listEncode :=
   BoundedFormula.encoding.encode_injective
+#align
+  first_order.language.bounded_formula.list_encode_sigma_injective FirstOrder.Language.BoundedFormula.list_encode_sigma_injective
 
 theorem card_le : (#Σn, L.BoundedFormula α n) ≤ max ℵ₀ (Cardinal.lift.{max u v} (#α) + Cardinal.lift.{u'} L.card) := by
   refine' lift_le.1 (bounded_formula.encoding.card_le_card_list.trans _)
@@ -395,6 +412,7 @@ theorem card_le : (#Σn, L.BoundedFormula α n) ≤ max ℵ₀ (Cardinal.lift.{m
   simp only [lift_add, lift_lift, lift_aleph_0]
   rw [← add_assoc, add_comm, ← add_assoc, ← add_assoc, aleph_0_add_aleph_0, add_assoc, add_eq_max le_rfl, add_assoc,
     card, symbols, mk_sum, lift_add, lift_lift, lift_lift]
+#align first_order.language.bounded_formula.card_le FirstOrder.Language.BoundedFormula.card_le
 
 end BoundedFormula
 

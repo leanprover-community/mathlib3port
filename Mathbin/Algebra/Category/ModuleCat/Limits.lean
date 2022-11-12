@@ -33,10 +33,12 @@ variable {J : Type v} [SmallCategory J]
 instance addCommGroupObj (F : J ⥤ ModuleCat.{max v w} R) (j) : AddCommGroup ((F ⋙ forget (ModuleCat R)).obj j) := by
   change AddCommGroup (F.obj j)
   infer_instance
+#align Module.add_comm_group_obj ModuleCat.addCommGroupObj
 
 instance moduleObj (F : J ⥤ ModuleCat.{max v w} R) (j) : Module R ((F ⋙ forget (ModuleCat R)).obj j) := by
   change Module R (F.obj j)
   infer_instance
+#align Module.module_obj ModuleCat.moduleObj
 
 /-- The flat sections of a functor into `Module R` form a submodule of all sections.
 -/
@@ -48,19 +50,23 @@ def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.
       simp only [forget_map_eq_coe, functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
       dsimp [functor.sections] at sh
       rw [sh f] }
+#align Module.sections_submodule ModuleCat.sectionsSubmodule
 
 -- Adding the following instance speeds up `limit_module` noticeably,
 -- by preventing a bad unfold of `limit_add_comm_group`.
 instance limitAddCommMonoid (F : J ⥤ ModuleCat R) :
     AddCommMonoid (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
   show AddCommMonoid (sectionsSubmodule F) by infer_instance
+#align Module.limit_add_comm_monoid ModuleCat.limitAddCommMonoid
 
 instance limitAddCommGroup (F : J ⥤ ModuleCat R) :
     AddCommGroup (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
   show AddCommGroup (sectionsSubmodule F) by infer_instance
+#align Module.limit_add_comm_group ModuleCat.limitAddCommGroup
 
 instance limitModule (F : J ⥤ ModuleCat R) : Module R (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
   show Module R (sectionsSubmodule F) by infer_instance
+#align Module.limit_module ModuleCat.limitModule
 
 /-- `limit.π (F ⋙ forget Ring) j` as a `ring_hom`. -/
 def limitπLinearMap (F : J ⥤ ModuleCat R) (j) :
@@ -68,6 +74,7 @@ def limitπLinearMap (F : J ⥤ ModuleCat R) (j) :
   toFun := (Types.limitCone (F ⋙ forget (ModuleCat R))).π.app j
   map_smul' x y := rfl
   map_add' x y := rfl
+#align Module.limit_π_linear_map ModuleCat.limitπLinearMap
 
 namespace HasLimits
 
@@ -82,6 +89,7 @@ def limitCone (F : J ⥤ ModuleCat.{max v w} R) : Cone F where
   π :=
     { app := limitπLinearMap F,
       naturality' := fun j j' f => LinearMap.coe_injective ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
+#align Module.has_limits.limit_cone ModuleCat.HasLimits.limitCone
 
 /-- Witness that the limit cone in `Module R` is a limit cone.
 (Internal use only; use the limits API.)
@@ -93,25 +101,29 @@ def limitConeIsLimit (F : J ⥤ ModuleCat.{max v w} R) : IsLimit (limitCone F) :
       ext j <;>
         simp only [Subtype.coe_mk, functor.map_cone_π_app, forget_map_eq_coe, LinearMap.map_add, LinearMap.map_smul] <;>
           rfl
+#align Module.has_limits.limit_cone_is_limit ModuleCat.HasLimits.limitConeIsLimit
 
 end HasLimits
 
 open HasLimits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:292:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:294:38: unsupported irreducible non-definition -/
 /-- The category of R-modules has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>
       { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+#align Module.has_limits_of_size ModuleCat.has_limits_of_size
 
 instance has_limits : HasLimits (ModuleCat.{w} R) :=
   ModuleCat.has_limits_of_size.{w, w, u}
+#align Module.has_limits ModuleCat.has_limits
 
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ ModuleCat.{max v w} R) :
     IsLimit ((forget₂ (ModuleCat R) AddCommGroupCat).mapCone (limitCone F)) :=
   AddCommGroupCat.limitConeIsLimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v w})
+#align Module.forget₂_AddCommGroup_preserves_limits_aux ModuleCat.forget₂AddCommGroupPreservesLimitsAux
 
 /-- The forgetful functor from R-modules to abelian groups preserves all limits.
 -/
@@ -122,9 +134,11 @@ instance forget₂AddCommGroupPreservesLimitsOfSize :
             w}) where PreservesLimitsOfShape J 𝒥 :=
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (forget₂_AddCommGroup_preserves_limits_aux F) }
+#align Module.forget₂_AddCommGroup_preserves_limits_of_size ModuleCat.forget₂AddCommGroupPreservesLimitsOfSize
 
 instance forget₂AddCommGroupPreservesLimits : PreservesLimits (forget₂ (ModuleCat R) AddCommGroupCat.{w}) :=
   ModuleCat.forget₂AddCommGroupPreservesLimitsOfSize.{w, w}
+#align Module.forget₂_AddCommGroup_preserves_limits ModuleCat.forget₂AddCommGroupPreservesLimits
 
 /-- The forgetful functor from R-modules to types preserves all limits.
 -/
@@ -135,9 +149,11 @@ instance forgetPreservesLimitsOfSize :
           R)) where PreservesLimitsOfShape J 𝒥 :=
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (types.limit_cone_is_limit (F ⋙ forget _)) }
+#align Module.forget_preserves_limits_of_size ModuleCat.forgetPreservesLimitsOfSize
 
 instance forgetPreservesLimits : PreservesLimits (forget (ModuleCat.{w} R)) :=
   ModuleCat.forgetPreservesLimitsOfSize.{w, w}
+#align Module.forget_preserves_limits ModuleCat.forgetPreservesLimits
 
 section DirectLimit
 
@@ -168,6 +184,7 @@ def directLimitDiagram : ι ⥤ ModuleCat R where
     intro x
     symm
     apply Module.DirectedSystem.map_map
+#align Module.direct_limit_diagram ModuleCat.directLimitDiagram
 
 variable [DecidableEq ι]
 
@@ -184,6 +201,7 @@ def directLimitCocone : Cocone (directLimitDiagram G f) where
         apply LinearMap.ext
         intro x
         exact direct_limit.of_f }
+#align Module.direct_limit_cocone ModuleCat.directLimitCocone
 
 /-- The unbundled `direct_limit` of modules is a colimit
 in the sense of `category_theory`. -/
@@ -207,6 +225,7 @@ def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (
     intro x
     simp only [this]
     apply Module.DirectLimit.lift_unique
+#align Module.direct_limit_is_colimit ModuleCat.directLimitIsColimit
 
 end DirectLimit
 

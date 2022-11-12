@@ -59,6 +59,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     exacts[⟨⟨i, x⟩, mem_sigma.2 ⟨mem_univ _, by simp⟩, by simp [hx']⟩,
       (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rfl⟩]
     
+#align finset.induction_on_pi_of_choice Finset.induction_on_pi_of_choice
 
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
@@ -69,6 +70,7 @@ that require `Π i, linear_order (α i)`.  -/
 theorem induction_on_pi {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
     (step : ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i) (hx : x ∉ g i), p g → p (update g i (insert x (g i)))) : p f :=
   induction_on_pi_of_choice (fun i x s => x ∉ s) (fun i s ⟨x, hx⟩ => ⟨x, hx, not_mem_erase x s⟩) f h0 step
+#align finset.induction_on_pi Finset.induction_on_pi
 
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
@@ -83,6 +85,7 @@ theorem induction_on_pi_max [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α 
     p f :=
   induction_on_pi_of_choice (fun i x s => ∀ y ∈ s, y < x)
     (fun i s hs => ⟨s.max' hs, s.max'_mem hs, fun y => s.lt_max'_of_mem_erase_max' _⟩) f h0 step
+#align finset.induction_on_pi_max Finset.induction_on_pi_max
 
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
@@ -96,6 +99,7 @@ theorem induction_on_pi_min [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α 
     (step : ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i), (∀ y ∈ g i, x < y) → p g → p (update g i (insert x (g i)))) :
     p f :=
   @induction_on_pi_max ι (fun i => (α i)ᵒᵈ) _ _ _ _ _ _ h0 step
+#align finset.induction_on_pi_min Finset.induction_on_pi_min
 
 end Finset
 

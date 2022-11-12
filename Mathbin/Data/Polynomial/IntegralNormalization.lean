@@ -35,9 +35,11 @@ Moreover, `integral_normalization 0 = 0`.
 -/
 noncomputable def integralNormalization (f : R[X]) : R[X] :=
   ∑ i in f.support, monomial i (if f.degree = i then 1 else coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i))
+#align polynomial.integral_normalization Polynomial.integralNormalization
 
 @[simp]
 theorem integral_normalization_zero : integralNormalization (0 : R[X]) = 0 := by simp [integral_normalization]
+#align polynomial.integral_normalization_zero Polynomial.integral_normalization_zero
 
 theorem integral_normalization_coeff {f : R[X]} {i : ℕ} :
     (integralNormalization f).coeff i =
@@ -45,30 +47,37 @@ theorem integral_normalization_coeff {f : R[X]} {i : ℕ} :
   by
   have : f.coeff i = 0 → f.degree ≠ i := fun hc hd => coeff_ne_zero_of_eq_degree hd hc
   simp (config := { contextual := true }) [integral_normalization, coeff_monomial, this, mem_support_iff]
+#align polynomial.integral_normalization_coeff Polynomial.integral_normalization_coeff
 
 theorem integral_normalization_support {f : R[X]} : (integralNormalization f).support ⊆ f.support := by
   intro
   simp (config := { contextual := true }) [integral_normalization, coeff_monomial, mem_support_iff]
+#align polynomial.integral_normalization_support Polynomial.integral_normalization_support
 
 theorem integral_normalization_coeff_degree {f : R[X]} {i : ℕ} (hi : f.degree = i) :
     (integralNormalization f).coeff i = 1 := by rw [integral_normalization_coeff, if_pos hi]
+#align polynomial.integral_normalization_coeff_degree Polynomial.integral_normalization_coeff_degree
 
 theorem integral_normalization_coeff_nat_degree {f : R[X]} (hf : f ≠ 0) :
     (integralNormalization f).coeff (natDegree f) = 1 :=
   integral_normalization_coeff_degree (degree_eq_nat_degree hf)
+#align polynomial.integral_normalization_coeff_nat_degree Polynomial.integral_normalization_coeff_nat_degree
 
 theorem integral_normalization_coeff_ne_degree {f : R[X]} {i : ℕ} (hi : f.degree ≠ i) :
     coeff (integralNormalization f) i = coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) := by
   rw [integral_normalization_coeff, if_neg hi]
+#align polynomial.integral_normalization_coeff_ne_degree Polynomial.integral_normalization_coeff_ne_degree
 
 theorem integral_normalization_coeff_ne_nat_degree {f : R[X]} {i : ℕ} (hi : i ≠ natDegree f) :
     coeff (integralNormalization f) i = coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) :=
   integral_normalization_coeff_ne_degree (degree_ne_of_nat_degree_ne hi.symm)
+#align polynomial.integral_normalization_coeff_ne_nat_degree Polynomial.integral_normalization_coeff_ne_nat_degree
 
 theorem monic_integral_normalization {f : R[X]} (hf : f ≠ 0) : Monic (integralNormalization f) :=
   monic_of_degree_le f.natDegree
     (Finset.sup_le fun i h => WithBot.coe_le_coe.2 <| le_nat_degree_of_mem_supp i <| integral_normalization_support h)
     (integral_normalization_coeff_nat_degree hf)
+#align polynomial.monic_integral_normalization Polynomial.monic_integral_normalization
 
 end Semiring
 
@@ -86,6 +95,7 @@ theorem support_integral_normalization {f : R[X]} : (integralNormalization f).su
   simp only [integral_normalization_coeff, mem_support_iff]
   intro hfi
   split_ifs with hi <;> simp [hfi, hi, pow_ne_zero _ (leading_coeff_ne_zero.mpr hf)]
+#align polynomial.support_integral_normalization Polynomial.support_integral_normalization
 
 end IsDomain
 
@@ -127,11 +137,13 @@ theorem integral_normalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S
       exact @Finset.sum_attach _ _ p.support _ fun i => f (p.coeff i) * z ^ i
     _ = 0 := by rw [hz, _root_.mul_zero]
     
+#align polynomial.integral_normalization_eval₂_eq_zero Polynomial.integral_normalization_eval₂_eq_zero
 
 theorem integral_normalization_aeval_eq_zero [Algebra R S] {f : R[X]} {z : S} (hz : aeval z f = 0)
     (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) :
     aeval (z * algebraMap R S f.leadingCoeff) (integralNormalization f) = 0 :=
   integral_normalization_eval₂_eq_zero (algebraMap R S) hz inj
+#align polynomial.integral_normalization_aeval_eq_zero Polynomial.integral_normalization_aeval_eq_zero
 
 end IsDomain
 

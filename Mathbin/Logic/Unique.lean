@@ -53,9 +53,10 @@ variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
 This is implemented as a type, rather than a `Prop`-valued predicate,
 for good definitional properties of the default term. -/
-@[ext]
+@[ext.1]
 structure Unique (α : Sort u) extends Inhabited α where
   uniq : ∀ a : α, a = default
+#align unique Unique
 -/
 
 attribute [class] Unique
@@ -63,6 +64,7 @@ attribute [class] Unique
 #print unique_iff_exists_unique /-
 theorem unique_iff_exists_unique (α : Sort u) : Nonempty (Unique α) ↔ ∃! a : α, True :=
   ⟨fun ⟨u⟩ => ⟨u.default, trivial, fun a _ => u.uniq a⟩, fun ⟨a, _, h⟩ => ⟨⟨⟨a⟩, fun _ => h _ trivial⟩⟩⟩
+#align unique_iff_exists_unique unique_iff_exists_unique
 -/
 
 #print unique_subtype_iff_exists_unique /-
@@ -71,6 +73,7 @@ theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) : Nonempty (Uniq
     ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by
         congr
         exact he b hb⟩⟩⟩
+#align unique_subtype_iff_exists_unique unique_subtype_iff_exists_unique
 -/
 
 #print uniqueOfSubsingleton /-
@@ -84,18 +87,21 @@ See note [reducible non-instances]. -/
 def uniqueOfSubsingleton {α : Sort _} [Subsingleton α] (a : α) : Unique α where
   default := a
   uniq _ := Subsingleton.elim _ _
+#align unique_of_subsingleton uniqueOfSubsingleton
 -/
 
 #print PUnit.unique /-
 instance PUnit.unique : Unique PUnit.{u} where
   default := PUnit.unit
   uniq x := PUnit.subsingleton x _
+#align punit.unique PUnit.unique
 -/
 
 #print PUnit.default_eq_unit /-
 @[simp]
 theorem PUnit.default_eq_unit : (default : PUnit) = PUnit.unit :=
   rfl
+#align punit.default_eq_star PUnit.default_eq_unit
 -/
 
 #print uniqueProp /-
@@ -103,6 +109,7 @@ theorem PUnit.default_eq_unit : (default : PUnit) = PUnit.unit :=
 def uniqueProp {p : Prop} (h : p) : Unique p where
   default := h
   uniq x := rfl
+#align unique_prop uniqueProp
 -/
 
 instance : Unique True :=
@@ -111,6 +118,7 @@ instance : Unique True :=
 #print Fin.eq_zero /-
 theorem Fin.eq_zero : ∀ n : Fin 1, n = 0
   | ⟨n, hn⟩ => Fin.eq_of_veq (Nat.eq_zero_of_le_zero (Nat.le_of_lt_succ hn))
+#align fin.eq_zero Fin.eq_zero
 -/
 
 instance {n : ℕ} : Inhabited (Fin n.succ) :=
@@ -119,6 +127,7 @@ instance {n : ℕ} : Inhabited (Fin n.succ) :=
 #print inhabitedFinOneAdd /-
 instance inhabitedFinOneAdd (n : ℕ) : Inhabited (Fin (1 + n)) :=
   ⟨⟨0, Nat.zero_lt_one_add n⟩⟩
+#align inhabited_fin_one_add inhabitedFinOneAdd
 -/
 
 /- warning: fin.default_eq_zero -> Fin.default_eq_zero is a dubious translation:
@@ -130,10 +139,12 @@ Case conversion may be inaccurate. Consider using '#align fin.default_eq_zero Fi
 @[simp]
 theorem Fin.default_eq_zero (n : ℕ) : (default : Fin n.succ) = 0 :=
   rfl
+#align fin.default_eq_zero Fin.default_eq_zero
 
 #print Fin.unique /-
 instance Fin.unique : Unique (Fin 1) :=
   { Fin.inhabited with uniq := Fin.eq_zero }
+#align fin.unique Fin.unique
 -/
 
 namespace Unique
@@ -151,11 +162,13 @@ instance (priority := 100) : Inhabited α :=
 #print Unique.eq_default /-
 theorem eq_default (a : α) : a = default :=
   uniq _ a
+#align unique.eq_default Unique.eq_default
 -/
 
 #print Unique.default_eq /-
 theorem default_eq (a : α) : default = a :=
   (uniq _ a).symm
+#align unique.default_eq Unique.default_eq
 -/
 
 -- see Note [lower instance priority]
@@ -165,24 +178,28 @@ instance (priority := 100) : Subsingleton α :=
 #print Unique.forall_iff /-
 theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ p default :=
   ⟨fun h => h _, fun h x => by rwa [Unique.eq_default x]⟩
+#align unique.forall_iff Unique.forall_iff
 -/
 
 #print Unique.exists_iff /-
 theorem exists_iff {p : α → Prop} : Exists p ↔ p default :=
   ⟨fun ⟨a, ha⟩ => eq_default a ▸ ha, Exists.intro default⟩
+#align unique.exists_iff Unique.exists_iff
 -/
 
 end
 
 #print Unique.subsingleton_unique' /-
-@[ext]
+@[ext.1]
 protected theorem subsingleton_unique' : ∀ h₁ h₂ : Unique α, h₁ = h₂
   | ⟨⟨x⟩, h⟩, ⟨⟨y⟩, _⟩ => by congr <;> rw [h x, h y]
+#align unique.subsingleton_unique' Unique.subsingleton_unique'
 -/
 
 #print Unique.subsingleton_unique /-
 instance subsingleton_unique : Subsingleton (Unique α) :=
   ⟨Unique.subsingleton_unique'⟩
+#align unique.subsingleton_unique Unique.subsingleton_unique
 -/
 
 #print Unique.mk' /-
@@ -191,6 +208,7 @@ a loop in the class inheritance graph. -/
 @[reducible]
 def mk' (α : Sort u) [h₁ : Inhabited α] [Subsingleton α] : Unique α :=
   { h₁ with uniq := fun x => Subsingleton.elim _ _ }
+#align unique.mk' Unique.mk'
 -/
 
 end Unique
@@ -202,6 +220,7 @@ theorem unique_iff_subsingleton_and_nonempty (α : Sort u) : Nonempty (Unique α
       skip
       inhabit α
       exact Unique.mk' α⟩⟩
+#align unique_iff_subsingleton_and_nonempty unique_iff_subsingleton_and_nonempty
 -/
 
 #print Pi.default_def /-
@@ -209,11 +228,13 @@ theorem unique_iff_subsingleton_and_nonempty (α : Sort u) : Nonempty (Unique α
 theorem Pi.default_def {β : α → Sort v} [∀ a, Inhabited (β a)] :
     @default (∀ a, β a) _ = fun a : α => @default (β a) _ :=
   rfl
+#align pi.default_def Pi.default_def
 -/
 
 #print Pi.default_apply /-
 theorem Pi.default_apply {β : α → Sort v} [∀ a, Inhabited (β a)] (a : α) : @default (∀ a, β a) _ a = default :=
   rfl
+#align pi.default_apply Pi.default_apply
 -/
 
 /- warning: pi.unique -> Pi.unique is a dubious translation:
@@ -224,6 +245,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi.unique Pi.uniqueₓ'. -/
 instance Pi.unique {β : α → Sort v} [∀ a, Unique (β a)] : Unique (∀ a, β a) :=
   { Pi.inhabited α with uniq := fun f => funext fun x => Unique.eq_default _ }
+#align pi.unique Pi.unique
 
 /- warning: pi.unique_of_is_empty -> Pi.uniqueOfIsEmpty is a dubious translation:
 lean 3 declaration is
@@ -235,6 +257,7 @@ Case conversion may be inaccurate. Consider using '#align pi.unique_of_is_empty 
 instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) : Unique (∀ a, β a) where
   default := isEmptyElim
   uniq f := funext isEmptyElim
+#align pi.unique_of_is_empty Pi.uniqueOfIsEmpty
 
 /- warning: eq_const_of_unique -> eq_const_of_unique is a dubious translation:
 lean 3 declaration is
@@ -245,10 +268,12 @@ Case conversion may be inaccurate. Consider using '#align eq_const_of_unique eq_
 theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) := by
   ext x
   rw [Subsingleton.elim x default]
+#align eq_const_of_unique eq_const_of_unique
 
 #print heq_const_of_unique /-
 theorem heq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) : HEq f (Function.const α (f default)) :=
   (Function.hfunext rfl) fun i _ _ => by rw [Subsingleton.elim i default]
+#align heq_const_of_unique heq_const_of_unique
 -/
 
 namespace Function
@@ -265,6 +290,7 @@ Case conversion may be inaccurate. Consider using '#align function.injective.sub
 is a subsingleton as well. -/
 protected theorem Injective.subsingleton (hf : Injective f) [Subsingleton β] : Subsingleton α :=
   ⟨fun x y => hf <| Subsingleton.elim _ _⟩
+#align function.injective.subsingleton Function.Injective.subsingleton
 
 /- warning: function.surjective.subsingleton -> Function.Surjective.subsingleton is a dubious translation:
 lean 3 declaration is
@@ -276,6 +302,7 @@ Case conversion may be inaccurate. Consider using '#align function.surjective.su
 well. -/
 protected theorem Surjective.subsingleton [Subsingleton α] (hf : Surjective f) : Subsingleton β :=
   ⟨hf.Forall₂.2 fun x y => congr_arg f <| Subsingleton.elim x y⟩
+#align function.surjective.subsingleton Function.Surjective.subsingleton
 
 /- warning: function.surjective.unique -> Function.Surjective.unique is a dubious translation:
 lean 3 declaration is
@@ -287,11 +314,13 @@ Case conversion may be inaccurate. Consider using '#align function.surjective.un
 then the codomain is a singleton as well. -/
 protected def Surjective.unique (hf : Surjective f) [Unique α] : Unique β :=
   @Unique.mk' _ ⟨f default⟩ hf.Subsingleton
+#align function.surjective.unique Function.Surjective.unique
 
 #print Function.Injective.unique /-
 /-- If `α` is inhabited and admits an injective map to a subsingleton type, then `α` is `unique`. -/
 protected def Injective.unique [Inhabited α] [Subsingleton β] (hf : Injective f) : Unique α :=
   @Unique.mk' _ _ hf.Subsingleton
+#align function.injective.unique Function.Injective.unique
 -/
 
 #print Function.Surjective.uniqueOfSurjectiveConst /-
@@ -299,6 +328,7 @@ protected def Injective.unique [Inhabited α] [Subsingleton β] (hf : Injective 
 def Surjective.uniqueOfSurjectiveConst (α : Type _) {β : Type _} (b : β)
     (h : Function.Surjective (Function.const α b)) : Unique β :=
   @uniqueOfSubsingleton _ (subsingleton_of_forall_eq b <| h.forall.mpr fun _ => rfl) b
+#align function.surjective.unique_of_surjective_const Function.Surjective.uniqueOfSurjectiveConst
 -/
 
 end Function
@@ -312,18 +342,20 @@ Case conversion may be inaccurate. Consider using '#align unique.bijective Uniqu
 theorem Unique.bijective {A B} [Unique A] [Unique B] {f : A → B} : Function.Bijective f := by
   rw [Function.bijective_iff_has_inverse]
   refine' ⟨default, _, _⟩ <;> intro x <;> simp
+#align unique.bijective Unique.bijective
 
 namespace Option
 
-#print Option.subsingleton_iff_is_empty /-
+#print Option.subsingleton_iff_isEmpty /-
 /-- `option α` is a `subsingleton` if and only if `α` is empty. -/
-theorem subsingleton_iff_is_empty {α} : Subsingleton (Option α) ↔ IsEmpty α :=
+theorem subsingleton_iff_isEmpty {α} : Subsingleton (Option α) ↔ IsEmpty α :=
   ⟨fun h => ⟨fun x => Option.noConfusion <| @Subsingleton.elim _ h x none⟩, fun h =>
     ⟨fun x y => Option.casesOn x (Option.casesOn y rfl fun x => h.elim x) fun x => h.elim x⟩⟩
+#align option.subsingleton_iff_is_empty Option.subsingleton_iff_isEmpty
 -/
 
 instance {α} [IsEmpty α] : Unique (Option α) :=
-  @Unique.mk' _ _ (subsingleton_iff_is_empty.2 ‹_›)
+  @Unique.mk' _ _ (subsingleton_iff_isEmpty.2 ‹_›)
 
 end Option
 
@@ -333,12 +365,14 @@ section Subtype
 instance Unique.subtypeEq (y : α) : Unique { x // x = y } where
   default := ⟨y, rfl⟩
   uniq := fun ⟨x, hx⟩ => by simpa using hx
+#align unique.subtype_eq Unique.subtypeEq
 -/
 
 #print Unique.subtypeEq' /-
 instance Unique.subtypeEq' (y : α) : Unique { x // y = x } where
   default := ⟨y, rfl⟩
   uniq := fun ⟨x, hx⟩ => by simpa using hx.symm
+#align unique.subtype_eq' Unique.subtypeEq'
 -/
 
 end Subtype

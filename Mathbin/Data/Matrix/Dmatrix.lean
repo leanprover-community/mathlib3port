@@ -18,6 +18,7 @@ whose columns are indexed by the fintype `n`. -/
 @[nolint unused_arguments]
 def Dmatrix (m : Type u) (n : Type u') [Fintype m] [Fintype n] (α : m → n → Type v) : Type max u u' v :=
   ∀ i j, α i j
+#align dmatrix Dmatrix
 
 variable {l m n o : Type _} [Fintype l] [Fintype m] [Fintype n] [Fintype o]
 
@@ -31,26 +32,31 @@ variable {M N : Dmatrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
   ⟨fun h => funext fun i => funext <| h i, fun h => by simp [h]⟩
+#align dmatrix.ext_iff Dmatrix.ext_iff
 
-@[ext]
+@[ext.1]
 theorem ext : (∀ i j, M i j = N i j) → M = N :=
   ext_iff.mp
+#align dmatrix.ext Dmatrix.ext
 
 end Ext
 
 /-- `M.map f` is the dmatrix obtained by applying `f` to each entry of the matrix `M`. -/
 def map (M : Dmatrix m n α) {β : m → n → Type w} (f : ∀ ⦃i j⦄, α i j → β i j) : Dmatrix m n β := fun i j => f (M i j)
+#align dmatrix.map Dmatrix.map
 
 @[simp]
 theorem map_apply {M : Dmatrix m n α} {β : m → n → Type w} {f : ∀ ⦃i j⦄, α i j → β i j} {i : m} {j : n} :
     M.map f i j = f (M i j) :=
   rfl
+#align dmatrix.map_apply Dmatrix.map_apply
 
 @[simp]
 theorem map_map {M : Dmatrix m n α} {β : m → n → Type w} {γ : m → n → Type z} {f : ∀ ⦃i j⦄, α i j → β i j}
     {g : ∀ ⦃i j⦄, β i j → γ i j} : (M.map f).map g = M.map fun i j x => g (f x) := by
   ext
   simp
+#align dmatrix.map_map Dmatrix.map_map
 
 /- warning: dmatrix.transpose -> Dmatrix.transpose is a dubious translation:
 lean 3 declaration is
@@ -61,6 +67,7 @@ Case conversion may be inaccurate. Consider using '#align dmatrix.transpose Dmat
 /-- The transpose of a dmatrix. -/
 def transpose (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
   | x, y => M y x
+#align dmatrix.transpose Dmatrix.transpose
 
 -- mathport name: dmatrix.transpose
 localized [Dmatrix] postfix:1024 "ᵀ" => Dmatrix.transpose
@@ -74,6 +81,7 @@ Case conversion may be inaccurate. Consider using '#align dmatrix.col Dmatrix.co
 /-- `dmatrix.col u` is the column matrix whose entries are given by `u`. -/
 def col {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
   | x, y => w x
+#align dmatrix.col Dmatrix.col
 
 /- warning: dmatrix.row -> Dmatrix.row is a dubious translation:
 lean 3 declaration is
@@ -84,6 +92,7 @@ Case conversion may be inaccurate. Consider using '#align dmatrix.row Dmatrix.ro
 /-- `dmatrix.row u` is the row matrix whose entries are given by `u`. -/
 def row {α : n → Type v} (v : ∀ j, α j) : Dmatrix Unit n fun i j => α j
   | x, y => v y
+#align dmatrix.row Dmatrix.row
 
 instance [∀ i j, Inhabited (α i j)] : Inhabited (Dmatrix m n α) :=
   Pi.inhabited _
@@ -127,44 +136,53 @@ instance [∀ i j, Subsingleton (α i j)] : Subsingleton (Dmatrix m n α) :=
 @[simp]
 theorem zero_apply [∀ i j, Zero (α i j)] (i j) : (0 : Dmatrix m n α) i j = 0 :=
   rfl
+#align dmatrix.zero_apply Dmatrix.zero_apply
 
 @[simp]
 theorem neg_apply [∀ i j, Neg (α i j)] (M : Dmatrix m n α) (i j) : (-M) i j = -M i j :=
   rfl
+#align dmatrix.neg_apply Dmatrix.neg_apply
 
 @[simp]
 theorem add_apply [∀ i j, Add (α i j)] (M N : Dmatrix m n α) (i j) : (M + N) i j = M i j + N i j :=
   rfl
+#align dmatrix.add_apply Dmatrix.add_apply
 
 @[simp]
 theorem sub_apply [∀ i j, Sub (α i j)] (M N : Dmatrix m n α) (i j) : (M - N) i j = M i j - N i j :=
   rfl
+#align dmatrix.sub_apply Dmatrix.sub_apply
 
 @[simp]
 theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)] {f : ∀ ⦃i j⦄, α i j → β i j}
     (h : ∀ i j, f (0 : α i j) = 0) : (0 : Dmatrix m n α).map f = 0 := by
   ext
   simp [h]
+#align dmatrix.map_zero Dmatrix.map_zero
 
 theorem map_add [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j)
     (M N : Dmatrix m n α) : ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j := by
   ext
   simp
+#align dmatrix.map_add Dmatrix.map_add
 
 theorem map_sub [∀ i j, AddGroup (α i j)] {β : m → n → Type w} [∀ i j, AddGroup (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j)
     (M N : Dmatrix m n α) : ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j := by
   ext
   simp
+#align dmatrix.map_sub Dmatrix.map_sub
 
 instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Dmatrix m n α) :=
   ⟨fun M N => by
     ext
     exact isEmptyElim i⟩
+#align dmatrix.subsingleton_of_empty_left Dmatrix.subsingleton_of_empty_left
 
 instance subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Dmatrix m n α) :=
   ⟨fun M N => by
     ext
     exact isEmptyElim j⟩
+#align dmatrix.subsingleton_of_empty_right Dmatrix.subsingleton_of_empty_right
 
 end Dmatrix
 
@@ -175,9 +193,11 @@ def AddMonoidHom.mapDmatrix [∀ i j, AddMonoid (α i j)] {β : m → n → Type
   toFun M := M.map fun i j => @f i j
   map_zero' := by simp
   map_add' := Dmatrix.map_add f
+#align add_monoid_hom.map_dmatrix AddMonoidHom.mapDmatrix
 
 @[simp]
 theorem AddMonoidHom.map_dmatrix_apply [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M : Dmatrix m n α) : AddMonoidHom.mapDmatrix f M = M.map fun i j => @f i j :=
   rfl
+#align add_monoid_hom.map_dmatrix_apply AddMonoidHom.map_dmatrix_apply
 

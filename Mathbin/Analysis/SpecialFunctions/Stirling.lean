@@ -50,14 +50,17 @@ Stirling's formula states that this sequence has limit $\sqrt(π)$.
 -/
 noncomputable def stirlingSeq (n : ℕ) : ℝ :=
   n ! / (sqrt (2 * n) * (n / exp 1) ^ n)
+#align stirling.stirling_seq Stirling.stirlingSeq
 
 @[simp]
 theorem stirling_seq_zero : stirlingSeq 0 = 0 := by
   rw [stirling_seq, cast_zero, mul_zero, Real.sqrt_zero, zero_mul, div_zero]
+#align stirling.stirling_seq_zero Stirling.stirling_seq_zero
 
 @[simp]
 theorem stirling_seq_one : stirlingSeq 1 = exp 1 / sqrt 2 := by
   rw [stirling_seq, pow_one, factorial_one, cast_one, mul_one, mul_one_div, one_div_div]
+#align stirling.stirling_seq_one Stirling.stirling_seq_one
 
 /-- We have the expression
 `log (stirling_seq (n + 1)) = log(n + 1)! - 1 / 2 * log(2 * n) - n * log ((n + 1) / e)`.
@@ -66,8 +69,9 @@ theorem log_stirling_seq_formula (n : ℕ) :
     log (stirlingSeq n.succ) = log n.succ ! - 1 / 2 * log (2 * n.succ) - n.succ * log (n.succ / exp 1) := by
   rw [stirling_seq, log_div, log_mul, sqrt_eq_rpow, log_rpow, Real.log_pow, tsub_tsub] <;>
     try apply ne_of_gt <;> positivity
+#align stirling.log_stirling_seq_formula Stirling.log_stirling_seq_formula
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr succ_ne_zero, ",", expr factorial_ne_zero, ",", expr exp_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr succ_ne_zero, ",", expr factorial_ne_zero, ",", expr exp_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- TODO: Make `positivity` handle `≠ 0` goals
 /-- The sequence `log (stirling_seq (m + 1)) - log (stirling_seq (m + 2))` has the series expansion
    `∑ 1 / (2 * (k + 1) + 1) * (1 / 2 * (m + 1) + 1)^(2 * (k + 1))`
@@ -97,14 +101,16 @@ theorem log_stirling_seq_diff_has_sum (m : ℕ) :
     simp (disch :=
     norm_cast
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr succ_ne_zero, \",\", expr factorial_ne_zero, \",\", expr exp_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error") only [log_stirling_seq_formula,
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr succ_ne_zero, \",\", expr factorial_ne_zero, \",\", expr exp_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error") only [log_stirling_seq_formula,
     log_div, log_mul, log_exp, factorial_succ, cast_mul, cast_succ, cast_zero, range_one, sum_singleton, h]
     ring
     
+#align stirling.log_stirling_seq_diff_has_sum Stirling.log_stirling_seq_diff_has_sum
 
 /-- The sequence `log ∘ stirling_seq ∘ succ` is monotone decreasing -/
 theorem log_stirling_seq'_antitone : Antitone (Real.log ∘ stirling_seq ∘ succ) :=
   antitone_nat_of_succ_le fun n => sub_nonneg.mp <| (log_stirling_seq_diff_has_sum n).Nonneg fun m => by positivity
+#align stirling.log_stirling_seq'_antitone Stirling.log_stirling_seq'_antitone
 
 /-- We have a bound for successive elements in the sequence `log (stirling_seq k)`.
 -/
@@ -128,6 +134,7 @@ theorem log_stirling_seq_diff_le_geo_sum (n : ℕ) :
     rw [one_div]
     exact inv_le_one (le_add_of_nonneg_left <| by positivity)
   exact has_sum_le hab (log_stirling_seq_diff_has_sum n) g
+#align stirling.log_stirling_seq_diff_le_geo_sum Stirling.log_stirling_seq_diff_le_geo_sum
 
 /-- We have the bound  `log (stirling_seq n) - log (stirling_seq (n+1))` ≤ 1/(4 n^2)
 -/
@@ -147,6 +154,7 @@ theorem log_stirling_seq_sub_log_stirling_seq_succ (n : ℕ) :
   ring_nf
   norm_cast
   linarith
+#align stirling.log_stirling_seq_sub_log_stirling_seq_succ Stirling.log_stirling_seq_sub_log_stirling_seq_succ
 
 /-- For any `n`, we have `log_stirling_seq 1 - log_stirling_seq n ≤ 1/4 * ∑' 1/k^2`  -/
 theorem log_stirling_seq_bounded_aux : ∃ c : ℝ, ∀ n : ℕ, log (stirlingSeq 1) - log (stirlingSeq n.succ) ≤ c := by
@@ -168,16 +176,19 @@ theorem log_stirling_seq_bounded_aux : ∃ c : ℝ, ∀ n : ℕ, log (stirlingSe
     _ = 1 / 4 * ∑ k in range n, 1 / k.succ ^ 2 := by rw [mul_sum]
     _ ≤ 1 / 4 * d := mul_le_mul_of_nonneg_left h₂ <| by positivity
     
+#align stirling.log_stirling_seq_bounded_aux Stirling.log_stirling_seq_bounded_aux
 
 /-- The sequence `log_stirling_seq` is bounded below for `n ≥ 1`. -/
 theorem log_stirling_seq_bounded_by_constant : ∃ c, ∀ n : ℕ, c ≤ log (stirlingSeq n.succ) := by
   obtain ⟨d, h⟩ := log_stirling_seq_bounded_aux
   exact ⟨log (stirling_seq 1) - d, fun n => sub_le_comm.mp (h n)⟩
+#align stirling.log_stirling_seq_bounded_by_constant Stirling.log_stirling_seq_bounded_by_constant
 
 /-- The sequence `stirling_seq` is positive for `n > 0`  -/
 theorem stirling_seq'_pos (n : ℕ) : 0 < stirlingSeq n.succ := by
   unfold stirling_seq
   positivity
+#align stirling.stirling_seq'_pos Stirling.stirling_seq'_pos
 
 /-- The sequence `stirling_seq` has a positive lower bound.
 -/
@@ -186,10 +197,12 @@ theorem stirling_seq'_bounded_by_pos_constant : ∃ a, 0 < a ∧ ∀ n : ℕ, a 
   refine' ⟨exp c, exp_pos _, fun n => _⟩
   rw [← le_log_iff_exp_le (stirling_seq'_pos n)]
   exact h n
+#align stirling.stirling_seq'_bounded_by_pos_constant Stirling.stirling_seq'_bounded_by_pos_constant
 
 /-- The sequence `stirling_seq ∘ succ` is monotone decreasing -/
 theorem stirling_seq'_antitone : Antitone (stirling_seq ∘ succ) := fun n m h =>
   (log_le_log (stirling_seq'_pos m) (stirling_seq'_pos n)).mp (log_stirling_seq'_antitone h)
+#align stirling.stirling_seq'_antitone Stirling.stirling_seq'_antitone
 
 /-- The limit `a` of the sequence `stirling_seq` satisfies `0 < a` -/
 theorem stirling_seq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSeq atTop (𝓝 a) := by
@@ -198,6 +211,7 @@ theorem stirling_seq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSe
   refine' ⟨_, lt_of_lt_of_le x_pos (le_cInf (Set.range_nonempty _) hx'), _⟩
   rw [← Filter.tendsto_add_at_top_iff_nat 1]
   exact tendsto_at_top_cinfi stirling_seq'_antitone ⟨x, hx'⟩
+#align stirling.stirling_seq_has_pos_limit_a Stirling.stirling_seq_has_pos_limit_a
 
 /-!
  ### Part 2
@@ -208,6 +222,7 @@ theorem stirling_seq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSe
 /-- For `n : ℕ`, define `w n` as `2^(4*n) * n!^4 / ((2*n)!^2 * (2*n + 1))` -/
 noncomputable def w (n : ℕ) : ℝ :=
   2 ^ (4 * n) * n ! ^ 4 / ((2 * n)! ^ 2 * (2 * n + 1))
+#align stirling.w Stirling.w
 
 /-- The sequence `w n` converges to `π/2` -/
 theorem tendsto_w_at_top : Tendsto (fun n : ℕ => w n) atTop (𝓝 (π / 2)) := by
@@ -223,6 +238,7 @@ theorem tendsto_w_at_top : Tendsto (fun n : ℕ => w n) atTop (𝓝 (π / 2)) :=
   simp_rw [Nat.mul_succ, factorial_succ, pow_succ]
   push_cast
   ring_nf
+#align stirling.tendsto_w_at_top Stirling.tendsto_w_at_top
 
 /-- The sequence `n / (2 * n + 1)` tends to `1/2` -/
 theorem tendsto_self_div_two_mul_self_add_one : Tendsto (fun n : ℕ => (n : ℝ) / (2 * n + 1)) atTop (𝓝 (1 / 2)) := by
@@ -235,6 +251,7 @@ theorem tendsto_self_div_two_mul_self_add_one : Tendsto (fun n : ℕ => (n : ℝ
     (((tendsto_const_div_at_top_nhds_0_nat 1).const_add (2 : ℝ)).inv₀ ((add_zero (2 : ℝ)).symm ▸ two_ne_zero)).congr'
       (eventually_at_top.mpr ⟨1, fun n hn => _⟩)
   rw [add_div' (1 : ℝ) (2 : ℝ) (n : ℝ) (cast_ne_zero.mpr (one_le_iff_ne_zero.mp hn)), inv_div]
+#align stirling.tendsto_self_div_two_mul_self_add_one Stirling.tendsto_self_div_two_mul_self_add_one
 
 /-- For any `n ≠ 0`, we have the identity
 `(stirling_seq n)^4/(stirling_seq (2*n))^2 * (n / (2 * n + 1)) = w n`. -/
@@ -253,6 +270,8 @@ theorem stirling_seq_pow_four_div_stirling_seq_pow_two_eq (n : ℕ) (hn : n ≠ 
   field_simp
   simp only [mul_pow, mul_comm 2 n, mul_comm 4 n, pow_mul]
   ring
+#align
+  stirling.stirling_seq_pow_four_div_stirling_seq_pow_two_eq Stirling.stirling_seq_pow_four_div_stirling_seq_pow_two_eq
 
 /-- Suppose the sequence `stirling_seq` (defined above) has the limit `a ≠ 0`.
 Then the sequence `w` has limit `a^2/2`
@@ -271,12 +290,14 @@ theorem second_wallis_limit (a : ℝ) (hane : a ≠ 0) (ha : Tendsto stirlingSeq
   exact
     ((ha.pow 4).div ((ha.comp (tendsto_id.const_mul_at_top' two_pos)).pow 2) (pow_ne_zero 2 hane)).mul
       tendsto_self_div_two_mul_self_add_one
+#align stirling.second_wallis_limit Stirling.second_wallis_limit
 
 /-- **Stirling's Formula** -/
 theorem tendsto_stirling_seq_sqrt_pi : Tendsto (fun n : ℕ => stirlingSeq n) atTop (𝓝 (sqrt π)) := by
   obtain ⟨a, hapos, halimit⟩ := stirling_seq_has_pos_limit_a
   have hπ : π / 2 = a ^ 2 / 2 := tendsto_nhds_unique tendsto_w_at_top (second_wallis_limit a (ne_of_gt hapos) halimit)
   rwa [(div_left_inj' (show (2 : ℝ) ≠ 0 from two_ne_zero)).mp hπ, sqrt_sq hapos.le]
+#align stirling.tendsto_stirling_seq_sqrt_pi Stirling.tendsto_stirling_seq_sqrt_pi
 
 end Stirling
 

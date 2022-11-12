@@ -44,6 +44,7 @@ class MonoidalPreadditive where
   zero_tensor' : ∀ {W X Y Z : C} (f : Y ⟶ Z), (0 : W ⟶ X) ⊗ f = 0 := by obviously
   tensor_add' : ∀ {W X Y Z : C} (f : W ⟶ X) (g h : Y ⟶ Z), f ⊗ (g + h) = f ⊗ g + f ⊗ h := by obviously
   add_tensor' : ∀ {W X Y Z : C} (f g : W ⟶ X) (h : Y ⟶ Z), (f + g) ⊗ h = f ⊗ h + g ⊗ h := by obviously
+#align category_theory.monoidal_preadditive CategoryTheory.MonoidalPreadditive
 
 restate_axiom monoidal_preadditive.tensor_zero'
 
@@ -60,12 +61,16 @@ variable {C} [MonoidalPreadditive C]
 attribute [local simp] monoidal_preadditive.tensor_add monoidal_preadditive.add_tensor
 
 instance tensor_left_additive (X : C) : (tensorLeft X).Additive where
+#align category_theory.tensor_left_additive CategoryTheory.tensor_left_additive
 
 instance tensor_right_additive (X : C) : (tensorRight X).Additive where
+#align category_theory.tensor_right_additive CategoryTheory.tensor_right_additive
 
 instance tensoring_left_additive (X : C) : ((tensoringLeft C).obj X).Additive where
+#align category_theory.tensoring_left_additive CategoryTheory.tensoring_left_additive
 
 instance tensoring_right_additive (X : C) : ((tensoringRight C).obj X).Additive where
+#align category_theory.tensoring_right_additive CategoryTheory.tensoring_right_additive
 
 /-- A faithful additive monoidal functor to a monoidal preadditive category
 ensures that the domain is monoidal preadditive. -/
@@ -89,6 +94,7 @@ def monoidalPreadditiveOfFaithful {D : Type _} [Category D] [Preadditive D] [Mon
     apply F.to_functor.map_injective
     simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
       monoidal_preadditive.add_tensor]
+#align category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidalPreadditiveOfFaithful
 
 open BigOperators
 
@@ -102,6 +108,7 @@ theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : 
   rw [tQ.map_sum, preadditive.comp_sum]
   dsimp [tQ]
   simp only [tensor_id_comp_id_tensor]
+#align category_theory.tensor_sum CategoryTheory.tensor_sum
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -113,6 +120,7 @@ theorem sum_tensor {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : 
   rw [tQ.map_sum, preadditive.sum_comp]
   dsimp [tQ]
   simp only [tensor_id_comp_id_tensor]
+#align category_theory.sum_tensor CategoryTheory.sum_tensor
 
 variable {C}
 
@@ -146,6 +154,7 @@ variable [HasFiniteBiproducts C]
 /-- The isomorphism showing how tensor product on the left distributes over direct sums. -/
 def leftDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : X ⊗ ⨁ f ≅ ⨁ fun j => X ⊗ f j :=
   (tensorLeft X).mapBiproduct f
+#align category_theory.left_distributor CategoryTheory.leftDistributor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -154,6 +163,7 @@ theorem left_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
   ext
   dsimp [tensor_left, left_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
+#align category_theory.left_distributor_hom CategoryTheory.left_distributor_hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -162,6 +172,7 @@ theorem left_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
   ext
   dsimp [tensor_left, left_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
+#align category_theory.left_distributor_inv CategoryTheory.left_distributor_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -179,12 +190,14 @@ theorem left_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
   simp only [category.comp_id, comp_zero, monoidal_preadditive.tensor_zero, eq_to_hom_refl, tensor_id, if_true,
     dif_ctx_congr, Finset.sum_congr, Finset.mem_univ, Finset.sum_dite_eq']
   simp only [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
+#align category_theory.left_distributor_assoc CategoryTheory.left_distributor_assoc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The isomorphism showing how tensor product on the right distributes over direct sums. -/
 def rightDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : (⨁ f) ⊗ X ≅ ⨁ fun j => f j ⊗ X :=
   (tensorRight X).mapBiproduct f
+#align category_theory.right_distributor CategoryTheory.rightDistributor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -193,6 +206,7 @@ theorem right_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
   ext
   dsimp [tensor_right, right_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
+#align category_theory.right_distributor_hom CategoryTheory.right_distributor_hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -201,6 +215,7 @@ theorem right_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
   ext
   dsimp [tensor_right, right_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
+#align category_theory.right_distributor_inv CategoryTheory.right_distributor_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -217,6 +232,7 @@ theorem right_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
   simp only [category.comp_id, comp_tensor_id, eq_to_hom_refl, tensor_id, comp_zero, monoidal_preadditive.zero_tensor,
     if_true, dif_ctx_congr, Finset.mem_univ, Finset.sum_congr, Finset.sum_dite_eq']
   simp only [← tensor_id, associator_inv_naturality, iso.hom_inv_id_assoc]
+#align category_theory.right_distributor_assoc CategoryTheory.right_distributor_assoc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -236,6 +252,7 @@ theorem left_distributor_right_distributor_assoc {J : Type _} [Fintype J] (X Y :
     monoidal_preadditive.tensor_zero, monoidal_preadditive.zero_tensor, comp_tensor_id, eq_to_hom_refl, tensor_id,
     if_true, dif_ctx_congr, Finset.sum_congr, Finset.mem_univ, Finset.sum_dite_eq']
   simp only [associator_inv_naturality, iso.hom_inv_id_assoc]
+#align category_theory.left_distributor_right_distributor_assoc CategoryTheory.left_distributor_right_distributor_assoc
 
 end CategoryTheory
 

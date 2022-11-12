@@ -36,28 +36,35 @@ polynomial of every element `x` in `K` splits in `K`, i.e. every conjugate of `x
 class Normal : Prop where
   isAlgebraic' : Algebra.IsAlgebraic F K
   splits' (x : K) : Splits (algebraMap F K) (minpoly F x)
+#align normal Normal
 
 variable {F K}
 
 theorem Normal.isAlgebraic (h : Normal F K) (x : K) : IsAlgebraic F x :=
   Normal.isAlgebraic' x
+#align normal.is_algebraic Normal.isAlgebraic
 
 theorem Normal.isIntegral (h : Normal F K) (x : K) : IsIntegral F x :=
   is_algebraic_iff_is_integral.mp (h.IsAlgebraic x)
+#align normal.is_integral Normal.isIntegral
 
 theorem Normal.splits (h : Normal F K) (x : K) : Splits (algebraMap F K) (minpoly F x) :=
   Normal.splits' x
+#align normal.splits Normal.splits
 
 theorem normal_iff : Normal F K ↔ ∀ x : K, IsIntegral F x ∧ Splits (algebraMap F K) (minpoly F x) :=
   ⟨fun h x => ⟨h.IsIntegral x, h.Splits x⟩, fun h => ⟨fun x => (h x).1.IsAlgebraic F, fun x => (h x).2⟩⟩
+#align normal_iff normal_iff
 
 theorem Normal.out : Normal F K → ∀ x : K, IsIntegral F x ∧ Splits (algebraMap F K) (minpoly F x) :=
   normal_iff.1
+#align normal.out Normal.out
 
 variable (F K)
 
 instance normalSelf : Normal F F :=
   ⟨fun x => isIntegralAlgebraMap.IsAlgebraic F, fun x => (minpoly.eq_X_sub_C' x).symm ▸ splitsXSubC _⟩
+#align normal_self normalSelf
 
 variable {K}
 
@@ -76,6 +83,7 @@ theorem Normal.exists_is_splitting_field [h : Normal F K] [FiniteDimensional F K
     
   rw [is_root.def, eval_map, ← aeval_def, AlgHom.map_prod]
   exact Finset.prod_eq_zero (Finset.mem_univ _) (minpoly.aeval _ _)
+#align normal.exists_is_splitting_field Normal.exists_is_splitting_field
 
 section NormalTower
 
@@ -90,6 +98,7 @@ theorem Normal.towerTopOfNormal [h : Normal F E] : Normal K E :=
         Polynomial.splitsOfSplitsOfDvd (algebraMap K E) (Polynomial.map_ne_zero (minpoly.ne_zero hx))
           ((Polynomial.splits_map_iff (algebraMap F K) (algebraMap K E)).mpr hhx)
           (minpoly.dvd_map_of_is_scalar_tower F K x)⟩
+#align normal.tower_top_of_normal Normal.towerTopOfNormal
 
 theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function.Bijective ϕ :=
   ⟨ϕ.toRingHom.Injective, fun x => by
@@ -107,6 +116,7 @@ theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function
                 exact minpoly.aeval F (algebraMap K E x))))) with
       y hy
     exact ⟨y, hy⟩⟩
+#align alg_hom.normal_bijective AlgHom.normal_bijective
 
 variable {F} {E} {E' : Type _} [Field E'] [Algebra F E']
 
@@ -125,9 +135,11 @@ theorem Normal.ofAlgEquiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
       exact
         Eq.trans (Polynomial.aeval_alg_hom_apply f.symm.to_alg_hom x (minpoly F (f.symm x))).symm (minpoly.aeval _ _)
       
+#align normal.of_alg_equiv Normal.ofAlgEquiv
 
 theorem AlgEquiv.transfer_normal (f : E ≃ₐ[F] E') : Normal F E ↔ Normal F E' :=
   ⟨fun h => Normal.ofAlgEquiv f, fun h => Normal.ofAlgEquiv f.symm⟩
+#align alg_equiv.transfer_normal AlgEquiv.transfer_normal
 
 theorem Normal.ofIsSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : Normal F E := by
   by_cases hp:p = 0
@@ -199,6 +211,7 @@ theorem Normal.ofIsSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : N
   rw [← Finset.image_to_finset, Finset.coe_image]
   apply Eq.trans (Algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots AdjoinRoot.adjoin_root_eq_top)
   rw [Set.image_singleton, RingHom.algebra_map_to_algebra, AdjoinRoot.lift_root]
+#align normal.of_is_splitting_field Normal.ofIsSplittingField
 
 instance (p : F[X]) : Normal F p.SplittingField :=
   Normal.ofIsSplittingField p
@@ -227,12 +240,14 @@ instance normalSupr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i,
   have := hF.splits ⟨x, hx⟩
   rw [minpoly_eq, Subtype.coe_mk, ← minpoly_eq] at this
   exact Polynomial.splitsCompOfSplits _ (inclusion hE).toRingHom this
+#align intermediate_field.normal_supr IntermediateField.normalSupr
 
 variable {F K} {L : Type _} [Field L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
 
 @[simp]
 theorem restrict_scalars_normal {E : IntermediateField K L} : Normal F (E.restrictScalars F) ↔ Normal F E :=
   Iff.rfl
+#align intermediate_field.restrict_scalars_normal IntermediateField.restrict_scalars_normal
 
 end IntermediateField
 
@@ -263,15 +278,18 @@ def AlgHom.restrictNormalAux [h : Normal F E] : (toAlgHom F E K₁).range →ₐ
   map_add' x y := Subtype.ext (ϕ.map_add x y)
   map_mul' x y := Subtype.ext (ϕ.map_mul x y)
   commutes' x := Subtype.ext (ϕ.commutes x)
+#align alg_hom.restrict_normal_aux AlgHom.restrictNormalAux
 
 /-- Restrict algebra homomorphism to normal subfield -/
 def AlgHom.restrictNormal [Normal F E] : E →ₐ[F] E :=
   ((AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K₂)).symm.toAlgHom.comp (ϕ.restrictNormalAux E)).comp
     (AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K₁)).toAlgHom
+#align alg_hom.restrict_normal AlgHom.restrictNormal
 
 /-- Restrict algebra homomorphism to normal subfield (`alg_equiv` version) -/
 def AlgHom.restrictNormal' [Normal F E] : E ≃ₐ[F] E :=
   AlgEquiv.ofBijective (AlgHom.restrictNormal ϕ E) (AlgHom.normal_bijective F E E _)
+#align alg_hom.restrict_normal' AlgHom.restrictNormal'
 
 @[simp]
 theorem AlgHom.restrict_normal_commutes [Normal F E] (x : E) :
@@ -279,28 +297,34 @@ theorem AlgHom.restrict_normal_commutes [Normal F E] (x : E) :
   Subtype.ext_iff.mp
     (AlgEquiv.apply_symm_apply (AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K₂))
       (ϕ.restrictNormalAux E ⟨IsScalarTower.toAlgHom F E K₁ x, x, rfl⟩))
+#align alg_hom.restrict_normal_commutes AlgHom.restrict_normal_commutes
 
 theorem AlgHom.restrict_normal_comp [Normal F E] :
     (ψ.restrictNormal E).comp (ϕ.restrictNormal E) = (ψ.comp ϕ).restrictNormal E :=
   AlgHom.ext fun _ => (algebraMap E K₃).Injective (by simp only [AlgHom.comp_apply, AlgHom.restrict_normal_commutes])
+#align alg_hom.restrict_normal_comp AlgHom.restrict_normal_comp
 
 /-- Restrict algebra isomorphism to a normal subfield -/
 def AlgEquiv.restrictNormal [h : Normal F E] : E ≃ₐ[F] E :=
   AlgHom.restrictNormal' χ.toAlgHom E
+#align alg_equiv.restrict_normal AlgEquiv.restrictNormal
 
 @[simp]
 theorem AlgEquiv.restrict_normal_commutes [Normal F E] (x : E) :
     algebraMap E K₂ (χ.restrictNormal E x) = χ (algebraMap E K₁ x) :=
   χ.toAlgHom.restrict_normal_commutes E x
+#align alg_equiv.restrict_normal_commutes AlgEquiv.restrict_normal_commutes
 
 theorem AlgEquiv.restrict_normal_trans [Normal F E] :
     (χ.trans ω).restrictNormal E = (χ.restrictNormal E).trans (ω.restrictNormal E) :=
   AlgEquiv.ext fun _ =>
     (algebraMap E K₃).Injective (by simp only [AlgEquiv.trans_apply, AlgEquiv.restrict_normal_commutes])
+#align alg_equiv.restrict_normal_trans AlgEquiv.restrict_normal_trans
 
 /-- Restriction to an normal subfield as a group homomorphism -/
 def AlgEquiv.restrictNormalHom [Normal F E] : (K₁ ≃ₐ[F] K₁) →* E ≃ₐ[F] E :=
   MonoidHom.mk' (fun χ => χ.restrictNormal E) fun ω χ => χ.restrict_normal_trans ω E
+#align alg_equiv.restrict_normal_hom AlgEquiv.restrictNormalHom
 
 variable (F K₁ E)
 
@@ -319,6 +343,7 @@ def Normal.algHomEquivAut [Normal F E] : (E →ₐ[F] K₁) ≃ E ≃ₐ[F] E wh
     apply NoZeroSmulDivisors.algebra_map_injective E K₁
     rw [AlgHom.restrict_normal_commutes]
     simp
+#align normal.alg_hom_equiv_aut Normal.algHomEquivAut
 
 end Restrict
 
@@ -340,36 +365,43 @@ noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
               rw [splits_map_iff, ← IsScalarTower.algebra_map_eq]
               exact (h.out x).2)
             (minpoly.dvd_map_of_is_scalar_tower F K₁ x)⟩
+#align alg_hom.lift_normal AlgHom.liftNormal
 
 @[simp]
 theorem AlgHom.lift_normal_commutes [Normal F E] (x : K₁) :
     ϕ.liftNormal E (algebraMap K₁ E x) = algebraMap K₂ E (ϕ x) := by apply @AlgHom.commutes K₁ E E _ _ _ _
+#align alg_hom.lift_normal_commutes AlgHom.lift_normal_commutes
 
 @[simp]
 theorem AlgHom.restrict_lift_normal (ϕ : K₁ →ₐ[F] K₁) [Normal F K₁] [Normal F E] :
     (ϕ.liftNormal E).restrictNormal K₁ = ϕ :=
   AlgHom.ext fun x =>
     (algebraMap K₁ E).Injective (Eq.trans (AlgHom.restrict_normal_commutes _ K₁ x) (ϕ.lift_normal_commutes E x))
+#align alg_hom.restrict_lift_normal AlgHom.restrict_lift_normal
 
 /-- If `E/Kᵢ/F` are towers of fields with `E/F` normal then we can lift
   an algebra isomorphism `ϕ : K₁ ≃ₐ[F] K₂` to `ϕ.lift_normal E : E ≃ₐ[F] E`. -/
 noncomputable def AlgEquiv.liftNormal [Normal F E] : E ≃ₐ[F] E :=
   AlgEquiv.ofBijective (χ.toAlgHom.liftNormal E) (AlgHom.normal_bijective F E E _)
+#align alg_equiv.lift_normal AlgEquiv.liftNormal
 
 @[simp]
 theorem AlgEquiv.lift_normal_commutes [Normal F E] (x : K₁) :
     χ.liftNormal E (algebraMap K₁ E x) = algebraMap K₂ E (χ x) :=
   χ.toAlgHom.lift_normal_commutes E x
+#align alg_equiv.lift_normal_commutes AlgEquiv.lift_normal_commutes
 
 @[simp]
 theorem AlgEquiv.restrict_lift_normal (χ : K₁ ≃ₐ[F] K₁) [Normal F K₁] [Normal F E] :
     (χ.liftNormal E).restrictNormal K₁ = χ :=
   AlgEquiv.ext fun x =>
     (algebraMap K₁ E).Injective (Eq.trans (AlgEquiv.restrict_normal_commutes _ K₁ x) (χ.lift_normal_commutes E x))
+#align alg_equiv.restrict_lift_normal AlgEquiv.restrict_lift_normal
 
 theorem AlgEquiv.restrict_normal_hom_surjective [Normal F K₁] [Normal F E] :
     Function.Surjective (AlgEquiv.restrictNormalHom K₁ : (E ≃ₐ[F] E) → K₁ ≃ₐ[F] K₁) := fun χ =>
   ⟨χ.liftNormal E, χ.restrict_lift_normal E⟩
+#align alg_equiv.restrict_normal_hom_surjective AlgEquiv.restrict_normal_hom_surjective
 
 variable (F) (K₁) (E)
 
@@ -384,6 +416,7 @@ theorem is_solvable_of_is_scalar_tower [Normal F K₁] [h1 : IsSolvable (K₁ �
     solvable_of_ker_le_range f (AlgEquiv.restrictNormalHom K₁) fun ϕ hϕ =>
       ⟨{ ϕ with commutes' := fun x => _ }, AlgEquiv.ext fun _ => rfl⟩
   exact Eq.trans (ϕ.restrict_normal_commutes K₁ x).symm (congr_arg _ (alg_equiv.ext_iff.mp hϕ x))
+#align is_solvable_of_is_scalar_tower is_solvable_of_is_scalar_tower
 
 end lift
 
@@ -397,6 +430,7 @@ variable (F K) (L : Type _) [Field L] [Algebra F L] [Algebra K L] [IsScalarTower
 noncomputable def normalClosure : IntermediateField K L :=
   { (⨆ f : K →ₐ[F] L, f.fieldRange).toSubfield with
     algebra_map_mem' := fun r => le_supr (fun f : K →ₐ[F] L => f.fieldRange) (IsScalarTower.toAlgHom F K L) ⟨r, rfl⟩ }
+#align normal_closure normalClosure
 
 namespace normalClosure
 
@@ -421,6 +455,7 @@ theorem restrict_scalars_eq_supr_adjoin [h : Normal F L] :
     rw [Algebra.id.map_eq_id, RingHom.id_apply]
     apply PowerBasis.lift_gen
     
+#align normal_closure.restrict_scalars_eq_supr_adjoin normalClosure.restrict_scalars_eq_supr_adjoin
 
 instance normal [h : Normal F L] : Normal F (normalClosure F K L) := by
   let ϕ := algebraMap K L
@@ -433,10 +468,12 @@ instance normal [h : Normal F L] : Normal F (normalClosure F K L) := by
       ((minpoly.eq_of_algebra_map_eq ϕ.injective ((is_integral_algebra_map_iff ϕ.injective).mp (h.is_integral (ϕ x)))
             rfl).symm ▸
         h.splits _)
+#align normal_closure.normal normalClosure.normal
 
 instance isFiniteDimensional [FiniteDimensional F K] : FiniteDimensional F (normalClosure F K L) := by
   haveI : ∀ f : K →ₐ[F] L, FiniteDimensional F f.fieldRange := fun f => f.to_linear_map.finite_dimensional_range
   apply IntermediateField.finiteDimensionalSuprOfFinite
+#align normal_closure.is_finite_dimensional normalClosure.isFiniteDimensional
 
 end normalClosure
 

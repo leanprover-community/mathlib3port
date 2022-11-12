@@ -35,23 +35,19 @@ include S
 
 /-- A localization always has cardinality less than or equal to the base ring. -/
 theorem card_le : (#L) ≤ (#R) := by
-  classical
-  cases fintypeOrInfinite R
-  · exact Cardinal.mk_le_of_surjective (IsArtinianRing.localization_surjective S _)
-    
-  erw [← Cardinal.mul_eq_self <| Cardinal.aleph_0_le_mk R]
-  set f : R × R → L := fun aa => IsLocalization.mk' _ aa.1 (if h : aa.2 ∈ S then ⟨aa.2, h⟩ else 1)
-  refine' @Cardinal.mk_le_of_surjective _ _ f fun a => _
-  obtain ⟨x, y, h⟩ := IsLocalization.mk'_surjective S a
-  use (x, y)
-  dsimp [f]
-  rwa [dif_pos <| show ↑y ∈ S from y.2, SetLike.eta]
+  classical cases fintypeOrInfinite R
+    erw [← Cardinal.mul_eq_self <| Cardinal.aleph_0_le_mk R]
+    refine' @Cardinal.mk_le_of_surjective _ _ f fun a => _
+    use (x, y)
+    rwa [dif_pos <| show ↑y ∈ S from y.2, SetLike.eta]
+#align is_localization.card_le IsLocalization.card_le
 
 variable (L)
 
 /-- If you do not localize at any zero-divisors, localization preserves cardinality. -/
 theorem card (hS : S ≤ R⁰) : (#R) = (#L) :=
   (Cardinal.mk_le_of_injective (IsLocalization.injective L hS)).antisymm (card_le S)
+#align is_localization.card IsLocalization.card
 
 end IsLocalization
 

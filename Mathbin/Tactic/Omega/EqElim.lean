@@ -15,9 +15,11 @@ namespace Omega
 
 def symdiv (i j : Int) : Int :=
   if 2 * (i % j) < j then i / j else i / j + 1
+#align omega.symdiv Omega.symdiv
 
 def symmod (i j : Int) : Int :=
   if 2 * (i % j) < j then i % j else i % j - j
+#align omega.symmod Omega.symmod
 
 attribute [local semireducible] Int.NonNeg
 
@@ -28,6 +30,7 @@ theorem symmod_add_one_self {i : Int} : 0 < i → symmod i (i + 1) = -1 := by
   simp only [add_comm, add_neg_cancel_left, neg_add_rev, sub_eq_add_neg]
   have h2 : 2 * i = (1 + 1) * i := rfl
   simpa only [h2, add_mul, one_mul, add_lt_add_iff_left, not_lt] using h1
+#align omega.symmod_add_one_self Omega.symmod_add_one_self
 
 theorem mul_symdiv_eq {i j : Int} : j * symdiv i j = i - symmod i j := by
   unfold symdiv
@@ -39,8 +42,10 @@ theorem mul_symdiv_eq {i j : Int} : j * symdiv i j = i - symmod i j := by
   · repeat' rw [if_neg h1]
     rw [Int.mod_def, sub_sub, sub_sub_cancel, mul_add, mul_one]
     
+#align omega.mul_symdiv_eq Omega.mul_symdiv_eq
 
 theorem symmod_eq {i j : Int} : symmod i j = i - j * symdiv i j := by rw [mul_symdiv_eq, sub_sub_cancel]
+#align omega.symmod_eq Omega.symmod_eq
 
 /-- (sgm v b as n) is the new value assigned to the nth variable
 after a single step of equality elimination using valuation v,
@@ -51,6 +56,7 @@ def sgm (v : Nat → Int) (b : Int) (as : List Int) (n : Nat) :=
   let a_n : Int := get n as
   let m : Int := a_n + 1
   (symmod b m + Coeffs.val v (as.map fun x => symmod x m)) / m
+#align omega.sgm Omega.sgm
 
 open List.Func
 
@@ -58,6 +64,7 @@ def rhs : Nat → Int → List Int → Term
   | n, b, as =>
     let m := get n as + 1
     ⟨symmod b m, (as.map fun x => symmod x m) {n ↦ -m}⟩
+#align omega.rhs Omega.rhs
 
 theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
     ∀ {k}, ∃ d, m * d + Coeffs.valBetween v (as.map fun x : ℤ => symmod x m) 0 k = Coeffs.valBetween v as 0 k
@@ -80,6 +87,7 @@ theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
       exact hk
       simp only [hk, List.length_map]
       
+#align omega.rhs_correct_aux Omega.rhs_correct_aux
 
 open Omega
 
@@ -139,15 +147,18 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
           ring
           
       
+#align omega.rhs_correct Omega.rhs_correct
 
 def symSym (m b : Int) : Int :=
   symdiv b m + symmod b m
+#align omega.sym_sym Omega.symSym
 
 def coeffsReduce : Nat → Int → List Int → Term
   | n, b, as =>
     let a := get n as
     let m := a + 1
     (symSym m b, as.map (symSym m) {n ↦ -a})
+#align omega.coeffs_reduce Omega.coeffsReduce
 
 theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : Nat} :
     0 < get n as → 0 = Term.val v (b, as) → 0 = Term.val (v ⟨n ↦ sgm v b as n⟩) (coeffsReduce n b as) := by
@@ -238,13 +249,16 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         rw [← coeffs.val_except_add_eq n, coeffs.val_except_update_set, get_set, update_eq]
       
   rw [← Int.mul_div_cancel (term.val _ _) h3, ← h4, Int.zero_div]
+#align omega.coeffs_reduce_correct Omega.coeffs_reduce_correct
 
 -- Requires : t1.coeffs[m] = 1
 def cancel (m : Nat) (t1 t2 : Term) : Term :=
   Term.add (t1.mul (-get m t2.snd)) t2
+#align omega.cancel Omega.cancel
 
 def subst (n : Nat) (t1 t2 : Term) : Term :=
   Term.add (t1.mul (get n t2.snd)) (t2.fst, t2.snd {n ↦ 0})
+#align omega.subst Omega.subst
 
 theorem subst_correct {v : Nat → Int} {b : Int} {as : List Int} {t : Term} {n : Nat} :
     0 < get n as → 0 = Term.val v (b, as) → Term.val v t = Term.val (v ⟨n ↦ sgm v b as n⟩) (subst n (rhs n b as) t) :=
@@ -258,6 +272,7 @@ theorem subst_correct {v : Nat → Int} {b : Int} {as : List Int} {t : Term} {n 
     rw [← coeffs.val_except_add_eq n, get_set, zero_mul, add_zero, coeffs.val_except_update_set]
   rw [h3, ← coeffs.val_except_add_eq n]
   ring
+#align omega.subst_correct Omega.subst_correct
 
 /-- The type of equality elimination rules. -/
 inductive Ee : Type
@@ -268,6 +283,7 @@ inductive Ee : Type
   | reduce : Nat → ee
   | cancel : Nat → ee
   deriving has_reflect, Inhabited
+#align omega.ee Omega.Ee
 
 namespace Ee
 
@@ -278,12 +294,15 @@ def repr : Ee → String
   | neg => "-"
   | reduce n => "≻" ++ n.repr
   | cancel n => "+" ++ n.repr
+#align omega.ee.repr Omega.Ee.repr
 
 instance hasRepr : Repr Ee :=
   ⟨repr⟩
+#align omega.ee.has_repr Omega.Ee.hasRepr
 
 unsafe instance has_to_format : has_to_format Ee :=
   ⟨fun x => x.repr⟩
+#align omega.ee.has_to_format omega.ee.has_to_format
 
 end Ee
 
@@ -323,11 +342,13 @@ def eqElim : List Ee → Clause → Clause
       eq_elim es (eq'::eqs', les')
     else ([], [])
   | ee.cancel m::es, (Eq::eqs, les) => eq_elim es (eqs.map (cancel m Eq), les.map (cancel m Eq))
+#align omega.eq_elim Omega.eqElim
 
 open Tactic
 
 theorem sat_empty : Clause.Sat ([], []) :=
   ⟨fun _ => 0, ⟨by decide, by decide⟩⟩
+#align omega.sat_empty Omega.sat_empty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -448,12 +469,14 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
       
     · apply h2 _ h4
       
+#align omega.sat_eq_elim Omega.sat_eq_elim
 
 /-- If the result of equality elimination is unsatisfiable, the original clause is unsatisfiable. -/
 theorem unsat_of_unsat_eq_elim (ee : List Ee) (c : Clause) : (eqElim ee c).Unsat → c.Unsat := by
   intro h1 h2
   apply h1
   apply sat_eq_elim h2
+#align omega.unsat_of_unsat_eq_elim Omega.unsat_of_unsat_eq_elim
 
 end Omega
 

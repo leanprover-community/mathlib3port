@@ -37,30 +37,36 @@ def indicator (s : Finset ι) (f : ∀ i ∈ s, α) : ι →₀ α where
     exact
       ⟨fun ⟨⟨j, hj⟩, hf, rfl⟩ => ⟨hj, (mem_filter.1 hf).2⟩, fun ⟨hi, hf⟩ =>
         ⟨⟨i, hi⟩, mem_filter.2 <| ⟨mem_attach _ _, hf⟩, rfl⟩⟩
+#align finsupp.indicator Finsupp.indicator
 
 theorem indicator_of_mem (hi : i ∈ s) (f : ∀ i ∈ s, α) : indicator s f i = f i hi :=
   dif_pos hi
+#align finsupp.indicator_of_mem Finsupp.indicator_of_mem
 
 theorem indicator_of_not_mem (hi : i ∉ s) (f : ∀ i ∈ s, α) : indicator s f i = 0 :=
   dif_neg hi
+#align finsupp.indicator_of_not_mem Finsupp.indicator_of_not_mem
 
 variable (s i)
 
 @[simp]
 theorem indicator_apply : indicator s f i = if hi : i ∈ s then f i hi else 0 :=
   rfl
+#align finsupp.indicator_apply Finsupp.indicator_apply
 
 theorem indicator_injective : Injective fun f : ∀ i ∈ s, α => indicator s f := by
   intro a b h
   ext (i hi)
   rw [← indicator_of_mem hi a, ← indicator_of_mem hi b]
   exact congr_fun h i
+#align finsupp.indicator_injective Finsupp.indicator_injective
 
 theorem support_indicator_subset : ((indicator s f).Support : Set ι) ⊆ s := by
   intro i hi
   rw [mem_coe, mem_support_iff] at hi
   by_contra
   exact hi (indicator_of_not_mem h _)
+#align finsupp.support_indicator_subset Finsupp.support_indicator_subset
 
 end Finsupp
 

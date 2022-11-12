@@ -30,6 +30,7 @@ variable {α : Type _}
 -/
 @[norm_cast]
 theorem cast_neg_nat_cast {R} [Field R] (n : ℕ) : ((-n : ℤ) : R) = -n := by simp
+#align int.cast_neg_nat_cast Int.cast_neg_nat_cast
 
 @[simp]
 theorem cast_div [Field α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) : ((m / n : ℤ) : α) = m / n := by
@@ -38,6 +39,7 @@ theorem cast_div [Field α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) 
     rintro rfl
     simpa using n_nonzero
   rw [Int.mul_div_cancel_left _ this, Int.cast_mul, mul_div_cancel_left _ n_nonzero]
+#align int.cast_div Int.cast_div
 
 end Int
 

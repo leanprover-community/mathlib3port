@@ -36,6 +36,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 @[protect_proj]
 structure DenseInducing [TopologicalSpace α] [TopologicalSpace β] (i : α → β) extends Inducing i : Prop where
   dense : DenseRange i
+#align dense_inducing DenseInducing
 
 namespace DenseInducing
 
@@ -45,15 +46,19 @@ variable {i : α → β} (di : DenseInducing i)
 
 theorem nhds_eq_comap (di : DenseInducing i) : ∀ a : α, 𝓝 a = comap i (𝓝 <| i a) :=
   di.to_inducing.nhds_eq_comap
+#align dense_inducing.nhds_eq_comap DenseInducing.nhds_eq_comap
 
 protected theorem continuous (di : DenseInducing i) : Continuous i :=
   di.to_inducing.Continuous
+#align dense_inducing.continuous DenseInducing.continuous
 
 theorem closure_range : Closure (Range i) = univ :=
   di.dense.closure_range
+#align dense_inducing.closure_range DenseInducing.closure_range
 
 protected theorem preconnected_space [PreconnectedSpace α] (di : DenseInducing i) : PreconnectedSpace β :=
   di.dense.PreconnectedSpace di.Continuous
+#align dense_inducing.preconnected_space DenseInducing.preconnected_space
 
 theorem closure_image_mem_nhds {s : Set α} {a : α} (di : DenseInducing i) (hs : s ∈ 𝓝 a) : Closure (i '' s) ∈ 𝓝 (i a) :=
   by
@@ -64,11 +69,13 @@ theorem closure_image_mem_nhds {s : Set α} {a : α} (di : DenseInducing i) (hs 
     U ⊆ Closure (i '' (i ⁻¹' U)) := di.dense.subset_closure_image_preimage_of_is_open hUo
     _ ⊆ Closure (i '' s) := closure_mono (image_subset i sub)
     
+#align dense_inducing.closure_image_mem_nhds DenseInducing.closure_image_mem_nhds
 
 theorem dense_image (di : DenseInducing i) {s : Set α} : Dense (i '' s) ↔ Dense s := by
   refine' ⟨fun H x => _, di.dense.dense_image di.continuous⟩
   rw [di.to_inducing.closure_eq_preimage_closure_image, H.closure_eq, preimage_univ]
   trivial
+#align dense_inducing.dense_image DenseInducing.dense_image
 
 /-- If `i : α → β` is a dense embedding with dense complement of the range, then any compact set in
 `α` has empty interior. -/
@@ -80,17 +87,20 @@ theorem interior_compact_eq_empty [T2Space β] (di : DenseInducing i) (hd : Dens
   rw [(hs.image di.continuous).IsClosed.closure_eq] at this
   rcases hd.inter_nhds_nonempty this with ⟨y, hyi, hys⟩
   exact hyi (image_subset_range _ _ hys)
+#align dense_inducing.interior_compact_eq_empty DenseInducing.interior_compact_eq_empty
 
 /-- The product of two dense inducings is a dense inducing -/
 protected theorem prod [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseInducing e₁)
     (de₂ : DenseInducing e₂) : DenseInducing fun p : α × γ => (e₁ p.1, e₂ p.2) :=
   { induced := (de₁.to_inducing.prod_mk de₂.to_inducing).induced, dense := de₁.dense.prod_map de₂.dense }
+#align dense_inducing.prod DenseInducing.prod
 
 open TopologicalSpace
 
 /-- If the domain of a `dense_inducing` map is a separable space, then so is the codomain. -/
 protected theorem separable_space [SeparableSpace α] : SeparableSpace β :=
   di.dense.SeparableSpace di.Continuous
+#align dense_inducing.separable_space DenseInducing.separable_space
 
 variable [TopologicalSpace δ] {f : γ → α} {g : γ → δ} {h : δ → β}
 
@@ -108,14 +118,17 @@ theorem tendsto_comap_nhds_nhds {d : δ} {a : α} (di : DenseInducing i) (H : Te
   have lim2 : comap i (map h (𝓝 d)) ≤ comap i (𝓝 (i a)) := comap_mono H
   rw [← di.nhds_eq_comap] at lim2
   exact le_trans lim1 lim2
+#align dense_inducing.tendsto_comap_nhds_nhds DenseInducing.tendsto_comap_nhds_nhds
 
 protected theorem nhdsWithinNeBot (di : DenseInducing i) (b : β) : NeBot (𝓝[Range i] b) :=
   di.dense.nhdsWithinNeBot b
+#align dense_inducing.nhds_within_ne_bot DenseInducing.nhdsWithinNeBot
 
 theorem comapNhdsNeBot (di : DenseInducing i) (b : β) : NeBot (comap i (𝓝 b)) :=
   comap_ne_bot fun s hs =>
     let ⟨_, ⟨ha, a, rfl⟩⟩ := mem_closure_iff_nhds.1 (di.dense b) s hs
     ⟨a, ha⟩
+#align dense_inducing.comap_nhds_ne_bot DenseInducing.comapNhdsNeBot
 
 variable [TopologicalSpace γ]
 
@@ -125,20 +138,25 @@ variable [TopologicalSpace γ]
   `g` might not be continuous or even extend `f`. -/
 def extend (di : DenseInducing i) (f : α → γ) (b : β) : γ :=
   @lim _ ⟨f (di.dense.some b)⟩ (comap i (𝓝 b)) f
+#align dense_inducing.extend DenseInducing.extend
 
 theorem extend_eq_of_tendsto [T2Space γ] {b : β} {c : γ} {f : α → γ} (hf : Tendsto f (comap i (𝓝 b)) (𝓝 c)) :
     di.extend f b = c :=
   haveI := di.comap_nhds_ne_bot
   hf.lim_eq
+#align dense_inducing.extend_eq_of_tendsto DenseInducing.extend_eq_of_tendsto
 
 theorem extend_eq_at [T2Space γ] {f : α → γ} {a : α} (hf : ContinuousAt f a) : di.extend f (i a) = f a :=
   extend_eq_of_tendsto _ <| di.nhds_eq_comap a ▸ hf
+#align dense_inducing.extend_eq_at DenseInducing.extend_eq_at
 
 theorem extend_eq_at' [T2Space γ] {f : α → γ} {a : α} (c : γ) (hf : Tendsto f (𝓝 a) (𝓝 c)) : di.extend f (i a) = f a :=
   di.extend_eq_at (continuous_at_of_tendsto_nhds hf)
+#align dense_inducing.extend_eq_at' DenseInducing.extend_eq_at'
 
 theorem extend_eq [T2Space γ] {f : α → γ} (hf : Continuous f) (a : α) : di.extend f (i a) = f a :=
   di.extend_eq_at hf.ContinuousAt
+#align dense_inducing.extend_eq DenseInducing.extend_eq
 
 /-- Variation of `extend_eq` where we ask that `f` has a limit along `comap i (𝓝 b)` for each
 `b : β`. This is a strictly stronger assumption than continuity of `f`, but in a lot of cases
@@ -148,6 +166,7 @@ theorem extend_eq' [T2Space γ] {f : α → γ} (di : DenseInducing i) (hf : ∀
   rcases hf (i a) with ⟨b, hb⟩
   refine' di.extend_eq_at' b _
   rwa [← di.to_inducing.nhds_eq_comap] at hb
+#align dense_inducing.extend_eq' DenseInducing.extend_eq'
 
 theorem extend_unique_at [T2Space γ] {b : β} {f : α → γ} {g : β → γ} (di : DenseInducing i)
     (hf : ∀ᶠ x in comap i (𝓝 b), g (i x) = f x) (hg : ContinuousAt g b) : di.extend f b = g b := by
@@ -158,10 +177,12 @@ theorem extend_unique_at [T2Space γ] {b : β} {f : α → γ} {g : β → γ} (
   refine' eventually_comap.2 ((hg.eventually hs).mono _)
   rintro _ hxs x rfl
   exact hxs
+#align dense_inducing.extend_unique_at DenseInducing.extend_unique_at
 
 theorem extend_unique [T2Space γ] {f : α → γ} {g : β → γ} (di : DenseInducing i) (hf : ∀ x, g (i x) = f x)
     (hg : Continuous g) : di.extend f = g :=
   funext fun b => extend_unique_at di (eventually_of_forall hf) hg.ContinuousAt
+#align dense_inducing.extend_unique DenseInducing.extend_unique
 
 theorem continuous_at_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInducing i)
     (hf : ∀ᶠ x in 𝓝 b, ∃ c, Tendsto f (comap i <| 𝓝 x) (𝓝 c)) : ContinuousAt (di.extend f) b := by
@@ -184,10 +205,12 @@ theorem continuous_at_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseIn
   apply V'_closed.mem_of_tendsto x_in₁
   use V₂
   tauto
+#align dense_inducing.continuous_at_extend DenseInducing.continuous_at_extend
 
 theorem continuous_extend [T3Space γ] {f : α → γ} (di : DenseInducing i)
     (hf : ∀ b, ∃ c, Tendsto f (comap i (𝓝 b)) (𝓝 c)) : Continuous (di.extend f) :=
   continuous_iff_continuous_at.mpr fun b => di.continuous_at_extend <| univ_mem' hf
+#align dense_inducing.continuous_extend DenseInducing.continuous_extend
 
 theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (Range i))
     (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 (i a), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
@@ -195,17 +218,20 @@ theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (Ra
       (induced_iff_nhds_eq i).2 fun a =>
         le_antisymm (tendsto_iff_comap.1 <| c.Tendsto _) (by simpa [Filter.le_def] using H a),
     dense }
+#align dense_inducing.mk' DenseInducing.mk'
 
 end DenseInducing
 
 /-- A dense embedding is an embedding with dense image. -/
 structure DenseEmbedding [TopologicalSpace α] [TopologicalSpace β] (e : α → β) extends DenseInducing e : Prop where
   inj : Function.Injective e
+#align dense_embedding DenseEmbedding
 
 theorem DenseEmbedding.mk' [TopologicalSpace α] [TopologicalSpace β] (e : α → β) (c : Continuous e)
     (dense : DenseRange e) (inj : Function.Injective e)
     (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 (e a), ∀ b, e b ∈ t → b ∈ s) : DenseEmbedding e :=
   { DenseInducing.mk' e c Dense H with inj }
+#align dense_embedding.mk' DenseEmbedding.mk'
 
 namespace DenseEmbedding
 
@@ -217,24 +243,29 @@ variable {e : α → β} (de : DenseEmbedding e)
 
 theorem inj_iff {x y} : e x = e y ↔ x = y :=
   de.inj.eq_iff
+#align dense_embedding.inj_iff DenseEmbedding.inj_iff
 
 theorem to_embedding : Embedding e :=
   { induced := de.induced, inj := de.inj }
+#align dense_embedding.to_embedding DenseEmbedding.to_embedding
 
 /-- If the domain of a `dense_embedding` is a separable space, then so is its codomain. -/
 protected theorem separable_space [SeparableSpace α] : SeparableSpace β :=
   de.to_dense_inducing.SeparableSpace
+#align dense_embedding.separable_space DenseEmbedding.separable_space
 
 /-- The product of two dense embeddings is a dense embedding. -/
 protected theorem prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbedding e₁) (de₂ : DenseEmbedding e₂) :
     DenseEmbedding fun p : α × γ => (e₁ p.1, e₂ p.2) :=
   { DenseInducing.prod de₁.to_dense_inducing de₂.to_dense_inducing with
     inj := fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ => by simp <;> exact fun h₁ h₂ => ⟨de₁.inj h₁, de₂.inj h₂⟩ }
+#align dense_embedding.prod DenseEmbedding.prod
 
 /-- The dense embedding of a subtype inside its closure. -/
 @[simps]
 def subtypeEmb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }) : { x // x ∈ Closure (e '' { x | p x }) } :=
   ⟨e x, subset_closure <| mem_image_of_mem e x.Prop⟩
+#align dense_embedding.subtype_emb DenseEmbedding.subtypeEmb
 
 protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
   { dense :=
@@ -246,14 +277,17 @@ protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
     induced :=
       (induced_iff_nhds_eq _).2 fun ⟨x, hx⟩ => by
         simp [subtype_emb, nhds_subtype_eq_comap, de.to_inducing.nhds_eq_comap, comap_comap, (· ∘ ·)] }
+#align dense_embedding.subtype DenseEmbedding.subtype
 
 theorem dense_image {s : Set α} : Dense (e '' s) ↔ Dense s :=
   de.to_dense_inducing.dense_image
+#align dense_embedding.dense_image DenseEmbedding.dense_image
 
 end DenseEmbedding
 
 theorem Dense.dense_embedding_coe [TopologicalSpace α] {s : Set α} (hs : Dense s) : DenseEmbedding (coe : s → α) :=
   { embedding_subtype_coe with dense := hs.dense_range_coe }
+#align dense.dense_embedding_coe Dense.dense_embedding_coe
 
 theorem isClosedProperty [TopologicalSpace β] {e : α → β} {p : β → Prop} (he : DenseRange e) (hp : IsClosed { x | p x })
     (h : ∀ a, p (e a)) : ∀ b, p b :=
@@ -264,33 +298,39 @@ theorem isClosedProperty [TopologicalSpace β] {e : α → β} {p : β → Prop}
       _ = _ := hp.closure_eq
       
   fun b => this trivial
+#align is_closed_property isClosedProperty
 
 theorem isClosedProperty2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
   have : ∀ q : β × β, p q.1 q.2 := (isClosedProperty (he.prod_map he) hp) fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
+#align is_closed_property2 isClosedProperty2
 
 theorem isClosedProperty3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) :
     ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
   have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 := (isClosedProperty (he.prod_map <| he.prod_map he) hp) fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
+#align is_closed_property3 isClosedProperty3
 
 @[elab_as_elim]
 theorem DenseRange.inductionOn [TopologicalSpace β] {e : α → β} (he : DenseRange e) {p : β → Prop} (b₀ : β)
     (hp : IsClosed { b | p b }) (ih : ∀ a : α, p <| e a) : p b₀ :=
   isClosedProperty he hp ih b₀
+#align dense_range.induction_on DenseRange.inductionOn
 
 @[elab_as_elim]
 theorem DenseRange.inductionOn₂ [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) (b₁ b₂ : β) : p b₁ b₂ :=
   isClosedProperty2 he hp h _ _
+#align dense_range.induction_on₂ DenseRange.inductionOn₂
 
 @[elab_as_elim]
 theorem DenseRange.inductionOn₃ [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) (b₁ b₂ b₃ : β) :
     p b₁ b₂ b₃ :=
   isClosedProperty3 he hp h _ _ _
+#align dense_range.induction_on₃ DenseRange.inductionOn₃
 
 section
 
@@ -302,6 +342,7 @@ variable {f : α → β}
 theorem DenseRange.equalizer (hfd : DenseRange f) {g h : β → γ} (hg : Continuous g) (hh : Continuous h)
     (H : g ∘ f = h ∘ f) : g = h :=
   funext fun y => hfd.induction_on y (isClosedEq hg hh) <| congr_fun H
+#align dense_range.equalizer DenseRange.equalizer
 
 end
 
@@ -327,4 +368,5 @@ theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [Topol
     replace h := (h (s i)).mpr ⟨i, hi, subset.rfl⟩
     exact hf.closure_image_mem_nhds h
     
+#align filter.has_basis.has_basis_of_dense_inducing Filter.HasBasis.has_basis_of_dense_inducing
 

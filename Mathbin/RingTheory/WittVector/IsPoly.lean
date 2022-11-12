@@ -107,6 +107,7 @@ setup_tactic_parser
 unsafe def ghost_simp (lems : parse simp_arg_list) : tactic Unit := do
   tactic.try tactic.intro1
   simp none none tt (lems ++ [simp_arg_type.symm_expr (pquote.1 sub_eq_add_neg)]) [`ghost_simps] (loc.ns [none])
+#align tactic.interactive.ghost_simp tactic.interactive.ghost_simp
 
 /-- `ghost_calc` is a tactic for proving identities between polynomial functions.
 Typically, when faced with a goal like
@@ -147,6 +148,7 @@ unsafe def ghost_calc (ids' : parse ident_*) : tactic Unit := do
   unfreezingI (tactic.clear' tt [R])
   introsI <| [nm, .str nm "_inst"] ++ ids'
   skip
+#align tactic.interactive.ghost_calc tactic.interactive.ghost_calc
 
 end Interactive
 
@@ -185,6 +187,7 @@ theorem poly_eq_of_witt_polynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × 
   replace h := congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
   simpa only [Function.comp, map_bind₁, map_witt_polynomial, ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W,
     bind₁_X_right] using h
+#align witt_vector.poly_eq_of_witt_polynomial_bind_eq' WittVector.poly_eq_of_witt_polynomial_bind_eq'
 
 theorem poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
     (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g := by
@@ -194,6 +197,7 @@ theorem poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
   replace h := congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
   simpa only [Function.comp, map_bind₁, map_witt_polynomial, ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W,
     bind₁_X_right] using h
+#align witt_vector.poly_eq_of_witt_polynomial_bind_eq WittVector.poly_eq_of_witt_polynomial_bind_eq
 
 omit hp
 
@@ -212,15 +216,18 @@ For the most part, users are not expected to treat `is_poly` as a class.
 -/
 class IsPoly (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R) : Prop where mk' ::
   poly : ∃ φ : ℕ → MvPolynomial ℕ ℤ, ∀ ⦃R⦄ [CommRing R] (x : 𝕎 R), (f x).coeff = fun n => aeval x.coeff (φ n)
+#align witt_vector.is_poly WittVector.IsPoly
 
 /-- The identity function on Witt vectors is a polynomial function. -/
 instance idIsPoly : IsPoly p fun _ _ => id :=
   ⟨⟨x, by
       intros
       simp only [aeval_X, id]⟩⟩
+#align witt_vector.id_is_poly WittVector.idIsPoly
 
 instance idIsPolyI' : IsPoly p fun _ _ a => a :=
   WittVector.idIsPoly _
+#align witt_vector.id_is_poly_i' WittVector.idIsPolyI'
 
 namespace IsPoly
 
@@ -256,6 +263,7 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
   simp only [coeff_mk]
   rfl
+#align witt_vector.is_poly.ext WittVector.IsPoly.ext
 
 omit hp
 
@@ -266,6 +274,7 @@ theorem comp {g f} (hg : IsPoly p g) (hf : IsPoly p f) : IsPoly p fun R _Rcr => 
   use fun n => bind₁ φ (ψ n)
   intros
   simp only [aeval_bind₁, Function.comp, hg, hf]
+#align witt_vector.is_poly.comp WittVector.IsPoly.comp
 
 end IsPoly
 
@@ -284,6 +293,7 @@ class IsPoly₂ (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R → �
   poly :
     ∃ φ : ℕ → MvPolynomial (Fin 2 × ℕ) ℤ,
       ∀ ⦃R⦄ [CommRing R] (x y : 𝕎 R), (f x y).coeff = fun n => peval (φ n) ![x.coeff, y.coeff]
+#align witt_vector.is_poly₂ WittVector.IsPoly₂
 
 variable {p}
 
@@ -307,6 +317,7 @@ theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPo
   fin_cases i <;>
     simp only [aeval_eq_eval₂_hom, eval₂_hom_rename, Function.comp, Matrix.cons_val_zero, Matrix.head_cons,
       Matrix.cons_val_one]
+#align witt_vector.is_poly₂.comp WittVector.IsPoly₂.comp
 
 /-- The composition of a polynomial function with a binary polynomial function is polynomial. -/
 theorem IsPoly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) : IsPoly₂ p fun R _Rcr x y => g (f x y) := by
@@ -315,6 +326,7 @@ theorem IsPoly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) : IsPoly₂ 
   use fun n => bind₁ φ (ψ n)
   intros
   simp only [peval, aeval_bind₁, Function.comp, hg, hf]
+#align witt_vector.is_poly.comp₂ WittVector.IsPoly.comp₂
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
@@ -327,6 +339,7 @@ theorem IsPoly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x
   apply eval₂_hom_congr rfl _ rfl
   ext ⟨i, k⟩
   fin_cases i <;> simp only [Matrix.head_cons, aeval_X, Matrix.cons_val_zero, Matrix.cons_val_one]
+#align witt_vector.is_poly₂.diag WittVector.IsPoly₂.diag
 
 open Tactic
 
@@ -362,6 +375,7 @@ unsafe def mk_poly_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic
   let nm := .str n "comp₂_i"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
+#align witt_vector.tactic.mk_poly_comp_lemmas witt_vector.tactic.mk_poly_comp_lemmas
 
 /-- If `n` is the name of a lemma with opened type `∀ vars, is_poly₂ p _`,
 `mk_poly₂_comp_lemmas n vars p` adds composition instances to the environment
@@ -387,6 +401,7 @@ unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tac
   let nm := .str n "comp_diag"
   add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
+#align witt_vector.tactic.mk_poly₂_comp_lemmas witt_vector.tactic.mk_poly₂_comp_lemmas
 
 /-- The `after_set` function for `@[is_poly]`. Calls `mk_poly(₂)_comp_lemmas`.
 -/
@@ -397,6 +412,7 @@ unsafe def mk_comp_lemmas (n : Name) : tactic Unit := do
     | quote.1 (IsPoly (%%ₓp) _) => mk_poly_comp_lemmas n vars p
     | quote.1 (IsPoly₂ (%%ₓp) _) => mk_poly₂_comp_lemmas n vars p
     | _ => fail "@[is_poly] should only be applied to terms of type `is_poly _ _` or `is_poly₂ _ _`"
+#align witt_vector.tactic.mk_comp_lemmas witt_vector.tactic.mk_comp_lemmas
 
 /-- `@[is_poly]` is applied to lemmas of the form `is_poly f φ` or `is_poly₂ f φ`.
 These lemmas should *not* be tagged as instances, and only atomic `is_poly` defs should be tagged:
@@ -425,6 +441,7 @@ unsafe def is_poly_attr : user_attribute where
   Name := `is_poly
   descr := "Lemmas with this attribute describe the polynomial structure of functions"
   after_set := some fun n _ _ => mk_comp_lemmas n
+#align witt_vector.tactic.is_poly_attr witt_vector.tactic.is_poly_attr
 
 end Tactic
 
@@ -451,6 +468,7 @@ theorem negIsPoly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
       ext ⟨i, k⟩
       fin_cases i
       rfl⟩⟩
+#align witt_vector.neg_is_poly WittVector.negIsPoly
 
 section ZeroOne
 
@@ -462,16 +480,19 @@ instance zeroIsPoly : IsPoly p fun _ _ _ => 0 :=
       intros
       funext n
       simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
+#align witt_vector.zero_is_poly WittVector.zeroIsPoly
 
 @[simp]
 theorem bind₁_zero_witt_polynomial (n : ℕ) : bind₁ (0 : ℕ → MvPolynomial ℕ R) (wittPolynomial p R n) = 0 := by
   rw [← aeval_eq_bind₁, aeval_zero, constant_coeff_witt_polynomial, RingHom.map_zero]
+#align witt_vector.bind₁_zero_witt_polynomial WittVector.bind₁_zero_witt_polynomial
 
 omit hp
 
 /-- The coefficients of `1 : 𝕎 R` as polynomials. -/
 def onePoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if n = 0 then 1 else 0
+#align witt_vector.one_poly WittVector.onePoly
 
 include hp
 
@@ -487,6 +508,7 @@ theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ onePoly (wittPolyno
   · rw [Finset.mem_range]
     decide
     
+#align witt_vector.bind₁_one_poly_witt_polynomial WittVector.bind₁_one_poly_witt_polynomial
 
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
 instance oneIsPoly : IsPoly p fun _ _ _ => 1 :=
@@ -498,6 +520,7 @@ instance oneIsPoly : IsPoly p fun _ _ _ => 1 :=
         
       · simp only [one_poly, Nat.succ_pos', one_coeff_eq_of_pos, if_neg n.succ_ne_zero, AlgHom.map_zero]
         ⟩⟩
+#align witt_vector.one_is_poly WittVector.oneIsPoly
 
 end ZeroOne
 
@@ -510,6 +533,7 @@ theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
       intros
       dsimp only [WittVector.hasAdd]
       simp [eval]⟩⟩
+#align witt_vector.add_is_poly₂ WittVector.add_is_poly₂
 
 /-- Multiplication of Witt vectors is a polynomial function. -/
 @[is_poly]
@@ -518,6 +542,7 @@ theorem mul_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
       intros
       dsimp only [WittVector.hasMul]
       simp [eval]⟩⟩
+#align witt_vector.mul_is_poly₂ WittVector.mul_is_poly₂
 
 include hp
 
@@ -531,6 +556,7 @@ theorem IsPoly.map {f} (hf : IsPoly p f) (g : R →+* S) (x : 𝕎 R) : map g (f
   simp only [map_coeff, hf, map_aeval]
   apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
   simp only [map_coeff]
+#align witt_vector.is_poly.map WittVector.IsPoly.map
 
 namespace IsPoly₂
 
@@ -545,11 +571,13 @@ variable {p}
  with a unary polynomial function in the first argument is polynomial. -/
 theorem comp_left {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) : IsPoly₂ p fun R _Rcr x y => g (f x) y :=
   hg.comp hf (WittVector.idIsPoly _)
+#align witt_vector.is_poly₂.comp_left WittVector.IsPoly₂.comp_left
 
 /-- The composition of a binary polynomial function
  with a unary polynomial function in the second argument is polynomial. -/
 theorem comp_right {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) : IsPoly₂ p fun R _Rcr x y => g x (f y) :=
   hg.comp (WittVector.idIsPoly p) hf
+#align witt_vector.is_poly₂.comp_right WittVector.IsPoly₂.comp_right
 
 include hp
 
@@ -581,6 +609,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
   ext ⟨b, _⟩
   fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
+#align witt_vector.is_poly₂.ext WittVector.IsPoly₂.ext
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
@@ -595,6 +624,7 @@ theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) : map g (f x
   ext ⟨i, k⟩
   fin_cases i
   all_goals simp only [map_coeff, Matrix.cons_val_zero, Matrix.head_cons, Matrix.cons_val_one]
+#align witt_vector.is_poly₂.map WittVector.IsPoly₂.map
 
 end IsPoly₂
 

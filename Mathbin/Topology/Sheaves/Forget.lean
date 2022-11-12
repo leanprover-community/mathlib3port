@@ -89,6 +89,8 @@ def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U :
     dsimp
     simp
     
+#align
+  Top.presheaf.sheaf_condition.diagram_comp_preserves_limits TopCat.Presheaf.SheafCondition.diagramCompPreservesLimits
 
 attribute [local reducible] res
 
@@ -115,6 +117,7 @@ def mapConeFork :
       dsimp
       simp only [limit.lift_π, fan.mk_π_app, ← G.map_comp, limit.lift_π_assoc, fan.mk_π_app]
       
+#align Top.presheaf.sheaf_condition.map_cone_fork TopCat.Presheaf.SheafCondition.mapConeFork
 
 end SheafCondition
 
@@ -220,6 +223,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       exact is_iso.of_iso ((cones.forget _).mapIso (as_iso f'))
       
     
+#align Top.presheaf.is_sheaf_iff_is_sheaf_comp TopCat.Presheaf.is_sheaf_iff_is_sheaf_comp
 
 /-!
 As an example, we now have everything we need to check the sheaf condition

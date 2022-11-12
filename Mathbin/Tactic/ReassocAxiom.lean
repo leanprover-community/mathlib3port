@@ -56,6 +56,7 @@ open CategoryTheory
 unsafe def get_cat_inst : expr → tactic expr
   | quote.1 (@CategoryStruct.comp _ (%%ₓstruct_inst) _ _ _ _ _) => pure struct_inst
   | _ => failed
+#align tactic.get_cat_inst tactic.get_cat_inst
 
 /-- (internals for `@[reassoc]`)
 Given a lemma of the form `∀ ..., f ≫ g = h`, proves a new lemma of the form
@@ -87,6 +88,7 @@ unsafe def prove_reassoc (h : expr) : tactic (expr × expr) := do
   let t'' ← pis (vs ++ [X', f']) t''
   let pr' ← lambdas (vs ++ [X', f']) pr'
   pure (t'', pr')
+#align tactic.prove_reassoc tactic.prove_reassoc
 
 /-- (implementation for `@[reassoc]`)
 Given a declaration named `n` of the form `∀ ..., f ≫ g = h`, proves a new lemma named `n'`
@@ -99,6 +101,7 @@ unsafe def reassoc_axiom (n : Name) (n' : Name := n.appendSuffix "_assoc") : tac
   let (t'', pr') ← prove_reassoc c
   add_decl <| declaration.thm n' d t'' (pure pr')
   copy_attribute `simp n n'
+#align tactic.reassoc_axiom tactic.reassoc_axiom
 
 setup_tactic_parser
 
@@ -125,8 +128,10 @@ unsafe def reassoc_attr : user_attribute Unit (Option Name) where
   parser := optional ident
   after_set :=
     some fun n _ _ => do
-      let some n' ← reassoc_attr.get_param n | reassoc_axiom n (n.appendSuffix "_assoc")
+      let some n' ← reassoc_attr.get_param n |
+        reassoc_axiom n (n.appendSuffix "_assoc")
       reassoc_axiom n <| n ++ n'
+#align tactic.reassoc_attr tactic.reassoc_attr
 
 add_tactic_doc
   { Name := "reassoc", category := DocCategory.attr, declNames := [`tactic.reassoc_attr], tags := ["category theory"] }
@@ -162,6 +167,7 @@ unsafe def reassoc_cmd (_ : parse <| tk "reassoc_axiom") : lean.parser Unit := d
   of_tactic <| do
       let n ← resolve_constant n
       reassoc_axiom n
+#align tactic.reassoc_cmd tactic.reassoc_cmd
 
 add_tactic_doc
   { Name := "reassoc_axiom", category := DocCategory.cmd, declNames := [`tactic.reassoc_cmd],
@@ -181,17 +187,20 @@ unsafe def reassoc (del : parse (tk "!")?) (ns : parse ident*) : tactic Unit := 
       let (t, pr) ← prove_reassoc h
       assertv n t pr
       when del (tactic.clear h)
+#align tactic.interactive.reassoc tactic.interactive.reassoc
 
 end Interactive
 
 def CalculatedProp {α} (β : Prop) (hh : α) :=
   β
+#align tactic.calculated_Prop Tactic.CalculatedProp
 
 unsafe def derive_reassoc_proof : tactic Unit := do
   let quote.1 (CalculatedProp (%%ₓv) (%%ₓh)) ← target
   let (t, pr) ← prove_reassoc h
   unify v t
   exact pr
+#align tactic.derive_reassoc_proof tactic.derive_reassoc_proof
 
 end Tactic
 
@@ -214,6 +223,7 @@ end
 -/
 theorem CategoryTheory.reassoc_of {α} (hh : α) {β} (x : Tactic.CalculatedProp β hh := by derive_reassoc_proof) : β :=
   x
+#align category_theory.reassoc_of CategoryTheory.reassoc_of
 
 /-- `reassoc_of h` takes local assumption `h` and add a ` ≫ f` term on the right of
 both sides of the equality. Instead of creating a new assumption from the result, `reassoc_of h`

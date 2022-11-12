@@ -29,19 +29,22 @@ open ContinuousMap
 
 open ContinuousMap
 
-/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`equiv_unit] [] -/
 /-- A simply connected space is one whose fundamental groupoid is equivalent to `discrete unit` -/
 class SimplyConnectedSpace (X : Type _) [TopologicalSpace X] : Prop where
   equiv_unit : Nonempty (FundamentalGroupoid X ≌ Discrete Unit)
+#align simply_connected_space SimplyConnectedSpace
 
 theorem simply_connected_def (X : Type _) [TopologicalSpace X] :
     SimplyConnectedSpace X ↔ Nonempty (FundamentalGroupoid X ≌ Discrete Unit) :=
   ⟨fun h => @SimplyConnectedSpace.equiv_unit X _ h, fun h => ⟨h⟩⟩
+#align simply_connected_def simply_connected_def
 
 theorem simply_connected_iff_unique_homotopic (X : Type _) [TopologicalSpace X] :
     SimplyConnectedSpace X ↔ Nonempty X ∧ ∀ x y : X, Nonempty (Unique (Path.Homotopic.Quotient x y)) := by
   rw [simply_connected_def, equiv_punit_iff_unique]
   rfl
+#align simply_connected_iff_unique_homotopic simply_connected_iff_unique_homotopic
 
 namespace SimplyConnectedSpace
 
@@ -63,12 +66,14 @@ instance (priority := 100) : PathConnectedSpace X :=
 /-- In a simply connected space, any two paths are homotopic -/
 theorem pathsHomotopic {x y : X} (p₁ p₂ : Path x y) : Path.Homotopic p₁ p₂ := by
   simpa using @Subsingleton.elim (Path.Homotopic.Quotient x y) _ ⟦p₁⟧ ⟦p₂⟧
+#align simply_connected_space.paths_homotopic SimplyConnectedSpace.pathsHomotopic
 
 instance (priority := 100) of_contractible (Y : Type _) [TopologicalSpace Y] [ContractibleSpace Y] :
     SimplyConnectedSpace
       Y where equiv_unit :=
     let H : TopCat.of Y ≃ₕ TopCat.of Unit := (ContractibleSpace.hequiv_unit Y).some
     ⟨(FundamentalGroupoidFunctor.equivOfHomotopyEquiv H).trans FundamentalGroupoid.punitEquivDiscretePunit⟩
+#align simply_connected_space.of_contractible SimplyConnectedSpace.of_contractible
 
 end SimplyConnectedSpace
 
@@ -84,6 +89,7 @@ theorem simply_connected_iff_paths_homotopic {Y : Type _} [TopologicalSpace Y] :
     cases h
     rw [simply_connected_iff_unique_homotopic]
     exact ⟨inferInstance, fun x y => ⟨uniqueOfSubsingleton ⟦PathConnectedSpace.somePath x y⟧⟩⟩⟩
+#align simply_connected_iff_paths_homotopic simply_connected_iff_paths_homotopic
 
 /-- Another version of `simply_connected_iff_paths_homotopic` -/
 theorem simply_connected_iff_paths_homotopic' {Y : Type _} [TopologicalSpace Y] :
@@ -91,4 +97,5 @@ theorem simply_connected_iff_paths_homotopic' {Y : Type _} [TopologicalSpace Y] 
   convert simply_connected_iff_paths_homotopic
   simp [Path.Homotopic.Quotient, Setoid.eq_top_iff]
   rfl
+#align simply_connected_iff_paths_homotopic' simply_connected_iff_paths_homotopic'
 

@@ -39,8 +39,8 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
   rw [det_apply]
   refine' (nat_degree_sum_le _ _).trans _
   refine' Multiset.max_nat_le_of_forall_le _ _ _
-  simp only [forall_apply_eq_imp_iff', true_and_iff, Function.comp_app, Multiset.map_map, Multiset.mem_map, exists_imp,
-    Finset.mem_univ_val]
+  simp only [forall_apply_eq_imp_iff', true_and_iff, Function.comp_apply, Multiset.map_map, Multiset.mem_map,
+    exists_imp, Finset.mem_univ_val]
   intro g
   calc
     nat_degree (sign g • ∏ i : n, (X • A.map C + B.map C) (g i) i) ≤
@@ -64,6 +64,7 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
     _ ≤ nat_degree (X : α[X]) := nat_degree_mul_C_le _ _
     _ ≤ 1 := nat_degree_X_le
     
+#align polynomial.nat_degree_det_X_add_C_le Polynomial.nat_degree_det_X_add_C_le
 
 theorem coeff_det_X_add_C_zero (A B : Matrix n n α) : coeff (det ((x : α[X]) • A.map c + B.map c)) 0 = det B := by
   rw [det_apply, finset_sum_coeff, det_apply]
@@ -73,6 +74,7 @@ theorem coeff_det_X_add_C_zero (A B : Matrix n n α) : coeff (det ((x : α[X]) �
   rw [coeff_zero_prod]
   refine' Finset.prod_congr rfl _
   simp
+#align polynomial.coeff_det_X_add_C_zero Polynomial.coeff_det_X_add_C_zero
 
 theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
     coeff (det ((x : α[X]) • A.map c + B.map c)) (Fintype.card n) = det A := by
@@ -92,6 +94,7 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
     simpa only [Pi.smul_apply, map_apply, Algebra.id.smul_eq_mul, X_mul_C, nat_degree_C, max_eq_left, zero_le'] using
       (nat_degree_C_mul_le _ _).trans nat_degree_X_le
     
+#align polynomial.coeff_det_X_add_C_card Polynomial.coeff_det_X_add_C_card
 
 theorem leading_coeff_det_X_one_add_C (A : Matrix n n α) :
     leadingCoeff (det ((x : α[X]) • (1 : Matrix n n α[X]) + A.map c)) = 1 := by
@@ -110,6 +113,7 @@ theorem leading_coeff_det_X_one_add_C (A : Matrix n n α) :
     rw [coeff_det_X_add_C_card] at H
     simpa using H
     
+#align polynomial.leading_coeff_det_X_one_add_C Polynomial.leading_coeff_det_X_one_add_C
 
 end Polynomial
 

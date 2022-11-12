@@ -38,12 +38,14 @@ def splitAt : ℕ → List α → List α × List α
   | succ n, x :: xs =>
     let (l, r) := split_at n xs
     (x :: l, r)
+#align list.split_at List.splitAt
 -/
 
 /-- An auxiliary function for `split_on_p`. -/
 def splitOnPAux {α : Type u} (P : α → Prop) [DecidablePred P] : List α → (List α → List α) → List (List α)
   | [], f => [f []]
   | h :: t, f => if P h then f [] :: split_on_p_aux t id else split_on_p_aux t fun l => f (h :: l)
+#align list.split_on_p_aux List.splitOnPAux
 
 /- warning: list.split_on_p -> List.splitOnP is a dubious translation:
 lean 3 declaration is
@@ -54,6 +56,7 @@ Case conversion may be inaccurate. Consider using '#align list.split_on_p List.s
 /-- Split a list at every element satisfying a predicate. -/
 def splitOnP {α : Type u} (P : α → Prop) [DecidablePred P] (l : List α) : List (List α) :=
   splitOnPAux P l id
+#align list.split_on_p List.splitOnP
 
 /- warning: list.split_on -> List.splitOn is a dubious translation:
 lean 3 declaration is
@@ -66,6 +69,7 @@ Case conversion may be inaccurate. Consider using '#align list.split_on List.spl
     [1,1,2,3,2,4,4].split_on 2 = [[1,1],[3],[4,4]] -/
 def splitOn {α : Type u} [DecidableEq α] (a : α) (as : List α) : List (List α) :=
   as.splitOnP (· = a)
+#align list.split_on List.splitOn
 
 #print List.concat /-
 /-- Concatenate an element at the end of a list.
@@ -75,6 +79,7 @@ def splitOn {α : Type u} [DecidableEq α] (a : α) (as : List α) : List (List 
 def concat : List α → α → List α
   | [], a => [a]
   | b :: l, a => b :: concat l a
+#align list.concat List.concat
 -/
 
 /- warning: list.head' clashes with list.head -> List.head'
@@ -90,6 +95,7 @@ it returns `none` otherwise -/
 def head' : List α → Option α
   | [] => none
   | a :: l => some a
+#align list.head' List.head'
 
 /- warning: list.to_array -> List.toArray is a dubious translation:
 lean 3 declaration is
@@ -99,6 +105,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.to_array List.toArrayₓ'. -/
 /-- Convert a list into an array (whose length is the length of `l`). -/
 def toArray (l : List α) : Array' l.length α where data v := l.nthLe v.1 v.2
+#align list.to_array List.toArray
 
 /-- "default" `nth` function: returns `d` instead of `none` in the case
   that the index is out of bounds. -/
@@ -106,11 +113,13 @@ def nthd (d : α) : ∀ (l : List α) (n : ℕ), α
   | [], _ => d
   | x :: xs, 0 => x
   | x :: xs, n + 1 => nthd xs n
+#align list.nthd List.nthd
 
 /-- "inhabited" `nth` function: returns `default` instead of `none` in the case
   that the index is out of bounds. -/
 def inth [h : Inhabited α] (l : List α) (n : Nat) : α :=
   nthd default l n
+#align list.inth List.inth
 
 #print List.modifyNthTail /-
 /-- Apply a function to the nth tail of `l`. Returns the input without
@@ -122,6 +131,7 @@ def modifyNthTail (f : List α → List α) : ℕ → List α → List α
   | 0, l => f l
   | n + 1, [] => []
   | n + 1, a :: l => a :: modify_nth_tail n l
+#align list.modify_nth_tail List.modifyNthTail
 -/
 
 #print List.modifyHead /-
@@ -130,12 +140,14 @@ def modifyNthTail (f : List α → List α) : ℕ → List α → List α
 def modifyHead (f : α → α) : List α → List α
   | [] => []
   | a :: l => f a :: l
+#align list.modify_head List.modifyHead
 -/
 
 #print List.modifyNth /-
 /-- Apply `f` to the nth element of the list, if it exists. -/
 def modifyNth (f : α → α) : ℕ → List α → List α :=
   modifyNthTail (modifyHead f)
+#align list.modify_nth List.modifyNth
 -/
 
 #print List.modifyLast /-
@@ -145,6 +157,7 @@ def modifyLast (f : α → α) : List α → List α
   | [] => []
   | [x] => [f x]
   | x :: xs => x :: modify_last xs
+#align list.modify_last List.modifyLast
 -/
 
 #print List.insertNth /-
@@ -152,6 +165,7 @@ def modifyLast (f : α → α) : List α → List α
  `insert_nth 2 1 [1, 2, 3, 4] = [1, 2, 1, 3, 4]`-/
 def insertNth (n : ℕ) (a : α) : List α → List α :=
   modifyNthTail (List.cons a) n
+#align list.insert_nth List.insertNth
 -/
 
 section Take'
@@ -163,6 +177,7 @@ elements `default`. -/
 def take' : ∀ n, List α → List α
   | 0, l => []
   | n + 1, l => l.head :: take' n l.tail
+#align list.take' List.take'
 
 end Take'
 
@@ -178,6 +193,7 @@ Case conversion may be inaccurate. Consider using '#align list.take_while List.t
 def takeWhile (p : α → Prop) [DecidablePred p] : List α → List α
   | [] => []
   | a :: l => if p a then a :: take_while l else []
+#align list.take_while List.takeWhile
 
 #print List.scanl /-
 /-- Fold a function `f` over the list from the left, returning the list
@@ -187,6 +203,7 @@ def takeWhile (p : α → Prop) [DecidablePred p] : List α → List α
 def scanl (f : α → β → α) : α → List β → List α
   | a, [] => [a]
   | a, b :: l => a :: scanl (f a b) l
+#align list.scanl List.scanl
 -/
 
 /-- Auxiliary definition used to define `scanr`. If `scanr_aux f b l = (b', l')`
@@ -196,6 +213,7 @@ def scanrAux (f : α → β → β) (b : β) : List α → β × List β
   | a :: l =>
     let (b', l') := scanr_aux l
     (f a b', b' :: l')
+#align list.scanr_aux List.scanrAux
 
 #print List.scanr /-
 /-- Fold a function `f` over the list from the right, returning the list
@@ -205,6 +223,7 @@ def scanrAux (f : α → β → β) (b : β) : List α → β × List β
 def scanr (f : α → β → β) (b : β) (l : List α) : List β :=
   let (b', l') := scanrAux f b l
   b' :: l'
+#align list.scanr List.scanr
 -/
 
 /-- Product of a list.
@@ -212,6 +231,7 @@ def scanr (f : α → β → β) (b : β) (l : List α) : List β :=
      prod [a, b, c] = ((1 * a) * b) * c -/
 def prod [Mul α] [One α] : List α → α :=
   foldl (· * ·) 1
+#align list.prod List.prod
 
 -- Later this will be tagged with `to_additive`, but this can't be done yet because of import
 -- dependencies.
@@ -220,18 +240,21 @@ def prod [Mul α] [One α] : List α → α :=
      sum [a, b, c] = ((0 + a) + b) + c -/
 def sum [Add α] [Zero α] : List α → α :=
   foldl (· + ·) 0
+#align list.sum List.sum
 
 /-- The alternating sum of a list. -/
 def alternatingSum {G : Type _} [Zero G] [Add G] [Neg G] : List G → G
   | [] => 0
   | g :: [] => g
   | g :: h :: t => g + -h + alternating_sum t
+#align list.alternating_sum List.alternatingSum
 
 /-- The alternating product of a list. -/
 def alternatingProd {G : Type _} [One G] [Mul G] [Inv G] : List G → G
   | [] => 1
   | g :: [] => g
   | g :: h :: t => g * h⁻¹ * alternating_prod t
+#align list.alternating_prod List.alternatingProd
 
 #print List.partitionMap /-
 /-- Given a function `f : α → β ⊕ γ`, `partition_map f l` maps the list by `f`
@@ -244,6 +267,7 @@ def partitionMap (f : α → Sum β γ) : List α → List β × List γ
     match f x with
     | Sum.inr r => Prod.map id (cons r) <| partition_map xs
     | Sum.inl l => Prod.map (cons l) id <| partition_map xs
+#align list.partition_map List.partitionMap
 -/
 
 /-- `find p l` is the first element of `l` satisfying `p`, or `none` if no such
@@ -251,11 +275,13 @@ def partitionMap (f : α → Sum β γ) : List α → List β × List γ
 def find (p : α → Prop) [DecidablePred p] : List α → Option α
   | [] => none
   | a :: l => if p a then some a else find l
+#align list.find List.find
 
 /-- `mfind tac l` returns the first element of `l` on which `tac` succeeds, and
 fails otherwise. -/
 def mfind {α} {m : Type u → Type v} [Monad m] [Alternative m] (tac : α → m PUnit) : List α → m α :=
-  List.mfirst fun a => tac a $> a
+  List.firstM fun a => tac a $> a
+#align list.mfind List.mfind
 
 /-- `mbfind' p l` returns the first element `a` of `l` for which `p a` returns
 true. `mbfind'` short-circuits, so `p` is not necessarily run on every `a` in
@@ -265,6 +291,7 @@ def mbfind' {m : Type u → Type v} [Monad m] {α : Type u} (p : α → m (ULift
   | x :: xs => do
     let ⟨px⟩ ← p x
     if px then pure (some x) else mbfind' xs
+#align list.mbfind' List.mbfind'
 
 section
 
@@ -273,6 +300,7 @@ variable {m : Type → Type v} [Monad m]
 /-- A variant of `mbfind'` with more restrictive universe levels. -/
 def mbfind {α} (p : α → m Bool) (xs : List α) : m (Option α) :=
   xs.mbfind' (Functor.map ULift.up ∘ p)
+#align list.mbfind List.mbfind
 
 -- Implementing this via `mbfind` would give us less universe polymorphism.
 /-- `many p as` returns true iff `p` returns true for any element of `l`.
@@ -283,24 +311,28 @@ def many {α : Type u} (p : α → m Bool) : List α → m Bool
   | x :: xs => do
     let px ← p x
     if px then pure tt else many xs
+#align list.many List.many
 
 /-- `mall p as` returns true iff `p` returns true for all elements of `l`.
 `mall` short-circuits, so if `p` returns false for any element of `l`, later
 elements are not checked. This is a monadic version of `list.all`. -/
 def mall {α : Type u} (p : α → m Bool) (as : List α) : m Bool :=
   not <$> many (fun a => not <$> p a) as
+#align list.mall List.mall
 
 /-- `mbor xs` runs the actions in `xs`, returning true if any of them returns
 true. `mbor` short-circuits, so if an action returns true, later actions are
 not run. This is a monadic version of `list.bor`. -/
 def mbor : List (m Bool) → m Bool :=
   many id
+#align list.mbor List.mbor
 
 /-- `mband xs` runs the actions in `xs`, returning true if all of them return
 true. `mband` short-circuits, so if an action returns false, later actions are
 not run. This is a monadic version of `list.band`. -/
 def mband : List (m Bool) → m Bool :=
   mall id
+#align list.mband List.mband
 
 end
 
@@ -308,25 +340,30 @@ end
 def foldlWithIndexAux (f : ℕ → α → β → α) : ℕ → α → List β → α
   | _, a, [] => a
   | i, a, b :: l => foldl_with_index_aux (i + 1) (f i a b) l
+#align list.foldl_with_index_aux List.foldlWithIndexAux
 
 /-- Fold a list from left to right as with `foldl`, but the combining function
 also receives each element's index. -/
 def foldlWithIndex (f : ℕ → α → β → α) (a : α) (l : List β) : α :=
   foldlWithIndexAux f 0 a l
+#align list.foldl_with_index List.foldlWithIndex
 
 /-- Auxiliary definition for `foldr_with_index`. -/
 def foldrWithIndexAux (f : ℕ → α → β → β) : ℕ → β → List α → β
   | _, b, [] => b
   | i, b, a :: l => f i a (foldr_with_index_aux (i + 1) b l)
+#align list.foldr_with_index_aux List.foldrWithIndexAux
 
 /-- Fold a list from right to left as with `foldr`, but the combining function
 also receives each element's index. -/
 def foldrWithIndex (f : ℕ → α → β → β) (b : β) (l : List α) : β :=
   foldrWithIndexAux f 0 b l
+#align list.foldr_with_index List.foldrWithIndex
 
 /-- `find_indexes p l` is the list of indexes of elements of `l` that satisfy `p`. -/
 def findIndexes (p : α → Prop) [DecidablePred p] (l : List α) : List Nat :=
   foldrWithIndex (fun i a is => if p a then i :: is else is) [] l
+#align list.find_indexes List.findIndexes
 
 /- warning: list.indexes_values -> List.indexesValues is a dubious translation:
 lean 3 declaration is
@@ -338,6 +375,7 @@ Case conversion may be inaccurate. Consider using '#align list.indexes_values Li
 `l`. The returned list is ordered by index. -/
 def indexesValues (p : α → Prop) [DecidablePred p] (l : List α) : List (ℕ × α) :=
   foldrWithIndex (fun i a l => if p a then (i, a) :: l else l) [] l
+#align list.indexes_values List.indexesValues
 
 /- warning: list.indexes_of -> List.indexesOf is a dubious translation:
 lean 3 declaration is
@@ -352,6 +390,7 @@ indexes_of a [a, b, a, a] = [0, 2, 3]
 -/
 def indexesOf [DecidableEq α] (a : α) : List α → List Nat :=
   findIndexes (Eq a)
+#align list.indexes_of List.indexesOf
 
 section MfoldWithIndex
 
@@ -364,6 +403,7 @@ def mfoldlWithIndex {α β} (f : ℕ → β → α → m β) (b : β) (as : List
       let a ← ma
       f i a b)
     (pure b)
+#align list.mfoldl_with_index List.mfoldlWithIndex
 
 /-- Monadic variant of `foldr_with_index`. -/
 def mfoldrWithIndex {α β} (f : ℕ → α → β → m β) (b : β) (as : List α) : m β :=
@@ -372,6 +412,7 @@ def mfoldrWithIndex {α β} (f : ℕ → α → β → m β) (b : β) (as : List
       let b ← mb
       f i a b)
     (pure b)
+#align list.mfoldr_with_index List.mfoldrWithIndex
 
 end MfoldWithIndex
 
@@ -389,10 +430,12 @@ Case conversion may be inaccurate. Consider using '#align list.mmap_with_index_a
 def mmapWithIndexAux {α β} (f : ℕ → α → m β) : ℕ → List α → m (List β)
   | _, [] => pure []
   | i, a :: as => List.cons <$> f i a <*> mmap_with_index_aux (i + 1) as
+#align list.mmap_with_index_aux List.mmapWithIndexAux
 
 /-- Applicative variant of `map_with_index`. -/
 def mmapWithIndex {α β} (f : ℕ → α → m β) (as : List α) : m (List β) :=
   mmapWithIndexAux f 0 as
+#align list.mmap_with_index List.mmapWithIndex
 
 /- warning: list.mmap_with_index'_aux -> List.mmapWithIndex'Aux is a dubious translation:
 lean 3 declaration is
@@ -404,11 +447,13 @@ Case conversion may be inaccurate. Consider using '#align list.mmap_with_index'_
 def mmapWithIndex'Aux {α} (f : ℕ → α → m PUnit) : ℕ → List α → m PUnit
   | _, [] => pure ⟨⟩
   | i, a :: as => f i a *> mmap_with_index'_aux (i + 1) as
+#align list.mmap_with_index'_aux List.mmapWithIndex'Aux
 
 /-- A variant of `mmap_with_index` specialised to applicative actions which
 return `unit`. -/
 def mmapWithIndex' {α} (f : ℕ → α → m PUnit) (as : List α) : m PUnit :=
   mmapWithIndex'Aux f 0 as
+#align list.mmap_with_index' List.mmapWithIndex'
 
 end MmapWithIndex
 
@@ -422,6 +467,7 @@ def lookmap (f : α → Option α) : List α → List α
     match f a with
     | some b => b :: l
     | none => a :: lookmap l
+#align list.lookmap List.lookmap
 -/
 
 /- warning: list.countp -> List.countp is a dubious translation:
@@ -434,6 +480,7 @@ Case conversion may be inaccurate. Consider using '#align list.countp List.count
 def countp (p : α → Prop) [DecidablePred p] : List α → Nat
   | [] => 0
   | x :: xs => if p x then succ (countp xs) else countp xs
+#align list.countp List.countp
 
 /- warning: list.count -> List.count is a dubious translation:
 lean 3 declaration is
@@ -444,21 +491,25 @@ Case conversion may be inaccurate. Consider using '#align list.count List.count�
 /-- `count a l` is the number of occurrences of `a` in `l`. -/
 def count [DecidableEq α] (a : α) : List α → Nat :=
   countp (Eq a)
+#align list.count List.count
 
 /-- `is_prefix l₁ l₂`, or `l₁ <+: l₂`, means that `l₁` is a prefix of `l₂`,
   that is, `l₂` has the form `l₁ ++ t` for some `t`. -/
 def IsPrefix (l₁ : List α) (l₂ : List α) : Prop :=
   ∃ t, l₁ ++ t = l₂
+#align list.is_prefix List.IsPrefix
 
 /-- `is_suffix l₁ l₂`, or `l₁ <:+ l₂`, means that `l₁` is a suffix of `l₂`,
   that is, `l₂` has the form `t ++ l₁` for some `t`. -/
 def IsSuffix (l₁ : List α) (l₂ : List α) : Prop :=
   ∃ t, t ++ l₁ = l₂
+#align list.is_suffix List.IsSuffix
 
 /-- `is_infix l₁ l₂`, or `l₁ <:+: l₂`, means that `l₁` is a contiguous
   substring of `l₂`, that is, `l₂` has the form `s ++ l₁ ++ t` for some `s, t`. -/
 def IsInfix (l₁ : List α) (l₂ : List α) : Prop :=
   ∃ s t, s ++ l₁ ++ t = l₂
+#align list.is_infix List.IsInfix
 
 -- mathport name: «expr <+: »
 infixl:50 " <+: " => IsPrefix
@@ -477,6 +528,7 @@ infixl:50 " <:+: " => IsInfix
 def inits : List α → List (List α)
   | [] => [[]]
   | a :: l => [] :: map (fun t => a :: t) (inits l)
+#align list.inits List.inits
 -/
 
 #print List.tails /-
@@ -487,11 +539,13 @@ def inits : List α → List (List α)
 def tails : List α → List (List α)
   | [] => [[]]
   | a :: l => (a :: l) :: tails l
+#align list.tails List.tails
 -/
 
 def sublists'Aux : List α → (List α → List β) → List (List β) → List (List β)
   | [], f, r => f [] :: r
   | a :: l, f, r => sublists'_aux l f (sublists'_aux l (f ∘ cons a) r)
+#align list.sublists'_aux List.sublists'Aux
 
 #print List.sublists' /-
 /-- `sublists' l` is the list of all (non-contiguous) sublists of `l`.
@@ -502,11 +556,13 @@ def sublists'Aux : List α → (List α → List β) → List (List β) → List
      sublists' [1, 2, 3] = [[], [3], [2], [2, 3], [1], [1, 3], [1, 2], [1, 2, 3]] -/
 def sublists' (l : List α) : List (List α) :=
   sublists'Aux l id []
+#align list.sublists' List.sublists'
 -/
 
 def sublistsAux : List α → (List α → List β → List β) → List β
   | [], f => []
   | a :: l, f => f [a] (sublists_aux l fun ys r => f ys (f (a :: ys) r))
+#align list.sublists_aux List.sublistsAux
 
 #print List.sublists /-
 /-- `sublists l` is the list of all (non-contiguous) sublists of `l`; cf. `sublists'`
@@ -515,11 +571,13 @@ def sublistsAux : List α → (List α → List β → List β) → List β
      sublists [1, 2, 3] = [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]] -/
 def sublists (l : List α) : List (List α) :=
   [] :: sublistsAux l cons
+#align list.sublists List.sublists
 -/
 
 def sublistsAux₁ : List α → (List α → List β) → List β
   | [], f => []
   | a :: l, f => f [a] ++ sublists_aux₁ l fun ys => f ys ++ f (a :: ys)
+#align list.sublists_aux₁ List.sublistsAux₁
 
 section Forall₂
 
@@ -532,6 +590,7 @@ variable {r : α → β → Prop} {p : γ → δ → Prop}
 inductive Forall₂ (R : α → β → Prop) : List α → List β → Prop
   | nil : forall₂ [] []
   | cons {a b l₁ l₂} : R a b → forall₂ l₁ l₂ → forall₂ (a :: l₁) (b :: l₂)
+#align list.forall₂ List.Forall₂
 -/
 
 attribute [simp] forall₂.nil
@@ -545,6 +604,7 @@ def All₂ (p : α → Prop) : List α → Prop
   | [] => True
   | x :: [] => p x
   | x :: l => p x ∧ all₂ l
+#align list.all₂ List.All₂
 
 /-- Auxiliary definition used to define `transpose`.
   `transpose_aux l L` takes each element of `l` and appends it to the start of
@@ -555,6 +615,7 @@ def transposeAux : List α → List (List α) → List (List α)
   | [], ls => ls
   | a :: i, [] => [a] :: transpose_aux i []
   | a :: i, l :: ls => (a :: l) :: transpose_aux i ls
+#align list.transpose_aux List.transposeAux
 
 #print List.transpose /-
 /-- transpose of a list of lists, treated as a matrix.
@@ -563,6 +624,7 @@ def transposeAux : List α → List (List α) → List (List α)
 def transpose : List (List α) → List (List α)
   | [] => []
   | l :: ls => transposeAux l (transpose ls)
+#align list.transpose List.transpose
 -/
 
 #print List.sections /-
@@ -572,6 +634,7 @@ def transpose : List (List α) → List (List α)
 def sections : List (List α) → List (List α)
   | [] => [[]]
   | l :: L => (bind (sections L)) fun s => map (fun a => a :: s) l
+#align list.sections List.sections
 -/
 
 section Permutations
@@ -590,9 +653,11 @@ def permutationsAux2 (t : α) (ts : List α) (r : List β) : List α → (List �
   | y :: ys, f =>
     let (us, zs) := permutations_aux2 ys fun x : List α => f (y :: x)
     (y :: us, f (t :: y :: us) :: zs)
+#align list.permutations_aux2 List.permutationsAux2
 
 private def meas : (Σ'_ : List α, List α) → ℕ × ℕ
   | ⟨l, i⟩ => (length l + length i, length l)
+#align list.meas list.meas
 
 -- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => InvImage (Prod.Lex (· < ·) (· < ·)) meas
@@ -615,12 +680,14 @@ def PermutationsAux.rec {C : List α → List α → Sort v} (H0 : ∀ is, C [] 
         rw [Nat.succ_add] <;> exact Prod.Lex.right _ (lt_succ_self _)
     have h2 : ⟨is, []⟩ ≺ ⟨t :: ts, is⟩ := Prod.Lex.left _ _ (Nat.lt_add_of_pos_left (succ_pos _))
     H1 t ts is (permutations_aux.rec ts (t :: is)) (permutations_aux.rec is [])
+#align list.permutations_aux.rec List.PermutationsAux.rec
 
 /-- An auxiliary function for defining `permutations`. `permutations_aux ts is` is the set of all
 permutations of `is ++ ts` that do not fix `ts`. -/
 def permutationsAux : List α → List α → List (List α) :=
   @PermutationsAux.rec (fun _ _ => List (List α)) (fun is => []) fun t ts is IH1 IH2 =>
     foldr (fun y r => (permutationsAux2 t ts r y id).2) IH1 (is :: IH2)
+#align list.permutations_aux List.permutationsAux
 
 /-- List of all permutations of `l`.
 
@@ -629,6 +696,7 @@ def permutationsAux : List α → List α → List (List α) :=
         [2, 3, 1], [3, 1, 2], [1, 3, 2]] -/
 def permutations (l : List α) : List (List α) :=
   l :: permutationsAux l []
+#align list.permutations List.permutations
 
 /-- `permutations'_aux t ts` inserts `t` into every position in `ts`, including the last.
 This function is intended for use in specifications, so it is simpler than `permutations_aux2`,
@@ -645,6 +713,7 @@ position:
 def permutations'Aux (t : α) : List α → List (List α)
   | [] => [[t]]
   | y :: ys => (t :: y :: ys) :: (permutations'_aux ys).map (cons y)
+#align list.permutations'_aux List.permutations'Aux
 
 /-- List of all permutations of `l`. This version of `permutations` is less efficient but has
 simpler definitional equations. The permutations are in a different order,
@@ -657,6 +726,7 @@ but are equal up to permutation, as shown by `list.permutations_perm_permutation
 def permutations' : List α → List (List α)
   | [] => [[]]
   | t :: ts => (permutations' ts).bind <| permutations'Aux t
+#align list.permutations' List.permutations'
 
 end Permutations
 
@@ -664,6 +734,7 @@ end Permutations
 def erasep (p : α → Prop) [DecidablePred p] : List α → List α
   | [] => []
   | a :: l => if p a then l else a :: erasep l
+#align list.erasep List.erasep
 
 /-- `extractp p l` returns a pair of an element `a` of `l` satisfying the predicate
   `p`, and `l`, with `a` removed. If there is no such element `a` it returns `(none, l)`. -/
@@ -674,6 +745,7 @@ def extractp (p : α → Prop) [DecidablePred p] : List α → Option α × List
     else
       let (a', l') := extractp l
       (a', a :: l')
+#align list.extractp List.extractp
 
 #print List.revzip /-
 /-- `revzip l` returns a list of pairs of the elements of `l` paired
@@ -683,6 +755,7 @@ def extractp (p : α → Prop) [DecidablePred p] : List α → Option α × List
  -/
 def revzip (l : List α) : List (α × α) :=
   zip l l.reverse
+#align list.revzip List.revzip
 -/
 
 #print List.product /-
@@ -691,6 +764,7 @@ def revzip (l : List α) : List (α × α) :=
      product [1, 2] [5, 6] = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
 def product (l₁ : List α) (l₂ : List β) : List (α × β) :=
   l₁.bind fun a => l₂.map <| Prod.mk a
+#align list.product List.product
 -/
 
 -- mathport name: list.product
@@ -704,6 +778,7 @@ infixr:82
      sigma [1, 2] (λ_, [(5 : ℕ), 6]) = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
 protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σa, σ a) :=
   l₁.bind fun a => (l₂ a).map <| Sigma.mk a
+#align list.sigma List.sigma
 -/
 
 /-- Auxliary definition used to define `of_fn`.
@@ -713,24 +788,28 @@ protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (�
 def ofFnAux {n} (f : Fin n → α) : ∀ m, m ≤ n → List α → List α
   | 0, h, l => l
   | succ m, h, l => of_fn_aux m (le_of_lt h) (f ⟨m, h⟩ :: l)
+#align list.of_fn_aux List.ofFnAux
 
 #print List.ofFn /-
 /-- `of_fn f` with `f : fin n → α` returns the list whose ith element is `f i`
   `of_fun f = [f 0, f 1, ... , f(n - 1)]` -/
 def ofFn {n} (f : Fin n → α) : List α :=
   ofFnAux f n (le_refl _) []
+#align list.of_fn List.ofFn
 -/
 
 #print List.ofFnNthVal /-
 /-- `of_fn_nth_val f i` returns `some (f i)` if `i < n` and `none` otherwise. -/
 def ofFnNthVal {n} (f : Fin n → α) (i : ℕ) : Option α :=
   if h : i < n then some (f ⟨i, h⟩) else none
+#align list.of_fn_nth_val List.ofFnNthVal
 -/
 
 #print List.Disjoint /-
 /-- `disjoint l₁ l₂` means that `l₁` and `l₂` have no elements in common. -/
 def Disjoint (l₁ l₂ : List α) : Prop :=
   ∀ ⦃a⦄, a ∈ l₁ → a ∈ l₂ → False
+#align list.disjoint List.Disjoint
 -/
 
 section Pairwise
@@ -748,6 +827,7 @@ variable (R : α → α → Prop)
 inductive Pairwise : List α → Prop
   | nil : pairwise []
   | cons : ∀ {a : α} {l : List α}, (∀ a' ∈ l, R a a') → pairwise l → pairwise (a :: l)
+#align list.pairwise List.Pairwise
 -/
 
 variable {R}
@@ -755,11 +835,13 @@ variable {R}
 @[simp]
 theorem pairwise_cons {a : α} {l : List α} : Pairwise R (a :: l) ↔ (∀ a' ∈ l, R a a') ∧ Pairwise R l :=
   ⟨fun p => by cases' p with a l n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
+#align list.pairwise_cons List.pairwise_cons
 
 attribute [simp] pairwise.nil
 
 instance decidablePairwise [DecidableRel R] (l : List α) : Decidable (Pairwise R l) := by
   induction' l with hd tl ih <;> [exact is_true pairwise.nil, exact decidable_of_iff' _ pairwise_cons]
+#align list.decidable_pairwise List.decidablePairwise
 
 end Pairwise
 
@@ -774,6 +856,7 @@ def pwFilter (R : α → α → Prop) [DecidableRel R] : List α → List α
   | x :: xs =>
     let IH := pw_filter xs
     if ∀ y ∈ IH, R x y then x :: IH else IH
+#align list.pw_filter List.pwFilter
 -/
 
 section Chain
@@ -787,6 +870,7 @@ variable (R : α → α → Prop)
 inductive Chain : α → List α → Prop
   | nil {a : α} : chain a []
   | cons : ∀ {a b : α} {l : List α}, R a b → chain b l → chain a (b :: l)
+#align list.chain List.Chain
 -/
 
 #print List.Chain' /-
@@ -796,6 +880,7 @@ inductive Chain : α → List α → Prop
 def Chain' : List α → Prop
   | [] => True
   | a :: l => Chain R a l
+#align list.chain' List.Chain'
 -/
 
 variable {R}
@@ -804,15 +889,18 @@ variable {R}
 @[simp]
 theorem chain_cons {a b : α} {l : List α} : Chain R a (b :: l) ↔ R a b ∧ Chain R b l :=
   ⟨fun p => by cases' p with _ a b l n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
+#align list.chain_cons List.chain_cons
 -/
 
 attribute [simp] chain.nil
 
 instance decidableChain [DecidableRel R] (a : α) (l : List α) : Decidable (Chain R a l) := by
   induction l generalizing a <;> simp only [chain.nil, chain_cons] <;> skip <;> infer_instance
+#align list.decidable_chain List.decidableChain
 
 instance decidableChain' [DecidableRel R] (l : List α) : Decidable (Chain' R l) := by
   cases l <;> dsimp only [chain'] <;> infer_instance
+#align list.decidable_chain' List.decidableChain'
 
 end Chain
 
@@ -821,11 +909,13 @@ end Chain
   once in the list. It is defined as `pairwise (≠)`. -/
 def Nodup : List α → Prop :=
   Pairwise (· ≠ ·)
+#align list.nodup List.Nodup
 -/
 
 #print List.nodupDecidable /-
 instance nodupDecidable [DecidableEq α] : ∀ l : List α, Decidable (Nodup l) :=
   List.decidablePairwise
+#align list.nodup_decidable List.nodupDecidable
 -/
 
 /-- `dedup l` removes duplicates from `l` (taking only the last occurrence).
@@ -834,6 +924,7 @@ instance nodupDecidable [DecidableEq α] : ∀ l : List α, Decidable (Nodup l) 
      dedup [1, 0, 2, 2, 1] = [0, 2, 1] -/
 def dedup [DecidableEq α] : List α → List α :=
   pwFilter (· ≠ ·)
+#align list.dedup List.dedup
 
 /-- Greedily create a sublist of `a :: l` such that, for every two adjacent elements `a, b`,
 `R a b` holds. Mostly used with ≠; for example, `destutter' (≠) 1 [2, 2, 1, 1] = [1, 2, 1]`,
@@ -841,6 +932,7 @@ def dedup [DecidableEq α] : List α → List α :=
 def destutter' (R : α → α → Prop) [DecidableRel R] : α → List α → List α
   | a, [] => [a]
   | a, h :: l => if R a h then a :: destutter' h l else destutter' a l
+#align list.destutter' List.destutter'
 
 /-- Greedily create a sublist of `l` such that, for every two adjacent elements `a, b ∈ l`,
 `R a b` holds. Mostly used with ≠; for example, `destutter (≠) [1, 2, 2, 1, 1] = [1, 2, 1]`,
@@ -848,6 +940,7 @@ def destutter' (R : α → α → Prop) [DecidableRel R] : α → List α → Li
 def destutter (R : α → α → Prop) [DecidableRel R] : List α → List α
   | h :: l => destutter' R h l
   | [] => []
+#align list.destutter List.destutter
 
 #print List.range' /-
 /-- `range' s n` is the list of numbers `[s, s+1, ..., s+n-1]`.
@@ -856,12 +949,14 @@ def destutter (R : α → α → Prop) [DecidableRel R] : List α → List α
 def range' : ℕ → ℕ → List ℕ
   | s, 0 => []
   | s, n + 1 => s :: range' (s + 1) n
+#align list.range' List.range'
 -/
 
 #print List.reduceOption /-
 /-- Drop `none`s from a list, and replace each remaining `some a` with `a`. -/
 def reduceOption {α} : List (Option α) → List α :=
   List.filterMap id
+#align list.reduce_option List.reduceOption
 -/
 
 #print List.ilast' /-
@@ -871,6 +966,7 @@ it returns `x` otherwise -/
 def ilast' {α} : α → List α → α
   | a, [] => a
   | a, b :: l => ilast' b l
+#align list.ilast' List.ilast'
 -/
 
 #print List.last' /-
@@ -881,6 +977,7 @@ def last' {α} : List α → Option α
   | [] => none
   | [a] => some a
   | b :: l => last' l
+#align list.last' List.last'
 -/
 
 #print List.rotate /-
@@ -890,6 +987,7 @@ def last' {α} : List α → Option α
 def rotate (l : List α) (n : ℕ) : List α :=
   let (l₁, l₂) := List.splitAt (n % l.length) l
   l₂ ++ l₁
+#align list.rotate List.rotate
 -/
 
 #print List.rotate' /-
@@ -898,6 +996,7 @@ def rotate' : List α → ℕ → List α
   | [], n => []
   | l, 0 => l
   | a :: l, n + 1 => rotate' (l ++ [a]) n
+#align list.rotate' List.rotate'
 -/
 
 section Choose
@@ -914,12 +1013,14 @@ def chooseX : ∀ l : List α, ∀ hp : ∃ a, a ∈ l ∧ p a, { a // a ∈ l �
     else
       let ⟨a, ⟨a_mem_ls, pa⟩⟩ := choose_x ls (hp.imp fun b ⟨o, h₂⟩ => ⟨o.resolve_left fun e => pl <| e ▸ h₂, h₂⟩)
       ⟨a, ⟨Or.inr a_mem_ls, pa⟩⟩
+#align list.choose_x List.chooseX
 
 /-- Given a decidable predicate `p` and a proof of existence of `a ∈ l` such that `p a`,
 choose the first element with this property. This version returns `a : α`, and properties
 are given by `choose_mem` and `choose_property`. -/
 def choose (hp : ∃ a, a ∈ l ∧ p a) : α :=
   chooseX p l hp
+#align list.choose List.choose
 
 end Choose
 
@@ -939,6 +1040,7 @@ def mmapFilter {m : Type → Type v} [Monad m] {α β} (f : α → m (Option β)
         match b with
         | none => t'
         | some x => x :: t'
+#align list.mmap_filter List.mmapFilter
 
 /- warning: list.mmap_upper_triangle -> List.mmapUpperTriangle is a dubious translation:
 lean 3 declaration is
@@ -960,6 +1062,7 @@ def mmapUpperTriangle {m} [Monad m] {α β : Type u} (f : α → α → m β) : 
     let l ← t.mmap (f h)
     let t ← t.mmapUpperTriangle
     return <| v :: l ++ t
+#align list.mmap_upper_triangle List.mmapUpperTriangle
 
 /- warning: list.mmap'_diag -> List.mmap'Diag is a dubious translation:
 lean 3 declaration is
@@ -977,6 +1080,7 @@ Example: suppose `l = [1, 2, 3]`. `mmap'_diag f l` will evaluate, in this order,
 def mmap'Diag {m} [Monad m] {α} (f : α → α → m Unit) : List α → m Unit
   | [] => return ()
   | h :: t => (f h h >> t.mmap' (f h)) >> t.mmap'Diag
+#align list.mmap'_diag List.mmap'Diag
 
 /- warning: list.traverse -> List.traverse is a dubious translation:
 lean 3 declaration is
@@ -987,6 +1091,7 @@ Case conversion may be inaccurate. Consider using '#align list.traverse List.tra
 protected def traverse {F : Type u → Type v} [Applicative F] {α β : Type _} (f : α → F β) : List α → F (List β)
   | [] => pure []
   | x :: xs => List.cons <$> f x <*> traverse xs
+#align list.traverse List.traverse
 
 #print List.getRest /-
 /-- `get_rest l l₁` returns `some l₂` if `l = l₁ ++ l₂`.
@@ -995,6 +1100,7 @@ def getRest [DecidableEq α] : List α → List α → Option (List α)
   | l, [] => some l
   | [], _ => none
   | x :: l, y :: l₁ => if x = y then get_rest l l₁ else none
+#align list.get_rest List.getRest
 -/
 
 /-- `list.slice n m xs` removes a slice of length `m` at index `n` in list `xs`.
@@ -1003,6 +1109,7 @@ def slice {α} : ℕ → ℕ → List α → List α
   | 0, n, xs => xs.drop n
   | succ n, m, [] => []
   | succ n, m, x :: xs => x :: slice n m xs
+#align list.slice List.slice
 
 /-- Left-biased version of `list.map₂`. `map₂_left' f as bs` applies `f` to each
 pair of elements `aᵢ ∈ as` and `bᵢ ∈ bs`. If `bs` is shorter than `as`, `f` is
@@ -1022,6 +1129,7 @@ def map₂Left' (f : α → Option β → γ) : List α → List β → List γ 
   | a :: as, b :: bs =>
     let rec := map₂_left' as bs
     (f a (some b) :: rec.fst, rec.snd)
+#align list.map₂_left' List.map₂Left'
 
 /-- Right-biased version of `list.map₂`. `map₂_right' f as bs` applies `f` to each
 pair of elements `aᵢ ∈ as` and `bᵢ ∈ bs`. If `as` is shorter than `bs`, `f` is
@@ -1036,6 +1144,7 @@ map₂_right' prod.mk [1, 2] ['a'] = ([(some 1, 'a')], [2])
 -/
 def map₂Right' (f : Option α → β → γ) (as : List α) (bs : List β) : List γ × List α :=
   map₂Left' (flip f) bs as
+#align list.map₂_right' List.map₂Right'
 
 #print List.zipLeft' /-
 /-- Left-biased version of `list.zip`. `zip_left' as bs` returns the list of
@@ -1053,6 +1162,7 @@ zip_left' = map₂_left' prod.mk
 -/
 def zipLeft' : List α → List β → List (α × Option β) × List β :=
   map₂Left' Prod.mk
+#align list.zip_left' List.zipLeft'
 -/
 
 #print List.zipRight' /-
@@ -1070,6 +1180,7 @@ zip_right' = map₂_right' prod.mk
 -/
 def zipRight' : List α → List β → List (Option α × β) × List α :=
   map₂Right' Prod.mk
+#align list.zip_right' List.zipRight'
 -/
 
 /-- Left-biased version of `list.map₂`. `map₂_left f as bs` applies `f` to each pair
@@ -1089,6 +1200,7 @@ def map₂Left (f : α → Option β → γ) : List α → List β → List γ
   | [], _ => []
   | a :: as, [] => (a :: as).map fun a => f a none
   | a :: as, b :: bs => f a (some b) :: map₂_left as bs
+#align list.map₂_left List.map₂Left
 
 /-- Right-biased version of `list.map₂`. `map₂_right f as bs` applies `f` to each
 pair `aᵢ ∈ as` and `bᵢ ‌∈ bs`. If `as` is shorter than `bs`, `f` is applied to
@@ -1104,6 +1216,7 @@ map₂_right f as bs = (map₂_right' f as bs).fst
 -/
 def map₂Right (f : Option α → β → γ) (as : List α) (bs : List β) : List γ :=
   map₂Left (flip f) bs as
+#align list.map₂_right List.map₂Right
 
 #print List.zipLeft /-
 /-- Left-biased version of `list.zip`. `zip_left as bs` returns the list of pairs
@@ -1120,6 +1233,7 @@ zip_left = map₂_left prod.mk
 -/
 def zipLeft : List α → List β → List (α × Option β) :=
   map₂Left Prod.mk
+#align list.zip_left List.zipLeft
 -/
 
 #print List.zipRight /-
@@ -1137,6 +1251,7 @@ zip_right = map₂_right prod.mk
 -/
 def zipRight : List α → List β → List (Option α × β) :=
   map₂Right Prod.mk
+#align list.zip_right List.zipRight
 -/
 
 #print List.allSome /-
@@ -1152,6 +1267,7 @@ def allSome : List (Option α) → Option (List α)
   | [] => some []
   | some a :: as => cons a <$> all_some as
   | none :: as => none
+#align list.all_some List.allSome
 -/
 
 #print List.fillNones /-
@@ -1168,6 +1284,7 @@ def fillNones {α} : List (Option α) → List α → List α
   | some a :: as, as' => a :: fill_nones as as'
   | none :: as, [] => as.reduceOption
   | none :: as, a :: as' => a :: fill_nones as as'
+#align list.fill_nones List.fillNones
 -/
 
 #print List.takeList /-
@@ -1188,6 +1305,7 @@ def takeList {α} : List α → List ℕ → List (List α) × List α
     let ⟨xs₁, xs₂⟩ := xs.splitAt n
     let ⟨xss, rest⟩ := take_list xs₂ ns
     (xs₁ :: xss, rest)
+#align list.take_list List.takeList
 -/
 
 /-- `to_rbmap as` is the map that associates each index `i` of `as` with the
@@ -1199,6 +1317,7 @@ to_rbmap ['a', 'b', 'c'] = rbmap_of [(0, 'a'), (1, 'b'), (2, 'c')]
 -/
 def toRbmap {α : Type _} : List α → Rbmap ℕ α :=
   foldlWithIndex (fun i mapp a => mapp.insert i a) (mkRbmap ℕ α)
+#align list.to_rbmap List.toRbmap
 
 #print List.toChunksAux /-
 /-- Auxliary definition used to define `to_chunks`.
@@ -1214,6 +1333,7 @@ def toChunksAux {α} (n : ℕ) : List α → ℕ → List α × List (List α)
   | x :: xs, i + 1 =>
     let (l, L) := to_chunks_aux xs i
     (x :: l, L)
+#align list.to_chunks_aux List.toChunksAux
 -/
 
 #print List.toChunks /-
@@ -1233,12 +1353,14 @@ def toChunks {α} : ℕ → List α → List (List α)
   | n + 1, x :: xs =>
     let (l, L) := toChunksAux n xs n
     (x :: l) :: L
+#align list.to_chunks List.toChunks
 -/
 
 /-- Asynchronous version of `list.map`.
 -/
 unsafe def map_async_chunked {α β} (f : α → β) (xs : List α) (chunk_size := 1024) : List β :=
   ((xs.toChunks chunk_size).map fun xs => task.delay fun _ => List.map f xs).bind task.get
+#align list.map_async_chunked list.map_async_chunked
 
 /-!
 We add some n-ary versions of `list.zip_with` for functions with more than two arguments.
@@ -1254,16 +1376,19 @@ or as
 def zipWith3 (f : α → β → γ → δ) : List α → List β → List γ → List δ
   | x :: xs, y :: ys, z :: zs => f x y z :: zip_with3 xs ys zs
   | _, _, _ => []
+#align list.zip_with3 List.zipWith3
 
 /-- Quaternary version of `list.zip_with`. -/
 def zipWith4 (f : α → β → γ → δ → ε) : List α → List β → List γ → List δ → List ε
   | x :: xs, y :: ys, z :: zs, u :: us => f x y z u :: zip_with4 xs ys zs us
   | _, _, _, _ => []
+#align list.zip_with4 List.zipWith4
 
 /-- Quinary version of `list.zip_with`. -/
 def zipWith5 (f : α → β → γ → δ → ε → ζ) : List α → List β → List γ → List δ → List ε → List ζ
   | x :: xs, y :: ys, z :: zs, u :: us, v :: vs => f x y z u v :: zip_with5 xs ys zs us vs
   | _, _, _, _, _ => []
+#align list.zip_with5 List.zipWith5
 
 /-- Given a starting list `old`, a list of booleans and a replacement list `new`,
 read the items in `old` in succession and either replace them with the next element of `new` or
@@ -1273,12 +1398,14 @@ def replaceIf : List α → List Bool → List α → List α
   | [], _, _ => []
   | l, [], _ => l
   | n :: ns, tf :: bs, e@(c :: cs) => if tf then c :: ns.replaceIf bs cs else n :: ns.replaceIf bs e
+#align list.replace_if List.replaceIf
 
 #print List.mapWithPrefixSuffixAux /-
 /-- An auxiliary function for `list.map_with_prefix_suffix`. -/
 def mapWithPrefixSuffixAux {α β} (f : List α → α → List α → β) : List α → List α → List β
   | prev, [] => []
   | prev, h :: t => f prev h t :: map_with_prefix_suffix_aux (prev.concat h) t
+#align list.map_with_prefix_suffix_aux List.mapWithPrefixSuffixAux
 -/
 
 #print List.mapWithPrefixSuffix /-
@@ -1291,6 +1418,7 @@ Example: if `f : list ℕ → ℕ → list ℕ → β`,
 -/
 def mapWithPrefixSuffix {α β} (f : List α → α → List α → β) (l : List α) : List β :=
   mapWithPrefixSuffixAux f [] l
+#align list.map_with_prefix_suffix List.mapWithPrefixSuffix
 -/
 
 #print List.mapWithComplement /-
@@ -1304,6 +1432,7 @@ Example: if `f : ℕ → list ℕ → β`, `list.map_with_complement f [1, 2, 3]
 -/
 def mapWithComplement {α β} (f : α → List α → β) : List α → List β :=
   map_with_prefix_suffix fun pref a suff => f a (pref ++ suff)
+#align list.map_with_complement List.mapWithComplement
 -/
 
 end List

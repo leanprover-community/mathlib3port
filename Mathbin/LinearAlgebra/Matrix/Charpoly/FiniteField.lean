@@ -23,7 +23,7 @@ variable {n : Type _} [DecidableEq n] [Fintype n]
 @[simp]
 theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
     (M ^ Fintype.card K).charpoly = M.charpoly := by
-  cases (is_empty_or_nonempty n).symm
+  cases (isEmpty_or_nonempty n).symm
   · cases' CharP.exists K with p hp
     letI := hp
     rcases FiniteField.card K p with ⟨⟨k, kpos⟩, ⟨hp, hk⟩⟩
@@ -47,21 +47,25 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     
   · exact congr_arg _ (Subsingleton.elim _ _)
     
+#align finite_field.matrix.charpoly_pow_card FiniteField.Matrix.charpoly_pow_card
 
 @[simp]
 theorem Zmod.charpoly_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)) : (M ^ p).charpoly = M.charpoly := by
   have h := FiniteField.Matrix.charpoly_pow_card M
   rwa [Zmod.card] at h
+#align zmod.charpoly_pow_card Zmod.charpoly_pow_card
 
 theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
     trace (M ^ Fintype.card K) = trace M ^ Fintype.card K := by
-  cases is_empty_or_nonempty n
+  cases isEmpty_or_nonempty n
   · simp [zero_pow Fintype.card_pos, Matrix.trace]
     
   rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, FiniteField.Matrix.charpoly_pow_card,
     FiniteField.pow_card]
+#align finite_field.trace_pow_card FiniteField.trace_pow_card
 
 theorem Zmod.trace_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)) : trace (M ^ p) = trace M ^ p := by
   have h := FiniteField.trace_pow_card M
   rwa [Zmod.card] at h
+#align zmod.trace_pow_card Zmod.trace_pow_card
 

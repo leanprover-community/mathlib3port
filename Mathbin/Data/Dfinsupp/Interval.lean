@@ -33,10 +33,12 @@ def dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i)
       refine' (mk_injective _).comp fun f g h => _
       ext (i hi)
       convert congr_fun h ⟨i, hi⟩⟩
+#align finset.dfinsupp Finset.dfinsupp
 
 @[simp]
 theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : (s.Dfinsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
+#align finset.card_dfinsupp Finset.card_dfinsupp
 
 variable [∀ i, DecidableEq (α i)]
 
@@ -52,6 +54,7 @@ theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ 
     dsimp
     exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
     
+#align finset.mem_dfinsupp_iff Finset.mem_dfinsupp_iff
 
 /-- When `t` is supported on `s`, `f ∈ s.dfinsupp t` precisely means that `f` is pointwise in `t`.
 -/
@@ -72,6 +75,7 @@ theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.
     
   · rwa [H, mem_zero] at h
     
+#align finset.mem_dfinsupp_iff_of_support_subset Finset.mem_dfinsupp_iff_of_support_subset
 
 end Finset
 
@@ -87,9 +91,11 @@ variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i) where
   toFun i := {f i}
   support' := f.support'.map fun s => ⟨s, fun i => (s.Prop i).imp id (congr_arg _)⟩
+#align dfinsupp.singleton Dfinsupp.singleton
 
 theorem mem_singleton_apply_iff : a ∈ f.singleton i ↔ a = f i :=
   mem_singleton
+#align dfinsupp.mem_singleton_apply_iff Dfinsupp.mem_singleton_apply_iff
 
 end BundledSingleton
 
@@ -111,13 +117,16 @@ def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) where
               (gs.prop i).resolve_left (Multiset.not_mem_mono (Multiset.Le.subset <| Multiset.le_add_left _ _) h)
             rw [hf, hg]
             exact Icc_self _⟩
+#align dfinsupp.range_Icc Dfinsupp.rangeIcc
 
 @[simp]
 theorem range_Icc_apply (f g : Π₀ i, α i) (i : ι) : f.rangeIcc g i = icc (f i) (g i) :=
   rfl
+#align dfinsupp.range_Icc_apply Dfinsupp.range_Icc_apply
 
 theorem mem_range_Icc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
   mem_Icc
+#align dfinsupp.mem_range_Icc_apply_iff Dfinsupp.mem_range_Icc_apply_iff
 
 theorem support_range_Icc_subset [DecidableEq ι] [∀ i, DecidableEq (α i)] :
     (f.rangeIcc g).support ⊆ f.support ∪ g.support := by
@@ -127,6 +136,7 @@ theorem support_range_Icc_subset [DecidableEq ι] [∀ i, DecidableEq (α i)] :
   rw [range_Icc_apply, not_mem_support_iff.1 (not_mem_mono (subset_union_left _ _) h),
     not_mem_support_iff.1 (not_mem_mono (subset_union_right _ _) h)]
   exact Icc_self _
+#align dfinsupp.support_range_Icc_subset Dfinsupp.support_range_Icc_subset
 
 end BundledIcc
 
@@ -138,15 +148,18 @@ variable [∀ i, Zero (α i)] [DecidableEq ι] [∀ i, DecidableEq (α i)]
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
 def pi (f : Π₀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
   f.support.Dfinsupp f
+#align dfinsupp.pi Dfinsupp.pi
 
 @[simp]
 theorem mem_pi {f : Π₀ i, Finset (α i)} {g : Π₀ i, α i} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
   mem_dfinsupp_iff_of_support_subset <| Subset.refl _
+#align dfinsupp.mem_pi Dfinsupp.mem_pi
 
 @[simp]
 theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i).card := by
   rw [pi, card_dfinsupp]
   exact Finset.prod_congr rfl fun i _ => by simp only [Pi.nat_apply, Nat.cast_id]
+#align dfinsupp.card_pi Dfinsupp.card_pi
 
 end Pi
 
@@ -166,18 +179,23 @@ variable (f g : Π₀ i, α i)
 
 theorem Icc_eq : icc f g = (f.support ∪ g.support).Dfinsupp (f.rangeIcc g) :=
   rfl
+#align dfinsupp.Icc_eq Dfinsupp.Icc_eq
 
 theorem card_Icc : (icc f g).card = ∏ i in f.support ∪ g.support, (icc (f i) (g i)).card :=
   card_dfinsupp _ _
+#align dfinsupp.card_Icc Dfinsupp.card_Icc
 
 theorem card_Ico : (ico f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
+#align dfinsupp.card_Ico Dfinsupp.card_Ico
 
 theorem card_Ioc : (ioc f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
+#align dfinsupp.card_Ioc Dfinsupp.card_Ioc
 
 theorem card_Ioo : (ioo f g).card = (∏ i in f.support ∪ g.support, (icc (f i) (g i)).card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
+#align dfinsupp.card_Ioo Dfinsupp.card_Ioo
 
 end LocallyFinite
 
@@ -191,9 +209,11 @@ variable (f : Π₀ i, α i)
 
 theorem card_Iic : (iic f).card = ∏ i in f.support, (iic (f i)).card := by
   simp_rw [Iic_eq_Icc, card_Icc, Dfinsupp.bot_eq_zero, support_zero, empty_union, zero_apply, bot_eq_zero]
+#align dfinsupp.card_Iic Dfinsupp.card_Iic
 
 theorem card_Iio : (iio f).card = (∏ i in f.support, (iic (f i)).card) - 1 := by
   rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
+#align dfinsupp.card_Iio Dfinsupp.card_Iio
 
 end CanonicallyOrdered
 

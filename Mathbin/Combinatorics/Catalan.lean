@@ -52,19 +52,24 @@ def catalan : ℕ → ℕ
       have := i.2
       have := Nat.lt_succ_iff.mpr (n.sub_le i)
       catalan i * catalan (n - i)
+#align catalan catalan
 
 @[simp]
 theorem catalan_zero : catalan 0 = 1 := by rw [catalan]
+#align catalan_zero catalan_zero
 
 theorem catalan_succ (n : ℕ) : catalan (n + 1) = ∑ i : Fin n.succ, catalan i * catalan (n - i) := by rw [catalan]
+#align catalan_succ catalan_succ
 
 @[simp]
 theorem catalan_one : catalan 1 = 1 := by simp [catalan_succ]
+#align catalan_one catalan_one
 
 /-- A helper sequence that can be used to prove the equality of the recursive and the explicit
 definition using a telescoping sum argument. -/
 private def gosper_catalan (n j : ℕ) : ℚ :=
   Nat.centralBinom j * Nat.centralBinom (n - j) * (2 * j - n) / (2 * n * (n + 1))
+#align gosper_catalan gosper_catalan
 
 private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
     gosperCatalan (n + 1) (i + 1) - gosperCatalan (n + 1) i =
@@ -84,6 +89,7 @@ private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
   rw [Nat.succ_sub h]
   linear_combination(2 : ℚ) * (n - i).centralBinom * (i + 1 - (n - i)) * (n + 1) * (n + 2) * (n - i + 1) * h₁ -
       2 * i.central_binom * (n + 1) * (n + 2) * (i - (n - i) - 1) * (i + 1) * h₂
+#align gosper_trick gosper_trick
 
 private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) :
     gosperCatalan (n + 1) (n + 1) - gosperCatalan (n + 1) 0 = Nat.centralBinom (n + 1) / (n + 2) := by
@@ -93,14 +99,8 @@ private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) :
   simp only [gosper_catalan, Nat.sub_zero, Nat.central_binom_zero, Nat.sub_self]
   field_simp
   ring
+#align gosper_catalan_sub_eq_central_binom_div gosper_catalan_sub_eq_central_binom_div
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (finset.sum_univ((i : fin d.succ),
-    «expr * »(«expr / »(nat.central_binom i, «expr + »(i, 1)),
-     «expr / »(nat.central_binom «expr - »(d, i), «expr + »(«expr - »(d, i), 1)))) : exprℚ())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum_univ((i : fin d.succ),
-    «expr - »(gosper_catalan «expr + »(d, 1) «expr + »(i, 1), gosper_catalan «expr + »(d, 1) i))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n + 1) := by
   suffices (catalan n : ℚ) = Nat.centralBinom n / (n + 1) by
     have h := Nat.succ_dvd_central_binom n
@@ -109,8 +109,7 @@ theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n
   · simp
     
   · simp_rw [catalan_succ, Nat.cast_sum, Nat.cast_mul]
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr (finset.sum_univ((i : fin d.succ),\n    «expr * »(«expr / »(nat.central_binom i, «expr + »(i, 1)),\n     «expr / »(nat.central_binom «expr - »(d, i), «expr + »(«expr - »(d, i), 1)))) : exprℚ())]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    trans (∑ i : Fin d.succ, Nat.centralBinom i / (i + 1) * (Nat.centralBinom (d - i) / (d - i + 1)) : ℚ)
     · refine' sum_congr rfl fun i _ => _
       congr
       · exact_mod_cast hd i i.is_le
@@ -121,8 +120,7 @@ theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n
         exact tsub_le_self
         
       
-    · trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum_univ((i : fin d.succ),\n    «expr - »(gosper_catalan «expr + »(d, 1) «expr + »(i, 1), gosper_catalan «expr + »(d, 1) i))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    · trans ∑ i : Fin d.succ, gosper_catalan (d + 1) (i + 1) - gosper_catalan (d + 1) i
       · refine' sum_congr rfl fun i _ => _
         rw_mod_cast [gosper_trick i.is_le, mul_div]
         
@@ -132,11 +130,15 @@ theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n
         
       
     
+#align catalan_eq_central_binom_div catalan_eq_central_binom_div
 
 theorem succ_mul_catalan_eq_central_binom (n : ℕ) : (n + 1) * catalan n = n.centralBinom :=
   (Nat.eq_mul_of_div_eq_right n.succ_dvd_central_binom (catalan_eq_central_binom_div n).symm).symm
+#align succ_mul_catalan_eq_central_binom succ_mul_catalan_eq_central_binom
 
 theorem catalan_two : catalan 2 = 2 := by norm_num [catalan_eq_central_binom_div, Nat.centralBinom, Nat.choose]
+#align catalan_two catalan_two
 
 theorem catalan_three : catalan 3 = 5 := by norm_num [catalan_eq_central_binom_div, Nat.centralBinom, Nat.choose]
+#align catalan_three catalan_three
 

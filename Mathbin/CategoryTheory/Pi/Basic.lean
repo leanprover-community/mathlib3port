@@ -27,12 +27,14 @@ instance pi : Category.{max w₀ v₁} (∀ i, C i) where
   Hom X Y := ∀ i, X i ⟶ Y i
   id X i := 𝟙 (X i)
   comp X Y Z f g i := f i ≫ g i
+#align category_theory.pi CategoryTheory.pi
 
 /-- This provides some assistance to typeclass search in a common situation,
 which otherwise fails. (Without this `category_theory.pi.has_limit_of_has_limit_comp_eval` fails.)
 -/
 abbrev pi' {I : Type v₁} (C : I → Type u₁) [∀ i, Category.{v₁} (C i)] : Category.{v₁} (∀ i, C i) :=
   CategoryTheory.pi C
+#align category_theory.pi' CategoryTheory.pi'
 
 attribute [instance] pi'
 
@@ -41,10 +43,12 @@ namespace Pi
 @[simp]
 theorem id_apply (X : ∀ i, C i) (i) : (𝟙 X : ∀ i, X i ⟶ X i) i = 𝟙 (X i) :=
   rfl
+#align category_theory.pi.id_apply CategoryTheory.pi.id_apply
 
 @[simp]
 theorem comp_apply {X Y Z : ∀ i, C i} (f : X ⟶ Y) (g : Y ⟶ Z) (i) : (f ≫ g : ∀ i, X i ⟶ Z i) i = f i ≫ g i :=
   rfl
+#align category_theory.pi.comp_apply CategoryTheory.pi.comp_apply
 
 /-- The evaluation functor at `i : I`, sending an `I`-indexed family of objects to the object over `i`.
 -/
@@ -52,6 +56,7 @@ theorem comp_apply {X Y Z : ∀ i, C i} (f : X ⟶ Y) (g : Y ⟶ Z) (i) : (f ≫
 def eval (i : I) : (∀ i, C i) ⥤ C i where
   obj f := f i
   map f g α := α i
+#align category_theory.pi.eval CategoryTheory.pi.eval
 
 section
 
@@ -63,6 +68,7 @@ variable {J : Type w₁}
 def comap (h : J → I) : (∀ i, C i) ⥤ ∀ j, C (h j) where
   obj f i := f (h i)
   map f g α i := α (h i)
+#align category_theory.pi.comap CategoryTheory.pi.comap
 
 variable (I)
 
@@ -73,6 +79,7 @@ and the identity functor. -/
 def comapId : comap C (id : I → I) ≅ 𝟭 (∀ i, C i) where
   Hom := { app := fun X => 𝟙 X }
   inv := { app := fun X => 𝟙 X }
+#align category_theory.pi.comap_id CategoryTheory.pi.comapId
 
 variable {I}
 
@@ -86,11 +93,13 @@ pulling back along their composition
 def comapComp (f : K → J) (g : J → I) : comap C g ⋙ comap (C ∘ g) f ≅ comap C (g ∘ f) where
   Hom := { app := fun X b => 𝟙 (X (g (f b))) }
   inv := { app := fun X b => 𝟙 (X (g (f b))) }
+#align category_theory.pi.comap_comp CategoryTheory.pi.comapComp
 
 /-- The natural isomorphism between pulling back then evaluating, and just evaluating. -/
 @[simps]
 def comapEvalIsoEval (h : J → I) (j : J) : comap C h ⋙ eval (C ∘ h) j ≅ eval C (h j) :=
   NatIso.ofComponents (fun f => Iso.refl _) (by tidy)
+#align category_theory.pi.comap_eval_iso_eval CategoryTheory.pi.comapEvalIsoEval
 
 end
 
@@ -111,6 +120,7 @@ instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
   | Sum.inr j => by
     dsimp
     infer_instance
+#align category_theory.pi.sum_elim_category CategoryTheory.pi.sumElimCategory
 
 /-- The bifunctor combining an `I`-indexed family of objects with a `J`-indexed family of objects
 to obtain an `I ⊕ J`-indexed family of objects.
@@ -119,6 +129,7 @@ to obtain an `I ⊕ J`-indexed family of objects.
 def sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s where
   obj f := { obj := fun g s => Sum.rec f g s, map := fun g g' α s => Sum.rec (fun i => 𝟙 (f i)) α s }
   map f f' α := { app := fun g s => Sum.rec α (fun j => 𝟙 (g j)) s }
+#align category_theory.pi.sum CategoryTheory.pi.sum
 
 end
 
@@ -133,19 +144,23 @@ def isoApp {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : X i ≅ Y i :=
     rw [← comp_apply, iso.hom_inv_id, id_apply], by
     dsimp
     rw [← comp_apply, iso.inv_hom_id, id_apply]⟩
+#align category_theory.pi.iso_app CategoryTheory.pi.isoApp
 
 @[simp]
 theorem iso_app_refl (X : ∀ i, C i) (i : I) : isoApp (Iso.refl X) i = Iso.refl (X i) :=
   rfl
+#align category_theory.pi.iso_app_refl CategoryTheory.pi.iso_app_refl
 
 @[simp]
 theorem iso_app_symm {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : isoApp f.symm i = (isoApp f i).symm :=
   rfl
+#align category_theory.pi.iso_app_symm CategoryTheory.pi.iso_app_symm
 
 @[simp]
 theorem iso_app_trans {X Y Z : ∀ i, C i} (f : X ≅ Y) (g : Y ≅ Z) (i : I) :
     isoApp (f ≪≫ g) i = isoApp f i ≪≫ isoApp g i :=
   rfl
+#align category_theory.pi.iso_app_trans CategoryTheory.pi.iso_app_trans
 
 end Pi
 
@@ -161,6 +176,7 @@ variable {D : I → Type u₁} [∀ i, Category.{v₁} (D i)] {A : Type u₁} [C
 def pi (F : ∀ i, C i ⥤ D i) : (∀ i, C i) ⥤ ∀ i, D i where
   obj f i := (F i).obj (f i)
   map f g α i := (F i).map (α i)
+#align category_theory.functor.pi CategoryTheory.Functor.pi
 
 /-- Similar to `pi`, but all functors come from the same category `A`
 -/
@@ -168,6 +184,7 @@ def pi (F : ∀ i, C i ⥤ D i) : (∀ i, C i) ⥤ ∀ i, D i where
 def pi' (f : ∀ i, A ⥤ C i) : A ⥤ ∀ i, C i where
   obj a i := (f i).obj a
   map a₁ a₂ h i := (f i).map h
+#align category_theory.functor.pi' CategoryTheory.Functor.pi'
 
 section EqToHom
 
@@ -176,6 +193,7 @@ theorem eq_to_hom_proj {x x' : ∀ i, C i} (h : x = x') (i : I) :
     (eqToHom h : x ⟶ x') i = eqToHom (Function.funext_iff.mp h i) := by
   subst h
   rfl
+#align category_theory.functor.eq_to_hom_proj CategoryTheory.Functor.eq_to_hom_proj
 
 end EqToHom
 
@@ -188,6 +206,7 @@ theorem pi'_eval (f : ∀ i, A ⥤ C i) (i : I) : pi' f ⋙ pi.eval C i = f i :=
     
   · rfl
     
+#align category_theory.functor.pi'_eval CategoryTheory.Functor.pi'_eval
 
 /-- Two functors to a product category are equal iff they agree on every coordinate. -/
 theorem pi_ext (f f' : A ⥤ ∀ i, C i) (h : ∀ i, f ⋙ pi.eval C i = f' ⋙ pi.eval C i) : f = f' := by
@@ -205,6 +224,7 @@ theorem pi_ext (f f' : A ⥤ ∀ i, C i) (h : ∀ i, f ⋙ pi.eval C i = f' ⋙ 
     have := congr_hom h p
     simpa
     
+#align category_theory.functor.pi_ext CategoryTheory.Functor.pi_ext
 
 end Functor
 
@@ -220,6 +240,7 @@ variable {F G : ∀ i, C i ⥤ D i}
 -/
 @[simps]
 def pi (α : ∀ i, F i ⟶ G i) : Functor.pi F ⟶ Functor.pi G where app f i := (α i).app (f i)
+#align category_theory.nat_trans.pi CategoryTheory.NatTrans.pi
 
 end NatTrans
 

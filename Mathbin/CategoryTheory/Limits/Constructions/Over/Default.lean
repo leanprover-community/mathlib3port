@@ -53,6 +53,7 @@ instance has_finite_limits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits 
     · infer_instance
       
     
+#align category_theory.over.has_finite_limits CategoryTheory.Over.has_finite_limits
 
 instance has_limits {B : C} [HasWidePullbacks.{w} C] : HasLimitsOfSize.{w} (Over B) := by
   apply @has_limits_of_has_equalizers_and_products _ _ _ _
@@ -65,6 +66,7 @@ instance has_limits {B : C} [HasWidePullbacks.{w} C] : HasLimitsOfSize.{w} (Over
     · infer_instance
       
     
+#align category_theory.over.has_limits CategoryTheory.Over.has_limits
 
 end CategoryTheory.Over
 

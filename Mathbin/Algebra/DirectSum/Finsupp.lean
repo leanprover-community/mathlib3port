@@ -33,17 +33,20 @@ copies of M indexed by ι. -/
 def finsuppLequivDirectSum : (ι →₀ M) ≃ₗ[R] ⨁ i : ι, M :=
   haveI : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
   finsuppLequivDfinsupp R
+#align finsupp_lequiv_direct_sum finsuppLequivDirectSum
 
 @[simp]
 theorem finsupp_lequiv_direct_sum_single (i : ι) (m : M) :
     finsuppLequivDirectSum R M ι (Finsupp.single i m) = DirectSum.lof R ι _ i m :=
   Finsupp.to_dfinsupp_single i m
+#align finsupp_lequiv_direct_sum_single finsupp_lequiv_direct_sum_single
 
 @[simp]
 theorem finsupp_lequiv_direct_sum_symm_lof (i : ι) (m : M) :
     (finsuppLequivDirectSum R M ι).symm (DirectSum.lof R ι _ i m) = Finsupp.single i m :=
   letI : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
   Dfinsupp.to_finsupp_single i m
+#align finsupp_lequiv_direct_sum_symm_lof finsupp_lequiv_direct_sum_symm_lof
 
 end finsuppLequivDirectSum
 

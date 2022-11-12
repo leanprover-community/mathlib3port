@@ -28,12 +28,14 @@ universe u
 protected def Nat.unaryCast {R : Type u} [One R] [Zero R] [Add R] : ℕ → R
   | 0 => 0
   | n + 1 => Nat.unaryCast n + 1
+#align nat.unary_cast Nat.unaryCast
 
 /-- Type class for the canonical homomorphism `ℕ → R`.
 -/
 @[protect_proj]
 class HasNatCast (R : Type u) where
   natCast : ℕ → R
+#align has_nat_cast HasNatCast
 
 #print AddMonoidWithOne /-
 /-- An `add_monoid_with_one` is an `add_monoid` with a `1`.
@@ -48,6 +50,7 @@ class AddMonoidWithOne (R : Type u) extends HasNatCast R, AddMonoid R, One R whe
   nat_cast_succ : ∀ n, nat_cast (n + 1) = (nat_cast n + 1 : R) := by
     intros
     rfl
+#align add_monoid_with_one AddMonoidWithOne
 -/
 
 /- warning: nat.cast -> Nat.cast is a dubious translation:
@@ -59,10 +62,12 @@ Case conversion may be inaccurate. Consider using '#align nat.cast Nat.castₓ'.
 /-- Canonical homomorphism from `ℕ` to a additive monoid `R` with a `1`. -/
 protected def Nat.cast {R : Type u} [HasNatCast R] : ℕ → R :=
   HasNatCast.natCast
+#align nat.cast Nat.cast
 
 /-- An `add_comm_monoid_with_one` is an `add_monoid_with_one` satisfying `a + b = b + a`.  -/
 @[protect_proj]
 class AddCommMonoidWithOne (R : Type _) extends AddMonoidWithOne R, AddCommMonoid R
+#align add_comm_monoid_with_one AddCommMonoidWithOne
 
 section
 
@@ -101,6 +106,7 @@ namespace Nat
 -- see note [coercion into rings]
 instance (priority := 900) castCoe {R} [HasNatCast R] : CoeTC ℕ R :=
   ⟨Nat.cast⟩
+#align nat.cast_coe Nat.castCoe
 
 /- warning: nat.cast_zero -> Nat.cast_zero is a dubious translation:
 lean 3 declaration is
@@ -111,6 +117,7 @@ Case conversion may be inaccurate. Consider using '#align nat.cast_zero Nat.cast
 @[norm_cast]
 theorem cast_zero : ((0 : ℕ) : R) = 0 :=
   AddMonoidWithOne.nat_cast_zero
+#align nat.cast_zero Nat.cast_zero
 
 /- warning: nat.cast_succ -> Nat.cast_succ is a dubious translation:
 lean 3 declaration is
@@ -124,13 +131,16 @@ Case conversion may be inaccurate. Consider using '#align nat.cast_succ Nat.cast
 @[simp, norm_cast]
 theorem cast_succ (n : ℕ) : ((succ n : ℕ) : R) = n + 1 :=
   AddMonoidWithOne.nat_cast_succ _
+#align nat.cast_succ Nat.cast_succ
 
 theorem cast_add_one (n : ℕ) : ((n + 1 : ℕ) : R) = n + 1 :=
   cast_succ _
+#align nat.cast_add_one Nat.cast_add_one
 
 @[simp, norm_cast]
 theorem cast_ite (P : Prop) [Decidable P] (m n : ℕ) : ((ite P m n : ℕ) : R) = ite P (m : R) (n : R) := by
   split_ifs <;> rfl
+#align nat.cast_ite Nat.cast_ite
 
 end Nat
 
@@ -148,6 +158,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.cast_one Nat.cast_oneₓ'. -/
 @[norm_cast]
 theorem cast_one [AddMonoidWithOne R] : ((1 : ℕ) : R) = 1 := by rw [cast_succ, Nat.cast_zero, zero_add]
+#align nat.cast_one Nat.cast_one
 
 /- warning: nat.cast_add -> Nat.cast_add is a dubious translation:
 lean 3 declaration is
@@ -158,10 +169,12 @@ Case conversion may be inaccurate. Consider using '#align nat.cast_add Nat.cast_
 @[norm_cast]
 theorem cast_add [AddMonoidWithOne R] (m n : ℕ) : ((m + n : ℕ) : R) = m + n := by
   induction n <;> simp [add_succ, add_assoc, Nat.add_zero, Nat.cast_one, Nat.cast_zero, *]
+#align nat.cast_add Nat.cast_add
 
 /-- Computationally friendlier cast than `nat.unary_cast`, using binary representation. -/
 protected def binCast [Zero R] [One R] [Add R] (n : ℕ) : R :=
   @Nat.binaryRec (fun _ => R) 0 (fun odd k a => cond odd (a + a + 1) (a + a)) n
+#align nat.bin_cast Nat.binCast
 
 @[simp]
 theorem bin_cast_eq [AddMonoidWithOne R] (n : ℕ) : (Nat.binCast n : R) = ((n : ℕ) : R) := by
@@ -176,16 +189,20 @@ theorem bin_cast_eq [AddMonoidWithOne R] (n : ℕ) : (Nat.binCast n : R) = ((n :
     · simp
       
     
+#align nat.bin_cast_eq Nat.bin_cast_eq
 
 @[norm_cast]
 theorem cast_bit0 [AddMonoidWithOne R] (n : ℕ) : ((bit0 n : ℕ) : R) = bit0 n :=
   Nat.cast_add _ _
+#align nat.cast_bit0 Nat.cast_bit0
 
 @[norm_cast]
 theorem cast_bit1 [AddMonoidWithOne R] (n : ℕ) : ((bit1 n : ℕ) : R) = bit1 n := by
   rw [bit1, cast_add_one, cast_bit0] <;> rfl
+#align nat.cast_bit1 Nat.cast_bit1
 
 theorem cast_two [AddMonoidWithOne R] : ((2 : ℕ) : R) = 2 := by rw [cast_add_one, Nat.cast_one, bit0]
+#align nat.cast_two Nat.cast_two
 
 attribute [simp, norm_cast] Int.nat_abs_of_nat
 
@@ -195,6 +212,7 @@ end Nat
 @[reducible]
 protected def AddMonoidWithOne.unary {R : Type _} [AddMonoid R] [One R] : AddMonoidWithOne R :=
   { ‹One R›, ‹AddMonoid R› with }
+#align add_monoid_with_one.unary AddMonoidWithOne.unary
 
 /-- `add_monoid_with_one` implementation using binary recursion. -/
 @[reducible]
@@ -205,11 +223,13 @@ protected def AddMonoidWithOne.binary {R : Type _} [AddMonoid R] [One R] : AddMo
       letI : AddMonoidWithOne R := AddMonoidWithOne.unary
       erw [Nat.bin_cast_eq, Nat.bin_cast_eq, Nat.cast_succ]
       rfl }
+#align add_monoid_with_one.binary AddMonoidWithOne.binary
 
 namespace NeZero
 
 theorem ne' (n : ℕ) (R) [AddMonoidWithOne R] [h : NeZero (n : R)] : (n : R) ≠ 0 :=
   h.out
+#align ne_zero.ne' NeZero.ne'
 
 theorem of_ne_zero_coe (R) [AddMonoidWithOne R] {n : ℕ} [h : NeZero (n : R)] : NeZero n :=
   ⟨by
@@ -217,9 +237,11 @@ theorem of_ne_zero_coe (R) [AddMonoidWithOne R] {n : ℕ} [h : NeZero (n : R)] :
     rintro rfl
     · simpa [Nat.cast_zero] using h
       ⟩
+#align ne_zero.of_ne_zero_coe NeZero.of_ne_zero_coe
 
 theorem pos_of_ne_zero_coe (R) [AddMonoidWithOne R] {n : ℕ} [NeZero (n : R)] : 0 < n :=
   Nat.pos_of_ne_zero (of_ne_zero_coe R).out
+#align ne_zero.pos_of_ne_zero_coe NeZero.pos_of_ne_zero_coe
 
 end NeZero
 

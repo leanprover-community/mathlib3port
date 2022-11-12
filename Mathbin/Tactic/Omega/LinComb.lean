@@ -24,6 +24,7 @@ def linComb : List Nat → List Term → Term
   | [], _::_ => ⟨0, []⟩
   | _::_, [] => ⟨0, []⟩
   | n::ns, t::ts => Term.add (t.mul ↑n) (lin_comb ns ts)
+#align omega.lin_comb Omega.linComb
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -44,16 +45,19 @@ theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} (ns), (∀ t ∈ ts, 0 ≤ T
         apply List.forall_mem_of_forall_mem_cons h
         
     simpa only [lin_comb, term.val_mul, term.val_add]
+#align omega.lin_comb_holds Omega.lin_comb_holds
 
 /-- `unsat_lin_comb ns ts` asserts that the linear combination
     `lin_comb ns ts` is unsatisfiable  -/
 def UnsatLinComb (ns : List Nat) (ts : List Term) : Prop :=
   (linComb ns ts).fst < 0 ∧ ∀ x ∈ (linComb ns ts).snd, x = (0 : Int)
+#align omega.unsat_lin_comb Omega.UnsatLinComb
 
 theorem unsat_lin_comb_of (ns : List Nat) (ts : List Term) :
     (linComb ns ts).fst < 0 → (∀ x ∈ (linComb ns ts).snd, x = (0 : Int)) → UnsatLinComb ns ts := by
   intro h1 h2
   exact ⟨h1, h2⟩
+#align omega.unsat_lin_comb_of Omega.unsat_lin_comb_of
 
 theorem unsat_of_unsat_lin_comb (ns : List Nat) (ts : List Term) : UnsatLinComb ns ts → Clause.Unsat ([], ts) := by
   intro h1 h2
@@ -64,6 +68,7 @@ theorem unsat_of_unsat_lin_comb (ns : List Nat) (ts : List Term) : UnsatLinComb 
   unfold term.val at h3
   rw [coeffs.val_eq_zero hr, add_zero, ← not_lt] at h3
   apply h3 hl
+#align omega.unsat_of_unsat_lin_comb Omega.unsat_of_unsat_lin_comb
 
 end Omega
 

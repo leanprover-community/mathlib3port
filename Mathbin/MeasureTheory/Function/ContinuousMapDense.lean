@@ -58,8 +58,8 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (u «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (F «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (u «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
@@ -106,14 +106,14 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     simpa using Ennreal.add_lt_add_left hsμ.ne hη_pos'
   obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ↑η :=
     hs.exists_is_closed_lt_add hsμ.ne hη_pos'.ne'
-  have : Disjoint (uᶜ) F := (Fs.trans su).disjointComplLeft
+  have : Disjoint (uᶜ) F := (Fs.trans su).disjoint_compl_left
   have h_μ_sdiff : μ (u \ F) ≤ 2 * η := by
     have hFμ : μ F < ⊤ := (measure_mono Fs).trans_lt hsμ
     refine' Ennreal.le_of_add_le_add_left hFμ.ne _
     have : μ u < μ F + ↑η + ↑η := μu.trans (Ennreal.add_lt_add_right Ennreal.coe_ne_top μF)
     convert this.le using 1
     · rw [add_comm, ← measure_union, Set.diff_union_of_subset (Fs.trans su)]
-      exacts[disjointSdiffSelfLeft, F_closed.measurable_set]
+      exacts[disjoint_sdiff_self_left, F_closed.measurable_set]
       
     have : (2 : ℝ≥0∞) * η = η + η := by simpa using add_mul (1 : ℝ≥0∞) 1 η
     rw [this]
@@ -166,6 +166,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     have h₀ : g x * ∥c∥ ≤ ∥c∥ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
     simp [norm_smul, g_norm x, h₀]
     
+#align measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.lp.bounded_continuous_function_dense
 
 end MeasureTheory.lp
 
@@ -181,6 +182,7 @@ theorem to_Lp_dense_range [μ.WeaklyRegular] [IsFiniteMeasure μ] : DenseRange �
   rw [dense_range_iff_closure_range]
   suffices (range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤ by exact congr_arg coe this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
+#align bounded_continuous_function.to_Lp_dense_range BoundedContinuousFunction.to_Lp_dense_range
 
 end BoundedContinuousFunction
 
@@ -194,6 +196,7 @@ theorem to_Lp_dense_range [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure 
   rw [dense_range_iff_closure_range]
   suffices (range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤ by exact congr_arg coe this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
+#align continuous_map.to_Lp_dense_range ContinuousMap.to_Lp_dense_range
 
 end ContinuousMap
 

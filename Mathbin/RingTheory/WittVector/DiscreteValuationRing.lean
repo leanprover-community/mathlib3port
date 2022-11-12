@@ -45,6 +45,7 @@ variable {k : Type _} [CommRing k] [CharP k p]
 /-- This is the `n+1`st coefficient of our inverse. -/
 def succNthValUnits (n : ℕ) (a : Units k) (A : 𝕎 k) (bs : Fin (n + 1) → k) : k :=
   -↑(a⁻¹ ^ p ^ (n + 1)) * (A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) + nthRemainder p n (truncateFun (n + 1) A) bs)
+#align witt_vector.succ_nth_val_units WittVector.succNthValUnits
 
 /- warning: witt_vector.inverse_coeff -> WittVector.inverseCoeff is a dubious translation:
 lean 3 declaration is
@@ -58,6 +59,7 @@ is a unit.
 noncomputable def inverseCoeff (a : Units k) (A : 𝕎 k) : ℕ → k
   | 0 => ↑a⁻¹
   | n + 1 => succNthValUnits n a A fun i => inverse_coeff i.val
+#align witt_vector.inverse_coeff WittVector.inverseCoeff
 
 /-- Upgrade a Witt vector `A` whose first entry `A.coeff 0` is a unit to be, itself, a unit in `𝕎 k`.
 -/
@@ -78,10 +80,12 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
       simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, Fin.val_eq_coe, one_coeff_eq_of_pos,
         Nat.succ_pos', H_coeff, ha_inv, ha, inv_pow]
       ring!)
+#align witt_vector.mk_unit WittVector.mkUnit
 
 @[simp]
 theorem coe_mk_unit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : (mkUnit hA : 𝕎 k) = A :=
   rfl
+#align witt_vector.coe_mk_unit WittVector.coe_mk_unit
 
 end CommRing
 
@@ -93,6 +97,7 @@ theorem is_unit_of_coeff_zero_ne_zero (x : 𝕎 k) (hx : x.coeff 0 ≠ 0) : IsUn
   let y : kˣ := Units.mk0 (x.coeff 0) hx
   have hy : x.coeff 0 = y := rfl
   exact (mk_unit hy).IsUnit
+#align witt_vector.is_unit_of_coeff_zero_ne_zero WittVector.is_unit_of_coeff_zero_ne_zero
 
 variable (p)
 
@@ -117,9 +122,10 @@ theorem irreducible : Irreducible (p : 𝕎 k) := by
     
   rw [iterate_verschiebung_mul] at hab
   apply_fun fun x => coeff x 1  at hab
-  simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_app,
+  simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_apply,
     verschiebung_coeff_add_one, verschiebung_coeff_zero] at hab
   exact (one_ne_zero hab).elim
+#align witt_vector.irreducible WittVector.irreducible
 
 end Field
 
@@ -132,7 +138,7 @@ theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : 𝕎
   obtain ⟨b, rfl⟩ := (frobenius_bijective p k).Surjective.iterate m c
   rw [WittVector.iterate_frobenius_coeff] at hc
   have := congr_fun (witt_vector.verschiebung_frobenius_comm.comp_iterate m) b
-  simp only [Function.comp_app] at this
+  simp only [Function.comp_apply] at this
   rw [← this] at hcm
   refine' ⟨m, b, _, _⟩
   · contrapose! hc
@@ -144,6 +150,7 @@ theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : 𝕎
     ext1 x
     rw [mul_comm, ← WittVector.verschiebung_frobenius x]
     
+#align witt_vector.exists_eq_pow_p_mul WittVector.exists_eq_pow_p_mul
 
 end PerfectRing
 
@@ -156,6 +163,7 @@ theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Uni
   let b₀ := Units.mk0 (b.coeff 0) h₁
   have hb₀ : b.coeff 0 = b₀ := rfl
   exact ⟨m, mk_unit hb₀, h₂⟩
+#align witt_vector.exists_eq_pow_p_mul' WittVector.exists_eq_pow_p_mul'
 
 /-
 Note: The following lemma should be an instance, but it seems to cause some
@@ -171,6 +179,7 @@ theorem discreteValuationRing : DiscreteValuationRing (𝕎 k) :=
       refine' ⟨p, Irreducible p, fun x hx => _⟩
       obtain ⟨n, b, hb⟩ := exists_eq_pow_p_mul' x hx
       exact ⟨n, b, hb.symm⟩)
+#align witt_vector.discrete_valuation_ring WittVector.discreteValuationRing
 
 end PerfectField
 

@@ -19,6 +19,7 @@ namespace AddCommGroupCat
 
 instance well_powered_AddCommGroup : WellPowered AddCommGroupCat.{u} :=
   well_powered_of_equiv (forget₂ (ModuleCat.{u} ℤ) AddCommGroupCat.{u}).asEquivalence
+#align AddCommGroup.well_powered_AddCommGroup AddCommGroupCat.well_powered_AddCommGroup
 
 end AddCommGroupCat
 

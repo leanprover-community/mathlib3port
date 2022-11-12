@@ -49,6 +49,7 @@ theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
   refine' mul_lt_mul' _ (by norm_num) (by norm_num) (pow_pos h 3)
   apply pow_le_pow_of_le_one h.le h'
   norm_num
+#align real.sin_lt Real.sin_lt
 
 /-- For 0 < x ≤ 1 we have x - x ^ 3 / 4 < sin x.
 
@@ -65,10 +66,12 @@ theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < s
   refine' mul_lt_mul' _ (by norm_num) (by norm_num) (pow_pos h 3)
   apply pow_le_pow_of_le_one h.le h'
   norm_num
+#align real.sin_gt_sub_cube Real.sin_gt_sub_cube
 
 /-- The derivative of `tan x - x` is `1/(cos x)^2 - 1` away from the zeroes of cos. -/
 theorem deriv_tan_sub_id (x : ℝ) (h : cos x ≠ 0) : deriv (fun y : ℝ => tan y - y) x = 1 / cos x ^ 2 - 1 :=
   HasDerivAt.deriv <| by simpa using (has_deriv_at_tan h).add (hasDerivAtId x).neg
+#align real.deriv_tan_sub_id Real.deriv_tan_sub_id
 
 /-- For all `0 ≤ x < π/2` we have `x < tan x`.
 
@@ -107,6 +110,7 @@ theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x := by
   have zero_in_U : (0 : ℝ) ∈ U := by rwa [left_mem_Ico]
   have x_in_U : x ∈ U := ⟨h1.le, h2⟩
   simpa only [tan_zero, sub_zero, sub_pos] using mono zero_in_U x_in_U h1
+#align real.lt_tan Real.lt_tan
 
 end Real
 

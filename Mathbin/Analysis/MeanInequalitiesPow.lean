@@ -54,21 +54,25 @@ namespace Real
 theorem pow_arith_mean_le_arith_mean_pow (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
     (hz : ∀ i ∈ s, 0 ≤ z i) (n : ℕ) : (∑ i in s, w i * z i) ^ n ≤ ∑ i in s, w i * z i ^ n :=
   (convex_on_pow n).map_sum_le hw hw' hz
+#align real.pow_arith_mean_le_arith_mean_pow Real.pow_arith_mean_le_arith_mean_pow
 
 theorem pow_arith_mean_le_arith_mean_pow_of_even (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
     {n : ℕ} (hn : Even n) : (∑ i in s, w i * z i) ^ n ≤ ∑ i in s, w i * z i ^ n :=
   hn.convex_on_pow.map_sum_le hw hw' fun _ _ => trivial
+#align real.pow_arith_mean_le_arith_mean_pow_of_even Real.pow_arith_mean_le_arith_mean_pow_of_even
 
 theorem zpow_arith_mean_le_arith_mean_zpow (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
     (hz : ∀ i ∈ s, 0 < z i) (m : ℤ) : (∑ i in s, w i * z i) ^ m ≤ ∑ i in s, w i * z i ^ m :=
   (convex_on_zpow m).map_sum_le hw hw' hz
+#align real.zpow_arith_mean_le_arith_mean_zpow Real.zpow_arith_mean_le_arith_mean_zpow
 
 theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
     (hz : ∀ i ∈ s, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : (∑ i in s, w i * z i) ^ p ≤ ∑ i in s, w i * z i ^ p :=
   (convex_on_rpow hp).map_sum_le hw hw' hz
+#align real.rpow_arith_mean_le_arith_mean_rpow Real.rpow_arith_mean_le_arith_mean_rpow
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr sum_nonneg, ",", expr rpow_nonneg_of_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_nonneg, ",", expr rpow_nonneg_of_nonneg, ",", expr hw i hi, ",", expr hz i hi, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr sum_nonneg, ",", expr rpow_nonneg_of_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_nonneg, ",", expr rpow_nonneg_of_nonneg, ",", expr hw i hi, ",", expr hz i hi, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem arith_mean_le_rpow_mean (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
     (hz : ∀ i ∈ s, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : (∑ i in s, w i * z i) ≤ (∑ i in s, w i * z i ^ p) ^ (1 / p) := by
   have : 0 < p := by positivity
@@ -76,10 +80,11 @@ theorem arith_mean_le_rpow_mean (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i)
   exact rpow_arith_mean_le_arith_mean_rpow s w z hw hw' hz hp
   all_goals
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr sum_nonneg, \",\", expr rpow_nonneg_of_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr sum_nonneg, \",\", expr rpow_nonneg_of_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   intro i hi
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr rpow_nonneg_of_nonneg, \",\", expr hw i hi, \",\", expr hz i hi, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr rpow_nonneg_of_nonneg, \",\", expr hw i hi, \",\", expr hz i hi, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+#align real.arith_mean_le_rpow_mean Real.arith_mean_le_rpow_mean
 
 end Real
 
@@ -92,6 +97,7 @@ theorem pow_arith_mean_le_arith_mean_pow (w z : ι → ℝ≥0) (hw' : (∑ i in
   exact_mod_cast
     Real.pow_arith_mean_le_arith_mean_pow s _ _ (fun i _ => (w i).coe_nonneg) (by exact_mod_cast hw')
       (fun i _ => (z i).coe_nonneg) n
+#align nnreal.pow_arith_mean_le_arith_mean_pow Nnreal.pow_arith_mean_le_arith_mean_pow
 
 /-- Weighted generalized mean inequality, version for sums over finite sets, with `ℝ≥0`-valued
 functions and real exponents. -/
@@ -100,6 +106,7 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0) (hw' : (∑ i 
   exact_mod_cast
     Real.rpow_arith_mean_le_arith_mean_rpow s _ _ (fun i _ => (w i).coe_nonneg) (by exact_mod_cast hw')
       (fun i _ => (z i).coe_nonneg) hp
+#align nnreal.rpow_arith_mean_le_arith_mean_rpow Nnreal.rpow_arith_mean_le_arith_mean_rpow
 
 /-- Weighted generalized mean inequality, version for two elements of `ℝ≥0` and real exponents. -/
 theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0) (hw' : w₁ + w₂ = 1) {p : ℝ} (hp : 1 ≤ p) :
@@ -109,6 +116,7 @@ theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0) (hw'
     
   · simp [hw', Fin.sum_univ_succ]
     
+#align nnreal.rpow_arith_mean_le_arith_mean2_rpow Nnreal.rpow_arith_mean_le_arith_mean2_rpow
 
 /-- Weighted generalized mean inequality, version for sums over finite sets, with `ℝ≥0`-valued
 functions and real exponents. -/
@@ -117,6 +125,7 @@ theorem arith_mean_le_rpow_mean (w z : ι → ℝ≥0) (hw' : (∑ i in s, w i) 
   exact_mod_cast
     Real.arith_mean_le_rpow_mean s _ _ (fun i _ => (w i).coe_nonneg) (by exact_mod_cast hw')
       (fun i _ => (z i).coe_nonneg) hp
+#align nnreal.arith_mean_le_rpow_mean Nnreal.arith_mean_le_rpow_mean
 
 end Nnreal
 
@@ -128,6 +137,7 @@ private theorem add_rpow_le_one_of_add_le_one {p : ℝ} (a b : ℝ≥0) (hab : a
   have ha : a ≤ 1 := (self_le_add_right a b).trans hab
   have hb : b ≤ 1 := (self_le_add_left b a).trans hab
   exact (add_le_add (h_le_one a ha) (h_le_one b hb)).trans hab
+#align nnreal.add_rpow_le_one_of_add_le_one nnreal.add_rpow_le_one_of_add_le_one
 
 theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) : a ^ p + b ^ p ≤ (a + b) ^ p := by
   have hp_pos : 0 < p := by positivity
@@ -145,11 +155,13 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) : a ^ p +
     exact (mul_le_mul_left hab_0').mpr h
   rwa [div_eq_mul_inv, div_eq_mul_inv, mul_add, mul_comm (a ^ p), mul_comm (b ^ p), ← mul_assoc, ← mul_assoc,
     mul_inv_cancel hab_0, one_mul, one_mul] at h_mul
+#align nnreal.add_rpow_le_rpow_add Nnreal.add_rpow_le_rpow_add
 
 theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) : (a ^ p + b ^ p) ^ (1 / p) ≤ a + b := by
   rw [← @Nnreal.le_rpow_one_div_iff _ _ (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]
   rw [one_div_one_div]
   exact add_rpow_le_rpow_add _ _ hp1
+#align nnreal.rpow_add_rpow_le_add Nnreal.rpow_add_rpow_le_add
 
 theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0) (hp_pos : 0 < p) (hpq : p ≤ q) :
     (a ^ q + b ^ q) ^ (1 / q) ≤ (a ^ p + b ^ p) ^ (1 / p) := by
@@ -160,6 +172,7 @@ theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0) (hp_pos : 0 < p) (hpq : p �
     rwa [one_le_div hp_pos]
   rw [h_rpow a, h_rpow b, Nnreal.le_rpow_one_div_iff hp_pos, ← Nnreal.rpow_mul, mul_comm, mul_one_div]
   rwa [one_div_div] at h_rpow_add_rpow_le_add
+#align nnreal.rpow_add_rpow_le Nnreal.rpow_add_rpow_le
 
 theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0) (hp : 0 ≤ p) (hp1 : p ≤ 1) : (a + b) ^ p ≤ a ^ p + b ^ p := by
   rcases hp.eq_or_lt with (rfl | hp_pos)
@@ -169,6 +182,7 @@ theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0) (hp : 0 ≤ p) (hp1 : p �
   rw [one_div_one] at h
   repeat' rw [Nnreal.rpow_one] at h
   exact (Nnreal.le_rpow_one_div_iff hp_pos).mp h
+#align nnreal.rpow_add_le_add_rpow Nnreal.rpow_add_le_add_rpow
 
 end Nnreal
 
@@ -222,6 +236,7 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
       exact hw'.symm ▸ Ennreal.one_ne_top
     rwa [← coe_eq_coe, ← h_sum_nnreal]
     
+#align ennreal.rpow_arith_mean_le_arith_mean_rpow Ennreal.rpow_arith_mean_le_arith_mean_rpow
 
 /-- Weighted generalized mean inequality, version for two elements of `ℝ≥0∞` and real
 exponents. -/
@@ -232,6 +247,7 @@ theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0∞) (
     
   · simp [hw', Fin.sum_univ_succ]
     
+#align ennreal.rpow_arith_mean_le_arith_mean2_rpow Ennreal.rpow_arith_mean_le_arith_mean2_rpow
 
 end Ennreal
 
@@ -248,11 +264,13 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ 
   lift a to ℝ≥0 using ha_top
   lift b to ℝ≥0 using hb_top
   simpa [← Ennreal.coe_rpow_of_nonneg _ hp_pos.le] using Ennreal.coe_le_coe.2 (Nnreal.add_rpow_le_rpow_add a b hp1)
+#align ennreal.add_rpow_le_rpow_add Ennreal.add_rpow_le_rpow_add
 
 theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : (a ^ p + b ^ p) ^ (1 / p) ≤ a + b := by
   rw [← @Ennreal.le_rpow_one_div_iff _ _ (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]
   rw [one_div_one_div]
   exact add_rpow_le_rpow_add _ _ hp1
+#align ennreal.rpow_add_rpow_le_add Ennreal.rpow_add_rpow_le_add
 
 theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0∞) (hp_pos : 0 < p) (hpq : p ≤ q) :
     (a ^ q + b ^ q) ^ (1 / q) ≤ (a ^ p + b ^ p) ^ (1 / p) := by
@@ -263,6 +281,7 @@ theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0∞) (hp_pos : 0 < p) (hpq : 
     rwa [one_le_div hp_pos]
   rw [h_rpow a, h_rpow b, Ennreal.le_rpow_one_div_iff hp_pos, ← Ennreal.rpow_mul, mul_comm, mul_one_div]
   rwa [one_div_div] at h_rpow_add_rpow_le_add
+#align ennreal.rpow_add_rpow_le Ennreal.rpow_add_rpow_le
 
 theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0∞) (hp : 0 ≤ p) (hp1 : p ≤ 1) : (a + b) ^ p ≤ a ^ p + b ^ p := by
   rcases hp.eq_or_lt with (rfl | hp_pos)
@@ -274,6 +293,7 @@ theorem rpow_add_le_add_rpow {p : ℝ} (a b : ℝ≥0∞) (hp : 0 ≤ p) (hp1 : 
   rw [one_div_one] at h
   repeat' rw [Ennreal.rpow_one] at h
   exact (Ennreal.le_rpow_one_div_iff hp_pos).mp h
+#align ennreal.rpow_add_le_add_rpow Ennreal.rpow_add_le_add_rpow
 
 end Ennreal
 

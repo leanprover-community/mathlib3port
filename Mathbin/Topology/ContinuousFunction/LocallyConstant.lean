@@ -29,6 +29,7 @@ def toContinuousMapMonoidHom [Monoid Y] [HasContinuousMul Y] : LocallyConstant X
   map_mul' x y := by
     ext
     simp
+#align locally_constant.to_continuous_map_monoid_hom LocallyConstant.toContinuousMapMonoidHom
 
 /-- The inclusion of locally-constant functions into continuous functions as a linear map. -/
 @[simps]
@@ -41,6 +42,7 @@ def toContinuousMapLinearMap (R : Type _) [Semiring R] [AddCommMonoid Y] [Module
   map_smul' x y := by
     ext
     simp
+#align locally_constant.to_continuous_map_linear_map LocallyConstant.toContinuousMapLinearMap
 
 /-- The inclusion of locally-constant functions into continuous functions as an algebra map. -/
 @[simps]
@@ -62,6 +64,7 @@ def toContinuousMapAlgHom (R : Type _) [CommSemiring R] [Semiring Y] [Algebra R 
   commutes' r := by
     ext x
     simp [Algebra.smul_def]
+#align locally_constant.to_continuous_map_alg_hom LocallyConstant.toContinuousMapAlgHom
 
 end LocallyConstant
 

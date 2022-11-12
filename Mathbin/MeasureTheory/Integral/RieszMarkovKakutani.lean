@@ -39,6 +39,7 @@ variable (Λ : (X →ᵇ ℝ≥0) →ₗ[ℝ≥0] ℝ≥0)
 `λ(K) = inf {Λf | 1≤f on K}`. When X is a compact Hausdorff space, this will be shown to be a
 content, and will be shown to agree with the Riesz measure on the compact subsets `K ⊆ X`. -/
 def rieszContentAux : Compacts X → ℝ≥0 := fun K => inf (Λ '' { f : X →ᵇ ℝ≥0 | ∀ x ∈ K, (1 : ℝ≥0) ≤ f x })
+#align riesz_content_aux rieszContentAux
 
 section RieszMonotone
 
@@ -50,12 +51,14 @@ theorem riesz_content_aux_image_nonempty (K : Compacts X) :
   use (1 : X →ᵇ ℝ≥0)
   intro x x_in_K
   simp only [BoundedContinuousFunction.coe_one, Pi.one_apply]
+#align riesz_content_aux_image_nonempty riesz_content_aux_image_nonempty
 
 /-- Riesz content λ (associated with a positive linear functional Λ) is
 monotone: if `K₁ ⊆ K₂` are compact subsets in X, then `λ(K₁) ≤ λ(K₂)`. -/
 theorem riesz_content_aux_mono {K₁ K₂ : Compacts X} (h : K₁ ≤ K₂) : rieszContentAux Λ K₁ ≤ rieszContentAux Λ K₂ :=
   cInf_le_cInf (OrderBot.bdd_below _) (riesz_content_aux_image_nonempty Λ K₂)
     (image_subset Λ (set_of_subset_set_of.mpr fun f f_hyp x x_in_K₁ => f_hyp x (h x_in_K₁)))
+#align riesz_content_aux_mono riesz_content_aux_mono
 
 end RieszMonotone
 
@@ -66,6 +69,7 @@ content of K; namely `λ(K) ≤ Λ f`. -/
 theorem riesz_content_aux_le {K : Compacts X} {f : X →ᵇ ℝ≥0} (h : ∀ x ∈ K, (1 : ℝ≥0) ≤ f x) :
     rieszContentAux Λ K ≤ Λ f :=
   cInf_le (OrderBot.bdd_below _) ⟨f, ⟨h, rfl⟩⟩
+#align riesz_content_aux_le riesz_content_aux_le
 
 /-- The Riesz content can be approximated arbitrarily well by evaluating the positive linear
 functional on test functions: for any `ε > 0`, there exists a bounded continuous nonnegative
@@ -78,6 +82,7 @@ theorem exists_lt_riesz_content_aux_add_pos (K : Compacts X) {ε : ℝ≥0} (εp
   refine' ⟨f, f_hyp.left, _⟩
   rw [f_hyp.right]
   exact α_hyp
+#align exists_lt_riesz_content_aux_add_pos exists_lt_riesz_content_aux_add_pos
 
 /-- The Riesz content λ associated to a given positive linear functional Λ is
 finitely subadditive: `λ(K₁ ∪ K₂) ≤ λ(K₁) + λ(K₂)` for any compact subsets `K₁, K₂ ⊆ X`. -/
@@ -101,6 +106,7 @@ theorem riesz_content_aux_sup_le (K1 K2 : Compacts X) :
   --use that `Λfi` are lower bounds for `λ(Ki) + ε/2`
   apply lt_of_lt_of_le (add_lt_add f_test_function_K1.right f_test_function_K2.right) (le_of_eq _)
   rw [add_assoc, add_comm (ε / 2), add_assoc, Nnreal.add_halves ε, add_assoc]
+#align riesz_content_aux_sup_le riesz_content_aux_sup_le
 
 end RieszSubadditive
 

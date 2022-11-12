@@ -29,6 +29,7 @@ theorem aleph_0_le_cardinal_mk_of_char_zero (R A : Type _) [CommRing R] [IsDomai
     [CharZero A] : ℵ₀ ≤ (#{ x : A // IsAlgebraic R x }) :=
   @mk_le_of_injective (ULift ℕ) { x : A | IsAlgebraic R x } (fun n => ⟨_, isAlgebraicNat n.down⟩) fun m n hmn => by
     simpa using hmn
+#align algebraic.aleph_0_le_cardinal_mk_of_char_zero Algebraic.aleph_0_le_cardinal_mk_of_char_zero
 
 section lift
 
@@ -60,15 +61,18 @@ theorem cardinal_mk_lift_le_mul :
   apply Fintype.ofInjective h fun _ _ H => _
   simp only [Subtype.val_eq_coe, Subtype.mk_eq_mk] at H
   exact Subtype.ext (ULift.down_injective (Subtype.ext H))
+#align algebraic.cardinal_mk_lift_le_mul Algebraic.cardinal_mk_lift_le_mul
 
 theorem cardinal_mk_lift_le_max :
     Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ max (Cardinal.lift.{v, u} (#R)) ℵ₀ :=
   (cardinal_mk_lift_le_mul R A).trans <|
     (mul_le_mul_right' (lift_le.2 cardinal_mk_le_max) _).trans <| by simp [le_total]
+#align algebraic.cardinal_mk_lift_le_max Algebraic.cardinal_mk_lift_le_max
 
 theorem cardinal_mk_lift_le_of_infinite [Infinite R] :
     Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (#R) :=
   (cardinal_mk_lift_le_max R A).trans <| by simp
+#align algebraic.cardinal_mk_lift_le_of_infinite Algebraic.cardinal_mk_lift_le_of_infinite
 
 variable [Encodable R]
 
@@ -77,10 +81,12 @@ theorem countable_of_encodable : Set.Countable { x : A | IsAlgebraic R x } := by
   rw [← le_aleph_0_iff_set_countable, ← lift_le]
   apply (cardinal_mk_lift_le_max R A).trans
   simp
+#align algebraic.countable_of_encodable Algebraic.countable_of_encodable
 
 @[simp]
 theorem cardinal_mk_of_encodable_of_char_zero [CharZero A] [IsDomain R] : (#{ x : A // IsAlgebraic R x }) = ℵ₀ :=
   le_antisymm (by simp) (aleph_0_le_cardinal_mk_of_char_zero R A)
+#align algebraic.cardinal_mk_of_encodable_of_char_zero Algebraic.cardinal_mk_of_encodable_of_char_zero
 
 end lift
 
@@ -91,13 +97,16 @@ variable (R A : Type u) [CommRing R] [CommRing A] [IsDomain A] [Algebra R A] [No
 theorem cardinal_mk_le_mul : (#{ x : A // IsAlgebraic R x }) ≤ (#R[X]) * ℵ₀ := by
   rw [← lift_id (#_), ← lift_id (#R[X])]
   exact cardinal_mk_lift_le_mul R A
+#align algebraic.cardinal_mk_le_mul Algebraic.cardinal_mk_le_mul
 
 theorem cardinal_mk_le_max : (#{ x : A // IsAlgebraic R x }) ≤ max (#R) ℵ₀ := by
   rw [← lift_id (#_), ← lift_id (#R)]
   exact cardinal_mk_lift_le_max R A
+#align algebraic.cardinal_mk_le_max Algebraic.cardinal_mk_le_max
 
 theorem cardinal_mk_le_of_infinite [Infinite R] : (#{ x : A // IsAlgebraic R x }) ≤ (#R) :=
   (cardinal_mk_le_max R A).trans <| by simp
+#align algebraic.cardinal_mk_le_of_infinite Algebraic.cardinal_mk_le_of_infinite
 
 end NonLift
 

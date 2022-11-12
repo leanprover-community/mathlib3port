@@ -149,6 +149,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
       rw [norm_smul_of_nonneg (nneg _)]
     rwa [has_fderiv_at_iff_tendsto, this] at ha
     
+#align has_fderiv_at_integral_of_dominated_loc_of_lip' has_fderiv_at_integral_of_dominated_loc_of_lip'
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
@@ -167,6 +168,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' 
   exact h_lip.mono fun a lip x hx => lip.norm_sub_le (hδε x hx) (mem_ball_self ε_pos)
   replace bound_integrable := bound_integrable.norm
   apply has_fderiv_at_integral_of_dominated_loc_of_lip' δ_pos <;> assumption
+#align has_fderiv_at_integral_of_dominated_loc_of_lip has_fderiv_at_integral_of_dominated_loc_of_lip
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is differentiable on a ball around `x₀` for ae `a` with
@@ -190,6 +192,7 @@ theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → α → E} {F' : H �
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
   exact (has_fderiv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable diff_x₀).2
+#align has_fderiv_at_integral_of_dominated_of_fderiv_le hasFderivAtIntegralOfDominatedOfFderivLe
 
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : 𝕜`, `𝕜 = ℝ` or `𝕜 = ℂ`,
 assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
@@ -216,6 +219,7 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F
   simp_rw [has_deriv_at_iff_has_fderiv_at] at h_diff⊢
   rwa [ContinuousLinearMap.integral_comp_comm _ hF'_int] at key
   all_goals infer_instance
+#align has_deriv_at_integral_of_dominated_loc_of_lip has_deriv_at_integral_of_dominated_loc_of_lip
 
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : ℝ`, assuming
 `F x₀` is integrable, `x ↦ F x a` is differentiable on an interval around `x₀` for ae `a`
@@ -238,4 +242,5 @@ theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → 
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
   exact has_deriv_at_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable diff_x₀
+#align has_deriv_at_integral_of_dominated_loc_of_deriv_le has_deriv_at_integral_of_dominated_loc_of_deriv_le
 

@@ -114,6 +114,8 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {
       simp only [A, rq, piecewise_eq_of_mem, Subtype.coe_mk]
       
   exact ⟨f', f'_meas, ff'⟩
+#align
+  measure_theory.ae_measurable_of_exist_almost_disjoint_supersets MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets
 
 /-- If a function `f : α → ℝ≥0∞` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p` and `q` are finite numbers satisfying
@@ -134,4 +136,5 @@ theorem Ennreal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : Me
   lift p to ℝ≥0 using I p hp
   lift q to ℝ≥0 using I q hq
   exact h p q (Ennreal.coe_lt_coe.1 hpq)
+#align ennreal.ae_measurable_of_exist_almost_disjoint_supersets Ennreal.aeMeasurableOfExistAlmostDisjointSupersets
 

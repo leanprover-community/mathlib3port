@@ -25,13 +25,16 @@ instance [HasStar R] [HasStar S] : HasStar (R × S) where star x := (star x.1, s
 @[simp]
 theorem fst_star [HasStar R] [HasStar S] (x : R × S) : (star x).1 = star x.1 :=
   rfl
+#align prod.fst_star Prod.fst_star
 
 @[simp]
 theorem snd_star [HasStar R] [HasStar S] (x : R × S) : (star x).2 = star x.2 :=
   rfl
+#align prod.snd_star Prod.snd_star
 
 theorem star_def [HasStar R] [HasStar S] (x : R × S) : star x = (star x.1, star x.2) :=
   rfl
+#align prod.star_def Prod.star_def
 
 instance [HasInvolutiveStar R] [HasInvolutiveStar S] :
     HasInvolutiveStar (R × S) where star_involutive _ := Prod.ext (star_star _) (star_star _)
@@ -54,4 +57,5 @@ end Prod
 theorem Units.embed_product_star [Monoid R] [StarSemigroup R] (u : Rˣ) :
     Units.embedProduct R (star u) = star (Units.embedProduct R u) :=
   rfl
+#align units.embed_product_star Units.embed_product_star
 

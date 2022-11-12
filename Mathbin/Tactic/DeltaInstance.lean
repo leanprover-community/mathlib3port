@@ -17,6 +17,7 @@ first unfolding the definitions in `ids`.
 -/
 unsafe def delta_instance (ids : List Name) : tactic Unit :=
   dsimp_result ((((intros >> reset_instance_cache) >> delta_target ids) >> apply_instance) >> done)
+#align tactic.delta_instance tactic.delta_instance
 
 namespace Interactive
 
@@ -28,6 +29,7 @@ first unfolding the definitions in `idᵢ`.
 -/
 unsafe def delta_instance (ids : parse (parser.many ident)) : itactic :=
   tactic.delta_instance ids
+#align tactic.interactive.delta_instance tactic.interactive.delta_instance
 
 end Interactive
 
@@ -41,6 +43,7 @@ unsafe def delta_instance_name : pexpr → String
   | expr.lam _ _ _ body => delta_instance_name body
   | expr.const nm _ => nm.last
   | _ => "inst"
+#align tactic.delta_instance_name tactic.delta_instance_name
 
 /-- Tries to derive instances by unfolding the newly introduced type and applying type class resolution.
 
@@ -75,6 +78,7 @@ unsafe def delta_instance_handler : derive_handler := fun cls new_decl_name => d
       add_protected_decl <| declaration.defn nm inst tgt inst new_decl new_decl
       set_basic_attribute `instance nm tt
       return tt
+#align tactic.delta_instance_handler tactic.delta_instance_handler
 
 end Tactic
 

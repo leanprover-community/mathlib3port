@@ -52,6 +52,7 @@ extension to a (unital) algebra homomorphism from `unitization R A` to `B`.
 `R × A`.-/
 def Unitization (R A : Type _) :=
   R × A
+#align unitization Unitization
 
 namespace Unitization
 
@@ -62,6 +63,7 @@ variable {R A : Type _}
 /-- The canonical inclusion `R → unitization R A`. -/
 def inl [Zero A] (r : R) : Unitization R A :=
   (r, 0)
+#align unitization.inl Unitization.inl
 
 /-- The canonical inclusion `A → unitization R A`. -/
 instance [Zero R] : CoeTC A (Unitization R A) where coe a := (0, a)
@@ -69,14 +71,17 @@ instance [Zero R] : CoeTC A (Unitization R A) where coe a := (0, a)
 /-- The canonical projection `unitization R A → R`. -/
 def fst (x : Unitization R A) : R :=
   x.1
+#align unitization.fst Unitization.fst
 
 /-- The canonical projection `unitization R A → A`. -/
 def snd (x : Unitization R A) : A :=
   x.2
+#align unitization.snd Unitization.snd
 
-@[ext]
+@[ext.1]
 theorem ext {x y : Unitization R A} (h1 : x.fst = y.fst) (h2 : x.snd = y.snd) : x = y :=
   Prod.ext h1 h2
+#align unitization.ext Unitization.ext
 
 section
 
@@ -85,10 +90,12 @@ variable (A)
 @[simp]
 theorem fst_inl [Zero A] (r : R) : (inl r : Unitization R A).fst = r :=
   rfl
+#align unitization.fst_inl Unitization.fst_inl
 
 @[simp]
 theorem snd_inl [Zero A] (r : R) : (inl r : Unitization R A).snd = 0 :=
   rfl
+#align unitization.snd_inl Unitization.snd_inl
 
 end
 
@@ -99,18 +106,22 @@ variable (R)
 @[simp]
 theorem fst_coe [Zero R] (a : A) : (a : Unitization R A).fst = 0 :=
   rfl
+#align unitization.fst_coe Unitization.fst_coe
 
 @[simp]
 theorem snd_coe [Zero R] (a : A) : (a : Unitization R A).snd = a :=
   rfl
+#align unitization.snd_coe Unitization.snd_coe
 
 end
 
 theorem inl_injective [Zero A] : Function.Injective (inl : R → Unitization R A) :=
   Function.LeftInverse.injective <| fst_inl _
+#align unitization.inl_injective Unitization.inl_injective
 
 theorem coe_injective [Zero R] : Function.Injective (coe : A → Unitization R A) :=
   Function.LeftInverse.injective <| snd_coe _
+#align unitization.coe_injective Unitization.coe_injective
 
 end Basic
 
@@ -184,34 +195,42 @@ instance [Semiring S] [AddCommMonoid R] [AddCommMonoid A] [Module S R] [Module S
 @[simp]
 theorem fst_zero [Zero R] [Zero A] : (0 : Unitization R A).fst = 0 :=
   rfl
+#align unitization.fst_zero Unitization.fst_zero
 
 @[simp]
 theorem snd_zero [Zero R] [Zero A] : (0 : Unitization R A).snd = 0 :=
   rfl
+#align unitization.snd_zero Unitization.snd_zero
 
 @[simp]
 theorem fst_add [Add R] [Add A] (x₁ x₂ : Unitization R A) : (x₁ + x₂).fst = x₁.fst + x₂.fst :=
   rfl
+#align unitization.fst_add Unitization.fst_add
 
 @[simp]
 theorem snd_add [Add R] [Add A] (x₁ x₂ : Unitization R A) : (x₁ + x₂).snd = x₁.snd + x₂.snd :=
   rfl
+#align unitization.snd_add Unitization.snd_add
 
 @[simp]
 theorem fst_neg [Neg R] [Neg A] (x : Unitization R A) : (-x).fst = -x.fst :=
   rfl
+#align unitization.fst_neg Unitization.fst_neg
 
 @[simp]
 theorem snd_neg [Neg R] [Neg A] (x : Unitization R A) : (-x).snd = -x.snd :=
   rfl
+#align unitization.snd_neg Unitization.snd_neg
 
 @[simp]
 theorem fst_smul [HasSmul S R] [HasSmul S A] (s : S) (x : Unitization R A) : (s • x).fst = s • x.fst :=
   rfl
+#align unitization.fst_smul Unitization.fst_smul
 
 @[simp]
 theorem snd_smul [HasSmul S R] [HasSmul S A] (s : S) (x : Unitization R A) : (s • x).snd = s • x.snd :=
   rfl
+#align unitization.snd_smul Unitization.snd_smul
 
 section
 
@@ -220,19 +239,23 @@ variable (A)
 @[simp]
 theorem inl_zero [Zero R] [Zero A] : (inl 0 : Unitization R A) = 0 :=
   rfl
+#align unitization.inl_zero Unitization.inl_zero
 
 @[simp]
 theorem inl_add [Add R] [AddZeroClass A] (r₁ r₂ : R) : (inl (r₁ + r₂) : Unitization R A) = inl r₁ + inl r₂ :=
   ext rfl (add_zero 0).symm
+#align unitization.inl_add Unitization.inl_add
 
 @[simp]
 theorem inl_neg [Neg R] [AddGroup A] (r : R) : (inl (-r) : Unitization R A) = -inl r :=
   ext rfl neg_zero.symm
+#align unitization.inl_neg Unitization.inl_neg
 
 @[simp]
 theorem inl_smul [Monoid S] [AddMonoid A] [HasSmul S R] [DistribMulAction S A] (s : S) (r : R) :
     (inl (s • r) : Unitization R A) = s • inl r :=
   ext rfl (smul_zero s).symm
+#align unitization.inl_smul Unitization.inl_smul
 
 end
 
@@ -243,24 +266,29 @@ variable (R)
 @[simp]
 theorem coe_zero [Zero R] [Zero A] : ↑(0 : A) = (0 : Unitization R A) :=
   rfl
+#align unitization.coe_zero Unitization.coe_zero
 
 @[simp]
 theorem coe_add [AddZeroClass R] [Add A] (m₁ m₂ : A) : (↑(m₁ + m₂) : Unitization R A) = m₁ + m₂ :=
   ext (add_zero 0).symm rfl
+#align unitization.coe_add Unitization.coe_add
 
 @[simp]
 theorem coe_neg [AddGroup R] [Neg A] (m : A) : (↑(-m) : Unitization R A) = -m :=
   ext neg_zero.symm rfl
+#align unitization.coe_neg Unitization.coe_neg
 
 @[simp]
 theorem coe_smul [Zero R] [Zero S] [SmulWithZero S R] [HasSmul S A] (r : S) (m : A) :
     (↑(r • m) : Unitization R A) = r • m :=
   ext (smul_zero _).symm rfl
+#align unitization.coe_smul Unitization.coe_smul
 
 end
 
 theorem inl_fst_add_coe_snd_eq [AddZeroClass R] [AddZeroClass A] (x : Unitization R A) : inl x.fst + ↑x.snd = x :=
   ext (add_zero x.1) (zero_add x.2)
+#align unitization.inl_fst_add_coe_snd_eq Unitization.inl_fst_add_coe_snd_eq
 
 /-- To show a property hold on all `unitization R A` it suffices to show it holds
 on terms of the form `inl r + a`.
@@ -269,12 +297,14 @@ This can be used as `induction x using unitization.ind`. -/
 theorem ind {R A} [AddZeroClass R] [AddZeroClass A] {P : Unitization R A → Prop} (h : ∀ (r : R) (a : A), P (inl r + a))
     (x) : P x :=
   inl_fst_add_coe_snd_eq x ▸ h x.1 x.2
+#align unitization.ind Unitization.ind
 
 /-- This cannot be marked `@[ext]` as it ends up being used instead of `linear_map.prod_ext` when
 working with `R × A`. -/
 theorem linear_map_ext {N} [Semiring S] [AddCommMonoid R] [AddCommMonoid A] [AddCommMonoid N] [Module S R] [Module S A]
     [Module S N] ⦃f g : Unitization R A →ₗ[S] N⦄ (hl : ∀ r, f (inl r) = g (inl r)) (hr : ∀ a : A, f a = g a) : f = g :=
   LinearMap.prod_ext (LinearMap.ext hl) (LinearMap.ext hr)
+#align unitization.linear_map_ext Unitization.linear_map_ext
 
 variable (R A)
 
@@ -282,11 +312,13 @@ variable (R A)
 @[simps apply]
 def coeHom [Semiring R] [AddCommMonoid A] [Module R A] : A →ₗ[R] Unitization R A :=
   { LinearMap.inr R R A with toFun := coe }
+#align unitization.coe_hom Unitization.coeHom
 
 /-- The canonical `R`-linear projection `unitization R A → A`. -/
 @[simps apply]
 def sndHom [Semiring R] [AddCommMonoid A] [Module R A] : Unitization R A →ₗ[R] A :=
   { LinearMap.snd _ _ _ with toFun := snd }
+#align unitization.snd_hom Unitization.sndHom
 
 end Additive
 
@@ -306,19 +338,23 @@ instance [Mul R] [Add A] [Mul A] [HasSmul R A] : Mul (Unitization R A) :=
 @[simp]
 theorem fst_one [One R] [Zero A] : (1 : Unitization R A).fst = 1 :=
   rfl
+#align unitization.fst_one Unitization.fst_one
 
 @[simp]
 theorem snd_one [One R] [Zero A] : (1 : Unitization R A).snd = 0 :=
   rfl
+#align unitization.snd_one Unitization.snd_one
 
 @[simp]
 theorem fst_mul [Mul R] [Add A] [Mul A] [HasSmul R A] (x₁ x₂ : Unitization R A) : (x₁ * x₂).fst = x₁.fst * x₂.fst :=
   rfl
+#align unitization.fst_mul Unitization.fst_mul
 
 @[simp]
 theorem snd_mul [Mul R] [Add A] [Mul A] [HasSmul R A] (x₁ x₂ : Unitization R A) :
     (x₁ * x₂).snd = x₁.fst • x₂.snd + x₂.fst • x₁.snd + x₁.snd * x₂.snd :=
   rfl
+#align unitization.snd_mul Unitization.snd_mul
 
 section
 
@@ -327,15 +363,18 @@ variable (A)
 @[simp]
 theorem inl_one [One R] [Zero A] : (inl 1 : Unitization R A) = 1 :=
   rfl
+#align unitization.inl_one Unitization.inl_one
 
 @[simp]
 theorem inl_mul [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r₁ r₂ : R) :
     (inl (r₁ * r₂) : Unitization R A) = inl r₁ * inl r₂ :=
   ext rfl <| show (0 : A) = r₁ • (0 : A) + r₂ • 0 + 0 * 0 by simp only [smul_zero, add_zero, mul_zero]
+#align unitization.inl_mul Unitization.inl_mul
 
 theorem inl_mul_inl [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r₁ r₂ : R) :
     (inl r₁ * inl r₂ : Unitization R A) = inl (r₁ * r₂) :=
   (inl_mul A r₁ r₂).symm
+#align unitization.inl_mul_inl Unitization.inl_mul_inl
 
 end
 
@@ -347,16 +386,19 @@ variable (R)
 theorem coe_mul [Semiring R] [AddCommMonoid A] [Mul A] [SmulWithZero R A] (a₁ a₂ : A) :
     (↑(a₁ * a₂) : Unitization R A) = a₁ * a₂ :=
   ext (mul_zero _).symm <| show a₁ * a₂ = (0 : R) • a₂ + (0 : R) • a₁ + a₁ * a₂ by simp only [zero_smul, zero_add]
+#align unitization.coe_mul Unitization.coe_mul
 
 end
 
 theorem inl_mul_coe [Semiring R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r : R) (a : A) :
     (inl r * a : Unitization R A) = ↑(r • a) :=
   ext (mul_zero r) <| show r • a + (0 : R) • 0 + 0 * a = r • a by rw [smul_zero, add_zero, zero_mul, add_zero]
+#align unitization.inl_mul_coe Unitization.inl_mul_coe
 
 theorem coe_mul_inl [Semiring R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r : R) (a : A) :
     (a * inl r : Unitization R A) = ↑(r • a) :=
   ext (zero_mul r) <| show (0 : R) • 0 + r • a + a * 0 = r • a by rw [smul_zero, zero_add, mul_zero, add_zero]
+#align unitization.coe_mul_inl Unitization.coe_mul_inl
 
 instance mulOneClass [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] : MulOneClass (Unitization R A) :=
   { Unitization.hasOne, Unitization.hasMul with
@@ -366,6 +408,7 @@ instance mulOneClass [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction 
     mul_one := fun x =>
       ext (mul_one x.1) <|
         show (x.1 • 0 : A) + (1 : R) • x.2 + x.2 * 0 = x.2 by rw [smul_zero, zero_add, one_smul, mul_zero, add_zero] }
+#align unitization.mul_one_class Unitization.mulOneClass
 
 instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] : NonAssocSemiring (Unitization R A) :=
   { Unitization.mulOneClass, Unitization.addCommMonoid with
@@ -432,6 +475,7 @@ def inlRingHom [Semiring R] [NonUnitalSemiring A] [Module R A] : R →+* Unitiza
   map_mul' := inl_mul A
   map_zero' := inl_zero A
   map_add' := inl_add A
+#align unitization.inl_ring_hom Unitization.inlRingHom
 
 end Mul
 
@@ -448,18 +492,22 @@ instance [HasStar R] [HasStar A] : HasStar (Unitization R A) :=
 @[simp]
 theorem fst_star [HasStar R] [HasStar A] (x : Unitization R A) : (star x).fst = star x.fst :=
   rfl
+#align unitization.fst_star Unitization.fst_star
 
 @[simp]
 theorem snd_star [HasStar R] [HasStar A] (x : Unitization R A) : (star x).snd = star x.snd :=
   rfl
+#align unitization.snd_star Unitization.snd_star
 
 @[simp]
 theorem inl_star [HasStar R] [AddMonoid A] [StarAddMonoid A] (r : R) : inl (star r) = star (inl r : Unitization R A) :=
   ext rfl (by simp only [snd_star, star_zero, snd_inl])
+#align unitization.inl_star Unitization.inl_star
 
 @[simp]
 theorem coe_star [AddMonoid R] [StarAddMonoid R] [HasStar A] (a : A) : ↑(star a) = star (a : Unitization R A) :=
   ext (by simp only [fst_star, star_zero, fst_coe]) rfl
+#align unitization.coe_star Unitization.coe_star
 
 instance [AddMonoid R] [AddMonoid A] [StarAddMonoid R] [StarAddMonoid A] : StarAddMonoid (Unitization R A) where
   star_involutive x := ext (star_star x.fst) (star_star x.snd)
@@ -487,26 +535,31 @@ instance algebra : Algebra S (Unitization R A) :=
   { (Unitization.inlRingHom R A).comp (algebraMap S R) with
     commutes' := fun r x => by
       induction x using Unitization.ind
-      simp only [mul_add, add_mul, RingHom.to_fun_eq_coe, RingHom.coe_comp, Function.comp_app, inl_ring_hom_apply,
+      simp only [mul_add, add_mul, RingHom.to_fun_eq_coe, RingHom.coe_comp, Function.comp_apply, inl_ring_hom_apply,
         inl_mul_inl]
       rw [inl_mul_coe, coe_mul_inl, mul_comm],
     smul_def' := fun s x => by
       induction x using Unitization.ind
-      simp only [mul_add, smul_add, RingHom.to_fun_eq_coe, RingHom.coe_comp, Function.comp_app, inl_ring_hom_apply,
+      simp only [mul_add, smul_add, RingHom.to_fun_eq_coe, RingHom.coe_comp, Function.comp_apply, inl_ring_hom_apply,
         Algebra.algebra_map_eq_smul_one]
       rw [inl_mul_inl, inl_mul_coe, smul_one_mul, inl_smul, coe_smul, smul_one_smul] }
+#align unitization.algebra Unitization.algebra
 
 theorem algebra_map_eq_inl_comp : ⇑(algebraMap S (Unitization R A)) = inl ∘ algebraMap S R :=
   rfl
+#align unitization.algebra_map_eq_inl_comp Unitization.algebra_map_eq_inl_comp
 
 theorem algebra_map_eq_inl_ring_hom_comp : algebraMap S (Unitization R A) = (inlRingHom R A).comp (algebraMap S R) :=
   rfl
+#align unitization.algebra_map_eq_inl_ring_hom_comp Unitization.algebra_map_eq_inl_ring_hom_comp
 
 theorem algebra_map_eq_inl : ⇑(algebraMap R (Unitization R A)) = inl :=
   rfl
+#align unitization.algebra_map_eq_inl Unitization.algebra_map_eq_inl
 
 theorem algebra_map_eq_inl_hom : algebraMap R (Unitization R A) = inlRingHom R A :=
   rfl
+#align unitization.algebra_map_eq_inl_hom Unitization.algebra_map_eq_inl_hom
 
 /-- The canonical `R`-algebra projection `unitization R A → R`. -/
 @[simps]
@@ -517,6 +570,7 @@ def fstHom : Unitization R A →ₐ[R] R where
   map_zero' := fst_zero
   map_add' := fst_add
   commutes' := fst_inl A
+#align unitization.fst_hom Unitization.fstHom
 
 end Algebra
 
@@ -532,6 +586,7 @@ def coeNonUnitalAlgHom (R A : Type _) [CommSemiring R] [NonUnitalSemiring A] [Mo
   map_zero' := coe_zero R
   map_add' := coe_add R
   map_mul' := coe_mul R
+#align unitization.coe_non_unital_alg_hom Unitization.coeNonUnitalAlgHom
 
 end coe
 
@@ -546,13 +601,15 @@ theorem alg_hom_ext {φ ψ : Unitization R A →ₐ[S] B} (h : ∀ a : A, φ a =
   ext
   induction x using Unitization.ind
   simp only [map_add, ← algebra_map_eq_inl, h, h']
+#align unitization.alg_hom_ext Unitization.alg_hom_ext
 
 /-- See note [partially-applied ext lemmas] -/
-@[ext]
+@[ext.1]
 theorem alg_hom_ext' {φ ψ : Unitization R A →ₐ[R] C}
     (h : φ.toNonUnitalAlgHom.comp (coeNonUnitalAlgHom R A) = ψ.toNonUnitalAlgHom.comp (coeNonUnitalAlgHom R A)) :
     φ = ψ :=
   alg_hom_ext (NonUnitalAlgHom.congr_fun h) (by simp [AlgHom.commutes])
+#align unitization.alg_hom_ext' Unitization.alg_hom_ext'
 
 /-- Non-unital algebra homomorphisms from `A` into a unital `R`-algebra `C` lift uniquely to
 `unitization R A →ₐ[R] C`. This is the universal property of the unitization. -/
@@ -585,9 +642,11 @@ def lift : (A →ₙₐ[R] C) ≃ (Unitization R A →ₐ[R] C) where
       (by
         ext
         simp)
+#align unitization.lift Unitization.lift
 
 theorem lift_symm_apply (φ : Unitization R A →ₐ[R] C) (a : A) : Unitization.lift.symm φ a = φ a :=
   rfl
+#align unitization.lift_symm_apply Unitization.lift_symm_apply
 
 end AlgHom
 

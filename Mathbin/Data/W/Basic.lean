@@ -31,6 +31,7 @@ elements of `α` and the children of a node labeled `a` are indexed by elements 
 -/
 inductive WType {α : Type _} (β : α → Type _)
   | mk (a : α) (f : β a → WType) : WType
+#align W_type WType
 
 instance : Inhabited (WType fun _ : Unit => Empty) :=
   ⟨WType.mk Unit.unit Empty.elim⟩
@@ -43,19 +44,23 @@ variable {α : Type _} {β : α → Type _}
   element `a` of `α`, and the children of the node as a function `β a → W_type β`. -/
 def toSigma : WType β → Σa : α, β a → WType β
   | ⟨a, f⟩ => ⟨a, f⟩
+#align W_type.to_sigma WType.toSigma
 
 /-- The canonical map from the sigma type into a `W_type`. Given a node `a : α`, and
   its children as a function `β a → W_type β`, return the corresponding tree. -/
 def ofSigma : (Σa : α, β a → WType β) → WType β
   | ⟨a, f⟩ => WType.mk a f
+#align W_type.of_sigma WType.ofSigma
 
 @[simp]
 theorem of_sigma_to_sigma : ∀ w : WType β, ofSigma (toSigma w) = w
   | ⟨a, f⟩ => rfl
+#align W_type.of_sigma_to_sigma WType.of_sigma_to_sigma
 
 @[simp]
 theorem to_sigma_of_sigma : ∀ s : Σa : α, β a → WType β, toSigma (ofSigma s) = s
   | ⟨a, f⟩ => rfl
+#align W_type.to_sigma_of_sigma WType.to_sigma_of_sigma
 
 variable (β)
 
@@ -67,6 +72,7 @@ def equivSigma : WType β ≃ Σa : α, β a → WType β where
   invFun := ofSigma
   left_inv := of_sigma_to_sigma
   right_inv := to_sigma_of_sigma
+#align W_type.equiv_sigma WType.equivSigma
 
 variable {β}
 
@@ -79,6 +85,7 @@ Case conversion may be inaccurate. Consider using '#align W_type.elim WType.elim
 /-- The canonical map from `W_type β` into any type `γ` given a map `(Σ a : α, β a → γ) → γ`. -/
 def elim (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) : WType β → γ
   | ⟨a, f⟩ => fγ ⟨a, fun b => elim (f b)⟩
+#align W_type.elim WType.elim
 
 theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) (fγ_injective : Function.Injective fγ) :
     Function.Injective (elim γ fγ)
@@ -86,6 +93,7 @@ theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) (fγ
     obtain ⟨rfl, h⟩ := Sigma.mk.inj (fγ_injective h)
     congr with x
     exact elim_injective (congr_fun (eq_of_heq h) x : _)
+#align W_type.elim_injective WType.elim_injective
 
 instance [hα : IsEmpty α] : IsEmpty (WType β) :=
   ⟨fun w => WType.recOn w (IsEmpty.elim hα)⟩
@@ -108,19 +116,23 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he :
         simp_all [Function.funext_iff]
         
       ⟩
+#align W_type.infinite_of_nonempty_of_is_empty WType.infinite_of_nonempty_of_is_empty
 
 variable [∀ a : α, Fintype (β a)]
 
 /-- The depth of a finitely branching tree. -/
 def depth : WType β → ℕ
   | ⟨a, f⟩ => (Finset.sup Finset.univ fun n => depth (f n)) + 1
+#align W_type.depth WType.depth
 
 theorem depth_pos (t : WType β) : 0 < t.depth := by
   cases t
   apply Nat.succ_pos
+#align W_type.depth_pos WType.depth_pos
 
 theorem depth_lt_depth_mk (a : α) (f : β a → WType β) (i : β a) : depth (f i) < depth ⟨a, f⟩ :=
   Nat.lt_succ_of_le (Finset.le_sup (Finset.mem_univ i))
+#align W_type.depth_lt_depth_mk WType.depth_lt_depth_mk
 
 /-
 Show that W types are encodable when `α` is an encodable fintype and for every `a : α`, `β a` is
@@ -133,6 +145,7 @@ and of themselves, so we mark them as `private`.
 @[reducible]
 private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)] (n : ℕ) :=
   { t : WType β // t.depth ≤ n }
+#align W_type.W_type' W_type.W_type'
 
 variable [∀ a : α, Encodable (β a)]
 
@@ -143,6 +156,7 @@ private def encodable_zero : Encodable (WType' β 0) :=
     cases x
   have : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim <| not_lt_of_ge h (WType.depth_pos _)
   Encodable.ofLeftInverse f finv this
+#align W_type.encodable_zero W_type.encodable_zero
 
 private def f (n : ℕ) : WType' β (n + 1) → Σa : α, β a → WType' β n
   | ⟨t, h⟩ => by
@@ -150,12 +164,14 @@ private def f (n : ℕ) : WType' β (n + 1) → Σa : α, β a → WType' β n
     have h₀ : ∀ i : β a, WType.depth (f i) ≤ n := fun i =>
       Nat.le_of_lt_succ (lt_of_lt_of_le (WType.depth_lt_depth_mk a f i) h)
     exact ⟨a, fun i : β a => ⟨f i, h₀ i⟩⟩
+#align W_type.f W_type.f
 
 private def finv (n : ℕ) : (Σa : α, β a → WType' β n) → WType' β (n + 1)
   | ⟨a, f⟩ =>
     let f' := fun i : β a => (f i).val
     have : WType.depth ⟨a, f'⟩ ≤ n + 1 := add_le_add_right (Finset.sup_le fun b h => (f b).2) 1
     ⟨⟨a, f'⟩, this⟩
+#align W_type.finv W_type.finv
 
 variable [Encodable α]
 
@@ -164,6 +180,7 @@ private def encodable_succ (n : Nat) (h : Encodable (WType' β n)) : Encodable (
     (by
       rintro ⟨⟨_, _⟩, _⟩
       rfl)
+#align W_type.encodable_succ W_type.encodable_succ
 
 /-- `W_type` is encodable when `α` is an encodable fintype and for every `a : α`, `β a` is
 encodable. -/

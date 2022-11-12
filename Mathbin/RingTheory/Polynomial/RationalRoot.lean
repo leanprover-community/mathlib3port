@@ -39,6 +39,7 @@ theorem scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero {p : A[X]} {r : A} {s : M
     aeval (algebraMap A S r) (scaleRoots p s) = 0 := by
   convert scale_roots_eval₂_eq_zero (algebraMap A S) hr
   rw [aeval_def, mk'_spec' _ r s]
+#align scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero
 
 variable [IsDomain A]
 
@@ -48,6 +49,7 @@ theorem num_is_root_scale_roots_of_aeval_eq_zero [UniqueFactorizationMonoid A] {
   refine' scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero _
   rw [mk'_num_denom]
   exact hr
+#align num_is_root_scale_roots_of_aeval_eq_zero num_is_root_scale_roots_of_aeval_eq_zero
 
 end ScaleRoots
 
@@ -83,6 +85,7 @@ theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣
   apply dvd_mul_of_dvd_right
   convert pow_dvd_pow (Num A r) (Nat.succ_le_of_lt (bot_lt_iff_ne_bot.mpr hj))
   exact (pow_one _).symm
+#align num_dvd_of_is_root num_dvd_of_is_root
 
 /-- Rational root theorem part 2:
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,
@@ -107,16 +110,19 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : (denom A 
   rw [← nat_degree_scale_roots p (denom A r)] at *
   rw [coeff_eq_zero_of_nat_degree_lt (lt_of_le_of_ne (le_of_not_gt h) hj.symm), zero_mul]
   exact dvd_zero _
+#align denom_dvd_of_is_root denom_dvd_of_is_root
 
 /-- Integral root theorem:
 if `r : f.codomain` is a root of a monic polynomial over the ufd `A`,
 then `r` is an integer -/
 theorem isIntegerOfIsRootOfMonic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) : IsInteger A r :=
   isIntegerOfIsUnitDenom (is_unit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
+#align is_integer_of_is_root_of_monic isIntegerOfIsRootOfMonic
 
 namespace UniqueFactorizationMonoid
 
 theorem integerOfIntegral {x : K} : IsIntegral A x → IsInteger A x := fun ⟨p, hp, hx⟩ => isIntegerOfIsRootOfMonic hp hx
+#align unique_factorization_monoid.integer_of_integral UniqueFactorizationMonoid.integerOfIntegral
 
 -- See library note [lower instance priority]
 instance (priority := 100) : IsIntegrallyClosed A :=

@@ -35,6 +35,7 @@ open Filter TopologicalSpace
 
 theorem is_Gδ_irrational : IsGδ { x | Irrational x } :=
   (countable_range _).is_Gδ_compl
+#align is_Gδ_irrational is_Gδ_irrational
 
 theorem dense_irrational : Dense { x : ℝ | Irrational x } := by
   refine' real.is_topological_basis_Ioo_rat.dense_iff.2 _
@@ -42,9 +43,11 @@ theorem dense_irrational : Dense { x : ℝ | Irrational x } := by
   rintro _ ⟨a, b, hlt, rfl⟩ hne
   rw [inter_comm]
   exact exists_irrational_btwn (Rat.cast_lt.2 hlt)
+#align dense_irrational dense_irrational
 
 theorem eventually_residual_irrational : ∀ᶠ x in residual ℝ, Irrational x :=
   eventually_residual.2 ⟨_, is_Gδ_irrational, dense_irrational, fun _ => id⟩
+#align eventually_residual_irrational eventually_residual_irrational
 
 namespace Irrational
 
@@ -78,15 +81,20 @@ theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) : ∀�
   rw [dist_comm] at hlt
   refine' hε (ball_subset_ball hδ hlt) ⟨m, _⟩
   simp [div_eq_inv_mul]
+#align irrational.eventually_forall_le_dist_cast_div Irrational.eventually_forall_le_dist_cast_div
 
 theorem eventually_forall_le_dist_cast_div_of_denom_le (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀ k ≤ n, ∀ (m : ℤ), ε ≤ dist x (m / k) :=
   (finite_le_nat n).eventually_all.2 fun k hk => hx.eventually_forall_le_dist_cast_div k
+#align
+  irrational.eventually_forall_le_dist_cast_div_of_denom_le Irrational.eventually_forall_le_dist_cast_div_of_denom_le
 
 theorem eventually_forall_le_dist_cast_rat_of_denom_le (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀ r : ℚ, r.denom ≤ n → ε ≤ dist x r :=
   (hx.eventually_forall_le_dist_cast_div_of_denom_le n).mono fun ε H r hr => by
     simpa only [Rat.cast_def] using H r.denom hr r.num
+#align
+  irrational.eventually_forall_le_dist_cast_rat_of_denom_le Irrational.eventually_forall_le_dist_cast_rat_of_denom_le
 
 end Irrational
 

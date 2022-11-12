@@ -26,6 +26,7 @@ unsafe def restate_axiom (d : declaration) (new_name : Name) : tactic Unit := do
     if prop then declaration.thm new_name levels new_type (task.pure value)
     else declaration.defn new_name levels new_type value reducibility trusted
   updateex_env fun env => env new_decl
+#align restate_axiom restate_axiom
 
 private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic Name :=
   match new with
@@ -40,6 +41,7 @@ private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic 
         failed
     | nil => undefined
   | some new => return (mkStrName old.getPrefix new.toString)
+#align name_lemma name_lemma
 
 /-- `restate_axiom` makes a new copy of a structure field, first definitionally simplifying the type.
 This is useful to remove `auto_param` or `opt_param` from the statement.
@@ -73,6 +75,7 @@ unsafe def restate_axiom_cmd (_ : parse <| tk "restate_axiom") : lean.parser Uni
   do
     let new_name ← name_lemma from_lemma_fully_qualified new_name
     restate_axiom d new_name
+#align restate_axiom_cmd restate_axiom_cmd
 
 add_tactic_doc
   { Name := "restate_axiom", category := DocCategory.cmd, declNames := [`restate_axiom_cmd],

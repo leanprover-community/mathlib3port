@@ -182,7 +182,7 @@ variable (f : Type → Prop)
 
 namespace SlimCheck
 
-/- ./././Mathport/Syntax/Translate/Command.lean:328:30: infer kinds are unsupported in Lean 4: gave_up {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:330:30: infer kinds are unsupported in Lean 4: gave_up {} -/
 #print SlimCheck.TestResult /-
 /-- Result of trying to disprove `p`
 
@@ -209,6 +209,7 @@ inductive TestResult (p : Prop)
   | gave_up : ℕ → test_result
   | failure : ¬p → List String → ℕ → test_result
   deriving Inhabited
+#align slim_check.test_result SlimCheck.TestResult
 -/
 
 #print SlimCheck.TestResult.toString /-
@@ -218,6 +219,7 @@ protected def TestResult.toString {p} : TestResult p → String
   | test_result.success (PSum.inr h) => "success (with proof)"
   | test_result.gave_up n => s! "gave up {n} times"
   | test_result.failure a vs _ => s! "failed {vs}"
+#align slim_check.test_result.to_string SlimCheck.TestResult.toString
 -/
 
 /-- configuration for testing a property -/
@@ -239,6 +241,7 @@ structure SlimCheckCfg where
   -- obtain a deterministic behavior
   quiet : Bool := false
   deriving has_reflect, Inhabited
+#align slim_check.slim_check_cfg SlimCheck.SlimCheckCfg
 
 -- suppress success message when running `slim_check`
 instance {p} : ToString (TestResult p) :=
@@ -250,17 +253,20 @@ instance {p} : ToString (TestResult p) :=
 -/
 class PrintableProp (p : Prop) where
   printProp : Option String
+#align slim_check.printable_prop SlimCheck.PrintableProp
 -/
 
 -- see [note priority]
 instance (priority := 100) defaultPrintableProp {p} : PrintableProp p :=
   ⟨none⟩
+#align slim_check.default_printable_prop SlimCheck.defaultPrintableProp
 
 #print SlimCheck.Testable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
 /-- `testable p` uses random examples to try to disprove `p`. -/
 class Testable (p : Prop) where
   run (cfg : SlimCheckCfg) (minimize : Bool) : Gen (TestResult p)
+#align slim_check.testable SlimCheck.Testable
 -/
 
 open _Root_.List
@@ -271,6 +277,7 @@ open TestResult
 def combine {p q : Prop} : PSum Unit (p → q) → PSum Unit p → PSum Unit q
   | PSum.inr f, PSum.inr x => PSum.inr (f x)
   | _, _ => PSum.inl ()
+#align slim_check.combine SlimCheck.combine
 
 /-- Combine the test result for properties `p` and `q` to create a test for their conjunction. -/
 def andCounterExample {p q : Prop} : TestResult p → TestResult q → TestResult (p ∧ q)
@@ -280,6 +287,7 @@ def andCounterExample {p q : Prop} : TestResult p → TestResult q → TestResul
   | gave_up n, gave_up m => gave_up <| n + m
   | gave_up n, _ => gaveUp n
   | _, gave_up n => gaveUp n
+#align slim_check.and_counter_example SlimCheck.andCounterExample
 
 /-- Combine the test result for properties `p` and `q` to create a test for their disjunction -/
 def orCounterExample {p q : Prop} : TestResult p → TestResult q → TestResult (p ∨ q)
@@ -289,6 +297,7 @@ def orCounterExample {p q : Prop} : TestResult p → TestResult q → TestResult
   | gave_up n, gave_up m => gave_up <| n + m
   | gave_up n, _ => gaveUp n
   | _, gave_up n => gaveUp n
+#align slim_check.or_counter_example SlimCheck.orCounterExample
 
 /-- If `q → p`, then `¬ p → ¬ q` which means that testing `p` can allow us
 to find counter-examples to `q`. -/
@@ -297,10 +306,12 @@ def convertCounterExample {p q : Prop} (h : q → p) :
   | failure Hce xs n, _ => failure (mt h Hce) xs n
   | success Hp, Hpq => success (combine Hpq Hp)
   | gave_up n, _ => gaveUp n
+#align slim_check.convert_counter_example SlimCheck.convertCounterExample
 
 /-- Test `q` by testing `p` and proving the equivalence between the two. -/
 def convertCounterExample' {p q : Prop} (h : p ↔ q) (r : TestResult p) : TestResult q :=
   convertCounterExample h.2 r (PSum.inr h.1)
+#align slim_check.convert_counter_example' SlimCheck.convertCounterExample'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- When we assign a value to a universally quantified variable,
@@ -310,11 +321,13 @@ def addToCounterExample (x : String) {p q : Prop} (h : q → p) :
     TestResult p → optParam (PSum Unit (p → q)) (PSum.inl ()) → TestResult q
   | failure Hce xs n, _ => failure (mt h Hce) (x::xs) n
   | r, hpq => convertCounterExample h r hpq
+#align slim_check.add_to_counter_example SlimCheck.addToCounterExample
 
 /-- Add some formatting to the information recorded by `add_to_counter_example`. -/
 def addVarToCounterExample {γ : Type v} [Repr γ] (var : String) (x : γ) {p q : Prop} (h : q → p) :
     TestResult p → optParam (PSum Unit (p → q)) (PSum.inl ()) → TestResult q :=
   @addToCounterExample (var ++ " := " ++ repr x) _ _ h
+#align slim_check.add_var_to_counter_example SlimCheck.addVarToCounterExample
 
 #print SlimCheck.NamedBinder /-
 /-- Gadget used to introspect the name of bound variables.
@@ -334,18 +347,21 @@ x := 3
 @[simp, nolint unused_arguments]
 def NamedBinder (n : String) (p : Prop) : Prop :=
   p
+#align slim_check.named_binder SlimCheck.NamedBinder
 -/
 
 /-- Is the given test result a failure? -/
 def isFailure {p} : TestResult p → Bool
   | test_result.failure _ _ _ => true
   | _ => false
+#align slim_check.is_failure SlimCheck.isFailure
 
 instance andTestable (p q : Prop) [Testable p] [Testable q] : Testable (p ∧ q) :=
   ⟨fun cfg min => do
     let xp ← Testable.run p cfg min
     let xq ← Testable.run q cfg min
     pure <| and_counter_example xp xq⟩
+#align slim_check.and_testable SlimCheck.andTestable
 
 instance orTestable (p q : Prop) [Testable p] [Testable q] : Testable (p ∨ q) :=
   ⟨fun cfg min => do
@@ -356,11 +372,13 @@ instance orTestable (p q : Prop) [Testable p] [Testable q] : Testable (p ∨ q) 
       | _ => do
         let xq ← testable.run q cfg min
         pure <| or_counter_example xp xq⟩
+#align slim_check.or_testable SlimCheck.orTestable
 
 instance iffTestable (p q : Prop) [Testable (p ∧ q ∨ ¬p ∧ ¬q)] : Testable (p ↔ q) :=
   ⟨fun cfg min => do
     let xp ← Testable.run (p ∧ q ∨ ¬p ∧ ¬q) cfg min
     return <| convert_counter_example' (by tauto!) xp⟩
+#align slim_check.iff_testable SlimCheck.iffTestable
 
 open PrintableProp
 
@@ -379,17 +397,21 @@ instance (priority := 1000) decGuardTestable (p : Prop) [PrintableProp p] [Decid
           | none => trace "discard" <| return <| gave_up 1
           | some str => (trace s! "discard: {str} does not hold") <| return <| gave_up 1
         else return <| gave_up 1⟩
+#align slim_check.dec_guard_testable SlimCheck.decGuardTestable
 
 /-- Type tag that replaces a type's `has_repr` instance with its `has_to_string` instance. -/
 def UseHasToString (α : Type _) :=
   α
+#align slim_check.use_has_to_string SlimCheck.UseHasToString
 
 instance UseHasToString.inhabited [I : Inhabited α] : Inhabited (UseHasToString α) :=
   I
+#align slim_check.use_has_to_string.inhabited SlimCheck.UseHasToString.inhabited
 
 /-- Add the type tag `use_has_to_string` to an expression's type. -/
 def UseHasToString.mk {α} (x : α) : UseHasToString α :=
   x
+#align slim_check.use_has_to_string.mk SlimCheck.UseHasToString.mk
 
 instance [ToString α] : Repr (UseHasToString α) :=
   ⟨@toString α _⟩
@@ -398,6 +420,7 @@ instance (priority := 2000) allTypesTestable [Testable (f ℤ)] : Testable (Name
   ⟨fun cfg min => do
     let r ← Testable.run (f ℤ) cfg min
     return <| add_var_to_counter_example var (use_has_to_string.mk "ℤ") (· <| ℤ) r⟩
+#align slim_check.all_types_testable SlimCheck.allTypesTestable
 
 /- warning: slim_check.trace_if_giveup -> SlimCheck.traceIfGiveup is a dubious translation:
 lean 3 declaration is
@@ -409,6 +432,7 @@ Case conversion may be inaccurate. Consider using '#align slim_check.trace_if_gi
 def traceIfGiveup {p α β} [Repr α] (tracing_enabled : Bool) (var : String) (val : α) : TestResult p → Thunk' β → β
   | test_result.gave_up _ => if tracing_enabled then trace s! " {var } := {repr val}" else (· <| ())
   | _ => (· <| ())
+#align slim_check.trace_if_giveup SlimCheck.traceIfGiveup
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- testable instance for a property iterating over the element of a list -/
@@ -464,6 +488,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
                       apply not_and_of_not_right _ Hce)
                     xs n
               | gave_up n' => return <| gave_up (n + n')⟩
+#align slim_check.test_forall_in_list SlimCheck.testForallInList
 
 /-- Test proposition `p` by randomly selecting one of the provided
 testable instances. -/
@@ -473,6 +498,7 @@ def combineTestable (p : Prop) (t : List <| Testable p) (h : 0 < t.length) : Tes
       rw [length_map]
       apply h
     Gen.oneOf (List.map (fun t => @Testable.run _ t cfg min) t) this⟩
+#align slim_check.combine_testable SlimCheck.combineTestable
 
 open SampleableExt
 
@@ -488,6 +514,7 @@ def formatFailure (s : String) (xs : List String) (n : ℕ) : String :=
     ({n} shrinks)
     -------------------
     "
+#align slim_check.format_failure SlimCheck.formatFailure
 
 /-- Format the counter-examples found in a test failure.
 -/
@@ -495,6 +522,7 @@ def formatFailure' (s : String) {p} : TestResult p → String
   | success a => ""
   | gave_up a => ""
   | test_result.failure _ xs n => formatFailure s xs n
+#align slim_check.format_failure' SlimCheck.formatFailure'
 
 /-- Increase the number of shrinking steps in a test result.
 -/
@@ -502,6 +530,7 @@ def addShrinks {p} (n : ℕ) : TestResult p → TestResult p
   | r@(success a) => r
   | r@(gave_up a) => r
   | test_result.failure h vs n' => TestResult.failure h vs <| n + n'
+#align slim_check.add_shrinks SlimCheck.addShrinks
 
 /-- Shrink a counter-example `x` by using `shrink x`, picking the first
 candidate that falsifies a property and recursively shrinking that one.
@@ -530,6 +559,7 @@ def minimizeAux [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg)
     if cfg then return <| trace ((s! "{var } := {repr y}") ++ format_failure' "Shrink counter-example:" r) ()
       else pure ()
     f_rec y h₁ (n + 1) <|> pure ⟨y, add_shrinks (n + 1) r⟩
+#align slim_check.minimize_aux SlimCheck.minimizeAux
 
 /-- Once a property fails to hold on an example, look for smaller counter-examples
 to show the user. -/
@@ -538,12 +568,14 @@ def minimize [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg) (v
   if cfg then return <| trace ((s! "{var } := {repr x}") ++ format_failure' "Shrink counter-example:" r) () else pure ()
   let x' ← OptionT.run <| minimizeAux α _ cfg var x 0
   pure <| x' ⟨x, r⟩
+#align slim_check.minimize SlimCheck.minimize
 
 instance (priority := 2000) existsTestable (p : Prop) [Testable (NamedBinder var (∀ x, NamedBinder var' <| β x → p))] :
     Testable (NamedBinder var' (NamedBinder var (∃ x, β x) → p)) :=
   ⟨fun cfg min => do
     let x ← Testable.run (NamedBinder var (∀ x, NamedBinder var' <| β x → p)) cfg min
     pure <| convert_counter_example' exists_imp x⟩
+#align slim_check.exists_testable SlimCheck.existsTestable
 
 /-- Test a universal property by creating a sample of the right type and instantiating the
 bound variable with it -/
@@ -556,18 +588,21 @@ instance varTestable [SampleableExt α] [∀ x, Testable (β x)] : Testable (Nam
               else if cfg then (trace s! "  {var } := {repr x}") <| pure ⟨x, r⟩ else pure ⟨x, r⟩))
             fun ⟨x, r⟩ =>
             return <| trace_if_giveup cfg var x r (add_var_to_counter_example var x (· <| sampleable_ext.interp α x) r)⟩
+#align slim_check.var_testable SlimCheck.varTestable
 
 /-- Test a universal property about propositions -/
 instance propVarTestable (β : Prop → Prop) [I : ∀ b : Bool, Testable (β b)] :
     Testable (NamedBinder var <| ∀ p : Prop, β p) :=
   ⟨fun cfg min => do
     (convert_counter_example fun h (b : Bool) => h b) <$> @testable.run (named_binder var <| ∀ b : Bool, β b) _ cfg min⟩
+#align slim_check.prop_var_testable SlimCheck.propVarTestable
 
 instance (priority := 3000) unusedVarTestable (β) [Inhabited α] [Testable β] :
     Testable (NamedBinder var <| ∀ x : α, β) :=
   ⟨fun cfg min => do
     let r ← Testable.run β cfg min
     pure <| convert_counter_example (· <| default) r (PSum.inr fun x _ => x)⟩
+#align slim_check.unused_var_testable SlimCheck.unusedVarTestable
 
 instance (priority := 2000) subtypeVarTestable {p : α → Prop} [∀ x, PrintableProp (p x)] [∀ x, Testable (β x)]
     [I : SampleableExt (Subtype p)] : Testable (NamedBinder var <| ∀ x : α, NamedBinder var' <| p x → β x) :=
@@ -580,6 +615,7 @@ instance (priority := 2000) subtypeVarTestable {p : α → Prop} [∀ x, Printab
           | some str => pure <| add_to_counter_example (s! "guard: {str} (by construction)") id r (PSum.inr id)⟩
     let r ← @Testable.run (∀ x : Subtype p, β x.val) (@SlimCheck.varTestable var _ _ I test) cfg min
     pure <| convert_counter_example' ⟨fun (h : ∀ x : Subtype p, β x) x h' => h ⟨x, h'⟩, fun h ⟨x, h'⟩ => h x h'⟩ r⟩
+#align slim_check.subtype_var_testable SlimCheck.subtypeVarTestable
 
 instance (priority := 100) decidableTestable (p : Prop) [PrintableProp p] [Decidable p] : Testable p :=
   ⟨fun cfg min =>
@@ -589,25 +625,31 @@ instance (priority := 100) decidableTestable (p : Prop) [PrintableProp p] [Decid
         match printProp p with
         | none => failure h [] 0
         | some str => failure h [s! "issue: {str} does not hold"] 0⟩
+#align slim_check.decidable_testable SlimCheck.decidableTestable
 
 #print SlimCheck.Eq.printableProp /-
 instance Eq.printableProp {α} [Repr α] (x y : α) : PrintableProp (x = y) :=
   ⟨some s!"{(repr x)} = {repr y}"⟩
+#align slim_check.eq.printable_prop SlimCheck.Eq.printableProp
 -/
 
 #print SlimCheck.Ne.printableProp /-
 instance Ne.printableProp {α} [Repr α] (x y : α) : PrintableProp (x ≠ y) :=
   ⟨some s!"{(repr x)} ≠ {repr y}"⟩
+#align slim_check.ne.printable_prop SlimCheck.Ne.printableProp
 -/
 
 instance Le.printableProp {α} [LE α] [Repr α] (x y : α) : PrintableProp (x ≤ y) :=
   ⟨some s!"{(repr x)} ≤ {repr y}"⟩
+#align slim_check.le.printable_prop SlimCheck.Le.printableProp
 
 instance Lt.printableProp {α} [LT α] [Repr α] (x y : α) : PrintableProp (x < y) :=
   ⟨some s!"{(repr x)} < {repr y}"⟩
+#align slim_check.lt.printable_prop SlimCheck.Lt.printableProp
 
 instance Perm.printableProp {α} [Repr α] (xs ys : List α) : PrintableProp (xs ~ ys) :=
   ⟨some s!"{(repr xs)} ~ {repr ys}"⟩
+#align slim_check.perm.printable_prop SlimCheck.Perm.printableProp
 
 #print SlimCheck.And.printableProp /-
 instance And.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : PrintableProp (x ∧ y) :=
@@ -615,6 +657,7 @@ instance And.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : Pr
     let x' ← printProp x
     let y' ← printProp y
     some s! "({x' } ∧ {y'})"⟩
+#align slim_check.and.printable_prop SlimCheck.And.printableProp
 -/
 
 #print SlimCheck.Or.printableProp /-
@@ -623,6 +666,7 @@ instance Or.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : Pri
     let x' ← printProp x
     let y' ← printProp y
     some s! "({x' } ∨ {y'})"⟩
+#align slim_check.or.printable_prop SlimCheck.Or.printableProp
 -/
 
 #print SlimCheck.Iff.printableProp /-
@@ -631,6 +675,7 @@ instance Iff.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : Pr
     let x' ← printProp x
     let y' ← printProp y
     some s! "({x' } ↔ {y'})"⟩
+#align slim_check.iff.printable_prop SlimCheck.Iff.printableProp
 -/
 
 #print SlimCheck.Imp.printableProp /-
@@ -639,6 +684,7 @@ instance Imp.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : Pr
     let x' ← printProp x
     let y' ← printProp y
     some s! "({x' } → {y'})"⟩
+#align slim_check.imp.printable_prop SlimCheck.Imp.printableProp
 -/
 
 #print SlimCheck.Not.printableProp /-
@@ -646,21 +692,25 @@ instance Not.printableProp (x : Prop) [PrintableProp x] : PrintableProp ¬x :=
   ⟨do
     let x' ← printProp x
     some s! "¬ {x'}"⟩
+#align slim_check.not.printable_prop SlimCheck.Not.printableProp
 -/
 
 #print SlimCheck.True.printableProp /-
 instance True.printableProp : PrintableProp True :=
   ⟨some "true"⟩
+#align slim_check.true.printable_prop SlimCheck.True.printableProp
 -/
 
 #print SlimCheck.False.printableProp /-
 instance False.printableProp : PrintableProp False :=
   ⟨some "false"⟩
+#align slim_check.false.printable_prop SlimCheck.False.printableProp
 -/
 
 #print SlimCheck.Bool.printableProp /-
 instance Bool.printableProp (b : Bool) : PrintableProp b :=
   ⟨some <| if b then "true" else "false"⟩
+#align slim_check.bool.printable_prop SlimCheck.Bool.printableProp
 -/
 
 section Io
@@ -680,6 +730,7 @@ def retry (cmd : Rand (TestResult p)) : ℕ → Rand (TestResult p)
       | success hp => return <| success hp
       | failure Hce xs n => return (failure Hce xs n)
       | gave_up _ => retry n
+#align slim_check.retry SlimCheck.retry
 -/
 
 #print SlimCheck.giveUp /-
@@ -689,6 +740,7 @@ def giveUp (x : ℕ) : TestResult p → TestResult p
   | success (PSum.inr p) => success (PSum.inr p)
   | gave_up n => gaveUp (n + x)
   | failure Hce xs n => failure Hce xs n
+#align slim_check.give_up SlimCheck.giveUp
 -/
 
 variable (p)
@@ -713,6 +765,7 @@ def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (T
       | success (PSum.inr Hp) => return <| success (PSum.inr Hp)
       | failure Hce xs n => return (failure Hce xs n)
       | gave_up g => testable.run_suite_aux (give_up g r) n
+#align slim_check.testable.run_suite_aux SlimCheck.Testable.runSuiteAux
 
 /- warning: slim_check.testable.run_suite -> SlimCheck.Testable.runSuite is a dubious translation:
 lean 3 declaration is
@@ -723,12 +776,14 @@ Case conversion may be inaccurate. Consider using '#align slim_check.testable.ru
 /-- Try to find a counter-example of `p`. -/
 def Testable.runSuite (cfg : SlimCheckCfg := {  }) : Rand (TestResult p) :=
   Testable.runSuiteAux p cfg (success <| PSum.inl ()) cfg.numInst
+#align slim_check.testable.run_suite SlimCheck.Testable.runSuite
 
 /-- Run a test suite for `p` in `io`. -/
 def Testable.check' (cfg : SlimCheckCfg := {  }) : Io (TestResult p) :=
   match cfg.randomSeed with
   | some seed => Io.runRandWith seed (Testable.runSuite p cfg)
   | none => Io.runRand (Testable.runSuite p cfg)
+#align slim_check.testable.check' SlimCheck.Testable.check'
 
 namespace Tactic
 
@@ -755,6 +810,7 @@ unsafe def add_existential_decorations : expr → expr
     let n := toString n
     const `` named_binder [] (quote.1 n : expr) e
   | e => e
+#align slim_check.tactic.add_existential_decorations slim_check.tactic.add_existential_decorations
 
 /-- Traverse the syntax of a proposition to find universal quantifiers
 and existential quantifiers and add `named_binder` annotations next to
@@ -768,6 +824,7 @@ unsafe def add_decorations : expr → expr
         some <|
           const `` named_binder [] (quote.1 n : expr) (pi n bi (add_existential_decorations d) (add_decorations b))
       | e => none
+#align slim_check.tactic.add_decorations slim_check.tactic.add_decorations
 
 /-- `decorations_of p` is used as a hint to `mk_decorations` to specify
 that the goal should be satisfied with a proposition equivalent to `p`
@@ -775,6 +832,7 @@ with added annotations. -/
 @[reducible, nolint unused_arguments]
 def DecorationsOf (p : Prop) :=
   Prop
+#align slim_check.tactic.decorations_of SlimCheck.Tactic.DecorationsOf
 
 /-- In a goal of the shape `⊢ tactic.decorations_of p`, `mk_decoration` examines
 the syntax of `p` and add `named_binder` around universal quantifications and
@@ -792,6 +850,7 @@ the quantifiers are annotated with `named_binder`.
 unsafe def mk_decorations : tactic Unit := do
   let quote.1 (Tactic.DecorationsOf (%%ₓp)) ← target
   exact <| add_decorations p
+#align slim_check.tactic.mk_decorations slim_check.tactic.mk_decorations
 
 end Tactic
 
@@ -817,6 +876,7 @@ def Testable.check (p : Prop) (cfg : SlimCheckCfg := {  })
     | gave_up n => Io.fail s! "Gave up {repr n} times"
     | failure _ xs n => do
       Io.fail <| format_failure "Found problems!" xs n
+#align slim_check.testable.check SlimCheck.Testable.check
 
 end Io
 

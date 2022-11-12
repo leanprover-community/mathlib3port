@@ -44,6 +44,7 @@ instance : IsLawfulFunctor Finset where
 @[simp]
 theorem fmap_def {s : Finset α} (f : α → β) : f <$> s = s.Image f :=
   rfl
+#align finset.fmap_def Finset.fmap_def
 
 end Functor
 
@@ -56,6 +57,7 @@ instance : Pure Finset :=
 @[simp]
 theorem pure_def {α} : (pure : α → Finset α) = singleton :=
   rfl
+#align finset.pure_def Finset.pure_def
 
 /-! ### Applicative functor -/
 
@@ -71,20 +73,24 @@ instance : Applicative Finset :=
 @[simp]
 theorem seq_def (s : Finset α) (t : Finset (α → β)) : t <*> s = t.sup fun f => s.Image f :=
   rfl
+#align finset.seq_def Finset.seq_def
 
 @[simp]
 theorem seq_left_def (s : Finset α) (t : Finset β) : s <* t = if t = ∅ then ∅ else s :=
   rfl
+#align finset.seq_left_def Finset.seq_left_def
 
 @[simp]
 theorem seq_right_def (s : Finset α) (t : Finset β) : s *> t = if s = ∅ then ∅ else t :=
   rfl
+#align finset.seq_right_def Finset.seq_right_def
 
 /-- `finset.image₂` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/
 theorem image₂_def {α β γ : Type _} (f : α → β → γ) (s : Finset α) (t : Finset β) : image₂ f s t = f <$> s <*> t := by
   ext
   simp [mem_sup]
+#align finset.image₂_def Finset.image₂_def
 
 instance : LawfulApplicative Finset :=
   { Finset.is_lawful_functor with
@@ -132,16 +138,12 @@ instance : LawfulApplicative Finset :=
          }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr [finset.product/multiset.product/set.prod/list.product](s, t)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 instance : IsCommApplicative Finset :=
   { Finset.is_lawful_applicative with
     commutative_prod := fun α β s t => by
       simp_rw [seq_def, fmap_def, sup_image, sup_eq_bUnion]
       change (s.bUnion fun a => t.image fun b => (a, b)) = t.bUnion fun b => s.image fun a => (a, b)
-      trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr [finset.product/multiset.product/set.prod/list.product](s, t)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" <;>
-          [rw [product_eq_bUnion], rw [product_eq_bUnion_right]] <;>
+      trans s ×ˢ t <;> [rw [product_eq_bUnion], rw [product_eq_bUnion_right]] <;>
         congr <;> ext <;> simp_rw [mem_image] }
 
 end Applicative
@@ -159,6 +161,7 @@ instance : Monad Finset :=
 @[simp]
 theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
   rfl
+#align finset.bind_def Finset.bind_def
 
 instance : LawfulMonad Finset :=
   { Finset.is_lawful_applicative with bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _,
@@ -192,23 +195,27 @@ variable {α β γ : Type u} {F G : Type u → Type u} [Applicative F] [Applicat
 /-- Traverse function for `finset`. -/
 def traverse [DecidableEq β] (f : α → F β) (s : Finset α) : F (Finset β) :=
   Multiset.toFinset <$> Multiset.traverse f s.1
+#align finset.traverse Finset.traverse
 
 @[simp]
 theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s := by
   rw [traverse, Multiset.id_traverse]
   exact s.val_to_finset
+#align finset.id_traverse Finset.id_traverse
 
 open Classical
 
 @[simp]
 theorem map_comp_coe (h : α → β) : Functor.map h ∘ Multiset.toFinset = Multiset.toFinset ∘ Functor.map h :=
   funext fun s => image_to_finset
+#align finset.map_comp_coe Finset.map_comp_coe
 
 theorem map_traverse (g : α → G β) (h : β → γ) (s : Finset α) :
     Functor.map h <$> traverse g s = traverse (Functor.map h ∘ g) s := by
   unfold traverse
   simp only [map_comp_coe, functor_norm]
   rw [IsLawfulFunctor.comp_map, Multiset.map_traverse]
+#align finset.map_traverse Finset.map_traverse
 
 end Traversable
 

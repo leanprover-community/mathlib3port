@@ -100,6 +100,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
       
     · exact complex.equiv_real_prodₗ.symm.continuous.continuous_on
       
+#align polar_coord polarCoord
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
@@ -116,6 +117,7 @@ theorem hasFderivAtPolarCoordSymm (p : ℝ × ℝ) :
         (has_fderiv_at_fst.mul ((has_deriv_at_sin p.2).compHasFderivAt p hasFderivAtSnd)) using
       2 <;>
     simp only [smul_smul, add_comm, neg_mul, neg_smul, smul_neg]
+#align has_fderiv_at_polar_coord_symm hasFderivAtPolarCoordSymm
 
 theorem polar_coord_source_ae_eq_univ : polarCoord.Source =ᵐ[volume] univ := by
   have A : polar_coord.sourceᶜ ⊆ (LinearMap.snd ℝ ℝ ℝ).ker := by
@@ -130,6 +132,7 @@ theorem polar_coord_source_ae_eq_univ : polarCoord.Source =ᵐ[volume] univ := b
     simpa using this
   simp only [ae_eq_univ]
   exact le_antisymm ((measure_mono A).trans (le_of_eq B)) bot_le
+#align polar_coord_source_ae_eq_univ polar_coord_source_ae_eq_univ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
@@ -161,4 +164,5 @@ theorem integral_comp_polar_coord_symm {E : Type _} [NormedAddCommGroup E] [Norm
       rw [B_det, abs_of_pos]
       exact hx.1
     
+#align integral_comp_polar_coord_symm integral_comp_polar_coord_symm
 

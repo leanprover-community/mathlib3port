@@ -42,6 +42,7 @@ def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') : HomologicalCo
   shape' i i' w := by
     ext j
     exact (C.X j).shape i i' w
+#align homological_complex.flip_obj HomologicalComplex.flipObj
 
 variable (V c c')
 
@@ -50,6 +51,7 @@ variable (V c c')
 def flip : HomologicalComplex (HomologicalComplex V c) c' ⥤ HomologicalComplex (HomologicalComplex V c') c where
   obj C := flipObj C
   map C D f := { f := fun i => { f := fun j => (f.f j).f i, comm' := fun j j' h => congr_hom (f.comm j j') i } }
+#align homological_complex.flip HomologicalComplex.flip
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]
@@ -72,6 +74,7 @@ def flipEquivalenceUnitIso : 𝟭 (HomologicalComplex (HomologicalComplex V c) c
     ext
     dsimp
     simp only [category.id_comp, category.comp_id]
+#align homological_complex.flip_equivalence_unit_iso HomologicalComplex.flipEquivalenceUnitIso
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]
@@ -94,6 +97,7 @@ def flipEquivalenceCounitIso : flip V c' c ⋙ flip V c c' ≅ 𝟭 (Homological
     ext
     dsimp
     simp only [category.id_comp, category.comp_id]
+#align homological_complex.flip_equivalence_counit_iso HomologicalComplex.flipEquivalenceCounitIso
 
 /-- Flipping a complex of complexes over the diagonal, as an equivalence of categories. -/
 @[simps]
@@ -103,6 +107,7 @@ def flipEquivalence :
   inverse := flip V c' c
   unitIso := flipEquivalenceUnitIso V c c'
   counitIso := flipEquivalenceCounitIso V c c'
+#align homological_complex.flip_equivalence HomologicalComplex.flipEquivalence
 
 end HomologicalComplex
 

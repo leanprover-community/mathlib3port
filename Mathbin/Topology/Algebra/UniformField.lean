@@ -51,6 +51,7 @@ a field.
 -/
 class CompletableTopField extends SeparatedSpace K : Prop where
   nice : ∀ F : Filter K, Cauchy F → 𝓝 0 ⊓ F = ⊥ → Cauchy (map (fun x => x⁻¹) F)
+#align completable_top_field CompletableTopField
 
 namespace UniformSpace
 
@@ -64,6 +65,7 @@ variable {K}
 /-- extension of inversion to the completion of a field. -/
 def hatInv : hat K → hat K :=
   dense_inducing_coe.extend fun x : K => (coe x⁻¹ : hat K)
+#align uniform_space.completion.hat_inv UniformSpace.Completion.hatInv
 
 theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : ContinuousAt hatInv x := by
   haveI : T3Space (hat K) := completion.t3_space K
@@ -87,6 +89,7 @@ theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : C
     erw [dense_inducing_coe.nhds_eq_comap (0 : K), ← Filter.comap_inf, eq_bot]
     exact comap_bot
     
+#align uniform_space.completion.continuous_hat_inv UniformSpace.Completion.continuous_hat_inv
 
 /-
 The value of `hat_inv` at zero is not really specified, although it's probably zero.
@@ -99,6 +102,7 @@ variable [TopologicalDivisionRing K]
 
 theorem hat_inv_extends {x : K} (h : x ≠ 0) : hatInv (x : hat K) = coe (x⁻¹ : K) :=
   dense_inducing_coe.extend_eq_at ((continuous_coe K).ContinuousAt.comp (continuous_at_inv₀ h))
+#align uniform_space.completion.hat_inv_extends UniformSpace.Completion.hat_inv_extends
 
 variable [CompletableTopField K]
 
@@ -117,6 +121,7 @@ theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) := by
     · exact fun H => h (dense_embedding_coe.inj H)
       
     
+#align uniform_space.completion.coe_inv UniformSpace.Completion.coe_inv
 
 variable [UniformAddGroup K]
 
@@ -148,6 +153,7 @@ theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
     rw [mul_inv_cancel z_ne]
   replace fxclo := closure_mono this fxclo
   rwa [closure_singleton, mem_singleton_iff] at fxclo
+#align uniform_space.completion.mul_hat_inv_cancel UniformSpace.Completion.mul_hat_inv_cancel
 
 instance : Field (hat K) :=
   { Completion.hasInv, (by infer_instance : CommRing (hat K)) with
@@ -189,6 +195,7 @@ instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :
             rfl)]
       apply CompletableTopField.nice _ F_cau
       rw [← Filter.push_pull', ← map_zero i, ← hi.inducing.nhds_eq_comap, inf_F, Filter.map_bot] }
+#align subfield.completable_top_field Subfield.completableTopField
 
 instance (priority := 100) completableTopFieldOfComplete (L : Type _) [Field L] [UniformSpace L]
     [TopologicalDivisionRing L] [SeparatedSpace L] [CompleteSpace L] : CompletableTopField L :=
@@ -206,4 +213,5 @@ instance (priority := 100) completableTopFieldOfComplete (L : Type _) [Field L] 
             map (fun x => x⁻¹) F ≤ map (fun x => x⁻¹) (𝓝 x) := map_mono hx
             _ ≤ 𝓝 x⁻¹ := continuous_at_inv₀ hx'
             ) }
+#align completable_top_field_of_complete completableTopFieldOfComplete
 

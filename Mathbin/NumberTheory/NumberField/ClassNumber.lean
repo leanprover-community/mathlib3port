@@ -34,12 +34,14 @@ end RingOfIntegers
 /-- The class number of a number field is the (finite) cardinality of the class group. -/
 noncomputable def classNumber : ℕ :=
   Fintype.card (ClassGroup (ringOfIntegers K))
+#align number_field.class_number NumberField.classNumber
 
 variable {K}
 
 /-- The class number of a number field is `1` iff the ring of integers is a PID. -/
 theorem class_number_eq_one_iff : classNumber K = 1 ↔ IsPrincipalIdealRing (ringOfIntegers K) :=
   card_class_group_eq_one_iff
+#align number_field.class_number_eq_one_iff NumberField.class_number_eq_one_iff
 
 end NumberField
 
@@ -52,6 +54,7 @@ theorem class_number_eq : NumberField.classNumber ℚ = 1 :=
     convert
       IsPrincipalIdealRing.ofSurjective (rat.ring_of_integers_equiv.symm : ℤ →+* ring_of_integers ℚ)
         rat.ring_of_integers_equiv.symm.surjective
+#align rat.class_number_eq Rat.class_number_eq
 
 end Rat
 

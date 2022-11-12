@@ -18,7 +18,7 @@ variable {α ι : Type _} [LinearOrderedSemifield α]
 theorem Pi.exists_forall_pos_add_lt [HasExistsAddOfLe α] [Finite ι] {x y : ι → α} (h : ∀ i, x i < y i) :
     ∃ ε, 0 < ε ∧ ∀ i, x i + ε < y i := by
   cases nonempty_fintype ι
-  cases is_empty_or_nonempty ι
+  cases isEmpty_or_nonempty ι
   · exact ⟨1, zero_lt_one, isEmptyElim⟩
     
   choose ε hε hxε using fun i => exists_pos_add_of_lt' (h i)
@@ -26,4 +26,5 @@ theorem Pi.exists_forall_pos_add_lt [HasExistsAddOfLe α] [Finite ι] {x y : ι 
   have hε : 0 < finset.univ.inf' Finset.univ_nonempty ε := (Finset.lt_inf'_iff _).2 fun i _ => hε _
   exact
     ⟨_, half_pos hε, fun i => add_lt_add_left ((half_lt_self hε).trans_le <| Finset.inf'_le _ <| Finset.mem_univ _) _⟩
+#align pi.exists_forall_pos_add_lt Pi.exists_forall_pos_add_lt
 

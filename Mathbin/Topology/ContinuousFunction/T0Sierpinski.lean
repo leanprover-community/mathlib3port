@@ -35,6 +35,7 @@ theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
     simp only [Set.mem_Union, Set.mem_set_of_eq, is_open_induced_iff']
     exact ⟨⟨u, h⟩, {True}, is_open_singleton_true, by simp [Set.Preimage]⟩
     
+#align topological_space.eq_induced_by_maps_to_sierpinski TopologicalSpace.eq_induced_by_maps_to_sierpinski
 
 variable (X : Type _) [TopologicalSpace X]
 
@@ -44,18 +45,22 @@ open subset `u` of `X`). The `u` coordinate of `product_of_mem_opens x` is given
 def productOfMemOpens : ContinuousMap X (Opens X → Prop) where
   toFun x u := x ∈ u
   continuous_to_fun := continuous_pi_iff.2 fun u => continuous_Prop.2 u.property
+#align topological_space.product_of_mem_opens TopologicalSpace.productOfMemOpens
 
 theorem product_of_mem_opens_inducing : Inducing (productOfMemOpens X) := by
   convert inducing_infi_to_pi fun (u : opens X) (x : X) => x ∈ u
   apply eq_induced_by_maps_to_sierpinski
+#align topological_space.product_of_mem_opens_inducing TopologicalSpace.product_of_mem_opens_inducing
 
 theorem product_of_mem_opens_injective [T0Space X] : Function.Injective (productOfMemOpens X) := by
   intro x1 x2 h
   apply Inseparable.eq
   rw [← Inducing.inseparable_iff (product_of_mem_opens_inducing X), h]
+#align topological_space.product_of_mem_opens_injective TopologicalSpace.product_of_mem_opens_injective
 
 theorem product_of_mem_opens_embedding [T0Space X] : Embedding (productOfMemOpens X) :=
   Embedding.mk (product_of_mem_opens_inducing X) (product_of_mem_opens_injective X)
+#align topological_space.product_of_mem_opens_embedding TopologicalSpace.product_of_mem_opens_embedding
 
 end TopologicalSpace
 

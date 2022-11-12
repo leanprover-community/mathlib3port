@@ -49,6 +49,7 @@ structure Rat where mk' ::
   denom : ℕ
   Pos : 0 < denom
   cop : num.natAbs.Coprime denom
+#align rat Rat
 -/
 
 -- mathport name: exprℚ
@@ -60,6 +61,7 @@ namespace Rat
 `has_to_format` instances. -/
 protected def repr : ℚ → String
   | ⟨n, d, _, _⟩ => if d = 1 then repr n else repr n ++ "/" ++ repr d
+#align rat.repr Rat.repr
 
 instance : Repr ℚ :=
   ⟨Rat.repr⟩
@@ -70,14 +72,20 @@ instance : ToString ℚ :=
 unsafe instance : has_to_format ℚ :=
   ⟨coe ∘ Rat.repr⟩
 
+#print Rat.ext_iff /-
 theorem ext_iff {p q : ℚ} : p = q ↔ p.num = q.num ∧ p.denom = q.denom := by
   cases p
   cases q
   simp
+#align rat.ext_iff Rat.ext_iff
+-/
 
-@[ext]
+#print Rat.ext /-
+@[ext.1]
 theorem ext {p q : ℚ} (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
   Rat.ext_iff.mpr ⟨hn, hd⟩
+#align rat.ext Rat.ext
+-/
 
 end Rat
 

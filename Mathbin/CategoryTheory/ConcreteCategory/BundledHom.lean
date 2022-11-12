@@ -35,6 +35,7 @@ structure BundledHom where
     ∀ {α β γ : Type u} (Iα : c α) (Iβ : c β) (Iγ : c γ) (f : hom Iα Iβ) (g : hom Iβ Iγ),
       to_fun Iα Iγ (comp Iα Iβ Iγ g f) = to_fun Iβ Iγ g ∘ to_fun Iα Iβ f := by
     obviously
+#align category_theory.bundled_hom CategoryTheory.BundledHom
 
 attribute [class] bundled_hom
 
@@ -57,6 +58,7 @@ instance category : Category (Bundled c) := by
         comp := fun X Y Z f g => @bundled_hom.comp c hom 𝒞 X Y Z X.str Y.str Z.str g f, comp_id' := _, id_comp' := _,
         assoc' := _ } <;>
     intros <;> apply 𝒞.hom_ext <;> simp only [𝒞.id_to_fun, 𝒞.comp_to_fun, Function.left_id, Function.right_id]
+#align category_theory.bundled_hom.category CategoryTheory.BundledHom.category
 
 /-- A category given by `bundled_hom` is a concrete category.
 
@@ -68,6 +70,7 @@ instance concreteCategory : ConcreteCategory.{u} (Bundled c) where
     { obj := fun X => X, map := fun X Y f => 𝒞.toFun X.str Y.str f, map_id' := fun X => 𝒞.id_to_fun X.str,
       map_comp' := by intros <;> erw [𝒞.comp_to_fun] <;> rfl }
   forget_faithful := { map_injective' := by intros <;> apply 𝒞.hom_ext }
+#align category_theory.bundled_hom.concrete_category CategoryTheory.BundledHom.concreteCategory
 
 variable {hom}
 
@@ -78,6 +81,7 @@ def mkHasForget₂ {d : Type u → Type u} {hom_d : ∀ ⦃α β : Type u⦄ (I�
     (obj : ∀ ⦃α⦄, c α → d α) (map : ∀ {X Y : Bundled c}, (X ⟶ Y) → (Bundled.map obj X ⟶ Bundled.map obj Y))
     (h_map : ∀ {X Y : Bundled c} (f : X ⟶ Y), (map f : X → Y) = f) : HasForget₂ (Bundled c) (Bundled d) :=
   HasForget₂.mk' (Bundled.map @obj) (fun _ => rfl) (@map) (by intros <;> apply heq_of_eq <;> apply h_map)
+#align category_theory.bundled_hom.mk_has_forget₂ CategoryTheory.BundledHom.mkHasForget₂
 
 variable {d : Type u → Type u}
 
@@ -93,6 +97,7 @@ For typical usage, see the construction of `CommMon` from `Mon`.
 -/
 @[reducible]
 def MapHom (F : ∀ {α}, d α → c α) : ∀ ⦃α β : Type u⦄ (Iα : d α) (Iβ : d β), Type u := fun α β iα iβ => hom (F iα) (F iβ)
+#align category_theory.bundled_hom.map_hom CategoryTheory.BundledHom.MapHom
 
 end
 
@@ -104,6 +109,7 @@ def map (F : ∀ {α}, d α → c α) : BundledHom (MapHom hom @F) where
   id α iα := 𝒞.id (F iα)
   comp α β γ iα iβ iγ f g := 𝒞.comp (F iα) (F iβ) (F iγ) f g
   hom_ext α β iα iβ f g h := 𝒞.hom_ext (F iα) (F iβ) h
+#align category_theory.bundled_hom.map CategoryTheory.BundledHom.map
 
 section
 
@@ -117,6 +123,7 @@ this allows us to set up `CommMon` by defining an instance
 ```instance : parent_projection (comm_monoid.to_monoid) := ⟨⟩```
 -/
 class ParentProjection (F : ∀ {α}, d α → c α)
+#align category_theory.bundled_hom.parent_projection CategoryTheory.BundledHom.ParentProjection
 
 end
 
@@ -124,12 +131,16 @@ end
 @[nolint unused_arguments]
 instance bundledHomOfParentProjection (F : ∀ {α}, d α → c α) [ParentProjection @F] : BundledHom (MapHom hom @F) :=
   map hom @F
+#align
+  category_theory.bundled_hom.bundled_hom_of_parent_projection CategoryTheory.BundledHom.bundledHomOfParentProjection
 
 instance forget₂ (F : ∀ {α}, d α → c α) [ParentProjection @F] :
     HasForget₂ (Bundled d) (Bundled c) where forget₂ := { obj := fun X => ⟨X, F X.2⟩, map := fun X Y f => f }
+#align category_theory.bundled_hom.forget₂ CategoryTheory.BundledHom.forget₂
 
 instance forget₂Full (F : ∀ {α}, d α → c α) [ParentProjection @F] :
     Full (forget₂ (Bundled d) (Bundled c)) where preimage X Y f := f
+#align category_theory.bundled_hom.forget₂_full CategoryTheory.BundledHom.forget₂Full
 
 end BundledHom
 

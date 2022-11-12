@@ -65,6 +65,7 @@ namespace MeasureTheory
 def NullMeasurableSpace (α : Type _) [MeasurableSpace α] (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) :
     Type _ :=
   α
+#align measure_theory.null_measurable_space MeasureTheory.NullMeasurableSpace
 
 section
 
@@ -89,70 +90,87 @@ a set of null measure. -/
 def NullMeasurableSet [MeasurableSpace α] (s : Set α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) :
     Prop :=
   @MeasurableSet (NullMeasurableSpace α μ) _ s
+#align measure_theory.null_measurable_set MeasureTheory.NullMeasurableSet
 
 @[simp]
 theorem _root_.measurable_set.null_measurable_set (h : MeasurableSet s) : NullMeasurableSet s μ :=
   ⟨s, h, ae_eq_refl _⟩
+#align measure_theory._root_.measurable_set.null_measurable_set measure_theory._root_.measurable_set.null_measurable_set
 
 @[simp]
 theorem nullMeasurableSetEmpty : NullMeasurableSet ∅ μ :=
   MeasurableSet.empty
+#align measure_theory.null_measurable_set_empty MeasureTheory.nullMeasurableSetEmpty
 
 @[simp]
 theorem nullMeasurableSetUniv : NullMeasurableSet Univ μ :=
   MeasurableSet.univ
+#align measure_theory.null_measurable_set_univ MeasureTheory.nullMeasurableSetUniv
 
 namespace NullMeasurableSet
 
 theorem ofNull (h : μ s = 0) : NullMeasurableSet s μ :=
   ⟨∅, MeasurableSet.empty, ae_eq_empty.2 h⟩
+#align measure_theory.null_measurable_set.of_null MeasureTheory.NullMeasurableSet.ofNull
 
 theorem compl (h : NullMeasurableSet s μ) : NullMeasurableSet (sᶜ) μ :=
   h.compl
+#align measure_theory.null_measurable_set.compl MeasureTheory.NullMeasurableSet.compl
 
 theorem ofCompl (h : NullMeasurableSet (sᶜ) μ) : NullMeasurableSet s μ :=
   h.ofCompl
+#align measure_theory.null_measurable_set.of_compl MeasureTheory.NullMeasurableSet.ofCompl
 
 @[simp]
 theorem compl_iff : NullMeasurableSet (sᶜ) μ ↔ NullMeasurableSet s μ :=
   MeasurableSet.compl_iff
+#align measure_theory.null_measurable_set.compl_iff MeasureTheory.NullMeasurableSet.compl_iff
 
 @[nontriviality]
 theorem ofSubsingleton [Subsingleton α] : NullMeasurableSet s μ :=
   Subsingleton.measurableSet
+#align measure_theory.null_measurable_set.of_subsingleton MeasureTheory.NullMeasurableSet.ofSubsingleton
 
 protected theorem congr (hs : NullMeasurableSet s μ) (h : s =ᵐ[μ] t) : NullMeasurableSet t μ :=
   let ⟨s', hm, hs'⟩ := hs
   ⟨s', hm, h.symm.trans hs'⟩
+#align measure_theory.null_measurable_set.congr MeasureTheory.NullMeasurableSet.congr
 
 protected theorem union {ι : Sort _} [Countable ι] {s : ι → Set α} (h : ∀ i, NullMeasurableSet (s i) μ) :
     NullMeasurableSet (⋃ i, s i) μ :=
   MeasurableSet.union h
+#align measure_theory.null_measurable_set.Union MeasureTheory.NullMeasurableSet.union
 
 protected theorem bUnionDecode₂ [Encodable ι] ⦃f : ι → Set α⦄ (h : ∀ i, NullMeasurableSet (f i) μ) (n : ℕ) :
     NullMeasurableSet (⋃ b ∈ Encodable.decode₂ ι n, f b) μ :=
   MeasurableSet.bUnionDecode₂ h n
+#align measure_theory.null_measurable_set.bUnion_decode₂ MeasureTheory.NullMeasurableSet.bUnionDecode₂
 
 protected theorem bUnion {f : ι → Set α} {s : Set ι} (hs : s.Countable) (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) :
     NullMeasurableSet (⋃ b ∈ s, f b) μ :=
   MeasurableSet.bUnion hs h
+#align measure_theory.null_measurable_set.bUnion MeasureTheory.NullMeasurableSet.bUnion
 
 protected theorem sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, NullMeasurableSet t μ) :
     NullMeasurableSet (⋃₀s) μ := by
   rw [sUnion_eq_bUnion]
   exact MeasurableSet.bUnion hs h
+#align measure_theory.null_measurable_set.sUnion MeasureTheory.NullMeasurableSet.sUnion
 
 protected theorem inter {ι : Sort _} [Countable ι] {f : ι → Set α} (h : ∀ i, NullMeasurableSet (f i) μ) :
     NullMeasurableSet (⋂ i, f i) μ :=
   MeasurableSet.inter h
+#align measure_theory.null_measurable_set.Inter MeasureTheory.NullMeasurableSet.inter
 
 protected theorem bInter {f : β → Set α} {s : Set β} (hs : s.Countable) (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) :
     NullMeasurableSet (⋂ b ∈ s, f b) μ :=
   MeasurableSet.bInter hs h
+#align measure_theory.null_measurable_set.bInter MeasureTheory.NullMeasurableSet.bInter
 
 protected theorem sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, NullMeasurableSet t μ) :
     NullMeasurableSet (⋂₀ s) μ :=
   MeasurableSet.sInter hs h
+#align measure_theory.null_measurable_set.sInter MeasureTheory.NullMeasurableSet.sInter
 
 /- warning: measure_theory.null_measurable_set.union clashes with measure_theory.null_measurable_set.Union -> MeasureTheory.NullMeasurableSet.union
 warning: measure_theory.null_measurable_set.union -> MeasureTheory.NullMeasurableSet.union is a dubious translation:
@@ -164,9 +182,11 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.null_me
 @[simp]
 protected theorem union (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) : NullMeasurableSet (s ∪ t) μ :=
   hs.union ht
+#align measure_theory.null_measurable_set.union MeasureTheory.NullMeasurableSet.union
 
 protected theorem unionNull (hs : NullMeasurableSet s μ) (ht : μ t = 0) : NullMeasurableSet (s ∪ t) μ :=
   hs.union (ofNull ht)
+#align measure_theory.null_measurable_set.union_null MeasureTheory.NullMeasurableSet.unionNull
 
 /- warning: measure_theory.null_measurable_set.inter clashes with measure_theory.null_measurable_set.Inter -> MeasureTheory.NullMeasurableSet.inter
 warning: measure_theory.null_measurable_set.inter -> MeasureTheory.NullMeasurableSet.inter is a dubious translation:
@@ -178,19 +198,23 @@ Case conversion may be inaccurate. Consider using '#align measure_theory.null_me
 @[simp]
 protected theorem inter (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) : NullMeasurableSet (s ∩ t) μ :=
   hs.inter ht
+#align measure_theory.null_measurable_set.inter MeasureTheory.NullMeasurableSet.inter
 
 @[simp]
 protected theorem diff (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) : NullMeasurableSet (s \ t) μ :=
   hs.diff ht
+#align measure_theory.null_measurable_set.diff MeasureTheory.NullMeasurableSet.diff
 
 @[simp]
 protected theorem disjointed {f : ℕ → Set α} (h : ∀ i, NullMeasurableSet (f i) μ) (n) :
     NullMeasurableSet (disjointed f n) μ :=
   MeasurableSet.disjointed h n
+#align measure_theory.null_measurable_set.disjointed MeasureTheory.NullMeasurableSet.disjointed
 
 @[simp]
 protected theorem const (p : Prop) : NullMeasurableSet { a : α | p } μ :=
   MeasurableSet.const p
+#align measure_theory.null_measurable_set.const MeasureTheory.NullMeasurableSet.const
 
 instance [MeasurableSingletonClass α] : MeasurableSingletonClass (NullMeasurableSpace α μ) :=
   ⟨fun x => (@measurableSetSingleton α _ _ x).NullMeasurableSet⟩
@@ -198,8 +222,9 @@ instance [MeasurableSingletonClass α] : MeasurableSingletonClass (NullMeasurabl
 protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)] (hs : NullMeasurableSet s μ) (a : α) :
     NullMeasurableSet (insert a s) μ :=
   hs.insert a
+#align measure_theory.null_measurable_set.insert MeasureTheory.NullMeasurableSet.insert
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊇ » s) -/
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s := by
   rcases h with ⟨t, htm, hst⟩
@@ -209,19 +234,26 @@ theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
   · have : to_measurable μ (s \ t) =ᵐ[μ] (∅ : Set α) := by simp [ae_le_set.1 hst.le]
     simpa only [union_empty] using hst.symm.union this
     
+#align
+  measure_theory.null_measurable_set.exists_measurable_superset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_superset_ae_eq
 
 theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ s =ᵐ[μ] s := by
   rw [to_measurable, dif_pos]
   exact h.exists_measurable_superset_ae_eq.some_spec.snd.2
+#align measure_theory.null_measurable_set.to_measurable_ae_eq MeasureTheory.NullMeasurableSet.to_measurable_ae_eq
 
 theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
   simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
+#align
+  measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_to_measurable_compl_ae_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨ToMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurableSetToMeasurable _ _).compl,
     h.compl_to_measurable_compl_ae_eq⟩
+#align
+  measure_theory.null_measurable_set.exists_measurable_subset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_subset_ae_eq
 
 end NullMeasurableSet
 
@@ -238,6 +270,7 @@ theorem exists_subordinate_pairwise_disjoint [Countable ι] {s : ι → Set α} 
     ⟨fun i => t i \ u i, fun i => (diff_subset _ _).trans (ht_sub _), fun i =>
       (ht_eq _).symm.trans (diff_null_ae_eq_self (hu₀ i)).symm, fun i => (htm i).diff (hum i),
       hud.mono fun i j h => h.mono (diff_subset_diff_left (ht_sub i)) (diff_subset_diff_left (ht_sub j))⟩
+#align measure_theory.exists_subordinate_pairwise_disjoint MeasureTheory.exists_subordinate_pairwise_disjoint
 
 theorem measure_Union {m0 : MeasurableSpace α} {μ : Measure α} [Countable ι] {f : ι → Set α}
     (hn : Pairwise (Disjoint on f)) (h : ∀ i, MeasurableSet (f i)) : μ (⋃ i, f i) = ∑' i, μ (f i) := by
@@ -248,6 +281,7 @@ theorem measure_Union {m0 : MeasurableSpace α} {μ : Measure α} [Countable ι]
     
   · exact μ.m_Union
     
+#align measure_theory.measure_Union MeasureTheory.measure_Union
 
 theorem measure_Union₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AeDisjoint μ on f))
     (h : ∀ i, NullMeasurableSet (f i) μ) : μ (⋃ i, f i) = ∑' i, μ (f i) := by
@@ -257,11 +291,13 @@ theorem measure_Union₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AeDi
     _ = ∑' i, μ (t i) := measure_Union htd htm
     _ = ∑' i, μ (f i) := tsum_congr fun i => measure_congr (ht_eq _).symm
     
+#align measure_theory.measure_Union₀ MeasureTheory.measure_Union₀
 
 theorem measure_union₀_aux (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) (hd : AeDisjoint μ s t) :
     μ (s ∪ t) = μ s + μ t := by
   rw [union_eq_Union, measure_Union₀, tsum_fintype, Fintype.sum_bool, cond, cond]
   exacts[(pairwise_on_bool ae_disjoint.symmetric).2 hd, fun b => Bool.casesOn b ht hs]
+#align measure_theory.measure_union₀_aux MeasureTheory.measure_union₀_aux
 
 /-- A null measurable set `t` is Carathéodory measurable: for any `s`, we have
 `μ (s ∩ t) + μ (s \ t) = μ s`. -/
@@ -273,7 +309,7 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) : �
       μ (s ∩ t) + μ (s \ t) ≤ μ (s' ∩ t) + μ (s' \ t) :=
         add_le_add (measure_mono <| inter_subset_inter_left _ hsub) (measure_mono <| diff_subset_diff_left hsub)
       _ = μ (s' ∩ t ∪ s' \ t) :=
-        (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) <| (@disjointInfSdiff _ s' t _).AeDisjoint).symm
+        (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) <| (@disjoint_inf_sdiff _ s' t _).AeDisjoint).symm
       _ = μ s' := congr_arg μ (inter_union_diff _ _)
       _ = μ s := hs'
       
@@ -283,19 +319,24 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) : �
       _ ≤ μ (s ∩ t) + μ (s \ t) := measure_union_le _ _
       
     
+#align measure_theory.measure_inter_add_diff₀ MeasureTheory.measure_inter_add_diff₀
 
 theorem measure_union_add_inter₀ (s : Set α) (ht : NullMeasurableSet t μ) : μ (s ∪ t) + μ (s ∩ t) = μ s + μ t := by
   rw [← measure_inter_add_diff₀ (s ∪ t) ht, union_inter_cancel_right, union_diff_right, ← measure_inter_add_diff₀ s ht,
     add_comm, ← add_assoc, add_right_comm]
+#align measure_theory.measure_union_add_inter₀ MeasureTheory.measure_union_add_inter₀
 
 theorem measure_union_add_inter₀' (hs : NullMeasurableSet s μ) (t : Set α) : μ (s ∪ t) + μ (s ∩ t) = μ s + μ t := by
   rw [union_comm, inter_comm, measure_union_add_inter₀ t hs, add_comm]
+#align measure_theory.measure_union_add_inter₀' MeasureTheory.measure_union_add_inter₀'
 
 theorem measure_union₀ (ht : NullMeasurableSet t μ) (hd : AeDisjoint μ s t) : μ (s ∪ t) = μ s + μ t := by
   rw [← measure_union_add_inter₀ s ht, hd.eq, add_zero]
+#align measure_theory.measure_union₀ MeasureTheory.measure_union₀
 
 theorem measure_union₀' (hs : NullMeasurableSet s μ) (hd : AeDisjoint μ s t) : μ (s ∪ t) = μ s + μ t := by
   rw [union_comm, measure_union₀ hs hd.symm, add_comm]
+#align measure_theory.measure_union₀' MeasureTheory.measure_union₀'
 
 section MeasurableSingletonClass
 
@@ -303,48 +344,64 @@ variable [MeasurableSingletonClass (NullMeasurableSpace α μ)]
 
 theorem nullMeasurableSetSingleton (x : α) : NullMeasurableSet {x} μ :=
   measurableSetSingleton x
+#align measure_theory.null_measurable_set_singleton MeasureTheory.nullMeasurableSetSingleton
 
 @[simp]
 theorem null_measurable_set_insert {a : α} {s : Set α} : NullMeasurableSet (insert a s) μ ↔ NullMeasurableSet s μ :=
   measurable_set_insert
+#align measure_theory.null_measurable_set_insert MeasureTheory.null_measurable_set_insert
 
 theorem nullMeasurableSetEq {a : α} : NullMeasurableSet { x | x = a } μ :=
   nullMeasurableSetSingleton a
+#align measure_theory.null_measurable_set_eq MeasureTheory.nullMeasurableSetEq
 
 protected theorem _root_.set.finite.null_measurable_set (hs : s.Finite) : NullMeasurableSet s μ :=
   Finite.measurableSet hs
+#align measure_theory._root_.set.finite.null_measurable_set measure_theory._root_.set.finite.null_measurable_set
 
 protected theorem _root_.finset.null_measurable_set (s : Finset α) : NullMeasurableSet (↑s) μ :=
   Finset.measurableSet s
+#align measure_theory._root_.finset.null_measurable_set measure_theory._root_.finset.null_measurable_set
 
 end MeasurableSingletonClass
 
 theorem _root_.set.finite.null_measurable_set_bUnion {f : ι → Set α} {s : Set ι} (hs : s.Finite)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
   Finite.measurableSetBUnion hs h
+#align
+  measure_theory._root_.set.finite.null_measurable_set_bUnion measure_theory._root_.set.finite.null_measurable_set_bUnion
 
 theorem _root_.finset.null_measurable_set_bUnion {f : ι → Set α} (s : Finset ι)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
   Finset.measurableSetBUnion s h
+#align measure_theory._root_.finset.null_measurable_set_bUnion measure_theory._root_.finset.null_measurable_set_bUnion
 
 theorem _root_.set.finite.null_measurable_set_sUnion {s : Set (Set α)} (hs : s.Finite)
     (h : ∀ t ∈ s, NullMeasurableSet t μ) : NullMeasurableSet (⋃₀s) μ :=
   Finite.measurableSetSUnion hs h
+#align
+  measure_theory._root_.set.finite.null_measurable_set_sUnion measure_theory._root_.set.finite.null_measurable_set_sUnion
 
 theorem _root_.set.finite.null_measurable_set_bInter {f : ι → Set α} {s : Set ι} (hs : s.Finite)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
   Finite.measurableSetBInter hs h
+#align
+  measure_theory._root_.set.finite.null_measurable_set_bInter measure_theory._root_.set.finite.null_measurable_set_bInter
 
 theorem _root_.finset.null_measurable_set_bInter {f : ι → Set α} (s : Finset ι)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
   s.finite_to_set.nullMeasurableSetBInter h
+#align measure_theory._root_.finset.null_measurable_set_bInter measure_theory._root_.finset.null_measurable_set_bInter
 
 theorem _root_.set.finite.null_measurable_set_sInter {s : Set (Set α)} (hs : s.Finite)
     (h : ∀ t ∈ s, NullMeasurableSet t μ) : NullMeasurableSet (⋂₀ s) μ :=
   NullMeasurableSet.sInter hs.Countable h
+#align
+  measure_theory._root_.set.finite.null_measurable_set_sInter measure_theory._root_.set.finite.null_measurable_set_sInter
 
 theorem nullMeasurableSetToMeasurable : NullMeasurableSet (ToMeasurable μ s) μ :=
   (measurableSetToMeasurable _ _).NullMeasurableSet
+#align measure_theory.null_measurable_set_to_measurable MeasureTheory.nullMeasurableSetToMeasurable
 
 end
 
@@ -356,19 +413,24 @@ variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α 
 measurable set. -/
 def NullMeasurable (f : α → β) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) : Prop :=
   ∀ ⦃s : Set β⦄, MeasurableSet s → NullMeasurableSet (f ⁻¹' s) μ
+#align measure_theory.null_measurable MeasureTheory.NullMeasurable
 
 protected theorem _root_.measurable.null_measurable (h : Measurable f) : NullMeasurable f μ := fun s hs =>
   (h hs).NullMeasurableSet
+#align measure_theory._root_.measurable.null_measurable measure_theory._root_.measurable.null_measurable
 
 protected theorem NullMeasurable.measurable' (h : NullMeasurable f μ) : @Measurable (NullMeasurableSpace α μ) β _ _ f :=
   h
+#align measure_theory.null_measurable.measurable' MeasureTheory.NullMeasurable.measurable'
 
 theorem Measurable.compNullMeasurable {g : β → γ} (hg : Measurable g) (hf : NullMeasurable f μ) :
     NullMeasurable (g ∘ f) μ :=
   hg.comp hf
+#align measure_theory.measurable.comp_null_measurable MeasureTheory.Measurable.compNullMeasurable
 
 theorem NullMeasurable.congr {g : α → β} (hf : NullMeasurable f μ) (hg : f =ᵐ[μ] g) : NullMeasurable g μ := fun s hs =>
   (hf hs).congr <| eventually_eq_set.2 <| hg.mono fun x hx => by rw [mem_preimage, mem_preimage, hx]
+#align measure_theory.null_measurable.congr MeasureTheory.NullMeasurable.congr
 
 end NullMeasurable
 
@@ -380,28 +442,35 @@ section IsComplete
   that a set `s` is null if `μ s = 0`. -/
 class Measure.IsComplete {_ : MeasurableSpace α} (μ : Measure α) : Prop where
   out' : ∀ s, μ s = 0 → MeasurableSet s
+#align measure_theory.measure.is_complete MeasureTheory.Measure.IsComplete
 
 variable {m0 : MeasurableSpace α} {μ : Measure α} {s t : Set α}
 
 theorem Measure.is_complete_iff : μ.IsComplete ↔ ∀ s, μ s = 0 → MeasurableSet s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
+#align measure_theory.measure.is_complete_iff MeasureTheory.Measure.is_complete_iff
 
 theorem Measure.IsComplete.out (h : μ.IsComplete) : ∀ s, μ s = 0 → MeasurableSet s :=
   h.1
+#align measure_theory.measure.is_complete.out MeasureTheory.Measure.IsComplete.out
 
 theorem measurableSetOfNull [μ.IsComplete] (hs : μ s = 0) : MeasurableSet s :=
   MeasureTheory.Measure.IsComplete.out' s hs
+#align measure_theory.measurable_set_of_null MeasureTheory.measurableSetOfNull
 
 theorem NullMeasurableSet.measurableOfComplete (hs : NullMeasurableSet s μ) [μ.IsComplete] : MeasurableSet s :=
   diff_diff_cancel_left (subset_to_measurable μ s) ▸
     (measurableSetToMeasurable _ _).diff (measurableSetOfNull (ae_le_set.1 hs.to_measurable_ae_eq.le))
+#align measure_theory.null_measurable_set.measurable_of_complete MeasureTheory.NullMeasurableSet.measurableOfComplete
 
 theorem NullMeasurable.measurableOfComplete [μ.IsComplete] {m1 : MeasurableSpace β} {f : α → β}
     (hf : NullMeasurable f μ) : Measurable f := fun s hs => (hf hs).measurableOfComplete
+#align measure_theory.null_measurable.measurable_of_complete MeasureTheory.NullMeasurable.measurableOfComplete
 
 theorem _root_.measurable.congr_ae {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} [hμ : μ.IsComplete]
     {f g : α → β} (hf : Measurable f) (hfg : f =ᵐ[μ] g) : Measurable g :=
   (hf.NullMeasurable.congr hfg).measurableOfComplete
+#align measure_theory._root_.measurable.congr_ae measure_theory._root_.measurable.congr_ae
 
 namespace Measure
 
@@ -415,16 +484,20 @@ def completion {_ : MeasurableSpace α} (μ : Measure α) : @MeasureTheory.Measu
     simp only [to_outer_measure_apply]
     refine' (infi₂_mono _).trans_eq (measure_eq_infi _).symm
     exact fun t ht => infi_mono' fun h => ⟨h.NullMeasurableSet, le_rfl⟩
+#align measure_theory.measure.completion MeasureTheory.Measure.completion
 
 instance completion.isComplete {m : MeasurableSpace α} (μ : Measure α) : μ.Completion.IsComplete :=
   ⟨fun z hz => NullMeasurableSet.ofNull hz⟩
+#align measure_theory.measure.completion.is_complete MeasureTheory.Measure.completion.isComplete
 
 @[simp]
 theorem coe_completion {_ : MeasurableSpace α} (μ : Measure α) : ⇑μ.Completion = μ :=
   rfl
+#align measure_theory.measure.coe_completion MeasureTheory.Measure.coe_completion
 
 theorem completion_apply {_ : MeasurableSpace α} (μ : Measure α) (s : Set α) : μ.Completion s = μ s :=
   rfl
+#align measure_theory.measure.completion_apply MeasureTheory.Measure.completion_apply
 
 end Measure
 

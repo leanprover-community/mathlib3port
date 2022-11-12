@@ -46,6 +46,7 @@ class NormalMono (f : X ⟶ Y) where
   g : Y ⟶ Z
   w : f ≫ g = 0
   IsLimit : IsLimit (KernelFork.ofι f w)
+#align category_theory.normal_mono CategoryTheory.NormalMono
 
 section
 
@@ -66,18 +67,21 @@ def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMo
           (is_limit.of_iso_limit (is_kernel.of_comp_iso _ _ (F.obj_obj_preimage_iso hf.Z) (by simp) hf.is_limit)
             (of_ι_congr (category.comp_id _).symm))
           (isoOfι _).symm
+#align category_theory.equivalence_reflects_normal_mono CategoryTheory.equivalenceReflectsNormalMono
 
 end
 
 /-- Every normal monomorphism is a regular monomorphism. -/
 instance (priority := 100) NormalMono.regularMono (f : X ⟶ Y) [I : NormalMono f] : RegularMono f :=
   { I with left := I.g, right := 0, w := by simpa using I.w }
+#align category_theory.normal_mono.regular_mono CategoryTheory.NormalMono.regularMono
 
 /-- If `f` is a normal mono, then any map `k : W ⟶ Y` such that `k ≫ normal_mono.g = 0` induces
     a morphism `l : W ⟶ X` such that `l ≫ f = k`. -/
 def NormalMono.lift' {W : C} (f : X ⟶ Y) [NormalMono f] (k : W ⟶ Y) (h : k ≫ normal_mono.g = 0) :
     { l : W ⟶ X // l ≫ f = k } :=
   KernelFork.IsLimit.lift' NormalMono.isLimit _ h
+#align category_theory.normal_mono.lift' CategoryTheory.NormalMono.lift'
 
 /-- The second leg of a pullback cone is a normal monomorphism if the right component is too.
 
@@ -99,6 +103,7 @@ def normalOfIsPullbackSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h :
     exact q
     exact q
     apply proof_irrel_heq
+#align category_theory.normal_of_is_pullback_snd_of_normal CategoryTheory.normalOfIsPullbackSndOfNormal
 
 /-- The first leg of a pullback cone is a normal monomorphism if the left component is too.
 
@@ -108,6 +113,7 @@ See also `pullback.fst_of_mono` for the basic monomorphism version, and
 def normalOfIsPullbackFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hn : NormalMono k]
     (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : NormalMono f :=
   normalOfIsPullbackSndOfNormal comm.symm (PullbackCone.flipIsLimit t)
+#align category_theory.normal_of_is_pullback_fst_of_normal CategoryTheory.normalOfIsPullbackFstOfNormal
 
 section
 
@@ -116,6 +122,7 @@ variable (C)
 /-- A normal mono category is a category in which every monomorphism is normal. -/
 class NormalMonoCategory where
   normalMonoOfMono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], NormalMono f
+#align category_theory.normal_mono_category CategoryTheory.NormalMonoCategory
 
 end
 
@@ -123,11 +130,14 @@ end
     a kernel. This is not an instance because it would create an instance loop. -/
 def normalMonoOfMono [NormalMonoCategory C] (f : X ⟶ Y) [Mono f] : NormalMono f :=
   NormalMonoCategory.normalMonoOfMono _
+#align category_theory.normal_mono_of_mono CategoryTheory.normalMonoOfMono
 
 instance (priority := 100) regularMonoCategoryOfNormalMonoCategory [NormalMonoCategory C] :
     RegularMonoCategory C where regularMonoOfMono _ _ f _ := by
     haveI := normal_mono_of_mono f
     infer_instance
+#align
+  category_theory.regular_mono_category_of_normal_mono_category CategoryTheory.regularMonoCategoryOfNormalMonoCategory
 
 end
 
@@ -141,6 +151,7 @@ class NormalEpi (f : X ⟶ Y) where
   g : W ⟶ X
   w : g ≫ f = 0
   IsColimit : IsColimit (CokernelCofork.ofπ f w)
+#align category_theory.normal_epi CategoryTheory.NormalEpi
 
 section
 
@@ -162,18 +173,21 @@ def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMor
             (is_cokernel.of_iso_comp _ _ (F.obj_obj_preimage_iso hf.W).symm (by simp) hf.is_colimit)
             (of_π_congr (category.id_comp _).symm))
           (isoOfπ _).symm
+#align category_theory.equivalence_reflects_normal_epi CategoryTheory.equivalenceReflectsNormalEpi
 
 end
 
 /-- Every normal epimorphism is a regular epimorphism. -/
 instance (priority := 100) NormalEpi.regularEpi (f : X ⟶ Y) [I : NormalEpi f] : RegularEpi f :=
   { I with left := I.g, right := 0, w := by simpa using I.w }
+#align category_theory.normal_epi.regular_epi CategoryTheory.NormalEpi.regularEpi
 
 /-- If `f` is a normal epi, then every morphism `k : X ⟶ W` satisfying `normal_epi.g ≫ k = 0`
     induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
 def NormalEpi.desc' {W : C} (f : X ⟶ Y) [NormalEpi f] (k : X ⟶ W) (h : normal_epi.g ≫ k = 0) :
     { l : Y ⟶ W // f ≫ l = k } :=
   CokernelCofork.IsColimit.desc' NormalEpi.isColimit _ h
+#align category_theory.normal_epi.desc' CategoryTheory.NormalEpi.desc'
 
 /-- The second leg of a pushout cocone is a normal epimorphism if the right component is too.
 
@@ -195,6 +209,7 @@ def normalOfIsPushoutSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : 
     exact q
     exact q
     apply proof_irrel_heq
+#align category_theory.normal_of_is_pushout_snd_of_normal CategoryTheory.normalOfIsPushoutSndOfNormal
 
 /-- The first leg of a pushout cocone is a normal epimorphism if the left component is too.
 
@@ -204,6 +219,7 @@ See also `pushout.fst_of_epi` for the basic epimorphism version, and
 def normalOfIsPushoutFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hn : NormalEpi f]
     (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : NormalEpi k :=
   normalOfIsPushoutSndOfNormal comm.symm (PushoutCocone.flipIsColimit t)
+#align category_theory.normal_of_is_pushout_fst_of_normal CategoryTheory.normalOfIsPushoutFstOfNormal
 
 end
 
@@ -226,6 +242,7 @@ def normalEpiOfNormalMonoUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalMono f.un
         apply Quiver.Hom.unop_inj
         apply m.is_limit.uniq (kernel_fork.of_ι (m'.unop ≫ f.unop) _) m'.unop
         rintro (⟨⟩ | ⟨⟩) <;> simp)
+#align category_theory.normal_epi_of_normal_mono_unop CategoryTheory.normalEpiOfNormalMonoUnop
 
 /-- A normal epi becomes a normal mono in the opposite category. -/
 def normalMonoOfNormalEpiUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalEpi f.unop) : NormalMono f where
@@ -242,6 +259,7 @@ def normalMonoOfNormalEpiUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalEpi f.uno
         apply Quiver.Hom.unop_inj
         apply m.is_colimit.uniq (cokernel_cofork.of_π (f.unop ≫ m'.unop) _) m'.unop
         rintro (⟨⟩ | ⟨⟩) <;> simp)
+#align category_theory.normal_mono_of_normal_epi_unop CategoryTheory.normalMonoOfNormalEpiUnop
 
 section
 
@@ -250,6 +268,7 @@ variable (C)
 /-- A normal epi category is a category in which every epimorphism is normal. -/
 class NormalEpiCategory where
   normalEpiOfEpi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], NormalEpi f
+#align category_theory.normal_epi_category CategoryTheory.NormalEpiCategory
 
 end
 
@@ -257,11 +276,13 @@ end
     a kernel. This is not an instance because it would create an instance loop. -/
 def normalEpiOfEpi [NormalEpiCategory C] (f : X ⟶ Y) [Epi f] : NormalEpi f :=
   NormalEpiCategory.normalEpiOfEpi _
+#align category_theory.normal_epi_of_epi CategoryTheory.normalEpiOfEpi
 
 instance (priority := 100) regularEpiCategoryOfNormalEpiCategory [NormalEpiCategory C] :
     RegularEpiCategory C where regularEpiOfEpi _ _ f _ := by
     haveI := normal_epi_of_epi f
     infer_instance
+#align category_theory.regular_epi_category_of_normal_epi_category CategoryTheory.regularEpiCategoryOfNormalEpiCategory
 
 end CategoryTheory
 

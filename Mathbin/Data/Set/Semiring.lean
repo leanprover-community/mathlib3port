@@ -24,39 +24,48 @@ variable {α β : Type _}
   multiplication `*` as "multiplication". -/
 def SetSemiring (α : Type _) : Type _ :=
   Set α deriving Inhabited, PartialOrder, OrderBot
+#align set_semiring SetSemiring
 
 /-- The identity function `set α → set_semiring α`. -/
 protected def Set.up : Set α ≃ SetSemiring α :=
   Equiv.refl _
+#align set.up Set.up
 
 namespace SetSemiring
 
 /-- The identity function `set_semiring α → set α`. -/
 protected def down : SetSemiring α ≃ Set α :=
   Equiv.refl _
+#align set_semiring.down SetSemiring.down
 
 @[simp]
 protected theorem down_up (s : Set α) : s.up.down = s :=
   rfl
+#align set_semiring.down_up SetSemiring.down_up
 
 @[simp]
 protected theorem up_down (s : SetSemiring α) : s.down.up = s :=
   rfl
+#align set_semiring.up_down SetSemiring.up_down
 
 -- TODO: These lemmas are not tagged `simp` because `set.le_eq_subset` simplifies the LHS
 theorem up_le_up {s t : Set α} : s.up ≤ t.up ↔ s ⊆ t :=
   Iff.rfl
+#align set_semiring.up_le_up SetSemiring.up_le_up
 
 theorem up_lt_up {s t : Set α} : s.up < t.up ↔ s ⊂ t :=
   Iff.rfl
+#align set_semiring.up_lt_up SetSemiring.up_lt_up
 
 @[simp]
 theorem down_subset_down {s t : SetSemiring α} : s.down ⊆ t.down ↔ s ≤ t :=
   Iff.rfl
+#align set_semiring.down_subset_down SetSemiring.down_subset_down
 
 @[simp]
 theorem down_ssubset_down {s t : SetSemiring α} : s.down ⊂ t.down ↔ s < t :=
   Iff.rfl
+#align set_semiring.down_ssubset_down SetSemiring.down_ssubset_down
 
 instance : AddCommMonoid (SetSemiring α) where
   add s t := (s.down ∪ t.down).up
@@ -70,6 +79,7 @@ instance : AddCommMonoid (SetSemiring α) where
 to also have the instance `covariant_class (set_semiring α) (set_semiring α) (swap (+)) (≤)`. -/
 instance covariant_class_add : CovariantClass (SetSemiring α) (SetSemiring α) (· + ·) (· ≤ ·) :=
   ⟨fun a b c => union_subset_union_right _⟩
+#align set_semiring.covariant_class_add SetSemiring.covariant_class_add
 
 section Mul
 
@@ -86,9 +96,11 @@ instance : NoZeroDivisors (SetSemiring α) :=
 
 instance covariant_class_mul_left : CovariantClass (SetSemiring α) (SetSemiring α) (· * ·) (· ≤ ·) :=
   ⟨fun a b c => mul_subset_mul_left⟩
+#align set_semiring.covariant_class_mul_left SetSemiring.covariant_class_mul_left
 
 instance covariant_class_mul_right : CovariantClass (SetSemiring α) (SetSemiring α) (swap (· * ·)) (· ≤ ·) :=
   ⟨fun a b c => mul_subset_mul_right⟩
+#align set_semiring.covariant_class_mul_right SetSemiring.covariant_class_mul_right
 
 end Mul
 
@@ -117,6 +129,7 @@ def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) : SetSemiring α
   map_one' := by rw [image_one, map_one, singleton_one]
   map_add' := image_union _
   map_mul' _ _ := image_mul f
+#align set_semiring.image_hom SetSemiring.imageHom
 
 end SetSemiring
 

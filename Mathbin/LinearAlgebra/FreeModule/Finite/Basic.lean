@@ -51,8 +51,8 @@ instance linearMap [Module.Finite R M] [Module.Finite R N] : Module.Free R (M �
   cases subsingleton_or_nontrivial R
   · apply Module.Free.ofSubsingleton'
     
-  classical
-  exact of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
+  classical exact of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
+#align module.free.linear_map Module.Free.linearMap
 
 variable {R}
 
@@ -60,22 +60,21 @@ variable {R}
 theorem _root_.module.finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [Module R M] [Finite ι]
     (b : Basis ι R M) : Module.Finite R M := by
   cases nonempty_fintype ι
-  classical
-  refine' ⟨⟨finset.univ.image b, _⟩⟩
-  simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
+  classical refine' ⟨⟨finset.univ.image b, _⟩⟩
+#align module.free._root_.module.finite.of_basis module.free._root_.module.finite.of_basis
 
 instance _root_.module.finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] : Module.Finite R (Matrix ι₁ ι₂ R) := by
   cases nonempty_fintype ι₁
   cases nonempty_fintype ι₂
   exact Module.Finite.of_basis (Pi.basis fun i => Pi.basisFun R _)
+#align module.free._root_.module.finite.matrix module.free._root_.module.finite.matrix
 
 instance _root_.module.finite.linear_map [Module.Finite R M] [Module.Finite R N] : Module.Finite R (M →ₗ[R] N) := by
   cases subsingleton_or_nontrivial R
   · infer_instance
     
-  classical
-  have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
-  exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
+  classical have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
+#align module.free._root_.module.finite.linear_map module.free._root_.module.finite.linear_map
 
 end CommRing
 
@@ -87,10 +86,12 @@ variable [AddCommGroup N] [Module.Finite ℤ N] [Module.Free ℤ N]
 
 instance _root_.module.finite.add_monoid_hom : Module.Finite ℤ (M →+ N) :=
   Module.Finite.equiv (addMonoidHomLequivInt ℤ).symm
+#align module.free._root_.module.finite.add_monoid_hom module.free._root_.module.finite.add_monoid_hom
 
 instance addMonoidHom : Module.Free ℤ (M →+ N) :=
   letI : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linearMap _ _ _
   Module.Free.ofEquiv (addMonoidHomLequivInt ℤ).symm
+#align module.free.add_monoid_hom Module.Free.addMonoidHom
 
 end Integer
 

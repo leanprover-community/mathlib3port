@@ -37,6 +37,7 @@ namespace Projectivization
 in projective space. -/
 inductive Independent : (ι → ℙ K V) → Prop
   | mk (f : ι → V) (hf : ∀ i : ι, f i ≠ 0) (hl : LinearIndependent K f) : independent fun i => mk K (f i) (hf i)
+#align projectivization.independent Projectivization.Independent
 
 /-- A family of points in a projective space is independent if and only if the representative
 vectors determined by the family are linearly independent. -/
@@ -56,6 +57,7 @@ theorem independent_iff : Independent f ↔ LinearIndependent K (Projectivizatio
       apply rep_nonzero
       
     
+#align projectivization.independent_iff Projectivization.independent_iff
 
 /-- A family of points in projective space is independent if and only if the family of
 submodules which the points determine is independent in the lattice-theoretic sense. -/
@@ -67,16 +69,19 @@ theorem independent_iff_complete_lattice_independent :
     
   · rw [independent_iff]
     refine' h.linear_independent (Projectivization.submodule ∘ f) (fun i => _) fun i => _
-    · simpa only [Function.comp_app, submodule_eq] using Submodule.mem_span_singleton_self _
+    · simpa only [Function.comp_apply, submodule_eq] using Submodule.mem_span_singleton_self _
       
     · exact rep_nonzero (f i)
       
     
+#align
+  projectivization.independent_iff_complete_lattice_independent Projectivization.independent_iff_complete_lattice_independent
 
 /-- A linearly dependent family of nonzero vectors gives a dependent family of points
 in projective space. -/
 inductive Dependent : (ι → ℙ K V) → Prop
   | mk (f : ι → V) (hf : ∀ i : ι, f i ≠ 0) (h : ¬LinearIndependent K f) : dependent fun i => mk K (f i) (hf i)
+#align projectivization.dependent Projectivization.Dependent
 
 /-- A family of points in a projective space is dependent if and only if their
 representatives are linearly dependent. -/
@@ -87,7 +92,7 @@ theorem dependent_iff : Dependent f ↔ ¬LinearIndependent K (Projectivization.
     choose a ha using fun i : ι => exists_smul_eq_mk_rep K (ff i) (hff i)
     convert hh1.units_smul a⁻¹
     ext i
-    simp only [← ha, inv_smul_smul, Pi.smul_apply', Pi.inv_apply, Function.comp_app]
+    simp only [← ha, inv_smul_smul, Pi.smul_apply', Pi.inv_apply, Function.comp_apply]
     
   · convert dependent.mk _ _ h
     · ext i
@@ -96,25 +101,30 @@ theorem dependent_iff : Dependent f ↔ ¬LinearIndependent K (Projectivization.
     · exact fun i => rep_nonzero (f i)
       
     
+#align projectivization.dependent_iff Projectivization.dependent_iff
 
 /-- Dependence is the negation of independence. -/
 theorem dependent_iff_not_independent : Dependent f ↔ ¬Independent f := by rw [dependent_iff, independent_iff]
+#align projectivization.dependent_iff_not_independent Projectivization.dependent_iff_not_independent
 
 /-- Independence is the negation of dependence. -/
 theorem independent_iff_not_dependent : Independent f ↔ ¬Dependent f := by rw [dependent_iff_not_independent, not_not]
+#align projectivization.independent_iff_not_dependent Projectivization.independent_iff_not_dependent
 
 /-- Two points in a projective space are dependent if and only if they are equal. -/
 @[simp]
 theorem dependent_pair_iff_eq (u v : ℙ K V) : Dependent ![u, v] ↔ u = v := by
-  simp_rw [dependent_iff_not_independent, independent_iff, linear_independent_fin2, Function.comp_app,
+  simp_rw [dependent_iff_not_independent, independent_iff, linear_independent_fin2, Function.comp_apply,
     Matrix.cons_val_one, Matrix.head_cons, Ne.def, Matrix.cons_val_zero, not_and, not_forall, not_not, ←
     mk_eq_mk_iff' K _ _ (rep_nonzero u) (rep_nonzero v), mk_rep, imp_iff_right_iff]
   exact Or.inl (rep_nonzero v)
+#align projectivization.dependent_pair_iff_eq Projectivization.dependent_pair_iff_eq
 
 /-- Two points in a projective space are independent if and only if the points are not equal. -/
 @[simp]
 theorem independent_pair_iff_neq (u v : ℙ K V) : Independent ![u, v] ↔ u ≠ v := by
   rw [independent_iff_not_dependent, dependent_pair_iff_eq u v]
+#align projectivization.independent_pair_iff_neq Projectivization.independent_pair_iff_neq
 
 end Projectivization
 

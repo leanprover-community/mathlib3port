@@ -35,14 +35,17 @@ instance : HasSmul M (Option α) :=
 @[to_additive]
 theorem smul_def : a • x = x.map ((· • ·) a) :=
   rfl
+#align option.smul_def Option.smul_def
 
 @[simp, to_additive]
 theorem smul_none : a • (none : Option α) = none :=
   rfl
+#align option.smul_none Option.smul_none
 
 @[simp, to_additive]
 theorem smul_some : a • some b = some (a • b) :=
   rfl
+#align option.smul_some Option.smul_some
 
 instance [HasSmul M N] [IsScalarTower M N α] : IsScalarTower M N (Option α) :=
   ⟨fun a b x => by

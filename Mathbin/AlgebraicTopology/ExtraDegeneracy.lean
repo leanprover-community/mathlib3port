@@ -60,7 +60,7 @@ variable {C : Type _} [Category C]
 /-- The datum of an extra degeneracy is a technical condition on
 augmented simplicial objects. The morphisms `s'` and `s n` of the
 structure formally behave like extra degeneracies `σ (-1)`. -/
-@[ext]
+@[ext.1]
 structure ExtraDegeneracy (X : SimplicialObject.Augmented C) where
   s' : point.obj X ⟶ drop.obj X _[0]
   s : ∀ n : ℕ, drop.obj X _[n] ⟶ drop.obj X _[n + 1]
@@ -69,6 +69,7 @@ structure ExtraDegeneracy (X : SimplicialObject.Augmented C) where
   s_comp_δ₀' : ∀ n : ℕ, s n ≫ (drop.obj X).δ 0 = 𝟙 _
   s_comp_δ' : ∀ (n : ℕ) (i : Fin (n + 2)), s (n + 1) ≫ (drop.obj X).δ i.succ = (drop.obj X).δ i ≫ s n
   s_comp_σ' : ∀ (n : ℕ) (i : Fin (n + 1)), s n ≫ (drop.obj X).σ i.succ = (drop.obj X).σ i ≫ s (n + 1)
+#align simplicial_object.augmented.extra_degeneracy SimplicialObject.Augmented.ExtraDegeneracy
 
 namespace ExtraDegeneracy
 
@@ -110,6 +111,7 @@ def map {D : Type _} [Category D] {X : SimplicialObject.Augmented C} (ed : Extra
     dsimp
     erw [← F.map_comp, ← F.map_comp, ed.s_comp_σ]
     rfl
+#align simplicial_object.augmented.extra_degeneracy.map SimplicialObject.Augmented.ExtraDegeneracy.map
 
 /-- If `X` and `Y` are isomorphic augmented simplicial objects, then an extra
 degeneracy for `X` gives also an extra degeneracy for `Y` -/
@@ -134,6 +136,7 @@ def ofIso {X Y : SimplicialObject.Augmented C} (e : X ≅ Y) (ed : ExtraDegenera
     have h := ed.s_comp_σ' n i
     dsimp at h⊢
     simp only [assoc, ← simplicial_object.σ_naturality, reassoc_of h, ← simplicial_object.σ_naturality_assoc]
+#align simplicial_object.augmented.extra_degeneracy.of_iso SimplicialObject.Augmented.ExtraDegeneracy.ofIso
 
 end ExtraDegeneracy
 
@@ -151,10 +154,12 @@ namespace StandardSimplex
 is a map `fin (n+1) → X` which sends `0` to `0` and `i.succ` to `f i`. -/
 def shiftFun {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) (i : Fin (n + 1)) : X :=
   dite (i = 0) (fun h => 0) fun h => f (i.pred h)
+#align sSet.augmented.standard_simplex.shift_fun SSet.Augmented.standardSimplex.shiftFun
 
 @[simp]
 theorem shift_fun_0 {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) : shiftFun f 0 = 0 :=
   rfl
+#align sSet.augmented.standard_simplex.shift_fun_0 SSet.Augmented.standardSimplex.shift_fun_0
 
 @[simp]
 theorem shift_fun_succ {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) (i : Fin n) : shiftFun f i.succ = f i := by
@@ -165,6 +170,7 @@ theorem shift_fun_succ {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) (i : Fi
     
   · simp only [Fin.pred_succ]
     
+#align sSet.augmented.standard_simplex.shift_fun_succ SSet.Augmented.standardSimplex.shift_fun_succ
 
 /-- The shift of a morphism `f : [n] → Δ` in `simplex_category` corresponds to
 the monotone map which sends `0` to `0` and `i.succ` to `f.to_order_hom i`. -/
@@ -186,6 +192,7 @@ def shift {n : ℕ} {Δ : SimplexCategory} (f : [n] ⟶ Δ) : [n + 1] ⟶ Δ :=
           substs hj₁ hj₂
           simpa only [shift_fun_succ] using f.to_order_hom.monotone (fin.succ_le_succ_iff.mp hi)
            }
+#align sSet.augmented.standard_simplex.shift SSet.Augmented.standardSimplex.shift
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
@@ -227,10 +234,13 @@ def extraDegeneracy (Δ : SimplexCategory) : SimplicialObject.Augmented.ExtraDeg
       subst hk
       simp only [Fin.succ_pred_above_succ, shift_fun_succ]
       
+#align sSet.augmented.standard_simplex.extra_degeneracy SSet.Augmented.standardSimplex.extraDegeneracy
 
 instance nonempty_extra_degeneracy_standard_simplex (Δ : SimplexCategory) :
     Nonempty (SimplicialObject.Augmented.ExtraDegeneracy (standardSimplex.obj Δ)) :=
   ⟨standardSimplex.extraDegeneracy Δ⟩
+#align
+  sSet.augmented.standard_simplex.nonempty_extra_degeneracy_standard_simplex SSet.Augmented.standardSimplex.nonempty_extra_degeneracy_standard_simplex
 
 end StandardSimplex
 
@@ -263,12 +273,16 @@ noncomputable def ExtraDegeneracy.s (n : ℕ) : f.cechNerve.obj (op [n]) ⟶ f.c
       
     · simp only [wide_pullback.π_arrow]
       
+#align
+  category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s
 
 @[simp]
 theorem ExtraDegeneracy.s_comp_π_0 (n : ℕ) :
     ExtraDegeneracy.s f S n ≫ widePullback.π _ 0 = widePullback.base _ ≫ S.section_ := by
   dsimp [extra_degeneracy.s]
   simpa only [wide_pullback.lift_π]
+#align
+  category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_π_0 CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_π_0
 
 @[simp]
 theorem ExtraDegeneracy.s_comp_π_succ (n : ℕ) (i : Fin (n + 1)) :
@@ -282,10 +296,14 @@ theorem ExtraDegeneracy.s_comp_π_succ (n : ℕ) (i : Fin (n + 1)) :
   · congr
     apply Fin.pred_succ
     
+#align
+  category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_π_succ CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_π_succ
 
 @[simp]
 theorem ExtraDegeneracy.s_comp_base (n : ℕ) : ExtraDegeneracy.s f S n ≫ widePullback.base _ = widePullback.base _ := by
   apply wide_pullback.lift_base
+#align
+  category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_base CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_base
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The augmented Čech nerve associated to a split epimorphism has an extra degeneracy. -/
@@ -352,6 +370,8 @@ noncomputable def extraDegeneracy : SimplicialObject.Augmented.ExtraDegeneracy f
       dsimp
       simp only [wide_pullback.lift_base]
       
+#align
+  category_theory.arrow.augmented_cech_nerve.extra_degeneracy CategoryTheory.Arrow.augmentedCechNerve.extraDegeneracy
 
 end AugmentedCechNerve
 
@@ -384,7 +404,7 @@ noncomputable def homotopyEquiv {C : Type _} [Category C] [Preadditive C] [HasZe
   homotopyHomInvId :=
     { Hom := fun i j => by
         by_cases i + 1 = j
-        · exact -ed.s i ≫ eq_to_hom (by congr)
+        · exact (-ed.s i) ≫ eq_to_hom (by congr )
           
         · exact 0
           ,
@@ -412,6 +432,8 @@ noncomputable def homotopyEquiv {C : Type _} [Category C] [Preadditive C] [HasZe
             preadditive.sum_comp, neg_neg, mul_one, preadditive.comp_zsmul, preadditive.zsmul_comp, s_comp_δ, zsmul_neg]
           rw [add_comm (-𝟙 _), add_assoc, add_assoc, add_left_neg, add_zero, Finset.sum_neg_distrib, add_left_neg]
            }
+#align
+  simplicial_object.augmented.extra_degeneracy.homotopy_equiv SimplicialObject.Augmented.ExtraDegeneracy.homotopyEquiv
 
 end ExtraDegeneracy
 

@@ -59,6 +59,7 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin (n + 1), a * (b + c
       _ ≡ a * b + a * c [MOD n + 1] := by rw [mul_add]
       _ ≡ a * b % (n + 1) + a * c % (n + 1) [MOD n + 1] := (Nat.mod_modeq _ _).symm.add (Nat.mod_modeq _ _).symm
       )
+#align fin.left_distrib_aux fin.left_distrib_aux
 
 /-- Commutative ring structure on `fin (n+1)`. -/
 instance (n : ℕ) : CommRing (Fin (n + 1)) :=
@@ -72,23 +73,28 @@ end Fin
 def Zmod : ℕ → Type
   | 0 => ℤ
   | n + 1 => Fin (n + 1)
+#align zmod Zmod
 
 instance Zmod.decidableEq : ∀ n : ℕ, DecidableEq (Zmod n)
   | 0 => Int.decidableEq
   | n + 1 => Fin.decidableEq _
+#align zmod.decidable_eq Zmod.decidableEq
 
 instance Zmod.hasRepr : ∀ n : ℕ, Repr (Zmod n)
   | 0 => Int.hasRepr
   | n + 1 => Fin.hasRepr _
+#align zmod.has_repr Zmod.hasRepr
 
 namespace Zmod
 
 instance fintype : ∀ (n : ℕ) [NeZero n], Fintype (Zmod n)
   | 0, h => (NeZero.ne 0 rfl).elim
   | n + 1, _ => Fin.fintype (n + 1)
+#align zmod.fintype Zmod.fintype
 
 instance infinite : Infinite (Zmod 0) :=
   Int.infinite
+#align zmod.infinite Zmod.infinite
 
 @[simp]
 theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n := by
@@ -97,6 +103,7 @@ theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n := by
     
   · convert Fintype.card_fin (n + 1)
     
+#align zmod.card Zmod.card
 
 /- We define each field by cases, to ensure that the eta-expanded `zmod.comm_ring` is defeq to the
 original, this helps avoid diamonds with instances coming from classes extending `comm_ring` such as
@@ -135,9 +142,11 @@ instance commRing (n : ℕ) : CommRing (Zmod n) where
   left_distrib := Nat.casesOn n (@left_distrib Int _ _ _) fun n => @left_distrib (Fin n.succ) _ _ _
   right_distrib := Nat.casesOn n (@right_distrib Int _ _ _) fun n => @right_distrib (Fin n.succ) _ _ _
   mul_comm := Nat.casesOn n (@mul_comm Int _) fun n => @mul_comm (Fin n.succ) _
+#align zmod.comm_ring Zmod.commRing
 
 instance inhabited (n : ℕ) : Inhabited (Zmod n) :=
   ⟨0⟩
+#align zmod.inhabited Zmod.inhabited
 
 end Zmod
 

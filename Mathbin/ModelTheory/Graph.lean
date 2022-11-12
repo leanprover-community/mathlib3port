@@ -39,14 +39,17 @@ variable {L : Language.{u, v}} {α : Type w} {V : Type w'} {n : ℕ}
 /-- The language consisting of a single relation representing adjacency. -/
 protected def graph : Language :=
   Language.mk₂ Empty Empty Empty Empty Unit
+#align first_order.language.graph FirstOrder.Language.graph
 
 /-- The symbol representing the adjacency relation. -/
 def adj : Language.graph.Relations 2 :=
   Unit.unit
+#align first_order.language.adj FirstOrder.Language.adj
 
 /-- Any simple graph can be thought of as a structure in the language of graphs. -/
 def _root_.simple_graph.Structure (G : SimpleGraph V) : Language.graph.StructureCat V :=
   StructureCat.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => G.Adj
+#align first_order.language._root_.simple_graph.Structure first_order.language._root_.simple_graph.Structure
 
 namespace Graph
 
@@ -61,6 +64,7 @@ end Graph
 /-- The theory of simple graphs. -/
 protected def TheoryCat.SimpleGraph : Language.graph.TheoryCat :=
   {adj.Irreflexive, adj.Symmetric}
+#align first_order.language.Theory.simple_graph FirstOrder.Language.TheoryCat.SimpleGraph
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -68,10 +72,12 @@ theorem TheoryCat.simple_graph_model_iff [Language.graph.StructureCat V] :
     V ⊨ Theory.simple_graph ↔
       (Irreflexive fun x y : V => RelMap adj ![x, y]) ∧ Symmetric fun x y : V => RelMap adj ![x, y] :=
   by simp [Theory.simple_graph]
+#align first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.TheoryCat.simple_graph_model_iff
 
 instance simple_graph_model (G : SimpleGraph V) : @TheoryCat.Model _ V G.StructureCat TheoryCat.SimpleGraph := by
   simp only [Theory.simple_graph_model_iff, rel_map_apply₂]
   exact ⟨G.loopless, G.symm⟩
+#align first_order.language.simple_graph_model FirstOrder.Language.simple_graph_model
 
 variable (V)
 
@@ -85,6 +91,7 @@ def simpleGraphOfStructure [Language.graph.StructureCat V] [V ⊨ Theory.simple_
       (TheoryCat.realize_sentence_of_mem TheoryCat.SimpleGraph (Set.mem_insert_of_mem _ (Set.mem_singleton _)))
   loopless :=
     Relations.realize_irreflexive.1 (TheoryCat.realize_sentence_of_mem TheoryCat.SimpleGraph (Set.mem_insert _ _))
+#align first_order.language.simple_graph_of_structure FirstOrder.Language.simpleGraphOfStructure
 
 variable {V}
 
@@ -93,6 +100,8 @@ theorem _root_.simple_graph.simple_graph_of_structure (G : SimpleGraph V) :
     @simpleGraphOfStructure V G.StructureCat _ = G := by
   ext
   rfl
+#align
+  first_order.language._root_.simple_graph.simple_graph_of_structure first_order.language._root_.simple_graph.simple_graph_of_structure
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
@@ -120,9 +129,11 @@ theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V] 
         
       
     
+#align first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.Structure_simple_graph_of_structure
 
 theorem TheoryCat.simple_graph_is_satisfiable : TheoryCat.IsSatisfiable TheoryCat.SimpleGraph :=
   ⟨@TheoryCat.ModelCat.of _ _ Unit (SimpleGraph.structure ⊥) _ _⟩
+#align first_order.language.Theory.simple_graph_is_satisfiable FirstOrder.Language.TheoryCat.simple_graph_is_satisfiable
 
 end Language
 

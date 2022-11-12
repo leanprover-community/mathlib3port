@@ -34,30 +34,39 @@ attribute [local instance] Classical.propDecidable
 
 theorem not_not_eq : (¬¬p) = p :=
   propext not_not
+#align push_neg.not_not_eq PushNeg.not_not_eq
 
 theorem not_and_eq : (¬(p ∧ q)) = (p → ¬q) :=
   propext not_and
+#align push_neg.not_and_eq PushNeg.not_and_eq
 
 theorem not_and_distrib_eq : (¬(p ∧ q)) = (¬p ∨ ¬q) :=
   propext not_and_or
+#align push_neg.not_and_distrib_eq PushNeg.not_and_distrib_eq
 
 theorem not_or_eq : (¬(p ∨ q)) = (¬p ∧ ¬q) :=
   propext not_or
+#align push_neg.not_or_eq PushNeg.not_or_eq
 
 theorem not_forall_eq : (¬∀ x, s x) = ∃ x, ¬s x :=
   propext not_forall
+#align push_neg.not_forall_eq PushNeg.not_forall_eq
 
 theorem not_exists_eq : (¬∃ x, s x) = ∀ x, ¬s x :=
   propext not_exists
+#align push_neg.not_exists_eq PushNeg.not_exists_eq
 
 theorem not_implies_eq : (¬(p → q)) = (p ∧ ¬q) :=
   propext not_imp
+#align push_neg.not_implies_eq PushNeg.not_implies_eq
 
 theorem Classical.implies_iff_not_or : p → q ↔ ¬p ∨ q :=
   imp_iff_not_or
+#align push_neg.classical.implies_iff_not_or PushNeg.Classical.implies_iff_not_or
 
 theorem not_eq (a b : α) : ¬a = b ↔ a ≠ b :=
   Iff.rfl
+#align push_neg.not_eq PushNeg.not_eq
 
 variable {β : Type u}
 
@@ -65,14 +74,17 @@ variable [LinearOrder β]
 
 theorem not_le_eq (a b : β) : (¬a ≤ b) = (b < a) :=
   propext not_le
+#align push_neg.not_le_eq PushNeg.not_le_eq
 
 theorem not_lt_eq (a b : β) : (¬a < b) = (b ≤ a) :=
   propext not_lt
+#align push_neg.not_lt_eq PushNeg.not_lt_eq
 
 end
 
 unsafe def whnf_reducible (e : expr) : tactic expr :=
   whnf e reducible
+#align push_neg.whnf_reducible push_neg.whnf_reducible
 
 private unsafe def transform_negation_step (e : expr) : tactic (Option (expr × expr)) := do
   let e ← whnf_reducible e
@@ -123,13 +135,17 @@ private unsafe def transform_negation_step (e : expr) : tactic (Option (expr × 
             return (some (e', pr))
         | _ => return none
     | _ => return none
+#align push_neg.transform_negation_step push_neg.transform_negation_step
 
 private unsafe def transform_negation : expr → tactic (Option (expr × expr))
   | e => do
-    let some (e', pr) ← transform_negation_step e | return none
-    let some (e'', pr') ← transform_negation e' | return (some (e', pr))
+    let some (e', pr) ← transform_negation_step e |
+      return none
+    let some (e'', pr') ← transform_negation e' |
+      return (some (e', pr))
     let pr'' ← mk_eq_trans pr pr'
     return (some (e'', pr''))
+#align push_neg.transform_negation push_neg.transform_negation
 
 unsafe def normalize_negations (t : expr) : tactic (expr × expr) := do
   let (_, e, pr) ←
@@ -143,6 +159,7 @@ unsafe def normalize_negations (t : expr) : tactic (expr × expr) := do
               return ((), e, pr))
         t { eta := false }
   return (e, pr)
+#align push_neg.normalize_negations push_neg.normalize_negations
 
 unsafe def push_neg_at_hyp (h : Name) : tactic Unit := do
   let H ← get_local h
@@ -150,11 +167,13 @@ unsafe def push_neg_at_hyp (h : Name) : tactic Unit := do
   let (e, pr) ← normalize_negations t
   replace_hyp H e pr
   skip
+#align push_neg.push_neg_at_hyp push_neg.push_neg_at_hyp
 
 unsafe def push_neg_at_goal : tactic Unit := do
   let H ← target
   let (e, pr) ← normalize_negations H
   replace_target e pr
+#align push_neg.push_neg_at_goal push_neg.push_neg_at_goal
 
 end PushNeg
 
@@ -213,15 +232,18 @@ unsafe def tactic.interactive.push_neg : parse location → tactic Unit
     push_neg_at_goal
     local_context >>= mmap' fun h => push_neg_at_hyp (local_pp_name h)
     try sorry
+#align tactic.interactive.push_neg tactic.interactive.push_neg
 
 add_tactic_doc
   { Name := "push_neg", category := DocCategory.tactic, declNames := [`tactic.interactive.push_neg], tags := ["logic"] }
 
 theorem imp_of_not_imp_not (P Q : Prop) : (¬Q → ¬P) → P → Q := fun h hP => Classical.by_contradiction fun h' => h h' hP
+#align imp_of_not_imp_not imp_of_not_imp_not
 
 /-- Matches either an identifier "h" or a pair of identifiers "h with k" -/
 unsafe def name_with_opt : lean.parser (Name × Option Name) :=
   Prod.mk <$> ident <*> (some <$> (tk "with" *> ident) <|> return none)
+#align name_with_opt name_with_opt
 
 /-- Transforms the goal into its contrapositive.
 
@@ -235,11 +257,13 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
 unsafe def tactic.interactive.contrapose (push : parse (tk "!")?) : parse name_with_opt ? → tactic Unit
   | some (h, h') => (((get_local h >>= revert) >> tactic.interactive.contrapose none) >> intro (h'.getOrElse h)) >> skip
   | none => do
-    let quote.1 ((%%ₓP) → %%ₓQ) ← target | fail "The goal is not an implication, and you didn't specify an assumption"
+    let quote.1 ((%%ₓP) → %%ₓQ) ← target |
+      fail "The goal is not an implication, and you didn't specify an assumption"
     let cp ←
       mk_mapp `` imp_of_not_imp_not [P, Q] <|> fail "contrapose only applies to nondependent arrows between props"
     apply cp
     when push <| try (tactic.interactive.push_neg (loc.ns [none]))
+#align tactic.interactive.contrapose tactic.interactive.contrapose
 
 add_tactic_doc
   { Name := "contrapose", category := DocCategory.tactic, declNames := [`tactic.interactive.contrapose],
@@ -293,6 +317,7 @@ unsafe def push_neg_cmd (_ : parse <| tk "#push_neg") : lean.parser Unit := do
   -- Trace the result.
       trace
       result
+#align tactic.push_neg_cmd tactic.push_neg_cmd
 
 add_tactic_doc
   { Name := "#push_neg", category := DocCategory.cmd, declNames := [`tactic.push_neg_cmd], tags := ["logic"] }

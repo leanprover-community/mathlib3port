@@ -44,6 +44,7 @@ def tensorObj : C ⥤ D where
   map X Y f := F.map f ⊗ G.map f
   map_id' X := by rw [F.map_id, G.map_id, tensor_id]
   map_comp' X Y Z f g := by rw [F.map_comp, G.map_comp, tensor_comp]
+#align category_theory.monoidal.functor_category.tensor_obj CategoryTheory.Monoidal.FunctorCategory.tensorObj
 
 variable {F G F' G'}
 
@@ -59,6 +60,7 @@ def tensorHom : tensorObj F F' ⟶ tensorObj G G' where
   naturality' X Y f := by
     dsimp
     rw [← tensor_comp, α.naturality, β.naturality, tensor_comp]
+#align category_theory.monoidal.functor_category.tensor_hom CategoryTheory.Monoidal.FunctorCategory.tensorHom
 
 end FunctorCategory
 
@@ -112,52 +114,62 @@ instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D) where
     ext X
     dsimp
     rw [pentagon]
+#align category_theory.monoidal.functor_category_monoidal CategoryTheory.Monoidal.functorCategoryMonoidal
 
 @[simp]
 theorem tensor_unit_obj {X} : (𝟙_ (C ⥤ D)).obj X = 𝟙_ D :=
   rfl
+#align category_theory.monoidal.tensor_unit_obj CategoryTheory.Monoidal.tensor_unit_obj
 
 @[simp]
 theorem tensor_unit_map {X Y} {f : X ⟶ Y} : (𝟙_ (C ⥤ D)).map f = 𝟙 (𝟙_ D) :=
   rfl
+#align category_theory.monoidal.tensor_unit_map CategoryTheory.Monoidal.tensor_unit_map
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_obj_obj {F G : C ⥤ D} {X} : (F ⊗ G).obj X = F.obj X ⊗ G.obj X :=
   rfl
+#align category_theory.monoidal.tensor_obj_obj CategoryTheory.Monoidal.tensor_obj_obj
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_obj_map {F G : C ⥤ D} {X Y} {f : X ⟶ Y} : (F ⊗ G).map f = F.map f ⊗ G.map f :=
   rfl
+#align category_theory.monoidal.tensor_obj_map CategoryTheory.Monoidal.tensor_obj_map
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_hom_app {F G F' G' : C ⥤ D} {α : F ⟶ G} {β : F' ⟶ G'} {X} : (α ⊗ β).app X = α.app X ⊗ β.app X :=
   rfl
+#align category_theory.monoidal.tensor_hom_app CategoryTheory.Monoidal.tensor_hom_app
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem left_unitor_hom_app {F : C ⥤ D} {X} : ((λ_ F).Hom : 𝟙_ _ ⊗ F ⟶ F).app X = (λ_ (F.obj X)).Hom :=
   rfl
+#align category_theory.monoidal.left_unitor_hom_app CategoryTheory.Monoidal.left_unitor_hom_app
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem left_unitor_inv_app {F : C ⥤ D} {X} : ((λ_ F).inv : F ⟶ 𝟙_ _ ⊗ F).app X = (λ_ (F.obj X)).inv :=
   rfl
+#align category_theory.monoidal.left_unitor_inv_app CategoryTheory.Monoidal.left_unitor_inv_app
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_unitor_hom_app {F : C ⥤ D} {X} : ((ρ_ F).Hom : F ⊗ 𝟙_ _ ⟶ F).app X = (ρ_ (F.obj X)).Hom :=
   rfl
+#align category_theory.monoidal.right_unitor_hom_app CategoryTheory.Monoidal.right_unitor_hom_app
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_unitor_inv_app {F : C ⥤ D} {X} : ((ρ_ F).inv : F ⟶ F ⊗ 𝟙_ _).app X = (ρ_ (F.obj X)).inv :=
   rfl
+#align category_theory.monoidal.right_unitor_inv_app CategoryTheory.Monoidal.right_unitor_inv_app
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -167,6 +179,7 @@ theorem right_unitor_inv_app {F : C ⥤ D} {X} : ((ρ_ F).inv : F ⟶ F ⊗ 𝟙
 theorem associator_hom_app {F G H : C ⥤ D} {X} :
     ((α_ F G H).Hom : (F ⊗ G) ⊗ H ⟶ F ⊗ G ⊗ H).app X = (α_ (F.obj X) (G.obj X) (H.obj X)).Hom :=
   rfl
+#align category_theory.monoidal.associator_hom_app CategoryTheory.Monoidal.associator_hom_app
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -176,6 +189,7 @@ theorem associator_hom_app {F G H : C ⥤ D} {X} :
 theorem associator_inv_app {F G H : C ⥤ D} {X} :
     ((α_ F G H).inv : F ⊗ G ⊗ H ⟶ (F ⊗ G) ⊗ H).app X = (α_ (F.obj X) (G.obj X) (H.obj X)).inv :=
   rfl
+#align category_theory.monoidal.associator_inv_app CategoryTheory.Monoidal.associator_inv_app
 
 section BraidedCategory
 
@@ -195,6 +209,7 @@ instance functorCategoryBraided : BraidedCategory (C ⥤ D) where
   hexagon_reverse' F G H := by
     ext X
     apply hexagon_reverse
+#align category_theory.monoidal.functor_category_braided CategoryTheory.Monoidal.functorCategoryBraided
 
 example : BraidedCategory (C ⥤ D) :=
   CategoryTheory.Monoidal.functorCategoryBraided
@@ -215,6 +230,7 @@ instance functorCategorySymmetric :
     SymmetricCategory (C ⥤ D) where symmetry' F G := by
     ext X
     apply symmetry
+#align category_theory.monoidal.functor_category_symmetric CategoryTheory.Monoidal.functorCategorySymmetric
 
 end SymmetricCategory
 

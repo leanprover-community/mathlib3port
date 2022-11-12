@@ -34,32 +34,40 @@ namespace CancelFactors
 theorem mul_subst {α} [CommRing α] {n1 n2 k e1 e2 t1 t2 : α} (h1 : n1 * e1 = t1) (h2 : n2 * e2 = t2)
     (h3 : n1 * n2 = k) : k * (e1 * e2) = t1 * t2 := by
   rw [← h3, mul_comm n1, mul_assoc n2, ← mul_assoc n1, h1, ← mul_assoc n2, mul_comm n2, mul_assoc, h2]
+#align cancel_factors.mul_subst CancelFactors.mul_subst
 
 theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h2 : n2 / e2 = 1) (h3 : n1 * n2 = k) :
     k * (e1 / e2) = t1 := by rw [← h3, mul_assoc, mul_div_left_comm, h2, ← mul_assoc, h1, mul_comm, one_mul]
+#align cancel_factors.div_subst CancelFactors.div_subst
 
 theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) : e = e' / n :=
   eq_div_of_mul_eq h2 <| by rwa [mul_comm] at h
+#align cancel_factors.cancel_factors_eq_div CancelFactors.cancel_factors_eq_div
 
 theorem add_subst {α} [Ring α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 + e2) = t1 + t2 := by
   simp [left_distrib, *]
+#align cancel_factors.add_subst CancelFactors.add_subst
 
 theorem sub_subst {α} [Ring α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 - e2) = t1 - t2 := by
   simp [left_distrib, *, sub_eq_add_neg]
+#align cancel_factors.sub_subst CancelFactors.sub_subst
 
 theorem neg_subst {α} [Ring α] {n e t : α} (h1 : n * e = t) : n * -e = -t := by simp [*]
+#align cancel_factors.neg_subst CancelFactors.neg_subst
 
 theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
     (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a < b) = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) := by
   rw [mul_lt_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_lt_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
+#align cancel_factors.cancel_factors_lt CancelFactors.cancel_factors_lt
 
 theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
     (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a ≤ b) = (1 / gcd * (bd * a') ≤ 1 / gcd * (ad * b')) := by
   rw [mul_le_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_le_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
+#align cancel_factors.cancel_factors_le CancelFactors.cancel_factors_le
 
 theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
     (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a = b) = (1 / gcd * (bd * a') = 1 / gcd * (ad * b')) := by
@@ -76,6 +84,7 @@ theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α
     apply div_ne_zero
     all_goals apply ne_of_gt <;> first |assumption|exact zero_lt_one
     
+#align cancel_factors.cancel_factors_eq CancelFactors.cancel_factors_eq
 
 open Tactic Expr
 
@@ -113,6 +122,7 @@ unsafe def find_cancel_factor : expr → ℕ × Tree ℕ
     | none => (1, node 1 Tree.nil Tree.nil)
   | quote.1 (-%%ₓe) => find_cancel_factor e
   | _ => (1, node 1 Tree.nil Tree.nil)
+#align cancel_factors.find_cancel_factor cancel_factors.find_cancel_factor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -159,6 +169,7 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
     let v' ← tp.ofNat v
     let e' ← to_expr (pquote.1 ((%%ₓv') * %%ₓe))
     mk_app `eq.refl [e']
+#align cancel_factors.mk_prod_prf cancel_factors.mk_prod_prf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -170,6 +181,7 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
   let (n, t) := find_cancel_factor e
   Prod.mk n <$> mk_prod_prf n t e <|>
     "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+#align cancel_factors.derive cancel_factors.derive
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Given `e`, a term with rational divison, produces a natural number `n` and a proof of `e = e' / n`,
@@ -182,6 +194,7 @@ unsafe def derive_div (e : expr) : tactic (ℕ × expr) := do
   let tgt ← to_expr (pquote.1 ((%%ₓn') ≠ 0))
   let (_, pn) ← solve_aux tgt sorry
   Prod.mk n <$> mk_mapp `` cancel_factors_eq_div [none, none, n', none, none, p, pn]
+#align cancel_factors.derive_div cancel_factors.derive_div
 
 /-- `find_comp_lemma e` arranges `e` in the form `lhs R rhs`, where `R ∈ {<, ≤, =}`, and returns
 `lhs`, `rhs`, and the `cancel_factors` lemma corresponding to `R`.
@@ -193,6 +206,7 @@ unsafe def find_comp_lemma : expr → Option (expr × expr × Name)
   | quote.1 ((%%ₓa) ≥ %%ₓb) => (b, a, `` cancel_factors_le)
   | quote.1 ((%%ₓa) > %%ₓb) => (b, a, `` cancel_factors_lt)
   | _ => none
+#align cancel_factors.find_comp_lemma cancel_factors.find_comp_lemma
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -203,7 +217,8 @@ It produces an expression `h'` of the form `lhs' R rhs'` and a proof that `h = h
 Numeric denominators have been canceled in `lhs'` and `rhs'`.
 -/
 unsafe def cancel_denominators_in_type (h : expr) : tactic (expr × expr) := do
-  let some (lhs, rhs, lem) ← return <| find_comp_lemma h | fail "cannot kill factors"
+  let some (lhs, rhs, lem) ← return <| find_comp_lemma h |
+    fail "cannot kill factors"
   let (al, lhs_p) ← derive lhs
   let (ar, rhs_p) ← derive rhs
   let gcd := al.gcd ar
@@ -220,6 +235,7 @@ unsafe def cancel_denominators_in_type (h : expr) : tactic (expr × expr) := do
   let pf ← mk_app lem [lhs_p, rhs_p, al_pos, ar_pos, gcd_pos]
   let pf_tp ← infer_type pf
   return ((find_comp_lemma pf_tp).elim default (Prod.fst ∘ Prod.snd), pf)
+#align cancel_factors.cancel_denominators_in_type cancel_factors.cancel_denominators_in_type
 
 end CancelFactors
 
@@ -253,6 +269,7 @@ unsafe def tactic.interactive.cancel_denoms (l : parse location) : tactic Unit :
   let locs ← l.get_locals
   tactic.replace_at cancel_denominators_in_type locs l >>= guardb <|> fail "failed to cancel any denominators"
   tactic.interactive.norm_num [simp_arg_type.symm_expr (pquote.1 mul_assoc)] l
+#align tactic.interactive.cancel_denoms tactic.interactive.cancel_denoms
 
 add_tactic_doc
   { Name := "cancel_denoms", category := DocCategory.tactic, declNames := [`tactic.interactive.cancel_denoms],

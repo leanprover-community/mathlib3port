@@ -35,9 +35,11 @@ instance : DistribMulAction R (A →+ B) where
 @[simp]
 theorem coe_smul (r : R) (f : A →+ B) : ⇑(r • f) = r • f :=
   rfl
+#align add_monoid_hom.coe_smul AddMonoidHom.coe_smul
 
 theorem smul_apply (r : R) (f : A →+ B) (x : A) : (r • f) x = r • f x :=
   rfl
+#align add_monoid_hom.smul_apply AddMonoidHom.smul_apply
 
 instance [SmulCommClass R S B] : SmulCommClass R S (A →+ B) :=
   ⟨fun a b f => ext fun x => smul_comm _ _ _⟩

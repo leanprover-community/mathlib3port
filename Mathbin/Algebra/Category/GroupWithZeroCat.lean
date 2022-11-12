@@ -20,6 +20,7 @@ open CategoryTheory Order
 /-- The category of groups with zero. -/
 def GroupWithZeroCat :=
   Bundled GroupWithZero
+#align GroupWithZero GroupWithZeroCat
 
 namespace GroupWithZeroCat
 
@@ -32,6 +33,7 @@ instance (X : GroupWithZeroCat) : GroupWithZero X :=
 /-- Construct a bundled `GroupWithZero` from a `group_with_zero`. -/
 def of (α : Type _) [GroupWithZero α] : GroupWithZeroCat :=
   Bundled.of α
+#align GroupWithZero.of GroupWithZeroCat.of
 
 instance : Inhabited GroupWithZeroCat :=
   ⟨of (WithZero PUnit)⟩
@@ -51,10 +53,12 @@ instance : ConcreteCategory GroupWithZeroCat where
 instance hasForgetToBipointed :
     HasForget₂ GroupWithZeroCat
       BipointedCat where forget₂ := { obj := fun X => ⟨X, 0, 1⟩, map := fun X Y f => ⟨f, f.map_zero', f.map_one'⟩ }
+#align GroupWithZero.has_forget_to_Bipointed GroupWithZeroCat.hasForgetToBipointed
 
 instance hasForgetToMon :
     HasForget₂ GroupWithZeroCat
       MonCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => MonoidWithZeroHom.toMonoidHom }
+#align GroupWithZero.has_forget_to_Mon GroupWithZeroCat.hasForgetToMon
 
 /-- Constructs an isomorphism of groups with zero from a group isomorphism between them. -/
 @[simps]
@@ -67,6 +71,7 @@ def Iso.mk {α β : GroupWithZeroCat.{u}} (e : α ≃* β) : α ≅ β where
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
+#align GroupWithZero.iso.mk GroupWithZeroCat.Iso.mk
 
 end GroupWithZeroCat
 

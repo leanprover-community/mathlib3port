@@ -27,6 +27,7 @@ unsafe def trisect (m : Nat) :
     let (neg, zero, Pos) := trisect pts
     if get m t.snd < 0 then ((p, t)::neg, zero, Pos)
     else if get m t.snd = 0 then (neg, (p, t)::zero, Pos) else (neg, zero, (p, t)::Pos)
+#align omega.trisect omega.trisect
 
 /-- Use two linear combinations to obtain a third linear combination
     whose resultant term does not include the `m`th variable. -/
@@ -38,6 +39,7 @@ unsafe def elim_var_aux (m : Nat) : (List Nat × term) × List Nat × term → t
     let n' := lcm / n
     let o' := lcm / o
     return (add (p1.map ((· * ·) n')) (p2.map ((· * ·) o')), Term.add (t1.mul n') (t2.mul o'))
+#align omega.elim_var_aux omega.elim_var_aux
 
 /-- Use two lists of linear combinations (one in which the resultant terms
     include occurrences of the `m`th variable with positive coefficients,
@@ -45,7 +47,8 @@ unsafe def elim_var_aux (m : Nat) : (List Nat × term) × List Nat × term → t
     possible way that eliminates the `m`th variable. -/
 unsafe def elim_var (m : Nat) (neg pos : List (List Nat × term)) : tactic (List (List Nat × term)) :=
   let pairs := List.product neg Pos
-  Monad.mapm (elim_var_aux m) pairs
+  Monad.mapM (elim_var_aux m) pairs
+#align omega.elim_var omega.elim_var
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Search through a list of (linear combination × resultant term) pairs,
@@ -54,6 +57,7 @@ unsafe def elim_var (m : Nat) (neg pos : List (List Nat × term)) : tactic (List
 unsafe def find_neg_const : List (List Nat × term) → tactic (List Nat)
   | [] => tactic.failed
   | (π, ⟨c, _⟩)::l => if c < 0 then return π else find_neg_const l
+#align omega.find_neg_const omega.find_neg_const
 
 /-- First, eliminate all variables by Fourier–Motzkin elimination.
     When all variables have been eliminated, find and return the
@@ -66,12 +70,14 @@ unsafe def find_scalars_core : Nat → List (List Nat × term) → tactic (List 
     do
     let new ← elim_var m neg Pos
     find_scalars_core m (new ++ zero)
+#align omega.find_scalars_core omega.find_scalars_core
 
 /-- Perform Fourier–Motzkin elimination to find a contradictory
     linear combination of input constraints. -/
 unsafe def find_scalars (ts : List Term) : tactic (List Nat) :=
   find_scalars_core (ts.map fun t : Term => t.snd.length).maximum.iget
     (ts.mapWithIndex fun m t => (List.Func.set 1 [] m, t))
+#align omega.find_scalars omega.find_scalars
 
 end Omega
 

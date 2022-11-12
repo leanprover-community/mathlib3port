@@ -44,6 +44,7 @@ def prodComonad : Comonad C where
   toFunctor := prod.functor.obj X
   ε' := { app := fun Y => Limits.prod.snd }
   δ' := { app := fun Y => prod.lift Limits.prod.fst (𝟙 _) }
+#align category_theory.prod_comonad CategoryTheory.prodComonad
 
 /-- The forward direction of the equivalence from coalgebras for the product comonad to the over
 category.
@@ -57,6 +58,7 @@ def coalgebraToOver : Coalgebra (prodComonad X) ⥤ Over X where
         rw [over.mk_hom, ← f.h_assoc]
         dsimp
         simp)
+#align category_theory.coalgebra_to_over CategoryTheory.coalgebraToOver
 
 /-- The backward direction of the equivalence from coalgebras for the product comonad to the over
 category.
@@ -65,6 +67,7 @@ category.
 def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X) where
   obj f := { A := f.left, a := prod.lift f.Hom (𝟙 _) }
   map f₁ f₂ g := { f := g.left }
+#align category_theory.over_to_coalgebra CategoryTheory.overToCoalgebra
 
 /-- The equivalence from coalgebras for the product comonad to the over category. -/
 @[simps]
@@ -86,6 +89,7 @@ def coalgebraEquivOver : Coalgebra (prodComonad X) ≌ Over X where
       ext
       simp
   counitIso := NatIso.ofComponents (fun f => Over.isoMk (Iso.refl _)) fun f g k => by tidy
+#align category_theory.coalgebra_equiv_over CategoryTheory.coalgebraEquivOver
 
 end
 
@@ -101,6 +105,7 @@ def coprodMonad : Monad C where
   toFunctor := coprod.functor.obj X
   η' := { app := fun Y => coprod.inr }
   μ' := { app := fun Y => coprod.desc coprod.inl (𝟙 _) }
+#align category_theory.coprod_monad CategoryTheory.coprodMonad
 
 /-- The forward direction of the equivalence from algebras for the coproduct monad to the under
 category.
@@ -114,6 +119,7 @@ def algebraToUnder : Monad.Algebra (coprodMonad X) ⥤ Under X where
         rw [under.mk_hom, assoc, ← f.h]
         dsimp
         simp)
+#align category_theory.algebra_to_under CategoryTheory.algebraToUnder
 
 /-- The backward direction of the equivalence from algebras for the coproduct monad to the under
 category.
@@ -122,6 +128,7 @@ category.
 def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X) where
   obj f := { A := f.right, a := coprod.desc f.Hom (𝟙 _) }
   map f₁ f₂ g := { f := g.right }
+#align category_theory.under_to_algebra CategoryTheory.underToAlgebra
 
 /-- The equivalence from algebras for the coproduct monad to the under category.
 -/
@@ -141,6 +148,7 @@ def algebraEquivUnder : Monad.Algebra (coprodMonad X) ≌ Under X where
       ext
       simp
   counitIso := NatIso.ofComponents (fun f => Under.isoMk (Iso.refl _) (by tidy)) fun f g k => by tidy
+#align category_theory.algebra_equiv_under CategoryTheory.algebraEquivUnder
 
 end
 

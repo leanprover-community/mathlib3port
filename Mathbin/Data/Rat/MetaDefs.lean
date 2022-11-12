@@ -42,6 +42,7 @@ unsafe def rat.mk_numeral (type has_zero has_one has_add has_neg has_div : expr)
     else
       let dene := denom.mk_numeral type Zero One Add
       quote.1 (@Div.div.{0} (%%ₓtype) (%%ₓDiv) (%%ₓnume) (%%ₓdene))
+#align rat.mk_numeral rat.mk_numeral
 
 section
 
@@ -54,6 +55,7 @@ attribute [local semireducible] reflected
 unsafe instance rat.reflect : has_reflect ℚ :=
   rat.mk_numeral (quote.1 ℚ) (quote.1 (by infer_instance : Zero ℚ)) (quote.1 (by infer_instance : One ℚ))
     (quote.1 (by infer_instance : Add ℚ)) (quote.1 (by infer_instance : Neg ℚ)) (quote.1 (by infer_instance : Div ℚ))
+#align rat.reflect rat.reflect
 
 end
 
@@ -65,6 +67,7 @@ unsafe def rat.to_pexpr (q : ℚ) : pexpr :=
   let n := q.num
   let d := q.denom
   if d = 1 then n.to_pexpr else pquote.1 ((%%ₓn.to_pexpr) / %%ₓd.to_pexpr)
+#align rat.to_pexpr rat.to_pexpr
 
 /-- Evaluates an expression as a rational number,
 if that expression represents a numeral or the quotient of two numerals. -/
@@ -76,6 +79,7 @@ protected unsafe def expr.to_nonneg_rat : expr → Option ℚ
   | e => do
     let n ← e.toNat
     return n
+#align expr.to_nonneg_rat expr.to_nonneg_rat
 
 /-- Evaluates an expression as a rational number,
 if that expression represents a numeral, the quotient of two numerals,
@@ -85,6 +89,7 @@ protected unsafe def expr.to_rat : expr → Option ℚ
     let q ← e.to_nonneg_rat
     some (-q)
   | e => e.to_nonneg_rat
+#align expr.to_rat expr.to_rat
 
 /-- Evaluates an expression into a rational number, if that expression is built up from
   numerals, +, -, *, /, ⁻¹  -/
@@ -100,6 +105,7 @@ protected unsafe def expr.eval_rat : expr → Option ℚ
   | quote.1 (-%%ₓa) => Neg.neg <$> a.eval_rat
   | quote.1 (%%ₓa)⁻¹ => Inv.inv <$> a.eval_rat
   | _ => none
+#align expr.eval_rat expr.eval_rat
 
 /-- `expr.of_rat α q` embeds `q` as a numeral expression inside the type `α`.
 Lean will try to infer the correct type classes on `α`, and the tactic will fail if it cannot.
@@ -120,6 +126,7 @@ protected unsafe def expr.of_rat (α : expr) : ℚ → tactic expr
           let e₂ ← expr.of_nat α d
           tactic.mk_app `` Div.div [e₁, e₂]
     tactic.mk_app `` Neg.neg [e]
+#align expr.of_rat expr.of_rat
 
 namespace Tactic
 
@@ -144,6 +151,7 @@ protected unsafe def of_rat (c : instance_cache) : ℚ → tactic (instance_cach
           let (c, e₂) ← c.ofNat d
           c `` Div.div [e₁, e₂]
     c `` Neg.neg [e]
+#align tactic.instance_cache.of_rat tactic.instance_cache.of_rat
 
 end InstanceCache
 

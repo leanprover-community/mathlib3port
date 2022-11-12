@@ -50,6 +50,7 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
   -- let's try to force β-reduction at `h`
       try <|
       tactic.dsimp_hyp hyp simp_lemmas.mk [] { eta := False, beta := True }
+#align tactic.apply_fun_to_hyp tactic.apply_fun_to_hyp
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -93,6 +94,7 @@ unsafe def apply_fun_to_goal (e : pexpr) (lem : Option pexpr) : tactic Unit := d
         clear n
     | _ =>
       "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+#align tactic.apply_fun_to_goal tactic.apply_fun_to_goal
 
 namespace Interactive
 
@@ -131,6 +133,7 @@ end
  -/
 unsafe def apply_fun (q : parse texpr) (locs : parse location) (lem : parse (tk "using" *> texpr)?) : tactic Unit :=
   locs.apply (apply_fun_to_hyp q lem) (apply_fun_to_goal q lem)
+#align tactic.interactive.apply_fun tactic.interactive.apply_fun
 
 add_tactic_doc
   { Name := "apply_fun", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_fun],

@@ -36,12 +36,14 @@ def finsuppTensorFinsupp (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [M
     (ι →₀ M) ⊗[R] (κ →₀ N) ≃ₗ[R] ι × κ →₀ M ⊗[R] N :=
   TensorProduct.congr (finsuppLequivDirectSum R M ι) (finsuppLequivDirectSum R N κ) ≪≫ₗ
     ((TensorProduct.directSum R ι κ (fun _ => M) fun _ => N) ≪≫ₗ (finsuppLequivDirectSum R (M ⊗[R] N) (ι × κ)).symm)
+#align finsupp_tensor_finsupp finsuppTensorFinsupp
 
 @[simp]
 theorem finsupp_tensor_finsupp_single (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N]
     [Module R N] (i : ι) (m : M) (k : κ) (n : N) :
     finsuppTensorFinsupp R M N ι κ (Finsupp.single i m ⊗ₜ Finsupp.single k n) = Finsupp.single (i, k) (m ⊗ₜ n) := by
   simp [finsuppTensorFinsupp]
+#align finsupp_tensor_finsupp_single finsupp_tensor_finsupp_single
 
 @[simp]
 theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N]
@@ -74,12 +76,14 @@ theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCom
         
       
     
+#align finsupp_tensor_finsupp_apply finsupp_tensor_finsupp_apply
 
 @[simp]
 theorem finsupp_tensor_finsupp_symm_single (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M]
     [AddCommGroup N] [Module R N] (i : ι × κ) (m : M) (n : N) :
     (finsuppTensorFinsupp R M N ι κ).symm (Finsupp.single i (m ⊗ₜ n)) = Finsupp.single i.1 m ⊗ₜ Finsupp.single i.2 n :=
   (Prod.casesOn i) fun i k => (LinearEquiv.symm_apply_eq _).2 (finsupp_tensor_finsupp_single _ _ _ _ _ _ _ _ _).symm
+#align finsupp_tensor_finsupp_symm_single finsupp_tensor_finsupp_symm_single
 
 variable (S : Type _) [CommRing S] (α β : Type _)
 
@@ -87,16 +91,19 @@ variable (S : Type _) [CommRing S] (α β : Type _)
 -/
 def finsuppTensorFinsupp' : (α →₀ S) ⊗[S] (β →₀ S) ≃ₗ[S] α × β →₀ S :=
   (finsuppTensorFinsupp S S S α β).trans (Finsupp.lcongr (Equiv.refl _) (TensorProduct.lid S S))
+#align finsupp_tensor_finsupp' finsuppTensorFinsupp'
 
 @[simp]
 theorem finsupp_tensor_finsupp'_apply_apply (f : α →₀ S) (g : β →₀ S) (a : α) (b : β) :
     finsuppTensorFinsupp' S α β (f ⊗ₜ[S] g) (a, b) = f a * g b := by simp [finsuppTensorFinsupp']
+#align finsupp_tensor_finsupp'_apply_apply finsupp_tensor_finsupp'_apply_apply
 
 @[simp]
 theorem finsupp_tensor_finsupp'_single_tmul_single (a : α) (b : β) (r₁ r₂ : S) :
     finsuppTensorFinsupp' S α β (Finsupp.single a r₁ ⊗ₜ[S] Finsupp.single b r₂) = Finsupp.single (a, b) (r₁ * r₂) := by
   ext ⟨a', b'⟩
   simp [Finsupp.single_apply, ite_and]
+#align finsupp_tensor_finsupp'_single_tmul_single finsupp_tensor_finsupp'_single_tmul_single
 
 end TensorProduct
 

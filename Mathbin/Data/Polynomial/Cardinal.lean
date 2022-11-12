@@ -27,6 +27,7 @@ theorem cardinal_mk_eq_max {R : Type u} [Semiring R] [Nontrivial R] : (#R[X]) = 
   (toFinsuppIso R).toEquiv.cardinal_eq.trans <| by
     rw [AddMonoidAlgebra, mk_finsupp_lift_of_infinite, lift_uzero, max_comm]
     rfl
+#align polynomial.cardinal_mk_eq_max Polynomial.cardinal_mk_eq_max
 
 theorem cardinal_mk_le_max {R : Type u} [Semiring R] : (#R[X]) ≤ max (#R) ℵ₀ := by
   cases subsingleton_or_nontrivial R
@@ -34,6 +35,7 @@ theorem cardinal_mk_le_max {R : Type u} [Semiring R] : (#R[X]) ≤ max (#R) ℵ�
     
   · exact cardinal_mk_eq_max.le
     
+#align polynomial.cardinal_mk_le_max Polynomial.cardinal_mk_le_max
 
 end Polynomial
 

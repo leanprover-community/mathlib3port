@@ -30,14 +30,17 @@ variable (C)
 /-- A category is called balanced if any morphism that is both monic and epic is an isomorphism. -/
 class Balanced : Prop where
   is_iso_of_mono_of_epi : ∀ {X Y : C} (f : X ⟶ Y) [Mono f] [Epi f], IsIso f
+#align category_theory.balanced CategoryTheory.Balanced
 
 end
 
 theorem is_iso_of_mono_of_epi [Balanced C] {X Y : C} (f : X ⟶ Y) [Mono f] [Epi f] : IsIso f :=
   Balanced.is_iso_of_mono_of_epi _
+#align category_theory.is_iso_of_mono_of_epi CategoryTheory.is_iso_of_mono_of_epi
 
 theorem is_iso_iff_mono_and_epi [Balanced C] {X Y : C} (f : X ⟶ Y) : IsIso f ↔ Mono f ∧ Epi f :=
   ⟨fun _ => ⟨inferInstance, inferInstance⟩, fun ⟨_, _⟩ => is_iso_of_mono_of_epi _⟩
+#align category_theory.is_iso_iff_mono_and_epi CategoryTheory.is_iso_iff_mono_and_epi
 
 section
 
@@ -47,6 +50,7 @@ theorem balanced_opposite [Balanced C] : Balanced Cᵒᵖ :=
   { is_iso_of_mono_of_epi := fun X Y f fmono fepi => by
       rw [← Quiver.Hom.op_unop f]
       exact is_iso_of_op _ }
+#align category_theory.balanced_opposite CategoryTheory.balanced_opposite
 
 end
 

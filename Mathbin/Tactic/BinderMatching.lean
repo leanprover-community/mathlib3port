@@ -81,6 +81,7 @@ unsafe def get_binder (do_whnf : Option (transparency × Bool)) (pi_or_lambda : 
     tactic (Option (Name × BinderInfo × expr × expr)) := do
   let e ← do_whnf.elim (pure e) fun p => whnf e p.1 p.2
   pure <| if pi_or_lambda then match_pi e else match_lam e
+#align tactic.get_binder tactic.get_binder
 
 /-- `mk_binder_replacement local_or_meta b` creates an expression that can be used
 to replace the binder `b`. If `local_or_meta` is true, we create a fresh local
@@ -89,6 +90,7 @@ metavariable with `b`'s type.
 -/
 unsafe def mk_binder_replacement (local_or_meta : Bool) (b : binder) : tactic expr :=
   if local_or_meta then mk_local' b.Name b.info b.type else mk_meta_var b.type
+#align tactic.mk_binder_replacement tactic.mk_binder_replacement
 
 /-- `open_binders` is a generalisation of functions like `open_pis`,
 `mk_meta_lambdas` etc. `open_binders do_whnf pis_or_lamdas local_or_metas e`
@@ -107,10 +109,12 @@ binders.
 -/
 unsafe def open_binders (do_whnf : Option (transparency × Bool)) (pis_or_lambdas : Bool) (locals_or_metas : Bool) :
     expr → tactic (List expr × expr) := fun e => do
-  let some (Name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e | pure ([], e)
+  let some (Name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e |
+    pure ([], e)
   let replacement ← mk_binder_replacement locals_or_metas ⟨Name, bi, type⟩
   let (rs, rest) ← open_binders (body.instantiate_var replacement)
   pure (replacement :: rs, rest)
+#align tactic.open_binders tactic.open_binders
 
 /-- `open_n_binders do_whnf pis_or_lambdas local_or_metas e n` is like
 `open_binders do_whnf pis_or_lambdas local_or_metas e`, but it matches exactly `n`
@@ -121,10 +125,12 @@ unsafe def open_n_binders (do_whnf : Option (transparency × Bool)) (pis_or_lamb
     expr → ℕ → tactic (List expr × expr)
   | e, 0 => pure ([], e)
   | e, d + 1 => do
-    let some (Name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e | failed
+    let some (Name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e |
+      failed
     let replacement ← mk_binder_replacement locals_or_metas ⟨Name, bi, type⟩
     let (rs, rest) ← open_n_binders (body.instantiate_var replacement) d
     pure (replacement :: rs, rest)
+#align tactic.open_n_binders tactic.open_n_binders
 
 /-- `open_pis e` instantiates all leading Π binders of `e` with fresh local
 constants. Returns the local constants and the remainder of `e`. This is an
@@ -132,6 +138,7 @@ alias for `tactic.mk_local_pis`.
 -/
 unsafe abbrev open_pis : expr → tactic (List expr × expr) :=
   mk_local_pis
+#align tactic.open_pis tactic.open_pis
 
 /-- `open_pis_metas e` instantiates all leading Π binders of `e` with fresh
 metavariables. Returns the metavariables and the remainder of `e`. This is
@@ -139,6 +146,7 @@ metavariables. Returns the metavariables and the remainder of `e`. This is
 -/
 unsafe def open_pis_metas : expr → tactic (List expr × expr) :=
   open_binders none true false
+#align tactic.open_pis_metas tactic.open_pis_metas
 
 /-- `open_n_pis e n` instantiates the first `n` Π binders of `e` with fresh local
 constants. Returns the local constants and the remainder of `e`. Fails if
@@ -147,6 +155,7 @@ to `n` binders.
 -/
 unsafe def open_n_pis : expr → ℕ → tactic (List expr × expr) :=
   open_n_binders none true true
+#align tactic.open_n_pis tactic.open_n_pis
 
 /-- `open_n_pis_metas e n` instantiates the first `n` Π binders of `e` with fresh
 metavariables. Returns the metavariables and the remainder of `e`. This is
@@ -154,6 +163,7 @@ metavariables. Returns the metavariables and the remainder of `e`. This is
 -/
 unsafe def open_n_pis_metas : expr → ℕ → tactic (List expr × expr) :=
   open_n_binders none true false
+#align tactic.open_n_pis_metas tactic.open_n_pis_metas
 
 /-- `open_pis_whnf e md unfold_ginductive` instantiates all leading Π binders of `e`
 with fresh local constants. The leading Π binders of `e` are matched up to
@@ -163,6 +173,7 @@ This is `open_pis` up to normalisation.
 -/
 unsafe def open_pis_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) : tactic (List expr × expr) :=
   open_binders (some (md, unfold_ginductive)) true true e
+#align tactic.open_pis_whnf tactic.open_pis_whnf
 
 /-- `open_pis_metas_whnf e md unfold_ginductive` instantiates all leading Π binders
 of `e` with fresh metavariables. The leading Π binders of `e` are matched up to
@@ -173,6 +184,7 @@ This is `open_pis_metas` up to normalisation.
 unsafe def open_pis_metas_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) :
     tactic (List expr × expr) :=
   open_binders (some (md, unfold_ginductive)) true false e
+#align tactic.open_pis_metas_whnf tactic.open_pis_metas_whnf
 
 /-- `open_n_pis_whnf e n md unfold_ginductive` instantiates the first `n` Π binders
 of `e` with fresh local constants. The leading Π binders of `e` are matched up
@@ -183,6 +195,7 @@ This is `open_pis_whnf` but restricted to `n` binders.
 unsafe def open_n_pis_whnf (e : expr) (n : ℕ) (md := semireducible) (unfold_ginductive := true) :
     tactic (List expr × expr) :=
   open_n_binders (some (md, unfold_ginductive)) true true e n
+#align tactic.open_n_pis_whnf tactic.open_n_pis_whnf
 
 /-- `open_n_pis_metas_whnf e n md unfold_ginductive` instantiates the first `n` Π
 binders of `e` with fresh metavariables. The leading Π binders of `e` are
@@ -194,6 +207,7 @@ binders.
 unsafe def open_n_pis_metas_whnf (e : expr) (n : ℕ) (md := semireducible) (unfold_ginductive := true) :
     tactic (List expr × expr) :=
   open_n_binders (some (md, unfold_ginductive)) true false e n
+#align tactic.open_n_pis_metas_whnf tactic.open_n_pis_metas_whnf
 
 /-- `get_pi_binders e` instantiates all leading Π binders of `e` with fresh local
 constants (like `open_pis`). Returns the remainder of `e` and information about
@@ -203,13 +217,16 @@ the binders that were instantiated (but not the new local constants). See also
 unsafe def get_pi_binders (e : expr) : tactic (List binder × expr) := do
   let (lcs, rest) ← open_pis e
   pure (lcs to_binder, rest)
+#align tactic.get_pi_binders tactic.get_pi_binders
 
 private unsafe def get_pi_binders_nondep_aux : ℕ → expr → tactic (List (ℕ × binder) × expr) := fun i e => do
-  let some (Name, bi, type, body) ← get_binder none true e | pure ([], e)
+  let some (Name, bi, type, body) ← get_binder none true e |
+    pure ([], e)
   let replacement ← mk_local' Name bi type
   let (rs, rest) ← get_pi_binders_nondep_aux (i + 1) (body.instantiate_var replacement)
   let rs' := if body.has_var then rs else (i, replacement.to_binder) :: rs
   pure (rs', rest)
+#align tactic.get_pi_binders_nondep_aux tactic.get_pi_binders_nondep_aux
 
 /-- `get_pi_binders_nondep e` instantiates all leading Π binders of `e` with fresh
 local constants (like `open_pis`). Returns the remainder of `e` and information
@@ -219,6 +236,7 @@ expression. Also returns the index of each returned binder (starting at 0).
 -/
 unsafe def get_pi_binders_nondep : expr → tactic (List (ℕ × binder) × expr) :=
   get_pi_binders_nondep_aux 0
+#align tactic.get_pi_binders_nondep tactic.get_pi_binders_nondep
 
 /-- `open_lambdas e` instantiates all leading λ binders of `e` with fresh local
 constants. Returns the new local constants and the remainder of `e`. This is
@@ -226,6 +244,7 @@ constants. Returns the new local constants and the remainder of `e`. This is
 -/
 unsafe def open_lambdas : expr → tactic (List expr × expr) :=
   open_binders none false true
+#align tactic.open_lambdas tactic.open_lambdas
 
 /-- `open_lambdas_metas e` instantiates all leading λ binders of `e` with fresh
 metavariables. Returns the new metavariables and the remainder of `e`. This is
@@ -233,6 +252,7 @@ metavariables. Returns the new metavariables and the remainder of `e`. This is
 -/
 unsafe def open_lambdas_metas : expr → tactic (List expr × expr) :=
   open_binders none false false
+#align tactic.open_lambdas_metas tactic.open_lambdas_metas
 
 /-- `open_n_lambdas e n` instantiates the first `n` λ binders of `e` with fresh
 local constants. Returns the new local constants and the remainder of `e`. Fails
@@ -241,6 +261,7 @@ restricted to the first `n` binders.
 -/
 unsafe def open_n_lambdas : expr → ℕ → tactic (List expr × expr) :=
   open_n_binders none false true
+#align tactic.open_n_lambdas tactic.open_n_lambdas
 
 /-- `open_n_lambdas_metas e n` instantiates the first `n` λ binders of `e` with
 fresh metavariables. Returns the new metavariables and the remainder of `e`.
@@ -249,6 +270,7 @@ Fails if `e` does not start with at least `n` λ binders. This is
 -/
 unsafe def open_n_lambdas_metas : expr → ℕ → tactic (List expr × expr) :=
   open_n_binders none false false
+#align tactic.open_n_lambdas_metas tactic.open_n_lambdas_metas
 
 /-- `open_lambdas_whnf e md unfold_ginductive` instantiates all leading λ binders of
 `e` with fresh local constants. The leading λ binders of `e` are matched up to
@@ -258,6 +280,7 @@ This is `open_lambdas` up to normalisation.
 -/
 unsafe def open_lambdas_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) : tactic (List expr × expr) :=
   open_binders (some (md, unfold_ginductive)) false true e
+#align tactic.open_lambdas_whnf tactic.open_lambdas_whnf
 
 /-- `open_lambdas_metas_whnf e md unfold_ginductive` instantiates all leading λ
 binders of `e` with fresh metavariables. The leading λ binders of `e` are
@@ -268,6 +291,7 @@ during normalisation. This is `open_lambdas_metas` up to normalisation.
 unsafe def open_lambdas_metas_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) :
     tactic (List expr × expr) :=
   open_binders (some (md, unfold_ginductive)) false false e
+#align tactic.open_lambdas_metas_whnf tactic.open_lambdas_metas_whnf
 
 /-- `open_n_lambdas_whnf e md unfold_ginductive` instantiates the first `n` λ
 binders of `e` with fresh local constants. The λ binders are matched up to
@@ -279,6 +303,7 @@ Fails if `e` does not start with `n` λ binders (after normalisation). This is
 unsafe def open_n_lambdas_whnf (e : expr) (n : ℕ) (md := semireducible) (unfold_ginductive := true) :
     tactic (List expr × expr) :=
   open_n_binders (some (md, unfold_ginductive)) false true e n
+#align tactic.open_n_lambdas_whnf tactic.open_n_lambdas_whnf
 
 /-- `open_n_lambdas_metas_whnf e md unfold_ginductive` instantiates the first `n` λ
 binders of `e` with fresh metavariables. The λ binders are matched up to
@@ -290,6 +315,7 @@ Fails if `e` does not start with `n` λ binders (after normalisation). This is
 unsafe def open_n_lambdas_metas_whnf (e : expr) (n : ℕ) (md := semireducible) (unfold_ginductive := true) :
     tactic (List expr × expr) :=
   open_n_binders (some (md, unfold_ginductive)) false false e n
+#align tactic.open_n_lambdas_metas_whnf tactic.open_n_lambdas_metas_whnf
 
 /-!
 ## Special-purpose tactics
@@ -313,6 +339,7 @@ unsafe def open_pis_whnf_dep : expr → tactic (List (expr × Bool) × expr) := 
       let (cs, rest) ← open_pis_whnf_dep <| rest c
       pure ((c, dep) :: cs, rest)
     | _ => pure ([], e)
+#align tactic.open_pis_whnf_dep tactic.open_pis_whnf_dep
 
 /-- `open_n_pis_metas' e n` instantiates the first `n` leading Π binders of `e` with
 fresh metavariables. It returns the remainder of the expression and, for each
@@ -327,6 +354,7 @@ unsafe def open_n_pis_metas' : expr → ℕ → tactic (List (expr × Name × Bi
     let (ms, rest) ← open_n_pis_metas' (rest.instantiate_var m) n
     pure ((m, nam, bi) :: ms, rest)
   | e, n + 1 => fail <| to_fmt "expected an expression starting with a Π, but got: " ++ to_fmt e
+#align tactic.open_n_pis_metas' tactic.open_n_pis_metas'
 
 end Tactic
 

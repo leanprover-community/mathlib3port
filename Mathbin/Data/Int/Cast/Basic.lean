@@ -35,11 +35,13 @@ Case conversion may be inaccurate. Consider using '#align nat.cast_sub Nat.cast_
 @[simp, norm_cast]
 theorem cast_sub {m n} (h : m ≤ n) : ((n - m : ℕ) : R) = n - m :=
   eq_sub_of_add_eq <| by rw [← cast_add, Nat.sub_add_cancel h]
+#align nat.cast_sub Nat.cast_sub
 
 @[simp, norm_cast]
 theorem cast_pred : ∀ {n}, 0 < n → ((n - 1 : ℕ) : R) = n - 1
   | 0, h => by cases h
   | n + 1, h => by rw [cast_succ, add_sub_cancel] <;> rfl
+#align nat.cast_pred Nat.cast_pred
 
 end Nat
 
@@ -58,6 +60,7 @@ Case conversion may be inaccurate. Consider using '#align int.cast_neg_succ_of_n
 @[simp]
 theorem cast_negSucc (n : ℕ) : (-[n+1] : R) = -(n + 1 : ℕ) :=
   AddGroupWithOne.int_cast_neg_succ_of_nat n
+#align int.cast_neg_succ_of_nat Int.cast_negSucc
 
 /- warning: int.cast_zero -> Int.cast_zero is a dubious translation:
 lean 3 declaration is
@@ -68,6 +71,7 @@ Case conversion may be inaccurate. Consider using '#align int.cast_zero Int.cast
 @[norm_cast]
 theorem cast_zero : ((0 : ℤ) : R) = 0 :=
   (cast_of_nat 0).trans Nat.cast_zero
+#align int.cast_zero Int.cast_zero
 
 /- warning: int.cast_coe_nat -> Int.cast_ofNat is a dubious translation:
 lean 3 declaration is
@@ -78,6 +82,7 @@ Case conversion may be inaccurate. Consider using '#align int.cast_coe_nat Int.c
 @[simp, norm_cast]
 theorem cast_ofNat (n : ℕ) : ((n : ℤ) : R) = n :=
   cast_of_nat _
+#align int.cast_coe_nat Int.cast_ofNat
 
 /- warning: int.cast_one -> Int.cast_one is a dubious translation:
 lean 3 declaration is
@@ -88,6 +93,7 @@ Case conversion may be inaccurate. Consider using '#align int.cast_one Int.cast_
 @[norm_cast]
 theorem cast_one : ((1 : ℤ) : R) = 1 :=
   show (((1 : ℕ) : ℤ) : R) = 1 by simp [Nat.cast_zero]
+#align int.cast_one Int.cast_one
 
 /- warning: int.cast_neg -> Int.cast_neg is a dubious translation:
 lean 3 declaration is
@@ -100,6 +106,7 @@ theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
   | (0 : ℕ) => by erw [cast_zero, neg_zero]
   | (n + 1 : ℕ) => by erw [cast_of_nat, cast_neg_succ_of_nat] <;> rfl
   | -[n+1] => by erw [cast_of_nat, cast_neg_succ_of_nat, neg_neg]
+#align int.cast_neg Int.cast_neg
 
 /- warning: int.cast_sub_nat_nat -> Int.cast_subNatNat is a dubious translation:
 lean 3 declaration is
@@ -117,11 +124,14 @@ theorem cast_subNatNat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n := by
   · rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e, Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succ e,
       neg_sub]
     
+#align int.cast_sub_nat_nat Int.cast_subNatNat
 
 theorem neg_of_nat_eq (n : ℕ) : negOfNat n = -(n : ℤ) := by cases n <;> rfl
+#align int.neg_of_nat_eq Int.neg_of_nat_eq
 
 @[simp]
 theorem cast_neg_of_nat (n : ℕ) : ((negOfNat n : ℤ) : R) = -n := by simp [Int.cast_neg, neg_of_nat_eq]
+#align int.cast_neg_of_nat Int.cast_neg_of_nat
 
 /- warning: int.cast_add -> Int.cast_add is a dubious translation:
 lean 3 declaration is
@@ -140,6 +150,7 @@ theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
     show (-[m + n + 1+1] : R) = _ by
       rw [cast_neg_succ_of_nat, cast_neg_succ_of_nat, cast_neg_succ_of_nat, ← neg_add_rev, ← Nat.cast_add,
         Nat.add_right_comm m n 1, Nat.add_assoc, Nat.add_comm]
+#align int.cast_add Int.cast_add
 
 /- warning: int.cast_sub -> Int.cast_sub is a dubious translation:
 lean 3 declaration is
@@ -150,27 +161,35 @@ Case conversion may be inaccurate. Consider using '#align int.cast_sub Int.cast_
 @[norm_cast]
 theorem cast_sub (m n) : ((m - n : ℤ) : R) = m - n := by
   simp [Int.sub_eq_add_neg, sub_eq_add_neg, Int.cast_neg, Int.cast_add]
+#align int.cast_sub Int.cast_sub
 
 @[norm_cast]
 theorem coe_nat_bit0 (n : ℕ) : (↑(bit0 n) : ℤ) = bit0 ↑n :=
   rfl
+#align int.coe_nat_bit0 Int.coe_nat_bit0
 
 @[norm_cast]
 theorem coe_nat_bit1 (n : ℕ) : (↑(bit1 n) : ℤ) = bit1 ↑n :=
   rfl
+#align int.coe_nat_bit1 Int.coe_nat_bit1
 
 @[norm_cast]
 theorem cast_bit0 (n : ℤ) : ((bit0 n : ℤ) : R) = bit0 n :=
   Int.cast_add _ _
+#align int.cast_bit0 Int.cast_bit0
 
 @[norm_cast]
 theorem cast_bit1 (n : ℤ) : ((bit1 n : ℤ) : R) = bit1 n := by rw [bit1, Int.cast_add, Int.cast_one, cast_bit0] <;> rfl
+#align int.cast_bit1 Int.cast_bit1
 
 theorem cast_two : ((2 : ℤ) : R) = 2 := by simp [cast_bit0, cast_bit1, cast_one]
+#align int.cast_two Int.cast_two
 
 theorem cast_three : ((3 : ℤ) : R) = 3 := by simp [cast_bit0, cast_bit1, cast_one]
+#align int.cast_three Int.cast_three
 
 theorem cast_four : ((4 : ℤ) : R) = 4 := by simp [cast_bit0, cast_bit1, cast_one]
+#align int.cast_four Int.cast_four
 
 end Int
 

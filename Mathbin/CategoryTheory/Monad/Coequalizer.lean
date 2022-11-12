@@ -42,22 +42,26 @@ Show that any algebra is a coequalizer of free algebras.
 @[simps]
 def FreeCoequalizer.topMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A :=
   (Monad.free T).map X.a
+#align category_theory.monad.free_coequalizer.top_map CategoryTheory.Monad.FreeCoequalizer.topMap
 
 /-- The bottom map in the coequalizer diagram we will construct. -/
 @[simps]
 def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A where
   f := T.μ.app X.A
   h' := T.assoc X.A
+#align category_theory.monad.free_coequalizer.bottom_map CategoryTheory.Monad.FreeCoequalizer.bottomMap
 
 /-- The cofork map in the coequalizer diagram we will construct. -/
 @[simps]
 def FreeCoequalizer.π : (Monad.free T).obj X.A ⟶ X where
   f := X.a
   h' := X.assoc.symm
+#align category_theory.monad.free_coequalizer.π CategoryTheory.Monad.FreeCoequalizer.π
 
 theorem FreeCoequalizer.condition :
     FreeCoequalizer.topMap X ≫ FreeCoequalizer.π X = FreeCoequalizer.bottomMap X ≫ FreeCoequalizer.π X :=
   Algebra.Hom.ext _ _ X.assoc.symm
+#align category_theory.monad.free_coequalizer.condition CategoryTheory.Monad.FreeCoequalizer.condition
 
 instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) := by
   apply is_reflexive_pair.mk' _ _ _
@@ -76,6 +80,7 @@ coequalizer.
 @[simps]
 def beckAlgebraCofork : Cofork (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) :=
   Cofork.ofπ _ (FreeCoequalizer.condition X)
+#align category_theory.monad.beck_algebra_cofork CategoryTheory.Monad.beckAlgebraCofork
 
 /-- The cofork constructed is a colimit. This shows that any algebra is a (reflexive) coequalizer of
 free algebras.
@@ -98,28 +103,34 @@ def beckAlgebraCoequalizer : IsColimit (beckAlgebraCofork X) :=
       rw [← hm]
       apply (X.unit_assoc _).symm
       
+#align category_theory.monad.beck_algebra_coequalizer CategoryTheory.Monad.beckAlgebraCoequalizer
 
 /-- The Beck cofork is a split coequalizer. -/
 def beckSplitCoequalizer : IsSplitCoequalizer (T.map X.a) (T.μ.app _) X.a :=
   ⟨T.η.app _, T.η.app _, X.assoc.symm, X.Unit, T.left_unit _, (T.η.naturality _).symm⟩
+#align category_theory.monad.beck_split_coequalizer CategoryTheory.Monad.beckSplitCoequalizer
 
 /-- This is the Beck cofork. It is a split coequalizer, in particular a coequalizer. -/
 @[simps x]
 def beckCofork : Cofork (T.map X.a) (T.μ.app _) :=
   (beckSplitCoequalizer X).asCofork
+#align category_theory.monad.beck_cofork CategoryTheory.Monad.beckCofork
 
 @[simp]
 theorem beck_cofork_π : (beckCofork X).π = X.a :=
   rfl
+#align category_theory.monad.beck_cofork_π CategoryTheory.Monad.beck_cofork_π
 
 /-- The Beck cofork is a coequalizer. -/
 def beckCoequalizer : IsColimit (beckCofork X) :=
   (beckSplitCoequalizer X).isCoequalizer
+#align category_theory.monad.beck_coequalizer CategoryTheory.Monad.beckCoequalizer
 
 @[simp]
 theorem beck_coequalizer_desc (s : Cofork (T.toFunctor.map X.a) (T.μ.app X.A)) :
     (beckCoequalizer X).desc s = T.η.app _ ≫ s.π :=
   rfl
+#align category_theory.monad.beck_coequalizer_desc CategoryTheory.Monad.beck_coequalizer_desc
 
 end Monad
 

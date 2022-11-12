@@ -36,12 +36,14 @@ variable {F : J ⥤ ∀ i, C i}
 def coneCompEval (c : Cone F) (i : I) : Cone (F ⋙ pi.eval C i) where
   x := c.x i
   π := { app := fun j => c.π.app j i, naturality' := fun j j' f => congr_fun (c.π.naturality f) i }
+#align category_theory.pi.cone_comp_eval CategoryTheory.pi.coneCompEval
 
 /-- A cocone over `F : J ⥤ Π i, C i` has as its components cocones over each of the `F ⋙ pi.eval C i`.
 -/
 def coconeCompEval (c : Cocone F) (i : I) : Cocone (F ⋙ pi.eval C i) where
   x := c.x i
   ι := { app := fun j => c.ι.app j i, naturality' := fun j j' f => congr_fun (c.ι.naturality f) i }
+#align category_theory.pi.cocone_comp_eval CategoryTheory.pi.coconeCompEval
 
 /-- Given a family of cones over the `F ⋙ pi.eval C i`, we can assemble these together as a `cone F`.
 -/
@@ -52,6 +54,7 @@ def coneOfConeCompEval (c : ∀ i, Cone (F ⋙ pi.eval C i)) : Cone F where
       naturality' := fun j j' f => by
         ext i
         exact (c i).π.naturality f }
+#align category_theory.pi.cone_of_cone_comp_eval CategoryTheory.pi.coneOfConeCompEval
 
 /-- Given a family of cocones over the `F ⋙ pi.eval C i`,
 we can assemble these together as a `cocone F`.
@@ -63,6 +66,7 @@ def coconeOfCoconeCompEval (c : ∀ i, Cocone (F ⋙ pi.eval C i)) : Cocone F wh
       naturality' := fun j j' f => by
         ext i
         exact (c i).ι.naturality f }
+#align category_theory.pi.cocone_of_cocone_comp_eval CategoryTheory.pi.coconeOfCoconeCompEval
 
 /-- Given a family of limit cones over the `F ⋙ pi.eval C i`,
 assembling them together as a `cone F` produces a limit cone.
@@ -76,6 +80,7 @@ def coneOfConeEvalIsLimit {c : ∀ i, Cone (F ⋙ pi.eval C i)} (P : ∀ i, IsLi
   uniq' s m w := by
     ext i
     exact (P i).uniq (cone_comp_eval s i) (m i) fun j => congr_fun (w j) i
+#align category_theory.pi.cone_of_cone_eval_is_limit CategoryTheory.pi.coneOfConeEvalIsLimit
 
 /-- Given a family of colimit cocones over the `F ⋙ pi.eval C i`,
 assembling them together as a `cocone F` produces a colimit cocone.
@@ -89,6 +94,7 @@ def coconeOfCoconeEvalIsColimit {c : ∀ i, Cocone (F ⋙ pi.eval C i)} (P : ∀
   uniq' s m w := by
     ext i
     exact (P i).uniq (cocone_comp_eval s i) (m i) fun j => congr_fun (w j) i
+#align category_theory.pi.cocone_of_cocone_eval_is_colimit CategoryTheory.pi.coconeOfCoconeEvalIsColimit
 
 section
 
@@ -101,6 +107,7 @@ then `F` has a limit.
 theorem has_limit_of_has_limit_comp_eval : HasLimit F :=
   HasLimit.mk
     { Cone := coneOfConeCompEval fun i => Limit.cone _, IsLimit := coneOfConeEvalIsLimit fun i => limit.isLimit _ }
+#align category_theory.pi.has_limit_of_has_limit_comp_eval CategoryTheory.pi.has_limit_of_has_limit_comp_eval
 
 end
 
@@ -116,6 +123,7 @@ theorem has_colimit_of_has_colimit_comp_eval : HasColimit F :=
   HasColimit.mk
     { Cocone := coconeOfCoconeCompEval fun i => Colimit.cocone _,
       IsColimit := coconeOfCoconeEvalIsColimit fun i => colimit.isColimit _ }
+#align category_theory.pi.has_colimit_of_has_colimit_comp_eval CategoryTheory.pi.has_colimit_of_has_colimit_comp_eval
 
 end
 

@@ -43,6 +43,7 @@ theorem finrank_matrix [Fintype m] [Fintype n] :
     FiniteDimensional.finrank R (Matrix m n R) = Fintype.card m * Fintype.card n := by
   rw [@LinearEquiv.finrank_eq R (Matrix m n R) _ _ _ _ _ _ (LinearEquiv.curry R m n).symm,
     FiniteDimensional.finrank_fintype_fun_eq_card, Fintype.card_prod]
+#align matrix.finrank_matrix Matrix.finrank_matrix
 
 end FiniteDimensional
 

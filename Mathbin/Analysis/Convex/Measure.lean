@@ -81,14 +81,16 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (Frontier s) = 0 := by
   -- Taking the limit as `r → 1`, we get `μ (closure s) ≤ μ (interior s)`.
   refine' ge_of_tendsto _ this
   refine'
-    (((Ennreal.continuous_mul_const hb).comp (ennreal.continuous_coe.comp (continuous_pow d))).tendsto' _ _ _).monoLeft
+    (((Ennreal.continuous_mul_const hb).comp (ennreal.continuous_coe.comp (continuous_pow d))).tendsto' _ _ _).mono_left
       nhds_within_le_nhds
   simp
+#align convex.add_haar_frontier Convex.add_haar_frontier
 
 /-- A convex set in a finite dimensional real vector space is null measurable with respect to an
 additive Haar measure on this space. -/
 protected theorem nullMeasurableSet (hs : Convex ℝ s) : NullMeasurableSet s μ :=
   nullMeasurableSetOfNullFrontier (hs.add_haar_frontier μ)
+#align convex.null_measurable_set Convex.nullMeasurableSet
 
 end Convex
 

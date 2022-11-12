@@ -28,7 +28,8 @@ variable {α : Type _} [DecidableEq α] [CommGroup α] (s : Finset α) {t : Fins
 theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.card ≤ (s * t).card ∧ s ⊆ u * t / t := by
   haveI : ∀ u, Decidable ((u : Set α).PairwiseDisjoint (· • t)) := fun u => Classical.dec _
   set C := s.powerset.filter fun u => (u : Set α).PairwiseDisjoint (· • t)
-  obtain ⟨u, hu, hCmax⟩ := C.exists_maximal (filter_nonempty_iff.2 ⟨∅, empty_mem_powerset _, Set.pairwiseDisjointEmpty⟩)
+  obtain ⟨u, hu, hCmax⟩ :=
+    C.exists_maximal (filter_nonempty_iff.2 ⟨∅, empty_mem_powerset _, Set.pairwise_disjoint_empty⟩)
   rw [mem_filter, mem_powerset] at hu
   refine'
     ⟨u, (card_mul_iff.2 <| pairwise_disjoint_smul_iff.1 hu.2).ge.trans (card_le_of_subset <| mul_subset_mul_right hu.1),
@@ -46,6 +47,7 @@ theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.
   simp_rw [not_disjoint_iff, ← inv_smul_mem_iff] at H
   obtain ⟨b, hb, c, hc₁, hc₂⟩ := H
   exact mem_mul.2 ⟨_, _, hb, mem_div.2 ⟨_, _, hc₂, hc₁, by simp [div_eq_mul_inv a b]⟩, by simp⟩
+#align finset.exists_subset_mul_div Finset.exists_subset_mul_div
 
 end Finset
 

@@ -57,9 +57,11 @@ instance : ChartedSpace R Rˣ :=
 
 theorem chart_at_apply {a : Rˣ} {b : Rˣ} : chartAt R a b = b :=
   rfl
+#align units.chart_at_apply Units.chart_at_apply
 
 theorem chart_at_source {a : Rˣ} : (chartAt R a).Source = Set.Univ :=
   rfl
+#align units.chart_at_source Units.chart_at_source
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 R]
 

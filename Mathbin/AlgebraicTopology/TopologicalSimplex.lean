@@ -28,13 +28,15 @@ attribute [local instance] CategoryTheory.ConcreteCategory.hasCoeToSort Category
   This is the object part of the functor `simplex_category.to_Top`. -/
 def ToTopObj (x : SimplexCategory) :=
   { f : x → ℝ≥0 | (∑ i, f i) = 1 }
+#align simplex_category.to_Top_obj SimplexCategory.ToTopObj
 
 instance (x : SimplexCategory) : CoeFun x.ToTopObj fun _ => x → ℝ≥0 :=
   ⟨fun f => (f : x → ℝ≥0)⟩
 
-@[ext]
+@[ext.1]
 theorem ToTopObj.ext {x : SimplexCategory} (f g : x.ToTopObj) : (f : x → ℝ≥0) = g → f = g :=
   Subtype.ext
+#align simplex_category.to_Top_obj.ext SimplexCategory.ToTopObj.ext
 
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
 def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.ToTopObj → y.ToTopObj := fun g =>
@@ -47,21 +49,26 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.ToTopObj → y.ToTopObj :
       rw [Finset.mem_bUnion]
       exact ⟨f i, by simp, by simp⟩
       
-    · intro i hi j hj h e he
+    · intro i hi j hj h
+      rw [Function.onFun, disjoint_iff_inf_le]
+      intro e he
       apply h
       simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter, Finset.mem_inter] at he
       rw [← he.1, ← he.2]
       ⟩
+#align simplex_category.to_Top_map SimplexCategory.toTopMap
 
 @[simp]
 theorem coe_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) (g : x.ToTopObj) (i : y) :
     toTopMap f g i = ∑ j in Finset.univ.filter fun k => f k = i, g j :=
   rfl
+#align simplex_category.coe_to_Top_map SimplexCategory.coe_to_Top_map
 
 @[continuity]
 theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous (toTopMap f) :=
   Continuous.subtype_mk
     (continuous_pi fun i => (continuous_finset_sum _) fun j hj => (continuous_apply _).comp continuous_subtype_val) _
+#align simplex_category.continuous_to_Top_map SimplexCategory.continuous_to_Top_map
 
 /-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/
 @[simps]
@@ -83,11 +90,14 @@ def toTop : SimplexCategory ⥤ TopCat where
       
     · tauto
       
-    · intro j hj k hk h e he
+    · intro j hj k hk h
+      rw [Function.onFun, disjoint_iff_inf_le]
+      intro e he
       apply h
       simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter, Finset.mem_inter] at he
       rw [← he.1, ← he.2]
       
+#align simplex_category.to_Top SimplexCategory.toTop
 
 end SimplexCategory
 

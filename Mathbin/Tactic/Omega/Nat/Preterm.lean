@@ -24,6 +24,7 @@ unsafe inductive exprterm : Type
   | exp : Nat → expr → exprterm
   | add : exprterm → exprterm → exprterm
   | sub : exprterm → exprterm → exprterm
+#align omega.nat.exprterm omega.nat.exprterm
 
 /-- Similar to `exprterm`, except that all exprs are now replaced with
 de Brujin indices of type `nat`. This is akin to generalizing over
@@ -34,6 +35,7 @@ inductive Preterm : Type
   | add : preterm → preterm → preterm
   | sub : preterm → preterm → preterm
   deriving has_reflect, DecidableEq, Inhabited
+#align omega.nat.preterm Omega.Nat.Preterm
 
 -- mathport name: preterm.cst
 localized [Omega.Nat] notation "&" k => Omega.Nat.Preterm.cst k
@@ -53,6 +55,7 @@ namespace Preterm
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
+#align omega.nat.preterm.induce omega.nat.preterm.induce
 
 /-- Preterm evaluation -/
 def val (v : Nat → Nat) : Preterm → Nat
@@ -60,10 +63,12 @@ def val (v : Nat → Nat) : Preterm → Nat
   | i ** n => if i = 1 then v n else v n * i
   | t1 +* t2 => t1.val + t2.val
   | t1 -* t2 => t1.val - t2.val
+#align omega.nat.preterm.val Omega.Nat.Preterm.val
 
 @[simp]
 theorem val_const {v : Nat → Nat} {m : Nat} : (&m).val v = m :=
   rfl
+#align omega.nat.preterm.val_const Omega.Nat.Preterm.val_const
 
 @[simp]
 theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
@@ -71,14 +76,17 @@ theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
   by_cases h1:m = 1
   rw [if_pos h1, h1, one_mul]
   rw [if_neg h1, mul_comm]
+#align omega.nat.preterm.val_var Omega.Nat.Preterm.val_var
 
 @[simp]
 theorem val_add {v : Nat → Nat} {t s : Preterm} : (t +* s).val v = t.val v + s.val v :=
   rfl
+#align omega.nat.preterm.val_add Omega.Nat.Preterm.val_add
 
 @[simp]
 theorem val_sub {v : Nat → Nat} {t s : Preterm} : (t -* s).val v = t.val v - s.val v :=
   rfl
+#align omega.nat.preterm.val_sub Omega.Nat.Preterm.val_sub
 
 /-- Fresh de Brujin index not used by any variable in argument -/
 def freshIndex : Preterm → Nat
@@ -86,6 +94,7 @@ def freshIndex : Preterm → Nat
   | i ** n => n + 1
   | t1 +* t2 => max t1.freshIndex t2.freshIndex
   | t1 -* t2 => max t1.freshIndex t2.freshIndex
+#align omega.nat.preterm.fresh_index Omega.Nat.Preterm.freshIndex
 
 /-- If variable assignments `v` and `w` agree on all variables that occur
 in term `t`, the value of `t` under `v` and `w` are identical. -/
@@ -105,16 +114,19 @@ theorem val_constant (v w : Nat → Nat) : ∀ t : Preterm, (∀ x < t.freshInde
     have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_left _ _))
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_right _ _))
     rw [ht, hs]
+#align omega.nat.preterm.val_constant Omega.Nat.Preterm.val_constant
 
 def repr : Preterm → String
   | &i => i.repr
   | i ** n => i.repr ++ "*x" ++ n.repr
   | t1 +* t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
   | t1 -* t2 => "(" ++ t1.repr ++ " - " ++ t2.repr ++ ")"
+#align omega.nat.preterm.repr Omega.Nat.Preterm.repr
 
 @[simp]
 def addOne (t : Preterm) : Preterm :=
   t +* &1
+#align omega.nat.preterm.add_one Omega.Nat.Preterm.addOne
 
 /-- Preterm is free of subtractions -/
 def SubFree : Preterm → Prop
@@ -122,6 +134,7 @@ def SubFree : Preterm → Prop
   | m ** n => True
   | t +* s => t.SubFree ∧ s.SubFree
   | _ -* _ => False
+#align omega.nat.preterm.sub_free Omega.Nat.Preterm.SubFree
 
 end Preterm
 
@@ -136,6 +149,7 @@ def canonize : Preterm → Term
   | m ** n => ⟨0, [] {n ↦ ↑m}⟩
   | t +* s => Term.add (canonize t) (canonize s)
   | _ -* _ => ⟨0, []⟩
+#align omega.nat.canonize Omega.Nat.canonize
 
 @[simp]
 theorem val_canonize {v : Nat → Nat} : ∀ {t : Preterm}, t.SubFree → ((canonize t).val fun x => ↑(v x)) = t.val v
@@ -143,6 +157,7 @@ theorem val_canonize {v : Nat → Nat} : ∀ {t : Preterm}, t.SubFree → ((cano
   | i ** n, h1 => by simp only [preterm.val_var, coeffs.val_set, term.val, zero_add, Int.coe_nat_mul, canonize]
   | t +* s, h1 => by
     simp only [val_canonize h1.left, val_canonize h1.right, Int.coe_nat_add, canonize, term.val_add, preterm.val_add]
+#align omega.nat.val_canonize Omega.Nat.val_canonize
 
 end Nat
 

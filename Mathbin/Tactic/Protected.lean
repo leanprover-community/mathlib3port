@@ -52,6 +52,7 @@ unsafe def protected_attr : user_attribute where
   descr :=
     "Attribute to protect a declaration\n    If a declaration `foo.bar` is marked protected, then it must be referred to\n    by its full name `foo.bar`, even when the `foo` namespace is open."
   after_set := some fun n _ _ => mk_protected n
+#align tactic.protected_attr tactic.protected_attr
 
 add_tactic_doc
   { Name := "protected", category := DocCategory.attr, declNames := [`tactic.protected_attr],
@@ -63,6 +64,7 @@ unsafe def protect_proj_tac (n : Name) (l : List Name) : tactic Unit := do
   match env n with
     | none => fail "protect_proj failed: declaration is not a structure"
     | some fields => fields fun field => when (l fun m => not <| m field) <| mk_protected field
+#align tactic.protect_proj_tac tactic.protect_proj_tac
 
 /-- Attribute to protect the projections of a structure.
 If a structure `foo` is marked with the `protect_proj` user attribute, then
@@ -86,6 +88,7 @@ unsafe def protect_proj_attr : user_attribute Unit (List Name) where
       let l ← protect_proj_attr.get_param n
       protect_proj_tac n l
   parser := interactive.types.without_ident_list
+#align tactic.protect_proj_attr tactic.protect_proj_attr
 
 add_tactic_doc
   { Name := "protect_proj", category := DocCategory.attr, declNames := [`tactic.protect_proj_attr],

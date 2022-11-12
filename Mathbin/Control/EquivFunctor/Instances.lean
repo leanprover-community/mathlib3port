@@ -16,12 +16,16 @@ We derive some `equiv_functor` instances, to enable `equiv_rw` to rewrite under 
 open Equiv
 
 instance equivFunctorUnique : EquivFunctor Unique where map α β e := Equiv.uniqueCongr e
+#align equiv_functor_unique equivFunctorUnique
 
 instance equivFunctorPerm : EquivFunctor Perm where map α β e p := (e.symm.trans p).trans e
+#align equiv_functor_perm equivFunctorPerm
 
 -- There is a classical instance of `is_lawful_functor finset` available,
 -- but we provide this computable alternative separately.
 instance equivFunctorFinset : EquivFunctor Finset where map α β e s := s.map e.toEmbedding
+#align equiv_functor_finset equivFunctorFinset
 
 instance equivFunctorFintype : EquivFunctor Fintype where map α β e s := Fintype.ofBijective e e.bijective
+#align equiv_functor_fintype equivFunctorFintype
 

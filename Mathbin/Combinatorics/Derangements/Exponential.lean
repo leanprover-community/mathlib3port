@@ -49,4 +49,5 @@ theorem num_derangements_tendsto_inv_e :
   push_cast [Nat.factorial_dvd_factorial h_le]
   field_simp [Nat.factorial_ne_zero]
   ring
+#align num_derangements_tendsto_inv_e num_derangements_tendsto_inv_e
 

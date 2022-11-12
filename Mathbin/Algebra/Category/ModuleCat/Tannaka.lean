@@ -48,4 +48,5 @@ def ringEquivEndForget₂ (R : Type u) [Ring R] :
     intros
     ext
     simpa using mul_smul _ _ _
+#align ring_equiv_End_forget₂ ringEquivEndForget₂
 

@@ -53,6 +53,7 @@ def powAddExpansion {R : Type _} [CommSemiring R] (x y : R) :
         push_cast
         ring!
       
+#align polynomial.pow_add_expansion Polynomial.powAddExpansion
 
 variable [CommRing R]
 
@@ -61,12 +62,14 @@ private def poly_binom_aux1 (x y : R) (e : ℕ) (a : R) :
   exists (pow_add_expansion x y e).val
   congr
   apply (pow_add_expansion _ _ _).property
+#align polynomial.poly_binom_aux1 polynomial.poly_binom_aux1
 
 private theorem poly_binom_aux2 (f : R[X]) (x y : R) :
     f.eval (x + y) = f.Sum fun e a => a * (x ^ e + e * x ^ (e - 1) * y + (polyBinomAux1 x y e a).val * y ^ 2) := by
   unfold eval eval₂
   congr with (n z)
   apply (poly_binom_aux1 x y _ _).property
+#align polynomial.poly_binom_aux2 polynomial.poly_binom_aux2
 
 private theorem poly_binom_aux3 (f : R[X]) (x y : R) :
     f.eval (x + y) =
@@ -75,6 +78,7 @@ private theorem poly_binom_aux3 (f : R[X]) (x y : R) :
   by
   rw [poly_binom_aux2]
   simp [left_distrib, sum_add, mul_assoc]
+#align polynomial.poly_binom_aux3 polynomial.poly_binom_aux3
 
 /-- A polynomial `f` evaluated at `x + y` can be expressed as
 the evaluation of `f` at `x`, plus `y` times the (polynomial) derivative of `f` at `x`,
@@ -92,6 +96,7 @@ def binomExpansion (f : R[X]) (x y : R) :
     
   · exact finset.sum_mul.symm
     
+#align polynomial.binom_expansion Polynomial.binomExpansion
 
 /- warning: polynomial.pow_sub_pow_factor -> Polynomial.powSubPowFactor is a dubious translation:
 lean 3 declaration is
@@ -109,6 +114,7 @@ def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x -
     cases' @pow_sub_pow_factor (k + 1) with z hz
     exists z * x + y ^ (k + 1)
     linear_combination (config := { normalization_tactic := sorry })x * hz
+#align polynomial.pow_sub_pow_factor Polynomial.powSubPowFactor
 
 /-- For any polynomial `f`, `f.eval x - f.eval y` can be expressed as `z * (x - y)`
 for some `z` in the ring.
@@ -120,6 +126,7 @@ def evalSubFactor (f : R[X]) (x y : R) : { z : R // f.eval x - f.eval y = z * (x
   dsimp
   congr with (i r)
   rw [mul_assoc, ← (pow_sub_pow_factor x y _).Prop, mul_sub]
+#align polynomial.eval_sub_factor Polynomial.evalSubFactor
 
 end Identities
 

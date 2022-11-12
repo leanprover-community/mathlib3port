@@ -18,6 +18,7 @@ open Interactive Interactive.Types Expr
 /-- Similar to `constructor`, but does not reorder goals. -/
 unsafe def fconstructor : tactic Unit :=
   concat_tags tactic.fconstructor
+#align tactic.interactive.fconstructor tactic.interactive.fconstructor
 
 add_tactic_doc
   { Name := "fconstructor", category := DocCategory.tactic, declNames := [`tactic.interactive.fconstructor],
@@ -31,11 +32,13 @@ unsafe def try_for (max : parse parser.pexpr) (tac : itactic) : tactic Unit := d
     match _root_.try_for max (tac s) with
     | some r => r
     | none => (tactic.trace "try_for timeout, using sorry" >> tactic.admit) s
+#align tactic.interactive.try_for tactic.interactive.try_for
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Multiple `subst`. `substs x y z` is the same as `subst x, subst y, subst z`. -/
 unsafe def substs (l : parse (parser.many ident)) : tactic Unit :=
   propagate_tags <| (l.mmap' fun h => get_local h >>= tactic.subst) >> try (tactic.reflexivity reducible)
+#align tactic.interactive.substs tactic.interactive.substs
 
 add_tactic_doc
   { Name := "substs", category := DocCategory.tactic, declNames := [`tactic.interactive.substs], tags := ["rewriting"] }
@@ -46,6 +49,7 @@ unsafe def unfold_coes (loc : parse location) : tactic Unit :=
     [`` coe, `` coeT, `` CoeTC.coe, `` coeB, `` Coe.coe, `` lift, `` HasLift.lift, `` liftT, `` HasLiftT.lift, `` coeFn,
       `` CoeFun.coe, `` coeSort, `` CoeSort.coe]
     loc
+#align tactic.interactive.unfold_coes tactic.interactive.unfold_coes
 
 add_tactic_doc
   { Name := "unfold_coes", category := DocCategory.tactic, declNames := [`tactic.interactive.unfold_coes],
@@ -54,6 +58,7 @@ add_tactic_doc
 /-- Unfold `has_well_founded.r`, `sizeof` and other such definitions. -/
 unsafe def unfold_wf :=
   propagate_tags (andthen well_founded_tactics.unfold_wf_rel well_founded_tactics.unfold_sizeof)
+#align tactic.interactive.unfold_wf tactic.interactive.unfold_wf
 
 /-- Unfold auxiliary definitions associated with the current declaration. -/
 unsafe def unfold_aux : tactic Unit := do
@@ -65,17 +70,20 @@ unsafe def unfold_aux : tactic Unit := do
         simp_lemmas.mk
         to_unfold tgt >>=
       tactic.change
+#align tactic.interactive.unfold_aux tactic.interactive.unfold_aux
 
 /-- For debugging only. This tactic checks the current state for any
 missing dropped goals and restores them. Useful when there are no
 goals to solve but "result contains meta-variables". -/
 unsafe def recover : tactic Unit :=
   metavariables >>= tactic.set_goals
+#align tactic.interactive.recover tactic.interactive.recover
 
 /-- Like `try { tac }`, but in the case of failure it continues
 from the failure state instead of reverting to the original state. -/
 unsafe def continue (tac : itactic) : tactic Unit := fun s =>
   result.cases_on (tac s) (fun a => result.success ()) fun e ref => result.success ()
+#align tactic.interactive.continue tactic.interactive.continue
 
 /-- `id { tac }` is the same as `tac`, but it is useful for creating a block scope without
 requiring the goal to be solved at the end like `{ tac }`. It can also be used to enclose a
@@ -83,6 +91,7 @@ non-interactive tactic for patterns like `tac1; id {tac2}` where `tac2` is non-i
 @[inline]
 protected unsafe def id (tac : itactic) : tactic Unit :=
   tac
+#align tactic.interactive.id tactic.interactive.id
 
 /-- `work_on_goal n { tac }` creates a block scope for the `n`-goal,
 and does not require that the goal be solved at the end
@@ -111,6 +120,7 @@ unsafe def work_on_goal : parse small_nat → itactic → tactic Unit
     t
     let new_goals ← get_goals
     set_goals (earlier_goals ++ new_goals ++ later_goals)
+#align tactic.interactive.work_on_goal tactic.interactive.work_on_goal
 
 /-- `swap n` will move the `n`th goal to the front.
 `swap` defaults to `swap 2`, and so interchanges the first and second goals.
@@ -122,6 +132,7 @@ unsafe def swap (n := 2) : tactic Unit := do
   match gs (n - 1) with
     | some g => set_goals (g :: gs (n - 1))
     | _ => skip
+#align tactic.interactive.swap tactic.interactive.swap
 
 add_tactic_doc
   { Name := "swap", category := DocCategory.tactic, declNames := [`tactic.interactive.swap],
@@ -133,6 +144,7 @@ See also `tactic.interactive.swap`, which moves the `n`th goal to the front.
 -/
 unsafe def rotate (n := 1) : tactic Unit :=
   tactic.rotate n
+#align tactic.interactive.rotate tactic.interactive.rotate
 
 add_tactic_doc
   { Name := "rotate", category := DocCategory.tactic, declNames := [`tactic.interactive.rotate],
@@ -148,6 +160,7 @@ unsafe def clear_ : tactic Unit :=
         let cl ← infer_type h >>= is_class
         guard ¬cl
         tactic.clear h
+#align tactic.interactive.clear_ tactic.interactive.clear_
 
 add_tactic_doc
   { Name := "clear_", category := DocCategory.tactic, declNames := [`tactic.interactive.clear_],
@@ -171,6 +184,7 @@ unsafe def replace (h : parse (parser.optional ident)) (q₁ : parse (parser.opt
     | none, _ => skip
     | some o, some _ => tactic.clear o
     | some o, none => (swap >> tactic.clear o) >> swap
+#align tactic.interactive.replace tactic.interactive.replace
 
 add_tactic_doc
   { Name := "replace", category := DocCategory.tactic, declNames := [`tactic.interactive.replace],
@@ -183,6 +197,7 @@ add_tactic_doc
 available for a specific proposition, the noncomputable one will be used instead. -/
 unsafe def classical (bang : parse <| parser.optional (tk "!")) :=
   tactic.classical bang.isSome
+#align tactic.interactive.classical tactic.interactive.classical
 
 add_tactic_doc
   { Name := "classical", category := DocCategory.tactic, declNames := [`tactic.interactive.classical],
@@ -191,13 +206,16 @@ add_tactic_doc
 private unsafe def generalize_arg_p_aux : pexpr → parser (pexpr × Name)
   | app (app (macro _ [const `eq _]) h) (local_const x _ _ _) => pure (h, x)
   | _ => fail "parse error"
+#align tactic.interactive.generalize_arg_p_aux tactic.interactive.generalize_arg_p_aux
 
 private unsafe def generalize_arg_p : parser (pexpr × Name) :=
   with_desc "expr = id" <| parser.pexpr 0 >>= generalize_arg_p_aux
+#align tactic.interactive.generalize_arg_p tactic.interactive.generalize_arg_p
 
 @[nolint def_lemma]
 noncomputable theorem generalizeAAux.{u} {α : Sort u} (h : ∀ x : Sort u, (α → x) → x) : α :=
   h α id
+#align tactic.interactive.generalize_a_aux Tactic.Interactive.generalizeAAux
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Like `generalize` but also considers assumptions
@@ -222,6 +240,7 @@ unsafe def generalize_hyp (h : parse (parser.optional ident)) (_ : parse <| tk "
       tactic.clear h'
       tactic.clear x'
     | none => return ()
+#align tactic.interactive.generalize_hyp tactic.interactive.generalize_hyp
 
 add_tactic_doc
   { Name := "generalize_hyp", category := DocCategory.tactic, declNames := [`tactic.interactive.generalize_hyp],
@@ -236,6 +255,7 @@ unsafe def compact_decl_aux : List Name → BinderInfo → expr → List expr �
         let vs ← compact_decl_aux [pp] bi' t' xs
         pure <| (ns, bi, t) :: vs
   | ns, bi, t, _ :: xs => compact_decl_aux ns bi t xs
+#align tactic.interactive.compact_decl_aux tactic.interactive.compact_decl_aux
 
 /-- go from (x₀ : t₀) (x₁ : t₀) (x₂ : t₀) to (x₀ x₁ x₂ : t₀) -/
 unsafe def compact_decl : List expr → tactic (List (List Name × BinderInfo × expr))
@@ -244,6 +264,7 @@ unsafe def compact_decl : List expr → tactic (List (List Name × BinderInfo ×
     let t ← infer_type v
     compact_decl_aux [pp] bi t xs
   | _ :: xs => compact_decl xs
+#align tactic.interactive.compact_decl tactic.interactive.compact_decl
 
 /-- Remove identity functions from a term. These are normally
 automatically generated with terms like `show t, from p` or
@@ -254,6 +275,7 @@ unsafe def clean (q : parse texpr) : tactic Unit := do
   let tgt : expr ← target
   let e ← i_to_expr_strict (pquote.1 (%%ₓq : %%ₓtgt))
   tactic.exact <| e
+#align tactic.interactive.clean tactic.interactive.clean
 
 unsafe def source_fields (missing : List Name) (e : pexpr) : tactic (List (Name × pexpr)) := do
   let e ← to_expr e
@@ -262,16 +284,20 @@ unsafe def source_fields (missing : List Name) (e : pexpr) : tactic (List (Name 
   let fields ← expanded_field_list struct_n
   let exp_fields := fields.filter fun x => x.2 ∈ missing
   exp_fields fun ⟨p, n⟩ => (Prod.mk n ∘ to_pexpr) <$> mk_mapp (n p) [none, some e]
+#align tactic.interactive.source_fields tactic.interactive.source_fields
 
 unsafe def collect_struct' : pexpr → StateT (List <| expr × structure_instance_info) tactic pexpr
   | e => do
-    let some str ← pure e.get_structure_instance_info | e.traverse collect_struct'
+    let some str ← pure e.get_structure_instance_info |
+      e.traverse collect_struct'
     let v ← monadLift mk_mvar
     modify (List.cons (v, str))
     pure <| to_pexpr v
+#align tactic.interactive.collect_struct' tactic.interactive.collect_struct'
 
 unsafe def collect_struct (e : pexpr) : tactic <| pexpr × List (expr × structure_instance_info) :=
   Prod.map id List.reverse <$> (collect_struct' e).run []
+#align tactic.interactive.collect_struct tactic.interactive.collect_struct
 
 unsafe def refine_one (str : structure_instance_info) : tactic <| List (expr × structure_instance_info) := do
   let tgt ← target >>= whnf
@@ -301,6 +327,7 @@ unsafe def refine_one (str : structure_instance_info) : tactic <| List (expr × 
           missing_f' vs)
   set_goals gs
   return new_goals
+#align tactic.interactive.refine_one tactic.interactive.refine_one
 
 unsafe def refine_recursively : expr × structure_instance_info → tactic (List expr)
   | (e, str) => do
@@ -309,6 +336,7 @@ unsafe def refine_recursively : expr × structure_instance_info → tactic (List
     let gs ← get_goals
     let gs' ← rs.mmap refine_recursively
     return <| gs' ++ gs
+#align tactic.interactive.refine_recursively tactic.interactive.refine_recursively
 
 /-- `refine_struct { .. }` acts like `refine` but works only with structure instance
 literals. It creates a goal for each missing field and tags it with the name of the
@@ -351,6 +379,7 @@ unsafe def refine_struct : parse texpr → tactic Unit
     let gs ← get_goals
     let xs' ← xs.mmap refine_recursively
     set_goals (xs' ++ gs)
+#align tactic.interactive.refine_struct tactic.interactive.refine_struct
 
 /-- `guard_hyp' h : t` fails if the hypothesis `h` does not have type `t`.
 We use this tactic for writing tests.
@@ -359,6 +388,7 @@ Fixes `guard_hyp` by instantiating meta variables
 unsafe def guard_hyp' (n : parse ident) (p : parse <| tk ":" *> texpr) : tactic Unit := do
   let h ← get_local n >>= infer_type >>= instantiate_mvars
   guard_expr_eq h p
+#align tactic.interactive.guard_hyp' tactic.interactive.guard_hyp'
 
 /-- `match_hyp h : t` fails if the hypothesis `h` does not match the type `t` (which may be a pattern).
 We use this tactic for writing tests.
@@ -366,6 +396,7 @@ We use this tactic for writing tests.
 unsafe def match_hyp (n : parse ident) (p : parse <| tk ":" *> texpr) (m := reducible) : tactic (List expr) := do
   let h ← get_local n >>= infer_type >>= instantiate_mvars
   match_expr p h m
+#align tactic.interactive.match_hyp tactic.interactive.match_hyp
 
 /-- `guard_expr_strict t := e` fails if the expr `t` is not equal to `e`. By contrast
 to `guard_expr`, this tests strict (syntactic) equality.
@@ -374,6 +405,7 @@ We use this tactic for writing tests.
 unsafe def guard_expr_strict (t : expr) (p : parse <| tk ":=" *> texpr) : tactic Unit := do
   let e ← to_expr p
   guard (t = e)
+#align tactic.interactive.guard_expr_strict tactic.interactive.guard_expr_strict
 
 /-- `guard_target_strict t` fails if the target of the main goal is not syntactically `t`.
 We use this tactic for writing tests.
@@ -381,6 +413,7 @@ We use this tactic for writing tests.
 unsafe def guard_target_strict (p : parse texpr) : tactic Unit := do
   let t ← target
   guard_expr_strict t p
+#align tactic.interactive.guard_target_strict tactic.interactive.guard_target_strict
 
 /-- `guard_hyp_strict h : t` fails if the hypothesis `h` does not have type syntactically equal
 to `t`.
@@ -389,11 +422,13 @@ We use this tactic for writing tests.
 unsafe def guard_hyp_strict (n : parse ident) (p : parse <| tk ":" *> texpr) : tactic Unit := do
   let h ← get_local n >>= infer_type >>= instantiate_mvars
   guard_expr_strict h p
+#align tactic.interactive.guard_hyp_strict tactic.interactive.guard_hyp_strict
 
 /-- Tests that there are `n` hypotheses in the current context. -/
 unsafe def guard_hyp_nums (n : ℕ) : tactic Unit := do
   let k ← local_context
   guard (n = k) <|> fail f! "{k} hypotheses found"
+#align tactic.interactive.guard_hyp_nums tactic.interactive.guard_hyp_nums
 
 /-- `guard_hyp_mod_implicit h : t` fails if the type of the hypothesis `h`
 is not definitionally equal to `t` modulo none transparency
@@ -404,6 +439,7 @@ unsafe def guard_hyp_mod_implicit (n : parse ident) (p : parse <| tk ":" *> texp
   let h ← get_local n >>= infer_type >>= instantiate_mvars
   let e ← to_expr p
   is_def_eq h e transparency.none
+#align tactic.interactive.guard_hyp_mod_implicit tactic.interactive.guard_hyp_mod_implicit
 
 /-- `guard_target_mod_implicit t` fails if the target of the main goal
 is not definitionally equal to `t` modulo none transparency
@@ -414,12 +450,14 @@ unsafe def guard_target_mod_implicit (p : parse texpr) : tactic Unit := do
   let tgt ← target
   let e ← to_expr p
   is_def_eq tgt e transparency.none
+#align tactic.interactive.guard_target_mod_implicit tactic.interactive.guard_target_mod_implicit
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Test that `t` is the tag of the main goal. -/
 unsafe def guard_tags (tags : parse (parser.many ident)) : tactic Unit := do
   let (t : List Name) ← get_main_tag
   guard (t = tags)
+#align tactic.interactive.guard_tags tactic.interactive.guard_tags
 
 /-- `guard_proof_term { t } e` applies tactic `t` and tests whether the resulting proof term
   unifies with `p`. -/
@@ -429,16 +467,19 @@ unsafe def guard_proof_term (t : itactic) (p : parse texpr) : itactic := do
   t
   let g ← instantiate_mvars g
   unify e g
+#align tactic.interactive.guard_proof_term tactic.interactive.guard_proof_term
 
 /-- `success_if_fail_with_msg { tac } msg` succeeds if the interactive tactic `tac` fails with
 error message `msg` (for test writing purposes). -/
 unsafe def success_if_fail_with_msg (tac : tactic.interactive.itactic) :=
   tactic.success_if_fail_with_msg tac
+#align tactic.interactive.success_if_fail_with_msg tactic.interactive.success_if_fail_with_msg
 
 /-- Get the field of the current goal. -/
 unsafe def get_current_field : tactic Name := do
   let [_, field, str] ← get_main_tag
   expr.const_name <$> resolve_name (field str)
+#align tactic.interactive.get_current_field tactic.interactive.get_current_field
 
 unsafe def field (n : parse ident) (tac : itactic) : tactic Unit := do
   let gs ← get_goals
@@ -448,6 +489,7 @@ unsafe def field (n : parse ident) (tac : itactic) : tactic Unit := do
   tac
   done
   set_goals <| gs' Prod.fst
+#align tactic.interactive.field tactic.interactive.field
 
 /-- `have_field`, used after `refine_struct _` poses `field` as a local constant
 with the type of the field of the current goal:
@@ -466,10 +508,12 @@ refine_struct ({ .. } : semigroup α),
 -/
 unsafe def have_field : tactic Unit :=
   propagate_tags <| (get_current_field >>= mk_const >>= note `field none) >> return ()
+#align tactic.interactive.have_field tactic.interactive.have_field
 
 /-- `apply_field` functions as `have_field, apply field, clear field` -/
 unsafe def apply_field : tactic Unit :=
   propagate_tags <| get_current_field >>= applyc
+#align tactic.interactive.apply_field tactic.interactive.apply_field
 
 add_tactic_doc
   { Name := "refine_struct", category := DocCategory.tactic,
@@ -507,6 +551,7 @@ by apply_rules [add_le_add] with mono_rules
 unsafe def apply_rules (args : parse opt_pexpr_list) (attrs : parse with_ident_list) (n : Nat := 50)
     (opt : ApplyCfg := {  }) : tactic Unit :=
   tactic.apply_rules args attrs n opt
+#align tactic.interactive.apply_rules tactic.interactive.apply_rules
 
 add_tactic_doc
   { Name := "apply_rules", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_rules],
@@ -520,11 +565,13 @@ unsafe def return_cast (f : Option expr) (t : Option (expr × expr)) (es : List 
       let u ← mk_meta_univ
       let f ← f <|> mk_mapp `` _root_.id [(expr.sort u : expr)]
       let t' ← infer_type e
-      let some (f', t) ← pure t | return (some (f, t'), (e, x', eq_h) :: es)
+      let some (f', t) ← pure t |
+        return (some (f, t'), (e, x', eq_h) :: es)
       infer_type e >>= is_def_eq t
       unify f f'
       return (some (f, t), (e, x', eq_h) :: es)) <|>
     return (t, es)
+#align tactic.interactive.return_cast tactic.interactive.return_cast
 
 unsafe def list_cast_of_aux (x : expr) (t : Option (expr × expr)) (es : List (expr × expr × expr)) :
     expr → tactic (Option (expr × expr) × List (expr × expr × expr))
@@ -537,16 +584,20 @@ unsafe def list_cast_of_aux (x : expr) (t : Option (expr × expr)) (es : List (e
   | e@(quote.1 (@Eq.ndrec (%%ₓα) (%%ₓa) (%%ₓf) (%%ₓx') _ (%%ₓeq_h))) => return_cast f t es e x x' eq_h
   | e@(quote.1 (@Eq.recOn (%%ₓα) (%%ₓa) (%%ₓf) (%%ₓb) (%%ₓeq_h) (%%ₓx'))) => return_cast f t es e x x' eq_h
   | e => return (t, es)
+#align tactic.interactive.list_cast_of_aux tactic.interactive.list_cast_of_aux
 
 unsafe def list_cast_of (x tgt : expr) : tactic (List (expr × expr × expr)) :=
   (List.reverse ∘ Prod.snd) <$> tgt.mfold (none, []) fun e i es => list_cast_of_aux x es.1 es.2 e
+#align tactic.interactive.list_cast_of tactic.interactive.list_cast_of
 
 private unsafe def h_generalize_arg_p_aux : pexpr → parser (pexpr × Name)
   | app (app (macro _ [const `heq _]) h) (local_const x _ _ _) => pure (h, x)
   | _ => fail "parse error"
+#align tactic.interactive.h_generalize_arg_p_aux tactic.interactive.h_generalize_arg_p_aux
 
 private unsafe def h_generalize_arg_p : parser (pexpr × Name) :=
   with_desc "expr == id" <| parser.pexpr 0 >>= h_generalize_arg_p_aux
+#align tactic.interactive.h_generalize_arg_p tactic.interactive.h_generalize_arg_p
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -570,7 +621,8 @@ unsafe def h_generalize (rev : parse (parser.optional (tk "!"))) (h : parse (par
   let h' ← (h' : tactic Name) <|> get_unused_name ("h" ++ n.toString : String)
   let e ← to_expr e
   let tgt ← target
-  let (e, x, eq_h) :: es ← list_cast_of e tgt | fail "no cast found"
+  let (e, x, eq_h) :: es ← list_cast_of e tgt |
+    fail "no cast found"
   interactive.generalize h' () (to_pexpr e, n)
   let asm ← get_local h'
   let v ← get_local n
@@ -590,6 +642,7 @@ unsafe def h_generalize (rev : parse (parser.optional (tk "!"))) (h : parse (par
           pure ()
   tactic.clear asm
   when rev (interactive.revert [n])
+#align tactic.interactive.h_generalize tactic.interactive.h_generalize
 
 add_tactic_doc
   { Name := "h_generalize", category := DocCategory.tactic, declNames := [`tactic.interactive.h_generalize],
@@ -600,6 +653,7 @@ add_tactic_doc
 unsafe def guard_expr_eq' (t : expr) (p : parse <| tk ":=" *> texpr) : tactic Unit := do
   let e ← to_expr p
   is_def_eq t e
+#align tactic.interactive.guard_expr_eq' tactic.interactive.guard_expr_eq'
 
 /-- `guard_target' t` fails if the target of the main goal is not definitionally equal to `t`.
 We use this tactic for writing tests.
@@ -609,6 +663,7 @@ alpha-equivalence.
 unsafe def guard_target' (p : parse texpr) : tactic Unit := do
   let t ← target
   guard_expr_eq' t p
+#align tactic.interactive.guard_target' tactic.interactive.guard_target'
 
 add_tactic_doc
   { Name := "guard_target'", category := DocCategory.tactic, declNames := [`tactic.interactive.guard_target'],
@@ -619,6 +674,7 @@ Unlike `trivial` or `trivial'`, does not the `contradiction` tactic.
 -/
 unsafe def triv : tactic Unit :=
   tactic.triv <|> tactic.reflexivity <|> fail "triv tactic failed"
+#align tactic.interactive.triv tactic.interactive.triv
 
 add_tactic_doc
   { Name := "triv", category := DocCategory.tactic, declNames := [`tactic.interactive.triv], tags := ["finishing"] }
@@ -628,6 +684,7 @@ add_tactic_doc
 and otherwise tries the `contradiction` tactic. -/
 unsafe def trivial' : tactic Unit :=
   tactic.triv' <|> tactic.reflexivity reducible <|> tactic.contradiction <|> fail "trivial' tactic failed"
+#align tactic.interactive.trivial' tactic.interactive.trivial'
 
 add_tactic_doc
   { Name := "trivial'", category := DocCategory.tactic, declNames := [`tactic.interactive.trivial'],
@@ -678,6 +735,7 @@ unsafe def use (l : parse pexpr_list_or_texpr) : tactic Unit :=
         (trivial' <|> do
           let quote.1 (Exists (%%ₓp)) ← target
           (to_expr (pquote.1 exists_prop.mpr) >>= tactic.apply) >> skip))
+#align tactic.interactive.use tactic.interactive.use
 
 add_tactic_doc
   { Name := "use", category := DocCategory.tactic, declNames := [`tactic.interactive.use, `tactic.interactive.existsi],
@@ -708,6 +766,7 @@ end
 -/
 unsafe def clear_aux_decl : tactic Unit :=
   tactic.clear_aux_decl
+#align tactic.interactive.clear_aux_decl tactic.interactive.clear_aux_decl
 
 add_tactic_doc
   { Name := "clear_aux_decl", category := DocCategory.tactic,
@@ -717,9 +776,11 @@ add_tactic_doc
 unsafe def loc.get_local_pp_names : Loc → tactic (List Name)
   | loc.wildcard => List.map expr.local_pp_name <$> local_context
   | loc.ns l => return l.reduceOption
+#align tactic.interactive.loc.get_local_pp_names tactic.interactive.loc.get_local_pp_names
 
 unsafe def loc.get_local_uniq_names (l : Loc) : tactic (List Name) :=
   List.map expr.local_uniq_name <$> l.get_locals
+#align tactic.interactive.loc.get_local_uniq_names tactic.interactive.loc.get_local_uniq_names
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- The logic of `change x with y at l` fails when there are dependencies.
@@ -740,6 +801,7 @@ unsafe def change' (q : parse texpr) : parse (parser.optional (tk "with" *> texp
     let l' ← loc.get_local_pp_names l
     l' fun e => try (change_with_at q w e)
     when l <| change q w (loc.ns [none])
+#align tactic.interactive.change' tactic.interactive.change'
 
 add_tactic_doc
   { Name := "change'", category := DocCategory.tactic,
@@ -750,6 +812,7 @@ add_tactic_doc
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 private unsafe def opt_dir_with : parser (Option (Bool × Name)) :=
   parser.optional (tk "with" *> ((fun arrow h => (Option.isSome arrow, h)) <$> parser.optional (tk "<-") <*> ident))
+#align tactic.interactive.opt_dir_with tactic.interactive.opt_dir_with
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -791,6 +854,7 @@ unsafe def set (h_simp : parse (parser.optional (tk "!"))) (a : parse ident)
       mk_app `eq (cond flip [pv, nv] [nv, pv]) >>= assert id
       reflexivity
     | none => skip
+#align tactic.interactive.set tactic.interactive.set
 
 add_tactic_doc
   { Name := "set", category := DocCategory.tactic, declNames := [`tactic.interactive.set],
@@ -804,6 +868,7 @@ unsafe def clear_except (xs : parse (parser.many ident)) : tactic Unit := do
   let ls ← local_context
   ls <| try ∘ tactic.clear
   intron_no_renames n
+#align tactic.interactive.clear_except tactic.interactive.clear_except
 
 add_tactic_doc
   { Name := "clear_except", category := DocCategory.tactic, declNames := [`tactic.interactive.clear_except],
@@ -811,6 +876,7 @@ add_tactic_doc
 
 unsafe def format_names (ns : List Name) : format :=
   format.join <| List.intersperse " " (ns.map to_fmt)
+#align tactic.interactive.format_names tactic.interactive.format_names
 
 private unsafe def indent_bindents (l r : String) : Option (List Name) → expr → tactic format
   | none, e => do
@@ -821,6 +887,7 @@ private unsafe def indent_bindents (l r : String) : Option (List Name) → expr 
     let ns := format_names ns
     let margin := l.length + ns.toString.length + " : ".length
     f!"{(← l)}{(← ns)} : {(← format.nest margin e)}{← r}"
+#align tactic.interactive.indent_bindents tactic.interactive.indent_bindents
 
 private unsafe def format_binders : List Name × BinderInfo × expr → tactic format
   | (ns, BinderInfo.default, t) => indent_bindents "(" ")" ns t
@@ -830,16 +897,19 @@ private unsafe def format_binders : List Name × BinderInfo × expr → tactic f
     if "_".isPrefixOf n.toString then indent_bindents "[" "]" none t else indent_bindents "[" "]" [n] t
   | (ns, BinderInfo.inst_implicit, t) => indent_bindents "[" "]" ns t
   | (ns, BinderInfo.aux_decl, t) => indent_bindents "(" ")" ns t
+#align tactic.interactive.format_binders tactic.interactive.format_binders
 
 private unsafe def partition_vars' (s : name_set) : List expr → List expr → List expr → tactic (List expr × List expr)
   | [], as, bs => pure (as.reverse, bs.reverse)
   | x :: xs, as, bs => do
     let t ← infer_type x
     if t s then partition_vars' xs as (x :: bs) else partition_vars' xs (x :: as) bs
+#align tactic.interactive.partition_vars' tactic.interactive.partition_vars'
 
 private unsafe def partition_vars : tactic (List expr × List expr) := do
   let ls ← local_context
   partition_vars' (name_set.of_list <| ls expr.local_uniq_name) ls [] []
+#align tactic.interactive.partition_vars tactic.interactive.partition_vars
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -933,8 +1003,8 @@ unsafe def extract_goal (print_use : parse <| tk "!" *> pure true <|> pure false
         | none, _ => to_fmt "example"
         | some n, tt => f! "lemma {n}"
         | some n, ff => f! "def {n}"
-      let cxt₀ ← compact_decl cxt₀ >>= List.mmap format_binders
-      let cxt₁ ← compact_decl cxt₁ >>= List.mmap format_binders
+      let cxt₀ ← compact_decl cxt₀ >>= List.mapM format_binders
+      let cxt₁ ← compact_decl cxt₁ >>= List.mapM format_binders
       let stmt ← f!"{← tgt} :="
       let fmt :=
         format.group <|
@@ -957,6 +1027,7 @@ unsafe def extract_goal (print_use : parse <| tk "!" *> pure true <|> pure false
             end
             "
   skip
+#align tactic.interactive.extract_goal tactic.interactive.extract_goal
 
 add_tactic_doc
   { Name := "extract_goal", category := DocCategory.tactic, declNames := [`tactic.interactive.extract_goal],
@@ -990,6 +1061,7 @@ unsafe def inhabit (t : parse parser.pexpr) (inst_name : parse (parser.optional 
       decorate_error "could not infer nonempty instance:" <|
           mk_mapp `` Classical.inhabitedOfNonempty' [ty, none] >>= note nm none
       resetI
+#align tactic.interactive.inhabit tactic.interactive.inhabit
 
 add_tactic_doc
   { Name := "inhabit", category := DocCategory.tactic, declNames := [`tactic.interactive.inhabit],
@@ -1000,6 +1072,7 @@ add_tactic_doc
 It does not revert `n₁, n₂, ...` themselves (unless they depend on another `nᵢ`). -/
 unsafe def revert_deps (ns : parse (parser.many ident)) : tactic Unit :=
   propagate_tags <| (ns.mmap get_local >>= revert_reverse_dependencies_of_hyps) >> skip
+#align tactic.interactive.revert_deps tactic.interactive.revert_deps
 
 add_tactic_doc
   { Name := "revert_deps", category := DocCategory.tactic, declNames := [`tactic.interactive.revert_deps],
@@ -1008,6 +1081,7 @@ add_tactic_doc
 /-- `revert_after n` reverts all the hypotheses after `n`. -/
 unsafe def revert_after (n : parse ident) : tactic Unit :=
   propagate_tags <| (get_local n >>= tactic.revert_after) >> skip
+#align tactic.interactive.revert_after tactic.interactive.revert_after
 
 add_tactic_doc
   { Name := "revert_after", category := DocCategory.tactic, declNames := [`tactic.interactive.revert_after],
@@ -1016,6 +1090,7 @@ add_tactic_doc
 /-- Reverts all local constants on which the target depends (recursively). -/
 unsafe def revert_target_deps : tactic Unit :=
   propagate_tags <| tactic.revert_target_deps >> skip
+#align tactic.interactive.revert_target_deps tactic.interactive.revert_target_deps
 
 add_tactic_doc
   { Name := "revert_target_deps", category := DocCategory.tactic, declNames := [`tactic.interactive.revert_target_deps],
@@ -1026,6 +1101,7 @@ add_tactic_doc
 into regular hypotheses. A hypothesis `n : α := t` is changed to `n : α`. -/
 unsafe def clear_value (ns : parse (parser.many ident)) : tactic Unit :=
   propagate_tags <| ns.reverse.mmap get_local >>= tactic.clear_value
+#align tactic.interactive.clear_value tactic.interactive.clear_value
 
 add_tactic_doc
   { Name := "clear_value", category := DocCategory.tactic, declNames := [`tactic.interactive.clear_value],
@@ -1046,7 +1122,8 @@ unsafe def generalize' (h : parse (parser.optional ident)) (_ : parse <| tk ":")
   propagate_tags <| do
     let (p, x) := p
     let e ← i_to_expr p
-    let some h ← pure h | tactic.generalize' e x >> skip
+    let some h ← pure h |
+      tactic.generalize' e x >> skip
     let tgt
       ←-- `h` is given, the regular implementation of `generalize` works.
         target
@@ -1060,6 +1137,7 @@ unsafe def generalize' (h : parse (parser.optional ident)) (_ : parse <| tk ":")
     exact (pquote.1 ((%%ₓt) (%%ₓe) rfl))
     intro x
     intro h
+#align tactic.interactive.generalize' tactic.interactive.generalize'
 
 add_tactic_doc
   { Name := "generalize'", category := DocCategory.tactic, declNames := [`tactic.interactive.generalize'],
@@ -1076,6 +1154,7 @@ a local definition. It is trickier to fix this in core, since `tactic.is_local_d
 -/
 unsafe def subst' (q : parse texpr) : tactic Unit := do
   (i_to_expr q >>= tactic.subst') >> try (tactic.reflexivity reducible)
+#align tactic.interactive.subst' tactic.interactive.subst'
 
 add_tactic_doc
   { Name := "subst'", category := DocCategory.tactic, declNames := [`tactic.interactive.subst'],

@@ -83,10 +83,12 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
         
       
     
+#align extend_partial_order extend_partial_order
 
 /-- A type alias for `α`, intended to extend a partial order on `α` to a linear order. -/
 def LinearExtension (α : Type u) : Type u :=
   α
+#align linear_extension LinearExtension
 
 noncomputable instance {α : Type u} [PartialOrder α] : LinearOrder (LinearExtension α) where
   le := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some
@@ -101,6 +103,7 @@ def toLinearExtension {α : Type u} [PartialOrder α] :
     ((· ≤ ·) : α → α → Prop) →r ((· ≤ ·) : LinearExtension α → LinearExtension α → Prop) where
   toFun x := x
   map_rel' a b := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some_spec _ _
+#align to_linear_extension toLinearExtension
 
 instance {α : Type u} [Inhabited α] : Inhabited (LinearExtension α) :=
   ⟨(default : α)⟩

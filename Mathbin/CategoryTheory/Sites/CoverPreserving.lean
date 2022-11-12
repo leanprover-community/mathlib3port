@@ -74,10 +74,12 @@ if for all covering sieves `R` in `C`, `R.pushforward_functor G` is a covering s
 @[nolint has_nonempty_instance]
 structure CoverPreserving (G : C ⥤ D) : Prop where
   cover_preserve : ∀ {U : C} {S : Sieve U} (hS : S ∈ J U), S.FunctorPushforward G ∈ K (G.obj U)
+#align category_theory.cover_preserving CategoryTheory.CoverPreserving
 
 /-- The identity functor on a site is cover-preserving. -/
 theorem idCoverPreserving : CoverPreserving J J (𝟭 _) :=
   ⟨fun U S hS => by simpa using hS⟩
+#align category_theory.id_cover_preserving CategoryTheory.idCoverPreserving
 
 variable (J) (K)
 
@@ -87,6 +89,7 @@ theorem CoverPreserving.comp {F} (hF : CoverPreserving J K F) {G} (hG : CoverPre
   ⟨fun U S hS => by
     rw [sieve.functor_pushforward_comp]
     exact hG.cover_preserve (hF.cover_preserve hS)⟩
+#align category_theory.cover_preserving.comp CategoryTheory.CoverPreserving.comp
 
 /-- A functor `G : (C, J) ⥤ (D, K)` between sites is called compatible preserving if for each
 compatible family of elements at `C` and valued in `G.op ⋙ ℱ`, and each commuting diagram
@@ -100,6 +103,7 @@ structure CompatiblePreserving (K : GrothendieckTopology D) (G : C ⥤ D) : Prop
     ∀ (ℱ : SheafOfTypesCat.{w} K) {Z} {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Compatible)
       {Y₁ Y₂} {X} (f₁ : X ⟶ G.obj Y₁) (f₂ : X ⟶ G.obj Y₂) {g₁ : Y₁ ⟶ Z} {g₂ : Y₂ ⟶ Z} (hg₁ : T g₁) (hg₂ : T g₂)
       (eq : f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂), ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
+#align category_theory.compatible_preserving CategoryTheory.CompatiblePreserving
 
 variable {J K} {G : C ⥤ D} (hG : CompatiblePreserving.{w} K G) (ℱ : SheafOfTypesCat.{w} K) {Z : C}
 
@@ -117,6 +121,8 @@ theorem Presieve.FamilyOfElements.Compatible.functor_pushforward : (x.FunctorPus
   simpa using this
   apply hG.compatible ℱ h _ _ hf₁ hf₂
   simpa using Eq
+#align
+  category_theory.presieve.family_of_elements.compatible.functor_pushforward CategoryTheory.Presieve.FamilyOfElements.Compatible.functor_pushforward
 
 @[simp]
 theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
@@ -124,6 +130,7 @@ theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
   unfold family_of_elements.functor_pushforward
   rcases e₁ : get_functor_pushforward_structure (image_mem_functor_pushforward G T hf) with ⟨X, g, f', hg, eq⟩
   simpa using hG.compatible ℱ h f' (𝟙 _) hg hf (by simp [Eq])
+#align category_theory.compatible_preserving.apply_map CategoryTheory.CompatiblePreserving.apply_map
 
 omit h hG
 
@@ -315,7 +322,7 @@ open Limits.WalkingCospan
              "]"]
             [])
            []
-           (Tactic.congr' "congr" [(num "1")] [])
+           (Tactic.congr "congr" [(num "1")])
            []
            (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inl]) ["with" ["_" `e₁]])
            []
@@ -503,7 +510,7 @@ open Limits.WalkingCospan
             "]"]
            [])
           []
-          (Tactic.congr' "congr" [(num "1")] [])
+          (Tactic.congr "congr" [(num "1")])
           []
           (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inl]) ["with" ["_" `e₁]])
           []
@@ -650,6 +657,7 @@ theorem
         injection c'.π.naturality walking_cospan.hom.inl with _ e₁
         injection c'.π.naturality walking_cospan.hom.inr with _ e₂
         exact hx c'.π.app left . right c'.π.app right . right hg₁ hg₂ e₁.symm.trans e₂
+#align category_theory.compatible_preserving_of_flat CategoryTheory.compatiblePreservingOfFlat
 
 theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F]
     (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σc', F.obj c' ≅ d) : CompatiblePreserving K F := by
@@ -659,6 +667,7 @@ theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F
   apply (ℱ.1.mapIso e.op).toEquiv.Injective
   simp only [iso.op_hom, iso.to_equiv_fun, ℱ.1.map_iso_hom, ← functor_to_types.map_comp_apply]
   simpa using hx (F.preimage <| e.hom ≫ f₁) (F.preimage <| e.hom ≫ f₂) hg₁ hg₂ (F.map_injective <| by simpa using he)
+#align category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
 
 /-- If `G` is cover-preserving and compatible-preserving,
 then `G.op ⋙ _` pulls sheaves back to sheaves.
@@ -688,11 +697,13 @@ theorem pullbackIsSheafOfCoverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreser
     dsimp
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
     
+#align category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullbackIsSheafOfCoverPreserving
 
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/
 def pullbackSheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) (ℱ : SheafCat K A) :
     SheafCat J A :=
   ⟨G.op ⋙ ℱ.val, pullbackIsSheafOfCoverPreserving hG₁ hG₂ ℱ⟩
+#align category_theory.pullback_sheaf CategoryTheory.pullbackSheaf
 
 variable (A)
 
@@ -710,6 +721,7 @@ def Sites.pullback {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : Cov
   map_comp' _ _ _ f g := by
     ext1
     apply ((whiskering_left _ _ _).obj G.op).map_comp
+#align category_theory.sites.pullback CategoryTheory.Sites.pullback
 
 end CategoryTheory
 
@@ -739,6 +751,7 @@ same direction as `G`. -/
 @[simps]
 def Sites.pushforward (G : C ⥤ D) : SheafCat J A ⥤ SheafCat K A :=
   sheafToPresheaf J A ⋙ lan G.op ⋙ presheafToSheaf K A
+#align category_theory.sites.pushforward CategoryTheory.Sites.pushforward
 
 instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.pushforward A J K G) := by
   apply (config := { instances := false }) comp_preserves_finite_limits
@@ -757,6 +770,7 @@ def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserv
   ((lan.adjunction A G.op).comp (sheafificationAdjunction K A)).restrictFullyFaithful (sheafToPresheaf J A) (𝟭 _)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ => (Category.comp_id _).trans (Category.id_comp _).symm)
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ => (Category.comp_id _).trans (Category.id_comp _).symm)
+#align category_theory.sites.pullback_pushforward_adjunction CategoryTheory.Sites.pullbackPushforwardAdjunction
 
 end CategoryTheory
 

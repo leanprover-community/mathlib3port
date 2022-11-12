@@ -79,6 +79,7 @@ containing the data, but none of the axioms. -/
 class CategoryStruct (obj : Type u) extends Quiver.{v + 1} obj : Type max u (v + 1) where
   id : ∀ X : obj, hom X X
   comp : ∀ {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)
+#align category_theory.category_struct CategoryTheory.CategoryStruct
 
 -- mathport name: «expr𝟙»
 notation "𝟙" => CategoryStruct.id
@@ -99,6 +100,7 @@ class Category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1
   id_comp' : ∀ {X Y : obj} (f : hom X Y), 𝟙 X ≫ f = f := by obviously
   comp_id' : ∀ {X Y : obj} (f : hom X Y), f ≫ 𝟙 Y = f := by obviously
   assoc' : ∀ {W X Y Z : obj} (f : hom W X) (g : hom X Y) (h : hom Y Z), (f ≫ g) ≫ h = f ≫ g ≫ h := by obviously
+#align category_theory.category CategoryTheory.Category
 
 -- `restate_axiom` is a command that creates a lemma from a structure field,
 -- discarding any auto_param wrappers from the type.
@@ -119,11 +121,13 @@ of groups, etc.
 -/
 abbrev LargeCategory (C : Type (u + 1)) : Type (u + 1) :=
   Category.{u} C
+#align category_theory.large_category CategoryTheory.LargeCategory
 
 /-- A `small_category` has objects and morphisms in the same universe level.
 -/
 abbrev SmallCategory (C : Type u) : Type (u + 1) :=
   Category.{u} C
+#align category_theory.small_category CategoryTheory.SmallCategory
 
 section
 
@@ -134,9 +138,11 @@ initialize_simps_projections category (to_category_struct_to_quiver_hom → Hom,
 
 /-- postcompose an equation between morphisms by another morphism -/
 theorem eq_whisker {f g : X ⟶ Y} (w : f = g) (h : Y ⟶ Z) : f ≫ h = g ≫ h := by rw [w]
+#align category_theory.eq_whisker CategoryTheory.eq_whisker
 
 /-- precompose an equation between morphisms by another morphism -/
 theorem whisker_eq (f : X ⟶ Y) {g h : Y ⟶ Z} (w : g = h) : f ≫ g = f ≫ h := by rw [w]
+#align category_theory.whisker_eq CategoryTheory.whisker_eq
 
 -- mathport name: «expr =≫ »
 infixr:80 " =≫ " => eq_whisker
@@ -147,38 +153,48 @@ infixr:80 " ≫= " => whisker_eq
 theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} (h : Y ⟶ Z), f ≫ h = g ≫ h) : f = g := by
   convert w (𝟙 Y)
   tidy
+#align category_theory.eq_of_comp_left_eq CategoryTheory.eq_of_comp_left_eq
 
 theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} (h : X ⟶ Y), h ≫ f = h ≫ g) : f = g := by
   convert w (𝟙 Y)
   tidy
+#align category_theory.eq_of_comp_right_eq CategoryTheory.eq_of_comp_right_eq
 
 theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun {Z : C} (h : Y ⟶ Z) => f ≫ h) = fun {Z : C} (h : Y ⟶ Z) => g ≫ h) :
     f = g :=
   eq_of_comp_left_eq fun Z h => by convert congr_fun (congr_fun w Z) h
+#align category_theory.eq_of_comp_left_eq' CategoryTheory.eq_of_comp_left_eq'
 
 theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun {X : C} (h : X ⟶ Y) => h ≫ f) = fun {X : C} (h : X ⟶ Y) => h ≫ g) :
     f = g :=
   eq_of_comp_right_eq fun X h => by convert congr_fun (congr_fun w X) h
+#align category_theory.eq_of_comp_right_eq' CategoryTheory.eq_of_comp_right_eq'
 
 theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} (g : X ⟶ Y), f ≫ g = g) : f = 𝟙 X := by
   convert w (𝟙 X)
   tidy
+#align category_theory.id_of_comp_left_id CategoryTheory.id_of_comp_left_id
 
 theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} (g : Y ⟶ X), g ≫ f = g) : f = 𝟙 X := by
   convert w (𝟙 X)
   tidy
+#align category_theory.id_of_comp_right_id CategoryTheory.id_of_comp_right_id
 
 theorem comp_ite {P : Prop} [Decidable P] {X Y Z : C} (f : X ⟶ Y) (g g' : Y ⟶ Z) :
     (f ≫ if P then g else g') = if P then f ≫ g else f ≫ g' := by split_ifs <;> rfl
+#align category_theory.comp_ite CategoryTheory.comp_ite
 
 theorem ite_comp {P : Prop} [Decidable P] {X Y Z : C} (f f' : X ⟶ Y) (g : Y ⟶ Z) :
     (if P then f else f') ≫ g = if P then f ≫ g else f' ≫ g := by split_ifs <;> rfl
+#align category_theory.ite_comp CategoryTheory.ite_comp
 
 theorem comp_dite {P : Prop} [Decidable P] {X Y Z : C} (f : X ⟶ Y) (g : P → (Y ⟶ Z)) (g' : ¬P → (Y ⟶ Z)) :
     (f ≫ if h : P then g h else g' h) = if h : P then f ≫ g h else f ≫ g' h := by split_ifs <;> rfl
+#align category_theory.comp_dite CategoryTheory.comp_dite
 
 theorem dite_comp {P : Prop} [Decidable P] {X Y Z : C} (f : P → (X ⟶ Y)) (f' : ¬P → (X ⟶ Y)) (g : Y ⟶ Z) :
     (if h : P then f h else f' h) ≫ g = if h : P then f h ≫ g else f' h ≫ g := by split_ifs <;> rfl
+#align category_theory.dite_comp CategoryTheory.dite_comp
 
 /-- A morphism `f` is an epimorphism if it can be "cancelled" when precomposed:
 `f ≫ g = f ≫ h` implies `g = h`.
@@ -187,6 +203,7 @@ See <https://stacks.math.columbia.edu/tag/003B>.
 -/
 class Epi (f : X ⟶ Y) : Prop where
   left_cancellation : ∀ {Z : C} (g h : Y ⟶ Z) (w : f ≫ g = f ≫ h), g = h
+#align category_theory.epi CategoryTheory.Epi
 
 /-- A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
 `g ≫ f = h ≫ f` implies `g = h`.
@@ -195,6 +212,7 @@ See <https://stacks.math.columbia.edu/tag/003B>.
 -/
 class Mono (f : X ⟶ Y) : Prop where
   right_cancellation : ∀ {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h
+#align category_theory.mono CategoryTheory.Mono
 
 instance (X : C) : Epi (𝟙 X) :=
   ⟨fun Z g h w => by simpa using w⟩
@@ -204,17 +222,21 @@ instance (X : C) : Mono (𝟙 X) :=
 
 theorem cancel_epi (f : X ⟶ Y) [Epi f] {g h : Y ⟶ Z} : f ≫ g = f ≫ h ↔ g = h :=
   ⟨fun p => Epi.left_cancellation g h p, congr_arg _⟩
+#align category_theory.cancel_epi CategoryTheory.cancel_epi
 
 theorem cancel_mono (f : X ⟶ Y) [Mono f] {g h : Z ⟶ X} : g ≫ f = h ≫ f ↔ g = h :=
   ⟨fun p => Mono.right_cancellation g h p, congr_arg _⟩
+#align category_theory.cancel_mono CategoryTheory.cancel_mono
 
 theorem cancel_epi_id (f : X ⟶ Y) [Epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y := by
   convert cancel_epi f
   simp
+#align category_theory.cancel_epi_id CategoryTheory.cancel_epi_id
 
 theorem cancel_mono_id (f : X ⟶ Y) [Mono f] {g : X ⟶ X} : g ≫ f = f ↔ g = 𝟙 X := by
   convert cancel_mono f
   simp
+#align category_theory.cancel_mono_id CategoryTheory.cancel_mono_id
 
 theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [Epi f] (g : Y ⟶ Z) [Epi g] : Epi (f ≫ g) := by
   constructor
@@ -222,6 +244,7 @@ theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [Epi f] (g : Y ⟶ Z) [Epi g] : Epi (
   apply (cancel_epi g).1
   apply (cancel_epi f).1
   simpa using w
+#align category_theory.epi_comp CategoryTheory.epi_comp
 
 theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [Mono f] (g : Y ⟶ Z) [Mono g] : Mono (f ≫ g) := by
   constructor
@@ -229,6 +252,7 @@ theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [Mono f] (g : Y ⟶ Z) [Mono g] : Mo
   apply (cancel_mono f).1
   apply (cancel_mono g).1
   simpa using w
+#align category_theory.mono_comp CategoryTheory.mono_comp
 
 theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : Mono f := by
   constructor
@@ -237,10 +261,12 @@ theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : 
   dsimp at w
   rw [category.assoc, category.assoc] at w
   exact (cancel_mono _).1 w
+#align category_theory.mono_of_mono CategoryTheory.mono_of_mono
 
 theorem mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [Mono h] (w : f ≫ g = h) : Mono f := by
   subst h
   exact mono_of_mono f g
+#align category_theory.mono_of_mono_fac CategoryTheory.mono_of_mono_fac
 
 theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi (f ≫ g)] : Epi g := by
   constructor
@@ -249,9 +275,11 @@ theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi (f ≫ g)] : Epi
   dsimp at w
   rw [← category.assoc, ← category.assoc] at w
   exact (cancel_epi _).1 w
+#align category_theory.epi_of_epi CategoryTheory.epi_of_epi
 
 theorem epi_of_epi_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [Epi h] (w : f ≫ g = h) : Epi g := by
   subst h <;> exact epi_of_epi f g
+#align category_theory.epi_of_epi_fac CategoryTheory.epi_of_epi_fac
 
 end
 
@@ -267,6 +295,7 @@ instance uliftCategory : Category.{v} (ULift.{u'} C) where
   Hom X Y := X.down ⟶ Y.down
   id X := 𝟙 X.down
   comp _ _ _ f g := f ≫ g
+#align category_theory.ulift_category CategoryTheory.uliftCategory
 
 -- We verify that this previous instance can lift small categories to large categories.
 example (D : Type u) [SmallCategory D] : LargeCategory (ULift.{u + 1} D) := by infer_instance

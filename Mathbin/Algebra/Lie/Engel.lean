@@ -88,6 +88,7 @@ theorem exists_smul_add_of_span_sup_eq_top (y : L) : ∃ t : R, ∃ z ∈ I, y =
   simp only [← hxI, Submodule.mem_sup, Submodule.mem_span_singleton] at hy
   obtain ⟨-, ⟨t, rfl⟩, z, hz, rfl⟩ := hy
   exact ⟨t, z, hz, rfl⟩
+#align lie_submodule.exists_smul_add_of_span_sup_eq_top LieSubmodule.exists_smul_add_of_span_sup_eq_top
 
 theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
     (↑⁅(⊤ : LieIdeal R L), N⁆ : Submodule R M) =
@@ -106,6 +107,7 @@ theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
   · rcases hz with (⟨m, hm, rfl⟩ | ⟨y, hy, m, hm, rfl⟩)
     exacts[⟨x, m, hm, rfl⟩, ⟨y, m, hm, rfl⟩]
     
+#align lie_submodule.lie_top_eq_of_span_sup_eq_top LieSubmodule.lie_top_eq_of_span_sup_eq_top
 
 theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ} (hxn : toEndomorphism R L M x ^ n = 0)
     (hIM : lowerCentralSeries R L M i ≤ I.lcs M j) : lowerCentralSeries R L M (i + n) ≤ I.lcs M (j + 1) := by
@@ -128,6 +130,7 @@ theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ} (hxn : toEndomo
       exact antitone_lower_central_series R L M le_self_add
       
     
+#align lie_submodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top LieSubmodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top
 
 theorem is_nilpotent_of_is_nilpotent_span_sup_eq_top (hnp : IsNilpotent <| toEndomorphism R L M x)
     (hIM : IsNilpotent R I M) : IsNilpotent R L M := by
@@ -143,6 +146,8 @@ theorem is_nilpotent_of_is_nilpotent_span_sup_eq_top (hnp : IsNilpotent <| toEnd
     
   · exact (l.succ_mul n).symm ▸ lcs_le_lcs_of_is_nilpotent_span_sup_eq_top hxI hn ih
     
+#align
+  lie_submodule.is_nilpotent_of_is_nilpotent_span_sup_eq_top LieSubmodule.is_nilpotent_of_is_nilpotent_span_sup_eq_top
 
 end LieSubmodule
 
@@ -161,6 +166,7 @@ def LieAlgebra.IsEngelian : Prop :=
   ∀ (M : Type u₄) [AddCommGroup M],
     ∀ [Module R M] [LieRingModule L M],
       ∀ [LieModule R L M], ∀ h : ∀ x : L, IsNilpotent (to_endomorphism R L M x), LieModule.IsNilpotent R L M
+#align lie_algebra.is_engelian LieAlgebra.IsEngelian
 
 variable {R L}
 
@@ -170,6 +176,7 @@ theorem LieAlgebra.is_engelian_of_subsingleton [Subsingleton L] : LieAlgebra.IsE
   suffices (⊤ : LieIdeal R L) = ⊥ by simp [this]
   haveI := (LieSubmodule.subsingleton_iff R L L).mpr inferInstance
   apply Subsingleton.elim
+#align lie_algebra.is_engelian_of_subsingleton LieAlgebra.is_engelian_of_subsingleton
 
 theorem Function.Surjective.is_engelian {f : L →ₗ⁅R⁆ L₂} (hf : Function.Surjective f)
     (h : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R L) : LieAlgebra.IsEngelian.{u₁, u₃, u₄} R L₂ := by
@@ -181,10 +188,12 @@ theorem Function.Surjective.is_engelian {f : L →ₗ⁅R⁆ L₂} (hf : Functio
   haveI : LieModule.IsNilpotent R L M := h M hnp
   apply hf.lie_module_is_nilpotent surj_id
   simp
+#align function.surjective.is_engelian Function.Surjective.is_engelian
 
 theorem LieEquiv.is_engelian_iff (e : L ≃ₗ⁅R⁆ L₂) :
     LieAlgebra.IsEngelian.{u₁, u₂, u₄} R L ↔ LieAlgebra.IsEngelian.{u₁, u₃, u₄} R L₂ :=
   ⟨e.Surjective.IsEngelian, e.symm.Surjective.IsEngelian⟩
+#align lie_equiv.is_engelian_iff LieEquiv.is_engelian_iff
 
 theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubalgebra R L}
     (hK₁ : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K) (hK₂ : K < K.normalizer) :
@@ -209,6 +218,8 @@ theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubal
     (LieSubalgebra.equivOfLe hKK').trans (LieEquiv.ofEq _ _ ((LieSubalgebra.coe_set_eq _ _).mpr hI₁.symm))
   have hI₃ : LieAlgebra.IsEngelian R I := e.is_engelian_iff.mp hK₁
   exact LieSubmodule.is_nilpotent_of_is_nilpotent_span_sup_eq_top hI₂ (h _) (hI₃ _ fun x => h x)
+#align
+  lie_algebra.exists_engelian_lie_subalgebra_of_lt_normalizer LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer
 
 attribute [local instance] LieSubalgebra.subsingleton_bot
 
@@ -259,6 +270,7 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
     replace hK'₂ := (ne_of_lt hK'₂).symm
     contradiction
   exact hK₃ ▸ hK₁
+#align lie_algebra.is_engelian_of_is_noetherian LieAlgebra.is_engelian_of_is_noetherian
 
 /-- Engel's theorem. -/
 theorem LieModule.is_nilpotent_iff_forall : LieModule.IsNilpotent R L M ↔ ∀ x, IsNilpotent <| toEndomorphism R L M x :=
@@ -266,10 +278,12 @@ theorem LieModule.is_nilpotent_iff_forall : LieModule.IsNilpotent R L M ↔ ∀ 
     intro h
     obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
     exact fun x => ⟨k, hk x⟩, fun h => LieAlgebra.is_engelian_of_is_noetherian M h⟩
+#align lie_module.is_nilpotent_iff_forall LieModule.is_nilpotent_iff_forall
 
 /-- Engel's theorem. -/
 theorem LieAlgebra.is_nilpotent_iff_forall : LieAlgebra.IsNilpotent R L ↔ ∀ x, IsNilpotent <| LieAlgebra.ad R L x :=
   LieModule.is_nilpotent_iff_forall
+#align lie_algebra.is_nilpotent_iff_forall LieAlgebra.is_nilpotent_iff_forall
 
 end LieAlgebra
 

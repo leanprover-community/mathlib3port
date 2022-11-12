@@ -42,6 +42,7 @@ This is the category of contravariant functors from
 `simplex_category` to `Type u`. -/
 def SSet : Type (u + 1) :=
   SimplicialObject (Type u)deriving LargeCategory, Limits.HasLimits, Limits.HasColimits
+#align sSet SSet
 
 namespace SSet
 
@@ -49,6 +50,7 @@ namespace SSet
 is the Yoneda embedding of `n`. -/
 def standardSimplex : SimplexCategory ⥤ SSet :=
   yoneda
+#align sSet.standard_simplex SSet.standardSimplex
 
 -- mathport name: standard_simplex
 localized [Simplicial] notation "Δ[" n "]" => SSet.standardSimplex.obj (SimplexCategory.mk n)
@@ -62,6 +64,7 @@ section
 the monotone maps from `fin (m+1)` to `fin (n+1)`. -/
 def asOrderHom {n} {m} (α : Δ[n].obj m) : OrderHom (Fin (m.unop.len + 1)) (Fin (n + 1)) :=
   α.toOrderHom
+#align sSet.as_order_hom SSet.asOrderHom
 
 end
 
@@ -75,12 +78,14 @@ def boundary (n : ℕ) : SSet where
       intro h
       apply α.property
       exact Function.Surjective.of_comp h⟩
+#align sSet.boundary SSet.boundary
 
 -- mathport name: sSet.boundary
 localized [Simplicial] notation "∂Δ[" n "]" => SSet.boundary n
 
 /-- The inclusion of the boundary of the `n`-th standard simplex into that standard simplex. -/
 def boundaryInclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] where app m (α : { α : Δ[n].obj m // _ }) := α
+#align sSet.boundary_inclusion SSet.boundaryInclusion
 
 /-- `horn n i` (or `Λ[n, i]`) is the `i`-th horn of the `n`-th standard simplex, where `i : n`.
 It consists of all `m`-simplices `α` of `Δ[n]`
@@ -97,12 +102,14 @@ def horn (n : ℕ) (i : Fin (n + 1)) : SSet where
       apply Or.imp _ id (h j)
       intro hj
       exact Set.range_comp_subset_range _ _ hj⟩
+#align sSet.horn SSet.horn
 
 -- mathport name: sSet.horn
 localized [Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
 
 /-- The inclusion of the `i`-th horn of the `n`-th standard simplex into that standard simplex. -/
 def hornInclusion (n : ℕ) (i : Fin (n + 1)) : Λ[n, i] ⟶ Δ[n] where app m (α : { α : Δ[n].obj m // _ }) := α
+#align sSet.horn_inclusion SSet.hornInclusion
 
 section Examples
 
@@ -113,16 +120,19 @@ noncomputable def s1 : SSet :=
   limits.colimit <|
     Limits.parallelPair (standardSimplex.map <| SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
       (standardSimplex.map <| SimplexCategory.δ 1)
+#align sSet.S1 SSet.s1
 
 end Examples
 
 /-- Truncated simplicial sets. -/
 def Truncated (n : ℕ) :=
   SimplicialObject.Truncated (Type u) n deriving LargeCategory, Limits.HasLimits, Limits.HasColimits
+#align sSet.truncated SSet.Truncated
 
 /-- The skeleton functor on simplicial sets. -/
 def sk (n : ℕ) : SSet ⥤ SSet.Truncated n :=
   SimplicialObject.sk n
+#align sSet.sk SSet.sk
 
 instance {n} : Inhabited (SSet.Truncated n) :=
   ⟨(sk n).obj <| Δ[0]⟩
@@ -131,6 +141,7 @@ instance {n} : Inhabited (SSet.Truncated n) :=
 augmented simplicial objects. -/
 abbrev Augmented :=
   SimplicialObject.Augmented (Type u)
+#align sSet.augmented SSet.Augmented
 
 namespace Augmented
 
@@ -140,6 +151,7 @@ the obvious augmentation towards the terminal object of the category of sets. -/
 noncomputable def standardSimplex : SimplexCategory ⥤ SSet.Augmented where
   obj Δ := { left := SSet.standardSimplex.obj Δ, right := terminal _, Hom := { app := fun Δ' => terminal.from _ } }
   map Δ₁ Δ₂ θ := { left := SSet.standardSimplex.map θ, right := terminal.from _ }
+#align sSet.augmented.standard_simplex SSet.Augmented.standardSimplex
 
 end Augmented
 
@@ -148,17 +160,21 @@ end SSet
 /-- The functor associating the singular simplicial set to a topological space. -/
 def TopCat.toSSet : TopCat ⥤ SSet :=
   ColimitAdj.restrictedYoneda SimplexCategory.toTop
+#align Top.to_sSet TopCat.toSSet
 
 /-- The geometric realization functor. -/
 noncomputable def SSet.toTop : SSet ⥤ TopCat :=
   ColimitAdj.extendAlongYoneda SimplexCategory.toTop
+#align sSet.to_Top SSet.toTop
 
 /-- Geometric realization is left adjoint to the singular simplicial set construction. -/
 noncomputable def sSetTopAdj : SSet.toTop ⊣ TopCat.toSSet :=
   ColimitAdj.yonedaAdjunction _
+#align sSet_Top_adj sSetTopAdj
 
 /-- The geometric realization of the representable simplicial sets agree
   with the usual topological simplices. -/
 noncomputable def SSet.toTopSimplex : (yoneda : SimplexCategory ⥤ _) ⋙ SSet.toTop ≅ SimplexCategory.toTop :=
   ColimitAdj.isExtensionAlongYoneda _
+#align sSet.to_Top_simplex SSet.toTopSimplex
 

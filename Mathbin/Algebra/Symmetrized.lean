@@ -34,6 +34,7 @@ open Function
 -/
 def SymAlg (α : Type _) : Type _ :=
   α
+#align sym_alg SymAlg
 
 -- mathport name: «expr ˢʸᵐ»
 postfix:max "ˢʸᵐ" => SymAlg
@@ -46,61 +47,77 @@ variable {α : Type _}
 @[match_pattern, pp_nodot]
 def sym : α ≃ αˢʸᵐ :=
   Equiv.refl _
+#align sym_alg.sym SymAlg.sym
 
 /-- The element of `α` represented by `x : αˢʸᵐ`. -/
 @[pp_nodot]
 def unsym : αˢʸᵐ ≃ α :=
   Equiv.refl _
+#align sym_alg.unsym SymAlg.unsym
 
 @[simp]
 theorem unsym_sym (a : α) : unsym (sym a) = a :=
   rfl
+#align sym_alg.unsym_sym SymAlg.unsym_sym
 
 @[simp]
 theorem sym_unsym (a : α) : sym (unsym a) = a :=
   rfl
+#align sym_alg.sym_unsym SymAlg.sym_unsym
 
 @[simp]
 theorem sym_comp_unsym : (sym : α → αˢʸᵐ) ∘ unsym = id :=
   rfl
+#align sym_alg.sym_comp_unsym SymAlg.sym_comp_unsym
 
 @[simp]
 theorem unsym_comp_sym : (unsym : αˢʸᵐ → α) ∘ Sym = id :=
   rfl
+#align sym_alg.unsym_comp_sym SymAlg.unsym_comp_sym
 
 @[simp]
 theorem sym_symm : (@sym α).symm = unsym :=
   rfl
+#align sym_alg.sym_symm SymAlg.sym_symm
 
 @[simp]
 theorem unsym_symm : (@unsym α).symm = Sym :=
   rfl
+#align sym_alg.unsym_symm SymAlg.unsym_symm
 
 theorem sym_bijective : Bijective (sym : α → αˢʸᵐ) :=
   sym.Bijective
+#align sym_alg.sym_bijective SymAlg.sym_bijective
 
 theorem unsym_bijective : Bijective (unsym : αˢʸᵐ → α) :=
   unsym.symm.Bijective
+#align sym_alg.unsym_bijective SymAlg.unsym_bijective
 
 theorem sym_injective : Injective (sym : α → αˢʸᵐ) :=
   sym.Injective
+#align sym_alg.sym_injective SymAlg.sym_injective
 
 theorem sym_surjective : Surjective (sym : α → αˢʸᵐ) :=
   sym.Surjective
+#align sym_alg.sym_surjective SymAlg.sym_surjective
 
 theorem unsym_injective : Injective (unsym : αˢʸᵐ → α) :=
   unsym.Injective
+#align sym_alg.unsym_injective SymAlg.unsym_injective
 
 theorem unsym_surjective : Surjective (unsym : αˢʸᵐ → α) :=
   unsym.Surjective
+#align sym_alg.unsym_surjective SymAlg.unsym_surjective
 
 @[simp]
 theorem sym_inj {a b : α} : sym a = sym b ↔ a = b :=
   sym_injective.eq_iff
+#align sym_alg.sym_inj SymAlg.sym_inj
 
 @[simp]
 theorem unsym_inj {a b : αˢʸᵐ} : unsym a = unsym b ↔ a = b :=
   unsym_injective.eq_iff
+#align sym_alg.unsym_inj SymAlg.unsym_inj
 
 instance [Nontrivial α] : Nontrivial αˢʸᵐ :=
   sym_injective.Nontrivial
@@ -115,7 +132,7 @@ instance [Unique α] : Unique αˢʸᵐ :=
   Unique.mk' _
 
 instance [IsEmpty α] : IsEmpty αˢʸᵐ :=
-  Function.is_empty unsym
+  function.isEmpty unsym
 
 @[to_additive]
 instance [One α] : One αˢʸᵐ where one := sym 1
@@ -138,76 +155,95 @@ instance (R : Type _) [HasSmul R α] : HasSmul R αˢʸᵐ where smul r a := sym
 @[simp, to_additive]
 theorem sym_one [One α] : sym (1 : α) = 1 :=
   rfl
+#align sym_alg.sym_one SymAlg.sym_one
 
 @[simp, to_additive]
 theorem unsym_one [One α] : unsym (1 : αˢʸᵐ) = 1 :=
   rfl
+#align sym_alg.unsym_one SymAlg.unsym_one
 
 @[simp]
 theorem sym_add [Add α] (a b : α) : sym (a + b) = sym a + sym b :=
   rfl
+#align sym_alg.sym_add SymAlg.sym_add
 
 @[simp]
 theorem unsym_add [Add α] (a b : αˢʸᵐ) : unsym (a + b) = unsym a + unsym b :=
   rfl
+#align sym_alg.unsym_add SymAlg.unsym_add
 
 @[simp]
 theorem sym_sub [Sub α] (a b : α) : sym (a - b) = sym a - sym b :=
   rfl
+#align sym_alg.sym_sub SymAlg.sym_sub
 
 @[simp]
 theorem unsym_sub [Sub α] (a b : αˢʸᵐ) : unsym (a - b) = unsym a - unsym b :=
   rfl
+#align sym_alg.unsym_sub SymAlg.unsym_sub
 
 @[simp]
 theorem sym_neg [Neg α] (a : α) : sym (-a) = -sym a :=
   rfl
+#align sym_alg.sym_neg SymAlg.sym_neg
 
 @[simp]
 theorem unsym_neg [Neg α] (a : αˢʸᵐ) : unsym (-a) = -unsym a :=
   rfl
+#align sym_alg.unsym_neg SymAlg.unsym_neg
 
 theorem mul_def [Add α] [Mul α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) :
     a * b = sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a)) := by rfl
+#align sym_alg.mul_def SymAlg.mul_def
 
 theorem unsym_mul [Mul α] [Add α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) :
     unsym (a * b) = ⅟ 2 * (unsym a * unsym b + unsym b * unsym a) := by rfl
+#align sym_alg.unsym_mul SymAlg.unsym_mul
 
 theorem sym_mul_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a b : α) :
     sym a * sym b = sym (⅟ 2 * (a * b + b * a)) :=
   rfl
+#align sym_alg.sym_mul_sym SymAlg.sym_mul_sym
 
 @[simp, to_additive]
 theorem sym_inv [Inv α] (a : α) : sym a⁻¹ = (sym a)⁻¹ :=
   rfl
+#align sym_alg.sym_inv SymAlg.sym_inv
 
 @[simp, to_additive]
 theorem unsym_inv [Inv α] (a : αˢʸᵐ) : unsym a⁻¹ = (unsym a)⁻¹ :=
   rfl
+#align sym_alg.unsym_inv SymAlg.unsym_inv
 
 @[simp]
 theorem sym_smul {R : Type _} [HasSmul R α] (c : R) (a : α) : sym (c • a) = c • sym a :=
   rfl
+#align sym_alg.sym_smul SymAlg.sym_smul
 
 @[simp]
 theorem unsym_smul {R : Type _} [HasSmul R α] (c : R) (a : αˢʸᵐ) : unsym (c • a) = c • unsym a :=
   rfl
+#align sym_alg.unsym_smul SymAlg.unsym_smul
 
 @[simp, to_additive]
 theorem unsym_eq_one_iff [One α] (a : αˢʸᵐ) : a.unsym = 1 ↔ a = 1 :=
   unsym_injective.eq_iff' rfl
+#align sym_alg.unsym_eq_one_iff SymAlg.unsym_eq_one_iff
 
 @[simp, to_additive]
 theorem sym_eq_one_iff [One α] (a : α) : sym a = 1 ↔ a = 1 :=
   sym_injective.eq_iff' rfl
+#align sym_alg.sym_eq_one_iff SymAlg.sym_eq_one_iff
 
 @[to_additive]
 theorem unsym_ne_one_iff [One α] (a : αˢʸᵐ) : a.unsym ≠ (1 : α) ↔ a ≠ (1 : αˢʸᵐ) :=
   not_congr <| unsym_eq_one_iff a
+#align sym_alg.unsym_ne_one_iff SymAlg.unsym_ne_one_iff
 
 @[to_additive]
 theorem sym_ne_one_iff [One α] (a : α) : sym a ≠ (1 : αˢʸᵐ) ↔ a ≠ (1 : α) :=
   not_congr <| sym_eq_one_iff a
+#align sym_alg.sym_ne_one_iff SymAlg.sym_ne_one_iff
 
 instance [AddCommSemigroup α] : AddCommSemigroup αˢʸᵐ :=
   unsym_injective.AddCommSemigroup _ unsym_add
@@ -235,6 +271,7 @@ instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a
 @[simp]
 theorem inv_of_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] : ⅟ (sym a) = sym (⅟ a) :=
   rfl
+#align sym_alg.inv_of_sym SymAlg.inv_of_sym
 
 instance [Semiring α] [Invertible (2 : α)] : NonAssocSemiring αˢʸᵐ :=
   { SymAlg.addCommMonoid with one := 1, mul := (· * ·), zero := 0,
@@ -262,12 +299,15 @@ instance [Ring α] [Invertible (2 : α)] : NonAssocRing αˢʸᵐ :=
 
 theorem unsym_mul_self [Semiring α] [Invertible (2 : α)] (a : αˢʸᵐ) : unsym (a * a) = unsym a * unsym a := by
   rw [mul_def, unsym_sym, ← two_mul, inv_of_mul_self_assoc]
+#align sym_alg.unsym_mul_self SymAlg.unsym_mul_self
 
 theorem sym_mul_self [Semiring α] [Invertible (2 : α)] (a : α) : sym (a * a) = sym a * sym a := by
   rw [sym_mul_sym, ← two_mul, inv_of_mul_self_assoc]
+#align sym_alg.sym_mul_self SymAlg.sym_mul_self
 
 theorem mul_comm [Mul α] [AddCommSemigroup α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) : a * b = b * a := by
   rw [mul_def, mul_def, add_comm]
+#align sym_alg.mul_comm SymAlg.mul_comm
 
 instance [Ring α] [Invertible (2 : α)] : IsCommJordan αˢʸᵐ where
   mul_comm := SymAlg.mul_comm

@@ -33,6 +33,7 @@ theorem epi_iff_surjective {X Y : TopCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function
     
   · apply functor.epi_of_epi_map
     
+#align Top.epi_iff_surjective TopCat.epi_iff_surjective
 
 theorem mono_iff_injective {X Y : TopCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
   suffices mono f ↔ mono ((forget TopCat).map f) by
@@ -44,6 +45,7 @@ theorem mono_iff_injective {X Y : TopCat.{u}} (f : X ⟶ Y) : Mono f ↔ Functio
     
   · apply functor.mono_of_mono_map
     
+#align Top.mono_iff_injective TopCat.mono_iff_injective
 
 end TopCat
 

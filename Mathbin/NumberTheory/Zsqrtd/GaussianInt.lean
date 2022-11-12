@@ -43,6 +43,7 @@ open Zsqrtd Complex
 @[reducible]
 def GaussianInt : Type :=
   Zsqrtd (-1)
+#align gaussian_int GaussianInt
 
 -- mathport name: «exprℤ[i]»
 local notation "ℤ[i]" => GaussianInt
@@ -63,6 +64,7 @@ attribute [-instance] Complex.field
 /-- The embedding of the Gaussian integers into the complex numbers, as a ring homomorphism. -/
 def toComplex : ℤ[i] →+* ℂ :=
   Zsqrtd.lift ⟨i, by simp⟩
+#align gaussian_int.to_complex GaussianInt.toComplex
 
 end
 
@@ -71,80 +73,103 @@ instance : Coe ℤ[i] ℂ :=
 
 theorem to_complex_def (x : ℤ[i]) : (x : ℂ) = x.re + x.im * I :=
   rfl
+#align gaussian_int.to_complex_def GaussianInt.to_complex_def
 
 theorem to_complex_def' (x y : ℤ) : ((⟨x, y⟩ : ℤ[i]) : ℂ) = x + y * I := by simp [to_complex_def]
+#align gaussian_int.to_complex_def' GaussianInt.to_complex_def'
 
 theorem to_complex_def₂ (x : ℤ[i]) : (x : ℂ) = ⟨x.re, x.im⟩ := by apply Complex.ext <;> simp [to_complex_def]
+#align gaussian_int.to_complex_def₂ GaussianInt.to_complex_def₂
 
 @[simp]
 theorem to_real_re (x : ℤ[i]) : ((x.re : ℤ) : ℝ) = (x : ℂ).re := by simp [to_complex_def]
+#align gaussian_int.to_real_re GaussianInt.to_real_re
 
 @[simp]
 theorem to_real_im (x : ℤ[i]) : ((x.im : ℤ) : ℝ) = (x : ℂ).im := by simp [to_complex_def]
+#align gaussian_int.to_real_im GaussianInt.to_real_im
 
 @[simp]
 theorem to_complex_re (x y : ℤ) : ((⟨x, y⟩ : ℤ[i]) : ℂ).re = x := by simp [to_complex_def]
+#align gaussian_int.to_complex_re GaussianInt.to_complex_re
 
 @[simp]
 theorem to_complex_im (x y : ℤ) : ((⟨x, y⟩ : ℤ[i]) : ℂ).im = y := by simp [to_complex_def]
+#align gaussian_int.to_complex_im GaussianInt.to_complex_im
 
 @[simp]
 theorem to_complex_add (x y : ℤ[i]) : ((x + y : ℤ[i]) : ℂ) = x + y :=
   toComplex.map_add _ _
+#align gaussian_int.to_complex_add GaussianInt.to_complex_add
 
 @[simp]
 theorem to_complex_mul (x y : ℤ[i]) : ((x * y : ℤ[i]) : ℂ) = x * y :=
   toComplex.map_mul _ _
+#align gaussian_int.to_complex_mul GaussianInt.to_complex_mul
 
 @[simp]
 theorem to_complex_one : ((1 : ℤ[i]) : ℂ) = 1 :=
   toComplex.map_one
+#align gaussian_int.to_complex_one GaussianInt.to_complex_one
 
 @[simp]
 theorem to_complex_zero : ((0 : ℤ[i]) : ℂ) = 0 :=
   toComplex.map_zero
+#align gaussian_int.to_complex_zero GaussianInt.to_complex_zero
 
 @[simp]
 theorem to_complex_neg (x : ℤ[i]) : ((-x : ℤ[i]) : ℂ) = -x :=
   toComplex.map_neg _
+#align gaussian_int.to_complex_neg GaussianInt.to_complex_neg
 
 @[simp]
 theorem to_complex_sub (x y : ℤ[i]) : ((x - y : ℤ[i]) : ℂ) = x - y :=
   toComplex.map_sub _ _
+#align gaussian_int.to_complex_sub GaussianInt.to_complex_sub
 
 @[simp]
 theorem to_complex_inj {x y : ℤ[i]} : (x : ℂ) = y ↔ x = y := by cases x <;> cases y <;> simp [to_complex_def₂]
+#align gaussian_int.to_complex_inj GaussianInt.to_complex_inj
 
 @[simp]
 theorem to_complex_eq_zero {x : ℤ[i]} : (x : ℂ) = 0 ↔ x = 0 := by rw [← to_complex_zero, to_complex_inj]
+#align gaussian_int.to_complex_eq_zero GaussianInt.to_complex_eq_zero
 
 @[simp]
 theorem nat_cast_real_norm (x : ℤ[i]) : (x.norm : ℝ) = (x : ℂ).normSq := by rw [Zsqrtd.norm, norm_sq] <;> simp
+#align gaussian_int.nat_cast_real_norm GaussianInt.nat_cast_real_norm
 
 @[simp]
 theorem nat_cast_complex_norm (x : ℤ[i]) : (x.norm : ℂ) = (x : ℂ).normSq := by
   cases x <;> rw [Zsqrtd.norm, norm_sq] <;> simp
+#align gaussian_int.nat_cast_complex_norm GaussianInt.nat_cast_complex_norm
 
 theorem norm_nonneg (x : ℤ[i]) : 0 ≤ norm x :=
   norm_nonneg (by norm_num) _
+#align gaussian_int.norm_nonneg GaussianInt.norm_nonneg
 
 @[simp]
 theorem norm_eq_zero {x : ℤ[i]} : norm x = 0 ↔ x = 0 := by rw [← @Int.cast_inj ℝ _ _ _] <;> simp
+#align gaussian_int.norm_eq_zero GaussianInt.norm_eq_zero
 
 theorem norm_pos {x : ℤ[i]} : 0 < norm x ↔ x ≠ 0 := by
   rw [lt_iff_le_and_ne, Ne.def, eq_comm, norm_eq_zero] <;> simp [norm_nonneg]
+#align gaussian_int.norm_pos GaussianInt.norm_pos
 
 theorem coe_nat_abs_norm (x : ℤ[i]) : (x.norm.natAbs : ℤ) = x.norm :=
   Int.nat_abs_of_nonneg (norm_nonneg _)
+#align gaussian_int.coe_nat_abs_norm GaussianInt.coe_nat_abs_norm
 
 @[simp]
 theorem nat_cast_nat_abs_norm {α : Type _} [Ring α] (x : ℤ[i]) : (x.norm.natAbs : α) = x.norm := by
   rw [← Int.cast_ofNat, coe_nat_abs_norm]
+#align gaussian_int.nat_cast_nat_abs_norm GaussianInt.nat_cast_nat_abs_norm
 
 theorem nat_abs_norm_eq (x : ℤ[i]) : x.norm.natAbs = x.re.natAbs * x.re.natAbs + x.im.natAbs * x.im.natAbs :=
   Int.coe_nat_inj <| by
     simp
     simp [Zsqrtd.norm]
+#align gaussian_int.nat_abs_norm_eq GaussianInt.nat_abs_norm_eq
 
 instance : Div ℤ[i] :=
   ⟨fun x y =>
@@ -154,13 +179,16 @@ instance : Div ℤ[i] :=
 
 theorem div_def (x y : ℤ[i]) : x / y = ⟨round ((x * conj y).re / norm y : ℚ), round ((x * conj y).im / norm y : ℚ)⟩ :=
   show Zsqrtd.mk _ _ = _ by simp [div_eq_mul_inv]
+#align gaussian_int.div_def GaussianInt.div_def
 
 theorem to_complex_div_re (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).re = round (x / y : ℂ).re := by
   rw [div_def, ← @Rat.round_cast ℝ _ _] <;> simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_add, add_mul]
+#align gaussian_int.to_complex_div_re GaussianInt.to_complex_div_re
 
 theorem to_complex_div_im (x y : ℤ[i]) : ((x / y : ℤ[i]) : ℂ).im = round (x / y : ℂ).im := by
   rw [div_def, ← @Rat.round_cast ℝ _ _, ← @Rat.round_cast ℝ _ _] <;>
     simp [-Rat.round_cast, mul_assoc, div_eq_mul_inv, mul_add, add_mul]
+#align gaussian_int.to_complex_div_im GaussianInt.to_complex_div_im
 
 theorem norm_sq_le_norm_sq_of_re_le_of_im_le {x y : ℂ} (hre : |x.re| ≤ |y.re|) (him : |x.im| ≤ |y.im|) :
     x.normSq ≤ y.normSq := by
@@ -168,6 +196,7 @@ theorem norm_sq_le_norm_sq_of_re_le_of_im_le {x y : ℂ} (hre : |x.re| ≤ |y.re
       _root_.abs_mul y.re, ← _root_.abs_mul_self x.im, _root_.abs_mul x.im, ← _root_.abs_mul_self y.im,
       _root_.abs_mul y.im] <;>
     exact add_le_add (mul_self_le_mul_self (abs_nonneg _) hre) (mul_self_le_mul_self (abs_nonneg _) him)
+#align gaussian_int.norm_sq_le_norm_sq_of_re_le_of_im_le GaussianInt.norm_sq_le_norm_sq_of_re_le_of_im_le
 
 theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq < 1 :=
   calc
@@ -181,12 +210,14 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
         (by rw [to_complex_div_im] <;> simp [norm_sq, this] <;> simpa using abs_sub_round (x / y : ℂ).im)
     _ < 1 := by simp [norm_sq] <;> norm_num
     
+#align gaussian_int.norm_sq_div_sub_div_lt_one GaussianInt.norm_sq_div_sub_div_lt_one
 
 instance : Mod ℤ[i] :=
   ⟨fun x y => x - y * (x / y)⟩
 
 theorem mod_def (x y : ℤ[i]) : x % y = x - y * (x / y) :=
   rfl
+#align gaussian_int.mod_def GaussianInt.mod_def
 
 theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.norm :=
   have : (y : ℂ) ≠ 0 := by rwa [Ne.def, ← to_complex_zero, to_complex_inj]
@@ -197,15 +228,18 @@ theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.
       _ < (y : ℂ).normSq * 1 := mul_lt_mul_of_pos_left (norm_sq_div_sub_div_lt_one _ _) (norm_sq_pos.2 this)
       _ = Zsqrtd.norm y := by simp
       
+#align gaussian_int.norm_mod_lt GaussianInt.norm_mod_lt
 
 theorem nat_abs_norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm.natAbs < y.norm.natAbs :=
   Int.coe_nat_lt.1 (by simp [-Int.coe_nat_lt, norm_mod_lt x hy])
+#align gaussian_int.nat_abs_norm_mod_lt GaussianInt.nat_abs_norm_mod_lt
 
 theorem norm_le_norm_mul_left (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (norm x).natAbs ≤ (norm (x * y)).natAbs := by
   rw [Zsqrtd.norm_mul, Int.nat_abs_mul] <;>
     exact
       le_mul_of_one_le_right (Nat.zero_le _)
         (Int.coe_nat_le.1 (by rw [coe_nat_abs_norm] <;> exact Int.add_one_le_of_lt (norm_pos.2 hy)))
+#align gaussian_int.norm_le_norm_mul_left GaussianInt.norm_le_norm_mul_left
 
 instance : Nontrivial ℤ[i] :=
   ⟨⟨0, 1, by decide⟩⟩
@@ -277,6 +311,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
       have := hpi.2.2 ⟨k, 1⟩ ⟨k, -1⟩ ⟨y, by rw [← hkmul, ← Nat.cast_mul p, ← hy] <;> simp⟩
       clear_aux_decl
       tauto
+#align gaussian_int.mod_four_eq_three_of_nat_prime_of_prime GaussianInt.mod_four_eq_three_of_nat_prime_of_prime
 
 theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime] (hpi : ¬Irreducible (p : ℤ[i])) :
     ∃ a b, a ^ 2 + b ^ 2 = p :=
@@ -290,6 +325,7 @@ theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime] 
     ((hp.1.mul_eq_prime_sq_iff (mt norm_eq_one_iff.1 hau) (mt norm_eq_one_iff.1 hbu)).1 <| by
         rw [← Int.coe_nat_inj', Int.coe_nat_pow, sq, ← @norm_nat_cast (-1), hpab] <;> simp).1
   ⟨a.re.natAbs, a.im.natAbs, by simpa [nat_abs_norm_eq, sq] using hnap⟩
+#align gaussian_int.sq_add_sq_of_nat_prime_of_not_irreducible GaussianInt.sq_add_sq_of_nat_prime_of_not_irreducible
 
 theorem primeOfNatPrimeOfModFourEqThree (p : ℕ) [hp : Fact p.Prime] (hp3 : p % 4 = 3) : Prime (p : ℤ[i]) :=
   irreducible_iff_prime.1 <|
@@ -297,10 +333,12 @@ theorem primeOfNatPrimeOfModFourEqThree (p : ℕ) [hp : Fact p.Prime] (hp3 : p %
       let ⟨a, b, hab⟩ := sq_add_sq_of_nat_prime_of_not_irreducible p hpi
       have : ∀ a b : Zmod 4, a ^ 2 + b ^ 2 ≠ p := by erw [← Zmod.nat_cast_mod p 4, hp3] <;> exact by decide
       this a b (hab ▸ by simp)
+#align gaussian_int.prime_of_nat_prime_of_mod_four_eq_three GaussianInt.primeOfNatPrimeOfModFourEqThree
 
 /-- A prime natural number is prime in `ℤ[i]` if and only if it is `3` mod `4` -/
 theorem prime_iff_mod_four_eq_three_of_nat_prime (p : ℕ) [hp : Fact p.Prime] : Prime (p : ℤ[i]) ↔ p % 4 = 3 :=
   ⟨mod_four_eq_three_of_nat_prime_of_prime p, primeOfNatPrimeOfModFourEqThree p⟩
+#align gaussian_int.prime_iff_mod_four_eq_three_of_nat_prime GaussianInt.prime_iff_mod_four_eq_three_of_nat_prime
 
 end GaussianInt
 

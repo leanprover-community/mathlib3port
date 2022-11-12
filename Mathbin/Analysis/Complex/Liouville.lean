@@ -46,6 +46,7 @@ theorem deriv_eq_smul_circle_integral [CompleteSpace F] {R : ℝ} {c : ℂ} {f :
   lift R to ℝ≥0 using hR.le
   refine' (hf.has_fpower_series_on_ball hR).HasFpowerSeriesAt.deriv.trans _
   simp only [cauchy_power_series_apply, one_div, zpow_neg, pow_one, smul_smul, zpow_two, mul_inv]
+#align complex.deriv_eq_smul_circle_integral Complex.deriv_eq_smul_circle_integral
 
 theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
     (hf : DiffContOnCl ℂ f (Ball c R)) (hC : ∀ z ∈ Sphere c R, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
@@ -57,6 +58,7 @@ theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F
     _ ≤ R * (C / (R * R)) := circleIntegral.norm_two_pi_I_inv_smul_integral_le_of_norm_le_const hR.le this
     _ = C / R := by rw [mul_div_left_comm, div_self_mul_self', div_eq_mul_inv]
     
+#align complex.norm_deriv_le_aux Complex.norm_deriv_le_aux
 
 /-- If `f` is complex differentiable on an open disc of radius `R > 0`, is continuous on its
 closure, and its values on the boundary circle of this disc are bounded from above by `C`, then the
@@ -74,6 +76,7 @@ theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : �
       norm_deriv_le_aux hR (e.differentiable.comp_diff_cont_on_cl hd) fun z hz =>
         (UniformSpace.Completion.norm_coe _).trans_le (hC z hz)
     
+#align complex.norm_deriv_le_of_forall_mem_sphere_norm_le Complex.norm_deriv_le_of_forall_mem_sphere_norm_le
 
 /-- An auxiliary lemma for Liouville's theorem `differentiable.apply_eq_apply_of_bounded`. -/
 theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : Bounded (Range f)) (z w : ℂ) : f z = f w := by
@@ -90,6 +93,7 @@ theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : 
       norm_deriv_le_of_forall_mem_sphere_norm_le (div_pos C₀ ε₀) hf.diff_cont_on_cl fun z _ => hC z
     _ = ε := div_div_cancel' C₀.lt.ne'
     
+#align complex.liouville_theorem_aux Complex.liouville_theorem_aux
 
 end Complex
 
@@ -104,16 +108,19 @@ theorem apply_eq_apply_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb 
   suffices g 0 = g 1 by simpa [g]
   apply liouville_theorem_aux
   exacts[hf.comp ((differentiable_id.smul_const (w - z)).AddConst z), hb.mono (range_comp_subset_range _ _)]
+#align differentiable.apply_eq_apply_of_bounded Differentiable.apply_eq_apply_of_bounded
 
 /-- **Liouville's theorem**: a complex differentiable bounded function is a constant. -/
 theorem exists_const_forall_eq_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb : Bounded (Range f)) :
     ∃ c, ∀ z, f z = c :=
   ⟨f 0, fun z => hf.apply_eq_apply_of_bounded hb _ _⟩
+#align differentiable.exists_const_forall_eq_of_bounded Differentiable.exists_const_forall_eq_of_bounded
 
 /-- **Liouville's theorem**: a complex differentiable bounded function is a constant. -/
 theorem exists_eq_const_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb : Bounded (Range f)) :
     ∃ c, f = const E c :=
   (hf.exists_const_forall_eq_of_bounded hb).imp fun c => funext
+#align differentiable.exists_eq_const_of_bounded Differentiable.exists_eq_const_of_bounded
 
 end Differentiable
 

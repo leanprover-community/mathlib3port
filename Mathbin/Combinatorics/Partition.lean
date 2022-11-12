@@ -48,12 +48,13 @@ open BigOperators
 namespace Nat
 
 /-- A partition of `n` is a multiset of positive integers summing to `n`. -/
-@[ext]
+@[ext.1]
 structure Partition (n : ℕ) where
   parts : Multiset ℕ
   parts_pos : ∀ {i}, i ∈ parts → 0 < i
   parts_sum : parts.Sum = n
   deriving DecidableEq
+#align nat.partition Nat.Partition
 
 namespace Partition
 
@@ -62,12 +63,14 @@ def ofComposition (n : ℕ) (c : Composition n) : Partition n where
   parts := c.blocks
   parts_pos i hi := c.blocks_pos hi
   parts_sum := by rw [Multiset.coe_sum, c.blocks_sum]
+#align nat.partition.of_composition Nat.Partition.ofComposition
 
 theorem of_composition_surj {n : ℕ} : Function.Surjective (ofComposition n) := by
   rintro ⟨b, hb₁, hb₂⟩
   rcases Quotient.exists_rep b with ⟨b, rfl⟩
   refine' ⟨⟨b, fun i hi => hb₁ hi, _⟩, partition.ext _ _ rfl⟩
   simpa using hb₂
+#align nat.partition.of_composition_surj Nat.Partition.of_composition_surj
 
 -- The argument `n` is kept explicit here since it is useful in tactic mode proofs to generate the
 -- proof obligation `l.sum = n`.
@@ -84,14 +87,17 @@ def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
       rw [Multiset.sum_eq_zero_iff]
       simp
     simpa [lz, hl] using lt
+#align nat.partition.of_sums Nat.Partition.ofSums
 
 /-- A `multiset ℕ` induces a partition on its sum. -/
 def ofMultiset (l : Multiset ℕ) : Partition l.Sum :=
   ofSums _ l rfl
+#align nat.partition.of_multiset Nat.Partition.ofMultiset
 
 /-- The partition of exactly one part. -/
 def indiscretePartition (n : ℕ) : Partition n :=
   ofSums n {n} rfl
+#align nat.partition.indiscrete_partition Nat.Partition.indiscretePartition
 
 instance {n : ℕ} : Inhabited (Partition n) :=
   ⟨indiscretePartition n⟩
@@ -104,9 +110,11 @@ this is `0` instead.)
 theorem count_of_sums_of_ne_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) {i : ℕ} (hi : i ≠ 0) :
     (ofSums n l hl).parts.count i = l.count i :=
   count_filter_of_pos hi
+#align nat.partition.count_of_sums_of_ne_zero Nat.Partition.count_of_sums_of_ne_zero
 
 theorem count_of_sums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) : (ofSums n l hl).parts.count 0 = 0 :=
   count_filter_of_neg fun h => h rfl
+#align nat.partition.count_of_sums_zero Nat.Partition.count_of_sums_zero
 
 /-- Show there are finitely many partitions by considering the surjection from compositions to
 partitions.
@@ -117,14 +125,17 @@ instance (n : ℕ) : Fintype (Partition n) :=
 /-- The finset of those partitions in which every part is odd. -/
 def odds (n : ℕ) : Finset (Partition n) :=
   Finset.univ.filter fun c => ∀ i ∈ c.parts, ¬Even i
+#align nat.partition.odds Nat.Partition.odds
 
 /-- The finset of those partitions in which each part is used at most once. -/
 def distincts (n : ℕ) : Finset (Partition n) :=
   Finset.univ.filter fun c => c.parts.Nodup
+#align nat.partition.distincts Nat.Partition.distincts
 
 /-- The finset of those partitions in which every part is odd and used at most once. -/
 def oddDistincts (n : ℕ) : Finset (Partition n) :=
   odds n ∩ distincts n
+#align nat.partition.odd_distincts Nat.Partition.oddDistincts
 
 end Partition
 

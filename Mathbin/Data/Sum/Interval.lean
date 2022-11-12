@@ -36,6 +36,7 @@ def sumLift₂ : ∀ (a : Sum α₁ α₂) (b : Sum β₁ β₂), Finset (Sum γ
   | inl a, inr b => ∅
   | inr a, inl b => ∅
   | inr a, inr b => (g a b).map Embedding.inr
+#align finset.sum_lift₂ Finset.sumLift₂
 
 variable {f f₁ g₁ g f₂ g₂} {a : Sum α₁ α₂} {b : Sum β₁ β₂} {c : Sum γ₁ γ₂}
 
@@ -61,18 +62,21 @@ theorem mem_sum_lift₂ :
     
   · rintro (⟨a, b, c, rfl, rfl, rfl, h⟩ | ⟨a, b, c, rfl, rfl, rfl, h⟩) <;> exact mem_map_of_mem _ h
     
+#align finset.mem_sum_lift₂ Finset.mem_sum_lift₂
 
 theorem inl_mem_sum_lift₂ {c₁ : γ₁} : inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
   rw [mem_sum_lift₂, or_iff_left]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inl_ne_inr h
+#align finset.inl_mem_sum_lift₂ Finset.inl_mem_sum_lift₂
 
 theorem inr_mem_sum_lift₂ {c₂ : γ₂} : inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
   rw [mem_sum_lift₂, or_iff_right]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inr_ne_inl h
+#align finset.inr_mem_sum_lift₂ Finset.inr_mem_sum_lift₂
 
 theorem sum_lift₂_eq_empty :
     sumLift₂ f g a b = ∅ ↔
@@ -93,11 +97,13 @@ theorem sum_lift₂_eq_empty :
     
   · exact map_eq_empty.2 (h.2 _ _ rfl rfl)
     
+#align finset.sum_lift₂_eq_empty Finset.sum_lift₂_eq_empty
 
 theorem sum_lift₂_nonempty :
     (sumLift₂ f g a b).Nonempty ↔
       (∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ (f a₁ b₁).Nonempty) ∨ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ (g a₂ b₂).Nonempty :=
   by simp [nonempty_iff_ne_empty, sum_lift₂_eq_empty, not_and_or]
+#align finset.sum_lift₂_nonempty Finset.sum_lift₂_nonempty
 
 theorem sum_lift₂_mono (h₁ : ∀ a b, f₁ a b ⊆ g₁ a b) (h₂ : ∀ a b, f₂ a b ⊆ g₂ a b) :
     ∀ a b, sumLift₂ f₁ f₂ a b ⊆ sumLift₂ g₁ g₂ a b
@@ -105,6 +111,7 @@ theorem sum_lift₂_mono (h₁ : ∀ a b, f₁ a b ⊆ g₁ a b) (h₂ : ∀ a b
   | inl a, inr b => Subset.rfl
   | inr a, inl b => Subset.rfl
   | inr a, inr b => map_subset_map.2 (h₂ _ _)
+#align finset.sum_lift₂_mono Finset.sum_lift₂_mono
 
 end SumLift₂
 
@@ -137,59 +144,75 @@ variable (a₁ a₂ : α) (b₁ b₂ : β) (a b : Sum α β)
 
 theorem Icc_inl_inl : icc (inl a₁ : Sum α β) (inl a₂) = (icc a₁ a₂).map Embedding.inl :=
   rfl
+#align sum.Icc_inl_inl Sum.Icc_inl_inl
 
 theorem Ico_inl_inl : ico (inl a₁ : Sum α β) (inl a₂) = (ico a₁ a₂).map Embedding.inl :=
   rfl
+#align sum.Ico_inl_inl Sum.Ico_inl_inl
 
 theorem Ioc_inl_inl : ioc (inl a₁ : Sum α β) (inl a₂) = (ioc a₁ a₂).map Embedding.inl :=
   rfl
+#align sum.Ioc_inl_inl Sum.Ioc_inl_inl
 
 theorem Ioo_inl_inl : ioo (inl a₁ : Sum α β) (inl a₂) = (ioo a₁ a₂).map Embedding.inl :=
   rfl
+#align sum.Ioo_inl_inl Sum.Ioo_inl_inl
 
 @[simp]
 theorem Icc_inl_inr : icc (inl a₁) (inr b₂) = ∅ :=
   rfl
+#align sum.Icc_inl_inr Sum.Icc_inl_inr
 
 @[simp]
 theorem Ico_inl_inr : ico (inl a₁) (inr b₂) = ∅ :=
   rfl
+#align sum.Ico_inl_inr Sum.Ico_inl_inr
 
 @[simp]
 theorem Ioc_inl_inr : ioc (inl a₁) (inr b₂) = ∅ :=
   rfl
+#align sum.Ioc_inl_inr Sum.Ioc_inl_inr
 
 @[simp]
 theorem Ioo_inl_inr : ioo (inl a₁) (inr b₂) = ∅ :=
   rfl
+#align sum.Ioo_inl_inr Sum.Ioo_inl_inr
 
 @[simp]
 theorem Icc_inr_inl : icc (inr b₁) (inl a₂) = ∅ :=
   rfl
+#align sum.Icc_inr_inl Sum.Icc_inr_inl
 
 @[simp]
 theorem Ico_inr_inl : ico (inr b₁) (inl a₂) = ∅ :=
   rfl
+#align sum.Ico_inr_inl Sum.Ico_inr_inl
 
 @[simp]
 theorem Ioc_inr_inl : ioc (inr b₁) (inl a₂) = ∅ :=
   rfl
+#align sum.Ioc_inr_inl Sum.Ioc_inr_inl
 
 @[simp]
 theorem Ioo_inr_inl : ioo (inr b₁) (inl a₂) = ∅ :=
   rfl
+#align sum.Ioo_inr_inl Sum.Ioo_inr_inl
 
 theorem Icc_inr_inr : icc (inr b₁ : Sum α β) (inr b₂) = (icc b₁ b₂).map Embedding.inr :=
   rfl
+#align sum.Icc_inr_inr Sum.Icc_inr_inr
 
 theorem Ico_inr_inr : ico (inr b₁ : Sum α β) (inr b₂) = (ico b₁ b₂).map Embedding.inr :=
   rfl
+#align sum.Ico_inr_inr Sum.Ico_inr_inr
 
 theorem Ioc_inr_inr : ioc (inr b₁ : Sum α β) (inr b₂) = (ioc b₁ b₂).map Embedding.inr :=
   rfl
+#align sum.Ioc_inr_inr Sum.Ioc_inr_inr
 
 theorem Ioo_inr_inr : ioo (inr b₁ : Sum α β) (inr b₂) = (ioo b₁ b₂).map Embedding.inr :=
   rfl
+#align sum.Ioo_inr_inr Sum.Ioo_inr_inr
 
 end Disjoint
 

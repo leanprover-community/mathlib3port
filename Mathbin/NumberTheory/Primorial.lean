@@ -31,6 +31,7 @@ open BigOperators Nat
 -/
 def primorial (n : ℕ) : ℕ :=
   ∏ p in filter Nat.Prime (range (n + 1)), p
+#align primorial primorial
 
 -- mathport name: «expr #»
 local notation x "#" => primorial x
@@ -40,6 +41,7 @@ theorem primorial_succ {n : ℕ} (n_big : 1 < n) (r : n % 2 = 1) : (n + 1)# = n#
   rw [range_succ, filter_insert, if_neg fun h => _]
   have two_dvd : 2 ∣ n + 1 := dvd_iff_mod_eq_zero.mpr (by rw [← mod_add_mod, r, mod_self])
   linarith [(h.dvd_iff_eq (Nat.bit0_ne_one 1)).mp two_dvd]
+#align primorial_succ primorial_succ
 
 theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ) (p_big : m + 1 < p)
     (p_small : p ≤ 2 * m + 1) : p ∣ choose (2 * m + 1) (m + 1) := by
@@ -62,6 +64,7 @@ theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ
     
   cases (prime.dvd_mul is_prime).1 p_div_facts
   exacts[(s h).elim, (t h).elim]
+#align dvd_choose_of_middling_prime dvd_choose_of_middling_prime
 
 theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
   | 0 => le_rfl
@@ -91,7 +94,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
               simp only [Finset.disjoint_left, and_imp, Finset.mem_Ico, not_lt, Finset.mem_range]
               intro _ pr _
               exact pr
-            exact Finset.disjointFilterFilter disj
+            exact Finset.disjoint_filter_filter disj
           _ ≤ (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) * 4 ^ (m + 1) :=
             Nat.mul_le_mul_left _ (primorial_le_4_pow (m + 1))
           _ ≤ choose (2 * m + 1) (m + 1) * 4 ^ (m + 1) := by
@@ -129,4 +132,5 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
       · have n_zero : n = 0 := eq_bot_iff.2 (succ_le_succ_iff.1 n_le_one)
         norm_num [n_zero, primorial, range_succ, prod_filter, Nat.not_prime_zero, Nat.prime_two]
         
+#align primorial_le_4_pow primorial_le_4_pow
 

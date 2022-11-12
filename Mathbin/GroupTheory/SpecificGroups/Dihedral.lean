@@ -27,6 +27,7 @@ inductive DihedralGroup (n : ℕ) : Type
   | r : Zmod n → DihedralGroup
   | sr : Zmod n → DihedralGroup
   deriving DecidableEq
+#align dihedral_group DihedralGroup
 
 namespace DihedralGroup
 
@@ -39,11 +40,13 @@ private def mul : DihedralGroup n → DihedralGroup n → DihedralGroup n
   | r i, sr j => sr (j - i)
   | sr i, r j => sr (i + j)
   | sr i, sr j => r (j - i)
+#align dihedral_group.mul dihedral_group.mul
 
 /-- The identity `1` is the rotation by `0`.
 -/
 private def one : DihedralGroup n :=
   r 0
+#align dihedral_group.one dihedral_group.one
 
 instance : Inhabited (DihedralGroup n) :=
   ⟨one⟩
@@ -53,6 +56,7 @@ instance : Inhabited (DihedralGroup n) :=
 private def inv : DihedralGroup n → DihedralGroup n
   | r i => r (-i)
   | sr i => sr i
+#align dihedral_group.inv dihedral_group.inv
 
 /-- The group structure on `dihedral_group n`.
 -/
@@ -77,21 +81,26 @@ instance : Group (DihedralGroup n) where
 @[simp]
 theorem r_mul_r (i j : Zmod n) : r i * r j = r (i + j) :=
   rfl
+#align dihedral_group.r_mul_r DihedralGroup.r_mul_r
 
 @[simp]
 theorem r_mul_sr (i j : Zmod n) : r i * sr j = sr (j - i) :=
   rfl
+#align dihedral_group.r_mul_sr DihedralGroup.r_mul_sr
 
 @[simp]
 theorem sr_mul_r (i j : Zmod n) : sr i * r j = sr (i + j) :=
   rfl
+#align dihedral_group.sr_mul_r DihedralGroup.sr_mul_r
 
 @[simp]
 theorem sr_mul_sr (i j : Zmod n) : sr i * sr j = r (j - i) :=
   rfl
+#align dihedral_group.sr_mul_sr DihedralGroup.sr_mul_sr
 
 theorem one_def : (1 : DihedralGroup n) = r 0 :=
   rfl
+#align dihedral_group.one_def DihedralGroup.one_def
 
 private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n where
   invFun i :=
@@ -104,6 +113,7 @@ private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n where
     | Sum.inr j => sr j
   left_inv := by rintro (x | x) <;> rfl
   right_inv := by rintro (x | x) <;> rfl
+#align dihedral_group.fintype_helper dihedral_group.fintype_helper
 
 /-- If `0 < n`, then `dihedral_group n` is a finite group.
 -/
@@ -117,6 +127,7 @@ instance : Nontrivial (DihedralGroup n) :=
 -/
 theorem card [NeZero n] : Fintype.card (DihedralGroup n) = 2 * n := by
   rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, Zmod.card, two_mul]
+#align dihedral_group.card DihedralGroup.card
 
 @[simp]
 theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k := by
@@ -129,15 +140,18 @@ theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k := by
     norm_cast
     rw [Nat.one_add]
     
+#align dihedral_group.r_one_pow DihedralGroup.r_one_pow
 
 @[simp]
 theorem r_one_pow_n : r (1 : Zmod n) ^ n = 1 := by
   rw [r_one_pow, one_def]
   congr 1
   exact Zmod.nat_cast_self _
+#align dihedral_group.r_one_pow_n DihedralGroup.r_one_pow_n
 
 @[simp]
 theorem sr_mul_self (i : Zmod n) : sr i * sr i = 1 := by rw [sr_mul_sr, sub_self, one_def]
+#align dihedral_group.sr_mul_self DihedralGroup.sr_mul_self
 
 /-- If `0 < n`, then `sr i` has order 2.
 -/
@@ -148,12 +162,13 @@ theorem order_of_sr (i : Zmod n) : orderOf (sr i) = 2 := by
     
   rw [sq, sr_mul_self]
   decide
+#align dihedral_group.order_of_sr DihedralGroup.order_of_sr
 
 /-- If `0 < n`, then `r 1` has order `n`.
 -/
 @[simp]
 theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
-  rcases eq_zero_or_ne_zero n with (rfl | hn)
+  rcases eq_zero_or_neZero n with (rfl | hn)
   · rw [order_of_eq_zero_iff']
     intro n hn
     rw [r_one_pow, one_def]
@@ -169,15 +184,17 @@ theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
     rw [← Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
     exact absurd h2.symm (order_of_pos _).Ne
     
+#align dihedral_group.order_of_r_one DihedralGroup.order_of_r_one
 
 /-- If `0 < n`, then `i : zmod n` has order `n / gcd n i`.
 -/
 theorem order_of_r [NeZero n] (i : Zmod n) : orderOf (r i) = n / Nat.gcd n i.val := by
   conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
   rw [← r_one_pow, order_of_pow, order_of_r_one]
+#align dihedral_group.order_of_r DihedralGroup.order_of_r
 
 theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 := by
-  rcases eq_zero_or_ne_zero n with (rfl | hn)
+  rcases eq_zero_or_neZero n with (rfl | hn)
   · exact Monoid.exponent_eq_zero_of_order_zero order_of_r_one
     
   skip
@@ -201,6 +218,7 @@ theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 := by
       exact (order_of_sr 0).symm
       
     
+#align dihedral_group.exponent DihedralGroup.exponent
 
 end DihedralGroup
 

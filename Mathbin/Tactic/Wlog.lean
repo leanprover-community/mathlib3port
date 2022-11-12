@@ -16,6 +16,7 @@ namespace Tactic
 private unsafe def update_pp_name : expr → Name → expr
   | local_const n _ bi d, pp => local_const n pp bi d
   | e, n => e
+#align tactic.update_pp_name tactic.update_pp_name
 
 private unsafe def elim_or : ℕ → expr → tactic (List expr)
   | 0, h => fail "zero cases"
@@ -30,12 +31,15 @@ private unsafe def elim_or : ℕ → expr → tactic (List expr)
     let gsr ← get_goals
     set_goals (gl :: gsr)
     return (hl :: hsr)
+#align tactic.elim_or tactic.elim_or
 
 private unsafe def dest_or : expr → tactic (List expr)
   | e => do
-    let quote.1 ((%%ₓa) ∨ %%ₓb) ← whnf e | return [e]
+    let quote.1 ((%%ₓa) ∨ %%ₓb) ← whnf e |
+      return [e]
     let lb ← dest_or b
     return (a :: lb)
+#align tactic.dest_or tactic.dest_or
 
 private unsafe def match_perms (pat : pattern) : expr → tactic (List <| List expr)
   | t =>
@@ -48,6 +52,7 @@ private unsafe def match_perms (pat : pattern) : expr → tactic (List <| List e
       let m ← match_pattern pat l
       let rs ← match_perms r
       return (m.2 :: rs)
+#align tactic.match_perms tactic.match_perms
 
 unsafe def wlog (vars' : List expr) (h_cases fst_case : expr) (perms : List (List expr)) : tactic Unit := do
   guard h_cases
@@ -82,6 +87,7 @@ unsafe def wlog (vars' : List expr) (h_cases fst_case : expr) (perms : List (Lis
         return ())
   let gs ← get_goals
   set_goals (g :: gs)
+#align tactic.wlog tactic.wlog
 
 namespace Interactive
 
@@ -95,6 +101,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
     guard (perms fun p => p p₀) <|>
         fail ("The permutations `xs_i` in `using [xs_1, …, xs_n]` must be permutations of the same" ++ " variables.")
     perms fun p => p get_local
+#align tactic.interactive.parse_permutations tactic.interactive.parse_permutations
 
 /-- Without loss of generality: reduces to one goal under variables permutations.
 
@@ -190,7 +197,8 @@ unsafe def wlog (h : parse ident ?) (pat : parse (tk ":" *> texpr)?) (cases : pa
         return (pat, cases_pr, @none expr, vars, perms)
       | none => do
         let name_h := h.getOrElse `case
-        let some pat ← return pat | fail "Either specify cases or a pattern with permutations"
+        let some pat ← return pat |
+          fail "Either specify cases or a pattern with permutations"
         let pat ← to_expr pat
         (do
               let [x, y] ←
@@ -233,6 +241,7 @@ unsafe def wlog (h : parse ident ?) (pat : parse (tk ":" *> texpr)?) (cases : pa
             let gs ← get_goals
             set_goals (g :: gs)
           | none => skip
+#align tactic.interactive.wlog tactic.interactive.wlog
 
 add_tactic_doc { Name := "wlog", category := DocCategory.tactic, declNames := [`` wlog], tags := ["logic"] }
 

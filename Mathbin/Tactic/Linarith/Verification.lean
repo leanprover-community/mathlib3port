@@ -31,12 +31,14 @@ When elaborated, the coefficient will be a native numeral of the same type as `e
 -/
 unsafe def mul_expr (n : ℕ) (e : expr) : pexpr :=
   if n = 1 then pquote.1 (%%ₓe) else pquote.1 ((%%ₓnat.to_pexpr n) * %%ₓe)
+#align linarith.mul_expr linarith.mul_expr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private unsafe def add_exprs_aux : pexpr → List pexpr → pexpr
   | p, [] => p
   | p, [a] => pquote.1 ((%%ₓp) + %%ₓa)
   | p, h::t => add_exprs_aux (pquote.1 ((%%ₓp) + %%ₓh)) t
+#align linarith.add_exprs_aux linarith.add_exprs_aux
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `add_exprs l` creates a `pexpr` representing the sum of the elements of `l`, associated left.
@@ -45,6 +47,7 @@ If `l` is empty, it will be the `pexpr` 0. Otherwise, it does not include 0 in t
 unsafe def add_exprs : List pexpr → pexpr
   | [] => pquote.1 0
   | h::t => add_exprs_aux h t
+#align linarith.add_exprs linarith.add_exprs
 
 /-- If our goal is to add together two inequalities `t1 R1 0` and `t2 R2 0`,
 `ineq_const_nm R1 R2` produces the strength of the inequality in the sum `R`,
@@ -60,6 +63,7 @@ unsafe def ineq_const_nm : Ineq → Ineq → Name × ineq
   | lt, Eq => (`` lt_of_lt_of_eq, lt)
   | lt, le => (`add_lt_of_neg_of_le, lt)
   | lt, lt => (`left.add_neg, lt)
+#align linarith.ineq_const_nm linarith.ineq_const_nm
 
 /-- `mk_lt_zero_pf_aux c pf npf coeff` assumes that `pf` is a proof of `t1 R1 0` and `npf` is a proof
 of `t2 R2 0`. It uses `mk_single_comp_zero_pf` to prove `t1 + coeff*t2 R 0`, and returns `R`
@@ -69,6 +73,7 @@ unsafe def mk_lt_zero_pf_aux (c : Ineq) (pf npf : expr) (coeff : ℕ) : tactic (
   let (iq, h') ← mk_single_comp_zero_pf coeff npf
   let (nm, niq) := ineq_const_nm c iq
   Prod.mk niq <$> mk_app nm [pf, h']
+#align linarith.mk_lt_zero_pf_aux linarith.mk_lt_zero_pf_aux
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `mk_lt_zero_pf coeffs pfs` takes a list of proofs of the form `tᵢ Rᵢ 0`,
@@ -81,14 +86,17 @@ unsafe def mk_lt_zero_pf : List (expr × ℕ) → tactic expr
   | (h, c)::t => do
     let (iq, h') ← mk_single_comp_zero_pf c h
     Prod.snd <$> t (fun pr ce => mk_lt_zero_pf_aux pr.1 pr.2 ce.1 ce.2) (iq, h')
+#align linarith.mk_lt_zero_pf linarith.mk_lt_zero_pf
 
 /-- If `prf` is a proof of `t R s`, `term_of_ineq_prf prf` returns `t`. -/
 unsafe def term_of_ineq_prf (prf : expr) : tactic expr :=
   Prod.fst <$> (infer_type prf >>= get_rel_sides)
+#align linarith.term_of_ineq_prf linarith.term_of_ineq_prf
 
 /-- If `prf` is a proof of `t R s`, `ineq_prf_tp prf` returns the type of `t`. -/
 unsafe def ineq_prf_tp (prf : expr) : tactic expr :=
   term_of_ineq_prf prf >>= infer_type
+#align linarith.ineq_prf_tp linarith.ineq_prf_tp
 
 /-- `mk_neg_one_lt_zero_pf tp` returns a proof of `-1 < 0`,
 where the numerals are natively of type `tp`.
@@ -96,17 +104,20 @@ where the numerals are natively of type `tp`.
 unsafe def mk_neg_one_lt_zero_pf (tp : expr) : tactic expr := do
   let zero_lt_one ← mk_mapp `zero_lt_one [tp, none, none]
   mk_app `neg_neg_of_pos [zero_lt_one]
+#align linarith.mk_neg_one_lt_zero_pf linarith.mk_neg_one_lt_zero_pf
 
 /-- If `e` is a proof that `t = 0`, `mk_neg_eq_zero_pf e` returns a proof that `-t = 0`.
 -/
 unsafe def mk_neg_eq_zero_pf (e : expr) : tactic expr :=
   to_expr (pquote.1 (neg_eq_zero.mpr (%%ₓe)))
+#align linarith.mk_neg_eq_zero_pf linarith.mk_neg_eq_zero_pf
 
 /-- `prove_eq_zero_using tac e` tries to use `tac` to construct a proof of `e = 0`.
 -/
 unsafe def prove_eq_zero_using (tac : tactic Unit) (e : expr) : tactic expr := do
   let tgt ← to_expr (pquote.1 ((%%ₓe) = 0))
   Prod.snd <$> solve_aux tgt (tac >> done)
+#align linarith.prove_eq_zero_using linarith.prove_eq_zero_using
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -124,6 +135,7 @@ unsafe def add_neg_eq_pfs : List expr → tactic (List expr)
         let tl ← add_neg_eq_pfs t
         return <| h::nep::tl
       | _ => List.cons h <$> add_neg_eq_pfs t
+#align linarith.add_neg_eq_pfs linarith.add_neg_eq_pfs
 
 /-! #### The main method -/
 
@@ -202,6 +214,7 @@ unsafe def prove_false_by_linarith (cfg : linarith_config) : List expr → tacti
     let (_, nep, _) ← rewrite_core sm_eq_zero pftp
     let pf' ← mk_eq_mp nep sm_lt_zero
     mk_app `lt_irrefl [pf']
+#align linarith.prove_false_by_linarith linarith.prove_false_by_linarith
 
 end Linarith
 

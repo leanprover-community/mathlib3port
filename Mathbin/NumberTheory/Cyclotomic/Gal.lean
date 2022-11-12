@@ -47,7 +47,7 @@ namespace IsPrimitiveRoot
 
 variable [CommRing L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [IsCyclotomicExtension {n} K L]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:130:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 /-- `is_primitive_root.aut_to_pow` is injective in the case that it's considered over a cyclotomic
 field extension. -/
 theorem aut_to_pow_injective : Function.Injective <| hμ.autToPow K := by
@@ -71,6 +71,7 @@ theorem aut_to_pow_injective : Function.Injective <| hμ.autToPow K := by
   rw [hμ.eq_order_of]
   rw [← hμ.coe_to_roots_of_unity_coe]
   rw [order_of_units, order_of_subgroup]
+#align is_primitive_root.aut_to_pow_injective IsPrimitiveRoot.aut_to_pow_injective
 
 end IsPrimitiveRoot
 
@@ -82,12 +83,13 @@ variable [CommRing L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [I
 noncomputable def Aut.commGroup : CommGroup (L ≃ₐ[K] L) :=
   ((zeta_spec n K L).aut_to_pow_injective K).CommGroup _ (map_one _) (map_mul _) (map_inv _) (map_div _) (map_pow _)
     (map_zpow _)
+#align is_cyclotomic_extension.aut.comm_group IsCyclotomicExtension.Aut.commGroup
 
 variable (h : Irreducible (cyclotomic n K)) {K} (L)
 
 include h
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1, 5]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:130:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1, 5]) } -/
 /-- The `mul_equiv` that takes an automorphism `f` to the element `k : (zmod n)ˣ` such that
   `f μ = μ ^ k`. A stronger version of `is_primitive_root.aut_to_pow`. -/
 @[simps]
@@ -125,6 +127,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
         (zeta_spec n K L).eq_order_of, ← Zmod.eq_iff_modeq_nat] at key
       simp only [Zmod.nat_cast_val, Zmod.cast_id', id.def] at key
       exact Units.ext key }
+#align is_cyclotomic_extension.aut_equiv_pow IsCyclotomicExtension.autEquivPow
 
 include hμ
 
@@ -136,8 +139,9 @@ noncomputable def fromZetaAut : L ≃ₐ[K] L :=
   (autEquivPow L h).symm <|
     Zmod.unitOfCoprime hζ.some <|
       ((zeta_spec n K L).pow_iff_coprime n.Pos hζ.some).mp <| hζ.some_spec.some_spec.symm ▸ hμ
+#align is_cyclotomic_extension.from_zeta_aut IsCyclotomicExtension.fromZetaAut
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([4]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:130:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([4]) } -/
 theorem from_zeta_aut_spec : fromZetaAut hμ h (zeta n K L) = μ := by
   simp_rw [from_zeta_aut, aut_equiv_pow_symm_apply]
   generalize_proofs _ hζ h _ hμ _
@@ -145,6 +149,7 @@ theorem from_zeta_aut_spec : fromZetaAut hμ h (zeta n K L) = μ := by
   rw [PowerBasis.equiv_of_minpoly_gen, hμ.power_basis_gen K]
   convert h.some_spec.some_spec
   exact Zmod.val_cast_of_lt h.some_spec.some
+#align is_cyclotomic_extension.from_zeta_aut_spec IsCyclotomicExtension.from_zeta_aut_spec
 
 end IsCyclotomicExtension
 
@@ -158,12 +163,14 @@ Galois group of `cyclotomic n K` is equivalent to `(zmod n)ˣ` if `cyclotomic n 
 the base field. -/
 noncomputable def galCyclotomicEquivUnitsZmod : (cyclotomic n K).Gal ≃* (Zmod n)ˣ :=
   (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans (IsCyclotomicExtension.autEquivPow L h)
+#align gal_cyclotomic_equiv_units_zmod galCyclotomicEquivUnitsZmod
 
 /-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`. Asserts that the
 Galois group of `X ^ n - 1` is equivalent to `(zmod n)ˣ` if `cyclotomic n K` is irreducible in the
 base field. -/
 noncomputable def galXPowEquivUnitsZmod : (X ^ (n : ℕ) - 1).Gal ≃* (Zmod n)ˣ :=
   (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans (IsCyclotomicExtension.autEquivPow L h)
+#align gal_X_pow_equiv_units_zmod galXPowEquivUnitsZmod
 
 end Gal
 

@@ -172,6 +172,7 @@ import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Algebra.GroupWithZero.Default
 import Mathbin.Algebra.GroupWithZero.Defs
 import Mathbin.Algebra.GroupWithZero.Divisibility
+import Mathbin.Algebra.GroupWithZero.InjSurj
 import Mathbin.Algebra.GroupWithZero.Power
 import Mathbin.Algebra.GroupWithZero.Units
 import Mathbin.Algebra.HierarchyDesign
@@ -181,7 +182,8 @@ import Mathbin.Algebra.Hom.Commute
 import Mathbin.Algebra.Hom.Embedding
 import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Algebra.Hom.Equiv.TypeTags
-import Mathbin.Algebra.Hom.Equiv.Units
+import Mathbin.Algebra.Hom.Equiv.Units.Basic
+import Mathbin.Algebra.Hom.Equiv.Units.GroupWithZero
 import Mathbin.Algebra.Hom.Freiman
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Hom.GroupAction
@@ -273,7 +275,10 @@ import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Order.CompleteField
 import Mathbin.Algebra.Order.EuclideanAbsoluteValue
 import Mathbin.Algebra.Order.Field.Basic
+import Mathbin.Algebra.Order.Field.Canonical.Basic
+import Mathbin.Algebra.Order.Field.Canonical.Defs
 import Mathbin.Algebra.Order.Field.Defs
+import Mathbin.Algebra.Order.Field.InjSurj
 import Mathbin.Algebra.Order.Field.Pi
 import Mathbin.Algebra.Order.Field.Power
 import Mathbin.Algebra.Order.Floor
@@ -282,6 +287,7 @@ import Mathbin.Algebra.Order.Group.Bounds
 import Mathbin.Algebra.Order.Group.Defs
 import Mathbin.Algebra.Order.Group.DenselyOrdered
 import Mathbin.Algebra.Order.Group.InjSurj
+import Mathbin.Algebra.Order.Group.Instances
 import Mathbin.Algebra.Order.Group.MinMax
 import Mathbin.Algebra.Order.Group.Prod
 import Mathbin.Algebra.Order.Group.TypeTags
@@ -357,6 +363,7 @@ import Mathbin.Algebra.Ring.Fin
 import Mathbin.Algebra.Ring.Idempotents
 import Mathbin.Algebra.Ring.InjSurj
 import Mathbin.Algebra.Ring.Opposite
+import Mathbin.Algebra.Ring.OrderSynonym
 import Mathbin.Algebra.Ring.Pi
 import Mathbin.Algebra.Ring.Prod
 import Mathbin.Algebra.Ring.Regular
@@ -418,6 +425,7 @@ import Mathbin.AlgebraicTopology.MooreComplex
 import Mathbin.AlgebraicTopology.AlternatingFaceMapComplex
 import Mathbin.AlgebraicTopology.CechNerve
 import Mathbin.AlgebraicTopology.DoldKan.Decomposition
+import Mathbin.AlgebraicTopology.DoldKan.Degeneracies
 import Mathbin.AlgebraicTopology.DoldKan.Faces
 import Mathbin.AlgebraicTopology.DoldKan.FunctorN
 import Mathbin.AlgebraicTopology.DoldKan.Homotopies
@@ -1266,7 +1274,8 @@ import Mathbin.Data.Int.Cast.Lemmas
 import Mathbin.Data.Int.CharZero
 import Mathbin.Data.Int.ConditionallyCompleteOrder
 import Mathbin.Data.Int.Div
-import Mathbin.Data.Int.Dvd
+import Mathbin.Data.Int.Dvd.Basic
+import Mathbin.Data.Int.Dvd.Pow
 import Mathbin.Data.Int.Gcd
 import Mathbin.Data.Int.Interval
 import Mathbin.Data.Int.LeastGreatest
@@ -1274,7 +1283,8 @@ import Mathbin.Data.Int.Lemmas
 import Mathbin.Data.Int.Log
 import Mathbin.Data.Int.Modeq
 import Mathbin.Data.Int.NatPrime
-import Mathbin.Data.Int.Order
+import Mathbin.Data.Int.Order.Basic
+import Mathbin.Data.Int.Order.Lemmas
 import Mathbin.Data.Int.Parity
 import Mathbin.Data.Int.Range
 import Mathbin.Data.Int.Sqrt
@@ -1375,6 +1385,7 @@ import Mathbin.Data.Nat.Bitwise
 import Mathbin.Data.Nat.Cast.Basic
 import Mathbin.Data.Nat.Cast.Defs
 import Mathbin.Data.Nat.Cast.Field
+import Mathbin.Data.Nat.Cast.WithTop
 import Mathbin.Data.Nat.Choose.Basic
 import Mathbin.Data.Nat.Choose.Bounds
 import Mathbin.Data.Nat.Choose.Cast
@@ -1402,7 +1413,8 @@ import Mathbin.Data.Nat.Log
 import Mathbin.Data.Nat.Modeq
 import Mathbin.Data.Nat.Multiplicity
 import Mathbin.Data.Nat.Nth
-import Mathbin.Data.Nat.Order
+import Mathbin.Data.Nat.Order.Basic
+import Mathbin.Data.Nat.Order.Lemmas
 import Mathbin.Data.Nat.Pairing
 import Mathbin.Data.Nat.Parity
 import Mathbin.Data.Nat.PartEnat
@@ -1752,6 +1764,7 @@ import Mathbin.GroupTheory.Perm.Option
 import Mathbin.GroupTheory.Perm.Sign
 import Mathbin.GroupTheory.Perm.Subgroup
 import Mathbin.GroupTheory.Perm.Support
+import Mathbin.GroupTheory.Perm.ViaEmbedding
 import Mathbin.GroupTheory.PresentedGroup
 import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.GroupTheory.Schreier
@@ -1827,6 +1840,7 @@ import Mathbin.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathbin.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathbin.LinearAlgebra.ExteriorAlgebra.OfAlternating
 import Mathbin.LinearAlgebra.FiniteDimensional
+import Mathbin.LinearAlgebra.Finrank
 import Mathbin.LinearAlgebra.Finsupp
 import Mathbin.LinearAlgebra.FinsuppVectorSpace
 import Mathbin.LinearAlgebra.FreeAlgebra
@@ -1897,6 +1911,7 @@ import Mathbin.LinearAlgebra.QuadraticForm.Isometry
 import Mathbin.LinearAlgebra.QuadraticForm.Prod
 import Mathbin.LinearAlgebra.QuadraticForm.Real
 import Mathbin.LinearAlgebra.Quotient
+import Mathbin.LinearAlgebra.QuotientPi
 import Mathbin.LinearAlgebra.Ray
 import Mathbin.LinearAlgebra.SesquilinearForm
 import Mathbin.LinearAlgebra.Smodeq
@@ -1914,7 +1929,8 @@ import Mathbin.LinearAlgebra.UnitaryGroup
 import Mathbin.LinearAlgebra.Vandermonde
 import Mathbin.Logic.Basic
 import Mathbin.Logic.Denumerable
-import Mathbin.Logic.Embedding
+import Mathbin.Logic.Embedding.Basic
+import Mathbin.Logic.Embedding.Set
 import Mathbin.Logic.Encodable.Basic
 import Mathbin.Logic.Encodable.Lattice
 import Mathbin.Logic.Equiv.Basic
@@ -2215,6 +2231,7 @@ import Mathbin.Order.Hom.Bounded
 import Mathbin.Order.Hom.CompleteLattice
 import Mathbin.Order.Hom.Lattice
 import Mathbin.Order.Hom.Order
+import Mathbin.Order.Hom.Set
 import Mathbin.Order.Ideal
 import Mathbin.Order.InitialSeg
 import Mathbin.Order.Interval
@@ -2239,7 +2256,9 @@ import Mathbin.Order.Partition.Finpartition
 import Mathbin.Order.Pfilter
 import Mathbin.Order.PrimeIdeal
 import Mathbin.Order.RelClasses
-import Mathbin.Order.RelIso
+import Mathbin.Order.RelIso.Basic
+import Mathbin.Order.RelIso.Group
+import Mathbin.Order.RelIso.Set
 import Mathbin.Order.SemiconjSup
 import Mathbin.Order.SuccPred.Basic
 import Mathbin.Order.SuccPred.IntervalSucc
@@ -2369,6 +2388,7 @@ import Mathbin.RingTheory.MvPolynomial.Tower
 import Mathbin.RingTheory.Nakayama
 import Mathbin.RingTheory.Nilpotent
 import Mathbin.RingTheory.Noetherian
+import Mathbin.RingTheory.NonUnitalSubsemiring.Basic
 import Mathbin.RingTheory.NonZeroDivisors
 import Mathbin.RingTheory.Norm
 import Mathbin.RingTheory.Nullstellensatz

@@ -28,6 +28,7 @@ theorem surj_on_Ioo_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
   refine' ⟨x, mem_Ioo.2 _, rfl⟩
   contrapose! hp
   exact fun h => h.2.not_le (h_mono <| hp <| h_mono.reflect_lt h.1)
+#align surj_on_Ioo_of_monotone_surjective surj_on_Ioo_of_monotone_surjective
 
 theorem surj_on_Ico_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
     SurjOn f (IcoCat a b) (IcoCat (f a) (f b)) := by
@@ -43,10 +44,12 @@ theorem surj_on_Ico_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
   · rw [Ico_eq_empty (h_mono hab).not_lt]
     exact surj_on_empty f _
     
+#align surj_on_Ico_of_monotone_surjective surj_on_Ico_of_monotone_surjective
 
 theorem surj_on_Ioc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
     SurjOn f (IocCat a b) (IocCat (f a) (f b)) := by
   simpa using surj_on_Ico_of_monotone_surjective h_mono.dual h_surj (to_dual b) (to_dual a)
+#align surj_on_Ioc_of_monotone_surjective surj_on_Ioc_of_monotone_surjective
 
 -- to see that the hypothesis `a ≤ b` is necessary, consider a constant function
 theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) {a b : α}
@@ -60,23 +63,28 @@ theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Funct
   · have := surj_on_Ioo_of_monotone_surjective h_mono h_surj a b hp'
     exact image_subset f Ioo_subset_Icc_self this
     
+#align surj_on_Icc_of_monotone_surjective surj_on_Icc_of_monotone_surjective
 
 theorem surj_on_Ioi_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
     SurjOn f (IoiCat a) (IoiCat (f a)) := by
   rw [← compl_Iic, ← compl_compl (Ioi (f a))]
   refine' maps_to.surj_on_compl _ h_surj
   exact fun x hx => (h_mono hx).not_lt
+#align surj_on_Ioi_of_monotone_surjective surj_on_Ioi_of_monotone_surjective
 
 theorem surj_on_Iio_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
     SurjOn f (IioCat a) (IioCat (f a)) :=
   @surj_on_Ioi_of_monotone_surjective _ _ _ _ _ h_mono.dual h_surj a
+#align surj_on_Iio_of_monotone_surjective surj_on_Iio_of_monotone_surjective
 
 theorem surj_on_Ici_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
     SurjOn f (IciCat a) (IciCat (f a)) := by
   rw [← Ioi_union_left, ← Ioi_union_left]
   exact (surj_on_Ioi_of_monotone_surjective h_mono h_surj a).union_union (@image_singleton _ _ f a ▸ surj_on_image _ _)
+#align surj_on_Ici_of_monotone_surjective surj_on_Ici_of_monotone_surjective
 
 theorem surj_on_Iic_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
     SurjOn f (IicCat a) (IicCat (f a)) :=
   @surj_on_Ici_of_monotone_surjective _ _ _ _ _ h_mono.dual h_surj a
+#align surj_on_Iic_of_monotone_surjective surj_on_Iic_of_monotone_surjective
 

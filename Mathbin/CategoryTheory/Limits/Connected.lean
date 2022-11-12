@@ -38,6 +38,7 @@ instance wide_pullback_shape_connected (J : Type v₁) : IsConnected (WidePullba
     
   · rwa [t (wide_pullback_shape.hom.term j)]
     
+#align category_theory.wide_pullback_shape_connected CategoryTheory.wide_pullback_shape_connected
 
 instance wide_pushout_shape_connected (J : Type v₁) : IsConnected (WidePushoutShape J) := by
   apply is_connected.of_induct
@@ -47,9 +48,11 @@ instance wide_pushout_shape_connected (J : Type v₁) : IsConnected (WidePushout
     
   · rwa [← t (wide_pushout_shape.hom.init j)]
     
+#align category_theory.wide_pushout_shape_connected CategoryTheory.wide_pushout_shape_connected
 
 instance parallelPairInhabited : Inhabited WalkingParallelPair :=
   ⟨WalkingParallelPair.one⟩
+#align category_theory.parallel_pair_inhabited CategoryTheory.parallelPairInhabited
 
 instance parallel_pair_connected : IsConnected WalkingParallelPair := by
   apply is_connected.of_induct
@@ -59,6 +62,7 @@ instance parallel_pair_connected : IsConnected WalkingParallelPair := by
     
   · assumption
     
+#align category_theory.parallel_pair_connected CategoryTheory.parallel_pair_connected
 
 end Examples
 
@@ -75,10 +79,12 @@ namespace ProdPreservesConnectedLimits
 /-- (Impl). The obvious natural transformation from (X × K -) to K. -/
 @[simps]
 def γ₂ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ K where app Y := Limits.prod.snd
+#align category_theory.prod_preserves_connected_limits.γ₂ CategoryTheory.ProdPreservesConnectedLimits.γ₂
 
 /-- (Impl). The obvious natural transformation from (X × K -) to X -/
 @[simps]
 def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X where app Y := Limits.prod.fst
+#align category_theory.prod_preserves_connected_limits.γ₁ CategoryTheory.ProdPreservesConnectedLimits.γ₁
 
 /-- (Impl).
 Given a cone for (X × K -), produce a cone for K using the natural transformation `γ₂` -/
@@ -86,6 +92,8 @@ Given a cone for (X × K -), produce a cone for K using the natural transformati
 def forgetCone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) : Cone K where
   x := s.x
   π := s.π ≫ γ₂ X
+#align
+  category_theory.prod_preserves_connected_limits.forget_cone CategoryTheory.ProdPreservesConnectedLimits.forgetCone
 
 end ProdPreservesConnectedLimits
 
@@ -119,6 +127,7 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
               intro j
               simp [← L j]
                } }
+#align category_theory.prod_preserves_connected_limits CategoryTheory.prodPreservesConnectedLimits
 
 end CategoryTheory
 

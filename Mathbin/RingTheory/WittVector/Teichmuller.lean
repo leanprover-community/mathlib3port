@@ -41,6 +41,7 @@ The `0`-th coefficient of `teichmuller_fun p r` is `r`, and all others are `0`.
 -/
 def teichmullerFun (r : R) : 𝕎 R :=
   ⟨p, fun n => if n = 0 then r else 0⟩
+#align witt_vector.teichmuller_fun WittVector.teichmullerFun
 
 /-!
 ## `teichmuller` is a monoid homomorphism
@@ -80,6 +81,7 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghostCompone
     intro h
     exact (h (Nat.succ_pos n)).elim
     
+#align witt_vector.ghost_component_teichmuller_fun witt_vector.ghost_component_teichmuller_fun
 
 private theorem map_teichmuller_fun (f : R →+* S) (r : R) : map f (teichmullerFun p r) = teichmullerFun p (f r) := by
   ext n
@@ -88,6 +90,7 @@ private theorem map_teichmuller_fun (f : R →+* S) (r : R) : map f (teichmuller
     
   · exact f.map_zero
     
+#align witt_vector.map_teichmuller_fun witt_vector.map_teichmuller_fun
 
 private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
     teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y := by
@@ -95,11 +98,13 @@ private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
   rw [RingHom.map_mul]
   ext1 n
   simp only [Pi.mul_apply, ghost_map_apply, ghost_component_teichmuller_fun, mul_pow]
+#align witt_vector.teichmuller_mul_aux₁ witt_vector.teichmuller_mul_aux₁
 
 private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
     teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y := by
   refine' map_injective (MvPolynomial.map (Int.castRingHom ℚ)) (MvPolynomial.map_injective _ Int.cast_injective) _
   simp only [teichmuller_mul_aux₁, map_teichmuller_fun, RingHom.map_mul]
+#align witt_vector.teichmuller_mul_aux₂ witt_vector.teichmuller_mul_aux₂
 
 /-- The Teichmüller lift of an element of `R` to `𝕎 R`.
 The `0`-th coefficient of `teichmuller p r` is `r`, and all others are `0`.
@@ -119,14 +124,17 @@ def teichmuller : R →* 𝕎 R where
     rcases counit_surjective R x with ⟨x, rfl⟩
     rcases counit_surjective R y with ⟨y, rfl⟩
     simp only [← map_teichmuller_fun, ← RingHom.map_mul, teichmuller_mul_aux₂]
+#align witt_vector.teichmuller WittVector.teichmuller
 
 @[simp]
 theorem teichmuller_coeff_zero (r : R) : (teichmuller p r).coeff 0 = r :=
   rfl
+#align witt_vector.teichmuller_coeff_zero WittVector.teichmuller_coeff_zero
 
 @[simp]
 theorem teichmuller_coeff_pos (r : R) : ∀ (n : ℕ) (hn : 0 < n), (teichmuller p r).coeff n = 0
   | n + 1, _ => rfl
+#align witt_vector.teichmuller_coeff_pos WittVector.teichmuller_coeff_pos
 
 @[simp]
 theorem teichmuller_zero : teichmuller p (0 : R) = 0 := by
@@ -134,16 +142,19 @@ theorem teichmuller_zero : teichmuller p (0 : R) = 0 := by
     · rw [zero_coeff]
       rfl
       
+#align witt_vector.teichmuller_zero WittVector.teichmuller_zero
 
 /-- `teichmuller` is a natural transformation. -/
 @[simp]
 theorem map_teichmuller (f : R →+* S) (r : R) : map f (teichmuller p r) = teichmuller p (f r) :=
   map_teichmuller_fun _ _ _
+#align witt_vector.map_teichmuller WittVector.map_teichmuller
 
 /-- The `n`-th ghost component of `teichmuller p r` is `r ^ p ^ n`. -/
 @[simp]
 theorem ghost_component_teichmuller (r : R) (n : ℕ) : ghostComponent n (teichmuller p r) = r ^ p ^ n :=
   ghost_component_teichmuller_fun _ _ _
+#align witt_vector.ghost_component_teichmuller WittVector.ghost_component_teichmuller
 
 end WittVector
 

@@ -36,6 +36,7 @@ theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ 
   haveI : _root_.finite (⨁ i, ℤ ⧸ (Submodule.span ℤ {p i ^ e i} : Submodule ℤ ℤ)) :=
     Finite.of_equiv _ dfinsupp.equiv_fun_on_fintype.symm
   exact Finite.of_equiv _ l.symm.to_equiv
+#align module.finite_of_fg_torsion Module.finite_of_fg_torsion
 
 end Module
 
@@ -63,6 +64,7 @@ theorem equiv_free_prod_direct_sum_zmod [hG : AddGroup.Fg G] :
       ((AddEquiv.refl _).prodCongr <|
         Dfinsupp.mapRange.addEquiv fun i =>
           ((Int.quotientSpanEquivZmod _).trans <| Zmod.ringEquivCongr <| (p i).nat_abs_pow _).toAddEquiv)
+#align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_direct_sum_zmod
 
 /-- **Structure theorem of finite abelian groups** : Any finite abelian group is a direct sum of
 some `zmod (p i ^ e i)` for some prime powers `p i ^ e i`. -/
@@ -80,10 +82,12 @@ theorem equiv_direct_sum_zmod_of_fintype [Finite G] :
       ((Fintype.ofSurjective fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
             ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).False.elim
     
+#align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_direct_sum_zmod_of_fintype
 
 theorem finite_of_fg_torsion [hG' : AddGroup.Fg G] (hG : AddMonoid.IsTorsion G) : Finite G :=
   @Module.finite_of_fg_torsion _ _ _ (Module.Finite.iff_add_group_fg.mpr hG') <|
     AddMonoid.is_torsion_iff_is_torsion_int.mp hG
+#align add_comm_group.finite_of_fg_torsion AddCommGroup.finite_of_fg_torsion
 
 end AddCommGroup
 
@@ -91,6 +95,7 @@ namespace CommGroup
 
 theorem finite_of_fg_torsion [CommGroup G] [Group.Fg G] (hG : Monoid.IsTorsion G) : Finite G :=
   @Finite.of_equiv _ _ (AddCommGroup.finite_of_fg_torsion (Additive G) hG) Multiplicative.ofAdd
+#align comm_group.finite_of_fg_torsion CommGroup.finite_of_fg_torsion
 
 end CommGroup
 

@@ -49,6 +49,7 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
           simp [← hbc, prod_insert hiu, mul_assoc, mul_comm, mul_left_comm]⟩
       
     
+#align mul_eq_mul_prime_prod mul_eq_mul_prime_prod
 
 /-- If ` x * y = a * p ^ n` where `p` is prime, then `x` and `y` can both be written
   as the product of a power of `p` and a divisor of `a`. -/
@@ -57,6 +58,7 @@ theorem mul_eq_mul_prime_pow {x y a p : R} {n : ℕ} (hp : Prime p) (hx : x * y 
   rcases mul_eq_mul_prime_prod (fun _ _ => hp) (show x * y = a * (range n).Prod fun _ => p by simpa) with
     ⟨t, u, b, c, htus, htu, rfl, rfl, rfl⟩
   exact ⟨t.card, u.card, b, c, by rw [← card_disjoint_union htu, htus, card_range], by simp⟩
+#align mul_eq_mul_prime_pow mul_eq_mul_prime_pow
 
 end CancelCommMonoidWithZero
 
@@ -67,6 +69,7 @@ variable {α : Type _} [CommRing α]
 theorem Prime.neg {p : α} (hp : Prime p) : Prime (-p) := by
   obtain ⟨h1, h2, h3⟩ := hp
   exact ⟨neg_ne_zero.mpr h1, by rwa [IsUnit.neg_iff], by simpa [neg_dvd] using h3⟩
+#align prime.neg Prime.neg
 
 theorem Prime.abs [LinearOrder α] {p : α} (hp : Prime p) : Prime (abs p) := by
   obtain h | h := abs_choice p <;> rw [h]
@@ -74,6 +77,7 @@ theorem Prime.abs [LinearOrder α] {p : α} (hp : Prime p) : Prime (abs p) := by
     
   · exact hp.neg
     
+#align prime.abs Prime.abs
 
 end CommRing
 

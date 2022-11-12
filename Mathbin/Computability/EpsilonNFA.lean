@@ -30,6 +30,7 @@ structure εNFA (α : Type u) (σ : Type v) where
   step : σ → Option α → Set σ
   start : Set σ
   accept : Set σ
+#align ε_NFA εNFA
 
 variable {α : Type u} {σ σ' : Type v} (M : εNFA α σ) {S : Set σ} {x : List α} {s : σ} {a : α}
 
@@ -40,31 +41,38 @@ namespace εNFA
 inductive εClosure (S : Set σ) : Set σ
   | base : ∀ s ∈ S, ε_closure s
   | step : ∀ (s), ∀ t ∈ M.step s none, ε_closure s → ε_closure t
+#align ε_NFA.ε_closure εNFA.εClosure
 
 @[simp]
 theorem subset_ε_closure (S : Set σ) : S ⊆ M.εClosure S :=
   ε_closure.base
+#align ε_NFA.subset_ε_closure εNFA.subset_ε_closure
 
 @[simp]
 theorem ε_closure_empty : M.εClosure ∅ = ∅ :=
   eq_empty_of_forall_not_mem fun s hs => by induction' hs with t ht _ _ _ _ ih <;> assumption
+#align ε_NFA.ε_closure_empty εNFA.ε_closure_empty
 
 @[simp]
 theorem ε_closure_univ : M.εClosure Univ = univ :=
   eq_univ_of_univ_subset <| subset_ε_closure _ _
+#align ε_NFA.ε_closure_univ εNFA.ε_closure_univ
 
 /-- `M.step_set S a` is the union of the ε-closure of `M.step s a` for all `s ∈ S`. -/
 def StepSet (S : Set σ) (a : α) : Set σ :=
   ⋃ s ∈ S, M.εClosure <| M.step s a
+#align ε_NFA.step_set εNFA.StepSet
 
 variable {M}
 
 @[simp]
 theorem mem_step_set_iff : s ∈ M.StepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosure (M.step t a) :=
   mem_Union₂
+#align ε_NFA.mem_step_set_iff εNFA.mem_step_set_iff
 
 @[simp]
 theorem step_set_empty (a : α) : M.StepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
+#align ε_NFA.step_set_empty εNFA.step_set_empty
 
 variable (M)
 
@@ -72,19 +80,23 @@ variable (M)
 of `S`. -/
 def EvalFrom (start : Set σ) : List α → Set σ :=
   List.foldl M.StepSet (M.εClosure start)
+#align ε_NFA.eval_from εNFA.EvalFrom
 
 @[simp]
 theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = M.εClosure S :=
   rfl
+#align ε_NFA.eval_from_nil εNFA.eval_from_nil
 
 @[simp]
 theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.StepSet (M.εClosure S) a :=
   rfl
+#align ε_NFA.eval_from_singleton εNFA.eval_from_singleton
 
 @[simp]
 theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.StepSet (M.evalFrom S x) a := by
   simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
+#align ε_NFA.eval_from_append_singleton εNFA.eval_from_append_singleton
 
 @[simp]
 theorem eval_from_empty (x : List α) : M.evalFrom ∅ x = ∅ := by
@@ -93,27 +105,33 @@ theorem eval_from_empty (x : List α) : M.evalFrom ∅ x = ∅ := by
     
   · rw [eval_from_append_singleton, ih, step_set_empty]
     
+#align ε_NFA.eval_from_empty εNFA.eval_from_empty
 
 /-- `M.eval x` computes all possible paths through `M` with input `x` starting at an element of
 `M.start`. -/
 def Eval :=
   M.evalFrom M.start
+#align ε_NFA.eval εNFA.Eval
 
 @[simp]
 theorem eval_nil : M.eval [] = M.εClosure M.start :=
   rfl
+#align ε_NFA.eval_nil εNFA.eval_nil
 
 @[simp]
 theorem eval_singleton (a : α) : M.eval [a] = M.StepSet (M.εClosure M.start) a :=
   rfl
+#align ε_NFA.eval_singleton εNFA.eval_singleton
 
 @[simp]
 theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.StepSet (M.eval x) a :=
   eval_from_append_singleton _ _ _ _
+#align ε_NFA.eval_append_singleton εNFA.eval_append_singleton
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
 def Accepts : Language α :=
   { x | ∃ S ∈ M.accept, S ∈ M.eval x }
+#align ε_NFA.accepts εNFA.Accepts
 
 /-! ### Conversions between `ε_NFA` and `NFA` -/
 
@@ -123,16 +141,19 @@ def toNFA : NFA α σ where
   step S a := M.εClosure (M.step S a)
   start := M.εClosure M.start
   accept := M.accept
+#align ε_NFA.to_NFA εNFA.toNFA
 
 @[simp]
 theorem to_NFA_eval_from_match (start : Set σ) : M.toNFA.evalFrom (M.εClosure start) = M.evalFrom start :=
   rfl
+#align ε_NFA.to_NFA_eval_from_match εNFA.to_NFA_eval_from_match
 
 @[simp]
 theorem to_NFA_correct : M.toNFA.Accepts = M.Accepts := by
   ext x
   rw [accepts, NFA.Accepts, eval, NFA.Eval, ← to_NFA_eval_from_match]
   rfl
+#align ε_NFA.to_NFA_correct εNFA.to_NFA_correct
 
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
@@ -141,6 +162,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : 
   by
   rw [← to_NFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen
+#align ε_NFA.pumping_lemma εNFA.pumping_lemma
 
 end εNFA
 
@@ -152,6 +174,7 @@ def toεNFA (M : NFA α σ) : εNFA α σ where
   step s a := a.casesOn' ∅ fun a => M.step s a
   start := M.start
   accept := M.accept
+#align NFA.to_ε_NFA NFA.toεNFA
 
 @[simp]
 theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure S = S := by
@@ -162,6 +185,7 @@ theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure 
     
   · cases h
     
+#align NFA.to_ε_NFA_ε_closure NFA.to_ε_NFA_ε_closure
 
 @[simp]
 theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.evalFrom start = M.evalFrom start := by
@@ -174,11 +198,13 @@ theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.e
   intro t ht
   rw [M.to_ε_NFA_ε_closure]
   rfl
+#align NFA.to_ε_NFA_eval_from_match NFA.to_ε_NFA_eval_from_match
 
 @[simp]
 theorem to_ε_NFA_correct (M : NFA α σ) : M.toεNFA.Accepts = M.Accepts := by
   rw [accepts, εNFA.Accepts, eval, εNFA.Eval, to_ε_NFA_eval_from_match]
   rfl
+#align NFA.to_ε_NFA_correct NFA.to_ε_NFA_correct
 
 end NFA
 
@@ -201,26 +227,32 @@ variable (P : εNFA α σ) (Q : εNFA α σ')
 @[simp]
 theorem step_zero (s a) : (0 : εNFA α σ).step s a = ∅ :=
   rfl
+#align ε_NFA.step_zero εNFA.step_zero
 
 @[simp]
 theorem step_one (s a) : (1 : εNFA α σ).step s a = ∅ :=
   rfl
+#align ε_NFA.step_one εNFA.step_one
 
 @[simp]
 theorem start_zero : (0 : εNFA α σ).start = ∅ :=
   rfl
+#align ε_NFA.start_zero εNFA.start_zero
 
 @[simp]
 theorem start_one : (1 : εNFA α σ).start = univ :=
   rfl
+#align ε_NFA.start_one εNFA.start_one
 
 @[simp]
 theorem accept_zero : (0 : εNFA α σ).accept = ∅ :=
   rfl
+#align ε_NFA.accept_zero εNFA.accept_zero
 
 @[simp]
 theorem accept_one : (1 : εNFA α σ).accept = univ :=
   rfl
+#align ε_NFA.accept_one εNFA.accept_one
 
 end εNFA
 

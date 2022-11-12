@@ -68,11 +68,13 @@ arrows over `X` with `f` as the cone point. This is the underlying diagram.
 def toDiagram : J ⥤ StructuredArrow c.x K where
   obj j := StructuredArrow.mk (c.π.app j)
   map j k g := StructuredArrow.homMk g (by simpa)
+#align category_theory.structured_arrow_cone.to_diagram CategoryTheory.StructuredArrowCone.toDiagram
 
 /-- Given a diagram of `structured_arrow X F`s, we may obtain a cone with cone point `X`. -/
 @[simps]
 def diagramToCone {X : D} (G : J ⥤ StructuredArrow X F) : Cone (G ⋙ proj X F ⋙ F) :=
   { x, π := { app := fun j => (G.obj j).Hom } }
+#align category_theory.structured_arrow_cone.diagram_to_cone CategoryTheory.StructuredArrowCone.diagramToCone
 
 /-- Given a cone `c : cone K` and a map `f : X ⟶ F.obj c.X`, we can construct a cone of structured
 arrows over `X` with `f` as the cone point.
@@ -86,6 +88,7 @@ def toCone {X : D} (f : X ⟶ F.obj c.x) : Cone (toDiagram (F.mapCone c) ⋙ map
         ext
         dsimp
         simp }
+#align category_theory.structured_arrow_cone.to_cone CategoryTheory.StructuredArrowCone.toCone
 
 end StructuredArrowCone
 
@@ -100,13 +103,12 @@ is cofiltered for each `X : C`.
 -/
 class RepresentablyFlat (F : C ⥤ D) : Prop where
   cofiltered : ∀ X : D, IsCofiltered (StructuredArrow X F)
+#align category_theory.representably_flat CategoryTheory.RepresentablyFlat
 
 attribute [instance] representably_flat.cofiltered
 
 attribute [local instance] is_cofiltered.nonempty
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr Z.hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) := by
   constructor
   intro X
@@ -124,10 +126,9 @@ instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) := by
     use structured_arrow.mk (𝟙 _)
     use structured_arrow.hom_mk Y.hom (by erw [functor.id_map, category.id_comp])
     ext
-    trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr Z.hom]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" <;>
-      simp
+    trans Z.hom <;> simp
     
+#align category_theory.representably_flat.id CategoryTheory.RepresentablyFlat.id
 
 instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F] [RepresentablyFlat G] :
     RepresentablyFlat (F ⋙ G) := by
@@ -171,6 +172,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     ext
     exact (congr_arg comma_morphism.right h'_cond : _)
     
+#align category_theory.representably_flat.comp CategoryTheory.RepresentablyFlat.comp
 
 end RepresentablyFlat
 
@@ -183,6 +185,7 @@ attribute [local instance] has_finite_limits_of_has_finite_limits_of_size
 theorem cofiltered_of_has_finite_limits [HasFiniteLimits C] : IsCofiltered C :=
   { cocone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivial⟩,
     cocone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩, Nonempty := ⟨⊤_ C⟩ }
+#align category_theory.cofiltered_of_has_finite_limits CategoryTheory.cofiltered_of_has_finite_limits
 
 theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [PreservesFiniteLimits F] :
     RepresentablyFlat F :=
@@ -193,6 +196,7 @@ theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [Prese
       skip
       constructor
     cofiltered_of_has_finite_limits⟩
+#align category_theory.flat_of_preserves_finite_limits CategoryTheory.flat_of_preserves_finite_limits
 
 namespace PreservesFiniteLimitsOfFlat
 
@@ -218,8 +222,10 @@ noncomputable def lift : s.x ⟶ F.obj c.x :=
         (Cones.postcompose
               ({ app := fun X => 𝟙 _, naturality' := by simp } : (toDiagram s ⋙ pre s.x K F) ⋙ proj s.x F ⟶ K)).obj <|
           (StructuredArrow.proj s.x F).mapCone s')
+#align category_theory.preserves_finite_limits_of_flat.lift CategoryTheory.PreservesFiniteLimitsOfFlat.lift
 
 theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by simpa [lift, ← functor.map_comp]
+#align category_theory.preserves_finite_limits_of_flat.fac CategoryTheory.PreservesFiniteLimitsOfFlat.fac
 
 attribute [local simp] eq_to_hom_map
 
@@ -434,7 +440,7 @@ attribute [local simp] eq_to_hom_map
                  [(Term.paren
                    "("
                    [(Term.app `whisker_right [`α₁ (Term.app `pre [`s.X `K `F])])
-                    [(Term.typeAscription ":" (Term.hole "_"))]]
+                    [(Term.typeAscription ":" [(Term.hole "_")])]]
                    ")")])
                 "."
                 `obj)
@@ -462,7 +468,7 @@ attribute [local simp] eq_to_hom_map
                  [(Term.paren
                    "("
                    [(Term.app `whisker_right [`α₂ (Term.app `pre [`s.X `K `F])])
-                    [(Term.typeAscription ":" (Term.hole "_"))]]
+                    [(Term.typeAscription ":" [(Term.hole "_")])]]
                    ")")])
                 "."
                 `obj)
@@ -550,7 +556,7 @@ attribute [local simp] eq_to_hom_map
                 (Tactic.tacticSeq1Indented
                  [(Tactic.unfold "unfold" [`cone.extend] [])
                   []
-                  (Tactic.congr' "congr" [(num "1")] [])
+                  (Tactic.congr "congr" [(num "1")])
                   []
                   (Std.Tactic.Ext.«tacticExt___:_»
                    "ext"
@@ -579,8 +585,7 @@ attribute [local simp] eq_to_hom_map
               (Term.byTactic
                "by"
                (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [] (Tactic.exact "exact" `this)]))))
+                (Tactic.tacticSeq1Indented [(Tactic.congr "congr" []) [] (Tactic.exact "exact" `this)]))))
              (calcStep
               («term_=_» (Term.hole "_") "=" `g₂.right)
               ":="
@@ -588,7 +593,7 @@ attribute [local simp] eq_to_hom_map
                "by"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(choice (Tactic.symm "symm") (Mathlib.Tactic.tacticSymm_ "symm" []))
+                 [(Mathlib.Tactic.tacticSymm_ "symm" [])
                   []
                   (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
                   []
@@ -792,7 +797,7 @@ attribute [local simp] eq_to_hom_map
                 [(Term.paren
                   "("
                   [(Term.app `whisker_right [`α₁ (Term.app `pre [`s.X `K `F])])
-                   [(Term.typeAscription ":" (Term.hole "_"))]]
+                   [(Term.typeAscription ":" [(Term.hole "_")])]]
                   ")")])
                "."
                `obj)
@@ -820,7 +825,7 @@ attribute [local simp] eq_to_hom_map
                 [(Term.paren
                   "("
                   [(Term.app `whisker_right [`α₂ (Term.app `pre [`s.X `K `F])])
-                   [(Term.typeAscription ":" (Term.hole "_"))]]
+                   [(Term.typeAscription ":" [(Term.hole "_")])]]
                   ")")])
                "."
                `obj)
@@ -908,7 +913,7 @@ attribute [local simp] eq_to_hom_map
                (Tactic.tacticSeq1Indented
                 [(Tactic.unfold "unfold" [`cone.extend] [])
                  []
-                 (Tactic.congr' "congr" [(num "1")] [])
+                 (Tactic.congr "congr" [(num "1")])
                  []
                  (Std.Tactic.Ext.«tacticExt___:_»
                   "ext"
@@ -937,8 +942,7 @@ attribute [local simp] eq_to_hom_map
              (Term.byTactic
               "by"
               (Tactic.tacticSeq
-               (Tactic.tacticSeq1Indented
-                [(choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [] (Tactic.exact "exact" `this)]))))
+               (Tactic.tacticSeq1Indented [(Tactic.congr "congr" []) [] (Tactic.exact "exact" `this)]))))
             (calcStep
              («term_=_» (Term.hole "_") "=" `g₂.right)
              ":="
@@ -946,7 +950,7 @@ attribute [local simp] eq_to_hom_map
               "by"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
-                [(choice (Tactic.symm "symm") (Mathlib.Tactic.tacticSymm_ "symm" []))
+                [(Mathlib.Tactic.tacticSymm_ "symm" [])
                  []
                  (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
                  []
@@ -1221,9 +1225,7 @@ attribute [local simp] eq_to_hom_map
          ":="
          (Term.byTactic
           "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [] (Tactic.exact "exact" `this)]))))
+          (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.congr "congr" []) [] (Tactic.exact "exact" `this)]))))
         (calcStep
          («term_=_» (Term.hole "_") "=" `g₂.right)
          ":="
@@ -1231,7 +1233,7 @@ attribute [local simp] eq_to_hom_map
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(choice (Tactic.symm "symm") (Mathlib.Tactic.tacticSymm_ "symm" []))
+            [(Mathlib.Tactic.tacticSymm_ "symm" [])
              []
              (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
              []
@@ -1241,7 +1243,7 @@ attribute [local simp] eq_to_hom_map
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(choice (Tactic.symm "symm") (Mathlib.Tactic.tacticSymm_ "symm" []))
+         [(Mathlib.Tactic.tacticSymm_ "symm" [])
           []
           (Tactic.apply "apply" (Term.app `hc.uniq [(Term.app `c.extend [(Term.hole "_")])]))
           []
@@ -1274,7 +1276,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (choice (Tactic.symm "symm") (Mathlib.Tactic.tacticSymm_ "symm" []))
+      (Mathlib.Tactic.tacticSymm_ "symm" [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1289,9 +1291,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
        "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" [])) [] (Tactic.exact "exact" `this)])))
+       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.congr "congr" []) [] (Tactic.exact "exact" `this)])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `this)
@@ -1300,7 +1300,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (choice (Tactic.congr' "congr" [] []) (Tactic.congr "congr" []))
+      (Tactic.congr "congr" [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1418,7 +1418,7 @@ attribute [local simp] eq_to_hom_map
            (Tactic.tacticSeq1Indented
             [(Tactic.unfold "unfold" [`cone.extend] [])
              []
-             (Tactic.congr' "congr" [(num "1")] [])
+             (Tactic.congr "congr" [(num "1")])
              []
              (Std.Tactic.Ext.«tacticExt___:_»
               "ext"
@@ -1433,7 +1433,7 @@ attribute [local simp] eq_to_hom_map
         (Tactic.tacticSeq1Indented
          [(Tactic.unfold "unfold" [`cone.extend] [])
           []
-          (Tactic.congr' "congr" [(num "1")] [])
+          (Tactic.congr "congr" [(num "1")])
           []
           (Std.Tactic.Ext.«tacticExt___:_»
            "ext"
@@ -1455,7 +1455,7 @@ attribute [local simp] eq_to_hom_map
        [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.congr' "congr" [(num "1")] [])
+      (Tactic.congr "congr" [(num "1")])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.unfold "unfold" [`cone.extend] [])
@@ -1625,14 +1625,14 @@ theorem
         have : g₁.right = g₂.right
         calc
           g₁.right = hc.lift c.extend g₁.right := by apply hc.uniq c.extend _ tidy
-          _ = hc.lift c.extend g₂.right := by congr congr exact this
-            _ = g₂.right := by symm symm apply hc.uniq c.extend _ tidy
+          _ = hc.lift c.extend g₂.right := by congr exact this _ = g₂.right := by symm apply hc.uniq c.extend _ tidy
         calc
           f₁ = 𝟙 _ ≫ f₁ := by simp
           _ = c₀.X.hom ≫ F.map g₁.right := g₁.w
             _ = c₀.X.hom ≫ F.map g₂.right := by rw [ this ]
             _ = 𝟙 _ ≫ f₂ := g₂.w.symm
             _ = f₂ := by simp
+#align category_theory.preserves_finite_limits_of_flat.uniq CategoryTheory.PreservesFiniteLimitsOfFlat.uniq
 
 end PreservesFiniteLimitsOfFlat
 
@@ -1650,6 +1650,7 @@ noncomputable def preservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F
         apply preserves_finite_limits_of_flat.uniq F hc
         exact h
         exact preserves_finite_limits_of_flat.fac F hc s }
+#align category_theory.preserves_finite_limits_of_flat CategoryTheory.preservesFiniteLimitsOfFlat
 
 /-- If `C` is finitely cocomplete, then `F : C ⥤ D` is representably flat iff it preserves
 finite limits.
@@ -1664,6 +1665,7 @@ noncomputable def preservesFiniteLimitsIffFlat [HasFiniteLimits C] (F : C ⥤ D)
     unfold preserves_finite_limits_of_flat
     dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]
     congr
+#align category_theory.preserves_finite_limits_iff_flat CategoryTheory.preservesFiniteLimitsIffFlat
 
 end HasLimit
 
@@ -1687,6 +1689,7 @@ noncomputable def lanEvaluationIsoColim (F : C ⥤ D) (X : D) [∀ X : D, HasCol
       rcases j with ⟨j_left, ⟨⟨⟩⟩, j_hom⟩
       congr
       rw [costructured_arrow.map_mk, category.id_comp, costructured_arrow.mk])
+#align category_theory.Lan_evaluation_iso_colim CategoryTheory.lanEvaluationIsoColim
 
 variable [ConcreteCategory.{u₁} E] [HasLimits E] [HasColimits E]
 
@@ -1707,9 +1710,11 @@ noncomputable instance lanPreservesFiniteLimitsOfFlat (F : C ⥤ D) [Representab
   haveI : is_filtered (costructured_arrow F.op K) :=
     is_filtered.of_equivalence (structured_arrow_op_equivalence F (unop K))
   exact preserves_limits_of_shape_of_nat_iso (Lan_evaluation_iso_colim _ _ _).symm
+#align category_theory.Lan_preserves_finite_limits_of_flat CategoryTheory.lanPreservesFiniteLimitsOfFlat
 
 instance Lan_flat_of_flat (F : C ⥤ D) [RepresentablyFlat F] : RepresentablyFlat (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) :=
   flat_of_preserves_finite_limits _
+#align category_theory.Lan_flat_of_flat CategoryTheory.Lan_flat_of_flat
 
 variable [HasFiniteLimits C]
 
@@ -1717,6 +1722,8 @@ noncomputable instance lanPreservesFiniteLimitsOfPreservesFiniteLimits (F : C �
     PreservesFiniteLimits (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) := by
   haveI := flat_of_preserves_finite_limits F
   infer_instance
+#align
+  category_theory.Lan_preserves_finite_limits_of_preserves_finite_limits CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits
 
 theorem flat_iff_Lan_flat (F : C ⥤ D) : RepresentablyFlat F ↔ RepresentablyFlat (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u₁) :=
   ⟨fun H => inferInstance, fun H => by
@@ -1728,6 +1735,7 @@ theorem flat_iff_Lan_flat (F : C ⥤ D) : RepresentablyFlat F ↔ RepresentablyF
       skip
       apply preserves_limit_of_Lan_presesrves_limit
     apply flat_of_preserves_finite_limits⟩
+#align category_theory.flat_iff_Lan_flat CategoryTheory.flat_iff_Lan_flat
 
 /-- If `C` is finitely complete, then `F : C ⥤ D` preserves finite limits iff
 `Lan F.op : (Cᵒᵖ ⥤ Type*) ⥤ (Dᵒᵖ ⥤ Type*)` preserves finite limits.
@@ -1752,6 +1760,8 @@ noncomputable def preservesFiniteLimitsIffLanPreservesFiniteLimits (F : C ⥤ D)
     unfold CategoryTheory.lanPreservesFiniteLimitsOfPreservesFiniteLimits CategoryTheory.lanPreservesFiniteLimitsOfFlat
     dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]
     congr
+#align
+  category_theory.preserves_finite_limits_iff_Lan_preserves_finite_limits CategoryTheory.preservesFiniteLimitsIffLanPreservesFiniteLimits
 
 end SmallCategory
 

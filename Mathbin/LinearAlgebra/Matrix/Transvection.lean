@@ -82,9 +82,11 @@ variable {R n} (i j : n)
 to adding `c` times the `i`-th column to the `j`-th column. -/
 def transvection (c : R) : Matrix n n R :=
   1 + Matrix.stdBasisMatrix i j c
+#align matrix.transvection Matrix.transvection
 
 @[simp]
 theorem transvection_zero : transvection i j (0 : R) = 1 := by simp [transvection]
+#align matrix.transvection_zero Matrix.transvection_zero
 
 section
 
@@ -105,32 +107,39 @@ theorem update_row_eq_transvection [Finite n] (c : R) :
   · simp only [update_row, transvection, ha, Ne.symm ha, std_basis_matrix.apply_of_ne, add_zero, Algebra.id.smul_eq_mul,
       Function.update_noteq, Ne.def, not_false_iff, Dmatrix.add_apply, Pi.smul_apply, mul_zero, false_and_iff]
     
+#align matrix.update_row_eq_transvection Matrix.update_row_eq_transvection
 
 variable [Fintype n]
 
 theorem transvection_mul_transvection_same (h : i ≠ j) (c d : R) :
     transvection i j c ⬝ transvection i j d = transvection i j (c + d) := by
   simp [transvection, Matrix.add_mul, Matrix.mul_add, h, h.symm, add_smul, add_assoc, std_basis_matrix_add]
+#align matrix.transvection_mul_transvection_same Matrix.transvection_mul_transvection_same
 
 @[simp]
 theorem transvection_mul_apply_same (b : n) (c : R) (M : Matrix n n R) :
     (transvection i j c ⬝ M) i b = M i b + c * M j b := by simp [transvection, Matrix.add_mul]
+#align matrix.transvection_mul_apply_same Matrix.transvection_mul_apply_same
 
 @[simp]
 theorem mul_transvection_apply_same (a : n) (c : R) (M : Matrix n n R) :
     (M ⬝ transvection i j c) a j = M a j + c * M a i := by simp [transvection, Matrix.mul_add, mul_comm]
+#align matrix.mul_transvection_apply_same Matrix.mul_transvection_apply_same
 
 @[simp]
 theorem transvection_mul_apply_of_ne (a b : n) (ha : a ≠ i) (c : R) (M : Matrix n n R) :
     (transvection i j c ⬝ M) a b = M a b := by simp [transvection, Matrix.add_mul, ha]
+#align matrix.transvection_mul_apply_of_ne Matrix.transvection_mul_apply_of_ne
 
 @[simp]
 theorem mul_transvection_apply_of_ne (a b : n) (hb : b ≠ j) (c : R) (M : Matrix n n R) :
     (M ⬝ transvection i j c) a b = M a b := by simp [transvection, Matrix.mul_add, hb]
+#align matrix.mul_transvection_apply_of_ne Matrix.mul_transvection_apply_of_ne
 
 @[simp]
 theorem det_transvection_of_ne (h : i ≠ j) (c : R) : det (transvection i j c) = 1 := by
   rw [← update_row_eq_transvection i j, det_update_row_add_smul_self _ h, det_one]
+#align matrix.det_transvection_of_ne Matrix.det_transvection_of_ne
 
 end
 
@@ -144,6 +153,7 @@ structure TransvectionStruct where
   (i j : n)
   hij : i ≠ j
   c : R
+#align matrix.transvection_struct Matrix.TransvectionStruct
 
 instance [Nontrivial n] : Nonempty (TransvectionStruct n R) := by
   choose x y hxy using exists_pair_ne n
@@ -156,15 +166,18 @@ variable {R n}
 /-- Associating to a `transvection_struct` the corresponding transvection matrix. -/
 def toMatrix (t : TransvectionStruct n R) : Matrix n n R :=
   transvection t.i t.j t.c
+#align matrix.transvection_struct.to_matrix Matrix.TransvectionStruct.toMatrix
 
 @[simp]
 theorem to_matrix_mk (i j : n) (hij : i ≠ j) (c : R) :
     TransvectionStruct.toMatrix ⟨i, j, hij, c⟩ = transvection i j c :=
   rfl
+#align matrix.transvection_struct.to_matrix_mk Matrix.TransvectionStruct.to_matrix_mk
 
 @[simp]
 protected theorem det [Fintype n] (t : TransvectionStruct n R) : det t.toMatrix = 1 :=
   det_transvection_of_ne _ _ t.hij _
+#align matrix.transvection_struct.det Matrix.TransvectionStruct.det
 
 @[simp]
 theorem det_to_matrix_prod [Fintype n] (L : List (TransvectionStruct n 𝕜)) : det (L.map toMatrix).Prod = 1 := by
@@ -173,6 +186,7 @@ theorem det_to_matrix_prod [Fintype n] (L : List (TransvectionStruct n 𝕜)) : 
     
   · simp [IH]
     
+#align matrix.transvection_struct.det_to_matrix_prod Matrix.TransvectionStruct.det_to_matrix_prod
 
 /-- The inverse of a `transvection_struct`, designed so that `t.inv.to_matrix` is the inverse of
 `t.to_matrix`. -/
@@ -182,6 +196,7 @@ protected def inv (t : TransvectionStruct n R) : TransvectionStruct n R where
   j := t.j
   hij := t.hij
   c := -t.c
+#align matrix.transvection_struct.inv Matrix.TransvectionStruct.inv
 
 section
 
@@ -190,10 +205,12 @@ variable [Fintype n]
 theorem inv_mul (t : TransvectionStruct n R) : t.inv.toMatrix ⬝ t.toMatrix = 1 := by
   rcases t with ⟨⟩
   simp [to_matrix, transvection_mul_transvection_same, t_hij]
+#align matrix.transvection_struct.inv_mul Matrix.TransvectionStruct.inv_mul
 
 theorem mul_inv (t : TransvectionStruct n R) : t.toMatrix ⬝ t.inv.toMatrix = 1 := by
   rcases t with ⟨⟩
   simp [to_matrix, transvection_mul_transvection_same, t_hij]
+#align matrix.transvection_struct.mul_inv Matrix.TransvectionStruct.mul_inv
 
 theorem reverse_inv_prod_mul_prod (L : List (TransvectionStruct n R)) :
     (L.reverse.map (to_matrix ∘ transvection_struct.inv)).Prod ⬝ (L.map toMatrix).Prod = 1 := by
@@ -207,6 +224,7 @@ theorem reverse_inv_prod_mul_prod (L : List (TransvectionStruct n R)) :
       by simpa [Matrix.mul_assoc]
     simpa [inv_mul] using IH
     
+#align matrix.transvection_struct.reverse_inv_prod_mul_prod Matrix.TransvectionStruct.reverse_inv_prod_mul_prod
 
 theorem prod_mul_reverse_inv_prod (L : List (TransvectionStruct n R)) :
     (L.map toMatrix).Prod ⬝ (L.reverse.map (to_matrix ∘ transvection_struct.inv)).Prod = 1 := by
@@ -220,6 +238,7 @@ theorem prod_mul_reverse_inv_prod (L : List (TransvectionStruct n R)) :
       by simpa [Matrix.mul_assoc]
     simp_rw [IH, Matrix.mul_one, t.mul_inv]
     
+#align matrix.transvection_struct.prod_mul_reverse_inv_prod Matrix.TransvectionStruct.prod_mul_reverse_inv_prod
 
 end
 
@@ -234,6 +253,7 @@ def sumInl (t : TransvectionStruct n R) : TransvectionStruct (Sum n p) R where
   j := inl t.j
   hij := by simp [t.hij]
   c := t.c
+#align matrix.transvection_struct.sum_inl Matrix.TransvectionStruct.sumInl
 
 theorem to_matrix_sum_inl (t : TransvectionStruct n R) : (t.sumInl p).toMatrix = fromBlocks t.toMatrix 0 0 1 := by
   cases t
@@ -247,6 +267,7 @@ theorem to_matrix_sum_inl (t : TransvectionStruct n R) : (t.sumInl p).toMatrix =
     
   · by_cases h:a = b <;> simp [transvection_struct.sum_inl, transvection, h]
     
+#align matrix.transvection_struct.to_matrix_sum_inl Matrix.TransvectionStruct.to_matrix_sum_inl
 
 @[simp]
 theorem sum_inl_to_matrix_prod_mul [Fintype n] [Fintype p] (M : Matrix n n R) (L : List (TransvectionStruct n R))
@@ -257,6 +278,7 @@ theorem sum_inl_to_matrix_prod_mul [Fintype n] [Fintype p] (M : Matrix n n R) (L
     
   · simp [Matrix.mul_assoc, IH, to_matrix_sum_inl, from_blocks_multiply]
     
+#align matrix.transvection_struct.sum_inl_to_matrix_prod_mul Matrix.TransvectionStruct.sum_inl_to_matrix_prod_mul
 
 @[simp]
 theorem mul_sum_inl_to_matrix_prod [Fintype n] [Fintype p] (M : Matrix n n R) (L : List (TransvectionStruct n R))
@@ -267,6 +289,7 @@ theorem mul_sum_inl_to_matrix_prod [Fintype n] [Fintype p] (M : Matrix n n R) (L
     
   · simp [IH, to_matrix_sum_inl, from_blocks_multiply]
     
+#align matrix.transvection_struct.mul_sum_inl_to_matrix_prod Matrix.TransvectionStruct.mul_sum_inl_to_matrix_prod
 
 variable {p}
 
@@ -277,6 +300,7 @@ def reindexEquiv (e : n ≃ p) (t : TransvectionStruct n R) : TransvectionStruct
   j := e t.j
   hij := by simp [t.hij]
   c := t.c
+#align matrix.transvection_struct.reindex_equiv Matrix.TransvectionStruct.reindexEquiv
 
 variable [Fintype n] [Fintype p]
 
@@ -289,16 +313,18 @@ theorem to_matrix_reindex_equiv (e : n ≃ p) (t : TransvectionStruct n R) :
   by_cases ha:e t_i = a <;>
     by_cases hb:e t_j = b <;>
       by_cases hab:a = b <;> simp [ha, hb, hab, ← e.apply_eq_iff_eq_symm_apply, std_basis_matrix]
+#align matrix.transvection_struct.to_matrix_reindex_equiv Matrix.TransvectionStruct.to_matrix_reindex_equiv
 
 theorem to_matrix_reindex_equiv_prod (e : n ≃ p) (L : List (TransvectionStruct n R)) :
     (L.map (to_matrix ∘ reindexEquiv e)).Prod = reindexAlgEquiv R e (L.map toMatrix).Prod := by
   induction' L with t L IH
   · simp
     
-  · simp only [to_matrix_reindex_equiv, IH, Function.comp_app, List.prod_cons, mul_eq_mul, reindex_alg_equiv_apply,
+  · simp only [to_matrix_reindex_equiv, IH, Function.comp_apply, List.prod_cons, mul_eq_mul, reindex_alg_equiv_apply,
       List.map]
     exact (reindex_alg_equiv_mul _ _ _ _).symm
     
+#align matrix.transvection_struct.to_matrix_reindex_equiv_prod Matrix.TransvectionStruct.to_matrix_reindex_equiv_prod
 
 end TransvectionStruct
 
@@ -330,11 +356,13 @@ open Sum Unit Fin TransvectionStruct
 the last column with zeroes. -/
 def listTransvecCol : List (Matrix (Sum (Fin r) Unit) (Sum (Fin r) Unit) 𝕜) :=
   List.ofFn fun i : Fin r => transvection (inl i) (inr unit) <| -M (inl i) (inr unit) / M (inr unit) (inr unit)
+#align matrix.pivot.list_transvec_col Matrix.Pivot.listTransvecCol
 
 /-- A list of transvections such that multiplying on the right with these transvections will replace
 the last row with zeroes. -/
 def listTransvecRow : List (Matrix (Sum (Fin r) Unit) (Sum (Fin r) Unit) 𝕜) :=
   List.ofFn fun i : Fin r => transvection (inr unit) (inl i) <| -M (inr unit) (inl i) / M (inr unit) (inr unit)
+#align matrix.pivot.list_transvec_row Matrix.Pivot.listTransvecRow
 
 /-- Multiplying by some of the matrices in `list_transvec_col M` does not change the last row. -/
 theorem list_transvec_col_mul_last_row_drop (i : Sum (Fin r) Unit) {k : ℕ} (hk : k ≤ r) :
@@ -347,11 +375,13 @@ theorem list_transvec_col_mul_last_row_drop (i : Sum (Fin r) Unit) {k : ℕ} (hk
     rw [← List.cons_nth_le_drop_succ hn']
     simpa [list_transvec_col, Matrix.mul_assoc]
     
+#align matrix.pivot.list_transvec_col_mul_last_row_drop Matrix.Pivot.list_transvec_col_mul_last_row_drop
 
 /-- Multiplying by all the matrices in `list_transvec_col M` does not change the last row. -/
 theorem list_transvec_col_mul_last_row (i : Sum (Fin r) Unit) :
     ((listTransvecCol M).Prod ⬝ M) (inr unit) i = M (inr unit) i := by
   simpa using list_transvec_col_mul_last_row_drop M i (zero_le _)
+#align matrix.pivot.list_transvec_col_mul_last_row Matrix.Pivot.list_transvec_col_mul_last_row
 
 /-- Multiplying by all the matrices in `list_transvec_col M` kills all the coefficients in the
 last column but the last one. -/
@@ -402,6 +432,7 @@ theorem list_transvec_col_mul_last_col (hM : M (inr unit) (inr unit) ≠ 0) (i :
         
       
     
+#align matrix.pivot.list_transvec_col_mul_last_col Matrix.Pivot.list_transvec_col_mul_last_col
 
 /-- Multiplying by some of the matrices in `list_transvec_row M` does not change the last column. -/
 theorem mul_list_transvec_row_last_col_take (i : Sum (Fin r) Unit) {k : ℕ} (hk : k ≤ r) :
@@ -422,6 +453,7 @@ theorem mul_list_transvec_row_last_col_take (i : Sum (Fin r) Unit) {k : ℕ} (hk
     rw [mul_transvection_apply_of_ne, IH hkr.le]
     simp only [Ne.def, not_false_iff]
     
+#align matrix.pivot.mul_list_transvec_row_last_col_take Matrix.Pivot.mul_list_transvec_row_last_col_take
 
 /-- Multiplying by all the matrices in `list_transvec_row M` does not change the last column. -/
 theorem mul_list_transvec_row_last_col (i : Sum (Fin r) Unit) :
@@ -429,6 +461,7 @@ theorem mul_list_transvec_row_last_col (i : Sum (Fin r) Unit) :
   have A : (list_transvec_row M).length = r := by simp [list_transvec_row]
   rw [← List.take_length (list_transvec_row M), A]
   simpa using mul_list_transvec_row_last_col_take M i le_rfl
+#align matrix.pivot.mul_list_transvec_row_last_col Matrix.Pivot.mul_list_transvec_row_last_col
 
 /-- Multiplying by all the matrices in `list_transvec_row M` kills all the coefficients in the
 last row but the last one. -/
@@ -482,6 +515,7 @@ theorem mul_list_transvec_row_last_row (hM : M (inr unit) (inr unit) ≠ 0) (i :
         
       
     
+#align matrix.pivot.mul_list_transvec_row_last_row Matrix.Pivot.mul_list_transvec_row_last_row
 
 /-- Multiplying by all the matrices either in `list_transvec_col M` and `list_transvec_row M` kills
 all the coefficients in the last row but the last one. -/
@@ -492,6 +526,8 @@ theorem list_transvec_col_mul_mul_list_transvec_row_last_col (hM : M (inr unit) 
   rw [this]
   apply mul_list_transvec_row_last_row
   simpa [list_transvec_col_mul_last_row] using hM
+#align
+  matrix.pivot.list_transvec_col_mul_mul_list_transvec_row_last_col Matrix.Pivot.list_transvec_col_mul_mul_list_transvec_row_last_col
 
 /-- Multiplying by all the matrices either in `list_transvec_col M` and `list_transvec_row M` kills
 all the coefficients in the last column but the last one. -/
@@ -502,6 +538,8 @@ theorem list_transvec_col_mul_mul_list_transvec_row_last_row (hM : M (inr unit) 
   rw [this, Matrix.mul_assoc]
   apply list_transvec_col_mul_last_col
   simpa [mul_list_transvec_row_last_col] using hM
+#align
+  matrix.pivot.list_transvec_col_mul_mul_list_transvec_row_last_row Matrix.Pivot.list_transvec_col_mul_mul_list_transvec_row_last_row
 
 /-- Multiplying by all the matrices either in `list_transvec_col M` and `list_transvec_row M` turns
 the matrix in block-diagonal form. -/
@@ -516,6 +554,8 @@ theorem is_two_block_diagonal_list_transvec_col_mul_mul_list_transvec_row (hM : 
     have : i = star := by simp only [eq_iff_true_of_subsingleton]
     simp [to_blocks₂₁, this, list_transvec_col_mul_mul_list_transvec_row_last_col M hM]
     
+#align
+  matrix.pivot.is_two_block_diagonal_list_transvec_col_mul_mul_list_transvec_row Matrix.Pivot.is_two_block_diagonal_list_transvec_col_mul_mul_list_transvec_row
 
 /-- There exist two lists of `transvection_struct` such that multiplying by them on the left and
 on the right makes a matrix block-diagonal, when the last coefficient is nonzero. -/
@@ -532,6 +572,7 @@ theorem exists_is_two_block_diagonal_of_ne_zero (hM : M (inr unit) (inr unit) �
   have B : L'.map to_matrix = list_transvec_row M := by simp [L, list_transvec_row, (· ∘ ·)]
   rw [A, B]
   exact is_two_block_diagonal_list_transvec_col_mul_mul_list_transvec_row M hM
+#align matrix.pivot.exists_is_two_block_diagonal_of_ne_zero Matrix.Pivot.exists_is_two_block_diagonal_of_ne_zero
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- There exist two lists of `transvection_struct` such that multiplying by them on the left and
@@ -581,6 +622,8 @@ theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
     rw [Matrix.mul_assoc (L.map to_matrix).Prod]
     exact hLL'
     
+#align
+  matrix.pivot.exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec Matrix.Pivot.exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
 
 /-- Inductive step for the reduction: if one knows that any size `r` matrix can be reduced to
 diagonal form by elementary operations, then one deduces it for matrices over `fin r ⊕ unit`. -/
@@ -616,6 +659,8 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction
       
   rw [this]
   simp [h₀]
+#align
+  matrix.pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction Matrix.Pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction
 
 variable {n p} [Fintype n] [Fintype p]
 
@@ -636,6 +681,8 @@ theorem reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal (M : Matr
   simp only [to_matrix_reindex_equiv_prod, List.map_map, reindex_alg_equiv_apply]
   simp only [← reindex_alg_equiv_apply, ← reindex_alg_equiv_mul, h₀]
   simp only [Equiv.symm_symm, reindex_apply, submatrix_diagonal_equiv, reindex_alg_equiv_apply]
+#align
+  matrix.pivot.reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal Matrix.Pivot.reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal
 
 /-- Any matrix can be reduced to diagonal form by elementary operations. Formulated here on `Type 0`
 because we will make an induction using `fin r`.
@@ -660,6 +707,8 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux (n : Type) [F
     apply reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal M e
     apply exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction fun N => IH (Fin r) N (by simp)
     
+#align
+  matrix.pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux Matrix.Pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux
 
 /-- Any matrix can be reduced to diagonal form by elementary operations. -/
 theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal (M : Matrix n n 𝕜) :
@@ -669,6 +718,8 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal (M : Matrix n n �
   have e : n ≃ Fin (Fintype.card n) := Fintype.equivOfCardEq (by simp)
   apply reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal M e
   apply exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux
+#align
+  matrix.pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal Matrix.Pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal
 
 /-- Any matrix can be written as the product of transvections, a diagonal matrix, and
 transvections.-/
@@ -684,6 +735,8 @@ theorem exists_list_transvec_mul_diagonal_mul_list_transvec (M : Matrix n n 𝕜
         ((L'.map to_matrix).Prod ⬝ (L'.reverse.map (to_matrix ∘ transvection_struct.inv)).Prod)
     by simpa [← h, Matrix.mul_assoc]
   rw [reverse_inv_prod_mul_prod, prod_mul_reverse_inv_prod, Matrix.one_mul, Matrix.mul_one]
+#align
+  matrix.pivot.exists_list_transvec_mul_diagonal_mul_list_transvec Matrix.Pivot.exists_list_transvec_mul_diagonal_mul_list_transvec
 
 end Pivot
 
@@ -724,6 +777,7 @@ theorem diagonalTransvectionInduction (P : Matrix n n 𝕜 → Prop) (M : Matrix
   · simp only [Matrix.mul_assoc, List.prod_cons, mul_eq_mul, List.map] at IH⊢
     exact hmul _ _ (htransvec _) IH
     
+#align matrix.diagonal_transvection_induction Matrix.diagonalTransvectionInduction
 
 /-- Induction principle for invertible matrices based on transvections: if a property is true for
 all invertible diagonal matrices, all transvections, and is stable under product of invertible
@@ -749,6 +803,7 @@ theorem diagonalTransvectionInductionOfDetNeZero (P : Matrix n n 𝕜 → Prop) 
       exact ⟨by simp [QA.1, QB.1], hmul A B QA.1 QB.1 QA.2 QB.2⟩
       
   exact this.2
+#align matrix.diagonal_transvection_induction_of_det_ne_zero Matrix.diagonalTransvectionInductionOfDetNeZero
 
 end Matrix
 

@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 -/
 import Mathbin.Algebra.Field.Defs
-import Mathbin.Algebra.Order.Ring.Canonical
-import Mathbin.Algebra.Order.WithZero
+import Mathbin.Algebra.Order.Ring.Defs
 
 /-!
 # Linear ordered (semi)fields
@@ -33,29 +32,16 @@ variable {α : Type _}
 /-- A linear ordered semifield is a field with a linear order respecting the operations. -/
 @[protect_proj]
 class LinearOrderedSemifield (α : Type _) extends LinearOrderedCommSemiring α, Semifield α
+#align linear_ordered_semifield LinearOrderedSemifield
 
 /-- A linear ordered field is a field with a linear order respecting the operations. -/
 @[protect_proj]
 class LinearOrderedField (α : Type _) extends LinearOrderedCommRing α, Field α
-
-/-- A canonically linear ordered field is a linear ordered field in which `a ≤ b` iff there exists
-`c` with `b = a + c`. -/
-@[protect_proj]
-class CanonicallyLinearOrderedSemifield (α : Type _) extends CanonicallyOrderedCommSemiring α, LinearOrderedSemifield α
+#align linear_ordered_field LinearOrderedField
 
 -- See note [lower instance priority]
 instance (priority := 100) LinearOrderedField.toLinearOrderedSemifield [LinearOrderedField α] :
     LinearOrderedSemifield α :=
   { LinearOrderedRing.toLinearOrderedSemiring, ‹LinearOrderedField α› with }
-
--- See note [lower instance priority]
-instance (priority := 100) CanonicallyLinearOrderedSemifield.toLinearOrderedCommGroupWithZero
-    [CanonicallyLinearOrderedSemifield α] : LinearOrderedCommGroupWithZero α :=
-  { ‹CanonicallyLinearOrderedSemifield α› with
-    mul_le_mul_left := fun a b h c => mul_le_mul_of_nonneg_left h <| zero_le _ }
-
--- See note [lower instance priority]
-instance (priority := 100) CanonicallyLinearOrderedSemifield.toCanonicallyLinearOrderedAddMonoid
-    [CanonicallyLinearOrderedSemifield α] : CanonicallyLinearOrderedAddMonoid α :=
-  { ‹CanonicallyLinearOrderedSemifield α› with }
+#align linear_ordered_field.to_linear_ordered_semifield LinearOrderedField.toLinearOrderedSemifield
 

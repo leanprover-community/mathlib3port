@@ -39,6 +39,8 @@ in `C`.
 @[reducible]
 def widePullbackDiagramOfDiagramOver (B : C) {J : Type w} (F : Discrete J ⥤ Over B) : WidePullbackShape J ⥤ C :=
   WidePullbackShape.wideCospan B (fun j => (F.obj ⟨j⟩).left) fun j => (F.obj ⟨j⟩).Hom
+#align
+  category_theory.over.construct_products.wide_pullback_diagram_of_diagram_over CategoryTheory.Over.ConstructProducts.widePullbackDiagramOfDiagramOver
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
@@ -58,6 +60,8 @@ def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : C
           
         · rw [category.id_comp, category.comp_id]
            }
+#align
+  category_theory.over.construct_products.cones_equiv_inverse_obj CategoryTheory.Over.ConstructProducts.conesEquivInverseObj
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
@@ -74,6 +78,8 @@ def conesEquivInverse (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
           rw [← f.w ⟨j⟩]
           rfl
            }
+#align
+  category_theory.over.construct_products.cones_equiv_inverse CategoryTheory.Over.ConstructProducts.conesEquivInverse
 
 attribute [local tidy] tactic.discrete_cases
 
@@ -85,6 +91,8 @@ def conesEquivFunctor (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
     { x := Over.mk (c.π.app none),
       π := { app := fun ⟨j⟩ => Over.homMk (c.π.app (some j)) (by apply c.w (wide_pullback_shape.hom.term j)) } }
   map c₁ c₂ f := { Hom := Over.homMk f.Hom }
+#align
+  category_theory.over.construct_products.cones_equiv_functor CategoryTheory.Over.ConstructProducts.conesEquivFunctor
 
 attribute [local tidy] tactic.case_bash
 
@@ -93,12 +101,16 @@ attribute [local tidy] tactic.case_bash
 def conesEquivUnitIso (B : C) (F : Discrete J ⥤ Over B) :
     𝟭 (Cone (widePullbackDiagramOfDiagramOver B F)) ≅ conesEquivFunctor B F ⋙ conesEquivInverse B F :=
   NatIso.ofComponents (fun _ => Cones.ext { Hom := 𝟙 _, inv := 𝟙 _ } (by tidy)) (by tidy)
+#align
+  category_theory.over.construct_products.cones_equiv_unit_iso CategoryTheory.Over.ConstructProducts.conesEquivUnitIso
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simp]
 def conesEquivCounitIso (B : C) (F : Discrete J ⥤ Over B) :
     conesEquivInverse B F ⋙ conesEquivFunctor B F ≅ 𝟭 (Cone F) :=
   NatIso.ofComponents (fun _ => Cones.ext { Hom := Over.homMk (𝟙 _), inv := Over.homMk (𝟙 _) } (by tidy)) (by tidy)
+#align
+  category_theory.over.construct_products.cones_equiv_counit_iso CategoryTheory.Over.ConstructProducts.conesEquivCounitIso
 
 -- TODO: Can we add `. obviously` to the second arguments of `nat_iso.of_components` and
 --       `cones.ext`?
@@ -110,6 +122,7 @@ def conesEquiv (B : C) (F : Discrete J ⥤ Over B) : Cone (widePullbackDiagramOf
   inverse := conesEquivInverse B F
   unitIso := conesEquivUnitIso B F
   counitIso := conesEquivCounitIso B F
+#align category_theory.over.construct_products.cones_equiv CategoryTheory.Over.ConstructProducts.conesEquiv
 
 /-- Use the above equivalence to prove we have a limit. -/
 theorem has_over_limit_discrete_of_wide_pullback_limit {B : C} (F : Discrete J ⥤ Over B)
@@ -118,23 +131,33 @@ theorem has_over_limit_discrete_of_wide_pullback_limit {B : C} (F : Discrete J �
     { Cone := _,
       IsLimit :=
         IsLimit.ofRightAdjoint (conesEquiv B F).Functor (limit.isLimit (widePullbackDiagramOfDiagramOver B F)) }
+#align
+  category_theory.over.construct_products.has_over_limit_discrete_of_wide_pullback_limit CategoryTheory.Over.ConstructProducts.has_over_limit_discrete_of_wide_pullback_limit
 
 /-- Given a wide pullback in `C`, construct a product in `C/B`. -/
 theorem over_product_of_wide_pullback [HasLimitsOfShape (WidePullbackShape J) C] {B : C} :
     HasLimitsOfShape (Discrete J) (Over B) :=
   { HasLimit := fun F => has_over_limit_discrete_of_wide_pullback_limit F }
+#align
+  category_theory.over.construct_products.over_product_of_wide_pullback CategoryTheory.Over.ConstructProducts.over_product_of_wide_pullback
 
 /-- Given a pullback in `C`, construct a binary product in `C/B`. -/
 theorem over_binary_product_of_pullback [HasPullbacks C] {B : C} : HasBinaryProducts (Over B) :=
   over_product_of_wide_pullback
+#align
+  category_theory.over.construct_products.over_binary_product_of_pullback CategoryTheory.Over.ConstructProducts.over_binary_product_of_pullback
 
 /-- Given all wide pullbacks in `C`, construct products in `C/B`. -/
 theorem over_products_of_wide_pullbacks [HasWidePullbacks.{w} C] {B : C} : HasProducts.{w} (Over B) := fun J =>
   over_product_of_wide_pullback
+#align
+  category_theory.over.construct_products.over_products_of_wide_pullbacks CategoryTheory.Over.ConstructProducts.over_products_of_wide_pullbacks
 
 /-- Given all finite wide pullbacks in `C`, construct finite products in `C/B`. -/
 theorem over_finite_products_of_finite_wide_pullbacks [HasFiniteWidePullbacks C] {B : C} : HasFiniteProducts (Over B) :=
   ⟨fun J 𝒥 => over_product_of_wide_pullback⟩
+#align
+  category_theory.over.construct_products.over_finite_products_of_finite_wide_pullbacks CategoryTheory.Over.ConstructProducts.over_finite_products_of_finite_wide_pullbacks
 
 end ConstructProducts
 
@@ -157,6 +180,7 @@ theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
                 have := m.w
                 dsimp at this
                 rwa [category.comp_id, category.comp_id] at this } } }
+#align category_theory.over.over_has_terminal CategoryTheory.Over.over_has_terminal
 
 end CategoryTheory.Over
 

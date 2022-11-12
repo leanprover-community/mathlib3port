@@ -58,6 +58,7 @@ theorem nhds_basis_abs_convex : (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 
   refine' ⟨Filter.mem_of_superset (balanced_core_mem_nhds_zero hs.1) (subset_convex_hull ℝ _), _⟩
   refine' ⟨balancedConvexHullOfBalanced (balancedCoreBalanced s), _⟩
   exact convex_convex_hull ℝ (BalancedCore 𝕜 s)
+#align nhds_basis_abs_convex nhds_basis_abs_convex
 
 variable [HasContinuousSmul ℝ E] [TopologicalAddGroup E]
 
@@ -72,6 +73,7 @@ theorem nhds_basis_abs_convex_open :
     
   rintro s ⟨hs_zero, hs_open, hs_balanced, hs_convex⟩
   exact ⟨s, ⟨hs_open.mem_nhds hs_zero, hs_balanced, hs_convex⟩, rfl.subset⟩
+#align nhds_basis_abs_convex_open nhds_basis_abs_convex_open
 
 end NontriviallyNormedField
 
@@ -86,9 +88,11 @@ variable (𝕜 E)
 /-- The type of absolutely convex open sets. -/
 def AbsConvexOpenSets :=
   { s : Set E // (0 : E) ∈ s ∧ IsOpen s ∧ Balanced 𝕜 s ∧ Convex ℝ s }
+#align abs_convex_open_sets AbsConvexOpenSets
 
 instance AbsConvexOpenSets.hasCoe : Coe (AbsConvexOpenSets 𝕜 E) (Set E) :=
   ⟨Subtype.val⟩
+#align abs_convex_open_sets.has_coe AbsConvexOpenSets.hasCoe
 
 namespace AbsConvexOpenSets
 
@@ -96,18 +100,23 @@ variable {𝕜 E}
 
 theorem coe_zero_mem (s : AbsConvexOpenSets 𝕜 E) : (0 : E) ∈ (s : Set E) :=
   s.2.1
+#align abs_convex_open_sets.coe_zero_mem AbsConvexOpenSets.coe_zero_mem
 
 theorem coe_is_open (s : AbsConvexOpenSets 𝕜 E) : IsOpen (s : Set E) :=
   s.2.2.1
+#align abs_convex_open_sets.coe_is_open AbsConvexOpenSets.coe_is_open
 
 theorem coe_nhds (s : AbsConvexOpenSets 𝕜 E) : (s : Set E) ∈ 𝓝 (0 : E) :=
   s.coe_is_open.mem_nhds s.coe_zero_mem
+#align abs_convex_open_sets.coe_nhds AbsConvexOpenSets.coe_nhds
 
 theorem coeBalanced (s : AbsConvexOpenSets 𝕜 E) : Balanced 𝕜 (s : Set E) :=
   s.2.2.2.1
+#align abs_convex_open_sets.coe_balanced AbsConvexOpenSets.coeBalanced
 
 theorem coe_convex (s : AbsConvexOpenSets 𝕜 E) : Convex ℝ (s : Set E) :=
   s.2.2.2.2
+#align abs_convex_open_sets.coe_convex AbsConvexOpenSets.coe_convex
 
 end AbsConvexOpenSets
 
@@ -132,6 +141,7 @@ variable (𝕜 E)
 /-- The family of seminorms defined by the gauges of absolute convex open sets. -/
 noncomputable def gaugeSeminormFamily : SeminormFamily 𝕜 E (AbsConvexOpenSets 𝕜 E) := fun s =>
   gaugeSeminorm s.coeBalanced s.coe_convex (absorbentNhdsZero s.coe_nhds)
+#align gauge_seminorm_family gaugeSeminormFamily
 
 variable {𝕜 E}
 
@@ -141,6 +151,7 @@ theorem gauge_seminorm_family_ball (s : AbsConvexOpenSets 𝕜 E) : (gaugeSemino
   rw [Seminorm.ball_zero_eq]
   simp_rw [gauge_seminorm_to_fun]
   exact gauge_lt_one_eq_self_of_open s.coe_convex s.coe_zero_mem s.coe_is_open
+#align gauge_seminorm_family_ball gauge_seminorm_family_ball
 
 variable [TopologicalAddGroup E] [HasContinuousSmul 𝕜 E]
 
@@ -174,4 +185,5 @@ theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) := 
   refine' IsOpen.smul₀ _ hr''
   rw [gauge_seminorm_family_ball]
   exact AbsConvexOpenSets.coe_is_open _
+#align with_gauge_seminorm_family withGaugeSeminormFamily
 

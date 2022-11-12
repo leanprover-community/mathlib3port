@@ -82,6 +82,7 @@ unsafe def gives_upper_bound (n e : expr) : tactic expr := do
         | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iff.mpr (%%ₓe)))
         | _ => failed
     | _ => failed
+#align tactic.interval_cases.gives_upper_bound tactic.interval_cases.gives_upper_bound
 
 /-- If `e` easily implies `(%%n ≥ %%b)`
 for some explicit `b`,
@@ -117,6 +118,7 @@ unsafe def gives_lower_bound (n e : expr) : tactic expr := do
         | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
         | _ => failed
     | _ => failed
+#align tactic.interval_cases.gives_lower_bound tactic.interval_cases.gives_lower_bound
 
 /-- Combine two upper bounds. -/
 unsafe def combine_upper_bounds : Option expr → Option expr → tactic (Option expr)
@@ -125,6 +127,7 @@ unsafe def combine_upper_bounds : Option expr → Option expr → tactic (Option
   | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
     Option.some <$> to_expr (pquote.1 (lt_min (%%ₓprf₁) (%%ₓprf₂)))
+#align tactic.interval_cases.combine_upper_bounds tactic.interval_cases.combine_upper_bounds
 
 /-- Combine two lower bounds. -/
 unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option expr)
@@ -133,6 +136,7 @@ unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option
   | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
     Option.some <$> to_expr (pquote.1 (max_le (%%ₓprf₂) (%%ₓprf₁)))
+#align tactic.interval_cases.combine_lower_bounds tactic.interval_cases.combine_lower_bounds
 
 /-- Inspect a given expression, using it to update a set of upper and lower bounds on `n`. -/
 unsafe def update_bounds (n : expr) (bounds : Option expr × Option expr) (e : expr) :
@@ -142,6 +146,7 @@ unsafe def update_bounds (n : expr) (bounds : Option expr × Option expr) (e : e
   let clb ← combine_lower_bounds bounds.1 nlb
   let cub ← combine_upper_bounds bounds.2 nub
   return (clb, cub)
+#align tactic.interval_cases.update_bounds tactic.interval_cases.update_bounds
 
 /-- Attempt to find a lower bound for the variable `n`, by evaluating `bot_le n`.
 -/
@@ -152,6 +157,7 @@ unsafe def initial_lower_bound (n : expr) : tactic expr := do
     | quote.1 ((%%ₓb) ≤ %%ₓn) => do
       return e
     | _ => failed
+#align tactic.interval_cases.initial_lower_bound tactic.interval_cases.initial_lower_bound
 
 /-- Attempt to find an upper bound for the variable `n`, by evaluating `le_top n`.
 -/
@@ -168,6 +174,7 @@ unsafe def initial_upper_bound (n : expr) : tactic expr := do
           | _ => failed
       return e
     | _ => failed
+#align tactic.interval_cases.initial_upper_bound tactic.interval_cases.initial_upper_bound
 
 /-- Inspect the local hypotheses for upper and lower bounds on a variable `n`. -/
 unsafe def get_bounds (n : expr) : tactic (expr × expr) := do
@@ -179,14 +186,17 @@ unsafe def get_bounds (n : expr) : tactic (expr × expr) := do
     | (_, none) => fail "No upper bound located."
     | (none, _) => fail "No lower bound located."
     | (some lb_prf, some ub_prf) => return (lb_prf, ub_prf)
+#align tactic.interval_cases.get_bounds tactic.interval_cases.get_bounds
 
 /-- The finset of elements of a set `s` for which we have `fintype s`. -/
 def setElems {α} [DecidableEq α] (s : Set α) [Fintype s] : Finset α :=
   (Fintype.elems s).Image Subtype.val
+#align tactic.interval_cases.set_elems Tactic.IntervalCases.setElems
 
 /-- Each element of `s` is a member of `set_elems s`. -/
 theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] {a : α} (h : a ∈ s) : a ∈ setElems s :=
   Finset.mem_image.2 ⟨⟨a, h⟩, Fintype.complete _, rfl⟩
+#align tactic.interval_cases.mem_set_elems Tactic.IntervalCases.mem_set_elems
 
 end IntervalCases
 
@@ -205,6 +215,7 @@ unsafe def interval_cases_using (hl hu : expr) (n : Option Name) : tactic Unit :
   (to_expr (pquote.1 (mem_set_elems (IcoCat _ _) ⟨%%ₓhl, %%ₓhu⟩)) >>=
       if hn : n.isSome then note (Option.get hn) else note_anon none) >>=
     fin_cases_at none none
+#align tactic.interval_cases_using tactic.interval_cases_using
 
 setup_tactic_parser
 
@@ -250,6 +261,7 @@ unsafe def interval_cases (n : parse texpr ?) (bounds : parse (tk "using" *> (Pr
         fail
           ("Call `interval_cases n` (specifying a variable), or `interval_cases lb ub`\n" ++
             "(specifying a lower bound and upper bound on the same variable).")
+#align tactic.interactive.interval_cases tactic.interactive.interval_cases
 
 /-- `interval_cases n` searches for upper and lower bounds on a variable `n`,
 and if bounds are found,

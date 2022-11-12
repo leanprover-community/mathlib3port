@@ -31,6 +31,7 @@ def BoundedOrder.copy {h : LE α} {h' : LE α} (c : @BoundedOrder α h') (top : 
     cases c
     simp_rw [le_eq]
     assumption
+#align bounded_order.copy BoundedOrder.copy
 
 /-- A function to create a provable equal copy of a lattice
 with possibly different definitional equalities. -/
@@ -41,6 +42,7 @@ def Lattice.copy (c : Lattice α) (le : α → α → Prop) (eq_le : le = @Latti
     subst_vars
     cases c
     assumption
+#align lattice.copy Lattice.copy
 
 /-- A function to create a provable equal copy of a distributive lattice
 with possibly different definitional equalities. -/
@@ -52,6 +54,7 @@ def DistribLattice.copy (c : DistribLattice α) (le : α → α → Prop) (eq_le
     subst_vars
     cases c
     assumption
+#align distrib_lattice.copy DistribLattice.copy
 
 /-- A function to create a provable equal copy of a complete lattice
 with possibly different definitional equalities. -/
@@ -67,6 +70,7 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop) (eq_
     subst_vars
     cases c
     assumption
+#align complete_lattice.copy CompleteLattice.copy
 
 /-- A function to create a provable equal copy of a frame with possibly different definitional
 equalities. -/
@@ -82,6 +86,7 @@ def Frame.copy (c : Frame α) (le : α → α → Prop) (eq_le : le = @Frame.Le 
     subst_vars
     cases c
     assumption
+#align frame.copy Frame.copy
 
 /-- A function to create a provable equal copy of a coframe with possibly different definitional
 equalities. -/
@@ -97,6 +102,7 @@ def Coframe.copy (c : Coframe α) (le : α → α → Prop) (eq_le : le = @Cofra
     subst_vars
     cases c
     assumption
+#align coframe.copy Coframe.copy
 
 /-- A function to create a provable equal copy of a complete distributive lattice
 with possibly different definitional equalities. -/
@@ -110,6 +116,7 @@ def CompleteDistribLattice.copy (c : CompleteDistribLattice α) (le : α → α 
       eq_Inf,
     Coframe.copy (@CompleteDistribLattice.toCoframe α c) le eq_le top eq_top bot eq_bot sup eq_sup inf eq_inf Sup eq_Sup
       Inf eq_Inf with }
+#align complete_distrib_lattice.copy CompleteDistribLattice.copy
 
 /-- A function to create a provable equal copy of a conditionally complete lattice
 with possibly different definitional equalities. -/
@@ -124,4 +131,5 @@ def ConditionallyCompleteLattice.copy (c : ConditionallyCompleteLattice α) (le 
     subst_vars
     cases c
     assumption
+#align conditionally_complete_lattice.copy ConditionallyCompleteLattice.copy
 

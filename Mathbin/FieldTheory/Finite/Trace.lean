@@ -28,6 +28,7 @@ theorem trace_to_zmod_nondegenerate (F : Type _) [Field F] [Finite F] {a : F} (h
   simp_rw [Algebra.trace_form_apply] at htr
   by_contra' hf
   exact ha (htr hf)
+#align finite_field.trace_to_zmod_nondegenerate FiniteField.trace_to_zmod_nondegenerate
 
 end FiniteField
 

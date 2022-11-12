@@ -3,7 +3,7 @@ Copyright (c) 2020 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
-import Mathbin.Data.Nat.Order
+import Mathbin.Data.Nat.Order.Basic
 
 /-!
 # `nat.upto`
@@ -32,6 +32,7 @@ satisfying `p`, because in this case the `>` relation is well-founded.  -/
 @[reducible]
 def Upto (p : ℕ → Prop) : Type :=
   { i : ℕ // ∀ j < i, ¬p j }
+#align nat.upto Nat.Upto
 
 namespace Upto
 
@@ -40,6 +41,7 @@ variable {p : ℕ → Prop}
 /-- Lift the "greater than" relation on natural numbers to `nat.upto`. -/
 protected def Gt (p) (x y : Upto p) : Prop :=
   x.1 > y.1
+#align nat.upto.gt Nat.Upto.Gt
 
 instance : LT (Upto p) :=
   ⟨fun x y => x.1 < y.1⟩
@@ -55,14 +57,17 @@ protected theorem wf : (∃ x, p x) → WellFounded (Upto.Gt p)
     dsimp [Measure, InvImage, upto.gt]
     rw [tsub_lt_tsub_iff_left_of_le]
     exact le_of_not_lt fun h' => ha _ h' h
+#align nat.upto.wf Nat.Upto.wf
 
 /-- Zero is always a member of `nat.upto p` because it has no predecessors. -/
 def zero : Nat.Upto p :=
   ⟨0, fun j h => False.elim (Nat.not_lt_zero _ h)⟩
+#align nat.upto.zero Nat.Upto.zero
 
 /-- The successor of `n` is in `nat.upto p` provided that `n` doesn't satisfy `p`. -/
 def succ (x : Nat.Upto p) (h : ¬p x.val) : Nat.Upto p :=
   ⟨x.val.succ, fun j h' => by rcases Nat.lt_succ_iff_lt_or_eq.1 h' with (h' | rfl) <;> [exact x.2 _ h', exact h]⟩
+#align nat.upto.succ Nat.Upto.succ
 
 end Upto
 

@@ -34,6 +34,7 @@ def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] [
   { hf.OrderedCommMonoid f one mul npow with
     le_of_mul_le_mul_left := fun a b c (bc : f (a * b) ≤ f (a * c)) =>
       (mul_le_mul_iff_left (f a)).mp (by rwa [← mul, ← mul]) }
+#align function.injective.ordered_cancel_comm_monoid Function.Injective.orderedCancelCommMonoid
 
 end OrderedCancelCommMonoid
 
@@ -51,6 +52,7 @@ def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [One β] [Mul
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
     (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedCancelCommMonoid β :=
   { hf.LinearOrderedCommMonoid f one mul npow hsup hinf, hf.OrderedCancelCommMonoid f one mul npow with }
+#align function.injective.linear_ordered_cancel_comm_monoid Function.Injective.linearOrderedCancelCommMonoid
 
 end LinearOrderedCancelCommMonoid
 

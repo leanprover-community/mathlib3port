@@ -79,6 +79,7 @@ theorem subgroupsBasis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgroup
         rw [Units.coe_mul, mul_comm] at vy_lt
         simpa using mul_inv_lt_of_lt_mul₀ vy_lt
          }
+#align valuation.subgroups_basis Valuation.subgroupsBasis
 
 end Valuation
 
@@ -93,6 +94,7 @@ class Valued (R : Type u) [Ring R] (Γ₀ : outParam (Type v)) [LinearOrderedCom
   UniformAddGroup R where
   V : Valuation R Γ₀
   is_topological_valuation : ∀ s, s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, { x : R | v x < γ } ⊆ s
+#align valued Valued
 
 attribute [nolint dangerous_instance] Valued.toUniformSpace
 
@@ -108,6 +110,7 @@ def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
       intro s
       rw [filter.has_basis_iff.mp v.subgroups_basis.has_basis_nhds_zero s]
       exact exists_congr fun γ => by simpa }
+#align valued.mk' Valued.mk'
 
 variable (R Γ₀) [_i : Valued R Γ₀]
 
@@ -115,23 +118,28 @@ include _i
 
 theorem has_basis_nhds_zero : (𝓝 (0 : R)).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { x | v x < (γ : Γ₀) } := by
   simp [Filter.has_basis_iff, is_topological_valuation]
+#align valued.has_basis_nhds_zero Valued.has_basis_nhds_zero
 
 theorem has_basis_uniformity : (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { p : R × R | v (p.2 - p.1) < (γ : Γ₀) } :=
   by
   rw [uniformity_eq_comap_nhds_zero]
   exact (has_basis_nhds_zero R Γ₀).comap _
+#align valued.has_basis_uniformity Valued.has_basis_uniformity
 
 theorem to_uniform_space_eq : to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroupsBasis.topology _ :=
   uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis <| v.subgroupsBasis.has_basis_nhds_zero.comap _)
+#align valued.to_uniform_space_eq Valued.to_uniform_space_eq
 
 variable {R Γ₀}
 
 theorem mem_nhds {s : Set R} {x : R} : s ∈ 𝓝 x ↔ ∃ γ : Γ₀ˣ, { y | (v (y - x) : Γ₀) < γ } ⊆ s := by
   simp only [← nhds_translation_add_neg x, ← sub_eq_add_neg, preimage_set_of_eq, exists_true_left,
     ((has_basis_nhds_zero R Γ₀).comap fun y => y - x).mem_iff]
+#align valued.mem_nhds Valued.mem_nhds
 
 theorem mem_nhds_zero {s : Set R} : s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, { x | v x < (γ : Γ₀) } ⊆ s := by
   simp only [mem_nhds, sub_zero]
+#align valued.mem_nhds_zero Valued.mem_nhds_zero
 
 theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 𝓝 x := by
   rw [mem_nhds]
@@ -140,11 +148,12 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
   rw [hx]
   intro y y_in
   exact Valuation.map_eq_of_sub_lt _ y_in
+#align valued.loc_const Valued.loc_const
 
 instance (priority := 100) : TopologicalRing R :=
   (to_uniform_space_eq R Γ₀).symm ▸ v.subgroupsBasis.toRingFilterBasis.isTopologicalRing
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔ F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ := by
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]
@@ -157,6 +166,7 @@ theorem cauchy_iff {F : Filter R} :
   · rintro h - ⟨γ, rfl⟩
     exact h γ
     
+#align valued.cauchy_iff Valued.cauchy_iff
 
 end Valued
 

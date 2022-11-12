@@ -7,4 +7,5 @@ Authors: Leonardo de Moura
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def rbtree.default_lt : tactic Unit :=
   sorry
+#align rbtree.default_lt rbtree.default_lt
 

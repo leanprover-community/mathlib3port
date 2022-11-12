@@ -38,14 +38,17 @@ Note that we do not assume or require that `F` is faithful.
 -/
 class ReflectsIsomorphisms (F : C ⥤ D) : Prop where
   reflects : ∀ {A B : C} (f : A ⟶ B) [IsIso (F.map f)], IsIso f
+#align category_theory.reflects_isomorphisms CategoryTheory.ReflectsIsomorphisms
 
 /-- If `F` reflects isos and `F.map f` is an iso, then `f` is an iso. -/
 theorem is_iso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.map f)] [ReflectsIsomorphisms F] : IsIso f :=
   ReflectsIsomorphisms.reflects F f
+#align category_theory.is_iso_of_reflects_iso CategoryTheory.is_iso_of_reflects_iso
 
 instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful F] :
     ReflectsIsomorphisms
       F where reflects X Y f i := ⟨⟨F.preimage (inv (F.map f)), ⟨F.map_injective (by simp), F.map_injective (by simp)⟩⟩⟩
+#align category_theory.of_full_and_faithful CategoryTheory.of_full_and_faithful
 
 instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphisms G] : ReflectsIsomorphisms (F ⋙ G) :=
   ⟨fun _ _ f (hf : IsIso (G.map _)) => by
@@ -60,6 +63,8 @@ instance (priority := 100) reflects_isomorphisms_of_reflects_monomorphisms_of_re
     haveI : epi f := epi_of_epi_map F inferInstance
     haveI : mono f := mono_of_mono_map F inferInstance
     exact is_iso_of_mono_of_epi f
+#align
+  category_theory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms CategoryTheory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms
 
 end ReflectsIso
 

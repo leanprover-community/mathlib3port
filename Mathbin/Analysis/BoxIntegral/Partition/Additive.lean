@@ -47,6 +47,7 @@ structure BoxAdditiveMap (ι M : Type _) [AddCommMonoid M] (I : WithTop (Box ι)
   toFun : Box ι → M
   sum_partition_boxes' :
     ∀ J : Box ι, ↑J ≤ I → ∀ π : Prepartition J, π.IsPartition → (∑ Ji in π.boxes, to_fun Ji) = to_fun J
+#align box_integral.box_additive_map BoxIntegral.BoxAdditiveMap
 
 -- mathport name: box_integral.box_additive_map.top
 localized [BoxIntegral] notation:25 ι " →ᵇᵃ " M => BoxIntegral.BoxAdditiveMap ι M ⊤
@@ -68,22 +69,27 @@ initialize_simps_projections box_integral.box_additive_map (toFun → apply)
 @[simp]
 theorem to_fun_eq_coe (f : ι →ᵇᵃ[I₀] M) : f.toFun = f :=
   rfl
+#align box_integral.box_additive_map.to_fun_eq_coe BoxIntegral.BoxAdditiveMap.to_fun_eq_coe
 
 @[simp]
 theorem coe_mk (f h) : ⇑(mk f h : ι →ᵇᵃ[I₀] M) = f :=
   rfl
+#align box_integral.box_additive_map.coe_mk BoxIntegral.BoxAdditiveMap.coe_mk
 
 theorem coe_injective : Injective fun (f : ι →ᵇᵃ[I₀] M) x => f x := by
   rintro ⟨f, hf⟩ ⟨g, hg⟩ (rfl : f = g)
   rfl
+#align box_integral.box_additive_map.coe_injective BoxIntegral.BoxAdditiveMap.coe_injective
 
 @[simp]
 theorem coe_inj {f g : ι →ᵇᵃ[I₀] M} : (f : Box ι → M) = g ↔ f = g :=
   coe_injective.eq_iff
+#align box_integral.box_additive_map.coe_inj BoxIntegral.BoxAdditiveMap.coe_inj
 
 theorem sum_partition_boxes (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π : Prepartition I} (h : π.IsPartition) :
     (∑ J in π.boxes, f J) = f I :=
   f.sum_partition_boxes' I hI π h
+#align box_integral.box_additive_map.sum_partition_boxes BoxIntegral.BoxAdditiveMap.sum_partition_boxes
 
 @[simps (config := { fullyApplied := false })]
 instance : Zero (ι →ᵇᵃ[I₀] M) :=
@@ -105,12 +111,14 @@ instance : AddCommMonoid (ι →ᵇᵃ[I₀] M) :=
 theorem map_split_add (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) (i : ι) (x : ℝ) :
     (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f = f I := by
   rw [← f.sum_partition_boxes hI (is_partition_split I i x), sum_split_boxes]
+#align box_integral.box_additive_map.map_split_add BoxIntegral.BoxAdditiveMap.map_split_add
 
 /-- If `f` is box-additive on subboxes of `I₀`, then it is box-additive on subboxes of any
 `I ≤ I₀`. -/
 @[simps]
 def restrict (f : ι →ᵇᵃ[I₀] M) (I : WithTop (Box ι)) (hI : I ≤ I₀) : ι →ᵇᵃ[I] M :=
   ⟨f, fun J hJ => f.2 J (hJ.trans hI)⟩
+#align box_integral.box_additive_map.restrict BoxIntegral.BoxAdditiveMap.restrict
 
 /-- If `f : box ι → M` is box additive on partitions of the form `split I i x`, then it is box
 additive. -/
@@ -140,6 +148,7 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
   rcases hπ.exists_split_many_le with ⟨s, hs⟩
   rw [← hf _ hI, ← inf_of_le_right hs, inf_split_many, bUnion_boxes, sum_bUnion_boxes]
   exact Finset.sum_congr rfl fun J hJ => (hf _ (Hle _ hJ) _).symm
+#align box_integral.box_additive_map.of_map_split_add BoxIntegral.BoxAdditiveMap.ofMapSplitAdd
 
 /-- If `g : M → N` is an additive map and `f` is a box additive map, then `g ∘ f` is a box additive
 map. -/
@@ -147,6 +156,7 @@ map. -/
 def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) : ι →ᵇᵃ[I₀] N where
   toFun := g ∘ f
   sum_partition_boxes' I hI π hπ := by rw [← g.map_sum, f.sum_partition_boxes hI hπ]
+#align box_integral.box_additive_map.map BoxIntegral.BoxAdditiveMap.map
 
 /-- If `f` is a box additive function on subboxes of `I` and `π₁`, `π₂` are two prepartitions of
 `I` that cover the same part of `I`, then `∑ J in π₁.boxes, f J = ∑ J in π₂.boxes, f J`. -/
@@ -166,6 +176,7 @@ theorem sum_boxes_congr [Finite ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I�
     _ = ∑ J in π₂.boxes, f J := Finset.sum_congr rfl fun J hJ => f.sum_partition_boxes _ (is_partition_split_many _ _)
     
   exacts[(WithTop.coe_le_coe.2 <| π₁.le_of_mem hJ).trans hI, (WithTop.coe_le_coe.2 <| π₂.le_of_mem hJ).trans hI]
+#align box_integral.box_additive_map.sum_boxes_congr BoxIntegral.BoxAdditiveMap.sum_boxes_congr
 
 section ToSmul
 
@@ -175,10 +186,12 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 by `f I` as a continuous linear map from `E` to itself. -/
 def toSmul (f : ι →ᵇᵃ[I₀] ℝ) : ι →ᵇᵃ[I₀] E →L[ℝ] E :=
   f.map (ContinuousLinearMap.lsmul ℝ ℝ).toLinearMap.toAddMonoidHom
+#align box_integral.box_additive_map.to_smul BoxIntegral.BoxAdditiveMap.toSmul
 
 @[simp]
 theorem to_smul_apply (f : ι →ᵇᵃ[I₀] ℝ) (I : Box ι) (x : E) : f.toSmul I x = f I • x :=
   rfl
+#align box_integral.box_additive_map.to_smul_apply BoxIntegral.BoxAdditiveMap.to_smul_apply
 
 end ToSmul
 
@@ -212,6 +225,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
           update_comp_eq_of_injective _ i.succ_above.injective j x, ← hf]
         simp only [box.face]
         )
+#align box_integral.box_additive_map.upper_sub_lower BoxIntegral.BoxAdditiveMap.upperSubLower
 
 end BoxAdditiveMap
 

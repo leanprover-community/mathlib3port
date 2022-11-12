@@ -95,6 +95,7 @@ unsafe def equiv_congr_lemmas : List (tactic expr) :=
         `equiv.refl,
         `iff.refl].map
     fun n => mk_const n
+#align tactic.equiv_congr_lemmas tactic.equiv_congr_lemmas
 
 initialize
   registerTraceClass.1 `equiv_rw_type
@@ -108,6 +109,7 @@ initialize
 -/
 unsafe structure equiv_rw_cfg where
   max_depth : ℕ := 10
+#align tactic.equiv_rw_cfg tactic.equiv_rw_cfg
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -150,6 +152,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
                   let gs ← get_goals
                   let gs ← gs fun g => infer_type g >>= pp
                   trace f! "Attempting to adapt to {gs}" }
+#align tactic.equiv_rw_type_core tactic.equiv_rw_type_core
 
 /-- `equiv_rw_type e t` rewrites the type `t` using the equivalence `e : α ≃ β`,
 returning a new equivalence `t ≃ t'`.
@@ -160,7 +163,8 @@ unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic 
       let eqv_pp ← pp eqv
       let eqv_ty_pp ← infer_type eqv >>= pp
       trace f! "Attempting to rewrite the type `{ty_pp }` using `{eqv_pp } : {eqv_ty_pp}`."
-  let quote.1 (_ ≃ _) ← infer_type eqv | fail f! "{eqv} must be an `equiv`"
+  let quote.1 (_ ≃ _) ← infer_type eqv |
+    fail f! "{eqv} must be an `equiv`"
   let equiv_ty
     ←-- We prepare a synthetic goal of type `(%%ty ≃ _)`, for some placeholder right hand side.
         to_expr
@@ -187,6 +191,7 @@ unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic 
       -- to compress away some `map_equiv equiv.refl` subexpressions.
       Prod.fst <$>
       new_eqv { failIfUnchanged := ff }
+#align tactic.equiv_rw_type tactic.equiv_rw_type
 
 /- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 [PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
@@ -247,6 +252,7 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
             fail f! "equiv_rw expected to be able to clear the original hypothesis {x}, but couldn't."
       skip)
     { failIfUnchanged := false } true
+#align tactic.equiv_rw_hyp tactic.equiv_rw_hyp
 
 -- call `dsimp_result` with `no_defaults := tt`.
 /-- Rewrite the goal using an equiv `e`. -/
@@ -256,6 +262,7 @@ unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit
   let s ← to_expr (pquote.1 (Equiv.invFun (%%ₓe)))
   tactic.eapply s
   skip
+#align tactic.equiv_rw_target tactic.equiv_rw_target
 
 end Tactic
 
@@ -272,6 +279,7 @@ unsafe def equiv_rw_hyp_aux (hyp : Name) (cfg : equiv_rw_cfg) (permissive : Bool
   | e::t => do
     if permissive then equiv_rw_hyp hyp e cfg <|> skip else equiv_rw_hyp hyp e cfg
     equiv_rw_hyp_aux t
+#align tactic.interactive.equiv_rw_hyp_aux tactic.interactive.equiv_rw_hyp_aux
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary function to call `equiv_rw_target` on a `list pexpr` recursively. -/
@@ -280,6 +288,7 @@ unsafe def equiv_rw_target_aux (cfg : equiv_rw_cfg) (permissive : Bool) : List e
   | e::t => do
     if permissive then equiv_rw_target e cfg <|> skip else equiv_rw_target e cfg
     equiv_rw_target_aux t
+#align tactic.interactive.equiv_rw_target_aux tactic.interactive.equiv_rw_target_aux
 
 /-- `equiv_rw e at h₁ h₂ ⋯`, where each `hᵢ : α` is a hypothesis, and `e : α ≃ β`,
 will attempt to transport each `hᵢ` along `e`, producing a new hypothesis `hᵢ : β`,
@@ -319,6 +328,7 @@ unsafe def equiv_rw (l : parse pexpr_list_or_texpr) (locat : parse location) (cf
           | some hyp => equiv_rw_hyp_aux hyp cfg ff es
           | none => equiv_rw_target_aux cfg ff es
       skip
+#align tactic.interactive.equiv_rw tactic.interactive.equiv_rw
 
 add_tactic_doc
   { Name := "equiv_rw", category := DocCategory.tactic, declNames := [`tactic.interactive.equiv_rw],
@@ -334,9 +344,11 @@ have e' : option α ≃ option β := by equiv_rw_type e
 ```
 -/
 unsafe def equiv_rw_type (e : parse texpr) (cfg : equiv_rw_cfg := {  }) : itactic := do
-  let quote.1 ((%%ₓt) ≃ _) ← target | fail "`equiv_rw_type` solves goals of the form `t ≃ _`."
+  let quote.1 ((%%ₓt) ≃ _) ← target |
+    fail "`equiv_rw_type` solves goals of the form `t ≃ _`."
   let e ← to_expr e
   tactic.equiv_rw_type e t cfg >>= tactic.exact
+#align tactic.interactive.equiv_rw_type tactic.interactive.equiv_rw_type
 
 add_tactic_doc
   { Name := "equiv_rw_type", category := DocCategory.tactic, declNames := [`tactic.interactive.equiv_rw_type],

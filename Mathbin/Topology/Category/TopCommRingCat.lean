@@ -25,6 +25,7 @@ structure TopCommRingCat where
   [isCommRing : CommRing α]
   [isTopologicalSpace : TopologicalSpace α]
   [isTopologicalRing : TopologicalRing α]
+#align TopCommRing TopCommRingCat
 
 namespace TopCommRingCat
 
@@ -55,36 +56,46 @@ instance : ConcreteCategory TopCommRingCat.{u} where
 /-- Construct a bundled `TopCommRing` from the underlying type and the appropriate typeclasses. -/
 def of (X : Type u) [CommRing X] [TopologicalSpace X] [TopologicalRing X] : TopCommRingCat :=
   ⟨X⟩
+#align TopCommRing.of TopCommRingCat.of
 
 @[simp]
 theorem coe_of (X : Type u) [CommRing X] [TopologicalSpace X] [TopologicalRing X] : (of X : Type u) = X :=
   rfl
+#align TopCommRing.coe_of TopCommRingCat.coe_of
 
 instance forgetTopologicalSpace (R : TopCommRingCat) : TopologicalSpace ((forget TopCommRingCat).obj R) :=
   R.isTopologicalSpace
+#align TopCommRing.forget_topological_space TopCommRingCat.forgetTopologicalSpace
 
 instance forgetCommRing (R : TopCommRingCat) : CommRing ((forget TopCommRingCat).obj R) :=
   R.isCommRing
+#align TopCommRing.forget_comm_ring TopCommRingCat.forgetCommRing
 
 instance forgetTopologicalRing (R : TopCommRingCat) : TopologicalRing ((forget TopCommRingCat).obj R) :=
   R.isTopologicalRing
+#align TopCommRing.forget_topological_ring TopCommRingCat.forgetTopologicalRing
 
 instance hasForgetToCommRing : HasForget₂ TopCommRingCat CommRingCat :=
   HasForget₂.mk' (fun R => CommRingCat.of R) (fun x => rfl) (fun R S f => f.val) fun R S f => HEq.rfl
+#align TopCommRing.has_forget_to_CommRing TopCommRingCat.hasForgetToCommRing
 
 instance forgetToCommRingTopologicalSpace (R : TopCommRingCat) :
     TopologicalSpace ((forget₂ TopCommRingCat CommRingCat).obj R) :=
   R.isTopologicalSpace
+#align TopCommRing.forget_to_CommRing_topological_space TopCommRingCat.forgetToCommRingTopologicalSpace
 
 /-- The forgetful functor to Top. -/
 instance hasForgetToTop : HasForget₂ TopCommRingCat TopCat :=
   HasForget₂.mk' (fun R => TopCat.of R) (fun x => rfl) (fun R S f => ⟨⇑f.1, f.2⟩) fun R S f => HEq.rfl
+#align TopCommRing.has_forget_to_Top TopCommRingCat.hasForgetToTop
 
 instance forgetToTopCommRing (R : TopCommRingCat) : CommRing ((forget₂ TopCommRingCat TopCat).obj R) :=
   R.isCommRing
+#align TopCommRing.forget_to_Top_comm_ring TopCommRingCat.forgetToTopCommRing
 
 instance forgetToTopTopologicalRing (R : TopCommRingCat) : TopologicalRing ((forget₂ TopCommRingCat TopCat).obj R) :=
   R.isTopologicalRing
+#align TopCommRing.forget_to_Top_topological_ring TopCommRingCat.forgetToTopTopologicalRing
 
 /-- The forgetful functors to `Type` do not reflect isomorphisms,
 but the forgetful functor from `TopCommRing` to `Top` does.

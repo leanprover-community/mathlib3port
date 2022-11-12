@@ -56,12 +56,14 @@ Use `coe` instead of `rat.cast_rec` for better definitional behaviour.
 -/
 def Rat.castRec [HasLiftT ℕ K] [HasLiftT ℤ K] [Mul K] [Inv K] : ℚ → K
   | ⟨a, b, _, _⟩ => ↑a * (↑b)⁻¹
+#align rat.cast_rec Rat.castRec
 
 /-- Type class for the canonical homomorphism `ℚ → K`.
 -/
 @[protect_proj]
 class HasRatCast (K : Type u) where
   ratCast : ℚ → K
+#align has_rat_cast HasRatCast
 
 /-- The default definition of the scalar multiplication `(a : ℚ) • (x : K)` for a division ring `K`
 is given by `a • x = (↑ a) * x`.
@@ -69,10 +71,12 @@ Use `(a : ℚ) • (x : K)` instead of `qsmul_rec` for better definitional behav
 -/
 def qsmulRec (coe : ℚ → K) [Mul K] (a : ℚ) (x : K) : K :=
   coe a * x
+#align qsmul_rec qsmulRec
 
 /-- A `division_semiring` is a `semiring` with multiplicative inverses for nonzero elements. -/
 @[protect_proj]
 class DivisionSemiring (α : Type _) extends Semiring α, GroupWithZero α
+#align division_semiring DivisionSemiring
 
 /-- A `division_ring` is a `ring` with multiplicative inverses for nonzero elements.
 
@@ -96,14 +100,17 @@ class DivisionRing (K : Type u) extends Ring K, DivInvMonoid K, Nontrivial K, Ha
   qsmul_eq_mul' : ∀ (a : ℚ) (x : K), qsmul a x = rat_cast a * x := by
     intros
     rfl
+#align division_ring DivisionRing
 
 -- see Note [lower instance priority]
 instance (priority := 100) DivisionRing.toDivisionSemiring [DivisionRing α] : DivisionSemiring α :=
   { ‹DivisionRing α›, (inferInstance : Semiring α) with }
+#align division_ring.to_division_semiring DivisionRing.toDivisionSemiring
 
 /-- A `semifield` is a `comm_semiring` with multiplicative inverses for nonzero elements. -/
 @[protect_proj]
 class Semifield (α : Type _) extends CommSemiring α, DivisionSemiring α, CommGroupWithZero α
+#align semifield Semifield
 
 /-- A `field` is a `comm_ring` with multiplicative inverses for nonzero elements.
 
@@ -117,6 +124,7 @@ See also Note [forgetful inheritance].
 -/
 @[protect_proj]
 class Field (K : Type u) extends CommRing K, DivisionRing K
+#align field Field
 
 section DivisionRing
 
@@ -131,18 +139,23 @@ namespace Rat
   division by zero convention. -/
 instance (priority := 900) castCoe {K : Type _} [HasRatCast K] : CoeTC ℚ K :=
   ⟨HasRatCast.ratCast⟩
+#align rat.cast_coe Rat.castCoe
 
 theorem cast_mk' (a b h1 h2) : ((⟨a, b, h1, h2⟩ : ℚ) : K) = a * b⁻¹ :=
   DivisionRing.rat_cast_mk _ _ _ _
+#align rat.cast_mk' Rat.cast_mk'
 
 theorem cast_def : ∀ r : ℚ, (r : K) = r.num / r.denom
   | ⟨a, b, h1, h2⟩ => (cast_mk' _ _ _ _).trans (div_eq_mul_inv _ _).symm
+#align rat.cast_def Rat.cast_def
 
 instance (priority := 100) smulDivisionRing : HasSmul ℚ K :=
   ⟨DivisionRing.qsmul⟩
+#align rat.smul_division_ring Rat.smulDivisionRing
 
 theorem smul_def (a : ℚ) (x : K) : a • x = ↑a * x :=
   DivisionRing.qsmul_eq_mul' a x
+#align rat.smul_def Rat.smul_def
 
 end Rat
 
@@ -155,6 +168,7 @@ variable [Field K]
 -- see Note [lower instance priority]
 instance (priority := 100) Field.toSemifield : Semifield K :=
   { ‹Field K›, (inferInstance : Semiring K) with }
+#align field.to_semifield Field.toSemifield
 
 end Field
 
@@ -170,23 +184,28 @@ structure IsField (R : Type u) [Semiring R] : Prop where
   exists_pair_ne : ∃ x y : R, x ≠ y
   mul_comm : ∀ x y : R, x * y = y * x
   mul_inv_cancel : ∀ {a : R}, a ≠ 0 → ∃ b, a * b = 1
+#align is_field IsField
 
 /-- Transferring from `semifield` to `is_field`. -/
 theorem Semifield.toIsField (R : Type u) [Semifield R] : IsField R :=
   { ‹Semifield R› with mul_inv_cancel := fun a ha => ⟨a⁻¹, mul_inv_cancel ha⟩ }
+#align semifield.to_is_field Semifield.toIsField
 
 /-- Transferring from `field` to `is_field`. -/
 theorem Field.toIsField (R : Type u) [Field R] : IsField R :=
   Semifield.toIsField _
+#align field.to_is_field Field.toIsField
 
 @[simp]
 theorem IsField.nontrivial {R : Type u} [Semiring R] (h : IsField R) : Nontrivial R :=
   ⟨h.exists_pair_ne⟩
+#align is_field.nontrivial IsField.nontrivial
 
 @[simp]
 theorem not_is_field_of_subsingleton (R : Type u) [Semiring R] [Subsingleton R] : ¬IsField R := fun h =>
   let ⟨x, y, h⟩ := h.exists_pair_ne
   h (Subsingleton.elim _ _)
+#align not_is_field_of_subsingleton not_is_field_of_subsingleton
 
 open Classical
 
@@ -197,10 +216,12 @@ noncomputable def IsField.toSemifield {R : Type u} [Semiring R] (h : IsField R) 
     mul_inv_cancel := fun a ha => by
       convert Classical.choose_spec (IsField.mul_inv_cancel h ha)
       exact dif_neg ha }
+#align is_field.to_semifield IsField.toSemifield
 
 /-- Transferring from `is_field` to `field`. -/
 noncomputable def IsField.toField {R : Type u} [Ring R] (h : IsField R) : Field R :=
   { ‹Ring R›, IsField.toSemifield h with }
+#align is_field.to_field IsField.toField
 
 /-- For each field, and for each nonzero element of said field, there is a unique inverse.
 Since `is_field` doesn't remember the data of an `inv` function and as such,
@@ -218,6 +239,7 @@ theorem uniq_inv_of_is_field (R : Type u) [Ring R] (hf : IsField R) : ∀ x : R,
       _ = z := by rw [hxy, one_mul]
       
     
+#align uniq_inv_of_is_field uniq_inv_of_is_field
 
 end IsField
 

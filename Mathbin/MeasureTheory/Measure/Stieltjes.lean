@@ -39,6 +39,7 @@ structure StieltjesFunction where
   toFun : ℝ → ℝ
   mono' : Monotone to_fun
   right_continuous' : ∀ x, ContinuousWithinAt to_fun (IciCat x) x
+#align stieltjes_function StieltjesFunction
 
 namespace StieltjesFunction
 
@@ -51,9 +52,11 @@ variable (f : StieltjesFunction)
 
 theorem mono : Monotone f :=
   f.mono'
+#align stieltjes_function.mono StieltjesFunction.mono
 
 theorem right_continuous (x : ℝ) : ContinuousWithinAt f (IciCat x) x :=
   f.right_continuous' x
+#align stieltjes_function.right_continuous StieltjesFunction.right_continuous
 
 /-- The identity of `ℝ` as a Stieltjes function, used to construct Lebesgue measure. -/
 @[simps]
@@ -61,11 +64,13 @@ protected def id : StieltjesFunction where
   toFun := id
   mono' x y := id
   right_continuous' x := continuous_within_at_id
+#align stieltjes_function.id StieltjesFunction.id
 
 @[simp]
 theorem id_left_lim (x : ℝ) : leftLim StieltjesFunction.id x = x :=
   tendsto_nhds_unique (StieltjesFunction.id.mono.tendsto_left_lim x) <|
     continuous_at_id.Tendsto.mono_left nhds_within_le_nhds
+#align stieltjes_function.id_left_lim StieltjesFunction.id_left_lim
 
 instance : Inhabited StieltjesFunction :=
   ⟨StieltjesFunction.id⟩
@@ -89,16 +94,19 @@ noncomputable def _root_.monotone.stieltjes_function {f : ℝ → ℝ} (hf : Mon
       right_lim f z ≤ f a := hf.right_lim_le za
       _ < u := (h'y ⟨hz.1.trans_lt za, ay.le⟩).2
       
+#align stieltjes_function._root_.monotone.stieltjes_function stieltjes_function._root_.monotone.stieltjes_function
 
 theorem _root_.monotone.stieltjes_function_eq {f : ℝ → ℝ} (hf : Monotone f) (x : ℝ) :
     hf.StieltjesFunction x = rightLim f x :=
   rfl
+#align stieltjes_function._root_.monotone.stieltjes_function_eq stieltjes_function._root_.monotone.stieltjes_function_eq
 
 theorem countable_left_lim_ne (f : StieltjesFunction) : Set.Countable { x | leftLim f x ≠ f x } := by
   apply countable.mono _ f.mono.countable_not_continuous_at
   intro x hx h'x
   apply hx
   exact tendsto_nhds_unique (f.mono.tendsto_left_lim x) (h'x.tendsto.mono_left nhds_within_le_nhds)
+#align stieltjes_function.countable_left_lim_ne StieltjesFunction.countable_left_lim_ne
 
 /-! ### The outer measure associated to a Stieltjes function -/
 
@@ -108,10 +116,12 @@ theorem countable_left_lim_ne (f : StieltjesFunction) : Set.Countable { x | left
 intervals. -/
 def length (s : Set ℝ) : ℝ≥0∞ :=
   ⨅ (a) (b) (h : s ⊆ IocCat a b), ofReal (f b - f a)
+#align stieltjes_function.length StieltjesFunction.length
 
 @[simp]
 theorem length_empty : f.length ∅ = 0 :=
   nonpos_iff_eq_zero.1 <| infi_le_of_le 0 <| infi_le_of_le 0 <| by simp
+#align stieltjes_function.length_empty StieltjesFunction.length_empty
 
 @[simp]
 theorem length_Ioc (a b : ℝ) : f.length (IocCat a b) = ofReal (f b - f a) := by
@@ -124,18 +134,22 @@ theorem length_Ioc (a b : ℝ) : f.length (IocCat a b) = ofReal (f b - f a) := b
     
   cases' (Ioc_subset_Ioc_iff ab).1 h with h₁ h₂
   exact Real.to_nnreal_le_to_nnreal (sub_le_sub (f.mono h₁) (f.mono h₂))
+#align stieltjes_function.length_Ioc StieltjesFunction.length_Ioc
 
 theorem length_mono {s₁ s₂ : Set ℝ} (h : s₁ ⊆ s₂) : f.length s₁ ≤ f.length s₂ :=
   infi_mono fun a => binfi_mono fun b => h.trans
+#align stieltjes_function.length_mono StieltjesFunction.length_mono
 
 open MeasureTheory
 
 /-- The Stieltjes outer measure associated to a Stieltjes function. -/
 protected def outer : OuterMeasure ℝ :=
   OuterMeasure.ofFunction f.length f.length_empty
+#align stieltjes_function.outer StieltjesFunction.outer
 
 theorem outer_le_length (s : Set ℝ) : f.outer s ≤ f.length s :=
   OuterMeasure.of_function_le _
+#align stieltjes_function.outer_le_length StieltjesFunction.outer_le_length
 
 /-- If a compact interval `[a, b]` is covered by a union of open interval `(c i, d i)`, then
 `f b - f a ≤ ∑ f (d i) - f (c i)`. This is an auxiliary technical statement to prove the same
@@ -176,6 +190,7 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : IccCat 
   · rintro x ⟨h₁, h₂⟩
     refine' (cv ⟨h₁, le_trans h₂ (le_of_lt cb)⟩).resolve_left (mt And.left (not_lt_of_le h₂))
     
+#align stieltjes_function.length_subadditive_Icc_Ioo StieltjesFunction.length_subadditive_Icc_Ioo
 
 @[simp]
 theorem outer_Ioc (a b : ℝ) : f.outer (IocCat a b) = ofReal (f b - f a) := by
@@ -237,6 +252,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (IocCat a b) = ofReal (f b - f a) := by
     _ ≤ (∑' i, f.length (s i)) + δ + δ := add_le_add (add_le_add le_rfl hε.le) le_rfl
     _ = (∑' i : ℕ, f.length (s i)) + ε := by simp [add_assoc, Ennreal.add_halves]
     
+#align stieltjes_function.outer_Ioc StieltjesFunction.outer_Ioc
 
 theorem measurableSetIoi {c : ℝ} : measurable_set[f.outer.caratheodory] (IoiCat c) := by
   apply outer_measure.of_function_caratheodory fun t => _
@@ -256,6 +272,7 @@ theorem measurableSetIoi {c : ℝ} : measurable_set[f.outer.caratheodory] (IoiCa
   · simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max, le_refl, Ioc_eq_empty,
       add_zero, max_eq_left, f.length_empty, not_lt]
     
+#align stieltjes_function.measurable_set_Ioi StieltjesFunction.measurableSetIoi
 
 theorem outer_trim : f.outer.trim = f.outer := by
   refine' le_antisymm (fun s => _) (outer_measure.le_trim _)
@@ -280,11 +297,13 @@ theorem outer_trim : f.outer.trim = f.outer := by
   apply infi_le_of_le (ht.trans <| Union_mono fun i => (hg i).1) _
   apply infi_le_of_le (MeasurableSet.union fun i => (hg i).2.1) _
   exact le_trans (f.outer.Union _) (Ennreal.tsum_le_tsum fun i => (hg i).2.2)
+#align stieltjes_function.outer_trim StieltjesFunction.outer_trim
 
 theorem borel_le_measurable : borel ℝ ≤ f.outer.caratheodory := by
   rw [borel_eq_generate_from_Ioi]
   refine' MeasurableSpace.generate_from_le _
   simp (config := { contextual := true }) [f.measurable_set_Ioi]
+#align stieltjes_function.borel_le_measurable StieltjesFunction.borel_le_measurable
 
 /-! ### The measure associated to a Stieltjes function -/
 
@@ -295,11 +314,13 @@ protected irreducible_def measure : Measure ℝ :=
   { toOuterMeasure := f.outer,
     m_Union := fun s hs => f.outer.Union_eq_of_caratheodory fun i => f.borel_le_measurable _ (hs i),
     trimmed := f.outer_trim }
+#align stieltjes_function.measure StieltjesFunction.measure
 
 @[simp]
 theorem measure_Ioc (a b : ℝ) : f.Measure (IocCat a b) = ofReal (f b - f a) := by
   rw [StieltjesFunction.measure]
   exact f.outer_Ioc a b
+#align stieltjes_function.measure_Ioc StieltjesFunction.measure_Ioc
 
 @[simp]
 theorem measure_singleton (a : ℝ) : f.Measure {a} = ofReal (f a - leftLim f a) := by
@@ -324,6 +345,7 @@ theorem measure_singleton (a : ℝ) : f.Measure {a} = ofReal (f a - leftLim f a)
       exact tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ u_lim (eventually_of_forall fun n => u_lt_a n)
     exact ennreal.continuous_of_real.continuous_at.tendsto.comp (tendsto_const_nhds.sub this)
   exact tendsto_nhds_unique L1 L2
+#align stieltjes_function.measure_singleton StieltjesFunction.measure_singleton
 
 @[simp]
 theorem measure_Icc (a b : ℝ) : f.Measure (IccCat a b) = ofReal (f b - leftLim f a) := by
@@ -336,6 +358,7 @@ theorem measure_Icc (a b : ℝ) : f.Measure (IccCat a b) = ofReal (f b - leftLim
     symm
     simp [Ennreal.of_real_eq_zero, f.mono.le_left_lim hab]
     
+#align stieltjes_function.measure_Icc StieltjesFunction.measure_Icc
 
 @[simp]
 theorem measure_Ioo {a b : ℝ} : f.Measure (IooCat a b) = ofReal (leftLim f b - f a) := by
@@ -357,6 +380,7 @@ theorem measure_Ioo {a b : ℝ} : f.Measure (IooCat a b) = ofReal (leftLim f b -
     · simp only [f.mono.le_left_lim hab, sub_nonneg]
       
     
+#align stieltjes_function.measure_Ioo StieltjesFunction.measure_Ioo
 
 @[simp]
 theorem measure_Ico (a b : ℝ) : f.Measure (IcoCat a b) = ofReal (leftLim f b - leftLim f a) := by
@@ -369,6 +393,7 @@ theorem measure_Ico (a b : ℝ) : f.Measure (IcoCat a b) = ofReal (leftLim f b -
     simp [← Icc_union_Ioo_eq_Ico le_rfl hab, -singleton_union, hab.ne, f.mono.left_lim_le,
       measure_union A measurableSetIoo, f.mono.le_left_lim hab, ← Ennreal.of_real_add]
     
+#align stieltjes_function.measure_Ico StieltjesFunction.measure_Ico
 
 instance : IsLocallyFiniteMeasure f.Measure :=
   ⟨fun x => ⟨IooCat (x - 1) (x + 1), Ioo_mem_nhds (by linarith) (by linarith), by simp⟩⟩

@@ -44,6 +44,7 @@ structure Triangle where mk' ::
   mor₁ : obj₁ ⟶ obj₂
   mor₂ : obj₂ ⟶ obj₃
   mor₃ : obj₃ ⟶ obj₁⟦(1 : ℤ)⟧
+#align category_theory.pretriangulated.triangle CategoryTheory.Pretriangulated.Triangle
 
 variable {C}
 
@@ -58,6 +59,7 @@ def Triangle.mk {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ X⟦(1 : ℤ)
   mor₁ := f
   mor₂ := g
   mor₃ := h
+#align category_theory.pretriangulated.triangle.mk CategoryTheory.Pretriangulated.Triangle.mk
 
 section
 
@@ -73,6 +75,7 @@ instance : Inhabited (Triangle C) :=
 @[simps]
 def contractibleTriangle (X : C) : Triangle C :=
   Triangle.mk (𝟙 X) (0 : X ⟶ 0) 0
+#align category_theory.pretriangulated.contractible_triangle CategoryTheory.Pretriangulated.contractibleTriangle
 
 end
 
@@ -91,7 +94,7 @@ In other words, we have a commutative diagram:
 ```
 See <https://stacks.math.columbia.edu/tag/0144>.
 -/
-@[ext]
+@[ext.1]
 structure TriangleMorphism (T₁ : Triangle C) (T₂ : Triangle C) where
   hom₁ : T₁.obj₁ ⟶ T₂.obj₁
   hom₂ : T₁.obj₂ ⟶ T₂.obj₂
@@ -99,6 +102,7 @@ structure TriangleMorphism (T₁ : Triangle C) (T₂ : Triangle C) where
   comm₁' : T₁.mor₁ ≫ hom₂ = hom₁ ≫ T₂.mor₁ := by obviously
   comm₂' : T₁.mor₂ ≫ hom₃ = hom₂ ≫ T₂.mor₂ := by obviously
   comm₃' : T₁.mor₃ ≫ hom₁⟦1⟧' = hom₃ ≫ T₂.mor₃ := by obviously
+#align category_theory.pretriangulated.triangle_morphism CategoryTheory.Pretriangulated.TriangleMorphism
 
 restate_axiom triangle_morphism.comm₁'
 
@@ -115,6 +119,7 @@ def triangleMorphismId (T : Triangle C) : TriangleMorphism T T where
   hom₁ := 𝟙 T.obj₁
   hom₂ := 𝟙 T.obj₂
   hom₃ := 𝟙 T.obj₃
+#align category_theory.pretriangulated.triangle_morphism_id CategoryTheory.Pretriangulated.triangleMorphismId
 
 instance (T : Triangle C) : Inhabited (TriangleMorphism T T) :=
   ⟨triangleMorphismId T⟩
@@ -128,6 +133,7 @@ def TriangleMorphism.comp (f : TriangleMorphism T₁ T₂) (g : TriangleMorphism
   hom₁ := f.hom₁ ≫ g.hom₁
   hom₂ := f.hom₂ ≫ g.hom₂
   hom₃ := f.hom₃ ≫ g.hom₃
+#align category_theory.pretriangulated.triangle_morphism.comp CategoryTheory.Pretriangulated.TriangleMorphism.comp
 
 /-- Triangles with triangle morphisms form a category.
 -/
@@ -136,6 +142,7 @@ instance triangleCategory : Category (Triangle C) where
   Hom A B := TriangleMorphism A B
   id A := triangleMorphismId A
   comp A B C f g := f.comp g
+#align category_theory.pretriangulated.triangle_category CategoryTheory.Pretriangulated.triangleCategory
 
 end CategoryTheory.Pretriangulated
 

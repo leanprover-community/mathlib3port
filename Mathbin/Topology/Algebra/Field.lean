@@ -29,6 +29,7 @@ This is not a global instance since other topologies could be relevant. Instead 
 `induced_units` asserting that something equivalent to this construction holds. -/
 def topologicalSpaceUnits : TopologicalSpace Rˣ :=
   induced (coe : Rˣ → R) ‹_›
+#align topological_ring.topological_space_units TopologicalRing.topologicalSpaceUnits
 
 /-- Asserts the topology on units is the induced topology.
 
@@ -38,17 +39,21 @@ def topologicalSpaceUnits : TopologicalSpace Rˣ :=
  These topologies are not (propositionally) equal in general. -/
 class InducedUnits [t : TopologicalSpace <| Rˣ] : Prop where
   top_eq : t = induced (coe : Rˣ → R) ‹_›
+#align topological_ring.induced_units TopologicalRing.InducedUnits
 
 variable [TopologicalSpace <| Rˣ]
 
 theorem units_topology_eq [InducedUnits R] : ‹TopologicalSpace Rˣ› = induced (coe : Rˣ → R) ‹_› :=
   induced_units.top_eq
+#align topological_ring.units_topology_eq TopologicalRing.units_topology_eq
 
 theorem InducedUnits.continuous_coe [InducedUnits R] : Continuous (coe : Rˣ → R) :=
   (units_topology_eq R).symm ▸ continuous_induced_dom
+#align topological_ring.induced_units.continuous_coe TopologicalRing.InducedUnits.continuous_coe
 
 theorem units_embedding [InducedUnits R] : Embedding (coe : Rˣ → R) :=
   { induced := units_topology_eq R, inj := fun x y h => Units.ext h }
+#align topological_ring.units_embedding TopologicalRing.units_embedding
 
 instance top_monoid_units [TopologicalSemiring R] [InducedUnits R] : HasContinuousMul Rˣ :=
   ⟨by
@@ -59,6 +64,7 @@ instance top_monoid_units [TopologicalSemiring R] [InducedUnits R] : HasContinuo
     apply induced_mono
     rw [← continuous_iff_le_induced]
     exact continuous_mul⟩
+#align topological_ring.top_monoid_units TopologicalRing.top_monoid_units
 
 end TopologicalRing
 
@@ -69,18 +75,21 @@ inverse images of compact sets are compact. -/
 theorem Filter.tendsto_cocompact_mul_left₀ [HasContinuousMul K] {a : K} (ha : a ≠ 0) :
     Filter.Tendsto (fun x : K => a * x) (Filter.cocompact K) (Filter.cocompact K) :=
   Filter.tendsto_cocompact_mul_left (inv_mul_cancel ha)
+#align filter.tendsto_cocompact_mul_left₀ Filter.tendsto_cocompact_mul_left₀
 
 /-- Right-multiplication by a nonzero element of a topological division ring is proper, i.e.,
 inverse images of compact sets are compact. -/
 theorem Filter.tendsto_cocompact_mul_right₀ [HasContinuousMul K] {a : K} (ha : a ≠ 0) :
     Filter.Tendsto (fun x : K => x * a) (Filter.cocompact K) (Filter.cocompact K) :=
   Filter.tendsto_cocompact_mul_right (mul_inv_cancel ha)
+#align filter.tendsto_cocompact_mul_right₀ Filter.tendsto_cocompact_mul_right₀
 
 variable (K)
 
 /-- A topological division ring is a division ring with a topology where all operations are
     continuous, including inversion. -/
 class TopologicalDivisionRing extends TopologicalRing K, HasContinuousInv₀ K : Prop
+#align topological_division_ring TopologicalDivisionRing
 
 namespace TopologicalDivisionRing
 
@@ -102,6 +111,7 @@ attribute [local instance] TopologicalRing.topologicalSpaceUnits
 
 instance (priority := 100) induced_units : TopologicalRing.InducedUnits K :=
   ⟨rfl⟩
+#align topological_division_ring.induced_units TopologicalDivisionRing.induced_units
 
 variable [TopologicalDivisionRing K]
 
@@ -114,11 +124,13 @@ theorem units_top_group : TopologicalGroup Kˣ :=
       apply comap_mono
       rw [← tendsto_iff_comap, Units.coe_inv]
       exact continuous_at_inv₀ x.ne_zero }
+#align topological_division_ring.units_top_group TopologicalDivisionRing.units_top_group
 
 attribute [local instance] units_top_group
 
 theorem continuous_units_inv : Continuous fun x : Kˣ => (↑x⁻¹ : K) :=
   (TopologicalRing.InducedUnits.continuous_coe K).comp continuous_inv
+#align topological_division_ring.continuous_units_inv TopologicalDivisionRing.continuous_units_inv
 
 end TopologicalDivisionRing
 
@@ -143,6 +155,7 @@ def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) : 𝕜 ≃ₜ 𝕜 where
     simp only [add_sub_cancel]
     exact mul_div_cancel_left x h
   right_inv y := by simp [mul_div_cancel' _ h]
+#align affine_homeomorph affineHomeomorph
 
 end affineHomeomorph
 
@@ -154,6 +167,7 @@ open TopologicalSpace
 
 theorem IsLocalMin.inv {f : α → β} {a : α} (h1 : IsLocalMin f a) (h2 : ∀ᶠ z in 𝓝 a, 0 < f z) : IsLocalMax f⁻¹ a := by
   filter_upwards [h1, h2] with z h3 h4 using(inv_le_inv h4 h2.self_of_nhds).mpr h3
+#align is_local_min.inv IsLocalMin.inv
 
 end LocalExtr
 

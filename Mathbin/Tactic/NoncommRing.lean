@@ -20,6 +20,7 @@ by noncomm_ring
 -/
 unsafe def noncomm_ring :=
   sorry
+#align tactic.interactive.noncomm_ring tactic.interactive.noncomm_ring
 
 -- Expand everything out.
 -- Right associate all products.

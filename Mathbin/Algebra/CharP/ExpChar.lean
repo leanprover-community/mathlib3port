@@ -39,6 +39,7 @@ variable [Semiring R]
 class inductive ExpChar (R : Type u) [Semiring R] : ℕ → Prop
   | zero [CharZero R] : ExpChar 1
   | Prime {q : ℕ} (hprime : q.Prime) [hchar : CharP R q] : ExpChar q
+#align exp_char ExpChar
 
 /-- The exponential characteristic is one if the characteristic is zero. -/
 theorem exp_char_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] : q = 1 := by
@@ -47,6 +48,7 @@ theorem exp_char_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] 
     
   · exact False.elim (lt_irrefl _ ((hp.eq R hq_hchar).symm ▸ hq_prime : (0 : ℕ).Prime).Pos)
     
+#align exp_char_one_of_char_zero exp_char_one_of_char_zero
 
 /-- The characteristic equals the exponential characteristic iff the former is prime. -/
 theorem char_eq_exp_char_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p = q ↔ p.Prime := by
@@ -62,6 +64,7 @@ theorem char_eq_exp_char_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p
     
   · exact ⟨fun hpq => hpq.symm ▸ hq_prime, fun _ => CharP.eq R hp hq_hchar⟩
     
+#align char_eq_exp_char_iff char_eq_exp_char_iff
 
 section Nontrivial
 
@@ -74,6 +77,7 @@ theorem char_zero_of_exp_char_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] 
     
   · exact False.elim (CharP.char_ne_one R 1 rfl)
     
+#align char_zero_of_exp_char_one char_zero_of_exp_char_one
 
 -- see Note [lower instance priority]
 /-- The characteristic is zero if the exponential characteristic is one. -/
@@ -83,6 +87,7 @@ instance (priority := 100) char_zero_of_exp_char_one' [hq : ExpChar R 1] : CharZ
     
   · exact False.elim (CharP.char_ne_one R 1 rfl)
     
+#align char_zero_of_exp_char_one' char_zero_of_exp_char_one'
 
 /-- The exponential characteristic is one iff the characteristic is zero. -/
 theorem exp_char_one_iff_char_zero (p q : ℕ) [CharP R p] [ExpChar R q] : q = 1 ↔ p = 0 := by
@@ -93,6 +98,7 @@ theorem exp_char_one_iff_char_zero (p q : ℕ) [CharP R p] [ExpChar R q] : q = 1
   · rintro rfl
     exact exp_char_one_of_char_zero R q
     
+#align exp_char_one_iff_char_zero exp_char_one_iff_char_zero
 
 section NoZeroDivisors
 
@@ -105,6 +111,7 @@ theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) :
     
   · contradiction
     
+#align char_prime_of_ne_zero char_prime_of_ne_zero
 
 /-- The exponential characteristic is a prime number or one. -/
 theorem exp_char_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q = 1 :=
@@ -121,6 +128,7 @@ theorem exp_char_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ 
       
     · contradiction
       
+#align exp_char_is_prime_or_one exp_char_is_prime_or_one
 
 end NoZeroDivisors
 

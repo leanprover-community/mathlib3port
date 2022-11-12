@@ -37,6 +37,7 @@ This combines `distrib_mul_action` with `mul_distrib_mul_action`. -/
 class MulSemiringAction (M : Type u) (R : Type v) [Monoid M] [Semiring R] extends DistribMulAction M R where
   smul_one : ∀ g : M, (g • 1 : R) = 1
   smul_mul : ∀ (g : M) (x y : R), g • (x * y) = g • x * g • y
+#align mul_semiring_action MulSemiringAction
 
 section Semiring
 
@@ -48,20 +49,24 @@ variable (A R S F : Type v) [AddMonoid A] [Semiring R] [CommSemiring S] [Divisio
 instance (priority := 100) MulSemiringAction.toMulDistribMulAction [h : MulSemiringAction M R] :
     MulDistribMulAction M R :=
   { h with }
+#align mul_semiring_action.to_mul_distrib_mul_action MulSemiringAction.toMulDistribMulAction
 
 /-- Each element of the monoid defines a semiring homomorphism. -/
 @[simps]
 def MulSemiringAction.toRingHom [MulSemiringAction M R] (x : M) : R →+* R :=
   { MulDistribMulAction.toMonoidHom R x, DistribMulAction.toAddMonoidHom R x with }
+#align mul_semiring_action.to_ring_hom MulSemiringAction.toRingHom
 
 theorem to_ring_hom_injective [MulSemiringAction M R] [HasFaithfulSmul M R] :
     Function.Injective (MulSemiringAction.toRingHom M R) := fun m₁ m₂ h =>
   eq_of_smul_eq_smul fun r => RingHom.ext_iff.1 h r
+#align to_ring_hom_injective to_ring_hom_injective
 
 /-- Each element of the group defines a semiring isomorphism. -/
 @[simps]
 def MulSemiringAction.toRingEquiv [MulSemiringAction G R] (x : G) : R ≃+* R :=
   { DistribMulAction.toAddEquiv R x, MulSemiringAction.toRingHom G R x with }
+#align mul_semiring_action.to_ring_equiv MulSemiringAction.toRingEquiv
 
 section
 
@@ -72,6 +77,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 def MulSemiringAction.compHom (f : N →* M) [MulSemiringAction M R] : MulSemiringAction N R :=
   { DistribMulAction.compHom R f, MulDistribMulAction.compHom R f with smul := HasSmul.Comp.smul f }
+#align mul_semiring_action.comp_hom MulSemiringAction.compHom
 
 end
 
@@ -82,19 +88,23 @@ variable {M G R}
 /-- A stronger version of `submonoid.distrib_mul_action`. -/
 instance Submonoid.mulSemiringAction [MulSemiringAction M R] (H : Submonoid M) : MulSemiringAction H R :=
   { H.MulDistribMulAction, H.DistribMulAction with smul := (· • ·) }
+#align submonoid.mul_semiring_action Submonoid.mulSemiringAction
 
 /-- A stronger version of `subgroup.distrib_mul_action`. -/
 instance Subgroup.mulSemiringAction [MulSemiringAction G R] (H : Subgroup G) : MulSemiringAction H R :=
   H.toSubmonoid.MulSemiringAction
+#align subgroup.mul_semiring_action Subgroup.mulSemiringAction
 
 /-- A stronger version of `subsemiring.distrib_mul_action`. -/
 instance Subsemiring.mulSemiringAction {R'} [Semiring R'] [MulSemiringAction R' R] (H : Subsemiring R') :
     MulSemiringAction H R :=
   H.toSubmonoid.MulSemiringAction
+#align subsemiring.mul_semiring_action Subsemiring.mulSemiringAction
 
 /-- A stronger version of `subring.distrib_mul_action`. -/
 instance Subring.mulSemiringAction {R'} [Ring R'] [MulSemiringAction R' R] (H : Subring R') : MulSemiringAction H R :=
   H.toSubsemiring.MulSemiringAction
+#align subring.mul_semiring_action Subring.mulSemiringAction
 
 end
 
@@ -109,6 +119,7 @@ on `x`. -/
 @[simp]
 theorem smul_inv'' [MulSemiringAction M F] (x : M) (m : F) : x • m⁻¹ = (x • m)⁻¹ :=
   map_inv₀ (MulSemiringAction.toRingHom M F x) _
+#align smul_inv'' smul_inv''
 
 end SimpLemmas
 
@@ -125,6 +136,7 @@ open MulAction
 /-- A typeclass for subrings invariant under a `mul_semiring_action`. -/
 class IsInvariantSubring : Prop where
   smul_mem : ∀ (m : M) {x : R}, x ∈ S → m • x ∈ S
+#align is_invariant_subring IsInvariantSubring
 
 instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSemiringAction M S where
   smul m x := ⟨m • x, IsInvariantSubring.smul_mem m x.2⟩
@@ -134,6 +146,7 @@ instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSe
   smul_zero m := Subtype.eq <| smul_zero m
   smul_one m := Subtype.eq <| smul_one m
   smul_mul m s₁ s₂ := Subtype.eq <| smul_mul' m s₁ s₂
+#align is_invariant_subring.to_mul_semiring_action IsInvariantSubring.toMulSemiringAction
 
 end Ring
 

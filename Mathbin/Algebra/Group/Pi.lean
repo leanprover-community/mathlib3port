@@ -32,31 +32,38 @@ variable (x y : ∀ i, f i) (i : I)
 theorem Set.preimage_one {α β : Type _} [One β] (s : Set β) [Decidable ((1 : β) ∈ s)] :
     (1 : α → β) ⁻¹' s = if (1 : β) ∈ s then Set.Univ else ∅ :=
   Set.preimage_const 1 s
+#align set.preimage_one Set.preimage_one
 
 namespace Pi
 
 @[to_additive]
 instance semigroup [∀ i, Semigroup <| f i] : Semigroup (∀ i : I, f i) := by
   refine_struct { mul := (· * ·).. } <;> pi_instance_derive_field
+#align pi.semigroup Pi.semigroup
 
 instance semigroupWithZero [∀ i, SemigroupWithZero <| f i] : SemigroupWithZero (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), mul := (· * ·).. } <;> pi_instance_derive_field
+#align pi.semigroup_with_zero Pi.semigroupWithZero
 
 @[to_additive]
 instance commSemigroup [∀ i, CommSemigroup <| f i] : CommSemigroup (∀ i : I, f i) := by
   refine_struct { mul := (· * ·).. } <;> pi_instance_derive_field
+#align pi.comm_semigroup Pi.commSemigroup
 
 @[to_additive]
 instance mulOneClass [∀ i, MulOneClass <| f i] : MulOneClass (∀ i : I, f i) := by
   refine_struct { one := (1 : ∀ i, f i), mul := (· * ·).. } <;> pi_instance_derive_field
+#align pi.mul_one_class Pi.mulOneClass
 
 @[to_additive]
 instance monoid [∀ i, Monoid <| f i] : Monoid (∀ i : I, f i) := by
   refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := fun n x i => x i ^ n } <;> pi_instance_derive_field
+#align pi.monoid Pi.monoid
 
 @[to_additive]
 instance commMonoid [∀ i, CommMonoid <| f i] : CommMonoid (∀ i : I, f i) := by
   refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoid.npow } <;> pi_instance_derive_field
+#align pi.comm_monoid Pi.commMonoid
 
 @[to_additive Pi.subNegMonoid]
 instance [∀ i, DivInvMonoid <| f i] : DivInvMonoid (∀ i : I, f i) := by
@@ -86,6 +93,7 @@ instance group [∀ i, Group <| f i] : Group (∀ i : I, f i) := by
       { one := (1 : ∀ i, f i), mul := (· * ·), inv := Inv.inv, div := Div.div, npow := Monoid.npow,
         zpow := DivInvMonoid.zpow } <;>
     pi_instance_derive_field
+#align pi.group Pi.group
 
 @[to_additive]
 instance commGroup [∀ i, CommGroup <| f i] : CommGroup (∀ i : I, f i) := by
@@ -93,44 +101,55 @@ instance commGroup [∀ i, CommGroup <| f i] : CommGroup (∀ i : I, f i) := by
       { one := (1 : ∀ i, f i), mul := (· * ·), inv := Inv.inv, div := Div.div, npow := Monoid.npow,
         zpow := DivInvMonoid.zpow } <;>
     pi_instance_derive_field
+#align pi.comm_group Pi.commGroup
 
 @[to_additive AddLeftCancelSemigroup]
 instance leftCancelSemigroup [∀ i, LeftCancelSemigroup <| f i] : LeftCancelSemigroup (∀ i : I, f i) := by
   refine_struct { mul := (· * ·) } <;> pi_instance_derive_field
+#align pi.left_cancel_semigroup Pi.leftCancelSemigroup
 
 @[to_additive AddRightCancelSemigroup]
 instance rightCancelSemigroup [∀ i, RightCancelSemigroup <| f i] : RightCancelSemigroup (∀ i : I, f i) := by
   refine_struct { mul := (· * ·) } <;> pi_instance_derive_field
+#align pi.right_cancel_semigroup Pi.rightCancelSemigroup
 
 @[to_additive AddLeftCancelMonoid]
 instance leftCancelMonoid [∀ i, LeftCancelMonoid <| f i] : LeftCancelMonoid (∀ i : I, f i) := by
   refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoid.npow } <;> pi_instance_derive_field
+#align pi.left_cancel_monoid Pi.leftCancelMonoid
 
 @[to_additive AddRightCancelMonoid]
 instance rightCancelMonoid [∀ i, RightCancelMonoid <| f i] : RightCancelMonoid (∀ i : I, f i) := by
   refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoid.npow.. } <;> pi_instance_derive_field
+#align pi.right_cancel_monoid Pi.rightCancelMonoid
 
 @[to_additive AddCancelMonoid]
 instance cancelMonoid [∀ i, CancelMonoid <| f i] : CancelMonoid (∀ i : I, f i) := by
   refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoid.npow } <;> pi_instance_derive_field
+#align pi.cancel_monoid Pi.cancelMonoid
 
 @[to_additive AddCancelCommMonoid]
 instance cancelCommMonoid [∀ i, CancelCommMonoid <| f i] : CancelCommMonoid (∀ i : I, f i) := by
   refine_struct { one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoid.npow } <;> pi_instance_derive_field
+#align pi.cancel_comm_monoid Pi.cancelCommMonoid
 
 instance mulZeroClass [∀ i, MulZeroClass <| f i] : MulZeroClass (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), mul := (· * ·).. } <;> pi_instance_derive_field
+#align pi.mul_zero_class Pi.mulZeroClass
 
 instance mulZeroOneClass [∀ i, MulZeroOneClass <| f i] : MulZeroOneClass (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := (· * ·).. } <;> pi_instance_derive_field
+#align pi.mul_zero_one_class Pi.mulZeroOneClass
 
 instance monoidWithZero [∀ i, MonoidWithZero <| f i] : MonoidWithZero (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoid.npow } <;>
     pi_instance_derive_field
+#align pi.monoid_with_zero Pi.monoidWithZero
 
 instance commMonoidWithZero [∀ i, CommMonoidWithZero <| f i] : CommMonoidWithZero (∀ i : I, f i) := by
   refine_struct { zero := (0 : ∀ i, f i), one := (1 : ∀ i, f i), mul := (· * ·), npow := Monoid.npow } <;>
     pi_instance_derive_field
+#align pi.comm_monoid_with_zero Pi.commMonoidWithZero
 
 end Pi
 
@@ -139,6 +158,7 @@ namespace MulHom
 @[to_additive]
 theorem coe_mul {M N} {mM : Mul M} {mN : CommSemigroup N} (f g : M →ₙ* N) : (f * g : M → N) = fun x => f x * g x :=
   rfl
+#align mul_hom.coe_mul MulHom.coe_mul
 
 end MulHom
 
@@ -155,12 +175,14 @@ This is `function.eval i` as a `mul_hom`. -/
 def Pi.evalMulHom (i : I) : (∀ i, f i) →ₙ* f i where
   toFun g := g i
   map_mul' x y := Pi.mul_apply _ _ i
+#align pi.eval_mul_hom Pi.evalMulHom
 
 /-- `function.const` as a `mul_hom`. -/
 @[to_additive "`function.const` as an `add_hom`.", simps]
 def Pi.constMulHom (α β : Type _) [Mul β] : β →ₙ* α → β where
   toFun := Function.const α
   map_mul' _ _ := rfl
+#align pi.const_mul_hom Pi.constMulHom
 
 /-- Coercion of a `mul_hom` into a function is itself a `mul_hom`.
 See also `mul_hom.eval`. -/
@@ -168,6 +190,7 @@ See also `mul_hom.eval`. -/
 def MulHom.coeFn (α β : Type _) [Mul α] [CommSemigroup β] : (α →ₙ* β) →ₙ* α → β where
   toFun g := g
   map_mul' x y := rfl
+#align mul_hom.coe_fn MulHom.coeFn
 
 /-- Semigroup homomorphism between the function spaces `I → α` and `I → β`, induced by a semigroup
 homomorphism `f` between `α` and `β`. -/
@@ -177,6 +200,7 @@ homomorphism `f` between `α` and `β`. -/
 protected def MulHom.compLeft {α β : Type _} [Mul α] [Mul β] (f : α →ₙ* β) (I : Type _) : (I → α) →ₙ* I → β where
   toFun h := f ∘ h
   map_mul' _ _ := by ext <;> simp
+#align mul_hom.comp_left MulHom.compLeft
 
 end MulHom
 
@@ -194,6 +218,7 @@ def Pi.evalMonoidHom (i : I) : (∀ i, f i) →* f i where
   toFun g := g i
   map_one' := Pi.one_apply i
   map_mul' x y := Pi.mul_apply _ _ i
+#align pi.eval_monoid_hom Pi.evalMonoidHom
 
 /-- `function.const` as a `monoid_hom`. -/
 @[to_additive "`function.const` as an `add_monoid_hom`.", simps]
@@ -201,6 +226,7 @@ def Pi.constMonoidHom (α β : Type _) [MulOneClass β] : β →* α → β wher
   toFun := Function.const α
   map_one' := rfl
   map_mul' _ _ := rfl
+#align pi.const_monoid_hom Pi.constMonoidHom
 
 /-- Coercion of a `monoid_hom` into a function is itself a `monoid_hom`.
 
@@ -212,6 +238,7 @@ def MonoidHom.coeFn (α β : Type _) [MulOneClass α] [CommMonoid β] : (α →*
   toFun g := g
   map_one' := rfl
   map_mul' x y := rfl
+#align monoid_hom.coe_fn MonoidHom.coeFn
 
 /-- Monoid homomorphism between the function spaces `I → α` and `I → β`, induced by a monoid
 homomorphism `f` between `α` and `β`. -/
@@ -223,6 +250,7 @@ protected def MonoidHom.compLeft {α β : Type _} [MulOneClass α] [MulOneClass 
   toFun h := f ∘ h
   map_one' := by ext <;> simp
   map_mul' _ _ := by ext <;> simp
+#align monoid_hom.comp_left MonoidHom.compLeft
 
 end MonoidHom
 
@@ -243,10 +271,12 @@ This is the `one_hom` version of `pi.mul_single`. -/
 def OneHom.single [∀ i, One <| f i] (i : I) : OneHom (f i) (∀ i, f i) where
   toFun := mulSingle i
   map_one' := mul_single_one i
+#align one_hom.single OneHom.single
 
 @[simp, to_additive]
 theorem OneHom.single_apply [∀ i, One <| f i] (i : I) (x : f i) : OneHom.single f i x = mulSingle i x :=
   rfl
+#align one_hom.single_apply OneHom.single_apply
 
 /-- The monoid homomorphism including a single monoid into a dependent family of additive monoids,
 as functions supported at a point.
@@ -256,10 +286,12 @@ This is the `monoid_hom` version of `pi.mul_single`. -/
       "The additive monoid homomorphism including a single additive\nmonoid into a dependent family of additive monoids, as functions supported at a point.\n\nThis is the `add_monoid_hom` version of `pi.single`."]
 def MonoidHom.single [∀ i, MulOneClass <| f i] (i : I) : f i →* ∀ i, f i :=
   { OneHom.single f i with map_mul' := mul_single_op₂ (fun _ => (· * ·)) (fun _ => one_mul _) _ }
+#align monoid_hom.single MonoidHom.single
 
 @[simp, to_additive]
 theorem MonoidHom.single_apply [∀ i, MulOneClass <| f i] (i : I) (x : f i) : MonoidHom.single f i x = mulSingle i x :=
   rfl
+#align monoid_hom.single_apply MonoidHom.single_apply
 
 /-- The multiplicative homomorphism including a single `mul_zero_class`
 into a dependent family of `mul_zero_class`es, as functions supported at a point.
@@ -269,6 +301,7 @@ This is the `mul_hom` version of `pi.single`. -/
 def MulHom.single [∀ i, MulZeroClass <| f i] (i : I) : f i →ₙ* ∀ i, f i where
   toFun := single i
   map_mul' := Pi.single_op₂ (fun _ => (· * ·)) (fun _ => zero_mul _) _
+#align mul_hom.single MulHom.single
 
 variable {f}
 
@@ -276,17 +309,21 @@ variable {f}
 theorem Pi.mul_single_mul [∀ i, MulOneClass <| f i] (i : I) (x y : f i) :
     mulSingle i (x * y) = mulSingle i x * mulSingle i y :=
   (MonoidHom.single f i).map_mul x y
+#align pi.mul_single_mul Pi.mul_single_mul
 
 @[to_additive]
 theorem Pi.mul_single_inv [∀ i, Group <| f i] (i : I) (x : f i) : mulSingle i x⁻¹ = (mulSingle i x)⁻¹ :=
   (MonoidHom.single f i).map_inv x
+#align pi.mul_single_inv Pi.mul_single_inv
 
 @[to_additive]
 theorem Pi.single_div [∀ i, Group <| f i] (i : I) (x y : f i) : mulSingle i (x / y) = mulSingle i x / mulSingle i y :=
   (MonoidHom.single f i).map_div x y
+#align pi.single_div Pi.single_div
 
 theorem Pi.single_mul [∀ i, MulZeroClass <| f i] (i : I) (x y : f i) : single i (x * y) = single i x * single i y :=
   (MulHom.single f i).map_mul x y
+#align pi.single_mul Pi.single_mul
 
 /-- The injection into a pi group at different indices commutes.
 
@@ -306,6 +343,7 @@ theorem Pi.mul_single_commute [∀ i, MulOneClass <| f i] :
     simp [hij]
     
   simp [h1, h2]
+#align pi.mul_single_commute Pi.mul_single_commute
 
 /-- The injection into a pi group with the same values commutes. -/
 @[to_additive "The injection into an additive pi group with the same values commutes."]
@@ -316,6 +354,7 @@ theorem Pi.mul_single_apply_commute [∀ i, MulOneClass <| f i] (x : ∀ i, f i)
     
   · exact Pi.mul_single_commute hij _ _
     
+#align pi.mul_single_apply_commute Pi.mul_single_apply_commute
 
 @[to_additive update_eq_sub_add_single]
 theorem Pi.update_eq_div_mul_single [∀ i, Group <| f i] (g : ∀ i : I, f i) (x : f i) :
@@ -326,6 +365,7 @@ theorem Pi.update_eq_div_mul_single [∀ i, Group <| f i] (g : ∀ i : I, f i) (
     
   · simp [Function.update_noteq h.symm, h]
     
+#align pi.update_eq_div_mul_single Pi.update_eq_div_mul_single
 
 @[to_additive Pi.single_add_single_eq_single_add_single]
 theorem Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single {M : Type _} [CommMonoid M] {k l m n : I} {u v : M}
@@ -371,6 +411,8 @@ theorem Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single {M : Type _} [
     · simp_rw [← Pi.mul_single_mul, h, mul_single_one]
       
     
+#align
+  pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single Pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single
 
 end Single
 
@@ -379,31 +421,37 @@ namespace Function
 @[simp, to_additive]
 theorem update_one [∀ i, One (f i)] [DecidableEq I] (i : I) : update (1 : ∀ i, f i) i 1 = 1 :=
   update_eq_self i 1
+#align function.update_one Function.update_one
 
 @[to_additive]
 theorem update_mul [∀ i, Mul (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (i : I) (x₁ : f i) (x₂ : f i) :
     update (f₁ * f₂) i (x₁ * x₂) = update f₁ i x₁ * update f₂ i x₂ :=
   funext fun j => (apply_update₂ (fun i => (· * ·)) f₁ f₂ i x₁ x₂ j).symm
+#align function.update_mul Function.update_mul
 
 @[to_additive]
 theorem update_inv [∀ i, Inv (f i)] [DecidableEq I] (f₁ : ∀ i, f i) (i : I) (x₁ : f i) :
     update f₁⁻¹ i x₁⁻¹ = (update f₁ i x₁)⁻¹ :=
   funext fun j => (apply_update (fun i => Inv.inv) f₁ i x₁ j).symm
+#align function.update_inv Function.update_inv
 
 @[to_additive]
 theorem update_div [∀ i, Div (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (i : I) (x₁ : f i) (x₂ : f i) :
     update (f₁ / f₂) i (x₁ / x₂) = update f₁ i x₁ / update f₂ i x₂ :=
   funext fun j => (apply_update₂ (fun i => (· / ·)) f₁ f₂ i x₁ x₂ j).symm
+#align function.update_div Function.update_div
 
 variable [One α] [Nonempty ι] {a : α}
 
 @[simp, to_additive]
 theorem const_eq_one : const ι a = 1 ↔ a = 1 :=
   @const_inj _ _ _ _ 1
+#align function.const_eq_one Function.const_eq_one
 
 @[to_additive]
 theorem const_ne_one : const ι a ≠ 1 ↔ a ≠ 1 :=
   const_eq_one.Not
+#align function.const_ne_one Function.const_ne_one
 
 end Function
 
@@ -413,16 +461,19 @@ section Piecewise
 theorem Set.piecewise_mul [∀ i, Mul (f i)] (s : Set I) [∀ i, Decidable (i ∈ s)] (f₁ f₂ g₁ g₂ : ∀ i, f i) :
     s.piecewise (f₁ * f₂) (g₁ * g₂) = s.piecewise f₁ g₁ * s.piecewise f₂ g₂ :=
   s.piecewise_op₂ _ _ _ _ fun _ => (· * ·)
+#align set.piecewise_mul Set.piecewise_mul
 
 @[to_additive]
 theorem Set.piecewise_inv [∀ i, Inv (f i)] (s : Set I) [∀ i, Decidable (i ∈ s)] (f₁ g₁ : ∀ i, f i) :
     s.piecewise f₁⁻¹ g₁⁻¹ = (s.piecewise f₁ g₁)⁻¹ :=
   s.piecewise_op f₁ g₁ fun _ x => x⁻¹
+#align set.piecewise_inv Set.piecewise_inv
 
 @[to_additive]
 theorem Set.piecewise_div [∀ i, Div (f i)] (s : Set I) [∀ i, Decidable (i ∈ s)] (f₁ f₂ g₁ g₂ : ∀ i, f i) :
     s.piecewise (f₁ / f₂) (g₁ / g₂) = s.piecewise f₁ g₁ / s.piecewise f₂ g₂ :=
   s.piecewise_op₂ _ _ _ _ fun _ => (· / ·)
+#align set.piecewise_div Set.piecewise_div
 
 end Piecewise
 
@@ -436,6 +487,7 @@ noncomputable def Function.ExtendByOne.hom [MulOneClass R] : (ι → R) →* η 
   toFun f := Function.extend s f 1
   map_one' := Function.extend_one s
   map_mul' f g := by simpa using Function.extend_mul s f g 1 1
+#align function.extend_by_one.hom Function.ExtendByOne.hom
 
 end Extend
 

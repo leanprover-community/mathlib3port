@@ -23,6 +23,7 @@ def AddEquiv.toMultiplicative [AddZeroClass G] [AddZeroClass H] : G ≃+ H ≃ (
   right_inv x := by
     ext
     rfl
+#align add_equiv.to_multiplicative AddEquiv.toMultiplicative
 
 /-- Reinterpret `G ≃* H` as `additive G ≃+ additive H`. -/
 def MulEquiv.toAdditive [MulOneClass G] [MulOneClass H] : G ≃* H ≃ (Additive G ≃+ Additive H) where
@@ -34,6 +35,7 @@ def MulEquiv.toAdditive [MulOneClass G] [MulOneClass H] : G ≃* H ≃ (Additive
   right_inv x := by
     ext
     rfl
+#align mul_equiv.to_additive MulEquiv.toAdditive
 
 /-- Reinterpret `additive G ≃+ H` as `G ≃* multiplicative H`. -/
 def AddEquiv.toMultiplicative' [MulOneClass G] [AddZeroClass H] : Additive G ≃+ H ≃ (G ≃* Multiplicative H) where
@@ -45,10 +47,12 @@ def AddEquiv.toMultiplicative' [MulOneClass G] [AddZeroClass H] : Additive G ≃
   right_inv x := by
     ext
     rfl
+#align add_equiv.to_multiplicative' AddEquiv.toMultiplicative'
 
 /-- Reinterpret `G ≃* multiplicative H` as `additive G ≃+ H` as. -/
 def MulEquiv.toAdditive' [MulOneClass G] [AddZeroClass H] : G ≃* Multiplicative H ≃ (Additive G ≃+ H) :=
   AddEquiv.toMultiplicative'.symm
+#align mul_equiv.to_additive' MulEquiv.toAdditive'
 
 /-- Reinterpret `G ≃+ additive H` as `multiplicative G ≃* H`. -/
 def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClass H] : G ≃+ Additive H ≃ (Multiplicative G ≃* H) where
@@ -60,10 +64,12 @@ def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClass H] : G ≃+ Additi
   right_inv x := by
     ext
     rfl
+#align add_equiv.to_multiplicative'' AddEquiv.toMultiplicative''
 
 /-- Reinterpret `multiplicative G ≃* H` as `G ≃+ additive H` as. -/
 def MulEquiv.toAdditive'' [AddZeroClass G] [MulOneClass H] : Multiplicative G ≃* H ≃ (G ≃+ Additive H) :=
   AddEquiv.toMultiplicative''.symm
+#align mul_equiv.to_additive'' MulEquiv.toAdditive''
 
 section
 
@@ -72,10 +78,12 @@ variable (G) (H)
 /-- `additive (multiplicative G)` is just `G`. -/
 def AddEquiv.additiveMultiplicative [AddZeroClass G] : Additive (Multiplicative G) ≃+ G :=
   MulEquiv.toAdditive'' (MulEquiv.refl (Multiplicative G))
+#align add_equiv.additive_multiplicative AddEquiv.additiveMultiplicative
 
 /-- `multiplicative (additive H)` is just `H`. -/
 def MulEquiv.multiplicativeAdditive [MulOneClass H] : Multiplicative (Additive H) ≃* H :=
   AddEquiv.toMultiplicative'' (AddEquiv.refl (Additive H))
+#align mul_equiv.multiplicative_additive MulEquiv.multiplicativeAdditive
 
 end
 

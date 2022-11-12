@@ -47,13 +47,14 @@ unsafe def zify_attr : user_attribute simp_lemmas Unit where
   descr := "Used to tag lemmas for use in the `zify` tactic"
   cache_cfg :=
     { mk_cache := fun ns =>
-        mmap
+        mapM
             (fun n => do
               let c ← mk_const n
               return (c, tt))
             ns >>=
           simp_lemmas.mk.append_with_symm,
       dependencies := [] }
+#align zify.zify_attr zify.zify_attr
 
 /-- Given an expression `e`, `lift_to_z e` looks for subterms of `e` that are propositions "about"
 natural numbers and change them to propositions about integers.
@@ -69,6 +70,7 @@ unsafe def lift_to_z (e : expr) : tactic (expr × expr) := do
   let sl ← sl.add_simp `gt_iff_lt
   let (e', prf, _) ← simplify sl [] e
   return (e', prf)
+#align zify.lift_to_z zify.lift_to_z
 
 attribute [zify] Int.coe_nat_le_coe_nat_iff Int.coe_nat_lt_coe_nat_iff Int.coe_nat_eq_coe_nat_iff
 
@@ -76,6 +78,7 @@ end Zify
 
 @[zify]
 theorem Int.coe_nat_ne_coe_nat_iff (a b : ℕ) : (a : ℤ) ≠ b ↔ a ≠ b := by simp
+#align int.coe_nat_ne_coe_nat_iff Int.coe_nat_ne_coe_nat_iff
 
 /-- `zify extra_lems e` is used to shift propositions in `e` from `ℕ` to `ℤ`.
 This is often useful since `ℤ` has well-behaved subtraction.
@@ -87,6 +90,7 @@ unsafe def tactic.zify (extra_lems : List simp_arg_type) : expr → tactic (expr
   let (z1, p1) ← zify.lift_to_z z <|> fail "failed to find an applicable zify lemma"
   let (z2, p2) ← norm_cast.derive_push_cast extra_lems z1
   Prod.mk z2 <$> mk_eq_trans p1 p2
+#align tactic.zify tactic.zify
 
 /-- A variant of `tactic.zify` that takes `h`, a proof of a proposition about natural numbers,
 and returns a proof of the zified version of that propositon.
@@ -94,6 +98,7 @@ and returns a proof of the zified version of that propositon.
 unsafe def tactic.zify_proof (extra_lems : List simp_arg_type) (h : expr) : tactic expr := do
   let (_, pf) ← infer_type h >>= tactic.zify extra_lems
   mk_eq_mp pf h
+#align tactic.zify_proof tactic.zify_proof
 
 section
 
@@ -135,6 +140,7 @@ subtype) to propositions about `ℤ` (the supertype), without changing the type 
 unsafe def tactic.interactive.zify (sl : parse simp_arg_list) (l : parse location) : tactic Unit := do
   let locs ← l.get_locals
   replace_at (tactic.zify sl) locs l >>= guardb
+#align tactic.interactive.zify tactic.interactive.zify
 
 end
 

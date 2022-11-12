@@ -37,12 +37,13 @@ namespace ContinuousMap
 `to_fun : C(X, Y)` and `inv_fun : C(Y, X)` such that `to_fun.comp inv_fun` and `inv_fun.comp to_fun`
 are both homotopic to `id`.
 -/
-@[ext]
+@[ext.1]
 structure HomotopyEquiv (X : Type u) (Y : Type v) [TopologicalSpace X] [TopologicalSpace Y] where
   toFun : C(X, Y)
   invFun : C(Y, X)
   left_inv : (inv_fun.comp to_fun).Homotopic (ContinuousMap.id X)
   right_inv : (to_fun.comp inv_fun).Homotopic (ContinuousMap.id Y)
+#align continuous_map.homotopy_equiv ContinuousMap.HomotopyEquiv
 
 -- mathport name: continuous_map.homotopy_equiv
 localized [ContinuousMap] infixl:25 " ≃ₕ " => ContinuousMap.HomotopyEquiv
@@ -55,10 +56,12 @@ instance : CoeFun (HomotopyEquiv X Y) fun _ => X → Y :=
 @[simp]
 theorem to_fun_eq_coe (h : HomotopyEquiv X Y) : (h.toFun : X → Y) = h :=
   rfl
+#align continuous_map.homotopy_equiv.to_fun_eq_coe ContinuousMap.HomotopyEquiv.to_fun_eq_coe
 
 @[continuity]
 theorem continuous (h : HomotopyEquiv X Y) : Continuous h :=
   h.toFun.Continuous
+#align continuous_map.homotopy_equiv.continuous ContinuousMap.HomotopyEquiv.continuous
 
 end HomotopyEquiv
 
@@ -81,10 +84,12 @@ def toHomotopyEquiv (h : X ≃ₜ Y) : X ≃ₕ Y where
     convert ContinuousMap.Homotopic.refl _
     ext
     simp
+#align homeomorph.to_homotopy_equiv Homeomorph.toHomotopyEquiv
 
 @[simp]
 theorem coe_to_homotopy_equiv (h : X ≃ₜ Y) : ⇑h.toHomotopyEquiv = h :=
   rfl
+#align homeomorph.coe_to_homotopy_equiv Homeomorph.coe_to_homotopy_equiv
 
 end Homeomorph
 
@@ -99,20 +104,24 @@ def symm (h : X ≃ₕ Y) : Y ≃ₕ X where
   invFun := h.toFun
   left_inv := h.right_inv
   right_inv := h.left_inv
+#align continuous_map.homotopy_equiv.symm ContinuousMap.HomotopyEquiv.symm
 
 @[simp]
 theorem coe_inv_fun (h : HomotopyEquiv X Y) : (⇑h.invFun : Y → X) = ⇑h.symm :=
   rfl
+#align continuous_map.homotopy_equiv.coe_inv_fun ContinuousMap.HomotopyEquiv.coe_inv_fun
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
 def Simps.apply (h : X ≃ₕ Y) : X → Y :=
   h
+#align continuous_map.homotopy_equiv.simps.apply ContinuousMap.HomotopyEquiv.Simps.apply
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
 def Simps.symmApply (h : X ≃ₕ Y) : Y → X :=
   h.symm
+#align continuous_map.homotopy_equiv.simps.symm_apply ContinuousMap.HomotopyEquiv.Simps.symmApply
 
 initialize_simps_projections HomotopyEquiv (to_fun_to_fun → apply, inv_fun_to_fun → symmApply, -toFun, -invFun)
 
@@ -121,6 +130,7 @@ initialize_simps_projections HomotopyEquiv (to_fun_to_fun → apply, inv_fun_to_
 @[simps]
 def refl (X : Type u) [TopologicalSpace X] : X ≃ₕ X :=
   (Homeomorph.refl X).toHomotopyEquiv
+#align continuous_map.homotopy_equiv.refl ContinuousMap.HomotopyEquiv.refl
 
 instance : Inhabited (HomotopyEquiv Unit Unit) :=
   ⟨refl Unit⟩
@@ -147,8 +157,10 @@ def trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : X ≃ₕ Z where
     refine' homotopic.hcomp _ (homotopic.refl _)
     refine' homotopic.trans ((homotopic.refl _).hcomp h₁.right_inv) _
     rw [id_comp]
+#align continuous_map.homotopy_equiv.trans ContinuousMap.HomotopyEquiv.trans
 
 theorem symm_trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : (h₁.trans h₂).symm = h₂.symm.trans h₁.symm := by ext <;> rfl
+#align continuous_map.homotopy_equiv.symm_trans ContinuousMap.HomotopyEquiv.symm_trans
 
 end HomotopyEquiv
 
@@ -162,15 +174,18 @@ namespace Homeomorph
 theorem refl_to_homotopy_equiv (X : Type u) [TopologicalSpace X] :
     (Homeomorph.refl X).toHomotopyEquiv = HomotopyEquiv.refl X :=
   rfl
+#align homeomorph.refl_to_homotopy_equiv Homeomorph.refl_to_homotopy_equiv
 
 @[simp]
 theorem symm_to_homotopy_equiv (h : X ≃ₜ Y) : h.symm.toHomotopyEquiv = h.toHomotopyEquiv.symm :=
   rfl
+#align homeomorph.symm_to_homotopy_equiv Homeomorph.symm_to_homotopy_equiv
 
 @[simp]
 theorem trans_to_homotopy_equiv (h₀ : X ≃ₜ Y) (h₁ : Y ≃ₜ Z) :
     (h₀.trans h₁).toHomotopyEquiv = h₀.toHomotopyEquiv.trans h₁.toHomotopyEquiv :=
   rfl
+#align homeomorph.trans_to_homotopy_equiv Homeomorph.trans_to_homotopy_equiv
 
 end Homeomorph
 

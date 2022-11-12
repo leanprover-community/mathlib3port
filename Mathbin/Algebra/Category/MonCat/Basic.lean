@@ -27,6 +27,7 @@ open CategoryTheory
 @[to_additive AddMonCat]
 def MonCat : Type (u + 1) :=
   Bundled Monoid
+#align Mon MonCat
 
 /-- The category of additive monoids and monoid morphisms. -/
 add_decl_doc AddMonCat
@@ -39,12 +40,14 @@ theory machinery work. -/
       "`add_monoid_hom` doesn't actually assume associativity. This alias is needed to make\nthe category theory machinery work."]
 abbrev AssocMonoidHom (M N : Type _) [Monoid M] [Monoid N] :=
   MonoidHom M N
+#align Mon.assoc_monoid_hom MonCat.AssocMonoidHom
 
 @[to_additive]
 instance bundledHom : BundledHom AssocMonoidHom :=
   ⟨fun M N [Monoid M] [Monoid N] => @MonoidHom.toFun M N _ _, fun M [Monoid M] => @MonoidHom.id M _,
     fun M N P [Monoid M] [Monoid N] [Monoid P] => @MonoidHom.comp M N P _ _ _, fun M N [Monoid M] [Monoid N] =>
     @MonoidHom.coe_inj M N _ _⟩
+#align Mon.bundled_hom MonCat.bundledHom
 
 deriving instance LargeCategory, ConcreteCategory for MonCat
 
@@ -58,6 +61,7 @@ instance : CoeSort MonCat (Type _) :=
 @[to_additive]
 def of (M : Type u) [Monoid M] : MonCat :=
   Bundled.of M
+#align Mon.of MonCat.of
 
 /-- Construct a bundled `Mon` from the underlying type and typeclass. -/
 add_decl_doc AddMonCat.of
@@ -66,6 +70,7 @@ add_decl_doc AddMonCat.of
 @[to_additive]
 def ofHom {X Y : Type u} [Monoid X] [Monoid Y] (f : X →* Y) : of X ⟶ of Y :=
   f
+#align Mon.of_hom MonCat.ofHom
 
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddMon`. -/
 add_decl_doc AddMonCat.ofHom
@@ -73,6 +78,7 @@ add_decl_doc AddMonCat.ofHom
 @[simp]
 theorem of_hom_apply {X Y : Type u} [Monoid X] [Monoid Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
+#align Mon.of_hom_apply MonCat.of_hom_apply
 
 @[to_additive]
 instance : Inhabited MonCat :=
@@ -89,6 +95,7 @@ instance (M : MonCat) : Monoid M :=
 @[simp, to_additive]
 theorem coe_of (R : Type u) [Monoid R] : (MonCat.of R : Type u) = R :=
   rfl
+#align Mon.coe_of MonCat.coe_of
 
 end MonCat
 
@@ -96,6 +103,7 @@ end MonCat
 @[to_additive AddCommMonCat]
 def CommMonCat : Type (u + 1) :=
   Bundled CommMonoid
+#align CommMon CommMonCat
 
 /-- The category of additive commutative monoids and monoid morphisms. -/
 add_decl_doc AddCommMonCat
@@ -118,6 +126,7 @@ instance : CoeSort CommMonCat (Type _) :=
 @[to_additive]
 def of (M : Type u) [CommMonoid M] : CommMonCat :=
   Bundled.of M
+#align CommMon.of CommMonCat.of
 
 /-- Construct a bundled `AddCommMon` from the underlying type and typeclass. -/
 add_decl_doc AddCommMonCat.of
@@ -137,10 +146,12 @@ instance (M : CommMonCat) : CommMonoid M :=
 @[simp, to_additive]
 theorem coe_of (R : Type u) [CommMonoid R] : (CommMonCat.of R : Type u) = R :=
   rfl
+#align CommMon.coe_of CommMonCat.coe_of
 
 @[to_additive has_forget_to_AddMon]
 instance hasForgetToMon : HasForget₂ CommMonCat MonCat :=
   BundledHom.forget₂ _ _
+#align CommMon.has_forget_to_Mon CommMonCat.hasForgetToMon
 
 @[to_additive]
 instance : Coe CommMonCat.{u} MonCat.{u} where coe := (forget₂ CommMonCat MonCat).obj
@@ -178,6 +189,7 @@ variable [Monoid X] [Monoid Y]
 def MulEquiv.toMonIso (e : X ≃* Y) : MonCat.of X ≅ MonCat.of Y where
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
+#align mul_equiv.to_Mon_iso MulEquiv.toMonIso
 
 end
 
@@ -192,6 +204,7 @@ variable [CommMonoid X] [CommMonoid Y]
 def MulEquiv.toCommMonIso (e : X ≃* Y) : CommMonCat.of X ≅ CommMonCat.of Y where
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
+#align mul_equiv.to_CommMon_iso MulEquiv.toCommMonIso
 
 end
 
@@ -201,11 +214,13 @@ namespace CategoryTheory.Iso
 @[to_additive AddMon_iso_to_add_equiv "Build an `add_equiv` from an isomorphism in the category\n`AddMon`."]
 def monIsoToMulEquiv {X Y : MonCat} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
+#align category_theory.iso.Mon_iso_to_mul_equiv CategoryTheory.Iso.monIsoToMulEquiv
 
 /-- Build a `mul_equiv` from an isomorphism in the category `CommMon`. -/
 @[to_additive "Build an `add_equiv` from an isomorphism in the category\n`AddCommMon`."]
 def commMonIsoToMulEquiv {X Y : CommMonCat} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
+#align category_theory.iso.CommMon_iso_to_mul_equiv CategoryTheory.Iso.commMonIsoToMulEquiv
 
 end CategoryTheory.Iso
 
@@ -216,6 +231,7 @@ in `Mon` -/
 def mulEquivIsoMonIso {X Y : Type u} [Monoid X] [Monoid Y] : X ≃* Y ≅ MonCat.of X ≅ MonCat.of Y where
   Hom e := e.toMonIso
   inv i := i.monIsoToMulEquiv
+#align mul_equiv_iso_Mon_iso mulEquivIsoMonIso
 
 /-- multiplicative equivalences between `comm_monoid`s are the same as (isomorphic to) isomorphisms
 in `CommMon` -/
@@ -225,6 +241,7 @@ def mulEquivIsoCommMonIso {X Y : Type u} [CommMonoid X] [CommMonoid Y] :
     X ≃* Y ≅ CommMonCat.of X ≅ CommMonCat.of Y where
   Hom e := e.toCommMonIso
   inv i := i.commMonIsoToMulEquiv
+#align mul_equiv_iso_CommMon_iso mulEquivIsoCommMonIso
 
 @[to_additive]
 instance MonCat.forget_reflects_isos :
@@ -233,6 +250,7 @@ instance MonCat.forget_reflects_isos :
     let i := as_iso ((forget MonCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Mon_iso).1⟩
+#align Mon.forget_reflects_isos MonCat.forget_reflects_isos
 
 @[to_additive]
 instance CommMonCat.forget_reflects_isos :
@@ -241,6 +259,7 @@ instance CommMonCat.forget_reflects_isos :
     let i := as_iso ((forget CommMonCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_CommMon_iso).1⟩
+#align CommMon.forget_reflects_isos CommMonCat.forget_reflects_isos
 
 /-!
 Once we've shown that the forgetful functors to type reflect isomorphisms,

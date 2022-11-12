@@ -51,6 +51,7 @@ inductive Rel : FreeAlgebra R M → FreeAlgebra R M → Prop-- force `ι` to be 
 
   | add {a b : M} : rel (FreeAlgebra.ι R (a + b)) (FreeAlgebra.ι R a + FreeAlgebra.ι R b)
   | smul {r : R} {a : M} : rel (FreeAlgebra.ι R (r • a)) (algebraMap R (FreeAlgebra R M) r * FreeAlgebra.ι R a)
+#align tensor_algebra.rel TensorAlgebra.Rel
 
 end TensorAlgebra
 
@@ -60,6 +61,7 @@ end TensorAlgebra
 def TensorAlgebra :=
   RingQuot (TensorAlgebra.Rel R M)deriving Inhabited, Semiring,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R»
+#align tensor_algebra TensorAlgebra
 
 namespace TensorAlgebra
 
@@ -78,9 +80,11 @@ def ι : M →ₗ[R] TensorAlgebra R M where
   map_smul' r x := by
     rw [← AlgHom.map_smul]
     exact RingQuot.mk_alg_hom_rel R rel.smul
+#align tensor_algebra.ι TensorAlgebra.ι
 
 theorem ring_quot_mk_alg_hom_free_algebra_ι_eq_ι (m : M) : RingQuot.mkAlgHom R (Rel R M) (FreeAlgebra.ι R m) = ι R m :=
   rfl
+#align tensor_algebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι TensorAlgebra.ring_quot_mk_alg_hom_free_algebra_ι_eq_ι
 
 /-- Given a linear map `f : M → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
 of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
@@ -97,22 +101,26 @@ def lift {A : Type _} [Semiring A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAl
     RingQuot.ring_quot_ext' _ _ _ <|
       FreeAlgebra.hom_ext <|
         funext fun x => (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply _ _)
+#align tensor_algebra.lift TensorAlgebra.lift
 
 variable {R}
 
 @[simp]
 theorem ι_comp_lift {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) : (lift R f).toLinearMap.comp (ι R) = f :=
   (lift R).symm_apply_apply f
+#align tensor_algebra.ι_comp_lift TensorAlgebra.ι_comp_lift
 
 @[simp]
 theorem lift_ι_apply {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) (x) : lift R f (ι R x) = f x := by
   dsimp [lift, ι]
   rfl
+#align tensor_algebra.lift_ι_apply TensorAlgebra.lift_ι_apply
 
 @[simp]
 theorem lift_unique {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) (g : TensorAlgebra R M →ₐ[R] A) :
     g.toLinearMap.comp (ι R) = f ↔ g = lift R f :=
   (lift R).symm_apply_eq
+#align tensor_algebra.lift_unique TensorAlgebra.lift_unique
 
 -- Marking `tensor_algebra` irreducible makes `ring` instances inaccessible on quotients.
 -- https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/algebra.2Esemiring_to_ring.20breaks.20semimodule.20typeclass.20lookup/near/212580241
@@ -122,13 +130,15 @@ theorem lift_comp_ι {A : Type _} [Semiring A] [Algebra R A] (g : TensorAlgebra 
     lift R (g.toLinearMap.comp (ι R)) = g := by
   rw [← lift_symm_apply]
   exact (lift R).apply_symm_apply g
+#align tensor_algebra.lift_comp_ι TensorAlgebra.lift_comp_ι
 
 /-- See note [partially-applied ext lemmas]. -/
-@[ext]
+@[ext.1]
 theorem hom_ext {A : Type _} [Semiring A] [Algebra R A] {f g : TensorAlgebra R M →ₐ[R] A}
     (w : f.toLinearMap.comp (ι R) = g.toLinearMap.comp (ι R)) : f = g := by
   rw [← lift_symm_apply, ← lift_symm_apply] at w
   exact (lift R).symm.Injective w
+#align tensor_algebra.hom_ext TensorAlgebra.hom_ext
 
 -- This proof closely follows `free_algebra.induction`
 /-- If `C` holds for the `algebra_map` of `r : R` into `tensor_algebra R M`, the `ι` of `x : M`,
@@ -149,27 +159,33 @@ theorem induction {C : TensorAlgebra R M → Prop} (h_grade0 : ∀ r, C (algebra
   -- finding a proof is finding an element of the subalgebra
   convert Subtype.prop (lift R of a)
   exact AlgHom.congr_fun of_id a
+#align tensor_algebra.induction TensorAlgebra.induction
 
 /-- The left-inverse of `algebra_map`. -/
 def algebraMapInv : TensorAlgebra R M →ₐ[R] R :=
   lift R (0 : M →ₗ[R] R)
+#align tensor_algebra.algebra_map_inv TensorAlgebra.algebraMapInv
 
 variable (M)
 
 theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| TensorAlgebra R M) := fun x => by
   simp [algebra_map_inv]
+#align tensor_algebra.algebra_map_left_inverse TensorAlgebra.algebra_map_left_inverse
 
 @[simp]
 theorem algebra_map_inj (x y : R) : algebraMap R (TensorAlgebra R M) x = algebraMap R (TensorAlgebra R M) y ↔ x = y :=
   (algebra_map_left_inverse M).Injective.eq_iff
+#align tensor_algebra.algebra_map_inj TensorAlgebra.algebra_map_inj
 
 @[simp]
 theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 0 ↔ x = 0 :=
   map_eq_zero_iff (algebraMap _ _) (algebra_map_left_inverse _).Injective
+#align tensor_algebra.algebra_map_eq_zero_iff TensorAlgebra.algebra_map_eq_zero_iff
 
 @[simp]
 theorem algebra_map_eq_one_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 1 ↔ x = 1 :=
   map_eq_one_iff (algebraMap _ _) (algebra_map_left_inverse _).Injective
+#align tensor_algebra.algebra_map_eq_one_iff TensorAlgebra.algebra_map_eq_one_iff
 
 variable {M}
 
@@ -177,10 +193,12 @@ variable {M}
 `tensor_algebra.ι` to `triv_sq_zero_ext.inr`. -/
 def toTrivSqZeroExt : TensorAlgebra R M →ₐ[R] TrivSqZeroExt R M :=
   lift R (TrivSqZeroExt.inrHom R M)
+#align tensor_algebra.to_triv_sq_zero_ext TensorAlgebra.toTrivSqZeroExt
 
 @[simp]
 theorem to_triv_sq_zero_ext_ι (x : M) : toTrivSqZeroExt (ι R x) = TrivSqZeroExt.inr x :=
   lift_ι_apply _ _
+#align tensor_algebra.to_triv_sq_zero_ext_ι TensorAlgebra.to_triv_sq_zero_ext_ι
 
 /-- The left-inverse of `ι`.
 
@@ -188,17 +206,21 @@ As an implementation detail, we implement this using `triv_sq_zero_ext` which ha
 algebra structure. -/
 def ιInv : TensorAlgebra R M →ₗ[R] M :=
   (TrivSqZeroExt.sndHom R M).comp toTrivSqZeroExt.toLinearMap
+#align tensor_algebra.ι_inv TensorAlgebra.ιInv
 
 theorem ι_left_inverse : Function.LeftInverse ιInv (ι R : M → TensorAlgebra R M) := fun x => by simp [ι_inv]
+#align tensor_algebra.ι_left_inverse TensorAlgebra.ι_left_inverse
 
 variable (R)
 
 @[simp]
 theorem ι_inj (x y : M) : ι R x = ι R y ↔ x = y :=
   ι_left_inverse.Injective.eq_iff
+#align tensor_algebra.ι_inj TensorAlgebra.ι_inj
 
 @[simp]
 theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by rw [← ι_inj R x 0, LinearMap.map_zero]
+#align tensor_algebra.ι_eq_zero_iff TensorAlgebra.ι_eq_zero_iff
 
 variable {R}
 
@@ -213,19 +235,22 @@ theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x 
   · rintro ⟨rfl, rfl⟩
     rw [LinearMap.map_zero, RingHom.map_zero]
     
+#align tensor_algebra.ι_eq_algebra_map_iff TensorAlgebra.ι_eq_algebra_map_iff
 
 @[simp]
 theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 := by
   rw [← (algebraMap R (TensorAlgebra R M)).map_one, Ne.def, ι_eq_algebra_map_iff]
   exact one_ne_zero ∘ And.right
+#align tensor_algebra.ι_ne_one TensorAlgebra.ι_ne_one
 
 /-- The generators of the tensor algebra are disjoint from its scalars. -/
-theorem ιRangeDisjointOne :
+theorem ι_range_disjoint_one :
     Disjoint (LinearMap.range (ι R : M →ₗ[R] TensorAlgebra R M)) (1 : Submodule R (TensorAlgebra R M)) := by
   rw [Submodule.disjoint_def]
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
   rw [ι_eq_algebra_map_iff x] at hx
   rw [hx.2, RingHom.map_zero]
+#align tensor_algebra.ι_range_disjoint_one TensorAlgebra.ι_range_disjoint_one
 
 variable (R M)
 
@@ -234,10 +259,12 @@ variable (R M)
 See also `pi_tensor_product.tprod`. -/
 def tprod (n : ℕ) : MultilinearMap R (fun i : Fin n => M) (TensorAlgebra R M) :=
   (MultilinearMap.mkPiAlgebraFin R n (TensorAlgebra R M)).compLinearMap fun _ => ι R
+#align tensor_algebra.tprod TensorAlgebra.tprod
 
 @[simp]
 theorem tprod_apply {n : ℕ} (x : Fin n → M) : tprod R M n x = (List.ofFn fun i => ι R (x i)).Prod :=
   rfl
+#align tensor_algebra.tprod_apply TensorAlgebra.tprod_apply
 
 variable {R M}
 
@@ -251,9 +278,11 @@ variable {R M}
 `free_algebra.ι R x` to `tensor_algebra.ι R x`. -/
 def toTensor : FreeAlgebra R M →ₐ[R] TensorAlgebra R M :=
   FreeAlgebra.lift R (TensorAlgebra.ι R)
+#align free_algebra.to_tensor FreeAlgebra.toTensor
 
 @[simp]
 theorem to_tensor_ι (m : M) : (FreeAlgebra.ι R m).toTensor = TensorAlgebra.ι R m := by simp [to_tensor]
+#align free_algebra.to_tensor_ι FreeAlgebra.to_tensor_ι
 
 end FreeAlgebra
 

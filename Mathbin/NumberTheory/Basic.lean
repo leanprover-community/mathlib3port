@@ -37,6 +37,7 @@ theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRing R] {p : ℕ} {a b : R} (h 
   rw [← mem_span_singleton, ← Ideal.Quotient.eq] at h
   rw [← mem_span_singleton, ← eq_zero_iff_mem, RingHom.map_geom_sum₂, RingHom.map_pow, RingHom.map_pow, h,
     geom_sum₂_self, hp, zero_mul]
+#align dvd_sub_pow_of_dvd_sub dvd_sub_pow_of_dvd_sub
 
 end
 

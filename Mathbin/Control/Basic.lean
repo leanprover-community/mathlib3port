@@ -32,6 +32,7 @@ Case conversion may be inaccurate. Consider using '#align functor.map_map Functo
 @[functor_norm]
 theorem Functor.map_map (m : α → β) (g : β → γ) (x : f α) : g <$> m <$> x = (g ∘ m) <$> x :=
   (comp_map _ _ _).symm
+#align functor.map_map Functor.map_map
 
 /- warning: id_map' -> id_map' is a dubious translation:
 lean 3 declaration is
@@ -42,6 +43,7 @@ Case conversion may be inaccurate. Consider using '#align id_map' id_map'ₓ'. -
 @[simp]
 theorem id_map' (x : f α) : (fun a => a) <$> x = x :=
   id_map _
+#align id_map' id_map'
 
 end Functor
 
@@ -52,11 +54,13 @@ variable {F : Type u → Type v} [Applicative F]
 def mzipWith {α₁ α₂ φ : Type u} (f : α₁ → α₂ → F φ) : ∀ (ma₁ : List α₁) (ma₂ : List α₂), F (List φ)
   | x :: xs, y :: ys => (· :: ·) <$> f x y <*> mzipWith xs ys
   | _, _ => pure []
+#align mzip_with mzipWith
 
 def mzipWith' (f : α → β → F γ) : List α → List β → F PUnit
   | x :: xs, y :: ys => f x y *> mzipWith' xs ys
   | [], _ => pure PUnit.unit
   | _, [] => pure PUnit.unit
+#align mzip_with' mzipWith'
 
 variable [LawfulApplicative F]
 
@@ -65,6 +69,7 @@ attribute [functor_norm] seq_assoc pure_seq_eq_map
 @[simp]
 theorem pure_id'_seq (x : F α) : (pure fun x => x) <*> x = x :=
   pure_id_seq x
+#align pure_id'_seq pure_id'_seq
 
 attribute [functor_norm] seq_assoc pure_seq_eq_map
 
@@ -73,10 +78,12 @@ theorem seq_map_assoc (x : F (α → β)) (f : γ → α) (y : F γ) : x <*> f <
   simp [(pure_seq_eq_map _ _).symm]
   simp [seq_assoc, (comp_map _ _ _).symm, (· ∘ ·)]
   simp [pure_seq_eq_map]
+#align seq_map_assoc seq_map_assoc
 
 @[functor_norm]
 theorem map_seq (f : β → γ) (x : F (α → β)) (y : F α) : f <$> (x <*> y) = (· ∘ ·) f <$> x <*> y := by
   simp [(pure_seq_eq_map _ _).symm] <;> simp [seq_assoc]
+#align map_seq map_seq
 
 end Applicative
 
@@ -91,13 +98,16 @@ open List
 
 def List.mpartition {f : Type → Type} [Monad f] {α : Type} (p : α → f Bool) : List α → f (List α × List α)
   | [] => pure ([], [])
-  | x :: xs => mcond (p x) (Prod.map (cons x) id <$> List.mpartition xs) (Prod.map id (cons x) <$> List.mpartition xs)
+  | x :: xs => condM (p x) (Prod.map (cons x) id <$> List.mpartition xs) (Prod.map id (cons x) <$> List.mpartition xs)
+#align list.mpartition List.mpartition
 
 theorem map_bind (x : m α) {g : α → m β} {f : β → γ} : f <$> (x >>= g) = x >>= fun a => f <$> g a := by
   rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [bind_pure_comp_eq_map]
+#align map_bind map_bind
 
 theorem seq_bind_eq (x : m α) {g : β → m γ} {f : α → β} : f <$> x >>= g = x >>= g ∘ f :=
   show bind (f <$> x) g = bind x (g ∘ f) by rw [← bind_pure_comp_eq_map, bind_assoc] <;> simp [pure_bind]
+#align seq_bind_eq seq_bind_eq
 
 /- warning: seq_eq_bind_map -> seq_eq_bind_map is a dubious translation:
 lean 3 declaration is
@@ -107,10 +117,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align seq_eq_bind_map seq_eq_bind_mapₓ'. -/
 theorem seq_eq_bind_map {x : m α} {f : m (α → β)} : f <*> x = f >>= (· <$> x) :=
   (bind_map_eq_seq f x).symm
+#align seq_eq_bind_map seq_eq_bind_map
 
 /-- This is the Kleisli composition -/
 @[reducible]
 def fish {m} [Monad m] {α β γ} (f : α → m β) (g : β → m γ) := fun x => f x >>= g
+#align fish fish
 
 -- mathport name: «expr >=> »
 infixl:55
@@ -122,13 +134,16 @@ infixl:55
 
 @[functor_norm]
 theorem fish_pure {α β} (f : α → m β) : f >=> pure = f := by simp only [(· >=> ·), functor_norm]
+#align fish_pure fish_pure
 
 @[functor_norm]
 theorem fish_pipe {α β} (f : α → m β) : pure >=> f = f := by simp only [(· >=> ·), functor_norm]
+#align fish_pipe fish_pipe
 
 @[functor_norm]
 theorem fish_assoc {α β γ φ} (f : α → m β) (g : β → m γ) (h : γ → m φ) : f >=> g >=> h = f >=> (g >=> h) := by
   simp only [(· >=> ·), functor_norm]
+#align fish_assoc fish_assoc
 
 variable {β' γ' : Type v}
 
@@ -140,6 +155,7 @@ def List.mmapAccumr (f : α → β' → m' (β' × γ')) : β' → List α → m
     let (a', ys) ← List.mmapAccumr a xs
     let (a'', y) ← f x a'
     pure (a'', y :: ys)
+#align list.mmap_accumr List.mmapAccumr
 
 def List.mmapAccuml (f : β' → α → m' (β' × γ')) : β' → List α → m' (β' × List γ')
   | a, [] => pure (a, [])
@@ -147,6 +163,7 @@ def List.mmapAccuml (f : β' → α → m' (β' × γ')) : β' → List α → m
     let (a', y) ← f a x
     let (a'', ys) ← List.mmapAccuml a' xs
     pure (a'', y :: ys)
+#align list.mmap_accuml List.mmapAccuml
 
 end Monad
 
@@ -154,19 +171,23 @@ section
 
 variable {m : Type u → Type u} [Monad m] [LawfulMonad m]
 
-theorem mjoin_map_map {α β : Type u} (f : α → β) (a : m (m α)) : mjoin (Functor.map f <$> a) = f <$> mjoin a := by
-  simp only [mjoin, (· ∘ ·), id.def, (bind_pure_comp_eq_map _ _).symm, bind_assoc, map_bind, pure_bind]
+theorem mjoin_map_map {α β : Type u} (f : α → β) (a : m (m α)) : joinM (Functor.map f <$> a) = f <$> joinM a := by
+  simp only [joinM, (· ∘ ·), id.def, (bind_pure_comp_eq_map _ _).symm, bind_assoc, map_bind, pure_bind]
+#align mjoin_map_map mjoin_map_map
 
-theorem mjoin_map_mjoin {α : Type u} (a : m (m (m α))) : mjoin (mjoin <$> a) = mjoin (mjoin a) := by
-  simp only [mjoin, (· ∘ ·), id.def, map_bind, (bind_pure_comp_eq_map _ _).symm, bind_assoc, pure_bind]
-
-@[simp]
-theorem mjoin_map_pure {α : Type u} (a : m α) : mjoin (pure <$> a) = a := by
-  simp only [mjoin, (· ∘ ·), id.def, map_bind, (bind_pure_comp_eq_map _ _).symm, bind_assoc, pure_bind, bind_pure]
+theorem mjoin_map_mjoin {α : Type u} (a : m (m (m α))) : joinM (joinM <$> a) = joinM (joinM a) := by
+  simp only [joinM, (· ∘ ·), id.def, map_bind, (bind_pure_comp_eq_map _ _).symm, bind_assoc, pure_bind]
+#align mjoin_map_mjoin mjoin_map_mjoin
 
 @[simp]
-theorem mjoin_pure {α : Type u} (a : m α) : mjoin (pure a) = a :=
+theorem mjoin_map_pure {α : Type u} (a : m α) : joinM (pure <$> a) = a := by
+  simp only [joinM, (· ∘ ·), id.def, map_bind, (bind_pure_comp_eq_map _ _).symm, bind_assoc, pure_bind, bind_pure]
+#align mjoin_map_pure mjoin_map_pure
+
+@[simp]
+theorem mjoin_pure {α : Type u} (a : m α) : joinM (pure a) = a :=
   LawfulMonad.pure_bind a id
+#align mjoin_pure mjoin_pure
 
 end
 
@@ -176,15 +197,19 @@ variable {F : Type → Type v} [Alternative F]
 
 def succeeds {α} (x : F α) : F Bool :=
   x $> tt <|> pure false
+#align succeeds succeeds
 
 def mtry {α} (x : F α) : F Unit :=
   x $> () <|> pure ()
+#align mtry mtry
 
 @[simp]
 theorem guard_true {h : Decidable True} : @guard F _ True h = pure () := by simp [guard]
+#align guard_true guard_true
 
 @[simp]
 theorem guard_false {h : Decidable False} : @guard F _ False h = failure := by simp [guard]
+#align guard_false guard_false
 
 end Alternative
 
@@ -201,6 +226,7 @@ Case conversion may be inaccurate. Consider using '#align sum.bind Sum.bindₓ'.
 protected def bind {α β} : Sum e α → (α → Sum e β) → Sum e β
   | inl x, _ => inl x
   | inr x, f => f x
+#align sum.bind Sum.bind
 
 instance : Monad (Sum.{v, u} e) where
   pure := @Sum.inr e
@@ -226,6 +252,7 @@ end Sum
 
 class IsCommApplicative (m : Type _ → Type _) [Applicative m] extends LawfulApplicative m : Prop where
   commutative_prod : ∀ {α β} (a : m α) (b : m β), Prod.mk <$> a <*> b = (fun b a => (a, b)) <$> b <*> a
+#align is_comm_applicative IsCommApplicative
 
 open Functor
 
@@ -237,4 +264,5 @@ theorem IsCommApplicative.commutative_map {m : Type _ → Type _} [Applicative m
     _ = (fun b a => f a b) <$> b <*> a := by
       rw [IsCommApplicative.commutative_prod] <;> simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
     
+#align is_comm_applicative.commutative_map IsCommApplicative.commutative_map
 

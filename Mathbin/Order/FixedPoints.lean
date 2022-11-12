@@ -44,43 +44,54 @@ variable [CompleteLattice α] (f : α →o α)
 def lfp : (α →o α) →o α where
   toFun f := inf { a | f a ≤ a }
   monotone' f g hle := Inf_le_Inf fun a ha => (hle a).trans ha
+#align order_hom.lfp OrderHom.lfp
 
 /-- Greatest fixed point of a monotone function -/
 def gfp : (α →o α) →o α where
   toFun f := sup { a | a ≤ f a }
   monotone' f g hle := Sup_le_Sup fun a ha => le_trans ha (hle a)
+#align order_hom.gfp OrderHom.gfp
 
 theorem lfp_le {a : α} (h : f a ≤ a) : lfp f ≤ a :=
   Inf_le h
+#align order_hom.lfp_le OrderHom.lfp_le
 
 theorem lfp_le_fixed {a : α} (h : f a = a) : lfp f ≤ a :=
   f.lfp_le h.le
+#align order_hom.lfp_le_fixed OrderHom.lfp_le_fixed
 
 theorem le_lfp {a : α} (h : ∀ b, f b ≤ b → a ≤ b) : a ≤ lfp f :=
   le_Inf h
+#align order_hom.le_lfp OrderHom.le_lfp
 
 theorem map_le_lfp {a : α} (ha : a ≤ f.lfp) : f a ≤ f.lfp :=
   f.le_lfp fun b hb => (f.mono <| le_Inf_iff.1 ha _ hb).trans hb
+#align order_hom.map_le_lfp OrderHom.map_le_lfp
 
 @[simp]
 theorem map_lfp : f (lfp f) = lfp f :=
   have h : f (lfp f) ≤ lfp f := f.map_le_lfp le_rfl
   h.antisymm <| f.lfp_le <| f.mono h
+#align order_hom.map_lfp OrderHom.map_lfp
 
 theorem is_fixed_pt_lfp : IsFixedPt f f.lfp :=
   f.map_lfp
+#align order_hom.is_fixed_pt_lfp OrderHom.is_fixed_pt_lfp
 
 theorem lfp_le_map {a : α} (ha : lfp f ≤ a) : lfp f ≤ f a :=
   calc
     lfp f = f (lfp f) := f.map_lfp.symm
     _ ≤ f a := f.mono ha
     
+#align order_hom.lfp_le_map OrderHom.lfp_le_map
 
 theorem is_least_lfp_le : IsLeast { a | f a ≤ a } (lfp f) :=
   ⟨f.map_lfp.le, fun a => f.lfp_le⟩
+#align order_hom.is_least_lfp_le OrderHom.is_least_lfp_le
 
 theorem is_least_lfp : IsLeast (FixedPoints f) (lfp f) :=
   ⟨f.is_fixed_pt_lfp, fun a => f.lfp_le_fixed⟩
+#align order_hom.is_least_lfp OrderHom.is_least_lfp
 
 theorem lfpInduction {p : α → Prop} (step : ∀ a, p a → a ≤ lfp f → p (f a)) (hSup : ∀ s, (∀ a ∈ s, p a) → p (sup s)) :
     p (lfp f) := by
@@ -91,35 +102,45 @@ theorem lfpInduction {p : α → Prop} (step : ∀ a, p a → a ≤ lfp f → p 
   have h : Sup s ≤ lfp f := Sup_le fun b => And.left
   have hmem : f (Sup s) ∈ s := ⟨f.map_le_lfp h, step _ hSup h⟩
   exact h.antisymm (f.lfp_le <| le_Sup hmem)
+#align order_hom.lfp_induction OrderHom.lfpInduction
 
 theorem le_gfp {a : α} (h : a ≤ f a) : a ≤ gfp f :=
   le_Sup h
+#align order_hom.le_gfp OrderHom.le_gfp
 
 theorem gfp_le {a : α} (h : ∀ b, b ≤ f b → b ≤ a) : gfp f ≤ a :=
   Sup_le h
+#align order_hom.gfp_le OrderHom.gfp_le
 
 theorem is_fixed_pt_gfp : IsFixedPt f (gfp f) :=
   f.dual.is_fixed_pt_lfp
+#align order_hom.is_fixed_pt_gfp OrderHom.is_fixed_pt_gfp
 
 @[simp]
 theorem map_gfp : f (gfp f) = gfp f :=
   f.dual.map_lfp
+#align order_hom.map_gfp OrderHom.map_gfp
 
 theorem map_le_gfp {a : α} (ha : a ≤ gfp f) : f a ≤ gfp f :=
   f.dual.lfp_le_map ha
+#align order_hom.map_le_gfp OrderHom.map_le_gfp
 
 theorem gfp_le_map {a : α} (ha : gfp f ≤ a) : gfp f ≤ f a :=
   f.dual.map_le_lfp ha
+#align order_hom.gfp_le_map OrderHom.gfp_le_map
 
 theorem is_greatest_gfp_le : IsGreatest { a | a ≤ f a } (gfp f) :=
   f.dual.is_least_lfp_le
+#align order_hom.is_greatest_gfp_le OrderHom.is_greatest_gfp_le
 
 theorem is_greatest_gfp : IsGreatest (FixedPoints f) (gfp f) :=
   f.dual.is_least_lfp
+#align order_hom.is_greatest_gfp OrderHom.is_greatest_gfp
 
 theorem gfpInduction {p : α → Prop} (step : ∀ a, p a → gfp f ≤ a → p (f a)) (hInf : ∀ s, (∀ a ∈ s, p a) → p (inf s)) :
     p (gfp f) :=
   f.dual.lfpInduction step hInf
+#align order_hom.gfp_induction OrderHom.gfpInduction
 
 end Basic
 
@@ -131,9 +152,11 @@ variable [CompleteLattice α] [CompleteLattice β] (f : β →o α) (g : α →o
 theorem map_lfp_comp : f (lfp (g.comp f)) = lfp (f.comp g) :=
   le_antisymm ((f.comp g).map_lfp ▸ f.mono (lfp_le_fixed _ <| congr_arg g (f.comp g).map_lfp)) <|
     lfp_le _ (congr_arg f (g.comp f).map_lfp).le
+#align order_hom.map_lfp_comp OrderHom.map_lfp_comp
 
 theorem map_gfp_comp : f (g.comp f).gfp = (f.comp g).gfp :=
   f.dual.map_lfp_comp g.dual
+#align order_hom.map_gfp_comp OrderHom.map_gfp_comp
 
 -- Diagonal rule
 theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag := by
@@ -147,9 +170,11 @@ theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag := by
     _ = lfp (h a) := (h a).map_lfp
     _ = a := ha
     
+#align order_hom.lfp_lfp OrderHom.lfp_lfp
 
 theorem gfp_gfp (h : α →o α →o α) : gfp (gfp.comp h) = gfp h.onDiag :=
   @lfp_lfp αᵒᵈ _ <| (OrderHom.dualIso αᵒᵈ αᵒᵈ).symm.toOrderEmbedding.toOrderHom.comp h.dual
+#align order_hom.gfp_gfp OrderHom.gfp_gfp
 
 end Eqn
 
@@ -159,6 +184,7 @@ variable [CompleteLattice α] (f : α →o α)
 
 theorem gfp_const_inf_le (x : α) : gfp (const α x ⊓ f) ≤ x :=
   (gfp_le _) fun b hb => hb.trans inf_le_left
+#align order_hom.gfp_const_inf_le OrderHom.gfp_const_inf_le
 
 /-- Previous fixed point of a monotone map. If `f` is a monotone self-map of a complete lattice and
 `x` is a point such that `f x ≤ x`, then `f.prev_fixed x hx` is the greatest fixed point of `f`
@@ -170,47 +196,59 @@ def prevFixed (x : α) (hx : f x ≤ x) : FixedPoints f :=
         Eq.symm <| inf_of_le_right <| (f.mono <| f.gfp_const_inf_le x).trans hx
       _ = gfp (const α x ⊓ f) := (const α x ⊓ f).map_gfp
       ⟩
+#align order_hom.prev_fixed OrderHom.prevFixed
 
 /-- Next fixed point of a monotone map. If `f` is a monotone self-map of a complete lattice and
 `x` is a point such that `x ≤ f x`, then `f.next_fixed x hx` is the least fixed point of `f`
 that is greater than or equal to `x`. -/
 def nextFixed (x : α) (hx : x ≤ f x) : FixedPoints f :=
   { f.dual.prevFixed x hx with val := (const α x ⊔ f).lfp }
+#align order_hom.next_fixed OrderHom.nextFixed
 
 theorem prev_fixed_le {x : α} (hx : f x ≤ x) : ↑(f.prevFixed x hx) ≤ x :=
   f.gfp_const_inf_le x
+#align order_hom.prev_fixed_le OrderHom.prev_fixed_le
 
 theorem le_next_fixed {x : α} (hx : x ≤ f x) : x ≤ f.nextFixed x hx :=
   f.dual.prev_fixed_le hx
+#align order_hom.le_next_fixed OrderHom.le_next_fixed
 
 theorem next_fixed_le {x : α} (hx : x ≤ f x) {y : FixedPoints f} (h : x ≤ y) : f.nextFixed x hx ≤ y :=
   Subtype.coe_le_coe.1 <| lfp_le _ <| sup_le h y.2.le
+#align order_hom.next_fixed_le OrderHom.next_fixed_le
 
 @[simp]
 theorem next_fixed_le_iff {x : α} (hx : x ≤ f x) {y : FixedPoints f} : f.nextFixed x hx ≤ y ↔ x ≤ y :=
   ⟨fun h => (f.le_next_fixed hx).trans h, f.next_fixed_le hx⟩
+#align order_hom.next_fixed_le_iff OrderHom.next_fixed_le_iff
 
 @[simp]
 theorem le_prev_fixed_iff {x : α} (hx : f x ≤ x) {y : FixedPoints f} : y ≤ f.prevFixed x hx ↔ ↑y ≤ x :=
   f.dual.next_fixed_le_iff hx
+#align order_hom.le_prev_fixed_iff OrderHom.le_prev_fixed_iff
 
 theorem le_prev_fixed {x : α} (hx : f x ≤ x) {y : FixedPoints f} (h : ↑y ≤ x) : y ≤ f.prevFixed x hx :=
   (f.le_prev_fixed_iff hx).2 h
+#align order_hom.le_prev_fixed OrderHom.le_prev_fixed
 
 theorem le_map_sup_fixed_points (x y : FixedPoints f) : (x ⊔ y : α) ≤ f (x ⊔ y) :=
   calc
     (x ⊔ y : α) = f x ⊔ f y := congr_arg₂ (· ⊔ ·) x.2.symm y.2.symm
     _ ≤ f (x ⊔ y) := f.mono.le_map_sup x y
     
+#align order_hom.le_map_sup_fixed_points OrderHom.le_map_sup_fixed_points
 
 theorem map_inf_fixed_points_le (x y : FixedPoints f) : f (x ⊓ y) ≤ x ⊓ y :=
   f.dual.le_map_sup_fixed_points x y
+#align order_hom.map_inf_fixed_points_le OrderHom.map_inf_fixed_points_le
 
 theorem le_map_Sup_subset_fixed_points (A : Set α) (hA : A ⊆ FixedPoints f) : sup A ≤ f (sup A) :=
   Sup_le fun x hx => hA hx ▸ (f.mono <| le_Sup hx)
+#align order_hom.le_map_Sup_subset_fixed_points OrderHom.le_map_Sup_subset_fixed_points
 
 theorem map_Inf_subset_fixed_points_le (A : Set α) (hA : A ⊆ FixedPoints f) : f (inf A) ≤ inf A :=
   le_Inf fun x hx => hA hx ▸ (f.mono <| Inf_le hx)
+#align order_hom.map_Inf_subset_fixed_points_le OrderHom.map_Inf_subset_fixed_points_le
 
 end PrevNext
 

@@ -28,6 +28,7 @@ In the implementation, the condition `x ≠ a/b` replaces the traditional equiva
 -/
 def Liouville (x : ℝ) :=
   ∀ n : ℕ, ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ n
+#align liouville Liouville
 
 namespace Liouville
 
@@ -72,6 +73,7 @@ theorem irrational {x : ℝ} (h : Liouville x) : Irrational x := by
   -- Recall this is by contradiction: we obtained the inequality `b * q ≤ x * q ^ (b + 1)`, so
   -- we are done.
   exact not_le.mpr a1 (Nat.mul_lt_mul_pow_succ (int.coe_nat_pos.mp ap) (int.coe_nat_lt.mp q1)).le
+#align liouville.irrational Liouville.irrational
 
 open Polynomial Metric Set Real RingHom
 
@@ -122,6 +124,7 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
     refine' mul_le_mul_of_nonneg_left ((B this).trans _) (zero_le_one.trans (d0 a))
     exact mul_le_mul_of_nonneg_left (le_max_right _ M) dist_nonneg
     
+#align liouville.exists_one_le_pow_mul_dist Liouville.exists_one_le_pow_mul_dist
 
 theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : ℤ[X]} (f0 : f ≠ 0)
     (fa : eval α (map (algebraMap ℤ ℝ) f) = 0) :
@@ -178,6 +181,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
     refine' ⟨hq, finset.mem_coe.mp (multiset.mem_to_finset.mpr _)⟩
     exact (mem_roots fR0).mpr (is_root.def.mpr hy)
     
+#align liouville.exists_pos_real_of_irrational_root Liouville.exists_pos_real_of_irrational_root
 
 /-- **Liouville's Theorem** -/
 theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
@@ -224,6 +228,7 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
     rwa [← Nat.cast_succ, Nat.succ_pred_eq_of_pos (zero_lt_one.trans _), ← mul_assoc, ← div_le_iff hA] at h
     exact int.coe_nat_lt.mp b1
     
+#align liouville.transcendental Liouville.transcendental
 
 end Liouville
 

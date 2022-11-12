@@ -45,6 +45,7 @@ def free : Type u ⥤ ModuleCat R where
   map_comp' := by
     intros
     exact Finsupp.lmap_domain_comp _ _ _ _
+#align Module.free ModuleCat.free
 
 /-- The free-forgetful adjunction for R-modules.
 -/
@@ -54,6 +55,7 @@ def adj : free R ⊣ forget (ModuleCat.{u} R) :=
       hom_equiv_naturality_left_symm' := fun _ _ M f g =>
         Finsupp.lhom_ext' fun x =>
           LinearMap.ext_ring (Finsupp.sum_map_domain_index_add_monoid_hom fun y => (smulAddHom R M).flip (g y)).symm }
+#align Module.adj ModuleCat.adj
 
 instance : IsRightAdjoint (forget (ModuleCat.{u} R)) :=
   ⟨_, adj R⟩
@@ -64,21 +66,24 @@ namespace Free
 
 variable [CommRing R]
 
-attribute [local ext] TensorProduct.ext
+attribute [local ext.1] TensorProduct.ext
 
 /-- (Implementation detail) The unitor for `free R`. -/
 def ε : 𝟙_ (ModuleCat.{u} R) ⟶ (free R).obj (𝟙_ (Type u)) :=
   Finsupp.lsingle PUnit.unit
+#align Module.free.ε ModuleCat.free.ε
 
 @[simp]
 theorem ε_apply (r : R) : ε R r = Finsupp.single PUnit.unit r :=
   rfl
+#align Module.free.ε_apply ModuleCat.free.ε_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- (Implementation detail) The tensorator for `free R`. -/
 def μ (α β : Type u) : (free R).obj α ⊗ (free R).obj β ≅ (free R).obj (α ⊗ β) :=
   (finsuppTensorFinsupp' R α β).toModuleIso
+#align Module.free.μ ModuleCat.free.μ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -89,6 +94,7 @@ theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
   dsimp [μ]
   simp_rw [Finsupp.map_domain_single, finsupp_tensor_finsupp'_single_tmul_single, mul_one, Finsupp.map_domain_single,
     CategoryTheory.tensor_apply]
+#align Module.free.μ_natural ModuleCat.free.μ_natural
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem left_unitality (X : Type u) :
@@ -99,6 +105,7 @@ theorem left_unitality (X : Type u) :
   dsimp [ε, μ]
   simp_rw [finsupp_tensor_finsupp'_single_tmul_single, ModuleCat.monoidalCategory.left_unitor_hom_apply,
     Finsupp.smul_single', mul_one, Finsupp.map_domain_single, CategoryTheory.left_unitor_hom_apply]
+#align Module.free.left_unitality ModuleCat.free.left_unitality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem right_unitality (X : Type u) :
@@ -109,6 +116,7 @@ theorem right_unitality (X : Type u) :
   dsimp [ε, μ]
   simp_rw [finsupp_tensor_finsupp'_single_tmul_single, ModuleCat.monoidalCategory.right_unitor_hom_apply,
     Finsupp.smul_single', mul_one, Finsupp.map_domain_single, CategoryTheory.right_unitor_hom_apply]
+#align Module.free.right_unitality ModuleCat.free.right_unitality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -124,6 +132,7 @@ theorem associativity (X Y Z : Type u) :
   dsimp [μ]
   simp_rw [finsupp_tensor_finsupp'_single_tmul_single, Finsupp.map_domain_single, mul_one,
     CategoryTheory.associator_hom_apply]
+#align Module.free.associativity ModuleCat.free.associativity
 
 -- In fact, it's strong monoidal, but we don't yet have a typeclass for that.
 /-- The free R-module functor is lax monoidal. -/
@@ -159,6 +168,7 @@ def monoidalFree : MonoidalFunctor (Type u) (ModuleCat.{u} R) :=
     μ_is_iso := fun X Y => by
       dsimp
       infer_instance }
+#align Module.monoidal_free ModuleCat.monoidalFree
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 example (X Y : Type u) : (free R).obj (X × Y) ≅ (free R).obj X ⊗ (free R).obj Y :=
@@ -177,6 +187,7 @@ of the morphisms in `C`.
 @[nolint unused_arguments has_nonempty_instance]
 def FreeCat (R : Type _) (C : Type u) :=
   C
+#align category_theory.Free CategoryTheory.FreeCat
 
 /-- Consider an object of `C` as an object of the `R`-linear completion.
 
@@ -185,6 +196,7 @@ this functor can also be used to lift morphisms.
 -/
 def FreeCat.of (R : Type _) {C : Type u} (X : C) : FreeCat R C :=
   X
+#align category_theory.Free.of CategoryTheory.FreeCat.of
 
 variable (R : Type _) [CommRing R] (C : Type u) [Category.{v} C]
 
@@ -202,6 +214,7 @@ instance categoryFree : Category (FreeCat R C) where
     -- This imitates the proof of associativity for `monoid_algebra`.
     simp only [sum_sum_index, sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
       forall₃_true_iff, add_mul, mul_add, category.assoc, mul_assoc, zero_mul, mul_zero, sum_zero, sum_add]
+#align category_theory.category_Free CategoryTheory.categoryFree
 
 namespace FreeCat
 
@@ -241,6 +254,7 @@ theorem single_comp_single {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (r s : R) :
     (single f r ≫ single g s : FreeCat.of R X ⟶ FreeCat.of R Z) = single (f ≫ g) (r * s) := by
   dsimp
   simp
+#align category_theory.Free.single_comp_single CategoryTheory.FreeCat.single_comp_single
 
 end
 
@@ -254,6 +268,7 @@ def embedding : C ⥤ FreeCat R C where
   map X Y f := Finsupp.single f 1
   map_id' X := rfl
   map_comp' X Y Z f g := by simp
+#align category_theory.Free.embedding CategoryTheory.FreeCat.embedding
 
 variable (R) {C} {D : Type u} [Category.{v} D] [Preadditive D] [Linear R D]
 
@@ -317,30 +332,35 @@ def lift (F : C ⥤ D) : FreeCat R C ⥤ D where
         simp [mul_comm r s, mul_smul]
         
       
+#align category_theory.Free.lift CategoryTheory.FreeCat.lift
 
 @[simp]
 theorem lift_map_single (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) (r : R) : (lift R F).map (single f r) = r • F.map f := by simp
+#align category_theory.Free.lift_map_single CategoryTheory.FreeCat.lift_map_single
 
 instance lift_additive (F : C ⥤ D) :
     (lift R F).Additive where map_add' X Y f g := by
     dsimp
     rw [Finsupp.sum_add_index] <;> simp [add_smul]
+#align category_theory.Free.lift_additive CategoryTheory.FreeCat.lift_additive
 
 instance lift_linear (F : C ⥤ D) :
     (lift R F).Linear R where map_smul' X Y f r := by
     dsimp
     rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_smul]
+#align category_theory.Free.lift_linear CategoryTheory.FreeCat.lift_linear
 
 /-- The embedding into the `R`-linear completion, followed by the lift,
 is isomorphic to the original functor.
 -/
 def embeddingLiftIso (F : C ⥤ D) : embedding R C ⋙ lift R F ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
+#align category_theory.Free.embedding_lift_iso CategoryTheory.FreeCat.embeddingLiftIso
 
 /-- Two `R`-linear functors out of the `R`-linear completion are isomorphic iff their
 compositions with the embedding functor are isomorphic.
 -/
-@[ext]
+@[ext.1]
 def ext {F G : FreeCat R C ⥤ D} [F.Additive] [F.Linear R] [G.Additive] [G.Linear R]
     (α : embedding R C ⋙ F ≅ embedding R C ⋙ G) : F ≅ G :=
   NatIso.ofComponents (fun X => α.app X)
@@ -360,12 +380,14 @@ def ext {F G : FreeCat R C ⥤ D} [F.Additive] [F.Linear R] [G.Additive] [G.Line
         -- Why are these not picked up automatically when we rewrite?
         infer_instance
         )
+#align category_theory.Free.ext CategoryTheory.FreeCat.ext
 
 /-- `Free.lift` is unique amongst `R`-linear functors `Free R C ⥤ D`
 which compose with `embedding ℤ C` to give the original functor.
 -/
 def liftUnique (F : C ⥤ D) (L : FreeCat R C ⥤ D) [L.Additive] [L.Linear R] (α : embedding R C ⋙ L ≅ F) : L ≅ lift R F :=
   ext R (α.trans (embeddingLiftIso R F).symm)
+#align category_theory.Free.lift_unique CategoryTheory.FreeCat.liftUnique
 
 end FreeCat
 

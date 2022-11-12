@@ -7,6 +7,7 @@ import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Logic.Function.Conjugate
 import Mathbin.Order.Bounds.OrderIso
 import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.RelIso.Group
 import Mathbin.Order.OrdContinuous
 
 /-!
@@ -40,25 +41,31 @@ to a least upper bound for `{x | f x ≤ y}`. If `α` is a partial order, and `f
 a right adjoint, then this right adjoint is unique. -/
 def IsOrderRightAdjoint [Preorder α] [Preorder β] (f : α → β) (g : β → α) :=
   ∀ y, IsLub { x | f x ≤ y } (g y)
+#align is_order_right_adjoint IsOrderRightAdjoint
 
 theorem is_order_right_adjoint_Sup [CompleteLattice α] [Preorder β] (f : α → β) :
     IsOrderRightAdjoint f fun y => sup { x | f x ≤ y } := fun y => is_lub_Sup _
+#align is_order_right_adjoint_Sup is_order_right_adjoint_Sup
 
 theorem is_order_right_adjoint_cSup [ConditionallyCompleteLattice α] [Preorder β] (f : α → β) (hne : ∀ y, ∃ x, f x ≤ y)
     (hbdd : ∀ y, BddAbove { x | f x ≤ y }) : IsOrderRightAdjoint f fun y => sup { x | f x ≤ y } := fun y =>
   is_lub_cSup (hne y) (hbdd y)
+#align is_order_right_adjoint_cSup is_order_right_adjoint_cSup
 
 namespace IsOrderRightAdjoint
 
 protected theorem unique [PartialOrder α] [Preorder β] {f : α → β} {g₁ g₂ : β → α} (h₁ : IsOrderRightAdjoint f g₁)
     (h₂ : IsOrderRightAdjoint f g₂) : g₁ = g₂ :=
   funext fun y => (h₁ y).unique (h₂ y)
+#align is_order_right_adjoint.unique IsOrderRightAdjoint.unique
 
 theorem right_mono [Preorder α] [Preorder β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) : Monotone g :=
   fun y₁ y₂ hy => ((h y₁).mono (h y₂)) fun x hx => le_trans hx hy
+#align is_order_right_adjoint.right_mono IsOrderRightAdjoint.right_mono
 
 theorem order_iso_comp [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
     (e : β ≃o γ) : IsOrderRightAdjoint (e ∘ f) (g ∘ e.symm) := fun y => by simpa [e.le_symm_apply] using h (e.symm y)
+#align is_order_right_adjoint.order_iso_comp IsOrderRightAdjoint.order_iso_comp
 
 theorem comp_order_iso [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
     (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) := by
@@ -66,6 +73,7 @@ theorem comp_order_iso [Preorder α] [Preorder β] [Preorder γ] {f : α → β}
   change IsLub (e ⁻¹' { x | f x ≤ y }) (e.symm (g y))
   rw [e.is_lub_preimage, e.apply_symm_apply]
   exact h y
+#align is_order_right_adjoint.comp_order_iso IsOrderRightAdjoint.comp_order_iso
 
 end IsOrderRightAdjoint
 
@@ -82,6 +90,7 @@ theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} 
   refine' fun y => (hg' _).unique _
   rw [← fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_set_of_eq]
   simp only [h.eq, fb.le_iff_le, fa.left_ord_continuous (hg' _)]
+#align function.semiconj.symm_adjoint Function.Semiconj.symm_adjoint
 
 variable {G : Type _}
 
@@ -91,6 +100,7 @@ theorem semiconj_of_is_lub [PartialOrder α] [Group G] (f₁ f₂ : G →* α �
   have := (f₁ g).LeftOrdContinuous (H y)
   rw [← range_comp, ← (Equiv.mulRight g).Surjective.range_comp _] at this
   simpa [(· ∘ ·)] using this
+#align function.semiconj_of_is_lub Function.semiconj_of_is_lub
 
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a complete lattice by order
 isomorphisms. Then the map `x ↦ ⨆ g : G, (f₁ g)⁻¹ (f₂ g x)` semiconjugates each `f₁ g'` to `f₂ g'`.
@@ -100,6 +110,7 @@ cohomologie bornee][ghys87:groupes]. -/
 theorem Sup_div_semiconj [CompleteLattice α] [Group G] (f₁ f₂ : G →* α ≃o α) (g : G) :
     Function.Semiconj (fun x => ⨆ g' : G, (f₁ g')⁻¹ (f₂ g' x)) (f₂ g) (f₁ g) :=
   semiconj_of_is_lub f₁ f₂ (fun x => is_lub_supr) _
+#align function.Sup_div_semiconj Function.Sup_div_semiconj
 
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a conditionally complete lattice by order
 isomorphisms. Suppose that each set $s(x)=\{f_1(g)^{-1} (f_2(g)(x)) | g \in G\}$ is bounded above.
@@ -111,6 +122,7 @@ theorem cSup_div_semiconj [ConditionallyCompleteLattice α] [Group G] (f₁ f₂
     (hbdd : ∀ x, BddAbove (range fun g => (f₁ g)⁻¹ (f₂ g x))) (g : G) :
     Function.Semiconj (fun x => ⨆ g' : G, (f₁ g')⁻¹ (f₂ g' x)) (f₂ g) (f₁ g) :=
   semiconj_of_is_lub f₁ f₂ (fun x => is_lub_cSup (range_nonempty _) (hbdd x)) _
+#align function.cSup_div_semiconj Function.cSup_div_semiconj
 
 end Function
 

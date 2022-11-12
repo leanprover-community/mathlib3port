@@ -82,6 +82,7 @@ theorem set_of_liouville_with_subset_aux :
       _ = b := one_mul b
       
     
+#align set_of_liouville_with_subset_aux set_of_liouville_with_subset_aux
 
 /-- The set of numbers satisfying the Liouville condition with some exponent `p > 2` has Lebesgue
 measure zero. -/
@@ -106,7 +107,7 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
     intro a b
     rw [Real.volume_ball, mul_one_div, ← Nnreal.coe_two, ← Nnreal.coe_nat_cast, ← Nnreal.coe_rpow, ← Nnreal.coe_div,
       Ennreal.of_real_coe_nnreal]
-  have : ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ -r) : ℝ≥0) := by
+  have : ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) := by
     intro b
     calc
       volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
@@ -121,20 +122,25 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
     simp [add_mul, div_eq_mul_inv, Nnreal.rpow_neg, Nnreal.rpow_sub' _ this, mul_add, mul_left_comm]
   refine' ne_top_of_le_ne_top (Ennreal.tsum_coe_ne_top_iff_summable.2 _) (Ennreal.tsum_le_tsum this)
   refine' (Summable.add _ _).mul_left _ <;> simp only [Nnreal.summable_rpow] <;> linarith
+#align volume_Union_set_of_liouville_with volume_Union_set_of_liouville_with
 
 theorem ae_not_liouville_with : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x := by
   simpa only [ae_iff, not_forall, not_not, set_of_exists] using volume_Union_set_of_liouville_with
+#align ae_not_liouville_with ae_not_liouville_with
 
 theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
   ae_not_liouville_with.mono fun x h₁ h₂ => h₁ 3 (by norm_num) (h₂.LiouvilleWith 3)
+#align ae_not_liouville ae_not_liouville
 
 /-- The set of Liouville numbers has Lebesgue measure zero. -/
 @[simp]
 theorem volume_set_of_liouville : volume { x : ℝ | Liouville x } = 0 := by
   simpa only [ae_iff, not_not] using ae_not_liouville
+#align volume_set_of_liouville volume_set_of_liouville
 
 /-- The filters `residual ℝ` and `volume.ae` are disjoint. This means that there exists a residual
 set of Lebesgue measure zero (e.g., the set of Liouville numbers). -/
-theorem Real.disjointResidualAe : Disjoint (residual ℝ) volume.ae :=
-  disjointOfDisjointOfMem disjointComplRight eventually_residual_liouville ae_not_liouville
+theorem Real.disjoint_residual_ae : Disjoint (residual ℝ) volume.ae :=
+  disjoint_of_disjoint_of_mem disjoint_compl_right eventually_residual_liouville ae_not_liouville
+#align real.disjoint_residual_ae Real.disjoint_residual_ae
 

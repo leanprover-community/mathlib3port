@@ -57,4 +57,5 @@ instance (priority := 100) commRingStrongRankCondition : StrongRankCondition R :
     replace heval := congr_fun heval (Fin.last n)
     simpa [hnex] using heval
   contradiction
+#align comm_ring_strong_rank_condition commRingStrongRankCondition
 

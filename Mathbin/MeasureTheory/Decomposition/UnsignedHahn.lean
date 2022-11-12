@@ -32,6 +32,7 @@ variable {α : Type _} [MeasurableSpace α] {μ ν : Measure α}
 
 -- suddenly this is necessary?!
 private theorem aux {m : ℕ} {γ d : ℝ} (h : γ - (1 / 2) ^ m < d) : γ - 2 * (1 / 2) ^ m + (1 / 2) ^ m ≤ d := by linarith
+#align measure_theory.aux measure_theory.aux
 
 /-- **Hahn decomposition theorem** -/
 theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
@@ -180,6 +181,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     rw [← to_nnreal_μ, ← to_nnreal_ν, Ennreal.coe_le_coe, ← Nnreal.coe_le_coe]
     simpa only [d, sub_le_iff_le_add, zero_add] using this
     
+#align measure_theory.hahn_decomposition MeasureTheory.hahn_decomposition
 
 end MeasureTheory
 

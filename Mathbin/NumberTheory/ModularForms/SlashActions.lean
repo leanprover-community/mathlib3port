@@ -37,6 +37,7 @@ class SlashAction (β : Type _) (G : Type _) (α : Type _) (γ : Type _) [Group 
   right_action : ∀ (k : β) (g h : G) (a : α), map k h (map k g a) = map k (g * h) a
   smul_action : ∀ (k : β) (g : G) (a : α) (z : γ), map k g (z • a) = z • map k g a
   AddAction : ∀ (k : β) (g : G) (a b : α), map k g (a + b) = map k g a + map k g b
+#align slash_action SlashAction
 
 /-- Slash_action induced by a monoid homomorphism.-/
 def monoidHomSlashAction {β : Type _} {G : Type _} {H : Type _} {α : Type _} {γ : Type _} [Group G] [Ring α]
@@ -59,6 +60,7 @@ def monoidHomSlashAction {β : Type _} {G : Type _} {H : Type _} {α : Type _} {
   AddAction := by
     intro k g a b
     apply SlashAction.add_action
+#align monoid_hom_slash_action monoidHomSlashAction
 
 namespace ModularForms
 
@@ -66,7 +68,8 @@ noncomputable section
 
 /-- The weight `k` action of `GL(2, ℝ)⁺` on functions `f : ℍ → ℂ`. -/
 def slash : ℤ → GL(2, ℝ)⁺ → (ℍ → ℂ) → ℍ → ℂ := fun k γ f => fun x : ℍ =>
-  f (γ • x) * ((↑ₘγ).det : ℝ) ^ (k - 1) * UpperHalfPlane.denom γ x ^ -k
+  f (γ • x) * ((↑ₘγ).det : ℝ) ^ (k - 1) * UpperHalfPlane.denom γ x ^ (-k)
+#align modular_forms.slash ModularForms.slash
 
 variable {Γ : Subgroup SL(2, ℤ)} {k : ℤ} (f : ℍ → ℂ)
 
@@ -90,17 +93,20 @@ theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (
         ((↑(↑B : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ).det : ℂ) ^ (k - 1) :=
     by simp_rw [← mul_zpow]
   simp_rw [this, ← mul_assoc, ← mul_zpow]
+#align modular_forms.slash_right_action ModularForms.slash_right_action
 
 theorem slash_add (k : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) : (f + g) ∣[k]A = f ∣[k]A + g ∣[k]A := by
   simp only [slash, Pi.add_apply, Matrix.GeneralLinearGroup.coe_det_apply, Subtype.val_eq_coe, coe_coe]
   ext1
   simp only [Pi.add_apply]
   ring
+#align modular_forms.slash_add ModularForms.slash_add
 
 theorem slash_mul_one (k : ℤ) (f : ℍ → ℂ) : f ∣[k]1 = f := by
   simp_rw [slash]
   ext1
   simp
+#align modular_forms.slash_mul_one ModularForms.slash_mul_one
 
 theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : ℂ) : (c • f) ∣[k]A = c • f ∣[k]A := by
   ext1
@@ -108,6 +114,7 @@ theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : ℂ) : (
   simp only [slash, Algebra.id.smul_eq_mul, Matrix.GeneralLinearGroup.coe_det_apply, Pi.smul_apply, Subtype.val_eq_coe,
     coe_coe]
   ring
+#align modular_forms.smul_slash ModularForms.smul_slash
 
 instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ where
   map := slash
@@ -125,10 +132,12 @@ instance subgroupAction (Γ : Subgroup SL(2, ℤ)) : SlashAction ℤ Γ (ℍ →
   monoidHomSlashAction
     (MonoidHom.comp Matrix.SpecialLinearGroup.toGLPos
       (MonoidHom.comp (Matrix.SpecialLinearGroup.map (Int.castRingHom ℝ)) (Subgroup.subtype Γ)))
+#align modular_forms.subgroup_action ModularForms.subgroupAction
 
 instance sLAction : SlashAction ℤ SL(2, ℤ) (ℍ → ℂ) ℂ :=
   monoidHomSlashAction
     (MonoidHom.comp Matrix.SpecialLinearGroup.toGLPos (Matrix.SpecialLinearGroup.map (Int.castRingHom ℝ)))
+#align modular_forms.SL_action ModularForms.sLAction
 
 end ModularForms
 

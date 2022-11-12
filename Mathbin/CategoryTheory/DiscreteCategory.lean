@@ -43,14 +43,16 @@ universe v₁ v₂ v₃ u₁ u₁' u₂ u₃
 /-- A wrapper for promoting any type to a category,
 with the only morphisms being equalities.
 -/
-@[ext]
+@[ext.1]
 structure Discrete (α : Type u₁) where
   as : α
+#align category_theory.discrete CategoryTheory.Discrete
 
 @[simp]
 theorem Discrete.mk_as {α : Type u₁} (X : Discrete α) : Discrete.mk X.as = X := by
   ext
   rfl
+#align category_theory.discrete.mk_as CategoryTheory.Discrete.mk_as
 
 /-- `discrete α` is equivalent to the original type `α`.-/
 @[simps]
@@ -59,6 +61,7 @@ def discreteEquiv {α : Type u₁} : Discrete α ≃ α where
   invFun := Discrete.mk
   left_inv := by tidy
   right_inv := by tidy
+#align category_theory.discrete_equiv CategoryTheory.discreteEquiv
 
 instance {α : Type u₁} [DecidableEq α] : DecidableEq (Discrete α) :=
   discreteEquiv.DecidableEq
@@ -79,6 +82,7 @@ instance discreteCategory (α : Type u₁) : SmallCategory (Discrete α) where
     cases Z
     rcases f with ⟨⟨⟨⟩⟩⟩
     exact g
+#align category_theory.discrete_category CategoryTheory.discreteCategory
 
 namespace Discrete
 
@@ -97,6 +101,7 @@ instance [Subsingleton α] : Subsingleton (Discrete α) :=
 /-- A simple tactic to run `cases` on any `discrete α` hypotheses. -/
 unsafe def _root_.tactic.discrete_cases : tactic Unit :=
   sorry
+#align category_theory.discrete._root_.tactic.discrete_cases category_theory.discrete._root_.tactic.discrete_cases
 
 run_cmd
   add_interactive [`` tactic.discrete_cases]
@@ -109,6 +114,7 @@ instance [Unique α] : Unique (Discrete α) :=
 /-- Extract the equation from a morphism in a discrete category. -/
 theorem eq_of_hom {X Y : Discrete α} (i : X ⟶ Y) : X.as = Y.as :=
   i.down.down
+#align category_theory.discrete.eq_of_hom CategoryTheory.Discrete.eq_of_hom
 
 /-- Promote an equation between the wrapped terms in `X Y : discrete α` to a morphism `X ⟶ Y`
 in the discrete category. -/
@@ -117,6 +123,7 @@ abbrev eqToHom {X Y : Discrete α} (h : X.as = Y.as) : X ⟶ Y :=
     (by
       ext
       exact h)
+#align category_theory.discrete.eq_to_hom CategoryTheory.Discrete.eqToHom
 
 /-- Promote an equation between the wrapped terms in `X Y : discrete α` to an isomorphism `X ≅ Y`
 in the discrete category. -/
@@ -125,18 +132,22 @@ abbrev eqToIso {X Y : Discrete α} (h : X.as = Y.as) : X ≅ Y :=
     (by
       ext
       exact h)
+#align category_theory.discrete.eq_to_iso CategoryTheory.Discrete.eqToIso
 
 /-- A variant of `eq_to_hom` that lifts terms to the discrete category. -/
 abbrev eqToHom' {a b : α} (h : a = b) : Discrete.mk a ⟶ Discrete.mk b :=
   eqToHom h
+#align category_theory.discrete.eq_to_hom' CategoryTheory.Discrete.eqToHom'
 
 /-- A variant of `eq_to_iso` that lifts terms to the discrete category. -/
 abbrev eqToIso' {a b : α} (h : a = b) : Discrete.mk a ≅ Discrete.mk b :=
   eqToIso h
+#align category_theory.discrete.eq_to_iso' CategoryTheory.Discrete.eqToIso'
 
 @[simp]
 theorem id_def (X : Discrete α) : ULift.up (PLift.up (Eq.refl X.as)) = 𝟙 X :=
   rfl
+#align category_theory.discrete.id_def CategoryTheory.Discrete.id_def
 
 variable {C : Type u₂} [Category.{v₂} C]
 
@@ -152,13 +163,16 @@ def functor {I : Type u₁} (F : I → C) : Discrete I ⥤ C where
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
     cases f
     exact 𝟙 (F X)
+#align category_theory.discrete.functor CategoryTheory.Discrete.functor
 
 @[simp]
 theorem functor_obj {I : Type u₁} (F : I → C) (i : I) : (Discrete.functor F).obj (Discrete.mk i) = F i :=
   rfl
+#align category_theory.discrete.functor_obj CategoryTheory.Discrete.functor_obj
 
 theorem functor_map {I : Type u₁} (F : I → C) {i : Discrete I} (f : i ⟶ i) : (Discrete.functor F).map f = 𝟙 (F i.as) :=
   by tidy
+#align category_theory.discrete.functor_map CategoryTheory.Discrete.functor_map
 
 /-- The discrete functor induced by a composition of maps can be written as a
 composition of two discrete functors.
@@ -167,6 +181,7 @@ composition of two discrete functors.
 def functorComp {I : Type u₁} {J : Type u₁'} (f : J → C) (g : I → J) :
     Discrete.functor (f ∘ g) ≅ Discrete.functor (discrete.mk ∘ g) ⋙ Discrete.functor f :=
   NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
+#align category_theory.discrete.functor_comp CategoryTheory.Discrete.functorComp
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 /-- For functors out of a discrete category,
@@ -180,6 +195,7 @@ def natTrans {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
     cases g
     simp
+#align category_theory.discrete.nat_trans CategoryTheory.Discrete.natTrans
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 /-- For functors out of a discrete category,
@@ -192,10 +208,12 @@ def natIso {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.o
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
     cases g
     simp
+#align category_theory.discrete.nat_iso CategoryTheory.Discrete.natIso
 
 @[simp]
 theorem nat_iso_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i) (i : Discrete I) :
     (Discrete.natIso f).app i = f i := by tidy
+#align category_theory.discrete.nat_iso_app CategoryTheory.Discrete.nat_iso_app
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 /-- Every functor `F` from a discrete category is naturally isomorphic (actually, equal) to
@@ -205,12 +223,14 @@ def natIsoFunctor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functo
   nat_iso fun i => by
     trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
     rfl
+#align category_theory.discrete.nat_iso_functor CategoryTheory.Discrete.natIsoFunctor
 
 /-- Composing `discrete.functor F` with another functor `G` amounts to composing `F` with `G.obj` -/
 @[simp]
 def compNatIsoDiscrete {I : Type u₁} {D : Type u₃} [Category.{v₃} D] (F : I → C) (G : C ⥤ D) :
     Discrete.functor F ⋙ G ≅ Discrete.functor (G.obj ∘ F) :=
   nat_iso fun i => Iso.refl _
+#align category_theory.discrete.comp_nat_iso_discrete CategoryTheory.Discrete.compNatIsoDiscrete
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
@@ -233,6 +253,7 @@ def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ D
         (by
           trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
           simp)
+#align category_theory.discrete.equivalence CategoryTheory.Discrete.equivalence
 
 /-- We can convert an equivalence of `discrete` categories to a type-level `equiv`. -/
 @[simps]
@@ -241,6 +262,7 @@ def equivOfEquivalence {α : Type u₁} {β : Type u₂} (h : Discrete α ≌ Di
   invFun := discrete.as ∘ h.inverse.obj ∘ discrete.mk
   left_inv a := by simpa using eq_of_hom (h.unit_iso.app (discrete.mk a)).2
   right_inv a := by simpa using eq_of_hom (h.counit_iso.app (discrete.mk a)).1
+#align category_theory.discrete.equiv_of_equivalence CategoryTheory.Discrete.equivOfEquivalence
 
 end Discrete
 
@@ -271,6 +293,7 @@ protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α :=
         simp [F])
       _
   tidy
+#align category_theory.discrete.opposite CategoryTheory.Discrete.opposite
 
 variable {C : Type u₂} [Category.{v₂} C]
 
@@ -282,6 +305,7 @@ theorem functor_map_id (F : Discrete J ⥤ C) {j : Discrete J} (f : j ⟶ j) : F
     ext
   rw [h]
   simp
+#align category_theory.discrete.functor_map_id CategoryTheory.Discrete.functor_map_id
 
 end Discrete
 

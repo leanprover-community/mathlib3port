@@ -49,6 +49,7 @@ def normalMono (hf : Mono f) : NormalMono f where
       by
       ext
       rfl
+#align Module.normal_mono ModuleCat.normalMono
 
 /-- In the category of modules, every epimorphism is normal. -/
 def normalEpi (hf : Epi f) : NormalEpi f where
@@ -71,6 +72,7 @@ def normalEpi (hf : Epi f) : NormalEpi f where
       by
       ext
       rfl
+#align Module.normal_epi ModuleCat.normalEpi
 
 /-- The category of R-modules is abelian. -/
 instance : Abelian (ModuleCat R) where
@@ -86,16 +88,20 @@ section ReflectsLimits
     is balanced. -/
 instance forgetReflectsLimitsOfSize : ReflectsLimitsOfSize.{v, v} (forget (ModuleCat.{max v w} R)) :=
   reflects_limits_of_reflects_isomorphisms
+#align Module.forget_reflects_limits_of_size ModuleCat.forgetReflectsLimitsOfSize
 
 instance forget₂ReflectsLimitsOfSize :
     ReflectsLimitsOfSize.{v, v} (forget₂ (ModuleCat.{max v w} R) AddCommGroupCat.{max v w}) :=
   reflects_limits_of_reflects_isomorphisms
+#align Module.forget₂_reflects_limits_of_size ModuleCat.forget₂ReflectsLimitsOfSize
 
 instance forgetReflectsLimits : ReflectsLimits (forget (ModuleCat.{v} R)) :=
   ModuleCat.forgetReflectsLimitsOfSize.{v, v}
+#align Module.forget_reflects_limits ModuleCat.forgetReflectsLimits
 
 instance forget₂ReflectsLimits : ReflectsLimits (forget₂ (ModuleCat.{v} R) AddCommGroupCat.{v}) :=
   ModuleCat.forget₂ReflectsLimitsOfSize.{v, v}
+#align Module.forget₂_reflects_limits ModuleCat.forget₂ReflectsLimits
 
 end ReflectsLimits
 
@@ -110,6 +116,7 @@ theorem exact_iff : Exact f g ↔ f.range = g.ker := by
   exact
     ⟨fun h => le_antisymm (range_le_ker_iff.2 h.1) (ker_le_range_iff.2 h.2), fun h =>
       ⟨range_le_ker_iff.1 <| le_of_eq h, ker_le_range_iff.1 <| le_of_eq h.symm⟩⟩
+#align Module.exact_iff ModuleCat.exact_iff
 
 end ModuleCat
 

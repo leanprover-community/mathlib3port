@@ -45,6 +45,7 @@ variable (α)
 /-- The product of a family of types over a list. -/
 def Tprod (l : List ι) : Type _ :=
   l.foldr (fun i β => α i × β) PUnit
+#align list.tprod List.Tprod
 
 variable {α}
 
@@ -62,6 +63,7 @@ Case conversion may be inaccurate. Consider using '#align list.tprod.mk List.Tpr
 protected def mk : ∀ (l : List ι) (f : ∀ i, α i), Tprod α l
   | [] => fun f => PUnit.unit
   | i :: is => fun f => (f i, mk is f)
+#align list.tprod.mk List.Tprod.mk
 
 instance [∀ i, Inhabited (α i)] : Inhabited (Tprod α l) :=
   ⟨Tprod.mk l default⟩
@@ -69,10 +71,12 @@ instance [∀ i, Inhabited (α i)] : Inhabited (Tprod α l) :=
 @[simp]
 theorem fst_mk (i : ι) (l : List ι) (f : ∀ i, α i) : (Tprod.mk (i :: l) f).1 = f i :=
   rfl
+#align list.tprod.fst_mk List.Tprod.fst_mk
 
 @[simp]
 theorem snd_mk (i : ι) (l : List ι) (f : ∀ i, α i) : (Tprod.mk (i :: l) f).2 = Tprod.mk l f :=
   rfl
+#align list.tprod.snd_mk List.Tprod.snd_mk
 
 variable [DecidableEq ι]
 
@@ -90,13 +94,16 @@ protected def elim : ∀ {l : List ι} (v : Tprod α l) {i : ι} (hi : i ∈ l),
       subst hji
       exact v.1
     else elim v.2 (hj.resolve_left hji)
+#align list.tprod.elim List.Tprod.elim
 
 @[simp]
 theorem elim_self (v : Tprod α (i :: l)) : v.elim (l.mem_cons_self i) = v.1 := by simp [tprod.elim]
+#align list.tprod.elim_self List.Tprod.elim_self
 
 @[simp]
 theorem elim_of_ne (hj : j ∈ i :: l) (hji : j ≠ i) (v : Tprod α (i :: l)) :
     v.elim hj = Tprod.elim v.2 (hj.resolve_left hji) := by simp [tprod.elim, hji]
+#align list.tprod.elim_of_ne List.Tprod.elim_of_ne
 
 @[simp]
 theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : Tprod α (i :: l)) :
@@ -104,6 +111,7 @@ theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : Tprod α (i :: l))
   apply elim_of_ne
   rintro rfl
   exact hl.not_mem hj
+#align list.tprod.elim_of_mem List.Tprod.elim_of_mem
 
 theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (Tprod.mk l f).elim hi = f i
   | i :: is, f, j, hj => by
@@ -113,8 +121,9 @@ theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (
       
     · rw [elim_of_ne _ hji, snd_mk, elim_mk]
       
+#align list.tprod.elim_mk List.Tprod.elim_mk
 
-@[ext]
+@[ext.1]
 theorem ext : ∀ {l : List ι} (hl : l.Nodup) {v w : Tprod α l} (hvw : ∀ (i) (hi : i ∈ l), v.elim hi = w.elim hi), v = w
   | [], hl, v, w, hvw => PUnit.ext
   | i :: is, hl, v, w, hvw => by
@@ -122,19 +131,23 @@ theorem ext : ∀ {l : List ι} (hl : l.Nodup) {v w : Tprod α l} (hvw : ∀ (i)
     rw [← elim_self v, hvw, elim_self]
     refine' ext (nodup_cons.mp hl).2 fun j hj => _
     rw [← elim_of_mem hl, hvw, elim_of_mem hl]
+#align list.tprod.ext List.Tprod.ext
 
 /-- A version of `tprod.elim` when `l` contains all elements. In this case we get a function into
   `Π i, α i`. -/
 @[simp]
 protected def elim' (h : ∀ i, i ∈ l) (v : Tprod α l) (i : ι) : α i :=
   v.elim (h i)
+#align list.tprod.elim' List.Tprod.elim'
 
 theorem mk_elim (hnd : l.Nodup) (h : ∀ i, i ∈ l) (v : Tprod α l) : Tprod.mk l (v.elim' h) = v :=
   Tprod.ext hnd fun i hi => by simp [elim_mk]
+#align list.tprod.mk_elim List.Tprod.mk_elim
 
 /-- Pi-types are equivalent to iterated products. -/
 def piEquivTprod (hnd : l.Nodup) (h : ∀ i, i ∈ l) : (∀ i, α i) ≃ Tprod α l :=
   ⟨Tprod.mk l, Tprod.elim' h, fun f => funext fun i => elim_mk l f (h i), mk_elim hnd h⟩
+#align list.tprod.pi_equiv_tprod List.Tprod.piEquivTprod
 
 end Tprod
 
@@ -156,6 +169,7 @@ Case conversion may be inaccurate. Consider using '#align set.tprod Set.Tprodₓ
 protected def Tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (Tprod α l)
   | [], t => Univ
   | i :: is, t => t i ×ˢ tprod is t
+#align set.tprod Set.Tprod
 
 theorem mk_preimage_tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk l ⁻¹' Set.Tprod l t = { i | i ∈ l }.pi t
   | [], t => by simp [Set.Tprod]
@@ -168,6 +182,7 @@ theorem mk_preimage_tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk 
     simp_rw [mem_set_of_eq, mem_cons_iff]
     rw [forall_eq_or_imp, and_congr_right_iff]
     exact fun _ => this
+#align set.mk_preimage_tprod Set.mk_preimage_tprod
 
 theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l) (t : ∀ i, Set (α i)) :
     Tprod.elim' h ⁻¹' Pi Univ t = Set.Tprod l t := by
@@ -177,6 +192,7 @@ theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀
   rw [← this, ← mk_preimage_tprod, preimage_preimage]
   convert preimage_id
   simp [tprod.mk_elim hnd h, id_def]
+#align set.elim_preimage_pi Set.elim_preimage_pi
 
 end Set
 

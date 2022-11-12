@@ -44,10 +44,9 @@ let `a : α`. The limit strictly to the left of `f` at `a`, denoted with `left_l
 by using the order topology on `α`. If `a` is isolated to its left or the function has no left
 limit, we use `f a` instead to guarantee a good behavior in most cases. -/
 noncomputable irreducible_def Function.leftLim (f : α → β) (a : α) : β := by
-  classical
-  haveI : Nonempty β := ⟨f a⟩
-  letI : TopologicalSpace α := Preorder.topology α
-  exact if 𝓝[<] a = ⊥ ∨ ¬∃ y, tendsto f (𝓝[<] a) (𝓝 y) then f a else lim (𝓝[<] a) f
+  classical haveI : Nonempty β := ⟨f a⟩
+    exact if 𝓝[<] a = ⊥ ∨ ¬∃ y, tendsto f (𝓝[<] a) (𝓝 y) then f a else lim (𝓝[<] a) f
+#align function.left_lim Function.leftLim
 
 /-- Let `f : α → β` be a function from a linear order `α` to a topological_space `β`, and
 let `a : α`. The limit strictly to the right of `f` at `a`, denoted with `right_lim f a`, is defined
@@ -55,6 +54,7 @@ by using the order topology on `α`. If `a` is isolated to its right or the func
 limit, , we use `f a` instead to guarantee a good behavior in most cases. -/
 noncomputable def Function.rightLim (f : α → β) (a : α) : β :=
   @Function.leftLim αᵒᵈ β _ _ f a
+#align function.right_lim Function.rightLim
 
 open Function
 
@@ -65,11 +65,13 @@ theorem left_lim_eq_of_tendsto [hα : TopologicalSpace α] [h'α : OrderTopology
   simp only [left_lim, h, h'', not_true, or_self_iff, if_false]
   haveI := ne_bot_iff.2 h
   exact h'.lim_eq
+#align left_lim_eq_of_tendsto left_lim_eq_of_tendsto
 
 theorem left_lim_eq_of_eq_bot [hα : TopologicalSpace α] [h'α : OrderTopology α] (f : α → β) {a : α} (h : 𝓝[<] a = ⊥) :
     leftLim f a = f a := by
   rw [h'α.topology_eq_generate_intervals] at h
   simp [left_lim, ite_eq_left_iff, h]
+#align left_lim_eq_of_eq_bot left_lim_eq_of_eq_bot
 
 end
 
@@ -84,6 +86,7 @@ include hf
 
 theorem left_lim_eq_Sup [TopologicalSpace α] [OrderTopology α] (h : 𝓝[<] x ≠ ⊥) : leftLim f x = sup (f '' IioCat x) :=
   left_lim_eq_of_tendsto h (hf.tendsto_nhds_within_Iio x)
+#align monotone.left_lim_eq_Sup Monotone.left_lim_eq_Sup
 
 theorem left_lim_le (h : x ≤ y) : leftLim f x ≤ f y := by
   letI : TopologicalSpace α := Preorder.topology α
@@ -101,6 +104,7 @@ theorem left_lim_le (h : x ≤ y) : leftLim f x ≤ f y := by
     intro z hz
     exact hf (hz.le.trans h)
     
+#align monotone.left_lim_le Monotone.left_lim_le
 
 theorem le_left_lim (h : x < y) : f x ≤ leftLim f y := by
   letI : TopologicalSpace α := Preorder.topology α
@@ -114,6 +118,7 @@ theorem le_left_lim (h : x < y) : f x ≤ leftLim f y := by
   simp only [UpperBounds, mem_image, mem_Iio, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂, mem_set_of_eq]
   intro z hz
   exact hf hz.le
+#align monotone.le_left_lim Monotone.le_left_lim
 
 @[mono]
 protected theorem left_lim : Monotone (leftLim f) := by
@@ -123,18 +128,23 @@ protected theorem left_lim : Monotone (leftLim f) := by
     
   · exact (hf.left_lim_le le_rfl).trans (hf.le_left_lim hxy)
     
+#align monotone.left_lim Monotone.left_lim
 
 theorem le_right_lim (h : x ≤ y) : f x ≤ rightLim f y :=
   hf.dual.left_lim_le h
+#align monotone.le_right_lim Monotone.le_right_lim
 
 theorem right_lim_le (h : x < y) : rightLim f x ≤ f y :=
   hf.dual.le_left_lim h
+#align monotone.right_lim_le Monotone.right_lim_le
 
 @[mono]
 protected theorem right_lim : Monotone (rightLim f) := fun x y h => hf.dual.leftLim h
+#align monotone.right_lim Monotone.right_lim
 
 theorem left_lim_le_right_lim (h : x ≤ y) : leftLim f x ≤ rightLim f y :=
   (hf.left_lim_le le_rfl).trans (hf.le_right_lim h)
+#align monotone.left_lim_le_right_lim Monotone.left_lim_le_right_lim
 
 theorem right_lim_le_left_lim (h : x < y) : rightLim f x ≤ leftLim f y := by
   letI : TopologicalSpace α := Preorder.topology α
@@ -149,6 +159,7 @@ theorem right_lim_le_left_lim (h : x < y) : rightLim f x ≤ leftLim f y := by
     right_lim f x ≤ f a := hf.right_lim_le xa
     _ ≤ left_lim f y := hf.le_left_lim ay
     
+#align monotone.right_lim_le_left_lim Monotone.right_lim_le_left_lim
 
 variable [TopologicalSpace α] [OrderTopology α]
 
@@ -158,16 +169,20 @@ theorem tendsto_left_lim (x : α) : Tendsto f (𝓝[<] x) (𝓝 (leftLim f x)) :
     
   rw [left_lim_eq_Sup hf h']
   exact hf.tendsto_nhds_within_Iio x
+#align monotone.tendsto_left_lim Monotone.tendsto_left_lim
 
 theorem tendsto_left_lim_within (x : α) : Tendsto f (𝓝[<] x) (𝓝[≤] leftLim f x) := by
   apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within f (hf.tendsto_left_lim x)
   filter_upwards [self_mem_nhds_within] with y hy using hf.le_left_lim hy
+#align monotone.tendsto_left_lim_within Monotone.tendsto_left_lim_within
 
 theorem tendsto_right_lim (x : α) : Tendsto f (𝓝[>] x) (𝓝 (rightLim f x)) :=
   hf.dual.tendsto_left_lim x
+#align monotone.tendsto_right_lim Monotone.tendsto_right_lim
 
 theorem tendsto_right_lim_within (x : α) : Tendsto f (𝓝[>] x) (𝓝[≥] rightLim f x) :=
   hf.dual.tendsto_left_lim_within x
+#align monotone.tendsto_right_lim_within Monotone.tendsto_right_lim_within
 
 /-- A monotone function is continuous to the left at a point if and only if its left limit
 coincides with the value of the function. -/
@@ -179,11 +194,13 @@ theorem continuous_within_at_Iio_iff_left_lim_eq : ContinuousWithinAt f (IioCat 
   refine' ⟨fun h => tendsto_nhds_unique (hf.tendsto_left_lim x) h.Tendsto, fun h => _⟩
   have := hf.tendsto_left_lim x
   rwa [h] at this
+#align monotone.continuous_within_at_Iio_iff_left_lim_eq Monotone.continuous_within_at_Iio_iff_left_lim_eq
 
 /-- A monotone function is continuous to the right at a point if and only if its right limit
 coincides with the value of the function. -/
 theorem continuous_within_at_Ioi_iff_right_lim_eq : ContinuousWithinAt f (IoiCat x) x ↔ rightLim f x = f x :=
   hf.dual.continuous_within_at_Iio_iff_left_lim_eq
+#align monotone.continuous_within_at_Ioi_iff_right_lim_eq Monotone.continuous_within_at_Ioi_iff_right_lim_eq
 
 /-- A monotone function is continuous at a point if and only if its left and right limits
 coincide. -/
@@ -204,6 +221,7 @@ theorem continuous_at_iff_left_lim_eq_right_lim : ContinuousAt f x ↔ leftLim f
       exact hf.continuous_within_at_Ioi_iff_right_lim_eq.2 h'
       
     
+#align monotone.continuous_at_iff_left_lim_eq_right_lim Monotone.continuous_at_iff_left_lim_eq_right_lim
 
 /-- In a second countable space, the set of points where a monotone function is not right-continuous
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
@@ -255,6 +273,7 @@ theorem countable_not_continuous_within_at_Ioi [TopologicalSpace.SecondCountable
     rintro _ ⟨y, ys, rfl⟩
     simpa only [I.left_inv_on_inv_fun_on ys] using (hz y ys).1
   exact maps_to.countable_of_inj_on (maps_to_image f s) I fs_count
+#align monotone.countable_not_continuous_within_at_Ioi Monotone.countable_not_continuous_within_at_Ioi
 
 /-- In a second countable space, the set of points where a monotone function is not left-continuous
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
@@ -262,6 +281,7 @@ version. -/
 theorem countable_not_continuous_within_at_Iio [TopologicalSpace.SecondCountableTopology β] :
     Set.Countable { x | ¬ContinuousWithinAt f (IioCat x) x } :=
   hf.dual.countable_not_continuous_within_at_Ioi
+#align monotone.countable_not_continuous_within_at_Iio Monotone.countable_not_continuous_within_at_Iio
 
 /-- In a second countable space, the set of points where a monotone function is not continuous
 is at most countable. -/
@@ -273,6 +293,7 @@ theorem countable_not_continuous_at [TopologicalSpace.SecondCountableTopology β
   rintro x ⟨hx, h'x⟩
   simp only [mem_set_of_eq, not_not, mem_compl_iff] at hx h'x⊢
   exact continuous_at_iff_continuous_left'_right'.2 ⟨h'x, hx⟩
+#align monotone.countable_not_continuous_at Monotone.countable_not_continuous_at
 
 end Monotone
 
@@ -285,64 +306,80 @@ include hf
 
 theorem le_left_lim (h : x ≤ y) : f y ≤ leftLim f x :=
   hf.dual_right.left_lim_le h
+#align antitone.le_left_lim Antitone.le_left_lim
 
 theorem left_lim_le (h : x < y) : leftLim f y ≤ f x :=
   hf.dual_right.le_left_lim h
+#align antitone.left_lim_le Antitone.left_lim_le
 
 @[mono]
 protected theorem left_lim : Antitone (leftLim f) :=
   hf.dual_right.leftLim
+#align antitone.left_lim Antitone.left_lim
 
 theorem right_lim_le (h : x ≤ y) : rightLim f y ≤ f x :=
   hf.dual_right.le_right_lim h
+#align antitone.right_lim_le Antitone.right_lim_le
 
 theorem le_right_lim (h : x < y) : f y ≤ rightLim f x :=
   hf.dual_right.right_lim_le h
+#align antitone.le_right_lim Antitone.le_right_lim
 
 @[mono]
 protected theorem right_lim : Antitone (rightLim f) :=
   hf.dual_right.rightLim
+#align antitone.right_lim Antitone.right_lim
 
 theorem right_lim_le_left_lim (h : x ≤ y) : rightLim f y ≤ leftLim f x :=
   hf.dual_right.left_lim_le_right_lim h
+#align antitone.right_lim_le_left_lim Antitone.right_lim_le_left_lim
 
 theorem left_lim_le_right_lim (h : x < y) : leftLim f y ≤ rightLim f x :=
   hf.dual_right.right_lim_le_left_lim h
+#align antitone.left_lim_le_right_lim Antitone.left_lim_le_right_lim
 
 variable [TopologicalSpace α] [OrderTopology α]
 
 theorem tendsto_left_lim (x : α) : Tendsto f (𝓝[<] x) (𝓝 (leftLim f x)) :=
   hf.dual_right.tendsto_left_lim x
+#align antitone.tendsto_left_lim Antitone.tendsto_left_lim
 
 theorem tendsto_left_lim_within (x : α) : Tendsto f (𝓝[<] x) (𝓝[≥] leftLim f x) :=
   hf.dual_right.tendsto_left_lim_within x
+#align antitone.tendsto_left_lim_within Antitone.tendsto_left_lim_within
 
 theorem tendsto_right_lim (x : α) : Tendsto f (𝓝[>] x) (𝓝 (rightLim f x)) :=
   hf.dual_right.tendsto_right_lim x
+#align antitone.tendsto_right_lim Antitone.tendsto_right_lim
 
 theorem tendsto_right_lim_within (x : α) : Tendsto f (𝓝[>] x) (𝓝[≤] rightLim f x) :=
   hf.dual_right.tendsto_right_lim_within x
+#align antitone.tendsto_right_lim_within Antitone.tendsto_right_lim_within
 
 /-- An antitone function is continuous to the left at a point if and only if its left limit
 coincides with the value of the function. -/
 theorem continuous_within_at_Iio_iff_left_lim_eq : ContinuousWithinAt f (IioCat x) x ↔ leftLim f x = f x :=
   hf.dual_right.continuous_within_at_Iio_iff_left_lim_eq
+#align antitone.continuous_within_at_Iio_iff_left_lim_eq Antitone.continuous_within_at_Iio_iff_left_lim_eq
 
 /-- An antitone function is continuous to the right at a point if and only if its right limit
 coincides with the value of the function. -/
 theorem continuous_within_at_Ioi_iff_right_lim_eq : ContinuousWithinAt f (IoiCat x) x ↔ rightLim f x = f x :=
   hf.dual_right.continuous_within_at_Ioi_iff_right_lim_eq
+#align antitone.continuous_within_at_Ioi_iff_right_lim_eq Antitone.continuous_within_at_Ioi_iff_right_lim_eq
 
 /-- An antitone function is continuous at a point if and only if its left and right limits
 coincide. -/
 theorem continuous_at_iff_left_lim_eq_right_lim : ContinuousAt f x ↔ leftLim f x = rightLim f x :=
   hf.dual_right.continuous_at_iff_left_lim_eq_right_lim
+#align antitone.continuous_at_iff_left_lim_eq_right_lim Antitone.continuous_at_iff_left_lim_eq_right_lim
 
 /-- In a second countable space, the set of points where an antitone function is not continuous
 is at most countable. -/
 theorem countable_not_continuous_at [TopologicalSpace.SecondCountableTopology β] :
     Set.Countable { x | ¬ContinuousAt f x } :=
   hf.dual_right.countable_not_continuous_at
+#align antitone.countable_not_continuous_at Antitone.countable_not_continuous_at
 
 end Antitone
 

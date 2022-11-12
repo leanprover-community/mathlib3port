@@ -65,6 +65,8 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {
     ext n
     exact this.apply_eq_zero n _
   exact HasSum.unique A B
+#align
+  analytic_on.eq_on_zero_of_preconnected_of_eventually_eq_zero_aux AnalyticOn.eq_on_zero_of_preconnected_of_eventually_eq_zero_aux
 
 /-- The *identity principle* for analytic functions: If an analytic function vanishes in a whole
 neighborhood of a point `z₀`, then it is uniformly zero along a connected set. For a one-dimensional
@@ -78,10 +80,12 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero {f : E → F} {U : Set 
   have A : eq_on (e ∘ f) 0 U := by
     apply eq_on_zero_of_preconnected_of_eventually_eq_zero_aux this hU h₀
     filter_upwards [hfz₀] with x hx
-    simp only [hx, Function.comp_app, Pi.zero_apply, map_zero]
+    simp only [hx, Function.comp_apply, Pi.zero_apply, map_zero]
   intro z hz
   have : e (f z) = e 0 := by simpa only using A hz
   exact UniformSpace.Completion.coe_injective F this
+#align
+  analytic_on.eq_on_zero_of_preconnected_of_eventually_eq_zero AnalyticOn.eq_on_zero_of_preconnected_of_eventually_eq_zero
 
 /-- The *identity principle* for analytic functions: If two analytic function coincide in a whole
 neighborhood of a point `z₀`, then they coincide globally along a connected set.
@@ -91,6 +95,7 @@ theorem eq_on_of_preconnected_of_eventually_eq {f g : E → F} {U : Set E} (hf :
     (hU : IsPreconnected U) {z₀ : E} (h₀ : z₀ ∈ U) (hfg : f =ᶠ[𝓝 z₀] g) : EqOn f g U := by
   have hfg' : f - g =ᶠ[𝓝 z₀] 0 := hfg.mono fun z h => by simp [h]
   simpa [sub_eq_zero] using fun z hz => (hf.sub hg).eq_on_zero_of_preconnected_of_eventually_eq_zero hU h₀ hfg' hz
+#align analytic_on.eq_on_of_preconnected_of_eventually_eq AnalyticOn.eq_on_of_preconnected_of_eventually_eq
 
 end AnalyticOn
 

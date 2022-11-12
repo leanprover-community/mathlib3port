@@ -37,10 +37,12 @@ theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semirin
       rw [IsScalarTower.algebra_map_apply ℕ R A x]
       refine' Iff.trans _ h.eq_iff
       rw [RingHom.map_zero] }
+#align char_p_of_injective_algebra_map char_p_of_injective_algebra_map
 
 theorem char_p_of_injective_algebra_map' (R A : Type _) [Field R] [Semiring A] [Algebra R A] [Nontrivial A] (p : ℕ)
     [CharP R p] : CharP A p :=
   char_p_of_injective_algebra_map (algebraMap R A).Injective p
+#align char_p_of_injective_algebra_map' char_p_of_injective_algebra_map'
 
 /-- If the algebra map `R →+* A` is injective and `R` has characteristic zero then so does `A`. -/
 theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
@@ -50,6 +52,7 @@ theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semi
       rw [IsScalarTower.algebra_map_apply ℕ R A x] at hxy
       rw [IsScalarTower.algebra_map_apply ℕ R A y] at hxy
       exact CharZero.cast_injective (h hxy) }
+#align char_zero_of_injective_algebra_map char_zero_of_injective_algebra_map
 
 /-!
 As an application, a `ℚ`-algebra has characteristic zero.
@@ -70,6 +73,7 @@ automatically receive an `algebra ℚ R` instance.
 -/
 theorem algebraRat.char_p_zero [Semiring R] [Algebra ℚ R] : CharP R 0 :=
   char_p_of_injective_algebra_map (algebraMap ℚ R).Injective 0
+#align algebra_rat.char_p_zero algebraRat.char_p_zero
 
 /-- A nontrivial `ℚ`-algebra has characteristic zero.
 
@@ -79,6 +83,7 @@ automatically receive an `algebra ℚ R` instance.
 -/
 theorem algebraRat.char_zero [Ring R] [Algebra ℚ R] : CharZero R :=
   @CharP.char_p_to_char_zero R _ (algebraRat.char_p_zero R)
+#align algebra_rat.char_zero algebraRat.char_zero
 
 end QAlgebra
 
@@ -93,10 +98,12 @@ variable (K L : Type _) [Field K] [CommSemiring L] [Nontrivial L] [Algebra K L]
 
 theorem Algebra.char_p_iff (p : ℕ) : CharP K p ↔ CharP L p :=
   (algebraMap K L).char_p_iff_char_p p
+#align algebra.char_p_iff Algebra.char_p_iff
 
 theorem Algebra.ring_char_eq : ringChar K = ringChar L := by
   rw [ringChar.eq_iff, Algebra.char_p_iff K L]
   apply ringChar.char_p
+#align algebra.ring_char_eq Algebra.ring_char_eq
 
 end
 
@@ -107,10 +114,12 @@ variable {R X : Type _} [CommSemiring R] (p : ℕ)
 /-- If `R` has characteristic `p`, then so does `free_algebra R X`. -/
 instance char_p [CharP R p] : CharP (FreeAlgebra R X) p :=
   char_p_of_injective_algebra_map FreeAlgebra.algebra_map_left_inverse.Injective p
+#align free_algebra.char_p FreeAlgebra.char_p
 
 /-- If `R` has characteristic `0`, then so does `free_algebra R X`. -/
 instance char_zero [CharZero R] : CharZero (FreeAlgebra R X) :=
   char_zero_of_injective_algebra_map FreeAlgebra.algebra_map_left_inverse.Injective
+#align free_algebra.char_zero FreeAlgebra.char_zero
 
 end FreeAlgebra
 
@@ -123,20 +132,24 @@ variable (p : ℕ)
 /-- If `R` has characteristic `p`, then so does Frac(R). -/
 theorem char_p_of_is_fraction_ring [CharP R p] : CharP K p :=
   char_p_of_injective_algebra_map (IsFractionRing.injective R K) p
+#align is_fraction_ring.char_p_of_is_fraction_ring IsFractionRing.char_p_of_is_fraction_ring
 
 /-- If `R` has characteristic `0`, then so does Frac(R). -/
 theorem char_zero_of_is_fraction_ring [CharZero R] : CharZero K :=
   @CharP.char_p_to_char_zero K _ (char_p_of_is_fraction_ring R 0)
+#align is_fraction_ring.char_zero_of_is_fraction_ring IsFractionRing.char_zero_of_is_fraction_ring
 
 variable [IsDomain R]
 
 /-- If `R` has characteristic `p`, then so does `fraction_ring R`. -/
 instance char_p [CharP R p] : CharP (FractionRing R) p :=
   char_p_of_is_fraction_ring R p
+#align is_fraction_ring.char_p IsFractionRing.char_p
 
 /-- If `R` has characteristic `0`, then so does `fraction_ring R`. -/
 instance char_zero [CharZero R] : CharZero (FractionRing R) :=
   char_zero_of_is_fraction_ring R
+#align is_fraction_ring.char_zero IsFractionRing.char_zero
 
 end IsFractionRing
 

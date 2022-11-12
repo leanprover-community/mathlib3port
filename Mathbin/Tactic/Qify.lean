@@ -48,13 +48,14 @@ unsafe def qify_attr : user_attribute simp_lemmas Unit where
   descr := "Used to tag lemmas for use in the `qify` tactic"
   cache_cfg :=
     { mk_cache := fun ns =>
-        mmap
+        mapM
             (fun n => do
               let c ← mk_const n
               return (c, tt))
             ns >>=
           simp_lemmas.mk.append_with_symm,
       dependencies := [] }
+#align qify.qify_attr qify.qify_attr
 
 /-- Given an expression `e`, `lift_to_q e` looks for subterms of `e` that are propositions "about"
 natural numbers or integers and change them to propositions about rational numbers.
@@ -70,30 +71,39 @@ unsafe def lift_to_q (e : expr) : tactic (expr × expr) := do
   let sl ← sl.add_simp `gt_iff_lt
   let (e', prf, _) ← simplify sl [] e
   return (e', prf)
+#align qify.lift_to_q qify.lift_to_q
 
 @[qify]
 theorem Rat.coe_nat_le_coe_nat_iff (a b : ℕ) : (a : ℚ) ≤ b ↔ a ≤ b := by simp
+#align qify.rat.coe_nat_le_coe_nat_iff Qify.Rat.coe_nat_le_coe_nat_iff
 
 @[qify]
 theorem Rat.coe_nat_lt_coe_nat_iff (a b : ℕ) : (a : ℚ) < b ↔ a < b := by simp
+#align qify.rat.coe_nat_lt_coe_nat_iff Qify.Rat.coe_nat_lt_coe_nat_iff
 
 @[qify]
 theorem Rat.coe_nat_eq_coe_nat_iff (a b : ℕ) : (a : ℚ) = b ↔ a = b := by simp
+#align qify.rat.coe_nat_eq_coe_nat_iff Qify.Rat.coe_nat_eq_coe_nat_iff
 
 @[qify]
 theorem Rat.coe_nat_ne_coe_nat_iff (a b : ℕ) : (a : ℚ) ≠ b ↔ a ≠ b := by simp
+#align qify.rat.coe_nat_ne_coe_nat_iff Qify.Rat.coe_nat_ne_coe_nat_iff
 
 @[qify]
 theorem Rat.coe_int_le_coe_int_iff (a b : ℤ) : (a : ℚ) ≤ b ↔ a ≤ b := by simp
+#align qify.rat.coe_int_le_coe_int_iff Qify.Rat.coe_int_le_coe_int_iff
 
 @[qify]
 theorem Rat.coe_int_lt_coe_int_iff (a b : ℤ) : (a : ℚ) < b ↔ a < b := by simp
+#align qify.rat.coe_int_lt_coe_int_iff Qify.Rat.coe_int_lt_coe_int_iff
 
 @[qify]
 theorem Rat.coe_int_eq_coe_int_iff (a b : ℤ) : (a : ℚ) = b ↔ a = b := by simp
+#align qify.rat.coe_int_eq_coe_int_iff Qify.Rat.coe_int_eq_coe_int_iff
 
 @[qify]
 theorem Rat.coe_int_ne_coe_int_iff (a b : ℤ) : (a : ℚ) ≠ b ↔ a ≠ b := by simp
+#align qify.rat.coe_int_ne_coe_int_iff Qify.Rat.coe_int_ne_coe_int_iff
 
 end Qify
 
@@ -107,6 +117,7 @@ unsafe def tactic.qify (extra_lems : List simp_arg_type) : expr → tactic (expr
   let (q1, p1) ← qify.lift_to_q q <|> fail "failed to find an applicable qify lemma"
   let (q2, p2) ← norm_cast.derive_push_cast extra_lems q1
   Prod.mk q2 <$> mk_eq_trans p1 p2
+#align tactic.qify tactic.qify
 
 /-- A variant of `tactic.qify` that takes `h`, a proof of a proposition about natural numbers
 or integers, and returns a proof of the qified version of that propositon.
@@ -114,6 +125,7 @@ or integers, and returns a proof of the qified version of that propositon.
 unsafe def tactic.qify_proof (extra_lems : List simp_arg_type) (h : expr) : tactic expr := do
   let (_, pf) ← infer_type h >>= tactic.qify extra_lems
   mk_eq_mp pf h
+#align tactic.qify_proof tactic.qify_proof
 
 section
 
@@ -159,6 +171,7 @@ and the `push_cast` tactic to simplify the `ℚ`-valued expressions.
 unsafe def tactic.interactive.qify (sl : parse simp_arg_list) (l : parse location) : tactic Unit := do
   let locs ← l.get_locals
   replace_at (tactic.qify sl) locs l >>= guardb
+#align tactic.interactive.qify tactic.interactive.qify
 
 end
 

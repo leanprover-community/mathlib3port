@@ -238,6 +238,8 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
   -- then `x` belongs to `t q`.
   apply mem_Union.2 ⟨q, _⟩
   simp only [hq, subset_closure hnz, hp, mem_inter_iff, and_self_iff]
+#align
+  exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at
 
 variable [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ]
 
@@ -263,6 +265,8 @@ theorem exists_partition_approximates_linear_on_of_has_fderiv_within_at [SecondC
   · intro n
     exact (t_approx n).monoSet (inter_subset_inter_right _ (disjointed_subset _ _))
     
+#align
+  exists_partition_approximates_linear_on_of_has_fderiv_within_at exists_partition_approximates_linear_on_of_has_fderiv_within_at
 
 namespace MeasureTheory
 
@@ -374,6 +378,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
     simp only [Ennreal.coe_ne_top, Ne.def, or_true_iff, not_false_iff]
   rw [add_zero] at L
   exact ge_of_tendsto L J
+#align measure_theory.add_haar_image_le_mul_of_det_lt MeasureTheory.add_haar_image_le_mul_of_det_lt
 
 /-- Let `f` be a function which is sufficiently close (in the Lipschitz sense) to a given linear
 map `A`. Then it expands the volume of any set by at least `m` for any `m < det A`. -/
@@ -453,6 +458,7 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
   -- as `f⁻¹` is well approximated by `B⁻¹`, the conclusion follows from `hδ₀`
   -- and our choice of `δ`.
   exact hδ₀ _ _ ((hf'.to_inv h1δ).monoNum h2δ.le)
+#align measure_theory.mul_le_add_haar_image_of_lt_det MeasureTheory.mul_le_add_haar_image_of_lt_det
 
 /-- If a differentiable function `f` is approximated by a linear map `A` on a set `s`, up to `δ`,
 then at almost every `x` in `s` one has `∥f' x - A∥ ≤ δ`. -/
@@ -544,6 +550,8 @@ theorem _root_.approximates_linear_on.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ
       _ ≤ (δ + ε) * (∥z∥ + ε) + ∥f' x - A∥ * ε :=
         add_le_add le_rfl (mul_le_mul_of_nonneg_left (mem_closed_ball_iff_norm'.1 az) (norm_nonneg _))
       
+#align
+  measure_theory._root_.approximates_linear_on.norm_fderiv_sub_le measure_theory._root_.approximates_linear_on.norm_fderiv_sub_le
 
 /-!
 ### Measure zero of the image, over non-measurable sets
@@ -596,6 +604,8 @@ theorem add_haar_image_eq_zero_of_differentiable_on_of_add_haar_eq_zero (hf : Di
       exact le_trans (measure_mono (inter_subset_left _ _)) (le_of_eq hs)
     _ = 0 := by simp only [tsum_zero, mul_zero]
     
+#align
+  measure_theory.add_haar_image_eq_zero_of_differentiable_on_of_add_haar_eq_zero MeasureTheory.add_haar_image_eq_zero_of_differentiable_on_of_add_haar_eq_zero
 
 /-- A version of Sard lemma in fixed dimension: given a differentiable function from `E` to `E` and
 a set where the differential is not invertible, then the image of this set has zero measure.
@@ -655,6 +665,8 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux (hf' : ∀ x ∈
       rw [← inter_Union]
       exact Ennreal.mul_le_mul le_rfl (measure_mono (inter_subset_left _ _))
     
+#align
+  measure_theory.add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux MeasureTheory.add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux
 
 /-- A version of Sard lemma in fixed dimension: given a differentiable function from `E` to `E` and
 a set where the differential is not invertible, then the image of this set has zero measure. -/
@@ -684,6 +696,8 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero (hf' : ∀ x ∈ s, 
   apply ge_of_tendsto B
   filter_upwards [self_mem_nhds_within]
   exact A
+#align
+  measure_theory.add_haar_image_eq_zero_of_det_fderiv_within_eq_zero MeasureTheory.add_haar_image_eq_zero_of_det_fderiv_within_eq_zero
 
 /-!
 ### Weak measurability statements
@@ -748,6 +762,7 @@ theorem aeMeasurableFderivWithin (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasF
   rw [← nndist_eq_nnnorm] at hx1
   rw [hx2, dist_comm]
   exact hx1
+#align measure_theory.ae_measurable_fderiv_within MeasureTheory.aeMeasurableFderivWithin
 
 theorem aeMeasurableOfRealAbsDetFderivWithin (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) :
     AeMeasurable (fun x => Ennreal.ofReal (|(f' x).det|)) (μ.restrict s) := by
@@ -755,6 +770,7 @@ theorem aeMeasurableOfRealAbsDetFderivWithin (hs : MeasurableSet s) (hf' : ∀ x
   refine' continuous_abs.measurable.comp_ae_measurable _
   refine' continuous_linear_map.continuous_det.measurable.comp_ae_measurable _
   exact ae_measurable_fderiv_within μ hs hf'
+#align measure_theory.ae_measurable_of_real_abs_det_fderiv_within MeasureTheory.aeMeasurableOfRealAbsDetFderivWithin
 
 theorem aeMeasurableToNnrealAbsDetFderivWithin (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) :
     AeMeasurable (fun x => |(f' x).det|.toNnreal) (μ.restrict s) := by
@@ -762,6 +778,7 @@ theorem aeMeasurableToNnrealAbsDetFderivWithin (hs : MeasurableSet s) (hf' : ∀
   refine' continuous_abs.measurable.comp_ae_measurable _
   refine' continuous_linear_map.continuous_det.measurable.comp_ae_measurable _
   exact ae_measurable_fderiv_within μ hs hf'
+#align measure_theory.ae_measurable_to_nnreal_abs_det_fderiv_within MeasureTheory.aeMeasurableToNnrealAbsDetFderivWithin
 
 /-- If a function is differentiable and injective on a measurable set,
 then the image is measurable.-/
@@ -769,6 +786,7 @@ theorem measurableImageOfFderivWithin (hs : MeasurableSet s) (hf' : ∀ x ∈ s,
     (hf : InjOn f s) : MeasurableSet (f '' s) :=
   haveI : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
   hs.image_of_continuous_on_inj_on (DifferentiableOn.continuous_on this) hf
+#align measure_theory.measurable_image_of_fderiv_within MeasureTheory.measurableImageOfFderivWithin
 
 /-- If a function is differentiable and injective on a measurable set `s`, then its restriction
 to `s` is a measurable embedding. -/
@@ -776,6 +794,7 @@ theorem measurableEmbeddingOfFderivWithin (hs : MeasurableSet s) (hf' : ∀ x �
     (hf : InjOn f s) : MeasurableEmbedding (s.restrict f) :=
   haveI : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
   this.continuous_on.measurable_embedding hs hf
+#align measure_theory.measurable_embedding_of_fderiv_within MeasureTheory.measurableEmbeddingOfFderivWithin
 
 /-!
 ### Proving the estimate for the measure of the image
@@ -875,6 +894,8 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
     _ = (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) + 2 * ε * μ s := by
       simp only [lintegral_add_right' _ aeMeasurableConst, set_lintegral_const]
     
+#align
+  measure_theory.add_haar_image_le_lintegral_abs_det_fderiv_aux1 MeasureTheory.add_haar_image_le_lintegral_abs_det_fderiv_aux1
 
 theorem add_haar_image_le_lintegral_abs_det_fderiv_aux2 (hs : MeasurableSet s) (h's : μ s ≠ ∞)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) : μ (f '' s) ≤ ∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ := by
@@ -892,6 +913,8 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux2 (hs : MeasurableSet s) (
   filter_upwards [self_mem_nhds_within]
   rintro ε (εpos : 0 < ε)
   exact add_haar_image_le_lintegral_abs_det_fderiv_aux1 μ hs hf' εpos
+#align
+  measure_theory.add_haar_image_le_lintegral_abs_det_fderiv_aux2 MeasureTheory.add_haar_image_le_lintegral_abs_det_fderiv_aux2
 
 theorem add_haar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) : μ (f '' s) ≤ ∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ := by
@@ -923,6 +946,8 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
       · exact PairwiseDisjoint.mono (disjoint_disjointed _) fun n => inter_subset_right _ _
         
     
+#align
+  measure_theory.add_haar_image_le_lintegral_abs_det_fderiv MeasureTheory.add_haar_image_le_lintegral_abs_det_fderiv
 
 theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) {ε : ℝ≥0} (εpos : 0 < ε) :
@@ -1041,6 +1066,8 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
       ext1 i
       rw [mul_assoc, two_mul, add_assoc]
     
+#align
+  measure_theory.lintegral_abs_det_fderiv_le_add_haar_image_aux1 MeasureTheory.lintegral_abs_det_fderiv_le_add_haar_image_aux1
 
 theorem lintegral_abs_det_fderiv_le_add_haar_image_aux2 (hs : MeasurableSet s) (h's : μ s ≠ ∞)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) :
@@ -1056,6 +1083,8 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux2 (hs : MeasurableSet s) (
   filter_upwards [self_mem_nhds_within]
   rintro ε (εpos : 0 < ε)
   exact lintegral_abs_det_fderiv_le_add_haar_image_aux1 μ hs hf' hf εpos
+#align
+  measure_theory.lintegral_abs_det_fderiv_le_add_haar_image_aux2 MeasureTheory.lintegral_abs_det_fderiv_le_add_haar_image_aux2
 
 theorem lintegral_abs_det_fderiv_le_add_haar_image (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) :
@@ -1097,6 +1126,8 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image (hs : MeasurableSet s)
             (fun x hx => (hf' x hx.1).mono (inter_subset_left _ _)) (hf.mono (inter_subset_left _ _))
         
     
+#align
+  measure_theory.lintegral_abs_det_fderiv_le_add_haar_image MeasureTheory.lintegral_abs_det_fderiv_le_add_haar_image
 
 /-- Change of variable formula for differentiable functions, set version: if a function `f` is
 injective and differentiable on a measurable set `s`, then the measure of `f '' s` is given by the
@@ -1107,6 +1138,8 @@ theorem lintegral_abs_det_fderiv_eq_add_haar_image (hs : MeasurableSet s)
     (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) = μ (f '' s) :=
   le_antisymm (lintegral_abs_det_fderiv_le_add_haar_image μ hs hf' hf)
     (add_haar_image_le_lintegral_abs_det_fderiv μ hs hf')
+#align
+  measure_theory.lintegral_abs_det_fderiv_eq_add_haar_image MeasureTheory.lintegral_abs_det_fderiv_eq_add_haar_image
 
 /-- Change of variable formula for differentiable functions, set version: if a function `f` is
 injective and differentiable on a measurable set `s`, then the pushforward of the measure with
@@ -1123,6 +1156,8 @@ theorem map_with_density_abs_det_fderiv_eq_add_haar (hs : MeasurableSet s)
     lintegral_abs_det_fderiv_eq_add_haar_image μ ((h'f ht).inter hs)
       (fun x hx => (hf' x hx.2).mono (inter_subset_right _ _)) (hf.mono (inter_subset_right _ _)),
     image_preimage_inter]
+#align
+  measure_theory.map_with_density_abs_det_fderiv_eq_add_haar MeasureTheory.map_with_density_abs_det_fderiv_eq_add_haar
 
 /-- Change of variable formula for differentiable functions, set version: if a function `f` is
 injective and differentiable on a measurable set `s`, then the pushforward of the measure with
@@ -1137,11 +1172,8 @@ theorem restrict_map_with_density_abs_det_fderiv_eq_add_haar (hs : MeasurableSet
       μ.restrict (f '' s) :=
   by
   obtain ⟨u, u_meas, uf⟩ : ∃ u, Measurable u ∧ eq_on u f s := by
-    classical
-    refine' ⟨piecewise s f 0, _, piecewise_eq_on _ _ _⟩
-    refine' ContinuousOn.measurablePiecewise _ continuous_zero.continuous_on hs
-    have : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
-    exact this.continuous_on
+    classical refine' ⟨piecewise s f 0, _, piecewise_eq_on _ _ _⟩
+      have : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
   have u' : ∀ x ∈ s, HasFderivWithinAt u (f' x) s x := fun x hx => (hf' x hx).congr (fun y hy => uf hy) (uf hx)
   set F : s → E := u ∘ coe with hF
   have A : measure.map F (comap coe (μ.with_density fun x => Ennreal.ofReal (|(f' x).det|))) = μ.restrict (u '' s) := by
@@ -1152,6 +1184,8 @@ theorem restrict_map_with_density_abs_det_fderiv_eq_add_haar (hs : MeasurableSet
     ext x
     exact uf x.2
   rwa [this] at A
+#align
+  measure_theory.restrict_map_with_density_abs_det_fderiv_eq_add_haar MeasureTheory.restrict_map_with_density_abs_det_fderiv_eq_add_haar
 
 /-! ### Change of variable formulas in integrals -/
 
@@ -1175,6 +1209,8 @@ theorem lintegral_image_eq_lintegral_abs_det_fderiv_mul (hs : MeasurableSet s)
     
   · exact ae_measurable_of_real_abs_det_fderiv_within μ hs hf'
     
+#align
+  measure_theory.lintegral_image_eq_lintegral_abs_det_fderiv_mul MeasureTheory.lintegral_image_eq_lintegral_abs_det_fderiv_mul
 
 /-- Integrability in the change of variable formula for differentiable functions: if a
 function `f` is injective and differentiable on a measurable set `s`, then a function
@@ -1195,6 +1231,8 @@ theorem integrable_on_image_iff_integrable_on_abs_det_fderiv_smul (hs : Measurab
     
   · exact ae_measurable_to_nnreal_abs_det_fderiv_within μ hs hf'
     
+#align
+  measure_theory.integrable_on_image_iff_integrable_on_abs_det_fderiv_smul MeasureTheory.integrable_on_image_iff_integrable_on_abs_det_fderiv_smul
 
 /-- Change of variable formula for differentiable functions: if a function `f` is
 injective and differentiable on a measurable set `s`, then the Bochner integral of a function
@@ -1211,6 +1249,8 @@ theorem integral_image_eq_integral_abs_det_fderiv_smul [CompleteSpace F] (hs : M
   congr with x
   conv_rhs => rw [← Real.coe_to_nnreal _ (abs_nonneg (f' x).det)]
   rfl
+#align
+  measure_theory.integral_image_eq_integral_abs_det_fderiv_smul MeasureTheory.integral_image_eq_integral_abs_det_fderiv_smul
 
 theorem integral_target_eq_integral_abs_det_fderiv_smul [CompleteSpace F] {f : LocalHomeomorph E E}
     (hf' : ∀ x ∈ f.Source, HasFderivAt f (f' x) x) (g : E → F) :
@@ -1220,6 +1260,8 @@ theorem integral_target_eq_integral_abs_det_fderiv_smul [CompleteSpace F] {f : L
   apply integral_image_eq_integral_abs_det_fderiv_smul μ f.open_source.measurable_set _ f.inj_on
   intro x hx
   exact (hf' x hx).HasFderivWithinAt
+#align
+  measure_theory.integral_target_eq_integral_abs_det_fderiv_smul MeasureTheory.integral_target_eq_integral_abs_det_fderiv_smul
 
 end MeasureTheory
 

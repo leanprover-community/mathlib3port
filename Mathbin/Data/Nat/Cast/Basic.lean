@@ -3,11 +3,10 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Nat.Order
+import Mathbin.Data.Nat.Order.Basic
 import Mathbin.Algebra.Order.Group.Abs
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Hom.Ring
-import Mathbin.Algebra.Order.Monoid.WithTop
 
 /-!
 # Cast of natural numbers (additional theorems)
@@ -35,10 +34,12 @@ instance (α : Type _) [AddMonoidWithOne α] : CoeIsAddMonoidHom ℕ α where
 /-- `coe : ℕ → α` as an `add_monoid_hom`. -/
 def castAddMonoidHom (α : Type _) [AddMonoidWithOne α] : ℕ →+ α :=
   AddMonoidHom.coe ℕ α
+#align nat.cast_add_monoid_hom Nat.castAddMonoidHom
 
 @[simp]
 theorem coe_cast_add_monoid_hom [AddMonoidWithOne α] : (castAddMonoidHom α : ℕ → α) = coe :=
   rfl
+#align nat.coe_cast_add_monoid_hom Nat.coe_cast_add_monoid_hom
 
 /- warning: nat.cast_mul -> Nat.cast_mul is a dubious translation:
 lean 3 declaration is
@@ -49,6 +50,7 @@ Case conversion may be inaccurate. Consider using '#align nat.cast_mul Nat.cast_
 @[simp, norm_cast]
 theorem cast_mul [NonAssocSemiring α] (m n : ℕ) : ((m * n : ℕ) : α) = m * n := by
   induction n <;> simp [mul_succ, mul_add, *]
+#align nat.cast_mul Nat.cast_mul
 
 instance (α : Type _) [NonAssocSemiring α] : CoeIsRingHom ℕ α :=
   { Nat.coeIsAddMonoidHom α with coe_mul := cast_mul, coe_one := cast_one }
@@ -56,10 +58,12 @@ instance (α : Type _) [NonAssocSemiring α] : CoeIsRingHom ℕ α :=
 /-- `coe : ℕ → α` as a `ring_hom` -/
 def castRingHom (α : Type _) [NonAssocSemiring α] : ℕ →+* α :=
   RingHom.coe ℕ α
+#align nat.cast_ring_hom Nat.castRingHom
 
 @[simp]
 theorem coe_cast_ring_hom [NonAssocSemiring α] : (castRingHom α : ℕ → α) = coe :=
   rfl
+#align nat.coe_cast_ring_hom Nat.coe_cast_ring_hom
 
 /- warning: nat.cast_commute -> Nat.cast_commute is a dubious translation:
 lean 3 declaration is
@@ -70,12 +74,15 @@ Case conversion may be inaccurate. Consider using '#align nat.cast_commute Nat.c
 theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x :=
   (Nat.recOn n (by rw [cast_zero] <;> exact Commute.zero_left x)) fun n ihn => by
     rw [cast_succ] <;> exact ihn.add_left (Commute.one_left x)
+#align nat.cast_commute Nat.cast_commute
 
 theorem cast_comm [NonAssocSemiring α] (n : ℕ) (x : α) : (n : α) * x = x * n :=
   (cast_commute n x).Eq
+#align nat.cast_comm Nat.cast_comm
 
 theorem commute_cast [NonAssocSemiring α] (x : α) (n : ℕ) : Commute x n :=
   (n.cast_commute x).symm
+#align nat.commute_cast Nat.commute_cast
 
 section OrderedSemiring
 
@@ -84,18 +91,22 @@ variable [OrderedSemiring α]
 @[mono]
 theorem mono_cast : Monotone (coe : ℕ → α) :=
   monotone_nat_of_le_succ fun n => by rw [Nat.cast_succ] <;> exact le_add_of_nonneg_right zero_le_one
+#align nat.mono_cast Nat.mono_cast
 
 @[simp]
 theorem cast_nonneg (n : ℕ) : 0 ≤ (n : α) :=
   @Nat.cast_zero α _ ▸ mono_cast (Nat.zero_le n)
+#align nat.cast_nonneg Nat.cast_nonneg
 
 variable [Nontrivial α]
 
 theorem cast_add_one_pos (n : ℕ) : 0 < (n : α) + 1 :=
   zero_lt_one.trans_le <| le_add_of_nonneg_left n.cast_nonneg
+#align nat.cast_add_one_pos Nat.cast_add_one_pos
 
 @[simp]
 theorem cast_pos {n : ℕ} : (0 : α) < n ↔ 0 < n := by cases n <;> simp [cast_add_one_pos]
+#align nat.cast_pos Nat.cast_pos
 
 end OrderedSemiring
 
@@ -111,6 +122,7 @@ theorem cast_tsub [CanonicallyOrderedCommSemiring α] [Sub α] [HasOrderedSub α
   · rcases le_iff_exists_add'.mp h with ⟨m, rfl⟩
     rw [add_tsub_cancel_right, cast_add, add_tsub_cancel_right]
     
+#align nat.cast_tsub Nat.cast_tsub
 
 section StrictOrderedSemiring
 
@@ -119,39 +131,49 @@ variable [StrictOrderedSemiring α] [Nontrivial α]
 @[simp, norm_cast]
 theorem cast_le {m n : ℕ} : (m : α) ≤ n ↔ m ≤ n :=
   strict_mono_cast.le_iff_le
+#align nat.cast_le Nat.cast_le
 
 @[simp, norm_cast, mono]
 theorem cast_lt {m n : ℕ} : (m : α) < n ↔ m < n :=
   strict_mono_cast.lt_iff_lt
+#align nat.cast_lt Nat.cast_lt
 
 @[simp, norm_cast]
 theorem one_lt_cast {n : ℕ} : 1 < (n : α) ↔ 1 < n := by rw [← cast_one, cast_lt]
+#align nat.one_lt_cast Nat.one_lt_cast
 
 @[simp, norm_cast]
 theorem one_le_cast {n : ℕ} : 1 ≤ (n : α) ↔ 1 ≤ n := by rw [← cast_one, cast_le]
+#align nat.one_le_cast Nat.one_le_cast
 
 @[simp, norm_cast]
 theorem cast_lt_one {n : ℕ} : (n : α) < 1 ↔ n = 0 := by rw [← cast_one, cast_lt, lt_succ_iff] <;> exact le_bot_iff
+#align nat.cast_lt_one Nat.cast_lt_one
 
 @[simp, norm_cast]
 theorem cast_le_one {n : ℕ} : (n : α) ≤ 1 ↔ n ≤ 1 := by rw [← cast_one, cast_le]
+#align nat.cast_le_one Nat.cast_le_one
 
 end StrictOrderedSemiring
 
 @[simp, norm_cast]
 theorem cast_min [LinearOrderedSemiring α] {a b : ℕ} : (↑(min a b) : α) = min a b :=
   (@mono_cast α _).map_min
+#align nat.cast_min Nat.cast_min
 
 @[simp, norm_cast]
 theorem cast_max [LinearOrderedSemiring α] {a b : ℕ} : (↑(max a b) : α) = max a b :=
   (@mono_cast α _).map_max
+#align nat.cast_max Nat.cast_max
 
 @[simp, norm_cast]
 theorem abs_cast [LinearOrderedRing α] (a : ℕ) : |(a : α)| = a :=
   abs_of_nonneg (cast_nonneg a)
+#align nat.abs_cast Nat.abs_cast
 
 theorem coe_nat_dvd [Semiring α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
   map_dvd (Nat.castRingHom α) h
+#align nat.coe_nat_dvd Nat.coe_nat_dvd
 
 alias coe_nat_dvd ← _root_.has_dvd.dvd.nat_cast
 
@@ -168,9 +190,11 @@ instance : AddMonoidWithOne (α × β) :=
 
 @[simp]
 theorem fst_nat_cast (n : ℕ) : (n : α × β).fst = n := by induction n <;> simp [*]
+#align prod.fst_nat_cast Prod.fst_nat_cast
 
 @[simp]
 theorem snd_nat_cast (n : ℕ) : (n : α × β).snd = n := by induction n <;> simp [*]
+#align prod.snd_nat_cast Prod.snd_nat_cast
 
 end Prod
 
@@ -184,10 +208,12 @@ theorem ext_nat' [AddMonoid A] [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = 
     · simp only [Nat.zero_eq, map_zero]
       
     simp (config := { contextual := true }) [Nat.succ_eq_add_one, h]
+#align ext_nat' ext_nat'
 
-@[ext]
+@[ext.1]
 theorem AddMonoidHom.ext_nat [AddMonoid A] : ∀ {f g : ℕ →+ A}, ∀ h : f 1 = g 1, f = g :=
   ext_nat'
+#align add_monoid_hom.ext_nat AddMonoidHom.ext_nat
 
 variable [AddMonoidWithOne A]
 
@@ -195,10 +221,12 @@ variable [AddMonoidWithOne A]
 theorem eq_nat_cast' [AddMonoidHomClass F ℕ A] (f : F) (h1 : f 1 = 1) : ∀ n : ℕ, f n = n
   | 0 => by simp
   | n + 1 => by rw [map_add, h1, eq_nat_cast' n, Nat.cast_add_one]
+#align eq_nat_cast' eq_nat_cast'
 
 theorem map_nat_cast' {A} [AddMonoidWithOne A] [AddMonoidHomClass F A B] (f : F) (h : f 1 = 1) : ∀ n : ℕ, f n = n
   | 0 => by simp
   | n + 1 => by rw [Nat.cast_add, map_add, Nat.cast_add, map_nat_cast', Nat.cast_one, h, Nat.cast_one]
+#align map_nat_cast' map_nat_cast'
 
 end AddMonoidHomClass
 
@@ -213,10 +241,12 @@ theorem ext_nat'' [MonoidWithZeroHomClass F ℕ A] (f g : F) (h_pos : ∀ {n : �
   · simp
     
   exact h_pos n.succ_pos
+#align ext_nat'' ext_nat''
 
-@[ext]
+@[ext.1]
 theorem MonoidWithZeroHom.ext_nat : ∀ {f g : ℕ →*₀ A}, (∀ {n : ℕ}, 0 < n → f n = g n) → f = g :=
   ext_nat''
+#align monoid_with_zero_hom.ext_nat MonoidWithZeroHom.ext_nat
 
 end MonoidWithZeroHomClass
 
@@ -227,22 +257,27 @@ variable {R S F : Type _} [NonAssocSemiring R] [NonAssocSemiring S]
 @[simp]
 theorem eq_nat_cast [RingHomClass F ℕ R] (f : F) : ∀ n, f n = n :=
   eq_nat_cast' f <| map_one f
+#align eq_nat_cast eq_nat_cast
 
 @[simp]
 theorem map_nat_cast [RingHomClass F R S] (f : F) : ∀ n : ℕ, f (n : R) = n :=
   map_nat_cast' f <| map_one f
+#align map_nat_cast map_nat_cast
 
 theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
   ext_nat' f g <| by simp only [map_one]
+#align ext_nat ext_nat
 
 theorem NeZero.nat_of_injective {n : ℕ} [h : NeZero (n : R)] [RingHomClass F R S] {f : F} (hf : Function.Injective f) :
     NeZero (n : S) :=
   ⟨fun h => NeZero.ne' n R <| hf <| by simpa only [map_nat_cast, map_zero] ⟩
+#align ne_zero.nat_of_injective NeZero.nat_of_injective
 
 theorem NeZero.nat_of_ne_zero {R S} [Semiring R] [Semiring S] {F} [RingHomClass F R S] (f : F) {n : ℕ}
     [hn : NeZero (n : S)] : NeZero (n : R) := by
   apply NeZero.of_map f
   simp only [map_nat_cast, hn]
+#align ne_zero.nat_of_ne_zero NeZero.nat_of_ne_zero
 
 end RingHomClass
 
@@ -251,6 +286,7 @@ namespace RingHom
 /-- This is primed to match `eq_int_cast'`. -/
 theorem eq_nat_cast' {R} [NonAssocSemiring R] (f : ℕ →+* R) : f = Nat.castRingHom R :=
   RingHom.ext <| eq_nat_cast f
+#align ring_hom.eq_nat_cast' RingHom.eq_nat_cast'
 
 end RingHom
 
@@ -263,19 +299,18 @@ Case conversion may be inaccurate. Consider using '#align nat.cast_id Nat.cast_i
 @[simp, norm_cast]
 theorem Nat.cast_id (n : ℕ) : ↑n = n :=
   rfl
+#align nat.cast_id Nat.cast_id
 
 @[simp]
 theorem Nat.cast_ring_hom_nat : Nat.castRingHom ℕ = RingHom.id ℕ :=
   rfl
-
-@[simp]
-theorem Nat.cast_with_bot (n : ℕ) : @coe ℕ (WithBot ℕ) (@coeToLift _ _ Nat.castCoe) n = n :=
-  rfl
+#align nat.cast_ring_hom_nat Nat.cast_ring_hom_nat
 
 -- I don't think `ring_hom_class` is good here, because of the `subsingleton` TC slowness
 instance Nat.uniqueRingHom {R : Type _} [NonAssocSemiring R] : Unique (ℕ →+* R) where
   default := Nat.castRingHom R
   uniq := RingHom.eq_nat_cast'
+#align nat.unique_ring_hom Nat.uniqueRingHom
 
 namespace MulOpposite
 
@@ -284,10 +319,12 @@ variable [AddMonoidWithOne α]
 @[simp, norm_cast]
 theorem op_nat_cast (n : ℕ) : op (n : α) = n :=
   rfl
+#align mul_opposite.op_nat_cast MulOpposite.op_nat_cast
 
 @[simp, norm_cast]
 theorem unop_nat_cast (n : ℕ) : unop (n : αᵐᵒᵖ) = n :=
   rfl
+#align mul_opposite.unop_nat_cast MulOpposite.unop_nat_cast
 
 end MulOpposite
 
@@ -299,15 +336,18 @@ instance : HasNatCast (∀ a, π a) := by refine_struct { .. } <;> pi_instance_d
 
 theorem nat_apply (n : ℕ) (a : α) : (n : ∀ a, π a) a = n :=
   rfl
+#align pi.nat_apply Pi.nat_apply
 
 @[simp]
 theorem coe_nat (n : ℕ) : (n : ∀ a, π a) = fun _ => n :=
   rfl
+#align pi.coe_nat Pi.coe_nat
 
 end Pi
 
 theorem Sum.elim_nat_cast_nat_cast {α β γ : Type _} [HasNatCast γ] (n : ℕ) : Sum.elim (n : α → γ) (n : β → γ) = n :=
   @Sum.elim_lam_const_lam_const α β γ n
+#align sum.elim_nat_cast_nat_cast Sum.elim_nat_cast_nat_cast
 
 namespace Pi
 
@@ -334,10 +374,12 @@ instance [h : AddCommMonoidWithOne α] : AddCommMonoidWithOne αᵒᵈ :=
 @[simp]
 theorem to_dual_nat_cast [HasNatCast α] (n : ℕ) : toDual (n : α) = n :=
   rfl
+#align to_dual_nat_cast to_dual_nat_cast
 
 @[simp]
 theorem of_dual_nat_cast [HasNatCast α] (n : ℕ) : (ofDual n : α) = n :=
   rfl
+#align of_dual_nat_cast of_dual_nat_cast
 
 /-! ### Lexicographic order -/
 
@@ -354,8 +396,10 @@ instance [h : AddCommMonoidWithOne α] : AddCommMonoidWithOne (Lex α) :=
 @[simp]
 theorem to_lex_nat_cast [HasNatCast α] (n : ℕ) : toLex (n : α) = n :=
   rfl
+#align to_lex_nat_cast to_lex_nat_cast
 
 @[simp]
 theorem of_lex_nat_cast [HasNatCast α] (n : ℕ) : (ofLex n : α) = n :=
   rfl
+#align of_lex_nat_cast of_lex_nat_cast
 

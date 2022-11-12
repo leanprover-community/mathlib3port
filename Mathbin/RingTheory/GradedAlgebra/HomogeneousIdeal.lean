@@ -62,35 +62,43 @@ include A
   of `r` are in `I`.-/
 def Ideal.IsHomogeneous : Prop :=
   ∀ (i : ι) ⦃r : A⦄, r ∈ I → (DirectSum.decompose 𝒜 r i : A) ∈ I
+#align ideal.is_homogeneous Ideal.IsHomogeneous
 
 /-- For any `semiring A`, we collect the homogeneous ideals of `A` into a type. -/
 structure HomogeneousIdeal extends Submodule A A where
   isHomogeneous' : Ideal.IsHomogeneous 𝒜 to_submodule
+#align homogeneous_ideal HomogeneousIdeal
 
 variable {𝒜}
 
 /-- Converting a homogeneous ideal to an ideal-/
 def HomogeneousIdeal.toIdeal (I : HomogeneousIdeal 𝒜) : Ideal A :=
   I.toSubmodule
+#align homogeneous_ideal.to_ideal HomogeneousIdeal.toIdeal
 
 theorem HomogeneousIdeal.isHomogeneous (I : HomogeneousIdeal 𝒜) : I.toIdeal.IsHomogeneous 𝒜 :=
   I.isHomogeneous'
+#align homogeneous_ideal.is_homogeneous HomogeneousIdeal.isHomogeneous
 
 theorem HomogeneousIdeal.to_ideal_injective :
     Function.Injective (HomogeneousIdeal.toIdeal : HomogeneousIdeal 𝒜 → Ideal A) := fun ⟨x, hx⟩ ⟨y, hy⟩ (h : x = y) =>
   by simp [h]
+#align homogeneous_ideal.to_ideal_injective HomogeneousIdeal.to_ideal_injective
 
 instance HomogeneousIdeal.setLike : SetLike (HomogeneousIdeal 𝒜) A where
   coe I := I.toIdeal
   coe_injective' I J h := HomogeneousIdeal.to_ideal_injective <| SetLike.coe_injective h
+#align homogeneous_ideal.set_like HomogeneousIdeal.setLike
 
-@[ext]
+@[ext.1]
 theorem HomogeneousIdeal.ext {I J : HomogeneousIdeal 𝒜} (h : I.toIdeal = J.toIdeal) : I = J :=
   HomogeneousIdeal.to_ideal_injective h
+#align homogeneous_ideal.ext HomogeneousIdeal.ext
 
 @[simp]
 theorem HomogeneousIdeal.mem_iff {I : HomogeneousIdeal 𝒜} {x : A} : x ∈ I.toIdeal ↔ x ∈ I :=
   Iff.rfl
+#align homogeneous_ideal.mem_iff HomogeneousIdeal.mem_iff
 
 end HomogeneousDef
 
@@ -108,12 +116,15 @@ include A
 is the largest homogeneous ideal of `A` contained in `I`, as an ideal. -/
 def Ideal.homogeneousCore' (I : Ideal A) : Ideal A :=
   Ideal.span (coe '' ((coe : Subtype (IsHomogeneous 𝒜) → A) ⁻¹' I))
+#align ideal.homogeneous_core' Ideal.homogeneousCore'
 
 theorem Ideal.homogeneous_core'_mono : Monotone (Ideal.homogeneousCore' 𝒜) := fun I J I_le_J =>
   Ideal.span_mono <| (Set.image_subset _) fun x => @I_le_J _
+#align ideal.homogeneous_core'_mono Ideal.homogeneous_core'_mono
 
 theorem Ideal.homogeneous_core'_le : I.homogeneousCore' 𝒜 ≤ I :=
   Ideal.span_le.2 <| image_preimage_subset _ _
+#align ideal.homogeneous_core'_le Ideal.homogeneous_core'_le
 
 end HomogeneousCore
 
@@ -131,24 +142,21 @@ include A
 
 theorem Ideal.is_homogeneous_iff_forall_subset : I.IsHomogeneous 𝒜 ↔ ∀ i, (I : Set A) ⊆ GradedRing.proj 𝒜 i ⁻¹' I :=
   Iff.rfl
+#align ideal.is_homogeneous_iff_forall_subset Ideal.is_homogeneous_iff_forall_subset
 
 theorem Ideal.is_homogeneous_iff_subset_Inter : I.IsHomogeneous 𝒜 ↔ (I : Set A) ⊆ ⋂ i, GradedRing.proj 𝒜 i ⁻¹' ↑I :=
   subset_Inter_iff.symm
+#align ideal.is_homogeneous_iff_subset_Inter Ideal.is_homogeneous_iff_subset_Inter
 
 theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ : IsHomogeneous 𝒜 x) (hx₂ : x ∈ I)
     (j : ι) : GradedRing.proj 𝒜 j (r * x) ∈ I := by
-  classical
-  rw [← DirectSum.sum_support_decompose 𝒜 r, Finset.sum_mul, map_sum]
-  apply Ideal.sum_mem
-  intro k hk
-  obtain ⟨i, hi⟩ := hx₁
-  have mem₁ : (DirectSum.decompose 𝒜 r k : A) * x ∈ 𝒜 (k + i) := graded_monoid.mul_mem (SetLike.coe_mem _) hi
-  erw [GradedRing.proj_apply, DirectSum.decompose_of_mem 𝒜 mem₁, coe_of_apply, SetLike.coe_mk]
-  split_ifs
-  · exact I.mul_mem_left _ hx₂
-    
-  · exact I.zero_mem
-    
+  classical rw [← DirectSum.sum_support_decompose 𝒜 r, Finset.sum_mul, map_sum]
+    intro k hk
+    have mem₁ : (DirectSum.decompose 𝒜 r k : A) * x ∈ 𝒜 (k + i) := graded_monoid.mul_mem (SetLike.coe_mem _) hi
+    split_ifs
+    · exact I.zero_mem
+      
+#align ideal.mul_homogeneous_element_mem_of_mem Ideal.mul_homogeneous_element_mem_of_mem
 
 theorem Ideal.isHomogeneousSpan (s : Set A) (h : ∀ x ∈ s, IsHomogeneous 𝒜 x) : (Ideal.span s).IsHomogeneous 𝒜 := by
   rintro i r hr
@@ -165,6 +173,7 @@ theorem Ideal.isHomogeneousSpan (s : Set A) (h : ∀ x ∈ s, IsHomogeneous 𝒜
     
   · exact Ideal.subset_span z.2
     
+#align ideal.is_homogeneous_span Ideal.isHomogeneousSpan
 
 /-- For any `I : ideal A`, not necessarily homogeneous, `I.homogeneous_core' 𝒜`
 is the largest homogeneous ideal of `A` contained in `I`.-/
@@ -173,40 +182,46 @@ def Ideal.homogeneousCore : HomogeneousIdeal 𝒜 :=
     Ideal.isHomogeneousSpan _ _ fun x h => by
       rw [Subtype.image_preimage_coe] at h
       exact h.2⟩
+#align ideal.homogeneous_core Ideal.homogeneousCore
 
 theorem Ideal.homogeneous_core_mono : Monotone (Ideal.homogeneousCore 𝒜) :=
   Ideal.homogeneous_core'_mono 𝒜
+#align ideal.homogeneous_core_mono Ideal.homogeneous_core_mono
 
 theorem Ideal.to_ideal_homogeneous_core_le : (I.homogeneousCore 𝒜).toIdeal ≤ I :=
   Ideal.homogeneous_core'_le 𝒜 I
+#align ideal.to_ideal_homogeneous_core_le Ideal.to_ideal_homogeneous_core_le
 
 variable {𝒜 I}
 
 theorem Ideal.mem_homogeneous_core_of_is_homogeneous_of_mem {x : A} (h : SetLike.IsHomogeneous 𝒜 x) (hmem : x ∈ I) :
     x ∈ I.homogeneousCore 𝒜 :=
   Ideal.subset_span ⟨⟨x, h⟩, hmem, rfl⟩
+#align ideal.mem_homogeneous_core_of_is_homogeneous_of_mem Ideal.mem_homogeneous_core_of_is_homogeneous_of_mem
 
 theorem Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self (h : I.IsHomogeneous 𝒜) :
     (I.homogeneousCore 𝒜).toIdeal = I := by
   apply le_antisymm (I.homogeneous_core'_le 𝒜) _
   intro x hx
-  classical
-  rw [← DirectSum.sum_support_decompose 𝒜 x]
-  exact Ideal.sum_mem _ fun j hj => Ideal.subset_span ⟨⟨_, is_homogeneous_coe _⟩, h _ hx, rfl⟩
+  classical rw [← DirectSum.sum_support_decompose 𝒜 x]
+#align ideal.is_homogeneous.to_ideal_homogeneous_core_eq_self Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self
 
 @[simp]
 theorem HomogeneousIdeal.to_ideal_homogeneous_core_eq_self (I : HomogeneousIdeal 𝒜) : I.toIdeal.homogeneousCore 𝒜 = I :=
   by ext1 <;> convert Ideal.IsHomogeneous.to_ideal_homogeneous_core_eq_self I.is_homogeneous
+#align homogeneous_ideal.to_ideal_homogeneous_core_eq_self HomogeneousIdeal.to_ideal_homogeneous_core_eq_self
 
 variable (𝒜 I)
 
 theorem Ideal.IsHomogeneous.iff_eq : I.IsHomogeneous 𝒜 ↔ (I.homogeneousCore 𝒜).toIdeal = I :=
   ⟨fun hI => hI.to_ideal_homogeneous_core_eq_self, fun hI => hI ▸ (Ideal.homogeneousCore 𝒜 I).2⟩
+#align ideal.is_homogeneous.iff_eq Ideal.IsHomogeneous.iff_eq
 
 theorem Ideal.IsHomogeneous.iff_exists :
     I.IsHomogeneous 𝒜 ↔ ∃ S : Set (homogeneousSubmonoid 𝒜), I = Ideal.span (coe '' S) := by
   rw [Ideal.IsHomogeneous.iff_eq, eq_comm]
   exact ((set.image_preimage.compose (Submodule.gi _ _).gc).exists_eq_l _).symm
+#align ideal.is_homogeneous.iff_exists Ideal.IsHomogeneous.iff_exists
 
 end IsHomogeneousIdealDefs
 
@@ -232,13 +247,16 @@ theorem bot : Ideal.IsHomogeneous 𝒜 ⊥ := fun i r hr => by
   simp only [Ideal.mem_bot] at hr
   rw [hr, decompose_zero, zero_apply]
   apply Ideal.zero_mem
+#align ideal.is_homogeneous.bot Ideal.IsHomogeneous.bot
 
 theorem top : Ideal.IsHomogeneous 𝒜 ⊤ := fun i r hr => by simp only [Submodule.mem_top]
+#align ideal.is_homogeneous.top Ideal.IsHomogeneous.top
 
 variable {𝒜}
 
 theorem inf {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ : J.IsHomogeneous 𝒜) : (I ⊓ J).IsHomogeneous 𝒜 := fun i r hr =>
   ⟨HI _ hr.1, HJ _ hr.2⟩
+#align ideal.is_homogeneous.inf Ideal.IsHomogeneous.inf
 
 theorem sup {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ : J.IsHomogeneous 𝒜) : (I ⊔ J).IsHomogeneous 𝒜 := by
   rw [iff_exists] at HI HJ⊢
@@ -246,6 +264,7 @@ theorem sup {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ : J.IsHomogeneous �
   refine' ⟨s₁ ∪ s₂, _⟩
   rw [Set.image_union]
   exact (Submodule.span_union _ _).symm
+#align ideal.is_homogeneous.sup Ideal.IsHomogeneous.sup
 
 protected theorem supr {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHomogeneous 𝒜) : (⨆ i, f i).IsHomogeneous 𝒜 :=
   by
@@ -255,22 +274,26 @@ protected theorem supr {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHo
   simp_rw [Set.image_Union, Ideal.span_Union]
   congr
   exact funext hs
+#align ideal.is_homogeneous.supr Ideal.IsHomogeneous.supr
 
 protected theorem infi {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHomogeneous 𝒜) : (⨅ i, f i).IsHomogeneous 𝒜 :=
   by
   intro i x hx
   simp only [Ideal.mem_infi] at hx⊢
   exact fun j => h _ _ (hx j)
+#align ideal.is_homogeneous.infi Ideal.IsHomogeneous.infi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem supr₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨆ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.supr fun i => is_homogeneous.supr <| h i
+#align ideal.is_homogeneous.supr₂ Ideal.IsHomogeneous.supr₂
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem infi₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨅ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.infi fun i => is_homogeneous.infi <| h i
+#align ideal.is_homogeneous.infi₂ Ideal.IsHomogeneous.infi₂
 
 /- warning: ideal.is_homogeneous.Sup clashes with ideal.is_homogeneous.sup -> Ideal.IsHomogeneous.sup
 Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.supₓ'. -/
@@ -278,6 +301,7 @@ Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.S
 theorem sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (sup ℐ).IsHomogeneous 𝒜 := by
   rw [Sup_eq_supr]
   exact supr₂ h
+#align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.sup
 -/
 
 /- warning: ideal.is_homogeneous.Inf clashes with ideal.is_homogeneous.inf -> Ideal.IsHomogeneous.inf
@@ -286,6 +310,7 @@ Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.I
 theorem inf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (inf ℐ).IsHomogeneous 𝒜 := by
   rw [Inf_eq_infi]
   exact infi₂ h
+#align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.inf
 -/
 
 end Ideal.IsHomogeneous
@@ -318,70 +343,86 @@ instance : HasInf (HomogeneousIdeal 𝒜) :=
 @[simp]
 theorem coe_top : ((⊤ : HomogeneousIdeal 𝒜) : Set A) = univ :=
   rfl
+#align homogeneous_ideal.coe_top HomogeneousIdeal.coe_top
 
 @[simp]
 theorem coe_bot : ((⊥ : HomogeneousIdeal 𝒜) : Set A) = 0 :=
   rfl
+#align homogeneous_ideal.coe_bot HomogeneousIdeal.coe_bot
 
 @[simp]
 theorem coe_sup (I J : HomogeneousIdeal 𝒜) : ↑(I ⊔ J) = (I + J : Set A) :=
   Submodule.coe_sup _ _
+#align homogeneous_ideal.coe_sup HomogeneousIdeal.coe_sup
 
 @[simp]
 theorem coe_inf (I J : HomogeneousIdeal 𝒜) : (↑(I ⊓ J) : Set A) = I ∩ J :=
   rfl
+#align homogeneous_ideal.coe_inf HomogeneousIdeal.coe_inf
 
 @[simp]
 theorem to_ideal_top : (⊤ : HomogeneousIdeal 𝒜).toIdeal = (⊤ : Ideal A) :=
   rfl
+#align homogeneous_ideal.to_ideal_top HomogeneousIdeal.to_ideal_top
 
 @[simp]
 theorem to_ideal_bot : (⊥ : HomogeneousIdeal 𝒜).toIdeal = (⊥ : Ideal A) :=
   rfl
+#align homogeneous_ideal.to_ideal_bot HomogeneousIdeal.to_ideal_bot
 
 @[simp]
 theorem to_ideal_sup (I J : HomogeneousIdeal 𝒜) : (I ⊔ J).toIdeal = I.toIdeal ⊔ J.toIdeal :=
   rfl
+#align homogeneous_ideal.to_ideal_sup HomogeneousIdeal.to_ideal_sup
 
 @[simp]
 theorem to_ideal_inf (I J : HomogeneousIdeal 𝒜) : (I ⊓ J).toIdeal = I.toIdeal ⊓ J.toIdeal :=
   rfl
+#align homogeneous_ideal.to_ideal_inf HomogeneousIdeal.to_ideal_inf
 
 @[simp]
 theorem to_ideal_Sup (ℐ : Set (HomogeneousIdeal 𝒜)) : (sup ℐ).toIdeal = ⨆ s ∈ ℐ, toIdeal s :=
   rfl
+#align homogeneous_ideal.to_ideal_Sup HomogeneousIdeal.to_ideal_Sup
 
 @[simp]
 theorem to_ideal_Inf (ℐ : Set (HomogeneousIdeal 𝒜)) : (inf ℐ).toIdeal = ⨅ s ∈ ℐ, toIdeal s :=
   rfl
+#align homogeneous_ideal.to_ideal_Inf HomogeneousIdeal.to_ideal_Inf
 
 @[simp]
 theorem to_ideal_supr {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨆ i, s i).toIdeal = ⨆ i, (s i).toIdeal := by
   rw [supr, to_ideal_Sup, supr_range]
+#align homogeneous_ideal.to_ideal_supr HomogeneousIdeal.to_ideal_supr
 
 @[simp]
 theorem to_ideal_infi {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨅ i, s i).toIdeal = ⨅ i, (s i).toIdeal := by
   rw [infi, to_ideal_Inf, infi_range]
+#align homogeneous_ideal.to_ideal_infi HomogeneousIdeal.to_ideal_infi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem to_ideal_supr₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨆ (i) (j), s i j).toIdeal = ⨆ (i) (j), (s i j).toIdeal := by simp_rw [to_ideal_supr]
+#align homogeneous_ideal.to_ideal_supr₂ HomogeneousIdeal.to_ideal_supr₂
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem to_ideal_infi₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨅ (i) (j), s i j).toIdeal = ⨅ (i) (j), (s i j).toIdeal := by simp_rw [to_ideal_infi]
+#align homogeneous_ideal.to_ideal_infi₂ HomogeneousIdeal.to_ideal_infi₂
 
 @[simp]
 theorem eq_top_iff (I : HomogeneousIdeal 𝒜) : I = ⊤ ↔ I.toIdeal = ⊤ :=
   to_ideal_injective.eq_iff.symm
+#align homogeneous_ideal.eq_top_iff HomogeneousIdeal.eq_top_iff
 
 @[simp]
 theorem eq_bot_iff (I : HomogeneousIdeal 𝒜) : I = ⊥ ↔ I.toIdeal = ⊥ :=
   to_ideal_injective.eq_iff.symm
+#align homogeneous_ideal.eq_bot_iff HomogeneousIdeal.eq_bot_iff
 
 instance : CompleteLattice (HomogeneousIdeal 𝒜) :=
   to_ideal_injective.CompleteLattice _ to_ideal_sup to_ideal_inf to_ideal_Sup to_ideal_Inf to_ideal_top to_ideal_bot
@@ -392,6 +433,7 @@ instance : Add (HomogeneousIdeal 𝒜) :=
 @[simp]
 theorem to_ideal_add (I J : HomogeneousIdeal 𝒜) : (I + J).toIdeal = I.toIdeal + J.toIdeal :=
   rfl
+#align homogeneous_ideal.to_ideal_add HomogeneousIdeal.to_ideal_add
 
 instance : Inhabited (HomogeneousIdeal 𝒜) where default := ⊥
 
@@ -417,6 +459,7 @@ theorem Ideal.IsHomogeneous.mul {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ 
   obtain ⟨⟨s₁, rfl⟩, ⟨s₂, rfl⟩⟩ := HI, HJ
   rw [Ideal.span_mul_span']
   exact ⟨s₁ * s₂, congr_arg _ <| (Set.image_mul (homogeneous_submonoid 𝒜).Subtype).symm⟩
+#align ideal.is_homogeneous.mul Ideal.IsHomogeneous.mul
 
 variable {𝒜}
 
@@ -425,6 +468,7 @@ instance : Mul (HomogeneousIdeal 𝒜) where mul I J := ⟨I.toIdeal * J.toIdeal
 @[simp]
 theorem HomogeneousIdeal.to_ideal_mul (I J : HomogeneousIdeal 𝒜) : (I * J).toIdeal = I.toIdeal * J.toIdeal :=
   rfl
+#align homogeneous_ideal.to_ideal_mul HomogeneousIdeal.to_ideal_mul
 
 end CommSemiring
 
@@ -451,6 +495,7 @@ include A
 theorem Ideal.homogeneousCore.gc : GaloisConnection toIdeal (Ideal.homogeneousCore 𝒜) := fun I J =>
   ⟨fun H => I.to_ideal_homogeneous_core_eq_self ▸ Ideal.homogeneous_core_mono 𝒜 H, fun H =>
     le_trans H (Ideal.homogeneous_core'_le _ _)⟩
+#align ideal.homogeneous_core.gc Ideal.homogeneousCore.gc
 
 /-- `to_ideal : homogeneous_ideal 𝒜 → ideal A` and `ideal.homogeneous_core 𝒜` forms a galois
 coinsertion-/
@@ -459,9 +504,11 @@ def Ideal.homogeneousCore.gi : GaloisCoinsertion toIdeal (Ideal.homogeneousCore 
   gc := Ideal.homogeneousCore.gc 𝒜
   u_l_le I := Ideal.homogeneous_core'_le _ _
   choice_eq I H := le_antisymm H (I.to_ideal_homogeneous_core_le _)
+#align ideal.homogeneous_core.gi Ideal.homogeneousCore.gi
 
 theorem Ideal.homogeneous_core_eq_Sup : I.homogeneousCore 𝒜 = sup { J : HomogeneousIdeal 𝒜 | J.toIdeal ≤ I } :=
   Eq.symm <| IsLub.Sup_eq <| (Ideal.homogeneousCore.gc 𝒜).is_greatest_u.IsLub
+#align ideal.homogeneous_core_eq_Sup Ideal.homogeneous_core_eq_Sup
 
 theorem Ideal.homogeneous_core'_eq_Sup : I.homogeneousCore' 𝒜 = sup { J : Ideal A | J.IsHomogeneous 𝒜 ∧ J ≤ I } := by
   refine' (IsLub.Sup_eq _).symm
@@ -471,6 +518,7 @@ theorem Ideal.homogeneous_core'_eq_Sup : I.homogeneousCore' 𝒜 = sup { J : Ide
   ext
   rw [mem_image, mem_set_of_eq]
   refine' ⟨fun hI => ⟨⟨x, hI.1⟩, ⟨hI.2, rfl⟩⟩, by rintro ⟨x, ⟨hx, rfl⟩⟩ <;> exact ⟨x.is_homogeneous, hx⟩⟩
+#align ideal.homogeneous_core'_eq_Sup Ideal.homogeneous_core'_eq_Sup
 
 end HomogeneousCore
 
@@ -496,22 +544,21 @@ def Ideal.homogeneousHull : HomogeneousIdeal 𝒜 :=
     refine' Ideal.isHomogeneousSpan _ _ fun x hx => _
     obtain ⟨i, x, rfl⟩ := hx
     apply SetLike.is_homogeneous_coe⟩
+#align ideal.homogeneous_hull Ideal.homogeneousHull
 
 theorem Ideal.le_to_ideal_homogeneous_hull : I ≤ (Ideal.homogeneousHull 𝒜 I).toIdeal := by
   intro r hr
-  classical
-  rw [← DirectSum.sum_support_decompose 𝒜 r]
-  refine' Ideal.sum_mem _ _
-  intro j hj
-  apply Ideal.subset_span
-  use j
-  use ⟨r, hr⟩
-  rfl
+  classical rw [← DirectSum.sum_support_decompose 𝒜 r]
+    intro j hj
+    use j
+    rfl
+#align ideal.le_to_ideal_homogeneous_hull Ideal.le_to_ideal_homogeneous_hull
 
 theorem Ideal.homogeneous_hull_mono : Monotone (Ideal.homogeneousHull 𝒜) := fun I J I_le_J => by
   apply Ideal.span_mono
   rintro r ⟨hr1, ⟨x, hx⟩, rfl⟩
   refine' ⟨hr1, ⟨⟨x, I_le_J hx⟩, rfl⟩⟩
+#align ideal.homogeneous_hull_mono Ideal.homogeneous_hull_mono
 
 variable {I 𝒜}
 
@@ -521,10 +568,12 @@ theorem Ideal.IsHomogeneous.to_ideal_homogeneous_hull_eq_self (h : I.IsHomogeneo
   apply Ideal.span_le.2
   rintro _ ⟨i, x, rfl⟩
   exact h _ x.prop
+#align ideal.is_homogeneous.to_ideal_homogeneous_hull_eq_self Ideal.IsHomogeneous.to_ideal_homogeneous_hull_eq_self
 
 @[simp]
 theorem HomogeneousIdeal.homogeneous_hull_to_ideal_eq_self (I : HomogeneousIdeal 𝒜) : I.toIdeal.homogeneousHull 𝒜 = I :=
   HomogeneousIdeal.to_ideal_injective <| I.IsHomogeneous.to_ideal_homogeneous_hull_eq_self
+#align homogeneous_ideal.homogeneous_hull_to_ideal_eq_self HomogeneousIdeal.homogeneous_hull_to_ideal_eq_self
 
 variable (I 𝒜)
 
@@ -535,6 +584,7 @@ theorem Ideal.to_ideal_homogeneous_hull_eq_supr :
   ext1
   simp only [Set.mem_Union, Set.mem_image, mem_set_of_eq, GradedRing.proj_apply, SetLike.exists, exists_prop,
     Subtype.coe_mk, SetLike.mem_coe]
+#align ideal.to_ideal_homogeneous_hull_eq_supr Ideal.to_ideal_homogeneous_hull_eq_supr
 
 theorem Ideal.homogeneous_hull_eq_supr :
     I.homogeneousHull 𝒜 =
@@ -548,6 +598,7 @@ theorem Ideal.homogeneous_hull_eq_supr :
   ext1
   rw [Ideal.to_ideal_homogeneous_hull_eq_supr, to_ideal_supr]
   rfl
+#align ideal.homogeneous_hull_eq_supr Ideal.homogeneous_hull_eq_supr
 
 end HomogeneousHull
 
@@ -564,6 +615,7 @@ include A
 theorem Ideal.homogeneousHull.gc : GaloisConnection (Ideal.homogeneousHull 𝒜) toIdeal := fun I J =>
   ⟨le_trans (Ideal.le_to_ideal_homogeneous_hull _ _), fun H =>
     J.homogeneous_hull_to_ideal_eq_self ▸ Ideal.homogeneous_hull_mono 𝒜 H⟩
+#align ideal.homogeneous_hull.gc Ideal.homogeneousHull.gc
 
 /-- `ideal.homogeneous_hull 𝒜` and `to_ideal : homogeneous_ideal 𝒜 → ideal A` form a galois
 insertion-/
@@ -572,10 +624,12 @@ def Ideal.homogeneousHull.gi : GaloisInsertion (Ideal.homogeneousHull 𝒜) toId
   gc := Ideal.homogeneousHull.gc 𝒜
   le_l_u I := Ideal.le_to_ideal_homogeneous_hull _ _
   choice_eq I H := le_antisymm (I.le_to_ideal_homogeneous_hull 𝒜) H
+#align ideal.homogeneous_hull.gi Ideal.homogeneousHull.gi
 
 theorem Ideal.homogeneous_hull_eq_Inf (I : Ideal A) :
     Ideal.homogeneousHull 𝒜 I = inf { J : HomogeneousIdeal 𝒜 | I ≤ J.toIdeal } :=
   Eq.symm <| IsGlb.Inf_eq <| (Ideal.homogeneousHull.gc 𝒜).is_least_l.IsGlb
+#align ideal.homogeneous_hull_eq_Inf Ideal.homogeneous_hull_eq_Inf
 
 end GaloisConnection
 
@@ -611,15 +665,18 @@ def HomogeneousIdeal.irrelevant : HomogeneousIdeal 𝒜 :=
       
     · rw [decompose_of_mem_ne 𝒜 (SetLike.coe_mem _) h]
       ⟩
+#align homogeneous_ideal.irrelevant HomogeneousIdeal.irrelevant
 
 @[simp]
 theorem HomogeneousIdeal.mem_irrelevant_iff (a : A) : a ∈ HomogeneousIdeal.irrelevant 𝒜 ↔ proj 𝒜 0 a = 0 :=
   Iff.rfl
+#align homogeneous_ideal.mem_irrelevant_iff HomogeneousIdeal.mem_irrelevant_iff
 
 @[simp]
 theorem HomogeneousIdeal.to_ideal_irrelevant :
     (HomogeneousIdeal.irrelevant 𝒜).toIdeal = (GradedRing.projZeroRingHom 𝒜).ker :=
   rfl
+#align homogeneous_ideal.to_ideal_irrelevant HomogeneousIdeal.to_ideal_irrelevant
 
 end IrrelevantIdeal
 

@@ -16,21 +16,24 @@ instance (n : ℕ) : Preorder (Bitvec n) :=
 /-- convert `fin` to `bitvec` -/
 def ofFin {n : ℕ} (i : Fin <| 2 ^ n) : Bitvec n :=
   Bitvec.ofNat _ i.val
+#align bitvec.of_fin Bitvec.ofFin
 
 theorem of_fin_val {n : ℕ} (i : Fin <| 2 ^ n) : (ofFin i).toNat = i.val := by
   rw [of_fin, to_nat_of_nat, Nat.mod_eq_of_lt] <;> apply i.is_lt
+#align bitvec.of_fin_val Bitvec.of_fin_val
 
 /-- convert `bitvec` to `fin` -/
 def toFin {n : ℕ} (i : Bitvec n) : Fin <| 2 ^ n :=
   Fin.ofNat' i.toNat
+#align bitvec.to_fin Bitvec.toFin
 
 theorem add_lsb_eq_twice_add_one {x b} : addLsb x b = 2 * x + cond b 1 0 := by simp [add_lsb, two_mul]
+#align bitvec.add_lsb_eq_twice_add_one Bitvec.add_lsb_eq_twice_add_one
 
 theorem to_nat_eq_foldr_reverse {n : ℕ} (v : Bitvec n) : v.toNat = v.toList.reverse.foldr (flip addLsb) 0 := by
   rw [List.foldr_reverse, flip] <;> rfl
+#align bitvec.to_nat_eq_foldr_reverse Bitvec.to_nat_eq_foldr_reverse
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(2, list.foldr (λ (x : bool) (y : exprℕ()), add_lsb y x) 0 ys_tl), «expr * »(2, 1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
   suffices v.to_nat + 1 ≤ 2 ^ n by simpa
   rw [to_nat_eq_foldr_reverse]
@@ -44,8 +47,7 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
     
   · simp only [← h, pow_add, flip, List.length, List.foldr, pow_one]
     rw [add_lsb_eq_twice_add_one]
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(2, list.foldr (λ (x : bool) (y : exprℕ()), add_lsb y x) 0 ys_tl), «expr * »(2, 1))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    trans 2 * List.foldr (fun (x : Bool) (y : ℕ) => add_lsb y x) 0 ys_tl + 2 * 1
     · ac_mono
       rw [two_mul]
       mono
@@ -57,18 +59,21 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
       norm_num
       
     
+#align bitvec.to_nat_lt Bitvec.to_nat_lt
 
 theorem add_lsb_div_two {x b} : addLsb x b / 2 = x := by
   cases b <;>
     simp only [Nat.add_mul_div_left, add_lsb, ← two_mul, add_comm, Nat.succ_pos', Nat.mul_div_right, gt_iff_lt,
         zero_add, cond] <;>
       norm_num
+#align bitvec.add_lsb_div_two Bitvec.add_lsb_div_two
 
 theorem to_bool_add_lsb_mod_two {x b} : decide (addLsb x b % 2 = 1) = b := by
   cases b <;>
-    simp only [Bool.decide_iff, Nat.add_mul_mod_self_left, add_lsb, ← two_mul, add_comm, Bool.to_bool_false,
+    simp only [Bool.decide_iff, Nat.add_mul_mod_self_left, add_lsb, ← two_mul, add_comm, Bool.decide_False,
         Nat.mul_mod_right, zero_add, cond, zero_ne_one] <;>
       norm_num
+#align bitvec.to_bool_add_lsb_mod_two Bitvec.to_bool_add_lsb_mod_two
 
 theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v := by
   cases' v with xs h
@@ -92,22 +97,28 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v := b
     apply ys_ih
     rfl
     
+#align bitvec.of_nat_to_nat Bitvec.of_nat_to_nat
 
 theorem to_fin_val {n : ℕ} (v : Bitvec n) : (toFin v : ℕ) = v.toNat := by
   rw [to_fin, Fin.coe_of_nat_eq_mod', Nat.mod_eq_of_lt] <;> apply to_nat_lt
+#align bitvec.to_fin_val Bitvec.to_fin_val
 
 theorem to_fin_le_to_fin_of_le {n} {v₀ v₁ : Bitvec n} (h : v₀ ≤ v₁) : v₀.toFin ≤ v₁.toFin :=
   show (v₀.toFin : ℕ) ≤ v₁.toFin by rw [to_fin_val, to_fin_val] <;> exact h
+#align bitvec.to_fin_le_to_fin_of_le Bitvec.to_fin_le_to_fin_of_le
 
 theorem of_fin_le_of_fin_of_le {n : ℕ} {i j : Fin (2 ^ n)} (h : i ≤ j) : ofFin i ≤ ofFin j :=
   show (Bitvec.ofNat n i).toNat ≤ (Bitvec.ofNat n j).toNat by
     simp only [to_nat_of_nat, Nat.mod_eq_of_lt, Fin.is_lt]
     exact h
+#align bitvec.of_fin_le_of_fin_of_le Bitvec.of_fin_le_of_fin_of_le
 
 theorem to_fin_of_fin {n} (i : Fin <| 2 ^ n) : (ofFin i).toFin = i :=
   Fin.eq_of_veq (by simp [to_fin_val, of_fin, to_nat_of_nat, Nat.mod_eq_of_lt, i.is_lt])
+#align bitvec.to_fin_of_fin Bitvec.to_fin_of_fin
 
 theorem of_fin_to_fin {n} (v : Bitvec n) : ofFin (toFin v) = v := by dsimp [of_fin] <;> rw [to_fin_val, of_nat_to_nat]
+#align bitvec.of_fin_to_fin Bitvec.of_fin_to_fin
 
 end Bitvec
 

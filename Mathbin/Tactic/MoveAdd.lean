@@ -72,6 +72,7 @@ def returnUnused {α : Type _} : List α → List Bool → List α
   | un, [] => un
   | [], bo => []
   | u :: us, b :: bs => if b then u :: return_unused us bs else return_unused us bs
+#align tactic.move_op.return_unused Tactic.MoveOp.returnUnused
 
 /-- Given a list `lp` of `bool × pexpr` and a list `l_un` of `expr`, scan the elements of `lp` one
 at a time and produce 3 sublists of `l_un`.
@@ -95,9 +96,11 @@ unsafe def move_left_or_right :
     List (Bool × expr) → List expr → List Bool → tactic (List expr × List expr × List expr × List Bool)
   | [], l_un, l_m => return ([], [], l_un, l_m)
   | be :: l, l_un, l_m => do
-    let ex :: _ ← l_un.mfilter fun e' => succeeds <| unify be.2 e' | move_left_or_right l l_un (l_m.append [true])
+    let ex :: _ ← l_un.mfilter fun e' => succeeds <| unify be.2 e' |
+      move_left_or_right l l_un (l_m.append [true])
     let (l_tt, l_ff, l_un, l_m) ← move_left_or_right l (l_un.erase ex) (l_m.append [false])
     if be.1 then return (ex :: l_tt, l_ff, l_un, l_m) else return (l_tt, ex :: l_ff, l_un, l_m)
+#align tactic.move_op.move_left_or_right tactic.move_op.move_left_or_right
 
 /-- We adapt `move_left_or_right` to our goal:
 1. we convert a list of pairs `bool × pexpr` to a list of pairs `bool × expr`,
@@ -112,6 +115,7 @@ unsafe def final_sort (lp : List (Bool × pexpr)) (sl : List expr) : tactic (Lis
         return (x.1, e)
   let (l1, l2, l3, is_unused) ← move_left_or_right lp_exp sl []
   return (l1 ++ l3 ++ l2, is_unused)
+#align tactic.move_op.final_sort tactic.move_op.final_sort
 
 /-- `as_given_op op e` unifies the head term of `e`, which is a ≥2-argument function application,
 with the binary operation `op`, failing if it cannot. -/
@@ -120,6 +124,7 @@ unsafe def as_given_op (op : pexpr) : expr → tactic expr
     to_expr op tt ff >>= unify F
     return F
   | _ => failed
+#align tactic.move_op.as_given_op tactic.move_op.as_given_op
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -199,6 +204,7 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
     let (lee, lb) := len.unzip
     return (expr.macro ma lee, lb List.band)
   | e => pure (e, lp.map fun _ => true)
+#align tactic.move_op.reorder_oper tactic.move_op.reorder_oper
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -246,6 +252,7 @@ unsafe def reorder_hyp (op : pexpr) (lp : List (Bool × pexpr)) (na : Option Nam
         | none => replace_target reordered prf
         | some hyploc => replace_hyp hyploc reordered prf >> skip
       return (ff, is_unused)
+#align tactic.move_op.reorder_hyp tactic.move_op.reorder_hyp
 
 section ParsingArgumentsForMoveOp
 
@@ -255,11 +262,13 @@ setup_tactic_parser
 variables to be moved.  It is either a `pexpr`, or a `pexpr` preceded by a `←`. -/
 unsafe def move_op_arg (prec : Nat) : parser (Bool × pexpr) :=
   Prod.mk <$> Option.isSome <$> (tk "<-")? <*> parser.pexpr prec
+#align tactic.move_op.move_op_arg tactic.move_op.move_op_arg
 
 /-- `move_pexpr_list_or_texpr` is either a list of `move_op_arg`, possibly empty, or a single
 `move_op_arg`. -/
 unsafe def move_pexpr_list_or_texpr : parser (List (Bool × pexpr)) :=
   list_of (move_op_arg 0) <|> List.ret <$> move_op_arg tac_rbp <|> return []
+#align tactic.move_op.move_pexpr_list_or_texpr tactic.move_op.move_pexpr_list_or_texpr
 
 end ParsingArgumentsForMoveOp
 
@@ -299,8 +308,10 @@ unsafe def move_op (args : parse move_pexpr_list_or_texpr) (locat : parse locati
       let linames := returnUnused locas unch_tgts
       (if none ∈ returnUnused names unch_tgts then [f!"Goal did not change"] else []) ++
         if linames ≠ [] then [f! "'{linames.reverse}' did not change"] else []
-  let [] ← pure (str_tgts ++ str_unva) | fail (format.intercalate "\n" (str_tgts ++ str_unva))
+  let [] ← pure (str_tgts ++ str_unva) |
+    fail (format.intercalate "\n" (str_tgts ++ str_unva))
   assumption <|> try (tactic.reflexivity reducible)
+#align tactic.move_op tactic.move_op
 
 namespace Interactive
 
@@ -387,11 +398,13 @@ same effect and changes the goal to `b + a = 0`.  These are all valid uses of `m
 -/
 unsafe def move_add (args : parse move_pexpr_list_or_texpr) (locat : parse location) : tactic Unit :=
   move_op args locat (pquote.1 (· + ·))
+#align tactic.interactive.move_add tactic.interactive.move_add
 
 /-- See the doc-string for `move_add` and mentally
 replace addition with multiplication throughout. ;-) -/
 unsafe def move_mul (args : parse move_pexpr_list_or_texpr) (locat : parse location) : tactic Unit :=
   move_op args locat (pquote.1 Mul.mul)
+#align tactic.interactive.move_mul tactic.interactive.move_mul
 
 /-- `move_oper` behaves like `move_add` except that it also takes an associative, commutative,
 binary operation as input.  The operation must be passed as a list consisting of a single element.
@@ -405,8 +418,10 @@ intended operation.
 -/
 unsafe def move_oper (op : parse pexpr_list) (args : parse move_pexpr_list_or_texpr) (locat : parse location) :
     tactic Unit := do
-  let [op] ← pure op | fail "only one operation is allowed"
+  let [op] ← pure op |
+    fail "only one operation is allowed"
   move_op args locat op
+#align tactic.interactive.move_oper tactic.interactive.move_oper
 
 add_tactic_doc
   { Name := "move_add", category := DocCategory.tactic, declNames := [`tactic.interactive.move_add],

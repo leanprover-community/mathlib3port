@@ -56,6 +56,7 @@ extract the expression for `S`.
 unsafe def extract_category : expr → tactic expr
   | quote.1 (@Eq (@Quiver.Hom _ (@CategoryStruct.toQuiver _ (@Category.toCategoryStruct _ (%%ₓS))) _ _) _ _) => pure S
   | _ => failed
+#align tactic.extract_category tactic.extract_category
 
 -- This is closely modelled on `reassoc_axiom`.
 /-- (internals for `@[elementwise]`)
@@ -129,6 +130,7 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
   let t'' ← pis (vs ++ if CC_found then [x] else [CC, x]) t''
   let pr'' ← lambdas (vs ++ if CC_found then [x] else [CC, x]) pr''
   pure (t'', pr'', n)
+#align tactic.prove_elementwise tactic.prove_elementwise
 
 /-- (implementation for `@[elementwise]`)
 Given a declaration named `n` of the form `∀ ..., f = g`, proves a new lemma named `n'`
@@ -141,6 +143,7 @@ unsafe def elementwise_lemma (n : Name) (n' : Name := n.appendSuffix "_apply") :
   let params := l'.toList ++ d.univ_params
   add_decl <| declaration.thm n' params t'' (pure pr')
   copy_attribute `simp n n'
+#align tactic.elementwise_lemma tactic.elementwise_lemma
 
 /-- The `elementwise` attribute can be applied to a lemma
 
@@ -175,8 +178,10 @@ unsafe def elementwise_attr : user_attribute Unit (Option Name) where
   parser := optional ident
   after_set :=
     some fun n _ _ => do
-      let some n' ← elementwise_attr.get_param n | elementwise_lemma n (n.appendSuffix "_apply")
+      let some n' ← elementwise_attr.get_param n |
+        elementwise_lemma n (n.appendSuffix "_apply")
       elementwise_lemma n <| n ++ n'
+#align tactic.elementwise_attr tactic.elementwise_attr
 
 add_tactic_doc
   { Name := "elementwise", category := DocCategory.attr, declNames := [`tactic.elementwise_attr],
@@ -199,6 +204,7 @@ unsafe def elementwise (del : parse (tk "!")?) (ns : parse ident*) : tactic Unit
       let (t, pr, u) ← prove_elementwise h
       assertv n t pr
       when del (tactic.clear h)
+#align tactic.interactive.elementwise tactic.interactive.elementwise
 
 end Interactive
 
@@ -208,6 +214,7 @@ unsafe def derive_elementwise_proof : tactic Unit := do
   let (t, pr, n) ← prove_elementwise h
   unify v t
   exact pr
+#align tactic.derive_elementwise_proof tactic.derive_elementwise_proof
 
 end Tactic
 
@@ -229,6 +236,7 @@ end
 theorem CategoryTheory.elementwise_of {α} (hh : α) {β} (x : Tactic.CalculatedProp β hh := by derive_elementwise_proof) :
     β :=
   x
+#align category_theory.elementwise_of CategoryTheory.elementwise_of
 
 /-- With `w : ∀ ..., f ≫ g = h` (with universal quantifiers tolerated),
 `elementwise_of w : ∀ ... (x : X), g (f x) = h x`.

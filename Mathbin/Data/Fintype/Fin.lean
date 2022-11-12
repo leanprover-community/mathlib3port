@@ -36,6 +36,7 @@ theorem Ioi_zero_eq_map : ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).
   · rintro ⟨i, _, rfl⟩
     exact succ_pos _
     
+#align fin.Ioi_zero_eq_map Fin.Ioi_zero_eq_map
 
 @[simp]
 theorem Ioi_succ (i : Fin n) : ioi i.succ = (ioi i).map (Fin.succEmbedding _).toEmbedding := by
@@ -52,15 +53,18 @@ theorem Ioi_succ (i : Fin n) : ioi i.succ = (ioi i).map (Fin.succEmbedding _).to
   · rintro ⟨i, hi, rfl⟩
     simpa
     
+#align fin.Ioi_succ Fin.Ioi_succ
 
 theorem card_filter_univ_succ' (p : Fin (n + 1) → Prop) [DecidablePred p] :
     (univ.filter p).card = ite (p 0) 1 0 + (univ.filter (p ∘ Fin.succ)).card := by
   rw [Fin.univ_succ, filter_cons, card_disj_union, map_filter, card_map]
   split_ifs <;> simp
+#align fin.card_filter_univ_succ' Fin.card_filter_univ_succ'
 
 theorem card_filter_univ_succ (p : Fin (n + 1) → Prop) [DecidablePred p] :
     (univ.filter p).card = if p 0 then (univ.filter (p ∘ Fin.succ)).card + 1 else (univ.filter (p ∘ Fin.succ)).card :=
   (card_filter_univ_succ' p).trans (by split_ifs <;> simp [add_comm 1])
+#align fin.card_filter_univ_succ Fin.card_filter_univ_succ
 
 theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : Vector α n) :
     (univ.filter fun i => a = v.nth i).card = v.toList.count a := by
@@ -70,6 +74,7 @@ theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : V
   · simp_rw [card_filter_univ_succ', Vector.nth_cons_zero, Vector.to_list_cons, Function.comp, Vector.nth_cons_succ,
       hxs, List.count_cons', add_comm (ite (a = x) 1 0)]
     
+#align fin.card_filter_univ_eq_vector_nth_eq_count Fin.card_filter_univ_eq_vector_nth_eq_count
 
 end Fin
 

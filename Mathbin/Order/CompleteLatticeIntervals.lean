@@ -35,6 +35,7 @@ non-canonical (it uses `default s`); it should be used only as here, as an auxil
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasSup [Inhabited s] :
     HasSup s where sup t := if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default
+#align subset_has_Sup subsetHasSup
 
 attribute [local instance] subsetHasSup
 
@@ -42,9 +43,11 @@ attribute [local instance] subsetHasSup
 theorem subset_Sup_def [Inhabited s] :
     @sup s _ = fun t => if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default :=
   rfl
+#align subset_Sup_def subset_Sup_def
 
 theorem subset_Sup_of_within [Inhabited s] {t : Set s} (h : sup (coe '' t : Set α) ∈ s) :
     sup (coe '' t : Set α) = (@sup s _ t : α) := by simp [dif_pos h]
+#align subset_Sup_of_within subset_Sup_of_within
 
 end HasSup
 
@@ -57,6 +60,7 @@ non-canonical (it uses `default s`); it should be used only as here, as an auxil
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasInf [Inhabited s] :
     HasInf s where inf t := if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default
+#align subset_has_Inf subsetHasInf
 
 attribute [local instance] subsetHasInf
 
@@ -64,9 +68,11 @@ attribute [local instance] subsetHasInf
 theorem subset_Inf_def [Inhabited s] :
     @inf s _ = fun t => if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default :=
   rfl
+#align subset_Inf_def subset_Inf_def
 
 theorem subset_Inf_of_within [Inhabited s] {t : Set s} (h : inf (coe '' t : Set α) ∈ s) :
     inf (coe '' t : Set α) = (@inf s _ t : α) := by simp [dif_pos h]
+#align subset_Inf_of_within subset_Inf_of_within
 
 end HasInf
 
@@ -107,6 +113,7 @@ noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
       rintro t c h_bdd hct
       have := (Subtype.mono_coe s).cInf_image_le hct h_bdd
       rwa [subset_Inf_of_within s (h_Inf ⟨c, hct⟩ h_bdd)] at this }
+#align subset_conditionally_complete_linear_order subsetConditionallyCompleteLinearOrder
 
 section OrdConnected
 
@@ -121,6 +128,7 @@ theorem Sup_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Se
     
   · exact (Subtype.mono_coe s).cSup_image_le ⟨c, hct⟩ hB
     
+#align Sup_within_of_ord_connected Sup_within_of_ord_connected
 
 /-- The `Inf` function on a nonempty `ord_connected` set `s` in a conditionally complete linear
 order takes values within `s`, for all nonempty bounded-below subsets of `s`. -/
@@ -133,12 +141,14 @@ theorem Inf_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Se
     
   · exact (Subtype.mono_coe s).cInf_image_le hct ⟨B, hB⟩
     
+#align Inf_within_of_ord_connected Inf_within_of_ord_connected
 
 /-- A nonempty `ord_connected` set in a conditionally complete linear order is naturally a
 conditionally complete linear order. -/
 noncomputable instance ordConnectedSubsetConditionallyCompleteLinearOrder [Inhabited s] [OrdConnected s] :
     ConditionallyCompleteLinearOrder s :=
   subsetConditionallyCompleteLinearOrder s Sup_within_of_ord_connected Inf_within_of_ord_connected
+#align ord_connected_subset_conditionally_complete_linear_order ordConnectedSubsetConditionallyCompleteLinearOrder
 
 end OrdConnected
 

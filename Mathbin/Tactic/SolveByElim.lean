@@ -110,6 +110,7 @@ unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : 
           let e ← h
           if e then return h else return (return e)
     return (hs, locals)
+#align tactic.solve_by_elim.mk_assumption_set tactic.solve_by_elim.mk_assumption_set
 
 /-- Configuration options for `solve_by_elim`.
 
@@ -133,6 +134,7 @@ unsafe structure basic_opt extends apply_any_opt where
   pre_apply : tactic Unit := skip
   discharger : tactic Unit := failed
   max_depth : ℕ := 3
+#align tactic.solve_by_elim.basic_opt tactic.solve_by_elim.basic_opt
 
 initialize
   registerTraceClass.1 `solve_by_elim
@@ -142,15 +144,18 @@ initialize
 -/
 unsafe def solve_by_elim_trace (n : ℕ) (f : format) : tactic Unit :=
   trace_if_enabled `solve_by_elim ((f!"[solve_by_elim {(List.repeat '.' (n + 1)).asString} ") ++ f ++ "]")
+#align tactic.solve_by_elim.solve_by_elim_trace tactic.solve_by_elim.solve_by_elim_trace
 
 /-- A helper function to generate trace messages on successful applications. -/
 unsafe def on_success (g : format) (n : ℕ) (e : expr) : tactic Unit := do
   let pp ← pp e
   solve_by_elim_trace n f! "✅ `{pp }` solves `⊢ {g}`"
+#align tactic.solve_by_elim.on_success tactic.solve_by_elim.on_success
 
 /-- A helper function to generate trace messages on unsuccessful applications. -/
 unsafe def on_failure (g : format) (n : ℕ) : tactic Unit :=
   solve_by_elim_trace n f! "❌ failed to solve `⊢ {g}`"
+#align tactic.solve_by_elim.on_failure tactic.solve_by_elim.on_failure
 
 /-- A helper function to generate the tactic that print trace messages.
 This function exists to ensure the target is pretty printed only as necessary.
@@ -160,6 +165,7 @@ unsafe def trace_hooks (n : ℕ) : tactic ((expr → tactic Unit) × tactic Unit
     let g ← target >>= pp
     return (on_success g n, on_failure g n)
   else return (fun _ => skip, skip)
+#align tactic.solve_by_elim.trace_hooks tactic.solve_by_elim.trace_hooks
 
 /-- The internal implementation of `solve_by_elim`, with a limiting counter.
 -/
@@ -187,6 +193,7 @@ unsafe def solve_by_elim_aux (opt : basic_opt) (original_goals : List expr) (lem
               on_failure <|>-- or if that doesn't work, run the discharger and recurse.
               opt >>
               solve_by_elim_aux (n - 1)
+#align tactic.solve_by_elim.solve_by_elim_aux tactic.solve_by_elim.solve_by_elim_aux
 
 /-- Arguments for `solve_by_elim`:
 * By default `solve_by_elim` operates only on the first goal,
@@ -208,6 +215,7 @@ unsafe structure opt extends basic_opt where
   lemmas : Option (List expr) := none
   lemma_thunks : Option (List (tactic expr)) := lemmas.map fun l => l.map return
   ctx_thunk : tactic (List expr) := local_context
+#align tactic.solve_by_elim.opt tactic.solve_by_elim.opt
 
 /-- If no lemmas have been specified, generate the default set
 (local hypotheses, along with `rfl`, `trivial`, `congr_arg`, and `congr_fun`).
@@ -216,6 +224,7 @@ unsafe def opt.get_lemma_thunks (opt : opt) : tactic (List (tactic expr) × tact
   match opt.lemma_thunks with
   | none => mk_assumption_set false [] []
   | some lemma_thunks => return (lemma_thunks, opt.ctx_thunk)
+#align tactic.solve_by_elim.opt.get_lemma_thunks tactic.solve_by_elim.opt.get_lemma_thunks
 
 end SolveByElim
 
@@ -255,6 +264,7 @@ unsafe def solve_by_elim (opt : opt := {  }) : tactic Unit := do
             ("`solve_by_elim` failed.\n" ++ "Try `solve_by_elim { max_depth := N }` for `N > " ++ toString opt ++
                 "`\n" ++
               "or use `set_option trace.solve_by_elim true` to view the search.")
+#align tactic.solve_by_elim tactic.solve_by_elim
 
 setup_tactic_parser
 
@@ -283,6 +293,7 @@ unsafe def apply_assumption (lemmas : parse (parser.optional pexpr_list)) (opt :
       | none => local_context
       | some lemmas => lemmas.mmap to_expr
   tactic.apply_any lemmas opt tac
+#align tactic.interactive.apply_assumption tactic.interactive.apply_assumption
 
 add_tactic_doc
   { Name := "apply_assumption", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_assumption],
@@ -330,6 +341,7 @@ unsafe def solve_by_elim (all_goals : parse <| parser.optional (tk "*")) (no_dfl
   do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set no_dflt hs attr_names
   tactic.solve_by_elim { opt with backtrack_all_goals := all_goals ∨ opt, lemma_thunks := some lemma_thunks, ctx_thunk }
+#align tactic.interactive.solve_by_elim tactic.interactive.solve_by_elim
 
 add_tactic_doc
   { Name := "solve_by_elim", category := DocCategory.tactic, declNames := [`tactic.interactive.solve_by_elim],

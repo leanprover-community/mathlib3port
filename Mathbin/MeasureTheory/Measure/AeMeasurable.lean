@@ -28,33 +28,41 @@ section
 @[nontriviality, measurability]
 theorem Subsingleton.aeMeasurable [Subsingleton α] : AeMeasurable f μ :=
   Subsingleton.measurable.AeMeasurable
+#align subsingleton.ae_measurable Subsingleton.aeMeasurable
 
 @[nontriviality, measurability]
 theorem aeMeasurableOfSubsingletonCodomain [Subsingleton β] : AeMeasurable f μ :=
   (measurableOfSubsingletonCodomain f).AeMeasurable
+#align ae_measurable_of_subsingleton_codomain aeMeasurableOfSubsingletonCodomain
 
 @[simp, measurability]
 theorem aeMeasurableZeroMeasure : AeMeasurable f (0 : Measure α) := by
   nontriviality α
   inhabit α
   exact ⟨fun x => f default, measurableConst, rfl⟩
+#align ae_measurable_zero_measure aeMeasurableZeroMeasure
 
 namespace AeMeasurable
 
 theorem monoMeasure (h : AeMeasurable f μ) (h' : ν ≤ μ) : AeMeasurable f ν :=
   ⟨h.mk f, h.measurableMk, Eventually.filter_mono (ae_mono h') h.ae_eq_mk⟩
+#align ae_measurable.mono_measure AeMeasurable.monoMeasure
 
 theorem monoSet {s t} (h : s ⊆ t) (ht : AeMeasurable f (μ.restrict t)) : AeMeasurable f (μ.restrict s) :=
   ht.monoMeasure (restrict_mono h le_rfl)
+#align ae_measurable.mono_set AeMeasurable.monoSet
 
 protected theorem mono' (h : AeMeasurable f μ) (h' : ν ≪ μ) : AeMeasurable f ν :=
   ⟨h.mk f, h.measurableMk, h' h.ae_eq_mk⟩
+#align ae_measurable.mono' AeMeasurable.mono'
 
 theorem ae_mem_imp_eq_mk {s} (h : AeMeasurable f (μ.restrict s)) : ∀ᵐ x ∂μ, x ∈ s → f x = h.mk f x :=
   ae_imp_of_ae_restrict h.ae_eq_mk
+#align ae_measurable.ae_mem_imp_eq_mk AeMeasurable.ae_mem_imp_eq_mk
 
 theorem ae_inf_principal_eq_mk {s} (h : AeMeasurable f (μ.restrict s)) : f =ᶠ[μ.ae ⊓ 𝓟 s] h.mk f :=
   le_ae_restrict h.ae_eq_mk
+#align ae_measurable.ae_inf_principal_eq_mk AeMeasurable.ae_inf_principal_eq_mk
 
 @[measurability]
 theorem sumMeasure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AeMeasurable f (μ i)) : AeMeasurable f (Sum μ) := by
@@ -97,53 +105,64 @@ theorem sumMeasure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AeMeasura
     refine' (piecewise_eq_of_not_mem _ _ _ _).symm
     exact fun h => hx (mem_Inter.1 h i)
     
+#align ae_measurable.sum_measure AeMeasurable.sumMeasure
 
 @[simp]
 theorem _root_.ae_measurable_sum_measure_iff [Countable ι] {μ : ι → Measure α} :
     AeMeasurable f (Sum μ) ↔ ∀ i, AeMeasurable f (μ i) :=
   ⟨fun h i => h.monoMeasure (le_sum _ _), sumMeasure⟩
+#align ae_measurable._root_.ae_measurable_sum_measure_iff ae_measurable._root_.ae_measurable_sum_measure_iff
 
 @[simp]
 theorem _root_.ae_measurable_add_measure_iff : AeMeasurable f (μ + ν) ↔ AeMeasurable f μ ∧ AeMeasurable f ν := by
   rw [← sum_cond, ae_measurable_sum_measure_iff, Bool.forall_bool, and_comm]
   rfl
+#align ae_measurable._root_.ae_measurable_add_measure_iff ae_measurable._root_.ae_measurable_add_measure_iff
 
 @[measurability]
 theorem addMeasure {f : α → β} (hμ : AeMeasurable f μ) (hν : AeMeasurable f ν) : AeMeasurable f (μ + ν) :=
   ae_measurable_add_measure_iff.2 ⟨hμ, hν⟩
+#align ae_measurable.add_measure AeMeasurable.addMeasure
 
 @[measurability]
 protected theorem union [Countable ι] {s : ι → Set α} (h : ∀ i, AeMeasurable f (μ.restrict (s i))) :
     AeMeasurable f (μ.restrict (⋃ i, s i)) :=
   (sumMeasure h).monoMeasure <| restrict_Union_le
+#align ae_measurable.Union AeMeasurable.union
 
 @[simp]
 theorem _root_.ae_measurable_Union_iff [Countable ι] {s : ι → Set α} :
     AeMeasurable f (μ.restrict (⋃ i, s i)) ↔ ∀ i, AeMeasurable f (μ.restrict (s i)) :=
   ⟨fun h i => h.monoMeasure <| restrict_mono (subset_Union _ _) le_rfl, AeMeasurable.union⟩
+#align ae_measurable._root_.ae_measurable_Union_iff ae_measurable._root_.ae_measurable_Union_iff
 
 @[simp]
 theorem _root_.ae_measurable_union_iff {s t : Set α} :
     AeMeasurable f (μ.restrict (s ∪ t)) ↔ AeMeasurable f (μ.restrict s) ∧ AeMeasurable f (μ.restrict t) := by
   simp only [union_eq_Union, ae_measurable_Union_iff, Bool.forall_bool, cond, and_comm]
+#align ae_measurable._root_.ae_measurable_union_iff ae_measurable._root_.ae_measurable_union_iff
 
 @[measurability]
 theorem smulMeasure [Monoid R] [DistribMulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] (h : AeMeasurable f μ) (c : R) :
     AeMeasurable f (c • μ) :=
   ⟨h.mk f, h.measurableMk, ae_smul_measure h.ae_eq_mk c⟩
+#align ae_measurable.smul_measure AeMeasurable.smulMeasure
 
 theorem compAeMeasurable {f : α → δ} {g : δ → β} (hg : AeMeasurable g (μ.map f)) (hf : AeMeasurable f μ) :
     AeMeasurable (g ∘ f) μ :=
   ⟨hg.mk g ∘ hf.mk f, hg.measurableMk.comp hf.measurableMk,
     (ae_eq_comp hf hg.ae_eq_mk).trans (hf.ae_eq_mk.fun_comp (mk g hg))⟩
+#align ae_measurable.comp_ae_measurable AeMeasurable.compAeMeasurable
 
 theorem compMeasurable {f : α → δ} {g : δ → β} (hg : AeMeasurable g (μ.map f)) (hf : Measurable f) :
     AeMeasurable (g ∘ f) μ :=
   hg.compAeMeasurable hf.AeMeasurable
+#align ae_measurable.comp_measurable AeMeasurable.compMeasurable
 
 theorem compQuasiMeasurePreserving {ν : Measure δ} {f : α → δ} {g : δ → β} (hg : AeMeasurable g ν)
     (hf : QuasiMeasurePreserving f μ ν) : AeMeasurable (g ∘ f) μ :=
   (hg.mono' hf.AbsolutelyContinuous).compMeasurable hf.Measurable
+#align ae_measurable.comp_quasi_measure_preserving AeMeasurable.compQuasiMeasurePreserving
 
 theorem map_map_of_ae_measurable {g : β → γ} {f : α → β} (hg : AeMeasurable g (Measure.map f μ))
     (hf : AeMeasurable f μ) : (μ.map f).map g = μ.map (g ∘ f) := by
@@ -158,12 +177,14 @@ theorem map_map_of_ae_measurable {g : β → γ} {f : α → β} (hg : AeMeasura
   simp only [A, B, hs, hg.measurable_mk.ae_measurable.comp_ae_measurable hf, hg.measurable_mk, hg.measurable_mk hs, hf,
     map_apply, map_apply_of_ae_measurable]
   rfl
+#align ae_measurable.map_map_of_ae_measurable AeMeasurable.map_map_of_ae_measurable
 
 @[measurability]
 theorem prodMk {f : α → β} {g : α → γ} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
     AeMeasurable (fun x => (f x, g x)) μ :=
   ⟨fun a => (hf.mk f a, hg.mk g a), hf.measurableMk.prod_mk hg.measurableMk,
     EventuallyEq.prod_mk hf.ae_eq_mk hg.ae_eq_mk⟩
+#align ae_measurable.prod_mk AeMeasurable.prodMk
 
 theorem exists_ae_eq_range_subset (H : AeMeasurable f μ) {t : Set β} (ht : ∀ᵐ x ∂μ, f x ∈ t) (h₀ : t.Nonempty) :
     ∃ g, Measurable g ∧ Range g ⊆ t ∧ f =ᵐ[μ] g := by
@@ -193,11 +214,13 @@ theorem exists_ae_eq_range_subset (H : AeMeasurable f μ) {t : Set β} (ht : ∀
     apply subset_to_measurable
     simp only [hx, mem_compl_iff, mem_set_of_eq, false_and_iff, not_false_iff]
     
+#align ae_measurable.exists_ae_eq_range_subset AeMeasurable.exists_ae_eq_range_subset
 
 theorem exists_measurable_nonneg {β} [Preorder β] [Zero β] {mβ : MeasurableSpace β} {f : α → β} (hf : AeMeasurable f μ)
     (f_nn : ∀ᵐ t ∂μ, 0 ≤ f t) : ∃ g, Measurable g ∧ 0 ≤ g ∧ f =ᵐ[μ] g := by
   obtain ⟨G, hG_meas, hG_mem, hG_ae_eq⟩ := hf.exists_ae_eq_range_subset f_nn ⟨0, le_rfl⟩
   exact ⟨G, hG_meas, fun x => hG_mem (mem_range_self x), hG_ae_eq⟩
+#align ae_measurable.exists_measurable_nonneg AeMeasurable.exists_measurable_nonneg
 
 theorem subtypeMk (h : AeMeasurable f μ) {s : Set β} {hfs : ∀ x, f x ∈ s} : AeMeasurable (codRestrict f s hfs) μ := by
   nontriviality α
@@ -207,10 +230,12 @@ theorem subtypeMk (h : AeMeasurable f μ) {s : Set β} {hfs : ∀ x, f x ∈ s} 
   refine' ⟨cod_restrict g s fun x => hg (mem_range_self _), Measurable.subtypeMk g_meas, _⟩
   filter_upwards [fg] with x hx
   simpa [Subtype.ext_iff]
+#align ae_measurable.subtype_mk AeMeasurable.subtypeMk
 
 protected theorem nullMeasurable (h : AeMeasurable f μ) : NullMeasurable f μ :=
   let ⟨g, hgm, hg⟩ := h
   hgm.NullMeasurable.congr hg.symm
+#align ae_measurable.null_measurable AeMeasurable.nullMeasurable
 
 end AeMeasurable
 
@@ -218,9 +243,11 @@ theorem ae_measurable_interval_oc_iff [LinearOrder α] {f : α → β} {a b : α
     (AeMeasurable f <| μ.restrict <| Ι a b) ↔
       (AeMeasurable f <| μ.restrict <| IocCat a b) ∧ (AeMeasurable f <| μ.restrict <| IocCat b a) :=
   by rw [interval_oc_eq_union, ae_measurable_union_iff]
+#align ae_measurable_interval_oc_iff ae_measurable_interval_oc_iff
 
 theorem ae_measurable_iff_measurable [μ.IsComplete] : AeMeasurable f μ ↔ Measurable f :=
   ⟨fun h => h.NullMeasurable.measurableOfComplete, fun h => h.AeMeasurable⟩
+#align ae_measurable_iff_measurable ae_measurable_iff_measurable
 
 theorem MeasurableEmbedding.ae_measurable_map_iff {g : β → γ} (hf : MeasurableEmbedding f) :
     AeMeasurable g (μ.map f) ↔ AeMeasurable (g ∘ f) μ := by
@@ -228,6 +255,7 @@ theorem MeasurableEmbedding.ae_measurable_map_iff {g : β → γ} (hf : Measurab
   rintro ⟨g₁, hgm₁, heq⟩
   rcases hf.exists_measurable_extend hgm₁ fun x => ⟨g x⟩ with ⟨g₂, hgm₂, rfl⟩
   exact ⟨g₂, hgm₂, hf.ae_map_iff.2 HEq⟩
+#align measurable_embedding.ae_measurable_map_iff MeasurableEmbedding.ae_measurable_map_iff
 
 theorem MeasurableEmbedding.ae_measurable_comp_iff {g : β → γ} (hg : MeasurableEmbedding g) {μ : Measure α} :
     AeMeasurable (g ∘ f) μ ↔ AeMeasurable f μ := by
@@ -235,35 +263,43 @@ theorem MeasurableEmbedding.ae_measurable_comp_iff {g : β → γ} (hg : Measura
   suffices AeMeasurable ((range_splitting g ∘ range_factorization g) ∘ f) μ by
     rwa [(right_inverse_range_splitting hg.injective).comp_eq_id] at this
   exact hg.measurable_range_splitting.comp_ae_measurable H.subtype_mk
+#align measurable_embedding.ae_measurable_comp_iff MeasurableEmbedding.ae_measurable_comp_iff
 
 theorem ae_measurable_restrict_iff_comap_subtype {s : Set α} (hs : MeasurableSet s) {μ : Measure α} {f : α → β} :
     AeMeasurable f (μ.restrict s) ↔ AeMeasurable (f ∘ coe : s → β) (comap coe μ) := by
   rw [← map_comap_subtype_coe hs, (MeasurableEmbedding.subtypeCoe hs).ae_measurable_map_iff]
+#align ae_measurable_restrict_iff_comap_subtype ae_measurable_restrict_iff_comap_subtype
 
 @[simp, to_additive]
 theorem aeMeasurableOne [One β] : AeMeasurable (fun a : α => (1 : β)) μ :=
   measurableOne.AeMeasurable
+#align ae_measurable_one aeMeasurableOne
 
 @[simp]
 theorem ae_measurable_smul_measure_iff {c : ℝ≥0∞} (hc : c ≠ 0) : AeMeasurable f (c • μ) ↔ AeMeasurable f μ :=
   ⟨fun h => ⟨h.mk f, h.measurableMk, (ae_smul_measure_iff hc).1 h.ae_eq_mk⟩, fun h =>
     ⟨h.mk f, h.measurableMk, (ae_smul_measure_iff hc).2 h.ae_eq_mk⟩⟩
+#align ae_measurable_smul_measure_iff ae_measurable_smul_measure_iff
 
 theorem aeMeasurableOfAeMeasurableTrim {α} {m m0 : MeasurableSpace α} {μ : Measure α} (hm : m ≤ m0) {f : α → β}
     (hf : AeMeasurable f (μ.trim hm)) : AeMeasurable f μ :=
   ⟨hf.mk f, Measurable.mono hf.measurableMk hm le_rfl, ae_eq_of_ae_eq_trim hf.ae_eq_mk⟩
+#align ae_measurable_of_ae_measurable_trim aeMeasurableOfAeMeasurableTrim
 
 theorem aeMeasurableRestrictOfMeasurableSubtype {s : Set α} (hs : MeasurableSet s) (hf : Measurable fun x : s => f x) :
     AeMeasurable f (μ.restrict s) :=
   (ae_measurable_restrict_iff_comap_subtype hs).2 hf.AeMeasurable
+#align ae_measurable_restrict_of_measurable_subtype aeMeasurableRestrictOfMeasurableSubtype
 
 theorem ae_measurable_map_equiv_iff (e : α ≃ᵐ β) {f : β → γ} : AeMeasurable f (μ.map e) ↔ AeMeasurable (f ∘ e) μ :=
   e.MeasurableEmbedding.ae_measurable_map_iff
+#align ae_measurable_map_equiv_iff ae_measurable_map_equiv_iff
 
 end
 
 theorem AeMeasurable.restrict (hfm : AeMeasurable f μ) {s} : AeMeasurable f (μ.restrict s) :=
   ⟨AeMeasurable.mk f hfm, hfm.measurableMk, ae_restrict_of_ae hfm.ae_eq_mk⟩
+#align ae_measurable.restrict AeMeasurable.restrict
 
 theorem aeMeasurableIoiOfForallIoc {β} {mβ : MeasurableSpace β} [LinearOrder α]
     [(atTop : Filter α).IsCountablyGenerated] {x : α} {g : α → β}
@@ -284,6 +320,7 @@ theorem aeMeasurableIoiOfForallIoc {β} {mβ : MeasurableSpace β} [LinearOrder 
     simp only [measure.restrict_empty]
     exact aeMeasurableZeroMeasure
     
+#align ae_measurable_Ioi_of_forall_Ioc aeMeasurableIoiOfForallIoc
 
 variable [Zero β]
 
@@ -301,10 +338,12 @@ theorem ae_measurable_indicator_iff {s} (hs : MeasurableSet s) :
       (indicator_ae_eq_restrict_compl hs).trans (indicator_ae_eq_restrict_compl hs).symm
     exact ae_of_ae_restrict_of_ae_restrict_compl _ A B
     
+#align ae_measurable_indicator_iff ae_measurable_indicator_iff
 
 @[measurability]
 theorem AeMeasurable.indicator (hfm : AeMeasurable f μ) {s} (hs : MeasurableSet s) : AeMeasurable (s.indicator f) μ :=
   (ae_measurable_indicator_iff hs).mpr hfm.restrict
+#align ae_measurable.indicator AeMeasurable.indicator
 
 theorem MeasureTheory.Measure.restrict_map_of_ae_measurable {f : α → δ} (hf : AeMeasurable f μ) {s : Set δ}
     (hs : MeasurableSet s) : (μ.map f).restrict s = (μ.restrict <| f ⁻¹' s).map f :=
@@ -321,7 +360,9 @@ theorem MeasureTheory.Measure.restrict_map_of_ae_measurable {f : α → δ} (hf 
       apply measure_congr
       apply (eventually_eq.refl _ _).inter (hf.ae_eq_mk.symm.preimage s)
     
+#align measure_theory.measure.restrict_map_of_ae_measurable MeasureTheory.Measure.restrict_map_of_ae_measurable
 
 theorem MeasureTheory.Measure.map_mono_of_ae_measurable {f : α → δ} (h : μ ≤ ν) (hf : AeMeasurable f ν) :
     μ.map f ≤ ν.map f := fun s hs => by simpa [hf, hs, hf.mono_measure h] using measure.le_iff'.1 h (f ⁻¹' s)
+#align measure_theory.measure.map_mono_of_ae_measurable MeasureTheory.Measure.map_mono_of_ae_measurable
 

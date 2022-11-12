@@ -31,6 +31,7 @@ theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A]
     
   · infer_instance
     
+#align is_localization.surj_of_gcd_domain IsLocalization.surj_of_gcd_domain
 
 instance (priority := 100) GcdMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R :=
   ⟨fun X ⟨p, hp₁, hp₂⟩ => by
@@ -46,4 +47,5 @@ instance (priority := 100) GcdMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R
     use x * (this.unit⁻¹ : _)
     erw [map_mul, ← Units.coe_map_inv, eq_comm, Units.eq_mul_inv_iff_mul_eq]
     exact he⟩
+#align gcd_monoid.to_is_integrally_closed GcdMonoid.toIsIntegrallyClosed
 

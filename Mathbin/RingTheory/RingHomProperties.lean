@@ -40,6 +40,7 @@ def RespectsIso : Prop :=
       ∀ (f : R →+* S) (e : S ≃+* T) (hf : P f), P (e.to_ring_hom.comp f)) ∧
     ∀ {R S T : Type u} [CommRing R] [CommRing S] [CommRing T],
       ∀ (f : S →+* T) (e : R ≃+* S) (hf : P f), P (f.comp e.toRingHom)
+#align ring_hom.respects_iso RingHom.RespectsIso
 
 variable {P}
 
@@ -48,6 +49,7 @@ theorem RespectsIso.cancel_left_is_iso (hP : RespectsIso @P) {R S T : CommRingCa
   ⟨fun H => by
     convert hP.2 (f ≫ g) (as_iso f).symm.commRingIsoToRingEquiv H
     exact (is_iso.inv_hom_id_assoc _ _).symm, hP.2 g (asIso f).commRingIsoToRingEquiv⟩
+#align ring_hom.respects_iso.cancel_left_is_iso RingHom.RespectsIso.cancel_left_is_iso
 
 theorem RespectsIso.cancel_right_is_iso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) [IsIso g] :
     P (f ≫ g) ↔ P f :=
@@ -55,6 +57,7 @@ theorem RespectsIso.cancel_right_is_iso (hP : RespectsIso @P) {R S T : CommRingC
     convert hP.1 (f ≫ g) (as_iso g).symm.commRingIsoToRingEquiv H
     change f = f ≫ g ≫ inv g
     simp, hP.1 f (asIso g).commRingIsoToRingEquiv⟩
+#align ring_hom.respects_iso.cancel_right_is_iso RingHom.RespectsIso.cancel_right_is_iso
 
 theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S : Type _} (R' S' : Type _) [CommRing R]
     [CommRing S] [CommRing R'] [CommRing S'] [Algebra R R'] [Algebra S S'] (f : R →+* S) (r : R)
@@ -74,6 +77,7 @@ theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S 
   simp only [CategoryTheory.comp_apply, RingEquiv.refl_apply, IsLocalization.alg_equiv_apply,
     IsLocalization.ring_equiv_of_ring_equiv_apply, RingHom.coe_mk, RingEquiv.to_fun_eq_coe,
     IsLocalization.ring_equiv_of_ring_equiv_eq, IsLocalization.map_eq]
+#align ring_hom.respects_iso.is_localization_away_iff RingHom.RespectsIso.is_localization_away_iff
 
 end RespectsIso
 
@@ -83,6 +87,7 @@ section StableUnderComposition
 still falls in the class. -/
 def StableUnderComposition : Prop :=
   ∀ ⦃R S T⦄ [CommRing R] [CommRing S] [CommRing T], ∀ (f : R →+* S) (g : S →+* T) (hf : P f) (hg : P g), P (g.comp f)
+#align ring_hom.stable_under_composition RingHom.StableUnderComposition
 
 variable {P}
 
@@ -99,6 +104,7 @@ theorem StableUnderComposition.respectsIso (hP : RingHom.StableUnderComposition 
     apply hP
     exacts[hP' e, H]
     
+#align ring_hom.stable_under_composition.respects_iso RingHom.StableUnderComposition.respectsIso
 
 end StableUnderComposition
 
@@ -110,6 +116,7 @@ def StableUnderBaseChange : Prop :=
   ∀ ⦃R S T⦄ [CommRing R] [CommRing S] [CommRing T],
     ∀ [Algebra R S] [Algebra R T],
       P (algebraMap R T) → P (algebra.tensor_product.include_left.to_ring_hom : S →+* TensorProduct R S T)
+#align ring_hom.stable_under_base_change RingHom.StableUnderBaseChange
 
 theorem StableUnderBaseChange.pushoutInl (hP : RingHom.StableUnderBaseChange @P) (hP' : RingHom.RespectsIso @P)
     {R S T : CommRingCat} (f : R ⟶ S) (g : R ⟶ T) (H : P g) : P (pushout.inl : S ⟶ pushout f g) := by
@@ -119,6 +126,7 @@ theorem StableUnderBaseChange.pushoutInl (hP : RingHom.StableUnderBaseChange @P)
     hP'.cancel_right_is_iso]
   apply hP
   exact H
+#align ring_hom.stable_under_base_change.pushout_inl RingHom.StableUnderBaseChange.pushoutInl
 
 end StableUnderBaseChange
 

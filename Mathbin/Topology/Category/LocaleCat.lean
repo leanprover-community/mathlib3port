@@ -19,6 +19,7 @@ open CategoryTheory Opposite Order TopologicalSpace
 /-- The category of locales. -/
 def LocaleCat :=
   FrameCatᵒᵖderiving LargeCategory
+#align Locale LocaleCat
 
 namespace LocaleCat
 
@@ -31,10 +32,12 @@ instance (X : LocaleCat) : Frame X :=
 /-- Construct a bundled `Locale` from a `frame`. -/
 def of (α : Type _) [Frame α] : LocaleCat :=
   op <| FrameCat.of α
+#align Locale.of LocaleCat.of
 
 @[simp]
 theorem coe_of (α : Type _) [Frame α] : ↥(of α) = α :=
   rfl
+#align Locale.coe_of LocaleCat.coe_of
 
 instance : Inhabited LocaleCat :=
   ⟨of PUnit⟩
@@ -46,10 +49,12 @@ end LocaleCat
 @[simps]
 def topToLocale : TopCat ⥤ LocaleCat :=
   topOpToFrame.rightOp
+#align Top_to_Locale topToLocale
 
 -- Note, `CompHaus` is too strong. We only need `t0_space`.
 instance CompHausToLocale.faithful : Faithful (compHausToTop ⋙ topToLocale.{u}) :=
   ⟨fun X Y f g h => by
     dsimp at h
     exact opens.comap_injective (Quiver.Hom.op_inj h)⟩
+#align CompHaus_to_Locale.faithful CompHausToLocale.faithful
 

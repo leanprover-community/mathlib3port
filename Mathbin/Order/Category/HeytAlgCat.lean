@@ -20,6 +20,7 @@ open CategoryTheory Opposite Order
 /-- The category of Heyting algebras. -/
 def HeytAlgCat :=
   Bundled HeytingAlgebra
+#align HeytAlg HeytAlgCat
 
 namespace HeytAlgCat
 
@@ -32,10 +33,12 @@ instance (X : HeytAlgCat) : HeytingAlgebra X :=
 /-- Construct a bundled `HeytAlg` from a `heyting_algebra`. -/
 def of (α : Type _) [HeytingAlgebra α] : HeytAlgCat :=
   Bundled.of α
+#align HeytAlg.of HeytAlgCat.of
 
 @[simp]
 theorem coe_of (α : Type _) [HeytingAlgebra α] : ↥(of α) = α :=
   rfl
+#align HeytAlg.coe_of HeytAlgCat.coe_of
 
 instance : Inhabited HeytAlgCat :=
   ⟨of PUnit⟩
@@ -45,6 +48,7 @@ instance bundledHom : BundledHom HeytingHom where
   id := HeytingHom.id
   comp := @HeytingHom.comp
   hom_ext α β [HeytingAlgebra α] [HeytingAlgebra β] := FunLike.coe_injective
+#align HeytAlg.bundled_hom HeytAlgCat.bundledHom
 
 deriving instance LargeCategory, ConcreteCategory for HeytAlgCat
 
@@ -53,6 +57,7 @@ instance hasForgetToLattice :
     HasForget₂ HeytAlgCat
       BoundedDistribLatticeCat where forget₂ :=
     { obj := fun X => BoundedDistribLatticeCat.of X, map := fun X Y f => (f : BoundedLatticeHom X Y) }
+#align HeytAlg.has_forget_to_Lattice HeytAlgCat.hasForgetToLattice
 
 /-- Constructs an isomorphism of Heyting algebras from an order isomorphism between them. -/
 @[simps]
@@ -65,6 +70,7 @@ def Iso.mk {α β : HeytAlgCat.{u}} (e : α ≃o β) : α ≅ β where
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
+#align HeytAlg.iso.mk HeytAlgCat.Iso.mk
 
 end HeytAlgCat
 

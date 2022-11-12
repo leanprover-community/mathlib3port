@@ -25,20 +25,25 @@ namespace Complex
 /-- Lebesgue measure on `ℂ`. -/
 instance measureSpace : MeasureSpace ℂ :=
   ⟨Measure.map basisOneI.equivFun.symm volume⟩
+#align complex.measure_space Complex.measureSpace
 
 /-- Measurable equivalence between `ℂ` and `ℝ² = fin 2 → ℝ`. -/
 def measurableEquivPi : ℂ ≃ᵐ (Fin 2 → ℝ) :=
   basisOneI.equivFun.toContinuousLinearEquiv.toHomeomorph.toMeasurableEquiv
+#align complex.measurable_equiv_pi Complex.measurableEquivPi
 
 /-- Measurable equivalence between `ℂ` and `ℝ × ℝ`. -/
 def measurableEquivRealProd : ℂ ≃ᵐ ℝ × ℝ :=
   equivRealProdₗ.toHomeomorph.toMeasurableEquiv
+#align complex.measurable_equiv_real_prod Complex.measurableEquivRealProd
 
 theorem volumePreservingEquivPi : MeasurePreserving measurableEquivPi :=
   (measurableEquivPi.symm.Measurable.MeasurePreserving _).symm _
+#align complex.volume_preserving_equiv_pi Complex.volumePreservingEquivPi
 
 theorem volumePreservingEquivRealProd : MeasurePreserving measurableEquivRealProd :=
   (volumePreservingFinTwoArrow ℝ).comp volumePreservingEquivPi
+#align complex.volume_preserving_equiv_real_prod Complex.volumePreservingEquivRealProd
 
 end Complex
 

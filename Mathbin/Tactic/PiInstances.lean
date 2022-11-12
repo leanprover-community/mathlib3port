@@ -43,6 +43,7 @@ unsafe def pi_instance_derive_field : tactic Unit := do
         (xs fun h => try <| () <$ (apply (h x) <|> apply h) <|> refine (pquote.1 (Set.image (· <| %%ₓx) (%%ₓh)))) <|>
             fail "args"
         return ()
+#align tactic.pi_instance_derive_field tactic.pi_instance_derive_field
 
 /-- `pi_instance` constructs an instance of `my_class (Π i : I, f i)`
 where we know `Π i, my_class (f i)`. If an order relation is required,
@@ -52,6 +53,7 @@ it defaults to `pi.partial_order`. Any field of the instance that
 unsafe def pi_instance : tactic Unit :=
   andthen (refine_struct (pquote.1 { Pi.partialOrder with .. }))
     (propagate_tags (try <| pi_instance_derive_field >> done))
+#align tactic.pi_instance tactic.pi_instance
 
 run_cmd
   add_interactive [`pi_instance]

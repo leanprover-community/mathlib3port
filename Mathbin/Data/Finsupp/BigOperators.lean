@@ -41,16 +41,17 @@ theorem List.support_sum_subset [AddMonoid M] (l : List (ι →₀ M)) :
     refine' finsupp.support_add.trans (Finset.union_subset_union _ IH)
     rfl
     
+#align list.support_sum_subset List.support_sum_subset
 
 theorem Multiset.support_sum_subset [AddCommMonoid M] (s : Multiset (ι →₀ M)) :
     s.Sum.Support ⊆ (s.map Finsupp.support).sup := by
   induction s using Quot.induction_on
   simpa using List.support_sum_subset _
+#align multiset.support_sum_subset Multiset.support_sum_subset
 
 theorem Finset.support_sum_subset [AddCommMonoid M] (s : Finset (ι →₀ M)) :
-    (s.Sum id).Support ⊆ Finset.sup s Finsupp.support := by
-  classical
-  convert Multiset.support_sum_subset s.1 <;> simp
+    (s.Sum id).Support ⊆ Finset.sup s Finsupp.support := by classical convert Multiset.support_sum_subset s.1 <;> simp
+#align finset.support_sum_subset Finset.support_sum_subset
 
 theorem List.mem_foldr_sup_support_iff [Zero M] {l : List (ι →₀ M)} {x : ι} :
     x ∈ l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ ↔ ∃ (f : ι →₀ M)(hf : f ∈ l), x ∈ f.Support := by
@@ -73,14 +74,17 @@ theorem List.mem_foldr_sup_support_iff [Zero M] {l : List (ι →₀ M)} {x : ι
         
       
     
+#align list.mem_foldr_sup_support_iff List.mem_foldr_sup_support_iff
 
 theorem Multiset.mem_sup_map_support_iff [Zero M] {s : Multiset (ι →₀ M)} {x : ι} :
     x ∈ (s.map Finsupp.support).sup ↔ ∃ (f : ι →₀ M)(hf : f ∈ s), x ∈ f.Support :=
   (Quot.induction_on s) fun _ => by simpa using List.mem_foldr_sup_support_iff
+#align multiset.mem_sup_map_support_iff Multiset.mem_sup_map_support_iff
 
 theorem Finset.mem_sup_support_iff [Zero M] {s : Finset (ι →₀ M)} {x : ι} :
     x ∈ s.sup Finsupp.support ↔ ∃ (f : ι →₀ M)(hf : f ∈ s), x ∈ f.Support :=
   Multiset.mem_sup_map_support_iff
+#align finset.mem_sup_support_iff Finset.mem_sup_support_iff
 
 theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M)) (hl : l.Pairwise (Disjoint on Finsupp.support)) :
     l.Sum.Support = l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ := by
@@ -88,10 +92,10 @@ theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M)) (hl : l.Pairw
   · simp
     
   · simp only [List.pairwise_cons] at hl
-    simp only [List.sum_cons, List.foldr_cons, Function.comp_app]
+    simp only [List.sum_cons, List.foldr_cons, Function.comp_apply]
     rw [Finsupp.support_add_eq, IH hl.right, Finset.sup_eq_union]
     suffices Disjoint hd.support (tl.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅) by
-      exact Finset.disjointOfSubsetRight (List.support_sum_subset _) this
+      exact Finset.disjoint_of_subset_right (List.support_sum_subset _) this
     · rw [← List.foldr_map, ← Finset.bot_eq_empty, List.foldr_sup_eq_sup_to_finset]
       rw [Finset.disjoint_sup_right]
       intro f hf
@@ -100,6 +104,7 @@ theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M)) (hl : l.Pairw
       exact hl.left _ hf
       
     
+#align list.support_sum_eq List.support_sum_eq
 
 theorem Multiset.support_sum_eq [AddCommMonoid M] (s : Multiset (ι →₀ M))
     (hs : s.Pairwise (Disjoint on Finsupp.support)) : s.Sum.Support = (s.map Finsupp.support).sup := by
@@ -113,20 +118,19 @@ theorem Multiset.support_sum_eq [AddCommMonoid M] (s : Multiset (ι →₀ M))
   · simp only [Multiset.quot_mk_to_coe'', Multiset.coe_map, Multiset.coe_eq_coe] at hl
     exact hl.symm.pairwise hd fun _ _ h => Disjoint.symm h
     
+#align multiset.support_sum_eq Multiset.support_sum_eq
 
 theorem Finset.support_sum_eq [AddCommMonoid M] (s : Finset (ι →₀ M))
     (hs : (s : Set (ι →₀ M)).PairwiseDisjoint Finsupp.support) : (s.Sum id).Support = Finset.sup s Finsupp.support := by
-  classical
-  convert Multiset.support_sum_eq s.1 _
-  · exact (Finset.sum_val _).symm
-    
-  · obtain ⟨l, hl, hn⟩ : ∃ l : List (ι →₀ M), l.toFinset = s ∧ l.Nodup := by
-      refine' ⟨s.to_list, _, Finset.nodup_to_list _⟩
-      simp
-    subst hl
-    rwa [List.to_finset_val, list.dedup_eq_self.mpr hn, Multiset.pairwise_coe_iff_pairwise, ←
-      List.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint hn]
-    intro x y hxy
-    exact symmetric_disjoint hxy
-    
+  classical convert Multiset.support_sum_eq s.1 _
+    · obtain ⟨l, hl, hn⟩ : ∃ l : List (ι →₀ M), l.toFinset = s ∧ l.Nodup := by
+        refine' ⟨s.to_list, _, Finset.nodup_to_list _⟩
+        simp
+      subst hl
+      rwa [List.to_finset_val, list.dedup_eq_self.mpr hn, Multiset.pairwise_coe_iff_pairwise, ←
+        List.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint hn]
+      intro x y hxy
+      exact symmetric_disjoint hxy
+      
+#align finset.support_sum_eq Finset.support_sum_eq
 

@@ -35,13 +35,16 @@ of quasi-compact open sets are quasi-compact.
 @[mk_iff]
 class QuasiCompact (f : X ⟶ Y) : Prop where
   is_compact_preimage : ∀ U : Set Y.Carrier, IsOpen U → IsCompact U → IsCompact (f.1.base ⁻¹' U)
+#align algebraic_geometry.quasi_compact AlgebraicGeometry.QuasiCompact
 
 theorem quasi_compact_iff_spectral : QuasiCompact f ↔ IsSpectralMap f.1.base :=
   ⟨fun ⟨h⟩ => ⟨by continuity, h⟩, fun h => ⟨h.2⟩⟩
+#align algebraic_geometry.quasi_compact_iff_spectral AlgebraicGeometry.quasi_compact_iff_spectral
 
 /-- The `affine_target_morphism_property` corresponding to `quasi_compact`, asserting that the
 domain is a quasi-compact scheme. -/
 def QuasiCompact.affineProperty : AffineTargetMorphismProperty := fun X Y f hf => CompactSpace X.Carrier
+#align algebraic_geometry.quasi_compact.affine_property AlgebraicGeometry.QuasiCompact.affineProperty
 
 instance (priority := 900) quasiCompactOfIsIso {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] : QuasiCompact f := by
   constructor
@@ -50,6 +53,7 @@ instance (priority := 900) quasiCompactOfIsIso {X Y : SchemeCat} (f : X ⟶ Y) [
   rw [Set.image_eq_preimage_of_inverse]
   delta Function.LeftInverse
   exacts[is_iso.inv_hom_id_apply f.1.base, is_iso.hom_inv_id_apply f.1.base]
+#align algebraic_geometry.quasi_compact_of_is_iso AlgebraicGeometry.quasiCompactOfIsIso
 
 instance quasiCompactComp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiCompact f] [QuasiCompact g] :
     QuasiCompact (f ≫ g) := by
@@ -60,6 +64,7 @@ instance quasiCompactComp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [Quasi
   · exact Continuous.is_open_preimage (by continuity) _ hU
     
   apply quasi_compact.is_compact_preimage <;> assumption
+#align algebraic_geometry.quasi_compact_comp AlgebraicGeometry.quasiCompactComp
 
 theorem is_compact_open_iff_eq_finset_affine_union {X : SchemeCat} (U : Set X.Carrier) :
     IsCompact U ∧ IsOpen U ↔ ∃ s : Set X.AffineOpens, s.Finite ∧ U = ⋃ (i : X.AffineOpens) (h : i ∈ s), i := by
@@ -70,6 +75,8 @@ theorem is_compact_open_iff_eq_finset_affine_union {X : SchemeCat} (U : Set X.Ca
   · intro i
     exact i.2.IsCompact
     
+#align
+  algebraic_geometry.is_compact_open_iff_eq_finset_affine_union AlgebraicGeometry.is_compact_open_iff_eq_finset_affine_union
 
 theorem is_compact_open_iff_eq_basic_open_union {X : SchemeCat} [IsAffine X] (U : Set X.Carrier) :
     IsCompact U ∧ IsOpen U ↔
@@ -81,6 +88,8 @@ theorem is_compact_open_iff_eq_basic_open_union {X : SchemeCat} [IsAffine X] (U 
   · intro i
     exact ((top_is_affine_open _).basic_open_is_affine _).IsCompact
     
+#align
+  algebraic_geometry.is_compact_open_iff_eq_basic_open_union AlgebraicGeometry.is_compact_open_iff_eq_basic_open_union
 
 theorem quasi_compact_iff_forall_affine :
     QuasiCompact f ↔ ∀ U : Opens Y.Carrier, IsAffineOpen U → IsCompact (f.1.base ⁻¹' (U : Set Y.Carrier)) := by
@@ -90,58 +99,43 @@ theorem quasi_compact_iff_forall_affine :
   obtain ⟨S, hS, rfl⟩ := (is_compact_open_iff_eq_finset_affine_union U).mp ⟨hU', hU⟩
   simp only [Set.preimage_Union, Subtype.val_eq_coe]
   exact hS.is_compact_bUnion fun i _ => H i i.Prop
+#align algebraic_geometry.quasi_compact_iff_forall_affine AlgebraicGeometry.quasi_compact_iff_forall_affine
 
 @[simp]
 theorem QuasiCompact.affine_property_to_property {X Y : SchemeCat} (f : X ⟶ Y) :
     (QuasiCompact.affineProperty : _).ToProperty f ↔ IsAffine Y ∧ CompactSpace X.Carrier := by
   delta affine_target_morphism_property.to_property quasi_compact.affine_property
   simp
+#align
+  algebraic_geometry.quasi_compact.affine_property_to_property AlgebraicGeometry.QuasiCompact.affine_property_to_property
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ U : Y.affine_opens, is_compact «expr ⁻¹' »(f.1.base, (U : set Y.carrier))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem quasi_compact_iff_affine_property : QuasiCompact f ↔ TargetAffineLocally QuasiCompact.affineProperty f := by
   rw [quasi_compact_iff_forall_affine]
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ U : Y.affine_opens, is_compact «expr ⁻¹' »(f.1.base, (U : set Y.carrier))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  trans ∀ U : Y.affine_opens, IsCompact (f.1.base ⁻¹' (U : Set Y.carrier))
   · exact ⟨fun h U => h U U.Prop, fun h U hU => h ⟨U, hU⟩⟩
     
   apply forall_congr'
   exact fun _ => is_compact_iff_compact_space
+#align algebraic_geometry.quasi_compact_iff_affine_property AlgebraicGeometry.quasi_compact_iff_affine_property
 
 theorem quasi_compact_eq_affine_property : @QuasiCompact = TargetAffineLocally QuasiCompact.affineProperty := by
   ext
   exact quasi_compact_iff_affine_property _
+#align algebraic_geometry.quasi_compact_eq_affine_property AlgebraicGeometry.quasi_compact_eq_affine_property
 
 theorem is_compact_basic_open (X : SchemeCat) {U : Opens X.Carrier} (hU : IsCompact (U : Set X.Carrier))
     (f : X.Presheaf.obj (op U)) : IsCompact (X.basicOpen f : Set X.Carrier) := by
-  classical
-  refine' ((is_compact_open_iff_eq_finset_affine_union _).mpr _).1
-  obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_finset_affine_union _).mp ⟨hU, U.prop⟩
-  let g : s → X.affine_opens := by
-    intro V
-    use V.1 ⊓ X.basic_open f
-    have : V.1.1 ⟶ U := by
-      apply hom_of_le
-      change _ ⊆ (U : Set X.carrier)
-      rw [e]
-      convert @Set.subset_Union₂ _ _ _ (fun (U : X.affine_opens) (h : U ∈ s) => ↑U) V V.prop using 1
-      rfl
-    erw [← X.to_LocallyRingedSpace.to_RingedSpace.basic_open_res this.op]
-    exact is_affine_open.basic_open_is_affine V.1.Prop _
-  haveI : Finite s := hs.to_subtype
-  refine' ⟨Set.Range g, Set.finite_range g, _⟩
-  refine' (set.inter_eq_right_iff_subset.mpr (RingedSpace.basic_open_le _ _)).symm.trans _
-  rw [e, Set.Union₂_inter]
-  apply le_antisymm <;> apply Set.Union₂_subset
-  · intro i hi
-    refine' Set.Subset.trans _ (Set.subset_Union₂ _ (Set.mem_range_self ⟨i, hi⟩))
-    exact Set.Subset.rfl
-    
-  · rintro ⟨i, hi⟩ ⟨⟨j, hj⟩, hj'⟩
-    rw [← hj']
-    refine' Set.Subset.trans _ (Set.subset_Union₂ j hj)
-    exact Set.Subset.rfl
-    
+  classical refine' ((is_compact_open_iff_eq_finset_affine_union _).mpr _).1
+    let g : s → X.affine_opens
+    haveI : Finite s := hs.to_subtype
+    refine' (set.inter_eq_right_iff_subset.mpr (RingedSpace.basic_open_le _ _)).symm.trans _
+    apply le_antisymm <;> apply Set.Union₂_subset
+    · rintro ⟨i, hi⟩ ⟨⟨j, hj⟩, hj'⟩
+      rw [← hj']
+      refine' Set.Subset.trans _ (Set.subset_Union₂ j hj)
+      exact Set.Subset.rfl
+      
+#align algebraic_geometry.is_compact_basic_open AlgebraicGeometry.is_compact_basic_open
 
 theorem QuasiCompact.affinePropertyIsLocal : (QuasiCompact.affineProperty : _).IsLocal := by
   constructor
@@ -167,6 +161,7 @@ theorem QuasiCompact.affinePropertyIsLocal : (QuasiCompact.affineProperty : _).I
     simp only [opens.coe_supr, Set.preimage_Union, Subtype.val_eq_coe]
     exacts[is_compact_Union fun i => is_compact_iff_compact_space.mpr (hS' i), top_is_affine_open _]
     
+#align algebraic_geometry.quasi_compact.affine_property_is_local AlgebraicGeometry.QuasiCompact.affinePropertyIsLocal
 
 theorem QuasiCompact.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     Tfae
@@ -179,9 +174,11 @@ theorem QuasiCompact.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) 
         ∃ (ι : Type u)(U : ι → Opens Y.Carrier)(hU : supr U = ⊤)(hU' : ∀ i, IsAffineOpen (U i)),
           ∀ i, CompactSpace (f.1.base ⁻¹' (U i).1)] :=
   quasi_compact_eq_affine_property.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_open_cover_tfae f
+#align algebraic_geometry.quasi_compact.affine_open_cover_tfae AlgebraicGeometry.QuasiCompact.affine_open_cover_tfae
 
 theorem QuasiCompact.isLocalAtTarget : PropertyIsLocalAtTarget @QuasiCompact :=
   quasi_compact_eq_affine_property.symm ▸ QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal
+#align algebraic_geometry.quasi_compact.is_local_at_target AlgebraicGeometry.QuasiCompact.isLocalAtTarget
 
 theorem QuasiCompact.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     Tfae
@@ -193,28 +190,36 @@ theorem QuasiCompact.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
         ∃ (ι : Type u)(U : ι → Opens Y.Carrier)(hU : supr U = ⊤), ∀ i, QuasiCompact (f ∣_ U i)] :=
   quasi_compact_eq_affine_property.symm ▸
     QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal.open_cover_tfae f
+#align algebraic_geometry.quasi_compact.open_cover_tfae AlgebraicGeometry.QuasiCompact.open_cover_tfae
 
 theorem quasi_compact_over_affine_iff {X Y : SchemeCat} (f : X ⟶ Y) [IsAffine Y] :
     QuasiCompact f ↔ CompactSpace X.Carrier :=
   quasi_compact_eq_affine_property.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_target_iff f
+#align algebraic_geometry.quasi_compact_over_affine_iff AlgebraicGeometry.quasi_compact_over_affine_iff
 
 theorem compact_space_iff_quasi_compact (X : SchemeCat) : CompactSpace X.Carrier ↔ QuasiCompact (terminal.from X) :=
   (quasi_compact_over_affine_iff _).symm
+#align algebraic_geometry.compact_space_iff_quasi_compact AlgebraicGeometry.compact_space_iff_quasi_compact
 
 theorem QuasiCompact.affine_open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
     [∀ i, IsAffine (𝒰.obj i)] (f : X ⟶ Y) : QuasiCompact f ↔ ∀ i, CompactSpace (pullback f (𝒰.map i)).Carrier :=
   quasi_compact_eq_affine_property.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_open_cover_iff f 𝒰
+#align algebraic_geometry.quasi_compact.affine_open_cover_iff AlgebraicGeometry.QuasiCompact.affine_open_cover_iff
 
 theorem QuasiCompact.open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y) (f : X ⟶ Y) :
     QuasiCompact f ↔ ∀ i, QuasiCompact (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   quasi_compact_eq_affine_property.symm ▸
     QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal.open_cover_iff f 𝒰
+#align algebraic_geometry.quasi_compact.open_cover_iff AlgebraicGeometry.QuasiCompact.open_cover_iff
 
 theorem quasi_compact_respects_iso : MorphismProperty.RespectsIso @QuasiCompact :=
   quasi_compact_eq_affine_property.symm ▸ target_affine_locally_respects_iso QuasiCompact.affinePropertyIsLocal.1
+#align algebraic_geometry.quasi_compact_respects_iso AlgebraicGeometry.quasi_compact_respects_iso
 
 theorem quasi_compact_stable_under_composition : MorphismProperty.StableUnderComposition @QuasiCompact :=
   fun _ _ _ _ _ _ _ => inferInstance
+#align
+  algebraic_geometry.quasi_compact_stable_under_composition AlgebraicGeometry.quasi_compact_stable_under_composition
 
 attribute [-simp] PresheafedSpace.as_coe SheafedSpace.as_coe
 
@@ -231,10 +236,14 @@ theorem QuasiCompact.affine_property_stable_under_base_change : QuasiCompact.aff
     dsimp
     infer_instance
   exact 𝒰.compact_space
+#align
+  algebraic_geometry.quasi_compact.affine_property_stable_under_base_change AlgebraicGeometry.QuasiCompact.affine_property_stable_under_base_change
 
 theorem quasi_compact_stable_under_base_change : MorphismProperty.StableUnderBaseChange @QuasiCompact :=
   quasi_compact_eq_affine_property.symm ▸
     QuasiCompact.affinePropertyIsLocal.StableUnderBaseChange QuasiCompact.affine_property_stable_under_base_change
+#align
+  algebraic_geometry.quasi_compact_stable_under_base_change AlgebraicGeometry.quasi_compact_stable_under_base_change
 
 variable {Z : SchemeCat.{u}}
 
@@ -247,28 +256,14 @@ instance (f : X ⟶ Z) (g : Y ⟶ Z) [QuasiCompact f] : QuasiCompact (pullback.s
 @[elab_as_elim]
 theorem compact_open_induction_on {P : Opens X.Carrier → Prop} (S : Opens X.Carrier) (hS : IsCompact S.1) (h₁ : P ⊥)
     (h₂ : ∀ (S : Opens X.Carrier) (hS : IsCompact S.1) (U : X.AffineOpens), P S → P (S ⊔ U)) : P S := by
-  classical
-  obtain ⟨s, hs, hs'⟩ := (is_compact_open_iff_eq_finset_affine_union S.1).mp ⟨hS, S.2⟩
-  replace hs' : S = supr fun i : s => (i : opens X.carrier) := by
-    ext1
-    simpa using hs'
-  subst hs'
-  apply hs.induction_on
-  · convert h₁
-    rw [supr_eq_bot]
-    rintro ⟨_, h⟩
-    exact h.elim
-    
-  · intro x s h₃ hs h₄
-    have : IsCompact (⨆ i : s, (i : opens X.carrier)).1 := by
-      refine' ((is_compact_open_iff_eq_finset_affine_union _).mpr _).1
-      exact ⟨s, hs, by simp⟩
-    convert h₂ _ this x h₄
-    simp only [coe_coe]
-    rw [supr_subtype, sup_comm]
-    conv_rhs => rw [supr_subtype]
-    exact supr_insert
-    
+  classical obtain ⟨s, hs, hs'⟩ := (is_compact_open_iff_eq_finset_affine_union S.1).mp ⟨hS, S.2⟩
+    subst hs'
+    · convert h₁
+      rw [supr_eq_bot]
+      rintro ⟨_, h⟩
+      exact h.elim
+      
+#align algebraic_geometry.compact_open_induction_on AlgebraicGeometry.compact_open_induction_on
 
 end AlgebraicGeometry
 

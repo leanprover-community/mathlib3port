@@ -58,15 +58,15 @@ variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCom
 
 include s_conv xs hx hf
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_within_at.sub, ",", expr has_deriv_within_at.add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_within_at.sub, ",", expr has_deriv_within_at.add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_at.has_deriv_within_at, ",", expr has_deriv_at.const_add, ",", expr has_deriv_at.smul_const, ",", expr has_deriv_at_mul_const, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_at.has_deriv_within_at, ",", expr has_deriv_at.smul_const, ",", expr has_deriv_at_mul_const, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_at.has_deriv_within_at, ",", expr has_deriv_at.smul_const, ",", expr has_deriv_at_mul_const, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr has_deriv_at.has_deriv_within_at, ",", expr has_deriv_at.smul_const, ",", expr has_deriv_at_id', ",", expr has_deriv_at.pow, ",", expr has_deriv_at.mul_const, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Assume that `f` is differentiable inside a convex set `s`, and that its derivative `f'` is
 differentiable at a point `x`. Then, given two vectors `v` and `w` pointing inside `s`, one can
 Taylor-expand to order two the function `f` on the segment `[x + h v, x + h (v + w)]`, giving a
@@ -117,18 +117,18 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
   have g_deriv : ∀ t ∈ Icc (0 : ℝ) 1, HasDerivWithinAt g (g' t) (Icc 0 1) t := by
     intro t ht
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_within_at.sub, \",\", expr has_deriv_within_at.add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_within_at.sub, \",\", expr has_deriv_within_at.add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     · refine' (hf _ _).compHasDerivWithinAt _ _
       · exact xt_mem t ht
         
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.const_add, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.const_add, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       
     · trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       
     · trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       
     · suffices H :
         HasDerivWithinAt (fun u => ((u * h) ^ 2 / 2) • f'' w w)
@@ -138,7 +138,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
         ring
         
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_id', \",\", expr has_deriv_at.pow, \",\", expr has_deriv_at.mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_id', \",\", expr has_deriv_at.pow, \",\", expr has_deriv_at.mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       
   -- check that `g'` is uniformly bounded, with a suitable bound `ε * ((∥v∥ + ∥w∥) * ∥w∥) * h^2`.
   have g'_bound : ∀ t ∈ Ico (0 : ℝ) 1, ∥g' t∥ ≤ ε * ((∥v∥ + ∥w∥) * ∥w∥) * h ^ 2 := by
@@ -193,6 +193,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
   · simp only [Real.norm_eq_abs, abs_mul, add_nonneg (norm_nonneg v) (norm_nonneg w), abs_of_nonneg, mul_assoc,
       pow_bit0_abs, norm_nonneg, abs_pow]
     
+#align convex.taylor_approx_two_segment Convex.taylor_approx_two_segment
 
 /-- One can get `f'' v w` as the limit of `h ^ (-2)` times the alternate sum of the values of `f`
 along the vertices of a quadrilateral with sides `h v` and `h w` based at `x`.
@@ -249,6 +250,7 @@ theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v �
   simp only [two_smul, smul_add, ← add_assoc, ContinuousLinearMap.map_add, ContinuousLinearMap.add_apply, Pi.smul_apply,
     ContinuousLinearMap.coe_smul', ContinuousLinearMap.map_smul]
   abel
+#align convex.is_o_alternate_sum_square Convex.is_o_alternate_sum_square
 
 /-- Assume that `f` is differentiable inside a convex set `s`, and that its derivative `f'` is
 differentiable at a point `x`. Then, given two vectors `v` and `w` pointing inside `s`, one
@@ -276,6 +278,8 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E} (
       field_simp [LT.lt.ne' hpos, HasSmul.smul]
       
   simpa only [sub_eq_zero] using is_o_const_const_iff.1 B
+#align
+  convex.second_derivative_within_at_symmetric_of_mem_interior Convex.second_derivative_within_at_symmetric_of_mem_interior
 
 omit s_conv xs hx hf
 
@@ -329,6 +333,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
   simp only [one_zsmul, neg_smul, sub_eq_zero, mul_comm, ← sub_eq_add_neg] at this
   apply smul_right_injective F _ this
   simp [(tpos v).ne', (tpos w).ne']
+#align convex.second_derivative_within_at_symmetric Convex.second_derivative_within_at_symmetric
 
 /-- If a function is differentiable around `x`, and has two derivatives at `x`, then the second
 derivative is symmetric. -/
@@ -339,10 +344,12 @@ theorem second_derivative_symmetric_of_eventually {f : E → F} {f' : E → E �
   exact
     Convex.second_derivative_within_at_symmetric (convex_ball x ε) A (fun y hy => hε (interior_subset hy))
       (Metric.mem_ball_self εpos) hx.has_fderiv_within_at v w
+#align second_derivative_symmetric_of_eventually second_derivative_symmetric_of_eventually
 
 /-- If a function is differentiable, and has two derivatives at `x`, then the second
 derivative is symmetric. -/
 theorem second_derivative_symmetric {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
     (hf : ∀ y, HasFderivAt f (f' y) y) (hx : HasFderivAt f' f'' x) (v w : E) : f'' v w = f'' w v :=
   second_derivative_symmetric_of_eventually (Filter.eventually_of_forall hf) hx v w
+#align second_derivative_symmetric second_derivative_symmetric
 

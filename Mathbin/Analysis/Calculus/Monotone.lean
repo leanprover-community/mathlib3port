@@ -57,6 +57,7 @@ theorem tendsto_apply_add_mul_sq_div_sub {f : ℝ → ℝ} {x a c d : ℝ} {l : 
   have : ∀ᶠ y in l, y + c * (y - x) ^ 2 ≠ x := by apply tendsto.mono_right h' hl self_mem_nhds_within
   filter_upwards [this] with y hy
   field_simp [sub_ne_zero.2 hy]
+#align tendsto_apply_add_mul_sq_div_sub tendsto_apply_add_mul_sq_div_sub
 
 /-- A Stieltjes function is almost everywhere differentiable, with derivative equal to the
 Radon-Nikodym derivative of the associated Stieltjes measure with respect to Lebesgue. -/
@@ -127,6 +128,7 @@ theorem StieltjesFunction.ae_has_deriv_at (f : StieltjesFunction) :
   -- prove the result by splitting into left and right limits.
   rw [has_deriv_at_iff_tendsto_slope, slope_fun_def_field, ← nhds_left'_sup_nhds_right', tendsto_sup]
   exact ⟨L4, L1⟩
+#align stieltjes_function.ae_has_deriv_at StieltjesFunction.ae_has_deriv_at
 
 /-- A monotone function is almost everywhere differentiable, with derivative equal to the
 Radon-Nikodym derivative of the associated Stieltjes measure with respect to Lebesgue. -/
@@ -218,10 +220,12 @@ theorem Monotone.ae_has_deriv_at {f : ℝ → ℝ} (hf : Monotone f) :
   -- conclude global differentiability
   rw [has_deriv_at_iff_tendsto_slope, slope_fun_def_field, (nhds_left'_sup_nhds_right' x).symm, tendsto_sup]
   exact ⟨L2, L1⟩
+#align monotone.ae_has_deriv_at Monotone.ae_has_deriv_at
 
 /-- A monotone real function is differentiable Lebesgue-almost everywhere. -/
 theorem Monotone.ae_differentiable_at {f : ℝ → ℝ} (hf : Monotone f) : ∀ᵐ x, DifferentiableAt ℝ f x := by
   filter_upwards [hf.ae_has_deriv_at] with x hx using hx.differentiable_at
+#align monotone.ae_differentiable_at Monotone.ae_differentiable_at
 
 /-- A real function which is monotone on a set is differentiable Lebesgue-almost everywhere on
 this set. This version does not assume that `s` is measurable. For a formulation with
@@ -243,6 +247,7 @@ theorem MonotoneOn.ae_differentiable_within_at_of_mem {f : ℝ → ℝ} {s : Set
   have : Ioo a b ∈ 𝓝[s] x := nhds_within_le_nhds (Ioo_mem_nhds h'x.2.1 h'x.2.2)
   filter_upwards [self_mem_nhds_within, this] with y hy h'y
   exact gf ⟨hy, h'y.1.le, h'y.2.le⟩
+#align monotone_on.ae_differentiable_within_at_of_mem MonotoneOn.ae_differentiable_within_at_of_mem
 
 /-- A real function which is monotone on a set is differentiable Lebesgue-almost everywhere on
 this set. This version assumes that `s` is measurable and uses `volume.restrict s`.
@@ -252,4 +257,5 @@ theorem MonotoneOn.ae_differentiable_within_at {f : ℝ → ℝ} {s : Set ℝ} (
     ∀ᵐ x ∂volume.restrict s, DifferentiableWithinAt ℝ f s x := by
   rw [ae_restrict_iff' hs]
   exact hf.ae_differentiable_within_at_of_mem
+#align monotone_on.ae_differentiable_within_at MonotoneOn.ae_differentiable_within_at
 

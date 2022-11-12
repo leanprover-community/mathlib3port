@@ -19,31 +19,38 @@ variable {α : Sort u} {β : Sort v}
 /-- Functorial action. -/
 protected def map (f : α → β) (a : PLift α) : PLift β :=
   PLift.up (f a.down)
+#align plift.map PLift.map
 
 @[simp]
 theorem map_up (f : α → β) (a : α) : (PLift.up a).map f = PLift.up (f a) :=
   rfl
+#align plift.map_up PLift.map_up
 
 /-- Embedding of pure values. -/
 @[simp]
 protected def pure : α → PLift α :=
   up
+#align plift.pure PLift.pure
 
 /-- Applicative sequencing. -/
 protected def seq (f : PLift (α → β)) (x : PLift α) : PLift β :=
   PLift.up (f.down x.down)
+#align plift.seq PLift.seq
 
 @[simp]
 theorem seq_up (f : α → β) (x : α) : (PLift.up f).seq (PLift.up x) = PLift.up (f x) :=
   rfl
+#align plift.seq_up PLift.seq_up
 
 /-- Monadic bind. -/
 protected def bind (a : PLift α) (f : α → PLift β) : PLift β :=
   f a.down
+#align plift.bind PLift.bind
 
 @[simp]
 theorem bind_up (a : α) (f : α → PLift β) : (PLift.up a).bind f = f a :=
   rfl
+#align plift.bind_up PLift.bind_up
 
 instance : Monad PLift where
   map := @PLift.map
@@ -70,6 +77,7 @@ instance : LawfulMonad PLift where
 @[simp]
 theorem rec.constant {α : Sort u} {β : Type v} (b : β) : (@PLift.rec α (fun _ => β) fun _ => b) = fun _ => b :=
   funext fun x => PLift.casesOn x fun a => Eq.refl (PLift.rec (fun a' => b) { down := a })
+#align plift.rec.constant PLift.rec.constant
 
 end PLift
 
@@ -80,31 +88,38 @@ variable {α : Type u} {β : Type v}
 /-- Functorial action. -/
 protected def map (f : α → β) (a : ULift α) : ULift β :=
   ULift.up (f a.down)
+#align ulift.map ULift.map
 
 @[simp]
 theorem map_up (f : α → β) (a : α) : (ULift.up a).map f = ULift.up (f a) :=
   rfl
+#align ulift.map_up ULift.map_up
 
 /-- Embedding of pure values. -/
 @[simp]
 protected def pure : α → ULift α :=
   up
+#align ulift.pure ULift.pure
 
 /-- Applicative sequencing. -/
 protected def seq (f : ULift (α → β)) (x : ULift α) : ULift β :=
   ULift.up (f.down x.down)
+#align ulift.seq ULift.seq
 
 @[simp]
 theorem seq_up (f : α → β) (x : α) : (ULift.up f).seq (ULift.up x) = ULift.up (f x) :=
   rfl
+#align ulift.seq_up ULift.seq_up
 
 /-- Monadic bind. -/
 protected def bind (a : ULift α) (f : α → ULift β) : ULift β :=
   f a.down
+#align ulift.bind ULift.bind
 
 @[simp]
 theorem bind_up (a : α) (f : α → ULift β) : (ULift.up a).bind f = f a :=
   rfl
+#align ulift.bind_up ULift.bind_up
 
 instance : Monad ULift where
   map := @ULift.map
@@ -138,6 +153,7 @@ instance : LawfulMonad ULift where
 @[simp]
 theorem rec.constant {α : Type u} {β : Sort v} (b : β) : (@ULift.rec α (fun _ => β) fun _ => b) = fun _ => b :=
   funext fun x => ULift.casesOn x fun a => Eq.refl (ULift.rec (fun a' => b) { down := a })
+#align ulift.rec.constant ULift.rec.constant
 
 end ULift
 

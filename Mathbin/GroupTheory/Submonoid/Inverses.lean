@@ -41,6 +41,7 @@ noncomputable instance [CommMonoid M] : CommGroup (IsUnit.submonoid M) :=
 @[to_additive]
 theorem IsUnit.Submonoid.coe_inv [Monoid M] (x : IsUnit.submonoid M) : ↑x⁻¹ = (↑x.Prop.Unit⁻¹ : M) :=
   rfl
+#align submonoid.is_unit.submonoid.coe_inv Submonoid.IsUnit.Submonoid.coe_inv
 
 section Monoid
 
@@ -52,16 +53,19 @@ def leftInv : Submonoid M where
   Carrier := { x : M | ∃ y : S, x * y = 1 }
   one_mem' := ⟨1, mul_one 1⟩
   mul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ => ⟨b' * a', by rw [coe_mul, ← mul_assoc, mul_assoc a, hb, mul_one, ha]⟩
+#align submonoid.left_inv Submonoid.leftInv
 
 @[to_additive]
 theorem left_inv_left_inv_le : S.left_inv.left_inv ≤ S := by
   rintro x ⟨⟨y, z, h₁⟩, h₂ : x * y = 1⟩
   convert z.prop
   rw [← mul_one x, ← h₁, ← mul_assoc, h₂, one_mul]
+#align submonoid.left_inv_left_inv_le Submonoid.left_inv_left_inv_le
 
 @[to_additive]
 theorem unit_mem_left_inv (x : Mˣ) (hx : (x : M) ∈ S) : ((x⁻¹ : _) : M) ∈ S.left_inv :=
   ⟨⟨x, hx⟩, x.inv_val⟩
+#align submonoid.unit_mem_left_inv Submonoid.unit_mem_left_inv
 
 @[to_additive]
 theorem left_inv_left_inv_eq (hS : S ≤ IsUnit.submonoid M) : S.left_inv.left_inv = S := by
@@ -72,20 +76,24 @@ theorem left_inv_left_inv_eq (hS : S ≤ IsUnit.submonoid M) : S.left_inv.left_i
     rfl
   rw [this]
   exact S.left_inv.unit_mem_left_inv _ (S.unit_mem_left_inv _ hx)
+#align submonoid.left_inv_left_inv_eq Submonoid.left_inv_left_inv_eq
 
 /-- The function from `S.left_inv` to `S` sending an element to its right inverse in `S`.
 This is a `monoid_hom` when `M` is commutative. -/
 @[to_additive
       "The function from `S.left_add` to `S` sending an element to its right additive\ninverse in `S`. This is an `add_monoid_hom` when `M` is commutative."]
 noncomputable def fromLeftInv : S.left_inv → S := fun x => x.Prop.some
+#align submonoid.from_left_inv Submonoid.fromLeftInv
 
 @[simp, to_additive]
 theorem mul_from_left_inv (x : S.left_inv) : (x : M) * S.fromLeftInv x = 1 :=
   x.Prop.some_spec
+#align submonoid.mul_from_left_inv Submonoid.mul_from_left_inv
 
 @[simp, to_additive]
 theorem from_left_inv_one : S.fromLeftInv 1 = 1 :=
   (one_mul _).symm.trans (Subtype.eq <| S.mul_from_left_inv 1)
+#align submonoid.from_left_inv_one Submonoid.from_left_inv_one
 
 end Monoid
 
@@ -95,13 +103,16 @@ variable [CommMonoid M] (S : Submonoid M)
 
 @[simp, to_additive]
 theorem from_left_inv_mul (x : S.left_inv) : (S.fromLeftInv x : M) * x = 1 := by rw [mul_comm, mul_from_left_inv]
+#align submonoid.from_left_inv_mul Submonoid.from_left_inv_mul
 
 @[to_additive]
 theorem left_inv_le_is_unit : S.left_inv ≤ IsUnit.submonoid M := fun x ⟨y, hx⟩ => ⟨⟨x, y, hx, mul_comm x y ▸ hx⟩, rfl⟩
+#align submonoid.left_inv_le_is_unit Submonoid.left_inv_le_is_unit
 
 @[to_additive]
 theorem from_left_inv_eq_iff (a : S.left_inv) (b : M) : (S.fromLeftInv a : M) = b ↔ (a : M) * b = 1 := by
   rw [← IsUnit.mul_right_inj (left_inv_le_is_unit _ a.prop), S.mul_from_left_inv, eq_comm]
+#align submonoid.from_left_inv_eq_iff Submonoid.from_left_inv_eq_iff
 
 /-- The `monoid_hom` from `S.left_inv` to `S` sending an element to its right inverse in `S`. -/
 @[to_additive "The `add_monoid_hom` from `S.left_neg` to `S` sending an element to its\nright additive inverse in `S`.",
@@ -113,6 +124,7 @@ noncomputable def fromCommLeftInv : S.left_inv →* S where
     Subtype.ext <| by
       rw [from_left_inv_eq_iff, mul_comm x, Submonoid.coe_mul, Submonoid.coe_mul, mul_assoc, ← mul_assoc (x : M),
         mul_from_left_inv, one_mul, mul_from_left_inv]
+#align submonoid.from_comm_left_inv Submonoid.fromCommLeftInv
 
 variable (hS : S ≤ IsUnit.submonoid M)
 
@@ -137,30 +149,37 @@ noncomputable def leftInvEquiv : S.left_inv ≃* S :=
       rw [from_left_inv_eq_iff]
       convert (hS x.prop).some.inv_val
       exact (hS x.prop).some_spec.symm }
+#align submonoid.left_inv_equiv Submonoid.leftInvEquiv
 
 @[simp, to_additive]
 theorem from_left_inv_left_inv_equiv_symm (x : S) : S.fromLeftInv ((S.leftInvEquiv hS).symm x) = x :=
   (S.leftInvEquiv hS).right_inv x
+#align submonoid.from_left_inv_left_inv_equiv_symm Submonoid.from_left_inv_left_inv_equiv_symm
 
 @[simp, to_additive]
 theorem left_inv_equiv_symm_from_left_inv (x : S.left_inv) : (S.leftInvEquiv hS).symm (S.fromLeftInv x) = x :=
   (S.leftInvEquiv hS).left_inv x
+#align submonoid.left_inv_equiv_symm_from_left_inv Submonoid.left_inv_equiv_symm_from_left_inv
 
 @[to_additive]
 theorem left_inv_equiv_mul (x : S.left_inv) : (S.leftInvEquiv hS x : M) * x = 1 := by simp
+#align submonoid.left_inv_equiv_mul Submonoid.left_inv_equiv_mul
 
 @[to_additive]
 theorem mul_left_inv_equiv (x : S.left_inv) : (x : M) * S.leftInvEquiv hS x = 1 := by simp
+#align submonoid.mul_left_inv_equiv Submonoid.mul_left_inv_equiv
 
 @[simp, to_additive]
 theorem left_inv_equiv_symm_mul (x : S) : ((S.leftInvEquiv hS).symm x : M) * x = 1 := by
   convert S.mul_left_inv_equiv hS ((S.left_inv_equiv hS).symm x)
   simp
+#align submonoid.left_inv_equiv_symm_mul Submonoid.left_inv_equiv_symm_mul
 
 @[simp, to_additive]
 theorem mul_left_inv_equiv_symm (x : S) : (x : M) * (S.leftInvEquiv hS).symm x = 1 := by
   convert S.left_inv_equiv_mul hS ((S.left_inv_equiv hS).symm x)
   simp
+#align submonoid.mul_left_inv_equiv_symm Submonoid.mul_left_inv_equiv_symm
 
 end CommMonoid
 
@@ -175,10 +194,12 @@ theorem left_inv_eq_inv : S.left_inv = S⁻¹ :=
   Submonoid.ext fun x =>
     ⟨fun h => Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_one_right h.some_spec).symm ▸ h.some.Prop), fun h =>
       ⟨⟨_, h⟩, mul_right_inv _⟩⟩
+#align submonoid.left_inv_eq_inv Submonoid.left_inv_eq_inv
 
 @[simp, to_additive]
 theorem from_left_inv_eq_inv (x : S.left_inv) : (S.fromLeftInv x : M) = x⁻¹ := by
   rw [← mul_right_inj (x : M), mul_right_inv, mul_from_left_inv]
+#align submonoid.from_left_inv_eq_inv Submonoid.from_left_inv_eq_inv
 
 end Group
 
@@ -189,6 +210,7 @@ variable [CommGroup M] (S : Submonoid M) (hS : S ≤ IsUnit.submonoid M)
 @[simp, to_additive]
 theorem left_inv_equiv_symm_eq_inv (x : S) : ((S.leftInvEquiv hS).symm x : M) = x⁻¹ := by
   rw [← mul_right_inj (x : M), mul_right_inv, mul_left_inv_equiv_symm]
+#align submonoid.left_inv_equiv_symm_eq_inv Submonoid.left_inv_equiv_symm_eq_inv
 
 end CommGroup
 

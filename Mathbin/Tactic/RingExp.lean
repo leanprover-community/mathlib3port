@@ -105,6 +105,7 @@ for a given expression.
 unsafe structure atom : Type where
   value : expr
   index : ℕ
+#align tactic.ring_exp.atom tactic.ring_exp.atom
 
 namespace Atom
 
@@ -115,11 +116,13 @@ Thus, `eq` indicates equality as long as the `atom`s come from the same context.
 -/
 unsafe def eq (a b : atom) : Bool :=
   a.index = b.index
+#align tactic.ring_exp.atom.eq tactic.ring_exp.atom.eq
 
 /-- We order `atom`s on the order of appearance in the main expression.
 -/
 unsafe def lt (a b : atom) : Bool :=
   a.index < b.index
+#align tactic.ring_exp.atom.lt tactic.ring_exp.atom.lt
 
 unsafe instance : Repr atom :=
   ⟨fun x => "(atom " ++ repr x.2 ++ ")"⟩
@@ -150,6 +153,7 @@ or using a different meta representation of numerals.
 structure Coeff : Type where
   value : ℚ
   deriving DecidableEq, Inhabited
+#align tactic.ring_exp.coeff Tactic.RingExp.Coeff
 
 /-- The values in `ex_type` are used as parameters to `ex` to control the expression's structure. -/
 inductive ExType : Type
@@ -158,6 +162,7 @@ inductive ExType : Type
   | Prod : ex_type
   | exp : ex_type
   deriving DecidableEq, Inhabited
+#align tactic.ring_exp.ex_type Tactic.RingExp.ExType
 
 open ExType
 
@@ -177,6 +182,7 @@ unsafe structure ex_info : Type where
   orig : expr
   pretty : expr
   Proof : Option expr
+#align tactic.ring_exp.ex_info tactic.ring_exp.ex_info
 
 /-- The `ex` type is an abstract representation of an expression with `+`, `*` and `^`.
 Those operators are mapped to the `sum`, `prod` and `exp` constructors respectively.
@@ -219,6 +225,7 @@ unsafe inductive ex : ExType → Type
   | var (info : ex_info) : atom → ex base
   | sum_b (info : ex_info) : ex Sum → ex base
   | exp (info : ex_info) : ex base → ex Prod → ex exp
+#align tactic.ring_exp.ex tactic.ring_exp.ex
 
 /-- Return the proof information associated to the `ex`.
 -/
@@ -230,6 +237,7 @@ unsafe def ex.info : ∀ {et : ExType} (ps : ex et), ex_info
   | base, ex.var i _ => i
   | base, ex.sum_b i _ => i
   | exp, ex.exp i _ _ => i
+#align tactic.ring_exp.ex.info tactic.ring_exp.ex.info
 
 /-- Return the original, non-normalized version of this `ex`.
 
@@ -238,11 +246,13 @@ their `orig` and `pretty` are equal, and their `proof` is reflexivity.
 -/
 unsafe def ex.orig {et : ExType} (ps : ex et) : expr :=
   ps.info.orig
+#align tactic.ring_exp.ex.orig tactic.ring_exp.ex.orig
 
 /-- Return the normalized version of this `ex`.
 -/
 unsafe def ex.pretty {et : ExType} (ps : ex et) : expr :=
   ps.info.pretty
+#align tactic.ring_exp.ex.pretty tactic.ring_exp.ex.pretty
 
 /-- Return the normalisation proof of the given expression.
 If the proof is `refl`, we give `none` instead,
@@ -252,12 +262,14 @@ or use `mk_proof` with the correct set of arguments.
 -/
 unsafe def ex.proof {et : ExType} (ps : ex et) : Option expr :=
   ps.info.Proof
+#align tactic.ring_exp.ex.proof tactic.ring_exp.ex.proof
 
 /-- Update the `orig` and `proof` fields of the `ex_info`.
 Intended for use in `ex.set_info`.
 -/
 unsafe def ex_info.set (i : ex_info) (o : Option expr) (pf : Option expr) : ex_info :=
   { i with orig := o.getOrElse i.pretty, Proof := pf }
+#align tactic.ring_exp.ex_info.set tactic.ring_exp.ex_info.set
 
 /-- Update the `ex_info` of the given expression.
 
@@ -273,9 +285,11 @@ unsafe def ex.set_info : ∀ {et : ExType} (ps : ex et), Option expr → Option 
   | base, ex.var i x, o, pf => ex.var (i.Set o pf) x
   | base, ex.sum_b i ps, o, pf => ex.sum_b (i.Set o pf) ps
   | exp, ex.exp i p ps, o, pf => ex.exp (i.Set o pf) p ps
+#align tactic.ring_exp.ex.set_info tactic.ring_exp.ex.set_info
 
 instance coeffHasRepr : Repr Coeff :=
   ⟨fun x => repr x.1⟩
+#align tactic.ring_exp.coeff_has_repr Tactic.RingExp.coeffHasRepr
 
 /-- Convert an `ex` to a `string`. -/
 unsafe def ex.repr : ∀ {et : ExType}, ex et → String
@@ -286,6 +300,7 @@ unsafe def ex.repr : ∀ {et : ExType}, ex et → String
   | base, ex.var _ x => repr x
   | base, ex.sum_b _ ps => "(" ++ ex.repr ps ++ ")"
   | exp, ex.exp _ p ps => ex.repr p ++ " ^ " ++ ex.repr ps
+#align tactic.ring_exp.ex.repr tactic.ring_exp.ex.repr
 
 unsafe instance {et : ExType} : Repr (ex et) :=
   ⟨ex.repr⟩
@@ -309,6 +324,7 @@ unsafe def ex.eq : ∀ {et : ExType}, ex et → ex et → Bool
   | base, ex.sum_b _ _, ex.var _ _ => false
   | base, ex.sum_b _ ps, ex.sum_b _ qs => ps.Eq qs
   | exp, ex.exp _ p ps, ex.exp _ q qs => p.Eq q && ps.Eq qs
+#align tactic.ring_exp.ex.eq tactic.ring_exp.ex.eq
 
 /-- The ordering on expressions.
 
@@ -327,6 +343,7 @@ unsafe def ex.lt : ∀ {et : ExType}, ex et → ex et → Bool
   | base, ex.sum_b _ _, ex.var _ _ => false
   | base, ex.sum_b _ ps, ex.sum_b _ qs => ps.lt qs
   | exp, ex.exp _ p ps, ex.exp _ q qs => p.lt q || p.Eq q && ps.lt qs
+#align tactic.ring_exp.ex.lt tactic.ring_exp.ex.lt
 
 end Expression
 
@@ -370,6 +387,7 @@ unsafe structure eval_info where
   -- Cache common constants.
   zero : expr
   one : expr
+#align tactic.ring_exp.eval_info tactic.ring_exp.eval_info
 
 /-- The `context` contains the full set of information needed for the `eval` function.
 
@@ -381,16 +399,19 @@ unsafe structure context where
   info_b : eval_info
   info_e : eval_info
   transp : Transparency
+#align tactic.ring_exp.context tactic.ring_exp.context
 
 /-- The `ring_exp_m` monad is used instead of `tactic` to store the context.
 -/
 unsafe def ring_exp_m (α : Type) : Type :=
   ReaderT context (StateT (List atom) tactic) α deriving Monad, Alternative
+#align tactic.ring_exp.ring_exp_m tactic.ring_exp.ring_exp_m
 
 /-- Access the instance cache.
 -/
 unsafe def get_context : ring_exp_m context :=
   ReaderT.read
+#align tactic.ring_exp.get_context tactic.ring_exp.get_context
 
 /-- Lift an operation in the `tactic` monad to the `ring_exp_m` monad.
 
@@ -398,6 +419,7 @@ This operation will not access the cache.
 -/
 unsafe def lift {α} (m : tactic α) : ring_exp_m α :=
   ReaderT.lift (StateT.lift m)
+#align tactic.ring_exp.lift tactic.ring_exp.lift
 
 /-- Change the context of the given computation,
 so that expressions are evaluated in the exponent ring,
@@ -406,6 +428,7 @@ instead of the base ring.
 unsafe def in_exponent {α} (mx : ring_exp_m α) : ring_exp_m α := do
   let ctx ← get_context
   ReaderT.lift <| mx ⟨ctx, ctx, ctx⟩
+#align tactic.ring_exp.in_exponent tactic.ring_exp.in_exponent
 
 /-- Specialized version of `mk_app` where the first two arguments are `{α}` `[some_class α]`.
 Should be faster because it can use the cached instances.
@@ -413,6 +436,7 @@ Should be faster because it can use the cached instances.
 unsafe def mk_app_class (f : Name) (inst : expr) (args : List expr) : ring_exp_m expr := do
   let ctx ← get_context
   pure <| (@expr.const tt f [ctx] ctx inst).mk_app args
+#align tactic.ring_exp.mk_app_class tactic.ring_exp.mk_app_class
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `ctx -/
 /-- Specialized version of `mk_app` where the first two arguments are `{α}` `[comm_semiring α]`.
@@ -421,6 +445,7 @@ Should be faster because it can use the cached instances.
 unsafe def mk_app_csr (f : Name) (args : List expr) : ring_exp_m expr := do
   let ctx ← get_context
   mk_app_class f (ctx ctx.info_b.csr_instance) args
+#align tactic.ring_exp.mk_app_csr tactic.ring_exp.mk_app_csr
 
 /-- Specialized version of `mk_app ``has_add.add`.
 Should be faster because it can use the cached instances.
@@ -428,6 +453,7 @@ Should be faster because it can use the cached instances.
 unsafe def mk_add (args : List expr) : ring_exp_m expr := do
   let ctx ← get_context
   mk_app_class `` Add.add ctx args
+#align tactic.ring_exp.mk_add tactic.ring_exp.mk_add
 
 /-- Specialized version of `mk_app ``has_mul.mul`.
 Should be faster because it can use the cached instances.
@@ -435,6 +461,7 @@ Should be faster because it can use the cached instances.
 unsafe def mk_mul (args : List expr) : ring_exp_m expr := do
   let ctx ← get_context
   mk_app_class `` Mul.mul ctx args
+#align tactic.ring_exp.mk_mul tactic.ring_exp.mk_mul
 
 /-- Specialized version of `mk_app ``has_pow.pow`.
 Should be faster because it can use the cached instances.
@@ -442,16 +469,19 @@ Should be faster because it can use the cached instances.
 unsafe def mk_pow (args : List expr) : ring_exp_m expr := do
   let ctx ← get_context
   pure <| (@expr.const tt `` Pow.pow [ctx, ctx] ctx ctx ctx).mk_app args
+#align tactic.ring_exp.mk_pow tactic.ring_exp.mk_pow
 
 /-- Construct a normalization proof term or return the cached one. -/
 unsafe def ex_info.proof_term (ps : ex_info) : ring_exp_m expr :=
   match ps.Proof with
   | none => lift <| tactic.mk_eq_refl ps.pretty
   | some p => pure p
+#align tactic.ring_exp.ex_info.proof_term tactic.ring_exp.ex_info.proof_term
 
 /-- Construct a normalization proof term or return the cached one. -/
 unsafe def ex.proof_term {et : ExType} (ps : ex et) : ring_exp_m expr :=
   ps.info.proof_term
+#align tactic.ring_exp.ex.proof_term tactic.ring_exp.ex.proof_term
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -474,6 +504,7 @@ unsafe def none_or_proof_term : List ex_info → ring_exp_m (Option (List expr))
       | (_, some xs_pfs) => do
         let x_pf ← x
         pure (some (x_pf::xs_pfs))
+#align tactic.ring_exp.none_or_proof_term tactic.ring_exp.none_or_proof_term
 
 /-- Use the proof terms as arguments to the given lemma.
 If the lemma could reduce to reflexivity, consider using `mk_proof_or_refl.`
@@ -481,6 +512,7 @@ If the lemma could reduce to reflexivity, consider using `mk_proof_or_refl.`
 unsafe def mk_proof (lem : Name) (args : List expr) (hs : List ex_info) : ring_exp_m expr := do
   let hs' ← traverse ex_info.proof_term hs
   mk_app_csr lem (args ++ hs')
+#align tactic.ring_exp.mk_proof tactic.ring_exp.mk_proof
 
 /-- Use the proof terms as arguments to the given lemma.
 Often, we construct a proof term using congruence where reflexivity suffices.
@@ -491,32 +523,40 @@ unsafe def mk_proof_or_refl (term : expr) (lem : Name) (args : List expr) (hs : 
   match hs_full with
     | none => lift <| mk_eq_refl term
     | some hs' => mk_app_csr lem (args ++ hs')
+#align tactic.ring_exp.mk_proof_or_refl tactic.ring_exp.mk_proof_or_refl
 
 /-- A shortcut for adding the original terms of two expressions. -/
 unsafe def add_orig {et et'} (ps : ex et) (qs : ex et') : ring_exp_m expr :=
   mk_add [ps.orig, qs.orig]
+#align tactic.ring_exp.add_orig tactic.ring_exp.add_orig
 
 /-- A shortcut for multiplying the original terms of two expressions. -/
 unsafe def mul_orig {et et'} (ps : ex et) (qs : ex et') : ring_exp_m expr :=
   mk_mul [ps.orig, qs.orig]
+#align tactic.ring_exp.mul_orig tactic.ring_exp.mul_orig
 
 /-- A shortcut for exponentiating the original terms of two expressions. -/
 unsafe def pow_orig {et et'} (ps : ex et) (qs : ex et') : ring_exp_m expr :=
   mk_pow [ps.orig, qs.orig]
+#align tactic.ring_exp.pow_orig tactic.ring_exp.pow_orig
 
 /-- Congruence lemma for constructing `ex.sum`. -/
 theorem sum_congr {p p' ps ps' : α} : p = p' → ps = ps' → p + ps = p' + ps' := by cc
+#align tactic.ring_exp.sum_congr Tactic.RingExp.sum_congr
 
 /-- Congruence lemma for constructing `ex.prod`. -/
 theorem prod_congr {p p' ps ps' : α} : p = p' → ps = ps' → p * ps = p' * ps' := by cc
+#align tactic.ring_exp.prod_congr Tactic.RingExp.prod_congr
 
 /-- Congruence lemma for constructing `ex.exp`. -/
 theorem exp_congr {p p' : α} {ps ps' : ℕ} : p = p' → ps = ps' → p ^ ps = p' ^ ps' := by cc
+#align tactic.ring_exp.exp_congr Tactic.RingExp.exp_congr
 
 /-- Constructs `ex.zero` with the correct arguments. -/
 unsafe def ex_zero : ring_exp_m (ex Sum) := do
   let ctx ← get_context
   pure <| ex.zero ⟨ctx, ctx, none⟩
+#align tactic.ring_exp.ex_zero tactic.ring_exp.ex_zero
 
 /-- Constructs `ex.sum` with the correct arguments. -/
 unsafe def ex_sum (p : ex Prod) (ps : ex Sum) : ring_exp_m (ex Sum) := do
@@ -524,6 +564,7 @@ unsafe def ex_sum (p : ex Prod) (ps : ex Sum) : ring_exp_m (ex Sum) := do
   let pps_p ← mk_add [p.pretty, ps.pretty]
   let pps_pf ← mk_proof_or_refl pps_p `` sum_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
   pure (ex.sum ⟨pps_o, pps_p, pps_pf⟩ (p none none) (ps none none))
+#align tactic.ring_exp.ex_sum tactic.ring_exp.ex_sum
 
 /-- Constructs `ex.coeff` with the correct arguments.
 
@@ -534,6 +575,7 @@ unsafe def ex_coeff (x : Rat) : ring_exp_m (ex Prod) := do
   let ctx ← get_context
   let x_p ← lift <| expr.of_rat ctx.info_b.α x
   pure (ex.coeff ⟨x_p, x_p, none⟩ ⟨x⟩)
+#align tactic.ring_exp.ex_coeff tactic.ring_exp.ex_coeff
 
 /-- Constructs `ex.coeff 1` with the correct arguments.
 This is a special case for optimization purposes.
@@ -541,6 +583,7 @@ This is a special case for optimization purposes.
 unsafe def ex_one : ring_exp_m (ex Prod) := do
   let ctx ← get_context
   pure <| ex.coeff ⟨ctx, ctx, none⟩ ⟨1⟩
+#align tactic.ring_exp.ex_one tactic.ring_exp.ex_one
 
 /-- Constructs `ex.prod` with the correct arguments. -/
 unsafe def ex_prod (p : ex exp) (ps : ex Prod) : ring_exp_m (ex Prod) := do
@@ -548,14 +591,17 @@ unsafe def ex_prod (p : ex exp) (ps : ex Prod) : ring_exp_m (ex Prod) := do
   let pps_p ← mk_mul [p.pretty, ps.pretty]
   let pps_pf ← mk_proof_or_refl pps_p `` prod_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
   pure (ex.prod ⟨pps_o, pps_p, pps_pf⟩ (p none none) (ps none none))
+#align tactic.ring_exp.ex_prod tactic.ring_exp.ex_prod
 
 /-- Constructs `ex.var` with the correct arguments. -/
 unsafe def ex_var (p : atom) : ring_exp_m (ex base) :=
   pure (ex.var ⟨p.1, p.1, none⟩ p)
+#align tactic.ring_exp.ex_var tactic.ring_exp.ex_var
 
 /-- Constructs `ex.sum_b` with the correct arguments. -/
 unsafe def ex_sum_b (ps : ex Sum) : ring_exp_m (ex base) :=
   pure (ex.sum_b ps.info (ps.set_info none none))
+#align tactic.ring_exp.ex_sum_b tactic.ring_exp.ex_sum_b
 
 /-- Constructs `ex.exp` with the correct arguments. -/
 unsafe def ex_exp (p : ex base) (ps : ex Prod) : ring_exp_m (ex exp) := do
@@ -564,8 +610,10 @@ unsafe def ex_exp (p : ex base) (ps : ex Prod) : ring_exp_m (ex exp) := do
   let pps_p ← mk_pow [p.pretty, ps.pretty]
   let pps_pf ← mk_proof_or_refl pps_p `` exp_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
   pure (ex.exp ⟨pps_o, pps_p, pps_pf⟩ (p none none) (ps none none))
+#align tactic.ring_exp.ex_exp tactic.ring_exp.ex_exp
 
 theorem base_to_exp_pf {p p' : α} : p = p' → p = p' ^ 1 := by simp
+#align tactic.ring_exp.base_to_exp_pf Tactic.RingExp.base_to_exp_pf
 
 /-- Conversion from `ex base` to `ex exp`. -/
 unsafe def base_to_exp (p : ex base) : ring_exp_m (ex exp) := do
@@ -573,8 +621,10 @@ unsafe def base_to_exp (p : ex base) : ring_exp_m (ex exp) := do
   let ps ← ex_exp p o
   let pf ← mk_proof `` base_to_exp_pf [p.orig, p.pretty] [p.info]
   pure <| ps p pf
+#align tactic.ring_exp.base_to_exp tactic.ring_exp.base_to_exp
 
 theorem exp_to_prod_pf {p p' : α} : p = p' → p = p' * 1 := by simp
+#align tactic.ring_exp.exp_to_prod_pf Tactic.RingExp.exp_to_prod_pf
 
 /-- Conversion from `ex exp` to `ex prod`. -/
 unsafe def exp_to_prod (p : ex exp) : ring_exp_m (ex Prod) := do
@@ -582,8 +632,10 @@ unsafe def exp_to_prod (p : ex exp) : ring_exp_m (ex Prod) := do
   let ps ← ex_prod p o
   let pf ← mk_proof `` exp_to_prod_pf [p.orig, p.pretty] [p.info]
   pure <| ps p pf
+#align tactic.ring_exp.exp_to_prod tactic.ring_exp.exp_to_prod
 
 theorem prod_to_sum_pf {p p' : α} : p = p' → p = p' + 0 := by simp
+#align tactic.ring_exp.prod_to_sum_pf Tactic.RingExp.prod_to_sum_pf
 
 /-- Conversion from `ex prod` to `ex sum`. -/
 unsafe def prod_to_sum (p : ex Prod) : ring_exp_m (ex Sum) := do
@@ -591,8 +643,10 @@ unsafe def prod_to_sum (p : ex Prod) : ring_exp_m (ex Sum) := do
   let ps ← ex_sum p z
   let pf ← mk_proof `` prod_to_sum_pf [p.orig, p.pretty] [p.info]
   pure <| ps p pf
+#align tactic.ring_exp.prod_to_sum tactic.ring_exp.prod_to_sum
 
 theorem atom_to_sum_pf (p : α) : p = p ^ 1 * 1 + 0 := by simp
+#align tactic.ring_exp.atom_to_sum_pf Tactic.RingExp.atom_to_sum_pf
 
 /-- A more efficient conversion from `atom` to `ex sum`.
 
@@ -609,6 +663,7 @@ unsafe def atom_to_sum (p : atom) : ring_exp_m (ex Sum) := do
   let p' ← ex_sum p' z
   let pf ← mk_proof `` atom_to_sum_pf [p.1] []
   pure <| p' p.1 pf
+#align tactic.ring_exp.atom_to_sum tactic.ring_exp.atom_to_sum
 
 /-- Compute the sum of two coefficients.
 Note that the result might not be a valid expression:
@@ -623,12 +678,15 @@ unsafe def add_coeff (p_p q_p : expr) (p q : Coeff) : ring_exp_m (ex Prod) := do
   let pq_o ← mk_add [p_p, q_p]
   let (pq_p, pq_pf) ← lift <| norm_num.eval_field pq_o
   pure <| ex.coeff ⟨pq_o, pq_p, pq_pf⟩ ⟨p.1 + q.1⟩
+#align tactic.ring_exp.add_coeff tactic.ring_exp.add_coeff
 
 theorem mul_coeff_pf_one_mul (q : α) : 1 * q = q :=
   one_mul q
+#align tactic.ring_exp.mul_coeff_pf_one_mul Tactic.RingExp.mul_coeff_pf_one_mul
 
 theorem mul_coeff_pf_mul_one (p : α) : p * 1 = p :=
   mul_one p
+#align tactic.ring_exp.mul_coeff_pf_mul_one Tactic.RingExp.mul_coeff_pf_mul_one
 
 /-- Compute the product of two coefficients.
 
@@ -654,6 +712,7 @@ unsafe def mul_coeff (p_p q_p : expr) (p q : Coeff) : ring_exp_m (ex Prod) :=
     let pq' ← mk_mul [p_p, q_p]
     let (pq_p, pq_pf) ← lift <| norm_num.eval_field pq'
     pure <| ex.coeff ⟨pq_p, pq_p, pq_pf⟩ ⟨p.1 * q.1⟩
+#align tactic.ring_exp.mul_coeff tactic.ring_exp.mul_coeff
 
 section Rewrite
 
@@ -680,6 +739,7 @@ unsafe def rewrite (ps_o : expr) (ps' : ex Sum) (pf : expr) : ring_exp_m (ex Sum
   let ps'_pf ← ps'.info.proof_term
   let pf ← lift <| mk_eq_trans pf ps'_pf
   pure <| ps' ps_o pf
+#align tactic.ring_exp.rewrite tactic.ring_exp.rewrite
 
 end Rewrite
 
@@ -705,12 +765,14 @@ unsafe inductive overlap : Type
   | none : overlap
   | nonzero : ex Prod → overlap
   | zero : ex Sum → overlap
+#align tactic.ring_exp.overlap tactic.ring_exp.overlap
 
 theorem add_overlap_pf {ps qs pq} (p : α) : ps + qs = pq → p * ps + p * qs = p * pq := fun pq_pf =>
   calc
     p * ps + p * qs = p * (ps + qs) := symm (mul_add _ _ _)
     _ = p * pq := by rw [pq_pf]
     
+#align tactic.ring_exp.add_overlap_pf Tactic.RingExp.add_overlap_pf
 
 theorem add_overlap_pf_zero {ps qs} (p : α) : ps + qs = 0 → p * ps + p * qs = 0 := fun pq_pf =>
   calc
@@ -718,6 +780,7 @@ theorem add_overlap_pf_zero {ps qs} (p : α) : ps + qs = 0 → p * ps + p * qs =
     _ = p * 0 := by rw [pq_pf]
     _ = 0 := mul_zero _
     
+#align tactic.ring_exp.add_overlap_pf_zero Tactic.RingExp.add_overlap_pf_zero
 
 /-- Given arguments `ps`, `qs` of the form `ps' * x` and `ps' * y` respectively
 return `ps + qs = ps' * (x + y)` (with `x` and `y` arbitrary coefficients).
@@ -748,6 +811,7 @@ unsafe def add_overlap : ex Prod → ex Prod → ring_exp_m overlap
           let pf ← mk_proof `` add_overlap_pf_zero [ps, qs, p] [pq]
           pure <| overlap.zero (z pqs_o pf)
     else pure overlap.none
+#align tactic.ring_exp.add_overlap tactic.ring_exp.add_overlap
 
 section Addition
 
@@ -756,15 +820,18 @@ theorem add_pf_z_sum {ps qs qs' : α} : ps = 0 → qs = qs' → ps + qs = qs' :=
     ps + qs = 0 + qs' := by rw [ps_pf, qs_pf]
     _ = qs' := zero_add _
     
+#align tactic.ring_exp.add_pf_z_sum Tactic.RingExp.add_pf_z_sum
 
 theorem add_pf_sum_z {ps ps' qs : α} : ps = ps' → qs = 0 → ps + qs = ps' := fun ps_pf qs_pf =>
   calc
     ps + qs = ps' + 0 := by rw [ps_pf, qs_pf]
     _ = ps' := add_zero _
     
+#align tactic.ring_exp.add_pf_sum_z Tactic.RingExp.add_pf_sum_z
 
 theorem add_pf_sum_overlap {pps p ps qqs q qs pq pqs : α} :
     pps = p + ps → qqs = q + qs → p + q = pq → ps + qs = pqs → pps + qqs = pq + pqs := by cc
+#align tactic.ring_exp.add_pf_sum_overlap Tactic.RingExp.add_pf_sum_overlap
 
 theorem add_pf_sum_overlap_zero {pps p ps qqs q qs pqs : α} :
     pps = p + ps → qqs = q + qs → p + q = 0 → ps + qs = pqs → pps + qqs = pqs := fun pps_pf qqs_pf pq_pf pqs_pf =>
@@ -774,10 +841,13 @@ theorem add_pf_sum_overlap_zero {pps p ps qqs q qs pqs : α} :
     _ = 0 + pqs := by rw [pq_pf, pqs_pf]
     _ = pqs := zero_add _
     
+#align tactic.ring_exp.add_pf_sum_overlap_zero Tactic.RingExp.add_pf_sum_overlap_zero
 
 theorem add_pf_sum_lt {pps p ps qqs pqs : α} : pps = p + ps → ps + qqs = pqs → pps + qqs = p + pqs := by cc
+#align tactic.ring_exp.add_pf_sum_lt Tactic.RingExp.add_pf_sum_lt
 
 theorem add_pf_sum_gt {pps qqs q qs pqs : α} : qqs = q + qs → pps + qs = pqs → pps + qqs = q + pqs := by cc
+#align tactic.ring_exp.add_pf_sum_gt Tactic.RingExp.add_pf_sum_gt
 
 /-- Add two expressions.
 
@@ -821,24 +891,31 @@ unsafe def add : ex Sum → ex Sum → ring_exp_m (ex Sum)
           let pqqs ← ex_sum q pqs
           let pf ← mk_proof `` add_pf_sum_gt [pps, qqs, q, qs, pqs] [qqs, pqs]
           pure <| pqqs ppqqs_o pf
+#align tactic.ring_exp.add tactic.ring_exp.add
 
 end Addition
 
 section Multiplication
 
 theorem mul_pf_c_c {ps ps' qs qs' pq : α} : ps = ps' → qs = qs' → ps' * qs' = pq → ps * qs = pq := by cc
+#align tactic.ring_exp.mul_pf_c_c Tactic.RingExp.mul_pf_c_c
 
 theorem mul_pf_c_prod {ps qqs q qs pqs : α} : qqs = q * qs → ps * qs = pqs → ps * qqs = q * pqs := by cc
+#align tactic.ring_exp.mul_pf_c_prod Tactic.RingExp.mul_pf_c_prod
 
 theorem mul_pf_prod_c {pps p ps qs pqs : α} : pps = p * ps → ps * qs = pqs → pps * qs = p * pqs := by cc
+#align tactic.ring_exp.mul_pf_prod_c Tactic.RingExp.mul_pf_prod_c
 
 theorem mul_pp_pf_overlap {pps p_b ps qqs qs psqs : α} {p_e q_e : ℕ} :
     pps = p_b ^ p_e * ps → qqs = p_b ^ q_e * qs → p_b ^ (p_e + q_e) * (ps * qs) = psqs → pps * qqs = psqs :=
   fun ps_pf qs_pf psqs_pf => by simp [symm psqs_pf, pow_add, ps_pf, qs_pf] <;> ac_rfl
+#align tactic.ring_exp.mul_pp_pf_overlap Tactic.RingExp.mul_pp_pf_overlap
 
 theorem mul_pp_pf_prod_lt {pps p ps qqs pqs : α} : pps = p * ps → ps * qqs = pqs → pps * qqs = p * pqs := by cc
+#align tactic.ring_exp.mul_pp_pf_prod_lt Tactic.RingExp.mul_pp_pf_prod_lt
 
 theorem mul_pp_pf_prod_gt {pps qqs q qs pqs : α} : qqs = q * qs → pps * qs = pqs → pps * qqs = q * pqs := by cc
+#align tactic.ring_exp.mul_pp_pf_prod_gt Tactic.RingExp.mul_pp_pf_prod_gt
 
 /-- Multiply two expressions.
 
@@ -891,8 +968,10 @@ unsafe def mul_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
           let pqqs ← ex_prod q pqs
           let pf ← mk_proof `` mul_pp_pf_prod_gt [pps, qqs, q, qs, pqs] [qqs, pqs]
           pure <| pqqs ppqqs_o pf
+#align tactic.ring_exp.mul_pp tactic.ring_exp.mul_pp
 
 theorem mul_p_pf_zero {ps qs : α} : ps = 0 → ps * qs = 0 := fun ps_pf => by rw [ps_pf, zero_mul]
+#align tactic.ring_exp.mul_p_pf_zero Tactic.RingExp.mul_p_pf_zero
 
 theorem mul_p_pf_sum {pps p ps qs ppsqs : α} : pps = p + ps → p * qs + ps * qs = ppsqs → pps * qs = ppsqs :=
   fun pps_pf ppsqs_pf =>
@@ -901,6 +980,7 @@ theorem mul_p_pf_sum {pps p ps qs ppsqs : α} : pps = p + ps → p * qs + ps * q
     _ = p * qs + ps * qs := add_mul _ _ _
     _ = ppsqs := ppsqs_pf
     
+#align tactic.ring_exp.mul_p_pf_sum Tactic.RingExp.mul_p_pf_sum
 
 /-- Multiply two expressions.
 
@@ -922,8 +1002,10 @@ unsafe def mul_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
     let ppsqs_pf ← ppsqs.proof_term
     let pf ← mk_proof `` mul_p_pf_sum [pps.orig, p.pretty, ps.pretty, qs.orig, ppsqs.pretty] [pps.info, ppsqs.info]
     pure <| ppsqs ppsqs_o pf
+#align tactic.ring_exp.mul_p tactic.ring_exp.mul_p
 
 theorem mul_pf_zero {ps qs : α} : qs = 0 → ps * qs = 0 := fun qs_pf => by rw [qs_pf, mul_zero]
+#align tactic.ring_exp.mul_pf_zero Tactic.RingExp.mul_pf_zero
 
 theorem mul_pf_sum {ps qqs q qs psqqs : α} : qqs = q + qs → ps * q + ps * qs = psqqs → ps * qqs = psqqs :=
   fun qs_pf psqqs_pf =>
@@ -932,6 +1014,7 @@ theorem mul_pf_sum {ps qqs q qs psqqs : α} : qqs = q + qs → ps * q + ps * qs 
     _ = ps * q + ps * qs := mul_add _ _ _
     _ = psqqs := psqqs_pf
     
+#align tactic.ring_exp.mul_pf_sum Tactic.RingExp.mul_pf_sum
 
 /-- Multiply two expressions.
 
@@ -951,6 +1034,7 @@ unsafe def mul : ex Sum → ex Sum → ring_exp_m (ex Sum)
     let psqqs_o ← mul_orig ps qqs
     let pf ← mk_proof `` mul_pf_sum [ps.orig, qqs.orig, q.orig, qs.orig, psqqs.pretty] [qqs.info, psqqs.info]
     pure <| psqqs psqqs_o pf
+#align tactic.ring_exp.mul tactic.ring_exp.mul
 
 end Multiplication
 
@@ -963,6 +1047,7 @@ theorem pow_e_pf_exp {pps p : α} {ps qs psqs : ℕ} : pps = p ^ ps → ps * qs 
     _ = p ^ (ps * qs) := symm (pow_mul _ _ _)
     _ = p ^ psqs := by rw [psqs_pf]
     
+#align tactic.ring_exp.pow_e_pf_exp Tactic.RingExp.pow_e_pf_exp
 
 /-- Compute the exponentiation of two coefficients.
 
@@ -974,6 +1059,7 @@ unsafe def pow_coeff (p_p q_p : expr) (p q : Coeff) : ring_exp_m (ex Prod) := do
   let pq' ← mk_pow [p_p, q_p]
   let (pq_p, pq_pf) ← lift <| norm_num.eval_pow pq'
   pure <| ex.coeff ⟨pq_p, pq_p, pq_pf⟩ ⟨p.1 * q.1⟩
+#align tactic.ring_exp.pow_coeff tactic.ring_exp.pow_coeff
 
 /-- Exponentiate two expressions.
 
@@ -986,13 +1072,17 @@ unsafe def pow_e : ex exp → ex Prod → ring_exp_m (ex exp)
     let ppsqs_o ← pow_orig pps qs
     let pf ← mk_proof `` pow_e_pf_exp [pps.orig, p.pretty, ps.pretty, qs.orig, psqs.pretty] [pps.info, psqs.info]
     pure <| ppsqs ppsqs_o pf
+#align tactic.ring_exp.pow_e tactic.ring_exp.pow_e
 
 theorem pow_pp_pf_one {ps : α} {qs : ℕ} : ps = 1 → ps ^ qs = 1 := fun ps_pf => by rw [ps_pf, one_pow]
+#align tactic.ring_exp.pow_pp_pf_one Tactic.RingExp.pow_pp_pf_one
 
 theorem pow_pf_c_c {ps ps' pq : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps' ^ qs' = pq → ps ^ qs = pq := by cc
+#align tactic.ring_exp.pow_pf_c_c Tactic.RingExp.pow_pf_c_c
 
 theorem pow_pp_pf_c {ps ps' pqs : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps' ^ qs' = pqs → ps ^ qs = pqs * 1 := by
   simp <;> cc
+#align tactic.ring_exp.pow_pp_pf_c Tactic.RingExp.pow_pp_pf_c
 
 theorem pow_pp_pf_prod {pps p ps pqs psqs : α} {qs : ℕ} :
     pps = p * ps → p ^ qs = pqs → ps ^ qs = psqs → pps ^ qs = pqs * psqs := fun pps_pf pqs_pf psqs_pf =>
@@ -1001,6 +1091,7 @@ theorem pow_pp_pf_prod {pps p ps pqs psqs : α} {qs : ℕ} :
     _ = p ^ qs * ps ^ qs := mul_pow _ _ _
     _ = pqs * psqs := by rw [pqs_pf, psqs_pf]
     
+#align tactic.ring_exp.pow_pp_pf_prod Tactic.RingExp.pow_pp_pf_prod
 
 /-- Exponentiate two expressions.
 
@@ -1039,18 +1130,21 @@ unsafe def pow_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
       mk_proof `` pow_pp_pf_prod [pps.orig, p.pretty, ps.pretty, pqs.pretty, psqs.pretty, qs.orig]
           [pps.info, pqs.info, psqs.info]
     pure <| ppsqs ppsqs_o pf
+#align tactic.ring_exp.pow_pp tactic.ring_exp.pow_pp
 
 theorem pow_p_pf_one {ps ps' : α} {qs : ℕ} : ps = ps' → qs = succ zero → ps ^ qs = ps' := fun ps_pf qs_pf =>
   calc
     ps ^ qs = ps' ^ 1 := by rw [ps_pf, qs_pf]
     _ = ps' := pow_one _
     
+#align tactic.ring_exp.pow_p_pf_one Tactic.RingExp.pow_p_pf_one
 
 theorem pow_p_pf_zero {ps : α} {qs qs' : ℕ} : ps = 0 → qs = succ qs' → ps ^ qs = 0 := fun ps_pf qs_pf =>
   calc
     ps ^ qs = 0 ^ succ qs' := by rw [ps_pf, qs_pf]
     _ = 0 := zero_pow (succ_pos qs')
     
+#align tactic.ring_exp.pow_p_pf_zero Tactic.RingExp.pow_p_pf_zero
 
 theorem pow_p_pf_succ {ps pqqs : α} {qs qs' : ℕ} : qs = succ qs' → ps * ps ^ qs' = pqqs → ps ^ qs = pqqs :=
   fun qs_pf pqqs_pf =>
@@ -1059,11 +1153,14 @@ theorem pow_p_pf_succ {ps pqqs : α} {qs qs' : ℕ} : qs = succ qs' → ps * ps 
     _ = ps * ps ^ qs' := pow_succ _ _
     _ = pqqs := by rw [pqqs_pf]
     
+#align tactic.ring_exp.pow_p_pf_succ Tactic.RingExp.pow_p_pf_succ
 
 theorem pow_p_pf_singleton {pps p pqs : α} {qs : ℕ} : pps = p + 0 → p ^ qs = pqs → pps ^ qs = pqs :=
   fun pps_pf pqs_pf => by rw [pps_pf, add_zero, pqs_pf]
+#align tactic.ring_exp.pow_p_pf_singleton Tactic.RingExp.pow_p_pf_singleton
 
 theorem pow_p_pf_cons {ps ps' : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps ^ qs = ps' ^ qs' := by cc
+#align tactic.ring_exp.pow_p_pf_cons Tactic.RingExp.pow_p_pf_cons
 
 /-- Exponentiate two expressions.
 
@@ -1107,12 +1204,14 @@ unsafe def pow_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
     let pf ←
       mk_proof_or_refl psqs.pretty `` pow_p_pf_cons [pps.orig, pps.pretty, qqs.orig, qqs.pretty] [pps.info, qqs.info]
     exp_to_prod (psqs psqs_o pf) >>= prod_to_sum
+#align tactic.ring_exp.pow_p tactic.ring_exp.pow_p
 
 theorem pow_pf_zero {ps : α} {qs : ℕ} : qs = 0 → ps ^ qs = 1 := fun qs_pf =>
   calc
     ps ^ qs = ps ^ 0 := by rw [qs_pf]
     _ = 1 := pow_zero _
     
+#align tactic.ring_exp.pow_pf_zero Tactic.RingExp.pow_pf_zero
 
 theorem pow_pf_sum {ps psqqs : α} {qqs q qs : ℕ} : qqs = q + qs → ps ^ q * ps ^ qs = psqqs → ps ^ qqs = psqqs :=
   fun qqs_pf psqqs_pf =>
@@ -1121,6 +1220,7 @@ theorem pow_pf_sum {ps psqqs : α} {qqs q qs : ℕ} : qqs = q + qs → ps ^ q * 
     _ = ps ^ q * ps ^ qs := pow_add _ _ _
     _ = psqqs := psqqs_pf
     
+#align tactic.ring_exp.pow_pf_sum Tactic.RingExp.pow_pf_sum
 
 /-- Exponentiate two expressions.
 
@@ -1140,18 +1240,24 @@ unsafe def pow : ex Sum → ex Sum → ring_exp_m (ex Sum)
     let psqqs_o ← pow_orig ps qqs
     let pf ← mk_proof `` pow_pf_sum [ps.orig, psqqs.pretty, qqs.orig, q.pretty, qs.pretty] [qqs.info, psqqs.info]
     pure <| psqqs psqqs_o pf
+#align tactic.ring_exp.pow tactic.ring_exp.pow
 
 end Exponentiation
 
 theorem simple_pf_sum_zero {p p' : α} : p = p' → p + 0 = p' := by simp
+#align tactic.ring_exp.simple_pf_sum_zero Tactic.RingExp.simple_pf_sum_zero
 
 theorem simple_pf_prod_one {p p' : α} : p = p' → p * 1 = p' := by simp
+#align tactic.ring_exp.simple_pf_prod_one Tactic.RingExp.simple_pf_prod_one
 
 theorem simple_pf_prod_neg_one {α} [Ring α] {p p' : α} : p = p' → p * -1 = -p' := by simp
+#align tactic.ring_exp.simple_pf_prod_neg_one Tactic.RingExp.simple_pf_prod_neg_one
 
 theorem simple_pf_var_one (p : α) : p ^ 1 = p := by simp
+#align tactic.ring_exp.simple_pf_var_one Tactic.RingExp.simple_pf_var_one
 
 theorem simple_pf_exp_one {p p' : α} : p = p' → p ^ 1 = p' := by simp
+#align tactic.ring_exp.simple_pf_exp_one Tactic.RingExp.simple_pf_exp_one
 
 /-- Give a simpler, more human-readable representation of the normalized expression.
 
@@ -1193,6 +1299,7 @@ unsafe def ex.simple : ∀ {et : ExType}, ex et → ring_exp_m (expr × expr)
     let (ps_p, ps_pf) ← in_exponent <| ps.simple
     Prod.mk <$> mk_pow [p_p, ps_p] <*> mk_app_csr `` exp_congr [p, p_p, ps, ps_p, p_pf, ps_pf]
   | et, ps => Prod.mk ps.pretty <$> lift (mk_eq_refl ps.pretty)
+#align tactic.ring_exp.ex.simple tactic.ring_exp.ex.simple
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1215,6 +1322,7 @@ unsafe def resolve_atom_aux (a : expr) : List atom → ℕ → ring_exp_m (atom 
     (lift <| is_def_eq a b ctx >> pure (b, bas)) <|> do
         let (atm, as') ← resolve_atom_aux as (succ n)
         pure (atm, b::as')
+#align tactic.ring_exp.resolve_atom_aux tactic.ring_exp.resolve_atom_aux
 
 /-- Convert the expression to an atom:
 either look up a definitionally equal atom,
@@ -1229,6 +1337,7 @@ unsafe def resolve_atom (a : expr) : ring_exp_m atom := do
   let (atm, atoms') ← resolve_atom_aux a atoms 0
   ReaderT.lift <| StateT.put atoms'
   pure atm
+#align tactic.ring_exp.resolve_atom tactic.ring_exp.resolve_atom
 
 /-- Treat the expression atomically: as a coefficient or atom.
 
@@ -1242,8 +1351,10 @@ unsafe def eval_base (ps : expr) : ring_exp_m (ex Sum) :=
   | none => do
     let a ← resolve_atom ps
     atom_to_sum a
+#align tactic.ring_exp.eval_base tactic.ring_exp.eval_base
 
 theorem negate_pf {α} [Ring α] {ps ps' : α} : -1 * ps = ps' → -ps = ps' := by simp
+#align tactic.ring_exp.negate_pf Tactic.RingExp.negate_pf
 
 /-- Negate an expression by multiplying with `-1`.
 
@@ -1260,9 +1371,11 @@ unsafe def negate (ps : ex Sum) : ring_exp_m (ex Sum) := do
       let pf ← mk_app_class `` negate_pf ring_instance [ps, ps', ps_pf]
       let ps'_o ← lift <| mk_app `` Neg.neg [ps]
       pure <| ps' ps'_o pf
+#align tactic.ring_exp.negate tactic.ring_exp.negate
 
 theorem inverse_pf {α} [DivisionRing α] {ps ps_u ps_p e' e'' : α} :
     ps = ps_u → ps_u = ps_p → ps_p⁻¹ = e' → e' = e'' → ps⁻¹ = e'' := by cc
+#align tactic.ring_exp.inverse_pf Tactic.RingExp.inverse_pf
 
 /-- Invert an expression by simplifying, applying `has_inv.inv` and treating the result as an atom.
 
@@ -1284,10 +1397,13 @@ unsafe def inverse (ps : ex Sum) : ring_exp_m (ex Sum) := do
     mk_app_class `` inverse_pf dri [ps.orig, ps.pretty, ps_simple, e', e''.pretty, ps_pf, ps_simple_pf, e_pf, e''_pf]
   let e''_o ← lift <| mk_app `` Inv.inv [ps.orig]
   pure <| e'' e''_o pf
+#align tactic.ring_exp.inverse tactic.ring_exp.inverse
 
 theorem sub_pf {α} [Ring α] {ps qs psqs : α} (h : ps + -qs = psqs) : ps - qs = psqs := by rwa [sub_eq_add_neg]
+#align tactic.ring_exp.sub_pf Tactic.RingExp.sub_pf
 
 theorem div_pf {α} [DivisionRing α] {ps qs psqs : α} (h : ps * qs⁻¹ = psqs) : ps / qs = psqs := by rwa [div_eq_mul_inv]
+#align tactic.ring_exp.div_pf Tactic.RingExp.div_pf
 
 end Operations
 
@@ -1376,6 +1492,7 @@ unsafe def eval : expr → ring_exp_m (ex Sum)
           pure <| psqs e pf) <|>
         eval_base e
   | ps => eval_base ps
+#align tactic.ring_exp.eval tactic.ring_exp.eval
 
 /-- Run `eval` on the expression and return the result together with normalization proof.
 
@@ -1384,6 +1501,7 @@ See also `eval_simple` if you want something that behaves like `norm_num`.
 unsafe def eval_with_proof (e : expr) : ring_exp_m (ex Sum × expr) := do
   let e' ← eval e
   Prod.mk e' <$> e'
+#align tactic.ring_exp.eval_with_proof tactic.ring_exp.eval_with_proof
 
 /-- Run `eval` on the expression and simplify the result.
 
@@ -1395,6 +1513,7 @@ unsafe def eval_simple (e : expr) : ring_exp_m (expr × expr) := do
   let (complicated, complicated_pf) ← eval_with_proof e
   let (simple, simple_pf) ← complicated.simple
   Prod.mk simple <$> lift (mk_eq_trans complicated_pf simple_pf)
+#align tactic.ring_exp.eval_simple tactic.ring_exp.eval_simple
 
 /-- Compute the `eval_info` for a given type `α`. -/
 unsafe def make_eval_info (α : expr) : tactic eval_info := do
@@ -1410,12 +1529,14 @@ unsafe def make_eval_info (α : expr) : tactic eval_info := do
   let z ← mk_mapp `` Zero.zero [α, none]
   let o ← mk_mapp `` One.one [α, none]
   pure ⟨α, u, csr_instance, ha_instance, hm_instance, hp_instance, ring_instance, dr_instance, z, o⟩
+#align tactic.ring_exp.make_eval_info tactic.ring_exp.make_eval_info
 
 /-- Use `e` to build the context for running `mx`. -/
 unsafe def run_ring_exp {α} (transp : Transparency) (e : expr) (mx : ring_exp_m α) : tactic α := do
   let info_b ← infer_type e >>= make_eval_info
   let info_e ← mk_const `` Nat >>= make_eval_info
   (fun x : _ × _ => x.1) <$> StateT.run (ReaderT.run mx ⟨info_b, info_e, transp⟩) []
+#align tactic.ring_exp.run_ring_exp tactic.ring_exp.run_ring_exp
 
 /-- Repeatedly apply `eval_simple` on (sub)expressions. -/
 unsafe def normalize (transp : Transparency) (e : expr) : tactic (expr × expr) := do
@@ -1427,6 +1548,7 @@ unsafe def normalize (transp : Transparency) (e : expr) : tactic (expr × expr) 
           return ((), e'', some pf, ff))
         (fun _ _ _ _ _ => failed) `eq e
   pure (e', pf')
+#align tactic.ring_exp.normalize tactic.ring_exp.normalize
 
 end Wiring
 
@@ -1455,6 +1577,7 @@ unsafe def ring_exp_eq (red : parse (tk "!")?) : tactic Unit := do
       let pf ← mk_eq_trans ps_pf qs_pf_inv
       tactic.interactive.exact (pquote.1 (%%ₓpf))
     else fail "ring_exp failed to prove equality"
+#align tactic.interactive.ring_exp_eq tactic.interactive.ring_exp_eq
 
 /-- Tactic for evaluating expressions in *commutative* (semi)rings, allowing for variables in the
 exponent.
@@ -1479,8 +1602,10 @@ unsafe def ring_exp (red : parse (tk "!")?) (loc : parse location) : tactic Unit
     do
     let ns ← loc.get_locals
     let transp := if red.isSome then semireducible else reducible
-    let tt ← tactic.replace_at (normalize transp) ns loc.include_goal | fail "ring_exp failed to simplify"
+    let tt ← tactic.replace_at (normalize transp) ns loc.include_goal |
+      fail "ring_exp failed to simplify"
     when loc <| try tactic.reflexivity
+#align tactic.interactive.ring_exp tactic.interactive.ring_exp
 
 add_tactic_doc
   { Name := "ring_exp", category := DocCategory.tactic, declNames := [`tactic.interactive.ring_exp],
@@ -1507,6 +1632,7 @@ local postfix:1024 "?" => optional
 unsafe def ring_exp (red : parse (lean.parser.tk "!")?) : conv Unit :=
   let transp := if red.isSome then semireducible else reducible
   discharge_eq_lhs (ring_exp_eq red) <|> replace_lhs (normalize transp) <|> fail "ring_exp failed to simplify"
+#align conv.interactive.ring_exp conv.interactive.ring_exp
 
 end Conv.Interactive
 

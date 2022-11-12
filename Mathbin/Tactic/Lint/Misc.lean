@@ -35,8 +35,9 @@ open Tactic Expr
 /-- The names of `≥` and `>`, mostly disallowed in lemma statements -/
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
+#align illegal_ge_gt illegal_ge_gt
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option eqn_compiler.max_steps -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps -/
 set_option eqn_compiler.max_steps 20000
 
 /-- Checks whether `≥` and `>` occurs in an illegal way in the expression.
@@ -67,6 +68,7 @@ private unsafe def contains_illegal_ge_gt : expr → Bool
   | elet var_name type assignment body =>
     contains_illegal_ge_gt type || contains_illegal_ge_gt assignment || contains_illegal_ge_gt body
   | _ => false
+#align contains_illegal_ge_gt contains_illegal_ge_gt
 
 /-- Checks whether a `>`/`≥` is used in the statement of `d`.
 
@@ -79,6 +81,7 @@ private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option Stri
     if (d.type.contains_constant fun n => n ∈ illegal_ge_gt) && contains_illegal_ge_gt d.type then
       some "the type contains ≥/>. Use ≤/< instead."
     else none
+#align ge_or_gt_in_statement ge_or_gt_in_statement
 
 -- TODO: the commented out code also checks for classicality in statements, but needs fixing
 -- TODO: this probably needs to also check whether the argument is a variable or @eq <var> _ _
@@ -104,6 +107,7 @@ unsafe def linter.ge_or_gt : linter where
   errors_found :=
     "The following declarations use ≥/>, probably in a way where we would prefer\n  to use ≤/< instead. See note [nolint_ge] for more information."
   is_fast := false
+#align linter.ge_or_gt linter.ge_or_gt
 
 library_note "nolint_ge"/-- Currently, the linter forbids the use of `>` and `≥` in definitions and
 statements, as they cause problems in rewrites.
@@ -131,6 +135,7 @@ private unsafe def dup_namespace (d : declaration) : tactic (Option String) :=
       else
         let s := (nm.find fun n => nm.count n ≥ 2).iget.toString
         some <| "The namespace `" ++ s ++ "` is duplicated in the name"
+#align dup_namespace dup_namespace
 
 /-- A linter for checking whether a declaration has a namespace twice consecutively in its name. -/
 @[linter]
@@ -139,6 +144,7 @@ unsafe def linter.dup_namespace : linter where
   auto_decls := false
   no_errors_found := "No declarations have a duplicate namespace."
   errors_found := "DUPLICATED NAMESPACES IN NAME:"
+#align linter.dup_namespace linter.dup_namespace
 
 attribute [nolint dup_namespace] Iff.iff
 
@@ -157,6 +163,7 @@ private unsafe def check_unused_arguments_aux : List ℕ → ℕ → ℕ → exp
         let b := e.binding_body
         let l' := if b.has_var_idx 0 then l else n :: l
         check_unused_arguments_aux l' (n + 1) n_max b
+#align check_unused_arguments_aux check_unused_arguments_aux
 
 /-- Check which arguments of a declaration are not used.
 Prints a list of natural numbers corresponding to which arguments are not used (e.g.
@@ -172,6 +179,7 @@ unsafe def check_unused_arguments (d : declaration) : Option (List ℕ) :=
   else
     let l2 := check_unused_arguments_aux [] 1 d.type.pi_arity d.type
     (l.filter fun n => n ∈ l2).reverse
+#align check_unused_arguments check_unused_arguments
 
 /-- Check for unused arguments, and print them with their position, variable name, type and whether
 the argument is a duplicate.
@@ -179,14 +187,17 @@ See also `check_unused_arguments`.
 This tactic additionally filters out all unused arguments of type `parse _`.
 We skip all declarations that contain `sorry` in their value. -/
 private unsafe def unused_arguments (d : declaration) : tactic (Option String) := do
-  let ff ← d.to_name.contains_sorry | return none
+  let ff ← d.to_name.contains_sorry |
+    return none
   let ns := check_unused_arguments d
-  let tt ← return ns.isSome | return none
+  let tt ← return ns.isSome |
+    return none
   let ns := ns.iget
   let (ds, _) ← get_pi_binders d.type
   let ns := ns.map fun n => (n, (ds.nth <| n - 1).iget)
   let ns := ns.filter fun x => x.2.type.get_app_fn ≠ const `interactive.parse []
-  let ff ← return ns.Empty | return none
+  let ff ← return ns.Empty |
+    return none
   let ds' ← ds.mmap pp
   let ns ←
     ns.mmap fun ⟨n, b⟩ =>
@@ -195,6 +206,7 @@ private unsafe def unused_arguments (d : declaration) : tactic (Option String) :
               if (ds.countp fun b' => b.type = b'.type) ≥ 2 then " (duplicate)" else "") <$>
           pp b
   return <| some <| ns tt
+#align unused_arguments unused_arguments
 
 /-- A linter object for checking for unused arguments. This is in the default linter set. -/
 @[linter]
@@ -203,6 +215,7 @@ unsafe def linter.unused_arguments : linter where
   auto_decls := false
   no_errors_found := "No unused arguments."
   errors_found := "UNUSED ARGUMENTS."
+#align linter.unused_arguments linter.unused_arguments
 
 attribute [nolint unused_arguments] imp_intro
 
@@ -216,19 +229,22 @@ private unsafe def doc_blame_report_defn : declaration → tactic (Option String
   | declaration.defn n _ _ _ _ _ => doc_string n >> return none <|> return "def missing doc string"
   | declaration.cnst n _ _ _ => doc_string n >> return none <|> return "constant missing doc string"
   | _ => return none
+#align doc_blame_report_defn doc_blame_report_defn
 
 /-- Reports definitions and constants that are missing doc strings -/
 private unsafe def doc_blame_report_thm : declaration → tactic (Option String)
   | declaration.thm n _ _ _ => doc_string n >> return none <|> return "theorem missing doc string"
   | _ => return none
+#align doc_blame_report_thm doc_blame_report_thm
 
 /-- A linter for checking definition doc strings -/
 @[linter]
 unsafe def linter.doc_blame : linter where
-  test d := mcond (not <$> has_attribute' `instance d.to_name) (doc_blame_report_defn d) (return none)
+  test d := condM (not <$> has_attribute' `instance d.to_name) (doc_blame_report_defn d) (return none)
   auto_decls := false
   no_errors_found := "No definitions are missing documentation."
   errors_found := "DEFINITIONS ARE MISSING DOCUMENTATION STRINGS:"
+#align linter.doc_blame linter.doc_blame
 
 /-- A linter for checking theorem doc strings. This is not in the default linter set. -/
 unsafe def linter.doc_blame_thm : linter where
@@ -237,6 +253,7 @@ unsafe def linter.doc_blame_thm : linter where
   no_errors_found := "No theorems are missing documentation."
   errors_found := "THEOREMS ARE MISSING DOCUMENTATION STRINGS:"
   is_fast := false
+#align linter.doc_blame_thm linter.doc_blame_thm
 
 /-!
 ## Linter for correct usage of `lemma`/`def`
@@ -268,6 +285,7 @@ private unsafe def incorrect_def_lemma (d : declaration) : tactic (Option String
                 if is_pattern then none
                 else-- declarations with `@[pattern]` are allowed to be a `def`.
                   "is a def, should be a lemma/theorem"
+#align incorrect_def_lemma incorrect_def_lemma
 
 /-- A linter for checking whether the correct declaration constructor (definition or theorem)
 has been used. -/
@@ -277,6 +295,7 @@ unsafe def linter.def_lemma : linter where
   auto_decls := false
   no_errors_found := "All declarations correctly marked as def/lemma."
   errors_found := "INCORRECT DEF/LEMMA:"
+#align linter.def_lemma linter.def_lemma
 
 /-!
 ## Linter that checks whether declarations are well-typed
@@ -286,6 +305,7 @@ unsafe def linter.def_lemma : linter where
 /-- Checks whether the statement of a declaration is well-typed. -/
 unsafe def check_type (d : declaration) : tactic (Option String) :=
   type_check d.type >> return none <|> return "The statement doesn't type-check"
+#align check_type check_type
 
 /-- A linter for missing checking whether statements of declarations are well-typed. -/
 @[linter]
@@ -299,6 +319,7 @@ unsafe def linter.check_type : linter where
         "or `@[semireducible]`. This can especially cause problems with type class inference or " ++
       "`@[simps]`."
   is_fast := true
+#align linter.check_type linter.check_type
 
 /-!
 ## Linter for universe parameters
@@ -321,6 +342,7 @@ unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Nam
       if nm.getPrefix = nm₀ ∧ nm.last.startsWith "_proof_" then l
       else l.union <| rb_set.of_list <| us.map fun u : level => u.params.toList
     | _ => l
+#align expr.univ_params_grouped expr.univ_params_grouped
 
 /-- The good parameters are the parameters that occur somewhere in the `rb_set` as a singleton or
   (recursively) with only other good parameters.
@@ -332,6 +354,7 @@ unsafe def bad_params : rb_set (List Name) → List Name
       (l.fold mk_name_set) fun us prev => if us.length = 1 then prev.insert us.head else prev
     if good_levels.Empty then l.fold [] List.union
     else bad_params <| rb_set.of_list <| l.toList.map fun us => us.filter fun nm => !good_levels.contains nm
+#align bad_params bad_params
 
 /-- Checks whether all universe levels `u` in the type of `d` are "good".
 This means that `u` either occurs in a `level` of `d` by itself, or (recursively)
@@ -345,6 +368,7 @@ unsafe def check_univs (d : declaration) : tactic (Option String) := do
   let l := d.type.univ_params_grouped d.to_name
   let bad := bad_params l
   if bad then return none else return <| some <| "universes " ++ toString bad ++ " only occur together."
+#align check_univs check_univs
 
 /-- A linter for checking that there are no bad `max u v` universe levels. -/
 @[linter]
@@ -362,6 +386,7 @@ unsafe def linter.check_univs : linter where
         "definition has the universes occur separately, and the definition will usually be used with " ++
       "explicit universe arguments. In this case, feel free to add `@[nolint check_univs]`."
   is_fast := true
+#align linter.check_univs linter.check_univs
 
 /-!
 ## Linter for syntactic tautologies
@@ -380,6 +405,7 @@ unsafe def syn_taut (d : declaration) : tactic (Option String) :=
       guardb (el == er)
       return <| some "LHS equals RHS syntactically") <|>
     return none
+#align syn_taut syn_taut
 
 /-- A linter for checking that declarations aren't syntactic tautologies. -/
 @[linter]
@@ -396,6 +422,7 @@ unsafe def linter.syn_taut : linter where
         "basic facts using `rfl`, when elaboration results in a different term than the user intended. " ++
       "You should check that the declaration really says what you think it does."
   is_fast := true
+#align linter.syn_taut linter.syn_taut
 
 attribute [nolint syn_taut] rfl
 
@@ -412,6 +439,7 @@ unsafe def expr.has_zero_var (e : expr) : Bool :=
       match e' with
       | var k => k = d
       | _ => false
+#align expr.has_zero_var expr.has_zero_var
 
 /-- Return a list of unused have and suffices terms in an expression
 -/
@@ -435,6 +463,7 @@ unsafe def find_unused_have_suffices_macros : expr → tactic (List String)
         ((· ++ ·) <$> find_unused_have_suffices_macros l <*> find_unused_have_suffices_macros arg)
   | macro md l => List.join <$> l.mmap find_unused_have_suffices_macros
   | _ => return []
+#align find_unused_have_suffices_macros find_unused_have_suffices_macros
 
 /-- Return a list of unused have and suffices terms in a declaration
 -/
@@ -442,6 +471,7 @@ unsafe def unused_have_of_decl : declaration → tactic (List String)
   | declaration.defn _ _ _ bd _ _ => find_unused_have_suffices_macros bd
   | declaration.thm _ _ _ bd => find_unused_have_suffices_macros bd.get
   | _ => return []
+#align unused_have_of_decl unused_have_of_decl
 
 /-- Checks whether a declaration contains term mode have statements that have no effect on the resulting
 term.
@@ -449,6 +479,7 @@ term.
 unsafe def has_unused_haves_suffices (d : declaration) : tactic (Option String) := do
   let ns ← unused_have_of_decl d
   if ns = 0 then return none else return (", ".intercalate (ns toString))
+#align has_unused_haves_suffices has_unused_haves_suffices
 
 /-- A linter for checking that declarations don't have unused term mode have statements. We do not
 tag this as `@[linter]` so that it is not in the default linter set as it is slow and an uncommon
@@ -469,6 +500,7 @@ unsafe def linter.unused_haves_suffices : linter where
         "`proof_of_goal`, in addition to being ineffectual, they may make unnecessary assumptions in " ++
       "proofs appear as if they are used. "
   is_fast := false
+#align linter.unused_haves_suffices linter.unused_haves_suffices
 
 /-!
 ## Linter for unprintable interactive tactics
@@ -483,10 +515,12 @@ unsafe def unprintable_interactive (d : declaration) : tactic (Option String) :=
   | Name.mk_string _ (Name.mk_string "interactive" (Name.mk_string _ Name.anonymous)) => do
     let (ds, _) ← mk_local_pis d.type
     let ds ← ds.mfilter fun d => not <$> succeeds (interactive.param_desc d.local_type)
-    let ff ← return ds.Empty | return none
+    let ff ← return ds.Empty |
+      return none
     let ds ← ds.mmap (pp ∘ to_binder)
     return <| some <| ds tt
   | _ => return none
+#align unprintable_interactive unprintable_interactive
 
 /-- A linter for checking that interactive tactics have parser documentation. -/
 @[linter]
@@ -502,6 +536,7 @@ unsafe def linter.unprintable_interactive : linter where
         "like `?` `*>` `<*` `<*>` `<|>` and `<$>` (but not `>>=` or `do` blocks) " ++
       "that automatically generate a description."
   is_fast := true
+#align linter.unprintable_interactive linter.unprintable_interactive
 
 /-!
 ## Linter for iff's
@@ -517,6 +552,7 @@ unsafe def unravel_explicits_of_pi : expr → ℕ → List Name → List ℕ →
   | pi n default _ e, i, ln, li => unravel_explicits_of_pi e (i + 1) (n :: ln) (i :: li)
   | pi n _ _ e, i, ln, li => unravel_explicits_of_pi e (i + 1) ln li
   | e, _, ln, li => (ln, li, e)
+#align unravel_explicits_of_pi unravel_explicits_of_pi
 
 /-- This function works as follows:
 1. Call `unravel_explicits_of_pi` to obtain the names, complements of de-Bruijn indexes and the
@@ -540,6 +576,7 @@ unsafe def explicit_vars_of_iff (d : declaration) : tactic (Option String) := do
           return <|
             "The following variables are used on both sides of an iff and ".append <|
               "should be made implicit: ".append <| ", ".intercalate (l fun t => toString t.1)
+#align explicit_vars_of_iff explicit_vars_of_iff
 
 /-- A linter for checking if variables appearing on both sides of an iff are explicit. Ideally, such
 variables should be implicit instead.
@@ -549,4 +586,5 @@ unsafe def linter.explicit_vars_of_iff : linter where
   auto_decls := false
   no_errors_found := "No explicit variables on both sides of iff"
   errors_found := "EXPLICIT VARIABLES ON BOTH SIDES OF IFF"
+#align linter.explicit_vars_of_iff linter.explicit_vars_of_iff
 

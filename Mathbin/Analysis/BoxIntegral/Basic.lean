@@ -76,12 +76,14 @@ local notation "ℝⁿ" => ι → ℝ
 with codomain `E →L[ℝ] F` is the sum of `vol J (f (π.tag J))` over all boxes of `π`. -/
 def integralSum (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I) : F :=
   ∑ J in π.boxes, vol J (f (π.Tag J))
+#align box_integral.integral_sum BoxIntegral.integralSum
 
 theorem integral_sum_bUnion_tagged (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : Prepartition I)
     (πi : ∀ J, TaggedPrepartition J) :
     integralSum f vol (π.bUnionTagged πi) = ∑ J in π.boxes, integralSum f vol (πi J) := by
   refine' (π.sum_bUnion_boxes _ _).trans ((sum_congr rfl) fun J hJ => (sum_congr rfl) fun J' hJ' => _)
   rw [π.tag_bUnion_tagged hJ hJ']
+#align box_integral.integral_sum_bUnion_tagged BoxIntegral.integral_sum_bUnion_tagged
 
 theorem integral_sum_bUnion_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I)
     (πi : ∀ J, Prepartition J) (hπi : ∀ J ∈ π, (πi J).IsPartition) :
@@ -94,14 +96,17 @@ theorem integral_sum_bUnion_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E �
     _ = vol J (f (π.tag J)) :=
       (vol.map ⟨fun g : E →L[ℝ] F => g (f (π.tag J)), rfl, fun _ _ => rfl⟩).sum_partition_boxes le_top (hπi J hJ)
     
+#align box_integral.integral_sum_bUnion_partition BoxIntegral.integral_sum_bUnion_partition
 
 theorem integral_sum_inf_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I) {π' : Prepartition I}
     (h : π'.IsPartition) : integralSum f vol (π.infPrepartition π') = integralSum f vol π :=
   (integral_sum_bUnion_partition f vol π _) fun J hJ => h.restrict (Prepartition.le_of_mem _ hJ)
+#align box_integral.integral_sum_inf_partition BoxIntegral.integral_sum_inf_partition
 
 theorem integral_sum_fiberwise {α} (g : Box ι → α) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I) :
     (∑ y in π.boxes.Image g, integralSum f vol (π.filter fun x => g x = y)) = integralSum f vol π :=
   π.toPrepartition.sum_fiberwise g fun J => vol J (f <| π.Tag J)
+#align box_integral.integral_sum_fiberwise BoxIntegral.integral_sum_fiberwise
 
 theorem integral_sum_sub_partitions (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) {π₁ π₂ : TaggedPrepartition I}
     (h₁ : π₁.IsPartition) (h₂ : π₂.IsPartition) :
@@ -113,6 +118,7 @@ theorem integral_sum_sub_partitions (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →
   rw [← integral_sum_inf_partition f vol π₁ h₂, ← integral_sum_inf_partition f vol π₂ h₁, integral_sum, integral_sum,
     Finset.sum_sub_distrib]
   simp only [inf_prepartition_to_prepartition, _root_.inf_comm]
+#align box_integral.integral_sum_sub_partitions BoxIntegral.integral_sum_sub_partitions
 
 @[simp]
 theorem integral_sum_disj_union (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) {π₁ π₂ : TaggedPrepartition I}
@@ -125,21 +131,25 @@ theorem integral_sum_disj_union (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[�
     
   · rw [disj_union_tag_of_mem_right _ hJ]
     
+#align box_integral.integral_sum_disj_union BoxIntegral.integral_sum_disj_union
 
 @[simp]
 theorem integral_sum_add (f g : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I) :
     integralSum (f + g) vol π = integralSum f vol π + integralSum g vol π := by
   simp only [integral_sum, Pi.add_apply, (vol _).map_add, Finset.sum_add_distrib]
+#align box_integral.integral_sum_add BoxIntegral.integral_sum_add
 
 @[simp]
 theorem integral_sum_neg (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I) :
     integralSum (-f) vol π = -integralSum f vol π := by
   simp only [integral_sum, Pi.neg_apply, (vol _).map_neg, Finset.sum_neg_distrib]
+#align box_integral.integral_sum_neg BoxIntegral.integral_sum_neg
 
 @[simp]
 theorem integral_sum_smul (c : ℝ) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I) :
     integralSum (c • f) vol π = c • integralSum f vol π := by
   simp only [integral_sum, Finset.smul_sum, Pi.smul_apply, ContinuousLinearMap.map_smul]
+#align box_integral.integral_sum_smul BoxIntegral.integral_sum_smul
 
 variable [Fintype ι]
 
@@ -153,16 +163,19 @@ w.r.t. volume `vol`. This means that integral sums of `f` tend to `𝓝 y` along
 `box_integral.integration_params.to_filter_Union I ⊤`. -/
 def HasIntegral (I : Box ι) (l : IntegrationParams) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (y : F) : Prop :=
   Tendsto (integralSum f vol) (l.toFilterUnion I ⊤) (𝓝 y)
+#align box_integral.has_integral BoxIntegral.HasIntegral
 
 /-- A function is integrable if there exists a vector that satisfies the `has_integral`
 predicate. -/
 def Integrable (I : Box ι) (l : IntegrationParams) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) :=
   ∃ y, HasIntegral I l f vol y
+#align box_integral.integrable BoxIntegral.Integrable
 
 /-- The integral of a function `f` over a box `I` along a filter `l` w.r.t. a volume `vol`.  Returns
 zero on non-integrable functions. -/
 def integral (I : Box ι) (l : IntegrationParams) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) :=
   if h : Integrable I l f vol then h.some else 0
+#align box_integral.integral BoxIntegral.integral
 
 variable {l : IntegrationParams} {f g : ℝⁿ → E} {vol : ι →ᵇᵃ E →L[ℝ] F} {y y' : F}
 
@@ -170,6 +183,7 @@ variable {l : IntegrationParams} {f g : ℝⁿ → E} {vol : ι →ᵇᵃ E →L
 that are shadowed in the `box_integral.has_integral` namespace. -/
 theorem HasIntegral.tendsto (h : HasIntegral I l f vol y) : Tendsto (integralSum f vol) (l.toFilterUnion I ⊤) (𝓝 y) :=
   h
+#align box_integral.has_integral.tendsto BoxIntegral.HasIntegral.tendsto
 
 /-- The `ε`-`δ` definition of `box_integral.has_integral`. -/
 theorem has_integral_iff :
@@ -179,6 +193,7 @@ theorem has_integral_iff :
           (∀ c, l.RCond (r c)) ∧ ∀ c π, l.MemBaseSet I c (r c) π → IsPartition π → dist (integralSum f vol π) y ≤ ε :=
   ((l.has_basis_to_filter_Union_top I).tendsto_iff nhds_basis_closed_ball).trans <| by
     simp [@forall_swap ℝ≥0 (tagged_prepartition I)]
+#align box_integral.has_integral_iff BoxIntegral.has_integral_iff
 
 /-- Quite often it is more natural to prove an estimate of the form `a * ε`, not `ε` in the RHS of
 `box_integral.has_integral_iff`, so we provide this auxiliary lemma.  -/
@@ -194,10 +209,12 @@ theorem hasIntegralOfMul (a : ℝ)
   rcases exists_pos_mul_lt hε a with ⟨ε', hε', ha⟩
   rcases h ε' hε' with ⟨r, hr, H⟩
   exact ⟨r, hr, fun c π hπ hπp => (H c π hπ hπp).trans ha.le⟩
+#align box_integral.has_integral_of_mul BoxIntegral.hasIntegralOfMul
 
 theorem integrable_iff_cauchy [CompleteSpace F] :
     Integrable I l f vol ↔ Cauchy ((l.toFilterUnion I ⊤).map (integralSum f vol)) :=
   cauchy_map_iff_exists_tendsto.symm
+#align box_integral.integrable_iff_cauchy BoxIntegral.integrable_iff_cauchy
 
 /-- In a complete space, a function is integrable if and only if its integral sums form a Cauchy
 net. Here we restate this fact in terms of `∀ ε > 0, ∃ r, ...`. -/
@@ -221,85 +238,109 @@ theorem integrable_iff_cauchy_basis [CompleteSpace F] :
     and_congr Iff.rfl
       ⟨fun H c₁ c₂ π₁ π₂ h₁ hU₁ h₂ hU₂ => H π₁ π₂ c₁ h₁ hU₁ c₂ h₂ hU₂, fun H π₁ π₂ c₁ h₁ hU₁ c₂ h₂ hU₂ =>
         H c₁ c₂ π₁ π₂ h₁ hU₁ h₂ hU₂⟩
+#align box_integral.integrable_iff_cauchy_basis BoxIntegral.integrable_iff_cauchy_basis
 
 theorem HasIntegral.mono {l₁ l₂ : IntegrationParams} (h : HasIntegral I l₁ f vol y) (hl : l₂ ≤ l₁) :
     HasIntegral I l₂ f vol y :=
-  h.monoLeft <| IntegrationParams.to_filter_Union_mono _ hl _
+  h.mono_left <| IntegrationParams.to_filter_Union_mono _ hl _
+#align box_integral.has_integral.mono BoxIntegral.HasIntegral.mono
 
 protected theorem Integrable.hasIntegral (h : Integrable I l f vol) : HasIntegral I l f vol (integral I l f vol) := by
   rw [integral, dif_pos h]
   exact Classical.choose_spec h
+#align box_integral.integrable.has_integral BoxIntegral.Integrable.hasIntegral
 
 theorem Integrable.mono {l'} (h : Integrable I l f vol) (hle : l' ≤ l) : Integrable I l' f vol :=
   ⟨_, h.HasIntegral.mono hle⟩
+#align box_integral.integrable.mono BoxIntegral.Integrable.mono
 
 theorem HasIntegral.unique (h : HasIntegral I l f vol y) (h' : HasIntegral I l f vol y') : y = y' :=
   tendsto_nhds_unique h h'
+#align box_integral.has_integral.unique BoxIntegral.HasIntegral.unique
 
 theorem HasIntegral.integrable (h : HasIntegral I l f vol y) : Integrable I l f vol :=
   ⟨_, h⟩
+#align box_integral.has_integral.integrable BoxIntegral.HasIntegral.integrable
 
 theorem HasIntegral.integral_eq (h : HasIntegral I l f vol y) : integral I l f vol = y :=
   h.Integrable.HasIntegral.unique h
+#align box_integral.has_integral.integral_eq BoxIntegral.HasIntegral.integral_eq
 
 theorem HasIntegral.add (h : HasIntegral I l f vol y) (h' : HasIntegral I l g vol y') :
     HasIntegral I l (f + g) vol (y + y') := by simpa only [has_integral, ← integral_sum_add] using h.add h'
+#align box_integral.has_integral.add BoxIntegral.HasIntegral.add
 
 theorem Integrable.add (hf : Integrable I l f vol) (hg : Integrable I l g vol) : Integrable I l (f + g) vol :=
   (hf.HasIntegral.add hg.HasIntegral).Integrable
+#align box_integral.integrable.add BoxIntegral.Integrable.add
 
 theorem integral_add (hf : Integrable I l f vol) (hg : Integrable I l g vol) :
     integral I l (f + g) vol = integral I l f vol + integral I l g vol :=
   (hf.HasIntegral.add hg.HasIntegral).integral_eq
+#align box_integral.integral_add BoxIntegral.integral_add
 
 theorem HasIntegral.neg (hf : HasIntegral I l f vol y) : HasIntegral I l (-f) vol (-y) := by
   simpa only [has_integral, ← integral_sum_neg] using hf.neg
+#align box_integral.has_integral.neg BoxIntegral.HasIntegral.neg
 
 theorem Integrable.neg (hf : Integrable I l f vol) : Integrable I l (-f) vol :=
   hf.HasIntegral.neg.Integrable
+#align box_integral.integrable.neg BoxIntegral.Integrable.neg
 
 theorem Integrable.ofNeg (hf : Integrable I l (-f) vol) : Integrable I l f vol :=
   neg_neg f ▸ hf.neg
+#align box_integral.integrable.of_neg BoxIntegral.Integrable.ofNeg
 
 @[simp]
 theorem integrable_neg : Integrable I l (-f) vol ↔ Integrable I l f vol :=
   ⟨fun h => h.of_neg, fun h => h.neg⟩
+#align box_integral.integrable_neg BoxIntegral.integrable_neg
 
 @[simp]
 theorem integral_neg : integral I l (-f) vol = -integral I l f vol :=
   if h : Integrable I l f vol then h.HasIntegral.neg.integral_eq
   else by rw [integral, integral, dif_neg h, dif_neg (mt integrable.of_neg h), neg_zero]
+#align box_integral.integral_neg BoxIntegral.integral_neg
 
 theorem HasIntegral.sub (h : HasIntegral I l f vol y) (h' : HasIntegral I l g vol y') :
     HasIntegral I l (f - g) vol (y - y') := by simpa only [sub_eq_add_neg] using h.add h'.neg
+#align box_integral.has_integral.sub BoxIntegral.HasIntegral.sub
 
 theorem Integrable.sub (hf : Integrable I l f vol) (hg : Integrable I l g vol) : Integrable I l (f - g) vol :=
   (hf.HasIntegral.sub hg.HasIntegral).Integrable
+#align box_integral.integrable.sub BoxIntegral.Integrable.sub
 
 theorem integral_sub (hf : Integrable I l f vol) (hg : Integrable I l g vol) :
     integral I l (f - g) vol = integral I l f vol - integral I l g vol :=
   (hf.HasIntegral.sub hg.HasIntegral).integral_eq
+#align box_integral.integral_sub BoxIntegral.integral_sub
 
 theorem hasIntegralConst (c : E) : HasIntegral I l (fun _ => c) vol (vol I c) :=
   tendsto_const_nhds.congr' <|
     (l.eventually_is_partition I).mono fun π hπ =>
       ((vol.map ⟨fun g : E →L[ℝ] F => g c, rfl, fun _ _ => rfl⟩).sum_partition_boxes le_top hπ).symm
+#align box_integral.has_integral_const BoxIntegral.hasIntegralConst
 
 @[simp]
 theorem integral_const (c : E) : integral I l (fun _ => c) vol = vol I c :=
   (hasIntegralConst c).integral_eq
+#align box_integral.integral_const BoxIntegral.integral_const
 
 theorem integrableConst (c : E) : Integrable I l (fun _ => c) vol :=
   ⟨_, hasIntegralConst c⟩
+#align box_integral.integrable_const BoxIntegral.integrableConst
 
 theorem hasIntegralZero : HasIntegral I l (fun _ => (0 : E)) vol 0 := by
   simpa only [← (vol I).map_zero] using has_integral_const (0 : E)
+#align box_integral.has_integral_zero BoxIntegral.hasIntegralZero
 
 theorem integrableZero : Integrable I l (fun _ => (0 : E)) vol :=
   ⟨0, hasIntegralZero⟩
+#align box_integral.integrable_zero BoxIntegral.integrableZero
 
 theorem integral_zero : integral I l (fun _ => (0 : E)) vol = 0 :=
   hasIntegralZero.integral_eq
+#align box_integral.integral_zero BoxIntegral.integral_zero
 
 theorem hasIntegralSum {α : Type _} {s : Finset α} {f : α → ℝⁿ → E} {g : α → F}
     (h : ∀ i ∈ s, HasIntegral I l (f i) vol (g i)) : HasIntegral I l (fun x => ∑ i in s, f i x) vol (∑ i in s, g i) :=
@@ -310,17 +351,21 @@ theorem hasIntegralSum {α : Type _} {s : Finset α} {f : α → ℝⁿ → E} {
   simp only [Finset.sum_insert ha]
   rw [Finset.forall_mem_insert] at h
   exact h.1.add (ihs h.2)
+#align box_integral.has_integral_sum BoxIntegral.hasIntegralSum
 
 theorem HasIntegral.smul (hf : HasIntegral I l f vol y) (c : ℝ) : HasIntegral I l (c • f) vol (c • y) := by
   simpa only [has_integral, ← integral_sum_smul] using (tendsto_const_nhds : tendsto _ _ (𝓝 c)).smul hf
+#align box_integral.has_integral.smul BoxIntegral.HasIntegral.smul
 
 theorem Integrable.smul (hf : Integrable I l f vol) (c : ℝ) : Integrable I l (c • f) vol :=
   (hf.HasIntegral.smul c).Integrable
+#align box_integral.integrable.smul BoxIntegral.Integrable.smul
 
 theorem Integrable.ofSmul {c : ℝ} (hf : Integrable I l (c • f) vol) (hc : c ≠ 0) : Integrable I l f vol := by
   convert hf.smul c⁻¹
   ext x
   simp only [Pi.smul_apply, inv_smul_smul₀ hc]
+#align box_integral.integrable.of_smul BoxIntegral.Integrable.ofSmul
 
 @[simp]
 theorem integral_smul (c : ℝ) : integral I l (fun x => c • f x) vol = c • integral I l f vol := by
@@ -333,6 +378,7 @@ theorem integral_smul (c : ℝ) : integral I l (fun x => c • f x) vol = c • 
   · have : ¬integrable I l (fun x => c • f x) vol := mt (fun h => h.of_smul hc) hf
     rw [integral, integral, dif_neg hf, dif_neg this, smul_zero]
     
+#align box_integral.integral_smul BoxIntegral.integral_smul
 
 open MeasureTheory
 
@@ -346,6 +392,7 @@ theorem integral_nonneg {g : ℝⁿ → ℝ} (hg : ∀ x ∈ I.IccCat, 0 ≤ g x
     
   · rw [integral, dif_neg hgi]
     
+#align box_integral.integral_nonneg BoxIntegral.integral_nonneg
 
 /-- If `∥f x∥ ≤ g x` on `[l, u]` and `g` is integrable, then the norm of the integral of `f` is less
 than or equal to the integral of `g`. -/
@@ -362,10 +409,12 @@ theorem norm_integral_le_of_norm_le {g : ℝⁿ → ℝ} (hle : ∀ x ∈ I.IccC
   · rw [integral, dif_neg hfi, norm_zero]
     exact integral_nonneg (fun x hx => (norm_nonneg _).trans (hle x hx)) μ
     
+#align box_integral.norm_integral_le_of_norm_le BoxIntegral.norm_integral_le_of_norm_le
 
 theorem norm_integral_le_of_le_const {c : ℝ} (hc : ∀ x ∈ I.IccCat, ∥f x∥ ≤ c) (μ : Measure ℝⁿ)
     [IsLocallyFiniteMeasure μ] : ∥(integral I l f μ.toBoxAdditive.toSmul : E)∥ ≤ (μ I).toReal * c := by
   simpa only [integral_const] using norm_integral_le_of_norm_le hc μ (integrable_const c)
+#align box_integral.norm_integral_le_of_le_const BoxIntegral.norm_integral_le_of_le_const
 
 /-!
 # Henstock-Sacks inequality and integrability on subboxes
@@ -407,6 +456,7 @@ If `box.integral.integration_params.bRiemann = tt`, then `r c x` does not depend
 then we use `r c x = 1`.  -/
 def convergenceR (h : Integrable I l f vol) (ε : ℝ) : ℝ≥0 → ℝⁿ → ioi (0 : ℝ) :=
   if hε : 0 < ε then (has_integral_iff.1 h.HasIntegral ε hε).some else fun _ _ => ⟨1, Set.mem_Ioi.2 zero_lt_one⟩
+#align box_integral.integrable.convergence_r BoxIntegral.Integrable.convergenceR
 
 variable {c c₁ c₂ : ℝ≥0} {ε ε₁ ε₂ : ℝ} {π₁ π₂ : TaggedPrepartition I}
 
@@ -414,12 +464,15 @@ theorem convergence_r_cond (h : Integrable I l f vol) (ε : ℝ) (c : ℝ≥0) :
   rw [convergence_r]
   split_ifs with h₀
   exacts[(has_integral_iff.1 h.has_integral ε h₀).some_spec.1 _, fun _ x => rfl]
+#align box_integral.integrable.convergence_r_cond BoxIntegral.Integrable.convergence_r_cond
 
 theorem dist_integral_sum_integral_le_of_mem_base_set (h : Integrable I l f vol) (h₀ : 0 < ε)
     (hπ : l.MemBaseSet I c (h.convergenceR ε c) π) (hπp : π.IsPartition) :
     dist (integralSum f vol π) (integral I l f vol) ≤ ε := by
   rw [convergence_r, dif_pos h₀] at hπ
   exact (has_integral_iff.1 h.has_integral ε h₀).some_spec.2 c _ hπ hπp
+#align
+  box_integral.integrable.dist_integral_sum_integral_le_of_mem_base_set BoxIntegral.Integrable.dist_integral_sum_integral_le_of_mem_base_set
 
 /-- **Henstock-Sacks inequality**. Let `r₁ r₂ : ℝⁿ → (0, ∞)` be function such that for any tagged
 *partition* of `I` subordinate to `rₖ`, `k=1,2`, the integral sum of `f` over this partition differs
@@ -454,6 +507,8 @@ theorem dist_integral_sum_le_of_mem_base_set (h : Integrable I l f vol) (hpos₁
       (h₂.union_compl_to_subordinate (fun _ _ => min_le_right _ _) hπU hπc₂)
       (is_partition_union_compl_to_subordinate _ _ _ _)
   simpa [union_compl_to_subordinate] using (dist_triangle_right _ _ _).trans (add_le_add H₁ H₂)
+#align
+  box_integral.integrable.dist_integral_sum_le_of_mem_base_set BoxIntegral.Integrable.dist_integral_sum_le_of_mem_base_set
 
 /-- If `f` is integrable on `I` along `l`, then for two sufficiently fine tagged prepartitions
 (in the sense of the filter `box_integral.integration_params.to_filter l I`) such that they cover
@@ -468,6 +523,8 @@ theorem tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity (h : In
   rintro ⟨π₁, π₂⟩ ⟨⟨h₁, h₂⟩, hU⟩
   rw [← add_halves ε]
   exact h.dist_integral_sum_le_of_mem_base_set ε0 ε0 h₁.some_spec h₂.some_spec hU
+#align
+  box_integral.integrable.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity BoxIntegral.Integrable.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity
 
 /-- If `f` is integrable on a box `I` along `l`, then for any fixed subset `s` of `I` that can be
 represented as a finite union of boxes, the integral sums of `f` over tagged prepartitions that
@@ -479,6 +536,8 @@ theorem cauchy_map_integral_sum_to_filter_Union (h : Integrable I l f vol) (π�
   exact
     h.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity.mono_left
       (inf_le_inf_left _ <| principal_mono.2 fun π h => h.1.trans h.2.symm)
+#align
+  box_integral.integrable.cauchy_map_integral_sum_to_filter_Union BoxIntegral.Integrable.cauchy_map_integral_sum_to_filter_Union
 
 variable [CompleteSpace F]
 
@@ -490,11 +549,13 @@ theorem to_subbox_aux (h : Integrable I l f vol) (hJ : J ≤ I) :
     (cauchy_map_iff_exists_tendsto.1 (h.cauchy_map_integral_sum_to_filter_Union (prepartition.single I J hJ))).imp
       fun y hy => ⟨_, hy⟩
   convert hy.comp (l.tendsto_embed_box_to_filter_Union_top hJ)
+#align box_integral.integrable.to_subbox_aux BoxIntegral.Integrable.to_subbox_aux
 
 -- faster than `exact` here
 /-- If `f` is integrable on a box `I`, then it is integrable on any subbox of `I`. -/
 theorem toSubbox (h : Integrable I l f vol) (hJ : J ≤ I) : Integrable J l f vol :=
   (h.to_subbox_aux hJ).imp fun y => And.left
+#align box_integral.integrable.to_subbox BoxIntegral.Integrable.toSubbox
 
 /-- If `f` is integrable on a box `I`, then integral sums of `f` over tagged prepartitions
 that cover exactly a subbox `J ≤ I` tend to the integral of `f` over `J` along `l`. -/
@@ -502,6 +563,8 @@ theorem tendsto_integral_sum_to_filter_Union_single (h : Integrable I l f vol) (
     Tendsto (integralSum f vol) (l.toFilterUnion I (Prepartition.single I J hJ)) (𝓝 <| integral J l f vol) :=
   let ⟨y, h₁, h₂⟩ := h.to_subbox_aux hJ
   h₁.integral_eq.symm ▸ h₂
+#align
+  box_integral.integrable.tendsto_integral_sum_to_filter_Union_single BoxIntegral.Integrable.tendsto_integral_sum_to_filter_Union_single
 
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged
 *partition* of `I` subordinate to `r`, the integral sum of `f` over this partition differs from the
@@ -569,6 +632,8 @@ theorem dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq (h : Integ
       field_simp [H0.ne']
       ring
     
+#align
+  box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq BoxIntegral.Integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq
 
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged
 *partition* of `I` subordinate to `r`, the integral sum of `f` over this partition differs from the
@@ -587,6 +652,8 @@ theorem dist_integral_sum_sum_integral_le_of_mem_base_set (h : Integrable I l f 
     (hπ : l.MemBaseSet I c (h.convergenceR ε c) π) :
     dist (integralSum f vol π) (∑ J in π.boxes, integral J l f vol) ≤ ε :=
   h.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq h0 hπ rfl
+#align
+  box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set BoxIntegral.Integrable.dist_integral_sum_sum_integral_le_of_mem_base_set
 
 /-- Integral sum of `f` over a tagged prepartition `π` such that `π.Union = π₀.Union` tends to the
 sum of integrals of `f` over the boxes of `π₀`. -/
@@ -597,6 +664,8 @@ theorem tendsto_integral_sum_sum_integral (h : Integrable I l f vol) (π₀ : Pr
   simp only [mem_inter_iff, Set.mem_Union, mem_set_of_eq]
   rintro π ⟨c, hc, hU⟩
   exact h.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq ε0 hc hU
+#align
+  box_integral.integrable.tendsto_integral_sum_sum_integral BoxIntegral.Integrable.tendsto_integral_sum_sum_integral
 
 /-- If `f` is integrable on `I`, then `λ J, integral J l f vol` is box-additive on subboxes of `I`:
 if `π₁`, `π₂` are two prepartitions of `I` covering the same part of `I`, then the sum of integrals
@@ -608,6 +677,7 @@ theorem sum_integral_congr (h : Integrable I l f vol) {π₁ π₂ : Prepartitio
   refine' tendsto_nhds_unique (h.tendsto_integral_sum_sum_integral π₁) _
   rw [l.to_filter_Union_congr _ hU]
   exact h.tendsto_integral_sum_sum_integral π₂
+#align box_integral.integrable.sum_integral_congr BoxIntegral.Integrable.sum_integral_congr
 
 /-- If `f` is integrable on `I`, then `λ J, integral J l f vol` is box-additive on subboxes of `I`:
 if `π₁`, `π₂` are two prepartitions of `I` covering the same part of `I`, then the sum of integrals
@@ -621,6 +691,7 @@ def toBoxAdditive (h : Integrable I l f vol) : ι →ᵇᵃ[I] F where
     replace hπ := hπ.Union_eq
     rw [← prepartition.Union_top] at hπ
     rw [(h.to_subbox (WithTop.coe_le_coe.1 hJ)).sum_integral_congr hπ, prepartition.top_boxes, sum_singleton]
+#align box_integral.integrable.to_box_additive BoxIntegral.Integrable.toBoxAdditive
 
 end Integrable
 
@@ -671,6 +742,7 @@ theorem integrableOfContinuousOn [CompleteSpace E] {I : Box ι} {f : ℝⁿ → 
   refine' (norm_sum_le_of_le _ this).trans _
   rw [← Finset.sum_mul, μ.to_box_additive.sum_partition_boxes le_top (h₁p.inf h₂p)]
   exact hε.le
+#align box_integral.integrable_of_continuous_on BoxIntegral.integrableOfContinuousOn
 
 variable {l}
 
@@ -769,6 +841,7 @@ theorem hasIntegralOfBRiemannEqFfOfForallIsO (hl : l.bRiemann = ff) (B : ι →�
   · rw [← mul_sum, B.sum_partition_boxes le_rfl hπp, mul_comm]
     exact hεI.le
     
+#align box_integral.has_integral_of_bRiemann_eq_ff_of_forall_is_o BoxIntegral.hasIntegralOfBRiemannEqFfOfForallIsO
 
 /-- A function `f` has Henstock (or `⊥`) integral over `I` is equal to the value of a box-additive
 function `g` on `I` provided that `vol J (f x)` is sufficiently close to `g J` for sufficiently
@@ -811,6 +884,7 @@ theorem hasIntegralOfLeHenstockOfForallIsO (hl : l ≤ Henstock) (B : ι →ᵇ�
   have A : l.bHenstock := hl.2.1.resolve_left (by decide)
   hasIntegralOfBRiemannEqFfOfForallIsO (hl.1.resolve_right (by decide)) B hB0 _ s hs (fun _ => A) H₁ <| by
     simpa only [A, true_imp_iff] using H₂
+#align box_integral.has_integral_of_le_Henstock_of_forall_is_o BoxIntegral.hasIntegralOfLeHenstockOfForallIsO
 
 /-- Suppose that there exists a nonnegative box-additive function `B` with the following property.
 
@@ -833,6 +907,7 @@ theorem hasIntegralMcShaneOfForallIsO (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 
   (hasIntegralOfBRiemannEqFfOfForallIsO rfl B hB0 g ∅ countable_empty (fun ⟨x, hx⟩ => hx.elim) fun c x hx =>
       hx.2.elim) <|
     by simpa only [McShane, Bool.coe_sort_false, false_imp_iff, true_imp_iff, diff_empty] using H
+#align box_integral.has_integral_McShane_of_forall_is_o BoxIntegral.hasIntegralMcShaneOfForallIsO
 
 end BoxIntegral
 

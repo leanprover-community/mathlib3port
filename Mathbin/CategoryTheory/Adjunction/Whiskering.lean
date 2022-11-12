@@ -49,6 +49,7 @@ protected def whiskerRight (adj : F ⊣ G) : (whiskeringRight C D E).obj F ⊣ (
         ext
         dsimp
         simp }
+#align category_theory.adjunction.whisker_right CategoryTheory.Adjunction.whiskerRight
 
 -- `tidy` gets stuck for `left_triangle'` and `right_triangle'`.
 /-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
@@ -80,6 +81,7 @@ protected def whiskerLeft (adj : F ⊣ G) : (whiskeringLeft E D C).obj G ⊣ (wh
         dsimp
         simp only [category.id_comp, category.comp_id, ← x.map_comp]
         simp }
+#align category_theory.adjunction.whisker_left CategoryTheory.Adjunction.whiskerLeft
 
 end CategoryTheory.Adjunction
 

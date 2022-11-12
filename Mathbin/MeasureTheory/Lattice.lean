@@ -35,11 +35,13 @@ For a typeclass assuming measurability of `uncurry (⊔)` see `has_measurable_su
 class HasMeasurableSup (M : Type _) [MeasurableSpace M] [HasSup M] : Prop where
   measurableConstSup : ∀ c : M, Measurable ((· ⊔ ·) c)
   measurableSupConst : ∀ c : M, Measurable (· ⊔ c)
+#align has_measurable_sup HasMeasurableSup
 
 /-- We say that a type `has_measurable_sup₂` if `uncurry (⊔)` is a measurable functions.
 For a typeclass assuming measurability of `((⊔) c)` and `(⊔ c)` see `has_measurable_sup`. -/
 class HasMeasurableSup₂ (M : Type _) [MeasurableSpace M] [HasSup M] : Prop where
   measurableSup : Measurable fun p : M × M => p.1 ⊔ p.2
+#align has_measurable_sup₂ HasMeasurableSup₂
 
 export HasMeasurableSup₂ (measurableSup)
 
@@ -50,11 +52,13 @@ For a typeclass assuming measurability of `uncurry (⊓)` see `has_measurable_in
 class HasMeasurableInf (M : Type _) [MeasurableSpace M] [HasInf M] : Prop where
   measurableConstInf : ∀ c : M, Measurable ((· ⊓ ·) c)
   measurableInfConst : ∀ c : M, Measurable (· ⊓ c)
+#align has_measurable_inf HasMeasurableInf
 
 /-- We say that a type `has_measurable_inf₂` if `uncurry (⊔)` is a measurable functions.
 For a typeclass assuming measurability of `((⊔) c)` and `(⊔ c)` see `has_measurable_inf`. -/
 class HasMeasurableInf₂ (M : Type _) [MeasurableSpace M] [HasInf M] : Prop where
   measurableInf : Measurable fun p : M × M => p.1 ⊓ p.2
+#align has_measurable_inf₂ HasMeasurableInf₂
 
 export HasMeasurableInf₂ (measurableInf)
 
@@ -93,18 +97,22 @@ variable [HasMeasurableSup M]
 @[measurability]
 theorem Measurable.constSup (hf : Measurable f) (c : M) : Measurable fun x => c ⊔ f x :=
   (measurableConstSup c).comp hf
+#align measurable.const_sup Measurable.constSup
 
 @[measurability]
 theorem AeMeasurable.constSup (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => c ⊔ f x) μ :=
   (HasMeasurableSup.measurableConstSup c).compAeMeasurable hf
+#align ae_measurable.const_sup AeMeasurable.constSup
 
 @[measurability]
 theorem Measurable.supConst (hf : Measurable f) (c : M) : Measurable fun x => f x ⊔ c :=
   (measurableSupConst c).comp hf
+#align measurable.sup_const Measurable.supConst
 
 @[measurability]
 theorem AeMeasurable.supConst (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => f x ⊔ c) μ :=
   (measurableSupConst c).compAeMeasurable hf
+#align ae_measurable.sup_const AeMeasurable.supConst
 
 end MeasurableSup
 
@@ -115,23 +123,28 @@ variable [HasMeasurableSup₂ M]
 @[measurability]
 theorem Measurable.sup' (hf : Measurable f) (hg : Measurable g) : Measurable (f ⊔ g) :=
   measurableSup.comp (hf.prod_mk hg)
+#align measurable.sup' Measurable.sup'
 
 @[measurability]
 theorem Measurable.sup (hf : Measurable f) (hg : Measurable g) : Measurable fun a => f a ⊔ g a :=
   measurableSup.comp (hf.prod_mk hg)
+#align measurable.sup Measurable.sup
 
 @[measurability]
 theorem AeMeasurable.sup' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (f ⊔ g) μ :=
   measurableSup.compAeMeasurable (hf.prod_mk hg)
+#align ae_measurable.sup' AeMeasurable.sup'
 
 @[measurability]
 theorem AeMeasurable.sup (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (fun a => f a ⊔ g a) μ :=
   measurableSup.compAeMeasurable (hf.prod_mk hg)
+#align ae_measurable.sup AeMeasurable.sup
 
 omit m
 
 instance (priority := 100) HasMeasurableSup₂.toHasMeasurableSup : HasMeasurableSup M :=
   ⟨fun c => measurableConst.sup measurableId, fun c => measurableId.sup measurableConst⟩
+#align has_measurable_sup₂.to_has_measurable_sup HasMeasurableSup₂.toHasMeasurableSup
 
 include m
 
@@ -150,18 +163,22 @@ variable [HasMeasurableInf M]
 @[measurability]
 theorem Measurable.constInf (hf : Measurable f) (c : M) : Measurable fun x => c ⊓ f x :=
   (measurableConstInf c).comp hf
+#align measurable.const_inf Measurable.constInf
 
 @[measurability]
 theorem AeMeasurable.constInf (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => c ⊓ f x) μ :=
   (HasMeasurableInf.measurableConstInf c).compAeMeasurable hf
+#align ae_measurable.const_inf AeMeasurable.constInf
 
 @[measurability]
 theorem Measurable.infConst (hf : Measurable f) (c : M) : Measurable fun x => f x ⊓ c :=
   (measurableInfConst c).comp hf
+#align measurable.inf_const Measurable.infConst
 
 @[measurability]
 theorem AeMeasurable.infConst (hf : AeMeasurable f μ) (c : M) : AeMeasurable (fun x => f x ⊓ c) μ :=
   (measurableInfConst c).compAeMeasurable hf
+#align ae_measurable.inf_const AeMeasurable.infConst
 
 end MeasurableInf
 
@@ -172,23 +189,28 @@ variable [HasMeasurableInf₂ M]
 @[measurability]
 theorem Measurable.inf' (hf : Measurable f) (hg : Measurable g) : Measurable (f ⊓ g) :=
   measurableInf.comp (hf.prod_mk hg)
+#align measurable.inf' Measurable.inf'
 
 @[measurability]
 theorem Measurable.inf (hf : Measurable f) (hg : Measurable g) : Measurable fun a => f a ⊓ g a :=
   measurableInf.comp (hf.prod_mk hg)
+#align measurable.inf Measurable.inf
 
 @[measurability]
 theorem AeMeasurable.inf' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (f ⊓ g) μ :=
   measurableInf.compAeMeasurable (hf.prod_mk hg)
+#align ae_measurable.inf' AeMeasurable.inf'
 
 @[measurability]
 theorem AeMeasurable.inf (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (fun a => f a ⊓ g a) μ :=
   measurableInf.compAeMeasurable (hf.prod_mk hg)
+#align ae_measurable.inf AeMeasurable.inf
 
 omit m
 
 instance (priority := 100) HasMeasurableInf₂.toHasMeasurableInf : HasMeasurableInf M :=
   ⟨fun c => measurableConst.inf measurableId, fun c => measurableId.inf measurableConst⟩
+#align has_measurable_inf₂.to_has_measurable_inf HasMeasurableInf₂.toHasMeasurableInf
 
 include m
 
@@ -206,6 +228,7 @@ variable {δ : Type _} [MeasurableSpace δ] [SemilatticeSup α] [HasMeasurableSu
 theorem Finset.measurableSup' {ι : Type _} {s : Finset ι} (hs : s.Nonempty) {f : ι → δ → α}
     (hf : ∀ n ∈ s, Measurable (f n)) : Measurable (s.sup' hs f) :=
   Finset.sup'Induction hs _ (fun f hf g hg => hf.sup hg) fun n hn => hf n hn
+#align finset.measurable_sup' Finset.measurableSup'
 
 @[measurability]
 theorem Finset.measurableRangeSup' {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, Measurable (f k)) :
@@ -213,6 +236,7 @@ theorem Finset.measurableRangeSup' {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k
   simp_rw [← Nat.lt_succ_iff] at hf
   refine' Finset.measurableSup' _ _
   simpa [Finset.mem_range]
+#align finset.measurable_range_sup' Finset.measurableRangeSup'
 
 @[measurability]
 theorem Finset.measurableRangeSup'' {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, Measurable (f k)) :
@@ -220,6 +244,7 @@ theorem Finset.measurableRangeSup'' {f : ℕ → δ → α} {n : ℕ} (hf : ∀ 
   convert Finset.measurableRangeSup' hf
   ext x
   simp
+#align finset.measurable_range_sup'' Finset.measurableRangeSup''
 
 end SemilatticeSup
 

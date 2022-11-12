@@ -30,6 +30,7 @@ variable (m n R)
 @[simp]
 noncomputable def mvPolynomialX [CommSemiring R] : Matrix m n (MvPolynomial (m × n) R)
   | i, j => MvPolynomial.x (i, j)
+#align matrix.mv_polynomial_X Matrix.mvPolynomialX
 
 variable {m n R S}
 
@@ -41,11 +42,13 @@ under cancellative assumptions. -/
 theorem mv_polynomial_X_map_eval₂ [CommSemiring R] [CommSemiring S] (f : R →+* S) (A : Matrix m n S) :
     (mvPolynomialX m n R).map ((MvPolynomial.eval₂ f) fun p : m × n => A p.1 p.2) = A :=
   ext fun i j => MvPolynomial.eval₂_X _ (fun p : m × n => A p.1 p.2) (i, j)
+#align matrix.mv_polynomial_X_map_eval₂ Matrix.mv_polynomial_X_map_eval₂
 
 /-- A variant of `matrix.mv_polynomial_X_map_eval₂` with a bundled `ring_hom` on the LHS. -/
 theorem mv_polynomial_X_map_matrix_eval [Fintype m] [DecidableEq m] [CommSemiring R] (A : Matrix m m R) :
     (MvPolynomial.eval fun p : m × m => A p.1 p.2).mapMatrix (mvPolynomialX m m R) = A :=
   mv_polynomial_X_map_eval₂ _ A
+#align matrix.mv_polynomial_X_map_matrix_eval Matrix.mv_polynomial_X_map_matrix_eval
 
 variable (R)
 
@@ -53,6 +56,7 @@ variable (R)
 theorem mv_polynomial_X_map_matrix_aeval [Fintype m] [DecidableEq m] [CommSemiring R] [CommSemiring S] [Algebra R S]
     (A : Matrix m m S) : (MvPolynomial.aeval fun p : m × m => A p.1 p.2).mapMatrix (mvPolynomialX m m R) = A :=
   mv_polynomial_X_map_eval₂ _ A
+#align matrix.mv_polynomial_X_map_matrix_aeval Matrix.mv_polynomial_X_map_matrix_aeval
 
 variable (m R)
 
@@ -63,6 +67,7 @@ theorem det_mv_polynomial_X_ne_zero [DecidableEq m] [Fintype m] [CommRing R] [No
   have := congr_arg Matrix.det (mv_polynomial_X_map_matrix_eval (1 : Matrix m m R))
   rw [det_one, ← RingHom.map_det, h_det, RingHom.map_zero] at this
   exact zero_ne_one this
+#align matrix.det_mv_polynomial_X_ne_zero Matrix.det_mv_polynomial_X_ne_zero
 
 end Matrix
 

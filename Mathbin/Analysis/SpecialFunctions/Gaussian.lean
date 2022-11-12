@@ -28,12 +28,14 @@ theorem exp_neg_mul_sq_is_o_exp_neg {b : ℝ} (hb : 0 < b) :
   apply tendsto.at_top_mul_at_top tendsto_id
   apply tendsto_at_top_add_const_right at_top (-1 : ℝ)
   exact tendsto.const_mul_at_top hb tendsto_id
+#align exp_neg_mul_sq_is_o_exp_neg exp_neg_mul_sq_is_o_exp_neg
 
 theorem rpow_mul_exp_neg_mul_sq_is_o_exp_neg {b : ℝ} (hb : 0 < b) (s : ℝ) :
     (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) =o[at_top] fun x : ℝ => exp (-(1 / 2) * x) := by
   apply ((is_O_refl (fun x : ℝ => x ^ s) at_top).mul_is_o (exp_neg_mul_sq_is_o_exp_neg hb)).trans
   convert Gamma_integrand_is_o s
   simp_rw [mul_comm]
+#align rpow_mul_exp_neg_mul_sq_is_o_exp_neg rpow_mul_exp_neg_mul_sq_is_o_exp_neg
 
 theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
     IntegrableOn (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) (IoiCat 0) := by
@@ -56,6 +58,7 @@ theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1
     apply ((continuous_at_rpow_const _ _ (Or.inl N)).mul _).ContinuousWithinAt
     exact (continuous_exp.comp (continuous_const.mul (continuous_pow 2))).ContinuousAt
     
+#align integrable_on_rpow_mul_exp_neg_mul_sq integrableOnRpowMulExpNegMulSq
 
 theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
     Integrable fun x : ℝ => x ^ s * exp (-b * x ^ 2) := by
@@ -76,11 +79,13 @@ theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 <
     apply mul_le_mul_of_nonneg_right _ (exp_pos _).le
     simpa [abs_of_nonneg h'x] using abs_rpow_le_abs_rpow (-x) s
     
+#align integrable_rpow_mul_exp_neg_mul_sq integrableRpowMulExpNegMulSq
 
 theorem integrableExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => exp (-b * x ^ 2) := by
   have A : (-1 : ℝ) < 0 := by norm_num
   convert integrableRpowMulExpNegMulSq hb A
   simp
+#align integrable_exp_neg_mul_sq integrableExpNegMulSq
 
 theorem integrable_exp_neg_mul_sq_iff {b : ℝ} : (Integrable fun x : ℝ => exp (-b * x ^ 2)) ↔ 0 < b := by
   refine' ⟨fun h => _, integrableExpNegMulSq⟩
@@ -91,11 +96,13 @@ theorem integrable_exp_neg_mul_sq_iff {b : ℝ} : (Integrable fun x : ℝ => exp
       Real.norm_of_nonneg (exp_pos _).le, coe_nnnorm, one_le_exp_iff, Right.nonneg_neg_iff]
     exact mul_nonpos_of_nonpos_of_nonneg hb (sq_nonneg _)
   simpa using this.trans_lt h.2
+#align integrable_exp_neg_mul_sq_iff integrable_exp_neg_mul_sq_iff
 
 theorem integrableMulExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => x * exp (-b * x ^ 2) := by
   have A : (-1 : ℝ) < 1 := by norm_num
   convert integrableRpowMulExpNegMulSq hb A
   simp
+#align integrable_mul_exp_neg_mul_sq integrableMulExpNegMulSq
 
 theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : (∫ r in IoiCat 0, r * exp (-b * r ^ 2)) = (2 * b)⁻¹ := by
   have I : integrable fun x => x * exp (-b * x ^ 2) := integrableMulExpNegMulSq hb
@@ -115,6 +122,7 @@ theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : (∫ r in IoiCat 0,
     apply tendsto_exp_at_bot.comp
     exact tendsto.neg_const_mul_at_top (neg_lt_zero.2 hb) (tendsto_pow_at_top two_ne_zero)
   simpa using L
+#align integral_mul_exp_neg_mul_sq integral_mul_exp_neg_mul_sq
 
 theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) := by
   -- First we deal with the crazy case where `b ≤ 0`: then both sides vanish.
@@ -161,4 +169,5 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
       rw [sq_sqrt]
       exact div_nonneg pi_pos.le hb.le
     
+#align integral_gaussian integral_gaussian
 

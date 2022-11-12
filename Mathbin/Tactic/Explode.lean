@@ -26,6 +26,7 @@ inductive Status : Type
   | lam
   | sintro
   deriving Inhabited
+#align tactic.explode.status Tactic.Explode.Status
 
 /-- A type to distinguish introduction or elimination rules represented as
 strings from theorems referred to by their names.
@@ -34,6 +35,7 @@ unsafe inductive thm : Type
   | expr (e : expr)
   | Name (n : Name)
   | String (s : String)
+#align tactic.explode.thm tactic.explode.thm
 
 /-- Turn a thm into a string.
 -/
@@ -41,6 +43,7 @@ unsafe def thm.to_string : thm → String
   | thm.expr e => e.toString
   | thm.name n => n.toString
   | thm.string s => s
+#align tactic.explode.thm.to_string tactic.explode.thm.to_string
 
 unsafe structure entry : Type where
   expr : expr
@@ -49,27 +52,34 @@ unsafe structure entry : Type where
   Status : Status
   thm : thm
   deps : List Nat
+#align tactic.explode.entry tactic.explode.entry
 
 unsafe def pad_right (l : List String) : List String :=
   let n := l.foldl (fun r (s : String) => max r s.length) 0
   l.map fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
+#align tactic.explode.pad_right tactic.explode.pad_right
 
 unsafe structure entries : Type where mk' ::
   s : expr_map entry
   l : List entry
   deriving Inhabited
+#align tactic.explode.entries tactic.explode.entries
 
 unsafe def entries.find (es : entries) (e : expr) : Option entry :=
   es.s.find e
+#align tactic.explode.entries.find tactic.explode.entries.find
 
 unsafe def entries.size (es : entries) : ℕ :=
   es.s.size
+#align tactic.explode.entries.size tactic.explode.entries.size
 
 unsafe def entries.add : entries → entry → entries
   | es@⟨s, l⟩, e => if s.contains e.expr then es else ⟨s.insert e.expr e, e :: l⟩
+#align tactic.explode.entries.add tactic.explode.entries.add
 
 unsafe def entries.head (es : entries) : Option entry :=
   es.l.head'
+#align tactic.explode.entries.head tactic.explode.entries.head
 
 unsafe def format_aux : List String → List String → List String → List entry → tactic format
   | line :: lines, dep :: deps, thm :: thms, en :: es => do
@@ -87,6 +97,7 @@ unsafe def format_aux : List String → List String → List String → List ent
         return <| format.of_string lhs ++ (p lhs).group ++ format.line
     (· ++ fmt) <$> format_aux lines deps thms es
   | _, _, _, _ => return format.nil
+#align tactic.explode.format_aux tactic.explode.format_aux
 
 unsafe instance : has_to_tactic_format entries :=
   ⟨fun es : entries =>
@@ -101,10 +112,12 @@ unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) 
       filter ei
       return (ei :: deps)) <|>
     return deps
+#align tactic.explode.append_dep tactic.explode.append_dep
 
 unsafe def may_be_proof (e : expr) : tactic Bool := do
   let expr.sort u ← infer_type e >>= infer_type
   return <| not u
+#align tactic.explode.may_be_proof tactic.explode.may_be_proof
 
 end Explode
 
@@ -154,13 +167,17 @@ mutual
       explode.args e args depth es' thm deps'
     | e, [], depth, es, thm, deps => return (es.add ⟨e, es.size, depth, Status.reg, thm, deps.reverse⟩)
 end
+#align tactic.explode.core tactic.explode.core
+#align tactic.explode.args tactic.explode.args
 
 unsafe def explode_expr (e : expr) (hide_non_prop := true) : tactic entries :=
   let filter := if hide_non_prop then fun e => may_be_proof e >>= guardb else fun _ => skip
   tactic.explode.core filter e true 0 default
+#align tactic.explode_expr tactic.explode_expr
 
 unsafe def explode (n : Name) : tactic Unit := do
-  let const n _ ← resolve_name n | fail "cannot resolve name"
+  let const n _ ← resolve_name n |
+    fail "cannot resolve name"
   let d ← get_decl n
   let v ←
     match d with
@@ -169,6 +186,7 @@ unsafe def explode (n : Name) : tactic Unit := do
       | _ => fail "not a definition"
   let t ← pp d.type
   explode_expr v <* trace (to_fmt n ++ " : " ++ t) >>= trace
+#align tactic.explode tactic.explode
 
 setup_tactic_parser
 
@@ -232,6 +250,7 @@ have global scope anyway so detailed tracking is not necessary.)
 unsafe def explode_cmd (_ : parse <| tk "#explode") : parser Unit := do
   let n ← ident
   explode n
+#align tactic.explode_cmd tactic.explode_cmd
 
 add_tactic_doc
   { Name := "#explode / #explode_widget", category := DocCategory.cmd,

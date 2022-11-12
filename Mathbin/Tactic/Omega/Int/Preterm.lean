@@ -21,6 +21,7 @@ unsafe inductive exprterm : Type
   | cst : Int → exprterm
   | exp : Int → expr → exprterm
   | add : exprterm → exprterm → exprterm
+#align omega.int.exprterm omega.int.exprterm
 
 /-- Similar to `exprterm`, except that all exprs are now replaced with
 de Brujin indices of type `nat`. This is akin to generalizing over
@@ -30,6 +31,7 @@ inductive Preterm : Type
   | var : Int → Nat → preterm
   | add : preterm → preterm → preterm
   deriving has_reflect, Inhabited
+#align omega.int.preterm Omega.Int.Preterm
 
 -- mathport name: preterm.cst
 localized [Omega.Int] notation "&" k => Omega.Int.Preterm.cst k
@@ -48,21 +50,25 @@ def val (v : Nat → Int) : Preterm → Int
   | &i => i
   | i ** n => if i = 1 then v n else if i = -1 then -v n else v n * i
   | t1 +* t2 => t1.val + t2.val
+#align omega.int.preterm.val Omega.Int.Preterm.val
 
 /-- Fresh de Brujin index not used by any variable in argument -/
 def freshIndex : Preterm → Nat
   | &_ => 0
   | i ** n => n + 1
   | t1 +* t2 => max t1.freshIndex t2.freshIndex
+#align omega.int.preterm.fresh_index Omega.Int.Preterm.freshIndex
 
 @[simp]
 def addOne (t : Preterm) : Preterm :=
   t +* &1
+#align omega.int.preterm.add_one Omega.Int.Preterm.addOne
 
 def repr : Preterm → String
   | &i => i.repr
   | i ** n => i.repr ++ "*x" ++ n.repr
   | t1 +* t2 => "(" ++ t1.repr ++ " + " ++ t2.repr ++ ")"
+#align omega.int.preterm.repr Omega.Int.Preterm.repr
 
 end Preterm
 
@@ -76,6 +82,7 @@ def canonize : Preterm → Term
   | &i => ⟨i, []⟩
   | i ** n => ⟨0, [] {n ↦ i}⟩
   | t1 +* t2 => Term.add (canonize t1) (canonize t2)
+#align omega.int.canonize Omega.Int.canonize
 
 @[simp]
 theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v = t.val v
@@ -90,6 +97,7 @@ theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v =
     · rw [mul_comm]
       
   | t +* s => by simp only [canonize, val_canonize, term.val_add, preterm.val]
+#align omega.int.val_canonize Omega.Int.val_canonize
 
 end Int
 

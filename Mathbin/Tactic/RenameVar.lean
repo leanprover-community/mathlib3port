@@ -37,6 +37,7 @@ unsafe def expr.rename_var (old new : Name) : expr → expr
   | lam n bi t b => lam (if n = old then new else n) bi (expr.rename_var t) (expr.rename_var b)
   | app t b => app (expr.rename_var t) (expr.rename_var b)
   | e => e
+#align expr.rename_var expr.rename_var
 
 namespace Tactic
 
@@ -44,11 +45,13 @@ namespace Tactic
 unsafe def rename_var_at_goal (old new : Name) : tactic Unit := do
   let old_tgt ← target
   tactic.change (expr.rename_var old new old_tgt)
+#align tactic.rename_var_at_goal tactic.rename_var_at_goal
 
 /-- Rename bound variable `old` to `new` in assumption `h` -/
 unsafe def rename_var_at_hyp (old new : Name) (e : expr) : tactic Unit := do
   let old_e ← infer_type e
   tactic.change_core (expr.rename_var old new old_e) (some e)
+#align tactic.rename_var_at_hyp tactic.rename_var_at_hyp
 
 end Tactic
 
@@ -63,6 +66,7 @@ setup_tactic_parser
 -/
 unsafe def rename_var (old : parse ident) (new : parse ident) (l : parse location) : tactic Unit :=
   l.apply (rename_var_at_hyp old new) (rename_var_at_goal old new)
+#align tactic.interactive.rename_var tactic.interactive.rename_var
 
 end Tactic.Interactive
 

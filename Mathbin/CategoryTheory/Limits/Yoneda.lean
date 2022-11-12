@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Limits.FunctorCategory
+import Mathbin.Tactic.AssertExists
 
 /-!
 # Limit properties relating to the (co)yoneda embedding.
@@ -35,6 +36,7 @@ variable {C : Type v} [SmallCategory C]
 def colimitCocone (X : Cᵒᵖ) : Cocone (coyoneda.obj X) where
   x := PUnit
   ι := { app := by tidy }
+#align category_theory.coyoneda.colimit_cocone CategoryTheory.coyoneda.colimitCocone
 
 /-- The proposed colimit cocone over `coyoneda.obj X` is a colimit cocone.
 -/
@@ -49,6 +51,7 @@ def colimitCoconeIsColimit (X : Cᵒᵖ) : IsColimit (colimitCocone X) where
     ext ⟨⟩
     rw [← w]
     simp
+#align category_theory.coyoneda.colimit_cocone_is_colimit CategoryTheory.coyoneda.colimitCoconeIsColimit
 
 instance (X : Cᵒᵖ) : HasColimit (coyoneda.obj X) :=
   HasColimit.mk { Cocone := _, IsColimit := colimitCoconeIsColimit X }
@@ -57,6 +60,7 @@ instance (X : Cᵒᵖ) : HasColimit (coyoneda.obj X) :=
 -/
 noncomputable def colimitCoyonedaIso (X : Cᵒᵖ) : colimit (coyoneda.obj X) ≅ PUnit :=
   colimit.isoColimitCocone { Cocone := _, IsColimit := colimitCoconeIsColimit X }
+#align category_theory.coyoneda.colimit_coyoneda_iso CategoryTheory.coyoneda.colimitCoyonedaIso
 
 end Coyoneda
 
@@ -82,6 +86,7 @@ instance yonedaPreservesLimits (X : C) :
                   -- See library note [dsimp, simp]
                   · exact Quiver.Hom.unop_inj (congr_fun (w j) x)
                      } } }
+#align category_theory.yoneda_preserves_limits CategoryTheory.yonedaPreservesLimits
 
 /-- The coyoneda embedding `coyoneda.obj X : C ⥤ Type v` for `X : Cᵒᵖ` preserves limits. -/
 instance coyonedaPreservesLimits (X : Cᵒᵖ) :
@@ -100,6 +105,7 @@ instance coyonedaPreservesLimits (X : Cᵒᵖ) :
                 funext fun x => by
                   refine' t.uniq ⟨unop X, _⟩ _ fun j => _
                   exact congr_fun (w j) x } } }
+#align category_theory.coyoneda_preserves_limits CategoryTheory.coyonedaPreservesLimits
 
 /-- The yoneda embeddings jointly reflect limits. -/
 def yonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ Cᵒᵖ) (c : Cone K)
@@ -114,6 +120,7 @@ def yonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ Cᵒ�
       apply (t _).uniq (s' s) _ fun j => _
       ext
       exact Quiver.Hom.op_inj (w j) }
+#align category_theory.yoneda_jointly_reflects_limits CategoryTheory.yonedaJointlyReflectsLimits
 
 /-- The coyoneda embeddings jointly reflect limits. -/
 def coyonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ C) (c : Cone K)
@@ -126,6 +133,7 @@ def coyonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ C) (
       apply (t _).uniq (s' s) _ fun j => _
       ext
       exact w j }
+#align category_theory.coyoneda_jointly_reflects_limits CategoryTheory.coyonedaJointlyReflectsLimits
 
 variable {D : Type u} [SmallCategory D]
 
@@ -134,18 +142,26 @@ instance yonedaFunctorPreservesLimits : PreservesLimits (@yoneda D _) := by
   intro K
   change preserves_limits (coyoneda.obj K)
   infer_instance
+#align category_theory.yoneda_functor_preserves_limits CategoryTheory.yonedaFunctorPreservesLimits
 
 instance coyonedaFunctorPreservesLimits : PreservesLimits (@coyoneda D _) := by
   apply preserves_limits_of_evaluation
   intro K
   change preserves_limits (yoneda.obj K)
   infer_instance
+#align category_theory.coyoneda_functor_preserves_limits CategoryTheory.coyonedaFunctorPreservesLimits
 
 instance yonedaFunctorReflectsLimits : ReflectsLimits (@yoneda D _) :=
   Limits.fullyFaithfulReflectsLimits _
+#align category_theory.yoneda_functor_reflects_limits CategoryTheory.yonedaFunctorReflectsLimits
 
 instance coyonedaFunctorReflectsLimits : ReflectsLimits (@coyoneda D _) :=
   Limits.fullyFaithfulReflectsLimits _
+#align category_theory.coyoneda_functor_reflects_limits CategoryTheory.coyonedaFunctorReflectsLimits
 
 end CategoryTheory
 
+/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_no_instance -/
+/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_no_instance -/
+-- These act as a guard that the algebraic hierarchy has not been imported
+-- low into the category theory hierarchy again.

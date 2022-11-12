@@ -38,9 +38,11 @@ theorem gcd_div_eq_one {β : Type _} {f : β → ℕ} (s : Finset β) {x : β} (
   refine' ((Finset.gcd_congr rfl) fun a ha => _).trans hg
   rw [he a ha, Nat.mul_div_cancel_left]
   exact Nat.pos_of_ne_zero (mt Finset.gcd_eq_zero_iff.1 fun h => hfz <| h x hx)
+#align finset.nat.gcd_div_eq_one Finset.Nat.gcd_div_eq_one
 
 theorem gcd_div_id_eq_one {s : Finset ℕ} {x : ℕ} (hx : x ∈ s) (hnz : x ≠ 0) : (s.gcd fun b => b / s.gcd id) = 1 :=
   gcd_div_eq_one s hx hnz
+#align finset.nat.gcd_div_id_eq_one Finset.Nat.gcd_div_id_eq_one
 
 end Nat
 
@@ -54,9 +56,11 @@ theorem gcd_div_eq_one {β : Type _} {f : β → ℤ} (s : Finset β) {x : β} (
   refine' ((Finset.gcd_congr rfl) fun a ha => _).trans hg
   rw [he a ha, Int.mul_div_cancel_left]
   exact mt Finset.gcd_eq_zero_iff.1 fun h => hfz <| h x hx
+#align finset.int.gcd_div_eq_one Finset.Int.gcd_div_eq_one
 
 theorem gcd_div_id_eq_one {s : Finset ℤ} {x : ℤ} (hx : x ∈ s) (hnz : x ≠ 0) : (s.gcd fun b => b / s.gcd id) = 1 :=
   gcd_div_eq_one s hx hnz
+#align finset.int.gcd_div_id_eq_one Finset.Int.gcd_div_id_eq_one
 
 end Int
 
@@ -76,9 +80,11 @@ theorem gcd_div_eq_one {β : Type _} {f : β → K[X]} (s : Finset β) {x : β} 
   refine' ((Finset.gcd_congr rfl) fun a ha => _).trans hg
   rw [he a ha, EuclideanDomain.mul_div_cancel_left]
   exact mt Finset.gcd_eq_zero_iff.1 fun h => hfz <| h x hx
+#align finset.polynomial.gcd_div_eq_one Finset.Polynomial.gcd_div_eq_one
 
 theorem gcd_div_id_eq_one {s : Finset K[X]} {x : K[X]} (hx : x ∈ s) (hnz : x ≠ 0) : (s.gcd fun b => b / s.gcd id) = 1 :=
   gcd_div_eq_one s hx hnz
+#align finset.polynomial.gcd_div_id_eq_one Finset.Polynomial.gcd_div_id_eq_one
 
 end Polynomial
 

@@ -35,12 +35,15 @@ protected theorem StarConvex.contractible_space (h : StarConvex ℝ x s) (hne : 
   · ext1
     simp
     
+#align star_convex.contractible_space StarConvex.contractible_space
 
 /-- A non-empty convex set is a contractible space. -/
 protected theorem Convex.contractible_space (hs : Convex ℝ s) (hne : s.Nonempty) : ContractibleSpace s :=
   let ⟨x, hx⟩ := hne
   (hs.StarConvex hx).ContractibleSpace hne
+#align convex.contractible_space Convex.contractible_space
 
 instance (priority := 100) RealTopologicalVectorSpace.contractible_space : ContractibleSpace E :=
   (Homeomorph.Set.univ E).contractible_space_iff.mp <| convex_univ.ContractibleSpace Set.univ_nonempty
+#align real_topological_vector_space.contractible_space RealTopologicalVectorSpace.contractible_space
 

@@ -74,6 +74,7 @@ inductive Prequotient-- There's always `of`
   | neg : prequotient → prequotient
   | add : prequotient → prequotient → prequotient
   | mul : prequotient → prequotient → prequotient
+#align CommRing.colimits.prequotient CommRingCat.Colimits.Prequotient
 
 instance : Inhabited (Prequotient F) :=
   ⟨Prequotient.zero⟩
@@ -121,12 +122,14 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | mul_assoc : ∀ x y z, relation (mul (mul x y) z) (mul x (mul y z))
   | left_distrib : ∀ x y z, relation (mul x (add y z)) (add (mul x y) (mul x z))
   | right_distrib : ∀ x y z, relation (mul (add x y) z) (add (mul x z) (mul y z))
+#align CommRing.colimits.relation CommRingCat.Colimits.Relation
 
 /-- The setoid corresponding to commutative expressions modulo monoid relations and identifications.
 -/
 def colimitSetoid : Setoid (Prequotient F) where
   R := Relation F
   iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
+#align CommRing.colimits.colimit_setoid CommRingCat.Colimits.colimitSetoid
 
 attribute [instance] colimit_setoid
 
@@ -134,6 +137,7 @@ attribute [instance] colimit_setoid
 -/
 def ColimitType : Type v :=
   Quotient (colimitSetoid F)deriving Inhabited
+#align CommRing.colimits.colimit_type CommRingCat.Colimits.ColimitType
 
 instance : AddGroup (ColimitType F) where
   zero := Quot.mk _ zero
@@ -294,32 +298,39 @@ instance : CommRing (ColimitType F) :=
       rfl }
 
 @[simp]
-theorem quot_zero : Quot.mk Setoid.R zero = (0 : ColimitType F) :=
+theorem quot_zero : Quot.mk Setoid.r zero = (0 : ColimitType F) :=
   rfl
+#align CommRing.colimits.quot_zero CommRingCat.Colimits.quot_zero
 
 @[simp]
-theorem quot_one : Quot.mk Setoid.R one = (1 : ColimitType F) :=
+theorem quot_one : Quot.mk Setoid.r one = (1 : ColimitType F) :=
   rfl
+#align CommRing.colimits.quot_one CommRingCat.Colimits.quot_one
 
 @[simp]
-theorem quot_neg (x) : Quot.mk Setoid.R (neg x) = (-Quot.mk Setoid.R x : ColimitType F) :=
+theorem quot_neg (x) : Quot.mk Setoid.r (neg x) = (-Quot.mk Setoid.r x : ColimitType F) :=
   rfl
+#align CommRing.colimits.quot_neg CommRingCat.Colimits.quot_neg
 
 @[simp]
-theorem quot_add (x y) : Quot.mk Setoid.R (add x y) = (Quot.mk Setoid.R x + Quot.mk Setoid.R y : ColimitType F) :=
+theorem quot_add (x y) : Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
   rfl
+#align CommRing.colimits.quot_add CommRingCat.Colimits.quot_add
 
 @[simp]
-theorem quot_mul (x y) : Quot.mk Setoid.R (mul x y) = (Quot.mk Setoid.R x * Quot.mk Setoid.R y : ColimitType F) :=
+theorem quot_mul (x y) : Quot.mk Setoid.r (mul x y) = (Quot.mk Setoid.r x * Quot.mk Setoid.r y : ColimitType F) :=
   rfl
+#align CommRing.colimits.quot_mul CommRingCat.Colimits.quot_mul
 
 /-- The bundled commutative ring giving the colimit of a diagram. -/
 def colimit : CommRingCat :=
   CommRingCat.of (ColimitType F)
+#align CommRing.colimits.colimit CommRingCat.Colimits.colimit
 
 /-- The function from a given commutative ring in the diagram to the colimit commutative ring. -/
 def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
+#align CommRing.colimits.cocone_fun CommRingCat.Colimits.coconeFun
 
 /-- The ring homomorphism from a given commutative ring in the diagram to the colimit commutative
 ring. -/
@@ -329,23 +340,27 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
   map_mul' := by intros <;> apply Quot.sound <;> apply relation.mul
   map_zero' := by apply Quot.sound <;> apply relation.zero
   map_add' := by intros <;> apply Quot.sound <;> apply relation.add
+#align CommRing.colimits.cocone_morphism CommRingCat.Colimits.coconeMorphism
 
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
+#align CommRing.colimits.cocone_naturality CommRingCat.Colimits.cocone_naturality
 
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
     (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
   rw [← cocone_naturality F f]
   rfl
+#align CommRing.colimits.cocone_naturality_components CommRingCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit commutative ring. -/
 def colimitCocone : Cocone F where
   x := colimit F
   ι := { app := coconeMorphism F }
+#align CommRing.colimits.colimit_cocone CommRingCat.Colimits.colimitCocone
 
 /-- The function from the free commutative ring on the diagram to the cone point of any other
 cocone. -/
@@ -357,6 +372,7 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
   | neg x => -desc_fun_lift x
   | add x y => desc_fun_lift x + desc_fun_lift y
   | mul x y => desc_fun_lift x * desc_fun_lift y
+#align CommRing.colimits.desc_fun_lift CommRingCat.Colimits.descFunLift
 
 /-- The function from the colimit commutative ring to the cone point of any other cocone. -/
 def descFun (s : Cocone F) : ColimitType F → s.x := by
@@ -441,6 +457,7 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
     · rw [right_distrib]
       
     
+#align CommRing.colimits.desc_fun CommRingCat.Colimits.descFun
 
 /-- The ring homomorphism from the colimit commutative ring to the cone point of any other
 cocone. -/
@@ -450,6 +467,7 @@ def descMorphism (s : Cocone F) : colimit F ⟶ s.x where
   map_zero' := rfl
   map_add' x y := by induction x <;> induction y <;> rfl
   map_mul' x y := by induction x <;> induction y <;> rfl
+#align CommRing.colimits.desc_morphism CommRingCat.Colimits.descMorphism
 
 /-- Evidence that the proposed colimit is the colimit. -/
 def colimitIsColimit : IsColimit (colimitCocone F) where
@@ -473,11 +491,13 @@ def colimitIsColimit : IsColimit (colimitCocone F) where
     · simp [*]
       
     rfl
+#align CommRing.colimits.colimit_is_colimit CommRingCat.Colimits.colimitIsColimit
 
 instance has_colimits_CommRing :
     HasColimits
       CommRingCat where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
+#align CommRing.colimits.has_colimits_CommRing CommRingCat.Colimits.has_colimits_CommRing
 
 end CommRingCat.Colimits
 

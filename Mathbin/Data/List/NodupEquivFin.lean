@@ -42,6 +42,7 @@ def nthLeBijectionOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, 
   ⟨fun i => l.nthLe i i.property, fun i j h => Fin.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
     let ⟨i, hi, hl⟩ := List.mem_iff_nth_le.1 (h x)
     ⟨⟨i, hi⟩, hl⟩⟩
+#align list.nodup.nth_le_bijection_of_forall_mem_list List.Nodup.nthLeBijectionOfForallMemList
 
 variable [DecidableEq α]
 
@@ -53,6 +54,7 @@ def nthLeEquiv (l : List α) (H : Nodup l) : Fin (length l) ≃ { x // x ∈ l }
   invFun x := ⟨indexOf' (↑x) l, index_of_lt_length.2 x.2⟩
   left_inv i := by simp [H]
   right_inv x := by simp
+#align list.nodup.nth_le_equiv List.Nodup.nthLeEquiv
 
 /-- If `l` lists all the elements of `α` without duplicates, then `list.nth_le` defines
 an equivalence between `fin l.length` and `α`.
@@ -65,6 +67,7 @@ def nthLeEquivOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x �
   invFun a := ⟨_, index_of_lt_length.2 (h a)⟩
   left_inv i := by simp [nd]
   right_inv a := by simp
+#align list.nodup.nth_le_equiv_of_forall_mem_list List.Nodup.nthLeEquivOfForallMemList
 
 end Nodup
 
@@ -74,9 +77,11 @@ variable [Preorder α] {l : List α}
 
 theorem nth_le_mono (h : l.Sorted (· ≤ ·)) : Monotone fun i : Fin l.length => l.nthLe i i.2 := fun i j =>
   h.rel_nth_le_of_le _ _
+#align list.sorted.nth_le_mono List.Sorted.nth_le_mono
 
 theorem nth_le_strict_mono (h : l.Sorted (· < ·)) : StrictMono fun i : Fin l.length => l.nthLe i i.2 := fun i j =>
   h.rel_nth_le_of_lt _ _
+#align list.sorted.nth_le_strict_mono List.Sorted.nth_le_strict_mono
 
 variable [DecidableEq α]
 
@@ -85,16 +90,19 @@ variable [DecidableEq α]
 def nthLeIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x ∈ l } where
   toEquiv := H.Nodup.nthLeEquiv l
   map_rel_iff' i j := H.nth_le_strict_mono.le_iff_le
+#align list.sorted.nth_le_iso List.Sorted.nthLeIso
 
 variable (H : Sorted (· < ·) l) {x : { x // x ∈ l }} {i : Fin l.length}
 
 @[simp]
 theorem coe_nth_le_iso_apply : (H.nthLeIso l i : α) = nthLe l i i.2 :=
   rfl
+#align list.sorted.coe_nth_le_iso_apply List.Sorted.coe_nth_le_iso_apply
 
 @[simp]
 theorem coe_nth_le_iso_symm_apply : ((H.nthLeIso l).symm x : ℕ) = indexOf' (↑x) l :=
   rfl
+#align list.sorted.coe_nth_le_iso_symm_apply List.Sorted.coe_nth_le_iso_symm_apply
 
 end Sorted
 
@@ -122,6 +130,7 @@ theorem sublist_of_order_embedding_nth_eq {l l' : List α} (f : ℕ ↪o ℕ) (h
   apply List.Sublist.append _ (IH _ this)
   rw [List.singleton_sublist, ← h, l'.nth_le_take _ (Nat.lt_succ_self _)]
   apply List.nth_le_mem
+#align list.sublist_of_order_embedding_nth_eq List.sublist_of_order_embedding_nth_eq
 
 /-- A `l : list α` is `sublist l l'` for `l' : list α` iff
 there is `f`, an order-preserving embedding of `ℕ` into `ℕ` such that
@@ -153,6 +162,7 @@ theorem sublist_iff_exists_order_embedding_nth_eq {l l' : List α} :
   · rintro ⟨f, hf⟩
     exact sublist_of_order_embedding_nth_eq f hf
     
+#align list.sublist_iff_exists_order_embedding_nth_eq List.sublist_iff_exists_order_embedding_nth_eq
 
 /-- A `l : list α` is `sublist l l'` for `l' : list α` iff
 there is `f`, an order-preserving embedding of `fin l.length` into `fin l'.length` such that
@@ -208,6 +218,7 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
         
       
     
+#align list.sublist_iff_exists_fin_order_embedding_nth_le_eq List.sublist_iff_exists_fin_order_embedding_nth_le_eq
 
 /-- An element `x : α` of `l : list α` is a duplicate iff it can be found
 at two distinct indices `n m : ℕ` inside the list `l`.
@@ -216,36 +227,16 @@ theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
     l.Duplicate x ↔
       ∃ (n : ℕ)(hn : n < l.length)(m : ℕ)(hm : m < l.length)(h : n < m), x = l.nthLe n hn ∧ x = l.nthLe m hm :=
   by
-  classical
-  rw [duplicate_iff_two_le_count, le_count_iff_repeat_sublist, sublist_iff_exists_fin_order_embedding_nth_le_eq]
-  constructor
-  · rintro ⟨f, hf⟩
-    refine' ⟨f ⟨0, by simp⟩, Fin.is_lt _, f ⟨1, by simp⟩, Fin.is_lt _, by simp, _, _⟩
-    · simpa using hf ⟨0, by simp⟩
-      
-    · simpa using hf ⟨1, by simp⟩
-      
-    
-  · rintro ⟨n, hn, m, hm, hnm, h, h'⟩
-    refine' ⟨OrderEmbedding.ofStrictMono (fun i => if (i : ℕ) = 0 then ⟨n, hn⟩ else ⟨m, hm⟩) _, _⟩
-    · rintro ⟨⟨_ | i⟩, hi⟩ ⟨⟨_ | j⟩, hj⟩
-      · simp
+  classical rw [duplicate_iff_two_le_count, le_count_iff_repeat_sublist,
+      sublist_iff_exists_fin_order_embedding_nth_le_eq]
+    · rintro ⟨f, hf⟩
+      refine' ⟨f ⟨0, by simp⟩, Fin.is_lt _, f ⟨1, by simp⟩, Fin.is_lt _, by simp, _, _⟩
+      · simpa using hf ⟨0, by simp⟩
         
-      · simp [hnm]
-        
-      · simp
-        
-      · simp only [Nat.lt_succ_iff, Nat.succ_le_succ_iff, repeat, length, nonpos_iff_eq_zero] at hi hj
-        simp [hi, hj]
+      · simpa using hf ⟨1, by simp⟩
         
       
-    · rintro ⟨⟨_ | i⟩, hi⟩
-      · simpa using h
-        
-      · simpa using h'
-        
-      
-    
+#align list.duplicate_iff_exists_distinct_nth_le List.duplicate_iff_exists_distinct_nth_le
 
 end Sublist
 

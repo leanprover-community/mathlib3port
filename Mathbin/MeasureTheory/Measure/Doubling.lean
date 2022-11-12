@@ -29,7 +29,7 @@ open Set Filter Metric MeasureTheory TopologicalSpace
 
 open Nnreal TopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closed_ball_le_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closed_ball_le_mul] [] -/
 /-- A measure `μ` is said to be a doubling measure if there exists a constant `C` such that for
 all sufficiently small radii `ε`, and for any centre, the measure of a ball of radius `2 * ε` is
 bounded by `C` times the measure of the concentric ball of radius `ε`.
@@ -41,6 +41,7 @@ curvature -1, the area of a disc of radius `ε` is `A(ε) = 2π(cosh(ε) - 1)` s
 -/
 class IsDoublingMeasure {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α) where
   exists_measure_closed_ball_le_mul : ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (ClosedBall x (2 * ε)) ≤ C * μ (ClosedBall x ε)
+#align is_doubling_measure IsDoublingMeasure
 
 namespace IsDoublingMeasure
 
@@ -51,10 +52,12 @@ variable {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α) [
 See also `is_doubling_measure.scaling_constant_of`. -/
 def doublingConstant : ℝ≥0 :=
   Classical.choose <| exists_measure_closed_ball_le_mul μ
+#align is_doubling_measure.doubling_constant IsDoublingMeasure.doublingConstant
 
 theorem exists_measure_closed_ball_le_mul' :
     ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (ClosedBall x (2 * ε)) ≤ doublingConstant μ * μ (ClosedBall x ε) :=
   Classical.choose_spec <| exists_measure_closed_ball_le_mul μ
+#align is_doubling_measure.exists_measure_closed_ball_le_mul' IsDoublingMeasure.exists_measure_closed_ball_le_mul'
 
 theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
     ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ (x t) (ht : t ≤ K), μ (ClosedBall x (t * ε)) ≤ C * μ (ClosedBall x ε) := by
@@ -88,11 +91,14 @@ theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
     rw [← Real.rpow_nat_cast]
     exact Real.rpow_le_rpow_of_exponent_le one_le_two (Nat.le_ceil (Real.logb 2 K))
     
+#align
+  is_doubling_measure.exists_eventually_forall_measure_closed_ball_le_mul IsDoublingMeasure.exists_eventually_forall_measure_closed_ball_le_mul
 
 /-- A variant of `is_doubling_measure.doubling_constant` which allows for scaling the radius by
 values other than `2`. -/
 def scalingConstantOf (K : ℝ) : ℝ≥0 :=
   max (Classical.choose <| exists_eventually_forall_measure_closed_ball_le_mul μ K) 1
+#align is_doubling_measure.scaling_constant_of IsDoublingMeasure.scalingConstantOf
 
 theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
     ∃ R : ℝ,
@@ -114,19 +120,25 @@ theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
   · apply (hR ⟨rpos, hr⟩ x t ht.2).trans _
     exact Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl
     
+#align
+  is_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.eventually_measure_mul_le_scaling_constant_of_mul
 
 /-- A scale below which the doubling measure `μ` satisfies good rescaling properties when one
 multiplies the radius of balls by at most `K`, as stated
 in `measure_mul_le_scaling_constant_of_mul`. -/
 def scalingScaleOf (K : ℝ) : ℝ :=
   (eventually_measure_mul_le_scaling_constant_of_mul μ K).some
+#align is_doubling_measure.scaling_scale_of IsDoublingMeasure.scalingScaleOf
 
 theorem scaling_scale_of_pos (K : ℝ) : 0 < scalingScaleOf μ K :=
   (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.1
+#align is_doubling_measure.scaling_scale_of_pos IsDoublingMeasure.scaling_scale_of_pos
 
 theorem measure_mul_le_scaling_constant_of_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ IocCat 0 K)
     (hr : r ≤ scalingScaleOf μ K) : μ (ClosedBall x (t * r)) ≤ scalingConstantOf μ K * μ (ClosedBall x r) :=
   (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.2 x t r ht hr
+#align
+  is_doubling_measure.measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.measure_mul_le_scaling_constant_of_mul
 
 end IsDoublingMeasure
 

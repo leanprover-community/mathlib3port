@@ -41,41 +41,51 @@ instance : HasSmul M (α × β) :=
 @[simp, to_additive]
 theorem smul_fst : (a • x).1 = a • x.1 :=
   rfl
+#align prod.smul_fst Prod.smul_fst
 
 @[simp, to_additive]
 theorem smul_snd : (a • x).2 = a • x.2 :=
   rfl
+#align prod.smul_snd Prod.smul_snd
 
 @[simp, to_additive]
 theorem smul_mk (a : M) (b : α) (c : β) : a • (b, c) = (a • b, a • c) :=
   rfl
+#align prod.smul_mk Prod.smul_mk
 
 @[to_additive]
 theorem smul_def (a : M) (x : α × β) : a • x = (a • x.1, a • x.2) :=
   rfl
+#align prod.smul_def Prod.smul_def
 
 @[simp, to_additive]
 theorem smul_swap : (a • x).swap = a • x.swap :=
   rfl
+#align prod.smul_swap Prod.smul_swap
 
 theorem smul_zero_mk {α : Type _} [Monoid M] [AddMonoid α] [DistribMulAction M α] (a : M) (c : β) :
     a • ((0 : α), c) = (0, a • c) := by rw [Prod.smul_mk, smul_zero]
+#align prod.smul_zero_mk Prod.smul_zero_mk
 
 theorem smul_mk_zero {β : Type _} [Monoid M] [AddMonoid β] [DistribMulAction M β] (a : M) (b : α) :
     a • (b, (0 : β)) = (a • b, 0) := by rw [Prod.smul_mk, smul_zero]
+#align prod.smul_mk_zero Prod.smul_mk_zero
 
 variable [Pow α E] [Pow β E]
 
 @[to_additive HasSmul]
 instance hasPow : Pow (α × β) E where pow p c := (p.1 ^ c, p.2 ^ c)
+#align prod.has_pow Prod.hasPow
 
 @[simp, to_additive smul_snd, to_additive_reorder 6]
 theorem pow_fst (p : α × β) (c : E) : (p ^ c).fst = p.fst ^ c :=
   rfl
+#align prod.pow_fst Prod.pow_fst
 
 @[simp, to_additive smul_snd, to_additive_reorder 6]
 theorem pow_snd (p : α × β) (c : E) : (p ^ c).snd = p.snd ^ c :=
   rfl
+#align prod.pow_snd Prod.pow_snd
 
 /- Note that the `c` arguments to this lemmas cannot be in the more natural right-most positions due
 to limitations in `to_additive` and `to_additive_reorder`, which will silently fail to reorder more
@@ -83,14 +93,17 @@ than two adjacent arguments -/
 @[simp, to_additive smul_mk, to_additive_reorder 6]
 theorem pow_mk (c : E) (a : α) (b : β) : Prod.mk a b ^ c = Prod.mk (a ^ c) (b ^ c) :=
   rfl
+#align prod.pow_mk Prod.pow_mk
 
 @[to_additive smul_def, to_additive_reorder 6]
 theorem pow_def (p : α × β) (c : E) : p ^ c = (p.1 ^ c, p.2 ^ c) :=
   rfl
+#align prod.pow_def Prod.pow_def
 
 @[simp, to_additive smul_swap, to_additive_reorder 6]
 theorem pow_swap (p : α × β) (c : E) : (p ^ c).swap = p.swap ^ c :=
   rfl
+#align prod.pow_swap Prod.pow_swap
 
 instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=
   ⟨fun x y z => mk.inj_iff.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
@@ -107,12 +120,14 @@ instance has_faithful_smul_left [HasFaithfulSmul M α] [Nonempty β] : HasFaithf
   ⟨fun x y h =>
     let ⟨b⟩ := ‹Nonempty β›
     eq_of_smul_eq_smul fun a : α => by injection h (a, b)⟩
+#align prod.has_faithful_smul_left Prod.has_faithful_smul_left
 
 @[to_additive]
 instance has_faithful_smul_right [Nonempty α] [HasFaithfulSmul M β] : HasFaithfulSmul M (α × β) :=
   ⟨fun x y h =>
     let ⟨a⟩ := ‹Nonempty α›
     eq_of_smul_eq_smul fun b : β => by injection h (a, b)⟩
+#align prod.has_faithful_smul_right Prod.has_faithful_smul_right
 
 end
 
@@ -120,10 +135,12 @@ end
 instance smul_comm_class_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [SmulCommClass M N N] [SmulCommClass M P P] :
     SmulCommClass M (N × P) (N × P) :=
   ⟨fun c x y => by simp [smul_def, mul_def, mul_smul_comm]⟩
+#align prod.smul_comm_class_both Prod.smul_comm_class_both
 
 instance is_scalar_tower_both [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [IsScalarTower M N N] [IsScalarTower M P P] :
     IsScalarTower M (N × P) (N × P) :=
   ⟨fun c x y => by simp [smul_def, mul_def, smul_mul_assoc]⟩
+#align prod.is_scalar_tower_both Prod.is_scalar_tower_both
 
 @[to_additive]
 instance {m : Monoid M} [MulAction M α] [MulAction M β] : MulAction M (α × β) where
@@ -157,11 +174,13 @@ section BundledSmul
 def smulMulHom [Monoid α] [Mul β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] : α × β →ₙ* β where
   toFun a := a.1 • a.2
   map_mul' a b := (smul_mul_smul _ _ _ _).symm
+#align smul_mul_hom smulMulHom
 
 /-- Scalar multiplication as a monoid homomorphism. -/
 @[simps]
 def smulMonoidHom [Monoid α] [MulOneClass β] [MulAction α β] [IsScalarTower α β β] [SmulCommClass α β β] : α × β →* β :=
   { smulMulHom with map_one' := one_smul _ _ }
+#align smul_monoid_hom smulMonoidHom
 
 end BundledSmul
 

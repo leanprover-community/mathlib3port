@@ -38,21 +38,25 @@ compact open subsets of `s` are still compact.
 Note that this is equivalent to `s` being a `quasi_separated_space` only when `s` is open. -/
 def IsQuasiSeparated (s : Set α) : Prop :=
   ∀ U V : Set α, U ⊆ s → IsOpen U → IsCompact U → V ⊆ s → IsOpen V → IsCompact V → IsCompact (U ∩ V)
+#align is_quasi_separated IsQuasiSeparated
 
 /-- A topological space is quasi-separated if the intersections of any pairs of compact open
 subsets are still compact. -/
 @[mk_iff]
 class QuasiSeparatedSpace (α : Type _) [TopologicalSpace α] : Prop where
   inter_is_compact : ∀ U V : Set α, IsOpen U → IsCompact U → IsOpen V → IsCompact V → IsCompact (U ∩ V)
+#align quasi_separated_space QuasiSeparatedSpace
 
 theorem is_quasi_separated_univ_iff {α : Type _} [TopologicalSpace α] :
     IsQuasiSeparated (Set.Univ : Set α) ↔ QuasiSeparatedSpace α := by
   rw [quasi_separated_space_iff]
   simp [IsQuasiSeparated]
+#align is_quasi_separated_univ_iff is_quasi_separated_univ_iff
 
 theorem is_quasi_separated_univ {α : Type _} [TopologicalSpace α] [QuasiSeparatedSpace α] :
     IsQuasiSeparated (Set.Univ : Set α) :=
   is_quasi_separated_univ_iff.mpr inferInstance
+#align is_quasi_separated_univ is_quasi_separated_univ
 
 theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s) (h : Embedding f) :
     IsQuasiSeparated (f '' s) := by
@@ -80,6 +84,7 @@ theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s
     rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset]
     exact hV.trans (Set.image_subset_range _ _)
     
+#align is_quasi_separated.image_of_embedding IsQuasiSeparated.image_of_embedding
 
 theorem OpenEmbedding.is_quasi_separated_iff (h : OpenEmbedding f) {s : Set α} :
     IsQuasiSeparated s ↔ IsQuasiSeparated (f '' s) := by
@@ -89,25 +94,32 @@ theorem OpenEmbedding.is_quasi_separated_iff (h : OpenEmbedding f) {s : Set α} 
   exact
     H (f '' U) (f '' V) (Set.image_subset _ hU) (h.is_open_map _ hU') (hU''.image h.continuous) (Set.image_subset _ hV)
       (h.is_open_map _ hV') (hV''.image h.continuous)
+#align open_embedding.is_quasi_separated_iff OpenEmbedding.is_quasi_separated_iff
 
 theorem is_quasi_separated_iff_quasi_separated_space (s : Set α) (hs : IsOpen s) :
     IsQuasiSeparated s ↔ QuasiSeparatedSpace s := by
   rw [← is_quasi_separated_univ_iff]
   convert hs.open_embedding_subtype_coe.is_quasi_separated_iff.symm <;> simp
+#align is_quasi_separated_iff_quasi_separated_space is_quasi_separated_iff_quasi_separated_space
 
 theorem IsQuasiSeparated.of_subset {s t : Set α} (ht : IsQuasiSeparated t) (h : s ⊆ t) : IsQuasiSeparated s := by
   intro U V hU hU' hU'' hV hV' hV''
   exact ht U V (hU.trans h) hU' hU'' (hV.trans h) hV' hV''
+#align is_quasi_separated.of_subset IsQuasiSeparated.of_subset
 
 instance (priority := 100) T2Space.to_quasi_separated_space [T2Space α] : QuasiSeparatedSpace α :=
   ⟨fun U V hU hU' hV hV' => hU'.inter hV'⟩
+#align t2_space.to_quasi_separated_space T2Space.to_quasi_separated_space
 
 instance (priority := 100) NoetherianSpace.to_quasi_separated_space [NoetherianSpace α] : QuasiSeparatedSpace α :=
   ⟨fun _ _ _ _ _ _ => NoetherianSpace.is_compact _⟩
+#align noetherian_space.to_quasi_separated_space NoetherianSpace.to_quasi_separated_space
 
 theorem IsQuasiSeparated.of_quasi_separated_space (s : Set α) [QuasiSeparatedSpace α] : IsQuasiSeparated s :=
   is_quasi_separated_univ.ofSubset (Set.subset_univ _)
+#align is_quasi_separated.of_quasi_separated_space IsQuasiSeparated.of_quasi_separated_space
 
 theorem QuasiSeparatedSpace.of_open_embedding (h : OpenEmbedding f) [QuasiSeparatedSpace β] : QuasiSeparatedSpace α :=
   is_quasi_separated_univ_iff.mp (h.is_quasi_separated_iff.mpr <| IsQuasiSeparated.of_quasi_separated_space _)
+#align quasi_separated_space.of_open_embedding QuasiSeparatedSpace.of_open_embedding
 

@@ -41,129 +41,164 @@ namespace Complex
 /-- `complex.re` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem is_trivial_topological_fiber_bundle_re : IsTrivialTopologicalFiberBundle ℝ re :=
   ⟨equivRealProdₗ.toHomeomorph, fun z => rfl⟩
+#align complex.is_trivial_topological_fiber_bundle_re Complex.is_trivial_topological_fiber_bundle_re
 
 /-- `complex.im` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem is_trivial_topological_fiber_bundle_im : IsTrivialTopologicalFiberBundle ℝ im :=
   ⟨equivRealProdₗ.toHomeomorph.trans (Homeomorph.prodComm ℝ ℝ), fun z => rfl⟩
+#align complex.is_trivial_topological_fiber_bundle_im Complex.is_trivial_topological_fiber_bundle_im
 
 theorem is_topological_fiber_bundle_re : IsTopologicalFiberBundle ℝ re :=
   is_trivial_topological_fiber_bundle_re.IsTopologicalFiberBundle
+#align complex.is_topological_fiber_bundle_re Complex.is_topological_fiber_bundle_re
 
 theorem is_topological_fiber_bundle_im : IsTopologicalFiberBundle ℝ im :=
   is_trivial_topological_fiber_bundle_im.IsTopologicalFiberBundle
+#align complex.is_topological_fiber_bundle_im Complex.is_topological_fiber_bundle_im
 
 theorem is_open_map_re : IsOpenMap re :=
   is_topological_fiber_bundle_re.is_open_map_proj
+#align complex.is_open_map_re Complex.is_open_map_re
 
 theorem is_open_map_im : IsOpenMap im :=
   is_topological_fiber_bundle_im.is_open_map_proj
+#align complex.is_open_map_im Complex.is_open_map_im
 
 theorem quotient_map_re : QuotientMap re :=
   is_topological_fiber_bundle_re.quotient_map_proj
+#align complex.quotient_map_re Complex.quotient_map_re
 
 theorem quotient_map_im : QuotientMap im :=
   is_topological_fiber_bundle_im.quotient_map_proj
+#align complex.quotient_map_im Complex.quotient_map_im
 
 theorem interior_preimage_re (s : Set ℝ) : Interior (re ⁻¹' s) = re ⁻¹' Interior s :=
   (is_open_map_re.preimage_interior_eq_interior_preimage continuous_re _).symm
+#align complex.interior_preimage_re Complex.interior_preimage_re
 
 theorem interior_preimage_im (s : Set ℝ) : Interior (im ⁻¹' s) = im ⁻¹' Interior s :=
   (is_open_map_im.preimage_interior_eq_interior_preimage continuous_im _).symm
+#align complex.interior_preimage_im Complex.interior_preimage_im
 
 theorem closure_preimage_re (s : Set ℝ) : Closure (re ⁻¹' s) = re ⁻¹' Closure s :=
   (is_open_map_re.preimage_closure_eq_closure_preimage continuous_re _).symm
+#align complex.closure_preimage_re Complex.closure_preimage_re
 
 theorem closure_preimage_im (s : Set ℝ) : Closure (im ⁻¹' s) = im ⁻¹' Closure s :=
   (is_open_map_im.preimage_closure_eq_closure_preimage continuous_im _).symm
+#align complex.closure_preimage_im Complex.closure_preimage_im
 
 theorem frontier_preimage_re (s : Set ℝ) : Frontier (re ⁻¹' s) = re ⁻¹' Frontier s :=
   (is_open_map_re.preimage_frontier_eq_frontier_preimage continuous_re _).symm
+#align complex.frontier_preimage_re Complex.frontier_preimage_re
 
 theorem frontier_preimage_im (s : Set ℝ) : Frontier (im ⁻¹' s) = im ⁻¹' Frontier s :=
   (is_open_map_im.preimage_frontier_eq_frontier_preimage continuous_im _).symm
+#align complex.frontier_preimage_im Complex.frontier_preimage_im
 
 @[simp]
 theorem interior_set_of_re_le (a : ℝ) : Interior { z : ℂ | z.re ≤ a } = { z | z.re < a } := by
   simpa only [interior_Iic] using interior_preimage_re (Iic a)
+#align complex.interior_set_of_re_le Complex.interior_set_of_re_le
 
 @[simp]
 theorem interior_set_of_im_le (a : ℝ) : Interior { z : ℂ | z.im ≤ a } = { z | z.im < a } := by
   simpa only [interior_Iic] using interior_preimage_im (Iic a)
+#align complex.interior_set_of_im_le Complex.interior_set_of_im_le
 
 @[simp]
 theorem interior_set_of_le_re (a : ℝ) : Interior { z : ℂ | a ≤ z.re } = { z | a < z.re } := by
   simpa only [interior_Ici] using interior_preimage_re (Ici a)
+#align complex.interior_set_of_le_re Complex.interior_set_of_le_re
 
 @[simp]
 theorem interior_set_of_le_im (a : ℝ) : Interior { z : ℂ | a ≤ z.im } = { z | a < z.im } := by
   simpa only [interior_Ici] using interior_preimage_im (Ici a)
+#align complex.interior_set_of_le_im Complex.interior_set_of_le_im
 
 @[simp]
 theorem closure_set_of_re_lt (a : ℝ) : Closure { z : ℂ | z.re < a } = { z | z.re ≤ a } := by
   simpa only [closure_Iio] using closure_preimage_re (Iio a)
+#align complex.closure_set_of_re_lt Complex.closure_set_of_re_lt
 
 @[simp]
 theorem closure_set_of_im_lt (a : ℝ) : Closure { z : ℂ | z.im < a } = { z | z.im ≤ a } := by
   simpa only [closure_Iio] using closure_preimage_im (Iio a)
+#align complex.closure_set_of_im_lt Complex.closure_set_of_im_lt
 
 @[simp]
 theorem closure_set_of_lt_re (a : ℝ) : Closure { z : ℂ | a < z.re } = { z | a ≤ z.re } := by
   simpa only [closure_Ioi] using closure_preimage_re (Ioi a)
+#align complex.closure_set_of_lt_re Complex.closure_set_of_lt_re
 
 @[simp]
 theorem closure_set_of_lt_im (a : ℝ) : Closure { z : ℂ | a < z.im } = { z | a ≤ z.im } := by
   simpa only [closure_Ioi] using closure_preimage_im (Ioi a)
+#align complex.closure_set_of_lt_im Complex.closure_set_of_lt_im
 
 @[simp]
 theorem frontier_set_of_re_le (a : ℝ) : Frontier { z : ℂ | z.re ≤ a } = { z | z.re = a } := by
   simpa only [frontier_Iic] using frontier_preimage_re (Iic a)
+#align complex.frontier_set_of_re_le Complex.frontier_set_of_re_le
 
 @[simp]
 theorem frontier_set_of_im_le (a : ℝ) : Frontier { z : ℂ | z.im ≤ a } = { z | z.im = a } := by
   simpa only [frontier_Iic] using frontier_preimage_im (Iic a)
+#align complex.frontier_set_of_im_le Complex.frontier_set_of_im_le
 
 @[simp]
 theorem frontier_set_of_le_re (a : ℝ) : Frontier { z : ℂ | a ≤ z.re } = { z | z.re = a } := by
   simpa only [frontier_Ici] using frontier_preimage_re (Ici a)
+#align complex.frontier_set_of_le_re Complex.frontier_set_of_le_re
 
 @[simp]
 theorem frontier_set_of_le_im (a : ℝ) : Frontier { z : ℂ | a ≤ z.im } = { z | z.im = a } := by
   simpa only [frontier_Ici] using frontier_preimage_im (Ici a)
+#align complex.frontier_set_of_le_im Complex.frontier_set_of_le_im
 
 @[simp]
 theorem frontier_set_of_re_lt (a : ℝ) : Frontier { z : ℂ | z.re < a } = { z | z.re = a } := by
   simpa only [frontier_Iio] using frontier_preimage_re (Iio a)
+#align complex.frontier_set_of_re_lt Complex.frontier_set_of_re_lt
 
 @[simp]
 theorem frontier_set_of_im_lt (a : ℝ) : Frontier { z : ℂ | z.im < a } = { z | z.im = a } := by
   simpa only [frontier_Iio] using frontier_preimage_im (Iio a)
+#align complex.frontier_set_of_im_lt Complex.frontier_set_of_im_lt
 
 @[simp]
 theorem frontier_set_of_lt_re (a : ℝ) : Frontier { z : ℂ | a < z.re } = { z | z.re = a } := by
   simpa only [frontier_Ioi] using frontier_preimage_re (Ioi a)
+#align complex.frontier_set_of_lt_re Complex.frontier_set_of_lt_re
 
 @[simp]
 theorem frontier_set_of_lt_im (a : ℝ) : Frontier { z : ℂ | a < z.im } = { z | z.im = a } := by
   simpa only [frontier_Ioi] using frontier_preimage_im (Ioi a)
+#align complex.frontier_set_of_lt_im Complex.frontier_set_of_lt_im
 
 theorem closure_re_prod_im (s t : Set ℝ) : Closure (s ×ℂ t) = Closure s ×ℂ Closure t := by
   simpa only [← preimage_eq_preimage equiv_real_prodₗ.symm.to_homeomorph.surjective,
     equiv_real_prodₗ.symm.to_homeomorph.preimage_closure] using @closure_prod_eq _ _ _ _ s t
+#align complex.closure_re_prod_im Complex.closure_re_prod_im
 
 theorem interior_re_prod_im (s t : Set ℝ) : Interior (s ×ℂ t) = Interior s ×ℂ Interior t := by
   rw [re_prod_im, re_prod_im, interior_inter, interior_preimage_re, interior_preimage_im]
+#align complex.interior_re_prod_im Complex.interior_re_prod_im
 
 theorem frontier_re_prod_im (s t : Set ℝ) : Frontier (s ×ℂ t) = Closure s ×ℂ Frontier t ∪ Frontier s ×ℂ Closure t := by
   simpa only [← preimage_eq_preimage equiv_real_prodₗ.symm.to_homeomorph.surjective,
     equiv_real_prodₗ.symm.to_homeomorph.preimage_frontier] using frontier_prod_eq s t
+#align complex.frontier_re_prod_im Complex.frontier_re_prod_im
 
 theorem frontier_set_of_le_re_and_le_im (a b : ℝ) :
     Frontier { z | a ≤ re z ∧ b ≤ im z } = { z | a ≤ re z ∧ im z = b ∨ re z = a ∧ b ≤ im z } := by
   simpa only [closure_Ici, frontier_Ici] using frontier_re_prod_im (Ici a) (Ici b)
+#align complex.frontier_set_of_le_re_and_le_im Complex.frontier_set_of_le_re_and_le_im
 
 theorem frontier_set_of_le_re_and_im_le (a b : ℝ) :
     Frontier { z | a ≤ re z ∧ im z ≤ b } = { z | a ≤ re z ∧ im z = b ∨ re z = a ∧ im z ≤ b } := by
   simpa only [closure_Ici, closure_Iic, frontier_Ici, frontier_Iic] using frontier_re_prod_im (Ici a) (Iic b)
+#align complex.frontier_set_of_le_re_and_im_le Complex.frontier_set_of_le_re_and_im_le
 
 end Complex
 
@@ -173,10 +208,13 @@ variable {s t : Set ℝ}
 
 theorem IsOpen.re_prod_im (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ℂ t) :=
   (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
+#align is_open.re_prod_im IsOpen.re_prod_im
 
 theorem IsClosed.reProdIm (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×ℂ t) :=
   (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
+#align is_closed.re_prod_im IsClosed.reProdIm
 
 theorem Metric.Bounded.reProdIm (hs : Bounded s) (ht : Bounded t) : Bounded (s ×ℂ t) :=
   equivRealProdₗ.antilipschitz.boundedPreimage (hs.Prod ht)
+#align metric.bounded.re_prod_im Metric.Bounded.reProdIm
 

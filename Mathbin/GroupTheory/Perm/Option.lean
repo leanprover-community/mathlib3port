@@ -16,6 +16,7 @@ open Equiv
 @[simp]
 theorem Equiv.option_congr_one {α : Type _} : (1 : Perm α).optionCongr = 1 :=
   Equiv.option_congr_refl
+#align equiv.option_congr_one Equiv.option_congr_one
 
 @[simp]
 theorem Equiv.option_congr_swap {α : Type _} [DecidableEq α] (x y : α) :
@@ -27,6 +28,7 @@ theorem Equiv.option_congr_swap {α : Type _} [DecidableEq α] (x y : α) :
     simp [hx, swap_apply_of_ne_of_ne]
     by_cases hy:i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne]
     
+#align equiv.option_congr_swap Equiv.option_congr_swap
 
 @[simp]
 theorem Equiv.option_congr_sign {α : Type _} [DecidableEq α] [Fintype α] (e : Perm α) :
@@ -37,6 +39,7 @@ theorem Equiv.option_congr_sign {α : Type _} [DecidableEq α] [Fintype α] (e :
   · intro f x y hne h
     simp [h, hne, perm.mul_def, ← Equiv.option_congr_trans]
     
+#align equiv.option_congr_sign Equiv.option_congr_sign
 
 @[simp]
 theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : Perm (Option α)) :
@@ -55,6 +58,7 @@ theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : Perm (Option 
         
       
   simpa using this
+#align map_equiv_remove_none map_equiv_remove_none
 
 /-- Permutations of `option α` are equivalent to fixing an
 `option α` and permuting the remaining with a `perm α`.
@@ -67,12 +71,15 @@ def Equiv.Perm.decomposeOption {α : Type _} [DecidableEq α] : Perm (Option α)
   right_inv := fun ⟨x, σ⟩ => by
     have : remove_none (swap none x * σ.option_congr) = σ := Equiv.option_congr_injective (by simp [← mul_assoc])
     simp [← perm.eq_inv_iff_eq, this]
+#align equiv.perm.decompose_option Equiv.Perm.decomposeOption
 
 theorem Equiv.Perm.decompose_option_symm_of_none_apply {α : Type _} [DecidableEq α] (e : Perm α) (i : Option α) :
     Equiv.Perm.decomposeOption.symm (none, e) i = i.map e := by simp
+#align equiv.perm.decompose_option_symm_of_none_apply Equiv.Perm.decompose_option_symm_of_none_apply
 
 theorem Equiv.Perm.decompose_option_symm_sign {α : Type _} [DecidableEq α] [Fintype α] (e : Perm α) :
     Perm.sign (Equiv.Perm.decomposeOption.symm (none, e)) = Perm.sign e := by simp
+#align equiv.perm.decompose_option_symm_sign Equiv.Perm.decompose_option_symm_sign
 
 /-- The set of all permutations of `option α` can be constructed by augmenting the set of
 permutations of `α` by each element of `option α` in turn. -/
@@ -80,4 +87,5 @@ theorem Finset.univ_perm_option {α : Type _} [DecidableEq α] [Fintype α] :
     @Finset.univ (perm <| Option α) _ =
       (Finset.univ : Finset <| Option α × Perm α).map Equiv.Perm.decomposeOption.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm
+#align finset.univ_perm_option Finset.univ_perm_option
 

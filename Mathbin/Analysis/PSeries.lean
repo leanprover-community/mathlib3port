@@ -56,11 +56,13 @@ theorem le_sum_condensed' (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m
   have : ∀ k ∈ Ico (2 ^ n) (2 ^ (n + 1)), f k ≤ f (2 ^ n) := fun k hk => hf (pow_pos zero_lt_two _) (mem_Ico.mp hk).1
   convert sum_le_sum this
   simp [pow_succ, two_mul]
+#align finset.le_sum_condensed' Finset.le_sum_condensed'
 
 theorem le_sum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
     (∑ k in range (2 ^ n), f k) ≤ f 0 + ∑ k in range n, 2 ^ k • f (2 ^ k) := by
   convert add_le_add_left (le_sum_condensed' hf n) (f 0)
   rw [← sum_range_add_sum_Ico _ n.one_le_two_pow, sum_range_succ, sum_range_zero, zero_add]
+#align finset.le_sum_condensed Finset.le_sum_condensed
 
 theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
     (∑ k in range n, 2 ^ k • f (2 ^ (k + 1))) ≤ ∑ k in ico 2 (2 ^ n + 1), f k := by
@@ -76,11 +78,13 @@ theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
       (Nat.le_of_lt_succ <| (mem_Ico.mp hk).2)
   convert sum_le_sum this
   simp [pow_succ, two_mul]
+#align finset.sum_condensed_le' Finset.sum_condensed_le'
 
 theorem sum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) (n : ℕ) :
     (∑ k in range (n + 1), 2 ^ k • f (2 ^ k)) ≤ f 1 + 2 • ∑ k in ico 2 (2 ^ n + 1), f k := by
   convert add_le_add_left (nsmul_le_nsmul_of_le_right (sum_condensed_le' hf n) 2) (f 1)
   simp [sum_range_succ', add_comm, pow_succ, mul_nsmul, sum_nsmul]
+#align finset.sum_condensed_le Finset.sum_condensed_le
 
 end Finset
 
@@ -94,6 +98,7 @@ theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m
   refine' supr_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
   simp only [nsmul_eq_mul, Nat.cast_pow, Nat.cast_two]
   apply Ennreal.sum_le_tsum
+#align ennreal.le_tsum_condensed Ennreal.le_tsum_condensed
 
 theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) :
     (∑' k : ℕ, 2 ^ k * f (2 ^ k)) ≤ f 1 + 2 * ∑' k, f k := by
@@ -102,6 +107,7 @@ theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
     supr_le fun n =>
       le_trans _ (add_le_add_left (nsmul_le_nsmul_of_le_right (Ennreal.sum_le_tsum <| Finset.ico 2 (2 ^ n + 1)) _) _)
   simpa using Finset.sum_condensed_le hf n
+#align ennreal.tsum_condensed_le Ennreal.tsum_condensed_le
 
 end Ennreal
 
@@ -120,6 +126,7 @@ theorem summable_condensed_iff {f : ℕ → ℝ≥0} (hf : ∀ ⦃m n⦄, 0 < m 
   · replace hf : ∀ m n, 0 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn => Ennreal.coe_le_coe.2 (hf hm hmn)
     simpa [h, Ennreal.add_eq_top] using Ennreal.le_tsum_condensed hf
     
+#align nnreal.summable_condensed_iff Nnreal.summable_condensed_iff
 
 end Nnreal
 
@@ -129,6 +136,7 @@ theorem summable_condensed_iff_of_nonneg {f : ℕ → ℝ} (h_nonneg : ∀ n, 0 
   lift f to ℕ → ℝ≥0 using h_nonneg
   simp only [Nnreal.coe_le_coe] at *
   exact_mod_cast Nnreal.summable_condensed_iff h_mono
+#align summable_condensed_iff_of_nonneg summable_condensed_iff_of_nonneg
 
 open Real
 
@@ -176,34 +184,41 @@ theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ :
       simpa [inv_lt_one_iff_of_pos (rpow_pos_of_pos hk₀ _), one_lt_rpow_iff_of_pos hk₀, hp, hp.not_lt, hk₀] using hk₁
       
     
+#align real.summable_nat_rpow_inv Real.summable_nat_rpow_inv
 
 @[simp]
 theorem Real.summable_nat_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ) ↔ p < -1 := by
   rcases neg_surjective p with ⟨p, rfl⟩
   simp [rpow_neg]
+#align real.summable_nat_rpow Real.summable_nat_rpow
 
 /-- Test for convergence of the `p`-series: the real-valued series `∑' n : ℕ, 1 / n ^ p` converges
 if and only if `1 < p`. -/
 theorem Real.summable_one_div_nat_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ) ↔ 1 < p := by simp
+#align real.summable_one_div_nat_rpow Real.summable_one_div_nat_rpow
 
 /-- Test for convergence of the `p`-series: the real-valued series `∑' n : ℕ, (n ^ p)⁻¹` converges
 if and only if `1 < p`. -/
 @[simp]
 theorem Real.summable_nat_pow_inv {p : ℕ} : Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ) ↔ 1 < p := by
   simp only [← rpow_nat_cast, Real.summable_nat_rpow_inv, Nat.one_lt_cast]
+#align real.summable_nat_pow_inv Real.summable_nat_pow_inv
 
 /-- Test for convergence of the `p`-series: the real-valued series `∑' n : ℕ, 1 / n ^ p` converges
 if and only if `1 < p`. -/
 theorem Real.summable_one_div_nat_pow {p : ℕ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ) ↔ 1 < p := by simp
+#align real.summable_one_div_nat_pow Real.summable_one_div_nat_pow
 
 /-- Harmonic series is not unconditionally summable. -/
 theorem Real.not_summable_nat_cast_inv : ¬Summable (fun n => n⁻¹ : ℕ → ℝ) := by
   have : ¬Summable (fun n => (n ^ 1)⁻¹ : ℕ → ℝ) := mt Real.summable_nat_pow_inv.1 (lt_irrefl 1)
   simpa
+#align real.not_summable_nat_cast_inv Real.not_summable_nat_cast_inv
 
 /-- Harmonic series is not unconditionally summable. -/
 theorem Real.not_summable_one_div_nat_cast : ¬Summable (fun n => 1 / n : ℕ → ℝ) := by
   simpa only [inv_eq_one_div] using Real.not_summable_nat_cast_inv
+#align real.not_summable_one_div_nat_cast Real.not_summable_one_div_nat_cast
 
 /-- **Divergence of the Harmonic Series** -/
 theorem Real.tendsto_sum_range_one_div_nat_succ_at_top :
@@ -213,15 +228,19 @@ theorem Real.tendsto_sum_range_one_div_nat_succ_at_top :
     
   · exact fun i => div_nonneg zero_le_one i.cast_add_one_pos.le
     
+#align real.tendsto_sum_range_one_div_nat_succ_at_top Real.tendsto_sum_range_one_div_nat_succ_at_top
 
 @[simp]
 theorem Nnreal.summable_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ≥0) ↔ 1 < p := by
   simp [← Nnreal.summable_coe]
+#align nnreal.summable_rpow_inv Nnreal.summable_rpow_inv
 
 @[simp]
 theorem Nnreal.summable_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ≥0) ↔ p < -1 := by simp [← Nnreal.summable_coe]
+#align nnreal.summable_rpow Nnreal.summable_rpow
 
 theorem Nnreal.summable_one_div_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ≥0) ↔ 1 < p := by simp
+#align nnreal.summable_one_div_rpow Nnreal.summable_one_div_rpow
 
 section
 
@@ -247,6 +266,7 @@ theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) : (∑ i 
     
   · nlinarith
     
+#align sum_Ioc_inv_sq_le_sub sum_Ioc_inv_sq_le_sub
 
 theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) ≤ 2 / (k + 1) :=
   calc
@@ -279,6 +299,7 @@ theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) 
       simpa using pow_le_pow A one_le_two
     _ = 2 / (k + 1) := by ring
     
+#align sum_Ioo_inv_sq_le sum_Ioo_inv_sq_le
 
 end
 

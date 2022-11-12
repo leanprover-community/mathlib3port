@@ -38,6 +38,7 @@ This is a characteristic property of Cartan subalgebras with the roles of `L`, `
 def LieSubmodule.IsUcsLimit {M : Type _} [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
     (N : LieSubmodule R L M) : Prop :=
   ∃ k, ∀ l, k ≤ l → (⊥ : LieSubmodule R L M).ucs l = N
+#align lie_submodule.is_ucs_limit LieSubmodule.IsUcsLimit
 
 namespace LieSubalgebra
 
@@ -45,6 +46,7 @@ namespace LieSubalgebra
 class IsCartanSubalgebra : Prop where
   nilpotent : LieAlgebra.IsNilpotent R H
   self_normalizing : H.normalizer = H
+#align lie_subalgebra.is_cartan_subalgebra LieSubalgebra.IsCartanSubalgebra
 
 instance [H.IsCartanSubalgebra] : LieAlgebra.IsNilpotent R H :=
   is_cartan_subalgebra.nilpotent
@@ -54,6 +56,8 @@ theorem centralizer_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.I
     H.toLieSubmodule.Centralizer = H.toLieSubmodule := by
   rw [← LieSubmodule.coe_to_submodule_eq_iff, coe_centralizer_eq_normalizer, is_cartan_subalgebra.self_normalizing,
     coe_to_lie_submodule]
+#align
+  lie_subalgebra.centralizer_eq_self_of_is_cartan_subalgebra LieSubalgebra.centralizer_eq_self_of_is_cartan_subalgebra
 
 @[simp]
 theorem ucs_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanSubalgebra] (k : ℕ) :
@@ -63,6 +67,7 @@ theorem ucs_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanS
     
   · simp [ih]
     
+#align lie_subalgebra.ucs_eq_self_of_is_cartan_subalgebra LieSubalgebra.ucs_eq_self_of_is_cartan_subalgebra
 
 theorem is_cartan_subalgebra_iff_is_ucs_limit : H.IsCartanSubalgebra ↔ H.toLieSubmodule.IsUcsLimit := by
   constructor
@@ -88,6 +93,7 @@ theorem is_cartan_subalgebra_iff_is_ucs_limit : H.IsCartanSubalgebra ↔ H.toLie
           rw [← LieSubalgebra.coe_to_submodule_eq_iff, ← LieSubalgebra.coe_centralizer_eq_normalizer, hk',
             LieSubalgebra.coe_to_lie_submodule] }
     
+#align lie_subalgebra.is_cartan_subalgebra_iff_is_ucs_limit LieSubalgebra.is_cartan_subalgebra_iff_is_ucs_limit
 
 end LieSubalgebra
 
@@ -96,6 +102,7 @@ theorem LieIdeal.normalizer_eq_top {R : Type u} {L : Type v} [CommRing R] [LieRi
     (I : LieIdeal R L) : (I : LieSubalgebra R L).normalizer = ⊤ := by
   ext x
   simpa only [LieSubalgebra.mem_normalizer_iff, LieSubalgebra.mem_top, iff_true_iff] using fun y hy => I.lie_mem hy
+#align lie_ideal.normalizer_eq_top LieIdeal.normalizer_eq_top
 
 open LieIdeal
 
@@ -104,4 +111,5 @@ instance LieAlgebra.top_is_cartan_subalgebra_of_nilpotent [LieAlgebra.IsNilpoten
     LieSubalgebra.IsCartanSubalgebra (⊤ : LieSubalgebra R L) where
   nilpotent := inferInstance
   self_normalizing := by rw [← top_coe_lie_subalgebra, normalizer_eq_top, top_coe_lie_subalgebra]
+#align lie_algebra.top_is_cartan_subalgebra_of_nilpotent LieAlgebra.top_is_cartan_subalgebra_of_nilpotent
 

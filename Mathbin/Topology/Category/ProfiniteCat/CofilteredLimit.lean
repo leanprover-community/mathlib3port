@@ -112,6 +112,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
       rwa [dif_pos hs, ← Set.preimage_comp, ← ProfiniteCat.coe_comp, C.w] at hx
       
     
+#align Profinite.exists_clopen_of_cofiltered ProfiniteCat.exists_clopen_of_cofiltered
 
 theorem exists_locally_constant_fin_two (f : LocallyConstant C.x (Fin 2)) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) := by
@@ -123,6 +124,7 @@ theorem exists_locally_constant_fin_two (f : LocallyConstant C.x (Fin 2)) :
   rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]
   conv_rhs => rw [Set.preimage_comp]
   rw [LocallyConstant.of_clopen_fiber_zero hV, ← h]
+#align Profinite.exists_locally_constant_fin_two ProfiniteCat.exists_locally_constant_fin_two
 
 theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) (α → Fin 2)),
@@ -164,6 +166,7 @@ theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : Locall
     rw [C.w]
     
   all_goals continuity
+#align Profinite.exists_locally_constant_finite_aux ProfiniteCat.exists_locally_constant_finite_aux
 
 theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonempty α] (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
@@ -194,6 +197,7 @@ theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonem
     · exact False.elim (bot_ne_top hh)
       
     
+#align Profinite.exists_locally_constant_finite_nonempty ProfiniteCat.exists_locally_constant_finite_nonempty
 
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/
@@ -201,7 +205,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
   let S := f.discrete_quotient
   let ff : S → α := f.lift
-  cases is_empty_or_nonempty S
+  cases isEmpty_or_nonempty S
   · suffices ∃ j, IsEmpty (F.obj j) by
       refine' this.imp fun j hj => _
       refine' ⟨⟨hj.elim, fun A => _⟩, _⟩
@@ -234,6 +238,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
     rw [← hj]
     rfl
     
+#align Profinite.exists_locally_constant ProfiniteCat.exists_locally_constant
 
 end ProfiniteCat
 

@@ -64,11 +64,13 @@ def n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ) where
   map_comp' X Y Z f g := by
     ext
     simp
+#align algebraic_topology.dold_kan.N₁ AlgebraicTopology.DoldKan.n₁
 
 /-- The extension of `N₁` to the Karoubi envelope of `simplicial_object C`. -/
 @[simps]
 def n₂ : Karoubi (SimplicialObject C) ⥤ Karoubi (ChainComplex C ℕ) :=
   (functorExtension₁ _ _).obj n₁
+#align algebraic_topology.dold_kan.N₂ AlgebraicTopology.DoldKan.n₂
 
 end DoldKan
 

@@ -66,6 +66,7 @@ protected theorem StrictMonoOn.union {s t : Set α} {c : α} (h₁ : StrictMonoO
     have yt : y ∈ t := B _ hy (hcx.trans hxy.le)
     exact h₂ xt yt hxy
     
+#align strict_mono_on.union StrictMonoOn.union
 
 /-- If `f` is strictly monotone both on `(-∞, a]` and `[a, ∞)`, then it is strictly monotone on the
 whole line. -/
@@ -73,18 +74,21 @@ protected theorem StrictMonoOn.Iic_union_Ici (h₁ : StrictMonoOn f (IicCat a)) 
     StrictMono f := by
   rw [← strict_mono_on_univ, ← @Iic_union_Ici _ _ a]
   exact StrictMonoOn.union h₁ h₂ is_greatest_Iic is_least_Ici
+#align strict_mono_on.Iic_union_Ici StrictMonoOn.Iic_union_Ici
 
 /-- If `f` is strictly antitone both on `s` and `t`, with `s` to the left of `t` and the center
 point belonging to both `s` and `t`, then `f` is strictly antitone on `s ∪ t` -/
 protected theorem StrictAntiOn.union {s t : Set α} {c : α} (h₁ : StrictAntiOn f s) (h₂ : StrictAntiOn f t)
     (hs : IsGreatest s c) (ht : IsLeast t c) : StrictAntiOn f (s ∪ t) :=
   (h₁.dual_right.union h₂.dual_right hs ht).dual_right
+#align strict_anti_on.union StrictAntiOn.union
 
 /-- If `f` is strictly antitone both on `(-∞, a]` and `[a, ∞)`, then it is strictly antitone on the
 whole line. -/
 protected theorem StrictAntiOn.Iic_union_Ici (h₁ : StrictAntiOn f (IicCat a)) (h₂ : StrictAntiOn f (IciCat a)) :
     StrictAnti f :=
   (h₁.dual_right.Iic_union_Ici h₂.dual_right).dual_right
+#align strict_anti_on.Iic_union_Ici StrictAntiOn.Iic_union_Ici
 
 /-- If `f` is monotone both on `s` and `t`, with `s` to the left of `t` and the center
 point belonging to both `s` and `t`, then `f` is monotone on `s ∪ t` -/
@@ -122,22 +126,26 @@ protected theorem MonotoneOn.union_right {s t : Set α} {c : α} (h₁ : Monoton
     have yt : y ∈ t := B _ hy (hcx.trans hxy)
     exact h₂ xt yt hxy
     
+#align monotone_on.union_right MonotoneOn.union_right
 
 /-- If `f` is monotone both on `(-∞, a]` and `[a, ∞)`, then it is monotone on the whole line. -/
 protected theorem MonotoneOn.Iic_union_Ici (h₁ : MonotoneOn f (IicCat a)) (h₂ : MonotoneOn f (IciCat a)) : Monotone f :=
   by
   rw [← monotone_on_univ, ← @Iic_union_Ici _ _ a]
   exact MonotoneOn.union_right h₁ h₂ is_greatest_Iic is_least_Ici
+#align monotone_on.Iic_union_Ici MonotoneOn.Iic_union_Ici
 
 /-- If `f` is antitone both on `s` and `t`, with `s` to the left of `t` and the center
 point belonging to both `s` and `t`, then `f` is antitone on `s ∪ t` -/
 protected theorem AntitoneOn.union_right {s t : Set α} {c : α} (h₁ : AntitoneOn f s) (h₂ : AntitoneOn f t)
     (hs : IsGreatest s c) (ht : IsLeast t c) : AntitoneOn f (s ∪ t) :=
-  (h₁.dual_right.unionRight h₂.dual_right hs ht).dual_right
+  (h₁.dual_right.union_right h₂.dual_right hs ht).dual_right
+#align antitone_on.union_right AntitoneOn.union_right
 
 /-- If `f` is antitone both on `(-∞, a]` and `[a, ∞)`, then it is antitone on the whole line. -/
 protected theorem AntitoneOn.Iic_union_Ici (h₁ : AntitoneOn f (IicCat a)) (h₂ : AntitoneOn f (IciCat a)) : Antitone f :=
   (h₁.dual_right.Iic_union_Ici h₂.dual_right).dual_right
+#align antitone_on.Iic_union_Ici AntitoneOn.Iic_union_Ici
 
 /-- If a function is monotone on a set `s`, then it admits a monotone extension to the whole space
 provided `s` has a least element `a` and a greatest element `b`. -/
@@ -194,12 +202,14 @@ theorem MonotoneOn.exists_monotone_extension {β : Type _} [ConditionallyComplet
       exact Icc_subset_Icc le_rfl hxy
       
   exact ⟨g, M1.Iic_union_Ici M2, hfg⟩
+#align monotone_on.exists_monotone_extension MonotoneOn.exists_monotone_extension
 
 /-- If a function is antitone on a set `s`, then it admits an antitone extension to the whole space
 provided `s` has a least element `a` and a greatest element `b`. -/
 theorem AntitoneOn.exists_antitone_extension {β : Type _} [ConditionallyCompleteLinearOrder β] {f : α → β} {s : Set α}
     (h : AntitoneOn f s) {a b : α} (ha : IsLeast s a) (hb : IsGreatest s b) : ∃ g : α → β, Antitone g ∧ EqOn f g s :=
   h.dual_right.exists_monotone_extension ha hb
+#align antitone_on.exists_antitone_extension AntitoneOn.exists_antitone_extension
 
 end
 
@@ -212,12 +222,14 @@ theorem strict_mono_of_odd_strict_mono_on_nonneg {f : G → H} (h₁ : ∀ x, f 
   refine' StrictMonoOn.Iic_union_Ici (fun x hx y hy hxy => neg_lt_neg_iff.1 _) h₂
   rw [← h₁, ← h₁]
   exact h₂ (neg_nonneg.2 hy) (neg_nonneg.2 hx) (neg_lt_neg hxy)
+#align strict_mono_of_odd_strict_mono_on_nonneg strict_mono_of_odd_strict_mono_on_nonneg
 
 theorem monotone_of_odd_of_monotone_on_nonneg {f : G → H} (h₁ : ∀ x, f (-x) = -f x) (h₂ : MonotoneOn f (IciCat 0)) :
     Monotone f := by
   refine' MonotoneOn.Iic_union_Ici (fun x hx y hy hxy => neg_le_neg_iff.1 _) h₂
   rw [← h₁, ← h₁]
   exact h₂ (neg_nonneg.2 hy) (neg_nonneg.2 hx) (neg_le_neg hxy)
+#align monotone_of_odd_of_monotone_on_nonneg monotone_of_odd_of_monotone_on_nonneg
 
 end OrderedGroup
 
@@ -246,122 +258,159 @@ irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃
     have : 0 < 1 - |(x : k)| := sub_pos.2 (abs_lt.2 x.2)
     field_simp [abs_div, this.ne', abs_of_pos this]
     
+#align order_iso_Ioo_neg_one_one orderIsoIooNegOneOne
 
 section IxxCat
 
 variable {α β : Type _} [Preorder α] [Preorder β] {f g : α → β} {s : Set α}
 
 theorem antitone_Ici : Antitone (IciCat : α → Set α) := fun _ _ => Ici_subset_Ici.2
+#align antitone_Ici antitone_Ici
 
 theorem monotone_Iic : Monotone (IicCat : α → Set α) := fun _ _ => Iic_subset_Iic.2
+#align monotone_Iic monotone_Iic
 
 theorem antitone_Ioi : Antitone (IoiCat : α → Set α) := fun _ _ => Ioi_subset_Ioi
+#align antitone_Ioi antitone_Ioi
 
 theorem monotone_Iio : Monotone (IioCat : α → Set α) := fun _ _ => Iio_subset_Iio
+#align monotone_Iio monotone_Iio
 
 protected theorem Monotone.Ici (hf : Monotone f) : Antitone fun x => IciCat (f x) :=
   antitone_Ici.comp_monotone hf
+#align monotone.Ici Monotone.Ici
 
 protected theorem MonotoneOn.Ici (hf : MonotoneOn f s) : AntitoneOn (fun x => IciCat (f x)) s :=
   antitone_Ici.comp_monotone_on hf
+#align monotone_on.Ici MonotoneOn.Ici
 
 protected theorem Antitone.Ici (hf : Antitone f) : Monotone fun x => IciCat (f x) :=
   antitone_Ici.comp hf
+#align antitone.Ici Antitone.Ici
 
 protected theorem AntitoneOn.Ici (hf : AntitoneOn f s) : MonotoneOn (fun x => IciCat (f x)) s :=
   antitone_Ici.comp_antitone_on hf
+#align antitone_on.Ici AntitoneOn.Ici
 
 protected theorem Monotone.Iic (hf : Monotone f) : Monotone fun x => IicCat (f x) :=
   monotone_Iic.comp hf
+#align monotone.Iic Monotone.Iic
 
 protected theorem MonotoneOn.Iic (hf : MonotoneOn f s) : MonotoneOn (fun x => IicCat (f x)) s :=
   monotone_Iic.comp_monotone_on hf
+#align monotone_on.Iic MonotoneOn.Iic
 
 protected theorem Antitone.Iic (hf : Antitone f) : Antitone fun x => IicCat (f x) :=
   monotone_Iic.comp_antitone hf
+#align antitone.Iic Antitone.Iic
 
 protected theorem AntitoneOn.Iic (hf : AntitoneOn f s) : AntitoneOn (fun x => IicCat (f x)) s :=
   monotone_Iic.comp_antitone_on hf
+#align antitone_on.Iic AntitoneOn.Iic
 
 protected theorem Monotone.Ioi (hf : Monotone f) : Antitone fun x => IoiCat (f x) :=
   antitone_Ioi.comp_monotone hf
+#align monotone.Ioi Monotone.Ioi
 
 protected theorem MonotoneOn.Ioi (hf : MonotoneOn f s) : AntitoneOn (fun x => IoiCat (f x)) s :=
   antitone_Ioi.comp_monotone_on hf
+#align monotone_on.Ioi MonotoneOn.Ioi
 
 protected theorem Antitone.Ioi (hf : Antitone f) : Monotone fun x => IoiCat (f x) :=
   antitone_Ioi.comp hf
+#align antitone.Ioi Antitone.Ioi
 
 protected theorem AntitoneOn.Ioi (hf : AntitoneOn f s) : MonotoneOn (fun x => IoiCat (f x)) s :=
   antitone_Ioi.comp_antitone_on hf
+#align antitone_on.Ioi AntitoneOn.Ioi
 
 protected theorem Monotone.Iio (hf : Monotone f) : Monotone fun x => IioCat (f x) :=
   monotone_Iio.comp hf
+#align monotone.Iio Monotone.Iio
 
 protected theorem MonotoneOn.Iio (hf : MonotoneOn f s) : MonotoneOn (fun x => IioCat (f x)) s :=
   monotone_Iio.comp_monotone_on hf
+#align monotone_on.Iio MonotoneOn.Iio
 
 protected theorem Antitone.Iio (hf : Antitone f) : Antitone fun x => IioCat (f x) :=
   monotone_Iio.comp_antitone hf
+#align antitone.Iio Antitone.Iio
 
 protected theorem AntitoneOn.Iio (hf : AntitoneOn f s) : AntitoneOn (fun x => IioCat (f x)) s :=
   monotone_Iio.comp_antitone_on hf
+#align antitone_on.Iio AntitoneOn.Iio
 
 protected theorem Monotone.Icc (hf : Monotone f) (hg : Antitone g) : Antitone fun x => IccCat (f x) (g x) :=
   hf.IciCat.inter hg.IicCat
+#align monotone.Icc Monotone.Icc
 
 protected theorem MonotoneOn.Icc (hf : MonotoneOn f s) (hg : AntitoneOn g s) :
     AntitoneOn (fun x => IccCat (f x) (g x)) s :=
   hf.IciCat.inter hg.IicCat
+#align monotone_on.Icc MonotoneOn.Icc
 
 protected theorem Antitone.Icc (hf : Antitone f) (hg : Monotone g) : Monotone fun x => IccCat (f x) (g x) :=
   hf.IciCat.inter hg.IicCat
+#align antitone.Icc Antitone.Icc
 
 protected theorem AntitoneOn.Icc (hf : AntitoneOn f s) (hg : MonotoneOn g s) :
     MonotoneOn (fun x => IccCat (f x) (g x)) s :=
   hf.IciCat.inter hg.IicCat
+#align antitone_on.Icc AntitoneOn.Icc
 
 protected theorem Monotone.Ico (hf : Monotone f) (hg : Antitone g) : Antitone fun x => IcoCat (f x) (g x) :=
   hf.IciCat.inter hg.IioCat
+#align monotone.Ico Monotone.Ico
 
 protected theorem MonotoneOn.Ico (hf : MonotoneOn f s) (hg : AntitoneOn g s) :
     AntitoneOn (fun x => IcoCat (f x) (g x)) s :=
   hf.IciCat.inter hg.IioCat
+#align monotone_on.Ico MonotoneOn.Ico
 
 protected theorem Antitone.Ico (hf : Antitone f) (hg : Monotone g) : Monotone fun x => IcoCat (f x) (g x) :=
   hf.IciCat.inter hg.IioCat
+#align antitone.Ico Antitone.Ico
 
 protected theorem AntitoneOn.Ico (hf : AntitoneOn f s) (hg : MonotoneOn g s) :
     MonotoneOn (fun x => IcoCat (f x) (g x)) s :=
   hf.IciCat.inter hg.IioCat
+#align antitone_on.Ico AntitoneOn.Ico
 
 protected theorem Monotone.Ioc (hf : Monotone f) (hg : Antitone g) : Antitone fun x => IocCat (f x) (g x) :=
   hf.IoiCat.inter hg.IicCat
+#align monotone.Ioc Monotone.Ioc
 
 protected theorem MonotoneOn.Ioc (hf : MonotoneOn f s) (hg : AntitoneOn g s) :
     AntitoneOn (fun x => IocCat (f x) (g x)) s :=
   hf.IoiCat.inter hg.IicCat
+#align monotone_on.Ioc MonotoneOn.Ioc
 
 protected theorem Antitone.Ioc (hf : Antitone f) (hg : Monotone g) : Monotone fun x => IocCat (f x) (g x) :=
   hf.IoiCat.inter hg.IicCat
+#align antitone.Ioc Antitone.Ioc
 
 protected theorem AntitoneOn.Ioc (hf : AntitoneOn f s) (hg : MonotoneOn g s) :
     MonotoneOn (fun x => IocCat (f x) (g x)) s :=
   hf.IoiCat.inter hg.IicCat
+#align antitone_on.Ioc AntitoneOn.Ioc
 
 protected theorem Monotone.Ioo (hf : Monotone f) (hg : Antitone g) : Antitone fun x => IooCat (f x) (g x) :=
   hf.IoiCat.inter hg.IioCat
+#align monotone.Ioo Monotone.Ioo
 
 protected theorem MonotoneOn.Ioo (hf : MonotoneOn f s) (hg : AntitoneOn g s) :
     AntitoneOn (fun x => IooCat (f x) (g x)) s :=
   hf.IoiCat.inter hg.IioCat
+#align monotone_on.Ioo MonotoneOn.Ioo
 
 protected theorem Antitone.Ioo (hf : Antitone f) (hg : Monotone g) : Monotone fun x => IooCat (f x) (g x) :=
   hf.IoiCat.inter hg.IioCat
+#align antitone.Ioo Antitone.Ioo
 
 protected theorem AntitoneOn.Ioo (hf : AntitoneOn f s) (hg : MonotoneOn g s) :
     MonotoneOn (fun x => IooCat (f x) (g x)) s :=
   hf.IoiCat.inter hg.IioCat
+#align antitone_on.Ioo AntitoneOn.Ioo
 
 end IxxCat
 
@@ -375,6 +424,7 @@ theorem Union_Ioo_of_mono_of_is_glb_of_is_lub (hf : Antitone f) (hg : Monotone g
     (⋃ x, IooCat (f x) (g x)) = (⋃ x, IoiCat (f x)) ∩ ⋃ x, IioCat (g x) := Union_inter_of_monotone hf.IoiCat hg.IioCat
     _ = IoiCat a ∩ IioCat b := congr_arg₂ (· ∩ ·) ha.Union_Ioi_eq hb.Union_Iio_eq
     
+#align Union_Ioo_of_mono_of_is_glb_of_is_lub Union_Ioo_of_mono_of_is_glb_of_is_lub
 
 end UnionCat
 
@@ -401,10 +451,12 @@ theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot �
     
   · exact ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) _ h
     
+#align strict_mono_on.Iic_id_le StrictMonoOn.Iic_id_le
 
 theorem StrictMonoOn.Iic_le_id [PredOrder α] [IsPredArchimedean α] [OrderTop α] {n : α} {φ : α → α}
     (hφ : StrictMonoOn φ (Set.IciCat n)) : ∀ m, n ≤ m → φ m ≤ m :=
   @StrictMonoOn.Iic_id_le αᵒᵈ _ _ _ _ _ _ fun i hi j hj hij => hφ hj hi hij
+#align strict_mono_on.Iic_le_id StrictMonoOn.Iic_le_id
 
 variable [Preorder β] {ψ : α → β}
 
@@ -435,18 +487,22 @@ theorem strict_mono_on_Iic_of_lt_succ [SuccOrder α] [IsSuccArchimedean α] {n :
   rw [← Function.comp_apply succ, ← Function.iterate_succ']
   refine' hψ _ (lt_of_lt_of_le _ hy)
   rwa [Function.iterate_succ', Function.comp_apply, lt_succ_iff_not_is_max]
+#align strict_mono_on_Iic_of_lt_succ strict_mono_on_Iic_of_lt_succ
 
 theorem strict_anti_on_Iic_of_succ_lt [SuccOrder α] [IsSuccArchimedean α] {n : α} (hψ : ∀ m, m < n → ψ (succ m) < ψ m) :
     StrictAntiOn ψ (Set.IicCat n) := fun i hi j hj hij =>
   @strict_mono_on_Iic_of_lt_succ α βᵒᵈ _ _ ψ _ _ n hψ i hi j hj hij
+#align strict_anti_on_Iic_of_succ_lt strict_anti_on_Iic_of_succ_lt
 
 theorem strict_mono_on_Iic_of_pred_lt [PredOrder α] [IsPredArchimedean α] {n : α} (hψ : ∀ m, n < m → ψ (pred m) < ψ m) :
     StrictMonoOn ψ (Set.IciCat n) := fun i hi j hj hij =>
   @strict_mono_on_Iic_of_lt_succ αᵒᵈ βᵒᵈ _ _ ψ _ _ n hψ j hj i hi hij
+#align strict_mono_on_Iic_of_pred_lt strict_mono_on_Iic_of_pred_lt
 
 theorem strict_anti_on_Iic_of_lt_pred [PredOrder α] [IsPredArchimedean α] {n : α} (hψ : ∀ m, n < m → ψ m < ψ (pred m)) :
     StrictAntiOn ψ (Set.IciCat n) := fun i hi j hj hij =>
   @strict_anti_on_Iic_of_succ_lt αᵒᵈ βᵒᵈ _ _ ψ _ _ n hψ j hj i hi hij
+#align strict_anti_on_Iic_of_lt_pred strict_anti_on_Iic_of_lt_pred
 
 end SuccOrder
 

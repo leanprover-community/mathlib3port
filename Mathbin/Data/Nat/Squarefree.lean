@@ -26,9 +26,11 @@ namespace Nat
 theorem squarefree_iff_nodup_factors {n : ℕ} (h0 : n ≠ 0) : Squarefree n ↔ n.factors.Nodup := by
   rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors h0, Nat.factors_eq]
   simp
+#align nat.squarefree_iff_nodup_factors Nat.squarefree_iff_nodup_factors
 
 theorem squarefree_iff_prime_squarefree {n : ℕ} : Squarefree n ↔ ∀ x, Prime x → ¬x * x ∣ n :=
   squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible ⟨_, prime_two⟩
+#align nat.squarefree_iff_prime_squarefree Nat.squarefree_iff_prime_squarefree
 
 theorem Squarefree.factorization_le_one {n : ℕ} (p : ℕ) (hn : Squarefree n) : n.factorization p ≤ 1 := by
   rcases eq_or_ne n 0 with (rfl | hn')
@@ -43,15 +45,18 @@ theorem Squarefree.factorization_le_one {n : ℕ} (p : ℕ) (hn : Squarefree n) 
   · rw [factorization_eq_zero_of_non_prime _ hp]
     exact zero_le_one
     
+#align nat.squarefree.factorization_le_one Nat.Squarefree.factorization_le_one
 
 theorem squarefree_of_factorization_le_one {n : ℕ} (hn : n ≠ 0) (hn' : ∀ p, n.factorization p ≤ 1) : Squarefree n := by
   rw [squarefree_iff_nodup_factors hn, List.nodup_iff_count_le_one]
   intro a
   rw [factors_count_eq]
   apply hn'
+#align nat.squarefree_of_factorization_le_one Nat.squarefree_of_factorization_le_one
 
 theorem squarefree_iff_factorization_le_one {n : ℕ} (hn : n ≠ 0) : Squarefree n ↔ ∀ p, n.factorization p ≤ 1 :=
   ⟨fun p hn => Squarefree.factorization_le_one hn p, squarefree_of_factorization_le_one hn⟩
+#align nat.squarefree_iff_factorization_le_one Nat.squarefree_iff_factorization_le_one
 
 theorem Squarefree.ext_iff {n m : ℕ} (hn : Squarefree n) (hm : Squarefree m) : n = m ↔ ∀ p, Prime p → (p ∣ n ↔ p ∣ m) :=
   by
@@ -75,6 +80,7 @@ theorem Squarefree.ext_iff {n m : ℕ} (hn : Squarefree n) (hm : Squarefree m) :
       
     
   rw [factorization_eq_zero_of_non_prime _ hp, factorization_eq_zero_of_non_prime _ hp]
+#align nat.squarefree.ext_iff Nat.Squarefree.ext_iff
 
 theorem squarefree_pow_iff {n k : ℕ} (hn : n ≠ 1) (hk : k ≠ 0) : Squarefree (n ^ k) ↔ Squarefree n ∧ k = 1 := by
   refine'
@@ -89,6 +95,7 @@ theorem squarefree_pow_iff {n k : ℕ} (hn : n ≠ 1) (hk : k ≠ 0) : Squarefre
   apply hn (Nat.is_unit_iff.1 (h _ _))
   rw [← sq]
   exact pow_dvd_pow _ this
+#align nat.squarefree_pow_iff Nat.squarefree_pow_iff
 
 theorem squarefree_and_prime_pow_iff_prime {n : ℕ} : Squarefree n ∧ IsPrimePow n ↔ Prime n := by
   refine' Iff.symm ⟨fun hn => ⟨hn.Squarefree, hn.IsPrimePow⟩, _⟩
@@ -96,6 +103,7 @@ theorem squarefree_and_prime_pow_iff_prime {n : ℕ} : Squarefree n ∧ IsPrimeP
   rintro ⟨h, p, k, hp, hk, rfl⟩
   rw [squarefree_pow_iff hp.ne_one hk.ne'] at h
   rwa [h.2, pow_one]
+#align nat.squarefree_and_prime_pow_iff_prime Nat.squarefree_and_prime_pow_iff_prime
 
 /-- Assuming that `n` has no factors less than `k`, returns the smallest prime `p` such that
   `p^2 ∣ n`. -/
@@ -113,6 +121,7 @@ def minSqFacAux : ℕ → ℕ → Option ℕ
             this
         if k ∣ n' then some k else min_sq_fac_aux n' (k + 2)
       else min_sq_fac_aux n (k + 2)
+#align nat.min_sq_fac_aux Nat.minSqFacAux
 
 /-- Returns the smallest prime factor `p` of `n` such that `p^2 ∣ n`, or `none` if there is no
   such `p` (that is, `n` is squarefree). See also `squarefree_iff_min_sq_fac`. -/
@@ -121,6 +130,7 @@ def minSqFac (n : ℕ) : Option ℕ :=
     let n' := n / 2
     if 2 ∣ n' then some 2 else minSqFacAux n' 3
   else minSqFacAux n 3
+#align nat.min_sq_fac Nat.minSqFac
 
 /-- The correctness property of the return value of `min_sq_fac`.
   * If `none`, then `n` is squarefree;
@@ -128,6 +138,7 @@ def minSqFac (n : ℕ) : Option ℕ :=
 def MinSqFacProp (n : ℕ) : Option ℕ → Prop
   | none => Squarefree n
   | some d => Prime d ∧ d * d ∣ n ∧ ∀ p, Prime p → p * p ∣ n → d ≤ p
+#align nat.min_sq_fac_prop Nat.MinSqFacProp
 
 theorem min_sq_fac_prop_div (n) {k} (pk : Prime k) (dk : k ∣ n) (dkk : ¬k * k ∣ n) {o} (H : MinSqFacProp (n / k) o) :
     MinSqFacProp n o := by
@@ -145,6 +156,7 @@ theorem min_sq_fac_prop_div (n) {k} (pk : Prime k) (dk : k ∣ n) (dkk : ¬k * k
     simp only [dvd_div_iff dk] at H2 H3
     exact ⟨H1, dvd_trans (dvd_mul_left _ _) H2, fun p pp dp => H3 _ pp (this _ pp dp)⟩
     
+#align nat.min_sq_fac_prop_div Nat.min_sq_fac_prop_div
 
 theorem min_sq_fac_aux_has_prop :
     ∀ {n : ℕ} (k), 0 < n → ∀ i, k = 2 * i + 3 → (∀ m, Prime m → m ∣ n → k ≤ m) → MinSqFacProp n (minSqFacAux n k)
@@ -190,6 +202,7 @@ theorem min_sq_fac_aux_has_prop :
       
     · exact IH n (dvd_refl _) dk
       
+#align nat.min_sq_fac_aux_has_prop Nat.min_sq_fac_aux_has_prop
 
 theorem min_sq_fac_has_prop (n : ℕ) : MinSqFacProp n (minSqFac n) := by
   dsimp only [min_sq_fac]
@@ -215,16 +228,19 @@ theorem min_sq_fac_has_prop (n : ℕ) : MinSqFacProp n (minSqFac n) := by
     rintro rfl
     contradiction
     
+#align nat.min_sq_fac_has_prop Nat.min_sq_fac_has_prop
 
 theorem min_sq_fac_prime {n d : ℕ} (h : n.minSqFac = some d) : Prime d := by
   have := min_sq_fac_has_prop n
   rw [h] at this
   exact this.1
+#align nat.min_sq_fac_prime Nat.min_sq_fac_prime
 
 theorem min_sq_fac_dvd {n d : ℕ} (h : n.minSqFac = some d) : d * d ∣ n := by
   have := min_sq_fac_has_prop n
   rw [h] at this
   exact this.2.1
+#align nat.min_sq_fac_dvd Nat.min_sq_fac_dvd
 
 theorem min_sq_fac_le_of_dvd {n d : ℕ} (h : n.minSqFac = some d) {m} (m2 : 2 ≤ m) (md : m * m ∣ n) : d ≤ m := by
   have := min_sq_fac_has_prop n
@@ -233,6 +249,7 @@ theorem min_sq_fac_le_of_dvd {n d : ℕ} (h : n.minSqFac = some d) {m} (m2 : 2 �
   exact
     le_trans (this.2.2 _ (min_fac_prime <| ne_of_gt m2) (dvd_trans (mul_dvd_mul fd fd) md))
       (min_fac_le <| lt_of_lt_of_le (by decide) m2)
+#align nat.min_sq_fac_le_of_dvd Nat.min_sq_fac_le_of_dvd
 
 theorem squarefree_iff_min_sq_fac {n : ℕ} : Squarefree n ↔ n.minSqFac = none := by
   have := min_sq_fac_has_prop n
@@ -244,10 +261,12 @@ theorem squarefree_iff_min_sq_fac {n : ℕ} : Squarefree n ↔ n.minSqFac = none
     
   · rwa [H] at this
     
+#align nat.squarefree_iff_min_sq_fac Nat.squarefree_iff_min_sq_fac
 
 instance : DecidablePred (Squarefree : ℕ → Prop) := fun n => decidable_of_iff' _ squarefree_iff_min_sq_fac
 
 theorem squarefree_two : Squarefree 2 := by rw [squarefree_iff_nodup_factors] <;> norm_num
+#align nat.squarefree_two Nat.squarefree_two
 
 open UniqueFactorizationMonoid
 
@@ -303,6 +322,7 @@ theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
       apply hy hz
       
     
+#align nat.divisors_filter_squarefree Nat.divisors_filter_squarefree
 
 open BigOperators
 
@@ -310,6 +330,7 @@ theorem sum_divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) {α : Type _} [A
     (∑ i in n.divisors.filter Squarefree, f i) =
       ∑ i in (UniqueFactorizationMonoid.normalizedFactors n).toFinset.Powerset, f i.val.Prod :=
   by rw [Finset.sum_eq_multiset_sum, divisors_filter_squarefree h0, Multiset.map_map, Finset.sum_eq_multiset_sum]
+#align nat.sum_divisors_filter_squarefree Nat.sum_divisors_filter_squarefree
 
 theorem sq_mul_squarefree_of_pos {n : ℕ} (hn : 0 < n) : ∃ a b : ℕ, 0 < a ∧ 0 < b ∧ b ^ 2 * a = n ∧ Squarefree a := by
   let S := { s ∈ Finset.range (n + 1) | s ∣ n ∧ ∃ x, s = x ^ 2 }
@@ -337,10 +358,12 @@ theorem sq_mul_squarefree_of_pos {n : ℕ} (hn : 0 < n) : ∃ a b : ℕ, 0 < a �
         (one_lt_pow 2 x zero_lt_two (one_lt_iff_ne_zero_and_ne_one.mpr ⟨fun h => by simp_all, hx⟩))
     rw [mul_pow]
     
+#align nat.sq_mul_squarefree_of_pos Nat.sq_mul_squarefree_of_pos
 
 theorem sq_mul_squarefree_of_pos' {n : ℕ} (h : 0 < n) : ∃ a b : ℕ, (b + 1) ^ 2 * (a + 1) = n ∧ Squarefree (a + 1) := by
   obtain ⟨a₁, b₁, ha₁, hb₁, hab₁, hab₂⟩ := sq_mul_squarefree_of_pos h
   refine' ⟨a₁.pred, b₁.pred, _, _⟩ <;> simpa only [add_one, succ_pred_eq_of_pos, ha₁, hb₁]
+#align nat.sq_mul_squarefree_of_pos' Nat.sq_mul_squarefree_of_pos'
 
 theorem sq_mul_squarefree (n : ℕ) : ∃ a b : ℕ, b ^ 2 * a = n ∧ Squarefree a := by
   cases n
@@ -349,6 +372,7 @@ theorem sq_mul_squarefree (n : ℕ) : ∃ a b : ℕ, b ^ 2 * a = n ∧ Squarefre
   · obtain ⟨a, b, -, -, h₁, h₂⟩ := sq_mul_squarefree_of_pos (succ_pos n)
     exact ⟨a, b, h₁, h₂⟩
     
+#align nat.sq_mul_squarefree Nat.sq_mul_squarefree
 
 /-- `squarefree` is multiplicative. Note that the → direction does not require `hmn`
 and generalizes to arbitrary commutative monoids. See `squarefree.of_mul_left` and
@@ -357,6 +381,7 @@ theorem squarefree_mul {m n : ℕ} (hmn : m.Coprime n) : Squarefree (m * n) ↔ 
   simp only [squarefree_iff_prime_squarefree, ← sq, ← forall_and]
   refine' ball_congr fun p hp => _
   simp only [hmn.is_prime_pow_dvd_mul (hp.is_prime_pow.pow two_ne_zero), not_or]
+#align nat.squarefree_mul Nat.squarefree_mul
 
 end Nat
 
@@ -372,6 +397,7 @@ namespace NormNum
 /-- A predicate representing partial progress in a proof of `squarefree`. -/
 def SquarefreeHelper (n k : ℕ) : Prop :=
   0 < k → (∀ m, Nat.Prime m → m ∣ bit1 n → bit1 k ≤ m) → Squarefree (bit1 n)
+#align tactic.norm_num.squarefree_helper Tactic.NormNum.SquarefreeHelper
 
 theorem squarefree_bit10 (n : ℕ) (h : SquarefreeHelper n 1) : Squarefree (bit0 (bit1 n)) := by
   refine' @Nat.min_sq_fac_prop_div _ _ Nat.prime_two two_dvd_bit0 _ none _
@@ -383,11 +409,13 @@ theorem squarefree_bit10 (n : ℕ) (h : SquarefreeHelper n 1) : Squarefree (bit0
     rintro rfl
     exact Nat.not_two_dvd_bit1 _ dp
     
+#align tactic.norm_num.squarefree_bit10 Tactic.NormNum.squarefree_bit10
 
 theorem squarefree_bit1 (n : ℕ) (h : SquarefreeHelper n 1) : Squarefree (bit1 n) := by
   refine' h (by decide) fun p pp dp => Nat.succ_le_of_lt (lt_of_le_of_ne pp.two_le _)
   rintro rfl
   exact Nat.not_two_dvd_bit1 _ dp
+#align tactic.norm_num.squarefree_bit1 Tactic.NormNum.squarefree_bit1
 
 theorem squarefree_helper_0 {k} (k0 : 0 < k) {p : ℕ} (pp : Nat.Prime p) (h : bit1 k ≤ p) :
     bit1 (k + 1) ≤ p ∨ bit1 k = p := by
@@ -401,6 +429,7 @@ theorem squarefree_helper_0 {k} (k0 : 0 < k) {p : ℕ} (pp : Nat.Prime p) (h : b
     
   · exact Or.inr hp
     
+#align tactic.norm_num.squarefree_helper_0 Tactic.NormNum.squarefree_helper_0
 
 theorem squarefree_helper_1 (n k k' : ℕ) (e : k + 1 = k') (hk : Nat.Prime (bit1 k) → ¬bit1 k ∣ bit1 n)
     (H : SquarefreeHelper n k') : SquarefreeHelper n k := fun k0 ih => by
@@ -409,6 +438,7 @@ theorem squarefree_helper_1 (n k k' : ℕ) (e : k + 1 = k') (hk : Nat.Prime (bit
   refine' (squarefree_helper_0 k0 pp (ih p pp dp)).resolve_right fun hp => _
   subst hp
   cases hk pp dp
+#align tactic.norm_num.squarefree_helper_1 Tactic.NormNum.squarefree_helper_1
 
 theorem squarefree_helper_2 (n k k' c : ℕ) (e : k + 1 = k') (hc : bit1 n % bit1 k = c) (c0 : 0 < c)
     (h : SquarefreeHelper n k') : SquarefreeHelper n k := by
@@ -416,6 +446,7 @@ theorem squarefree_helper_2 (n k k' c : ℕ) (e : k + 1 = k') (hc : bit1 n % bit
   refine' mt _ (ne_of_gt c0)
   intro e₁
   rwa [← hc, ← Nat.dvd_iff_mod_eq_zero]
+#align tactic.norm_num.squarefree_helper_2 Tactic.NormNum.squarefree_helper_2
 
 theorem squarefree_helper_3 (n n' k k' c : ℕ) (e : k + 1 = k') (hn' : bit1 n' * bit1 k = bit1 n)
     (hc : bit1 n' % bit1 k = c) (c0 : 0 < c) (H : SquarefreeHelper n' k') : SquarefreeHelper n k := fun k0 ih => by
@@ -438,6 +469,7 @@ theorem squarefree_helper_3 (n n' k k' c : ℕ) (e : k + 1 = k') (hn' : bit1 n' 
   refine' (squarefree_helper_0 k0 pp (ih p pp <| dvd_trans dp dn')).resolve_right fun e => _
   subst e
   contradiction
+#align tactic.norm_num.squarefree_helper_3 Tactic.NormNum.squarefree_helper_3
 
 theorem squarefree_helper_4 (n k k' : ℕ) (e : bit1 k * bit1 k = k') (hd : bit1 n < k') : SquarefreeHelper n k := by
   cases' Nat.eq_zero_or_pos n with h h
@@ -451,10 +483,12 @@ theorem squarefree_helper_4 (n k k' : ℕ) (e : bit1 k * bit1 k = k') (hd : bit1
   have := (ih p pp (dvd_trans hp md)).trans (le_trans (Nat.le_of_dvd (lt_of_lt_of_le (by decide) m2) hp) hm)
   rw [Nat.le_sqrt] at this
   exact not_le_of_lt hd this
+#align tactic.norm_num.squarefree_helper_4 Tactic.NormNum.squarefree_helper_4
 
 theorem not_squarefree_mul (a aa b n : ℕ) (ha : a * a = aa) (hb : aa * b = n) (h₁ : 1 < a) : ¬Squarefree n := by
   rw [← hb, ← ha]
   exact fun H => ne_of_gt h₁ (Nat.is_unit_iff.1 <| H _ ⟨_, rfl⟩)
+#align tactic.norm_num.not_squarefree_mul Tactic.NormNum.not_squarefree_mul
 
 /-- Given `e` a natural numeral and `a : nat` with `a^2 ∣ n`, return `⊢ ¬ squarefree e`. -/
 unsafe def prove_non_squarefree (e : expr) (n a : ℕ) : tactic expr := do
@@ -468,6 +502,7 @@ unsafe def prove_non_squarefree (e : expr) (n a : ℕ) : tactic expr := do
   let (c, e', pb) ← prove_mul_nat c eaa eb
   guard (e' == e)
   return <| (quote.1 @not_squarefree_mul).mk_app [ea, eaa, eb, e, pa, pb, p₁]
+#align tactic.norm_num.prove_non_squarefree tactic.norm_num.prove_non_squarefree
 
 /-- Given `en`,`en1 := bit1 en`, `n1` the value of `en1`, `ek`,
   returns `⊢ squarefree_helper en ek`. -/
@@ -501,6 +536,7 @@ unsafe def prove_squarefree_aux : ∀ (ic : instance_cache) (en en1 : expr) (n1 
             let (ic, p₀) ← prove_pos ic ec
             let p₂ ← prove_squarefree_aux ic en en1 n1 ek' k'
             pure <| (quote.1 squarefree_helper_2).mk_app [en, ek, ek', ec, p₁, pc, p₀, p₂]
+#align tactic.norm_num.prove_squarefree_aux tactic.norm_num.prove_squarefree_aux
 
 /-- Given `n > 0` a squarefree natural numeral, returns `⊢ squarefree n`. -/
 unsafe def prove_squarefree (en : expr) (n : ℕ) : tactic expr :=
@@ -519,6 +555,7 @@ unsafe def prove_squarefree (en : expr) (n : ℕ) : tactic expr :=
     let p ← prove_squarefree_aux ic en' en n (quote.1 (1 : ℕ)) 1
     pure <| (quote.1 squarefree_bit1).mk_app [en', p]
   | _ => failed
+#align tactic.norm_num.prove_squarefree tactic.norm_num.prove_squarefree
 
 /-- Evaluates the `squarefree` predicate on naturals. -/
 @[norm_num]
@@ -533,6 +570,7 @@ unsafe def eval_squarefree : expr → tactic (expr × expr)
         | some d => prove_non_squarefree e n d >>= false_intro
         | none => prove_squarefree e n >>= true_intro
   | _ => failed
+#align tactic.norm_num.eval_squarefree tactic.norm_num.eval_squarefree
 
 end NormNum
 

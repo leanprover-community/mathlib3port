@@ -53,18 +53,21 @@ unsafe inductive target
   | forward : Name → target
   | backwards : Name → target
   deriving has_reflect
+#align tactic.alias.target tactic.alias.target
 
 /-- The name underlying an alias target -/
 unsafe def target.to_name : target → Name
   | target.plain n => n
   | target.forward n => n
   | target.backwards n => n
+#align tactic.alias.target.to_name tactic.alias.target.to_name
 
 /-- The docstring for an alias. Used by `alias` _and_ by `to_additive` -/
 unsafe def target.to_string : target → String
   | target.plain n => s! "**Alias** of `{n}`."
   | target.forward n => s! "**Alias** of the forward direction of `{n}`."
   | target.backwards n => s! "**Alias** of the reverse direction of `{n}`."
+#align tactic.alias.target.to_string tactic.alias.target.to_string
 
 /-- An auxiliary attribute which is placed on definitions created by the `alias` command. -/
 @[user_attribute]
@@ -72,6 +75,7 @@ unsafe def alias_attr : user_attribute Unit target where
   Name := `alias
   descr := "This definition is an alias of another."
   parser := failed
+#align tactic.alias.alias_attr tactic.alias.alias_attr
 
 /-- The core tactic which handles `alias d ← al`. Creates an alias `al` for declaration `d`. -/
 unsafe def alias_direct (doc : Option String) (d : declaration) (al : Name) : tactic Unit := do
@@ -85,6 +89,7 @@ unsafe def alias_direct (doc : Option String) (d : declaration) (al : Name) : ta
   let target := target.plain d.to_name
   alias_attr al target tt
   add_doc_string al (doc target)
+#align tactic.alias.alias_direct tactic.alias.alias_direct
 
 /-- Given a proof of `Π x y z, a ↔ b`, produces a proof of `Π x y z, a → b` or `Π x y z, b → a`
 (depending on whether `iffmp` is `iff.mp` or `iff.mpr`). The variable `f` supplies the proof,
@@ -93,6 +98,7 @@ unsafe def mk_iff_mp_app (iffmp : Name) : expr → (ℕ → expr) → tactic exp
   | expr.pi n bi e t, f => expr.lam n bi e <$> mk_iff_mp_app t fun n => f (n + 1) (expr.var n)
   | quote.1 ((%%ₓa) ↔ %%ₓb), f => pure <| @expr.const true iffmp [] a b (f 0)
   | _, f => fail "Target theorem must have the form `Π x y z, a ↔ b`"
+#align tactic.alias.mk_iff_mp_app tactic.alias.mk_iff_mp_app
 
 /-- The core tactic which handles `alias d ↔ al _` or `alias d ↔ _ al`. `ns` is the current
 namespace, and `is_forward` is true if this is the forward implication (the first form). -/
@@ -110,6 +116,7 @@ unsafe def alias_iff (doc : Option String) (d : declaration) (ns al : Name) (is_
       updateex_env fun env => env (declaration.thm al ls t' <| task.pure v)
       alias_attr al target tt
       add_doc_string al (doc target)
+#align tactic.alias.alias_iff tactic.alias.alias_iff
 
 /-- Get the default names for left/right to be used by `alias d ↔ ..`. -/
 unsafe def make_left_right : Name → tactic (Name × Name)
@@ -125,6 +132,7 @@ unsafe def make_left_right : Name → tactic (Name × Name)
         (.str p ("_".intercalate (right ++ "of" :: left ++ suffix)),
           .str p ("_".intercalate (left ++ "of" :: right ++ suffix)))
   | _ => failed
+#align tactic.alias.make_left_right tactic.alias.make_left_right
 
 /-- The `alias` command can be used to create copies
 of a theorem or definition with different names.
@@ -176,11 +184,12 @@ unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse <| tk "alias") : le
       do
       tk "↔" <|> tk "<->"
       let (left, right) ←
-        mcond (tk ".." >> pure tt <|> pure ff)
+        condM (tk ".." >> pure tt <|> pure ff)
             (make_left_right old <|> fail "invalid name for automatic name generation")
             (Prod.mk <$> types.ident_ <*> types.ident_)
       alias_iff doc d ns left tt
       alias_iff doc d ns right ff
+#align tactic.alias.alias_cmd tactic.alias.alias_cmd
 
 add_tactic_doc
   { Name := "alias", category := DocCategory.cmd, declNames := [`tactic.alias.alias_cmd], tags := ["renaming"] }
@@ -188,9 +197,11 @@ add_tactic_doc
 /-- Given a definition, look up the definition that it is an alias of.
 Returns `none` if this defintion is not an alias. -/
 unsafe def get_alias_target (n : Name) : tactic (Option target) := do
-  let tt ← has_attribute' `alias n | pure none
+  let tt ← has_attribute' `alias n |
+    pure none
   let v ← alias_attr.get_param n
   pure <| some v
+#align tactic.alias.get_alias_target tactic.alias.get_alias_target
 
 end Tactic.Alias
 

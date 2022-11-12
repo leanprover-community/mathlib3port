@@ -30,6 +30,7 @@ class OreSet {R : Type _} [Monoid R] (S : Submonoid R) where
   oreNum : R → S → R
   oreDenom : R → S → S
   ore_eq : ∀ (r : R) (s : S), r * ore_denom r s = s * ore_num r s
+#align ore_localization.ore_set OreLocalization.OreSet
 
 variable {R : Type _} [Monoid R] {S : Submonoid R} [OreSet S]
 
@@ -37,23 +38,28 @@ variable {R : Type _} [Monoid R] {S : Submonoid R} [OreSet S]
 cancellability. -/
 theorem ore_left_cancel (r₁ r₂ : R) (s : S) (h : ↑s * r₁ = s * r₂) : ∃ s' : S, r₁ * s' = r₂ * s' :=
   OreSet.ore_left_cancel r₁ r₂ s h
+#align ore_localization.ore_left_cancel OreLocalization.ore_left_cancel
 
 /-- The Ore numerator of a fraction. -/
 def oreNum (r : R) (s : S) : R :=
   OreSet.oreNum r s
+#align ore_localization.ore_num OreLocalization.oreNum
 
 /-- The Ore denominator of a fraction. -/
 def oreDenom (r : R) (s : S) : S :=
   OreSet.oreDenom r s
+#align ore_localization.ore_denom OreLocalization.oreDenom
 
 /-- The Ore condition of a fraction, expressed in terms of `ore_num` and `ore_denom`. -/
 theorem ore_eq (r : R) (s : S) : r * oreDenom r s = s * oreNum r s :=
   OreSet.ore_eq r s
+#align ore_localization.ore_eq OreLocalization.ore_eq
 
 /-- The Ore condition bundled in a sigma type. This is useful in situations where we want to obtain
 both witnesses and the condition for a given fraction. -/
 def oreCondition (r : R) (s : S) : Σ'r' : R, Σ's' : S, r * s' = s * r' :=
   ⟨oreNum r s, oreDenom r s, ore_eq r s⟩
+#align ore_localization.ore_condition OreLocalization.oreCondition
 
 /-- The trivial submonoid is an Ore set. -/
 instance oreSetBot : OreSet (⊥ : Submonoid R) where
@@ -70,6 +76,7 @@ instance oreSetBot : OreSet (⊥ : Submonoid R) where
     rcases s with ⟨s, hs⟩
     rw [Submonoid.mem_bot] at hs
     simp [hs]
+#align ore_localization.ore_set_bot OreLocalization.oreSetBot
 
 /-- Every submonoid of a commutative monoid is an Ore set. -/
 instance (priority := 100) oreSetComm {R} [CommMonoid R] (S : Submonoid R) : OreSet S where
@@ -77,6 +84,7 @@ instance (priority := 100) oreSetComm {R} [CommMonoid R] (S : Submonoid R) : Ore
   oreNum r _ := r
   oreDenom _ s := s
   ore_eq r s := by rw [mul_comm]
+#align ore_localization.ore_set_comm OreLocalization.oreSetComm
 
 end Monoid
 
@@ -86,6 +94,7 @@ def oreSetOfCancelMonoidWithZero {R : Type _} [CancelMonoidWithZero R] {S : Subm
     (ore_denom : R → S → S) (ore_eq : ∀ (r : R) (s : S), r * ore_denom r s = s * ore_num r s) : OreSet S :=
   { ore_left_cancel := fun r₁ r₂ s h => ⟨s, mul_eq_mul_right_iff.mpr (mul_eq_mul_left_iff.mp h)⟩, oreNum, oreDenom,
     ore_eq }
+#align ore_localization.ore_set_of_cancel_monoid_with_zero OreLocalization.oreSetOfCancelMonoidWithZero
 
 /-- In rings without zero divisors, the first (cancellability) condition is always fulfilled,
 it suffices to give a proof for the Ore condition itself. -/
@@ -93,6 +102,7 @@ def oreSetOfNoZeroDivisors {R : Type _} [Ring R] [NoZeroDivisors R] {S : Submono
     (ore_denom : R → S → S) (ore_eq : ∀ (r : R) (s : S), r * ore_denom r s = s * ore_num r s) : OreSet S :=
   letI : CancelMonoidWithZero R := NoZeroDivisors.toCancelMonoidWithZero
   ore_set_of_cancel_monoid_with_zero ore_num ore_denom ore_eq
+#align ore_localization.ore_set_of_no_zero_divisors OreLocalization.oreSetOfNoZeroDivisors
 
 end OreLocalization
 

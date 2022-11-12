@@ -67,6 +67,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
       le_mul_of_one_le_right (Nat.cast_nonneg _) ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)
     _ = (m + m : ℕ) / (ε / ∥k∥) * ∥y∥ := (mul_comm_div _ _ _).symm
     
+#align banach_steinhaus banach_steinhaus
 
 open Ennreal
 
@@ -89,6 +90,7 @@ theorem banach_steinhaus_supr_nnnorm {ι : Type _} [CompleteSpace E] {g : ι →
   refine' (supr_le fun i => _).trans_lt (@coe_lt_top C'.to_nnreal)
   rw [← norm_to_nnreal]
   exact coe_mono (Real.to_nnreal_le_to_nnreal <| hC' i)
+#align banach_steinhaus_supr_nnnorm banach_steinhaus_supr_nnnorm
 
 open TopologicalSpace
 
@@ -128,4 +130,5 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       _ < ∥g n∥ * ∥x∥ + ε := by linarith [lt_ε, (g n).le_op_norm x]
       _ ≤ C' * ∥x∥ + ε := by nlinarith [hC' n, norm_nonneg x]
       
+#align continuous_linear_map_of_tendsto continuousLinearMapOfTendsto
 

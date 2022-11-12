@@ -31,6 +31,7 @@ unsafe def guard_mem_fin (e : expr) : tactic expr := do
       to_expr (pquote.1 (_ ∈ (_ : Multiset (%%ₓα)))) tt ff >>= unify t <|>
         to_expr (pquote.1 (_ ∈ (_ : List (%%ₓα)))) tt ff >>= unify t
   instantiate_mvars α
+#align tactic.guard_mem_fin tactic.guard_mem_fin
 
 /-- `expr_list_to_list_expr` converts an `expr` of type `list α`
 to a list of `expr`s each with type `α`.
@@ -41,6 +42,7 @@ unsafe def expr_list_to_list_expr : ∀ e : expr, tactic (List expr)
   | quote.1 (List.cons (%%ₓh) (%%ₓt)) => List.cons h <$> expr_list_to_list_expr t
   | quote.1 [] => return []
   | _ => failed
+#align tactic.expr_list_to_list_expr tactic.expr_list_to_list_expr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), tactic Unit
@@ -75,6 +77,7 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
         [] =>
         skip
       | _ => failed
+#align tactic.fin_cases_at_aux tactic.fin_cases_at_aux
 
 /-- `fin_cases_at with_list e` performs case analysis on `e : α`, where `α` is a fintype.
 The optional list of expressions `with_list` provides descriptions for the cases of `e`,
@@ -103,6 +106,7 @@ unsafe def fin_cases_at (nm : Option Name) : ∀ (with_list : Option pexpr) (e :
                 expr_list_to_list_expr e
               | none => return []
           fin_cases_at_aux with_list e
+#align tactic.fin_cases_at tactic.fin_cases_at
 
 namespace Interactive
 
@@ -110,6 +114,7 @@ setup_tactic_parser
 
 private unsafe def hyp :=
   tk "*" *> return none <|> some <$> ident
+#align tactic.interactive.hyp tactic.interactive.hyp
 
 /-- `fin_cases h` performs case analysis on a hypothesis of the form
 `h : A`, where `[fintype A]` is available, or
@@ -167,6 +172,7 @@ unsafe def fin_cases : parse hyp → parse (tk "with" *> texpr)? → parse (tk "
   | some n, with_list, nm => do
     let h ← get_local n
     fin_cases_at nm with_list h
+#align tactic.interactive.fin_cases tactic.interactive.fin_cases
 
 end Interactive
 

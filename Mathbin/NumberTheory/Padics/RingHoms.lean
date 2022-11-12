@@ -68,6 +68,7 @@ See `padic_int.zmod_repr` for a version that takes values in `ℕ`
 and works for arbitrary `x : ℤ_[p]`.) -/
 def modPart : ℤ :=
   r.num * gcdA r.denom p % p
+#align padic_int.mod_part PadicInt.modPart
 
 include hp_prime
 
@@ -79,9 +80,11 @@ theorem mod_part_lt_p : modPart p r < p := by
     
   · exact_mod_cast hp_prime.1.NeZero
     
+#align padic_int.mod_part_lt_p PadicInt.mod_part_lt_p
 
 theorem mod_part_nonneg : 0 ≤ modPart p r :=
   Int.mod_nonneg _ <| by exact_mod_cast hp_prime.1.NeZero
+#align padic_int.mod_part_nonneg PadicInt.mod_part_nonneg
 
 theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.denom : ℤ_[p]) := by
   rw [is_unit_iff]
@@ -104,6 +107,7 @@ theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.deno
     exact ⟨key, norm_denom_lt⟩
   apply hp_prime.1.not_dvd_one
   rwa [← r.cop.gcd_eq_one, Nat.dvd_gcd_iff, ← Int.coe_nat_dvd_left, ← Int.coe_nat_dvd]
+#align padic_int.is_unit_denom PadicInt.is_unit_denom
 
 theorem norm_sub_mod_part_aux (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : ↑p ∣ r.num - r.num * r.denom.gcdA p % p * ↑r.denom := by
   rw [← Zmod.int_coe_zmod_eq_zero_iff_dvd]
@@ -122,6 +126,7 @@ theorem norm_sub_mod_part_aux (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : ↑p �
   apply ge_of_eq
   rw [← is_unit_iff]
   exact is_unit_denom r h
+#align padic_int.norm_sub_mod_part_aux PadicInt.norm_sub_mod_part_aux
 
 theorem norm_sub_mod_part (h : ∥(r : ℚ_[p])∥ ≤ 1) : ∥(⟨r, h⟩ - modPart p r : ℤ_[p])∥ < 1 := by
   let n := mod_part p r
@@ -134,10 +139,12 @@ theorem norm_sub_mod_part (h : ∥(r : ℚ_[p])∥ ≤ 1) : ∥(⟨r, h⟩ - mod
     rw_mod_cast [@Rat.mul_denom_eq_num r]
     rfl
   exact norm_sub_mod_part_aux r h
+#align padic_int.norm_sub_mod_part PadicInt.norm_sub_mod_part
 
 theorem exists_mem_range_of_norm_rat_le_one (h : ∥(r : ℚ_[p])∥ ≤ 1) :
     ∃ n : ℤ, 0 ≤ n ∧ n < p ∧ ∥(⟨r, h⟩ - n : ℤ_[p])∥ < 1 :=
   ⟨modPart p r, mod_part_nonneg _, mod_part_lt_p _, norm_sub_mod_part _ h⟩
+#align padic_int.exists_mem_range_of_norm_rat_le_one PadicInt.exists_mem_range_of_norm_rat_le_one
 
 theorem zmod_congr_of_sub_mem_span_aux (n : ℕ) (x : ℤ_[p]) (a b : ℤ) (ha : x - a ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]))
     (hb : x - b ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p])) : (a : Zmod (p ^ n)) = b := by
@@ -147,10 +154,12 @@ theorem zmod_congr_of_sub_mem_span_aux (n : ℕ) (x : ℤ_[p]) (a b : ℤ) (ha :
   have := dvd_add ha hb
   rwa [sub_eq_add_neg, sub_eq_add_neg, add_assoc, neg_add_cancel_left, ← sub_eq_add_neg, ← Int.cast_sub,
     pow_p_dvd_int_iff] at this
+#align padic_int.zmod_congr_of_sub_mem_span_aux PadicInt.zmod_congr_of_sub_mem_span_aux
 
 theorem zmod_congr_of_sub_mem_span (n : ℕ) (x : ℤ_[p]) (a b : ℕ) (ha : x - a ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]))
     (hb : x - b ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p])) : (a : Zmod (p ^ n)) = b := by
   simpa using zmod_congr_of_sub_mem_span_aux n x a b ha hb
+#align padic_int.zmod_congr_of_sub_mem_span PadicInt.zmod_congr_of_sub_mem_span
 
 theorem zmod_congr_of_sub_mem_max_ideal (x : ℤ_[p]) (m n : ℕ) (hm : x - m ∈ maximalIdeal ℤ_[p])
     (hn : x - n ∈ maximalIdeal ℤ_[p]) : (m : Zmod p) = n := by
@@ -161,6 +170,7 @@ theorem zmod_congr_of_sub_mem_max_ideal (x : ℤ_[p]) (m n : ℕ) (hm : x - m �
   apply_fun Zmod.castHom (show p ∣ p ^ 1 by rw [pow_one]) (Zmod p)  at this
   simp only [map_int_cast] at this
   simpa only [Int.cast_ofNat] using this
+#align padic_int.zmod_congr_of_sub_mem_max_ideal PadicInt.zmod_congr_of_sub_mem_max_ideal
 
 variable (x : ℤ_[p])
 
@@ -185,21 +195,26 @@ theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p]
   apply lt_of_le_of_lt (padicNormE.nonarchimedean _ _)
   apply max_lt hr
   simpa using hn
+#align padic_int.exists_mem_range PadicInt.exists_mem_range
 
 /-- `zmod_repr x` is the unique natural number smaller than `p`
 satisfying `∥(x - zmod_repr x : ℤ_[p])∥ < 1`.
 -/
 def zmodRepr : ℕ :=
   Classical.choose (exists_mem_range x)
+#align padic_int.zmod_repr PadicInt.zmodRepr
 
 theorem zmod_repr_spec : zmodRepr x < p ∧ x - zmodRepr x ∈ maximalIdeal ℤ_[p] :=
   Classical.choose_spec (exists_mem_range x)
+#align padic_int.zmod_repr_spec PadicInt.zmod_repr_spec
 
 theorem zmod_repr_lt_p : zmodRepr x < p :=
   (zmod_repr_spec _).1
+#align padic_int.zmod_repr_lt_p PadicInt.zmod_repr_lt_p
 
 theorem sub_zmod_repr_mem : x - zmodRepr x ∈ maximalIdeal ℤ_[p] :=
   (zmod_repr_spec _).2
+#align padic_int.sub_zmod_repr_mem PadicInt.sub_zmod_repr_mem
 
 /-- `to_zmod_hom` is an auxiliary constructor for creating ring homs from `ℤ_[p]` to `zmod v`.
 -/
@@ -240,6 +255,7 @@ def toZmodHom (v : ℕ) (f : ℤ_[p] → ℕ) (f_spec : ∀ x, x - f x ∈ (Idea
       rw [cast_mul]
       ring
       
+#align padic_int.to_zmod_hom PadicInt.toZmodHom
 
 /-- `to_zmod` is a ring hom from `ℤ_[p]` to `zmod p`,
 with the equality `to_zmod x = (zmod_repr x : zmod p)`.
@@ -252,6 +268,7 @@ def toZmod : ℤ_[p] →+* Zmod p :=
     (by
       rw [← maximal_ideal_eq_span_p]
       exact zmod_congr_of_sub_mem_max_ideal)
+#align padic_int.to_zmod PadicInt.toZmod
 
 /-- `z - (to_zmod z : ℤ_[p])` is contained in the maximal ideal of `ℤ_[p]`, for every `z : ℤ_[p]`.
 
@@ -270,6 +287,7 @@ theorem to_zmod_spec (z : ℤ_[p]) : z - (toZmod z : ℤ_[p]) ∈ maximalIdeal �
   simp only [Zmod.val_nat_cast, add_zero, add_def, Nat.cast_inj, zero_add]
   apply mod_eq_of_lt
   simpa only [zero_add] using zmod_repr_lt_p z
+#align padic_int.to_zmod_spec PadicInt.to_zmod_spec
 
 theorem ker_to_zmod : (toZmod : ℤ_[p] →+* Zmod p).ker = maximalIdeal ℤ_[p] := by
   ext x
@@ -285,6 +303,7 @@ theorem ker_to_zmod : (toZmod : ℤ_[p] →+* Zmod p).ker = maximalIdeal ℤ_[p]
     norm_cast
     apply sub_zmod_repr_mem
     
+#align padic_int.ker_to_zmod PadicInt.ker_to_zmod
 
 /-- `appr n x` gives a value `v : ℕ` such that `x` and `↑v : ℤ_p` are congruent mod `p^n`.
 See `appr_spec`. -/
@@ -296,6 +315,7 @@ noncomputable def appr : ℤ_[p] → ℕ → ℕ
     else
       let u := unitCoeff hy
       appr x n + p ^ n * (toZmod ((u : ℤ_[p]) * p ^ (y.Valuation - n).natAbs)).val
+#align padic_int.appr PadicInt.appr
 
 theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < p ^ n := by
   induction' n with n ih generalizing x
@@ -319,6 +339,7 @@ theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < p ^ n := by
       apply add_tsub_cancel_of_le (le_of_lt hp)
       
     
+#align padic_int.appr_lt PadicInt.appr_lt
 
 theorem appr_mono (x : ℤ_[p]) : Monotone x.appr := by
   apply monotone_nat_of_le_succ
@@ -328,6 +349,7 @@ theorem appr_mono (x : ℤ_[p]) : Monotone x.appr := by
   · rfl
     
   apply Nat.le_add_right
+#align padic_int.appr_mono PadicInt.appr_mono
 
 theorem dvd_appr_sub_appr (x : ℤ_[p]) (m n : ℕ) (h : m ≤ n) : p ^ m ∣ x.appr n - x.appr m := by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le h
@@ -344,6 +366,7 @@ theorem dvd_appr_sub_appr (x : ℤ_[p]) (m n : ℕ) (h : m ≤ n) : p ^ m ∣ x.
   apply dvd_add _ ih
   apply dvd_mul_of_dvd_left
   apply pow_dvd_pow _ (Nat.le_add_right m k)
+#align padic_int.dvd_appr_sub_appr PadicInt.dvd_appr_sub_appr
 
 theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]) := by
   simp only [Ideal.mem_span_singleton]
@@ -388,6 +411,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
     rw [unit_coeff_spec hc']
     exact (dvd_pow_self (p : ℤ_[p]) hc0.ne').mul_left _
     
+#align padic_int.appr_spec PadicInt.appr_spec
 
 /-- A ring hom from `ℤ_[p]` to `zmod (p^n)`, with underlying function `padic_int.appr n`. -/
 def toZmodPow (n : ℕ) : ℤ_[p] →+* Zmod (p ^ n) :=
@@ -403,6 +427,7 @@ def toZmodPow (n : ℕ) : ℤ_[p] →+* Zmod (p ^ n) :=
         
       · simpa using hb
         )
+#align padic_int.to_zmod_pow PadicInt.toZmodPow
 
 theorem ker_to_zmod_pow (n : ℕ) : (toZmodPow n : ℤ_[p] →+* Zmod (p ^ n)).ker = Ideal.span {p ^ n} := by
   ext x
@@ -422,6 +447,7 @@ theorem ker_to_zmod_pow (n : ℕ) : (toZmodPow n : ℤ_[p] →+* Zmod (p ^ n)).k
     rw [zmod_congr_of_sub_mem_span n x _ 0 _ h, cast_zero]
     apply appr_spec
     
+#align padic_int.ker_to_zmod_pow PadicInt.ker_to_zmod_pow
 
 @[simp]
 theorem zmod_cast_comp_to_zmod_pow (m n : ℕ) (h : m ≤ n) :
@@ -429,7 +455,7 @@ theorem zmod_cast_comp_to_zmod_pow (m n : ℕ) (h : m ≤ n) :
   apply Zmod.ring_hom_eq_of_ker_eq
   ext x
   rw [RingHom.mem_ker, RingHom.mem_ker]
-  simp only [Function.comp_app, Zmod.cast_hom_apply, RingHom.coe_comp]
+  simp only [Function.comp_apply, Zmod.cast_hom_apply, RingHom.coe_comp]
   simp only [to_zmod_pow, to_zmod_hom, RingHom.coe_mk]
   rw [Zmod.cast_nat_cast (pow_dvd_pow p h), zmod_congr_of_sub_mem_span m (x.appr n) (x.appr n) (x.appr m)]
   · rw [sub_self]
@@ -442,11 +468,13 @@ theorem zmod_cast_comp_to_zmod_pow (m n : ℕ) (h : m ≤ n) :
     
   · infer_instance
     
+#align padic_int.zmod_cast_comp_to_zmod_pow PadicInt.zmod_cast_comp_to_zmod_pow
 
 @[simp]
 theorem cast_to_zmod_pow (m n : ℕ) (h : m ≤ n) (x : ℤ_[p]) : ↑(toZmodPow n x) = toZmodPow m x := by
   rw [← zmod_cast_comp_to_zmod_pow _ _ h]
   rfl
+#align padic_int.cast_to_zmod_pow PadicInt.cast_to_zmod_pow
 
 theorem dense_range_nat_cast : DenseRange (Nat.cast : ℕ → ℤ_[p]) := by
   intro x
@@ -458,6 +486,7 @@ theorem dense_range_nat_cast : DenseRange (Nat.cast : ℕ → ℤ_[p]) := by
   apply lt_of_le_of_lt _ hn
   rw [norm_le_pow_iff_mem_span_pow]
   apply appr_spec
+#align padic_int.dense_range_nat_cast PadicInt.dense_range_nat_cast
 
 theorem dense_range_int_cast : DenseRange (Int.cast : ℤ → ℤ_[p]) := by
   intro x
@@ -469,6 +498,7 @@ theorem dense_range_int_cast : DenseRange (Int.cast : ℤ → ℤ_[p]) := by
     apply subset_closure
     exact Set.mem_range_self _
     
+#align padic_int.dense_range_int_cast PadicInt.dense_range_int_cast
 
 end RingHoms
 
@@ -490,9 +520,11 @@ whose `n`th value is the unique integer `k` such that `0 ≤ k < p ^ n`
 and `f n r = (k : zmod (p ^ n))`.
 -/
 def nthHom (r : R) : ℕ → ℤ := fun n => (f n r : Zmod (p ^ n)).val
+#align padic_int.nth_hom PadicInt.nthHom
 
 @[simp]
 theorem nth_hom_zero : nthHom f 0 = 0 := by simp [nth_hom] <;> rfl
+#align padic_int.nth_hom_zero PadicInt.nth_hom_zero
 
 variable {f}
 
@@ -506,16 +538,18 @@ theorem pow_dvd_nth_hom_sub (r : R) (i j : ℕ) (h : i ≤ j) : ↑p ^ i ∣ nth
   dsimp [nth_hom]
   rw [← f_compat, RingHom.comp_apply]
   simp only [Zmod.cast_id, Zmod.cast_hom_apply, sub_self, Zmod.nat_cast_val, Zmod.int_cast_cast]
+#align padic_int.pow_dvd_nth_hom_sub PadicInt.pow_dvd_nth_hom_sub
 
 theorem isCauSeqNthHom (r : R) : IsCauSeq (padicNorm p) fun n => nthHom f r n := by
   intro ε hε
-  obtain ⟨k, hk⟩ : ∃ k : ℕ, (p ^ -(↑(k : ℕ) : ℤ) : ℚ) < ε := exists_pow_neg_lt_rat p hε
+  obtain ⟨k, hk⟩ : ∃ k : ℕ, (p ^ (-(↑(k : ℕ) : ℤ)) : ℚ) < ε := exists_pow_neg_lt_rat p hε
   use k
   intro j hj
   refine' lt_of_le_of_lt _ hk
   norm_cast
   rw [← padicNorm.dvd_iff_norm_le]
   exact_mod_cast pow_dvd_nth_hom_sub f_compat r k j hj
+#align padic_int.is_cau_seq_nth_hom PadicInt.isCauSeqNthHom
 
 /-- `nth_hom_seq f_compat r` bundles `padic_int.nth_hom f r`
 as a Cauchy sequence of rationals with respect to the `p`-adic norm.
@@ -523,6 +557,7 @@ The `n`th value of the sequence is `((f n r).val : ℚ)`.
 -/
 def nthHomSeq (r : R) : PadicSeq p :=
   ⟨fun n => nthHom f r n, isCauSeqNthHom f_compat r⟩
+#align padic_int.nth_hom_seq PadicInt.nthHomSeq
 
 -- this lemma ran into issues after changing to `ne_zero` and I'm not sure why.
 theorem nth_hom_seq_one : nthHomSeq f_compat 1 ≈ 1 := by
@@ -533,6 +568,7 @@ theorem nth_hom_seq_one : nthHomSeq f_compat 1 ≈ 1 := by
   haveI : Fact (1 < p ^ j) := ⟨Nat.one_lt_pow _ _ (by linarith) hp_prime.1.one_lt⟩
   suffices ((1 : Zmod (p ^ j)) : ℚ) = 1 by simp [nth_hom_seq, nth_hom, this, hε]
   rw [Zmod.cast_eq_val, Zmod.val_one, Nat.cast_one]
+#align padic_int.nth_hom_seq_one PadicInt.nth_hom_seq_one
 
 theorem nth_hom_seq_add (r s : R) : nthHomSeq f_compat (r + s) ≈ nthHomSeq f_compat r + nthHomSeq f_compat s := by
   intro ε hε
@@ -547,6 +583,7 @@ theorem nth_hom_seq_add (r s : R) : nthHomSeq f_compat (r + s) ≈ nthHomSeq f_c
   rw [Zmod.cast_add (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
   · infer_instance
     
+#align padic_int.nth_hom_seq_add PadicInt.nth_hom_seq_add
 
 theorem nth_hom_seq_mul (r s : R) : nthHomSeq f_compat (r * s) ≈ nthHomSeq f_compat r * nthHomSeq f_compat s := by
   intro ε hε
@@ -561,12 +598,14 @@ theorem nth_hom_seq_mul (r s : R) : nthHomSeq f_compat (r * s) ≈ nthHomSeq f_c
   rw [Zmod.cast_mul (show p ^ n ∣ p ^ j from pow_dvd_pow _ hj), sub_self]
   · infer_instance
     
+#align padic_int.nth_hom_seq_mul PadicInt.nth_hom_seq_mul
 
 /-- `lim_nth_hom f_compat r` is the limit of a sequence `f` of compatible ring homs `R →+* zmod (p^k)`.
 This is itself a ring hom: see `padic_int.lift`.
 -/
 def limNthHom (r : R) : ℤ_[p] :=
   ofIntSeq (nthHom f r) (isCauSeqNthHom f_compat r)
+#align padic_int.lim_nth_hom PadicInt.limNthHom
 
 theorem lim_nth_hom_spec (r : R) : ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀ n ≥ N, ∥limNthHom f_compat r - nthHom f r n∥ < ε := by
   intro ε hε
@@ -579,17 +618,22 @@ theorem lim_nth_hom_spec (r : R) : ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀ n �
   change ↑(padicNormE _) < _
   norm_cast
   exact hN _ hn
+#align padic_int.lim_nth_hom_spec PadicInt.lim_nth_hom_spec
 
 theorem lim_nth_hom_zero : limNthHom f_compat 0 = 0 := by simp [lim_nth_hom] <;> rfl
+#align padic_int.lim_nth_hom_zero PadicInt.lim_nth_hom_zero
 
 theorem lim_nth_hom_one : limNthHom f_compat 1 = 1 :=
   Subtype.ext <| Quot.sound <| nth_hom_seq_one _
+#align padic_int.lim_nth_hom_one PadicInt.lim_nth_hom_one
 
 theorem lim_nth_hom_add (r s : R) : limNthHom f_compat (r + s) = limNthHom f_compat r + limNthHom f_compat s :=
   Subtype.ext <| Quot.sound <| nth_hom_seq_add _ _ _
+#align padic_int.lim_nth_hom_add PadicInt.lim_nth_hom_add
 
 theorem lim_nth_hom_mul (r s : R) : limNthHom f_compat (r * s) = limNthHom f_compat r * limNthHom f_compat s :=
   Subtype.ext <| Quot.sound <| nth_hom_seq_mul _ _ _
+#align padic_int.lim_nth_hom_mul PadicInt.lim_nth_hom_mul
 
 -- TODO: generalize this to arbitrary complete discrete valuation rings
 /-- `lift f_compat` is the limit of a sequence `f` of compatible ring homs `R →+* zmod (p^k)`,
@@ -601,6 +645,7 @@ def lift : R →+* ℤ_[p] where
   map_mul' := lim_nth_hom_mul f_compat
   map_zero' := lim_nth_hom_zero f_compat
   map_add' := lim_nth_hom_add f_compat
+#align padic_int.lift PadicInt.lift
 
 omit f_compat
 
@@ -616,6 +661,7 @@ theorem lift_sub_val_mem_span (r : R) (n : ℕ) : lift f_compat r - (f n r).val 
   rw [Ideal.mem_span_singleton]
   simpa only [eq_int_cast, RingHom.map_pow, Int.cast_sub] using
     (Int.castRingHom ℤ_[p]).map_dvd (pow_dvd_nth_hom_sub f_compat r n (max n k) (le_max_left _ _))
+#align padic_int.lift_sub_val_mem_span PadicInt.lift_sub_val_mem_span
 
 /-- One part of the universal property of `ℤ_[p]` as a projective limit.
 See also `padic_int.lift_unique`.
@@ -625,6 +671,7 @@ theorem lift_spec (n : ℕ) : (toZmodPow n).comp (lift f_compat) = f n := by
   rw [RingHom.comp_apply, ← Zmod.nat_cast_zmod_val (f n r), ← map_nat_cast <| to_zmod_pow n, ← sub_eq_zero, ←
     RingHom.map_sub, ← RingHom.mem_ker, ker_to_zmod_pow]
   apply lift_sub_val_mem_span
+#align padic_int.lift_spec PadicInt.lift_spec
 
 /-- One part of the universal property of `ℤ_[p]` as a projective limit.
 See also `padic_int.lift_spec`.
@@ -637,6 +684,7 @@ theorem lift_unique (g : R →+* ℤ_[p]) (hg : ∀ n, (toZmodPow n).comp g = f 
   apply le_trans _ (le_of_lt hn)
   rw [dist_eq_norm, norm_le_pow_iff_mem_span_pow, ← ker_to_zmod_pow, RingHom.mem_ker, RingHom.map_sub, ←
     RingHom.comp_apply, ← RingHom.comp_apply, lift_spec, hg, sub_self]
+#align padic_int.lift_unique PadicInt.lift_unique
 
 @[simp]
 theorem lift_self (z : ℤ_[p]) : @lift p _ ℤ_[p] _ toZmodPow zmod_cast_comp_to_zmod_pow z = z := by
@@ -644,6 +692,7 @@ theorem lift_self (z : ℤ_[p]) : @lift p _ ℤ_[p] _ toZmodPow zmod_cast_comp_t
   rw [@lift_unique p _ ℤ_[p] _ _ zmod_cast_comp_to_zmod_pow (RingHom.id ℤ_[p])]
   intro
   rw [RingHom.comp_id]
+#align padic_int.lift_self PadicInt.lift_self
 
 end lift
 
@@ -656,6 +705,7 @@ theorem ext_of_to_zmod_pow {x y : ℤ_[p]} : (∀ n, toZmodPow n x = toZmodPow n
   · rintro rfl _
     rfl
     
+#align padic_int.ext_of_to_zmod_pow PadicInt.ext_of_to_zmod_pow
 
 theorem to_zmod_pow_eq_iff_ext {R : Type _} [NonAssocSemiring R] {g g' : R →+* ℤ_[p]} :
     (∀ n, (toZmodPow n).comp g = (toZmodPow n).comp g') ↔ g = g' := by
@@ -670,6 +720,7 @@ theorem to_zmod_pow_eq_iff_ext {R : Type _} [NonAssocSemiring R] {g g' : R →+*
   · rintro rfl _
     rfl
     
+#align padic_int.to_zmod_pow_eq_iff_ext PadicInt.to_zmod_pow_eq_iff_ext
 
 end PadicInt
 

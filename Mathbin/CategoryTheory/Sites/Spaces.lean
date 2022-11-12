@@ -52,6 +52,7 @@ def grothendieckTopology : GrothendieckTopology (Opens T) where
     rcases hS x hx with ⟨U, f, hf, hU⟩
     rcases hR hf _ hU with ⟨V, g, hg, hV⟩
     exact ⟨_, g ≫ f, hg, hV⟩
+#align opens.grothendieck_topology Opens.grothendieckTopology
 
 /-- The Grothendieck pretopology associated to a topological space. -/
 def pretopology : Pretopology (Opens T) where
@@ -67,6 +68,7 @@ def pretopology : Pretopology (Opens T) where
     rcases hS x hx with ⟨U, f, hf, hU⟩
     rcases hTi f hf x hU with ⟨V, g, hg, hV⟩
     exact ⟨_, _, ⟨_, g, f, hf, hg, rfl⟩, hV⟩
+#align opens.pretopology Opens.pretopology
 
 /-- The pretopology associated to a space is the largest pretopology that
     generates the Grothendieck topology associated to the space. -/
@@ -82,6 +84,7 @@ theorem pretopology_of_grothendieck :
     rcases hR x hx with ⟨U, f, hf, hU⟩
     exact ⟨U, f, sieve.le_generate R U hf, hU⟩
     
+#align opens.pretopology_of_grothendieck Opens.pretopology_of_grothendieck
 
 /-- The pretopology associated to a space induces the Grothendieck topology associated to the space.
 -/
@@ -90,6 +93,7 @@ theorem pretopology_to_grothendieck :
     Pretopology.toGrothendieck _ (Opens.pretopology T) = Opens.grothendieckTopology T := by
   rw [← pretopology_of_grothendieck]
   apply (pretopology.gi (opens T)).l_u_eq
+#align opens.pretopology_to_grothendieck Opens.pretopology_to_grothendieck
 
 end Opens
 

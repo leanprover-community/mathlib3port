@@ -37,6 +37,7 @@ variable [NormedLatticeAddCommGroup E]
 
 theorem coe_fn_le (f g : lp E p μ) : f ≤ᵐ[μ] g ↔ f ≤ g := by
   rw [← Subtype.coe_le_coe, ← ae_eq_fun.coe_fn_le, ← coe_fn_coe_base, ← coe_fn_coe_base]
+#align measure_theory.Lp.coe_fn_le MeasureTheory.lp.coe_fn_le
 
 theorem coe_fn_nonneg (f : lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f := by
   rw [← coe_fn_le]
@@ -46,6 +47,7 @@ theorem coe_fn_nonneg (f : lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f := by
     
   · rwa [← h2]
     
+#align measure_theory.Lp.coe_fn_nonneg MeasureTheory.lp.coe_fn_nonneg
 
 instance : CovariantClass (lp E p μ) (lp E p μ) (· + ·) (· ≤ ·) := by
   refine' ⟨fun f g₁ g₂ hg₁₂ => _⟩
@@ -59,12 +61,15 @@ instance : OrderedAddCommGroup (lp E p μ) :=
 
 theorem _root_.measure_theory.mem_ℒp.sup {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) : Memℒp (f ⊔ g) p μ :=
   Memℒp.mono' (hf.norm.add hg.norm) (hf.1.sup hg.1) (Filter.eventually_of_forall fun x => norm_sup_le_add (f x) (g x))
+#align measure_theory.Lp._root_.measure_theory.mem_ℒp.sup measure_theory.Lp._root_.measure_theory.mem_ℒp.sup
 
 theorem _root_.measure_theory.mem_ℒp.inf {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) : Memℒp (f ⊓ g) p μ :=
   Memℒp.mono' (hf.norm.add hg.norm) (hf.1.inf hg.1) (Filter.eventually_of_forall fun x => norm_inf_le_add (f x) (g x))
+#align measure_theory.Lp._root_.measure_theory.mem_ℒp.inf measure_theory.Lp._root_.measure_theory.mem_ℒp.inf
 
 theorem _root_.measure_theory.mem_ℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp (|f|) p μ :=
   hf.sup hf.neg
+#align measure_theory.Lp._root_.measure_theory.mem_ℒp.abs measure_theory.Lp._root_.measure_theory.mem_ℒp.abs
 
 instance : Lattice (lp E p μ) :=
   Subtype.lattice
@@ -77,12 +82,15 @@ instance : Lattice (lp E p μ) :=
 
 theorem coe_fn_sup (f g : lp E p μ) : ⇑(f ⊔ g) =ᵐ[μ] ⇑f ⊔ ⇑g :=
   AeEqFun.coe_fn_sup _ _
+#align measure_theory.Lp.coe_fn_sup MeasureTheory.lp.coe_fn_sup
 
 theorem coe_fn_inf (f g : lp E p μ) : ⇑(f ⊓ g) =ᵐ[μ] ⇑f ⊓ ⇑g :=
   AeEqFun.coe_fn_inf _ _
+#align measure_theory.Lp.coe_fn_inf MeasureTheory.lp.coe_fn_inf
 
 theorem coe_fn_abs (f : lp E p μ) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
   AeEqFun.coe_fn_abs _
+#align measure_theory.Lp.coe_fn_abs MeasureTheory.lp.coe_fn_abs
 
 noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) :=
   { lp.lattice, lp.normedAddCommGroup with add_le_add_left := fun f g => add_le_add_left,

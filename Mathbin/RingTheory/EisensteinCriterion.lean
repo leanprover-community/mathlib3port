@@ -3,6 +3,7 @@ Copyright (c) 2020 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
+import Mathbin.Data.Nat.Cast.WithTop
 import Mathbin.RingTheory.Prime
 import Mathbin.RingTheory.Polynomial.Content
 
@@ -46,6 +47,8 @@ theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R} (hfP : �
       · exact lt_of_le_of_lt (degree_map_le _ _) h
         
       
+#align
+  polynomial.eisenstein_criterion_aux.map_eq_C_mul_X_pow_of_forall_coeff_mem Polynomial.EisensteinCriterionAux.map_eq_C_mul_X_pow_of_forall_coeff_mem
 
 theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime) {q : R[X]} {c : Polynomial (R ⧸ P)}
     (hq : map (mk P) q = c * X ^ n) (hc0 : c.degree = 0) : n ≤ q.natDegree :=
@@ -56,11 +59,15 @@ theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrim
       _ ≤ degree q := degree_map_le _ _
       _ ≤ natDegree q := degree_le_nat_degree
       )
+#align
+  polynomial.eisenstein_criterion_aux.le_nat_degree_of_map_eq_mul_X_pow Polynomial.EisensteinCriterionAux.le_nat_degree_of_map_eq_mul_X_pow
 
 theorem eval_zero_mem_ideal_of_eq_mul_X_pow {n : ℕ} {P : Ideal R} {q : R[X]} {c : Polynomial (R ⧸ P)}
     (hq : map (mk P) q = c * X ^ n) (hn0 : 0 < n) : eval 0 q ∈ P := by
   rw [← coeff_zero_eq_eval_zero, ← eq_zero_iff_mem, ← coeff_map, coeff_zero_eq_eval_zero, hq, eval_mul, eval_pow,
     eval_X, zero_pow hn0, mul_zero]
+#align
+  polynomial.eisenstein_criterion_aux.eval_zero_mem_ideal_of_eq_mul_X_pow Polynomial.EisensteinCriterionAux.eval_zero_mem_ideal_of_eq_mul_X_pow
 
 theorem is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit {p q : R[X]} (hu : ∀ x : R, c x ∣ p * q → IsUnit x)
     (hpm : p.natDegree = 0) : IsUnit p := by
@@ -68,6 +75,8 @@ theorem is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit {p q : R[X]} (hu : �
   refine' hu _ _
   rw [← eq_C_of_degree_le_zero (nat_degree_eq_zero_iff_degree_le_zero.1 hpm)]
   exact dvd_mul_right _ _
+#align
+  polynomial.eisenstein_criterion_aux.is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit Polynomial.EisensteinCriterionAux.is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit
 
 end EisensteinCriterionAux
 
@@ -121,6 +130,7 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
       
     · exact Or.inr (is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit (by simpa only [mul_comm] using hu) hpmqn.2)
       ⟩
+#align polynomial.irreducible_of_eisenstein_criterion Polynomial.irreducible_of_eisenstein_criterion
 
 end Polynomial
 

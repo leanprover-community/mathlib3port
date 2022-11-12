@@ -14,14 +14,17 @@ unsafe structure auto_cases_tac where
   Name : String
   {α : Type}
   tac : expr → tactic α
+#align tactic.auto_cases.auto_cases_tac tactic.auto_cases.auto_cases_tac
 
 /-- The `auto_cases_tac` for `tactic.cases`. -/
 unsafe def tac_cases : auto_cases_tac :=
   ⟨"cases", cases⟩
+#align tactic.auto_cases.tac_cases tactic.auto_cases.tac_cases
 
 /-- The `auto_cases_tac` for `tactic.induction`. -/
 unsafe def tac_induction : auto_cases_tac :=
   ⟨"induction", induction⟩
+#align tactic.auto_cases.tac_induction tactic.auto_cases.tac_induction
 
 /-- Find an `auto_cases_tac` which matches the given `type : expr`. -/
 unsafe def find_tac : expr → Option auto_cases_tac
@@ -56,6 +59,7 @@ unsafe def find_tac : expr → Option auto_cases_tac
     tac_induction
   | quote.1 (Quot _) => tac_induction
   | _ => none
+#align tactic.auto_cases.find_tac tactic.auto_cases.find_tac
 
 end AutoCases
 
@@ -68,6 +72,7 @@ unsafe def auto_cases_at (hyp : expr) : tactic String := do
       let pp ← pp hyp
       return s! "{atac } {pp}"
     | none => fail "hypothesis type unsupported"
+#align tactic.auto_cases_at tactic.auto_cases_at
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results -/
 /-- Applies `cases` or `induction` on certain hypotheses. -/
@@ -77,6 +82,7 @@ unsafe def auto_cases : tactic String := do
   let results ← successes <| l.reverse.map auto_cases_at
   when (results results.empty) <| fail "`auto_cases` did not find any hypotheses to apply `cases` or `induction` to"
   return (String.intercalate ", " results)
+#align tactic.auto_cases tactic.auto_cases
 
 end Tactic
 

@@ -36,8 +36,9 @@ See https://stacks.math.columbia.edu/tag/0FCG
 -/
 class NoetherianObject (X : C) : Prop where
   subobject_gt_well_founded : WellFounded ((· > ·) : Subobject X → Subobject X → Prop)
+#align category_theory.noetherian_object CategoryTheory.NoetherianObject
 
-/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_well_founded] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_well_founded] [] -/
 /-- An artinian object is an object
 which does not have infinite decreasing sequences of subobjects.
 
@@ -45,18 +46,21 @@ See https://stacks.math.columbia.edu/tag/0FCF
 -/
 class ArtinianObject (X : C) : Prop where
   subobject_lt_well_founded : WellFounded ((· < ·) : Subobject X → Subobject X → Prop)
+#align category_theory.artinian_object CategoryTheory.ArtinianObject
 
 variable (C)
 
 /-- A category is noetherian if it is essentially small and all objects are noetherian. -/
 class Noetherian extends EssentiallySmall C where
   NoetherianObject : ∀ X : C, NoetherianObject X
+#align category_theory.noetherian CategoryTheory.Noetherian
 
 attribute [instance] noetherian.noetherian_object
 
 /-- A category is artinian if it is essentially small and all objects are artinian. -/
 class Artinian extends EssentiallySmall C where
   ArtinianObject : ∀ X : C, ArtinianObject X
+#align category_theory.artinian CategoryTheory.Artinian
 
 attribute [instance] artinian.artinian_object
 
@@ -72,14 +76,17 @@ theorem exists_simple_subobject {X : C} [ArtinianObject X] (h : ¬IsZero X) : �
   have := IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)
   obtain ⟨Y, s⟩ := (IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)).resolve_left top_ne_bot
   exact ⟨Y, (subobject_simple_iff_is_atom _).mpr s.1⟩
+#align category_theory.exists_simple_subobject CategoryTheory.exists_simple_subobject
 
 /-- Choose an arbitrary simple subobject of a non-zero artinian object. -/
 noncomputable def simpleSubobject {X : C} [ArtinianObject X] (h : ¬IsZero X) : C :=
   (exists_simple_subobject h).some
+#align category_theory.simple_subobject CategoryTheory.simpleSubobject
 
 /-- The monomorphism from the arbitrary simple subobject of a non-zero artinian object. -/
 noncomputable def simpleSubobjectArrow {X : C} [ArtinianObject X] (h : ¬IsZero X) : simpleSubobject h ⟶ X :=
   (exists_simple_subobject h).some.arrow deriving Mono
+#align category_theory.simple_subobject_arrow CategoryTheory.simpleSubobjectArrow
 
 instance {X : C} [ArtinianObject X] (h : ¬IsZero X) : Simple (simpleSubobject h) :=
   (exists_simple_subobject h).some_spec

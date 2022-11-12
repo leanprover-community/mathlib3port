@@ -133,6 +133,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ (I : Bo
     exact (this.has_box_integral ⊥ rfl).integral_eq
     infer_instance
     
+#align
+  measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ MeasureTheory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₁
 
 /-- An auxiliary lemma for
 `measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable`. Compared to the previous
@@ -237,6 +239,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
       exacts[sub_nonneg.2 (box.lower_le_upper _ _),
         sub_le_sub ((hJ_sub' _ (J _).upper_mem_Icc).2 _) ((hJ_sub' _ (J _).lower_mem_Icc).1 _)]
     
+#align
+  measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ MeasureTheory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₂
 
 variable (a b : ℝⁿ⁺¹)
 
@@ -290,6 +294,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable (hle : a ≤ b
     have hlt : ∀ i, a i < b i := fun i => (hle i).lt_of_ne fun hi => hne ⟨i, hi⟩
     convert integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ ⟨a, b, hlt⟩ f f' s hs Hc Hd Hi
     
+#align
+  measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable MeasureTheory.integral_divergence_of_has_fderiv_within_at_off_countable
 
 /-- **Divergence theorem** for a family of functions `f : fin (n + 1) → ℝⁿ⁺¹ → E`. See also
 `measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable'` for a version formulated
@@ -303,6 +309,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable' (hle : a ≤ 
   integral_divergence_of_has_fderiv_within_at_off_countable a b hle (fun x i => f i x)
     (fun x => ContinuousLinearMap.pi fun i => f' i x) s hs (continuous_on_pi.2 Hc)
     (fun x hx => has_fderiv_at_pi.2 (Hd x hx)) Hi
+#align
+  measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable' MeasureTheory.integral_divergence_of_has_fderiv_within_at_off_countable'
 
 end
 
@@ -349,6 +357,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
         simp [← hDF, (· ∘ ·), Hi]
         
     
+#align
+  measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv MeasureTheory.integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv
 
 end
 
@@ -412,6 +422,8 @@ theorem integral_eq_of_has_deriv_within_at_off_countable_of_le (f f' : ℝ → E
       have : ∀ c : ℝ, const (Fin 0) c = isEmptyElim := fun c => Subsingleton.elim _ _
       simp [this, volume_pi, measure.pi_of_empty fun _ : Fin 0 => volume]
     
+#align
+  measure_theory.integral_eq_of_has_deriv_within_at_off_countable_of_le MeasureTheory.integral_eq_of_has_deriv_within_at_off_countable_of_le
 
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the
 interval and is differentiable off a countable set `s`.
@@ -430,6 +442,8 @@ theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b
     rw [intervalIntegral.integral_symm, neg_eq_iff_neg_eq, neg_sub, eq_comm]
     exact integral_eq_of_has_deriv_within_at_off_countable_of_le f f' hab hs Hc Hd Hi.symm
     
+#align
+  measure_theory.integral_eq_of_has_deriv_within_at_off_countable MeasureTheory.integral_eq_of_has_deriv_within_at_off_countable
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -495,6 +509,8 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
         set_integral_congr_set_ae Ioc_ae_eq_Icc]
       abel
     
+#align
+  measure_theory.integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le MeasureTheory.integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -551,6 +567,8 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
     refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
     abel
     
+#align
+  measure_theory.integral2_divergence_prod_of_has_fderiv_within_at_off_countable MeasureTheory.integral2_divergence_prod_of_has_fderiv_within_at_off_countable
 
 end MeasureTheory
 

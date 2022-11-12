@@ -21,7 +21,7 @@ private unsafe def collect_proofs_in : expr → List expr → List Name × List 
   | e, ctx, (ns, hs) =>
     let go (tac : List Name × List expr → tactic (List Name × List expr)) : tactic (List Name × List expr) := do
       let t ← infer_type e
-      mcond (is_prop t)
+      condM (is_prop t)
           (do
             first
                   (hs fun h => do
@@ -68,17 +68,19 @@ private unsafe def collect_proofs_in : expr → List expr → List Name × List 
         let nh ← collect_proofs_in t ctx nh
         let nh ← collect_proofs_in d ctx nh
         collect_proofs_in (expr.instantiate_var e d) ctx nh
-    | expr.macro m l => go fun nh => mfoldl (fun x e => collect_proofs_in e ctx x) nh l
+    | expr.macro m l => go fun nh => foldlM (fun x e => collect_proofs_in e ctx x) nh l
     | _ => return (ns, hs)
+#align tactic.collect_proofs_in tactic.collect_proofs_in
 
 /-- Generalize proofs in the goal, naming them with the provided list. -/
 unsafe def generalize_proofs (ns : List Name) (loc : Interactive.Loc) : tactic Unit := do
   intros_dep
-  let hs ← local_context >>= mfilter is_proof
+  let hs ← local_context >>= filterM is_proof
   let n ← loc.get_locals >>= revert_lst
   let t ← target
   collect_proofs_in t [] (ns, hs)
   intron n <|> intros $> ()
+#align tactic.generalize_proofs tactic.generalize_proofs
 
 -- mathport name: parser.many
 local postfix:1024 "*" => many
@@ -100,6 +102,7 @@ end
 -/
 unsafe def generalize_proofs : parse ident_* → parse location → tactic Unit :=
   tactic.generalize_proofs
+#align tactic.interactive.generalize_proofs tactic.interactive.generalize_proofs
 
 end Interactive
 

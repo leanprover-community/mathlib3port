@@ -55,15 +55,12 @@ variable {ι 𝕜 F : Type _} [Finite ι] [Semiring 𝕜] [TopologicalSpace 𝕜
 /-- A linear map on `ι → 𝕜` (where `ι` is finite) is continuous -/
 theorem LinearMap.continuous_on_pi (f : (ι → 𝕜) →ₗ[𝕜] F) : Continuous f := by
   cases nonempty_fintype ι
-  classical
-  -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
-  -- function.
-  have : (f : (ι → 𝕜) → F) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 := by
-    ext x
-    exact f.pi_apply_eq_sum_univ x
-  rw [this]
-  refine' continuous_finset_sum _ fun i hi => _
-  exact (continuous_apply i).smul continuous_const
+  classical-- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
+    -- function.
+    have : (f : (ι → 𝕜) → F) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0
+    rw [this]
+    exact (continuous_apply i).smul continuous_const
+#align linear_map.continuous_on_pi LinearMap.continuous_on_pi
 
 end Semiring
 
@@ -143,6 +140,7 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
       _ = @nhds 𝕜 t 0 := by rw [zero_smul]
       
     
+#align unique_topology_of_t2 unique_topology_of_t2
 
 /-- Any linear form on a topological vector space over a nontrivially normed field is continuous if
     its kernel is closed. -/
@@ -185,11 +183,13 @@ theorem LinearMap.continuous_of_is_closed_ker (l : E →ₗ[𝕜] 𝕜) (hl : Is
     rw [this.symm, Equiv.induced_symm]
     exact continuous_coinduced_rng
     
+#align linear_map.continuous_of_is_closed_ker LinearMap.continuous_of_is_closed_ker
 
 /-- Any linear form on a topological vector space over a nontrivially normed field is continuous if
     and only if its kernel is closed. -/
 theorem LinearMap.continuous_iff_is_closed_ker (l : E →ₗ[𝕜] 𝕜) : Continuous l ↔ IsClosed (l.ker : Set E) :=
   ⟨fun h => isClosedSingleton.Preimage h, l.continuous_of_is_closed_ker⟩
+#align linear_map.continuous_iff_is_closed_ker LinearMap.continuous_iff_is_closed_ker
 
 /-- Over a nontrivially normed field, any linear form which is nonzero on a nonempty open set is
     automatically continuous. -/
@@ -201,6 +201,7 @@ theorem LinearMap.continuous_of_nonzero_on_open (l : E →ₗ[𝕜] 𝕜) (s : S
     rw [mem_interior_iff_mem_nhds]
     exact mem_of_superset (hs₁.mem_nhds hx) hs₃
   rwa [hl.interior_compl] at this
+#align linear_map.continuous_of_nonzero_on_open LinearMap.continuous_of_nonzero_on_open
 
 variable [CompleteSpace 𝕜]
 
@@ -253,6 +254,7 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
     change Continuous (ξ.coord i)
     exact H₂ (ξ.coord i)
     
+#align continuous_equiv_fun_basis_aux continuous_equiv_fun_basis_aux
 
 /-- Any linear map on a finite dimensional space over a complete field is continuous. -/
 theorem LinearMap.continuous_of_finite_dimensional [T2Space E] [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F') :
@@ -268,10 +270,13 @@ theorem LinearMap.continuous_of_finite_dimensional [T2Space E] [FiniteDimensiona
   ext x
   dsimp
   rw [Basis.equiv_fun_symm_apply, Basis.sum_repr]
+#align linear_map.continuous_of_finite_dimensional LinearMap.continuous_of_finite_dimensional
 
 instance LinearMap.continuousLinearMapClassOfFiniteDimensional [T2Space E] [FiniteDimensional 𝕜 E] :
     ContinuousLinearMapClass (E →ₗ[𝕜] F') 𝕜 E F' :=
   { LinearMap.semilinearMapClass with map_continuous := fun f => f.continuous_of_finite_dimensional }
+#align
+  linear_map.continuous_linear_map_class_of_finite_dimensional LinearMap.continuousLinearMapClassOfFiniteDimensional
 
 /-- In finite dimensions over a non-discrete complete normed field, the canonical identification
 (in terms of a basis) with `𝕜^n` (endowed with the product topology) is continuous.
@@ -281,6 +286,7 @@ norms are equivalent in finite dimensions. -/
 theorem continuous_equiv_fun_basis [T2Space E] {ι : Type _} [Fintype ι] (ξ : Basis ι 𝕜 E) : Continuous ξ.equivFun :=
   haveI : FiniteDimensional 𝕜 E := of_fintype_basis ξ
   ξ.equiv_fun.to_linear_map.continuous_of_finite_dimensional
+#align continuous_equiv_fun_basis continuous_equiv_fun_basis
 
 namespace LinearMap
 
@@ -294,30 +300,51 @@ def toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F' whe
   map_smul' c f := rfl
   left_inv f := rfl
   right_inv f := ContinuousLinearMap.coe_injective rfl
+#align linear_map.to_continuous_linear_map LinearMap.toContinuousLinearMap
 
 @[simp]
 theorem coe_to_continuous_linear_map' (f : E →ₗ[𝕜] F') : ⇑f.toContinuousLinearMap = f :=
   rfl
+#align linear_map.coe_to_continuous_linear_map' LinearMap.coe_to_continuous_linear_map'
 
 @[simp]
 theorem coe_to_continuous_linear_map (f : E →ₗ[𝕜] F') : (f.toContinuousLinearMap : E →ₗ[𝕜] F') = f :=
   rfl
+#align linear_map.coe_to_continuous_linear_map LinearMap.coe_to_continuous_linear_map
 
 @[simp]
 theorem coe_to_continuous_linear_map_symm : ⇑(toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coe :=
   rfl
+#align linear_map.coe_to_continuous_linear_map_symm LinearMap.coe_to_continuous_linear_map_symm
 
 @[simp]
 theorem det_to_continuous_linear_map (f : E →ₗ[𝕜] E) : f.toContinuousLinearMap.det = f.det :=
   rfl
+#align linear_map.det_to_continuous_linear_map LinearMap.det_to_continuous_linear_map
 
 @[simp]
 theorem ker_to_continuous_linear_map (f : E →ₗ[𝕜] F') : ker f.toContinuousLinearMap = ker f :=
   rfl
+#align linear_map.ker_to_continuous_linear_map LinearMap.ker_to_continuous_linear_map
 
 @[simp]
 theorem range_to_continuous_linear_map (f : E →ₗ[𝕜] F') : range f.toContinuousLinearMap = range f :=
   rfl
+#align linear_map.range_to_continuous_linear_map LinearMap.range_to_continuous_linear_map
+
+/-- A surjective linear map `f` with finite dimensional codomain is an open map. -/
+theorem is_open_map_of_finite_dimensional (f : F →ₗ[𝕜] E) (hf : Function.Surjective f) : IsOpenMap f := by
+  rcases f.exists_right_inverse_of_surjective (LinearMap.range_eq_top.2 hf) with ⟨g, hg⟩
+  refine' IsOpenMap.of_sections fun x => ⟨fun y => g (y - f x) + x, _, _, fun y => _⟩
+  · exact
+      ((g.continuous_of_finite_dimensional.comp <| continuous_id.sub continuous_const).add
+          continuous_const).ContinuousAt
+    
+  · rw [sub_self, map_zero, zero_add]
+    
+  · simp only [map_sub, map_add, ← comp_apply f g, hg, id_apply, sub_add_cancel]
+    
+#align linear_map.is_open_map_of_finite_dimensional LinearMap.is_open_map_of_finite_dimensional
 
 end LinearMap
 
@@ -332,33 +359,41 @@ def toContinuousLinearEquiv (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
     continuous_inv_fun :=
       haveI : FiniteDimensional 𝕜 F := e.finite_dimensional
       e.symm.to_linear_map.continuous_of_finite_dimensional }
+#align linear_equiv.to_continuous_linear_equiv LinearEquiv.toContinuousLinearEquiv
 
 @[simp]
 theorem coe_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E →ₗ[𝕜] F) = e :=
   rfl
+#align linear_equiv.coe_to_continuous_linear_equiv LinearEquiv.coe_to_continuous_linear_equiv
 
 @[simp]
 theorem coe_to_continuous_linear_equiv' (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E → F) = e :=
   rfl
+#align linear_equiv.coe_to_continuous_linear_equiv' LinearEquiv.coe_to_continuous_linear_equiv'
 
 @[simp]
 theorem coe_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv.symm : F →ₗ[𝕜] E) = e.symm :=
   rfl
+#align linear_equiv.coe_to_continuous_linear_equiv_symm LinearEquiv.coe_to_continuous_linear_equiv_symm
 
 @[simp]
 theorem coe_to_continuous_linear_equiv_symm' (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv.symm : F → E) = e.symm :=
   rfl
+#align linear_equiv.coe_to_continuous_linear_equiv_symm' LinearEquiv.coe_to_continuous_linear_equiv_symm'
 
 @[simp]
 theorem to_linear_equiv_to_continuous_linear_equiv (e : E ≃ₗ[𝕜] F) : e.toContinuousLinearEquiv.toLinearEquiv = e := by
   ext x
   rfl
+#align linear_equiv.to_linear_equiv_to_continuous_linear_equiv LinearEquiv.to_linear_equiv_to_continuous_linear_equiv
 
 @[simp]
 theorem to_linear_equiv_to_continuous_linear_equiv_symm (e : E ≃ₗ[𝕜] F) :
     e.toContinuousLinearEquiv.symm.toLinearEquiv = e.symm := by
   ext x
   rfl
+#align
+  linear_equiv.to_linear_equiv_to_continuous_linear_equiv_symm LinearEquiv.to_linear_equiv_to_continuous_linear_equiv_symm
 
 end LinearEquiv
 
@@ -370,17 +405,23 @@ variable [T2Space E] [FiniteDimensional 𝕜 E]
 vector space whose determinant is nonzero. -/
 def toContinuousLinearEquivOfDetNeZero (f : E →L[𝕜] E) (hf : f.det ≠ 0) : E ≃L[𝕜] E :=
   ((f : E →ₗ[𝕜] E).equivOfDetNeZero hf).toContinuousLinearEquiv
+#align
+  continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero
 
 @[simp]
 theorem coe_to_continuous_linear_equiv_of_det_ne_zero (f : E →L[𝕜] E) (hf : f.det ≠ 0) :
     (f.toContinuousLinearEquivOfDetNeZero hf : E →L[𝕜] E) = f := by
   ext x
   rfl
+#align
+  continuous_linear_map.coe_to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.coe_to_continuous_linear_equiv_of_det_ne_zero
 
 @[simp]
 theorem to_continuous_linear_equiv_of_det_ne_zero_apply (f : E →L[𝕜] E) (hf : f.det ≠ 0) (x : E) :
     f.toContinuousLinearEquivOfDetNeZero hf x = f x :=
   rfl
+#align
+  continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply ContinuousLinearMap.to_continuous_linear_equiv_of_det_ne_zero_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
@@ -391,6 +432,8 @@ theorem _root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map (a b c d : �
       (a • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + b • ContinuousLinearMap.snd 𝕜 𝕜 𝕜).Prod
         (c • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + d • ContinuousLinearMap.snd 𝕜 𝕜 𝕜) :=
   ContinuousLinearMap.ext <| Matrix.to_lin_fin_two_prod_apply _ _ _ _
+#align
+  continuous_linear_map._root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map continuous_linear_map._root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map
 
 end ContinuousLinearMap
 

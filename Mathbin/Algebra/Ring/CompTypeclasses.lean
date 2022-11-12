@@ -47,6 +47,7 @@ variable [Semiring R₁] [Semiring R₂] [Semiring R₃]
 used to handle composition of semilinear maps. -/
 class RingHomCompTriple (σ₁₂ : R₁ →+* R₂) (σ₂₃ : R₂ →+* R₃) (σ₁₃ : outParam (R₁ →+* R₃)) : Prop where
   comp_eq : σ₂₃.comp σ₁₂ = σ₁₃
+#align ring_hom_comp_triple RingHomCompTriple
 
 attribute [simp] RingHomCompTriple.comp_eq
 
@@ -57,6 +58,7 @@ namespace RingHomCompTriple
 @[simp]
 theorem comp_apply [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] {x : R₁} : σ₂₃ (σ₁₂ x) = σ₁₃ x :=
   RingHom.congr_fun comp_eq x
+#align ring_hom_comp_triple.comp_apply RingHomCompTriple.comp_apply
 
 end RingHomCompTriple
 
@@ -65,6 +67,7 @@ used to handle `symm` for semilinear equivalences. -/
 class RingHomInvPair (σ : R₁ →+* R₂) (σ' : outParam (R₂ →+* R₁)) : Prop where
   comp_eq : σ'.comp σ = RingHom.id R₁
   comp_eq₂ : σ.comp σ' = RingHom.id R₂
+#align ring_hom_inv_pair RingHomInvPair
 
 attribute [simp] RingHomInvPair.comp_eq
 
@@ -80,20 +83,25 @@ variable [RingHomInvPair σ σ']
 theorem comp_apply_eq {x : R₁} : σ' (σ x) = x := by
   rw [← RingHom.comp_apply, comp_eq]
   simp
+#align ring_hom_inv_pair.comp_apply_eq RingHomInvPair.comp_apply_eq
 
 @[simp]
 theorem comp_apply_eq₂ {x : R₂} : σ (σ' x) = x := by
   rw [← RingHom.comp_apply, comp_eq₂]
   simp
+#align ring_hom_inv_pair.comp_apply_eq₂ RingHomInvPair.comp_apply_eq₂
 
 instance ids : RingHomInvPair (RingHom.id R₁) (RingHom.id R₁) :=
   ⟨rfl, rfl⟩
+#align ring_hom_inv_pair.ids RingHomInvPair.ids
 
 instance triples {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂₁] : RingHomCompTriple σ₁₂ σ₂₁ (RingHom.id R₁) :=
   ⟨by simp only [comp_eq]⟩
+#align ring_hom_inv_pair.triples RingHomInvPair.triples
 
 instance triples₂ {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂₁] : RingHomCompTriple σ₂₁ σ₁₂ (RingHom.id R₂) :=
   ⟨by simp only [comp_eq₂]⟩
+#align ring_hom_inv_pair.triples₂ RingHomInvPair.triples₂
 
 /-- Construct a `ring_hom_inv_pair` from both directions of a ring equiv.
 
@@ -105,6 +113,7 @@ See note [reducible non-instances].
 @[reducible]
 theorem ofRingEquiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* R₂) ↑e.symm :=
   ⟨e.symm_to_ring_hom_comp_to_ring_hom, e.symm.symm_to_ring_hom_comp_to_ring_hom⟩
+#align ring_hom_inv_pair.of_ring_equiv RingHomInvPair.ofRingEquiv
 
 /-- Swap the direction of a `ring_hom_inv_pair`. This is not an instance as it would loop, and better
 instances are often available and may often be preferrable to using this one. Indeed, this
@@ -115,6 +124,7 @@ See note [reducible non-instances].
 @[reducible]
 theorem symm (σ₁₂ : R₁ →+* R₂) (σ₂₁ : R₂ →+* R₁) [RingHomInvPair σ₁₂ σ₂₁] : RingHomInvPair σ₂₁ σ₁₂ :=
   ⟨RingHomInvPair.comp_eq₂, RingHomInvPair.comp_eq⟩
+#align ring_hom_inv_pair.symm RingHomInvPair.symm
 
 end RingHomInvPair
 
@@ -124,11 +134,13 @@ instance ids : RingHomCompTriple (RingHom.id R₁) σ₁₂ σ₁₂ :=
   ⟨by
     ext
     simp⟩
+#align ring_hom_comp_triple.ids RingHomCompTriple.ids
 
 instance rightIds : RingHomCompTriple σ₁₂ (RingHom.id R₂) σ₁₂ :=
   ⟨by
     ext
     simp⟩
+#align ring_hom_comp_triple.right_ids RingHomCompTriple.rightIds
 
 end RingHomCompTriple
 
@@ -136,9 +148,11 @@ end RingHomCompTriple
 of semilinear maps, where some lemmas require this. -/
 class RingHomSurjective (σ : R₁ →+* R₂) : Prop where
   is_surjective : Function.Surjective σ
+#align ring_hom_surjective RingHomSurjective
 
 theorem RingHom.is_surjective (σ : R₁ →+* R₂) [t : RingHomSurjective σ] : Function.Surjective σ :=
   t.is_surjective
+#align ring_hom.is_surjective RingHom.is_surjective
 
 namespace RingHomSurjective
 
@@ -146,15 +160,18 @@ namespace RingHomSurjective
 @[nolint dangerous_instance]
 instance (priority := 100) invPair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] : RingHomSurjective σ₁ :=
   ⟨fun x => ⟨σ₂ x, RingHomInvPair.comp_apply_eq₂⟩⟩
+#align ring_hom_surjective.inv_pair RingHomSurjective.invPair
 
 instance ids : RingHomSurjective (RingHom.id R₁) :=
   ⟨is_surjective⟩
+#align ring_hom_surjective.ids RingHomSurjective.ids
 
 /-- This cannot be an instance as there is no way to infer `σ₁₂` and `σ₂₃`. -/
 theorem comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomSurjective σ₁₂] [RingHomSurjective σ₂₃] : RingHomSurjective σ₁₃ :=
   { is_surjective := by
       have := σ₂₃.is_surjective.comp σ₁₂.is_surjective
       rwa [← RingHom.coe_comp, RingHomCompTriple.comp_eq] at this }
+#align ring_hom_surjective.comp RingHomSurjective.comp
 
 end RingHomSurjective
 

@@ -47,22 +47,29 @@ open GeneralizedContinuedFraction
 
 theorem GeneralizedContinuedFraction.ofIsSimpleContinuedFraction : (of v).IsSimpleContinuedFraction :=
   fun _ _ nth_part_num_eq => of_part_num_eq_one nth_part_num_eq
+#align
+  generalized_continued_fraction.of_is_simple_continued_fraction GeneralizedContinuedFraction.ofIsSimpleContinuedFraction
 
 /-- Creates the simple continued fraction of a value. -/
 def SimpleContinuedFraction.of : SimpleContinuedFraction K :=
   ⟨of v, GeneralizedContinuedFraction.ofIsSimpleContinuedFraction v⟩
+#align simple_continued_fraction.of SimpleContinuedFraction.of
 
 theorem SimpleContinuedFraction.of_is_continued_fraction : (SimpleContinuedFraction.of v).IsContinuedFraction :=
   fun _ denom nth_part_denom_eq => lt_of_lt_of_le zero_lt_one (of_one_le_nth_part_denom nth_part_denom_eq)
+#align simple_continued_fraction.of_is_continued_fraction SimpleContinuedFraction.of_is_continued_fraction
 
 /-- Creates the continued fraction of a value. -/
 def ContinuedFraction.of : ContinuedFraction K :=
   ⟨SimpleContinuedFraction.of v, SimpleContinuedFraction.of_is_continued_fraction v⟩
+#align continued_fraction.of ContinuedFraction.of
 
 namespace GeneralizedContinuedFraction
 
 theorem of_convergents_eq_convergents' : (of v).convergents = (of v).convergents' :=
   @ContinuedFraction.convergents_eq_convergents' _ _ (ContinuedFraction.of v)
+#align
+  generalized_continued_fraction.of_convergents_eq_convergents' GeneralizedContinuedFraction.of_convergents_eq_convergents'
 
 section Convergence
 
@@ -135,11 +142,13 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
       _ ≤ B * nB := mul_le_mul B_ineq nB_ineq (by exact_mod_cast (fib (n + 2)).zero_le) (le_of_lt zero_lt_B)
       
     
+#align generalized_continued_fraction.of_convergence_epsilon GeneralizedContinuedFraction.of_convergence_epsilon
 
 attribute [local instance] Preorder.topology
 
 theorem of_convergence [OrderTopology K] : Filter.Tendsto (of v).convergents Filter.atTop <| nhds v := by
   simpa [LinearOrderedAddCommGroup.tendsto_nhds, abs_sub_comm] using of_convergence_epsilon v
+#align generalized_continued_fraction.of_convergence GeneralizedContinuedFraction.of_convergence
 
 end Convergence
 

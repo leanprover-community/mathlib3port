@@ -31,6 +31,7 @@ variable {α : Type _} {β : α → Type _}
 of function of type `α → α`. -/
 class HasFix (α : Type _) where
   fix : (α → α) → α
+#align has_fix HasFix
 
 namespace Part
 
@@ -45,10 +46,12 @@ variable (f : (∀ a, Part <| β a) → ∀ a, Part <| β a)
 def Fix.approx : Stream <| ∀ a, Part <| β a
   | 0 => ⊥
   | Nat.succ i => f (fix.approx i)
+#align part.fix.approx Part.Fix.approx
 
 /-- loop body for finding the fixed point of `f` -/
 def fixAux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part <| β a) : ∀ a, Part <| β a :=
   f fun x : α => (assert ¬p i.val) fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_self _) x
+#align part.fix_aux Part.fixAux
 
 /-- The least fixed point of `f`.
 
@@ -60,6 +63,7 @@ it satisfies the equations:
 -/
 protected def fix (x : α) : Part <| β x :=
   (Part.assert (∃ i, (Fix.approx f i x).Dom)) fun h => WellFounded.fix.{1} (Nat.Upto.wf h) (fixAux f) Nat.Upto.zero x
+#align part.fix Part.fix
 
 protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     Part.fix f x = Fix.approx f (Nat.succ <| Nat.find h') x := by
@@ -96,9 +100,11 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     rw [succ_add_eq_succ_add] at this hk
     rw [assert_pos hh, k_ih (upto.succ z hh) this hk]
     
+#align part.fix_def Part.fix_def
 
 theorem fix_def' {x : α} (h' : ¬∃ i, (Fix.approx f i x).Dom) : Part.fix f x = none := by
   dsimp [Part.fix] <;> rw [assert_neg h']
+#align part.fix_def' Part.fix_def'
 
 end Basic
 
@@ -117,6 +123,7 @@ namespace Pi
 
 instance Part.hasFix {β} : HasFix (α → Part β) :=
   ⟨Part.fix⟩
+#align pi.part.has_fix Pi.Part.hasFix
 
 end Pi
 

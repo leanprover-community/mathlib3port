@@ -50,6 +50,7 @@ class GroupFilterBasis (G : Type u) [Group G] extends FilterBasis G where
   mul' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, V * V ⊆ U
   inv' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x⁻¹) ⁻¹' U
   conj' : ∀ x₀, ∀ {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ * x * x₀⁻¹) ⁻¹' U
+#align group_filter_basis GroupFilterBasis
 
 /-- A `add_group_filter_basis` on an additive group is a `filter_basis` satisfying some additional
   axioms. Example : if `G` is a topological group then the neighbourhoods of the identity are a
@@ -60,6 +61,7 @@ class AddGroupFilterBasis (A : Type u) [AddGroup A] extends FilterBasis A where
   add' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, V + V ⊆ U
   neg' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => -x) ⁻¹' U
   conj' : ∀ x₀, ∀ {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ + x + -x₀) ⁻¹' U
+#align add_group_filter_basis AddGroupFilterBasis
 
 attribute [to_additive] GroupFilterBasis
 
@@ -80,6 +82,7 @@ def groupFilterBasisOfComm {G : Type _} [CommGroup G] (sets : Set (Set G)) (none
     (mul : ∀ U ∈ sets, ∃ V ∈ sets, V * V ⊆ U) (inv : ∀ U ∈ sets, ∃ V ∈ sets, V ⊆ (fun x => x⁻¹) ⁻¹' U) :
     GroupFilterBasis G :=
   { Sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv, conj' := fun x U U_in => ⟨U, U_in, by simp⟩ }
+#align group_filter_basis_of_comm groupFilterBasisOfComm
 
 namespace GroupFilterBasis
 
@@ -92,18 +95,22 @@ instance : Membership (Set G) (GroupFilterBasis G) :=
 @[to_additive]
 theorem one {U : Set G} : U ∈ B → (1 : G) ∈ U :=
   GroupFilterBasis.one'
+#align group_filter_basis.one GroupFilterBasis.one
 
 @[to_additive]
 theorem mul {U : Set G} : U ∈ B → ∃ V ∈ B, V * V ⊆ U :=
   GroupFilterBasis.mul'
+#align group_filter_basis.mul GroupFilterBasis.mul
 
 @[to_additive]
 theorem inv {U : Set G} : U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x⁻¹) ⁻¹' U :=
   GroupFilterBasis.inv'
+#align group_filter_basis.inv GroupFilterBasis.inv
 
 @[to_additive]
 theorem conj : ∀ x₀, ∀ {U}, U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x₀ * x * x₀⁻¹) ⁻¹' U :=
   GroupFilterBasis.conj'
+#align group_filter_basis.conj GroupFilterBasis.conj
 
 /-- The trivial group filter basis consists of `{1}` only. The associated topology
 is discrete. -/
@@ -134,23 +141,28 @@ instance : Inhabited (GroupFilterBasis G) :=
 @[to_additive]
 theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U ⊆ U * U := fun x x_in =>
   ⟨1, x, one h, x_in, one_mul x⟩
+#align group_filter_basis.prod_subset_self GroupFilterBasis.prod_subset_self
 
 /-- The neighborhood function of a `group_filter_basis` -/
 @[to_additive "The neighborhood function of a `add_group_filter_basis`"]
 def n (B : GroupFilterBasis G) : G → Filter G := fun x => map (fun y => x * y) B.toFilterBasis.filter
+#align group_filter_basis.N GroupFilterBasis.n
 
 @[simp, to_additive]
 theorem N_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by simp only [N, one_mul, map_id']
+#align group_filter_basis.N_one GroupFilterBasis.N_one
 
 @[to_additive]
 protected theorem has_basis (B : GroupFilterBasis G) (x : G) :
     HasBasis (B.n x) (fun V : Set G => V ∈ B) fun V => (fun y => x * y) '' V :=
   HasBasis.map (fun y => x * y) toFilterBasis.HasBasis
+#align group_filter_basis.has_basis GroupFilterBasis.has_basis
 
 /-- The topological space structure coming from a group filter basis. -/
 @[to_additive "The topological space structure coming from an additive group filter basis."]
 def topology (B : GroupFilterBasis G) : TopologicalSpace G :=
   TopologicalSpace.mkOfNhds B.n
+#align group_filter_basis.topology GroupFilterBasis.topology
 
 @[to_additive]
 theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = B.n x₀ := by
@@ -178,28 +190,33 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
       exact ⟨t * w, hW (mul_mem_mul tW wW), by simp [mul_assoc]⟩
       
     
+#align group_filter_basis.nhds_eq GroupFilterBasis.nhds_eq
 
 @[to_additive]
 theorem nhds_one_eq (B : GroupFilterBasis G) : @nhds G B.topology (1 : G) = B.toFilterBasis.filter := by
   rw [B.nhds_eq]
   simp only [N, one_mul]
   exact map_id
+#align group_filter_basis.nhds_one_eq GroupFilterBasis.nhds_one_eq
 
 @[to_additive]
 theorem nhds_has_basis (B : GroupFilterBasis G) (x₀ : G) :
     HasBasis (@nhds G B.topology x₀) (fun V : Set G => V ∈ B) fun V => (fun y => x₀ * y) '' V := by
   rw [B.nhds_eq]
   apply B.has_basis
+#align group_filter_basis.nhds_has_basis GroupFilterBasis.nhds_has_basis
 
 @[to_additive]
 theorem nhds_one_has_basis (B : GroupFilterBasis G) : HasBasis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id := by
   rw [B.nhds_one_eq]
   exact B.to_filter_basis.has_basis
+#align group_filter_basis.nhds_one_has_basis GroupFilterBasis.nhds_one_has_basis
 
 @[to_additive]
 theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈ @nhds G B.topology 1 := by
   rw [B.nhds_one_has_basis.mem_iff]
   exact ⟨U, hU, rfl.subset⟩
+#align group_filter_basis.mem_nhds_one GroupFilterBasis.mem_nhds_one
 
 -- See note [lower instance priority]
 /-- If a group is endowed with a topological structure coming from a group filter basis then it's a
@@ -232,6 +249,7 @@ instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @Topo
     intro U U_in
     exact conj x₀ U_in
     
+#align group_filter_basis.is_topological_group GroupFilterBasis.is_topological_group
 
 end GroupFilterBasis
 
@@ -243,6 +261,7 @@ class RingFilterBasis (R : Type u) [Ring R] extends AddGroupFilterBasis R where
   mul' : ∀ {U}, U ∈ sets → ∃ V ∈ sets, V * V ⊆ U
   mul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ * x) ⁻¹' U
   mul_right' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x * x₀) ⁻¹' U
+#align ring_filter_basis RingFilterBasis
 
 namespace RingFilterBasis
 
@@ -253,17 +272,21 @@ instance : Membership (Set R) (RingFilterBasis R) :=
 
 theorem mul {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V * V ⊆ U :=
   mul' hU
+#align ring_filter_basis.mul RingFilterBasis.mul
 
 theorem mul_left (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x₀ * x) ⁻¹' U :=
   mul_left' x₀ hU
+#align ring_filter_basis.mul_left RingFilterBasis.mul_left
 
 theorem mul_right (x₀ : R) {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x * x₀) ⁻¹' U :=
   mul_right' x₀ hU
+#align ring_filter_basis.mul_right RingFilterBasis.mul_right
 
 /-- The topology associated to a ring filter basis.
 It has the given basis as a basis of neighborhoods of zero. -/
 def topology : TopologicalSpace R :=
   B.toAddGroupFilterBasis.topology
+#align ring_filter_basis.topology RingFilterBasis.topology
 
 /-- If a ring is endowed with a topological structure coming from
 a ring filter basis then it's a topological ring. -/
@@ -293,6 +316,7 @@ instance (priority := 100) isTopologicalRing {R : Type u} [Ring R] (B : RingFilt
     intro U
     simpa using B.mul_right x₀
     
+#align ring_filter_basis.is_topological_ring RingFilterBasis.isTopologicalRing
 
 end RingFilterBasis
 
@@ -305,6 +329,7 @@ structure ModuleFilterBasis (R M : Type _) [CommRing R] [TopologicalSpace R] [Ad
   smul' : ∀ {U}, U ∈ sets → ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ sets, V • W ⊆ U
   smul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ • x) ⁻¹' U
   smul_right' : ∀ (m₀ : M) {U}, U ∈ sets → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U
+#align module_filter_basis ModuleFilterBasis
 
 namespace ModuleFilterBasis
 
@@ -312,15 +337,19 @@ variable {R M : Type _} [CommRing R] [TopologicalSpace R] [AddCommGroup M] [Modu
 
 instance GroupFilterBasis.hasMem : Membership (Set M) (ModuleFilterBasis R M) :=
   ⟨fun s B => s ∈ B.Sets⟩
+#align module_filter_basis.group_filter_basis.has_mem ModuleFilterBasis.GroupFilterBasis.hasMem
 
 theorem smul {U : Set M} (hU : U ∈ B) : ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ B, V • W ⊆ U :=
   B.smul' hU
+#align module_filter_basis.smul ModuleFilterBasis.smul
 
 theorem smul_left (x₀ : R) {U : Set M} (hU : U ∈ B) : ∃ V ∈ B, V ⊆ (fun x => x₀ • x) ⁻¹' U :=
   B.smul_left' x₀ hU
+#align module_filter_basis.smul_left ModuleFilterBasis.smul_left
 
 theorem smul_right (m₀ : M) {U : Set M} (hU : U ∈ B) : ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U :=
   B.smul_right' m₀ hU
+#align module_filter_basis.smul_right ModuleFilterBasis.smul_right
 
 /-- If `R` is discrete then the trivial additive group filter basis on any `R`-module is a
 module filter basis. -/
@@ -346,6 +375,7 @@ instance [DiscreteTopology R] : Inhabited (ModuleFilterBasis R M) :=
 It has the given basis as a basis of neighborhoods of zero. -/
 def topology : TopologicalSpace M :=
   B.toAddGroupFilterBasis.topology
+#align module_filter_basis.topology ModuleFilterBasis.topology
 
 /-- The topology associated to a module filter basis on a module over a topological ring.
 It has the given basis as a basis of neighborhoods of zero. This version gets the ring
@@ -353,6 +383,7 @@ topology by unification instead of type class inference. -/
 def topology' {R M : Type _} [CommRing R] {tR : TopologicalSpace R} [AddCommGroup M] [Module R M]
     (B : ModuleFilterBasis R M) : TopologicalSpace M :=
   B.toAddGroupFilterBasis.topology
+#align module_filter_basis.topology' ModuleFilterBasis.topology'
 
 /-- A topological add group whith a basis of `𝓝 0` satisfying the axioms of `module_filter_basis`
 is a topological module.
@@ -387,6 +418,8 @@ theorem _root_.has_continuous_smul.of_basis_zero {ι : Type _} [TopologicalRing 
     rcases hsmul_left x₀ hi with ⟨j, hj, hji⟩
     exact mem_of_superset (h.mem_of_mem hj) hji
     
+#align
+  module_filter_basis._root_.has_continuous_smul.of_basis_zero module_filter_basis._root_.has_continuous_smul.of_basis_zero
 
 /-- If a module is endowed with a topological structure coming from
 a module filter basis then it's a topological module. -/
@@ -395,6 +428,7 @@ instance (priority := 100) has_continuous_smul [TopologicalRing R] : @HasContinu
   letI := B'.topology
   haveI := B'.is_topological_add_group
   exact HasContinuousSmul.of_basis_zero B'.nhds_zero_has_basis (fun _ => B.smul) B.smul_left B.smul_right
+#align module_filter_basis.has_continuous_smul ModuleFilterBasis.has_continuous_smul
 
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def ofBases {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (BR : RingFilterBasis R)
@@ -412,6 +446,7 @@ def ofBases {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (BR : Ring
       intro m₀ U U_in
       rcases smul_right m₀ U_in with ⟨V, V_in, H⟩
       exact mem_of_superset (BR.to_add_group_filter_basis.mem_nhds_zero V_in) H }
+#align module_filter_basis.of_bases ModuleFilterBasis.ofBases
 
 end ModuleFilterBasis
 

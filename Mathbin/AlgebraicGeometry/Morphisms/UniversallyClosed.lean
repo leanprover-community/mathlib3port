@@ -38,36 +38,47 @@ along any morphism `Y' ⟶ Y` is (topologically) a closed map.
 @[mk_iff]
 class UniversallyClosed (f : X ⟶ Y) : Prop where
   out : Universally (Topologically @IsClosedMap) f
+#align algebraic_geometry.universally_closed AlgebraicGeometry.UniversallyClosed
 
 theorem universally_closed_eq : @UniversallyClosed = Universally (Topologically @IsClosedMap) := by
   ext (X Y f)
   rw [universally_closed_iff]
+#align algebraic_geometry.universally_closed_eq AlgebraicGeometry.universally_closed_eq
 
 theorem universally_closed_respects_iso : RespectsIso @UniversallyClosed :=
   universally_closed_eq.symm ▸ universally_respects_iso (Topologically @IsClosedMap)
+#align algebraic_geometry.universally_closed_respects_iso AlgebraicGeometry.universally_closed_respects_iso
 
 theorem universally_closed_stable_under_base_change : StableUnderBaseChange @UniversallyClosed :=
   universally_closed_eq.symm ▸ universally_stable_under_base_change (Topologically @IsClosedMap)
+#align
+  algebraic_geometry.universally_closed_stable_under_base_change AlgebraicGeometry.universally_closed_stable_under_base_change
 
 theorem universally_closed_stable_under_composition : StableUnderComposition @UniversallyClosed := by
   rw [universally_closed_eq]
   exact stable_under_composition.universally fun X Y Z f g hf hg => IsClosedMap.comp hg hf
+#align
+  algebraic_geometry.universally_closed_stable_under_composition AlgebraicGeometry.universally_closed_stable_under_composition
 
 instance universally_closed_type_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [hf : UniversallyClosed f]
     [hg : UniversallyClosed g] : UniversallyClosed (f ≫ g) :=
   universally_closed_stable_under_composition f g hf hg
+#align algebraic_geometry.universally_closed_type_comp AlgebraicGeometry.universally_closed_type_comp
 
 instance universally_closed_fst {X Y Z : SchemeCat} (f : X ⟶ Z) (g : Y ⟶ Z) [hg : UniversallyClosed g] :
     UniversallyClosed (pullback.fst : pullback f g ⟶ _) :=
   universally_closed_stable_under_base_change.fst f g hg
+#align algebraic_geometry.universally_closed_fst AlgebraicGeometry.universally_closed_fst
 
 instance universally_closed_snd {X Y Z : SchemeCat} (f : X ⟶ Z) (g : Y ⟶ Z) [hf : UniversallyClosed f] :
     UniversallyClosed (pullback.snd : pullback f g ⟶ _) :=
   universally_closed_stable_under_base_change.snd f g hf
+#align algebraic_geometry.universally_closed_snd AlgebraicGeometry.universally_closed_snd
 
 theorem morphism_restrict_base {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.Carrier) :
     ⇑(f ∣_ U).1.base = U.1.restrictPreimage f.1 :=
   funext fun x => Subtype.ext <| morphism_restrict_base_coe f U x
+#align algebraic_geometry.morphism_restrict_base AlgebraicGeometry.morphism_restrict_base
 
 theorem universallyClosedIsLocalAtTarget : PropertyIsLocalAtTarget @UniversallyClosed := by
   rw [universally_closed_eq]
@@ -80,10 +91,12 @@ theorem universallyClosedIsLocalAtTarget : PropertyIsLocalAtTarget @UniversallyC
     simp_rw [topologically, morphism_restrict_base] at H
     exact (is_closed_map_iff_is_closed_map_of_supr_eq_top hU).mpr H
     
+#align algebraic_geometry.universally_closed_is_local_at_target AlgebraicGeometry.universallyClosedIsLocalAtTarget
 
 theorem UniversallyClosed.open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y) :
     UniversallyClosed f ↔ ∀ i, UniversallyClosed (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   universallyClosedIsLocalAtTarget.open_cover_iff f 𝒰
+#align algebraic_geometry.universally_closed.open_cover_iff AlgebraicGeometry.UniversallyClosed.open_cover_iff
 
 end AlgebraicGeometry
 

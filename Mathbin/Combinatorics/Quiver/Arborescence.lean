@@ -39,10 +39,12 @@ namespace Quiver
 class Arborescence (V : Type u) [Quiver.{v} V] : Type max u v where
   root : V
   uniquePath : ∀ b : V, Unique (Path root b)
+#align quiver.arborescence Quiver.Arborescence
 
 /-- The root of an arborescence. -/
 def root (V : Type u) [Quiver V] [Arborescence V] : V :=
   arborescence.root
+#align quiver.root Quiver.root
 
 instance {V : Type u} [Quiver V] [Arborescence V] (b : V) : Unique (Path (root V) b) :=
   Arborescence.uniquePath b
@@ -90,10 +92,12 @@ noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V →
       · rcases unique_arrow e f with ⟨⟨⟩, ⟨⟩⟩
         rw [ih]
         ⟩
+#align quiver.arborescence_mk Quiver.arborescenceMk
 
 /-- `rooted_connected r` means that there is a path from `r` to any other vertex. -/
 class RootedConnected {V : Type u} [Quiver V] (r : V) : Prop where
   nonempty_path : ∀ b : V, Nonempty (Path r b)
+#align quiver.rooted_connected Quiver.RootedConnected
 
 attribute [instance] rooted_connected.nonempty_path
 
@@ -104,13 +108,16 @@ variable {V : Type u} [Quiver.{v + 1} V] (r : V) [RootedConnected r]
 /-- A path from `r` of minimal length. -/
 noncomputable def shortestPath (b : V) : Path r b :=
   WellFounded.min (measure_wf Path.length) Set.Univ Set.univ_nonempty
+#align quiver.shortest_path Quiver.shortestPath
 
 /-- The length of a path is at least the length of the shortest path -/
 theorem shortest_path_spec {a : V} (p : Path r a) : (shortestPath r a).length ≤ p.length :=
   not_lt.mp (WellFounded.not_lt_min (measure_wf _) Set.Univ _ trivial)
+#align quiver.shortest_path_spec Quiver.shortest_path_spec
 
 /-- A subquiver which by construction is an arborescence. -/
 def GeodesicSubtree : WideSubquiver V := fun a b => { e | ∃ p : Path r a, shortestPath r b = p.cons e }
+#align quiver.geodesic_subtree Quiver.GeodesicSubtree
 
 noncomputable instance geodesicArborescence : Arborescence (GeodesicSubtree r) :=
   arborescenceMk r (fun a => (shortestPath r a).length)
@@ -129,6 +136,7 @@ noncomputable instance geodesicArborescence : Arborescence (GeodesicSubtree r) :
         
       · exact Or.inr ⟨_, ⟨⟨e, p, hp⟩⟩⟩
         )
+#align quiver.geodesic_arborescence Quiver.geodesicArborescence
 
 end GeodesicSubtree
 

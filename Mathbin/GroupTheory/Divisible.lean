@@ -82,6 +82,7 @@ class DivisibleBy where
   div : A → α → A
   div_zero : ∀ a, div a 0 = 0
   div_cancel : ∀ {n : α} (a : A), n ≠ 0 → n • div a n = a
+#align divisible_by DivisibleBy
 
 end AddMonoid
 
@@ -99,21 +100,236 @@ class RootableBy where
   root : A → α → A
   root_zero : ∀ a, root a 0 = 1
   root_cancel : ∀ {n : α} (a : A), n ≠ 0 → root a n ^ n = a
+#align rootable_by RootableBy
 
 @[to_additive smul_right_surj_of_divisible_by]
 theorem pow_left_surj_of_rootable_by [RootableBy A α] {n : α} (hn : n ≠ 0) :
     Function.Surjective (fun a => pow a n : A → A) := fun x => ⟨RootableBy.root x n, RootableBy.root_cancel _ hn⟩
+#align pow_left_surj_of_rootable_by pow_left_surj_of_rootable_by
 
-/-- A `monoid A` is `α`-rootable iff the `pow _ n` function is surjective, i.e. the constructive version
-implies the textbook approach.
--/
-@[to_additive divisibleByOfSmulRightSurj
-      "An `add_monoid A` is `α`-divisible iff `n • _` is a surjective function, i.e. the constructive\nversion implies the textbook approach."]
-noncomputable def rootableByOfPowLeftSurj (H : ∀ {n : α}, n ≠ 0 → Function.Surjective (fun a => a ^ n : A → A)) :
-    RootableBy A α where
-  root a n := @dite _ (n = 0) (Classical.dec _) (fun _ => (1 : A)) fun hn => (H hn a).some
-  root_zero _ := by classical <;> exact dif_pos rfl
-  root_cancel n a hn := by rw [dif_neg hn] <;> exact (H hn a).some_spec
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "A `monoid A` is `α`-rootable iff the `pow _ n` function is surjective, i.e. the constructive version\nimplies the textbook approach.\n-/")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive
+           "to_additive"
+           []
+           []
+           [`divisibleByOfSmulRightSurj]
+           [(str
+             "\"An `add_monoid A` is `α`-divisible iff `n • _` is a surjective function, i.e. the constructive\\nversion implies the textbook approach.\"")]))]
+        "]")]
+      []
+      [(Command.noncomputable "noncomputable")]
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `rootableByOfPowLeftSurj [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`H]
+         [":"
+          (Term.forall
+           "∀"
+           [(Term.implicitBinder "{" [`n] [":" `α] "}")]
+           []
+           ","
+           (Term.arrow
+            («term_≠_» `n "≠" (num "0"))
+            "→"
+            (Term.app
+             `Function.Surjective
+             [(Term.paren
+               "("
+               [(Term.fun "fun" (Term.basicFun [`a] [] "=>" («term_^_» `a "^" `n)))
+                [(Term.typeAscription ":" [(Term.arrow `A "→" `A)])]]
+               ")")])))]
+         []
+         ")")]
+       [(Term.typeSpec ":" (Term.app `RootableBy [`A `α]))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `root
+           [`a `n]
+           []
+           ":="
+           (Term.app
+            (Term.explicit "@" `dite)
+            [(Term.hole "_")
+             («term_=_» `n "=" (num "0"))
+             (Term.app `Classical.dec [(Term.hole "_")])
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [(Term.hole "_")]
+               []
+               "=>"
+               (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`A])]] ")")))
+             (Term.fun "fun" (Term.basicFun [`hn] [] "=>" (Term.proj (Term.app `H [`hn `a]) "." `some)))]))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `root_zero
+           [(Term.hole "_")]
+           []
+           ":="
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.«tactic_<;>_»
+                (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+                "<;>"
+                (Tactic.exact "exact" (Term.app `dif_pos [`rfl])))]))))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `root_cancel
+           [`n `a `hn]
+           []
+           ":="
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.«tactic_<;>_»
+                (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `dif_neg [`hn]))] "]") [])
+                "<;>"
+                (Tactic.exact "exact" (Term.proj (Term.app `H [`hn `a]) "." `some_spec)))]))))))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `dif_neg [`hn]))] "]") [])
+           "<;>"
+           (Tactic.exact "exact" (Term.proj (Term.app `H [`hn `a]) "." `some_spec)))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `dif_neg [`hn]))] "]") [])
+       "<;>"
+       (Tactic.exact "exact" (Term.proj (Term.app `H [`hn `a]) "." `some_spec)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.proj (Term.app `H [`hn `a]) "." `some_spec))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj (Term.app `H [`hn `a]) "." `some_spec)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `H [`hn `a])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `a
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hn
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `H
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `H [`hn `a]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `dif_neg [`hn]))] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `dif_neg [`hn])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hn
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `dif_neg
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+           "<;>"
+           (Tactic.exact "exact" (Term.app `dif_pos [`rfl])))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+       "<;>"
+       (Tactic.exact "exact" (Term.app `dif_pos [`rfl])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `dif_pos [`rfl]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `dif_pos [`rfl])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `dif_pos
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      A `monoid A` is `α`-rootable iff the `pow _ n` function is surjective, i.e. the constructive version
+      implies the textbook approach.
+      -/
+    @[
+      to_additive
+        divisibleByOfSmulRightSurj
+        "An `add_monoid A` is `α`-divisible iff `n • _` is a surjective function, i.e. the constructive\nversion implies the textbook approach."
+      ]
+    noncomputable
+  def
+    rootableByOfPowLeftSurj
+    ( H : ∀ { n : α } , n ≠ 0 → Function.Surjective ( fun a => a ^ n : A → A ) ) : RootableBy A α
+    where
+      root a n := @ dite _ n = 0 Classical.dec _ fun _ => ( 1 : A ) fun hn => H hn a . some
+        root_zero _ := by skip <;> exact dif_pos rfl
+        root_cancel n a hn := by rw [ dif_neg hn ] <;> exact H hn a . some_spec
+#align rootable_by_of_pow_left_surj rootableByOfPowLeftSurj
 
 section Pi
 
@@ -126,6 +342,7 @@ instance Pi.rootableBy : RootableBy (∀ i, B i) β where
   root x n i := RootableBy.root (x i) n
   root_zero x := funext fun i => RootableBy.root_zero _
   root_cancel n x hn := funext fun i => RootableBy.root_cancel _ hn
+#align pi.rootable_by Pi.rootableBy
 
 end Pi
 
@@ -140,6 +357,7 @@ instance Prod.rootableBy : RootableBy (B × B') β where
   root p n := (RootableBy.root p.1 n, RootableBy.root p.2 n)
   root_zero p := Prod.ext (RootableBy.root_zero _) (RootableBy.root_zero _)
   root_cancel n p hn := Prod.ext (RootableBy.root_cancel _ hn) (RootableBy.root_cancel _ hn)
+#align prod.rootable_by Prod.rootableBy
 
 end Prod
 
@@ -151,6 +369,7 @@ variable (A : Type _) [AddCommGroup A]
 
 theorem smul_top_eq_top_of_divisible_by_int [DivisibleBy A ℤ] {n : ℤ} (hn : n ≠ 0) : n • (⊤ : AddSubgroup A) = ⊤ :=
   (AddSubgroup.map_top_of_surjective _) fun a => ⟨DivisibleBy.div a n, DivisibleBy.div_cancel _ hn⟩
+#align add_comm_group.smul_top_eq_top_of_divisible_by_int AddCommGroup.smul_top_eq_top_of_divisible_by_int
 
 /-- If for all `n ≠ 0 ∈ ℤ`, `n • A = A`, then `A` is divisible.
 -/
@@ -162,6 +381,7 @@ noncomputable def divisibleByIntOfSmulTopEqTop (H : ∀ {n : ℤ} (hn : n ≠ 0)
     rw [dif_neg hn]
     generalize_proofs h1
     exact h1.some_spec.2
+#align add_comm_group.divisible_by_int_of_smul_top_eq_top AddCommGroup.divisibleByIntOfSmulTopEqTop
 
 end AddCommGroup
 
@@ -169,6 +389,7 @@ instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [
   div q n := q / n
   div_zero q := by norm_num
   div_cancel n q hn := by rw [zsmul_eq_mul, (Int.cast_commute n _).Eq, div_mul_cancel q (int.cast_ne_zero.mpr hn)]
+#align divisible_by_int_of_char_zero divisibleByIntOfCharZero
 
 namespace Group
 
@@ -196,6 +417,7 @@ def rootableByIntOfRootableByNat [RootableBy A ℕ] : RootableBy A ℤ where
       rw [RootableBy.root_cancel]
       norm_num
       
+#align group.rootable_by_int_of_rootable_by_nat Group.rootableByIntOfRootableByNat
 
 /-- A group is `ℕ`-rootable if it is `ℤ`-rootable
 -/
@@ -207,6 +429,7 @@ def rootableByNatOfRootableByInt [RootableBy A ℤ] : RootableBy A ℕ where
     have := RootableBy.root_cancel a (show (n : ℤ) ≠ 0 by exact_mod_cast hn)
     norm_num at this
     exact this
+#align group.rootable_by_nat_of_rootable_by_int Group.rootableByNatOfRootableByInt
 
 end Group
 
@@ -226,10 +449,12 @@ noncomputable def Function.Surjective.rootableBy (hf : Function.Surjective f)
   (rootableByOfPowLeftSurj _ _) fun n hn x =>
     let ⟨y, hy⟩ := hf x
     ⟨f <| RootableBy.root y n, (by rw [← hpow (RootableBy.root y n) n, RootableBy.root_cancel _ hn, hy] : _ ^ _ = x)⟩
+#align function.surjective.rootable_by Function.Surjective.rootableBy
 
 @[to_additive DivisibleBy.surjective_smul]
 theorem RootableBy.surjective_pow (A α : Type _) [Monoid A] [Pow A α] [Zero α] [RootableBy A α] {n : α} (hn : n ≠ 0) :
     Function.Surjective fun a : A => a ^ n := fun a => ⟨RootableBy.root a n, RootableBy.root_cancel a hn⟩
+#align rootable_by.surjective_pow RootableBy.surjective_pow
 
 end Hom
 
@@ -241,6 +466,7 @@ variable (α : Type _) {A : Type _} [CommGroup A] (B : Subgroup A)
 @[to_additive QuotientAddGroup.divisibleBy "Any quotient group of a divisible group is divisible"]
 noncomputable instance QuotientGroup.rootableBy [RootableBy A ℕ] : RootableBy (A ⧸ B) ℕ :=
   (QuotientGroup.mk_surjective.RootableBy _) fun _ _ => rfl
+#align quotient_group.rootable_by QuotientGroup.rootableBy
 
 end Quotient
 

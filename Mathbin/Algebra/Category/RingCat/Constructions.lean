@@ -37,8 +37,6 @@ section Pushout
 
 variable {R A B : CommRingCat.{u}} (f : R ⟶ A) (g : R ⟶ B)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra_map R tensor_product(A, R, B) r]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The explicit cocone with tensor products as the fibered product in `CommRing`. -/
 def pushoutCocone : Limits.PushoutCocone f g := by
   letI := RingHom.toAlgebra f
@@ -51,12 +49,12 @@ def pushoutCocone : Limits.PushoutCocone f g := by
   show B ⟶ _
   exact algebra.tensor_product.include_right.to_ring_hom
   ext r
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr algebra_map R tensor_product(A, R, B) r]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  trans algebraMap R (A ⊗[R] B) r
   · exact algebra.tensor_product.include_left.commutes r
     
   · exact (algebra.tensor_product.include_right.commutes r).symm
     
+#align CommRing.pushout_cocone CommRingCat.pushoutCocone
 
 @[simp]
 theorem pushout_cocone_inl :
@@ -65,6 +63,7 @@ theorem pushout_cocone_inl :
       letI := g.to_algebra
       exact algebra.tensor_product.include_left.to_ring_hom :=
   rfl
+#align CommRing.pushout_cocone_inl CommRingCat.pushout_cocone_inl
 
 @[simp]
 theorem pushout_cocone_inr :
@@ -73,6 +72,7 @@ theorem pushout_cocone_inr :
       letI := g.to_algebra
       exact algebra.tensor_product.include_right.to_ring_hom :=
   rfl
+#align CommRing.pushout_cocone_inr CommRingCat.pushout_cocone_inr
 
 @[simp]
 theorem pushout_cocone_X :
@@ -81,6 +81,7 @@ theorem pushout_cocone_X :
       letI := g.to_algebra
       exact CommRingCat.of (A ⊗[R] B) :=
   rfl
+#align CommRing.pushout_cocone_X CommRingCat.pushout_cocone_X
 
 /-- Verify that the `pushout_cocone` is indeed the colimit. -/
 def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
@@ -124,6 +125,7 @@ def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
     apply Algebra.TensorProduct.ext
     intro a b
     simp [← eq1, ← eq2, ← h.map_mul]
+#align CommRing.pushout_cocone_is_colimit CommRingCat.pushoutCoconeIsColimit
 
 end Pushout
 
@@ -133,6 +135,7 @@ section Terminal
 def punitIsTerminal : IsTerminal (CommRingCat.of.{u} PUnit) := by
   apply (config := { instances := false }) is_terminal.of_unique
   tidy
+#align CommRing.punit_is_terminal CommRingCat.punitIsTerminal
 
 instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRingCat.{u} := by
   apply has_strict_terminal_objects_of_terminal_is_strict (CommRingCat.of PUnit)
@@ -145,15 +148,18 @@ instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRin
   replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
   rw [one_mul, zero_mul, ← f.map_zero] at e
   exact e
+#align CommRing.CommRing_has_strict_terminal_objects CommRingCat.CommRing_has_strict_terminal_objects
 
 theorem subsingleton_of_is_terminal {X : CommRingCat} (hX : IsTerminal X) : Subsingleton X :=
   (hX.uniqueUpToIso punitIsTerminal).commRingIsoToRingEquiv.toEquiv.subsingleton_congr.mpr
     (show Subsingleton PUnit by infer_instance)
+#align CommRing.subsingleton_of_is_terminal CommRingCat.subsingleton_of_is_terminal
 
 /-- `ℤ` is the initial object of `CommRing`. -/
 def zIsInitial : IsInitial (CommRingCat.of ℤ) := by
   apply (config := { instances := false }) is_initial.of_unique
   exact fun R => ⟨⟨Int.castRingHom R⟩, fun a => a.ext_int _⟩
+#align CommRing.Z_is_initial CommRingCat.zIsInitial
 
 end Terminal
 
@@ -165,6 +171,7 @@ variable (A B : CommRingCat.{u})
 @[simps x]
 def prodFan : BinaryFan A B :=
   BinaryFan.mk (CommRingCat.ofHom <| RingHom.fst A B) (CommRingCat.ofHom <| RingHom.snd A B)
+#align CommRing.prod_fan CommRingCat.prodFan
 
 /-- The product in `CommRing` is the cartesian product. -/
 def prodFanIsLimit : IsLimit (prodFan A B) where
@@ -178,6 +185,7 @@ def prodFanIsLimit : IsLimit (prodFan A B) where
       
     · simpa using congr_hom (h ⟨walking_pair.right⟩) x
       
+#align CommRing.prod_fan_is_limit CommRingCat.prodFanIsLimit
 
 end Product
 
@@ -191,6 +199,7 @@ def equalizerFork : Fork f g :=
     (by
       ext ⟨x, e⟩
       simpa using e)
+#align CommRing.equalizer_fork CommRingCat.equalizerFork
 
 /-- The equalizer in `CommRing` is the equalizer as sets. -/
 def equalizerForkIsLimit : IsLimit (equalizerFork f g) := by
@@ -205,6 +214,7 @@ def equalizerForkIsLimit : IsLimit (equalizerFork f g) := by
     ext x
     exact concrete_category.congr_hom hm x
     
+#align CommRing.equalizer_fork_is_limit CommRingCat.equalizerForkIsLimit
 
 instance : IsLocalRingHom (equalizerFork f g).ι := by
   constructor
@@ -227,6 +237,7 @@ instance equalizerιIsLocalRingHom (F : walking_parallel_pair ⥤ CommRingCat.{u
       walking_parallel_pair.zero]
   change IsLocalRingHom ((lim.map _ ≫ _ ≫ (equalizer_fork _ _).ι) ≫ _)
   infer_instance
+#align CommRing.equalizer_ι_is_local_ring_hom CommRingCat.equalizerιIsLocalRingHom
 
 open CategoryTheory.Limits.WalkingParallelPair Opposite
 
@@ -240,6 +251,7 @@ instance equalizerιIsLocalRingHom' (F : walking_parallel_pairᵒᵖ ⥤ CommRin
       _)
   erw [← this]
   infer_instance
+#align CommRing.equalizer_ι_is_local_ring_hom' CommRingCat.equalizerιIsLocalRingHom'
 
 end Equalizer
 
@@ -257,6 +269,7 @@ def pullbackCone {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) : Pullbac
     (by
       ext ⟨x, e⟩
       simpa [CommRingCat.ofHom] using e)
+#align CommRing.pullback_cone CommRingCat.pullbackCone
 
 /-- The constructed pullback cone is indeed the limit. -/
 def pullbackConeIsLimit {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) : IsLimit (pullbackCone f g) := by
@@ -281,6 +294,7 @@ def pullbackConeIsLimit {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) : 
     · exact (congr_arg (fun f : s.X →+* B => f x) e₂ : _)
       
     
+#align CommRing.pullback_cone_is_limit CommRingCat.pullbackConeIsLimit
 
 end Pullback
 

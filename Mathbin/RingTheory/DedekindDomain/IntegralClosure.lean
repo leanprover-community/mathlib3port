@@ -84,6 +84,7 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
   refine' ⟨fun i => db.repr (algebraMap C L x) i, fun i => _, (db.sum_repr _).symm⟩
   rw [BilinForm.dual_basis_repr_apply]
   exact is_integral_trace (isIntegralMul hx (hb_int i))
+#align is_integral_closure.range_le_span_dual_basis IsIntegralClosure.range_le_span_dual_basis
 
 theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι] (b : Basis ι K L)
     (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
@@ -93,12 +94,13 @@ theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fin
   refine' le_trans _ (IsIntegralClosure.range_le_span_dual_basis (integralClosure A L) b hb_int)
   intro x hx
   exact ⟨⟨x, hx⟩, rfl⟩
+#align integral_closure_le_span_dual_basis integral_closure_le_span_dual_basis
 
 variable (A) (K)
 
 include K
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
 theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀ x ∈ s, IsIntegral A (y • x) := by
@@ -124,6 +126,7 @@ theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)
       exact IsFractionRing.injective _ _
       
     
+#align exists_integral_multiples exists_integral_multiples
 
 variable (L)
 
@@ -156,6 +159,7 @@ theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basi
     simp only [Basis.map_apply, LinearEquiv.coe_mk]
     exact his' _ ⟨_, rfl⟩
     
+#align finite_dimensional.exists_is_basis_integral FiniteDimensional.exists_is_basis_integral
 
 variable (A K L) [IsSeparable K L]
 
@@ -175,12 +179,14 @@ theorem IsIntegralClosure.is_noetherian [IsIntegrallyClosed A] [IsNoetherianRing
   refine' is_noetherian_of_ker_bot f _
   rw [LinearMap.ker_comp, Submodule.ker_of_le, Submodule.comap_bot, LinearMap.ker_cod_restrict]
   exact LinearMap.ker_eq_bot_of_injective (IsIntegralClosure.algebra_map_injective C A L)
+#align is_integral_closure.is_noetherian IsIntegralClosure.is_noetherian
 
 /- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is
 integrally closed and Noetherian, the integral closure `C` of `A` in `L` is
 Noetherian. -/
 theorem IsIntegralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] : IsNoetherianRing C :=
   is_noetherian_ring_iff.mpr <| is_noetherian_of_tower A (IsIntegralClosure.is_noetherian A K L C)
+#align is_integral_closure.is_noetherian_ring IsIntegralClosure.is_noetherian_ring
 
 variable {A K}
 
@@ -190,6 +196,7 @@ Noetherian. -/
 theorem integralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] :
     IsNoetherianRing (integralClosure A L) :=
   IsIntegralClosure.is_noetherian_ring A K L (integralClosure A L)
+#align integral_closure.is_noetherian_ring integralClosure.is_noetherian_ring
 
 variable (A K) [IsDomain C]
 
@@ -206,6 +213,7 @@ theorem IsIntegralClosure.isDedekindDomain [h : IsDedekindDomain A] : IsDedekind
     (is_integrally_closed_iff L).mpr fun x hx =>
       ⟨IsIntegralClosure.mk' C x (isIntegralTrans (IsIntegralClosure.isIntegralAlgebra A L) _ hx),
         IsIntegralClosure.algebra_map_mk' _ _ _⟩⟩
+#align is_integral_closure.is_dedekind_domain IsIntegralClosure.isDedekindDomain
 
 /- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is a Dedekind domain,
 the integral closure of `A` in `L` is a Dedekind domain.
@@ -215,6 +223,7 @@ Can't be an instance since `K` can't be inferred. See also the instance
 -/
 theorem integralClosure.isDedekindDomain [h : IsDedekindDomain A] : IsDedekindDomain (integralClosure A L) :=
   IsIntegralClosure.isDedekindDomain A K L (integralClosure A L)
+#align integral_closure.is_dedekind_domain integralClosure.isDedekindDomain
 
 omit K
 
@@ -230,6 +239,7 @@ the field of fractions yourself.
 -/
 instance integralClosure.isDedekindDomainFractionRing [IsDedekindDomain A] : IsDedekindDomain (integralClosure A L) :=
   integralClosure.isDedekindDomain A (FractionRing A) L
+#align integral_closure.is_dedekind_domain_fraction_ring integralClosure.isDedekindDomainFractionRing
 
 end IsIntegralClosure
 

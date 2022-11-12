@@ -25,17 +25,21 @@ variable (F : A → Typevec.{u} n → Type u)
 data types like `ℕ` or over `Type.{u-1}` -/
 def Sigma (v : Typevec.{u} n) : Type u :=
   Σα : A, F α v
+#align mvqpf.sigma Mvqpf.Sigma
 
 /-- Dependent product of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
 def Pi (v : Typevec.{u} n) : Type u :=
   ∀ α : A, F α v
+#align mvqpf.pi Mvqpf.Pi
 
 instance Sigma.inhabited {α} [Inhabited A] [Inhabited (F default α)] : Inhabited (Sigma F α) :=
   ⟨⟨default, default⟩⟩
+#align mvqpf.sigma.inhabited Mvqpf.Sigma.inhabited
 
 instance Pi.inhabited {α} [∀ a, Inhabited (F a α)] : Inhabited (Pi F α) :=
   ⟨fun a => default⟩
+#align mvqpf.pi.inhabited Mvqpf.Pi.inhabited
 
 variable [∀ α, Mvfunctor <| F α]
 
@@ -48,16 +52,19 @@ variable [∀ α, Mvqpf <| F α]
 /-- polynomial functor representation of a dependent sum -/
 protected def p : Mvpfunctor n :=
   ⟨Σa, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
+#align mvqpf.sigma.P Mvqpf.Sigma.p
 
 /-- abstraction function for dependent sums -/
 protected def abs ⦃α⦄ : (Sigma.p F).Obj α → Sigma F α
   | ⟨a, f⟩ => ⟨a.1, Mvqpf.abs ⟨a.2, f⟩⟩
+#align mvqpf.sigma.abs Mvqpf.Sigma.abs
 
 /-- representation function for dependent sums -/
 protected def repr ⦃α⦄ : Sigma F α → (Sigma.p F).Obj α
   | ⟨a, f⟩ =>
     let x := Mvqpf.repr f
     ⟨⟨a, x.1⟩, x.2⟩
+#align mvqpf.sigma.repr Mvqpf.Sigma.repr
 
 instance : Mvqpf (Sigma F) where
   p := Sigma.p F
@@ -79,14 +86,17 @@ variable [∀ α, Mvqpf <| F α]
 /-- polynomial functor representation of a dependent product -/
 protected def p : Mvpfunctor n :=
   ⟨∀ a, (p (F a)).A, fun x i => Σa : A, (p (F a)).B (x a) i⟩
+#align mvqpf.pi.P Mvqpf.Pi.p
 
 /-- abstraction function for dependent products -/
 protected def abs ⦃α⦄ : (Pi.p F).Obj α → Pi F α
   | ⟨a, f⟩ => fun x => Mvqpf.abs ⟨a x, fun i y => f i ⟨_, y⟩⟩
+#align mvqpf.pi.abs Mvqpf.Pi.abs
 
 /-- representation function for dependent products -/
 protected def repr ⦃α⦄ : Pi F α → (Pi.p F).Obj α
   | f => ⟨fun a => (Mvqpf.repr (f a)).1, fun i a => (Mvqpf.repr (f _)).2 _ a.2⟩
+#align mvqpf.pi.repr Mvqpf.Pi.repr
 
 instance : Mvqpf (Pi F) where
   p := Pi.p F

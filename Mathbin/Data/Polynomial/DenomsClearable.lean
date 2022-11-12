@@ -36,11 +36,13 @@ the fraction equals `i D`.
 -/
 def DenomsClearable (a b : R) (N : ℕ) (f : R[X]) (i : R →+* K) : Prop :=
   ∃ (D : R)(bi : K), bi * i b = 1 ∧ i D = i b ^ N * eval (i a * bi) (f.map i)
+#align denoms_clearable DenomsClearable
 
 theorem denomsClearableZero (N : ℕ) (a : R) (bu : bi * i b = 1) : DenomsClearable a b N 0 i :=
   ⟨0, bi, bu, by simp only [eval_zero, RingHom.map_zero, mul_zero, Polynomial.map_zero]⟩
+#align denoms_clearable_zero denomsClearableZero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:125:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:130:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 theorem denomsClearableCMulXPow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} (r : R) (nN : n ≤ N) :
     DenomsClearable a b N (c r * X ^ n) i := by
   refine' ⟨r * a ^ n * b ^ (N - n), bi, bu, _⟩
@@ -49,6 +51,7 @@ theorem denomsClearableCMulXPow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} 
   rw [← tsub_add_cancel_of_le nN]
   rw [pow_add, mul_assoc, mul_comm (i b ^ n), mul_pow, mul_assoc, mul_assoc (i a ^ n), ← mul_pow]
   rw [bu, one_pow, mul_one]
+#align denoms_clearable_C_mul_X_pow denomsClearableCMulXPow
 
 theorem DenomsClearable.add {N : ℕ} {f g : R[X]} :
     DenomsClearable a b N f i → DenomsClearable a b N g i → DenomsClearable a b N (f + g) i :=
@@ -57,11 +60,13 @@ theorem DenomsClearable.add {N : ℕ} {f g : R[X]} :
     rw [RingHom.map_add, Polynomial.map_add, eval_add, mul_add, Hf, Hg]
     congr
     refine' @inv_unique K _ (i b) bg bf _ _ <;> rwa [mul_comm]⟩
+#align denoms_clearable.add DenomsClearable.add
 
 theorem denomsClearableOfNatDegreeLe (N : ℕ) (a : R) (bu : bi * i b = 1) :
     ∀ f : R[X], f.natDegree ≤ N → DenomsClearable a b N f i :=
   induction_with_nat_degree_le _ N (denomsClearableZero N a bu) (fun N_1 r r0 => denomsClearableCMulXPow a bu r)
     fun f g fg gN df dg => df.add dg
+#align denoms_clearable_of_nat_degree_le denomsClearableOfNatDegreeLe
 
 /-- If `i : R → K` is a ring homomorphism, `f` is a polynomial with coefficients in `R`,
 `a, b` are elements of `R`, with `i b` invertible, then there is a `D ∈ R` such that
@@ -69,6 +74,7 @@ theorem denomsClearableOfNatDegreeLe (N : ℕ) (a : R) (bu : bi * i b = 1) :
 theorem denomsClearableNatDegree (i : R →+* K) (f : R[X]) (a : R) (bu : bi * i b = 1) :
     DenomsClearable a b f.natDegree f i :=
   denomsClearableOfNatDegreeLe f.natDegree a bu f le_rfl
+#align denoms_clearable_nat_degree denomsClearableNatDegree
 
 end DenomsClearable
 
@@ -99,4 +105,5 @@ theorem one_le_pow_mul_abs_eval_div {K : Type _} [LinearOrderedField K] {f : ℤ
     
   · rwa [div_eq_mul_inv]
     
+#align one_le_pow_mul_abs_eval_div one_le_pow_mul_abs_eval_div
 

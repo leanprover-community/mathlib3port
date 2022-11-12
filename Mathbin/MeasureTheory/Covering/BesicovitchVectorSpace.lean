@@ -110,11 +110,14 @@ def centerAndRescale : SatelliteConfig E N τ where
     rw [dist_eq_norm] at H
     convert H using 2
     abel
+#align besicovitch.satellite_config.center_and_rescale Besicovitch.SatelliteConfig.centerAndRescale
 
 theorem center_and_rescale_center : a.centerAndRescale.c (last N) = 0 := by simp [satellite_config.center_and_rescale]
+#align besicovitch.satellite_config.center_and_rescale_center Besicovitch.SatelliteConfig.center_and_rescale_center
 
 theorem center_and_rescale_radius {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) : a.centerAndRescale.R (last N) = 1 := by
   simp [satellite_config.center_and_rescale, inv_mul_cancel (a.rpos _).ne']
+#align besicovitch.satellite_config.center_and_rescale_radius Besicovitch.SatelliteConfig.center_and_rescale_radius
 
 end SatelliteConfig
 
@@ -125,6 +128,7 @@ end SatelliteConfig
 optimal number of families in the Besicovitch covering theorem. -/
 def multiplicity (E : Type _) [NormedAddCommGroup E] :=
   sup { N | ∃ s : Finset E, s.card = N ∧ (∀ c ∈ s, ∥c∥ ≤ 2) ∧ ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥ }
+#align besicovitch.multiplicity Besicovitch.multiplicity
 
 section
 
@@ -175,6 +179,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ∥c∥ ≤ 2) (h
   have K : (s.card : ℝ) ≤ (5 : ℝ) ^ finrank ℝ E := by
     simpa [Ennreal.to_real_mul, div_eq_mul_inv] using Ennreal.to_real_le_of_le_of_real (pow_nonneg ρpos.le _) J
   exact_mod_cast K
+#align besicovitch.card_le_of_separated Besicovitch.card_le_of_separated
 
 theorem multiplicity_le : multiplicity E ≤ 5 ^ finrank ℝ E := by
   apply cSup_le
@@ -183,6 +188,7 @@ theorem multiplicity_le : multiplicity E ≤ 5 ^ finrank ℝ E := by
   · rintro _ ⟨s, ⟨rfl, h⟩⟩
     exact Besicovitch.card_le_of_separated s h.1 h.2
     
+#align besicovitch.multiplicity_le Besicovitch.multiplicity_le
 
 theorem card_le_multiplicity {s : Finset E} (hs : ∀ c ∈ s, ∥c∥ ≤ 2) (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥) :
     s.card ≤ multiplicity E := by
@@ -194,6 +200,7 @@ theorem card_le_multiplicity {s : Finset E} (hs : ∀ c ∈ s, ∥c∥ ≤ 2) (h
   · simp only [mem_set_of_eq, Ne.def]
     exact ⟨s, rfl, hs, h's⟩
     
+#align besicovitch.card_le_multiplicity Besicovitch.card_le_multiplicity
 
 variable (E)
 
@@ -205,130 +212,105 @@ theorem exists_good_δ :
         δ < 1 ∧
           ∀ s : Finset E, (∀ c ∈ s, ∥c∥ ≤ 2) → (∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - δ ≤ ∥c - d∥) → s.card ≤ multiplicity E :=
   by
-  /- This follows from a compactness argument: otherwise, one could extract a converging
-    subsequence, to obtain a `1`-separated set in the ball of radius `2` with cardinality
-    `N = multiplicity E + 1`. To formalize this, we work with functions `fin N → E`.
-     -/
-  classical
-  by_contra' h
-  set N := multiplicity E + 1 with hN
-  have : ∀ δ : ℝ, 0 < δ → ∃ f : Fin N → E, (∀ i : Fin N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ∥f i - f j∥ := by
-    intro δ hδ
-    rcases lt_or_le δ 1 with (hδ' | hδ')
-    · rcases h δ hδ hδ' with ⟨s, hs, h's, s_card⟩
-      obtain ⟨f, f_inj, hfs⟩ : ∃ f : Fin N → E, Function.Injective f ∧ range f ⊆ ↑s := by
-        have : Fintype.card (Fin N) ≤ s.card := by
-          simp only [Fintype.card_fin]
-          exact s_card
-        rcases Function.Embedding.exists_of_card_le_finset this with ⟨f, hf⟩
-        exact ⟨f, f.injective, hf⟩
-      simp only [range_subset_iff, Finset.mem_coe] at hfs
-      refine' ⟨f, fun i => hs _ (hfs i), fun i j hij => h's _ (hfs i) _ (hfs j) (f_inj.ne hij)⟩
+  classical/- This follows from a compactness argument: otherwise, one could extract a converging
+      subsequence, to obtain a `1`-separated set in the ball of radius `2` with cardinality
+      `N = multiplicity E + 1`. To formalize this, we work with functions `fin N → E`.
+       -/
+    by_contra' h
+    have : ∀ δ : ℝ, 0 < δ → ∃ f : Fin N → E, (∀ i : Fin N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ∥f i - f j∥
+    -- For `δ > 0`, `F δ` is a function from `fin N` to the ball of radius `2` for which two points
+    -- in the image are separated by `1 - δ`.
+    choose! F hF using this
+    · obtain ⟨u, u_mono, zero_lt_u, hu⟩ :
+        ∃ u : ℕ → ℝ, (∀ m n : ℕ, m < n → u n < u m) ∧ (∀ n : ℕ, 0 < u n) ∧ Filter.Tendsto u Filter.atTop (𝓝 0) :=
+        exists_seq_strict_anti_tendsto (0 : ℝ)
+      have A : ∀ n, F (u n) ∈ closed_ball (0 : Fin N → E) 2 := by
+        intro n
+        simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right,
+          (hF (u n) (zero_lt_u n)).left, forall_const]
+      obtain ⟨f, fmem, φ, φ_mono, hf⟩ :
+        ∃ f ∈ closed_ball (0 : Fin N → E) 2, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto ((F ∘ u) ∘ φ) at_top (𝓝 f) :=
+        IsCompact.tendsto_subseq (is_compact_closed_ball _ _) A
+      refine' ⟨f, fun i => _, fun i j hij => _⟩
+      · simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right] at fmem
+        exact fmem i
+        
+      · have A : tendsto (fun n => ∥F (u (φ n)) i - F (u (φ n)) j∥) at_top (𝓝 ∥f i - f j∥) :=
+          ((hf.apply i).sub (hf.apply j)).norm
+        have B : tendsto (fun n => 1 - u (φ n)) at_top (𝓝 (1 - 0)) :=
+          tendsto_const_nhds.sub (hu.comp φ_mono.tendsto_at_top)
+        rw [sub_zero] at B
+        exact le_of_tendsto_of_tendsto' B A fun n => (hF (u (φ n)) (zero_lt_u _)).2 i j hij
+        
       
-    · exact ⟨fun i => 0, fun i => by simp, fun i j hij => by simpa only [norm_zero, sub_nonpos, sub_self] ⟩
+    -- the range of `f` contradicts the definition of `multiplicity E`.
+    have finj : Function.Injective f
+    let s := Finset.image f Finset.univ
+    · rw [Finset.card_image_of_injective _ finj]
+      exact Finset.card_fin N
       
-  -- For `δ > 0`, `F δ` is a function from `fin N` to the ball of radius `2` for which two points
-  -- in the image are separated by `1 - δ`.
-  choose! F hF using this
-  -- Choose a converging subsequence when `δ → 0`.
-  have : ∃ f : Fin N → E, (∀ i : Fin N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 ≤ ∥f i - f j∥ := by
-    obtain ⟨u, u_mono, zero_lt_u, hu⟩ :
-      ∃ u : ℕ → ℝ, (∀ m n : ℕ, m < n → u n < u m) ∧ (∀ n : ℕ, 0 < u n) ∧ Filter.Tendsto u Filter.atTop (𝓝 0) :=
-      exists_seq_strict_anti_tendsto (0 : ℝ)
-    have A : ∀ n, F (u n) ∈ closed_ball (0 : Fin N → E) 2 := by
-      intro n
-      simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right, (hF (u n) (zero_lt_u n)).left,
-        forall_const]
-    obtain ⟨f, fmem, φ, φ_mono, hf⟩ :
-      ∃ f ∈ closed_ball (0 : Fin N → E) 2, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto ((F ∘ u) ∘ φ) at_top (𝓝 f) :=
-      IsCompact.tendsto_subseq (is_compact_closed_ball _ _) A
-    refine' ⟨f, fun i => _, fun i j hij => _⟩
-    · simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right] at fmem
-      exact fmem i
+    · simp only [hf, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finset.mem_univ, Finset.mem_image]
       
-    · have A : tendsto (fun n => ∥F (u (φ n)) i - F (u (φ n)) j∥) at_top (𝓝 ∥f i - f j∥) :=
-        ((hf.apply i).sub (hf.apply j)).norm
-      have B : tendsto (fun n => 1 - u (φ n)) at_top (𝓝 (1 - 0)) :=
-        tendsto_const_nhds.sub (hu.comp φ_mono.tendsto_at_top)
-      rw [sub_zero] at B
-      exact le_of_tendsto_of_tendsto' B A fun n => (hF (u (φ n)) (zero_lt_u _)).2 i j hij
+    · simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finset.mem_univ, Finset.mem_image, Ne.def,
+        exists_true_left, forall_apply_eq_imp_iff', forall_true_left]
+      intro i j hij
+      have : i ≠ j := fun h => by
+        rw [h] at hij
+        exact hij rfl
+      exact h'f i j this
       
-  rcases this with ⟨f, hf, h'f⟩
-  -- the range of `f` contradicts the definition of `multiplicity E`.
-  have finj : Function.Injective f := by
-    intro i j hij
-    by_contra
-    have : 1 ≤ ∥f i - f j∥ := h'f i j h
-    simp only [hij, norm_zero, sub_self] at this
-    exact lt_irrefl _ (this.trans_lt zero_lt_one)
-  let s := Finset.image f Finset.univ
-  have s_card : s.card = N := by
-    rw [Finset.card_image_of_injective _ finj]
-    exact Finset.card_fin N
-  have hs : ∀ c ∈ s, ∥c∥ ≤ 2 := by
-    simp only [hf, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finset.mem_univ, Finset.mem_image]
-  have h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ∥c - d∥ := by
-    simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finset.mem_univ, Finset.mem_image, Ne.def,
-      exists_true_left, forall_apply_eq_imp_iff', forall_true_left]
-    intro i j hij
-    have : i ≠ j := fun h => by
-      rw [h] at hij
-      exact hij rfl
-    exact h'f i j this
-  have : s.card ≤ multiplicity E := card_le_multiplicity hs h's
-  rw [s_card, hN] at this
-  exact lt_irrefl _ ((Nat.lt_succ_self (multiplicity E)).trans_le this)
+    rw [s_card, hN] at this
+#align besicovitch.exists_good_δ Besicovitch.exists_good_δ
 
 /-- A small positive number such that any `1 - δ`-separated set in the ball of radius `2` has
 cardinality at most `besicovitch.multiplicity E`. -/
 def goodδ : ℝ :=
   (exists_good_δ E).some
+#align besicovitch.good_δ Besicovitch.goodδ
 
 theorem good_δ_lt_one : goodδ E < 1 :=
   (exists_good_δ E).some_spec.2.1
+#align besicovitch.good_δ_lt_one Besicovitch.good_δ_lt_one
 
 /-- A number `τ > 1`, but chosen close enough to `1` so that the construction in the Besicovitch
 covering theorem using this parameter `τ` will give the smallest possible number of covering
 families. -/
 def goodτ : ℝ :=
   1 + goodδ E / 4
+#align besicovitch.good_τ Besicovitch.goodτ
 
 theorem one_lt_good_τ : 1 < goodτ E := by
   dsimp [good_τ, good_δ]
   linarith [(exists_good_δ E).some_spec.1]
+#align besicovitch.one_lt_good_τ Besicovitch.one_lt_good_τ
 
 variable {E}
 
 theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀ c ∈ s, ∥c∥ ≤ 2)
     (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - goodδ E ≤ ∥c - d∥) : s.card ≤ multiplicity E :=
   (Classical.choose_spec (exists_good_δ E)).2.2 s hs h's
+#align besicovitch.card_le_multiplicity_of_δ Besicovitch.card_le_multiplicity_of_δ
 
 theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Fin n → E) (h : ∀ i, ∥f i∥ ≤ 2)
     (h' : ∀ i j, i ≠ j → 1 - goodδ E ≤ ∥f i - f j∥) : n ≤ multiplicity E := by
-  classical
-  have finj : Function.Injective f := by
-    intro i j hij
-    by_contra
-    have : 1 - good_δ E ≤ ∥f i - f j∥ := h' i j h
-    simp only [hij, norm_zero, sub_self] at this
-    linarith [good_δ_lt_one E]
-  let s := Finset.image f Finset.univ
-  have s_card : s.card = n := by
-    rw [Finset.card_image_of_injective _ finj]
-    exact Finset.card_fin n
-  have hs : ∀ c ∈ s, ∥c∥ ≤ 2 := by
-    simp only [h, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finset.mem_univ, Finset.mem_image,
-      imp_true_iff]
-  have h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - good_δ E ≤ ∥c - d∥ := by
-    simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finset.mem_univ, Finset.mem_image, Ne.def,
-      exists_true_left, forall_apply_eq_imp_iff', forall_true_left]
-    intro i j hij
-    have : i ≠ j := fun h => by
-      rw [h] at hij
-      exact hij rfl
-    exact h' i j this
-  have : s.card ≤ multiplicity E := card_le_multiplicity_of_δ hs h's
-  rwa [s_card] at this
+  classical have finj : Function.Injective f
+    let s := Finset.image f Finset.univ
+    · rw [Finset.card_image_of_injective _ finj]
+      exact Finset.card_fin n
+      
+    · simp only [h, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finset.mem_univ, Finset.mem_image,
+        imp_true_iff]
+      
+    · simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finset.mem_univ, Finset.mem_image, Ne.def,
+        exists_true_left, forall_apply_eq_imp_iff', forall_true_left]
+      intro i j hij
+      have : i ≠ j := fun h => by
+        rw [h] at hij
+        exact hij rfl
+      exact h' i j this
+      
+    rwa [s_card] at this
+#align besicovitch.le_multiplicity_of_δ_of_fin Besicovitch.le_multiplicity_of_δ_of_fin
 
 end
 
@@ -383,6 +365,7 @@ theorem exists_normalized_aux1 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
     apply le_trans _ H.1
     exact hτ' j
     
+#align besicovitch.satellite_config.exists_normalized_aux1 Besicovitch.SatelliteConfig.exists_normalized_aux1
 
 variable [NormedSpace ℝ E]
 
@@ -449,6 +432,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         linarith only [hcrj]
       
   linarith only [this]
+#align besicovitch.satellite_config.exists_normalized_aux2 Besicovitch.SatelliteConfig.exists_normalized_aux2
 
 theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)
     (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (i j : Fin N.succ) (inej : i ≠ j)
@@ -511,6 +495,7 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       congr 3
       field_simp [spos.ne']
     
+#align besicovitch.satellite_config.exists_normalized_aux3 Besicovitch.SatelliteConfig.exists_normalized_aux3
 
 theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)
     (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) :
@@ -549,6 +534,7 @@ theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (las
       exact exists_normalized_aux3 a lastc lastr hτ δ hδ1 i j inej Hi hij
       
     
+#align besicovitch.satellite_config.exists_normalized Besicovitch.SatelliteConfig.exists_normalized
 
 end SatelliteConfig
 
@@ -566,6 +552,7 @@ theorem is_empty_satellite_config_multiplicity : IsEmpty (SatelliteConfig E (mul
         le_rfl (good_δ_lt_one E).le with
       ⟨c', c'_le_two, hc'⟩
     exact lt_irrefl _ ((Nat.lt_succ_self _).trans_le (le_multiplicity_of_δ_of_fin c' c'_le_two hc'))⟩
+#align besicovitch.is_empty_satellite_config_multiplicity Besicovitch.is_empty_satellite_config_multiplicity
 
 instance (priority := 100) : HasBesicovitchCovering E :=
   ⟨⟨multiplicity E, goodτ E, one_lt_good_τ E, is_empty_satellite_config_multiplicity E⟩⟩

@@ -34,12 +34,14 @@ theorem IsSelfAdjoint.exp_i_smul_unitary {a : A} (ha : IsSelfAdjoint a) : exp �
   rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_left]
   rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_right]
   simpa only [add_right_neg, add_left_neg, and_self_iff] using (exp_zero : exp ℂ (0 : A) = 1)
+#align is_self_adjoint.exp_i_smul_unitary IsSelfAdjoint.exp_i_smul_unitary
 
 /-- The map from the selfadjoint real subspace to the unitary group. This map only makes sense
 over ℂ. -/
 @[simps]
 noncomputable def selfAdjoint.expUnitary (a : selfAdjoint A) : unitary A :=
   ⟨exp ℂ (I • a), a.Prop.exp_i_smul_unitary⟩
+#align self_adjoint.exp_unitary selfAdjoint.expUnitary
 
 open selfAdjoint
 
@@ -51,6 +53,7 @@ theorem Commute.exp_unitary_add {a b : selfAdjoint A} (h : Commute (a : A) (b : 
     _ = _ := by simp only [h.eq, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
     
   simpa only [exp_unitary_coe, AddSubgroup.coe_add, smul_add] using exp_add_of_commute hcomm
+#align commute.exp_unitary_add Commute.exp_unitary_add
 
 theorem Commute.exp_unitary {a b : selfAdjoint A} (h : Commute (a : A) (b : A)) :
     Commute (expUnitary a) (expUnitary b) :=
@@ -58,6 +61,7 @@ theorem Commute.exp_unitary {a b : selfAdjoint A} (h : Commute (a : A) (b : A)) 
     expUnitary a * expUnitary b = expUnitary b * expUnitary a := by
       rw [← h.exp_unitary_add, ← h.symm.exp_unitary_add, add_comm]
     
+#align commute.exp_unitary Commute.exp_unitary
 
 end Star
 

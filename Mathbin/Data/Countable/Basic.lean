@@ -32,12 +32,15 @@ variable {α : Sort u} {β : Sort v}
 
 theorem countable_iff_nonempty_embedding : Countable α ↔ Nonempty (α ↪ ℕ) :=
   ⟨fun ⟨⟨f, hf⟩⟩ => ⟨⟨f, hf⟩⟩, fun ⟨f⟩ => ⟨⟨f, f.2⟩⟩⟩
+#align countable_iff_nonempty_embedding countable_iff_nonempty_embedding
 
 theorem nonempty_embedding_nat (α) [Countable α] : Nonempty (α ↪ ℕ) :=
   countable_iff_nonempty_embedding.1 ‹_›
+#align nonempty_embedding_nat nonempty_embedding_nat
 
 protected theorem Function.Embedding.countable [Countable β] (f : α ↪ β) : Countable α :=
   f.Injective.Countable
+#align function.embedding.countable Function.Embedding.countable
 
 end Embedding
 
@@ -81,6 +84,7 @@ variable {α : Sort u} {β : Sort v} {π : α → Sort w}
 
 instance (priority := 500) SetCoe.countable {α} [Countable α] (s : Set α) : Countable s :=
   Subtype.countable
+#align set_coe.countable SetCoe.countable
 
 instance [Countable α] [Countable β] : Countable (PSum α β) :=
   Countable.of_equiv (Sum (PLift α) (PLift β)) (Equiv.plift.sumPsum Equiv.plift)

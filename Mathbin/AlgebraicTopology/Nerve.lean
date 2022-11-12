@@ -33,6 +33,7 @@ def nerve (C : Type u) [Category.{v} C] : SSet.{max u v} where
     rw [unop_id, Functor.map_id]
     ext x
     apply functor.id_comp
+#align category_theory.nerve CategoryTheory.nerve
 
 instance {C : Type _} [Category C] {Δ : SimplexCategoryᵒᵖ} : Category ((nerve C).obj Δ) :=
   (inferInstance : Category (SimplexCategory.toCat.obj Δ.unop ⥤ C))
@@ -45,6 +46,7 @@ def nerveFunctor : Cat ⥤ SSet where
   map_id' C := by
     ext (Δ x)
     apply functor.comp_id
+#align category_theory.nerve_functor CategoryTheory.nerveFunctor
 
 end CategoryTheory
 

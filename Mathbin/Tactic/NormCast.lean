@@ -44,6 +44,7 @@ should end instantly.
 -/
 unsafe def mk_instance_fast (e : expr) (timeout := 1000) : tactic expr :=
   try_for timeout (mk_instance e)
+#align tactic.mk_instance_fast tactic.mk_instance_fast
 
 end Tactic
 
@@ -60,6 +61,7 @@ unsafe def trace_norm_cast {α} [has_to_tactic_format α] (msg : String) (a : α
   when_tracing `norm_cast <| do
     let a ← pp a
     trace ("[norm_cast] " ++ msg ++ a : format)
+#align norm_cast.trace_norm_cast norm_cast.trace_norm_cast
 
 /- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 [PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
@@ -84,6 +86,7 @@ inductive Label
   | move : label
   | squash : label
   deriving DecidableEq, has_reflect, Inhabited
+#align norm_cast.label NormCast.Label
 
 namespace Label
 
@@ -92,6 +95,7 @@ protected def toString : Label → String
   | elim => "elim"
   | move => "move"
   | squash => "squash"
+#align norm_cast.label.to_string NormCast.Label.toString
 
 instance : ToString Label :=
   ⟨Label.toString⟩
@@ -108,6 +112,7 @@ def ofString : String → Option Label
   | "move" => some move
   | "squash" => some squash
   | _ => none
+#align norm_cast.label.of_string NormCast.Label.ofString
 
 end Label
 
@@ -119,6 +124,7 @@ unsafe def count_head_coes : expr → ℕ
   | quote.1 (coeSort (%%ₓe)) => count_head_coes e + 1
   | quote.1 (coeFn (%%ₓe)) => count_head_coes e + 1
   | _ => 0
+#align norm_cast.count_head_coes norm_cast.count_head_coes
 
 /-- Count how many coercions are inside the expression, including the top ones. -/
 unsafe def count_coes : expr → tactic ℕ
@@ -132,11 +138,13 @@ unsafe def count_coes : expr → tactic ℕ
   | e => do
     let as ← e.get_simp_args
     List.sum <$> as count_coes
+#align norm_cast.count_coes norm_cast.count_coes
 
 /-- Count how many coercions are inside the expression, excluding the top ones. -/
 private unsafe def count_internal_coes (e : expr) : tactic ℕ := do
   let ncoes ← count_coes e
   pure <| ncoes - count_head_coes e
+#align norm_cast.count_internal_coes norm_cast.count_internal_coes
 
 /-- Classifies a declaration of type `ty` as a `norm_cast` rule.
 -/
@@ -163,18 +171,21 @@ unsafe def classify_type (ty : expr) : tactic Label := do
           return squash
         else do
           fail "norm_cast: badly shaped shaped squash lemma, rhs must have fewer head coes than lhs"
+#align norm_cast.classify_type norm_cast.classify_type
 
 /-- The cache for `norm_cast` attribute stores three `simp_lemma` objects. -/
 unsafe structure norm_cast_cache where
   up : simp_lemmas
   down : simp_lemmas
   squash : simp_lemmas
+#align norm_cast.norm_cast_cache norm_cast.norm_cast_cache
 
 /-- Empty `norm_cast_cache`. -/
 unsafe def empty_cache : norm_cast_cache where
   up := simp_lemmas.mk
   down := simp_lemmas.mk
   squash := simp_lemmas.mk
+#align norm_cast.empty_cache norm_cast.empty_cache
 
 unsafe instance : Inhabited norm_cast_cache :=
   ⟨empty_cache⟩
@@ -183,24 +194,28 @@ unsafe instance : Inhabited norm_cast_cache :=
 unsafe def add_elim (cache : norm_cast_cache) (e : expr) : tactic norm_cast_cache := do
   let new_up ← cache.up.add e
   return { up := new_up, down := cache, squash := cache }
+#align norm_cast.add_elim norm_cast.add_elim
 
 /-- `add_move cache e` adds `e` as a `move` lemma to `cache`. -/
 unsafe def add_move (cache : norm_cast_cache) (e : expr) : tactic norm_cast_cache := do
   let new_up ← cache.up.add e true
   let new_down ← cache.down.add e
   return { up := new_up, down := new_down, squash := cache }
+#align norm_cast.add_move norm_cast.add_move
 
 /-- `add_squash cache e` adds `e` as an `squash` lemma to `cache`. -/
 unsafe def add_squash (cache : norm_cast_cache) (e : expr) : tactic norm_cast_cache := do
   let new_squash ← cache.squash.add e
   let new_down ← cache.down.add e
   return { up := cache, down := new_down, squash := new_squash }
+#align norm_cast.add_squash norm_cast.add_squash
 
 /-- The type of the `norm_cast` attribute.
 The optional label is used to overwrite the classifier.
 -/
 unsafe def norm_cast_attr_ty : Type :=
   user_attribute norm_cast_cache (Option Label)
+#align norm_cast.norm_cast_attr_ty norm_cast.norm_cast_attr_ty
 
 /-- Efficient getter for the `@[norm_cast]` attribute parameter that does not call `eval_expr`.
 
@@ -214,6 +229,7 @@ unsafe def get_label_param (attr : norm_cast_attr_ty) (decl : Name) : tactic (Op
     | quote.1 (some Label.move) => pure label.move
     | quote.1 (some Label.squash) => pure label.squash
     | _ => fail p
+#align norm_cast.get_label_param norm_cast.get_label_param
 
 /-- `add_lemma cache decl` infers the proper `norm_cast` attribute for `decl` and adds it to `cache`.
 -/
@@ -225,13 +241,17 @@ unsafe def add_lemma (attr : norm_cast_attr_ty) (cache : norm_cast_cache) (decl 
     | elim => add_elim cache e
     | move => add_move cache e
     | squash => add_squash cache e
+#align norm_cast.add_lemma norm_cast.add_lemma
 
 -- special lemmas to handle the ≥, > and ≠ operators
 private theorem ge_from_le {α} [LE α] : ∀ x y : α, x ≥ y ↔ y ≤ x := fun _ _ => Iff.rfl
+#align norm_cast.ge_from_le norm_cast.ge_from_le
 
 private theorem gt_from_lt {α} [LT α] : ∀ x y : α, x > y ↔ y < x := fun _ _ => Iff.rfl
+#align norm_cast.gt_from_lt norm_cast.gt_from_lt
 
 private theorem ne_from_not_eq {α} : ∀ x y : α, x ≠ y ↔ ¬x = y := fun _ _ => Iff.rfl
+#align norm_cast.ne_from_not_eq norm_cast.ne_from_not_eq
 
 /-- `mk_cache names` creates a `norm_cast_cache`. It infers the proper `norm_cast` attributes
 for names in `names`, and collects the lemmas attributed with specific `norm_cast` attributes.
@@ -249,6 +269,7 @@ unsafe def mk_cache (attr : Thunk' norm_cast_attr_ty) (names : List Name) : tact
   let down := cache.down
   let down ← down.add_simp `` coe_coe
   pure { up, down, squash := cache }
+#align norm_cast.mk_cache norm_cast.mk_cache
 
 /-- The `norm_cast` attribute.
 -/
@@ -273,12 +294,14 @@ unsafe def norm_cast_attr : user_attribute norm_cast_cache (Option Label) where
           norm_cast_attr decl l persistent prio
   before_unset := some fun _ _ => tactic.skip
   cache_cfg := { mk_cache := mk_cache norm_cast_attr, dependencies := [] }
+#align norm_cast.norm_cast_attr norm_cast.norm_cast_attr
 
 /-- Classify a declaration as a `norm_cast` rule. -/
 unsafe def make_guess (decl : Name) : tactic Label := do
   let e ← mk_const decl
   let ty ← infer_type e
   classify_type ty
+#align norm_cast.make_guess norm_cast.make_guess
 
 /-- Gets the `norm_cast` classification label for a declaration. Applies the
 override specified on the attribute, if necessary.
@@ -286,6 +309,7 @@ override specified on the attribute, if necessary.
 unsafe def get_label (decl : Name) : tactic Label := do
   let param ← get_label_param norm_cast_attr decl
   param <|> make_guess decl
+#align norm_cast.get_label norm_cast.get_label
 
 end NormCast
 
@@ -312,6 +336,7 @@ end
 -/
 unsafe def push_cast (hs : parse tactic.simp_arg_list) (l : parse location) : tactic Unit :=
   tactic.interactive.simp none none true hs [`push_cast] l { discharger := tactic.assumption }
+#align tactic.interactive.push_cast tactic.interactive.push_cast
 
 end Tactic.Interactive
 
@@ -326,12 +351,14 @@ unsafe def prove_eq_using (s : simp_lemmas) (a b : expr) : tactic expr := do
   on_exception (trace_norm_cast "failed: " (to_expr (pquote.1 ((%%ₓa') = %%ₓb')) >>= pp)) <| is_def_eq a' b' reducible
   let b'_b ← mk_eq_symm b_b'
   mk_eq_trans a_a' b'_b
+#align norm_cast.prove_eq_using norm_cast.prove_eq_using
 
 /-- Prove `a = b` by simplifying using move and squash lemmas. -/
 unsafe def prove_eq_using_down (a b : expr) : tactic expr := do
   let cache ← norm_cast_attr.get_cache
   trace_norm_cast "proving: " (to_expr (pquote.1 ((%%ₓa) = %%ₓb)) >>= pp)
   prove_eq_using cache a b
+#align norm_cast.prove_eq_using_down norm_cast.prove_eq_using_down
 
 /-- This is the main heuristic used alongside the elim and move lemmas.
 The goal is to help casts move past operators by adding intermediate casts.
@@ -398,6 +425,7 @@ unsafe def splitting_procedure : expr → tactic (expr × expr)
             let pr ← mk_congr_arg (lam `x BinderInfo.default β (app (app op (var 0)) y)) eq_x
             return (new_e, pr)
   | _ => failed
+#align norm_cast.splitting_procedure norm_cast.splitting_procedure
 
 /-- Discharging function used during simplification in the "squash" step.
 
@@ -406,6 +434,7 @@ TODO: a tactic to print the results the discharger fails to proove
 -/
 private unsafe def prove : tactic Unit :=
   assumption
+#align norm_cast.prove norm_cast.prove
 
 /-- Core rewriting function used in the "squash" step, which moves casts upwards
 and eliminates them.
@@ -415,7 +444,7 @@ On failure, it calls the splitting procedure heuristic.
 -/
 unsafe def upward_and_elim (s : simp_lemmas) (e : expr) : tactic (expr × expr) :=
   (do
-      let r ← mcond (is_prop e) (return `iff) (return `eq)
+      let r ← condM (is_prop e) (return `iff) (return `eq)
       let (new_e, pr) ← s.rewrite e prove r
       let pr ←
         match r with
@@ -423,6 +452,7 @@ unsafe def upward_and_elim (s : simp_lemmas) (e : expr) : tactic (expr × expr) 
           | _ => return pr
       return (new_e, pr)) <|>
     splitting_procedure e
+#align norm_cast.upward_and_elim norm_cast.upward_and_elim
 
 /-!
 The following auxiliary functions are used to handle numerals.
@@ -441,6 +471,7 @@ unsafe def numeral_to_coe (e : expr) : tactic (expr × expr) := do
   let new_e ← to_expr (pquote.1 (@coe ℕ (%%ₓα) (%%ₓh1) (%%ₓnew_e)))
   let pr ← prove_eq_using_down e new_e
   return (new_e, pr)
+#align norm_cast.numeral_to_coe norm_cast.numeral_to_coe
 
 /-- If possible, rewrite `((n : ℕ) : α)` to `(n : α)` where `n` is a numeral.
 Returns a pair of the new expression and proof that they are equal.
@@ -455,6 +486,7 @@ unsafe def coe_to_numeral (e : expr) : tactic (expr × expr) := do
   let new_e ← expr.of_nat α n
   let pr ← prove_eq_using_down e new_e
   return (new_e, pr)
+#align norm_cast.coe_to_numeral norm_cast.coe_to_numeral
 
 /-- A local variant on `simplify_top_down`. -/
 private unsafe def simplify_top_down' {α} (a : α) (pre : α → expr → tactic (α × expr × expr)) (e : expr)
@@ -465,6 +497,7 @@ private unsafe def simplify_top_down' {α} (a : α) (pre : α → expr → tacti
       guard ¬new_e == e
       return (new_a, new_e, some pr, ff))
     (fun _ _ _ _ _ => failed) `eq e
+#align norm_cast.simplify_top_down' norm_cast.simplify_top_down'
 
 /-- The core simplification routine of `norm_cast`.
 -/
@@ -497,6 +530,7 @@ unsafe def derive (e : expr) : tactic (expr × expr) := do
   let pr ← mk_eq_trans pr pr3
   let pr ← mk_eq_trans pr pr4
   return (new_e, pr)
+#align norm_cast.derive norm_cast.derive
 
 /-- A small variant of `push_cast` suited for non-interactive use.
 
@@ -506,6 +540,7 @@ unsafe def derive_push_cast (extra_lems : List simp_arg_type) (e : expr) : tacti
   let (s, _) ← mk_simp_set true [`push_cast] extra_lems
   let (e, prf, _) ← simplify (s.erase [`nat.cast_succ]) [] e { failIfUnchanged := false } `eq tactic.assumption
   return (e, prf)
+#align norm_cast.derive_push_cast norm_cast.derive_push_cast
 
 end NormCast
 
@@ -526,6 +561,7 @@ unsafe def aux_mod_cast (e : expr) (include_goal : Bool := true) : tactic expr :
     let e ← assertv `this t e
     replace_at derive [e] include_goal
     get_local `this
+#align tactic.aux_mod_cast tactic.aux_mod_cast
 
 /-- `exact_mod_cast e` runs `norm_cast` on the goal and `e`, and tries to use `e` to close the
 goal. -/
@@ -533,12 +569,14 @@ unsafe def exact_mod_cast (e : expr) : tactic Unit :=
   decorate_error "exact_mod_cast failed:" <| do
     let new_e ← aux_mod_cast e
     exact new_e
+#align tactic.exact_mod_cast tactic.exact_mod_cast
 
 /-- `apply_mod_cast e` runs `norm_cast` on the goal and `e`, and tries to apply `e`. -/
 unsafe def apply_mod_cast (e : expr) : tactic (List (Name × expr)) :=
   decorate_error "apply_mod_cast failed:" <| do
     let new_e ← aux_mod_cast e
     apply new_e
+#align tactic.apply_mod_cast tactic.apply_mod_cast
 
 /-- `assumption_mod_cast` runs `norm_cast` on the goal. For each local hypothesis `h`, it also
 normalizes `h` and tries to use that to close the goal. -/
@@ -549,6 +587,7 @@ unsafe def assumption_mod_cast : tactic Unit :=
     replace_at derive [] tt
     let ctx ← local_context
     ctx fun h => aux_mod_cast h ff >>= tactic.exact
+#align tactic.assumption_mod_cast tactic.assumption_mod_cast
 
 end Tactic
 
@@ -561,10 +600,12 @@ As opposed to simp, norm_cast can be used without necessarily closing the goal.
 -/
 unsafe def norm_cast (loc : parse location) : tactic Unit := do
   let ns ← loc.get_locals
-  let tt ← replace_at derive ns loc.include_goal | fail "norm_cast failed to simplify"
+  let tt ← replace_at derive ns loc.include_goal |
+    fail "norm_cast failed to simplify"
   when loc <| try tactic.reflexivity
   when loc <| try tactic.triv
   when ¬ns <| try tactic.contradiction
+#align tactic.interactive.norm_cast tactic.interactive.norm_cast
 
 /-- Rewrite with the given rules and normalize casts between steps.
 -/
@@ -573,7 +614,7 @@ unsafe def rw_mod_cast (rs : parse rw_rules) (loc : parse location) : tactic Uni
     let cfg_norm : SimpConfig := {  }
     let cfg_rw : RewriteCfg := {  }
     let ns ← loc.get_locals
-    Monad.mapm'
+    Monad.mapM'
         (fun r : rw_rule => do
           save_info r
           replace_at derive ns loc
@@ -581,6 +622,7 @@ unsafe def rw_mod_cast (rs : parse rw_rules) (loc : parse location) : tactic Uni
         rs
     replace_at derive ns loc
     skip
+#align tactic.interactive.rw_mod_cast tactic.interactive.rw_mod_cast
 
 /-- Normalize the goal and the given expression, then close the goal with exact.
 -/
@@ -599,17 +641,20 @@ unsafe def exact_mod_cast (e : parse texpr) : tactic Unit := do
               ptgt :
               format)
   tactic.exact_mod_cast e
+#align tactic.interactive.exact_mod_cast tactic.interactive.exact_mod_cast
 
 /-- Normalize the goal and the given expression, then apply the expression to the goal.
 -/
 unsafe def apply_mod_cast (e : parse texpr) : tactic Unit := do
   let e ← i_to_expr_for_apply e
   concat_tags <| tactic.apply_mod_cast e
+#align tactic.interactive.apply_mod_cast tactic.interactive.apply_mod_cast
 
 /-- Normalize the goal and every expression in the local context, then close the goal with assumption.
 -/
 unsafe def assumption_mod_cast : tactic Unit :=
   tactic.assumption_mod_cast
+#align tactic.interactive.assumption_mod_cast tactic.interactive.assumption_mod_cast
 
 end Tactic.Interactive
 
@@ -622,6 +667,7 @@ open NormCast (derive)
 /-- the converter version of `norm_cast' -/
 unsafe def norm_cast : conv Unit :=
   replace_lhs derive
+#align conv.interactive.norm_cast conv.interactive.norm_cast
 
 end Conv.Interactive
 
@@ -629,10 +675,12 @@ end Conv.Interactive
 @[norm_cast]
 theorem ite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a b : α} : ↑(ite c a b) = ite c (↑a : β) (↑b : β) := by
   by_cases h:c <;> simp [h]
+#align ite_cast ite_cast
 
 @[norm_cast]
 theorem dite_cast {α β} [HasLiftT α β] {c : Prop} [Decidable c] {a : c → α} {b : ¬c → α} :
     ↑(dite c a b) = dite c (fun h => (↑(a h) : β)) fun h => (↑(b h) : β) := by by_cases h:c <;> simp [h]
+#align dite_cast dite_cast
 
 add_hint_tactic norm_cast  at *
 

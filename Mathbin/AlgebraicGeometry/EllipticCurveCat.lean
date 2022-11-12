@@ -57,7 +57,8 @@ def EllipticCurveCat.ΔAux {R : Type u} [CommRing R] (a₁ a₂ a₃ a₄ a₆ :
   let b₄ : R := 2 * a₄ + a₁ * a₃
   let b₆ : R := a₃ ^ 2 + 4 * a₆
   let b₈ : R := a₁ ^ 2 * a₆ + 4 * a₂ * a₆ - a₁ * a₃ * a₄ + a₂ * a₃ ^ 2 - a₄ ^ 2
-  -(b₂ ^ 2) * b₈ - 8 * b₄ ^ 3 - 27 * b₆ ^ 2 + 9 * b₂ * b₄ * b₆
+  -b₂ ^ 2 * b₈ - 8 * b₄ ^ 3 - 27 * b₆ ^ 2 + 9 * b₂ * b₄ * b₆
+#align EllipticCurve.Δ_aux EllipticCurveCat.ΔAux
 
 /-- The category of elliptic curves over `R` (note that this definition is only mathematically
   correct for certain rings `R` with `Pic(R)[12] = 0`, for example if `R` is a field or a PID). -/
@@ -65,6 +66,7 @@ structure EllipticCurveCat (R : Type u) [CommRing R] where
   (a₁ a₂ a₃ a₄ a₆ : R)
   Δ : Rˣ
   Δ_eq : ↑Δ = EllipticCurveCat.ΔAux a₁ a₂ a₃ a₄ a₆
+#align EllipticCurve EllipticCurveCat
 
 namespace EllipticCurveCat
 
@@ -82,48 +84,58 @@ section Quantity
 @[simp]
 def b₂ : R :=
   E.a₁ ^ 2 + 4 * E.a₂
+#align EllipticCurve.b₂ EllipticCurveCat.b₂
 
 /-- The `b₄` coefficient of an elliptic curve. -/
 @[simp]
 def b₄ : R :=
   2 * E.a₄ + E.a₁ * E.a₃
+#align EllipticCurve.b₄ EllipticCurveCat.b₄
 
 /-- The `b₆` coefficient of an elliptic curve. -/
 @[simp]
 def b₆ : R :=
   E.a₃ ^ 2 + 4 * E.a₆
+#align EllipticCurve.b₆ EllipticCurveCat.b₆
 
 /-- The `b₈` coefficient of an elliptic curve. -/
 @[simp]
 def b₈ : R :=
   E.a₁ ^ 2 * E.a₆ + 4 * E.a₂ * E.a₆ - E.a₁ * E.a₃ * E.a₄ + E.a₂ * E.a₃ ^ 2 - E.a₄ ^ 2
+#align EllipticCurve.b₈ EllipticCurveCat.b₈
 
 theorem b_relation : 4 * E.b₈ = E.b₂ * E.b₆ - E.b₄ ^ 2 := by
   simp
   ring1
+#align EllipticCurve.b_relation EllipticCurveCat.b_relation
 
 /-- The `c₄` coefficient of an elliptic curve. -/
 @[simp]
 def c₄ : R :=
   E.b₂ ^ 2 - 24 * E.b₄
+#align EllipticCurve.c₄ EllipticCurveCat.c₄
 
 /-- The `c₆` coefficient of an elliptic curve. -/
 @[simp]
 def c₆ : R :=
-  -(E.b₂ ^ 3) + 36 * E.b₂ * E.b₄ - 216 * E.b₆
+  -E.b₂ ^ 3 + 36 * E.b₂ * E.b₄ - 216 * E.b₆
+#align EllipticCurve.c₆ EllipticCurveCat.c₆
 
 @[simp]
-theorem coe_Δ : ↑E.Δ = -(E.b₂ ^ 2) * E.b₈ - 8 * E.b₄ ^ 3 - 27 * E.b₆ ^ 2 + 9 * E.b₂ * E.b₄ * E.b₆ :=
+theorem coe_Δ : ↑E.Δ = -E.b₂ ^ 2 * E.b₈ - 8 * E.b₄ ^ 3 - 27 * E.b₆ ^ 2 + 9 * E.b₂ * E.b₄ * E.b₆ :=
   E.Δ_eq
+#align EllipticCurve.coe_Δ EllipticCurveCat.coe_Δ
 
 theorem c_relation : 1728 * ↑E.Δ = E.c₄ ^ 3 - E.c₆ ^ 2 := by
   simp
   ring1
+#align EllipticCurve.c_relation EllipticCurveCat.c_relation
 
 /-- The j-invariant of an elliptic curve, which is invariant under isomorphisms over `R`. -/
 @[simp]
 def j : R :=
   ↑E.Δ⁻¹ * E.c₄ ^ 3
+#align EllipticCurve.j EllipticCurveCat.j
 
 end Quantity
 
@@ -139,11 +151,13 @@ variable (A : Type v) [CommRing A] [Algebra R A]
   happens to be a multiple of the discriminant of the elliptic curve. -/
 def twoTorsionPolynomial : Cubic A :=
   ⟨4, algebraMap R A E.b₂, 2 * algebraMap R A E.b₄, algebraMap R A E.b₆⟩
+#align EllipticCurve.two_torsion_polynomial EllipticCurveCat.twoTorsionPolynomial
 
 theorem twoTorsionPolynomial.disc_eq : (twoTorsionPolynomial E A).disc = 16 * algebraMap R A E.Δ := by
   simp only [two_torsion_polynomial, Cubic.disc, coe_Δ, b₂, b₄, b₆, b₈, map_neg, map_add, map_sub, map_mul, map_pow,
     map_one, map_bit0, map_bit1]
   ring1
+#align EllipticCurve.two_torsion_polynomial.disc_eq EllipticCurveCat.twoTorsionPolynomial.disc_eq
 
 theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 : K)] (E : EllipticCurveCat K)
     (A : Type v) [CommRing A] [Nontrivial A] [Algebra K A] : (twoTorsionPolynomial E A).disc ≠ 0 := fun hdisc =>
@@ -153,6 +167,7 @@ theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 
         (by
           simp only [map_mul, map_pow, map_bit0, map_one, map_zero]
           linear_combination hdisc - two_torsion_polynomial.disc_eq E A)
+#align EllipticCurve.two_torsion_polynomial.disc_ne_zero EllipticCurveCat.twoTorsionPolynomial.disc_ne_zero
 
 end TorsionPolynomial
 
@@ -174,47 +189,56 @@ def changeOfVariable : EllipticCurveCat R where
   Δ_eq := by
     simp [-inv_pow]
     ring1
+#align EllipticCurve.change_of_variable EllipticCurveCat.changeOfVariable
 
 namespace ChangeOfVariable
 
 @[simp]
 theorem a₁_eq : (E.changeOfVariable u r s t).a₁ = ↑u⁻¹ * (E.a₁ + 2 * s) :=
   rfl
+#align EllipticCurve.change_of_variable.a₁_eq EllipticCurveCat.changeOfVariable.a₁_eq
 
 @[simp]
 theorem a₂_eq : (E.changeOfVariable u r s t).a₂ = ↑u⁻¹ ^ 2 * (E.a₂ - s * E.a₁ + 3 * r - s ^ 2) :=
   rfl
+#align EllipticCurve.change_of_variable.a₂_eq EllipticCurveCat.changeOfVariable.a₂_eq
 
 @[simp]
 theorem a₃_eq : (E.changeOfVariable u r s t).a₃ = ↑u⁻¹ ^ 3 * (E.a₃ + r * E.a₁ + 2 * t) :=
   rfl
+#align EllipticCurve.change_of_variable.a₃_eq EllipticCurveCat.changeOfVariable.a₃_eq
 
 @[simp]
 theorem a₄_eq :
     (E.changeOfVariable u r s t).a₄ =
       ↑u⁻¹ ^ 4 * (E.a₄ - s * E.a₃ + 2 * r * E.a₂ - (t + r * s) * E.a₁ + 3 * r ^ 2 - 2 * s * t) :=
   rfl
+#align EllipticCurve.change_of_variable.a₄_eq EllipticCurveCat.changeOfVariable.a₄_eq
 
 @[simp]
 theorem a₆_eq :
     (E.changeOfVariable u r s t).a₆ =
       ↑u⁻¹ ^ 6 * (E.a₆ + r * E.a₄ + r ^ 2 * E.a₂ + r ^ 3 - t * E.a₃ - t ^ 2 - r * t * E.a₁) :=
   rfl
+#align EllipticCurve.change_of_variable.a₆_eq EllipticCurveCat.changeOfVariable.a₆_eq
 
 @[simp]
 theorem b₂_eq : (E.changeOfVariable u r s t).b₂ = ↑u⁻¹ ^ 2 * (E.b₂ + 12 * r) := by
   simp [change_of_variable]
   ring1
+#align EllipticCurve.change_of_variable.b₂_eq EllipticCurveCat.changeOfVariable.b₂_eq
 
 @[simp]
 theorem b₄_eq : (E.changeOfVariable u r s t).b₄ = ↑u⁻¹ ^ 4 * (E.b₄ + r * E.b₂ + 6 * r ^ 2) := by
   simp [change_of_variable]
   ring1
+#align EllipticCurve.change_of_variable.b₄_eq EllipticCurveCat.changeOfVariable.b₄_eq
 
 @[simp]
 theorem b₆_eq : (E.changeOfVariable u r s t).b₆ = ↑u⁻¹ ^ 6 * (E.b₆ + 2 * r * E.b₄ + r ^ 2 * E.b₂ + 4 * r ^ 3) := by
   simp [change_of_variable]
   ring1
+#align EllipticCurve.change_of_variable.b₆_eq EllipticCurveCat.changeOfVariable.b₆_eq
 
 @[simp]
 theorem b₈_eq :
@@ -222,26 +246,31 @@ theorem b₈_eq :
   by
   simp [change_of_variable]
   ring1
+#align EllipticCurve.change_of_variable.b₈_eq EllipticCurveCat.changeOfVariable.b₈_eq
 
 @[simp]
 theorem c₄_eq : (E.changeOfVariable u r s t).c₄ = ↑u⁻¹ ^ 4 * E.c₄ := by
   simp [change_of_variable]
   ring1
+#align EllipticCurve.change_of_variable.c₄_eq EllipticCurveCat.changeOfVariable.c₄_eq
 
 @[simp]
 theorem c₆_eq : (E.changeOfVariable u r s t).c₆ = ↑u⁻¹ ^ 6 * E.c₆ := by
   simp [change_of_variable]
   ring1
+#align EllipticCurve.change_of_variable.c₆_eq EllipticCurveCat.changeOfVariable.c₆_eq
 
 @[simp]
 theorem Δ_eq : (E.changeOfVariable u r s t).Δ = u⁻¹ ^ 12 * E.Δ :=
   rfl
+#align EllipticCurve.change_of_variable.Δ_eq EllipticCurveCat.changeOfVariable.Δ_eq
 
 @[simp]
 theorem j_eq : (E.changeOfVariable u r s t).j = E.j := by
   simp only [j, c₄, Δ_eq, inv_pow, mul_inv_rev, inv_inv, Units.coe_mul, Units.coe_pow, c₄_eq, b₂, b₄]
   have hu : (u * ↑u⁻¹ : R) ^ 12 = 1 := by rw [u.mul_inv, one_pow]
   linear_combination↑E.Δ⁻¹ * ((E.a₁ ^ 2 + 4 * E.a₂) ^ 2 - 24 * (2 * E.a₄ + E.a₁ * E.a₃)) ^ 3 * hu
+#align EllipticCurve.change_of_variable.j_eq EllipticCurveCat.changeOfVariable.j_eq
 
 end ChangeOfVariable
 

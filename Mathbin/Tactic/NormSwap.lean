@@ -66,6 +66,7 @@ unsafe def eval : expr → tactic (expr × expr) := fun e => do
               pure p
         let p ← mk_mapp `equiv.swap_apply_of_ne_of_ne [α, deceq_inst, a, b, c, hca, hcb]
         pure (c, p)
+#align norm_swap.eval norm_swap.eval
 
 end NormSwap
 

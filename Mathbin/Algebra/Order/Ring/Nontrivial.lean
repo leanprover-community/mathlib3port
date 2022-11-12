@@ -21,6 +21,7 @@ variable [StrictOrderedSemiring α] [Nontrivial α]
 loop. -/
 theorem StrictOrderedSemiring.to_char_zero : CharZero α :=
   ⟨Nat.strict_mono_cast.Injective⟩
+#align strict_ordered_semiring.to_char_zero StrictOrderedSemiring.to_char_zero
 
 end StrictOrderedSemiring
 
@@ -31,6 +32,7 @@ variable [LinearOrderedSemiring α]
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedSemiring.to_char_zero : CharZero α :=
   StrictOrderedSemiring.to_char_zero
+#align linear_ordered_semiring.to_char_zero LinearOrderedSemiring.to_char_zero
 
 end LinearOrderedSemiring
 

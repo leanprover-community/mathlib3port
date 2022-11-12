@@ -50,6 +50,7 @@ attribute [local simp] structured_arrow.proj
 /-- The diagram indexed by `Ran.index ι x` used to define `Ran`. -/
 abbrev diagram (F : S ⥤ D) (x : L) : StructuredArrow x ι ⥤ D :=
   StructuredArrow.proj x ι ⋙ F
+#align category_theory.Ran.diagram CategoryTheory.RanCat.diagram
 
 variable {ι}
 
@@ -66,6 +67,7 @@ def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : Cone (diagra
         rw [ff]
         have := f.naturality
         tidy }
+#align category_theory.Ran.cone CategoryTheory.RanCat.cone
 
 variable (ι)
 
@@ -86,6 +88,7 @@ def loc (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] : L ⥤ D where
     erw [limit.pre_pre, limit.pre_π, limit.pre_π]
     congr 1
     tidy
+#align category_theory.Ran.loc CategoryTheory.RanCat.loc
 
 /-- An auxiliary definition used to define `Ran` and `Ran.adjunction`. -/
 @[simps]
@@ -120,6 +123,7 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
     rcases j with ⟨⟨⟩, _, _⟩
     tidy
   right_inv := by tidy
+#align category_theory.Ran.equiv CategoryTheory.RanCat.equiv
 
 end RanCat
 
@@ -127,6 +131,7 @@ end RanCat
 @[simps]
 def ran [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (S ⥤ D) ⥤ L ⥤ D :=
   Adjunction.rightAdjointOfEquiv (fun F G => (RanCat.equiv ι G F).symm) (by tidy)
+#align category_theory.Ran CategoryTheory.ran
 
 namespace RanCat
 
@@ -135,6 +140,7 @@ variable (D)
 /-- The adjunction associated to `Ran`. -/
 def adjunction [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (whiskeringLeft _ _ D).obj ι ⊣ ran ι :=
   Adjunction.adjunctionOfEquivRight _ _
+#align category_theory.Ran.adjunction CategoryTheory.ran.adjunction
 
 theorem reflective [Full ι] [Faithful ι] [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] :
     IsIso (adjunction D ι).counit := by
@@ -147,6 +153,7 @@ theorem reflective [Full ι] [Faithful ι] [∀ X, HasLimitsOfShape (StructuredA
   exact
     is_iso.of_iso
       ((limit.is_limit _).conePointUniqueUpToIso (limit_of_diagram_initial structured_arrow.mk_id_initial _))
+#align category_theory.Ran.reflective CategoryTheory.ran.reflective
 
 end RanCat
 
@@ -157,6 +164,7 @@ attribute [local simp] costructured_arrow.proj
 /-- The diagram indexed by `Ran.index ι x` used to define `Ran`. -/
 abbrev diagram (F : S ⥤ D) (x : L) : CostructuredArrow ι x ⥤ D :=
   CostructuredArrow.proj ι x ⋙ F
+#align category_theory.Lan.diagram CategoryTheory.LanCat.diagram
 
 variable {ι}
 
@@ -172,6 +180,7 @@ def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : Cocone (di
         simp only [functor.comp_map, category.comp_id, nat_trans.naturality_assoc]
         rw [← G.map_comp, ff]
         tidy }
+#align category_theory.Lan.cocone CategoryTheory.LanCat.cocone
 
 variable (ι)
 
@@ -200,6 +209,7 @@ def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D where
     erw [colimit.pre_pre dd gg ff, colimit.ι_pre, colimit.ι_pre]
     congr 1
     simp
+#align category_theory.Lan.loc CategoryTheory.LanCat.loc
 
 /-- An auxiliary definition used to define `Lan` and `Lan.adjunction`. -/
 @[simps]
@@ -246,6 +256,7 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     rcases j with ⟨_, ⟨⟩, _⟩
     tidy
   right_inv := by tidy
+#align category_theory.Lan.equiv CategoryTheory.LanCat.equiv
 
 end LanCat
 
@@ -253,6 +264,7 @@ end LanCat
 @[simps]
 def lan [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : (S ⥤ D) ⥤ L ⥤ D :=
   Adjunction.leftAdjointOfEquiv (fun F G => LanCat.equiv ι F G) (by tidy)
+#align category_theory.Lan CategoryTheory.lan
 
 namespace LanCat
 
@@ -261,6 +273,7 @@ variable (D)
 /-- The adjunction associated to `Lan`. -/
 def adjunction [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : lan ι ⊣ (whiskeringLeft _ _ D).obj ι :=
   Adjunction.adjunctionOfEquivLeft _ _
+#align category_theory.Lan.adjunction CategoryTheory.lan.adjunction
 
 theorem coreflective [Full ι] [Faithful ι] [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] :
     IsIso (adjunction D ι).Unit := by
@@ -274,6 +287,7 @@ theorem coreflective [Full ι] [Faithful ι] [∀ X, HasColimitsOfShape (Costruc
     is_iso.of_iso
       ((colimit.is_colimit _).coconePointUniqueUpToIso
           (colimit_of_diagram_terminal costructured_arrow.mk_id_terminal _)).symm
+#align category_theory.Lan.coreflective CategoryTheory.lan.coreflective
 
 end LanCat
 

@@ -68,22 +68,27 @@ compact type to `GH_space`. -/
 /-- Equivalence relation identifying two nonempty compact sets which are isometric -/
 private def isometry_rel : NonemptyCompacts ℓ_infty_ℝ → NonemptyCompacts ℓ_infty_ℝ → Prop := fun x y =>
   Nonempty (x ≃ᵢ y)
+#align Gromov_Hausdorff.isometry_rel Gromov_Hausdorff.isometry_rel
 
 /-- This is indeed an equivalence relation -/
 private theorem is_equivalence_isometry_rel : Equivalence IsometryRel :=
   ⟨fun x => ⟨Isometric.refl _⟩, fun x y ⟨e⟩ => ⟨e.symm⟩, fun x y z ⟨e⟩ ⟨f⟩ => ⟨e.trans f⟩⟩
+#align Gromov_Hausdorff.is_equivalence_isometry_rel Gromov_Hausdorff.is_equivalence_isometry_rel
 
 /-- setoid instance identifying two isometric nonempty compact subspaces of ℓ^∞(ℝ) -/
 instance IsometryRel.setoid : Setoid (NonemptyCompacts ℓ_infty_ℝ) :=
   Setoid.mk IsometryRel is_equivalence_isometry_rel
+#align Gromov_Hausdorff.isometry_rel.setoid GromovHausdorff.IsometryRel.setoid
 
 /-- The Gromov-Hausdorff space -/
 def GHSpace : Type :=
   Quotient IsometryRel.setoid
+#align Gromov_Hausdorff.GH_space GromovHausdorff.GHSpace
 
 /-- Map any nonempty compact type to `GH_space` -/
 def toGHSpace (X : Type u) [MetricSpace X] [CompactSpace X] [Nonempty X] : GHSpace :=
   ⟦NonemptyCompacts.kuratowskiEmbedding X⟧
+#align Gromov_Hausdorff.to_GH_space GromovHausdorff.toGHSpace
 
 instance : Inhabited GHSpace :=
   ⟨Quot.mk _ ⟨⟨{0}, is_compact_singleton⟩, singleton_nonempty _⟩⟩
@@ -92,6 +97,7 @@ instance : Inhabited GHSpace :=
 @[nolint has_nonempty_instance]
 def GHSpace.Rep (p : GHSpace) : Type :=
   (Quotient.out p : NonemptyCompacts ℓ_infty_ℝ)
+#align Gromov_Hausdorff.GH_space.rep GromovHausdorff.GHSpace.Rep
 
 theorem eq_to_GH_space_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {p : NonemptyCompacts ℓ_infty_ℝ} :
     ⟦p⟧ = toGHSpace X ↔ ∃ Ψ : X → ℓ_infty_ℝ, Isometry Ψ ∧ Range Ψ = p := by
@@ -110,19 +116,24 @@ theorem eq_to_GH_space_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonemp
       rw [rangeΨ] <;> rfl
     exact ⟨cast E f⟩
     
+#align Gromov_Hausdorff.eq_to_GH_space_iff GromovHausdorff.eq_to_GH_space_iff
 
 theorem eq_to_GH_space {p : NonemptyCompacts ℓ_infty_ℝ} : ⟦p⟧ = toGHSpace p :=
   eq_to_GH_space_iff.2 ⟨fun x => x, isometrySubtypeCoe, Subtype.range_coe⟩
+#align Gromov_Hausdorff.eq_to_GH_space GromovHausdorff.eq_to_GH_space
 
 section
 
 attribute [local reducible] GH_space.rep
 
 instance repGHSpaceMetricSpace {p : GHSpace} : MetricSpace p.rep := by infer_instance
+#align Gromov_Hausdorff.rep_GH_space_metric_space GromovHausdorff.repGHSpaceMetricSpace
 
 instance rep_GH_space_compact_space {p : GHSpace} : CompactSpace p.rep := by infer_instance
+#align Gromov_Hausdorff.rep_GH_space_compact_space GromovHausdorff.rep_GH_space_compact_space
 
 instance rep_GH_space_nonempty {p : GHSpace} : Nonempty p.rep := by infer_instance
+#align Gromov_Hausdorff.rep_GH_space_nonempty GromovHausdorff.rep_GH_space_nonempty
 
 end
 
@@ -130,6 +141,7 @@ theorem GHSpace.to_GH_space_rep (p : GHSpace) : toGHSpace p.rep = p := by
   change to_GH_space (Quot.out p : nonempty_compacts ℓ_infty_ℝ) = p
   rw [← eq_to_GH_space]
   exact Quot.out_eq p
+#align Gromov_Hausdorff.GH_space.to_GH_space_rep GromovHausdorff.GHSpace.to_GH_space_rep
 
 /-- Two nonempty compact spaces have the same image in `GH_space` if and only if they are
 isometric. -/
@@ -158,6 +170,8 @@ theorem to_GH_space_eq_to_GH_space_iff_isometric {X : Type u} [MetricSpace X] [C
       dsimp only [NonemptyCompacts.kuratowskiEmbedding]
       rfl
     exact ⟨cast I ((f.trans e).trans g)⟩⟩
+#align
+  Gromov_Hausdorff.to_GH_space_eq_to_GH_space_iff_isometric GromovHausdorff.to_GH_space_eq_to_GH_space_iff_isometric
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Distance on `GH_space`: the distance between two nonempty compact spaces is the infimum
@@ -175,9 +189,11 @@ the distance of the equivalence classes of these spaces in the Gromov-Hausdorff 
 def gHDist (X : Type u) (Y : Type v) [MetricSpace X] [Nonempty X] [CompactSpace X] [MetricSpace Y] [Nonempty Y]
     [CompactSpace Y] : ℝ :=
   dist (toGHSpace X) (toGHSpace Y)
+#align Gromov_Hausdorff.GH_dist GromovHausdorff.gHDist
 
 theorem dist_GH_dist (p q : GHSpace) : dist p q = gHDist p.rep q.rep := by
   rw [GH_dist, p.to_GH_space_rep, q.to_GH_space_rep]
+#align Gromov_Hausdorff.dist_GH_dist GromovHausdorff.dist_GH_dist
 
 /-- The Gromov-Hausdorff distance between two spaces is bounded by the Hausdorff distance
 of isometric copies of the spaces, in any metric space. -/
@@ -236,6 +252,7 @@ theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] 
   apply (mem_image _ _ _).2
   exists (⟨A, B⟩ : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ)
   simp [AX, BY]
+#align Gromov_Hausdorff.GH_dist_le_Hausdorff_dist GromovHausdorff.GH_dist_le_Hausdorff_dist
 
 /-- The optimal coupling constructed above realizes exactly the Gromov-Hausdorff distance,
 essentially by design. -/
@@ -394,6 +411,7 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
     
   · exact GH_dist_le_Hausdorff_dist (isometry_optimal_GH_injl X Y) (isometry_optimal_GH_injr X Y)
     
+#align Gromov_Hausdorff.Hausdorff_dist_optimal GromovHausdorff.Hausdorff_dist_optimal
 
 /-- The Gromov-Hausdorff distance can also be realized by a coupling in `ℓ^∞(ℝ)`, by embedding
 the optimal coupling through its Kuratowski embedding. -/
@@ -414,6 +432,7 @@ theorem GH_dist_eq_Hausdorff_dist (X : Type u) [MetricSpace X] [CompactSpace X] 
       Hausdorff_dist_optimal]
     exact (Hausdorff_dist_image (kuratowskiEmbedding.isometry _)).symm
     
+#align Gromov_Hausdorff.GH_dist_eq_Hausdorff_dist GromovHausdorff.GH_dist_eq_Hausdorff_dist
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -543,6 +562,7 @@ in the topological_space namespace to take advantage of the notation `p.to_GH_sp
 def TopologicalSpace.NonemptyCompacts.toGHSpace {X : Type u} [MetricSpace X] (p : NonemptyCompacts X) :
     GromovHausdorff.GHSpace :=
   GromovHausdorff.toGHSpace p
+#align topological_space.nonempty_compacts.to_GH_space TopologicalSpace.NonemptyCompacts.toGHSpace
 
 open TopologicalSpace
 
@@ -560,12 +580,15 @@ theorem GH_dist_le_nonempty_compacts_dist (p q : NonemptyCompacts X) : dist p.to
   have J : ↑q = range (coe : q → X) := subtype.range_coe_subtype.symm
   rw [A, I, J]
   exact GH_dist_le_Hausdorff_dist ha hb
+#align Gromov_Hausdorff.GH_dist_le_nonempty_compacts_dist GromovHausdorff.GH_dist_le_nonempty_compacts_dist
 
 theorem toGHSpaceLipschitz : LipschitzWith 1 (NonemptyCompacts.toGHSpace : NonemptyCompacts X → GHSpace) :=
   LipschitzWith.mkOne GH_dist_le_nonempty_compacts_dist
+#align Gromov_Hausdorff.to_GH_space_lipschitz GromovHausdorff.toGHSpaceLipschitz
 
 theorem to_GH_space_continuous : Continuous (NonemptyCompacts.toGHSpace : NonemptyCompacts X → GHSpace) :=
   toGHSpaceLipschitz.Continuous
+#align Gromov_Hausdorff.to_GH_space_continuous GromovHausdorff.to_GH_space_continuous
 
 end NonemptyCompacts
 
@@ -658,6 +681,7 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
     rcases hs' x with ⟨y, Dy⟩
     exact ⟨Φ y, mem_range_self _, Dy⟩
   linarith
+#align Gromov_Hausdorff.GH_dist_le_of_approx_subsets GromovHausdorff.GH_dist_le_of_approx_subsets
 
 end
 
@@ -971,6 +995,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       ring
     _ < δ := half_lt_self δpos
     
+#align Gromov_Hausdorff.totally_bounded GromovHausdorff.totally_bounded
 
 section Complete
 
@@ -997,6 +1022,7 @@ structure AuxGluingStruct (A : Type) [MetricSpace A] : Type 1 where
   metric : MetricSpace space
   embed : A → space
   isom : Isometry embed
+#align Gromov_Hausdorff.aux_gluing_struct GromovHausdorff.AuxGluingStruct
 
 instance (A : Type) [MetricSpace A] : Inhabited (AuxGluingStruct A) :=
   ⟨{ Space := A, metric := by infer_instance, embed := id, isom := fun x y => rfl }⟩
@@ -1010,6 +1036,7 @@ def auxGluing (n : ℕ) : AuxGluingStruct (X n) :=
     { Space := glue_space Y.isom (isometry_optimal_GH_injl (X n) (X (n + 1))), metric := by infer_instance,
       embed := to_glue_r Y.isom (isometry_optimal_GH_injl (X n) (X (n + 1))) ∘ optimal_GH_injr (X n) (X (n + 1)),
       isom := (to_glue_r_isometry _ _).comp (isometry_optimal_GH_injr (X n) (X (n + 1))) }
+#align Gromov_Hausdorff.aux_gluing GromovHausdorff.auxGluing
 
 /-- The Gromov-Hausdorff space is complete. -/
 instance : CompleteSpace GHSpace := by

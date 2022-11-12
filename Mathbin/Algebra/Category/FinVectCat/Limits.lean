@@ -59,6 +59,7 @@ instance (F : J ⥤ FinVectCat k) :
 def forget₂CreatesLimit (F : J ⥤ FinVectCat k) : CreatesLimit F (forget₂ (FinVectCat k) (ModuleCat.{v} k)) :=
   createsLimitOfFullyFaithfulOfIso
     ⟨(limit (F ⋙ forget₂ (FinVectCat k) (ModuleCat.{v} k)) : ModuleCat.{v} k), by infer_instance⟩ (Iso.refl _)
+#align FinVect.forget₂_creates_limit FinVectCat.forget₂CreatesLimit
 
 instance :
     CreatesLimitsOfShape J (forget₂ (FinVectCat k) (ModuleCat.{v} k)) where CreatesLimit F := forget₂CreatesLimit F

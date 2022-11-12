@@ -54,6 +54,7 @@ noncomputable def unionLift (S : ι → Set α) (f : ∀ (i) (x : S i), β)
     (hT : T ⊆ UnionCat S) (x : T) : β :=
   let i := Classical.indefiniteDescription _ (mem_Union.1 (hT x.Prop))
   f i ⟨x, i.Prop⟩
+#align set.Union_lift Set.unionLift
 
 variable {S : ι → Set α} {f : ∀ (i) (x : S i), β}
   {hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α} {hT : T ⊆ UnionCat S}
@@ -63,13 +64,16 @@ variable {S : ι → Set α} {f : ∀ (i) (x : S i), β}
 theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) : unionLift S f hf T hT ⟨x, hx⟩ = f i x := by
   let j := Classical.indefiniteDescription _ (mem_Union.1 (hT hx))
   cases' x with x hx <;> exact hf j i x j.2 _
+#align set.Union_lift_mk Set.Union_lift_mk
 
 @[simp]
 theorem Union_lift_inclusion {i : ι} (x : S i) (h : S i ⊆ T) : unionLift S f hf T hT (Set.inclusion h x) = f i x :=
   Union_lift_mk x _
+#align set.Union_lift_inclusion Set.Union_lift_inclusion
 
 theorem Union_lift_of_mem (x : T) {i : ι} (hx : (x : α) ∈ S i) : unionLift S f hf T hT x = f i ⟨x, hx⟩ := by
   cases' x with x hx <;> exact hf _ _ _ _ _
+#align set.Union_lift_of_mem Set.Union_lift_of_mem
 
 /-- `Union_lift_const` is useful for proving that `Union_lift` is a homomorphism
   of algebraic structures when defined on the Union of algebraic subobjects.
@@ -80,6 +84,7 @@ theorem Union_lift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c
   let ⟨i, hi⟩ := Set.mem_Union.1 (hT c.Prop)
   have : ci i = ⟨c, hi⟩ := Subtype.ext (hci i)
   rw [Union_lift_of_mem _ hi, ← this, h]
+#align set.Union_lift_const Set.Union_lift_const
 
 /-- `Union_lift_unary` is useful for proving that `Union_lift` is a homomorphism
   of algebraic structures when defined on the Union of algebraic subobjects.
@@ -100,6 +105,7 @@ theorem Union_lift_unary (u : T → T) (ui : ∀ i, S i → S i)
     rfl
   have hx' : (Set.inclusion (Set.subset_Union S i) (ui i ⟨x, hi⟩) : α) ∈ S i := (ui i ⟨x, hi⟩).Prop
   conv_lhs => rw [this, hui, Union_lift_inclusion]
+#align set.Union_lift_unary Set.Union_lift_unary
 
 /-- `Union_lift_binary` is useful for proving that `Union_lift` is a homomorphism
   of algebraic structures when defined on the Union of algebraic subobjects.
@@ -130,6 +136,7 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
     (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop
   conv_lhs => rw [hx, hy, ← hopi, Union_lift_of_mem _ hxy]
   simp only [coe_inclusion, Subtype.coe_eta]
+#align set.Union_lift_binary Set.Union_lift_binary
 
 end UnionLift
 
@@ -142,13 +149,16 @@ noncomputable def liftCover (S : ι → Set α) (f : ∀ (i) (x : S i), β)
     (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : UnionCat S = univ)
     (a : α) : β :=
   unionLift S f hf Univ (hS ▸ Set.Subset.refl _) ⟨a, trivial⟩
+#align set.lift_cover Set.liftCover
 
 @[simp]
 theorem lift_cover_coe {i : ι} (x : S i) : liftCover S f hf hS x = f i x :=
   Union_lift_mk x _
+#align set.lift_cover_coe Set.lift_cover_coe
 
 theorem lift_cover_of_mem {i : ι} {x : α} (hx : (x : α) ∈ S i) : liftCover S f hf hS x = f i ⟨x, hx⟩ :=
   Union_lift_of_mem ⟨x, trivial⟩ hx
+#align set.lift_cover_of_mem Set.lift_cover_of_mem
 
 end Set
 

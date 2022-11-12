@@ -67,67 +67,45 @@ theorem is_open_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a := by
     · exact (ha ha').elim
       
     
+#align ordinal.is_open_singleton_iff Ordinal.is_open_singleton_iff
 
 theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.IooCat a o ⊆ s := by
-  classical
-  refine' ⟨_, fun h => _⟩
-  · rw [is_open_iff_generate_intervals]
-    intro h o hos ho
-    have ho₀ := Ordinal.pos_iff_ne_zero.2 ho.1
-    induction' h with t ht t u ht hu ht' hu' t ht H
-    · rcases ht with ⟨a, rfl | rfl⟩
-      · exact ⟨a, hos, fun b hb => hb.1⟩
-        
-      · exact ⟨0, ho₀, fun b hb => hb.2.trans hos⟩
-        
-      
-    · exact ⟨0, ho₀, fun b _ => Set.mem_univ b⟩
-      
-    · rcases ht' hos.1 with ⟨a, ha, ha'⟩
-      rcases hu' hos.2 with ⟨b, hb, hb'⟩
-      exact
-        ⟨_, max_lt ha hb, fun c hc =>
-          ⟨ha' ⟨(le_max_left a b).trans_lt hc.1, hc.2⟩, hb' ⟨(le_max_right a b).trans_lt hc.1, hc.2⟩⟩⟩
-      
-    · rcases hos with ⟨u, hu, hu'⟩
-      rcases H u hu hu' with ⟨a, ha, ha'⟩
-      exact ⟨a, ha, fun b hb => ⟨u, hu, ha' hb⟩⟩
-      
-    
-  · let f : s → Set Ordinal := fun o =>
-      if ho : is_limit o.val then Set.IooCat (Classical.choose (h o.val o.Prop ho)) (o + 1) else {o.val}
-    have : ∀ a, IsOpen (f a) := fun a => by
-      change IsOpen (dite _ _ _)
-      split_ifs
-      · exact is_open_Ioo
-        
-      · rwa [is_open_singleton_iff]
-        
-    convert is_open_Union this
-    ext o
-    refine' ⟨fun ho => Set.mem_Union.2 ⟨⟨o, ho⟩, _⟩, _⟩
-    · split_ifs with ho'
-      · refine' ⟨_, lt_succ o⟩
-        cases' Classical.choose_spec (h o ho ho') with H
-        exact H
-        
-      · exact Set.mem_singleton o
-        
-      
-    · rintro ⟨t, ⟨a, ht⟩, hoa⟩
-      change dite _ _ _ = t at ht
-      split_ifs  at ht with ha <;> subst ht
-      · cases' Classical.choose_spec (h a.val a.prop ha) with H has
-        rcases lt_or_eq_of_le (le_of_lt_succ hoa.2) with (hoa' | rfl)
-        · exact has ⟨hoa.1, hoa'⟩
+  classical refine' ⟨_, fun h => _⟩
+    · let f : s → Set Ordinal := fun o =>
+        if ho : is_limit o.val then Set.IooCat (Classical.choose (h o.val o.Prop ho)) (o + 1) else {o.val}
+      have : ∀ a, IsOpen (f a) := fun a => by
+        change IsOpen (dite _ _ _)
+        split_ifs
+        · exact is_open_Ioo
           
-        · exact a.prop
+        · rwa [is_open_singleton_iff]
+          
+      convert is_open_Union this
+      ext o
+      refine' ⟨fun ho => Set.mem_Union.2 ⟨⟨o, ho⟩, _⟩, _⟩
+      · split_ifs with ho'
+        · refine' ⟨_, lt_succ o⟩
+          cases' Classical.choose_spec (h o ho ho') with H
+          exact H
+          
+        · exact Set.mem_singleton o
           
         
-      · convert a.prop
+      · rintro ⟨t, ⟨a, ht⟩, hoa⟩
+        change dite _ _ _ = t at ht
+        split_ifs  at ht with ha <;> subst ht
+        · cases' Classical.choose_spec (h a.val a.prop ha) with H has
+          rcases lt_or_eq_of_le (le_of_lt_succ hoa.2) with (hoa' | rfl)
+          · exact has ⟨hoa.1, hoa'⟩
+            
+          · exact a.prop
+            
+          
+        · convert a.prop
+          
         
       
-    
+#align ordinal.is_open_iff Ordinal.is_open_iff
 
 theorem mem_closure_iff_sup :
     a ∈ Closure s ↔ ∃ (ι : Type u)(_ : Nonempty ι)(f : ι → Ordinal), (∀ i, f i ∈ s) ∧ sup.{u, u} f = a := by
@@ -170,10 +148,12 @@ theorem mem_closure_iff_sup :
     cases' lt_sup.1 hab with i hi
     exact ⟨_, hbct ⟨hi, (le_sup.{u, u} f i).trans_lt hac⟩, hf i⟩
     
+#align ordinal.mem_closure_iff_sup Ordinal.mem_closure_iff_sup
 
 theorem mem_closed_iff_sup (hs : IsClosed s) :
     a ∈ s ↔ ∃ (ι : Type u)(hι : Nonempty ι)(f : ι → Ordinal), (∀ i, f i ∈ s) ∧ sup.{u, u} f = a := by
   rw [← mem_closure_iff_sup, hs.closure_eq]
+#align ordinal.mem_closed_iff_sup Ordinal.mem_closed_iff_sup
 
 theorem mem_closure_iff_bsup :
     a ∈ Closure s ↔ ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal), (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a :=
@@ -182,10 +162,12 @@ theorem mem_closure_iff_bsup :
       ⟨_, fun h => (type_eq_zero_iff_is_empty.1 h).elim i, bfamilyOfFamily f, fun i hi => hf _, by rwa [bsup_eq_sup]⟩,
       fun ⟨o, ho, f, hf, ha⟩ =>
       ⟨_, out_nonempty_iff_ne_zero.2 ho, familyOfBfamily o f, fun i => hf _ _, by rwa [sup_eq_bsup]⟩⟩
+#align ordinal.mem_closure_iff_bsup Ordinal.mem_closure_iff_bsup
 
 theorem mem_closed_iff_bsup (hs : IsClosed s) :
     a ∈ s ↔ ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal), (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a := by
   rw [← mem_closure_iff_bsup, hs.closure_eq]
+#align ordinal.mem_closed_iff_bsup Ordinal.mem_closed_iff_bsup
 
 theorem is_closed_iff_sup :
     IsClosed s ↔ ∀ {ι : Type u} (hι : Nonempty ι) (f : ι → Ordinal), (∀ i, f i ∈ s) → sup.{u, u} f ∈ s := by
@@ -194,6 +176,7 @@ theorem is_closed_iff_sup :
   intro h x hx
   rcases mem_closure_iff_sup.1 hx with ⟨ι, hι, f, hf, rfl⟩
   exact h hι f hf
+#align ordinal.is_closed_iff_sup Ordinal.is_closed_iff_sup
 
 theorem is_closed_iff_bsup :
     IsClosed s ↔ ∀ {o : Ordinal} (ho : o ≠ 0) (f : ∀ a < o, Ordinal), (∀ i hi, f i hi ∈ s) → bsup.{u, u} o f ∈ s := by
@@ -205,6 +188,7 @@ theorem is_closed_iff_bsup :
     apply H (type_ne_zero_iff_nonempty.2 hι)
     exact fun i hi => hf _
     
+#align ordinal.is_closed_iff_bsup Ordinal.is_closed_iff_bsup
 
 theorem is_limit_of_mem_frontier (ha : a ∈ Frontier s) : IsLimit a := by
   simp only [frontier_eq_closure_inter_closure, Set.mem_inter_iff, mem_closure_iff] at ha
@@ -216,6 +200,7 @@ theorem is_limit_of_mem_frontier (ha : a ∈ Frontier s) : IsLimit a := by
   subst hb
   subst hc
   exact hc' hb'
+#align ordinal.is_limit_of_mem_frontier Ordinal.is_limit_of_mem_frontier
 
 theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u}) :
     IsNormal f ↔ StrictMono f ∧ Continuous f := by
@@ -237,8 +222,9 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
     rw [mem_closed_iff_sup (IsClosed.preimage h' (@isClosedIic _ _ _ _ a))]
     exact ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i), sup_typein_limit ho.2⟩
     
+#align ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.is_normal_iff_strict_mono_and_continuous
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (b «expr < » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr < » a) -/
 theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal (enumOrd s) ↔ IsClosed s := by
   have Hs := enum_ord_strict_mono hs
   refine'
@@ -265,6 +251,7 @@ theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal
     rw [hb]
     exact le_bsup.{u, u} _ _ (ha.2 _ hba)
     
+#align ordinal.enum_ord_is_normal_iff_is_closed Ordinal.enum_ord_is_normal_iff_is_closed
 
 end Ordinal
 

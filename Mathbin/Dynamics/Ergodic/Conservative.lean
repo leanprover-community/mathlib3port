@@ -48,17 +48,19 @@ namespace MeasureTheory
 
 open Measure
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (m «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (m «expr ≠ » 0) -/
 /-- We say that a non-singular (`measure_theory.quasi_measure_preserving`) self-map is
 *conservative* if for any measurable set `s` of positive measure there exists `x ∈ s` such that `x`
 returns back to `s` under some iteration of `f`. -/
 structure Conservative (f : α → α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends
   QuasiMeasurePreserving f μ μ : Prop where
   exists_mem_image_mem : ∀ ⦃s⦄, MeasurableSet s → μ s ≠ 0 → ∃ x ∈ s, ∃ (m : _)(_ : m ≠ 0), (f^[m]) x ∈ s
+#align measure_theory.conservative MeasureTheory.Conservative
 
 /-- A self-map preserving a finite measure is conservative. -/
 protected theorem MeasurePreserving.conservative [IsFiniteMeasure μ] (h : MeasurePreserving f μ μ) : Conservative f μ :=
   ⟨h.QuasiMeasurePreserving, fun s hsm h0 => h.exists_mem_image_mem hsm h0⟩
+#align measure_theory.measure_preserving.conservative MeasureTheory.MeasurePreserving.conservative
 
 namespace Conservative
 
@@ -68,6 +70,7 @@ protected theorem id (μ : Measure α) : Conservative id μ :=
     exists_mem_image_mem := fun s hs h0 =>
       let ⟨x, hx⟩ := nonempty_of_measure_ne_zero h0
       ⟨x, hx, 1, one_ne_zero, hx⟩ }
+#align measure_theory.conservative.id MeasureTheory.Conservative.id
 
 /-- If `f` is a conservative map and `s` is a measurable set of nonzero measure, then
 for infinitely many values of `m` a positive measure of points `x ∈ s` returns back to `s`
@@ -98,6 +101,8 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
     
   · rwa [Set.mem_preimage, ← iterate_add_apply] at hxm
     
+#align
+  measure_theory.conservative.frequently_measure_inter_ne_zero MeasureTheory.Conservative.frequently_measure_inter_ne_zero
 
 /-- If `f` is a conservative map and `s` is a measurable set of nonzero measure, then
 for an arbitrarily large `m` a positive measure of points `x ∈ s` returns back to `s`
@@ -106,6 +111,8 @@ theorem exists_gt_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurabl
     ∃ m > N, μ (s ∩ f^[m] ⁻¹' s) ≠ 0 :=
   let ⟨m, hm, hmN⟩ := ((hf.frequently_measure_inter_ne_zero hs h0).and_eventually (eventually_gt_at_top N)).exists
   ⟨m, hmN, hm⟩
+#align
+  measure_theory.conservative.exists_gt_measure_inter_ne_zero MeasureTheory.Conservative.exists_gt_measure_inter_ne_zero
 
 /-- Poincaré recurrence theorem: given a conservative map `f` and a measurable set `s`, the set
 of points `x ∈ s` such that `x` does not return to `s` after `≥ n` iterations has measure zero. -/
@@ -118,6 +125,8 @@ theorem measure_mem_forall_ge_image_not_mem_eq_zero (hf : Conservative f μ) (hs
   rcases(hf.exists_gt_measure_inter_ne_zero this H) n with ⟨m, hmn, hm⟩
   rcases nonempty_of_measure_ne_zero hm with ⟨x, ⟨hxs, hxn⟩, hxm, -⟩
   exact hxn m hmn.lt.le hxm
+#align
+  measure_theory.conservative.measure_mem_forall_ge_image_not_mem_eq_zero MeasureTheory.Conservative.measure_mem_forall_ge_image_not_mem_eq_zero
 
 /-- Poincaré recurrence theorem: given a conservative map `f` and a measurable set `s`,
 almost every point `x ∈ s` returns back to `s` infinitely many times. -/
@@ -127,14 +136,20 @@ theorem ae_mem_imp_frequently_image_mem (hf : Conservative f μ) (hs : Measurabl
   intro n
   filter_upwards [measure_zero_iff_ae_nmem.1 (hf.measure_mem_forall_ge_image_not_mem_eq_zero hs n)]
   simp
+#align
+  measure_theory.conservative.ae_mem_imp_frequently_image_mem MeasureTheory.Conservative.ae_mem_imp_frequently_image_mem
 
 theorem inter_frequently_image_mem_ae_eq (hf : Conservative f μ) (hs : MeasurableSet s) :
     (s ∩ { x | ∃ᶠ n in at_top, (f^[n]) x ∈ s } : Set α) =ᵐ[μ] s :=
   inter_eventually_eq_left.2 <| hf.ae_mem_imp_frequently_image_mem hs
+#align
+  measure_theory.conservative.inter_frequently_image_mem_ae_eq MeasureTheory.Conservative.inter_frequently_image_mem_ae_eq
 
 theorem measure_inter_frequently_image_mem_eq (hf : Conservative f μ) (hs : MeasurableSet s) :
     μ (s ∩ { x | ∃ᶠ n in at_top, (f^[n]) x ∈ s }) = μ s :=
   measure_congr (hf.inter_frequently_image_mem_ae_eq hs)
+#align
+  measure_theory.conservative.measure_inter_frequently_image_mem_eq MeasureTheory.Conservative.measure_inter_frequently_image_mem_eq
 
 /-- Poincaré recurrence theorem: if `f` is a conservative dynamical system and `s` is a measurable
 set, then for `μ`-a.e. `x`, if the orbit of `x` visits `s` at least once, then it visits `s`
@@ -146,6 +161,8 @@ theorem ae_forall_image_mem_imp_frequently_image_mem (hf : Conservative f μ) (h
   rw [← map_add_at_top_eq_nat k, frequently_map]
   refine' (hx hk).mono fun n hn => _
   rwa [add_comm, iterate_add_apply]
+#align
+  measure_theory.conservative.ae_forall_image_mem_imp_frequently_image_mem MeasureTheory.Conservative.ae_forall_image_mem_imp_frequently_image_mem
 
 /-- If `f` is a conservative self-map and `s` is a measurable set of positive measure, then
 `μ.ae`-frequently we have `x ∈ s` and `s` returns to `s` under infinitely many iterations of `f`. -/
@@ -153,6 +170,8 @@ theorem frequently_ae_mem_and_frequently_image_mem (hf : Conservative f μ) (hs 
     ∃ᵐ x ∂μ, x ∈ s ∧ ∃ᶠ n in at_top, (f^[n]) x ∈ s :=
   ((frequently_ae_mem_iff.2 h0).and_eventually (hf.ae_mem_imp_frequently_image_mem hs)).mono fun x hx =>
     ⟨hx.1, hx.2 hx.1⟩
+#align
+  measure_theory.conservative.frequently_ae_mem_and_frequently_image_mem MeasureTheory.Conservative.frequently_ae_mem_and_frequently_image_mem
 
 /-- Poincaré recurrence theorem. Let `f : α → α` be a conservative dynamical system on a topological
 space with second countable topology and measurable open sets. Then almost every point `x : α`
@@ -164,6 +183,8 @@ theorem ae_frequently_mem_of_mem_nhds [TopologicalSpace α] [SecondCountableTopo
   refine' ((ae_ball_iff <| countable_countable_basis α).2 this).mono fun x hx s hs => _
   rcases(is_basis_countable_basis α).mem_nhds_iff.1 hs with ⟨o, hoS, hxo, hos⟩
   exact (hx o hoS hxo).mono fun n hn => hos hn
+#align
+  measure_theory.conservative.ae_frequently_mem_of_mem_nhds MeasureTheory.Conservative.ae_frequently_mem_of_mem_nhds
 
 /-- Iteration of a conservative system is a conservative system. -/
 protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[n]) μ := by
@@ -190,6 +211,7 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[
   · rwa [← iterate_mul, this, ← iterate_add_apply, tsub_add_cancel_of_le]
     exact hkl.le
     
+#align measure_theory.conservative.iterate MeasureTheory.Conservative.iterate
 
 end Conservative
 

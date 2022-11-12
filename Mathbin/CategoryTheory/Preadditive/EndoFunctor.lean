@@ -94,8 +94,10 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) wh
     intros
     ext
     apply comp_add
+#align category_theory.endofunctor.algebra_preadditive CategoryTheory.Endofunctor.algebraPreadditive
 
 instance Algebra.forget_additive : (Endofunctor.Algebra.forget F).Additive where
+#align category_theory.algebra.forget_additive CategoryTheory.Algebra.forget_additive
 
 @[simps]
 instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F) where
@@ -165,8 +167,10 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
     intros
     ext
     apply comp_add
+#align category_theory.endofunctor.coalgebra_preadditive CategoryTheory.Endofunctor.coalgebraPreadditive
 
 instance Coalgebra.forget_additive : (Endofunctor.Coalgebra.forget F).Additive where
+#align category_theory.coalgebra.forget_additive CategoryTheory.Coalgebra.forget_additive
 
 end CategoryTheory
 

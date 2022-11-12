@@ -106,6 +106,7 @@ unsafe def find_splitting_expr : expr → tactic expr
   | quote.1 ((%%ₓapp x y) = _) => pure y
   | e =>
     "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+#align tactic.unfold_cases.find_splitting_expr tactic.unfold_cases.find_splitting_expr
 
 /-- Tries to finish the current goal using the `inner` tactic. If the tactic
   fails, it tries to find an expression on which to do a distinction by
@@ -129,6 +130,7 @@ unsafe def unfold_cases_core (inner : interactive.itactic) : tactic Unit :=
           cases e
           all_goals <| dsimp_target >> unfold_cases_core <|> skip
           skip
+#align tactic.unfold_cases.unfold_cases_core tactic.unfold_cases.unfold_cases_core
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -146,6 +148,7 @@ unsafe def unfold_tgt : expr → tactic Unit
       "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   | e =>
     "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+#align tactic.unfold_cases.unfold_tgt tactic.unfold_cases.unfold_tgt
 
 end UnfoldCases
 
@@ -202,6 +205,7 @@ unsafe def unfold_cases (inner : itactic) : tactic Unit :=
     unfold_tgt tgt
     try dsimp_target
     unfold_cases_core inner
+#align tactic.interactive.unfold_cases tactic.interactive.unfold_cases
 
 add_tactic_doc
   { Name := "unfold_cases", category := DocCategory.tactic, declNames := [`tactic.interactive.unfold_cases],

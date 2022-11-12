@@ -70,6 +70,7 @@ structure ModuleCat where
   Carrier : Type v
   [isAddCommGroup : AddCommGroup carrier]
   [isModule : Module R carrier]
+#align Module ModuleCat
 
 attribute [instance] ModuleCat.isAddCommGroup ModuleCat.isModule
 
@@ -85,15 +86,18 @@ instance moduleCategory : Category (ModuleCat.{v} R) where
   id_comp' X Y f := LinearMap.id_comp _
   comp_id' X Y f := LinearMap.comp_id _
   assoc' W X Y Z f g h := LinearMap.comp_assoc _ _ _
+#align Module.Module_category ModuleCat.moduleCategory
 
 instance moduleConcreteCategory : ConcreteCategory.{v} (ModuleCat.{v} R) where
   forget := { obj := fun R => R, map := fun R S f => (f : R → S) }
   forget_faithful := {  }
+#align Module.Module_concrete_category ModuleCat.moduleConcreteCategory
 
 instance hasForgetToAddCommGroup :
     HasForget₂ (ModuleCat R)
       AddCommGroupCat where forget₂ :=
     { obj := fun M => AddCommGroupCat.of M, map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
+#align Module.has_forget_to_AddCommGroup ModuleCat.hasForgetToAddCommGroup
 
 instance (M N : ModuleCat R) : LinearMapClass (M ⟶ N) R M N :=
   { LinearMap.semilinearMapClass with coe := fun f => f }
@@ -101,40 +105,48 @@ instance (M N : ModuleCat R) : LinearMapClass (M ⟶ N) R M N :=
 /-- The object in the category of R-modules associated to an R-module -/
 def of (X : Type v) [AddCommGroup X] [Module R X] : ModuleCat R :=
   ⟨X⟩
+#align Module.of ModuleCat.of
 
 @[simp]
 theorem forget₂_obj (X : ModuleCat R) : (forget₂ (ModuleCat R) AddCommGroupCat).obj X = AddCommGroupCat.of X :=
   rfl
+#align Module.forget₂_obj ModuleCat.forget₂_obj
 
 @[simp]
 theorem forget₂_obj_Module_of (X : Type v) [AddCommGroup X] [Module R X] :
     (forget₂ (ModuleCat R) AddCommGroupCat).obj (of R X) = AddCommGroupCat.of X :=
   rfl
+#align Module.forget₂_obj_Module_of ModuleCat.forget₂_obj_Module_of
 
 @[simp]
 theorem forget₂_map (X Y : ModuleCat R) (f : X ⟶ Y) :
     (forget₂ (ModuleCat R) AddCommGroupCat).map f = LinearMap.toAddMonoidHom f :=
   rfl
+#align Module.forget₂_map ModuleCat.forget₂_map
 
 /-- Typecheck a `linear_map` as a morphism in `Module R`. -/
 def ofHom {R : Type u} [Ring R] {X Y : Type v} [AddCommGroup X] [Module R X] [AddCommGroup Y] [Module R Y]
     (f : X →ₗ[R] Y) : of R X ⟶ of R Y :=
   f
+#align Module.of_hom ModuleCat.ofHom
 
 @[simp]
 theorem of_hom_apply {R : Type u} [Ring R] {X Y : Type v} [AddCommGroup X] [Module R X] [AddCommGroup Y] [Module R Y]
     (f : X →ₗ[R] Y) (x : X) : ofHom f x = f x :=
   rfl
+#align Module.of_hom_apply ModuleCat.of_hom_apply
 
 instance : Inhabited (ModuleCat R) :=
   ⟨of R PUnit⟩
 
 instance ofUnique {X : Type v} [AddCommGroup X] [Module R X] [i : Unique X] : Unique (of R X) :=
   i
+#align Module.of_unique ModuleCat.ofUnique
 
 @[simp]
 theorem coe_of (X : Type v) [AddCommGroup X] [Module R X] : (of R X : Type v) = X :=
   rfl
+#align Module.coe_of ModuleCat.coe_of
 
 variable {R}
 
@@ -144,6 +156,7 @@ module. -/
 def ofSelfIso (M : ModuleCat R) : ModuleCat.of R M ≅ M where
   Hom := 𝟙 M
   inv := 𝟙 M
+#align Module.of_self_iso ModuleCat.ofSelfIso
 
 theorem is_zero_of_subsingleton (M : ModuleCat R) [Subsingleton M] : IsZero M := by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
@@ -154,6 +167,7 @@ theorem is_zero_of_subsingleton (M : ModuleCat R) [Subsingleton M] : IsZero M :=
   · ext
     apply Subsingleton.elim
     
+#align Module.is_zero_of_subsingleton ModuleCat.is_zero_of_subsingleton
 
 instance : HasZeroObject (ModuleCat.{v} R) :=
   ⟨⟨of R PUnit, is_zero_of_subsingleton _⟩⟩
@@ -163,13 +177,16 @@ variable {R} {M N U : ModuleCat.{v} R}
 @[simp]
 theorem id_apply (m : M) : (𝟙 M : M → M) m = m :=
   rfl
+#align Module.id_apply ModuleCat.id_apply
 
 @[simp]
 theorem coe_comp (f : M ⟶ N) (g : N ⟶ U) : (f ≫ g : M → U) = g ∘ f :=
   rfl
+#align Module.coe_comp ModuleCat.coe_comp
 
 theorem comp_def (f : M ⟶ N) (g : N ⟶ U) : f ≫ g = g.comp f :=
   rfl
+#align Module.comp_def ModuleCat.comp_def
 
 end ModuleCat
 
@@ -181,6 +198,7 @@ variable {X₁ X₂ : Type v}
 def ModuleCat.asHom [AddCommGroup X₁] [Module R X₁] [AddCommGroup X₂] [Module R X₂] :
     (X₁ →ₗ[R] X₂) → (ModuleCat.of R X₁ ⟶ ModuleCat.of R X₂) :=
   id
+#align Module.as_hom ModuleCat.asHom
 
 -- mathport name: Module.as_hom
 localized [ModuleCat] notation "↟" f:1024 => ModuleCat.asHom f
@@ -189,6 +207,7 @@ localized [ModuleCat] notation "↟" f:1024 => ModuleCat.asHom f
 def ModuleCat.asHomRight [AddCommGroup X₁] [Module R X₁] {X₂ : ModuleCat.{v} R} :
     (X₁ →ₗ[R] X₂) → (ModuleCat.of R X₁ ⟶ X₂) :=
   id
+#align Module.as_hom_right ModuleCat.asHomRight
 
 -- mathport name: Module.as_hom_right
 localized [ModuleCat] notation "↾" f:1024 => ModuleCat.asHomRight f
@@ -197,6 +216,7 @@ localized [ModuleCat] notation "↾" f:1024 => ModuleCat.asHomRight f
 def ModuleCat.asHomLeft {X₁ : ModuleCat.{v} R} [AddCommGroup X₂] [Module R X₂] :
     (X₁ →ₗ[R] X₂) → (X₁ ⟶ ModuleCat.of R X₂) :=
   id
+#align Module.as_hom_left ModuleCat.asHomLeft
 
 -- mathport name: Module.as_hom_left
 localized [ModuleCat] notation "↿" f:1024 => ModuleCat.asHomLeft f
@@ -213,6 +233,7 @@ def LinearEquiv.toModuleIso {g₁ : AddCommGroup X₁} {g₂ : AddCommGroup X₂
   inv_hom_id' := by
     ext
     exact e.right_inv x
+#align linear_equiv.to_Module_iso LinearEquiv.toModuleIso
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
 
@@ -224,6 +245,7 @@ def LinearEquiv.toModuleIso' {M N : ModuleCat.{v} R} (i : M ≃ₗ[R] N) : M ≅
   inv := i.symm
   hom_inv_id' := LinearMap.ext fun x => by simp
   inv_hom_id' := LinearMap.ext fun x => by simp
+#align linear_equiv.to_Module_iso' LinearEquiv.toModuleIso'
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
 
@@ -236,6 +258,7 @@ def LinearEquiv.toModuleIso'Left {X₁ : ModuleCat.{v} R} {g₂ : AddCommGroup X
   inv := (e.symm : X₂ →ₗ[R] X₁)
   hom_inv_id' := LinearMap.ext fun x => by simp
   inv_hom_id' := LinearMap.ext fun x => by simp
+#align linear_equiv.to_Module_iso'_left LinearEquiv.toModuleIso'Left
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
 
@@ -248,6 +271,7 @@ def LinearEquiv.toModuleIso'Right {g₁ : AddCommGroup X₁} {m₁ : Module R X�
   inv := (e.symm : X₂ →ₗ[R] X₁)
   hom_inv_id' := LinearMap.ext fun x => by simp
   inv_hom_id' := LinearMap.ext fun x => by simp
+#align linear_equiv.to_Module_iso'_right LinearEquiv.toModuleIso'Right
 
 namespace CategoryTheory.Iso
 
@@ -260,6 +284,7 @@ def toLinearEquiv {X Y : ModuleCat R} (i : X ≅ Y) : X ≃ₗ[R] Y where
   right_inv := by tidy
   map_add' := by tidy
   map_smul' := by tidy
+#align category_theory.iso.to_linear_equiv CategoryTheory.Iso.toLinearEquiv
 
 end CategoryTheory.Iso
 
@@ -270,6 +295,7 @@ def linearEquivIsoModuleIso {X Y : Type u} [AddCommGroup X] [AddCommGroup Y] [Mo
     (X ≃ₗ[R] Y) ≅ ModuleCat.of R X ≅ ModuleCat.of R Y where
   Hom e := e.toModuleIso
   inv i := i.toLinearEquiv
+#align linear_equiv_iso_Module_iso linearEquivIsoModuleIso
 
 namespace ModuleCat
 
@@ -284,6 +310,7 @@ instance : Preadditive (ModuleCat.{v} R) where
       simp
 
 instance forget₂_AddCommGroup_additive : (forget₂ (ModuleCat.{v} R) AddCommGroupCat).Additive where
+#align Module.forget₂_AddCommGroup_additive ModuleCat.forget₂_AddCommGroup_additive
 
 section
 
@@ -305,9 +332,11 @@ variable {X Y X' Y' : ModuleCat.{v} S}
 theorem Iso.hom_congr_eq_arrow_congr (i : X ≅ X') (j : Y ≅ Y') (f : X ⟶ Y) :
     Iso.homCongr i j f = LinearEquiv.arrowCongr i.toLinearEquiv j.toLinearEquiv f :=
   rfl
+#align Module.iso.hom_congr_eq_arrow_congr ModuleCat.Iso.hom_congr_eq_arrow_congr
 
 theorem Iso.conj_eq_conj (i : X ≅ X') (f : EndCat X) : Iso.conj i f = LinearEquiv.conj i.toLinearEquiv f :=
   rfl
+#align Module.iso.conj_eq_conj ModuleCat.Iso.conj_eq_conj
 
 end
 

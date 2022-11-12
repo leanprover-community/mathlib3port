@@ -48,6 +48,7 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n
     dsimp [Fin.tail]
     rw [Fin.cons_succ, Fin.cons_succ]
     
+#align basis.ext_multilinear_fin Basis.ext_multilinear_fin
 
 /-- Two multilinear maps indexed by a `fintype` are equal if they are equal when all arguments
 are basis vectors. Unlike `basis.ext_multilinear_fin`, this only uses a single basis; a
@@ -57,4 +58,5 @@ theorem Basis.ext_multilinear [DecidableEq ι] [Finite ι] {f g : MultilinearMap
     (e : Basis ι₁ R M₂) (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g := by
   cases nonempty_fintype ι
   exact (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp ((Basis.ext_multilinear_fin fun i => e) fun i => h (i ∘ _))
+#align basis.ext_multilinear Basis.ext_multilinear
 

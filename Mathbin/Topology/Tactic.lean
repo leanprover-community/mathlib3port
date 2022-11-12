@@ -32,6 +32,7 @@ used by `continuity`.
 unsafe def continuity : user_attribute where
   Name := `continuity
   descr := "lemmas usable to prove continuity"
+#align continuity continuity
 
 -- Mark some continuity lemmas already defined in `topology.basic`
 attribute [continuity] continuous_id continuous_const
@@ -41,6 +42,7 @@ attribute [continuity] continuous_id continuous_const
 @[continuity]
 theorem continuous_id' {α : Type _} [TopologicalSpace α] : Continuous fun a : α => a :=
   continuous_id
+#align continuous_id' continuous_id'
 
 namespace Tactic
 
@@ -63,12 +65,14 @@ extra logic here to try to avoid bad cases.
 -/
 unsafe def apply_continuous.comp : tactic Unit :=
   sorry
+#align tactic.apply_continuous.comp tactic.apply_continuous.comp
 
 /-- List of tactics used by `continuity` internally. -/
 unsafe def continuity_tactics (md : Transparency := reducible) : List (tactic String) :=
   [intros1 >>= fun ns => pure ("intros " ++ " ".intercalate (ns.map fun e => e.toString)),
     apply_rules [] [`` continuity] 50 { md } >> pure "apply_rules with continuity",
     apply_continuous.comp >> pure "refine continuous.comp _ _"]
+#align tactic.continuity_tactics tactic.continuity_tactics
 
 namespace Interactive
 
@@ -82,10 +86,12 @@ unsafe def continuity (bang : parse <| optional (tk "!")) (trace : parse <| opti
   let continuity_core := tactic.tidy { cfg with tactics := continuity_tactics md }
   let trace_fn := if trace.isSome then show_term else id
   trace_fn continuity_core
+#align tactic.interactive.continuity tactic.interactive.continuity
 
 /-- Version of `continuity` for use with auto_param. -/
 unsafe def continuity' : tactic Unit :=
   continuity none none {  }
+#align tactic.interactive.continuity' tactic.interactive.continuity'
 
 /-- `continuity` solves goals of the form `continuous f` by applying lemmas tagged with the
 `continuity` user attribute.

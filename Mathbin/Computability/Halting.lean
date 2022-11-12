@@ -39,13 +39,13 @@ theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
     simp only [dom_iff_mem, code.evaln_complete, Option.mem_def] at h
     obtain ⟨x, k, e⟩ | ⟨x, k, e⟩ := h
     · refine' ⟨k, x, _⟩
-      simp only [e, Option.some_orelse, Option.mem_def]
+      simp only [e, Option.some_orElse, Option.mem_def]
       
     · refine' ⟨k, _⟩
       cases' cf.evaln k n with y
-      · exact ⟨x, by simp only [e, Option.mem_def, Option.none_orelse]⟩
+      · exact ⟨x, by simp only [e, Option.mem_def, Option.none_orElse]⟩
         
-      · exact ⟨y, by simp only [Option.some_orelse, Option.mem_def]⟩
+      · exact ⟨y, by simp only [Option.some_orElse, Option.mem_def]⟩
         
       
     
@@ -58,6 +58,7 @@ theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
   · subst y
     exact Or.inl (code.evaln_sound e')
     
+#align nat.partrec.merge' Nat.Partrec.merge'
 
 end Nat.Partrec
 
@@ -98,6 +99,7 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
   · exact Or.inl ha
     
   exact Or.inr ha
+#align partrec.merge' Partrec.merge'
 
 theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) (H : ∀ (a), ∀ x ∈ f a, ∀ y ∈ g a, x = y) :
     ∃ k : α →. σ, Partrec k ∧ ∀ a x, x ∈ k a ↔ x ∈ f a ∨ x ∈ g a :=
@@ -115,6 +117,7 @@ theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) (H : ∀ (a),
         
       · exact mem_unique h' h
         ⟩⟩
+#align partrec.merge Partrec.merge
 
 theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computable c) (hf : Partrec f) (hg : Partrec g) :
     Partrec fun a => cond (c a) (f a) (g a) :=
@@ -123,6 +126,7 @@ theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computabl
   ((eval_part.comp (Computable.cond hc (const cf) (const cg)) Computable.id).bind
         ((@Computable.decode σ _).comp snd).ofOption.to₂).of_eq
     fun a => by cases c a <;> simp [ef, eg, encodek]
+#align partrec.cond Partrec.cond
 
 theorem sum_cases {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ →. σ} (hf : Computable f) (hg : Partrec₂ g)
     (hh : Partrec₂ h) : @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
@@ -131,27 +135,33 @@ theorem sum_cases {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ 
           (sum_cases_left hf (option_some_iff.2 hg).to₂ (const Option.none).to₂)
           (sum_cases_right hf (const Option.none).to₂ (option_some_iff.2 hh).to₂)).of_eq
       fun a => by cases f a <;> simp only [Bool.cond_true, Bool.cond_false]
+#align partrec.sum_cases Partrec.sum_cases
 
 end Partrec
 
 /-- A computable predicate is one whose indicator function is computable. -/
 def ComputablePred {α} [Primcodable α] (p : α → Prop) :=
   ∃ D : DecidablePred p, Computable fun a => to_bool (p a)
+#align computable_pred ComputablePred
 
 /-- A recursively enumerable predicate is one which is the domain of a computable partial function.
  -/
 def RePred {α} [Primcodable α] (p : α → Prop) :=
   Partrec fun a => Part.assert (p a) fun _ => Part.some ()
+#align re_pred RePred
 
 theorem RePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : RePred p) (H : ∀ a, p a ↔ q a) : RePred q :=
   (funext fun a => propext (H a) : p = q) ▸ hp
+#align re_pred.of_eq RePred.of_eq
 
 theorem Partrec.dom_re {α β} [Primcodable α] [Primcodable β] {f : α →. β} (h : Partrec f) : RePred fun a => (f a).Dom :=
   (h.map (Computable.const ()).to₂).of_eq fun n => Part.ext fun _ => by simp [Part.dom_iff_mem]
+#align partrec.dom_re Partrec.dom_re
 
 theorem ComputablePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : ComputablePred p) (H : ∀ a, p a ↔ q a) :
     ComputablePred q :=
   (funext fun a => propext (H a) : p = q) ▸ hp
+#align computable_pred.of_eq ComputablePred.of_eq
 
 namespace ComputablePred
 
@@ -166,6 +176,7 @@ open Nat.Partrec.Code Computable
 theorem computable_iff {p : α → Prop} : ComputablePred p ↔ ∃ f : α → Bool, Computable f ∧ p = fun a => f a :=
   ⟨fun ⟨D, h⟩ => ⟨_, h, funext fun a => propext (Bool.decide_iff _).symm⟩, by
     rintro ⟨f, h, rfl⟩ <;> exact ⟨by infer_instance, by simpa using h⟩⟩
+#align computable_pred.computable_iff ComputablePred.computable_iff
 
 protected theorem not {p : α → Prop} (hp : ComputablePred p) : ComputablePred fun a => ¬p a := by
   obtain ⟨f, hf, rfl⟩ := computable_iff.1 hp <;>
@@ -174,6 +185,7 @@ protected theorem not {p : α → Prop} (hp : ComputablePred p) : ComputablePred
         (cond hf (const ff) (const tt)).of_eq fun n => by
           dsimp
           cases f n <;> rfl⟩
+#align computable_pred.not ComputablePred.not
 
 theorem to_re {p : α → Prop} (hp : ComputablePred p) : RePred p := by
   obtain ⟨f, hf, rfl⟩ := computable_iff.1 hp
@@ -181,6 +193,7 @@ theorem to_re {p : α → Prop} (hp : ComputablePred p) : RePred p := by
   refine' (Partrec.cond hf (Decidable.Partrec.const' (Part.some ())) Partrec.none).of_eq fun n => Part.ext fun a => _
   cases a
   cases f n <;> simp
+#align computable_pred.to_re ComputablePred.to_re
 
 theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C) {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g)
     (fC : f ∈ C) : g ∈ C := by
@@ -198,28 +211,1738 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
     rw [e] at H
     contradiction
     
+#align computable_pred.rice ComputablePred.rice
 
-theorem rice₂ (C : Set Code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C ↔ cg ∈ C)) :
-    (ComputablePred fun c => c ∈ C) ↔ C = ∅ ∨ C = Set.Univ := by
-  classical <;>
-    exact
-      have hC : ∀ f, f ∈ C ↔ eval f ∈ eval '' C := fun f => ⟨Set.mem_image_of_mem _, fun ⟨g, hg, e⟩ => (H _ _ e).1 hg⟩
-      ⟨fun h =>
-        or_iff_not_imp_left.2 fun C0 =>
-          Set.eq_univ_of_forall fun cg =>
-            let ⟨cf, fC⟩ := Set.ne_empty_iff_nonempty.1 C0
-            (hC _).2 <|
-              rice (eval '' C) (h.of_eq hC) (Partrec.nat_iff.1 <| eval_part.comp (const cf) Computable.id)
-                (Partrec.nat_iff.1 <| eval_part.comp (const cg) Computable.id) ((hC _).1 fC),
-        fun h => by
-        obtain rfl | rfl := h <;>
-          simp [ComputablePred, Set.mem_empty_iff_false] <;> exact ⟨by infer_instance, Computable.const _⟩⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `rice₂ [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`C] [":" (Term.app `Set [`Code])] [] ")")
+        (Term.explicitBinder
+         "("
+         [`H]
+         [":"
+          (Term.forall
+           "∀"
+           [`cf `cg]
+           []
+           ","
+           (Term.arrow
+            («term_=_» (Term.app `eval [`cf]) "=" (Term.app `eval [`cg]))
+            "→"
+            («term_↔_» («term_∈_» `cf "∈" `C) "↔" («term_∈_» `cg "∈" `C))))]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term_↔_»
+         (Term.app `ComputablePred [(Term.fun "fun" (Term.basicFun [`c] [] "=>" («term_∈_» `c "∈" `C)))])
+         "↔"
+         («term_∨_» («term_=_» `C "=" («term∅» "∅")) "∨" («term_=_» `C "=" `Set.Univ)))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.«tactic_<;>_»
+            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+            "<;>"
+            (Tactic.exact
+             "exact"
+             (Term.have
+              "have"
+              (Term.haveDecl
+               (Term.haveIdDecl
+                [`hC []]
+                [(Term.typeSpec
+                  ":"
+                  (Term.forall
+                   "∀"
+                   [`f]
+                   []
+                   ","
+                   («term_↔_»
+                    («term_∈_» `f "∈" `C)
+                    "↔"
+                    («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+                ":="
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`f]
+                  []
+                  "=>"
+                  (Term.anonymousCtor
+                   "⟨"
+                   [(Term.app `Set.mem_image_of_mem [(Term.hole "_")])
+                    ","
+                    (Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
+                      []
+                      "=>"
+                      (Term.app
+                       (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+                       [`hg])))]
+                   "⟩")))))
+              []
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`h]
+                  []
+                  "=>"
+                  (Term.app
+                   (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`C0]
+                      []
+                      "=>"
+                      (Term.app
+                       `Set.eq_univ_of_forall
+                       [(Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`cg]
+                          []
+                          "=>"
+                          (Term.let
+                           "let"
+                           (Term.letDecl
+                            (Term.letPatDecl
+                             (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                             []
+                             []
+                             ":="
+                             (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                           []
+                           («term_<|_»
+                            (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                            "<|"
+                            (Term.app
+                             `rice
+                             [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                              (Term.app (Term.proj `h "." `of_eq) [`hC])
+                              («term_<|_»
+                               (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                               "<|"
+                               (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                              («term_<|_»
+                               (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                               "<|"
+                               (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                              (Term.app
+                               (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                               [`fC])])))))])))])))
+                ","
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`h]
+                  []
+                  "=>"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.«tactic_<;>_»
+                       (Std.Tactic.obtain
+                        "obtain"
+                        [(Std.Tactic.RCases.rcasesPatMed
+                          [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                        []
+                        [":=" [`h]])
+                       "<;>"
+                       (Tactic.«tactic_<;>_»
+                        (Tactic.simp
+                         "simp"
+                         []
+                         []
+                         []
+                         ["["
+                          [(Tactic.simpLemma [] [] `ComputablePred)
+                           ","
+                           (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                          "]"]
+                         [])
+                        "<;>"
+                        (Tactic.exact
+                         "exact"
+                         (Term.anonymousCtor
+                          "⟨"
+                          [(Term.byTactic
+                            "by"
+                            (Tactic.tacticSeq
+                             (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                           ","
+                           (Term.app `Computable.const [(Term.hole "_")])]
+                          "⟩"))))])))))]
+               "⟩"))))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+           "<;>"
+           (Tactic.exact
+            "exact"
+            (Term.have
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               [`hC []]
+               [(Term.typeSpec
+                 ":"
+                 (Term.forall
+                  "∀"
+                  [`f]
+                  []
+                  ","
+                  («term_↔_»
+                   («term_∈_» `f "∈" `C)
+                   "↔"
+                   («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+               ":="
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`f]
+                 []
+                 "=>"
+                 (Term.anonymousCtor
+                  "⟨"
+                  [(Term.app `Set.mem_image_of_mem [(Term.hole "_")])
+                   ","
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
+                     []
+                     "=>"
+                     (Term.app
+                      (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+                      [`hg])))]
+                  "⟩")))))
+             []
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`h]
+                 []
+                 "=>"
+                 (Term.app
+                  (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`C0]
+                     []
+                     "=>"
+                     (Term.app
+                      `Set.eq_univ_of_forall
+                      [(Term.fun
+                        "fun"
+                        (Term.basicFun
+                         [`cg]
+                         []
+                         "=>"
+                         (Term.let
+                          "let"
+                          (Term.letDecl
+                           (Term.letPatDecl
+                            (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                            []
+                            []
+                            ":="
+                            (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                          []
+                          («term_<|_»
+                           (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                           "<|"
+                           (Term.app
+                            `rice
+                            [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                             (Term.app (Term.proj `h "." `of_eq) [`hC])
+                             («term_<|_»
+                              (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                              "<|"
+                              (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                             («term_<|_»
+                              (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                              "<|"
+                              (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                             (Term.app
+                              (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                              [`fC])])))))])))])))
+               ","
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`h]
+                 []
+                 "=>"
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.«tactic_<;>_»
+                      (Std.Tactic.obtain
+                       "obtain"
+                       [(Std.Tactic.RCases.rcasesPatMed
+                         [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                       []
+                       [":=" [`h]])
+                      "<;>"
+                      (Tactic.«tactic_<;>_»
+                       (Tactic.simp
+                        "simp"
+                        []
+                        []
+                        []
+                        ["["
+                         [(Tactic.simpLemma [] [] `ComputablePred)
+                          ","
+                          (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                         "]"]
+                        [])
+                       "<;>"
+                       (Tactic.exact
+                        "exact"
+                        (Term.anonymousCtor
+                         "⟨"
+                         [(Term.byTactic
+                           "by"
+                           (Tactic.tacticSeq
+                            (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                          ","
+                          (Term.app `Computable.const [(Term.hole "_")])]
+                         "⟩"))))])))))]
+              "⟩"))))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+       "<;>"
+       (Tactic.exact
+        "exact"
+        (Term.have
+         "have"
+         (Term.haveDecl
+          (Term.haveIdDecl
+           [`hC []]
+           [(Term.typeSpec
+             ":"
+             (Term.forall
+              "∀"
+              [`f]
+              []
+              ","
+              («term_↔_»
+               («term_∈_» `f "∈" `C)
+               "↔"
+               («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+           ":="
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`f]
+             []
+             "=>"
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.app `Set.mem_image_of_mem [(Term.hole "_")])
+               ","
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
+                 []
+                 "=>"
+                 (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+              "⟩")))))
+         []
+         (Term.anonymousCtor
+          "⟨"
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`h]
+             []
+             "=>"
+             (Term.app
+              (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`C0]
+                 []
+                 "=>"
+                 (Term.app
+                  `Set.eq_univ_of_forall
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`cg]
+                     []
+                     "=>"
+                     (Term.let
+                      "let"
+                      (Term.letDecl
+                       (Term.letPatDecl
+                        (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                        []
+                        []
+                        ":="
+                        (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                      []
+                      («term_<|_»
+                       (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                       "<|"
+                       (Term.app
+                        `rice
+                        [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                         (Term.app (Term.proj `h "." `of_eq) [`hC])
+                         («term_<|_»
+                          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                          "<|"
+                          (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                         («term_<|_»
+                          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                          "<|"
+                          (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                         (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+           ","
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`h]
+             []
+             "=>"
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.«tactic_<;>_»
+                  (Std.Tactic.obtain
+                   "obtain"
+                   [(Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                   []
+                   [":=" [`h]])
+                  "<;>"
+                  (Tactic.«tactic_<;>_»
+                   (Tactic.simp
+                    "simp"
+                    []
+                    []
+                    []
+                    ["["
+                     [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                     "]"]
+                    [])
+                   "<;>"
+                   (Tactic.exact
+                    "exact"
+                    (Term.anonymousCtor
+                     "⟨"
+                     [(Term.byTactic
+                       "by"
+                       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                      ","
+                      (Term.app `Computable.const [(Term.hole "_")])]
+                     "⟩"))))])))))]
+          "⟩"))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.have
+        "have"
+        (Term.haveDecl
+         (Term.haveIdDecl
+          [`hC []]
+          [(Term.typeSpec
+            ":"
+            (Term.forall
+             "∀"
+             [`f]
+             []
+             ","
+             («term_↔_»
+              («term_∈_» `f "∈" `C)
+              "↔"
+              («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+          ":="
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`f]
+            []
+            "=>"
+            (Term.anonymousCtor
+             "⟨"
+             [(Term.app `Set.mem_image_of_mem [(Term.hole "_")])
+              ","
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
+                []
+                "=>"
+                (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+             "⟩")))))
+        []
+        (Term.anonymousCtor
+         "⟨"
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`h]
+            []
+            "=>"
+            (Term.app
+             (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`C0]
+                []
+                "=>"
+                (Term.app
+                 `Set.eq_univ_of_forall
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`cg]
+                    []
+                    "=>"
+                    (Term.let
+                     "let"
+                     (Term.letDecl
+                      (Term.letPatDecl
+                       (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                       []
+                       []
+                       ":="
+                       (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                     []
+                     («term_<|_»
+                      (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                      "<|"
+                      (Term.app
+                       `rice
+                       [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                        (Term.app (Term.proj `h "." `of_eq) [`hC])
+                        («term_<|_»
+                         (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                         "<|"
+                         (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                        («term_<|_»
+                         (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                         "<|"
+                         (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                        (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+          ","
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`h]
+            []
+            "=>"
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.«tactic_<;>_»
+                 (Std.Tactic.obtain
+                  "obtain"
+                  [(Std.Tactic.RCases.rcasesPatMed
+                    [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                  []
+                  [":=" [`h]])
+                 "<;>"
+                 (Tactic.«tactic_<;>_»
+                  (Tactic.simp
+                   "simp"
+                   []
+                   []
+                   []
+                   ["["
+                    [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                    "]"]
+                   [])
+                  "<;>"
+                  (Tactic.exact
+                   "exact"
+                   (Term.anonymousCtor
+                    "⟨"
+                    [(Term.byTactic
+                      "by"
+                      (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                     ","
+                     (Term.app `Computable.const [(Term.hole "_")])]
+                    "⟩"))))])))))]
+         "⟩")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.have
+       "have"
+       (Term.haveDecl
+        (Term.haveIdDecl
+         [`hC []]
+         [(Term.typeSpec
+           ":"
+           (Term.forall
+            "∀"
+            [`f]
+            []
+            ","
+            («term_↔_»
+             («term_∈_» `f "∈" `C)
+             "↔"
+             («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+         ":="
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`f]
+           []
+           "=>"
+           (Term.anonymousCtor
+            "⟨"
+            [(Term.app `Set.mem_image_of_mem [(Term.hole "_")])
+             ","
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
+               []
+               "=>"
+               (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+            "⟩")))))
+       []
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`h]
+           []
+           "=>"
+           (Term.app
+            (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`C0]
+               []
+               "=>"
+               (Term.app
+                `Set.eq_univ_of_forall
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`cg]
+                   []
+                   "=>"
+                   (Term.let
+                    "let"
+                    (Term.letDecl
+                     (Term.letPatDecl
+                      (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                      []
+                      []
+                      ":="
+                      (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                    []
+                    («term_<|_»
+                     (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                     "<|"
+                     (Term.app
+                      `rice
+                      [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                       (Term.app (Term.proj `h "." `of_eq) [`hC])
+                       («term_<|_»
+                        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                        "<|"
+                        (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                       («term_<|_»
+                        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                        "<|"
+                        (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                       (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+         ","
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`h]
+           []
+           "=>"
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.«tactic_<;>_»
+                (Std.Tactic.obtain
+                 "obtain"
+                 [(Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                 []
+                 [":=" [`h]])
+                "<;>"
+                (Tactic.«tactic_<;>_»
+                 (Tactic.simp
+                  "simp"
+                  []
+                  []
+                  []
+                  ["["
+                   [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                   "]"]
+                  [])
+                 "<;>"
+                 (Tactic.exact
+                  "exact"
+                  (Term.anonymousCtor
+                   "⟨"
+                   [(Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                    ","
+                    (Term.app `Computable.const [(Term.hole "_")])]
+                   "⟩"))))])))))]
+        "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`h]
+          []
+          "=>"
+          (Term.app
+           (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`C0]
+              []
+              "=>"
+              (Term.app
+               `Set.eq_univ_of_forall
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`cg]
+                  []
+                  "=>"
+                  (Term.let
+                   "let"
+                   (Term.letDecl
+                    (Term.letPatDecl
+                     (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                     []
+                     []
+                     ":="
+                     (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                   []
+                   («term_<|_»
+                    (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                    "<|"
+                    (Term.app
+                     `rice
+                     [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                      (Term.app (Term.proj `h "." `of_eq) [`hC])
+                      («term_<|_»
+                       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                       "<|"
+                       (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                      («term_<|_»
+                       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                       "<|"
+                       (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                      (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+        ","
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`h]
+          []
+          "=>"
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.«tactic_<;>_»
+               (Std.Tactic.obtain
+                "obtain"
+                [(Std.Tactic.RCases.rcasesPatMed
+                  [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                []
+                [":=" [`h]])
+               "<;>"
+               (Tactic.«tactic_<;>_»
+                (Tactic.simp
+                 "simp"
+                 []
+                 []
+                 []
+                 ["["
+                  [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                  "]"]
+                 [])
+                "<;>"
+                (Tactic.exact
+                 "exact"
+                 (Term.anonymousCtor
+                  "⟨"
+                  [(Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                   ","
+                   (Term.app `Computable.const [(Term.hole "_")])]
+                  "⟩"))))])))))]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`h]
+        []
+        "=>"
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.«tactic_<;>_»
+             (Std.Tactic.obtain
+              "obtain"
+              [(Std.Tactic.RCases.rcasesPatMed
+                [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+              []
+              [":=" [`h]])
+             "<;>"
+             (Tactic.«tactic_<;>_»
+              (Tactic.simp
+               "simp"
+               []
+               []
+               []
+               ["["
+                [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                "]"]
+               [])
+              "<;>"
+              (Tactic.exact
+               "exact"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                 ","
+                 (Term.app `Computable.const [(Term.hole "_")])]
+                "⟩"))))])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Std.Tactic.obtain
+            "obtain"
+            [(Std.Tactic.RCases.rcasesPatMed
+              [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+            []
+            [":=" [`h]])
+           "<;>"
+           (Tactic.«tactic_<;>_»
+            (Tactic.simp
+             "simp"
+             []
+             []
+             []
+             ["[" [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)] "]"]
+             [])
+            "<;>"
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.byTactic
+                "by"
+                (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+               ","
+               (Term.app `Computable.const [(Term.hole "_")])]
+              "⟩"))))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Std.Tactic.obtain
+        "obtain"
+        [(Std.Tactic.RCases.rcasesPatMed
+          [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+        []
+        [":=" [`h]])
+       "<;>"
+       (Tactic.«tactic_<;>_»
+        (Tactic.simp
+         "simp"
+         []
+         []
+         []
+         ["[" [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)] "]"]
+         [])
+        "<;>"
+        (Tactic.exact
+         "exact"
+         (Term.anonymousCtor
+          "⟨"
+          [(Term.byTactic
+            "by"
+            (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+           ","
+           (Term.app `Computable.const [(Term.hole "_")])]
+          "⟩"))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Tactic.simp
+        "simp"
+        []
+        []
+        []
+        ["[" [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)] "]"]
+        [])
+       "<;>"
+       (Tactic.exact
+        "exact"
+        (Term.anonymousCtor
+         "⟨"
+         [(Term.byTactic
+           "by"
+           (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+          ","
+          (Term.app `Computable.const [(Term.hole "_")])]
+         "⟩")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.byTactic
+          "by"
+          (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+         ","
+         (Term.app `Computable.const [(Term.hole "_")])]
+        "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.byTactic
+         "by"
+         (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+        ","
+        (Term.app `Computable.const [(Term.hole "_")])]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Computable.const [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Computable.const
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticInfer_instance "infer_instance")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       []
+       ["[" [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)] "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Set.mem_empty_iff_false
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `ComputablePred
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Std.Tactic.obtain
+       "obtain"
+       [(Std.Tactic.RCases.rcasesPatMed
+         [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+       []
+       [":=" [`h]])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`h]
+        []
+        "=>"
+        (Term.app
+         (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`C0]
+            []
+            "=>"
+            (Term.app
+             `Set.eq_univ_of_forall
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`cg]
+                []
+                "=>"
+                (Term.let
+                 "let"
+                 (Term.letDecl
+                  (Term.letPatDecl
+                   (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                   []
+                   []
+                   ":="
+                   (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                 []
+                 («term_<|_»
+                  (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                  "<|"
+                  (Term.app
+                   `rice
+                   [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                    (Term.app (Term.proj `h "." `of_eq) [`hC])
+                    («term_<|_»
+                     (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                     "<|"
+                     (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                    («term_<|_»
+                     (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                     "<|"
+                     (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                    (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`C0]
+          []
+          "=>"
+          (Term.app
+           `Set.eq_univ_of_forall
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`cg]
+              []
+              "=>"
+              (Term.let
+               "let"
+               (Term.letDecl
+                (Term.letPatDecl
+                 (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                 []
+                 []
+                 ":="
+                 (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+               []
+               («term_<|_»
+                (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                "<|"
+                (Term.app
+                 `rice
+                 [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                  (Term.app (Term.proj `h "." `of_eq) [`hC])
+                  («term_<|_»
+                   (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                   "<|"
+                   (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                  («term_<|_»
+                   (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                   "<|"
+                   (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                  (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`C0]
+        []
+        "=>"
+        (Term.app
+         `Set.eq_univ_of_forall
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`cg]
+            []
+            "=>"
+            (Term.let
+             "let"
+             (Term.letDecl
+              (Term.letPatDecl
+               (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+               []
+               []
+               ":="
+               (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+             []
+             («term_<|_»
+              (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+              "<|"
+              (Term.app
+               `rice
+               [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                (Term.app (Term.proj `h "." `of_eq) [`hC])
+                («term_<|_»
+                 (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                 "<|"
+                 (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                («term_<|_»
+                 (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                 "<|"
+                 (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `Set.eq_univ_of_forall
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`cg]
+          []
+          "=>"
+          (Term.let
+           "let"
+           (Term.letDecl
+            (Term.letPatDecl
+             (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+             []
+             []
+             ":="
+             (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+           []
+           («term_<|_»
+            (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+            "<|"
+            (Term.app
+             `rice
+             [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+              (Term.app (Term.proj `h "." `of_eq) [`hC])
+              («term_<|_»
+               (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+               "<|"
+               (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+              («term_<|_»
+               (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+               "<|"
+               (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+              (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`cg]
+        []
+        "=>"
+        (Term.let
+         "let"
+         (Term.letDecl
+          (Term.letPatDecl
+           (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+           []
+           []
+           ":="
+           (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+         []
+         («term_<|_»
+          (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+          "<|"
+          (Term.app
+           `rice
+           [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+            (Term.app (Term.proj `h "." `of_eq) [`hC])
+            («term_<|_»
+             (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+             "<|"
+             (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+            («term_<|_»
+             (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+             "<|"
+             (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+            (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.let
+       "let"
+       (Term.letDecl
+        (Term.letPatDecl
+         (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+         []
+         []
+         ":="
+         (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+       []
+       («term_<|_»
+        (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+        "<|"
+        (Term.app
+         `rice
+         [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+          (Term.app (Term.proj `h "." `of_eq) [`hC])
+          («term_<|_»
+           (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+           "<|"
+           (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+          («term_<|_»
+           (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+           "<|"
+           (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+          (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+       "<|"
+       (Term.app
+        `rice
+        [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+         (Term.app (Term.proj `h "." `of_eq) [`hC])
+         («term_<|_»
+          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+          "<|"
+          (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+         («term_<|_»
+          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+          "<|"
+          (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+         (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `rice
+       [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+        (Term.app (Term.proj `h "." `of_eq) [`hC])
+        («term_<|_»
+         (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+         "<|"
+         (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+        («term_<|_»
+         (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+         "<|"
+         (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+        (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `fC
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `hC [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hC
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `hC [(Term.hole "_")]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(Term.app (Term.proj (Term.paren "(" [(Term.app `hC [(Term.hole "_")]) []] ")") "." (fieldIdx "1")) [`fC]) []]
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      («term_<|_»
+       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+       "<|"
+       (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Computable.id
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `const [`cg])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `cg
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `const
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `const [`cg]) []] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `eval_part.comp
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `Partrec.nat_iff
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 10, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(«term_<|_»
+       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+       "<|"
+       (Term.app `eval_part.comp [(Term.paren "(" [(Term.app `const [`cg]) []] ")") `Computable.id]))
+      []]
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      («term_<|_»
+       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+       "<|"
+       (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Computable.id
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `const [`cf])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `cf
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `const
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `const [`cf]) []] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `eval_part.comp
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `Partrec.nat_iff
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 10, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(«term_<|_»
+       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+       "<|"
+       (Term.app `eval_part.comp [(Term.paren "(" [(Term.app `const [`cf]) []] ")") `Computable.id]))
+      []]
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app (Term.proj `h "." `of_eq) [`hC])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hC
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `h "." `of_eq)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app (Term.proj `h "." `of_eq) [`hC]) []] ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Basic.term_''_', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Basic.term_''_', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `C
+[PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      `eval
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (some 80, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 81, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Set.Data.Set.Basic.term_''_ `eval " '' " `C) []] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `rice
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `hC [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hC
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `hC [(Term.hole "_")]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `C0
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `Set.ne_empty_iff_nonempty
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `fC
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `cf
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `cg
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Set.eq_univ_of_forall
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `C0
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `or_iff_not_imp_left
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`f]
+        []
+        "=>"
+        (Term.anonymousCtor
+         "⟨"
+         [(Term.app `Set.mem_image_of_mem [(Term.hole "_")])
+          ","
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
+            []
+            "=>"
+            (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+         "⟩")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.app `Set.mem_image_of_mem [(Term.hole "_")])
+        ","
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
+          []
+          "=>"
+          (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
+        []
+        "=>"
+        (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hg
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `H [(Term.hole "_") (Term.hole "_") `e])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `e
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `H
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `H [(Term.hole "_") (Term.hole "_") `e]) []] ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `e
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Set.mem_image_of_mem [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Set.mem_image_of_mem
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.forall
+       "∀"
+       [`f]
+       []
+       ","
+       («term_↔_»
+        («term_∈_» `f "∈" `C)
+        "↔"
+        («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_↔_»
+       («term_∈_» `f "∈" `C)
+       "↔"
+       («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `C
+[PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      `eval
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (some 80, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 80, (some 81, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app `eval [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `eval
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 21 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 20, term))
+      («term_∈_» `f "∈" `C)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `C
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 21 >? 50, (some 51, term) <=? (some 20, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 20, (some 21, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  rice₂
+  ( C : Set Code ) ( H : ∀ cf cg , eval cf = eval cg → cf ∈ C ↔ cg ∈ C )
+    : ComputablePred fun c => c ∈ C ↔ C = ∅ ∨ C = Set.Univ
+  :=
+    by
+      skip
+        <;>
+        exact
+          have
+            hC
+              : ∀ f , f ∈ C ↔ eval f ∈ eval '' C
+              :=
+              fun f => ⟨ Set.mem_image_of_mem _ , fun ⟨ g , hg , e ⟩ => H _ _ e . 1 hg ⟩
+            ⟨
+              fun
+                  h
+                    =>
+                    or_iff_not_imp_left . 2
+                      fun
+                        C0
+                          =>
+                          Set.eq_univ_of_forall
+                            fun
+                              cg
+                                =>
+                                let
+                                  ⟨ cf , fC ⟩ := Set.ne_empty_iff_nonempty . 1 C0
+                                  hC _ . 2
+                                    <|
+                                    rice
+                                      eval '' C
+                                        h . of_eq hC
+                                        Partrec.nat_iff . 1 <| eval_part.comp const cf Computable.id
+                                        Partrec.nat_iff . 1 <| eval_part.comp const cg Computable.id
+                                        hC _ . 1 fC
+                ,
+                fun
+                  h
+                    =>
+                    by
+                      obtain rfl | rfl := h
+                        <;>
+                        simp [ ComputablePred , Set.mem_empty_iff_false ]
+                          <;>
+                          exact ⟨ by infer_instance , Computable.const _ ⟩
+              ⟩
+#align computable_pred.rice₂ ComputablePred.rice₂
 
 theorem halting_problem_re (n) : RePred fun c => (eval c n).Dom :=
   (eval_part.comp Computable.id (Computable.const _)).dom_re
+#align computable_pred.halting_problem_re ComputablePred.halting_problem_re
 
 theorem halting_problem (n) : ¬ComputablePred fun c => (eval c n).Dom
   | h => rice { f | (f n).Dom } h Nat.Partrec.zero Nat.Partrec.none trivial
+#align computable_pred.halting_problem ComputablePred.halting_problem
 
 -- Post's theorem on the equivalence of r.e., co-r.e. sets and
 -- computable sets. The assumption that p is decidable is required
@@ -239,12 +1962,82 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
         simp at hx hy
         cases hy.1 hx.1
         ⟩⟩
+#align computable_pred.computable_iff_re_compl_re ComputablePred.computable_iff_re_compl_re
 
-theorem computable_iff_re_compl_re' {p : α → Prop} : ComputablePred p ↔ RePred p ∧ RePred fun a => ¬p a := by
-  classical <;> exact computable_iff_re_compl_re
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `computable_iff_re_compl_re' [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`p] [":" (Term.arrow `α "→" (Term.prop "Prop"))] "}")]
+       (Term.typeSpec
+        ":"
+        («term_↔_»
+         (Term.app `ComputablePred [`p])
+         "↔"
+         («term_∧_»
+          (Term.app `RePred [`p])
+          "∧"
+          (Term.app `RePred [(Term.fun "fun" (Term.basicFun [`a] [] "=>" («term¬_» "¬" (Term.app `p [`a]))))])))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.«tactic_<;>_»
+            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+            "<;>"
+            (Tactic.exact "exact" `computable_iff_re_compl_re))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+           "<;>"
+           (Tactic.exact "exact" `computable_iff_re_compl_re))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+       "<;>"
+       (Tactic.exact "exact" `computable_iff_re_compl_re))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" `computable_iff_re_compl_re)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `computable_iff_re_compl_re
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  computable_iff_re_compl_re'
+  { p : α → Prop } : ComputablePred p ↔ RePred p ∧ RePred fun a => ¬ p a
+  := by skip <;> exact computable_iff_re_compl_re
+#align computable_pred.computable_iff_re_compl_re' ComputablePred.computable_iff_re_compl_re'
 
 theorem halting_problem_not_re (n) : ¬RePred fun c => ¬(eval c n).Dom
   | h => halting_problem _ <| computable_iff_re_compl_re'.2 ⟨halting_problem_re _, h⟩
+#align computable_pred.halting_problem_not_re ComputablePred.halting_problem_not_re
 
 end ComputablePred
 
@@ -259,6 +2052,7 @@ inductive Partrec' : ∀ {n}, (Vector ℕ n →. ℕ) → Prop
   comp {m n f} (g : Fin n → Vector ℕ m →. ℕ) :
     partrec' f → (∀ i, partrec' (g i)) → partrec' fun v => (mOfFn fun i => g i v) >>= f
   | rfind {n} {f : Vector ℕ (n + 1) → ℕ} : @partrec' (n + 1) f → partrec' fun v => rfind fun n => some (f (n ::ᵥ v) = 0)
+#align nat.partrec' Nat.Partrec'
 
 end Nat
 
@@ -278,19 +2072,24 @@ theorem to_part {n f} (pf : @Partrec' n f) : Partrec f := by
   have :=
     ((primrec.eq.comp Primrec.id (Primrec.const 0)).to_comp.comp (hf.comp (vector_cons.comp snd fst))).to₂.Partrec₂
   exact this.rfind
+#align nat.partrec'.to_part Nat.Partrec'.to_part
 
 theorem of_eq {n} {f g : Vector ℕ n →. ℕ} (hf : Partrec' f) (H : ∀ i, f i = g i) : Partrec' g :=
   (funext H : f = g) ▸ hf
+#align nat.partrec'.of_eq Nat.Partrec'.of_eq
 
 theorem of_prim {n} {f : Vector ℕ n → ℕ} (hf : Primrec f) : @Partrec' n f :=
   prim (Nat.Primrec'.of_prim hf)
+#align nat.partrec'.of_prim Nat.Partrec'.of_prim
 
 theorem head {n : ℕ} : @Partrec' n.succ (@head ℕ n) :=
   prim Nat.Primrec'.head
+#align nat.partrec'.head Nat.Partrec'.head
 
 theorem tail {n f} (hf : @Partrec' n f) : @Partrec' n.succ fun v => f v.tail :=
   (hf.comp _ fun i => @prim _ _ <| Nat.Primrec'.nth i.succ).of_eq fun v => by
     simp <;> rw [← of_fn_nth v.tail] <;> congr <;> funext i <;> simp
+#align nat.partrec'.tail Nat.Partrec'.tail
 
 protected theorem bind {n f g} (hf : @Partrec' n f) (hg : @Partrec' (n + 1) g) :
     @Partrec' n fun v => (f v).bind fun a => g (a ::ᵥ v) :=
@@ -298,10 +2097,12 @@ protected theorem bind {n f g} (hf : @Partrec' n f) (hg : @Partrec' (n + 1) g) :
         refine' Fin.cases _ (fun i => _) i <;> simp [*]
         exact prim (Nat.Primrec'.nth _)).of_eq
     fun v => by simp [m_of_fn, Part.bind_assoc, pure]
+#align nat.partrec'.bind Nat.Partrec'.bind
 
 protected theorem map {n f} {g : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' n f) (hg : @Partrec' (n + 1) g) :
     @Partrec' n fun v => (f v).map fun a => g (a ::ᵥ v) := by
   simp [(Part.bind_some_eq_map _ _).symm] <;> exact hf.bind hg
+#align nat.partrec'.map Nat.Partrec'.map
 
 attribute [-instance] Part.hasZero
 
@@ -309,22 +2110,29 @@ attribute [-instance] Part.hasZero
   vector-valued functions.-/
 def Vec {n m} (f : Vector ℕ n → Vector ℕ m) :=
   ∀ i, Partrec' fun v => (f v).nth i
+#align nat.partrec'.vec Nat.Partrec'.Vec
 
 theorem Vec.prim {n m f} (hf : @Nat.Primrec'.Vec n m f) : Vec f := fun i => prim <| hf i
+#align nat.partrec'.vec.prim Nat.Partrec'.Vec.prim
 
 protected theorem nil {n} : @Vec n 0 fun _ => nil := fun i => i.elim0
+#align nat.partrec'.nil Nat.Partrec'.nil
 
 protected theorem cons {n m} {f : Vector ℕ n → ℕ} {g} (hf : @Partrec' n f) (hg : @Vec n m g) :
     Vec fun v => f v ::ᵥ g v := fun i => Fin.cases (by simp [*]) (fun i => by simp only [hg i, nth_cons_succ]) i
+#align nat.partrec'.cons Nat.Partrec'.cons
 
 theorem idv {n} : @Vec n n id :=
   Vec.prim Nat.Primrec'.idv
+#align nat.partrec'.idv Nat.Partrec'.idv
 
 theorem comp' {n m f g} (hf : @Partrec' m f) (hg : @Vec n m g) : Partrec' fun v => f (g v) :=
   (hf.comp _ hg).of_eq fun v => by simp
+#align nat.partrec'.comp' Nat.Partrec'.comp'
 
 theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @Partrec' 1 fun v => f v.head) (hg : @Partrec' n g) :
     @Partrec' n fun v => f (g v) := by simpa using hf.comp' (partrec'.cons hg partrec'.nil)
+#align nat.partrec'.comp₁ Nat.Partrec'.comp₁
 
 theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f) :
     @Partrec' n fun v => Nat.rfindOpt fun a => ofNat (Option ℕ) (f (a ::ᵥ v)) :=
@@ -350,6 +2158,7 @@ theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f
         rw [← Option.some_inj, eq_comm]
         rfl
         
+#align nat.partrec'.rfind_opt Nat.Partrec'.rfind_opt
 
 open Nat.Partrec.Code
 
@@ -367,15 +2176,18 @@ theorem of_part : ∀ {n f}, Partrec f → @Partrec' n f :=
         Primrec.encode_iff.2 <|
           evaln_prim.comp <|
             (primrec.vector_head.pair (Primrec.const c)).pair <| primrec.vector_head.comp Primrec.vector_tail
+#align nat.partrec'.of_part Nat.Partrec'.of_part
 
 theorem part_iff {n f} : @Partrec' n f ↔ Partrec f :=
   ⟨to_part, of_part⟩
+#align nat.partrec'.part_iff Nat.Partrec'.part_iff
 
 theorem part_iff₁ {f : ℕ →. ℕ} : (@Partrec' 1 fun v => f v.head) ↔ Partrec f :=
   part_iff.trans
     ⟨fun h =>
       (h.comp <| (Primrec.vector_of_fn fun i => Primrec.id).to_comp).of_eq fun v => by simp only [id.def, head_of_fn],
       fun h => h.comp vector_head⟩
+#align nat.partrec'.part_iff₁ Nat.Partrec'.part_iff₁
 
 theorem part_iff₂ {f : ℕ → ℕ →. ℕ} : (@Partrec' 2 fun v => f v.head v.tail.head) ↔ Partrec₂ f :=
   part_iff.trans
@@ -383,10 +2195,12 @@ theorem part_iff₂ {f : ℕ → ℕ →. ℕ} : (@Partrec' 2 fun v => f v.head 
       (h.comp <| vector_cons.comp fst <| vector_cons.comp snd (const nil)).of_eq fun v => by
         simp only [cons_head, cons_tail],
       fun h => h.comp vector_head (vector_head.comp vector_tail)⟩
+#align nat.partrec'.part_iff₂ Nat.Partrec'.part_iff₂
 
 theorem vec_iff {m n f} : @Vec m n f ↔ Computable f :=
   ⟨fun h => by simpa only [of_fn_nth] using vector_of_fn fun i => to_part (h i), fun h i =>
     of_part <| vector_nth.comp h (const i)⟩
+#align nat.partrec'.vec_iff Nat.Partrec'.vec_iff
 
 end Nat.Partrec'
 

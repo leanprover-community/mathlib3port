@@ -3,6 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
+import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Algebra.Group.Opposite
 import Mathbin.Algebra.Hom.Ring
 
@@ -173,6 +174,7 @@ def NonUnitalRingHom.toOpposite {R S : Type _} [NonUnitalNonAssocSemiring R] [No
     (f : R →ₙ+* S) (hf : ∀ x y, Commute (f x) (f y)) : R →ₙ+* Sᵐᵒᵖ :=
   { ((opAddEquiv : S ≃+ Sᵐᵒᵖ).toAddMonoidHom.comp ↑f : R →+ Sᵐᵒᵖ), f.toMulHom.toOpposite hf with
     toFun := MulOpposite.op ∘ f }
+#align non_unital_ring_hom.to_opposite NonUnitalRingHom.toOpposite
 
 /-- A non-unital ring homomorphism `f : R →ₙ* S` such that `f x` commutes with `f y` for all `x, y`
 defines a non-unital ring homomorphism from `Rᵐᵒᵖ`. -/
@@ -181,6 +183,7 @@ def NonUnitalRingHom.fromOpposite {R S : Type _} [NonUnitalNonAssocSemiring R] [
     (f : R →ₙ+* S) (hf : ∀ x y, Commute (f x) (f y)) : Rᵐᵒᵖ →ₙ+* S :=
   { (f.toAddMonoidHom.comp (opAddEquiv : R ≃+ Rᵐᵒᵖ).symm.toAddMonoidHom : Rᵐᵒᵖ →+ S), f.toMulHom.fromOpposite hf with
     toFun := f ∘ MulOpposite.unop }
+#align non_unital_ring_hom.from_opposite NonUnitalRingHom.fromOpposite
 
 /-- A non-unital ring hom `α →ₙ+* β` can equivalently be viewed as a non-unital ring hom
 `αᵐᵒᵖ →+* βᵐᵒᵖ`. This is the action of the (fully faithful) `ᵐᵒᵖ`-functor on morphisms. -/
@@ -195,6 +198,7 @@ def NonUnitalRingHom.op {α β} [NonUnitalNonAssocSemiring α] [NonUnitalNonAsso
   right_inv f := by
     ext
     simp
+#align non_unital_ring_hom.op NonUnitalRingHom.op
 
 /-- The 'unopposite' of a non-unital ring hom `αᵐᵒᵖ →ₙ+* βᵐᵒᵖ`. Inverse to
 `non_unital_ring_hom.op`. -/
@@ -202,6 +206,7 @@ def NonUnitalRingHom.op {α β} [NonUnitalNonAssocSemiring α] [NonUnitalNonAsso
 def NonUnitalRingHom.unop {α β} [NonUnitalNonAssocSemiring α] [NonUnitalNonAssocSemiring β] :
     (αᵐᵒᵖ →ₙ+* βᵐᵒᵖ) ≃ (α →ₙ+* β) :=
   NonUnitalRingHom.op.symm
+#align non_unital_ring_hom.unop NonUnitalRingHom.unop
 
 /-- A ring homomorphism `f : R →+* S` such that `f x` commutes with `f y` for all `x, y` defines
 a ring homomorphism to `Sᵐᵒᵖ`. -/
@@ -210,6 +215,7 @@ def RingHom.toOpposite {R S : Type _} [Semiring R] [Semiring S] (f : R →+* S) 
     R →+* Sᵐᵒᵖ :=
   { ((opAddEquiv : S ≃+ Sᵐᵒᵖ).toAddMonoidHom.comp ↑f : R →+ Sᵐᵒᵖ), f.toMonoidHom.toOpposite hf with
     toFun := MulOpposite.op ∘ f }
+#align ring_hom.to_opposite RingHom.toOpposite
 
 /-- A ring homomorphism `f : R →+* S` such that `f x` commutes with `f y` for all `x, y` defines
 a ring homomorphism from `Rᵐᵒᵖ`. -/
@@ -218,6 +224,7 @@ def RingHom.fromOpposite {R S : Type _} [Semiring R] [Semiring S] (f : R →+* S
     Rᵐᵒᵖ →+* S :=
   { (f.toAddMonoidHom.comp (opAddEquiv : R ≃+ Rᵐᵒᵖ).symm.toAddMonoidHom : Rᵐᵒᵖ →+ S), f.toMonoidHom.fromOpposite hf with
     toFun := f ∘ MulOpposite.unop }
+#align ring_hom.from_opposite RingHom.fromOpposite
 
 /-- A ring hom `α →+* β` can equivalently be viewed as a ring hom `αᵐᵒᵖ →+* βᵐᵒᵖ`. This is the
 action of the (fully faithful) `ᵐᵒᵖ`-functor on morphisms. -/
@@ -231,9 +238,11 @@ def RingHom.op {α β} [NonAssocSemiring α] [NonAssocSemiring β] : (α →+* �
   right_inv f := by
     ext
     simp
+#align ring_hom.op RingHom.op
 
 /-- The 'unopposite' of a ring hom `αᵐᵒᵖ →+* βᵐᵒᵖ`. Inverse to `ring_hom.op`. -/
 @[simp]
 def RingHom.unop {α β} [NonAssocSemiring α] [NonAssocSemiring β] : (αᵐᵒᵖ →+* βᵐᵒᵖ) ≃ (α →+* β) :=
   RingHom.op.symm
+#align ring_hom.unop RingHom.unop
 

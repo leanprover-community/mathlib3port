@@ -23,34 +23,42 @@ noncomputable instance : HasDist ℕ :=
 
 theorem dist_eq (x y : ℕ) : dist x y = |x - y| :=
   rfl
+#align nat.dist_eq Nat.dist_eq
 
 theorem dist_coe_int (x y : ℕ) : dist (x : ℤ) (y : ℤ) = dist x y :=
   rfl
+#align nat.dist_coe_int Nat.dist_coe_int
 
 @[norm_cast, simp]
 theorem dist_cast_real (x y : ℕ) : dist (x : ℝ) y = dist x y :=
   rfl
+#align nat.dist_cast_real Nat.dist_cast_real
 
 theorem pairwise_one_le_dist : Pairwise fun m n : ℕ => 1 ≤ dist m n := by
   intro m n hne
   rw [← dist_coe_int]
   apply Int.pairwise_one_le_dist
   exact_mod_cast hne
+#align nat.pairwise_one_le_dist Nat.pairwise_one_le_dist
 
 theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℕ → ℝ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
+#align nat.uniform_embedding_coe_real Nat.uniform_embedding_coe_real
 
 theorem closedEmbeddingCoeReal : ClosedEmbedding (coe : ℕ → ℝ) :=
   closedEmbeddingOfPairwiseLeDist zero_lt_one pairwise_one_le_dist
+#align nat.closed_embedding_coe_real Nat.closedEmbeddingCoeReal
 
 instance : MetricSpace ℕ :=
   Nat.uniform_embedding_coe_real.comapMetricSpace _
 
 theorem preimage_ball (x : ℕ) (r : ℝ) : coe ⁻¹' Ball (x : ℝ) r = Ball x r :=
   rfl
+#align nat.preimage_ball Nat.preimage_ball
 
 theorem preimage_closed_ball (x : ℕ) (r : ℝ) : coe ⁻¹' ClosedBall (x : ℝ) r = ClosedBall x r :=
   rfl
+#align nat.preimage_closed_ball Nat.preimage_closed_ball
 
 theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : ClosedBall x r = IccCat ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
   rcases le_or_lt 0 r with (hr | hr)
@@ -69,6 +77,7 @@ theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : ClosedBall x r = IccCat ⌈↑x
         linarith
       
     
+#align nat.closed_ball_eq_Icc Nat.closed_ball_eq_Icc
 
 instance : ProperSpace ℕ :=
   ⟨by

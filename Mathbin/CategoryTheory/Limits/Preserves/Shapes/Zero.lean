@@ -42,20 +42,24 @@ variable [HasZeroMorphisms C] [HasZeroMorphisms D]
 /-- A functor preserves zero morphisms if it sends zero morphisms to zero morphisms. -/
 class PreservesZeroMorphisms (F : C ⥤ D) : Prop where
   map_zero' : ∀ X Y : C, F.map (0 : X ⟶ Y) = 0 := by obviously
+#align category_theory.functor.preserves_zero_morphisms CategoryTheory.Functor.PreservesZeroMorphisms
 
 @[simp]
 protected theorem map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] (X Y : C) : F.map (0 : X ⟶ Y) = 0 :=
   PreservesZeroMorphisms.map_zero' _ _
+#align category_theory.functor.map_zero CategoryTheory.Functor.map_zero
 
 theorem zero_of_map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} (f : X ⟶ Y) (h : F.map f = 0) :
     f = 0 :=
   F.map_injective <| h.trans <| Eq.symm <| F.map_zero _ _
+#align category_theory.functor.zero_of_map_zero CategoryTheory.Functor.zero_of_map_zero
 
 theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} {f : X ⟶ Y} :
     F.map f = 0 ↔ f = 0 :=
   ⟨F.zero_of_map_zero _, by
     rintro rfl
     exact F.map_zero _ _⟩
+#align category_theory.functor.map_eq_zero_iff CategoryTheory.Functor.map_eq_zero_iff
 
 instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C ⥤ D) [IsLeftAdjoint F] :
     PreservesZeroMorphisms F where map_zero' X Y := by
@@ -72,6 +76,8 @@ instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C �
       
     · simp only [adjunction.counit_naturality, comp_zero]
       
+#align
+  category_theory.functor.preserves_zero_morphisms_of_is_left_adjoint CategoryTheory.Functor.preserves_zero_morphisms_of_is_left_adjoint
 
 instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C ⥤ D) [IsRightAdjoint G] :
     PreservesZeroMorphisms G where map_zero' X Y := by
@@ -87,6 +93,8 @@ instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C �
       
     · simp only [adjunction.unit_naturality_assoc, zero_comp]
       
+#align
+  category_theory.functor.preserves_zero_morphisms_of_is_right_adjoint CategoryTheory.Functor.preserves_zero_morphisms_of_is_right_adjoint
 
 instance (priority := 100) preserves_zero_morphisms_of_full (F : C ⥤ D) [Full F] :
     PreservesZeroMorphisms F where map_zero' X Y :=
@@ -94,6 +102,7 @@ instance (priority := 100) preserves_zero_morphisms_of_full (F : C ⥤ D) [Full 
       F.map (0 : X ⟶ Y) = F.map (0 ≫ F.preimage (0 : F.obj Y ⟶ F.obj Y)) := by rw [zero_comp]
       _ = 0 := by rw [F.map_comp, F.image_preimage, comp_zero]
       
+#align category_theory.functor.preserves_zero_morphisms_of_full CategoryTheory.Functor.preserves_zero_morphisms_of_full
 
 end ZeroMorphisms
 
@@ -112,6 +121,7 @@ def mapZeroObject [PreservesZeroMorphisms F] : F.obj 0 ≅ 0 where
   inv := 0
   hom_inv_id' := by rw [← F.map_id, id_zero, F.map_zero, zero_comp]
   inv_hom_id' := by rw [id_zero, comp_zero]
+#align category_theory.functor.map_zero_object CategoryTheory.Functor.mapZeroObject
 
 variable {F}
 
@@ -122,16 +132,22 @@ theorem preserves_zero_morphisms_of_map_zero_object (i : F.obj 0 ≅ 0) : Preser
         _ = F.map 0 ≫ (i.Hom ≫ i.inv) ≫ F.map 0 := by rw [iso.hom_inv_id, category.id_comp]
         _ = 0 := by simp only [zero_of_to_zero i.hom, zero_comp, comp_zero]
          }
+#align
+  category_theory.functor.preserves_zero_morphisms_of_map_zero_object CategoryTheory.Functor.preserves_zero_morphisms_of_map_zero_object
 
 instance (priority := 100) preserves_zero_morphisms_of_preserves_initial_object
     [PreservesColimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
   preserves_zero_morphisms_of_map_zero_object <|
     F.mapIso HasZeroObject.zeroIsoInitial ≪≫ PreservesInitial.iso F ≪≫ HasZeroObject.zeroIsoInitial.symm
+#align
+  category_theory.functor.preserves_zero_morphisms_of_preserves_initial_object CategoryTheory.Functor.preserves_zero_morphisms_of_preserves_initial_object
 
 instance (priority := 100) preserves_zero_morphisms_of_preserves_terminal_object
     [PreservesLimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
   preserves_zero_morphisms_of_map_zero_object <|
     F.mapIso HasZeroObject.zeroIsoTerminal ≪≫ PreservesTerminal.iso F ≪≫ HasZeroObject.zeroIsoTerminal.symm
+#align
+  category_theory.functor.preserves_zero_morphisms_of_preserves_terminal_object CategoryTheory.Functor.preserves_zero_morphisms_of_preserves_terminal_object
 
 variable (F)
 
@@ -139,11 +155,15 @@ variable (F)
 def preservesTerminalObjectOfPreservesZeroMorphisms [PreservesZeroMorphisms F] : PreservesLimit (Functor.empty C) F :=
   preservesTerminalOfIso F <|
     F.mapIso HasZeroObject.zeroIsoTerminal.symm ≪≫ mapZeroObject F ≪≫ has_zero_object.zero_iso_terminal
+#align
+  category_theory.functor.preserves_terminal_object_of_preserves_zero_morphisms CategoryTheory.Functor.preservesTerminalObjectOfPreservesZeroMorphisms
 
 /-- Preserving zero morphisms implies preserving terminal objects. -/
 def preservesInitialObjectOfPreservesZeroMorphisms [PreservesZeroMorphisms F] : PreservesColimit (Functor.empty C) F :=
   preservesInitialOfIso F <|
     HasZeroObject.zeroIsoInitial.symm ≪≫ (mapZeroObject F).symm ≪≫ (F.mapIso HasZeroObject.zeroIsoInitial.symm).symm
+#align
+  category_theory.functor.preserves_initial_object_of_preserves_zero_morphisms CategoryTheory.Functor.preservesInitialObjectOfPreservesZeroMorphisms
 
 end ZeroObject
 

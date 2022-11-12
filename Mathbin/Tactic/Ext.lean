@@ -120,6 +120,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
         instantiate_mvars pr
   add_decl (declaration.thm (.str n "ext_iff") d t pr)
   pure decl_n
+#align derive_struct_ext_lemma derive_struct_ext_lemma
 
 unsafe def get_ext_subject : expr → tactic Name
   | expr.pi n bi d b => do
@@ -137,6 +138,7 @@ unsafe def get_ext_subject : expr → tactic Name
             let t ← pp t
             fail f! "only constants and Pi types are supported: {t}"
   | e => fail f! "Only expressions of the form `_ → _ → ... → R ... e are supported: {e}"
+#align get_ext_subject get_ext_subject
 
 open Native
 
@@ -152,11 +154,13 @@ unsafe def saturate_fun : Name → tactic expr
     let e ← resolve_constant n >>= mk_const
     let a ← get_arity e
     e <$> (List.iota a).mmap fun _ => mk_mvar
+#align saturate_fun saturate_fun
 
 unsafe def equiv_type_constr (n n' : Name) : tactic Unit := do
   let e ← saturate_fun n
   let e' ← saturate_fun n'
   unify e e' <|> fail f! "{n } and {n'} are not definitionally equal types"
+#align equiv_type_constr equiv_type_constr
 
 section PerformanceHack
 
@@ -199,6 +203,7 @@ attribute [local semireducible] reflected
 
 @[local instance]
 private unsafe def hacky_name_reflect : has_reflect Name := fun n => quote.1 (id (%%ₓexpr.const n []) : Name)
+#align hacky_name_reflect hacky_name_reflect
 
 @[user_attribute]
 private unsafe def ext_attr_core : user_attribute (name_map Name) Name where
@@ -213,6 +218,7 @@ private unsafe def ext_attr_core : user_attribute (name_map Name) Name where
             pure (m n ext_l))
           mk_name_map }
   parser := failure
+#align ext_attr_core ext_attr_core
 
 end PerformanceHack
 
@@ -222,22 +228,26 @@ private unsafe def ext_lemma_attr_core : user_attribute where
   Name := `_ext_lemma_core
   descr := "(internal attribute used by ext)"
   parser := failure
+#align ext_lemma_attr_core ext_lemma_attr_core
 
 /-- Returns the extensionality lemmas in the environment, as a map from structure
 name to lemma name.
 -/
 unsafe def get_ext_lemmas : tactic (name_map Name) :=
   ext_attr_core.get_cache
+#align get_ext_lemmas get_ext_lemmas
 
 /-- Returns the extensionality lemmas in the environment, as a list of lemma names.
 -/
 unsafe def get_ext_lemma_names : tactic (List Name) :=
   attribute.get_instances ext_lemma_attr_core.Name
+#align get_ext_lemma_names get_ext_lemma_names
 
 /-- Marks `lem` as an extensionality lemma corresponding to type constructor `constr`;
 if `persistent` is true then this is a global attribute, else local. -/
 unsafe def add_ext_lemma (constr lem : Name) (persistent : Bool) : tactic Unit :=
   ext_attr_core.Set constr lem persistent >> ext_lemma_attr_core.Set lem () persistent
+#align add_ext_lemma add_ext_lemma
 
 /-- Tag lemmas of the form:
 
@@ -320,6 +330,7 @@ unsafe def extensional_attribute : user_attribute Unit (Option Name) where
       match add with
         | none => add_ext_lemma s n b
         | some add => equiv_type_constr s add >> add_ext_lemma add n b
+#align extensional_attribute extensional_attribute
 
 add_tactic_doc
   { Name := "ext", category := DocCategory.attr, declNames := [`extensional_attribute], tags := ["rewrite", "logic"] }
@@ -340,10 +351,10 @@ defined later.
 
 
 -- We mark some existing extensionality lemmas.
-attribute [ext] Array'.ext propext Function.hfunext
+attribute [ext.1] Array'.ext propext Function.hfunext
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Ext.lean:18:19: unsupported: attribute [ext id] -/
-attribute [ext] _root_.funext
+attribute [ext.1] _root_.funext
 
 -- This line is equivalent to:
 --   attribute [ext (→)] _root_.funext
@@ -353,34 +364,37 @@ run_cmd
   add_ext_lemma (Name.mk_numeral 0 Name.anonymous) `` _root_.funext true
 
 -- We create some extensionality lemmas for existing structures.
-attribute [ext] ULift
+attribute [ext.1] ULift
 
 namespace PLift
 
 -- This is stronger than the one generated automatically.
-@[ext]
+@[ext.1]
 theorem ext {P : Prop} (a b : PLift P) : a = b := by
   cases a
   cases b
   rfl
+#align plift.ext PLift.ext
 
 end PLift
 
 -- Conservatively, we'll only add extensionality lemmas for `has_*` structures
 -- as they become useful.
-attribute [ext] Zero
+attribute [ext.1] Zero
 
-@[ext]
+@[ext.1]
 theorem Unit.ext {x y : Unit} : x = y := by
   cases x
   cases y
   rfl
+#align unit.ext Unit.ext
 
-@[ext]
+@[ext.1]
 theorem PUnit.ext {x y : PUnit} : x = y := by
   cases x
   cases y
   rfl
+#align punit.ext PUnit.ext
 
 namespace Tactic
 
@@ -390,6 +404,7 @@ unsafe structure ext_state : Type where
   patts : List rcases_patt := []
   trace_msg : List String := []
   fuel : Option ℕ := none
+#align tactic.ext_state tactic.ext_state
 
 /-- Helper function for `try_intros`. Additionally populates the `trace_msg` field
   of `ext_state`. -/
@@ -410,12 +425,14 @@ private unsafe def try_intros_core : StateT ext_state tactic Unit := do
           let msg ← StateT.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
           modify fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩
           try_intros_core
+#align tactic.try_intros_core tactic.try_intros_core
 
 /-- Try to introduce as many arguments as possible, using the given patterns to destruct the
   introduced variables. Returns the unused patterns. -/
 unsafe def try_intros (patts : List rcases_patt) : tactic (List rcases_patt) :=
   let σ := ext_state.mk patts [] none
   (ext_state.patts ∘ Prod.snd) <$> StateT.run try_intros_core σ
+#align tactic.try_intros tactic.try_intros
 
 /-- Apply one extensionality lemma, and destruct the arguments using the patterns
   in the ext_state. -/
@@ -455,6 +472,7 @@ unsafe def ext1_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := 
           pure new_trace_msg
   modify fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ new_msgs, fuel⟩
   try_intros_core
+#align tactic.ext1_core tactic.ext1_core
 
 /-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns. -/
 unsafe def ext_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := do
@@ -465,6 +483,7 @@ unsafe def ext_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := d
       ext1_core cfg
       modify fun ⟨patts, lemmas, _⟩ => ⟨patts, lemmas, Nat.pred <$> n⟩
       ext_core <|> pure ()
+#align tactic.ext_core tactic.ext_core
 
 /-- Apply one extensionality lemma, and destruct the arguments using the given patterns.
   Returns the unused patterns. -/
@@ -473,6 +492,7 @@ unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool :
   let ⟨_, σ⟩ ← StateT.run (ext1_core cfg) { patts := xs }
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
+#align tactic.ext1 tactic.ext1
 
 /-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns.
   `ext ps (some n)` applies at most `n` extensionality lemmas. Returns the unused patterns. -/
@@ -481,6 +501,7 @@ unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := { 
   let ⟨_, σ⟩ ← StateT.run (ext_core cfg) { patts := xs, fuel }
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
+#align tactic.ext tactic.ext
 
 -- mathport name: parser.optional
 local postfix:1024 "?" => optional
@@ -497,6 +518,7 @@ applications that can replace the call to `ext1`.
 -/
 unsafe def interactive.ext1 (trace : parse (tk "?")?) (xs : parse rcases_patt_parse_hi*) : tactic Unit :=
   ext1 xs {  } trace.isSome $> ()
+#align tactic.interactive.ext1 tactic.interactive.ext1
 
 /-- - `ext` applies as many extensionality lemmas as possible;
 - `ext ids`, with `ids` a list of identifiers, finds extentionality and applies them
@@ -562,6 +584,7 @@ unsafe def interactive.ext :
   | trace, [], some n => iterate_range 1 n (ext1 [] {  } trace.isSome $> ())
   | trace, [], none => repeat1 (ext1 [] {  } trace.isSome $> ())
   | trace, xs, n => ext xs.join n {  } trace.isSome $> ()
+#align tactic.interactive.ext tactic.interactive.ext
 
 /-- * `ext1 id` selects and apply one extensionality lemma (with
   attribute `ext`), using `id`, if provided, to name a

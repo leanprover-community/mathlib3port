@@ -30,6 +30,7 @@ The internal hom functor `F ⟶[C] -` -/
 @[simps]
 def closedIhom (F : D ⥤ C) : (D ⥤ C) ⥤ D ⥤ C :=
   ((whiskeringRight₂ D Cᵒᵖ C C).obj internalHom).obj (Groupoid.invFunctor D ⋙ F.op)
+#align category_theory.functor.closed_ihom CategoryTheory.Functor.closedIhom
 
 /-- Auxiliary definition for `category_theory.monoidal_closed.functor_closed`.
 The unit for the adjunction `(tensor_left F) ⊣ (ihom F)`. -/
@@ -46,6 +47,7 @@ def closedUnit (F : D ⥤ C) :
         dsimp
         rw [coev_app_comp_pre_app_assoc, ← functor.map_comp]
         simp }
+#align category_theory.functor.closed_unit CategoryTheory.Functor.closedUnit
 
 /-- Auxiliary definition for `category_theory.monoidal_closed.functor_closed`.
 The counit for the adjunction `(tensor_left F) ⊣ (ihom F)`. -/
@@ -60,6 +62,7 @@ def closedCounit (F : D ⥤ C) :
         simp only [closed_ihom_obj_map, pre_comm_ihom_map]
         rw [← tensor_id_comp_id_tensor, id_tensor_comp]
         simp }
+#align category_theory.functor.closed_counit CategoryTheory.Functor.closedCounit
 
 /-- If `C` is a monoidal closed category and `D` is groupoid, then every functor `F : D ⥤ C` is
 closed in the functor category `F : D ⥤ C` with the pointwise monoidal structure. -/
@@ -68,11 +71,13 @@ instance closed (F : D ⥤ C) :
     Closed
       F where isAdj :=
     { right := closedIhom F, adj := Adjunction.mkOfUnitCounit { Unit := closedUnit F, counit := closedCounit F } }
+#align category_theory.functor.closed CategoryTheory.Functor.closed
 
 /-- If `C` is a monoidal closed category and `D` is groupoid, then the functor category `D ⥤ C`,
 with the pointwise monoidal structure, is monoidal closed. -/
 @[simps]
 instance monoidalClosed : MonoidalClosed (D ⥤ C) where closed' := by infer_instance
+#align category_theory.functor.monoidal_closed CategoryTheory.Functor.monoidalClosed
 
 end CategoryTheory.Functor
 

@@ -42,6 +42,7 @@ def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ
     
   · exact 0
     
+#align simplicial_object.splitting.π_summand SimplicialObject.Splitting.πSummand
 
 @[simp, reassoc]
 theorem ι_π_summand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
@@ -51,6 +52,7 @@ theorem ι_π_summand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A
   erw [colimit.ι_desc, cofan.mk_ι_app]
   dsimp
   simp only [eq_self_iff_true, if_true]
+#align simplicial_object.splitting.ι_π_summand_eq_id SimplicialObject.Splitting.ι_π_summand_eq_id
 
 @[simp, reassoc]
 theorem ι_π_summand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A B : IndexSet Δ) (h : B ≠ A) :
@@ -60,6 +62,7 @@ theorem ι_π_summand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} 
   erw [colimit.ι_desc, cofan.mk_ι_app]
   apply dif_neg
   exact h.symm
+#align simplicial_object.splitting.ι_π_summand_eq_zero SimplicialObject.Splitting.ι_π_summand_eq_zero
 
 variable [Preadditive C]
 
@@ -72,6 +75,7 @@ theorem decomposition_id (Δ : SimplexCategoryᵒᵖ) : 𝟙 (X.obj Δ) = ∑ A 
     
   · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff]
     
+#align simplicial_object.splitting.decomposition_id SimplicialObject.Splitting.decomposition_id
 
 @[simp, reassoc]
 theorem σ_comp_π_summand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) : X.σ i ≫ s.πSummand (IndexSet.id (op [n + 1])) = 0 := by
@@ -85,6 +89,7 @@ theorem σ_comp_π_summand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) : X.σ i ≫ s
   have h := SimplexCategory.len_le_of_epi (inferInstance : epi A.e)
   dsimp at h⊢
   linarith
+#align simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_π_summand_id_eq_zero
 
 end Splitting
 

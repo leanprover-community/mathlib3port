@@ -40,12 +40,14 @@ neighborhoods of a point form a neighborhood basis at that point. -/
 class LocallyConvexSpace (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] :
   Prop where
   convex_basis : ∀ x : E, (𝓝 x).HasBasis (fun s : Set E => s ∈ 𝓝 x ∧ Convex 𝕜 s) id
+#align locally_convex_space LocallyConvexSpace
 
 variable (𝕜 E : Type _) [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
 
 theorem locally_convex_space_iff :
     LocallyConvexSpace 𝕜 E ↔ ∀ x : E, (𝓝 x).HasBasis (fun s : Set E => s ∈ 𝓝 x ∧ Convex 𝕜 s) id :=
   ⟨@LocallyConvexSpace.convex_basis _ _ _ _ _ _, LocallyConvexSpace.mk⟩
+#align locally_convex_space_iff locally_convex_space_iff
 
 theorem LocallyConvexSpace.of_bases {ι : Type _} (b : E → ι → Set E) (p : E → ι → Prop)
     (hbasis : ∀ x : E, (𝓝 x).HasBasis (p x) (b x)) (hconvex : ∀ x i, p x i → Convex 𝕜 (b x i)) :
@@ -53,14 +55,17 @@ theorem LocallyConvexSpace.of_bases {ι : Type _} (b : E → ι → Set E) (p : 
   ⟨fun x =>
     (hbasis x).to_has_basis (fun i hi => ⟨b x i, ⟨⟨(hbasis x).mem_of_mem hi, hconvex x i hi⟩, le_refl (b x i)⟩⟩)
       fun s hs => ⟨(hbasis x).index s hs.1, ⟨(hbasis x).property_index hs.1, (hbasis x).set_index_subset hs.1⟩⟩⟩
+#align locally_convex_space.of_bases LocallyConvexSpace.of_bases
 
 theorem LocallyConvexSpace.convex_basis_zero [LocallyConvexSpace 𝕜 E] :
     (𝓝 0 : Filter E).HasBasis (fun s => s ∈ (𝓝 0 : Filter E) ∧ Convex 𝕜 s) id :=
   LocallyConvexSpace.convex_basis 0
+#align locally_convex_space.convex_basis_zero LocallyConvexSpace.convex_basis_zero
 
 theorem locally_convex_space_iff_exists_convex_subset :
     LocallyConvexSpace 𝕜 E ↔ ∀ x : E, ∀ U ∈ 𝓝 x, ∃ S ∈ 𝓝 x, Convex 𝕜 S ∧ S ⊆ U :=
   (locally_convex_space_iff 𝕜 E).trans (forall_congr' fun x => has_basis_self)
+#align locally_convex_space_iff_exists_convex_subset locally_convex_space_iff_exists_convex_subset
 
 end Semimodule
 
@@ -75,21 +80,25 @@ theorem LocallyConvexSpace.of_basis_zero {ι : Type _} (b : ι → Set E) (p : �
       (hconvex i hi).translate x
   rw [← map_add_left_nhds_zero]
   exact hbasis.map _
+#align locally_convex_space.of_basis_zero LocallyConvexSpace.of_basis_zero
 
 theorem locally_convex_space_iff_zero :
     LocallyConvexSpace 𝕜 E ↔ (𝓝 0 : Filter E).HasBasis (fun s : Set E => s ∈ (𝓝 0 : Filter E) ∧ Convex 𝕜 s) id :=
   ⟨fun h => @LocallyConvexSpace.convex_basis _ _ _ _ _ _ h 0, fun h =>
     LocallyConvexSpace.of_basis_zero 𝕜 E _ _ h fun s => And.right⟩
+#align locally_convex_space_iff_zero locally_convex_space_iff_zero
 
 theorem locally_convex_space_iff_exists_convex_subset_zero :
     LocallyConvexSpace 𝕜 E ↔ ∀ U ∈ (𝓝 0 : Filter E), ∃ S ∈ (𝓝 0 : Filter E), Convex 𝕜 S ∧ S ⊆ U :=
   (locally_convex_space_iff_zero 𝕜 E).trans has_basis_self
+#align locally_convex_space_iff_exists_convex_subset_zero locally_convex_space_iff_exists_convex_subset_zero
 
 -- see Note [lower instance priority]
 instance (priority := 100) LocallyConvexSpace.to_locally_connected_space [Module ℝ E] [HasContinuousSmul ℝ E]
     [LocallyConvexSpace ℝ E] : LocallyConnectedSpace E :=
   locally_connected_space_of_connected_bases _ _ (fun x => @LocallyConvexSpace.convex_basis ℝ _ _ _ _ _ _ x)
     fun x s hs => hs.2.IsPreconnected
+#align locally_convex_space.to_locally_connected_space LocallyConvexSpace.to_locally_connected_space
 
 end Module
 
@@ -103,6 +112,7 @@ theorem LocallyConvexSpace.convex_open_basis_zero [LocallyConvexSpace 𝕜 E] :
   (LocallyConvexSpace.convex_basis_zero 𝕜 E).to_has_basis
     (fun s hs => ⟨Interior s, ⟨mem_interior_iff_mem_nhds.mpr hs.1, is_open_interior, hs.2.Interior⟩, interior_subset⟩)
     fun s hs => ⟨s, ⟨hs.2.1.mem_nhds hs.1, hs.2.2⟩, subset_rfl⟩
+#align locally_convex_space.convex_open_basis_zero LocallyConvexSpace.convex_open_basis_zero
 
 variable {𝕜 E}
 
@@ -122,6 +132,7 @@ theorem Disjoint.exists_open_convexes [LocallyConvexSpace 𝕜 E] {s t : Set E} 
   simp_rw [← Union_add_left_image, image_add_left]
   simp_rw [UniformSpace.Ball, ← preimage_comp, sub_eq_neg_add] at hV
   exact hV
+#align disjoint.exists_open_convexes Disjoint.exists_open_convexes
 
 end LinearOrderedField
 
@@ -138,17 +149,20 @@ theorem locally_convex_space_Inf {ts : Set (TopologicalSpace E)} (h : ∀ t ∈ 
       (fun x => _) fun x If hif => convex_Inter fun i => convex_Inter fun hi => (hif.2 i hi).2
   rw [nhds_Inf, ← infi_subtype'']
   exact has_basis_infi' fun i : ts => (@locally_convex_space_iff 𝕜 E _ _ _ ↑i).mp (h (↑i) i.2) x
+#align locally_convex_space_Inf locally_convex_space_Inf
 
 theorem locally_convex_space_infi {ts' : ι → TopologicalSpace E} (h' : ∀ i, @LocallyConvexSpace 𝕜 E _ _ _ (ts' i)) :
     @LocallyConvexSpace 𝕜 E _ _ _ (⨅ i, ts' i) := by
   refine' locally_convex_space_Inf _
   rwa [forall_range_iff]
+#align locally_convex_space_infi locally_convex_space_infi
 
 theorem locally_convex_space_inf {t₁ t₂ : TopologicalSpace E} (h₁ : @LocallyConvexSpace 𝕜 E _ _ _ t₁)
     (h₂ : @LocallyConvexSpace 𝕜 E _ _ _ t₂) : @LocallyConvexSpace 𝕜 E _ _ _ (t₁ ⊓ t₂) := by
   rw [inf_eq_infi]
   refine' locally_convex_space_infi fun b => _
   cases b <;> assumption
+#align locally_convex_space_inf locally_convex_space_inf
 
 theorem locally_convex_space_induced {t : TopologicalSpace F} [LocallyConvexSpace 𝕜 F] (f : E →ₗ[𝕜] F) :
     @LocallyConvexSpace 𝕜 E _ _ _ (t.induced f) := by
@@ -158,6 +172,7 @@ theorem locally_convex_space_induced {t : TopologicalSpace F} [LocallyConvexSpac
       (fun x => _) fun x s ⟨_, hs⟩ => hs.linear_preimage f
   rw [nhds_induced]
   exact (LocallyConvexSpace.convex_basis <| f x).comap f
+#align locally_convex_space_induced locally_convex_space_induced
 
 instance {ι : Type _} {X : ι → Type _} [∀ i, AddCommMonoid (X i)] [∀ i, TopologicalSpace (X i)] [∀ i, Module 𝕜 (X i)]
     [∀ i, LocallyConvexSpace 𝕜 (X i)] : LocallyConvexSpace 𝕜 (∀ i, X i) :=

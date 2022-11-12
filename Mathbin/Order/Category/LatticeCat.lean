@@ -28,6 +28,7 @@ open CategoryTheory
 /-- The category of lattices. -/
 def LatticeCat :=
   Bundled Lattice
+#align Lattice LatticeCat
 
 namespace LatticeCat
 
@@ -40,10 +41,12 @@ instance (X : LatticeCat) : Lattice X :=
 /-- Construct a bundled `Lattice` from a `lattice`. -/
 def of (α : Type _) [Lattice α] : LatticeCat :=
   Bundled.of α
+#align Lattice.of LatticeCat.of
 
 @[simp]
 theorem coe_of (α : Type _) [Lattice α] : ↥(of α) = α :=
   rfl
+#align Lattice.coe_of LatticeCat.coe_of
 
 instance : Inhabited LatticeCat :=
   ⟨of Bool⟩
@@ -63,6 +66,7 @@ instance : ConcreteCategory LatticeCat :=
 instance hasForgetToPartialOrder : HasForget₂ LatticeCat PartialOrderCat where
   forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
   forget_comp := rfl
+#align Lattice.has_forget_to_PartialOrder LatticeCat.hasForgetToPartialOrder
 
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
@@ -75,22 +79,26 @@ def Iso.mk {α β : LatticeCat.{u}} (e : α ≃o β) : α ≅ β where
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
+#align Lattice.iso.mk LatticeCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : LatticeCat ⥤ LatticeCat where
   obj X := of Xᵒᵈ
   map X Y := LatticeHom.dual
+#align Lattice.dual LatticeCat.dual
 
 /-- The equivalence between `Lattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : LatticeCat ≌ LatticeCat :=
   Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+#align Lattice.dual_equiv LatticeCat.dualEquiv
 
 end LatticeCat
 
 theorem Lattice_dual_comp_forget_to_PartialOrder :
     LatticeCat.dual ⋙ forget₂ LatticeCat PartialOrderCat = forget₂ LatticeCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
+#align Lattice_dual_comp_forget_to_PartialOrder Lattice_dual_comp_forget_to_PartialOrder
 

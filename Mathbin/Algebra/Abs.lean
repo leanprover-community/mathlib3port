@@ -39,6 +39,7 @@ absolute
 -/
 class Abs (α : Type _) where
   abs : α → α
+#align has_abs Abs
 -/
 
 export Abs (abs)
@@ -48,6 +49,7 @@ export Abs (abs)
 -/
 class PosPart (α : Type _) where
   Pos : α → α
+#align has_pos_part PosPart
 -/
 
 #print NegPart /-
@@ -55,6 +57,7 @@ class PosPart (α : Type _) where
 -/
 class NegPart (α : Type _) where
   neg : α → α
+#align has_neg_part NegPart
 -/
 
 -- mathport name: «expr ⁺»

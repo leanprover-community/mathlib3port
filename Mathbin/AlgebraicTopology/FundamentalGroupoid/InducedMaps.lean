@@ -49,18 +49,21 @@ def path01 : Path (0 : I) 1 where
   toFun := id
   source' := rfl
   target' := rfl
+#align unit_interval.path01 UnitInterval.path01
 
 /-- The path 0 ⟶ 1 in ulift I -/
 def upath01 : Path (ULift.up 0 : ULift.{u} I) (ULift.up 1) where
   toFun := ULift.up
   source' := rfl
   target' := rfl
+#align unit_interval.upath01 UnitInterval.upath01
 
 attribute [local instance] Path.Homotopic.setoid
 
 /-- The homotopy path class of 0 → 1 in `ulift I` -/
 def uhpath01 : @fromTop (TopCat.of <| ULift.{u} I) (ULift.up (0 : I)) ⟶ fromTop (ULift.up 1) :=
   ⟦upath01⟧
+#align unit_interval.uhpath01 UnitInterval.uhpath01
 
 end UnitInterval
 
@@ -75,10 +78,12 @@ section Casts
 /-- Abbreviation for `eq_to_hom` that accepts points in a topological space -/
 abbrev hcast {X : TopCat} {x₀ x₁ : X} (hx : x₀ = x₁) : fromTop x₀ ⟶ fromTop x₁ :=
   eqToHom hx
+#align continuous_map.homotopy.hcast ContinuousMap.Homotopy.hcast
 
 @[simp]
 theorem hcast_def {X : TopCat} {x₀ x₁ : X} (hx₀ : x₀ = x₁) : hcast hx₀ = eqToHom hx₀ :=
   rfl
+#align continuous_map.homotopy.hcast_def ContinuousMap.Homotopy.hcast_def
 
 variable {X₁ X₂ Y : TopCat.{u}} {f : C(X₁, Y)} {g : C(X₂, Y)} {x₀ x₁ : X₁} {x₂ x₃ : X₂} {p : Path x₀ x₁}
   {q : Path x₂ x₃} (hfg : ∀ t, f (p t) = g (q t))
@@ -91,14 +96,18 @@ theorem heq_path_of_eq_image : HEq ((πₘ f).map ⟦p⟧) ((πₘ g).map ⟦q�
   simp only [map_eq, ← Path.Homotopic.map_lift]
   apply Path.Homotopic.hpath_hext
   exact hfg
+#align continuous_map.homotopy.heq_path_of_eq_image ContinuousMap.Homotopy.heq_path_of_eq_image
 
 private theorem start_path : f x₀ = g x₂ := by convert hfg 0 <;> simp only [Path.source]
+#align continuous_map.homotopy.start_path continuous_map.homotopy.start_path
 
 private theorem end_path : f x₁ = g x₃ := by convert hfg 1 <;> simp only [Path.target]
+#align continuous_map.homotopy.end_path continuous_map.homotopy.end_path
 
 theorem eq_path_of_eq_image : (πₘ f).map ⟦p⟧ = hcast (start_path hfg) ≫ (πₘ g).map ⟦q⟧ ≫ hcast (end_path hfg).symm := by
   rw [functor.conj_eq_to_hom_iff_heq]
   exact heq_path_of_eq_image hfg
+#align continuous_map.homotopy.eq_path_of_eq_image ContinuousMap.Homotopy.eq_path_of_eq_image
 
 end Casts
 
@@ -131,24 +140,29 @@ many of the paths do not have defeq starting/ending points, so we end up needing
 /-- Interpret a homotopy `H : C(I × X, Y) as a map C(ulift I × X, Y) -/
 def uliftMap : C(TopCat.of (ULift.{u} I × X), Y) :=
   ⟨fun x => H (x.1.down, x.2), H.Continuous.comp ((continuous_induced_dom.comp continuous_fst).prod_mk continuous_snd)⟩
+#align continuous_map.homotopy.ulift_map ContinuousMap.Homotopy.uliftMap
 
 @[simp]
 theorem ulift_apply (i : ULift.{u} I) (x : X) : H.uliftMap (i, x) = H (i.down, x) :=
   rfl
+#align continuous_map.homotopy.ulift_apply ContinuousMap.Homotopy.ulift_apply
 
 /-- An abbreviation for `prod_to_prod_Top`, with some types already in place to help the
  typechecker. In particular, the first path should be on the ulifted unit interval. -/
 abbrev prodToProdTopI {a₁ a₂ : TopCat.of (ULift I)} {b₁ b₂ : X} (p₁ : fromTop a₁ ⟶ fromTop a₂)
     (p₂ : fromTop b₁ ⟶ fromTop b₂) :=
   @CategoryTheory.Functor.map _ _ _ _ (prodToProdTop (TopCat.of <| ULift I) X) (a₁, b₁) (a₂, b₂) (p₁, p₂)
+#align continuous_map.homotopy.prod_to_prod_Top_I ContinuousMap.Homotopy.prodToProdTopI
 
 /-- The diagonal path `d` of a homotopy `H` on a path `p` -/
 def diagonalPath : fromTop (H (0, x₀)) ⟶ fromTop (H (1, x₁)) :=
   (πₘ H.uliftMap).map (prodToProdTopI uhpath01 p)
+#align continuous_map.homotopy.diagonal_path ContinuousMap.Homotopy.diagonalPath
 
 /-- The diagonal path, but starting from `f x₀` and going to `g x₁` -/
 def diagonalPath' : fromTop (f x₀) ⟶ fromTop (g x₁) :=
   hcast (H.apply_zero x₀).symm ≫ H.diagonalPath p ≫ hcast (H.apply_one x₁)
+#align continuous_map.homotopy.diagonal_path' ContinuousMap.Homotopy.diagonalPath'
 
 /-- Proof that `f(p) = H(0 ⟶ 0, p)`, with the appropriate casts -/
 theorem apply_zero_path :
@@ -160,6 +174,7 @@ theorem apply_zero_path :
   intro p'
   apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).Prod p')
   simp
+#align continuous_map.homotopy.apply_zero_path ContinuousMap.Homotopy.apply_zero_path
 
 /-- Proof that `g(p) = H(1 ⟶ 1, p)`, with the appropriate casts -/
 theorem apply_one_path :
@@ -170,6 +185,7 @@ theorem apply_one_path :
   intro p'
   apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).Prod p')
   simp
+#align continuous_map.homotopy.apply_one_path ContinuousMap.Homotopy.apply_one_path
 
 /-- Proof that `H.eval_at x = H(0 ⟶ 1, x ⟶ x)`, with the appropriate casts -/
 theorem eval_at_eq (x : X) :
@@ -183,6 +199,7 @@ theorem eval_at_eq (x : X) :
   apply Path.Homotopic.hpath_hext
   intro
   rfl
+#align continuous_map.homotopy.eval_at_eq ContinuousMap.Homotopy.eval_at_eq
 
 -- Finally, we show `d = f(p) ≫ H₁ = H₀ ≫ g(p)`
 theorem eq_diag_path :
@@ -195,6 +212,7 @@ theorem eq_diag_path :
     · slice_lhs 2 5 => simp [← CategoryTheory.Functor.map_comp]
       rfl
       
+#align continuous_map.homotopy.eq_diag_path ContinuousMap.Homotopy.eq_diag_path
 
 end ContinuousMap.Homotopy
 
@@ -213,6 +231,7 @@ functors `f` and `g` -/
 def homotopicMapsNatIso : πₘ f ⟶ πₘ g where
   app x := ⟦H.evalAt x⟧
   naturality' x y p := by rw [(H.eq_diag_path p).1, (H.eq_diag_path p).2]
+#align fundamental_groupoid_functor.homotopic_maps_nat_iso FundamentalGroupoidFunctor.homotopicMapsNatIso
 
 instance : IsIso (homotopicMapsNatIso H) := by apply nat_iso.is_iso_of_is_iso_app
 
@@ -228,6 +247,7 @@ def equivOfHomotopyEquiv (hequiv : X ≃ₕ Y) : πₓ X ≌ πₓ Y := by
   · convert as_iso (homotopic_maps_nat_iso hequiv.right_inv.some)
     exacts[(π.map_comp _ _).symm, (π.map_id Y).symm]
     
+#align fundamental_groupoid_functor.equiv_of_homotopy_equiv FundamentalGroupoidFunctor.equivOfHomotopyEquiv
 
 end FundamentalGroupoidFunctor
 

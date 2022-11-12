@@ -71,6 +71,7 @@ unsafe def step1 (md : Transparency) (unify : Bool) (e : expr) (to_generalize : 
     let ks ← ks.mmap fun k' => kreplace k' j k md unify
     pure (e, k :: ks)
   to_generalize go (e, [])
+#align tactic.generalizes.step1 tactic.generalizes.step1
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -97,6 +98,7 @@ unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr
       else ((const `heq [u]) K k J j, (const `heq.refl [u]) J j)
     let eq ← mk_local' n BinderInfo.default eq_type
     pure (Eq, eq_proof)
+#align tactic.generalizes.step2 tactic.generalizes.step2
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -118,6 +120,7 @@ unsafe def step3 (e : expr) (js ks eqs eq_proofs : List expr) : tactic Unit :=
     swap
     let target_proof := new_target.mk_app <| js ++ eq_proofs
     exact target_proof
+#align tactic.generalizes.step3 tactic.generalizes.step3
 
 end Generalizes
 
@@ -156,6 +159,7 @@ unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semir
   let eq_proofs := eqs_and_proofs.map Prod.snd
   let js := args.map (Prod.snd ∘ Prod.snd)
   step3 e js ks eqs eq_proofs
+#align tactic.generalizes' tactic.generalizes'
 
 /-- Like `generalizes'`, but also introduces the generalized constants and their
 associated equations into the context.
@@ -166,6 +170,7 @@ unsafe def generalizes_intro (args : List (Name × Option Name × expr)) (md := 
   let ks ← intron' args.length
   let eqs ← intron' <| args.countp fun x => x.snd.fst.isSome
   pure (ks, eqs)
+#align tactic.generalizes_intro tactic.generalizes_intro
 
 namespace Interactive
 
@@ -175,6 +180,7 @@ private unsafe def generalizes_arg_parser_eq : pexpr → lean.parser (pexpr × N
   | app (app (macro _ [const `eq _]) e) (local_const x _ _ _) => pure (e, x)
   | app (app (macro _ [const `heq _]) e) (local_const x _ _ _) => pure (e, x)
   | _ => failure
+#align tactic.interactive.generalizes_arg_parser_eq tactic.interactive.generalizes_arg_parser_eq
 
 private unsafe def generalizes_arg_parser : lean.parser (Name × Option Name × pexpr) :=
   with_desc "(id :)? expr = id" <| do
@@ -188,9 +194,11 @@ private unsafe def generalizes_arg_parser : lean.parser (Name × Option Name × 
         do
         let (arg, arg_name) ← generalizes_arg_parser_eq lhs
         pure (arg_name, none, arg)
+#align tactic.interactive.generalizes_arg_parser tactic.interactive.generalizes_arg_parser
 
 private unsafe def generalizes_args_parser : lean.parser (List (Name × Option Name × pexpr)) :=
   with_desc "[(id :)? expr = id, ...]" <| tk "[" *> sep_by (tk ",") generalizes_arg_parser <* tk "]"
+#align tactic.interactive.generalizes_args_parser tactic.interactive.generalizes_args_parser
 
 /-- Generalizes the target over multiple expressions. For example, given the goal
 
@@ -236,6 +244,7 @@ unsafe def generalizes (args : parse generalizes_args_parser) : tactic Unit :=
           pure (arg_name, hyp_name, arg)
     generalizes_intro args
     pure ()
+#align tactic.interactive.generalizes tactic.interactive.generalizes
 
 add_tactic_doc
   { Name := "generalizes", category := DocCategory.tactic, declNames := [`tactic.interactive.generalizes],

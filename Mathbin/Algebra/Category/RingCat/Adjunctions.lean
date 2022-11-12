@@ -34,14 +34,17 @@ def free : Type u ⥤ CommRingCat.{u} where
   -- generates are too slow.
   map_id' X := RingHom.ext <| rename_id
   map_comp' X Y Z f g := RingHom.ext fun p => (rename_rename f g p).symm
+#align CommRing.free CommRingCat.free
 
 @[simp]
 theorem free_obj_coe {α : Type u} : (free.obj α : Type u) = MvPolynomial α ℤ :=
   rfl
+#align CommRing.free_obj_coe CommRingCat.free_obj_coe
 
 @[simp]
 theorem free_map_coe {α β : Type u} {f : α → β} : ⇑(free.map f) = rename f :=
   rfl
+#align CommRing.free_map_coe CommRingCat.free_map_coe
 
 /-- The free-forgetful adjunction for commutative rings.
 -/
@@ -50,6 +53,7 @@ def adj : free ⊣ forget CommRingCat.{u} :=
     { homEquiv := fun X R => homEquiv,
       hom_equiv_naturality_left_symm' := fun _ _ Y f g =>
         RingHom.ext fun x => eval₂_cast_comp f (Int.castRingHom Y) g x }
+#align CommRing.adj CommRingCat.adj
 
 instance : IsRightAdjoint (forget CommRingCat.{u}) :=
   ⟨_, adj⟩

@@ -49,6 +49,8 @@ theorem Memℒp.finStronglyMeasurableOfStronglyMeasurable (hf : Memℒp f p μ) 
     apply subset_closure
     simp
     
+#align
+  measure_theory.mem_ℒp.fin_strongly_measurable_of_strongly_measurable MeasureTheory.Memℒp.finStronglyMeasurableOfStronglyMeasurable
 
 theorem Memℒp.aeFinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     AeFinStronglyMeasurable f μ :=
@@ -56,12 +58,15 @@ theorem Memℒp.aeFinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p �
     ((mem_ℒp_congr_ae hf.AeStronglyMeasurable.ae_eq_mk).mp hf).finStronglyMeasurableOfStronglyMeasurable
       hf.AeStronglyMeasurable.stronglyMeasurableMk hp_ne_zero hp_ne_top,
     hf.AeStronglyMeasurable.ae_eq_mk⟩
+#align measure_theory.mem_ℒp.ae_fin_strongly_measurable MeasureTheory.Memℒp.aeFinStronglyMeasurable
 
 theorem Integrable.aeFinStronglyMeasurable (hf : Integrable f μ) : AeFinStronglyMeasurable f μ :=
   (mem_ℒp_one_iff_integrable.mpr hf).AeFinStronglyMeasurable one_ne_zero Ennreal.coe_ne_top
+#align measure_theory.integrable.ae_fin_strongly_measurable MeasureTheory.Integrable.aeFinStronglyMeasurable
 
 theorem lp.finStronglyMeasurable (f : lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) : FinStronglyMeasurable f μ :=
   (lp.memℒp f).finStronglyMeasurableOfStronglyMeasurable (lp.stronglyMeasurable f) hp_ne_zero hp_ne_top
+#align measure_theory.Lp.fin_strongly_measurable MeasureTheory.lp.finStronglyMeasurable
 
 end MeasureTheory
 

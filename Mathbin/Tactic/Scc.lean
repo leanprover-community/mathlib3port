@@ -81,6 +81,7 @@ A description of the path compression optimization can be found at:
 -/
 unsafe def closure :=
   ref (expr_map (Sum ℕ (expr × expr)))
+#align tactic.closure tactic.closure
 
 namespace Closure
 
@@ -88,6 +89,7 @@ namespace Closure
 returning the output of `f`. -/
 unsafe def with_new_closure {α} : (closure → tactic α) → tactic α :=
   using_new_ref (expr_map.mk _)
+#align tactic.closure.with_new_closure tactic.closure.with_new_closure
 
 /-- `to_tactic_format cl` pretty-prints the `closure` `cl` as a list. Assuming `cl` was built by
 `dfs_at`, each element corresponds to a node `pᵢ : expr` and is one of the folllowing:
@@ -103,6 +105,7 @@ unsafe def to_tactic_format (cl : closure) : tactic format := do
         | Sum.inl y => f!"{(← x)} ⇐ {← y}"
         | Sum.inr ⟨y, p⟩ => f!"({(← x)}, {(← y)}) : {← infer_type p}"
   pure <| to_fmt fmt
+#align tactic.closure.to_tactic_format tactic.closure.to_tactic_format
 
 unsafe instance : has_to_tactic_format closure :=
   ⟨to_tactic_format⟩
@@ -124,6 +127,7 @@ unsafe def root (cl : closure) : expr → tactic (ℕ × expr × expr)
         let p ← mk_app `` Iff.trans [p₀, p₁]
         (modify_ref cl) fun m => m e (Sum.inr (e₁, p))
         pure (n, e₁, p)
+#align tactic.closure.root tactic.closure.root
 
 /-- (Implementation of `merge`.) -/
 unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Unit := do
@@ -131,6 +135,7 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
   let p ← mk_app `` Iff.trans [p₂, p]
   let p ← mk_app `` Iff.trans [p, p₁]
   (modify_ref cl) fun m => m e₀ <| Sum.inr (e₁, p)
+#align tactic.closure.merge_intl tactic.closure.merge_intl
 
 /-- `merge cl p`, with `p` a proof of `e₀ ↔ e₁` for some `e₀` and `e₁`,
 merges the trees of `e₀` and `e₁` and keeps the root with the smallest preorder
@@ -148,10 +153,12 @@ unsafe def merge (cl : closure) (p : expr) : tactic Unit := do
           cl p e₃ p₃ e₂ p₂
         else cl p e₂ p₂ e₃ p₃
     else pure ()
+#align tactic.closure.merge tactic.closure.merge
 
 /-- Sequentially assign numbers to the nodes of the graph as they are being visited. -/
 unsafe def assign_preorder (cl : closure) (e : expr) : tactic Unit :=
   (modify_ref cl) fun m => m.insert e (Sum.inl m.size)
+#align tactic.closure.assign_preorder tactic.closure.assign_preorder
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -165,16 +172,19 @@ unsafe def prove_eqv (cl : closure) (e₀ e₁ : expr) : tactic expr := do
       "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
   let p₁ ← mk_app `` Iff.symm [p₁]
   mk_app `` Iff.trans [p₀, p₁]
+#align tactic.closure.prove_eqv tactic.closure.prove_eqv
 
 /-- `prove_impl cl e₀ e₁` constructs a proof of `e₀ -> e₁` if they are equivalent. -/
 unsafe def prove_impl (cl : closure) (e₀ e₁ : expr) : tactic expr :=
   cl.prove_eqv e₀ e₁ >>= iff_mp
+#align tactic.closure.prove_impl tactic.closure.prove_impl
 
 /-- `is_eqv cl e₀ e₁` checks whether `e₀` and `e₁` are equivalent without building a proof. -/
 unsafe def is_eqv (cl : closure) (e₀ e₁ : expr) : tactic Bool := do
   let (_, r, p₀) ← root cl e₀
   let (_, r', p₁) ← root cl e₁
   return <| r = r'
+#align tactic.closure.is_eqv tactic.closure.is_eqv
 
 end Closure
 
@@ -182,11 +192,13 @@ end Closure
 @[reducible]
 unsafe def impl_graph :=
   ref (expr_map (List <| expr × expr))
+#align tactic.impl_graph tactic.impl_graph
 
 /-- `with_impl_graph f` creates an empty `impl_graph` `g`, executes `f` on `g`, and then deletes
 `g`, returning the output of `f`. -/
 unsafe def with_impl_graph {α} : (impl_graph → tactic α) → tactic α :=
   using_new_ref (expr_map.mk (List <| expr × expr))
+#align tactic.with_impl_graph tactic.with_impl_graph
 
 namespace ImplGraph
 
@@ -209,6 +221,7 @@ unsafe def add_edge (g : impl_graph) : expr → tactic Unit
         add_edge p₀
         add_edge p₁
       | _ => failed
+#align tactic.impl_graph.add_edge tactic.impl_graph.add_edge
 
 section Scc
 
@@ -234,6 +247,7 @@ unsafe def merge_path (path : List (expr × expr)) (e : expr) : tactic Unit := d
     path.mmapAccumr (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, none, none, p.2, p'] <*> pure p') p₂
   let ps ← mzipWith (fun p₀ p₁ => mk_app `` Iff.intro [p₀, p₁]) ls.tail rs.init
   ps cl
+#align tactic.impl_graph.merge_path tactic.impl_graph.merge_path
 
 /-- (implementation of `collapse`) -/
 unsafe def collapse' : List (expr × expr) → List (expr × expr) → expr → tactic Unit
@@ -242,6 +256,7 @@ unsafe def collapse' : List (expr × expr) → List (expr × expr) → expr → 
     let b ← cl.is_eqv x v
     let acc' := (x, pr) :: Acc
     if b then merge_path acc' v else collapse' acc' xs v
+#align tactic.impl_graph.collapse' tactic.impl_graph.collapse'
 
 /-- `collapse path v`, where `v` is a vertex that originated the current search
 (or a vertex in the same equivalence class as the one that originated the current search).
@@ -249,6 +264,7 @@ It or its equivalent should be found in `path`. Since the vertices following `v`
 form a cycle with `v`, they can all be added to an equivalence class. -/
 unsafe def collapse : List (expr × expr) → expr → tactic Unit :=
   collapse' []
+#align tactic.impl_graph.collapse tactic.impl_graph.collapse
 
 /-- Strongly connected component algorithm inspired by Tarjan's and
 Dijkstra's scc algorithm. Whereas they return strongly connected
@@ -275,6 +291,7 @@ unsafe def dfs_at : List (expr × expr) → expr → tactic Unit
         ns fun ⟨w, e⟩ => dfs_at ((v, e) :: vs) w
         (modify_ref visit) fun m => m v tt
         pure ()
+#align tactic.impl_graph.dfs_at tactic.impl_graph.dfs_at
 
 end Scc
 
@@ -287,12 +304,14 @@ unsafe def mk_scc (cl : closure) : tactic (expr_map (List (expr × expr))) :=
       let m ← read_ref g
       m fun ⟨v, _⟩ => impl_graph.dfs_at m visit cl [] v
       pure m
+#align tactic.impl_graph.mk_scc tactic.impl_graph.mk_scc
 
 end ImplGraph
 
 unsafe def prove_eqv_target (cl : closure) : tactic Unit := do
   let quote.1 ((%%ₓp) ↔ %%ₓq) ← target >>= whnf
   cl p q >>= exact
+#align tactic.prove_eqv_target tactic.prove_eqv_target
 
 /-- `scc` uses the available equivalences and implications to prove
 a goal of the form `p ↔ q`.
@@ -307,6 +326,7 @@ unsafe def interactive.scc : tactic Unit :=
     impl_graph.mk_scc cl
     let quote.1 ((%%ₓp) ↔ %%ₓq) ← target
     cl p q >>= exact
+#align tactic.interactive.scc tactic.interactive.scc
 
 /-- Collect all the available equivalences and implications and
 add assumptions for every equivalence that can be proven using the
@@ -319,6 +339,7 @@ unsafe def interactive.scc' : tactic Unit :=
     ls' fun x => do
         let h ← get_unused_name `h
         try <| closure.prove_eqv cl x.1 x.2 >>= note h none
+#align tactic.interactive.scc' tactic.interactive.scc'
 
 /-- `scc` uses the available equivalences and implications to prove
 a goal of the form `p ↔ q`.

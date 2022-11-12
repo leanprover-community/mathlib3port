@@ -47,6 +47,7 @@ structure Mon_ where
   -- and chooses to place the associator on the right-hand side.
   -- The heuristic is that unitors and associators "don't have much weight".
   mul_assoc' : (mul ⊗ 𝟙 X) ≫ mul = (α_ X X X).Hom ≫ (𝟙 X ⊗ mul) ≫ mul := by obviously
+#align Mon_ Mon_
 
 restate_axiom Mon_.one_mul'
 
@@ -70,6 +71,7 @@ def trivial : Mon_ C where
   mul := (λ_ _).Hom
   mul_assoc' := by coherence
   mul_one' := by coherence
+#align Mon_.trivial Mon_.trivial
 
 instance : Inhabited (Mon_ C) :=
   ⟨trivial C⟩
@@ -80,23 +82,27 @@ variable {C} {M : Mon_ C}
 @[simp]
 theorem one_mul_hom {Z : C} (f : Z ⟶ M.x) : (M.one ⊗ f) ≫ M.mul = (λ_ Z).Hom ≫ f := by
   rw [← id_tensor_comp_tensor_id, category.assoc, M.one_mul, left_unitor_naturality]
+#align Mon_.one_mul_hom Mon_.one_mul_hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem mul_one_hom {Z : C} (f : Z ⟶ M.x) : (f ⊗ M.one) ≫ M.mul = (ρ_ Z).Hom ≫ f := by
   rw [← tensor_id_comp_id_tensor, category.assoc, M.mul_one, right_unitor_naturality]
+#align Mon_.mul_one_hom Mon_.mul_one_hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem assoc_flip : (𝟙 M.x ⊗ M.mul) ≫ M.mul = (α_ M.x M.x M.x).inv ≫ (M.mul ⊗ 𝟙 M.x) ≫ M.mul := by simp
+#align Mon_.assoc_flip Mon_.assoc_flip
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A morphism of monoid objects. -/
-@[ext]
+@[ext.1]
 structure Hom (M N : Mon_ C) where
   Hom : M.x ⟶ N.x
   one_hom' : M.one ≫ hom = N.one := by obviously
   mul_hom' : M.mul ≫ hom = (hom ⊗ hom) ≫ N.mul := by obviously
+#align Mon_.hom Mon_.Hom
 
 restate_axiom hom.one_hom'
 
@@ -107,13 +113,16 @@ attribute [simp, reassoc] hom.one_hom hom.mul_hom
 /-- The identity morphism on a monoid object. -/
 @[simps]
 def id (M : Mon_ C) : Hom M M where Hom := 𝟙 M.x
+#align Mon_.id Mon_.id
 
 instance homInhabited (M : Mon_ C) : Inhabited (Hom M M) :=
   ⟨id M⟩
+#align Mon_.hom_inhabited Mon_.homInhabited
 
 /-- Composition of morphisms of monoid objects. -/
 @[simps]
 def comp {M N O : Mon_ C} (f : Hom M N) (g : Hom N O) : Hom M O where Hom := f.Hom ≫ g.Hom
+#align Mon_.comp Mon_.comp
 
 instance : Category (Mon_ C) where
   Hom M N := Hom M N
@@ -123,10 +132,12 @@ instance : Category (Mon_ C) where
 @[simp]
 theorem id_hom' (M : Mon_ C) : (𝟙 M : Hom M M).Hom = 𝟙 M.x :=
   rfl
+#align Mon_.id_hom' Mon_.id_hom'
 
 @[simp]
 theorem comp_hom' {M N K : Mon_ C} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : Hom M K).Hom = f.Hom ≫ g.Hom :=
   rfl
+#align Mon_.comp_hom' Mon_.comp_hom'
 
 section
 
@@ -137,10 +148,12 @@ variable (C)
 def forget : Mon_ C ⥤ C where
   obj A := A.x
   map A B f := f.Hom
+#align Mon_.forget Mon_.forget
 
 end
 
 instance forget_faithful : Faithful (@forget C _ _) where
+#align Mon_.forget_faithful Mon_.forget_faithful
 
 instance {A B : Mon_ C} (f : A ⟶ B) [e : IsIso ((forget C).map f)] : IsIso f.Hom :=
   e
@@ -172,6 +185,7 @@ def isoOfIso {M N : Mon_ C} (f : M.x ≅ N.x) (one_f : M.one ≫ f.Hom = N.one)
         rw [← cancel_mono f.hom]
         slice_rhs 2 3 => rw [mul_f]
         simp }
+#align Mon_.iso_of_iso Mon_.isoOfIso
 
 instance uniqueHomFromTrivial (A : Mon_ C) : Unique (trivial C ⟶ A) where
   default :=
@@ -187,6 +201,7 @@ instance uniqueHomFromTrivial (A : Mon_ C) : Unique (trivial C ⟶ A) where
     simp
     rw [← category.id_comp f.hom]
     erw [f.one_hom]
+#align Mon_.unique_hom_from_trivial Mon_.uniqueHomFromTrivial
 
 open CategoryTheory.Limits
 
@@ -245,6 +260,7 @@ def mapMon (F : LaxMonoidalFunctor C D) : Mon_ C ⥤ Mon_ D where
   map_comp' A B C f g := by
     ext
     simp
+#align category_theory.lax_monoidal_functor.map_Mon CategoryTheory.LaxMonoidalFunctor.mapMon
 
 variable (C D)
 
@@ -252,6 +268,7 @@ variable (C D)
 def mapMonFunctor : LaxMonoidalFunctor C D ⥤ Mon_ C ⥤ Mon_ D where
   obj := mapMon
   map F G α := { app := fun A => { Hom := α.app A.x } }
+#align category_theory.lax_monoidal_functor.map_Mon_functor CategoryTheory.LaxMonoidalFunctor.mapMonFunctor
 
 end CategoryTheory.LaxMonoidalFunctor
 
@@ -266,6 +283,7 @@ namespace EquivLaxMonoidalFunctorPunit
 def laxMonoidalToMon : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C ⥤ Mon_ C where
   obj F := (F.mapMon : Mon_ _ ⥤ Mon_ C).obj (trivial (Discrete PUnit))
   map F G α := ((mapMonFunctor (Discrete PUnit) C).map α).app _
+#align Mon_.equiv_lax_monoidal_functor_punit.lax_monoidal_to_Mon Mon_.EquivLaxMonoidalFunctorPunit.laxMonoidalToMon
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
@@ -279,6 +297,7 @@ def monToLaxMonoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C 
         dsimp
         rw [category.id_comp, category.comp_id],
       unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
+#align Mon_.equiv_lax_monoidal_functor_punit.Mon_to_lax_monoidal Mon_.EquivLaxMonoidalFunctorPunit.monToLaxMonoidal
 
 attribute [local tidy] tactic.discrete_cases
 
@@ -291,11 +310,13 @@ def unitIso : 𝟭 (LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C) ≅ laxMonoid
     (fun F =>
       MonoidalNatIso.ofComponents (fun _ => F.toFunctor.mapIso (eqToIso (by ext))) (by tidy) (by tidy) (by tidy))
     (by tidy)
+#align Mon_.equiv_lax_monoidal_functor_punit.unit_iso Mon_.EquivLaxMonoidalFunctorPunit.unitIso
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
 def counitIso : monToLaxMonoidal C ⋙ laxMonoidalToMon C ≅ 𝟭 (Mon_ C) :=
   NatIso.ofComponents (fun F => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
+#align Mon_.equiv_lax_monoidal_functor_punit.counit_iso Mon_.EquivLaxMonoidalFunctorPunit.counitIso
 
 end EquivLaxMonoidalFunctorPunit
 
@@ -311,6 +332,7 @@ def equivLaxMonoidalFunctorPunit : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C
   inverse := monToLaxMonoidal C
   unitIso := unitIso C
   counitIso := counitIso C
+#align Mon_.equiv_lax_monoidal_functor_punit Mon_.equivLaxMonoidalFunctorPunit
 
 end Mon_
 
@@ -367,16 +389,19 @@ theorem one_associator {M N P : Mon_ C} :
   rw [← cancel_epi (λ_ (𝟙_ C)).inv]
   slice_lhs 1 2 => rw [left_unitor_inv_naturality]
   simp only [category.assoc]
+#align Mon_.one_associator Mon_.one_associator
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem one_left_unitor {M : Mon_ C} : ((λ_ (𝟙_ C)).inv ≫ (𝟙 (𝟙_ C) ⊗ M.one)) ≫ (λ_ M.x).Hom = M.one := by
   slice_lhs 2 3 => rw [left_unitor_naturality]
   simp
+#align Mon_.one_left_unitor Mon_.one_left_unitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem one_right_unitor {M : Mon_ C} : ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ 𝟙 (𝟙_ C))) ≫ (ρ_ M.x).Hom = M.one := by
   slice_lhs 2 3 => rw [right_unitor_naturality, ← unitors_equal]
   simp
+#align Mon_.one_right_unitor Mon_.one_right_unitor
 
 variable [BraidedCategory C]
 
@@ -395,6 +420,7 @@ theorem Mon_tensor_one_mul (M N : Mon_ C) :
   slice_lhs 3 4 => rw [← tensor_comp, one_mul M, one_mul N]
   symm
   exact tensor_left_unitality C M.X N.X
+#align Mon_.Mon_tensor_one_mul Mon_.Mon_tensor_one_mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -411,6 +437,7 @@ theorem Mon_tensor_mul_one (M N : Mon_ C) :
   slice_lhs 3 4 => rw [← tensor_comp, mul_one M, mul_one N]
   symm
   exact tensor_right_unitality C M.X N.X
+#align Mon_.Mon_tensor_mul_one Mon_.Mon_tensor_mul_one
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -438,6 +465,7 @@ theorem Mon_tensor_mul_assoc (M N : Mon_ C) :
   slice_lhs 3 4 => rw [← tensor_μ_natural]
   slice_lhs 2 3 => rw [← tensor_comp, tensor_id]
   simp only [category.assoc]
+#align Mon_.Mon_tensor_mul_assoc Mon_.Mon_tensor_mul_assoc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -460,6 +488,7 @@ theorem mul_associator {M N P : Mon_ C} :
   slice_rhs 3 4 => rw [← category.id_comp M.mul, tensor_comp]
   slice_lhs 1 3 => rw [associator_monoidal]
   simp only [category.assoc]
+#align Mon_.mul_associator Mon_.mul_associator
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -471,6 +500,7 @@ theorem mul_left_unitor {M : Mon_ C} :
   slice_lhs 3 4 => rw [left_unitor_naturality]
   slice_lhs 1 3 => rw [← left_unitor_monoidal]
   simp only [category.assoc, category.id_comp]
+#align Mon_.mul_left_unitor Mon_.mul_left_unitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -482,6 +512,7 @@ theorem mul_right_unitor {M : Mon_ C} :
   slice_lhs 3 4 => rw [right_unitor_naturality]
   slice_lhs 1 3 => rw [← right_unitor_monoidal]
   simp only [category.assoc, category.id_comp]
+#align Mon_.mul_right_unitor Mon_.mul_right_unitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -539,6 +570,7 @@ instance monMonoidal : MonoidalCategory (Mon_ C) where
     ext
     dsimp
     apply triangle
+#align Mon_.Mon_monoidal Mon_.monMonoidal
 
 end Mon_
 

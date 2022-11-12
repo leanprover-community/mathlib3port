@@ -91,19 +91,23 @@ preserve limits. This applies to most "algebraic" categories, e.g. groups, abeli
 -/
 def IsSheaf (F : Presheaf.{w, v, u} C X) : Prop :=
   Presheaf.IsSheaf (Opens.grothendieckTopology X) F
+#align Top.presheaf.is_sheaf TopCat.Presheaf.IsSheaf
 
 /-- The presheaf valued in `unit` over any topological space is a sheaf.
 -/
 theorem is_sheaf_unit (F : Presheaf (CategoryTheory.Discrete Unit) X) : F.IsSheaf := fun x U S hS x hx =>
   ⟨eqToHom (Subsingleton.elim _ _), by tidy, by tidy⟩
+#align Top.presheaf.is_sheaf_unit TopCat.Presheaf.is_sheaf_unit
 
 theorem is_sheaf_iso_iff {F G : Presheaf C X} (α : F ≅ G) : F.IsSheaf ↔ G.IsSheaf :=
   Presheaf.is_sheaf_of_iso_iff α
+#align Top.presheaf.is_sheaf_iso_iff TopCat.Presheaf.is_sheaf_iso_iff
 
 /-- Transfer the sheaf condition across an isomorphism of presheaves.
 -/
 theorem is_sheaf_of_iso {F G : Presheaf C X} (α : F ≅ G) (h : F.IsSheaf) : G.IsSheaf :=
   (is_sheaf_iso_iff α).1 h
+#align Top.presheaf.is_sheaf_of_iso TopCat.Presheaf.is_sheaf_of_iso
 
 end Presheaf
 
@@ -114,18 +118,21 @@ satisfying the sheaf condition.
 -/
 def Sheaf : Type max u v w :=
   SheafCat (Opens.grothendieckTopology X) C deriving Category
+#align Top.sheaf TopCat.Sheaf
 
 variable {C X}
 
 /-- The underlying presheaf of a sheaf -/
 abbrev Sheaf.presheaf (F : X.Sheaf C) : TopCat.Presheaf C X :=
   F.1
+#align Top.sheaf.presheaf TopCat.Sheaf.presheaf
 
 variable (C X)
 
 -- Let's construct a trivial example, to keep the inhabited linter happy.
 instance sheafInhabited : Inhabited (Sheaf (CategoryTheory.Discrete PUnit) X) :=
   ⟨⟨Functor.star _, Presheaf.is_sheaf_unit _⟩⟩
+#align Top.sheaf_inhabited TopCat.sheafInhabited
 
 namespace Sheaf
 
@@ -133,13 +140,16 @@ namespace Sheaf
 -/
 def forget : TopCat.Sheaf C X ⥤ TopCat.Presheaf C X :=
   sheafToPresheaf _ _ deriving Full, Faithful
+#align Top.sheaf.forget TopCat.Sheaf.forget
 
 -- Note: These can be proved by simp.
 theorem id_app (F : Sheaf C X) (t) : (𝟙 F : F ⟶ F).1.app t = 𝟙 _ :=
   rfl
+#align Top.sheaf.id_app TopCat.Sheaf.id_app
 
 theorem comp_app {F G H : Sheaf C X} (f : F ⟶ G) (g : G ⟶ H) (t) : (f ≫ g).1.app t = f.1.app t ≫ g.1.app t :=
   rfl
+#align Top.sheaf.comp_app TopCat.Sheaf.comp_app
 
 end Sheaf
 

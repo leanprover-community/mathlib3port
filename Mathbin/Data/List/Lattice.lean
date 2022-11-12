@@ -39,25 +39,30 @@ variable {α : Type _} {l l₁ l₂ : List α} {p : α → Prop} {a : α}
 section Disjoint
 
 theorem Disjoint.symm (d : Disjoint l₁ l₂) : Disjoint l₂ l₁ := fun a i₂ i₁ => d i₁ i₂
+#align list.disjoint.symm List.Disjoint.symm
 
 #print List.disjoint_comm /-
 theorem disjoint_comm : Disjoint l₁ l₂ ↔ Disjoint l₂ l₁ :=
   ⟨Disjoint.symm, Disjoint.symm⟩
+#align list.disjoint_comm List.disjoint_comm
 -/
 
 #print List.disjoint_left /-
 theorem disjoint_left : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₁ → a ∉ l₂ :=
   Iff.rfl
+#align list.disjoint_left List.disjoint_left
 -/
 
 #print List.disjoint_right /-
 theorem disjoint_right : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₂ → a ∉ l₁ :=
   disjoint_comm
+#align list.disjoint_right List.disjoint_right
 -/
 
 #print List.disjoint_iff_ne /-
 theorem disjoint_iff_ne : Disjoint l₁ l₂ ↔ ∀ a ∈ l₁, ∀ b ∈ l₂, a ≠ b := by
   simp only [disjoint_left, imp_not_comm, forall_eq']
+#align list.disjoint_iff_ne List.disjoint_iff_ne
 -/
 
 /- warning: list.disjoint_of_subset_left -> List.disjoint_of_subset_left is a dubious translation:
@@ -67,6 +72,7 @@ but is expected to have type
   forall {α._@.Std.Data.List.Lemmas._hyg.23231 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23231} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23231} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23231}, (HasSubset.Subset.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23231) (List.instHasSubsetList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23231) l₁ l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23231 l l₂) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23231 l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align list.disjoint_of_subset_left List.disjoint_of_subset_leftₓ'. -/
 theorem disjoint_of_subset_left (ss : l₁ ⊆ l) (d : Disjoint l l₂) : Disjoint l₁ l₂ := fun x m => d (ss m)
+#align list.disjoint_of_subset_left List.disjoint_of_subset_left
 
 /- warning: list.disjoint_of_subset_right -> List.disjoint_of_subset_right is a dubious translation:
 lean 3 declaration is
@@ -75,20 +81,24 @@ but is expected to have type
   forall {α._@.Std.Data.List.Lemmas._hyg.23270 : Type.{u_1}} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23270} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23270} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23270}, (HasSubset.Subset.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23270) (List.instHasSubsetList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23270) l₂ l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23270 l₁ l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23270 l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align list.disjoint_of_subset_right List.disjoint_of_subset_rightₓ'. -/
 theorem disjoint_of_subset_right (ss : l₂ ⊆ l) (d : Disjoint l₁ l) : Disjoint l₁ l₂ := fun x m m₁ => d m (ss m₁)
+#align list.disjoint_of_subset_right List.disjoint_of_subset_right
 
 #print List.disjoint_of_disjoint_cons_left /-
 theorem disjoint_of_disjoint_cons_left {l₁ l₂} : Disjoint (a :: l₁) l₂ → Disjoint l₁ l₂ :=
   disjoint_of_subset_left (List.subset_cons _ _)
+#align list.disjoint_of_disjoint_cons_left List.disjoint_of_disjoint_cons_left
 -/
 
 #print List.disjoint_of_disjoint_cons_right /-
 theorem disjoint_of_disjoint_cons_right {l₁ l₂} : Disjoint l₁ (a :: l₂) → Disjoint l₁ l₂ :=
   disjoint_of_subset_right (List.subset_cons _ _)
+#align list.disjoint_of_disjoint_cons_right List.disjoint_of_disjoint_cons_right
 -/
 
 #print List.disjoint_nil_left /-
 @[simp]
 theorem disjoint_nil_left (l : List α) : Disjoint [] l := fun a => (not_mem_nil a).elim
+#align list.disjoint_nil_left List.disjoint_nil_left
 -/
 
 #print List.disjoint_nil_right /-
@@ -96,6 +106,7 @@ theorem disjoint_nil_left (l : List α) : Disjoint [] l := fun a => (not_mem_nil
 theorem disjoint_nil_right (l : List α) : Disjoint l [] := by
   rw [disjoint_comm]
   exact disjoint_nil_left _
+#align list.disjoint_nil_right List.disjoint_nil_right
 -/
 
 /- warning: list.singleton_disjoint -> List.singleton_disjoint is a dubious translation:
@@ -108,10 +119,12 @@ Case conversion may be inaccurate. Consider using '#align list.singleton_disjoin
 theorem singleton_disjoint : Disjoint [a] l ↔ a ∉ l := by
   simp only [Disjoint, mem_singleton, forall_eq]
   rfl
+#align list.singleton_disjoint List.singleton_disjoint
 
 #print List.disjoint_singleton /-
 @[simp]
 theorem disjoint_singleton : Disjoint l [a] ↔ a ∉ l := by rw [disjoint_comm, singleton_disjoint]
+#align list.disjoint_singleton List.disjoint_singleton
 -/
 
 /- warning: list.disjoint_append_left -> List.disjoint_append_left is a dubious translation:
@@ -123,11 +136,13 @@ Case conversion may be inaccurate. Consider using '#align list.disjoint_append_l
 @[simp]
 theorem disjoint_append_left : Disjoint (l₁ ++ l₂) l ↔ Disjoint l₁ l ∧ Disjoint l₂ l := by
   simp only [Disjoint, mem_append, or_imp, forall_and]
+#align list.disjoint_append_left List.disjoint_append_left
 
 #print List.disjoint_append_right /-
 @[simp]
 theorem disjoint_append_right : Disjoint l (l₁ ++ l₂) ↔ Disjoint l l₁ ∧ Disjoint l l₂ :=
   disjoint_comm.trans <| by simp only [disjoint_comm, disjoint_append_left]
+#align list.disjoint_append_right List.disjoint_append_right
 -/
 
 /- warning: list.disjoint_cons_left -> List.disjoint_cons_left is a dubious translation:
@@ -139,6 +154,7 @@ Case conversion may be inaccurate. Consider using '#align list.disjoint_cons_lef
 @[simp]
 theorem disjoint_cons_left : Disjoint (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjoint l₁ l₂ :=
   (@disjoint_append_left _ l₂ [a] l₁).trans <| by simp only [singleton_disjoint]
+#align list.disjoint_cons_left List.disjoint_cons_left
 
 /- warning: list.disjoint_cons_right -> List.disjoint_cons_right is a dubious translation:
 lean 3 declaration is
@@ -149,6 +165,7 @@ Case conversion may be inaccurate. Consider using '#align list.disjoint_cons_rig
 @[simp]
 theorem disjoint_cons_right : Disjoint l₁ (a :: l₂) ↔ a ∉ l₁ ∧ Disjoint l₁ l₂ :=
   disjoint_comm.trans <| by simp only [disjoint_comm, disjoint_cons_left]
+#align list.disjoint_cons_right List.disjoint_cons_right
 
 /- warning: list.disjoint_of_disjoint_append_left_left -> List.disjoint_of_disjoint_append_left_left is a dubious translation:
 lean 3 declaration is
@@ -158,6 +175,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.disjoint_of_disjoint_append_left_left List.disjoint_of_disjoint_append_left_leftₓ'. -/
 theorem disjoint_of_disjoint_append_left_left (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₁ l :=
   (disjoint_append_left.1 d).1
+#align list.disjoint_of_disjoint_append_left_left List.disjoint_of_disjoint_append_left_left
 
 /- warning: list.disjoint_of_disjoint_append_left_right -> List.disjoint_of_disjoint_append_left_right is a dubious translation:
 lean 3 declaration is
@@ -167,15 +185,18 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.disjoint_of_disjoint_append_left_right List.disjoint_of_disjoint_append_left_rightₓ'. -/
 theorem disjoint_of_disjoint_append_left_right (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₂ l :=
   (disjoint_append_left.1 d).2
+#align list.disjoint_of_disjoint_append_left_right List.disjoint_of_disjoint_append_left_right
 
 #print List.disjoint_of_disjoint_append_right_left /-
 theorem disjoint_of_disjoint_append_right_left (d : Disjoint l (l₁ ++ l₂)) : Disjoint l l₁ :=
   (disjoint_append_right.1 d).1
+#align list.disjoint_of_disjoint_append_right_left List.disjoint_of_disjoint_append_right_left
 -/
 
 #print List.disjoint_of_disjoint_append_right_right /-
 theorem disjoint_of_disjoint_append_right_right (d : Disjoint l (l₁ ++ l₂)) : Disjoint l l₂ :=
   (disjoint_append_right.1 d).2
+#align list.disjoint_of_disjoint_append_right_right List.disjoint_of_disjoint_append_right_right
 -/
 
 /- warning: list.disjoint_take_drop -> List.disjoint_take_drop is a dubious translation:
@@ -200,6 +221,7 @@ theorem disjoint_take_drop {m n : ℕ} (hl : l.Nodup) (h : m ≤ n) : Disjoint (
     exact h₀ _ (mem_of_mem_drop h) rfl
     
   solve_by_elim (config := { max_depth := 4 }) [le_of_succ_le_succ]
+#align list.disjoint_take_drop List.disjoint_take_drop
 
 end Disjoint
 
@@ -214,6 +236,7 @@ section Union
 @[simp]
 theorem nil_union (l : List α) : [] ∪ l = l :=
   rfl
+#align list.nil_union List.nil_union
 -/
 
 /- warning: list.cons_union -> List.cons_union is a dubious translation:
@@ -225,17 +248,21 @@ Case conversion may be inaccurate. Consider using '#align list.cons_union List.c
 @[simp]
 theorem cons_union (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = insert a (l₁ ∪ l₂) :=
   rfl
+#align list.cons_union List.cons_union
 
 @[simp]
 theorem mem_union : a ∈ l₁ ∪ l₂ ↔ a ∈ l₁ ∨ a ∈ l₂ := by
   induction l₁ <;>
     simp only [nil_union, not_mem_nil, false_or_iff, cons_union, mem_insert_iff, mem_cons_iff, or_assoc', *]
+#align list.mem_union List.mem_union
 
 theorem mem_union_left (h : a ∈ l₁) (l₂ : List α) : a ∈ l₁ ∪ l₂ :=
   mem_union.2 (Or.inl h)
+#align list.mem_union_left List.mem_union_left
 
 theorem mem_union_right (l₁ : List α) (h : a ∈ l₂) : a ∈ l₁ ∪ l₂ :=
   mem_union.2 (Or.inr h)
+#align list.mem_union_right List.mem_union_right
 
 theorem sublist_suffix_of_union : ∀ l₁ l₂ : List α, ∃ t, t <+ l₁ ∧ t ++ l₂ = l₁ ∪ l₂
   | [], l₂ => ⟨[], by rfl, rfl⟩
@@ -243,22 +270,28 @@ theorem sublist_suffix_of_union : ∀ l₁ l₂ : List α, ∃ t, t <+ l₁ ∧ 
     let ⟨t, s, e⟩ := sublist_suffix_of_union l₁ l₂
     if h : a ∈ l₁ ∪ l₂ then ⟨t, sublist_cons_of_sublist _ s, by simp only [e, cons_union, insert_of_mem h]⟩
     else ⟨a :: t, s.cons_cons _, by simp only [cons_append, cons_union, e, insert_of_not_mem h] <;> constructor <;> rfl⟩
+#align list.sublist_suffix_of_union List.sublist_suffix_of_union
 
 theorem suffix_union_right (l₁ l₂ : List α) : l₂ <:+ l₁ ∪ l₂ :=
   (sublist_suffix_of_union l₁ l₂).imp fun a => And.right
+#align list.suffix_union_right List.suffix_union_right
 
 theorem union_sublist_append (l₁ l₂ : List α) : l₁ ∪ l₂ <+ l₁ ++ l₂ :=
   let ⟨t, s, e⟩ := sublist_suffix_of_union l₁ l₂
   e ▸ (append_sublist_append_right _).2 s
+#align list.union_sublist_append List.union_sublist_append
 
 theorem forall_mem_union : (∀ x ∈ l₁ ∪ l₂, p x) ↔ (∀ x ∈ l₁, p x) ∧ ∀ x ∈ l₂, p x := by
   simp only [mem_union, or_imp, forall_and]
+#align list.forall_mem_union List.forall_mem_union
 
 theorem forall_mem_of_forall_mem_union_left (h : ∀ x ∈ l₁ ∪ l₂, p x) : ∀ x ∈ l₁, p x :=
   (forall_mem_union.1 h).1
+#align list.forall_mem_of_forall_mem_union_left List.forall_mem_of_forall_mem_union_left
 
 theorem forall_mem_of_forall_mem_union_right (h : ∀ x ∈ l₁ ∪ l₂, p x) : ∀ x ∈ l₂, p x :=
   (forall_mem_union.1 h).2
+#align list.forall_mem_of_forall_mem_union_right List.forall_mem_of_forall_mem_union_right
 
 end Union
 
@@ -270,47 +303,61 @@ section Inter
 @[simp]
 theorem inter_nil (l : List α) : [] ∩ l = [] :=
   rfl
+#align list.inter_nil List.inter_nil
 
 @[simp]
 theorem inter_cons_of_mem (l₁ : List α) (h : a ∈ l₂) : (a :: l₁) ∩ l₂ = a :: l₁ ∩ l₂ :=
   if_pos h
+#align list.inter_cons_of_mem List.inter_cons_of_mem
 
 @[simp]
 theorem inter_cons_of_not_mem (l₁ : List α) (h : a ∉ l₂) : (a :: l₁) ∩ l₂ = l₁ ∩ l₂ :=
   if_neg h
+#align list.inter_cons_of_not_mem List.inter_cons_of_not_mem
 
 theorem mem_of_mem_inter_left : a ∈ l₁ ∩ l₂ → a ∈ l₁ :=
   mem_of_mem_filter
+#align list.mem_of_mem_inter_left List.mem_of_mem_inter_left
 
 theorem mem_of_mem_inter_right : a ∈ l₁ ∩ l₂ → a ∈ l₂ :=
   of_mem_filter
+#align list.mem_of_mem_inter_right List.mem_of_mem_inter_right
 
 theorem mem_inter_of_mem_of_mem : a ∈ l₁ → a ∈ l₂ → a ∈ l₁ ∩ l₂ :=
   mem_filter_of_mem
+#align list.mem_inter_of_mem_of_mem List.mem_inter_of_mem_of_mem
 
 @[simp]
 theorem mem_inter : a ∈ l₁ ∩ l₂ ↔ a ∈ l₁ ∧ a ∈ l₂ :=
   mem_filter
+#align list.mem_inter List.mem_inter
 
 theorem inter_subset_left (l₁ l₂ : List α) : l₁ ∩ l₂ ⊆ l₁ :=
   filter_subset _
+#align list.inter_subset_left List.inter_subset_left
 
 theorem inter_subset_right (l₁ l₂ : List α) : l₁ ∩ l₂ ⊆ l₂ := fun a => mem_of_mem_inter_right
+#align list.inter_subset_right List.inter_subset_right
 
 theorem subset_inter {l l₁ l₂ : List α} (h₁ : l ⊆ l₁) (h₂ : l ⊆ l₂) : l ⊆ l₁ ∩ l₂ := fun a h => mem_inter.2 ⟨h₁ h, h₂ h⟩
+#align list.subset_inter List.subset_inter
 
 theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ := by
   simp only [eq_nil_iff_forall_not_mem, mem_inter, not_and]
   rfl
+#align list.inter_eq_nil_iff_disjoint List.inter_eq_nil_iff_disjoint
 
 theorem forall_mem_inter_of_forall_left (h : ∀ x ∈ l₁, p x) (l₂ : List α) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
   BAll.imp_left (fun x => mem_of_mem_inter_left) h
+#align list.forall_mem_inter_of_forall_left List.forall_mem_inter_of_forall_left
 
 theorem forall_mem_inter_of_forall_right (l₁ : List α) (h : ∀ x ∈ l₂, p x) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
   BAll.imp_left (fun x => mem_of_mem_inter_right) h
+#align list.forall_mem_inter_of_forall_right List.forall_mem_inter_of_forall_right
 
 @[simp]
 theorem inter_reverse {xs ys : List α} : xs.inter ys.reverse = xs.inter ys := by simp only [List.inter, mem_reverse]
+#align list.inter_reverse List.inter_reverse
 
 end Inter
 
@@ -321,13 +368,16 @@ section BagInter
 
 @[simp]
 theorem nil_bag_inter (l : List α) : [].bagInter l = [] := by cases l <;> rfl
+#align list.nil_bag_inter List.nil_bag_inter
 
 @[simp]
 theorem bag_inter_nil (l : List α) : l.bagInter [] = [] := by cases l <;> rfl
+#align list.bag_inter_nil List.bag_inter_nil
 
 @[simp]
 theorem cons_bag_inter_of_pos (l₁ : List α) (h : a ∈ l₂) : (a :: l₁).bagInter l₂ = a :: l₁.bagInter (l₂.erase a) := by
   cases l₂ <;> exact if_pos h
+#align list.cons_bag_inter_of_pos List.cons_bag_inter_of_pos
 
 @[simp]
 theorem cons_bag_inter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).bagInter l₂ = l₁.bagInter l₂ := by
@@ -335,6 +385,7 @@ theorem cons_bag_inter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).ba
   · simp only [bag_inter_nil]
     
   simp only [erase_of_not_mem h, List.bagInter', if_neg h]
+#align list.cons_bag_inter_of_neg List.cons_bag_inter_of_neg
 
 @[simp]
 theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter l₂ ↔ a ∈ l₁ ∧ a ∈ l₂
@@ -354,6 +405,7 @@ theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter 
       rintro ⟨rfl, h'⟩
       exact h.elim h'
       
+#align list.mem_bag_inter List.mem_bag_inter
 
 @[simp]
 theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bagInter l₂) = min (count a l₁) (count a l₂)
@@ -377,6 +429,7 @@ theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bagI
       · rw [count_cons_of_ne ab]
         
       
+#align list.count_bag_inter List.count_bag_inter
 
 theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ l₁
   | [], l₂ => by simp
@@ -387,12 +440,14 @@ theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ 
     · apply sublist_cons_of_sublist
       apply bag_inter_sublist_left
       
+#align list.bag_inter_sublist_left List.bag_inter_sublist_left
 
 theorem bag_inter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bagInter l₂ = [] ↔ l₁ ∩ l₂ = []
   | [], l₂ => by simp
   | b :: l₁, l₂ => by
     by_cases h:b ∈ l₂ <;> simp [h]
     exact bag_inter_nil_iff_inter_nil l₁ l₂
+#align list.bag_inter_nil_iff_inter_nil List.bag_inter_nil_iff_inter_nil
 
 end BagInter
 

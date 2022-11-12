@@ -41,6 +41,7 @@ namespace Tactic
 /-- A generic function with one argument.  It is the "function underscore" input to `congrm`. -/
 @[nolint unused_arguments]
 def congrmFun1 {α ρ} {r : ρ} : α → ρ := fun _ => r
+#align tactic.congrm_fun_1 Tactic.congrmFun1
 
 -- mathport name: expr_₁
 notation "_₁" => congrmFun1
@@ -48,6 +49,7 @@ notation "_₁" => congrmFun1
 /-- A generic function with two arguments.  It is the "function underscore" input to `congrm`. -/
 @[nolint unused_arguments]
 def congrmFun2 {α β ρ} {r : ρ} : α → β → ρ := fun _ _ => r
+#align tactic.congrm_fun_2 Tactic.congrmFun2
 
 -- mathport name: expr_₂
 notation "_₂" => congrmFun2
@@ -55,6 +57,7 @@ notation "_₂" => congrmFun2
 /-- A generic function with three arguments.  It is the "function underscore" input to `congrm`. -/
 @[nolint unused_arguments]
 def congrmFun3 {α β γ ρ} {r : ρ} : α → β → γ → ρ := fun _ _ _ => r
+#align tactic.congrm_fun_3 Tactic.congrmFun3
 
 -- mathport name: expr_₃
 notation "_₃" => congrmFun3
@@ -62,6 +65,7 @@ notation "_₃" => congrmFun3
 /-- A generic function with four arguments.  It is the "function underscore" input to `congrm`. -/
 @[nolint unused_arguments]
 def congrmFun4 {α β γ δ ρ} {r : ρ} : α → β → γ → δ → ρ := fun _ _ _ _ => r
+#align tactic.congrm_fun_4 Tactic.congrmFun4
 
 -- mathport name: expr_₄
 notation "_₄" => congrmFun4
@@ -72,6 +76,7 @@ unsafe def convert_to_explicit (pat lhs : expr) : tactic expr :=
   if pat.get_app_fn.const_name.toString.startsWith "tactic.congrm_fun_" then
     pat.list_explicit_args >>= lhs.replace_explicit_args
   else return pat
+#align tactic.convert_to_explicit tactic.convert_to_explicit
 
 /-- For each element of `list congr_arg_kind` that is `eq`, add a pair `(g, pat)` to the
 final list.  Otherwise, discard an appropriate number of initial terms from each list
@@ -90,6 +95,7 @@ private unsafe def extract_subgoals : List expr → List CongrArgKind → List e
   | _ :: _ :: prf_args, CongrArgKind.cast :: kinds, _ :: pat_args => extract_subgoals prf_args kinds pat_args
   | _, _, [] => pure []
   | _, _, _ => fail "unsupported congr lemma"
+#align tactic.extract_subgoals tactic.extract_subgoals
 
 /-- `equate_with_pattern_core pat` solves a single goal of the form `lhs = rhs`
 (assuming that `lhs` and `rhs` are unifiable with `pat`)
@@ -135,6 +141,7 @@ unsafe def equate_with_pattern_core : expr → tactic (List expr)
           | _ => do
             let pat ← pp pat
             fail <| to_fmt "unsupported pattern:\n" ++ pat
+#align tactic.equate_with_pattern_core tactic.equate_with_pattern_core
 
 /-- `equate_with_pattern pat` solves a single goal of the form `lhs = rhs`
 (assuming that `lhs` and `rhs` are unifiable with `pat`)
@@ -145,6 +152,7 @@ unsafe def equate_with_pattern (pat : expr) : tactic Unit := do
   let congr_subgoals ← solve1 (equate_with_pattern_core pat)
   let gs ← get_goals
   set_goals <| congr_subgoals ++ gs
+#align tactic.equate_with_pattern tactic.equate_with_pattern
 
 end Tactic
 
@@ -192,9 +200,11 @@ inputs to the "function underscore".  After that, `congrm` continues with its ma
 -/
 unsafe def congrm (arg : parse texpr) : tactic Unit := do
   try <| applyc `` _root_.eq.to_iff
-  let quote.1 (@Eq (%%ₓty) _ _) ← target | fail "congrm: goal must be an equality or iff"
+  let quote.1 (@Eq (%%ₓty) _ _) ← target |
+    fail "congrm: goal must be an equality or iff"
   let ta ← to_expr (pquote.1 (%%ₓarg : %%ₓty)) true false
   equate_with_pattern ta
+#align tactic.interactive.congrm tactic.interactive.congrm
 
 add_tactic_doc
   { Name := "congrm", category := DocCategory.tactic, declNames := [`tactic.interactive.congrm],

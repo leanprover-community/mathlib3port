@@ -203,6 +203,8 @@ theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → 
     (volume_preserving_equiv_real_prod.symm _).integrable_on_comp_preimage (MeasurableEquiv.measurableEmbedding _)] at
     Hi
   simpa only [hF'] using Hi.neg
+#align
+  complex.integral_boundary_rect_of_has_fderiv_at_real_off_countable Complex.integral_boundary_rect_of_has_fderiv_at_real_off_countable
 
 /-- Suppose that a function `f : ℂ → E` is continuous on a closed rectangle with opposite corners at
 `z w : ℂ`, is *real* differentiable on the corresponding open rectangle, and
@@ -220,6 +222,8 @@ theorem integral_boundary_rect_of_continuous_on_of_has_fderiv_at_real (f : ℂ �
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • f' (x + y * I) 1 - f' (x + y * I) i :=
   integral_boundary_rect_of_has_fderiv_at_real_off_countable f f' z w ∅ countable_empty Hc (fun x hx => Hd x hx.1) Hi
+#align
+  complex.integral_boundary_rect_of_continuous_on_of_has_fderiv_at_real Complex.integral_boundary_rect_of_continuous_on_of_has_fderiv_at_real
 
 /-- Suppose that a function `f : ℂ → E` is *real* differentiable on a closed rectangle with opposite
 corners at `z w : ℂ` and $\frac{\partial f}{\partial \bar z}$ is integrable on this rectangle. Then
@@ -238,6 +242,7 @@ theorem integral_boundary_rect_of_differentiable_on_real (f : ℂ → E) (z w : 
       Hd.HasFderivAt <| by
         simpa only [← mem_interior_iff_mem_nhds, interior_re_prod_im, interval, interior_Icc] using hx.1)
     Hi
+#align complex.integral_boundary_rect_of_differentiable_on_real Complex.integral_boundary_rect_of_differentiable_on_real
 
 /-- **Cauchy-Goursat theorem** for a rectangle: the integral of a complex differentiable function
 over the boundary of a rectangle equals zero. More precisely, if `f` is continuous on a closed
@@ -258,6 +263,8 @@ theorem integral_boundary_rect_eq_zero_of_differentiable_on_off_countable (f : �
             Hc (fun x hx => (Hd x hx).HasFderivAt.restrictScalars ℝ) _).trans
         _ <;>
     simp [← ContinuousLinearMap.map_smul]
+#align
+  complex.integral_boundary_rect_eq_zero_of_differentiable_on_off_countable Complex.integral_boundary_rect_eq_zero_of_differentiable_on_off_countable
 
 /-- **Cauchy-Goursat theorem for a rectangle**: the integral of a complex differentiable function
 over the boundary of a rectangle equals zero. More precisely, if `f` is continuous on a closed
@@ -272,6 +279,8 @@ theorem integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on (f 
       0 :=
   (integral_boundary_rect_eq_zero_of_differentiable_on_off_countable f z w ∅ countable_empty Hc) fun x hx =>
     Hd.DifferentiableAt <| (is_open_Ioo.ReProdIm is_open_Ioo).mem_nhds hx.1
+#align
+  complex.integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on Complex.integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on
 
 /-- **Cauchy-Goursat theorem** for a rectangle: the integral of a complex differentiable function
 over the boundary of a rectangle equals zero. More precisely, if `f` is complex differentiable on a
@@ -284,6 +293,8 @@ theorem integral_boundary_rect_eq_zero_of_differentiable_on (f : ℂ → E) (z w
       0 :=
   integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on f z w H.ContinuousOn <|
     H.mono <| inter_subset_inter (preimage_mono Ioo_subset_Icc_self) (preimage_mono Ioo_subset_Icc_self)
+#align
+  complex.integral_boundary_rect_eq_zero_of_differentiable_on Complex.integral_boundary_rect_eq_zero_of_differentiable_on
 
 /-- If `f : ℂ → E` is continuous the closed annulus `r ≤ ∥z - c∥ ≤ R`, `0 < r ≤ R`, and is complex
 differentiable at all but countably many points of its interior, then the integrals of
@@ -322,6 +333,8 @@ theorem circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_
     
   simpa [g, circleMap, exp_periodic _, sub_eq_zero, ← exp_add] using
     integral_boundary_rect_eq_zero_of_differentiable_on_off_countable _ ⟨a, 0⟩ ⟨b, 2 * π⟩ _ hs hc hd
+#align
+  complex.circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable Complex.circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable
 
 /-- **Cauchy-Goursat theorem** for an annulus. If `f : ℂ → E` is continuous on the closed annulus
 `r ≤ ∥z - c∥ ≤ R`, `0 < r ≤ R`, and is complex differentiable at all but countably many points of
@@ -339,6 +352,8 @@ theorem circle_integral_eq_of_differentiable_on_annulus_off_countable {c : ℂ} 
         ((continuous_on_id.sub continuous_on_const).smul hc) fun z hz => (differentiableAtId.sub_const _).smul (hd z hz)
     _ = ∮ z in C(c, r), f z := circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _
     
+#align
+  complex.circle_integral_eq_of_differentiable_on_annulus_off_countable Complex.circle_integral_eq_of_differentiable_on_annulus_off_countable
 
 /-- **Cauchy integral formula** for the value at the center of a disc. If `f` is continuous on a
 punctured closed disc of radius `R`, is differentiable at all but countably many points of the
@@ -392,6 +407,8 @@ theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_o
       field_simp [hr0.ne', real.two_pi_pos.ne']
       ac_rfl
     
+#align
+  complex.circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto Complex.circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto
 
 /-- **Cauchy integral formula** for the value at the center of a disc. If `f : ℂ → E` is continuous
 on a closed disc of radius `R` and is complex differentiable at all but countably many points of its
@@ -401,6 +418,8 @@ theorem circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable {
     (hd : ∀ z ∈ Ball c R \ s, DifferentiableAt ℂ f z) : (∮ z in C(c, R), (z - c)⁻¹ • f z) = (2 * π * I : ℂ) • f c :=
   circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto h0 hs (hc.mono <| diff_subset _ _)
     (fun z hz => hd z ⟨hz.1.1, hz.2⟩) (hc.ContinuousAt <| closed_ball_mem_nhds _ h0).ContinuousWithinAt
+#align
+  complex.circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable Complex.circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable
 
 /-- **Cauchy-Goursat theorem** for a disk: if `f : ℂ → E` is continuous on a closed disk
 `{z | ∥z - c∥ ≤ R}` and is complex differentiable at all but countably many points of its interior,
@@ -420,6 +439,8 @@ theorem circle_integral_eq_zero_of_differentiable_on_off_countable {R : ℝ} (h0
         (differentiable_at_id.sub_const _).smul (hd z hz)
     _ = 0 := by rw [sub_self, zero_smul, smul_zero]
     
+#align
+  complex.circle_integral_eq_zero_of_differentiable_on_off_countable Complex.circle_integral_eq_zero_of_differentiable_on_off_countable
 
 /-- An auxiliary lemma for
 `complex.circle_integral_sub_inv_smul_of_differentiable_on_off_countable`. This lemma assumes
@@ -450,6 +471,8 @@ theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable_aux {R :
     circleIntegral.integral_sub, ← circleIntegral.integral_congr hR.le hFeq, HI]
   exacts[(hc'.smul (hc.mono sphere_subset_closed_ball)).CircleIntegrable hR.le,
     (hc'.smul continuous_on_const).CircleIntegrable hR.le]
+#align
+  complex.circle_integral_sub_inv_smul_of_differentiable_on_off_countable_aux Complex.circle_integral_sub_inv_smul_of_differentiable_on_off_countable_aux
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is continuous on a closed disc of radius `R` and is
 complex differentiable at all but countably many points of its interior, then for any `w` in this
@@ -482,6 +505,8 @@ theorem two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_
     rw [← Cardinal.le_aleph_0_iff_set_countable, Cardinal.mk_Ioo_real (hlu₀.1.trans hlu₀.2)] at this
     exact this.not_lt Cardinal.aleph_0_lt_continuum
   exact ⟨g x, (hlu_sub hx.1).1, (hlu_sub hx.1).2, hx.2⟩
+#align
+  complex.two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable Complex.two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is continuous on a closed disc of radius `R` and is
 complex differentiable at all but countably many points of its interior, then for any `w` in this
@@ -492,6 +517,8 @@ theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable {R : ℝ
     (hd : ∀ x ∈ Ball c R \ s, DifferentiableAt ℂ f x) : (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w := by
   rw [← two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw hc hd, smul_inv_smul₀]
   simp [Real.pi_ne_zero, I_ne_zero]
+#align
+  complex.circle_integral_sub_inv_smul_of_differentiable_on_off_countable Complex.circle_integral_sub_inv_smul_of_differentiable_on_off_countable
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is complex differentiable on an open disc and is
 continuous on its closure, then for any `w` in this open ball we have
@@ -500,6 +527,8 @@ theorem _root_.diff_cont_on_cl.circle_integral_sub_inv_smul {R : ℝ} {c w : ℂ
     (h : DiffContOnCl ℂ f (Ball c R)) (hw : w ∈ Ball c R) : (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
   (circle_integral_sub_inv_smul_of_differentiable_on_off_countable countable_empty hw h.continuous_on_ball) fun x hx =>
     h.DifferentiableAt is_open_ball hx.1
+#align
+  complex._root_.diff_cont_on_cl.circle_integral_sub_inv_smul complex._root_.diff_cont_on_cl.circle_integral_sub_inv_smul
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is complex differentiable on a closed disc of radius
 `R`, then for any `w` in its interior we have $\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$. -/
@@ -507,6 +536,8 @@ theorem _root_.differentiable_on.circle_integral_sub_inv_smul {R : ℝ} {c w : �
     (hd : DifferentiableOn ℂ f (ClosedBall c R)) (hw : w ∈ Ball c R) :
     (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
   (hd.mono closure_ball_subset_closed_ball).DiffContOnCl.circle_integral_sub_inv_smul hw
+#align
+  complex._root_.differentiable_on.circle_integral_sub_inv_smul complex._root_.differentiable_on.circle_integral_sub_inv_smul
 
 /-- **Cauchy integral formula**: if `f : ℂ → ℂ` is continuous on a closed disc of radius `R` and is
 complex differentiable at all but countably many points of its interior, then for any `w` in this
@@ -517,6 +548,8 @@ theorem circle_integral_div_sub_of_differentiable_on_off_countable {R : ℝ} {c 
     (hd : ∀ z ∈ Ball c R \ s, DifferentiableAt ℂ f z) : (∮ z in C(c, R), f z / (z - w)) = 2 * π * I * f w := by
   simpa only [smul_eq_mul, div_eq_inv_mul] using
     circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw hc hd
+#align
+  complex.circle_integral_div_sub_of_differentiable_on_off_countable Complex.circle_integral_div_sub_of_differentiable_on_off_countable
 
 /-- If `f : ℂ → E` is continuous on a closed ball of positive radius and is differentiable at all
 but countably many points of the corresponding open ball, then it is analytic on the open ball with
@@ -531,6 +564,8 @@ theorem hasFpowerSeriesOnBallOfDifferentiableOffCountable {R : ℝ≥0} {c : ℂ
           Ennreal.coe_lt_coe] using hw
       rw [← two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw' hc hd]
       exact (hasFpowerSeriesOnCauchyIntegral ((hc.mono sphere_subset_closed_ball).CircleIntegrable R.2) hR).HasSum hw }
+#align
+  complex.has_fpower_series_on_ball_of_differentiable_off_countable Complex.hasFpowerSeriesOnBallOfDifferentiableOffCountable
 
 /-- If `f : ℂ → E` is complex differentiable on an open disc of positive radius and is continuous
 on its closure, then it is analytic on the open disc with coefficients of the power series given by
@@ -539,6 +574,7 @@ theorem _root_.diff_cont_on_cl.has_fpower_series_on_ball {R : ℝ≥0} {c : ℂ}
     (hf : DiffContOnCl ℂ f (Ball c R)) (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   hasFpowerSeriesOnBallOfDifferentiableOffCountable countable_empty hf.continuous_on_ball
     (fun z hz => hf.DifferentiableAt is_open_ball hz.1) hR
+#align complex._root_.diff_cont_on_cl.has_fpower_series_on_ball complex._root_.diff_cont_on_cl.has_fpower_series_on_ball
 
 /-- If `f : ℂ → E` is complex differentiable on a closed disc of positive radius, then it is
 analytic on the corresponding open disc, and the coefficients of the power series are given by
@@ -548,6 +584,8 @@ weaker assumptions. -/
 protected theorem _root_.differentiable_on.has_fpower_series_on_ball {R : ℝ≥0} {c : ℂ} {f : ℂ → E}
     (hd : DifferentiableOn ℂ f (ClosedBall c R)) (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   (hd.mono closure_ball_subset_closed_ball).DiffContOnCl.HasFpowerSeriesOnBall hR
+#align
+  complex._root_.differentiable_on.has_fpower_series_on_ball complex._root_.differentiable_on.has_fpower_series_on_ball
 
 /-- If `f : ℂ → E` is complex differentiable on some set `s`, then it is analytic at any point `z`
 such that `s ∈ 𝓝 z` (equivalently, `z ∈ interior s`). -/
@@ -556,13 +594,16 @@ protected theorem _root_.differentiable_on.analytic_at {s : Set ℂ} {f : ℂ �
   rcases nhds_basis_closed_ball.mem_iff.1 hz with ⟨R, hR0, hRs⟩
   lift R to ℝ≥0 using hR0.le
   exact ((hd.mono hRs).HasFpowerSeriesOnBall hR0).AnalyticAt
+#align complex._root_.differentiable_on.analytic_at complex._root_.differentiable_on.analytic_at
 
 theorem _root_.differentiable_on.analytic_on {s : Set ℂ} {f : ℂ → E} (hd : DifferentiableOn ℂ f s) (hs : IsOpen s) :
     AnalyticOn ℂ f s := fun z hz => hd.AnalyticAt (hs.mem_nhds hz)
+#align complex._root_.differentiable_on.analytic_on complex._root_.differentiable_on.analytic_on
 
 /-- A complex differentiable function `f : ℂ → E` is analytic at every point. -/
 protected theorem _root_.differentiable.analytic_at {f : ℂ → E} (hf : Differentiable ℂ f) (z : ℂ) : AnalyticAt ℂ f z :=
   hf.DifferentiableOn.AnalyticAt univ_mem
+#align complex._root_.differentiable.analytic_at complex._root_.differentiable.analytic_at
 
 /-- When `f : ℂ → E` is differentiable, the `cauchy_power_series f z R` represents `f` as a power
 series centered at `z` in the entirety of `ℂ`, regardless of `R : ℝ≥0`, with  `0 < R`. -/
@@ -570,6 +611,7 @@ protected theorem _root_.differentiable.has_fpower_series_on_ball {f : ℂ → E
     (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f z R) z ∞ :=
   (h.DifferentiableOn.HasFpowerSeriesOnBall hR).rEqTopOfExists fun r hr =>
     ⟨_, h.DifferentiableOn.HasFpowerSeriesOnBall hr⟩
+#align complex._root_.differentiable.has_fpower_series_on_ball complex._root_.differentiable.has_fpower_series_on_ball
 
 end Complex
 

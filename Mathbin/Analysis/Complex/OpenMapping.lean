@@ -66,6 +66,7 @@ theorem DiffContOnCl.ball_subset_image_closed_ball (h : DiffContOnCl ℂ f (Ball
   have h9 := h3.eq_on_of_preconnected_of_frequently_eq analyticOnConst h8 hz1 h7
   have h10 : f z = f z₀ := (h9 (mem_ball_self hr)).symm
   exact not_eventually.mpr hz₀ (mem_of_superset (ball_mem_nhds z₀ hr) (h10 ▸ h9))
+#align diff_cont_on_cl.ball_subset_image_closed_ball DiffContOnCl.ball_subset_image_closed_ball
 
 /-- A function `f : ℂ → ℂ` which is analytic at a point `z₀` is either constant in a neighborhood
 of `z₀`, or behaves locally like an open function (in the sense that the image of every neighborhood
@@ -101,6 +102,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux (hf : AnalyticAt 
   exact
     (h6.ball_subset_image_closed_ball hr (fun z hz => hfx z hz) (not_eventually.mp h)).trans
       (image_subset f (closed_ball_subset_closed_ball inf_le_right))
+#align analytic_at.eventually_constant_or_nhds_le_map_nhds_aux AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux
 
 /-- The *open mapping theorem* for holomorphic functions, local version: is a function `g : E → ℂ`
 is analytic at a point `z₀`, then either it is constant in a neighborhood of `z₀`, or it maps every
@@ -139,7 +141,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     have h4 : ∥z - z₀∥ < r := by simpa [dist_eq_norm] using mem_ball.mp hz
     replace h4 : ↑∥z - z₀∥ ∈ ball (0 : ℂ) r := by
       simpa only [mem_ball_zero_iff, norm_eq_abs, abs_of_real, abs_norm_eq_norm]
-    simpa only [gray, ray, smul_smul, mul_inv_cancel h', one_smul, add_sub_cancel'_right, Function.comp_app,
+    simpa only [gray, ray, smul_smul, mul_inv_cancel h', one_smul, add_sub_cancel'_right, Function.comp_apply,
       Complex.coe_smul] using h3 (↑∥z - z₀∥) h4
     
   · right
@@ -153,8 +155,9 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     have h10 : Continuous fun t : ℂ => z₀ + t • z := continuous_const.add (continuous_id'.smul continuous_const)
     simpa using h10.tendsto 0
     
+#align analytic_at.eventually_constant_or_nhds_le_map_nhds AnalyticAt.eventually_constant_or_nhds_le_map_nhds
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (s «expr ⊆ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (s «expr ⊆ » U) -/
 /-- The *open mapping theorem* for holomorphic functions, global version: if a function `g : E → ℂ`
 is analytic on a connected set `U`, then either it is constant on `U`, or it is open on `U` (in the
 sense that it maps any open set contained in `U` to an open set in `ℂ`). -/
@@ -171,4 +174,5 @@ theorem AnalyticOn.is_constant_or_is_open (hg : AnalyticOn ℂ g U) (hU : IsPrec
       (hg w (hs1 hw1)).eventually_constant_or_nhds_le_map_nhds.resolve_left (h w (hs1 hw1))
         (image_mem_map (hs2.mem_nhds hw1))
     
+#align analytic_on.is_constant_or_is_open AnalyticOn.is_constant_or_is_open
 

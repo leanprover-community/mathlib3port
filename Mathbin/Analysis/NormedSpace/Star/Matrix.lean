@@ -53,6 +53,7 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
   -- Putting it all together
   rw [← sq_le_one_iff (norm_nonneg (U i j)), ← diag_eq_one, re_diag_eq_norm_sum]
   exact norm_sum
+#align entry_norm_bound_of_unitary entry_norm_bound_of_unitary
 
 attribute [local instance] Matrix.normedAddCommGroup
 
@@ -61,6 +62,7 @@ theorem entrywise_sup_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Ma
   simp_rw [pi_norm_le_iff_of_nonneg zero_le_one]
   intro i j
   exact entry_norm_bound_of_unitary hU _ _
+#align entrywise_sup_norm_bound_of_unitary entrywise_sup_norm_bound_of_unitary
 
 end EntrywiseSupNorm
 

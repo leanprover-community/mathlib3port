@@ -39,6 +39,7 @@ structure RingSubgroupsBasis {A ι : Type _} [Ring A] (B : ι → AddSubgroup A)
   mul : ∀ i, ∃ j, (B j : Set A) * B j ⊆ B i
   leftMul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x * y) ⁻¹' B i
   rightMul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => y * x) ⁻¹' B i
+#align ring_subgroups_basis RingSubgroupsBasis
 
 namespace RingSubgroupsBasis
 
@@ -53,6 +54,7 @@ theorem ofComm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A) (inter : 
       cases' leftMul x i with j hj
       use j
       simpa [mul_comm] using hj }
+#align ring_subgroups_basis.of_comm RingSubgroupsBasis.ofComm
 
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
 def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A where
@@ -93,19 +95,23 @@ def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgrou
     rintro x₀ _ ⟨i, rfl⟩
     cases' hB.right_mul x₀ i with k hk
     use B k, k, rfl, hk
+#align ring_subgroups_basis.to_ring_filter_basis RingSubgroupsBasis.toRingFilterBasis
 
 variable [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B)
 
 theorem mem_add_group_filter_basis_iff {V : Set A} : V ∈ hB.toRingFilterBasis.toAddGroupFilterBasis ↔ ∃ i, V = B i :=
   Iff.rfl
+#align ring_subgroups_basis.mem_add_group_filter_basis_iff RingSubgroupsBasis.mem_add_group_filter_basis_iff
 
 theorem mem_add_group_filter_basis (i) : (B i : Set A) ∈ hB.toRingFilterBasis.toAddGroupFilterBasis :=
   ⟨i, rfl⟩
+#align ring_subgroups_basis.mem_add_group_filter_basis RingSubgroupsBasis.mem_add_group_filter_basis
 
 /-- The topology defined from a subgroups basis, admitting the given subgroups as a basis
 of neighborhoods of zero. -/
 def topology : TopologicalSpace A :=
   hB.toRingFilterBasis.toAddGroupFilterBasis.topology
+#align ring_subgroups_basis.topology RingSubgroupsBasis.topology
 
 theorem has_basis_nhds_zero : HasBasis (@nhds A hB.topology 0) (fun _ => True) fun i => B i :=
   ⟨by
@@ -118,6 +124,7 @@ theorem has_basis_nhds_zero : HasBasis (@nhds A hB.topology 0) (fun _ => True) f
     · rintro ⟨i, -, hi⟩
       exact ⟨B i, ⟨i, rfl⟩, hi⟩
       ⟩
+#align ring_subgroups_basis.has_basis_nhds_zero RingSubgroupsBasis.has_basis_nhds_zero
 
 theorem has_basis_nhds (a : A) : HasBasis (@nhds A hB.topology a) (fun _ => True) fun i => { b | b - a ∈ B i } :=
   ⟨by
@@ -145,6 +152,7 @@ theorem has_basis_nhds (a : A) : HasBasis (@nhds A hB.topology a) (fun _ => True
       apply hi
       simpa using b_in
       ⟩
+#align ring_subgroups_basis.has_basis_nhds RingSubgroupsBasis.has_basis_nhds
 
 /-- Given a subgroups basis, the basis elements as open additive subgroups in the associated
 topology. -/
@@ -158,6 +166,7 @@ def openAddSubgroup (i : ι) : @OpenAddSubgroup A _ hB.topology :=
       use i, trivial
       rintro b b_in
       simpa using (B i).add_mem a_in b_in }
+#align ring_subgroups_basis.open_add_subgroup RingSubgroupsBasis.openAddSubgroup
 
 -- see Note [nonarchimedean non instances]
 theorem nonarchimedean : @NonarchimedeanRing A _ hB.topology := by
@@ -166,6 +175,7 @@ theorem nonarchimedean : @NonarchimedeanRing A _ hB.topology := by
   intro U hU
   obtain ⟨i, -, hi : (B i : Set A) ⊆ U⟩ := hB.has_basis_nhds_zero.mem_iff.mp hU
   exact ⟨hB.open_add_subgroup i, hi⟩
+#align ring_subgroups_basis.nonarchimedean RingSubgroupsBasis.nonarchimedean
 
 end RingSubgroupsBasis
 
@@ -178,6 +188,7 @@ structure SubmodulesRingBasis (B : ι → Submodule R A) : Prop where
   inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j
   leftMul : ∀ (a : A) (i), ∃ j, a • B j ≤ B i
   mul : ∀ i, ∃ j, (B j : Set A) * B j ⊆ B i
+#align submodules_ring_basis SubmodulesRingBasis
 
 namespace SubmodulesRingBasis
 
@@ -190,10 +201,12 @@ theorem toRingSubgroupsBasis (hB : SubmodulesRingBasis B) : RingSubgroupsBasis f
   use j
   rintro b (b_in : b ∈ B j)
   exact hj ⟨b, b_in, rfl⟩
+#align submodules_ring_basis.to_ring_subgroups_basis SubmodulesRingBasis.toRingSubgroupsBasis
 
 /-- The topology associated to a basis of submodules in an algebra. -/
 def topology [Nonempty ι] (hB : SubmodulesRingBasis B) : TopologicalSpace A :=
   hB.toRingSubgroupsBasis.topology
+#align submodules_ring_basis.topology SubmodulesRingBasis.topology
 
 end SubmodulesRingBasis
 
@@ -205,6 +218,7 @@ admits this family as a basis of neighborhoods of zero. -/
 structure SubmodulesBasis [TopologicalSpace R] (B : ι → Submodule R M) : Prop where
   inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j
   smul : ∀ (m : M) (i : ι), ∀ᶠ a in 𝓝 (0 : R), a • m ∈ B i
+#align submodules_basis SubmodulesBasis
 
 namespace SubmodulesBasis
 
@@ -252,10 +266,12 @@ def toModuleFilterBasis : ModuleFilterBasis R M where
   smul_right' := by
     rintro m₀ _ ⟨i, rfl⟩
     exact hB.smul m₀ i
+#align submodules_basis.to_module_filter_basis SubmodulesBasis.toModuleFilterBasis
 
 /-- The topology associated to a basis of submodules in a module. -/
 def topology : TopologicalSpace M :=
   hB.toModuleFilterBasis.toAddGroupFilterBasis.topology
+#align submodules_basis.topology SubmodulesBasis.topology
 
 /-- Given a submodules basis, the basis elements as open additive subgroups in the associated
 topology. -/
@@ -269,6 +285,7 @@ def openAddSubgroup (i : ι) : @OpenAddSubgroup M _ hB.topology :=
       use B i, i, rfl
       rintro - ⟨b, b_in, rfl⟩
       exact (B i).add_mem a_in b_in }
+#align submodules_basis.open_add_subgroup SubmodulesBasis.openAddSubgroup
 
 -- see Note [nonarchimedean non instances]
 theorem nonarchimedean (hB : SubmodulesBasis B) : @NonarchimedeanAddGroup M _ hB.topology := by
@@ -278,6 +295,7 @@ theorem nonarchimedean (hB : SubmodulesBasis B) : @NonarchimedeanAddGroup M _ hB
   obtain ⟨-, ⟨i, rfl⟩, hi : (B i : Set M) ⊆ U⟩ :=
     hB.to_module_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff.mp hU
   exact ⟨hB.open_add_subgroup i, hi⟩
+#align submodules_basis.nonarchimedean SubmodulesBasis.nonarchimedean
 
 library_note "nonarchimedean non instances"/--
 The non archimedean subgroup basis lemmas cannot be instances because some instances
@@ -301,6 +319,7 @@ variable [TopologicalSpace R] {B : ι → Submodule R A} (hB : SubmodulesRingBas
 
 theorem SubmodulesRingBasis.toSubmodulesBasis : SubmodulesBasis B :=
   { inter := hB.inter, smul := hsmul }
+#align submodules_ring_basis.to_submodules_basis SubmodulesRingBasis.toSubmodulesBasis
 
 example [Nonempty ι] : hB.topology = (hB.toSubmodulesBasis hsmul).topology :=
   rfl
@@ -313,6 +332,7 @@ a topological module structure. -/
 structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → Submodule R M) : Prop where
   inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j
   smul : ∀ (m : M) (i : ι), ∃ U ∈ BR, U ⊆ (fun a => a • m) ⁻¹' B i
+#align ring_filter_basis.submodules_basis RingFilterBasis.SubmodulesBasis
 
 theorem RingFilterBasis.submodulesBasisIsBasis (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @SubmodulesBasis ι R _ M _ _ BR.topology B :=
@@ -322,6 +342,7 @@ theorem RingFilterBasis.submodulesBasisIsBasis (BR : RingFilterBasis R) {B : ι 
       intro m i
       rcases hB.smul m i with ⟨V, V_in, hV⟩
       exact mem_of_superset (BR.to_add_group_filter_basis.mem_nhds_zero V_in) hV }
+#align ring_filter_basis.submodules_basis_is_basis RingFilterBasis.submodulesBasisIsBasis
 
 /-- The module filter basis associated to a ring filter basis and a compatible submodule basis.
 This allows to build a topological module structure compatible with the given module structure
@@ -329,4 +350,5 @@ and the topology associated to the given ring filter basis. -/
 def RingFilterBasis.moduleFilterBasis [Nonempty ι] (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @ModuleFilterBasis R M _ BR.topology _ _ :=
   @SubmodulesBasis.toModuleFilterBasis ι R _ M _ _ BR.topology _ _ (BR.submodulesBasisIsBasis hB)
+#align ring_filter_basis.module_filter_basis RingFilterBasis.moduleFilterBasis
 

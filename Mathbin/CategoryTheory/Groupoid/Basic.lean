@@ -28,6 +28,7 @@ theorem is_thin_iff : Quiver.IsThin C ↔ ∀ c : C, Subsingleton (c ⟶ c) := b
     _ = f ≫ inv f ≫ g := by congr
     _ = g := by simp only [inv_eq_inv, is_iso.hom_inv_id_assoc]
     
+#align category_theory.groupoid.is_thin_iff CategoryTheory.Groupoid.is_thin_iff
 
 end Thin
 
@@ -36,6 +37,7 @@ section Disconnected
 /-- A subgroupoid is totally disconnected if it only has loops. -/
 def IsTotallyDisconnected :=
   ∀ c d : C, (c ⟶ d) → c = d
+#align category_theory.groupoid.is_totally_disconnected CategoryTheory.Groupoid.IsTotallyDisconnected
 
 end Disconnected
 

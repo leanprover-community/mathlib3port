@@ -32,20 +32,24 @@ instance : CommGroup PUnit := by
 @[simp, to_additive]
 theorem one_eq : (1 : PUnit) = star :=
   rfl
+#align punit.one_eq PUnit.one_eq
 
 @[simp, to_additive]
 theorem mul_eq : x * y = star :=
   rfl
+#align punit.mul_eq PUnit.mul_eq
 
 -- `sub_eq` simplifies `punit.sub_eq`, but the latter is eligible for `dsimp`
 @[simp, nolint simp_nf, to_additive]
 theorem div_eq : x / y = star :=
   rfl
+#align punit.div_eq PUnit.div_eq
 
 -- `neg_eq` simplifies `punit.neg_eq`, but the latter is eligible for `dsimp`
 @[simp, nolint simp_nf, to_additive]
 theorem inv_eq : x⁻¹ = star :=
   rfl
+#align punit.inv_eq PUnit.inv_eq
 
 instance : CommRing PUnit := by
   refine' { PUnit.commGroup, PUnit.addCommGroup with natCast := fun _ => PUnit.unit.. } <;>
@@ -66,14 +70,17 @@ instance : NormalizedGcdMonoid PUnit := by
 @[simp]
 theorem gcd_eq : gcd x y = star :=
   rfl
+#align punit.gcd_eq PUnit.gcd_eq
 
 @[simp]
 theorem lcm_eq : lcm x y = star :=
   rfl
+#align punit.lcm_eq PUnit.lcm_eq
 
 @[simp]
 theorem norm_unit_eq : normUnit x = 1 :=
   rfl
+#align punit.norm_unit_eq PUnit.norm_unit_eq
 
 instance : CanonicallyOrderedAddMonoid PUnit := by
   refine'
@@ -92,6 +99,7 @@ instance : HasSmul R PUnit where smul _ _ := unit
 @[simp]
 theorem smul_eq (r : R) : r • y = star :=
   rfl
+#align punit.smul_eq PUnit.smul_eq
 
 instance : IsCentralScalar R PUnit :=
   ⟨fun _ _ => rfl⟩

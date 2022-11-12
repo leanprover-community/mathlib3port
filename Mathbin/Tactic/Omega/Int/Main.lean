@@ -26,6 +26,7 @@ attribute [sugar]
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=
   sorry
+#align omega.int.desugar omega.int.desugar
 
 theorem univ_close_of_unsat_clausify (m : Nat) (p : Preform) : Clauses.Unsat (dnf (¬* p)) → UnivClose p (fun x => 0) m
   | h1 => by
@@ -33,11 +34,13 @@ theorem univ_close_of_unsat_clausify (m : Nat) (p : Preform) : Clauses.Unsat (dn
     apply valid_of_unsat_not
     apply unsat_of_clauses_unsat
     exact h1
+#align omega.int.univ_close_of_unsat_clausify Omega.Int.univ_close_of_unsat_clausify
 
 /-- Given a (p : preform), return the expr of a (t : univ_close m p) -/
 unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
   let x ← prove_unsats (dnf (¬* p))
   return (quote.1 (univ_close_of_unsat_clausify (%%ₓquote.1 m) (%%ₓquote.1 p) (%%ₓx)))
+#align omega.int.prove_univ_close omega.int.prove_univ_close
 
 /-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprterm : expr → tactic exprterm
@@ -59,6 +62,7 @@ unsafe def to_exprterm : expr → tactic exprterm
         let z ← eval_expr' Int x
         return (exprterm.cst z)) <|>
       (return <| exprterm.exp 1 x)
+#align omega.int.to_exprterm omega.int.to_exprterm
 
 /-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprform : expr → tactic exprform
@@ -83,12 +87,14 @@ unsafe def to_exprform : expr → tactic exprform
     return (exprform.and p q)
   | quote.1 (_ → %%ₓpx) => to_exprform px
   | x => (trace "Cannot reify expr : " >> trace x) >> failed
+#align omega.int.to_exprform omega.int.to_exprform
 
 /-- List of all unreified exprs -/
 unsafe def exprterm.exprs : exprterm → List expr
   | exprterm.cst _ => []
   | exprterm.exp _ x => [x]
   | exprterm.add t s => List.union t.exprs s.exprs
+#align omega.int.exprterm.exprs omega.int.exprterm.exprs
 
 /-- List of all unreified exprs -/
 unsafe def exprform.exprs : exprform → List expr
@@ -97,6 +103,7 @@ unsafe def exprform.exprs : exprform → List expr
   | exprform.not p => p.exprs
   | exprform.or p q => List.union p.exprs q.exprs
   | exprform.and p q => List.union p.exprs q.exprs
+#align omega.int.exprform.exprs omega.int.exprform.exprs
 
 /-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms -/
@@ -109,6 +116,7 @@ unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic Preterm
     let a ← xa.to_preterm
     let b ← xb.to_preterm
     return (a +* b)
+#align omega.int.exprterm.to_preterm omega.int.exprterm.to_preterm
 
 /-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms -/
@@ -132,6 +140,7 @@ unsafe def exprform.to_preform (xs : List expr) : exprform → tactic Preform
     let p ← xp.to_preform
     let q ← xq.to_preform
     return (p ∧* q)
+#align omega.int.exprform.to_preform omega.int.exprform.to_preform
 
 /-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms. -/
@@ -140,16 +149,19 @@ unsafe def to_preform (x : expr) : tactic (preform × Nat) := do
   let xs := xf.exprs
   let f ← xf.to_preform xs
   return (f, xs)
+#align omega.int.to_preform omega.int.to_preform
 
 /-- Return expr of proof of current LIA goal -/
 unsafe def prove : tactic expr := do
   let (p, m) ← target >>= to_preform
   trace_if_enabled `omega p
   prove_univ_close m p
+#align omega.int.prove omega.int.prove
 
 /-- Succeed iff argument is the expr of ℤ -/
 unsafe def eq_int (x : expr) : tactic Unit :=
   if x = quote.1 Int then skip else failed
+#align omega.int.eq_int omega.int.eq_int
 
 /-- Check whether argument is expr of a well-formed formula of LIA-/
 unsafe def wff : expr → tactic Unit
@@ -168,10 +180,12 @@ unsafe def wff : expr → tactic Unit
   | quote.1 True => skip
   | quote.1 False => skip
   | _ => failed
+#align omega.int.wff omega.int.wff
 
 /-- Succeed iff argument is expr of term whose type is wff -/
 unsafe def wfx (x : expr) : tactic Unit :=
   infer_type x >>= wff
+#align omega.int.wfx omega.int.wfx
 
 /-- Intro all universal quantifiers over ℤ -/
 unsafe def intro_ints_core : tactic Unit := do
@@ -179,15 +193,18 @@ unsafe def intro_ints_core : tactic Unit := do
   match x with
     | expr.pi _ _ (quote.1 Int) _ => intro_fresh >> intro_ints_core
     | _ => skip
+#align omega.int.intro_ints_core omega.int.intro_ints_core
 
 unsafe def intro_ints : tactic Unit := do
   let expr.pi _ _ (quote.1 Int) _ ← target
   intro_ints_core
+#align omega.int.intro_ints omega.int.intro_ints
 
 /-- If the goal has universal quantifiers over integers, introduce all of them.
 Otherwise, revert all hypotheses that are formulas of linear integer arithmetic. -/
 unsafe def preprocess : tactic Unit :=
   intro_ints <|> revert_cond_all wfx >> desugar
+#align omega.int.preprocess omega.int.preprocess
 
 end Int
 
@@ -198,4 +215,5 @@ open Omega.Int
 /-- The core omega tactic for integers. -/
 unsafe def omega_int (is_manual : Bool) : tactic Unit :=
   andthen (andthen desugar (if is_manual then skip else preprocess)) ((prove >>= apply) >> skip)
+#align omega_int omega_int
 

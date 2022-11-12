@@ -48,6 +48,7 @@ def domCoprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearM
   toFun v := (a fun i => v (Sum.inl i)) ⊗ₜ b fun i => v (Sum.inr i)
   map_add' v i p q := by cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add]
   map_smul' v i c p := by cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul]
+#align multilinear_map.dom_coprod MultilinearMap.domCoprod
 
 /-- A more bundled version of `multilinear_map.dom_coprod` that maps
 `((ι₁ → N) → N₁) ⊗ ((ι₂ → N) → N₂)` to `(ι₁ ⊕ ι₂ → N) → N₁ ⊗ N₂`. -/
@@ -68,11 +69,13 @@ def domCoprod' :
       fun c m n => by
       ext
       simp only [dom_coprod_apply, TensorProduct.tmul_smul, smul_apply]
+#align multilinear_map.dom_coprod' MultilinearMap.domCoprod'
 
 @[simp]
 theorem dom_coprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :
     domCoprod' (a ⊗ₜ[R] b) = domCoprod a b :=
   rfl
+#align multilinear_map.dom_coprod'_apply MultilinearMap.dom_coprod'_apply
 
 /-- When passed an `equiv.sum_congr`, `multilinear_map.dom_dom_congr` distributes over
 `multilinear_map.dom_coprod`. -/
@@ -80,6 +83,7 @@ theorem dom_coprod_dom_dom_congr_sum_congr (a : MultilinearMap R (fun _ : ι₁ 
     (b : MultilinearMap R (fun _ : ι₂ => N) N₂) (σa : ι₁ ≃ ι₃) (σb : ι₂ ≃ ι₄) :
     (a.domCoprod b).domDomCongr (σa.sumCongr σb) = (a.domDomCongr σa).domCoprod (b.domDomCongr σb) :=
   rfl
+#align multilinear_map.dom_coprod_dom_dom_congr_sum_congr MultilinearMap.dom_coprod_dom_dom_congr_sum_congr
 
 end DomCoprod
 

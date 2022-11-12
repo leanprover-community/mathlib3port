@@ -19,6 +19,7 @@ open Tactic Nat
 theorem is_sqrt {n a a2 b : ℕ} (ha2 : a * a = a2) (hb : a2 + b = n) (hle : b ≤ bit0 a) : sqrt n = a := by
   rw [← hb, ← ha2, ← pow_two]
   exact sqrt_add_eq' _ hle
+#align norm_num.is_sqrt NormNum.is_sqrt
 
 /-- Given `n` provides `(a, ⊢ nat.sqrt n = a)`. -/
 unsafe def prove_sqrt (ic : instance_cache) (n : expr) : tactic (instance_cache × expr × expr) := do
@@ -30,6 +31,7 @@ unsafe def prove_sqrt (ic : instance_cache) (n : expr) : tactic (instance_cache 
   let (ic, hb) ← prove_add_nat ic a2 b n
   let (ic, hle) ← prove_le_nat ic b ((quote.1 (bit0 : ℕ → ℕ)).mk_app [a])
   pure (ic, a, (quote.1 @is_sqrt).mk_app [n, a, a2, b, ha2, hb, hle])
+#align norm_num.prove_sqrt norm_num.prove_sqrt
 
 /-- A `norm_num` plugin for `sqrt n` when `n` is a numeral. -/
 @[norm_num]
@@ -42,6 +44,7 @@ unsafe def eval_sqrt : expr → tactic (expr × expr)
         let c ← mk_instance_cache (quote.1 ℕ)
         Prod.snd <$> prove_sqrt c en
   | _ => failed
+#align norm_num.eval_sqrt norm_num.eval_sqrt
 
 end NormNum
 

@@ -22,6 +22,7 @@ open CategoryTheory
 /-- The category of preorders. -/
 def PreorderCat :=
   Bundled Preorder
+#align Preorder PreorderCat
 
 namespace PreorderCat
 
@@ -39,10 +40,12 @@ instance : CoeSort PreorderCat (Type _) :=
 /-- Construct a bundled Preorder from the underlying type and typeclass. -/
 def of (α : Type _) [Preorder α] : PreorderCat :=
   Bundled.of α
+#align Preorder.of PreorderCat.of
 
 @[simp]
 theorem coe_of (α : Type _) [Preorder α] : ↥(of α) = α :=
   rfl
+#align Preorder.coe_of PreorderCat.coe_of
 
 instance : Inhabited PreorderCat :=
   ⟨of PUnit⟩
@@ -61,18 +64,21 @@ def Iso.mk {α β : PreorderCat.{u}} (e : α ≃o β) : α ≅ β where
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply x
+#align Preorder.iso.mk PreorderCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : PreorderCat ⥤ PreorderCat where
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
+#align Preorder.dual PreorderCat.dual
 
 /-- The equivalence between `Preorder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : PreorderCat ≌ PreorderCat :=
   Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+#align Preorder.dual_equiv PreorderCat.dualEquiv
 
 end PreorderCat
 
@@ -88,6 +94,7 @@ def preorderToCat : PreorderCat.{u} ⥤ Cat where
   map_comp' X Y Z f g := by
     apply CategoryTheory.Functor.ext
     tidy
+#align Preorder_to_Cat preorderToCat
 
 instance :
     Faithful preorderToCat.{u} where map_injective' X Y f g h := by

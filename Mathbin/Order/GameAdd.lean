@@ -39,10 +39,12 @@ namespace Prod
 inductive GameAdd : α × β → α × β → Prop
   | fst {a' a b} : rα a' a → game_add (a', b) (a, b)
   | snd {a b' b} : rβ b' b → game_add (a, b') (a, b)
+#align prod.game_add Prod.GameAdd
 
 /-- `game_add` is a `subrelation` of `prod.lex`. -/
 theorem game_add_le_lex : GameAdd rα rβ ≤ Prod.Lex rα rβ := fun _ _ h =>
   h.rec (fun _ _ b => Prod.Lex.left b b) fun a _ _ => Prod.Lex.right a
+#align prod.game_add_le_lex Prod.game_add_le_lex
 
 /-- `prod.rprod` is a subrelation of the transitive closure of `game_add`. -/
 theorem rprod_le_trans_gen_game_add : Prod.Rprod rα rβ ≤ Relation.TransGen (GameAdd rα rβ) := fun _ _ h =>
@@ -50,6 +52,7 @@ theorem rprod_le_trans_gen_game_add : Prod.Rprod rα rβ ≤ Relation.TransGen (
     (by
       intro _ _ _ _ hα hβ
       exact Relation.TransGen.tail (Relation.TransGen.single <| game_add.fst hα) (game_add.snd hβ))
+#align prod.rprod_le_trans_gen_game_add Prod.rprod_le_trans_gen_game_add
 
 end Prod
 
@@ -64,8 +67,10 @@ theorem Acc.prod_game_add {a b} (ha : Acc rα a) (hb : Acc rβ b) : Acc (Prod.Ga
   refine' Acc.intro _ fun h => _
   rintro (⟨ra⟩ | ⟨rb⟩)
   exacts[iha _ ra (Acc.intro b hb), ihb _ rb]
+#align acc.prod_game_add Acc.prod_game_add
 
 /-- The sum of two well-founded games is well-founded. -/
 theorem WellFounded.prod_game_add (hα : WellFounded rα) (hβ : WellFounded rβ) : WellFounded (Prod.GameAdd rα rβ) :=
   ⟨fun ⟨a, b⟩ => (hα.apply a).prod_game_add (hβ.apply b)⟩
+#align well_founded.prod_game_add WellFounded.prod_game_add
 

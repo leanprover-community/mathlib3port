@@ -54,10 +54,12 @@ variable [T2Space M] [Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
   toFun x i := (f i x • extChartAt I (f.c i) x, f i x)
   contMdiffToFun := cont_mdiff_pi_space.2 fun i => ((f i).smoothSmul contMdiffOnExtChartAt).prodMkSpace (f i).Smooth
+#align smooth_bump_covering.embedding_pi_tangent SmoothBumpCovering.embeddingPiTangent
 
 @[local simp]
 theorem embedding_pi_tangent_coe : ⇑f.embeddingPiTangent = fun x i => (f i x • extChartAt I (f.c i) x, f i x) :=
   rfl
+#align smooth_bump_covering.embedding_pi_tangent_coe SmoothBumpCovering.embedding_pi_tangent_coe
 
 theorem embedding_pi_tangent_inj_on : InjOn f.embeddingPiTangent s := by
   intro x hx y hy h
@@ -67,9 +69,11 @@ theorem embedding_pi_tangent_inj_on : InjOn f.embeddingPiTangent s := by
   rw [← h₂, f.apply_ind x hx, one_smul, one_smul] at h₁
   have := f.mem_ext_chart_at_source_of_eq_one h₂.symm
   exact (extChartAt I (f.c _)).InjOn (f.mem_ext_chart_at_ind_source x hx) this h₁
+#align smooth_bump_covering.embedding_pi_tangent_inj_on SmoothBumpCovering.embedding_pi_tangent_inj_on
 
 theorem embedding_pi_tangent_injective (f : SmoothBumpCovering ι I M) : Injective f.embeddingPiTangent :=
   injective_iff_inj_on_univ.2 f.embedding_pi_tangent_inj_on
+#align smooth_bump_covering.embedding_pi_tangent_injective SmoothBumpCovering.embedding_pi_tangent_injective
 
 theorem comp_embedding_pi_tangent_mfderiv (x : M) (hx : x ∈ s) :
     ((ContinuousLinearMap.fst ℝ E ℝ).comp
@@ -87,6 +91,7 @@ theorem comp_embedding_pi_tangent_mfderiv (x : M) (hx : x ∈ s) :
   simp only [embedding_pi_tangent_coe, ContinuousLinearMap.coe_comp', (· ∘ ·), ContinuousLinearMap.coe_fst',
     ContinuousLinearMap.proj_apply]
   rw [hy, Pi.one_apply, one_smul]
+#align smooth_bump_covering.comp_embedding_pi_tangent_mfderiv SmoothBumpCovering.comp_embedding_pi_tangent_mfderiv
 
 theorem embedding_pi_tangent_ker_mfderiv (x : M) (hx : x ∈ s) :
     LinearMap.ker (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) = ⊥ := by
@@ -94,10 +99,13 @@ theorem embedding_pi_tangent_ker_mfderiv (x : M) (hx : x ∈ s) :
   rw [← (mdifferentiableChart I (f.c (f.ind x hx))).ker_mfderiv_eq_bot (f.mem_chart_at_ind_source x hx), ←
     comp_embedding_pi_tangent_mfderiv]
   exact LinearMap.ker_le_ker_comp _ _
+#align smooth_bump_covering.embedding_pi_tangent_ker_mfderiv SmoothBumpCovering.embedding_pi_tangent_ker_mfderiv
 
 theorem embedding_pi_tangent_injective_mfderiv (x : M) (hx : x ∈ s) :
     Injective (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) :=
   LinearMap.ker_eq_bot.1 (f.embedding_pi_tangent_ker_mfderiv x hx)
+#align
+  smooth_bump_covering.embedding_pi_tangent_injective_mfderiv SmoothBumpCovering.embedding_pi_tangent_injective_mfderiv
 
 /-- Baby version of the Whitney weak embedding theorem: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be immersed into the `n`-dimensional
@@ -115,6 +123,7 @@ theorem exists_immersion_euclidean (f : SmoothBumpCovering ι I M) :
       eEF.injective.comp f.embedding_pi_tangent_injective, fun x => _⟩
   rw [mfderiv_comp _ eEF.differentiable_at.mdifferentiable_at f.embedding_pi_tangent.mdifferentiable_at, eEF.mfderiv_eq]
   exact eEF.injective.comp (f.embedding_pi_tangent_injective_mfderiv _ trivial)
+#align smooth_bump_covering.exists_immersion_euclidean SmoothBumpCovering.exists_immersion_euclidean
 
 end SmoothBumpCovering
 
@@ -129,4 +138,5 @@ theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
   haveI := f.fintype
   rcases f.exists_immersion_euclidean with ⟨n, e, hsmooth, hinj, hinj_mfderiv⟩
   exact ⟨n, e, hsmooth, hsmooth.continuous.closed_embedding hinj, hinj_mfderiv⟩
+#align exists_embedding_euclidean_of_compact exists_embedding_euclidean_of_compact
 

@@ -31,16 +31,19 @@ unsafe def replacer_core {α : Type} [reflected _ α] (ntac : Name) (eval : ∀ 
             let tac ← mk_const n >>= eval (Option (tactic α) → tactic α)
             return (tac (guard (ns ≠ []) >> some (replacer_core ns)))
     tac
+#align tactic.replacer_core tactic.replacer_core
 
 unsafe def replacer (ntac : Name) {α : Type} [reflected _ α] (F : Type → Type)
     (eF : ∀ β, reflected _ β → reflected _ (F β)) (R : ∀ β, F β → β) : tactic α :=
   attribute.get_instances ntac >>= replacer_core ntac fun β eβ e => R β <$> @eval_expr' (F β) (eF β eβ) e
+#align tactic.replacer tactic.replacer
 
 unsafe def mk_replacer₁ : expr → Nat → expr × expr
   | expr.pi n bi d b, i =>
     let (e₁, e₂) := mk_replacer₁ b (i + 1)
     (expr.pi n bi d e₁, (quote.1 (expr.pi n bi d) : expr) e₂)
   | _, i => (expr.var i, expr.var 0)
+#align tactic.mk_replacer₁ tactic.mk_replacer₁
 
 unsafe def mk_replacer₂ (ntac : Name) (v : expr × expr) : expr → Nat → Option expr
   | expr.pi n bi d b, i => do
@@ -55,9 +58,11 @@ unsafe def mk_replacer₂ (ntac : Name) (v : expr × expr) : expr → Nat → Op
           expr.lam `γ BinderInfo.default (quote.1 Type) <|
             expr.lam `f BinderInfo.default v.1 <| (List.range i).foldr (fun i e' => e' (expr.var (i + 2))) (expr.var 0)]
   | _, i => none
+#align tactic.mk_replacer₂ tactic.mk_replacer₂
 
 unsafe def mk_replacer (ntac : Name) (e : expr) : tactic expr :=
   mk_replacer₂ ntac (mk_replacer₁ e 0) e 0
+#align tactic.mk_replacer tactic.mk_replacer
 
 unsafe def valid_types : expr → List expr
   | expr.pi n bi d b => expr.pi n bi d <$> valid_types b
@@ -65,6 +70,7 @@ unsafe def valid_types : expr → List expr
     [quote.1 (tactic.{0} (%%ₓβ)), quote.1 (tactic.{0} (%%ₓβ) → tactic.{0} (%%ₓβ)),
       quote.1 (Option (tactic.{0} (%%ₓβ)) → tactic.{0} (%%ₓβ))]
   | _ => []
+#align tactic.valid_types tactic.valid_types
 
 unsafe def replacer_attr (ntac : Name) : user_attribute where
   Name := ntac
@@ -81,6 +87,7 @@ unsafe def replacer_attr (ntac : Name) : user_attribute where
       let d ← get_decl n
       let base ← get_decl ntac
       guardb ((valid_types base).any (· == d)) <|> fail f! "incorrect type for @[{ntac}]"
+#align tactic.replacer_attr tactic.replacer_attr
 
 /-- Define a new replaceable tactic. -/
 unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
@@ -97,6 +104,7 @@ unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
             toString ntac ++
           "]` attribute. " ++
         "It is intended for use with `auto_param`s for structure fields."
+#align tactic.def_replacer tactic.def_replacer
 
 setup_tactic_parser
 
@@ -123,6 +131,7 @@ unsafe def def_replacer_cmd (_ : parse <| tk "def_replacer") : lean.parser Unit 
       let t ← to_expr p
       def_replacer ntac t
     | none => def_replacer ntac (quote.1 (tactic Unit))
+#align tactic.def_replacer_cmd tactic.def_replacer_cmd
 
 add_tactic_doc
   { Name := "def_replacer", category := DocCategory.cmd, declNames := [`tactic.def_replacer_cmd],
@@ -133,6 +142,7 @@ unsafe def unprime : Name → tactic Name
     let s' := (s.splitOn ''').head
     if s'.length < s.length then pure (Name.mk_string s' n) else fail f! "expecting primed name: {nn}"
   | n => fail f! "invalid name: {n}"
+#align tactic.unprime tactic.unprime
 
 @[user_attribute]
 unsafe def replaceable_attr : user_attribute where
@@ -144,6 +154,7 @@ unsafe def replaceable_attr : user_attribute where
       let d ← get_decl n'
       def_replacer n d
       (replacer_attr n).Set n' () tt
+#align tactic.replaceable_attr tactic.replaceable_attr
 
 end Tactic
 

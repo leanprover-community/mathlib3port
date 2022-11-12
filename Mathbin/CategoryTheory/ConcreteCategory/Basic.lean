@@ -42,7 +42,7 @@ namespace CategoryTheory
 
 open CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`forget] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`forget] [] -/
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,
@@ -54,6 +54,7 @@ They are specified that order, to avoid unnecessary universe annotations.
 class ConcreteCategory (C : Type u) [Category.{v} C] where
   forget : C ⥤ Type w
   [forget_faithful : Faithful forget]
+#align category_theory.concrete_category CategoryTheory.ConcreteCategory
 
 attribute [instance] concrete_category.forget_faithful
 
@@ -61,8 +62,10 @@ attribute [instance] concrete_category.forget_faithful
 @[reducible]
 def forget (C : Type v) [Category C] [ConcreteCategory.{u} C] : C ⥤ Type u :=
   ConcreteCategory.forget C
+#align category_theory.forget CategoryTheory.forget
 
 instance ConcreteCategory.types : ConcreteCategory (Type u) where forget := 𝟭 _
+#align category_theory.concrete_category.types CategoryTheory.ConcreteCategory.types
 
 /-- Provide a coercion to `Type u` for a concrete category. This is not marked as an instance
 as it could potentially apply to every type, and so is too expensive in typeclass search.
@@ -74,6 +77,7 @@ instance : has_coe_to_sort X := concrete_category.has_coe_to_sort X
 -/
 def ConcreteCategory.hasCoeToSort (C : Type v) [Category C] [ConcreteCategory C] : CoeSort C (Type u) :=
   ⟨(ConcreteCategory.forget C).obj⟩
+#align category_theory.concrete_category.has_coe_to_sort CategoryTheory.ConcreteCategory.hasCoeToSort
 
 section
 
@@ -84,11 +88,13 @@ variable {C : Type v} [Category C] [ConcreteCategory C]
 @[simp]
 theorem forget_obj_eq_coe {X : C} : (forget C).obj X = X :=
   rfl
+#align category_theory.forget_obj_eq_coe CategoryTheory.forget_obj_eq_coe
 
 /-- Usually a bundled hom structure already has a coercion to function
 that works with different universes. So we don't use this as a global instance. -/
 def ConcreteCategory.hasCoeToFun {X Y : C} : CoeFun (X ⟶ Y) fun f => X → Y :=
   ⟨fun f => (forget _).map f⟩
+#align category_theory.concrete_category.has_coe_to_fun CategoryTheory.ConcreteCategory.hasCoeToFun
 
 attribute [local instance] concrete_category.has_coe_to_fun
 
@@ -97,69 +103,90 @@ theorem ConcreteCategory.hom_ext {X Y : C} (f g : X ⟶ Y) (w : ∀ x : X, f x =
   apply faithful.map_injective (forget C)
   ext
   exact w x
+#align category_theory.concrete_category.hom_ext CategoryTheory.ConcreteCategory.hom_ext
 
 @[simp]
 theorem forget_map_eq_coe {X Y : C} (f : X ⟶ Y) : (forget C).map f = f :=
   rfl
+#align category_theory.forget_map_eq_coe CategoryTheory.forget_map_eq_coe
 
 /-- Analogue of `congr_fun h x`,
 when `h : f = g` is an equality between morphisms in a concrete category.
 -/
 theorem congr_hom {X Y : C} {f g : X ⟶ Y} (h : f = g) (x : X) : f x = g x :=
   congr_fun (congr_arg (fun k : X ⟶ Y => (k : X → Y)) h) x
+#align category_theory.congr_hom CategoryTheory.congr_hom
 
 theorem coe_id {X : C} : (𝟙 X : X → X) = id :=
   (forget _).map_id X
+#align category_theory.coe_id CategoryTheory.coe_id
 
 theorem coe_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g : X → Z) = g ∘ f :=
   (forget _).map_comp f g
+#align category_theory.coe_comp CategoryTheory.coe_comp
 
 @[simp]
 theorem id_apply {X : C} (x : X) : (𝟙 X : X → X) x = x :=
   congr_fun ((forget _).map_id X) x
+#align category_theory.id_apply CategoryTheory.id_apply
 
 @[simp]
 theorem comp_apply {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f ≫ g) x = g (f x) :=
   congr_fun ((forget _).map_comp _ _) x
+#align category_theory.comp_apply CategoryTheory.comp_apply
 
 theorem ConcreteCategory.congr_hom {X Y : C} {f g : X ⟶ Y} (h : f = g) (x : X) : f x = g x :=
   congr_fun (congr_arg (fun f : X ⟶ Y => (f : X → Y)) h) x
+#align category_theory.concrete_category.congr_hom CategoryTheory.ConcreteCategory.congr_hom
 
 theorem ConcreteCategory.congr_arg {X Y : C} (f : X ⟶ Y) {x x' : X} (h : x = x') : f x = f x' :=
   congr_arg (f : X → Y) h
+#align category_theory.concrete_category.congr_arg CategoryTheory.ConcreteCategory.congr_arg
 
 /-- In any concrete category, injective morphisms are monomorphisms. -/
 theorem ConcreteCategory.mono_of_injective {X Y : C} (f : X ⟶ Y) (i : Function.Injective f) : Mono f :=
   (forget C).mono_of_mono_map ((mono_iff_injective f).2 i)
+#align category_theory.concrete_category.mono_of_injective CategoryTheory.ConcreteCategory.mono_of_injective
 
 theorem ConcreteCategory.injective_of_mono_of_preserves_pullback {X Y : C} (f : X ⟶ Y) [Mono f]
     [PreservesLimitsOfShape WalkingCospan (forget C)] : Function.Injective f :=
   (mono_iff_injective ((forget C).map f)).mp inferInstance
+#align
+  category_theory.concrete_category.injective_of_mono_of_preserves_pullback CategoryTheory.ConcreteCategory.injective_of_mono_of_preserves_pullback
 
 theorem ConcreteCategory.mono_iff_injective_of_preserves_pullback {X Y : C} (f : X ⟶ Y)
     [PreservesLimitsOfShape WalkingCospan (forget C)] : Mono f ↔ Function.Injective f :=
   ((forget C).mono_map_iff_mono _).symm.trans (mono_iff_injective _)
+#align
+  category_theory.concrete_category.mono_iff_injective_of_preserves_pullback CategoryTheory.ConcreteCategory.mono_iff_injective_of_preserves_pullback
 
 /-- In any concrete category, surjective morphisms are epimorphisms. -/
 theorem ConcreteCategory.epi_of_surjective {X Y : C} (f : X ⟶ Y) (s : Function.Surjective f) : Epi f :=
   (forget C).epi_of_epi_map ((epi_iff_surjective f).2 s)
+#align category_theory.concrete_category.epi_of_surjective CategoryTheory.ConcreteCategory.epi_of_surjective
 
 theorem ConcreteCategory.surjective_of_epi_of_preserves_pushout {X Y : C} (f : X ⟶ Y) [Epi f]
     [PreservesColimitsOfShape WalkingSpan (forget C)] : Function.Surjective f :=
   (epi_iff_surjective ((forget C).map f)).mp inferInstance
+#align
+  category_theory.concrete_category.surjective_of_epi_of_preserves_pushout CategoryTheory.ConcreteCategory.surjective_of_epi_of_preserves_pushout
 
 theorem ConcreteCategory.epi_iff_surjective_of_preserves_pushout {X Y : C} (f : X ⟶ Y)
     [PreservesColimitsOfShape WalkingSpan (forget C)] : Epi f ↔ Function.Surjective f :=
   ((forget C).epi_map_iff_epi _).symm.trans (epi_iff_surjective _)
+#align
+  category_theory.concrete_category.epi_iff_surjective_of_preserves_pushout CategoryTheory.ConcreteCategory.epi_iff_surjective_of_preserves_pushout
 
 theorem ConcreteCategory.bijective_of_is_iso {X Y : C} (f : X ⟶ Y) [IsIso f] : Function.Bijective ((forget C).map f) :=
   by
   rw [← is_iso_iff_bijective]
   infer_instance
+#align category_theory.concrete_category.bijective_of_is_iso CategoryTheory.ConcreteCategory.bijective_of_is_iso
 
 @[simp]
 theorem ConcreteCategory.has_coe_to_fun_Type {X Y : Type u} (f : X ⟶ Y) : coeFn f = f :=
   rfl
+#align category_theory.concrete_category.has_coe_to_fun_Type CategoryTheory.ConcreteCategory.has_coe_to_fun_Type
 
 end
 
@@ -170,6 +197,7 @@ class HasForget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory.{u}
   [ConcreteCategory.{u} D] where
   forget₂ : C ⥤ D
   forget_comp : forget₂ ⋙ forget D = forget C := by obviously
+#align category_theory.has_forget₂ CategoryTheory.HasForget₂
 
 /-- The forgetful functor `C ⥤ D` between concrete categories for which we have an instance
 `has_forget₂ C `. -/
@@ -177,10 +205,12 @@ class HasForget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory.{u}
 def forget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D] [ConcreteCategory D]
     [HasForget₂ C D] : C ⥤ D :=
   has_forget₂.forget₂
+#align category_theory.forget₂ CategoryTheory.forget₂
 
 instance forget₂_faithful (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D] [ConcreteCategory D]
     [HasForget₂ C D] : Faithful (forget₂ C D) :=
   HasForget₂.forget_comp.faithful_of_comp
+#align category_theory.forget₂_faithful CategoryTheory.forget₂_faithful
 
 instance forget₂_preserves_monomorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D]
     [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesMonomorphisms] : (forget₂ C D).PreservesMonomorphisms :=
@@ -188,6 +218,7 @@ instance forget₂_preserves_monomorphisms (C : Type v) (D : Type v') [Category 
     simp only [has_forget₂.forget_comp]
     infer_instance
   functor.preserves_monomorphisms_of_preserves_of_reflects _ (forget D)
+#align category_theory.forget₂_preserves_monomorphisms CategoryTheory.forget₂_preserves_monomorphisms
 
 instance forget₂_preserves_epimorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D]
     [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesEpimorphisms] : (forget₂ C D).PreservesEpimorphisms :=
@@ -195,22 +226,27 @@ instance forget₂_preserves_epimorphisms (C : Type v) (D : Type v') [Category C
     simp only [has_forget₂.forget_comp]
     infer_instance
   functor.preserves_epimorphisms_of_preserves_of_reflects _ (forget D)
+#align category_theory.forget₂_preserves_epimorphisms CategoryTheory.forget₂_preserves_epimorphisms
 
 instance InducedCategory.concreteCategory {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D] (f : C → D) :
     ConcreteCategory (InducedCategory D f) where forget := inducedFunctor f ⋙ forget D
+#align category_theory.induced_category.concrete_category CategoryTheory.InducedCategory.concreteCategory
 
 instance InducedCategory.hasForget₂ {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D] (f : C → D) :
     HasForget₂ (InducedCategory D f) D where
   forget₂ := inducedFunctor f
   forget_comp := rfl
+#align category_theory.induced_category.has_forget₂ CategoryTheory.InducedCategory.hasForget₂
 
 instance FullSubcategory.concreteCategory {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
     ConcreteCategory (FullSubcategory Z) where forget := fullSubcategoryInclusion Z ⋙ forget C
+#align category_theory.full_subcategory.concrete_category CategoryTheory.FullSubcategory.concreteCategory
 
 instance FullSubcategory.hasForget₂ {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
     HasForget₂ (FullSubcategory Z) C where
   forget₂ := fullSubcategoryInclusion Z
   forget_comp := rfl
+#align category_theory.full_subcategory.has_forget₂ CategoryTheory.FullSubcategory.hasForget₂
 
 /-- In order to construct a “partially forgetting” functor, we do not need to verify functor laws;
 it suffices to ensure that compositions agree with `forget₂ C D ⋙ forget D = forget C`.
@@ -220,12 +256,14 @@ def HasForget₂.mk' {C : Type v} {D : Type v'} [Category C] [ConcreteCategory C
     (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq ((forget D).map (map f)) ((forget C).map f)) : HasForget₂ C D where
   forget₂ := Faithful.div _ _ _ @h_obj _ @h_map
   forget_comp := by apply faithful.div_comp
+#align category_theory.has_forget₂.mk' CategoryTheory.HasForget₂.mk'
 
 /-- Every forgetful functor factors through the identity functor. This is not a global instance as
     it is prone to creating type class resolution loops. -/
 def hasForgetToType (C : Type v) [Category C] [ConcreteCategory C] : HasForget₂ C (Type u) where
   forget₂ := forget C
   forget_comp := Functor.comp_id _
+#align category_theory.has_forget_to_Type CategoryTheory.hasForgetToType
 
 end CategoryTheory
 

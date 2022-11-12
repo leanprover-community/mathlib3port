@@ -24,6 +24,7 @@ attribute [local semireducible] Int.NonNeg
 /-- List enumerating `[m, n)`. This is the ℤ variant of `list.Ico`. -/
 def range (m n : ℤ) : List ℤ :=
   (List.range (toNat (n - m))).map fun r => m + r
+#align int.range Int.range
 
 theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
   ⟨fun H =>
@@ -41,18 +42,23 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
               to_nat_of_nonneg (sub_nonneg_of_le (le_of_lt (lt_of_le_of_lt h1 h2)))] <;>
             exact sub_lt_sub_right h2 _,
         show m + _ = _ by rw [to_nat_of_nonneg (sub_nonneg_of_le h1), add_sub_cancel'_right]⟩⟩
+#align int.mem_range_iff Int.mem_range_iff
 
 instance decidableLeLt (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m ≤ r → r < n → P r) :=
   decidable_of_iff (∀ r ∈ range m n, P r) <| by simp only [mem_range_iff, and_imp]
+#align int.decidable_le_lt Int.decidableLeLt
 
 instance decidableLeLe (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m ≤ r → r ≤ n → P r) :=
   decidable_of_iff (∀ r ∈ range m (n + 1), P r) <| by simp only [mem_range_iff, and_imp, lt_add_one_iff]
+#align int.decidable_le_le Int.decidableLeLe
 
 instance decidableLtLt (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m < r → r < n → P r) :=
   Int.decidableLeLt P _ _
+#align int.decidable_lt_lt Int.decidableLtLt
 
 instance decidableLtLe (P : Int → Prop) [DecidablePred P] (m n : ℤ) : Decidable (∀ r, m < r → r ≤ n → P r) :=
   Int.decidableLeLe P _ _
+#align int.decidable_lt_le Int.decidableLtLe
 
 end Int
 

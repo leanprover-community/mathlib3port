@@ -63,6 +63,7 @@ inductive LintVerbosity
   | medium
   | high
   deriving DecidableEq, Inhabited
+#align lint_verbosity LintVerbosity
 
 /-- `get_checks slow extra use_only` produces a list of linters.
 `extras` is a list of names that should resolve to declarations with type `linter`.
@@ -73,6 +74,7 @@ unsafe def get_checks (slow : Bool) (extra : List Name) (use_only : Bool) : tact
   let default ← if use_only then return [] else attribute.get_instances `linter >>= get_linters
   let default := if slow then default else default.filter fun l => l.2.is_fast
   List.append default <$> get_linters extra
+#align get_checks get_checks
 
 /-- `lint_core all_decls non_auto_decls checks` applies the linters `checks` to the list of
 declarations.
@@ -101,6 +103,7 @@ unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : Lis
             | (_, none) => results)
           mk_rb_map
       pure (linter_name, linter, results)
+#align lint_core lint_core
 
 /-- Sorts a map with declaration keys as names by line number. -/
 unsafe def sort_results {α} (e : environment) (results : rb_map Name α) : List (Name × α) :=
@@ -109,21 +112,25 @@ unsafe def sort_results {α} (e : environment) (results : rb_map Name α) : List
       rb_lmap.of_list <|
         (results.fold []) fun decl linter_warning results =>
           (((e.decl_pos decl).getOrElse ⟨0, 0⟩).line, (decl, linter_warning)) :: results
+#align sort_results sort_results
 
 /-- Formats a linter warning as `#check` command with comment. -/
 unsafe def print_warning (decl_name : Name) (warning : String) : format :=
   "#check @" ++ to_fmt decl_name ++ " /- " ++ warning ++ " -/"
+#align print_warning print_warning
 
 private def workflow_command_replacements : Char → String
   | '%' => "%25"
   | '\n' => "%0A"
   | c => toString c
+#align workflow_command_replacements workflow_command_replacements
 
 /-- Escape characters that may not be used in a workflow commands, following
 https://github.com/actions/toolkit/blob/7257597d731b34d14090db516d9ea53439300e98/packages/core/src/command.ts#L92-L105
 -/
 def escapeWorkflowCommand (s : String) : String :=
   "".intercalate <| s.toList.map workflowCommandReplacements
+#align escape_workflow_command escapeWorkflowCommand
 
 /-- Prints a workflow command to emit an error understood by github in an actions workflow.
 This enables CI to tag the parts of the file where linting failed with annotations, and makes it
@@ -139,6 +146,7 @@ unsafe def print_workflow_command (env : environment) (linter_name decl_name : N
             ::error file={ol },line={po },col={po},title=") ++
           s! "Warning from {linter_name} linter::") ++
         s!"{(escapeWorkflowCommand <| toString decl_name)} - {escapeWorkflowCommand warning}"
+#align print_workflow_command print_workflow_command
 
 /-- Formats a map of linter warnings using `print_warning`, sorted by line number. -/
 unsafe def print_warnings (env : environment) (emit_workflow_commands : Bool) (linter_name : Name)
@@ -148,6 +156,7 @@ unsafe def print_warnings (env : environment) (emit_workflow_commands : Bool) (l
       let form := print_warning decl_name warning
       if emit_workflow_commands then form ++ (print_workflow_command env linter_name decl_name warning).getOrElse ""
       else form
+#align print_warnings print_warnings
 
 /-- Formats a map of linter warnings grouped by filename with `-- filename` comments.
 The first `drop_fn_chars` characters are stripped from the filename.
@@ -162,6 +171,7 @@ unsafe def grouped_by_filename (e : environment) (results : rb_map Name String) 
     results.toList.reverse.map fun ⟨fn, results⟩ =>
       ("-- " ++ fn.popn drop_fn_chars ++ "\n" ++ formatter results : format)
   format.intercalate "\n\n" l ++ "\n"
+#align grouped_by_filename grouped_by_filename
 
 /-- Formats the linter results as Lean code with comments and `#check` commands.
 -/
@@ -193,6 +203,7 @@ unsafe def format_linter_results (env : environment) (results : List (Name × li
         s
   let s := if slow then s else s ++ "/- (slow tests skipped) -/\n"
   s
+#align format_linter_results format_linter_results
 
 /-- The common denominator of `#lint[|mathlib|all]`.
 The different commands have different configurations for `l`,
@@ -214,6 +225,7 @@ unsafe def lint_aux (decls : List declaration) (group_by_filename : Option ℕ) 
       let (_, _, rs) ← results
       rs
   pure (ns, s)
+#align lint_aux lint_aux
 
 /-- Return the message printed by `#lint` and a `name_set` containing all declarations that fail. -/
 unsafe def lint (slow : Bool := true) (verbose : LintVerbosity := LintVerbosity.medium) (extra : List Name := [])
@@ -222,11 +234,13 @@ unsafe def lint (slow : Bool := true) (verbose : LintVerbosity := LintVerbosity.
   let e ← get_env
   let l := e.filter fun d => e.in_current_file d.to_name
   lint_aux l none "in the current file" slow verbose checks
+#align lint lint
 
 /-- Returns the declarations in the folder `proj_folder`. -/
 unsafe def lint_project_decls (proj_folder : String) : tactic (List declaration) := do
   let e ← get_env
   pure <| e fun d => e proj_folder d
+#align lint_project_decls lint_project_decls
 
 /-- Returns the linter message by running the linter on all declarations in project `proj_name` in
 folder `proj_folder`. It also returns a `name_set` containing all declarations that fail.
@@ -248,6 +262,7 @@ unsafe def lint_project (proj_folder proj_name : String) (slow : Bool := true)
   let checks ← get_checks slow extra use_only
   let decls ← lint_project_decls proj_folder
   lint_aux decls proj_folder ("in " ++ proj_name ++ " (only in imported files)") slow verbose checks
+#align lint_project lint_project
 
 /-- Return the message printed by `#lint_all` and a `name_set` containing all declarations
 that fail. -/
@@ -257,18 +272,21 @@ unsafe def lint_all (slow : Bool := true) (verbose : LintVerbosity := LintVerbos
   let e ← get_env
   let l := e.get_decls
   lint_aux l (some 0) "in all imported files (including this one)" slow verbose checks
+#align lint_all lint_all
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Parses an optional `only`, followed by a sequence of zero or more identifiers.
 Prepends `linter.` to each of these identifiers. -/
 unsafe def parse_lint_additions : parser (Bool × List Name) :=
   Prod.mk <$> only_flag <*> List.map (name.append `linter) <$> parser.many ident
+#align parse_lint_additions parse_lint_additions
 
 /-- Parses a "-" or "+", returning `lint_verbosity.low` or `lint_verbosity.high` respectively,
 or returns `none`.
 -/
 unsafe def parse_verbosity : parser (Option LintVerbosity) :=
   tk "-" >> return LintVerbosity.low <|> tk "+" >> return LintVerbosity.high <|> return none
+#align parse_verbosity parse_verbosity
 
 /-- The common denominator of `lint_cmd`, `lint_mathlib_cmd`, `lint_all_cmd` -/
 unsafe def lint_cmd_aux (scope : Bool → LintVerbosity → List Name → Bool → tactic (name_set × format)) : parser Unit :=
@@ -285,6 +303,7 @@ unsafe def lint_cmd_aux (scope : Bool → LintVerbosity → List Name → Bool �
   when ¬s <| trace s
   when (verbosity = LintVerbosity.low ∧ ¬failed) <| fail "Linting did not succeed"
   when (verbosity = LintVerbosity.medium ∧ failed) <| trace "/- All linting checks passed! -/"
+#align lint_cmd_aux lint_cmd_aux
 
 /-- The command `#lint` at the bottom of a file will warn you about some common mistakes
 in that file. Usage: `#lint`, `#lint linter_1 linter_2`, `#lint only linter_1 linter_2`.
@@ -295,6 +314,7 @@ Use the command `#list_linters` to see all available linters. -/
 @[user_command]
 unsafe def lint_cmd (_ : parse <| tk "#lint") : parser Unit :=
   lint_cmd_aux @lint
+#align lint_cmd lint_cmd
 
 /-- The command `#lint_mathlib` checks all of mathlib for certain mistakes.
 Usage: `#lint_mathlib`, `#lint_mathlib linter_1 linter_2`, `#lint_mathlib only linter_1 linter_2`.
@@ -306,6 +326,7 @@ Use the command `#list_linters` to see all available linters. -/
 unsafe def lint_mathlib_cmd (_ : parse <| tk "#lint_mathlib") : parser Unit := do
   let str ← get_mathlib_dir
   lint_cmd_aux (@lint_project str "mathlib")
+#align lint_mathlib_cmd lint_mathlib_cmd
 
 /-- The command `#lint_all` checks all imported files for certain mistakes.
 Usage: `#lint_all`, `#lint_all linter_1 linter_2`, `#lint_all only linter_1 linter_2`.
@@ -316,6 +337,7 @@ Use the command `#list_linters` to see all available linters. -/
 @[user_command]
 unsafe def lint_all_cmd (_ : parse <| tk "#lint_all") : parser Unit :=
   lint_cmd_aux @lint_all
+#align lint_all_cmd lint_all_cmd
 
 /-- The command `#list_linters` prints a list of all available linters. -/
 @[user_command]
@@ -328,6 +350,7 @@ unsafe def list_linters (_ : parse <| tk "#list_linters") : parser Unit := do
   ns fun n => do
       let b ← has_attribute' `linter n
       trace <| n ++ if b then " (*)" else ""
+#align list_linters list_linters
 
 /-- Invoking the hole command `lint` ("Find common mistakes in current file") will print text that
 indicates mistakes made in the file above the command. It is equivalent to copying and pasting the
@@ -340,6 +363,7 @@ unsafe def lint_hole_cmd : hole_command where
   action es := do
     let (_, s) ← lint
     return [(s, "")]
+#align lint_hole_cmd lint_hole_cmd
 
 add_tactic_doc { Name := "Lint", category := DocCategory.hole_cmd, declNames := [`lint_hole_cmd], tags := ["linting"] }
 

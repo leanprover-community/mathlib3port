@@ -58,6 +58,7 @@ We will show that if `C` and `D` are cartesian closed, then this morphism is an 
 -/
 def frobeniusMorphism (h : L ⊣ F) (A : C) : prod.functor.obj (F.obj A) ⋙ L ⟶ L ⋙ prod.functor.obj A :=
   prodComparisonNatTrans L (F.obj A) ≫ whiskerLeft _ (prod.functor.map (h.counit.app _))
+#align category_theory.frobenius_morphism CategoryTheory.frobeniusMorphism
 
 /-- If `F` is full and faithful and has a left adjoint `L` which preserves binary products, then the
 Frobenius morphism is an isomorphism.
@@ -68,6 +69,8 @@ instance frobenius_morphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : 
   intro B
   dsimp [frobenius_morphism]
   infer_instance
+#align
+  category_theory.frobenius_morphism_iso_of_preserves_binary_products CategoryTheory.frobenius_morphism_iso_of_preserves_binary_products
 
 variable [CartesianClosed C] [CartesianClosed D]
 
@@ -78,6 +81,7 @@ variable [PreservesLimitsOfShape (Discrete WalkingPair) F]
 -/
 def expComparison (A : C) : exp A ⋙ F ⟶ F ⋙ exp (F.obj A) :=
   transferNatTrans (exp.adjunction A) (exp.adjunction (F.obj A)) (prodComparisonNatIso F A).inv
+#align category_theory.exp_comparison CategoryTheory.expComparison
 
 theorem exp_comparison_ev (A B : C) :
     Limits.prod.map (𝟙 (F.obj A)) ((expComparison F A).app B) ≫ (exp.ev (F.obj A)).app (F.obj B) =
@@ -86,6 +90,7 @@ theorem exp_comparison_ev (A B : C) :
   convert transfer_nat_trans_counit _ _ (prod_comparison_nat_iso F A).inv B
   ext
   simp
+#align category_theory.exp_comparison_ev CategoryTheory.exp_comparison_ev
 
 theorem coev_exp_comparison (A B : C) :
     F.map ((exp.coev A).app B) ≫ (expComparison F A).app (A ⨯ B) =
@@ -95,10 +100,12 @@ theorem coev_exp_comparison (A B : C) :
   ext
   dsimp
   simp
+#align category_theory.coev_exp_comparison CategoryTheory.coev_exp_comparison
 
 theorem uncurry_exp_comparison (A B : C) :
     CartesianClosed.uncurry ((expComparison F A).app B) = inv (prodComparison F _ _) ≫ F.map ((exp.ev _).app _) := by
   rw [uncurry_eq, exp_comparison_ev]
+#align category_theory.uncurry_exp_comparison CategoryTheory.uncurry_exp_comparison
 
 /-- The exponential comparison map is natural in `A`. -/
 theorem exp_comparison_whisker_left {A A' : C} (f : A' ⟶ A) :
@@ -109,12 +116,14 @@ theorem exp_comparison_whisker_left {A A' : C} (f : A' ⟶ A) :
   rw [uncurry_natural_left, uncurry_natural_left, uncurry_exp_comparison, uncurry_pre, prod.map_swap_assoc, ← F.map_id,
     exp_comparison_ev, ← F.map_id, ← prod_comparison_inv_natural_assoc, ← prod_comparison_inv_natural_assoc, ←
     F.map_comp, ← F.map_comp, prod_map_pre_app_comp_ev]
+#align category_theory.exp_comparison_whisker_left CategoryTheory.exp_comparison_whisker_left
 
 /-- The functor `F` is cartesian closed (ie preserves exponentials) if each natural transformation
 `exp_comparison F A` is an isomorphism
 -/
 class CartesianClosedFunctor where
   comparison_iso : ∀ A, IsIso (expComparison F A)
+#align category_theory.cartesian_closed_functor CategoryTheory.CartesianClosedFunctor
 
 attribute [instance] cartesian_closed_functor.comparison_iso
 
@@ -135,6 +144,7 @@ theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
   · rw [assoc, assoc, ← h.counit_naturality, ← L.map_comp_assoc, assoc, inv_prod_comparison_map_snd]
     simp
     
+#align category_theory.frobenius_morphism_mate CategoryTheory.frobenius_morphism_mate
 
 /-- If the exponential comparison transformation (at `A`) is an isomorphism, then the Frobenius morphism
 at `A` is an isomorphism.
@@ -143,6 +153,8 @@ theorem frobenius_morphism_iso_of_exp_comparison_iso (h : L ⊣ F) (A : C) [i : 
     IsIso (frobeniusMorphism F h A) := by
   rw [← frobenius_morphism_mate F h] at i
   exact @transfer_nat_trans_self_of_iso _ _ _ _ _ i
+#align
+  category_theory.frobenius_morphism_iso_of_exp_comparison_iso CategoryTheory.frobenius_morphism_iso_of_exp_comparison_iso
 
 /-- If the Frobenius morphism at `A` is an isomorphism, then the exponential comparison transformation
 (at `A`) is an isomorphism.
@@ -151,6 +163,8 @@ theorem exp_comparison_iso_of_frobenius_morphism_iso (h : L ⊣ F) (A : C) [i : 
     IsIso (expComparison F A) := by
   rw [← frobenius_morphism_mate F h]
   infer_instance
+#align
+  category_theory.exp_comparison_iso_of_frobenius_morphism_iso CategoryTheory.exp_comparison_iso_of_frobenius_morphism_iso
 
 /-- If `F` is full and faithful, and has a left adjoint which preserves binary products, then it is
 cartesian closed.
@@ -161,6 +175,8 @@ products, then it is full and faithful.
 def cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts (h : L ⊣ F) [Full F] [Faithful F]
     [PreservesLimitsOfShape (Discrete WalkingPair) L] :
     CartesianClosedFunctor F where comparison_iso A := exp_comparison_iso_of_frobenius_morphism_iso F h _
+#align
+  category_theory.cartesian_closed_functor_of_left_adjoint_preserves_binary_products CategoryTheory.cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts
 
 end CategoryTheory
 

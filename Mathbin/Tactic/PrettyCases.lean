@@ -63,6 +63,7 @@ unsafe def pretty_cases_advice : tactic String :=
     pure
         s! "Try this:
           {cases}"
+#align tactic.pretty_cases_advice tactic.pretty_cases_advice
 
 namespace Interactive
 
@@ -93,6 +94,7 @@ introduced variables.
 -/
 unsafe def pretty_cases : tactic Unit :=
   pretty_cases_advice >>= trace
+#align tactic.interactive.pretty_cases tactic.interactive.pretty_cases
 
 add_tactic_doc
   { Name := "pretty_cases", category := DocCategory.tactic, declNames := [`` tactic.interactive.pretty_cases],

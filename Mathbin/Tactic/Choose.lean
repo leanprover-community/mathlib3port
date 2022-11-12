@@ -34,6 +34,7 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr ×
           (expr.const `` Function.sometimes [level.zero, u] t α nonemp val',
             expr.const `` Function.sometimes_spec [u] t α nonemp p val' e spec)
         else (val, spec)
+#align tactic.mk_sometimes tactic.mk_sometimes
 
 /-- Changes `(h : ∀xs, ∃a:α, p a) ⊢ g` to `(d : ∀xs, a) (s : ∀xs, p (d xs)) ⊢ g` and
 `(h : ∀xs, p xs ∧ q xs) ⊢ g` to `(d : ∀xs, p xs) (s : ∀xs, q xs) ⊢ g`.
@@ -93,6 +94,7 @@ unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tact
       try (tactic.clear h)
       pure (hq, none)
     | _ => fail "expected a term of the shape `∀xs, ∃a, p xs a` or `∀xs, p xs ∧ q xs`"
+#align tactic.choose1 tactic.choose1
 
 /-- Changes `(h : ∀xs, ∃as, p as ∧ q as) ⊢ g` to a list of functions `as`,
 and a final hypothesis on `p as` and `q as`. If `nondep` is true then the functions will
@@ -124,6 +126,7 @@ unsafe def choose (nondep : Bool) : expr → List Name → optParam (Option (Opt
         | some none, _ => some none
         | _, some none => some none
         | _, _ => ne_fail₁
+#align tactic.choose tactic.choose
 
 namespace Interactive
 
@@ -179,6 +182,7 @@ unsafe def choose (nondep : parse (parser.optional (tk "!"))) (first : parse ide
   tactic.choose nondep tgt (first :: names)
   try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns <| some <$> names))
   try (tactic.clear tgt)
+#align tactic.interactive.choose tactic.interactive.choose
 
 add_tactic_doc
   { Name := "choose", category := DocCategory.tactic, declNames := [`tactic.interactive.choose],

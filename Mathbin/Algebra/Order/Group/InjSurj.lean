@@ -5,6 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Algebra.Order.Group.Defs
 import Mathbin.Algebra.Order.Monoid.Basic
+import Mathbin.Algebra.Order.Group.Instances
 
 /-!
 # Pull back ordered groups along injective maps.
@@ -22,6 +23,7 @@ def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One
     (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : OrderedCommGroup β :=
   { PartialOrder.lift f hf, hf.OrderedCommMonoid f one mul npow, hf.CommGroup f one mul inv div npow zpow with }
+#align function.injective.ordered_comm_group Function.Injective.orderedCommGroup
 
 /-- Pullback a `linear_ordered_comm_group` under an injective map.
 See note [reducible non-instances]. -/
@@ -35,4 +37,5 @@ def Function.Injective.linearOrderedCommGroup [LinearOrderedCommGroup α] {β : 
     (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
     LinearOrderedCommGroup β :=
   { LinearOrder.lift f hf hsup hinf, hf.OrderedCommGroup f one mul inv div npow zpow with }
+#align function.injective.linear_ordered_comm_group Function.Injective.linearOrderedCommGroup
 

@@ -39,6 +39,7 @@ inductive Palindrome : List α → Prop
   | nil : palindrome []
   | singleton : ∀ x, palindrome [x]
   | cons_concat : ∀ (x) {l}, palindrome l → palindrome (x :: (l ++ [x]))
+#align list.palindrome List.Palindrome
 
 namespace Palindrome
 
@@ -46,6 +47,7 @@ variable {l : List α}
 
 theorem reverse_eq {l : List α} (p : Palindrome l) : reverse l = l :=
   Palindrome.rec_on p rfl (fun _ => rfl) fun x l p h => by simp [h]
+#align list.palindrome.reverse_eq List.Palindrome.reverse_eq
 
 theorem of_reverse_eq {l : List α} : reverse l = l → Palindrome l := by
   refine' bidirectional_rec_on l (fun _ => palindrome.nil) (fun a _ => palindrome.singleton a) _
@@ -54,16 +56,20 @@ theorem of_reverse_eq {l : List α} : reverse l = l → Palindrome l := by
   rw [head_eq_of_cons_eq hr]
   have : palindrome l := hp (append_inj_left' (tail_eq_of_cons_eq hr) rfl)
   exact palindrome.cons_concat x this
+#align list.palindrome.of_reverse_eq List.Palindrome.of_reverse_eq
 
 theorem iff_reverse_eq {l : List α} : Palindrome l ↔ reverse l = l :=
   Iff.intro reverse_eq of_reverse_eq
+#align list.palindrome.iff_reverse_eq List.Palindrome.iff_reverse_eq
 
 theorem append_reverse (l : List α) : Palindrome (l ++ reverse l) := by
   apply of_reverse_eq
   rw [reverse_append, reverse_reverse]
+#align list.palindrome.append_reverse List.Palindrome.append_reverse
 
 protected theorem map (f : α → β) (p : Palindrome l) : Palindrome (map f l) :=
   of_reverse_eq <| by rw [← map_reverse, p.reverse_eq]
+#align list.palindrome.map List.Palindrome.map
 
 instance [DecidableEq α] (l : List α) : Decidable (Palindrome l) :=
   decidable_of_iff' _ iff_reverse_eq

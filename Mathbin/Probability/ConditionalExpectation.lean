@@ -81,6 +81,7 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
     
   · exact ⟨f, hf, eventually_eq.rfl⟩
     
+#align measure_theory.condexp_indep_eq MeasureTheory.condexp_indep_eq
 
 end MeasureTheory
 

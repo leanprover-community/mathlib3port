@@ -38,9 +38,11 @@ setup_tactic_parser
 
 private unsafe def swap_arg_parser : lean.parser (Name × Name) :=
   Prod.mk <$> ident <*> (optional (tk "<->" <|> tk "↔") *> ident)
+#align tactic.interactive.swap_arg_parser tactic.interactive.swap_arg_parser
 
 private unsafe def swap_args_parser : lean.parser (List (Name × Name)) :=
   Functor.map (fun x => [x]) swap_arg_parser <|> tk "[" *> sep_by (tk ",") swap_arg_parser <* tk "]"
+#align tactic.interactive.swap_args_parser tactic.interactive.swap_args_parser
 
 /-- `swap_var [x y, P ↔ Q]` swaps the names `x` and `y`, `P` and `Q`.
 Such a swapping can be used as a weak `wlog` if the tactic proofs use the same names.
@@ -62,6 +64,7 @@ unsafe def swap_var (renames : parse swap_args_parser) : tactic Unit := do
           tactic.rename_many <| native.rb_map.of_list [(e.1, n), (e.2, e.1)]
       propagate_tags <| tactic.rename_many <| native.rb_map.of_list [(n, e.2)]
   pure ()
+#align tactic.interactive.swap_var tactic.interactive.swap_var
 
 end Tactic.Interactive
 

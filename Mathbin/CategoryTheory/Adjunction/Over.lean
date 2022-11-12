@@ -33,6 +33,7 @@ variable {C : Type u} [Category.{v} C] (X : C)
 @[simps obj_left obj_hom mapLeft]
 def star [HasBinaryProducts C] : C ⥤ Over X :=
   cofree _ ⋙ coalgebraToOver X
+#align category_theory.star CategoryTheory.star
 
 /-- The functor `over.forget X : over X ⥤ C` has a right adjoint given by `star X`.
 
@@ -41,6 +42,7 @@ Note that the binary products assumption is necessary: the existence of a right 
 -/
 def forgetAdjStar [HasBinaryProducts C] : Over.forget X ⊣ star X :=
   (coalgebraEquivOver X).symm.toAdjunction.comp (adj _)
+#align category_theory.forget_adj_star CategoryTheory.forgetAdjStar
 
 /-- Note that the binary products assumption is necessary: the existence of a right adjoint to
 `over.forget X` is equivalent to the existence of each binary product `X ⨯ -`.

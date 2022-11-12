@@ -34,7 +34,7 @@ namespace Linarith
 
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:333:40: warning: unsupported option eqn_compiler.max_steps -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.max_steps -/
 set_option eqn_compiler.max_steps 50000
 
 /-- If `prf` is a proof of `¬ e`, where `e` is a comparison,
@@ -47,6 +47,7 @@ unsafe def rem_neg (prf : expr) : expr → tactic expr
   | quote.1 (_ > _) => mk_app `` le_of_not_gt [prf]
   | quote.1 (_ ≥ _) => mk_app `` lt_of_not_ge [prf]
   | e => failed
+#align linarith.rem_neg linarith.rem_neg
 
 private unsafe def rearr_comp_aux : expr → expr → tactic expr
   | prf, quote.1 ((%%ₓa) ≤ 0) => return prf
@@ -69,21 +70,25 @@ private unsafe def rearr_comp_aux : expr → expr → tactic expr
     let tp ← infer_type nprf
     rearr_comp_aux nprf tp
   | prf, a => trace a >> fail "couldn't rearrange comp"
+#align linarith.rearr_comp_aux linarith.rearr_comp_aux
 
 /-- `rearr_comp e` takes a proof `e` of an equality, inequality, or negation thereof,
 and turns it into a proof of a comparison `_ R 0`, where `R ∈ {=, ≤, <}`.
  -/
 unsafe def rearr_comp (e : expr) : tactic expr :=
   infer_type e >>= rearr_comp_aux e
+#align linarith.rearr_comp linarith.rearr_comp
 
 /-- If `e` is of the form `((n : ℕ) : ℤ)`, `is_nat_int_coe e` returns `n : ℕ`. -/
 unsafe def is_nat_int_coe : expr → Option expr
   | quote.1 (@coe ℕ ℤ (%%ₓ_) (%%ₓn)) => some n
   | _ => none
+#align linarith.is_nat_int_coe linarith.is_nat_int_coe
 
 /-- If `e : ℕ`, returns a proof of `0 ≤ (e : ℤ)`. -/
 unsafe def mk_coe_nat_nonneg_prf (e : expr) : tactic expr :=
   mk_app `int.coe_nat_nonneg [e]
+#align linarith.mk_coe_nat_nonneg_prf linarith.mk_coe_nat_nonneg_prf
 
 /-- `get_nat_comps e` returns a list of all subexpressions of `e` of the form `((t : ℕ) : ℤ)`. -/
 unsafe def get_nat_comps : expr → List expr
@@ -93,6 +98,7 @@ unsafe def get_nat_comps : expr → List expr
     match is_nat_int_coe e with
     | some e' => [e']
     | none => []
+#align linarith.get_nat_comps linarith.get_nat_comps
 
 /-- If `pf` is a proof of a strict inequality `(a : ℤ) < b`,
 `mk_non_strict_int_pf_of_strict_int_pf pf` returns a proof of `a + 1 ≤ b`,
@@ -106,6 +112,7 @@ unsafe def mk_non_strict_int_pf_of_strict_int_pf (pf : expr) : tactic expr := do
     | quote.1 ¬(%%ₓa) ≤ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gt (%%ₓpf))))
     | quote.1 ¬(%%ₓa) ≥ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gt (%%ₓpf))))
     | _ => fail "mk_non_strict_int_pf_of_strict_int_pf failed: proof is not an inequality"
+#align linarith.mk_non_strict_int_pf_of_strict_int_pf linarith.mk_non_strict_int_pf_of_strict_int_pf
 
 /-- `is_nat_prop tp` is true iff `tp` is an inequality or equality between natural numbers
 or the negation thereof.
@@ -118,6 +125,7 @@ unsafe def is_nat_prop : expr → Bool
   | quote.1 (@GT.gt ℕ (%%ₓ_) _ _) => true
   | quote.1 ¬%%ₓp => is_nat_prop p
   | _ => false
+#align linarith.is_nat_prop linarith.is_nat_prop
 
 /-- `is_strict_int_prop tp` is true iff `tp` is a strict inequality between integers
 or the negation of a weak inequality between integers.
@@ -128,10 +136,12 @@ unsafe def is_strict_int_prop : expr → Bool
   | quote.1 ¬@LE.le ℤ (%%ₓ_) _ _ => true
   | quote.1 ¬@GE.ge ℤ (%%ₓ_) _ _ => true
   | _ => false
+#align linarith.is_strict_int_prop linarith.is_strict_int_prop
 
 private unsafe def filter_comparisons_aux : expr → Bool
   | quote.1 ¬%%ₓp => p.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge]
   | tp => tp.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge, `eq]
+#align linarith.filter_comparisons_aux linarith.filter_comparisons_aux
 
 /-- Removes any expressions that are not proofs of inequalities, equalities, or negations thereof.
 -/
@@ -144,6 +154,7 @@ unsafe def filter_comparisons : preprocessor where
         guardb (filter_comparisons_aux tp)
         return [h]) <|>
       return []
+#align linarith.filter_comparisons linarith.filter_comparisons
 
 /-- Replaces proofs of negations of comparisons with proofs of the reversed comparisons.
 For example, a proof of `¬ a < b` will become a proof of `a ≥ b`.
@@ -155,6 +166,7 @@ unsafe def remove_negations : preprocessor where
     match tp with
       | quote.1 ¬%%ₓp => singleton <$> rem_neg h p
       | _ => return [h]
+#align linarith.remove_negations linarith.remove_negations
 
 /-- If `h` is an equality or inequality between natural numbers,
 `nat_to_int` lifts this inequality to the integers.
@@ -174,6 +186,7 @@ unsafe def nat_to_int : global_preprocessor where
             return <| (es (get_nat_comps a)).insert_list (get_nat_comps b))
           mk_rb_set
     (· ++ ·) l <$> nonnegs mk_coe_nat_nonneg_prf
+#align linarith.nat_to_int linarith.nat_to_int
 
 /-- `strengthen_strict_int h` turns a proof `h` of a strict integer inequality `t1 < t2`
 into a proof of `t1 ≤ t2 + 1`. -/
@@ -182,6 +195,7 @@ unsafe def strengthen_strict_int : preprocessor where
   transform h := do
     let tp ← infer_type h
     guardb (is_strict_int_prop tp) >> singleton <$> mk_non_strict_int_pf_of_strict_int_pf h <|> return [h]
+#align linarith.strengthen_strict_int linarith.strengthen_strict_int
 
 /-- `mk_comp_with_zero h` takes a proof `h` of an equality, inequality, or negation thereof,
 and turns it into a proof of a comparison `_ R 0`, where `R ∈ {=, ≤, <}`.
@@ -189,6 +203,7 @@ and turns it into a proof of a comparison `_ R 0`, where `R ∈ {=, ≤, <}`.
 unsafe def make_comp_with_zero : preprocessor where
   Name := "make comparisons with zero"
   transform e := singleton <$> rearr_comp e <|> return []
+#align linarith.make_comp_with_zero linarith.make_comp_with_zero
 
 /-- `normalize_denominators_in_lhs h lhs` assumes that `h` is a proof of `lhs R 0`.
 It creates a proof of `lhs' R 0`, where all numeric division in `lhs` has been cancelled.
@@ -200,6 +215,7 @@ unsafe def normalize_denominators_in_lhs (h lhs : expr) : tactic expr := do
       let (ih, h'') ← mk_single_comp_zero_pf v h
       let (_, nep, _) ← infer_type h'' >>= rewrite_core lhs'
       mk_eq_mp nep h''
+#align linarith.normalize_denominators_in_lhs linarith.normalize_denominators_in_lhs
 
 /-- `cancel_denoms pf` assumes `pf` is a proof of `t R 0`. If `t` contains the division symbol `/`,
 it tries to scale `t` to cancel out division by numerals.
@@ -212,6 +228,7 @@ unsafe def cancel_denoms : preprocessor where
         guardb <| lhs (· = `has_div.div)
         singleton <$> normalize_denominators_in_lhs pf lhs) <|>
       return [pf]
+#align linarith.cancel_denoms linarith.cancel_denoms
 
 /-- `find_squares m e` collects all terms of the form `a ^ 2` and `a * a` that appear in `e`
 and adds them to the set `m`.
@@ -227,6 +244,7 @@ unsafe def find_squares : rb_set (expr × Bool) → expr → tactic (rb_set <| e
       return (s (e1, ff))
     else e.mfoldl find_squares s
   | s, e => e.mfoldl find_squares s
+#align linarith.find_squares linarith.find_squares
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `nlinarith_extras` is the preprocessor corresponding to the `nlinarith` tactic.
@@ -272,6 +290,7 @@ unsafe def nlinarith_extras : global_preprocessor where
             return none
     let products ← make_comp_with_zero.globalize.transform products.reduceOption
     return <| new_es ++ ls ++ products
+#align linarith.nlinarith_extras linarith.nlinarith_extras
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `remove_ne_aux` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`.
@@ -293,6 +312,7 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
     do
     let g ← get_goal
     return [(g, hs)]
+#align linarith.remove_ne_aux linarith.remove_ne_aux
 
 /-- `remove_ne` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`,
 by calling `linarith.remove_ne_aux`.
@@ -301,11 +321,13 @@ This produces `2^n` branches when there are `n` such hypotheses in the input.
 unsafe def remove_ne : global_branching_preprocessor where
   Name := "remove_ne"
   transform := remove_ne_aux
+#align linarith.remove_ne linarith.remove_ne
 
 /-- The default list of preprocessors, in the order they should typically run.
 -/
 unsafe def default_preprocessors : List global_branching_preprocessor :=
   [filter_comparisons, remove_negations, nat_to_int, strengthen_strict_int, make_comp_with_zero, cancel_denoms]
+#align linarith.default_preprocessors linarith.default_preprocessors
 
 /-- `preprocess pps l` takes a list `l` of proofs of propositions.
 It maps each preprocessor `pp ∈ pps` over this list.
@@ -316,6 +338,7 @@ so the size of the list may change.
 unsafe def preprocess (pps : List global_branching_preprocessor) (l : List expr) : tactic (List branch) := do
   let g ← get_goal
   pps (fun ls pp => List.join <$> ls fun b => set_goals [b.1] >> pp b.2) [(g, l)]
+#align linarith.preprocess linarith.preprocess
 
 end Linarith
 

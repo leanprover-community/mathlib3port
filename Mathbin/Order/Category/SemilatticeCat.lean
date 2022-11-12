@@ -27,12 +27,14 @@ structure SemilatticeSupCat : Type (u + 1) where
   x : Type u
   [isSemilatticeSup : SemilatticeSup X]
   [isOrderBot : OrderBot X]
+#align SemilatticeSup SemilatticeSupCat
 
 /-- The category of inf-semilattices with a top element. -/
 structure SemilatticeInfCat : Type (u + 1) where
   x : Type u
   [isSemilatticeInf : SemilatticeInf X]
   [isOrderTop : OrderTop X]
+#align SemilatticeInf SemilatticeInfCat
 
 attribute [protected] SemilatticeSupCat.X SemilatticeInfCat.X
 
@@ -46,10 +48,12 @@ attribute [instance] is_semilattice_sup is_order_bot
 /-- Construct a bundled `SemilatticeSup` from a `semilattice_sup`. -/
 def of (α : Type _) [SemilatticeSup α] [OrderBot α] : SemilatticeSupCat :=
   ⟨α⟩
+#align SemilatticeSup.of SemilatticeSupCat.of
 
 @[simp]
 theorem coe_of (α : Type _) [SemilatticeSup α] [OrderBot α] : ↥(of α) = α :=
   rfl
+#align SemilatticeSup.coe_of SemilatticeSupCat.coe_of
 
 instance : Inhabited SemilatticeSupCat :=
   ⟨of PUnit⟩
@@ -68,11 +72,13 @@ instance : ConcreteCategory SemilatticeSupCat where
 
 instance hasForgetToPartialOrder :
     HasForget₂ SemilatticeSupCat PartialOrderCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
+#align SemilatticeSup.has_forget_to_PartialOrder SemilatticeSupCat.hasForgetToPartialOrder
 
 @[simp]
 theorem coe_forget_to_PartialOrder (X : SemilatticeSupCat) :
     ↥((forget₂ SemilatticeSupCat PartialOrderCat).obj X) = ↥X :=
   rfl
+#align SemilatticeSup.coe_forget_to_PartialOrder SemilatticeSupCat.coe_forget_to_PartialOrder
 
 end SemilatticeSupCat
 
@@ -86,10 +92,12 @@ attribute [instance] is_semilattice_inf is_order_top
 /-- Construct a bundled `SemilatticeInf` from a `semilattice_inf`. -/
 def of (α : Type _) [SemilatticeInf α] [OrderTop α] : SemilatticeInfCat :=
   ⟨α⟩
+#align SemilatticeInf.of SemilatticeInfCat.of
 
 @[simp]
 theorem coe_of (α : Type _) [SemilatticeInf α] [OrderTop α] : ↥(of α) = α :=
   rfl
+#align SemilatticeInf.coe_of SemilatticeInfCat.coe_of
 
 instance : Inhabited SemilatticeInfCat :=
   ⟨of PUnit⟩
@@ -108,11 +116,13 @@ instance : ConcreteCategory SemilatticeInfCat where
 
 instance hasForgetToPartialOrder :
     HasForget₂ SemilatticeInfCat PartialOrderCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => f }
+#align SemilatticeInf.has_forget_to_PartialOrder SemilatticeInfCat.hasForgetToPartialOrder
 
 @[simp]
 theorem coe_forget_to_PartialOrder (X : SemilatticeInfCat) :
     ↥((forget₂ SemilatticeInfCat PartialOrderCat).obj X) = ↥X :=
   rfl
+#align SemilatticeInf.coe_forget_to_PartialOrder SemilatticeInfCat.coe_forget_to_PartialOrder
 
 end SemilatticeInfCat
 
@@ -132,12 +142,14 @@ def Iso.mk {α β : SemilatticeSupCat.{u}} (e : α ≃o β) : α ≅ β where
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
+#align SemilatticeSup.iso.mk SemilatticeSupCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : SemilatticeSupCat ⥤ SemilatticeInfCat where
   obj X := SemilatticeInfCat.of Xᵒᵈ
   map X Y := SupBotHom.dual
+#align SemilatticeSup.dual SemilatticeSupCat.dual
 
 end SemilatticeSupCat
 
@@ -154,12 +166,14 @@ def Iso.mk {α β : SemilatticeInfCat.{u}} (e : α ≃o β) : α ≅ β where
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
+#align SemilatticeInf.iso.mk SemilatticeInfCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : SemilatticeInfCat ⥤ SemilatticeSupCat where
   obj X := SemilatticeSupCat.of Xᵒᵈ
   map X Y := InfTopHom.dual
+#align SemilatticeInf.dual SemilatticeInfCat.dual
 
 end SemilatticeInfCat
 
@@ -170,14 +184,17 @@ def semilatticeSupEquivSemilatticeInf : SemilatticeSupCat ≌ SemilatticeInfCat 
   Equivalence.mk SemilatticeSupCat.dual SemilatticeInfCat.dual
     ((NatIso.ofComponents fun X => SemilatticeSupCat.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => SemilatticeInfCat.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+#align SemilatticeSup_equiv_SemilatticeInf semilatticeSupEquivSemilatticeInf
 
 theorem SemilatticeSup_dual_comp_forget_to_PartialOrder :
     SemilatticeSupCat.dual ⋙ forget₂ SemilatticeInfCat PartialOrderCat =
       forget₂ SemilatticeSupCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
+#align SemilatticeSup_dual_comp_forget_to_PartialOrder SemilatticeSup_dual_comp_forget_to_PartialOrder
 
 theorem SemilatticeInf_dual_comp_forget_to_PartialOrder :
     SemilatticeInfCat.dual ⋙ forget₂ SemilatticeSupCat PartialOrderCat =
       forget₂ SemilatticeInfCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
+#align SemilatticeInf_dual_comp_forget_to_PartialOrder SemilatticeInf_dual_comp_forget_to_PartialOrder
 

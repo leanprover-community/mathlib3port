@@ -100,6 +100,7 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
     show (e a : σ → K) j ^ d j = x₀ ⟨j, hj⟩ ^ d j
     rw [Equiv.subtype_equiv_codomain_symm_apply_ne]
     
+#align mv_polynomial.sum_mv_polynomial_eq_zero MvPolynomial.sum_mv_polynomial_eq_zero
 
 variable [DecidableEq K] [DecidableEq σ]
 
@@ -170,6 +171,7 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
     _ ≤ (f i ^ (q - 1)).totalDegree := by simp only [max_eq_right, Nat.zero_le, total_degree_one]
     _ ≤ (q - 1) * (f i).totalDegree := total_degree_pow _ _
     
+#align char_dvd_card_solutions_family char_dvd_card_solutions_family
 
 /-- The Chevalley–Warning theorem.
 Let `f` be a multivariate polynomial in finitely many variables (`X s`, `s : σ`)
@@ -184,6 +186,7 @@ theorem char_dvd_card_solutions (p : ℕ) [CharP K p] {f : MvPolynomial σ K} (h
   have key := char_dvd_card_solutions_family p this
   simp only [F, Fintype.univ_punit, forall_eq, mem_singleton] at key
   convert key
+#align char_dvd_card_solutions char_dvd_card_solutions
 
 end FiniteField
 

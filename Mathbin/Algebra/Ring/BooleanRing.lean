@@ -44,6 +44,7 @@ variable {α β γ : Type _}
 /-- A Boolean ring is a ring where multiplication is idempotent. -/
 class BooleanRing (α) extends Ring α where
   mul_self : ∀ a : α, a * a = a
+#align boolean_ring BooleanRing
 
 section BooleanRing
 
@@ -55,6 +56,7 @@ instance : IsIdempotent α (· * ·) :=
 @[simp]
 theorem mul_self : a * a = a :=
   BooleanRing.mul_self _
+#align mul_self mul_self
 
 @[simp]
 theorem add_self : a + a = 0 := by
@@ -65,6 +67,7 @@ theorem add_self : a + a = 0 := by
       _ = a + a + (a + a) := by rw [mul_self]
       
   rwa [self_eq_add_left] at this
+#align add_self add_self
 
 @[simp]
 theorem neg_eq : -a = a :=
@@ -73,12 +76,14 @@ theorem neg_eq : -a = a :=
     _ = -a + -a + a := by rw [← neg_add_self, add_assoc]
     _ = a := by rw [add_self, zero_add]
     
+#align neg_eq neg_eq
 
 theorem add_eq_zero : a + b = 0 ↔ a = b :=
   calc
     a + b = 0 ↔ a = -b := add_eq_zero_iff_eq_neg
     _ ↔ a = b := by rw [neg_eq]
     
+#align add_eq_zero add_eq_zero
 
 @[simp]
 theorem mul_add_mul : a * b + b * a = 0 := by
@@ -90,16 +95,20 @@ theorem mul_add_mul : a * b + b * a = 0 := by
       _ = a + b + (a * b + b * a) := by abel
       
   rwa [self_eq_add_right] at this
+#align mul_add_mul mul_add_mul
 
 @[simp]
 theorem sub_eq_add : a - b = a + b := by rw [sub_eq_add_neg, add_right_inj, neg_eq]
+#align sub_eq_add sub_eq_add
 
 @[simp]
 theorem mul_one_add_self : a * (1 + a) = 0 := by rw [mul_add, mul_one, mul_self, add_self]
+#align mul_one_add_self mul_one_add_self
 
 -- Note [lower instance priority]
 instance (priority := 100) BooleanRing.toCommRing : CommRing α :=
   { (inferInstance : BooleanRing α) with mul_comm := fun a b => by rw [← add_eq_zero, mul_add_mul] }
+#align boolean_ring.to_comm_ring BooleanRing.toCommRing
 
 end BooleanRing
 
@@ -114,38 +123,47 @@ section RingToAlgebra
 /-- Type synonym to view a Boolean ring as a Boolean algebra. -/
 def AsBoolalg (α : Type _) :=
   α
+#align as_boolalg AsBoolalg
 
 /-- The "identity" equivalence between `as_boolalg α` and `α`. -/
 def toBoolalg : α ≃ AsBoolalg α :=
   Equiv.refl _
+#align to_boolalg toBoolalg
 
 /-- The "identity" equivalence between `α` and `as_boolalg α`. -/
 def ofBoolalg : AsBoolalg α ≃ α :=
   Equiv.refl _
+#align of_boolalg ofBoolalg
 
 @[simp]
 theorem to_boolalg_symm_eq : (@toBoolalg α).symm = ofBoolalg :=
   rfl
+#align to_boolalg_symm_eq to_boolalg_symm_eq
 
 @[simp]
 theorem of_boolalg_symm_eq : (@ofBoolalg α).symm = toBoolalg :=
   rfl
+#align of_boolalg_symm_eq of_boolalg_symm_eq
 
 @[simp]
 theorem to_boolalg_of_boolalg (a : AsBoolalg α) : toBoolalg (ofBoolalg a) = a :=
   rfl
+#align to_boolalg_of_boolalg to_boolalg_of_boolalg
 
 @[simp]
 theorem of_boolalg_to_boolalg (a : α) : ofBoolalg (toBoolalg a) = a :=
   rfl
+#align of_boolalg_to_boolalg of_boolalg_to_boolalg
 
 @[simp]
 theorem to_boolalg_inj {a b : α} : toBoolalg a = toBoolalg b ↔ a = b :=
   Iff.rfl
+#align to_boolalg_inj to_boolalg_inj
 
 @[simp]
 theorem of_boolalg_inj {a b : AsBoolalg α} : ofBoolalg a = ofBoolalg b ↔ a = b :=
   Iff.rfl
+#align of_boolalg_inj of_boolalg_inj
 
 instance [Inhabited α] : Inhabited (AsBoolalg α) :=
   ‹Inhabited α›
@@ -157,10 +175,12 @@ namespace BooleanRing
 /-- The join operation in a Boolean ring is `x + y + x * y`. -/
 def hasSup : HasSup α :=
   ⟨fun x y => x + y + x * y⟩
+#align boolean_ring.has_sup BooleanRing.hasSup
 
 /-- The meet operation in a Boolean ring is `x * y`. -/
 def hasInf : HasInf α :=
   ⟨(· * ·)⟩
+#align boolean_ring.has_inf BooleanRing.hasInf
 
 localized [-- Note [lower instance priority]
 BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
@@ -170,26 +190,32 @@ localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasInf
 theorem sup_comm (a b : α) : a ⊔ b = b ⊔ a := by
   dsimp only [(· ⊔ ·)]
   ring
+#align boolean_ring.sup_comm BooleanRing.sup_comm
 
 theorem inf_comm (a b : α) : a ⊓ b = b ⊓ a := by
   dsimp only [(· ⊓ ·)]
   ring
+#align boolean_ring.inf_comm BooleanRing.inf_comm
 
 theorem sup_assoc (a b c : α) : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) := by
   dsimp only [(· ⊔ ·)]
   ring
+#align boolean_ring.sup_assoc BooleanRing.sup_assoc
 
 theorem inf_assoc (a b c : α) : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) := by
   dsimp only [(· ⊓ ·)]
   ring
+#align boolean_ring.inf_assoc BooleanRing.inf_assoc
 
 theorem sup_inf_self (a b : α) : a ⊔ a ⊓ b = a := by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
   assoc_rw [mul_self, add_self, add_zero]
+#align boolean_ring.sup_inf_self BooleanRing.sup_inf_self
 
 theorem inf_sup_self (a b : α) : a ⊓ (a ⊔ b) = a := by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
   rw [mul_add, mul_add, mul_self, ← mul_assoc, mul_self, add_assoc, add_self, add_zero]
+#align boolean_ring.inf_sup_self BooleanRing.inf_sup_self
 
 theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b * c + a * (b * c) :=
   calc
@@ -198,10 +224,12 @@ theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b 
       by ring
     _ = a + b * c + a * (b * c) := by simp only [mul_self, add_self, add_zero]
     
+#align boolean_ring.le_sup_inf_aux BooleanRing.le_sup_inf_aux
 
 theorem le_sup_inf (a b c : α) : (a ⊔ b) ⊓ (a ⊔ c) ⊔ (a ⊔ b ⊓ c) = a ⊔ b ⊓ c := by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
   rw [le_sup_inf_aux, add_self, mul_self, zero_add]
+#align boolean_ring.le_sup_inf BooleanRing.le_sup_inf
 
 /-- The Boolean algebra structure on a Boolean ring.
 
@@ -223,6 +251,7 @@ def toBooleanAlgebra : BooleanAlgebra α :=
       change 1 + (a + (1 + a) + a * (1 + a)) + 1 * (a + (1 + a) + a * (1 + a)) = a + (1 + a) + a * (1 + a)
       norm_num [mul_add, mul_self]
       rw [← add_assoc, add_self] }
+#align boolean_ring.to_boolean_algebra BooleanRing.toBooleanAlgebra
 
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.toBooleanAlgebra
 
@@ -234,63 +263,77 @@ instance : BooleanAlgebra (AsBoolalg α) :=
 @[simp]
 theorem of_boolalg_top : ofBoolalg (⊤ : AsBoolalg α) = 1 :=
   rfl
+#align of_boolalg_top of_boolalg_top
 
 @[simp]
 theorem of_boolalg_bot : ofBoolalg (⊥ : AsBoolalg α) = 0 :=
   rfl
+#align of_boolalg_bot of_boolalg_bot
 
 @[simp]
 theorem of_boolalg_sup (a b : AsBoolalg α) :
     ofBoolalg (a ⊔ b) = ofBoolalg a + ofBoolalg b + ofBoolalg a * ofBoolalg b :=
   rfl
+#align of_boolalg_sup of_boolalg_sup
 
 @[simp]
 theorem of_boolalg_inf (a b : AsBoolalg α) : ofBoolalg (a ⊓ b) = ofBoolalg a * ofBoolalg b :=
   rfl
+#align of_boolalg_inf of_boolalg_inf
 
 @[simp]
 theorem of_boolalg_compl (a : AsBoolalg α) : ofBoolalg (aᶜ) = 1 + ofBoolalg a :=
   rfl
+#align of_boolalg_compl of_boolalg_compl
 
 @[simp]
 theorem of_boolalg_sdiff (a b : AsBoolalg α) : ofBoolalg (a \ b) = ofBoolalg a * (1 + ofBoolalg b) :=
   rfl
+#align of_boolalg_sdiff of_boolalg_sdiff
 
 private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a * b) = a + b :=
   calc
     (a + b + a * b) * (1 + a * b) = a + b + (a * b + a * b * (a * b)) + (a * (b * b) + a * a * b) := by ring
     _ = a + b := by simp only [mul_self, add_self, add_zero]
     
+#align of_boolalg_symm_diff_aux of_boolalg_symm_diff_aux
 
 @[simp]
 theorem of_boolalg_symm_diff (a b : AsBoolalg α) : ofBoolalg (a ∆ b) = ofBoolalg a + ofBoolalg b := by
   rw [symm_diff_eq_sup_sdiff_inf]
   exact of_boolalg_symm_diff_aux _ _
+#align of_boolalg_symm_diff of_boolalg_symm_diff
 
 @[simp]
 theorem of_boolalg_mul_of_boolalg_eq_left_iff {a b : AsBoolalg α} : ofBoolalg a * ofBoolalg b = ofBoolalg a ↔ a ≤ b :=
   @inf_eq_left (AsBoolalg α) _ _ _
+#align of_boolalg_mul_of_boolalg_eq_left_iff of_boolalg_mul_of_boolalg_eq_left_iff
 
 @[simp]
 theorem to_boolalg_zero : toBoolalg (0 : α) = ⊥ :=
   rfl
+#align to_boolalg_zero to_boolalg_zero
 
 @[simp]
 theorem to_boolalg_one : toBoolalg (1 : α) = ⊤ :=
   rfl
+#align to_boolalg_one to_boolalg_one
 
 @[simp]
 theorem to_boolalg_mul (a b : α) : toBoolalg (a * b) = toBoolalg a ⊓ toBoolalg b :=
   rfl
+#align to_boolalg_mul to_boolalg_mul
 
 -- `to_boolalg_add` simplifies the LHS but this lemma is eligible to `dsimp`
 @[simp, nolint simp_nf]
 theorem to_boolalg_add_add_mul (a b : α) : toBoolalg (a + b + a * b) = toBoolalg a ⊔ toBoolalg b :=
   rfl
+#align to_boolalg_add_add_mul to_boolalg_add_add_mul
 
 @[simp]
 theorem to_boolalg_add (a b : α) : toBoolalg (a + b) = toBoolalg a ∆ toBoolalg b :=
   (of_boolalg_symm_diff _ _).symm
+#align to_boolalg_add to_boolalg_add
 
 /-- Turn a ring homomorphism from Boolean rings `α` to `β` into a bounded lattice homomorphism
 from `α` to `β` considered as Boolean algebras. -/
@@ -304,14 +347,17 @@ protected def RingHom.asBoolalg (f : α →+* β) : BoundedLatticeHom (AsBoolalg
   map_inf' := f.map_mul'
   map_top' := f.map_one'
   map_bot' := f.map_zero'
+#align ring_hom.as_boolalg RingHom.asBoolalg
 
 @[simp]
 theorem RingHom.as_boolalg_id : (RingHom.id α).AsBoolalg = BoundedLatticeHom.id _ :=
   rfl
+#align ring_hom.as_boolalg_id RingHom.as_boolalg_id
 
 @[simp]
 theorem RingHom.as_boolalg_comp (g : β →+* γ) (f : α →+* β) : (g.comp f).AsBoolalg = g.AsBoolalg.comp f.AsBoolalg :=
   rfl
+#align ring_hom.as_boolalg_comp RingHom.as_boolalg_comp
 
 end RingToAlgebra
 
@@ -323,38 +369,47 @@ section AlgebraToRing
 /-- Type synonym to view a Boolean ring as a Boolean algebra. -/
 def AsBoolring (α : Type _) :=
   α
+#align as_boolring AsBoolring
 
 /-- The "identity" equivalence between `as_boolring α` and `α`. -/
 def toBoolring : α ≃ AsBoolring α :=
   Equiv.refl _
+#align to_boolring toBoolring
 
 /-- The "identity" equivalence between `α` and `as_boolring α`. -/
 def ofBoolring : AsBoolring α ≃ α :=
   Equiv.refl _
+#align of_boolring ofBoolring
 
 @[simp]
 theorem to_boolring_symm_eq : (@toBoolring α).symm = ofBoolring :=
   rfl
+#align to_boolring_symm_eq to_boolring_symm_eq
 
 @[simp]
 theorem of_boolring_symm_eq : (@ofBoolring α).symm = toBoolring :=
   rfl
+#align of_boolring_symm_eq of_boolring_symm_eq
 
 @[simp]
 theorem to_boolring_of_boolring (a : AsBoolring α) : toBoolring (ofBoolring a) = a :=
   rfl
+#align to_boolring_of_boolring to_boolring_of_boolring
 
 @[simp]
 theorem of_boolring_to_boolring (a : α) : ofBoolring (toBoolring a) = a :=
   rfl
+#align of_boolring_to_boolring of_boolring_to_boolring
 
 @[simp]
 theorem to_boolring_inj {a b : α} : toBoolring a = toBoolring b ↔ a = b :=
   Iff.rfl
+#align to_boolring_inj to_boolring_inj
 
 @[simp]
 theorem of_boolring_inj {a b : AsBoolring α} : ofBoolring a = ofBoolring b ↔ a = b :=
   Iff.rfl
+#align of_boolring_inj of_boolring_inj
 
 instance [Inhabited α] : Inhabited (AsBoolring α) :=
   ‹Inhabited α›
@@ -385,6 +440,7 @@ def GeneralizedBooleanAlgebra.toNonUnitalCommRing [GeneralizedBooleanAlgebra α]
   mul_comm _ _ := inf_comm
   left_distrib := inf_symm_diff_distrib_left
   right_distrib := inf_symm_diff_distrib_right
+#align generalized_boolean_algebra.to_non_unital_comm_ring GeneralizedBooleanAlgebra.toNonUnitalCommRing
 
 instance [GeneralizedBooleanAlgebra α] : NonUnitalCommRing (AsBoolring α) :=
   @GeneralizedBooleanAlgebra.toNonUnitalCommRing α _
@@ -404,6 +460,7 @@ variable [BooleanAlgebra α] [BooleanAlgebra β] [BooleanAlgebra γ]
 def BooleanAlgebra.toBooleanRing : BooleanRing α :=
   { GeneralizedBooleanAlgebra.toNonUnitalCommRing with one := ⊤, one_mul := fun _ => top_inf_eq,
     mul_one := fun _ => inf_top_eq, mul_self := fun b => inf_idem }
+#align boolean_algebra.to_boolean_ring BooleanAlgebra.toBooleanRing
 
 localized [BooleanRingOfBooleanAlgebra]
   attribute [instance] GeneralizedBooleanAlgebra.toNonUnitalCommRing BooleanAlgebra.toBooleanRing
@@ -414,48 +471,59 @@ instance : BooleanRing (AsBoolring α) :=
 @[simp]
 theorem of_boolring_zero : ofBoolring (0 : AsBoolring α) = ⊥ :=
   rfl
+#align of_boolring_zero of_boolring_zero
 
 @[simp]
 theorem of_boolring_one : ofBoolring (1 : AsBoolring α) = ⊤ :=
   rfl
+#align of_boolring_one of_boolring_one
 
 -- `sub_eq_add` proves this lemma but it is eligible for `dsimp`
 @[simp, nolint simp_nf]
 theorem of_boolring_neg (a : AsBoolring α) : ofBoolring (-a) = ofBoolring a :=
   rfl
+#align of_boolring_neg of_boolring_neg
 
 @[simp]
 theorem of_boolring_add (a b : AsBoolring α) : ofBoolring (a + b) = ofBoolring a ∆ ofBoolring b :=
   rfl
+#align of_boolring_add of_boolring_add
 
 -- `sub_eq_add` simplifies the LHS but this lemma is eligible for `dsimp`
 @[simp, nolint simp_nf]
 theorem of_boolring_sub (a b : AsBoolring α) : ofBoolring (a - b) = ofBoolring a ∆ ofBoolring b :=
   rfl
+#align of_boolring_sub of_boolring_sub
 
 @[simp]
 theorem of_boolring_mul (a b : AsBoolring α) : ofBoolring (a * b) = ofBoolring a ⊓ ofBoolring b :=
   rfl
+#align of_boolring_mul of_boolring_mul
 
 @[simp]
 theorem of_boolring_le_of_boolring_iff {a b : AsBoolring α} : ofBoolring a ≤ ofBoolring b ↔ a * b = a :=
   inf_eq_left.symm
+#align of_boolring_le_of_boolring_iff of_boolring_le_of_boolring_iff
 
 @[simp]
 theorem to_boolring_bot : toBoolring (⊥ : α) = 0 :=
   rfl
+#align to_boolring_bot to_boolring_bot
 
 @[simp]
 theorem to_boolring_top : toBoolring (⊤ : α) = 1 :=
   rfl
+#align to_boolring_top to_boolring_top
 
 @[simp]
 theorem to_boolring_inf (a b : α) : toBoolring (a ⊓ b) = toBoolring a * toBoolring b :=
   rfl
+#align to_boolring_inf to_boolring_inf
 
 @[simp]
 theorem to_boolring_symm_diff (a b : α) : toBoolring (a ∆ b) = toBoolring a + toBoolring b :=
   rfl
+#align to_boolring_symm_diff to_boolring_symm_diff
 
 /-- Turn a bounded lattice homomorphism from Boolean algebras `α` to `β` into a ring homomorphism
 from `α` to `β` considered as Boolean rings. -/
@@ -466,15 +534,18 @@ protected def BoundedLatticeHom.asBoolring (f : BoundedLatticeHom α β) : AsBoo
   map_one' := f.map_top'
   map_add' := map_symm_diff' f
   map_mul' := f.map_inf'
+#align bounded_lattice_hom.as_boolring BoundedLatticeHom.asBoolring
 
 @[simp]
 theorem BoundedLatticeHom.as_boolring_id : (BoundedLatticeHom.id α).AsBoolring = RingHom.id _ :=
   rfl
+#align bounded_lattice_hom.as_boolring_id BoundedLatticeHom.as_boolring_id
 
 @[simp]
 theorem BoundedLatticeHom.as_boolring_comp (g : BoundedLatticeHom β γ) (f : BoundedLatticeHom α β) :
     (g.comp f).AsBoolring = g.AsBoolring.comp f.AsBoolring :=
   rfl
+#align bounded_lattice_hom.as_boolring_comp BoundedLatticeHom.as_boolring_comp
 
 end AlgebraToRing
 
@@ -486,18 +557,20 @@ end AlgebraToRing
 @[simps]
 def OrderIso.asBoolalgAsBoolring (α : Type _) [BooleanAlgebra α] : AsBoolalg (AsBoolring α) ≃o α :=
   ⟨ofBoolalg.trans ofBoolring, fun a b => of_boolring_le_of_boolring_iff.trans of_boolalg_mul_of_boolalg_eq_left_iff⟩
+#align order_iso.as_boolalg_as_boolring OrderIso.asBoolalgAsBoolring
 
 /-- Ring isomorphism between `α` considered as a Boolean algebra considered as a Boolean ring and
 `α`. -/
 @[simps]
 def RingEquiv.asBoolringAsBoolalg (α : Type _) [BooleanRing α] : AsBoolring (AsBoolalg α) ≃+* α :=
   { ofBoolring.trans ofBoolalg with map_mul' := fun a b => rfl, map_add' := of_boolalg_symm_diff }
+#align ring_equiv.as_boolring_as_boolalg RingEquiv.asBoolringAsBoolalg
 
 open Bool
 
 instance : BooleanRing Bool where
   add := xor
-  add_assoc := bxor_assoc
+  add_assoc := xor_assoc
   zero := false
   zero_add := Bool.false_xor
   add_zero := Bool.xor_false
@@ -505,13 +578,13 @@ instance : BooleanRing Bool where
   sub := xor
   sub_eq_add_neg _ _ := rfl
   add_left_neg := Bool.xor_self
-  add_comm := bxor_comm
+  add_comm := xor_comm
   one := true
   mul := and
-  mul_assoc := band_assoc
+  mul_assoc := and_assoc
   one_mul := Bool.true_and
   mul_one := Bool.and_true
-  left_distrib := band_bxor_distrib_left
-  right_distrib := band_bxor_distrib_right
+  left_distrib := and_xor_distrib_left
+  right_distrib := and_xor_distrib_right
   mul_self := Bool.and_self
 

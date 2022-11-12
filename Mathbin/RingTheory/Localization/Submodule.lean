@@ -32,41 +32,51 @@ namespace IsLocalization
 /-- Map from ideals of `R` to submodules of `S` induced by `f`. -/
 def coeSubmodule (I : Ideal R) : Submodule R S :=
   Submodule.map (Algebra.linearMap R S) I
+#align is_localization.coe_submodule IsLocalization.coeSubmodule
 
 theorem mem_coe_submodule (I : Ideal R) {x : S} : x ∈ coeSubmodule S I ↔ ∃ y : R, y ∈ I ∧ algebraMap R S y = x :=
   Iff.rfl
+#align is_localization.mem_coe_submodule IsLocalization.mem_coe_submodule
 
 theorem coe_submodule_mono {I J : Ideal R} (h : I ≤ J) : coeSubmodule S I ≤ coeSubmodule S J :=
   Submodule.map_mono h
+#align is_localization.coe_submodule_mono IsLocalization.coe_submodule_mono
 
 @[simp]
 theorem coe_submodule_bot : coeSubmodule S (⊥ : Ideal R) = ⊥ := by rw [coe_submodule, Submodule.map_bot]
+#align is_localization.coe_submodule_bot IsLocalization.coe_submodule_bot
 
 @[simp]
 theorem coe_submodule_top : coeSubmodule S (⊤ : Ideal R) = 1 := by
   rw [coe_submodule, Submodule.map_top, Submodule.one_eq_range]
+#align is_localization.coe_submodule_top IsLocalization.coe_submodule_top
 
 @[simp]
 theorem coe_submodule_sup (I J : Ideal R) : coeSubmodule S (I ⊔ J) = coeSubmodule S I ⊔ coeSubmodule S J :=
   Submodule.map_sup _ _ _
+#align is_localization.coe_submodule_sup IsLocalization.coe_submodule_sup
 
 @[simp]
 theorem coe_submodule_mul (I J : Ideal R) : coeSubmodule S (I * J) = coeSubmodule S I * coeSubmodule S J :=
   Submodule.map_mul _ _ (Algebra.ofId R S)
+#align is_localization.coe_submodule_mul IsLocalization.coe_submodule_mul
 
 theorem coe_submodule_fg (hS : Function.Injective (algebraMap R S)) (I : Ideal R) :
     Submodule.Fg (coeSubmodule S I) ↔ Submodule.Fg I :=
   ⟨Submodule.fg_of_fg_map _ (LinearMap.ker_eq_bot.mpr hS), Submodule.Fg.map _⟩
+#align is_localization.coe_submodule_fg IsLocalization.coe_submodule_fg
 
 @[simp]
 theorem coe_submodule_span (s : Set R) : coeSubmodule S (Ideal.span s) = Submodule.span R (algebraMap R S '' s) := by
   rw [IsLocalization.coeSubmodule, Ideal.span, Submodule.map_span]
   rfl
+#align is_localization.coe_submodule_span IsLocalization.coe_submodule_span
 
 @[simp]
 theorem coe_submodule_span_singleton (x : R) :
     coeSubmodule S (Ideal.span {x}) = Submodule.span R {(algebraMap R S) x} := by
   rw [coe_submodule_span, Set.image_singleton]
+#align is_localization.coe_submodule_span_singleton IsLocalization.coe_submodule_span_singleton
 
 variable {g : R →+* P}
 
@@ -83,6 +93,7 @@ include M
 theorem is_noetherian_ring (h : IsNoetherianRing R) : IsNoetherianRing S := by
   rw [is_noetherian_ring_iff, is_noetherian_iff_well_founded] at h⊢
   exact OrderEmbedding.well_founded (IsLocalization.orderEmbedding M S).dual h
+#align is_localization.is_noetherian_ring IsLocalization.is_noetherian_ring
 
 end
 
@@ -92,16 +103,19 @@ variable {S Q M}
 theorem coe_submodule_le_coe_submodule (h : M ≤ nonZeroDivisors R) {I J : Ideal R} :
     coeSubmodule S I ≤ coeSubmodule S J ↔ I ≤ J :=
   Submodule.map_le_map_iff_of_injective (IsLocalization.injective _ h) _ _
+#align is_localization.coe_submodule_le_coe_submodule IsLocalization.coe_submodule_le_coe_submodule
 
 @[mono]
 theorem coe_submodule_strict_mono (h : M ≤ nonZeroDivisors R) : StrictMono (coeSubmodule S : Ideal R → Submodule R S) :=
   strict_mono_of_le_iff_le fun _ _ => (coe_submodule_le_coe_submodule h).symm
+#align is_localization.coe_submodule_strict_mono IsLocalization.coe_submodule_strict_mono
 
 variable (S) {Q M}
 
 theorem coe_submodule_injective (h : M ≤ nonZeroDivisors R) :
     Function.Injective (coeSubmodule S : Ideal R → Submodule R S) :=
   injective_of_le_imp_le _ fun _ _ => (coe_submodule_le_coe_submodule h).mp
+#align is_localization.coe_submodule_injective IsLocalization.coe_submodule_injective
 
 theorem coe_submodule_is_principal {I : Ideal R} (h : M ≤ nonZeroDivisors R) :
     (coeSubmodule S I).IsPrincipal ↔ I.IsPrincipal := by
@@ -114,6 +128,7 @@ theorem coe_submodule_is_principal {I : Ideal R} (h : M ≤ nonZeroDivisors R) :
   · refine' ⟨⟨algebraMap R S x, _⟩⟩
     rw [hx, Ideal.submodule_span_eq, coe_submodule_span_singleton]
     
+#align is_localization.coe_submodule_is_principal IsLocalization.coe_submodule_is_principal
 
 variable {S} (M)
 
@@ -151,6 +166,7 @@ theorem mem_span_iff {N : Type _} [AddCommGroup N] [Module R N] [Module S N] [Is
   · rintro ⟨y, hy, z, rfl⟩
     exact Submodule.smul_mem _ _ (Submodule.span_subset_span R S _ hy)
     
+#align is_localization.mem_span_iff IsLocalization.mem_span_iff
 
 theorem mem_span_map {x : S} {a : Set R} :
     x ∈ Ideal.span (algebraMap R S '' a) ↔ ∃ y ∈ Ideal.span a, ∃ z : M, x = mk' S y z := by
@@ -165,6 +181,7 @@ theorem mem_span_map {x : S} {a : Set R} :
     refine' ⟨algebraMap R S y, Submodule.map_mem_span_algebra_map_image _ _ hy, z, _⟩
     rw [hz, smul_eq_mul, mul_comm, mul_mk'_eq_mk'_of_mul, mul_one]
     
+#align is_localization.mem_span_map IsLocalization.mem_span_map
 
 end IsLocalization
 
@@ -181,19 +198,23 @@ variable [CommRing K] [Algebra R K] [IsFractionRing R K] [Algebra A K] [IsFracti
 @[simp, mono]
 theorem coe_submodule_le_coe_submodule {I J : Ideal R} : coeSubmodule K I ≤ coeSubmodule K J ↔ I ≤ J :=
   IsLocalization.coe_submodule_le_coe_submodule le_rfl
+#align is_fraction_ring.coe_submodule_le_coe_submodule IsFractionRing.coe_submodule_le_coe_submodule
 
 @[mono]
 theorem coe_submodule_strict_mono : StrictMono (coeSubmodule K : Ideal R → Submodule R K) :=
   strict_mono_of_le_iff_le fun _ _ => coe_submodule_le_coe_submodule.symm
+#align is_fraction_ring.coe_submodule_strict_mono IsFractionRing.coe_submodule_strict_mono
 
 variable (R K)
 
 theorem coe_submodule_injective : Function.Injective (coeSubmodule K : Ideal R → Submodule R K) :=
   injective_of_le_imp_le _ fun _ _ => coe_submodule_le_coe_submodule.mp
+#align is_fraction_ring.coe_submodule_injective IsFractionRing.coe_submodule_injective
 
 @[simp]
 theorem coe_submodule_is_principal {I : Ideal R} : (coeSubmodule K I).IsPrincipal ↔ I.IsPrincipal :=
   IsLocalization.coe_submodule_is_principal _ le_rfl
+#align is_fraction_ring.coe_submodule_is_principal IsFractionRing.coe_submodule_is_principal
 
 end CommRing
 

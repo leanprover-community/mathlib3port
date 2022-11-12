@@ -41,6 +41,7 @@ attribute [local instance] concrete_category.has_coe_to_sort
 structure SubmonoidPresheaf [∀ X : C, MulOneClass X] [∀ X Y : C, MonoidHomClass (X ⟶ Y) X Y] (F : X.Presheaf C) where
   obj : ∀ U, Submonoid (F.obj U)
   map : ∀ {U V : (Opens X)ᵒᵖ} (i : U ⟶ V), obj U ≤ (obj V).comap (F.map i)
+#align Top.presheaf.submonoid_presheaf TopCat.Presheaf.SubmonoidPresheaf
 
 variable {F : X.Presheaf CommRingCat.{w}} (G : F.SubmonoidPresheaf)
 
@@ -63,11 +64,13 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf 
     congr
     rw [F.map_comp]
     rfl
+#align Top.presheaf.submonoid_presheaf.localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.localizationPresheaf
 
 /-- The map into the localization presheaf. -/
 def SubmonoidPresheaf.toLocalizationPresheaf : F ⟶ G.localizationPresheaf where
   app U := CommRingCat.ofHom <| algebraMap (F.obj U) (Localization <| G.obj U)
   naturality' U V i := (IsLocalization.map_comp (G.map i)).symm
+#align Top.presheaf.submonoid_presheaf.to_localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.toLocalizationPresheaf
 
 instance : Epi G.toLocalizationPresheaf :=
   @NatTrans.epi_of_epi_app _ _ G.toLocalizationPresheaf fun U => Localization.epi' (G.obj U)
@@ -86,6 +89,7 @@ noncomputable def submonoidPresheafOfStalk (S : ∀ x : X, Submonoid (F.stalk x)
     change (F.map i.unop.op ≫ F.germ x) s ∈ _
     rw [F.germ_res]
     exact hs _
+#align Top.presheaf.submonoid_presheaf_of_stalk TopCat.Presheaf.submonoidPresheafOfStalk
 
 noncomputable instance : Inhabited F.SubmonoidPresheaf :=
   ⟨F.submonoidPresheafOfStalk fun _ => ⊥⟩
@@ -93,10 +97,12 @@ noncomputable instance : Inhabited F.SubmonoidPresheaf :=
 /-- The localization of a presheaf of `CommRing`s at locally non-zero-divisor sections. -/
 noncomputable def totalQuotientPresheaf : X.Presheaf CommRingCat.{w} :=
   (F.submonoidPresheafOfStalk fun x => (F.stalk x)⁰).localizationPresheaf
+#align Top.presheaf.total_quotient_presheaf TopCat.Presheaf.totalQuotientPresheaf
 
 /-- The map into the presheaf of total quotient rings -/
 noncomputable def toTotalQuotientPresheaf : F ⟶ F.totalQuotientPresheaf :=
   SubmonoidPresheaf.toLocalizationPresheaf _ deriving Epi
+#align Top.presheaf.to_total_quotient_presheaf TopCat.Presheaf.toTotalQuotientPresheaf
 
 instance (F : X.Sheaf CommRingCat.{w}) : Mono F.Presheaf.toTotalQuotientPresheaf := by
   apply (config := { instances := false }) nat_trans.mono_of_mono_app

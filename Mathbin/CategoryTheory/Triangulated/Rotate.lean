@@ -50,6 +50,7 @@ applying `rotate` gives a triangle of the form:
 @[simps]
 def Triangle.rotate (T : Triangle C) : Triangle C :=
   Triangle.mk T.mor₂ T.mor₃ (-T.mor₁⟦1⟧')
+#align category_theory.pretriangulated.triangle.rotate CategoryTheory.Pretriangulated.Triangle.rotate
 
 section
 
@@ -70,7 +71,8 @@ not necessarily equal to `Z`, but it is isomorphic, by the `counit_iso` of `shif
 -/
 @[simps]
 def Triangle.invRotate (T : Triangle C) : Triangle C :=
-  Triangle.mk (-(T.mor₃⟦(-1 : ℤ)⟧' ≫ (shiftShiftNeg _ _).Hom)) T.mor₁ (T.mor₂ ≫ (shiftNegShift _ _).inv)
+  Triangle.mk (-T.mor₃⟦(-1 : ℤ)⟧' ≫ (shiftShiftNeg _ _).Hom) T.mor₁ (T.mor₂ ≫ (shiftNegShift _ _).inv)
+#align category_theory.pretriangulated.triangle.inv_rotate CategoryTheory.Pretriangulated.Triangle.invRotate
 
 end
 
@@ -111,6 +113,7 @@ def rotate (f : TriangleMorphism T₁ T₂) : TriangleMorphism T₁.rotate T₂.
   comm₃' := by
     dsimp
     simp only [rotate_mor₃, comp_neg, neg_comp, ← functor.map_comp, f.comm₁]
+#align category_theory.pretriangulated.triangle_morphism.rotate CategoryTheory.Pretriangulated.TriangleMorphism.rotate
 
 /-- Given a triangle morphism of the form:
 ```
@@ -153,6 +156,8 @@ def invRotate (f : TriangleMorphism T₁ T₂) : TriangleMorphism T₁.invRotate
       unit_of_tensor_iso_unit_inv_app]
     erw [ε_naturality_assoc]
     rw [comm₂_assoc]
+#align
+  category_theory.pretriangulated.triangle_morphism.inv_rotate CategoryTheory.Pretriangulated.TriangleMorphism.invRotate
 
 end TriangleMorphism
 
@@ -164,6 +169,7 @@ variable (C)
 def rotate : Triangle C ⥤ Triangle C where
   obj := Triangle.rotate
   map _ _ f := f.rotate
+#align category_theory.pretriangulated.rotate CategoryTheory.Pretriangulated.rotate
 
 /-- The inverse rotation of triangles gives an endofunctor on the category of triangles in `C`.
 -/
@@ -171,6 +177,7 @@ def rotate : Triangle C ⥤ Triangle C where
 def invRotate : Triangle C ⥤ Triangle C where
   obj := Triangle.invRotate
   map _ _ f := f.invRotate
+#align category_theory.pretriangulated.inv_rotate CategoryTheory.Pretriangulated.invRotate
 
 variable {C}
 
@@ -188,6 +195,7 @@ def toInvRotateRotate (T : Triangle C) : T ⟶ (invRotate C).obj ((rotate C).obj
       functor.map_comp, nat_trans.id_app, obj_ε_app, unit_of_tensor_iso_unit_inv_app]
     erw [μ_inv_hom_app_assoc]
     rfl
+#align category_theory.pretriangulated.to_inv_rotate_rotate CategoryTheory.Pretriangulated.toInvRotateRotate
 
 /-- There is a natural transformation between the identity functor on triangles in `C`,
 and the composition of a rotation with an inverse rotation.
@@ -209,6 +217,7 @@ def rotCompInvRotHom : 𝟭 (Triangle C) ⟶ rotate C ⋙ invRotate C where
     · dsimp
       rw [comp_id, id_comp]
       
+#align category_theory.pretriangulated.rot_comp_inv_rot_hom CategoryTheory.Pretriangulated.rotCompInvRotHom
 
 /-- There is a natural map from the `inv_rotate` of the `rotate` of a triangle to itself. -/
 @[simps]
@@ -222,12 +231,14 @@ def fromInvRotateRotate (T : Triangle C) : (invRotate C).obj ((rotate C).obj T) 
     simp only [discrete.functor_map_id, nat_trans.id_app, id_comp, assoc, functor.map_comp, obj_μ_app, obj_ε_inv_app,
       comp_id, μ_inv_hom_app_assoc]
     erw [μ_inv_hom_app, μ_inv_hom_app_assoc, category.comp_id]
+#align category_theory.pretriangulated.from_inv_rotate_rotate CategoryTheory.Pretriangulated.fromInvRotateRotate
 
 /-- There is a natural transformation between the composition of a rotation with an inverse rotation
 on triangles in `C`, and the identity functor.
 -/
 @[simps]
 def rotCompInvRotInv : rotate C ⋙ invRotate C ⟶ 𝟭 (Triangle C) where app := fromInvRotateRotate
+#align category_theory.pretriangulated.rot_comp_inv_rot_inv CategoryTheory.Pretriangulated.rotCompInvRotInv
 
 /-- The natural transformations between the identity functor on triangles in `C` and the composition
 of a rotation with an inverse rotation are natural isomorphisms (they are isomorphisms in the
@@ -237,6 +248,7 @@ category of functors).
 def rotCompInvRot : 𝟭 (Triangle C) ≅ rotate C ⋙ invRotate C where
   Hom := rotCompInvRotHom
   inv := rotCompInvRotInv
+#align category_theory.pretriangulated.rot_comp_inv_rot CategoryTheory.Pretriangulated.rotCompInvRot
 
 /-- There is a natural map from the `rotate` of the `inv_rotate` of a triangle to itself. -/
 @[simps]
@@ -257,12 +269,14 @@ def fromRotateInvRotate (T : Triangle C) : (rotate C).obj ((invRotate C).obj T) 
       add_neg_equiv_counit_iso_hom, eq_to_hom_refl, nat_trans.comp_app]
     erw [μ_inv_hom_app, category.comp_id, obj_zero_map_μ_app]
     rw [discrete.functor_map_id, nat_trans.id_app, comp_id]
+#align category_theory.pretriangulated.from_rotate_inv_rotate CategoryTheory.Pretriangulated.fromRotateInvRotate
 
 /-- There is a natural transformation between the composition of an inverse rotation with a rotation
 on triangles in `C`, and the identity functor.
 -/
 @[simps]
 def invRotCompRotHom : invRotate C ⋙ rotate C ⟶ 𝟭 (Triangle C) where app := fromRotateInvRotate
+#align category_theory.pretriangulated.inv_rot_comp_rot_hom CategoryTheory.Pretriangulated.invRotCompRotHom
 
 /-- There is a natural map from a triangle to the `rotate` of its `inv_rotate`. -/
 @[simps]
@@ -278,6 +292,7 @@ def toRotateInvRotate (T : Triangle C) : T ⟶ (rotate C).obj ((invRotate C).obj
       μ_naturality_assoc, neg_neg, μ_inv_hom_app_assoc]
     erw [μ_inv_hom_app, category.comp_id, obj_zero_map_μ_app]
     simp only [discrete.functor_map_id, nat_trans.id_app, comp_id, ε_hom_inv_app_assoc]
+#align category_theory.pretriangulated.to_rotate_inv_rotate CategoryTheory.Pretriangulated.toRotateInvRotate
 
 /-- There is a natural transformation between the identity functor on triangles in `C`,
 and the composition of an inverse rotation with a rotation.
@@ -299,6 +314,7 @@ def invRotCompRotInv : 𝟭 (Triangle C) ⟶ invRotate C ⋙ rotate C where
       simp only [nat_trans.comp_app, assoc]
       erw [μ_inv_naturality, ε_naturality_assoc]
       
+#align category_theory.pretriangulated.inv_rot_comp_rot_inv CategoryTheory.Pretriangulated.invRotCompRotInv
 
 /-- The natural transformations between the composition of a rotation with an inverse rotation
 on triangles in `C`, and the identity functor on triangles are natural isomorphisms
@@ -308,6 +324,7 @@ on triangles in `C`, and the identity functor on triangles are natural isomorphi
 def invRotCompRot : invRotate C ⋙ rotate C ≅ 𝟭 (Triangle C) where
   Hom := invRotCompRotHom
   inv := invRotCompRotInv
+#align category_theory.pretriangulated.inv_rot_comp_rot CategoryTheory.Pretriangulated.invRotCompRot
 
 variable (C)
 
@@ -335,6 +352,7 @@ def triangleRotation : Equivalence (Triangle C) (Triangle C) where
       erw [μ_inv_hom_app_assoc, μ_inv_hom_app]
       rfl
       
+#align category_theory.pretriangulated.triangle_rotation CategoryTheory.Pretriangulated.triangleRotation
 
 variable {C}
 

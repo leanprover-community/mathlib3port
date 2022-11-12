@@ -31,6 +31,7 @@ universe u
 /-- A `laurent_series` is implemented as a `hahn_series` with value group `ℤ`. -/
 abbrev LaurentSeries (R : Type _) [Zero R] :=
   HahnSeries ℤ R
+#align laurent_series LaurentSeries
 
 variable {R : Type u}
 
@@ -45,27 +46,32 @@ instance : Coe (PowerSeries R) (LaurentSeries R) :=
 
 theorem coe_power_series (x : PowerSeries R) : (x : LaurentSeries R) = HahnSeries.ofPowerSeries ℤ R x :=
   rfl
+#align laurent_series.coe_power_series LaurentSeries.coe_power_series
 
 @[simp]
 theorem coeff_coe_power_series (x : PowerSeries R) (n : ℕ) :
     HahnSeries.coeff (x : LaurentSeries R) n = PowerSeries.coeff R n x := by
   rw [coe_power_series, of_power_series_apply_coeff]
+#align laurent_series.coeff_coe_power_series LaurentSeries.coeff_coe_power_series
 
 /-- This is a power series that can be multiplied by an integer power of `X` to give our
   Laurent series. If the Laurent series is nonzero, `power_series_part` has a nonzero
   constant term.  -/
 def powerSeriesPart (x : LaurentSeries R) : PowerSeries R :=
   PowerSeries.mk fun n => x.coeff (x.order + n)
+#align laurent_series.power_series_part LaurentSeries.powerSeriesPart
 
 @[simp]
 theorem power_series_part_coeff (x : LaurentSeries R) (n : ℕ) :
     PowerSeries.coeff R n x.powerSeriesPart = x.coeff (x.order + n) :=
   PowerSeries.coeff_mk _ _
+#align laurent_series.power_series_part_coeff LaurentSeries.power_series_part_coeff
 
 @[simp]
 theorem power_series_part_zero : powerSeriesPart (0 : LaurentSeries R) = 0 := by
   ext
   simp
+#align laurent_series.power_series_part_zero LaurentSeries.power_series_part_zero
 
 @[simp]
 theorem power_series_part_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 ↔ x = 0 := by
@@ -79,6 +85,7 @@ theorem power_series_part_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 
   · rintro rfl
     simp
     
+#align laurent_series.power_series_part_eq_zero LaurentSeries.power_series_part_eq_zero
 
 @[simp]
 theorem single_order_mul_power_series_part (x : LaurentSeries R) :
@@ -100,11 +107,13 @@ theorem single_order_mul_power_series_part (x : LaurentSeries R) :
       exact Int.zero_le_of_nat _
       
     
+#align laurent_series.single_order_mul_power_series_part LaurentSeries.single_order_mul_power_series_part
 
 theorem of_power_series_power_series_part (x : LaurentSeries R) :
     ofPowerSeries ℤ R x.powerSeriesPart = single (-x.order) 1 * x := by
   refine' Eq.trans _ (congr rfl x.single_order_mul_power_series_part)
   rw [← mul_assoc, single_mul_single, neg_add_self, mul_one, ← C_apply, C_one, one_mul, coe_power_series]
+#align laurent_series.of_power_series_power_series_part LaurentSeries.of_power_series_power_series_part
 
 end Semiring
 
@@ -115,6 +124,7 @@ instance [CommSemiring R] : Algebra (PowerSeries R) (LaurentSeries R) :=
 theorem coe_algebra_map [CommSemiring R] :
     ⇑(algebraMap (PowerSeries R) (LaurentSeries R)) = HahnSeries.ofPowerSeries ℤ R :=
   rfl
+#align laurent_series.coe_algebra_map LaurentSeries.coe_algebra_map
 
 /-- The localization map from power series to Laurent series. -/
 @[simps]
@@ -161,6 +171,7 @@ instance ofPowerSeriesLocalization [CommRing R] :
         Finsupp.single_add, MvPowerSeries.coeff_add_mul_monomial, mul_one] at h
       exact h
       
+#align laurent_series.of_power_series_localization LaurentSeries.ofPowerSeriesLocalization
 
 instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries K) :=
   IsLocalization.ofLe (Submonoid.powers (PowerSeries.x : PowerSeries K)) _
@@ -178,26 +189,32 @@ variable {R' : Type _} [Semiring R] [Ring R'] (f g : PowerSeries R) (f' g' : Pow
 @[simp, norm_cast]
 theorem coe_zero : ((0 : PowerSeries R) : LaurentSeries R) = 0 :=
   (ofPowerSeries ℤ R).map_zero
+#align power_series.coe_zero PowerSeries.coe_zero
 
 @[simp, norm_cast]
 theorem coe_one : ((1 : PowerSeries R) : LaurentSeries R) = 1 :=
   (ofPowerSeries ℤ R).map_one
+#align power_series.coe_one PowerSeries.coe_one
 
 @[simp, norm_cast]
 theorem coe_add : ((f + g : PowerSeries R) : LaurentSeries R) = f + g :=
   (ofPowerSeries ℤ R).map_add _ _
+#align power_series.coe_add PowerSeries.coe_add
 
 @[simp, norm_cast]
 theorem coe_sub : ((f' - g' : PowerSeries R') : LaurentSeries R') = f' - g' :=
   (ofPowerSeries ℤ R').map_sub _ _
+#align power_series.coe_sub PowerSeries.coe_sub
 
 @[simp, norm_cast]
 theorem coe_neg : ((-f' : PowerSeries R') : LaurentSeries R') = -f' :=
   (ofPowerSeries ℤ R').map_neg _
+#align power_series.coe_neg PowerSeries.coe_neg
 
 @[simp, norm_cast]
 theorem coe_mul : ((f * g : PowerSeries R) : LaurentSeries R) = f * g :=
   (ofPowerSeries ℤ R).map_mul _ _
+#align power_series.coe_mul PowerSeries.coe_mul
 
 theorem coeff_coe (i : ℤ) :
     ((f : PowerSeries R) : LaurentSeries R).coeff i = if i < 0 then 0 else PowerSeries.coeff R i.natAbs f := by
@@ -208,32 +225,39 @@ theorem coeff_coe (i : ℤ) :
     simp only [not_exists, RelEmbedding.coe_fn_mk, Set.mem_image, not_and, Function.Embedding.coe_fn_mk, Ne.def,
       to_power_series_symm_apply_coeff, mem_support, Int.coe_nat_eq, imp_true_iff, not_false_iff]
     
+#align power_series.coeff_coe PowerSeries.coeff_coe
 
 @[simp, norm_cast]
 theorem coe_C (r : R) : ((c R r : PowerSeries R) : LaurentSeries R) = HahnSeries.c r :=
   of_power_series_C _
+#align power_series.coe_C PowerSeries.coe_C
 
 @[simp]
 theorem coe_X : ((x : PowerSeries R) : LaurentSeries R) = single 1 1 :=
   of_power_series_X
+#align power_series.coe_X PowerSeries.coe_X
 
 @[simp, norm_cast]
 theorem coe_smul {S : Type _} [Semiring S] [Module R S] (r : R) (x : PowerSeries S) :
     ((r • x : PowerSeries S) : LaurentSeries S) = r • x := by
   ext
   simp [coeff_coe, coeff_smul, smul_ite]
+#align power_series.coe_smul PowerSeries.coe_smul
 
 @[simp, norm_cast]
 theorem coe_bit0 : ((bit0 f : PowerSeries R) : LaurentSeries R) = bit0 f :=
   (ofPowerSeries ℤ R).map_bit0 _
+#align power_series.coe_bit0 PowerSeries.coe_bit0
 
 @[simp, norm_cast]
 theorem coe_bit1 : ((bit1 f : PowerSeries R) : LaurentSeries R) = bit1 f :=
   (ofPowerSeries ℤ R).map_bit1 _
+#align power_series.coe_bit1 PowerSeries.coe_bit1
 
 @[simp, norm_cast]
 theorem coe_pow (n : ℕ) : ((f ^ n : PowerSeries R) : LaurentSeries R) = f ^ n :=
   (ofPowerSeries ℤ R).map_pow _ _
+#align power_series.coe_pow PowerSeries.coe_pow
 
 end PowerSeries
 

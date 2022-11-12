@@ -26,6 +26,7 @@ unsafe def field_simp.ne_zero : tactic Unit := do
         let n ← e
         sorry
     | _ => tactic.fail "goal should be of the form `x ≠ 0`"
+#align tactic.field_simp.ne_zero tactic.field_simp.ne_zero
 
 namespace Interactive
 
@@ -101,6 +102,7 @@ unsafe def field_simp (no_dflt : parse only_flag) (hs : parse simp_arg_list) (at
   let attr_names := `field_simps::attr_names
   let hs := simp_arg_type.except `one_div::simp_arg_type.except `mul_eq_zero::simp_arg_type.except `one_divp::hs
   propagate_tags (simp_core cfg.toSimpConfig cfg.discharger no_dflt hs attr_names locat >> skip)
+#align tactic.interactive.field_simp tactic.interactive.field_simp
 
 add_tactic_doc
   { Name := "field_simp", category := DocCategory.tactic, declNames := [`tactic.interactive.field_simp],

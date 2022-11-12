@@ -43,14 +43,17 @@ variable (X : ProfiniteCat.{u})
 def fintypeDiagram : DiscreteQuotient X ⥤ FintypeCat where
   obj S := FintypeCat.of S
   map S T f := DiscreteQuotient.ofLe f.le
+#align Profinite.fintype_diagram ProfiniteCat.fintypeDiagram
 
 /-- An abbreviation for `X.fintype_diagram ⋙ Fintype_to_Profinite`. -/
 abbrev diagram : DiscreteQuotient X ⥤ ProfiniteCat :=
   X.fintypeDiagram ⋙ FintypeCat.toProfinite
+#align Profinite.diagram ProfiniteCat.diagram
 
 /-- A cone over `X.diagram` whose cone point is `X`. -/
 def asLimitCone : CategoryTheory.Limits.Cone X.diagram :=
   { x, π := { app := fun S => ⟨S.proj, S.proj_is_locally_constant.Continuous⟩ } }
+#align Profinite.as_limit_cone ProfiniteCat.asLimitCone
 
 instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asLimitCone) :=
   is_iso_of_bijective _
@@ -66,26 +69,31 @@ instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.
         ext S : 3
         apply hb
         )
+#align Profinite.is_iso_as_limit_cone_lift ProfiniteCat.is_iso_as_limit_cone_lift
 
 /-- The isomorphism between `X` and the explicit limit of `X.diagram`,
 induced by lifting `X.as_limit_cone`.
 -/
 def isoAsLimitConeLift : X ≅ (limitCone X.diagram).x :=
   as_iso <| (limitConeIsLimit _).lift X.asLimitCone
+#align Profinite.iso_as_limit_cone_lift ProfiniteCat.isoAsLimitConeLift
 
 /-- The isomorphism of cones `X.as_limit_cone` and `Profinite.limit_cone X.diagram`.
 The underlying isomorphism is defeq to `X.iso_as_limit_cone_lift`.
 -/
 def asLimitConeIso : X.asLimitCone ≅ limitCone _ :=
   Limits.Cones.ext (isoAsLimitConeLift _) fun _ => rfl
+#align Profinite.as_limit_cone_iso ProfiniteCat.asLimitConeIso
 
 /-- `X.as_limit_cone` is indeed a limit cone. -/
 def asLimit : CategoryTheory.Limits.IsLimit X.asLimitCone :=
   Limits.IsLimit.ofIsoLimit (limitConeIsLimit _) X.asLimitConeIso.symm
+#align Profinite.as_limit ProfiniteCat.asLimit
 
 /-- A bundled version of `X.as_limit_cone` and `X.as_limit`. -/
 def lim : Limits.LimitCone X.diagram :=
   ⟨X.asLimitCone, X.asLimit⟩
+#align Profinite.lim ProfiniteCat.lim
 
 end ProfiniteCat
 

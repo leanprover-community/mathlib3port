@@ -27,6 +27,7 @@ namespace GroupCat
 def toAddGroup : GroupCat ⥤ AddGroupCat where
   obj X := AddGroupCat.of (Additive X)
   map X Y := MonoidHom.toAdditive
+#align Group.to_AddGroup GroupCat.toAddGroup
 
 end GroupCat
 
@@ -38,6 +39,7 @@ namespace CommGroupCat
 def toAddCommGroup : CommGroupCat ⥤ AddCommGroupCat where
   obj X := AddCommGroupCat.of (Additive X)
   map X Y := MonoidHom.toAdditive
+#align CommGroup.to_AddCommGroup CommGroupCat.toAddCommGroup
 
 end CommGroupCat
 
@@ -49,6 +51,7 @@ namespace AddGroupCat
 def toGroup : AddGroupCat ⥤ GroupCat where
   obj X := GroupCat.of (Multiplicative X)
   map X Y := AddMonoidHom.toMultiplicative
+#align AddGroup.to_Group AddGroupCat.toGroup
 
 end AddGroupCat
 
@@ -60,6 +63,7 @@ namespace AddCommGroupCat
 def toCommGroup : AddCommGroupCat ⥤ CommGroupCat where
   obj X := CommGroupCat.of (Multiplicative X)
   map X Y := AddMonoidHom.toMultiplicative
+#align AddCommGroup.to_CommGroup AddCommGroupCat.toCommGroup
 
 end AddCommGroupCat
 
@@ -70,6 +74,7 @@ def groupAddGroupEquivalence : GroupCat ≌ AddGroupCat :=
   Equivalence.mk GroupCat.toAddGroup AddGroupCat.toGroup
     (NatIso.ofComponents (fun X => MulEquiv.toGroupIso (MulEquiv.multiplicativeAdditive X)) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => AddEquiv.toAddGroupIso (AddEquiv.additiveMultiplicative X)) fun X Y f => rfl)
+#align Group_AddGroup_equivalence groupAddGroupEquivalence
 
 /-- The equivalence of categories between `CommGroup` and `AddCommGroup`.
 -/
@@ -78,4 +83,5 @@ def commGroupAddCommGroupEquivalence : CommGroupCat ≌ AddCommGroupCat :=
   Equivalence.mk CommGroupCat.toAddCommGroup AddCommGroupCat.toCommGroup
     (NatIso.ofComponents (fun X => MulEquiv.toCommGroupIso (MulEquiv.multiplicativeAdditive X)) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => AddEquiv.toAddCommGroupIso (AddEquiv.additiveMultiplicative X)) fun X Y f => rfl)
+#align CommGroup_AddCommGroup_equivalence commGroupAddCommGroupEquivalence
 

@@ -24,10 +24,12 @@ theorem uniformity : 𝓤 (Matrix m n 𝕜) = ⨅ (i : m) (j : n), (𝓤 𝕜).c
   erw [PiCat.uniformity, PiCat.uniformity]
   simp_rw [Filter.comap_infi, Filter.comap_comap]
   rfl
+#align matrix.uniformity Matrix.uniformity
 
 theorem uniform_continuous {β : Type _} [UniformSpace β] {f : β → Matrix m n 𝕜} :
     UniformContinuous f ↔ ∀ i j, UniformContinuous fun x => f x i j := by
   simp only [UniformContinuous, Matrix.uniformity, Filter.tendsto_infi, Filter.tendsto_comap_iff]
+#align matrix.uniform_continuous Matrix.uniform_continuous
 
 instance [CompleteSpace 𝕜] : CompleteSpace (Matrix m n 𝕜) :=
   (by infer_instance : CompleteSpace (m → n → 𝕜))

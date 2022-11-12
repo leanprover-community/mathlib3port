@@ -56,11 +56,13 @@ theorem nhds_set_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (Diagonal α)
     exact (𝓤 α).basis_sets.prod_self.comap _
   refine' (is_compact_diagonal.nhds_set_basis_uniformity this).ge_iff.2 fun U hU => _
   exact mem_of_superset hU fun ⟨x, y⟩ hxy => mem_Union₂.2 ⟨(x, x), rfl, refl_mem_uniformity hU, hxy⟩
+#align nhds_set_diagonal_eq_uniformity nhds_set_diagonal_eq_uniformity
 
 /-- On a compact uniform space, the topology determines the uniform structure, entourages are
 exactly the neighborhoods of the diagonal. -/
 theorem compact_space_uniformity [CompactSpace α] : 𝓤 α = ⨆ x, 𝓝 (x, x) :=
   nhds_set_diagonal_eq_uniformity.symm.trans (nhds_set_diagonal _)
+#align compact_space_uniformity compact_space_uniformity
 
 theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ] {u u' : UniformSpace γ}
     (h : u.toTopologicalSpace = t) (h' : u'.toTopologicalSpace = t) : u = u' := by
@@ -69,6 +71,7 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
   have : @CompactSpace γ u.to_topological_space := by rwa [h]
   have : @CompactSpace γ u'.to_topological_space := by rwa [h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
+#align unique_uniformity_of_compact unique_uniformity_of_compact
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -76,7 +79,7 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- The unique uniform structure inducing a given compact topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
@@ -156,13 +159,13 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     -- So u ∈ V₁, v ∈ V₂, and there exists some w such that (u, w) ∈ W and (w ,v) ∈ W.
     -- Because u is in V₁ which is disjoint from U₂ and U₃, (u, w) ∈ W forces (u, w) ∈ U₁ ×ˢ U₁.
     have uw_in : (u, w) ∈ U₁ ×ˢ U₁ :=
-      (huw.resolve_right fun h => h.1 <| Or.inl u_in).resolve_right fun h => hU₁₂ ⟨VU₁ u_in, h.1⟩
+      (huw.resolve_right fun h => h.1 <| Or.inl u_in).resolve_right fun h => hU₁₂.le_bot ⟨VU₁ u_in, h.1⟩
     -- Similarly, because v ∈ V₂, (w ,v) ∈ W forces (w, v) ∈ U₂ ×ˢ U₂.
     have wv_in : (w, v) ∈ U₂ ×ˢ U₂ :=
-      (hwv.resolve_right fun h => h.2 <| Or.inr v_in).resolve_left fun h => hU₁₂ ⟨h.2, VU₂ v_in⟩
+      (hwv.resolve_right fun h => h.2 <| Or.inr v_in).resolve_left fun h => hU₁₂.le_bot ⟨h.2, VU₂ v_in⟩
     -- Hence w ∈ U₁ ∩ U₂ which is empty.
     -- So we have a contradiction
-    exact hU₁₂ ⟨uw_in.2, wv_in.1⟩
+    exact hU₁₂.le_bot ⟨uw_in.2, wv_in.1⟩
   is_open_uniformity := by
     -- Here we need to prove the topology induced by the constructed uniformity is the
     -- topology we started with.
@@ -177,6 +180,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by simpa
     intro y hxy
     simp [comap_const_of_not_mem (compl_singleton_mem_nhds hxy) (by simp)]
+#align uniform_space_of_compact_t2 uniformSpaceOfCompactT2
 
 /-!
 ### Heine-Cantor theorem
@@ -194,6 +198,7 @@ theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] {f : α 
     _ ≤ ⨆ y, 𝓝 (y, y) := supr_comp_le (fun y => 𝓝 (y, y)) f
     _ ≤ 𝓤 β := supr_nhds_le_uniformity
     
+#align compact_space.uniform_continuous_of_continuous CompactSpace.uniform_continuous_of_continuous
 
 /-- Heine-Cantor: a continuous function on a compact set of a uniform space is uniformly
 continuous. -/
@@ -204,6 +209,7 @@ theorem IsCompact.uniform_continuous_on_of_continuous {s : Set α} {f : α → �
   rw [continuous_on_iff_continuous_restrict] at hf
   skip
   exact CompactSpace.uniform_continuous_of_continuous hf
+#align is_compact.uniform_continuous_on_of_continuous IsCompact.uniform_continuous_on_of_continuous
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -215,10 +221,12 @@ theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β
   have : UniformContinuousOn (↿f) (K ×ˢ univ) :=
     IsCompact.uniform_continuous_on_of_continuous (hK.prod is_compact_univ) (h.mono <| prod_mono hKU subset.rfl)
   exact this.tendsto_uniformly hxK
+#align continuous_on.tendsto_uniformly ContinuousOn.tendsto_uniformly
 
 /-- A continuous family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is
 locally compact and `β` is compact. -/
 theorem Continuous.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ] (f : α → β → γ)
     (h : Continuous ↿f) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
   h.ContinuousOn.TendstoUniformly univ_mem
+#align continuous.tendsto_uniformly Continuous.tendsto_uniformly
 

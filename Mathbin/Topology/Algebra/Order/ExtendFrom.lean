@@ -35,6 +35,7 @@ theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
     · use f x, hf x h
       
     
+#align continuous_on_Icc_extend_from_Ioo continuous_on_Icc_extend_from_Ioo
 
 theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α] [OrderTopology α]
     [TopologicalSpace β] [T2Space β] {f : α → β} {a b : α} {la : β} (hab : a < b) (ha : Tendsto f (𝓝[>] a) (𝓝 la)) :
@@ -45,6 +46,7 @@ theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [D
     
   · simpa [hab]
     
+#align eq_lim_at_left_extend_from_Ioo eq_lim_at_left_extend_from_Ioo
 
 theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α] [OrderTopology α]
     [TopologicalSpace β] [T2Space β] {f : α → β} {a b : α} {lb : β} (hab : a < b) (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) :
@@ -55,6 +57,7 @@ theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [
     
   · simpa [hab]
     
+#align eq_lim_at_right_extend_from_Ioo eq_lim_at_right_extend_from_Ioo
 
 theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α] [OrderTopology α]
     [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {la : β} (hab : a < b)
@@ -72,6 +75,7 @@ theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
     · use f x, hf x h
       
     
+#align continuous_on_Ico_extend_from_Ioo continuous_on_Ico_extend_from_Ioo
 
 theorem continuous_on_Ioc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α] [OrderTopology α]
     [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {lb : β} (hab : a < b)
@@ -80,4 +84,5 @@ theorem continuous_on_Ioc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
   have := @continuous_on_Ico_extend_from_Ioo αᵒᵈ _ _ _ _ _ _ _ f _ _ _ hab
   erw [dual_Ico, dual_Ioi, dual_Ioo] at this
   exact this hf hb
+#align continuous_on_Ioc_extend_from_Ioo continuous_on_Ioc_extend_from_Ioo
 

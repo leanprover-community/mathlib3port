@@ -17,7 +17,7 @@ statement.
 
 open Set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ≠ » «expr⊤»()) -/
 /-- **Zorn's lemma**: A partial order is coatomic if every nonempty chain `c`, `⊤ ∉ c`, has an upper
 bound not equal to `⊤`. -/
 theorem IsCoatomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderTop α]
@@ -32,11 +32,13 @@ theorem IsCoatomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderTop
   · rcases h c hc ⟨y, hy⟩ fun h => (hxc h).2.Ne rfl with ⟨z, hz, hcz⟩
     exact ⟨z, ⟨le_trans (hxc hy).1 (hcz hy), hz.lt_top⟩, hcz⟩
     
+#align is_coatomic.of_is_chain_bounded IsCoatomic.of_is_chain_bounded
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ≠ » «expr⊥»()) -/
 /-- **Zorn's lemma**: A partial order is atomic if every nonempty chain `c`, `⊥ ∉ c`, has an lower
 bound not equal to `⊥`. -/
 theorem IsAtomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderBot α]
     (h : ∀ c : Set α, IsChain (· ≤ ·) c → c.Nonempty → ⊥ ∉ c → ∃ (x : _)(_ : x ≠ ⊥), x ∈ LowerBounds c) : IsAtomic α :=
   is_coatomic_dual_iff_is_atomic.mp <| IsCoatomic.of_is_chain_bounded fun c hc => h c hc.symm
+#align is_atomic.of_is_chain_bounded IsAtomic.of_is_chain_bounded
 

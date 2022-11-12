@@ -35,14 +35,17 @@ variable {n : Type _} [Fintype n] [DecidableEq n] {R : Type v} [CommRing R]
 
 theorem proj_diagonal (i : n) (w : n → R) : (proj i).comp (toLin' (diagonal w)) = w i • proj i :=
   LinearMap.ext fun j => mul_vec_diagonal _ _ _
+#align matrix.proj_diagonal Matrix.proj_diagonal
 
 theorem diagonal_comp_std_basis (w : n → R) (i : n) :
     (diagonal w).toLin'.comp (LinearMap.stdBasis R (fun _ : n => R) i) =
       w i • LinearMap.stdBasis R (fun _ : n => R) i :=
   LinearMap.ext fun x => (diagonal_mul_vec_single w _ _).trans (Pi.single_smul' i (w i) x)
+#align matrix.diagonal_comp_std_basis Matrix.diagonal_comp_std_basis
 
 theorem diagonal_to_lin' (w : n → R) : (diagonal w).toLin' = LinearMap.pi fun i => w i • LinearMap.proj i :=
   LinearMap.ext fun v => funext fun i => mul_vec_diagonal _ _ _
+#align matrix.diagonal_to_lin' Matrix.diagonal_to_lin'
 
 end CommRing
 
@@ -59,7 +62,8 @@ theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
   have := fun i : m => ker_comp (to_lin' (diagonal w)) (proj i)
   simp only [comap_infi, ← this, proj_diagonal, ker_smul']
   have : univ ⊆ { i : m | w i = 0 } ∪ { i : m | w i = 0 }ᶜ := by rw [Set.union_compl_self]
-  exact (supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) disjointComplRight this (Set.to_finite _)).symm
+  exact (supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) disjoint_compl_right this (Set.to_finite _)).symm
+#align matrix.ker_diagonal_to_lin' Matrix.ker_diagonal_to_lin'
 
 theorem range_diagonal [DecidableEq m] (w : m → K) :
     (diagonal w).toLin'.range = ⨆ i ∈ { i | w i ≠ 0 }, (LinearMap.stdBasis K (fun i => K) i).range := by
@@ -68,16 +72,18 @@ theorem range_diagonal [DecidableEq m] (w : m → K) :
   congr
   funext i
   rw [← LinearMap.range_comp, diagonal_comp_std_basis, ← range_smul']
+#align matrix.range_diagonal Matrix.range_diagonal
 
 theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
     rank (diagonal w).toLin' = Fintype.card { i // w i ≠ 0 } := by
   have hu : univ ⊆ { i : m | w i = 0 }ᶜ ∪ { i : m | w i = 0 } := by rw [Set.compl_union_self]
-  have hd : Disjoint { i : m | w i ≠ 0 } { i : m | w i = 0 } := disjointComplLeft
+  have hd : Disjoint { i : m | w i ≠ 0 } { i : m | w i = 0 } := disjoint_compl_left
   have B₁ := supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) hd hu (Set.to_finite _)
   have B₂ := @infi_ker_proj_equiv K _ _ (fun i : m => K) _ _ _ _ (by simp <;> infer_instance) hd hu
   rw [rank, range_diagonal, B₁, ← @dim_fun' K]
   apply LinearEquiv.dim_eq
   apply B₂
+#align matrix.rank_diagonal Matrix.rank_diagonal
 
 end Field
 

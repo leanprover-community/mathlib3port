@@ -22,6 +22,7 @@ inductive SignType
   | neg
   | Pos
   deriving DecidableEq, Inhabited, Fintype
+#align sign_type SignType
 
 namespace SignType
 
@@ -41,14 +42,17 @@ instance : Neg SignType :=
 @[simp]
 theorem zero_eq_zero : zero = 0 :=
   rfl
+#align sign_type.zero_eq_zero SignType.zero_eq_zero
 
 @[simp]
 theorem neg_eq_neg_one : neg = -1 :=
   rfl
+#align sign_type.neg_eq_neg_one SignType.neg_eq_neg_one
 
 @[simp]
 theorem pos_eq_one : Pos = 1 :=
   rfl
+#align sign_type.pos_eq_one SignType.pos_eq_one
 
 instance : Mul SignType :=
   ⟨fun x y =>
@@ -62,6 +66,7 @@ inductive Le : SignType → SignType → Prop
   | of_neg (a) : le neg a
   | zero : le zero zero
   | of_pos (a) : le a pos
+#align sign_type.le SignType.Le
 
 instance : LE SignType :=
   ⟨Le⟩
@@ -121,60 +126,78 @@ def fin3Equiv : SignType ≃* Fin 3 where
     | ⟨2, h⟩ => rfl
     | ⟨n + 3, h⟩ => (h.not_le le_add_self).elim
   map_mul' x y := by casesm*_ <;> rfl
+#align sign_type.fin3_equiv SignType.fin3Equiv
 
 section CaseBashing
 
 theorem nonneg_iff {a : SignType} : 0 ≤ a ↔ a = 0 ∨ a = 1 := by decide!
+#align sign_type.nonneg_iff SignType.nonneg_iff
 
 theorem nonneg_iff_ne_neg_one {a : SignType} : 0 ≤ a ↔ a ≠ -1 := by decide!
+#align sign_type.nonneg_iff_ne_neg_one SignType.nonneg_iff_ne_neg_one
 
 theorem neg_one_lt_iff {a : SignType} : -1 < a ↔ 0 ≤ a := by decide!
+#align sign_type.neg_one_lt_iff SignType.neg_one_lt_iff
 
 theorem nonpos_iff {a : SignType} : a ≤ 0 ↔ a = -1 ∨ a = 0 := by decide!
+#align sign_type.nonpos_iff SignType.nonpos_iff
 
 theorem nonpos_iff_ne_one {a : SignType} : a ≤ 0 ↔ a ≠ 1 := by decide!
+#align sign_type.nonpos_iff_ne_one SignType.nonpos_iff_ne_one
 
 theorem lt_one_iff {a : SignType} : a < 1 ↔ a ≤ 0 := by decide!
+#align sign_type.lt_one_iff SignType.lt_one_iff
 
 @[simp]
 theorem neg_iff {a : SignType} : a < 0 ↔ a = -1 := by decide!
+#align sign_type.neg_iff SignType.neg_iff
 
 @[simp]
 theorem le_neg_one_iff {a : SignType} : a ≤ -1 ↔ a = -1 :=
   le_bot_iff
+#align sign_type.le_neg_one_iff SignType.le_neg_one_iff
 
 @[simp]
 theorem pos_iff {a : SignType} : 0 < a ↔ a = 1 := by decide!
+#align sign_type.pos_iff SignType.pos_iff
 
 @[simp]
 theorem one_le_iff {a : SignType} : 1 ≤ a ↔ a = 1 :=
   top_le_iff
+#align sign_type.one_le_iff SignType.one_le_iff
 
 @[simp]
 theorem neg_one_le (a : SignType) : -1 ≤ a :=
   bot_le
+#align sign_type.neg_one_le SignType.neg_one_le
 
 @[simp]
 theorem le_one (a : SignType) : a ≤ 1 :=
   le_top
+#align sign_type.le_one SignType.le_one
 
 @[simp]
 theorem not_lt_neg_one (a : SignType) : ¬a < -1 :=
   not_lt_bot
+#align sign_type.not_lt_neg_one SignType.not_lt_neg_one
 
 @[simp]
 theorem not_one_lt (a : SignType) : ¬1 < a :=
   not_top_lt
+#align sign_type.not_one_lt SignType.not_one_lt
 
 @[simp]
 theorem self_eq_neg_iff (a : SignType) : a = -a ↔ a = 0 := by decide!
+#align sign_type.self_eq_neg_iff SignType.self_eq_neg_iff
 
 @[simp]
 theorem neg_eq_self_iff (a : SignType) : -a = a ↔ a = 0 := by decide!
+#align sign_type.neg_eq_self_iff SignType.neg_eq_self_iff
 
 @[simp]
 theorem neg_one_lt_one : (-1 : SignType) < 1 :=
   bot_lt_top
+#align sign_type.neg_one_lt_one SignType.neg_one_lt_one
 
 end CaseBashing
 
@@ -188,6 +211,7 @@ def cast : SignType → α
   | zero => 0
   | Pos => 1
   | neg => -1
+#align sign_type.cast SignType.cast
 
 instance : CoeTC SignType α :=
   ⟨cast⟩
@@ -195,18 +219,22 @@ instance : CoeTC SignType α :=
 @[simp]
 theorem cast_eq_coe (a : SignType) : (cast a : α) = a :=
   rfl
+#align sign_type.cast_eq_coe SignType.cast_eq_coe
 
 @[simp]
 theorem coe_zero : ↑(0 : SignType) = (0 : α) :=
   rfl
+#align sign_type.coe_zero SignType.coe_zero
 
 @[simp]
 theorem coe_one : ↑(1 : SignType) = (1 : α) :=
   rfl
+#align sign_type.coe_one SignType.coe_one
 
 @[simp]
 theorem coe_neg_one : ↑(-1 : SignType) = (-1 : α) :=
   rfl
+#align sign_type.coe_neg_one SignType.coe_neg_one
 
 end cast
 
@@ -217,11 +245,12 @@ def castHom {α} [MulZeroOneClass α] [HasDistribNeg α] : SignType →*₀ α w
   map_zero' := rfl
   map_one' := rfl
   map_mul' x y := by cases x <;> cases y <;> simp
+#align sign_type.cast_hom SignType.castHom
 
 theorem range_eq {α} (f : SignType → α) : Set.Range f = {f zero, f neg, f pos} := by
-  classical
-  simpa only [← Finset.coe_singleton, ← Finset.image_singleton, ← Fintype.coe_image_univ, Finset.coe_image, ←
-    Set.image_insert_eq]
+  classical simpa only [← Finset.coe_singleton, ← Finset.image_singleton, ← Fintype.coe_image_univ, Finset.coe_image, ←
+      Set.image_insert_eq]
+#align sign_type.range_eq SignType.range_eq
 
 end SignType
 
@@ -244,24 +273,30 @@ def sign : α →o SignType :=
       
     · cases h₄ (h.trans_lt h₃)
       ⟩
+#align sign sign
 
 theorem sign_apply : sign a = ite (0 < a) 1 (ite (a < 0) (-1) 0) :=
   rfl
+#align sign_apply sign_apply
 
 @[simp]
 theorem sign_zero : sign (0 : α) = 0 := by simp [sign_apply]
+#align sign_zero sign_zero
 
 @[simp]
 theorem sign_pos (ha : 0 < a) : sign a = 1 := by rwa [sign_apply, if_pos]
+#align sign_pos sign_pos
 
 @[simp]
 theorem sign_neg (ha : a < 0) : sign a = -1 := by rwa [sign_apply, if_neg <| asymm ha, if_pos]
+#align sign_neg sign_neg
 
 theorem sign_eq_one_iff : sign a = 1 ↔ 0 < a := by
   refine' ⟨fun h => _, fun h => sign_pos h⟩
   by_contra hn
   rw [sign_apply, if_neg hn] at h
   split_ifs  at h <;> simpa using h
+#align sign_eq_one_iff sign_eq_one_iff
 
 theorem sign_eq_neg_one_iff : sign a = -1 ↔ a < 0 := by
   refine' ⟨fun h => _, fun h => sign_neg h⟩
@@ -273,6 +308,7 @@ theorem sign_eq_neg_one_iff : sign a = -1 ↔ a < 0 := by
     
   · simpa using h
     
+#align sign_eq_neg_one_iff sign_eq_neg_one_iff
 
 end Preorder
 
@@ -286,9 +322,11 @@ theorem sign_eq_zero_iff : sign a = 0 ↔ a = 0 := by
   rw [sign_apply] at h
   split_ifs  at h <;> cases h
   exact (le_of_not_lt h_1).eq_of_not_lt h_2
+#align sign_eq_zero_iff sign_eq_zero_iff
 
 theorem sign_ne_zero : sign a ≠ 0 ↔ a ≠ 0 :=
   sign_eq_zero_iff.Not
+#align sign_ne_zero sign_ne_zero
 
 @[simp]
 theorem sign_nonneg_iff : 0 ≤ sign a ↔ 0 ≤ a := by
@@ -299,6 +337,7 @@ theorem sign_nonneg_iff : 0 ≤ sign a ↔ 0 ≤ a := by
     
   · simpa [h, h.not_le]
     
+#align sign_nonneg_iff sign_nonneg_iff
 
 @[simp]
 theorem sign_nonpos_iff : sign a ≤ 0 ↔ a ≤ 0 := by
@@ -309,6 +348,7 @@ theorem sign_nonpos_iff : sign a ≤ 0 ↔ a ≤ 0 := by
     
   · simp [h, h.le]
     
+#align sign_nonpos_iff sign_nonpos_iff
 
 end LinearOrder
 
@@ -319,6 +359,7 @@ variable [OrderedSemiring α] [DecidableRel ((· < ·) : α → α → Prop)] [N
 @[simp]
 theorem sign_one : sign (1 : α) = 1 :=
   sign_pos zero_lt_one
+#align sign_one sign_one
 
 end OrderedSemiring
 
@@ -335,6 +376,7 @@ theorem sign_mul (x y : α) : sign (x * y) = sign x * sign y := by
     rcases lt_trichotomy y 0 with (hy | hy | hy) <;>
       simp only [sign_zero, mul_zero, zero_mul, sign_pos, sign_neg, hx, hy, mul_one, neg_one_mul, neg_neg, one_mul,
         mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, neg_zero, mul_neg_of_pos_of_neg, mul_pos]
+#align sign_mul sign_mul
 
 /-- `sign` as a `monoid_with_zero_hom` for a nontrivial ordered semiring. Note that linearity
 is required; consider ℂ with the order `z ≤ w` iff they have the same imaginary part and
@@ -345,10 +387,12 @@ def signHom : α →*₀ SignType where
   map_zero' := sign_zero
   map_one' := sign_one
   map_mul' := sign_mul
+#align sign_hom signHom
 
 theorem sign_pow (x : α) (n : ℕ) : sign (x ^ n) = sign x ^ n := by
   change signHom (x ^ n) = signHom x ^ n
   exact map_pow _ _ _
+#align sign_pow sign_pow
 
 end LinearOrderedRing
 
@@ -367,6 +411,7 @@ theorem Left.sign_neg [CovariantClass α α (· + ·) (· < ·)] (a : α) : sign
     
   · simp
     
+#align left.sign_neg Left.sign_neg
 
 theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)] (a : α) : sign (-a) = -sign a := by
   simp_rw [sign_apply, Right.neg_pos_iff, Right.neg_neg_iff]
@@ -379,6 +424,7 @@ theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)
     
   · simp
     
+#align right.sign_neg Right.sign_neg
 
 end AddGroup
 
@@ -392,6 +438,7 @@ theorem sign_eq_sign (n : ℤ) : n.sign = sign n := by
     
   · exact congr_arg coe (_root_.sign_neg <| neg_succ_lt_zero _).symm
     
+#align int.sign_eq_sign Int.sign_eq_sign
 
 end Int
 
@@ -413,6 +460,7 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
     simp [sum_sigma, hx, ← Int.sign_eq_sign, Int.sign_mul_nat_abs, mul_comm ((f _).natAbs : ℤ),
       @sum_attach _ _ _ _ fun a => ∑ j in range (f a).natAbs, if a = x then (f a).sign else 0]
     
+#align exists_signed_sum_aux exists_signed_sum_aux
 
 /-- We can decompose a sum of absolute value `n` into a sum of `n` signs. -/
 theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
@@ -422,6 +470,7 @@ theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
   let ⟨β, t, sgn, g, hg, ht, hf⟩ := exists_signed_sum_aux s f
   ⟨t, inferInstance, fun b => sgn b, fun b => g b, fun b => hg b, by simp [ht], fun a ha =>
     (@sum_attach _ _ t _ fun b => ite (g b = a) (sgn b : ℤ) 0).trans <| hf _ ha⟩
+#align exists_signed_sum exists_signed_sum
 
 /-- We can decompose a sum of absolute value less than `n` into a sum of at most `n` signs. -/
 theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : α → ℤ) (n : ℕ)
@@ -439,4 +488,5 @@ theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : �
     
   · rfl
     
+#align exists_signed_sum' exists_signed_sum'
 

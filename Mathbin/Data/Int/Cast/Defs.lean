@@ -30,11 +30,13 @@ attribute [simp] Int.of_nat_eq_coe
 protected def Int.castDef {R : Type u} [HasNatCast R] [Neg R] : ℤ → R
   | (n : ℕ) => n
   | -[n+1] => -(n + 1 : ℕ)
+#align int.cast_def Int.castDef
 
 /-- Type class for the canonical homomorphism `ℤ → R`.
 -/
 class HasIntCast (R : Type u) where
   intCast : ℤ → R
+#align has_int_cast HasIntCast
 
 #print AddGroupWithOne /-
 /-- An `add_group_with_one` is an `add_group` with a `1`.
@@ -49,11 +51,13 @@ class AddGroupWithOne (R : Type u) extends HasIntCast R, AddGroup R, AddMonoidWi
   int_cast_neg_succ_of_nat : ∀ n : ℕ, int_cast (-(n + 1 : ℕ)) = -((n + 1 : ℕ) : R) := by
     intros
     rfl
+#align add_group_with_one AddGroupWithOne
 -/
 
 /-- An `add_comm_group_with_one` is an `add_group_with_one` satisfying `a + b = b + a`. -/
 @[protect_proj]
 class AddCommGroupWithOne (R : Type u) extends AddCommGroup R, AddGroupWithOne R
+#align add_comm_group_with_one AddCommGroupWithOne
 
 /- warning: int.cast -> Int.cast is a dubious translation:
 lean 3 declaration is
@@ -64,6 +68,7 @@ Case conversion may be inaccurate. Consider using '#align int.cast Int.castₓ'.
 /-- Canonical homomorphism from the integers to any ring(-like) structure `R` -/
 protected def Int.cast {R : Type u} [HasIntCast R] (i : ℤ) : R :=
   HasIntCast.intCast i
+#align int.cast Int.cast
 
 open Nat
 
@@ -74,9 +79,11 @@ variable {R : Type u} [AddGroupWithOne R]
 -- see Note [coercion into rings]
 instance (priority := 900) castCoe {R} [HasIntCast R] : CoeTC ℤ R :=
   ⟨Int.cast⟩
+#align int.cast_coe Int.castCoe
 
 theorem cast_of_nat (n : ℕ) : (ofNat n : R) = n :=
   AddGroupWithOne.int_cast_of_nat n
+#align int.cast_of_nat Int.cast_of_nat
 
 end Int
 

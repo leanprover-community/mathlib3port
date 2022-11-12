@@ -46,7 +46,7 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
   · intro i
     have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i)) := by
       rw [ker_lsingle]
-      exact disjointBotRight
+      exact disjoint_bot_right
     apply (hf i).map h_disjoint
     
   · intro i t ht hit
@@ -61,6 +61,7 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
       apply range_comp_subset_range
       
     
+#align finsupp.linear_independent_single Finsupp.linear_independent_single
 
 end Ring
 
@@ -103,11 +104,13 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
       map_smul' := fun c h => by
         ext ⟨i, x⟩
         simp only [coe_mk, smul_apply, LinearEquiv.map_smul, RingHom.id_apply] }
+#align finsupp.basis Finsupp.basis
 
 @[simp]
 theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι →₀ M) (ix) :
     (Finsupp.basis b).repr g ix = (b ix.1).repr (g ix.1) ix.2 :=
   rfl
+#align finsupp.basis_repr Finsupp.basis_repr
 
 @[simp]
 theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
@@ -120,15 +123,18 @@ theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
         simp only [basis_repr, single_eq_same, Basis.repr_self, Finsupp.single_apply_left sigma_mk_injective]
         
       simp only [basis_repr, single_apply, h, false_and_iff, if_false, LinearEquiv.map_zero, zero_apply]
+#align finsupp.coe_basis Finsupp.coe_basis
 
 /-- The basis on `ι →₀ M` with basis vectors `λ i, single i 1`. -/
 @[simps]
 protected def basisSingleOne : Basis ι R (ι →₀ R) :=
   Basis.of_repr (LinearEquiv.refl _ _)
+#align finsupp.basis_single_one Finsupp.basisSingleOne
 
 @[simp]
 theorem coe_basis_single_one : (Finsupp.basisSingleOne : ι → ι →₀ R) = fun i => Finsupp.single i 1 :=
   funext fun i => Basis.apply_eq_iff.mpr rfl
+#align finsupp.coe_basis_single_one Finsupp.coe_basis_single_one
 
 end Semiring
 
@@ -141,6 +147,7 @@ variable [Field K] [AddCommGroup V] [Module K V]
 theorem dim_eq : Module.rank K (ι →₀ V) = (#ι) * Module.rank K V := by
   let bs := Basis.ofVectorSpace K V
   rw [← bs.mk_eq_dim'', ← (Finsupp.basis fun a : ι => bs).mk_eq_dim'', Cardinal.mk_sigma, Cardinal.sum_const']
+#align finsupp.dim_eq Finsupp.dim_eq
 
 end Dim
 
@@ -172,11 +179,12 @@ theorem equiv_of_dim_eq_lift_dim (h : Cardinal.lift.{w} (Module.rank K V) = Card
   rcases Quotient.exact h with ⟨e⟩
   let e := (equiv.ulift.symm.trans e).trans Equiv.ulift
   exact ⟨m.repr ≪≫ₗ Finsupp.domLcongr e ≪≫ₗ m'.repr.symm⟩
+#align equiv_of_dim_eq_lift_dim equiv_of_dim_eq_lift_dim
 
 /-- Two `K`-vector spaces are equivalent if their dimension is the same. -/
 def equivOfDimEqDim (h : Module.rank K V₁ = Module.rank K V₂) : V₁ ≃ₗ[K] V₂ := by
-  classical
-  exact Classical.choice (equiv_of_dim_eq_lift_dim (Cardinal.lift_inj.2 h))
+  classical exact Classical.choice (equiv_of_dim_eq_lift_dim (Cardinal.lift_inj.2 h))
+#align equiv_of_dim_eq_dim equivOfDimEqDim
 
 /-- An `n`-dimensional `K`-vector space is equivalent to `fin n → K`. -/
 def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fin n → K := by
@@ -185,6 +193,7 @@ def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fi
   rw [this] at hn
   rw [← @dim_fin_fun K _ n] at hn
   exact Classical.choice (equiv_of_dim_eq_lift_dim hn)
+#align fin_dim_vectorspace_equiv finDimVectorspaceEquiv
 
 end Module
 
@@ -202,11 +211,13 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : (#V) 
     _ = (#s → K) := Quotient.sound ⟨Finsupp.equivFunOnFintype⟩
     _ = _ := by rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
     
+#align cardinal_mk_eq_cardinal_mk_field_pow_dim cardinal_mk_eq_cardinal_mk_field_pow_dim
 
 theorem cardinal_lt_aleph_0_of_finite_dimensional [Finite K] [FiniteDimensional K V] : (#V) < ℵ₀ := by
   letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   rw [cardinal_mk_eq_cardinal_mk_field_pow_dim K V]
   exact Cardinal.power_lt_aleph_0 (Cardinal.lt_aleph_0_of_finite K) (IsNoetherian.dim_lt_aleph_0 K V)
+#align cardinal_lt_aleph_0_of_finite_dimensional cardinal_lt_aleph_0_of_finite_dimensional
 
 end Module
 
@@ -232,6 +243,7 @@ theorem _root_.finset.sum_single_ite (a : R) (i : n) :
     refine' ne_comm.mp _
     rwa [mem_singleton_iff] at hx
   simp [hx']
+#align basis._root_.finset.sum_single_ite basis._root_.finset.sum_single_ite
 
 @[simp]
 theorem equiv_fun_symm_std_basis (b : Basis n R M) (i : n) :
@@ -241,6 +253,7 @@ theorem equiv_fun_symm_std_basis (b : Basis n R M) (i : n) :
   simp only [equiv_fun_symm_apply, std_basis_apply', LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ, RingHom.id_apply,
     repr_self, Finsupp.smul_single', boole_mul]
   exact Finset.sum_single_ite 1 i
+#align basis.equiv_fun_symm_std_basis Basis.equiv_fun_symm_std_basis
 
 end Basis
 

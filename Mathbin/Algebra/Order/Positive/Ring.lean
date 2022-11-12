@@ -30,6 +30,7 @@ instance : Add { x : M // 0 < x } :=
 @[simp, norm_cast]
 theorem coe_add (x y : { x : M // 0 < x }) : ↑(x + y) = (x + y : M) :=
   rfl
+#align positive.coe_add Positive.coe_add
 
 instance : AddSemigroup { x : M // 0 < x } :=
   Subtype.coe_injective.AddSemigroup _ coe_add
@@ -48,32 +49,39 @@ instance {M : Type _} [AddRightCancelMonoid M] [Preorder M] [CovariantClass M M 
 
 instance covariant_class_add_lt : CovariantClass { x : M // 0 < x } { x : M // 0 < x } (· + ·) (· < ·) :=
   ⟨fun x y z hyz => Subtype.coe_lt_coe.1 <| add_lt_add_left hyz _⟩
+#align positive.covariant_class_add_lt Positive.covariant_class_add_lt
 
 instance covariant_class_swap_add_lt [CovariantClass M M (swap (· + ·)) (· < ·)] :
     CovariantClass { x : M // 0 < x } { x : M // 0 < x } (swap (· + ·)) (· < ·) :=
   ⟨fun x y z hyz => Subtype.coe_lt_coe.1 <| add_lt_add_right hyz _⟩
+#align positive.covariant_class_swap_add_lt Positive.covariant_class_swap_add_lt
 
 instance contravariant_class_add_lt [ContravariantClass M M (· + ·) (· < ·)] :
     ContravariantClass { x : M // 0 < x } { x : M // 0 < x } (· + ·) (· < ·) :=
   ⟨fun x y z h => Subtype.coe_lt_coe.1 <| lt_of_add_lt_add_left h⟩
+#align positive.contravariant_class_add_lt Positive.contravariant_class_add_lt
 
 instance contravariant_class_swap_add_lt [ContravariantClass M M (swap (· + ·)) (· < ·)] :
     ContravariantClass { x : M // 0 < x } { x : M // 0 < x } (swap (· + ·)) (· < ·) :=
   ⟨fun x y z h => Subtype.coe_lt_coe.1 <| lt_of_add_lt_add_right h⟩
+#align positive.contravariant_class_swap_add_lt Positive.contravariant_class_swap_add_lt
 
 instance contravariant_class_add_le [ContravariantClass M M (· + ·) (· ≤ ·)] :
     ContravariantClass { x : M // 0 < x } { x : M // 0 < x } (· + ·) (· ≤ ·) :=
   ⟨fun x y z h => Subtype.coe_le_coe.1 <| le_of_add_le_add_left h⟩
+#align positive.contravariant_class_add_le Positive.contravariant_class_add_le
 
 instance contravariant_class_swap_add_le [ContravariantClass M M (swap (· + ·)) (· ≤ ·)] :
     ContravariantClass { x : M // 0 < x } { x : M // 0 < x } (swap (· + ·)) (· ≤ ·) :=
   ⟨fun x y z h => Subtype.coe_le_coe.1 <| le_of_add_le_add_right h⟩
+#align positive.contravariant_class_swap_add_le Positive.contravariant_class_swap_add_le
 
 end AddBasic
 
 instance covariant_class_add_le [AddMonoid M] [PartialOrder M] [CovariantClass M M (· + ·) (· < ·)] :
     CovariantClass { x : M // 0 < x } { x : M // 0 < x } (· + ·) (· ≤ ·) :=
   ⟨fun x => StrictMono.monotone fun _ _ h => add_lt_add_left h _⟩
+#align positive.covariant_class_add_le Positive.covariant_class_add_le
 
 section Mul
 
@@ -85,6 +93,7 @@ instance : Mul { x : R // 0 < x } :=
 @[simp]
 theorem coe_mul (x y : { x : R // 0 < x }) : ↑(x * y) = (x * y : R) :=
   rfl
+#align positive.coe_mul Positive.coe_mul
 
 instance : Pow { x : R // 0 < x } ℕ :=
   ⟨fun x n => ⟨x ^ n, pow_pos x.2 n⟩⟩
@@ -92,6 +101,7 @@ instance : Pow { x : R // 0 < x } ℕ :=
 @[simp]
 theorem coe_pow (x : { x : R // 0 < x }) (n : ℕ) : ↑(x ^ n) = (x ^ n : R) :=
   rfl
+#align positive.coe_pow Positive.coe_pow
 
 instance : Semigroup { x : R // 0 < x } :=
   Subtype.coe_injective.Semigroup coe coe_mul
@@ -105,6 +115,7 @@ instance [Nontrivial R] : One { x : R // 0 < x } :=
 @[simp]
 theorem coe_one [Nontrivial R] : ((1 : { x : R // 0 < x }) : R) = 1 :=
   rfl
+#align positive.coe_one Positive.coe_one
 
 instance [Nontrivial R] : Monoid { x : R // 0 < x } :=
   Subtype.coe_injective.Monoid _ coe_one coe_mul coe_pow

@@ -59,6 +59,7 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
   rw [← sub_eq_zero]
   have : Icc a b ∈ 𝓝 c := by rwa [← mem_interior_iff_mem_nhds, interior_Icc]
   exact (hc.is_local_min this).has_deriv_at_eq_zero ((hg c cmem).HasDerivAt this)
+#align exists_has_deriv_within_at_eq_of_gt_of_lt exists_has_deriv_within_at_eq_of_gt_of_lt
 
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a > m > f' b`, then `f' c = m` for some `c ∈ [a, b]`.
 -/
@@ -68,6 +69,7 @@ theorem exists_has_deriv_within_at_eq_of_lt_of_gt (hab : a ≤ b)
   let ⟨c, cmem, hc⟩ :=
     exists_has_deriv_within_at_eq_of_gt_of_lt hab (fun x hx => (hf x hx).neg) (neg_lt_neg hma) (neg_lt_neg hmb)
   ⟨c, cmem, neg_injective hc⟩
+#align exists_has_deriv_within_at_eq_of_lt_of_gt exists_has_deriv_within_at_eq_of_lt_of_gt
 
 /-- **Darboux's theorem**: the image of a convex set under `f'` is a convex set. -/
 theorem convex_image_has_deriv_at {s : Set ℝ} (hs : Convex ℝ s) (hf : ∀ x ∈ s, HasDerivAt f (f' x) x) :
@@ -91,6 +93,7 @@ theorem convex_image_has_deriv_at {s : Set ℝ} (hs : Convex ℝ s) (hf : ∀ x 
       ⟨c, cmem, hc⟩
     exact ⟨c, this cmem, hc⟩
     
+#align convex_image_has_deriv_at convex_image_has_deriv_at
 
 /-- If the derivative of a function is never equal to `m`, then either
 it is always greater than `m`, or it is always less than `m`. -/
@@ -99,4 +102,5 @@ theorem deriv_forall_lt_or_forall_gt_of_forall_ne {s : Set ℝ} (hs : Convex ℝ
   contrapose! hf'
   rcases hf' with ⟨⟨b, hb, hmb⟩, ⟨a, ha, hma⟩⟩
   exact (convex_image_has_deriv_at hs hf).OrdConnected.out (mem_image_of_mem f' ha) (mem_image_of_mem f' hb) ⟨hma, hmb⟩
+#align deriv_forall_lt_or_forall_gt_of_forall_ne deriv_forall_lt_or_forall_gt_of_forall_ne
 

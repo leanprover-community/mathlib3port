@@ -30,6 +30,8 @@ variable (𝕜 E : Type _) [NormedField 𝕜] [NormedAddCommGroup E] [NormedSpac
 
 instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul : HasUniformContinuousConstSmul 𝕜 E :=
   ⟨fun c => (lipschitzWithSmul c).UniformContinuous⟩
+#align
+  uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_has_uniform_continuous_const_smul
 
 instance : NormedSpace 𝕜 (Completion E) :=
   { Completion.module with smul := (· • ·),
@@ -42,23 +44,28 @@ variable {𝕜 E}
 /-- Embedding of a normed space to its completion as a linear isometry. -/
 def toComplₗᵢ : E →ₗᵢ[𝕜] Completion E :=
   { toCompl with toFun := coe, map_smul' := coe_smul, norm_map' := norm_coe }
+#align uniform_space.completion.to_complₗᵢ UniformSpace.Completion.toComplₗᵢ
 
 @[simp]
 theorem coe_to_complₗᵢ : ⇑(toComplₗᵢ : E →ₗᵢ[𝕜] Completion E) = coe :=
   rfl
+#align uniform_space.completion.coe_to_complₗᵢ UniformSpace.Completion.coe_to_complₗᵢ
 
 /-- Embedding of a normed space to its completion as a continuous linear map. -/
 def toComplL : E →L[𝕜] Completion E :=
   toComplₗᵢ.toContinuousLinearMap
+#align uniform_space.completion.to_complL UniformSpace.Completion.toComplL
 
 @[simp]
 theorem coe_to_complL : ⇑(toComplL : E →L[𝕜] Completion E) = coe :=
   rfl
+#align uniform_space.completion.coe_to_complL UniformSpace.Completion.coe_to_complL
 
 @[simp]
 theorem norm_to_complL {𝕜 E : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
     [Nontrivial E] : ∥(toComplL : E →L[𝕜] Completion E)∥ = 1 :=
   (toComplₗᵢ : E →ₗᵢ[𝕜] Completion E).norm_to_continuous_linear_map
+#align uniform_space.completion.norm_to_complL UniformSpace.Completion.norm_to_complL
 
 section Algebra
 

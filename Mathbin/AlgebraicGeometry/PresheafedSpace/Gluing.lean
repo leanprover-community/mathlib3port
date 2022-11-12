@@ -91,6 +91,7 @@ that the `U i`'s are open subspaces of the glued space.
 @[nolint has_nonempty_instance]
 structure GlueData extends GlueData (PresheafedSpaceCat.{v} C) where
   f_open : ∀ i j, IsOpenImmersion (f i j)
+#align algebraic_geometry.PresheafedSpace.glue_data AlgebraicGeometry.PresheafedSpaceCat.GlueData
 
 attribute [instance] glue_data.f_open
 
@@ -118,12 +119,16 @@ local notation "π₂⁻¹ " i ", " j ", " k =>
 /-- The glue data of topological spaces associated to a family of glue data of PresheafedSpaces. -/
 abbrev toTopGlueData : TopCat.GlueData :=
   { f_open := fun i j => (D.f_open i j).base_open, toGlueData := 𝖣.mapGlueData (forget C) }
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.to_Top_glue_data AlgebraicGeometry.PresheafedSpaceCat.GlueData.toTopGlueData
 
 theorem ι_open_embedding [HasLimits C] (i : D.J) : OpenEmbedding (𝖣.ι i).base := by
   rw [← show _ = (𝖣.ι i).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) _]
   exact
     OpenEmbedding.comp (TopCat.homeoOfIso (𝖣.gluedIso (PresheafedSpace.forget _)).symm).OpenEmbedding
       (D.to_Top_glue_data.ι_open_embedding i)
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.ι_open_embedding AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_open_embedding
 
 theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).Carrier) :
     (π₂ i, j, k) '' ((π₁ i, j, k) ⁻¹' S) = D.f i k ⁻¹' (D.f i j '' S) := by
@@ -134,6 +139,8 @@ theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).Carrier) :
   rfl
   rw [← TopCat.epi_iff_surjective]
   infer_instance
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.pullback_base AlgebraicGeometry.PresheafedSpaceCat.GlueData.pullback_base
 
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/0GiBUh6.png) commute. -/
 @[simp, reassoc]
@@ -159,6 +166,8 @@ theorem f_inv_app_f_app (i j k : D.J) (U : Opens (D.V (i, j)).Carrier) :
   convert (category.comp_id _).symm
   erw [(D.V (i, k)).Presheaf.map_id]
   rfl
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.f_inv_app_f_app AlgebraicGeometry.PresheafedSpaceCat.GlueData.f_inv_app_f_app
 
 /-- We can prove the `eq` along with the lemma. Thus this is bundled together here, and the
 lemma itself is separated below.
@@ -185,6 +194,8 @@ theorem snd_inv_app_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k
   change (inv (D.t' k i j) ≫ π₁ k, i, j).base y = _
   congr 2
   rw [is_iso.inv_comp_eq, 𝖣.t_fac_assoc, 𝖣.t_inv, category.comp_id]
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.snd_inv_app_t_app' AlgebraicGeometry.PresheafedSpaceCat.GlueData.snd_inv_app_t_app'
 
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/q6X1GJ9.png) commute. -/
 @[simp, reassoc]
@@ -197,6 +208,8 @@ theorem snd_inv_app_t_app (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)
   reassoc! e
   rw [← e]
   simp [eq_to_hom_map]
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.snd_inv_app_t_app AlgebraicGeometry.PresheafedSpaceCat.GlueData.snd_inv_app_t_app
 
 variable [HasLimits C]
 
@@ -225,12 +238,16 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).Carrier) :
   · rw [← TopCat.mono_iff_injective]
     infer_instance
     
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.ι_image_preimage_eq AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_image_preimage_eq
 
 /-- (Implementation). The map `Γ(𝒪_{U_i}, U) ⟶ Γ(𝒪_{U_j}, 𝖣.ι j ⁻¹' (𝖣.ι i '' U))` -/
 def opensImagePreimageMap (i j : D.J) (U : Opens (D.U i).Carrier) :
     (D.U i).Presheaf.obj (op U) ⟶ (D.U j).Presheaf.obj _ :=
   (D.f i j).c.app (op U) ≫
     (D.t j i).c.app _ ≫ (D.f_open j i).invApp (unop _) ≫ (𝖣.U j).Presheaf.map (eqToHom (D.ι_image_preimage_eq i j U)).op
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.opens_image_preimage_map AlgebraicGeometry.PresheafedSpaceCat.GlueData.opensImagePreimageMap
 
 theorem opens_image_preimage_map_app' (i j k : D.J) (U : Opens (D.U i).Carrier) :
     ∃ eq,
@@ -249,6 +266,8 @@ theorem opens_image_preimage_map_app' (i j k : D.J) (U : Opens (D.U i).Carrier) 
   dsimp only [functor.op, unop_op, Quiver.Hom.unop_op]
   rw [eq_to_hom_map (opens.map _), eq_to_hom_op, eq_to_hom_trans]
   congr
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.opens_image_preimage_map_app' AlgebraicGeometry.PresheafedSpaceCat.GlueData.opens_image_preimage_map_app'
 
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/mBzV1Rx.png) commute. -/
 theorem opens_image_preimage_map_app (i j k : D.J) (U : Opens (D.U i).Carrier) :
@@ -256,6 +275,8 @@ theorem opens_image_preimage_map_app (i j k : D.J) (U : Opens (D.U i).Carrier) :
       ((π₁ j, i, k) ≫ D.t j i ≫ D.f i j).c.app (op U) ≫
         (π₂⁻¹ j, i, k) (unop _) ≫ (D.V (j, k)).Presheaf.map (eqToHom (opens_image_preimage_map_app' D i j k U).some) :=
   (opens_image_preimage_map_app' D i j k U).some_spec
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.opens_image_preimage_map_app AlgebraicGeometry.PresheafedSpaceCat.GlueData.opens_image_preimage_map_app
 
 -- This is proved separately since `reassoc` somehow timeouts.
 theorem opens_image_preimage_map_app_assoc (i j k : D.J) (U : Opens (D.U i).Carrier) {X' : C} (f' : _ ⟶ X') :
@@ -264,16 +285,22 @@ theorem opens_image_preimage_map_app_assoc (i j k : D.J) (U : Opens (D.U i).Carr
         (π₂⁻¹ j, i, k) (unop _) ≫
           (D.V (j, k)).Presheaf.map (eqToHom (opens_image_preimage_map_app' D i j k U).some) ≫ f' :=
   by simpa only [category.assoc] using congr_arg (fun g => g ≫ f') (opens_image_preimage_map_app D i j k U)
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.opens_image_preimage_map_app_assoc AlgebraicGeometry.PresheafedSpaceCat.GlueData.opens_image_preimage_map_app_assoc
 
 /-- (Implementation) Given an open subset of one of the spaces `U ⊆ Uᵢ`, the sheaf component of
 the image `ι '' U` in the glued space is the limit of this diagram. -/
 abbrev diagramOverOpen {i : D.J} (U : Opens (D.U i).Carrier) : (WalkingMultispan _ _)ᵒᵖ ⥤ C :=
   componentwiseDiagram 𝖣.diagram.multispan ((D.ι_open_embedding i).IsOpenMap.Functor.obj U)
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.diagram_over_open AlgebraicGeometry.PresheafedSpaceCat.GlueData.diagramOverOpen
 
 /-- (Implementation)
 The projection from the limit of `diagram_over_open` to a component of `D.U j`. -/
 abbrev diagramOverOpenπ {i : D.J} (U : Opens (D.U i).Carrier) (j : D.J) :=
   limit.π (D.diagramOverOpen U) (op (WalkingMultispan.right j))
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.diagram_over_open_π AlgebraicGeometry.PresheafedSpaceCat.GlueData.diagramOverOpenπ
 
 /-- (Implementation) We construct the map `Γ(𝒪_{U_i}, U) ⟶ Γ(𝒪_V, U_V)` for each `V` in the gluing
 diagram. We will lift these maps into `ι_inv_app`. -/
@@ -290,6 +317,8 @@ def ιInvAppπApp {i : D.J} (U : Opens (D.U i).Carrier) (j) :
     
   · exact D.opens_image_preimage_map i j U
     
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.ι_inv_app_π_app AlgebraicGeometry.PresheafedSpaceCat.GlueData.ιInvAppπApp
 
 /-- (Implementation) The natural map `Γ(𝒪_{U_i}, U) ⟶ Γ(𝒪_X, 𝖣.ι i '' U)`.
 This forms the inverse of `(𝖣.ι i).c.app (op U)`. -/
@@ -347,6 +376,7 @@ def ιInvApp {i : D.J} (U : Opens (D.U i).Carrier) : (D.U i).Presheaf.obj (op U)
               is_open_immersion.inv_naturality_assoc, is_open_immersion.app_inv_app_assoc]
             repeat' erw [← (D.V (j, k)).Presheaf.map_comp]
             congr } }
+#align algebraic_geometry.PresheafedSpace.glue_data.ι_inv_app AlgebraicGeometry.PresheafedSpaceCat.GlueData.ιInvApp
 
 /-- `ι_inv_app` is the left inverse of `D.ι i` on `U`. -/
 theorem ι_inv_app_π {i : D.J} (U : Opens (D.U i).Carrier) :
@@ -365,10 +395,14 @@ theorem ι_inv_app_π {i : D.J} (U : Opens (D.U i).Carrier) :
   · rw [← TopCat.epi_iff_surjective]
     infer_instance
     
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.ι_inv_app_π AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_inv_app_π
 
 /-- The `eq_to_hom` given by `ι_inv_app_π`. -/
 abbrev ιInvAppπEqMap {i : D.J} (U : Opens (D.U i).Carrier) :=
   (D.U i).Presheaf.map (eqToIso (D.ι_inv_app_π U).some).inv
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.ι_inv_app_π_eq_map AlgebraicGeometry.PresheafedSpaceCat.GlueData.ιInvAppπEqMap
 
 /-- `ι_inv_app` is the right inverse of `D.ι i` on `U`. -/
 theorem π_ι_inv_app_π (i j : D.J) (U : Opens (D.U i).Carrier) :
@@ -397,6 +431,8 @@ theorem π_ι_inv_app_π (i j : D.J) (U : Opens (D.U i).Carrier) :
     erw [D.ι_image_preimage_eq i j U]
     all_goals infer_instance
     
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.π_ι_inv_app_π AlgebraicGeometry.PresheafedSpaceCat.GlueData.π_ι_inv_app_π
 
 /-- `ι_inv_app` is the inverse of `D.ι i` on `U`. -/
 theorem π_ι_inv_app_eq_id (i : D.J) (U : Opens (D.U i).Carrier) :
@@ -414,6 +450,8 @@ theorem π_ι_inv_app_eq_id (i : D.J) (U : Opens (D.U i).Carrier) :
     rw [category.id_comp]
     apply π_ι_inv_app_π
     
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.π_ι_inv_app_eq_id AlgebraicGeometry.PresheafedSpaceCat.GlueData.π_ι_inv_app_eq_id
 
 instance componentwise_diagram_π_is_iso (i : D.J) (U : Opens (D.U i).Carrier) : IsIso (D.diagramOverOpenπ U i) := by
   use D.ι_inv_app_π_eq_map U ≫ D.ι_inv_app U
@@ -423,12 +461,16 @@ instance componentwise_diagram_π_is_iso (i : D.J) (U : Opens (D.U i).Carrier) :
   · rw [category.assoc, (D.ι_inv_app_π _).some_spec]
     exact iso.inv_hom_id ((D.to_glue_data.U i).Presheaf.mapIso (eq_to_iso _))
     
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.componentwise_diagram_π_is_iso AlgebraicGeometry.PresheafedSpaceCat.GlueData.componentwise_diagram_π_is_iso
 
 instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) where
   base_open := D.ι_open_embedding i
   c_iso U := by
     erw [← colimit_presheaf_obj_iso_componentwise_limit_hom_π]
     infer_instance
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_is_open_immersion
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.
 
@@ -463,9 +505,13 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
       erw [e₁]
       rw [is_open_immersion.lift_fac]
       
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.V_pullback_cone_is_limit AlgebraicGeometry.PresheafedSpaceCat.GlueData.vPullbackConeIsLimit
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
   𝖣.ι_jointly_surjective (PresheafedSpaceCat.forget _ ⋙ CategoryTheory.forget TopCat) x
+#align
+  algebraic_geometry.PresheafedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_jointly_surjective
 
 end GlueData
 
@@ -496,6 +542,7 @@ that the `U i`'s are open subspaces of the glued space.
 @[nolint has_nonempty_instance]
 structure GlueData extends GlueData (SheafedSpaceCat.{v} C) where
   f_open : ∀ i j, SheafedSpaceCat.IsOpenImmersion (f i j)
+#align algebraic_geometry.SheafedSpace.glue_data AlgebraicGeometry.SheafedSpaceCat.GlueData
 
 attribute [instance] glue_data.f_open
 
@@ -509,23 +556,33 @@ local notation "𝖣" => D.toGlueData
 /-- The glue data of presheafed spaces associated to a family of glue data of sheafed spaces. -/
 abbrev toPresheafedSpaceGlueData : PresheafedSpaceCat.GlueData C :=
   { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToPresheafedSpace }
+#align
+  algebraic_geometry.SheafedSpace.glue_data.to_PresheafedSpace_glue_data AlgebraicGeometry.SheafedSpaceCat.GlueData.toPresheafedSpaceGlueData
 
 variable [HasLimits C]
 
 /-- The gluing as sheafed spaces is isomorphic to the gluing as presheafed spaces. -/
 abbrev isoPresheafedSpace : 𝖣.glued.toPresheafedSpace ≅ D.toPresheafedSpaceGlueData.toGlueData.glued :=
   𝖣.gluedIso forgetToPresheafedSpace
+#align
+  algebraic_geometry.SheafedSpace.glue_data.iso_PresheafedSpace AlgebraicGeometry.SheafedSpaceCat.GlueData.isoPresheafedSpace
 
 theorem ι_iso_PresheafedSpace_inv (i : D.J) :
     D.toPresheafedSpaceGlueData.toGlueData.ι i ≫ D.isoPresheafedSpace.inv = 𝖣.ι i :=
   𝖣.ι_glued_iso_inv _ _
+#align
+  algebraic_geometry.SheafedSpace.glue_data.ι_iso_PresheafedSpace_inv AlgebraicGeometry.SheafedSpaceCat.GlueData.ι_iso_PresheafedSpace_inv
 
 instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
   rw [← D.ι_iso_PresheafedSpace_inv]
   infer_instance
+#align
+  algebraic_geometry.SheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.SheafedSpaceCat.GlueData.ι_is_open_immersion
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
   𝖣.ι_jointly_surjective (SheafedSpaceCat.forget _ ⋙ CategoryTheory.forget TopCat) x
+#align
+  algebraic_geometry.SheafedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.SheafedSpaceCat.GlueData.ι_jointly_surjective
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.
 
@@ -536,6 +593,8 @@ Vᵢⱼ ⟶ Uᵢ
 -/
 def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
   𝖣.vPullbackConeIsLimitOfMap forgetToPresheafedSpace i j (D.toPresheafedSpaceGlueData.vPullbackConeIsLimit _ _)
+#align
+  algebraic_geometry.SheafedSpace.glue_data.V_pullback_cone_is_limit AlgebraicGeometry.SheafedSpaceCat.GlueData.vPullbackConeIsLimit
 
 end GlueData
 
@@ -564,6 +623,7 @@ that the `U i`'s are open subspaces of the glued space.
 @[nolint has_nonempty_instance]
 structure GlueData extends GlueData LocallyRingedSpaceCat where
   f_open : ∀ i j, LocallyRingedSpaceCat.IsOpenImmersion (f i j)
+#align algebraic_geometry.LocallyRingedSpace.glue_data AlgebraicGeometry.LocallyRingedSpaceCat.GlueData
 
 attribute [instance] glue_data.f_open
 
@@ -577,25 +637,35 @@ local notation "𝖣" => D.toGlueData
 /-- The glue data of ringed spaces associated to a family of glue data of locally ringed spaces. -/
 abbrev toSheafedSpaceGlueData : SheafedSpaceCat.GlueData CommRingCat :=
   { f_open := D.f_open, toGlueData := 𝖣.mapGlueData forgetToSheafedSpace }
+#align
+  algebraic_geometry.LocallyRingedSpace.glue_data.to_SheafedSpace_glue_data AlgebraicGeometry.LocallyRingedSpaceCat.GlueData.toSheafedSpaceGlueData
 
 /-- The gluing as locally ringed spaces is isomorphic to the gluing as ringed spaces. -/
 abbrev isoSheafedSpace : 𝖣.glued.toSheafedSpace ≅ D.toSheafedSpaceGlueData.toGlueData.glued :=
   𝖣.gluedIso forgetToSheafedSpace
+#align
+  algebraic_geometry.LocallyRingedSpace.glue_data.iso_SheafedSpace AlgebraicGeometry.LocallyRingedSpaceCat.GlueData.isoSheafedSpace
 
 theorem ι_iso_SheafedSpace_inv (i : D.J) :
     D.toSheafedSpaceGlueData.toGlueData.ι i ≫ D.isoSheafedSpace.inv = (𝖣.ι i).1 :=
   𝖣.ι_glued_iso_inv forgetToSheafedSpace i
+#align
+  algebraic_geometry.LocallyRingedSpace.glue_data.ι_iso_SheafedSpace_inv AlgebraicGeometry.LocallyRingedSpaceCat.GlueData.ι_iso_SheafedSpace_inv
 
 instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
   delta is_open_immersion
   rw [← D.ι_iso_SheafedSpace_inv]
   apply PresheafedSpace.is_open_immersion.comp
+#align
+  algebraic_geometry.LocallyRingedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.LocallyRingedSpaceCat.GlueData.ι_is_open_immersion
 
 instance (i j k : D.J) : PreservesLimit (cospan (𝖣.f i j) (𝖣.f i k)) forgetToSheafedSpace :=
   inferInstance
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).1.base y = x :=
   𝖣.ι_jointly_surjective ((LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpaceCat.forget _) ⋙ forget TopCat) x
+#align
+  algebraic_geometry.LocallyRingedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.LocallyRingedSpaceCat.GlueData.ι_jointly_surjective
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.
 
@@ -606,6 +676,8 @@ Vᵢⱼ ⟶ Uᵢ
 -/
 def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
   𝖣.vPullbackConeIsLimitOfMap forgetToSheafedSpace i j (D.toSheafedSpaceGlueData.vPullbackConeIsLimit _ _)
+#align
+  algebraic_geometry.LocallyRingedSpace.glue_data.V_pullback_cone_is_limit AlgebraicGeometry.LocallyRingedSpaceCat.GlueData.vPullbackConeIsLimit
 
 end GlueData
 

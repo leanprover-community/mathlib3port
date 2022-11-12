@@ -27,12 +27,14 @@ primarily an auxiliary construction used to provide `tensor_algebra.graded_algeb
 def GradedAlgebra.ι : M →ₗ[R] ⨁ i : ℕ, ↥((ι R : M →ₗ[_] _).range ^ i) :=
   DirectSum.lof R ℕ (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1 ∘ₗ
     (ι R).codRestrict _ fun m => by simpa only [pow_one] using LinearMap.mem_range_self _ m
+#align tensor_algebra.graded_algebra.ι TensorAlgebra.GradedAlgebra.ι
 
 theorem GradedAlgebra.ι_apply (m : M) :
     GradedAlgebra.ι R M m =
       DirectSum.of (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1
         ⟨ι R m, by simpa only [pow_one] using LinearMap.mem_range_self _ m⟩ :=
   rfl
+#align tensor_algebra.graded_algebra.ι_apply TensorAlgebra.GradedAlgebra.ι_apply
 
 variable {R M}
 
@@ -57,6 +59,7 @@ instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlge
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.of_mul_of]
       exact DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)
       
+#align tensor_algebra.graded_algebra TensorAlgebra.gradedAlgebra
 
 end TensorAlgebra
 

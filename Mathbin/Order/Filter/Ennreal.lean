@@ -39,6 +39,7 @@ theorem eventually_le_limsup [CountableInterFilter f] (u : α → ℝ≥0∞) : 
   cases' exists_inv_nat_lt hr_ne_zero with i hi
   rw [inv_eq_one_div] at hi
   exact (hy i).le.trans (add_le_add_left hi.le (f.limsup u))
+#align ennreal.eventually_le_limsup Ennreal.eventually_le_limsup
 
 theorem limsup_eq_zero_iff [CountableInterFilter f] {u : α → ℝ≥0∞} : f.limsup u = 0 ↔ u =ᶠ[f] 0 := by
   constructor <;> intro h
@@ -48,6 +49,7 @@ theorem limsup_eq_zero_iff [CountableInterFilter f] {u : α → ℝ≥0∞} : f.
   · rw [limsup_congr h]
     simp_rw [Pi.zero_apply, ← Ennreal.bot_eq_zero, limsup_const_bot]
     
+#align ennreal.limsup_eq_zero_iff Ennreal.limsup_eq_zero_iff
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_top : a ≠ ⊤) :
@@ -69,6 +71,7 @@ theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_
   all_goals
     run_tac
       is_bounded_default
+#align ennreal.limsup_const_mul_of_ne_top Ennreal.limsup_const_mul_of_ne_top
 
 theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : ℝ≥0∞} :
     (f.limsup fun x : α => a * u x) = a * f.limsup u := by
@@ -95,6 +98,7 @@ theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : �
     have hfu : f.limsup u ≠ 0 := mt limsup_eq_zero_iff.1 hu
     simp only [h_top_le, hfu, if_false]
     
+#align ennreal.limsup_const_mul Ennreal.limsup_const_mul
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.limsup (u * v) ≤ f.limsup u * f.limsup v :=
@@ -109,9 +113,11 @@ theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.lim
         
     _ = f.limsup u * f.limsup v := limsup_const_mul
     
+#align ennreal.limsup_mul_le Ennreal.limsup_mul_le
 
 theorem limsup_add_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.limsup (u + v) ≤ f.limsup u + f.limsup v :=
   Inf_le ((eventually_le_limsup u).mp ((eventually_le_limsup v).mono fun _ hxg hxf => add_le_add hxf hxg))
+#align ennreal.limsup_add_le Ennreal.limsup_add_le
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem limsup_liminf_le_liminf_limsup {β} [Countable β] {f : Filter α} [CountableInterFilter f] {g : Filter β}
@@ -123,6 +129,7 @@ theorem limsup_liminf_le_liminf_limsup {β} [Countable β] {f : Filter α} [Coun
   refine' Inf_le (h1.mono fun x hx => Filter.liminf_le_liminf (Filter.eventually_of_forall hx) _)
   run_tac
     filter.is_bounded_default
+#align ennreal.limsup_liminf_le_liminf_limsup Ennreal.limsup_liminf_le_liminf_limsup
 
 end Ennreal
 

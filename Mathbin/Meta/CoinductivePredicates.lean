@@ -13,40 +13,50 @@ universe u
 unsafe def monotonicity : user_attribute where
   Name := `monotonicity
   descr := "Monotonicity rules for predicates"
+#align monotonicity monotonicity
 
 theorem Monotonicity.pi {α : Sort u} {p q : α → Prop} (h : ∀ a, Implies (p a) (q a)) : Implies (∀ a, p a) (∀ a, q a) :=
   fun h' a => h a (h' a)
+#align monotonicity.pi Monotonicity.pi
 
 theorem Monotonicity.imp {p p' q q' : Prop} (h₁ : Implies p' q') (h₂ : Implies q p) : Implies (p → p') (q → q') :=
   fun h => h₁ ∘ h ∘ h₂
+#align monotonicity.imp Monotonicity.imp
 
 @[monotonicity]
 theorem Monotonicity.const (p : Prop) : Implies p p :=
   id
+#align monotonicity.const Monotonicity.const
 
 @[monotonicity]
 theorem Monotonicity.true (p : Prop) : Implies p True := fun _ => trivial
+#align monotonicity.true Monotonicity.true
 
 @[monotonicity]
 theorem Monotonicity.false (p : Prop) : Implies False p :=
   False.elim
+#align monotonicity.false Monotonicity.false
 
 @[monotonicity]
 theorem Monotonicity.exists {α : Sort u} {p q : α → Prop} (h : ∀ a, Implies (p a) (q a)) :
     Implies (∃ a, p a) (∃ a, q a) :=
   Exists.imp h
+#align monotonicity.exists Monotonicity.exists
 
 @[monotonicity]
 theorem Monotonicity.and {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∧ q) (p' ∧ q') :=
   And.imp hp hq
+#align monotonicity.and Monotonicity.and
 
 @[monotonicity]
 theorem Monotonicity.or {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∨ q) (p' ∨ q') :=
   Or.imp hp hq
+#align monotonicity.or Monotonicity.or
 
 @[monotonicity]
 theorem Monotonicity.not {p q : Prop} (h : Implies p q) : Implies (¬q) ¬p :=
   mt h
+#align monotonicity.not Monotonicity.not
 
 end
 
@@ -85,6 +95,7 @@ private unsafe def mono_aux (ns : List Name) (hs : List expr) : tactic Unit := d
             apply_core c { md := transparency.none, NewGoals := new_goals.non_dep_only }
             skip)
   all_goals' mono_aux
+#align tactic.mono_aux tactic.mono_aux
 
 unsafe def mono (e : expr) (hs : List expr) : tactic Unit := do
   let t ← target
@@ -92,6 +103,7 @@ unsafe def mono (e : expr) (hs : List expr) : tactic Unit := do
   let ns ← attribute.get_instances `monotonicity
   let ((), p) ← solve_aux (quote.1 (Implies (%%ₓt') (%%ₓt))) (mono_aux ns hs)
   exact (p e)
+#align tactic.mono tactic.mono
 
 end Tactic
 
@@ -152,6 +164,7 @@ unsafe structure coind_rule : Type where
   loc_args : List expr
   concl : expr
   insts : List expr
+#align tactic.add_coinductive_predicate.coind_rule tactic.add_coinductive_predicate.coind_rule
 
 -- private
 unsafe structure coind_pred : Type where
@@ -163,44 +176,58 @@ unsafe structure coind_pred : Type where
   locals : List expr
   (f₁ f₂ : expr)
   u_f : level
+#align tactic.add_coinductive_predicate.coind_pred tactic.add_coinductive_predicate.coind_pred
 
 namespace CoindPred
 
 unsafe def u_params (pd : coind_pred) : List level :=
   pd.u_names.map param
+#align tactic.add_coinductive_predicate.coind_pred.u_params tactic.add_coinductive_predicate.coind_pred.u_params
 
 unsafe def f₁_l (pd : coind_pred) : expr :=
   pd.f₁.app_of_list pd.locals
+#align tactic.add_coinductive_predicate.coind_pred.f₁_l tactic.add_coinductive_predicate.coind_pred.f₁_l
 
 unsafe def f₂_l (pd : coind_pred) : expr :=
   pd.f₂.app_of_list pd.locals
+#align tactic.add_coinductive_predicate.coind_pred.f₂_l tactic.add_coinductive_predicate.coind_pred.f₂_l
 
 unsafe def pred (pd : coind_pred) : expr :=
   const pd.pd_name pd.u_params
+#align tactic.add_coinductive_predicate.coind_pred.pred tactic.add_coinductive_predicate.coind_pred.pred
 
 unsafe def func (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "functional") pd.u_params
+#align tactic.add_coinductive_predicate.coind_pred.func tactic.add_coinductive_predicate.coind_pred.func
 
 unsafe def func_g (pd : coind_pred) : expr :=
   pd.func.app_of_list <| pd.params
+#align tactic.add_coinductive_predicate.coind_pred.func_g tactic.add_coinductive_predicate.coind_pred.func_g
 
 unsafe def pred_g (pd : coind_pred) : expr :=
   pd.pred.app_of_list <| pd.params
+#align tactic.add_coinductive_predicate.coind_pred.pred_g tactic.add_coinductive_predicate.coind_pred.pred_g
 
 unsafe def impl_locals (pd : coind_pred) : List expr :=
   pd.locals.map to_implicit_binder
+#align tactic.add_coinductive_predicate.coind_pred.impl_locals tactic.add_coinductive_predicate.coind_pred.impl_locals
 
 unsafe def impl_params (pd : coind_pred) : List expr :=
   pd.params.map to_implicit_binder
+#align tactic.add_coinductive_predicate.coind_pred.impl_params tactic.add_coinductive_predicate.coind_pred.impl_params
 
 unsafe def le (pd : coind_pred) (f₁ f₂ : expr) : expr :=
   (imp (f₁.app_of_list pd.locals) (f₂.app_of_list pd.locals)).pis pd.impl_locals
+#align tactic.add_coinductive_predicate.coind_pred.le tactic.add_coinductive_predicate.coind_pred.le
 
 unsafe def corec_functional (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "corec_functional") pd.u_params
+#align
+  tactic.add_coinductive_predicate.coind_pred.corec_functional tactic.add_coinductive_predicate.coind_pred.corec_functional
 
 unsafe def mono (pd : coind_pred) : expr :=
   const (pd.func.const_name ++ "mono") pd.u_params
+#align tactic.add_coinductive_predicate.coind_pred.mono tactic.add_coinductive_predicate.coind_pred.mono
 
 unsafe def rec' (pd : coind_pred) : tactic expr := do
   let c := pd.func.const_name ++ "rec"
@@ -208,16 +235,20 @@ unsafe def rec' (pd : coind_pred) : tactic expr := do
   let decl ← env.get c
   let num := decl.univ_params.length
   return (const c <| if num = pd then pd else level.zero :: pd)
+#align tactic.add_coinductive_predicate.coind_pred.rec' tactic.add_coinductive_predicate.coind_pred.rec'
 
 -- ^^ `rec`'s universes are not always `u_params`, e.g. eq, wf, false
 unsafe def construct (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "construct") pd.u_params
+#align tactic.add_coinductive_predicate.coind_pred.construct tactic.add_coinductive_predicate.coind_pred.construct
 
 unsafe def destruct (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "destruct") pd.u_params
+#align tactic.add_coinductive_predicate.coind_pred.destruct tactic.add_coinductive_predicate.coind_pred.destruct
 
 unsafe def add_theorem (pd : coind_pred) (n : Name) (type : expr) (tac : tactic Unit) : tactic expr :=
   add_theorem_by n pd.u_names type tac
+#align tactic.add_coinductive_predicate.coind_pred.add_theorem tactic.add_coinductive_predicate.coind_pred.add_theorem
 
 end CoindPred
 
@@ -239,6 +270,7 @@ unsafe def compact_relation : List expr → List (expr × expr) → List expr ×
     | (ps₁, List.cons (a, _) ps₂) =>
       let i := a.instantiate_local b.local_uniq_name
       compact_relation (bs.map i) ((ps₁ ++ ps₂).map fun ⟨a, p⟩ => (a, i p))
+#align tactic.compact_relation tactic.compact_relation
 
 unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) (preds : List <| expr × List expr) :
     Tactic := do
@@ -446,6 +478,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
           exact <| (const r u_params).app_of_list <| (ps ++ pds fun pd => pd ps) ++ bs
   pds fun pd : coind_pred => set_basic_attribute `irreducible pd
   try triv
+#align tactic.add_coinductive_predicate tactic.add_coinductive_predicate
 
 -- we setup a trivial goal for the tactic framework
 setup_tactic_parser
@@ -458,8 +491,10 @@ unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "
       get_env >>= fun env => set_env <| env d
       meta_info d
       d d
-      let some doc_string ← pure meta_info | skip
+      let some doc_string ← pure meta_info |
+        skip
       add_doc_string d doc_string
+#align tactic.coinductive_predicate tactic.coinductive_predicate
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `hs -/
 /-- Prepares coinduction proofs. This tactic constructs the coinduction invariant from
@@ -520,6 +555,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
                   pure <| hs hs')
                 ns
             skip
+#align tactic.coinduction tactic.coinduction
 
 namespace Interactive
 
@@ -534,10 +570,11 @@ local postfix:1024 "*" => many
 unsafe def coinduction (corec_name : parse ident) (ns : parse with_ident_list)
     (revert : parse <| (tk "generalizing" *> ident*)?) : tactic Unit := do
   let rule ← mk_const corec_name
-  let locals ← mmap tactic.get_local <| revert.getOrElse []
+  let locals ← mapM tactic.get_local <| revert.getOrElse []
   revert_lst locals
   tactic.coinduction rule ns
   skip
+#align tactic.interactive.coinduction tactic.interactive.coinduction
 
 end Interactive
 

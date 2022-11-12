@@ -24,4 +24,5 @@ instance Matrix.char_p [DecidableEq n] [Nonempty n] (p : ℕ) [CharP R p] : Char
       
     · assumption
       ⟩
+#align matrix.char_p Matrix.char_p
 

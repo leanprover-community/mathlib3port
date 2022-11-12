@@ -31,11 +31,13 @@ theorem continuous_at_sign_of_pos {a : α} (h : 0 < a) : ContinuousAt sign a := 
   refine' (continuous_at_const : ContinuousAt (fun x => (1 : SignType)) a).congr _
   rw [Filter.EventuallyEq, eventually_nhds_iff]
   exact ⟨{ x | 0 < x }, fun x hx => (sign_pos hx).symm, is_open_lt' 0, h⟩
+#align continuous_at_sign_of_pos continuous_at_sign_of_pos
 
 theorem continuous_at_sign_of_neg {a : α} (h : a < 0) : ContinuousAt sign a := by
   refine' (continuous_at_const : ContinuousAt (fun x => (-1 : SignType)) a).congr _
   rw [Filter.EventuallyEq, eventually_nhds_iff]
   exact ⟨{ x | x < 0 }, fun x hx => (sign_neg hx).symm, is_open_gt' 0, h⟩
+#align continuous_at_sign_of_neg continuous_at_sign_of_neg
 
 end PartialOrder
 
@@ -49,6 +51,7 @@ theorem continuous_at_sign_of_ne_zero {a : α} (h : a ≠ 0) : ContinuousAt sign
     
   · exact continuous_at_sign_of_pos h_pos
     
+#align continuous_at_sign_of_ne_zero continuous_at_sign_of_ne_zero
 
 end LinearOrder
 

@@ -71,12 +71,14 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
     congr 1
     rw [sum_range_succ', sum_range_succ, h_first, h_last, mul_zero, add_zero, pow_succ]
     
+#align commute.add_pow Commute.add_pow
 
 /-- A version of `commute.add_pow` that avoids ℕ-subtraction by summing over the antidiagonal and
 also with the binomial coefficient applied via scalar action of ℕ. -/
 theorem add_pow' : (x + y) ^ n = ∑ m in Nat.antidiagonal n, choose n m.fst • (x ^ m.fst * y ^ m.snd) := by
   simp_rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ fun m p => choose n m • (x ^ m * y ^ p), _root_.nsmul_eq_mul,
     cast_comm, h.add_pow]
+#align commute.add_pow' Commute.add_pow'
 
 end Commute
 
@@ -84,11 +86,13 @@ end Commute
 theorem add_pow [CommSemiring R] (x y : R) (n : ℕ) :
     (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * choose n m :=
   (Commute.all x y).add_pow n
+#align add_pow add_pow
 
 namespace Nat
 
 /-- The sum of entries in a row of Pascal's triangle -/
 theorem sum_range_choose (n : ℕ) : (∑ m in range (n + 1), choose n m) = 2 ^ n := by simpa using (add_pow 1 1 n).symm
+#align nat.sum_range_choose Nat.sum_range_choose
 
 theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 * m + 1) i) = 4 ^ m :=
   have : (∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i)) = ∑ i in range (m + 1), choose (2 * m + 1) i :=
@@ -115,11 +119,13 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
         rw [pow_succ, pow_mul]
         rfl
       
+#align nat.sum_range_choose_halfway Nat.sum_range_choose_halfway
 
 theorem choose_middle_le_pow (n : ℕ) : choose (2 * n + 1) n ≤ 4 ^ n := by
   have t : choose (2 * n + 1) n ≤ ∑ i in range (n + 1), choose (2 * n + 1) i :=
     single_le_sum (fun x _ => by linarith) (self_mem_range_succ n)
   simpa [sum_range_choose_halfway n] using t
+#align nat.choose_middle_le_pow Nat.choose_middle_le_pow
 
 theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) : 4 ^ n ≤ (2 * n + 1) * choose (2 * n) n :=
   calc
@@ -128,31 +134,29 @@ theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) : 4 ^ n ≤ (2 *
     _ ≤ ∑ m in range (2 * n + 1), choose (2 * n) (2 * n / 2) := sum_le_sum fun i hi => choose_le_middle i (2 * n)
     _ = (2 * n + 1) * choose (2 * n) n := by simp
     
+#align nat.four_pow_le_two_mul_add_one_mul_central_binom Nat.four_pow_le_two_mul_add_one_mul_central_binom
 
 end Nat
 
 theorem Int.alternating_sum_range_choose {n : ℕ} :
-    (∑ m in range (n + 1), (-1 ^ m * ↑(choose n m) : ℤ)) = if n = 0 then 1 else 0 := by
+    (∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ)) = if n = 0 then 1 else 0 := by
   cases n
   · simp
     
   have h := add_pow (-1 : ℤ) 1 n.succ
   simp only [one_pow, mul_one, add_left_neg] at h
   rw [← h, zero_pow (Nat.succ_pos n), if_neg (Nat.succ_ne_zero n)]
+#align int.alternating_sum_range_choose Int.alternating_sum_range_choose
 
 theorem Int.alternating_sum_range_choose_of_ne {n : ℕ} (h0 : n ≠ 0) :
-    (∑ m in range (n + 1), (-1 ^ m * ↑(choose n m) : ℤ)) = 0 := by rw [Int.alternating_sum_range_choose, if_neg h0]
+    (∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ)) = 0 := by rw [Int.alternating_sum_range_choose, if_neg h0]
+#align int.alternating_sum_range_choose_of_ne Int.alternating_sum_range_choose_of_ne
 
 namespace Finset
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((m),
-    range «expr + »(x.card, 1),
-    finset.sum((j), x.powerset.filter (λ z, «expr = »(z.card, m)), f j.card))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ → α) {x : Finset β} :
     (∑ m in x.Powerset, f m.card) = ∑ m in range (x.card + 1), x.card.choose m • f m := by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr finset.sum((m),\n    range «expr + »(x.card, 1),\n    finset.sum((j), x.powerset.filter (λ z, «expr = »(z.card, m)), f j.card))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  trans ∑ m in range (x.card + 1), ∑ j in x.powerset.filter fun z => z.card = m, f j.card
   · refine' (sum_fiberwise_of_maps_to _ _).symm
     intro y hy
     rw [mem_range, Nat.lt_succ_iff]
@@ -164,18 +168,19 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ →
     refine' sum_congr powerset_len_eq_filter.symm fun z hz => _
     rw [(mem_powerset_len.1 hz).2]
     
+#align finset.sum_powerset_apply_card Finset.sum_powerset_apply_card
 
 theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset α} :
     (∑ m in x.Powerset, (-1 : ℤ) ^ m.card) = if x = ∅ then 1 else 0 := by
   rw [sum_powerset_apply_card]
   simp only [nsmul_eq_mul', ← card_eq_zero, Int.alternating_sum_range_choose]
+#align finset.sum_powerset_neg_one_pow_card Finset.sum_powerset_neg_one_pow_card
 
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
     (∑ m in x.Powerset, (-1 : ℤ) ^ m.card) = 0 := by
-  classical
-  rw [sum_powerset_neg_one_pow_card, if_neg]
-  rw [← Ne.def, ← nonempty_iff_ne_empty]
-  apply h0
+  classical rw [sum_powerset_neg_one_pow_card, if_neg]
+    apply h0
+#align finset.sum_powerset_neg_one_pow_card_of_nonempty Finset.sum_powerset_neg_one_pow_card_of_nonempty
 
 end Finset
 

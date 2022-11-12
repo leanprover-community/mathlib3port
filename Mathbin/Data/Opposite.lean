@@ -43,6 +43,7 @@ variable (α : Sort u)
 -/
 def Opposite : Sort u :=
   α
+#align opposite Opposite
 
 -- mathport name: «expr ᵒᵖ»
 notation:max -- Use a high right binding power (like that of postfix ⁻¹) so that, for example,
@@ -57,33 +58,41 @@ variable {α}
 @[pp_nodot]
 def op : α → αᵒᵖ :=
   id
+#align opposite.op Opposite.op
 
 /-- The canonical map `αᵒᵖ → α`. -/
 @[pp_nodot]
 def unop : αᵒᵖ → α :=
   id
+#align opposite.unop Opposite.unop
 
 theorem op_injective : Function.Injective (op : α → αᵒᵖ) := fun _ _ => id
+#align opposite.op_injective Opposite.op_injective
 
 theorem unop_injective : Function.Injective (unop : αᵒᵖ → α) := fun _ _ => id
+#align opposite.unop_injective Opposite.unop_injective
 
 @[simp]
 theorem op_unop (x : αᵒᵖ) : op (unop x) = x :=
   rfl
+#align opposite.op_unop Opposite.op_unop
 
 @[simp]
 theorem unop_op (x : α) : unop (op x) = x :=
   rfl
+#align opposite.unop_op Opposite.unop_op
 
 -- We could prove these by `iff.rfl`, but that would make these eligible for `dsimp`. That would be
 -- a bad idea because `opposite` is irreducible.
 @[simp]
 theorem op_inj_iff (x y : α) : op x = op y ↔ x = y :=
   op_injective.eq_iff
+#align opposite.op_inj_iff Opposite.op_inj_iff
 
 @[simp]
 theorem unop_inj_iff (x y : αᵒᵖ) : unop x = unop y ↔ x = y :=
   unop_injective.eq_iff
+#align opposite.unop_inj_iff Opposite.unop_inj_iff
 
 /-- The type-level equivalence between a type and its opposite. -/
 def equivToOpposite : α ≃ αᵒᵖ where
@@ -91,20 +100,25 @@ def equivToOpposite : α ≃ αᵒᵖ where
   invFun := unop
   left_inv := unop_op
   right_inv := op_unop
+#align opposite.equiv_to_opposite Opposite.equivToOpposite
 
 @[simp]
 theorem equiv_to_opposite_coe : (equivToOpposite : α → αᵒᵖ) = op :=
   rfl
+#align opposite.equiv_to_opposite_coe Opposite.equiv_to_opposite_coe
 
 @[simp]
 theorem equiv_to_opposite_symm_coe : (equivToOpposite.symm : αᵒᵖ → α) = unop :=
   rfl
+#align opposite.equiv_to_opposite_symm_coe Opposite.equiv_to_opposite_symm_coe
 
 theorem op_eq_iff_eq_unop {x : α} {y} : op x = y ↔ x = unop y :=
   equivToOpposite.apply_eq_iff_eq_symm_apply
+#align opposite.op_eq_iff_eq_unop Opposite.op_eq_iff_eq_unop
 
 theorem unop_eq_iff_eq_op {x} {y : α} : unop x = y ↔ x = op y :=
   equivToOpposite.symm.apply_eq_iff_eq_symm_apply
+#align opposite.unop_eq_iff_eq_op Opposite.unop_eq_iff_eq_op
 
 instance [Inhabited α] : Inhabited αᵒᵖ :=
   ⟨op default⟩
@@ -112,6 +126,7 @@ instance [Inhabited α] : Inhabited αᵒᵖ :=
 /-- A recursor for `opposite`. Use as `induction x using opposite.rec`. -/
 @[simp]
 protected def rec {F : ∀ X : αᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X := fun X => h (unop X)
+#align opposite.rec Opposite.rec
 
 end Opposite
 
@@ -124,15 +139,19 @@ namespace OpInduction
 /-- Test if `e : expr` is of type `opposite α` for some `α`. -/
 unsafe def is_opposite (e : expr) : tactic Bool := do
   let t ← infer_type e
-  let quote.1 (Opposite _) ← whnf t | return false
+  let quote.1 (Opposite _) ← whnf t |
+    return false
   return tt
+#align tactic.op_induction.is_opposite tactic.op_induction.is_opposite
 
 /-- Find the first hypothesis of type `opposite _`. Fail if no such hypothesis exist in the local
 context. -/
 unsafe def find_opposite_hyp : tactic Name := do
   let lc ← local_context
-  let h :: _ ← lc.mfilter <| is_opposite | fail "No hypotheses of the form Xᵒᵖ"
+  let h :: _ ← lc.mfilter <| is_opposite |
+    fail "No hypotheses of the form Xᵒᵖ"
   return h
+#align tactic.op_induction.find_opposite_hyp tactic.op_induction.find_opposite_hyp
 
 end OpInduction
 
@@ -145,6 +164,7 @@ unsafe def op_induction' : tactic Unit := do
   let h ← find_opposite_hyp
   let h' ← tactic.get_local h
   tactic.induction' h' [] `opposite.rec
+#align tactic.op_induction' tactic.op_induction'
 
 end Tactic
 

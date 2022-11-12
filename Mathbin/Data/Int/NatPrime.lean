@@ -17,6 +17,7 @@ namespace Int
 theorem not_prime_of_int_mul {a b : ℤ} {c : ℕ} (ha : 1 < a.natAbs) (hb : 1 < b.natAbs) (hc : a * b = (c : ℤ)) :
     ¬Nat.Prime c :=
   not_prime_mul' (nat_abs_mul_nat_abs_eq hc) ha hb
+#align int.not_prime_of_int_mul Int.not_prime_of_int_mul
 
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime p) {m n : ℤ} {k l : ℕ}
     (hpm : ↑(p ^ k) ∣ m) (hpn : ↑(p ^ l) ∣ n) (hpmn : ↑(p ^ (k + l + 1)) ∣ m * n) :
@@ -37,10 +38,12 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime 
       (by
         apply Int.dvd_nat_abs.1
         apply Int.coe_nat_dvd.2 hsd2)
+#align int.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul Int.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul
 
 theorem Prime.dvd_nat_abs_of_coe_dvd_sq {p : ℕ} (hp : p.Prime) (k : ℤ) (h : ↑p ∣ k ^ 2) : p ∣ k.natAbs := by
   apply @Nat.Prime.dvd_of_dvd_pow _ _ 2 hp
   rwa [sq, ← nat_abs_mul, ← coe_nat_dvd_left, ← sq]
+#align int.prime.dvd_nat_abs_of_coe_dvd_sq Int.Prime.dvd_nat_abs_of_coe_dvd_sq
 
 end Int
 

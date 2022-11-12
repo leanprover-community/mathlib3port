@@ -49,20 +49,24 @@ variable {F : Type} [CommSemiring F] (q : ℕ)
 `g(x^(q^m)) = f(x)` for some `m : ℕ`.-/
 def IsSeparableContraction (f : F[X]) (g : F[X]) : Prop :=
   g.Separable ∧ ∃ m : ℕ, expand F (q ^ m) g = f
+#align polynomial.is_separable_contraction Polynomial.IsSeparableContraction
 
 /-- The condition of having a separable contration. -/
 def HasSeparableContraction (f : F[X]) : Prop :=
   ∃ g : F[X], IsSeparableContraction q f g
+#align polynomial.has_separable_contraction Polynomial.HasSeparableContraction
 
 variable {q} {f : F[X]} (hf : HasSeparableContraction q f)
 
 /-- A choice of a separable contraction. -/
 def HasSeparableContraction.contraction : F[X] :=
   Classical.choose hf
+#align polynomial.has_separable_contraction.contraction Polynomial.HasSeparableContraction.contraction
 
 /-- The separable degree of a polynomial is the degree of a given separable contraction. -/
 def HasSeparableContraction.degree : ℕ :=
   hf.contraction.natDegree
+#align polynomial.has_separable_contraction.degree Polynomial.HasSeparableContraction.degree
 
 /-- The separable degree divides the degree, in function of the exponential characteristic of F. -/
 theorem IsSeparableContraction.dvd_degree' {g} (hf : IsSeparableContraction q f g) :
@@ -70,19 +74,23 @@ theorem IsSeparableContraction.dvd_degree' {g} (hf : IsSeparableContraction q f 
   obtain ⟨m, rfl⟩ := hf.2
   use m
   rw [nat_degree_expand]
+#align polynomial.is_separable_contraction.dvd_degree' Polynomial.IsSeparableContraction.dvd_degree'
 
 theorem HasSeparableContraction.dvd_degree' : ∃ m : ℕ, hf.degree * q ^ m = f.natDegree :=
   (Classical.choose_spec hf).dvd_degree'
+#align polynomial.has_separable_contraction.dvd_degree' Polynomial.HasSeparableContraction.dvd_degree'
 
 /-- The separable degree divides the degree. -/
 theorem HasSeparableContraction.dvd_degree : hf.degree ∣ f.natDegree :=
   let ⟨a, ha⟩ := hf.dvd_degree'
   Dvd.intro (q ^ a) ha
+#align polynomial.has_separable_contraction.dvd_degree Polynomial.HasSeparableContraction.dvd_degree
 
 /-- In exponential characteristic one, the separable degree equals the degree. -/
 theorem HasSeparableContraction.eq_degree {f : F[X]} (hf : HasSeparableContraction 1 f) : hf.degree = f.natDegree := by
   let ⟨a, ha⟩ := hf.dvd_degree'
   rw [← ha, one_pow a, mul_one]
+#align polynomial.has_separable_contraction.eq_degree Polynomial.HasSeparableContraction.eq_degree
 
 end CommSemiring
 
@@ -102,6 +110,7 @@ theorem _root_.irreducible.has_separable_contraction (q : ℕ) [hF : ExpChar F q
   · rcases exists_separable_of_irreducible q irred ‹q.prime›.NeZero with ⟨n, g, hgs, hge⟩
     exact ⟨g, hgs, n, hge⟩
     
+#align polynomial._root_.irreducible.has_separable_contraction polynomial._root_.irreducible.has_separable_contraction
 
 /-- A helper lemma: if two expansions (along the positive characteristic) of two polynomials `g` and
 `g'` agree, and the one with the larger degree is separable, then their degrees are the same. -/
@@ -114,6 +123,7 @@ theorem contraction_degree_eq_aux [hq : Fact q.Prime] [hF : CharP F q] (g g' : F
   rw [aux] at hg
   have := (is_unit_or_eq_zero_of_separable_expand q (s + 1) hq.out.pos hg).resolve_right s.succ_ne_zero
   rw [aux, nat_degree_expand, nat_degree_eq_of_degree_eq_some (degree_eq_zero_of_is_unit this), zero_mul]
+#align polynomial.contraction_degree_eq_aux Polynomial.contraction_degree_eq_aux
 
 /-- If two expansions (along the positive characteristic) of two separable polynomials
 `g` and `g'` agree, then they have the same degree. -/
@@ -136,6 +146,7 @@ theorem contraction_degree_eq_or_insep [hq : Fact q.Prime] [CharP F q] (g g' : F
     · exact (contraction_degree_eq_aux q g' g m' m h_expand.symm h_1 hg').symm
       
     
+#align polynomial.contraction_degree_eq_or_insep Polynomial.contraction_degree_eq_or_insep
 
 /-- The separable degree equals the degree of any separable contraction, i.e., it is unique. -/
 theorem IsSeparableContraction.degree_eq [hF : ExpChar F q] (g : F[X]) (hg : IsSeparableContraction q f g) :
@@ -155,6 +166,7 @@ theorem IsSeparableContraction.degree_eq [hF : ExpChar F q] (g : F[X]) (hg : IsS
     exact hg
     exact (Classical.choose_spec hf).1
     
+#align polynomial.is_separable_contraction.degree_eq Polynomial.IsSeparableContraction.degree_eq
 
 end Field
 

@@ -33,6 +33,7 @@ variable [Semiring R] {p q : R[X]}
   It can be used in a semiring where the usual division algorithm is not possible -/
 def divX (p : R[X]) : R[X] :=
   ∑ n in ico 0 p.natDegree, monomial n (p.coeff (n + 1))
+#align polynomial.div_X Polynomial.divX
 
 @[simp]
 theorem coeff_div_X : (divX p).coeff n = p.coeff (n + 1) := by
@@ -40,19 +41,24 @@ theorem coeff_div_X : (divX p).coeff n = p.coeff (n + 1) := by
     ite_eq_left_iff]
   intro h
   rw [coeff_eq_zero_of_nat_degree_lt (Nat.lt_succ_of_le h)]
+#align polynomial.coeff_div_X Polynomial.coeff_div_X
 
 theorem div_X_mul_X_add (p : R[X]) : divX p * X + c (p.coeff 0) = p :=
   ext <| by rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
+#align polynomial.div_X_mul_X_add Polynomial.div_X_mul_X_add
 
 @[simp]
 theorem div_X_C (a : R) : divX (c a) = 0 :=
   ext fun n => by simp [div_X, coeff_C] <;> simp [coeff]
+#align polynomial.div_X_C Polynomial.div_X_C
 
 theorem div_X_eq_zero_iff : divX p = 0 ↔ p = c (p.coeff 0) :=
   ⟨fun h => by simpa [eq_comm, h] using div_X_mul_X_add p, fun h => by rw [h, div_X_C]⟩
+#align polynomial.div_X_eq_zero_iff Polynomial.div_X_eq_zero_iff
 
 theorem div_X_add : divX (p + q) = divX p + divX q :=
   ext <| by simp
+#align polynomial.div_X_add Polynomial.div_X_add
 
 theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
   haveI := nontrivial.of_polynomial_ne hp0 <;>
@@ -82,6 +88,7 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
           rw [degree_add_eq_left_of_degree_lt this] <;> exact degree_lt_degree_mul_X hXp0
       _ = p.degree := congr_arg _ (div_X_mul_X_add _)
       
+#align polynomial.degree_div_X_lt Polynomial.degree_div_X_lt
 
 /- warning: polynomial.rec_on_horner -> Polynomial.recOnHorner is a dubious translation:
 lean 3 declaration is
@@ -106,6 +113,7 @@ noncomputable def recOnHorner {M : R[X] → Sort _} :
             MC _ _ (coeff_mul_X_zero _) hcp0
               (if hpX0 : div_X p = 0 then show M (div_X p * X) by rw [hpX0, zero_mul] <;> exact M0
               else MX (div_X p) hpX0 (rec_on_horner _ M0 MC MX))
+#align polynomial.rec_on_horner Polynomial.recOnHorner
 
 /-- A property holds for all polynomials of positive `degree` with coefficients in a semiring `R`
 if it holds for
@@ -130,6 +138,7 @@ theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree 
         rw [eq_C_of_degree_le_zero (le_of_not_gt h0)] at * <;>
           exact hC fun h : coeff p 0 = 0 => by simpa [h, Nat.not_lt_zero] using h0')
     h0
+#align polynomial.degree_pos_induction_on Polynomial.degree_pos_induction_on
 
 /-- A property holds for all polynomials of non-zero `nat_degree` with coefficients in a
 semiring `R` if it holds for
@@ -173,6 +182,7 @@ theorem nat_degree_ne_zero_induction_on {M : R[X] → Prop} {f : R[X]} (f0 : f.n
       exact h_monomial a0 n.succ_ne_zero
       
     
+#align polynomial.nat_degree_ne_zero_induction_on Polynomial.nat_degree_ne_zero_induction_on
 
 end Semiring
 

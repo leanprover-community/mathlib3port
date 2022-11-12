@@ -71,6 +71,7 @@ protected theorem UniformConvergence.uniform_group : @UniformGroup (α → G) (U
   exact
     ⟨(UniformConvergence.postcomp_uniform_continuous uniform_continuous_div).comp
         uniform_convergence.uniform_equiv_prod_arrow.symm.uniform_continuous⟩
+#align uniform_convergence.uniform_group UniformConvergence.uniform_group
 
 @[to_additive]
 protected theorem UniformConvergence.has_basis_nhds_one_of_basis {p : ι → Prop} {b : ι → Set G}
@@ -81,12 +82,14 @@ protected theorem UniformConvergence.has_basis_nhds_one_of_basis {p : ι → Pro
   convert UniformConvergence.has_basis_nhds_of_basis α _ 1 this
   ext (i f)
   simp [UniformConvergence.Gen]
+#align uniform_convergence.has_basis_nhds_one_of_basis UniformConvergence.has_basis_nhds_one_of_basis
 
 @[to_additive]
 protected theorem UniformConvergence.has_basis_nhds_one :
     (@nhds (α → G) (UniformConvergence.topologicalSpace α G) 1).HasBasis (fun V : Set G => V ∈ (𝓝 1 : Filter G))
       fun V => { f : α → G | ∀ x, f x ∈ V } :=
   UniformConvergence.has_basis_nhds_one_of_basis (basis_sets _)
+#align uniform_convergence.has_basis_nhds_one UniformConvergence.has_basis_nhds_one
 
 /-- Let `𝔖 : set (set α)`. If `G` is a uniform group, then the uniform structure of
 `𝔖`-convergence makes `α → G` a uniform group as well. -/
@@ -104,6 +107,7 @@ protected theorem UniformConvergenceOn.uniform_group :
   exact
     ⟨(UniformConvergenceOn.postcomp_uniform_continuous uniform_continuous_div).comp
         uniform_convergence_on.uniform_equiv_prod_arrow.symm.uniform_continuous⟩
+#align uniform_convergence_on.uniform_group UniformConvergenceOn.uniform_group
 
 @[to_additive]
 protected theorem UniformConvergenceOn.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
@@ -116,6 +120,7 @@ protected theorem UniformConvergenceOn.has_basis_nhds_one_of_basis (𝔖 : Set <
   convert UniformConvergenceOn.has_basis_nhds_of_basis α _ 𝔖 1 h𝔖₁ h𝔖₂ this
   ext (i f)
   simp [UniformConvergenceOn.Gen]
+#align uniform_convergence_on.has_basis_nhds_one_of_basis UniformConvergenceOn.has_basis_nhds_one_of_basis
 
 @[to_additive]
 protected theorem UniformConvergenceOn.has_basis_nhds_one (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
@@ -123,6 +128,7 @@ protected theorem UniformConvergenceOn.has_basis_nhds_one (𝔖 : Set <| Set α)
     (@nhds (α → G) (UniformConvergenceOn.topologicalSpace α G 𝔖) 1).HasBasis
       (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV => { f : α → G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
   UniformConvergenceOn.has_basis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
+#align uniform_convergence_on.has_basis_nhds_one UniformConvergenceOn.has_basis_nhds_one
 
 end Group
 
@@ -194,6 +200,8 @@ theorem UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded (h𝔖
       rwa [Set.mem_inv_smul_set_iff₀ ha0] at this
       
     
+#align
+  uniform_convergence_on.has_continuous_smul_induced_of_image_bounded UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded
 
 /-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α → E`. If the image of any `S ∈ 𝔖`
 by any `u ∈ H` is bounded (in the sense of `bornology.is_vonN_bounded`), then `H`, equipped with
@@ -209,6 +217,8 @@ theorem UniformConvergenceOn.has_continuous_smul_submodule_of_image_bounded (h�
   exact
     UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
       (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_coe fun ⟨u, hu⟩ => h u hu
+#align
+  uniform_convergence_on.has_continuous_smul_submodule_of_image_bounded UniformConvergenceOn.has_continuous_smul_submodule_of_image_bounded
 
 end Module
 

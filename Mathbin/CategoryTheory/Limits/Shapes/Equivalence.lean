@@ -24,15 +24,19 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 theorem has_initial_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasInitial C] : HasInitial D :=
   Adjunction.has_colimits_of_shape_of_equivalence e
+#align category_theory.has_initial_of_equivalence CategoryTheory.has_initial_of_equivalence
 
 theorem Equivalence.has_initial_iff (e : C ≌ D) : HasInitial C ↔ HasInitial D :=
   ⟨fun h => has_initial_of_equivalence e.inverse, fun h => has_initial_of_equivalence e.functor⟩
+#align category_theory.equivalence.has_initial_iff CategoryTheory.Equivalence.has_initial_iff
 
 theorem has_terminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal C] : HasTerminal D :=
   Adjunction.has_limits_of_shape_of_equivalence e
+#align category_theory.has_terminal_of_equivalence CategoryTheory.has_terminal_of_equivalence
 
 theorem Equivalence.has_terminal_iff (e : C ≌ D) : HasTerminal C ↔ HasTerminal D :=
   ⟨fun h => has_terminal_of_equivalence e.inverse, fun h => has_terminal_of_equivalence e.functor⟩
+#align category_theory.equivalence.has_terminal_iff CategoryTheory.Equivalence.has_terminal_iff
 
 end CategoryTheory
 

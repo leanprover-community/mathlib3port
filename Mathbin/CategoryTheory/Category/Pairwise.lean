@@ -39,6 +39,7 @@ We use this as the objects of a category to describe the sheaf condition.
 inductive Pairwise (ι : Type v)
   | single : ι → pairwise
   | pair : ι → ι → pairwise
+#align category_theory.pairwise CategoryTheory.Pairwise
 
 variable {ι : Type v}
 
@@ -46,6 +47,7 @@ namespace Pairwise
 
 instance pairwiseInhabited [Inhabited ι] : Inhabited (Pairwise ι) :=
   ⟨single default⟩
+#align category_theory.pairwise.pairwise_inhabited CategoryTheory.Pairwise.pairwiseInhabited
 
 /-- Morphisms in the category `pairwise ι`. The only non-identity morphisms are
 `left i j : single i ⟶ pair i j` and `right i j : single j ⟶ pair i j`.
@@ -55,17 +57,20 @@ inductive Hom : Pairwise ι → Pairwise ι → Type v
   | id_pair : ∀ i j, hom (pair i j) (pair i j)
   | left : ∀ i j, hom (pair i j) (single i)
   | right : ∀ i j, hom (pair i j) (single j)
+#align category_theory.pairwise.hom CategoryTheory.Pairwise.Hom
 
 open Hom
 
 instance homInhabited [Inhabited ι] : Inhabited (Hom (single (default : ι)) (single default)) :=
   ⟨id_single default⟩
+#align category_theory.pairwise.hom_inhabited CategoryTheory.Pairwise.homInhabited
 
 /-- The identity morphism in `pairwise ι`.
 -/
 def id : ∀ o : Pairwise ι, Hom o o
   | single i => id_single i
   | pair i j => id_pair i j
+#align category_theory.pairwise.id CategoryTheory.Pairwise.id
 
 /-- Composition of morphisms in `pairwise ι`. -/
 def comp : ∀ {o₁ o₂ o₃ : Pairwise ι} (f : Hom o₁ o₂) (g : Hom o₂ o₃), Hom o₁ o₃
@@ -73,6 +78,7 @@ def comp : ∀ {o₁ o₂ o₃ : Pairwise ι} (f : Hom o₁ o₂) (g : Hom o₂ 
   | _, _, _, id_pair i j, g => g
   | _, _, _, left i j, id_single _ => left i j
   | _, _, _, right i j, id_single _ => right i j
+#align category_theory.pairwise.comp CategoryTheory.Pairwise.comp
 
 section
 
@@ -96,6 +102,7 @@ variable [SemilatticeInf α]
 def diagramObj : Pairwise ι → α
   | single i => U i
   | pair i j => U i ⊓ U j
+#align category_theory.pairwise.diagram_obj CategoryTheory.Pairwise.diagramObj
 
 /-- Auxiliary definition for `diagram`. -/
 @[simp]
@@ -104,6 +111,7 @@ def diagramMap : ∀ {o₁ o₂ : Pairwise ι} (f : o₁ ⟶ o₂), diagramObj U
   | _, _, id_pair i j => 𝟙 _
   | _, _, left i j => homOfLe inf_le_left
   | _, _, right i j => homOfLe inf_le_right
+#align category_theory.pairwise.diagram_map CategoryTheory.Pairwise.diagramMap
 
 /-- Given a function `U : ι → α` for `[semilattice_inf α]`, we obtain a functor `pairwise ι ⥤ α`,
 sending `single i` to `U i` and `pair i j` to `U i ⊓ U j`,
@@ -113,6 +121,7 @@ and the morphisms to the obvious inequalities.
 def diagram : Pairwise ι ⥤ α where
   obj := diagramObj U
   map X Y f := diagramMap U f
+#align category_theory.pairwise.diagram CategoryTheory.Pairwise.diagram
 
 end
 
@@ -126,6 +135,7 @@ variable [CompleteLattice α]
 def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supr U
   | single i => homOfLe (le_supr U i)
   | pair i j => homOfLe inf_le_left ≫ homOfLe (le_supr U i)
+#align category_theory.pairwise.cocone_ι_app CategoryTheory.Pairwise.coconeιApp
 
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
 `supr U` provides a cocone over `diagram U`.
@@ -134,6 +144,7 @@ def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supr U
 def cocone : Cocone (diagram U) where
   x := supr U
   ι := { app := coconeιApp U }
+#align category_theory.pairwise.cocone CategoryTheory.Pairwise.cocone
 
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
 `infi U` provides a limit cone over `diagram U`.
@@ -145,6 +156,7 @@ def coconeIsColimit :
         apply CompleteLattice.Sup_le
         rintro _ ⟨j, rfl⟩
         exact (s.ι.app (single j)).le)
+#align category_theory.pairwise.cocone_is_colimit CategoryTheory.Pairwise.coconeIsColimit
 
 end
 

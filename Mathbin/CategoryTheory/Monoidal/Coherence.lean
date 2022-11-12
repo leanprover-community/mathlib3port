@@ -40,44 +40,58 @@ namespace CategoryTheory.MonoidalCategory
 /-- A typeclass carrying a choice of lift of an object from `C` to `free_monoidal_category C`. -/
 class LiftObj (X : C) where
   lift : FreeMonoidalCategory C
+#align category_theory.monoidal_category.lift_obj CategoryTheory.MonoidalCategory.LiftObj
 
 instance liftObjUnit : LiftObj (𝟙_ C) where lift := Unit
+#align category_theory.monoidal_category.lift_obj_unit CategoryTheory.MonoidalCategory.liftObjUnit
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance liftObjTensor (X Y : C) [LiftObj X] [LiftObj Y] : LiftObj (X ⊗ Y) where lift := LiftObj.lift X ⊗ LiftObj.lift Y
+#align category_theory.monoidal_category.lift_obj_tensor CategoryTheory.MonoidalCategory.liftObjTensor
 
 instance (priority := 100) liftObjOf (X : C) : LiftObj X where lift := of X
+#align category_theory.monoidal_category.lift_obj_of CategoryTheory.MonoidalCategory.liftObjOf
 
 /-- A typeclass carrying a choice of lift of a morphism from `C` to `free_monoidal_category C`. -/
 class LiftHom {X Y : C} [LiftObj X] [LiftObj Y] (f : X ⟶ Y) where
   lift : LiftObj.lift X ⟶ LiftObj.lift Y
+#align category_theory.monoidal_category.lift_hom CategoryTheory.MonoidalCategory.LiftHom
 
 instance liftHomId (X : C) [LiftObj X] : LiftHom (𝟙 X) where lift := 𝟙 _
+#align category_theory.monoidal_category.lift_hom_id CategoryTheory.MonoidalCategory.liftHomId
 
 instance liftHomLeftUnitorHom (X : C) [LiftObj X] : LiftHom (λ_ X).Hom where lift := (λ_ (LiftObj.lift X)).Hom
+#align category_theory.monoidal_category.lift_hom_left_unitor_hom CategoryTheory.MonoidalCategory.liftHomLeftUnitorHom
 
 instance liftHomLeftUnitorInv (X : C) [LiftObj X] : LiftHom (λ_ X).inv where lift := (λ_ (LiftObj.lift X)).inv
+#align category_theory.monoidal_category.lift_hom_left_unitor_inv CategoryTheory.MonoidalCategory.liftHomLeftUnitorInv
 
 instance liftHomRightUnitorHom (X : C) [LiftObj X] : LiftHom (ρ_ X).Hom where lift := (ρ_ (LiftObj.lift X)).Hom
+#align category_theory.monoidal_category.lift_hom_right_unitor_hom CategoryTheory.MonoidalCategory.liftHomRightUnitorHom
 
 instance liftHomRightUnitorInv (X : C) [LiftObj X] : LiftHom (ρ_ X).inv where lift := (ρ_ (LiftObj.lift X)).inv
+#align category_theory.monoidal_category.lift_hom_right_unitor_inv CategoryTheory.MonoidalCategory.liftHomRightUnitorInv
 
 instance liftHomAssociatorHom (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] :
     LiftHom (α_ X Y Z).Hom where lift := (α_ (LiftObj.lift X) (LiftObj.lift Y) (LiftObj.lift Z)).Hom
+#align category_theory.monoidal_category.lift_hom_associator_hom CategoryTheory.MonoidalCategory.liftHomAssociatorHom
 
 instance liftHomAssociatorInv (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] :
     LiftHom (α_ X Y Z).inv where lift := (α_ (LiftObj.lift X) (LiftObj.lift Y) (LiftObj.lift Z)).inv
+#align category_theory.monoidal_category.lift_hom_associator_inv CategoryTheory.MonoidalCategory.liftHomAssociatorInv
 
 instance liftHomComp {X Y Z : C} [LiftObj X] [LiftObj Y] [LiftObj Z] (f : X ⟶ Y) (g : Y ⟶ Z) [LiftHom f] [LiftHom g] :
     LiftHom (f ≫ g) where lift := LiftHom.lift f ≫ LiftHom.lift g
+#align category_theory.monoidal_category.lift_hom_comp CategoryTheory.MonoidalCategory.liftHomComp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z] (f : W ⟶ X) (g : Y ⟶ Z) [LiftHom f]
     [LiftHom g] : LiftHom (f ⊗ g) where lift := LiftHom.lift f ⊗ LiftHom.lift g
+#align category_theory.monoidal_category.lift_hom_tensor CategoryTheory.MonoidalCategory.liftHomTensor
 
-/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 -- We could likely turn this into a `Prop` valued existential if that proves useful.
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
@@ -85,6 +99,7 @@ Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
 class MonoidalCoherence (X Y : C) [LiftObj X] [LiftObj Y] where
   Hom : X ⟶ Y
   [IsIso : IsIso hom]
+#align category_theory.monoidal_category.monoidal_coherence CategoryTheory.MonoidalCategory.MonoidalCoherence
 
 attribute [instance] monoidal_coherence.is_iso
 
@@ -93,6 +108,7 @@ namespace MonoidalCoherence
 @[simps]
 instance refl (X : C) [LiftObj X] : MonoidalCoherence X X :=
   ⟨𝟙 _⟩
+#align category_theory.monoidal_category.monoidal_coherence.refl CategoryTheory.MonoidalCategory.MonoidalCoherence.refl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -101,38 +117,51 @@ instance refl (X : C) [LiftObj X] : MonoidalCoherence X X :=
 instance tensor (X Y Z : C) [LiftObj X] [LiftObj Y] [LiftObj Z] [MonoidalCoherence Y Z] :
     MonoidalCoherence (X ⊗ Y) (X ⊗ Z) :=
   ⟨𝟙 X ⊗ MonoidalCoherence.hom Y Z⟩
+#align
+  category_theory.monoidal_category.monoidal_coherence.tensor CategoryTheory.MonoidalCategory.MonoidalCoherence.tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance tensorRight (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence (𝟙_ C) Y] : MonoidalCoherence X (X ⊗ Y) :=
   ⟨(ρ_ X).inv ≫ (𝟙 X ⊗ MonoidalCoherence.hom (𝟙_ C) Y)⟩
+#align
+  category_theory.monoidal_category.monoidal_coherence.tensor_right CategoryTheory.MonoidalCategory.MonoidalCoherence.tensorRight
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance tensorRight' (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence Y (𝟙_ C)] : MonoidalCoherence (X ⊗ Y) X :=
   ⟨(𝟙 X ⊗ MonoidalCoherence.hom Y (𝟙_ C)) ≫ (ρ_ X).Hom⟩
+#align
+  category_theory.monoidal_category.monoidal_coherence.tensor_right' CategoryTheory.MonoidalCategory.MonoidalCoherence.tensorRight'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance left (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] : MonoidalCoherence (𝟙_ C ⊗ X) Y :=
   ⟨(λ_ X).Hom ≫ MonoidalCoherence.hom X Y⟩
+#align category_theory.monoidal_category.monoidal_coherence.left CategoryTheory.MonoidalCategory.MonoidalCoherence.left
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance left' (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] : MonoidalCoherence X (𝟙_ C ⊗ Y) :=
   ⟨MonoidalCoherence.hom X Y ≫ (λ_ Y).inv⟩
+#align
+  category_theory.monoidal_category.monoidal_coherence.left' CategoryTheory.MonoidalCategory.MonoidalCoherence.left'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance right (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] : MonoidalCoherence (X ⊗ 𝟙_ C) Y :=
   ⟨(ρ_ X).Hom ≫ MonoidalCoherence.hom X Y⟩
+#align
+  category_theory.monoidal_category.monoidal_coherence.right CategoryTheory.MonoidalCategory.MonoidalCoherence.right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
 instance right' (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] : MonoidalCoherence X (Y ⊗ 𝟙_ C) :=
   ⟨MonoidalCoherence.hom X Y ≫ (ρ_ Y).inv⟩
+#align
+  category_theory.monoidal_category.monoidal_coherence.right' CategoryTheory.MonoidalCategory.MonoidalCoherence.right'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -144,6 +173,8 @@ instance right' (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] : Mono
 instance assoc (X Y Z W : C) [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z] [MonoidalCoherence (X ⊗ Y ⊗ Z) W] :
     MonoidalCoherence ((X ⊗ Y) ⊗ Z) W :=
   ⟨(α_ X Y Z).Hom ≫ MonoidalCoherence.hom (X ⊗ Y ⊗ Z) W⟩
+#align
+  category_theory.monoidal_category.monoidal_coherence.assoc CategoryTheory.MonoidalCategory.MonoidalCoherence.assoc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -155,6 +186,8 @@ instance assoc (X Y Z W : C) [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z] [Mo
 instance assoc' (W X Y Z : C) [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z] [MonoidalCoherence W (X ⊗ Y ⊗ Z)] :
     MonoidalCoherence W ((X ⊗ Y) ⊗ Z) :=
   ⟨MonoidalCoherence.hom W (X ⊗ Y ⊗ Z) ≫ (α_ X Y Z).inv⟩
+#align
+  category_theory.monoidal_category.monoidal_coherence.assoc' CategoryTheory.MonoidalCategory.MonoidalCoherence.assoc'
 
 end MonoidalCoherence
 
@@ -162,6 +195,7 @@ end MonoidalCoherence
 out of unitors and associators. -/
 def monoidalIso (X Y : C) [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] : X ≅ Y :=
   asIso (MonoidalCoherence.hom X Y)
+#align category_theory.monoidal_category.monoidal_iso CategoryTheory.MonoidalCategory.monoidalIso
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -194,6 +228,7 @@ example (X1 X2 X3 X4 X5 X6 X7 X8 X9 : C) :
 inserting unitors and associators between as necessary. -/
 def monoidalComp {W X Y Z : C} [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] (f : W ⟶ X) (g : Y ⟶ Z) : W ⟶ Z :=
   f ≫ MonoidalCoherence.hom X Y ≫ g
+#align category_theory.monoidal_category.monoidal_comp CategoryTheory.MonoidalCategory.monoidalComp
 
 -- mathport name: «expr ⊗≫ »
 infixr:80 " ⊗≫ " => monoidalComp
@@ -203,6 +238,7 @@ infixr:80 " ⊗≫ " => monoidalComp
 inserting unitors and associators between as necessary. -/
 def monoidalIsoComp {W X Y Z : C} [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] (f : W ≅ X) (g : Y ≅ Z) : W ≅ Z :=
   f ≪≫ asIso (MonoidalCoherence.hom X Y) ≪≫ g
+#align category_theory.monoidal_category.monoidal_iso_comp CategoryTheory.MonoidalCategory.monoidalIsoComp
 
 -- mathport name: «expr ≪⊗≫ »
 infixr:80 " ≪⊗≫ " => monoidalIsoComp
@@ -228,6 +264,7 @@ example {W X Y Z : C} (f : W ⟶ (X ⊗ Y) ⊗ Z) : W ⟶ X ⊗ Y ⊗ Z :=
 theorem monoidal_comp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g := by
   dsimp [monoidal_comp]
   simp
+#align category_theory.monoidal_category.monoidal_comp_refl CategoryTheory.MonoidalCategory.monoidal_comp_refl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -253,6 +290,7 @@ unsafe def mk_project_map_expr (e : expr) : tactic expr :=
   to_expr
     (pquote.1
       (CategoryTheory.FreeMonoidalCategory.projectMap id _ _ (CategoryTheory.MonoidalCategory.LiftHom.lift (%%ₓe))))
+#align tactic.mk_project_map_expr tactic.mk_project_map_expr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Coherence tactic for monoidal categories. -/
@@ -265,6 +303,7 @@ unsafe def monoidal_coherence : tactic Unit := do
   let project_map_rhs ← mk_project_map_expr rhs
   to_expr (pquote.1 ((%%ₓproject_map_lhs) = %%ₓproject_map_rhs)) >>= tactic.change
   congr
+#align tactic.monoidal_coherence tactic.monoidal_coherence
 
 /-- `pure_coherence` uses the coherence theorem for monoidal categories to prove the goal.
 It can prove any equality made up only of associators, unitors, and identities.
@@ -280,6 +319,7 @@ where `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`
 -/
 unsafe def pure_coherence : tactic Unit :=
   monoidal_coherence <|> bicategorical_coherence
+#align tactic.pure_coherence tactic.pure_coherence
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.pure_coherence -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -308,6 +348,7 @@ built out of unitors and associators.
 theorem assoc_lift_hom {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] (f : W ⟶ X) (g : X ⟶ Y) (h : Y ⟶ Z) [LiftHom f]
     [LiftHom g] : f ≫ g ≫ h = (f ≫ g) ≫ h :=
   (Category.assoc _ _ _).symm
+#align tactic.coherence.assoc_lift_hom Tactic.Coherence.assoc_lift_hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -322,6 +363,7 @@ unsafe def liftable_prefixes : tactic Unit := do
   let o ← get_options
   set_options <| o `class.instance_max_depth 128
   (try sorry >> sorry) >> try sorry
+#align tactic.coherence.liftable_prefixes tactic.coherence.liftable_prefixes
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.coherence.liftable_prefixes -/
 example {W X Y Z : C} (f : Y ⟶ Z) (g) (w : False) : (λ_ _).Hom ≫ f = g := by
@@ -331,8 +373,10 @@ example {W X Y Z : C} (f : Y ⟶ Z) (g) (w : False) : (λ_ _).Hom ≫ f = g := b
   cases w
 
 theorem insert_id_lhs {C : Type _} [Category C] {X Y : C} (f g : X ⟶ Y) (w : f ≫ 𝟙 _ = g) : f = g := by simpa using w
+#align tactic.coherence.insert_id_lhs Tactic.Coherence.insert_id_lhs
 
 theorem insert_id_rhs {C : Type _} [Category C] {X Y : C} (f g : X ⟶ Y) (w : f = g ≫ 𝟙 _) : f = g := by simpa using w
+#align tactic.coherence.insert_id_rhs Tactic.Coherence.insert_id_rhs
 
 end Coherence
 
@@ -370,13 +414,15 @@ unsafe def coherence_loop : tactic Unit := do
                 let quote.1 (_ = _ ≫ _) ← target
                 skip) <|>
               sorry
-          let quote.1 (_ ≫ _ = _ ≫ _) ← target | fail "`coherence` tactic failed, non-structural morphisms don't match"
+          let quote.1 (_ ≫ _ = _ ≫ _) ← target |
+            fail "`coherence` tactic failed, non-structural morphisms don't match"
           tactic.congr_core'
           -- with identical first terms,
               reflexivity <|>
               fail "`coherence` tactic failed, non-structural morphisms don't match"
           -- and whose second terms can be identified by recursively called `coherence`.
             coherence_loop
+#align tactic.coherence_loop tactic.coherence_loop
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -400,6 +446,7 @@ unsafe def coherence : tactic Unit := do
       try
       bicategory.whisker_simps
   coherence_loop
+#align tactic.coherence tactic.coherence
 
 run_cmd
   add_interactive [`pure_coherence, `coherence]

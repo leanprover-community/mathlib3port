@@ -65,10 +65,12 @@ def uniformSpaceCore : UniformSpace.Core R where
               _ = ε := by rw [div_add_div_same, add_self_div_two]
               
           simpa [CompRel]
+#align is_absolute_value.uniform_space_core IsAbsoluteValue.uniformSpaceCore
 
 /-- The uniform structure coming from an absolute value. -/
 def uniformSpace : UniformSpace R :=
   UniformSpace.ofCore (uniformSpaceCore abv)
+#align is_absolute_value.uniform_space IsAbsoluteValue.uniformSpace
 
 theorem mem_uniformity {s : Set (R × R)} :
     s ∈ (uniformSpaceCore abv).uniformity ↔ ∃ ε > 0, ∀ {a b : R}, abv (b - a) < ε → (a, b) ∈ s := by
@@ -81,6 +83,7 @@ theorem mem_uniformity {s : Set (R × R)} :
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
     exact ⟨⟨min r p, lt_min hr hp⟩, by simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]⟩
     
+#align is_absolute_value.mem_uniformity IsAbsoluteValue.mem_uniformity
 
 end IsAbsoluteValue
 

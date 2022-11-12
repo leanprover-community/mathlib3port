@@ -51,6 +51,7 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
       exact aeval_algebra_map_apply S (⟨x, _⟩ : adjoin K {x}) _
       
     
+#align algebra.adjoin.power_basis_aux Algebra.adjoin.powerBasisAux
 
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. See `algebra.adjoin.power_basis'` for
@@ -61,6 +62,7 @@ noncomputable def adjoin.powerBasis {x : S} (hx : IsIntegral K x) : PowerBasis K
   dim := (minpoly K x).natDegree
   Basis := adjoin.powerBasisAux hx
   basis_eq_pow := Basis.mk_apply _ _
+#align algebra.adjoin.power_basis Algebra.adjoin.powerBasis
 
 end Algebra
 
@@ -73,6 +75,7 @@ noncomputable def PowerBasis.ofGenMemAdjoin {x : S} (B : PowerBasis K S) (hint :
     (hx : B.gen ∈ adjoin K ({x} : Set S)) : PowerBasis K S :=
   (Algebra.adjoin.powerBasis hint).map <|
     (Subalgebra.equivOfEq _ _ <| PowerBasis.adjoin_eq_top_of_gen_mem_adjoin hx).trans Subalgebra.topEquiv
+#align power_basis.of_gen_mem_adjoin PowerBasis.ofGenMemAdjoin
 
 section IsIntegral
 
@@ -123,6 +126,7 @@ theorem reprGenPowIsIntegral [IsDomain S] (hmin : minpoly S B.gen = (minpoly R B
     
   · simp [hij, isIntegralZero]
     
+#align power_basis.repr_gen_pow_is_integral PowerBasis.reprGenPowIsIntegral
 
 variable {B}
 
@@ -141,6 +145,7 @@ theorem reprMulIsIntegral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B.Ba
   refine' isIntegralMul (hy _) (isIntegralMul (hx _) _)
   simp only [coe_basis, ← pow_add]
   refine' repr_gen_pow_is_integral hB hmin _ _
+#align power_basis.repr_mul_is_integral PowerBasis.reprMulIsIntegral
 
 /-- Let `B : power_basis S A` be such that `is_integral R B.gen`, and let `x : A` be and element
 with integral coordinates in the base `B.basis`. Then `is_integral R ((B.basis.repr (x ^ n) i)` for
@@ -164,6 +169,7 @@ theorem reprPowIsIntegral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Basi
     rw [pow_succ]
     exact repr_mul_is_integral hB hx (fun _ => hn _ le_rfl (fun _ => hx _) _) hmin
     
+#align power_basis.repr_pow_is_integral PowerBasis.reprPowIsIntegral
 
 /-- Let `B B' : power_basis K S` be such that `is_integral R B.gen`, and let `P : R[X]` be such that
 `aeval B.gen P = B'.gen`. Then `is_integral R (B.basis.to_matrix B'.basis i j)` for all `i` and `j`
@@ -180,6 +186,7 @@ theorem toMatrixIsIntegral {B B' : PowerBasis K S} {P : R[X]} (h : aeval B.gen P
   rw [Algebra.smul_def, IsScalarTower.algebra_map_apply R K S, ← Algebra.smul_def, LinearEquiv.map_smul,
     algebra_map_smul]
   exact isIntegralSmul _ (repr_gen_pow_is_integral hB hmin _ _)
+#align power_basis.to_matrix_is_integral PowerBasis.toMatrixIsIntegral
 
 end PowerBasis
 

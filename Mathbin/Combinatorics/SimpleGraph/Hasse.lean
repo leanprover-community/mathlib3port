@@ -35,24 +35,29 @@ def hasse : SimpleGraph α where
   Adj a b := a ⋖ b ∨ b ⋖ a
   symm a b := Or.symm
   loopless a h := h.elim (irrefl _) (irrefl _)
+#align simple_graph.hasse SimpleGraph.hasse
 
 variable {α β} {a b : α}
 
 @[simp]
 theorem hasse_adj : (hasse α).Adj a b ↔ a ⋖ b ∨ b ⋖ a :=
   Iff.rfl
+#align simple_graph.hasse_adj SimpleGraph.hasse_adj
 
 /-- `αᵒᵈ` and `α` have the same Hasse diagram. -/
 def hasseDualIso : hasse αᵒᵈ ≃g hasse α :=
   { ofDual with map_rel_iff' := fun a b => by simp [or_comm'] }
+#align simple_graph.hasse_dual_iso SimpleGraph.hasseDualIso
 
 @[simp]
 theorem hasse_dual_iso_apply (a : αᵒᵈ) : hasseDualIso a = ofDual a :=
   rfl
+#align simple_graph.hasse_dual_iso_apply SimpleGraph.hasse_dual_iso_apply
 
 @[simp]
 theorem hasse_dual_iso_symm_apply (a : α) : hasseDualIso.symm a = toDual a :=
   rfl
+#align simple_graph.hasse_dual_iso_symm_apply SimpleGraph.hasse_dual_iso_symm_apply
 
 end Preorder
 
@@ -64,6 +69,7 @@ variable [PartialOrder α] [PartialOrder β]
 theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by
   ext (x y)
   simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2, or_or_or_comm]
+#align simple_graph.hasse_prod SimpleGraph.hasse_prod
 
 end PartialOrder
 
@@ -76,24 +82,29 @@ theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hass
   exact
     refl_trans_gen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_is_max) fun c hc =>
       Or.inr <| covby_succ_of_not_is_max hc.2.not_is_max
+#align simple_graph.hasse_preconnected_of_succ SimpleGraph.hasse_preconnected_of_succ
 
 theorem hasse_preconnected_of_pred [PredOrder α] [IsPredArchimedean α] : (hasse α).Preconnected := fun a b => by
   rw [reachable_iff_refl_trans_gen, ← refl_trans_gen_swap]
   exact
     refl_trans_gen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_is_min) fun c hc =>
       Or.inr <| pred_covby_of_not_is_min hc.1.not_is_min
+#align simple_graph.hasse_preconnected_of_pred SimpleGraph.hasse_preconnected_of_pred
 
 end LinearOrder
 
 /-- The path graph on `n` vertices. -/
 def pathGraph (n : ℕ) : SimpleGraph (Fin n) :=
   hasse _
+#align simple_graph.path_graph SimpleGraph.pathGraph
 
 theorem path_graph_preconnected (n : ℕ) : (pathGraph n).Preconnected :=
   hasse_preconnected_of_succ _
+#align simple_graph.path_graph_preconnected SimpleGraph.path_graph_preconnected
 
 theorem path_graph_connected (n : ℕ) : (pathGraph (n + 1)).Connected :=
   ⟨path_graph_preconnected _⟩
+#align simple_graph.path_graph_connected SimpleGraph.path_graph_connected
 
 end SimpleGraph
 

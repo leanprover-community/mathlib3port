@@ -17,6 +17,7 @@ unsafe structure cfg extends RewriteCfg where
   discharger : tactic Unit := skip
   -- Warning: rewrite_search can't produce tactic scripts when the simplifier is used.
   simplifier : expr → tactic (expr × expr) := fun e => failed
+#align tactic.nth_rewrite.cfg tactic.nth_rewrite.cfg
 
 /-- A data structure to track rewrites of subexpressions.
 The field `exp` contains the new expression,
@@ -27,6 +28,7 @@ unsafe structure tracked_rewrite where
   -- If `addr` is not provided by the underlying implementation of `nth_rewrite` (i.e. kabstract)
   -- `rewrite_search` will not be able to produce tactic scripts.
   addr : Option (List ExprLens.Dir)
+#align tactic.nth_rewrite.tracked_rewrite tactic.nth_rewrite.tracked_rewrite
 
 namespace TrackedRewrite
 
@@ -35,6 +37,7 @@ of a rewritten expression and a proof witness of the rewrite. -/
 unsafe def eval (rw : tracked_rewrite) : tactic (expr × expr) := do
   let prf ← rw.proof
   return (rw, prf)
+#align tactic.nth_rewrite.tracked_rewrite.eval tactic.nth_rewrite.tracked_rewrite.eval
 
 end TrackedRewrite
 

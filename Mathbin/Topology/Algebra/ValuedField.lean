@@ -69,6 +69,7 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0) (
     _ = (v <| x - y) * (v y * v y)⁻¹ := by rw [Valuation.map_sub_swap]
     _ < γ := hyp1'
     
+#align valuation.inversion_estimate Valuation.inversion_estimate
 
 end InversionEstimate
 
@@ -92,6 +93,7 @@ instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] : Top
       simp only [mem_set_of_eq] at y_in
       rw [Units.min_coe, Units.coe_mul, Units.coe_mul] at y_in
       exact Valuation.inversion_estimate _ x_ne y_in }
+#align valued.topological_division_ring Valued.topologicalDivisionRing
 
 /-- A valued division ring is separated. -/
 instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpace K := by
@@ -103,6 +105,7 @@ instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpac
   have vx_ne := (Valuation.ne_zero_iff <| v).mpr x_ne
   let γ' := Units.mk0 _ vx_ne
   exact ⟨γ', fun y hy => by simpa using hy⟩
+#align valued_ring.separated ValuedRing.separated
 
 section
 
@@ -123,6 +126,7 @@ theorem Valued.continuous_valuation [Valued K Γ₀] : Continuous (v : K → Γ�
     rw [ContinuousAt, LinearOrderedCommGroupWithZero.tendsto_of_ne_zero v_ne]
     apply Valued.loc_const v_ne
     
+#align valued.continuous_valuation Valued.continuous_valuation
 
 end
 
@@ -194,14 +198,16 @@ instance (priority := 100) completable : CompletableTopField K :=
           exact mul_le_mul_left' this γ
           
          }
+#align valued.completable Valued.completable
 
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
 /-- The extension of the valuation of a valued field to the completion of the field. -/
 noncomputable def extension : hat K → Γ₀ :=
   Completion.dense_inducing_coe.extend (v : K → Γ₀)
+#align valued.extension Valued.extension
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » V') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » V') -/
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) := by
   refine' completion.dense_inducing_coe.continuous_extend _
   intro x₀
@@ -277,12 +283,14 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       _ = v z₀ := by rw [this, one_mul]
       
     
+#align valued.continuous_extension Valued.continuous_extension
 
 @[simp, norm_cast]
 theorem extension_extends (x : K) : extension (x : hat K) = v x := by
   refine' completion.dense_inducing_coe.extend_eq_of_tendsto _
   rw [← completion.dense_inducing_coe.nhds_eq_comap]
   exact valued.continuous_valuation.continuous_at
+#align valued.extension_extends Valued.extension_extends
 
 /-- the extension of a valuation on a division ring to its completion. -/
 noncomputable def extensionValuation : Valuation (hat K) Γ₀ where
@@ -319,6 +327,7 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀ where
       rw [← le_max_iff]
       exact v.map_add x y
       
+#align valued.extension_valuation Valued.extensionValuation
 
 -- Bourbaki CA VI §5 no.3 Proposition 5 (d)
 theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
@@ -352,6 +361,7 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
     rw [← hy₁] at hx
     exact ⟨⟨y, ⟨y, hx, rfl⟩⟩, hy₂⟩
     
+#align valued.closure_coe_completion_v_lt Valued.closure_coe_completion_v_lt
 
 noncomputable instance valuedCompletion : Valued (hat K) Γ₀ where
   V := extensionValuation
@@ -361,6 +371,7 @@ noncomputable instance valuedCompletion : Valued (hat K) Γ₀ where
       exact exists_congr fun γ => by simp
     simp_rw [← closure_coe_completion_v_lt]
     exact (has_basis_nhds_zero K Γ₀).has_basis_of_dense_inducing completion.dense_inducing_coe
+#align valued.valued_completion Valued.valuedCompletion
 
 end Valued
 

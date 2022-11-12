@@ -49,12 +49,14 @@ open Manifold
 -/
 def EuclideanHalfSpace (n : ℕ) [Zero (Fin n)] : Type :=
   { x : EuclideanSpace ℝ (Fin n) // 0 ≤ x 0 }
+#align euclidean_half_space EuclideanHalfSpace
 
 /-- The quadrant in `ℝ^n`, used to model manifolds with corners, made of all vectors with nonnegative
 coordinates.
 -/
 def EuclideanQuadrant (n : ℕ) : Type :=
   { x : EuclideanSpace ℝ (Fin n) // ∀ i : Fin n, 0 ≤ x i }
+#align euclidean_quadrant EuclideanQuadrant
 
 section
 
@@ -76,12 +78,14 @@ instance : Inhabited (EuclideanQuadrant n) :=
 
 theorem range_half_space (n : ℕ) [Zero (Fin n)] : (Range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } := by
   simp
+#align range_half_space range_half_space
 
 theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Fin n, 0 ≤ y i } := by simp
+#align range_quadrant range_quadrant
 
 end
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
@@ -104,6 +108,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
     simpa only [singleton_pi] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun := (continuous_id.update 0 <| (continuous_apply 0).max continuous_const).subtype_mk _
+#align model_with_corners_euclidean_half_space modelWithCornersEuclideanHalfSpace
 
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_quadrant n)`, used as a
 model for manifolds with corners -/
@@ -128,6 +133,7 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
     Continuous.subtype_mk (continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
+#align model_with_corners_euclidean_quadrant modelWithCornersEuclideanQuadrant
 
 -- mathport name: model_with_corners_self.euclidean
 localized [Manifold]
@@ -187,6 +193,7 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (IccCat x y) (Eucl
     have A : Continuous fun z : ℝ => min (z + x) y := (continuous_id.add continuous_const).min continuous_const
     have B : Continuous fun z : EuclideanSpace ℝ (Fin 1) => z 0 := continuous_apply 0
     exact (A.comp B).comp continuous_subtype_val
+#align Icc_left_chart iccLeftChart
 
 /-- The right chart for the topological space `[x, y]`, defined on `(x,y]` and sending `y` to `0` in
 `euclidean_half_space 1`.
@@ -234,6 +241,7 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (IccCat x y) (Euc
     have A : Continuous fun z : ℝ => max (y - z) x := (continuous_const.sub continuous_id).max continuous_const
     have B : Continuous fun z : EuclideanSpace ℝ (Fin 1) => z 0 := continuous_apply 0
     exact (A.comp B).comp continuous_subtype_val
+#align Icc_right_chart iccRightChart
 
 /-- Charted space structure on `[x, y]`, using only two charts taking values in
 `euclidean_half_space 1`.
@@ -251,6 +259,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
       simpa only [not_lt] using h'
       
   chart_mem_atlas z := by by_cases h':(z : ℝ) < y <;> simp [h']
+#align Icc_manifold iccManifold
 
 /-- The manifold structure on `[x, y]` is smooth.
 -/
@@ -296,6 +305,7 @@ instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorner
   · -- `e = right chart`, `e' = right chart`
     exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_cont_diff_groupoid _ _ _)).1
     
+#align Icc_smooth_manifold iccSmoothManifold
 
 /-! Register the manifold structure on `Icc 0 1`, and also its zero and one. -/
 
@@ -304,6 +314,7 @@ section
 
 theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
   ⟨zero_lt_one⟩
+#align fact_zero_lt_one fact_zero_lt_one
 
 attribute [local instance] fact_zero_lt_one
 

@@ -28,30 +28,37 @@ instance : Module R (MulOpposite M) :=
 /-- The function `op` is a linear equivalence. -/
 def opLinearEquiv : M ≃ₗ[R] Mᵐᵒᵖ :=
   { opAddEquiv with map_smul' := MulOpposite.op_smul }
+#align mul_opposite.op_linear_equiv MulOpposite.opLinearEquiv
 
 @[simp]
 theorem coe_op_linear_equiv : (opLinearEquiv R : M → Mᵐᵒᵖ) = op :=
   rfl
+#align mul_opposite.coe_op_linear_equiv MulOpposite.coe_op_linear_equiv
 
 @[simp]
 theorem coe_op_linear_equiv_symm : ((opLinearEquiv R).symm : Mᵐᵒᵖ → M) = unop :=
   rfl
+#align mul_opposite.coe_op_linear_equiv_symm MulOpposite.coe_op_linear_equiv_symm
 
 @[simp]
 theorem coe_op_linear_equiv_to_linear_map : ((opLinearEquiv R).toLinearMap : M → Mᵐᵒᵖ) = op :=
   rfl
+#align mul_opposite.coe_op_linear_equiv_to_linear_map MulOpposite.coe_op_linear_equiv_to_linear_map
 
 @[simp]
 theorem coe_op_linear_equiv_symm_to_linear_map : ((opLinearEquiv R).symm.toLinearMap : Mᵐᵒᵖ → M) = unop :=
   rfl
+#align mul_opposite.coe_op_linear_equiv_symm_to_linear_map MulOpposite.coe_op_linear_equiv_symm_to_linear_map
 
 @[simp]
 theorem op_linear_equiv_to_add_equiv : (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).toAddEquiv = op_add_equiv :=
   rfl
+#align mul_opposite.op_linear_equiv_to_add_equiv MulOpposite.op_linear_equiv_to_add_equiv
 
 @[simp]
 theorem op_linear_equiv_symm_to_add_equiv : (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).symm.toAddEquiv = opAddEquiv.symm :=
   rfl
+#align mul_opposite.op_linear_equiv_symm_to_add_equiv MulOpposite.op_linear_equiv_symm_to_add_equiv
 
 end MulOpposite
 

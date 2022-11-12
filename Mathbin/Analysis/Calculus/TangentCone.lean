@@ -46,6 +46,7 @@ def TangentConeAt (s : Set E) (x : E) : Set E :=
   { y : E |
     ∃ (c : ℕ → 𝕜)(d : ℕ → E),
       (∀ᶠ n in at_top, x + d n ∈ s) ∧ Tendsto (fun n => ∥c n∥) atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
+#align tangent_cone_at TangentConeAt
 
 /-- A property ensuring that the tangent cone to `s` at `x` spans a dense subset of the whole space.
 The main role of this property is to ensure that the differential within `s` at `x` is unique,
@@ -57,6 +58,7 @@ is automatic when `E` is not `0`-dimensional).
 structure UniqueDiffWithinAt (s : Set E) (x : E) : Prop where
   dense_tangent_cone : Dense (Submodule.span 𝕜 (TangentConeAt 𝕜 s x) : Set E)
   mem_closure : x ∈ Closure s
+#align unique_diff_within_at UniqueDiffWithinAt
 
 /-- A property ensuring that the tangent cone to `s` at any of its points spans a dense subset of
 the whole space.  The main role of this property is to ensure that the differential along `s` is
@@ -64,6 +66,7 @@ unique, hence this name. The uniqueness it asserts is proved in `unique_diff_on.
 `fderiv.lean`. -/
 def UniqueDiffOn (s : Set E) : Prop :=
   ∀ x ∈ s, UniqueDiffWithinAt 𝕜 s x
+#align unique_diff_on UniqueDiffOn
 
 end TangentCone
 
@@ -95,10 +98,12 @@ theorem tangent_cone_univ : TangentConeAt 𝕜 Univ x = univ := by
       simpa [norm_eq_zero] using (ne_of_lt (lt_trans zero_lt_one hw)).symm
     rw [smul_smul, this, one_smul]
     
+#align tangent_cone_univ tangent_cone_univ
 
 theorem tangent_cone_mono (h : s ⊆ t) : TangentConeAt 𝕜 s x ⊆ TangentConeAt 𝕜 t x := by
   rintro y ⟨c, d, ds, ctop, clim⟩
   exact ⟨c, d, mem_of_superset ds fun n hn => h hn, ctop, clim⟩
+#align tangent_cone_mono tangent_cone_mono
 
 /-- Auxiliary lemma ensuring that, under the assumptions defining the tangent cone,
 the sequence `d` tends to 0 at infinity. -/
@@ -115,22 +120,26 @@ theorem TangentConeAt.lim_zero {α : Type _} (l : Filter α) {c : α → 𝕜} {
   have D : tendsto (fun n => ∥d n∥) l (𝓝 0) := tendsto.congr' this C
   rw [tendsto_zero_iff_norm_tendsto_zero]
   exact D
+#align tangent_cone_at.lim_zero TangentConeAt.lim_zero
 
 theorem tangent_cone_mono_nhds (h : 𝓝[s] x ≤ 𝓝[t] x) : TangentConeAt 𝕜 s x ⊆ TangentConeAt 𝕜 t x := by
   rintro y ⟨c, d, ds, ctop, clim⟩
   refine' ⟨c, d, _, ctop, clim⟩
   suffices : tendsto (fun n => x + d n) at_top (𝓝[t] x)
   exact tendsto_principal.1 (tendsto_inf.1 this).2
-  refine' (tendsto_inf.2 ⟨_, tendsto_principal.2 ds⟩).monoRight h
+  refine' (tendsto_inf.2 ⟨_, tendsto_principal.2 ds⟩).mono_right h
   simpa only [add_zero] using tendsto_const_nhds.add (TangentConeAt.lim_zero at_top ctop clim)
+#align tangent_cone_mono_nhds tangent_cone_mono_nhds
 
 /-- Tangent cone of `s` at `x` depends only on `𝓝[s] x`. -/
 theorem tangent_cone_congr (h : 𝓝[s] x = 𝓝[t] x) : TangentConeAt 𝕜 s x = TangentConeAt 𝕜 t x :=
   Subset.antisymm (tangent_cone_mono_nhds <| le_of_eq h) (tangent_cone_mono_nhds <| le_of_eq h.symm)
+#align tangent_cone_congr tangent_cone_congr
 
 /-- Intersecting with a neighborhood of the point does not change the tangent cone. -/
 theorem tangent_cone_inter_nhds (ht : t ∈ 𝓝 x) : TangentConeAt 𝕜 (s ∩ t) x = TangentConeAt 𝕜 s x :=
   tangent_cone_congr (nhds_within_restrict' _ ht).symm
+#align tangent_cone_inter_nhds tangent_cone_inter_nhds
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -153,6 +162,7 @@ theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ Closure t)
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
     
+#align subset_tangent_cone_prod_left subset_tangent_cone_prod_left
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -175,9 +185,10 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
     
+#align subset_tangent_cone_prod_right subset_tangent_cone_prod_right
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
 theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _} [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] {s : ∀ i, Set (E i)} {x : ∀ i, E i} {i : ι}
@@ -204,6 +215,7 @@ theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type 
       exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
       
     
+#align maps_to_tangent_cone_pi maps_to_tangent_cone_pi
 
 /-- If a subset of a real vector space contains an open segment, then the direction of this
 segment belongs to the tangent cone at its endpoints. -/
@@ -243,12 +255,14 @@ theorem mem_tangent_cone_of_open_segment_subset {s : Set G} {x y : G} (h : OpenS
     rw [this]
     apply tendsto_const_nhds
     
+#align mem_tangent_cone_of_open_segment_subset mem_tangent_cone_of_open_segment_subset
 
 /-- If a subset of a real vector space contains a segment, then the direction of this
 segment belongs to the tangent cone at its endpoints. -/
 theorem mem_tangent_cone_of_segment_subset {s : Set G} {x y : G} (h : Segment ℝ x y ⊆ s) :
     y - x ∈ TangentConeAt ℝ s x :=
   mem_tangent_cone_of_open_segment_subset ((open_segment_subset_segment ℝ x y).trans h)
+#align mem_tangent_cone_of_segment_subset mem_tangent_cone_of_segment_subset
 
 end TangentCone
 
@@ -264,49 +278,64 @@ This section is devoted to properties of the predicates
 theorem UniqueDiffOn.uniqueDiffWithinAt {s : Set E} {x} (hs : UniqueDiffOn 𝕜 s) (h : x ∈ s) :
     UniqueDiffWithinAt 𝕜 s x :=
   hs x h
+#align unique_diff_on.unique_diff_within_at UniqueDiffOn.uniqueDiffWithinAt
 
 theorem uniqueDiffWithinAtUniv : UniqueDiffWithinAt 𝕜 Univ x := by
   rw [unique_diff_within_at_iff, tangent_cone_univ]
   simp
+#align unique_diff_within_at_univ uniqueDiffWithinAtUniv
 
 theorem uniqueDiffOnUniv : UniqueDiffOn 𝕜 (Univ : Set E) := fun x hx => uniqueDiffWithinAtUniv
+#align unique_diff_on_univ uniqueDiffOnUniv
 
 theorem uniqueDiffOnEmpty : UniqueDiffOn 𝕜 (∅ : Set E) := fun x hx => hx.elim
+#align unique_diff_on_empty uniqueDiffOnEmpty
 
 theorem UniqueDiffWithinAt.monoNhds (h : UniqueDiffWithinAt 𝕜 s x) (st : 𝓝[s] x ≤ 𝓝[t] x) : UniqueDiffWithinAt 𝕜 t x :=
   by
   simp only [unique_diff_within_at_iff] at *
   rw [mem_closure_iff_nhds_within_ne_bot] at h⊢
   exact ⟨h.1.mono <| Submodule.span_mono <| tangent_cone_mono_nhds st, h.2.mono st⟩
+#align unique_diff_within_at.mono_nhds UniqueDiffWithinAt.monoNhds
 
 theorem UniqueDiffWithinAt.mono (h : UniqueDiffWithinAt 𝕜 s x) (st : s ⊆ t) : UniqueDiffWithinAt 𝕜 t x :=
   h.monoNhds <| nhds_within_mono _ st
+#align unique_diff_within_at.mono UniqueDiffWithinAt.mono
 
 theorem unique_diff_within_at_congr (st : 𝓝[s] x = 𝓝[t] x) : UniqueDiffWithinAt 𝕜 s x ↔ UniqueDiffWithinAt 𝕜 t x :=
   ⟨fun h => h.monoNhds <| le_of_eq st, fun h => h.monoNhds <| le_of_eq st.symm⟩
+#align unique_diff_within_at_congr unique_diff_within_at_congr
 
 theorem unique_diff_within_at_inter (ht : t ∈ 𝓝 x) : UniqueDiffWithinAt 𝕜 (s ∩ t) x ↔ UniqueDiffWithinAt 𝕜 s x :=
   unique_diff_within_at_congr <| (nhds_within_restrict' _ ht).symm
+#align unique_diff_within_at_inter unique_diff_within_at_inter
 
 theorem UniqueDiffWithinAt.inter (hs : UniqueDiffWithinAt 𝕜 s x) (ht : t ∈ 𝓝 x) : UniqueDiffWithinAt 𝕜 (s ∩ t) x :=
   (unique_diff_within_at_inter ht).2 hs
+#align unique_diff_within_at.inter UniqueDiffWithinAt.inter
 
 theorem unique_diff_within_at_inter' (ht : t ∈ 𝓝[s] x) : UniqueDiffWithinAt 𝕜 (s ∩ t) x ↔ UniqueDiffWithinAt 𝕜 s x :=
   unique_diff_within_at_congr <| (nhds_within_restrict'' _ ht).symm
+#align unique_diff_within_at_inter' unique_diff_within_at_inter'
 
 theorem UniqueDiffWithinAt.inter' (hs : UniqueDiffWithinAt 𝕜 s x) (ht : t ∈ 𝓝[s] x) : UniqueDiffWithinAt 𝕜 (s ∩ t) x :=
   (unique_diff_within_at_inter' ht).2 hs
+#align unique_diff_within_at.inter' UniqueDiffWithinAt.inter'
 
 theorem uniqueDiffWithinAtOfMemNhds (h : s ∈ 𝓝 x) : UniqueDiffWithinAt 𝕜 s x := by
   simpa only [univ_inter] using unique_diff_within_at_univ.inter h
+#align unique_diff_within_at_of_mem_nhds uniqueDiffWithinAtOfMemNhds
 
 theorem IsOpen.uniqueDiffWithinAt (hs : IsOpen s) (xs : x ∈ s) : UniqueDiffWithinAt 𝕜 s x :=
   uniqueDiffWithinAtOfMemNhds (IsOpen.mem_nhds hs xs)
+#align is_open.unique_diff_within_at IsOpen.uniqueDiffWithinAt
 
 theorem UniqueDiffOn.inter (hs : UniqueDiffOn 𝕜 s) (ht : IsOpen t) : UniqueDiffOn 𝕜 (s ∩ t) := fun x hx =>
   (hs x hx.1).inter (IsOpen.mem_nhds ht hx.2)
+#align unique_diff_on.inter UniqueDiffOn.inter
 
 theorem IsOpen.uniqueDiffOn (hs : IsOpen s) : UniqueDiffOn 𝕜 s := fun x hx => IsOpen.uniqueDiffWithinAt hs hx
+#align is_open.unique_diff_on IsOpen.uniqueDiffOn
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -321,41 +350,42 @@ theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt �
     Submodule.span_mono (union_subset (subset_tangent_cone_prod_left ht.2) (subset_tangent_cone_prod_right hs.2))
   rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this
   exact (hs.1.Prod ht.1).mono this
+#align unique_diff_within_at.prod UniqueDiffWithinAt.prod
 
 theorem UniqueDiffWithinAt.univPi (ι : Type _) [Finite ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i) (h : ∀ i, UniqueDiffWithinAt 𝕜 (s i) (x i)) :
     UniqueDiffWithinAt 𝕜 (Set.Pi Univ s) x := by
-  classical
-  simp only [unique_diff_within_at_iff, closure_pi_set] at h⊢
-  refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
-  norm_cast
-  simp only [← Submodule.supr_map_single, supr_le_iff, LinearMap.map_span, Submodule.span_le, ← maps_to']
-  exact fun i => (maps_to_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
+  classical simp only [unique_diff_within_at_iff, closure_pi_set] at h⊢
+    norm_cast
+    exact fun i => (maps_to_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
+#align unique_diff_within_at.univ_pi UniqueDiffWithinAt.univPi
 
 theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i) (I : Set ι)
     (h : ∀ i ∈ I, UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.Pi I s) x := by
-  classical
-  rw [← Set.univ_pi_piecewise]
-  refine' UniqueDiffWithinAt.univPi _ _ _ _ fun i => _
-  by_cases hi:i ∈ I <;> simp [*, uniqueDiffWithinAtUniv]
+  classical rw [← Set.univ_pi_piecewise]
+    by_cases hi:i ∈ I <;> simp [*, uniqueDiffWithinAtUniv]
+#align unique_diff_within_at.pi UniqueDiffWithinAt.pi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two sets of unique differentiability is a set of unique differentiability. -/
 theorem UniqueDiffOn.prod {t : Set F} (hs : UniqueDiffOn 𝕜 s) (ht : UniqueDiffOn 𝕜 t) : UniqueDiffOn 𝕜 (s ×ˢ t) :=
   fun ⟨x, y⟩ h => UniqueDiffWithinAt.prod (hs x h.1) (ht y h.2)
+#align unique_diff_on.prod UniqueDiffOn.prod
 
 /-- The finite product of a family of sets of unique differentiability is a set of unique
 differentiability. -/
 theorem UniqueDiffOn.pi (ι : Type _) [Finite ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (I : Set ι) (h : ∀ i ∈ I, UniqueDiffOn 𝕜 (s i)) :
     UniqueDiffOn 𝕜 (Set.Pi I s) := fun x hx => (UniqueDiffWithinAt.pi _ _ _ _ _) fun i hi => h i hi (x i) (hx i hi)
+#align unique_diff_on.pi UniqueDiffOn.pi
 
 /-- The finite product of a family of sets of unique differentiability is a set of unique
 differentiability. -/
 theorem UniqueDiffOn.univPi (ι : Type _) [Finite ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (h : ∀ i, UniqueDiffOn 𝕜 (s i)) : UniqueDiffOn 𝕜 (Set.Pi Univ s) :=
   (UniqueDiffOn.pi _ _ _ _) fun i _ => h i
+#align unique_diff_on.univ_pi UniqueDiffOn.univPi
 
 /-- In a real vector space, a convex set with nonempty interior is a set of unique
 differentiability at every point of its closure. -/
@@ -372,50 +402,64 @@ theorem uniqueDiffWithinAtConvex {s : Set G} (conv : Convex ℝ s) (hs : (Interi
   rintro _ ⟨z, zs, rfl⟩
   refine' mem_tangent_cone_of_open_segment_subset (subset.trans _ interior_subset)
   exact conv.open_segment_closure_interior_subset_interior hx zs
+#align unique_diff_within_at_convex uniqueDiffWithinAtConvex
 
 /-- In a real vector space, a convex set with nonempty interior is a set of unique
 differentiability. -/
 theorem uniqueDiffOnConvex {s : Set G} (conv : Convex ℝ s) (hs : (Interior s).Nonempty) : UniqueDiffOn ℝ s :=
   fun x xs => uniqueDiffWithinAtConvex conv hs (subset_closure xs)
+#align unique_diff_on_convex uniqueDiffOnConvex
 
 theorem uniqueDiffOnIci (a : ℝ) : UniqueDiffOn ℝ (IciCat a) :=
   uniqueDiffOnConvex (convex_Ici a) <| by simp only [interior_Ici, nonempty_Ioi]
+#align unique_diff_on_Ici uniqueDiffOnIci
 
 theorem uniqueDiffOnIic (a : ℝ) : UniqueDiffOn ℝ (IicCat a) :=
   uniqueDiffOnConvex (convex_Iic a) <| by simp only [interior_Iic, nonempty_Iio]
+#align unique_diff_on_Iic uniqueDiffOnIic
 
 theorem uniqueDiffOnIoi (a : ℝ) : UniqueDiffOn ℝ (IoiCat a) :=
   is_open_Ioi.UniqueDiffOn
+#align unique_diff_on_Ioi uniqueDiffOnIoi
 
 theorem uniqueDiffOnIio (a : ℝ) : UniqueDiffOn ℝ (IioCat a) :=
   is_open_Iio.UniqueDiffOn
+#align unique_diff_on_Iio uniqueDiffOnIio
 
 theorem uniqueDiffOnIcc {a b : ℝ} (hab : a < b) : UniqueDiffOn ℝ (IccCat a b) :=
   uniqueDiffOnConvex (convex_Icc a b) <| by simp only [interior_Icc, nonempty_Ioo, hab]
+#align unique_diff_on_Icc uniqueDiffOnIcc
 
 theorem uniqueDiffOnIco (a b : ℝ) : UniqueDiffOn ℝ (IcoCat a b) :=
   if hab : a < b then uniqueDiffOnConvex (convex_Ico a b) <| by simp only [interior_Ico, nonempty_Ioo, hab]
   else by simp only [Ico_eq_empty hab, uniqueDiffOnEmpty]
+#align unique_diff_on_Ico uniqueDiffOnIco
 
 theorem uniqueDiffOnIoc (a b : ℝ) : UniqueDiffOn ℝ (IocCat a b) :=
   if hab : a < b then uniqueDiffOnConvex (convex_Ioc a b) <| by simp only [interior_Ioc, nonempty_Ioo, hab]
   else by simp only [Ioc_eq_empty hab, uniqueDiffOnEmpty]
+#align unique_diff_on_Ioc uniqueDiffOnIoc
 
 theorem uniqueDiffOnIoo (a b : ℝ) : UniqueDiffOn ℝ (IooCat a b) :=
   is_open_Ioo.UniqueDiffOn
+#align unique_diff_on_Ioo uniqueDiffOnIoo
 
 /-- The real interval `[0, 1]` is a set of unique differentiability. -/
 theorem uniqueDiffOnIccZeroOne : UniqueDiffOn ℝ (IccCat (0 : ℝ) 1) :=
   uniqueDiffOnIcc zero_lt_one
+#align unique_diff_on_Icc_zero_one uniqueDiffOnIccZeroOne
 
 theorem uniqueDiffWithinAtIoo {a b t : ℝ} (ht : t ∈ Set.IooCat a b) : UniqueDiffWithinAt ℝ (Set.IooCat a b) t :=
   IsOpen.uniqueDiffWithinAt is_open_Ioo ht
+#align unique_diff_within_at_Ioo uniqueDiffWithinAtIoo
 
 theorem uniqueDiffWithinAtIoi (a : ℝ) : UniqueDiffWithinAt ℝ (IoiCat a) a :=
   uniqueDiffWithinAtConvex (convex_Ioi a) (by simp) (by simp)
+#align unique_diff_within_at_Ioi uniqueDiffWithinAtIoi
 
 theorem uniqueDiffWithinAtIio (a : ℝ) : UniqueDiffWithinAt ℝ (IioCat a) a :=
   uniqueDiffWithinAtConvex (convex_Iio a) (by simp) (by simp)
+#align unique_diff_within_at_Iio uniqueDiffWithinAtIio
 
 end UniqueDiff
 

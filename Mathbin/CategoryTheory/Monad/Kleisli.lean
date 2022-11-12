@@ -31,6 +31,7 @@ thing as objects of the base category `C`.
 @[nolint unused_arguments]
 def Kleisli (T : Monad C) :=
   C
+#align category_theory.kleisli CategoryTheory.Kleisli
 
 namespace Kleisli
 
@@ -51,6 +52,7 @@ instance Kleisli.category : Category (Kleisli T) where
   assoc' W X Y Z f g h := by
     simp only [functor.map_comp, category.assoc, monad.assoc]
     erw [T.μ.naturality_assoc]
+#align category_theory.kleisli.kleisli.category CategoryTheory.Kleisli.Kleisli.category
 
 namespace Adjunction
 
@@ -62,6 +64,7 @@ def toKleisli : C ⥤ Kleisli T where
   map_comp' X Y Z f g := by
     unfold_projs
     simp [← T.η.naturality g]
+#align category_theory.kleisli.adjunction.to_kleisli CategoryTheory.Kleisli.Adjunction.toKleisli
 
 /-- The right adjoint of the adjunction which induces the monad `(T, η_ T, μ_ T)`. -/
 @[simps]
@@ -74,6 +77,7 @@ def fromKleisli : Kleisli T ⥤ C where
     simp only [functor.map_comp, category.assoc]
     erw [← T.μ.naturality_assoc g, T.assoc]
     rfl
+#align category_theory.kleisli.adjunction.from_kleisli CategoryTheory.Kleisli.Adjunction.fromKleisli
 
 /-- The Kleisli adjunction which gives rise to the monad `(T, η_ T, μ_ T)`.
     cf Lemma 5.2.11 of [Riehl][riehl2017]. -/
@@ -86,12 +90,15 @@ def adj : toKleisli T ⊣ fromKleisli T :=
         rw [category.assoc, ← T.η.naturality_assoc g, functor.id_map]
         dsimp
         simp [monad.left_unit] }
+#align category_theory.kleisli.adjunction.adj CategoryTheory.Kleisli.Adjunction.adj
 
 /-- The composition of the adjunction gives the original functor. -/
 def toKleisliCompFromKleisliIsoSelf : toKleisli T ⋙ fromKleisli T ≅ T :=
   NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
     dsimp
     simp
+#align
+  category_theory.kleisli.adjunction.to_kleisli_comp_from_kleisli_iso_self CategoryTheory.Kleisli.Adjunction.toKleisliCompFromKleisliIsoSelf
 
 end Adjunction
 
@@ -103,6 +110,7 @@ thing as objects of the base category `C`.
 @[nolint unused_arguments]
 def Cokleisli (U : Comonad C) :=
   C
+#align category_theory.cokleisli CategoryTheory.Cokleisli
 
 namespace Cokleisli
 
@@ -120,6 +128,7 @@ instance Cokleisli.category : Category (Cokleisli U) where
   assoc' W X Y Z f g h := by
     unfold_projs
     simp only [functor.map_comp, ← category.assoc, U.δ.naturality_assoc, functor.comp_map, U.coassoc]
+#align category_theory.cokleisli.cokleisli.category CategoryTheory.Cokleisli.Cokleisli.category
 
 namespace Adjunction
 
@@ -131,6 +140,7 @@ def toCokleisli : C ⥤ Cokleisli U where
   map_comp' X Y Z f g := by
     unfold_projs
     simp [← U.ε.naturality g]
+#align category_theory.cokleisli.adjunction.to_cokleisli CategoryTheory.Cokleisli.Adjunction.toCokleisli
 
 /-- The left adjoint of the adjunction which induces the comonad `(U, ε_ U, δ_ U)`. -/
 @[simps]
@@ -144,6 +154,7 @@ def fromCokleisli : Cokleisli U ⥤ C where
     simp only [functor.map_comp, ← category.assoc]
     rw [comonad.coassoc]
     simp only [category.assoc, nat_trans.naturality, functor.comp_map]
+#align category_theory.cokleisli.adjunction.from_cokleisli CategoryTheory.Cokleisli.Adjunction.fromCokleisli
 
 /-- The co-Kleisli adjunction which gives rise to the monad `(U, ε_ U, δ_ U)`. -/
 def adj : fromCokleisli U ⊣ toCokleisli U :=
@@ -155,12 +166,15 @@ def adj : fromCokleisli U ⊣ toCokleisli U :=
         erw [← category.assoc (U.map f), U.ε.naturality]
         dsimp
         simp only [← category.assoc, comonad.left_counit, category.id_comp] }
+#align category_theory.cokleisli.adjunction.adj CategoryTheory.Cokleisli.Adjunction.adj
 
 /-- The composition of the adjunction gives the original functor. -/
 def toCokleisliCompFromCokleisliIsoSelf : toCokleisli U ⋙ fromCokleisli U ≅ U :=
   NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
     dsimp
     simp
+#align
+  category_theory.cokleisli.adjunction.to_cokleisli_comp_from_cokleisli_iso_self CategoryTheory.Cokleisli.Adjunction.toCokleisliCompFromCokleisliIsoSelf
 
 end Adjunction
 

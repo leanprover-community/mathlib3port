@@ -59,13 +59,15 @@ structure InjectiveResolutionCat (Z : C) where
   exact₀ : Exact (ι.f 0) (cocomplex.d 0 1) := by infer_instance
   exact : ∀ n, Exact (cocomplex.d n (n + 1)) (cocomplex.d (n + 1) (n + 2)) := by infer_instance
   Mono : Mono (ι.f 0) := by infer_instance
+#align category_theory.InjectiveResolution CategoryTheory.InjectiveResolutionCat
 
 attribute [instance] InjectiveResolution.injective InjectiveResolution.mono
 
-/- ./././Mathport/Syntax/Translate/Command.lean:353:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- An object admits a injective resolution. -/
 class HasInjectiveResolution (Z : C) : Prop where
   out : Nonempty (InjectiveResolutionCat Z)
+#align category_theory.has_injective_resolution CategoryTheory.HasInjectiveResolution
 
 section
 
@@ -75,6 +77,7 @@ variable (C)
 `[enough_injectives C]` and `[abelian C]`. -/
 class HasInjectiveResolutions : Prop where
   out : ∀ Z : C, HasInjectiveResolution Z
+#align category_theory.has_injective_resolutions CategoryTheory.HasInjectiveResolutions
 
 attribute [instance] has_injective_resolutions.out
 
@@ -87,15 +90,19 @@ theorem ι_f_succ {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : I.ι.f (n +
   apply zero_of_source_iso_zero
   dsimp
   rfl
+#align category_theory.InjectiveResolution.ι_f_succ CategoryTheory.InjectiveResolutionCat.ι_f_succ
 
 @[simp]
 theorem ι_f_zero_comp_complex_d {Z : C} (I : InjectiveResolutionCat Z) : I.ι.f 0 ≫ I.cocomplex.d 0 1 = 0 :=
   I.exact₀.w
+#align
+  category_theory.InjectiveResolution.ι_f_zero_comp_complex_d CategoryTheory.InjectiveResolutionCat.ι_f_zero_comp_complex_d
 
 @[simp]
 theorem complex_d_comp {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) :
     I.cocomplex.d n (n + 1) ≫ I.cocomplex.d (n + 1) (n + 2) = 0 :=
   (I.exact _).w
+#align category_theory.InjectiveResolution.complex_d_comp CategoryTheory.InjectiveResolutionCat.complex_d_comp
 
 instance {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : CategoryTheory.Mono (I.ι.f n) := by cases n <;> infer_instance
 
@@ -117,6 +124,7 @@ def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolutionCat Z where
   Mono := by
     dsimp
     infer_instance
+#align category_theory.InjectiveResolution.self CategoryTheory.InjectiveResolutionCat.self
 
 end InjectiveResolutionCat
 

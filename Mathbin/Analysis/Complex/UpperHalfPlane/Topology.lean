@@ -31,18 +31,23 @@ instance : TopologicalSpace ℍ :=
 
 theorem open_embedding_coe : OpenEmbedding (coe : ℍ → ℂ) :=
   IsOpen.open_embedding_subtype_coe <| is_open_lt continuous_const Complex.continuous_im
+#align upper_half_plane.open_embedding_coe UpperHalfPlane.open_embedding_coe
 
 theorem embedding_coe : Embedding (coe : ℍ → ℂ) :=
   embedding_subtype_coe
+#align upper_half_plane.embedding_coe UpperHalfPlane.embedding_coe
 
 theorem continuous_coe : Continuous (coe : ℍ → ℂ) :=
   embedding_coe.Continuous
+#align upper_half_plane.continuous_coe UpperHalfPlane.continuous_coe
 
 theorem continuous_re : Continuous re :=
   Complex.continuous_re.comp continuous_coe
+#align upper_half_plane.continuous_re UpperHalfPlane.continuous_re
 
 theorem continuous_im : Continuous im :=
   Complex.continuous_im.comp continuous_coe
+#align upper_half_plane.continuous_im UpperHalfPlane.continuous_im
 
 instance : TopologicalSpace.SecondCountableTopology ℍ :=
   TopologicalSpace.Subtype.second_countable_topology _ _

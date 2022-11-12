@@ -29,9 +29,11 @@ variable {α : Type _} {β : Type _} [Encodable β]
 theorem supr_decode₂ [CompleteLattice α] (f : β → α) : (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b := by
   rw [supr_comm]
   simp [mem_decode₂]
+#align encodable.supr_decode₂ Encodable.supr_decode₂
 
 theorem Union_decode₂ (f : β → Set α) : (⋃ (i : ℕ) (b ∈ decode₂ β i), f b) = ⋃ b, f b :=
   supr_decode₂ f
+#align encodable.Union_decode₂ Encodable.Union_decode₂
 
 @[elab_as_elim]
 theorem Union_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C ∅) (H1 : ∀ b, C (f b)) {n} :
@@ -43,13 +45,16 @@ theorem Union_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C 
   | some b => by
     convert H1 b
     simp [ext_iff]
+#align encodable.Union_decode₂_cases Encodable.Union_decode₂_cases
 
 theorem Union_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoint on f)) :
     Pairwise (Disjoint on fun i => ⋃ b ∈ decode₂ β i, f b) := by
-  rintro i j ij x
+  rintro i j ij
+  refine' disjoint_left.mpr fun x => _
   suffices ∀ a, encode a = i → x ∈ f a → ∀ b, encode b = j → x ∉ f b by simpa [decode₂_eq_some]
   rintro a rfl ha b rfl hb
-  exact hd (mt (congr_arg encode) ij) ⟨ha, hb⟩
+  exact (hd (mt (congr_arg encode) ij)).le_bot ⟨ha, hb⟩
+#align encodable.Union_decode₂_disjoint_on Encodable.Union_decode₂_disjoint_on
 
 end Encodable
 

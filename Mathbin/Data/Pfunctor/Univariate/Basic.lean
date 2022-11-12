@@ -26,6 +26,7 @@ elements of `α`.
 structure Pfunctor where
   A : Type u
   B : A → Type u
+#align pfunctor Pfunctor
 
 namespace Pfunctor
 
@@ -37,23 +38,29 @@ variable (P : Pfunctor) {α β : Type u}
 /-- Applying `P` to an object of `Type` -/
 def Obj (α : Type _) :=
   Σx : P.A, P.B x → α
+#align pfunctor.obj Pfunctor.Obj
 
 /-- Applying `P` to a morphism of `Type` -/
 def map {α β : Type _} (f : α → β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, f ∘ g⟩
+#align pfunctor.map Pfunctor.map
 
 instance Obj.inhabited [Inhabited P.A] [Inhabited α] : Inhabited (P.Obj α) :=
   ⟨⟨default, default⟩⟩
+#align pfunctor.obj.inhabited Pfunctor.Obj.inhabited
 
 instance : Functor P.Obj where map := @map P
 
 protected theorem map_eq {α β : Type _} (f : α → β) (a : P.A) (g : P.B a → α) :
     @Functor.map P.Obj _ _ _ f ⟨a, g⟩ = ⟨a, f ∘ g⟩ :=
   rfl
+#align pfunctor.map_eq Pfunctor.map_eq
 
 protected theorem id_map {α : Type _} : ∀ x : P.Obj α, id <$> x = id x := fun ⟨a, b⟩ => rfl
+#align pfunctor.id_map Pfunctor.id_map
 
 protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) : ∀ x : P.Obj α, (g ∘ f) <$> x = g <$> f <$> x :=
   fun ⟨a, b⟩ => rfl
+#align pfunctor.comp_map Pfunctor.comp_map
 
 instance : IsLawfulFunctor P.Obj where
   id_map := @Pfunctor.id_map P
@@ -63,6 +70,7 @@ instance : IsLawfulFunctor P.Obj where
 adapt it to a packaged definition of polynomial functor -/
 def W :=
   WType P.B
+#align pfunctor.W Pfunctor.W
 
 /- inhabitants of W types is awkward to encode as an instance
 assumption because there needs to be a value `a : P.A`
@@ -74,24 +82,30 @@ variable {P}
 /-- root element  of a W tree -/
 def W.head : W P → P.A
   | ⟨a, f⟩ => a
+#align pfunctor.W.head Pfunctor.W.head
 
 /-- children of the root of a W tree -/
 def W.children : ∀ x : W P, P.B (W.head x) → W P
   | ⟨a, f⟩ => f
+#align pfunctor.W.children Pfunctor.W.children
 
 /-- destructor for W-types -/
 def W.dest : W P → P.Obj (W P)
   | ⟨a, f⟩ => ⟨a, f⟩
+#align pfunctor.W.dest Pfunctor.W.dest
 
 /-- constructor for W-types -/
 def W.mk : P.Obj (W P) → W P
   | ⟨a, f⟩ => ⟨a, f⟩
+#align pfunctor.W.mk Pfunctor.W.mk
 
 @[simp]
 theorem W.dest_mk (p : P.Obj (W P)) : W.dest (W.mk p) = p := by cases p <;> rfl
+#align pfunctor.W.dest_mk Pfunctor.W.dest_mk
 
 @[simp]
 theorem W.mk_dest (p : W P) : W.mk (W.dest p) = p := by cases p <;> rfl
+#align pfunctor.W.mk_dest Pfunctor.W.mk_dest
 
 variable (P)
 
@@ -100,9 +114,11 @@ For `F : pfunctor`, `x : F.obj α` and `i : F.Idx`, `i` can designate
 one part of `x` or is invalid, if `i.1 ≠ x.1` -/
 def IdxCat :=
   Σx : P.A, P.B x
+#align pfunctor.Idx Pfunctor.IdxCat
 
 instance IdxCat.inhabited [Inhabited P.A] [Inhabited (P.B default)] : Inhabited P.IdxCat :=
   ⟨⟨default, default⟩⟩
+#align pfunctor.Idx.inhabited Pfunctor.IdxCat.inhabited
 
 variable {P}
 
@@ -110,9 +126,11 @@ variable {P}
 a default value -/
 def Obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.IdxCat) : α :=
   if h : i.1 = x.1 then x.2 (cast (congr_arg _ h) i.2) else default
+#align pfunctor.obj.iget Pfunctor.Obj.iget
 
 @[simp]
 theorem fst_map {α β : Type u} (x : P.Obj α) (f : α → β) : (f <$> x).1 = x.1 := by cases x <;> rfl
+#align pfunctor.fst_map Pfunctor.fst_map
 
 @[simp]
 theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α) (f : α → β) (i : P.IdxCat)
@@ -120,6 +138,7 @@ theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β
   simp only [obj.iget, fst_map, *, dif_pos, eq_self_iff_true]
   cases x
   rfl
+#align pfunctor.iget_map Pfunctor.iget_map
 
 end Pfunctor
 
@@ -131,14 +150,17 @@ namespace Pfunctor
 /-- functor composition for polynomial functors -/
 def comp (P₂ P₁ : Pfunctor.{u}) : Pfunctor.{u} :=
   ⟨Σa₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σu : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
+#align pfunctor.comp Pfunctor.comp
 
 /-- constructor for composition -/
 def comp.mk (P₂ P₁ : Pfunctor.{u}) {α : Type} (x : P₂.Obj (P₁.Obj α)) : (comp P₂ P₁).Obj α :=
   ⟨⟨x.1, Sigma.fst ∘ x.2⟩, fun a₂a₁ => (x.2 a₂a₁.1).2 a₂a₁.2⟩
+#align pfunctor.comp.mk Pfunctor.comp.mk
 
 /-- destructor for composition -/
 def comp.get (P₂ P₁ : Pfunctor.{u}) {α : Type} (x : (comp P₂ P₁).Obj α) : P₂.Obj (P₁.Obj α) :=
   ⟨x.1.1, fun a₂ => ⟨x.1.2 a₂, fun a₁ => x.2 ⟨a₂, a₁⟩⟩⟩
+#align pfunctor.comp.get Pfunctor.comp.get
 
 end Pfunctor
 
@@ -162,6 +184,7 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) : Liftp p x ↔
   use ⟨a, fun i => ⟨f i, pf i⟩⟩
   rw [xeq]
   rfl
+#align pfunctor.liftp_iff Pfunctor.liftp_iff
 
 theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) :
     @Liftp.{u} P.Obj _ α p ⟨a, f⟩ ↔ ∀ i, p (f i) := by
@@ -171,6 +194,7 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) 
     assumption
     
   repeat' first |constructor|assumption
+#align pfunctor.liftp_iff' Pfunctor.liftp_iff'
 
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.Obj α) :
     Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by
@@ -197,6 +221,7 @@ theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.Obj α) :
     
   rw [yeq]
   rfl
+#align pfunctor.liftr_iff Pfunctor.liftr_iff
 
 open Set
 
@@ -214,6 +239,7 @@ theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) : @Supp.{u} P.Obj _ �
     subst x
     tauto
     
+#align pfunctor.supp_eq Pfunctor.supp_eq
 
 end Pfunctor
 

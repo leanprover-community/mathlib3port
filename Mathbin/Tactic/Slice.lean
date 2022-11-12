@@ -16,10 +16,12 @@ unsafe def repeat_with_results {α : Type} (t : tactic α) : tactic (List α) :=
       let s ← repeat_with_results
       return (r :: s)) <|>
     return []
+#align tactic.repeat_with_results tactic.repeat_with_results
 
 unsafe def repeat_count {α : Type} (t : tactic α) : tactic ℕ := do
   let r ← repeat_with_results t
   return r
+#align tactic.repeat_count tactic.repeat_count
 
 end Tactic
 
@@ -33,10 +35,12 @@ unsafe def repeat_with_results {α : Type} (t : tactic α) : tactic (List α) :=
       let s ← repeat_with_results
       return (r :: s)) <|>
     return []
+#align conv.repeat_with_results conv.repeat_with_results
 
 unsafe def repeat_count {α : Type} (t : tactic α) : tactic ℕ := do
   let r ← repeat_with_results t
   return r
+#align conv.repeat_count conv.repeat_count
 
 unsafe def slice (a b : ℕ) : conv Unit := do
   repeat <| to_expr (pquote.1 Category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
@@ -48,16 +52,19 @@ unsafe def slice (a b : ℕ) : conv Unit := do
   repeat <| to_expr (pquote.1 Category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
   rotate 1
   iterate_exactly' (k + 1 + a - b) conv.skip
+#align conv.slice conv.slice
 
 unsafe def slice_lhs (a b : ℕ) (t : conv Unit) : tactic Unit := do
   conv.interactive.to_lhs
   slice a b
   t
+#align conv.slice_lhs conv.slice_lhs
 
 unsafe def slice_rhs (a b : ℕ) (t : conv Unit) : tactic Unit := do
   conv.interactive.to_rhs
   slice a b
   t
+#align conv.slice_rhs conv.slice_rhs
 
 namespace Interactive
 
@@ -68,6 +75,7 @@ Thus if the current focus is `(a ≫ b) ≫ ((c ≫ d) ≫ e)`, then `slice 2 3`
  -/
 unsafe def slice :=
   conv.slice
+#align conv.interactive.slice conv.interactive.slice
 
 end Interactive
 
@@ -83,6 +91,7 @@ private unsafe def conv_target' (c : conv Unit) : tactic Unit := do
   replace_target new_t pr
   try tactic.triv
   try (tactic.reflexivity reducible)
+#align tactic.conv_target' tactic.conv_target'
 
 namespace Interactive
 
@@ -93,12 +102,14 @@ composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invo
 -/
 unsafe def slice_lhs (a b : parse small_nat) (t : conv.interactive.itactic) : tactic Unit := do
   conv_target' ((conv.interactive.to_lhs >> slice a b) >> t)
+#align tactic.interactive.slice_lhs tactic.interactive.slice_lhs
 
 /-- `slice_rhs a b { tac }` zooms to the right hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 -/
 unsafe def slice_rhs (a b : parse small_nat) (t : conv.interactive.itactic) : tactic Unit := do
   conv_target' ((conv.interactive.to_rhs >> slice a b) >> t)
+#align tactic.interactive.slice_rhs tactic.interactive.slice_rhs
 
 end Interactive
 

@@ -53,6 +53,7 @@ variable {𝕜 : Type _}
 def AddCircle [LinearOrderedAddCommGroup 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] (p : 𝕜) :=
   𝕜 ⧸ zmultiples p deriving AddCommGroup, TopologicalSpace, TopologicalAddGroup, Inhabited,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜»
+#align add_circle AddCircle
 
 namespace AddCircle
 
@@ -63,11 +64,13 @@ variable [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] 
 @[continuity, nolint unused_arguments]
 protected theorem continuous_mk' : Continuous (QuotientAddGroup.mk' (zmultiples p) : 𝕜 → AddCircle p) :=
   continuous_coinduced_rng
+#align add_circle.continuous_mk' AddCircle.continuous_mk'
 
 /-- An auxiliary definition used only for constructing `add_circle.equiv_add_circle`. -/
 private def equiv_add_circle_aux (hp : p ≠ 0) : AddCircle p →+ AddCircle q :=
   QuotientAddGroup.lift _ ((QuotientAddGroup.mk' (zmultiples q)).comp <| AddMonoidHom.mulRight (p⁻¹ * q)) fun x h => by
     obtain ⟨z, rfl⟩ := mem_zmultiples_iff.1 h <;> simp [hp, mul_assoc (z : 𝕜), ← mul_assoc p]
+#align add_circle.equiv_add_circle_aux add_circle.equiv_add_circle_aux
 
 /-- The rescaling equivalence between additive circles with different periods. -/
 def equivAddCircle (hp : p ≠ 0) (hq : q ≠ 0) : AddCircle p ≃+ AddCircle q :=
@@ -82,16 +85,19 @@ def equivAddCircle (hp : p ≠ 0) (hq : q ≠ 0) : AddCircle p ≃+ AddCircle q 
       show QuotientAddGroup.mk _ = _
       congr
       field_simp [hp, hq] }
+#align add_circle.equiv_add_circle AddCircle.equivAddCircle
 
 @[simp]
 theorem equiv_add_circle_apply_mk (hp : p ≠ 0) (hq : q ≠ 0) (x : 𝕜) :
     equivAddCircle p q hp hq (x : 𝕜) = (x * (p⁻¹ * q) : 𝕜) :=
   rfl
+#align add_circle.equiv_add_circle_apply_mk AddCircle.equiv_add_circle_apply_mk
 
 @[simp]
 theorem equiv_add_circle_symm_apply_mk (hp : p ≠ 0) (hq : q ≠ 0) (x : 𝕜) :
     (equivAddCircle p q hp hq).symm (x : 𝕜) = (x * (q⁻¹ * p) : 𝕜) :=
   rfl
+#align add_circle.equiv_add_circle_symm_apply_mk AddCircle.equiv_add_circle_symm_apply_mk
 
 variable [FloorRing 𝕜] [hp : Fact (0 < p)]
 
@@ -110,14 +116,17 @@ def equivIco : AddCircle p ≃ IcoCat 0 p where
     change QuotientAddGroup.mk (toIcoMod 0 hp.out x) = QuotientAddGroup.mk x
     rw [QuotientAddGroup.eq', neg_add_eq_sub, self_sub_to_Ico_mod, zsmul_eq_mul]
     apply int_cast_mul_mem_zmultiples
+#align add_circle.equiv_Ico AddCircle.equivIco
 
 @[simp]
 theorem coe_equiv_Ico_mk_apply (x : 𝕜) : (equivIco p <| QuotientAddGroup.mk x : 𝕜) = fract (x / p) * p :=
   to_Ico_mod_eq_fract_mul _ x
+#align add_circle.coe_equiv_Ico_mk_apply AddCircle.coe_equiv_Ico_mk_apply
 
 @[continuity]
 theorem continuous_equiv_Ico_symm : Continuous (equivIco p).symm :=
   continuous_coinduced_rng.comp continuous_induced_dom
+#align add_circle.continuous_equiv_Ico_symm AddCircle.continuous_equiv_Ico_symm
 
 /-- The image of the closed interval `[0, p]` under the quotient map `𝕜 → add_circle p` is the
 entire space. -/
@@ -126,6 +135,7 @@ theorem coe_image_Icc_eq : (coe : 𝕜 → AddCircle p) '' IccCat 0 p = univ := 
   refine' eq_univ_iff_forall.mpr fun x => _
   let y := equiv_Ico p x
   exact ⟨y, ⟨y.2.1, y.2.2.le⟩, (equiv_Ico p).symm_apply_apply x⟩
+#align add_circle.coe_image_Icc_eq AddCircle.coe_image_Icc_eq
 
 instance : DivisibleBy (AddCircle p) ℤ where
   div x n := (↑((n : 𝕜)⁻¹ * (equivIco p x : 𝕜)) : AddCircle p)
@@ -147,6 +157,7 @@ variable (p : ℝ)
 instance compact_space [Fact (0 < p)] : CompactSpace <| AddCircle p := by
   rw [← is_compact_univ_iff, ← coe_image_Icc_eq p]
   exact is_compact_Icc.image (AddCircle.continuous_mk' p)
+#align add_circle.compact_space AddCircle.compact_space
 
 /-- The action on `ℝ` by right multiplication of its the subgroup `zmultiples p` (the multiples of
 `p:ℝ`) is properly discontinuous. -/
@@ -170,11 +181,13 @@ end AddCircle
 
 private theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
   ⟨zero_lt_one⟩
+#align fact_zero_lt_one fact_zero_lt_one
 
 attribute [local instance] fact_zero_lt_one
 
-/- ./././Mathport/Syntax/Translate/Command.lean:297:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:31: unsupported: @[derive] abbrev -/
 /-- The unit circle `ℝ ⧸ ℤ`. -/
 abbrev UnitAddCircle :=
   AddCircle (1 : ℝ)
+#align unit_add_circle UnitAddCircle
 

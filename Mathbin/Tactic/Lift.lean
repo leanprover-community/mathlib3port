@@ -21,6 +21,7 @@ lift, tactic
   Used by the tactic `lift`. -/
 class CanLift (α β : Sort _) (coe : outParam <| β → α) (cond : outParam <| α → Prop) where
   prf : ∀ x : α, cond x → ∃ y : β, coe y = x
+#align can_lift CanLift
 
 instance : CanLift ℤ ℕ coe ((· ≤ ·) 0) :=
   ⟨fun n hn => ⟨n.natAbs, Int.nat_abs_of_nonneg hn⟩⟩
@@ -35,23 +36,26 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
             i) where prf f hf :=
     ⟨fun i => Classical.choose (CanLift.prf (f i) (hf i)),
       funext fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
+#align pi.can_lift Pi.canLift
 
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)] {p : ι → Prop}
     (f : ∀ i : Subtype p, α i) : ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
-  classical
-  refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
-  rintro ⟨i, hi⟩
-  exact dif_pos hi
+  classical refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
+    exact dif_pos hi
+#align subtype.exists_pi_extension Subtype.exists_pi_extension
 
 instance PiSubtype.canLift (ι : Sort _) (α : ι → Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
     CanLift (∀ i : Subtype p, α i) (∀ i, α i) (fun f i => f i) fun _ =>
       True where prf f _ := Subtype.exists_pi_extension f
+#align pi_subtype.can_lift PiSubtype.canLift
 
 instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : ι → Prop) :
     CanLift (Subtype p → α) (ι → α) (fun f i => f i) fun _ => True :=
   PiSubtype.canLift ι (fun _ => α) p
+#align pi_subtype.can_lift' PiSubtype.canLift'
 
 instance Subtype.canLift {α : Sort _} (p : α → Prop) : CanLift α { x // p x } coe p where prf a ha := ⟨⟨a, ha⟩, rfl⟩
+#align subtype.can_lift Subtype.canLift
 
 open Tactic
 
@@ -80,6 +84,7 @@ unsafe def get_lift_prf (h : Option pexpr) (e P : expr) : tactic (expr × Bool) 
       let prf ← assert prf_nm expected_prf_ty
       swap
       return (prf, ff)
+#align tactic.get_lift_prf tactic.get_lift_prf
 
 /-- Lift the expression `p` to the type `t`, with proof obligation given by `h`.
   The list `n` is used for the two newly generated names, and to specify whether `h` should
@@ -137,6 +142,7 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
       if h_prf_nm : prf_nm ∧ n 2 ≠ prf_nm then get_local (Option.get h_prf_nm.1) >>= clear
     else skip
   if b then skip else swap
+#align tactic.lift tactic.lift
 
 setup_tactic_parser
 
@@ -144,10 +150,12 @@ setup_tactic_parser
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
   parser.optional (tk "using" *> texpr)
+#align tactic.using_texpr tactic.using_texpr
 
 /-- Parses a token "to" followed by a trailing `pexpr`. -/
 unsafe def to_texpr :=
   tk "to" *> texpr
+#align tactic.to_texpr tactic.to_texpr
 
 namespace Interactive
 
@@ -192,6 +200,7 @@ subtype) to propositions about `ℤ` (the supertype), without changing the type 
 unsafe def lift (p : parse texpr) (t : parse to_texpr) (h : parse using_texpr) (n : parse with_ident_list) :
     tactic Unit :=
   tactic.lift p t h n
+#align tactic.interactive.lift tactic.interactive.lift
 
 add_tactic_doc
   { Name := "lift", category := DocCategory.tactic, declNames := [`tactic.interactive.lift], tags := ["coercions"] }

@@ -41,6 +41,7 @@ def unitary (R : Type _) [Monoid R] [StarSemigroup R] : Submonoid R where
         _ = 1 := by rw [hB₂, mul_one, hA₂]
         
       
+#align unitary unitary
 
 variable {R : Type _}
 
@@ -52,21 +53,26 @@ variable [Monoid R] [StarSemigroup R]
 
 theorem mem_iff {U : R} : U ∈ unitary R ↔ star U * U = 1 ∧ U * star U = 1 :=
   Iff.rfl
+#align unitary.mem_iff unitary.mem_iff
 
 @[simp]
 theorem star_mul_self_of_mem {U : R} (hU : U ∈ unitary R) : star U * U = 1 :=
   hU.1
+#align unitary.star_mul_self_of_mem unitary.star_mul_self_of_mem
 
 @[simp]
 theorem mul_star_self_of_mem {U : R} (hU : U ∈ unitary R) : U * star U = 1 :=
   hU.2
+#align unitary.mul_star_self_of_mem unitary.mul_star_self_of_mem
 
 theorem star_mem {U : R} (hU : U ∈ unitary R) : star U ∈ unitary R :=
   ⟨by rw [star_star, mul_star_self_of_mem hU], by rw [star_star, star_mul_self_of_mem hU]⟩
+#align unitary.star_mem unitary.star_mem
 
 @[simp]
 theorem star_mem_iff {U : R} : star U ∈ unitary R ↔ U ∈ unitary R :=
   ⟨fun h => star_star U ▸ star_mem h, star_mem⟩
+#align unitary.star_mem_iff unitary.star_mem_iff
 
 instance : HasStar (unitary R) :=
   ⟨fun U => ⟨star U, star_mem U.Prop⟩⟩
@@ -74,20 +80,25 @@ instance : HasStar (unitary R) :=
 @[simp, norm_cast]
 theorem coe_star {U : unitary R} : ↑(star U) = (star U : R) :=
   rfl
+#align unitary.coe_star unitary.coe_star
 
 theorem coe_star_mul_self (U : unitary R) : (star U : R) * U = 1 :=
   star_mul_self_of_mem U.Prop
+#align unitary.coe_star_mul_self unitary.coe_star_mul_self
 
 theorem coe_mul_star_self (U : unitary R) : (U : R) * star U = 1 :=
   mul_star_self_of_mem U.Prop
+#align unitary.coe_mul_star_self unitary.coe_mul_star_self
 
 @[simp]
 theorem star_mul_self (U : unitary R) : star U * U = 1 :=
   Subtype.ext <| coe_star_mul_self U
+#align unitary.star_mul_self unitary.star_mul_self
 
 @[simp]
 theorem mul_star_self (U : unitary R) : U * star U = 1 :=
   Subtype.ext <| coe_mul_star_self U
+#align unitary.mul_star_self unitary.mul_star_self
 
 instance : Group (unitary R) :=
   { Submonoid.toMonoid _ with inv := star, mul_left_inv := star_mul_self }
@@ -107,9 +118,11 @@ instance : Inhabited (unitary R) :=
 
 theorem star_eq_inv (U : unitary R) : star U = U⁻¹ :=
   rfl
+#align unitary.star_eq_inv unitary.star_eq_inv
 
 theorem star_eq_inv' : (star : unitary R → unitary R) = Inv.inv :=
   rfl
+#align unitary.star_eq_inv' unitary.star_eq_inv'
 
 /-- The unitary elements embed into the units. -/
 @[simps]
@@ -117,9 +130,11 @@ def toUnits : unitary R →* Rˣ where
   toFun x := ⟨x, ↑x⁻¹, coe_mul_star_self x, coe_star_mul_self x⟩
   map_one' := Units.ext rfl
   map_mul' x y := Units.ext rfl
+#align unitary.to_units unitary.toUnits
 
 theorem to_units_injective : Function.Injective (toUnits : unitary R → Rˣ) := fun x y h =>
   Subtype.ext <| Units.ext_iff.mp h
+#align unitary.to_units_injective unitary.to_units_injective
 
 end Monoid
 
@@ -132,9 +147,11 @@ instance : CommGroup (unitary R) :=
 
 theorem mem_iff_star_mul_self {U : R} : U ∈ unitary R ↔ star U * U = 1 :=
   mem_iff.trans <| and_iff_left_of_imp fun h => mul_comm (star U) U ▸ h
+#align unitary.mem_iff_star_mul_self unitary.mem_iff_star_mul_self
 
 theorem mem_iff_self_mul_star {U : R} : U ∈ unitary R ↔ U * star U = 1 :=
   mem_iff.trans <| and_iff_right_of_imp fun h => mul_comm U (star U) ▸ h
+#align unitary.mem_iff_self_mul_star unitary.mem_iff_self_mul_star
 
 end CommMonoid
 
@@ -145,10 +162,12 @@ variable [GroupWithZero R] [StarSemigroup R]
 @[norm_cast]
 theorem coe_inv (U : unitary R) : ↑U⁻¹ = (U⁻¹ : R) :=
   eq_inv_of_mul_eq_one_right <| coe_mul_star_self _
+#align unitary.coe_inv unitary.coe_inv
 
 @[norm_cast]
 theorem coe_div (U₁ U₂ : unitary R) : ↑(U₁ / U₂) = (U₁ / U₂ : R) := by
   simp only [div_eq_mul_inv, coe_inv, Submonoid.coe_mul]
+#align unitary.coe_div unitary.coe_div
 
 @[norm_cast]
 theorem coe_zpow (U : unitary R) (z : ℤ) : ↑(U ^ z) = (U ^ z : R) := by
@@ -157,6 +176,7 @@ theorem coe_zpow (U : unitary R) (z : ℤ) : ↑(U ^ z) = (U ^ z : R) := by
     
   · simp [coe_inv]
     
+#align unitary.coe_zpow unitary.coe_zpow
 
 end GroupWithZero
 
@@ -173,6 +193,7 @@ instance :
 @[norm_cast]
 theorem coe_neg (U : unitary R) : ↑(-U) = (-U : R) :=
   rfl
+#align unitary.coe_neg unitary.coe_neg
 
 instance : HasDistribNeg (unitary R) :=
   Subtype.coe_injective.HasDistribNeg _ coe_neg (unitary R).coe_mul

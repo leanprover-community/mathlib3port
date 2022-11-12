@@ -109,18 +109,22 @@ variable [Preorder α]
 @[simp]
 theorem of_mul_le {a b : α} : ofMul a ≤ ofMul b ↔ a ≤ b :=
   Iff.rfl
+#align additive.of_mul_le Additive.of_mul_le
 
 @[simp]
 theorem of_mul_lt {a b : α} : ofMul a < ofMul b ↔ a < b :=
   Iff.rfl
+#align additive.of_mul_lt Additive.of_mul_lt
 
 @[simp]
 theorem to_mul_le {a b : Additive α} : toMul a ≤ toMul b ↔ a ≤ b :=
   Iff.rfl
+#align additive.to_mul_le Additive.to_mul_le
 
 @[simp]
 theorem to_mul_lt {a b : Additive α} : toMul a < toMul b ↔ a < b :=
   Iff.rfl
+#align additive.to_mul_lt Additive.to_mul_lt
 
 end Additive
 
@@ -131,18 +135,22 @@ variable [Preorder α]
 @[simp]
 theorem of_add_le {a b : α} : ofAdd a ≤ ofAdd b ↔ a ≤ b :=
   Iff.rfl
+#align multiplicative.of_add_le Multiplicative.of_add_le
 
 @[simp]
 theorem of_add_lt {a b : α} : ofAdd a < ofAdd b ↔ a < b :=
   Iff.rfl
+#align multiplicative.of_add_lt Multiplicative.of_add_lt
 
 @[simp]
 theorem to_add_le {a b : Multiplicative α} : toAdd a ≤ toAdd b ↔ a ≤ b :=
   Iff.rfl
+#align multiplicative.to_add_le Multiplicative.to_add_le
 
 @[simp]
 theorem to_add_lt {a b : Multiplicative α} : toAdd a < toAdd b ↔ a < b :=
   Iff.rfl
+#align multiplicative.to_add_lt Multiplicative.to_add_lt
 
 end Multiplicative
 

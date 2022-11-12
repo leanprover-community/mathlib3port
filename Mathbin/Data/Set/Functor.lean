@@ -29,24 +29,29 @@ instance : Monad.{u} Set where
 @[simp]
 theorem bind_def : s >>= f = ⋃ i ∈ s, f i :=
   rfl
+#align set.bind_def Set.bind_def
 
 @[simp]
 theorem fmap_eq_image (f : α → β) : f <$> s = f '' s :=
   rfl
+#align set.fmap_eq_image Set.fmap_eq_image
 
 @[simp]
 theorem seq_eq_set_seq (s : Set (α → β)) (t : Set α) : s <*> t = s.seq t :=
   rfl
+#align set.seq_eq_set_seq Set.seq_eq_set_seq
 
 @[simp]
 theorem pure_def (a : α) : (pure a : Set α) = {a} :=
   rfl
+#align set.pure_def Set.pure_def
 
 /-- `set.image2` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/
 theorem image2_def {α β γ : Type _} (f : α → β → γ) (s : Set α) (t : Set β) : Image2 f s t = f <$> s <*> t := by
   ext
   simp
+#align set.image2_def Set.image2_def
 
 instance : LawfulMonad Set where
   id_map α := image_id

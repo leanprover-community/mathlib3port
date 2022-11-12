@@ -38,6 +38,7 @@ variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [C
 theorem norm_le_norm_one (φ : CharacterSpace 𝕜 A) : ∥toNormedDual (φ : WeakDual 𝕜 A)∥ ≤ ∥(1 : A)∥ :=
   (ContinuousLinearMap.op_norm_le_bound _ (norm_nonneg (1 : A))) fun a =>
     mul_comm ∥a∥ ∥(1 : A)∥ ▸ Spectrum.norm_le_norm_mul_of_mem (apply_mem_spectrum φ a)
+#align weak_dual.character_space.norm_le_norm_one WeakDual.CharacterSpace.norm_le_norm_one
 
 instance [ProperSpace 𝕜] : CompactSpace (CharacterSpace 𝕜 A) := by
   rw [← is_compact_iff_compact_space]

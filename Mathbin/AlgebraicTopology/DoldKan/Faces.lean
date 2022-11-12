@@ -56,6 +56,7 @@ possible values of a nonzero `j`. Otherwise, when `q ≥ n+2`, all the compositi
 the identity `φ ≫ (P q).f (n+1) = φ`. -/
 def HigherFacesVanish {Y : C} {n : ℕ} (q : ℕ) (φ : Y ⟶ X _[n + 1]) : Prop :=
   ∀ j : Fin (n + 1), n + 1 ≤ (j : ℕ) + q → φ ≫ X.δ j.succ = 0
+#align algebraic_topology.dold_kan.higher_faces_vanish AlgebraicTopology.DoldKan.HigherFacesVanish
 
 namespace HigherFacesVanish
 
@@ -67,18 +68,22 @@ theorem comp_δ_eq_zero {Y : C} {n : ℕ} {q : ℕ} {φ : Y ⟶ X _[n + 1]} (v :
   apply v i
   rw [← @Nat.add_le_add_iff_right 1, add_assoc]
   simpa only [Fin.coe_succ, add_assoc, add_comm 1] using hj₂
+#align
+  algebraic_topology.dold_kan.higher_faces_vanish.comp_δ_eq_zero AlgebraicTopology.DoldKan.HigherFacesVanish.comp_δ_eq_zero
 
 theorem of_succ {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish (q + 1) φ) : HigherFacesVanish q φ :=
   fun j hj => v j (by simpa only [← add_assoc] using le_add_right hj)
+#align algebraic_topology.dold_kan.higher_faces_vanish.of_succ AlgebraicTopology.DoldKan.HigherFacesVanish.of_succ
 
 theorem of_comp {Y Z : C} {q n : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) (f : Z ⟶ Y) :
     HigherFacesVanish q (f ≫ φ) := fun j hj => by rw [assoc, v j hj, comp_zero]
+#align algebraic_topology.dold_kan.higher_faces_vanish.of_comp AlgebraicTopology.DoldKan.HigherFacesVanish.of_comp
 
 theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) (hnaq : n = a + q) :
     φ ≫ (hσ q).f (n + 1) =
-      -(φ ≫
+      -φ ≫
           X.δ ⟨a + 1, Nat.succ_lt_succ (Nat.lt_succ_iff.mpr (Nat.le.intro hnaq.symm))⟩ ≫
-            X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro hnaq.symm)⟩) :=
+            X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro hnaq.symm)⟩ :=
   by
   have hnaq_shift : ∀ d : ℕ, n + d = a + d + q := by
     intro d
@@ -153,6 +158,7 @@ conv_lhs =>
     congr
     ring
     
+#align algebraic_topology.dold_kan.higher_faces_vanish.comp_Hσ_eq AlgebraicTopology.DoldKan.HigherFacesVanish.comp_Hσ_eq
 
 theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) (hqn : n < q) :
     φ ≫ (hσ q).f (n + 1) = 0 := by
@@ -186,6 +192,8 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
         
       
     
+#align
+  algebraic_topology.dold_kan.higher_faces_vanish.comp_Hσ_eq_zero AlgebraicTopology.DoldKan.HigherFacesVanish.comp_Hσ_eq_zero
 
 theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
     HigherFacesVanish (q + 1) (φ ≫ (𝟙 _ + hσ q).f (n + 1)) := by
@@ -243,6 +251,7 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
       
     simp only [← assoc, v j (by linarith), zero_comp]
     
+#align algebraic_topology.dold_kan.higher_faces_vanish.induction AlgebraicTopology.DoldKan.HigherFacesVanish.induction
 
 end HigherFacesVanish
 

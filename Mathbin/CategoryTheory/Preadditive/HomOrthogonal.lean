@@ -51,6 +51,7 @@ there is at most one morphism between distinct objects.
 (In a category with zero morphisms, that must be the zero morphism.) -/
 def HomOrthogonal {ι : Type _} (s : ι → C) : Prop :=
   ∀ i j, i ≠ j → Subsingleton (s i ⟶ s j)
+#align category_theory.hom_orthogonal CategoryTheory.HomOrthogonal
 
 namespace HomOrthogonal
 
@@ -59,6 +60,7 @@ variable {ι : Type _} {s : ι → C}
 theorem eq_zero [HasZeroMorphisms C] (o : HomOrthogonal s) {i j : ι} (w : i ≠ j) (f : s i ⟶ s j) : f = 0 := by
   haveI := o i j w
   apply Subsingleton.elim
+#align category_theory.hom_orthogonal.eq_zero CategoryTheory.HomOrthogonal.eq_zero
 
 section
 
@@ -100,6 +102,7 @@ noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fint
     simp only [Set.mem_preimage, Set.mem_singleton_iff]
     simp [w.symm]
     rfl
+#align category_theory.hom_orthogonal.matrix_decomposition CategoryTheory.HomOrthogonal.matrixDecomposition
 
 end
 
@@ -117,6 +120,8 @@ noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Typ
       ext
       dsimp [biproduct.components]
       simp }
+#align
+  category_theory.hom_orthogonal.matrix_decomposition_add_equiv CategoryTheory.HomOrthogonal.matrixDecompositionAddEquiv
 
 @[simp]
 theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f : α → ι} (i : ι) :
@@ -132,6 +137,7 @@ theorem matrix_decomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {
   · convert comp_zero
     simpa using biproduct.ι_π_ne _ (Ne.symm h)
     
+#align category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrix_decomposition_id
 
 theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintype α] [Fintype β] [Fintype γ] {f : α → ι}
     {g : β → ι} {h : γ → ι} (z : (⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b))
@@ -157,6 +163,7 @@ theorem matrix_decomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Finty
     convert comp_zero
     apply o.eq_zero nm
     
+#align category_theory.hom_orthogonal.matrix_decomposition_comp CategoryTheory.HomOrthogonal.matrix_decomposition_comp
 
 section
 
@@ -172,6 +179,8 @@ noncomputable def matrixDecompositionLinearEquiv (o : HomOrthogonal s) {α β : 
       ext
       dsimp [biproduct.components]
       simp }
+#align
+  category_theory.hom_orthogonal.matrix_decomposition_linear_equiv CategoryTheory.HomOrthogonal.matrixDecompositionLinearEquiv
 
 end
 
@@ -202,6 +211,7 @@ theorem equiv_of_iso (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype 
       (by
         rw [← o.matrix_decomposition_comp]
         simp)
+#align category_theory.hom_orthogonal.equiv_of_iso CategoryTheory.HomOrthogonal.equiv_of_iso
 
 end
 

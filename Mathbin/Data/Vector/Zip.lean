@@ -19,11 +19,13 @@ variable {α β γ : Type _} {n : ℕ} (f : α → β → γ)
 
 /-- Apply the function `f : α → β → γ` to each corresponding pair of elements from two vectors. -/
 def zipWith : Vector α n → Vector β n → Vector γ n := fun x y => ⟨List.zipWith f x.1 y.1, by simp⟩
+#align vector.zip_with Vector.zipWith
 
 @[simp]
 theorem zip_with_to_list (x : Vector α n) (y : Vector β n) :
     (Vector.zipWith f x y).toList = List.zipWith f x.toList y.toList :=
   rfl
+#align vector.zip_with_to_list Vector.zip_with_to_list
 
 @[simp]
 theorem zip_with_nth (x : Vector α n) (y : Vector β n) (i) : (Vector.zipWith f x y).nth i = f (x.nth i) (y.nth i) := by
@@ -32,17 +34,20 @@ theorem zip_with_nth (x : Vector α n) (y : Vector β n) (i) : (Vector.zipWith f
   cases y
   simp only [List.nth_le_zip_with, Subtype.coe_mk]
   congr
+#align vector.zip_with_nth Vector.zip_with_nth
 
 @[simp]
 theorem zip_with_tail (x : Vector α n) (y : Vector β n) :
     (Vector.zipWith f x y).tail = Vector.zipWith f x.tail y.tail := by
   ext
   simp [nth_tail]
+#align vector.zip_with_tail Vector.zip_with_tail
 
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zip_with [CommMonoid α] (x y : Vector α n) :
     x.toList.Prod * y.toList.Prod = (Vector.zipWith (· * ·) x y).toList.Prod :=
   List.prod_mul_prod_eq_prod_zip_with_of_length_eq x.toList y.toList ((to_list_length x).trans (to_list_length y).symm)
+#align vector.prod_mul_prod_eq_prod_zip_with Vector.prod_mul_prod_eq_prod_zip_with
 
 end ZipWith
 

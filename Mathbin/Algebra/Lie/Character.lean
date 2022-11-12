@@ -34,12 +34,14 @@ variable (R : Type u) (L : Type v) [CommRing R] [LieRing L] [LieAlgebra R L]
 /-- A character of a Lie algebra is a morphism to the scalars. -/
 abbrev LieCharacter :=
   L →ₗ⁅R⁆ R
+#align lie_algebra.lie_character LieAlgebra.LieCharacter
 
 variable {R L}
 
 @[simp]
 theorem lie_character_apply_lie (χ : LieCharacter R L) (x y : L) : χ ⁅x, y⁆ = 0 := by
   rw [LieHom.map_lie, LieRing.of_associative_ring_bracket, mul_comm, sub_self]
+#align lie_algebra.lie_character_apply_lie LieAlgebra.lie_character_apply_lie
 
 theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L} (h : x ∈ derivedSeries R L 1) : χ x = 0 := by
   rw [derived_series_def, derived_series_of_ideal_succ, derived_series_of_ideal_zero, ← LieSubmodule.mem_coe_submodule,
@@ -56,6 +58,7 @@ theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L} (h : 
   · intro t y hy
     rw [LieHom.map_smul, hy, smul_zero]
     
+#align lie_algebra.lie_character_apply_of_mem_derived LieAlgebra.lie_character_apply_of_mem_derived
 
 /-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps]
@@ -72,6 +75,7 @@ def lieCharacterEquivLinearDual [IsLieAbelian L] : LieCharacter R L ≃ Module.D
   right_inv ψ := by
     ext
     rfl
+#align lie_algebra.lie_character_equiv_linear_dual LieAlgebra.lieCharacterEquivLinearDual
 
 end LieAlgebra
 

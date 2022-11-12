@@ -85,20 +85,24 @@ variable (R S) [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S]
 /-- Given non-unital semirings `R`, `S`, the natural projection homomorphism from `R × S` to `R`.-/
 def fst : R × S →ₙ+* R :=
   { MulHom.fst R S, AddMonoidHom.fst R S with toFun := Prod.fst }
+#align non_unital_ring_hom.fst NonUnitalRingHom.fst
 
 /-- Given non-unital semirings `R`, `S`, the natural projection homomorphism from `R × S` to `S`.-/
 def snd : R × S →ₙ+* S :=
   { MulHom.snd R S, AddMonoidHom.snd R S with toFun := Prod.snd }
+#align non_unital_ring_hom.snd NonUnitalRingHom.snd
 
 variable {R S}
 
 @[simp]
 theorem coe_fst : ⇑(fst R S) = Prod.fst :=
   rfl
+#align non_unital_ring_hom.coe_fst NonUnitalRingHom.coe_fst
 
 @[simp]
 theorem coe_snd : ⇑(snd R S) = Prod.snd :=
   rfl
+#align non_unital_ring_hom.coe_snd NonUnitalRingHom.coe_snd
 
 section Prod
 
@@ -109,25 +113,30 @@ variable [NonUnitalNonAssocSemiring T] (f : R →ₙ+* S) (g : R →ₙ+* T)
 protected def prod (f : R →ₙ+* S) (g : R →ₙ+* T) : R →ₙ+* S × T :=
   { MulHom.prod (f : MulHom R S) (g : MulHom R T), AddMonoidHom.prod (f : R →+ S) (g : R →+ T) with
     toFun := fun x => (f x, g x) }
+#align non_unital_ring_hom.prod NonUnitalRingHom.prod
 
 @[simp]
 theorem prod_apply (x) : f.Prod g x = (f x, g x) :=
   rfl
+#align non_unital_ring_hom.prod_apply NonUnitalRingHom.prod_apply
 
 @[simp]
 theorem fst_comp_prod : (fst S T).comp (f.Prod g) = f :=
   ext fun x => rfl
+#align non_unital_ring_hom.fst_comp_prod NonUnitalRingHom.fst_comp_prod
 
 @[simp]
 theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
   ext fun x => rfl
+#align non_unital_ring_hom.snd_comp_prod NonUnitalRingHom.snd_comp_prod
 
 theorem prod_unique (f : R →ₙ+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
   ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+#align non_unital_ring_hom.prod_unique NonUnitalRingHom.prod_unique
 
 end Prod
 
-section prod_map
+section Prod_map
 
 variable [NonUnitalNonAssocSemiring R'] [NonUnitalNonAssocSemiring S'] [NonUnitalNonAssocSemiring T]
 
@@ -136,19 +145,23 @@ variable (f : R →ₙ+* R') (g : S →ₙ+* S')
 /-- `prod.map` as a `non_unital_ring_hom`. -/
 def prodMap : R × S →ₙ+* R' × S' :=
   (f.comp (fst R S)).Prod (g.comp (snd R S))
+#align non_unital_ring_hom.prod_map NonUnitalRingHom.prodMap
 
 theorem prod_map_def : prodMap f g = (f.comp (fst R S)).Prod (g.comp (snd R S)) :=
   rfl
+#align non_unital_ring_hom.prod_map_def NonUnitalRingHom.prod_map_def
 
 @[simp]
 theorem coe_prod_map : ⇑(prodMap f g) = Prod.map f g :=
   rfl
+#align non_unital_ring_hom.coe_prod_map NonUnitalRingHom.coe_prod_map
 
 theorem prod_comp_prod_map (f : T →ₙ+* R) (g : T →ₙ+* S) (f' : R →ₙ+* R') (g' : S →ₙ+* S') :
     (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
+#align non_unital_ring_hom.prod_comp_prod_map NonUnitalRingHom.prod_comp_prod_map
 
-end prod_map
+end Prod_map
 
 end NonUnitalRingHom
 
@@ -159,20 +172,24 @@ variable (R S) [NonAssocSemiring R] [NonAssocSemiring S]
 /-- Given semirings `R`, `S`, the natural projection homomorphism from `R × S` to `R`.-/
 def fst : R × S →+* R :=
   { MonoidHom.fst R S, AddMonoidHom.fst R S with toFun := Prod.fst }
+#align ring_hom.fst RingHom.fst
 
 /-- Given semirings `R`, `S`, the natural projection homomorphism from `R × S` to `S`.-/
 def snd : R × S →+* S :=
   { MonoidHom.snd R S, AddMonoidHom.snd R S with toFun := Prod.snd }
+#align ring_hom.snd RingHom.snd
 
 variable {R S}
 
 @[simp]
 theorem coe_fst : ⇑(fst R S) = Prod.fst :=
   rfl
+#align ring_hom.coe_fst RingHom.coe_fst
 
 @[simp]
 theorem coe_snd : ⇑(snd R S) = Prod.snd :=
   rfl
+#align ring_hom.coe_snd RingHom.coe_snd
 
 section Prod
 
@@ -183,25 +200,30 @@ given by `(f.prod g) x = (f x, g x)` -/
 protected def prod (f : R →+* S) (g : R →+* T) : R →+* S × T :=
   { MonoidHom.prod (f : R →* S) (g : R →* T), AddMonoidHom.prod (f : R →+ S) (g : R →+ T) with
     toFun := fun x => (f x, g x) }
+#align ring_hom.prod RingHom.prod
 
 @[simp]
 theorem prod_apply (x) : f.Prod g x = (f x, g x) :=
   rfl
+#align ring_hom.prod_apply RingHom.prod_apply
 
 @[simp]
 theorem fst_comp_prod : (fst S T).comp (f.Prod g) = f :=
   ext fun x => rfl
+#align ring_hom.fst_comp_prod RingHom.fst_comp_prod
 
 @[simp]
 theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
   ext fun x => rfl
+#align ring_hom.snd_comp_prod RingHom.snd_comp_prod
 
 theorem prod_unique (f : R →+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
   ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+#align ring_hom.prod_unique RingHom.prod_unique
 
 end Prod
 
-section prod_map
+section Prod_map
 
 variable [NonAssocSemiring R'] [NonAssocSemiring S'] [NonAssocSemiring T]
 
@@ -210,19 +232,23 @@ variable (f : R →+* R') (g : S →+* S')
 /-- `prod.map` as a `ring_hom`. -/
 def prodMap : R × S →+* R' × S' :=
   (f.comp (fst R S)).Prod (g.comp (snd R S))
+#align ring_hom.prod_map RingHom.prodMap
 
 theorem prod_map_def : prodMap f g = (f.comp (fst R S)).Prod (g.comp (snd R S)) :=
   rfl
+#align ring_hom.prod_map_def RingHom.prod_map_def
 
 @[simp]
 theorem coe_prod_map : ⇑(prodMap f g) = Prod.map f g :=
   rfl
+#align ring_hom.coe_prod_map RingHom.coe_prod_map
 
 theorem prod_comp_prod_map (f : T →+* R) (g : T →+* S) (f' : R →+* R') (g' : S →+* S') :
     (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
+#align ring_hom.prod_comp_prod_map RingHom.prod_comp_prod_map
 
-end prod_map
+end Prod_map
 
 end RingHom
 
@@ -233,22 +259,27 @@ variable {R S} [NonAssocSemiring R] [NonAssocSemiring S]
 /-- Swapping components as an equivalence of (semi)rings. -/
 def prodComm : R × S ≃+* S × R :=
   { AddEquiv.prodComm, MulEquiv.prodComm with }
+#align ring_equiv.prod_comm RingEquiv.prodComm
 
 @[simp]
 theorem coe_prod_comm : ⇑(prodComm : R × S ≃+* S × R) = Prod.swap :=
   rfl
+#align ring_equiv.coe_prod_comm RingEquiv.coe_prod_comm
 
 @[simp]
 theorem coe_prod_comm_symm : ⇑(prodComm : R × S ≃+* S × R).symm = Prod.swap :=
   rfl
+#align ring_equiv.coe_prod_comm_symm RingEquiv.coe_prod_comm_symm
 
 @[simp]
 theorem fst_comp_coe_prod_comm : (RingHom.fst S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.snd R S :=
   RingHom.ext fun _ => rfl
+#align ring_equiv.fst_comp_coe_prod_comm RingEquiv.fst_comp_coe_prod_comm
 
 @[simp]
 theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.fst R S :=
   RingHom.ext fun _ => rfl
+#align ring_equiv.snd_comp_coe_prod_comm RingEquiv.snd_comp_coe_prod_comm
 
 variable (R S) [Subsingleton S]
 
@@ -261,6 +292,7 @@ def prodZeroRing : R ≃+* R × S where
   map_mul' := by simp
   left_inv x := rfl
   right_inv x := by cases x <;> simp
+#align ring_equiv.prod_zero_ring RingEquiv.prodZeroRing
 
 /-- A ring `R` is isomorphic to `S × R` when `S` is the zero ring -/
 @[simps]
@@ -271,6 +303,7 @@ def zeroRingProd : R ≃+* S × R where
   map_mul' := by simp
   left_inv x := rfl
   right_inv x := by cases x <;> simp
+#align ring_equiv.zero_ring_prod RingEquiv.zeroRingProd
 
 end RingEquiv
 
@@ -284,6 +317,7 @@ theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ring R] [Ring S] [
     
   · exact zero_ne_one h.symm
     
+#align false_of_nontrivial_of_product_domain false_of_nontrivial_of_product_domain
 
 /-! ### Order -/
 

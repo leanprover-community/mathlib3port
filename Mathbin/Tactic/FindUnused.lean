@@ -40,6 +40,7 @@ declarations of the file. -/
 unsafe def main_declaration_attr : user_attribute where
   Name := `main_declaration
   descr := "tag essential declarations to help identify unused definitions"
+#align tactic.main_declaration_attr tactic.main_declaration_attr
 
 /-- `update_unsed_decls_list n m` removes from the map of unneeded declarations those
 referenced by declaration named `n` which is considerred to be a
@@ -52,6 +53,7 @@ private unsafe def update_unsed_decls_list : Name → name_map declaration → t
         let ns := d d
         ns m update_unsed_decls_list
       else pure m
+#align tactic.update_unsed_decls_list tactic.update_unsed_decls_list
 
 /-- In the current file, list all the declaration that are not marked as `@[main_declaration]` and
 that are not referenced by such declarations -/
@@ -62,11 +64,13 @@ unsafe def all_unused (fs : List (Option String)) : tactic (name_map declaration
   ds fun n d => do
       let e ← get_env
       return <| !d e
+#align tactic.all_unused tactic.all_unused
 
 /-- expecting a string literal (e.g. `"src/tactic/find_unused.lean"`)
 -/
 unsafe def parse_file_name (fn : pexpr) : tactic (Option String) :=
   some <$> (to_expr fn >>= eval_expr String) <|> fail "expecting: \"src/dir/file-name\""
+#align tactic.parse_file_name tactic.parse_file_name
 
 setup_tactic_parser
 
@@ -102,6 +106,7 @@ unsafe def unused_decls_cmd (_ : parse <| tk "#list_unused_decls") : lean.parser
       ds fun ⟨n, _⟩ =>
           ← do
             dbg_trace "#print {← n}"
+#align tactic.unused_decls_cmd tactic.unused_decls_cmd
 
 add_tactic_doc
   { Name := "#list_unused_decls", category := DocCategory.cmd, declNames := [`tactic.unused_decls_cmd],

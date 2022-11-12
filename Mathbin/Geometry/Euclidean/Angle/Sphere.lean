@@ -45,12 +45,15 @@ theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq {x y z : V} (hxyne : x ≠ y) 
       rw [o.oangle_sub_right (sub_ne_zero_of_ne hxyne) (sub_ne_zero_of_ne hxzne) hx]
     _ = (2 : ℤ) • o.oangle (y - x) (z - x) := by rw [← oangle_neg_neg, neg_sub, neg_sub]
     
+#align orientation.oangle_eq_two_zsmul_oangle_sub_of_norm_eq Orientation.oangle_eq_two_zsmul_oangle_sub_of_norm_eq
 
 /-- Angle at center of a circle equals twice angle at circumference, oriented vector angle
 form with radius specified. -/
 theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real {x y z : V} (hxyne : x ≠ y) (hxzne : x ≠ z) {r : ℝ}
     (hx : ∥x∥ = r) (hy : ∥y∥ = r) (hz : ∥z∥ = r) : o.oangle y z = (2 : ℤ) • o.oangle (y - x) (z - x) :=
   o.oangle_eq_two_zsmul_oangle_sub_of_norm_eq hxyne hxzne (hy.symm ▸ hx) (hz.symm ▸ hx)
+#align
+  orientation.oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real Orientation.oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real
 
 /-- Oriented vector angle version of "angles in same segment are equal" and "opposite angles of
 a cyclic quadrilateral add to π", for oriented angles mod π (for which those are the same
@@ -60,6 +63,8 @@ theorem two_zsmul_oangle_sub_eq_two_zsmul_oangle_sub_of_norm_eq {x₁ x₂ y z :
     (2 : ℤ) • o.oangle (y - x₁) (z - x₁) = (2 : ℤ) • o.oangle (y - x₂) (z - x₂) :=
   o.oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real hx₁yne hx₁zne hx₁ hy hz ▸
     o.oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real hx₂yne hx₂zne hx₂ hy hz
+#align
+  orientation.two_zsmul_oangle_sub_eq_two_zsmul_oangle_sub_of_norm_eq Orientation.two_zsmul_oangle_sub_eq_two_zsmul_oangle_sub_of_norm_eq
 
 end Orientation
 

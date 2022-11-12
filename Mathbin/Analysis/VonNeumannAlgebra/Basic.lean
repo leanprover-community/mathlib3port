@@ -46,6 +46,7 @@ class WstarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Modul
   exists_predual :
     ∃ (X : Type u)(_ : NormedAddCommGroup X)(_ : NormedSpace ℂ X)(_ : CompleteSpace X),
       Nonempty (NormedSpace.Dual ℂ X ≃ₗᵢ⋆[ℂ] M)
+#align wstar_algebra WstarAlgebra
 
 -- TODO: Without this, `von_neumann_algebra` times out. Why?
 /-- The double commutant definition of a von Neumann algebra,
@@ -66,6 +67,7 @@ and instead will use `⊤ : von_neumann_algebra H`.
 structure VonNeumannAlgebra (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H] extends
   StarSubalgebra ℂ (H →L[ℂ] H) where
   double_commutant : Set.Centralizer (Set.Centralizer carrier) = carrier
+#align von_neumann_algebra VonNeumannAlgebra
 
 /-- Consider a von Neumann algebra acting on a Hilbert space `H` as a *-subalgebra of `H →L[ℂ] H`.
 (That is, we forget that it is equal to its double commutant
@@ -78,7 +80,7 @@ namespace VonNeumannAlgebra
 variable (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H]
 
 instance : SetLike (VonNeumannAlgebra H) (H →L[ℂ] H) :=
-  ⟨VonNeumannAlgebra.Carrier, fun p q h => by cases p <;> cases q <;> congr⟩
+  ⟨VonNeumannAlgebra.Carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
 
 end VonNeumannAlgebra
 

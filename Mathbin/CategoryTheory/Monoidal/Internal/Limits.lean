@@ -41,6 +41,7 @@ and hence sends monoid objects to monoid objects.
 @[simps]
 def limit (F : J ⥤ Mon_ C) : Mon_ C :=
   limLax.mapMon.obj (MonFunctorCategoryEquivalence.inverse.obj F)
+#align Mon_.limit Mon_.limit
 
 /-- Implementation of `Mon_.has_limits`: a limiting cone over a functor `F : J ⥤ Mon_ C`.
 -/
@@ -52,12 +53,14 @@ def limitCone (F : J ⥤ Mon_ C) : Cone F where
       naturality' := fun j j' f => by
         ext
         exact (limit.cone (F ⋙ Mon_.forget C)).π.naturality f }
+#align Mon_.limit_cone Mon_.limitCone
 
 /-- The image of the proposed limit cone for `F : J ⥤ Mon_ C` under the forgetful functor
 `forget C : Mon_ C ⥤ C` is isomorphic to the limit cone of `F ⋙ forget C`.
 -/
 def forgetMapConeLimitConeIso (F : J ⥤ Mon_ C) : (forget C).mapCone (limitCone F) ≅ Limit.cone (F ⋙ forget C) :=
   Cones.ext (Iso.refl _) fun j => by tidy
+#align Mon_.forget_map_cone_limit_cone_iso Mon_.forgetMapConeLimitConeIso
 
 /-- Implementation of `Mon_.has_limits`:
 the proposed cone over a functor `F : J ⥤ Mon_ C` is a limit cone.
@@ -82,12 +85,14 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
     dsimp
     simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
     exact congr_arg Mon_.Hom.hom (w j)
+#align Mon_.limit_cone_is_limit Mon_.limitConeIsLimit
 
 instance has_limits :
     HasLimits
       (Mon_
         C) where HasLimitsOfShape J 𝒥 :=
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
+#align Mon_.has_limits Mon_.has_limits
 
 instance forgetPreservesLimits :
     PreservesLimits
@@ -96,6 +101,7 @@ instance forgetPreservesLimits :
     { PreservesLimit := fun F : J ⥤ Mon_ C =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (is_limit.of_iso_limit (limit.is_limit (F ⋙ Mon_.forget C)) (forget_map_cone_limit_cone_iso F).symm) }
+#align Mon_.forget_preserves_limits Mon_.forgetPreservesLimits
 
 end Mon_
 

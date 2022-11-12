@@ -58,6 +58,7 @@ unsafe def tactic.clear' (clear_dependent : Bool) (hyps : List expr) : tactic Un
   exact v
   let gs ← get_goals
   set_goals <| v :: gs
+#align tactic.clear' tactic.clear'
 
 namespace Tactic.Interactive
 
@@ -77,6 +78,7 @@ end
 unsafe def clear' (p : parse (many ident)) : tactic Unit := do
   let hyps ← p.mmap get_local
   tactic.clear' False hyps
+#align tactic.interactive.clear' tactic.interactive.clear'
 
 /-- A variant of `clear'` which clears not only the given hypotheses, but also any
 other hypotheses depending on them.
@@ -93,6 +95,7 @@ end
 unsafe def clear_dependent (p : parse (many ident)) : tactic Unit := do
   let hyps ← p.mmap get_local
   tactic.clear' True hyps
+#align tactic.interactive.clear_dependent tactic.interactive.clear_dependent
 
 add_tactic_doc
   { Name := "clear'", category := DocCategory.tactic,

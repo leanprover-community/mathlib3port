@@ -36,35 +36,44 @@ section Lcm
 /-- Least common multiple of a multiset -/
 def lcm (s : Multiset α) : α :=
   s.fold GcdMonoid.lcm 1
+#align multiset.lcm Multiset.lcm
 
 @[simp]
 theorem lcm_zero : (0 : Multiset α).lcm = 1 :=
   fold_zero _ _
+#align multiset.lcm_zero Multiset.lcm_zero
 
 @[simp]
 theorem lcm_cons (a : α) (s : Multiset α) : (a ::ₘ s).lcm = GcdMonoid.lcm a s.lcm :=
   fold_cons_left _ _ _ _
+#align multiset.lcm_cons Multiset.lcm_cons
 
 @[simp]
 theorem lcm_singleton {a : α} : ({a} : Multiset α).lcm = normalize a :=
   (fold_singleton _ _ _).trans <| lcm_one_right _
+#align multiset.lcm_singleton Multiset.lcm_singleton
 
 @[simp]
 theorem lcm_add (s₁ s₂ : Multiset α) : (s₁ + s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm :=
   Eq.trans (by simp [lcm]) (fold_add _ _ _ _ _)
+#align multiset.lcm_add Multiset.lcm_add
 
 theorem lcm_dvd {s : Multiset α} {a : α} : s.lcm ∣ a ↔ ∀ b ∈ s, b ∣ a :=
   Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) [or_imp, forall_and, lcm_dvd_iff])
+#align multiset.lcm_dvd Multiset.lcm_dvd
 
 theorem dvd_lcm {s : Multiset α} {a : α} (h : a ∈ s) : a ∣ s.lcm :=
   lcm_dvd.1 dvd_rfl _ h
+#align multiset.dvd_lcm Multiset.dvd_lcm
 
 theorem lcm_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₁.lcm ∣ s₂.lcm :=
   lcm_dvd.2 fun b hb => dvd_lcm (h hb)
+#align multiset.lcm_mono Multiset.lcm_mono
 
 @[simp]
 theorem normalize_lcm (s : Multiset α) : normalize s.lcm = s.lcm :=
   (Multiset.induction_on s (by simp)) fun a s IH => by simp
+#align multiset.normalize_lcm Multiset.normalize_lcm
 
 @[simp]
 theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : α) ∈ s := by
@@ -73,6 +82,7 @@ theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : �
     
   · simp only [mem_cons, lcm_cons, lcm_eq_zero_iff, ihs, @eq_comm _ a]
     
+#align multiset.lcm_eq_zero_iff Multiset.lcm_eq_zero_iff
 
 variable [DecidableEq α]
 
@@ -83,21 +93,25 @@ theorem lcm_dedup (s : Multiset α) : (dedup s).lcm = s.lcm :=
     unfold lcm
     rw [← cons_erase h, fold_cons_left, ← lcm_assoc, lcm_same]
     apply lcm_eq_of_associated_left (associated_normalize _)
+#align multiset.lcm_dedup Multiset.lcm_dedup
 
 @[simp]
 theorem lcm_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm := by
   rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
   simp
+#align multiset.lcm_ndunion Multiset.lcm_ndunion
 
 @[simp]
 theorem lcm_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm := by
   rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
   simp
+#align multiset.lcm_union Multiset.lcm_union
 
 @[simp]
 theorem lcm_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).lcm = GcdMonoid.lcm a s.lcm := by
   rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_cons]
   simp
+#align multiset.lcm_ndinsert Multiset.lcm_ndinsert
 
 end Lcm
 
@@ -109,35 +123,44 @@ section Gcd
 /-- Greatest common divisor of a multiset -/
 def gcd (s : Multiset α) : α :=
   s.fold GcdMonoid.gcd 0
+#align multiset.gcd Multiset.gcd
 
 @[simp]
 theorem gcd_zero : (0 : Multiset α).gcd = 0 :=
   fold_zero _ _
+#align multiset.gcd_zero Multiset.gcd_zero
 
 @[simp]
 theorem gcd_cons (a : α) (s : Multiset α) : (a ::ₘ s).gcd = GcdMonoid.gcd a s.gcd :=
   fold_cons_left _ _ _ _
+#align multiset.gcd_cons Multiset.gcd_cons
 
 @[simp]
 theorem gcd_singleton {a : α} : ({a} : Multiset α).gcd = normalize a :=
   (fold_singleton _ _ _).trans <| gcd_zero_right _
+#align multiset.gcd_singleton Multiset.gcd_singleton
 
 @[simp]
 theorem gcd_add (s₁ s₂ : Multiset α) : (s₁ + s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd :=
   Eq.trans (by simp [gcd]) (fold_add _ _ _ _ _)
+#align multiset.gcd_add Multiset.gcd_add
 
 theorem dvd_gcd {s : Multiset α} {a : α} : a ∣ s.gcd ↔ ∀ b ∈ s, a ∣ b :=
   Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) [or_imp, forall_and, dvd_gcd_iff])
+#align multiset.dvd_gcd Multiset.dvd_gcd
 
 theorem gcd_dvd {s : Multiset α} {a : α} (h : a ∈ s) : s.gcd ∣ a :=
   dvd_gcd.1 dvd_rfl _ h
+#align multiset.gcd_dvd Multiset.gcd_dvd
 
 theorem gcd_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₂.gcd ∣ s₁.gcd :=
   dvd_gcd.2 fun b hb => gcd_dvd (h hb)
+#align multiset.gcd_mono Multiset.gcd_mono
 
 @[simp]
 theorem normalize_gcd (s : Multiset α) : normalize s.gcd = s.gcd :=
   (Multiset.induction_on s (by simp)) fun a s IH => by simp
+#align multiset.normalize_gcd Multiset.normalize_gcd
 
 theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s → x = 0 := by
   constructor
@@ -152,6 +175,7 @@ theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s �
     intro a s sgcd h
     simp [h a (mem_cons_self a s), sgcd fun x hx => h x (mem_cons_of_mem hx)]
     
+#align multiset.gcd_eq_zero_iff Multiset.gcd_eq_zero_iff
 
 theorem gcd_map_mul (a : α) (s : Multiset α) : (s.map ((· * ·) a)).gcd = normalize a * s.gcd := by
   refine' s.induction_on _ fun b s ih => _
@@ -161,6 +185,7 @@ theorem gcd_map_mul (a : α) (s : Multiset α) : (s.map ((· * ·) a)).gcd = nor
     rw [ih]
     apply ((normalize_associated a).mul_right _).gcd_eq_right
     
+#align multiset.gcd_map_mul Multiset.gcd_map_mul
 
 section
 
@@ -173,21 +198,25 @@ theorem gcd_dedup (s : Multiset α) : (dedup s).gcd = s.gcd :=
     unfold gcd
     rw [← cons_erase h, fold_cons_left, ← gcd_assoc, gcd_same]
     apply (associated_normalize _).gcd_eq_left
+#align multiset.gcd_dedup Multiset.gcd_dedup
 
 @[simp]
 theorem gcd_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd := by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
   simp
+#align multiset.gcd_ndunion Multiset.gcd_ndunion
 
 @[simp]
 theorem gcd_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd := by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
   simp
+#align multiset.gcd_union Multiset.gcd_union
 
 @[simp]
 theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GcdMonoid.gcd a s.gcd := by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_cons]
   simp
+#align multiset.gcd_ndinsert Multiset.gcd_ndinsert
 
 end
 
@@ -195,24 +224,20 @@ theorem extract_gcd' (s t : Multiset α) (hs : ∃ x, x ∈ s ∧ x ≠ (0 : α)
   ((@mul_right_eq_self₀ _ _ s.gcd _).1 <| by conv_lhs => rw [← normalize_gcd, ← gcd_map_mul, ← ht]).resolve_right <| by
     contrapose! hs
     exact s.gcd_eq_zero_iff.1 hs
+#align multiset.extract_gcd' Multiset.extract_gcd'
 
 theorem extract_gcd (s : Multiset α) (hs : s ≠ 0) : ∃ t : Multiset α, s = t.map ((· * ·) s.gcd) ∧ t.gcd = 1 := by
-  classical
-  by_cases h:∀ x ∈ s, x = (0 : α)
-  · use repeat 1 s.card
-    rw [map_repeat, eq_repeat, mul_one, s.gcd_eq_zero_iff.2 h, ← nsmul_singleton, ← gcd_dedup]
-    rw [dedup_nsmul (card_pos.2 hs).ne', dedup_singleton, gcd_singleton]
-    exact ⟨⟨rfl, h⟩, normalize_one⟩
-    
-  · choose f hf using @gcd_dvd _ _ _ s
-    have := _
-    push_neg  at h
-    refine' ⟨s.pmap @f fun _ => id, this, extract_gcd' s _ h this⟩
-    rw [map_pmap]
-    conv_lhs => rw [← s.map_id, ← s.pmap_eq_map _ _ fun _ => id]
-    congr with (x hx)
-    rw [id, ← hf hx]
-    
+  classical by_cases h:∀ x ∈ s, x = (0 : α)
+    · choose f hf using @gcd_dvd _ _ _ s
+      have := _
+      push_neg  at h
+      refine' ⟨s.pmap @f fun _ => id, this, extract_gcd' s _ h this⟩
+      rw [map_pmap]
+      conv_lhs => rw [← s.map_id, ← s.pmap_eq_map _ _ fun _ => id]
+      congr with (x hx)
+      rw [id, ← hf hx]
+      
+#align multiset.extract_gcd Multiset.extract_gcd
 
 end Gcd
 

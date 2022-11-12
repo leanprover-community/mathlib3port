@@ -41,4 +41,5 @@ theorem is_conformal_map_iff (f : E →L[ℝ] F) : IsConformalMap f ↔ ∃ c : 
       exact (smul_inv_smul₀ hc.ne' (f x)).symm
       
     
+#align is_conformal_map_iff is_conformal_map_iff
 

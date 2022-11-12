@@ -52,6 +52,7 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
         intro X Y Z f g
         rw [(linear_yoneda R C).map_comp, nat_trans.right_op_comp, nat_trans.left_derived_comp]
         rfl }
+#align Ext ext
 
 open ZeroObject
 
@@ -66,4 +67,5 @@ def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((ext R C (n + 1)).
         congr 1
         dsimp
         decide }
+#align Ext_succ_of_projective extSuccOfProjective
 

@@ -72,6 +72,7 @@ unsafe def guess_degree : expr → tactic expr
     let quote.1 (@Polynomial (%%ₓR) (%%ₓinst)) ← infer_type e
     let pe ← to_expr (pquote.1 (@natDegree (%%ₓR) (%%ₓinst))) true false
     pure <| expr.mk_app pe [e]
+#align tactic.compute_degree.guess_degree tactic.compute_degree.guess_degree
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -121,6 +122,7 @@ unsafe def resolve_sum_step : tactic Unit := do
       focus1 (refine (pquote.1 ((%%ₓn0) rfl).elim) <|> rewrite_target lem1 <|> rewrite_target lem2) <|> skip
     | e =>
       "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+#align tactic.compute_degree.resolve_sum_step tactic.compute_degree.resolve_sum_step
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `norm_assum` simply tries `norm_num` and `assumption`.
@@ -129,6 +131,7 @@ Several side-goals are of the form `m ≤ n`, for natural numbers `m, n` or of t
 with `c` a coefficient of the polynomial `f` in question. -/
 unsafe def norm_assum : tactic Unit :=
   try sorry >> try assumption
+#align tactic.compute_degree.norm_assum tactic.compute_degree.norm_assum
 
 /-- `eval_guessing n e` takes a natural number `n` and an expression `e` and gives an
 estimate for the evaluation of `eval_expr' ℕ e`.  It is tailor made for estimating degrees of
@@ -144,6 +147,7 @@ unsafe def eval_guessing (n : ℕ) : expr → tactic ℕ
   | quote.1 ((%%ₓa) * %%ₓb) => (· * ·) <$> eval_guessing a <*> eval_guessing b
   | quote.1 (max (%%ₓa) (%%ₓb)) => max <$> eval_guessing a <*> eval_guessing b
   | e => eval_expr' ℕ e <|> pure n
+#align tactic.compute_degree.eval_guessing tactic.compute_degree.eval_guessing
 
 /-- A general description of `compute_degree_le_aux` is in the doc-string of `compute_degree`.
 The difference between the two is that `compute_degree_le_aux` makes no effort to close side-goals,
@@ -159,6 +163,7 @@ unsafe def compute_degree_le_aux : tactic Unit := do
         s! "the given polynomial has a term of expected degree
           at least '{expected_deg}'"
     else repeat <| resolve_sum_step
+#align tactic.compute_degree.compute_degree_le_aux tactic.compute_degree.compute_degree_le_aux
 
 end ComputeDegree
 
@@ -196,6 +201,7 @@ unsafe def compute_degree_le : tactic Unit :=
   focus1 <| do
     check_target_changes compute_degree_le_aux
     try <| any_goals' norm_assum
+#align tactic.interactive.compute_degree_le tactic.interactive.compute_degree_le
 
 add_tactic_doc
   { Name := "compute_degree_le", category := DocCategory.tactic, declNames := [`tactic.interactive.compute_degree_le],

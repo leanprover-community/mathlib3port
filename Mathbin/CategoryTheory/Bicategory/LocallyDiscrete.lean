@@ -33,6 +33,7 @@ with the only morphisms being equalities.
 -/
 def LocallyDiscrete (C : Type u) :=
   C
+#align category_theory.locally_discrete CategoryTheory.LocallyDiscrete
 
 namespace LocallyDiscrete
 
@@ -48,11 +49,13 @@ variable {C} [CategoryStruct.{v} C]
 
 instance (priority := 900) homSmallCategory (X Y : LocallyDiscrete C) : SmallCategory (X ⟶ Y) :=
   CategoryTheory.discreteCategory (X ⟶ Y)
+#align category_theory.locally_discrete.hom_small_category CategoryTheory.LocallyDiscrete.homSmallCategory
 
 /-- Extract the equation from a 2-morphism in a locally discrete 2-category. -/
 theorem eq_of_hom {X Y : LocallyDiscrete C} {f g : X ⟶ Y} (η : f ⟶ g) : f = g := by
   have : discrete.mk f.as = discrete.mk g.as := congr_arg discrete.mk (eq_of_hom η)
   simpa using this
+#align category_theory.locally_discrete.eq_of_hom CategoryTheory.LocallyDiscrete.eq_of_hom
 
 end LocallyDiscrete
 
@@ -77,6 +80,7 @@ instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C) where
     eq_to_iso <| by
       unfold_projs
       simp only [category.comp_id, mk_as]
+#align category_theory.locally_discrete_bicategory CategoryTheory.locallyDiscreteBicategory
 
 /-- A locally discrete bicategory is strict. -/
 instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C) where
@@ -95,6 +99,7 @@ instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C) where
     ext1
     unfold_projs
     apply category.assoc
+#align category_theory.locally_discrete_bicategory.strict CategoryTheory.locallyDiscreteBicategory.strict
 
 variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, v₂} B] [Strict B]
 
@@ -108,6 +113,7 @@ def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B wh
   map₂ i j f g η := eqToHom (congr_arg _ (eq_of_hom η))
   map_id i := eqToHom (F.map_id i)
   map_comp i j k f g := eqToHom (F.map_comp f.as g.as)
+#align category_theory.functor.to_oplax_functor CategoryTheory.Functor.toOplaxFunctor
 
 end CategoryTheory
 

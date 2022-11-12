@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
 import Mathbin.Algebra.Group.Defs
-import Mathbin.Logic.Embedding
+import Mathbin.Logic.Embedding.Basic
 
 /-!
 # The embedding of a cancellative semigroup into itself by multiplication by a fixed element.
@@ -24,6 +24,7 @@ by left multiplication by a fixed element.
 def mulLeftEmbedding {G : Type _} [LeftCancelSemigroup G] (g : G) : G ↪ G where
   toFun h := g * h
   inj' := mul_right_injective g
+#align mul_left_embedding mulLeftEmbedding
 
 /-- The embedding of a right cancellative semigroup into itself
 by right multiplication by a fixed element.
@@ -34,12 +35,14 @@ by right multiplication by a fixed element.
 def mulRightEmbedding {G : Type _} [RightCancelSemigroup G] (g : G) : G ↪ G where
   toFun h := h * g
   inj' := mul_left_injective g
+#align mul_right_embedding mulRightEmbedding
 
 @[to_additive]
 theorem mul_left_embedding_eq_mul_right_embedding {G : Type _} [CancelCommMonoid G] (g : G) :
     mulLeftEmbedding g = mulRightEmbedding g := by
   ext
   exact mul_comm _ _
+#align mul_left_embedding_eq_mul_right_embedding mul_left_embedding_eq_mul_right_embedding
 
 end LeftOrRightCancelSemigroup
 

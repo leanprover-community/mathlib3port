@@ -51,6 +51,7 @@ class Decomposition where
   decompose' : M → ⨁ i, ℳ i
   left_inv : Function.LeftInverse (DirectSum.coeAddMonoidHom ℳ) decompose'
   right_inv : Function.RightInverse (DirectSum.coeAddMonoidHom ℳ) decompose'
+#align direct_sum.decomposition DirectSum.Decomposition
 
 include M
 
@@ -66,6 +67,7 @@ variable [Decomposition ℳ]
 
 protected theorem Decomposition.is_internal : DirectSum.IsInternal ℳ :=
   ⟨Decomposition.right_inv.Injective, Decomposition.left_inv.Surjective⟩
+#align direct_sum.decomposition.is_internal DirectSum.Decomposition.is_internal
 
 /-- If `M` is graded by `ι` with degree `i` component `ℳ i`, then it is isomorphic as
 to a direct sum of components. This is the canonical spelling of the `decompose'` field. -/
@@ -74,6 +76,7 @@ def decompose : M ≃ ⨁ i, ℳ i where
   invFun := DirectSum.coeAddMonoidHom ℳ
   left_inv := Decomposition.left_inv
   right_inv := Decomposition.right_inv
+#align direct_sum.decompose DirectSum.decompose
 
 protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0) (h_homogeneous : ∀ {i} (m : ℳ i), p (m : M))
     (h_add : ∀ m m' : M, p m → p m' → p (m + m')) : ∀ m, p m := by
@@ -85,65 +88,80 @@ protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0) (h_
   have mem : ∀ m, m ∈ supr ℳ' := fun m =>
     (DirectSum.IsInternal.add_submonoid_supr_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivial
   exact fun m => AddSubmonoid.supr_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
+#align direct_sum.decomposition.induction_on DirectSum.Decomposition.induction_on
 
 @[simp]
 theorem Decomposition.decompose'_eq : decomposition.decompose' = decompose ℳ :=
   rfl
+#align direct_sum.decomposition.decompose'_eq DirectSum.Decomposition.decompose'_eq
 
 @[simp]
 theorem decompose_symm_of {i : ι} (x : ℳ i) : (decompose ℳ).symm (DirectSum.of _ i x) = x :=
   DirectSum.coe_add_monoid_hom_of ℳ _ _
+#align direct_sum.decompose_symm_of DirectSum.decompose_symm_of
 
 @[simp]
 theorem decompose_coe {i : ι} (x : ℳ i) : decompose ℳ (x : M) = DirectSum.of _ i x := by
   rw [← decompose_symm_of, Equiv.apply_symm_apply]
+#align direct_sum.decompose_coe DirectSum.decompose_coe
 
 theorem decompose_of_mem {x : M} {i : ι} (hx : x ∈ ℳ i) : decompose ℳ x = DirectSum.of (fun i => ℳ i) i ⟨x, hx⟩ :=
   decompose_coe _ ⟨x, hx⟩
+#align direct_sum.decompose_of_mem DirectSum.decompose_of_mem
 
 theorem decompose_of_mem_same {x : M} {i : ι} (hx : x ∈ ℳ i) : (decompose ℳ x i : M) = x := by
   rw [decompose_of_mem _ hx, DirectSum.of_eq_same, Subtype.coe_mk]
+#align direct_sum.decompose_of_mem_same DirectSum.decompose_of_mem_same
 
 theorem decompose_of_mem_ne {x : M} {i j : ι} (hx : x ∈ ℳ i) (hij : i ≠ j) : (decompose ℳ x j : M) = 0 := by
   rw [decompose_of_mem _ hx, DirectSum.of_eq_of_ne _ _ _ _ hij, ZeroMemClass.coe_zero]
+#align direct_sum.decompose_of_mem_ne DirectSum.decompose_of_mem_ne
 
 /-- If `M` is graded by `ι` with degree `i` component `ℳ i`, then it is isomorphic as
 an additive monoid to a direct sum of components. -/
 @[simps (config := { fullyApplied := false })]
 def decomposeAddEquiv : M ≃+ ⨁ i, ℳ i :=
   AddEquiv.symm { (decompose ℳ).symm with map_add' := map_add (DirectSum.coeAddMonoidHom ℳ) }
+#align direct_sum.decompose_add_equiv DirectSum.decomposeAddEquiv
 
 @[simp]
 theorem decompose_zero : decompose ℳ (0 : M) = 0 :=
   map_zero (decomposeAddEquiv ℳ)
+#align direct_sum.decompose_zero DirectSum.decompose_zero
 
 @[simp]
 theorem decompose_symm_zero : (decompose ℳ).symm 0 = (0 : M) :=
   map_zero (decomposeAddEquiv ℳ).symm
+#align direct_sum.decompose_symm_zero DirectSum.decompose_symm_zero
 
 @[simp]
 theorem decompose_add (x y : M) : decompose ℳ (x + y) = decompose ℳ x + decompose ℳ y :=
   map_add (decomposeAddEquiv ℳ) x y
+#align direct_sum.decompose_add DirectSum.decompose_add
 
 @[simp]
 theorem decompose_symm_add (x y : ⨁ i, ℳ i) :
     (decompose ℳ).symm (x + y) = (decompose ℳ).symm x + (decompose ℳ).symm y :=
   map_add (decomposeAddEquiv ℳ).symm x y
+#align direct_sum.decompose_symm_add DirectSum.decompose_symm_add
 
 @[simp]
 theorem decompose_sum {ι'} (s : Finset ι') (f : ι' → M) : decompose ℳ (∑ i in s, f i) = ∑ i in s, decompose ℳ (f i) :=
   map_sum (decomposeAddEquiv ℳ) f s
+#align direct_sum.decompose_sum DirectSum.decompose_sum
 
 @[simp]
 theorem decompose_symm_sum {ι'} (s : Finset ι') (f : ι' → ⨁ i, ℳ i) :
     (decompose ℳ).symm (∑ i in s, f i) = ∑ i in s, (decompose ℳ).symm (f i) :=
   map_sum (decomposeAddEquiv ℳ).symm f s
+#align direct_sum.decompose_symm_sum DirectSum.decompose_symm_sum
 
 theorem sum_support_decompose [∀ (i) (x : ℳ i), Decidable (x ≠ 0)] (r : M) :
     (∑ i in (decompose ℳ r).support, (decompose ℳ r i : M)) = r := by
   conv_rhs => rw [← (decompose ℳ).symm_apply_apply r, ← sum_support_of (fun i => ℳ i) (decompose ℳ r)]
   rw [decompose_symm_sum]
   simp_rw [decompose_symm_of]
+#align direct_sum.sum_support_decompose DirectSum.sum_support_decompose
 
 end AddCommMonoid
 
@@ -155,6 +173,7 @@ instead of `decompose ℳ (-x) = -decompose ℳ x`, which forces the typeclasses
 be found by unification rather than synthesis, then everything works fine without this instance. -/
 instance addCommGroupSetLike [AddCommGroup M] [SetLike σ M] [AddSubgroupClass σ M] (ℳ : ι → σ) :
     AddCommGroup (⨁ i, ℳ i) := by infer_instance
+#align direct_sum.add_comm_group_set_like DirectSum.addCommGroupSetLike
 
 section AddCommGroup
 
@@ -169,19 +188,23 @@ include M
 @[simp]
 theorem decompose_neg (x : M) : decompose ℳ (-x) = -decompose ℳ x :=
   map_neg (decomposeAddEquiv ℳ) x
+#align direct_sum.decompose_neg DirectSum.decompose_neg
 
 @[simp]
 theorem decompose_symm_neg (x : ⨁ i, ℳ i) : (decompose ℳ).symm (-x) = -(decompose ℳ).symm x :=
   map_neg (decomposeAddEquiv ℳ).symm x
+#align direct_sum.decompose_symm_neg DirectSum.decompose_symm_neg
 
 @[simp]
 theorem decompose_sub (x y : M) : decompose ℳ (x - y) = decompose ℳ x - decompose ℳ y :=
   map_sub (decomposeAddEquiv ℳ) x y
+#align direct_sum.decompose_sub DirectSum.decompose_sub
 
 @[simp]
 theorem decompose_symm_sub (x y : ⨁ i, ℳ i) :
     (decompose ℳ).symm (x - y) = (decompose ℳ).symm x - (decompose ℳ).symm y :=
   map_sub (decomposeAddEquiv ℳ).symm x y
+#align direct_sum.decompose_symm_sub DirectSum.decompose_symm_sub
 
 end AddCommGroup
 
@@ -200,10 +223,12 @@ a module to a direct sum of components. -/
 @[simps (config := { fullyApplied := false })]
 def decomposeLinearEquiv : M ≃ₗ[R] ⨁ i, ℳ i :=
   LinearEquiv.symm { (decomposeAddEquiv ℳ).symm with map_smul' := map_smul (DirectSum.coeLinearMap ℳ) }
+#align direct_sum.decompose_linear_equiv DirectSum.decomposeLinearEquiv
 
 @[simp]
 theorem decompose_smul (r : R) (x : M) : decompose ℳ (r • x) = r • decompose ℳ x :=
   map_smul (decomposeLinearEquiv ℳ) r x
+#align direct_sum.decompose_smul DirectSum.decompose_smul
 
 end Module
 

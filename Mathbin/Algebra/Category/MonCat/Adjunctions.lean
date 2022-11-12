@@ -33,11 +33,13 @@ def adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u} where
   map X Y := WithOne.map
   map_id' X := WithOne.map_id
   map_comp' X Y Z := WithOne.map_comp
+#align adjoin_one adjoinOne
 
 @[to_additive hasForgetToAddSemigroup]
 instance hasForgetToSemigroup :
     HasForget₂ MonCat
       SemigroupCat where forget₂ := { obj := fun M => SemigroupCat.of M, map := fun M N => MonoidHom.toMulHom }
+#align has_forget_to_Semigroup hasForgetToSemigroup
 
 /-- The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/
 @[to_additive "The adjoin_one-forgetful adjunction from `AddSemigroup` to `AddMon`"]
@@ -54,6 +56,7 @@ def adjoinOneAdj : adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
           
         · simp
            }
+#align adjoin_one_adj adjoinOneAdj
 
 /-- The free functor `Type u ⥤ Mon` sending a type `X` to the free monoid on `X`. -/
 def free : Type u ⥤ MonCat.{u} where
@@ -67,6 +70,7 @@ def free : Type u ⥤ MonCat.{u} where
     intros
     ext1
     rfl
+#align free free
 
 /-- The free-forgetful adjunction for monoids. -/
 def adj : free ⊣ forget MonCat.{u} :=
@@ -75,6 +79,7 @@ def adj : free ⊣ forget MonCat.{u} :=
       hom_equiv_naturality_left_symm' := fun X Y G f g => by
         ext1
         rfl }
+#align adj adj
 
 instance : IsRightAdjoint (forget MonCat.{u}) :=
   ⟨_, adj⟩

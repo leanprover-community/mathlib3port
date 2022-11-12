@@ -98,17 +98,20 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   rintro q ⟨hqs, hq : chart_at E p q ∈ _, hq'⟩
   refine' ⟨_, hqs⟩
   simpa [LocalHomeomorph.left_inv _ hq', hp, -norm_eq_abs] using hUf (chart_at E p q) hq
+#align mdifferentiable.is_locally_constant Mdifferentiable.is_locally_constant
 
 /-- A holomorphic function on a compact connected complex manifold is constant. -/
 theorem apply_eq_of_compact_space [PreconnectedSpace M] {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) (a b : M) :
     f a = f b :=
   hf.IsLocallyConstant.apply_eq_of_preconnected_space _ _
+#align mdifferentiable.apply_eq_of_compact_space Mdifferentiable.apply_eq_of_compact_space
 
 /-- A holomorphic function on a compact connected complex manifold is the constant function `f ≡ v`,
 for some value `v`. -/
 theorem exists_eq_const_of_compact_space [PreconnectedSpace M] {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
     ∃ v : F, f = Function.const M v :=
   hf.IsLocallyConstant.exists_eq_const
+#align mdifferentiable.exists_eq_const_of_compact_space Mdifferentiable.exists_eq_const_of_compact_space
 
 end Mdifferentiable
 

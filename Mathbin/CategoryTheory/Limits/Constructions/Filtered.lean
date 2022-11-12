@@ -40,6 +40,8 @@ attribute [local tidy] tactic.case_bash
 def liftToFinset [HasFiniteCoproducts C] (F : Discrete α ⥤ C) : Finset (Discrete α) ⥤ C where
   obj s := ∐ fun x : s => F.obj x
   map s t h := Sigma.desc fun y => Sigma.ι (fun x : t => F.obj x) ⟨y, h.down.down y.2⟩
+#align
+  category_theory.limits.coproducts_from_finite_filtered.lift_to_finset CategoryTheory.Limits.CoproductsFromFiniteFiltered.liftToFinset
 
 /-- If `C` has finite coproducts and filtered colimits, we can construct arbitrary coproducts by
     taking the colimit of the diagram formed by the coproducts of finite sets over the indexing
@@ -64,30 +66,38 @@ def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize
           
         · tidy
            }
+#align
+  category_theory.limits.coproducts_from_finite_filtered.lift_to_finset_colimit_cocone CategoryTheory.Limits.CoproductsFromFiniteFiltered.liftToFinsetColimitCocone
 
 end CoproductsFromFiniteFiltered
 
 open CoproductsFromFiniteFiltered
 
 theorem has_coproducts_of_finite_and_filtered [HasFiniteCoproducts C] [HasFilteredColimitsOfSize.{w, w} C] :
-    HasCoproducts.{w} C := fun α => by
-  classical
-  exact ⟨fun F => has_colimit.mk (lift_to_finset_colimit_cocone F)⟩
+    HasCoproducts.{w} C := fun α => by classical exact ⟨fun F => has_colimit.mk (lift_to_finset_colimit_cocone F)⟩
+#align
+  category_theory.limits.has_coproducts_of_finite_and_filtered CategoryTheory.Limits.has_coproducts_of_finite_and_filtered
 
 theorem has_colimits_of_finite_and_filtered [HasFiniteColimits C] [HasFilteredColimitsOfSize.{w, w} C] :
     HasColimitsOfSize.{w, w} C :=
   have : HasCoproducts.{w} C := has_coproducts_of_finite_and_filtered
   has_colimits_of_has_coequalizers_and_coproducts
+#align
+  category_theory.limits.has_colimits_of_finite_and_filtered CategoryTheory.Limits.has_colimits_of_finite_and_filtered
 
 theorem has_products_of_finite_and_cofiltered [HasFiniteProducts C] [HasCofilteredLimitsOfSize.{w, w} C] :
     HasProducts.{w} C :=
   have : HasCoproducts.{w} Cᵒᵖ := has_coproducts_of_finite_and_filtered
   has_products_of_opposite
+#align
+  category_theory.limits.has_products_of_finite_and_cofiltered CategoryTheory.Limits.has_products_of_finite_and_cofiltered
 
 theorem has_limits_of_finite_and_cofiltered [HasFiniteLimits C] [HasCofilteredLimitsOfSize.{w, w} C] :
     HasLimitsOfSize.{w, w} C :=
   have : HasProducts.{w} C := has_products_of_finite_and_cofiltered
   has_limits_of_has_equalizers_and_products
+#align
+  category_theory.limits.has_limits_of_finite_and_cofiltered CategoryTheory.Limits.has_limits_of_finite_and_cofiltered
 
 end CategoryTheory.Limits
 

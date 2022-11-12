@@ -34,6 +34,7 @@ unsafe inductive expr_lens
   | app_fun : expr_lens → expr → expr_lens
   | app_arg : expr_lens → expr → expr_lens
   | entire : expr_lens
+#align expr_lens expr_lens
 
 namespace ExprLens
 
@@ -47,11 +48,13 @@ inductive Dir
   | F
   | A
   deriving DecidableEq, Inhabited
+#align expr_lens.dir ExprLens.Dir
 
 /-- String representation of `dir`. -/
 def Dir.toString : Dir → String
   | dir.F => "F"
   | dir.A => "A"
+#align expr_lens.dir.to_string ExprLens.Dir.toString
 
 instance : ToString Dir :=
   ⟨Dir.toString⟩
@@ -63,6 +66,7 @@ unsafe def fill : expr_lens → expr → expr
   | entire, e => e
   | app_fun l f, x => l.fill (expr.app f x)
   | app_arg l x, f => l.fill (expr.app f x)
+#align expr_lens.fill expr_lens.fill
 
 /-- Zoom into `e : expr` given the context of an `expr_lens`, popping out an `expr` and a new
 zoomed `expr_lens`, if this is possible (`e` has to be an application). -/
@@ -71,6 +75,7 @@ unsafe def zoom : expr_lens → List Dir → expr → Option (expr_lens × expr)
   | l, dir.F :: rest, expr.app f x => (expr_lens.app_arg l x).zoom rest f
   | l, dir.A :: rest, expr.app f x => (expr_lens.app_fun l f).zoom rest x
   | _, _, _ => none
+#align expr_lens.zoom expr_lens.zoom
 
 /-- Convert an `expr_lens` into a list of instructions needed to build it; repeatedly inspecting a
 function or its argument a finite number of times. -/
@@ -78,6 +83,7 @@ unsafe def to_dirs : expr_lens → List Dir
   | expr_lens.entire => []
   | expr_lens.app_fun l _ => l.to_dirs.concat Dir.A
   | expr_lens.app_arg l _ => l.to_dirs.concat Dir.F
+#align expr_lens.to_dirs expr_lens.to_dirs
 
 /-- Sometimes `mk_congr_arg` fails, when the function is 'superficially dependent'.
 Try to `dsimp` the function first before building the `congr_arg` expression. -/
@@ -86,6 +92,7 @@ unsafe def mk_congr_arg_using_dsimp (G W : expr) (u : List Name) : tactic expr :
   let t ← infer_type G
   let t' ← s.dsimplify u t { failIfUnchanged := false }
   to_expr (ppquote.1 (congr_arg (show %%ₓt' from %%ₓG) (%%ₓW)))
+#align expr_lens.mk_congr_arg_using_dsimp expr_lens.mk_congr_arg_using_dsimp
 
 private unsafe def trace_congr_error (f : expr) (x_eq : expr) : tactic Unit := do
   let pp_f ← pp f
@@ -96,6 +103,7 @@ private unsafe def trace_congr_error (f : expr) (x_eq : expr) : tactic Unit := d
       f! "expr_lens.congr failed on 
         {pp_f } : {pp_f_t }
         {pp_x_eq } : {pp_x_eq_t}"
+#align expr_lens.trace_congr_error expr_lens.trace_congr_error
 
 /-- Turn an `e : expr_lens` and a proof that `a = b` into a series of `congr_arg` or `congr_fun`
 applications showing that the expressions obtained from `e.fill a` and `e.fill b` are equal. -/
@@ -109,6 +117,7 @@ unsafe def congr : expr_lens → expr → tactic expr
       | some fx_eq => l fx_eq
       | none => trace_congr_error f x_eq >> failed
   | app_arg l x, f_eq => mk_congr_fun f_eq x >>= l.congr
+#align expr_lens.congr expr_lens.congr
 
 /-- Pretty print a lens. -/
 unsafe def to_tactic_string : expr_lens → tactic String
@@ -121,6 +130,7 @@ unsafe def to_tactic_string : expr_lens → tactic String
     let pp ← pp x
     let rest ← l.to_tactic_string
     return s! "(arg "{pp }" {rest})"
+#align expr_lens.to_tactic_string expr_lens.to_tactic_string
 
 end ExprLens
 
@@ -134,6 +144,7 @@ private unsafe def app_map_aux {α} (F : expr_lens → expr → tactic (List α)
         Monad.sequence [F l e, app_map_aux <| l.zoom [ExprLens.Dir.F] e, app_map_aux <| l.zoom [ExprLens.Dir.A] e] <|>
       pure []
   | none => pure []
+#align expr.app_map_aux expr.app_map_aux
 
 /-- `app_map F e` maps a function `F` which understands `expr_lens`es
 over the given `e : expr` in the natural way;
@@ -146,6 +157,7 @@ At each stage `F` returns a list of some type, and `app_map` collects these list
 returns a concatenation of them all. -/
 unsafe def app_map {α} (F : expr_lens → expr → tactic (List α)) (e : expr) : tactic (List α) :=
   app_map_aux F (expr_lens.entire, e)
+#align expr.app_map expr.app_map
 
 end Expr
 

@@ -60,25 +60,31 @@ noncomputable def dickson : ℕ → R[X]
   | 0 => 3 - k
   | 1 => x
   | n + 2 => X * dickson (n + 1) - c a * dickson n
+#align polynomial.dickson Polynomial.dickson
 
 @[simp]
 theorem dickson_zero : dickson k a 0 = 3 - k :=
   rfl
+#align polynomial.dickson_zero Polynomial.dickson_zero
 
 @[simp]
 theorem dickson_one : dickson k a 1 = X :=
   rfl
+#align polynomial.dickson_one Polynomial.dickson_one
 
 theorem dickson_two : dickson k a 2 = X ^ 2 - c a * (3 - k) := by simp only [dickson, sq]
+#align polynomial.dickson_two Polynomial.dickson_two
 
 @[simp]
 theorem dickson_add_two (n : ℕ) : dickson k a (n + 2) = X * dickson k a (n + 1) - c a * dickson k a n := by rw [dickson]
+#align polynomial.dickson_add_two Polynomial.dickson_add_two
 
 theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) : dickson k a n = X * dickson k a (n - 1) - c a * dickson k a (n - 2) :=
   by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_comm]
   exact dickson_add_two k a n
+#align polynomial.dickson_of_two_le Polynomial.dickson_of_two_le
 
 variable {R S k a}
 
@@ -90,6 +96,7 @@ theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dicks
   | n + 2 => by
     simp only [dickson_add_two, Polynomial.map_sub, Polynomial.map_mul, map_X, map_C]
     rw [map_dickson, map_dickson]
+#align polynomial.map_dickson Polynomial.map_dickson
 
 variable {R}
 
@@ -102,6 +109,7 @@ theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
   | n + 2 => by
     simp only [dickson_add_two, C_0, zero_mul, sub_zero]
     rw [dickson_two_zero, pow_add X (n + 1) 1, mul_comm, pow_one]
+#align polynomial.dickson_two_zero Polynomial.dickson_two_zero
 
 section Dickson
 
@@ -128,6 +136,7 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) : ∀ n, (dickson
     simp only [eval_sub, eval_mul, dickson_one_one_eval_add_inv, eval_X, dickson_add_two, C_1, eval_one]
     conv_lhs => simp only [pow_succ, add_mul, mul_add, h, ← mul_assoc, mul_comm y x, one_mul]
     ring
+#align polynomial.dickson_one_one_eval_add_inv Polynomial.dickson_one_one_eval_add_inv
 
 variable (R)
 
@@ -144,12 +153,14 @@ theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     simp only [← C_1, ← C_bit0, ← mul_assoc, ← C_mul, mul_inv_of_self]
     rw [C_1, one_mul]
     ring
+#align polynomial.dickson_one_one_eq_chebyshev_T Polynomial.dickson_one_one_eq_chebyshev_T
 
 theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
     Chebyshev.t R n = c (⅟ 2) * (dickson 1 1 n).comp (2 * X) := by
   rw [dickson_one_one_eq_chebyshev_T]
   simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
   rw [inv_of_mul_self, C_1, one_mul, one_mul, comp_X]
+#align polynomial.chebyshev_T_eq_dickson_one_one Polynomial.chebyshev_T_eq_dickson_one_one
 
 /-- The `(m * n)`-th Dickson polynomial of the first kind is the composition of the `m`-th and
 `n`-th. -/
@@ -167,10 +178,12 @@ theorem dickson_one_one_mul (m n : ℕ) : dickson 1 (1 : R) (m * n) = (dickson 1
   rw [comp_assoc]
   apply eval₂_congr rfl _ rfl
   rw [mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, inv_of_mul_self, C_1, one_mul]
+#align polynomial.dickson_one_one_mul Polynomial.dickson_one_one_mul
 
 theorem dickson_one_one_comp_comm (m n : ℕ) :
     (dickson 1 (1 : R) m).comp (dickson 1 1 n) = (dickson 1 1 n).comp (dickson 1 1 m) := by
   rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
+#align polynomial.dickson_one_one_comp_comm Polynomial.dickson_one_one_comp_comm
 
 theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p) p = X ^ p := by
   -- Recall that `dickson_eval_add_inv` characterises `dickson 1 1 p`
@@ -217,18 +230,13 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
         intro H
         have : φ.eval 0 = 0 := by rw [H, eval_zero]
         simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq, zero_add, one_ne_zero]
-      classical
-      convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
-      ext1 y
-      simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
-        eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one, Multiset.mem_singleton]
-      by_cases hy:y = 0
-      · simp only [hy, eq_self_iff_true, or_true_iff]
-        
-      apply or_congr _ Iff.rfl
-      rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
-      apply eq_iff_eq_cancel_right.mpr
-      ring
+      classical convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
+        simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
+          eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one, Multiset.mem_singleton]
+        · simp only [hy, eq_self_iff_true, or_true_iff]
+          
+        rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
+        ring
     -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     · apply (Set.eq_univ_of_forall _).symm
       intro x
@@ -242,11 +250,13 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
         
       
     
+#align polynomial.dickson_one_one_zmod_p Polynomial.dickson_one_one_zmod_p
 
 theorem dickson_one_one_char_p (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p := by
   have h : (1 : R) = Zmod.castHom (dvd_refl p) R 1
   simp only [Zmod.cast_hom_apply, Zmod.cast_one']
   rw [h, ← map_dickson (Zmod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, Polynomial.map_pow, map_X]
+#align polynomial.dickson_one_one_char_p Polynomial.dickson_one_one_char_p
 
 end Dickson
 

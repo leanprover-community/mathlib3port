@@ -49,12 +49,14 @@ variable {C : Type u₁} [Category.{v₁} C]
 def Ulift.upFunctor : C ⥤ ULift.{u₂} C where
   obj := ULift.up
   map X Y f := f
+#align category_theory.ulift.up_functor CategoryTheory.Ulift.upFunctor
 
 /-- The functorial version of `ulift.down`. -/
 @[simps]
 def Ulift.downFunctor : ULift.{u₂} C ⥤ C where
   obj := ULift.down
   map X Y f := f
+#align category_theory.ulift.down_functor CategoryTheory.Ulift.downFunctor
 
 /-- The categorical equivalence between `C` and `ulift C`. -/
 @[simps]
@@ -84,6 +86,7 @@ def Ulift.equivalence : C ≌ ULift.{u₂} C where
   functor_unit_iso_comp' X := by
     change 𝟙 X ≫ 𝟙 X = 𝟙 X
     simp
+#align category_theory.ulift.equivalence CategoryTheory.Ulift.equivalence
 
 section UliftHom
 
@@ -92,6 +95,7 @@ section UliftHom
 -/
 def UliftHom.{w, u} (C : Type u) :=
   C
+#align category_theory.ulift_hom CategoryTheory.UliftHom
 
 instance {C} [Inhabited C] : Inhabited (UliftHom C) :=
   ⟨(Inhabited.default C : C)⟩
@@ -99,18 +103,22 @@ instance {C} [Inhabited C] : Inhabited (UliftHom C) :=
 /-- The obvious function `ulift_hom C → C`. -/
 def UliftHom.objDown {C} (A : UliftHom C) : C :=
   A
+#align category_theory.ulift_hom.obj_down CategoryTheory.UliftHom.objDown
 
 /-- The obvious function `C → ulift_hom C`. -/
 def UliftHom.objUp {C} (A : C) : UliftHom C :=
   A
+#align category_theory.ulift_hom.obj_up CategoryTheory.UliftHom.objUp
 
 @[simp]
 theorem obj_down_obj_up {C} (A : C) : (UliftHom.objUp A).objDown = A :=
   rfl
+#align category_theory.obj_down_obj_up CategoryTheory.obj_down_obj_up
 
 @[simp]
 theorem obj_up_obj_down {C} (A : UliftHom C) : UliftHom.objUp A.objDown = A :=
   rfl
+#align category_theory.obj_up_obj_down CategoryTheory.obj_up_obj_down
 
 instance : Category.{max v₂ v₁} (UliftHom.{v₂} C) where
   Hom A B := ULift.{v₂} <| A.objDown ⟶ B.objDown
@@ -122,12 +130,14 @@ instance : Category.{max v₂ v₁} (UliftHom.{v₂} C) where
 def UliftHom.up : C ⥤ UliftHom C where
   obj := UliftHom.objUp
   map X Y f := ⟨f⟩
+#align category_theory.ulift_hom.up CategoryTheory.UliftHom.up
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
 def UliftHom.down : UliftHom C ⥤ C where
   obj := UliftHom.objDown
   map X Y f := f.down
+#align category_theory.ulift_hom.down CategoryTheory.UliftHom.down
 
 /-- The equivalence between `C` and `ulift_hom C`. -/
 def UliftHom.equiv : C ≌ UliftHom C where
@@ -135,6 +145,7 @@ def UliftHom.equiv : C ≌ UliftHom C where
   inverse := UliftHom.down
   unitIso := NatIso.ofComponents (fun A => eqToIso rfl) (by tidy)
   counitIso := NatIso.ofComponents (fun A => eqToIso rfl) (by tidy)
+#align category_theory.ulift_hom.equiv CategoryTheory.UliftHom.equiv
 
 end UliftHom
 
@@ -151,6 +162,7 @@ end UliftHom
 @[nolint unused_arguments]
 def AsSmall.{w, v, u} (C : Type u) [Category.{v} C] :=
   ULift.{max w v} C
+#align category_theory.as_small CategoryTheory.AsSmall
 
 instance : SmallCategory (AsSmall.{w₁} C) where
   Hom X Y := ULift.{max w₁ u₁} <| X.down ⟶ Y.down
@@ -162,12 +174,14 @@ instance : SmallCategory (AsSmall.{w₁} C) where
 def AsSmall.up : C ⥤ AsSmall C where
   obj X := ⟨X⟩
   map X Y f := ⟨f⟩
+#align category_theory.as_small.up CategoryTheory.AsSmall.up
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
 def AsSmall.down : AsSmall C ⥤ C where
   obj X := X.down
   map X Y f := f.down
+#align category_theory.as_small.down CategoryTheory.AsSmall.down
 
 /-- The equivalence between `C` and `as_small C`. -/
 @[simps]
@@ -182,6 +196,7 @@ def AsSmall.equiv : C ≌ AsSmall C where
           ext
           rfl)
       (by tidy)
+#align category_theory.as_small.equiv CategoryTheory.AsSmall.equiv
 
 instance [Inhabited C] : Inhabited (AsSmall C) :=
   ⟨⟨Inhabited.default _⟩⟩
@@ -189,6 +204,7 @@ instance [Inhabited C] : Inhabited (AsSmall C) :=
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
 def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (ULift.{u'} C) :=
   Ulift.equivalence.trans UliftHom.equiv
+#align category_theory.ulift_hom_ulift_category.equiv CategoryTheory.UliftHomUliftCategory.equiv
 
 end CategoryTheory
 

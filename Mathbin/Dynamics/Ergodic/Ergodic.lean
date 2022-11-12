@@ -39,18 +39,21 @@ include m
 strictly invariant set is either almost empty or full. -/
 structure PreErgodic (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) : Prop where
   ae_empty_or_univ : ∀ ⦃s⦄, MeasurableSet s → f ⁻¹' s = s → s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ
+#align pre_ergodic PreErgodic
 
 /-- A map `f : α → α` is said to be ergodic with respect to a measure `μ` if it is measure
 preserving and pre-ergodic. -/
 @[nolint has_nonempty_instance]
 structure Ergodic (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends MeasurePreserving f μ μ,
   PreErgodic f μ : Prop
+#align ergodic Ergodic
 
 /-- A map `f : α → α` is said to be quasi ergodic with respect to a measure `μ` if it is quasi
 measure preserving and pre-ergodic. -/
 @[nolint has_nonempty_instance]
 structure QuasiErgodic (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends
   QuasiMeasurePreserving f μ μ, PreErgodic f μ : Prop
+#align quasi_ergodic QuasiErgodic
 
 variable {f} {μ : Measure α}
 
@@ -58,13 +61,16 @@ namespace PreErgodic
 
 theorem measure_self_or_compl_eq_zero (hf : PreErgodic f μ) (hs : MeasurableSet s) (hs' : f ⁻¹' s = s) :
     μ s = 0 ∨ μ (sᶜ) = 0 := by simpa using hf.ae_empty_or_univ hs hs'
+#align pre_ergodic.measure_self_or_compl_eq_zero PreErgodic.measure_self_or_compl_eq_zero
 
 /-- On a probability space, the (pre)ergodicity condition is a zero one law. -/
 theorem prob_eq_zero_or_one [IsProbabilityMeasure μ] (hf : PreErgodic f μ) (hs : MeasurableSet s) (hs' : f ⁻¹' s = s) :
     μ s = 0 ∨ μ s = 1 := by simpa [hs] using hf.measure_self_or_compl_eq_zero hs hs'
+#align pre_ergodic.prob_eq_zero_or_one PreErgodic.prob_eq_zero_or_one
 
 theorem ofIterate (n : ℕ) (hf : PreErgodic (f^[n]) μ) : PreErgodic f μ :=
   ⟨fun s hs hs' => hf.ae_empty_or_univ hs <| IsFixedPt.preimage_iterate hs' n⟩
+#align pre_ergodic.of_iterate PreErgodic.ofIterate
 
 end PreErgodic
 
@@ -73,6 +79,7 @@ namespace Ergodic
 /-- An ergodic map is quasi ergodic. -/
 theorem quasiErgodic (hf : Ergodic f μ) : QuasiErgodic f μ :=
   { hf.toPreErgodic, hf.toMeasurePreserving.QuasiMeasurePreserving with }
+#align ergodic.quasi_ergodic Ergodic.quasiErgodic
 
 end Ergodic
 
@@ -84,6 +91,7 @@ theorem ae_empty_or_univ' (hf : QuasiErgodic f μ) (hs : MeasurableSet s) (hs' :
     s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ := by
   obtain ⟨t, h₀, h₁, h₂⟩ := hf.to_quasi_measure_preserving.exists_preimage_eq_of_preimage_ae hs hs'
   rcases hf.ae_empty_or_univ h₀ h₂ with (h₃ | h₃) <;> [left, right] <;> exact ae_eq_trans h₁.symm h₃
+#align quasi_ergodic.ae_empty_or_univ' QuasiErgodic.ae_empty_or_univ'
 
 end QuasiErgodic
 

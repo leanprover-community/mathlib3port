@@ -30,6 +30,7 @@ structure AlgebraCat where
   Carrier : Type v
   [isRing : Ring carrier]
   [isAlgebra : Algebra R carrier]
+#align Algebra AlgebraCat
 
 attribute [instance] AlgebraCat.isRing AlgebraCat.isAlgebra
 
@@ -50,26 +51,31 @@ instance : ConcreteCategory.{v} (AlgebraCat.{v} R) where
 instance hasForgetToRing :
     HasForget₂ (AlgebraCat.{v} R)
       RingCat.{v} where forget₂ := { obj := fun A => RingCat.of A, map := fun A₁ A₂ f => AlgHom.toRingHom f }
+#align Algebra.has_forget_to_Ring AlgebraCat.hasForgetToRing
 
 instance hasForgetToModule :
     HasForget₂ (AlgebraCat.{v} R)
       (ModuleCat.{v}
         R) where forget₂ := { obj := fun M => ModuleCat.of R M, map := fun M₁ M₂ f => AlgHom.toLinearMap f }
+#align Algebra.has_forget_to_Module AlgebraCat.hasForgetToModule
 
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
 typeclasses. -/
 def of (X : Type v) [Ring X] [Algebra R X] : AlgebraCat.{v} R :=
   ⟨X⟩
+#align Algebra.of AlgebraCat.of
 
 /-- Typecheck a `alg_hom` as a morphism in `Algebra R`. -/
 def ofHom {R : Type u} [CommRing R] {X Y : Type v} [Ring X] [Algebra R X] [Ring Y] [Algebra R Y] (f : X →ₐ[R] Y) :
     of R X ⟶ of R Y :=
   f
+#align Algebra.of_hom AlgebraCat.ofHom
 
 @[simp]
 theorem of_hom_apply {R : Type u} [CommRing R] {X Y : Type v} [Ring X] [Algebra R X] [Ring Y] [Algebra R Y]
     (f : X →ₐ[R] Y) (x : X) : ofHom f x = f x :=
   rfl
+#align Algebra.of_hom_apply AlgebraCat.of_hom_apply
 
 instance : Inhabited (AlgebraCat R) :=
   ⟨of R R⟩
@@ -77,6 +83,7 @@ instance : Inhabited (AlgebraCat R) :=
 @[simp]
 theorem coe_of (X : Type u) [Ring X] [Algebra R X] : (of R X : Type u) = X :=
   rfl
+#align Algebra.coe_of AlgebraCat.coe_of
 
 variable {R}
 
@@ -86,16 +93,19 @@ algebra. -/
 def ofSelfIso (M : AlgebraCat.{v} R) : AlgebraCat.of R M ≅ M where
   hom := 𝟙 M
   inv := 𝟙 M
+#align Algebra.of_self_iso AlgebraCat.ofSelfIso
 
 variable {R} {M N U : ModuleCat.{v} R}
 
 @[simp]
 theorem id_apply (m : M) : (𝟙 M : M → M) m = m :=
   rfl
+#align Algebra.id_apply AlgebraCat.id_apply
 
 @[simp]
 theorem coe_comp (f : M ⟶ N) (g : N ⟶ U) : (f ≫ g : M → U) = g ∘ f :=
   rfl
+#align Algebra.coe_comp AlgebraCat.coe_comp
 
 variable (R)
 
@@ -115,7 +125,8 @@ def free : Type u ⥤ AlgebraCat.{u} R where
     ext1
     simp only [FreeAlgebra.ι_comp_lift]
     ext1
-    simp only [FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_app, types_comp_apply]
+    simp only [FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_apply, types_comp_apply]
+#align Algebra.free AlgebraCat.free
 
 /-- The free/forget adjunction for `R`-algebras. -/
 def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
@@ -125,13 +136,14 @@ def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
       hom_equiv_naturality_left_symm' := by
         intros
         ext
-        simp only [free_map, Equiv.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_app,
+        simp only [free_map, Equiv.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_apply,
           types_comp_apply],
       hom_equiv_naturality_right' := by
         intros
         ext
-        simp only [forget_map_eq_coe, CategoryTheory.coe_comp, Function.comp_app, FreeAlgebra.lift_symm_apply,
+        simp only [forget_map_eq_coe, CategoryTheory.coe_comp, Function.comp_apply, FreeAlgebra.lift_symm_apply,
           types_comp_apply] }
+#align Algebra.adj AlgebraCat.adj
 
 instance : IsRightAdjoint (forget (AlgebraCat.{u} R)) :=
   ⟨_, adj R⟩
@@ -154,6 +166,7 @@ def AlgEquiv.toAlgebraIso {g₁ : Ring X₁} {g₂ : Ring X₂} {m₁ : Algebra 
   inv_hom_id' := by
     ext
     exact e.right_inv x
+#align alg_equiv.to_Algebra_iso AlgEquiv.toAlgebraIso
 
 namespace CategoryTheory.Iso
 
@@ -167,6 +180,7 @@ def toAlgEquiv {X Y : AlgebraCat R} (i : X ≅ Y) : X ≃ₐ[R] Y where
   map_add' := by tidy
   map_mul' := by tidy
   commutes' := by tidy
+#align category_theory.iso.to_alg_equiv CategoryTheory.Iso.toAlgEquiv
 
 end CategoryTheory.Iso
 
@@ -177,6 +191,7 @@ def algEquivIsoAlgebraIso {X Y : Type u} [Ring X] [Ring Y] [Algebra R X] [Algebr
     (X ≃ₐ[R] Y) ≅ AlgebraCat.of R X ≅ AlgebraCat.of R Y where
   hom e := e.toAlgebraIso
   inv i := i.toAlgEquiv
+#align alg_equiv_iso_Algebra_iso algEquivIsoAlgebraIso
 
 instance (X : Type u) [Ring X] [Algebra R X] : Coe (Subalgebra R X) (AlgebraCat R) :=
   ⟨fun N => AlgebraCat.of R N⟩
@@ -187,4 +202,5 @@ instance AlgebraCat.forget_reflects_isos :
     let i := as_iso ((forget (AlgebraCat.{u} R)).map f)
     let e : X ≃ₐ[R] Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Algebra_iso).1⟩
+#align Algebra.forget_reflects_isos AlgebraCat.forget_reflects_isos
 

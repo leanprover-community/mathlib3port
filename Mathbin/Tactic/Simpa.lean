@@ -65,6 +65,7 @@ unsafe def simpa (use_iota_eqn : parse <| (tk "!")?) (trace_lemmas : parse <| (t
           assertv `this t e
           simp_at [some `this, none] (get_local `this >>= tactic.exact)
           all_goals (try apply_instance)
+#align tactic.interactive.simpa tactic.interactive.simpa
 
 add_tactic_doc
   { Name := "simpa", category := DocCategory.tactic, declNames := [`tactic.interactive.simpa],

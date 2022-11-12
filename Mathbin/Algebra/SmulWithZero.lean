@@ -46,23 +46,27 @@ of `R` on a Type `M` with `0`, such that the equality `r • m = 0` holds if at 
 or `m` equals `0`. -/
 class SmulWithZero [Zero R] [Zero M] extends SmulZeroClass R M where
   zero_smul : ∀ m : M, (0 : R) • m = 0
+#align smul_with_zero SmulWithZero
 
 instance MulZeroClass.toSmulWithZero [MulZeroClass R] : SmulWithZero R R where
   smul := (· * ·)
   smul_zero := mul_zero
   zero_smul := zero_mul
+#align mul_zero_class.to_smul_with_zero MulZeroClass.toSmulWithZero
 
 /-- Like `mul_zero_class.to_smul_with_zero`, but multiplies on the right. -/
 instance MulZeroClass.toOppositeSmulWithZero [MulZeroClass R] : SmulWithZero Rᵐᵒᵖ R where
   smul := (· • ·)
   smul_zero r := zero_mul _
   zero_smul := mul_zero
+#align mul_zero_class.to_opposite_smul_with_zero MulZeroClass.toOppositeSmulWithZero
 
 variable (R) {M} [Zero R] [Zero M] [SmulWithZero R M]
 
 @[simp]
 theorem zero_smul (m : M) : (0 : R) • m = 0 :=
   SmulWithZero.zero_smul m
+#align zero_smul zero_smul
 
 variable {R M} [Zero R'] [Zero M'] [HasSmul R M']
 
@@ -74,6 +78,7 @@ protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.
   smul := (· • ·)
   zero_smul a := hf <| by simp [smul]
   smul_zero a := hf <| by simp [smul]
+#align function.injective.smul_with_zero Function.Injective.smulWithZero
 
 /-- Pushforward a `smul_with_zero` structure along a surjective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
@@ -85,6 +90,7 @@ protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function
     rcases hf m with ⟨x, rfl⟩
     simp [← smul]
   smul_zero c := by simp only [← f.map_zero, ← smul, smul_zero]
+#align function.surjective.smul_with_zero Function.Surjective.smulWithZero
 
 variable (M)
 
@@ -93,16 +99,19 @@ def SmulWithZero.compHom (f : ZeroHom R' R) : SmulWithZero R' M where
   smul := (· • ·) ∘ f
   smul_zero m := by simp
   zero_smul m := by simp
+#align smul_with_zero.comp_hom SmulWithZero.compHom
 
 end Zero
 
 instance AddMonoid.natSmulWithZero [AddMonoid M] : SmulWithZero ℕ M where
   smul_zero := nsmul_zero
   zero_smul := zero_nsmul
+#align add_monoid.nat_smul_with_zero AddMonoid.natSmulWithZero
 
 instance AddGroup.intSmulWithZero [AddGroup M] : SmulWithZero ℤ M where
   smul_zero := zsmul_zero
   zero_smul := zero_zsmul
+#align add_group.int_smul_with_zero AddGroup.intSmulWithZero
 
 section MonoidWithZero
 
@@ -117,19 +126,23 @@ class MulActionWithZero extends MulAction R M where
   -- these fields are copied from `smul_with_zero`, as `extends` behaves poorly
   smul_zero : ∀ r : R, r • (0 : M) = 0
   zero_smul : ∀ m : M, (0 : R) • m = 0
+#align mul_action_with_zero MulActionWithZero
 
 -- see Note [lower instance priority]
 instance (priority := 100) MulActionWithZero.toSmulWithZero [m : MulActionWithZero R M] : SmulWithZero R M :=
   { m with }
+#align mul_action_with_zero.to_smul_with_zero MulActionWithZero.toSmulWithZero
 
 /-- See also `semiring.to_module` -/
 instance MonoidWithZero.toMulActionWithZero : MulActionWithZero R R :=
   { MulZeroClass.toSmulWithZero R, Monoid.toMulAction R with }
+#align monoid_with_zero.to_mul_action_with_zero MonoidWithZero.toMulActionWithZero
 
 /-- Like `monoid_with_zero.to_mul_action_with_zero`, but multiplies on the right. See also
 `semiring.to_opposite_module` -/
 instance MonoidWithZero.toOppositeMulActionWithZero : MulActionWithZero Rᵐᵒᵖ R :=
   { MulZeroClass.toOppositeSmulWithZero R, Monoid.toOppositeMulAction R with }
+#align monoid_with_zero.to_opposite_mul_action_with_zero MonoidWithZero.toOppositeMulActionWithZero
 
 variable {R M} [MulActionWithZero R M] [Zero M'] [HasSmul R M']
 
@@ -139,6 +152,7 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.mulActionWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
     (smul : ∀ (a : R) (b), f (a • b) = a • f b) : MulActionWithZero R M' :=
   { hf.MulAction f smul, hf.SmulWithZero f smul with }
+#align function.injective.mul_action_with_zero Function.Injective.mulActionWithZero
 
 /-- Pushforward a `mul_action_with_zero` structure along a surjective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
@@ -146,6 +160,7 @@ See note [reducible non-instances]. -/
 protected def Function.Surjective.mulActionWithZero (f : ZeroHom M M') (hf : Function.Surjective f)
     (smul : ∀ (a : R) (b), f (a • b) = a • f b) : MulActionWithZero R M' :=
   { hf.MulAction f smul, hf.SmulWithZero f smul with }
+#align function.surjective.mul_action_with_zero Function.Surjective.mulActionWithZero
 
 variable (M)
 
@@ -153,6 +168,7 @@ variable (M)
 def MulActionWithZero.compHom (f : R' →*₀ R) : MulActionWithZero R' M :=
   { SmulWithZero.compHom M f.toZeroHom with smul := (· • ·) ∘ f, mul_smul := fun r s m => by simp [mul_smul],
     one_smul := fun m => by simp }
+#align mul_action_with_zero.comp_hom MulActionWithZero.compHom
 
 end MonoidWithZero
 
@@ -170,6 +186,7 @@ theorem smul_inv₀ [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (
   · refine' inv_eq_of_mul_eq_one_left _
     rw [smul_mul_smul, inv_mul_cancel hc, inv_mul_cancel hx, one_smul]
     
+#align smul_inv₀ smul_inv₀
 
 end GroupWithZero
 
@@ -178,4 +195,5 @@ end GroupWithZero
 def smulMonoidWithZeroHom {α β : Type _} [MonoidWithZero α] [MulZeroOneClass β] [MulActionWithZero α β]
     [IsScalarTower α β β] [SmulCommClass α β β] : α × β →*₀ β :=
   { smulMonoidHom with map_zero' := smul_zero _ }
+#align smul_monoid_with_zero_hom smulMonoidWithZeroHom
 

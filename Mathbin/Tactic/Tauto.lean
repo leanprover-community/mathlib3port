@@ -38,6 +38,7 @@ unsafe def distrib_not : tactic Unit := do
                 replace h (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh).symm)) <|> () <$ tactic.cases h
             | quote.1 (_ → _) => replace h (pquote.1 (Decidable.not_or_of_imp (%%ₓh)))
             | _ => failed
+#align tactic.distrib_not tactic.distrib_not
 
 /-!
   The following definitions maintain a path compression datastructure, i.e. a forest such that:
@@ -50,15 +51,18 @@ unsafe def distrib_not : tactic Unit := do
 
 unsafe def tauto_state :=
   ref <| expr_map (Option (expr × expr))
+#align tactic.tauto_state tactic.tauto_state
 
 unsafe def modify_ref {α : Type} (r : ref α) (f : α → α) :=
   read_ref r >>= write_ref r ∘ f
+#align tactic.modify_ref tactic.modify_ref
 
 unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
   let m ← read_ref r
   let p ← mk_mapp `rfl [none, e]
   write_ref r <| m e none
   return (e, p)
+#align tactic.add_refl tactic.add_refl
 
 /-- If there exists a symmetry lemma that can be applied to the hypothesis `e`,
   store it.
@@ -66,7 +70,8 @@ unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
 unsafe def add_symm_proof (r : tauto_state) (e : expr) : tactic (expr × expr) := do
   let env ← get_env
   let rel := e.get_app_fn.const_name
-  let some symm ← pure <| environment.symm_for env rel | add_refl r e
+  let some symm ← pure <| environment.symm_for env rel |
+    add_refl r e
   (do
         let e' ← mk_meta_var (quote.1 Prop)
         let iff_t ← to_expr (pquote.1 ((%%ₓe) = %%ₓe'))
@@ -76,9 +81,11 @@ unsafe def add_symm_proof (r : tauto_state) (e : expr) : tactic (expr × expr) :
         write_ref r <| (m e (e', p)).insert e' none
         return (e', p)) <|>
       add_refl r e
+#align tactic.add_symm_proof tactic.add_symm_proof
 
 unsafe def add_edge (r : tauto_state) (x y p : expr) : tactic Unit :=
   (modify_ref r) fun m => m.insert x (y, p)
+#align tactic.add_edge tactic.add_edge
 
 /-- Retrieve the root of the hypothesis `e` from the proof forest.
   If `e` has not been internalized, add it to the proof forest.
@@ -95,7 +102,8 @@ unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
             return (e, p)) <|>
           add_refl r e
       | _ => add_refl r e
-    let some e' ← pure <| m.find e | record_e
+    let some e' ← pure <| m.find e |
+      record_e
     match e' with
       | some (e', p') => do
         let (e'', p'') ← root e'
@@ -103,6 +111,7 @@ unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
         add_edge r e e'' p''
         pure (e'', p'')
       | none => Prod.mk e <$> mk_mapp `rfl [none, some e]
+#align tactic.root tactic.root
 
 /-- Given hypotheses `a` and `b`, build a proof that `a` is equivalent to `b`,
   applying congruence and recursing into arguments if `a` and `b`
@@ -162,12 +171,14 @@ unsafe def symm_eq (r : tauto_state) : expr → expr → tactic expr
         let p' ← mk_eq_trans pa p
         add_edge r a' b' p'
         mk_eq_symm pb >>= mk_eq_trans p'
+#align tactic.symm_eq tactic.symm_eq
 
 unsafe def find_eq_type (r : tauto_state) : expr → List expr → tactic (expr × expr)
   | e, [] => failed
   | e, H :: Hs => do
     let t ← infer_type H
     Prod.mk H <$> symm_eq r e t <|> find_eq_type e Hs
+#align tactic.find_eq_type tactic.find_eq_type
 
 private unsafe def contra_p_not_p (r : tauto_state) : List expr → List expr → tactic Unit
   | [], Hs => failed
@@ -181,15 +192,18 @@ private unsafe def contra_p_not_p (r : tauto_state) : List expr → List expr �
           let pr ← mk_app `absurd [tgt, H2, H1]
           tactic.exact pr) <|>
         contra_p_not_p Rs Hs
+#align tactic.contra_p_not_p tactic.contra_p_not_p
 
 unsafe def contradiction_with (r : tauto_state) : tactic Unit :=
   contradiction <|> do
     tactic.try intro1
     let ctx ← local_context
     contra_p_not_p r ctx ctx
+#align tactic.contradiction_with tactic.contradiction_with
 
 unsafe def contradiction_symm :=
   using_new_ref (native.rb_map.mk _ _) contradiction_with
+#align tactic.contradiction_symm tactic.contradiction_symm
 
 unsafe def assumption_with (r : tauto_state) : tactic Unit :=
   (do
@@ -198,9 +212,11 @@ unsafe def assumption_with (r : tauto_state) : tactic Unit :=
       let (H, p) ← find_eq_type r t ctx
       mk_eq_mpr p H >>= tactic.exact) <|>
     fail "assumption tactic failed"
+#align tactic.assumption_with tactic.assumption_with
 
 unsafe def assumption_symm :=
   using_new_ref (native.rb_map.mk _ _) assumption_with
+#align tactic.assumption_symm tactic.assumption_symm
 
 /-- Configuration options for `tauto`.
   If `classical` is `tt`, runs `classical` before the rest of `tauto`.
@@ -209,6 +225,7 @@ unsafe def assumption_symm :=
 unsafe structure tauto_cfg where
   classical : Bool := false
   closer : tactic Unit := pure ()
+#align tactic.tauto_cfg tactic.tauto_cfg
 
 unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
   focus1 <|
@@ -240,6 +257,7 @@ unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
     when cfg (classical tt)
     andthen (andthen (using_new_ref (expr_map.mk _) tauto_core) (repeat (first basic_tauto_tacs))) cfg
     done
+#align tactic.tautology tactic.tautology
 
 namespace Interactive
 
@@ -259,6 +277,7 @@ that it is unable to solve before failing.
 -/
 unsafe def tautology (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) :=
   tactic.tautology <| { cfg with classical := c.isSome }
+#align tactic.interactive.tautology tactic.interactive.tautology
 
 -- Now define a shorter name for the tactic `tautology`.
 /-- `tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
@@ -272,6 +291,7 @@ that it is unable to solve before failing.
 -/
 unsafe def tauto (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) : tactic Unit :=
   tautology c cfg
+#align tactic.interactive.tauto tactic.interactive.tauto
 
 add_hint_tactic tauto
 

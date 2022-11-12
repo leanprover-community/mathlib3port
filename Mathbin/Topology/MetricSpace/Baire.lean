@@ -41,6 +41,7 @@ Formulated here when the source space is ℕ (and subsumed below by `dense_Inter
 with any encodable source space).-/
 class BaireSpace (α : Type _) [TopologicalSpace α] : Prop where
   baire_property : ∀ f : ℕ → Set α, (∀ n, IsOpen (f n)) → (∀ n, Dense (f n)) → Dense (⋂ n, f n)
+#align baire_space BaireSpace
 
 /-- Baire theorems asserts that various topological spaces have the Baire property.
 Two versions of these theorems are given.
@@ -145,6 +146,7 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEmetri
     
   show edist y x ≤ ε
   exact le_trans (yball 0) (min_le_left _ _)
+#align baire_category_theorem_emetric_complete baire_category_theorem_emetric_complete
 
 /-- The second theorem states that locally compact spaces are Baire. -/
 instance (priority := 100) baire_category_theorem_locally_compact [TopologicalSpace α] [T2Space α]
@@ -180,12 +182,14 @@ instance (priority := 100) baire_category_theorem_locally_compact [TopologicalSp
       (fun n => (hK_decreasing n).trans (inter_subset_right _ _)) (fun n => (K n).Nonempty) (K 0).IsCompact fun n =>
       (K n).IsCompact.IsClosed
   exact hK_nonempty.mono hK_subset
+#align baire_category_theorem_locally_compact baire_category_theorem_locally_compact
 
 variable [TopologicalSpace α] [BaireSpace α]
 
 /-- Definition of a Baire space. -/
 theorem dense_Inter_of_open_nat {f : ℕ → Set α} (ho : ∀ n, IsOpen (f n)) (hd : ∀ n, Dense (f n)) : Dense (⋂ n, f n) :=
   BaireSpace.baire_property f ho hd
+#align dense_Inter_of_open_nat dense_Inter_of_open_nat
 
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here with ⋂₀. -/
 theorem dense_sInter_of_open {S : Set (Set α)} (ho : ∀ s ∈ S, IsOpen s) (hS : S.Countable) (hd : ∀ s ∈ S, Dense s) :
@@ -198,6 +202,7 @@ theorem dense_sInter_of_open {S : Set (Set α)} (ho : ∀ s ∈ S, IsOpen s) (hS
     rw [hf, sInter_range]
     exact dense_Inter_of_open_nat (fun n => ho _ (F n)) fun n => hd _ (F n)
     
+#align dense_sInter_of_open dense_sInter_of_open
 
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here with
 an index set which is a countable set in any type. -/
@@ -211,6 +216,7 @@ theorem dense_bInter_of_open {S : Set β} {f : β → Set α} (ho : ∀ s ∈ S,
     
   · rwa [ball_image_iff]
     
+#align dense_bInter_of_open dense_bInter_of_open
 
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here with
 an index set which is an encodable type. -/
@@ -224,6 +230,7 @@ theorem dense_Inter_of_open [Encodable β] {f : β → Set α} (ho : ∀ s, IsOp
     
   · rwa [forall_range_iff]
     
+#align dense_Inter_of_open dense_Inter_of_open
 
 /-- Baire theorem: a countable intersection of dense Gδ sets is dense. Formulated here with ⋂₀. -/
 theorem dense_sInter_of_Gδ {S : Set (Set α)} (ho : ∀ s ∈ S, IsGδ s) (hS : S.Countable) (hd : ∀ s ∈ S, Dense s) :
@@ -244,6 +251,7 @@ theorem dense_sInter_of_Gδ {S : Set (Set α)} (ho : ∀ s ∈ S, IsGδ s) (hS :
     rw [hsT s hs] at this
     exact closure_mono (sInter_subset_of_mem tTs) this
     
+#align dense_sInter_of_Gδ dense_sInter_of_Gδ
 
 /-- Baire theorem: a countable intersection of dense Gδ sets is dense. Formulated here with
 an index set which is an encodable type. -/
@@ -251,6 +259,7 @@ theorem dense_Inter_of_Gδ [Encodable β] {f : β → Set α} (ho : ∀ s, IsGδ
     Dense (⋂ s, f s) := by
   rw [← sInter_range]
   exact dense_sInter_of_Gδ (forall_range_iff.2 ‹_›) (countable_range _) (forall_range_iff.2 ‹_›)
+#align dense_Inter_of_Gδ dense_Inter_of_Gδ
 
 /-- Baire theorem: a countable intersection of dense Gδ sets is dense. Formulated here with
 an index set which is a countable set in any type. -/
@@ -259,12 +268,14 @@ theorem dense_bInter_of_Gδ {S : Set β} {f : ∀ x ∈ S, Set α} (ho : ∀ s �
   rw [bInter_eq_Inter]
   haveI := hS.to_encodable
   exact dense_Inter_of_Gδ (fun s => ho s s.2) fun s => hd s s.2
+#align dense_bInter_of_Gδ dense_bInter_of_Gδ
 
 /-- Baire theorem: the intersection of two dense Gδ sets is dense. -/
 theorem Dense.inter_of_Gδ {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) (hsc : Dense s) (htc : Dense t) : Dense (s ∩ t) :=
   by
   rw [inter_eq_Inter]
   apply dense_Inter_of_Gδ <;> simp [Bool.forall_bool, *]
+#align dense.inter_of_Gδ Dense.inter_of_Gδ
 
 /-- A property holds on a residual (comeagre) set if and only if it holds on some dense `Gδ` set. -/
 theorem eventually_residual {p : α → Prop} : (∀ᶠ x in residual α, p x) ↔ ∃ t : Set α, IsGδ t ∧ Dense t ∧ ∀ x ∈ t, p x :=
@@ -277,16 +288,19 @@ theorem eventually_residual {p : α → Prop} : (∀ᶠ x in residual α, p x) �
         ⟨Univ, is_Gδ_univ, dense_univ⟩
     _ ↔ _ := by simp [and_assoc']
     
+#align eventually_residual eventually_residual
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
   (@eventually_residual α _ _ fun x => x ∈ s).trans <|
     exists_congr fun t => by rw [exists_prop, and_comm' (t ⊆ s), subset_def, and_assoc']
+#align mem_residual mem_residual
 
 theorem dense_of_mem_residual {s : Set α} (hs : s ∈ residual α) : Dense s :=
   let ⟨t, hts, _, hd⟩ := mem_residual.1 hs
   hd.mono hts
+#align dense_of_mem_residual dense_of_mem_residual
 
 instance : CountableInterFilter (residual α) :=
   ⟨by
@@ -317,6 +331,7 @@ theorem IsGδ.dense_Union_interior_of_closed [Encodable ι] {s : Set α} (hs : I
   rw [mem_Inter] at hxg
   rcases mem_Union.1 (hU hxs) with ⟨i, hi⟩
   exact mem_Union.2 ⟨i, self_diff_frontier (f i) ▸ ⟨hi, hxg _⟩⟩
+#align is_Gδ.dense_Union_interior_of_closed IsGδ.dense_Union_interior_of_closed
 
 /-- If a countable family of closed sets cover a dense `Gδ` set, then the union of their interiors
 is dense. Formulated here with a union over a countable set in any type. -/
@@ -325,36 +340,42 @@ theorem IsGδ.dense_bUnion_interior_of_closed {t : Set ι} {s : Set α} (hs : Is
   haveI := ht.to_encodable
   simp only [bUnion_eq_Union, SetCoe.forall'] at *
   exact hs.dense_Union_interior_of_closed hd hc hU
+#align is_Gδ.dense_bUnion_interior_of_closed IsGδ.dense_bUnion_interior_of_closed
 
 /-- If a countable family of closed sets cover a dense `Gδ` set, then the union of their interiors
 is dense. Formulated here with `⋃₀`. -/
 theorem IsGδ.dense_sUnion_interior_of_closed {T : Set (Set α)} {s : Set α} (hs : IsGδ s) (hd : Dense s)
     (hc : T.Countable) (hc' : ∀ t ∈ T, IsClosed t) (hU : s ⊆ ⋃₀T) : Dense (⋃ t ∈ T, Interior t) :=
   hs.dense_bUnion_interior_of_closed hd hc hc' <| by rwa [← sUnion_eq_bUnion]
+#align is_Gδ.dense_sUnion_interior_of_closed IsGδ.dense_sUnion_interior_of_closed
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with an index set which is a countable set in any type. -/
 theorem dense_bUnion_interior_of_closed {S : Set β} {f : β → Set α} (hc : ∀ s ∈ S, IsClosed (f s)) (hS : S.Countable)
     (hU : (⋃ s ∈ S, f s) = univ) : Dense (⋃ s ∈ S, Interior (f s)) :=
   is_Gδ_univ.dense_bUnion_interior_of_closed dense_univ hS hc hU.ge
+#align dense_bUnion_interior_of_closed dense_bUnion_interior_of_closed
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with `⋃₀`. -/
 theorem dense_sUnion_interior_of_closed {S : Set (Set α)} (hc : ∀ s ∈ S, IsClosed s) (hS : S.Countable)
     (hU : ⋃₀S = univ) : Dense (⋃ s ∈ S, Interior s) :=
   is_Gδ_univ.dense_sUnion_interior_of_closed dense_univ hS hc hU.ge
+#align dense_sUnion_interior_of_closed dense_sUnion_interior_of_closed
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with an index set which is an encodable type. -/
 theorem dense_Union_interior_of_closed [Encodable β] {f : β → Set α} (hc : ∀ s, IsClosed (f s))
     (hU : (⋃ s, f s) = univ) : Dense (⋃ s, Interior (f s)) :=
   is_Gδ_univ.dense_Union_interior_of_closed dense_univ hc hU.ge
+#align dense_Union_interior_of_closed dense_Union_interior_of_closed
 
 /-- One of the most useful consequences of Baire theorem: if a countable union of closed sets
 covers the space, then one of the sets has nonempty interior. -/
 theorem nonempty_interior_of_Union_of_closed [Nonempty α] [Encodable β] {f : β → Set α} (hc : ∀ s, IsClosed (f s))
     (hU : (⋃ s, f s) = univ) : ∃ s, (Interior <| f s).Nonempty := by
   simpa using (dense_Union_interior_of_closed hc hU).Nonempty
+#align nonempty_interior_of_Union_of_closed nonempty_interior_of_Union_of_closed
 
 end BaireTheorem
 

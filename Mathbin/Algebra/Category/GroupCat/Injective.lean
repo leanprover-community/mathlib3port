@@ -51,13 +51,14 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
         have eq2 : α' ≫ f = β' ≫ f := by
           ext
           simp only [CategoryTheory.comp_apply, LinearMap.to_add_monoid_hom_coe]
-          simpa only [ModuleCat.coe_comp, LinearMap.coe_mk, Function.comp_app] using FunLike.congr_fun eq1 x
+          simpa only [ModuleCat.coe_comp, LinearMap.coe_mk, Function.comp_apply] using FunLike.congr_fun eq1 x
         rw [cancel_mono] at eq2
         ext
         simpa only using FunLike.congr_fun eq2 x
       refine' ⟨(injective.factor_thru G F).toAddMonoidHom, _⟩
       ext
       convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
+#align AddCommGroup.injective_of_injective_as_module AddCommGroupCat.injective_of_injective_as_module
 
 theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGroupCat)] : Injective (⟨A⟩ : ModuleCat ℤ) :=
   { factors := fun X Y g f m => by
@@ -83,6 +84,7 @@ theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGrou
         
       ext
       convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
+#align AddCommGroup.injective_as_module_of_injective_as_Ab AddCommGroupCat.injective_as_module_of_injective_as_Ab
 
 instance injective_of_divisible [DivisibleBy A ℤ] : CategoryTheory.Injective (⟨A⟩ : AddCommGroupCat) :=
   @injective_of_injective_as_module A _ <|
@@ -125,6 +127,7 @@ instance injective_of_divisible [DivisibleBy A ℤ] : CategoryTheory.Injective (
             congr
             
           
+#align AddCommGroup.injective_of_divisible AddCommGroupCat.injective_of_divisible
 
 end AddCommGroupCat
 

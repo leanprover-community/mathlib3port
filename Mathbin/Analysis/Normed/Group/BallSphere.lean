@@ -26,6 +26,7 @@ instance : HasInvolutiveNeg (Sphere (0 : E) r) where
 @[simp]
 theorem coe_neg_sphere {r : ℝ} (v : Sphere (0 : E) r) : ↑(-v) = (-v : E) :=
   rfl
+#align coe_neg_sphere coe_neg_sphere
 
 instance : HasContinuousNeg (Sphere (0 : E) r) :=
   ⟨continuous_neg.subtypeMap _⟩
@@ -39,6 +40,7 @@ instance {r : ℝ} : HasInvolutiveNeg (Ball (0 : E) r) where
 @[simp]
 theorem coe_neg_ball {r : ℝ} (v : Ball (0 : E) r) : ↑(-v) = (-v : E) :=
   rfl
+#align coe_neg_ball coe_neg_ball
 
 instance : HasContinuousNeg (Ball (0 : E) r) :=
   ⟨continuous_neg.subtypeMap _⟩
@@ -52,6 +54,7 @@ instance {r : ℝ} : HasInvolutiveNeg (ClosedBall (0 : E) r) where
 @[simp]
 theorem coe_neg_closed_ball {r : ℝ} (v : ClosedBall (0 : E) r) : ↑(-v) = (-v : E) :=
   rfl
+#align coe_neg_closed_ball coe_neg_closed_ball
 
 instance : HasContinuousNeg (ClosedBall (0 : E) r) :=
   ⟨continuous_neg.subtypeMap _⟩

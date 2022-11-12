@@ -62,6 +62,7 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ := by
     refine' ⟨min ε R, hε ⟨lt_min εpos Rpos, min_le_left _ _⟩, _⟩
     exact measure_mul_le_scaling_constant_of_mul μ ⟨zero_lt_three, le_max_right _ _⟩ (min_le_right _ _)
   exact (Vitali.vitaliFamily μ (scaling_constant_of μ (max (4 * K + 3) 3)) A).enlarge (R / 4) (by linarith)
+#align is_doubling_measure.vitali_family IsDoublingMeasure.vitaliFamily
 
 /-- In the Vitali family `is_doubling_measure.vitali_family K`, the sets based at `x` contain all
 balls `closed_ball y r` when `dist x y ≤ K * r`. -/
@@ -108,6 +109,8 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
     refine' le_mul_of_one_le_left (zero_le _) _
     exact Ennreal.one_le_coe_iff.2 (le_max_right _ _)
     
+#align
+  is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closed_ball_mem_vitali_family_of_dist_le_mul
 
 theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α) (δ : ι → ℝ)
     (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ ClosedBall (w j) (K * δ j)) :
@@ -136,6 +139,7 @@ theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filt
     simp only [mem_closed_ball] at hx hy⊢
     linarith [dist_triangle_right y x (w j)]
     
+#align is_doubling_measure.tendsto_closed_ball_filter_at IsDoublingMeasure.tendsto_closed_ball_filter_at
 
 end
 
@@ -155,6 +159,7 @@ theorem ae_tendsto_measure_inter_div (S : Set α) (K : ℝ) :
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_measure_inter_div
       S] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
+#align is_doubling_measure.ae_tendsto_measure_inter_div IsDoublingMeasure.ae_tendsto_measure_inter_div
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
 centers are not required to be fixed. -/
@@ -166,6 +171,7 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) (K : �
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_average_norm_sub
       hf] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
+#align is_doubling_measure.ae_tendsto_average_norm_sub IsDoublingMeasure.ae_tendsto_average_norm_sub
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
 centers are not required to be fixed. -/
@@ -177,6 +183,7 @@ theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} 
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_average
       hf] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
+#align is_doubling_measure.ae_tendsto_average IsDoublingMeasure.ae_tendsto_average
 
 end Applications
 

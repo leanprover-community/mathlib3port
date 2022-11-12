@@ -56,6 +56,8 @@ theorem det_to_matrix_orthonormal_basis_of_same_orientation (h : e.toBasis.Orien
     rw [e.to_basis.orientation_eq_iff_det_pos] at h
     simpa using h
   linarith
+#align
+  orthonormal_basis.det_to_matrix_orthonormal_basis_of_same_orientation OrthonormalBasis.det_to_matrix_orthonormal_basis_of_same_orientation
 
 /-- The change-of-basis matrix between two orthonormal bases with the opposite orientations has
 determinant -1. -/
@@ -63,6 +65,8 @@ theorem det_to_matrix_orthonormal_basis_of_opposite_orientation (h : e.toBasis.O
     e.toBasis.det f = -1 := by
   contrapose! h
   simp [e.to_basis.orientation_eq_iff_det_pos, (e.det_to_matrix_orthonormal_basis_real f).resolve_right h]
+#align
+  orthonormal_basis.det_to_matrix_orthonormal_basis_of_opposite_orientation OrthonormalBasis.det_to_matrix_orthonormal_basis_of_opposite_orientation
 
 variable {e f}
 
@@ -79,6 +83,7 @@ theorem same_orientation_iff_det_eq_det :
     rw [e.to_basis.det.eq_smul_basis_det f.to_basis]
     simp [e.det_to_matrix_orthonormal_basis_of_same_orientation f h]
     
+#align orthonormal_basis.same_orientation_iff_det_eq_det OrthonormalBasis.same_orientation_iff_det_eq_det
 
 variable (e f)
 
@@ -88,6 +93,7 @@ theorem det_eq_neg_det_of_opposite_orientation (h : e.toBasis.Orientation ≠ f.
     e.toBasis.det = -f.toBasis.det := by
   rw [e.to_basis.det.eq_smul_basis_det f.to_basis]
   simp [e.det_to_matrix_orthonormal_basis_of_opposite_orientation f h]
+#align orthonormal_basis.det_eq_neg_det_of_opposite_orientation OrthonormalBasis.det_eq_neg_det_of_opposite_orientation
 
 section AdjustToOrientation
 
@@ -98,34 +104,42 @@ property of orthonormality. -/
 theorem orthonormalAdjustToOrientation : Orthonormal ℝ (e.toBasis.adjustToOrientation x) := by
   apply e.orthonormal.orthonormal_of_forall_eq_or_eq_neg
   simpa using e.to_basis.adjust_to_orientation_apply_eq_or_eq_neg x
+#align orthonormal_basis.orthonormal_adjust_to_orientation OrthonormalBasis.orthonormalAdjustToOrientation
 
 /-- Given an orthonormal basis and an orientation, return an orthonormal basis giving that
 orientation: either the original basis, or one constructed by negating a single (arbitrary) basis
 vector. -/
 def adjustToOrientation : OrthonormalBasis ι ℝ E :=
   (e.toBasis.adjustToOrientation x).toOrthonormalBasis (e.orthonormalAdjustToOrientation x)
+#align orthonormal_basis.adjust_to_orientation OrthonormalBasis.adjustToOrientation
 
 theorem to_basis_adjust_to_orientation : (e.adjustToOrientation x).toBasis = e.toBasis.adjustToOrientation x :=
   (e.toBasis.adjustToOrientation x).to_basis_to_orthonormal_basis _
+#align orthonormal_basis.to_basis_adjust_to_orientation OrthonormalBasis.to_basis_adjust_to_orientation
 
 /-- `adjust_to_orientation` gives an orthonormal basis with the required orientation. -/
 @[simp]
 theorem orientation_adjust_to_orientation : (e.adjustToOrientation x).toBasis.Orientation = x := by
   rw [e.to_basis_adjust_to_orientation]
   exact e.to_basis.orientation_adjust_to_orientation x
+#align orthonormal_basis.orientation_adjust_to_orientation OrthonormalBasis.orientation_adjust_to_orientation
 
 /-- Every basis vector from `adjust_to_orientation` is either that from the original basis or its
 negation. -/
 theorem adjust_to_orientation_apply_eq_or_eq_neg (i : ι) :
     e.adjustToOrientation x i = e i ∨ e.adjustToOrientation x i = -e i := by
   simpa [← e.to_basis_adjust_to_orientation] using e.to_basis.adjust_to_orientation_apply_eq_or_eq_neg x i
+#align
+  orthonormal_basis.adjust_to_orientation_apply_eq_or_eq_neg OrthonormalBasis.adjust_to_orientation_apply_eq_or_eq_neg
 
 theorem det_adjust_to_orientation :
     (e.adjustToOrientation x).toBasis.det = e.toBasis.det ∨ (e.adjustToOrientation x).toBasis.det = -e.toBasis.det := by
   simpa using e.to_basis.det_adjust_to_orientation x
+#align orthonormal_basis.det_adjust_to_orientation OrthonormalBasis.det_adjust_to_orientation
 
 theorem abs_det_adjust_to_orientation (v : ι → E) : |(e.adjustToOrientation x).toBasis.det v| = |e.toBasis.det v| := by
   simp [to_basis_adjust_to_orientation]
+#align orthonormal_basis.abs_det_adjust_to_orientation OrthonormalBasis.abs_det_adjust_to_orientation
 
 end AdjustToOrientation
 
@@ -143,6 +157,7 @@ protected def finOrthonormalBasis (hn : 0 < n) (h : finrank ℝ E = n) (x : Orie
   haveI := Fin.pos_iff_nonempty.1 hn
   haveI := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
   exact ((stdOrthonormalBasis _ _).reindex <| finCongr h).adjustToOrientation x
+#align orientation.fin_orthonormal_basis Orientation.finOrthonormalBasis
 
 /-- `orientation.fin_orthonormal_basis` gives a basis with the required orientation. -/
 @[simp]
@@ -151,6 +166,7 @@ theorem fin_orthonormal_basis_orientation (hn : 0 < n) (h : finrank ℝ E = n) (
   haveI := Fin.pos_iff_nonempty.1 hn
   haveI := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
   exact ((stdOrthonormalBasis _ _).reindex <| finCongr h).orientation_adjust_to_orientation x
+#align orientation.fin_orthonormal_basis_orientation Orientation.fin_orthonormal_basis_orientation
 
 section VolumeForm
 
@@ -162,13 +178,10 @@ include _i o
 alternating form uniquely defined by compatibility with the orientation and inner product structure.
 -/
 irreducible_def volumeForm : AlternatingMap ℝ E ℝ (Fin n) := by
-  classical
-  cases n
-  · let opos : AlternatingMap ℝ E ℝ (Fin 0) := AlternatingMap.constOfIsEmpty ℝ E (1 : ℝ)
-    exact o.eq_or_eq_neg_of_is_empty.by_cases (fun _ => opos) fun _ => -opos
-    
-  · exact (o.fin_orthonormal_basis n.succ_pos _i.out).toBasis.det
-    
+  classical cases n
+    · exact (o.fin_orthonormal_basis n.succ_pos _i.out).toBasis.det
+      
+#align orientation.volume_form Orientation.volumeForm
 
 omit _i o
 
@@ -177,6 +190,7 @@ theorem volume_form_zero_pos [_i : Fact (finrank ℝ E = 0)] :
     Orientation.volumeForm (positiveOrientation : Orientation ℝ E (Fin 0)) =
       AlternatingMap.constLinearEquivOfIsEmpty 1 :=
   by simp [volume_form, Or.by_cases, if_pos]
+#align orientation.volume_form_zero_pos Orientation.volume_form_zero_pos
 
 theorem volume_form_zero_neg [_i : Fact (finrank ℝ E = 0)] :
     Orientation.volumeForm (-positive_orientation : Orientation ℝ E (Fin 0)) =
@@ -187,6 +201,7 @@ theorem volume_form_zero_neg [_i : Fact (finrank ℝ E = 0)] :
   rw [ray_eq_iff, same_ray_comm]
   intro h
   simpa using congr_arg alternating_map.const_linear_equiv_of_is_empty.symm (eq_zero_of_same_ray_self_neg h)
+#align orientation.volume_form_zero_neg Orientation.volume_form_zero_neg
 
 include _i o
 
@@ -202,6 +217,7 @@ theorem volume_form_robust (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBasis.
     rw [same_orientation_iff_det_eq_det, hb]
     exact o.fin_orthonormal_basis_orientation _ _
     
+#align orientation.volume_form_robust Orientation.volume_form_robust
 
 /-- The volume form on an oriented real inner product space can be evaluated as the determinant with
 respect to any orthonormal basis of the space compatible with the orientation. -/
@@ -216,6 +232,7 @@ theorem volume_form_robust_neg (b : OrthonormalBasis (Fin n) ℝ E) (hb : b.toBa
   apply e.det_eq_neg_det_of_opposite_orientation b
   convert hb.symm
   exact o.fin_orthonormal_basis_orientation _ _
+#align orientation.volume_form_robust_neg Orientation.volume_form_robust_neg
 
 @[simp]
 theorem volume_form_neg_orientation : (-o).volumeForm = -o.volumeForm := by
@@ -228,6 +245,7 @@ theorem volume_form_neg_orientation : (-o).volumeForm = -o.volumeForm := by
     symm
     rw [e.to_basis.orientation_ne_iff_eq_neg, h₁]
   rw [o.volume_form_robust e h₁, (-o).volume_form_robust_neg e h₂]
+#align orientation.volume_form_neg_orientation Orientation.volume_form_neg_orientation
 
 theorem volume_form_robust' (b : OrthonormalBasis (Fin n) ℝ E) (v : Fin n → E) : |o.volumeForm v| = |b.toBasis.det v| :=
   by
@@ -237,6 +255,7 @@ theorem volume_form_robust' (b : OrthonormalBasis (Fin n) ℝ E) (v : Fin n → 
   · rw [o.volume_form_robust (b.adjust_to_orientation o) (b.orientation_adjust_to_orientation o),
       b.abs_det_adjust_to_orientation]
     
+#align orientation.volume_form_robust' Orientation.volume_form_robust'
 
 /-- Let `v` be an indexed family of `n` vectors in an oriented `n`-dimensional real inner
 product space `E`. The output of the volume form of `E` when evaluated on `v` is bounded in absolute
@@ -257,9 +276,11 @@ theorem abs_volume_form_apply_le (v : Fin n → E) : |o.volumeForm v| ≤ ∏ i 
   intro i hi
   convert abs_real_inner_le_norm (b i) (v i)
   simp [b.orthonormal.1 i]
+#align orientation.abs_volume_form_apply_le Orientation.abs_volume_form_apply_le
 
 theorem volume_form_apply_le (v : Fin n → E) : o.volumeForm v ≤ ∏ i : Fin n, ∥v i∥ :=
   (le_abs_self _).trans (o.abs_volume_form_apply_le v)
+#align orientation.volume_form_apply_le Orientation.volume_form_apply_le
 
 /-- Let `v` be an indexed family of `n` orthogonal vectors in an oriented `n`-dimensional
 real inner product space `E`. The output of the volume form of `E` when evaluated on `v` is, up to
@@ -289,11 +310,13 @@ theorem abs_volume_form_apply_of_pairwise_orthogonal {v : Fin n → E} (hv : Pai
     
   · positivity
     
+#align orientation.abs_volume_form_apply_of_pairwise_orthogonal Orientation.abs_volume_form_apply_of_pairwise_orthogonal
 
 /-- The output of the volume form of an oriented real inner product space `E` when evaluated on an
 orthonormal basis is ±1. -/
 theorem abs_volume_form_apply_of_orthonormal (v : OrthonormalBasis (Fin n) ℝ E) : |o.volumeForm v| = 1 := by
   simpa [o.volume_form_robust' v v] using congr_arg abs v.to_basis.det_self
+#align orientation.abs_volume_form_apply_of_orthonormal Orientation.abs_volume_form_apply_of_orthonormal
 
 theorem volume_form_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = n)] (φ : E ≃ₗᵢ[ℝ] F) (x : Fin n → F) :
     (Orientation.map (Fin n) φ.toLinearEquiv o).volumeForm x = o.volumeForm (φ.symm ∘ x) := by
@@ -308,6 +331,7 @@ theorem volume_form_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank �
   rw [(Orientation.map (Fin n.succ) φ.to_linear_equiv o).volume_form_robust (e.map φ) heφ]
   rw [o.volume_form_robust e he]
   simp
+#align orientation.volume_form_map Orientation.volume_form_map
 
 /-- The volume form is invariant under pullback by a positively-oriented isometric automorphism. -/
 theorem volume_form_comp_linear_isometry_equiv (φ : E ≃ₗᵢ[ℝ] E) (hφ : 0 < (φ.toLinearEquiv : E →ₗ[ℝ] E).det)
@@ -320,6 +344,7 @@ theorem volume_form_comp_linear_isometry_equiv (φ : E ≃ₗᵢ[ℝ] E) (hφ : 
   · ext
     simp
     
+#align orientation.volume_form_comp_linear_isometry_equiv Orientation.volume_form_comp_linear_isometry_equiv
 
 end VolumeForm
 

@@ -58,10 +58,12 @@ unsafe def decide_eq (l r : expr) : tactic (Bool × expr) := do
     else do
       let (_, p) ← norm_num.prove_ne c l' r' n₁ n₂
       pure (ff, p)
+#align tactic.norm_num.decide_eq tactic.norm_num.decide_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.not_mem_cons {α : Type _} {x y : α} {ys : List α} (h₁ : x ≠ y) (h₂ : x ∉ ys) : x ∉ y::ys := fun h =>
   ((List.mem_cons_iff _ _ _).mp h).elim h₁ h₂
+#align tactic.norm_num.list.not_mem_cons Tactic.NormNum.List.not_mem_cons
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Use a decision procedure for the equality of list elements to decide list membership.
@@ -87,11 +89,13 @@ unsafe def list.decide_mem (decide_eq : expr → expr → tactic (Bool × expr))
           else do
             let pf ← i_to_expr (pquote.1 (List.not_mem_cons (%%ₓhead_pf) (%%ₓtail_pf)))
             pure (ff, pf)
+#align tactic.norm_num.list.decide_mem tactic.norm_num.list.decide_mem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.map_cons_congr {α β : Type _} (f : α → β) {x : α} {xs : List α} {fx : β} {fxs : List β} (h₁ : f x = fx)
     (h₂ : xs.map f = fxs) : (x::xs).map f = fx::fxs := by rw [List.map_cons, h₁, h₂]
+#align tactic.norm_num.list.map_cons_congr Tactic.NormNum.List.map_cons_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -105,14 +109,17 @@ unsafe def eval_list_map (ef : expr) : List expr → tactic (List expr × expr)
     let (fxs, fxs_eq) ← eval_list_map xs
     let eq ← i_to_expr (pquote.1 (List.map_cons_congr (%%ₓef) (%%ₓfx_eq) (%%ₓfxs_eq)))
     pure (fx::fxs, Eq)
+#align tactic.norm_num.eval_list_map tactic.norm_num.eval_list_map
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.cons_congr {α : Type _} (x : α) {xs : List α} {xs' : List α} (xs_eq : xs' = xs) : (x::xs') = x::xs := by
   rw [xs_eq]
+#align tactic.norm_num.list.cons_congr Tactic.NormNum.List.cons_congr
 
 theorem List.map_congr {α β : Type _} (f : α → β) {xs xs' : List α} {ys : List β} (xs_eq : xs = xs')
     (ys_eq : xs'.map f = ys) : xs.map f = ys := by rw [← ys_eq, xs_eq]
+#align tactic.norm_num.list.map_congr Tactic.NormNum.List.map_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Convert an expression denoting a list to a list of elements. -/
@@ -140,13 +147,16 @@ unsafe def eval_list : expr → tactic (List expr × expr)
     let eq ← mk_eq_refl e
     pure (eis, Eq)
   | e => fail (to_fmt "Unknown list expression" ++ format.line ++ to_fmt e)
+#align tactic.norm_num.eval_list tactic.norm_num.eval_list
 
 theorem Multiset.cons_congr {α : Type _} (x : α) {xs : Multiset α} {xs' : List α} (xs_eq : (xs' : Multiset α) = xs) :
     (List.cons x xs' : Multiset α) = x ::ₘ xs := by rw [← xs_eq] <;> rfl
+#align tactic.norm_num.multiset.cons_congr Tactic.NormNum.Multiset.cons_congr
 
 theorem Multiset.map_congr {α β : Type _} (f : α → β) {xs : Multiset α} {xs' : List α} {ys : List β}
     (xs_eq : xs = (xs' : Multiset α)) (ys_eq : xs'.map f = ys) : xs.map f = (ys : Multiset β) := by
   rw [← ys_eq, ← Multiset.coe_map, xs_eq]
+#align tactic.norm_num.multiset.map_congr Tactic.NormNum.Multiset.map_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -189,15 +199,18 @@ unsafe def eval_multiset : expr → tactic (List expr × expr)
     let eq ← i_to_expr (pquote.1 (Multiset.map_congr (%%ₓef) (%%ₓxs_eq) (%%ₓys_eq)))
     pure (ys, Eq)
   | e => fail (to_fmt "Unknown multiset expression" ++ format.line ++ to_fmt e)
+#align tactic.norm_num.eval_multiset tactic.norm_num.eval_multiset
 
 theorem Finset.mk_congr {α : Type _} {xs xs' : Multiset α} (h : xs = xs') (nd nd') :
     Finset.mk xs nd = Finset.mk xs' nd' := by congr <;> assumption
+#align tactic.norm_num.finset.mk_congr Tactic.NormNum.Finset.mk_congr
 
 theorem Finset.insert_eq_coe_list_of_mem {α : Type _} [DecidableEq α] (x : α) (xs : Finset α) {xs' : List α}
     (h : x ∈ xs') (nd_xs : xs'.Nodup) (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
     insert x xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs) := by
   have h : x ∈ xs := by simpa [hxs'] using h
   rw [Finset.insert_eq_of_mem h, hxs']
+#align tactic.norm_num.finset.insert_eq_coe_list_of_mem Tactic.NormNum.Finset.insert_eq_coe_list_of_mem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -207,6 +220,7 @@ theorem Finset.insert_eq_coe_list_cons {α : Type _} [DecidableEq α] (x : α) (
   have h : x ∉ xs := by simpa [hxs'] using h
   rw [← Finset.val_inj, Finset.insert_val_of_not_mem h, hxs']
   simp only [Multiset.cons_coe]
+#align tactic.norm_num.finset.insert_eq_coe_list_cons Tactic.NormNum.Finset.insert_eq_coe_list_cons
 
 /-- For now this only works on types that are contiguous subsets of the integers -/
 unsafe def eval_finset_interval : expr → tactic (Option (List expr × expr × expr))
@@ -239,6 +253,7 @@ unsafe def eval_finset_interval : expr → tactic (Option (List expr × expr × 
     let nd ← i_to_expr (pquote.1 (Finset.nodup (%%ₓe)))
     pure (eis, Eq, nd)
   | _ => pure none
+#align tactic.norm_num.eval_finset_interval tactic.norm_num.eval_finset_interval
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Convert an expression denoting a finset to a list of elements,
@@ -281,8 +296,10 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) : e
     let-- Convert the fintype instance expression `ft` to a list of its elements.
       -- Unfold it to the `fintype.mk` constructor and a list of arguments.
       `fintype.mk
-      ← get_app_fn_const_whnf ft | fail (to_fmt "Unknown fintype expression" ++ format.line ++ to_fmt ft)
-    let [_, args, _] ← get_app_args_whnf ft | fail (to_fmt "Expected 3 arguments to `fintype.mk`")
+      ← get_app_fn_const_whnf ft |
+      fail (to_fmt "Unknown fintype expression" ++ format.line ++ to_fmt ft)
+    let [_, args, _] ← get_app_args_whnf ft |
+      fail (to_fmt "Expected 3 arguments to `fintype.mk`")
     eval_finset args
   | e@(quote.1 (Finset.range (%%ₓen))) => do
     let n ← expr.to_nat en
@@ -294,13 +311,16 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) : e
     let-- try some other parsers
         some
         v
-      ← eval_finset_interval e | fail (to_fmt "Unknown finset expression" ++ format.line ++ to_fmt e)
+      ← eval_finset_interval e |
+      fail (to_fmt "Unknown finset expression" ++ format.line ++ to_fmt e)
     pure v
+#align tactic.norm_num.eval_finset tactic.norm_num.eval_finset
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
 theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : α) (his : xs.Prod = y) (hi : x * y = z) :
     (x::xs).Prod = z := by rw [List.prod_cons, his, hi]
+#align tactic.norm_num.list.prod_cons_congr Tactic.NormNum.List.prod_cons_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Evaluate `list.prod %%xs`,
@@ -320,6 +340,7 @@ unsafe def list.prove_prod (α : expr) : List expr → tactic (expr × expr)
           (pquote.1
             (List.prod_cons_congr (%%ₓexs) (%%ₓx) (%%ₓeval_xs.1) (%%ₓeval_xxs.1) (%%ₓeval_xs.2) (%%ₓeval_xxs.2)))
     pure (eval_xxs.1, proof)
+#align tactic.norm_num.list.prove_prod tactic.norm_num.list.prove_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Evaluate `list.sum %%xs`,
@@ -338,14 +359,17 @@ unsafe def list.prove_sum (α : expr) : List expr → tactic (expr × expr)
       i_to_expr
           (pquote.1 (List.sum_cons_congr (%%ₓexs) (%%ₓx) (%%ₓeval_xs.1) (%%ₓeval_xxs.1) (%%ₓeval_xs.2) (%%ₓeval_xxs.2)))
     pure (eval_xxs.1, proof)
+#align tactic.norm_num.list.prove_sum tactic.norm_num.list.prove_sum
 
 @[to_additive]
 theorem List.prod_congr {α : Type _} [Monoid α] {xs xs' : List α} {z : α} (h₁ : xs = xs') (h₂ : xs'.Prod = z) :
     xs.Prod = z := by cc
+#align tactic.norm_num.list.prod_congr Tactic.NormNum.List.prod_congr
 
 @[to_additive]
 theorem Multiset.prod_congr {α : Type _} [CommMonoid α] {xs : Multiset α} {xs' : List α} {z : α}
     (h₁ : xs = (xs' : Multiset α)) (h₂ : xs'.Prod = z) : xs.Prod = z := by rw [← h₂, ← Multiset.coe_prod, h₁]
+#align tactic.norm_num.multiset.prod_congr Tactic.NormNum.Multiset.prod_congr
 
 /-- Evaluate `(%%xs.map (%%ef : %%α → %%β)).prod`,
 producing the evaluated expression and an equality proof. -/
@@ -354,6 +378,7 @@ unsafe def list.prove_prod_map (β ef : expr) (xs : List expr) : tactic (expr ×
   let (Prod, prod_eq) ← list.prove_prod β fxs
   let eq ← i_to_expr (pquote.1 (List.prod_congr (%%ₓfxs_eq) (%%ₓprod_eq)))
   pure (Prod, Eq)
+#align tactic.norm_num.list.prove_prod_map tactic.norm_num.list.prove_prod_map
 
 /-- Evaluate `(%%xs.map (%%ef : %%α → %%β)).sum`,
 producing the evaluated expression and an equality proof. -/
@@ -362,11 +387,13 @@ unsafe def list.prove_sum_map (β ef : expr) (xs : List expr) : tactic (expr × 
   let (Sum, sum_eq) ← list.prove_sum β fxs
   let eq ← i_to_expr (pquote.1 (List.sum_congr (%%ₓfxs_eq) (%%ₓsum_eq)))
   pure (Sum, Eq)
+#align tactic.norm_num.list.prove_sum_map tactic.norm_num.list.prove_sum_map
 
 @[to_additive]
 theorem Finset.eval_prod_of_list {β α : Type _} [CommMonoid β] (s : Finset α) (f : α → β) {is : List α} (his : is.Nodup)
     (hs : Finset.mk (↑is) (Multiset.coe_nodup.mpr his) = s) {x : β} (hx : (is.map f).Prod = x) : s.Prod f = x := by
   rw [← hs, Finset.prod_mk, Multiset.coe_map, Multiset.coe_prod, hx]
+#align tactic.norm_num.finset.eval_prod_of_list Tactic.NormNum.Finset.eval_prod_of_list
 
 /-- `norm_num` plugin for evaluating big operators:
  * `list.prod`
@@ -415,6 +442,7 @@ unsafe def eval_big_operators : expr → tactic (expr × expr)
       let pf ← i_to_expr (pquote.1 (Finset.eval_sum_of_list (%%ₓes) (%%ₓef) (%%ₓnodup) (%%ₓlist_eq) (%%ₓsum_eq)))
       pure (result, pf)
   | _ => failed
+#align tactic.norm_num.eval_big_operators tactic.norm_num.eval_big_operators
 
 end Tactic.NormNum
 

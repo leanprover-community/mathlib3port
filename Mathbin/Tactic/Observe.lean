@@ -38,6 +38,7 @@ unsafe def tactic.interactive.observe (trc : parse <| optional (tk "?")) (h : pa
   when trc <|
       ← do
         dbg_trace "Try this: have {(← pph)}: {(← ppt)} := {← s}"
+#align tactic.interactive.observe tactic.interactive.observe
 
 add_tactic_doc
   { Name := "observe", category := DocCategory.tactic, declNames := [`tactic.interactive.observe],

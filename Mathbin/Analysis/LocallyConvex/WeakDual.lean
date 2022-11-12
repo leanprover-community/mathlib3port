@@ -52,27 +52,34 @@ variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [M
 `λ x, ∥f x∥` -/
 def toSeminorm (f : E →ₗ[𝕜] 𝕜) : Seminorm 𝕜 E :=
   (normSeminorm 𝕜 𝕜).comp f
+#align linear_map.to_seminorm LinearMap.toSeminorm
 
 theorem coe_to_seminorm {f : E →ₗ[𝕜] 𝕜} : ⇑f.toSeminorm = fun x => ∥f x∥ :=
   rfl
+#align linear_map.coe_to_seminorm LinearMap.coe_to_seminorm
 
 @[simp]
 theorem to_seminorm_apply {f : E →ₗ[𝕜] 𝕜} {x : E} : f.toSeminorm x = ∥f x∥ :=
   rfl
+#align linear_map.to_seminorm_apply LinearMap.to_seminorm_apply
 
 theorem to_seminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} : Seminorm.Ball f.toSeminorm 0 r = { x : E | ∥f x∥ < r } := by
   simp only [Seminorm.ball_zero_eq, to_seminorm_apply]
+#align linear_map.to_seminorm_ball_zero LinearMap.to_seminorm_ball_zero
 
 theorem to_seminorm_comp (f : F →ₗ[𝕜] 𝕜) (g : E →ₗ[𝕜] F) : f.toSeminorm.comp g = (f.comp g).toSeminorm := by
   ext
   simp only [Seminorm.comp_apply, to_seminorm_apply, coe_comp]
+#align linear_map.to_seminorm_comp LinearMap.to_seminorm_comp
 
 /-- Construct a family of seminorms from a bilinear form. -/
 def toSeminormFamily (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) : SeminormFamily 𝕜 E F := fun y => (B.flip y).toSeminorm
+#align linear_map.to_seminorm_family LinearMap.toSeminormFamily
 
 @[simp]
 theorem to_seminorm_family_apply {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} {x y} : (B.toSeminormFamily y) x = ∥B x y∥ :=
   rfl
+#align linear_map.to_seminorm_family_apply LinearMap.to_seminorm_family_apply
 
 end LinearMap
 
@@ -127,10 +134,12 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
   refine' Seminorm.finset_sup_apply_lt hr fun y hy => _
   rw [LinearMap.to_seminorm_family_apply]
   exact hx y hy
+#align linear_map.has_basis_weak_bilin LinearMap.has_basis_weak_bilin
 
 theorem LinearMap.weakBilinWithSeminorms (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     WithSeminorms (LinearMap.toSeminormFamily B : F → Seminorm 𝕜 (WeakBilin B)) :=
   SeminormFamily.withSeminormsOfHasBasis _ B.has_basis_weak_bilin
+#align linear_map.weak_bilin_with_seminorms LinearMap.weakBilinWithSeminorms
 
 end Topology
 

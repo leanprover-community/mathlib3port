@@ -38,12 +38,14 @@ Case conversion may be inaccurate. Consider using '#align string.hash String.has
 /-- A rudimentary hash function on strings. -/
 def String.hash (s : String) : ℕ :=
   s.fold 1 fun h c => (33 * h + c.val) % unsignedSz
+#align string.hash String.hash
 
 /-- Get the last component of a name, and convert it to a string. -/
 unsafe def name.last : Name → String
   | Name.mk_string s _ => s
   | Name.mk_numeral n _ => repr n
   | anonymous => "[anonymous]"
+#align name.last name.last
 
 open Tactic
 
@@ -52,6 +54,7 @@ to each declaration named in the list `to`. -/
 unsafe def tactic.copy_doc_string (fr : Name) (to : List Name) : tactic Unit := do
   let fr_ds ← doc_string fr
   to fun tgt => add_doc_string tgt fr_ds
+#align tactic.copy_doc_string tactic.copy_doc_string
 
 open Lean Lean.Parser Interactive
 
@@ -66,6 +69,7 @@ unsafe def copy_doc_string_cmd (_ : parse (tk "copy_doc_string")) : parser Unit 
   let expr.const fr _ ← resolve_name fr
   let to ← parser.of_tactic (to.mmap fun n => expr.const_name <$> resolve_name n)
   tactic.copy_doc_string fr to
+#align copy_doc_string_cmd copy_doc_string_cmd
 
 /-! ### The `library_note` command -/
 
@@ -77,6 +81,7 @@ unsafe def library_note_attr : user_attribute where
   Name := `library_note
   descr := "Notes about library features to be included in documentation"
   parser := failed
+#align library_note_attr library_note_attr
 
 /-- `mk_reflected_definition name val` constructs a definition declaration by reflection.
 
@@ -86,6 +91,7 @@ declaration corresponding to `def foo : ℕ := 17`
 unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected _ type] (body : type) [reflected _ body] :
     declaration :=
   mk_definition decl_name (reflect type).collect_univ_params (reflect type) (reflect body)
+#align mk_reflected_definition mk_reflected_definition
 
 /-- If `note_name` and `note` are strings, `add_library_note note_name note` adds a declaration named
 `library_note.<note_name>` with `note` as the docstring and tags it with the `library_note`
@@ -96,6 +102,7 @@ unsafe def tactic.add_library_note (note_name note : String) : tactic Unit := do
   add_decl <| mk_reflected_definition decl_name ()
   add_doc_string decl_name note
   library_note_attr decl_name () tt none
+#align tactic.add_library_note tactic.add_library_note
 
 open Tactic
 
@@ -111,13 +118,16 @@ library_note "note id"
 unsafe def library_note (mi : interactive.decl_meta_info) (_ : parse (tk "library_note")) : parser Unit := do
   let note_name ← parser.pexpr
   let note_name ← eval_pexpr String note_name
-  let some doc_string ← pure mi.doc_string | fail "library_note requires a doc string"
+  let some doc_string ← pure mi.doc_string |
+    fail "library_note requires a doc string"
   add_library_note note_name doc_string
+#align library_note library_note
 
 /-- Collects all notes in the current environment.
 Returns a list of pairs `(note_id, note_content)` -/
 unsafe def tactic.get_library_notes : tactic (List (String × String)) :=
-  attribute.get_instances `library_note >>= List.mmap fun dcl => Prod.mk dcl.last <$> doc_string dcl
+  attribute.get_instances `library_note >>= List.mapM fun dcl => Prod.mk dcl.last <$> doc_string dcl
+#align tactic.get_library_notes tactic.get_library_notes
 
 /-! ### The `add_tactic_doc_entry` command -/
 
@@ -129,6 +139,7 @@ inductive DocCategory
   | hole_cmd
   | attr
   deriving DecidableEq, has_reflect
+#align doc_category DocCategory
 
 /-- Format a `doc_category` -/
 unsafe def doc_category.to_string : DocCategory → String
@@ -136,6 +147,7 @@ unsafe def doc_category.to_string : DocCategory → String
   | DocCategory.cmd => "command"
   | DocCategory.hole_cmd => "hole_command"
   | DocCategory.attr => "attribute"
+#align doc_category.to_string doc_category.to_string
 
 unsafe instance : has_to_format DocCategory :=
   ⟨↑doc_category.to_string⟩
@@ -148,15 +160,18 @@ structure TacticDocEntry where
   tags : List String := []
   inheritDescriptionFrom : Option Name := none
   deriving has_reflect
+#align tactic_doc_entry TacticDocEntry
 
 /-- Turns a `tactic_doc_entry` into a JSON representation. -/
 unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) (desc : String) : json :=
   json.object
     [("name", d.Name), ("category", d.category.toString), ("decl_names", d.declNames.map (json.of_string ∘ toString)),
       ("tags", d.tags.map json.of_string), ("description", desc)]
+#align tactic_doc_entry.to_json tactic_doc_entry.to_json
 
 unsafe instance tactic_doc_entry.has_to_string : ToString (TacticDocEntry × String) :=
   ⟨fun ⟨doc, desc⟩ => json.unparse (doc.to_json desc)⟩
+#align tactic_doc_entry.has_to_string tactic_doc_entry.has_to_string
 
 /-- A user attribute `tactic_doc` for tagging decls of type `tactic_doc_entry`
 for use in doc output -/
@@ -165,11 +180,13 @@ unsafe def tactic_doc_entry_attr : user_attribute where
   Name := `tactic_doc
   descr := "Information about a tactic to be included in documentation"
   parser := failed
+#align tactic_doc_entry_attr tactic_doc_entry_attr
 
 /-- Collects everything in the environment tagged with the attribute `tactic_doc`. -/
 unsafe def tactic.get_tactic_doc_entries : tactic (List (TacticDocEntry × String)) :=
   attribute.get_instances `tactic_doc >>=
-    List.mmap fun dcl => Prod.mk <$> (mk_const dcl >>= eval_expr TacticDocEntry) <*> doc_string dcl
+    List.mapM fun dcl => Prod.mk <$> (mk_const dcl >>= eval_expr TacticDocEntry) <*> doc_string dcl
+#align tactic.get_tactic_doc_entries tactic.get_tactic_doc_entries
 
 /-- `add_tactic_doc tde` adds a declaration to the environment
 with `tde` as its body and tags it with the `tactic_doc`
@@ -191,6 +208,7 @@ unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) (doc : Option String) : 
   add_decl <| mk_definition decl_name [] (quote.1 TacticDocEntry) (reflect tde)
   add_doc_string decl_name desc
   tactic_doc_entry_attr decl_name () tt none
+#align tactic.add_tactic_doc tactic.add_tactic_doc
 
 /-- A command used to add documentation for a tactic, command, hole command, or attribute.
 
@@ -238,6 +256,7 @@ unsafe def add_tactic_doc_command (mi : interactive.decl_meta_info) (_ : parse <
   let pe ← parser.pexpr
   let e ← eval_pexpr TacticDocEntry pe
   tactic.add_tactic_doc e mi
+#align add_tactic_doc_command add_tactic_doc_command
 
 /-- At various places in mathlib, we leave implementation notes that are referenced from many other
 files. To keep track of these notes, we use the command `library_note`. This makes it easy to
@@ -432,8 +451,10 @@ add_decl_doc foo
 unsafe def add_decl_doc_command (mi : interactive.decl_meta_info) (_ : parse <| tk "add_decl_doc") : parser Unit := do
   let n ← parser.ident
   let n ← resolve_constant n
-  let some doc ← pure mi.doc_string | fail "add_decl_doc requires a doc string"
+  let some doc ← pure mi.doc_string |
+    fail "add_decl_doc requires a doc string"
   add_doc_string n doc
+#align add_decl_doc_command add_decl_doc_command
 
 add_tactic_doc
   { Name := "add_decl_doc", category := DocCategory.cmd, declNames := [`` add_decl_doc_command],

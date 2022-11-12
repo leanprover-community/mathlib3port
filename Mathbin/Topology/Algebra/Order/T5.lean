@@ -27,6 +27,7 @@ theorem ord_connected_component_mem_nhds : OrdConnectedComponent s a ∈ 𝓝 a 
   refine' ⟨fun h => mem_of_superset h ord_connected_component_subset, fun h => _⟩
   rcases exists_Icc_mem_subset_of_mem_nhds h with ⟨b, c, ha, ha', hs⟩
   exact mem_of_superset ha' (subset_ord_connected_component ha hs)
+#align set.ord_connected_component_mem_nhds Set.ord_connected_component_mem_nhds
 
 theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (Closure t)) (ha : a ∈ s) :
     (ord_connected_section <| OrdSeparatingSet s t)ᶜ ∈ 𝓝[≥] a := by
@@ -62,6 +63,7 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (C
       exact hxy (Icc_subset_interval ⟨hya.le, hx.1⟩) ha
       
     
+#align set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ord_separating_set_mem_nhds_within_Ici
 
 theorem compl_section_ord_separating_set_mem_nhds_within_Iic (hd : Disjoint s (Closure t)) (ha : a ∈ s) :
     (ord_connected_section <| OrdSeparatingSet s t)ᶜ ∈ 𝓝[≤] a := by
@@ -69,6 +71,7 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Iic (hd : Disjoint s (C
   have ha' : toDual a ∈ of_dual ⁻¹' s := ha
   simpa only [dual_ord_separating_set, dual_ord_connected_section] using
     compl_section_ord_separating_set_mem_nhds_within_Ici hd' ha'
+#align set.compl_section_ord_separating_set_mem_nhds_within_Iic Set.compl_section_ord_separating_set_mem_nhds_within_Iic
 
 theorem compl_section_ord_separating_set_mem_nhds (hd : Disjoint s (Closure t)) (ha : a ∈ s) :
     (ord_connected_section <| OrdSeparatingSet s t)ᶜ ∈ 𝓝 a := by
@@ -76,6 +79,7 @@ theorem compl_section_ord_separating_set_mem_nhds (hd : Disjoint s (Closure t)) 
   exact
     ⟨compl_section_ord_separating_set_mem_nhds_within_Iic hd ha,
       compl_section_ord_separating_set_mem_nhds_within_Ici hd ha⟩
+#align set.compl_section_ord_separating_set_mem_nhds Set.compl_section_ord_separating_set_mem_nhds
 
 theorem ord_t5_nhd_mem_nhds_set (hd : Disjoint s (Closure t)) : OrdT5Nhd s t ∈ 𝓝ˢ s :=
   bUnion_mem_nhds_set fun x hx =>
@@ -85,6 +89,7 @@ theorem ord_t5_nhd_mem_nhds_set (hd : Disjoint s (Closure t)) : OrdT5Nhd s t ∈
           rw [← mem_interior_iff_mem_nhds, interior_compl]
           exact disjoint_left.1 hd hx)
         (compl_section_ord_separating_set_mem_nhds hd hx)
+#align set.ord_t5_nhd_mem_nhds_set Set.ord_t5_nhd_mem_nhds_set
 
 end Set
 
@@ -94,5 +99,6 @@ open Set
 instance (priority := 100) OrderTopology.t5Space : T5Space X :=
   ⟨fun s t h₁ h₂ =>
     Filter.disjoint_iff.2
-      ⟨OrdT5Nhd s t, ord_t5_nhd_mem_nhds_set h₂, OrdT5Nhd t s, ord_t5_nhd_mem_nhds_set h₁.symm, disjointOrdT5Nhd⟩⟩
+      ⟨OrdT5Nhd s t, ord_t5_nhd_mem_nhds_set h₂, OrdT5Nhd t s, ord_t5_nhd_mem_nhds_set h₁.symm, disjoint_ord_t5_nhd⟩⟩
+#align order_topology.t5_space OrderTopology.t5Space
 

@@ -62,11 +62,13 @@ include P
 def LocalizationPreserves : Prop :=
   ∀ {R : Type u} [hR : CommRing R] (M : Submonoid R) (S : Type u) [hS : CommRing S] [Algebra R S] [IsLocalization M S],
     @P R hR → @P S hS
+#align localization_preserves LocalizationPreserves
 
 /-- A property `P` of comm rings satisfies `of_localization_maximal` if
   if `P` holds for `R` whenever `P` holds for `Rₘ` for all maximal ideal `m`. -/
 def OfLocalizationMaximal : Prop :=
   ∀ (R : Type u) [CommRing R], (∀ (J : Ideal R) (hJ : J.IsMaximal), P (Localization.AtPrime J)) → P R
+#align of_localization_maximal OfLocalizationMaximal
 
 end CommRing
 
@@ -82,6 +84,7 @@ def RingHom.LocalizationPreserves :=
   ∀ ⦃R S : Type u⦄ [CommRing R] [CommRing S] (f : R →+* S) (M : Submonoid R) (R' S' : Type u) [CommRing R']
     [CommRing S'] [Algebra R R'] [Algebra S S'] [IsLocalization M R'] [IsLocalization (M.map f) S'],
     P f → P (IsLocalization.map S' f (Submonoid.le_comap_map M) : R' →+* S')
+#align ring_hom.localization_preserves RingHom.LocalizationPreserves
 
 /-- A property `P` of ring homs satisfies `ring_hom.of_localization_finite_span`
 if `P` holds for `R →+* S` whenever there exists a finite set `{ r }` that spans `R` such that
@@ -92,6 +95,7 @@ Note that this is equivalent to `ring_hom.of_localization_span` via
 def RingHom.OfLocalizationFiniteSpan :=
   ∀ ⦃R S : Type u⦄ [CommRing R] [CommRing S] (f : R →+* S) (s : Finset R) (hs : Ideal.span (s : Set R) = ⊤)
     (H : ∀ r : s, P (Localization.awayMap f r)), P f
+#align ring_hom.of_localization_finite_span RingHom.OfLocalizationFiniteSpan
 
 /-- A property `P` of ring homs satisfies `ring_hom.of_localization_finite_span`
 if `P` holds for `R →+* S` whenever there exists a set `{ r }` that spans `R` such that
@@ -102,12 +106,14 @@ Note that this is equivalent to `ring_hom.of_localization_finite_span` via
 def RingHom.OfLocalizationSpan :=
   ∀ ⦃R S : Type u⦄ [CommRing R] [CommRing S] (f : R →+* S) (s : Set R) (hs : Ideal.span s = ⊤)
     (H : ∀ r : s, P (Localization.awayMap f r)), P f
+#align ring_hom.of_localization_span RingHom.OfLocalizationSpan
 
 /-- A property `P` of ring homs satisfies `ring_hom.holds_for_localization_away`
  if `P` holds for each localization map `R →+* Rᵣ`. -/
 def RingHom.HoldsForLocalizationAway : Prop :=
   ∀ ⦃R : Type u⦄ (S : Type u) [CommRing R] [CommRing S] [Algebra R S] (r : R) [IsLocalization.Away r S],
     P (algebraMap R S)
+#align ring_hom.holds_for_localization_away RingHom.HoldsForLocalizationAway
 
 /-- A property `P` of ring homs satisfies `ring_hom.of_localization_finite_span_target`
 if `P` holds for `R →+* S` whenever there exists a finite set `{ r }` that spans `S` such that
@@ -118,6 +124,7 @@ Note that this is equivalent to `ring_hom.of_localization_span_target` via
 def RingHom.OfLocalizationFiniteSpanTarget : Prop :=
   ∀ ⦃R S : Type u⦄ [CommRing R] [CommRing S] (f : R →+* S) (s : Finset S) (hs : Ideal.span (s : Set S) = ⊤)
     (H : ∀ r : s, P ((algebraMap S (Localization.Away (r : S))).comp f)), P f
+#align ring_hom.of_localization_finite_span_target RingHom.OfLocalizationFiniteSpanTarget
 
 /-- A property `P` of ring homs satisfies `ring_hom.of_localization_span_target`
 if `P` holds for `R →+* S` whenever there exists a set `{ r }` that spans `S` such that
@@ -128,12 +135,14 @@ Note that this is equivalent to `ring_hom.of_localization_finite_span_target` vi
 def RingHom.OfLocalizationSpanTarget : Prop :=
   ∀ ⦃R S : Type u⦄ [CommRing R] [CommRing S] (f : R →+* S) (s : Set S) (hs : Ideal.span s = ⊤)
     (H : ∀ r : s, P ((algebraMap S (Localization.Away (r : S))).comp f)), P f
+#align ring_hom.of_localization_span_target RingHom.OfLocalizationSpanTarget
 
 /-- A property `P` of ring homs satisfies `of_localization_prime` if
   if `P` holds for `R` whenever `P` holds for `Rₘ` for all prime ideals `p`. -/
 def RingHom.OfLocalizationPrime : Prop :=
   ∀ ⦃R S : Type u⦄ [CommRing R] [CommRing S] (f : R →+* S),
     (∀ (J : Ideal S) (hJ : J.IsPrime), P (Localization.localRingHom _ J f rfl)) → P f
+#align ring_hom.of_localization_prime RingHom.OfLocalizationPrime
 
 /-- A property of ring homs is local if it is preserved by localizations and compositions, and for
 each `{ r }` that spans `S`, we have `P (R →+* S) ↔ ∀ r, P (R →+* Sᵣ)`. -/
@@ -142,6 +151,7 @@ structure RingHom.PropertyIsLocal : Prop where
   OfLocalizationSpanTarget : RingHom.OfLocalizationSpanTarget @P
   StableUnderComposition : RingHom.StableUnderComposition @P
   HoldsForLocalizationAway : RingHom.HoldsForLocalizationAway @P
+#align ring_hom.property_is_local RingHom.PropertyIsLocal
 
 theorem RingHom.of_localization_span_iff_finite : RingHom.OfLocalizationSpan @P ↔ RingHom.OfLocalizationFiniteSpan @P :=
   by
@@ -157,6 +167,7 @@ theorem RingHom.of_localization_span_iff_finite : RingHom.OfLocalizationSpan @P 
     obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
     exact h s' h₂ fun x => hs' ⟨_, h₁ x.Prop⟩
     
+#align ring_hom.of_localization_span_iff_finite RingHom.of_localization_span_iff_finite
 
 theorem RingHom.of_localization_span_target_iff_finite :
     RingHom.OfLocalizationSpanTarget @P ↔ RingHom.OfLocalizationFiniteSpanTarget @P := by
@@ -172,6 +183,7 @@ theorem RingHom.of_localization_span_target_iff_finite :
     obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
     exact h s' h₂ fun x => hs' ⟨_, h₁ x.Prop⟩
     
+#align ring_hom.of_localization_span_target_iff_finite RingHom.of_localization_span_target_iff_finite
 
 variable {P f R' S'}
 
@@ -183,6 +195,7 @@ theorem _root_.ring_hom.property_is_local.respects_iso (hP : RingHom.PropertyIsL
   apply (config := { instances := false }) hP.holds_for_localization_away
   apply IsLocalization.awayOfIsUnitOfBijective _ is_unit_one
   exact e.bijective
+#align _root_.ring_hom.property_is_local.respects_iso _root_.ring_hom.property_is_local.respects_iso
 
 -- Almost all arguments are implicit since this is not intended to use mid-proof.
 theorem RingHom.LocalizationPreserves.away (H : RingHom.LocalizationPreserves @P) (r : R) [IsLocalization.Away r R']
@@ -192,6 +205,7 @@ theorem RingHom.LocalizationPreserves.away (H : RingHom.LocalizationPreserves @P
     rw [Submonoid.map_powers]
     assumption
   exact H f (Submonoid.powers r) R' S' hf
+#align ring_hom.localization_preserves.away RingHom.LocalizationPreserves.away
 
 theorem RingHom.PropertyIsLocal.ofLocalizationSpan (hP : RingHom.PropertyIsLocal @P) : RingHom.OfLocalizationSpan @P :=
   by
@@ -204,6 +218,7 @@ theorem RingHom.PropertyIsLocal.ofLocalizationSpan (hP : RingHom.PropertyIsLocal
   have := hs' ⟨r, hr⟩
   convert hP.stable_under_composition _ _ (hP.holds_for_localization_away (Localization.Away r) r) (hs' ⟨r, hr⟩) using 1
   exact (IsLocalization.map_comp _).symm
+#align ring_hom.property_is_local.of_localization_span RingHom.PropertyIsLocal.ofLocalizationSpan
 
 end RingHom
 
@@ -239,6 +254,7 @@ theorem ideal_eq_zero_of_localization (I : Ideal R)
   refine' hp₂ _
   erw [Submodule.mem_annihilator_span_singleton]
   rwa [mul_comm] at hm
+#align ideal_eq_zero_of_localization ideal_eq_zero_of_localization
 
 theorem eq_zero_of_localization (r : R)
     (h : ∀ (J : Ideal R) (hJ : J.IsMaximal), algebraMap R (Localization.AtPrime J) r = 0) : r = 0 := by
@@ -250,6 +266,7 @@ theorem eq_zero_of_localization (r : R)
   rintro _ ⟨_, h', rfl⟩
   cases set.mem_singleton_iff.mpr h'
   exact h J hJ
+#align eq_zero_of_localization eq_zero_of_localization
 
 end Ideal
 
@@ -274,6 +291,7 @@ theorem localization_is_reduced : LocalizationPreserves fun R hR => IsReduced R 
   replace hm' := IsNilpotent.eq_zero ⟨_, hm'.symm⟩
   rw [← (IsLocalization.map_units S m).mul_left_inj, hx, zero_mul, IsLocalization.map_eq_zero_iff M]
   exact ⟨m', by rw [← hm', mul_comm]⟩
+#align localization_is_reduced localization_is_reduced
 
 instance [IsReduced R] : IsReduced (Localization M) :=
   localization_is_reduced M _ inferInstance
@@ -287,6 +305,7 @@ theorem is_reduced_of_localization_maximal : OfLocalizationMaximal fun R hR => I
   specialize h J hJ
   skip
   exact (hx.map <| algebraMap R <| Localization.AtPrime J).eq_zero
+#align is_reduced_of_localization_maximal is_reduced_of_localization_maximal
 
 end Reduced
 
@@ -300,6 +319,7 @@ theorem localizationPreservesSurjective : RingHom.LocalizationPreserves fun R S 
   use IsLocalization.mk' R' y ⟨s, hs⟩
   rw [IsLocalization.map_mk']
   rfl
+#align localization_preserves_surjective localizationPreservesSurjective
 
 theorem surjectiveOfLocalizationSpan : RingHom.OfLocalizationSpan fun R S _ _ f => Function.Surjective f := by
   introv R e H
@@ -316,6 +336,7 @@ theorem surjectiveOfLocalizationSpan : RingHom.OfLocalizationSpan fun R S _ _ f 
   obtain ⟨⟨_, n', rfl⟩, e''⟩ := (IsLocalization.eq_iff_exists (Submonoid.powers (f r)) _).mp e'
   rw [Subtype.coe_mk, mul_assoc, ← map_pow, ← map_mul, ← map_mul, ← pow_add, mul_comm] at e''
   exact ⟨n + n', _, e''.symm⟩
+#align surjective_of_localization_span surjectiveOfLocalizationSpan
 
 end Surjective
 
@@ -356,10 +377,12 @@ theorem localizationFinite : RingHom.LocalizationPreserves @RingHom.Finite := by
   erw [IsLocalization.map_mk']
   rw [map_one]
   rfl
+#align localization_finite localizationFinite
 
 theorem localizationAwayMapFinite (r : R) [IsLocalization.Away r R'] [IsLocalization.Away (f r) S'] (hf : f.Finite) :
     (IsLocalization.Away.map R' S' f r).Finite :=
   localizationFinite.Away r hf
+#align localization_away_map_finite localizationAwayMapFinite
 
 /-- Let `S` be an `R`-algebra, `M` an submonoid of `R`, and `S' = M⁻¹S`.
 If the image of some `x : S` falls in the span of some finite `s ⊆ S'` over `R`,
@@ -399,34 +422,28 @@ theorem IsLocalization.smul_mem_finset_integer_multiple_span [Algebra R S] [Alge
   · rw [mul_comm]
     exact Algebra.smul_def _ _
     
+#align is_localization.smul_mem_finset_integer_multiple_span IsLocalization.smul_mem_finset_integer_multiple_span
 
 /-- If `S` is an `R' = M⁻¹R` algebra, and `x ∈ span R' s`,
 then `t • x ∈ span R s` for some `t : M`.-/
 theorem multiple_mem_span_of_mem_localization_span [Algebra R' S] [Algebra R S] [IsScalarTower R R' S]
     [IsLocalization M R'] (s : Set S) (x : S) (hx : x ∈ Submodule.span R' s) : ∃ t : M, t • x ∈ Submodule.span R s := by
-  classical
-  obtain ⟨s', hss', hs'⟩ := Submodule.mem_span_finite_of_mem_span hx
-  rsuffices ⟨t, ht⟩ : ∃ t : M, t • x ∈ Submodule.span R (s' : Set S)
-  · exact ⟨t, Submodule.span_mono hss' ht⟩
-    
-  clear hx hss' s
-  revert x
-  apply s'.induction_on
-  · intro x hx
-    use 1
-    simpa using hx
-    
-  rintro a s ha hs x hx
-  simp only [Finset.coe_insert, Finset.image_insert, Finset.coe_image, Subtype.coe_mk, Submodule.mem_span_insert] at hx⊢
-  rcases hx with ⟨y, z, hz, rfl⟩
-  rcases IsLocalization.surj M y with ⟨⟨y', s'⟩, e⟩
-  replace e : _ * a = _ * a := (congr_arg (fun x => algebraMap R' S x * a) e : _)
-  simp_rw [RingHom.map_mul, ← IsScalarTower.algebra_map_apply, mul_comm (algebraMap R' S y), mul_assoc, ←
-    Algebra.smul_def] at e
-  rcases hs _ hz with ⟨t, ht⟩
-  refine' ⟨t * s', t * y', _, (Submodule.span R (s : Set S)).smul_mem s' ht, _⟩
-  rw [smul_add, ← smul_smul, mul_comm, ← smul_smul, ← smul_smul, ← e]
-  rfl
+  classical obtain ⟨s', hss', hs'⟩ := Submodule.mem_span_finite_of_mem_span hx
+    · exact ⟨t, Submodule.span_mono hss' ht⟩
+      
+    revert x
+    · intro x hx
+      use 1
+      simpa using hx
+      
+    simp only [Finset.coe_insert, Finset.image_insert, Finset.coe_image, Subtype.coe_mk, Submodule.mem_span_insert] at
+      hx⊢
+    rcases IsLocalization.surj M y with ⟨⟨y', s'⟩, e⟩
+    simp_rw [RingHom.map_mul, ← IsScalarTower.algebra_map_apply, mul_comm (algebraMap R' S y), mul_assoc, ←
+      Algebra.smul_def] at e
+    refine' ⟨t * s', t * y', _, (Submodule.span R (s : Set S)).smul_mem s' ht, _⟩
+    rfl
+#align multiple_mem_span_of_mem_localization_span multiple_mem_span_of_mem_localization_span
 
 /-- If `S` is an `R' = M⁻¹R` algebra, and `x ∈ adjoin R' s`,
 then `t • x ∈ adjoin R s` for some `t : M`.-/
@@ -436,6 +453,7 @@ theorem multiple_mem_adjoin_of_mem_localization_adjoin [Algebra R' S] [Algebra R
   change x ∈ (Algebra.adjoin R' s).toSubmodule at hx
   simp_rw [Algebra.adjoin_eq_span] at hx⊢
   exact multiple_mem_span_of_mem_localization_span M R' _ _ hx
+#align multiple_mem_adjoin_of_mem_localization_adjoin multiple_mem_adjoin_of_mem_localization_adjoin
 
 theorem finiteOfLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.Finite := by
   rw [RingHom.of_localization_span_iff_finite]
@@ -480,6 +498,7 @@ theorem finiteOfLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.Finite :=
   simp_rw [Submonoid.map_powers] at hn₂
   use n₂ + n₁
   exact le_supr (fun x : s => Submodule.span R (sf x : Set S)) r hn₂
+#align finite_of_localization_span finiteOfLocalizationSpan
 
 end Finite
 
@@ -514,10 +533,12 @@ theorem localizationFiniteType : RingHom.LocalizationPreserves @RingHom.FiniteTy
   erw [IsLocalization.map_mk']
   rw [map_one]
   rfl
+#align localization_finite_type localizationFiniteType
 
 theorem localizationAwayMapFiniteType (r : R) [IsLocalization.Away r R'] [IsLocalization.Away (f r) S']
     (hf : f.FiniteType) : (IsLocalization.Away.map R' S' f r).FiniteType :=
   localizationFiniteType.Away r hf
+#align localization_away_map_finite_type localizationAwayMapFiniteType
 
 variable {S'}
 
@@ -547,6 +568,7 @@ theorem IsLocalization.exists_smul_mem_of_mem_adjoin [Algebra R S] [Algebra R S'
   convert ha₂.symm
   simp only [Submonoid.smul_def, Submonoid.coe_pow, smul_eq_mul, Submonoid.coe_mul]
   ring
+#align is_localization.exists_smul_mem_of_mem_adjoin IsLocalization.exists_smul_mem_of_mem_adjoin
 
 /-- Let `S` be an `R`-algebra, `M` an submonoid of `R`, and `S' = M⁻¹S`.
 If the image of some `x : S` falls in the adjoin of some finite `s ⊆ S'` over `R`,
@@ -565,6 +587,7 @@ theorem IsLocalization.lift_mem_adjoin_finset_integer_multiple [Algebra R S] [Al
   · rintro _ ⟨a, ha, rfl⟩
     exact Subalgebra.algebra_map_mem _ a
     
+#align is_localization.lift_mem_adjoin_finset_integer_multiple IsLocalization.lift_mem_adjoin_finset_integer_multiple
 
 theorem finiteTypeOfLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.FiniteType := by
   rw [RingHom.of_localization_span_iff_finite]
@@ -602,6 +625,7 @@ theorem finiteTypeOfLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.Finit
   simp_rw [Submonoid.map_powers] at hn₂
   use n₂ + n₁
   exact le_supr (fun x : s => Algebra.adjoin R (sf x : Set S)) r hn₂
+#align finite_type_of_localization_span finiteTypeOfLocalizationSpan
 
 end FiniteType
 

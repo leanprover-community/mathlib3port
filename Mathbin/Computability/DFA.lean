@@ -25,6 +25,7 @@ structure DFA (α : Type u) (σ : Type v) where
   step : σ → α → σ
   start : σ
   accept : Set σ
+#align DFA DFA
 
 namespace DFA
 
@@ -36,43 +37,54 @@ instance [Inhabited σ] : Inhabited (DFA α σ) :=
 /-- `M.eval_from s x` evaluates `M` with input `x` starting from the state `s`. -/
 def evalFrom (start : σ) : List α → σ :=
   List.foldl M.step start
+#align DFA.eval_from DFA.evalFrom
 
 @[simp]
 theorem eval_from_nil (s : σ) : M.evalFrom s [] = s :=
   rfl
+#align DFA.eval_from_nil DFA.eval_from_nil
 
 @[simp]
 theorem eval_from_singleton (s : σ) (a : α) : M.evalFrom s [a] = M.step s a :=
   rfl
+#align DFA.eval_from_singleton DFA.eval_from_singleton
 
 @[simp]
 theorem eval_from_append_singleton (s : σ) (x : List α) (a : α) : M.evalFrom s (x ++ [a]) = M.step (M.evalFrom s x) a :=
   by simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
+#align DFA.eval_from_append_singleton DFA.eval_from_append_singleton
 
 /-- `M.eval x` evaluates `M` with input `x` starting from the state `M.start`. -/
 def eval : List α → σ :=
   M.evalFrom M.start
+#align DFA.eval DFA.eval
 
 @[simp]
 theorem eval_nil : M.eval [] = M.start :=
   rfl
+#align DFA.eval_nil DFA.eval_nil
 
 @[simp]
 theorem eval_singleton (a : α) : M.eval [a] = M.step M.start a :=
   rfl
+#align DFA.eval_singleton DFA.eval_singleton
 
 @[simp]
 theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.step (M.eval x) a :=
   eval_from_append_singleton _ _ _ _
+#align DFA.eval_append_singleton DFA.eval_append_singleton
 
 theorem eval_from_of_append (start : σ) (x y : List α) :
     M.evalFrom start (x ++ y) = M.evalFrom (M.evalFrom start x) y :=
   x.foldl_append _ _ y
+#align DFA.eval_from_of_append DFA.eval_from_of_append
 
 /-- `M.accepts` is the language of `x` such that `M.eval x` is an accept state. -/
 def Accepts : Language α := fun x => M.eval x ∈ M.accept
+#align DFA.accepts DFA.Accepts
 
 theorem mem_accepts (x : List α) : x ∈ M.Accepts ↔ M.evalFrom M.start x ∈ M.accept := by rfl
+#align DFA.mem_accepts DFA.mem_accepts
 
 theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.card σ ≤ x.length)
     (hx : M.evalFrom s x = t) :
@@ -110,6 +122,7 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
   use hq
   rwa [← hq, ← eval_from_of_append, ← eval_from_of_append, ← List.append_assoc, List.take_append_drop,
     List.take_append_drop]
+#align DFA.eval_from_split DFA.eval_from_split
 
 theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy : y ∈ @Language.Star α {x}) :
     M.evalFrom s y = s := by
@@ -125,6 +138,7 @@ theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy 
     intro z hz
     exact hS z (List.mem_cons_of_mem a hz)
     
+#align DFA.eval_from_of_pow DFA.eval_from_of_pow
 
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card σ ≤ List.length x) :
     ∃ a b c,
@@ -141,6 +155,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : 
   substs ha' hc'
   have h := M.eval_from_of_pow hb hb'
   rwa [mem_accepts, eval_from_of_append, eval_from_of_append, h, hc]
+#align DFA.pumping_lemma DFA.pumping_lemma
 
 end DFA
 

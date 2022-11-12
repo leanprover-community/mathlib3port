@@ -35,6 +35,7 @@ variable [Fintype G] [Invertible (Fintype.card G : k)]
 -/
 noncomputable def average : MonoidAlgebra k G :=
   ⅟ (Fintype.card G : k) • ∑ g : G, of k G g
+#align group_algebra.average GroupAlgebra.average
 
 /-- `average k G` is invariant under left multiplication by elements of `G`.
 -/
@@ -45,6 +46,7 @@ theorem mul_average_left (g : G) : (Finsupp.single g 1 * average k G : MonoidAlg
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (g * x)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
   rw [Function.Bijective.sum_comp (Group.mul_left_bijective g) _]
+#align group_algebra.mul_average_left GroupAlgebra.mul_average_left
 
 /-- `average k G` is invariant under right multiplication by elements of `G`.
 -/
@@ -55,6 +57,7 @@ theorem mul_average_right (g : G) : average k G * Finsupp.single g 1 = average k
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (x * g)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
   rw [Function.Bijective.sum_comp (Group.mul_right_bijective g) _]
+#align group_algebra.mul_average_right GroupAlgebra.mul_average_right
 
 end GroupAlgebra
 
@@ -75,13 +78,16 @@ def invariants : Submodule k V where
   zero_mem' g := by simp only [map_zero]
   add_mem' v w hv hw g := by simp only [hv g, hw g, map_add]
   smul_mem' r v hv g := by simp only [hv g, LinearMap.map_smulₛₗ, RingHom.id_apply]
+#align representation.invariants Representation.invariants
 
 @[simp]
 theorem mem_invariants (v : V) : v ∈ invariants ρ ↔ ∀ g : G, ρ g v = v := by rfl
+#align representation.mem_invariants Representation.mem_invariants
 
 theorem invariants_eq_inter : (invariants ρ).Carrier = ⋂ g : G, Function.FixedPoints (ρ g) := by
   ext
   simp [Function.IsFixedPt]
+#align representation.invariants_eq_inter Representation.invariants_eq_inter
 
 variable [Fintype G] [Invertible (Fintype.card G : k)]
 
@@ -90,20 +96,24 @@ variable [Fintype G] [Invertible (Fintype.card G : k)]
 @[simp]
 noncomputable def averageMap : V →ₗ[k] V :=
   asAlgebraHom ρ (average k G)
+#align representation.average_map Representation.averageMap
 
 /-- The `average_map` sends elements of `V` to the subspace of invariants.
 -/
 theorem average_map_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun g => by
   rw [average_map, ← as_algebra_hom_single_one, ← LinearMap.mul_apply, ← map_mul (as_algebra_hom ρ), mul_average_left]
+#align representation.average_map_invariant Representation.average_map_invariant
 
 /-- The `average_map` acts as the identity on the subspace of invariants.
 -/
 theorem average_map_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v := by
   rw [mem_invariants] at hv
   simp [average, map_sum, hv, Finset.card_univ, nsmul_eq_smul_cast k _ v, smul_smul]
+#align representation.average_map_id Representation.average_map_id
 
 theorem is_proj_average_map : LinearMap.IsProj ρ.invariants ρ.averageMap :=
   ⟨ρ.average_map_invariant, ρ.average_map_id⟩
+#align representation.is_proj_average_map Representation.is_proj_average_map
 
 end Invariants
 
@@ -123,6 +133,7 @@ theorem mem_invariants_iff_comm {X Y : RepCat k G} (f : X.V →ₗ[k] Y.V) (g : 
   erw [← ρ_Aut_apply_inv]
   rw [← LinearMap.comp_assoc, ← ModuleCat.comp_def, ← ModuleCat.comp_def, iso.inv_comp_eq, ρ_Aut_apply_hom]
   exact comm
+#align representation.lin_hom.mem_invariants_iff_comm Representation.linHom.mem_invariants_iff_comm
 
 /-- The invariants of the representation `lin_hom X.ρ Y.ρ` correspond to the the representation
 homomorphisms from `X` to `Y` -/
@@ -138,6 +149,7 @@ def invariantsEquivRepHom (X Y : RepCat k G) : (linHom X.ρ Y.ρ).invariants ≃
   right_inv _ := by
     ext
     rfl
+#align representation.lin_hom.invariants_equiv_Rep_hom Representation.linHom.invariantsEquivRepHom
 
 end RepCat
 
@@ -150,6 +162,7 @@ homomorphisms from `X` to `Y` -/
 def invariantsEquivFdRepHom (X Y : FdRep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y := by
   rw [← FdRep.forget₂_ρ, ← FdRep.forget₂_ρ]
   exact lin_hom.invariants_equiv_Rep_hom _ _ ≪≫ₗ FdRep.forget₂HomLinearEquiv X Y
+#align representation.lin_hom.invariants_equiv_fdRep_hom Representation.linHom.invariantsEquivFdRepHom
 
 end FdRep
 

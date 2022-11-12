@@ -46,51 +46,63 @@ variable {ι : Sort _} {α β γ : Type _} {κ : ι → Sort _} (r : α → β �
 which `r` relates to all elements of `s`. -/
 def IntentClosure (s : Set α) : Set β :=
   { b | ∀ ⦃a⦄, a ∈ s → r a b }
+#align intent_closure IntentClosure
 
 /-- The extent closure of `t : set β` along a relation `r : α → β → Prop` is the set of all elements
 which `r` relates to all elements of `t`. -/
 def ExtentClosure (t : Set β) : Set α :=
   { a | ∀ ⦃b⦄, b ∈ t → r a b }
+#align extent_closure ExtentClosure
 
 variable {r}
 
 theorem subset_intent_closure_iff_subset_extent_closure : t ⊆ IntentClosure r s ↔ s ⊆ ExtentClosure r t :=
   ⟨fun h a ha b hb => h hb ha, fun h b hb a ha => h ha hb⟩
+#align subset_intent_closure_iff_subset_extent_closure subset_intent_closure_iff_subset_extent_closure
 
 variable (r)
 
 theorem gc_intent_closure_extent_closure : GaloisConnection (to_dual ∘ IntentClosure r) (ExtentClosure r ∘ of_dual) :=
   fun s t => subset_intent_closure_iff_subset_extent_closure
+#align gc_intent_closure_extent_closure gc_intent_closure_extent_closure
 
 theorem intent_closure_swap (t : Set β) : IntentClosure (swap r) t = ExtentClosure r t :=
   rfl
+#align intent_closure_swap intent_closure_swap
 
 theorem extent_closure_swap (s : Set α) : ExtentClosure (swap r) s = IntentClosure r s :=
   rfl
+#align extent_closure_swap extent_closure_swap
 
 @[simp]
 theorem intent_closure_empty : IntentClosure r ∅ = univ :=
   eq_univ_of_forall fun _ _ => False.elim
+#align intent_closure_empty intent_closure_empty
 
 @[simp]
 theorem extent_closure_empty : ExtentClosure r ∅ = univ :=
   intent_closure_empty _
+#align extent_closure_empty extent_closure_empty
 
 @[simp]
 theorem intent_closure_union (s₁ s₂ : Set α) : IntentClosure r (s₁ ∪ s₂) = IntentClosure r s₁ ∩ IntentClosure r s₂ :=
   Set.ext fun _ => ball_or_left
+#align intent_closure_union intent_closure_union
 
 @[simp]
 theorem extent_closure_union (t₁ t₂ : Set β) : ExtentClosure r (t₁ ∪ t₂) = ExtentClosure r t₁ ∩ ExtentClosure r t₂ :=
   intent_closure_union _ _ _
+#align extent_closure_union extent_closure_union
 
 @[simp]
 theorem intent_closure_Union (f : ι → Set α) : IntentClosure r (⋃ i, f i) = ⋂ i, IntentClosure r (f i) :=
   (gc_intent_closure_extent_closure r).l_supr
+#align intent_closure_Union intent_closure_Union
 
 @[simp]
 theorem extent_closure_Union (f : ι → Set β) : ExtentClosure r (⋃ i, f i) = ⋂ i, ExtentClosure r (f i) :=
   intent_closure_Union _ _
+#align extent_closure_Union extent_closure_Union
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -98,6 +110,7 @@ theorem extent_closure_Union (f : ι → Set β) : ExtentClosure r (⋃ i, f i) 
 theorem intent_closure_Union₂ (f : ∀ i, κ i → Set α) :
     IntentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), IntentClosure r (f i j) :=
   (gc_intent_closure_extent_closure r).l_supr₂
+#align intent_closure_Union₂ intent_closure_Union₂
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -105,28 +118,35 @@ theorem intent_closure_Union₂ (f : ∀ i, κ i → Set α) :
 theorem extent_closure_Union₂ (f : ∀ i, κ i → Set β) :
     ExtentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), ExtentClosure r (f i j) :=
   intent_closure_Union₂ _ _
+#align extent_closure_Union₂ extent_closure_Union₂
 
 theorem subset_extent_closure_intent_closure (s : Set α) : s ⊆ ExtentClosure r (IntentClosure r s) :=
   (gc_intent_closure_extent_closure r).le_u_l _
+#align subset_extent_closure_intent_closure subset_extent_closure_intent_closure
 
 theorem subset_intent_closure_extent_closure (t : Set β) : t ⊆ IntentClosure r (ExtentClosure r t) :=
   subset_extent_closure_intent_closure _ t
+#align subset_intent_closure_extent_closure subset_intent_closure_extent_closure
 
 @[simp]
 theorem intent_closure_extent_closure_intent_closure (s : Set α) :
     IntentClosure r (ExtentClosure r <| IntentClosure r s) = IntentClosure r s :=
   (gc_intent_closure_extent_closure r).l_u_l_eq_l _
+#align intent_closure_extent_closure_intent_closure intent_closure_extent_closure_intent_closure
 
 @[simp]
 theorem extent_closure_intent_closure_extent_closure (t : Set β) :
     ExtentClosure r (IntentClosure r <| ExtentClosure r t) = ExtentClosure r t :=
   intent_closure_extent_closure_intent_closure _ t
+#align extent_closure_intent_closure_extent_closure extent_closure_intent_closure_extent_closure
 
 theorem intent_closure_anti : Antitone (IntentClosure r) :=
   (gc_intent_closure_extent_closure r).monotone_l
+#align intent_closure_anti intent_closure_anti
 
 theorem extent_closure_anti : Antitone (ExtentClosure r) :=
   intent_closure_anti _
+#align extent_closure_anti extent_closure_anti
 
 /-! ### Concepts -/
 
@@ -139,6 +159,7 @@ all elements that are `r`-related to all of `s`. -/
 structure Concept extends Set α × Set β where
   closure_fst : IntentClosure r fst = snd
   closure_snd : ExtentClosure r snd = fst
+#align concept Concept
 
 namespace Concept
 
@@ -146,7 +167,7 @@ variable {r α β} {c d : Concept α β r}
 
 attribute [simp] closure_fst closure_snd
 
-@[ext]
+@[ext.1]
 theorem ext (h : c.fst = d.fst) : c = d := by
   obtain ⟨⟨s₁, t₁⟩, h₁, _⟩ := c
   obtain ⟨⟨s₂, t₂⟩, h₂, _⟩ := d
@@ -154,6 +175,7 @@ theorem ext (h : c.fst = d.fst) : c = d := by
   subst h
   subst h₁
   subst h₂
+#align concept.ext Concept.ext
 
 theorem ext' (h : c.snd = d.snd) : c = d := by
   obtain ⟨⟨s₁, t₁⟩, _, h₁⟩ := c
@@ -162,10 +184,13 @@ theorem ext' (h : c.snd = d.snd) : c = d := by
   subst h
   subst h₁
   subst h₂
+#align concept.ext' Concept.ext'
 
 theorem fst_injective : Injective fun c : Concept α β r => c.fst := fun c d => ext
+#align concept.fst_injective Concept.fst_injective
 
 theorem snd_injective : Injective fun c : Concept α β r => c.snd := fun c d => ext'
+#align concept.snd_injective Concept.snd_injective
 
 instance : HasSup (Concept α β r) :=
   ⟨fun c d =>
@@ -186,10 +211,12 @@ instance : SemilatticeInf (Concept α β r) :=
 @[simp]
 theorem fst_subset_fst_iff : c.fst ⊆ d.fst ↔ c ≤ d :=
   Iff.rfl
+#align concept.fst_subset_fst_iff Concept.fst_subset_fst_iff
 
 @[simp]
 theorem fst_ssubset_fst_iff : c.fst ⊂ d.fst ↔ c < d :=
   Iff.rfl
+#align concept.fst_ssubset_fst_iff Concept.fst_ssubset_fst_iff
 
 @[simp]
 theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c := by
@@ -200,14 +227,18 @@ theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c := by
   · rw [← c.closure_fst, ← d.closure_fst]
     exact intent_closure_anti _ h
     
+#align concept.snd_subset_snd_iff Concept.snd_subset_snd_iff
 
 @[simp]
 theorem snd_ssubset_snd_iff : c.snd ⊂ d.snd ↔ d < c := by
   rw [ssubset_iff_subset_not_subset, lt_iff_le_not_le, snd_subset_snd_iff, snd_subset_snd_iff]
+#align concept.snd_ssubset_snd_iff Concept.snd_ssubset_snd_iff
 
 theorem strict_mono_fst : StrictMono (Prod.fst ∘ to_prod : Concept α β r → Set α) := fun c d => fst_ssubset_fst_iff.2
+#align concept.strict_mono_fst Concept.strict_mono_fst
 
 theorem strict_anti_snd : StrictAnti (Prod.snd ∘ to_prod : Concept α β r → Set β) := fun c d => snd_ssubset_snd_iff.2
+#align concept.strict_anti_snd Concept.strict_anti_snd
 
 instance : Lattice (Concept α β r) :=
   { Concept.semilatticeInf with sup := (· ⊔ ·), le_sup_left := fun c d => snd_subset_snd_iff.1 <| inter_subset_left _ _,
@@ -244,50 +275,62 @@ instance : CompleteLattice (Concept α β r) :=
 @[simp]
 theorem top_fst : (⊤ : Concept α β r).fst = univ :=
   rfl
+#align concept.top_fst Concept.top_fst
 
 @[simp]
 theorem top_snd : (⊤ : Concept α β r).snd = IntentClosure r Univ :=
   rfl
+#align concept.top_snd Concept.top_snd
 
 @[simp]
 theorem bot_fst : (⊥ : Concept α β r).fst = ExtentClosure r Univ :=
   rfl
+#align concept.bot_fst Concept.bot_fst
 
 @[simp]
 theorem bot_snd : (⊥ : Concept α β r).snd = univ :=
   rfl
+#align concept.bot_snd Concept.bot_snd
 
 @[simp]
 theorem sup_fst (c d : Concept α β r) : (c ⊔ d).fst = ExtentClosure r (c.snd ∩ d.snd) :=
   rfl
+#align concept.sup_fst Concept.sup_fst
 
 @[simp]
 theorem sup_snd (c d : Concept α β r) : (c ⊔ d).snd = c.snd ∩ d.snd :=
   rfl
+#align concept.sup_snd Concept.sup_snd
 
 @[simp]
 theorem inf_fst (c d : Concept α β r) : (c ⊓ d).fst = c.fst ∩ d.fst :=
   rfl
+#align concept.inf_fst Concept.inf_fst
 
 @[simp]
 theorem inf_snd (c d : Concept α β r) : (c ⊓ d).snd = IntentClosure r (c.fst ∩ d.fst) :=
   rfl
+#align concept.inf_snd Concept.inf_snd
 
 @[simp]
 theorem Sup_fst (S : Set (Concept α β r)) : (sup S).fst = ExtentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd) :=
   rfl
+#align concept.Sup_fst Concept.Sup_fst
 
 @[simp]
 theorem Sup_snd (S : Set (Concept α β r)) : (sup S).snd = ⋂ c ∈ S, (c : Concept _ _ _).snd :=
   rfl
+#align concept.Sup_snd Concept.Sup_snd
 
 @[simp]
 theorem Inf_fst (S : Set (Concept α β r)) : (inf S).fst = ⋂ c ∈ S, (c : Concept _ _ _).fst :=
   rfl
+#align concept.Inf_fst Concept.Inf_fst
 
 @[simp]
 theorem Inf_snd (S : Set (Concept α β r)) : (inf S).snd = IntentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst) :=
   rfl
+#align concept.Inf_snd Concept.Inf_snd
 
 instance : Inhabited (Concept α β r) :=
   ⟨⊥⟩
@@ -296,18 +339,22 @@ instance : Inhabited (Concept α β r) :=
 @[simps]
 def swap (c : Concept α β r) : Concept β α (swap r) :=
   ⟨c.toProd.swap, c.closure_snd, c.closure_fst⟩
+#align concept.swap Concept.swap
 
 @[simp]
 theorem swap_swap (c : Concept α β r) : c.swap.swap = c :=
   ext rfl
+#align concept.swap_swap Concept.swap_swap
 
 @[simp]
 theorem swap_le_swap_iff : c.swap ≤ d.swap ↔ d ≤ c :=
   snd_subset_snd_iff
+#align concept.swap_le_swap_iff Concept.swap_le_swap_iff
 
 @[simp]
 theorem swap_lt_swap_iff : c.swap < d.swap ↔ d < c :=
   snd_ssubset_snd_iff
+#align concept.swap_lt_swap_iff Concept.swap_lt_swap_iff
 
 /-- The dual of a concept lattice is isomorphic to the concept lattice of the dual context. -/
 @[simps]
@@ -317,6 +364,7 @@ def swapEquiv : (Concept α β r)ᵒᵈ ≃o Concept β α (Function.swap r) whe
   left_inv := swap_swap
   right_inv := swap_swap
   map_rel_iff' c d := swap_le_swap_iff
+#align concept.swap_equiv Concept.swapEquiv
 
 end Concept
 

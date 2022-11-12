@@ -26,6 +26,7 @@ variable {ι α R S : Type _}
 /-- Basic hypothesis to talk about a topological space with a continuous `star` operator. -/
 class HasContinuousStar (R : Type u) [TopologicalSpace R] [HasStar R] : Prop where
   continuous_star : Continuous (star : R → R)
+#align has_continuous_star HasContinuousStar
 
 export HasContinuousStar (continuous_star)
 
@@ -35,39 +36,49 @@ variable [TopologicalSpace R] [HasStar R] [HasContinuousStar R]
 
 theorem continuous_on_star {s : Set R} : ContinuousOn star s :=
   continuous_star.ContinuousOn
+#align continuous_on_star continuous_on_star
 
 theorem continuous_within_at_star {s : Set R} {x : R} : ContinuousWithinAt star s x :=
   continuous_star.ContinuousWithinAt
+#align continuous_within_at_star continuous_within_at_star
 
 theorem continuous_at_star {x : R} : ContinuousAt star x :=
   continuous_star.ContinuousAt
+#align continuous_at_star continuous_at_star
 
 theorem tendsto_star (a : R) : Tendsto star (𝓝 a) (𝓝 (star a)) :=
   continuous_at_star
+#align tendsto_star tendsto_star
 
 theorem Filter.Tendsto.star {f : α → R} {l : Filter α} {y : R} (h : Tendsto f l (𝓝 y)) :
     Tendsto (fun x => star (f x)) l (𝓝 (star y)) :=
   (continuous_star.Tendsto y).comp h
+#align filter.tendsto.star Filter.Tendsto.star
 
 variable [TopologicalSpace α] {f : α → R} {s : Set α} {x : α}
 
 @[continuity]
 theorem Continuous.star (hf : Continuous f) : Continuous fun x => star (f x) :=
   continuous_star.comp hf
+#align continuous.star Continuous.star
 
 theorem ContinuousAt.star (hf : ContinuousAt f x) : ContinuousAt (fun x => star (f x)) x :=
   continuous_at_star.comp hf
+#align continuous_at.star ContinuousAt.star
 
 theorem ContinuousOn.star (hf : ContinuousOn f s) : ContinuousOn (fun x => star (f x)) s :=
   continuous_star.comp_continuous_on hf
+#align continuous_on.star ContinuousOn.star
 
 theorem ContinuousWithinAt.star (hf : ContinuousWithinAt f s x) : ContinuousWithinAt (fun x => star (f x)) s x :=
   hf.star
+#align continuous_within_at.star ContinuousWithinAt.star
 
 /-- The star operation bundled as a continuous map. -/
 @[simps]
 def starContinuousMap : C(R, R) :=
   ⟨star, continuous_star⟩
+#align star_continuous_map starContinuousMap
 
 end Continuity
 

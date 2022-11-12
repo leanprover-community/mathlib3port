@@ -39,12 +39,14 @@ theorem galois_poly_separable {K : Type _} [Field K] (p q : ℕ) [CharP K p] (h 
   rw [← CharP.cast_eq_zero_iff K[X] p] at h
   rw [derivative_sub, derivative_pow, derivative_X, h]
   ring
+#align galois_poly_separable galois_poly_separable
 
 /-- A finite field with `p ^ n` elements.
 Every field with the same cardinality is (non-canonically)
 isomorphic to this field. -/
 def GaloisField (p : ℕ) [Fact p.Prime] (n : ℕ) :=
   SplittingField (X ^ p ^ n - X : (Zmod p)[X])deriving Field
+#align galois_field GaloisField
 
 instance : Inhabited (@GaloisField 2 (Fact.mk Nat.prime_two) 1) :=
   ⟨37⟩
@@ -119,10 +121,12 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisFi
     intro x y hx hy
     rw [hx, hy]
     
+#align galois_field.finrank GaloisField.finrank
 
 theorem card (h : n ≠ 0) : Fintype.card (GaloisField p n) = p ^ n := by
   let b := IsNoetherian.finsetBasis (Zmod p) (GaloisField p n)
   rw [Module.card_fintype b, ← FiniteDimensional.finrank_eq_card_basis b, Zmod.card, finrank p h]
+#align galois_field.card GaloisField.card
 
 theorem splitsZmodXPowSubX : Splits (RingHom.id (Zmod p)) (X ^ p - X) := by
   have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
@@ -134,6 +138,7 @@ theorem splitsZmodXPowSubX : Splits (RingHom.id (Zmod p)) (X ^ p - X) := by
   cases p
   cases hp
   rw [splits_iff_card_roots, h1, ← Finset.card_def, Finset.card_univ, h2, Zmod.card]
+#align galois_field.splits_zmod_X_pow_sub_X GaloisField.splitsZmodXPowSubX
 
 /-- A Galois field with exponent 1 is equivalent to `zmod` -/
 def equivZmodP : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
@@ -142,14 +147,17 @@ def equivZmodP : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
     rw [h]
     infer_instance
   (is_splitting_field.alg_equiv (Zmod p) (X ^ p ^ 1 - X : (Zmod p)[X])).symm
+#align galois_field.equiv_zmod_p GaloisField.equivZmodP
 
 variable {K : Type _} [Field K] [Fintype K] [Algebra (Zmod p) K]
 
 theorem splitsXPowCardSubX : Splits (algebraMap (Zmod p) K) (X ^ Fintype.card K - X) :=
   (FiniteField.HasSub.Sub.Polynomial.isSplittingField K (Zmod p)).Splits
+#align galois_field.splits_X_pow_card_sub_X GaloisField.splitsXPowCardSubX
 
 theorem isSplittingFieldOfCardEq (h : Fintype.card K = p ^ n) : IsSplittingField (Zmod p) K (X ^ p ^ n - X) :=
   h ▸ FiniteField.HasSub.Sub.Polynomial.isSplittingField K (Zmod p)
+#align galois_field.is_splitting_field_of_card_eq GaloisField.isSplittingFieldOfCardEq
 
 instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Algebra K K'] : IsGalois K K' := by
   cases nonempty_fintype K'
@@ -166,6 +174,7 @@ instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Alg
 def algEquivGaloisField (h : Fintype.card K = p ^ n) : K ≃ₐ[Zmod p] GaloisField p n :=
   haveI := is_splitting_field_of_card_eq _ _ h
   is_splitting_field.alg_equiv _ _
+#align galois_field.alg_equiv_galois_field GaloisField.algEquivGaloisField
 
 end GaloisField
 
@@ -190,6 +199,7 @@ def algEquivOfCardEq (p : ℕ) [Fact p.Prime] [Algebra (Zmod p) K] [Algebra (Zmo
   have hK'Gal := (GaloisField.algEquivGaloisField p n' hK').symm
   rw [Nat.pow_right_injective (Fact.out (Nat.Prime p)).one_lt hKK'] at *
   use AlgEquiv.trans hGalK hK'Gal
+#align finite_field.alg_equiv_of_card_eq FiniteField.algEquivOfCardEq
 
 /-- Uniqueness of finite fields:
   Any two finite fields of the same cardinality are (possibly non canonically) isomorphic-/
@@ -209,6 +219,7 @@ def ringEquivOfCardEq (hKK' : Fintype.card K = Fintype.card K') : K ≃+* K' := 
   rw [← hpp'] at *
   haveI := fact_iff.2 hp
   exact alg_equiv_of_card_eq p hKK'
+#align finite_field.ring_equiv_of_card_eq FiniteField.ringEquivOfCardEq
 
 end FiniteField
 

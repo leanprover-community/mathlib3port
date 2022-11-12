@@ -64,14 +64,17 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
     rw [← order_of_units, Zmod.coe_unit_of_coprime, ← this] at hdiv
     exact ((modeq_iff_dvd' hprime.1.Pos).2 hdiv).symm
     
+#align nat.exists_prime_ge_modeq_one Nat.exists_prime_ge_modeq_one
 
 theorem frequently_at_top_modeq_one {k : ℕ} (hpos : 0 < k) : ∃ᶠ p in at_top, Nat.Prime p ∧ p ≡ 1 [MOD k] := by
   refine' frequently_at_top.2 fun n => _
   obtain ⟨p, hp⟩ := exists_prime_ge_modeq_one n hpos
   exact ⟨p, ⟨hp.2.1, hp.1, hp.2.2⟩⟩
+#align nat.frequently_at_top_modeq_one Nat.frequently_at_top_modeq_one
 
 theorem infinite_set_of_prime_modeq_one {k : ℕ} (hpos : 0 < k) : Set.Infinite { p : ℕ | Nat.Prime p ∧ p ≡ 1 [MOD k] } :=
   frequently_at_top_iff_infinite.1 (frequently_at_top_modeq_one hpos)
+#align nat.infinite_set_of_prime_modeq_one Nat.infinite_set_of_prime_modeq_one
 
 end Nat
 

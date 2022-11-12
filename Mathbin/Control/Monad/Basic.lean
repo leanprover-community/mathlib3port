@@ -51,7 +51,7 @@ functor, applicative, monad, simp
 /- [mathport] port note: move this to another file, it won't work here -/
 attribute [monad_norm] functor_norm
 
-attribute [ext] ReaderT.ext StateT.ext ExceptT.ext OptionT.ext
+attribute [ext.1] ReaderT.ext StateT.ext ExceptT.ext OptionT.ext
 
 attribute [functor_norm] bind_assoc pure_bind bind_pure
 
@@ -62,10 +62,12 @@ universe u v
 @[monad_norm]
 theorem map_eq_bind_pure_comp (m : Type u → Type v) [Monad m] [LawfulMonad m] {α β : Type u} (f : α → β) (x : m α) :
     f <$> x = x >>= pure ∘ f := by rw [bind_pure_comp_eq_map]
+#align map_eq_bind_pure_comp map_eq_bind_pure_comp
 
 /-- run a `state_t` program and discard the final state -/
 def StateT.eval {m : Type u → Type v} [Functor m] {σ α} (cmd : StateT σ m α) (s : σ) : m α :=
   Prod.fst <$> cmd.run s
+#align state_t.eval StateTₓ.eval
 
 universe u₀ u₁ v₀ v₁
 
@@ -77,6 +79,7 @@ def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.left_inv _
   right_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.right_inv _
+#align state_t.equiv StateTₓ.equiv
 
 /-- reduce the equivalence between two reader monads to the equivalence between
 their respective function spaces -/
@@ -86,4 +89,5 @@ def ReaderT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.left_inv _
   right_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.right_inv _
+#align reader_t.equiv ReaderTₓ.equiv
 

@@ -28,6 +28,7 @@ variable {α β γ : Sort _}
 @[protect_proj]
 class IsEmpty (α : Sort _) : Prop where
   False : α → False
+#align is_empty IsEmpty
 -/
 
 instance : IsEmpty Empty :=
@@ -42,33 +43,28 @@ instance : IsEmpty False :=
 instance : IsEmpty (Fin 0) :=
   ⟨fun n => Nat.not_lt_zero n.1 n.2⟩
 
-#print Function.is_empty /-
-protected theorem Function.is_empty [IsEmpty β] (f : α → β) : IsEmpty α :=
+protected theorem function.isEmpty [IsEmpty β] (f : α → β) : IsEmpty α :=
   ⟨fun x => IsEmpty.false (f x)⟩
--/
+#align function.is_empty function.isEmpty
 
 instance {p : α → Sort _} [h : Nonempty α] [∀ x, IsEmpty (p x)] : IsEmpty (∀ x, p x) :=
-  h.elim fun x => Function.is_empty <| Function.eval x
+  h.elim fun x => function.isEmpty <| Function.eval x
 
-#print PProd.is_empty_left /-
 instance PProd.is_empty_left [IsEmpty α] : IsEmpty (PProd α β) :=
-  Function.is_empty PProd.fst
--/
+  function.isEmpty PProd.fst
+#align pprod.is_empty_left PProd.is_empty_left
 
-#print PProd.is_empty_right /-
 instance PProd.is_empty_right [IsEmpty β] : IsEmpty (PProd α β) :=
-  Function.is_empty PProd.snd
--/
+  function.isEmpty PProd.snd
+#align pprod.is_empty_right PProd.is_empty_right
 
-#print Prod.is_empty_left /-
 instance Prod.is_empty_left {α β} [IsEmpty α] : IsEmpty (α × β) :=
-  Function.is_empty Prod.fst
--/
+  function.isEmpty Prod.fst
+#align prod.is_empty_left Prod.is_empty_left
 
-#print Prod.is_empty_right /-
 instance Prod.is_empty_right {α β} [IsEmpty β] : IsEmpty (α × β) :=
-  Function.is_empty Prod.snd
--/
+  function.isEmpty Prod.snd
+#align prod.is_empty_right Prod.is_empty_right
 
 instance [IsEmpty α] [IsEmpty β] : IsEmpty (PSum α β) :=
   ⟨fun x => PSum.rec IsEmpty.false IsEmpty.false x⟩
@@ -80,22 +76,21 @@ instance {α β} [IsEmpty α] [IsEmpty β] : IsEmpty (Sum α β) :=
 instance [IsEmpty α] (p : α → Prop) : IsEmpty (Subtype p) :=
   ⟨fun x => IsEmpty.false x.1⟩
 
-#print Subtype.is_empty_of_false /-
+#print Subtype.isEmpty_of_false /-
 /-- subtypes by an all-false predicate are false. -/
-theorem Subtype.is_empty_of_false {p : α → Prop} (hp : ∀ a, ¬p a) : IsEmpty (Subtype p) :=
+theorem Subtype.isEmpty_of_false {p : α → Prop} (hp : ∀ a, ¬p a) : IsEmpty (Subtype p) :=
   ⟨fun x => hp _ x.2⟩
+#align subtype.is_empty_of_false Subtype.isEmpty_of_false
 -/
 
-#print Subtype.is_empty_false /-
 /-- subtypes by false are false. -/
 instance Subtype.is_empty_false : IsEmpty { a : α // False } :=
-  Subtype.is_empty_of_false fun a => id
--/
+  Subtype.isEmpty_of_false fun a => id
+#align subtype.is_empty_false Subtype.is_empty_false
 
-#print Sigma.is_empty_left /-
 instance Sigma.is_empty_left {α} [IsEmpty α] {E : α → Type _} : IsEmpty (Sigma E) :=
-  Function.is_empty Sigma.fst
--/
+  function.isEmpty Sigma.fst
+#align sigma.is_empty_left Sigma.is_empty_left
 
 -- Test that `pi.is_empty` finds this instance.
 example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by infer_instance
@@ -105,11 +100,13 @@ example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by infer_instanc
 @[elab_as_elim]
 def isEmptyElim [IsEmpty α] {p : α → Sort _} (a : α) : p a :=
   (IsEmpty.false a).elim
+#align is_empty_elim isEmptyElim
 -/
 
-#print is_empty_iff /-
-theorem is_empty_iff : IsEmpty α ↔ α → False :=
+#print isEmpty_iff /-
+theorem isEmpty_iff : IsEmpty α ↔ α → False :=
   ⟨@IsEmpty.false α, IsEmpty.mk⟩
+#align is_empty_iff isEmpty_iff
 -/
 
 namespace IsEmpty
@@ -120,6 +117,7 @@ open Function
 /-- Eliminate out of a type that `is_empty` (using projection notation). -/
 protected def elim (h : IsEmpty α) {p : α → Sort _} (a : α) : p a :=
   isEmptyElim a
+#align is_empty.elim IsEmpty.elim
 -/
 
 #print IsEmpty.elim' /-
@@ -127,11 +125,13 @@ protected def elim (h : IsEmpty α) {p : α → Sort _} (a : α) : p a :=
   correctly. -/
 protected def elim' {β : Sort _} (h : IsEmpty α) (a : α) : β :=
   h.elim a
+#align is_empty.elim' IsEmpty.elim'
 -/
 
 #print IsEmpty.prop_iff /-
 protected theorem prop_iff {p : Prop} : IsEmpty p ↔ ¬p :=
-  is_empty_iff
+  isEmpty_iff
+#align is_empty.prop_iff IsEmpty.prop_iff
 -/
 
 variable [IsEmpty α]
@@ -140,12 +140,14 @@ variable [IsEmpty α]
 @[simp]
 theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ True :=
   iff_true_intro isEmptyElim
+#align is_empty.forall_iff IsEmpty.forall_iff
 -/
 
 #print IsEmpty.exists_iff /-
 @[simp]
 theorem exists_iff {p : α → Prop} : (∃ a, p a) ↔ False :=
   iff_false_intro fun ⟨x, hx⟩ => IsEmpty.false x
+#align is_empty.exists_iff IsEmpty.exists_iff
 -/
 
 -- see Note [lower instance priority]
@@ -158,127 +160,136 @@ end IsEmpty
 @[simp]
 theorem not_nonempty_iff : ¬Nonempty α ↔ IsEmpty α :=
   ⟨fun h => ⟨fun x => h ⟨x⟩⟩, fun h1 h2 => h2.elim h1.elim⟩
+#align not_nonempty_iff not_nonempty_iff
 -/
 
-#print not_is_empty_iff /-
+#print not_isEmpty_iff /-
 @[simp]
-theorem not_is_empty_iff : ¬IsEmpty α ↔ Nonempty α :=
+theorem not_isEmpty_iff : ¬IsEmpty α ↔ Nonempty α :=
   not_iff_comm.mp not_nonempty_iff
+#align not_is_empty_iff not_isEmpty_iff
 -/
 
-#print is_empty_Prop /-
+#print isEmpty_Prop /-
 @[simp]
-theorem is_empty_Prop {p : Prop} : IsEmpty p ↔ ¬p := by simp only [← not_nonempty_iff, nonempty_Prop]
+theorem isEmpty_Prop {p : Prop} : IsEmpty p ↔ ¬p := by simp only [← not_nonempty_iff, nonempty_Prop]
+#align is_empty_Prop isEmpty_Prop
 -/
 
-#print is_empty_pi /-
+#print isEmpty_pi /-
 @[simp]
-theorem is_empty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) := by
+theorem isEmpty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmpty (π a) := by
   simp only [← not_nonempty_iff, Classical.nonempty_pi, not_forall]
+#align is_empty_pi isEmpty_pi
 -/
 
-/- warning: is_empty_sigma -> is_empty_sigma is a dubious translation:
+/- warning: is_empty_sigma -> isEmpty_sigma is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {E : α -> Type.{u_2}}, Iff (IsEmpty.{(max (succ u_1) (succ u_2))} (Sigma.{u_1 u_2} α E)) (forall (a : α), IsEmpty.{succ u_2} (E a))
 but is expected to have type
   forall {α : Type.{u_1}} {E : α -> Type.{u_2}}, Iff (IsEmpty.{(max (succ u_2) (succ u_1))} (Sigma.{u_1 u_2} α E)) (forall (a : α), IsEmpty.{succ u_2} (E a))
-Case conversion may be inaccurate. Consider using '#align is_empty_sigma is_empty_sigmaₓ'. -/
+Case conversion may be inaccurate. Consider using '#align is_empty_sigma isEmpty_sigmaₓ'. -/
 @[simp]
-theorem is_empty_sigma {α} {E : α → Type _} : IsEmpty (Sigma E) ↔ ∀ a, IsEmpty (E a) := by
+theorem isEmpty_sigma {α} {E : α → Type _} : IsEmpty (Sigma E) ↔ ∀ a, IsEmpty (E a) := by
   simp only [← not_nonempty_iff, nonempty_sigma, not_exists]
+#align is_empty_sigma isEmpty_sigma
 
-/- warning: is_empty_psigma -> is_empty_psigma is a dubious translation:
+/- warning: is_empty_psigma -> isEmpty_psigma is a dubious translation:
 lean 3 declaration is
   forall {α : Sort.{u_1}} {E : α -> Sort.{u_2}}, Iff (IsEmpty.{(max 1 u_1 u_2)} (PSigma.{u_1 u_2} α E)) (forall (a : α), IsEmpty.{u_2} (E a))
 but is expected to have type
   forall {α : Sort.{u_1}} {E : α -> Sort.{u_2}}, Iff (IsEmpty.{(max (max 1 u_2) u_1)} (PSigma.{u_1 u_2} α E)) (forall (a : α), IsEmpty.{u_2} (E a))
-Case conversion may be inaccurate. Consider using '#align is_empty_psigma is_empty_psigmaₓ'. -/
+Case conversion may be inaccurate. Consider using '#align is_empty_psigma isEmpty_psigmaₓ'. -/
 @[simp]
-theorem is_empty_psigma {α} {E : α → Sort _} : IsEmpty (PSigma E) ↔ ∀ a, IsEmpty (E a) := by
+theorem isEmpty_psigma {α} {E : α → Sort _} : IsEmpty (PSigma E) ↔ ∀ a, IsEmpty (E a) := by
   simp only [← not_nonempty_iff, nonempty_psigma, not_exists]
+#align is_empty_psigma isEmpty_psigma
 
-#print is_empty_subtype /-
+#print isEmpty_subtype /-
 @[simp]
-theorem is_empty_subtype (p : α → Prop) : IsEmpty (Subtype p) ↔ ∀ x, ¬p x := by
+theorem isEmpty_subtype (p : α → Prop) : IsEmpty (Subtype p) ↔ ∀ x, ¬p x := by
   simp only [← not_nonempty_iff, nonempty_subtype, not_exists]
+#align is_empty_subtype isEmpty_subtype
 -/
 
-/- warning: is_empty_prod -> is_empty_prod is a dubious translation:
+/- warning: is_empty_prod -> isEmpty_prod is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (IsEmpty.{(max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β)) (Or (IsEmpty.{succ u_1} α) (IsEmpty.{succ u_2} β))
 but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (IsEmpty.{(max (succ u_2) (succ u_1))} (Prod.{u_1 u_2} α β)) (Or (IsEmpty.{succ u_1} α) (IsEmpty.{succ u_2} β))
-Case conversion may be inaccurate. Consider using '#align is_empty_prod is_empty_prodₓ'. -/
+Case conversion may be inaccurate. Consider using '#align is_empty_prod isEmpty_prodₓ'. -/
 @[simp]
-theorem is_empty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β := by
+theorem isEmpty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β := by
   simp only [← not_nonempty_iff, nonempty_prod, not_and_or]
+#align is_empty_prod isEmpty_prod
 
-#print is_empty_pprod /-
+#print isEmpty_pprod /-
 @[simp]
-theorem is_empty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β := by
+theorem isEmpty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β := by
   simp only [← not_nonempty_iff, nonempty_pprod, not_and_or]
+#align is_empty_pprod isEmpty_pprod
 -/
 
-/- warning: is_empty_sum -> is_empty_sum is a dubious translation:
+/- warning: is_empty_sum -> isEmpty_sum is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (IsEmpty.{(max (succ u_1) (succ u_2))} (Sum.{u_1 u_2} α β)) (And (IsEmpty.{succ u_1} α) (IsEmpty.{succ u_2} β))
 but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (IsEmpty.{(max (succ u_2) (succ u_1))} (Sum.{u_1 u_2} α β)) (And (IsEmpty.{succ u_1} α) (IsEmpty.{succ u_2} β))
-Case conversion may be inaccurate. Consider using '#align is_empty_sum is_empty_sumₓ'. -/
+Case conversion may be inaccurate. Consider using '#align is_empty_sum isEmpty_sumₓ'. -/
 @[simp]
-theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β := by
+theorem isEmpty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β := by
   simp only [← not_nonempty_iff, nonempty_sum, not_or]
+#align is_empty_sum isEmpty_sum
 
-/- warning: is_empty_psum -> is_empty_psum is a dubious translation:
+/- warning: is_empty_psum -> isEmpty_psum is a dubious translation:
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (IsEmpty.{(max 1 u_1 u_2)} (PSum.{u_1 u_2} α β)) (And (IsEmpty.{u_1} α) (IsEmpty.{u_2} β))
 but is expected to have type
   forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (IsEmpty.{(max (max 1 u_2) u_1)} (PSum.{u_1 u_2} α β)) (And (IsEmpty.{u_1} α) (IsEmpty.{u_2} β))
-Case conversion may be inaccurate. Consider using '#align is_empty_psum is_empty_psumₓ'. -/
+Case conversion may be inaccurate. Consider using '#align is_empty_psum isEmpty_psumₓ'. -/
 @[simp]
-theorem is_empty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
+theorem isEmpty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
   simp only [← not_nonempty_iff, nonempty_psum, not_or]
+#align is_empty_psum isEmpty_psum
 
-/- warning: is_empty_ulift -> is_empty_ulift is a dubious translation:
+/- warning: is_empty_ulift -> isEmpty_ulift is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}}, Iff (IsEmpty.{succ (max u_1 u_2)} (ULift.{u_2 u_1} α)) (IsEmpty.{succ u_1} α)
 but is expected to have type
   forall {α : Type.{u_1}}, Iff (IsEmpty.{(max (succ u_1) (succ u_2))} (ULift.{u_2 u_1} α)) (IsEmpty.{succ u_1} α)
-Case conversion may be inaccurate. Consider using '#align is_empty_ulift is_empty_uliftₓ'. -/
+Case conversion may be inaccurate. Consider using '#align is_empty_ulift isEmpty_uliftₓ'. -/
 @[simp]
-theorem is_empty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_ulift]
+theorem isEmpty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_ulift]
+#align is_empty_ulift isEmpty_ulift
 
-#print is_empty_plift /-
+#print isEmpty_plift /-
 @[simp]
-theorem is_empty_plift {α} : IsEmpty (PLift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_plift]
+theorem isEmpty_plift {α} : IsEmpty (PLift α) ↔ IsEmpty α := by simp only [← not_nonempty_iff, nonempty_plift]
+#align is_empty_plift isEmpty_plift
 -/
 
-#print well_founded_of_empty /-
-theorem well_founded_of_empty {α} [IsEmpty α] (r : α → α → Prop) : WellFounded r :=
+theorem wellFounded_of_isEmpty {α} [IsEmpty α] (r : α → α → Prop) : WellFounded r :=
   ⟨isEmptyElim⟩
--/
+#align well_founded_of_empty wellFounded_of_isEmpty
 
 variable (α)
 
-#print is_empty_or_nonempty /-
-theorem is_empty_or_nonempty : IsEmpty α ∨ Nonempty α :=
-  (em <| IsEmpty α).elim Or.inl <| Or.inr ∘ not_is_empty_iff.mp
+#print isEmpty_or_nonempty /-
+theorem isEmpty_or_nonempty : IsEmpty α ∨ Nonempty α :=
+  (em <| IsEmpty α).elim Or.inl <| Or.inr ∘ not_isEmpty_iff.mp
+#align is_empty_or_nonempty isEmpty_or_nonempty
 -/
 
-#print not_is_empty_of_nonempty /-
+#print not_isEmpty_of_nonempty /-
 @[simp]
-theorem not_is_empty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
-  not_is_empty_iff.mpr h
+theorem not_isEmpty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
+  not_isEmpty_iff.mpr h
+#align not_is_empty_of_nonempty not_isEmpty_of_nonempty
 -/
 
 variable {α}
 
-/- warning: function.extend_of_empty -> Function.extend_of_empty is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [_inst_1 : IsEmpty.{u_1} α] (f : α -> β) (g : α -> γ) (h : β -> γ), Eq.{(imax u_2 u_3)} (β -> γ) (Function.extend.{u_1 u_2 u_3} α β γ f g h) h
-but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [inst._@.Mathlib.Logic.IsEmpty._hyg.974 : IsEmpty.{u_1} α] (f : α -> β) (g : α -> γ) (h : β -> γ), Eq.{(imax u_2 u_3)} (β -> γ) (Function.extend.{u_1 u_2 u_3} α β γ f g h) h
-Case conversion may be inaccurate. Consider using '#align function.extend_of_empty Function.extend_of_emptyₓ'. -/
-theorem Function.extend_of_empty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) : Function.extend f g h = h :=
+theorem Function.extend_of_isEmpty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) : Function.extend f g h = h :=
   funext fun x => (Function.extend_apply' _ _ _) fun ⟨a, h⟩ => isEmptyElim a
+#align function.extend_of_empty Function.extend_of_isEmpty
 

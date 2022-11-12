@@ -44,16 +44,19 @@ variable {α}
 
 theorem le_def {f g : Π₀ i, α i} : f ≤ g ↔ ∀ i, f i ≤ g i :=
   Iff.rfl
+#align dfinsupp.le_def Dfinsupp.le_def
 
 /-- The order on `dfinsupp`s over a partial order embeds into the order on functions -/
 def orderEmbeddingToFun : (Π₀ i, α i) ↪o ∀ i, α i where
   toFun := coeFn
   inj' := coe_fn_injective
   map_rel_iff' a b := (@le_def _ _ _ _ a b).symm
+#align dfinsupp.order_embedding_to_fun Dfinsupp.orderEmbeddingToFun
 
 @[simp]
 theorem order_embedding_to_fun_apply {f : Π₀ i, α i} {i : ι} : orderEmbeddingToFun f i = f i :=
   rfl
+#align dfinsupp.order_embedding_to_fun_apply Dfinsupp.order_embedding_to_fun_apply
 
 end LE
 
@@ -65,6 +68,7 @@ instance : Preorder (Π₀ i, α i) :=
   { Dfinsupp.hasLe α with le_refl := fun f i => le_rfl, le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
 theorem coe_fn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun f g => le_def.1
+#align dfinsupp.coe_fn_mono Dfinsupp.coe_fn_mono
 
 end Preorder
 
@@ -86,6 +90,7 @@ instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
 @[simp]
 theorem inf_apply [∀ i, SemilatticeInf (α i)] (f g : Π₀ i, α i) (i : ι) : (f ⊓ g) i = f i ⊓ g i :=
   zip_with_apply _ _ _ _ _
+#align dfinsupp.inf_apply Dfinsupp.inf_apply
 
 instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
   { Dfinsupp.partialOrder α with sup := zipWith (fun _ => (· ⊔ ·)) fun _ => sup_idem,
@@ -102,9 +107,11 @@ instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
 @[simp]
 theorem sup_apply [∀ i, SemilatticeSup (α i)] (f g : Π₀ i, α i) (i : ι) : (f ⊔ g) i = f i ⊔ g i :=
   zip_with_apply _ _ _ _ _
+#align dfinsupp.sup_apply Dfinsupp.sup_apply
 
 instance lattice [∀ i, Lattice (α i)] : Lattice (Π₀ i, α i) :=
   { Dfinsupp.semilatticeInf α, Dfinsupp.semilatticeSup α with }
+#align dfinsupp.lattice Dfinsupp.lattice
 
 end Zero
 
@@ -143,9 +150,11 @@ variable {α}
 
 protected theorem bot_eq_zero : (⊥ : Π₀ i, α i) = 0 :=
   rfl
+#align dfinsupp.bot_eq_zero Dfinsupp.bot_eq_zero
 
 @[simp]
 theorem add_eq_zero_iff (f g : Π₀ i, α i) : f + g = 0 ↔ f = 0 ∧ g = 0 := by simp [ext_iff, forall_and]
+#align dfinsupp.add_eq_zero_iff Dfinsupp.add_eq_zero_iff
 
 section Le
 
@@ -154,20 +163,24 @@ variable [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] {f g : Π₀
 theorem le_iff' (hf : f.support ⊆ s) : f ≤ g ↔ ∀ i ∈ s, f i ≤ g i :=
   ⟨fun h s hs => h s, fun h s =>
     if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
+#align dfinsupp.le_iff' Dfinsupp.le_iff'
 
 theorem le_iff : f ≤ g ↔ ∀ i ∈ f.support, f i ≤ g i :=
   le_iff' <| Subset.refl _
+#align dfinsupp.le_iff Dfinsupp.le_iff
 
 variable (α)
 
 instance decidableLe [∀ i, DecidableRel (@LE.le (α i) _)] : DecidableRel (@LE.le (Π₀ i, α i) _) := fun f g =>
   decidable_of_iff _ le_iff.symm
+#align dfinsupp.decidable_le Dfinsupp.decidableLe
 
 variable {α}
 
 @[simp]
 theorem single_le_iff {i : ι} {a : α i} : single i a ≤ f ↔ a ≤ f i :=
   (le_iff' support_single_subset).trans <| by simp
+#align dfinsupp.single_le_iff Dfinsupp.single_le_iff
 
 end Le
 
@@ -177,16 +190,19 @@ variable (α) [∀ i, Sub (α i)] [∀ i, HasOrderedSub (α i)] {f g : Π₀ i, 
 additive group. -/
 instance tsub : Sub (Π₀ i, α i) :=
   ⟨zipWith (fun i m n => m - n) fun i => tsub_self 0⟩
+#align dfinsupp.tsub Dfinsupp.tsub
 
 variable {α}
 
 theorem tsub_apply (f g : Π₀ i, α i) (i : ι) : (f - g) i = f i - g i :=
   zip_with_apply _ _ _ _ _
+#align dfinsupp.tsub_apply Dfinsupp.tsub_apply
 
 @[simp]
 theorem coe_tsub (f g : Π₀ i, α i) : ⇑(f - g) = f - g := by
   ext i
   exact tsub_apply f g i
+#align dfinsupp.coe_tsub Dfinsupp.coe_tsub
 
 variable (α)
 
@@ -217,15 +233,18 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
     
   · rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
     
+#align dfinsupp.single_tsub Dfinsupp.single_tsub
 
 variable [∀ (i) (x : α i), Decidable (x ≠ 0)]
 
 theorem support_tsub : (f - g).support ⊆ f.support := by
   simp (config := { contextual := true }) only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff, Ne.def, coe_tsub,
     Pi.sub_apply, not_imp_not, zero_le, imp_true_iff]
+#align dfinsupp.support_tsub Dfinsupp.support_tsub
 
 theorem subset_support_tsub : f.support \ g.support ⊆ (f - g).support := by
   simp (config := { contextual := true }) [subset_iff]
+#align dfinsupp.subset_support_tsub Dfinsupp.subset_support_tsub
 
 end CanonicallyOrderedAddMonoid
 
@@ -238,16 +257,19 @@ theorem support_inf : (f ⊓ g).support = f.support ∩ g.support := by
   ext
   simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
   simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or]
+#align dfinsupp.support_inf Dfinsupp.support_inf
 
 @[simp]
 theorem support_sup : (f ⊔ g).support = f.support ∪ g.support := by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
   rw [_root_.sup_eq_bot_iff, not_and_or]
+#align dfinsupp.support_sup Dfinsupp.support_sup
 
 theorem disjoint_iff : Disjoint f g ↔ Disjoint f.support g.support := by
   rw [disjoint_iff, disjoint_iff, Dfinsupp.bot_eq_zero, ← Dfinsupp.support_eq_empty, Dfinsupp.support_inf]
   rfl
+#align dfinsupp.disjoint_iff Dfinsupp.disjoint_iff
 
 end CanonicallyLinearOrderedAddMonoid
 

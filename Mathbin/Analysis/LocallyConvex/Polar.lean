@@ -52,62 +52,76 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 for all `x ∈ s`.-/
 def Polar (s : Set E) : Set F :=
   { y : F | ∀ x ∈ s, ∥B x y∥ ≤ 1 }
+#align linear_map.polar LinearMap.Polar
 
 theorem polar_mem_iff (s : Set E) (y : F) : y ∈ B.Polar s ↔ ∀ x ∈ s, ∥B x y∥ ≤ 1 :=
   Iff.rfl
+#align linear_map.polar_mem_iff LinearMap.polar_mem_iff
 
 theorem polar_mem (s : Set E) (y : F) (hy : y ∈ B.Polar s) : ∀ x ∈ s, ∥B x y∥ ≤ 1 :=
   hy
+#align linear_map.polar_mem LinearMap.polar_mem
 
 @[simp]
 theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.Polar s := fun _ _ => by simp only [map_zero, norm_zero, zero_le_one]
+#align linear_map.zero_mem_polar LinearMap.zero_mem_polar
 
 theorem polar_eq_Inter {s : Set E} : B.Polar s = ⋂ x ∈ s, { y : F | ∥B x y∥ ≤ 1 } := by
   ext
   simp only [polar_mem_iff, Set.mem_Inter, Set.mem_set_of_eq]
+#align linear_map.polar_eq_Inter LinearMap.polar_eq_Inter
 
 /-- The map `B.polar : set E → set F` forms an order-reversing Galois connection with
 `B.flip.polar : set F → set E`. We use `order_dual.to_dual` and `order_dual.of_dual` to express
 that `polar` is order-reversing. -/
 theorem polar_gc : GaloisConnection (OrderDual.toDual ∘ B.Polar) (B.flip.Polar ∘ OrderDual.ofDual) := fun s t =>
   ⟨fun h _ hx _ hy => h hy _ hx, fun h _ hx _ hy => h hy _ hx⟩
+#align linear_map.polar_gc LinearMap.polar_gc
 
 @[simp]
 theorem polar_Union {ι} {s : ι → Set E} : B.Polar (⋃ i, s i) = ⋂ i, B.Polar (s i) :=
   B.polar_gc.l_supr
+#align linear_map.polar_Union LinearMap.polar_Union
 
 @[simp]
 theorem polar_union {s t : Set E} : B.Polar (s ∪ t) = B.Polar s ∩ B.Polar t :=
   B.polar_gc.l_sup
+#align linear_map.polar_union LinearMap.polar_union
 
 theorem polar_antitone : Antitone (B.Polar : Set E → Set F) :=
   B.polar_gc.monotone_l
+#align linear_map.polar_antitone LinearMap.polar_antitone
 
 @[simp]
 theorem polar_empty : B.Polar ∅ = Set.Univ :=
   B.polar_gc.l_bot
+#align linear_map.polar_empty LinearMap.polar_empty
 
 @[simp]
 theorem polar_zero : B.Polar ({0} : Set E) = Set.Univ := by
   refine' set.eq_univ_iff_forall.mpr fun y x hx => _
   rw [set.mem_singleton_iff.mp hx, map_zero, LinearMap.zero_apply, norm_zero]
   exact zero_le_one
+#align linear_map.polar_zero LinearMap.polar_zero
 
 theorem subset_bipolar (s : Set E) : s ⊆ B.flip.Polar (B.Polar s) := fun x hx y hy => by
   rw [B.flip_apply]
   exact hy x hx
+#align linear_map.subset_bipolar LinearMap.subset_bipolar
 
 @[simp]
 theorem tripolar_eq_polar (s : Set E) : B.Polar (B.flip.Polar (B.Polar s)) = B.Polar s := by
   refine' (B.polar_antitone (B.subset_bipolar s)).antisymm _
   convert subset_bipolar B.flip (B.polar s)
   exact B.flip_flip.symm
+#align linear_map.tripolar_eq_polar LinearMap.tripolar_eq_polar
 
 /-- The polar set is closed in the weak topology induced by `B.flip`. -/
 theorem polarWeakClosed (s : Set E) : @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.Polar s) := by
   rw [polar_eq_Inter]
   refine' isClosedInter fun x => isClosedInter fun _ => _
   exact isClosedLe (WeakBilin.eval_continuous B.flip x).norm continuous_const
+#align linear_map.polar_weak_closed LinearMap.polarWeakClosed
 
 end NormedRing
 
@@ -130,6 +144,7 @@ theorem polar_univ (h : SeparatingRight B) : B.Polar Set.Univ = {(0 : F)} := by
     _ ≤ ε * 1 := mul_le_mul hcε.le (hy _ trivial) (norm_nonneg _) hε.le
     _ = ε := mul_one _
     
+#align linear_map.polar_univ LinearMap.polar_univ
 
 end NontriviallyNormedField
 

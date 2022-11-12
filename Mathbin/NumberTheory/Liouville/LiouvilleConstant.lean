@@ -48,6 +48,7 @@ if the series does not converge, then the sum of the series is defined to be zer
 -/
 def liouvilleNumber (m : ℝ) : ℝ :=
   ∑' i : ℕ, 1 / m ^ i !
+#align liouville.liouville_number Liouville.liouvilleNumber
 
 /-- `liouville_number_initial_terms` is the sum of the first `k + 1` terms of Liouville's constant,
 i.e.
@@ -57,6 +58,7 @@ $$
 -/
 def liouvilleNumberInitialTerms (m : ℝ) (k : ℕ) : ℝ :=
   ∑ i in range (k + 1), 1 / m ^ i !
+#align liouville.liouville_number_initial_terms Liouville.liouvilleNumberInitialTerms
 
 /-- `liouville_number_tail` is the sum of the series of the terms in `liouville_number m`
 starting from `k+1`, i.e
@@ -66,6 +68,7 @@ $$
 -/
 def liouvilleNumberTail (m : ℝ) (k : ℕ) : ℝ :=
   ∑' i, 1 / m ^ (i + (k + 1))!
+#align liouville.liouville_number_tail Liouville.liouvilleNumberTail
 
 theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvilleNumberTail m k :=
   calc
@@ -89,11 +92,13 @@ theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvil
           summable_one_div_pow_of_le
           hm fun i => trans le_self_add (Nat.self_le_factorial _)
     
+#align liouville.liouville_number_tail_pos Liouville.liouville_number_tail_pos
 
 /-- Split the sum definining a Liouville number into the first `k` term and the rest. -/
 theorem liouville_number_eq_initial_terms_add_tail {m : ℝ} (hm : 1 < m) (k : ℕ) :
     liouvilleNumber m = liouvilleNumberInitialTerms m k + liouvilleNumberTail m k :=
   (sum_add_tsum_nat_add _ (summable_one_div_pow_of_le hm fun i => i.self_le_factorial)).symm
+#align liouville.liouville_number_eq_initial_terms_add_tail Liouville.liouville_number_eq_initial_terms_add_tail
 
 /-! We now prove two useful inequalities, before collecting everything together. -/
 
@@ -135,6 +140,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
           mul_eq_mul_right_iff.mpr
         (Or.inl (tsum_geometric_of_abs_lt_1 mi))
     
+#align liouville.tsum_one_div_pow_factorial_lt Liouville.tsum_one_div_pow_factorial_lt
 
 theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 1 / (m ^ n !) ^ n :=
   calc
@@ -158,6 +164,7 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m 
       exact trans (trans hm (pow_one _).symm.le) (pow_mono (one_le_two.trans hm) n.factorial_pos)
     _ = 1 / (m ^ n !) ^ n := congr_arg ((· / ·) 1) (pow_mul m n ! n)
     
+#align liouville.aux_calc Liouville.aux_calc
 
 /-!  Starting from here, we specialize to the case in which `m` is a natural number. -/
 
@@ -181,6 +188,7 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
     refine' mul_ne_zero_iff.mpr ⟨_, _⟩
     all_goals exact pow_ne_zero _ (nat.cast_ne_zero.mpr hm.ne.symm)
     
+#align liouville.liouville_number_rat_initial_terms Liouville.liouville_number_rat_initial_terms
 
 theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) := by
   -- two useful inequalities
@@ -201,11 +209,13 @@ theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) :=
   exact
     ⟨((lt_add_iff_pos_right _).mpr (liouville_number_tail_pos m1 n)).Ne.symm,
       (tsum_one_div_pow_factorial_lt n m1).trans_le (aux_calc _ (nat.cast_two.symm.le.trans (nat.cast_le.mpr hm)))⟩
+#align liouville.is_liouville Liouville.is_liouville
 
 /- Placing this lemma outside of the `open/closed liouville`-namespace would allow to remove
 `_root_.`, at the cost of some other small weirdness. -/
 theorem isTranscendental {m : ℕ} (hm : 2 ≤ m) : Transcendental ℤ (liouvilleNumber m) :=
   transcendental (is_liouville hm)
+#align liouville.is_transcendental Liouville.isTranscendental
 
 end Liouville
 

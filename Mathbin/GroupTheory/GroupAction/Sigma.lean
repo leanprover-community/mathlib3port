@@ -33,10 +33,12 @@ instance : HasSmul M (Σi, α i) :=
 @[to_additive]
 theorem smul_def : a • x = x.map id fun i => (· • ·) a :=
   rfl
+#align sigma.smul_def Sigma.smul_def
 
 @[simp, to_additive]
 theorem smul_mk : a • mk i b = ⟨i, a • b⟩ :=
   rfl
+#align sigma.smul_mk Sigma.smul_mk
 
 instance [HasSmul M N] [∀ i, IsScalarTower M N (α i)] : IsScalarTower M N (Σi, α i) :=
   ⟨fun a b x => by
@@ -58,6 +60,7 @@ instance [∀ i, HasSmul Mᵐᵒᵖ (α i)] [∀ i, IsCentralScalar M (α i)] : 
 @[to_additive "This is not an instance because `i` becomes a metavariable."]
 protected theorem has_faithful_smul' [HasFaithfulSmul M (α i)] : HasFaithfulSmul M (Σi, α i) :=
   ⟨fun x y h => eq_of_smul_eq_smul fun a : α i => heq_iff_eq.1 (ext_iff.1 <| h <| mk i a).2⟩
+#align sigma.has_faithful_smul' Sigma.has_faithful_smul'
 
 @[to_additive]
 instance [Nonempty ι] [∀ i, HasFaithfulSmul M (α i)] : HasFaithfulSmul M (Σi, α i) :=

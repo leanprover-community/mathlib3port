@@ -55,10 +55,12 @@ instance (R : Type _) [HasSmul R α] [HasSmul Rᵐᵒᵖ α] [IsCentralScalar R 
 theorem op_smul_eq_op_smul_op {R : Type _} [HasSmul R α] [HasSmul Rᵐᵒᵖ α] [IsCentralScalar R α] (r : R) (a : α) :
     op (r • a) = op r • op a :=
   (op_smul_eq_smul r (op a)).symm
+#align mul_opposite.op_smul_eq_op_smul_op MulOpposite.op_smul_eq_op_smul_op
 
 theorem unop_smul_eq_unop_smul_unop {R : Type _} [HasSmul R α] [HasSmul Rᵐᵒᵖ α] [IsCentralScalar R α] (r : Rᵐᵒᵖ)
     (a : αᵐᵒᵖ) : unop (r • a) = unop r • unop a :=
   (unop_smul_eq_smul r (unop a)).symm
+#align mul_opposite.unop_smul_eq_unop_smul_unop MulOpposite.unop_smul_eq_unop_smul_unop
 
 end MulOpposite
 
@@ -78,30 +80,37 @@ See also `monoid.to_opposite_mul_action` and `monoid_with_zero.to_opposite_mul_a
 @[to_additive "Like `has_add.to_has_vadd`, but adds on the right.\n\nSee also `add_monoid.to_opposite_add_action`."]
 instance Mul.toHasOppositeSmul [Mul α] : HasSmul αᵐᵒᵖ α :=
   ⟨fun c x => x * c.unop⟩
+#align has_mul.to_has_opposite_smul Mul.toHasOppositeSmul
 
 @[to_additive]
 theorem op_smul_eq_mul [Mul α] {a a' : α} : op a • a' = a' * a :=
   rfl
+#align op_smul_eq_mul op_smul_eq_mul
 
 @[simp, to_additive]
 theorem MulOpposite.smul_eq_mul_unop [Mul α] {a : αᵐᵒᵖ} {a' : α} : a • a' = a' * a.unop :=
   rfl
+#align mul_opposite.smul_eq_mul_unop MulOpposite.smul_eq_mul_unop
 
 /-- The right regular action of a group on itself is transitive. -/
 @[to_additive "The right regular action of an additive group on itself is transitive."]
 instance MulAction.OppositeRegular.is_pretransitive {G : Type _} [Group G] : MulAction.IsPretransitive Gᵐᵒᵖ G :=
   ⟨fun x y => ⟨op (x⁻¹ * y), mul_inv_cancel_left _ _⟩⟩
+#align mul_action.opposite_regular.is_pretransitive MulAction.OppositeRegular.is_pretransitive
 
 @[to_additive]
 instance Semigroup.opposite_smul_comm_class [Semigroup α] :
     SmulCommClass αᵐᵒᵖ α α where smul_comm x y z := mul_assoc _ _ _
+#align semigroup.opposite_smul_comm_class Semigroup.opposite_smul_comm_class
 
 @[to_additive]
 instance Semigroup.opposite_smul_comm_class' [Semigroup α] : SmulCommClass α αᵐᵒᵖ α :=
   SmulCommClass.symm _ _ _
+#align semigroup.opposite_smul_comm_class' Semigroup.opposite_smul_comm_class'
 
 instance CommSemigroup.is_central_scalar [CommSemigroup α] : IsCentralScalar α α :=
   ⟨fun r m => mul_comm _ _⟩
+#align comm_semigroup.is_central_scalar CommSemigroup.is_central_scalar
 
 /-- Like `monoid.to_mul_action`, but multiplies on the right. -/
 @[to_additive "Like `add_monoid.to_add_action`, but adds on the right."]
@@ -109,16 +118,19 @@ instance Monoid.toOppositeMulAction [Monoid α] : MulAction αᵐᵒᵖ α where
   smul := (· • ·)
   one_smul := mul_one
   mul_smul x y r := (mul_assoc _ _ _).symm
+#align monoid.to_opposite_mul_action Monoid.toOppositeMulAction
 
 @[to_additive]
 instance IsScalarTower.opposite_mid {M N} [Mul N] [HasSmul M N] [SmulCommClass M N N] : IsScalarTower M Nᵐᵒᵖ N :=
   ⟨fun x y z => mul_smul_comm _ _ _⟩
+#align is_scalar_tower.opposite_mid IsScalarTower.opposite_mid
 
 @[to_additive]
 instance SmulCommClass.opposite_mid {M N} [Mul N] [HasSmul M N] [IsScalarTower M N N] : SmulCommClass M Nᵐᵒᵖ N :=
   ⟨fun x y z => by
     induction y using MulOpposite.rec
     simp [smul_mul_assoc]⟩
+#align smul_comm_class.opposite_mid SmulCommClass.opposite_mid
 
 -- The above instance does not create an unwanted diamond, the two paths to
 -- `mul_action αᵐᵒᵖ αᵐᵒᵖ` are defeq.
@@ -129,9 +141,11 @@ example [Monoid α] : Monoid.toMulAction αᵐᵒᵖ = MulOpposite.mulAction α 
 @[to_additive "`add_monoid.to_opposite_add_action` is faithful on cancellative monoids."]
 instance LeftCancelMonoid.to_has_faithful_opposite_scalar [LeftCancelMonoid α] : HasFaithfulSmul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancel (h 1)⟩
+#align left_cancel_monoid.to_has_faithful_opposite_scalar LeftCancelMonoid.to_has_faithful_opposite_scalar
 
 /-- `monoid.to_opposite_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
 instance CancelMonoidWithZero.to_has_faithful_opposite_scalar [CancelMonoidWithZero α] [Nontrivial α] :
     HasFaithfulSmul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancel₀ one_ne_zero (h 1)⟩
+#align cancel_monoid_with_zero.to_has_faithful_opposite_scalar CancelMonoidWithZero.to_has_faithful_opposite_scalar
 

@@ -24,10 +24,12 @@ instance [Monoid α] [Preorder α] : Preorder αˣ :=
 @[simp, norm_cast, to_additive]
 theorem coe_le_coe [Monoid α] [Preorder α] {a b : αˣ} : (a : α) ≤ b ↔ a ≤ b :=
   Iff.rfl
+#align units.coe_le_coe Units.coe_le_coe
 
 @[simp, norm_cast, to_additive]
 theorem coe_lt_coe [Monoid α] [Preorder α] {a b : αˣ} : (a : α) < b ↔ a < b :=
   Iff.rfl
+#align units.coe_lt_coe Units.coe_lt_coe
 
 @[to_additive]
 instance [Monoid α] [PartialOrder α] : PartialOrder αˣ :=
@@ -41,14 +43,17 @@ instance [Monoid α] [LinearOrder α] : LinearOrder αˣ :=
 @[to_additive "`coe : add_units α → α` as an order embedding.", simps (config := { fullyApplied := false })]
 def orderEmbeddingCoe [Monoid α] [LinearOrder α] : αˣ ↪o α :=
   ⟨⟨coe, ext⟩, fun _ _ => Iff.rfl⟩
+#align units.order_embedding_coe Units.orderEmbeddingCoe
 
 @[simp, norm_cast, to_additive]
 theorem max_coe [Monoid α] [LinearOrder α] {a b : αˣ} : (↑(max a b) : α) = max a b :=
   Monotone.map_max orderEmbeddingCoe.Monotone
+#align units.max_coe Units.max_coe
 
 @[simp, norm_cast, to_additive]
 theorem min_coe [Monoid α] [LinearOrder α] {a b : αˣ} : (↑(min a b) : α) = min a b :=
   Monotone.map_min orderEmbeddingCoe.Monotone
+#align units.min_coe Units.min_coe
 
 end Units
 

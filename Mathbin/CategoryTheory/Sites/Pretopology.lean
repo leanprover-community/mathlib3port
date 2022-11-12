@@ -57,7 +57,7 @@ https://stacks.math.columbia.edu/tag/00VH, or [MM92] Chapter III, Section 2, Def
 Note that Stacks calls a category together with a pretopology a site, and [MM92] calls this
 a basis for a topology.
 -/
-@[ext]
+@[ext.1]
 structure Pretopology where
   Coverings : ∀ X : C, Set (Presieve X)
   has_isos : ∀ ⦃X Y⦄ (f : Y ⟶ X) [IsIso f], Presieve.Singleton f ∈ coverings X
@@ -65,6 +65,7 @@ structure Pretopology where
   Transitive :
     ∀ ⦃X : C⦄ (S : Presieve X) (Ti : ∀ ⦃Y⦄ (f : Y ⟶ X), S f → Presieve Y),
       S ∈ coverings X → (∀ ⦃Y⦄ (f) (H : S f), Ti f H ∈ coverings Y) → S.bind Ti ∈ coverings X
+#align category_theory.pretopology CategoryTheory.Pretopology
 
 namespace Pretopology
 
@@ -77,6 +78,7 @@ instance : LE (Pretopology C) where le K₁ K₂ := (K₁ : ∀ X : C, Set (Pres
 
 theorem le_def {K₁ K₂ : Pretopology C} : K₁ ≤ K₂ ↔ (K₁ : ∀ X : C, Set (Presieve X)) ≤ K₂ :=
   Iff.rfl
+#align category_theory.pretopology.le_def CategoryTheory.Pretopology.le_def
 
 variable (C)
 
@@ -114,9 +116,11 @@ def toGrothendieck (K : Pretopology C) : GrothendieckTopology C where
     refine' ⟨_, K.transitive _ _ hR' fun _ f hf => t₂ (RS _ hf), _⟩
     rintro Y _ ⟨Z, g, f, hg, hf, rfl⟩
     apply t₃ (RS _ hg) _ hf
+#align category_theory.pretopology.to_grothendieck CategoryTheory.Pretopology.toGrothendieck
 
 theorem mem_to_grothendieck (K : Pretopology C) (X S) : S ∈ toGrothendieck C K X ↔ ∃ R ∈ K X, R ≤ (S : Presieve X) :=
   Iff.rfl
+#align category_theory.pretopology.mem_to_grothendieck CategoryTheory.Pretopology.mem_to_grothendieck
 
 /-- The largest pretopology generating the given Grothendieck topology.
 
@@ -137,6 +141,7 @@ def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C where
     apply J.superset_covering _ (hTi _ hf)
     rintro Y g ⟨W, h, g, hg, rfl⟩
     exact ⟨_, h, _, ⟨_, _, _, hf, hg, rfl⟩, by simp⟩
+#align category_theory.pretopology.of_grothendieck CategoryTheory.Pretopology.ofGrothendieck
 
 /-- We have a galois insertion from pretopologies to Grothendieck topologies. -/
 def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C) where
@@ -152,6 +157,7 @@ def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C) where
   le_l_u J X S hS := ⟨S, J.superset_covering S.le_generate hS, le_rfl⟩
   choice x hx := toGrothendieck C x
   choice_eq _ _ := rfl
+#align category_theory.pretopology.gi CategoryTheory.Pretopology.gi
 
 /-- The trivial pretopology, in which the coverings are exactly singleton isomorphisms. This topology is
 also known as the indiscrete, coarse, or chaotic topology.
@@ -194,6 +200,7 @@ def trivial : Pretopology C where
       rw [hTi]
       apply presieve.singleton.mk
       
+#align category_theory.pretopology.trivial CategoryTheory.Pretopology.trivial
 
 instance : OrderBot (Pretopology C) where
   bot := trivial C
@@ -204,6 +211,7 @@ instance : OrderBot (Pretopology C) where
 /-- The trivial pretopology induces the trivial grothendieck topology. -/
 theorem to_grothendieck_bot : toGrothendieck C ⊥ = ⊥ :=
   (gi C).gc.l_bot
+#align category_theory.pretopology.to_grothendieck_bot CategoryTheory.Pretopology.to_grothendieck_bot
 
 end Pretopology
 

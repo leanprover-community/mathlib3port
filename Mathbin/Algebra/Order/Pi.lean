@@ -34,6 +34,7 @@ namespace Pi
 instance orderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedCommMonoid (Z i)] :
     OrderedCommMonoid (∀ i, Z i) :=
   { Pi.partialOrder, Pi.commMonoid with mul_le_mul_left := fun f g w h i => mul_le_mul_left' (w i) _ }
+#align pi.ordered_comm_monoid Pi.orderedCommMonoid
 
 @[to_additive]
 instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i)] [∀ i, HasExistsMulOfLe (α i)] :
@@ -52,11 +53,13 @@ instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] : Order
       { Pi.partialOrder, Pi.monoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·), lt := (· < ·),
         npow := Monoid.npow } <;>
     pi_instance_derive_field
+#align pi.ordered_cancel_comm_monoid Pi.orderedCancelCommMonoid
 
 @[to_additive]
 instance orderedCommGroup [∀ i, OrderedCommGroup <| f i] : OrderedCommGroup (∀ i : I, f i) :=
   { Pi.commGroup, Pi.orderedCommMonoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·), lt := (· < ·),
     npow := Monoid.npow }
+#align pi.ordered_comm_group Pi.orderedCommGroup
 
 instance [∀ i, OrderedSemiring (f i)] : OrderedSemiring (∀ i, f i) :=
   { Pi.semiring, Pi.partialOrder with add_le_add_left := fun a b hab c i => add_le_add_left (hab _) _,
@@ -81,27 +84,33 @@ variable (β) [One α] [Preorder α] {a : α}
 
 @[to_additive const_nonneg_of_nonneg]
 theorem one_le_const_of_one_le (ha : 1 ≤ a) : 1 ≤ const β a := fun _ => ha
+#align function.one_le_const_of_one_le Function.one_le_const_of_one_le
 
 @[to_additive]
 theorem const_le_one_of_le_one (ha : a ≤ 1) : const β a ≤ 1 := fun _ => ha
+#align function.const_le_one_of_le_one Function.const_le_one_of_le_one
 
 variable {β} [Nonempty β]
 
 @[simp, to_additive const_nonneg]
 theorem one_le_const : 1 ≤ const β a ↔ 1 ≤ a :=
   @const_le_const _ _ _ _ 1 _
+#align function.one_le_const Function.one_le_const
 
 @[simp, to_additive const_pos]
 theorem one_lt_const : 1 < const β a ↔ 1 < a :=
   @const_lt_const _ _ _ _ 1 a
+#align function.one_lt_const Function.one_lt_const
 
 @[simp, to_additive]
 theorem const_le_one : const β a ≤ 1 ↔ a ≤ 1 :=
   @const_le_const _ _ _ _ _ 1
+#align function.const_le_one Function.const_le_one
 
 @[simp, to_additive]
 theorem const_lt_one : const β a < 1 ↔ a < 1 :=
   @const_lt_const _ _ _ _ _ 1
+#align function.const_lt_one Function.const_lt_one
 
 end Function
 
@@ -113,14 +122,17 @@ variable (ι) [Zero α] {a : α}
 
 private theorem function_const_nonneg_of_pos [Preorder α] (ha : 0 < a) : 0 ≤ const ι a :=
   const_nonneg_of_nonneg _ ha.le
+#align tactic.function_const_nonneg_of_pos tactic.function_const_nonneg_of_pos
 
 variable [Nonempty ι]
 
 private theorem function_const_ne_zero : a ≠ 0 → const ι a ≠ 0 :=
   const_ne_zero.2
+#align tactic.function_const_ne_zero tactic.function_const_ne_zero
 
 private theorem function_const_pos [Preorder α] : 0 < a → 0 < const ι a :=
   const_pos.2
+#align tactic.function_const_pos tactic.function_const_pos
 
 /-- Extension for the `positivity` tactic: `function.const` is positive/nonnegative/nonzero if its
 input is. -/
@@ -135,6 +147,7 @@ unsafe def positivity_const : expr → tactic strictness
       | nonnegative p => nonnegative <$> to_expr (pquote.1 (const_nonneg_of_nonneg (%%ₓι) (%%ₓp)))
       | nonzero p => nonzero <$> to_expr (pquote.1 (function_const_ne_zero (%%ₓι) (%%ₓp)))
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` is not of the form `function.const ι a`"
+#align tactic.positivity_const tactic.positivity_const
 
 end Tactic
 

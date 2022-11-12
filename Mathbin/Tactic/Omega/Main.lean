@@ -23,9 +23,11 @@ unsafe def select_domain (t s : tactic (Option Bool)) : tactic (Option Bool) := 
     | some tt, some tt => return (some tt)
     | some ff, some ff => return (some ff)
     | _, _ => failed
+#align omega.select_domain omega.select_domain
 
 unsafe def type_domain (x : expr) : tactic (Option Bool) :=
   if x = quote.1 Int then return (some true) else if x = quote.1 Nat then return (some false) else failed
+#align omega.type_domain omega.type_domain
 
 /-- Detects domain of a formula from its expr.
 * Returns none, if domain can be either ℤ or ℕ
@@ -49,21 +51,25 @@ unsafe def form_domain : expr → tactic (Option Bool)
   | quote.1 True => return none
   | quote.1 False => return none
   | x => failed
+#align omega.form_domain omega.form_domain
 
 unsafe def goal_domain_aux (x : expr) : tactic Bool :=
   omega.int.wff x >> return true <|> omega.nat.wff x >> return false
+#align omega.goal_domain_aux omega.goal_domain_aux
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Use the current goal to determine.
     Return tt if the domain is ℤ, and return ff if it is ℕ -/
 unsafe def goal_domain : tactic Bool := do
   let gx ← target
-  let hxs ← local_context >>= Monad.mapm infer_type
+  let hxs ← local_context >>= Monad.mapM infer_type
   app_first goal_domain_aux (gx::hxs)
+#align omega.goal_domain omega.goal_domain
 
 /-- Return tt if the domain is ℤ, and return ff if it is ℕ -/
 unsafe def determine_domain (opt : List Name) : tactic Bool :=
   if `int ∈ opt then return true else if `nat ∈ opt then return false else goal_domain
+#align omega.determine_domain omega.determine_domain
 
 end Omega
 
@@ -80,6 +86,7 @@ unsafe def tactic.interactive.omega (opt : parse (many ident)) : tactic Unit := 
   let is_int ← determine_domain opt
   let is_manual : Bool := if `manual ∈ opt then true else false
   if is_int then omega_int is_manual else omega_nat is_manual
+#align tactic.interactive.omega tactic.interactive.omega
 
 add_hint_tactic omega
 

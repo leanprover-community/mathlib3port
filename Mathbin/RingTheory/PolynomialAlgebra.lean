@@ -55,6 +55,7 @@ as a bilinear function of two arguments.
 @[simps apply_apply]
 def toFunBilinear : A →ₗ[A] R[X] →ₗ[R] A[X] :=
   LinearMap.toSpanSingleton A _ (aeval (Polynomial.x : A[X])).toLinearMap
+#align poly_equiv_tensor.to_fun_bilinear PolyEquivTensor.toFunBilinear
 
 theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
     toFunBilinear R A a p = p.Sum fun n r => monomial n (a * algebraMap R A r) := by
@@ -63,6 +64,7 @@ theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
   congr with i : 1
   rw [← Algebra.smul_def, ← C_mul', mul_smul_comm, C_mul_X_pow_eq_monomial, ← Algebra.commutes, ← Algebra.smul_def,
     smul_monomial]
+#align poly_equiv_tensor.to_fun_bilinear_apply_eq_sum PolyEquivTensor.to_fun_bilinear_apply_eq_sum
 
 /-- (Implementation detail).
 The function underlying `A ⊗[R] R[X] →ₐ[R] A[X]`,
@@ -70,17 +72,19 @@ as a linear map.
 -/
 def toFunLinear : A ⊗[R] R[X] →ₗ[R] A[X] :=
   TensorProduct.lift (toFunBilinear R A)
+#align poly_equiv_tensor.to_fun_linear PolyEquivTensor.toFunLinear
 
 @[simp]
 theorem to_fun_linear_tmul_apply (a : A) (p : R[X]) : toFunLinear R A (a ⊗ₜ[R] p) = toFunBilinear R A a p :=
   lift.tmul _ _
+#align poly_equiv_tensor.to_fun_linear_tmul_apply PolyEquivTensor.to_fun_linear_tmul_apply
 
 -- We apparently need to provide the decidable instance here
 -- in order to successfully rewrite by this lemma.
 theorem to_fun_linear_mul_tmul_mul_aux_1 (p : R[X]) (k : ℕ) (h : Decidable ¬p.coeff k = 0) (a : A) :
     ite (¬coeff p k = 0) (a * (algebraMap R A) (coeff p k)) 0 = a * (algebraMap R A) (coeff p k) := by
-  classical
-  split_ifs <;> simp [*]
+  classical split_ifs <;> simp [*]
+#align poly_equiv_tensor.to_fun_linear_mul_tmul_mul_aux_1 PolyEquivTensor.to_fun_linear_mul_tmul_mul_aux_1
 
 theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     a₁ * a₂ * (algebraMap R A) ((p₁ * p₂).coeff k) =
@@ -90,25 +94,23 @@ theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : 
   simp_rw [mul_assoc, Algebra.commutes, ← Finset.mul_sum, mul_assoc, ← Finset.mul_sum]
   congr
   simp_rw [Algebra.commutes (coeff p₂ _), coeff_mul, RingHom.map_sum, RingHom.map_mul]
+#align poly_equiv_tensor.to_fun_linear_mul_tmul_mul_aux_2 PolyEquivTensor.to_fun_linear_mul_tmul_mul_aux_2
 
 theorem to_fun_linear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     (toFunLinear R A) ((a₁ * a₂) ⊗ₜ[R] (p₁ * p₂)) = (toFunLinear R A) (a₁ ⊗ₜ[R] p₁) * (toFunLinear R A) (a₂ ⊗ₜ[R] p₂) :=
   by
-  classical
-  simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
-  ext k
-  simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
-  conv_rhs => rw [coeff_mul]
-  simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite, mul_zero, ite_mul,
-    zero_mul]
-  simp_rw [ite_mul_zero_left (¬coeff p₁ _ = 0) (a₁ * (algebraMap R A) (coeff p₁ _))]
-  simp_rw [ite_mul_zero_right (¬coeff p₂ _ = 0) _ (_ * _)]
-  simp_rw [to_fun_linear_mul_tmul_mul_aux_1, to_fun_linear_mul_tmul_mul_aux_2]
+  classical simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
+    simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
+    simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite, mul_zero, ite_mul,
+      zero_mul]
+    simp_rw [ite_mul_zero_right (¬coeff p₂ _ = 0) _ (_ * _)]
+#align poly_equiv_tensor.to_fun_linear_mul_tmul_mul PolyEquivTensor.to_fun_linear_mul_tmul_mul
 
 theorem to_fun_linear_algebra_map_tmul_one (r : R) :
     (toFunLinear R A) ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R A[X]) r := by
   rw [to_fun_linear_tmul_apply, to_fun_bilinear_apply_apply, Polynomial.aeval_one, algebra_map_smul,
     Algebra.algebra_map_eq_smul_one]
+#align poly_equiv_tensor.to_fun_linear_algebra_map_tmul_one PolyEquivTensor.to_fun_linear_algebra_map_tmul_one
 
 /-- (Implementation detail).
 The algebra homomorphism `A ⊗[R] R[X] →ₐ[R] A[X]`.
@@ -116,12 +118,14 @@ The algebra homomorphism `A ⊗[R] R[X] →ₐ[R] A[X]`.
 def toFunAlgHom : A ⊗[R] R[X] →ₐ[R] A[X] :=
   algHomOfLinearMapTensorProduct (toFunLinear R A) (to_fun_linear_mul_tmul_mul R A)
     (to_fun_linear_algebra_map_tmul_one R A)
+#align poly_equiv_tensor.to_fun_alg_hom PolyEquivTensor.toFunAlgHom
 
 @[simp]
 theorem to_fun_alg_hom_apply_tmul (a : A) (p : R[X]) :
     toFunAlgHom R A (a ⊗ₜ[R] p) = p.Sum fun n r => monomial n (a * (algebraMap R A) r) := by
   dsimp [to_fun_alg_hom]
   rw [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
+#align poly_equiv_tensor.to_fun_alg_hom_apply_tmul PolyEquivTensor.to_fun_alg_hom_apply_tmul
 
 /-- (Implementation detail.)
 
@@ -130,12 +134,15 @@ The bare function `A[X] → A ⊗[R] R[X]`.
 -/
 def invFun (p : A[X]) : A ⊗[R] R[X] :=
   p.eval₂ (includeLeft : A →ₐ[R] A ⊗[R] R[X]) ((1 : A) ⊗ₜ[R] (x : R[X]))
+#align poly_equiv_tensor.inv_fun PolyEquivTensor.invFun
 
 @[simp]
 theorem inv_fun_add {p q} : invFun R A (p + q) = invFun R A p + invFun R A q := by simp only [inv_fun, eval₂_add]
+#align poly_equiv_tensor.inv_fun_add PolyEquivTensor.inv_fun_add
 
 theorem inv_fun_monomial (n : ℕ) (a : A) : invFun R A (monomial n a) = includeLeft a * (1 : A) ⊗ₜ[R] (x : R[X]) ^ n :=
   eval₂_monomial _ _
+#align poly_equiv_tensor.inv_fun_monomial PolyEquivTensor.inv_fun_monomial
 
 theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x := by
   apply TensorProduct.induction_on x
@@ -154,6 +161,7 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x := by
   · intro p q hp hq
     simp only [AlgHom.map_add, inv_fun_add, hp, hq]
     
+#align poly_equiv_tensor.left_inv PolyEquivTensor.left_inv
 
 theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x := by
   apply Polynomial.induction_on' x
@@ -166,6 +174,7 @@ theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x := by
         sum_monomial_index] <;>
       simp
     
+#align poly_equiv_tensor.right_inv PolyEquivTensor.right_inv
 
 /-- (Implementation detail)
 
@@ -176,6 +185,7 @@ def equiv : A ⊗[R] R[X] ≃ A[X] where
   invFun := invFun R A
   left_inv := left_inv R A
   right_inv := right_inv R A
+#align poly_equiv_tensor.equiv PolyEquivTensor.equiv
 
 end polyEquivTensor
 
@@ -185,16 +195,19 @@ open polyEquivTensor
 -/
 def polyEquivTensor : A[X] ≃ₐ[R] A ⊗[R] R[X] :=
   AlgEquiv.symm { PolyEquivTensor.toFunAlgHom R A, PolyEquivTensor.equiv R A with }
+#align poly_equiv_tensor polyEquivTensor
 
 @[simp]
 theorem poly_equiv_tensor_apply (p : A[X]) :
     polyEquivTensor R A p = p.eval₂ (includeLeft : A →ₐ[R] A ⊗[R] R[X]) ((1 : A) ⊗ₜ[R] (x : R[X])) :=
   rfl
+#align poly_equiv_tensor_apply poly_equiv_tensor_apply
 
 @[simp]
 theorem poly_equiv_tensor_symm_apply_tmul (a : A) (p : R[X]) :
     (polyEquivTensor R A).symm (a ⊗ₜ p) = p.Sum fun n r => monomial n (a * algebraMap R A r) :=
   to_fun_alg_hom_apply_tmul _ _ _ _
+#align poly_equiv_tensor_symm_apply_tmul poly_equiv_tensor_symm_apply_tmul
 
 open Dmatrix Matrix
 
@@ -212,6 +225,7 @@ it's an algebra equivalence, and characterised extensionally by the lemma
 -/
 noncomputable def matPolyEquiv : Matrix n n R[X] ≃ₐ[R] (Matrix n n R)[X] :=
   ((matrixEquivTensor R R[X] n).trans (Algebra.TensorProduct.comm R _ _)).trans (polyEquivTensor R (Matrix n n R)).symm
+#align mat_poly_equiv matPolyEquiv
 
 open Finset
 
@@ -227,6 +241,7 @@ theorem mat_poly_equiv_coeff_apply_aux_1 (i j : n) (k : ℕ) (x : R) :
     Algebra.TensorProduct.include_left_apply, mul_eq_mul]
   rw [monomial_eq_smul_X, ← TensorProduct.smul_tmul]
   congr with (i' j') <;> simp
+#align mat_poly_equiv_coeff_apply_aux_1 mat_poly_equiv_coeff_apply_aux_1
 
 theorem mat_poly_equiv_coeff_apply_aux_2 (i j : n) (p : R[X]) (k : ℕ) :
     coeff (matPolyEquiv (stdBasisMatrix i j p)) k = stdBasisMatrix i j (coeff p k) := by
@@ -242,6 +257,7 @@ theorem mat_poly_equiv_coeff_apply_aux_2 (i j : n) (p : R[X]) (k : ℕ) :
         simp
         
     
+#align mat_poly_equiv_coeff_apply_aux_2 mat_poly_equiv_coeff_apply_aux_2
 
 @[simp]
 theorem mat_poly_equiv_coeff_apply (m : Matrix n n R[X]) (k : ℕ) (i j : n) :
@@ -262,6 +278,7 @@ theorem mat_poly_equiv_coeff_apply (m : Matrix n n R[X]) (k : ℕ) (i j : n) :
     · simp [std_basis_matrix, h]
       
     
+#align mat_poly_equiv_coeff_apply mat_poly_equiv_coeff_apply
 
 @[simp]
 theorem mat_poly_equiv_symm_apply_coeff (p : (Matrix n n R)[X]) (i j : n) (k : ℕ) :
@@ -269,11 +286,13 @@ theorem mat_poly_equiv_symm_apply_coeff (p : (Matrix n n R)[X]) (i j : n) (k : �
   have t : p = matPolyEquiv (mat_poly_equiv.symm p) := by simp
   conv_rhs => rw [t]
   simp only [mat_poly_equiv_coeff_apply]
+#align mat_poly_equiv_symm_apply_coeff mat_poly_equiv_symm_apply_coeff
 
 theorem mat_poly_equiv_smul_one (p : R[X]) : matPolyEquiv (p • 1) = p.map (algebraMap R (Matrix n n R)) := by
   ext (m i j)
   simp only [coeff_map, one_apply, algebra_map_matrix_apply, mul_boole, Pi.smul_apply, mat_poly_equiv_coeff_apply]
   split_ifs <;> simp
+#align mat_poly_equiv_smul_one mat_poly_equiv_smul_one
 
 theorem support_subset_support_mat_poly_equiv (m : Matrix n n R[X]) (i j : n) :
     support (m i j) ⊆ support (matPolyEquiv m) := by
@@ -283,4 +302,5 @@ theorem support_subset_support_mat_poly_equiv (m : Matrix n n R[X]) (i j : n) :
   intro hk
   rw [← mat_poly_equiv_coeff_apply, hk]
   rfl
+#align support_subset_support_mat_poly_equiv support_subset_support_mat_poly_equiv
 

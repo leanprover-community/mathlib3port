@@ -26,6 +26,7 @@ theorem Icc_mem_vitali_family_at_right {x y : ℝ} (hxy : x < y) :
   rw [Icc_eq_closed_ball]
   refine' closed_ball_mem_vitali_family_of_dist_le_mul _ _ (by linarith)
   rw [dist_comm, Real.dist_eq, abs_of_nonneg] <;> linarith
+#align real.Icc_mem_vitali_family_at_right Real.Icc_mem_vitali_family_at_right
 
 theorem tendsto_Icc_vitali_family_right (x : ℝ) :
     Tendsto (fun y => IccCat x y) (𝓝[>] x) ((VitaliFamily (volume : Measure ℝ) 1).filterAt x) := by
@@ -38,12 +39,14 @@ theorem tendsto_Icc_vitali_family_right (x : ℝ) :
     rw [closed_ball_eq_Icc]
     exact Icc_subset_Icc (by linarith) hy.2
     
+#align real.tendsto_Icc_vitali_family_right Real.tendsto_Icc_vitali_family_right
 
 theorem Icc_mem_vitali_family_at_left {x y : ℝ} (hxy : x < y) :
     IccCat x y ∈ (VitaliFamily (volume : Measure ℝ) 1).SetsAt y := by
   rw [Icc_eq_closed_ball]
   refine' closed_ball_mem_vitali_family_of_dist_le_mul _ _ (by linarith)
   rw [Real.dist_eq, abs_of_nonneg] <;> linarith
+#align real.Icc_mem_vitali_family_at_left Real.Icc_mem_vitali_family_at_left
 
 theorem tendsto_Icc_vitali_family_left (x : ℝ) :
     Tendsto (fun y => IccCat y x) (𝓝[<] x) ((VitaliFamily (volume : Measure ℝ) 1).filterAt x) := by
@@ -56,6 +59,7 @@ theorem tendsto_Icc_vitali_family_left (x : ℝ) :
     rw [closed_ball_eq_Icc]
     exact Icc_subset_Icc hy.1 (by linarith)
     
+#align real.tendsto_Icc_vitali_family_left Real.tendsto_Icc_vitali_family_left
 
 end Real
 

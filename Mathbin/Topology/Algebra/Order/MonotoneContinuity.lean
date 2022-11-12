@@ -51,6 +51,7 @@ theorem StrictMonoOn.continuous_at_right_of_exists_between {f : α → β} {s : 
     rintro x hx ⟨hax, hxc⟩
     exact ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb
     
+#align strict_mono_on.continuous_at_right_of_exists_between StrictMonoOn.continuous_at_right_of_exists_between
 
 /-- If `f` is a monotone function on a right neighborhood of `a` and the image of this neighborhood
 under `f` meets every interval `(f a, b)`, `b > f a`, then `f` is continuous at `a` from the right.
@@ -71,6 +72,7 @@ theorem continuous_at_right_of_monotone_on_of_exists_between {f : α → β} {s 
     rintro x hx ⟨hax, hxc⟩
     exact (h_mono hx hcs hxc.le).trans_lt hcb
     
+#align continuous_at_right_of_monotone_on_of_exists_between continuous_at_right_of_monotone_on_of_exists_between
 
 /-- If a function `f` with a densely ordered codomain is monotone on a right neighborhood of `a` and
 the closure of the image of this neighborhood under `f` is a right neighborhood of `f a`, then `f`
@@ -83,6 +85,8 @@ theorem continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within [Den
   rcases exists_between hab' with ⟨c', hc'⟩
   rcases mem_closure_iff.1 (hb' ⟨hc'.1.le, hc'.2⟩) (Ioo (f a) b') is_open_Ioo hc' with ⟨_, hc, ⟨c, hcs, rfl⟩⟩
   exact ⟨c, hcs, hc.1, hc.2.trans_le hbb'⟩
+#align
+  continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within
 
 /-- If a function `f` with a densely ordered codomain is monotone on a right neighborhood of `a` and
 the image of this neighborhood under `f` is a right neighborhood of `f a`, then `f` is continuous at
@@ -90,6 +94,8 @@ the image of this neighborhood under `f` is a right neighborhood of `f a`, then 
 theorem continuous_at_right_of_monotone_on_of_image_mem_nhds_within [DenselyOrdered β] {f : α → β} {s : Set α} {a : α}
     (h_mono : MonotoneOn f s) (hs : s ∈ 𝓝[≥] a) (hfs : f '' s ∈ 𝓝[≥] f a) : ContinuousWithinAt f (IciCat a) a :=
   continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within h_mono hs <| mem_of_superset hfs subset_closure
+#align
+  continuous_at_right_of_monotone_on_of_image_mem_nhds_within continuous_at_right_of_monotone_on_of_image_mem_nhds_within
 
 /-- If a function `f` with a densely ordered codomain is strictly monotone on a right neighborhood
 of `a` and the closure of the image of this neighborhood under `f` is a right neighborhood of `f a`,
@@ -99,6 +105,8 @@ theorem StrictMonoOn.continuous_at_right_of_closure_image_mem_nhds_within [Dense
     ContinuousWithinAt f (IciCat a) a :=
   continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within (fun x hx y hy => (h_mono.le_iff_le hx hy).2) hs
     hfs
+#align
+  strict_mono_on.continuous_at_right_of_closure_image_mem_nhds_within StrictMonoOn.continuous_at_right_of_closure_image_mem_nhds_within
 
 /-- If a function `f` with a densely ordered codomain is strictly monotone on a right neighborhood
 of `a` and the image of this neighborhood under `f` is a right neighborhood of `f a`, then `f` is
@@ -106,6 +114,8 @@ continuous at `a` from the right. -/
 theorem StrictMonoOn.continuous_at_right_of_image_mem_nhds_within [DenselyOrdered β] {f : α → β} {s : Set α} {a : α}
     (h_mono : StrictMonoOn f s) (hs : s ∈ 𝓝[≥] a) (hfs : f '' s ∈ 𝓝[≥] f a) : ContinuousWithinAt f (IciCat a) a :=
   h_mono.continuous_at_right_of_closure_image_mem_nhds_within hs (mem_of_superset hfs subset_closure)
+#align
+  strict_mono_on.continuous_at_right_of_image_mem_nhds_within StrictMonoOn.continuous_at_right_of_image_mem_nhds_within
 
 /-- If a function `f` is strictly monotone on a right neighborhood of `a` and the image of this
 neighborhood under `f` includes `Ioi (f a)`, then `f` is continuous at `a` from the right. -/
@@ -114,6 +124,7 @@ theorem StrictMonoOn.continuous_at_right_of_surj_on {f : α → β} {s : Set α}
   (h_mono.continuous_at_right_of_exists_between hs) fun b hb =>
     let ⟨c, hcs, hcb⟩ := hfs hb
     ⟨c, hcs, hcb.symm ▸ hb, hcb.le⟩
+#align strict_mono_on.continuous_at_right_of_surj_on StrictMonoOn.continuous_at_right_of_surj_on
 
 /-- If `f` is a strictly monotone function on a left neighborhood of `a` and the image of this
 neighborhood under `f` meets every interval `[b, f a)`, `b < f a`, then `f` is continuous at `a`
@@ -127,6 +138,7 @@ theorem StrictMonoOn.continuous_at_left_of_exists_between {f : α → β} {s : S
   (h_mono.dual.continuous_at_right_of_exists_between hs) fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
+#align strict_mono_on.continuous_at_left_of_exists_between StrictMonoOn.continuous_at_left_of_exists_between
 
 /-- If `f` is a monotone function on a left neighborhood of `a` and the image of this neighborhood
 under `f` meets every interval `(b, f a)`, `b < f a`, then `f` is continuous at `a` from the left.
@@ -139,6 +151,7 @@ theorem continuous_at_left_of_monotone_on_of_exists_between {f : α → β} {s :
   (@continuous_at_right_of_monotone_on_of_exists_between αᵒᵈ βᵒᵈ _ _ _ _ _ _ f s a hf.dual hs) fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
+#align continuous_at_left_of_monotone_on_of_exists_between continuous_at_left_of_monotone_on_of_exists_between
 
 /-- If a function `f` with a densely ordered codomain is monotone on a left neighborhood of `a` and
 the closure of the image of this neighborhood under `f` is a left neighborhood of `f a`, then `f` is
@@ -147,6 +160,8 @@ theorem continuous_at_left_of_monotone_on_of_closure_image_mem_nhds_within [Dens
     {a : α} (hf : MonotoneOn f s) (hs : s ∈ 𝓝[≤] a) (hfs : Closure (f '' s) ∈ 𝓝[≤] f a) :
     ContinuousWithinAt f (IicCat a) a :=
   @continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ f s a hf.dual hs hfs
+#align
+  continuous_at_left_of_monotone_on_of_closure_image_mem_nhds_within continuous_at_left_of_monotone_on_of_closure_image_mem_nhds_within
 
 /-- If a function `f` with a densely ordered codomain is monotone on a left neighborhood of `a` and
 the image of this neighborhood under `f` is a left neighborhood of `f a`, then `f` is continuous at
@@ -154,6 +169,8 @@ the image of this neighborhood under `f` is a left neighborhood of `f a`, then `
 theorem continuous_at_left_of_monotone_on_of_image_mem_nhds_within [DenselyOrdered β] {f : α → β} {s : Set α} {a : α}
     (h_mono : MonotoneOn f s) (hs : s ∈ 𝓝[≤] a) (hfs : f '' s ∈ 𝓝[≤] f a) : ContinuousWithinAt f (IicCat a) a :=
   continuous_at_left_of_monotone_on_of_closure_image_mem_nhds_within h_mono hs (mem_of_superset hfs subset_closure)
+#align
+  continuous_at_left_of_monotone_on_of_image_mem_nhds_within continuous_at_left_of_monotone_on_of_image_mem_nhds_within
 
 /-- If a function `f` with a densely ordered codomain is strictly monotone on a left neighborhood of
 `a` and the closure of the image of this neighborhood under `f` is a left neighborhood of `f a`,
@@ -162,6 +179,8 @@ theorem StrictMonoOn.continuous_at_left_of_closure_image_mem_nhds_within [Densel
     {a : α} (h_mono : StrictMonoOn f s) (hs : s ∈ 𝓝[≤] a) (hfs : Closure (f '' s) ∈ 𝓝[≤] f a) :
     ContinuousWithinAt f (IicCat a) a :=
   h_mono.dual.continuous_at_right_of_closure_image_mem_nhds_within hs hfs
+#align
+  strict_mono_on.continuous_at_left_of_closure_image_mem_nhds_within StrictMonoOn.continuous_at_left_of_closure_image_mem_nhds_within
 
 /-- If a function `f` with a densely ordered codomain is strictly monotone on a left neighborhood of
 `a` and the image of this neighborhood under `f` is a left neighborhood of `f a`, then `f` is
@@ -169,12 +188,15 @@ continuous at `a` from the left. -/
 theorem StrictMonoOn.continuous_at_left_of_image_mem_nhds_within [DenselyOrdered β] {f : α → β} {s : Set α} {a : α}
     (h_mono : StrictMonoOn f s) (hs : s ∈ 𝓝[≤] a) (hfs : f '' s ∈ 𝓝[≤] f a) : ContinuousWithinAt f (IicCat a) a :=
   h_mono.dual.continuous_at_right_of_image_mem_nhds_within hs hfs
+#align
+  strict_mono_on.continuous_at_left_of_image_mem_nhds_within StrictMonoOn.continuous_at_left_of_image_mem_nhds_within
 
 /-- If a function `f` is strictly monotone on a left neighborhood of `a` and the image of this
 neighborhood under `f` includes `Iio (f a)`, then `f` is continuous at `a` from the left. -/
 theorem StrictMonoOn.continuous_at_left_of_surj_on {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
     (hs : s ∈ 𝓝[≤] a) (hfs : SurjOn f s (IioCat (f a))) : ContinuousWithinAt f (IicCat a) a :=
   h_mono.dual.continuous_at_right_of_surj_on hs hfs
+#align strict_mono_on.continuous_at_left_of_surj_on StrictMonoOn.continuous_at_left_of_surj_on
 
 /-- If a function `f` is strictly monotone on a neighborhood of `a` and the image of this
 neighborhood under `f` meets every interval `[b, f a)`, `b < f a`, and every interval
@@ -185,6 +207,7 @@ theorem StrictMonoOn.continuous_at_of_exists_between {f : α → β} {s : Set α
   continuous_at_iff_continuous_left_right.2
     ⟨h_mono.continuous_at_left_of_exists_between (mem_nhds_within_of_mem_nhds hs) hfs_l,
       h_mono.continuous_at_right_of_exists_between (mem_nhds_within_of_mem_nhds hs) hfs_r⟩
+#align strict_mono_on.continuous_at_of_exists_between StrictMonoOn.continuous_at_of_exists_between
 
 /-- If a function `f` with a densely ordered codomain is strictly monotone on a neighborhood of `a`
 and the closure of the image of this neighborhood under `f` is a neighborhood of `f a`, then `f` is
@@ -196,12 +219,14 @@ theorem StrictMonoOn.continuous_at_of_closure_image_mem_nhds [DenselyOrdered β]
         (mem_nhds_within_of_mem_nhds hfs),
       h_mono.continuous_at_right_of_closure_image_mem_nhds_within (mem_nhds_within_of_mem_nhds hs)
         (mem_nhds_within_of_mem_nhds hfs)⟩
+#align strict_mono_on.continuous_at_of_closure_image_mem_nhds StrictMonoOn.continuous_at_of_closure_image_mem_nhds
 
 /-- If a function `f` with a densely ordered codomain is strictly monotone on a neighborhood of `a`
 and the image of this set under `f` is a neighborhood of `f a`, then `f` is continuous at `a`. -/
 theorem StrictMonoOn.continuous_at_of_image_mem_nhds [DenselyOrdered β] {f : α → β} {s : Set α} {a : α}
     (h_mono : StrictMonoOn f s) (hs : s ∈ 𝓝 a) (hfs : f '' s ∈ 𝓝 (f a)) : ContinuousAt f a :=
   h_mono.continuous_at_of_closure_image_mem_nhds hs (mem_of_superset hfs subset_closure)
+#align strict_mono_on.continuous_at_of_image_mem_nhds StrictMonoOn.continuous_at_of_image_mem_nhds
 
 /-- If `f` is a monotone function on a neighborhood of `a` and the image of this neighborhood under
 `f` meets every interval `(b, f a)`, `b < f a`, and every interval `(f a, b)`, `b > f a`, then `f`
@@ -212,6 +237,7 @@ theorem continuous_at_of_monotone_on_of_exists_between {f : α → β} {s : Set 
   continuous_at_iff_continuous_left_right.2
     ⟨continuous_at_left_of_monotone_on_of_exists_between h_mono (mem_nhds_within_of_mem_nhds hs) hfs_l,
       continuous_at_right_of_monotone_on_of_exists_between h_mono (mem_nhds_within_of_mem_nhds hs) hfs_r⟩
+#align continuous_at_of_monotone_on_of_exists_between continuous_at_of_monotone_on_of_exists_between
 
 /-- If a function `f` with a densely ordered codomain is monotone on a neighborhood of `a` and the
 closure of the image of this neighborhood under `f` is a neighborhood of `f a`, then `f` is
@@ -223,12 +249,14 @@ theorem continuous_at_of_monotone_on_of_closure_image_mem_nhds [DenselyOrdered �
         (mem_nhds_within_of_mem_nhds hfs),
       continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within h_mono (mem_nhds_within_of_mem_nhds hs)
         (mem_nhds_within_of_mem_nhds hfs)⟩
+#align continuous_at_of_monotone_on_of_closure_image_mem_nhds continuous_at_of_monotone_on_of_closure_image_mem_nhds
 
 /-- If a function `f` with a densely ordered codomain is monotone on a neighborhood of `a` and the
 image of this neighborhood under `f` is a neighborhood of `f a`, then `f` is continuous at `a`. -/
 theorem continuous_at_of_monotone_on_of_image_mem_nhds [DenselyOrdered β] {f : α → β} {s : Set α} {a : α}
     (h_mono : MonotoneOn f s) (hs : s ∈ 𝓝 a) (hfs : f '' s ∈ 𝓝 (f a)) : ContinuousAt f a :=
   continuous_at_of_monotone_on_of_closure_image_mem_nhds h_mono hs (mem_of_superset hfs subset_closure)
+#align continuous_at_of_monotone_on_of_image_mem_nhds continuous_at_of_monotone_on_of_image_mem_nhds
 
 /-- A monotone function with densely ordered codomain and a dense range is continuous. -/
 theorem Monotone.continuous_of_dense_range [DenselyOrdered β] {f : α → β} (h_mono : Monotone f)
@@ -236,11 +264,13 @@ theorem Monotone.continuous_of_dense_range [DenselyOrdered β] {f : α → β} (
   continuous_iff_continuous_at.mpr fun a =>
     continuous_at_of_monotone_on_of_closure_image_mem_nhds (fun x hx y hy hxy => h_mono hxy) univ_mem <| by
       simp only [image_univ, h_dense.closure_eq, univ_mem]
+#align monotone.continuous_of_dense_range Monotone.continuous_of_dense_range
 
 /-- A monotone surjective function with a densely ordered codomain is continuous. -/
 theorem Monotone.continuous_of_surjective [DenselyOrdered β] {f : α → β} (h_mono : Monotone f)
     (h_surj : Function.Surjective f) : Continuous f :=
   h_mono.continuous_of_dense_range h_surj.DenseRange
+#align monotone.continuous_of_surjective Monotone.continuous_of_surjective
 
 end LinearOrder
 
@@ -267,18 +297,22 @@ protected theorem continuous (e : α ≃o β) : Continuous e := by
   · rw [e.preimage_Iio]
     apply is_open_gt'
     
+#align order_iso.continuous OrderIso.continuous
 
 /-- An order isomorphism between two linear order `order_topology` spaces is a homeomorphism. -/
 def toHomeomorph (e : α ≃o β) : α ≃ₜ β :=
   { e with continuous_to_fun := e.Continuous, continuous_inv_fun := e.symm.Continuous }
+#align order_iso.to_homeomorph OrderIso.toHomeomorph
 
 @[simp]
 theorem coe_to_homeomorph (e : α ≃o β) : ⇑e.toHomeomorph = e :=
   rfl
+#align order_iso.coe_to_homeomorph OrderIso.coe_to_homeomorph
 
 @[simp]
 theorem coe_to_homeomorph_symm (e : α ≃o β) : ⇑e.toHomeomorph.symm = e.symm :=
   rfl
+#align order_iso.coe_to_homeomorph_symm OrderIso.coe_to_homeomorph_symm
 
 end OrderIso
 

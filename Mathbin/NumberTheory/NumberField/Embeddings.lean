@@ -42,6 +42,7 @@ variable [IsAlgClosed A]
 /-- The number of embeddings of a number field is equal to its finrank. -/
 theorem card : Fintype.card (K →+* A) = finrank ℚ K := by
   rw [Fintype.of_equiv_card ring_hom.equiv_rat_alg_hom.symm, AlgHom.card]
+#align number_field.embeddings.card NumberField.Embeddings.card
 
 end Fintype
 
@@ -58,6 +59,7 @@ theorem range_eval_eq_root_set_minpoly : (Range fun φ : K →+* A => φ x) = (m
   convert (NumberField.isAlgebraic K).range_eval_eq_root_set_minpoly A x using 1
   ext a
   exact ⟨fun ⟨φ, hφ⟩ => ⟨φ.toRatAlgHom, hφ⟩, fun ⟨φ, hφ⟩ => ⟨φ.toRingHom, hφ⟩⟩
+#align number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_root_set_minpoly
 
 end Roots
 
@@ -76,10 +78,9 @@ theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ∥φ x�
   refine'
     coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splitsCodomain _) (minpoly.nat_degree_le hx) (fun z hz => _)
       i
-  classical
-  rw [← Multiset.mem_to_finset] at hz
-  obtain ⟨φ, rfl⟩ := (range_eval_eq_root_set_minpoly K A x).symm.Subset hz
-  exact h φ
+  classical rw [← Multiset.mem_to_finset] at hz
+    exact h φ
+#align number_field.embeddings.coeff_bdd_of_norm_le NumberField.Embeddings.coeff_bdd_of_norm_le
 
 variable (K A)
 
@@ -98,6 +99,7 @@ theorem finite_of_norm_le (B : ℝ) : { x : K | IsIntegral ℤ x ∧ ∀ φ : K 
   rw [mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
   refine' (Eq.trans_le _ <| coeff_bdd_of_norm_le hx.2 i).trans (Nat.le_ceil _)
   rw [h_map_ℚ_minpoly, coeff_map, eq_int_cast, Int.norm_cast_rat, Int.norm_eq_abs, Int.cast_abs]
+#align number_field.embeddings.finite_of_norm_le NumberField.Embeddings.finite_of_norm_le
 
 /-- An algebraic integer whose conjugates are all of norm one is a root of unity. -/
 theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ : K →+* A, ∥φ x∥ = 1) :
@@ -124,6 +126,7 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
     
   · exact fun a _ => ⟨hxi.pow a, fun φ => by simp only [hx φ, norm_pow, one_pow, map_pow]⟩
     
+#align number_field.embeddings.pow_eq_one_of_norm_eq_one NumberField.Embeddings.pow_eq_one_of_norm_eq_one
 
 end Bounded
 

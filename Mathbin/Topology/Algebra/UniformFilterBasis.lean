@@ -29,14 +29,16 @@ variable {G : Type _} [AddCommGroup G] (B : AddGroupFilterBasis G)
 topological abelian group structure. -/
 protected def uniformSpace : UniformSpace G :=
   @TopologicalAddGroup.toUniformSpace G _ B.topology B.is_topological_add_group
+#align add_group_filter_basis.uniform_space AddGroupFilterBasis.uniformSpace
 
 /-- The uniform space structure associated to an abelian group filter basis via the associated
 topological abelian group structure is compatible with its group structure. -/
 protected theorem uniform_add_group : @UniformAddGroup G B.UniformSpace _ :=
   @topological_add_comm_group_is_uniform G _ B.topology B.is_topological_add_group
+#align add_group_filter_basis.uniform_add_group AddGroupFilterBasis.uniform_add_group
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » M) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔ F.ne_bot ∧ ∀ U ∈ B, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), y - x ∈ U := by
   letI := B.uniform_space
@@ -46,6 +48,7 @@ theorem cauchy_iff {F : Filter G} :
   rw [uniformity_eq_comap_nhds_zero G, ← map_le_iff_le_comap]
   change tendsto _ _ _ ↔ _
   simp [(basis_sets F).prod_self.tendsto_iff B.nhds_zero_has_basis, @forall_swap (_ ∈ _) G]
+#align add_group_filter_basis.cauchy_iff AddGroupFilterBasis.cauchy_iff
 
 end AddGroupFilterBasis
 

@@ -51,19 +51,22 @@ variable (Q)
 def even : Subalgebra R (CliffordAlgebra Q) :=
   (evenOdd Q 0).toSubalgebra SetLike.GradedMonoid.one_mem fun x y hx hy =>
     add_zero (0 : Zmod 2) ▸ SetLike.GradedMonoid.mul_mem hx hy
+#align clifford_algebra.even CliffordAlgebra.even
 
 @[simp]
 theorem even_to_submodule : (even Q).toSubmodule = evenOdd Q 0 :=
   rfl
+#align clifford_algebra.even_to_submodule CliffordAlgebra.even_to_submodule
 
 variable (A)
 
 /-- The type of bilinear maps which are accepted by `clifford_algebra.even.lift`. -/
-@[ext]
+@[ext.1]
 structure EvenHom : Type max u_2 u_3 where
   bilin : M →ₗ[R] M →ₗ[R] A
   contract (m : M) : bilin m m = algebraMap R A (Q m)
   contract_mid (m₁ m₂ m₃ : M) : bilin m₁ m₂ * bilin m₂ m₃ = Q m₂ • bilin m₁ m₃
+#align clifford_algebra.even_hom CliffordAlgebra.EvenHom
 
 variable {A Q}
 
@@ -73,6 +76,7 @@ def EvenHom.compr₂ (g : EvenHom Q A) (f : A →ₐ[R] B) : EvenHom Q B where
   bilin := g.bilin.compr₂ f.toLinearMap
   contract m := (f.congr_arg <| g.contract _).trans <| f.commutes _
   contract_mid m₁ m₂ m₃ := (f.map_mul _ _).symm.trans <| (f.congr_arg <| g.contract_mid _ _ _).trans <| f.map_smul _ _
+#align clifford_algebra.even_hom.compr₂ CliffordAlgebra.EvenHom.compr₂
 
 variable (Q)
 
@@ -100,6 +104,7 @@ def even.ι : EvenHom Q (even Q) where
         ι Q m₁ * ι Q m₂ * (ι Q m₂ * ι Q m₃) = ι Q m₁ * (ι Q m₂ * ι Q m₂ * ι Q m₃) := by simp only [mul_assoc]
         _ = Q m₂ • (ι Q m₁ * ι Q m₃) := by rw [Algebra.smul_def, ι_sq_scalar, Algebra.left_comm]
         
+#align clifford_algebra.even.ι CliffordAlgebra.even.ι
 
 instance : Inhabited (EvenHom Q (even Q)) :=
   ⟨even.ι Q⟩
@@ -109,7 +114,7 @@ variable (f : EvenHom Q A)
 /-- Two algebra morphisms from the even subalgebra are equal if they agree on pairs of generators.
 
 See note [partially-applied ext lemmas]. -/
-@[ext]
+@[ext.1]
 theorem even.alg_hom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr₂ f = (even.ι Q).compr₂ g) : f = g := by
   rw [even_hom.ext_iff] at h
   ext ⟨x, hx⟩
@@ -125,6 +130,7 @@ theorem even.alg_hom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr�
     have := congr_arg₂ (· * ·) (LinearMap.congr_fun (LinearMap.congr_fun h m₁) m₂) ih
     exact (f.map_mul _ _).trans (this.trans <| (g.map_mul _ _).symm)
     
+#align clifford_algebra.even.alg_hom_ext CliffordAlgebra.even.alg_hom_ext
 
 variable {Q}
 
@@ -134,6 +140,7 @@ namespace Even.Lift
 This is the span of elements `f'` such that `∃ x m₂, ∀ m₁, f' m₁ = f m₁ m₂ * x`.  -/
 private def S : Submodule R (M →ₗ[R] A) :=
   Submodule.span R { f' | ∃ x m₂, f' = LinearMap.lcomp R _ (f.bilin.flip m₂) (LinearMap.mulRight R x) }
+#align clifford_algebra.even.lift.S clifford_algebra.even.lift.S
 
 /-- An auxiliary bilinear map that is later passed into `clifford_algebra.fold`. Our desired result
 is stored in the `A` part of the accumulator, while auxiliary recursion state is stored in the `S f`
@@ -161,15 +168,18 @@ private def f_fold : M →ₗ[R] A × s f →ₗ[R] A × s f :=
             show f.bilin m₃ (c • m) * a.1 = c • (f.bilin m₃ m * a.1) by rw [LinearMap.map_smul, smul_mul_assoc]))
     (fun m a₁ a₂ => Prod.ext rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_add _ _ _)) fun c m a =>
     Prod.ext rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_smul_comm _ _ _)
+#align clifford_algebra.even.lift.f_fold clifford_algebra.even.lift.f_fold
 
 @[simp]
 private theorem fst_f_fold_f_fold (m₁ m₂ : M) (x : A × s f) : (fFold f m₁ (fFold f m₂ x)).fst = f.bilin m₁ m₂ * x.fst :=
   rfl
+#align clifford_algebra.even.lift.fst_f_fold_f_fold clifford_algebra.even.lift.fst_f_fold_f_fold
 
 @[simp]
 private theorem snd_f_fold_f_fold (m₁ m₂ m₃ : M) (x : A × s f) :
     ((fFold f m₁ (fFold f m₂ x)).snd : M →ₗ[R] A) m₃ = f.bilin m₃ m₁ * (x.snd : M →ₗ[R] A) m₂ :=
   rfl
+#align clifford_algebra.even.lift.snd_f_fold_f_fold clifford_algebra.even.lift.snd_f_fold_f_fold
 
 private theorem f_fold_f_fold (m : M) (x : A × s f) : fFold f m (fFold f m x) = Q m • x := by
   obtain ⟨a, ⟨g, hg⟩⟩ := x
@@ -194,6 +204,7 @@ private theorem f_fold_f_fold (m : M) (x : A × s f) : fFold f m (fFold f m x) =
       rw [LinearMap.smul_apply, LinearMap.smul_apply, mul_smul_comm, ihx, smul_comm]
       
     
+#align clifford_algebra.even.lift.f_fold_f_fold clifford_algebra.even.lift.f_fold_f_fold
 
 /-- The final auxiliary construction for `clifford_algebra.even.lift`. This map is the forwards
 direction of that equivalence, but not in the fully-bundled form. -/
@@ -201,10 +212,12 @@ direction of that equivalence, but not in the fully-bundled form. -/
 def aux (f : EvenHom Q A) : CliffordAlgebra.even Q →ₗ[R] A := by
   refine' _ ∘ₗ (Even Q).val.toLinearMap
   exact LinearMap.fst _ _ _ ∘ₗ foldr Q (f_fold f) (f_fold_f_fold f) (1, 0)
+#align clifford_algebra.even.lift.aux CliffordAlgebra.even.Lift.aux
 
 @[simp]
 theorem aux_one : aux f 1 = 1 :=
   congr_arg Prod.fst (foldr_one _ _ _ _)
+#align clifford_algebra.even.lift.aux_one CliffordAlgebra.even.Lift.aux_one
 
 @[simp]
 theorem aux_ι (m₁ m₂ : M) : aux f ((even.ι Q).bilin m₁ m₂) = f.bilin m₁ m₂ :=
@@ -212,10 +225,12 @@ theorem aux_ι (m₁ m₂ : M) : aux f ((even.ι Q).bilin m₁ m₂) = f.bilin m
     (by
       rw [foldr_ι, foldr_ι]
       exact mul_one _)
+#align clifford_algebra.even.lift.aux_ι CliffordAlgebra.even.Lift.aux_ι
 
 @[simp]
 theorem aux_algebra_map (r) (hr) : aux f ⟨algebraMap R _ r, hr⟩ = algebraMap R _ r :=
   (congr_arg Prod.fst (foldr_algebra_map _ _ _ _ _)).trans (Algebra.algebra_map_eq_smul_one r).symm
+#align clifford_algebra.even.lift.aux_algebra_map CliffordAlgebra.even.Lift.aux_algebra_map
 
 @[simp]
 theorem aux_mul (x y : even Q) : aux f (x * y) = aux f x * aux f y := by
@@ -237,6 +252,7 @@ theorem aux_mul (x y : even Q) : aux f (x * y) = aux f x * aux f y := by
       foldr_mul, foldr_mul, foldr_ι, foldr_ι, fst_f_fold_f_fold]
     rfl
     
+#align clifford_algebra.even.lift.aux_mul CliffordAlgebra.even.Lift.aux_mul
 
 end Even.Lift
 
@@ -253,10 +269,12 @@ def even.lift : EvenHom Q A ≃ (CliffordAlgebra.even Q →ₐ[R] A) where
   invFun F := (even.ι Q).compr₂ F
   left_inv f := EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι f
   right_inv F := even.alg_hom_ext Q <| EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι _
+#align clifford_algebra.even.lift CliffordAlgebra.even.lift
 
 @[simp]
 theorem even.lift_ι (f : EvenHom Q A) (m₁ m₂ : M) : even.lift Q f ((even.ι Q).bilin m₁ m₂) = f.bilin m₁ m₂ :=
   even.Lift.aux_ι _ _ _
+#align clifford_algebra.even.lift_ι CliffordAlgebra.even.lift_ι
 
 end CliffordAlgebra
 

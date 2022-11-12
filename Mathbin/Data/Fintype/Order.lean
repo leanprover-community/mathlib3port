@@ -59,6 +59,7 @@ variable (α) [Nonempty α]
 def toOrderBot [SemilatticeInf α] : OrderBot α where
   bot := univ.inf' univ_nonempty id
   bot_le a := inf'_le _ <| mem_univ a
+#align fintype.to_order_bot Fintype.toOrderBot
 
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` of a finite nonempty `semilattice_sup` -/
@@ -66,12 +67,14 @@ def toOrderBot [SemilatticeInf α] : OrderBot α where
 def toOrderTop [SemilatticeSup α] : OrderTop α where
   top := univ.sup' univ_nonempty id
   le_top a := le_sup' _ <| mem_univ a
+#align fintype.to_order_top Fintype.toOrderTop
 
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` and `⊥` of a finite nonempty `lattice`. -/
 @[reducible]
 def toBoundedOrder [Lattice α] : BoundedOrder α :=
   { toOrderBot α, toOrderTop α with }
+#align fintype.to_bounded_order Fintype.toBoundedOrder
 
 end Nonempty
 
@@ -90,6 +93,7 @@ noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLat
     Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb,
     Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_to_finset.mpr ha),
     le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
+#align fintype.to_complete_lattice Fintype.toCompleteLattice
 
 -- See note [reducible non-instances]
 /-- A finite bounded distributive lattice is completely distributive. -/
@@ -106,18 +110,21 @@ noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α]
       convert (Finset.sup_eq_supr _ _).symm
       simp_rw [Set.mem_to_finset]
       rfl }
+#align fintype.to_complete_distrib_lattice Fintype.toCompleteDistribLattice
 
 -- See note [reducible non-instances]
 /-- A finite bounded linear order is complete. -/
 @[reducible]
 noncomputable def toCompleteLinearOrder [LinearOrder α] [BoundedOrder α] : CompleteLinearOrder α :=
   { toCompleteLattice α, ‹LinearOrder α› with }
+#align fintype.to_complete_linear_order Fintype.toCompleteLinearOrder
 
 -- See note [reducible non-instances]
 /-- A finite boolean algebra is complete. -/
 @[reducible]
 noncomputable def toCompleteBooleanAlgebra [BooleanAlgebra α] : CompleteBooleanAlgebra α :=
   { Fintype.toCompleteDistribLattice α, ‹BooleanAlgebra α› with }
+#align fintype.to_complete_boolean_algebra Fintype.toCompleteBooleanAlgebra
 
 end BoundedOrder
 
@@ -131,6 +138,7 @@ variable (α) [Nonempty α]
 @[reducible]
 noncomputable def toCompleteLatticeOfNonempty [Lattice α] : CompleteLattice α :=
   @toCompleteLattice _ _ _ <| @toBoundedOrder α _ ⟨Classical.arbitrary α⟩ _
+#align fintype.to_complete_lattice_of_nonempty Fintype.toCompleteLatticeOfNonempty
 
 -- See note [reducible non-instances]
 /-- A nonempty finite linear order is complete. If the linear order is already a `bounded_order`,
@@ -139,6 +147,7 @@ then use `fintype.to_complete_linear_order` instead, as this gives definitional 
 @[reducible]
 noncomputable def toCompleteLinearOrderOfNonempty [LinearOrder α] : CompleteLinearOrder α :=
   { toCompleteLatticeOfNonempty α, ‹LinearOrder α› with }
+#align fintype.to_complete_linear_order_of_nonempty Fintype.toCompleteLinearOrderOfNonempty
 
 end Nonempty
 
@@ -163,13 +172,13 @@ variable {α : Type _}
 
 theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α} [Fintype β]
     (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
-  classical
-  obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
-  exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
+  classical obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
+#align directed.fintype_le Directed.fintype_le
 
 theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β] (f : β → α) :
     ∃ M, ∀ i, f i ≤ M :=
   directed_id.fintype_le _
+#align fintype.exists_le Fintype.exists_le
 
 theorem Fintype.bdd_above_range [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β] (f : β → α) :
     BddAbove (Set.Range f) := by
@@ -177,4 +186,5 @@ theorem Fintype.bdd_above_range [Nonempty α] [Preorder α] [IsDirected α (· �
   refine' ⟨M, fun a ha => _⟩
   obtain ⟨b, rfl⟩ := ha
   exact hM b
+#align fintype.bdd_above_range Fintype.bdd_above_range
 

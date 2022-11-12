@@ -54,6 +54,7 @@ theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
   · simp only [← mul_add]
     exact mul_le_mul_of_nonneg_left (norm_add_le x y) (norm_nonneg f)
     
+#align real.exists_extension_norm_eq Real.exists_extension_norm_eq
 
 end Real
 
@@ -104,6 +105,7 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     
   · exact f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg fun x => h x ▸ g.extend_to_𝕜.le_op_norm x
     
+#align exists_extension_norm_eq exists_extension_norm_eq
 
 end IsROrC
 
@@ -119,6 +121,7 @@ open Classical
 
 theorem coord_norm' {x : E} (h : x ≠ 0) : ∥(∥x∥ : 𝕜) • coord 𝕜 x h∥ = 1 := by
   rw [norm_smul, IsROrC.norm_coe_norm, coord_norm, mul_inv_cancel (mt norm_eq_zero.mp h)]
+#align coord_norm' coord_norm'
 
 /-- Corollary of Hahn-Banach.  Given a nonzero element `x` of a normed space, there exists an
     element of the dual space, of norm `1`, whose value on `x` is `∥x∥`. -/
@@ -135,6 +138,7 @@ theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, �
       _ = ∥x∥ := by simp
       
     
+#align exists_dual_vector exists_dual_vector
 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, and choosing
     the dual element arbitrarily when `x = 0`. -/
@@ -147,6 +151,7 @@ theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, 
     
   · exact exists_dual_vector 𝕜 x hx
     
+#align exists_dual_vector' exists_dual_vector'
 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, but only ensuring that
     the dual element has norm at most `1` (this can not be improved for the trivial
@@ -160,6 +165,7 @@ theorem exists_dual_vector'' (x : E) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ ≤ 1 
   · rcases exists_dual_vector 𝕜 x hx with ⟨g, g_norm, g_eq⟩
     exact ⟨g, g_norm.le, g_eq⟩
     
+#align exists_dual_vector'' exists_dual_vector''
 
 end DualVector
 

@@ -26,34 +26,42 @@ variable [Add α]
 element then making it multiplicative. -/
 def toMulBot : WithZero (Multiplicative α) ≃* Multiplicative (WithBot α) :=
   MulEquiv.refl _
+#align with_zero.to_mul_bot WithZero.toMulBot
 
 @[simp]
 theorem to_mul_bot_zero : toMulBot (0 : WithZero (Multiplicative α)) = Multiplicative.ofAdd ⊥ :=
   rfl
+#align with_zero.to_mul_bot_zero WithZero.to_mul_bot_zero
 
 @[simp]
 theorem to_mul_bot_coe (x : Multiplicative α) : toMulBot ↑x = Multiplicative.ofAdd (x.toAdd : WithBot α) :=
   rfl
+#align with_zero.to_mul_bot_coe WithZero.to_mul_bot_coe
 
 @[simp]
 theorem to_mul_bot_symm_bot : toMulBot.symm (Multiplicative.ofAdd (⊥ : WithBot α)) = 0 :=
   rfl
+#align with_zero.to_mul_bot_symm_bot WithZero.to_mul_bot_symm_bot
 
 @[simp]
 theorem to_mul_bot_coe_of_add (x : α) : toMulBot.symm (Multiplicative.ofAdd (x : WithBot α)) = Multiplicative.ofAdd x :=
   rfl
+#align with_zero.to_mul_bot_coe_of_add WithZero.to_mul_bot_coe_of_add
 
 variable [Preorder α] (a b : WithZero (Multiplicative α))
 
 theorem to_mul_bot_strict_mono : StrictMono (@toMulBot α _) := fun x y => id
+#align with_zero.to_mul_bot_strict_mono WithZero.to_mul_bot_strict_mono
 
 @[simp]
 theorem to_mul_bot_le : toMulBot a ≤ toMulBot b ↔ a ≤ b :=
   Iff.rfl
+#align with_zero.to_mul_bot_le WithZero.to_mul_bot_le
 
 @[simp]
 theorem to_mul_bot_lt : toMulBot a < toMulBot b ↔ a < b :=
   Iff.rfl
+#align with_zero.to_mul_bot_lt WithZero.to_mul_bot_lt
 
 end WithZero
 

@@ -115,6 +115,7 @@ theorem image_le_of_liminf_slope_right_lt_deriv_boundary' {f f' : ℝ → ℝ} {
     have := (hfz.trans hzB).le
     rwa [slope_def_field, slope_def_field, div_le_div_right (sub_pos.2 hz.1), hxB, sub_le_sub_iff_right] at this
     
+#align image_le_of_liminf_slope_right_lt_deriv_boundary' image_le_of_liminf_slope_right_lt_deriv_boundary'
 
 /-- General fencing theorem for continuous functions with an estimate on the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -133,6 +134,7 @@ theorem image_le_of_liminf_slope_right_lt_deriv_boundary {f f' : ℝ → ℝ} {a
     (bound : ∀ x ∈ IcoCat a b, f x = B x → f' x < B' x) : ∀ ⦃x⦄, x ∈ IccCat a b → f x ≤ B x :=
   image_le_of_liminf_slope_right_lt_deriv_boundary' hf hf' ha (fun x hx => (hB x).ContinuousAt.ContinuousWithinAt)
     (fun x hx => (hB x).HasDerivWithinAt) bound
+#align image_le_of_liminf_slope_right_lt_deriv_boundary image_le_of_liminf_slope_right_lt_deriv_boundary
 
 /-- General fencing theorem for continuous functions with an estimate on the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -168,6 +170,7 @@ theorem image_le_of_liminf_slope_right_le_deriv_boundary {f : ℝ → ℝ} {a b 
   have : ContinuousWithinAt (fun r => B x + r * (x - a)) (Ioi 0) 0 :=
     continuous_within_at_const.add (continuous_within_at_id.mul continuous_within_at_const)
   convert continuous_within_at_const.closure_le _ this (Hr x hx) <;> simp
+#align image_le_of_liminf_slope_right_le_deriv_boundary image_le_of_liminf_slope_right_le_deriv_boundary
 
 /-- General fencing theorem for continuous functions with an estimate on the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -184,6 +187,7 @@ theorem image_le_of_deriv_right_lt_deriv_boundary' {f f' : ℝ → ℝ} {a b : �
     (bound : ∀ x ∈ IcoCat a b, f x = B x → f' x < B' x) : ∀ ⦃x⦄, x ∈ IccCat a b → f x ≤ B x :=
   image_le_of_liminf_slope_right_lt_deriv_boundary' hf (fun x hx r hr => (hf' x hx).liminf_right_slope_le hr) ha hB hB'
     bound
+#align image_le_of_deriv_right_lt_deriv_boundary' image_le_of_deriv_right_lt_deriv_boundary'
 
 /-- General fencing theorem for continuous functions with an estimate on the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -200,6 +204,7 @@ theorem image_le_of_deriv_right_lt_deriv_boundary {f f' : ℝ → ℝ} {a b : �
     ∀ ⦃x⦄, x ∈ IccCat a b → f x ≤ B x :=
   image_le_of_deriv_right_lt_deriv_boundary' hf hf' ha (fun x hx => (hB x).ContinuousAt.ContinuousWithinAt)
     (fun x hx => (hB x).HasDerivWithinAt) bound
+#align image_le_of_deriv_right_lt_deriv_boundary image_le_of_deriv_right_lt_deriv_boundary
 
 /-- General fencing theorem for continuous functions with an estimate on the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -216,6 +221,7 @@ theorem image_le_of_deriv_right_le_deriv_boundary {f f' : ℝ → ℝ} {a b : �
     (bound : ∀ x ∈ IcoCat a b, f' x ≤ B' x) : ∀ ⦃x⦄, x ∈ IccCat a b → f x ≤ B x :=
   (image_le_of_liminf_slope_right_le_deriv_boundary hf ha hB hB') fun x hx r hr =>
     (hf' x hx).liminf_right_slope_le (lt_of_le_of_lt (bound x hx) hr)
+#align image_le_of_deriv_right_le_deriv_boundary image_le_of_deriv_right_le_deriv_boundary
 
 /-! ### Vector-valued functions `f : ℝ → E` -/
 
@@ -242,6 +248,8 @@ theorem image_norm_le_of_liminf_right_slope_norm_lt_deriv_boundary {E : Type _} 
     (hB' : ∀ x ∈ IcoCat a b, HasDerivWithinAt B (B' x) (IciCat x) x)
     (bound : ∀ x ∈ IcoCat a b, ∥f x∥ = B x → f' x < B' x) : ∀ ⦃x⦄, x ∈ IccCat a b → ∥f x∥ ≤ B x :=
   image_le_of_liminf_slope_right_lt_deriv_boundary' (continuous_norm.comp_continuous_on hf) hf' ha hB hB' bound
+#align
+  image_norm_le_of_liminf_right_slope_norm_lt_deriv_boundary image_norm_le_of_liminf_right_slope_norm_lt_deriv_boundary
 
 /-- General fencing theorem for continuous functions with an estimate on the norm of the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -259,6 +267,7 @@ theorem image_norm_le_of_norm_deriv_right_lt_deriv_boundary' {f' : ℝ → E} (h
     (bound : ∀ x ∈ IcoCat a b, ∥f x∥ = B x → ∥f' x∥ < B' x) : ∀ ⦃x⦄, x ∈ IccCat a b → ∥f x∥ ≤ B x :=
   image_norm_le_of_liminf_right_slope_norm_lt_deriv_boundary hf
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha hB hB' bound
+#align image_norm_le_of_norm_deriv_right_lt_deriv_boundary' image_norm_le_of_norm_deriv_right_lt_deriv_boundary'
 
 /-- General fencing theorem for continuous functions with an estimate on the norm of the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -277,6 +286,7 @@ theorem image_norm_le_of_norm_deriv_right_lt_deriv_boundary {f' : ℝ → E} (hf
     ∀ ⦃x⦄, x ∈ IccCat a b → ∥f x∥ ≤ B x :=
   image_norm_le_of_norm_deriv_right_lt_deriv_boundary' hf hf' ha (fun x hx => (hB x).ContinuousAt.ContinuousWithinAt)
     (fun x hx => (hB x).HasDerivWithinAt) bound
+#align image_norm_le_of_norm_deriv_right_lt_deriv_boundary image_norm_le_of_norm_deriv_right_lt_deriv_boundary
 
 /-- General fencing theorem for continuous functions with an estimate on the norm of the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -294,6 +304,7 @@ theorem image_norm_le_of_norm_deriv_right_le_deriv_boundary' {f' : ℝ → E} (h
     (bound : ∀ x ∈ IcoCat a b, ∥f' x∥ ≤ B' x) : ∀ ⦃x⦄, x ∈ IccCat a b → ∥f x∥ ≤ B x :=
   (image_le_of_liminf_slope_right_le_deriv_boundary (continuous_norm.comp_continuous_on hf) ha hB hB') fun x hx r hr =>
     (hf' x hx).liminf_right_slope_norm_le (lt_of_le_of_lt (bound x hx) hr)
+#align image_norm_le_of_norm_deriv_right_le_deriv_boundary' image_norm_le_of_norm_deriv_right_le_deriv_boundary'
 
 /-- General fencing theorem for continuous functions with an estimate on the norm of the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -311,6 +322,7 @@ theorem image_norm_le_of_norm_deriv_right_le_deriv_boundary {f' : ℝ → E} (hf
     (hB : ∀ x, HasDerivAt B (B' x) x) (bound : ∀ x ∈ IcoCat a b, ∥f' x∥ ≤ B' x) : ∀ ⦃x⦄, x ∈ IccCat a b → ∥f x∥ ≤ B x :=
   image_norm_le_of_norm_deriv_right_le_deriv_boundary' hf hf' ha (fun x hx => (hB x).ContinuousAt.ContinuousWithinAt)
     (fun x hx => (hB x).HasDerivWithinAt) bound
+#align image_norm_le_of_norm_deriv_right_le_deriv_boundary image_norm_le_of_norm_deriv_right_le_deriv_boundary
 
 /-- A function on `[a, b]` with the norm of the right derivative bounded by `C`
 satisfies `∥f x - f a∥ ≤ C * (x - a)`. -/
@@ -329,6 +341,7 @@ theorem norm_image_sub_le_of_norm_deriv_right_le_segment {f' : ℝ → E} {C : �
   convert image_norm_le_of_norm_deriv_right_le_deriv_boundary hg hg' _ hB bound
   simp only [g, B]
   rw [sub_self, norm_zero, sub_self, mul_zero]
+#align norm_image_sub_le_of_norm_deriv_right_le_segment norm_image_sub_le_of_norm_deriv_right_le_segment
 
 /-- A function on `[a, b]` with the norm of the derivative within `[a, b]`
 bounded by `C` satisfies `∥f x - f a∥ ≤ C * (x - a)`, `has_deriv_within_at`
@@ -339,6 +352,7 @@ theorem norm_image_sub_le_of_norm_deriv_le_segment' {f' : ℝ → E} {C : ℝ}
   refine'
     norm_image_sub_le_of_norm_deriv_right_le_segment (fun x hx => (hf x hx).ContinuousWithinAt) (fun x hx => _) bound
   exact (hf x <| Ico_subset_Icc_self hx).nhdsWithin (Icc_mem_nhds_within_Ici hx)
+#align norm_image_sub_le_of_norm_deriv_le_segment' norm_image_sub_le_of_norm_deriv_le_segment'
 
 /-- A function on `[a, b]` with the norm of the derivative within `[a, b]`
 bounded by `C` satisfies `∥f x - f a∥ ≤ C * (x - a)`, `deriv_within`
@@ -347,6 +361,7 @@ theorem norm_image_sub_le_of_norm_deriv_le_segment {C : ℝ} (hf : Differentiabl
     (bound : ∀ x ∈ IcoCat a b, ∥derivWithin f (IccCat a b) x∥ ≤ C) : ∀ x ∈ IccCat a b, ∥f x - f a∥ ≤ C * (x - a) := by
   refine' norm_image_sub_le_of_norm_deriv_le_segment' _ bound
   exact fun x hx => (hf x hx).HasDerivWithinAt
+#align norm_image_sub_le_of_norm_deriv_le_segment norm_image_sub_le_of_norm_deriv_le_segment
 
 /-- A function on `[0, 1]` with the norm of the derivative within `[0, 1]`
 bounded by `C` satisfies `∥f 1 - f 0∥ ≤ C`, `has_deriv_within_at`
@@ -356,6 +371,7 @@ theorem norm_image_sub_le_of_norm_deriv_le_segment_01' {f' : ℝ → E} {C : ℝ
     (bound : ∀ x ∈ IcoCat (0 : ℝ) 1, ∥f' x∥ ≤ C) : ∥f 1 - f 0∥ ≤ C := by
   simpa only [sub_zero, mul_one] using
     norm_image_sub_le_of_norm_deriv_le_segment' hf bound 1 (right_mem_Icc.2 zero_le_one)
+#align norm_image_sub_le_of_norm_deriv_le_segment_01' norm_image_sub_le_of_norm_deriv_le_segment_01'
 
 /-- A function on `[0, 1]` with the norm of the derivative within `[0, 1]`
 bounded by `C` satisfies `∥f 1 - f 0∥ ≤ C`, `deriv_within` version. -/
@@ -363,11 +379,13 @@ theorem norm_image_sub_le_of_norm_deriv_le_segment_01 {C : ℝ} (hf : Differenti
     (bound : ∀ x ∈ IcoCat (0 : ℝ) 1, ∥derivWithin f (IccCat (0 : ℝ) 1) x∥ ≤ C) : ∥f 1 - f 0∥ ≤ C := by
   simpa only [sub_zero, mul_one] using
     norm_image_sub_le_of_norm_deriv_le_segment hf bound 1 (right_mem_Icc.2 zero_le_one)
+#align norm_image_sub_le_of_norm_deriv_le_segment_01 norm_image_sub_le_of_norm_deriv_le_segment_01
 
 theorem constant_of_has_deriv_right_zero (hcont : ContinuousOn f (IccCat a b))
     (hderiv : ∀ x ∈ IcoCat a b, HasDerivWithinAt f 0 (IciCat x) x) : ∀ x ∈ IccCat a b, f x = f a := by
   simpa only [zero_mul, norm_le_zero_iff, sub_eq_zero] using fun x hx =>
     norm_image_sub_le_of_norm_deriv_right_le_segment hcont hderiv (fun y hy => by rw [norm_le_zero_iff]) x hx
+#align constant_of_has_deriv_right_zero constant_of_has_deriv_right_zero
 
 theorem constant_of_deriv_within_zero (hdiff : DifferentiableOn ℝ f (IccCat a b))
     (hderiv : ∀ x ∈ IcoCat a b, derivWithin f (IccCat a b) x = 0) : ∀ x ∈ IccCat a b, f x = f a := by
@@ -375,6 +393,7 @@ theorem constant_of_deriv_within_zero (hdiff : DifferentiableOn ℝ f (IccCat a 
     simpa only [norm_le_zero_iff] using fun x hx => hderiv x hx
   simpa only [zero_mul, norm_le_zero_iff, sub_eq_zero] using fun x hx =>
     norm_image_sub_le_of_norm_deriv_le_segment hdiff H x hx
+#align constant_of_deriv_within_zero constant_of_deriv_within_zero
 
 variable {f' g : ℝ → E}
 
@@ -388,6 +407,7 @@ theorem eq_of_has_deriv_right_eq (derivf : ∀ x ∈ IcoCat a b, HasDerivWithinA
     hi ▸
       constant_of_has_deriv_right_zero (fcont.sub gcont) fun y hy => by
         simpa only [sub_self] using (derivf y hy).sub (derivg y hy)
+#align eq_of_has_deriv_right_eq eq_of_has_deriv_right_eq
 
 /-- If two differentiable functions on `[a, b]` have the same derivative within `[a, b]` everywhere
   on `[a, b)` and are equal at `a`, then they are equal everywhere on `[a, b]`. -/
@@ -399,6 +419,7 @@ theorem eq_of_deriv_within_eq (fdiff : DifferentiableOn ℝ f (IccCat a b)) (gdi
   have B : ∀ y ∈ Ico a b, HasDerivWithinAt g (derivWithin g (Icc a b) y) (Ici y) y := fun y hy =>
     (gdiff y (mem_Icc_of_Ico hy)).HasDerivWithinAt.nhdsWithin (Icc_mem_nhds_within_Ici hy)
   exact eq_of_has_deriv_right_eq A (fun y hy => (hderiv hy).symm ▸ B y hy) fdiff.continuous_on gdiff.continuous_on hi
+#align eq_of_deriv_within_eq eq_of_deriv_within_eq
 
 end
 
@@ -450,6 +471,7 @@ theorem norm_image_sub_le_of_norm_has_fderiv_within_le (hf : ∀ x ∈ s, HasFde
   apply norm_image_sub_le_of_norm_deriv_le_segment_01' D2
   refine' fun t ht => le_of_op_norm_le _ _ _
   exact bound (g t) (segm <| Ico_subset_Icc_self ht)
+#align convex.norm_image_sub_le_of_norm_has_fderiv_within_le Convex.norm_image_sub_le_of_norm_has_fderiv_within_le
 
 /-- The mean value theorem on a convex set: if the derivative of a function is bounded by `C` on
 `s`, then the function is `C`-Lipschitz on `s`. Version with `has_fderiv_within` and
@@ -459,6 +481,7 @@ theorem lipschitzOnWithOfNnnormHasFderivWithinLe {C : ℝ≥0} (hf : ∀ x ∈ s
   rw [lipschitz_on_with_iff_norm_sub_le]
   intro x x_in y y_in
   exact hs.norm_image_sub_le_of_norm_has_fderiv_within_le hf bound y_in x_in
+#align convex.lipschitz_on_with_of_nnnorm_has_fderiv_within_le Convex.lipschitzOnWithOfNnnormHasFderivWithinLe
 
 /-- Let `s` be a convex set in a real normed vector space `E`, let `f : E → G` be a function
 differentiable within `s` in a neighborhood of `x : E` with derivative `f'`. Suppose that `f'` is
@@ -476,6 +499,8 @@ theorem exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at_of_nnnorm_l
   exact
     (hs.inter (convex_ball _ _)).lipschitzOnWithOfNnnormHasFderivWithinLe
       (fun y hy => (hε hy).1.mono (inter_subset_left _ _)) fun y hy => (hε hy).2.le
+#align
+  convex.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at_of_nnnorm_lt Convex.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at_of_nnnorm_lt
 
 /-- Let `s` be a convex set in a real normed vector space `E`, let `f : E → G` be a function
 differentiable within `s` in a neighborhood of `x : E` with derivative `f'`. Suppose that `f'` is
@@ -487,6 +512,8 @@ theorem exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at (hs : Conve
     (hder : ∀ᶠ y in 𝓝[s] x, HasFderivWithinAt f (f' y) s y) (hcont : ContinuousWithinAt f' s x) :
     ∃ K, ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t :=
   (exists_gt _).imp <| hs.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at_of_nnnorm_lt hder hcont
+#align
+  convex.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at Convex.exists_nhds_within_lipschitz_on_with_of_has_fderiv_within_at
 
 /-- The mean value theorem on a convex set: if the derivative of a function within this set is
 bounded by `C`, then the function is `C`-Lipschitz. Version with `fderiv_within`. -/
@@ -494,6 +521,7 @@ theorem norm_image_sub_le_of_norm_fderiv_within_le (hf : DifferentiableOn 𝕜 f
     (bound : ∀ x ∈ s, ∥fderivWithin 𝕜 f s x∥ ≤ C) (hs : Convex ℝ s) (xs : x ∈ s) (ys : y ∈ s) :
     ∥f y - f x∥ ≤ C * ∥y - x∥ :=
   hs.norm_image_sub_le_of_norm_has_fderiv_within_le (fun x hx => (hf x hx).HasFderivWithinAt) bound xs ys
+#align convex.norm_image_sub_le_of_norm_fderiv_within_le Convex.norm_image_sub_le_of_norm_fderiv_within_le
 
 /-- The mean value theorem on a convex set: if the derivative of a function is bounded by `C` on
 `s`, then the function is `C`-Lipschitz on `s`. Version with `fderiv_within` and
@@ -501,18 +529,21 @@ theorem norm_image_sub_le_of_norm_fderiv_within_le (hf : DifferentiableOn 𝕜 f
 theorem lipschitzOnWithOfNnnormFderivWithinLe {C : ℝ≥0} (hf : DifferentiableOn 𝕜 f s)
     (bound : ∀ x ∈ s, ∥fderivWithin 𝕜 f s x∥₊ ≤ C) (hs : Convex ℝ s) : LipschitzOnWith C f s :=
   hs.lipschitzOnWithOfNnnormHasFderivWithinLe (fun x hx => (hf x hx).HasFderivWithinAt) bound
+#align convex.lipschitz_on_with_of_nnnorm_fderiv_within_le Convex.lipschitzOnWithOfNnnormFderivWithinLe
 
 /-- The mean value theorem on a convex set: if the derivative of a function is bounded by `C`,
 then the function is `C`-Lipschitz. Version with `fderiv`. -/
 theorem norm_image_sub_le_of_norm_fderiv_le (hf : ∀ x ∈ s, DifferentiableAt 𝕜 f x) (bound : ∀ x ∈ s, ∥fderiv 𝕜 f x∥ ≤ C)
     (hs : Convex ℝ s) (xs : x ∈ s) (ys : y ∈ s) : ∥f y - f x∥ ≤ C * ∥y - x∥ :=
   hs.norm_image_sub_le_of_norm_has_fderiv_within_le (fun x hx => (hf x hx).HasFderivAt.HasFderivWithinAt) bound xs ys
+#align convex.norm_image_sub_le_of_norm_fderiv_le Convex.norm_image_sub_le_of_norm_fderiv_le
 
 /-- The mean value theorem on a convex set: if the derivative of a function is bounded by `C` on
 `s`, then the function is `C`-Lipschitz on `s`. Version with `fderiv` and `lipschitz_on_with`. -/
 theorem lipschitzOnWithOfNnnormFderivLe {C : ℝ≥0} (hf : ∀ x ∈ s, DifferentiableAt 𝕜 f x)
     (bound : ∀ x ∈ s, ∥fderiv 𝕜 f x∥₊ ≤ C) (hs : Convex ℝ s) : LipschitzOnWith C f s :=
   hs.lipschitzOnWithOfNnnormHasFderivWithinLe (fun x hx => (hf x hx).HasFderivAt.HasFderivWithinAt) bound
+#align convex.lipschitz_on_with_of_nnnorm_fderiv_le Convex.lipschitzOnWithOfNnnormFderivLe
 
 /-- Variant of the mean value inequality on a convex set, using a bound on the difference between
 the derivative and a fixed linear map, rather than a bound on the derivative itself. Version with
@@ -531,18 +562,21 @@ theorem norm_image_sub_le_of_norm_has_fderiv_within_le' (hf : ∀ x ∈ s, HasFd
     _ = ∥g y - g x∥ := by simp
     _ ≤ C * ∥y - x∥ := Convex.norm_image_sub_le_of_norm_has_fderiv_within_le hg bound hs xs ys
     
+#align convex.norm_image_sub_le_of_norm_has_fderiv_within_le' Convex.norm_image_sub_le_of_norm_has_fderiv_within_le'
 
 /-- Variant of the mean value inequality on a convex set. Version with `fderiv_within`. -/
 theorem norm_image_sub_le_of_norm_fderiv_within_le' (hf : DifferentiableOn 𝕜 f s)
     (bound : ∀ x ∈ s, ∥fderivWithin 𝕜 f s x - φ∥ ≤ C) (hs : Convex ℝ s) (xs : x ∈ s) (ys : y ∈ s) :
     ∥f y - f x - φ (y - x)∥ ≤ C * ∥y - x∥ :=
   hs.norm_image_sub_le_of_norm_has_fderiv_within_le' (fun x hx => (hf x hx).HasFderivWithinAt) bound xs ys
+#align convex.norm_image_sub_le_of_norm_fderiv_within_le' Convex.norm_image_sub_le_of_norm_fderiv_within_le'
 
 /-- Variant of the mean value inequality on a convex set. Version with `fderiv`. -/
 theorem norm_image_sub_le_of_norm_fderiv_le' (hf : ∀ x ∈ s, DifferentiableAt 𝕜 f x)
     (bound : ∀ x ∈ s, ∥fderiv 𝕜 f x - φ∥ ≤ C) (hs : Convex ℝ s) (xs : x ∈ s) (ys : y ∈ s) :
     ∥f y - f x - φ (y - x)∥ ≤ C * ∥y - x∥ :=
   hs.norm_image_sub_le_of_norm_has_fderiv_within_le' (fun x hx => (hf x hx).HasFderivAt.HasFderivWithinAt) bound xs ys
+#align convex.norm_image_sub_le_of_norm_fderiv_le' Convex.norm_image_sub_le_of_norm_fderiv_le'
 
 /-- If a function has zero Fréchet derivative at every point of a convex set,
 then it is a constant on this set. -/
@@ -551,11 +585,13 @@ theorem is_const_of_fderiv_within_eq_zero (hs : Convex ℝ s) (hf : Differentiab
   have bound : ∀ x ∈ s, ∥fderivWithin 𝕜 f s x∥ ≤ 0 := fun x hx => by simp only [hf' x hx, norm_zero]
   simpa only [(dist_eq_norm _ _).symm, zero_mul, dist_le_zero, eq_comm] using
     hs.norm_image_sub_le_of_norm_fderiv_within_le hf bound hx hy
+#align convex.is_const_of_fderiv_within_eq_zero Convex.is_const_of_fderiv_within_eq_zero
 
 theorem _root_.is_const_of_fderiv_eq_zero (hf : Differentiable 𝕜 f) (hf' : ∀ x, fderiv 𝕜 f x = 0) (x y : E) :
     f x = f y :=
   convex_univ.is_const_of_fderiv_within_eq_zero hf.DifferentiableOn
     (fun x _ => by rw [fderiv_within_univ] <;> exact hf' x) trivial trivial
+#align convex._root_.is_const_of_fderiv_eq_zero convex._root_.is_const_of_fderiv_eq_zero
 
 end Convex
 
@@ -569,6 +605,7 @@ theorem norm_image_sub_le_of_norm_has_deriv_within_le {C : ℝ} (hf : ∀ x ∈ 
     (bound : ∀ x ∈ s, ∥f' x∥ ≤ C) (hs : Convex ℝ s) (xs : x ∈ s) (ys : y ∈ s) : ∥f y - f x∥ ≤ C * ∥y - x∥ :=
   Convex.norm_image_sub_le_of_norm_has_fderiv_within_le (fun x hx => (hf x hx).HasFderivWithinAt)
     (fun x hx => le_trans (by simp) (bound x hx)) hs xs ys
+#align convex.norm_image_sub_le_of_norm_has_deriv_within_le Convex.norm_image_sub_le_of_norm_has_deriv_within_le
 
 /-- The mean value theorem on a convex set in dimension 1: if the derivative of a function is
 bounded by `C` on `s`, then the function is `C`-Lipschitz on `s`.
@@ -577,6 +614,7 @@ theorem lipschitzOnWithOfNnnormHasDerivWithinLe {C : ℝ≥0} (hs : Convex ℝ s
     (hf : ∀ x ∈ s, HasDerivWithinAt f (f' x) s x) (bound : ∀ x ∈ s, ∥f' x∥₊ ≤ C) : LipschitzOnWith C f s :=
   Convex.lipschitzOnWithOfNnnormHasFderivWithinLe (fun x hx => (hf x hx).HasFderivWithinAt)
     (fun x hx => le_trans (by simp) (bound x hx)) hs
+#align convex.lipschitz_on_with_of_nnnorm_has_deriv_within_le Convex.lipschitzOnWithOfNnnormHasDerivWithinLe
 
 /-- The mean value theorem on a convex set in dimension 1: if the derivative of a function within
 this set is bounded by `C`, then the function is `C`-Lipschitz. Version with `deriv_within` -/
@@ -584,6 +622,7 @@ theorem norm_image_sub_le_of_norm_deriv_within_le {C : ℝ} (hf : Differentiable
     (bound : ∀ x ∈ s, ∥derivWithin f s x∥ ≤ C) (hs : Convex ℝ s) (xs : x ∈ s) (ys : y ∈ s) :
     ∥f y - f x∥ ≤ C * ∥y - x∥ :=
   hs.norm_image_sub_le_of_norm_has_deriv_within_le (fun x hx => (hf x hx).HasDerivWithinAt) bound xs ys
+#align convex.norm_image_sub_le_of_norm_deriv_within_le Convex.norm_image_sub_le_of_norm_deriv_within_le
 
 /-- The mean value theorem on a convex set in dimension 1: if the derivative of a function is
 bounded by `C` on `s`, then the function is `C`-Lipschitz on `s`.
@@ -591,12 +630,14 @@ Version with `deriv_within` and `lipschitz_on_with`. -/
 theorem lipschitzOnWithOfNnnormDerivWithinLe {C : ℝ≥0} (hs : Convex ℝ s) (hf : DifferentiableOn 𝕜 f s)
     (bound : ∀ x ∈ s, ∥derivWithin f s x∥₊ ≤ C) : LipschitzOnWith C f s :=
   hs.lipschitzOnWithOfNnnormHasDerivWithinLe (fun x hx => (hf x hx).HasDerivWithinAt) bound
+#align convex.lipschitz_on_with_of_nnnorm_deriv_within_le Convex.lipschitzOnWithOfNnnormDerivWithinLe
 
 /-- The mean value theorem on a convex set in dimension 1: if the derivative of a function is
 bounded by `C`, then the function is `C`-Lipschitz. Version with `deriv`. -/
 theorem norm_image_sub_le_of_norm_deriv_le {C : ℝ} (hf : ∀ x ∈ s, DifferentiableAt 𝕜 f x)
     (bound : ∀ x ∈ s, ∥deriv f x∥ ≤ C) (hs : Convex ℝ s) (xs : x ∈ s) (ys : y ∈ s) : ∥f y - f x∥ ≤ C * ∥y - x∥ :=
   hs.norm_image_sub_le_of_norm_has_deriv_within_le (fun x hx => (hf x hx).HasDerivAt.HasDerivWithinAt) bound xs ys
+#align convex.norm_image_sub_le_of_norm_deriv_le Convex.norm_image_sub_le_of_norm_deriv_le
 
 /-- The mean value theorem on a convex set in dimension 1: if the derivative of a function is
 bounded by `C` on `s`, then the function is `C`-Lipschitz on `s`.
@@ -604,12 +645,14 @@ Version with `deriv` and `lipschitz_on_with`. -/
 theorem lipschitzOnWithOfNnnormDerivLe {C : ℝ≥0} (hf : ∀ x ∈ s, DifferentiableAt 𝕜 f x)
     (bound : ∀ x ∈ s, ∥deriv f x∥₊ ≤ C) (hs : Convex ℝ s) : LipschitzOnWith C f s :=
   hs.lipschitzOnWithOfNnnormHasDerivWithinLe (fun x hx => (hf x hx).HasDerivAt.HasDerivWithinAt) bound
+#align convex.lipschitz_on_with_of_nnnorm_deriv_le Convex.lipschitzOnWithOfNnnormDerivLe
 
 /-- The mean value theorem set in dimension 1: if the derivative of a function is bounded by `C`,
 then the function is `C`-Lipschitz.  Version with `deriv` and `lipschitz_with`. -/
 theorem _root_.lipschitz_with_of_nnnorm_deriv_le {C : ℝ≥0} (hf : Differentiable 𝕜 f) (bound : ∀ x, ∥deriv f x∥₊ ≤ C) :
     LipschitzWith C f :=
   lipschitz_on_univ.1 <| convex_univ.lipschitzOnWithOfNnnormDerivLe (fun x hx => hf x) fun x hx => bound x
+#align convex._root_.lipschitz_with_of_nnnorm_deriv_le convex._root_.lipschitz_with_of_nnnorm_deriv_le
 
 /-- If `f : 𝕜 → G`, `𝕜 = R` or `𝕜 = ℂ`, is differentiable everywhere and its derivative equal zero,
 then it is a constant function. -/
@@ -619,6 +662,7 @@ theorem _root_.is_const_of_deriv_eq_zero (hf : Differentiable 𝕜 f) (hf' : ∀
       ext
       simp [← deriv_fderiv, hf'])
     _ _
+#align convex._root_.is_const_of_deriv_eq_zero convex._root_.is_const_of_deriv_eq_zero
 
 end Convex
 
@@ -649,6 +693,7 @@ theorem exists_ratio_has_deriv_at_eq_ratio_slope : ∃ c ∈ IooCat a b, (g b - 
   have hhc : ContinuousOn h (Icc a b) := (continuous_on_const.mul hfc).sub (continuous_on_const.mul hgc)
   rcases exists_has_deriv_at_eq_zero h h' hab hhc hI hhh' with ⟨c, cmem, hc⟩
   exact ⟨c, cmem, sub_eq_zero.1 hc⟩
+#align exists_ratio_has_deriv_at_eq_ratio_slope exists_ratio_has_deriv_at_eq_ratio_slope
 
 omit hfc hgc
 
@@ -674,6 +719,7 @@ theorem exists_ratio_has_deriv_at_eq_ratio_slope' {lfa lga lfb lgb : ℝ} (hff' 
     exact ((hff' x hx).const_mul _).sub ((hgg' x hx).const_mul _)
   rcases exists_has_deriv_at_eq_zero' hab hha hhb hhh' with ⟨c, cmem, hc⟩
   exact ⟨c, cmem, sub_eq_zero.1 hc⟩
+#align exists_ratio_has_deriv_at_eq_ratio_slope' exists_ratio_has_deriv_at_eq_ratio_slope'
 
 include hfc
 
@@ -688,6 +734,7 @@ theorem exists_has_deriv_at_eq_slope : ∃ c ∈ IooCat a b, f' c = (f b - f a) 
   simp only [_root_.id, Pi.one_apply, mul_one] at hc
   rw [← hc, mul_div_cancel_left]
   exact ne_of_gt (sub_pos.2 hab)
+#align exists_has_deriv_at_eq_slope exists_has_deriv_at_eq_slope
 
 omit hff'
 
@@ -696,6 +743,7 @@ theorem exists_ratio_deriv_eq_ratio_slope : ∃ c ∈ IooCat a b, (g b - g a) * 
   (exists_ratio_has_deriv_at_eq_ratio_slope f (deriv f) hab hfc
       (fun x hx => ((hfd x hx).DifferentiableAt <| IsOpen.mem_nhds is_open_Ioo hx).HasDerivAt) g (deriv g) hgc)
     fun x hx => ((hgd x hx).DifferentiableAt <| IsOpen.mem_nhds is_open_Ioo hx).HasDerivAt
+#align exists_ratio_deriv_eq_ratio_slope exists_ratio_deriv_eq_ratio_slope
 
 omit hfc
 
@@ -707,15 +755,17 @@ theorem exists_ratio_deriv_eq_ratio_slope' {lfa lga lfb lgb : ℝ} (hdf : Differ
   exists_ratio_has_deriv_at_eq_ratio_slope' _ _ hab _ _
     (fun x hx => ((hdf x hx).DifferentiableAt <| Ioo_mem_nhds hx.1 hx.2).HasDerivAt)
     (fun x hx => ((hdg x hx).DifferentiableAt <| Ioo_mem_nhds hx.1 hx.2).HasDerivAt) hfa hga hfb hgb
+#align exists_ratio_deriv_eq_ratio_slope' exists_ratio_deriv_eq_ratio_slope'
 
 /-- Lagrange's **Mean Value Theorem**, `deriv` version. -/
 theorem exists_deriv_eq_slope : ∃ c ∈ IooCat a b, deriv f c = (f b - f a) / (b - a) :=
   exists_has_deriv_at_eq_slope f (deriv f) hab hfc fun x hx =>
     ((hfd x hx).DifferentiableAt <| IsOpen.mem_nhds is_open_Ioo hx).HasDerivAt
+#align exists_deriv_eq_slope exists_deriv_eq_slope
 
 end Interval
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `C < f'`, then
 `f` grows faster than `C * x` on `D`, i.e., `C * (y - x) < f y - f x` whenever `x, y ∈ D`,
@@ -732,6 +782,7 @@ theorem Convex.mul_sub_lt_image_sub_of_lt_deriv {D : Set ℝ} (hD : Convex ℝ D
     rw [← ha]
     exact hf'_gt _ (hxyD' a_mem)
   exact (lt_div_iff (sub_pos.2 hxy)).1 this
+#align convex.mul_sub_lt_image_sub_of_lt_deriv Convex.mul_sub_lt_image_sub_of_lt_deriv
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `C < f'`, then `f` grows faster than
 `C * x`, i.e., `C * (y - x) < f y - f x` whenever `x < y`. -/
@@ -739,8 +790,9 @@ theorem mul_sub_lt_image_sub_of_lt_deriv {f : ℝ → ℝ} (hf : Differentiable 
     (hxy : x < y) : C * (y - x) < f y - f x :=
   convex_univ.mul_sub_lt_image_sub_of_lt_deriv hf.Continuous.ContinuousOn hf.DifferentiableOn (fun x _ => hf'_gt x) x
     trivial y trivial hxy
+#align mul_sub_lt_image_sub_of_lt_deriv mul_sub_lt_image_sub_of_lt_deriv
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `C ≤ f'`, then
 `f` grows at least as fast as `C * x` on `D`, i.e., `C * (y - x) ≤ f y - f x` whenever `x, y ∈ D`,
@@ -760,6 +812,7 @@ theorem Convex.mul_sub_le_image_sub_of_le_deriv {D : Set ℝ} (hD : Convex ℝ D
     rw [← ha]
     exact hf'_ge _ (hxyD' a_mem)
   exact (le_div_iff (sub_pos.2 hxy')).1 this
+#align convex.mul_sub_le_image_sub_of_le_deriv Convex.mul_sub_le_image_sub_of_le_deriv
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `C ≤ f'`, then `f` grows at least as fast
 as `C * x`, i.e., `C * (y - x) ≤ f y - f x` whenever `x ≤ y`. -/
@@ -767,8 +820,9 @@ theorem mul_sub_le_image_sub_of_le_deriv {f : ℝ → ℝ} (hf : Differentiable 
     (hxy : x ≤ y) : C * (y - x) ≤ f y - f x :=
   convex_univ.mul_sub_le_image_sub_of_le_deriv hf.Continuous.ContinuousOn hf.DifferentiableOn (fun x _ => hf'_ge x) x
     trivial y trivial hxy
+#align mul_sub_le_image_sub_of_le_deriv mul_sub_le_image_sub_of_le_deriv
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f' < C`, then
 `f` grows slower than `C * x` on `D`, i.e., `f y - f x < C * (y - x)` whenever `x, y ∈ D`,
@@ -782,6 +836,7 @@ theorem Convex.image_sub_lt_mul_sub_of_deriv_lt {D : Set ℝ} (hD : Convex ℝ D
     rw [deriv.neg, neg_lt_neg_iff]
     exact lt_hf' x hx
   simpa [-neg_lt_neg_iff] using neg_lt_neg (hD.mul_sub_lt_image_sub_of_lt_deriv hf.neg hf'.neg hf'_gt x hx y hy hxy)
+#align convex.image_sub_lt_mul_sub_of_deriv_lt Convex.image_sub_lt_mul_sub_of_deriv_lt
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f' < C`, then `f` grows slower than
 `C * x` on `D`, i.e., `f y - f x < C * (y - x)` whenever `x < y`. -/
@@ -789,8 +844,9 @@ theorem image_sub_lt_mul_sub_of_deriv_lt {f : ℝ → ℝ} (hf : Differentiable 
     (hxy : x < y) : f y - f x < C * (y - x) :=
   convex_univ.image_sub_lt_mul_sub_of_deriv_lt hf.Continuous.ContinuousOn hf.DifferentiableOn (fun x _ => lt_hf' x) x
     trivial y trivial hxy
+#align image_sub_lt_mul_sub_of_deriv_lt image_sub_lt_mul_sub_of_deriv_lt
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (x y «expr ∈ » D) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » D) -/
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f' ≤ C`, then
 `f` grows at most as fast as `C * x` on `D`, i.e., `f y - f x ≤ C * (y - x)` whenever `x, y ∈ D`,
@@ -804,6 +860,7 @@ theorem Convex.image_sub_le_mul_sub_of_deriv_le {D : Set ℝ} (hD : Convex ℝ D
     rw [deriv.neg, neg_le_neg_iff]
     exact le_hf' x hx
   simpa [-neg_le_neg_iff] using neg_le_neg (hD.mul_sub_le_image_sub_of_le_deriv hf.neg hf'.neg hf'_ge x hx y hy hxy)
+#align convex.image_sub_le_mul_sub_of_deriv_le Convex.image_sub_le_mul_sub_of_deriv_le
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f' ≤ C`, then `f` grows at most as fast
 as `C * x`, i.e., `f y - f x ≤ C * (y - x)` whenever `x ≤ y`. -/
@@ -811,6 +868,7 @@ theorem image_sub_le_mul_sub_of_deriv_le {f : ℝ → ℝ} (hf : Differentiable 
     (hxy : x ≤ y) : f y - f x ≤ C * (y - x) :=
   convex_univ.image_sub_le_mul_sub_of_deriv_le hf.Continuous.ContinuousOn hf.DifferentiableOn (fun x _ => le_hf' x) x
     trivial y trivial hxy
+#align image_sub_le_mul_sub_of_deriv_le image_sub_le_mul_sub_of_deriv_le
 
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f'` is positive, then
@@ -822,6 +880,7 @@ theorem Convex.strict_mono_on_of_deriv_pos {D : Set ℝ} (hD : Convex ℝ D) {f 
   rintro x hx y hy
   simpa only [zero_mul, sub_pos] using hD.mul_sub_lt_image_sub_of_lt_deriv hf _ hf' x hx y hy
   exact fun z hz => (differentiableAtOfDerivNeZero (hf' z hz).ne').DifferentiableWithinAt
+#align convex.strict_mono_on_of_deriv_pos Convex.strict_mono_on_of_deriv_pos
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is positive, then
 `f` is a strictly monotone function.
@@ -832,6 +891,7 @@ theorem strict_mono_of_deriv_pos {f : ℝ → ℝ} (hf' : ∀ x, 0 < deriv f x) 
     convex_univ.strict_mono_on_of_deriv_pos
       (fun z _ => (differentiableAtOfDerivNeZero (hf' z).ne').DifferentiableWithinAt.ContinuousWithinAt) fun x _ =>
       hf' x
+#align strict_mono_of_deriv_pos strict_mono_of_deriv_pos
 
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f'` is nonnegative, then
@@ -840,12 +900,14 @@ theorem Convex.monotone_on_of_deriv_nonneg {D : Set ℝ} (hD : Convex ℝ D) {f 
     (hf' : DifferentiableOn ℝ f (Interior D)) (hf'_nonneg : ∀ x ∈ Interior D, 0 ≤ deriv f x) : MonotoneOn f D :=
   fun x hx y hy hxy => by
   simpa only [zero_mul, sub_nonneg] using hD.mul_sub_le_image_sub_of_le_deriv hf hf' hf'_nonneg x hx y hy hxy
+#align convex.monotone_on_of_deriv_nonneg Convex.monotone_on_of_deriv_nonneg
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is nonnegative, then
 `f` is a monotone function. -/
 theorem monotone_of_deriv_nonneg {f : ℝ → ℝ} (hf : Differentiable ℝ f) (hf' : ∀ x, 0 ≤ deriv f x) : Monotone f :=
   monotone_on_univ.1 <|
     convex_univ.monotone_on_of_deriv_nonneg hf.Continuous.ContinuousOn hf.DifferentiableOn fun x _ => hf' x
+#align monotone_of_deriv_nonneg monotone_of_deriv_nonneg
 
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f'` is negative, then
@@ -855,6 +917,7 @@ theorem Convex.strict_anti_on_of_deriv_neg {D : Set ℝ} (hD : Convex ℝ D) {f 
   simpa only [zero_mul, sub_lt_zero] using
     hD.image_sub_lt_mul_sub_of_deriv_lt hf
       (fun z hz => (differentiableAtOfDerivNeZero (hf' z hz).Ne).DifferentiableWithinAt) hf' x hx y
+#align convex.strict_anti_on_of_deriv_neg Convex.strict_anti_on_of_deriv_neg
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is negative, then
 `f` is a strictly antitone function.
@@ -864,6 +927,7 @@ theorem strict_anti_of_deriv_neg {f : ℝ → ℝ} (hf' : ∀ x, deriv f x < 0) 
   strict_anti_on_univ.1 <|
     convex_univ.strict_anti_on_of_deriv_neg
       (fun z _ => (differentiableAtOfDerivNeZero (hf' z).Ne).DifferentiableWithinAt.ContinuousWithinAt) fun x _ => hf' x
+#align strict_anti_of_deriv_neg strict_anti_of_deriv_neg
 
 /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
 of the real line. If `f` is differentiable on the interior of `D` and `f'` is nonpositive, then
@@ -872,12 +936,14 @@ theorem Convex.antitone_on_of_deriv_nonpos {D : Set ℝ} (hD : Convex ℝ D) {f 
     (hf' : DifferentiableOn ℝ f (Interior D)) (hf'_nonpos : ∀ x ∈ Interior D, deriv f x ≤ 0) : AntitoneOn f D :=
   fun x hx y hy hxy => by
   simpa only [zero_mul, sub_nonpos] using hD.image_sub_le_mul_sub_of_deriv_le hf hf' hf'_nonpos x hx y hy hxy
+#align convex.antitone_on_of_deriv_nonpos Convex.antitone_on_of_deriv_nonpos
 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is nonpositive, then
 `f` is an antitone function. -/
 theorem antitone_of_deriv_nonpos {f : ℝ → ℝ} (hf : Differentiable ℝ f) (hf' : ∀ x, deriv f x ≤ 0) : Antitone f :=
   antitone_on_univ.1 <|
     convex_univ.antitone_on_of_deriv_nonpos hf.Continuous.ContinuousOn hf.DifferentiableOn fun x _ => hf' x
+#align antitone_of_deriv_nonpos antitone_of_deriv_nonpos
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ`, is differentiable on its interior,
 and `f'` is monotone on the interior, then `f` is convex on `D`. -/
@@ -899,6 +965,7 @@ theorem MonotoneOn.convex_on_of_deriv {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ
       exact exists_deriv_eq_slope f hyz (hf.mono hyzD) (hf'.mono hyzD')
       rw [← ha, ← hb]
       exact hf'_mono (hxyD' ⟨hxa, hay⟩) (hyzD' ⟨hyb, hbz⟩) (hay.trans hyb).le)
+#align monotone_on.convex_on_of_deriv MonotoneOn.convex_on_of_deriv
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ`, is differentiable on its interior,
 and `f'` is antitone on the interior, then `f` is concave on `D`. -/
@@ -908,6 +975,7 @@ theorem AntitoneOn.concave_on_of_deriv {D : Set ℝ} (hD : Convex ℝ D) {f : �
     intro x hx y hy hxy
     convert neg_le_neg (h_anti hx hy hxy) <;> convert deriv.neg
   neg_convex_on_iff.mp (this.convex_on_of_deriv hD hf.neg hf'.neg)
+#align antitone_on.concave_on_of_deriv AntitoneOn.concave_on_of_deriv
 
 theorem StrictMonoOn.exists_slope_lt_deriv_aux {x y : ℝ} {f : ℝ → ℝ} (hf : ContinuousOn f (IccCat x y)) (hxy : x < y)
     (hf'_mono : StrictMonoOn (deriv f) (IooCat x y)) (h : ∀ w ∈ IooCat x y, deriv f w ≠ 0) :
@@ -920,6 +988,7 @@ theorem StrictMonoOn.exists_slope_lt_deriv_aux {x y : ℝ} {f : ℝ → ℝ} (hf
   refine' ⟨b, ⟨hxa.trans hab, hby⟩, _⟩
   rw [← ha]
   exact hf'_mono ⟨hxa, hay⟩ ⟨hxa.trans hab, hby⟩ hab
+#align strict_mono_on.exists_slope_lt_deriv_aux StrictMonoOn.exists_slope_lt_deriv_aux
 
 theorem StrictMonoOn.exists_slope_lt_deriv {x y : ℝ} {f : ℝ → ℝ} (hf : ContinuousOn f (IccCat x y)) (hxy : x < y)
     (hf'_mono : StrictMonoOn (deriv f) (IooCat x y)) : ∃ a ∈ IooCat x y, (f y - f x) / (y - x) < deriv f a := by
@@ -961,6 +1030,7 @@ theorem StrictMonoOn.exists_slope_lt_deriv {x y : ℝ} {f : ℝ → ℝ} (hf : C
         
     linarith
     
+#align strict_mono_on.exists_slope_lt_deriv StrictMonoOn.exists_slope_lt_deriv
 
 theorem StrictMonoOn.exists_deriv_lt_slope_aux {x y : ℝ} {f : ℝ → ℝ} (hf : ContinuousOn f (IccCat x y)) (hxy : x < y)
     (hf'_mono : StrictMonoOn (deriv f) (IooCat x y)) (h : ∀ w ∈ IooCat x y, deriv f w ≠ 0) :
@@ -973,6 +1043,7 @@ theorem StrictMonoOn.exists_deriv_lt_slope_aux {x y : ℝ} {f : ℝ → ℝ} (hf
   refine' ⟨b, ⟨hxb, hba.trans hay⟩, _⟩
   rw [← ha]
   exact hf'_mono ⟨hxb, hba.trans hay⟩ ⟨hxa, hay⟩ hba
+#align strict_mono_on.exists_deriv_lt_slope_aux StrictMonoOn.exists_deriv_lt_slope_aux
 
 theorem StrictMonoOn.exists_deriv_lt_slope {x y : ℝ} {f : ℝ → ℝ} (hf : ContinuousOn f (IccCat x y)) (hxy : x < y)
     (hf'_mono : StrictMonoOn (deriv f) (IooCat x y)) : ∃ a ∈ IooCat x y, deriv f a < (f y - f x) / (y - x) := by
@@ -1014,6 +1085,7 @@ theorem StrictMonoOn.exists_deriv_lt_slope {x y : ℝ} {f : ℝ → ℝ} (hf : C
         
     linarith
     
+#align strict_mono_on.exists_deriv_lt_slope StrictMonoOn.exists_deriv_lt_slope
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ`, and `f'` is strictly monotone on the
 interior, then `f` is strictly convex on `D`.
@@ -1038,6 +1110,7 @@ theorem StrictMonoOn.strict_convex_on_of_deriv {D : Set ℝ} (hD : Convex ℝ D)
       exact StrictMonoOn.exists_deriv_lt_slope (hf.mono hyzD) hyz (hf'.mono hyzD')
       apply ha.trans (lt_trans _ hb)
       exact hf' (hxyD' ⟨hxa, hay⟩) (hyzD' ⟨hyb, hbz⟩) (hay.trans hyb))
+#align strict_mono_on.strict_convex_on_of_deriv StrictMonoOn.strict_convex_on_of_deriv
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ` and `f'` is strictly antitone on the
 interior, then `f` is strictly concave on `D`.
@@ -1049,16 +1122,19 @@ theorem StrictAntiOn.strict_concave_on_of_deriv {D : Set ℝ} (hD : Convex ℝ D
     intro x hx y hy hxy
     convert neg_lt_neg (h_anti hx hy hxy) <;> convert deriv.neg
   neg_strict_convex_on_iff.mp (this.strict_convex_on_of_deriv hD hf.neg)
+#align strict_anti_on.strict_concave_on_of_deriv StrictAntiOn.strict_concave_on_of_deriv
 
 /-- If a function `f` is differentiable and `f'` is monotone on `ℝ` then `f` is convex. -/
 theorem Monotone.convex_on_univ_of_deriv {f : ℝ → ℝ} (hf : Differentiable ℝ f) (hf'_mono : Monotone (deriv f)) :
     ConvexOn ℝ Univ f :=
   (hf'_mono.MonotoneOn _).convex_on_of_deriv convex_univ hf.Continuous.ContinuousOn hf.DifferentiableOn
+#align monotone.convex_on_univ_of_deriv Monotone.convex_on_univ_of_deriv
 
 /-- If a function `f` is differentiable and `f'` is antitone on `ℝ` then `f` is concave. -/
 theorem Antitone.concave_on_univ_of_deriv {f : ℝ → ℝ} (hf : Differentiable ℝ f) (hf'_anti : Antitone (deriv f)) :
     ConcaveOn ℝ Univ f :=
   (hf'_anti.AntitoneOn _).concave_on_of_deriv convex_univ hf.Continuous.ContinuousOn hf.DifferentiableOn
+#align antitone.concave_on_univ_of_deriv Antitone.concave_on_univ_of_deriv
 
 /-- If a function `f` is continuous and `f'` is strictly monotone on `ℝ` then `f` is strictly
 convex. Note that we don't require differentiability, since it is guaranteed at all but at most
@@ -1066,6 +1142,7 @@ one point by the strict monotonicity of `f'`. -/
 theorem StrictMono.strict_convex_on_univ_of_deriv {f : ℝ → ℝ} (hf : Continuous f) (hf'_mono : StrictMono (deriv f)) :
     StrictConvexOn ℝ Univ f :=
   (hf'_mono.StrictMonoOn _).strict_convex_on_of_deriv convex_univ hf.ContinuousOn
+#align strict_mono.strict_convex_on_univ_of_deriv StrictMono.strict_convex_on_univ_of_deriv
 
 /-- If a function `f` is continuous and `f'` is strictly antitone on `ℝ` then `f` is strictly
 concave. Note that we don't require differentiability, since it is guaranteed at all but at most
@@ -1073,6 +1150,7 @@ one point by the strict antitonicity of `f'`. -/
 theorem StrictAnti.strict_concave_on_univ_of_deriv {f : ℝ → ℝ} (hf : Continuous f) (hf'_anti : StrictAnti (deriv f)) :
     StrictConcaveOn ℝ Univ f :=
   (hf'_anti.StrictAntiOn _).strict_concave_on_of_deriv convex_univ hf.ContinuousOn
+#align strict_anti.strict_concave_on_univ_of_deriv StrictAnti.strict_concave_on_univ_of_deriv
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ`, is twice differentiable on its
 interior, and `f''` is nonnegative on the interior, then `f` is convex on `D`. -/
@@ -1082,6 +1160,7 @@ theorem convex_on_of_deriv2_nonneg {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ �
   (hD.Interior.monotone_on_of_deriv_nonneg hf''.ContinuousOn (by rwa [interior_interior]) <| by
         rwa [interior_interior]).convex_on_of_deriv
     hD hf hf'
+#align convex_on_of_deriv2_nonneg convex_on_of_deriv2_nonneg
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ`, is twice differentiable on its
 interior, and `f''` is nonpositive on the interior, then `f` is concave on `D`. -/
@@ -1091,6 +1170,7 @@ theorem concave_on_of_deriv2_nonpos {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ �
   (hD.Interior.antitone_on_of_deriv_nonpos hf''.ContinuousOn (by rwa [interior_interior]) <| by
         rwa [interior_interior]).concave_on_of_deriv
     hD hf hf'
+#align concave_on_of_deriv2_nonpos concave_on_of_deriv2_nonpos
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ` and `f''` is strictly positive on the
 interior, then `f` is strictly convex on `D`.
@@ -1102,6 +1182,7 @@ theorem strict_convex_on_of_deriv2_pos {D : Set ℝ} (hD : Convex ℝ D) {f : �
           (differentiableAtOfDerivNeZero (hf'' z hz).ne').DifferentiableWithinAt.ContinuousWithinAt) <|
         by rwa [interior_interior]).strict_convex_on_of_deriv
     hD hf
+#align strict_convex_on_of_deriv2_pos strict_convex_on_of_deriv2_pos
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ` and `f''` is strictly negative on the
 interior, then `f` is strictly concave on `D`.
@@ -1113,6 +1194,7 @@ theorem strict_concave_on_of_deriv2_neg {D : Set ℝ} (hD : Convex ℝ D) {f : �
           (differentiableAtOfDerivNeZero (hf'' z hz).Ne).DifferentiableWithinAt.ContinuousWithinAt) <|
         by rwa [interior_interior]).strict_concave_on_of_deriv
     hD hf
+#align strict_concave_on_of_deriv2_neg strict_concave_on_of_deriv2_neg
 
 /-- If a function `f` is twice differentiable on a open convex set `D ⊆ ℝ` and
 `f''` is nonnegative on `D`, then `f` is convex on `D`. -/
@@ -1120,6 +1202,7 @@ theorem convex_on_of_deriv2_nonneg' {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ �
     (hf'' : DifferentiableOn ℝ (deriv f) D) (hf''_nonneg : ∀ x ∈ D, 0 ≤ ((deriv^[2]) f) x) : ConvexOn ℝ D f :=
   convex_on_of_deriv2_nonneg hD hf'.ContinuousOn (hf'.mono interior_subset) (hf''.mono interior_subset) fun x hx =>
     hf''_nonneg x (interior_subset hx)
+#align convex_on_of_deriv2_nonneg' convex_on_of_deriv2_nonneg'
 
 /-- If a function `f` is twice differentiable on an open convex set `D ⊆ ℝ` and
 `f''` is nonpositive on `D`, then `f` is concave on `D`. -/
@@ -1127,6 +1210,7 @@ theorem concave_on_of_deriv2_nonpos' {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ 
     (hf'' : DifferentiableOn ℝ (deriv f) D) (hf''_nonpos : ∀ x ∈ D, (deriv^[2]) f x ≤ 0) : ConcaveOn ℝ D f :=
   concave_on_of_deriv2_nonpos hD hf'.ContinuousOn (hf'.mono interior_subset) (hf''.mono interior_subset) fun x hx =>
     hf''_nonpos x (interior_subset hx)
+#align concave_on_of_deriv2_nonpos' concave_on_of_deriv2_nonpos'
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ` and `f''` is strictly positive on `D`,
 then `f` is strictly convex on `D`.
@@ -1135,6 +1219,7 @@ derivative being strictly positive, except at at most one point. -/
 theorem strict_convex_on_of_deriv2_pos' {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
     (hf'' : ∀ x ∈ D, 0 < ((deriv^[2]) f) x) : StrictConvexOn ℝ D f :=
   (strict_convex_on_of_deriv2_pos hD hf) fun x hx => hf'' x (interior_subset hx)
+#align strict_convex_on_of_deriv2_pos' strict_convex_on_of_deriv2_pos'
 
 /-- If a function `f` is continuous on a convex set `D ⊆ ℝ` and `f''` is strictly negative on `D`,
 then `f` is strictly concave on `D`.
@@ -1143,18 +1228,21 @@ derivative being strictly negative, except at at most one point. -/
 theorem strict_concave_on_of_deriv2_neg' {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ → ℝ} (hf : ContinuousOn f D)
     (hf'' : ∀ x ∈ D, (deriv^[2]) f x < 0) : StrictConcaveOn ℝ D f :=
   (strict_concave_on_of_deriv2_neg hD hf) fun x hx => hf'' x (interior_subset hx)
+#align strict_concave_on_of_deriv2_neg' strict_concave_on_of_deriv2_neg'
 
 /-- If a function `f` is twice differentiable on `ℝ`, and `f''` is nonnegative on `ℝ`,
 then `f` is convex on `ℝ`. -/
 theorem convex_on_univ_of_deriv2_nonneg {f : ℝ → ℝ} (hf' : Differentiable ℝ f) (hf'' : Differentiable ℝ (deriv f))
     (hf''_nonneg : ∀ x, 0 ≤ ((deriv^[2]) f) x) : ConvexOn ℝ Univ f :=
   convex_on_of_deriv2_nonneg' convex_univ hf'.DifferentiableOn hf''.DifferentiableOn fun x _ => hf''_nonneg x
+#align convex_on_univ_of_deriv2_nonneg convex_on_univ_of_deriv2_nonneg
 
 /-- If a function `f` is twice differentiable on `ℝ`, and `f''` is nonpositive on `ℝ`,
 then `f` is concave on `ℝ`. -/
 theorem concave_on_univ_of_deriv2_nonpos {f : ℝ → ℝ} (hf' : Differentiable ℝ f) (hf'' : Differentiable ℝ (deriv f))
     (hf''_nonpos : ∀ x, (deriv^[2]) f x ≤ 0) : ConcaveOn ℝ Univ f :=
   concave_on_of_deriv2_nonpos' convex_univ hf'.DifferentiableOn hf''.DifferentiableOn fun x _ => hf''_nonpos x
+#align concave_on_univ_of_deriv2_nonpos concave_on_univ_of_deriv2_nonpos
 
 /-- If a function `f` is continuous on `ℝ`, and `f''` is strictly positive on `ℝ`,
 then `f` is strictly convex on `ℝ`.
@@ -1163,6 +1251,7 @@ derivative being strictly positive, except at at most one point.  -/
 theorem strict_convex_on_univ_of_deriv2_pos {f : ℝ → ℝ} (hf : Continuous f) (hf'' : ∀ x, 0 < ((deriv^[2]) f) x) :
     StrictConvexOn ℝ Univ f :=
   (strict_convex_on_of_deriv2_pos' convex_univ hf.ContinuousOn) fun x _ => hf'' x
+#align strict_convex_on_univ_of_deriv2_pos strict_convex_on_univ_of_deriv2_pos
 
 /-- If a function `f` is continuous on `ℝ`, and `f''` is strictly negative on `ℝ`,
 then `f` is strictly concave on `ℝ`.
@@ -1171,6 +1260,7 @@ derivative being strictly negative, except at at most one point.  -/
 theorem strict_concave_on_univ_of_deriv2_neg {f : ℝ → ℝ} (hf : Continuous f) (hf'' : ∀ x, (deriv^[2]) f x < 0) :
     StrictConcaveOn ℝ Univ f :=
   (strict_concave_on_of_deriv2_neg' convex_univ hf.ContinuousOn) fun x _ => hf'' x
+#align strict_concave_on_univ_of_deriv2_neg strict_concave_on_univ_of_deriv2_neg
 
 /-! ### Functions `f : E → ℝ` -/
 
@@ -1214,6 +1304,7 @@ theorem domain_mvt {f : E → ℝ} {s : Set E} {x y : E} {f' : E → E →L[ℝ]
   use g t
   refine' ⟨hseg t <| hIccIoo Ht, _⟩
   simp [g, hMVT']
+#align domain_mvt domain_mvt
 
 section IsROrC
 
@@ -1252,6 +1343,7 @@ theorem hasStrictFderivAtOfHasFderivAtOfContinuousAt (hder : ∀ᶠ y in 𝓝 x,
   letI : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
   refine' (convex_ball _ _).norm_image_sub_le_of_norm_has_fderiv_within_le' _ hf' h.2 h.1
   exact fun y hy => (hε hy).1.HasFderivWithinAt
+#align has_strict_fderiv_at_of_has_fderiv_at_of_continuous_at hasStrictFderivAtOfHasFderivAtOfContinuousAt
 
 /-- Over the reals or the complexes, a continuously differentiable function is strictly
 differentiable. -/
@@ -1259,6 +1351,7 @@ theorem hasStrictDerivAtOfHasDerivAtOfContinuousAt {f f' : 𝕜 → G} {x : 𝕜
     (hcont : ContinuousAt f' x) : HasStrictDerivAt f (f' x) x :=
   hasStrictFderivAtOfHasFderivAtOfContinuousAt (hder.mono fun y hy => hy.HasFderivAt) <|
     (smulRightL 𝕜 𝕜 G 1).Continuous.ContinuousAt.comp hcont
+#align has_strict_deriv_at_of_has_deriv_at_of_continuous_at hasStrictDerivAtOfHasDerivAtOfContinuousAt
 
 end IsROrC
 

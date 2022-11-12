@@ -40,20 +40,26 @@ open Tactic
 
 theorem left_mul_both_sides {α} [h : Mul α] {x y : α} (z : α) (h1 : x = y) : z * x = z * y :=
   congr_arg (Mul.mul z) h1
+#align linear_combo.left_mul_both_sides LinearCombo.left_mul_both_sides
 
 theorem sum_two_equations {α} [h : Add α] {x1 y1 x2 y2 : α} (h1 : x1 = y1) (h2 : x2 = y2) : x1 + x2 = y1 + y2 :=
   congr (congr_arg Add.add h1) h2
+#align linear_combo.sum_two_equations LinearCombo.sum_two_equations
 
 theorem left_minus_right {α} [h : AddGroup α] {x y : α} (h1 : x = y) : x - y = 0 :=
   sub_eq_zero.mpr h1
+#align linear_combo.left_minus_right LinearCombo.left_minus_right
 
 theorem all_on_left_equiv {α} [h : AddGroup α] (x y : α) : (x = y) = (x - y = 0) :=
   propext ⟨left_minus_right, sub_eq_zero.mp⟩
+#align linear_combo.all_on_left_equiv LinearCombo.all_on_left_equiv
 
 theorem replace_eq_expr {α} [h : Zero α] {x y : α} (h1 : x = 0) (h2 : y = x) : y = 0 := by rwa [h2]
+#align linear_combo.replace_eq_expr LinearCombo.replace_eq_expr
 
 theorem eq_zero_of_sub_eq_zero {α} [AddGroup α] {x y : α} (h : y = 0) (h2 : x - y = 0) : x = 0 := by
   rwa [h, sub_zero] at h2
+#align linear_combo.eq_zero_of_sub_eq_zero LinearCombo.eq_zero_of_sub_eq_zero
 
 /-! ### Configuration -/
 
@@ -69,6 +75,7 @@ checking if the weighted sum is equivalent to the goal (when `normalize` is `tt`
 unsafe structure linear_combination_config : Type where
   normalize : Bool := true
   normalization_tactic : tactic Unit := sorry
+#align linear_combo.linear_combination_config linear_combo.linear_combination_config
 
 /-! ### Part 1: Multiplying Equations by Constants and Adding Them Together -/
 
@@ -93,6 +100,7 @@ unsafe def mul_equality_expr (h_equality : expr) (coeff : pexpr) : tactic expr :
         lhs
   let coeff_expr ← to_expr (pquote.1 (%%ₓcoeff : %%ₓleft_type))
   mk_app `` left_mul_both_sides [coeff_expr, h_equality]
+#align linear_combo.mul_equality_expr linear_combo.mul_equality_expr
 
 /-- Given two hypotheses that `a = b` and `c = d`, this tactic returns an `expr` proving
   that `a + c = b + d`.
@@ -108,6 +116,7 @@ unsafe def mul_equality_expr (h_equality : expr) (coeff : pexpr) : tactic expr :
 -/
 unsafe def sum_equalities (h_equality1 h_equality2 : expr) : tactic expr :=
   mk_app `` sum_two_equations [h_equality1, h_equality2]
+#align linear_combo.sum_equalities linear_combo.sum_equalities
 
 /-- Given that `a = b` and `c = d`, along with a coefficient, this tactic returns an
   `expr` proving that `a + coeff * c = b + coeff * d`.
@@ -125,6 +134,7 @@ unsafe def sum_equalities (h_equality1 h_equality2 : expr) : tactic expr :=
 -/
 unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_for_eq2 : pexpr) : tactic expr :=
   mul_equality_expr h_equality2 coeff_for_eq2 >>= sum_equalities h_equality1
+#align linear_combo.sum_two_hyps_one_mul_helper linear_combo.sum_two_hyps_one_mul_helper
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -178,6 +188,7 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
     fail
         ("The length of the input list of equalities should be the " ++
           "same as the length of the input list of coefficients")
+#align linear_combo.make_sum_of_hyps_helper linear_combo.make_sum_of_hyps_helper
 
 /-- Given a list of names referencing equalities and a list of pexprs representing
   coefficients, this tactic proves that a weighted sum of the equalities
@@ -195,6 +206,7 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
 -/
 unsafe def make_sum_of_hyps (expected_tp : expr) (h_eqs_names : List expr) (coeffs : List pexpr) : tactic expr :=
   make_sum_of_hyps_helper expected_tp none h_eqs_names coeffs
+#align linear_combo.make_sum_of_hyps linear_combo.make_sum_of_hyps
 
 /-! ### Part 2: Simplifying -/
 
@@ -213,6 +225,7 @@ unsafe def make_sum_of_hyps (expected_tp : expr) (h_eqs_names : List expr) (coef
 -/
 unsafe def move_to_left_side (h_equality : expr) : tactic expr :=
   mk_app `` left_minus_right [h_equality]
+#align linear_combo.move_to_left_side linear_combo.move_to_left_side
 
 /-- This tactic replaces the target with the result of moving all the terms in the
   target to the left side of the equals sign by subtracting the right side of
@@ -234,6 +247,7 @@ unsafe def move_target_to_left_side : tactic Unit := do
   let (targ_lhs, targ_rhs) ← match_eq target
   let target_left_eq ← to_expr (pquote.1 (((%%ₓtarg_lhs) - %%ₓtarg_rhs) = 0))
   mk_app `` all_on_left_equiv [targ_lhs, targ_rhs] >>= replace_target target_left_eq
+#align linear_combo.move_target_to_left_side linear_combo.move_target_to_left_side
 
 /-! ### Part 3: Matching the Linear Combination to the Target -/
 
@@ -255,6 +269,7 @@ This tactic only should be used when the target's type is an equality whose
 unsafe def set_goal_to_hleft_sub_tleft (hsum_on_left : expr) : tactic Unit := do
   to_expr (pquote.1 (eq_zero_of_sub_eq_zero (%%ₓhsum_on_left))) >>= apply
   skip
+#align linear_combo.set_goal_to_hleft_sub_tleft linear_combo.set_goal_to_hleft_sub_tleft
 
 /-- This tactic attempts to prove the goal by normalizing the target if the
 `normalize` field of the given configuration is true.
@@ -267,6 +282,7 @@ unsafe def set_goal_to_hleft_sub_tleft (hsum_on_left : expr) : tactic Unit := do
 -/
 unsafe def normalize_if_desired (config : linear_combination_config) : tactic Unit :=
   when config.normalize config.normalization_tactic
+#align linear_combo.normalize_if_desired linear_combo.normalize_if_desired
 
 /-! ### Part 4: Completed Tactic -/
 
@@ -295,13 +311,15 @@ Note: The left and right sides of all the equalities should have the same
 -/
 unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
     (config : linear_combination_config := {  }) : tactic Unit := do
-  let quote.1 (@Eq (%%ₓext) _ _) ← target | fail "linear_combination can only be used to prove equality goals"
+  let quote.1 (@Eq (%%ₓext) _ _) ← target |
+    fail "linear_combination can only be used to prove equality goals"
   let h_eqs ← h_eqs_names.mmap to_expr
   let hsum ← make_sum_of_hyps ext h_eqs coeffs
   let hsum_on_left ← move_to_left_side hsum
   move_target_to_left_side
   set_goal_to_hleft_sub_tleft hsum_on_left
   normalize_if_desired config
+#align linear_combo.linear_combination linear_combo.linear_combination
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `mk_mul [p₀, p₁, ..., pₙ]` produces the pexpr `p₀ * p₁ * ... * pₙ`. -/
@@ -309,6 +327,7 @@ unsafe def mk_mul : List pexpr → pexpr
   | [] => pquote.1 1
   | [e] => e
   | e::es => pquote.1 ((%%ₓe) * %%ₓmk_mul es)
+#align linear_combo.mk_mul linear_combo.mk_mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -330,6 +349,7 @@ unsafe def as_linear_combo : Bool → List pexpr → pexpr → List (pexpr × pe
     | _, _ =>
       let m := mk_mul ms
       [(e, if neg then pquote.1 (-%%ₓm) else m)]
+#align linear_combo.as_linear_combo linear_combo.as_linear_combo
 
 section InteractiveMode
 
@@ -405,6 +425,8 @@ unsafe def _root_.tactic.interactive.linear_combination (input : parse (as_linea
     (_ : parse (tk "with")?) (config : linear_combination_config := {  }) : tactic Unit :=
   let (h_eqs_names, coeffs) := List.unzip (input.getOrElse [])
   linear_combination h_eqs_names coeffs config
+#align
+  linear_combo._root_.tactic.interactive.linear_combination linear_combo._root_.tactic.interactive.linear_combination
 
 add_tactic_doc
   { Name := "linear_combination", category := DocCategory.tactic, declNames := [`tactic.interactive.linear_combination],

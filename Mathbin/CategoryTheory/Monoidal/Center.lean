@@ -65,6 +65,7 @@ structure HalfBraiding (X : C) where
         (α_ _ _ _).inv ≫ ((β U).Hom ⊗ 𝟙 U') ≫ (α_ _ _ _).Hom ≫ (𝟙 U ⊗ (β U').Hom) ≫ (α_ _ _ _).inv := by
     obviously
   naturality' : ∀ {U U'} (f : U ⟶ U'), (𝟙 X ⊗ f) ≫ (β U').Hom = (β U).Hom ≫ (f ⊗ 𝟙 X) := by obviously
+#align category_theory.half_braiding CategoryTheory.HalfBraiding
 
 restate_axiom half_braiding.monoidal'
 
@@ -83,6 +84,7 @@ and `b` is a half-braiding on `X`.
 @[nolint has_nonempty_instance]
 def Center :=
   ΣX : C, HalfBraiding X
+#align category_theory.center CategoryTheory.Center
 
 namespace Center
 
@@ -91,10 +93,11 @@ variable {C}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A morphism in the Drinfeld center of `C`. -/
-@[ext, nolint has_nonempty_instance]
+@[ext.1, nolint has_nonempty_instance]
 structure Hom (X Y : Center C) where
   f : X.1 ⟶ Y.1
   comm' : ∀ U, (f ⊗ 𝟙 U) ≫ (Y.2.β U).Hom = (X.2.β U).Hom ≫ (𝟙 U ⊗ f) := by obviously
+#align category_theory.center.hom CategoryTheory.Center.Hom
 
 restate_axiom hom.comm'
 
@@ -108,17 +111,20 @@ instance : Category (Center C) where
 @[simp]
 theorem id_f (X : Center C) : Hom.f (𝟙 X) = 𝟙 X.1 :=
   rfl
+#align category_theory.center.id_f CategoryTheory.Center.id_f
 
 @[simp]
 theorem comp_f {X Y Z : Center C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).f = f.f ≫ g.f :=
   rfl
+#align category_theory.center.comp_f CategoryTheory.Center.comp_f
 
-@[ext]
+@[ext.1]
 theorem ext {X Y : Center C} (f g : X ⟶ Y) (w : f.f = g.f) : f = g := by
   cases f
   cases g
   congr
   exact w
+#align category_theory.center.ext CategoryTheory.Center.ext
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Construct an isomorphism in the Drinfeld center from
@@ -128,10 +134,12 @@ a morphism whose underlying morphism is an isomorphism.
 def isoMk {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : X ≅ Y where
   Hom := f
   inv := ⟨inv f.f, fun U => by simp [← cancel_epi (f.f ⊗ 𝟙 U), ← comp_tensor_id_assoc, ← id_tensor_comp]⟩
+#align category_theory.center.iso_mk CategoryTheory.Center.isoMk
 
 instance is_iso_of_f_is_iso {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : IsIso f := by
   change is_iso (iso_mk f).Hom
   infer_instance
+#align category_theory.center.is_iso_of_f_is_iso CategoryTheory.Center.is_iso_of_f_is_iso
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -164,6 +172,7 @@ def tensorObj (X Y : Center C) : Center C :=
         rw [category.assoc, category.assoc, category.assoc, category.assoc, id_tensor_associator_naturality_assoc, ←
           id_tensor_comp_assoc, half_braiding.naturality, id_tensor_comp_assoc, associator_inv_naturality_assoc, ←
           comp_tensor_id_assoc, half_braiding.naturality, comp_tensor_id_assoc, associator_naturality, ← tensor_id] }⟩
+#align category_theory.center.tensor_obj CategoryTheory.Center.tensorObj
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
@@ -178,6 +187,7 @@ def tensorHom {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶
       id_tensor_associator_inv_naturality_assoc, tensor_id, id_tensor_comp_tensor_id_assoc, ←
       tensor_id_comp_id_tensor g.f, category.assoc, ← comp_tensor_id_assoc, f.comm, comp_tensor_id_assoc,
       id_tensor_associator_naturality, associator_naturality_assoc, ← id_tensor_comp, tensor_id_comp_id_tensor]
+#align category_theory.center.tensor_hom CategoryTheory.Center.tensorHom
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
@@ -187,6 +197,7 @@ def tensorUnit : Center C :=
       naturality' := fun U U' f => by
         dsimp
         rw [left_unitor_naturality_assoc, right_unitor_inv_naturality, category.assoc] }⟩
+#align category_theory.center.tensor_unit CategoryTheory.Center.tensorUnit
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def associator (X Y Z : Center C) : tensorObj (tensorObj X Y) Z ≅ tensorObj X (tensorObj Y Z) :=
@@ -195,6 +206,7 @@ def associator (X Y Z : Center C) : tensorObj (tensorObj X Y) Z ≅ tensorObj X 
       dsimp
       simp only [comp_tensor_id, id_tensor_comp, ← tensor_id, associator_conjugation]
       coherence⟩
+#align category_theory.center.associator CategoryTheory.Center.associator
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def leftUnitor (X : Center C) : tensorObj tensorUnit X ≅ X :=
@@ -204,6 +216,7 @@ def leftUnitor (X : Center C) : tensorObj tensorUnit X ≅ X :=
       simp only [category.comp_id, category.assoc, tensor_inv_hom_id, comp_tensor_id, tensor_id_comp_id_tensor,
         triangle_assoc_comp_right_inv]
       rw [← left_unitor_tensor, left_unitor_naturality, left_unitor_tensor'_assoc]⟩
+#align category_theory.center.left_unitor CategoryTheory.Center.leftUnitor
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def rightUnitor (X : Center C) : tensorObj X tensorUnit ≅ X :=
@@ -214,6 +227,7 @@ def rightUnitor (X : Center C) : tensorObj X tensorUnit ≅ X :=
       rw [← tensor_id_comp_id_tensor_assoc (ρ_ U).inv, cancel_epi, ← right_unitor_tensor_inv_assoc, ←
         right_unitor_inv_naturality_assoc]
       simp⟩
+#align category_theory.center.right_unitor CategoryTheory.Center.rightUnitor
 
 section
 
@@ -234,6 +248,7 @@ instance : MonoidalCategory (Center C) where
 @[simp]
 theorem tensor_fst (X Y : Center C) : (X ⊗ Y).1 = X.1 ⊗ Y.1 :=
   rfl
+#align category_theory.center.tensor_fst CategoryTheory.Center.tensor_fst
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -242,46 +257,55 @@ theorem tensor_fst (X Y : Center C) : (X ⊗ Y).1 = X.1 ⊗ Y.1 :=
 theorem tensor_β (X Y : Center C) (U : C) :
     (X ⊗ Y).2.β U = α_ _ _ _ ≪≫ (Iso.refl X.1 ⊗ Y.2.β U) ≪≫ (α_ _ _ _).symm ≪≫ (X.2.β U ⊗ Iso.refl Y.1) ≪≫ α_ _ _ _ :=
   rfl
+#align category_theory.center.tensor_β CategoryTheory.Center.tensor_β
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem tensor_f {X₁ Y₁ X₂ Y₂ : Center C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) : (f ⊗ g).f = f.f ⊗ g.f :=
   rfl
+#align category_theory.center.tensor_f CategoryTheory.Center.tensor_f
 
 @[simp]
 theorem tensor_unit_β (U : C) : (𝟙_ (Center C)).2.β U = λ_ U ≪≫ (ρ_ U).symm :=
   rfl
+#align category_theory.center.tensor_unit_β CategoryTheory.Center.tensor_unit_β
 
 @[simp]
 theorem associator_hom_f (X Y Z : Center C) : Hom.f (α_ X Y Z).Hom = (α_ X.1 Y.1 Z.1).Hom :=
   rfl
+#align category_theory.center.associator_hom_f CategoryTheory.Center.associator_hom_f
 
 @[simp]
 theorem associator_inv_f (X Y Z : Center C) : Hom.f (α_ X Y Z).inv = (α_ X.1 Y.1 Z.1).inv := by
   ext
   rw [← associator_hom_f, ← comp_f, iso.hom_inv_id]
   rfl
+#align category_theory.center.associator_inv_f CategoryTheory.Center.associator_inv_f
 
 @[simp]
 theorem left_unitor_hom_f (X : Center C) : Hom.f (λ_ X).Hom = (λ_ X.1).Hom :=
   rfl
+#align category_theory.center.left_unitor_hom_f CategoryTheory.Center.left_unitor_hom_f
 
 @[simp]
 theorem left_unitor_inv_f (X : Center C) : Hom.f (λ_ X).inv = (λ_ X.1).inv := by
   ext
   rw [← left_unitor_hom_f, ← comp_f, iso.hom_inv_id]
   rfl
+#align category_theory.center.left_unitor_inv_f CategoryTheory.Center.left_unitor_inv_f
 
 @[simp]
 theorem right_unitor_hom_f (X : Center C) : Hom.f (ρ_ X).Hom = (ρ_ X.1).Hom :=
   rfl
+#align category_theory.center.right_unitor_hom_f CategoryTheory.Center.right_unitor_hom_f
 
 @[simp]
 theorem right_unitor_inv_f (X : Center C) : Hom.f (ρ_ X).inv = (ρ_ X.1).inv := by
   ext
   rw [← right_unitor_hom_f, ← comp_f, iso.hom_inv_id]
   rfl
+#align category_theory.center.right_unitor_inv_f CategoryTheory.Center.right_unitor_inv_f
 
 end
 
@@ -297,6 +321,7 @@ def forget : MonoidalFunctor (Center C) C where
   map X Y f := f.f
   ε := 𝟙 (𝟙_ C)
   μ X Y := 𝟙 (X.1 ⊗ Y.1)
+#align category_theory.center.forget CategoryTheory.Center.forget
 
 instance :
     ReflectsIsomorphisms (forget C).toFunctor where reflects A B f i := by
@@ -319,6 +344,7 @@ def braiding (X Y : Center C) : X ⊗ Y ≅ Y ⊗ X :=
       rw [← is_iso.inv_comp_eq, is_iso.iso.inv_hom, ← half_braiding.monoidal_assoc, ← half_braiding.naturality_assoc,
         half_braiding.monoidal]
       simp⟩
+#align category_theory.center.braiding CategoryTheory.Center.braiding
 
 instance braidedCategoryCenter : BraidedCategory (Center C) where
   braiding := braiding
@@ -326,6 +352,7 @@ instance braidedCategoryCenter : BraidedCategory (Center C) where
     ext
     dsimp
     rw [← tensor_id_comp_id_tensor, category.assoc, half_braiding.naturality, f.comm_assoc, id_tensor_comp_tensor_id]
+#align category_theory.center.braided_category_center CategoryTheory.Center.braidedCategoryCenter
 
 -- `obviously` handles the hexagon axioms
 section
@@ -342,6 +369,7 @@ def ofBraidedObj (X : C) : Center C :=
       monoidal' := fun U U' => by
         rw [iso.eq_inv_comp, ← category.assoc, ← category.assoc, iso.eq_comp_inv, category.assoc, category.assoc]
         exact hexagon_forward X U U' }⟩
+#align category_theory.center.of_braided_obj CategoryTheory.Center.ofBraidedObj
 
 variable (C)
 
@@ -363,6 +391,7 @@ def ofBraided : MonoidalFunctor C (Center C) where
         dsimp
         rw [tensor_id, tensor_id, category.id_comp, category.comp_id, ← iso.inv_comp_eq, ← category.assoc, ←
           category.assoc, ← iso.comp_inv_eq, category.assoc, hexagon_reverse, category.assoc] }
+#align category_theory.center.of_braided CategoryTheory.Center.ofBraided
 
 end
 

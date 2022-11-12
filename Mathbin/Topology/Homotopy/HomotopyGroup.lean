@@ -43,6 +43,7 @@ variable {n : ℕ} {x : X}
 -/
 def Cube (n : ℕ) : Type :=
   Fin n → I deriving Zero, One, TopologicalSpace
+#align cube Cube
 
 -- mathport name: «exprI^»
 local notation "I^" => Cube
@@ -52,30 +53,37 @@ namespace Cube
 @[continuity]
 theorem proj_continuous (i : Fin n) : Continuous fun f : I^ n => f i :=
   continuous_apply i
+#align cube.proj_continuous Cube.proj_continuous
 
 /-- The points of the `n`-dimensional cube with at least one projection equal to 0 or 1.
 -/
 def Boundary (n : ℕ) : Set (I^ n) :=
   { y | ∃ i, y i = 0 ∨ y i = 1 }
+#align cube.boundary Cube.Boundary
 
 /-- The first projection of a positive-dimensional cube.
 -/
 @[simp]
 def head {n} : I^ (n + 1) → I := fun c => c 0
+#align cube.head Cube.head
 
 @[continuity]
 theorem head.continuous {n} : Continuous (@head n) :=
   proj_continuous 0
+#align cube.head.continuous Cube.head.continuous
 
 /-- The projection to the last `n` coordinates from an `n+1` dimensional cube.
 -/
 @[simp]
 def tail {n} : I^ (n + 1) → I^ n := fun c => Fin.tail c
+#align cube.tail Cube.tail
 
 instance uniqueCube0 : Unique (I^ 0) :=
   Pi.uniqueOfIsEmpty _
+#align cube.unique_cube0 Cube.uniqueCube0
 
 theorem one_char (f : I^ 1) : f = fun _ => f 0 := by convert eq_const_of_unique f
+#align cube.one_char Cube.one_char
 
 end Cube
 
@@ -83,6 +91,7 @@ end Cube
 -/
 structure GenLoop (n : ℕ) (x : X) extends C(I^ n, X) where
   Boundary : ∀ y ∈ Cube.Boundary n, to_fun y = x
+#align gen_loop GenLoop
 
 namespace GenLoop
 
@@ -91,26 +100,32 @@ instance funLike : FunLike (GenLoop n x) (I^ n) fun _ => X where
   coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h => by
     congr
     exact h
+#align gen_loop.fun_like GenLoop.funLike
 
-@[ext]
+@[ext.1]
 theorem ext (f g : GenLoop n x) (H : ∀ y, f y = g y) : f = g :=
   FunLike.ext f g H
+#align gen_loop.ext GenLoop.ext
 
 @[simp]
 theorem mk_apply (f : C(I^ n, X)) (H y) : (⟨f, H⟩ : GenLoop n x) y = f y :=
   rfl
+#align gen_loop.mk_apply GenLoop.mk_apply
 
 /-- The constant `gen_loop` at `x`.
 -/
 def const : GenLoop n x :=
   ⟨ContinuousMap.const _ x, fun _ _ => rfl⟩
+#align gen_loop.const GenLoop.const
 
 instance inhabited : Inhabited (GenLoop n x) where default := const
+#align gen_loop.inhabited GenLoop.inhabited
 
 /-- The "homotopy relative to boundary" relation between `gen_loop`s.
 -/
 def Homotopic (f g : GenLoop n x) : Prop :=
   f.toContinuousMap.HomotopicRel g.toContinuousMap (Cube.Boundary n)
+#align gen_loop.homotopic GenLoop.Homotopic
 
 namespace Homotopic
 
@@ -121,20 +136,25 @@ variable {f g h : GenLoop n x}
 @[refl]
 theorem refl (f : GenLoop n x) : Homotopic f f :=
   ContinuousMap.HomotopicRel.refl _
+#align gen_loop.homotopic.refl GenLoop.Homotopic.refl
 
 @[symm]
 theorem symm (H : f.Homotopic g) : g.Homotopic f :=
   H.symm
+#align gen_loop.homotopic.symm GenLoop.Homotopic.symm
 
 @[trans]
 theorem trans (H0 : f.Homotopic g) (H1 : g.Homotopic h) : f.Homotopic h :=
   H0.trans H1
+#align gen_loop.homotopic.trans GenLoop.Homotopic.trans
 
 theorem equiv : Equivalence (@Homotopic X _ n x) :=
   ⟨Homotopic.refl, fun _ _ => Homotopic.symm, fun _ _ _ => Homotopic.trans⟩
+#align gen_loop.homotopic.equiv GenLoop.Homotopic.equiv
 
 instance setoid (n : ℕ) (x : X) : Setoid (GenLoop n x) :=
   ⟨Homotopic, equiv⟩
+#align gen_loop.homotopic.setoid GenLoop.Homotopic.setoid
 
 end
 
@@ -147,6 +167,7 @@ end GenLoop
 -/
 def HomotopyGroup (n : ℕ) (x : X) : Type _ :=
   Quotient (GenLoop.Homotopic.setoid n x)deriving Inhabited
+#align homotopy_group HomotopyGroup
 
 -- mathport name: exprπ
 local notation "π" => HomotopyGroup
@@ -159,6 +180,7 @@ def genLoopZeroEquiv : GenLoop 0 x ≃ X where
     ext1
     exact congr_arg f (Subsingleton.elim _ _)
   right_inv _ := rfl
+#align gen_loop_zero_equiv genLoopZeroEquiv
 
 /-- The 0th homotopy "group" is equivalent to the path components of `X`, aka the `zeroth_homotopy`.
 -/
@@ -173,6 +195,7 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
             target' := (H.apply_one _).trans (congr_arg a₂ matrix.zero_empty.symm) }⟩,
         ⟨{ toFun := fun t0 => H t0.fst, map_zero_left' := fun _ => by convert H.source,
             map_one_left' := fun _ => by convert H.target, prop' := fun _ _ ⟨i, _⟩ => i.elim0 }⟩])
+#align pi0_equiv_path_components pi0EquivPathComponents
 
 /-- The 1-dimensional generalized loops based at `x` are in 1-1 correspondence with
   paths from `x` to itself. -/
@@ -195,6 +218,7 @@ def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x where
   right_inv p := by
     ext
     rfl
+#align gen_loop_one_equiv_path_self genLoopOneEquivPathSelf
 
 /-- The first homotopy group at `x` is equivalent to the fundamental group,
 i.e. the loops based at `x` up to homotopy.
@@ -223,4 +247,5 @@ def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x := by
           · convert H.eq_snd _ _
             exacts[y.one_char, iH]
              }⟩]
+#align pi1_equiv_fundamental_group pi1EquivFundamentalGroup
 

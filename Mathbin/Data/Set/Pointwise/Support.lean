@@ -25,10 +25,12 @@ theorem mul_support_comp_inv_smul [One γ] (c : α) (f : β → γ) : (MulSuppor
   by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem, mem_mul_support]
+#align mul_support_comp_inv_smul mul_support_comp_inv_smul
 
 theorem support_comp_inv_smul [Zero γ] (c : α) (f : β → γ) : (Support fun x => f (c⁻¹ • x)) = c • Support f := by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem, mem_support]
+#align support_comp_inv_smul support_comp_inv_smul
 
 attribute [to_additive support_comp_inv_smul] mul_support_comp_inv_smul
 
@@ -42,11 +44,13 @@ theorem mul_support_comp_inv_smul₀ [One γ] {c : α} (hc : c ≠ 0) (f : β �
     (MulSupport fun x => f (c⁻¹ • x)) = c • MulSupport f := by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_mul_support]
+#align mul_support_comp_inv_smul₀ mul_support_comp_inv_smul₀
 
 theorem support_comp_inv_smul₀ [Zero γ] {c : α} (hc : c ≠ 0) (f : β → γ) :
     (Support fun x => f (c⁻¹ • x)) = c • Support f := by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_support]
+#align support_comp_inv_smul₀ support_comp_inv_smul₀
 
 attribute [to_additive support_comp_inv_smul₀] mul_support_comp_inv_smul₀
 

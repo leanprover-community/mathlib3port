@@ -40,6 +40,7 @@ theorem nat_trans_eq {F G : Karoubi C ⥤ D} (φ : F ⟶ G) (P : Karoubi C) :
   rw [← id_comp (φ.app P), ← F.map_id]
   congr
   apply decomp_id
+#align category_theory.idempotents.nat_trans_eq CategoryTheory.Idempotents.nat_trans_eq
 
 namespace FunctorExtension₁
 
@@ -49,6 +50,7 @@ namespace FunctorExtension₁
 def obj (F : C ⥤ Karoubi D) : Karoubi C ⥤ Karoubi D where
   obj P := ⟨(F.obj P.x).x, (F.map P.p).f, by simpa only [F.map_comp, hom_ext] using F.congr_map P.idem⟩
   map P Q f := ⟨(F.map f.f).f, by simpa only [F.map_comp, hom_ext] using F.congr_map f.comm⟩
+#align category_theory.idempotents.functor_extension₁.obj CategoryTheory.Idempotents.FunctorExtension₁.obj
 
 /-- Extension of a natural transformation `φ` between functors
 `C ⥤ karoubi D` to a natural transformation between the
@@ -73,6 +75,7 @@ def map {F G : C ⥤ Karoubi D} (φ : F ⟶ G) : obj F ⟶ obj G where
     slice_rhs 2 3 => rw [← h]
     slice_lhs 1 2 => rw [h']
     slice_rhs 1 2 => rw [h'']
+#align category_theory.idempotents.functor_extension₁.map CategoryTheory.Idempotents.FunctorExtension₁.map
 
 end FunctorExtension₁
 
@@ -95,6 +98,7 @@ def functorExtension₁ : (C ⥤ Karoubi D) ⥤ Karoubi C ⥤ Karoubi D where
     slice_rhs 2 3 => rw [← h]
     slice_rhs 1 2 => rw [h']
     simp only [assoc]
+#align category_theory.idempotents.functor_extension₁ CategoryTheory.Idempotents.functorExtension₁
 
 theorem functor_extension₁_comp_whiskering_left_to_karoubi :
     functorExtension₁ C D ⋙ (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C) = 𝟭 _ := by
@@ -123,6 +127,8 @@ theorem functor_extension₁_comp_whiskering_left_to_karoubi :
     simp only [eq_to_hom_app, F.map_id, karoubi.comp, eq_to_hom_f, id_eq, p_comp, eq_to_hom_refl, comp_id, comp_p,
       functor_extension₁.obj_obj_p, to_karoubi_obj_p, F.map_id X]
     
+#align
+  category_theory.idempotents.functor_extension₁_comp_whiskering_left_to_karoubi CategoryTheory.Idempotents.functor_extension₁_comp_whiskering_left_to_karoubi
 
 end Idempotents
 

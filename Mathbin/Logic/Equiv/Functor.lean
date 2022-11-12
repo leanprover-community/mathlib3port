@@ -38,6 +38,7 @@ def mapEquiv (h : α ≃ β) : f α ≃ f β where
   invFun := map h.symm
   left_inv x := by simp [map_map]
   right_inv x := by simp [map_map]
+#align functor.map_equiv Functor.mapEquiv
 
 /- warning: functor.map_equiv_apply -> Functor.map_equiv_apply is a dubious translation:
 lean 3 declaration is
@@ -48,6 +49,7 @@ Case conversion may be inaccurate. Consider using '#align functor.map_equiv_appl
 @[simp]
 theorem map_equiv_apply (h : α ≃ β) (x : f α) : (mapEquiv f h : f α ≃ f β) x = map h x :=
   rfl
+#align functor.map_equiv_apply Functor.map_equiv_apply
 
 /- warning: functor.map_equiv_symm_apply -> Functor.map_equiv_symm_apply is a dubious translation:
 lean 3 declaration is
@@ -58,12 +60,14 @@ Case conversion may be inaccurate. Consider using '#align functor.map_equiv_symm
 @[simp]
 theorem map_equiv_symm_apply (h : α ≃ β) (y : f β) : (mapEquiv f h : f α ≃ f β).symm y = map h.symm y :=
   rfl
+#align functor.map_equiv_symm_apply Functor.map_equiv_symm_apply
 
 @[simp]
 theorem map_equiv_refl : mapEquiv f (Equiv.refl α) = Equiv.refl (f α) := by
   ext x
   simp only [map_equiv_apply, refl_apply]
   exact IsLawfulFunctor.id_map x
+#align functor.map_equiv_refl Functor.map_equiv_refl
 
 end Functor
 
@@ -77,21 +81,25 @@ def mapEquiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β' where
   invFun := bimap h.symm h'.symm
   left_inv x := by simp [bimap_bimap, id_bimap]
   right_inv x := by simp [bimap_bimap, id_bimap]
+#align bifunctor.map_equiv Bifunctor.mapEquiv
 
 @[simp]
 theorem map_equiv_apply (h : α ≃ β) (h' : α' ≃ β') (x : F α α') :
     (mapEquiv F h h' : F α α' ≃ F β β') x = bimap h h' x :=
   rfl
+#align bifunctor.map_equiv_apply Bifunctor.map_equiv_apply
 
 @[simp]
 theorem map_equiv_symm_apply (h : α ≃ β) (h' : α' ≃ β') (y : F β β') :
     (mapEquiv F h h' : F α α' ≃ F β β').symm y = bimap h.symm h'.symm y :=
   rfl
+#align bifunctor.map_equiv_symm_apply Bifunctor.map_equiv_symm_apply
 
 @[simp]
 theorem map_equiv_refl_refl : mapEquiv F (Equiv.refl α) (Equiv.refl α') = Equiv.refl (F α α') := by
   ext x
   simp [id_bimap]
+#align bifunctor.map_equiv_refl_refl Bifunctor.map_equiv_refl_refl
 
 end Bifunctor
 

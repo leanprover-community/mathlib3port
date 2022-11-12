@@ -67,12 +67,14 @@ theorem exists_primitive_element_of_finite_top [Finite E] : ∃ α : E, F⟮⟯ 
         rw [hn, Units.coe_mk0]]
     exact zpow_mem (mem_adjoin_simple_self F ↑α) n
     
+#align field.exists_primitive_element_of_finite_top Field.exists_primitive_element_of_finite_top
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /-- Primitive element theorem for finite dimensional extension of a finite field. -/
 theorem exists_primitive_element_of_finite_bot [Finite F] [FiniteDimensional F E] : ∃ α : E, F⟮⟯ = ⊤ :=
   haveI : Finite E := finite_of_finite F E
   exists_primitive_element_of_finite_top F E
+#align field.exists_primitive_element_of_finite_bot Field.exists_primitive_element_of_finite_bot
 
 end PrimitiveElementFinite
 
@@ -93,6 +95,7 @@ theorem primitive_element_inf_aux_exists_c (f g : F[X]) :
   simp_rw [Finset.mem_preimage, Multiset.mem_to_finset, Multiset.mem_bind, Multiset.mem_map] at hc
   push_neg  at hc
   exact ⟨c, hc⟩
+#align field.primitive_element_inf_aux_exists_c Field.primitive_element_inf_aux_exists_c
 
 variable (F) [Algebra F E]
 
@@ -108,8 +111,6 @@ variable (F) [Algebra F E]
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr euclidean_domain.gcd (_ : polynomial(E)) (_ : polynomial(E))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -181,13 +182,13 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
     simp only [Algebra.smul_def, RingHom.map_add, RingHom.map_mul, RingHom.comp_apply]
     ring
   rw [← eq_X_sub_C_of_separable_of_root_eq h_sep h_root h_splits h_roots]
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr euclidean_domain.gcd (_ : polynomial(E)) (_ : polynomial(E))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  trans EuclideanDomain.gcd (_ : E[X]) (_ : E[X])
   · dsimp only [p]
     convert (gcd_map (algebraMap F⟮⟯ E)).symm
     
   · simpa [map_comp, Polynomial.map_map, ← IsScalarTower.algebra_map_eq, h]
     
+#align field.primitive_element_inf_aux Field.primitive_element_inf_aux
 
 end PrimitiveElementInf
 
@@ -205,7 +206,7 @@ variable [IsSeparable F E]
 /-- Primitive element theorem: a finite separable field extension `E` of `F` has a
   primitive element, i.e. there is an `α ∈ E` such that `F⟮α⟯ = (⊤ : subalgebra F E)`.-/
 theorem exists_primitive_element : ∃ α : E, F⟮⟯ = ⊤ := by
-  rcases is_empty_or_nonempty (Fintype F) with (F_inf | ⟨⟨F_finite⟩⟩)
+  rcases isEmpty_or_nonempty (Fintype F) with (F_inf | ⟨⟨F_finite⟩⟩)
   · let P : IntermediateField F E → Prop := fun K => ∃ α : E, F⟮⟯ = K
     have base : P ⊥ := ⟨0, adjoin_zero⟩
     have ih : ∀ (K : IntermediateField F E) (x : E), P K → P (K⟮⟯.restrictScalars F) := by
@@ -219,6 +220,7 @@ theorem exists_primitive_element : ∃ α : E, F⟮⟯ = ⊤ := by
     
   · exact exists_primitive_element_of_finite_bot F E
     
+#align field.exists_primitive_element Field.exists_primitive_element
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /-- Alternative phrasing of primitive element theorem:
@@ -230,6 +232,7 @@ noncomputable def powerBasisOfFiniteOfSeparable : PowerBasis F E :=
   let pb := adjoin.powerBasis (IsSeparable.isIntegral F α)
   have e : F⟮⟯ = ⊤ := (exists_primitive_element F E).some_spec
   pb.map ((IntermediateField.equivOfEq e).trans IntermediateField.topEquiv)
+#align field.power_basis_of_finite_of_separable Field.powerBasisOfFiniteOfSeparable
 
 end SeparableAssumption
 
@@ -243,4 +246,5 @@ theorem AlgHom.card (F E K : Type _) [Field F] [Field E] [Field K] [IsAlgClosed 
           (IsAlgClosed.splitsCodomain _)).trans
       (PowerBasis.finrank _).symm
   infer_instance
+#align alg_hom.card AlgHom.card
 

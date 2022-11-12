@@ -63,18 +63,22 @@ def reesAlgebra : Subalgebra R R[X] where
       
     · simp
       
+#align rees_algebra reesAlgebra
 
 theorem mem_rees_algebra_iff (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i, f.coeff i ∈ I ^ i :=
   Iff.rfl
+#align mem_rees_algebra_iff mem_rees_algebra_iff
 
 theorem mem_rees_algebra_iff_support (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i ∈ f.Support, f.coeff i ∈ I ^ i := by
   apply forall_congr'
   intro a
   rw [mem_support_iff, Iff.comm, imp_iff_right_iff, Ne.def, ← imp_iff_not_or]
   exact fun e => e.symm ▸ (I ^ a).zero_mem
+#align mem_rees_algebra_iff_support mem_rees_algebra_iff_support
 
 theorem reesAlgebra.monomial_mem {I : Ideal R} {i : ℕ} {r : R} : monomial i r ∈ reesAlgebra I ↔ r ∈ I ^ i := by
   simp (config := { contextual := true }) [mem_rees_algebra_iff_support, coeff_monomial, ← imp_iff_not_or]
+#align rees_algebra.monomial_mem reesAlgebra.monomial_mem
 
 theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈ I ^ n) :
     monomial n r ∈ Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) I : Set R[X]) := by
@@ -92,6 +96,7 @@ theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈
       exact Subalgebra.add_mem _ hx hy
       
     
+#align monomial_mem_adjoin_monomial monomial_mem_adjoin_monomial
 
 theorem adjoin_monomial_eq_rees_algebra :
     Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) I : Set R[X]) = reesAlgebra I := by
@@ -106,17 +111,15 @@ theorem adjoin_monomial_eq_rees_algebra :
     rintro i -
     exact monomial_mem_adjoin_monomial (hp i)
     
+#align adjoin_monomial_eq_rees_algebra adjoin_monomial_eq_rees_algebra
 
 variable {I}
 
 theorem reesAlgebra.fg (hI : I.Fg) : (reesAlgebra I).Fg := by
-  classical
-  obtain ⟨s, hs⟩ := hI
-  rw [← adjoin_monomial_eq_rees_algebra, ← hs]
-  use s.image (monomial 1)
-  rw [Finset.coe_image]
-  change _ = Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
-  rw [Submodule.map_span, Algebra.adjoin_span]
+  classical obtain ⟨s, hs⟩ := hI
+    use s.image (monomial 1)
+    change _ = Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
+#align rees_algebra.fg reesAlgebra.fg
 
 instance [IsNoetherianRing R] : Algebra.FiniteType R (reesAlgebra I) :=
   ⟨(reesAlgebra I).fg_top.mpr (reesAlgebra.fg <| IsNoetherian.noetherian I)⟩

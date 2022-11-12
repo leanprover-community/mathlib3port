@@ -41,6 +41,7 @@ and binders (or any other element that can be pretty printed).
 unsafe def print_arguments {α} [has_to_tactic_format α] (l : List (ℕ × α)) : tactic String := do
   let fs ← l.mmap fun ⟨n, b⟩ => (fun s => to_fmt "argument " ++ to_fmt (n + 1) ++ ": " ++ s) <$> pp b
   return <| fs tt
+#align print_arguments print_arguments
 
 /-- checks whether an instance that always applies has priority ≥ 1000. -/
 private unsafe def instance_priority (d : declaration) : tactic (Option String) := do
@@ -67,6 +68,7 @@ private unsafe def instance_priority (d : declaration) : tactic (Option String) 
               if info = BinderInfo.inst_implicit ∨ tp `out_param then none else some e
           let always_applies := relevant_args expr.is_local_constant ∧ relevant_args
           if always_applies then return <| some "set priority below 1000" else return none
+#align instance_priority instance_priority
 
 library_note "implicit instance arguments"/--
 There are places where typeclass arguments are specified with implicit `{}` brackets instead of
@@ -107,24 +109,30 @@ unsafe def linter.instance_priority : linter where
   errors_found :=
     "DANGEROUS INSTANCE PRIORITIES.\nThe following instances always apply, and therefore should have a priority < 1000.\nIf you don't know what priority to choose, use priority 100.\nSee note [lower instance priority] for instructions to change the priority."
   auto_decls := true
+#align linter.instance_priority linter.instance_priority
 
 /-- Reports declarations of types that do not have an nonemptiness instance.
 A `nonempty`, `inhabited` or `unique` instance suffices, and we prefer a computable `inhabited`
 or `unique` instance if possible. -/
 private unsafe def has_nonempty_instance (d : declaration) : tactic (Option String) := do
-  let tt ← pure d.is_trusted | pure none
-  let ff ← has_attribute' `reducible d.to_name | pure none
-  let ff ← has_attribute' `class d.to_name | pure none
+  let tt ← pure d.is_trusted |
+    pure none
+  let ff ← has_attribute' `reducible d.to_name |
+    pure none
+  let ff ← has_attribute' `class d.to_name |
+    pure none
   let (_, ty) ← open_pis d.type
   let ty ← whnf ty
   if ty = quote.1 Prop then pure none
     else do
-      let quote.1 (Sort _) ← whnf ty | pure none
+      let quote.1 (Sort _) ← whnf ty |
+        pure none
       let insts ← attribute.get_instances `instance
       let insts_tys ← insts fun i => expr.pi_codomain <$> declaration.type <$> get_decl i
       let nonempty_insts := insts_tys fun i => i ∈ [`` Nonempty, `` Inhabited, `unique]
       let nonempty_tys := nonempty_insts fun i => i
       if d ∈ nonempty_tys then pure none else pure "nonempty/inhabited/unique instance missing"
+#align has_nonempty_instance has_nonempty_instance
 
 /-- A linter for missing `nonempty` instances. -/
 @[linter]
@@ -135,16 +143,20 @@ unsafe def linter.has_nonempty_instance : linter where
   errors_found :=
     "TYPES ARE MISSING NONEMPTY INSTANCES.\nThe following types should have an associated instance of the class\n`nonempty`, or if computably possible `inhabited` or `unique`:"
   is_fast := false
+#align linter.has_nonempty_instance linter.has_nonempty_instance
 
 attribute [nolint has_nonempty_instance] PEmpty
 
 /-- Checks whether an instance can never be applied. -/
 private unsafe def impossible_instance (d : declaration) : tactic (Option String) := do
-  let tt ← is_instance d.to_name | return none
+  let tt ← is_instance d.to_name |
+    return none
   let (binders, _) ← get_pi_binders_nondep d.type
   let bad_arguments := binders.filter fun nb => nb.2.info ≠ BinderInfo.inst_implicit
-  let _ :: _ ← return bad_arguments | return none
+  let _ :: _ ← return bad_arguments |
+    return none
   (fun s => some <| "Impossible to infer " ++ s) <$> print_arguments bad_arguments
+#align impossible_instance impossible_instance
 
 /-- A linter object for `impossible_instance`. -/
 @[linter]
@@ -156,6 +168,7 @@ unsafe def linter.impossible_instance : linter where
     "IMPOSSIBLE INSTANCES FOUND.\nThese instances have an argument that cannot be found during type-class resolution, and " ++
         "therefore can never succeed. Either mark the arguments with square brackets (if it is a " ++
       "class), or don't make it an instance."
+#align linter.impossible_instance linter.impossible_instance
 
 /-- Checks whether an instance can never be applied. -/
 private unsafe def incorrect_type_class_argument (d : declaration) : tactic (Option String) := do
@@ -171,8 +184,10 @@ private unsafe def incorrect_type_class_argument (d : declaration) : tactic (Opt
         if head then return ff
           else do
             not <$> is_class head
-  let _ :: _ ← return bad_arguments | return none
+  let _ :: _ ← return bad_arguments |
+    return none
   (fun s => some <| "These are not classes. " ++ s) <$> print_arguments bad_arguments
+#align incorrect_type_class_argument incorrect_type_class_argument
 
 /-- A linter object for `incorrect_type_class_argument`. -/
 @[linter]
@@ -181,11 +196,13 @@ unsafe def linter.incorrect_type_class_argument : linter where
   auto_decls := true
   no_errors_found := "All declarations have correct type-class arguments."
   errors_found := "INCORRECT TYPE-CLASS ARGUMENTS.\nSome declarations have non-classes between [square brackets]:"
+#align linter.incorrect_type_class_argument linter.incorrect_type_class_argument
 
 /-- Checks whether an instance is dangerous: it creates a new type-class problem with metavariable
 arguments. -/
 private unsafe def dangerous_instance (d : declaration) : tactic (Option String) := do
-  let tt ← is_instance d.to_name | return none
+  let tt ← is_instance d.to_name |
+    return none
   let (local_constants, target) ← open_pis d.type
   let instance_arguments :=
     local_constants.indexesValues fun e : expr => e.local_binding_info = BinderInfo.inst_implicit
@@ -194,8 +211,10 @@ private unsafe def dangerous_instance (d : declaration) : tactic (Option String)
       !target.has_local_constant x && x.local_binding_info ≠ BinderInfo.inst_implicit &&
         instance_arguments.any fun nb => nb.2.local_type.has_local_constant x
   let bad_arguments : List (ℕ × binder) := bad_arguments.map fun ⟨n, e⟩ => ⟨n, e.to_binder⟩
-  let _ :: _ ← return bad_arguments | return none
+  let _ :: _ ← return bad_arguments |
+    return none
   (fun s => some <| "The following arguments become metavariables. " ++ s) <$> print_arguments bad_arguments
+#align dangerous_instance dangerous_instance
 
 /-- A linter object for `dangerous_instance`. -/
 @[linter]
@@ -207,6 +226,7 @@ unsafe def linter.dangerous_instance : linter where
         "type-class problem which will have metavariables.\nPossible solution: remove the instance attribute or make it a local instance instead.\n\nCurrently this linter does not check whether the metavariables only occur in arguments marked " ++
       "with `out_param`, in which case this linter gives a false positive."
   auto_decls := true
+#align linter.dangerous_instance linter.dangerous_instance
 
 /-- Auxilliary definition for `find_nondep` -/
 unsafe def find_nondep_aux : List expr → expr_set → tactic expr_set
@@ -214,6 +234,7 @@ unsafe def find_nondep_aux : List expr → expr_set → tactic expr_set
   | h :: hs, r => do
     let type ← infer_type h
     find_nondep_aux hs <| r type
+#align find_nondep_aux find_nondep_aux
 
 /-- Finds all hypotheses that don't occur in the target or other hypotheses. -/
 unsafe def find_nondep : tactic (List expr) := do
@@ -221,6 +242,7 @@ unsafe def find_nondep : tactic (List expr) := do
   let tgt ← target
   let lconsts ← find_nondep_aux ctx tgt.list_local_consts'
   return <| ctx fun e => !lconsts e
+#align find_nondep find_nondep
 
 /-- Tests whether type-class inference search will end quickly on certain unsolvable
 type-class problems. This is to detect loops or very slow searches, which are problematic
@@ -235,12 +257,14 @@ error message is raised (usually a maximum depth in the search).
 -/
 unsafe def fails_quickly (max_steps : ℕ) (d : declaration) : tactic (Option String) :=
   retrieve <| do
-    let tt ← is_instance d.to_name | return none
+    let tt ← is_instance d.to_name |
+      return none
     let e := d.type
     let g ← mk_meta_var e
     set_goals [g]
     intros
-    let l@(_ :: _) ← find_nondep | return none
+    let l@(_ :: _) ← find_nondep |
+      return none
     -- if all arguments occur in the goal, this instance is ok
         clear
         l
@@ -248,7 +272,8 @@ unsafe def fails_quickly (max_steps : ℕ) (d : declaration) : tactic (Option St
     let state ← read
     let state_msg := "\nState:\n" ++ toString State
     let tgt ← target >>= instantiate_mvars
-    let Sum.inr msg ← retrieve_or_report_error <| tactic.try_for max_steps <| mk_instance tgt | return none
+    let Sum.inr msg ← retrieve_or_report_error <| tactic.try_for max_steps <| mk_instance tgt |
+      return none
     /- it's ok if type-class inference can find an instance with fewer hypotheses.
             This happens a lot for `has_sizeof` and `has_well_founded`, but can also happen if there is a
             noncomputable instance with fewer assumptions. -/
@@ -257,6 +282,7 @@ unsafe def fails_quickly (max_steps : ℕ) (d : declaration) : tactic (Option St
         else
           some <|
             (· ++ state_msg) <| if msg = "try_for tactic failed, timeout" then "type-class inference timed out" else msg
+#align fails_quickly fails_quickly
 
 /-- A linter object for `fails_quickly`.
 We currently set the number of steps in the type-class search pretty high.
@@ -271,6 +297,7 @@ unsafe def linter.fails_quickly : linter where
   errors_found :=
     "TYPE CLASS SEARCHES TIMED OUT.\nThe following instances are part of a loop, or an excessively long search.\nIt is common that the loop occurs in a different class than the one flagged below,\nbut usually an instance that is part of the loop is also flagged.\nTo debug:\n(1) run `scripts/mk_all.sh` and create a file with `import all` and\n`set_option trace.class_instances true`\n(2) Recreate the state shown in the error message. You can do this easily by copying the type of\nthe instance (the output of `#check @my_instance`), turning this into an example and removing the\nlast argument in square brackets. Prove the example using `by apply_instance`.\nFor example, if `additive.topological_add_group` raises an error, run\n```\nexample {G : Type*} [topological_space G] [group G] : topological_add_group (additive G) :=\nby apply_instance\n```\n(3) What error do you get?\n(3a) If the error is \"tactic.mk_instance failed to generate instance\",\nthere might be nothing wrong. But it might take unreasonably long for the type-class inference to\nfail. Check the trace to see if type-class inference takes any unnecessary long unexpected turns.\nIf not, feel free to increase the value in the definition of the linter `fails_quickly`.\n(3b) If the error is \"maximum class-instance resolution depth has been reached\" there is almost\ncertainly a loop in the type-class inference. Find which instance causes the type-class inference to\ngo astray, and fix that instance."
   is_fast := false
+#align linter.fails_quickly linter.fails_quickly
 
 /-- Checks that all uses of the `@[class]` attribute apply to structures or inductive types.
   This is future-proofing for lean 4, which no longer supports `@[class] def`. -/
@@ -280,6 +307,7 @@ private unsafe def class_structure (n : Name) : tactic (Option String) := do
       let env ← get_env
       pure <| if env n then none else "is a non-structure or inductive type marked @[class]"
     else pure none
+#align class_structure class_structure
 
 /-- A linter object for `class_structure`. -/
 @[linter]
@@ -288,18 +316,22 @@ unsafe def linter.class_structure : linter where
   auto_decls := true
   no_errors_found := "All classes are structures."
   errors_found := "USE OF @[class] def IS DISALLOWED:"
+#align linter.class_structure linter.class_structure
 
 /-- Tests whether there is no instance of type `has_coe α t` where `α` is a variable,
 or `has_coe t α` where `α` does not occur in `t`.
 See note [use has_coe_t].
 -/
 private unsafe def has_coe_variable (d : declaration) : tactic (Option String) := do
-  let tt ← is_instance d.to_name | return none
-  let quote.1 (Coe (%%ₓa) (%%ₓb)) ← return d.type.pi_codomain | return none
+  let tt ← is_instance d.to_name |
+    return none
+  let quote.1 (Coe (%%ₓa) (%%ₓb)) ← return d.type.pi_codomain |
+    return none
   if a then return <| some <| "illegal instance, first argument is variable"
     else
       if b ∧ ¬b a then return <| some <| "illegal instance, second argument is variable not occurring in first argument"
       else return none
+#align has_coe_variable has_coe_variable
 
 /-- A linter object for `has_coe_variable`. -/
 @[linter]
@@ -309,17 +341,20 @@ unsafe def linter.has_coe_variable : linter where
   no_errors_found := "No invalid `has_coe` instances."
   errors_found :=
     "INVALID `has_coe` INSTANCES.\nMake the following declarations instances of the class `has_coe_t` instead of `has_coe`."
+#align linter.has_coe_variable linter.has_coe_variable
 
 /-- Checks whether a declaration is prop-valued and takes an `inhabited _` argument that is unused
 elsewhere in the type. In this case, that argument can be replaced with `nonempty _`. -/
 private unsafe def inhabited_nonempty (d : declaration) : tactic (Option String) := do
-  let tt ← is_prop d.type | return none
+  let tt ← is_prop d.type |
+    return none
   let (binders, _) ← get_pi_binders_nondep d.type
   let inhd_binders := binders.filter fun pr => pr.2.type.is_app_of `inhabited
   if inhd_binders = 0 then return none
     else
       (fun s => some <| "The following `inhabited` instances should be `nonempty`. " ++ s) <$>
         print_arguments inhd_binders
+#align inhabited_nonempty inhabited_nonempty
 
 /-- A linter object for `inhabited_nonempty`. -/
 @[linter]
@@ -328,14 +363,17 @@ unsafe def linter.inhabited_nonempty : linter where
   auto_decls := false
   no_errors_found := "No uses of `inhabited` arguments should be replaced with `nonempty`."
   errors_found := "USES OF `inhabited` SHOULD BE REPLACED WITH `nonempty`."
+#align linter.inhabited_nonempty linter.inhabited_nonempty
 
 /-- Checks whether a declaration is `Prop`-valued and takes a `decidable* _`
 hypothesis that is unused elsewhere in the type.
 In this case, that hypothesis can be replaced with `classical` in the proof.
 Theorems in the `decidable` namespace are exempt from the check. -/
 private unsafe def decidable_classical (d : declaration) : tactic (Option String) := do
-  let tt ← is_prop d.type | return none
-  let ff ← pure <| `decidable.isPrefixOf d.to_name | return none
+  let tt ← is_prop d.type |
+    return none
+  let ff ← pure <| `decidable.isPrefixOf d.to_name |
+    return none
   let (binders, _) ← get_pi_binders_nondep d.type
   let deceq_binders :=
     binders.filter fun pr =>
@@ -348,6 +386,7 @@ private unsafe def decidable_classical (d : declaration) : tactic (Option String
             "The following `decidable` hypotheses should be replaced with\n                      `classical` in the proof. " ++
               s) <$>
         print_arguments deceq_binders
+#align decidable_classical decidable_classical
 
 /-- A linter object for `decidable_classical`. -/
 @[linter]
@@ -356,6 +395,7 @@ unsafe def linter.decidable_classical : linter where
   auto_decls := false
   no_errors_found := "No uses of `decidable` arguments should be replaced with `classical`."
   errors_found := "USES OF `decidable` SHOULD BE REPLACED WITH `classical` IN THE PROOF."
+#align linter.decidable_classical linter.decidable_classical
 
 /- The file `logic/basic.lean` emphasizes the differences between what holds under classical
 and non-classical logic. It makes little sense to make all these lemmas classical, so we add them
@@ -366,7 +406,8 @@ attribute [nolint decidable_classical] dec_em dec_em' Not.decidable_imp_symm
 hypothesis that is unused elsewhere in the type.
 In this case, that hypothesis can be replaced with `casesI nonempty_fintype _` in the proof. -/
 unsafe def linter.fintype_finite_fun (d : declaration) : tactic (Option String) := do
-  let tt ← is_prop d.type | return none
+  let tt ← is_prop d.type |
+    return none
   let (binders, _) ← get_pi_binders_nondep d.type
   let fintype_binders := binders.filter fun pr => pr.2.type.is_app_of `fintype
   if fintype_binders = 0 then return none
@@ -376,6 +417,7 @@ unsafe def linter.fintype_finite_fun (d : declaration) : tactic (Option String) 
             "The following `fintype` hypotheses should be replaced with\n                      `casesI nonempty_fintype _` in the proof. " ++
               s) <$>
         print_arguments fintype_binders
+#align linter.fintype_finite_fun linter.fintype_finite_fun
 
 /-- A linter object for `fintype` vs `finite`. -/
 @[linter]
@@ -384,19 +426,25 @@ unsafe def linter.fintype_finite : linter where
   auto_decls := false
   no_errors_found := "No uses of `fintype` arguments should be replaced with `casesI nonempty_fintype _`."
   errors_found := "USES OF `fintype` SHOULD BE REPLACED WITH `casesI nonempty_fintype _` IN THE PROOF."
+#align linter.fintype_finite linter.fintype_finite
 
 private unsafe def has_coe_to_fun_linter (d : declaration) : tactic (Option String) :=
   retrieve <| do
-    let tt ← return d.is_trusted | pure none
+    let tt ← return d.is_trusted |
+      pure none
     mk_meta_var d >>= set_goals ∘ pure
     let args ← unfreezing intros
-    let expr.sort _ ← target | pure none
+    let expr.sort _ ← target |
+      pure none
     let ty : expr := (expr.const d.to_name d.univ_levels).mk_app args
-    let some coe_fn_inst ← try_core <| to_expr (pquote.1 (CoeFun (%%ₓty) _)) >>= mk_instance | pure none
+    let some coe_fn_inst ← try_core <| to_expr (pquote.1 (CoeFun (%%ₓty) _)) >>= mk_instance |
+      pure none
     set_bool_option `pp.all True
     let some trans_inst@(expr.app (expr.app _ trans_inst_1) trans_inst_2) ←
-      try_core <| to_expr (pquote.1 (@coeFnTrans (%%ₓty) _ _ _ _)) | pure none
-    let tt ← succeeds <| unify trans_inst coe_fn_inst Transparency.reducible | pure none
+      try_core <| to_expr (pquote.1 (@coeFnTrans (%%ₓty) _ _ _ _)) |
+      pure none
+    let tt ← succeeds <| unify trans_inst coe_fn_inst Transparency.reducible |
+      pure none
     set_bool_option `pp.all True
     let trans_inst_1 ← pp trans_inst_1
     let trans_inst_2 ← pp trans_inst_2
@@ -407,6 +455,7 @@ private unsafe def has_coe_to_fun_linter (d : declaration) : tactic (Option Stri
                 format.line ++
               "and" ++
             trans_inst_2 2
+#align has_coe_to_fun_linter has_coe_to_fun_linter
 
 /-- Linter that checks whether `has_coe_to_fun` instances comply with Note [function coercion]. -/
 @[linter]
@@ -416,6 +465,7 @@ unsafe def linter.has_coe_to_fun : linter where
   no_errors_found := "has_coe_to_fun is used correctly"
   errors_found :=
     "INVALID/MISSING `has_coe_to_fun` instances.\nYou should add a `has_coe_to_fun` instance for the following types.\nSee Note [function coercion]."
+#align linter.has_coe_to_fun linter.has_coe_to_fun
 
 /-- Checks whether an instance contains a semireducible non-instance with a class as
 type in its value. We add some restrictions to get not too many false positives:
@@ -427,24 +477,34 @@ or at the generated equation lemmas, but it's unlikely that there are many probl
 defined using the equation compiler.
 -/
 unsafe def check_reducible_non_instances (d : declaration) : tactic (Option String) := do
-  let tt ← is_instance d.to_name | return none
-  let ff ← is_prop d.type | return none
+  let tt ← is_instance d.to_name |
+    return none
+  let ff ← is_prop d.type |
+    return none
   let env ← get_env
   let-- We only check if the class of the instance contains an `add` or a `mul` field.
   cls := d.type.pi_codomain.get_app_fn.const_name
-  let some constrs ← return <| env.structure_fields cls | return none
-  let tt ← return <| constrs.Mem `add || constrs.Mem `mul | return none
+  let some constrs ← return <| env.structure_fields cls |
+    return none
+  let tt ← return <| constrs.Mem `add || constrs.Mem `mul |
+    return none
   let l ←
     d.value.list_constant.mfilter fun nm => do
         let d ← env.get nm
-        let ff ← is_instance nm | return false
-        let tt ← is_class d.type | return false
-        let tt ← return d.is_definition | return false
+        let ff ← is_instance nm |
+          return false
+        let tt ← is_class d.type |
+          return false
+        let tt ← return d.is_definition |
+          return false
         let-- We only check if the class of the non-instance contains an `add` or a `mul` field.
         cls := d.type.pi_codomain.get_app_fn.const_name
-        let some constrs ← return <| env.structure_fields cls | return false
-        let tt ← return <| constrs.Mem `add || constrs.Mem `mul | return false
-        let ff ← has_attribute' `reducible nm | return false
+        let some constrs ← return <| env.structure_fields cls |
+          return false
+        let tt ← return <| constrs.Mem `add || constrs.Mem `mul |
+          return false
+        let ff ← has_attribute' `reducible nm |
+          return false
         return tt
   if l then return none
     else-- we currently ignore declarations that have a `foo._main` declaration.
@@ -452,6 +512,7 @@ unsafe def check_reducible_non_instances (d : declaration) : tactic (Option Stri
       else
         return <|
           some <| "This instance contains the declarations " ++ toString l ++ ", which are semireducible non-instances."
+#align check_reducible_non_instances check_reducible_non_instances
 
 /-- A linter that checks whether an instance contains a semireducible non-instance. -/
 @[linter]
@@ -465,4 +526,5 @@ unsafe def linter.check_reducibility : linter where
         "equal. This can cause unexpected errors when this class occurs " ++
       "as an *argument* to a type-class problem. See note [reducible non-instances]."
   is_fast := true
+#align linter.check_reducibility linter.check_reducibility
 

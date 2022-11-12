@@ -65,15 +65,18 @@ instance setoidPrestructure : L.Prestructure ((u : Filter α).productSetoid M) :
         rw [funext ha2]
         exact ha1
          }
+#align first_order.language.ultraproduct.setoid_prestructure FirstOrder.Language.Ultraproduct.setoidPrestructure
 
 variable {M} {u}
 
 instance structure : L.StructureCat ((u : Filter α).product M) :=
   language.quotient_structure
+#align first_order.language.ultraproduct.Structure FirstOrder.Language.Ultraproduct.structure
 
 theorem fun_map_cast {n : ℕ} (f : L.Functions n) (x : Fin n → ∀ a, M a) :
     (funMap f fun i => (x i : (u : Filter α).product M)) = fun a => funMap f fun i => x i a := by
   apply fun_map_quotient_mk
+#align first_order.language.ultraproduct.fun_map_cast FirstOrder.Language.Ultraproduct.fun_map_cast
 
 theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) :
     (t.realize fun i => (x i : (u : Filter α).product M)) = fun a => t.realize fun i => x i a := by
@@ -85,13 +88,10 @@ theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) 
   · simp only [term.realize, t_ih]
     rfl
     
+#align first_order.language.ultraproduct.term_realize_cast FirstOrder.Language.Ultraproduct.term_realize_cast
 
 variable [∀ a : α, Nonempty (M a)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ m : ∀ a : α, M a,
-   φ.realize (λ i : β, (x i : (u : filter α).product M))
-   (fin.snoc «expr ∘ »(coe, v) («expr↑ »(m) : (u : filter α).product M))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormula β n) (x : β → ∀ a, M a)
     (v : Fin n → ∀ a, M a) :
     (φ.realize (fun i : β => (x i : (u : Filter α).product M)) fun i => v i) ↔
@@ -115,8 +115,9 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
     rw [Ultrafilter.eventually_imp]
     
   · simp only [bounded_formula.realize]
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr ∀ m : ∀ a : α, M a,\n   φ.realize (λ i : β, (x i : (u : filter α).product M))\n   (fin.snoc «expr ∘ »(coe, v) («expr↑ »(m) : (u : filter α).product M))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    trans
+      ∀ m : ∀ a : α, M a,
+        φ.realize (fun i : β => (x i : (u : Filter α).product M)) (Fin.snoc (coe ∘ v) (↑m : (u : Filter α).product M))
     · exact forall_quotient_iff
       
     have h' :
@@ -141,11 +142,14 @@ theorem bounded_formula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedForm
       exact Filter.mem_of_superset h fun a ha => ha (m a)
       
     
+#align
+  first_order.language.ultraproduct.bounded_formula_realize_cast FirstOrder.Language.Ultraproduct.bounded_formula_realize_cast
 
 theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a, M a) :
     (φ.realize fun i => (x i : (u : Filter α).product M)) ↔ ∀ᶠ a : α in u, φ.realize fun i => x i a := by
   simp_rw [formula.realize, ← bounded_formula_realize_cast φ x, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
+#align first_order.language.ultraproduct.realize_formula_cast FirstOrder.Language.Ultraproduct.realize_formula_cast
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -154,6 +158,7 @@ theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a
 theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ ↔ ∀ᶠ a : α in u, M a ⊨ φ := by
   simp_rw [sentence.realize, ← realize_formula_cast φ, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
+#align first_order.language.ultraproduct.sentence_realize FirstOrder.Language.Ultraproduct.sentence_realize
 
 instance : Nonempty ((u : Filter α).product M) :=
   letI : ∀ a, Inhabited (M a) := fun _ => Classical.inhabitedOfNonempty'

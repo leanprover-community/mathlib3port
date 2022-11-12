@@ -59,6 +59,7 @@ unsafe def init_ring (assert : parse (tk "using" *> parser.pexpr)?) : tactic Uni
       sorry
       tactic.replace `h (ppquote.1 ((%%ₓe) p _ h))
       sorry
+#align tactic.interactive.init_ring tactic.interactive.init_ring
 
 end Interactive
 
@@ -79,6 +80,7 @@ whose `n`-th coefficient is `x.coeff n` if `P n` is true, and `0` otherwise.
 -/
 def select (P : ℕ → Prop) (x : 𝕎 R) : 𝕎 R :=
   mk p fun n => if P n then x.coeff n else 0
+#align witt_vector.select WittVector.select
 
 section Select
 
@@ -88,6 +90,7 @@ variable (P : ℕ → Prop)
 `select_poly n` is `X n` if `P n` holds, and `0` otherwise. -/
 def selectPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if P n then x n else 0
+#align witt_vector.select_poly WittVector.selectPoly
 
 theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) := by
   dsimp [select, select_poly]
@@ -96,6 +99,7 @@ theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coe
     
   · rw [AlgHom.map_zero]
     
+#align witt_vector.coeff_select WittVector.coeff_select
 
 @[is_poly]
 theorem selectIsPoly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x := by
@@ -103,6 +107,7 @@ theorem selectIsPoly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x :=
   rintro R _Rcr x
   funext i
   apply coeff_select
+#align witt_vector.select_is_poly WittVector.selectIsPoly
 
 include hp
 
@@ -127,6 +132,7 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
     
   · rwa [if_neg Pm, if_pos, zero_add]
     
+#align witt_vector.select_add_select_not WittVector.select_add_select_not
 
 theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coeff n = 0) :
     (x + y).coeff n = x.coeff n + y.coeff n := by
@@ -160,6 +166,7 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
     
   · rw [(h n).resolve_right hn, zero_add]
     
+#align witt_vector.coeff_add_of_disjoint WittVector.coeff_add_of_disjoint
 
 end Select
 
@@ -169,42 +176,53 @@ See `witt_vector.tail` for the complementary part.
 -/
 def init (n : ℕ) : 𝕎 R → 𝕎 R :=
   select fun i => i < n
+#align witt_vector.init WittVector.init
 
 /-- `witt_vector.tail n x` is the Witt vector of which the first `n` coefficients are `0`
 and all other coefficients are those from `x`.
 See `witt_vector.init` for the complementary part. -/
 def tail (n : ℕ) : 𝕎 R → 𝕎 R :=
   select fun i => n ≤ i
+#align witt_vector.tail WittVector.tail
 
 include hp
 
 @[simp]
 theorem init_add_tail (x : 𝕎 R) (n : ℕ) : init n x + tail n x = x := by
   simp only [init, tail, ← not_lt, select_add_select_not]
+#align witt_vector.init_add_tail WittVector.init_add_tail
 
 end
 
 @[simp]
 theorem init_init (x : 𝕎 R) (n : ℕ) : init n (init n x) = init n x := by init_ring
+#align witt_vector.init_init WittVector.init_init
 
 include hp
 
 theorem init_add (x y : 𝕎 R) (n : ℕ) : init n (x + y) = init n (init n x + init n y) := by init_ring using witt_add_vars
+#align witt_vector.init_add WittVector.init_add
 
 theorem init_mul (x y : 𝕎 R) (n : ℕ) : init n (x * y) = init n (init n x * init n y) := by init_ring using witt_mul_vars
+#align witt_vector.init_mul WittVector.init_mul
 
 theorem init_neg (x : 𝕎 R) (n : ℕ) : init n (-x) = init n (-init n x) := by init_ring using witt_neg_vars
+#align witt_vector.init_neg WittVector.init_neg
 
 theorem init_sub (x y : 𝕎 R) (n : ℕ) : init n (x - y) = init n (init n x - init n y) := by init_ring using witt_sub_vars
+#align witt_vector.init_sub WittVector.init_sub
 
 theorem init_nsmul (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by
   init_ring using fun p [Fact (Nat.Prime p)] n => witt_nsmul_vars p m n
+#align witt_vector.init_nsmul WittVector.init_nsmul
 
 theorem init_zsmul (m : ℤ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by
   init_ring using fun p [Fact (Nat.Prime p)] n => witt_zsmul_vars p m n
+#align witt_vector.init_zsmul WittVector.init_zsmul
 
 theorem init_pow (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (x ^ m) = init n (init n x ^ m) := by
   init_ring using fun p [Fact (Nat.Prime p)] n => witt_pow_vars p m n
+#align witt_vector.init_pow WittVector.init_pow
 
 section
 
@@ -215,6 +233,7 @@ omit hp
 /-- `witt_vector.init n x` is polynomial in the coefficients of `x`. -/
 theorem initIsPoly (n : ℕ) : IsPoly p fun R _Rcr => init n :=
   selectIsPoly fun i => i < n
+#align witt_vector.init_is_poly WittVector.initIsPoly
 
 end
 

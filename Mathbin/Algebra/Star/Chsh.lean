@@ -93,6 +93,7 @@ structure IsCHSHTuple {R} [Monoid R] [StarSemigroup R] (A₀ A₁ B₀ B₁ : R)
   A₀B₁_commutes : A₀ * B₁ = B₁ * A₀
   A₁B₀_commutes : A₁ * B₀ = B₀ * A₁
   A₁B₁_commutes : A₁ * B₁ = B₁ * A₁
+#align is_CHSH_tuple IsCHSHTuple
 
 variable {R : Type u}
 
@@ -109,6 +110,7 @@ theorem CHSH_id [CommRing R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 = 1)
   simp only [A₁_inv, B₁_inv, sub_eq_add_neg, add_mul, mul_add, sub_mul, mul_sub, add_assoc, neg_add, neg_sub, sub_add,
     sub_sub, neg_mul, ← sq, A₀_inv, B₀_inv, ← sq, ← mul_assoc, one_mul, mul_one, add_right_neg, add_zero,
     sub_eq_add_neg, A₀_inv, mul_one, add_right_neg, zero_mul]
+#align CHSH_id CHSH_id
 
 /-- Given a CHSH tuple (A₀, A₁, B₀, B₁) in a *commutative* ordered `*`-algebra over ℝ,
 `A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2`.
@@ -143,6 +145,7 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
       
   apply le_of_sub_nonneg
   simpa only [sub_add_eq_sub_sub, ← sub_add] using i₁
+#align CHSH_inequality_of_comm CHSH_inequality_of_comm
 
 /-!
 We now prove some rather specialized lemmas in preparation for the Tsirelson inequality,
@@ -167,10 +170,12 @@ theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 *
   ring_nf
   field_simp [(@Real.sqrt_pos 2).2 (by norm_num)]
   convert congr_arg (· ^ 2) (@Real.sq_sqrt 2 (by norm_num)) using 1 <;> simp only [← pow_mul] <;> norm_num
+#align tsirelson_inequality.tsirelson_inequality_aux TsirelsonInequality.tsirelson_inequality_aux
 
 theorem sqrt_two_inv_mul_self : √2⁻¹ * √2⁻¹ = (2⁻¹ : ℝ) := by
   rw [← mul_inv]
   norm_num
+#align tsirelson_inequality.sqrt_two_inv_mul_self TsirelsonInequality.sqrt_two_inv_mul_self
 
 end tsirelson_inequality
 
@@ -208,6 +213,7 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     simp only [M]
     simp only [neg_mul, Int.cast_bit0, one_mul, mul_inv_cancel_of_invertible, Int.cast_one, one_smul, Int.cast_neg,
       add_right_inj, neg_smul, ← add_smul]
+    -- just look at the coefficients now:
     congr
     exact mul_left_cancel₀ (by norm_num) tsirelson_inequality_aux
   have pos : 0 ≤ √2⁻¹ • (P ^ 2 + Q ^ 2) := by
@@ -238,4 +244,5 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     simp
   apply le_of_sub_nonneg
   simpa only [sub_add_eq_sub_sub, ← sub_add, w] using Pos
+#align tsirelson_inequality tsirelson_inequality
 

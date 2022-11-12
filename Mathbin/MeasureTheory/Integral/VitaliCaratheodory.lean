@@ -84,7 +84,7 @@ local infixr:25 " →ₛ " => SimpleFunc
 /-! ### Lower semicontinuous upper bound for nonnegative functions -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (u «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (u «expr ⊇ » s) -/
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists a lower semicontinuous
 function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -144,6 +144,8 @@ theorem SimpleFunc.exists_le_lower_semicontinuous_lintegral_ge (f : α →ₛ �
     conv_lhs => rw [← Ennreal.add_halves ε]
     abel
     
+#align
+  measure_theory.simple_func.exists_le_lower_semicontinuous_lintegral_ge MeasureTheory.SimpleFunc.exists_le_lower_semicontinuous_lintegral_ge
 
 open SimpleFunc (eapproxDiff tsum_eapprox_diff)
 
@@ -183,6 +185,8 @@ theorem exists_le_lower_semicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf 
           
       
     
+#align
+  measure_theory.exists_le_lower_semicontinuous_lintegral_ge MeasureTheory.exists_le_lower_semicontinuous_lintegral_ge
 
 /-- Given a measurable function `f` with values in `ℝ≥0` in a sigma-finite space, there exists a
 lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
@@ -209,6 +213,8 @@ theorem exists_lt_lower_semicontinuous_lintegral_ge [SigmaFinite μ] (f : α →
       _ = (∫⁻ x : α, f x ∂μ) + ε := by rw [add_assoc, Ennreal.add_halves]
       
     
+#align
+  measure_theory.exists_lt_lower_semicontinuous_lintegral_ge MeasureTheory.exists_lt_lower_semicontinuous_lintegral_ge
 
 /-- Given an almost everywhere measurable function `f` with values in `ℝ≥0` in a sigma-finite space,
 there exists a lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
@@ -251,6 +257,8 @@ theorem exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable [SigmaFinit
       _ = (∫⁻ x, f x ∂μ) + ε := by simp only [add_assoc, Ennreal.add_halves, zero_add]
       
     
+#align
+  measure_theory.exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable MeasureTheory.exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable
 
 variable {μ}
 
@@ -309,11 +317,13 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
     · apply gcont.measurable.ennreal_to_real.ae_measurable.ae_strongly_measurable
       
     
+#align
+  measure_theory.exists_lt_lower_semicontinuous_integral_gt_nnreal MeasureTheory.exists_lt_lower_semicontinuous_integral_gt_nnreal
 
 /-! ### Upper semicontinuous lower bound for nonnegative functions -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:572:2: warning: expanding binder collection (F «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -371,6 +381,8 @@ theorem SimpleFunc.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ �
     conv_lhs => rw [← Ennreal.add_halves ε]
     abel
     
+#align
+  measure_theory.simple_func.exists_upper_semicontinuous_le_lintegral_le MeasureTheory.SimpleFunc.exists_upper_semicontinuous_le_lintegral_le
 
 /-- Given an integrable function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
@@ -400,6 +412,8 @@ theorem exists_upper_semicontinuous_le_lintegral_le (f : α → ℝ≥0) (int_f 
     _ ≤ (∫⁻ x, g x ∂μ) + ε / 2 + ε / 2 := add_le_add gint le_rfl
     _ = (∫⁻ x, g x ∂μ) + ε := by rw [add_assoc, Ennreal.add_halves]
     
+#align
+  measure_theory.exists_upper_semicontinuous_le_lintegral_le MeasureTheory.exists_upper_semicontinuous_le_lintegral_le
 
 /-- Given an integrable function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
@@ -444,6 +458,8 @@ theorem exists_upper_semicontinuous_le_integral_le (f : α → ℝ≥0) (fint : 
     · exact fint.ae_strongly_measurable
       
     
+#align
+  measure_theory.exists_upper_semicontinuous_le_integral_le MeasureTheory.exists_upper_semicontinuous_le_integral_le
 
 /-! ### Vitali-Carathéodory theorem -/
 
@@ -534,6 +550,8 @@ theorem exists_lt_lower_semicontinuous_integral_lt [SigmaFinite μ] (f : α → 
       exact Ereal.continuous_at_add (by simp) (by simp)
       
     
+#align
+  measure_theory.exists_lt_lower_semicontinuous_integral_lt MeasureTheory.exists_lt_lower_semicontinuous_integral_lt
 
 /-- **Vitali-Carathéodory Theorem**: given an integrable real function `f`, there exists an
 integrable function `g < f` which is upper semicontinuous, with integral arbitrarily close to that
@@ -563,6 +581,8 @@ theorem exists_upper_semicontinuous_lt_integral_gt [SigmaFinite μ] (f : α → 
     rw [add_comm] at gint
     simpa [integral_neg] using gint
     
+#align
+  measure_theory.exists_upper_semicontinuous_lt_integral_gt MeasureTheory.exists_upper_semicontinuous_lt_integral_gt
 
 end MeasureTheory
 

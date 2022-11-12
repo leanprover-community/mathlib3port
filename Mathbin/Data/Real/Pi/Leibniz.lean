@@ -41,7 +41,7 @@ local notation "|" x "|" => abs x
   subintervals. Finally, we (6) apply the Mean Value Theorem twice, obtaining bounds on `f 1 - f u`
   and `f u - f 0` from the bounds on `f'` (note that `f 0 = 0`). -/
 theorem tendsto_sum_pi_div_four :
-    Tendsto (fun k => ∑ i in Finset.range k, -(1 : ℝ) ^ i / (2 * i + 1)) atTop (𝓝 (π / 4)) := by
+    Tendsto (fun k => ∑ i in Finset.range k, (-(1 : ℝ)) ^ i / (2 * i + 1)) atTop (𝓝 (π / 4)) := by
   rw [tendsto_iff_norm_tendsto_zero, ← tendsto_zero_iff_norm_tendsto_zero]
   -- (1) We introduce a useful sequence `u` of values in [0,1], then prove that another sequence
   --     constructed from `u` tends to `0` at `+∞`
@@ -51,7 +51,7 @@ theorem tendsto_sum_pi_div_four :
       (((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add tendsto_inv_at_top_zero).comp
         tendsto_coe_nat_at_top_at_top
     · ext k
-      simp only [Nnreal.coe_nat_cast, Function.comp_app, Nnreal.coe_rpow]
+      simp only [Nnreal.coe_nat_cast, Function.comp_apply, Nnreal.coe_rpow]
       rw [← rpow_mul (Nat.cast_nonneg k) (-1 / (2 * (k : ℝ) + 1)) (2 * (k : ℝ) + 1),
         @div_mul_cancel _ _ (2 * (k : ℝ) + 1) _
           (by
@@ -67,7 +67,7 @@ theorem tendsto_sum_pi_div_four :
   -- Since `k` is now fixed, we henceforth denote `u k` as `U`
   let U := u k
   -- (3) We introduce an auxiliary function `f`
-  let b (i : ℕ) x := -(1 : ℝ) ^ i * x ^ (2 * i + 1) / (2 * i + 1)
+  let b (i : ℕ) x := (-(1 : ℝ)) ^ i * x ^ (2 * i + 1) / (2 * i + 1)
   let f x := arctan x - ∑ i in Finset.range k, b i x
   suffices f_bound : |f 1 - f 0| ≤ (1 : ℝ) - U + U ^ (2 * (k : ℝ) + 1)
   · rw [← norm_neg]
@@ -93,10 +93,10 @@ theorem tendsto_sum_pi_div_four :
       
   have hU2 := Nnreal.coe_nonneg U
   -- (4) We compute the derivative of `f`, denoted by `f'`
-  let f' := fun x : ℝ => -(x ^ 2) ^ k / (1 + x ^ 2)
+  let f' := fun x : ℝ => (-x ^ 2) ^ k / (1 + x ^ 2)
   have has_deriv_at_f : ∀ x, HasDerivAt f (f' x) x := by
     intro x
-    have has_deriv_at_b : ∀ i ∈ Finset.range k, HasDerivAt (b i) (-(x ^ 2) ^ i) x := by
+    have has_deriv_at_b : ∀ i ∈ Finset.range k, HasDerivAt (b i) ((-x ^ 2) ^ i) x := by
       intro i hi
       convert HasDerivAt.constMul ((-1 : ℝ) ^ i / (2 * i + 1)) (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (hasDerivAtId x))
       · ext y
@@ -114,7 +114,7 @@ theorem tendsto_sum_pi_div_four :
         ring_nf
         
     convert (has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
-    have g_sum := @geom_sum_eq _ _ (-(x ^ 2)) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).Ne k
+    have g_sum := @geom_sum_eq _ _ (-x ^ 2) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).Ne k
     simp only [f'] at g_sum⊢
     rw [g_sum, ← neg_add' (x ^ 2) 1, add_comm (x ^ 2) 1, sub_eq_add_neg, neg_div', neg_div_neg_eq]
     ring
@@ -125,7 +125,7 @@ theorem tendsto_sum_pi_div_four :
   -- (5) We prove a general bound for `f'` and then more precise bounds on each of two subintervals
   have f'_bound : ∀ x ∈ Icc (-1 : ℝ) 1, |f' x| ≤ |x| ^ (2 * k) := by
     intro x hx
-    rw [abs_div, IsAbsoluteValue.abv_pow abs (-(x ^ 2)) k, abs_neg, IsAbsoluteValue.abv_pow abs x 2, ← pow_mul]
+    rw [abs_div, IsAbsoluteValue.abv_pow abs (-x ^ 2) k, abs_neg, IsAbsoluteValue.abv_pow abs x 2, ← pow_mul]
     refine' div_le_of_nonneg_of_le_mul (abs_nonneg _) (pow_nonneg (abs_nonneg _) _) _
     refine' le_mul_of_one_le_right (pow_nonneg (abs_nonneg _) _) _
     rw [abs_of_nonneg (add_nonneg zero_le_one (sq_nonneg x) : (0 : ℝ) ≤ _)]
@@ -154,6 +154,7 @@ theorem tendsto_sum_pi_div_four :
       rw [← pow_succ' (U : ℝ) (2 * k)]
       norm_cast
     
+#align real.tendsto_sum_pi_div_four Real.tendsto_sum_pi_div_four
 
 end Real
 

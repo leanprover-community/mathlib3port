@@ -36,11 +36,13 @@ variable {X : TopCat.{w}}
 type the type of dependent pairs `(V, f)`, where `f : V ⟶ U` is in `R`.
 -/
 def coveringOfPresieve (U : Opens X) (R : Presieve U) : (ΣV, { f : V ⟶ U // R f }) → Opens X := fun f => f.1
+#align Top.presheaf.covering_of_presieve TopCat.Presheaf.coveringOfPresieve
 
 @[simp]
 theorem covering_of_presieve_apply (U : Opens X) (R : Presieve U) (f : ΣV, { f : V ⟶ U // R f }) :
     coveringOfPresieve U R f = f.1 :=
   rfl
+#align Top.presheaf.covering_of_presieve_apply TopCat.Presheaf.covering_of_presieve_apply
 
 namespace CoveringOfPresieve
 
@@ -60,6 +62,8 @@ theorem supr_eq_of_mem_grothendieck (hR : Sieve.generate R ∈ Opens.grothendiec
   rw [opens.mem_coe, opens.mem_supr]
   obtain ⟨V, iVU, ⟨W, iVW, iWU, hiWU, -⟩, hxV⟩ := hR x hxU
   exact ⟨⟨W, ⟨iWU, hiWU⟩⟩, iVW.le hxV⟩
+#align
+  Top.presheaf.covering_of_presieve.supr_eq_of_mem_grothendieck TopCat.Presheaf.coveringOfPresieve.supr_eq_of_mem_grothendieck
 
 end CoveringOfPresieve
 
@@ -68,10 +72,12 @@ on `Y` by declaring that a morphism `f : V ⟶ Y` is a member of the presieve if
 there exists an index `i : ι` such that `V = U i`.
 -/
 def PresieveOfCoveringAux {ι : Type v} (U : ι → Opens X) (Y : Opens X) : Presieve Y := fun V f => ∃ i, V = U i
+#align Top.presheaf.presieve_of_covering_aux TopCat.Presheaf.PresieveOfCoveringAux
 
 /-- Take `Y` to be `supr U` and obtain a presieve over `supr U`. -/
 def PresieveOfCovering {ι : Type v} (U : ι → Opens X) : Presieve (supr U) :=
   PresieveOfCoveringAux U (supr U)
+#align Top.presheaf.presieve_of_covering TopCat.Presheaf.PresieveOfCovering
 
 /-- Given a presieve `R` on `Y`, if we take its associated family of opens via
     `covering_of_presieve` (which may not cover `Y` if `R` is not covering), and take
@@ -82,6 +88,7 @@ theorem covering_presieve_eq_self {Y : Opens X} (R : Presieve Y) :
     PresieveOfCoveringAux (coveringOfPresieve Y R) Y = R := by
   ext (Z f)
   exact ⟨fun ⟨⟨_, _, h⟩, rfl⟩ => by convert h, fun h => ⟨⟨Z, f, h⟩, rfl⟩⟩
+#align Top.presheaf.covering_presieve_eq_self TopCat.Presheaf.covering_presieve_eq_self
 
 namespace PresieveOfCovering
 
@@ -93,21 +100,26 @@ theorem mem_grothendieck_topology : Sieve.generate (PresieveOfCovering U) ∈ Op
   intro x hx
   obtain ⟨i, hxi⟩ := opens.mem_supr.mp hx
   exact ⟨U i, opens.le_supr U i, ⟨U i, 𝟙 _, opens.le_supr U i, ⟨i, rfl⟩, category.id_comp _⟩, hxi⟩
+#align
+  Top.presheaf.presieve_of_covering.mem_grothendieck_topology TopCat.Presheaf.PresieveOfCovering.mem_grothendieck_topology
 
 /-- An index `i : ι` can be turned into a dependent pair `(V, f)`, where `V` is an open set and
 `f : V ⟶ supr U` is a member of `presieve_of_covering U f`.
 -/
 def homOfIndex (i : ι) : ΣV, { f : V ⟶ supr U // PresieveOfCovering U f } :=
   ⟨U i, Opens.leSupr U i, i, rfl⟩
+#align Top.presheaf.presieve_of_covering.hom_of_index TopCat.Presheaf.PresieveOfCovering.homOfIndex
 
 /-- By using the axiom of choice, a dependent pair `(V, f)` where `f : V ⟶ supr U` is a member of
 `presieve_of_covering U f` can be turned into an index `i : ι`, such that `V = U i`.
 -/
 def indexOfHom (f : ΣV, { f : V ⟶ supr U // PresieveOfCovering U f }) : ι :=
   f.2.2.some
+#align Top.presheaf.presieve_of_covering.index_of_hom TopCat.Presheaf.PresieveOfCovering.indexOfHom
 
 theorem index_of_hom_spec (f : ΣV, { f : V ⟶ supr U // PresieveOfCovering U f }) : f.1 = U (indexOfHom U f) :=
   f.2.2.some_spec
+#align Top.presheaf.presieve_of_covering.index_of_hom_spec TopCat.Presheaf.PresieveOfCovering.index_of_hom_spec
 
 end PresieveOfCovering
 
@@ -129,10 +141,12 @@ theorem cover_dense_iff_is_basis [Category ι] (B : ι ⥤ Opens X) :
   intro U x hx
   rcases hb hx with ⟨_, ⟨i, rfl⟩, hx, hi⟩
   exact ⟨B.obj i, ⟨⟨hi⟩⟩, ⟨⟨i, 𝟙 _, ⟨⟨hi⟩⟩, rfl⟩⟩, hx⟩
+#align Top.opens.cover_dense_iff_is_basis TopCat.Opens.cover_dense_iff_is_basis
 
 theorem coverDenseInducedFunctor {B : ι → Opens X} (h : Opens.IsBasis (Set.Range B)) :
     CoverDense (Opens.grothendieckTopology X) (inducedFunctor B) :=
   (cover_dense_iff_is_basis _).2 h
+#align Top.opens.cover_dense_induced_functor TopCat.Opens.coverDenseInducedFunctor
 
 end TopCat.Opens
 
@@ -152,6 +166,7 @@ theorem OpenEmbedding.compatiblePreserving (hf : OpenEmbedding f) :
   refine' ⟨(opens.map f).obj V, eq_to_iso <| opens.ext <| Set.image_preimage_eq_of_subset fun x h => _⟩
   obtain ⟨_, _, rfl⟩ := i.le h
   exact ⟨_, rfl⟩
+#align open_embedding.compatible_preserving OpenEmbedding.compatiblePreserving
 
 theorem IsOpenMap.coverPreserving (hf : IsOpenMap f) :
     CoverPreserving (Opens.grothendieckTopology X) (Opens.grothendieckTopology Y) hf.Functor := by
@@ -159,10 +174,12 @@ theorem IsOpenMap.coverPreserving (hf : IsOpenMap f) :
   rintro U S hU _ ⟨x, hx, rfl⟩
   obtain ⟨V, i, hV, hxV⟩ := hU x hx
   exact ⟨_, hf.functor.map i, ⟨_, i, 𝟙 _, hV, rfl⟩, Set.mem_image_of_mem f hxV⟩
+#align is_open_map.cover_preserving IsOpenMap.coverPreserving
 
 theorem TopCat.Presheaf.is_sheaf_of_open_embedding (h : OpenEmbedding f) (hF : F.IsSheaf) :
     IsSheaf (h.IsOpenMap.Functor.op ⋙ F) :=
   pullbackIsSheafOfCoverPreserving h.CompatiblePreserving h.IsOpenMap.CoverPreserving ⟨_, hF⟩
+#align Top.presheaf.is_sheaf_of_open_embedding TopCat.Presheaf.is_sheaf_of_open_embedding
 
 end OpenEmbedding
 
@@ -179,10 +196,12 @@ variable (F : X.Presheaf C) (F' : Sheaf C X) (h : Opens.IsBasis (Set.Range B))
 /-- The empty component of a sheaf is terminal -/
 def isTerminalOfEmpty (F : Sheaf C X) : Limits.IsTerminal (F.val.obj (op ∅)) :=
   F.isTerminalOfBotCover ∅ (by tidy)
+#align Top.sheaf.is_terminal_of_empty TopCat.Sheaf.isTerminalOfEmpty
 
 /-- A variant of `is_terminal_of_empty` that is easier to `apply`. -/
 def isTerminalOfEqEmpty (F : X.Sheaf C) {U : Opens X} (h : U = ∅) : Limits.IsTerminal (F.val.obj (op U)) := by
   convert F.is_terminal_of_empty
+#align Top.sheaf.is_terminal_of_eq_empty TopCat.Sheaf.isTerminalOfEqEmpty
 
 /-- If a family `B` of open sets forms a basis of the topology on `X`, and if `F'`
     is a sheaf on `X`, then a homomorphism between a presheaf `F` on `X` and `F'`
@@ -190,12 +209,14 @@ def isTerminalOfEqEmpty (F : X.Sheaf C) {U : Opens X} (h : U = ∅) : Limits.IsT
     `ι` of `B`, with the induced category structure on `ι`. -/
 def restrictHomEquivHom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) ≃ (F ⟶ F'.1) :=
   @CoverDense.restrictHomEquivHom _ _ _ _ _ _ _ _ (Opens.coverDenseInducedFunctor h) _ F F'
+#align Top.sheaf.restrict_hom_equiv_hom TopCat.Sheaf.restrictHomEquivHom
 
 @[simp]
 theorem extend_hom_app (α : (inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) (i : ι) :
     (restrictHomEquivHom F F' h α).app (op (B i)) = α.app (op i) := by
   nth_rw 1 [← (restrict_hom_equiv_hom F F' h).left_inv α]
   rfl
+#align Top.sheaf.extend_hom_app TopCat.Sheaf.extend_hom_app
 
 include h
 
@@ -203,6 +224,7 @@ theorem hom_ext {α β : F ⟶ F'.1} (he : ∀ i, α.app (op (B i)) = β.app (op
   apply (restrict_hom_equiv_hom F F' h).symm.Injective
   ext i
   exact he i.unop
+#align Top.sheaf.hom_ext TopCat.Sheaf.hom_ext
 
 end TopCat.Sheaf
 

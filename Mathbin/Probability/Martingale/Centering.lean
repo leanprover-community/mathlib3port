@@ -43,40 +43,49 @@ process. This is the predictable process. See `martingale_part` for the martinga
 noncomputable def predictablePart {m0 : MeasurableSpace Ω} (f : ℕ → Ω → E) (ℱ : Filtration ℕ m0)
     (μ : Measure Ω := by exact MeasureTheory.MeasureSpace.volume) : ℕ → Ω → E := fun n =>
   ∑ i in Finset.range n, μ[f (i + 1) - f i|ℱ i]
+#align measure_theory.predictable_part MeasureTheory.predictablePart
 
 @[simp]
 theorem predictable_part_zero : predictablePart f ℱ μ 0 = 0 := by
   simp_rw [predictable_part, Finset.range_zero, Finset.sum_empty]
+#align measure_theory.predictable_part_zero MeasureTheory.predictable_part_zero
 
 theorem adaptedPredictablePart : Adapted ℱ fun n => predictablePart f ℱ μ (n + 1) := fun n =>
   Finset.stronglyMeasurableSum' _ fun i hin =>
     stronglyMeasurableCondexp.mono (ℱ.mono (Finset.mem_range_succ_iff.mp hin))
+#align measure_theory.adapted_predictable_part MeasureTheory.adaptedPredictablePart
 
 theorem adaptedPredictablePart' : Adapted ℱ fun n => predictablePart f ℱ μ n := fun n =>
   Finset.stronglyMeasurableSum' _ fun i hin => stronglyMeasurableCondexp.mono (ℱ.mono (Finset.mem_range_le hin))
+#align measure_theory.adapted_predictable_part' MeasureTheory.adaptedPredictablePart'
 
 /-- Any `ℕ`-indexed stochastic process can be written as the sum of a martingale and a predictable
 process. This is the martingale. See `predictable_part` for the predictable process. -/
 noncomputable def martingalePart {m0 : MeasurableSpace Ω} (f : ℕ → Ω → E) (ℱ : Filtration ℕ m0)
     (μ : Measure Ω := by exact MeasureTheory.MeasureSpace.volume) : ℕ → Ω → E := fun n => f n - predictablePart f ℱ μ n
+#align measure_theory.martingale_part MeasureTheory.martingalePart
 
 theorem martingale_part_add_predictable_part (ℱ : Filtration ℕ m0) (μ : Measure Ω) (f : ℕ → Ω → E) :
     martingalePart f ℱ μ + predictablePart f ℱ μ = f :=
   sub_add_cancel _ _
+#align measure_theory.martingale_part_add_predictable_part MeasureTheory.martingale_part_add_predictable_part
 
 theorem martingale_part_eq_sum :
     martingalePart f ℱ μ = fun n => f 0 + ∑ i in Finset.range n, f (i + 1) - f i - μ[f (i + 1) - f i|ℱ i] := by
   rw [martingale_part, predictable_part]
   ext1 n
   rw [Finset.eq_sum_range_sub f n, ← add_sub, ← Finset.sum_sub_distrib]
+#align measure_theory.martingale_part_eq_sum MeasureTheory.martingale_part_eq_sum
 
 theorem adaptedMartingalePart (hf : Adapted ℱ f) : Adapted ℱ (martingalePart f ℱ μ) :=
   Adapted.sub hf adaptedPredictablePart'
+#align measure_theory.adapted_martingale_part MeasureTheory.adaptedMartingalePart
 
 theorem integrableMartingalePart (hf_int : ∀ n, Integrable (f n) μ) (n : ℕ) : Integrable (martingalePart f ℱ μ n) μ :=
   by
   rw [martingale_part_eq_sum]
   exact (hf_int 0).add (integrable_finset_sum' _ fun i hi => ((hf_int _).sub (hf_int _)).sub integrable_condexp)
+#align measure_theory.integrable_martingale_part MeasureTheory.integrableMartingalePart
 
 theorem martingaleMartingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrable (f n) μ) [SigmaFiniteFiltration μ ℱ] :
     Martingale (martingalePart f ℱ μ) ℱ μ := by
@@ -133,6 +142,7 @@ theorem martingaleMartingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrabl
   refine' (eventually_eq_sum fun k hk => h_ge k (finset.mem_Ico.mp hk).1).trans _
   simp only [Finset.sum_const_zero, Pi.zero_apply]
   rfl
+#align measure_theory.martingale_martingale_part MeasureTheory.martingaleMartingalePart
 
 -- The following two lemmas demonstrate the essential uniqueness of the decomposition
 theorem martingale_part_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → Ω → E} (hf : Martingale f ℱ μ)
@@ -153,6 +163,7 @@ theorem martingale_part_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → 
   rw [hhdef, Pi.sub_apply] at hω
   rw [hω, Pi.sub_apply, martingale_part]
   simp [hg0]
+#align measure_theory.martingale_part_add_ae_eq MeasureTheory.martingale_part_add_ae_eq
 
 theorem predictable_part_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → Ω → E} (hf : Martingale f ℱ μ)
     (hg : Adapted ℱ fun n => g (n + 1)) (hg0 : g 0 = 0) (hgint : ∀ n, Integrable (g n) μ) (n : ℕ) :
@@ -161,6 +172,7 @@ theorem predictable_part_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ →
   rw [← add_right_inj (f n ω)]
   conv_rhs => rw [← Pi.add_apply, ← Pi.add_apply, ← martingale_part_add_predictable_part ℱ μ (f + g)]
   rw [Pi.add_apply, Pi.add_apply, hω]
+#align measure_theory.predictable_part_add_ae_eq MeasureTheory.predictable_part_add_ae_eq
 
 section Difference
 
@@ -169,6 +181,7 @@ theorem predictable_part_bdd_difference {R : ℝ≥0} {f : ℕ → Ω → ℝ} (
     ∀ᵐ ω ∂μ, ∀ i, |predictablePart f ℱ μ (i + 1) ω - predictablePart f ℱ μ i ω| ≤ R := by
   simp_rw [predictable_part, Finset.sum_apply, Finset.sum_range_succ_sub_sum]
   exact ae_all_iff.2 fun i => ae_bdd_condexp_of_ae_bdd <| ae_all_iff.1 hbdd i
+#align measure_theory.predictable_part_bdd_difference MeasureTheory.predictable_part_bdd_difference
 
 theorem martingale_part_bdd_difference {R : ℝ≥0} {f : ℕ → Ω → ℝ} (ℱ : Filtration ℕ m0)
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
@@ -182,6 +195,7 @@ theorem martingale_part_bdd_difference {R : ℝ≥0} {f : ℕ → Ω → ℝ} (�
   -- `ring` suggests `ring_nf` despite proving the goal
   rw [this]
   exact (abs_sub _ _).trans (add_le_add (hω₁ i) (hω₂ i))
+#align measure_theory.martingale_part_bdd_difference MeasureTheory.martingale_part_bdd_difference
 
 end Difference
 

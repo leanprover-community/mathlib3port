@@ -24,10 +24,12 @@ mapping `[x₁, x₂, ..., xₙ]` to the "monomial" `1 • x₁ * x₂ * ⋯ * x
 @[simps]
 noncomputable def basisFreeMonoid (R : Type u) (X : Type v) [CommRing R] : Basis (FreeMonoid X) R (FreeAlgebra R X) :=
   Finsupp.basisSingleOne.map (equivMonoidAlgebraFreeMonoid.symm.toLinearEquiv : _ ≃ₗ[R] FreeAlgebra R X)
+#align free_algebra.basis_free_monoid FreeAlgebra.basisFreeMonoid
 
 -- TODO: generalize to `X : Type v`
 theorem dim_eq {K : Type u} {X : Type max u v} [Field K] : Module.rank K (FreeAlgebra K X) = Cardinal.mk (List X) :=
   (Cardinal.lift_inj.mp (basisFreeMonoid K X).mk_eq_dim).symm
+#align free_algebra.dim_eq FreeAlgebra.dim_eq
 
 end FreeAlgebra
 

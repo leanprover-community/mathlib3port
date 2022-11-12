@@ -42,12 +42,14 @@ variable {I : Type u} (X : I → TopCat.{u})
 -/
 def proj (i : I) : πₓ (TopCat.of (∀ i, X i)) ⥤ πₓ (X i) :=
   πₘ ⟨_, continuous_apply i⟩
+#align fundamental_groupoid_functor.proj FundamentalGroupoidFunctor.proj
 
 /-- The projection map is precisely path.homotopic.proj interpreted as a functor -/
 @[simp]
 theorem proj_map (i : I) (x₀ x₁ : πₓ (TopCat.of (∀ i, X i))) (p : x₀ ⟶ x₁) :
     (proj X i).map p = @Path.Homotopic.proj _ _ _ _ _ i p :=
   rfl
+#align fundamental_groupoid_functor.proj_map FundamentalGroupoidFunctor.proj_map
 
 /-- The map taking the pi product of a family of fundamental groupoids to the fundamental
 groupoid of the pi product. This is actually an isomorphism (see `pi_iso`)
@@ -62,6 +64,7 @@ def piToPiTop : (∀ i, πₓ (X i)) ⥤ πₓ (TopCat.of (∀ i, X i)) where
     simp only [FundamentalGroupoid.id_eq_path_refl, Path.Homotopic.pi_lift]
     rfl
   map_comp' x y z f g := (Path.Homotopic.comp_pi_eq_pi_comp f g).symm
+#align fundamental_groupoid_functor.pi_to_pi_Top FundamentalGroupoidFunctor.piToPiTop
 
 /-- Shows `pi_to_pi_Top` is an isomorphism, whose inverse is precisely the pi product
 of the induced projections. This shows that `fundamental_groupoid_functor` preserves products.
@@ -87,6 +90,7 @@ def piIso : CategoryTheory.GroupoidCat.of (∀ i : I, πₓ (X i)) ≅ πₓ (To
       
     · rfl
       
+#align fundamental_groupoid_functor.pi_iso FundamentalGroupoidFunctor.piIso
 
 section Preserves
 
@@ -95,16 +99,20 @@ open CategoryTheory
 /-- Equivalence between the categories of cones over the objects `π Xᵢ` written in two ways -/
 def coneDiscreteComp : Limits.Cone (Discrete.functor X ⋙ π) ≌ Limits.Cone (Discrete.functor fun i => πₓ (X i)) :=
   Limits.Cones.postcomposeEquivalence (Discrete.compNatIsoDiscrete X π)
+#align fundamental_groupoid_functor.cone_discrete_comp FundamentalGroupoidFunctor.coneDiscreteComp
 
 theorem cone_discrete_comp_obj_map_cone :
     (coneDiscreteComp X).Functor.obj (π.mapCone (TopCat.piFan.{u} X)) =
       Limits.Fan.mk (πₓ (TopCat.of (∀ i, X i))) (proj X) :=
   rfl
+#align
+  fundamental_groupoid_functor.cone_discrete_comp_obj_map_cone FundamentalGroupoidFunctor.cone_discrete_comp_obj_map_cone
 
 /-- This is `pi_iso.inv` as a cone morphism (in fact, isomorphism) -/
 def piTopToPiCone :
     Limits.Fan.mk (πₓ (TopCat.of (∀ i, X i))) (proj X) ⟶
       GroupoidCat.piLimitFan fun i : I => πₓ (X i) where Hom := CategoryTheory.Functor.pi' (proj X)
+#align fundamental_groupoid_functor.pi_Top_to_pi_cone FundamentalGroupoidFunctor.piTopToPiCone
 
 instance : IsIso (piTopToPiCone X) :=
   haveI : is_iso (pi_Top_to_pi_cone X).Hom := (inferInstance : is_iso (pi_iso X).inv)
@@ -117,6 +125,7 @@ def preservesProduct : Limits.PreservesLimit (Discrete.functor X) π := by
   simp only [cone_discrete_comp_obj_map_cone]
   apply limits.is_limit.of_iso_limit _ (as_iso (pi_Top_to_pi_cone X)).symm
   exact Groupoid.pi_limit_fan_is_limit _
+#align fundamental_groupoid_functor.preserves_product FundamentalGroupoidFunctor.preservesProduct
 
 end Preserves
 
@@ -129,20 +138,24 @@ variable (A B : TopCat.{u})
 /-- The induced map of the left projection map X × Y → X -/
 def projLeft : πₓ (TopCat.of (A × B)) ⥤ πₓ A :=
   πₘ ⟨_, continuous_fst⟩
+#align fundamental_groupoid_functor.proj_left FundamentalGroupoidFunctor.projLeft
 
 /-- The induced map of the right projection map X × Y → Y -/
 def projRight : πₓ (TopCat.of (A × B)) ⥤ πₓ B :=
   πₘ ⟨_, continuous_snd⟩
+#align fundamental_groupoid_functor.proj_right FundamentalGroupoidFunctor.projRight
 
 @[simp]
 theorem proj_left_map (x₀ x₁ : πₓ (TopCat.of (A × B))) (p : x₀ ⟶ x₁) :
     (projLeft A B).map p = Path.Homotopic.projLeft p :=
   rfl
+#align fundamental_groupoid_functor.proj_left_map FundamentalGroupoidFunctor.proj_left_map
 
 @[simp]
 theorem proj_right_map (x₀ x₁ : πₓ (TopCat.of (A × B))) (p : x₀ ⟶ x₁) :
     (projRight A B).map p = Path.Homotopic.projRight p :=
   rfl
+#align fundamental_groupoid_functor.proj_right_map FundamentalGroupoidFunctor.proj_right_map
 
 /-- The map taking the product of two fundamental groupoids to the fundamental groupoid of the product
 of the two topological spaces. This is in fact an isomorphism (see `prod_iso`).
@@ -162,10 +175,12 @@ def prodToProdTop : πₓ A × πₓ B ⥤ πₓ (TopCat.of (A × B)) where
   map_comp' x y z f g :=
     match x, y, z, f, g with
     | (x₀, x₁), (y₀, y₁), (z₀, z₁), (f₀, f₁), (g₀, g₁) => (Path.Homotopic.comp_prod_eq_prod_comp f₀ f₁ g₀ g₁).symm
+#align fundamental_groupoid_functor.prod_to_prod_Top FundamentalGroupoidFunctor.prodToProdTop
 
 theorem prod_to_prod_Top_map {x₀ x₁ : πₓ A} {y₀ y₁ : πₓ B} (p₀ : x₀ ⟶ x₁) (p₁ : y₀ ⟶ y₁) :
     @CategoryTheory.Functor.map _ _ _ _ (prodToProdTop A B) (x₀, y₀) (x₁, y₁) (p₀, p₁) = Path.Homotopic.prod p₀ p₁ :=
   rfl
+#align fundamental_groupoid_functor.prod_to_prod_Top_map FundamentalGroupoidFunctor.prod_to_prod_Top_map
 
 /-- Shows `prod_to_prod_Top` is an isomorphism, whose inverse is precisely the product
 of the induced left and right projections.
@@ -192,6 +207,7 @@ def prodIso : CategoryTheory.GroupoidCat.of (πₓ A × πₓ B) ≅ πₓ (TopC
     rintro ⟨x₀, x₁⟩ ⟨y₀, y₁⟩ f
     have := Path.Homotopic.prod_proj_left_proj_right f
     simpa
+#align fundamental_groupoid_functor.prod_iso FundamentalGroupoidFunctor.prodIso
 
 end Prod
 

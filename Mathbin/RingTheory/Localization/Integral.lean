@@ -52,27 +52,33 @@ noncomputable def coeffIntegerNormalization (p : S[X]) (i : ℕ) : R :=
       (Classical.choose_spec (exist_integer_multiples_of_finset M (p.support.Image p.coeff)) (p.coeff i)
         (Finset.mem_image.mpr ⟨i, hi, rfl⟩))
   else 0
+#align is_localization.coeff_integer_normalization IsLocalization.coeffIntegerNormalization
 
 theorem coeff_integer_normalization_of_not_mem_support (p : S[X]) (i : ℕ) (h : coeff p i = 0) :
     coeffIntegerNormalization M p i = 0 := by
   simp only [coeff_integer_normalization, h, mem_support_iff, eq_self_iff_true, not_true, Ne.def, dif_neg,
     not_false_iff]
+#align
+  is_localization.coeff_integer_normalization_of_not_mem_support IsLocalization.coeff_integer_normalization_of_not_mem_support
 
 theorem coeff_integer_normalization_mem_support (p : S[X]) (i : ℕ) (h : coeffIntegerNormalization M p i ≠ 0) :
     i ∈ p.support := by
   contrapose h
   rw [Ne.def, not_not, coeff_integer_normalization, dif_neg h]
+#align is_localization.coeff_integer_normalization_mem_support IsLocalization.coeff_integer_normalization_mem_support
 
 /-- `integer_normalization g` normalizes `g` to have integer coefficients
 by clearing the denominators -/
 noncomputable def integerNormalization (p : S[X]) : R[X] :=
   ∑ i in p.support, monomial i (coeffIntegerNormalization M p i)
+#align is_localization.integer_normalization IsLocalization.integerNormalization
 
 @[simp]
 theorem integer_normalization_coeff (p : S[X]) (i : ℕ) :
     (integerNormalization M p).coeff i = coeffIntegerNormalization M p i := by
   simp (config := { contextual := true }) [integer_normalization, coeff_monomial,
     coeff_integer_normalization_of_not_mem_support]
+#align is_localization.integer_normalization_coeff IsLocalization.integer_normalization_coeff
 
 theorem integer_normalization_spec (p : S[X]) :
     ∃ b : M, ∀ i, algebraMap R S ((integerNormalization M p).coeff i) = (b : R) • p.coeff i := by
@@ -91,6 +97,7 @@ theorem integer_normalization_spec (p : S[X]) :
     · exact not_mem_support_iff.mp hi
       
     
+#align is_localization.integer_normalization_spec IsLocalization.integer_normalization_spec
 
 theorem integer_normalization_map_to_map (p : S[X]) :
     ∃ b : M, (integerNormalization M p).map (algebraMap R S) = (b : R) • p :=
@@ -99,6 +106,7 @@ theorem integer_normalization_map_to_map (p : S[X]) :
     Polynomial.ext fun i => by
       rw [coeff_map, coeff_smul]
       exact hb i⟩
+#align is_localization.integer_normalization_map_to_map IsLocalization.integer_normalization_map_to_map
 
 variable {R' : Type _} [CommRing R']
 
@@ -107,10 +115,12 @@ theorem integer_normalization_eval₂_eq_zero (g : S →+* R') (p : S[X]) {x : R
   let ⟨b, hb⟩ := integer_normalization_map_to_map M p
   trans (eval₂_map (algebraMap R S) g x).symm
     (by rw [hb, ← IsScalarTower.algebra_map_smul S (b : R) p, eval₂_smul, hx, mul_zero])
+#align is_localization.integer_normalization_eval₂_eq_zero IsLocalization.integer_normalization_eval₂_eq_zero
 
 theorem integer_normalization_aeval_eq_zero [Algebra R R'] [Algebra S R'] [IsScalarTower R S R'] (p : S[X]) {x : R'}
     (hx : aeval x p = 0) : aeval x (integerNormalization M p) = 0 := by
   rw [aeval_def, IsScalarTower.algebra_map_eq R S R', integer_normalization_eval₂_eq_zero _ _ _ hx]
+#align is_localization.integer_normalization_aeval_eq_zero IsLocalization.integer_normalization_aeval_eq_zero
 
 end IntegerNormalization
 
@@ -140,6 +150,7 @@ theorem integer_normalization_eq_zero_iff {p : K[X]} : integerNormalization (non
     apply mem_non_zero_divisors_iff_ne_zero.mp nonzero
     exact to_map_eq_zero_iff.mp h
     
+#align is_fraction_ring.integer_normalization_eq_zero_iff IsFractionRing.integer_normalization_eq_zero_iff
 
 variable (A K C)
 
@@ -160,6 +171,7 @@ theorem is_algebraic_iff [Algebra A C] [Algebra K C] [IsScalarTower A K C] {x : 
       ⟨integer_normalization _ p, mt integer_normalization_eq_zero_iff.mp hp,
         integer_normalization_aeval_eq_zero _ p px⟩
     
+#align is_fraction_ring.is_algebraic_iff IsFractionRing.is_algebraic_iff
 
 variable {A K C}
 
@@ -168,6 +180,7 @@ variable {A K C}
 theorem comap_is_algebraic_iff [Algebra A C] [Algebra K C] [IsScalarTower A K C] :
     Algebra.IsAlgebraic A C ↔ Algebra.IsAlgebraic K C :=
   ⟨fun h x => (is_algebraic_iff A K C).mp (h x), fun h x => (is_algebraic_iff A K C).mpr (h x)⟩
+#align is_fraction_ring.comap_is_algebraic_iff IsFractionRing.comap_is_algebraic_iff
 
 end IsFractionRing
 
@@ -203,6 +216,7 @@ theorem RingHom.isIntegralElemLocalizationAtLeadingCoeff {R S : Type _} [CommRin
     erw [eval₂_map, IsLocalization.map_comp, ← hom_eval₂ _ f (algebraMap S Sₘ) x]
     exact trans (congr_arg (algebraMap S Sₘ) hf) (RingHom.map_zero _)
     
+#align ring_hom.is_integral_elem_localization_at_leading_coeff RingHom.isIntegralElemLocalizationAtLeadingCoeff
 
 /-- Given a particular witness to an element being algebraic over an algebra `R → S`,
 We can localize to a submonoid containing the leading coefficient to make it integral.
@@ -212,6 +226,7 @@ theorem isIntegralLocalizationAtLeadingCoeff {x : S} (p : R[X]) (hp : aeval x p 
           Rₘ →+* _).IsIntegralElem
       (algebraMap S Sₘ x) :=
   (algebraMap R S).isIntegralElemLocalizationAtLeadingCoeff x p hp M hM
+#align is_integral_localization_at_leading_coeff isIntegralLocalizationAtLeadingCoeff
 
 /-- If `R → S` is an integral extension, `M` is a submonoid of `R`,
 `Rₘ` is the localization of `R` at `M`,
@@ -234,12 +249,14 @@ theorem isIntegralLocalization (H : Algebra.IsIntegral R S) :
   · obtain ⟨p, hp⟩ := H s
     exact hx.symm ▸ isIntegralLocalizationAtLeadingCoeff p hp.2 (hp.1.symm ▸ M.one_mem)
     
+#align is_integral_localization isIntegralLocalization
 
 theorem isIntegralLocalization' {R S : Type _} [CommRing R] [CommRing S] {f : R →+* S} (hf : f.IsIntegral)
     (M : Submonoid R) :
     (map (Localization (M.map (f : R →* S))) f (M.le_comap_map : _ ≤ Submonoid.comap (f : R →* S) _) :
         Localization M →+* _).IsIntegral :=
   @isIntegralLocalization R _ M S _ f.toAlgebra _ _ _ _ _ _ _ _ hf
+#align is_integral_localization' isIntegralLocalization'
 
 variable (M)
 
@@ -268,6 +285,7 @@ theorem IsLocalization.scale_roots_common_denom_mem_lifts (p : Rₘ[X]) (hp : p.
     rw [h₁, zero_mul]
     exact zero_mem (algebraMap R Rₘ).range
     
+#align is_localization.scale_roots_common_denom_mem_lifts IsLocalization.scale_roots_common_denom_mem_lifts
 
 theorem IsIntegral.exists_multiple_integral_of_is_localization [Algebra Rₘ S] [IsScalarTower R Rₘ S] (x : S)
     (hx : IsIntegral Rₘ x) : ∃ m : M, IsIntegral R (m • x) := by
@@ -288,6 +306,7 @@ theorem IsIntegral.exists_multiple_integral_of_is_localization [Algebra Rₘ S] 
     
   · rwa [Polynomial.monic_scale_roots_iff]
     
+#align is_integral.exists_multiple_integral_of_is_localization IsIntegral.exists_multiple_integral_of_is_localization
 
 end IsIntegral
 
@@ -321,6 +340,7 @@ theorem isFractionRingOfAlgebraic (alg : IsAlgebraic A L) (inj : ∀ x, algebraM
     eq_iff_exists := fun x y =>
       ⟨fun h => ⟨1, by simpa using algebra_map_injective C A L h⟩, fun ⟨c, hc⟩ =>
         congr_arg (algebraMap _ L) (mul_right_cancel₀ (mem_non_zero_divisors_iff_ne_zero.mp c.2) hc)⟩ }
+#align is_integral_closure.is_fraction_ring_of_algebraic IsIntegralClosure.isFractionRingOfAlgebraic
 
 variable (K L)
 
@@ -331,6 +351,7 @@ theorem isFractionRingOfFiniteExtension [Algebra K L] [IsScalarTower A K L] [Fin
   isFractionRingOfAlgebraic A C (IsFractionRing.comap_is_algebraic_iff.mpr (isAlgebraicOfFinite K L)) fun x hx =>
     IsFractionRing.to_map_eq_zero_iff.mp
       ((map_eq_zero <| algebraMap K L).mp <| (IsScalarTower.algebra_map_apply _ _ _ _).symm.trans hx)
+#align is_integral_closure.is_fraction_ring_of_finite_extension IsIntegralClosure.isFractionRingOfFiniteExtension
 
 end IsIntegralClosure
 
@@ -345,6 +366,7 @@ the integral closure of `A` in `L` has fraction field `L`. -/
 theorem isFractionRingOfAlgebraic [Algebra A L] (alg : IsAlgebraic A L) (inj : ∀ x, algebraMap A L x = 0 → x = 0) :
     IsFractionRing (integralClosure A L) L :=
   IsIntegralClosure.isFractionRingOfAlgebraic A (integralClosure A L) alg inj
+#align integral_closure.is_fraction_ring_of_algebraic integralClosure.isFractionRingOfAlgebraic
 
 variable (K L)
 
@@ -353,6 +375,7 @@ the integral closure of `A` in `L` has fraction field `L`. -/
 theorem isFractionRingOfFiniteExtension [Algebra A L] [Algebra K L] [IsScalarTower A K L] [FiniteDimensional K L] :
     IsFractionRing (integralClosure A L) L :=
   IsIntegralClosure.isFractionRingOfFiniteExtension A K L (integralClosure A L)
+#align integral_closure.is_fraction_ring_of_finite_extension integralClosure.isFractionRingOfFiniteExtension
 
 end integralClosure
 
@@ -401,6 +424,7 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
     rw [Polynomial.aeval_algebra_map_apply] at hf₂
     exact (injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSmulDivisors.algebra_map_injective _ _) _ hf₂
     
+#align is_fraction_ring.is_algebraic_iff' IsFractionRing.is_algebraic_iff'
 
 open nonZeroDivisors
 
@@ -434,6 +458,7 @@ theorem ideal_span_singleton_map_subset {L : Type _} [IsDomain R] [IsDomain S] [
   refine' Submodule.span_subset_span R K _ _
   rw [Submodule.span_algebra_map_image_of_tower]
   exact Submodule.mem_map_of_mem (h (ideal.mem_span_singleton.mpr ⟨y, rfl⟩))
+#align is_fraction_ring.ideal_span_singleton_map_subset IsFractionRing.ideal_span_singleton_map_subset
 
 end IsFractionRing
 

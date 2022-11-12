@@ -85,6 +85,7 @@ class JordanHolderLattice (X : Type u) [Lattice X] where
   isoSymm : ∀ {x y}, iso x y → iso y x
   isoTrans : ∀ {x y z}, iso x y → iso y z → iso x z
   secondIso : ∀ {x y}, is_maximal x (x ⊔ y) → iso (x, x ⊔ y) (x ⊓ y, y)
+#align jordan_holder_lattice JordanHolderLattice
 
 namespace JordanHolderLattice
 
@@ -95,18 +96,22 @@ theorem isMaximalInfRightOfIsMaximalSup {x y : X} (hxz : IsMaximal x (x ⊔ y)) 
   rw [inf_comm]
   rw [sup_comm] at hxz hyz
   exact is_maximal_inf_left_of_is_maximal_sup hyz hxz
+#align jordan_holder_lattice.is_maximal_inf_right_of_is_maximal_sup JordanHolderLattice.isMaximalInfRightOfIsMaximalSup
 
 theorem isMaximalOfEqInf (x b : X) {a y : X} (ha : x ⊓ y = a) (hxy : x ≠ y) (hxb : IsMaximal x b)
     (hyb : IsMaximal y b) : IsMaximal a y := by
   have hb : x ⊔ y = b := sup_eq_of_is_maximal hxb hyb hxy
   substs a b
   exact is_maximal_inf_right_of_is_maximal_sup hxb hyb
+#align jordan_holder_lattice.is_maximal_of_eq_inf JordanHolderLattice.isMaximalOfEqInf
 
 theorem secondIsoOfEq {x y a b : X} (hm : IsMaximal x a) (ha : x ⊔ y = a) (hb : x ⊓ y = b) : Iso (x, a) (b, y) := by
   substs a b <;> exact second_iso hm
+#align jordan_holder_lattice.second_iso_of_eq JordanHolderLattice.secondIsoOfEq
 
 theorem IsMaximal.isoRefl {x y : X} (h : IsMaximal x y) : Iso (x, y) (x, y) :=
   secondIsoOfEq h (sup_eq_right.2 (le_of_lt (lt_of_is_maximal h))) (inf_eq_left.2 (le_of_lt (lt_of_is_maximal h)))
+#align jordan_holder_lattice.is_maximal.iso_refl JordanHolderLattice.IsMaximal.isoRefl
 
 end JordanHolderLattice
 
@@ -127,6 +132,7 @@ structure CompositionSeries (X : Type u) [Lattice X] [JordanHolderLattice X] : T
   length : ℕ
   series : Fin (length + 1) → X
   step' : ∀ i : Fin length, IsMaximal (series i.cast_succ) (series i.succ)
+#align composition_series CompositionSeries
 
 namespace CompositionSeries
 
@@ -141,40 +147,49 @@ variable {X}
 
 theorem step (s : CompositionSeries X) : ∀ i : Fin s.length, IsMaximal (s i.cast_succ) (s i.succ) :=
   s.step'
+#align composition_series.step CompositionSeries.step
 
 @[simp]
 theorem coe_fn_mk (length : ℕ) (series step) :
     (@CompositionSeries.mk X _ _ length series step : Fin length.succ → X) = series :=
   rfl
+#align composition_series.coe_fn_mk CompositionSeries.coe_fn_mk
 
 theorem lt_succ (s : CompositionSeries X) (i : Fin s.length) : s i.cast_succ < s i.succ :=
   lt_of_is_maximal (s.step _)
+#align composition_series.lt_succ CompositionSeries.lt_succ
 
 protected theorem strict_mono (s : CompositionSeries X) : StrictMono s :=
   Fin.strict_mono_iff_lt_succ.2 s.lt_succ
+#align composition_series.strict_mono CompositionSeries.strict_mono
 
 protected theorem injective (s : CompositionSeries X) : Function.Injective s :=
   s.StrictMono.Injective
+#align composition_series.injective CompositionSeries.injective
 
 @[simp]
 protected theorem inj (s : CompositionSeries X) {i j : Fin s.length.succ} : s i = s j ↔ i = j :=
   s.Injective.eq_iff
+#align composition_series.inj CompositionSeries.inj
 
 instance : Membership X (CompositionSeries X) :=
   ⟨fun x s => x ∈ Set.Range s⟩
 
 theorem mem_def {x : X} {s : CompositionSeries X} : x ∈ s ↔ x ∈ Set.Range s :=
   Iff.rfl
+#align composition_series.mem_def CompositionSeries.mem_def
 
 theorem total {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s) : x ≤ y ∨ y ≤ x := by
   rcases Set.mem_range.1 hx with ⟨i, rfl⟩
   rcases Set.mem_range.1 hy with ⟨j, rfl⟩
   rw [s.strict_mono.le_iff_le, s.strict_mono.le_iff_le]
   exact le_total i j
+#align composition_series.total CompositionSeries.total
 
 /-- The ordered `list X` of elements of a `composition_series X`. -/
 def toList (s : CompositionSeries X) : List X :=
   List.ofFn s
+#align composition_series.to_list CompositionSeries.toList
 
 /-- Two `composition_series` are equal if they are the same length and
 have the same `i`th element for every `i` -/
@@ -185,12 +200,15 @@ theorem ext_fun {s₁ s₂ : CompositionSeries X} (hl : s₁.length = s₂.lengt
   dsimp at *
   subst hl
   simpa [Function.funext_iff] using h
+#align composition_series.ext_fun CompositionSeries.ext_fun
 
 @[simp]
 theorem length_to_list (s : CompositionSeries X) : s.toList.length = s.length + 1 := by rw [to_list, List.length_of_fn]
+#align composition_series.length_to_list CompositionSeries.length_to_list
 
 theorem to_list_ne_nil (s : CompositionSeries X) : s.toList ≠ [] := by
   rw [← List.length_pos_iff_ne_nil, length_to_list] <;> exact Nat.succ_pos _
+#align composition_series.to_list_ne_nil CompositionSeries.to_list_ne_nil
 
 theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _) :=
   fun s₁ s₂ (h : List.ofFn s₁ = List.ofFn s₂) => by
@@ -207,6 +225,7 @@ theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _)
   simp only [heq_iff_eq, eq_self_iff_true, true_and_iff]
   simp only [Fin.cast_refl] at h₂
   exact funext h₂
+#align composition_series.to_list_injective CompositionSeries.to_list_injective
 
 theorem chain'_to_list (s : CompositionSeries X) : List.Chain' IsMaximal s.toList :=
   List.chain'_iff_nth_le.2
@@ -215,18 +234,22 @@ theorem chain'_to_list (s : CompositionSeries X) : List.Chain' IsMaximal s.toLis
       simp only [to_list, List.nth_le_of_fn']
       rw [length_to_list] at hi
       exact s.step ⟨i, hi⟩)
+#align composition_series.chain'_to_list CompositionSeries.chain'_to_list
 
 theorem to_list_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
   List.pairwise_iff_nth_le.2 fun i j hi hij => by
     dsimp [to_list]
     rw [List.nth_le_of_fn', List.nth_le_of_fn']
     exact s.strict_mono hij
+#align composition_series.to_list_sorted CompositionSeries.to_list_sorted
 
 theorem to_list_nodup (s : CompositionSeries X) : s.toList.Nodup :=
   s.to_list_sorted.Nodup
+#align composition_series.to_list_nodup CompositionSeries.to_list_nodup
 
 @[simp]
 theorem mem_to_list {s : CompositionSeries X} {x : X} : x ∈ s.toList ↔ x ∈ s := by rw [to_list, List.mem_of_fn, mem_def]
+#align composition_series.mem_to_list CompositionSeries.mem_to_list
 
 /-- Make a `composition_series X` from the ordered list of its elements. -/
 def ofList (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) : CompositionSeries X where
@@ -237,10 +260,12 @@ def ofList (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) : Composi
         conv_rhs => rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt (List.length_pos_of_ne_nil hl))]
         exact i.2)
   step' := fun ⟨i, hi⟩ => List.chain'_iff_nth_le.1 hc i hi
+#align composition_series.of_list CompositionSeries.ofList
 
 theorem length_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) :
     (ofList l hl hc).length = l.length - 1 :=
   rfl
+#align composition_series.length_of_list CompositionSeries.length_of_list
 
 theorem of_list_to_list (s : CompositionSeries X) : ofList s.toList s.to_list_ne_nil s.chain'_to_list = s := by
   refine' ext_fun _ _
@@ -250,10 +275,12 @@ theorem of_list_to_list (s : CompositionSeries X) : ofList s.toList s.to_list_ne
     dsimp [of_list, to_list]
     rw [List.nth_le_of_fn']
     
+#align composition_series.of_list_to_list CompositionSeries.of_list_to_list
 
 @[simp]
 theorem of_list_to_list' (s : CompositionSeries X) : ofList s.toList s.to_list_ne_nil s.chain'_to_list = s :=
   of_list_to_list s
+#align composition_series.of_list_to_list' CompositionSeries.of_list_to_list'
 
 @[simp]
 theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) : toList (ofList l hl hc) = l := by
@@ -265,46 +292,324 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
     rw [List.nth_le_of_fn']
     rfl
     
+#align composition_series.to_list_of_list CompositionSeries.to_list_of_list
 
-/-- Two `composition_series` are equal if they have the same elements. See also `ext_fun`. -/
-@[ext]
-theorem ext {s₁ s₂ : CompositionSeries X} (h : ∀ x, x ∈ s₁ ↔ x ∈ s₂) : s₁ = s₂ :=
-  to_list_injective <|
-    List.eq_of_perm_of_sorted
-      (by
-        classical <;>
-          exact List.perm_of_nodup_nodup_to_finset_eq s₁.to_list_nodup s₂.to_list_nodup (Finset.ext <| by simp [*]))
-      s₁.to_list_sorted s₂.to_list_sorted
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Two `composition_series` are equal if they have the same elements. See also `ext_fun`. -/")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (Attr.simple `ext._@.Order.JordanHolder._hyg.1 []))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `ext [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`s₁ `s₂] [":" (Term.app `CompositionSeries [`X])] "}")
+        (Term.explicitBinder
+         "("
+         [`h]
+         [":" (Term.forall "∀" [`x] [] "," («term_↔_» («term_∈_» `x "∈" `s₁) "↔" («term_∈_» `x "∈" `s₂)))]
+         []
+         ")")]
+       (Term.typeSpec ":" («term_=_» `s₁ "=" `s₂)))
+      (Command.declValSimple
+       ":="
+       («term_<|_»
+        `to_list_injective
+        "<|"
+        (Term.app
+         `List.eq_of_perm_of_sorted
+         [(Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.«tactic_<;>_»
+               (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+               "<;>"
+               (Tactic.exact
+                "exact"
+                (Term.app
+                 `List.perm_of_nodup_nodup_to_finset_eq
+                 [`s₁.to_list_nodup
+                  `s₂.to_list_nodup
+                  («term_<|_»
+                   `Finset.ext
+                   "<|"
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])))])))
+          (Term.proj `s₁ "." `to_list_sorted)
+          (Term.proj `s₂ "." `to_list_sorted)]))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `to_list_injective
+       "<|"
+       (Term.app
+        `List.eq_of_perm_of_sorted
+        [(Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.«tactic_<;>_»
+              (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+              "<;>"
+              (Tactic.exact
+               "exact"
+               (Term.app
+                `List.perm_of_nodup_nodup_to_finset_eq
+                [`s₁.to_list_nodup
+                 `s₂.to_list_nodup
+                 («term_<|_»
+                  `Finset.ext
+                  "<|"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])))])))
+         (Term.proj `s₁ "." `to_list_sorted)
+         (Term.proj `s₂ "." `to_list_sorted)]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `List.eq_of_perm_of_sorted
+       [(Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.«tactic_<;>_»
+             (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+             "<;>"
+             (Tactic.exact
+              "exact"
+              (Term.app
+               `List.perm_of_nodup_nodup_to_finset_eq
+               [`s₁.to_list_nodup
+                `s₂.to_list_nodup
+                («term_<|_»
+                 `Finset.ext
+                 "<|"
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])))])))
+        (Term.proj `s₁ "." `to_list_sorted)
+        (Term.proj `s₂ "." `to_list_sorted)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `s₂ "." `to_list_sorted)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `s₂
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj `s₁ "." `to_list_sorted)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `s₁
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+           "<;>"
+           (Tactic.exact
+            "exact"
+            (Term.app
+             `List.perm_of_nodup_nodup_to_finset_eq
+             [`s₁.to_list_nodup
+              `s₂.to_list_nodup
+              («term_<|_»
+               `Finset.ext
+               "<|"
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+       "<;>"
+       (Tactic.exact
+        "exact"
+        (Term.app
+         `List.perm_of_nodup_nodup_to_finset_eq
+         [`s₁.to_list_nodup
+          `s₂.to_list_nodup
+          («term_<|_»
+           `Finset.ext
+           "<|"
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        `List.perm_of_nodup_nodup_to_finset_eq
+        [`s₁.to_list_nodup
+         `s₂.to_list_nodup
+         («term_<|_»
+          `Finset.ext
+          "<|"
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `List.perm_of_nodup_nodup_to_finset_eq
+       [`s₁.to_list_nodup
+        `s₂.to_list_nodup
+        («term_<|_»
+         `Finset.ext
+         "<|"
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `Finset.ext
+       "<|"
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `Finset.ext
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     [(«term_<|_»
+       `Finset.ext
+       "<|"
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))
+      []]
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `s₂.to_list_nodup
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `s₁.to_list_nodup
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `List.perm_of_nodup_nodup_to_finset_eq
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/-- Two `composition_series` are equal if they have the same elements. See also `ext_fun`. -/ @[ ext ]
+  theorem
+    ext
+    { s₁ s₂ : CompositionSeries X } ( h : ∀ x , x ∈ s₁ ↔ x ∈ s₂ ) : s₁ = s₂
+    :=
+      to_list_injective
+        <|
+        List.eq_of_perm_of_sorted
+          by
+              skip
+                <;>
+                exact
+                  List.perm_of_nodup_nodup_to_finset_eq s₁.to_list_nodup s₂.to_list_nodup Finset.ext <| by simp [ * ]
+            s₁ . to_list_sorted
+            s₂ . to_list_sorted
+#align composition_series.ext CompositionSeries.ext
 
 /-- The largest element of a `composition_series` -/
 def top (s : CompositionSeries X) : X :=
   s (Fin.last _)
+#align composition_series.top CompositionSeries.top
 
 theorem top_mem (s : CompositionSeries X) : s.top ∈ s :=
   mem_def.2 (Set.mem_range.2 ⟨Fin.last _, rfl⟩)
+#align composition_series.top_mem CompositionSeries.top_mem
 
 @[simp]
 theorem le_top {s : CompositionSeries X} (i : Fin (s.length + 1)) : s i ≤ s.top :=
   s.StrictMono.Monotone (Fin.le_last _)
+#align composition_series.le_top CompositionSeries.le_top
 
 theorem le_top_of_mem {s : CompositionSeries X} {x : X} (hx : x ∈ s) : x ≤ s.top :=
   let ⟨i, hi⟩ := Set.mem_range.2 hx
   hi ▸ le_top _
+#align composition_series.le_top_of_mem CompositionSeries.le_top_of_mem
 
 /-- The smallest element of a `composition_series` -/
 def bot (s : CompositionSeries X) : X :=
   s 0
+#align composition_series.bot CompositionSeries.bot
 
 theorem bot_mem (s : CompositionSeries X) : s.bot ∈ s :=
   mem_def.2 (Set.mem_range.2 ⟨0, rfl⟩)
+#align composition_series.bot_mem CompositionSeries.bot_mem
 
 @[simp]
 theorem bot_le {s : CompositionSeries X} (i : Fin (s.length + 1)) : s.bot ≤ s i :=
   s.StrictMono.Monotone (Fin.zero_le _)
+#align composition_series.bot_le CompositionSeries.bot_le
 
 theorem bot_le_of_mem {s : CompositionSeries X} {x : X} (hx : x ∈ s) : s.bot ≤ x :=
   let ⟨i, hi⟩ := Set.mem_range.2 hx
   hi ▸ bot_le _
+#align composition_series.bot_le_of_mem CompositionSeries.bot_le_of_mem
 
 theorem length_pos_of_mem_ne {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s) (hxy : x ≠ y) :
     0 < s.length :=
@@ -313,10 +618,12 @@ theorem length_pos_of_mem_ne {s : CompositionSeries X} {x y : X} (hx : x ∈ s) 
   have hij : i ≠ j := (mt s.inj.2) fun h => hxy (hi ▸ hj ▸ h)
   hij.lt_or_lt.elim (fun hij => lt_of_le_of_lt (zero_le i) (lt_of_lt_of_le hij (Nat.le_of_lt_succ j.2))) fun hji =>
     lt_of_le_of_lt (zero_le j) (lt_of_lt_of_le hji (Nat.le_of_lt_succ i.2))
+#align composition_series.length_pos_of_mem_ne CompositionSeries.length_pos_of_mem_ne
 
 theorem forall_mem_eq_of_length_eq_zero {s : CompositionSeries X} (hs : s.length = 0) {x y} (hx : x ∈ s) (hy : y ∈ s) :
     x = y :=
   by_contradiction fun hxy => pos_iff_ne_zero.1 (length_pos_of_mem_ne hx hy hxy) hs
+#align composition_series.forall_mem_eq_of_length_eq_zero CompositionSeries.forall_mem_eq_of_length_eq_zero
 
 /-- Remove the largest element from a `composition_series`. If the series `s`
 has length zero, then `s.erase_top = s` -/
@@ -328,6 +635,7 @@ def eraseTop (s : CompositionSeries X) : CompositionSeries X where
     have := s.step ⟨i, lt_of_lt_of_le i.2 tsub_le_self⟩
     cases i
     exact this
+#align composition_series.erase_top CompositionSeries.eraseTop
 
 theorem top_erase_top (s : CompositionSeries X) :
     s.eraseTop.top = s ⟨s.length - 1, lt_of_le_of_lt tsub_le_self (Nat.lt_succ_self _)⟩ :=
@@ -336,13 +644,16 @@ theorem top_erase_top (s : CompositionSeries X) :
       (by
         ext
         simp only [erase_top_length, Fin.coe_last, Fin.coe_cast_succ, Fin.coe_of_nat_eq_mod, Fin.coe_mk, coe_coe])
+#align composition_series.top_erase_top CompositionSeries.top_erase_top
 
 theorem erase_top_top_le (s : CompositionSeries X) : s.eraseTop.top ≤ s.top := by
   simp [erase_top, top, s.strict_mono.le_iff_le, Fin.le_iff_coe_le_coe, tsub_le_self]
+#align composition_series.erase_top_top_le CompositionSeries.erase_top_top_le
 
 @[simp]
 theorem bot_erase_top (s : CompositionSeries X) : s.eraseTop.bot = s.bot :=
   rfl
+#align composition_series.bot_erase_top CompositionSeries.bot_erase_top
 
 theorem mem_erase_top_of_ne_of_mem {s : CompositionSeries X} {x : X} (hx : x ≠ s.top) (hxs : x ∈ s) : x ∈ s.eraseTop :=
   by
@@ -352,6 +663,7 @@ theorem mem_erase_top_of_ne_of_mem {s : CompositionSeries X} {x : X} (hx : x ≠
     exact lt_of_le_of_ne (Nat.le_of_lt_succ i.2) (by simpa [top, s.inj, Fin.ext_iff] using hx)
   refine' ⟨i.cast_succ, _⟩
   simp [Fin.ext_iff, Nat.mod_eq_of_lt hi]
+#align composition_series.mem_erase_top_of_ne_of_mem CompositionSeries.mem_erase_top_of_ne_of_mem
 
 theorem mem_erase_top {s : CompositionSeries X} {x : X} (h : 0 < s.length) : x ∈ s.eraseTop ↔ x ≠ s.top ∧ x ∈ s := by
   simp only [mem_def]
@@ -366,25 +678,29 @@ theorem mem_erase_top {s : CompositionSeries X} {x : X} (h : 0 < s.length) : x �
   · intro h
     exact mem_erase_top_of_ne_of_mem h.1 h.2
     
+#align composition_series.mem_erase_top CompositionSeries.mem_erase_top
 
 theorem lt_top_of_mem_erase_top {s : CompositionSeries X} {x : X} (h : 0 < s.length) (hx : x ∈ s.eraseTop) :
     x < s.top :=
   lt_of_le_of_ne (le_top_of_mem ((mem_erase_top h).1 hx).2) ((mem_erase_top h).1 hx).1
+#align composition_series.lt_top_of_mem_erase_top CompositionSeries.lt_top_of_mem_erase_top
 
 theorem isMaximalEraseTopTop {s : CompositionSeries X} (h : 0 < s.length) : IsMaximal s.eraseTop.top s.top := by
   have : s.length - 1 + 1 = s.length := by conv_rhs => rw [← Nat.succ_sub_one s.length] <;> rw [Nat.succ_sub h]
   rw [top_erase_top, top]
   convert s.step ⟨s.length - 1, Nat.sub_lt h zero_lt_one⟩ <;> ext <;> simp [this]
+#align composition_series.is_maximal_erase_top_top CompositionSeries.isMaximalEraseTopTop
 
 theorem append_cast_add_aux {s₁ s₂ : CompositionSeries X} (i : Fin s₁.length) :
     Fin.append (Nat.add_succ _ _).symm (s₁ ∘ Fin.castSucc) s₂ (Fin.castAdd s₂.length i).cast_succ = s₁ i.cast_succ := by
   cases i
   simp [Fin.append, *]
+#align composition_series.append_cast_add_aux CompositionSeries.append_cast_add_aux
 
 theorem append_succ_cast_add_aux {s₁ s₂ : CompositionSeries X} (i : Fin s₁.length) (h : s₁ (Fin.last _) = s₂ 0) :
     Fin.append (Nat.add_succ _ _).symm (s₁ ∘ Fin.castSucc) s₂ (Fin.castAdd s₂.length i).succ = s₁ i.succ := by
   cases' i with i hi
-  simp only [Fin.append, hi, Fin.succ_mk, Function.comp_app, Fin.cast_succ_mk, Fin.coe_mk, Fin.cast_add_mk]
+  simp only [Fin.append, hi, Fin.succ_mk, Function.comp_apply, Fin.cast_succ_mk, Fin.coe_mk, Fin.cast_add_mk]
   split_ifs
   · rfl
     
@@ -395,18 +711,21 @@ theorem append_succ_cast_add_aux {s₁ s₂ : CompositionSeries X} (i : Fin s₁
       _ = _ := congr_arg s₁ (by simp [Fin.ext_iff, this])
       
     
+#align composition_series.append_succ_cast_add_aux CompositionSeries.append_succ_cast_add_aux
 
 theorem append_nat_add_aux {s₁ s₂ : CompositionSeries X} (i : Fin s₂.length) :
     Fin.append (Nat.add_succ _ _).symm (s₁ ∘ Fin.castSucc) s₂ (Fin.natAdd s₁.length i).cast_succ = s₂ i.cast_succ := by
   cases i
   simp only [Fin.append, Nat.not_lt_zero, Fin.nat_add_mk, add_lt_iff_neg_left, add_tsub_cancel_left, dif_neg,
     Fin.cast_succ_mk, not_false_iff, Fin.coe_mk]
+#align composition_series.append_nat_add_aux CompositionSeries.append_nat_add_aux
 
 theorem append_succ_nat_add_aux {s₁ s₂ : CompositionSeries X} (i : Fin s₂.length) :
     Fin.append (Nat.add_succ _ _).symm (s₁ ∘ Fin.castSucc) s₂ (Fin.natAdd s₁.length i).succ = s₂ i.succ := by
   cases' i with i hi
   simp only [Fin.append, add_assoc, Nat.not_lt_zero, Fin.nat_add_mk, add_lt_iff_neg_left, add_tsub_cancel_left,
     Fin.succ_mk, dif_neg, not_false_iff, Fin.coe_mk]
+#align composition_series.append_succ_nat_add_aux CompositionSeries.append_succ_nat_add_aux
 
 /-- Append two composition series `s₁` and `s₂` such that
 the least element of `s₁` is the maximum element of `s₂`. -/
@@ -424,26 +743,31 @@ def append (s₁ s₂ : CompositionSeries X) (h : s₁.top = s₂.bot) : Composi
       rw [append_nat_add_aux, append_succ_nat_add_aux]
       exact s₂.step i
       
+#align composition_series.append CompositionSeries.append
 
 @[simp]
 theorem append_cast_add {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bot) (i : Fin s₁.length) :
     append s₁ s₂ h (Fin.castAdd s₂.length i).cast_succ = s₁ i.cast_succ :=
   append_cast_add_aux i
+#align composition_series.append_cast_add CompositionSeries.append_cast_add
 
 @[simp]
 theorem append_succ_cast_add {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bot) (i : Fin s₁.length) :
     append s₁ s₂ h (Fin.castAdd s₂.length i).succ = s₁ i.succ :=
   append_succ_cast_add_aux i h
+#align composition_series.append_succ_cast_add CompositionSeries.append_succ_cast_add
 
 @[simp]
 theorem append_nat_add {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bot) (i : Fin s₂.length) :
     append s₁ s₂ h (Fin.natAdd s₁.length i).cast_succ = s₂ i.cast_succ :=
   append_nat_add_aux i
+#align composition_series.append_nat_add CompositionSeries.append_nat_add
 
 @[simp]
 theorem append_succ_nat_add {s₁ s₂ : CompositionSeries X} (h : s₁.top = s₂.bot) (i : Fin s₂.length) :
     append s₁ s₂ h (Fin.natAdd s₁.length i).succ = s₂ i.succ :=
   append_succ_nat_add_aux i
+#align composition_series.append_succ_nat_add CompositionSeries.append_succ_nat_add
 
 /-- Add an element to the top of a `composition_series` -/
 @[simps length]
@@ -458,24 +782,29 @@ def snoc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) : Composit
       rw [Fin.snoc_cast_succ, ← Fin.cast_succ_fin_succ, Fin.snoc_cast_succ]
       exact s.step _
       
+#align composition_series.snoc CompositionSeries.snoc
 
 @[simp]
 theorem top_snoc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) : (snoc s x hsat).top = x :=
   Fin.snoc_last _ _
+#align composition_series.top_snoc CompositionSeries.top_snoc
 
 @[simp]
 theorem snoc_last (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) :
     snoc s x hsat (Fin.last (s.length + 1)) = x :=
   Fin.snoc_last _ _
+#align composition_series.snoc_last CompositionSeries.snoc_last
 
 @[simp]
 theorem snoc_cast_succ (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) (i : Fin (s.length + 1)) :
     snoc s x hsat i.cast_succ = s i :=
   Fin.snoc_cast_succ _ _ _
+#align composition_series.snoc_cast_succ CompositionSeries.snoc_cast_succ
 
 @[simp]
 theorem bot_snoc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) : (snoc s x hsat).bot = s.bot := by
   rw [bot, bot, ← Fin.cast_succ_zero, snoc_cast_succ]
+#align composition_series.bot_snoc CompositionSeries.bot_snoc
 
 theorem mem_snoc {s : CompositionSeries X} {x y : X} {hsat : IsMaximal s.top x} : y ∈ snoc s x hsat ↔ y ∈ s ∨ y = x :=
   by
@@ -499,12 +828,14 @@ theorem mem_snoc {s : CompositionSeries X} {x y : X} {hsat : IsMaximal s.top x} 
       simp
       
     
+#align composition_series.mem_snoc CompositionSeries.mem_snoc
 
 theorem eq_snoc_erase_top {s : CompositionSeries X} (h : 0 < s.length) :
     s = snoc (eraseTop s) s.top (isMaximalEraseTopTop h) := by
   ext x
   simp [mem_snoc, mem_erase_top h]
   by_cases h:x = s.top <;> simp [*, s.top_mem]
+#align composition_series.eq_snoc_erase_top CompositionSeries.eq_snoc_erase_top
 
 @[simp]
 theorem snoc_erase_top_top {s : CompositionSeries X} (h : IsMaximal s.eraseTop.top s.top) :
@@ -516,6 +847,7 @@ theorem snoc_erase_top_top {s : CompositionSeries X} (h : IsMaximal s.eraseTop.t
         refine' ne_of_gt (lt_of_is_maximal h) _
         simp [top, Fin.ext_iff, hs])
   (eq_snoc_erase_top h).symm
+#align composition_series.snoc_erase_top_top CompositionSeries.snoc_erase_top_top
 
 /-- Two `composition_series X`, `s₁` and `s₂` are equivalent if there is a bijection
 `e : fin s₁.length ≃ fin s₂.length` such that for any `i`,
@@ -523,20 +855,24 @@ theorem snoc_erase_top_top {s : CompositionSeries X} (h : IsMaximal s.eraseTop.t
 def Equivalent (s₁ s₂ : CompositionSeries X) : Prop :=
   ∃ f : Fin s₁.length ≃ Fin s₂.length,
     ∀ i : Fin s₁.length, Iso (s₁ i.cast_succ, s₁ i.succ) (s₂ (f i).cast_succ, s₂ (f i).succ)
+#align composition_series.equivalent CompositionSeries.Equivalent
 
 namespace Equivalent
 
 @[refl]
 theorem refl (s : CompositionSeries X) : Equivalent s s :=
   ⟨Equiv.refl _, fun _ => (s.step _).isoRefl⟩
+#align composition_series.equivalent.refl CompositionSeries.Equivalent.refl
 
 @[symm]
 theorem symm {s₁ s₂ : CompositionSeries X} (h : Equivalent s₁ s₂) : Equivalent s₂ s₁ :=
   ⟨h.some.symm, fun i => isoSymm (by simpa using h.some_spec (h.some.symm i))⟩
+#align composition_series.equivalent.symm CompositionSeries.Equivalent.symm
 
 @[trans]
 theorem trans {s₁ s₂ s₃ : CompositionSeries X} (h₁ : Equivalent s₁ s₂) (h₂ : Equivalent s₂ s₃) : Equivalent s₁ s₃ :=
   ⟨h₁.some.trans h₂.some, fun i => isoTrans (h₁.some_spec i) (h₂.some_spec (h₁.some i))⟩
+#align composition_series.equivalent.trans CompositionSeries.Equivalent.trans
 
 theorem append {s₁ s₂ t₁ t₂ : CompositionSeries X} (hs : s₁.top = s₂.bot) (ht : t₁.top = t₂.bot) (h₁ : Equivalent s₁ t₁)
     (h₂ : Equivalent s₂ t₂) : Equivalent (append s₁ s₂ hs) (append t₁ t₂ ht) :=
@@ -555,6 +891,7 @@ theorem append {s₁ s₂ t₁ t₂ : CompositionSeries X} (hs : s₁.top = s₂
     · intro i
       simpa [top, bot] using h₂.some_spec i
       ⟩
+#align composition_series.equivalent.append CompositionSeries.Equivalent.append
 
 protected theorem snoc {s₁ s₂ : CompositionSeries X} {x₁ x₂ : X} {hsat₁ : IsMaximal s₁.top x₁}
     {hsat₂ : IsMaximal s₂.top x₂} (hequiv : Equivalent s₁ s₂) (htop : Iso (s₁.top, x₁) (s₂.top, x₂)) :
@@ -572,9 +909,11 @@ protected theorem snoc {s₁ s₂ : CompositionSeries X} {x₁ x₂ : X} {hsat�
     · intro i
       simpa [Fin.succ_cast_succ] using hequiv.some_spec i
       ⟩
+#align composition_series.equivalent.snoc CompositionSeries.Equivalent.snoc
 
 theorem length_eq {s₁ s₂ : CompositionSeries X} (h : Equivalent s₁ s₂) : s₁.length = s₂.length := by
   simpa using Fintype.card_congr h.some
+#align composition_series.equivalent.length_eq CompositionSeries.Equivalent.length_eq
 
 theorem snocSnocSwap {s : CompositionSeries X} {x₁ x₂ y₁ y₂ : X} {hsat₁ : IsMaximal s.top x₁}
     {hsat₂ : IsMaximal s.top x₂} {hsaty₁ : IsMaximal (snoc s x₁ hsat₁).top y₁}
@@ -603,6 +942,7 @@ theorem snocSnocSwap {s : CompositionSeries X} {x₁ x₂ y₁ y₂ : X} {hsat�
         exact (s.step i).isoRefl
         
       ⟩
+#align composition_series.equivalent.snoc_snoc_swap CompositionSeries.Equivalent.snocSnocSwap
 
 end Equivalent
 
@@ -611,6 +951,8 @@ theorem length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ 
   have : s₁.bot = s₁.top := congr_arg s₁ (Fin.ext (by simp [hs₁]))
   have : Fin.last s₂.length = (0 : Fin s₂.length.succ) := s₂.injective (hb.symm.trans (this.trans ht)).symm
   simpa [Fin.ext_iff]
+#align
+  composition_series.length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero CompositionSeries.length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero
 
 theorem length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos {s₁ s₂ : CompositionSeries X} (hb : s₁.bot = s₂.bot)
     (ht : s₁.top = s₂.top) : 0 < s₁.length → 0 < s₂.length :=
@@ -618,6 +960,8 @@ theorem length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos {s₁ s₂ : Compos
     (by
       simp only [pos_iff_ne_zero, Ne.def, not_iff_not, not_not]
       exact length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero hb.symm ht.symm)
+#align
+  composition_series.length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos CompositionSeries.length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos
 
 theorem eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : CompositionSeries X} (hb : s₁.bot = s₂.bot)
     (ht : s₁.top = s₂.top) (hs₁0 : s₁.length = 0) : s₁ = s₂ := by
@@ -630,6 +974,8 @@ theorem eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : Compositio
       fun hx => hx.symm ▸ s₂.top_mem⟩
   ext
   simp [*]
+#align
+  composition_series.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero CompositionSeries.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero
 
 /-- Given a `composition_series`, `s`, and an element `x`
 such that `x` is maximal inside `s.top` there is a series, `t`,
@@ -674,6 +1020,7 @@ theorem exists_top_eq_snoc_equivalant (s : CompositionSeries X) (x : X) (hm : Is
         
       
     
+#align composition_series.exists_top_eq_snoc_equivalant CompositionSeries.exists_top_eq_snoc_equivalant
 
 /-- The **Jordan-Hölder** theorem, stated for any `jordan_holder_lattice`.
 If two composition series start and finish at the same place, they are equivalent. -/
@@ -692,6 +1039,7 @@ theorem jordanHolder (s₁ s₂ : CompositionSeries X) (hb : s₁.bot = s₂.bot
     simp only [ht]
     exact equivalent.snoc this (by simp [htt, (is_maximal_erase_top_top h0s₂).isoRefl])
     
+#align composition_series.jordan_holder CompositionSeries.jordanHolder
 
 end CompositionSeries
 

@@ -50,6 +50,7 @@ unsafe def simp_rw (q : parse rw_rules) (l : parse location) : tactic Unit :=
     let simp_arg := if rule.symm then simp_arg_type.symm_expr rule.rule else simp_arg_type.expr rule.rule
     save_info rule
     simp none none tt [simp_arg] [] l
+#align tactic.interactive.simp_rw tactic.interactive.simp_rw
 
 -- equivalent to `simp only [rule] at l`
 add_tactic_doc

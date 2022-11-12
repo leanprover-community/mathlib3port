@@ -41,6 +41,7 @@ theorem exists_subset_Union_ball_radius_lt {r : ι → ℝ} (hs : IsClosed s)
   have := fun i => exists_lt_subset_ball (hvc i) (hcv i)
   choose r' hlt hsub
   exact ⟨r', hsv.trans <| Union_mono <| hsub, hlt⟩
+#align exists_subset_Union_ball_radius_lt exists_subset_Union_ball_radius_lt
 
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover
 of a proper metric space by open balls can be shrunk to a new cover by open balls so that each of
@@ -49,6 +50,7 @@ theorem exists_Union_ball_eq_radius_lt {r : ι → ℝ} (uf : ∀ x, { i | x ∈
     (uU : (⋃ i, Ball (c i) (r i)) = univ) : ∃ r' : ι → ℝ, (⋃ i, Ball (c i) (r' i)) = univ ∧ ∀ i, r' i < r i :=
   let ⟨r', hU, hv⟩ := exists_subset_Union_ball_radius_lt isClosedUniv (fun x _ => uf x) uU.ge
   ⟨r', univ_subset_iff.1 hU, hv⟩
+#align exists_Union_ball_eq_radius_lt exists_Union_ball_eq_radius_lt
 
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover
 of a closed subset of a proper metric space by nonempty open balls can be shrunk to a new cover by
@@ -60,6 +62,7 @@ theorem exists_subset_Union_ball_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 <
   have := fun i => exists_pos_lt_subset_ball (hr i) (hvc i) (hcv i)
   choose r' hlt hsub
   exact ⟨r', hsv.trans <| Union_mono hsub, hlt⟩
+#align exists_subset_Union_ball_radius_pos_lt exists_subset_Union_ball_radius_pos_lt
 
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover
 of a proper metric space by nonempty open balls can be shrunk to a new cover by nonempty open balls
@@ -69,6 +72,7 @@ theorem exists_Union_ball_eq_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 < r i
     ∃ r' : ι → ℝ, (⋃ i, Ball (c i) (r' i)) = univ ∧ ∀ i, r' i ∈ IooCat 0 (r i) :=
   let ⟨r', hU, hv⟩ := exists_subset_Union_ball_radius_pos_lt hr isClosedUniv (fun x _ => uf x) uU.ge
   ⟨r', univ_subset_iff.1 hU, hv⟩
+#align exists_Union_ball_eq_radius_pos_lt exists_Union_ball_eq_radius_pos_lt
 
 /-- Let `R : α → ℝ` be a (possibly discontinuous) function on a proper metric space.
 Let `s` be a closed set in `α` such that `R` is positive on `s`. Then there exists a collection of
@@ -92,6 +96,7 @@ theorem exists_locally_finite_subset_Union_ball_radius_lt (hs : IsClosed s) {R :
   rcases exists_subset_Union_ball_radius_pos_lt (fun i => (hr' i).2.1) hs (fun x hx => hfin.point_finite x) hsub' with
     ⟨r, hsub, hlt⟩
   exact ⟨ι, c, r, r', fun i => ⟨(hr' i).1, (hlt i).1, (hlt i).2, (hr' i).2.2⟩, hfin, hsub⟩
+#align exists_locally_finite_subset_Union_ball_radius_lt exists_locally_finite_subset_Union_ball_radius_lt
 
 /-- Let `R : α → ℝ` be a (possibly discontinuous) positive function on a proper metric space. Then
 there exists a collection of pairs of balls `metric.ball (c i) (r i)`, `metric.ball (c i) (r' i)`
@@ -109,4 +114,5 @@ theorem exists_locally_finite_Union_eq_ball_radius_lt {R : α → ℝ} (hR : ∀
         (LocallyFinite fun i => Ball (c i) (r' i)) ∧ (⋃ i, Ball (c i) (r i)) = univ :=
   let ⟨ι, c, r, r', hlt, hfin, hsub⟩ := exists_locally_finite_subset_Union_ball_radius_lt isClosedUniv fun x _ => hR x
   ⟨ι, c, r, r', fun i => (hlt i).2, hfin, univ_subset_iff.1 hsub⟩
+#align exists_locally_finite_Union_eq_ball_radius_lt exists_locally_finite_Union_eq_ball_radius_lt
 

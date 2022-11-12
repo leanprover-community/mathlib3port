@@ -26,6 +26,7 @@ open TopologicalSpace
 for all `m, n`. -/
 def Subadditive (u : ℕ → ℝ) : Prop :=
   ∀ m n, u (m + n) ≤ u m + u n
+#align subadditive Subadditive
 
 namespace Subadditive
 
@@ -38,6 +39,7 @@ this limit is given in `subadditive.tendsto_lim` -/
 @[nolint unused_arguments]
 protected irreducible_def lim :=
   inf ((fun n : ℕ => u n / n) '' IciCat 1)
+#align subadditive.lim Subadditive.lim
 
 theorem lim_le_div (hbdd : BddBelow (Range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) : h.lim ≤ u n / n := by
   rw [Subadditive.lim]
@@ -48,6 +50,7 @@ theorem lim_le_div (hbdd : BddBelow (Range fun n => u n / n)) {n : ℕ} (hn : n 
   · apply mem_image_of_mem
     exact zero_lt_iff.2 hn
     
+#align subadditive.lim_le_div Subadditive.lim_le_div
 
 theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r := by
   induction' k with k IH
@@ -61,6 +64,7 @@ theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r := by
     _ ≤ u n + (k * u n + u r) := add_le_add_left IH _
     _ = (k + 1 : ℕ) * u n + u r := by simp <;> ring
     
+#align subadditive.apply_mul_add_le Subadditive.apply_mul_add_le
 
 theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) : ∀ᶠ p in at_top, u p / p < L := by
   have I : ∀ i : ℕ, 0 < i → (i : ℝ) ≠ 0 := by
@@ -104,6 +108,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     rw [add_zero] at this
     exact (tendsto_order.1 this).2 _ wL
   filter_upwards [B, C] with _ hp h'p using hp.trans_lt h'p
+#align subadditive.eventually_div_lt_of_div_lt Subadditive.eventually_div_lt_of_div_lt
 
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/
 theorem tendsto_lim (hbdd : BddBelow (Range fun n => u n / n)) : Tendsto (fun n => u n / n) atTop (𝓝 h.lim) := by
@@ -117,6 +122,7 @@ theorem tendsto_lim (hbdd : BddBelow (Range fun n => u n / n)) : Tendsto (fun n 
       exact ⟨n, zero_lt_one.trans_le hn, xL⟩
     exact h.eventually_div_lt_of_div_lt npos.ne' hn
     
+#align subadditive.tendsto_lim Subadditive.tendsto_lim
 
 end Subadditive
 

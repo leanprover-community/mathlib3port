@@ -34,9 +34,11 @@ See Note [user attribute parameters]
 -/
 private unsafe def reflect_name_list : has_reflect (List Name)
   | ns => quote.1 (id (%%ₓexpr.mk_app (quote.1 Prop) <| ns.map (flip expr.const [])) : List Name)
+#align reflect_name_list reflect_name_list
 
 private unsafe def parse_name_list (e : expr) : List Name :=
   e.app_arg.get_app_args.map expr.const_name
+#align parse_name_list parse_name_list
 
 attribute [local instance] reflect_name_list
 
@@ -54,10 +56,11 @@ unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where
   cache_cfg :=
     { dependencies := [],
       mk_cache :=
-        List.mfoldl
+        List.foldlM
           (fun cache d => native.rb_map.insert cache d <$> parse_name_list <$> nolint_attr.get_param_untyped d)
           mk_name_map }
   parser := parser.many ident
+#align nolint_attr nolint_attr
 
 end
 
@@ -68,6 +71,7 @@ using `linter`, i.e., if there is no `nolint` attribute. -/
 unsafe def should_be_linted (linter : Name) (decl : Name) : tactic Bool := do
   let c ← nolint_attr.get_cache
   pure <| linter ∉ (c decl).getOrElse []
+#align should_be_linted should_be_linted
 
 /-- A linting test for the `#lint` command.
 
@@ -87,11 +91,13 @@ unsafe structure linter where
   errors_found : String
   is_fast : Bool := true
   auto_decls : Bool
+#align linter linter
 
 /-- Takes a list of names that resolve to declarations of type `linter`,
 and produces a list of linters. -/
 unsafe def get_linters (l : List Name) : tactic (List (Name × linter)) :=
   l.mmap fun n => Prod.mk n.last <$> (mk_const n >>= eval_expr linter) <|> fail f! "invalid linter: {n}"
+#align get_linters get_linters
 
 /-- Defines the user attribute `linter` for adding a linter to the default set.
 Linters should be defined in the `linter` namespace.
@@ -103,6 +109,7 @@ unsafe def linter_attr : user_attribute Unit Unit where
   Name := "linter"
   descr := "Use this declaration as a linting test in #lint"
   after_set := some fun nm _ _ => mk_const nm >>= infer_type >>= unify (quote.1 linter)
+#align linter_attr linter_attr
 
 add_tactic_doc { Name := "linter", category := DocCategory.attr, declNames := [`linter_attr], tags := ["linting"] }
 

@@ -41,6 +41,7 @@ class Bicategory.Strict : Prop where
   right_unitor_eq_to_iso' : ∀ {a b : B} (f : a ⟶ b), ρ_ f = eqToIso (comp_id' f) := by obviously
   associator_eq_to_iso' : ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d), α_ f g h = eqToIso (assoc' f g h) := by
     obviously
+#align category_theory.bicategory.strict CategoryTheory.Bicategory.Strict
 
 restate_axiom bicategory.strict.id_comp'
 
@@ -63,6 +64,7 @@ instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] : Cat
   id_comp' a b := Bicategory.Strict.id_comp
   comp_id' a b := Bicategory.Strict.comp_id
   assoc' a b c d := Bicategory.Strict.assoc
+#align category_theory.strict_bicategory.category CategoryTheory.StrictBicategory.category
 
 namespace Bicategory
 
@@ -73,12 +75,14 @@ theorem whisker_left_eq_to_hom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g
     f ◁ eqToHom η = eqToHom (congr_arg₂ (· ≫ ·) rfl η) := by
   cases η
   simp only [whisker_left_id, eq_to_hom_refl]
+#align category_theory.bicategory.whisker_left_eq_to_hom CategoryTheory.Bicategory.whisker_left_eq_to_hom
 
 @[simp]
 theorem eq_to_hom_whisker_right {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶ c) :
     eqToHom η ▷ h = eqToHom (congr_arg₂ (· ≫ ·) η rfl) := by
   cases η
   simp only [id_whisker_right, eq_to_hom_refl]
+#align category_theory.bicategory.eq_to_hom_whisker_right CategoryTheory.Bicategory.eq_to_hom_whisker_right
 
 end Bicategory
 

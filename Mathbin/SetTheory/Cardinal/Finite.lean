@@ -32,25 +32,32 @@ namespace Nat
   If `α` is infinite, `nat.card α = 0`. -/
 protected def card (α : Type _) : ℕ :=
   (mk α).toNat
+#align nat.card Nat.card
 
 @[simp]
 theorem card_eq_fintype_card [Fintype α] : Nat.card α = Fintype.card α :=
   mk_to_nat_eq_card
+#align nat.card_eq_fintype_card Nat.card_eq_fintype_card
 
 @[simp]
 theorem card_eq_zero_of_infinite [Infinite α] : Nat.card α = 0 :=
   mk_to_nat_of_infinite
+#align nat.card_eq_zero_of_infinite Nat.card_eq_zero_of_infinite
 
 theorem finite_of_card_ne_zero (h : Nat.card α ≠ 0) : Finite α :=
   not_infinite_iff_finite.mp <| h ∘ @Nat.card_eq_zero_of_infinite α
+#align nat.finite_of_card_ne_zero Nat.finite_of_card_ne_zero
 
 theorem card_congr (f : α ≃ β) : Nat.card α = Nat.card β :=
   Cardinal.to_nat_congr f
+#align nat.card_congr Nat.card_congr
 
 theorem card_eq_of_bijective (f : α → β) (hf : Function.Bijective f) : Nat.card α = Nat.card β :=
   card_congr (Equiv.ofBijective f hf)
+#align nat.card_eq_of_bijective Nat.card_eq_of_bijective
 
 theorem card_eq_of_equiv_fin {α : Type _} {n : ℕ} (f : α ≃ Fin n) : Nat.card α = n := by simpa using card_congr f
+#align nat.card_eq_of_equiv_fin Nat.card_eq_of_equiv_fin
 
 /-- If the cardinality is positive, that means it is a finite type, so there is
 an equivalence between `α` and `fin (nat.card α)`. See also `finite.equiv_fin`. -/
@@ -60,44 +67,56 @@ def equivFinOfCardPos {α : Type _} (h : Nat.card α ≠ 0) : α ≃ Fin (Nat.ca
     
   · simpa using h
     
+#align nat.equiv_fin_of_card_pos Nat.equivFinOfCardPos
 
 theorem card_of_subsingleton (a : α) [Subsingleton α] : Nat.card α = 1 := by
   letI := Fintype.ofSubsingleton a
   rw [card_eq_fintype_card, Fintype.card_of_subsingleton a]
+#align nat.card_of_subsingleton Nat.card_of_subsingleton
 
 @[simp]
 theorem card_unique [Unique α] : Nat.card α = 1 :=
   card_of_subsingleton default
+#align nat.card_unique Nat.card_unique
 
 theorem card_eq_one_iff_unique : Nat.card α = 1 ↔ Subsingleton α ∧ Nonempty α :=
   Cardinal.to_nat_eq_one_iff_unique
+#align nat.card_eq_one_iff_unique Nat.card_eq_one_iff_unique
 
 theorem card_eq_two_iff : Nat.card α = 2 ↔ ∃ x y : α, x ≠ y ∧ {x, y} = @Set.Univ α :=
   (to_nat_eq_iff two_ne_zero).trans <| Iff.trans (by rw [Nat.cast_two]) mk_eq_two_iff
+#align nat.card_eq_two_iff Nat.card_eq_two_iff
 
 theorem card_eq_two_iff' (x : α) : Nat.card α = 2 ↔ ∃! y, y ≠ x :=
   (to_nat_eq_iff two_ne_zero).trans <| Iff.trans (by rw [Nat.cast_two]) (mk_eq_two_iff' x)
+#align nat.card_eq_two_iff' Nat.card_eq_two_iff'
 
 theorem card_of_is_empty [IsEmpty α] : Nat.card α = 0 := by simp
+#align nat.card_of_is_empty Nat.card_of_is_empty
 
 @[simp]
 theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.card β := by
   simp only [Nat.card, mk_prod, to_nat_mul, to_nat_lift]
+#align nat.card_prod Nat.card_prod
 
 @[simp]
 theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
   card_congr Equiv.ulift
+#align nat.card_ulift Nat.card_ulift
 
 @[simp]
 theorem card_plift (α : Type _) : Nat.card (PLift α) = Nat.card α :=
   card_congr Equiv.plift
+#align nat.card_plift Nat.card_plift
 
 theorem card_pi {β : α → Type _} [Fintype α] : Nat.card (∀ a, β a) = ∏ a, Nat.card (β a) := by
   simp_rw [Nat.card, mk_pi, prod_eq_of_fintype, to_nat_lift, to_nat_finset_prod]
+#align nat.card_pi Nat.card_pi
 
 theorem card_fun [Finite α] : Nat.card (α → β) = Nat.card β ^ Nat.card α := by
   haveI := Fintype.ofFinite α
   rw [Nat.card_pi, Finset.prod_const, Finset.card_univ, ← Nat.card_eq_fintype_card]
+#align nat.card_fun Nat.card_fun
 
 @[simp]
 theorem card_zmod (n : ℕ) : Nat.card (Zmod n) = n := by
@@ -106,6 +125,7 @@ theorem card_zmod (n : ℕ) : Nat.card (Zmod n) = n := by
     
   · rw [Nat.card_eq_fintype_card, Zmod.card]
     
+#align nat.card_zmod Nat.card_zmod
 
 end Nat
 
@@ -115,14 +135,17 @@ namespace PartEnat
   If `α` is infinite, `part_enat.card α = ⊤`. -/
 def card (α : Type _) : PartEnat :=
   (mk α).toPartEnat
+#align part_enat.card PartEnat.card
 
 @[simp]
 theorem card_eq_coe_fintype_card [Fintype α] : card α = Fintype.card α :=
   mk_to_part_enat_eq_coe_card
+#align part_enat.card_eq_coe_fintype_card PartEnat.card_eq_coe_fintype_card
 
 @[simp]
 theorem card_eq_top_of_infinite [Infinite α] : card α = ⊤ :=
   mk_to_part_enat_of_infinite
+#align part_enat.card_eq_top_of_infinite PartEnat.card_eq_top_of_infinite
 
 end PartEnat
 

@@ -45,16 +45,19 @@ theorem Fintype.isPrimePowCardOfField {α} [Fintype α] [Field α] : IsPrimePow 
     
   rw [← FiniteDimensional.finrank_eq_card_basis b]
   exact finite_dimensional.finrank_pos.ne'
+#align fintype.is_prime_pow_card_of_field Fintype.isPrimePowCardOfField
 
 /-- A `fintype` can be given a field structure iff its cardinality is a prime power. -/
 theorem Fintype.nonempty_field_iff {α} [Fintype α] : Nonempty (Field α) ↔ IsPrimePow ‖α‖ := by
   refine' ⟨fun ⟨h⟩ => Fintype.isPrimePowCardOfField, _⟩
   rintro ⟨p, n, hp, hn, hα⟩
-  haveI := Fact.mk (nat.prime_iff.mpr hp)
+  haveI := Fact.mk hp.nat_prime
   exact ⟨(Fintype.equivOfCardEq ((GaloisField.card p n hn.ne').trans hα)).symm.Field⟩
+#align fintype.nonempty_field_iff Fintype.nonempty_field_iff
 
 theorem Fintype.not_is_field_of_card_not_prime_pow {α} [Fintype α] [Ring α] : ¬IsPrimePow ‖α‖ → ¬IsField α :=
   mt fun h => Fintype.nonempty_field_iff.mp ⟨h.toField⟩
+#align fintype.not_is_field_of_card_not_prime_pow Fintype.not_is_field_of_card_not_prime_pow
 
 /-- Any infinite type can be endowed a field structure. -/
 theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α) := by
@@ -69,6 +72,7 @@ theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α
     
   · simp
     
+#align infinite.nonempty_field Infinite.nonempty_field
 
 /-- There is a field structure on type if and only if its cardinality is a prime power. -/
 theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow (#α) := by
@@ -79,4 +83,5 @@ theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow (#
     
   · simpa only [← Cardinal.infinite_iff, h, true_or_iff, iff_true_iff] using Infinite.nonempty_field
     
+#align field.nonempty_iff Field.nonempty_iff
 

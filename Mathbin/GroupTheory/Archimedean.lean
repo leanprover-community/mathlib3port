@@ -53,6 +53,7 @@ theorem AddSubgroup.cyclic_of_min {H : AddSubgroup G} {a : G} (ha : IsLeast { g 
     have h' : ¬a ≤ g - k • a := not_le.mpr lt
     contradiction
   simp [sub_eq_zero.mp h_zero, AddSubgroup.mem_closure_singleton]
+#align add_subgroup.cyclic_of_min AddSubgroup.cyclic_of_min
 
 /-- Every subgroup of `ℤ` is cyclic. -/
 theorem Int.subgroup_cyclic (H : AddSubgroup ℤ) : ∃ a, H = AddSubgroup.closure {a} := by
@@ -72,4 +73,5 @@ theorem Int.subgroup_cyclic (H : AddSubgroup ℤ) : ∃ a, H = AddSubgroup.closu
       
   obtain ⟨a, ha, ha'⟩ := Int.exists_least_of_bdd ⟨(0 : ℤ), h_bdd⟩ ⟨g₁, g₁_in, g₁_pos⟩
   exact ⟨a, AddSubgroup.cyclic_of_min ⟨ha, ha'⟩⟩
+#align int.subgroup_cyclic Int.subgroup_cyclic
 

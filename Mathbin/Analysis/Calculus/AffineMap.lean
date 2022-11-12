@@ -32,6 +32,7 @@ theorem contDiff {n : ℕ∞} (f : V →A[𝕜] W) : ContDiff 𝕜 n f := by
   apply f.cont_linear.cont_diff.add
   simp only
   exact contDiffConst
+#align continuous_affine_map.cont_diff ContinuousAffineMap.contDiff
 
 end ContinuousAffineMap
 

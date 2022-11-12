@@ -40,6 +40,7 @@ namespace Finset
 /-- Finitely supported product of finsets. -/
 protected def finsupp (s : Finset ι) (t : ι → Finset α) : Finset (ι →₀ α) :=
   (s.pi t).map ⟨indicator s, indicator_injective s⟩
+#align finset.finsupp Finset.finsupp
 
 theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.Support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i := by
   refine' mem_map.trans ⟨_, _⟩
@@ -52,6 +53,7 @@ theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.Support
     ext i
     exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
     
+#align finset.mem_finsupp_iff Finset.mem_finsupp_iff
 
 /-- When `t` is supported on `s`, `f ∈ s.finsupp t` precisely means that `f` is pointwise in `t`. -/
 @[simp]
@@ -71,10 +73,12 @@ theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.Supp
     
   · rwa [H, mem_zero] at h
     
+#align finset.mem_finsupp_iff_of_support_subset Finset.mem_finsupp_iff_of_support_subset
 
 @[simp]
 theorem card_finsupp (s : Finset ι) (t : ι → Finset α) : (s.Finsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
+#align finset.card_finsupp Finset.card_finsupp
 
 end Finset
 
@@ -86,15 +90,18 @@ namespace Finsupp
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
 def pi (f : ι →₀ Finset α) : Finset (ι →₀ α) :=
   f.Support.Finsupp f
+#align finsupp.pi Finsupp.pi
 
 @[simp]
 theorem mem_pi {f : ι →₀ Finset α} {g : ι →₀ α} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
   mem_finsupp_iff_of_support_subset <| Subset.refl _
+#align finsupp.mem_pi Finsupp.mem_pi
 
 @[simp]
 theorem card_pi (f : ι →₀ Finset α) : f.pi.card = f.Prod fun i => (f i).card := by
   rw [pi, card_finsupp]
   exact Finset.prod_congr rfl fun i _ => by simp only [Pi.nat_apply, Nat.cast_id]
+#align finsupp.card_pi Finsupp.card_pi
 
 end Finsupp
 

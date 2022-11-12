@@ -32,11 +32,13 @@ variable (R : Type u) (M : Type v) (N : Type w) (X : Type x) (Y : Type y) [Unifo
 /-- An additive action such that for all `c`, the map `λ x, c +ᵥ x` is uniformly continuous. -/
 class HasUniformContinuousConstVadd [HasVadd M X] : Prop where
   uniform_continuous_const_vadd : ∀ c : M, UniformContinuous ((· +ᵥ ·) c : X → X)
+#align has_uniform_continuous_const_vadd HasUniformContinuousConstVadd
 
 /-- A multiplicative action such that for all `c`, the map `λ x, c • x` is uniformly continuous. -/
 @[to_additive]
 class HasUniformContinuousConstSmul [HasSmul M X] : Prop where
   uniform_continuous_const_smul : ∀ c : M, UniformContinuous ((· • ·) c : X → X)
+#align has_uniform_continuous_const_smul HasUniformContinuousConstSmul
 
 export HasUniformContinuousConstVadd (uniform_continuous_const_vadd)
 
@@ -45,10 +47,12 @@ export HasUniformContinuousConstSmul (uniform_continuous_const_smul)
 instance AddMonoid.has_uniform_continuous_const_smul_nat [AddGroup X] [UniformAddGroup X] :
     HasUniformContinuousConstSmul ℕ X :=
   ⟨uniform_continuous_const_nsmul⟩
+#align add_monoid.has_uniform_continuous_const_smul_nat AddMonoid.has_uniform_continuous_const_smul_nat
 
 instance AddGroup.has_uniform_continuous_const_smul_int [AddGroup X] [UniformAddGroup X] :
     HasUniformContinuousConstSmul ℤ X :=
   ⟨uniform_continuous_const_zsmul⟩
+#align add_group.has_uniform_continuous_const_smul_int AddGroup.has_uniform_continuous_const_smul_int
 
 /-- A `distrib_mul_action` that is continuous on a uniform group is uniformly continuous.
 This can't be an instance due to it forming a loop with
@@ -58,16 +62,20 @@ theorem has_uniform_continuous_const_smul_of_continuous_const_smul [Monoid R] [A
   ⟨fun r =>
     uniform_continuous_of_continuous_at_zero (DistribMulAction.toAddMonoidHom M r)
       (Continuous.continuous_at (continuous_const_smul r))⟩
+#align
+  has_uniform_continuous_const_smul_of_continuous_const_smul has_uniform_continuous_const_smul_of_continuous_const_smul
 
 /-- The action of `semiring.to_module` is uniformly continuous. -/
 instance Ring.has_uniform_continuous_const_smul [Ring R] [UniformSpace R] [UniformAddGroup R] [HasContinuousMul R] :
     HasUniformContinuousConstSmul R R :=
   has_uniform_continuous_const_smul_of_continuous_const_smul _ _
+#align ring.has_uniform_continuous_const_smul Ring.has_uniform_continuous_const_smul
 
 /-- The action of `semiring.to_opposite_module` is uniformly continuous. -/
 instance Ring.has_uniform_continuous_const_op_smul [Ring R] [UniformSpace R] [UniformAddGroup R] [HasContinuousMul R] :
     HasUniformContinuousConstSmul Rᵐᵒᵖ R :=
   has_uniform_continuous_const_smul_of_continuous_const_smul _ _
+#align ring.has_uniform_continuous_const_op_smul Ring.has_uniform_continuous_const_op_smul
 
 section HasSmul
 
@@ -77,6 +85,8 @@ variable [HasSmul M X]
 instance (priority := 100) HasUniformContinuousConstSmul.to_has_continuous_const_smul
     [HasUniformContinuousConstSmul M X] : HasContinuousConstSmul M X :=
   ⟨fun c => (uniform_continuous_const_smul c).Continuous⟩
+#align
+  has_uniform_continuous_const_smul.to_has_continuous_const_smul HasUniformContinuousConstSmul.to_has_continuous_const_smul
 
 variable {M X Y}
 
@@ -84,6 +94,7 @@ variable {M X Y}
 theorem UniformContinuous.const_smul [HasUniformContinuousConstSmul M X] {f : Y → X} (hf : UniformContinuous f)
     (c : M) : UniformContinuous (c • f) :=
   (uniform_continuous_const_smul c).comp hf
+#align uniform_continuous.const_smul UniformContinuous.const_smul
 
 /-- If a scalar is central, then its right action is uniform continuous when its left action is. -/
 instance (priority := 100) HasUniformContinuousConstSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X]
@@ -92,11 +103,13 @@ instance (priority := 100) HasUniformContinuousConstSmul.op [HasSmul Mᵐᵒᵖ 
       change UniformContinuous fun m => MulOpposite.op c • m
       simp_rw [op_smul_eq_smul]
       exact uniform_continuous_const_smul c⟩
+#align has_uniform_continuous_const_smul.op HasUniformContinuousConstSmul.op
 
 @[to_additive]
 instance MulOpposite.has_uniform_continuous_const_smul [HasUniformContinuousConstSmul M X] :
     HasUniformContinuousConstSmul M Xᵐᵒᵖ :=
   ⟨fun c => MulOpposite.uniform_continuous_op.comp <| MulOpposite.uniform_continuous_unop.const_smul c⟩
+#align mul_opposite.has_uniform_continuous_const_smul MulOpposite.has_uniform_continuous_const_smul
 
 end HasSmul
 
@@ -104,6 +117,7 @@ end HasSmul
 instance UniformGroup.to_has_uniform_continuous_const_smul {G : Type u} [Group G] [UniformSpace G] [UniformGroup G] :
     HasUniformContinuousConstSmul G G :=
   ⟨fun c => uniform_continuous_const.mul uniform_continuous_id⟩
+#align uniform_group.to_has_uniform_continuous_const_smul UniformGroup.to_has_uniform_continuous_const_smul
 
 namespace UniformSpace
 
@@ -119,6 +133,7 @@ instance : HasSmul M (Completion X) :=
 
 theorem smul_def (c : M) (x : Completion X) : c • x = Completion.map ((· • ·) c) x :=
   rfl
+#align uniform_space.completion.smul_def UniformSpace.Completion.smul_def
 
 @[to_additive]
 instance : HasUniformContinuousConstSmul M (Completion X) :=
@@ -149,6 +164,7 @@ variable {M X} [HasUniformContinuousConstSmul M X]
 @[simp, norm_cast, to_additive]
 theorem coe_smul (c : M) (x : X) : ↑(c • x) = (c • x : Completion X) :=
   (map_coe (uniform_continuous_const_smul c) x).symm
+#align uniform_space.completion.coe_smul UniformSpace.Completion.coe_smul
 
 end HasSmul
 

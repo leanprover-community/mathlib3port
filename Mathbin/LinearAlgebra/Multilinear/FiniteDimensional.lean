@@ -63,12 +63,15 @@ private theorem free_and_finite : Module.Free R (MultilinearMap R M₁ M₂) ∧
     cases ih fun i => N i.succ
     exact ⟨Module.Free.linearMap _ _ _, Module.Finite.linear_map _ _⟩
     
+#align multilinear_map.free_and_finite multilinear_map.free_and_finite
 
 instance _root_.module.finite.multilinear_map : Module.Finite R (MultilinearMap R M₁ M₂) :=
   free_and_finite.2
+#align multilinear_map._root_.module.finite.multilinear_map multilinear_map._root_.module.finite.multilinear_map
 
 instance _root_.module.free.multilinear_map : Module.Free R (MultilinearMap R M₁ M₂) :=
   free_and_finite.1
+#align multilinear_map._root_.module.free.multilinear_map multilinear_map._root_.module.free.multilinear_map
 
 end MultilinearMap
 

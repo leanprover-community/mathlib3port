@@ -31,10 +31,11 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:297:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:299:31: unsupported: @[derive] abbrev -/
 /-- The category of `k`-linear representations of a monoid `G`. -/
 abbrev RepCat (k G : Type u) [Ring k] [Monoid G] :=
   ActionCat (ModuleCat.{u} k) (MonCat.of G)
+#align Rep RepCat
 
 instance (k G : Type u) [CommRing k] [Monoid G] : Linear k (RepCat k G) := by infer_instance
 
@@ -57,18 +58,22 @@ instance (V : RepCat k G) : Module k V := by
 -/
 def ρ (V : RepCat k G) : Representation k G V :=
   V.ρ
+#align Rep.ρ RepCat.ρ
 
 /-- Lift an unbundled representation to `Rep`. -/
 def of {V : Type u} [AddCommGroup V] [Module k V] (ρ : G →* V →ₗ[k] V) : RepCat k G :=
   ⟨ModuleCat.of k V, ρ⟩
+#align Rep.of RepCat.of
 
 @[simp]
 theorem coe_of {V : Type u} [AddCommGroup V] [Module k V] (ρ : G →* V →ₗ[k] V) : (of ρ : Type u) = V :=
   rfl
+#align Rep.coe_of RepCat.coe_of
 
 @[simp]
 theorem of_ρ {V : Type u} [AddCommGroup V] [Module k V] (ρ : G →* V →ₗ[k] V) : (of ρ).ρ = ρ :=
   rfl
+#align Rep.of_ρ RepCat.of_ρ
 
 -- Verify that limits are calculated correctly.
 noncomputable example : PreservesLimits (forget₂ (RepCat k G) (ModuleCat.{u} k)) := by infer_instance
@@ -83,6 +88,7 @@ variable (k G)
 `G`-representation on `k[H].` -/
 noncomputable def linearization : MonoidalFunctor (ActionCat (Type u) (MonCat.of G)) (RepCat k G) :=
   (ModuleCat.monoidalFree k).mapAction (MonCat.of G)
+#align Rep.linearization RepCat.linearization
 
 variable {k G}
 
@@ -90,21 +96,25 @@ variable {k G}
 theorem linearization_obj_ρ (X : ActionCat (Type u) (MonCat.of G)) (g : G) (x : X.V →₀ k) :
     ((linearization k G).1.1.obj X).ρ g x = Finsupp.lmapDomain k k (X.ρ g) x :=
   rfl
+#align Rep.linearization_obj_ρ RepCat.linearization_obj_ρ
 
 @[simp]
 theorem linearization_of (X : ActionCat (Type u) (MonCat.of G)) (g : G) (x : X.V) :
     ((linearization k G).1.1.obj X).ρ g (Finsupp.single x (1 : k)) = Finsupp.single (X.ρ g x) (1 : k) := by
   rw [linearization_obj_ρ, Finsupp.lmap_domain_apply, Finsupp.map_domain_single]
+#align Rep.linearization_of RepCat.linearization_of
 
 variable (X Y : ActionCat (Type u) (MonCat.of G)) (f : X ⟶ Y)
 
 @[simp]
 theorem linearization_map_hom : ((linearization k G).1.1.map f).hom = Finsupp.lmapDomain k k f.hom :=
   rfl
+#align Rep.linearization_map_hom RepCat.linearization_map_hom
 
 theorem linearization_map_hom_of (x : X.V) :
     ((linearization k G).1.1.map f).hom (Finsupp.single x (1 : k)) = Finsupp.single (f.hom x) (1 : k) := by
   rw [linearization_map_hom, Finsupp.lmap_domain_apply, Finsupp.map_domain_single]
+#align Rep.linearization_map_hom_of RepCat.linearization_map_hom_of
 
 variable (k G)
 
@@ -112,12 +122,14 @@ variable (k G)
 `G →* End(k[H])` as a term of type `Rep k G`. -/
 noncomputable abbrev ofMulAction (H : Type u) [MulAction G H] : RepCat k G :=
   of <| Representation.ofMulAction k G H
+#align Rep.of_mul_action RepCat.ofMulAction
 
 /-- The linearization of a type `H` with a `G`-action is definitionally isomorphic to the
 `k`-linear `G`-representation on `k[H]` induced by the `G`-action on `H`. -/
 noncomputable def linearizationOfMulActionIso (n : ℕ) :
     (linearization k G).1.1.obj (ActionCat.ofMulAction G (Fin n → G)) ≅ ofMulAction k G (Fin n → G) :=
   Iso.refl _
+#align Rep.linearization_of_mul_action_iso RepCat.linearizationOfMulActionIso
 
 end Linearization
 
@@ -157,16 +169,19 @@ theorem to_Module_monoid_algebra_map_aux {k G : Type _} [CommRing k] [Monoid G] 
   · intro r g w
     simp only [AlgHom.map_smul, w, RingHom.id_apply, LinearMap.smul_apply, LinearMap.map_smulₛₗ]
     
+#align Rep.to_Module_monoid_algebra_map_aux RepCat.to_Module_monoid_algebra_map_aux
 
 /-- Auxilliary definition for `to_Module_monoid_algebra`. -/
 def toModuleMonoidAlgebraMap {V W : RepCat k G} (f : V ⟶ W) :
     ModuleCat.of (MonoidAlgebra k G) V.ρ.AsModule ⟶ ModuleCat.of (MonoidAlgebra k G) W.ρ.AsModule :=
   { f.hom with map_smul' := fun r x => to_Module_monoid_algebra_map_aux V.V W.V V.ρ W.ρ f.hom f.comm r x }
+#align Rep.to_Module_monoid_algebra_map RepCat.toModuleMonoidAlgebraMap
 
 /-- Functorially convert a representation of `G` into a module over `monoid_algebra k G`. -/
 def toModuleMonoidAlgebra : RepCat k G ⥤ ModuleCat.{u} (MonoidAlgebra k G) where
   obj V := ModuleCat.of _ V.ρ.AsModule
   map V W f := toModuleMonoidAlgebraMap f
+#align Rep.to_Module_monoid_algebra RepCat.toModuleMonoidAlgebra
 
 /-- Functorially convert a module over `monoid_algebra k G` into a representation of `G`. -/
 def ofModuleMonoidAlgebra : ModuleCat.{u} (MonoidAlgebra k G) ⥤ RepCat k G where
@@ -176,26 +191,31 @@ def ofModuleMonoidAlgebra : ModuleCat.{u} (MonoidAlgebra k G) ⥤ RepCat k G whe
       comm' := fun g => by
         ext
         apply f.map_smul }
+#align Rep.of_Module_monoid_algebra RepCat.ofModuleMonoidAlgebra
 
 theorem of_Module_monoid_algebra_obj_coe (M : ModuleCat.{u} (MonoidAlgebra k G)) :
     (ofModuleMonoidAlgebra.obj M : Type u) = RestrictScalars k (MonoidAlgebra k G) M :=
   rfl
+#align Rep.of_Module_monoid_algebra_obj_coe RepCat.of_Module_monoid_algebra_obj_coe
 
 theorem of_Module_monoid_algebra_obj_ρ (M : ModuleCat.{u} (MonoidAlgebra k G)) :
     (ofModuleMonoidAlgebra.obj M).ρ = Representation.ofModule k G M :=
   rfl
+#align Rep.of_Module_monoid_algebra_obj_ρ RepCat.of_Module_monoid_algebra_obj_ρ
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def counitIsoAddEquiv {M : ModuleCat.{u} (MonoidAlgebra k G)} :
     (of_Module_monoid_algebra ⋙ to_Module_monoid_algebra).obj M ≃+ M := by
   dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' (Representation.ofModule k G ↥M).asModuleEquiv.trans (RestrictScalars.addEquiv _ _ _)
+#align Rep.counit_iso_add_equiv RepCat.counitIsoAddEquiv
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def unitIsoAddEquiv {V : RepCat k G} : V ≃+ (to_Module_monoid_algebra ⋙ of_Module_monoid_algebra).obj V := by
   dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' V.ρ.as_module_equiv.symm.trans _
   exact (RestrictScalars.addEquiv _ _ _).symm
+#align Rep.unit_iso_add_equiv RepCat.unitIsoAddEquiv
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def counitIso (M : ModuleCat.{u} (MonoidAlgebra k G)) :
@@ -205,6 +225,7 @@ def counitIso (M : ModuleCat.{u} (MonoidAlgebra k G)) :
       map_smul' := fun r x => by
         dsimp [counit_iso_add_equiv]
         simp }
+#align Rep.counit_iso RepCat.counitIso
 
 theorem unit_iso_comm (V : RepCat k G) (g : G) (x : V) :
     unitIsoAddEquiv ((V.ρ g).toFun x) =
@@ -213,6 +234,7 @@ theorem unit_iso_comm (V : RepCat k G) (g : G) (x : V) :
   dsimp [unit_iso_add_equiv, of_Module_monoid_algebra, to_Module_monoid_algebra]
   simp only [AddEquiv.apply_eq_iff_eq, AddEquiv.apply_symm_apply, Representation.as_module_equiv_symm_map_rho,
     Representation.of_module_as_module_act]
+#align Rep.unit_iso_comm RepCat.unit_iso_comm
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def unitIso (V : RepCat k G) : V ≅ (to_Module_monoid_algebra ⋙ of_Module_monoid_algebra).obj V :=
@@ -226,6 +248,7 @@ def unitIso (V : RepCat k G) : V ≅ (to_Module_monoid_algebra ⋙ of_Module_mon
     fun g => by
     ext
     apply unit_iso_comm
+#align Rep.unit_iso RepCat.unitIso
 
 /-- The categorical equivalence `Rep k G ≌ Module (monoid_algebra k G)`. -/
 def equivalenceModuleMonoidAlgebra : RepCat k G ≌ ModuleCat.{u} (MonoidAlgebra k G) where
@@ -233,6 +256,7 @@ def equivalenceModuleMonoidAlgebra : RepCat k G ≌ ModuleCat.{u} (MonoidAlgebra
   inverse := ofModuleMonoidAlgebra
   unitIso := NatIso.ofComponents (fun V => unitIso V) (by tidy)
   counitIso := NatIso.ofComponents (fun M => counitIso M) (by tidy)
+#align Rep.equivalence_Module_monoid_algebra RepCat.equivalenceModuleMonoidAlgebra
 
 -- TODO Verify that the equivalence with `Module (monoid_algebra k G)` is a monoidal functor.
 end RepCat

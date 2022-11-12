@@ -28,6 +28,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.pi.empty Mult
 multiset. -/
 def Pi.empty (δ : α → Type _) : ∀ a ∈ (0 : Multiset α), δ a :=
   fun.
+#align multiset.pi.empty Multiset.Pi.empty
 
 variable [DecidableEq α] {δ : α → Type _}
 
@@ -36,14 +37,17 @@ function `f` such that `f a' : δ a'` for all `a'` in `m`, `pi.cons m a b f` is 
 that `g a'' : δ a''` for all `a''` in `a ::ₘ m`. -/
 def Pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀ a ∈ m, δ a) : ∀ a' ∈ a ::ₘ m, δ a' := fun a' ha' =>
   if h : a' = a then Eq.ndrec b h.symm else f a' <| (mem_cons.1 ha').resolve_left h
+#align multiset.pi.cons Multiset.Pi.cons
 
 theorem Pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h : a ∈ a ::ₘ m) :
     Pi.cons m a b f a h = b :=
   dif_pos rfl
+#align multiset.pi.cons_same Multiset.Pi.cons_same
 
 theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h' : a' ∈ a ::ₘ m) (h : a' ≠ a) :
     Pi.cons m a b f a' h' = f a' ((mem_cons.1 h').resolve_left h) :=
   dif_neg h
+#align multiset.pi.cons_ne Multiset.Pi.cons_ne
 
 theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a ∈ m, δ a} (h : a ≠ a') :
     HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) := by
@@ -53,6 +57,7 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
   rcases ne_or_eq a'' a with (h₁ | rfl)
   rcases eq_or_ne a'' a' with (rfl | h₂)
   all_goals simp [*, pi.cons_same, pi.cons_ne]
+#align multiset.pi.cons_swap Multiset.Pi.cons_swap
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, δ a) :=
@@ -77,15 +82,18 @@ def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, �
         intro f hf
         exact pi.cons_swap Eq
         )
+#align multiset.pi Multiset.pi
 
 @[simp]
 theorem pi_zero (t : ∀ a, Multiset (δ a)) : pi 0 t = {Pi.empty δ} :=
   rfl
+#align multiset.pi_zero Multiset.pi_zero
 
 @[simp]
 theorem pi_cons (m : Multiset α) (t : ∀ a, Multiset (δ a)) (a : α) :
     pi (a ::ₘ m) t = (t a).bind fun b => (pi m t).map <| Pi.cons m a b :=
   rec_on_cons a m
+#align multiset.pi_cons Multiset.pi_cons
 
 theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) : Function.Injective (Pi.cons s a b) :=
   fun f₁ f₂ eq =>
@@ -98,9 +106,11 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
         _ = Pi.cons s a b f₂ a' this := by rw [Eq]
         _ = f₂ a' h' := by rw [pi.cons_ne this Ne.symm]
         
+#align multiset.pi_cons_injective Multiset.pi_cons_injective
 
 theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) = prod (m.map fun a => card (t a)) :=
   Multiset.induction_on m (by simp) (by simp (config := { contextual := true }) [mul_comm])
+#align multiset.card_pi Multiset.card_pi
 
 protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
     Nodup s → (∀ a ∈ s, Nodup (t a)) → Nodup (pi s t) :=
@@ -116,6 +126,7 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
         disjoint_map_map.2 fun f hf g hg eq =>
           have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) := by rw [Eq]
           neb <| show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this)
+#align multiset.nodup.pi Multiset.Nodup.pi
 
 @[simp]
 theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
@@ -127,6 +138,7 @@ theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a')
     
   · rw [pi.cons_ne _ h]
     
+#align multiset.pi.cons_ext Multiset.pi.cons_ext
 
 theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
     ∀ f : ∀ a ∈ m, δ a, f ∈ pi m t ↔ ∀ (a) (h : a ∈ m), f a h ∈ t a := by
@@ -149,6 +161,7 @@ theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
     refine' ⟨_, hf a (mem_cons_self _ _), _, fun a ha => hf a (mem_cons_of_mem ha), _⟩
     rw [pi.cons_ext]
     
+#align multiset.mem_pi Multiset.mem_pi
 
 end Pi
 

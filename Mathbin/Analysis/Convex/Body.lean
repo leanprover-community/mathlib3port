@@ -43,6 +43,7 @@ structure ConvexBody where
   convex' : Convex ℝ carrier
   is_compact' : IsCompact carrier
   nonempty' : carrier.Nonempty
+#align convex_body ConvexBody
 
 namespace ConvexBody
 
@@ -57,20 +58,25 @@ instance : SetLike (ConvexBody V) V where
 
 theorem convex (K : ConvexBody V) : Convex ℝ (K : Set V) :=
   K.convex'
+#align convex_body.convex ConvexBody.convex
 
 theorem is_compact (K : ConvexBody V) : IsCompact (K : Set V) :=
   K.is_compact'
+#align convex_body.is_compact ConvexBody.is_compact
 
 theorem nonempty (K : ConvexBody V) : (K : Set V).Nonempty :=
   K.nonempty'
+#align convex_body.nonempty ConvexBody.nonempty
 
-@[ext]
+@[ext.1]
 protected theorem ext {K L : ConvexBody V} (h : (K : Set V) = L) : K = L :=
   SetLike.ext' h
+#align convex_body.ext ConvexBody.ext
 
 @[simp]
 theorem coe_mk (s : Set V) (h₁ h₂ h₃) : (mk s h₁ h₂ h₃ : Set V) = s :=
   rfl
+#align convex_body.coe_mk ConvexBody.coe_mk
 
 instance : AddMonoid (ConvexBody V) where
   -- we cannot write K + L to avoid reducibility issues with the set.has_add instance
@@ -89,10 +95,12 @@ instance : AddMonoid (ConvexBody V) where
 @[simp]
 theorem coe_add (K L : ConvexBody V) : (↑(K + L) : Set V) = (K : Set V) + L :=
   rfl
+#align convex_body.coe_add ConvexBody.coe_add
 
 @[simp]
 theorem coe_zero : (↑(0 : ConvexBody V) : Set V) = 0 :=
   rfl
+#align convex_body.coe_zero ConvexBody.coe_zero
 
 instance : Inhabited (ConvexBody V) :=
   ⟨0⟩
@@ -110,6 +118,7 @@ instance :
 @[simp]
 theorem coe_smul (c : ℝ) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (K : Set V) :=
   rfl
+#align convex_body.coe_smul ConvexBody.coe_smul
 
 instance : DistribMulAction ℝ (ConvexBody V) where
   toHasSmul := ConvexBody.hasSmul
@@ -129,6 +138,7 @@ instance : DistribMulAction ℝ (ConvexBody V) where
 @[simp]
 theorem coe_smul' (c : ℝ≥0) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (K : Set V) :=
   rfl
+#align convex_body.coe_smul' ConvexBody.coe_smul'
 
 /-- The convex bodies in a fixed space $V$ form a module over the nonnegative reals.
 -/

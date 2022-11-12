@@ -60,16 +60,19 @@ def curry (f : Filter α) (g : Filter β) : Filter (α × β) where
     intro x y hx hy
     simp only [Set.mem_set_of_eq, Set.mem_inter_iff] at hx hy⊢
     exact (hx.and hy).mono fun a ha => (ha.1.And ha.2).mono fun b hb => hb
+#align filter.curry Filter.curry
 
 theorem eventually_curry_iff {f : Filter α} {g : Filter β} {p : α × β → Prop} :
     (∀ᶠ x : α × β in f.curry g, p x) ↔ ∀ᶠ x : α in f, ∀ᶠ y : β in g, p (x, y) :=
   Iff.rfl
+#align filter.eventually_curry_iff Filter.eventually_curry_iff
 
 theorem curry_le_prod {f : Filter α} {g : Filter β} : f.curry g ≤ f.Prod g := by
   intro u hu
   rw [← eventually_mem_set] at hu⊢
   rw [eventually_curry_iff]
   exact hu.curry
+#align filter.curry_le_prod Filter.curry_le_prod
 
 theorem Tendsto.curry {f : α → β → γ} {la : Filter α} {lb : Filter β} {lc : Filter γ} :
     (∀ᶠ a in la, Tendsto (fun b : β => f a b) lb lc) → Tendsto (↿f) (la.curry lb) lc := by
@@ -79,6 +82,7 @@ theorem Tendsto.curry {f : α → β → γ} {la : Filter α} {lb : Filter β} {
   simp_rw [tendsto_def] at h
   refine' fun s hs => h.mono fun a ha => eventually_iff.mpr _
   simpa [Function.HasUncurry.uncurry, Set.Preimage] using ha s hs
+#align filter.tendsto.curry Filter.Tendsto.curry
 
 end Filter
 

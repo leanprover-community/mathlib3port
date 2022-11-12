@@ -28,4 +28,5 @@ theorem ManifoldWithCorners.metrizableSpace {E : Type _} [NormedAddCommGroup E] 
   haveI := I.second_countable_topology
   haveI := ChartedSpace.second_countable_of_sigma_compact H M
   exact metrizable_space_of_t3_second_countable M
+#align manifold_with_corners.metrizable_space ManifoldWithCorners.metrizableSpace
 

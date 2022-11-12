@@ -137,6 +137,7 @@ theorem norm_max_aux₁ [CompleteSpace F] {f : ℂ → F} {z w : ℂ} (hd : Diff
   · rw [norm_smul, norm_inv, norm_eq_abs, ← div_eq_inv_mul]
     exact (div_lt_div_right hr).2 hw_lt
     
+#align complex.norm_max_aux₁ Complex.norm_max_aux₁
 
 /-!
 Now we drop the assumption `complete_space F` by embedding `F` into its completion.
@@ -151,6 +152,7 @@ theorem norm_max_aux₂ {f : ℂ → F} {z w : ℂ} (hd : DiffContOnCl ℂ f (Ba
   · simpa only [IsMaxOn, (· ∘ ·), he] using hz
     
   simpa only [he] using norm_max_aux₁ (e.differentiable.comp_diff_cont_on_cl hd) hz
+#align complex.norm_max_aux₂ Complex.norm_max_aux₂
 
 /-!
 Then we replace the assumption `is_max_on (norm ∘ f) (closed_ball z r) z` with a seemingly weaker
@@ -166,6 +168,7 @@ theorem norm_max_aux₃ {f : ℂ → F} {z w : ℂ} {r : ℝ} (hr : dist w z = r
     
   rw [← dist_ne_zero] at hne
   exact norm_max_aux₂ hd (closure_ball z hne ▸ hz.closure hd.continuous_on.norm)
+#align complex.norm_max_aux₃ Complex.norm_max_aux₃
 
 /-!
 ### Maximum modulus principle for any codomain
@@ -198,6 +201,7 @@ theorem norm_eq_on_closed_ball_of_is_max_on {f : E → F} {z : E} {r : ℝ} (hd 
     refine' ((lipschitzWithLineMap z w).maps_to_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
     simpa only [line_map_apply_zero, mul_one, coe_nndist] using ball_subset_ball hw
   exact norm_max_aux₃ hr (hd.comp hde.diff_cont_on_cl hball) (hz.comp_maps_to hball (line_map_apply_zero z w))
+#align complex.norm_eq_on_closed_ball_of_is_max_on Complex.norm_eq_on_closed_ball_of_is_max_on
 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable on a set `s`, the norm
 of `f` takes it maximum on `s` at `z`, and `w` is a point such that the closed ball with center `z`
@@ -205,6 +209,7 @@ and radius `dist w z` is included in `s`, then `∥f w∥ = ∥f z∥`. -/
 theorem norm_eq_norm_of_is_max_on_of_ball_subset {f : E → F} {s : Set E} {z w : E} (hd : DiffContOnCl ℂ f s)
     (hz : IsMaxOn (norm ∘ f) s z) (hsub : Ball z (dist w z) ⊆ s) : ∥f w∥ = ∥f z∥ :=
   norm_eq_on_closed_ball_of_is_max_on (hd.mono hsub) (hz.on_subset hsub) (mem_closed_ball.2 le_rfl)
+#align complex.norm_eq_norm_of_is_max_on_of_ball_subset Complex.norm_eq_norm_of_is_max_on_of_ball_subset
 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable in a neighborhood of `c`
 and the norm `∥f z∥` has a local maximum at `c`, then `∥f z∥` is locally constant in a neighborhood
@@ -219,6 +224,7 @@ theorem norm_eventually_eq_of_is_local_max {f : E → F} {c : E} (hd : ∀ᶠ z 
           (DifferentiableOn.diffContOnCl fun x hx =>
             (hr <| closure_ball_subset_closed_ball hx).1.DifferentiableWithinAt)
           fun x hx => (hr <| ball_subset_closed_ball hx).2⟩
+#align complex.norm_eventually_eq_of_is_local_max Complex.norm_eventually_eq_of_is_local_max
 
 theorem is_open_set_of_mem_nhds_and_is_max_on_norm {f : E → F} {s : Set E} (hd : DifferentiableOn ℂ f s) :
     IsOpen { z | s ∈ 𝓝 z ∧ IsMaxOn (norm ∘ f) s z } := by
@@ -226,6 +232,7 @@ theorem is_open_set_of_mem_nhds_and_is_max_on_norm {f : E → F} {s : Set E} (hd
   replace hd : ∀ᶠ w in 𝓝 z, DifferentiableAt ℂ f w
   exact hd.eventually_differentiable_at hz.1
   exact (norm_eventually_eq_of_is_local_max hd <| hz.2.IsLocalMax hz.1).mono fun x hx y hy => le_trans (hz.2 hy) hx.ge
+#align complex.is_open_set_of_mem_nhds_and_is_max_on_norm Complex.is_open_set_of_mem_nhds_and_is_max_on_norm
 
 /-- **Maximum modulus principle** on a connected set. Let `U` be a (pre)connected open set in a
 complex normed space. Let `f : E → F` be a function that is complex differentiable on `U`. Suppose
@@ -242,10 +249,11 @@ theorem norm_eq_on_of_is_preconnected_of_is_max_on {f : E → F} {U : Set E} {c 
   have hVne : (U ∩ V).Nonempty := ⟨c, hcU, hcU, hm⟩
   set W := U ∩ { z | ∥f z∥ ≠ ∥f c∥ }
   have hWo : IsOpen W := hd.continuous_on.norm.preimage_open_of_open ho is_open_ne
-  have hdVW : Disjoint V W := fun x ⟨hxV, hxW⟩ => hxW.2 (hV x hxV)
+  have hdVW : Disjoint V W := disjoint_left.mpr fun x hxV hxW => hxW.2 (hV x hxV)
   have hUVW : U ⊆ V ∪ W := fun x hx =>
     (eq_or_ne ∥f x∥ ∥f c∥).imp (fun h => ⟨hx, fun y hy => (hm hy).out.trans_eq h.symm⟩) (And.intro hx)
   exact hc.subset_left_of_subset_union hVo hWo hdVW hUVW hVne
+#align complex.norm_eq_on_of_is_preconnected_of_is_max_on Complex.norm_eq_on_of_is_preconnected_of_is_max_on
 
 /-- **Maximum modulus principle** on a connected set. Let `U` be a (pre)connected open set in a
 complex normed space.  Let `f : E → F` be a function that is complex differentiable on `U` and is
@@ -256,6 +264,8 @@ theorem norm_eq_on_closure_of_is_preconnected_of_is_max_on {f : E → F} {U : Se
     EqOn (norm ∘ f) (const E ∥f c∥) (Closure U) :=
   (norm_eq_on_of_is_preconnected_of_is_max_on hc ho hd.DifferentiableOn hcU hm).of_subset_closure hd.ContinuousOn.norm
     continuous_on_const subset_closure Subset.rfl
+#align
+  complex.norm_eq_on_closure_of_is_preconnected_of_is_max_on Complex.norm_eq_on_closure_of_is_preconnected_of_is_max_on
 
 section StrictConvex
 
@@ -286,6 +296,7 @@ theorem eq_on_of_is_preconnected_of_is_max_on_norm {f : E → F} {U : Set E} {c 
   have H₂ : ∥f x + f c∥ = ∥f c + f c∥ :=
     norm_eq_on_of_is_preconnected_of_is_max_on hc ho (hd.AddConst _) hcU hm.norm_add_self hx
   eq_of_norm_eq_of_norm_add_eq H₁ <| by simp only [H₂, same_ray.rfl.norm_add, H₁]
+#align complex.eq_on_of_is_preconnected_of_is_max_on_norm Complex.eq_on_of_is_preconnected_of_is_max_on_norm
 
 /-- **Maximum modulus principle** on a connected set. Let `U` be a (pre)connected open set in a
 complex normed space.  Let `f : E → F` be a function that is complex differentiable on `U` and is
@@ -296,6 +307,8 @@ theorem eq_on_closure_of_is_preconnected_of_is_max_on_norm {f : E → F} {U : Se
     EqOn f (const E (f c)) (Closure U) :=
   (eq_on_of_is_preconnected_of_is_max_on_norm hc ho hd.DifferentiableOn hcU hm).of_subset_closure hd.ContinuousOn
     continuous_on_const subset_closure Subset.rfl
+#align
+  complex.eq_on_closure_of_is_preconnected_of_is_max_on_norm Complex.eq_on_closure_of_is_preconnected_of_is_max_on_norm
 
 /-- **Maximum modulus principle**. Let `f : E → F` be a function between complex normed spaces.
 Suppose that the codomain `F` is a strictly convex space, `f` is complex differentiable on a set
@@ -307,6 +320,7 @@ theorem eq_of_is_max_on_of_ball_subset {f : E → F} {s : Set E} {z w : E} (hd :
   have H₁ : ∥f w∥ = ∥f z∥ := norm_eq_norm_of_is_max_on_of_ball_subset hd hz hsub
   have H₂ : ∥f w + f z∥ = ∥f z + f z∥ := norm_eq_norm_of_is_max_on_of_ball_subset (hd.AddConst _) hz.norm_add_self hsub
   eq_of_norm_eq_of_norm_add_eq H₁ <| by simp only [H₂, same_ray.rfl.norm_add, H₁]
+#align complex.eq_of_is_max_on_of_ball_subset Complex.eq_of_is_max_on_of_ball_subset
 
 /-- **Maximum modulus principle** on a closed ball. Suppose that a function `f : E → F` from a
 normed complex space to a strictly convex normed complex space has the following properties:
@@ -319,6 +333,7 @@ Then `f` is a constant on the closed ball.  -/
 theorem eq_on_closed_ball_of_is_max_on_norm {f : E → F} {z : E} {r : ℝ} (hd : DiffContOnCl ℂ f (Ball z r))
     (hz : IsMaxOn (norm ∘ f) (Ball z r) z) : EqOn f (const E (f z)) (ClosedBall z r) := fun x hx =>
   eq_of_is_max_on_of_ball_subset hd hz <| ball_subset_ball hx
+#align complex.eq_on_closed_ball_of_is_max_on_norm Complex.eq_on_closed_ball_of_is_max_on_norm
 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable in a neighborhood of `c`
 and the norm `∥f z∥` has a local maximum at `c`, then `f` is locally constant in a neighborhood
@@ -333,6 +348,7 @@ theorem eventually_eq_of_is_local_max_norm {f : E → F} {c : E} (hd : ∀ᶠ z 
           (DifferentiableOn.diffContOnCl fun x hx =>
             (hr <| closure_ball_subset_closed_ball hx).1.DifferentiableWithinAt)
           fun x hx => (hr <| ball_subset_closed_ball hx).2⟩
+#align complex.eventually_eq_of_is_local_max_norm Complex.eventually_eq_of_is_local_max_norm
 
 theorem eventually_eq_or_eq_zero_of_is_local_min_norm {f : E → ℂ} {c : E} (hf : ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f z)
     (hc : IsLocalMin (norm ∘ f) c) : (∀ᶠ z in 𝓝 c, f z = f c) ∨ f c = 0 := by
@@ -342,6 +358,7 @@ theorem eventually_eq_or_eq_zero_of_is_local_min_norm {f : E → ℂ} {c : E} (h
   have h3 : IsLocalMax (norm ∘ f⁻¹) c := by refine' h2.congr (eventually_of_forall _) <;> simp
   have h4 : ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f⁻¹ z := by filter_upwards [hf, h1] with z h using h.inv
   filter_upwards [eventually_eq_of_is_local_max_norm h4 h3] with z using inv_inj.mp
+#align complex.eventually_eq_or_eq_zero_of_is_local_min_norm Complex.eventually_eq_or_eq_zero_of_is_local_min_norm
 
 end StrictConvex
 
@@ -374,6 +391,7 @@ theorem exists_mem_frontier_is_max_on_norm [FiniteDimensional ℂ E] {f : E → 
   refine' (norm_eq_norm_of_is_max_on_of_ball_subset hd (hle.on_subset subset_closure) _).symm
   rw [dist_comm, ← hzw]
   exact ball_inf_dist_compl_subset.trans interior_subset
+#align complex.exists_mem_frontier_is_max_on_norm Complex.exists_mem_frontier_is_max_on_norm
 
 /-- **Maximum modulus principle**: if `f : E → F` is complex differentiable on a bounded set `U` and
 `∥f z∥ ≤ C` for any `z ∈ frontier U`, then the same is true for any `z ∈ closure U`. -/
@@ -399,6 +417,7 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
     _ ≤ ∥f (e ζ)∥ := hζ (subset_closure h₀)
     _ ≤ C := hC _ (hde.continuous.frontier_preimage_subset _ hζU)
     
+#align complex.norm_le_of_forall_mem_frontier_norm_le Complex.norm_le_of_forall_mem_frontier_norm_le
 
 /-- If two complex differentiable functions `f g : E → F` are equal on the boundary of a bounded set
 `U`, then they are equal on `closure U`. -/
@@ -409,12 +428,14 @@ theorem eq_on_closure_of_eq_on_frontier {f g : E → F} {U : Set E} (hU : Bounde
     
   refine' fun z hz => norm_le_of_forall_mem_frontier_norm_le hU (hf.sub hg) (fun w hw => _) hz
   simp [hfg hw]
+#align complex.eq_on_closure_of_eq_on_frontier Complex.eq_on_closure_of_eq_on_frontier
 
 /-- If two complex differentiable functions `f g : E → F` are equal on the boundary of a bounded set
 `U`, then they are equal on `U`. -/
 theorem eq_on_of_eq_on_frontier {f g : E → F} {U : Set E} (hU : Bounded U) (hf : DiffContOnCl ℂ f U)
     (hg : DiffContOnCl ℂ g U) (hfg : EqOn f g (Frontier U)) : EqOn f g U :=
   (eq_on_closure_of_eq_on_frontier hU hf hg hfg).mono subset_closure
+#align complex.eq_on_of_eq_on_frontier Complex.eq_on_of_eq_on_frontier
 
 end Complex
 

@@ -42,6 +42,7 @@ unsafe structure parse_ctx where
   decl : Bool → Name → expr → pexpr → tactic Unit
   names : List Name
   pis_depth : ℕ := 0
+#align tactic.expand_exists.parse_ctx tactic.expand_exists.parse_ctx
 
 /-- Data known when parsing exists expressions (after parsing pi expressions).
 
@@ -54,6 +55,7 @@ unsafe structure parse_ctx_exists extends parse_ctx where
   with_args : expr → expr
   spec_chain : pexpr
   exists_decls : List Name := []
+#align tactic.expand_exists.parse_ctx_exists tactic.expand_exists.parse_ctx_exists
 
 /-- Data known when parsing the proposition (after parsing exists and pi expressions).
 
@@ -62,6 +64,7 @@ unsafe structure parse_ctx_exists extends parse_ctx where
 -/
 unsafe structure parse_ctx_props extends parse_ctx_exists where
   project_proof : pexpr → pexpr := id
+#align tactic.expand_exists.parse_ctx_props tactic.expand_exists.parse_ctx_props
 
 /-- Replaces free variables with their exists declaration. For example, if:
 
@@ -74,6 +77,7 @@ then this function converts `#0` in `#0 = #0` from `∃ n : ℕ, n = n` to `n_va
 unsafe def instantiate_exists_decls (ctx : parse_ctx_exists) (p : expr) : expr :=
   p.instantiate_vars <|
     ctx.exists_decls.reverse.map fun name => ctx.with_args (const Name ctx.original_decl.univ_levels)
+#align tactic.expand_exists.instantiate_exists_decls tactic.expand_exists.instantiate_exists_decls
 
 /-- Parses a proposition and creates the associated specification proof. Does not break down the
 proposition further.
@@ -87,6 +91,7 @@ unsafe def parse_one_prop (ctx : parse_ctx_props) (p : expr) : tactic Unit := do
       | [] => fail "missing name for proposition"
       | _ => fail "too many names for propositions (are you missing an and?)"
   ctx True n p val
+#align tactic.expand_exists.parse_one_prop tactic.expand_exists.parse_one_prop
 
 /-- Parses a proposition and decides if it should be broken down (eg `P ∧ Q` -> `P` and `Q`) depending
 on how many `names` are left. Then creates the associated specification proof(s).
@@ -100,6 +105,7 @@ unsafe def parse_props : parse_ctx_props → expr → tactic Unit
           parse_props { ctx with names := tail, project_proof := (fun p => (const `and.right []) p) ∘ ctx } q
       | [] => fail "missing name for proposition"
   | ctx, p => parse_one_prop ctx p
+#align tactic.expand_exists.parse_props tactic.expand_exists.parse_props
 
 /-- Parses an `∃ a : α, p a`, and creates an associated definition with a value of `α`. When `p α` is
 not an exists statement, it will call `parse_props`.
@@ -122,6 +128,7 @@ unsafe def parse_exists : parse_ctx_exists → expr → tactic Unit
     let ctx : parse_ctx_exists := { ctx with names, spec_chain := some_spec, exists_decls }
     parse_exists ctx body
   | ctx, e => parse_props { ctx with } e
+#align tactic.expand_exists.parse_exists tactic.expand_exists.parse_exists
 
 /-- Parses a `∀ (a : α), p a`. If `p` is not a pi expression, it will call `parse_exists`
 -/
@@ -137,6 +144,7 @@ unsafe def parse_pis : parse_ctx → expr → tactic Unit
         spec_chain := to_pexpr (with_args <| const ctx.original_decl.to_name ctx.original_decl.univ_levels) }
       (app (app (const "Exists" [lvl]) type) p)
   | ctx, e => fail ("unexpected expression " ++ toString e)
+#align tactic.expand_exists.parse_pis tactic.expand_exists.parse_pis
 
 end ExpandExists
 
@@ -196,6 +204,7 @@ unsafe def expand_exists_attr : user_attribute Unit (List Name) where
                   (if is_t then declaration.thm n d ty (pure val) else declaration.defn n d ty val default tt),
             names }
           d
+#align tactic.expand_exists_attr tactic.expand_exists_attr
 
 add_tactic_doc
   { Name := "expand_exists", category := DocCategory.attr, declNames := [`tactic.expand_exists_attr],

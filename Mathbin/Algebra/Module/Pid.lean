@@ -78,6 +78,7 @@ theorem Submodule.is_internal_prime_power_torsion_of_pid [Module.Finite R M] (hM
     rw [← torsion_by_span_singleton_eq, Ideal.submodule_span_eq, ← Ideal.span_singleton_pow,
       Ideal.span_singleton_generator]
     
+#align submodule.is_internal_prime_power_torsion_of_pid Submodule.is_internal_prime_power_torsion_of_pid
 
 namespace Module
 
@@ -106,8 +107,8 @@ theorem _root_.ideal.torsion_of_eq_span_pow_p_order (x : M) : torsionOf R M x = 
     rfl
   have := (is_torsion'_powers_iff p).mp hM x
   rw [prop] at this
-  classical
-  convert Associates.eq_pow_find_of_dvd_irreducible_pow ((Associates.irreducible_mk p).mpr hp) this.some_spec
+  classical convert Associates.eq_pow_find_of_dvd_irreducible_pow ((Associates.irreducible_mk p).mpr hp) this.some_spec
+#align module._root_.ideal.torsion_of_eq_span_pow_p_order module._root_.ideal.torsion_of_eq_span_pow_p_order
 
 theorem p_pow_smul_lift {x y : M} {k : ℕ} (hM' : Module.IsTorsionBy R M (p ^ pOrder hM y)) (h : p ^ k • x ∈ R ∙ y) :
     ∃ a : R, p ^ k • x = p ^ k • a • y := by
@@ -136,6 +137,7 @@ theorem p_pow_smul_lift {x y : M} {k : ℕ} (hM' : Module.IsTorsionBy R M (p ^ p
   · use 0
     rw [zero_smul, smul_zero, ← Nat.sub_add_cancel (le_of_not_le hk), pow_add, mul_smul, hM', smul_zero]
     
+#align module.p_pow_smul_lift Module.p_pow_smul_lift
 
 open Submodule.Quotient
 
@@ -151,6 +153,7 @@ theorem exists_smul_eq_zero_and_mk_eq {z : M} (hz : Module.IsTorsionBy R M (p ^ 
   obtain ⟨a, ha⟩ := p_pow_smul_lift hp hM hz this
   refine' ⟨f1.some - a • z, by rw [smul_sub, sub_eq_zero, ha], _⟩
   rw [mk_sub, mk_smul, (quotient.mk_eq_zero _).mpr <| mem_span_singleton_self _, smul_zero, sub_zero, f1.some_spec]
+#align module.exists_smul_eq_zero_and_mk_eq Module.exists_smul_eq_zero_and_mk_eq
 
 open Finset Multiset
 
@@ -173,61 +176,55 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
     exact ⟨0⟩
     
   · have : ∀ x : N, Decidable (x = 0)
-    classical
-    infer_instance
-    obtain ⟨j, hj⟩ := exists_is_torsion_by hN d.succ d.succ_ne_zero s hs
-    let s' : Fin d → N ⧸ R ∙ s j := Submodule.Quotient.mk ∘ s ∘ j.succ_above
-    obtain ⟨k, ⟨f⟩⟩ := IH _ s' _ <;> clear IH
-    · have : ∀ i : Fin d, ∃ x : N, p ^ k i • x = 0 ∧ f (Submodule.Quotient.mk x) = DirectSum.lof R _ _ i 1 := by
-        intro i
-        let fi := f.symm.to_linear_map.comp (DirectSum.lof _ _ _ i)
-        obtain ⟨x, h0, h1⟩ := exists_smul_eq_zero_and_mk_eq hp hN hj fi
-        refine' ⟨x, h0, _⟩
-        rw [h1]
-        simp only [LinearMap.coe_comp, f.symm.coe_to_linear_map, f.apply_symm_apply]
-      refine'
-        ⟨_,
-          ⟨(((@lequivProdOfRightSplitExact _ _ _ _ _ _ _ _ _ _ _ _
-                            ((f.trans ULift.moduleEquiv.{u, u, v}.symm).toLinearMap.comp <| mkq _)
-                            (((DirectSum.toModule _ _ _) fun i =>
-                                  (liftqSpanSingleton.{u, u} (p ^ k i) (LinearMap.toSpanSingleton _ _ _)
-                                    (this i).some_spec.left :
-                                    R ⧸ _ →ₗ[R] _)).comp
-                              ulift.module_equiv.to_linear_map)
-                            (R ∙ s j).injective_subtype _ _).symm.trans <|
-                      ((quot_torsion_of_equiv_span_singleton _ _ _).symm.trans <|
-                            quot_equiv_of_eq _ _ <| Ideal.torsion_of_eq_span_pow_p_order hp hN _).Prod <|
-                        ULift.moduleEquiv).trans <|
-                  (@DirectSum.lequivProdDirectSum R _ _ _
-                      (fun i => R ⧸ R ∙ p ^ @Option.rec _ (fun _ => ℕ) (p_order hN <| s j) k i) _ _).symm).trans <|
-              DirectSum.lequivCongrLeft R (finSuccEquiv d).symm⟩⟩
-      · rw [range_subtype, LinearEquiv.to_linear_map_eq_coe, LinearEquiv.ker_comp, ker_mkq]
+    classical infer_instance
+      let s' : Fin d → N ⧸ R ∙ s j := Submodule.Quotient.mk ∘ s ∘ j.succ_above
+      · have : ∀ i : Fin d, ∃ x : N, p ^ k i • x = 0 ∧ f (Submodule.Quotient.mk x) = DirectSum.lof R _ _ i 1 := by
+          intro i
+          let fi := f.symm.to_linear_map.comp (DirectSum.lof _ _ _ i)
+          obtain ⟨x, h0, h1⟩ := exists_smul_eq_zero_and_mk_eq hp hN hj fi
+          refine' ⟨x, h0, _⟩
+          rw [h1]
+          simp only [LinearMap.coe_comp, f.symm.coe_to_linear_map, f.apply_symm_apply]
+        refine'
+          ⟨_,
+            ⟨(((@lequivProdOfRightSplitExact _ _ _ _ _ _ _ _ _ _ _ _
+                              ((f.trans ULift.moduleEquiv.{u, u, v}.symm).toLinearMap.comp <| mkq _)
+                              (((DirectSum.toModule _ _ _) fun i =>
+                                    (liftqSpanSingleton.{u, u} (p ^ k i) (LinearMap.toSpanSingleton _ _ _)
+                                      (this i).some_spec.left :
+                                      R ⧸ _ →ₗ[R] _)).comp
+                                ulift.module_equiv.to_linear_map)
+                              (R ∙ s j).injective_subtype _ _).symm.trans <|
+                        ((quot_torsion_of_equiv_span_singleton _ _ _).symm.trans <|
+                              quot_equiv_of_eq _ _ <| Ideal.torsion_of_eq_span_pow_p_order hp hN _).Prod <|
+                          ULift.moduleEquiv).trans <|
+                    (@DirectSum.lequivProdDirectSum R _ _ _
+                        (fun i => R ⧸ R ∙ p ^ @Option.rec _ (fun _ => ℕ) (p_order hN <| s j) k i) _ _).symm).trans <|
+                DirectSum.lequivCongrLeft R (finSuccEquiv d).symm⟩⟩
+        · rw [range_subtype, LinearEquiv.to_linear_map_eq_coe, LinearEquiv.ker_comp, ker_mkq]
+          
+        · rw [LinearEquiv.to_linear_map_eq_coe, ← f.comp_coe, LinearMap.comp_assoc, LinearMap.comp_assoc, ←
+            LinearEquiv.to_linear_map_eq_coe, LinearEquiv.to_linear_map_symm_comp_eq, LinearMap.comp_id, ←
+            LinearMap.comp_assoc, ← LinearMap.comp_assoc]
+          suffices (f.to_linear_map.comp (R ∙ s j).mkq).comp _ = LinearMap.id by
+            rw [← f.to_linear_map_eq_coe, this, LinearMap.id_comp]
+          ext i : 3
+          simp only [LinearMap.coe_comp, Function.comp_apply, mkq_apply]
+          rw [LinearEquiv.coe_to_linear_map, LinearMap.id_apply, DirectSum.to_module_lof, liftq_span_singleton_apply,
+            LinearMap.to_span_singleton_one, Ideal.Quotient.mk_eq_mk, map_one, (this i).some_spec.right]
+          
         
-      · rw [LinearEquiv.to_linear_map_eq_coe, ← f.comp_coe, LinearMap.comp_assoc, LinearMap.comp_assoc, ←
-          LinearEquiv.to_linear_map_eq_coe, LinearEquiv.to_linear_map_symm_comp_eq, LinearMap.comp_id, ←
-          LinearMap.comp_assoc, ← LinearMap.comp_assoc]
-        suffices (f.to_linear_map.comp (R ∙ s j).mkq).comp _ = LinearMap.id by
-          rw [← f.to_linear_map_eq_coe, this, LinearMap.id_comp]
-        ext i : 3
-        simp only [LinearMap.coe_comp, Function.comp_app, mkq_apply]
-        rw [LinearEquiv.coe_to_linear_map, LinearMap.id_apply, DirectSum.to_module_lof, liftq_span_singleton_apply,
-          LinearMap.to_span_singleton_one, Ideal.Quotient.mk_eq_mk, map_one, (this i).some_spec.right]
+      · have hs' := congr_arg (Submodule.map <| mkq <| R ∙ s j) hs
+        rw [Submodule.map_span, Submodule.map_top, range_mkq] at hs'
+        simp only [mkq_apply] at hs'
+        simp only [s']
+        rw [Set.range_comp (_ ∘ s), Fin.range_succ_above]
+        rw [← Set.range_comp, ← Set.insert_image_compl_eq_range _ j, Function.comp_apply,
+          (quotient.mk_eq_zero _).mpr (mem_span_singleton_self _), span_insert_zero] at hs'
+        exact hs'
         
-      
-    · exact
-        (mk_surjective _).forall.mpr fun x =>
-          ⟨(@hN x).some, by rw [← quotient.mk_smul, (@hN x).some_spec, quotient.mk_zero]⟩
-      
-    · have hs' := congr_arg (Submodule.map <| mkq <| R ∙ s j) hs
-      rw [Submodule.map_span, Submodule.map_top, range_mkq] at hs'
-      simp only [mkq_apply] at hs'
-      simp only [s']
-      rw [Set.range_comp (_ ∘ s), Fin.range_succ_above]
-      rw [← Set.range_comp, ← Set.insert_image_compl_eq_range _ j, Function.comp_apply,
-        (quotient.mk_eq_zero _).mpr (mem_span_singleton_self _), span_insert_zero] at hs'
-      exact hs'
-      
     
+#align module.torsion_by_prime_power_decomposition Module.torsion_by_prime_power_decomposition
 
 end PTorsion
 
@@ -253,6 +250,7 @@ theorem equiv_direct_sum_of_is_torsion [h' : Module.Finite R N] (hN : Module.IsT
             (DirectSum.sigmaLcurryEquiv R).symm.trans (Dfinsupp.mapRange.linearEquiv fun i => quot_equiv_of_eq _ _ _)⟩⟩
   cases' i with i j
   simp only
+#align module.equiv_direct_sum_of_is_torsion Module.equiv_direct_sum_of_is_torsion
 
 /-- **Structure theorem of finitely generated modules over a PID** : A finitely generated
   module over a PID is isomorphic to the product of a free module and a direct sum of some
@@ -273,6 +271,7 @@ theorem equiv_free_prod_direct_sum [h' : Module.Finite R N] :
       ⟨(lequivProdOfRightSplitExact (torsion R N).injective_subtype _ hf).symm.trans <|
           (h.prod g).trans <| LinearEquiv.prodComm R _ _⟩⟩
   rw [range_subtype, ker_mkq]
+#align module.equiv_free_prod_direct_sum Module.equiv_free_prod_direct_sum
 
 end Module
 

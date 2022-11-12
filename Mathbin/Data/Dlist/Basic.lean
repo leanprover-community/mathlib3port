@@ -24,12 +24,15 @@ useful for append-heavy uses such as logging and pretty printing.
 def Dlist.join {α : Type _} : List (Dlist α) → Dlist α
   | [] => Dlist.empty
   | x :: xs => x ++ Dlist.join xs
+#align dlist.join Dlist.join
 
 @[simp]
 theorem dlist_singleton {α : Type _} {a : α} : Dlist.singleton a = Dlist.lazyOfList [a] :=
   rfl
+#align dlist_singleton dlist_singleton
 
 @[simp]
 theorem dlist_lazy {α : Type _} {l : List α} : Dlist.lazyOfList l = Dlist.ofList l :=
   rfl
+#align dlist_lazy dlist_lazy
 

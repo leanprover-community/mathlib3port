@@ -34,10 +34,12 @@ variable {C : Type u} [Category.{v} C] [HasLimits C]
 
 instance limitFunctorial : Functorial fun F : J ⥤ C => limit F :=
   { Limits.lim with }
+#align category_theory.limits.limit_functorial CategoryTheory.Limits.limitFunctorial
 
 @[simp]
 theorem limit_functorial_map {F G : J ⥤ C} (α : F ⟶ G) : map (fun F : J ⥤ C => limit F) α = Limits.lim.map α :=
   rfl
+#align category_theory.limits.limit_functorial_map CategoryTheory.Limits.limit_functorial_map
 
 variable [MonoidalCategory.{v} C]
 
@@ -100,25 +102,31 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
     dsimp
     slice_rhs 2 3 => rw [right_unitor_naturality]
     simp
+#align category_theory.limits.limit_lax_monoidal CategoryTheory.Limits.limitLaxMonoidal
 
 /-- The limit functor `F ↦ limit F` bundled as a lax monoidal functor. -/
 def limLax : LaxMonoidalFunctor (J ⥤ C) C :=
   LaxMonoidalFunctor.of fun F : J ⥤ C => limit F
+#align category_theory.limits.lim_lax CategoryTheory.Limits.limLax
 
 @[simp]
 theorem lim_lax_obj (F : J ⥤ C) : limLax.obj F = limit F :=
   rfl
+#align category_theory.limits.lim_lax_obj CategoryTheory.Limits.lim_lax_obj
 
 theorem lim_lax_obj' (F : J ⥤ C) : limLax.obj F = lim.obj F :=
   rfl
+#align category_theory.limits.lim_lax_obj' CategoryTheory.Limits.lim_lax_obj'
 
 @[simp]
 theorem lim_lax_map {F G : J ⥤ C} (α : F ⟶ G) : limLax.map α = lim.map α :=
   rfl
+#align category_theory.limits.lim_lax_map CategoryTheory.Limits.lim_lax_map
 
 @[simp]
 theorem lim_lax_ε : (@limLax J _ C _ _ _).ε = limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } } :=
   rfl
+#align category_theory.limits.lim_lax_ε CategoryTheory.Limits.lim_lax_ε
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -134,6 +142,7 @@ theorem lim_lax_μ (F G : J ⥤ C) :
                 dsimp
                 simp only [category.id_comp, ← tensor_comp, limit.w] } } :=
   rfl
+#align category_theory.limits.lim_lax_μ CategoryTheory.Limits.lim_lax_μ
 
 end CategoryTheory.Limits
 

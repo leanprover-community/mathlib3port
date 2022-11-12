@@ -38,6 +38,7 @@ Heyting implication. -/
 structure HeytingHom (α β : Type _) [HeytingAlgebra α] [HeytingAlgebra β] extends LatticeHom α β where
   map_bot' : to_fun ⊥ = ⊥
   map_himp' : ∀ a b, to_fun (a ⇨ b) = to_fun a ⇨ to_fun b
+#align heyting_hom HeytingHom
 
 /-- The type of co-Heyting homomorphisms from `α` to `β`. Bounded lattice homomorphisms that
 preserve difference. -/
@@ -45,6 +46,7 @@ preserve difference. -/
 structure CoheytingHom (α β : Type _) [CoheytingAlgebra α] [CoheytingAlgebra β] extends LatticeHom α β where
   map_top' : to_fun ⊤ = ⊤
   map_sdiff' : ∀ a b, to_fun (a \ b) = to_fun a \ to_fun b
+#align coheyting_hom CoheytingHom
 
 /-- The type of bi-Heyting homomorphisms from `α` to `β`. Bounded lattice homomorphisms that
 preserve Heyting implication and difference. -/
@@ -52,6 +54,7 @@ preserve Heyting implication and difference. -/
 structure BiheytingHom (α β : Type _) [BiheytingAlgebra α] [BiheytingAlgebra β] extends LatticeHom α β where
   map_himp' : ∀ a b, to_fun (a ⇨ b) = to_fun a ⇨ to_fun b
   map_sdiff' : ∀ a b, to_fun (a \ b) = to_fun a \ to_fun b
+#align biheyting_hom BiheytingHom
 
 /-- `heyting_hom_class F α β` states that `F` is a type of Heyting homomorphisms.
 
@@ -60,6 +63,7 @@ class HeytingHomClass (F : Type _) (α β : outParam <| Type _) [HeytingAlgebra 
   LatticeHomClass F α β where
   map_bot (f : F) : f ⊥ = ⊥
   map_himp (f : F) : ∀ a b, f (a ⇨ b) = f a ⇨ f b
+#align heyting_hom_class HeytingHomClass
 
 /-- `coheyting_hom_class F α β` states that `F` is a type of co-Heyting homomorphisms.
 
@@ -68,6 +72,7 @@ class CoheytingHomClass (F : Type _) (α β : outParam <| Type _) [CoheytingAlge
   LatticeHomClass F α β where
   map_top (f : F) : f ⊤ = ⊤
   map_sdiff (f : F) : ∀ a b, f (a \ b) = f a \ f b
+#align coheyting_hom_class CoheytingHomClass
 
 /-- `biheyting_hom_class F α β` states that `F` is a type of bi-Heyting homomorphisms.
 
@@ -76,6 +81,7 @@ class BiheytingHomClass (F : Type _) (α β : outParam <| Type _) [BiheytingAlge
   LatticeHomClass F α β where
   map_himp (f : F) : ∀ a b, f (a ⇨ b) = f a ⇨ f b
   map_sdiff (f : F) : ∀ a b, f (a \ b) = f a \ f b
+#align biheyting_hom_class BiheytingHomClass
 
 export HeytingHomClass (map_himp)
 
@@ -87,22 +93,26 @@ attribute [simp] map_himp map_sdiff
 instance (priority := 100) HeytingHomClass.toBoundedLatticeHomClass [HeytingAlgebra α] [HeytingAlgebra β]
     [HeytingHomClass F α β] : BoundedLatticeHomClass F α β :=
   { ‹HeytingHomClass F α β› with map_top := fun f => by rw [← @himp_self α _ ⊥, ← himp_self, map_himp] }
+#align heyting_hom_class.to_bounded_lattice_hom_class HeytingHomClass.toBoundedLatticeHomClass
 
 -- See note [lower instance priority]
 instance (priority := 100) CoheytingHomClass.toBoundedLatticeHomClass [CoheytingAlgebra α] [CoheytingAlgebra β]
     [CoheytingHomClass F α β] : BoundedLatticeHomClass F α β :=
   { ‹CoheytingHomClass F α β› with map_bot := fun f => by rw [← @sdiff_self α _ ⊤, ← sdiff_self, map_sdiff] }
+#align coheyting_hom_class.to_bounded_lattice_hom_class CoheytingHomClass.toBoundedLatticeHomClass
 
 -- See note [lower instance priority]
 instance (priority := 100) BiheytingHomClass.toHeytingHomClass [BiheytingAlgebra α] [BiheytingAlgebra β]
     [BiheytingHomClass F α β] : HeytingHomClass F α β :=
   { ‹BiheytingHomClass F α β› with
     map_bot := fun f => by rw [← @sdiff_self α _ ⊤, ← sdiff_self, BiheytingHomClass.map_sdiff] }
+#align biheyting_hom_class.to_heyting_hom_class BiheytingHomClass.toHeytingHomClass
 
 -- See note [lower instance priority]
 instance (priority := 100) BiheytingHomClass.toCoheytingHomClass [BiheytingAlgebra α] [BiheytingAlgebra β]
     [BiheytingHomClass F α β] : CoheytingHomClass F α β :=
   { ‹BiheytingHomClass F α β› with map_top := fun f => by rw [← @himp_self α _ ⊥, ← himp_self, map_himp] }
+#align biheyting_hom_class.to_coheyting_hom_class BiheytingHomClass.toCoheytingHomClass
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toHeytingHomClass [HeytingAlgebra α] [HeytingAlgebra β] [OrderIsoClass F α β] :
@@ -113,6 +123,7 @@ instance (priority := 100) OrderIsoClass.toHeytingHomClass [HeytingAlgebra α] [
         simp only [← map_inv_le_iff, le_himp_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
+#align order_iso_class.to_heyting_hom_class OrderIsoClass.toHeytingHomClass
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toCoheytingHomClass [CoheytingAlgebra α] [CoheytingAlgebra β]
@@ -123,6 +134,7 @@ instance (priority := 100) OrderIsoClass.toCoheytingHomClass [CoheytingAlgebra �
         simp only [← le_map_inv_iff, sdiff_le_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
+#align order_iso_class.to_coheyting_hom_class OrderIsoClass.toCoheytingHomClass
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra α] [BiheytingAlgebra β]
@@ -138,6 +150,7 @@ instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra �
         simp only [← le_map_inv_iff, sdiff_le_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
+#align order_iso_class.to_biheyting_hom_class OrderIsoClass.toBiheytingHomClass
 
 -- See note [reducible non instances]
 /-- This can't be an instance because of typeclass loops. -/
@@ -147,6 +160,7 @@ def BoundedLatticeHomClass.toBiheytingHomClass [BooleanAlgebra α] [BooleanAlgeb
   { ‹BoundedLatticeHomClass F α β› with
     map_himp := fun f a b => by rw [himp_eq, himp_eq, map_sup, (is_compl_compl.map _).compl_eq],
     map_sdiff := fun f a b => by rw [sdiff_eq, sdiff_eq, map_inf, (is_compl_compl.map _).compl_eq] }
+#align bounded_lattice_hom_class.to_biheyting_hom_class BoundedLatticeHomClass.toBiheytingHomClass
 
 section HeytingAlgebra
 
@@ -156,9 +170,11 @@ include β
 
 @[simp]
 theorem map_compl (a : α) : f (aᶜ) = f aᶜ := by rw [← himp_bot, ← himp_bot, map_himp, map_bot]
+#align map_compl map_compl
 
 @[simp]
 theorem map_bihimp (a b : α) : f (a ⇔ b) = f a ⇔ f b := by simp_rw [bihimp, map_inf, map_himp]
+#align map_bihimp map_bihimp
 
 -- TODO: `map_bihimp`
 end HeytingAlgebra
@@ -171,9 +187,11 @@ include β
 
 @[simp]
 theorem map_hnot (a : α) : f (￢a) = ￢f a := by rw [← top_sdiff', ← top_sdiff', map_sdiff, map_top]
+#align map_hnot map_hnot
 
 @[simp]
 theorem map_symm_diff (a b : α) : f (a ∆ b) = f a ∆ f b := by simp_rw [symmDiff, map_sup, map_sdiff]
+#align map_symm_diff map_symm_diff
 
 end CoheytingAlgebra
 
@@ -209,10 +227,12 @@ instance : CoeFun (HeytingHom α β) fun _ => α → β :=
 @[simp]
 theorem to_fun_eq_coe {f : HeytingHom α β} : f.toFun = (f : α → β) :=
   rfl
+#align heyting_hom.to_fun_eq_coe HeytingHom.to_fun_eq_coe
 
-@[ext]
+@[ext.1]
 theorem ext {f g : HeytingHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
+#align heyting_hom.ext HeytingHom.ext
 
 /-- Copy of a `heyting_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
@@ -222,22 +242,26 @@ protected def copy (f : HeytingHom α β) (f' : α → β) (h : f' = f) : Heytin
   map_inf' := by simpa only [h] using map_inf f
   map_bot' := by simpa only [h] using map_bot f
   map_himp' := by simpa only [h] using map_himp f
+#align heyting_hom.copy HeytingHom.copy
 
 variable (α)
 
 /-- `id` as a `heyting_hom`. -/
 protected def id : HeytingHom α α :=
   { BotHom.id _ with toLatticeHom := LatticeHom.id _, map_himp' := fun a b => rfl }
+#align heyting_hom.id HeytingHom.id
 
 @[simp]
 theorem coe_id : ⇑(HeytingHom.id α) = id :=
   rfl
+#align heyting_hom.coe_id HeytingHom.coe_id
 
 variable {α}
 
 @[simp]
 theorem id_apply (a : α) : HeytingHom.id α a = a :=
   rfl
+#align heyting_hom.id_apply HeytingHom.id_apply
 
 instance : Inhabited (HeytingHom α α) :=
   ⟨HeytingHom.id _⟩
@@ -248,35 +272,43 @@ instance : PartialOrder (HeytingHom α β) :=
 /-- Composition of `heyting_hom`s as a `heyting_hom`. -/
 def comp (f : HeytingHom β γ) (g : HeytingHom α β) : HeytingHom α γ :=
   { f.toLatticeHom.comp g.toLatticeHom with toFun := f ∘ g, map_bot' := by simp, map_himp' := fun a b => by simp }
+#align heyting_hom.comp HeytingHom.comp
 
 variable {f f₁ f₂ : HeytingHom α β} {g g₁ g₂ : HeytingHom β γ}
 
 @[simp]
 theorem coe_comp (f : HeytingHom β γ) (g : HeytingHom α β) : ⇑(f.comp g) = f ∘ g :=
   rfl
+#align heyting_hom.coe_comp HeytingHom.coe_comp
 
 @[simp]
 theorem comp_apply (f : HeytingHom β γ) (g : HeytingHom α β) (a : α) : f.comp g a = f (g a) :=
   rfl
+#align heyting_hom.comp_apply HeytingHom.comp_apply
 
 @[simp]
 theorem comp_assoc (f : HeytingHom γ δ) (g : HeytingHom β γ) (h : HeytingHom α β) :
     (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
+#align heyting_hom.comp_assoc HeytingHom.comp_assoc
 
 @[simp]
 theorem comp_id (f : HeytingHom α β) : f.comp (HeytingHom.id α) = f :=
   ext fun a => rfl
+#align heyting_hom.comp_id HeytingHom.comp_id
 
 @[simp]
 theorem id_comp (f : HeytingHom α β) : (HeytingHom.id β).comp f = f :=
   ext fun a => rfl
+#align heyting_hom.id_comp HeytingHom.id_comp
 
 theorem cancel_right (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+#align heyting_hom.cancel_right HeytingHom.cancel_right
 
 theorem cancel_left (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => HeytingHom.ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+#align heyting_hom.cancel_left HeytingHom.cancel_left
 
 end HeytingHom
 
@@ -300,10 +332,12 @@ instance : CoeFun (CoheytingHom α β) fun _ => α → β :=
 @[simp]
 theorem to_fun_eq_coe {f : CoheytingHom α β} : f.toFun = (f : α → β) :=
   rfl
+#align coheyting_hom.to_fun_eq_coe CoheytingHom.to_fun_eq_coe
 
-@[ext]
+@[ext.1]
 theorem ext {f g : CoheytingHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
+#align coheyting_hom.ext CoheytingHom.ext
 
 /-- Copy of a `coheyting_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
@@ -313,22 +347,26 @@ protected def copy (f : CoheytingHom α β) (f' : α → β) (h : f' = f) : Cohe
   map_inf' := by simpa only [h] using map_inf f
   map_top' := by simpa only [h] using map_top f
   map_sdiff' := by simpa only [h] using map_sdiff f
+#align coheyting_hom.copy CoheytingHom.copy
 
 variable (α)
 
 /-- `id` as a `coheyting_hom`. -/
 protected def id : CoheytingHom α α :=
   { TopHom.id _ with toLatticeHom := LatticeHom.id _, map_sdiff' := fun a b => rfl }
+#align coheyting_hom.id CoheytingHom.id
 
 @[simp]
 theorem coe_id : ⇑(CoheytingHom.id α) = id :=
   rfl
+#align coheyting_hom.coe_id CoheytingHom.coe_id
 
 variable {α}
 
 @[simp]
 theorem id_apply (a : α) : CoheytingHom.id α a = a :=
   rfl
+#align coheyting_hom.id_apply CoheytingHom.id_apply
 
 instance : Inhabited (CoheytingHom α α) :=
   ⟨CoheytingHom.id _⟩
@@ -339,35 +377,43 @@ instance : PartialOrder (CoheytingHom α β) :=
 /-- Composition of `coheyting_hom`s as a `coheyting_hom`. -/
 def comp (f : CoheytingHom β γ) (g : CoheytingHom α β) : CoheytingHom α γ :=
   { f.toLatticeHom.comp g.toLatticeHom with toFun := f ∘ g, map_top' := by simp, map_sdiff' := fun a b => by simp }
+#align coheyting_hom.comp CoheytingHom.comp
 
 variable {f f₁ f₂ : CoheytingHom α β} {g g₁ g₂ : CoheytingHom β γ}
 
 @[simp]
 theorem coe_comp (f : CoheytingHom β γ) (g : CoheytingHom α β) : ⇑(f.comp g) = f ∘ g :=
   rfl
+#align coheyting_hom.coe_comp CoheytingHom.coe_comp
 
 @[simp]
 theorem comp_apply (f : CoheytingHom β γ) (g : CoheytingHom α β) (a : α) : f.comp g a = f (g a) :=
   rfl
+#align coheyting_hom.comp_apply CoheytingHom.comp_apply
 
 @[simp]
 theorem comp_assoc (f : CoheytingHom γ δ) (g : CoheytingHom β γ) (h : CoheytingHom α β) :
     (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
+#align coheyting_hom.comp_assoc CoheytingHom.comp_assoc
 
 @[simp]
 theorem comp_id (f : CoheytingHom α β) : f.comp (CoheytingHom.id α) = f :=
   ext fun a => rfl
+#align coheyting_hom.comp_id CoheytingHom.comp_id
 
 @[simp]
 theorem id_comp (f : CoheytingHom α β) : (CoheytingHom.id β).comp f = f :=
   ext fun a => rfl
+#align coheyting_hom.id_comp CoheytingHom.id_comp
 
 theorem cancel_right (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+#align coheyting_hom.cancel_right CoheytingHom.cancel_right
 
 theorem cancel_left (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => CoheytingHom.ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+#align coheyting_hom.cancel_left CoheytingHom.cancel_left
 
 end CoheytingHom
 
@@ -391,10 +437,12 @@ instance : CoeFun (BiheytingHom α β) fun _ => α → β :=
 @[simp]
 theorem to_fun_eq_coe {f : BiheytingHom α β} : f.toFun = (f : α → β) :=
   rfl
+#align biheyting_hom.to_fun_eq_coe BiheytingHom.to_fun_eq_coe
 
-@[ext]
+@[ext.1]
 theorem ext {f g : BiheytingHom α β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
+#align biheyting_hom.ext BiheytingHom.ext
 
 /-- Copy of a `biheyting_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
@@ -404,22 +452,26 @@ protected def copy (f : BiheytingHom α β) (f' : α → β) (h : f' = f) : Bihe
   map_inf' := by simpa only [h] using map_inf f
   map_himp' := by simpa only [h] using map_himp f
   map_sdiff' := by simpa only [h] using map_sdiff f
+#align biheyting_hom.copy BiheytingHom.copy
 
 variable (α)
 
 /-- `id` as a `biheyting_hom`. -/
 protected def id : BiheytingHom α α :=
   { HeytingHom.id _, CoheytingHom.id _ with toLatticeHom := LatticeHom.id _ }
+#align biheyting_hom.id BiheytingHom.id
 
 @[simp]
 theorem coe_id : ⇑(BiheytingHom.id α) = id :=
   rfl
+#align biheyting_hom.coe_id BiheytingHom.coe_id
 
 variable {α}
 
 @[simp]
 theorem id_apply (a : α) : BiheytingHom.id α a = a :=
   rfl
+#align biheyting_hom.id_apply BiheytingHom.id_apply
 
 instance : Inhabited (BiheytingHom α α) :=
   ⟨BiheytingHom.id _⟩
@@ -431,35 +483,43 @@ instance : PartialOrder (BiheytingHom α β) :=
 def comp (f : BiheytingHom β γ) (g : BiheytingHom α β) : BiheytingHom α γ :=
   { f.toLatticeHom.comp g.toLatticeHom with toFun := f ∘ g, map_himp' := fun a b => by simp,
     map_sdiff' := fun a b => by simp }
+#align biheyting_hom.comp BiheytingHom.comp
 
 variable {f f₁ f₂ : BiheytingHom α β} {g g₁ g₂ : BiheytingHom β γ}
 
 @[simp]
 theorem coe_comp (f : BiheytingHom β γ) (g : BiheytingHom α β) : ⇑(f.comp g) = f ∘ g :=
   rfl
+#align biheyting_hom.coe_comp BiheytingHom.coe_comp
 
 @[simp]
 theorem comp_apply (f : BiheytingHom β γ) (g : BiheytingHom α β) (a : α) : f.comp g a = f (g a) :=
   rfl
+#align biheyting_hom.comp_apply BiheytingHom.comp_apply
 
 @[simp]
 theorem comp_assoc (f : BiheytingHom γ δ) (g : BiheytingHom β γ) (h : BiheytingHom α β) :
     (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
+#align biheyting_hom.comp_assoc BiheytingHom.comp_assoc
 
 @[simp]
 theorem comp_id (f : BiheytingHom α β) : f.comp (BiheytingHom.id α) = f :=
   ext fun a => rfl
+#align biheyting_hom.comp_id BiheytingHom.comp_id
 
 @[simp]
 theorem id_comp (f : BiheytingHom α β) : (BiheytingHom.id β).comp f = f :=
   ext fun a => rfl
+#align biheyting_hom.id_comp BiheytingHom.id_comp
 
 theorem cancel_right (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+#align biheyting_hom.cancel_right BiheytingHom.cancel_right
 
 theorem cancel_left (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => BiheytingHom.ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+#align biheyting_hom.cancel_left BiheytingHom.cancel_left
 
 end BiheytingHom
 

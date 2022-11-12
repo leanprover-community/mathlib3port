@@ -33,6 +33,7 @@ copy the attribute to the additive version.
 unsafe def measurability : user_attribute where
   Name := `measurability
   descr := "lemmas usable to prove (ae)-measurability"
+#align measurability measurability
 
 /- Mark some measurability lemmas already defined in `measure_theory.measurable_space_def` and
 `measure_theory.measure_space_def` -/
@@ -60,6 +61,7 @@ extra logic here to try to avoid bad cases.
 -/
 unsafe def apply_measurable.comp : tactic Unit :=
   sorry
+#align tactic.apply_measurable.comp tactic.apply_measurable.comp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
@@ -80,6 +82,7 @@ extra logic here to try to avoid bad cases.
 -/
 unsafe def apply_measurable.comp_ae_measurable : tactic Unit :=
   sorry
+#align tactic.apply_measurable.comp_ae_measurable tactic.apply_measurable.comp_ae_measurable
 
 /-- We don't want the intro1 tactic to apply to a goal of the form `measurable f`, `ae_measurable f μ`
 or `measurable_set s`. This tactic tests the target to see if it matches that form.
@@ -91,6 +94,7 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | quote.1 (AeMeasurable (%%ₓl) (%%ₓr)) => failed
     | quote.1 (MeasurableSet (%%ₓl)) => failed
     | _ => skip
+#align tactic.goal_is_not_measurable tactic.goal_is_not_measurable
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -105,6 +109,7 @@ unsafe def measurability_tactics (md : Transparency := semireducible) : List (ta
     apply_measurable.comp >> pure "refine measurable.comp _ _",
     apply_measurable.comp_ae_measurable >> pure "refine measurable.comp_ae_measurable _ _",
     sorry >> pure "refine measurable.ae_measurable _", sorry >> pure "refine measurable.ae_strongly_measurable _"]
+#align tactic.measurability_tactics tactic.measurability_tactics
 
 namespace Interactive
 
@@ -119,10 +124,12 @@ unsafe def measurability (bang : parse <| optional (tk "!")) (trace : parse <| o
   let measurability_core := tactic.tidy { cfg with tactics := measurability_tactics md }
   let trace_fn := if trace.isSome then show_term else id
   trace_fn measurability_core
+#align tactic.interactive.measurability tactic.interactive.measurability
 
 /-- Version of `measurability` for use with auto_param. -/
 unsafe def measurability' : tactic Unit :=
   measurability none none {  }
+#align tactic.interactive.measurability' tactic.interactive.measurability'
 
 /-- `measurability` solves goals of the form `measurable f`, `ae_measurable f μ`,
 `ae_strongly_measurable f μ` or `measurable_set s` by applying lemmas tagged with the

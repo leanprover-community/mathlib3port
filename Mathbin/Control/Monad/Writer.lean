@@ -12,11 +12,13 @@ universe u v w u₀ u₁ v₀ v₁
 
 structure WriterT (ω : Type u) (m : Type u → Type v) (α : Type u) : Type max u v where
   run : m (α × ω)
+#align writer_t WriterTₓ
 
 #print Writer /-
 @[reducible]
 def Writer (ω : Type u) :=
   WriterT ω id
+#align writer Writer
 -/
 
 attribute [pp_using_anonymous_constructor] WriterT
@@ -35,25 +37,30 @@ variable {α β : Type u}
 
 open Function
 
-@[ext]
+@[ext.1]
 protected theorem ext (x x' : WriterT ω m α) (h : x.run = x'.run) : x = x' := by
   cases x <;> cases x' <;> congr <;> apply h
+#align writer_t.ext WriterTₓ.ext
 
 @[inline]
 protected def tell (w : ω) : WriterT ω m PUnit :=
   ⟨pure (PUnit.unit, w)⟩
+#align writer_t.tell WriterTₓ.tell
 
 @[inline]
 protected def listen : WriterT ω m α → WriterT ω m (α × ω)
   | ⟨cmd⟩ => ⟨(fun x : α × ω => ((x.1, x.2), x.2)) <$> cmd⟩
+#align writer_t.listen WriterTₓ.listen
 
 @[inline]
 protected def pass : WriterT ω m (α × (ω → ω)) → WriterT ω m α
   | ⟨cmd⟩ => ⟨uncurry (uncurry fun x (f : ω → ω) w => (x, f w)) <$> cmd⟩
+#align writer_t.pass WriterTₓ.pass
 
 @[inline]
 protected def pure [One ω] (a : α) : WriterT ω m α :=
   ⟨pure (a, 1)⟩
+#align writer_t.pure WriterTₓ.pure
 
 @[inline]
 protected def bind [Mul ω] (x : WriterT ω m α) (f : α → WriterT ω m β) : WriterT ω m β :=
@@ -61,6 +68,7 @@ protected def bind [Mul ω] (x : WriterT ω m α) (f : α → WriterT ω m β) :
     let x ← x.run
     let x' ← (f x.1).run
     pure (x'.1, x.2 * x'.2)⟩
+#align writer_t.bind WriterTₓ.bind
 
 instance [One ω] [Mul ω] : Monad (WriterT ω m) where
   pure α := WriterT.pure
@@ -82,6 +90,7 @@ instance [Monoid ω] [LawfulMonad m] : LawfulMonad (WriterT ω m) where
 @[inline]
 protected def lift [One ω] (a : m α) : WriterT ω m α :=
   ⟨flip Prod.mk 1 <$> a⟩
+#align writer_t.lift WriterTₓ.lift
 
 instance (m) [Monad m] [One ω] : HasMonadLift m (WriterT ω m) :=
   ⟨fun α => WriterT.lift⟩
@@ -89,6 +98,7 @@ instance (m) [Monad m] [One ω] : HasMonadLift m (WriterT ω m) :=
 @[inline]
 protected def monadMap {m m'} [Monad m] [Monad m'] {α} (f : ∀ {α}, m α → m' α) : WriterT ω m α → WriterT ω m' α :=
   fun x => ⟨f x.run⟩
+#align writer_t.monad_map WriterTₓ.monadMap
 
 instance (m m') [Monad m] [Monad m'] : MonadFunctor m m' (WriterT ω m) (WriterT ω m') :=
   ⟨@WriterT.monadMap ω m m' _ _⟩
@@ -96,6 +106,7 @@ instance (m m') [Monad m] [Monad m'] : MonadFunctor m m' (WriterT ω m) (WriterT
 @[inline]
 protected def adapt {ω' : Type u} {α : Type u} (f : ω → ω') : WriterT ω m α → WriterT ω' m α := fun x =>
   ⟨Prod.map id f <$> x.run⟩
+#align writer_t.adapt WriterTₓ.adapt
 
 instance (ε) [One ω] [Monad m] [MonadExcept ε m] : MonadExcept ε (WriterT ω m) where
   throw α := WriterT.lift ∘ throw
@@ -121,6 +132,7 @@ class MonadWriter (ω : outParam (Type u)) (m : Type u → Type v) where
   tell (w : ω) : m PUnit
   listen {α} : m α → m (α × ω)
   pass {α : Type u} : m (α × (ω → ω)) → m α
+#align monad_writer MonadWriter
 -/
 
 export MonadWriter ()
@@ -137,6 +149,7 @@ instance {ω ρ : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
 
 def swapRight {α β γ} : (α × β) × γ → (α × γ) × β
   | ⟨⟨x, y⟩, z⟩ => ((x, z), y)
+#align swap_right swapRight
 
 instance {ω σ : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] : MonadWriter ω (StateT σ m) where
   tell x := monadLift (tell x : m PUnit)
@@ -148,6 +161,7 @@ open Function
 def ExceptT.passAux {ε α ω} : Except ε (α × (ω → ω)) → Except ε α × (ω → ω)
   | Except.error a => (Except.error a, id)
   | Except.ok (x, y) => (Except.ok x, y)
+#align except_t.pass_aux ExceptTₓ.passAux
 
 instance {ω ε : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] : MonadWriter ω (ExceptT ε m) where
   tell x := monadLift (tell x : m PUnit)
@@ -157,6 +171,7 @@ instance {ω ε : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
 def OptionT.passAux {α ω} : Option (α × (ω → ω)) → Option α × (ω → ω)
   | none => (none, id)
   | some (x, y) => (some x, y)
+#align option_t.pass_aux OptionTₓ.passAux
 
 instance {ω : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] : MonadWriter ω (OptionT m) where
   tell x := monadLift (tell x : m PUnit)
@@ -179,6 +194,7 @@ class monad_reader_functor (ρ ρ' : out_param (Type u)) (n n' : Type u → Type
 -/
 class MonadWriterAdapter (ω ω' : outParam (Type u)) (m m' : Type u → Type v) where
   adaptWriter {α : Type u} : (ω → ω') → m α → m' α
+#align monad_writer_adapter MonadWriterAdapter
 
 export MonadWriterAdapter (adaptWriter)
 
@@ -198,6 +214,7 @@ see Note [lower instance priority] -/
 instance (priority := 100) monadWriterAdapterTrans {n n' : Type u → Type v} [MonadWriterAdapter ω ω' m m']
     [MonadFunctor m m' n n'] : MonadWriterAdapter ω ω' n n' :=
   ⟨fun α f => monadMap fun α => (adaptWriter f : m α → m' α)⟩
+#align monad_writer_adapter_trans monadWriterAdapterTrans
 
 instance [Monad m] : MonadWriterAdapter ω ω' (WriterT ω m) (WriterT ω' m) :=
   ⟨fun α => WriterT.adapt⟩
@@ -215,4 +232,5 @@ def WriterT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg WriterT.mk <| F.left_inv _
   right_inv := fun ⟨f⟩ => congr_arg WriterT.mk <| F.right_inv _
+#align writer_t.equiv WriterTₓ.equiv
 

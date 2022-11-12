@@ -61,6 +61,7 @@ theorem integral_sin_pow_div_tendsto_one :
     
   · exact tendsto_const_nhds
     
+#align real.integral_sin_pow_div_tendsto_one Real.integral_sin_pow_div_tendsto_one
 
 /-- This theorem establishes the Wallis Product for `π`. Our proof is largely about analyzing
   the behavior of the ratio of the integral of `sin x ^ n` as `n → ∞`.
@@ -92,6 +93,7 @@ theorem tendsto_prod_pi_div_two :
   rw [integral_sin_pow_even, integral_sin_pow_odd, mul_div_mul_comm, ← prod_div_distrib, inv_div]
   congr with i
   rw [div_div_div_comm, div_div_eq_mul_div, mul_div_assoc]
+#align real.tendsto_prod_pi_div_two Real.tendsto_prod_pi_div_two
 
 end Real
 

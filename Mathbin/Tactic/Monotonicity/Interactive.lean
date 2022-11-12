@@ -28,6 +28,7 @@ unsafe inductive mono_function (elab : Bool := true)
   | non_assoc : expr elab → List (expr elab) → List (expr elab) → mono_function
   | assoc : expr elab → Option (expr elab) → Option (expr elab) → mono_function
   | assoc_comm : expr elab → expr elab → mono_function
+#align tactic.interactive.mono_function tactic.interactive.mono_function
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.mk_dec_eq_instance -/
 unsafe instance : DecidableEq mono_function := by
@@ -37,8 +38,8 @@ unsafe instance : DecidableEq mono_function := by
 unsafe def mono_function.to_tactic_format : mono_function → tactic format
   | mono_function.non_assoc fn xs ys => do
     let fn' ← pp fn
-    let xs' ← mmap pp xs
-    let ys' ← mmap pp ys
+    let xs' ← mapM pp xs
+    let ys' ← mapM pp ys
     return f! "{fn' } {xs' } _ {ys'}"
   | mono_function.assoc fn xs ys => do
     let fn' ← pp fn
@@ -49,23 +50,28 @@ unsafe def mono_function.to_tactic_format : mono_function → tactic format
     let fn' ← pp fn
     let xs' ← pp xs
     return f! "{fn' } _ {xs'}"
+#align tactic.interactive.mono_function.to_tactic_format tactic.interactive.mono_function.to_tactic_format
 
 unsafe instance has_to_tactic_format_mono_function :
     has_to_tactic_format mono_function where to_tactic_format := mono_function.to_tactic_format
+#align tactic.interactive.has_to_tactic_format_mono_function tactic.interactive.has_to_tactic_format_mono_function
 
 unsafe structure ac_mono_ctx' (rel : Type) where
   to_rel : rel
   function : mono_function
   (left right rel_def : expr)
   deriving Traversable
+#align tactic.interactive.ac_mono_ctx' tactic.interactive.ac_mono_ctx'
 
 @[reducible]
 unsafe def ac_mono_ctx :=
   ac_mono_ctx' (Option (expr → expr → expr))
+#align tactic.interactive.ac_mono_ctx tactic.interactive.ac_mono_ctx
 
 @[reducible]
 unsafe def ac_mono_ctx_ne :=
   ac_mono_ctx' (expr → expr → expr)
+#align tactic.interactive.ac_mono_ctx_ne tactic.interactive.ac_mono_ctx_ne
 
 unsafe def ac_mono_ctx.to_tactic_format (ctx : ac_mono_ctx) : tactic format := do
   let fn ← pp ctx.function
@@ -77,15 +83,18 @@ unsafe def ac_mono_ctx.to_tactic_format (ctx : ac_mono_ctx) : tactic format := d
         , left  := {l }
         , right := {r }
         , rel_def := {rel} }}"
+#align tactic.interactive.ac_mono_ctx.to_tactic_format tactic.interactive.ac_mono_ctx.to_tactic_format
 
 unsafe instance has_to_tactic_format_mono_ctx :
     has_to_tactic_format ac_mono_ctx where to_tactic_format := ac_mono_ctx.to_tactic_format
+#align tactic.interactive.has_to_tactic_format_mono_ctx tactic.interactive.has_to_tactic_format_mono_ctx
 
 unsafe def as_goal (e : expr) (tac : tactic Unit) : tactic Unit := do
   let gs ← get_goals
   set_goals [e]
   tac
   set_goals gs
+#align tactic.interactive.as_goal tactic.interactive.as_goal
 
 open List hiding map
 
@@ -102,23 +111,28 @@ unsafe def unify_with_instance (e : expr) : tactic Unit :=
     apply_instance <|>
       apply_opt_param <|>
         apply_auto_param <|> tactic.solve_by_elim { lemmas := some asms } <|> reflexivity <|> applyc `` id <|> return ()
+#align tactic.interactive.unify_with_instance tactic.interactive.unify_with_instance
 
 private unsafe def match_rule_head (p : expr) : List expr → expr → expr → tactic expr
   | vs, e, t =>
-    (unify t p >> mmap' unify_with_instance vs.reverse) >> instantiate_mvars e <|> do
-      let expr.pi _ _ d b ← return t | failed
+    (unify t p >> mapM' unify_with_instance vs.reverse) >> instantiate_mvars e <|> do
+      let expr.pi _ _ d b ← return t |
+        failed
       let v ← mk_meta_var d
       match_rule_head (v :: vs) (expr.app e v) (b v)
+#align tactic.interactive.match_rule_head tactic.interactive.match_rule_head
 
 unsafe def pi_head : expr → tactic expr
   | expr.pi n _ t b => do
     let v ← mk_meta_var t
     pi_head (b v)
   | e => return e
+#align tactic.interactive.pi_head tactic.interactive.pi_head
 
 unsafe def delete_expr (e : expr) : List expr → tactic (Option (List expr))
   | [] => return none
   | x :: xs => compare opt e x >> return (some xs) <|> map (cons x) <$> delete_expr xs
+#align tactic.interactive.delete_expr tactic.interactive.delete_expr
 
 unsafe def match_ac' : List expr → List expr → tactic (List expr × List expr × List expr)
   | es, x :: xs => do
@@ -132,13 +146,15 @@ unsafe def match_ac' : List expr → List expr → tactic (List expr × List exp
         return (c, l, x :: r)
   | es, [] => do
     return ([], es, [])
+#align tactic.interactive.match_ac' tactic.interactive.match_ac'
 
 unsafe def match_ac (l : List expr) (r : List expr) : tactic (List expr × List expr × List expr) := do
   let (s', l', r') ← match_ac' l r
-  let s' ← mmap instantiate_mvars s'
-  let l' ← mmap instantiate_mvars l'
-  let r' ← mmap instantiate_mvars r'
+  let s' ← mapM instantiate_mvars s'
+  let l' ← mapM instantiate_mvars l'
+  let r' ← mapM instantiate_mvars r'
   return (s', l', r')
+#align tactic.interactive.match_ac tactic.interactive.match_ac
 
 unsafe def match_prefix : List expr → List expr → tactic (List expr × List expr × List expr)
   | x :: xs, y :: ys =>
@@ -147,6 +163,7 @@ unsafe def match_prefix : List expr → List expr → tactic (List expr × List 
         Prod.map ((· :: ·) x) id <$> match_prefix xs ys) <|>
       return ([], x :: xs, y :: ys)
   | xs, ys => return ([], xs, ys)
+#align tactic.interactive.match_prefix tactic.interactive.match_prefix
 
 /-- `(prefix,left,right,suffix) ← match_assoc unif l r` finds the
 longest prefix and suffix common to `l` and `r` and
@@ -155,6 +172,7 @@ unsafe def match_assoc (l : List expr) (r : List expr) : tactic (List expr × Li
   let (pre, l₁, r₁) ← match_prefix l r
   let (suf, l₂, r₂) ← match_prefix (reverse l₁) (reverse r₁)
   return (pre, reverse l₂, reverse r₂, reverse suf)
+#align tactic.interactive.match_assoc tactic.interactive.match_assoc
 
 unsafe def check_ac : expr → tactic (Bool × Bool × Option (expr × expr × expr) × expr)
   | expr.app (expr.app f x) y => do
@@ -176,6 +194,7 @@ unsafe def check_ac : expr → tactic (Bool × Bool × Option (expr × expr × e
           return (l_id, r_id, v')
     return (a, c, i, f)
   | _ => return (false, false, none, expr.var 1)
+#align tactic.interactive.check_ac tactic.interactive.check_ac
 
 unsafe def parse_assoc_chain' (f : expr) : expr → tactic (Dlist expr)
   | e =>
@@ -184,25 +203,31 @@ unsafe def parse_assoc_chain' (f : expr) : expr → tactic (Dlist expr)
         is_def_eq f f'
         (· ++ ·) <$> parse_assoc_chain' x <*> parse_assoc_chain' y) <|>
       return (singleton e)
+#align tactic.interactive.parse_assoc_chain' tactic.interactive.parse_assoc_chain'
 
 unsafe def parse_assoc_chain (f : expr) : expr → tactic (List expr) :=
   map Dlist.toList ∘ parse_assoc_chain' f
+#align tactic.interactive.parse_assoc_chain tactic.interactive.parse_assoc_chain
 
 unsafe def fold_assoc (op : expr) : Option (expr × expr × expr) → List expr → Option (expr × List expr)
   | _, x :: xs => some (foldl (expr.app ∘ expr.app op) x xs, [])
   | none, [] => none
   | some (l_id, r_id, x₀), [] => some (x₀, [l_id, r_id])
+#align tactic.interactive.fold_assoc tactic.interactive.fold_assoc
 
 unsafe def fold_assoc1 (op : expr) : List expr → Option expr
   | x :: xs => some <| foldl (expr.app ∘ expr.app op) x xs
   | [] => none
+#align tactic.interactive.fold_assoc1 tactic.interactive.fold_assoc1
 
 unsafe def same_function_aux : List expr → List expr → expr → expr → tactic (expr × List expr × List expr)
   | xs₀, xs₁, expr.app f₀ a₀, expr.app f₁ a₁ => same_function_aux (a₀ :: xs₀) (a₁ :: xs₁) f₀ f₁
   | xs₀, xs₁, e₀, e₁ => is_def_eq e₀ e₁ >> return (e₀, xs₀, xs₁)
+#align tactic.interactive.same_function_aux tactic.interactive.same_function_aux
 
 unsafe def same_function : expr → expr → tactic (expr × List expr × List expr) :=
   same_function_aux [] []
+#align tactic.interactive.same_function tactic.interactive.same_function
 
 unsafe def parse_ac_mono_function (l r : expr) : tactic (expr × expr × List expr × mono_function) := do
   let (full_f, ls, rs) ← same_function l r
@@ -228,11 +253,13 @@ unsafe def parse_ac_mono_function (l r : expr) : tactic (expr × expr × List ex
         (xs₀, x₀, x₁, xs₁)
         ← find_one_difference opt ls rs
       return (x₀, x₁, [], mono_function.non_assoc full_f xs₀ xs₁)
+#align tactic.interactive.parse_ac_mono_function tactic.interactive.parse_ac_mono_function
 
 unsafe def parse_ac_mono_function' (l r : pexpr) := do
   let l' ← to_expr l
   let r' ← to_expr r
   parse_ac_mono_function l' r'
+#align tactic.interactive.parse_ac_mono_function' tactic.interactive.parse_ac_mono_function'
 
 unsafe def ac_monotonicity_goal : expr → tactic (expr × expr × List expr × ac_mono_ctx)
   | quote.1 ((%%ₓe₀) → %%ₓe₁) => do
@@ -253,22 +280,27 @@ unsafe def ac_monotonicity_goal : expr → tactic (expr × expr × List expr × 
     let (l, r, id_rs, f) ← parse_ac_mono_function e₀ e₁
     return (e₀, e₁, id_rs, { function := f, left := l, right := r, to_rel := expr.app ∘ expr.app rel, rel_def := rel })
   | _ => fail "invalid monotonicity goal"
+#align tactic.interactive.ac_monotonicity_goal tactic.interactive.ac_monotonicity_goal
 
 unsafe def bin_op_left (f : expr) : Option expr → expr → expr
   | none, e => e
   | some e₀, e₁ => f.mk_app [e₀, e₁]
+#align tactic.interactive.bin_op_left tactic.interactive.bin_op_left
 
 unsafe def bin_op (f a b : expr) : expr :=
   f.mk_app [a, b]
+#align tactic.interactive.bin_op tactic.interactive.bin_op
 
 unsafe def bin_op_right (f : expr) : expr → Option expr → expr
   | e, none => e
   | e₀, some e₁ => f.mk_app [e₀, e₁]
+#align tactic.interactive.bin_op_right tactic.interactive.bin_op_right
 
 unsafe def mk_fun_app : mono_function → expr → expr
   | mono_function.non_assoc f x y, z => f.mk_app (x ++ z :: y)
   | mono_function.assoc f x y, z => bin_op_left f x (bin_op_right f z y)
   | mono_function.assoc_comm f x, z => f.mk_app [z, x]
+#align tactic.interactive.mk_fun_app tactic.interactive.mk_fun_app
 
 unsafe inductive mono_law/- `assoc (l₀,r₀) (r₁,l₁)` gives first how to find rules to prove
       x+(y₀+z) R x+(y₁+z);
@@ -278,6 +310,7 @@ unsafe inductive mono_law/- `assoc (l₀,r₀) (r₁,l₁)` gives first how to f
 
   | congr : expr → mono_law
   | other : expr → mono_law
+#align tactic.interactive.mono_law tactic.interactive.mono_law
 
 unsafe def mono_law.to_tactic_format : mono_law → tactic format
   | mono_law.other e => do
@@ -292,12 +325,15 @@ unsafe def mono_law.to_tactic_format : mono_law → tactic format
     let y₀ ← pp y₀
     let y₁ ← pp y₁
     return f! "assoc {x₀ }; {x₁ } | {y₀ }; {y₁}"
+#align tactic.interactive.mono_law.to_tactic_format tactic.interactive.mono_law.to_tactic_format
 
 unsafe instance has_to_tactic_format_mono_law :
     has_to_tactic_format mono_law where to_tactic_format := mono_law.to_tactic_format
+#align tactic.interactive.has_to_tactic_format_mono_law tactic.interactive.has_to_tactic_format_mono_law
 
 unsafe def mk_rel (ctx : ac_mono_ctx_ne) (f : expr → expr) : expr :=
   ctx.to_rel (f ctx.left) (f ctx.right)
+#align tactic.interactive.mk_rel tactic.interactive.mk_rel
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `xs₁ -/
 unsafe def mk_congr_args (fn : expr) (xs₀ xs₁ : List expr) (l r : expr) : tactic expr := do
@@ -306,6 +342,7 @@ unsafe def mk_congr_args (fn : expr) (xs₀ xs₁ : List expr) (l r : expr) : ta
       solve_aux p do
         iterate_exactly (xs₁ xs₁.length) (applyc `congr_fun)
         applyc `congr_arg
+#align tactic.interactive.mk_congr_args tactic.interactive.mk_congr_args
 
 unsafe def mk_congr_law (ctx : ac_mono_ctx) : tactic expr :=
   match ctx.function with
@@ -313,6 +350,7 @@ unsafe def mk_congr_law (ctx : ac_mono_ctx) : tactic expr :=
     if (x₀ <|> x₁).isSome then mk_congr_args f x₀.toMonad x₁.toMonad ctx.left ctx.right else failed
   | mono_function.assoc_comm f x₀ => mk_congr_args f [x₀] [] ctx.left ctx.right
   | mono_function.non_assoc f x₀ x₁ => mk_congr_args f x₀ x₁ ctx.left ctx.right
+#align tactic.interactive.mk_congr_law tactic.interactive.mk_congr_law
 
 unsafe def mk_pattern (ctx : ac_mono_ctx) : tactic mono_law :=
   match (sequence ctx : Option (ac_mono_ctx' _)) with
@@ -327,6 +365,7 @@ unsafe def mk_pattern (ctx : ac_mono_ctx) : tactic mono_law :=
     | mono_function.assoc f none none => none
     | _ => return <| mono_law.other <| mk_rel ctx fun e => mk_fun_app ctx.function e
   | none => mono_law.congr <$> mk_congr_law ctx
+#align tactic.interactive.mk_pattern tactic.interactive.mk_pattern
 
 unsafe def match_rule (pat : expr) (r : Name) : tactic expr := do
   let r' ← mk_const r
@@ -335,22 +374,26 @@ unsafe def match_rule (pat : expr) (r : Name) : tactic expr := do
     expr.dsimp t { failIfUnchanged := false } true []
         [simp_arg_type.expr (pquote.1 Monotone), simp_arg_type.expr (pquote.1 StrictMono)]
   match_rule_head pat [] r' t
+#align tactic.interactive.match_rule tactic.interactive.match_rule
 
 unsafe def find_lemma (pat : expr) : List Name → tactic (List expr)
   | [] => return []
   | r :: rs => do
     (cons <$> match_rule pat r <|> pure id) <*> find_lemma rs
+#align tactic.interactive.find_lemma tactic.interactive.find_lemma
 
 unsafe def match_chaining_rules (ls : List Name) (x₀ x₁ : expr) : tactic (List expr) := do
   let x' ← to_expr (pquote.1 ((%%ₓx₁) → %%ₓx₀))
   let r₀ ← find_lemma x' ls
   let r₁ ← find_lemma x₁ ls
   return (expr.app <$> r₀ <*> r₁)
+#align tactic.interactive.match_chaining_rules tactic.interactive.match_chaining_rules
 
 unsafe def find_rule (ls : List Name) : mono_law → tactic (List expr)
   | mono_law.assoc (x₀, x₁) (y₀, y₁) => match_chaining_rules ls x₀ x₁ <|> match_chaining_rules ls y₀ y₁
   | mono_law.congr r => return [r]
   | mono_law.other p => find_lemma p ls
+#align tactic.interactive.find_rule tactic.interactive.find_rule
 
 universe u v
 
@@ -358,9 +401,11 @@ def applyRel {α : Sort u} (R : α → α → Sort v) {x y : α} (x' y' : α) (h
     R x' y' := by
   rw [← hx, ← hy]
   apply h
+#align tactic.interactive.apply_rel Tactic.Interactive.applyRel
 
 unsafe def ac_refine (e : expr) : tactic Unit :=
   andthen (refine (pquote.1 (Eq.mp _ (%%ₓe)))) ac_refl
+#align tactic.interactive.ac_refine tactic.interactive.ac_refine
 
 unsafe def one_line (e : expr) : tactic format := do
   let lbl ← pp e
@@ -368,14 +413,16 @@ unsafe def one_line (e : expr) : tactic format := do
   return
       f! "	{asm}
         "
+#align tactic.interactive.one_line tactic.interactive.one_line
 
 unsafe def side_conditions (e : expr) : tactic format := do
   let vs := e.list_meta_vars
-  let ts ← mmap one_line vs.tail
+  let ts ← mapM one_line vs.tail
   let r := e.get_app_fn.const_name
   return
       f! "{r }:
         {format.join ts}"
+#align tactic.interactive.side_conditions tactic.interactive.side_conditions
 
 open Monad
 
@@ -394,6 +441,7 @@ private unsafe def monotonicity.generalize' (h : Name) (v : expr) (x : Name) : t
   let r ← mk_eq_refl v
   solve1 <| tactic.exact (t v r)
   Prod.mk <$> tactic.intro x <*> tactic.intro h
+#align tactic.interactive.monotonicity.generalize' tactic.interactive.monotonicity.generalize'
 
 private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Unit :=
   focus1 <| do
@@ -402,16 +450,18 @@ private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Uni
     let ctx ← local_context
     let vs := tgt.list_meta_vars
     let vs' ←
-      mmap
+      mapM
           (fun v => do
             let h ← get_unused_name `h
             let x ← get_unused_name `x
             Prod.snd <$> monotonicity.generalize' h v x)
           vs
     andthen (tac ctx) (vs' (try ∘ tactic.subst))
+#align tactic.interactive.hide_meta_vars tactic.interactive.hide_meta_vars
 
 unsafe def hide_meta_vars' (tac : itactic) : itactic :=
   hide_meta_vars fun _ => tac
+#align tactic.interactive.hide_meta_vars' tactic.interactive.hide_meta_vars'
 
 end Config
 
@@ -422,6 +472,7 @@ unsafe def solve_mvar (v : expr) (tac : tactic Unit) : tactic Unit := do
   tac
   done
   set_goals <| gs
+#align tactic.interactive.solve_mvar tactic.interactive.solve_mvar
 
 def List.minimumOn {α β} [LinearOrder β] (f : α → β) : List α → List α
   | [] => []
@@ -432,6 +483,7 @@ def List.minimumOn {α β} [LinearOrder β] (f : α → β) : List α → List �
           let k' := f b
           if k < k' then (k, a) else if k' < k then (k', [b]) else (k, b :: a))
         (f x, [x])
+#align tactic.interactive.list.minimum_on Tactic.Interactive.List.minimumOn
 
 open Format MonoSelection
 
@@ -454,6 +506,7 @@ unsafe def best_match {β} (xs : List expr) (tac : expr → tactic β) : tactic 
           f! "ambiguous match: {msg}
             
             Tip: try asserting a side condition to distinguish between the lemmas"
+#align tactic.interactive.best_match tactic.interactive.best_match
 
 unsafe def mono_aux (dir : parse side) : tactic Unit := do
   let t ← target >>= instantiate_mvars
@@ -461,6 +514,7 @@ unsafe def mono_aux (dir : parse side) : tactic Unit := do
   let asms ← local_context
   let rs ← find_lemma asms t ns
   focus1 <| () <$ best_match rs fun law => tactic.refine <| to_pexpr law
+#align tactic.interactive.mono_aux tactic.interactive.mono_aux
 
 /-- - `mono` applies a monotonicity rule.
 - `mono*` applies monotonicity rules repetitively.
@@ -516,6 +570,7 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
   if many then repeat <| mono_aux dir else mono_aux dir
   let gs ← get_goals
   set_goals <| hyps ++ gs
+#align tactic.interactive.mono tactic.interactive.mono
 
 add_tactic_doc
   { Name := "mono", category := DocCategory.tactic, declNames := [`tactic.interactive.mono], tags := ["monotonicity"] }
@@ -539,7 +594,7 @@ unsafe def ac_mono_aux (cfg : MonoCfg := {  }) : tactic Unit :=
     let p ← mk_pattern g
     let rules ← find_rule asms ns p <|> fail "no applicable rules found"
     when (rules = []) (fail "no applicable rules found")
-    let err ← format.join <$> mmap side_conditions rules
+    let err ← format.join <$> mapM side_conditions rules
     focus1 <|
         best_match rules fun rule => do
           let t₀ ← mk_meta_var (quote.1 Prop)
@@ -551,6 +606,7 @@ unsafe def ac_mono_aux (cfg : MonoCfg := {  }) : tactic Unit :=
           solve_mvar v₁ (try (any_of id_rs rewrite_target) >> (done <|> refl <|> ac_refl <|> sorry))
           let n ← num_goals
           iterate_exactly (n - 1) (try <| solve1 <| apply_instance <|> tactic.solve_by_elim { lemmas := some asms })
+#align tactic.interactive.ac_mono_aux tactic.interactive.ac_mono_aux
 
 open Sum Nat
 
@@ -558,15 +614,18 @@ open Sum Nat
 unsafe def repeat_until_or_at_most : Nat → tactic Unit → tactic Unit → tactic Unit
   | 0, t, _ => fail "too many applications"
   | succ n, t, u => u <|> t >> repeat_until_or_at_most n t u
+#align tactic.interactive.repeat_until_or_at_most tactic.interactive.repeat_until_or_at_most
 
 unsafe def repeat_until : tactic Unit → tactic Unit → tactic Unit :=
   repeat_until_or_at_most 100000
+#align tactic.interactive.repeat_until tactic.interactive.repeat_until
 
 inductive RepArity : Type
   | one
   | exactly (n : ℕ)
   | many
   deriving _root_.has_reflect, Inhabited
+#align tactic.interactive.rep_arity Tactic.Interactive.RepArity
 
 unsafe def repeat_or_not : RepArity → tactic Unit → Option (tactic Unit) → tactic Unit
   | rep_arity.one, tac, none => tac
@@ -575,12 +634,15 @@ unsafe def repeat_or_not : RepArity → tactic Unit → Option (tactic Unit) →
   | rep_arity.one, tac, some until => tac >> until
   | rep_arity.many, tac, some until => repeat_until tac until
   | rep_arity.exactly n, tac, some until => iterate_exactly n tac >> until
+#align tactic.interactive.repeat_or_not tactic.interactive.repeat_or_not
 
 unsafe def assert_or_rule : lean.parser (Sum pexpr pexpr) :=
   tk ":=" *> inl <$> texpr <|> tk ":" *> inr <$> texpr
+#align tactic.interactive.assert_or_rule tactic.interactive.assert_or_rule
 
 unsafe def arity : lean.parser RepArity :=
   tk "*" *> pure RepArity.many <|> rep_arity.exactly <$> (tk "^" *> small_nat) <|> pure RepArity.one
+#align tactic.interactive.arity tactic.interactive.arity
 
 /-- `ac_mono` reduces the `f x ⊑ f y`, for some relation `⊑` and a
 monotonic function `f` to `x ≺ y`.
@@ -644,6 +706,7 @@ unsafe def ac_mono (rep : parse arity) : parse assert_or_rule ? → optParam Mon
     let h ← i_to_expr t >>= assert `h
     tactic.swap
     focus1 <| repeat_or_not rep (ac_mono_aux opt) (some <| done <|> ac_refine h)
+#align tactic.interactive.ac_mono tactic.interactive.ac_mono
 
 /-
 TODO(Simon): with `ac_mono := h` and `ac_mono : p` split the remaining

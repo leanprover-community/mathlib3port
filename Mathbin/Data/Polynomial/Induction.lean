@@ -53,6 +53,7 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c
       
   rw [← sum_C_mul_X_eq p, Polynomial.sum]
   exact B _
+#align polynomial.induction_on Polynomial.induction_on
 
 /-- To prove something about polynomials,
 it suffices to show the condition is closed under taking sums,
@@ -64,6 +65,7 @@ protected theorem induction_on' {M : R[X] → Prop} (p : R[X]) (h_add : ∀ p q,
   Polynomial.induction_on p (h_monomial 0) h_add fun n a h => by
     rw [← monomial_eq_C_mul_X]
     exact h_monomial _ _
+#align polynomial.induction_on' Polynomial.induction_on'
 
 open Submodule Polynomial Set
 
@@ -74,6 +76,7 @@ the ideal spanned by the coefficients of the polynomial. -/
 theorem span_le_of_C_coeff_mem (cf : ∀ i : ℕ, c (f.coeff i) ∈ I) : Ideal.span { g | ∃ i, g = c (f.coeff i) } ≤ I := by
   simp (config := { singlePass := true }) only [@eq_comm _ _ (C _)]
   exact (ideal.span_le.trans range_subset_iff).mpr cf
+#align polynomial.span_le_of_C_coeff_mem Polynomial.span_le_of_C_coeff_mem
 
 theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coeff f i) } := by
   let p := Ideal.span { g : R[X] | ∃ i : ℕ, g = C (coeff f i) }
@@ -87,9 +90,11 @@ theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coe
   convert this using 1
   simp only [monomial_mul_C, one_mul, smul_eq_mul]
   rw [monomial_eq_C_mul_X]
+#align polynomial.mem_span_C_coeff Polynomial.mem_span_C_coeff
 
 theorem exists_C_coeff_not_mem : f ∉ I → ∃ i : ℕ, c (coeff f i) ∉ I :=
   Not.imp_symm fun cf => span_le_of_C_coeff_mem (not_exists_not.mp cf) mem_span_C_coeff
+#align polynomial.exists_C_coeff_not_mem Polynomial.exists_C_coeff_not_mem
 
 end Semiring
 

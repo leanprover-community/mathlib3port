@@ -53,12 +53,9 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : 
         Nat.cast_pow, ← Nat.cast_mul, ← q_eq_a_mul_rn, CharP.cast_eq_zero R q]
       simp
     have q_eq_rn := Nat.dvd_antisymm ((CharP.cast_eq_zero_iff R q (r ^ n)).mp rn_cast_zero) rn_dvd_q
-    have n_pos : n ≠ 0 := by
-      by_contra n_zero
-      simp [n_zero] at q_eq_rn
-      exact absurd q_eq_rn (CharP.char_ne_one R q)
+    have n_pos : n ≠ 0 := fun n_zero => absurd (by simpa [n_zero] using q_eq_rn) (CharP.char_ne_one R q)
     -- Definition of prime power: `∃ r n, prime r ∧ 0 < n ∧ r ^ n = q`.
-    exact ⟨r, ⟨n, ⟨nat.prime_iff.mp r_prime, ⟨pos_iff_ne_zero.mpr n_pos, q_eq_rn.symm⟩⟩⟩⟩
+    exact ⟨r, ⟨n, ⟨r_prime.prime, ⟨pos_iff_ne_zero.mpr n_pos, q_eq_rn.symm⟩⟩⟩⟩
     
   · haveI K_char_p_0 := ringChar.of_eq r_zero
     haveI K_char_zero : CharZero K := CharP.char_p_to_char_zero K
@@ -67,4 +64,5 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : 
     have q_zero := CharP.eq R char_R_q (CharP.of_char_zero R)
     exact absurd q_zero q_pos
     
+#align char_p_zero_or_prime_power char_p_zero_or_prime_power
 

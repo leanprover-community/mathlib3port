@@ -37,6 +37,7 @@ birthdays of its left and right games. It may be thought as the "step" in which 
 constructed. -/
 noncomputable def birthday : Pgame.{u} → Ordinal.{u}
   | ⟨xl, xr, xL, xR⟩ => max (lsub.{u, u} fun i => birthday (xL i)) (lsub.{u, u} fun i => birthday (xR i))
+#align pgame.birthday Pgame.birthday
 
 theorem birthday_def (x : Pgame) :
     birthday x = max (lsub.{u, u} fun i => birthday (x.moveLeft i)) (lsub.{u, u} fun i => birthday (x.moveRight i)) :=
@@ -44,16 +45,19 @@ theorem birthday_def (x : Pgame) :
   cases x
   rw [birthday]
   rfl
+#align pgame.birthday_def Pgame.birthday_def
 
 theorem birthday_move_left_lt {x : Pgame} (i : x.LeftMoves) : (x.moveLeft i).birthday < x.birthday := by
   cases x
   rw [birthday]
   exact lt_max_of_lt_left (lt_lsub _ i)
+#align pgame.birthday_move_left_lt Pgame.birthday_move_left_lt
 
 theorem birthday_move_right_lt {x : Pgame} (i : x.RightMoves) : (x.moveRight i).birthday < x.birthday := by
   cases x
   rw [birthday]
   exact lt_max_of_lt_right (lt_lsub _ i)
+#align pgame.birthday_move_right_lt Pgame.birthday_move_right_lt
 
 theorem lt_birthday_iff {x : Pgame} {o : Ordinal} :
     o < x.birthday ↔
@@ -76,6 +80,7 @@ theorem lt_birthday_iff {x : Pgame} {o : Ordinal} :
     · exact hi.trans_lt (birthday_move_right_lt i)
       
     
+#align pgame.lt_birthday_iff Pgame.lt_birthday_iff
 
 theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, x ≡r y → birthday x = birthday y
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, r => by
@@ -94,29 +99,35 @@ theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, x ≡r y → birthda
       
     · exact ⟨_, (r.move_right_symm j).birthday_congr⟩
       
+#align pgame.relabelling.birthday_congr Pgame.Relabelling.birthday_congr
 
 @[simp]
 theorem birthday_eq_zero {x : Pgame} : birthday x = 0 ↔ IsEmpty x.LeftMoves ∧ IsEmpty x.RightMoves := by
   rw [birthday_def, max_eq_zero, lsub_eq_zero_iff, lsub_eq_zero_iff]
+#align pgame.birthday_eq_zero Pgame.birthday_eq_zero
 
 @[simp]
 theorem birthday_zero : birthday 0 = 0 := by simp [PEmpty.is_empty]
+#align pgame.birthday_zero Pgame.birthday_zero
 
 @[simp]
 theorem birthday_one : birthday 1 = 1 := by
   rw [birthday_def]
   simp
+#align pgame.birthday_one Pgame.birthday_one
 
 @[simp]
 theorem birthday_star : birthday star = 1 := by
   rw [birthday_def]
   simp
+#align pgame.birthday_star Pgame.birthday_star
 
 @[simp]
 theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
   | ⟨xl, xr, xL, xR⟩ => by
     rw [birthday_def, birthday_def, max_comm]
     congr <;> funext <;> apply neg_birthday
+#align pgame.neg_birthday Pgame.neg_birthday
 
 @[simp]
 theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o := by
@@ -126,15 +137,18 @@ theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o := by
   nth_rw 0 [← lsub_typein o]
   congr with x
   exact IH _ (typein_lt_self x)
+#align pgame.to_pgame_birthday Pgame.to_pgame_birthday
 
 theorem le_birthday : ∀ x : Pgame, x ≤ x.birthday.toPgame
   | ⟨xl, _, xL, _⟩ =>
     le_def.2
       ⟨fun i => Or.inl ⟨toLeftMovesToPgame ⟨_, birthday_move_left_lt i⟩, by simp [le_birthday (xL i)]⟩, isEmptyElim⟩
+#align pgame.le_birthday Pgame.le_birthday
 
 variable (a b x : Pgame.{u})
 
 theorem neg_birthday_le : -x.birthday.toPgame ≤ x := by simpa only [neg_birthday, ← neg_le_iff] using le_birthday (-x)
+#align pgame.neg_birthday_le Pgame.neg_birthday_le
 
 @[simp]
 theorem birthday_add : ∀ x y : Pgame.{u}, (x + y).birthday = x.birthday ♯ y.birthday
@@ -160,23 +174,31 @@ theorem birthday_add : ∀ x y : Pgame.{u}, (x + y).birthday = x.birthday ♯ y.
       
     · exact lt_max_of_lt_right ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))
       
+#align pgame.birthday_add Pgame.birthday_add
 
 theorem birthday_add_zero : (a + 0).birthday = a.birthday := by simp
+#align pgame.birthday_add_zero Pgame.birthday_add_zero
 
 theorem birthday_zero_add : (0 + a).birthday = a.birthday := by simp
+#align pgame.birthday_zero_add Pgame.birthday_zero_add
 
 theorem birthday_add_one : (a + 1).birthday = Order.succ a.birthday := by simp
+#align pgame.birthday_add_one Pgame.birthday_add_one
 
 theorem birthday_one_add : (1 + a).birthday = Order.succ a.birthday := by simp
+#align pgame.birthday_one_add Pgame.birthday_one_add
 
 @[simp]
 theorem birthday_nat_cast : ∀ n : ℕ, birthday n = n
   | 0 => birthday_zero
   | n + 1 => by simp [birthday_nat_cast]
+#align pgame.birthday_nat_cast Pgame.birthday_nat_cast
 
 theorem birthday_add_nat (n : ℕ) : (a + n).birthday = a.birthday + n := by simp
+#align pgame.birthday_add_nat Pgame.birthday_add_nat
 
 theorem birthday_nat_add (n : ℕ) : (↑n + a).birthday = a.birthday + n := by simp
+#align pgame.birthday_nat_add Pgame.birthday_nat_add
 
 end Pgame
 

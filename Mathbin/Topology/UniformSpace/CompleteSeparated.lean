@@ -27,6 +27,7 @@ theorem IsComplete.isClosed [UniformSpace α] [SeparatedSpace α] {s : Set α} (
     have : Cauchy f := cauchy_nhds.mono' ha inf_le_left
     rcases h f this inf_le_right with ⟨y, ys, fy⟩
     rwa [(tendsto_nhds_unique' ha inf_le_left fy : a = y)]
+#align is_complete.is_closed IsComplete.isClosed
 
 namespace DenseInducing
 
@@ -39,6 +40,7 @@ variable {γ : Type _} [UniformSpace γ] [CompleteSpace γ] [SeparatedSpace γ]
 theorem continuous_extend_of_cauchy {e : α → β} {f : α → γ} (de : DenseInducing e)
     (h : ∀ b : β, Cauchy (map f (comap e <| 𝓝 b))) : Continuous (de.extend f) :=
   de.continuous_extend fun b => CompleteSpace.complete (h b)
+#align dense_inducing.continuous_extend_of_cauchy DenseInducing.continuous_extend_of_cauchy
 
 end DenseInducing
 

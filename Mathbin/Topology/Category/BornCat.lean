@@ -20,6 +20,7 @@ open CategoryTheory
 /-- The category of bornologies. -/
 def BornCat :=
   Bundled Bornology
+#align Born BornCat
 
 namespace BornCat
 
@@ -32,6 +33,7 @@ instance (X : BornCat) : Bornology X :=
 /-- Construct a bundled `Born` from a `bornology`. -/
 def of (α : Type _) [Bornology α] : BornCat :=
   Bundled.of α
+#align Born.of BornCat.of
 
 instance : Inhabited BornCat :=
   ⟨of PUnit⟩

@@ -32,17 +32,22 @@ def centralizer : Submonoid M where
   Carrier := S.Centralizer
   one_mem' := S.one_mem_centralizer
   mul_mem' a b := Set.mul_mem_centralizer
+#align submonoid.centralizer Submonoid.centralizer
 
 @[simp, norm_cast, to_additive]
 theorem coe_centralizer : ↑(centralizer S) = S.Centralizer :=
   rfl
+#align submonoid.coe_centralizer Submonoid.coe_centralizer
 
 theorem centralizer_to_subsemigroup : (centralizer S).toSubsemigroup = Subsemigroup.centralizer S :=
   rfl
+#align submonoid.centralizer_to_subsemigroup Submonoid.centralizer_to_subsemigroup
 
 theorem _root_.add_submonoid.centralizer_to_add_subsemigroup {M} [AddMonoid M] (S : Set M) :
     (AddSubmonoid.centralizer S).toAddSubsemigroup = AddSubsemigroup.centralizer S :=
   rfl
+#align
+  submonoid._root_.add_submonoid.centralizer_to_add_subsemigroup submonoid._root_.add_submonoid.centralizer_to_add_subsemigroup
 
 attribute [to_additive AddSubmonoid.centralizer_to_add_subsemigroup] Submonoid.centralizer_to_subsemigroup
 
@@ -51,20 +56,24 @@ variable {S}
 @[to_additive]
 theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z = z * g :=
   Iff.rfl
+#align submonoid.mem_centralizer_iff Submonoid.mem_centralizer_iff
 
 @[to_additive]
 instance decidableMemCentralizer [DecidableEq M] [Fintype M] [DecidablePred (· ∈ S)] :
     DecidablePred (· ∈ centralizer S) := fun _ => decidable_of_iff' _ mem_centralizer_iff
+#align submonoid.decidable_mem_centralizer Submonoid.decidableMemCentralizer
 
 @[to_additive]
 theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
   Set.centralizer_subset h
+#align submonoid.centralizer_le Submonoid.centralizer_le
 
 variable (M)
 
 @[simp, to_additive]
 theorem centralizer_univ : centralizer Set.Univ = center M :=
   SetLike.ext' (Set.centralizer_univ M)
+#align submonoid.centralizer_univ Submonoid.centralizer_univ
 
 end
 

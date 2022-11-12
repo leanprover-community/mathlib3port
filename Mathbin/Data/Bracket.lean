@@ -40,6 +40,7 @@ these are the Unicode "square with quill" brackets rather than the usual square 
      `K` of a group. -/
 class Bracket (L M : Type _) where
   bracket : L → M → M
+#align has_bracket Bracket
 -/
 
 -- mathport name: «expr⁅ , ⁆»

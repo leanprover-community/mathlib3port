@@ -50,10 +50,12 @@ variable (ι : Type _) [DecidableEq ι]
 cardinality as a basis. -/
 abbrev Orientation :=
   Module.Ray R (AlternatingMap R M R ι)
+#align orientation Orientation
 
 /-- A type class fixing an orientation of a module. -/
 class Module.Oriented where
   positiveOrientation : Orientation R M ι
+#align module.oriented Module.Oriented
 
 export Module.Oriented (positiveOrientation)
 
@@ -62,20 +64,24 @@ variable {R M}
 /-- An equivalence between modules implies an equivalence between orientations. -/
 def Orientation.map (e : M ≃ₗ[R] N) : Orientation R M ι ≃ Orientation R N ι :=
   Module.Ray.map <| AlternatingMap.domLcongr R R ι R e
+#align orientation.map Orientation.map
 
 @[simp]
 theorem Orientation.map_apply (e : M ≃ₗ[R] N) (v : AlternatingMap R M R ι) (hv : v ≠ 0) :
     Orientation.map ι e (rayOfNeZero _ v hv) =
       rayOfNeZero _ (v.compLinearMap e.symm) (mt (v.comp_linear_equiv_eq_zero_iff e.symm).mp hv) :=
   rfl
+#align orientation.map_apply Orientation.map_apply
 
 @[simp]
 theorem Orientation.map_refl : (Orientation.map ι <| LinearEquiv.refl R M) = Equiv.refl _ := by
   rw [Orientation.map, AlternatingMap.dom_lcongr_refl, Module.Ray.map_refl]
+#align orientation.map_refl Orientation.map_refl
 
 @[simp]
 theorem Orientation.map_symm (e : M ≃ₗ[R] N) : (Orientation.map ι e).symm = Orientation.map ι e.symm :=
   rfl
+#align orientation.map_symm Orientation.map_symm
 
 /-- A module is canonically oriented with respect to an empty index type. -/
 instance (priority := 100) IsEmpty.oriented [Nontrivial R] [IsEmpty ι] :
@@ -83,11 +89,13 @@ instance (priority := 100) IsEmpty.oriented [Nontrivial R] [IsEmpty ι] :
       ι where positiveOrientation :=
     rayOfNeZero R (AlternatingMap.constLinearEquivOfIsEmpty 1) <|
       AlternatingMap.constLinearEquivOfIsEmpty.Injective.Ne (by simp)
+#align is_empty.oriented IsEmpty.oriented
 
 @[simp]
 theorem Orientation.map_positive_orientation_of_is_empty [Nontrivial R] [IsEmpty ι] (f : M ≃ₗ[R] N) :
     Orientation.map ι f positiveOrientation = positive_orientation :=
   rfl
+#align orientation.map_positive_orientation_of_is_empty Orientation.map_positive_orientation_of_is_empty
 
 @[simp]
 theorem Orientation.map_of_is_empty [IsEmpty ι] (x : Orientation R M ι) (f : M ≃ₗ[R] M) : Orientation.map ι f x = x :=
@@ -98,6 +106,7 @@ theorem Orientation.map_of_is_empty [IsEmpty ι] (x : Orientation R M ι) (f : M
   ext i
   rw [AlternatingMap.comp_linear_map_apply]
   congr
+#align orientation.map_of_is_empty Orientation.map_of_is_empty
 
 end OrderedCommSemiring
 
@@ -111,6 +120,7 @@ variable {M N : Type _} [AddCommGroup M] [AddCommGroup N] [Module R M] [Module R
 protected theorem Orientation.map_neg {ι : Type _} [DecidableEq ι] (f : M ≃ₗ[R] N) (x : Orientation R M ι) :
     Orientation.map ι f (-x) = -Orientation.map ι f x :=
   Module.Ray.map_neg _ x
+#align orientation.map_neg Orientation.map_neg
 
 namespace Basis
 
@@ -126,16 +136,19 @@ theorem map_orientation_eq_det_inv_smul [Finite ι] (e : Basis ι R M) (x : Orie
     (g.comp_linear_map ↑f.symm).eq_smul_basis_det e, g.eq_smul_basis_det e, AlternatingMap.comp_linear_map_apply,
     AlternatingMap.smul_apply, Basis.det_comp, Basis.det_self, mul_one, smul_eq_mul, mul_comm, mul_smul,
     LinearEquiv.coe_inv_det]
+#align basis.map_orientation_eq_det_inv_smul Basis.map_orientation_eq_det_inv_smul
 
 variable [Fintype ι]
 
 /-- The orientation given by a basis. -/
 protected def orientation [Nontrivial R] (e : Basis ι R M) : Orientation R M ι :=
   rayOfNeZero R _ e.det_ne_zero
+#align basis.orientation Basis.orientation
 
 theorem orientation_map [Nontrivial R] (e : Basis ι R M) (f : M ≃ₗ[R] N) :
     (e.map f).Orientation = Orientation.map ι f e.Orientation := by
   simp_rw [Basis.orientation, Orientation.map_apply, Basis.det_map']
+#align basis.orientation_map Basis.orientation_map
 
 /-- The orientation given by a basis derived using `units_smul`, in terms of the product of those
 units. -/
@@ -145,6 +158,7 @@ theorem orientation_units_smul [Nontrivial R] (e : Basis ι R M) (w : ι → Uni
     det_units_smul_self, Units.smul_def, smul_smul]
   norm_cast
   simp
+#align basis.orientation_units_smul Basis.orientation_units_smul
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ray_of_ne_zero _ _ _]] -/
 @[simp]
@@ -152,6 +166,7 @@ theorem orientation_is_empty [Nontrivial R] [IsEmpty ι] (b : Basis ι R M) : b.
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ray_of_ne_zero _ _ _]]"
   convert b.det_is_empty
+#align basis.orientation_is_empty Basis.orientation_is_empty
 
 end Basis
 
@@ -185,6 +200,7 @@ theorem eq_or_eq_neg_of_is_empty [Nontrivial R] [IsEmpty ι] (o : Orientation R 
     fin_cases i <;> simp [a]
   rw [linear_independent_iff'] at H
   simpa using H Finset.univ ![1, -a] (by simp [Fin.sum_univ_succ]) 0 (by simp)
+#align orientation.eq_or_eq_neg_of_is_empty Orientation.eq_or_eq_neg_of_is_empty
 
 end Orientation
 
@@ -200,6 +216,7 @@ theorem orientation_eq_iff_det_pos (e₁ e₂ : Basis ι R M) : e₁.Orientation
     _ ↔ SameRay R (e₁.det e₂ • e₂.det) e₂.det := by rw [← e₁.det.eq_smul_basis_det e₂]
     _ ↔ 0 < e₁.det e₂ := same_ray_smul_left_iff_of_ne e₂.det_ne_zero (e₁.is_unit_det e₂).NeZero
     
+#align basis.orientation_eq_iff_det_pos Basis.orientation_eq_iff_det_pos
 
 /-- Given a basis, any orientation equals the orientation given by that basis or its negation. -/
 theorem orientation_eq_or_eq_neg (e : Basis ι R M) (x : Orientation R M ι) : x = e.Orientation ∨ x = -e.Orientation :=
@@ -209,24 +226,28 @@ theorem orientation_eq_or_eq_neg (e : Basis ι R M) (x : Orientation R M ι) : x
   rwa [Basis.orientation, ray_eq_iff, neg_ray_of_ne_zero, ray_eq_iff, x.eq_smul_basis_det e,
     same_ray_neg_smul_left_iff_of_ne e.det_ne_zero hx, same_ray_smul_left_iff_of_ne e.det_ne_zero hx, lt_or_lt_iff_ne,
     ne_comm]
+#align basis.orientation_eq_or_eq_neg Basis.orientation_eq_or_eq_neg
 
 /-- Given a basis, an orientation equals the negation of that given by that basis if and only
 if it does not equal that given by that basis. -/
 theorem orientation_ne_iff_eq_neg (e : Basis ι R M) (x : Orientation R M ι) : x ≠ e.Orientation ↔ x = -e.Orientation :=
   ⟨fun h => (e.orientation_eq_or_eq_neg x).resolve_left h, fun h =>
     h.symm ▸ (Module.Ray.ne_neg_self e.Orientation).symm⟩
+#align basis.orientation_ne_iff_eq_neg Basis.orientation_ne_iff_eq_neg
 
 /-- Composing a basis with a linear equiv gives the same orientation if and only if the
 determinant is positive. -/
 theorem orientation_comp_linear_equiv_eq_iff_det_pos (e : Basis ι R M) (f : M ≃ₗ[R] M) :
     (e.map f).Orientation = e.Orientation ↔ 0 < (f : M →ₗ[R] M).det := by
   rw [orientation_map, e.map_orientation_eq_det_inv_smul, units_inv_smul, units_smul_eq_self_iff, LinearEquiv.coe_det]
+#align basis.orientation_comp_linear_equiv_eq_iff_det_pos Basis.orientation_comp_linear_equiv_eq_iff_det_pos
 
 /-- Composing a basis with a linear equiv gives the negation of that orientation if and only if
 the determinant is negative. -/
 theorem orientation_comp_linear_equiv_eq_neg_iff_det_neg (e : Basis ι R M) (f : M ≃ₗ[R] M) :
     (e.map f).Orientation = -e.Orientation ↔ (f : M →ₗ[R] M).det < 0 := by
   rw [orientation_map, e.map_orientation_eq_det_inv_smul, units_inv_smul, units_smul_eq_neg_iff, LinearEquiv.coe_det]
+#align basis.orientation_comp_linear_equiv_eq_neg_iff_det_neg Basis.orientation_comp_linear_equiv_eq_neg_iff_det_neg
 
 /-- Negating a single basis vector (represented using `units_smul`) negates the corresponding
 orientation. -/
@@ -235,12 +256,14 @@ theorem orientation_neg_single [Nontrivial R] (e : Basis ι R M) (i : ι) :
     (e.units_smul (Function.update 1 i (-1))).Orientation = -e.Orientation := by
   rw [orientation_units_smul, Finset.prod_update_of_mem (Finset.mem_univ _)]
   simp
+#align basis.orientation_neg_single Basis.orientation_neg_single
 
 /-- Given a basis and an orientation, return a basis giving that orientation: either the original
 basis, or one constructed by negating a single (arbitrary) basis vector. -/
 def adjustToOrientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι) : Basis ι R M :=
   haveI := Classical.decEq (Orientation R M ι)
   if e.orientation = x then e else e.units_smul (Function.update 1 (Classical.arbitrary ι) (-1))
+#align basis.adjust_to_orientation Basis.adjustToOrientation
 
 /-- `adjust_to_orientation` gives a basis with the required orientation. -/
 @[simp]
@@ -253,6 +276,7 @@ theorem orientation_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basi
   · rw [orientation_neg_single, eq_comm, ← orientation_ne_iff_eq_neg, ne_comm]
     exact h
     
+#align basis.orientation_adjust_to_orientation Basis.orientation_adjust_to_orientation
 
 /-- Every basis vector from `adjust_to_orientation` is either that from the original basis or its
 negation. -/
@@ -264,6 +288,7 @@ theorem adjust_to_orientation_apply_eq_or_eq_neg [Nontrivial R] [Nonempty ι] (e
     
   · by_cases hi:i = Classical.arbitrary ι <;> simp [units_smul_apply, hi]
     
+#align basis.adjust_to_orientation_apply_eq_or_eq_neg Basis.adjust_to_orientation_apply_eq_or_eq_neg
 
 theorem det_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι) :
     (e.adjustToOrientation x).det = e.det ∨ (e.adjustToOrientation x).det = -e.det := by
@@ -275,11 +300,13 @@ theorem det_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M
   · right
     simp [e.det_units_smul, ← Units.coe_prod, Finset.prod_update_of_mem]
     
+#align basis.det_adjust_to_orientation Basis.det_adjust_to_orientation
 
 @[simp]
 theorem abs_det_adjust_to_orientation [Nontrivial R] [Nonempty ι] (e : Basis ι R M) (x : Orientation R M ι)
     (v : ι → M) : |(e.adjustToOrientation x).det v| = |e.det v| := by
   cases' e.det_adjust_to_orientation x with h h <;> simp [h]
+#align basis.abs_det_adjust_to_orientation Basis.abs_det_adjust_to_orientation
 
 end Basis
 
@@ -307,11 +334,13 @@ theorem eq_or_eq_neg (x₁ x₂ : Orientation R M ι) (h : Fintype.card ι = fin
   have e := (fin_basis R M).reindex (Fintype.equivFinOfCardEq h).symm
   rcases e.orientation_eq_or_eq_neg x₁ with (h₁ | h₁) <;>
     rcases e.orientation_eq_or_eq_neg x₂ with (h₂ | h₂) <;> simp [h₁, h₂]
+#align orientation.eq_or_eq_neg Orientation.eq_or_eq_neg
 
 /-- If the index type has cardinality equal to the finite dimension, an orientation equals the
 negation of another orientation if and only if they are not equal. -/
 theorem ne_iff_eq_neg (x₁ x₂ : Orientation R M ι) (h : Fintype.card ι = finrank R M) : x₁ ≠ x₂ ↔ x₁ = -x₂ :=
   ⟨fun hn => (eq_or_eq_neg x₁ x₂ h).resolve_left hn, fun he => he.symm ▸ (Module.Ray.ne_neg_self x₂).symm⟩
+#align orientation.ne_iff_eq_neg Orientation.ne_iff_eq_neg
 
 /-- The value of `orientation.map` when the index type has cardinality equal to the finite
 dimension, in terms of `f.det`. -/
@@ -319,6 +348,7 @@ theorem map_eq_det_inv_smul (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fi
     Orientation.map ι f x = f.det⁻¹ • x :=
   haveI e := (fin_basis R M).reindex (Fintype.equivFinOfCardEq h).symm
   e.map_orientation_eq_det_inv_smul x f
+#align orientation.map_eq_det_inv_smul Orientation.map_eq_det_inv_smul
 
 omit _i
 
@@ -327,7 +357,7 @@ map with the same linear equiv on each argument gives the same orientation if an
 determinant is positive. -/
 theorem map_eq_iff_det_pos (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fintype.card ι = finrank R M) :
     Orientation.map ι f x = x ↔ 0 < (f : M →ₗ[R] M).det := by
-  cases is_empty_or_nonempty ι
+  cases isEmpty_or_nonempty ι
   · have H : finrank R M = 0 := by
       refine' h.symm.trans _
       convert Fintype.card_of_is_empty
@@ -339,13 +369,14 @@ theorem map_eq_iff_det_pos (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fin
     exact Fintype.card_pos
   haveI : FiniteDimensional R M := finite_dimensional_of_finrank H
   rw [map_eq_det_inv_smul _ _ h, units_inv_smul, units_smul_eq_self_iff, LinearEquiv.coe_det]
+#align orientation.map_eq_iff_det_pos Orientation.map_eq_iff_det_pos
 
 /-- If the index type has cardinality equal to the finite dimension, composing an alternating
 map with the same linear equiv on each argument gives the negation of that orientation if and
 only if the determinant is negative. -/
 theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h : Fintype.card ι = finrank R M) :
     Orientation.map ι f x = -x ↔ (f : M →ₗ[R] M).det < 0 := by
-  cases is_empty_or_nonempty ι
+  cases isEmpty_or_nonempty ι
   · have H : finrank R M = 0 := by
       refine' h.symm.trans _
       convert Fintype.card_of_is_empty
@@ -357,6 +388,7 @@ theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M) (h :
     exact Fintype.card_pos
   haveI : FiniteDimensional R M := finite_dimensional_of_finrank H
   rw [map_eq_det_inv_smul _ _ h, units_inv_smul, units_smul_eq_neg_iff, LinearEquiv.coe_det]
+#align orientation.map_eq_neg_iff_det_neg Orientation.map_eq_neg_iff_det_neg
 
 include _i
 
@@ -364,12 +396,14 @@ include _i
 orientation. -/
 def someBasis [Nonempty ι] (x : Orientation R M ι) (h : Fintype.card ι = finrank R M) : Basis ι R M :=
   ((finBasis R M).reindex (Fintype.equivFinOfCardEq h).symm).adjustToOrientation x
+#align orientation.some_basis Orientation.someBasis
 
 /-- `some_basis` gives a basis with the required orientation. -/
 @[simp]
 theorem some_basis_orientation [Nonempty ι] (x : Orientation R M ι) (h : Fintype.card ι = finrank R M) :
     (x.someBasis h).Orientation = x :=
   Basis.orientation_adjust_to_orientation _ _
+#align orientation.some_basis_orientation Orientation.some_basis_orientation
 
 end Orientation
 

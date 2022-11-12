@@ -39,6 +39,7 @@ instance [SemilatticeInf α] {a b : α} : SemilatticeInf (IcoCat a b) :=
 @[reducible]
 protected def orderBot [PartialOrder α] {a b : α} (h : a < b) : OrderBot (IcoCat a b) :=
   (is_least_Ico h).OrderBot
+#align set.Ico.order_bot Set.IcoCat.orderBot
 
 end IcoCat
 
@@ -58,6 +59,7 @@ instance [SemilatticeSup α] {a b : α} : SemilatticeSup (IocCat a b) :=
 @[reducible]
 protected def orderTop [PartialOrder α] {a b : α} (h : a < b) : OrderTop (IocCat a b) :=
   (is_greatest_Ioc h).OrderTop
+#align set.Ioc.order_top Set.IocCat.orderTop
 
 end IocCat
 
@@ -86,6 +88,7 @@ instance [Preorder α] {a : α} : OrderTop (IicCat a) where
 @[simp]
 theorem coe_top [Preorder α] {a : α} : ↑(⊤ : IicCat a) = a :=
   rfl
+#align set.Iic.coe_top Set.IicCat.coe_top
 
 instance [Preorder α] [OrderBot α] {a : α} : OrderBot (IicCat a) where
   bot := ⟨⊥, bot_le⟩
@@ -94,6 +97,7 @@ instance [Preorder α] [OrderBot α] {a : α} : OrderBot (IicCat a) where
 @[simp]
 theorem coe_bot [Preorder α] [OrderBot α] {a : α} : ↑(⊥ : IicCat a) = (⊥ : α) :=
   rfl
+#align set.Iic.coe_bot Set.IicCat.coe_bot
 
 instance [Preorder α] [OrderBot α] {a : α} : BoundedOrder (IicCat a) :=
   { IicCat.orderTop, IicCat.orderBot with }
@@ -121,6 +125,7 @@ instance [Preorder α] {a : α} : OrderBot (IciCat a) where
 @[simp]
 theorem coe_bot [Preorder α] {a : α} : ↑(⊥ : IciCat a) = a :=
   rfl
+#align set.Ici.coe_bot Set.IciCat.coe_bot
 
 instance [Preorder α] [OrderTop α] {a : α} : OrderTop (IciCat a) where
   top := ⟨⊤, le_top⟩
@@ -129,6 +134,7 @@ instance [Preorder α] [OrderTop α] {a : α} : OrderTop (IciCat a) where
 @[simp]
 theorem coe_top [Preorder α] [OrderTop α] {a : α} : ↑(⊤ : IciCat a) = (⊤ : α) :=
   rfl
+#align set.Ici.coe_top Set.IciCat.coe_top
 
 instance [Preorder α] [OrderTop α] {a : α} : BoundedOrder (IciCat a) :=
   { IciCat.orderTop, IciCat.orderBot with }
@@ -150,16 +156,19 @@ instance [Lattice α] {a b : α} : Lattice (IccCat a b) :=
 @[reducible]
 protected def orderBot [Preorder α] {a b : α} (h : a ≤ b) : OrderBot (IccCat a b) :=
   (is_least_Icc h).OrderBot
+#align set.Icc.order_bot Set.IccCat.orderBot
 
 /-- `Icc a b` has a top element whenever `a ≤ b`. -/
 @[reducible]
 protected def orderTop [Preorder α] {a b : α} (h : a ≤ b) : OrderTop (IccCat a b) :=
   (is_greatest_Icc h).OrderTop
+#align set.Icc.order_top Set.IccCat.orderTop
 
 /-- `Icc a b` is a `bounded_order` whenever `a ≤ b`. -/
 @[reducible]
 protected def boundedOrder [Preorder α] {a b : α} (h : a ≤ b) : BoundedOrder (IccCat a b) :=
   { IccCat.orderTop h, IccCat.orderBot h with }
+#align set.Icc.bounded_order Set.IccCat.boundedOrder
 
 end IccCat
 

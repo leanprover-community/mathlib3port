@@ -43,6 +43,7 @@ unsafe def inhabited_instance : derive_handler :=
         applyc `` default <|> do
             let s ← read
             fail <| to_fmt "could not find inhabited instance for:\n" ++ to_fmt s
+#align tactic.inhabited_instance tactic.inhabited_instance
 
 end Tactic
 

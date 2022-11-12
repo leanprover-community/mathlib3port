@@ -31,6 +31,7 @@ namespace CategoryTheory
 @[nolint check_univs]
 def CatCat :=
   Bundled Category.{v, u}
+#align category_theory.Cat CategoryTheory.CatCat
 
 namespace CatCat
 
@@ -42,10 +43,12 @@ instance : CoeSort CatCat (Type u) :=
 
 instance str (C : CatCat.{v, u}) : Category.{v, u} C :=
   C.str
+#align category_theory.Cat.str CategoryTheory.CatCat.str
 
 /-- Construct a bundled `Cat` from the underlying type and the typeclass. -/
 def of (C : Type u) [Category.{v} C] : CatCat.{v, u} :=
   Bundled.of C
+#align category_theory.Cat.of CategoryTheory.CatCat.of
 
 /-- Bicategory structure on `Cat` -/
 instance bicategory : Bicategory.{max v u, max v u} CatCat.{v, u} where
@@ -60,34 +63,41 @@ instance bicategory : Bicategory.{max v u, max v u} CatCat.{v, u} where
   rightUnitor A B := Functor.rightUnitor
   pentagon' A B C D E := Functor.pentagon
   triangle' A B C := Functor.triangle
+#align category_theory.Cat.bicategory CategoryTheory.CatCat.bicategory
 
 /-- `Cat` is a strict bicategory. -/
 instance bicategory.strict : Bicategory.Strict CatCat.{v, u} where
   id_comp' C D F := by cases F <;> rfl
   comp_id' C D F := by cases F <;> rfl
   assoc' := by intros <;> rfl
+#align category_theory.Cat.bicategory.strict CategoryTheory.CatCat.bicategory.strict
 
 /-- Category structure on `Cat` -/
 instance category : LargeCategory.{max v u} CatCat.{v, u} :=
   StrictBicategory.category CatCat.{v, u}
+#align category_theory.Cat.category CategoryTheory.CatCat.category
 
 @[simp]
 theorem id_map {C : CatCat} {X Y : C} (f : X ⟶ Y) : (𝟙 C : C ⥤ C).map f = f :=
   Functor.id_map f
+#align category_theory.Cat.id_map CategoryTheory.CatCat.id_map
 
 @[simp]
 theorem comp_obj {C D E : CatCat} (F : C ⟶ D) (G : D ⟶ E) (X : C) : (F ≫ G).obj X = G.obj (F.obj X) :=
   Functor.comp_obj F G X
+#align category_theory.Cat.comp_obj CategoryTheory.CatCat.comp_obj
 
 @[simp]
 theorem comp_map {C D E : CatCat} (F : C ⟶ D) (G : D ⟶ E) {X Y : C} (f : X ⟶ Y) : (F ≫ G).map f = G.map (F.map f) :=
   Functor.comp_map F G f
+#align category_theory.Cat.comp_map CategoryTheory.CatCat.comp_map
 
 /-- Functor that gets the set of objects of a category. It is not
 called `forget`, because it is not a faithful functor. -/
 def objects : Cat.{v, u} ⥤ Type u where
   obj C := C
   map C D F := F.obj
+#align category_theory.Cat.objects CategoryTheory.CatCat.objects
 
 section
 
@@ -99,6 +109,7 @@ def equivOfIso {C D : CatCat} (γ : C ≅ D) : C ≌ D where
   inverse := γ.inv
   unitIso := eq_to_iso <| Eq.symm γ.hom_inv_id
   counitIso := eqToIso γ.inv_hom_id
+#align category_theory.Cat.equiv_of_iso CategoryTheory.CatCat.equivOfIso
 
 end
 
@@ -118,6 +129,7 @@ def typeToCat : Type u ⥤ Cat where
   map_comp' X Y Z f g := by
     apply Functor.ext
     tidy
+#align category_theory.Type_to_Cat CategoryTheory.typeToCat
 
 instance :
     Faithful

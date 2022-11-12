@@ -38,49 +38,60 @@ theorem AffineSubspace.is_closed_direction_iff (s : AffineSubspace 𝕜 Q) :
     
   rw [← (Isometric.vaddConst x).toHomeomorph.symm.is_closed_image, AffineSubspace.coe_direction_eq_vsub_set_right hx]
   rfl
+#align affine_subspace.is_closed_direction_iff AffineSubspace.is_closed_direction_iff
 
 include V
 
 @[simp]
 theorem dist_center_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₁ (homothety p₁ c p₂) = ∥c∥ * dist p₁ p₂ := by
   simp [homothety_def, norm_smul, ← dist_eq_norm_vsub, dist_comm]
+#align dist_center_homothety dist_center_homothety
 
 @[simp]
 theorem dist_homothety_center (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ c p₂) p₁ = ∥c∥ * dist p₁ p₂ := by
   rw [dist_comm, dist_center_homothety]
+#align dist_homothety_center dist_homothety_center
 
 @[simp]
 theorem dist_line_map_line_map (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
     dist (lineMap p₁ p₂ c₁) (lineMap p₁ p₂ c₂) = dist c₁ c₂ * dist p₁ p₂ := by
   rw [dist_comm p₁ p₂]
   simp only [line_map_apply, dist_eq_norm_vsub, vadd_vsub_vadd_cancel_right, ← sub_smul, norm_smul, vsub_eq_sub]
+#align dist_line_map_line_map dist_line_map_line_map
 
 theorem lipschitzWithLineMap (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
   LipschitzWith.ofDistLeMul fun c₁ c₂ => ((dist_line_map_line_map p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
+#align lipschitz_with_line_map lipschitzWithLineMap
 
 @[simp]
 theorem dist_line_map_left (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₁ = ∥c∥ * dist p₁ p₂ := by
   simpa only [line_map_apply_zero, dist_zero_right] using dist_line_map_line_map p₁ p₂ c 0
+#align dist_line_map_left dist_line_map_left
 
 @[simp]
 theorem dist_left_line_map (p₁ p₂ : P) (c : 𝕜) : dist p₁ (lineMap p₁ p₂ c) = ∥c∥ * dist p₁ p₂ :=
   (dist_comm _ _).trans (dist_line_map_left _ _ _)
+#align dist_left_line_map dist_left_line_map
 
 @[simp]
 theorem dist_line_map_right (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₂ = ∥1 - c∥ * dist p₁ p₂ := by
   simpa only [line_map_apply_one, dist_eq_norm'] using dist_line_map_line_map p₁ p₂ c 1
+#align dist_line_map_right dist_line_map_right
 
 @[simp]
 theorem dist_right_line_map (p₁ p₂ : P) (c : 𝕜) : dist p₂ (lineMap p₁ p₂ c) = ∥1 - c∥ * dist p₁ p₂ :=
   (dist_comm _ _).trans (dist_line_map_right _ _ _)
+#align dist_right_line_map dist_right_line_map
 
 @[simp]
 theorem dist_homothety_self (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ c p₂) p₂ = ∥1 - c∥ * dist p₁ p₂ := by
   rw [homothety_eq_line_map, dist_line_map_right]
+#align dist_homothety_self dist_homothety_self
 
 @[simp]
 theorem dist_self_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₂ (homothety p₁ c p₂) = ∥1 - c∥ * dist p₁ p₂ := by
   rw [dist_comm, dist_homothety_self]
+#align dist_self_homothety dist_self_homothety
 
 section invertibleTwo
 
@@ -89,24 +100,29 @@ variable [Invertible (2 : 𝕜)]
 @[simp]
 theorem dist_left_midpoint (p₁ p₂ : P) : dist p₁ (midpoint 𝕜 p₁ p₂) = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
   rw [midpoint, dist_comm, dist_line_map_left, inv_of_eq_inv, ← norm_inv]
+#align dist_left_midpoint dist_left_midpoint
 
 @[simp]
 theorem dist_midpoint_left (p₁ p₂ : P) : dist (midpoint 𝕜 p₁ p₂) p₁ = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
   rw [dist_comm, dist_left_midpoint]
+#align dist_midpoint_left dist_midpoint_left
 
 @[simp]
 theorem dist_midpoint_right (p₁ p₂ : P) : dist (midpoint 𝕜 p₁ p₂) p₂ = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
   rw [midpoint_comm, dist_midpoint_left, dist_comm]
+#align dist_midpoint_right dist_midpoint_right
 
 @[simp]
 theorem dist_right_midpoint (p₁ p₂ : P) : dist p₂ (midpoint 𝕜 p₁ p₂) = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
   rw [dist_comm, dist_midpoint_right]
+#align dist_right_midpoint dist_right_midpoint
 
 theorem dist_midpoint_midpoint_le' (p₁ p₂ p₃ p₄ : P) :
     dist (midpoint 𝕜 p₁ p₂) (midpoint 𝕜 p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / ∥(2 : 𝕜)∥ := by
   rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, midpoint_vsub_midpoint] <;> try infer_instance
   rw [midpoint_eq_smul_add, norm_smul, inv_of_eq_inv, norm_inv, ← div_eq_inv_mul]
   exact div_le_div_of_le_of_nonneg (norm_add_le _ _) (norm_nonneg _)
+#align dist_midpoint_midpoint_le' dist_midpoint_midpoint_le'
 
 end invertibleTwo
 
@@ -119,6 +135,7 @@ theorem antilipschitzWithLineMap {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
   AntilipschitzWith.ofLeMulDist fun c₁ c₂ => by
     rw [dist_line_map_line_map, Nnreal.coe_inv, ← dist_nndist, mul_left_comm, inv_mul_cancel (dist_ne_zero.2 h),
       mul_one]
+#align antilipschitz_with_line_map antilipschitzWithLineMap
 
 variable (𝕜)
 
@@ -135,6 +152,7 @@ theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy
   refine' ⟨ε / ∥y -ᵥ x∥, div_pos hε hxy, fun δ (hδ : ∥δ - 1∥ < ε / ∥y -ᵥ x∥) => hu₁ (hyε _)⟩
   rw [lt_div_iff hxy, ← norm_smul, sub_smul, one_smul] at hδ
   rwa [homothety_apply, Metric.mem_ball, dist_eq_norm_vsub W, vadd_vsub_eq_sub_vsub]
+#align eventually_homothety_mem_of_mem_interior eventually_homothety_mem_of_mem_interior
 
 theorem eventually_homothety_image_subset_of_finite_subset_interior (x : Q) {s : Set Q} {t : Set Q} (ht : t.Finite)
     (h : t ⊆ Interior s) : ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ '' t ⊆ s := by
@@ -143,6 +161,8 @@ theorem eventually_homothety_image_subset_of_finite_subset_interior (x : Q) {s :
     exact (Filter.eventually_all_finite ht).mpr this
   intro y hy
   exact eventually_homothety_mem_of_mem_interior 𝕜 x (h hy)
+#align
+  eventually_homothety_image_subset_of_finite_subset_interior eventually_homothety_image_subset_of_finite_subset_interior
 
 end NormedSpace
 
@@ -151,11 +171,12 @@ variable [NormedSpace ℝ V] [NormedSpace ℝ W]
 theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
     dist (midpoint ℝ p₁ p₂) (midpoint ℝ p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / 2 := by
   simpa using dist_midpoint_midpoint_le' p₁ p₂ p₃ p₄
+#align dist_midpoint_midpoint_le dist_midpoint_midpoint_le
 
 include V W
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr continuous.vadd, ",", expr continuous.vsub, ",", expr continuous_const, ",", expr hfc.comp, ",", expr continuous_id, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- A continuous map between two normed affine spaces is an affine map provided that
 it sends midpoints to midpoints. -/
 def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = midpoint ℝ (f x) (f y)) (hfc : Continuous f) :
@@ -167,6 +188,7 @@ def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = m
             (by simp) fun x y => by simp [h]).toRealLinearMap <|
         by
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous.vadd, \",\", expr continuous.vsub, \",\", expr continuous_const, \",\", expr hfc.comp, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"))
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous.vadd, \",\", expr continuous.vsub, \",\", expr continuous_const, \",\", expr hfc.comp, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"))
     (Classical.arbitrary P) fun p => by simp
+#align affine_map.of_map_midpoint AffineMap.ofMapMidpoint
 

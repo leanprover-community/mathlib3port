@@ -60,7 +60,7 @@ sequentially closed, sequentially compact, sequential space
 
 open Set Function Filter TopologicalSpace
 
-open TopologicalSpace
+open TopologicalSpace Filter
 
 variable {X Y : Type _}
 
@@ -76,44 +76,54 @@ which arise as limit of sequences in `s`. Note that the sequential closure of a 
 guaranteed to be sequentially closed. -/
 def SeqClosure (s : Set X) : Set X :=
   { a | ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) }
+#align seq_closure SeqClosure
 
 theorem subset_seq_closure {s : Set X} : s ⊆ SeqClosure s := fun p hp => ⟨const ℕ p, fun _ => hp, tendsto_const_nhds⟩
+#align subset_seq_closure subset_seq_closure
 
 /-- The sequential closure of a set is contained in the closure of that set.
 The converse is not true. -/
 theorem seq_closure_subset_closure {s : Set X} : SeqClosure s ⊆ Closure s := fun p ⟨x, xM, xp⟩ =>
   mem_closure_of_tendsto xp (univ_mem' xM)
+#align seq_closure_subset_closure seq_closure_subset_closure
 
 /-- A set `s` is sequentially closed if for any converging sequence `x n` of elements of `s`, the
 limit belongs to `s` as well. Note that the sequential closure of a set is not guaranteed to be
 sequentially closed. -/
 def IsSeqClosed (s : Set X) : Prop :=
   ∀ ⦃x : ℕ → X⦄ ⦃p : X⦄, (∀ n, x n ∈ s) → Tendsto x atTop (𝓝 p) → p ∈ s
+#align is_seq_closed IsSeqClosed
 
 /-- The sequential closure of a sequentially closed set is the set itself. -/
 theorem IsSeqClosed.seq_closure_eq {s : Set X} (hs : IsSeqClosed s) : SeqClosure s = s :=
   Subset.antisymm (fun p ⟨x, hx, hp⟩ => hs hx hp) subset_seq_closure
+#align is_seq_closed.seq_closure_eq IsSeqClosed.seq_closure_eq
 
 /-- If a set is equal to its sequential closure, then it is sequentially closed. -/
 theorem is_seq_closed_of_seq_closure_eq {s : Set X} (hs : SeqClosure s = s) : IsSeqClosed s := fun x p hxs hxp =>
   hs ▸ ⟨x, hxs, hxp⟩
+#align is_seq_closed_of_seq_closure_eq is_seq_closed_of_seq_closure_eq
 
 /-- A set is sequentially closed iff it is equal to its sequential closure. -/
 theorem is_seq_closed_iff {s : Set X} : IsSeqClosed s ↔ SeqClosure s = s :=
   ⟨IsSeqClosed.seq_closure_eq, is_seq_closed_of_seq_closure_eq⟩
+#align is_seq_closed_iff is_seq_closed_iff
 
 /-- A set is sequentially closed if it is closed. -/
 protected theorem IsClosed.is_seq_closed {s : Set X} (hc : IsClosed s) : IsSeqClosed s := fun u x hu hx =>
   hc.mem_of_tendsto hx (eventually_of_forall hu)
+#align is_closed.is_seq_closed IsClosed.is_seq_closed
 
 /-- A topological space is called a *Fréchet-Urysohn space*, if the sequential closure of any set
 is equal to its closure. Since one of the inclusions is trivial, we require only the non-trivial one
 in the definition. -/
 class FrechetUrysohnSpace (X : Type _) [TopologicalSpace X] : Prop where
   closure_subset_seq_closure : ∀ s : Set X, Closure s ⊆ SeqClosure s
+#align frechet_urysohn_space FrechetUrysohnSpace
 
 theorem seq_closure_eq_closure [FrechetUrysohnSpace X] (s : Set X) : SeqClosure s = Closure s :=
   seq_closure_subset_closure.antisymm <| FrechetUrysohnSpace.closure_subset_seq_closure s
+#align seq_closure_eq_closure seq_closure_eq_closure
 
 /-- In a Fréchet-Urysohn space, a point belongs to the closure of a set iff it is a limit
 of a sequence taking values in this set. -/
@@ -121,6 +131,7 @@ theorem mem_closure_iff_seq_limit [FrechetUrysohnSpace X] {s : Set X} {a : X} :
     a ∈ Closure s ↔ ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) := by
   rw [← seq_closure_eq_closure]
   rfl
+#align mem_closure_iff_seq_limit mem_closure_iff_seq_limit
 
 /-- If the domain of a function `f : α → β` is a Fréchet-Urysohn space, then convergence
 is equivalent to sequential convergence. See also `filter.tendsto_iff_seq_tendsto` for a version
@@ -136,6 +147,7 @@ theorem tendsto_nhds_iff_seq_tendsto [FrechetUrysohnSpace X] {f : X → Y} {a : 
   rw [← seq_closure_eq_closure]
   rintro ⟨u, hus, hu⟩
   exact hsc.mem_of_tendsto (h u hu) (eventually_of_forall hus)
+#align tendsto_nhds_iff_seq_tendsto tendsto_nhds_iff_seq_tendsto
 
 /-- An alternative construction for `frechet_urysohn_space`: if sequential convergence implies
 convergence, then the space is a Fréchet-Urysohn space. -/
@@ -156,56 +168,69 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
   rcases h hcx with ⟨u, hux, hus⟩
   rcases extraction_of_frequently_at_top hus with ⟨φ, φ_mono, hφ⟩
   exact ⟨u ∘ φ, hφ, hux.comp φ_mono.tendsto_at_top⟩
+#align frechet_urysohn_space.of_seq_tendsto_imp_tendsto FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
 
 -- see Note [lower instance priority]
 /-- Every first-countable space is a Fréchet-Urysohn space. -/
 instance (priority := 100) TopologicalSpace.FirstCountableTopology.frechet_urysohn_space [FirstCountableTopology X] :
     FrechetUrysohnSpace X :=
   FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto fun f a => tendsto_iff_seq_tendsto.2
+#align
+  topological_space.first_countable_topology.frechet_urysohn_space TopologicalSpace.FirstCountableTopology.frechet_urysohn_space
 
 /-- A topological space is said to be a *sequential space* if any sequentially closed set in this
 space is closed. This condition is weaker than being a Fréchet-Urysohn space. -/
 class SequentialSpace (X : Type _) [TopologicalSpace X] : Prop where
   isClosedOfSeq : ∀ s : Set X, IsSeqClosed s → IsClosed s
+#align sequential_space SequentialSpace
 
 -- see Note [lower instance priority]
 /-- Every Fréchet-Urysohn space is a sequential space. -/
 instance (priority := 100) FrechetUrysohnSpace.toSequentialSpace [FrechetUrysohnSpace X] : SequentialSpace X :=
   ⟨fun s hs => by rw [← closure_eq_iff_is_closed, ← seq_closure_eq_closure, hs.seq_closure_eq]⟩
+#align frechet_urysohn_space.to_sequential_space FrechetUrysohnSpace.toSequentialSpace
 
 /-- In a sequential space, a sequentially closed set is closed. -/
 protected theorem IsSeqClosed.isClosed [SequentialSpace X] {s : Set X} (hs : IsSeqClosed s) : IsClosed s :=
   SequentialSpace.isClosedOfSeq s hs
+#align is_seq_closed.is_closed IsSeqClosed.isClosed
 
 /-- In a sequential space, a set is closed iff it's sequentially closed. -/
 theorem is_seq_closed_iff_is_closed [SequentialSpace X] {M : Set X} : IsSeqClosed M ↔ IsClosed M :=
   ⟨IsSeqClosed.isClosed, IsClosed.is_seq_closed⟩
+#align is_seq_closed_iff_is_closed is_seq_closed_iff_is_closed
 
 /-- A function between topological spaces is sequentially continuous if it commutes with limit of
  convergent sequences. -/
 def SeqContinuous (f : X → Y) : Prop :=
   ∀ ⦃x : ℕ → X⦄ ⦃p : X⦄, Tendsto x atTop (𝓝 p) → Tendsto (f ∘ x) atTop (𝓝 (f p))
+#align seq_continuous SeqContinuous
 
 /-- The preimage of a sequentially closed set under a sequentially continuous map is sequentially
 closed. -/
 theorem IsSeqClosed.preimage {f : X → Y} {s : Set Y} (hs : IsSeqClosed s) (hf : SeqContinuous f) :
     IsSeqClosed (f ⁻¹' s) := fun x p hx hp => hs hx (hf hp)
+#align is_seq_closed.preimage IsSeqClosed.preimage
 
 -- A continuous function is sequentially continuous.
 protected theorem Continuous.seq_continuous {f : X → Y} (hf : Continuous f) : SeqContinuous f := fun x p hx =>
   (hf.Tendsto p).comp hx
+#align continuous.seq_continuous Continuous.seq_continuous
 
 /-- A sequentially continuous function defined on a sequential space is continuous. -/
 protected theorem SeqContinuous.continuous [SequentialSpace X] {f : X → Y} (hf : SeqContinuous f) : Continuous f :=
   continuous_iff_is_closed.mpr fun s hs => (hs.IsSeqClosed.Preimage hf).IsClosed
+#align seq_continuous.continuous SeqContinuous.continuous
 
 /-- If the domain of a function is a sequential space, then continuity of this function is
 equivalent to its sequential continuity. -/
 theorem continuous_iff_seq_continuous [SequentialSpace X] {f : X → Y} : Continuous f ↔ SeqContinuous f :=
   ⟨Continuous.seq_continuous, SeqContinuous.continuous⟩
+#align continuous_iff_seq_continuous continuous_iff_seq_continuous
 
 theorem QuotientMap.sequentialSpace [SequentialSpace X] {f : X → Y} (hf : QuotientMap f) : SequentialSpace Y :=
   ⟨fun s hs => hf.isClosedPreimage.mp <| (hs.Preimage <| hf.Continuous.SeqContinuous).IsClosed⟩
+#align quotient_map.sequential_space QuotientMap.sequentialSpace
 
 /-- The quotient of a sequential space is a sequential space. -/
 instance [SequentialSpace X] {s : Setoid X} : SequentialSpace (Quotient s) :=
@@ -223,22 +248,29 @@ variable [TopologicalSpace X]
 converging subsequence. -/
 def IsSeqCompact (s : Set X) :=
   ∀ ⦃x : ℕ → X⦄, (∀ n, x n ∈ s) → ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a)
+#align is_seq_compact IsSeqCompact
 
 /-- A space `X` is sequentially compact if every sequence in `X` has a
 converging subsequence. -/
+@[mk_iff]
 class SeqCompactSpace (X : Type _) [TopologicalSpace X] : Prop where
   seq_compact_univ : IsSeqCompact (Univ : Set X)
+#align seq_compact_space SeqCompactSpace
+
+export SeqCompactSpace (seq_compact_univ)
 
 theorem IsSeqCompact.subseq_of_frequently_in {s : Set X} (hs : IsSeqCompact s) {x : ℕ → X}
     (hx : ∃ᶠ n in at_top, x n ∈ s) : ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   let ⟨ψ, hψ, huψ⟩ := extraction_of_frequently_at_top hx
   let ⟨a, a_in, φ, hφ, h⟩ := hs huψ
   ⟨a, a_in, ψ ∘ φ, hψ.comp hφ, h⟩
+#align is_seq_compact.subseq_of_frequently_in IsSeqCompact.subseq_of_frequently_in
 
 theorem SeqCompactSpace.tendsto_subseq [SeqCompactSpace X] (x : ℕ → X) :
     ∃ (a : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
-  let ⟨a, _, φ, mono, h⟩ := SeqCompactSpace.seq_compact_univ fun n => mem_univ (x n)
+  let ⟨a, _, φ, mono, h⟩ := seq_compact_univ fun n => mem_univ (x n)
   ⟨a, φ, mono, h⟩
+#align seq_compact_space.tendsto_subseq SeqCompactSpace.tendsto_subseq
 
 section FirstCountableTopology
 
@@ -246,25 +278,30 @@ variable [FirstCountableTopology X]
 
 open TopologicalSpace.FirstCountableTopology
 
-theorem IsCompact.is_seq_compact {s : Set X} (hs : IsCompact s) : IsSeqCompact s := fun x x_in =>
-  let ⟨a, a_in, ha⟩ := @hs (map x atTop) _ (le_principal_iff.mpr (univ_mem' x_in : _))
+protected theorem IsCompact.is_seq_compact {s : Set X} (hs : IsCompact s) : IsSeqCompact s := fun x x_in =>
+  let ⟨a, a_in, ha⟩ := hs (tendsto_principal.mpr (eventually_of_forall x_in))
   ⟨a, a_in, tendsto_subseq ha⟩
+#align is_compact.is_seq_compact IsCompact.is_seq_compact
 
 theorem IsCompact.tendsto_subseq' {s : Set X} {x : ℕ → X} (hs : IsCompact s) (hx : ∃ᶠ n in at_top, x n ∈ s) :
     ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   hs.IsSeqCompact.subseq_of_frequently_in hx
+#align is_compact.tendsto_subseq' IsCompact.tendsto_subseq'
 
 theorem IsCompact.tendsto_subseq {s : Set X} {x : ℕ → X} (hs : IsCompact s) (hx : ∀ n, x n ∈ s) :
     ∃ a ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   hs.IsSeqCompact hx
+#align is_compact.tendsto_subseq IsCompact.tendsto_subseq
 
 -- see Note [lower instance priority]
 instance (priority := 100) FirstCountableTopology.seq_compact_of_compact [CompactSpace X] : SeqCompactSpace X :=
   ⟨is_compact_univ.IsSeqCompact⟩
+#align first_countable_topology.seq_compact_of_compact FirstCountableTopology.seq_compact_of_compact
 
 theorem CompactSpace.tendsto_subseq [CompactSpace X] (x : ℕ → X) :
     ∃ (a : _)(φ : ℕ → ℕ), StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   SeqCompactSpace.tendsto_subseq x
+#align compact_space.tendsto_subseq CompactSpace.tendsto_subseq
 
 end FirstCountableTopology
 
@@ -278,115 +315,83 @@ open UniformSpace Prod
 
 variable [UniformSpace X] {s : Set X}
 
-theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 X)] {c : ι → Set X} (hs : IsSeqCompact s)
-    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ V ∈ 𝓤 X, SymmetricRel V ∧ ∀ x ∈ s, ∃ i, Ball x V ⊆ c i := by
-  classical
-  obtain ⟨V, hV, Vsymm⟩ : ∃ V : ℕ → Set (X × X), (𝓤 X).HasAntitoneBasis V ∧ ∀ n, swap ⁻¹' V n = V n
-  exact UniformSpace.has_seq_basis X
-  rsuffices ⟨n, hn⟩ : ∃ n, ∀ x ∈ s, ∃ i, ball x (V n) ⊆ c i
-  · exact ⟨V n, hV.to_has_basis.mem_of_mem trivial, Vsymm n, hn⟩
-    
-  by_contra H
-  obtain ⟨x, x_in, hx⟩ : ∃ x : ℕ → X, (∀ n, x n ∈ s) ∧ ∀ n i, ¬ball (x n) (V n) ⊆ c i := by
-    push_neg  at H
-    choose x hx using H
-    exact ⟨x, forall_and_distrib.mp hx⟩
-  clear H
-  obtain ⟨x₀, x₀_in, φ, φ_mono, hlim⟩ : ∃ x₀ ∈ s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (x ∘ φ) at_top (𝓝 x₀)
-  exact hs x_in
-  clear hs
-  obtain ⟨i₀, x₀_in⟩ : ∃ i₀, x₀ ∈ c i₀ := by
-    rcases hc₂ x₀_in with ⟨_, ⟨i₀, rfl⟩, x₀_in_c⟩
-    exact ⟨i₀, x₀_in_c⟩
-  clear hc₂
-  obtain ⟨n₀, hn₀⟩ : ∃ n₀, ball x₀ (V n₀) ⊆ c i₀ := by
-    rcases(nhds_basis_uniformity hV.to_has_basis).mem_iff.mp (is_open_iff_mem_nhds.mp (hc₁ i₀) _ x₀_in) with ⟨n₀, _, h⟩
-    use n₀
-    rwa [← ball_eq_of_symmetry (Vsymm n₀)] at h
-  clear hc₁
-  obtain ⟨W, W_in, hWW⟩ : ∃ W ∈ 𝓤 X, W ○ W ⊆ V n₀
-  exact comp_mem_uniformity_sets (hV.to_has_basis.mem_of_mem trivial)
-  obtain ⟨N, x_φ_N_in, hVNW⟩ : ∃ N, x (φ N) ∈ ball x₀ W ∧ V (φ N) ⊆ W := by
-    obtain ⟨N₁, h₁⟩ : ∃ N₁, ∀ n ≥ N₁, x (φ n) ∈ ball x₀ W
-    exact tendsto_at_top'.mp hlim _ (mem_nhds_left x₀ W_in)
-    obtain ⟨N₂, h₂⟩ : ∃ N₂, V (φ N₂) ⊆ W := by
-      rcases hV.to_has_basis.mem_iff.mp W_in with ⟨N, _, hN⟩
-      use N
-      exact subset.trans (hV.antitone <| φ_mono.id_le _) hN
-    have : φ N₂ ≤ φ (max N₁ N₂) := φ_mono.le_iff_le.mpr (le_max_right _ _)
-    exact ⟨max N₁ N₂, h₁ _ (le_max_left _ _), trans (hV.antitone this) h₂⟩
-  suffices : ball (x (φ N)) (V (φ N)) ⊆ c i₀
-  exact hx (φ N) i₀ this
-  calc
-    ball (x <| φ N) (V <| φ N) ⊆ ball (x <| φ N) W := preimage_mono hVNW
-    _ ⊆ ball x₀ (V n₀) := ball_subset_of_comp_subset x_φ_N_in hWW
-    _ ⊆ c i₀ := hn₀
-    
+theorem IsSeqCompact.exists_tendsto_of_frequently_mem (hs : IsSeqCompact s) {u : ℕ → X} (hu : ∃ᶠ n in at_top, u n ∈ s)
+    (huc : CauchySeq u) : ∃ x ∈ s, Tendsto u atTop (𝓝 x) :=
+  let ⟨x, hxs, φ, φ_mono, hx⟩ := hs.subseq_of_frequently_in hu
+  ⟨x, hxs, tendsto_nhds_of_cauchy_seq_of_subseq huc φ_mono.tendsto_at_top hx⟩
+#align is_seq_compact.exists_tendsto_of_frequently_mem IsSeqCompact.exists_tendsto_of_frequently_mem
 
-theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := by
-  classical
-  apply totally_bounded_of_forall_symm
+theorem IsSeqCompact.exists_tendsto (hs : IsSeqCompact s) {u : ℕ → X} (hu : ∀ n, u n ∈ s) (huc : CauchySeq u) :
+    ∃ x ∈ s, Tendsto u atTop (𝓝 x) :=
+  hs.exists_tendsto_of_frequently_mem (frequently_of_forall hu) huc
+#align is_seq_compact.exists_tendsto IsSeqCompact.exists_tendsto
+
+/-- A sequentially compact set in a uniform space is totally bounded. -/
+protected theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := by
+  intro V V_in
   unfold IsSeqCompact at h
   contrapose! h
-  rcases h with ⟨V, V_in, V_symm, h⟩
-  simp_rw [not_subset] at h
-  have : ∀ t : Set X, t.Finite → ∃ a, a ∈ s ∧ a ∉ ⋃ y ∈ t, ball y V := by
-    intro t ht
-    obtain ⟨a, a_in, H⟩ : ∃ a ∈ s, ∀ x ∈ t, (x, a) ∉ V := by simpa [ht] using h t
-    use a, a_in
-    intro H'
-    obtain ⟨x, x_in, hx⟩ := mem_Union₂.mp H'
-    exact H x x_in hx
-  cases' seq_of_forall_finite_exists this with u hu
-  clear h this
-  simp [forall_and] at hu
-  cases' hu with u_in hu
-  use u, u_in
-  clear u_in
-  intro x x_in φ
-  intro hφ huφ
+  obtain ⟨u, u_in, hu⟩ : ∃ u : ℕ → X, (∀ n, u n ∈ s) ∧ ∀ n m, m < n → u m ∉ ball (u n) V := by
+    simp only [not_subset, mem_Union₂, not_exists, exists_prop] at h
+    simpa only [forall_and, ball_image_iff, not_and] using seq_of_forall_finite_exists h
+  refine' ⟨u, u_in, fun x x_in φ hφ huφ => _⟩
   obtain ⟨N, hN⟩ : ∃ N, ∀ p q, p ≥ N → q ≥ N → (u (φ p), u (φ q)) ∈ V
   exact huφ.cauchy_seq.mem_entourage V_in
-  specialize hN N (N + 1) (le_refl N) (Nat.le_succ N)
-  specialize hu (φ <| N + 1) (φ N) (hφ <| lt_add_one N)
-  exact hu hN
+  exact hu (φ <| N + 1) (φ N) (hφ <| lt_add_one N) (hN (N + 1) N N.le_succ le_rfl)
+#align is_seq_compact.totally_bounded IsSeqCompact.totally_bounded
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⋃ , »((y «expr ∈ » t), ball y V)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
-protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 X] (hs : IsSeqCompact s) : IsCompact s := by
-  classical
-  rw [is_compact_iff_finite_subcover]
-  intro ι U Uop s_sub
-  rcases lebesgue_number_lemma_seq hs Uop s_sub with ⟨V, V_in, Vsymm, H⟩
-  rcases totally_bounded_iff_subset.mp hs.totally_bounded V V_in with ⟨t, t_sub, tfin, ht⟩
-  have : ∀ x : t, ∃ i : ι, ball x.val V ⊆ U i := by
-    rintro ⟨x, x_in⟩
-    exact H x (t_sub x_in)
-  choose i hi using this
-  haveI : Fintype t := tfin.fintype
-  use Finset.image i Finset.univ
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr⋃ , »((y «expr ∈ » t), ball y V)]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
-  · intro x x_in
-    specialize ht x_in
-    rw [mem_Union₂] at *
-    simp_rw [ball_eq_of_symmetry Vsymm]
-    exact ht
-    
-  · refine' Union₂_mono' fun x x_in => _
-    exact ⟨i ⟨x, x_in⟩, Finset.mem_image_of_mem _ (Finset.mem_univ _), hi ⟨x, x_in⟩⟩
-    
+variable [IsCountablyGenerated (𝓤 X)]
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- A sequentially compact set in a uniform set with countably generated uniformity filter
+is complete. -/
+protected theorem IsSeqCompact.is_complete (hs : IsSeqCompact s) : IsComplete s := by
+  intro l hl hls
+  haveI := hl.1
+  rcases exists_antitone_basis (𝓤 X) with ⟨V, hV⟩
+  choose W hW hWV using fun n => comp_mem_uniformity_sets (hV.mem n)
+  have hWV' : ∀ n, W n ⊆ V n := fun n ⟨x, y⟩ hx => @hWV n (x, y) ⟨x, refl_mem_uniformity <| hW _, hx⟩
+  obtain ⟨t, ht_anti, htl, htW, hts⟩ :
+    ∃ t : ℕ → Set X, Antitone t ∧ (∀ n, t n ∈ l) ∧ (∀ n, t n ×ˢ t n ⊆ W n) ∧ ∀ n, t n ⊆ s := by
+    have : ∀ n, ∃ t ∈ l, t ×ˢ t ⊆ W n ∧ t ⊆ s := by
+      rw [le_principal_iff] at hls
+      have : ∀ n, W n ∩ s ×ˢ s ∈ l ×ᶠ l := fun n => inter_mem (hl.2 (hW n)) (prod_mem_prod hls hls)
+      simpa only [l.basis_sets.prod_self.mem_iff, true_imp_iff, subset_inter_iff, prod_self_subset_prod_self,
+        and_assoc] using this
+    choose t htl htW hts
+    have : ∀ n, (⋂ k ≤ n, t k) ⊆ t n := fun n => Inter₂_subset _ le_rfl
+    exact
+      ⟨fun n => ⋂ k ≤ n, t k, fun m n h => bInter_subset_bInter_left fun k (hk : k ≤ m) => hk.trans h, fun n =>
+        (bInter_mem (finite_le_nat n)).2 fun k hk => htl k, fun n => (prod_mono (this n) (this n)).trans (htW n),
+        fun n => (this n).trans (hts n)⟩
+  choose u hu using fun n => Filter.nonempty_of_mem (htl n)
+  have huc : CauchySeq u :=
+    hV.to_has_basis.cauchy_seq_iff.2 fun N hN =>
+      ⟨N, fun m hm n hn => hWV' _ <| @htW N (_, _) ⟨ht_anti hm (hu _), ht_anti hn (hu _)⟩⟩
+  rcases hs.exists_tendsto (fun n => hts n (hu n)) huc with ⟨x, hxs, hx⟩
+  refine' ⟨x, hxs, (nhds_basis_uniformity' hV.to_has_basis).ge_iff.2 fun N hN => _⟩
+  obtain ⟨n, hNn, hn⟩ : ∃ n, N ≤ n ∧ u n ∈ ball x (W N)
+  exact ((eventually_ge_at_top N).And (hx <| ball_mem_nhds x (hW N))).exists
+  refine' mem_of_superset (htl n) fun y hy => hWV N ⟨u n, _, htW N ⟨_, _⟩⟩
+  exacts[hn, ht_anti hNn (hu n), ht_anti hNn hy]
+#align is_seq_compact.is_complete IsSeqCompact.is_complete
+
+/-- If `𝓤 β` is countably generated, then any sequentially compact set is compact. -/
+protected theorem IsSeqCompact.is_compact (hs : IsSeqCompact s) : IsCompact s :=
+  is_compact_iff_totally_bounded_is_complete.2 ⟨hs.TotallyBounded, hs.IsComplete⟩
+#align is_seq_compact.is_compact IsSeqCompact.is_compact
 
 /-- A version of Bolzano-Weistrass: in a uniform space with countably generated uniformity filter
 (e.g., in a metric space), a set is compact if and only if it is sequentially compact. -/
-protected theorem UniformSpace.is_compact_iff_is_seq_compact [is_countably_generated <| 𝓤 X] :
-    IsCompact s ↔ IsSeqCompact s :=
+protected theorem UniformSpace.is_compact_iff_is_seq_compact : IsCompact s ↔ IsSeqCompact s :=
   ⟨fun H => H.IsSeqCompact, fun H => H.IsCompact⟩
+#align uniform_space.is_compact_iff_is_seq_compact UniformSpace.is_compact_iff_is_seq_compact
 
-theorem UniformSpace.compact_space_iff_seq_compact_space [is_countably_generated <| 𝓤 X] :
-    CompactSpace X ↔ SeqCompactSpace X :=
-  have key : IsCompact (Univ : Set X) ↔ IsSeqCompact Univ := UniformSpace.is_compact_iff_is_seq_compact
-  ⟨fun ⟨h⟩ => ⟨key.mp h⟩, fun ⟨h⟩ => ⟨key.mpr h⟩⟩
+theorem UniformSpace.compact_space_iff_seq_compact_space : CompactSpace X ↔ SeqCompactSpace X := by
+  simp only [← is_compact_univ_iff, seq_compact_space_iff, UniformSpace.is_compact_iff_is_seq_compact]
+#align uniform_space.compact_space_iff_seq_compact_space UniformSpace.compact_space_iff_seq_compact_space
 
 end UniformSpaceSeqCompact
 
@@ -399,6 +404,7 @@ open Metric
 theorem SeqCompact.lebesgue_number_lemma_of_metric {ι : Sort _} {c : ι → Set X} {s : Set X} (hs : IsSeqCompact s)
     (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ δ > 0, ∀ a ∈ s, ∃ i, Ball a δ ⊆ c i :=
   lebesgue_number_lemma_of_metric hs.IsCompact hc₁ hc₂
+#align seq_compact.lebesgue_number_lemma_of_metric SeqCompact.lebesgue_number_lemma_of_metric
 
 variable [ProperSpace X] {s : Set X}
 
@@ -410,12 +416,14 @@ theorem tendsto_subseq_of_frequently_bounded (hs : Bounded s) {x : ℕ → X} (h
   have hcs : IsSeqCompact (Closure s) := hs.is_compact_closure.IsSeqCompact
   have hu' : ∃ᶠ n in at_top, x n ∈ Closure s := hx.mono fun n hn => subset_closure hn
   hcs.subseq_of_frequently_in hu'
+#align tendsto_subseq_of_frequently_bounded tendsto_subseq_of_frequently_bounded
 
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. -/
 theorem tendsto_subseq_of_bounded (hs : Bounded s) {x : ℕ → X} (hx : ∀ n, x n ∈ s) :
     ∃ a ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   tendsto_subseq_of_frequently_bounded hs <| frequently_of_forall hx
+#align tendsto_subseq_of_bounded tendsto_subseq_of_bounded
 
 end MetricSeqCompact
 

@@ -40,15 +40,18 @@ variable {p q : ℚ} {s t : Set ℚ}
 
 theorem interior_compact_eq_empty (hs : IsCompact s) : Interior s = ∅ :=
   dense_embedding_coe_real.to_dense_inducing.interior_compact_eq_empty dense_irrational hs
+#align rat.interior_compact_eq_empty Rat.interior_compact_eq_empty
 
 theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
   interior_eq_empty_iff_dense_compl.1 (interior_compact_eq_empty hs)
+#align rat.dense_compl_compact Rat.dense_compl_compact
 
 instance cocompactInfNhdsNeBot : NeBot (cocompact ℚ ⊓ 𝓝 p) := by
   refine' (has_basis_cocompact.inf (nhds_basis_opens _)).ne_bot_iff.2 _
   rintro ⟨s, o⟩ ⟨hs, hpo, ho⟩
   rw [inter_comm]
   exact (dense_compl_compact hs).inter_open_nonempty _ ho ⟨p, hpo⟩
+#align rat.cocompact_inf_nhds_ne_bot Rat.cocompactInfNhdsNeBot
 
 theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact ℚ) := by
   intro H
@@ -58,20 +61,24 @@ theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact �
   obtain ⟨n, hn⟩ : ∃ n : ℕ, x n ∉ insert (0 : ℚ) (range x)
   exact (hxc.eventually hx0.is_compact_insert_range.compl_mem_cocompact).exists
   exact hn (Or.inr ⟨n, rfl⟩)
+#align rat.not_countably_generated_cocompact Rat.not_countably_generated_cocompact
 
 theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated (𝓝 (∞ : ℚ∞)) := by
   intro
   have : is_countably_generated (comap (coe : ℚ → ℚ∞) (𝓝 ∞)) := by infer_instance
   rw [Alexandroff.comap_coe_nhds_infty, coclosed_compact_eq_cocompact] at this
   exact not_countably_generated_cocompact this
+#align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_alexandroff
 
 theorem not_first_countable_topology_alexandroff : ¬FirstCountableTopology ℚ∞ := by
   intro
   exact not_countably_generated_nhds_infty_alexandroff inferInstance
+#align rat.not_first_countable_topology_alexandroff Rat.not_first_countable_topology_alexandroff
 
 theorem not_second_countable_topology_alexandroff : ¬SecondCountableTopology ℚ∞ := by
   intro
   exact not_first_countable_topology_alexandroff inferInstance
+#align rat.not_second_countable_topology_alexandroff Rat.not_second_countable_topology_alexandroff
 
 instance : TotallyDisconnectedSpace ℚ := by
   refine' ⟨fun s hsu hs x hx y hy => _⟩

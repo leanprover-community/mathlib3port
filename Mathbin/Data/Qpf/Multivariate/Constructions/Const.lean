@@ -29,9 +29,11 @@ variable (n : ℕ)
 @[nolint unused_arguments]
 def Const (A : Type _) (v : Typevec.{u} n) : Type _ :=
   A
+#align mvqpf.const Mvqpf.Const
 
 instance Const.inhabited {A α} [Inhabited A] : Inhabited (Const n A α) :=
   ⟨(default : A)⟩
+#align mvqpf.const.inhabited Mvqpf.Const.inhabited
 
 namespace Const
 
@@ -42,29 +44,36 @@ variable {n} {A : Type u} {α β : Typevec.{u} n} (f : α ⟹ β)
 /-- Constructor for constant functor -/
 protected def mk (x : A) : (Const n A) α :=
   x
+#align mvqpf.const.mk Mvqpf.Const.mk
 
 /-- Destructor for constant functor -/
 protected def get (x : (Const n A) α) : A :=
   x
+#align mvqpf.const.get Mvqpf.Const.get
 
 @[simp]
 protected theorem mk_get (x : (Const n A) α) : Const.mk (Const.get x) = x :=
   rfl
+#align mvqpf.const.mk_get Mvqpf.Const.mk_get
 
 @[simp]
 protected theorem get_mk (x : A) : Const.get (Const.mk x : Const n A α) = x :=
   rfl
+#align mvqpf.const.get_mk Mvqpf.Const.get_mk
 
 /-- `map` for constant functor -/
 protected def map : (Const n A) α → (Const n A) β := fun x => x
+#align mvqpf.const.map Mvqpf.Const.map
 
 instance : Mvfunctor (Const n A) where map α β f := Const.map
 
 theorem map_mk (x : A) : f <$$> Const.mk x = Const.mk x :=
   rfl
+#align mvqpf.const.map_mk Mvqpf.Const.map_mk
 
 theorem get_map (x : (Const n A) α) : Const.get (f <$$> x) = Const.get x :=
   rfl
+#align mvqpf.const.get_map Mvqpf.Const.get_map
 
 instance mvqpf : @Mvqpf _ (Const n A) Mvqpf.Const.mvfunctor where
   p := Mvpfunctor.const n A
@@ -72,6 +81,7 @@ instance mvqpf : @Mvqpf _ (Const n A) Mvqpf.Const.mvfunctor where
   repr α x := Mvpfunctor.const.mk n x
   abs_repr := by intros <;> simp
   abs_map := by intros <;> simp <;> rfl
+#align mvqpf.const.mvqpf Mvqpf.Const.mvqpf
 
 end Const
 

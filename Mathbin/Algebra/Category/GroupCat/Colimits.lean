@@ -53,6 +53,7 @@ inductive Prequotient-- There's always `of`
   | zero : prequotient
   | neg : prequotient → prequotient
   | add : prequotient → prequotient → prequotient
+#align AddCommGroup.colimits.prequotient AddCommGroupCat.Colimits.Prequotient
 
 instance : Inhabited (Prequotient F) :=
   ⟨Prequotient.zero⟩
@@ -90,12 +91,14 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | add_left_neg : ∀ x, relation (add (neg x) x) zero
   | add_comm : ∀ x y, relation (add x y) (add y x)
   | add_assoc : ∀ x y z, relation (add (add x y) z) (add x (add y z))
+#align AddCommGroup.colimits.relation AddCommGroupCat.Colimits.Relation
 
 /-- The setoid corresponding to group expressions modulo abelian group relations and identifications.
 -/
 def colimitSetoid : Setoid (Prequotient F) where
   R := Relation F
   iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
+#align AddCommGroup.colimits.colimit_setoid AddCommGroupCat.Colimits.colimitSetoid
 
 attribute [instance] colimit_setoid
 
@@ -103,6 +106,7 @@ attribute [instance] colimit_setoid
 -/
 def ColimitType : Type v :=
   Quotient (colimitSetoid F)deriving Inhabited
+#align AddCommGroup.colimits.colimit_type AddCommGroupCat.Colimits.ColimitType
 
 instance : AddCommGroup (ColimitType F) where
   zero := Quot.mk _ zero
@@ -175,24 +179,29 @@ instance : AddCommGroup (ColimitType F) where
     rfl
 
 @[simp]
-theorem quot_zero : Quot.mk Setoid.R zero = (0 : ColimitType F) :=
+theorem quot_zero : Quot.mk Setoid.r zero = (0 : ColimitType F) :=
   rfl
+#align AddCommGroup.colimits.quot_zero AddCommGroupCat.Colimits.quot_zero
 
 @[simp]
-theorem quot_neg (x) : Quot.mk Setoid.R (neg x) = (-Quot.mk Setoid.R x : ColimitType F) :=
+theorem quot_neg (x) : Quot.mk Setoid.r (neg x) = (-Quot.mk Setoid.r x : ColimitType F) :=
   rfl
+#align AddCommGroup.colimits.quot_neg AddCommGroupCat.Colimits.quot_neg
 
 @[simp]
-theorem quot_add (x y) : Quot.mk Setoid.R (add x y) = (Quot.mk Setoid.R x + Quot.mk Setoid.R y : ColimitType F) :=
+theorem quot_add (x y) : Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
   rfl
+#align AddCommGroup.colimits.quot_add AddCommGroupCat.Colimits.quot_add
 
 /-- The bundled abelian group giving the colimit of a diagram. -/
 def colimit : AddCommGroupCat :=
   AddCommGroupCat.of (ColimitType F)
+#align AddCommGroup.colimits.colimit AddCommGroupCat.Colimits.colimit
 
 /-- The function from a given abelian group in the diagram to the colimit abelian group. -/
 def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
+#align AddCommGroup.colimits.cocone_fun AddCommGroupCat.Colimits.coconeFun
 
 /-- The group homomorphism from a given abelian group in the diagram to the colimit abelian
 group. -/
@@ -200,23 +209,27 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
   toFun := coconeFun F j
   map_zero' := by apply Quot.sound <;> apply relation.zero
   map_add' := by intros <;> apply Quot.sound <;> apply relation.add
+#align AddCommGroup.colimits.cocone_morphism AddCommGroupCat.Colimits.coconeMorphism
 
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
+#align AddCommGroup.colimits.cocone_naturality AddCommGroupCat.Colimits.cocone_naturality
 
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
     (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
   rw [← cocone_naturality F f]
   rfl
+#align AddCommGroup.colimits.cocone_naturality_components AddCommGroupCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit abelian group. -/
 def colimitCocone : Cocone F where
   x := colimit F
   ι := { app := coconeMorphism F }
+#align AddCommGroup.colimits.colimit_cocone AddCommGroupCat.Colimits.colimitCocone
 
 /-- The function from the free abelian group on the diagram to the cone point of any other
 cocone. -/
@@ -226,6 +239,7 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
   | zero => 0
   | neg x => -desc_fun_lift x
   | add x y => desc_fun_lift x + desc_fun_lift y
+#align AddCommGroup.colimits.desc_fun_lift AddCommGroupCat.Colimits.descFunLift
 
 /-- The function from the colimit abelian group to the cone point of any other cocone. -/
 def descFun (s : Cocone F) : ColimitType F → s.x := by
@@ -280,12 +294,14 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
     · rw [add_assoc]
       
     
+#align AddCommGroup.colimits.desc_fun AddCommGroupCat.Colimits.descFun
 
 /-- The group homomorphism from the colimit abelian group to the cone point of any other cocone. -/
 def descMorphism (s : Cocone F) : colimit F ⟶ s.x where
   toFun := descFun F s
   map_zero' := rfl
   map_add' x y := by induction x <;> induction y <;> rfl
+#align AddCommGroup.colimits.desc_morphism AddCommGroupCat.Colimits.descMorphism
 
 /-- Evidence that the proposed colimit is the colimit. -/
 def colimitCoconeIsColimit : IsColimit (colimitCocone F) where
@@ -305,11 +321,13 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F) where
     · simp [*]
       
     rfl
+#align AddCommGroup.colimits.colimit_cocone_is_colimit AddCommGroupCat.Colimits.colimitCoconeIsColimit
 
 instance has_colimits_AddCommGroup :
     HasColimits
       AddCommGroupCat where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+#align AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.has_colimits_AddCommGroup
 
 end AddCommGroupCat.Colimits
 
@@ -346,8 +364,9 @@ noncomputable def cokernelIsoQuotient {G H : AddCommGroupCat.{u}} (f : G ⟶ H) 
     rfl
   inv_hom_id' := by
     ext x : 2
-    simp only [AddMonoidHom.coe_comp, Function.comp_app, comp_apply, lift_mk, cokernel.π_desc_apply, mk'_apply,
+    simp only [AddMonoidHom.coe_comp, Function.comp_apply, comp_apply, lift_mk, cokernel.π_desc_apply, mk'_apply,
       id_apply]
+#align AddCommGroup.cokernel_iso_quotient AddCommGroupCat.cokernelIsoQuotient
 
 end AddCommGroupCat
 

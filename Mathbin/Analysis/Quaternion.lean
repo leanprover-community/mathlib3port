@@ -41,9 +41,11 @@ instance : HasInner ℝ ℍ :=
 
 theorem inner_self (a : ℍ) : ⟪a, a⟫ = normSq a :=
   rfl
+#align quaternion.inner_self Quaternion.inner_self
 
 theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a * b.conj).re :=
   rfl
+#align quaternion.inner_def Quaternion.inner_def
 
 instance : InnerProductSpace ℝ ℍ :=
   InnerProductSpace.ofCore
@@ -53,6 +55,7 @@ instance : InnerProductSpace ℝ ℍ :=
       smul_left := fun x y r => by simp [inner_def] }
 
 theorem norm_sq_eq_norm_sq (a : ℍ) : normSq a = ∥a∥ * ∥a∥ := by rw [← inner_self, real_inner_self_eq_norm_mul_norm]
+#align quaternion.norm_sq_eq_norm_sq Quaternion.norm_sq_eq_norm_sq
 
 instance : NormOneClass ℍ :=
   ⟨by rw [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_one, Real.sqrt_one]⟩
@@ -60,10 +63,12 @@ instance : NormOneClass ℍ :=
 @[simp, norm_cast]
 theorem norm_coe (a : ℝ) : ∥(a : ℍ)∥ = ∥a∥ := by
   rw [norm_eq_sqrt_real_inner, inner_self, norm_sq_coe, Real.sqrt_sq_eq_abs, Real.norm_eq_abs]
+#align quaternion.norm_coe Quaternion.norm_coe
 
 @[simp, norm_cast]
 theorem nnnorm_coe (a : ℝ) : ∥(a : ℍ)∥₊ = ∥a∥₊ :=
   Subtype.ext <| norm_coe a
+#align quaternion.nnnorm_coe Quaternion.nnnorm_coe
 
 noncomputable instance : NormedDivisionRing ℍ where
   dist_eq _ _ := rfl
@@ -81,39 +86,49 @@ instance : Coe ℂ ℍ :=
 @[simp, norm_cast]
 theorem coe_complex_re (z : ℂ) : (z : ℍ).re = z.re :=
   rfl
+#align quaternion.coe_complex_re Quaternion.coe_complex_re
 
 @[simp, norm_cast]
 theorem coe_complex_im_i (z : ℂ) : (z : ℍ).imI = z.im :=
   rfl
+#align quaternion.coe_complex_im_i Quaternion.coe_complex_im_i
 
 @[simp, norm_cast]
 theorem coe_complex_im_j (z : ℂ) : (z : ℍ).imJ = 0 :=
   rfl
+#align quaternion.coe_complex_im_j Quaternion.coe_complex_im_j
 
 @[simp, norm_cast]
 theorem coe_complex_im_k (z : ℂ) : (z : ℍ).imK = 0 :=
   rfl
+#align quaternion.coe_complex_im_k Quaternion.coe_complex_im_k
 
 @[simp, norm_cast]
 theorem coe_complex_add (z w : ℂ) : ↑(z + w) = (z + w : ℍ) := by ext <;> simp
+#align quaternion.coe_complex_add Quaternion.coe_complex_add
 
 @[simp, norm_cast]
 theorem coe_complex_mul (z w : ℂ) : ↑(z * w) = (z * w : ℍ) := by ext <;> simp
+#align quaternion.coe_complex_mul Quaternion.coe_complex_mul
 
 @[simp, norm_cast]
 theorem coe_complex_zero : ((0 : ℂ) : ℍ) = 0 :=
   rfl
+#align quaternion.coe_complex_zero Quaternion.coe_complex_zero
 
 @[simp, norm_cast]
 theorem coe_complex_one : ((1 : ℂ) : ℍ) = 1 :=
   rfl
+#align quaternion.coe_complex_one Quaternion.coe_complex_one
 
 @[simp, norm_cast]
 theorem coe_real_complex_mul (r : ℝ) (z : ℂ) : (r • z : ℍ) = ↑r * ↑z := by ext <;> simp
+#align quaternion.coe_real_complex_mul Quaternion.coe_real_complex_mul
 
 @[simp, norm_cast]
 theorem coe_complex_coe (r : ℝ) : ((r : ℂ) : ℍ) = r :=
   rfl
+#align quaternion.coe_complex_coe Quaternion.coe_complex_coe
 
 /-- Coercion `ℂ →ₐ[ℝ] ℍ` as an algebra homomorphism. -/
 def ofComplex : ℂ →ₐ[ℝ] ℍ where
@@ -123,10 +138,12 @@ def ofComplex : ℂ →ₐ[ℝ] ℍ where
   map_add' := coe_complex_add
   map_mul' := coe_complex_mul
   commutes' x := rfl
+#align quaternion.of_complex Quaternion.ofComplex
 
 @[simp]
 theorem coe_of_complex : ⇑of_complex = coe :=
   rfl
+#align quaternion.coe_of_complex Quaternion.coe_of_complex
 
 end Quaternion
 

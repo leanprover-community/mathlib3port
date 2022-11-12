@@ -28,18 +28,22 @@ group_theory
 @[to_additive]
 theorem Tactic.Group.zpow_trick {G : Type _} [Group G] (a b : G) (n m : ℤ) : a * b ^ n * b ^ m = a * b ^ (n + m) := by
   rw [mul_assoc, ← zpow_add]
+#align tactic.group.zpow_trick Tactic.Group.zpow_trick
 
 @[to_additive]
 theorem Tactic.Group.zpow_trick_one {G : Type _} [Group G] (a b : G) (m : ℤ) : a * b * b ^ m = a * b ^ (m + 1) := by
   rw [mul_assoc, mul_self_zpow]
+#align tactic.group.zpow_trick_one Tactic.Group.zpow_trick_one
 
 @[to_additive]
 theorem Tactic.Group.zpow_trick_one' {G : Type _} [Group G] (a b : G) (n : ℤ) : a * b ^ n * b = a * b ^ (n + 1) := by
   rw [mul_assoc, mul_zpow_self]
+#align tactic.group.zpow_trick_one' Tactic.Group.zpow_trick_one'
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick_sub {G : Type _} [Group G] (a b : G) (n m : ℤ) : a * b ^ n * b ^ -m = a * b ^ (n - m) :=
-  by rw [mul_assoc, ← zpow_add] <;> rfl
+theorem Tactic.Group.zpow_trick_sub {G : Type _} [Group G] (a b : G) (n m : ℤ) :
+    a * b ^ n * b ^ (-m) = a * b ^ (n - m) := by rw [mul_assoc, ← zpow_add] <;> rfl
+#align tactic.group.zpow_trick_sub Tactic.Group.zpow_trick_sub
 
 namespace Tactic
 
@@ -63,10 +67,12 @@ unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
         expr (pquote.1 zpow_trick_one'), expr (pquote.1 zpow_trick_sub), expr (pquote.1 Tactic.Ring.horner)]
       [] locat >>
     skip
+#align tactic.aux_group₁ tactic.aux_group₁
 
 /-- Auxiliary tactic for the `group` tactic. Calls `ring_nf` to normalize exponents. -/
 unsafe def aux_group₂ (locat : Loc) : tactic Unit :=
   ring_nf none Tactic.Ring.NormalizeMode.raw locat
+#align tactic.aux_group₂ tactic.aux_group₂
 
 end Tactic
 
@@ -97,6 +103,7 @@ unsafe def group (locat : parse location) : tactic Unit := do
   when locat sorry
   aux_group₁ locat
   repeat (andthen (aux_group₂ locat) (aux_group₁ locat))
+#align tactic.interactive.group tactic.interactive.group
 
 end Tactic.Interactive
 

@@ -24,6 +24,7 @@ inductive Tree.{u} (α : Type u) : Type u
   | nil : Tree
   | node : α → Tree → Tree → Tree
   deriving has_reflect, DecidableEq
+#align tree Tree
 
 namespace Tree
 
@@ -35,6 +36,7 @@ variable {α : Type u}
 def repr [Repr α] : Tree α → String
   | nil => "nil"
   | node a t1 t2 => "tree.node " ++ Repr.repr a ++ " (" ++ repr t1 ++ ") (" ++ repr t2 ++ ")"
+#align tree.repr Tree.repr
 
 instance [Repr α] : Repr (Tree α) :=
   ⟨Tree.repr⟩
@@ -47,6 +49,7 @@ def ofRbnode : Rbnode α → Tree α
   | Rbnode.leaf => nil
   | Rbnode.red_node l a r => node a (of_rbnode l) (of_rbnode r)
   | Rbnode.black_node l a r => node a (of_rbnode l) (of_rbnode r)
+#align tree.of_rbnode Tree.ofRbnode
 
 /-- Finds the index of an element in the tree assuming the tree has been
 constructed according to the provided decidable order on its elements.
@@ -55,10 +58,11 @@ is not in the tree, returns none. -/
 def indexOf (lt : α → α → Prop) [DecidableRel lt] (x : α) : Tree α → Option PosNum
   | nil => none
   | node a t₁ t₂ =>
-    match cmpUsing lt x a with
+    match CmpUsing lt x a with
     | Ordering.lt => PosNum.bit0 <$> index_of t₁
     | Ordering.eq => some PosNum.one
     | Ordering.gt => PosNum.bit1 <$> index_of t₂
+#align tree.index_of Tree.indexOf
 
 /-- Retrieves an element uniquely determined by a `pos_num` from the tree,
 taking the following path to get to the element:
@@ -70,11 +74,13 @@ def get : PosNum → Tree α → Option α
   | PosNum.one, node a t₁ t₂ => some a
   | PosNum.bit0 n, node a t₁ t₂ => t₁.get n
   | PosNum.bit1 n, node a t₁ t₂ => t₂.get n
+#align tree.get Tree.get
 
 /-- Retrieves an element from the tree, or the provided default value
 if the index is invalid. See `tree.get`. -/
 def getOrElse (n : PosNum) (t : Tree α) (v : α) : α :=
   (t.get n).getOrElse v
+#align tree.get_or_else Tree.getOrElse
 
 /- warning: tree.map -> Tree.map is a dubious translation:
 lean 3 declaration is
@@ -87,6 +93,7 @@ TODO: implement `traversable tree`. -/
 def map {β} (f : α → β) : Tree α → Tree β
   | nil => nil
   | node a l r => node (f a) (map l) (map r)
+#align tree.map Tree.map
 
 end Tree
 

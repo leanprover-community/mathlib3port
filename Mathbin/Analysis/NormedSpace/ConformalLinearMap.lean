@@ -48,6 +48,7 @@ open Function LinearIsometry ContinuousLinearMap
 def IsConformalMap {R : Type _} {X Y : Type _} [NormedField R] [SeminormedAddCommGroup X] [SeminormedAddCommGroup Y]
     [NormedSpace R X] [NormedSpace R Y] (f' : X →L[R] Y) :=
   ∃ (c : R)(hc : c ≠ 0)(li : X →ₗᵢ[R] Y), f' = c • li.toContinuousLinearMap
+#align is_conformal_map IsConformalMap
 
 variable {R M N G M' : Type _} [NormedField R] [SeminormedAddCommGroup M] [SeminormedAddCommGroup N]
   [SeminormedAddCommGroup G] [NormedSpace R M] [NormedSpace R N] [NormedSpace R G] [NormedAddCommGroup M']
@@ -55,20 +56,25 @@ variable {R M N G M' : Type _} [NormedField R] [SeminormedAddCommGroup M] [Semin
 
 theorem isConformalMapId : IsConformalMap (id R M) :=
   ⟨1, one_ne_zero, id, by simp⟩
+#align is_conformal_map_id isConformalMapId
 
 theorem IsConformalMap.smul (hf : IsConformalMap f) {c : R} (hc : c ≠ 0) : IsConformalMap (c • f) := by
   rcases hf with ⟨c', hc', li, rfl⟩
   exact ⟨c * c', mul_ne_zero hc hc', li, smul_smul _ _ _⟩
+#align is_conformal_map.smul IsConformalMap.smul
 
 theorem isConformalMapConstSmul (hc : c ≠ 0) : IsConformalMap (c • id R M) :=
   isConformalMapId.smul hc
+#align is_conformal_map_const_smul isConformalMapConstSmul
 
 protected theorem LinearIsometry.isConformalMap (f' : M →ₗᵢ[R] N) : IsConformalMap f'.toContinuousLinearMap :=
   ⟨1, one_ne_zero, f', (one_smul _ _).symm⟩
+#align linear_isometry.is_conformal_map LinearIsometry.isConformalMap
 
 @[nontriviality]
 theorem isConformalMapOfSubsingleton [Subsingleton M] (f' : M →L[R] N) : IsConformalMap f' :=
   ⟨1, one_ne_zero, ⟨0, fun x => by simp [Subsingleton.elim x 0]⟩, Subsingleton.elim _ _⟩
+#align is_conformal_map_of_subsingleton isConformalMapOfSubsingleton
 
 namespace IsConformalMap
 
@@ -78,15 +84,18 @@ theorem comp (hg : IsConformalMap g) (hf : IsConformalMap f) : IsConformalMap (g
   refine' ⟨cg * cf, mul_ne_zero hcg hcf, lig.comp lif, _⟩
   rw [smul_comp, comp_smul, mul_smul]
   rfl
+#align is_conformal_map.comp IsConformalMap.comp
 
 protected theorem injective {f : M' →L[R] N} (h : IsConformalMap f) : Function.Injective f := by
   rcases h with ⟨c, hc, li, rfl⟩
   exact (smul_right_injective _ hc).comp li.injective
+#align is_conformal_map.injective IsConformalMap.injective
 
 theorem ne_zero [Nontrivial M'] {f' : M' →L[R] N} (hf' : IsConformalMap f') : f' ≠ 0 := by
   rintro rfl
   rcases exists_ne (0 : M') with ⟨a, ha⟩
   exact ha (hf'.injective rfl)
+#align is_conformal_map.ne_zero IsConformalMap.ne_zero
 
 end IsConformalMap
 

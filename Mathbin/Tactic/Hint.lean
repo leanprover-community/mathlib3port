@@ -16,6 +16,7 @@ tactic. -/
 unsafe def hint_tactic_attribute : user_attribute where
   Name := `hint_tactic
   descr := "A tactic that should be tried by `hint`."
+#align tactic.hint.hint_tactic_attribute tactic.hint.hint_tactic_attribute
 
 add_tactic_doc
   { Name := "hint_tactic", category := DocCategory.attr, declNames := [`tactic.hint.hint_tactic_attribute],
@@ -26,6 +27,7 @@ setup_tactic_parser
 private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit := do
   add_decl <| declaration.defn n [] (quote.1 (tactic String)) t ReducibilityHints.opaque ff
   hint_tactic_attribute n () tt
+#align tactic.hint.add_tactic_hint tactic.hint.add_tactic_hint
 
 /-- `add_hint_tactic t` runs the tactic `t` whenever `hint` is invoked.
 The typical use case is `add_hint_tactic "foo"` for some interactive tactic `foo`.
@@ -45,6 +47,7 @@ unsafe def add_hint_tactic (_ : parse (tk "add_hint_tactic")) : parser Unit := d
               %%ₓt
               pure (%%ₓn))
       add_tactic_hint h t
+#align tactic.hint.add_hint_tactic tactic.hint.add_hint_tactic
 
 add_tactic_doc
   { Name := "add_hint_tactic", category := DocCategory.cmd, declNames := [`tactic.hint.add_hint_tactic],
@@ -85,6 +88,7 @@ and for each such tactic, the number of remaining goals afterwards.
 unsafe def hint : tactic (List (String × ℕ)) := do
   let names ← attribute.get_instances `hint_tactic
   focus1 <| try_all_sorted (names name_to_tactic)
+#align tactic.hint tactic.hint
 
 namespace Interactive
 
@@ -101,6 +105,7 @@ unsafe def hint : tactic Unit := do
         else do
           trace "the following tactics make progress:\n----"
           hints fun p => tactic.trace f! "Try this: {p.1}"
+#align tactic.interactive.hint tactic.interactive.hint
 
 /-- `hint` lists possible tactics which will make progress (that is, not fail) against the current goal.
 

@@ -46,6 +46,7 @@ structure IsAdmissible extends IsEuclidean abv where
   exists_partition' :
     ∀ (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (A : Fin n → R),
       ∃ t : Fin n → Fin (card ε), ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ % b - A i₀ % b) : ℝ) < abv b • ε
+#align absolute_value.is_admissible AbsoluteValue.IsAdmissible
 
 attribute [protected] is_admissible.card
 
@@ -62,6 +63,7 @@ theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b
   obtain ⟨t, ht⟩ := h.exists_partition' (Fintype.card ι) hε hb (A ∘ e.symm)
   refine' ⟨t ∘ e, fun i₀ i₁ h => _⟩
   convert ht (e i₀) (e i₁) h <;> simp only [e.symm_apply_apply]
+#align absolute_value.is_admissible.exists_partition AbsoluteValue.IsAdmissible.exists_partition
 
 /-- Any large enough family of vectors in `R^n` has a pair of elements
 whose remainders are close together, pointwise. -/
@@ -117,6 +119,7 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     
   · exact h i
     
+#align absolute_value.is_admissible.exists_approx_aux AbsoluteValue.IsAdmissible.exists_approx_aux
 
 /-- Any large enough family of vectors in `R^ι` has a pair of elements
 whose remainders are close together, pointwise. -/
@@ -127,6 +130,7 @@ theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : 
   obtain ⟨i₀, i₁, ne, h⟩ := h.exists_approx_aux (Fintype.card ι) hε hb fun x y => A x (e.symm y)
   refine' ⟨i₀, i₁, Ne, fun k => _⟩
   convert h (e k) <;> simp only [e.symm_apply_apply]
+#align absolute_value.is_admissible.exists_approx AbsoluteValue.IsAdmissible.exists_approx
 
 end IsAdmissible
 

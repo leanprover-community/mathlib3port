@@ -67,11 +67,13 @@ theorem wilsons_lemma : ((p - 1)! : Zmod p) = -1 := by
     · simp only [val_cast_of_lt hb.right, Units.coe_mk0]
       
     
+#align zmod.wilsons_lemma Zmod.wilsons_lemma
 
 @[simp]
 theorem prod_Ico_one_prime : (∏ x in ico 1 p, (x : Zmod p)) = -1 := by
   conv in Ico 1 p => rw [← succ_sub_one p, succ_sub (Fact.out p.prime).Pos]
   rw [← prod_nat_cast, Finset.prod_Ico_id_eq_factorial, wilsons_lemma]
+#align zmod.prod_Ico_one_prime Zmod.prod_Ico_one_prime
 
 end Wilson
 
@@ -120,10 +122,11 @@ theorem Ico_map_val_min_abs_nat_abs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] 
     Multiset.map_eq_map_of_bij_of_nodup _ _ (Finset.nodup _) (Finset.nodup _)
       (fun x _ => (a * x : Zmod p).valMinAbs.natAbs) hmem (fun _ _ => rfl)
       (inj_on_of_surj_on_of_card_le _ hmem hsurj le_rfl) hsurj
+#align zmod.Ico_map_val_min_abs_nat_abs_eq_Ico_map_id Zmod.Ico_map_val_min_abs_nat_abs_eq_Ico_map_id
 
 private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ} (hap : (a : Zmod p) ≠ 0) :
     (a ^ (p / 2) * (p / 2)! : Zmod p) =
-      -1 ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : Zmod p).val ≤ p / 2).card * (p / 2)! :=
+      (-1) ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : Zmod p).val ≤ p / 2).card * (p / 2)! :=
   calc
     (a ^ (p / 2) * (p / 2)! : Zmod p) = ∏ x in ico 1 (p / 2).succ, a * x := by
       rw [prod_mul_distrib, ← prod_nat_cast, prod_Ico_id_eq_factorial, prod_const, card_Ico, succ_sub_one] <;> simp
@@ -135,7 +138,7 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
         simp only [nat_cast_nat_abs_val_min_abs]
         split_ifs <;> simp
     _ =
-        -1 ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : Zmod p).val ≤ p / 2).card *
+        (-1) ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : Zmod p).val ≤ p / 2).card *
           ∏ x in ico 1 (p / 2).succ, (a * x : Zmod p).valMinAbs.natAbs :=
       by
       have :
@@ -144,31 +147,34 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
         prod_bij_ne_one (fun x _ _ => x) (fun x => by split_ifs <;> simp_all (config := { contextual := true }))
           (fun _ _ _ _ _ _ => id) (fun b h _ => ⟨b, by simp_all [-not_le]⟩) (by intros <;> split_ifs  at * <;> simp_all)
       rw [prod_mul_distrib, this] <;> simp
-    _ = -1 ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : Zmod p).val ≤ p / 2).card * (p / 2)! := by
+    _ = (-1) ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : Zmod p).val ≤ p / 2).card * (p / 2)! := by
       rw [← prod_nat_cast, Finset.prod_eq_multiset_prod, Ico_map_val_min_abs_nat_abs_eq_Ico_map_id p a hap, ←
         Finset.prod_eq_multiset_prod, prod_Ico_id_eq_factorial]
     
+#align zmod.gauss_lemma_aux₁ zmod.gauss_lemma_aux₁
 
 theorem gauss_lemma_aux (p : ℕ) [hp : Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ} (hap : (a : Zmod p) ≠ 0) :
-    (a ^ (p / 2) : Zmod p) = -1 ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card :=
+    (a ^ (p / 2) : Zmod p) = (-1) ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card :=
   (mul_left_inj'
         (show ((p / 2)! : Zmod p) ≠ 0 by
           rw [Ne.def, CharP.cast_eq_zero_iff (Zmod p) p, hp.1.dvd_factorial, not_le] <;>
             exact Nat.div_lt_self hp.1.Pos (by decide))).1 <|
     by simpa using gauss_lemma_aux₁ p hap
+#align zmod.gauss_lemma_aux Zmod.gauss_lemma_aux
 
 /-- Gauss' lemma. The legendre symbol can be computed by considering the number of naturals less
   than `p/2` such that `(a * x) % p > p / 2` -/
 theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a : Zmod p) ≠ 0) :
-    legendreSym p a = -1 ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card := by
+    legendreSym p a = (-1) ^ ((ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card := by
   haveI hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
   have :
     (legendreSym p a : Zmod p) =
-      ((-1 ^ ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card : ℤ) : Zmod p) :=
+      (((-1) ^ ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card : ℤ) : Zmod p) :=
     by rw [legendreSym.eq_pow, gauss_lemma_aux p ha0] <;> simp
   cases legendreSym.eq_one_or_neg_one p ha0 <;>
     cases neg_one_pow_eq_or ℤ ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : Zmod p).val).card <;>
       simp_all [ne_neg_self p one_ne_zero, (ne_neg_self p one_ne_zero).symm]
+#align zmod.gauss_lemma Zmod.gauss_lemma
 
 private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p % 2 = 1)] {a : ℕ} (hap : (a : Zmod p) ≠ 0) :
     ((∑ x in ico 1 (p / 2).succ, a * x : ℕ) : Zmod 2) =
@@ -199,6 +205,7 @@ private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p 
           )
         rfl
     
+#align zmod.eisenstein_lemma_aux₁ zmod.eisenstein_lemma_aux₁
 
 theorem eisenstein_lemma_aux (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℕ} (ha2 : a % 2 = 1)
     (hap : (a : Zmod p) ≠ 0) :
@@ -209,6 +216,7 @@ theorem eisenstein_lemma_aux (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : �
     sub_eq_zero.1 <| by
       simpa [add_left_comm, sub_eq_add_neg, finset.mul_sum.symm, mul_comm, ha2, Nat.cast_sum,
         add_neg_eq_iff_eq_add.symm, neg_eq_self_mod_two, add_assoc] using Eq.symm (eisenstein_lemma_aux₁ p hap)
+#align zmod.eisenstein_lemma_aux Zmod.eisenstein_lemma_aux
 
 theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
     a / b = ((ico 1 c.succ).filter fun x => x * b ≤ a).card :=
@@ -220,6 +228,7 @@ theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
           have : x * b ≤ a → x ≤ c := fun h => le_trans (by rwa [le_div_iff_mul_le hb0]) hc
           simp [lt_succ_iff, le_div_iff_mul_le hb0] <;> tauto
     
+#align zmod.div_eq_filter_card Zmod.div_eq_filter_card
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The given sum is the number of integer points in the triangle formed by the diagonal of the
@@ -255,6 +264,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
                   simp (config := { contextual := true }) only [mem_filter, eq_self_iff_true, exists_prop_of_true,
                     mem_sigma, and_self_iff, forall_true_iff, mem_product]⟩
       
+#align zmod.sum_Ico_eq_card_lt zmod.sum_Ico_eq_card_lt
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -303,15 +313,17 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
       have := le_total (x.2 * p) (x.1 * q) <;> simp only [mem_union, mem_filter, mem_Ico, mem_product] <;> tauto
   rw [sum_Ico_eq_card_lt, sum_Ico_eq_card_lt, hswap, ← card_disjoint_union hdisj, hunion, card_product]
   simp only [card_Ico, tsub_zero, succ_sub_succ_eq_sub]
+#align zmod.sum_mul_div_add_sum_mul_div_eq_mul Zmod.sum_mul_div_add_sum_mul_div_eq_mul
 
 theorem eisenstein_lemma {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a : ℕ} (ha1 : a % 2 = 1) (ha0 : (a : Zmod p) ≠ 0) :
-    legendreSym p a = -1 ^ ∑ x in ico 1 (p / 2).succ, x * a / p := by
+    legendreSym p a = (-1) ^ ∑ x in ico 1 (p / 2).succ, x * a / p := by
   haveI hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
   have ha0' : ((a : ℤ) : Zmod p) ≠ 0 := by
     norm_cast
     exact ha0
   rw [neg_one_pow_eq_pow_mod_two, gauss_lemma hp ha0', neg_one_pow_eq_pow_mod_two,
     (by norm_cast : ((a : ℤ) : Zmod p) = (a : Zmod p)), show _ = _ from eisenstein_lemma_aux p ha1 ha0]
+#align zmod.eisenstein_lemma Zmod.eisenstein_lemma
 
 end Zmod
 

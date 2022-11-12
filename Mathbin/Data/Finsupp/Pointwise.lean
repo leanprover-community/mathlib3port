@@ -39,10 +39,12 @@ instance : Mul (α →₀ β) :=
 
 protected theorem coe_mul (g₁ g₂ : α →₀ β) : ⇑(g₁ * g₂) = g₁ * g₂ :=
   rfl
+#align finsupp.coe_mul Finsupp.coe_mul
 
 @[simp]
 theorem mul_apply {g₁ g₂ : α →₀ β} {a : α} : (g₁ * g₂) a = g₁ a * g₂ a :=
   rfl
+#align finsupp.mul_apply Finsupp.mul_apply
 
 theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} : (g₁ * g₂).Support ⊆ g₁.Support ∩ g₂.Support := by
   intro a h
@@ -55,6 +57,7 @@ theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} : (g₁ * g₂).
     · rw [w]
       simp
       
+#align finsupp.support_mul Finsupp.support_mul
 
 instance : MulZeroClass (α →₀ β) :=
   Finsupp.coe_fn_injective.MulZeroClass _ Finsupp.coe_zero Finsupp.coe_mul
@@ -97,14 +100,17 @@ instance pointwiseScalar [Semiring β] :
         intro x hx h
         apply hx
         rw [h, smul_zero])
+#align finsupp.pointwise_scalar Finsupp.pointwiseScalar
 
 @[simp]
 theorem coe_pointwise_smul [Semiring β] (f : α → β) (g : α →₀ β) : ⇑(f • g) = f • g :=
   rfl
+#align finsupp.coe_pointwise_smul Finsupp.coe_pointwise_smul
 
 /-- The pointwise multiplicative action of functions on finitely supported functions -/
 instance pointwiseModule [Semiring β] : Module (α → β) (α →₀ β) :=
   Function.Injective.module _ coeFnAddHom coe_fn_injective coe_pointwise_smul
+#align finsupp.pointwise_module Finsupp.pointwiseModule
 
 end Finsupp
 

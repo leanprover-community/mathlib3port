@@ -76,6 +76,8 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
     · exact fun m n h_le a => Ennreal.mul_le_mul (h_mono_f h_le a) le_rfl
       
     
+#align
+  probability_theory.lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator ProbabilityTheory.lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator
 
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
    then `E[f * g] = E[f] * E[g]`. However, instead of directly using the independence
@@ -111,6 +113,8 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
     · exact fun n m (h_le : n ≤ m) a => Ennreal.mul_le_mul le_rfl (h_mono_f' h_le a)
       
     
+#align
+  probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
 
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
    then `E[f * g] = E[f] * E[g]`. -/
@@ -118,6 +122,8 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun (h_meas_f : Measur
     (h_indep_fun : IndepFun f g μ) : (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space (measurable_iff_comap_le.1 h_meas_f)
     (measurable_iff_comap_le.1 h_meas_g) h_indep_fun (Measurable.ofComapLe le_rfl) (Measurable.ofComapLe le_rfl)
+#align
+  probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun
 
 /-- If `f` and `g` with values in `ℝ≥0∞` are independent and almost everywhere measurable,
    then `E[f * g] = E[f] * E[g]` (slightly generalizing
@@ -129,11 +135,15 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AeMea
   rw [lintegral_congr_ae h_meas_f.ae_eq_mk, lintegral_congr_ae h_meas_g.ae_eq_mk, lintegral_congr_ae fg_ae]
   apply lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun h_meas_f.measurable_mk h_meas_g.measurable_mk
   exact h_indep_fun.ae_eq h_meas_f.ae_eq_mk h_meas_g.ae_eq_mk
+#align
+  probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'
 
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' (h_meas_f : AeMeasurable f μ)
     (h_meas_g : AeMeasurable g μ) (h_indep_fun : IndepFun f g μ) :
     (∫⁻ ω, f ω * g ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' h_meas_f h_meas_g h_indep_fun
+#align
+  probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun''
 
 /-- The product of two independent, integrable, real_valued random variables is integrable. -/
 theorem IndepFun.integrableMul {β : Type _} [MeasurableSpace β] {X Y : Ω → β} [NormedDivisionRing β] [BorelSpace β]
@@ -149,6 +159,7 @@ theorem IndepFun.integrableMul {β : Type _} [MeasurableSpace β] {X Y : Ω → 
   refine' ⟨hX.1.mul hY.1, _⟩
   simp_rw [has_finite_integral, Pi.mul_apply, nnnorm_mul, Ennreal.coe_mul, hmul]
   exact ennreal.mul_lt_top_iff.mpr (Or.inl ⟨hX.2, hY.2⟩)
+#align probability_theory.indep_fun.integrable_mul ProbabilityTheory.IndepFun.integrableMul
 
 /-- If the product of two independent real_valued random variables is integrable and
 the second one is not almost everywhere zero, then the first one is integrable. -/
@@ -170,6 +181,8 @@ theorem IndepFun.integrableLeftOfIntegrableMul {β : Type _} [MeasurableSpace β
   simp only [nnnorm_mul, Ennreal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
   simpa [Ennreal.top_mul, I] using A
+#align
+  probability_theory.indep_fun.integrable_left_of_integrable_mul ProbabilityTheory.IndepFun.integrableLeftOfIntegrableMul
 
 /-- If the product of two independent real_valued random variables is integrable and the
 first one is not almost everywhere zero, then the second one is integrable. -/
@@ -191,6 +204,8 @@ theorem IndepFun.integrableRightOfIntegrableMul {β : Type _} [MeasurableSpace �
   simp only [nnnorm_mul, Ennreal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
   simpa [Ennreal.top_mul, I] using A
+#align
+  probability_theory.indep_fun.integrable_right_of_integrable_mul ProbabilityTheory.IndepFun.integrableRightOfIntegrableMul
 
 /-- The (Bochner) integral of the product of two independent, nonnegative random
   variables is the product of their integrals. The proof is just plumbing around
@@ -208,6 +223,7 @@ theorem IndepFun.integral_mul_of_nonneg (hXY : IndepFun X Y μ) (hXp : 0 ≤ X) 
   congr
   apply lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' h1 h2
   exact hXY.comp Ennreal.measurableOfReal Ennreal.measurableOfReal
+#align probability_theory.indep_fun.integral_mul_of_nonneg ProbabilityTheory.IndepFun.integral_mul_of_nonneg
 
 /-- The (Bochner) integral of the product of two independent, integrable random
   variables is the product of their integrals. The proof is pedestrian decomposition
@@ -253,6 +269,7 @@ theorem IndepFun.integral_mul_of_integrable (hXY : IndepFun X Y μ) (hX : Integr
     hi1.integral_mul_of_nonneg hp1 hp3 hm1 hm3, hi2.integral_mul_of_nonneg hp2 hp3 hm2 hm3,
     hi3.integral_mul_of_nonneg hp1 hp4 hm1 hm4, hi4.integral_mul_of_nonneg hp2 hp4 hm2 hm4]
   ring
+#align probability_theory.indep_fun.integral_mul_of_integrable ProbabilityTheory.IndepFun.integral_mul_of_integrable
 
 /-- The (Bochner) integral of the product of two independent random
   variables is the product of their integrals. -/
@@ -283,10 +300,12 @@ theorem IndepFun.integral_mul (hXY : IndepFun X Y μ) (hX : AeStronglyMeasurable
     rw [not_and_or] at I
     cases I <;> simp [integral_undef, I, h]
     
+#align probability_theory.indep_fun.integral_mul ProbabilityTheory.IndepFun.integral_mul
 
 theorem IndepFun.integral_mul' (hXY : IndepFun X Y μ) (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) :
     (integral μ fun ω => X ω * Y ω) = integral μ X * integral μ Y :=
   hXY.integral_mul hX hY
+#align probability_theory.indep_fun.integral_mul' ProbabilityTheory.IndepFun.integral_mul'
 
 /-- Independence of functions `f` and `g` into arbitrary types is characterized by the relation
   `E[(φ ∘ f) * (ψ ∘ g)] = E[φ ∘ f] * E[ψ ∘ g]` for all measurable `φ` and `ψ` with values in `ℝ`
@@ -310,6 +329,7 @@ theorem indep_fun_iff_integral_comp_mul [IsFiniteMeasure μ] {β β' : Type _} {
     integral_indicator_one ((hfm hA).inter (hgm hB)), ← integral_indicator_one (hfm hA), ←
     integral_indicator_one (hgm hB), Set.inter_indicator_one]
   exact Ennreal.mul_ne_top (measure_ne_top μ _) (measure_ne_top μ _)
+#align probability_theory.indep_fun_iff_integral_comp_mul ProbabilityTheory.indep_fun_iff_integral_comp_mul
 
 end ProbabilityTheory
 

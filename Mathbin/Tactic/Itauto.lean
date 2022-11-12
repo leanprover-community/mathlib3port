@@ -86,6 +86,7 @@ inductive AndKind
   | Iff
   | Eq
   deriving has_reflect, DecidableEq
+#align tactic.itauto.and_kind Tactic.Itauto.AndKind
 
 instance : Inhabited AndKind :=
   ⟨AndKind.and⟩
@@ -104,32 +105,38 @@ inductive Prop : Type
 
   | imp : prop → prop → prop
   deriving has_reflect, DecidableEq
+#align tactic.itauto.prop Tactic.Itauto.Prop
 
 -- p → q
 /-- Constructor for `p ∧ q`. -/
 @[match_pattern]
 def Prop.and : Prop → Prop → Prop :=
   Prop.and' AndKind.and
+#align tactic.itauto.prop.and Tactic.Itauto.Prop.and
 
 /-- Constructor for `p ↔ q`. -/
 @[match_pattern]
 def Prop.iff : Prop → Prop → Prop :=
   Prop.and' AndKind.iff
+#align tactic.itauto.prop.iff Tactic.Itauto.Prop.iff
 
 /-- Constructor for `p = q`. -/
 @[match_pattern]
 def Prop.eq : Prop → Prop → Prop :=
   Prop.and' AndKind.eq
+#align tactic.itauto.prop.eq Tactic.Itauto.Prop.eq
 
 /-- Constructor for `¬ p`. -/
 @[match_pattern]
 def Prop.not (a : Prop) : Prop :=
   a.imp Prop.false
+#align tactic.itauto.prop.not Tactic.Itauto.Prop.not
 
 /-- Constructor for `xor p q`. -/
 @[match_pattern]
 def Prop.xor (a b : Prop) : Prop :=
   (a.And b.Not).Or (b.And a.Not)
+#align tactic.itauto.prop.xor Tactic.Itauto.Prop.xor
 
 instance : Inhabited Prop :=
   ⟨Prop.true⟩
@@ -138,6 +145,7 @@ instance : Inhabited Prop :=
 def AndKind.sides : AndKind → Prop → Prop → prop × prop
   | and_kind.and, A, B => (A, B)
   | _, A, B => (A.imp B, B.imp A)
+#align tactic.itauto.and_kind.sides Tactic.Itauto.AndKind.sides
 
 /-- Debugging printer for propositions. -/
 unsafe def prop.to_format : Prop → format
@@ -149,6 +157,7 @@ unsafe def prop.to_format : Prop → format
   | prop.eq p q => f! "({p.to_format } = {q.to_format})"
   | prop.or p q => f! "({p.to_format } ∨ {q.to_format})"
   | prop.imp p q => f! "({p.to_format } → {q.to_format})"
+#align tactic.itauto.prop.to_format tactic.itauto.prop.to_format
 
 unsafe instance : has_to_format Prop :=
   ⟨prop.to_format⟩
@@ -161,11 +170,12 @@ open Ordering
 def AndKind.cmp (p q : AndKind) : Ordering := by
   cases p <;> cases q
   exacts[Eq, lt, lt, GT.gt, Eq, lt, GT.gt, GT.gt, Eq]
+#align tactic.itauto.and_kind.cmp Tactic.Itauto.AndKind.cmp
 
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
 def Prop.cmp (p q : Prop) : Ordering := by
   induction' p with _ ap _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ generalizing q <;> cases q
-  case var.var => exact cmp p q
+  case var.var => exact Cmp p q
   case true.true => exact Eq
   case false.false => exact Eq
   case and'.and' aq q₁ q₂ => exact (ap.cmp aq).orElse ((p₁ q₁).orElse (p₂ q₂))
@@ -173,9 +183,10 @@ def Prop.cmp (p q : Prop) : Ordering := by
   case imp.imp q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
   exacts[lt, lt, lt, lt, lt, GT.gt, lt, lt, lt, lt, GT.gt, GT.gt, lt, lt, lt, GT.gt, GT.gt, GT.gt, lt, lt, GT.gt, GT.gt,
     GT.gt, GT.gt, lt, GT.gt, GT.gt, GT.gt, GT.gt, GT.gt]
+#align tactic.itauto.prop.cmp Tactic.Itauto.Prop.cmp
 
 instance : LT Prop :=
-  ⟨fun p q => p.cmp q = lt⟩
+  ⟨fun p q => p.Cmp q = lt⟩
 
 instance : DecidableRel (@LT.lt Prop _) := fun _ _ => Ordering.decidableEq _ _
 
@@ -238,6 +249,7 @@ inductive Proof-- ⊢ A, causes failure during reconstruction
 
   | imp_imp_simp (x : Name) (p : proof) : proof
   deriving has_reflect
+#align tactic.itauto.proof Tactic.Itauto.Proof
 
 instance : Inhabited Proof :=
   ⟨Proof.triv⟩
@@ -264,6 +276,7 @@ unsafe def proof.to_format : Proof → format
   | proof.em tt p => f! "(classical.em {p})"
   | proof.decidable_elim _ p x q r => f! "({p }.elim (λ {x }, {q.to_format }) (λ {x }, {r.to_format})"
   | proof.imp_imp_simp _ p => f! "(imp_imp_simp {p.to_format})"
+#align tactic.itauto.proof.to_format tactic.itauto.proof.to_format
 
 unsafe instance : has_to_format Proof :=
   ⟨proof.to_format⟩
@@ -272,11 +285,13 @@ unsafe instance : has_to_format Proof :=
 unsafe def proof.exfalso : Prop → Proof → Proof
   | prop.false, p => p
   | A, p => Proof.exfalso' p
+#align tactic.itauto.proof.exfalso tactic.itauto.proof.exfalso
 
 /-- A variant on `proof.or_elim` that performs opportunistic simplification. -/
 unsafe def proof.or_elim : Proof → Name → Proof → Proof → Proof
   | proof.em cl p, x, q, r => Proof.decidable_elim cl p x q r
   | p, x, q, r => Proof.or_elim' p x q r
+#align tactic.itauto.proof.or_elim tactic.itauto.proof.or_elim
 
 /-- A variant on `proof.app'` that performs opportunistic simplification.
 (This doesn't do full normalization because we don't want the proof size to blow up.) -/
@@ -287,6 +302,7 @@ unsafe def proof.app : Proof → Proof → Proof
   | proof.or_imp_right p, q => p.app q.or_inr
   | proof.imp_imp_simp x p, q => p.app (Proof.intro x q)
   | p, q => p.app' q
+#align tactic.itauto.proof.app tactic.itauto.proof.app
 
 -- Note(Mario): the typechecker is disabled because it requires proofs to carry around additional
 -- props. These can be retrieved from the git history if you want to re-enable this.
@@ -340,10 +356,12 @@ meta def proof.check : name_map prop → proof → option prop
 /-- Get a new name in the pattern `h0, h1, h2, ...` -/
 @[inline]
 unsafe def fresh_name : ℕ → Name × ℕ := fun n => (mkSimpleName ("h" ++ toString n), n + 1)
+#align tactic.itauto.fresh_name tactic.itauto.fresh_name
 
 /-- The context during proof search is a map from propositions to proof values. -/
 unsafe def context :=
   native.rb_map Prop Proof
+#align tactic.itauto.context tactic.itauto.context
 
 /-- Debug printer for the context. -/
 unsafe def context.to_format (Γ : context) : format :=
@@ -352,6 +370,7 @@ unsafe def context.to_format (Γ : context) : format :=
           P.to_format ++
         ",\n" ++
       f
+#align tactic.itauto.context.to_format tactic.itauto.context.to_format
 
 unsafe instance : has_to_format context :=
   ⟨context.to_format⟩
@@ -378,6 +397,7 @@ unsafe def context.add : Prop → Proof → context → Except (Prop → Proof) 
     Γ (B C) p
   | prop.imp A prop.true, p, Γ => pure Γ
   | A, p, Γ => pure (Γ.insert A p)
+#align tactic.itauto.context.add tactic.itauto.context.add
 
 /-- Add `A` to the context `Γ` with proof `p`. This version of `context.add` takes a continuation
 and a target proposition `B`, so that in the case that `⊥` is found we can skip the continuation
@@ -388,20 +408,24 @@ unsafe def context.with_add (Γ : context) (A : Prop) (p : Proof) (B : Prop) (f 
   match Γ.add A p with
   | Except.ok Γ_A => f Γ_A B n
   | Except.error p => (true, p B, n)
+#align tactic.itauto.context.with_add tactic.itauto.context.with_add
 
 /-- Map a function over the proof (regardless of whether the proof is successful or not). -/
 def mapProof (f : Proof → Proof) : Bool × proof × ℕ → Bool × proof × ℕ
   | (b, p, n) => (b, f p, n)
+#align tactic.itauto.map_proof Tactic.Itauto.mapProof
 
 /-- Convert a value-with-success to an optional value. -/
 def isOk {α} : Bool × α → Option α
   | (ff, p) => none
   | (tt, p) => some p
+#align tactic.itauto.is_ok Tactic.Itauto.isOk
 
 /-- Skip the continuation and return a failed proof if the boolean is false. -/
 def whenOk : Bool → (ℕ → Bool × proof × ℕ) → ℕ → Bool × proof × ℕ
   | ff, f, n => (false, Proof.sorry, n)
   | tt, f, n => f n
+#align tactic.itauto.when_ok Tactic.Itauto.whenOk
 
 /-- The search phase, which deals with the level 3 rules, which are rules that are not validity
 preserving and so require proof search. One obvious one is the or-introduction rule: we prove
@@ -449,6 +473,7 @@ unsafe def search (prove : context → Prop → ℕ → Bool × proof × ℕ) : 
           | (ff, _) => mapProof Proof.or_inr (prove Γ B₂ n)
           | r => r
         | _ => (false, Proof.sorry, n)
+#align tactic.itauto.search tactic.itauto.search
 
 /-- The main prover. This receives a context of proven or assumed lemmas and a target proposition,
 and returns a proof or `none` (with state for the fresh variable generator).
@@ -485,6 +510,7 @@ unsafe def prove : context → Prop → ℕ → Bool × proof × ℕ
           mapProof (proof.or_elim p a p₁) <| whenOk b (Γ.with_add A₂ (Proof.hyp a) B fun Γ _ => IH true Γ) n
         | _ => IH b Γ n)
       false Γ n
+#align tactic.itauto.prove tactic.itauto.prove
 
 /-- Reifies an atomic or otherwise unrecognized proposition. If it is defeq to a proposition we
 have already allocated, we reuse it, otherwise we name it with a new index. -/
@@ -494,6 +520,7 @@ unsafe def reify_atom (atoms : ref (Buffer expr)) (e : expr) : tactic Prop := do
   match o with
     | none => write_ref atoms (vec e) $> prop.var vec
     | some i => pure <| prop.var i
+#align tactic.itauto.reify_atom tactic.itauto.reify_atom
 
 /-- Reify an `expr` into a `prop`, allocating anything non-propositional as an atom in the
 `atoms` list. -/
@@ -510,6 +537,7 @@ unsafe def reify (atoms : ref (Buffer expr)) : expr → tactic Prop
   | quote.1 (Implies (%%ₓa) (%%ₓb)) => prop.imp <$> reify a <*> reify b
   | e@(quote.1 ((%%ₓa) → %%ₓb)) => if b.has_var then reify_atom atoms e else prop.imp <$> reify a <*> reify b
   | e => reify_atom atoms e
+#align tactic.itauto.reify tactic.itauto.reify
 
 /-- Once we have a proof object, we have to apply it to the goal. (Some of these cases are a bit
 annoying because `applyc` gets the arguments wrong sometimes so we have to use `to_expr` instead.)
@@ -667,6 +695,7 @@ unsafe def apply_proof : name_map expr → Proof → tactic Unit
     let e ← intro_core `_
     let n := e.local_uniq_name
     apply_proof (Γ n e) (p (proof.intro x (proof.hyp n)))
+#align tactic.itauto.apply_proof tactic.itauto.apply_proof
 
 end Itauto
 
@@ -684,13 +713,13 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
   (using_new_ref mkBuffer) fun atoms =>
     (using_new_ref mk_name_map) fun hs => do
       let t ← target
-      let t ← mcond (is_prop t) (reify atoms t) (tactic.exfalso $> prop.false)
+      let t ← condM (is_prop t) (reify atoms t) (tactic.exfalso $> prop.false)
       let hyps ← local_context
       let (Γ, decs) ←
         hyps.mfoldl
             (fun (Γ : Except (Prop → Proof) context × native.rb_map Prop (Bool × expr)) h => do
               let e ← infer_type h
-              mcond (is_prop e)
+              condM (is_prop e)
                   (do
                     let A ← reify atoms e
                     let n := h
@@ -742,6 +771,7 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
         | Except.error p => p t
       let hs ← read_ref hs
       apply_proof hs p
+#align tactic.itauto tactic.itauto
 
 namespace Interactive
 
@@ -768,6 +798,7 @@ unsafe def itauto (classical : parse (parser.optional (tk "!"))) :
   | none => tactic.itauto False classical.isSome []
   | some none => tactic.itauto True classical.isSome []
   | some (some ls) => ls.mmap i_to_expr >>= tactic.itauto False classical.isSome
+#align tactic.interactive.itauto tactic.interactive.itauto
 
 add_hint_tactic itauto
 

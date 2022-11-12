@@ -39,33 +39,30 @@ is not guaranteed. For a variant giving an element with norm in `[1, R]`, see
 `riesz_lemma_of_norm_lt`. -/
 theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃ x : E, x ∉ F) {r : ℝ} (hr : r < 1) :
     ∃ x₀ : E, x₀ ∉ F ∧ ∀ y ∈ F, r * ∥x₀∥ ≤ ∥x₀ - y∥ := by
-  classical
-  obtain ⟨x, hx⟩ : ∃ x : E, x ∉ F := hF
-  let d := Metric.infDist x F
-  have hFn : (F : Set E).Nonempty := ⟨_, F.zero_mem⟩
-  have hdp : 0 < d := lt_of_le_of_ne Metric.inf_dist_nonneg fun heq => hx ((hFc.mem_iff_inf_dist_zero hFn).2 HEq.symm)
-  let r' := max r 2⁻¹
-  have hr' : r' < 1 := by
-    simp [r', hr]
-    norm_num
-  have hlt : 0 < r' := lt_of_lt_of_le (by norm_num) (le_max_right r 2⁻¹)
-  have hdlt : d < d / r' := (lt_div_iff hlt).mpr ((mul_lt_iff_lt_one_right hdp).2 hr')
-  obtain ⟨y₀, hy₀F, hxy₀⟩ : ∃ y ∈ F, dist x y < d / r' := (Metric.inf_dist_lt_iff hFn).mp hdlt
-  have x_ne_y₀ : x - y₀ ∉ F := by
-    by_contra h
-    have : x - y₀ + y₀ ∈ F := F.add_mem h hy₀F
-    simp only [neg_add_cancel_right, sub_eq_add_neg] at this
-    exact hx this
-  refine' ⟨x - y₀, x_ne_y₀, fun y hy => le_of_lt _⟩
-  have hy₀y : y₀ + y ∈ F := F.add_mem hy₀F hy
-  calc
-    r * ∥x - y₀∥ ≤ r' * ∥x - y₀∥ := mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg _)
-    _ < d := by
-      rw [← dist_eq_norm]
-      exact (lt_div_iff' hlt).1 hxy₀
-    _ ≤ dist x (y₀ + y) := Metric.inf_dist_le_dist_of_mem hy₀y
-    _ = ∥x - y₀ - y∥ := by rw [sub_sub, dist_eq_norm]
-    
+  classical obtain ⟨x, hx⟩ : ∃ x : E, x ∉ F := hF
+    have hFn : (F : Set E).Nonempty
+    have hdp : 0 < d
+    let r' := max r 2⁻¹
+    · simp [r', hr]
+      norm_num
+      
+    have hdlt : d < d / r'
+    obtain ⟨y₀, hy₀F, hxy₀⟩ : ∃ y ∈ F, dist x y < d / r' := (Metric.inf_dist_lt_iff hFn).mp hdlt
+    · by_contra h
+      have : x - y₀ + y₀ ∈ F := F.add_mem h hy₀F
+      simp only [neg_add_cancel_right, sub_eq_add_neg] at this
+      exact hx this
+      
+    have hy₀y : y₀ + y ∈ F
+    calc
+      r * ∥x - y₀∥ ≤ r' * ∥x - y₀∥ := mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg _)
+      _ < d := by
+        rw [← dist_eq_norm]
+        exact (lt_div_iff' hlt).1 hxy₀
+      _ ≤ dist x (y₀ + y) := Metric.inf_dist_le_dist_of_mem hy₀y
+      _ = ∥x - y₀ - y∥ := by rw [sub_sub, dist_eq_norm]
+      
+#align riesz_lemma riesz_lemma
 
 /-- A version of Riesz lemma: given a strict closed subspace `F`, one may find an element of norm `≤ R`
 which is at distance  at least `1` of every element of `F`. Here, `R` is any given constant
@@ -99,6 +96,7 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ∥c∥) {R : ℝ} (hR : ∥
     _ ≤ ∥d∥ * ∥x - y'∥ := mul_le_mul_of_nonneg_left (hx y' (by simp [hy', Submodule.smul_mem _ _ hy])) (norm_nonneg _)
     _ = ∥d • x - y∥ := by simp [yy', ← smul_sub, norm_smul]
     
+#align riesz_lemma_of_norm_lt riesz_lemma_of_norm_lt
 
 theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx : x ∈ s) :
     ClosedBall x (infDist x (sᶜ)) ⊆ Closure s := by
@@ -109,4 +107,5 @@ theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx
   · rw [← closure_ball x h₀]
     exact closure_mono ball_inf_dist_compl_subset
     
+#align metric.closed_ball_inf_dist_compl_subset_closure Metric.closed_ball_inf_dist_compl_subset_closure
 

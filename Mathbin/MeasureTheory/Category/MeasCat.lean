@@ -38,6 +38,7 @@ universe u v
 /-- The category of measurable spaces and measurable functions. -/
 def MeasCat : Type (u + 1) :=
   Bundled MeasurableSpace
+#align Meas MeasCat
 
 namespace MeasCat
 
@@ -50,13 +51,16 @@ instance (X : MeasCat) : MeasurableSpace X :=
 /-- Construct a bundled `Meas` from the underlying type and the typeclass. -/
 def of (α : Type u) [MeasurableSpace α] : MeasCat :=
   ⟨α⟩
+#align Meas.of MeasCat.of
 
 @[simp]
 theorem coe_of (X : Type u) [MeasurableSpace X] : (of X : Type u) = X :=
   rfl
+#align Meas.coe_of MeasCat.coe_of
 
 instance unbundledHom : UnbundledHom @Measurable :=
   ⟨@measurableId, @Measurable.comp⟩
+#align Meas.unbundled_hom MeasCat.unbundledHom
 
 deriving instance LargeCategory, ConcreteCategory for MeasCat
 
@@ -77,6 +81,7 @@ def measure : MeasCat ⥤ MeasCat where
   map X Y f := ⟨Measure.map (f : X → Y), Measure.measurableMap f f.2⟩
   map_id' := fun ⟨α, I⟩ => Subtype.eq <| funext fun μ => @Measure.map_id α I μ
   map_comp' := fun X Y Z ⟨f, hf⟩ ⟨g, hg⟩ => Subtype.eq <| funext fun μ => (Measure.map_map hg hf).symm
+#align Meas.Measure MeasCat.measure
 
 /-- The Giry monad, i.e. the monadic structure associated with `Measure`. -/
 def giry : CategoryTheory.Monad MeasCat where
@@ -90,8 +95,9 @@ def giry : CategoryTheory.Monad MeasCat where
   assoc' α := Subtype.eq <| funext fun μ => @Measure.join_map_join _ _ _
   left_unit' α := Subtype.eq <| funext fun μ => @Measure.join_dirac _ _ _
   right_unit' α := Subtype.eq <| funext fun μ => @Measure.join_map_dirac _ _ _
+#align Meas.Giry MeasCat.giry
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
 def integral : giry.Algebra where
@@ -104,12 +110,14 @@ def integral : giry.Algebra where
         show (∫⁻ x, x ∂μ.join) = ∫⁻ x, x ∂Measure.map (fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m) μ by
           rw [measure.lintegral_join, lintegral_map] <;>
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr measurable_id, \",\", expr measure.measurable_lintegral, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:348:22: unsupported: parse error"
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr measurable_id, \",\", expr measure.measurable_lintegral, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+#align Meas.Integral MeasCat.integral
 
 end MeasCat
 
 instance TopCat.hasForgetToMeas : HasForget₂ TopCat.{u} MeasCat.{u} :=
   BundledHom.mkHasForget₂ borel (fun X Y f => ⟨f.1, f.2.borelMeasurable⟩) (by intros <;> rfl)
+#align Top.has_forget_to_Meas TopCat.hasForgetToMeas
 
 /- warning: Borel clashes with borel -> borel
 warning: Borel -> borel is a dubious translation:
@@ -122,4 +130,5 @@ Case conversion may be inaccurate. Consider using '#align Borel borelₓ'. -/
 @[reducible]
 def borel : TopCat.{u} ⥤ MeasCat.{u} :=
   forget₂ TopCat.{u} MeasCat.{u}
+#align Borel borel
 

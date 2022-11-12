@@ -42,6 +42,7 @@ structure Filtration {Ω : Type _} (ι : Type _) [Preorder ι] (m : MeasurableSp
   seq : ι → MeasurableSpace Ω
   mono' : Monotone seq
   le' : ∀ i : ι, seq i ≤ m
+#align measure_theory.filtration MeasureTheory.Filtration
 
 variable {Ω β ι : Type _} {m : MeasurableSpace Ω}
 
@@ -54,28 +55,33 @@ variable [Preorder ι]
 
 protected theorem mono {i j : ι} (f : Filtration ι m) (hij : i ≤ j) : f i ≤ f j :=
   f.mono' hij
+#align measure_theory.filtration.mono MeasureTheory.Filtration.mono
 
 protected theorem le (f : Filtration ι m) (i : ι) : f i ≤ m :=
   f.le' i
+#align measure_theory.filtration.le MeasureTheory.Filtration.le
 
-@[ext]
+@[ext.1]
 protected theorem ext {f g : Filtration ι m} (h : (f : ι → MeasurableSpace Ω) = g) : f = g := by
   cases f
   cases g
   simp only
   exact h
+#align measure_theory.filtration.ext MeasureTheory.Filtration.ext
 
 variable (ι)
 
 /-- The constant filtration which is equal to `m` for all `i : ι`. -/
 def const (m' : MeasurableSpace Ω) (hm' : m' ≤ m) : Filtration ι m :=
   ⟨fun _ => m', monotone_const, fun _ => hm'⟩
+#align measure_theory.filtration.const MeasureTheory.Filtration.const
 
 variable {ι}
 
 @[simp]
 theorem const_apply {m' : MeasurableSpace Ω} {hm' : m' ≤ m} (i : ι) : const ι m' hm' i = m' :=
   rfl
+#align measure_theory.filtration.const_apply MeasureTheory.Filtration.const_apply
 
 instance : Inhabited (Filtration ι m) :=
   ⟨const ι m le_rfl⟩
@@ -98,6 +104,7 @@ instance : HasSup (Filtration ι m) :=
 @[norm_cast]
 theorem coe_fn_sup {f g : Filtration ι m} : ⇑(f ⊔ g) = f ⊔ g :=
   rfl
+#align measure_theory.filtration.coe_fn_sup MeasureTheory.Filtration.coe_fn_sup
 
 instance : HasInf (Filtration ι m) :=
   ⟨fun f g =>
@@ -108,6 +115,7 @@ instance : HasInf (Filtration ι m) :=
 @[norm_cast]
 theorem coe_fn_inf {f g : Filtration ι m} : ⇑(f ⊓ g) = f ⊓ g :=
   rfl
+#align measure_theory.filtration.coe_fn_inf MeasureTheory.Filtration.coe_fn_inf
 
 instance : HasSup (Filtration ι m) :=
   ⟨fun s =>
@@ -129,6 +137,7 @@ instance : HasSup (Filtration ι m) :=
 
 theorem Sup_def (s : Set (Filtration ι m)) (i : ι) : sup s i = sup ((fun f : Filtration ι m => f i) '' s) :=
   rfl
+#align measure_theory.filtration.Sup_def MeasureTheory.Filtration.Sup_def
 
 noncomputable instance : HasInf (Filtration ι m) :=
   ⟨fun s =>
@@ -155,6 +164,7 @@ noncomputable instance : HasInf (Filtration ι m) :=
 theorem Inf_def (s : Set (Filtration ι m)) (i : ι) :
     inf s i = if Set.Nonempty s then inf ((fun f : Filtration ι m => f i) '' s) else m :=
   rfl
+#align measure_theory.filtration.Inf_def MeasureTheory.Filtration.Inf_def
 
 noncomputable instance : CompleteLattice (Filtration ι m) where
   le := (· ≤ ·)
@@ -199,25 +209,31 @@ end Filtration
 theorem measurableSetOfFiltration [Preorder ι] {f : Filtration ι m} {s : Set Ω} {i : ι} (hs : measurable_set[f i] s) :
     measurable_set[m] s :=
   f.le i s hs
+#align measure_theory.measurable_set_of_filtration MeasureTheory.measurableSetOfFiltration
 
 /-- A measure is σ-finite with respect to filtration if it is σ-finite with respect
 to all the sub-σ-algebra of the filtration. -/
 class SigmaFiniteFiltration [Preorder ι] (μ : Measure Ω) (f : Filtration ι m) : Prop where
   SigmaFinite : ∀ i : ι, SigmaFinite (μ.trim (f.le i))
+#align measure_theory.sigma_finite_filtration MeasureTheory.SigmaFiniteFiltration
 
 instance sigmaFiniteOfSigmaFiniteFiltration [Preorder ι] (μ : Measure Ω) (f : Filtration ι m)
     [hf : SigmaFiniteFiltration μ f] (i : ι) : SigmaFinite (μ.trim (f.le i)) := by apply hf.sigma_finite
+#align measure_theory.sigma_finite_of_sigma_finite_filtration MeasureTheory.sigmaFiniteOfSigmaFiniteFiltration
 
 -- can't exact here
 instance (priority := 100) IsFiniteMeasure.sigmaFiniteFiltration [Preorder ι] (μ : Measure Ω) (f : Filtration ι m)
     [IsFiniteMeasure μ] : SigmaFiniteFiltration μ f :=
   ⟨fun n => by infer_instance⟩
+#align measure_theory.is_finite_measure.sigma_finite_filtration MeasureTheory.IsFiniteMeasure.sigmaFiniteFiltration
 
 /-- Given a integrable function `g`, the conditional expectations of `g` with respect to a
 filtration is uniformly integrable. -/
 theorem Integrable.uniformIntegrableCondexpFiltration [Preorder ι] {μ : Measure Ω} [IsFiniteMeasure μ]
     {f : Filtration ι m} {g : Ω → ℝ} (hg : Integrable g μ) : UniformIntegrable (fun i => μ[g|f i]) 1 μ :=
   hg.uniformIntegrableCondexp f.le
+#align
+  measure_theory.integrable.uniform_integrable_condexp_filtration MeasureTheory.Integrable.uniformIntegrableCondexpFiltration
 
 section OfSet
 
@@ -229,14 +245,17 @@ def filtrationOfSet {s : ι → Set Ω} (hsm : ∀ i, MeasurableSet (s i)) : Fil
   seq i := MeasurableSpace.generateFrom { t | ∃ j ≤ i, s j = t }
   mono' n m hnm := MeasurableSpace.generate_from_mono fun t ⟨k, hk₁, hk₂⟩ => ⟨k, hk₁.trans hnm, hk₂⟩
   le' n := MeasurableSpace.generate_from_le fun t ⟨k, hk₁, hk₂⟩ => hk₂ ▸ hsm k
+#align measure_theory.filtration_of_set MeasureTheory.filtrationOfSet
 
 theorem measurableSetFiltrationOfSet {s : ι → Set Ω} (hsm : ∀ i, measurable_set[m] (s i)) (i : ι) {j : ι} (hj : j ≤ i) :
     measurable_set[filtrationOfSet hsm i] (s j) :=
   MeasurableSpace.measurableSetGenerateFrom ⟨j, hj, rfl⟩
+#align measure_theory.measurable_set_filtration_of_set MeasureTheory.measurableSetFiltrationOfSet
 
 theorem measurableSetFiltrationOfSet' {s : ι → Set Ω} (hsm : ∀ n, measurable_set[m] (s n)) (i : ι) :
     measurable_set[filtrationOfSet hsm i] (s i) :=
   measurableSetFiltrationOfSet hsm i le_rfl
+#align measure_theory.measurable_set_filtration_of_set' MeasureTheory.measurableSetFiltrationOfSet'
 
 end OfSet
 
@@ -256,6 +275,7 @@ def natural (u : ι → Ω → β) (hum : ∀ i, StronglyMeasurable (u i)) : Fil
     refine' supr₂_le _
     rintro j hj s ⟨t, ht, rfl⟩
     exact (hum j).Measurable ht
+#align measure_theory.filtration.natural MeasureTheory.Filtration.natural
 
 section
 
@@ -293,6 +313,7 @@ theorem filtration_of_set_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : �
     exacts[measurable_set_empty _, MeasurableSet.univ, measurable_set_generate_from ⟨n, hn, rfl⟩,
       MeasurableSet.compl (measurable_set_generate_from ⟨n, hn, rfl⟩)]
     
+#align measure_theory.filtration.filtration_of_set_eq_natural MeasureTheory.Filtration.filtration_of_set_eq_natural
 
 end
 
@@ -313,14 +334,19 @@ noncomputable def limitProcess (f : ι → Ω → E) (ℱ : Filtration ι m)
   if h : ∃ g : Ω → E, strongly_measurable[⨆ n, ℱ n] g ∧ ∀ᵐ ω ∂μ, Tendsto (fun n => f n ω) atTop (𝓝 (g ω)) then
     Classical.choose h
   else 0
+#align measure_theory.filtration.limit_process MeasureTheory.Filtration.limitProcess
 
 theorem stronglyMeasurableLimitProcess : strongly_measurable[⨆ n, ℱ n] (limitProcess f ℱ μ) := by
   rw [limit_process]
   split_ifs with h h
   exacts[(Classical.choose_spec h).1, strongly_measurable_zero]
+#align
+  measure_theory.filtration.strongly_measurable_limit_process MeasureTheory.Filtration.stronglyMeasurableLimitProcess
 
 theorem stronglyMeasurableLimitProcess' : strongly_measurable[m] (limitProcess f ℱ μ) :=
   stronglyMeasurableLimitProcess.mono (Sup_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)
+#align
+  measure_theory.filtration.strongly_measurable_limit_process' MeasureTheory.Filtration.stronglyMeasurableLimitProcess'
 
 theorem memℒpLimitProcessOfSnormBdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _} [NormedAddCommGroup F] {ℱ : Filtration ℕ m}
     {f : ℕ → Ω → F} (hfm : ∀ n, AeStronglyMeasurable (f n) μ) (hbdd : ∀ n, snorm (f n) p μ ≤ R) :
@@ -337,6 +363,7 @@ theorem memℒpLimitProcessOfSnormBdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _
     
   · exact zero_mem_ℒp
     
+#align measure_theory.filtration.mem_ℒp_limit_process_of_snorm_bdd MeasureTheory.Filtration.memℒpLimitProcessOfSnormBdd
 
 end Limit
 

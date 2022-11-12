@@ -41,6 +41,7 @@ variable {R : Type _}
 /-- Discriminant of a quadratic -/
 def discrim [Ring R] (a b c : R) : R :=
   b ^ 2 - 4 * a * c
+#align discrim discrim
 
 variable [CommRing R] [IsDomain R] {a b c : R}
 
@@ -58,6 +59,7 @@ theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) 
     apply mul_left_cancel₀ ha
     linear_combination-h
     
+#align quadratic_eq_zero_iff_discrim_eq_sq quadratic_eq_zero_iff_discrim_eq_sq
 
 /-- A quadratic has no root if its discriminant has no square root. -/
 theorem quadratic_ne_zero_of_discrim_ne_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (h : ∀ s : R, discrim a b c ≠ s * s)
@@ -65,6 +67,7 @@ theorem quadratic_ne_zero_of_discrim_ne_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (
   intro h'
   rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, sq] at h'
   exact h _ h'
+#align quadratic_ne_zero_of_discrim_ne_sq quadratic_ne_zero_of_discrim_ne_sq
 
 end Ring
 
@@ -84,6 +87,7 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
     
   · constructor <;> intro h' <;> linear_combination h'
     
+#align quadratic_eq_zero_iff quadratic_eq_zero_iff
 
 /-- A quadratic has roots if its discriminant has square roots -/
 theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s * s) : ∃ x, a * x * x + b * x + c = 0 := by
@@ -91,12 +95,14 @@ theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s * 
   use (-b + s) / (2 * a)
   rw [quadratic_eq_zero_iff ha hs]
   simp
+#align exists_quadratic_eq_zero exists_quadratic_eq_zero
 
 /-- Root of a quadratic when its discriminant equals zero -/
 theorem quadratic_eq_zero_iff_of_discrim_eq_zero (ha : a ≠ 0) (h : discrim a b c = 0) (x : K) :
     a * x * x + b * x + c = 0 ↔ x = -b / (2 * a) := by
   have : discrim a b c = 0 * 0 := by rw [h, mul_zero]
   rw [quadratic_eq_zero_iff ha this, add_zero, sub_zero, or_self_iff]
+#align quadratic_eq_zero_iff_of_discrim_eq_zero quadratic_eq_zero_iff_of_discrim_eq_zero
 
 end Field
 
@@ -139,6 +145,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
     rw [this] at h
     rwa [← neg_nonneg]
     
+#align discrim_le_zero discrim_le_zero
 
 /-- If a polynomial of degree 2 is always positive, then its discriminant is negative,
 at least when the coefficient of the quadratic term is nonzero.
@@ -151,6 +158,7 @@ theorem discrim_lt_zero (ha : a ≠ 0) (h : ∀ x : K, 0 < a * x * x + b * x + c
   have : a * (-b / (2 * a)) * (-b / (2 * a)) + b * (-b / (2 * a)) + c = 0 := by
     rw [quadratic_eq_zero_iff_of_discrim_eq_zero ha h' (-b / (2 * a))]
   linarith
+#align discrim_lt_zero discrim_lt_zero
 
 end LinearOrderedField
 

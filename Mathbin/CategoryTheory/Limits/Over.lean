@@ -41,6 +41,8 @@ namespace CategoryTheory.Over
 
 instance has_colimit_of_has_colimit_comp_forget (F : J ⥤ Over X) [i : HasColimit (F ⋙ forget X)] : HasColimit F :=
   @CostructuredArrow.has_colimit _ _ _ _ i _
+#align
+  category_theory.over.has_colimit_of_has_colimit_comp_forget CategoryTheory.Over.has_colimit_of_has_colimit_comp_forget
 
 instance [HasColimitsOfShape J C] : HasColimitsOfShape J (Over X) where
 
@@ -49,6 +51,7 @@ instance [HasColimits C] : HasColimits (Over X) :=
 
 instance createsColimits : CreatesColimits (forget X) :=
   costructured_arrow.creates_colimits
+#align category_theory.over.creates_colimits CategoryTheory.Over.createsColimits
 
 -- We can automatically infer that the forgetful functor preserves and reflects colimits.
 example [HasColimits C] : PreservesColimits (forget X) :=
@@ -59,9 +62,11 @@ example : ReflectsColimits (forget X) :=
 
 theorem epi_left_of_epi [HasPushouts C] {f g : Over X} (h : f ⟶ g) [Epi h] : Epi h.left :=
   CostructuredArrow.epi_left_of_epi _
+#align category_theory.over.epi_left_of_epi CategoryTheory.Over.epi_left_of_epi
 
 theorem epi_iff_epi_left [HasPushouts C] {f g : Over X} (h : f ⟶ g) : Epi h ↔ Epi h.left :=
   CostructuredArrow.epi_iff_epi_left _
+#align category_theory.over.epi_iff_epi_left CategoryTheory.Over.epi_iff_epi_left
 
 section
 
@@ -75,6 +80,7 @@ by pulling back a morphism along `f`. -/
 def pullback {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
   obj g := Over.mk (pullback.snd : pullback g.Hom f ⟶ X)
   map g h k := Over.homMk (pullback.lift (pullback.fst ≫ k.left) pullback.snd (by simp [pullback.condition])) (by tidy)
+#align category_theory.over.pullback CategoryTheory.Over.pullback
 
 /-- `over.map f` is left adjoint to `over.pullback f`. -/
 def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
@@ -98,18 +104,22 @@ def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
             dsimp
             rw [pullback.lift_snd, ← over.w Y]
             rfl } }
+#align category_theory.over.map_pullback_adj CategoryTheory.Over.mapPullbackAdj
 
 /-- pullback (𝟙 A) : over A ⥤ over A is the identity functor. -/
 def pullbackId {A : C} : pullback (𝟙 A) ≅ 𝟭 _ :=
   Adjunction.rightAdjointUniq (mapPullbackAdj _) (Adjunction.id.ofNatIsoLeft Over.mapId.symm)
+#align category_theory.over.pullback_id CategoryTheory.Over.pullbackId
 
 /-- pullback commutes with composition (up to natural isomorphism). -/
 def pullbackComp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : pullback (f ≫ g) ≅ pullback g ⋙ pullback f :=
   Adjunction.rightAdjointUniq (mapPullbackAdj _)
     (((mapPullbackAdj _).comp (mapPullbackAdj _)).ofNatIsoLeft (Over.mapComp _ _).symm)
+#align category_theory.over.pullback_comp CategoryTheory.Over.pullbackComp
 
 instance pullbackIsRightAdjoint {A B : C} (f : A ⟶ B) : IsRightAdjoint (pullback f) :=
   ⟨_, mapPullbackAdj f⟩
+#align category_theory.over.pullback_is_right_adjoint CategoryTheory.Over.pullbackIsRightAdjoint
 
 end
 
@@ -119,6 +129,7 @@ namespace CategoryTheory.Under
 
 instance has_limit_of_has_limit_comp_forget (F : J ⥤ Under X) [i : HasLimit (F ⋙ forget X)] : HasLimit F :=
   @StructuredArrow.has_limit _ _ _ _ i _
+#align category_theory.under.has_limit_of_has_limit_comp_forget CategoryTheory.Under.has_limit_of_has_limit_comp_forget
 
 instance [HasLimitsOfShape J C] : HasLimitsOfShape J (Under X) where
 
@@ -127,12 +138,15 @@ instance [HasLimits C] : HasLimits (Under X) :=
 
 theorem mono_right_of_mono [HasPullbacks C] {f g : Under X} (h : f ⟶ g) [Mono h] : Mono h.right :=
   StructuredArrow.mono_right_of_mono _
+#align category_theory.under.mono_right_of_mono CategoryTheory.Under.mono_right_of_mono
 
 theorem mono_iff_mono_right [HasPullbacks C] {f g : Under X} (h : f ⟶ g) : Mono h ↔ Mono h.right :=
   StructuredArrow.mono_iff_mono_right _
+#align category_theory.under.mono_iff_mono_right CategoryTheory.Under.mono_iff_mono_right
 
 instance createsLimits : CreatesLimits (forget X) :=
   structured_arrow.creates_limits
+#align category_theory.under.creates_limits CategoryTheory.Under.createsLimits
 
 -- We can automatically infer that the forgetful functor preserves and reflects limits.
 example [HasLimits C] : PreservesLimits (forget X) :=
@@ -151,6 +165,7 @@ by pushing a morphism forward along `f`. -/
 def pushout {X Y : C} (f : X ⟶ Y) : Under X ⥤ Under Y where
   obj g := Under.mk (pushout.inr : Y ⟶ pushout g.Hom f)
   map g h k := Under.homMk (pushout.desc (k.right ≫ pushout.inl) pushout.inr (by simp [← pushout.condition])) (by tidy)
+#align category_theory.under.pushout CategoryTheory.Under.pushout
 
 end
 

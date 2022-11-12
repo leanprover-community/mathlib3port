@@ -41,6 +41,7 @@ by a constant `< 2` when `∥x - y∥` is uniformly bounded below by a positive 
 See also `uniform_convex_space.of_uniform_convex_closed_unit_ball`. -/
 class UniformConvexSpace (E : Type _) [SeminormedAddCommGroup E] : Prop where
   uniform_convex : ∀ ⦃ε : ℝ⦄, 0 < ε → ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ∥x∥ = 1 → ∀ ⦃y⦄, ∥y∥ = 1 → ε ≤ ∥x - y∥ → ∥x + y∥ ≤ 2 - δ
+#align uniform_convex_space UniformConvexSpace
 
 variable {E : Type _}
 
@@ -51,6 +52,7 @@ variable (E) [SeminormedAddCommGroup E] [UniformConvexSpace E] {ε : ℝ}
 theorem exists_forall_sphere_dist_add_le_two_sub (hε : 0 < ε) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ∥x∥ = 1 → ∀ ⦃y⦄, ∥y∥ = 1 → ε ≤ ∥x - y∥ → ∥x + y∥ ≤ 2 - δ :=
   UniformConvexSpace.uniform_convex hε
+#align exists_forall_sphere_dist_add_le_two_sub exists_forall_sphere_dist_add_le_two_sub
 
 variable [NormedSpace ℝ E]
 
@@ -102,6 +104,7 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
       rw [← mul_div_cancel' δ three_ne_zero]
       exact mul_le_mul_of_nonneg_left (min_le_of_right_le <| min_le_right _ _) three_pos.le
     
+#align exists_forall_closed_ball_dist_add_le_two_sub exists_forall_closed_ball_dist_add_le_two_sub
 
 theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : ℝ) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ∥x∥ ≤ r → ∀ ⦃y⦄, ∥y∥ ≤ r → ε ≤ ∥x - y∥ → ∥x + y∥ ≤ 2 * r - δ := by
@@ -117,6 +120,7 @@ theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : �
   simp_rw [← smul_add, ← smul_sub, norm_smul_of_nonneg (inv_nonneg.2 hr.le), ← div_eq_inv_mul, div_le_div_right hr,
     div_le_iff hr, sub_mul] at this
   exact this hxy
+#align exists_forall_closed_ball_dist_add_le_two_mul_sub exists_forall_closed_ball_dist_add_le_two_mul_sub
 
 end SeminormedAddCommGroup
 
@@ -128,4 +132,5 @@ instance (priority := 100) UniformConvexSpace.toStrictConvexSpace : StrictConvex
     obtain ⟨δ, hδ, h⟩ := exists_forall_closed_ball_dist_add_le_two_sub E (norm_sub_pos_iff.2 hxy)
     rw [← smul_add, norm_smul_of_nonneg one_half_pos.le, ← lt_div_iff' one_half_pos, one_div_one_div]
     exact (h hx hy le_rfl).trans_lt (sub_lt_self _ hδ)
+#align uniform_convex_space.to_strict_convex_space UniformConvexSpace.toStrictConvexSpace
 

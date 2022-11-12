@@ -27,6 +27,7 @@ variable {α β : Type _}
 structure PointedCat : Type (u + 1) where
   x : Type u
   point : X
+#align Pointed PointedCat
 
 namespace PointedCat
 
@@ -38,10 +39,12 @@ attribute [protected] PointedCat.X
 /-- Turns a point into a pointed type. -/
 def of {X : Type _} (point : X) : PointedCat :=
   ⟨X, point⟩
+#align Pointed.of PointedCat.of
 
 @[simp]
 theorem coe_of {X : Type _} (point : X) : ↥(of point) = X :=
   rfl
+#align Pointed.coe_of PointedCat.coe_of
 
 alias of ← _root_.prod.Pointed
 
@@ -49,10 +52,11 @@ instance : Inhabited PointedCat :=
   ⟨of ((), ())⟩
 
 /-- Morphisms in `Pointed`. -/
-@[ext]
+@[ext.1]
 protected structure Hom (X Y : PointedCat.{u}) : Type u where
   toFun : X → Y
   map_point : to_fun X.point = Y.point
+#align Pointed.hom PointedCat.Hom
 
 namespace Hom
 
@@ -60,6 +64,7 @@ namespace Hom
 @[simps]
 def id (X : PointedCat) : Hom X X :=
   ⟨id, rfl⟩
+#align Pointed.hom.id PointedCat.Hom.id
 
 instance (X : PointedCat) : Inhabited (Hom X X) :=
   ⟨id X⟩
@@ -68,6 +73,7 @@ instance (X : PointedCat) : Inhabited (Hom X X) :=
 @[simps]
 def comp {X Y Z : PointedCat.{u}} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
   ⟨g.toFun ∘ f.toFun, by rw [Function.comp_apply, f.map_point, g.map_point]⟩
+#align Pointed.hom.comp PointedCat.Hom.comp
 
 end Hom
 
@@ -78,10 +84,12 @@ instance largeCategory : LargeCategory PointedCat where
   id_comp' _ _ _ := Hom.ext _ _ rfl
   comp_id' _ _ _ := Hom.ext _ _ rfl
   assoc' _ _ _ _ _ _ _ := Hom.ext _ _ rfl
+#align Pointed.large_category PointedCat.largeCategory
 
 instance concreteCategory : ConcreteCategory PointedCat where
   forget := { obj := PointedCat.X, map := @Hom.toFun }
   forget_faithful := ⟨@Hom.ext⟩
+#align Pointed.concrete_category PointedCat.concreteCategory
 
 /-- Constructs a isomorphism between pointed types from an equivalence that preserves the point
 between them. -/
@@ -91,6 +99,7 @@ def Iso.mk {α β : PointedCat} (e : α ≃ β) (he : e α.point = β.point) : �
   inv := ⟨e.symm, e.symm_apply_eq.2 he.symm⟩
   hom_inv_id' := PointedCat.Hom.ext _ _ e.symm_comp_self
   inv_hom_id' := PointedCat.Hom.ext _ _ e.self_comp_symm
+#align Pointed.iso.mk PointedCat.Iso.mk
 
 end PointedCat
 
@@ -101,6 +110,7 @@ def typeToPointed : Type u ⥤ PointedCat.{u} where
   map X Y f := ⟨Option.map f, rfl⟩
   map_id' X := PointedCat.Hom.ext _ _ Option.map_id
   map_comp' X Y Z f g := PointedCat.Hom.ext _ _ (Option.map_comp_map _ _).symm
+#align Type_to_Pointed typeToPointed
 
 /-- `Type_to_Pointed` is the free functor. -/
 def typeToPointedForgetAdjunction : typeToPointed ⊣ forget PointedCat :=
@@ -116,4 +126,5 @@ def typeToPointedForgetAdjunction : typeToPointed ⊣ forget PointedCat :=
       hom_equiv_naturality_left_symm' := fun X' X Y f g => by
         ext
         cases x <;> rfl }
+#align Type_to_Pointed_forget_adjunction typeToPointedForgetAdjunction
 

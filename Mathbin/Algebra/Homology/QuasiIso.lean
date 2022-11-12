@@ -35,6 +35,7 @@ variable {c : ComplexShape ι} {C D E : HomologicalComplex V c}
 -/
 class QuasiIso (f : C ⟶ D) : Prop where
   IsIso : ∀ i, IsIso ((homologyFunctor V c i).map f)
+#align quasi_iso QuasiIso
 
 attribute [instance] QuasiIso.is_iso
 
@@ -42,17 +43,21 @@ instance (priority := 100) quasi_iso_of_iso (f : C ⟶ D) [IsIso f] :
     QuasiIso f where IsIso i := by
     change is_iso ((homologyFunctor V c i).mapIso (as_iso f)).Hom
     infer_instance
+#align quasi_iso_of_iso quasi_iso_of_iso
 
 instance quasi_iso_comp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] :
     QuasiIso (f ≫ g) where IsIso i := by
     rw [functor.map_comp]
     infer_instance
+#align quasi_iso_comp quasi_iso_comp
 
 theorem quasi_iso_of_comp_left (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso (f ≫ g)] : QuasiIso g :=
   { IsIso := fun i => IsIso.of_is_iso_fac_left ((homologyFunctor V c i).map_comp f g).symm }
+#align quasi_iso_of_comp_left quasi_iso_of_comp_left
 
 theorem quasi_iso_of_comp_right (f : C ⟶ D) (g : D ⟶ E) [QuasiIso g] [QuasiIso (f ≫ g)] : QuasiIso f :=
   { IsIso := fun i => IsIso.of_is_iso_fac_right ((homologyFunctor V c i).map_comp f g).symm }
+#align quasi_iso_of_comp_right quasi_iso_of_comp_right
 
 /-- An homotopy equivalence is a quasi-isomorphism. -/
 theorem HomotopyEquiv.to_quasi_iso {W : Type _} [Category W] [Preadditive W] [HasCokernels W] [HasImages W]
@@ -63,4 +68,5 @@ theorem HomotopyEquiv.to_quasi_iso {W : Type _} [Category W] [Preadditive W] [Ha
     simp only [← functor.map_comp, ← (homologyFunctor W c i).map_id]
     constructor <;> apply homology_map_eq_of_homotopy
     exacts[e.homotopy_hom_inv_id, e.homotopy_inv_hom_id]⟩
+#align homotopy_equiv.to_quasi_iso HomotopyEquiv.to_quasi_iso
 

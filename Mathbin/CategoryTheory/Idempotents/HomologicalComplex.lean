@@ -34,14 +34,20 @@ variable {P Q : Karoubi (HomologicalComplex C c)} (f : P ⟶ Q) (n : ι)
 @[simp, reassoc]
 theorem p_comp_d : P.p.f n ≫ f.f.f n = f.f.f n :=
   HomologicalComplex.congr_hom (p_comp f) n
+#align
+  category_theory.idempotents.karoubi.homological_complex.p_comp_d CategoryTheory.Idempotents.Karoubi.HomologicalComplex.p_comp_d
 
 @[simp, reassoc]
 theorem comp_p_d : f.f.f n ≫ Q.p.f n = f.f.f n :=
   HomologicalComplex.congr_hom (comp_p f) n
+#align
+  category_theory.idempotents.karoubi.homological_complex.comp_p_d CategoryTheory.Idempotents.Karoubi.HomologicalComplex.comp_p_d
 
 @[reassoc]
 theorem p_comm_f : P.p.f n ≫ f.f.f n = f.f.f n ≫ Q.p.f n :=
   HomologicalComplex.congr_hom (p_comm f) n
+#align
+  category_theory.idempotents.karoubi.homological_complex.p_comm_f CategoryTheory.Idempotents.Karoubi.HomologicalComplex.p_comm_f
 
 end HomologicalComplex
 

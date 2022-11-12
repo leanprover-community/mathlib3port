@@ -123,6 +123,7 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       exact hat hj
       
     
+#align ideal.supr_infi_eq_top_iff_pairwise Ideal.supr_infi_eq_top_iff_pairwise
 
 end Ideal
 

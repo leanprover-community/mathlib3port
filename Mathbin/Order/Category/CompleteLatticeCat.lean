@@ -20,6 +20,7 @@ open CategoryTheory
 /-- The category of complete lattices. -/
 def CompleteLatticeCat :=
   Bundled CompleteLattice
+#align CompleteLattice CompleteLatticeCat
 
 namespace CompleteLatticeCat
 
@@ -32,10 +33,12 @@ instance (X : CompleteLatticeCat) : CompleteLattice X :=
 /-- Construct a bundled `CompleteLattice` from a `complete_lattice`. -/
 def of (α : Type _) [CompleteLattice α] : CompleteLatticeCat :=
   Bundled.of α
+#align CompleteLattice.of CompleteLatticeCat.of
 
 @[simp]
 theorem coe_of (α : Type _) [CompleteLattice α] : ↥(of α) = α :=
   rfl
+#align CompleteLattice.coe_of CompleteLatticeCat.coe_of
 
 instance : Inhabited CompleteLatticeCat :=
   ⟨of PUnit⟩
@@ -55,6 +58,7 @@ instance : ConcreteCategory CompleteLatticeCat :=
 instance hasForgetToBoundedLattice : HasForget₂ CompleteLatticeCat BoundedLatticeCat where
   forget₂ := { obj := fun X => BoundedLatticeCat.of X, map := fun X Y => CompleteLatticeHom.toBoundedLatticeHom }
   forget_comp := rfl
+#align CompleteLattice.has_forget_to_BoundedLattice CompleteLatticeCat.hasForgetToBoundedLattice
 
 /-- Constructs an isomorphism of complete lattices from an order isomorphism between them. -/
 @[simps]
@@ -67,18 +71,21 @@ def Iso.mk {α β : CompleteLatticeCat.{u}} (e : α ≃o β) : α ≅ β where
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
+#align CompleteLattice.iso.mk CompleteLatticeCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : CompleteLatticeCat ⥤ CompleteLatticeCat where
   obj X := of Xᵒᵈ
   map X Y := CompleteLatticeHom.dual
+#align CompleteLattice.dual CompleteLatticeCat.dual
 
 /-- The equivalence between `CompleteLattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : CompleteLatticeCat ≌ CompleteLatticeCat :=
   Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+#align CompleteLattice.dual_equiv CompleteLatticeCat.dualEquiv
 
 end CompleteLatticeCat
 
@@ -86,4 +93,5 @@ theorem CompleteLattice_dual_comp_forget_to_BoundedLattice :
     CompleteLatticeCat.dual ⋙ forget₂ CompleteLatticeCat BoundedLatticeCat =
       forget₂ CompleteLatticeCat BoundedLatticeCat ⋙ BoundedLatticeCat.dual :=
   rfl
+#align CompleteLattice_dual_comp_forget_to_BoundedLattice CompleteLattice_dual_comp_forget_to_BoundedLattice
 

@@ -36,10 +36,12 @@ sense of `ω`-complete partial orders, which excludes the example because it is 
 (making the input argument less defined can make `f` more defined). -/
 class LawfulFix (α : Type _) [OmegaCompletePartialOrder α] extends HasFix α where
   fix_eq : ∀ {f : α →o α}, Continuous f → HasFix.fix f = f (HasFix.fix f)
+#align lawful_fix LawfulFix
 
 theorem LawfulFix.fix_eq' {α} [OmegaCompletePartialOrder α] [LawfulFix α] {f : α → α} (hf : Continuous' f) :
     HasFix.fix f = f (HasFix.fix f) :=
   LawfulFix.fix_eq (hf.to_bundled _)
+#align lawful_fix.fix_eq' LawfulFix.fix_eq'
 
 namespace Part
 
@@ -56,6 +58,7 @@ theorem approx_mono' {i : ℕ} : Fix.approx f i ≤ Fix.approx f (succ i) := by
   intro
   apply f.monotone
   apply i_ih
+#align part.fix.approx_mono' Part.fix.approx_mono'
 
 theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j := by
   induction' j with j ih
@@ -66,6 +69,7 @@ theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j 
   · exact le_rfl
     
   exact le_trans (ih ‹_›) (approx_mono' f)
+#align part.fix.approx_mono Part.fix.approx_mono
 
 theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx f i a := by
   by_cases h₀:∃ i : ℕ, (approx f i a).Dom
@@ -92,10 +96,12 @@ theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx
     intro
     apply h₀
     
+#align part.fix.mem_iff Part.fix.mem_iff
 
 theorem approx_le_fix (i : ℕ) : approx f i ≤ Part.fix f := fun a b hh => by
   rw [mem_iff f]
   exact ⟨_, hh⟩
+#align part.fix.approx_le_fix Part.fix.approx_le_fix
 
 theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x := by
   by_cases hh:∃ i b, b ∈ approx f i x
@@ -113,20 +119,24 @@ theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x := 
     cases' h' with i h'
     cases hh _ _ h'
     
+#align part.fix.exists_fix_le_approx Part.fix.exists_fix_le_approx
 
 include f
 
 /-- The series of approximations of `fix f` (see `approx`) as a `chain` -/
 def approxChain : Chain (∀ a, Part <| β a) :=
   ⟨approx f, approx_mono f⟩
+#align part.fix.approx_chain Part.fix.approxChain
 
 theorem le_f_of_mem_approx {x} : x ∈ approxChain f → x ≤ f x := by
   simp only [(· ∈ ·), forall_exists_index]
   rintro i rfl
   apply approx_mono'
+#align part.fix.le_f_of_mem_approx Part.fix.le_f_of_mem_approx
 
 theorem approx_mem_approx_chain {i} : approx f i ∈ approxChain f :=
   Stream.mem_of_nth_eq rfl
+#align part.fix.approx_mem_approx_chain Part.fix.approx_mem_approx_chain
 
 end Fix
 
@@ -144,18 +154,12 @@ open Nat
 
 open Nat.Upto OmegaCompletePartialOrder
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr approx f i.succ x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) := by
   apply le_antisymm
   · intro x
     cases' exists_fix_le_approx f x with i hx
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr approx f i.succ x]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
-    · trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    trans approx f i.succ x
+    · trans
       apply hx
       apply approx_mono' f
       
@@ -168,9 +172,8 @@ theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) := by
     intro y x
     apply approx_le_fix f
     
+#align part.fix_eq_ωSup Part.fix_eq_ωSup
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr f X]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := by
   rw [fix_eq_ωSup f]
   apply ωSup_le _ _ _
@@ -179,10 +182,10 @@ theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := 
   induction i
   dsimp [fix.approx]
   apply bot_le
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity' #[[expr f X]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  trans f X
   apply f.monotone i_ih
   apply hX
+#align part.fix_le Part.fix_le
 
 variable {f} (hc : Continuous f)
 
@@ -203,6 +206,7 @@ theorem fix_eq : Part.fix f = f (Part.fix f) := by
     exists i.succ
     rfl
     
+#align part.fix_eq Part.fix_eq
 
 end Part
 
@@ -213,6 +217,7 @@ namespace Part
 def toUnitMono (f : Part α →o Part α) : (Unit → Part α) →o Unit → Part α where
   toFun x u := f (x u)
   monotone' x y (h : x ≤ y) u := f.Monotone <| h u
+#align part.to_unit_mono Part.toUnitMono
 
 theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous (toUnitMono f)
   | c => by
@@ -220,6 +225,7 @@ theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous
     dsimp [OmegaCompletePartialOrder.ωSup]
     erw [hc, chain.map_comp]
     rfl
+#align part.to_unit_cont Part.to_unit_cont
 
 instance : LawfulFix (Part α) :=
   ⟨fun f hc => show Part.fix (toUnitMono f) () = _ by rw [Part.fix_eq (to_unit_cont f hc)] <;> rfl⟩
@@ -244,12 +250,14 @@ variable (α β γ)
 def monotoneCurry [∀ x y, Preorder <| γ x y] : (∀ x : Σa, β a, γ x.1 x.2) →o ∀ (a) (b : β a), γ a b where
   toFun := curry
   monotone' x y h a b := h ⟨a, b⟩
+#align pi.monotone_curry Pi.monotoneCurry
 
 /-- `sigma.uncurry` as a monotone function. -/
 @[simps]
 def monotoneUncurry [∀ x y, Preorder <| γ x y] : (∀ (a) (b : β a), γ a b) →o ∀ x : Σa, β a, γ x.1 x.2 where
   toFun := uncurry
   monotone' x y h a := h a.1 a.2
+#align pi.monotone_uncurry Pi.monotoneUncurry
 
 variable [∀ x y, OmegaCompletePartialOrder <| γ x y]
 
@@ -260,12 +268,14 @@ theorem continuous_curry : continuous <| monotoneCurry α β γ := fun c => by
   dsimp [curry, ωSup]
   rw [map_comp, map_comp]
   rfl
+#align pi.continuous_curry Pi.continuous_curry
 
 theorem continuous_uncurry : continuous <| monotoneUncurry α β γ := fun c => by
   ext (x y)
   dsimp [uncurry, ωSup]
   rw [map_comp, map_comp]
   rfl
+#align pi.continuous_uncurry Pi.continuous_uncurry
 
 end Monotone
 
@@ -284,6 +294,7 @@ variable (hc : Continuous f)
 
 theorem uncurry_curry_continuous : continuous <| (monotoneUncurry α β γ).comp <| f.comp <| monotoneCurry α β γ :=
   continuous_comp _ _ (continuous_comp _ _ (continuous_curry _ _ _) hc) (continuous_uncurry _ _ _)
+#align pi.uncurry_curry_continuous Pi.uncurry_curry_continuous
 
 end Curry
 
@@ -294,6 +305,7 @@ instance Pi.lawfulFix' [LawfulFix <| ∀ x : Sigma β, γ x.1 x.2] :
     lhs
     erw [LawfulFix.fix_eq (uncurry_curry_continuous hc)]
     rfl
+#align pi.pi.lawful_fix' Pi.Pi.lawfulFix'
 
 end Pi
 

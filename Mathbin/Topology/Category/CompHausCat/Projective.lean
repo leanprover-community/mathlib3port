@@ -45,6 +45,7 @@ instance projective_ultrafilter (X : Type _) :
     simp only [forget_map_eq_coe, ContinuousMap.coe_mk, coe_comp]
     convert dense_range_pure.equalizer (g.continuous.comp hh) f.continuous _
     rw [comp.assoc, ultrafilter_extend_extends, ← comp.assoc, hg'.comp_eq_id, comp.left_id]
+#align CompHaus.projective_ultrafilter CompHausCat.projective_ultrafilter
 
 /-- For any compact Hausdorff space `X`,
   the natural map `ultrafilter X → X` is a projective presentation. -/
@@ -55,6 +56,7 @@ def projectivePresentation (X : CompHausCat) : ProjectivePresentation X where
   Epi :=
     (ConcreteCategory.epi_of_surjective _) fun x =>
       ⟨(pure x : Ultrafilter X), congr_fun (ultrafilter_extend_extends (𝟙 X)) x⟩
+#align CompHaus.projective_presentation CompHausCat.projectivePresentation
 
 instance : EnoughProjectives CompHausCat where presentation X := ⟨projectivePresentation X⟩
 

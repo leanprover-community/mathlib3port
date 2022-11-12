@@ -37,6 +37,7 @@ variable {α : Type _}
 separated by a clopen upper set. Compactness is often assumed, but we do not include it here. -/
 class PriestleySpace (α : Type _) [Preorder α] [TopologicalSpace α] where
   priestley {x y : α} : ¬x ≤ y → ∃ U : Set α, IsClopen U ∧ IsUpperSet U ∧ x ∈ U ∧ y ∉ U
+#align priestley_space PriestleySpace
 
 variable [TopologicalSpace α]
 
@@ -46,10 +47,12 @@ variable [Preorder α] [PriestleySpace α] {x y : α}
 
 theorem exists_clopen_upper_of_not_le : ¬x ≤ y → ∃ U : Set α, IsClopen U ∧ IsUpperSet U ∧ x ∈ U ∧ y ∉ U :=
   PriestleySpace.priestley
+#align exists_clopen_upper_of_not_le exists_clopen_upper_of_not_le
 
 theorem exists_clopen_lower_of_not_le (h : ¬x ≤ y) : ∃ U : Set α, IsClopen U ∧ IsLowerSet U ∧ x ∉ U ∧ y ∈ U :=
   let ⟨U, hU, hU', hx, hy⟩ := exists_clopen_upper_of_not_le h
   ⟨Uᶜ, hU.compl, hU'.compl, not_not.2 hx, hy⟩
+#align exists_clopen_lower_of_not_le exists_clopen_lower_of_not_le
 
 end Preorder
 
@@ -65,12 +68,14 @@ theorem exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
   · obtain ⟨U, hU, hU', hy, hx⟩ := exists_clopen_lower_of_not_le h
     exact ⟨U, hU, Or.inr hU', hx, hy⟩
     
+#align exists_clopen_upper_or_lower_of_ne exists_clopen_upper_or_lower_of_ne
 
 -- See note [lower instance priority]
 instance (priority := 100) PriestleySpace.toT2Space : T2Space α :=
   ⟨fun x y h =>
     let ⟨U, hU, _, hx, hy⟩ := exists_clopen_upper_or_lower_of_ne h
-    ⟨U, Uᶜ, hU.IsOpen, hU.compl.IsOpen, hx, hy, disjointComplRight⟩⟩
+    ⟨U, Uᶜ, hU.IsOpen, hU.compl.IsOpen, hx, hy, disjoint_compl_right⟩⟩
+#align priestley_space.to_t2_space PriestleySpace.toT2Space
 
 end PartialOrder
 

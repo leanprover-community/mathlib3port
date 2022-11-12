@@ -81,6 +81,7 @@ theorem decomposition_Q (n q : ℕ) :
         
       
     
+#align algebraic_topology.dold_kan.decomposition_Q AlgebraicTopology.DoldKan.decomposition_Q
 
 variable (X)
 
@@ -89,10 +90,11 @@ the proof that `N₁ : simplicial_object C ⥤ karoubi (chain_complex C ℕ))`
 reflects isomorphisms. The fields are the data that are needed in order to
 construct a morphism `X _[n+1] ⟶ Z` (see `φ`) using the decomposition of the
 identity given by `decomposition_Q n (n+1)`. -/
-@[ext, nolint has_nonempty_instance]
+@[ext.1, nolint has_nonempty_instance]
 structure MorphComponents (n : ℕ) (Z : C) where
   a : X _[n + 1] ⟶ Z
   b : Fin (n + 1) → (X _[n] ⟶ Z)
+#align algebraic_topology.dold_kan.morph_components AlgebraicTopology.DoldKan.MorphComponents
 
 namespace MorphComponents
 
@@ -101,6 +103,7 @@ variable {X} {n : ℕ} {Z Z' : C} (f : MorphComponents X n Z) (g : X' ⟶ X) (h 
 /-- The morphism `X _[n+1] ⟶ Z ` associated to `f : morph_components X n Z`. -/
 def φ {Z : C} (f : MorphComponents X n Z) : X _[n + 1] ⟶ Z :=
   pInfty.f (n + 1) ≫ f.a + ∑ i : Fin (n + 1), (p i).f (n + 1) ≫ X.δ i.rev.succ ≫ f.b i.rev
+#align algebraic_topology.dold_kan.morph_components.φ AlgebraicTopology.DoldKan.MorphComponents.φ
 
 variable (X n)
 
@@ -110,6 +113,7 @@ variable (X n)
 def id : MorphComponents X n (X _[n + 1]) where
   a := pInfty.f (n + 1)
   b i := X.σ i
+#align algebraic_topology.dold_kan.morph_components.id AlgebraicTopology.DoldKan.MorphComponents.id
 
 @[simp]
 theorem id_φ : (id X n).φ = 𝟙 _ := by
@@ -121,6 +125,7 @@ theorem id_φ : (id X n).φ = 𝟙 _ := by
     ext i
     simpa only [Finset.mem_univ, Finset.mem_filter, true_and_iff, true_iff_iff] using Fin.is_lt i
     
+#align algebraic_topology.dold_kan.morph_components.id_φ AlgebraicTopology.DoldKan.MorphComponents.id_φ
 
 variable {X n}
 
@@ -129,17 +134,20 @@ variable {X n}
 def postComp : MorphComponents X n Z' where
   a := f.a ≫ h
   b i := f.b i ≫ h
+#align algebraic_topology.dold_kan.morph_components.post_comp AlgebraicTopology.DoldKan.MorphComponents.postComp
 
 @[simp]
 theorem post_comp_φ : (f.postComp h).φ = f.φ ≫ h := by
   unfold φ post_comp
   simp only [add_comp, sum_comp, assoc]
+#align algebraic_topology.dold_kan.morph_components.post_comp_φ AlgebraicTopology.DoldKan.MorphComponents.post_comp_φ
 
 /-- A `morph_components` can be precomposed with a morphism of simplicial objects. -/
 @[simps]
 def preComp : MorphComponents X' n Z where
   a := g.app (op [n + 1]) ≫ f.a
   b i := g.app (op [n]) ≫ f.b i
+#align algebraic_topology.dold_kan.morph_components.pre_comp AlgebraicTopology.DoldKan.MorphComponents.preComp
 
 @[simp]
 theorem pre_comp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ := by
@@ -150,6 +158,7 @@ theorem pre_comp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ := by
     
   · simp only [comp_sum, P_f_naturality_assoc, simplicial_object.δ_naturality_assoc]
     
+#align algebraic_topology.dold_kan.morph_components.pre_comp_φ AlgebraicTopology.DoldKan.MorphComponents.pre_comp_φ
 
 end MorphComponents
 

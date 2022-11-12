@@ -44,12 +44,14 @@ theorem is_unit_iff_not_dvd_char_of_ring_char_ne_zero (R : Type _) [CommRing R] 
     rw [hch, mul_zero, add_zero, mul_comm] at hab
     exact is_unit_of_mul_eq_one (p : R) a hab
     
+#align is_unit_iff_not_dvd_char_of_ring_char_ne_zero is_unit_iff_not_dvd_char_of_ring_char_ne_zero
 
 /-- A prime `p` is a unit in a finite commutative ring `R`
 iff it does not divide the characteristic. -/
 theorem is_unit_iff_not_dvd_char (R : Type _) [CommRing R] (p : ℕ) [Fact p.Prime] [Finite R] :
     IsUnit (p : R) ↔ ¬p ∣ ringChar R :=
   is_unit_iff_not_dvd_char_of_ring_char_ne_zero R p <| CharP.char_ne_zero_of_finite R (ringChar R)
+#align is_unit_iff_not_dvd_char is_unit_iff_not_dvd_char
 
 /-- The prime divisors of the characteristic of a finite commutative ring are exactly
 the prime divisors of its cardinality. -/
@@ -70,10 +72,12 @@ theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : �
   apply_fun (· * ·) u  at hr₁
   rw [mul_zero, ← mul_assoc, hu, one_mul] at hr₁
   exact mt add_monoid.order_of_eq_one_iff.mpr (ne_of_eq_of_ne hr (Nat.Prime.ne_one (Fact.out p.prime))) hr₁
+#align prime_dvd_char_iff_dvd_card prime_dvd_char_iff_dvd_card
 
 /-- A prime that does not divide the cardinality of a finite commutative ring `R`
 is a unit in `R`. -/
 theorem not_is_unit_prime_of_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : ℕ) [Fact p.Prime]
     (hp : p ∣ Fintype.card R) : ¬IsUnit (p : R) :=
   mt (is_unit_iff_not_dvd_char R p).mp (not_not.mpr ((prime_dvd_char_iff_dvd_card p).mpr hp))
+#align not_is_unit_prime_of_dvd_card not_is_unit_prime_of_dvd_card
 

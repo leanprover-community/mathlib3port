@@ -31,6 +31,7 @@ namespace TopologicalSpace
 structure Closeds (α : Type _) [TopologicalSpace α] where
   Carrier : Set α
   closed' : IsClosed carrier
+#align topological_space.closeds TopologicalSpace.Closeds
 
 namespace Closeds
 
@@ -45,21 +46,26 @@ instance : SetLike (Closeds α) α where
 
 theorem closed (s : Closeds α) : IsClosed (s : Set α) :=
   s.closed'
+#align topological_space.closeds.closed TopologicalSpace.Closeds.closed
 
-@[ext]
+@[ext.1]
 protected theorem ext {s t : Closeds α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
+#align topological_space.closeds.ext TopologicalSpace.Closeds.ext
 
 @[simp]
 theorem coe_mk (s : Set α) (h) : (mk s h : Set α) = s :=
   rfl
+#align topological_space.closeds.coe_mk TopologicalSpace.Closeds.coe_mk
 
 /-- The closure of a set, as an element of `closeds`. -/
 protected def closure (s : Set α) : Closeds α :=
   ⟨Closure s, isClosedClosure⟩
+#align topological_space.closeds.closure TopologicalSpace.Closeds.closure
 
 theorem gc : GaloisConnection Closeds.closure (coe : Closeds α → Set α) := fun s U =>
   ⟨subset_closure.trans, fun h => closure_minimal h U.closed⟩
+#align topological_space.closeds.gc TopologicalSpace.Closeds.gc
 
 /-- The galois coinsertion between sets and opens. -/
 def gi : GaloisInsertion (@Closeds.closure α _) coe where
@@ -67,6 +73,7 @@ def gi : GaloisInsertion (@Closeds.closure α _) coe where
   gc := gc
   le_l_u _ := subset_closure
   choice_eq s hs := SetLike.coe_injective <| subset_closure.antisymm hs
+#align topological_space.closeds.gi TopologicalSpace.Closeds.gi
 
 instance : CompleteLattice (Closeds α) :=
   CompleteLattice.copy
@@ -96,48 +103,60 @@ instance : Inhabited (Closeds α) :=
 @[simp, norm_cast]
 theorem coe_sup (s t : Closeds α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
+#align topological_space.closeds.coe_sup TopologicalSpace.Closeds.coe_sup
 
 @[simp, norm_cast]
 theorem coe_inf (s t : Closeds α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
+#align topological_space.closeds.coe_inf TopologicalSpace.Closeds.coe_inf
 
 @[simp, norm_cast]
 theorem coe_top : (↑(⊤ : Closeds α) : Set α) = univ :=
   rfl
+#align topological_space.closeds.coe_top TopologicalSpace.Closeds.coe_top
 
 @[simp, norm_cast]
 theorem coe_bot : (↑(⊥ : Closeds α) : Set α) = ∅ :=
   rfl
+#align topological_space.closeds.coe_bot TopologicalSpace.Closeds.coe_bot
 
 @[simp, norm_cast]
 theorem coe_Inf {S : Set (Closeds α)} : (↑(inf S) : Set α) = ⋂ i ∈ S, ↑i :=
   rfl
+#align topological_space.closeds.coe_Inf TopologicalSpace.Closeds.coe_Inf
 
 @[simp, norm_cast]
 theorem coe_finset_sup (f : ι → Closeds α) (s : Finset ι) : (↑(s.sup f) : Set α) = s.sup (coe ∘ f) :=
   map_finset_sup (⟨⟨coe, coe_sup⟩, coe_bot⟩ : SupBotHom (Closeds α) (Set α)) _ _
+#align topological_space.closeds.coe_finset_sup TopologicalSpace.Closeds.coe_finset_sup
 
 @[simp, norm_cast]
 theorem coe_finset_inf (f : ι → Closeds α) (s : Finset ι) : (↑(s.inf f) : Set α) = s.inf (coe ∘ f) :=
   map_finset_inf (⟨⟨coe, coe_inf⟩, coe_top⟩ : InfTopHom (Closeds α) (Set α)) _ _
+#align topological_space.closeds.coe_finset_inf TopologicalSpace.Closeds.coe_finset_inf
 
 theorem infi_def {ι} (s : ι → Closeds α) : (⨅ i, s i) = ⟨⋂ i, s i, isClosedInter fun i => (s i).2⟩ := by
   ext
   simp only [infi, coe_Inf, bInter_range]
   rfl
+#align topological_space.closeds.infi_def TopologicalSpace.Closeds.infi_def
 
 @[simp]
 theorem infi_mk {ι} (s : ι → Set α) (h : ∀ i, IsClosed (s i)) :
     (⨅ i, ⟨s i, h i⟩ : Closeds α) = ⟨⋂ i, s i, isClosedInter h⟩ := by simp [infi_def]
+#align topological_space.closeds.infi_mk TopologicalSpace.Closeds.infi_mk
 
 @[simp, norm_cast]
 theorem coe_infi {ι} (s : ι → Closeds α) : ((⨅ i, s i : Closeds α) : Set α) = ⋂ i, s i := by simp [infi_def]
+#align topological_space.closeds.coe_infi TopologicalSpace.Closeds.coe_infi
 
 @[simp]
 theorem mem_infi {ι} {x : α} {s : ι → Closeds α} : x ∈ infi s ↔ ∀ i, x ∈ s i := by simp [← SetLike.mem_coe]
+#align topological_space.closeds.mem_infi TopologicalSpace.Closeds.mem_infi
 
 @[simp]
 theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ inf S ↔ ∀ s ∈ S, x ∈ s := by simp_rw [Inf_eq_infi, mem_infi]
+#align topological_space.closeds.mem_Inf TopologicalSpace.Closeds.mem_Inf
 
 instance : Coframe (Closeds α) :=
   { Closeds.completeLattice with inf := inf,
@@ -148,6 +167,7 @@ instance : Coframe (Closeds α) :=
 @[simps]
 def singleton [T1Space α] (x : α) : Closeds α :=
   ⟨{x}, isClosedSingleton⟩
+#align topological_space.closeds.singleton TopologicalSpace.Closeds.singleton
 
 end Closeds
 
@@ -155,23 +175,29 @@ end Closeds
 @[simps]
 def Closeds.compl (s : Closeds α) : Opens α :=
   ⟨sᶜ, s.2.is_open_compl⟩
+#align topological_space.closeds.compl TopologicalSpace.Closeds.compl
 
 /-- The complement of an open set as a closed set. -/
 @[simps]
 def Opens.compl (s : Opens α) : Closeds α :=
   ⟨sᶜ, s.2.isClosedCompl⟩
+#align topological_space.opens.compl TopologicalSpace.Opens.compl
 
 theorem Closeds.compl_compl (s : Closeds α) : s.compl.compl = s :=
   Closeds.ext (compl_compl s)
+#align topological_space.closeds.compl_compl TopologicalSpace.Closeds.compl_compl
 
 theorem Opens.compl_compl (s : Opens α) : s.compl.compl = s :=
   Opens.ext (compl_compl s)
+#align topological_space.opens.compl_compl TopologicalSpace.Opens.compl_compl
 
 theorem Closeds.compl_bijective : Function.Bijective (@Closeds.compl α _) :=
   Function.bijective_iff_has_inverse.mpr ⟨Opens.compl, Closeds.compl_compl, Opens.compl_compl⟩
+#align topological_space.closeds.compl_bijective TopologicalSpace.Closeds.compl_bijective
 
 theorem Opens.compl_bijective : Function.Bijective (@Opens.compl α _) :=
   Function.bijective_iff_has_inverse.mpr ⟨Closeds.compl, Opens.compl_compl, Closeds.compl_compl⟩
+#align topological_space.opens.compl_bijective TopologicalSpace.Opens.compl_bijective
 
 variable (α)
 
@@ -183,7 +209,8 @@ def Closeds.complOrderIso : Closeds α ≃o (Opens α)ᵒᵈ where
   left_inv s := by simp [closeds.compl_compl]
   right_inv s := by simp [opens.compl_compl]
   map_rel_iff' s t := by
-    simpa only [Equiv.coe_fn_mk, Function.comp_app, OrderDual.to_dual_le_to_dual] using compl_subset_compl
+    simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.to_dual_le_to_dual] using compl_subset_compl
+#align topological_space.closeds.compl_order_iso TopologicalSpace.Closeds.complOrderIso
 
 /-- `opens.compl` as an `order_iso` to the order dual of `closeds α`. -/
 @[simps]
@@ -193,7 +220,8 @@ def Opens.complOrderIso : Opens α ≃o (Closeds α)ᵒᵈ where
   left_inv s := by simp [opens.compl_compl]
   right_inv s := by simp [closeds.compl_compl]
   map_rel_iff' s t := by
-    simpa only [Equiv.coe_fn_mk, Function.comp_app, OrderDual.to_dual_le_to_dual] using compl_subset_compl
+    simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.to_dual_le_to_dual] using compl_subset_compl
+#align topological_space.opens.compl_order_iso TopologicalSpace.Opens.complOrderIso
 
 variable {α}
 
@@ -204,6 +232,7 @@ theorem Closeds.is_atom_iff [T1Space α] {s : Closeds α} : IsAtom s ↔ ∃ x, 
     obtain ⟨x, rfl⟩ := t.is_atom_iff.mp ht
     exact closure_singleton
   simpa only [← this, (s : Set α).is_atom_iff, SetLike.ext_iff, Set.ext_iff]
+#align topological_space.closeds.is_atom_iff TopologicalSpace.Closeds.is_atom_iff
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]] -/
 /-- in a `t1_space`, coatoms of `opens α` are precisely complements of singletons:
@@ -215,6 +244,7 @@ theorem Opens.is_coatom_iff [T1Space α] {s : Opens α} : IsCoatom s ↔ ∃ x, 
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
   exact closeds.compl_bijective.injective.eq_iff.symm
+#align topological_space.opens.is_coatom_iff TopologicalSpace.Opens.is_coatom_iff
 
 /-! ### Clopen sets -/
 
@@ -223,6 +253,7 @@ theorem Opens.is_coatom_iff [T1Space α] {s : Opens α} : IsCoatom s ↔ ∃ x, 
 structure Clopens (α : Type _) [TopologicalSpace α] where
   Carrier : Set α
   clopen' : IsClopen carrier
+#align topological_space.clopens TopologicalSpace.Clopens
 
 namespace Clopens
 
@@ -235,19 +266,23 @@ instance : SetLike (Clopens α) α where
 
 theorem clopen (s : Clopens α) : IsClopen (s : Set α) :=
   s.clopen'
+#align topological_space.clopens.clopen TopologicalSpace.Clopens.clopen
 
 /-- Reinterpret a compact open as an open. -/
 @[simps]
 def toOpens (s : Clopens α) : Opens α :=
   ⟨s, s.clopen.IsOpen⟩
+#align topological_space.clopens.to_opens TopologicalSpace.Clopens.toOpens
 
-@[ext]
+@[ext.1]
 protected theorem ext {s t : Clopens α} (h : (s : Set α) = t) : s = t :=
   SetLike.ext' h
+#align topological_space.clopens.ext TopologicalSpace.Clopens.ext
 
 @[simp]
 theorem coe_mk (s : Set α) (h) : (mk s h : Set α) = s :=
   rfl
+#align topological_space.clopens.coe_mk TopologicalSpace.Clopens.coe_mk
 
 instance : HasSup (Clopens α) :=
   ⟨fun s t => ⟨s ∪ t, s.clopen.union t.clopen⟩⟩
@@ -273,26 +308,32 @@ instance : BooleanAlgebra (Clopens α) :=
 @[simp]
 theorem coe_sup (s t : Clopens α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
+#align topological_space.clopens.coe_sup TopologicalSpace.Clopens.coe_sup
 
 @[simp]
 theorem coe_inf (s t : Clopens α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
+#align topological_space.clopens.coe_inf TopologicalSpace.Clopens.coe_inf
 
 @[simp]
 theorem coe_top : (↑(⊤ : Clopens α) : Set α) = univ :=
   rfl
+#align topological_space.clopens.coe_top TopologicalSpace.Clopens.coe_top
 
 @[simp]
 theorem coe_bot : (↑(⊥ : Clopens α) : Set α) = ∅ :=
   rfl
+#align topological_space.clopens.coe_bot TopologicalSpace.Clopens.coe_bot
 
 @[simp]
 theorem coe_sdiff (s t : Clopens α) : (↑(s \ t) : Set α) = s \ t :=
   rfl
+#align topological_space.clopens.coe_sdiff TopologicalSpace.Clopens.coe_sdiff
 
 @[simp]
 theorem coe_compl (s : Clopens α) : (↑(sᶜ) : Set α) = sᶜ :=
   rfl
+#align topological_space.clopens.coe_compl TopologicalSpace.Clopens.coe_compl
 
 instance : Inhabited (Clopens α) :=
   ⟨⊥⟩

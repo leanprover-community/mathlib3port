@@ -30,6 +30,7 @@ variable {X Y Z : Type _} [TopologicalSpace X] [TopologicalSpace Y] [Topological
 the source of some `e : local_homeomorph X Y` with `f = e`. -/
 def IsLocallyHomeomorphOn :=
   ∀ x ∈ s, ∃ e : LocalHomeomorph X Y, x ∈ e.Source ∧ f = e
+#align is_locally_homeomorph_on IsLocallyHomeomorphOn
 
 namespace IsLocallyHomeomorphOn
 
@@ -46,18 +47,22 @@ theorem mk (h : ∀ x ∈ s, ∃ e : LocalHomeomorph X Y, x ∈ e.Source ∧ ∀
         right_inv' := fun y hy => by rw [he _ (e.map_target' hy)] <;> exact e.right_inv' hy,
         continuous_to_fun := (continuous_on_congr he).mpr e.continuous_to_fun },
       hx, rfl⟩
+#align is_locally_homeomorph_on.mk IsLocallyHomeomorphOn.mk
 
 variable {g f s t}
 
 theorem map_nhds_eq (hf : IsLocallyHomeomorphOn f s) {x : X} (hx : x ∈ s) : (𝓝 x).map f = 𝓝 (f x) :=
   let ⟨e, hx, he⟩ := hf x hx
   he.symm ▸ e.map_nhds_eq hx
+#align is_locally_homeomorph_on.map_nhds_eq IsLocallyHomeomorphOn.map_nhds_eq
 
 protected theorem continuous_at (hf : IsLocallyHomeomorphOn f s) {x : X} (hx : x ∈ s) : ContinuousAt f x :=
   (hf.map_nhds_eq hx).le
+#align is_locally_homeomorph_on.continuous_at IsLocallyHomeomorphOn.continuous_at
 
 protected theorem continuous_on (hf : IsLocallyHomeomorphOn f s) : ContinuousOn f s :=
   ContinuousAt.continuous_on fun x => hf.ContinuousAt
+#align is_locally_homeomorph_on.continuous_on IsLocallyHomeomorphOn.continuous_on
 
 protected theorem comp (hg : IsLocallyHomeomorphOn g t) (hf : IsLocallyHomeomorphOn f s) (h : Set.MapsTo f s t) :
     IsLocallyHomeomorphOn (g ∘ f) s := by
@@ -65,6 +70,7 @@ protected theorem comp (hg : IsLocallyHomeomorphOn g t) (hf : IsLocallyHomeomorp
   obtain ⟨eg, hxg, rfl⟩ := hg (f x) (h hx)
   obtain ⟨ef, hxf, rfl⟩ := hf x hx
   exact ⟨ef.trans eg, ⟨hxf, hxg⟩, rfl⟩
+#align is_locally_homeomorph_on.comp IsLocallyHomeomorphOn.comp
 
 end IsLocallyHomeomorphOn
 
@@ -72,16 +78,19 @@ end IsLocallyHomeomorphOn
   the source of some `e : local_homeomorph X Y` with `f = e`. -/
 def IsLocallyHomeomorph :=
   ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.Source ∧ f = e
+#align is_locally_homeomorph IsLocallyHomeomorph
 
 variable {f}
 
 theorem is_locally_homeomorph_iff_is_locally_homeomorph_on_univ :
     IsLocallyHomeomorph f ↔ IsLocallyHomeomorphOn f Set.Univ := by
   simp only [IsLocallyHomeomorph, IsLocallyHomeomorphOn, Set.mem_univ, forall_true_left]
+#align is_locally_homeomorph_iff_is_locally_homeomorph_on_univ is_locally_homeomorph_iff_is_locally_homeomorph_on_univ
 
 protected theorem IsLocallyHomeomorph.is_locally_homeomorph_on (hf : IsLocallyHomeomorph f) :
     IsLocallyHomeomorphOn f Set.Univ :=
   is_locally_homeomorph_iff_is_locally_homeomorph_on_univ.mp hf
+#align is_locally_homeomorph.is_locally_homeomorph_on IsLocallyHomeomorph.is_locally_homeomorph_on
 
 variable (f)
 
@@ -92,21 +101,26 @@ definition of `is_locally_homeomorph f`, since it only requires `e : local_homeo
 agree with `f` on its source `e.source`, as opposed to on the whole space `X`. -/
 theorem mk (h : ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.Source ∧ ∀ y ∈ e.Source, f y = e y) : IsLocallyHomeomorph f :=
   is_locally_homeomorph_iff_is_locally_homeomorph_on_univ.mpr (IsLocallyHomeomorphOn.mk f Set.Univ fun x hx => h x)
+#align is_locally_homeomorph.mk IsLocallyHomeomorph.mk
 
 variable {g f}
 
 theorem map_nhds_eq (hf : IsLocallyHomeomorph f) (x : X) : (𝓝 x).map f = 𝓝 (f x) :=
   hf.IsLocallyHomeomorphOn.map_nhds_eq (Set.mem_univ x)
+#align is_locally_homeomorph.map_nhds_eq IsLocallyHomeomorph.map_nhds_eq
 
 protected theorem continuous (hf : IsLocallyHomeomorph f) : Continuous f :=
   continuous_iff_continuous_on_univ.mpr hf.IsLocallyHomeomorphOn.ContinuousOn
+#align is_locally_homeomorph.continuous IsLocallyHomeomorph.continuous
 
 protected theorem is_open_map (hf : IsLocallyHomeomorph f) : IsOpenMap f :=
   IsOpenMap.of_nhds_le fun x => ge_of_eq (hf.map_nhds_eq x)
+#align is_locally_homeomorph.is_open_map IsLocallyHomeomorph.is_open_map
 
 protected theorem comp (hg : IsLocallyHomeomorph g) (hf : IsLocallyHomeomorph f) : IsLocallyHomeomorph (g ∘ f) :=
   is_locally_homeomorph_iff_is_locally_homeomorph_on_univ.mpr
     (hg.IsLocallyHomeomorphOn.comp hf.IsLocallyHomeomorphOn (Set.Univ.maps_to_univ f))
+#align is_locally_homeomorph.comp IsLocallyHomeomorph.comp
 
 end IsLocallyHomeomorph
 

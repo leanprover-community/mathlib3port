@@ -57,15 +57,18 @@ open UnitInterval
 -/
 def bernstein (n ν : ℕ) : C(I, ℝ) :=
   (bernsteinPolynomial ℝ n ν).toContinuousMapOn I
+#align bernstein bernstein
 
 @[simp]
 theorem bernstein_apply (n ν : ℕ) (x : I) : bernstein n ν x = n.choose ν * x ^ ν * (1 - x) ^ (n - ν) := by
   dsimp [bernstein, Polynomial.toContinuousMapOn, Polynomial.toContinuousMap, bernsteinPolynomial]
   simp
+#align bernstein_apply bernstein_apply
 
 theorem bernstein_nonneg {n ν : ℕ} {x : I} : 0 ≤ bernstein n ν x := by
   simp only [bernstein_apply]
   exact mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (by unit_interval) _)) (pow_nonneg (by unit_interval) _)
+#align bernstein_nonneg bernstein_nonneg
 
 /-!
 We now give a slight reformulation of `bernstein_polynomial.variance`.
@@ -87,6 +90,7 @@ def z {n : ℕ} (k : Fin (n + 1)) : I :=
       norm_cast
       simp [h₂]
       ⟩
+#align bernstein.z bernstein.z
 
 -- mathport name: «expr /ₙ»
 local postfix:90 "/ₙ" => z
@@ -96,6 +100,7 @@ theorem probability (n : ℕ) (x : I) : (∑ k : Fin (n + 1), bernstein n k x) =
   apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this
   simp [AlgHom.map_sum, Finset.sum_range] at this
   exact this
+#align bernstein.probability bernstein.probability
 
 theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
     (∑ k : Fin (n + 1), (x - k/ₙ : ℝ) ^ 2 * bernstein n k x) = x * (1 - x) / n := by
@@ -118,6 +123,7 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
     
   · ring
     
+#align bernstein.variance bernstein.variance
 
 end bernstein
 
@@ -131,6 +137,7 @@ given by `∑ k, f (k/n) * bernstein n k x`.
 -/
 def bernsteinApproximation (n : ℕ) (f : C(I, ℝ)) : C(I, ℝ) :=
   ∑ k : Fin (n + 1), f k/ₙ • bernstein n k
+#align bernstein_approximation bernsteinApproximation
 
 /-!
 We now set up some of the basic machinery of the proof that the Bernstein approximations
@@ -152,19 +159,23 @@ namespace bernsteinApproximation
 @[simp]
 theorem apply (n : ℕ) (f : C(I, ℝ)) (x : I) :
     bernsteinApproximation n f x = ∑ k : Fin (n + 1), f k/ₙ * bernstein n k x := by simp [bernsteinApproximation]
+#align bernstein_approximation.apply bernsteinApproximation.apply
 
 /-- The modulus of (uniform) continuity for `f`, chosen so `|f x - f y| < ε/2` when `|x - y| < δ`.
 -/
 def δ (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) : ℝ :=
   f.modulus (ε / 2) (half_pos h)
+#align bernstein_approximation.δ bernsteinApproximation.δ
 
 theorem δ_pos {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} : 0 < δ f ε h :=
   f.modulus_pos
+#align bernstein_approximation.δ_pos bernsteinApproximation.δ_pos
 
 /-- The set of points `k` so `k/n` is within `δ` of `x`.
 -/
 def s (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Fin (n + 1)) :=
   { k : Fin (n + 1) | dist k/ₙ x < δ f ε h }.toFinset
+#align bernstein_approximation.S bernsteinApproximation.s
 
 /-- If `k ∈ S`, then `f(k/n)` is close to `f x`.
 -/
@@ -172,6 +183,7 @@ theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k
     |f k/ₙ - f x| < ε / 2 := by
   apply f.dist_lt_of_dist_lt_modulus (ε / 2) (half_pos h)
   simpa [S] using m
+#align bernstein_approximation.lt_of_mem_S bernsteinApproximation.lt_of_mem_S
 
 /-- If `k ∉ S`, then as `δ ≤ |x - k/n|`, we have the inequality `1 ≤ δ^-2 * (x - k/n)^2`.
 This particular formulation will be helpful later.
@@ -181,6 +193,7 @@ theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x :
   simp only [Finset.mem_compl, not_lt, Set.mem_to_finset, Set.mem_set_of_eq, S] at m
   erw [zpow_neg, ← div_eq_inv_mul, one_le_div (pow_pos δ_pos 2), sq_le_sq, abs_of_pos δ_pos]
   rwa [dist_comm] at m
+#align bernstein_approximation.le_of_mem_S_compl bernsteinApproximation.le_of_mem_S_compl
 
 end bernsteinApproximation
 
@@ -283,4 +296,5 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
       _ < ε / 2 := nh
       
     
+#align bernstein_approximation_uniform bernstein_approximation_uniform
 

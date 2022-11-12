@@ -30,6 +30,7 @@ unsafe def localized_attr : user_attribute (rb_lmap Name String) Unit where
     ⟨fun ns => do
       let dcls ← ns.mmap fun n => mk_const n >>= eval_expr (Name × String)
       return <| rb_lmap.of_list dcls, []⟩
+#align localized_attr localized_attr
 
 /-- Get all commands in the given locale and return them as a list of strings -/
 unsafe def get_localized (ns : List Name) : tactic (List String) := do
@@ -40,6 +41,7 @@ unsafe def get_localized (ns : List Name) : tactic (List String) := do
         | [] => fail f! "locale {nm} does not exist"
         | new_l => return <| l new_l)
       []
+#align get_localized get_localized
 
 /-- Execute all commands in the given locale -/
 @[user_command]
@@ -47,6 +49,7 @@ unsafe def open_locale_cmd (_ : parse <| tk "open_locale") : parser Unit := do
   let ns ← many ident
   let cmds ← get_localized ns
   cmds emit_code_here
+#align open_locale_cmd open_locale_cmd
 
 /-- Add a new command to a locale and execute it right now.
   The new command is added as a declaration to the environment with name `_localized_decl.<number>`.
@@ -66,6 +69,7 @@ unsafe def localized_cmd (_ : parse <| tk "localized") : parser Unit := do
       (declaration.defn dummy_decl_name [] (quote.1 (Name × String)) (reflect (⟨nm, cmd⟩ : Name × String))
         (ReducibilityHints.regular 1 tt) ff)
   localized_attr dummy_decl_name Unit.unit tt
+#align localized_cmd localized_cmd
 
 /-- This consists of two user-commands which allow you to declare notation and commands localized to a
 locale.
@@ -131,6 +135,7 @@ add_tactic_doc
 unsafe def print_localized_commands (ns : List Name) : tactic Unit := do
   let cmds ← get_localized ns
   cmds trace
+#align print_localized_commands print_localized_commands
 
 -- mathport name: exprhole!
 notation

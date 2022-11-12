@@ -63,6 +63,7 @@ theorem Submartingale.expected_stopped_value_mono [SigmaFiniteFiltration μ 𝒢
     
   · exact hf.integrable_stopped_value hτ fun ω => le_trans (hle ω) (hbdd ω)
     
+#align measure_theory.submartingale.expected_stopped_value_mono MeasureTheory.Submartingale.expected_stopped_value_mono
 
 /-- The converse direction of the optional stopping theorem, i.e. an adapted integrable process `f`
 is a submartingale if for all bounded stopping times `τ` and `π` such that `τ ≤ π`, the
@@ -75,13 +76,10 @@ theorem submartingaleOfExpectedStoppedValueMono [IsFiniteMeasure μ] (hadp : Ada
           IsStoppingTime 𝒢 π → τ ≤ π → (∃ N, ∀ ω, π ω ≤ N) → μ[stoppedValue f τ] ≤ μ[stoppedValue f π]) :
     Submartingale f 𝒢 μ := by
   refine' submartingale_of_set_integral_le hadp hint fun i j hij s hs => _
-  classical
-  specialize
-    hf (s.piecewise (fun _ => i) fun _ => j) _ (is_stopping_time_piecewise_const hij hs) (is_stopping_time_const 𝒢 j)
-      (fun x => (ite_le_sup _ _ _).trans (max_eq_right hij).le) ⟨j, fun x => le_rfl⟩
-  rwa [stopped_value_const, stopped_value_piecewise_const,
-    integral_piecewise (𝒢.le _ _ hs) (hint _).IntegrableOn (hint _).IntegrableOn, ←
-    integral_add_compl (𝒢.le _ _ hs) (hint j), add_le_add_iff_right] at hf
+  classical specialize
+      hf (s.piecewise (fun _ => i) fun _ => j) _ (is_stopping_time_piecewise_const hij hs) (is_stopping_time_const 𝒢 j)
+        (fun x => (ite_le_sup _ _ _).trans (max_eq_right hij).le) ⟨j, fun x => le_rfl⟩
+#align measure_theory.submartingale_of_expected_stopped_value_mono MeasureTheory.submartingaleOfExpectedStoppedValueMono
 
 /-- **The optional stopping theorem** (fair game theorem): an adapted integrable process `f`
 is a submartingale if and only if for all bounded stopping times `τ` and `π` such that `τ ≤ π`, the
@@ -94,6 +92,8 @@ theorem submartingale_iff_expected_stopped_value_mono [IsFiniteMeasure μ] (hadp
           IsStoppingTime 𝒢 π → τ ≤ π → (∃ N, ∀ x, π x ≤ N) → μ[stoppedValue f τ] ≤ μ[stoppedValue f π] :=
   ⟨fun hf _ _ hτ hπ hle ⟨N, hN⟩ => hf.expected_stopped_value_mono hτ hπ hle hN,
     submartingaleOfExpectedStoppedValueMono hadp hint⟩
+#align
+  measure_theory.submartingale_iff_expected_stopped_value_mono MeasureTheory.submartingale_iff_expected_stopped_value_mono
 
 /-- The stopped process of a submartingale with respect to a stopping time is a submartingale. -/
 @[protected]
@@ -111,6 +111,7 @@ theorem Submartingale.stoppedProcess [IsFiniteMeasure μ] (h : Submartingale f �
     
   · exact fun i => h.integrable_stopped_value ((is_stopping_time_const _ i).min hτ) fun ω => min_le_left _ _
     
+#align measure_theory.submartingale.stopped_process MeasureTheory.Submartingale.stoppedProcess
 
 section Maximal
 
@@ -151,6 +152,7 @@ theorem smul_le_stopped_value_hitting [IsFiniteMeasure μ] (hsub : Submartingale
     
   · exact le_trans (mul_nonneg ε.coe_nonneg Ennreal.to_real_nonneg) h
     
+#align measure_theory.smul_le_stopped_value_hitting MeasureTheory.smul_le_stopped_value_hitting
 
 /-- **Doob's maximal inequality**: Given a non-negative submartingale `f`, for all `ε : ℝ≥0`,
 we have `ε • μ {ε ≤ f* n} ≤ ∫ ω in {ε ≤ f* n}, f n` where `f* n ω = max_{k ≤ n}, f k ω`.
@@ -178,7 +180,8 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
         change (ε : ℝ) ≤ _ ∨ _ < (ε : ℝ) ↔ _
         simp only [le_or_lt, true_iff_iff]
         
-      · rintro ω ⟨hω₁ : _ ≤ _, hω₂ : _ < _⟩
+      · rw [disjoint_iff_inf_le]
+        rintro ω ⟨hω₁ : _ ≤ _, hω₂ : _ < _⟩
         exact (not_le.2 hω₂) hω₁
         
       · exact
@@ -224,7 +227,8 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
         change _ ↔ (ε : ℝ) ≤ _ ∨ _ < (ε : ℝ)
         simp only [le_or_lt, iff_true_iff]
         
-      · rintro ω ⟨hω₁ : _ ≤ _, hω₂ : _ < _⟩
+      · rw [disjoint_iff_inf_le]
+        rintro ω ⟨hω₁ : _ ≤ _, hω₂ : _ < _⟩
         exact (not_le.2 hω₂) hω₁
         
       · exact
@@ -247,6 +251,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
         hsub.expected_stopped_value_mono (hitting_is_stopping_time hsub.adapted measurableSetIci)
           (is_stopping_time_const _ _) (fun ω => hitting_le ω) (fun ω => le_rfl : ∀ ω, n ≤ n)
     
+#align measure_theory.maximal_ineq MeasureTheory.maximal_ineq
 
 end Maximal
 

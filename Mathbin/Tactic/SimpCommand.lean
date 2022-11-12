@@ -22,6 +22,7 @@ private unsafe def strip_annotations_from_all_non_local_consts {elab : Bool} (e 
       | some (_, expr.local_const _ _ _ _) => none
       | some (_, _) => e.erase_annotations
       | _ => none
+#align tactic.strip_annotations_from_all_non_local_consts tactic.strip_annotations_from_all_non_local_consts
 
 /-- `simp_arg_type.to_pexpr` retrieves the `pexpr` underlying the given `simp_arg_type`, if there is
 one. -/
@@ -29,11 +30,13 @@ unsafe def simp_arg_type.to_pexpr : simp_arg_type → Option pexpr
   | sat@(simp_arg_type.expr e) => e
   | sat@(simp_arg_type.symm_expr e) => e
   | sat => none
+#align tactic.simp_arg_type.to_pexpr tactic.simp_arg_type.to_pexpr
 
 /-- Incantation which prepares a `pexpr` in a `simp_arg_type` for use by the simplifier after
 `expr.replace_subexprs` as been called to replace some of its local variables. -/
 private unsafe def replace_subexprs_for_simp_arg (e : pexpr) (rules : List (expr × expr)) : pexpr :=
   strip_annotations_from_all_non_local_consts <| pexpr.of_expr <| e.unsafe_cast.replace_subexprs rules
+#align tactic.replace_subexprs_for_simp_arg tactic.replace_subexprs_for_simp_arg
 
 /-- `simp_arg_type.replace_subexprs` calls `expr.replace_subexprs` on the underlying `pexpr`, if
 there is one, and then prepares the result for use by the simplifier. -/
@@ -41,6 +44,7 @@ unsafe def simp_arg_type.replace_subexprs : simp_arg_type → List (expr × expr
   | simp_arg_type.expr e, rules => simp_arg_type.expr <| replace_subexprs_for_simp_arg e rules
   | simp_arg_type.symm_expr e, rules => simp_arg_type.symm_expr <| replace_subexprs_for_simp_arg e rules
   | sat, rules => sat
+#align tactic.simp_arg_type.replace_subexprs tactic.simp_arg_type.replace_subexprs
 
 setup_tactic_parser
 
@@ -102,6 +106,7 @@ unsafe def simp_cmd (_ : parse <| tk "#simp") : lean.parser Unit := do
   -- Trace the result.
       when
       (¬is_trace_enabled_for `silence_simp_if_true ∨ simp_result ≠ expr.const `true []) (trace simp_result)
+#align tactic.simp_cmd tactic.simp_cmd
 
 add_tactic_doc
   { Name := "#simp", category := DocCategory.cmd, declNames := [`tactic.simp_cmd], tags := ["simplification"] }

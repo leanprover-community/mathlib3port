@@ -33,6 +33,7 @@ unsafe def assert_exists (_ : parse <| tk "assert_exists") : lean.parser Unit :=
   let decl ← ident
   let d ← get_decl decl
   return ()
+#align assert_exists assert_exists
 
 /-- `assert_not_exists n` is a user command that asserts that a declaration named `n` *does not exist*
 in the current import scope.
@@ -53,6 +54,7 @@ You should *not* delete the `assert_not_exists` statement without careful discus
 unsafe def assert_not_exists (_ : parse <| tk "assert_not_exists") : lean.parser Unit := do
   let decl ← ident
   success_if_fail (get_decl decl) <|> fail f! "Declaration {decl} is not allowed to exist in this file."
+#align assert_not_exists assert_not_exists
 
 /-- `assert_instance e` is a user command that asserts that an instance `e` is available
 in the current import scope.
@@ -68,6 +70,7 @@ unsafe def assert_instance (_ : parse <| tk "assert_instance") : lean.parser Uni
   let e ← i_to_expr q
   mk_instance e
   return ()
+#align assert_instance assert_instance
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -102,6 +105,7 @@ unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.pars
         i =>
       ("./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" :
         tactic Unit)
+#align assert_no_instance assert_no_instance
 
 end
 

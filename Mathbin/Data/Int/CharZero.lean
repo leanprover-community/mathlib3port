@@ -29,16 +29,20 @@ theorem cast_eq_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) = 0
       contradiction
       ,
     fun h => by rw [h, cast_zero]⟩
+#align int.cast_eq_zero Int.cast_eq_zero
 
 @[simp, norm_cast]
 theorem cast_inj [AddGroupWithOne α] [CharZero α] {m n : ℤ} : (m : α) = n ↔ m = n := by
   rw [← sub_eq_zero, ← cast_sub, cast_eq_zero, sub_eq_zero]
+#align int.cast_inj Int.cast_inj
 
 theorem cast_injective [AddGroupWithOne α] [CharZero α] : Function.Injective (coe : ℤ → α)
   | m, n => cast_inj.1
+#align int.cast_injective Int.cast_injective
 
 theorem cast_ne_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
   not_congr cast_eq_zero
+#align int.cast_ne_zero Int.cast_ne_zero
 
 @[simp, norm_cast]
 theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dvd : n ∣ m) : ((m / n : ℤ) : k) = m / n :=
@@ -48,9 +52,11 @@ theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dv
     
   · exact cast_div n_dvd (cast_ne_zero.mpr hn)
     
+#align int.cast_div_char_zero Int.cast_div_char_zero
 
 end Int
 
 theorem RingHom.injective_int {α : Type _} [NonAssocRing α] (f : ℤ →+* α) [CharZero α] : Function.Injective f :=
   Subsingleton.elim (Int.castRingHom _) f ▸ Int.cast_injective
+#align ring_hom.injective_int RingHom.injective_int
 

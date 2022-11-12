@@ -55,6 +55,7 @@ inductive Prequotient-- There's always `of`
   | neg : prequotient → prequotient
   | add : prequotient → prequotient → prequotient
   | smul : R → prequotient → prequotient
+#align Module.colimits.prequotient ModuleCat.Colimits.Prequotient
 
 instance : Inhabited (Prequotient F) :=
   ⟨Prequotient.zero⟩
@@ -100,12 +101,14 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | smul_zero : ∀ s, relation (smul s zero) zero
   | add_smul : ∀ s t x, relation (smul (s + t) x) (add (smul s x) (smul t x))
   | zero_smul : ∀ x, relation (smul 0 x) zero
+#align Module.colimits.relation ModuleCat.Colimits.Relation
 
 /-- The setoid corresponding to module expressions modulo module relations and identifications.
 -/
 def colimitSetoid : Setoid (Prequotient F) where
   R := Relation F
   iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
+#align Module.colimits.colimit_setoid ModuleCat.Colimits.colimitSetoid
 
 attribute [instance] colimit_setoid
 
@@ -113,6 +116,7 @@ attribute [instance] colimit_setoid
 -/
 def ColimitType : Type max u v w :=
   Quotient (colimitSetoid F)deriving Inhabited
+#align Module.colimits.colimit_type ModuleCat.Colimits.ColimitType
 
 instance : AddCommGroup (ColimitType F) where
   zero := Quot.mk _ zero
@@ -231,28 +235,34 @@ instance : Module R (ColimitType F) where
     rfl
 
 @[simp]
-theorem quot_zero : Quot.mk Setoid.R zero = (0 : ColimitType F) :=
+theorem quot_zero : Quot.mk Setoid.r zero = (0 : ColimitType F) :=
   rfl
+#align Module.colimits.quot_zero ModuleCat.Colimits.quot_zero
 
 @[simp]
-theorem quot_neg (x) : Quot.mk Setoid.R (neg x) = (-Quot.mk Setoid.R x : ColimitType F) :=
+theorem quot_neg (x) : Quot.mk Setoid.r (neg x) = (-Quot.mk Setoid.r x : ColimitType F) :=
   rfl
+#align Module.colimits.quot_neg ModuleCat.Colimits.quot_neg
 
 @[simp]
-theorem quot_add (x y) : Quot.mk Setoid.R (add x y) = (Quot.mk Setoid.R x + Quot.mk Setoid.R y : ColimitType F) :=
+theorem quot_add (x y) : Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
   rfl
+#align Module.colimits.quot_add ModuleCat.Colimits.quot_add
 
 @[simp]
-theorem quot_smul (s x) : Quot.mk Setoid.R (smul s x) = (s • Quot.mk Setoid.R x : ColimitType F) :=
+theorem quot_smul (s x) : Quot.mk Setoid.r (smul s x) = (s • Quot.mk Setoid.r x : ColimitType F) :=
   rfl
+#align Module.colimits.quot_smul ModuleCat.Colimits.quot_smul
 
 /-- The bundled module giving the colimit of a diagram. -/
 def colimit : ModuleCat R :=
   ModuleCat.of R (ColimitType F)
+#align Module.colimits.colimit ModuleCat.Colimits.colimit
 
 /-- The function from a given module in the diagram to the colimit module. -/
 def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
+#align Module.colimits.cocone_fun ModuleCat.Colimits.coconeFun
 
 /-- The group homomorphism from a given module in the diagram to the colimit module. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
@@ -262,23 +272,27 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
     apply Quot.sound
     apply relation.smul
   map_add' := by intros <;> apply Quot.sound <;> apply relation.add
+#align Module.colimits.cocone_morphism ModuleCat.Colimits.coconeMorphism
 
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
+#align Module.colimits.cocone_naturality ModuleCat.Colimits.cocone_naturality
 
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
     (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
   rw [← cocone_naturality F f]
   rfl
+#align Module.colimits.cocone_naturality_components ModuleCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit module. -/
 def colimitCocone : Cocone F where
   x := colimit F
   ι := { app := coconeMorphism F }
+#align Module.colimits.colimit_cocone ModuleCat.Colimits.colimitCocone
 
 /-- The function from the free module on the diagram to the cone point of any other cocone. -/
 @[simp]
@@ -288,6 +302,7 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
   | neg x => -desc_fun_lift x
   | add x y => desc_fun_lift x + desc_fun_lift y
   | smul s x => s • desc_fun_lift x
+#align Module.colimits.desc_fun_lift ModuleCat.Colimits.descFunLift
 
 /-- The function from the colimit module to the cone point of any other cocone. -/
 def descFun (s : Cocone F) : ColimitType F → s.x := by
@@ -366,12 +381,14 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
     · rw [zero_smul]
       
     
+#align Module.colimits.desc_fun ModuleCat.Colimits.descFun
 
 /-- The group homomorphism from the colimit module to the cone point of any other cocone. -/
 def descMorphism (s : Cocone F) : colimit F ⟶ s.x where
   toFun := descFun F s
   map_smul' s x := by induction x <;> rfl
   map_add' x y := by induction x <;> induction y <;> rfl
+#align Module.colimits.desc_morphism ModuleCat.Colimits.descMorphism
 
 /-- Evidence that the proposed colimit is the colimit. -/
 def colimitCoconeIsColimit : IsColimit (colimitCocone F) where
@@ -393,22 +410,26 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F) where
     · simp [*]
       
     rfl
+#align Module.colimits.colimit_cocone_is_colimit ModuleCat.Colimits.colimitCoconeIsColimit
 
 instance has_colimits_Module :
     HasColimits
       (ModuleCat.{max v u}
         R) where HasColimitsOfShape J 𝒥 :=
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+#align Module.colimits.has_colimits_Module ModuleCat.Colimits.has_colimits_Module
 
 -- We manually add a `has_colimits` instance with universe parameters swapped, for otherwise
 -- the instance is not found by typeclass search.
 instance has_colimits_Module' (R : Type u) [Ring R] : HasColimits (ModuleCat.{max u v} R) :=
   ModuleCat.Colimits.has_colimits_Module.{u, v}
+#align Module.colimits.has_colimits_Module' ModuleCat.Colimits.has_colimits_Module'
 
 -- We manually add a `has_colimits` instance with equal universe parameters, for otherwise
 -- the instance is not found by typeclass search.
 instance has_colimits_Module'' (R : Type u) [Ring R] : HasColimits (ModuleCat.{u} R) :=
   ModuleCat.Colimits.has_colimits_Module.{u, u}
+#align Module.colimits.has_colimits_Module'' ModuleCat.Colimits.has_colimits_Module''
 
 -- Sanity checks, just to make sure typeclass search can find the instances we want.
 example (R : Type u) [Ring R] : HasColimits (ModuleCat.{max v u} R) :=

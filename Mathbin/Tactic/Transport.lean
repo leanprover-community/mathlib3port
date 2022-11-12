@@ -103,6 +103,7 @@ unsafe def transport (s e : expr) : tactic Unit := do
                     equiv_rw_hyp
                     f e
                 get_local f >>= exact))
+#align tactic.transport tactic.transport
 
 namespace Interactive
 
@@ -145,6 +146,7 @@ unsafe def transport (s : parse texpr ?) (e : parse <| tk "using" *> texpr) : it
           fail "`transport` could not find an appropriate source object. Try `transport s using e`."
   let e ← to_expr e
   tactic.transport s e
+#align tactic.interactive.transport tactic.interactive.transport
 
 add_tactic_doc
   { Name := "transport", category := DocCategory.tactic, declNames := [`tactic.interactive.transport],

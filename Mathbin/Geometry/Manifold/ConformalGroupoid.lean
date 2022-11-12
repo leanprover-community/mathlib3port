@@ -32,8 +32,10 @@ def conformalPregroupoid : Pregroupoid X where
     let ⟨v, h₁, h₂, h₃⟩ := h x hx
     h₃ x ⟨hx, h₂⟩
   congr f g u hu h hf x hx := (hf x hx).congr hx hu h
+#align conformal_pregroupoid conformalPregroupoid
 
 /-- The groupoid of conformal maps. -/
 def conformalGroupoid : StructureGroupoid X :=
   conformalPregroupoid.groupoid
+#align conformal_groupoid conformalGroupoid
 

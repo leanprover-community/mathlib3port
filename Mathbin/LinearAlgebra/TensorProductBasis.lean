@@ -30,13 +30,16 @@ def Basis.tensorProduct (b : Basis ι R M) (c : Basis κ R N) : Basis (ι × κ)
   Finsupp.basisSingleOne.map
     ((TensorProduct.congr b.repr c.repr).trans <|
         (finsuppTensorFinsupp R _ _ _ _).trans <| Finsupp.lcongr (Equiv.refl _) (TensorProduct.lid R R)).symm
+#align basis.tensor_product Basis.tensorProduct
 
 @[simp]
 theorem Basis.tensor_product_apply (b : Basis ι R M) (c : Basis κ R N) (i : ι) (j : κ) :
     Basis.tensorProduct b c (i, j) = b i ⊗ₜ c j := by simp [Basis.tensorProduct]
+#align basis.tensor_product_apply Basis.tensor_product_apply
 
 theorem Basis.tensor_product_apply' (b : Basis ι R M) (c : Basis κ R N) (i : ι × κ) :
     Basis.tensorProduct b c i = b i.1 ⊗ₜ c i.2 := by simp [Basis.tensorProduct]
+#align basis.tensor_product_apply' Basis.tensor_product_apply'
 
 end CommRing
 

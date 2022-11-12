@@ -29,6 +29,7 @@ section
 -/
 def Paths (V : Type u₁) : Type u₁ :=
   V
+#align category_theory.paths CategoryTheory.Paths
 
 instance (V : Type u₁) [Inhabited V] : Inhabited (Paths V) :=
   ⟨(default : V)⟩
@@ -41,6 +42,7 @@ instance categoryPaths : Category.{max u₁ v₁} (Paths V) where
   Hom := fun X Y : V => Quiver.Path X Y
   id X := Quiver.Path.nil
   comp X Y Z f g := Quiver.Path.comp f g
+#align category_theory.paths.category_paths CategoryTheory.Paths.categoryPaths
 
 variable {V}
 
@@ -50,8 +52,9 @@ variable {V}
 def of : Prefunctor V (Paths V) where
   obj X := X
   map X Y f := f.toPath
+#align category_theory.paths.of CategoryTheory.Paths.of
 
-attribute [local ext] Functor.ext
+attribute [local ext.1] Functor.ext
 
 /-- Any prefunctor from `V` lifts to a functor from `paths V` -/
 def lift {C} [Category C] (φ : Prefunctor V C) : Paths V ⥤ C where
@@ -69,20 +72,24 @@ def lift {C} [Category C] (φ : Prefunctor V C) : Paths V ⥤ C where
       simp only
       rw [ih, category.assoc]
       
+#align category_theory.paths.lift CategoryTheory.Paths.lift
 
 @[simp]
 theorem lift_nil {C} [Category C] (φ : Prefunctor V C) (X : V) : (lift φ).map Quiver.Path.nil = 𝟙 (φ.obj X) :=
   rfl
+#align category_theory.paths.lift_nil CategoryTheory.Paths.lift_nil
 
 @[simp]
 theorem lift_cons {C} [Category C] (φ : Prefunctor V C) {X Y Z : V} (p : Quiver.Path X Y) (f : Y ⟶ Z) :
     (lift φ).map (p.cons f) = (lift φ).map p ≫ φ.map f :=
   rfl
+#align category_theory.paths.lift_cons CategoryTheory.Paths.lift_cons
 
 @[simp]
 theorem lift_to_path {C} [Category C] (φ : Prefunctor V C) {X Y : V} (f : X ⟶ Y) : (lift φ).map f.toPath = φ.map f := by
   dsimp [Quiver.Hom.toPath, lift]
   simp
+#align category_theory.paths.lift_to_path CategoryTheory.Paths.lift_to_path
 
 theorem lift_spec {C} [Category C] (φ : Prefunctor V C) : of.comp (lift φ).toPrefunctor = φ := by
   apply Prefunctor.ext
@@ -95,6 +102,7 @@ theorem lift_spec {C} [Category C] (φ : Prefunctor V C) : of.comp (lift φ).toP
     dsimp [lift, Quiver.Hom.toPath]
     simp only [category.id_comp]
     
+#align category_theory.paths.lift_spec CategoryTheory.Paths.lift_spec
 
 theorem lift_unique {C} [Category C] (φ : Prefunctor V C) (Φ : Paths V ⥤ C) (hΦ : of.comp Φ.toPrefunctor = φ) :
     Φ = lift φ := by
@@ -115,9 +123,10 @@ theorem lift_unique {C} [Category C] (φ : Prefunctor V C) (Φ : Paths V ⥤ C) 
       rw [this, ih]
       
     
+#align category_theory.paths.lift_unique CategoryTheory.Paths.lift_unique
 
 /-- Two functors out of a path category are equal when they agree on singleton paths. -/
-@[ext]
+@[ext.1]
 theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.obj)
     (h :
       ∀ (a b : V) (e : a ⟶ b),
@@ -134,6 +143,7 @@ theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.ob
   · intro X
     rw [h_obj]
     
+#align category_theory.paths.ext_functor CategoryTheory.Paths.ext_functor
 
 end Paths
 
@@ -144,6 +154,7 @@ variable (W : Type u₂) [Quiver.{v₂ + 1} W]
 theorem Prefunctor.map_path_comp' (F : Prefunctor V W) {X Y Z : Paths V} (f : X ⟶ Y) (g : Y ⟶ Z) :
     F.mapPath (f ≫ g) = (F.mapPath f).comp (F.mapPath g) :=
   Prefunctor.map_path_comp _ _ _
+#align category_theory.prefunctor.map_path_comp' CategoryTheory.Prefunctor.map_path_comp'
 
 end
 
@@ -164,10 +175,12 @@ Case conversion may be inaccurate. Consider using '#align category_theory.compos
 def composePath {X : C} : ∀ {Y : C} (p : Path X Y), X ⟶ Y
   | _, path.nil => 𝟙 X
   | _, path.cons p e => compose_path p ≫ e
+#align category_theory.compose_path CategoryTheory.composePath
 
 @[simp]
 theorem compose_path_to_path {X Y : C} (f : X ⟶ Y) : composePath f.toPath = f :=
   Category.id_comp _
+#align category_theory.compose_path_to_path CategoryTheory.compose_path_to_path
 
 @[simp]
 theorem compose_path_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
@@ -177,15 +190,18 @@ theorem compose_path_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
     
   · simp [ih]
     
+#align category_theory.compose_path_comp CategoryTheory.compose_path_comp
 
 @[simp]
 theorem compose_path_id {X : Paths C} : composePath (𝟙 X) = 𝟙 X :=
   rfl
+#align category_theory.compose_path_id CategoryTheory.compose_path_id
 
 @[simp]
 theorem compose_path_comp' {X Y Z : Paths C} (f : X ⟶ Y) (g : Y ⟶ Z) :
     composePath (f ≫ g) = composePath f ≫ composePath g :=
   compose_path_comp f g
+#align category_theory.compose_path_comp' CategoryTheory.compose_path_comp'
 
 variable (C)
 
@@ -194,6 +210,7 @@ variable (C)
 def pathComposition : Paths C ⥤ C where
   obj X := X
   map X Y f := composePath f
+#align category_theory.path_composition CategoryTheory.pathComposition
 
 -- TODO: This, and what follows, should be generalized to
 -- the `hom_rel` for the kernel of any functor.
@@ -203,6 +220,7 @@ def pathComposition : Paths C ⥤ C where
 two paths are related if they compose to the same morphism. -/
 @[simp]
 def PathsHomRel : HomRel (Paths C) := fun X Y p q => (pathComposition C).map p = (pathComposition C).map q
+#align category_theory.paths_hom_rel CategoryTheory.PathsHomRel
 
 /-- The functor from a category to the canonical quotient of its path category. -/
 @[simps]
@@ -211,12 +229,14 @@ def toQuotientPaths : C ⥤ Quotient (PathsHomRel C) where
   map X Y f := Quot.mk _ f.toPath
   map_id' X := Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
   map_comp' X Y Z f g := Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
+#align category_theory.to_quotient_paths CategoryTheory.toQuotientPaths
 
 /-- The functor from the canonical quotient of a path category of a category
 to the original category. -/
 @[simps]
 def quotientPathsTo : Quotient (PathsHomRel C) ⥤ C :=
   Quotient.lift _ (pathComposition C) fun X Y p q w => w
+#align category_theory.quotient_paths_to CategoryTheory.quotientPathsTo
 
 /-- The canonical quotient of the path category of a category
 is equivalent to the original category. -/
@@ -245,6 +265,7 @@ def quotientPathsEquiv : Quotient (PathsHomRel C) ≌ C where
     dsimp
     simp
     rfl
+#align category_theory.quotient_paths_equiv CategoryTheory.quotientPathsEquiv
 
 end
 

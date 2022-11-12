@@ -34,6 +34,7 @@ unsafe def select : ℕ → ℕ → tactic Unit
   | 0, n + 1 => left >> skip
   | m + 1, n + 1 => right >> select m n
   | n + 1, 0 => failure
+#align mk_iff.select mk_iff.select
 
 /-- `compact_relation bs as_ps`: Produce a relation of the form:
 ```lean
@@ -55,6 +56,7 @@ unsafe def compact_relation : List expr → List (expr × expr) → List (Option
       let i := a.instantiate_local b.local_uniq_name
       let (bs, ps) := compact_relation (bs.map i) ((ps₁ ++ ps₂).map fun ⟨a, p⟩ => (a, i p))
       (none :: bs, ps)
+#align mk_iff.compact_relation mk_iff.compact_relation
 
 -- TODO: document
 @[nolint doc_blame]
@@ -91,6 +93,7 @@ unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr
         let r ← mk_exists_lst bs' (mk_and_lst eqs)
         return (Sum.inr eqs, r)
   return ((bs, n), r)
+#align mk_iff.constr_to_prop mk_iff.constr_to_prop
 
 -- TODO: document
 @[nolint doc_blame]
@@ -111,6 +114,7 @@ unsafe def to_cases (s : List <| List (Option expr) × Sum expr ℕ) : tactic Un
             (iterate_exactly (n - 1) ((split >> constructor) >> skip) >> constructor) >> skip
         done)
   done
+#align mk_iff.to_cases mk_iff.to_cases
 
 /-- Iterate over two lists, if the first element of the first list is `none`, insert `none` into the
 result and continue with the tail of first list. Otherwise, wrap the first element of the second
@@ -126,6 +130,7 @@ def listOptionMerge {α : Type _} {β : Type _} : List (Option α) → List β �
   | none :: xs, ys => none :: list_option_merge xs ys
   | some _ :: xs, y :: ys => some y :: list_option_merge xs ys
   | some _ :: xs, [] => []
+#align mk_iff.list_option_merge MkIff.listOptionMerge
 
 -- TODO: document
 @[nolint doc_blame]
@@ -166,6 +171,7 @@ unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Optio
           exact (c args)
           done)
     done
+#align mk_iff.to_inductive mk_iff.to_inductive
 
 end MkIff
 
@@ -206,7 +212,8 @@ unsafe def mk_iff_of_inductive_prop (i : Name) (r : Name) : tactic Unit := do
   let/- we use these names for our universe parameters, maybe we should construct a copy of them
         using `uniq_name` -/
     (g, quote.1 Prop)
-    ← open_pis type | fail "Inductive type is not a proposition"
+    ← open_pis type |
+    fail "Inductive type is not a proposition"
   let lhs := (const i univs).mk_app g
   let shape_rhss ← constrs.mmap (constr_to_prop univs (g.take params) (g.drop params))
   let shape := shape_rhss.map Prod.fst
@@ -216,6 +223,7 @@ unsafe def mk_iff_of_inductive_prop (i : Name) (r : Name) : tactic Unit := do
       split
       focus' [to_cases shape, intro1 >>= to_inductive constrs (gs params) shape]
   skip
+#align tactic.mk_iff_of_inductive_prop tactic.mk_iff_of_inductive_prop
 
 end Tactic
 
@@ -246,6 +254,7 @@ unsafe def mk_iff_of_inductive_prop_cmd (_ : parse (tk "mk_iff_of_inductive_prop
   let i ← ident
   let r ← ident
   tactic.mk_iff_of_inductive_prop i r
+#align mk_iff_of_inductive_prop_cmd mk_iff_of_inductive_prop_cmd
 
 add_tactic_doc
   { Name := "mk_iff_of_inductive_prop", category := DocCategory.cmd, declNames := [`` mk_iff_of_inductive_prop_cmd],
@@ -297,6 +306,7 @@ unsafe def mk_iff_attr : user_attribute Unit (Option Name) where
     some fun n _ _ => do
       let tgt ← mk_iff_attr.get_param n
       tactic.mk_iff_of_inductive_prop n (tgt (n "_iff"))
+#align mk_iff_attr mk_iff_attr
 
 add_tactic_doc
   { Name := "mk_iff", category := DocCategory.attr, declNames := [`mk_iff_attr], tags := ["logic", "environment"] }

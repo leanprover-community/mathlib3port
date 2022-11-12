@@ -35,18 +35,23 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 -/
 theorem exact_d_f [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
   (Abelian.exact_iff _ _).2 <| ⟨by simp, zero_of_epi_comp (π _) <| by rw [← category.assoc, cokernel.condition]⟩
+#align category_theory.exact_d_f CategoryTheory.exact_d_f
 
 /-- The preadditive Co-Yoneda functor on `P` preserves colimits if `P` is projective. -/
 def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Projective P] :
     PreservesFiniteColimits (preadditiveCoyonedaObj (op P)) := by
   letI := (projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' P).mp hP
   apply functor.preserves_finite_colimits_of_preserves_epis_and_kernels
+#align
+  category_theory.preserves_finite_colimits_preadditive_coyoneda_obj_of_projective CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective
 
 /-- An object is projective if its preadditive Co-Yoneda functor preserves finite colimits. -/
 theorem projective_of_preserves_finite_colimits_preadditive_coyoneda_obj (P : C)
     [hP : PreservesFiniteColimits (preadditiveCoyonedaObj (op P))] : Projective P := by
   rw [projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj']
   infer_instance
+#align
+  category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj CategoryTheory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj
 
 namespace ProjectiveResolutionCat
 
@@ -67,6 +72,7 @@ variable [EnoughProjectives C]
 def ofComplex (Z : C) : ChainComplex C ℕ :=
   ChainComplex.mk' (Projective.over Z) (Projective.syzygies (Projective.π Z)) (Projective.d (Projective.π Z))
     fun ⟨X, Y, f⟩ => ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
+#align category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolutionCat.ofComplex
 
 /-- In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projective resolution of the object `Z`.
@@ -87,6 +93,7 @@ irreducible_def of (Z : C) : ProjectiveResolutionCat Z :=
           apply exact_d_f
           ,
     Epi := Projective.π_epi Z }
+#align category_theory.ProjectiveResolution.of CategoryTheory.ProjectiveResolutionCat.of
 
 instance (priority := 100) (Z : C) : HasProjectiveResolution Z where out := ⟨of Z⟩
 

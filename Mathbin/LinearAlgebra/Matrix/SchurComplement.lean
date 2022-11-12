@@ -40,6 +40,7 @@ theorem schur_complement_eq₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A : M
   simp [Function.star_sum_elim, from_blocks_mul_vec, vec_mul_from_blocks, add_vec_mul, dot_product_mul_vec, vec_mul_sub,
     Matrix.mul_assoc, vec_mul_mul_vec, hA.eq, conj_transpose_nonsing_inv, star_mul_vec]
   abel
+#align matrix.schur_complement_eq₁₁ Matrix.schur_complement_eq₁₁
 
 theorem schur_complement_eq₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜) (B : Matrix m n 𝕜)
     {D : Matrix n n 𝕜} (x : m → 𝕜) (y : n → 𝕜) [Invertible D] (hD : D.IsHermitian) :
@@ -50,6 +51,7 @@ theorem schur_complement_eq₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A : M
   simp [Function.star_sum_elim, from_blocks_mul_vec, vec_mul_from_blocks, add_vec_mul, dot_product_mul_vec, vec_mul_sub,
     Matrix.mul_assoc, vec_mul_mul_vec, hD.eq, conj_transpose_nonsing_inv, star_mul_vec]
   abel
+#align matrix.schur_complement_eq₂₂ Matrix.schur_complement_eq₂₂
 
 end Matrix
 
@@ -74,11 +76,13 @@ theorem IsHermitian.from_blocks₁₁ [Fintype m] [DecidableEq m] {A : Matrix m 
     rw [← sub_add_cancel D]
     apply is_hermitian.add h hBAB
     
+#align matrix.is_hermitian.from_blocks₁₁ Matrix.IsHermitian.from_blocks₁₁
 
 theorem IsHermitian.from_blocks₂₂ [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜) (B : Matrix m n 𝕜) {D : Matrix n n 𝕜}
     (hD : D.IsHermitian) : (fromBlocks A B Bᴴ D).IsHermitian ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).IsHermitian := by
   rw [← is_hermitian_submatrix_equiv (Equiv.sumComm n m), Equiv.sum_comm_apply, from_blocks_submatrix_sum_swap_sum_swap]
   convert is_hermitian.from_blocks₁₁ _ _ hD <;> simp
+#align matrix.is_hermitian.from_blocks₂₂ Matrix.IsHermitian.from_blocks₂₂
 
 theorem PosSemidef.from_blocks₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A : Matrix m m 𝕜} (B : Matrix m n 𝕜)
     (D : Matrix n n 𝕜) (hA : A.PosDef) [Invertible A] :
@@ -101,12 +105,14 @@ theorem PosSemidef.from_blocks₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A 
       apply h.2
       
     
+#align matrix.pos_semidef.from_blocks₁₁ Matrix.PosSemidef.from_blocks₁₁
 
 theorem PosSemidef.from_blocks₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜) (B : Matrix m n 𝕜)
     {D : Matrix n n 𝕜} (hD : D.PosDef) [Invertible D] :
     (fromBlocks A B Bᴴ D).PosSemidef ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).PosSemidef := by
   rw [← pos_semidef_submatrix_equiv (Equiv.sumComm n m), Equiv.sum_comm_apply, from_blocks_submatrix_sum_swap_sum_swap]
   convert pos_semidef.from_blocks₁₁ _ _ hD <;> first |infer_instance|simp
+#align matrix.pos_semidef.from_blocks₂₂ Matrix.PosSemidef.from_blocks₂₂
 
 end Matrix
 

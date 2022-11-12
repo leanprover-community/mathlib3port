@@ -21,14 +21,18 @@ integer `r` such that `r * r ≤ n`. If it is negative, it returns `0`. For exam
 @[pp_nodot]
 def sqrt (z : ℤ) : ℤ :=
   Nat.sqrt <| Int.toNat z
+#align int.sqrt Int.sqrt
 
 theorem sqrt_eq (n : ℤ) : sqrt (n * n) = n.natAbs := by rw [sqrt, ← nat_abs_mul_self, to_nat_coe_nat, Nat.sqrt_eq]
+#align int.sqrt_eq Int.sqrt_eq
 
 theorem exists_mul_self (x : ℤ) : (∃ n, n * n = x) ↔ sqrt x * sqrt x = x :=
   ⟨fun ⟨n, hn⟩ => by rw [← hn, sqrt_eq, ← Int.coe_nat_mul, nat_abs_mul_self], fun h => ⟨sqrt x, h⟩⟩
+#align int.exists_mul_self Int.exists_mul_self
 
 theorem sqrt_nonneg (n : ℤ) : 0 ≤ sqrt n :=
   coe_nat_nonneg _
+#align int.sqrt_nonneg Int.sqrt_nonneg
 
 end Int
 

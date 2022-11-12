@@ -35,12 +35,14 @@ namespace Tactic
 /-- Apply the constant `iff_of_eq` to the goal. -/
 unsafe def apply_iff_congr_core : tactic Unit :=
   applyc `` iff_of_eq
+#align tactic.apply_iff_congr_core tactic.apply_iff_congr_core
 
 /-- The main part of the body for the loop in `congr'`. This will try to replace a goal `f x = f y`
  with `x = y`. Also has support for `==` and `↔`. -/
 unsafe def congr_core' : tactic Unit := do
   let tgt ← target
   apply_eq_congr_core tgt <|> apply_heq_congr_core <|> apply_iff_congr_core <|> fail "congr tactic failed"
+#align tactic.congr_core' tactic.congr_core'
 
 /-- The main function in `convert_to`. Changes the goal to `r` and a proof obligation that the goal
   is equal to `r`. -/
@@ -49,6 +51,7 @@ unsafe def convert_to_core (r : pexpr) : tactic Unit := do
   let h ← to_expr (pquote.1 (_ : (%%ₓtgt) = %%ₓr))
   rewrite_target h
   swap
+#align tactic.convert_to_core tactic.convert_to_core
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -58,6 +61,7 @@ unsafe def by_proof_irrel : tactic Unit := do
   let tgt ← target
   let @expr.const tt n [level.zero] ← pure tgt.get_app_fn
   if n = `` Eq then sorry else if n = `` HEq then sorry else failed
+#align tactic.by_proof_irrel tactic.by_proof_irrel
 
 /-- Same as the `congr` tactic, but takes an optional argument which gives
 the depth of recursive applications.
@@ -73,6 +77,7 @@ unsafe def congr' : Option ℕ → tactic Unit
         reflexivity Transparency.none <|>
           by_proof_irrel <|>
             (guard (o ≠ some 0) >> congr_core') >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity
+#align tactic.congr' tactic.congr'
 
 namespace Interactive
 
@@ -97,6 +102,7 @@ unsafe def congr' (n : parse (parser.optional (with_desc "n" small_nat))) :
       tactic Unit
   | none => tactic.congr' n
   | some ⟨p, m⟩ => focus1 (tactic.congr' n >> all_goals' (tactic.ext p.join m $> ()))
+#align tactic.interactive.congr' tactic.interactive.congr'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Repeatedly and apply `congr'` and `ext`, using the given patterns as arguments for `ext`.
@@ -137,6 +143,7 @@ unsafe def rcongr : parse (List.join <$> parser.many rintro_patt_parse_hi) → t
               guard <| ¬s == t)) |
       skip
     done <|> rcongr (qs ps)
+#align tactic.interactive.rcongr tactic.interactive.rcongr
 
 add_tactic_doc
   { Name := "congr'", category := DocCategory.tactic,
@@ -201,6 +208,7 @@ unsafe def convert (sym : parse (with_desc "←" (parser.optional (tk "<-")))) (
   try (tactic.congr' n)
   let gs' ← get_goals
   set_goals <| gs' ++ gs
+#align tactic.interactive.convert tactic.interactive.convert
 
 add_tactic_doc
   { Name := "convert", category := DocCategory.tactic, declNames := [`tactic.interactive.convert],
@@ -221,6 +229,7 @@ unsafe def convert_to (r : parse texpr) (n : parse (parser.optional (tk "using" 
   | none => convert_to_core r >> sorry
   | some 0 => convert_to_core r
   | some o => convert_to_core r >> tactic.congr' o
+#align tactic.interactive.convert_to tactic.interactive.convert_to
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `ac_change g using n` is `convert_to g using n` followed by `ac_refl`. It is useful for
@@ -235,6 +244,7 @@ end
 -/
 unsafe def ac_change (r : parse texpr) (n : parse (parser.optional (tk "using" *> small_nat))) : tactic Unit :=
   andthen (convert_to r n) (try ac_refl)
+#align tactic.interactive.ac_change tactic.interactive.ac_change
 
 add_tactic_doc
   { Name := "convert_to", category := DocCategory.tactic,

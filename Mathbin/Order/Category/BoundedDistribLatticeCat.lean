@@ -24,6 +24,7 @@ open CategoryTheory
 structure BoundedDistribLatticeCat where
   toDistribLattice : DistribLatticeCat
   [isBoundedOrder : BoundedOrder to_DistribLattice]
+#align BoundedDistribLattice BoundedDistribLatticeCat
 
 namespace BoundedDistribLatticeCat
 
@@ -38,10 +39,12 @@ attribute [instance] BoundedDistribLatticeCat.isBoundedOrder
 /-- Construct a bundled `BoundedDistribLattice` from a `bounded_order` `distrib_lattice`. -/
 def of (α : Type _) [DistribLattice α] [BoundedOrder α] : BoundedDistribLatticeCat :=
   ⟨⟨α⟩⟩
+#align BoundedDistribLattice.of BoundedDistribLatticeCat.of
 
 @[simp]
 theorem coe_of (α : Type _) [DistribLattice α] [BoundedOrder α] : ↥(of α) = α :=
   rfl
+#align BoundedDistribLattice.coe_of BoundedDistribLatticeCat.coe_of
 
 instance : Inhabited BoundedDistribLatticeCat :=
   ⟨of PUnit⟩
@@ -49,10 +52,12 @@ instance : Inhabited BoundedDistribLatticeCat :=
 /-- Turn a `BoundedDistribLattice` into a `BoundedLattice` by forgetting it is distributive. -/
 def toBoundedLattice (X : BoundedDistribLatticeCat) : BoundedLatticeCat :=
   BoundedLatticeCat.of X
+#align BoundedDistribLattice.to_BoundedLattice BoundedDistribLatticeCat.toBoundedLattice
 
 @[simp]
 theorem coe_to_BoundedLattice (X : BoundedDistribLatticeCat) : ↥X.toBoundedLattice = ↥X :=
   rfl
+#align BoundedDistribLattice.coe_to_BoundedLattice BoundedDistribLatticeCat.coe_to_BoundedLattice
 
 instance : LargeCategory.{u} BoundedDistribLatticeCat :=
   InducedCategory.category toBoundedLattice
@@ -63,14 +68,18 @@ instance : ConcreteCategory BoundedDistribLatticeCat :=
 instance hasForgetToDistribLattice :
     HasForget₂ BoundedDistribLatticeCat
       DistribLatticeCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
+#align BoundedDistribLattice.has_forget_to_DistribLattice BoundedDistribLatticeCat.hasForgetToDistribLattice
 
 instance hasForgetToBoundedLattice : HasForget₂ BoundedDistribLatticeCat BoundedLatticeCat :=
   InducedCategory.hasForget₂ toBoundedLattice
+#align BoundedDistribLattice.has_forget_to_BoundedLattice BoundedDistribLatticeCat.hasForgetToBoundedLattice
 
 theorem forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice :
     forget₂ BoundedDistribLatticeCat BoundedLatticeCat ⋙ forget₂ BoundedLatticeCat LatticeCat =
       forget₂ BoundedDistribLatticeCat DistribLatticeCat ⋙ forget₂ DistribLatticeCat LatticeCat :=
   rfl
+#align
+  BoundedDistribLattice.forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice BoundedDistribLatticeCat.forget_BoundedLattice_Lattice_eq_forget_DistribLattice_Lattice
 
 /-- Constructs an equivalence between bounded distributive lattices from an order isomorphism
 between them. -/
@@ -84,18 +93,21 @@ def Iso.mk {α β : BoundedDistribLatticeCat.{u}} (e : α ≃o β) : α ≅ β w
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
+#align BoundedDistribLattice.iso.mk BoundedDistribLatticeCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : BoundedDistribLatticeCat ⥤ BoundedDistribLatticeCat where
   obj X := of Xᵒᵈ
   map X Y := BoundedLatticeHom.dual
+#align BoundedDistribLattice.dual BoundedDistribLatticeCat.dual
 
 /-- The equivalence between `BoundedDistribLattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : BoundedDistribLatticeCat ≌ BoundedDistribLatticeCat :=
   Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+#align BoundedDistribLattice.dual_equiv BoundedDistribLatticeCat.dualEquiv
 
 end BoundedDistribLatticeCat
 
@@ -103,4 +115,5 @@ theorem BoundedDistribLattice_dual_comp_forget_to_DistribLattice :
     BoundedDistribLatticeCat.dual ⋙ forget₂ BoundedDistribLatticeCat DistribLatticeCat =
       forget₂ BoundedDistribLatticeCat DistribLatticeCat ⋙ DistribLatticeCat.dual :=
   rfl
+#align BoundedDistribLattice_dual_comp_forget_to_DistribLattice BoundedDistribLattice_dual_comp_forget_to_DistribLattice
 

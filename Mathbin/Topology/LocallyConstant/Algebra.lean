@@ -25,10 +25,12 @@ instance [One Y] : One (LocallyConstant X Y) where one := const X 1
 @[simp, to_additive]
 theorem coe_one [One Y] : ⇑(1 : LocallyConstant X Y) = (1 : X → Y) :=
   rfl
+#align locally_constant.coe_one LocallyConstant.coe_one
 
 @[to_additive]
 theorem one_apply [One Y] (x : X) : (1 : LocallyConstant X Y) x = 1 :=
   rfl
+#align locally_constant.one_apply LocallyConstant.one_apply
 
 @[to_additive]
 instance [Inv Y] : Inv (LocallyConstant X Y) where inv f := ⟨f⁻¹, f.IsLocallyConstant.inv⟩
@@ -36,10 +38,12 @@ instance [Inv Y] : Inv (LocallyConstant X Y) where inv f := ⟨f⁻¹, f.IsLocal
 @[simp, to_additive]
 theorem coe_inv [Inv Y] (f : LocallyConstant X Y) : ⇑f⁻¹ = f⁻¹ :=
   rfl
+#align locally_constant.coe_inv LocallyConstant.coe_inv
 
 @[to_additive]
 theorem inv_apply [Inv Y] (f : LocallyConstant X Y) (x : X) : f⁻¹ x = (f x)⁻¹ :=
   rfl
+#align locally_constant.inv_apply LocallyConstant.inv_apply
 
 @[to_additive]
 instance [Mul Y] : Mul (LocallyConstant X Y) where mul f g := ⟨f * g, f.IsLocallyConstant.mul g.IsLocallyConstant⟩
@@ -47,10 +51,12 @@ instance [Mul Y] : Mul (LocallyConstant X Y) where mul f g := ⟨f * g, f.IsLoca
 @[simp, to_additive]
 theorem coe_mul [Mul Y] (f g : LocallyConstant X Y) : ⇑(f * g) = f * g :=
   rfl
+#align locally_constant.coe_mul LocallyConstant.coe_mul
 
 @[to_additive]
 theorem mul_apply [Mul Y] (f g : LocallyConstant X Y) (x : X) : (f * g) x = f x * g x :=
   rfl
+#align locally_constant.mul_apply LocallyConstant.mul_apply
 
 @[to_additive]
 instance [MulOneClass Y] : MulOneClass (LocallyConstant X Y) :=
@@ -70,6 +76,7 @@ def coeFnMonoidHom [MulOneClass Y] : LocallyConstant X Y →* X → Y where
   toFun := coeFn
   map_one' := rfl
   map_mul' _ _ := rfl
+#align locally_constant.coe_fn_monoid_hom LocallyConstant.coeFnMonoidHom
 
 /-- The constant-function embedding, as a multiplicative monoid hom. -/
 @[to_additive "The constant-function embedding, as an additive monoid hom.", simps]
@@ -77,6 +84,7 @@ def constMonoidHom [MulOneClass Y] : Y →* LocallyConstant X Y where
   toFun := const X
   map_one' := rfl
   map_mul' _ _ := rfl
+#align locally_constant.const_monoid_hom LocallyConstant.constMonoidHom
 
 instance [MulZeroClass Y] : MulZeroClass (LocallyConstant X Y) :=
   { LocallyConstant.hasZero, LocallyConstant.hasMul with
@@ -100,18 +108,23 @@ variable (Y) [MulZeroOneClass Y] {U V : Set X}
   where `U` is a clopen set, and `0` otherwise. -/
 noncomputable def charFn (hU : IsClopen U) : LocallyConstant X Y :=
   indicator 1 hU
+#align locally_constant.char_fn LocallyConstant.charFn
 
 theorem coe_char_fn (hU : IsClopen U) : (charFn Y hU : X → Y) = Set.indicator U 1 :=
   rfl
+#align locally_constant.coe_char_fn LocallyConstant.coe_char_fn
 
 theorem char_fn_eq_one [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (1 : Y) ↔ x ∈ U :=
   Set.indicator_eq_one_iff_mem _
+#align locally_constant.char_fn_eq_one LocallyConstant.char_fn_eq_one
 
 theorem char_fn_eq_zero [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (0 : Y) ↔ x ∉ U :=
   Set.indicator_eq_zero_iff_not_mem _
+#align locally_constant.char_fn_eq_zero LocallyConstant.char_fn_eq_zero
 
 theorem char_fn_inj [Nontrivial Y] (hU : IsClopen U) (hV : IsClopen V) (h : charFn Y hU = charFn Y hV) : U = V :=
   Set.indicator_one_inj Y <| coe_inj.mpr h
+#align locally_constant.char_fn_inj LocallyConstant.char_fn_inj
 
 end CharFn
 
@@ -121,10 +134,12 @@ instance [Div Y] : Div (LocallyConstant X Y) where div f g := ⟨f / g, f.IsLoca
 @[to_additive]
 theorem coe_div [Div Y] (f g : LocallyConstant X Y) : ⇑(f / g) = f / g :=
   rfl
+#align locally_constant.coe_div LocallyConstant.coe_div
 
 @[to_additive]
 theorem div_apply [Div Y] (f g : LocallyConstant X Y) (x : X) : (f / g) x = f x / g x :=
   rfl
+#align locally_constant.div_apply LocallyConstant.div_apply
 
 @[to_additive]
 instance [Semigroup Y] : Semigroup (LocallyConstant X Y) :=
@@ -197,6 +212,7 @@ instance [NonAssocSemiring Y] : NonAssocSemiring (LocallyConstant X Y) :=
 @[simps]
 def constRingHom [NonAssocSemiring Y] : Y →+* LocallyConstant X Y :=
   { constMonoidHom, constAddMonoidHom with toFun := const X }
+#align locally_constant.const_ring_hom LocallyConstant.constRingHom
 
 instance [Semiring Y] : Semiring (LocallyConstant X Y) :=
   { LocallyConstant.nonAssocSemiring, LocallyConstant.monoid with }
@@ -235,9 +251,11 @@ instance [HasSmul R Y] :
 @[simp]
 theorem coe_smul [HasSmul R Y] (r : R) (f : LocallyConstant X Y) : ⇑(r • f) = r • f :=
   rfl
+#align locally_constant.coe_smul LocallyConstant.coe_smul
 
 theorem smul_apply [HasSmul R Y] (r : R) (f : LocallyConstant X Y) (x : X) : (r • f) x = r • f x :=
   rfl
+#align locally_constant.smul_apply LocallyConstant.smul_apply
 
 instance [Monoid R] [MulAction R Y] : MulAction R (LocallyConstant X Y) :=
   Function.Injective.mulAction _ coe_injective fun _ _ => rfl
@@ -266,6 +284,7 @@ instance : Algebra R (LocallyConstant X Y) where
 @[simp]
 theorem coe_algebra_map (r : R) : ⇑(algebraMap R (LocallyConstant X Y) r) = algebraMap R (X → Y) r :=
   rfl
+#align locally_constant.coe_algebra_map LocallyConstant.coe_algebra_map
 
 end Algebra
 

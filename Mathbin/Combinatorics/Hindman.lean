@@ -46,6 +46,7 @@ open Filter
 /-- Multiplication of ultrafilters given by `∀ᶠ m in U*V, p m ↔ ∀ᶠ m in U, ∀ᶠ m' in V, p (m*m')`. -/
 @[to_additive "Addition of ultrafilters given by\n`∀ᶠ m in U+V, p m ↔ ∀ᶠ m in U, ∀ᶠ m' in V, p (m+m')`."]
 def Ultrafilter.hasMul {M} [Mul M] : Mul (Ultrafilter M) where mul U V := (· * ·) <$> U <*> V
+#align ultrafilter.has_mul Ultrafilter.hasMul
 
 attribute [local instance] Ultrafilter.hasMul Ultrafilter.hasAdd
 
@@ -55,6 +56,7 @@ defines an ultrafilter. -/
 theorem Ultrafilter.eventually_mul {M} [Mul M] (U V : Ultrafilter M) (p : M → Prop) :
     (∀ᶠ m in ↑(U * V), p m) ↔ ∀ᶠ m in U, ∀ᶠ m' in V, p (m * m') :=
   Iff.rfl
+#align ultrafilter.eventually_mul Ultrafilter.eventually_mul
 
 /-- Semigroup structure on `ultrafilter M` induced by a semigroup structure on `M`. -/
 @[to_additive "Additive semigroup structure on `ultrafilter M` induced by an additive semigroup\nstructure on `M`."]
@@ -62,6 +64,7 @@ def Ultrafilter.semigroup {M} [Semigroup M] : Semigroup (Ultrafilter M) :=
   { Ultrafilter.hasMul with
     mul_assoc := fun U V W =>
       Ultrafilter.coe_inj.mp <| Filter.ext' fun p => by simp only [Ultrafilter.eventually_mul, mul_assoc] }
+#align ultrafilter.semigroup Ultrafilter.semigroup
 
 attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 
@@ -70,6 +73,7 @@ attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 theorem Ultrafilter.continuous_mul_left {M} [Semigroup M] (V : Ultrafilter M) : Continuous (· * V) :=
   TopologicalSpace.IsTopologicalBasis.continuous ultrafilter_basis_is_basis _ <|
     Set.forall_range_iff.mpr fun s => ultrafilter_is_open_basic { m : M | ∀ᶠ m' in V, m * m' ∈ s }
+#align ultrafilter.continuous_mul_left Ultrafilter.continuous_mul_left
 
 namespace Hindman
 
@@ -79,6 +83,7 @@ inductive FS {M} [AddSemigroup M] : Stream M → Set M
   | head (a : Stream M) : FS a a.head
   | tail (a : Stream M) (m : M) (h : FS a.tail m) : FS a m
   | cons (a : Stream M) (m : M) (h : FS a.tail m) : FS a (a.head + m)
+#align hindman.FS Hindman.FS
 
 /-- `FP a` is the set of finite products in `a`, i.e. `m ∈ FP a` if `m` is the product of a nonempty
 subsequence of `a`. We give a direct inductive definition instead of talking about subsequences. -/
@@ -87,6 +92,7 @@ inductive FP {M} [Semigroup M] : Stream M → Set M
   | head (a : Stream M) : FP a a.head
   | tail (a : Stream M) (m : M) (h : FP a.tail m) : FP a m
   | cons (a : Stream M) (m : M) (h : FP a.tail m) : FP a (a.head * m)
+#align hindman.FP Hindman.FP
 
 /-- If `m` and `m'` are finite products in `M`, then so is `m * m'`, provided that `m'` is obtained
 from a subsequence of `M` starting sufficiently late. -/
@@ -107,6 +113,7 @@ theorem FP.mul {M} [Semigroup M] {a : Stream M} {m : M} (hm : m ∈ FP a) : ∃ 
     rw [mul_assoc]
     exact FP.cons _ _ (hn _ hm')
     
+#align hindman.FP.mul Hindman.FP.mul
 
 @[to_additive exists_idempotent_ultrafilter_le_FS]
 theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream M) :
@@ -147,6 +154,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream M) :
     apply hn
     simpa only [Stream.drop_drop] using hm'
     
+#align hindman.exists_idempotent_ultrafilter_le_FP Hindman.exists_idempotent_ultrafilter_le_FP
 
 @[to_additive exists_FS_of_large]
 theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U = U) (s₀ : Set M) (sU : s₀ ∈ U) :
@@ -186,6 +194,7 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
       
     rw [Stream.corec_eq, Stream.tail_cons]
     
+#align hindman.exists_FP_of_large Hindman.exists_FP_of_large
 
 /-- The strong form of **Hindman's theorem**: in any finite cover of an FP-set, one the parts
 contains an FP-set. -/
@@ -196,6 +205,7 @@ theorem FP_partition_regular {M} [Semigroup M] (a : Stream M) (s : Set (Set M)) 
   let ⟨U, idem, aU⟩ := exists_idempotent_ultrafilter_le_FP a
   let ⟨c, cs, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset aU scov)
   ⟨c, cs, exists_FP_of_large U idem c hc⟩
+#align hindman.FP_partition_regular Hindman.FP_partition_regular
 
 /-- The weak form of **Hindman's theorem**: in any finite cover of a nonempty semigroup, one of the
 parts contains an FP-set. -/
@@ -206,6 +216,7 @@ theorem exists_FP_of_finite_cover {M} [Semigroup M] [Nonempty M] (s : Set (Set M
   let ⟨U, hU⟩ := exists_idempotent_of_compact_t2_of_continuous_mul_left (@Ultrafilter.continuous_mul_left M _)
   let ⟨c, c_s, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset univ_mem scov)
   ⟨c, c_s, exists_FP_of_large U hU c hc⟩
+#align hindman.exists_FP_of_finite_cover Hindman.exists_FP_of_finite_cover
 
 @[to_additive FS_iter_tail_sub_FS]
 theorem FP_drop_subset_FP {M} [Semigroup M] (a : Stream M) (n : ℕ) : FP (a.drop n) ⊆ FP a := by
@@ -214,6 +225,7 @@ theorem FP_drop_subset_FP {M} [Semigroup M] (a : Stream M) (n : ℕ) : FP (a.dro
     
   rw [Nat.succ_eq_one_add, ← Stream.drop_drop]
   exact trans (FP.tail _) ih
+#align hindman.FP_drop_subset_FP Hindman.FP_drop_subset_FP
 
 @[to_additive]
 theorem FP.singleton {M} [Semigroup M] (a : Stream M) (i : ℕ) : a.nth i ∈ FP a := by
@@ -223,6 +235,7 @@ theorem FP.singleton {M} [Semigroup M] (a : Stream M) (i : ℕ) : a.nth i ∈ FP
   · apply FP.tail
     apply ih
     
+#align hindman.FP.singleton Hindman.FP.singleton
 
 @[to_additive]
 theorem FP.mul_two {M} [Semigroup M] (a : Stream M) (i j : ℕ) (ij : i < j) : a.nth i * a.nth j ∈ FP a := by
@@ -234,6 +247,7 @@ theorem FP.mul_two {M} [Semigroup M] (a : Stream M) (i j : ℕ) (ij : i < j) : a
   rw [Stream.tail_eq_drop, Stream.nth_drop, Stream.nth_drop] at this
   convert this
   rw [hd, add_comm, Nat.succ_add, Nat.add_succ]
+#align hindman.FP.mul_two Hindman.FP.mul_two
 
 @[to_additive]
 theorem FP.finset_prod {M} [CommMonoid M] (a : Stream M) (s : Finset ℕ) (hs : s.Nonempty) :
@@ -254,6 +268,7 @@ theorem FP.finset_prod {M} [CommMonoid M] (a : Stream M) (s : Finset ℕ) (hs : 
     rw [hd, add_comm, ← Stream.drop_drop]
     apply FP_drop_subset_FP
     
+#align hindman.FP.finset_prod Hindman.FP.finset_prod
 
 end Hindman
 

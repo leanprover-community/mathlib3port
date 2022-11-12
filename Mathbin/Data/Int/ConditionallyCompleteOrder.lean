@@ -55,13 +55,16 @@ theorem cSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : �
     
   · exact ⟨Hinh, b, Hb⟩
     
+#align int.cSup_eq_greatest_of_bdd Int.cSup_eq_greatest_of_bdd
 
 @[simp]
 theorem cSup_empty : sup (∅ : Set ℤ) = 0 :=
   dif_neg (by simp)
+#align int.cSup_empty Int.cSup_empty
 
 theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : sup s = 0 :=
   dif_neg (by simp [h])
+#align int.cSup_of_not_bdd_above Int.cSup_of_not_bdd_above
 
 theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z ∈ s, b ≤ z) (Hinh : ∃ z : ℤ, z ∈ s) :
     inf s = leastOfBdd b Hb Hinh := by
@@ -70,21 +73,26 @@ theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) 
     
   · exact ⟨Hinh, b, Hb⟩
     
+#align int.cInf_eq_least_of_bdd Int.cInf_eq_least_of_bdd
 
 @[simp]
 theorem cInf_empty : inf (∅ : Set ℤ) = 0 :=
   dif_neg (by simp)
+#align int.cInf_empty Int.cInf_empty
 
 theorem cInf_of_not_bdd_below {s : Set ℤ} (h : ¬BddBelow s) : inf s = 0 :=
   dif_neg (by simp [h])
+#align int.cInf_of_not_bdd_below Int.cInf_of_not_bdd_below
 
 theorem cSup_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddAbove s) : sup s ∈ s := by
   convert (greatest_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
+#align int.cSup_mem Int.cSup_mem
 
 theorem cInf_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddBelow s) : inf s ∈ s := by
   convert (least_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
+#align int.cInf_mem Int.cInf_mem
 
 end Int
 

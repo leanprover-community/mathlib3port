@@ -17,4 +17,5 @@ We use the dummy declaration in this file to locate the project directory of mat
   tactic `tactic.decl_olean`. This is used in `tactic.get_mathlib_dir`. -/
 theorem mathlib_dir_locator : True :=
   trivial
+#align mathlib_dir_locator mathlib_dir_locator
 

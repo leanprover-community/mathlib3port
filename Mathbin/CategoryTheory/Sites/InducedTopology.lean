@@ -50,6 +50,7 @@ for each covering sieve `T` in `D`, `T ∩ mor(C)` generates a covering sieve in
 -/
 def LocallyCoverDense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop :=
   ∀ ⦃X⦄ (T : K (G.obj X)), (T.val.FunctorPullback G).FunctorPushforward G ∈ K (G.obj X)
+#align category_theory.locally_cover_dense CategoryTheory.LocallyCoverDense
 
 namespace LocallyCoverDense
 
@@ -66,6 +67,8 @@ theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
   · rintro ⟨T, rfl⟩
     exact Hld T
     
+#align
+  category_theory.locally_cover_dense.pushforward_cover_iff_cover_pullback CategoryTheory.LocallyCoverDense.pushforward_cover_iff_cover_pullback
 
 /-- If a functor `G : C ⥤ (D, K)` is fully faithful and locally dense,
 then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
@@ -94,14 +97,19 @@ def inducedTopology : GrothendieckTopology C where
     refine' K.superset_covering _ (H' hg)
     rintro W _ ⟨Z', g', i', hg, rfl⟩
     use ⟨Z', g' ≫ g, i', hg, by simp⟩
+#align category_theory.locally_cover_dense.induced_topology CategoryTheory.LocallyCoverDense.inducedTopology
 
 /-- `G` is cover-lifting wrt the induced topology. -/
 theorem inducedTopologyCoverLifting : CoverLifting Hld.inducedTopology K G :=
   ⟨fun _ S hS => Hld ⟨S, hS⟩⟩
+#align
+  category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.inducedTopologyCoverLifting
 
 /-- `G` is cover-preserving wrt the induced topology. -/
 theorem inducedTopologyCoverPreserving : CoverPreserving Hld.inducedTopology K G :=
   ⟨fun _ S hS => hS⟩
+#align
+  category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.inducedTopologyCoverPreserving
 
 end LocallyCoverDense
 
@@ -115,11 +123,13 @@ theorem CoverDense.locallyCoverDense [Full G] (H : CoverDense K G) : LocallyCove
   constructor
   simpa using T.val.downward_closed hf f'
   simp
+#align category_theory.cover_dense.locally_cover_dense CategoryTheory.CoverDense.locallyCoverDense
 
 /-- Given a fully faithful cover-dense functor `G : C ⥤ (D, K)`, we may induce a topology on `C`.
 -/
 abbrev CoverDense.inducedTopology [Full G] [Faithful G] (H : CoverDense K G) : GrothendieckTopology C :=
   H.LocallyCoverDense.inducedTopology
+#align category_theory.cover_dense.induced_topology CategoryTheory.CoverDense.inducedTopology
 
 variable (J)
 
@@ -134,6 +144,7 @@ theorem overForgetLocallyCoverDense (X : C) : LocallyCoverDense J (Over.forget X
   · intro hf
     exact ⟨over.mk (f ≫ Y.hom), over.hom_mk f, 𝟙 _, hf, (category.id_comp _).symm⟩
     
+#align category_theory.over_forget_locally_cover_dense CategoryTheory.overForgetLocallyCoverDense
 
 end
 
@@ -154,6 +165,7 @@ noncomputable def CoverDense.sheafEquiv [Full G] [Faithful G] (H : CoverDense K 
     SheafCat H.inducedTopology A ≌ SheafCat K A :=
   H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.inducedTopologyCoverPreserving
     H.LocallyCoverDense.inducedTopologyCoverLifting
+#align category_theory.cover_dense.Sheaf_equiv CategoryTheory.CoverDense.sheafEquiv
 
 end SmallSite
 

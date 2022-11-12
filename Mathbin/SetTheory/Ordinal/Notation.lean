@@ -35,6 +35,7 @@ inductive Onote : Type
   | zero : Onote
   | oadd : Onote → ℕ+ → Onote → Onote
   deriving DecidableEq
+#align onote Onote
 
 namespace Onote
 
@@ -45,6 +46,7 @@ instance : Zero Onote :=
 @[simp]
 theorem zero_def : zero = 0 :=
   rfl
+#align onote.zero_def Onote.zero_def
 
 instance : Inhabited Onote :=
   ⟨0⟩
@@ -56,27 +58,32 @@ instance : One Onote :=
 /-- Notation for ω -/
 def omega : Onote :=
   oadd 1 1 0
+#align onote.omega Onote.omega
 
 /-- The ordinal denoted by a notation -/
 @[simp]
 noncomputable def repr : Onote → Ordinal.{0}
   | 0 => 0
   | oadd e n a => ω ^ repr e * n + repr a
+#align onote.repr Onote.repr
 
 /-- Auxiliary definition to print an ordinal notation -/
 def toStringAux1 (e : Onote) (n : ℕ) (s : String) : String :=
   if e = 0 then toString n else (if e = 1 then "ω" else "ω^(" ++ s ++ ")") ++ if n = 1 then "" else "*" ++ toString n
+#align onote.to_string_aux1 Onote.toStringAux1
 
 /-- Print an ordinal notation -/
 def toString : Onote → String
   | zero => "0"
   | oadd e n 0 => toStringAux1 e n (toString e)
   | oadd e n a => toStringAux1 e n (toString e) ++ " + " ++ toString a
+#align onote.to_string Onote.toString
 
 /-- Print an ordinal notation -/
 def repr' : Onote → String
   | zero => "0"
   | oadd e n a => "(oadd " ++ repr' e ++ " " ++ toString (n : ℕ) ++ " " ++ repr' a ++ ")"
+#align onote.repr' Onote.repr'
 
 instance : ToString Onote :=
   ⟨toString⟩
@@ -93,40 +100,49 @@ instance : Preorder Onote where
 
 theorem lt_def {x y : Onote} : x < y ↔ repr x < repr y :=
   Iff.rfl
+#align onote.lt_def Onote.lt_def
 
 theorem le_def {x y : Onote} : x ≤ y ↔ repr x ≤ repr y :=
   Iff.rfl
+#align onote.le_def Onote.le_def
 
 /-- Convert a `nat` into an ordinal -/
 @[simp]
 def ofNat : ℕ → Onote
   | 0 => 0
   | Nat.succ n => oadd 0 n.succPnat 0
+#align onote.of_nat Onote.ofNat
 
 @[simp]
 theorem of_nat_one : ofNat 1 = 1 :=
   rfl
+#align onote.of_nat_one Onote.of_nat_one
 
 @[simp]
 theorem repr_of_nat (n : ℕ) : repr (ofNat n) = n := by cases n <;> simp
+#align onote.repr_of_nat Onote.repr_of_nat
 
 @[simp]
 theorem repr_one : repr 1 = 1 := by simpa using repr_of_nat 1
+#align onote.repr_one Onote.repr_one
 
 theorem omega_le_oadd (e n a) : ω ^ repr e ≤ repr (oadd e n a) := by
   unfold repr
   refine' le_trans _ (le_add_right _ _)
   simpa using (mul_le_mul_iff_left <| opow_pos (repr e) omega_pos).2 (nat_cast_le.2 n.2)
+#align onote.omega_le_oadd Onote.omega_le_oadd
 
 theorem oadd_pos (e n a) : 0 < oadd e n a :=
   @lt_of_lt_of_le _ _ _ _ _ (opow_pos _ omega_pos) (omega_le_oadd _ _ _)
+#align onote.oadd_pos Onote.oadd_pos
 
 /-- Compare ordinal notations -/
 def cmp : Onote → Onote → Ordering
   | 0, 0 => Ordering.eq
   | _, 0 => Ordering.gt
   | 0, _ => Ordering.lt
-  | o₁@(oadd e₁ n₁ a₁), o₂@(oadd e₂ n₂ a₂) => (cmp e₁ e₂).orElse <| (cmp (n₁ : ℕ) n₂).orElse (cmp a₁ a₂)
+  | o₁@(oadd e₁ n₁ a₁), o₂@(oadd e₂ n₂ a₂) => (Cmp e₁ e₂).orElse <| (Cmp (n₁ : ℕ) n₂).orElse (Cmp a₁ a₂)
+#align onote.cmp Onote.cmp
 
 theorem eq_of_cmp_eq : ∀ {o₁ o₂}, cmp o₁ o₂ = Ordering.eq → o₁ = o₂
   | 0, 0, h => rfl
@@ -134,8 +150,8 @@ theorem eq_of_cmp_eq : ∀ {o₁ o₂}, cmp o₁ o₂ = Ordering.eq → o₁ = o
   | 0, oadd e n a, h => by injection h
   | o₁@(oadd e₁ n₁ a₁), o₂@(oadd e₂ n₂ a₂), h => by
     revert h
-    simp only [cmp]
-    cases h₁ : cmp e₁ e₂ <;> intro h <;> try cases h
+    simp only [Cmp]
+    cases h₁ : Cmp e₁ e₂ <;> intro h <;> try cases h
     obtain rfl := eq_of_cmp_eq h₁
     revert h
     cases h₂ : _root_.cmp (n₁ : ℕ) n₂ <;> intro h <;> try cases h
@@ -143,14 +159,17 @@ theorem eq_of_cmp_eq : ∀ {o₁ o₂}, cmp o₁ o₂ = Ordering.eq → o₁ = o
     rw [_root_.cmp, cmp_using_eq_eq] at h₂
     obtain rfl := Subtype.eq (eq_of_incomp h₂)
     simp
+#align onote.eq_of_cmp_eq Onote.eq_of_cmp_eq
 
 theorem zero_lt_one : (0 : Onote) < 1 := by rw [lt_def, repr, repr_one] <;> exact zero_lt_one
+#align onote.zero_lt_one Onote.zero_lt_one
 
 /-- `NF_below o b` says that `o` is a normal form ordinal notation
   satisfying `repr o < ω ^ b`. -/
 inductive NFBelow : Onote → Ordinal.{0} → Prop
   | zero {b} : NF_below 0 b
   | oadd' {e n a eb b} : NF_below e eb → NF_below a (repr e) → repr e < b → NF_below (oadd e n a) b
+#align onote.NF_below Onote.NFBelow
 
 /-- A normal form ordinal notation has the form
 
@@ -164,44 +183,57 @@ inductive NFBelow : Onote → Ordinal.{0} → Prop
   only prove correctness with normal form as an invariant. -/
 class NF (o : Onote) : Prop where
   out : Exists (NFBelow o)
+#align onote.NF Onote.NF
 
 attribute [pp_nodot] NF
 
 instance NF.zero : NF 0 :=
   ⟨⟨0, NFBelow.zero⟩⟩
+#align onote.NF.zero Onote.NF.zero
 
 theorem NFBelow.oadd {e n a b} : NF e → NFBelow a (repr e) → repr e < b → NFBelow (oadd e n a) b
   | ⟨⟨eb, h⟩⟩ => NFBelow.oadd' h
+#align onote.NF_below.oadd Onote.NFBelow.oadd
 
 theorem NFBelow.fst {e n a b} (h : NFBelow (oadd e n a) b) : NF e := by
   cases' h with _ _ _ _ eb _ h₁ h₂ h₃ <;> exact ⟨⟨_, h₁⟩⟩
+#align onote.NF_below.fst Onote.NFBelow.fst
 
 theorem NF.fst {e n a} : NF (oadd e n a) → NF e
   | ⟨⟨b, h⟩⟩ => h.fst
+#align onote.NF.fst Onote.NF.fst
 
 theorem NFBelow.snd {e n a b} (h : NFBelow (oadd e n a) b) : NFBelow a (repr e) := by
   cases' h with _ _ _ _ eb _ h₁ h₂ h₃ <;> exact h₂
+#align onote.NF_below.snd Onote.NFBelow.snd
 
 theorem NF.snd' {e n a} : NF (oadd e n a) → NFBelow a (repr e)
   | ⟨⟨b, h⟩⟩ => h.snd
+#align onote.NF.snd' Onote.NF.snd'
 
 theorem NF.snd {e n a} (h : NF (oadd e n a)) : NF a :=
   ⟨⟨_, h.snd'⟩⟩
+#align onote.NF.snd Onote.NF.snd
 
 theorem NF.oadd {e a} (h₁ : NF e) (n) (h₂ : NFBelow a (repr e)) : NF (oadd e n a) :=
   ⟨⟨_, NFBelow.oadd h₁ h₂ (lt_succ _)⟩⟩
+#align onote.NF.oadd Onote.NF.oadd
 
 instance NF.oadd_zero (e n) [h : NF e] : NF (oadd e n 0) :=
   h.oadd _ NFBelow.zero
+#align onote.NF.oadd_zero Onote.NF.oadd_zero
 
 theorem NFBelow.lt {e n a b} (h : NFBelow (oadd e n a) b) : repr e < b := by
   cases' h with _ _ _ _ eb _ h₁ h₂ h₃ <;> exact h₃
+#align onote.NF_below.lt Onote.NFBelow.lt
 
 theorem NF_below_zero : ∀ {o}, NFBelow o 0 ↔ o = 0
   | 0 => ⟨fun _ => rfl, fun _ => NFBelow.zero⟩
   | oadd e n a => ⟨fun h => (not_le_of_lt h.lt).elim (Ordinal.zero_le _), fun e => e.symm ▸ NF_below.zero⟩
+#align onote.NF_below_zero Onote.NF_below_zero
 
 theorem NF.zero_of_zero {e n a} (h : NF (oadd e n a)) (e0 : e = 0) : a = 0 := by simpa [e0, NF_below_zero] using h.snd'
+#align onote.NF.zero_of_zero Onote.NF.zero_of_zero
 
 theorem NFBelow.repr_lt {o b} (h : NFBelow o b) : repr o < ω ^ b := by
   induction' h with _ e n a eb b h₁ h₂ h₃ _ IH
@@ -214,56 +246,66 @@ theorem NFBelow.repr_lt {o b} (h : NFBelow o b) : repr o < ω ^ b := by
     rw [← opow_succ]
     exact opow_le_opow_right omega_pos (succ_le_of_lt h₃)
     
+#align onote.NF_below.repr_lt Onote.NFBelow.repr_lt
 
 theorem NFBelow.mono {o b₁ b₂} (bb : b₁ ≤ b₂) (h : NFBelow o b₁) : NFBelow o b₂ := by
   induction' h with _ e n a eb b h₁ h₂ h₃ _ IH <;> constructor
   exacts[h₁, h₂, lt_of_lt_of_le h₃ bb]
+#align onote.NF_below.mono Onote.NFBelow.mono
 
 theorem NF.below_of_lt {e n a b} (H : repr e < b) : NF (oadd e n a) → NFBelow (oadd e n a) b
   | ⟨⟨b', h⟩⟩ => by cases' h with _ _ _ _ eb _ h₁ h₂ h₃ <;> exact NF_below.oadd' h₁ h₂ H
+#align onote.NF.below_of_lt Onote.NF.below_of_lt
 
 theorem NF.below_of_lt' : ∀ {o b}, repr o < ω ^ b → NF o → NFBelow o b
   | 0, b, H, _ => NFBelow.zero
   | oadd e n a, b, H, h =>
     h.below_of_lt <| (opow_lt_opow_iff_right one_lt_omega).1 <| lt_of_le_of_lt (omega_le_oadd _ _ _) H
+#align onote.NF.below_of_lt' Onote.NF.below_of_lt'
 
 theorem NF_below_of_nat : ∀ n, NFBelow (ofNat n) 1
   | 0 => NFBelow.zero
   | Nat.succ n => NFBelow.oadd NF.zero NFBelow.zero Ordinal.zero_lt_one
+#align onote.NF_below_of_nat Onote.NF_below_of_nat
 
 instance NF_of_nat (n) : NF (ofNat n) :=
   ⟨⟨_, NF_below_of_nat n⟩⟩
+#align onote.NF_of_nat Onote.NF_of_nat
 
 instance NF_one : NF 1 := by rw [← of_nat_one] <;> infer_instance
+#align onote.NF_one Onote.NF_one
 
 theorem oadd_lt_oadd_1 {e₁ n₁ o₁ e₂ n₂ o₂} (h₁ : NF (oadd e₁ n₁ o₁)) (h : e₁ < e₂) : oadd e₁ n₁ o₁ < oadd e₂ n₂ o₂ :=
   @lt_of_lt_of_le _ _ _ _ _ (h₁.below_of_lt h).repr_lt (omega_le_oadd _ _ _)
+#align onote.oadd_lt_oadd_1 Onote.oadd_lt_oadd_1
 
 theorem oadd_lt_oadd_2 {e o₁ o₂ : Onote} {n₁ n₂ : ℕ+} (h₁ : NF (oadd e n₁ o₁)) (h : (n₁ : ℕ) < n₂) :
     oadd e n₁ o₁ < oadd e n₂ o₂ := by
   simp [lt_def]
   refine' lt_of_lt_of_le ((add_lt_add_iff_left _).2 h₁.snd'.repr_lt) (le_trans _ (le_add_right _ _))
   rwa [← mul_succ, mul_le_mul_iff_left (opow_pos _ omega_pos), succ_le_iff, nat_cast_lt]
+#align onote.oadd_lt_oadd_2 Onote.oadd_lt_oadd_2
 
 theorem oadd_lt_oadd_3 {e n a₁ a₂} (h : a₁ < a₂) : oadd e n a₁ < oadd e n a₂ := by
   rw [lt_def]
   unfold repr
   exact add_lt_add_left h _
+#align onote.oadd_lt_oadd_3 Onote.oadd_lt_oadd_3
 
 theorem cmp_compares : ∀ (a b : Onote) [NF a] [NF b], (cmp a b).Compares a b
   | 0, 0, h₁, h₂ => rfl
   | oadd e n a, 0, h₁, h₂ => oadd_pos _ _ _
   | 0, oadd e n a, h₁, h₂ => oadd_pos _ _ _
   | o₁@(oadd e₁ n₁ a₁), o₂@(oadd e₂ n₂ a₂), h₁, h₂ => by
-    rw [cmp]
+    rw [Cmp]
     have IHe := @cmp_compares _ _ h₁.fst h₂.fst
-    cases cmp e₁ e₂
+    cases Cmp e₁ e₂
     case lt => exact oadd_lt_oadd_1 h₁ IHe
     case gt => exact oadd_lt_oadd_1 h₂ IHe
     change e₁ = e₂ at IHe
     subst IHe
     unfold _root_.cmp
-    cases nh : cmpUsing (· < ·) (n₁ : ℕ) n₂
+    cases nh : CmpUsing (· < ·) (n₁ : ℕ) n₂
     case lt =>
     rw [cmp_using_eq_lt] at nh
     exact oadd_lt_oadd_2 h₁ nh
@@ -273,12 +315,13 @@ theorem cmp_compares : ∀ (a b : Onote) [NF a] [NF b], (cmp a b).Compares a b
     rw [cmp_using_eq_eq] at nh
     obtain rfl := Subtype.eq (eq_of_incomp nh)
     have IHa := @cmp_compares _ _ h₁.snd h₂.snd
-    cases cmp a₁ a₂
+    cases Cmp a₁ a₂
     case lt => exact oadd_lt_oadd_3 IHa
     case gt => exact oadd_lt_oadd_3 IHa
     change a₁ = a₂ at IHa
     subst IHa
     exact rfl
+#align onote.cmp_compares Onote.cmp_compares
 
 theorem repr_inj {a b} [NF a] [NF b] : repr a = repr b ↔ a = b :=
   ⟨match cmp a b, cmp_compares a b with
@@ -286,6 +329,7 @@ theorem repr_inj {a b} [NF a] [NF b] : repr a = repr b ↔ a = b :=
     | Ordering.gt, (h : repr a > repr b), e => (ne_of_gt h e).elim
     | Ordering.eq, h, e => h,
     congr_arg _⟩
+#align onote.repr_inj Onote.repr_inj
 
 theorem NF.of_dvd_omega_opow {b e n a} (h : NF (oadd e n a)) (d : ω ^ b ∣ repr (oadd e n a)) :
     b ≤ repr e ∧ ω ^ b ∣ repr a := by
@@ -293,9 +337,11 @@ theorem NF.of_dvd_omega_opow {b e n a} (h : NF (oadd e n a)) (d : ω ^ b ∣ rep
   have L := le_of_not_lt fun l => not_le_of_lt (h.below_of_lt l).repr_lt (le_of_dvd this d)
   simp at d
   exact ⟨L, (dvd_add_iff <| (opow_dvd_opow _ L).mul_right _).1 d⟩
+#align onote.NF.of_dvd_omega_opow Onote.NF.of_dvd_omega_opow
 
 theorem NF.of_dvd_omega {e n a} (h : NF (oadd e n a)) : ω ∣ repr (oadd e n a) → repr e ≠ 0 ∧ ω ∣ repr a := by
   rw [← opow_one ω, ← one_le_iff_ne_zero] <;> exact h.of_dvd_omega_opow
+#align onote.NF.of_dvd_omega Onote.NF.of_dvd_omega
 
 /-- `top_below b o` asserts that the largest exponent in `o`, if
   it exists, is less than `b`. This is an auxiliary definition
@@ -303,14 +349,17 @@ theorem NF.of_dvd_omega {e n a} (h : NF (oadd e n a)) : ω ∣ repr (oadd e n a)
 def TopBelow (b) : Onote → Prop
   | 0 => True
   | oadd e n a => cmp e b = Ordering.lt
+#align onote.top_below Onote.TopBelow
 
 instance decidableTopBelow : DecidableRel TopBelow := by intro b o <;> cases o <;> delta top_below <;> infer_instance
+#align onote.decidable_top_below Onote.decidableTopBelow
 
 theorem NF_below_iff_top_below {b} [NF b] : ∀ {o}, NFBelow o (repr b) ↔ NF o ∧ TopBelow b o
   | 0 => ⟨fun h => ⟨⟨⟨_, h⟩⟩, trivial⟩, fun _ => NFBelow.zero⟩
   | oadd e n a =>
     ⟨fun h => ⟨⟨⟨_, h⟩⟩, (@cmp_compares _ b h.fst _).eq_lt.2 h.lt⟩, fun ⟨h₁, h₂⟩ =>
       h₁.below_of_lt <| (@cmp_compares _ b h₁.fst _).eq_lt.1 h₂⟩
+#align onote.NF_below_iff_top_below Onote.NF_below_iff_top_below
 
 instance decidableNF : DecidablePred NF
   | 0 => isTrue NF.zero
@@ -322,6 +371,7 @@ instance decidableNF : DecidablePred NF
     abstract 
     rw [← and_congr_right fun h => @NF_below_iff_top_below _ h _]
     exact ⟨fun ⟨h₁, h₂⟩ => NF.oadd h₁ n h₂, fun h => ⟨h.fst, h.snd'⟩⟩
+#align onote.decidable_NF Onote.decidableNF
 
 /-- Addition of ordinal notations (correct only for normal input) -/
 def add : Onote → Onote → Onote
@@ -334,6 +384,7 @@ def add : Onote → Onote → Onote
       | Ordering.lt => o'
       | Ordering.eq => oadd e (n + n') a'
       | Ordering.gt => oadd e n o'
+#align onote.add Onote.add
 
 instance : Add Onote :=
   ⟨add⟩
@@ -341,9 +392,11 @@ instance : Add Onote :=
 @[simp]
 theorem zero_add (o : Onote) : 0 + o = o :=
   rfl
+#align onote.zero_add Onote.zero_add
 
 theorem oadd_add (e n a o) : oadd e n a + o = Add._match1 e n (a + o) :=
   rfl
+#align onote.oadd_add Onote.oadd_add
 
 /-- Subtraction of ordinal notations (correct only for normal input) -/
 def sub : Onote → Onote → Onote
@@ -357,6 +410,7 @@ def sub : Onote → Onote → Onote
       match (n₁ : ℕ) - n₂ with
       | 0 => if n₁ = n₂ then sub a₁ a₂ else 0
       | Nat.succ k => oadd e₁ k.succPnat a₁
+#align onote.sub Onote.sub
 
 instance : Sub Onote :=
   ⟨sub⟩
@@ -371,7 +425,7 @@ theorem add_NF_below {b} : ∀ {o₁ o₂}, NFBelow o₁ b → NFBelow o₂ b �
       
     simp [add]
     have := @cmp_compares _ _ h₁.fst h'.fst
-    cases cmp e e' <;> simp [add]
+    cases Cmp e e' <;> simp [add]
     · exact h'
       
     · simp at this
@@ -380,10 +434,12 @@ theorem add_NF_below {b} : ∀ {o₁ o₂}, NFBelow o₁ b → NFBelow o₂ b �
       
     · exact NF_below.oadd h₁.fst (NF.below_of_lt this ⟨⟨_, h'⟩⟩) h₁.lt
       
+#align onote.add_NF_below Onote.add_NF_below
 
 instance add_NF (o₁ o₂) : ∀ [NF o₁] [NF o₂], NF (o₁ + o₂)
   | ⟨⟨b₁, h₁⟩⟩, ⟨⟨b₂, h₂⟩⟩ =>
     ⟨(le_total b₁ b₂).elim (fun h => ⟨b₂, add_NF_below (h₁.mono h) h₂⟩) fun h => ⟨b₁, add_NF_below h₁ (h₂.mono h)⟩⟩
+#align onote.add_NF Onote.add_NF
 
 @[simp]
 theorem repr_add : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ + o₂) = repr o₁ + repr o₂
@@ -399,7 +455,7 @@ theorem repr_add : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ + o₂) = rep
     have := h₁.fst
     haveI := nf.fst
     have ee := cmp_compares e e'
-    cases cmp e e' <;> simp [add]
+    cases Cmp e e' <;> simp [add]
     · rw [← add_assoc, @add_absorp _ (repr e') (ω ^ repr e' * (n' : ℕ))]
       · have := (h₁.below_of_lt ee).repr_lt
         unfold repr at this
@@ -412,6 +468,7 @@ theorem repr_add : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ + o₂) = rep
       subst e'
       rw [← add_assoc, ← mul_add, ← Nat.cast_add]
       
+#align onote.repr_add Onote.repr_add
 
 theorem sub_NF_below : ∀ {o₁ o₂ b}, NFBelow o₁ b → NF o₂ → NFBelow (o₁ - o₂) b
   | 0, o, b, h₁, h₂ => by cases o <;> exact NF_below.zero
@@ -420,7 +477,7 @@ theorem sub_NF_below : ∀ {o₁ o₂ b}, NFBelow o₁ b → NF o₂ → NFBelow
     have h' := sub_NF_below h₁.snd h₂.snd
     simp [Sub.sub, sub] at h'⊢
     have := @cmp_compares _ _ h₁.fst h₂.fst
-    cases cmp e₁ e₂ <;> simp [sub]
+    cases Cmp e₁ e₂ <;> simp [sub]
     · apply NF_below.zero
       
     · simp at this
@@ -437,9 +494,11 @@ theorem sub_NF_below : ∀ {o₁ o₂ b}, NFBelow o₁ b → NF o₂ → NFBelow
       
     · exact h₁
       
+#align onote.sub_NF_below Onote.sub_NF_below
 
 instance sub_NF (o₁ o₂) : ∀ [NF o₁] [NF o₂], NF (o₁ - o₂)
   | ⟨⟨b₁, h₁⟩⟩, h₂ => ⟨⟨b₁, sub_NF_below h₁ h₂⟩⟩
+#align onote.sub_NF Onote.sub_NF
 
 @[simp]
 theorem repr_sub : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ - o₂) = repr o₁ - repr o₂
@@ -454,7 +513,7 @@ theorem repr_sub : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ - o₂) = rep
     conv at nf in a₁ - a₂ => simp [Sub.sub]
     conv in _ - oadd _ _ _ => simp [Sub.sub, sub]
     have ee := @cmp_compares _ _ h₁.fst h₂.fst
-    cases cmp e₁ e₂
+    cases Cmp e₁ e₂
     · rw [Ordinal.sub_eq_zero_iff_le.2]
       · rfl
         
@@ -483,12 +542,14 @@ theorem repr_sub : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ - o₂) = rep
       
     · exact (Ordinal.sub_eq_of_add_eq <| add_absorp (h₂.below_of_lt ee).repr_lt <| omega_le_oadd _ _ _).symm
       
+#align onote.repr_sub Onote.repr_sub
 
 /-- Multiplication of ordinal notations (correct only for normal input) -/
 def mul : Onote → Onote → Onote
   | 0, _ => 0
   | _, 0 => 0
   | o₁@(oadd e₁ n₁ a₁), oadd e₂ n₂ a₂ => if e₂ = 0 then oadd e₁ (n₁ * n₂) a₁ else oadd (e₁ + e₂) n₂ (mul o₁ a₂)
+#align onote.mul Onote.mul
 
 instance : Mul Onote :=
   ⟨mul⟩
@@ -502,6 +563,7 @@ instance : MulZeroClass Onote where
 theorem oadd_mul (e₁ n₁ a₁ e₂ n₂ a₂) :
     oadd e₁ n₁ a₁ * oadd e₂ n₂ a₂ = if e₂ = 0 then oadd e₁ (n₁ * n₂) a₁ else oadd (e₁ + e₂) n₂ (oadd e₁ n₁ a₁ * a₂) :=
   rfl
+#align onote.oadd_mul Onote.oadd_mul
 
 theorem oadd_mul_NF_below {e₁ n₁ a₁ b₁} (h₁ : NFBelow (oadd e₁ n₁ a₁) b₁) :
     ∀ {o₂ b₂}, NFBelow o₂ b₂ → NFBelow (oadd e₁ n₁ a₁ * o₂) (repr e₁ + b₂)
@@ -522,10 +584,12 @@ theorem oadd_mul_NF_below {e₁ n₁ a₁ b₁} (h₁ : NFBelow (oadd e₁ n₁ 
         exact h₂.lt
         
       
+#align onote.oadd_mul_NF_below Onote.oadd_mul_NF_below
 
 instance mul_NF : ∀ (o₁ o₂) [NF o₁] [NF o₂], NF (o₁ * o₂)
   | 0, o, h₁, h₂ => by cases o <;> exact NF.zero
   | oadd e n a, o, ⟨⟨b₁, hb₁⟩⟩, ⟨⟨b₂, hb₂⟩⟩ => ⟨⟨_, oadd_mul_NF_below hb₁ hb₂⟩⟩
+#align onote.mul_NF Onote.mul_NF
 
 @[simp]
 theorem repr_mul : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ * o₂) = repr o₁ * repr o₂
@@ -554,6 +618,7 @@ theorem repr_mul : ∀ (o₁ o₂) [NF o₁] [NF o₂], repr (o₁ * o₂) = rep
         mul_omega_dvd (nat_cast_pos.2 n₁.pos) (nat_lt_omega _)]
       simpa using opow_dvd_opow ω (one_le_iff_ne_zero.2 this)
       
+#align onote.repr_mul Onote.repr_mul
 
 /-- Calculate division and remainder of `o` mod ω.
   `split' o = (a, n)` means `o = ω * a + n`. -/
@@ -564,6 +629,7 @@ def split' : Onote → Onote × ℕ
     else
       let (a', m) := split' a
       (oadd (e - 1) n a', m)
+#align onote.split' Onote.split'
 
 /-- Calculate division and remainder of `o` mod ω.
   `split o = (a, n)` means `o = a + n`, where `ω ∣ a`. -/
@@ -574,17 +640,20 @@ def split : Onote → Onote × ℕ
     else
       let (a', m) := split a
       (oadd e n a', m)
+#align onote.split Onote.split
 
 /-- `scale x o` is the ordinal notation for `ω ^ x * o`. -/
 def scale (x : Onote) : Onote → Onote
   | 0 => 0
   | oadd e n a => oadd (x + e) n (scale a)
+#align onote.scale Onote.scale
 
 /-- `mul_nat o n` is the ordinal notation for `o * n`. -/
 def mulNat : Onote → ℕ → Onote
   | 0, m => 0
   | _, 0 => 0
   | oadd e n a, m + 1 => oadd e (n * m.succPnat) a
+#align onote.mul_nat Onote.mulNat
 
 /-- Auxiliary definition to compute the ordinal notation for the ordinal
 exponentiation in `opow` -/
@@ -592,6 +661,7 @@ def opowAux (e a0 a : Onote) : ℕ → ℕ → Onote
   | _, 0 => 0
   | 0, m + 1 => oadd e m.succPnat 0
   | k + 1, m => scale (e + mulNat a0 k) a + opow_aux k m
+#align onote.opow_aux Onote.opowAux
 
 /-- `opow o₁ o₂` calculates the ordinal notation for
   the ordinal exponential `o₁ ^ o₂`. -/
@@ -608,12 +678,14 @@ def opow (o₁ o₂ : Onote) : Onote :=
     | (b, k + 1) =>
       let eb := a0 * b
       scale (eb + mulNat a0 k) a + opowAux eb a0 (mulNat a m) k m
+#align onote.opow Onote.opow
 
 instance : Pow Onote Onote :=
   ⟨opow⟩
 
 theorem opow_def (o₁ o₂ : Onote) : o₁ ^ o₂ = Opow._match1 o₂ (split o₁) :=
   rfl
+#align onote.opow_def Onote.opow_def
 
 theorem split_eq_scale_split' : ∀ {o o' m} [NF o], split' o = (o', m) → split o = (scale 1 o', m)
   | 0, o', m, h, p => by injection p <;> substs o' m <;> rfl
@@ -636,6 +708,7 @@ theorem split_eq_scale_split' : ∀ {o o' m} [NF o], split' o = (o', m) → spli
       substs o' m
       simp [scale, this]
       
+#align onote.split_eq_scale_split' Onote.split_eq_scale_split'
 
 theorem NF_repr_split' : ∀ {o o' m} [NF o], split' o = (o', m) → NF o' ∧ repr o = ω * repr o' + m
   | 0, o', m, h, p => by injection p <;> substs o' m <;> simp [NF.zero]
@@ -665,6 +738,7 @@ theorem NF_repr_split' : ∀ {o o' m} [NF o], split' o = (o', m) → NF o' ∧ r
         simp [mul_add, mul_assoc, add_assoc]
         
       
+#align onote.NF_repr_split' Onote.NF_repr_split'
 
 theorem scale_eq_mul (x) [NF x] : ∀ (o) [NF o], scale x o = oadd x 1 0 * o
   | 0, h => rfl
@@ -678,11 +752,14 @@ theorem scale_eq_mul (x) [NF x] : ∀ (o) [NF o], scale x o = oadd x 1 0 * o
       
     · simp [e0, scale_eq_mul, (· * ·)]
       
+#align onote.scale_eq_mul Onote.scale_eq_mul
 
 instance NF_scale (x) [NF x] (o) [NF o] : NF (scale x o) := by rw [scale_eq_mul] <;> infer_instance
+#align onote.NF_scale Onote.NF_scale
 
 @[simp]
 theorem repr_scale (x) [NF x] (o) [NF o] : repr (scale x o) = ω ^ repr x * repr o := by simp [scale_eq_mul]
+#align onote.repr_scale Onote.repr_scale
 
 theorem NF_repr_split {o o' m} [NF o] (h : split o = (o', m)) : NF o' ∧ repr o = repr o' + m := by
   cases' e : split' o with a n
@@ -693,6 +770,7 @@ theorem NF_repr_split {o o' m} [NF o] (h : split o = (o', m)) : NF o' ∧ repr o
   substs o' n
   simp [repr_scale, s₂.symm]
   infer_instance
+#align onote.NF_repr_split Onote.NF_repr_split
 
 theorem split_dvd {o o' m} [NF o] (h : split o = (o', m)) : ω ∣ repr o' := by
   cases' e : split' o with a n
@@ -702,6 +780,7 @@ theorem split_dvd {o o' m} [NF o] (h : split o = (o', m)) : ω ∣ repr o' := by
   cases NF_repr_split' e
   skip
   simp
+#align onote.split_dvd Onote.split_dvd
 
 theorem split_add_lt {o e n a m} [NF o] (h : split o = (oadd e n a, m)) : repr a + m < ω ^ repr e := by
   cases' NF_repr_split h with h₁ h₂
@@ -710,16 +789,20 @@ theorem split_add_lt {o e n a m} [NF o] (h : split o = (oadd e n a, m)) : repr a
   have := h₁.snd
   apply principal_add_omega_opow _ h₁.snd'.repr_lt (lt_of_lt_of_le (nat_lt_omega _) _)
   simpa using opow_le_opow_right omega_pos (one_le_iff_ne_zero.2 e0)
+#align onote.split_add_lt Onote.split_add_lt
 
 @[simp]
 theorem mul_nat_eq_mul (n o) : mulNat o n = o * ofNat n := by cases o <;> cases n <;> rfl
+#align onote.mul_nat_eq_mul Onote.mul_nat_eq_mul
 
 instance NF_mul_nat (o) [NF o] (n) : NF (mulNat o n) := by simp <;> infer_instance
+#align onote.NF_mul_nat Onote.NF_mul_nat
 
 instance NF_opow_aux (e a0 a) [NF e] [NF a0] [NF a] : ∀ k m, NF (opowAux e a0 a k m)
   | k, 0 => by cases k <;> exact NF.zero
   | 0, m + 1 => NF.oadd_zero _ _
   | k + 1, m + 1 => by haveI := NF_opow_aux k <;> simp [opow_aux, Nat.succ_ne_zero] <;> infer_instance
+#align onote.NF_opow_aux Onote.NF_opow_aux
 
 instance NF_opow (o₁ o₂) [NF o₁] [NF o₂] : NF (o₁ ^ o₂) := by
   cases' e₁ : split o₁ with a m
@@ -743,11 +826,13 @@ instance NF_opow (o₁ o₂) [NF o₁] [NF o₂] : NF (o₁ ^ o₂) := by
     have := na.fst
     cases' k with k <;> simp [opow] <;> skip <;> infer_instance
     
+#align onote.NF_opow Onote.NF_opow
 
 theorem scale_opow_aux (e a0 a : Onote) [NF e] [NF a0] [NF a] :
     ∀ k m, repr (opowAux e a0 a k m) = ω ^ repr e * repr (opowAux 0 a0 a k m)
   | 0, m => by cases m <;> simp [opow_aux]
   | k + 1, m => by by_cases m = 0 <;> simp [h, opow_aux, mul_add, opow_add, mul_assoc, scale_opow_aux]
+#align onote.scale_opow_aux Onote.scale_opow_aux
 
 theorem repr_opow_aux₁ {e a} [Ne : NF e] [Na : NF a] {a' : Ordinal} (e0 : repr e ≠ 0)
     (h : a' < (ω : Ordinal.{0}) ^ repr e) (aa : repr a = a') (n : ℕ+) :
@@ -773,6 +858,7 @@ theorem repr_opow_aux₁ {e a} [Ne : NF e] [Na : NF a] {a' : Ordinal} (e0 : repr
   · apply (principal_mul_omega (omega_is_limit.2 _ h) l).le.trans
     simpa using mul_le_mul_right' (one_le_iff_ne_zero.2 e0) ω
     
+#align onote.repr_opow_aux₁ Onote.repr_opow_aux₁
 
 section
 
@@ -863,6 +949,7 @@ theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω �
       simpa [α', repr] using omega_le_oadd a0 n a'
       
     
+#align onote.repr_opow_aux₂ Onote.repr_opow_aux₂
 
 end
 
@@ -902,6 +989,7 @@ theorem repr_opow (o₁ o₂) [NF o₁] [NF o₂] : repr (o₁ ^ o₂) = repr o�
       exact (repr_opow_aux₂ _ ad a00 al _ _).2
       
     
+#align onote.repr_opow Onote.repr_opow
 
 /-- Given an ordinal, returns `inl none` for `0`, `inl (some a)` for `a+1`, and
   `inr f` for a limit ordinal `a`, where `f i` is a sequence converging to `a`. -/
@@ -919,6 +1007,7 @@ def fundamentalSequence : Onote → Sum (Option Onote) (ℕ → Onote)
       | Sum.inl (some a'), m + 1 => Sum.inr fun i => oadd a m.succPnat (oadd a' i.succPnat zero)
       | Sum.inr f, 0 => Sum.inr fun i => oadd (f i) 1 zero
       | Sum.inr f, m + 1 => Sum.inr fun i => oadd a m.succPnat (oadd (f i) 1 zero)
+#align onote.fundamental_sequence Onote.fundamentalSequence
 
 private theorem exists_lt_add {α} [hα : Nonempty α] {o : Ordinal} {f : α → Ordinal} (H : ∀ ⦃a⦄, a < o → ∃ i, a < f i)
     {b : Ordinal} ⦃a⦄ (h : a < b + o) : ∃ i, a < b + f i := by
@@ -930,11 +1019,13 @@ private theorem exists_lt_add {α} [hα : Nonempty α] {o : Ordinal} {f : α →
     refine' (H h).imp fun i H => _
     rwa [← Ordinal.add_sub_cancel_of_le h', add_lt_add_iff_left]
     
+#align onote.exists_lt_add onote.exists_lt_add
 
 private theorem exists_lt_mul_omega' {o : Ordinal} ⦃a⦄ (h : a < o * ω) : ∃ i : ℕ, a < o * ↑i + o := by
   obtain ⟨i, hi, h'⟩ := (lt_mul_of_limit omega_is_limit).1 h
   obtain ⟨i, rfl⟩ := lt_omega.1 hi
   exact ⟨i, h'.trans_le (le_add_right _ _)⟩
+#align onote.exists_lt_mul_omega' onote.exists_lt_mul_omega'
 
 -- mathport name: ordinal.pow
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
@@ -943,6 +1034,7 @@ private theorem exists_lt_omega_opow' {α} {o b : Ordinal} (hb : 1 < b) (ho : o.
     (H : ∀ ⦃a⦄, a < o → ∃ i, a < f i) ⦃a⦄ (h : a < (b^o)) : ∃ i, a < (b^f i) := by
   obtain ⟨d, hd, h'⟩ := (lt_opow_of_limit (ordinal.zero_lt_one.trans hb).ne' ho).1 h
   exact (H hd).imp fun i hi => h'.trans <| (opow_lt_opow_iff_right hb).2 hi
+#align onote.exists_lt_omega_opow' onote.exists_lt_omega_opow'
 
 /-- The property satisfied by `fundamental_sequence o`:
   * `inl none` means `o = 0`
@@ -954,6 +1046,7 @@ def FundamentalSequenceProp (o : Onote) : Sum (Option Onote) (ℕ → Onote) →
   | Sum.inl (some a) => o.repr = succ a.repr ∧ (o.NF → a.NF)
   | Sum.inr f =>
     o.repr.IsLimit ∧ (∀ i, f i < f (i + 1) ∧ f i < o ∧ (o.NF → (f i).NF)) ∧ ∀ a, a < o.repr → ∃ i, a < (f i).repr
+#align onote.fundamental_sequence_prop Onote.FundamentalSequenceProp
 
 theorem fundamental_sequence_has_prop (o) : FundamentalSequenceProp o (fundamentalSequence o) := by
   induction' o with a m b iha ihb
@@ -1027,6 +1120,7 @@ theorem fundamental_sequence_has_prop (o) : FundamentalSequenceProp o (fundament
           H.fst.oadd _ (NF.below_of_lt' (lt_trans (h2 i).2.1 H.snd'.repr_lt) ((h2 i).2.2 H.snd))⟩,
         exists_lt_add h3⟩
     
+#align onote.fundamental_sequence_has_prop Onote.fundamental_sequence_has_prop
 
 /-- The fast growing hierarchy for ordinal notations `< ε₀`. This is a sequence of
 functions `ℕ → ℕ` indexed by ordinals, with the definition:
@@ -1046,6 +1140,7 @@ def fastGrowing : Onote → ℕ → ℕ
     | Sum.inr f, h => fun i =>
       have : f i < o := (h.2.1 i).2.1
       fast_growing (f i) i
+#align onote.fast_growing Onote.fastGrowing
 
 theorem fast_growing_def {o : Onote} {x} (e : fundamentalSequence o = x) :
     fastGrowing o =
@@ -1054,24 +1149,29 @@ theorem fast_growing_def {o : Onote} {x} (e : fundamentalSequence o = x) :
   by
   subst x
   rw [fast_growing]
+#align onote.fast_growing_def Onote.fast_growing_def
 
 theorem fast_growing_zero' (o : Onote) (h : fundamentalSequence o = Sum.inl none) : fastGrowing o = Nat.succ := by
   rw [fast_growing_def h]
   rfl
+#align onote.fast_growing_zero' Onote.fast_growing_zero'
 
 theorem fast_growing_succ (o) {a} (h : fundamentalSequence o = Sum.inl (some a)) :
     fastGrowing o = fun i => (fastGrowing a^[i]) i := by
   rw [fast_growing_def h]
   rfl
+#align onote.fast_growing_succ Onote.fast_growing_succ
 
 theorem fast_growing_limit (o) {f} (h : fundamentalSequence o = Sum.inr f) :
     fastGrowing o = fun i => fastGrowing (f i) i := by
   rw [fast_growing_def h]
   rfl
+#align onote.fast_growing_limit Onote.fast_growing_limit
 
 @[simp]
 theorem fast_growing_zero : fastGrowing 0 = Nat.succ :=
   fast_growing_zero' _ rfl
+#align onote.fast_growing_zero Onote.fast_growing_zero
 
 @[simp]
 theorem fast_growing_one : fastGrowing 1 = fun n => 2 * n := by
@@ -1082,6 +1182,7 @@ theorem fast_growing_one : fastGrowing 1 = fun n => 2 * n := by
   exact this _ _
   intro a b
   induction a <;> simp [*, Function.iterate_succ', Nat.add_succ]
+#align onote.fast_growing_one Onote.fast_growing_one
 
 section
 
@@ -1097,6 +1198,7 @@ theorem fast_growing_two : fastGrowing 2 = fun n => (2^n) * n := by
   exact this _ _
   intro a b
   induction a <;> simp [*, Function.iterate_succ', pow_succ, mul_assoc]
+#align onote.fast_growing_two Onote.fast_growing_two
 
 end
 
@@ -1106,14 +1208,18 @@ end
   for larger ordinals. -/
 def fastGrowingε₀ (i : ℕ) : ℕ :=
   fastGrowing (((fun a => a.oadd 1 0)^[i]) 0) i
+#align onote.fast_growing_ε₀ Onote.fastGrowingε₀
 
 theorem fast_growing_ε₀_zero : fastGrowingε₀ 0 = 1 := by simp [fast_growing_ε₀]
+#align onote.fast_growing_ε₀_zero Onote.fast_growing_ε₀_zero
 
 theorem fast_growing_ε₀_one : fastGrowingε₀ 1 = 2 := by simp [fast_growing_ε₀, show oadd 0 1 0 = 1 from rfl]
+#align onote.fast_growing_ε₀_one Onote.fast_growing_ε₀_one
 
 theorem fast_growing_ε₀_two : fastGrowingε₀ 2 = 2048 := by
   norm_num [fast_growing_ε₀, show oadd 0 1 0 = 1 from rfl, @fast_growing_limit (oadd 1 1 0) _ rfl,
     show oadd 0 (2 : Nat).succPnat 0 = 3 from rfl, @fast_growing_succ 3 2 rfl]
+#align onote.fast_growing_ε₀_two Onote.fast_growing_ε₀_two
 
 end Onote
 
@@ -1124,6 +1230,7 @@ end Onote
   representation.) -/
 def Nonote :=
   { o : Onote // o.NF }
+#align nonote Nonote
 
 instance : DecidableEq Nonote := by unfold Nonote <;> infer_instance
 
@@ -1133,11 +1240,13 @@ open Onote
 
 instance NF (o : Nonote) : NF o.1 :=
   o.2
+#align nonote.NF Nonote.NF
 
 /-- Construct a `nonote` from an ordinal notation
   (and infer normality) -/
 def mk (o : Onote) [h : NF o] : Nonote :=
   ⟨o, h⟩
+#align nonote.mk Nonote.mk
 
 /-- The ordinal represented by an ordinal notation.
   (This function is noncomputable because ordinal
@@ -1147,6 +1256,7 @@ def mk (o : Onote) [h : NF o] : Nonote :=
   results to be stated.) -/
 noncomputable def repr (o : Nonote) : Ordinal :=
   o.1.repr
+#align nonote.repr Nonote.repr
 
 instance : ToString Nonote :=
   ⟨fun x => x.1.toString⟩
@@ -1169,6 +1279,7 @@ instance : Inhabited Nonote :=
 
 theorem lt_wf : @WellFounded Nonote (· < ·) :=
   InvImage.wf repr Ordinal.lt_wf
+#align nonote.lt_wf Nonote.lt_wf
 
 instance : WellFoundedLt Nonote :=
   ⟨lt_wf⟩
@@ -1179,18 +1290,21 @@ instance : HasWellFounded Nonote :=
 /-- Convert a natural number to an ordinal notation -/
 def ofNat (n : ℕ) : Nonote :=
   ⟨ofNat n, ⟨⟨_, NF_below_of_nat _⟩⟩⟩
+#align nonote.of_nat Nonote.ofNat
 
 /-- Compare ordinal notations -/
 def cmp (a b : Nonote) : Ordering :=
-  cmp a.1 b.1
+  Cmp a.1 b.1
+#align nonote.cmp Nonote.cmp
 
 theorem cmp_compares : ∀ a b : Nonote, (cmp a b).Compares a b
   | ⟨a, ha⟩, ⟨b, hb⟩ => by
     skip
-    dsimp [cmp]
+    dsimp [Cmp]
     have := Onote.cmp_compares a b
     cases Onote.cmp a b <;> try exact this
     exact Subtype.mk_eq_mk.2 this
+#align nonote.cmp_compares Nonote.cmp_compares
 
 instance : LinearOrder Nonote :=
   linearOrderOfCompares cmp cmp_compares
@@ -1200,10 +1314,12 @@ instance : IsWellOrder Nonote (· < ·) where
 /-- Asserts that `repr a < ω ^ repr b`. Used in `nonote.rec_on` -/
 def below (a b : Nonote) : Prop :=
   NFBelow a.1 (repr b)
+#align nonote.below Nonote.below
 
 /-- The `oadd` pseudo-constructor for `nonote` -/
 def oadd (e : Nonote) (n : ℕ+) (a : Nonote) (h : below a e) : Nonote :=
   ⟨_, NF.oadd e.2 n h⟩
+#align nonote.oadd Nonote.oadd
 
 /-- This is a recursor-like theorem for `nonote` suggesting an
   inductive definition, which can't actually be defined this
@@ -1216,6 +1332,7 @@ def recOn {C : Nonote → Sort _} (o : Nonote) (H0 : C 0) (H1 : ∀ e n a h, C e
     
   · exact H1 ⟨e, h.fst⟩ n ⟨a, h.snd⟩ h.snd' (IHe _) (IHa _)
     
+#align nonote.rec_on Nonote.recOn
 
 /-- Addition of ordinal notations -/
 instance : Add Nonote :=
@@ -1223,6 +1340,7 @@ instance : Add Nonote :=
 
 theorem repr_add (a b) : repr (a + b) = repr a + repr b :=
   Onote.repr_add a.1 b.1
+#align nonote.repr_add Nonote.repr_add
 
 /-- Subtraction of ordinal notations -/
 instance : Sub Nonote :=
@@ -1230,6 +1348,7 @@ instance : Sub Nonote :=
 
 theorem repr_sub (a b) : repr (a - b) = repr a - repr b :=
   Onote.repr_sub a.1 b.1
+#align nonote.repr_sub Nonote.repr_sub
 
 /-- Multiplication of ordinal notations -/
 instance : Mul Nonote :=
@@ -1237,13 +1356,16 @@ instance : Mul Nonote :=
 
 theorem repr_mul (a b) : repr (a * b) = repr a * repr b :=
   Onote.repr_mul a.1 b.1
+#align nonote.repr_mul Nonote.repr_mul
 
 /-- Exponentiation of ordinal notations -/
 def opow (x y : Nonote) :=
   mk (x.1.opow y.1)
+#align nonote.opow Nonote.opow
 
 theorem repr_opow (a b) : repr (opow a b) = repr a ^ repr b :=
   Onote.repr_opow a.1 b.1
+#align nonote.repr_opow Nonote.repr_opow
 
 end Nonote
 

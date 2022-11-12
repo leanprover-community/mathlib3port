@@ -24,6 +24,7 @@ namespace CategoryTheory
 @[nolint check_univs]
 def QuivCat :=
   Bundled Quiver.{v + 1, u}
+#align category_theory.Quiv CategoryTheory.QuivCat
 
 namespace QuivCat
 
@@ -31,10 +32,12 @@ instance : CoeSort QuivCat (Type u) where coe := Bundled.α
 
 instance str (C : QuivCat.{v, u}) : Quiver.{v + 1, u} C :=
   C.str
+#align category_theory.Quiv.str CategoryTheory.QuivCat.str
 
 /-- Construct a bundled `Quiv` from the underlying type and the typeclass. -/
 def of (C : Type u) [Quiver.{v + 1} C] : QuivCat.{v, u} :=
   Bundled.of C
+#align category_theory.Quiv.of CategoryTheory.QuivCat.of
 
 instance : Inhabited QuivCat :=
   ⟨QuivCat.of (Quiver.Empty PEmpty)⟩
@@ -47,12 +50,14 @@ instance category : LargeCategory.{max v u} QuivCat.{v, u} where
   id_comp' C D F := by cases F <;> rfl
   comp_id' C D F := by cases F <;> rfl
   assoc' := by intros <;> rfl
+#align category_theory.Quiv.category CategoryTheory.QuivCat.category
 
 /-- The forgetful functor from categories to quivers. -/
 @[simps]
 def forget : Cat.{v, u} ⥤ Quiv.{v, u} where
   obj C := QuivCat.of C
   map C D F := F.toPrefunctor
+#align category_theory.Quiv.forget CategoryTheory.QuivCat.forget
 
 end QuivCat
 
@@ -74,6 +79,7 @@ def free : Quiv.{v, u} ⥤ Cat.{max u v, u} where
     ext
     apply eq_conj_eq_to_hom
     rfl
+#align category_theory.Cat.free CategoryTheory.CatCat.free
 
 end CatCat
 
@@ -84,6 +90,7 @@ namespace QuivCat
 def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunctor V C) : Paths V ⥤ C where
   obj X := F.obj X
   map X Y f := composePath (F.mapPath f)
+#align category_theory.Quiv.lift CategoryTheory.QuivCat.lift
 
 -- We might construct `of_lift_iso_self : paths.of ⋙ lift F ≅ F`
 -- (and then show that `lift F` is initial amongst such functors)
@@ -111,6 +118,7 @@ def adj : Cat.free ⊣ Quiv.forget :=
         ext
         apply eq_conj_eq_to_hom
         rfl }
+#align category_theory.Quiv.adj CategoryTheory.QuivCat.adj
 
 end QuivCat
 

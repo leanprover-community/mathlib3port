@@ -31,11 +31,14 @@ def ltb : Iterator → Iterator → Bool
           | ⟨_, a :: l⟩, h => Nat.lt_succ_self _
         ltb s₁.next s₂.next
       else s₁.curr < s₂.curr
+#align string.ltb String.ltb
 
 instance hasLt' : LT String :=
   ⟨fun s₁ s₂ => ltb s₁.mkIterator s₂.mkIterator⟩
+#align string.has_lt' String.hasLt'
 
 instance decidableLt : @DecidableRel String (· < ·) := by infer_instance
+#align string.decidable_lt String.decidableLt
 
 -- short-circuit type class inference
 @[simp]
@@ -63,41 +66,52 @@ theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : String}, s₁ < s₂ ↔ s₁.toLis
         assumption
         
       
+#align string.lt_iff_to_list_lt String.lt_iff_to_list_lt
 
 instance hasLe : LE String :=
   ⟨fun s₁ s₂ => ¬s₂ < s₁⟩
+#align string.has_le String.hasLe
 
 instance decidableLe : @DecidableRel String (· ≤ ·) := by infer_instance
+#align string.decidable_le String.decidableLe
 
 -- short-circuit type class inference
 @[simp]
 theorem le_iff_to_list_le {s₁ s₂ : String} : s₁ ≤ s₂ ↔ s₁.toList ≤ s₂.toList :=
   (not_congr lt_iff_to_list_lt).trans not_lt
+#align string.le_iff_to_list_le String.le_iff_to_list_le
 
 theorem to_list_inj : ∀ {s₁ s₂}, toList s₁ = toList s₂ ↔ s₁ = s₂
   | ⟨s₁⟩, ⟨s₂⟩ => ⟨congr_arg _, congr_arg _⟩
+#align string.to_list_inj String.to_list_inj
 
 theorem nil_as_string_eq_empty : [].asString = "" :=
   rfl
+#align string.nil_as_string_eq_empty String.nil_as_string_eq_empty
 
 @[simp]
 theorem to_list_empty : "".toList = [] :=
   rfl
+#align string.to_list_empty String.to_list_empty
 
 theorem as_string_inv_to_list (s : String) : s.toList.asString = s := by
   cases s
   rfl
+#align string.as_string_inv_to_list String.as_string_inv_to_list
 
 @[simp]
 theorem to_list_singleton (c : Char) : (String.singleton c).toList = [c] :=
   rfl
+#align string.to_list_singleton String.to_list_singleton
 
 theorem to_list_nonempty : ∀ {s : String}, s ≠ String.empty → s.toList = s.head :: (s.popn 1).toList
   | ⟨s⟩, h => by cases s <;> [cases h rfl, rfl]
+#align string.to_list_nonempty String.to_list_nonempty
 
 @[simp]
 theorem head_empty : "".head = default :=
   rfl
+#align string.head_empty String.head_empty
 
 @[simp]
 theorem popn_empty {n : ℕ} : "".popn n = "" := by
@@ -112,6 +126,7 @@ theorem popn_empty {n : ℕ} : "".popn n = "" := by
     · simpa only [← to_list_inj] using hs
       
     
+#align string.popn_empty String.popn_empty
 
 instance : LinearOrder String where
   lt := (· < ·)
@@ -138,19 +153,24 @@ open String
 theorem List.to_list_inv_as_string (l : List Char) : l.asString.toList = l := by
   cases hl : l.as_string
   exact StringImp.mk.inj hl.symm
+#align list.to_list_inv_as_string List.to_list_inv_as_string
 
 @[simp]
 theorem List.length_as_string (l : List Char) : l.asString.length = l.length :=
   rfl
+#align list.length_as_string List.length_as_string
 
 @[simp]
 theorem List.as_string_inj {l l' : List Char} : l.asString = l'.asString ↔ l = l' :=
   ⟨fun h => by rw [← List.to_list_inv_as_string l, ← List.to_list_inv_as_string l', to_list_inj, h], fun h => h ▸ rfl⟩
+#align list.as_string_inj List.as_string_inj
 
 @[simp]
 theorem String.length_to_list (s : String) : s.toList.length = s.length := by
   rw [← String.as_string_inv_to_list s, List.to_list_inv_as_string, List.length_as_string]
+#align string.length_to_list String.length_to_list
 
 theorem List.as_string_eq {l : List Char} {s : String} : l.asString = s ↔ l = s.toList := by
   rw [← as_string_inv_to_list s, List.as_string_inj, as_string_inv_to_list s]
+#align list.as_string_eq List.as_string_eq
 

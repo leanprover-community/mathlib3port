@@ -38,19 +38,24 @@ variable {σ : Type _}
 /-- Set of points that are zeroes of all polynomials in an ideal -/
 def ZeroLocus (I : Ideal (MvPolynomial σ k)) : Set (σ → k) :=
   { x : σ → k | ∀ p ∈ I, eval x p = 0 }
+#align mv_polynomial.zero_locus MvPolynomial.ZeroLocus
 
 @[simp]
 theorem mem_zero_locus_iff {I : Ideal (MvPolynomial σ k)} {x : σ → k} : x ∈ ZeroLocus I ↔ ∀ p ∈ I, eval x p = 0 :=
   Iff.rfl
+#align mv_polynomial.mem_zero_locus_iff MvPolynomial.mem_zero_locus_iff
 
 theorem zero_locus_anti_mono {I J : Ideal (MvPolynomial σ k)} (h : I ≤ J) : ZeroLocus J ≤ ZeroLocus I :=
   fun x hx p hp => hx p <| h hp
+#align mv_polynomial.zero_locus_anti_mono MvPolynomial.zero_locus_anti_mono
 
 theorem zero_locus_bot : ZeroLocus (⊥ : Ideal (MvPolynomial σ k)) = ⊤ :=
   eq_top_iff.2 fun x hx p hp => trans (congr_arg (eval x) (mem_bot.1 hp)) (eval x).map_zero
+#align mv_polynomial.zero_locus_bot MvPolynomial.zero_locus_bot
 
 theorem zero_locus_top : ZeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
   eq_bot_iff.2 fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
+#align mv_polynomial.zero_locus_top MvPolynomial.zero_locus_top
 
 /-- Ideal of polynomials with common zeroes at all elements of a set -/
 def vanishingIdeal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) where
@@ -58,31 +63,40 @@ def vanishingIdeal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) where
   zero_mem' x hx := RingHom.map_zero _
   add_mem' p q hp hq x hx := by simp only [hq x hx, hp x hx, add_zero, RingHom.map_add]
   smul_mem' p q hq x hx := by simp only [hq x hx, Algebra.id.smul_eq_mul, mul_zero, RingHom.map_mul]
+#align mv_polynomial.vanishing_ideal MvPolynomial.vanishingIdeal
 
 @[simp]
 theorem mem_vanishing_ideal_iff {V : Set (σ → k)} {p : MvPolynomial σ k} :
     p ∈ vanishingIdeal V ↔ ∀ x ∈ V, eval x p = 0 :=
   Iff.rfl
+#align mv_polynomial.mem_vanishing_ideal_iff MvPolynomial.mem_vanishing_ideal_iff
 
 theorem vanishing_ideal_anti_mono {A B : Set (σ → k)} (h : A ≤ B) : vanishingIdeal B ≤ vanishingIdeal A :=
   fun p hp x hx => hp x <| h hx
+#align mv_polynomial.vanishing_ideal_anti_mono MvPolynomial.vanishing_ideal_anti_mono
 
 theorem vanishing_ideal_empty : vanishingIdeal (∅ : Set (σ → k)) = ⊤ :=
   le_antisymm le_top fun p hp x hx => absurd hx (Set.not_mem_empty x)
+#align mv_polynomial.vanishing_ideal_empty MvPolynomial.vanishing_ideal_empty
 
 theorem le_vanishing_ideal_zero_locus (I : Ideal (MvPolynomial σ k)) : I ≤ vanishingIdeal (ZeroLocus I) :=
   fun p hp x hx => hx p hp
+#align mv_polynomial.le_vanishing_ideal_zero_locus MvPolynomial.le_vanishing_ideal_zero_locus
 
 theorem zero_locus_vanishing_ideal_le (V : Set (σ → k)) : V ≤ ZeroLocus (vanishingIdeal V) := fun V hV p hp => hp V hV
+#align mv_polynomial.zero_locus_vanishing_ideal_le MvPolynomial.zero_locus_vanishing_ideal_le
 
 theorem zero_locus_vanishing_ideal_galois_connection :
     @GaloisConnection (Ideal (MvPolynomial σ k)) (Set (σ → k))ᵒᵈ _ _ ZeroLocus vanishingIdeal := fun I V =>
   ⟨fun h => le_trans (le_vanishing_ideal_zero_locus I) (vanishing_ideal_anti_mono h), fun h =>
     le_trans (zero_locus_anti_mono h) (zero_locus_vanishing_ideal_le V)⟩
+#align
+  mv_polynomial.zero_locus_vanishing_ideal_galois_connection MvPolynomial.zero_locus_vanishing_ideal_galois_connection
 
 theorem mem_vanishing_ideal_singleton_iff (x : σ → k) (p : MvPolynomial σ k) :
     p ∈ (vanishingIdeal {x} : Ideal (MvPolynomial σ k)) ↔ eval x p = 0 :=
   ⟨fun h => h x rfl, fun hpx y hy => hy.symm ▸ hpx⟩
+#align mv_polynomial.mem_vanishing_ideal_singleton_iff MvPolynomial.mem_vanishing_ideal_singleton_iff
 
 instance vanishing_ideal_singleton_is_maximal {x : σ → k} : (vanishingIdeal {x} : Ideal (MvPolynomial σ k)).IsMaximal :=
   by
@@ -96,6 +110,7 @@ instance vanishing_ideal_singleton_is_maximal {x : σ → k} : (vanishingIdeal {
         rwa [Ideal.Quotient.lift_mk, ← mem_vanishing_ideal_singleton_iff, ← quotient.eq_zero_iff_mem] at hp)
   rw [← bot_quotient_is_maximal_iff, ring_equiv.bot_maximal_iff this]
   exact bot_is_maximal
+#align mv_polynomial.vanishing_ideal_singleton_is_maximal MvPolynomial.vanishing_ideal_singleton_is_maximal
 
 theorem radical_le_vanishing_ideal_zero_locus (I : Ideal (MvPolynomial σ k)) :
     I.radical ≤ vanishingIdeal (ZeroLocus I) := by
@@ -106,10 +121,12 @@ theorem radical_le_vanishing_ideal_zero_locus (I : Ideal (MvPolynomial σ k)) :
     (mem_Inf.mp hp)
       ⟨le_trans (le_vanishing_ideal_zero_locus I) (vanishing_ideal_anti_mono fun y hy => hy.symm ▸ hx),
         is_maximal.is_prime' _⟩
+#align mv_polynomial.radical_le_vanishing_ideal_zero_locus MvPolynomial.radical_le_vanishing_ideal_zero_locus
 
 /-- The point in the prime spectrum assosiated to a given point -/
 def pointToPoint (x : σ → k) : PrimeSpectrum (MvPolynomial σ k) :=
   ⟨(vanishingIdeal {x} : Ideal (MvPolynomial σ k)), by infer_instance⟩
+#align mv_polynomial.point_to_point MvPolynomial.pointToPoint
 
 @[simp]
 theorem vanishing_ideal_point_to_point (V : Set (σ → k)) :
@@ -121,12 +138,14 @@ theorem vanishing_ideal_point_to_point (V : Set (σ → k)) :
     (PrimeSpectrum.mem_vanishing_ideal _ _).2 fun I hI =>
       let ⟨x, hx⟩ := hI
       hx.2 ▸ fun x' hx' => (Set.mem_singleton_iff.1 hx').symm ▸ hp x hx.1
+#align mv_polynomial.vanishing_ideal_point_to_point MvPolynomial.vanishing_ideal_point_to_point
 
 theorem point_to_point_zero_locus_le (I : Ideal (MvPolynomial σ k)) :
     point_to_point '' MvPolynomial.ZeroLocus I ≤ PrimeSpectrum.ZeroLocus ↑I := fun J hJ =>
   let ⟨x, hx⟩ := hJ
   (le_trans (le_vanishing_ideal_zero_locus I) (hx.2 ▸ vanishing_ideal_anti_mono (Set.singleton_subset_iff.2 hx.1)) :
     I ≤ J.asIdeal)
+#align mv_polynomial.point_to_point_zero_locus_le MvPolynomial.point_to_point_zero_locus_le
 
 variable [IsAlgClosed k] [Finite σ]
 
@@ -152,6 +171,8 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
   rw [← quotient.eq_zero_iff_mem, map_mv_polynomial_eq_eval₂ (Ideal.Quotient.mk I) p, eval₂_eq']
   rw [mem_vanishing_ideal_singleton_iff, eval_eq'] at hp
   simpa only [ϕ.map_sum, ϕ.map_mul, ϕ.map_prod, ϕ.map_pow, ϕ.map_zero, hx] using congr_arg ϕ hp
+#align
+  mv_polynomial.is_maximal_iff_eq_vanishing_ideal_singleton MvPolynomial.is_maximal_iff_eq_vanishing_ideal_singleton
 
 /-- Main statement of the Nullstellensatz -/
 @[simp]
@@ -171,11 +192,13 @@ theorem vanishing_ideal_zero_locus_eq_radical (I : Ideal (MvPolynomial σ k)) :
         ⟨le_trans (le_vanishing_ideal_zero_locus I) (vanishing_ideal_anti_mono fun y hy => hy.symm ▸ hx),
           MvPolynomial.vanishing_ideal_singleton_is_maximal⟩
     
+#align mv_polynomial.vanishing_ideal_zero_locus_eq_radical MvPolynomial.vanishing_ideal_zero_locus_eq_radical
 
 @[simp]
 theorem IsPrime.vanishing_ideal_zero_locus (P : Ideal (MvPolynomial σ k)) [h : P.IsPrime] :
     vanishingIdeal (ZeroLocus P) = P :=
   trans (vanishing_ideal_zero_locus_eq_radical P) h.radical
+#align mv_polynomial.is_prime.vanishing_ideal_zero_locus MvPolynomial.IsPrime.vanishing_ideal_zero_locus
 
 end MvPolynomial
 

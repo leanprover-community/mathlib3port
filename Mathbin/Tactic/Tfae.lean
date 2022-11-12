@@ -25,16 +25,19 @@ inductive Arrow : Type
   | left_right : arrow
   | left : arrow
   deriving has_reflect, Inhabited
+#align tactic.tfae.arrow Tactic.Tfae.Arrow
 
 unsafe def mk_implication : ∀ (re : Arrow) (e₁ e₂ : expr), pexpr
   | arrow.right, e₁, e₂ => pquote.1 ((%%ₓe₁) → %%ₓe₂)
   | arrow.left_right, e₁, e₂ => pquote.1 ((%%ₓe₁) ↔ %%ₓe₂)
   | arrow.left, e₁, e₂ => pquote.1 ((%%ₓe₂) → %%ₓe₁)
+#align tactic.tfae.mk_implication tactic.tfae.mk_implication
 
 unsafe def mk_name : ∀ (re : Arrow) (i₁ i₂ : Nat), Name
   | arrow.right, i₁, i₂ => ("tfae_" ++ toString i₁ ++ "_to_" ++ toString i₂ : String)
   | arrow.left_right, i₁, i₂ => ("tfae_" ++ toString i₁ ++ "_iff_" ++ toString i₂ : String)
   | arrow.left, i₁, i₂ => ("tfae_" ++ toString i₂ ++ "_to_" ++ toString i₁ : String)
+#align tactic.tfae.mk_name tactic.tfae.mk_name
 
 end Tfae
 
@@ -48,6 +51,7 @@ unsafe def parse_list : expr → Option (List expr)
   | quote.1 [] => pure []
   | quote.1 ((%%ₓe) :: %%ₓes) => (· :: ·) e <$> parse_list es
   | _ => none
+#align tactic.interactive.parse_list tactic.interactive.parse_list
 
 /-- In a goal of the form `tfae [a₀, a₁, a₂]`,
 `tfae_have : i → j` creates the assertion `aᵢ → aⱼ`. The other possible
@@ -68,6 +72,7 @@ unsafe def tfae_have (h : parse <| optional ident <* tk ":") (i₁ : parse (with
   let h := h.getOrElse (mk_name re i₁ i₂)
   tactic.assert h type
   return ()
+#align tactic.interactive.tfae_have tactic.interactive.tfae_have
 
 /-- Finds all implications and equivalences in the context
 to prove a goal of the form `tfae [...]`.
@@ -88,6 +93,7 @@ unsafe def tfae_finish : tactic Unit :=
           tactic.exact p
       applyc `` forall_mem_nil
       pure ()
+#align tactic.interactive.tfae_finish tactic.interactive.tfae_finish
 
 end Interactive
 

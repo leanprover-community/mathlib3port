@@ -35,6 +35,7 @@ unsafe def replace : ℕ → expr → tactic expr
     let e' ← replace i (expr.instantiate_var e var)
     return (expr.elet n t' d' (expr.abstract_local e' var))
   | i + 1, e => return e
+#align tactic.elide.replace tactic.elide.replace
 
 unsafe def unelide (e : expr) : expr :=
   (expr.replace e) fun e n =>
@@ -42,6 +43,7 @@ unsafe def unelide (e : expr) : expr :=
     | expr.app (expr.app (expr.const n _) _) e' => if n = `` hidden then some e' else none
     | expr.app (expr.lam _ _ _ (expr.var 0)) e' => some e'
     | _ => none
+#align tactic.elide.unelide tactic.elide.unelide
 
 end Elide
 
@@ -60,6 +62,7 @@ unsafe def elide (n : parse small_nat) (loc : parse location) : tactic Unit :=
       let t ← infer_type h >>= tactic.elide.replace n
       tactic.change_core t (some h))
     (target >>= tactic.elide.replace n >>= tactic.change)
+#align tactic.interactive.elide tactic.interactive.elide
 
 /-- The `unelide (at ...)` tactic removes all `hidden` subterms in the target
 types (usually added by `elide`). -/
@@ -69,6 +72,7 @@ unsafe def unelide (loc : parse location) : tactic Unit :=
       let t ← infer_type h
       tactic.change_core (elide.unelide t) (some h))
     (target >>= tactic.change ∘ elide.unelide)
+#align tactic.interactive.unelide tactic.interactive.unelide
 
 /-- The `elide n (at ...)` tactic hides all subterms of the target goal or hypotheses
 beyond depth `n` by replacing them with `hidden`, which is a variant

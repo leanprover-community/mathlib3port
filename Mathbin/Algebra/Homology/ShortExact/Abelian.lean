@@ -37,6 +37,8 @@ theorem is_iso_of_short_exact_of_is_iso_of_is_iso (h : ShortExact f g) (h' : Sho
       @abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso 𝒜 _ _ 0 _ _ _ 0 _ _ _ 0 f g 0 f' g' 0 i₁ i₂ i₃ _ comm₁
         comm₂ 0 0 0 0 0 _ _ _ _ _ _ _ _ _ _ _ <;>
     try simp <;> try apply exact_zero_left_of_mono <;> try assumption <;> rwa [← epi_iff_exact_zero_right]
+#align
+  category_theory.is_iso_of_short_exact_of_is_iso_of_is_iso CategoryTheory.is_iso_of_short_exact_of_is_iso_of_is_iso
 
 /-- To construct a splitting of `A -f⟶ B -g⟶ C` it suffices to supply
 a *morphism* `i : B ⟶ A ⊞ C` such that `f ≫ i` is the canonical map `biprod.inl : A ⟶ A ⊞ C` and
@@ -55,6 +57,7 @@ def Splitting.mk' (h : ShortExact f g) (i : B ⟶ A ⊞ C) (h1 : f ≫ i = bipro
     apply exact_inl_snd
   comp_iso_eq_inl := by rwa [as_iso_hom]
   iso_comp_snd_eq := h2
+#align category_theory.splitting.mk' CategoryTheory.Splitting.mk'
 
 /-- To construct a splitting of `A -f⟶ B -g⟶ C` it suffices to supply
 a *morphism* `i : A ⊞ C ⟶ B` such that `p ≫ i = f` where `p` is the canonical map
@@ -73,6 +76,7 @@ def Splitting.mk'' (h : ShortExact f g) (i : A ⊞ C ⟶ B) (h1 : biprod.inl ≫
     apply exact_inl_snd
   comp_iso_eq_inl := by rw [iso.symm_hom, as_iso_inv, is_iso.comp_inv_eq, h1]
   iso_comp_snd_eq := by rw [iso.symm_hom, as_iso_inv, is_iso.inv_comp_eq, h2]
+#align category_theory.splitting.mk'' CategoryTheory.Splitting.mk''
 
 /-- A short exact sequence that is left split admits a splitting. -/
 def LeftSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : Splitting f g :=
@@ -84,6 +88,7 @@ def LeftSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : Splitt
       · simp only [biprod.inl_snd, biprod.lift_snd, category.assoc, h.exact.w]
         )
     (by simp only [biprod.lift_snd])
+#align category_theory.left_split.splitting CategoryTheory.LeftSplit.splitting
 
 /-- A short exact sequence that is right split admits a splitting. -/
 def RightSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : Splitting f g :=
@@ -94,6 +99,7 @@ def RightSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : Spli
         
       · rw [biprod.inr_snd, ← category.assoc, biprod.inr_desc, h.right_split.some_spec]
         )
+#align category_theory.right_split.splitting CategoryTheory.RightSplit.splitting
 
 end CategoryTheory
 

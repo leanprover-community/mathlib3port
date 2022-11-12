@@ -29,6 +29,7 @@ Case conversion may be inaccurate. Consider using '#align pprod.mk.eta PProd.mk.
 @[simp]
 theorem mk.eta {p : PProd α β} : PProd.mk p.1 p.2 = p :=
   PProd.casesOn p fun a b => rfl
+#align pprod.mk.eta PProd.mk.eta
 
 /- warning: pprod.forall -> PProd.forall is a dubious translation:
 lean 3 declaration is
@@ -39,6 +40,7 @@ Case conversion may be inaccurate. Consider using '#align pprod.forall PProd.for
 @[simp]
 theorem forall {p : PProd α β → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
+#align pprod.forall PProd.forall
 
 /- warning: pprod.exists -> PProd.exists is a dubious translation:
 lean 3 declaration is
@@ -49,6 +51,7 @@ Case conversion may be inaccurate. Consider using '#align pprod.exists PProd.exi
 @[simp]
 theorem exists {p : PProd α β → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
+#align pprod.exists PProd.exists
 
 /- warning: pprod.forall' -> PProd.forall' is a dubious translation:
 lean 3 declaration is
@@ -58,6 +61,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pprod.forall' PProd.forall'ₓ'. -/
 theorem forall' {p : α → β → Prop} : (∀ x : PProd α β, p x.1 x.2) ↔ ∀ a b, p a b :=
   PProd.forall
+#align pprod.forall' PProd.forall'
 
 /- warning: pprod.exists' -> PProd.exists' is a dubious translation:
 lean 3 declaration is
@@ -67,6 +71,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pprod.exists' PProd.exists'ₓ'. -/
 theorem exists' {p : α → β → Prop} : (∃ x : PProd α β, p x.1 x.2) ↔ ∃ a b, p a b :=
   PProd.exists
+#align pprod.exists' PProd.exists'
 
 end PProd
 
@@ -81,4 +86,5 @@ theorem Function.Injective.pprod_map {f : α → β} {g : γ → δ} (hf : Injec
   have A := congr_arg PProd.fst h
   have B := congr_arg PProd.snd h
   congr_arg₂ PProd.mk (hf A) (hg B)
+#align function.injective.pprod_map Function.Injective.pprod_map
 

@@ -74,6 +74,7 @@ theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) 
     refine' lt_trans _ h''
     exact_mod_cast hab
     
+#align rat.uniform_space_eq Rat.uniform_space_eq
 
 /-- Cauchy reals packaged as a completion of ℚ using the absolute value route. -/
 def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) where
@@ -86,6 +87,7 @@ def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace 
     rw [Rat.uniform_space_eq]
     exact rat.uniform_embedding_coe_real.to_uniform_inducing
   dense := Rat.dense_embedding_coe_real.dense
+#align rational_cau_seq_pkg rationalCauSeqPkg
 
 namespace CompareReals
 
@@ -95,6 +97,7 @@ but they are not definitionaly equal, so it would confuse the type class system 
 also human readers). -/
 def Q :=
   ℚ deriving CommRing, Inhabited
+#align compare_reals.Q CompareReals.Q
 
 instance : UniformSpace Q :=
   IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
@@ -102,23 +105,29 @@ instance : UniformSpace Q :=
 /-- Real numbers constructed as in Bourbaki. -/
 def BourbakiℝCat : Type :=
   Completion Q deriving Inhabited
+#align compare_reals.Bourbakiℝ CompareReals.BourbakiℝCat
 
 instance Bourbaki.uniformSpace : UniformSpace BourbakiℝCat :=
   Completion.uniformSpace Q
+#align compare_reals.bourbaki.uniform_space CompareReals.Bourbaki.uniformSpace
 
 /-- Bourbaki reals packaged as a completion of Q using the general theory. -/
 def bourbakiPkg : AbstractCompletion Q :=
   completion.cpkg
+#align compare_reals.Bourbaki_pkg CompareReals.bourbakiPkg
 
 /-- The uniform bijection between Bourbaki and Cauchy reals. -/
 noncomputable def compareEquiv : Bourbakiℝ ≃ᵤ ℝ :=
   bourbakiPkg.compareEquiv rationalCauSeqPkg
+#align compare_reals.compare_equiv CompareReals.compareEquiv
 
 theorem compare_uc : UniformContinuous compareEquiv :=
   bourbakiPkg.uniform_continuous_compare_equiv _
+#align compare_reals.compare_uc CompareReals.compare_uc
 
 theorem compare_uc_symm : UniformContinuous compareEquiv.symm :=
   bourbakiPkg.uniform_continuous_compare_equiv_symm _
+#align compare_reals.compare_uc_symm CompareReals.compare_uc_symm
 
 end CompareReals
 

@@ -51,6 +51,7 @@ theorem rn_deriv_ae_eq_condexp {hm : m ≤ m0} [hμm : SigmaFinite (μ.trim hm)]
     
   · exact strongly_measurable.ae_strongly_measurable' (signed_measure.measurable_rn_deriv _ _).StronglyMeasurable
     
+#align measure_theory.rn_deriv_ae_eq_condexp MeasureTheory.rn_deriv_ae_eq_condexp
 
 -- TODO: the following couple of lemmas should be generalized and proved using Jensen's inequality
 -- for the conditional expectation (not in mathlib yet) .
@@ -94,6 +95,7 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
       filter_upwards [this] with x hx
       exact abs_eq_self.2 hx
     
+#align measure_theory.snorm_one_condexp_le_snorm MeasureTheory.snorm_one_condexp_le_snorm
 
 theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) ≤ ∫ x, |f x| ∂μ := by
   by_cases hm:m ≤ m0
@@ -126,6 +128,7 @@ theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) 
   · simp_rw [← Real.norm_eq_abs]
     exact (strongly_measurable_condexp.mono hm).AeStronglyMeasurable.norm
     
+#align measure_theory.integral_abs_condexp_le MeasureTheory.integral_abs_condexp_le
 
 theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f : α → ℝ) :
     (∫ x in s, |(μ[f|m]) x| ∂μ) ≤ ∫ x in s, |f x| ∂μ := by
@@ -157,6 +160,7 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
   refine' (integral_abs_condexp_le _).trans (le_of_eq <| integral_congr_ae <| eventually_of_forall fun x => _)
   rw [← Real.norm_eq_abs, norm_indicator_eq_indicator_norm]
   rfl
+#align measure_theory.set_integral_abs_condexp_le MeasureTheory.set_integral_abs_condexp_le
 
 /-- If the real valued function `f` is bounded almost everywhere by `R`, then so is its conditional
 expectation. -/
@@ -203,6 +207,7 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
     
   · exact hbdd
     
+#align measure_theory.ae_bdd_condexp_of_ae_bdd MeasureTheory.ae_bdd_condexp_of_ae_bdd
 
 /-- Given a integrable function `g`, the conditional expectations of `g` with respect to
 a sequence of sub-σ-algebras is uniformly integrable. -/
@@ -249,6 +254,7 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
       (@Measurable.nnnorm _ _ _ _ _ (ℱ n) _ strongly_measurable_condexp.measurable)
   rw [← snorm_congr_ae (condexp_indicator hint hmeasℱ)]
   exact snorm_one_condexp_le_snorm _
+#align measure_theory.integrable.uniform_integrable_condexp MeasureTheory.Integrable.uniformIntegrableCondexp
 
 section PullOut
 
@@ -270,8 +276,7 @@ theorem condexp_strongly_measurable_simple_func_mul (hm : m ≤ m0) (f : @Simple
     rw [this, this]
     refine' (condexp_indicator (hg.smul c) hs).trans _
     filter_upwards [@condexp_smul α ℝ ℝ _ _ _ _ _ m m0 μ c g] with x hx
-    classical
-    simp_rw [Set.indicator_apply, hx]
+    classical simp_rw [Set.indicator_apply, hx]
     
   · have h_add := @simple_func.coe_add _ _ m _ g₁ g₂
     calc
@@ -285,6 +290,8 @@ theorem condexp_strongly_measurable_simple_func_mul (hm : m ≤ m0) (f : @Simple
       _ =ᵐ[μ] ⇑(g₁ + g₂) * μ[g|m] := by rw [h_add, add_mul]
       
     
+#align
+  measure_theory.condexp_strongly_measurable_simple_func_mul MeasureTheory.condexp_strongly_measurable_simple_func_mul
 
 theorem condexp_strongly_measurable_mul_of_bound (hm : m ≤ m0) [IsFiniteMeasure μ] {f g : α → ℝ}
     (hf : strongly_measurable[m] f) (hg : Integrable g μ) (c : ℝ) (hf_bound : ∀ᵐ x ∂μ, ∥f x∥ ≤ c) :
@@ -345,6 +352,7 @@ theorem condexp_strongly_measurable_mul_of_bound (hm : m ≤ m0) [IsFiniteMeasur
       integrable_condexp.bdd_mul' ((simple_func.strongly_measurable (fs n)).mono hm).AeStronglyMeasurable
         (eventually_of_forall (hfs_bound n))
     
+#align measure_theory.condexp_strongly_measurable_mul_of_bound MeasureTheory.condexp_strongly_measurable_mul_of_bound
 
 theorem condexp_strongly_measurable_mul_of_bound₀ (hm : m ≤ m0) [IsFiniteMeasure μ] {f g : α → ℝ}
     (hf : AeStronglyMeasurable' m f μ) (hg : Integrable g μ) (c : ℝ) (hf_bound : ∀ᵐ x ∂μ, ∥f x∥ ≤ c) :
@@ -357,6 +365,7 @@ theorem condexp_strongly_measurable_mul_of_bound₀ (hm : m ≤ m0) [IsFiniteMea
   filter_upwards [hf_bound, hf.ae_eq_mk] with x hxc hx_eq
   rw [← hx_eq]
   exact hxc
+#align measure_theory.condexp_strongly_measurable_mul_of_bound₀ MeasureTheory.condexp_strongly_measurable_mul_of_bound₀
 
 /-- Pull-out property of the conditional expectation. -/
 theorem condexp_strongly_measurable_mul {f g : α → ℝ} (hf : strongly_measurable[m] f) (hfg : Integrable (f * g) μ)
@@ -411,6 +420,7 @@ theorem condexp_strongly_measurable_mul {f g : α → ℝ} (hf : strongly_measur
     
   · simp only [hxs, Set.indicator_of_not_mem, not_false_iff, _root_.norm_zero, Nat.cast_nonneg]
     
+#align measure_theory.condexp_strongly_measurable_mul MeasureTheory.condexp_strongly_measurable_mul
 
 /-- Pull-out property of the conditional expectation. -/
 theorem condexp_strongly_measurable_mul₀ {f g : α → ℝ} (hf : AeStronglyMeasurable' m f μ) (hfg : Integrable (f * g) μ)
@@ -422,6 +432,7 @@ theorem condexp_strongly_measurable_mul₀ {f g : α → ℝ} (hf : AeStronglyMe
   refine' condexp_strongly_measurable_mul hf.strongly_measurable_mk _ hg
   refine' (integrable_congr _).mp hfg
   exact eventually_eq.mul hf.ae_eq_mk eventually_eq.rfl
+#align measure_theory.condexp_strongly_measurable_mul₀ MeasureTheory.condexp_strongly_measurable_mul₀
 
 end PullOut
 

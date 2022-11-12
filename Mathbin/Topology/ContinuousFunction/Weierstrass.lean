@@ -40,6 +40,7 @@ theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologic
   apply Subalgebra.smul_mem
   dsimp [bernstein, polynomialFunctions]
   simp
+#align polynomial_functions_closure_eq_top' polynomial_functions_closure_eq_top'
 
 /-- The **Weierstrass Approximation Theorem**:
 polynomials functions on `[a, b] ⊆ ℝ` are dense in `C([a,b],ℝ)`
@@ -77,6 +78,7 @@ theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (
       ⟨fun x y => le_antisymm ((x.2.2.trans (not_lt.mp h)).trans y.2.1) ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
     apply Subsingleton.elim
     
+#align polynomial_functions_closure_eq_top polynomial_functions_closure_eq_top
 
 /-- An alternative statement of Weierstrass' theorem.
 
@@ -86,6 +88,7 @@ theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.I
     f ∈ (polynomialFunctions (Set.IccCat a b)).topologicalClosure := by
   rw [polynomial_functions_closure_eq_top _ _]
   simp
+#align continuous_map_mem_polynomial_functions_closure continuous_map_mem_polynomial_functions_closure
 
 open Polynomial
 
@@ -101,6 +104,7 @@ theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.IccCat a b,
   obtain ⟨-, H, ⟨m, ⟨-, rfl⟩⟩⟩ := w ε Pos
   rw [Metric.mem_ball, dist_eq_norm] at H
   exact ⟨m, H⟩
+#align exists_polynomial_near_continuous_map exists_polynomial_near_continuous_map
 
 /-- Another alternative statement of Weierstrass's theorem,
 for those who like epsilons, but not bundled continuous functions.
@@ -116,4 +120,5 @@ theorem exists_polynomial_near_of_continuous_on (a b : ℝ) (f : ℝ → ℝ) (c
   rw [norm_lt_iff _ Pos] at b
   intro x m
   exact b ⟨x, m⟩
+#align exists_polynomial_near_of_continuous_on exists_polynomial_near_of_continuous_on
 

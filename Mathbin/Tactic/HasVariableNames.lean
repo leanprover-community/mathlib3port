@@ -37,6 +37,7 @@ of `α`. See `tactic.typical_variable_names`.
 class HasVariableNames (α : Sort u) : Type where
   names : List Name
   names_nonempty : 0 < names.length := by decide
+#align has_variable_names HasVariableNames
 
 namespace Tactic
 
@@ -56,6 +57,7 @@ unsafe def typical_variable_names (t : expr) : tactic (List Name) :=
       let names ← to_expr (pquote.1 (HasVariableNames.names (%%ₓt)))
       eval_expr (List Name) names) <|>
     "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+#align tactic.typical_variable_names tactic.typical_variable_names
 
 end Tactic
 
@@ -68,6 +70,7 @@ create instances for 'containers' such as lists or sets.
 -/
 def makeListlikeInstance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
   ⟨(names α).map fun n => n.appendSuffix "s", by simp [names_nonempty]⟩
+#align has_variable_names.make_listlike_instance HasVariableNames.makeListlikeInstance
 
 /-- `@make_inheriting_instance α _ β` creates an instance `has_variable_names β`
 from an instance `has_variable_names α`. The generated instance contains the
@@ -76,6 +79,7 @@ same variable names as that of `α`. This can be used to create instances for
 -/
 def makeInheritingInstance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
   ⟨names α, names_nonempty⟩
+#align has_variable_names.make_inheriting_instance HasVariableNames.makeInheritingInstance
 
 end HasVariableNames
 
@@ -104,6 +108,7 @@ instance : HasVariableNames ℕ :=
 
 instance PropCat.hasVariableNames : HasVariableNames Prop :=
   ⟨[`P, `Q, `R]⟩
+#align Prop.has_variable_names PropCat.hasVariableNames
 
 instance {α} [HasVariableNames α] : HasVariableNames (Thunk' α) :=
   makeInheritingInstance α

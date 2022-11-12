@@ -40,6 +40,7 @@ Called `skolem₁` because it is the first step in building a Skolemization of a
 @[simps]
 def skolem₁ : Language :=
   ⟨fun n => L.BoundedFormula Empty (n + 1), fun _ => Empty⟩
+#align first_order.language.skolem₁ FirstOrder.Language.skolem₁
 
 variable {L}
 
@@ -55,23 +56,23 @@ theorem card_functions_sum_skolem₁ : (#Σn, (L.Sum L.skolem₁).Functions n) =
   · rw [← mk_sigma]
     exact infinite_iff.1 (Infinite.of_injective (fun n => ⟨n, ⊥⟩) fun x y xy => (Sigma.mk.inj xy).1)
     
+#align first_order.language.card_functions_sum_skolem₁ FirstOrder.Language.card_functions_sum_skolem₁
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«exprΣ , »((n), L.bounded_formula empty n))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card := by
   rw [card_functions_sum_skolem₁]
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr cardinal.mk(«exprΣ , »((n), L.bounded_formula empty n))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  trans #Σn, L.bounded_formula Empty n
   · exact ⟨⟨Sigma.map Nat.succ fun _ => id, nat.succ_injective.sigma_map fun _ => Function.injective_id⟩⟩
     
   · refine' trans bounded_formula.card_le (lift_le.1 _)
     simp only [mk_empty, lift_zero, lift_uzero, zero_add]
     
+#align first_order.language.card_functions_sum_skolem₁_le FirstOrder.Language.card_functions_sum_skolem₁_le
 
 /-- The structure assigning each function symbol of `L.skolem₁` to a skolem function generated with
 choice. -/
 noncomputable instance skolem₁Structure : L.skolem₁.StructureCat M :=
   ⟨fun n φ x => Classical.epsilon fun a => φ.realize default (Fin.snoc x a : _ → M), fun _ r => Empty.elim r⟩
+#align first_order.language.skolem₁_Structure FirstOrder.Language.skolem₁Structure
 
 namespace Substructure
 
@@ -83,14 +84,20 @@ theorem skolem₁_reduct_is_elementary (S : (L.Sum L.skolem₁).Substructure M) 
   exact
     ⟨⟨fun_map φ' (coe ∘ x), S.fun_mem (Lhom.sum_inr.on_function φ) (coe ∘ x) fun i => (x i).2⟩,
       Classical.epsilon_spec ⟨a, h⟩⟩
+#align
+  first_order.language.substructure.skolem₁_reduct_is_elementary FirstOrder.Language.Substructure.skolem₁_reduct_is_elementary
 
 /-- Any `L.sum L.skolem₁`-substructure is an elementary `L`-substructure. -/
 noncomputable def elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) : L.ElementarySubstructure M :=
   ⟨LhomCat.sumInl.substructureReduct S, S.skolem₁_reduct_is_elementary⟩
+#align
+  first_order.language.substructure.elementary_skolem₁_reduct FirstOrder.Language.Substructure.elementarySkolem₁Reduct
 
 theorem coe_sort_elementary_skolem₁_reduct (S : (L.Sum L.skolem₁).Substructure M) :
     (S.elementarySkolem₁Reduct : Type w) = S :=
   rfl
+#align
+  first_order.language.substructure.coe_sort_elementary_skolem₁_reduct FirstOrder.Language.Substructure.coe_sort_elementary_skolem₁_reduct
 
 end Substructure
 
@@ -104,6 +111,8 @@ instance : Small (⊥ : (L.Sum L.skolem₁).Substructure M).elementarySkolem₁R
 
 theorem exists_small_elementary_substructure : ∃ S : L.ElementarySubstructure M, Small.{max u v} S :=
   ⟨Substructure.elementarySkolem₁Reduct ⊥, inferInstance⟩
+#align
+  first_order.language.exists_small_elementary_substructure FirstOrder.Language.exists_small_elementary_substructure
 
 variable {M}
 
@@ -144,6 +153,8 @@ theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) 
     rw [aleph_0_le_lift, ← aleph_0_le_lift, h]
     exact h1
     
+#align
+  first_order.language.exists_elementary_substructure_card_eq FirstOrder.Language.exists_elementary_substructure_card_eq
 
 end Language
 

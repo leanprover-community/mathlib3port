@@ -37,6 +37,7 @@ theorem quotient_mk_comp_C_injective (I : Ideal (MvPolynomial σ K)) (hI : I ≠
   refine' Classical.by_contradiction fun hx0 => absurd (I.eq_top_iff_one.2 _) hI
   have := I.mul_mem_left (MvPolynomial.c x⁻¹) hx
   rwa [← mv_polynomial.C.map_mul, inv_mul_cancel hx0, MvPolynomial.C_1] at this
+#align mv_polynomial.quotient_mk_comp_C_injective MvPolynomial.quotient_mk_comp_C_injective
 
 end MvPolynomial
 
@@ -50,6 +51,7 @@ open Classical
 
 theorem dim_mv_polynomial : Module.rank K (MvPolynomial σ K) = Cardinal.mk (σ →₀ ℕ) := by
   rw [← Cardinal.lift_inj, ← (basis_monomials σ K).mk_eq_dim]
+#align mv_polynomial.dim_mv_polynomial MvPolynomial.dim_mv_polynomial
 
 end MvPolynomial
 

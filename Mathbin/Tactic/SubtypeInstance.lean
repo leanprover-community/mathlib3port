@@ -20,6 +20,7 @@ open Tactic.Interactive (get_current_field refineStruct)
 def mkMemName (sub : Name) : Name → Name
   | mk_string n _ => mk_string (n ++ "_mem") sub
   | n => n
+#align tactic.mk_mem_name Tactic.mkMemName
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def derive_field_subtype : tactic Unit := do
@@ -40,7 +41,7 @@ unsafe def derive_field_subtype : tactic Unit := do
       let val ← mk_app field args
       let subname ←
         local_context >>=
-            List.mfirst fun h => do
+            List.firstM fun h => do
               let (expr.const n _, args) ← get_app_fn_args <$> infer_type h
               is_def_eq s args reducible
               return n
@@ -48,6 +49,7 @@ unsafe def derive_field_subtype : tactic Unit := do
       let val_mem ← mk_app mem_field hyps
       let quote.1 (coeSort (%%ₓs)) ← target >>= instantiate_mvars
       tactic.refine (pquote.1 (@Subtype.mk _ (%%ₓs) (%%ₓval) (%%ₓval_mem)))
+#align tactic.derive_field_subtype tactic.derive_field_subtype
 
 namespace Interactive
 
@@ -72,6 +74,7 @@ unsafe def subtype_instance := do
   let inst :=
     pexpr.mk_structure_instance { struct := cl, field_values := [], field_names := [], sources := src.map to_pexpr }
   andthen (refine_struct inst) derive_field_subtype
+#align tactic.interactive.subtype_instance tactic.interactive.subtype_instance
 
 add_tactic_doc
   { Name := "subtype_instance", category := DocCategory.tactic, declNames := [`` subtype_instance],

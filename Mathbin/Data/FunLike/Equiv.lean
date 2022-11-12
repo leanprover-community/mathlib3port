@@ -127,6 +127,12 @@ instead of linearly increasing the work per `my_iso`-related declaration.
 -/
 
 
+/- warning: equiv_like -> EquivLike is a dubious translation:
+lean 3 declaration is
+  Sort.{u_1} -> (outParam.{succ u_2} Sort.{u_2}) -> (outParam.{succ u_3} Sort.{u_3}) -> Sort.{max 1 (imax u_1 u_2 u_3) (imax u_1 u_3 u_2)}
+but is expected to have type
+  Sort.{u_1} -> (outParam.{succ u_2} Sort.{u_2}) -> (outParam.{succ u_3} Sort.{u_3}) -> Sort.{max (max (max 1 u_1) u_2) u_3}
+Case conversion may be inaccurate. Consider using '#align equiv_like EquivLikeₓ'. -/
 /-- The class `equiv_like E α β` expresses that terms of type `E` have an
 injective coercion to bijections between `α` and `β`.
 
@@ -140,6 +146,7 @@ class EquivLike (E : Sort _) (α β : outParam (Sort _)) where
   right_inv : ∀ e, Function.RightInverse (inv e) (coe e)
   -- The `inv` hypothesis makes this easier to prove with `congr'`
   coe_injective' : ∀ e g, coe e = coe g → inv e = inv g → e = g
+#align equiv_like EquivLike
 
 namespace EquivLike
 
@@ -147,38 +154,103 @@ variable {E F α β γ : Sort _} [iE : EquivLike E α β] [iF : EquivLike F β �
 
 include iE
 
+/- warning: equiv_like.inv_injective -> EquivLike.inv_injective is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} [iE : EquivLike.{u_1 u_3 u_4} E α β], Function.Injective.{u_1 (imax u_4 u_3)} E (β -> α) (EquivLike.inv.{u_1 u_3 u_4} E α β iE)
+but is expected to have type
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_2}} [iE : EquivLike.{u_1 u_3 u_2} E α β], Function.Injective.{u_1 (imax u_2 u_3)} E (β -> α) (EquivLike.inv.{u_1 u_3 u_2} E α β iE)
+Case conversion may be inaccurate. Consider using '#align equiv_like.inv_injective EquivLike.inv_injectiveₓ'. -/
 theorem inv_injective : Function.Injective (EquivLike.inv : E → β → α) := fun e g h =>
   coe_injective' e g ((right_inv e).eq_right_inverse (h.symm ▸ left_inv g)) h
+#align equiv_like.inv_injective EquivLike.inv_injective
 
+#print EquivLike.toEmbeddingLike /-
 instance (priority := 100) toEmbeddingLike : EmbeddingLike E α β where
   coe := (coe : E → α → β)
   coe_injective' e g h := coe_injective' e g h ((left_inv e).eq_right_inverse (h.symm ▸ right_inv g))
   injective' e := (left_inv e).Injective
+#align equiv_like.to_embedding_like EquivLike.toEmbeddingLike
+-/
 
+/- warning: equiv_like.injective -> EquivLike.injective is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} [iE : EquivLike.{u_1 u_3 u_4} E α β] (e : E), Function.Injective.{u_3 u_4} α β (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) e)
+but is expected to have type
+  forall {E : Sort.{u_3}} {α : Sort.{u_1}} {β : Sort.{u_2}} [iE : EquivLike.{u_3 u_1 u_2} E α β] (e : E), Function.Injective.{u_1 u_2} α β (FunLike.coe.{u_3 u_1 u_2} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_3 u_1 u_2} E α β (EquivLike.toEmbeddingLike.{u_3 u_1 u_2} E α β iE)) e)
+Case conversion may be inaccurate. Consider using '#align equiv_like.injective EquivLike.injectiveₓ'. -/
 protected theorem injective (e : E) : Function.Injective e :=
   EmbeddingLike.injective e
+#align equiv_like.injective EquivLike.injective
 
+/- warning: equiv_like.surjective -> EquivLike.surjective is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} [iE : EquivLike.{u_1 u_3 u_4} E α β] (e : E), Function.Surjective.{u_3 u_4} α β (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) e)
+but is expected to have type
+  forall {E : Sort.{u_3}} {α : Sort.{u_1}} {β : Sort.{u_2}} [iE : EquivLike.{u_3 u_1 u_2} E α β] (e : E), Function.Surjective.{u_1 u_2} α β (FunLike.coe.{u_3 u_1 u_2} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_3 u_1 u_2} E α β (EquivLike.toEmbeddingLike.{u_3 u_1 u_2} E α β iE)) e)
+Case conversion may be inaccurate. Consider using '#align equiv_like.surjective EquivLike.surjectiveₓ'. -/
 protected theorem surjective (e : E) : Function.Surjective e :=
   (right_inv e).Surjective
+#align equiv_like.surjective EquivLike.surjective
 
+/- warning: equiv_like.bijective -> EquivLike.bijective is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} [iE : EquivLike.{u_1 u_3 u_4} E α β] (e : E), Function.Bijective.{u_3 u_4} α β (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) e)
+but is expected to have type
+  forall {E : Sort.{u_3}} {α : Sort.{u_1}} {β : Sort.{u_2}} [iE : EquivLike.{u_3 u_1 u_2} E α β] (e : E), Function.Bijective.{u_1 u_2} α β (FunLike.coe.{u_3 u_1 u_2} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_3 u_1 u_2} E α β (EquivLike.toEmbeddingLike.{u_3 u_1 u_2} E α β iE)) e)
+Case conversion may be inaccurate. Consider using '#align equiv_like.bijective EquivLike.bijectiveₓ'. -/
 protected theorem bijective (e : E) : Function.Bijective (e : α → β) :=
   ⟨EquivLike.injective e, EquivLike.surjective e⟩
+#align equiv_like.bijective EquivLike.bijective
 
+/- warning: equiv_like.apply_eq_iff_eq -> EquivLike.apply_eq_iff_eq is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} [iE : EquivLike.{u_1 u_3 u_4} E α β] (f : E) {x : α} {y : α}, Iff (Eq.{u_4} β (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) f x) (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) f y)) (Eq.{u_3} α x y)
+but is expected to have type
+  forall {E : Sort.{u_2}} {α : Sort.{u_3}} {β : Sort.{u_1}} [iE : EquivLike.{u_2 u_3 u_1} E α β] (f : E) {x : α} {y : α}, Iff (Eq.{u_1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) x) (FunLike.coe.{u_2 u_3 u_1} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_2 u_3 u_1} E α β (EquivLike.toEmbeddingLike.{u_2 u_3 u_1} E α β iE)) f x) (FunLike.coe.{u_2 u_3 u_1} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_2 u_3 u_1} E α β (EquivLike.toEmbeddingLike.{u_2 u_3 u_1} E α β iE)) f y)) (Eq.{u_3} α x y)
+Case conversion may be inaccurate. Consider using '#align equiv_like.apply_eq_iff_eq EquivLike.apply_eq_iff_eqₓ'. -/
 theorem apply_eq_iff_eq (f : E) {x y : α} : f x = f y ↔ x = y :=
   EmbeddingLike.apply_eq_iff_eq f
+#align equiv_like.apply_eq_iff_eq EquivLike.apply_eq_iff_eq
 
+/- warning: equiv_like.injective_comp -> EquivLike.injective_comp is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} {γ : Sort.{u_5}} [iE : EquivLike.{u_1 u_3 u_4} E α β] (e : E) (f : β -> γ), Iff (Function.Injective.{u_3 u_5} α γ (Function.comp.{u_3 u_4 u_5} α β γ f (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) e))) (Function.Injective.{u_4 u_5} β γ f)
+but is expected to have type
+  forall {E : Sort.{u_4}} {α : Sort.{u_1}} {β : Sort.{u_3}} {γ : Sort.{u_2}} [iE : EquivLike.{u_4 u_1 u_3} E α β] (e : E) (f : β -> γ), Iff (Function.Injective.{u_1 u_2} α γ (Function.comp.{u_1 u_3 u_2} α β γ f (FunLike.coe.{u_4 u_1 u_3} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_4 u_1 u_3} E α β (EquivLike.toEmbeddingLike.{u_4 u_1 u_3} E α β iE)) e))) (Function.Injective.{u_3 u_2} β γ f)
+Case conversion may be inaccurate. Consider using '#align equiv_like.injective_comp EquivLike.injective_compₓ'. -/
 @[simp]
 theorem injective_comp (e : E) (f : β → γ) : Function.Injective (f ∘ e) ↔ Function.Injective f :=
   Function.Injective.of_comp_iff' f (EquivLike.bijective e)
+#align equiv_like.injective_comp EquivLike.injective_comp
 
+/- warning: equiv_like.surjective_comp -> EquivLike.surjective_comp is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} {γ : Sort.{u_5}} [iE : EquivLike.{u_1 u_3 u_4} E α β] (e : E) (f : β -> γ), Iff (Function.Surjective.{u_3 u_5} α γ (Function.comp.{u_3 u_4 u_5} α β γ f (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) e))) (Function.Surjective.{u_4 u_5} β γ f)
+but is expected to have type
+  forall {E : Sort.{u_4}} {α : Sort.{u_1}} {β : Sort.{u_3}} {γ : Sort.{u_2}} [iE : EquivLike.{u_4 u_1 u_3} E α β] (e : E) (f : β -> γ), Iff (Function.Surjective.{u_1 u_2} α γ (Function.comp.{u_1 u_3 u_2} α β γ f (FunLike.coe.{u_4 u_1 u_3} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_4 u_1 u_3} E α β (EquivLike.toEmbeddingLike.{u_4 u_1 u_3} E α β iE)) e))) (Function.Surjective.{u_3 u_2} β γ f)
+Case conversion may be inaccurate. Consider using '#align equiv_like.surjective_comp EquivLike.surjective_compₓ'. -/
 @[simp]
 theorem surjective_comp (e : E) (f : β → γ) : Function.Surjective (f ∘ e) ↔ Function.Surjective f :=
   (EquivLike.surjective e).of_comp_iff f
+#align equiv_like.surjective_comp EquivLike.surjective_comp
 
+/- warning: equiv_like.bijective_comp -> EquivLike.bijective_comp is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} {γ : Sort.{u_5}} [iE : EquivLike.{u_1 u_3 u_4} E α β] (e : E) (f : β -> γ), Iff (Function.Bijective.{u_3 u_5} α γ (Function.comp.{u_3 u_4 u_5} α β γ f (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) e))) (Function.Bijective.{u_4 u_5} β γ f)
+but is expected to have type
+  forall {E : Sort.{u_4}} {α : Sort.{u_1}} {β : Sort.{u_3}} {γ : Sort.{u_2}} [iE : EquivLike.{u_4 u_1 u_3} E α β] (e : E) (f : β -> γ), Iff (Function.Bijective.{u_1 u_2} α γ (Function.comp.{u_1 u_3 u_2} α β γ f (FunLike.coe.{u_4 u_1 u_3} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_4 u_1 u_3} E α β (EquivLike.toEmbeddingLike.{u_4 u_1 u_3} E α β iE)) e))) (Function.Bijective.{u_3 u_2} β γ f)
+Case conversion may be inaccurate. Consider using '#align equiv_like.bijective_comp EquivLike.bijective_compₓ'. -/
 @[simp]
 theorem bijective_comp (e : E) (f : β → γ) : Function.Bijective (f ∘ e) ↔ Function.Bijective f :=
   (EquivLike.bijective e).of_comp_iff f
+#align equiv_like.bijective_comp EquivLike.bijective_comp
 
+/- warning: equiv_like.inv_apply_apply -> EquivLike.inv_apply_apply is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} [iE : EquivLike.{u_1 u_3 u_4} E α β] (e : E) (a : α), Eq.{u_3} α (EquivLike.inv.{u_1 u_3 u_4} E α β iE e (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) e a)) a
+but is expected to have type
+  forall {E : Sort.{u_2}} {α : Sort.{u_1}} {β : Sort.{u_3}} [iE : EquivLike.{u_2 u_1 u_3} E α β] (e : E) (a : α), Eq.{u_1} α (EquivLike.inv.{u_2 u_1 u_3} E α ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) iE e (FunLike.coe.{u_2 u_1 u_3} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_2 u_1 u_3} E α β (EquivLike.toEmbeddingLike.{u_2 u_1 u_3} E α β iE)) e a)) a
+Case conversion may be inaccurate. Consider using '#align equiv_like.inv_apply_apply EquivLike.inv_apply_applyₓ'. -/
 /-- This lemma is only supposed to be used in the generic context, when working with instances
 of classes extending `equiv_like`.
 For concrete isomorphism types such as `equiv`, you should use `equiv.symm_apply_apply`
@@ -188,7 +260,14 @@ TODO: define a generic form of `equiv.symm`. -/
 @[simp]
 theorem inv_apply_apply (e : E) (a : α) : EquivLike.inv e (e a) = a :=
   left_inv _ _
+#align equiv_like.inv_apply_apply EquivLike.inv_apply_apply
 
+/- warning: equiv_like.apply_inv_apply -> EquivLike.apply_inv_apply is a dubious translation:
+lean 3 declaration is
+  forall {E : Sort.{u_1}} {α : Sort.{u_3}} {β : Sort.{u_4}} [iE : EquivLike.{u_1 u_3 u_4} E α β] (e : E) (b : β), Eq.{u_4} β (coeFn.{u_1 (imax u_3 u_4)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{u_1 u_3 u_4} E α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{u_1 u_3 u_4} E α β (EquivLike.toEmbeddingLike.{u_1 u_3 u_4} E α β iE))) e (EquivLike.inv.{u_1 u_3 u_4} E α β iE e b)) b
+but is expected to have type
+  forall {E : Sort.{u_2}} {α : Sort.{u_3}} {β : Sort.{u_1}} [iE : EquivLike.{u_2 u_3 u_1} E α β] (e : E) (b : β), Eq.{u_1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) (EquivLike.inv.{u_2 u_3 u_1} E α β iE e b)) (FunLike.coe.{u_2 u_3 u_1} E α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (EmbeddingLike.toFunLike.{u_2 u_3 u_1} E α β (EquivLike.toEmbeddingLike.{u_2 u_3 u_1} E α β iE)) e (EquivLike.inv.{u_2 u_3 u_1} E α β iE e b)) b
+Case conversion may be inaccurate. Consider using '#align equiv_like.apply_inv_apply EquivLike.apply_inv_applyₓ'. -/
 /-- This lemma is only supposed to be used in the generic context, when working with instances
 of classes extending `equiv_like`.
 For concrete isomorphism types such as `equiv`, you should use `equiv.apply_symm_apply`
@@ -198,25 +277,48 @@ TODO: define a generic form of `equiv.symm`. -/
 @[simp]
 theorem apply_inv_apply (e : E) (b : β) : e (EquivLike.inv e b) = b :=
   right_inv _ _
+#align equiv_like.apply_inv_apply EquivLike.apply_inv_apply
 
 omit iE
 
 include iF
 
+/- warning: equiv_like.comp_injective -> EquivLike.comp_injective is a dubious translation:
+lean 3 declaration is
+  forall {F : Sort.{u_2}} {α : Sort.{u_3}} {β : Sort.{u_4}} {γ : Sort.{u_5}} [iF : EquivLike.{u_2 u_4 u_5} F β γ] (f : α -> β) (e : F), Iff (Function.Injective.{u_3 u_5} α γ (Function.comp.{u_3 u_4 u_5} α β γ (coeFn.{u_2 (imax u_4 u_5)} F (fun (_x : F) => β -> γ) (FunLike.hasCoeToFun.{u_2 u_4 u_5} F β (fun (_x : β) => γ) (EmbeddingLike.toFunLike.{u_2 u_4 u_5} F β γ (EquivLike.toEmbeddingLike.{u_2 u_4 u_5} F β γ iF))) e) f)) (Function.Injective.{u_3 u_4} α β f)
+but is expected to have type
+  forall {F : Sort.{u_4}} {α : Sort.{u_1}} {β : Sort.{u_3}} {γ : Sort.{u_2}} [iF : EquivLike.{u_4 u_3 u_2} F β γ] (f : α -> β) (e : F), Iff (Function.Injective.{u_1 u_2} α γ (Function.comp.{u_1 u_3 u_2} α β γ (FunLike.coe.{u_4 u_3 u_2} F β (fun (a : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) a) (EmbeddingLike.toFunLike.{u_4 u_3 u_2} F β γ (EquivLike.toEmbeddingLike.{u_4 u_3 u_2} F β γ iF)) e) f)) (Function.Injective.{u_1 u_3} α β f)
+Case conversion may be inaccurate. Consider using '#align equiv_like.comp_injective EquivLike.comp_injectiveₓ'. -/
 theorem comp_injective (f : α → β) (e : F) : Function.Injective (e ∘ f) ↔ Function.Injective f :=
   EmbeddingLike.comp_injective f e
+#align equiv_like.comp_injective EquivLike.comp_injective
 
+/- warning: equiv_like.comp_surjective -> EquivLike.comp_surjective is a dubious translation:
+lean 3 declaration is
+  forall {F : Sort.{u_2}} {α : Sort.{u_3}} {β : Sort.{u_4}} {γ : Sort.{u_5}} [iF : EquivLike.{u_2 u_4 u_5} F β γ] (f : α -> β) (e : F), Iff (Function.Surjective.{u_3 u_5} α γ (Function.comp.{u_3 u_4 u_5} α β γ (coeFn.{u_2 (imax u_4 u_5)} F (fun (_x : F) => β -> γ) (FunLike.hasCoeToFun.{u_2 u_4 u_5} F β (fun (_x : β) => γ) (EmbeddingLike.toFunLike.{u_2 u_4 u_5} F β γ (EquivLike.toEmbeddingLike.{u_2 u_4 u_5} F β γ iF))) e) f)) (Function.Surjective.{u_3 u_4} α β f)
+but is expected to have type
+  forall {F : Sort.{u_4}} {α : Sort.{u_1}} {β : Sort.{u_3}} {γ : Sort.{u_2}} [iF : EquivLike.{u_4 u_3 u_2} F β γ] (f : α -> β) (e : F), Iff (Function.Surjective.{u_1 u_2} α γ (Function.comp.{u_1 u_3 u_2} α β γ (FunLike.coe.{u_4 u_3 u_2} F β (fun (a : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) a) (EmbeddingLike.toFunLike.{u_4 u_3 u_2} F β γ (EquivLike.toEmbeddingLike.{u_4 u_3 u_2} F β γ iF)) e) f)) (Function.Surjective.{u_1 u_3} α β f)
+Case conversion may be inaccurate. Consider using '#align equiv_like.comp_surjective EquivLike.comp_surjectiveₓ'. -/
 @[simp]
 theorem comp_surjective (f : α → β) (e : F) : Function.Surjective (e ∘ f) ↔ Function.Surjective f :=
   Function.Surjective.of_comp_iff' (EquivLike.bijective e) f
+#align equiv_like.comp_surjective EquivLike.comp_surjective
 
+/- warning: equiv_like.comp_bijective -> EquivLike.comp_bijective is a dubious translation:
+lean 3 declaration is
+  forall {F : Sort.{u_2}} {α : Sort.{u_3}} {β : Sort.{u_4}} {γ : Sort.{u_5}} [iF : EquivLike.{u_2 u_4 u_5} F β γ] (f : α -> β) (e : F), Iff (Function.Bijective.{u_3 u_5} α γ (Function.comp.{u_3 u_4 u_5} α β γ (coeFn.{u_2 (imax u_4 u_5)} F (fun (_x : F) => β -> γ) (FunLike.hasCoeToFun.{u_2 u_4 u_5} F β (fun (_x : β) => γ) (EmbeddingLike.toFunLike.{u_2 u_4 u_5} F β γ (EquivLike.toEmbeddingLike.{u_2 u_4 u_5} F β γ iF))) e) f)) (Function.Bijective.{u_3 u_4} α β f)
+but is expected to have type
+  forall {F : Sort.{u_4}} {α : Sort.{u_1}} {β : Sort.{u_3}} {γ : Sort.{u_2}} [iF : EquivLike.{u_4 u_3 u_2} F β γ] (f : α -> β) (e : F), Iff (Function.Bijective.{u_1 u_2} α γ (Function.comp.{u_1 u_3 u_2} α β γ (FunLike.coe.{u_4 u_3 u_2} F β (fun (a : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => γ) a) (EmbeddingLike.toFunLike.{u_4 u_3 u_2} F β γ (EquivLike.toEmbeddingLike.{u_4 u_3 u_2} F β γ iF)) e) f)) (Function.Bijective.{u_1 u_3} α β f)
+Case conversion may be inaccurate. Consider using '#align equiv_like.comp_bijective EquivLike.comp_bijectiveₓ'. -/
 @[simp]
 theorem comp_bijective (f : α → β) (e : F) : Function.Bijective (e ∘ f) ↔ Function.Bijective f :=
   (EquivLike.bijective e).of_comp_iff' f
+#align equiv_like.comp_bijective EquivLike.comp_bijective
 
 /-- This is not an instance to avoid slowing down every single `subsingleton` typeclass search.-/
 theorem subsingleton_dom [Subsingleton β] : Subsingleton F :=
   ⟨fun f g => (FunLike.ext f g) fun x => (right_inv f).Injective <| Subsingleton.elim _ _⟩
+#align equiv_like.subsingleton_dom EquivLike.subsingleton_dom
 
 end EquivLike
 

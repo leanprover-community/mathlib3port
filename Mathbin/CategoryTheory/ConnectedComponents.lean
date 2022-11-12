@@ -39,6 +39,7 @@ variable {C : Type u₂} [Category.{u₁} C]
 /-- This type indexes the connected components of the category `J`. -/
 def ConnectedComponents (J : Type u₁) [Category.{v₁} J] : Type u₁ :=
   Quotient (Zigzag.setoid J)
+#align category_theory.connected_components CategoryTheory.ConnectedComponents
 
 instance [Inhabited J] : Inhabited (ConnectedComponents J) :=
   ⟨Quotient.mk' default⟩
@@ -46,15 +47,17 @@ instance [Inhabited J] : Inhabited (ConnectedComponents J) :=
 /-- Given an index for a connected component, produce the actual component as a full subcategory. -/
 def Component (j : ConnectedComponents J) : Type u₁ :=
   FullSubcategory fun k => Quotient.mk' k = j deriving Category
+#align category_theory.component CategoryTheory.Component
 
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps (config := { rhsMd := semireducible })]
 def Component.ι (j) : Component j ⥤ J :=
   fullSubcategoryInclusion _ deriving Full, Faithful
+#align category_theory.component.ι CategoryTheory.Component.ι
 
 /-- Each connected component of the category is nonempty. -/
 instance (j : ConnectedComponents J) : Nonempty (Component j) := by
-  apply Quotient.induction_on' j
+  apply Quotient.inductionOn' j
   intro k
   refine' ⟨⟨k, rfl⟩⟩
 
@@ -96,6 +99,7 @@ This category is equivalent to `J`.
 -/
 abbrev Decomposed (J : Type u₁) [Category.{v₁} J] :=
   Σj : ConnectedComponents J, Component j
+#align category_theory.decomposed CategoryTheory.Decomposed
 
 -- This name may cause clashes further down the road, and so might need to be changed.
 /-- The inclusion of each component into the decomposed category. This is just `sigma.incl` but having
@@ -103,15 +107,18 @@ this abbreviation helps guide typeclass search to get the right category instanc
 -/
 abbrev inclusion (j : ConnectedComponents J) : Component j ⥤ Decomposed J :=
   Sigma.incl _
+#align category_theory.inclusion CategoryTheory.inclusion
 
 /-- The forward direction of the equivalence between the decomposed category and the original. -/
 @[simps (config := { rhsMd := semireducible })]
 def decomposedTo (J : Type u₁) [Category.{v₁} J] : Decomposed J ⥤ J :=
   Sigma.desc Component.ι
+#align category_theory.decomposed_to CategoryTheory.decomposedTo
 
 @[simp]
 theorem inclusion_comp_decomposed_to (j : ConnectedComponents J) : inclusion j ⋙ decomposedTo J = Component.ι j :=
   rfl
+#align category_theory.inclusion_comp_decomposed_to CategoryTheory.inclusion_comp_decomposed_to
 
 instance : Full (decomposedTo J) where
   Preimage := by
@@ -145,6 +152,7 @@ instance : IsEquivalence (decomposedTo J) :=
 @[simps (config := { rhsMd := semireducible }) Functor]
 def decomposedEquiv : Decomposed J ≌ J :=
   (decomposedTo J).asEquivalence
+#align category_theory.decomposed_equiv CategoryTheory.decomposedEquiv
 
 end CategoryTheory
 

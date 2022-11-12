@@ -41,16 +41,19 @@ theorem homology_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f 
   -- Gosh it would be nice if `equiv_rw` could directly use an isomorphism, or an enriched `≃`.
   equiv_rw(kernel_subobject_iso g ≪≫ ModuleCat.kernelIsoKer g).toLinearEquiv.toEquiv  at n
   convert w n <;> simp [to_kernel_subobject]
+#align Module.homology_ext ModuleCat.homology_ext
 
 /-- Bundle an element `C.X i` such that `C.d_from i x = 0` as a term of `C.cycles i`. -/
 abbrev toCycles {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} (x : LinearMap.ker (C.dFrom i)) : C.cycles i :=
   toKernelSubobject x
+#align Module.to_cycles ModuleCat.toCycles
 
-@[ext]
+@[ext.1]
 theorem cycles_ext {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} {x y : C.cycles i}
     (w : (C.cycles i).arrow x = (C.cycles i).arrow y) : x = y := by
   apply_fun (C.cycles i).arrow using (ModuleCat.mono_iff_injective _).mp (cycles C i).arrow_mono
   exact w
+#align Module.cycles_ext ModuleCat.cycles_ext
 
 attribute [local instance] concrete_category.has_coe_to_sort
 
@@ -59,15 +62,18 @@ theorem cycles_map_to_cycles (f : C ⟶ D) {i : ι} (x : LinearMap.ker (C.dFrom 
     (cyclesMap f i) (toCycles x) = toCycles ⟨f.f i x.1, by simp [x.2]⟩ := by
   ext
   simp
+#align Module.cycles_map_to_cycles ModuleCat.cycles_map_to_cycles
 
 /-- Build a term of `C.homology i` from an element `C.X i` such that `C.d_from i x = 0`. -/
 abbrev toHomology {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} (x : LinearMap.ker (C.dFrom i)) : C.homology i :=
   homology.π (C.dTo i) (C.dFrom i) _ (toCycles x)
+#align Module.to_homology ModuleCat.toHomology
 
-@[ext]
+@[ext.1]
 theorem homology_ext' {M : ModuleCat R} (i : ι) {h k : C.homology i ⟶ M}
     (w : ∀ x : LinearMap.ker (C.dFrom i), h (toHomology x) = k (toHomology x)) : h = k :=
   homology_ext _ w
+#align Module.homology_ext' ModuleCat.homology_ext'
 
 /-- We give an alternative proof of `homology_map_eq_of_homotopy`,
 specialized to the setting of `V = Module R`,
@@ -85,7 +91,7 @@ example (f g : C ⟶ D) (h : Homotopy f g) (i : ι) :
   ext1
   simp only [map_add, image_to_kernel_arrow_apply, HomologicalComplex.Hom.sq_from_left,
     ModuleCat.to_kernel_subobject_arrow, CategoryTheory.Limits.kernel_subobject_map_arrow_apply,
-    d_next_eq_d_from_from_next, Function.comp_app, zero_add, ModuleCat.coe_comp, LinearMap.add_apply, map_zero,
+    d_next_eq_d_from_from_next, Function.comp_apply, zero_add, ModuleCat.coe_comp, LinearMap.add_apply, map_zero,
     Subtype.val_eq_coe, CategoryTheory.Limits.image_subobject_arrow_comp_apply, LinearMap.map_coe_ker,
     prev_d_eq_to_prev_d_to, h.comm i, x.2]
   abel

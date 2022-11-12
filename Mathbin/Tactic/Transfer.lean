@@ -44,6 +44,7 @@ private unsafe structure rel_data where
   in_type : expr
   out_type : expr
   relation : expr
+#align transfer.rel_data transfer.rel_data
 
 unsafe instance has_to_tactic_format_rel_data : has_to_tactic_format rel_data :=
   ⟨fun r => do
@@ -51,6 +52,7 @@ unsafe instance has_to_tactic_format_rel_data : has_to_tactic_format rel_data :=
     let α ← pp r.in_type
     let β ← pp r.out_type
     return f! "({R }: rel ({α }) ({β}))"⟩
+#align transfer.has_to_tactic_format_rel_data transfer.has_to_tactic_format_rel_data
 
 private unsafe structure rule_data where
   pr : expr
@@ -65,6 +67,7 @@ private unsafe structure rule_data where
   pat : pattern
   -- `R c`
   output : expr
+#align transfer.rule_data transfer.rule_data
 
 -- right-hand side `d` of rel equation `R c d`
 unsafe instance has_to_tactic_format_rule_data : has_to_tactic_format rule_data :=
@@ -77,6 +80,7 @@ unsafe instance has_to_tactic_format_rule_data : has_to_tactic_format rule_data 
     let pat ← pp r.pat.target
     let output ← pp r.output
     return f! "\{ ⟨{pat }⟩ pr: {pr } → {output }, {up } {mp } {ua } {ma} }}"⟩
+#align transfer.has_to_tactic_format_rule_data transfer.has_to_tactic_format_rule_data
 
 private unsafe def get_lift_fun : expr → tactic (List rel_data × expr)
   | e =>
@@ -86,12 +90,14 @@ private unsafe def get_lift_fun : expr → tactic (List rel_data × expr)
         let (ps, r) ← get_lift_fun S
         return (rel_data.mk α β R :: ps, r)) <|>
       return ([], e)
+#align transfer.get_lift_fun transfer.get_lift_fun
 
 private unsafe def mark_occurences (e : expr) : List expr → List (expr × Bool)
   | [] => []
   | h :: t =>
     let xs := mark_occurences t
     (h, occurs h e || any xs fun ⟨e, oc⟩ => oc && occurs h e) :: xs
+#align transfer.mark_occurences transfer.mark_occurences
 
 private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data := do
   let t ← infer_type pr
@@ -106,13 +112,15 @@ private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data 
   let u ← return <| collect_univ_params (app R p) ∩ u'
   let pat ← mk_pattern (level.param <$> u) (p_vars ++ a_vars) (app R p) (level.param <$> u) (p_vars ++ a_vars)
   return <| rule_data.mk pr (u' u) p_data u args pat g
+#align transfer.analyse_rule transfer.analyse_rule
 
 unsafe def analyse_decls : List Name → tactic (List rule_data) :=
-  mmap fun n => do
+  mapM fun n => do
     let d ← get_decl n
     let c ← return d.univ_params.length
     let ls ← (repeat () c).mmap fun _ => mk_fresh_name
     analyse_rule ls (const n (ls level.param))
+#align transfer.analyse_decls transfer.analyse_decls
 
 private unsafe def split_params_args : List (expr × Bool) → List expr → List (expr × Option expr) × List expr
   | (lc, tt) :: ps, e :: es =>
@@ -122,6 +130,7 @@ private unsafe def split_params_args : List (expr × Bool) → List expr → Lis
     let (ps', es') := split_params_args ps es
     ((lc, none) :: ps', es')
   | _, es => ([], es)
+#align transfer.split_params_args transfer.split_params_args
 
 private unsafe def param_substitutions (ctxt : List expr) :
     List (expr × Option expr) → tactic (List (Name × expr) × List expr)
@@ -144,6 +153,7 @@ private unsafe def param_substitutions (ctxt : List expr) :
     let (ms, vs) ← param_substitutions ps
     return ((n, e) :: ms, m ++ vs)
   | _ => return ([], [])
+#align transfer.param_substitutions transfer.param_substitutions
 
 /- input expression a type `R a`, it finds a type `b`, s.t. there is a proof of the type `R a b`.
 It return (`a`, pr : `R a b`) -/
@@ -190,6 +200,7 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
           (app_of_list (i rd.output) bs)
     let pr ← return <| app_of_list (i rd.pr) (Prod.snd <$> ps ++ List.join hs)
     return (b, pr, ms ++ mss)
+#align transfer.compute_transfer transfer.compute_transfer
 
 end Transfer
 
@@ -207,4 +218,5 @@ unsafe def tactic.transfer (ds : List Name) : tactic Unit := do
   let ms ← ms.mmap fun m => get_assignment m >> return [] <|> return [m]
   let gs ← get_goals
   set_goals (ms ++ new_pr :: gs)
+#align tactic.transfer tactic.transfer
 

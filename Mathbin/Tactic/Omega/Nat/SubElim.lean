@@ -24,6 +24,7 @@ def subTerms : Preterm → Option (preterm × preterm)
   | i ** n => none
   | t +* s => t.subTerms <|> s.subTerms
   | t -* s => t.subTerms <|> s.subTerms <|> some (t, s)
+#align omega.nat.preterm.sub_terms Omega.Nat.Preterm.subTerms
 
 /-- Find (t - s) inside a preterm and replace it with variable k -/
 def subSubst (t s : Preterm) (k : Nat) : Preterm → Preterm
@@ -31,6 +32,7 @@ def subSubst (t s : Preterm) (k : Nat) : Preterm → Preterm
   | t@(m ** n) => t
   | x +* y => x.subSubst +* y.subSubst
   | x -* y => if x = t ∧ y = s then 1 ** k else x.subSubst -* y.subSubst
+#align omega.nat.preterm.sub_subst Omega.Nat.Preterm.subSubst
 
 theorem val_sub_subst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     ∀ {t : Preterm}, t.freshIndex ≤ k → (subSubst x y k t).val (update k (x.val v - y.val v) v) = t.val v
@@ -57,6 +59,7 @@ theorem val_sub_subst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
       apply le_max_left
       apply le_max_right
       
+#align omega.nat.preterm.val_sub_subst Omega.Nat.Preterm.val_sub_subst
 
 end Preterm
 
@@ -69,6 +72,7 @@ def subTerms : Preform → Option (preterm × preterm)
   | ¬* p => p.subTerms
   | p ∨* q => p.subTerms <|> q.subTerms
   | p ∧* q => p.subTerms <|> q.subTerms
+#align omega.nat.preform.sub_terms Omega.Nat.Preform.subTerms
 
 /-- Find (t - s) inside a preform and replace it with variable k -/
 @[simp]
@@ -78,6 +82,7 @@ def subSubst (x y : Preterm) (k : Nat) : Preform → Preform
   | ¬* p => ¬* p.subSubst
   | p ∨* q => p.subSubst ∨* q.subSubst
   | p ∧* q => p.subSubst ∧* q.subSubst
+#align omega.nat.preform.sub_subst Omega.Nat.Preform.subSubst
 
 end Preform
 
@@ -85,6 +90,7 @@ end Preform
     the truncated difference between preterms t and s -/
 def isDiff (t s : Preterm) (k : Nat) : Preform :=
   (t =* s +* 1 ** k) ∨* (t ≤* s) ∧* (1 ** k) =* &0
+#align omega.nat.is_diff Omega.Nat.isDiff
 
 theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} : v k = t.val v - s.val v → (isDiff t s k).Holds v := by
   intro h1
@@ -98,19 +104,23 @@ theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} : v k = t.val 
   · left
     rw [h1, one_mul, add_comm, tsub_add_cancel_of_le h2]
     
+#align omega.nat.holds_is_diff Omega.Nat.holds_is_diff
 
 /-- Helper function for sub_elim -/
 def subElimCore (t s : Preterm) (k : Nat) (p : Preform) : Preform :=
   Preform.subSubst t s k p ∧* isDiff t s k
+#align omega.nat.sub_elim_core Omega.Nat.subElimCore
 
 /-- Return de Brujin index of fresh variable that does not occur
     in any of the arguments -/
 def subFreshIndex (t s : Preterm) (p : Preform) : Nat :=
   max p.freshIndex (max t.freshIndex s.freshIndex)
+#align omega.nat.sub_fresh_index Omega.Nat.subFreshIndex
 
 /-- Return a new preform with all subtractions eliminated -/
 def subElim (t s : Preterm) (p : Preform) : Preform :=
   subElimCore t s (subFreshIndex t s p) p
+#align omega.nat.sub_elim Omega.Nat.subElim
 
 theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     ∀ p : Preform, p.freshIndex ≤ k → ((Preform.subSubst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.Holds v)
@@ -137,6 +147,7 @@ theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_trans _ h1)
     apply le_max_left
     apply le_max_right
+#align omega.nat.sub_subst_equiv Omega.Nat.sub_subst_equiv
 
 theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sat := by
   intro h1
@@ -157,9 +168,11 @@ theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).S
     apply le_max_left
     apply le_max_right
     
+#align omega.nat.sat_sub_elim Omega.Nat.sat_sub_elim
 
 theorem unsat_of_unsat_sub_elim (t s : Preterm) (p : Preform) : (subElim t s p).Unsat → p.Unsat :=
   mt sat_sub_elim
+#align omega.nat.unsat_of_unsat_sub_elim Omega.Nat.unsat_of_unsat_sub_elim
 
 end Nat
 

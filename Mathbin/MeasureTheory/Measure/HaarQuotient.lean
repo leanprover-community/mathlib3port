@@ -47,6 +47,7 @@ theorem Subgroup.smulInvariantMeasure [μ.IsMulRightInvariant] : SmulInvariantMe
       rintro ⟨c, hc⟩ s hs
       dsimp [(· • ·)]
       refine' measure_preimage_mul_right μ (MulOpposite.unop c) s }
+#align subgroup.smul_invariant_measure Subgroup.smulInvariantMeasure
 
 /-- Measurability of the action of the topological group `G` on the left-coset space `G/Γ`. -/
 @[to_additive "Measurability of the action of the additive topological group `G` on the left-coset\n  space `G/Γ`."]
@@ -54,6 +55,7 @@ instance QuotientGroup.hasMeasurableSmul [MeasurableSpace (G ⧸ Γ)] [BorelSpac
     HasMeasurableSmul G (G ⧸ Γ) where
   measurableConstSmul g := (continuous_const_smul g).Measurable
   measurableSmulConst x := (QuotientGroup.continuous_smul₁ x).Measurable
+#align quotient_group.has_measurable_smul QuotientGroup.hasMeasurableSmul
 
 variable {𝓕 : Set G} (h𝓕 : IsFundamentalDomain Γ.opposite 𝓕 μ)
 
@@ -61,8 +63,6 @@ include h𝓕
 
 variable [Countable Γ] [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr μ «expr ⁻¹' »(has_mul.mul g, «expr ∩ »(π_preA, «expr ⁻¹' »(has_mul.mul «expr ⁻¹»(g), 𝓕)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The pushforward to the coset space `G ⧸ Γ` of the restriction of a both left- and right-
   invariant measure on `G` to a fundamental domain `𝓕` is a `G`-invariant measure on `G ⧸ Γ`. -/
 @[to_additive
@@ -83,8 +83,7 @@ theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasureMap [μ.IsMulLeftI
         simp
       rw [this]
       have : μ (Mul.mul g ⁻¹' π_preA ∩ 𝓕) = μ (π_preA ∩ Mul.mul g⁻¹ ⁻¹' 𝓕) := by
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr μ «expr ⁻¹' »(has_mul.mul g, «expr ∩ »(π_preA, «expr ⁻¹' »(has_mul.mul «expr ⁻¹»(g), 𝓕)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+        trans μ (Mul.mul g ⁻¹' (π_preA ∩ Mul.mul g⁻¹ ⁻¹' 𝓕))
         · rw [preimage_inter]
           congr
           rw [← preimage_comp, comp_mul_left, mul_left_inv]
@@ -104,6 +103,8 @@ theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasureMap [μ.IsMulLeftI
       ext
       have : π (x * MulOpposite.unop γ) = π x := by simpa [QuotientGroup.eq'] using γ_in_Γ
       simp [(· • ·), this] }
+#align
+  measure_theory.is_fundamental_domain.smul_invariant_measure_map MeasureTheory.IsFundamentalDomain.smulInvariantMeasureMap
 
 /-- Assuming `Γ` is a normal subgroup of a topological group `G`, the pushforward to the quotient
   group `G ⧸ Γ` of the restriction of a both left- and right-invariant measure on `G` to a
@@ -126,6 +127,8 @@ theorem MeasureTheory.IsFundamentalDomain.isMulLeftInvariantMap [Subgroup.Normal
         
       · exact hA
          }
+#align
+  measure_theory.is_fundamental_domain.is_mul_left_invariant_map MeasureTheory.IsFundamentalDomain.isMulLeftInvariantMap
 
 variable [T2Space (G ⧸ Γ)] [SecondCountableTopology (G ⧸ Γ)] (K : PositiveCompacts (G ⧸ Γ))
 
@@ -152,6 +155,8 @@ theorem MeasureTheory.IsFundamentalDomain.map_restrict_quotient [Subgroup.Normal
   rw [measure.haar_measure_unique (measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)) K, measure.map_apply meas_π,
     measure.restrict_apply₀' 𝓕meas, inter_comm]
   exact K.is_compact.measurable_set
+#align
+  measure_theory.is_fundamental_domain.map_restrict_quotient MeasureTheory.IsFundamentalDomain.map_restrict_quotient
 
 /-- Given a normal subgroup `Γ` of a topological group `G` with Haar measure `μ`, which is also
   right-invariant, and a finite volume fundamental domain `𝓕`, the quotient map to `G ⧸ Γ` is
@@ -162,4 +167,5 @@ theorem MeasurePreservingQuotientGroup.mk' [Subgroup.Normal Γ] [MeasureTheory.M
     [μ.IsMulRightInvariant] (h𝓕_finite : μ 𝓕 < ⊤) (c : ℝ≥0) (h : μ (𝓕 ∩ QuotientGroup.mk' Γ ⁻¹' K) = c) :
     MeasurePreserving (QuotientGroup.mk' Γ) (μ.restrict 𝓕) (c • MeasureTheory.Measure.haarMeasure K) :=
   { Measurable := continuous_quotient_mk.Measurable, map_eq := by rw [h𝓕.map_restrict_quotient K h𝓕_finite, h] <;> rfl }
+#align measure_preserving_quotient_group.mk' MeasurePreservingQuotientGroup.mk'
 

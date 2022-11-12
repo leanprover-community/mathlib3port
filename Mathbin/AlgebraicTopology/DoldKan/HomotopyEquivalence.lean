@@ -41,10 +41,12 @@ noncomputable def homotopyPToId : ∀ q : ℕ, Homotopy (p q : K[X] ⟶ _) (𝟙
       
     · simp only [add_zero, comp_zero]
       
+#align algebraic_topology.dold_kan.homotopy_P_to_id AlgebraicTopology.DoldKan.homotopyPToId
 
 /-- The complement projection `Q q` to `P q` is homotopic to zero. -/
 def homotopyQToZero (q : ℕ) : Homotopy (q q : K[X] ⟶ _) 0 :=
   Homotopy.equivSubZero.toFun (homotopyPToId X q).symm
+#align algebraic_topology.dold_kan.homotopy_Q_to_zero AlgebraicTopology.DoldKan.homotopyQToZero
 
 theorem homotopy_P_to_id_eventually_constant {q n : ℕ} (hqn : n < q) :
     ((homotopyPToId X (q + 1)).Hom n (n + 1) : X _[n] ⟶ X _[n + 1]) = (homotopyPToId X q).Hom n (n + 1) := by
@@ -52,6 +54,8 @@ theorem homotopy_P_to_id_eventually_constant {q n : ℕ} (hqn : n < q) :
   simp only [homotopy_Hσ_to_zero, hσ'_eq_zero hqn (c_mk (n + 1) n rfl), Homotopy.trans_hom, Pi.add_apply,
     Homotopy.of_eq_hom, Pi.zero_apply, Homotopy.add_hom, Homotopy.comp_left_hom, Homotopy.null_homotopy'_hom,
     ComplexShape.down_rel, eq_self_iff_true, dite_eq_ite, if_true, comp_zero, add_zero, zero_add]
+#align
+  algebraic_topology.dold_kan.homotopy_P_to_id_eventually_constant AlgebraicTopology.DoldKan.homotopy_P_to_id_eventually_constant
 
 variable (X)
 
@@ -70,6 +74,7 @@ def homotopyPInftyToId : Homotopy (pInfty : K[X] ⟶ _) (𝟙 _) where
         ← P_is_eventually_constant (rfl.le : n + 1 ≤ n + 1),
         homotopy_P_to_id_eventually_constant X (lt_add_one (n + 1))] using (homotopy_P_to_id X (n + 2)).comm (n + 1)
       
+#align algebraic_topology.dold_kan.homotopy_P_infty_to_id AlgebraicTopology.DoldKan.homotopyPInftyToId
 
 /-- The inclusion of the Moore complex in the alternating face map complex
 is an homotopy equivalence -/
@@ -83,6 +88,8 @@ def homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex {A : Type _} [C
   homotopyInvHomId :=
     Homotopy.trans (Homotopy.ofEq (P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map Y))
       (homotopyPInftyToId Y)
+#align
+  algebraic_topology.dold_kan.homotopy_equiv_normalized_Moore_complex_alternating_face_map_complex AlgebraicTopology.DoldKan.homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex
 
 end DoldKan
 

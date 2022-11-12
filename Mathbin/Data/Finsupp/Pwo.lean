@@ -32,4 +32,5 @@ theorem Finsupp.is_pwo {α σ : Type _} [Zero α] [LinearOrder α] [IsWellOrder 
     S.IsPwo := by
   rw [← finsupp.equiv_fun_on_fintype.symm.image_preimage S]
   refine' Set.PartiallyWellOrderedOn.image_of_monotone_on (Pi.is_pwo _) fun a b ha hb => id
+#align finsupp.is_pwo Finsupp.is_pwo
 

@@ -19,6 +19,7 @@ open MvPolynomial
 noncomputable instance MvPolynomial.invertibleC (σ : Type _) {R : Type _} [CommSemiring R] (r : R) [Invertible r] :
     Invertible (c r : MvPolynomial σ R) :=
   Invertible.map (c : R →+* MvPolynomial σ R) _
+#align mv_polynomial.invertible_C MvPolynomial.invertibleC
 
 /-- A natural number that is invertible when coerced to a commutative semiring `R`
 is also invertible when coerced to any polynomial ring with rational coefficients.
@@ -27,4 +28,5 @@ Short-cut for typeclass resolution. -/
 noncomputable instance MvPolynomial.invertibleCoeNat (σ R : Type _) (p : ℕ) [CommSemiring R] [Invertible (p : R)] :
     Invertible (p : MvPolynomial σ R) :=
   IsScalarTower.invertibleAlgebraCoeNat R _ _
+#align mv_polynomial.invertible_coe_nat MvPolynomial.invertibleCoeNat
 

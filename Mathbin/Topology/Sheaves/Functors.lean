@@ -45,6 +45,8 @@ theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Op
   intro i j g
   apply Subsingleton.helim
   iterate 2 rw [map_diagram.obj_eq]
+#align
+  Top.presheaf.sheaf_condition_pairwise_intersections.map_diagram TopCat.Presheaf.SheafConditionPairwiseIntersections.map_diagram
 
 theorem map_cocone : HEq ((Opens.map f).mapCocone (Pairwise.cocone U)) (Pairwise.cocone ((Opens.map f).obj ∘ U)) := by
   unfold functor.map_cocone cocones.functoriality
@@ -56,6 +58,8 @@ theorem map_cocone : HEq ((Opens.map f).mapCocone (Pairwise.cocone U)) (Pairwise
   apply Subsingleton.helim
   rw [map_diagram, opens.map_supr]
   apply proof_irrel_heq
+#align
+  Top.presheaf.sheaf_condition_pairwise_intersections.map_cocone TopCat.Presheaf.SheafConditionPairwiseIntersections.map_cocone
 
 theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseIntersections) :
     (f _* F).IsSheafPairwiseIntersections := fun ι U => by
@@ -66,6 +70,8 @@ theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseInte
   congr
   iterate 2 rw [map_diagram]
   apply map_cocone
+#align
+  Top.presheaf.sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf TopCat.Presheaf.SheafConditionPairwiseIntersections.pushforward_sheaf_of_sheaf
 
 end Presheaf.SheafConditionPairwiseIntersections
 
@@ -78,12 +84,14 @@ open Presheaf
 theorem pushforward_sheaf_of_sheaf {F : X.Presheaf C} (h : F.IsSheaf) : (f _* F).IsSheaf := by
   rw [is_sheaf_iff_is_sheaf_pairwise_intersections] at h⊢ <;>
     exact sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf f h
+#align Top.sheaf.pushforward_sheaf_of_sheaf TopCat.Sheaf.pushforward_sheaf_of_sheaf
 
 /-- The pushforward functor.
 -/
 def pushforward (f : X ⟶ Y) : X.Sheaf C ⥤ Y.Sheaf C where
   obj ℱ := ⟨f _* ℱ.1, pushforward_sheaf_of_sheaf f ℱ.2⟩
   map _ _ g := ⟨pushforwardMap f g.1⟩
+#align Top.sheaf.pushforward TopCat.Sheaf.pushforward
 
 end Sheaf
 

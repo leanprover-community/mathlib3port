@@ -39,30 +39,38 @@ instance [IsEmpty α] : IsEmpty (PLift α) :=
 
 theorem up_injective : Injective (@up α) :=
   Equiv.plift.symm.Injective
+#align plift.up_injective PLift.up_injective
 
 theorem up_surjective : Surjective (@up α) :=
   Equiv.plift.symm.Surjective
+#align plift.up_surjective PLift.up_surjective
 
 theorem up_bijective : Bijective (@up α) :=
   Equiv.plift.symm.Bijective
+#align plift.up_bijective PLift.up_bijective
 
 @[simp]
 theorem up_inj {x y : α} : up x = up y ↔ x = y :=
   up_injective.eq_iff
+#align plift.up_inj PLift.up_inj
 
 theorem down_surjective : Surjective (@down α) :=
   Equiv.plift.Surjective
+#align plift.down_surjective PLift.down_surjective
 
 theorem down_bijective : Bijective (@down α) :=
   Equiv.plift.Bijective
+#align plift.down_bijective PLift.down_bijective
 
 @[simp]
 theorem forall {p : PLift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (PLift.up x) :=
   up_surjective.forall
+#align plift.forall PLift.forall
 
 @[simp]
 theorem exists {p : PLift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (PLift.up x) :=
   up_surjective.exists
+#align plift.exists PLift.exists
 
 end PLift
 
@@ -87,30 +95,38 @@ instance [IsEmpty α] : IsEmpty (ULift α) :=
 
 theorem up_injective : Injective (@up α) :=
   Equiv.ulift.symm.Injective
+#align ulift.up_injective ULift.up_injective
 
 theorem up_surjective : Surjective (@up α) :=
   Equiv.ulift.symm.Surjective
+#align ulift.up_surjective ULift.up_surjective
 
 theorem up_bijective : Bijective (@up α) :=
   Equiv.ulift.symm.Bijective
+#align ulift.up_bijective ULift.up_bijective
 
 @[simp]
 theorem up_inj {x y : α} : up x = up y ↔ x = y :=
   up_injective.eq_iff
+#align ulift.up_inj ULift.up_inj
 
 theorem down_surjective : Surjective (@down α) :=
   Equiv.ulift.Surjective
+#align ulift.down_surjective ULift.down_surjective
 
 theorem down_bijective : Bijective (@down α) :=
   Equiv.ulift.Bijective
+#align ulift.down_bijective ULift.down_bijective
 
 @[simp]
 theorem forall {p : ULift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (ULift.up x) :=
   up_surjective.forall
+#align ulift.forall ULift.forall
 
 @[simp]
 theorem exists {p : ULift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (ULift.up x) :=
   up_surjective.exists
+#align ulift.exists ULift.exists
 
 end ULift
 

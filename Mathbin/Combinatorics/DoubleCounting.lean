@@ -44,31 +44,39 @@ variable {α β : Type _} (r : α → β → Prop) (s : Finset α) (t : Finset �
 /-- Elements of `s` which are "below" `b` according to relation `r`. -/
 def bipartiteBelow : Finset α :=
   s.filter fun a => r a b
+#align finset.bipartite_below Finset.bipartiteBelow
 
 /-- Elements of `t` which are "above" `a` according to relation `r`. -/
 def bipartiteAbove : Finset β :=
   t.filter (r a)
+#align finset.bipartite_above Finset.bipartiteAbove
 
 theorem bipartite_below_swap : t.bipartiteBelow (swap r) a = t.bipartiteAbove r a :=
   rfl
+#align finset.bipartite_below_swap Finset.bipartite_below_swap
 
 theorem bipartite_above_swap : s.bipartiteAbove (swap r) b = s.bipartiteBelow r b :=
   rfl
+#align finset.bipartite_above_swap Finset.bipartite_above_swap
 
 variable {s t a a' b b'}
 
 @[simp]
 theorem mem_bipartite_below {a : α} : a ∈ s.bipartiteBelow r b ↔ a ∈ s ∧ r a b :=
   mem_filter
+#align finset.mem_bipartite_below Finset.mem_bipartite_below
 
 @[simp]
 theorem mem_bipartite_above {b : β} : b ∈ t.bipartiteAbove r a ↔ b ∈ t ∧ r a b :=
   mem_filter
+#align finset.mem_bipartite_above Finset.mem_bipartite_above
 
 theorem sum_card_bipartite_above_eq_sum_card_bipartite_below [∀ a b, Decidable (r a b)] :
     (∑ a in s, (t.bipartiteAbove r a).card) = ∑ b in t, (s.bipartiteBelow r b).card := by
   simp_rw [card_eq_sum_ones, bipartite_above, bipartite_below, sum_filter]
   exact sum_comm
+#align
+  finset.sum_card_bipartite_above_eq_sum_card_bipartite_below Finset.sum_card_bipartite_above_eq_sum_card_bipartite_below
 
 /-- Double counting argument. Considering `r` as a bipartite graph, the LHS is a lower bound on the
 number of edges while the RHS is an upper bound. -/
@@ -79,15 +87,18 @@ theorem card_mul_le_card_mul [∀ a b, Decidable (r a b)] (hm : ∀ a ∈ s, m �
     _ = ∑ b in t, (s.bipartiteBelow r b).card := sum_card_bipartite_above_eq_sum_card_bipartite_below _
     _ ≤ _ := t.sum_le_card_nsmul _ _ hn
     
+#align finset.card_mul_le_card_mul Finset.card_mul_le_card_mul
 
 theorem card_mul_le_card_mul' [∀ a b, Decidable (r a b)] (hn : ∀ b ∈ t, n ≤ (s.bipartiteBelow r b).card)
     (hm : ∀ a ∈ s, (t.bipartiteAbove r a).card ≤ m) : t.card * n ≤ s.card * m :=
   card_mul_le_card_mul (swap r) hn hm
+#align finset.card_mul_le_card_mul' Finset.card_mul_le_card_mul'
 
 theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)] (hm : ∀ a ∈ s, (t.bipartiteAbove r a).card = m)
     (hn : ∀ b ∈ t, (s.bipartiteBelow r b).card = n) : s.card * m = t.card * n :=
   ((card_mul_le_card_mul _ fun a ha => (hm a ha).ge) fun b hb => (hn b hb).le).antisymm <|
     (card_mul_le_card_mul' _ fun a ha => (hn a ha).ge) fun b hb => (hm b hb).le
+#align finset.card_mul_eq_card_mul Finset.card_mul_eq_card_mul
 
 end Bipartite
 

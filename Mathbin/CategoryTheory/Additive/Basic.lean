@@ -34,6 +34,7 @@ variable (C : Type u) [Category C]
 See <https://stacks.math.columbia.edu/tag/0104>.
 -/
 class AdditiveCategory extends Preadditive C, HasFiniteBiproducts C
+#align category_theory.additive_category CategoryTheory.AdditiveCategory
 
 end CategoryTheory
 

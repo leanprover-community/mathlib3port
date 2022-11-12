@@ -67,6 +67,7 @@ unsafe structure projection_data where
   is_default : Bool
   IsPrefix : Bool
   deriving has_reflect, Inhabited
+#align projection_data projection_data
 
 /-- Temporary projection data parsed from `initialize_simps_projections` before the expression
   matching this projection has been found. Only used internally in `simps_get_raw_projections`. -/
@@ -77,6 +78,7 @@ unsafe structure parsed_projection_data where
   -- name for this projection used in the generated `simp` lemmas
   is_default : Bool
   IsPrefix : Bool
+#align parsed_projection_data parsed_projection_data
 
 section
 
@@ -111,6 +113,7 @@ end
   See `initialize_simps_projection`. -/
 abbrev ProjectionRule :=
   Sum (Name × Name) Name × Bool
+#align projection_rule ProjectionRule
 -/
 
 /-- The `@[_simps_str]` attribute specifies the preferred projections of the given structure,
@@ -127,6 +130,7 @@ unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_da
   Name := `_simps_str
   descr := "An attribute specifying the projection of the given structure."
   parser := failed
+#align simps_str_attr simps_str_attr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -142,6 +146,7 @@ unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name) where
   Name := `notation_class
   descr := "An attribute specifying that this is a notation class. Used by @[simps]."
   parser := Prod.mk <$> Option.isNone <$> parser.optional (tk "*") <*> parser.optional ident
+#align notation_class_attr notation_class_attr
 
 attribute [notation_class]
   Zero One Add Mul Inv Neg Sub Div Dvd Mod LE LT Append AndThen' Union Inter Sdiff HasEquiv HasSubset HasSSubset EmptyCollection Insert Singleton Sep Membership Pow
@@ -166,6 +171,7 @@ unsafe def projections_info (l : List projection_data) (pref : String) (str : Na
   return
       f! "[simps] > {pref } {str }:
                 > {to_print}"
+#align projections_info projections_info
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -194,6 +200,7 @@ unsafe def get_composite_of_projections_aux :
         let (type_args, tgt) ← open_pis_whnf type
         let new_str := tgt
         get_composite_of_projections_aux new_str proj_rest (new_x type_args) new_pos (args ++ type_args)
+#align get_composite_of_projections_aux get_composite_of_projections_aux
 
 /-- Given a structure `str` and a projection `proj`, that could be multiple nested projections
   (separated by `_`), returns an expression that is the composition of these projections and a
@@ -207,6 +214,7 @@ unsafe def get_composite_of_projections (str : Name) (proj : String) : tactic (e
   let str_ap := str_e.mk_app type_args
   let x ← mk_local' `x BinderInfo.default str_ap
   get_composite_of_projections_aux str ("_" ++ proj) x [] <| type_args ++ [x]
+#align get_composite_of_projections get_composite_of_projections
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -405,6 +413,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
             dbg_trace "[simps] > Generated raw projection data: 
               {← (raw_univs, projs)}")
       return (raw_univs, projs)
+#align simps_get_raw_projections simps_get_raw_projections
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Parse a rule for `initialize_simps_projections`. It is either `<name>→<name>` or `-<name>`,
@@ -412,6 +421,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
 unsafe def simps_parse_rule : parser ProjectionRule :=
   Prod.mk <$> ((fun x y => inl (x, y)) <$> ident <*> (tk "->" >> ident) <|> inr <$> (tk "-" >> ident)) <*>
     is_some <$> parser.optional (tk "as_prefix")
+#align simps_parse_rule simps_parse_rule
 
 library_note "custom simps projection"/-- You can specify custom projections for the `@[simps]` attribute.
 To do this for the projection `my_structure.original_projection` by adding a declaration
@@ -518,6 +528,7 @@ unsafe def initialize_simps_projections_cmd (_ : parse <| tk "initialize_simps_p
   ns fun data => do
       let nm ← resolve_constant data.1
       simps_get_raw_projections env nm tt (data.2.getOrElse []) trc
+#align initialize_simps_projections_cmd initialize_simps_projections_cmd
 
 add_tactic_doc
   { Name := "initialize_simps_projections", category := DocCategory.cmd,
@@ -570,13 +581,16 @@ structure SimpsCfg where
   trace := false
   addAdditive := @none Name
   deriving has_reflect, Inhabited
+#align simps_cfg SimpsCfg
 
 /-- A common configuration for `@[simps]`: generate equalities between functions instead equalities
   between fully applied expressions. -/
 def asFn : SimpsCfg where fullyApplied := false
+#align as_fn asFn
 
 /-- A common configuration for `@[simps]`: don't tag the generated lemmas with `@[simp]`. -/
 def lemmasOnly : SimpsCfg where attrs := []
+#align lemmas_only lemmasOnly
 
 /-- Get the projections of a structure used by `@[simps]` applied to the appropriate arguments.
   Returns a list of tuples
@@ -623,6 +637,7 @@ unsafe def simps_get_projection_exprs (e : environment) (tgt : expr) (rhs : expr
         { proj with expr := (proj.expr.instantiate_univ_params univs).instantiate_lambdas_or_apps params,
           proj_nrs := proj.proj_nrs.tail })
   return new_proj_data
+#align simps_get_projection_exprs simps_get_projection_exprs
 
 /-- Add a lemma with `nm` stating that `lhs = rhs`. `type` is the type of both `lhs` and `rhs`,
   `args` is the list of local constants occurring, and `univs` is the list of universe variables. -/
@@ -666,6 +681,7 @@ unsafe def simps_add_projection (nm : Name) (type lhs rhs : expr) (args : List e
   when (b ∧ `simp ∈ cfg) (set_basic_attribute `_refl_lemma decl_name tt)
   cfg fun nm => set_attribute nm decl_name tt
   when cfg <| to_additive.attr decl_name ⟨ff, cfg, cfg, none, tt⟩ tt
+#align simps_add_projection simps_add_projection
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
@@ -715,7 +731,8 @@ unsafe def simps_add_projections :
     /- Don't recursively continue if `str` is not a structure or if the structure is in
             `not_recursive`. -/
         if e str ∧ ¬(todo = [] ∧ str ∈ cfg ∧ ¬must_be_str) then do
-        let [intro] ← return <| e str | fail "unreachable code (3)"
+        let [intro] ← return <| e str |
+          fail "unreachable code (3)"
         let rhs_whnf ← whnf rhs_ap cfg
         let (rhs_ap, todo_now)
           ←-- `todo_now` means that we still have to generate the current simp lemma
@@ -818,6 +835,7 @@ unsafe def simps_add_projections :
             "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
         if cfg then simps_add_projection nm tgt lhs_ap rhs_ap new_args univs cfg
           else simps_add_projection nm type lhs rhs args univs cfg
+#align simps_add_projections simps_add_projections
 
 /-- `simps_tac` derives `simp` lemmas for all (nested) non-Prop projections of the declaration.
   If `todo` is non-empty, it will generate exactly the names in `todo`.
@@ -839,6 +857,7 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := {  }) (todo : List String :=
         return { cfg with addAdditive := dict nm }
       else return cfg
   simps_add_projections e nm d lhs d [] d tt cfg todo []
+#align simps_tac simps_tac
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -848,8 +867,10 @@ unsafe def simps_parser : parser (Bool × List String × SimpsCfg) := do
         Prod.mk <$>
         is_some <$> parser.optional (tk "?") <*>
       (Prod.mk <$> many (name.last <$> ident) <*> do
-        let some e ← parser.optional parser.pexpr | return {  }
+        let some e ← parser.optional parser.pexpr |
+          return {  }
         eval_pexpr SimpsCfg e)
+#align simps_parser simps_parser
 
 /- If one of the fields is a partially applied constructor, we will eta-expand it
   (this likely never happens, so is not included in the official doc). -/
@@ -961,6 +982,7 @@ unsafe def simps_attr : user_attribute Unit (Bool × List String × SimpsCfg) wh
       guard persistent <|> fail "`simps` currently cannot be used as a local attribute"
       let (trc, todo, cfg) ← simps_attr.get_param n
       simps_tac n cfg todo trc
+#align simps_attr simps_attr
 
 add_tactic_doc { Name := "simps", category := DocCategory.attr, declNames := [`simps_attr], tags := ["simplification"] }
 

@@ -82,11 +82,13 @@ class IsJordan [Mul A] where
   lmul_lmul_comm_rmul : ∀ a b : A, a * a * (b * a) = a * a * b * a
   lmul_comm_rmul_rmul : ∀ a b : A, a * b * (a * a) = a * (b * (a * a))
   rmul_comm_rmul_rmul : ∀ a b : A, b * a * (a * a) = b * (a * a) * a
+#align is_jordan IsJordan
 
 /-- A commutative Jordan multipication -/
 class IsCommJordan [Mul A] where
   mul_comm : ∀ a b : A, a * b = b * a
   lmul_comm_rmul_rmul : ∀ a b : A, a * b * (a * a) = a * (b * (a * a))
+#align is_comm_jordan IsCommJordan
 
 -- see Note [lower instance priority]
 /-- A (commutative) Jordan multiplication is also a Jordan multipication -/
@@ -99,6 +101,7 @@ instance (priority := 100) IsCommJordan.toIsJordan [Mul A] [IsCommJordan A] : Is
     rw [IsCommJordan.mul_comm (a * a) (b * a), IsCommJordan.mul_comm b a, IsCommJordan.lmul_comm_rmul_rmul,
       IsCommJordan.mul_comm, IsCommJordan.mul_comm b (a * a)]
   rmul_comm_rmul_rmul a b := by rw [IsCommJordan.mul_comm b a, IsCommJordan.lmul_comm_rmul_rmul, IsCommJordan.mul_comm]
+#align is_comm_jordan.to_is_jordan IsCommJordan.toIsJordan
 
 -- see Note [lower instance priority]
 /-- Semigroup multiplication satisfies the (non-commutative) Jordan axioms-/
@@ -108,11 +111,13 @@ instance (priority := 100) Semigroup.isJordan [Semigroup A] : IsJordan A where
   lmul_comm_rmul_rmul a b := by rw [mul_assoc]
   lmul_lmul_comm_rmul a b := by rw [← mul_assoc]
   rmul_comm_rmul_rmul a b := by rw [← mul_assoc, ← mul_assoc]
+#align semigroup.is_jordan Semigroup.isJordan
 
 -- see Note [lower instance priority]
 instance (priority := 100) CommSemigroup.isCommJordan [CommSemigroup A] : IsCommJordan A where
   mul_comm := mul_comm
   lmul_comm_rmul_rmul a b := mul_assoc _ _ _
+#align comm_semigroup.is_comm_jordan CommSemigroup.isCommJordan
 
 -- mathport name: exprL
 local notation "L" => AddMonoid.EndCat.mulLeft
@@ -132,22 +137,27 @@ variable {A} [NonUnitalNonAssocRing A] [IsJordan A]
 @[simp]
 theorem commute_lmul_rmul (a : A) : Commute (L a) (R a) :=
   AddMonoidHom.ext fun b => (IsJordan.lmul_comm_rmul _ _).symm
+#align commute_lmul_rmul commute_lmul_rmul
 
 @[simp]
 theorem commute_lmul_lmul_sq (a : A) : Commute (L a) (L (a * a)) :=
   AddMonoidHom.ext fun b => (IsJordan.lmul_lmul_comm_lmul _ _).symm
+#align commute_lmul_lmul_sq commute_lmul_lmul_sq
 
 @[simp]
 theorem commute_lmul_rmul_sq (a : A) : Commute (L a) (R (a * a)) :=
   AddMonoidHom.ext fun b => (IsJordan.lmul_comm_rmul_rmul _ _).symm
+#align commute_lmul_rmul_sq commute_lmul_rmul_sq
 
 @[simp]
 theorem commute_lmul_sq_rmul (a : A) : Commute (L (a * a)) (R a) :=
   AddMonoidHom.ext fun b => IsJordan.lmul_lmul_comm_rmul _ _
+#align commute_lmul_sq_rmul commute_lmul_sq_rmul
 
 @[simp]
 theorem commute_rmul_rmul_sq (a : A) : Commute (R a) (R (a * a)) :=
   AddMonoidHom.ext fun b => (IsJordan.rmul_comm_rmul_rmul _ _).symm
+#align commute_rmul_rmul_sq commute_rmul_rmul_sq
 
 end Commute
 
@@ -167,6 +177,7 @@ theorem two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add (a b : A) :
   simp only [add_mul, mul_add, map_add, lie_add, add_lie, IsCommJordan.mul_comm b a, (commute_lmul_lmul_sq a).lie_eq,
     (commute_lmul_lmul_sq b).lie_eq]
   abel
+#align two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add
 
 theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
     2 • (⁅L a, L (b * c)⁆ + ⁅L b, L (c * a)⁆ + ⁅L c, L (a * b)⁆) = 0 := by
@@ -228,4 +239,5 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
       abel
     _ = 2 • (⁅L a, L (b * c)⁆ + ⁅L b, L (c * a)⁆ + ⁅L c, L (a * b)⁆) := by rw [nsmul_add, nsmul_add]
     
+#align two_nsmul_lie_lmul_lmul_add_add_eq_zero two_nsmul_lie_lmul_lmul_add_add_eq_zero
 

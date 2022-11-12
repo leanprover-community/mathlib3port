@@ -26,9 +26,11 @@ attribute [local semireducible] reflected
 @[local instance]
 private unsafe def reflect_name_list : has_reflect (List Name)
   | ns => quote.1 (id (%%ₓexpr.mk_app (quote.1 Prop) <| ns.map (flip expr.const [])) : List Name)
+#align tactic.reflect_name_list tactic.reflect_name_list
 
 private unsafe def parse_name_list (e : expr) : List Name :=
   e.app_arg.get_app_args.map expr.const_name
+#align tactic.parse_name_list tactic.parse_name_list
 
 /-- The `ancestor` attributes is used to record the names of structures which appear in the
 extends clause of a `structure` or `class` declared with `old_structure_cmd` set to true.
@@ -53,6 +55,7 @@ unsafe def ancestor_attr : user_attribute Unit (List Name) where
   Name := `ancestor
   descr := "ancestor of old structures"
   parser := many ident
+#align tactic.ancestor_attr tactic.ancestor_attr
 
 add_tactic_doc
   { Name := "ancestor", category := DocCategory.attr, declNames := [`tactic.ancestor_attr],
@@ -66,6 +69,7 @@ On failure, the empty list is returned.
 -/
 unsafe def get_tagged_ancestors (cl : Name) : tactic (List Name) :=
   parse_name_list <$> ancestor_attr.get_param_untyped cl <|> pure []
+#align tactic.get_tagged_ancestors tactic.get_tagged_ancestors
 
 /-- Returns the parents of a structure added via the `ancestor` attribute, as well as subobjects.
 
@@ -73,6 +77,7 @@ On failure, the empty list is returned.
 -/
 unsafe def get_ancestors (cl : Name) : tactic (List Name) :=
   (· ++ ·) <$> (Prod.fst <$> subobject_names cl <|> pure []) <*> get_tagged_ancestors cl
+#align tactic.get_ancestors tactic.get_ancestors
 
 /-- Returns the (transitive) ancestors of a structure added via the `ancestor`
 attribute (or reachable via subobjects).
@@ -84,6 +89,7 @@ unsafe def find_ancestors : Name → expr → tactic (List expr)
     let cs ← get_ancestors cl
     let r ← cs.mmap fun c => List.ret <$> (mk_app c [arg] >>= mk_instance) <|> find_ancestors c arg
     return r
+#align tactic.find_ancestors tactic.find_ancestors
 
 end Tactic
 

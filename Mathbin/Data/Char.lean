@@ -21,4 +21,5 @@ theorem Char.of_nat_to_nat {c : Char} (h : IsValidChar c.toNat) : Char.ofNat c.t
   rw [Char.ofNat, dif_pos h]
   cases c
   simp [Char.toNat]
+#align char.of_nat_to_nat Char.of_nat_to_nat
 

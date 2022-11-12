@@ -43,8 +43,8 @@ variable {α : Type u} {β : Type v}
 Given injections `α → β` and `β → α`, we can get a bijection `α → β`. -/
 theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injective f) (hg : Function.Injective g) :
     ∃ h : α → β, Bijective h := by
-  cases' is_empty_or_nonempty β with hβ hβ
-  · have : IsEmpty α := Function.is_empty f
+  cases' isEmpty_or_nonempty β with hβ hβ
+  · have : IsEmpty α := function.isEmpty f
     exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).Bijective⟩
     
   set F : Set α →o Set α :=
@@ -73,6 +73,7 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
       exact hy' ⟨x, hx, hxy⟩
       
   exact ⟨h, ‹injective h›, ‹surjective h›⟩
+#align function.embedding.schroeder_bernstein Function.Embedding.schroeder_bernstein
 
 /-- **The Schröder-Bernstein Theorem**: Given embeddings `α ↪ β` and `β ↪ α`, there exists an
 equivalence `α ≃ β`. -/
@@ -80,6 +81,7 @@ theorem antisymm : (α ↪ β) → (β ↪ α) → Nonempty (α ≃ β)
   | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩ =>
     let ⟨f, hf⟩ := schroeder_bernstein h₁ h₂
     ⟨Equiv.ofBijective f hf⟩
+#align function.embedding.antisymm Function.Embedding.antisymm
 
 end antisymm
 
@@ -90,6 +92,7 @@ parameter {ι : Type u}(β : ι → Type v)
 @[reducible]
 private def sets :=
   { s : Set (∀ i, β i) | ∀ x ∈ s, ∀ y ∈ s, ∀ (i), (x : ∀ i, β i) i = y i → x = y }
+#align function.embedding.sets function.embedding.sets
 
 /-- The cardinals are well-ordered. We express it here by the fact that in any set of cardinals
 there is an element that injects into the others. See `cardinal.linear_order` for (one of) the
@@ -129,6 +132,7 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
         let ⟨sa, ea⟩ := hf a
         let ⟨sb, eb⟩ := hf b
         rw [← ea, ← eb, hs _ sa _ sb _ e']⟩⟩⟩
+#align function.embedding.min_injective Function.Embedding.min_injective
 
 end Wo
 
@@ -142,6 +146,7 @@ theorem total (α : Type u) (β : Type v) : Nonempty (α ↪ β) ∨ Nonempty (�
   | ⟨ff, ⟨h⟩⟩ =>
     let ⟨f, hf⟩ := h true
     Or.inr ⟨Embedding.congr Equiv.ulift Equiv.ulift ⟨f, hf⟩⟩
+#align function.embedding.total Function.Embedding.total
 
 end Embedding
 

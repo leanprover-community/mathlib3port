@@ -60,6 +60,7 @@ def diagramCompIso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
         eq_to_hom_refl, category.comp_id, limit.cone_point_unique_up_to_iso_hom_comp,
         grothendieck_topology.cover.multicospan_comp_hom_inv_left, has_limit.iso_of_nat_iso_hom_π, category.assoc]
       simp only [← F.map_comp, multiequalizer.lift_ι])
+#align category_theory.grothendieck_topology.diagram_comp_iso CategoryTheory.GrothendieckTopology.diagramCompIso
 
 @[simp, reassoc]
 theorem diagram_comp_iso_hom_ι (X : C) (W : (J.cover X)ᵒᵖ) (i : W.unop.arrow) :
@@ -67,6 +68,8 @@ theorem diagram_comp_iso_hom_ι (X : C) (W : (J.cover X)ᵒᵖ) (i : W.unop.arro
   delta diagram_comp_iso
   dsimp
   simp
+#align
+  category_theory.grothendieck_topology.diagram_comp_iso_hom_ι CategoryTheory.GrothendieckTopology.diagram_comp_iso_hom_ι
 
 variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
@@ -108,6 +111,7 @@ def plusCompIso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
       dsimp
       simp only [category.assoc]
       erw [multiequalizer.lift_ι, diagram_comp_iso_hom_ι, diagram_comp_iso_hom_ι, ← F.map_comp, multiequalizer.lift_ι])
+#align category_theory.grothendieck_topology.plus_comp_iso CategoryTheory.GrothendieckTopology.plusCompIso
 
 @[simp, reassoc]
 theorem ι_plus_comp_iso_hom (X) (W) :
@@ -122,6 +126,7 @@ theorem ι_plus_comp_iso_hom (X) (W) :
     multiequalizer.multifork_π_app_left, multiequalizer.lift_ι, functor.map_comp, eq_self_iff_true, category.assoc,
     iso.trans_hom, iso.cancel_iso_hom_left, nat_iso.of_components_hom_app, colimit.cocone_ι, category.assoc,
     has_colimit.iso_of_nat_iso_ι_hom]
+#align category_theory.grothendieck_topology.ι_plus_comp_iso_hom CategoryTheory.GrothendieckTopology.ι_plus_comp_iso_hom
 
 @[simp, reassoc]
 theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ ⥤ D)
@@ -141,6 +146,8 @@ theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ �
   ext
   dsimp
   simpa
+#align
+  category_theory.grothendieck_topology.plus_comp_iso_whisker_left CategoryTheory.GrothendieckTopology.plus_comp_iso_whisker_left
 
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`, functorially in `F`. -/
 @[simps hom_app inv_app]
@@ -148,6 +155,8 @@ def plusFunctorWhiskerLeftIso (P : Cᵒᵖ ⥤ D) [∀ (F : D ⥤ E) (X : C), Pr
     [∀ (F : D ⥤ E) (X : C) (W : J.cover X) (P : Cᵒᵖ ⥤ D), PreservesLimit (W.index P).multicospan F] :
     (whiskeringLeft _ _ E).obj (J.plusObj P) ≅ (whiskeringLeft _ _ _).obj P ⋙ J.plusFunctor E :=
   (NatIso.ofComponents fun X => plusCompIso _ _ _) fun F G η => plus_comp_iso_whisker_left _ _ _
+#align
+  category_theory.grothendieck_topology.plus_functor_whisker_left_iso CategoryTheory.GrothendieckTopology.plusFunctorWhiskerLeftIso
 
 @[simp, reassoc]
 theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
@@ -169,12 +178,16 @@ theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
   dsimp
   simp only [diagram_comp_iso_hom_ι_assoc, multiequalizer.lift_ι, diagram_comp_iso_hom_ι, category.assoc]
   simp only [← F.map_comp, multiequalizer.lift_ι]
+#align
+  category_theory.grothendieck_topology.plus_comp_iso_whisker_right CategoryTheory.GrothendieckTopology.plus_comp_iso_whisker_right
 
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`, functorially in `P`. -/
 @[simps hom_app inv_app]
 def plusFunctorWhiskerRightIso :
     J.plusFunctor D ⋙ (whiskeringRight _ _ _).obj F ≅ (whiskeringRight _ _ _).obj F ⋙ J.plusFunctor E :=
   (NatIso.ofComponents fun P => J.plusCompIso _ _) fun P Q η => plus_comp_iso_whisker_right _ _ _
+#align
+  category_theory.grothendieck_topology.plus_functor_whisker_right_iso CategoryTheory.GrothendieckTopology.plusFunctorWhiskerRightIso
 
 @[simp, reassoc]
 theorem whisker_right_to_plus_comp_plus_comp_iso_hom :
@@ -189,15 +202,21 @@ theorem whisker_right_to_plus_comp_plus_comp_iso_hom :
   simp only [diagram_comp_iso_hom_ι, category.assoc, ← F.map_comp]
   erw [multiequalizer.lift_ι, multiequalizer.lift_ι]
   rfl
+#align
+  category_theory.grothendieck_topology.whisker_right_to_plus_comp_plus_comp_iso_hom CategoryTheory.GrothendieckTopology.whisker_right_to_plus_comp_plus_comp_iso_hom
 
 @[simp]
 theorem to_plus_comp_plus_comp_iso_inv : J.toPlus _ ≫ (J.plusCompIso F P).inv = whiskerRight (J.toPlus _) _ := by
   simp [iso.comp_inv_eq]
+#align
+  category_theory.grothendieck_topology.to_plus_comp_plus_comp_iso_inv CategoryTheory.GrothendieckTopology.to_plus_comp_plus_comp_iso_inv
 
 theorem plus_comp_iso_inv_eq_plus_lift (hP : Presheaf.IsSheaf J (J.plusObj P ⋙ F)) :
     (J.plusCompIso F P).inv = J.plusLift (whiskerRight (J.toPlus _) _) hP := by
   apply J.plus_lift_unique
   simp [iso.comp_inv_eq]
+#align
+  category_theory.grothendieck_topology.plus_comp_iso_inv_eq_plus_lift CategoryTheory.GrothendieckTopology.plus_comp_iso_inv_eq_plus_lift
 
 end CategoryTheory.GrothendieckTopology
 

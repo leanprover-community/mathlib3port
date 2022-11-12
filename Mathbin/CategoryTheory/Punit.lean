@@ -28,6 +28,7 @@ namespace Functor
 @[simps]
 def star : C ⥤ Discrete PUnit :=
   (Functor.const _).obj ⟨⟨⟩⟩
+#align category_theory.functor.star CategoryTheory.Functor.star
 
 variable {C}
 
@@ -35,16 +36,19 @@ variable {C}
 @[simps]
 def punitExt (F G : C ⥤ Discrete PUnit) : F ≅ G :=
   NatIso.ofComponents (fun _ => eqToIso (by decide)) fun _ _ _ => by decide
+#align category_theory.functor.punit_ext CategoryTheory.Functor.punitExt
 
 /-- Any two functors to `discrete punit` are *equal*.
 You probably want to use `punit_ext` instead of this.
 -/
 theorem punit_ext' (F G : C ⥤ Discrete PUnit) : F = G :=
   Functor.ext (fun _ => by decide) fun _ _ _ => by decide
+#align category_theory.functor.punit_ext' CategoryTheory.Functor.punit_ext'
 
 /-- The functor from `discrete punit` sending everything to the given object. -/
 abbrev fromPunit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
   (Functor.const _).obj X
+#align category_theory.functor.from_punit CategoryTheory.Functor.fromPunit
 
 /-- Functors from `discrete punit` are equivalent to the category itself. -/
 @[simps]
@@ -65,6 +69,7 @@ def equiv : Discrete PUnit ⥤ C ≌ C where
     intro X Y f
     dsimp
     simp
+#align category_theory.functor.equiv CategoryTheory.Functor.equiv
 
 -- See note [dsimp, simp].
 end Functor
@@ -99,6 +104,7 @@ theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C 
           (by apply functor.punit_ext))
     exact nat_iso.of_components (fun _ => { Hom := default, inv := default }) fun _ _ _ => by tidy
     
+#align category_theory.equiv_punit_iff_unique CategoryTheory.equiv_punit_iff_unique
 
 end CategoryTheory
 

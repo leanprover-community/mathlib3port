@@ -39,19 +39,23 @@ variable {F R S : Type _} (x y : R) (r : ℝ)
   values, is subadditive and submultiplicative and such that `f (-x) = f x` for all `x ∈ R`. -/
 structure RingSeminorm (R : Type _) [NonUnitalNonAssocRing R] extends AddGroupSeminorm R where
   mul_le' : ∀ x y : R, to_fun (x * y) ≤ to_fun x * to_fun y
+#align ring_seminorm RingSeminorm
 
 /-- A function `f : R → ℝ` is a norm on a (nonunital) ring if it is a seminorm and `f x = 0`
   implies `x = 0`. -/
 structure RingNorm (R : Type _) [NonUnitalNonAssocRing R] extends RingSeminorm R, AddGroupNorm R
+#align ring_norm RingNorm
 
 /-- A multiplicative seminorm on a ring `R` is a function `f : R → ℝ` that preserves zero and
 multiplication, takes nonnegative values, is subadditive and such that `f (-x) = f x` for all `x`.
 -/
 structure MulRingSeminorm (R : Type _) [NonAssocRing R] extends AddGroupSeminorm R, MonoidWithZeroHom R ℝ
+#align mul_ring_seminorm MulRingSeminorm
 
 /-- A multiplicative norm on a ring `R` is a multiplicative ring seminorm such that `f x = 0`
 implies `x = 0`. -/
 structure MulRingNorm (R : Type _) [NonAssocRing R] extends MulRingSeminorm R, AddGroupNorm R
+#align mul_ring_norm MulRingNorm
 
 attribute [nolint doc_blame]
   RingSeminorm.toAddGroupSeminorm RingNorm.toAddGroupNorm RingNorm.toRingSeminorm MulRingSeminorm.toAddGroupSeminorm MulRingSeminorm.toMonoidWithZeroHom MulRingNorm.toAddGroupNorm MulRingNorm.toMulRingSeminorm
@@ -61,12 +65,14 @@ attribute [nolint doc_blame]
 You should extend this class when you extend `ring_seminorm`. -/
 class RingSeminormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends
   AddGroupSeminormClass F α, SubmultiplicativeHomClass F α ℝ
+#align ring_seminorm_class RingSeminormClass
 
 /-- `ring_norm_class F α` states that `F` is a type of norms on the ring `α`.
 
 You should extend this class when you extend `ring_norm`. -/
 class RingNormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends RingSeminormClass F α,
   AddGroupNormClass F α
+#align ring_norm_class RingNormClass
 
 /-- `mul_ring_seminorm_class F α` states that `F` is a type of multiplicative seminorms on the ring
 `α`.
@@ -74,22 +80,26 @@ class RingNormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRin
 You should extend this class when you extend `mul_ring_seminorm`. -/
 class MulRingSeminormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends AddGroupSeminormClass F α,
   MonoidWithZeroHomClass F α ℝ
+#align mul_ring_seminorm_class MulRingSeminormClass
 
 /-- `mul_ring_norm_class F α` states that `F` is a type of multiplicative norms on the ring `α`.
 
 You should extend this class when you extend `mul_ring_norm`. -/
 class MulRingNormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends MulRingSeminormClass F α,
   AddGroupNormClass F α
+#align mul_ring_norm_class MulRingNormClass
 
 -- See note [lower instance priority]
 instance (priority := 100) MulRingSeminormClass.toRingSeminormClass [NonAssocRing R] [MulRingSeminormClass F R] :
     RingSeminormClass F R :=
   { ‹MulRingSeminormClass F R› with map_mul_le_mul := fun f a b => (map_mul _ _ _).le }
+#align mul_ring_seminorm_class.to_ring_seminorm_class MulRingSeminormClass.toRingSeminormClass
 
 -- See note [lower instance priority]
 instance (priority := 100) MulRingNormClass.toRingNormClass [NonAssocRing R] [MulRingNormClass F R] :
     RingNormClass F R :=
   { ‹MulRingNormClass F R›, MulRingSeminormClass.toRingSeminormClass with }
+#align mul_ring_norm_class.to_ring_norm_class MulRingNormClass.toRingNormClass
 
 namespace RingSeminorm
 
@@ -104,6 +114,7 @@ instance ringSeminormClass : RingSeminormClass (RingSeminorm R) R where
   map_add_le_add f := f.add_le'
   map_mul_le_mul f := f.mul_le'
   map_neg_eq_map f := f.neg'
+#align ring_seminorm.ring_seminorm_class RingSeminorm.ringSeminormClass
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun (RingSeminorm R) fun _ => R → ℝ :=
@@ -112,18 +123,22 @@ instance : CoeFun (RingSeminorm R) fun _ => R → ℝ :=
 @[simp]
 theorem to_fun_eq_coe (p : RingSeminorm R) : p.toFun = p :=
   rfl
+#align ring_seminorm.to_fun_eq_coe RingSeminorm.to_fun_eq_coe
 
-@[ext]
+@[ext.1]
 theorem ext {p q : RingSeminorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
+#align ring_seminorm.ext RingSeminorm.ext
 
 instance : Zero (RingSeminorm R) :=
   ⟨{ AddGroupSeminorm.hasZero.zero with mul_le' := fun _ _ => (zero_mul _).ge }⟩
 
 theorem eq_zero_iff {p : RingSeminorm R} : p = 0 ↔ ∀ x, p x = 0 :=
   FunLike.ext_iff
+#align ring_seminorm.eq_zero_iff RingSeminorm.eq_zero_iff
 
 theorem ne_zero_iff {p : RingSeminorm R} : p ≠ 0 ↔ ∃ x, p x ≠ 0 := by simp [eq_zero_iff]
+#align ring_seminorm.ne_zero_iff RingSeminorm.ne_zero_iff
 
 instance : Inhabited (RingSeminorm R) :=
   ⟨0⟩
@@ -147,6 +162,7 @@ instance [DecidableEq R] : One (RingSeminorm R) :=
 @[simp]
 theorem apply_one [DecidableEq R] (x : R) : (1 : RingSeminorm R) x = if x = 0 then 0 else 1 :=
   rfl
+#align ring_seminorm.apply_one RingSeminorm.apply_one
 
 end NonUnitalRing
 
@@ -169,6 +185,7 @@ theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :
   · refine' hp.antisymm ((le_mul_iff_one_le_left hp0).1 _)
     simpa only [one_mul] using map_mul_le_mul p (1 : R) _
     
+#align ring_seminorm.seminorm_one_eq_one_iff_ne_zero RingSeminorm.seminorm_one_eq_one_iff_ne_zero
 
 end Ring
 
@@ -177,6 +194,7 @@ end RingSeminorm
 /-- The norm of a `non_unital_semi_normed_ring` as a `ring_seminorm`. -/
 def normRingSeminorm (R : Type _) [NonUnitalSemiNormedRing R] : RingSeminorm R :=
   { normAddGroupSeminorm R with toFun := norm, mul_le' := norm_mul_le }
+#align norm_ring_seminorm normRingSeminorm
 
 namespace RingNorm
 
@@ -190,6 +208,7 @@ instance ringNormClass : RingNormClass (RingNorm R) R where
   map_mul_le_mul f := f.mul_le'
   map_neg_eq_map f := f.neg'
   eq_zero_of_map_eq_zero f := f.eq_zero_of_map_eq_zero'
+#align ring_norm.ring_norm_class RingNorm.ringNormClass
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun (RingNorm R) fun _ => R → ℝ :=
@@ -198,10 +217,12 @@ instance : CoeFun (RingNorm R) fun _ => R → ℝ :=
 @[simp]
 theorem to_fun_eq_coe (p : RingNorm R) : p.toFun = p :=
   rfl
+#align ring_norm.to_fun_eq_coe RingNorm.to_fun_eq_coe
 
-@[ext]
+@[ext.1]
 theorem ext {p q : RingNorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
+#align ring_norm.ext RingNorm.ext
 
 variable (R)
 
@@ -213,6 +234,7 @@ instance [DecidableEq R] : One (RingNorm R) :=
 @[simp]
 theorem apply_one [DecidableEq R] (x : R) : (1 : RingNorm R) x = if x = 0 then 0 else 1 :=
   rfl
+#align ring_norm.apply_one RingNorm.apply_one
 
 instance [DecidableEq R] : Inhabited (RingNorm R) :=
   ⟨1⟩
@@ -231,6 +253,7 @@ instance mulRingSeminormClass : MulRingSeminormClass (MulRingSeminorm R) R where
   map_add_le_add f := f.add_le'
   map_mul f := f.map_mul'
   map_neg_eq_map f := f.neg'
+#align mul_ring_seminorm.mul_ring_seminorm_class MulRingSeminorm.mulRingSeminormClass
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun (MulRingSeminorm R) fun _ => R → ℝ :=
@@ -239,10 +262,12 @@ instance : CoeFun (MulRingSeminorm R) fun _ => R → ℝ :=
 @[simp]
 theorem to_fun_eq_coe (p : MulRingSeminorm R) : p.toFun = p :=
   rfl
+#align mul_ring_seminorm.to_fun_eq_coe MulRingSeminorm.to_fun_eq_coe
 
-@[ext]
+@[ext.1]
 theorem ext {p q : MulRingSeminorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
+#align mul_ring_seminorm.ext MulRingSeminorm.ext
 
 variable [DecidableEq R] [NoZeroDivisors R] [Nontrivial R]
 
@@ -263,6 +288,7 @@ instance : One (MulRingSeminorm R) :=
 @[simp]
 theorem apply_one (x : R) : (1 : MulRingSeminorm R) x = if x = 0 then 0 else 1 :=
   rfl
+#align mul_ring_seminorm.apply_one MulRingSeminorm.apply_one
 
 instance : Inhabited (MulRingSeminorm R) :=
   ⟨1⟩
@@ -282,6 +308,7 @@ instance mulRingNormClass : MulRingNormClass (MulRingNorm R) R where
   map_mul f := f.map_mul'
   map_neg_eq_map f := f.neg'
   eq_zero_of_map_eq_zero f := f.eq_zero_of_map_eq_zero'
+#align mul_ring_norm.mul_ring_norm_class MulRingNorm.mulRingNormClass
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 instance : CoeFun (MulRingNorm R) fun _ => R → ℝ :=
@@ -290,10 +317,12 @@ instance : CoeFun (MulRingNorm R) fun _ => R → ℝ :=
 @[simp]
 theorem to_fun_eq_coe (p : MulRingNorm R) : p.toFun = p :=
   rfl
+#align mul_ring_norm.to_fun_eq_coe MulRingNorm.to_fun_eq_coe
 
-@[ext]
+@[ext.1]
 theorem ext {p q : MulRingNorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
+#align mul_ring_norm.ext MulRingNorm.ext
 
 variable (R) [DecidableEq R] [NoZeroDivisors R] [Nontrivial R]
 
@@ -305,6 +334,7 @@ instance : One (MulRingNorm R) :=
 @[simp]
 theorem apply_one (x : R) : (1 : MulRingNorm R) x = if x = 0 then 0 else 1 :=
   rfl
+#align mul_ring_norm.apply_one MulRingNorm.apply_one
 
 instance : Inhabited (MulRingNorm R) :=
   ⟨1⟩
@@ -323,9 +353,11 @@ def RingSeminorm.toRingNorm {K : Type _} [Field K] (f : RingSeminorm K) (hnt : f
           le_antisymm (le_trans (map_mul_le_mul f _ _) (by rw [← RingSeminorm.to_fun_eq_coe, hx, zero_mul]))
             (map_nonneg f _)
       exact hc hc0 }
+#align ring_seminorm.to_ring_norm RingSeminorm.toRingNorm
 
 /-- The norm of a normed_ring as a ring_norm. -/
 @[simps]
 def normRingNorm (R : Type _) [NonUnitalNormedRing R] : RingNorm R :=
   { normAddGroupNorm R, normRingSeminorm R with }
+#align norm_ring_norm normRingNorm
 

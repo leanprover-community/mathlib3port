@@ -30,6 +30,7 @@ variable [Semiring S] (a b : ℕ)
 
 theorem cast_asc_factorial : (a.ascFactorial b : S) = (pochhammer S b).eval (a + 1) := by
   rw [← pochhammer_nat_eq_asc_factorial, pochhammer_eval_cast, Nat.cast_add, Nat.cast_one]
+#align nat.cast_asc_factorial Nat.cast_asc_factorial
 
 theorem cast_desc_factorial : (a.descFactorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) := by
   rw [← pochhammer_eval_cast, pochhammer_nat_eq_desc_factorial]
@@ -43,9 +44,11 @@ theorem cast_desc_factorial : (a.descFactorial b : S) = (pochhammer S b).eval (a
     
   · rw [tsub_add_cancel_of_le h]
     
+#align nat.cast_desc_factorial Nat.cast_desc_factorial
 
 theorem cast_factorial : (a ! : S) = (pochhammer S a).eval 1 := by
   rw [← zero_asc_factorial, cast_asc_factorial, cast_zero, zero_add]
+#align nat.cast_factorial Nat.cast_factorial
 
 end Semiring
 
@@ -63,6 +66,7 @@ theorem cast_desc_factorial_two : (a.descFactorial 2 : S) = a * (a - 1) := by
   · rw [succ_sub_succ, tsub_zero, cast_succ, add_sub_cancel, pochhammer_succ_right, pochhammer_one, Polynomial.X_mul,
       Polynomial.eval_mul_X, Polynomial.eval_add, Polynomial.eval_X, cast_one, Polynomial.eval_one]
     
+#align nat.cast_desc_factorial_two Nat.cast_desc_factorial_two
 
 end Ring
 

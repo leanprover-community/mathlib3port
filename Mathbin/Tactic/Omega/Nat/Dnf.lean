@@ -25,6 +25,7 @@ def dnfCore : Preform → List Clause
   | t =* s => [([Term.sub (canonize s) (canonize t)], [])]
   | t ≤* s => [([], [Term.sub (canonize s) (canonize t)])]
   | ¬* _ => []
+#align omega.nat.dnf_core Omega.Nat.dnfCore
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.nat.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -65,13 +66,16 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     rw [List.mem_product]
     constructor <;> assumption
     
+#align omega.nat.exists_clause_holds_core Omega.Nat.exists_clause_holds_core
 
 def Term.varsCore (is : List Int) : List Bool :=
   is.map fun i => if i = 0 then false else true
+#align omega.nat.term.vars_core Omega.Nat.Term.varsCore
 
 /-- Return a list of bools that encodes which variables have nonzero coefficients -/
 def Term.vars (t : Term) : List Bool :=
   Term.varsCore t.snd
+#align omega.nat.term.vars Omega.Nat.Term.vars
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -80,6 +84,7 @@ def Bools.or : List Bool → List Bool → List Bool
   | [], bs2 => bs2
   | bs1, [] => bs1
   | b1::bs1, b2::bs2 => (b1 || b2)::bools.or bs1 bs2
+#align omega.nat.bools.or Omega.Nat.Bools.or
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Return a list of bools that encodes which variables have nonzero coefficients in any one of the
@@ -87,6 +92,7 @@ input terms. -/
 def Terms.vars : List Term → List Bool
   | [] => []
   | t::ts => Bools.or (Term.vars t) (terms.vars ts)
+#align omega.nat.terms.vars Omega.Nat.Terms.vars
 
 open List.Func
 
@@ -98,9 +104,11 @@ def nonnegConstsCore : Nat → List Bool → List Term
   | _, [] => []
   | k, ff::bs => nonneg_consts_core (k + 1) bs
   | k, tt::bs => ⟨0, [] {k ↦ 1}⟩::nonneg_consts_core (k + 1) bs
+#align omega.nat.nonneg_consts_core Omega.Nat.nonnegConstsCore
 
 def nonnegConsts (bs : List Bool) : List Term :=
   nonnegConstsCore 0 bs
+#align omega.nat.nonneg_consts Omega.Nat.nonnegConsts
 
 def nonnegate : Clause → Clause
   | (eqs, les) =>
@@ -108,10 +116,12 @@ def nonnegate : Clause → Clause
     let ys := Terms.vars les
     let bs := Bools.or xs ys
     (eqs, nonnegConsts bs ++ les)
+#align omega.nat.nonnegate Omega.Nat.nonnegate
 
 /-- DNF transformation -/
 def dnf (p : Preform) : List Clause :=
   (dnfCore p).map nonnegate
+#align omega.nat.dnf Omega.Nat.dnf
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -128,9 +138,11 @@ theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
       
     · apply holds_nonneg_consts_core (k + 1) bs
       
+#align omega.nat.holds_nonneg_consts_core Omega.Nat.holds_nonneg_consts_core
 
 theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} : (∀ x, 0 ≤ v x) → ∀ t ∈ nonnegConsts bs, 0 ≤ Term.val v t
   | h1 => by apply holds_nonneg_consts_core h1
+#align omega.nat.holds_nonneg_consts Omega.Nat.holds_nonneg_consts
 
 theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
     p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnf p, Clause.Holds (fun x => ↑(v x)) c := by
@@ -150,17 +162,20 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
   apply And.intro (holds_nonneg_consts _) h5.right
   intro x
   apply Int.coe_nat_nonneg
+#align omega.nat.exists_clause_holds Omega.Nat.exists_clause_holds
 
 theorem exists_clause_sat {p : Preform} : p.NegFree → p.SubFree → p.Sat → ∃ c ∈ dnf p, Clause.Sat c := by
   intro h1 h2 h3
   cases' h3 with v h3
   rcases exists_clause_holds h1 h2 h3 with ⟨c, h4, h5⟩
   refine' ⟨c, h4, _, h5⟩
+#align omega.nat.exists_clause_sat Omega.Nat.exists_clause_sat
 
 theorem unsat_of_unsat_dnf (p : Preform) : p.NegFree → p.SubFree → Clauses.Unsat (dnf p) → p.Unsat := by
   intro hnf hsf h1 h2
   apply h1
   apply exists_clause_sat hnf hsf h2
+#align omega.nat.unsat_of_unsat_dnf Omega.Nat.unsat_of_unsat_dnf
 
 end Nat
 

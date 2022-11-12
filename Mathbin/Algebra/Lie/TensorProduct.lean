@@ -40,13 +40,14 @@ variable [AddCommGroup P] [Module R P] [LieRingModule L P] [LieModule R L P]
 
 variable [AddCommGroup Q] [Module R Q] [LieRingModule L Q] [LieModule R L Q]
 
-attribute [local ext] TensorProduct.ext
+attribute [local ext.1] TensorProduct.ext
 
 /-- It is useful to define the bracket via this auxiliary function so that we have a type-theoretic
 expression of the fact that `L` acts by linear endomorphisms. It simplifies the proofs in
 `lie_ring_module` below. -/
 def hasBracketAux (x : L) : Module.EndCat R (M ⊗[R] N) :=
   (toEndomorphism R L M x).rtensor N + (toEndomorphism R L N x).ltensor M
+#align tensor_product.lie_module.has_bracket_aux TensorProduct.LieModule.hasBracketAux
 
 /-- The tensor product of two Lie modules is a Lie ring module. -/
 instance lieRingModule : LieRingModule L (M ⊗[R] N) where
@@ -65,10 +66,11 @@ instance lieRingModule : LieRingModule L (M ⊗[R] N) where
       rfl
     ext (m n)
     simp only [has_bracket_aux, LieRing.of_associative_ring_bracket, LinearMap.mul_apply, mk_apply,
-      LinearMap.ltensor_sub, LinearMap.compr₂_apply, Function.comp_app, LinearMap.coe_comp, LinearMap.rtensor_tmul,
+      LinearMap.ltensor_sub, LinearMap.compr₂_apply, Function.comp_apply, LinearMap.coe_comp, LinearMap.rtensor_tmul,
       LieHom.map_lie, to_endomorphism_apply_apply, LinearMap.add_apply, LinearMap.map_add, LinearMap.rtensor_sub,
       LinearMap.sub_apply, LinearMap.ltensor_tmul]
     abel
+#align tensor_product.lie_module.lie_ring_module TensorProduct.LieModule.lieRingModule
 
 /-- The tensor product of two Lie modules is a Lie module. -/
 instance lieModule : LieModule R L (M ⊗[R] N) where
@@ -77,12 +79,14 @@ instance lieModule : LieModule R L (M ⊗[R] N) where
     simp only [has_bracket_aux, smul_add, LinearMap.rtensor_smul, LinearMap.smul_apply, LinearMap.ltensor_smul,
       LieHom.map_smul, LinearMap.add_apply]
   lie_smul c x := LinearMap.map_smul _ c
+#align tensor_product.lie_module.lie_module TensorProduct.LieModule.lieModule
 
 @[simp]
 theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x, m ⊗ₜ[R] n⁆ = ⁅x, m⁆ ⊗ₜ n + m ⊗ₜ ⁅x, n⁆ :=
   show hasBracketAux x (m ⊗ₜ[R] n) = _ by
     simp only [has_bracket_aux, LinearMap.rtensor_tmul, to_endomorphism_apply_apply, LinearMap.add_apply,
       LinearMap.ltensor_tmul]
+#align tensor_product.lie_module.lie_tmul_right TensorProduct.LieModule.lie_tmul_right
 
 variable (R L M N P Q)
 
@@ -95,10 +99,12 @@ def lift : (M →ₗ[R] N →ₗ[R] P) ≃ₗ⁅R,L⁆ M ⊗[R] N →ₗ[R] P :=
       simp only [mk_apply, LinearMap.compr₂_apply, lie_tmul_right, LinearMap.sub_apply, lift.equiv_apply,
         LinearEquiv.to_fun_eq_coe, LieHom.lie_apply, LinearMap.map_add]
       abel }
+#align tensor_product.lie_module.lift TensorProduct.LieModule.lift
 
 @[simp]
 theorem lift_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) : lift R L M N P f (m ⊗ₜ n) = f m n :=
   lift.equiv_apply R M N P f m n
+#align tensor_product.lie_module.lift_apply TensorProduct.LieModule.lift_apply
 
 /-- A weaker form of the universal property for tensor product of modules of a Lie algebra.
 
@@ -107,6 +113,7 @@ Note that maps `f` of type `M →ₗ⁅R,L⁆ N →ₗ[R] P` are exactly those `
 def liftLie : (M →ₗ⁅R,L⁆ N →ₗ[R] P) ≃ₗ[R] M ⊗[R] N →ₗ⁅R,L⁆ P :=
   maxTrivLinearMapEquivLieModuleHom.symm ≪≫ₗ ↑(maxTrivEquiv (lift R L M N P)) ≪≫ₗ
     max_triv_linear_map_equiv_lie_module_hom
+#align tensor_product.lie_module.lift_lie TensorProduct.LieModule.liftLie
 
 @[simp]
 theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) : ⇑(liftLie R L M N P f) = lift R L M N P f := by
@@ -115,9 +122,11 @@ theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) : ⇑(lif
   simp only [lift_lie, LinearEquiv.trans_apply, LieModuleEquiv.coe_to_linear_equiv,
     coe_linear_map_max_triv_linear_map_equiv_lie_module_hom, coe_max_triv_equiv_apply,
     coe_linear_map_max_triv_linear_map_equiv_lie_module_hom_symm]
+#align tensor_product.lie_module.coe_lift_lie_eq_lift_coe TensorProduct.LieModule.coe_lift_lie_eq_lift_coe
 
 theorem lift_lie_apply (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) (m : M) (n : N) : liftLie R L M N P f (m ⊗ₜ n) = f m n := by
   simp only [coe_lift_lie_eq_lift_coe, LieModuleHom.coe_to_linear_map, lift_apply]
+#align tensor_product.lie_module.lift_lie_apply TensorProduct.LieModule.lift_lie_apply
 
 variable {R L M N P Q}
 
@@ -136,23 +145,28 @@ def map (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) : M ⊗[R] N →ₗ�
       · intro t₁ t₂ ht₁ ht₂
         simp only [ht₁, ht₂, lie_add, LinearMap.map_add]
          }
+#align tensor_product.lie_module.map TensorProduct.LieModule.map
 
 @[simp]
 theorem coe_linear_map_map (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) :
     (map f g : M ⊗[R] N →ₗ[R] P ⊗[R] Q) = TensorProduct.map (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :=
   rfl
+#align tensor_product.lie_module.coe_linear_map_map TensorProduct.LieModule.coe_linear_map_map
 
 @[simp]
 theorem map_tmul (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) (m : M) (n : N) : map f g (m ⊗ₜ n) = f m ⊗ₜ g n :=
   map_tmul f g m n
+#align tensor_product.lie_module.map_tmul TensorProduct.LieModule.map_tmul
 
 /-- Given Lie submodules `M' ⊆ M` and `N' ⊆ N`, this is the natural map: `M' ⊗ N' → M ⊗ N`. -/
 def mapIncl (M' : LieSubmodule R L M) (N' : LieSubmodule R L N) : M' ⊗[R] N' →ₗ⁅R,L⁆ M ⊗[R] N :=
   map M'.incl N'.incl
+#align tensor_product.lie_module.map_incl TensorProduct.LieModule.mapIncl
 
 @[simp]
 theorem map_incl_def (M' : LieSubmodule R L M) (N' : LieSubmodule R L N) : mapIncl M' N' = map M'.incl N'.incl :=
   rfl
+#align tensor_product.lie_module.map_incl_def TensorProduct.LieModule.map_incl_def
 
 end LieModule
 
@@ -175,11 +189,13 @@ def toModuleHom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
       map_lie' := fun x m => by
         ext n
         simp [LieRing.of_associative_ring_bracket] }
+#align lie_module.to_module_hom LieModule.toModuleHom
 
 @[simp]
 theorem to_module_hom_apply (x : L) (m : M) : toModuleHom R L M (x ⊗ₜ m) = ⁅x, m⁆ := by
   simp only [to_module_hom, TensorProduct.LieModule.lift_lie_apply, to_endomorphism_apply_apply,
     LieHom.coe_to_linear_map, LieModuleHom.coe_mk, LinearMap.coe_mk, LinearMap.to_fun_eq_coe]
+#align lie_module.to_module_hom_apply LieModule.to_module_hom_apply
 
 end LieModule
 
@@ -227,6 +243,7 @@ theorem lie_ideal_oper_eq_tensor_map_range :
     use ⟨x, hx⟩, ⟨n, hn⟩
     simp
     
+#align lie_submodule.lie_ideal_oper_eq_tensor_map_range LieSubmodule.lie_ideal_oper_eq_tensor_map_range
 
 end LieSubmodule
 

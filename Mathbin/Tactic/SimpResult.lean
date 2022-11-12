@@ -74,6 +74,7 @@ unsafe def intercept_result {α} (m : expr → tactic expr) (t : tactic α) : ta
           unsafe.type_context.run <|
           unsafe.type_context.assign g g''
   pure a
+#align tactic.intercept_result tactic.intercept_result
 
 /-- `dsimp_result t`
 attempts to run a tactic `t`,
@@ -84,6 +85,7 @@ before assigning the simplified values to the original goals.
 unsafe def dsimp_result {α} (t : tactic α) (cfg : DsimpConfig := { failIfUnchanged := false }) (no_defaults := false)
     (attr_names : List Name := []) (hs : List simp_arg_type := []) : tactic α :=
   intercept_result (fun g => g.dsimp cfg no_defaults attr_names hs) t
+#align tactic.dsimp_result tactic.dsimp_result
 
 /-- `simp_result t`
 attempts to run a tactic `t`,
@@ -95,6 +97,7 @@ unsafe def simp_result {α} (t : tactic α) (cfg : SimpConfig := { failIfUnchang
     (discharger : tactic Unit := failed) (no_defaults := false) (attr_names : List Name := [])
     (hs : List simp_arg_type := []) : tactic α :=
   intercept_result (fun g => Prod.fst <$> g.simp cfg discharger no_defaults attr_names hs) t
+#align tactic.simp_result tactic.simp_result
 
 namespace Interactive
 
@@ -112,6 +115,7 @@ You can use the usual interactive syntax for `dsimp`, e.g.
 unsafe def dsimp_result (no_defaults : parse only_flag) (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
     (t : itactic) : itactic :=
   tactic.dsimp_result t { failIfUnchanged := false } no_defaults attr_names hs
+#align tactic.interactive.dsimp_result tactic.interactive.dsimp_result
 
 /-- `simp_result { tac }`
 attempts to run a tactic block `tac`,
@@ -125,6 +129,7 @@ You can use the usual interactive syntax for `simp`, e.g.
 unsafe def simp_result (no_defaults : parse only_flag) (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
     (t : itactic) : itactic :=
   tactic.simp_result t { failIfUnchanged := false } failed no_defaults attr_names hs
+#align tactic.interactive.simp_result tactic.interactive.simp_result
 
 /-- `simp_result { tac }`
 attempts to run a tactic block `tac`,

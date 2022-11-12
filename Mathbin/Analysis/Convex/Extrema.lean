@@ -44,6 +44,7 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ}
     _ ≤ f (ya * a + yc * c) := hfy
     _ ≤ ya • f a + yc • f c := h_conv.2 (left_mem_Icc.2 a_lt_b.le) hc ya₀ yc₀.le yac
     
+#align is_min_on.of_is_local_min_on_of_convex_on_Icc IsMinOn.of_is_local_min_on_of_convex_on_Icc
 
 /-- A local minimum of a convex function is a global minimum, restricted to a set `s`.
 -/
@@ -63,19 +64,23 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s :
     refine' IsMinOn.of_is_local_min_on_of_convex_on_Icc one_pos fg_local_min_on _
     exact (h_conv.comp_affine_map g).Subset h_maps (convex_Icc 0 1)
   simpa only [hg0, hg1, comp_app, mem_set_of_eq] using fg_min_on (right_mem_Icc.2 zero_le_one)
+#align is_min_on.of_is_local_min_on_of_convex_on IsMinOn.of_is_local_min_on_of_convex_on
 
 /-- A local maximum of a concave function is a global maximum, restricted to a set `s`. -/
 theorem IsMaxOn.of_is_local_max_on_of_concave_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmax : IsLocalMaxOn f s a)
     (h_conc : ConcaveOn ℝ s f) : IsMaxOn f s a :=
   @IsMinOn.of_is_local_min_on_of_convex_on _ βᵒᵈ _ _ _ _ _ _ _ _ s f a a_in_s h_localmax h_conc
+#align is_max_on.of_is_local_max_on_of_concave_on IsMaxOn.of_is_local_max_on_of_concave_on
 
 /-- A local minimum of a convex function is a global minimum. -/
 theorem IsMinOn.of_is_local_min_of_convex_univ {f : E → β} {a : E} (h_local_min : IsLocalMin f a)
     (h_conv : ConvexOn ℝ Univ f) : ∀ x, f a ≤ f x := fun x =>
   (IsMinOn.of_is_local_min_on_of_convex_on (mem_univ a) (h_local_min.on Univ) h_conv) (mem_univ x)
+#align is_min_on.of_is_local_min_of_convex_univ IsMinOn.of_is_local_min_of_convex_univ
 
 /-- A local maximum of a concave function is a global maximum. -/
 theorem IsMaxOn.of_is_local_max_of_convex_univ {f : E → β} {a : E} (h_local_max : IsLocalMax f a)
     (h_conc : ConcaveOn ℝ Univ f) : ∀ x, f x ≤ f a :=
   @IsMinOn.of_is_local_min_of_convex_univ _ βᵒᵈ _ _ _ _ _ _ _ _ f a h_local_max h_conc
+#align is_max_on.of_is_local_max_of_convex_univ IsMaxOn.of_is_local_max_of_convex_univ
 

@@ -30,20 +30,25 @@ instance [Preorder α] : OrderBot (WithZero α) :=
 
 theorem zero_le [Preorder α] (a : WithZero α) : 0 ≤ a :=
   bot_le
+#align with_zero.zero_le WithZero.zero_le
 
 theorem zero_lt_coe [Preorder α] (a : α) : (0 : WithZero α) < a :=
   WithBot.bot_lt_coe a
+#align with_zero.zero_lt_coe WithZero.zero_lt_coe
 
 theorem zero_eq_bot [Preorder α] : (0 : WithZero α) = ⊥ :=
   rfl
+#align with_zero.zero_eq_bot WithZero.zero_eq_bot
 
 @[simp, norm_cast]
 theorem coe_lt_coe [Preorder α] {a b : α} : (a : WithZero α) < b ↔ a < b :=
   WithBot.coe_lt_coe
+#align with_zero.coe_lt_coe WithZero.coe_lt_coe
 
 @[simp, norm_cast]
 theorem coe_le_coe [Preorder α] {a b : α} : (a : WithZero α) ≤ b ↔ a ≤ b :=
   WithBot.coe_le_coe
+#align with_zero.coe_le_coe WithZero.coe_le_coe
 
 instance [Lattice α] : Lattice (WithZero α) :=
   WithBot.lattice
@@ -63,6 +68,7 @@ instance covariant_class_mul_le {α : Type u} [Mul α] [Preorder α] [CovariantC
   rcases WithBot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩
   rw [← coe_mul, ← coe_mul, coe_le_coe]
   exact mul_le_mul_left' hbc' a
+#align with_zero.covariant_class_mul_le WithZero.covariant_class_mul_le
 
 instance contravariant_class_mul_lt {α : Type u} [Mul α] [PartialOrder α] [ContravariantClass α α (· * ·) (· < ·)] :
     ContravariantClass (WithZero α) (WithZero α) (· * ·) (· < ·) := by
@@ -72,14 +78,17 @@ instance contravariant_class_mul_lt {α : Type u} [Mul α] [PartialOrder α] [Co
   lift c to α using right_ne_zero_of_mul this
   induction b using WithZero.recZeroCoe
   exacts[zero_lt_coe _, coe_lt_coe.mpr (lt_of_mul_lt_mul_left' <| coe_lt_coe.mp h)]
+#align with_zero.contravariant_class_mul_lt WithZero.contravariant_class_mul_lt
 
 @[simp]
 theorem le_max_iff [LinearOrder α] {a b c : α} : (a : WithZero α) ≤ max b c ↔ a ≤ max b c := by
   simp only [WithZero.coe_le_coe, le_max_iff]
+#align with_zero.le_max_iff WithZero.le_max_iff
 
 @[simp]
 theorem min_le_iff [LinearOrder α] {a b c : α} : min (a : WithZero α) b ≤ c ↔ min a b ≤ c := by
   simp only [WithZero.coe_le_coe, min_le_iff]
+#align with_zero.min_le_iff WithZero.min_le_iff
 
 instance [OrderedCommMonoid α] : OrderedCommMonoid (WithZero α) :=
   { WithZero.commMonoidWithZero, WithZero.partialOrder with mul_le_mul_left := fun _ _ => mul_le_mul_left' }
@@ -104,6 +113,7 @@ protected theorem covariant_class_add_le [AddZeroClass α] [Preorder α] [Covari
     rw [← coe_add, ← coe_add, coe_le_coe]
     exact add_le_add_left hbc' a
     
+#align with_zero.covariant_class_add_le WithZero.covariant_class_add_le
 
 /-
 Note 1 : the below is not an instance because it requires `zero_le`. It seems
@@ -120,6 +130,7 @@ protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : 
     OrderedAddCommMonoid (WithZero α) :=
   { WithZero.partialOrder, WithZero.addCommMonoid with
     add_le_add_left := @add_le_add_left _ _ _ (WithZero.covariant_class_add_le zero_le).. }
+#align with_zero.ordered_add_comm_monoid WithZero.orderedAddCommMonoid
 
 end WithZero
 
@@ -136,6 +147,7 @@ instance WithZero.has_exists_add_of_le {α} [Add α] [Preorder α] [HasExistsAdd
     rintro a' b' h
     obtain ⟨c, rfl⟩ := exists_add_of_le (WithZero.coe_le_coe.1 h)
     exact ⟨c, rfl⟩⟩
+#align with_zero.has_exists_add_of_le WithZero.has_exists_add_of_le
 
 -- This instance looks absurd: a monoid already has a zero
 /-- Adding a new zero to a canonically ordered additive monoid produces another one. -/
@@ -151,6 +163,7 @@ instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedA
         
       · exact fun a' b' => WithZero.coe_le_coe.2 le_self_add
          }
+#align with_zero.canonically_ordered_add_monoid WithZero.canonicallyOrderedAddMonoid
 
 end CanonicallyOrderedMonoid
 
@@ -159,6 +172,7 @@ section CanonicallyLinearOrderedMonoid
 instance WithZero.canonicallyLinearOrderedAddMonoid (α : Type _) [CanonicallyLinearOrderedAddMonoid α] :
     CanonicallyLinearOrderedAddMonoid (WithZero α) :=
   { WithZero.canonicallyOrderedAddMonoid, WithZero.linearOrder with }
+#align with_zero.canonically_linear_ordered_add_monoid WithZero.canonicallyLinearOrderedAddMonoid
 
 end CanonicallyLinearOrderedMonoid
 

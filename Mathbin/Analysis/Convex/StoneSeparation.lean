@@ -24,8 +24,6 @@ open BigOperators
 variable {𝕜 E ι : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s t : Set E}
 
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(«expr * »(az, av), bu), «expr + »(«expr * »(«expr * »(bz, au), bv), «expr * »(au, av)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- In a tetrahedron with vertices `x`, `y`, `p`, `q`, any segment `[u, v]` joining the opposite
 edges `[x, p]` and `[y, q]` passes through any triangle of vertices `p`, `q`, `z` where
@@ -57,36 +55,16 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
   · rw [← add_div, div_self hab.ne']
     
   rw [smul_add, smul_add, add_add_add_comm, add_comm, ← mul_smul, ← mul_smul]
-  classical
-  let w : Fin 3 → 𝕜 := ![az * av * bu, bz * au * bv, au * av]
-  let z : Fin 3 → E := ![p, q, az • x + bz • y]
-  have hw₀ : ∀ i, 0 ≤ w i := by
-    rintro i
-    fin_cases i
-    · exact mul_nonneg (mul_nonneg haz hav) hbu
-      
-    · exact mul_nonneg (mul_nonneg hbz hau) hbv
-      
-    · exact mul_nonneg hau hav
-      
-  have hw : (∑ i, w i) = az * av + bz * au := by
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in transitivity #[[expr «expr + »(«expr * »(«expr * »(az, av), bu), «expr + »(«expr * »(«expr * »(bz, au), bv), «expr * »(au, av)))]]: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
-    · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]
-      
-    rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add, mul_assoc, ← mul_add,
-      mul_comm av, ← add_mul, ← mul_add, add_comm bu, add_comm bv, habu, habv, one_mul, mul_one]
-  have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E) := by
-    rintro i
-    fin_cases i <;> simp [z]
-  convert
-    Finset.center_mass_mem_convex_hull (Finset.univ : Finset (Fin 3)) (fun i _ => hw₀ i) (by rwa [hw]) fun i _ => hz i
-  rw [Finset.centerMass]
-  simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assoc, ← mul_assoc]
-  congr 3
-  rw [← mul_smul, ← mul_rotate, mul_right_comm, mul_smul, ← mul_smul _ av, mul_rotate, mul_smul _ bz, ← smul_add]
-  simp only [List.map, List.pmap, Nat.add_def, add_zero, Fin.mk_bit0, Fin.mk_one, List.foldr_cons, List.foldr_nil]
-  rfl
+  classical let w : Fin 3 → 𝕜 := ![az * av * bu, bz * au * bv, au * av]
+    have hw₀ : ∀ i, 0 ≤ w i
+    have hw : (∑ i, w i) = az * av + bz * au
+    have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E)
+    convert
+      Finset.center_mass_mem_convex_hull (Finset.univ : Finset (Fin 3)) (fun i _ => hw₀ i) (by rwa [hw]) fun i _ => hz i
+    simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assoc, ← mul_assoc]
+    rw [← mul_smul, ← mul_rotate, mul_right_comm, mul_smul, ← mul_smul _ av, mul_rotate, mul_smul _ bz, ← smul_add]
+    rfl
+#align not_disjoint_segment_convex_hull_triple not_disjoint_segment_convex_hull_triple
 
 /-- **Stone's Separation Theorem** -/
 theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) (hst : Disjoint s t) :
@@ -114,6 +92,7 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
     exact hc (subset_convex_hull _ _ <| mem_insert _ _)
     
   rw [convex_hull_insert ⟨z, hzC⟩, convex_join_singleton_left]
-  refine' disjoint_Union₂_left.2 fun a ha b hb => h a _ ⟨b, hb⟩
+  refine' disjoint_Union₂_left.2 fun a ha => disjoint_iff_inf_le.mpr fun b hb => h a _ ⟨b, hb⟩
   rwa [← hC.1.convex_hull_eq]
+#align exists_convex_convex_compl_subset exists_convex_convex_compl_subset
 

@@ -83,6 +83,7 @@ def multiforkEvaluationCone (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPre
         dsimp [multifork.of_ι]
         erw [category.assoc, ← E.w f]
         tidy }
+#align category_theory.Sheaf.multifork_evaluation_cone CategoryTheory.SheafCat.multiforkEvaluationCone
 
 variable [HasLimitsOfShape K D]
 
@@ -121,6 +122,7 @@ def isLimitMultiforkOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToP
       change _ = S.ι i ≫ _
       erw [← hm, category.assoc, ← (E.π.app k).naturality, category.assoc]
       rfl)
+#align category_theory.Sheaf.is_limit_multifork_of_is_limit CategoryTheory.SheafCat.isLimitMultiforkOfIsLimit
 
 /-- If `E` is a cone which is a limit on the level of presheaves,
 then the limit presheaf is again a sheaf.
@@ -132,6 +134,7 @@ theorem isSheafOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPreshe
   rw [presheaf.is_sheaf_iff_multifork]
   intro X S
   exact ⟨is_limit_multifork_of_is_limit _ _ hE _ _⟩
+#align category_theory.Sheaf.is_sheaf_of_is_limit CategoryTheory.SheafCat.isSheafOfIsLimit
 
 instance (F : K ⥤ SheafCat J D) : CreatesLimit F (sheafToPresheaf J D) :=
   creates_limit_of_reflects_iso fun E hE =>
@@ -201,6 +204,7 @@ def sheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J
         ext1
         dsimp
         erw [category.comp_id, ← category.assoc, E.w f] }
+#align category_theory.Sheaf.sheafify_cocone CategoryTheory.SheafCat.sheafifyCocone
 
 /-- If `E` is a colimit cocone of presheaves, over a diagram factoring through sheaves,
 then `sheafify_cocone E` is a colimit cocone. -/
@@ -222,6 +226,7 @@ def isColimitSheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToP
     intro j
     dsimp
     simpa only [← category.assoc, ← hm]
+#align category_theory.Sheaf.is_colimit_sheafify_cocone CategoryTheory.SheafCat.isColimitSheafifyCocone
 
 instance [HasColimitsOfShape K D] : HasColimitsOfShape K (SheafCat J D) :=
   ⟨fun F => HasColimit.mk ⟨sheafify_cocone (Colimit.cocone _), is_colimit_sheafify_cocone _ (colimit.isColimit _)⟩⟩

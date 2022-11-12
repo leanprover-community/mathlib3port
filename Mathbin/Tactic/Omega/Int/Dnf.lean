@@ -27,6 +27,7 @@ def pushNeg : Preform → Preform
   | p ∧* q => push_neg p ∨* push_neg q
   | ¬* p => p
   | p => ¬* p
+#align omega.int.push_neg Omega.Int.pushNeg
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.int.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -39,6 +40,7 @@ theorem push_neg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) :=
     
   · simp only [preform.holds, push_neg, not_and_or, ihp v, ihq v]
     
+#align omega.int.push_neg_equiv Omega.Int.push_neg_equiv
 
 /-- NNF transformation -/
 def nnf : Preform → Preform
@@ -46,6 +48,7 @@ def nnf : Preform → Preform
   | p ∨* q => nnf p ∨* nnf q
   | p ∧* q => nnf p ∧* nnf q
   | a => a
+#align omega.int.nnf Omega.Int.nnf
 
 def IsNnf : Preform → Prop
   | t =* s => True
@@ -55,6 +58,7 @@ def IsNnf : Preform → Prop
   | p ∨* q => is_nnf p ∧ is_nnf q
   | p ∧* q => is_nnf p ∧ is_nnf q
   | _ => False
+#align omega.int.is_nnf Omega.Int.IsNnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.int.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -79,6 +83,7 @@ theorem is_nnf_push_neg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) := by
           ] <;>
       assumption
     
+#align omega.int.is_nnf_push_neg Omega.Int.is_nnf_push_neg
 
 /-- Argument is free of negations -/
 def NegFree : Preform → Prop
@@ -87,6 +92,7 @@ def NegFree : Preform → Prop
   | p ∨* q => neg_free p ∧ neg_free q
   | p ∧* q => neg_free p ∧ neg_free q
   | _ => False
+#align omega.int.neg_free Omega.Int.NegFree
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.int.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -99,6 +105,7 @@ theorem is_nnf_nnf : ∀ p : Preform, IsNnf (nnf p) := by
     
   · constructor <;> assumption
     
+#align omega.int.is_nnf_nnf Omega.Int.is_nnf_nnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.int.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -113,6 +120,7 @@ theorem nnf_equiv : ∀ {p : Preform}, Preform.Equiv (nnf p) p := by
     
   · apply pred_mono_2' (ihp v) (ihq v)
     
+#align omega.int.nnf_equiv Omega.Int.nnf_equiv
 
 /-- Eliminate all negations from preform -/
 @[simp]
@@ -122,6 +130,7 @@ def negElim : Preform → Preform
   | p ∨* q => neg_elim p ∨* neg_elim q
   | p ∧* q => neg_elim p ∧* neg_elim q
   | p => p
+#align omega.int.neg_elim Omega.Int.negElim
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.int.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -147,6 +156,7 @@ theorem neg_free_neg_elim : ∀ p : Preform, IsNnf p → NegFree (negElim p) := 
           ] <;>
       assumption
     
+#align omega.int.neg_free_neg_elim Omega.Int.neg_free_neg_elim
 
 theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ b ≤ a ↔ a = b := by
   constructor <;> intro h1
@@ -155,6 +165,7 @@ theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ 
     
   · constructor <;> apply le_of_eq <;> rw [h1]
     
+#align omega.int.le_and_le_iff_eq Omega.Int.le_and_le_iff_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.int.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -183,6 +194,7 @@ theorem implies_neg_elim : ∀ {p : Preform}, Preform.Implies p (negElim p) := b
     
   · apply And.imp (ihp _) (ihq _) h
     
+#align omega.int.implies_neg_elim Omega.Int.implies_neg_elim
 
 @[simp]
 def dnfCore : Preform → List Clause
@@ -191,10 +203,12 @@ def dnfCore : Preform → List Clause
   | t =* s => [([Term.sub (canonize s) (canonize t)], [])]
   | t ≤* s => [([], [Term.sub (canonize s) (canonize t)])]
   | ¬* _ => []
+#align omega.int.dnf_core Omega.Int.dnfCore
 
 /-- DNF transformation -/
 def dnf (p : Preform) : List Clause :=
   dnf_core <| neg_elim <| nnf p
+#align omega.int.dnf Omega.Int.dnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.int.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
@@ -239,12 +253,14 @@ theorem exists_clause_holds {v : Nat → Int} :
     rw [List.mem_product]
     constructor <;> assumption
     
+#align omega.int.exists_clause_holds Omega.Int.exists_clause_holds
 
 theorem clauses_sat_dnf_core {p : Preform} : NegFree p → p.Sat → Clauses.Sat (dnfCore p) := by
   intro h1 h2
   cases' h2 with v h2
   rcases exists_clause_holds h1 h2 with ⟨c, h3, h4⟩
   refine' ⟨c, h3, v, h4⟩
+#align omega.int.clauses_sat_dnf_core Omega.Int.clauses_sat_dnf_core
 
 theorem unsat_of_clauses_unsat {p : Preform} : Clauses.Unsat (dnf p) → p.Unsat := by
   intro h1 h2
@@ -254,6 +270,7 @@ theorem unsat_of_clauses_unsat {p : Preform} : Clauses.Unsat (dnf p) → p.Unsat
   apply preform.sat_of_implies_of_sat implies_neg_elim
   have hrw := exists_congr (@nnf_equiv p)
   apply hrw.elim_right h2
+#align omega.int.unsat_of_clauses_unsat Omega.Int.unsat_of_clauses_unsat
 
 end Int
 

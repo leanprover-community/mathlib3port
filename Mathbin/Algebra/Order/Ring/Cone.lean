@@ -22,6 +22,7 @@ which contains `1` and such that the positive elements are closed under multipli
 structure PositiveCone (α : Type _) [Ring α] extends AddCommGroup.PositiveCone α where
   one_nonneg : nonneg 1
   mul_pos : ∀ a b, Pos a → Pos b → Pos (a * b)
+#align ring.positive_cone Ring.PositiveCone
 
 /-- Forget that a positive cone in a ring respects the multiplicative structure. -/
 add_decl_doc positive_cone.to_positive_cone
@@ -30,6 +31,7 @@ add_decl_doc positive_cone.to_positive_cone
 @[nolint has_nonempty_instance]
 structure TotalPositiveCone (α : Type _) [Ring α] extends PositiveCone α, AddCommGroup.TotalPositiveCone α where
   one_pos : Pos 1
+#align ring.total_positive_cone Ring.TotalPositiveCone
 
 /-- Forget that a `total_positive_cone` in a ring is total. -/
 add_decl_doc total_positive_cone.to_positive_cone
@@ -61,6 +63,7 @@ def mkOfPositiveCone {α : Type _} [Ring α] (C : PositiveCone α) : StrictOrder
             convert yp
             simp)
       simp }
+#align strict_ordered_ring.mk_of_positive_cone StrictOrderedRing.mkOfPositiveCone
 
 end StrictOrderedRing
 
@@ -79,6 +82,7 @@ def mkOfPositiveCone {α : Type _} [Ring α] (C : TotalPositiveCone α) : Linear
         have one_pos := C.one_pos
         rw [← h, C.pos_iff] at one_pos
         simpa using one_pos⟩ }
+#align linear_ordered_ring.mk_of_positive_cone LinearOrderedRing.mkOfPositiveCone
 
 end LinearOrderedRing
 

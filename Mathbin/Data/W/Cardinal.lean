@@ -38,6 +38,7 @@ open Cardinal
 theorem cardinal_mk_eq_sum : (#WType β) = Sum fun a : α => (#WType β) ^ (#β a) := by
   simp only [Cardinal.power_def, ← Cardinal.mk_sigma]
   exact mk_congr (equiv_sigma β)
+#align W_type.cardinal_mk_eq_sum WType.cardinal_mk_eq_sum
 
 /-- `#(W_type β)` is the least cardinal `κ` such that `sum (λ a : α, κ ^ #(β a)) ≤ κ` -/
 theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ (#β a)) ≤ κ) : (#WType β) ≤ κ := by
@@ -45,11 +46,12 @@ theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ 
   simp only [Cardinal.power_def, ← Cardinal.mk_sigma, Cardinal.le_def] at hκ
   cases hκ
   exact Cardinal.mk_le_of_injective (elim_injective _ hκ.1 hκ.2)
+#align W_type.cardinal_mk_le_of_le WType.cardinal_mk_le_of_le
 
 /-- If, for any `a : α`, `β a` is finite, then the cardinality of `W_type β`
   is at most the maximum of the cardinality of `α` and `ℵ₀`  -/
 theorem cardinal_mk_le_max_aleph_0_of_finite [∀ a, Finite (β a)] : (#WType β) ≤ max (#α) ℵ₀ :=
-  ((is_empty_or_nonempty α).elim
+  ((isEmpty_or_nonempty α).elim
       (by
         intro h
         rw [Cardinal.mk_eq_zero (WType β)]
@@ -72,6 +74,7 @@ theorem cardinal_mk_le_max_aleph_0_of_finite [∀ a, Finite (β a)] : (#WType β
                   rw [← power_zero]
                   exact power_le_power_left (pos_iff_ne_zero.1 (aleph_0_pos.trans_le (le_max_right _ _))) (zero_le _))
         
+#align W_type.cardinal_mk_le_max_aleph_0_of_finite WType.cardinal_mk_le_max_aleph_0_of_finite
 
 end WType
 
