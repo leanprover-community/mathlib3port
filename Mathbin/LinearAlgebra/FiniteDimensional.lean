@@ -1555,3 +1555,29 @@ end EndCat
 
 end Module
 
+section Module
+
+open Module
+
+open Cardinal
+
+theorem cardinal_mk_eq_cardinal_mk_field_pow_dim (K V : Type u) [Field K] [AddCommGroup V] [Module K V]
+    [FiniteDimensional K V] : (#V) = (#K) ^ Module.rank K V := by
+  let s := Basis.OfVectorSpaceIndex K V
+  let hs := Basis.ofVectorSpace K V
+  calc
+    (#V) = (#s →₀ K) := Quotient.sound ⟨hs.repr.to_equiv⟩
+    _ = (#s → K) := Quotient.sound ⟨Finsupp.equivFunOnFintype⟩
+    _ = _ := by rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
+    
+#align cardinal_mk_eq_cardinal_mk_field_pow_dim cardinal_mk_eq_cardinal_mk_field_pow_dim
+
+theorem cardinal_lt_aleph_0_of_finite_dimensional (K V : Type u) [Field K] [AddCommGroup V] [Module K V] [Finite K]
+    [FiniteDimensional K V] : (#V) < ℵ₀ := by
+  letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
+  rw [cardinal_mk_eq_cardinal_mk_field_pow_dim K V]
+  exact Cardinal.power_lt_aleph_0 (Cardinal.lt_aleph_0_of_finite K) (IsNoetherian.dim_lt_aleph_0 K V)
+#align cardinal_lt_aleph_0_of_finite_dimensional cardinal_lt_aleph_0_of_finite_dimensional
+
+end Module
+

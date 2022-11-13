@@ -105,6 +105,7 @@ theorem pow_swap (p : α × β) (c : E) : (p ^ c).swap = p.swap ^ c :=
   rfl
 #align prod.pow_swap Prod.pow_swap
 
+@[to_additive]
 instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=
   ⟨fun x y z => mk.inj_iff.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
 
@@ -112,6 +113,7 @@ instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarT
 instance [SmulCommClass M N α] [SmulCommClass M N β] :
     SmulCommClass M N (α × β) where smul_comm r s x := mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
 
+@[to_additive]
 instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCentralScalar M β] : IsCentralScalar M (α × β) :=
   ⟨fun r m => Prod.ext (op_smul_eq_smul _ _) (op_smul_eq_smul _ _)⟩
 

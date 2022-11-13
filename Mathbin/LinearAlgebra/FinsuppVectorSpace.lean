@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Mathbin.LinearAlgebra.Dimension
-import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.StdBasis
 
 /-!
@@ -13,8 +12,7 @@ import Mathbin.LinearAlgebra.StdBasis
 This file contains results on the `R`-module structure on functions of finite support from a type
 `ι` to an `R`-module `M`, in particular in the case that `R` is a field.
 
-Furthermore, it contains some facts about isomorphisms of vector spaces from equality of dimension
-as well as the cardinality of finite dimensional vector spaces.
+Furthermore, it contains some facts about isomorphisms of vector spaces from equality of dimension.
 
 ## TODO
 
@@ -194,30 +192,6 @@ def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fi
   rw [← @dim_fin_fun K _ n] at hn
   exact Classical.choice (equiv_of_dim_eq_lift_dim hn)
 #align fin_dim_vectorspace_equiv finDimVectorspaceEquiv
-
-end Module
-
-section Module
-
-open Module
-
-variable (K V : Type u) [Field K] [AddCommGroup V] [Module K V]
-
-theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : (#V) = (#K) ^ Module.rank K V := by
-  let s := Basis.OfVectorSpaceIndex K V
-  let hs := Basis.ofVectorSpace K V
-  calc
-    (#V) = (#s →₀ K) := Quotient.sound ⟨hs.repr.to_equiv⟩
-    _ = (#s → K) := Quotient.sound ⟨Finsupp.equivFunOnFintype⟩
-    _ = _ := by rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
-    
-#align cardinal_mk_eq_cardinal_mk_field_pow_dim cardinal_mk_eq_cardinal_mk_field_pow_dim
-
-theorem cardinal_lt_aleph_0_of_finite_dimensional [Finite K] [FiniteDimensional K V] : (#V) < ℵ₀ := by
-  letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
-  rw [cardinal_mk_eq_cardinal_mk_field_pow_dim K V]
-  exact Cardinal.power_lt_aleph_0 (Cardinal.lt_aleph_0_of_finite K) (IsNoetherian.dim_lt_aleph_0 K V)
-#align cardinal_lt_aleph_0_of_finite_dimensional cardinal_lt_aleph_0_of_finite_dimensional
 
 end Module
 

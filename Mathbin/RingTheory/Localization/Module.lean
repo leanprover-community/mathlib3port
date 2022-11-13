@@ -3,7 +3,7 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu, Anne Baanen
 -/
-import Mathbin.LinearAlgebra.LinearIndependent
+import Mathbin.LinearAlgebra.Basis
 import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.RingTheory.Localization.Integer
 

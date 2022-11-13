@@ -42,16 +42,19 @@ theorem smul_apply' {g : I → Type _} [∀ i, HasSmul (f i) (g i)] (s : ∀ i, 
   rfl
 #align pi.smul_apply' Pi.smul_apply'
 
+@[to_additive]
 instance is_scalar_tower {α β : Type _} [HasSmul α β] [∀ i, HasSmul β <| f i] [∀ i, HasSmul α <| f i]
     [∀ i, IsScalarTower α β (f i)] : IsScalarTower α β (∀ i : I, f i) :=
   ⟨fun x y z => funext fun i => smul_assoc x y (z i)⟩
 #align pi.is_scalar_tower Pi.is_scalar_tower
 
+@[to_additive]
 instance is_scalar_tower' {g : I → Type _} {α : Type _} [∀ i, HasSmul α <| f i] [∀ i, HasSmul (f i) (g i)]
     [∀ i, HasSmul α <| g i] [∀ i, IsScalarTower α (f i) (g i)] : IsScalarTower α (∀ i : I, f i) (∀ i : I, g i) :=
   ⟨fun x y z => funext fun i => smul_assoc x (y i) (z i)⟩
 #align pi.is_scalar_tower' Pi.is_scalar_tower'
 
+@[to_additive]
 instance is_scalar_tower'' {g : I → Type _} {h : I → Type _} [∀ i, HasSmul (f i) (g i)] [∀ i, HasSmul (g i) (h i)]
     [∀ i, HasSmul (f i) (h i)] [∀ i, IsScalarTower (f i) (g i) (h i)] :
     IsScalarTower (∀ i, f i) (∀ i, g i) (∀ i, h i) :=
@@ -76,6 +79,7 @@ instance smul_comm_class'' {g : I → Type _} {h : I → Type _} [∀ i, HasSmul
   ⟨fun x y z => funext fun i => smul_comm (x i) (y i) (z i)⟩
 #align pi.smul_comm_class'' Pi.smul_comm_class''
 
+@[to_additive]
 instance {α : Type _} [∀ i, HasSmul α <| f i] [∀ i, HasSmul αᵐᵒᵖ <| f i] [∀ i, IsCentralScalar α (f i)] :
     IsCentralScalar α (∀ i, f i) :=
   ⟨fun r m => funext fun i => op_smul_eq_smul _ _⟩

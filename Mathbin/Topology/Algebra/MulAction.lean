@@ -108,7 +108,8 @@ theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun
   continuous_smul.comp (hf.prod_mk hg)
 #align continuous.smul Continuous.smul
 
-/-- If a scalar is central, then its right action is continuous when its left action is. -/
+/-- If a scalar action is central, then its right action is continuous when its left action is. -/
+@[to_additive "If an additive action is central, then its right action is continuous when its left\naction is."]
 instance HasContinuousSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasContinuousSmul Mᵐᵒᵖ X :=
   ⟨by
     suffices Continuous fun p : M × X => MulOpposite.op p.fst • p.snd from

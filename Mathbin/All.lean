@@ -1806,6 +1806,7 @@ import Mathbin.LinearAlgebra.AffineSpace.Independent
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
 import Mathbin.LinearAlgebra.AffineSpace.Ordered
 import Mathbin.LinearAlgebra.AffineSpace.Pointwise
+import Mathbin.LinearAlgebra.AffineSpace.Restrict
 import Mathbin.LinearAlgebra.AffineSpace.Slope
 import Mathbin.LinearAlgebra.Alternating
 import Mathbin.LinearAlgebra.AnnihilatingPolynomial
@@ -2311,6 +2312,7 @@ import Mathbin.RingTheory.Adjoin.Default
 import Mathbin.RingTheory.Adjoin.Fg
 import Mathbin.RingTheory.Adjoin.Field
 import Mathbin.RingTheory.Adjoin.PowerBasis
+import Mathbin.RingTheory.Adjoin.Tower
 import Mathbin.RingTheory.AdjoinRoot
 import Mathbin.RingTheory.AlgebraTower
 import Mathbin.RingTheory.Algebraic

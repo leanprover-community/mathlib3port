@@ -5,8 +5,9 @@ Authors: Kevin Buzzard, Patrick Massot
 
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 -/
-import Mathbin.GroupTheory.Coset
 import Mathbin.GroupTheory.Congruence
+import Mathbin.GroupTheory.Coset
+import Mathbin.GroupTheory.Subgroup.Pointwise
 
 /-!
 # Quotients of groups by normal subgroups

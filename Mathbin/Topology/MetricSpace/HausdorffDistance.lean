@@ -1184,6 +1184,57 @@ theorem thickening_Union (δ : ℝ) (f : ι → Set α) : Thickening δ (⋃ i, 
   simp_rw [thickening, inf_edist_Union, infi_lt_iff, set_of_exists]
 #align metric.thickening_Union Metric.thickening_Union
 
+theorem ediam_cthickening_le (ε : ℝ≥0) : Emetric.diam (Cthickening ε s) ≤ Emetric.diam s + 2 * ε := by
+  refine' diam_le fun x hx y hy => Ennreal.le_of_forall_pos_le_add fun δ hδ _ => _
+  rw [mem_cthickening_iff, Ennreal.of_real_coe_nnreal] at hx hy
+  have hε : (ε : ℝ≥0∞) < ε + ↑(δ / 2) := Ennreal.coe_lt_coe.2 (lt_add_of_pos_right _ <| half_pos hδ)
+  rw [Ennreal.coe_div two_ne_zero, Ennreal.coe_two] at hε
+  replace hx := hx.trans_lt hε
+  replace hy := hy.trans_lt hε
+  rw [inf_edist_lt_iff] at hx hy
+  obtain ⟨x', hx', hxx'⟩ := hx
+  obtain ⟨y', hy', hyy'⟩ := hy
+  refine'
+    (edist_triangle_right _ _ _).trans
+      ((add_le_add hxx'.le <|
+            (edist_triangle _ _ _).trans <| add_le_add hyy'.le <| edist_le_diam_of_mem hy' hx').trans_eq
+        _)
+  -- Now we're done, but `ring` won't do it because we're on `ennreal` :(
+  rw [← add_assoc, ← two_mul, mul_add, Ennreal.mul_div_cancel' Ennreal.two_ne_zero Ennreal.two_ne_top]
+  abel
+#align metric.ediam_cthickening_le Metric.ediam_cthickening_le
+
+theorem ediam_thickening_le (ε : ℝ≥0) : Emetric.diam (Thickening ε s) ≤ Emetric.diam s + 2 * ε :=
+  (Emetric.diam_mono <| thickening_subset_cthickening _ _).trans <| ediam_cthickening_le _
+#align metric.ediam_thickening_le Metric.ediam_thickening_le
+
+theorem diam_cthickening_le {α : Type _} [PseudoMetricSpace α] (s : Set α) (hε : 0 ≤ ε) :
+    diam (Cthickening ε s) ≤ diam s + 2 * ε := by
+  by_cases hs:bounded (cthickening ε s)
+  · replace hs := hs.mono (self_subset_cthickening _)
+    have : (2 : ℝ≥0∞) * @coe ℝ≥0 _ _ ⟨ε, hε⟩ ≠ ⊤ := by simp
+    refine'
+      (Ennreal.to_real_mono (Ennreal.add_ne_top.2 ⟨hs.ediam_ne_top, this⟩) <| ediam_cthickening_le ⟨ε, hε⟩).trans_eq _
+    simp [Ennreal.to_real_add hs.ediam_ne_top this, diam]
+    
+  · rw [diam_eq_zero_of_unbounded hs]
+    positivity
+    
+#align metric.diam_cthickening_le Metric.diam_cthickening_le
+
+theorem diam_thickening_le {α : Type _} [PseudoMetricSpace α] (s : Set α) (hε : 0 ≤ ε) :
+    diam (Thickening ε s) ≤ diam s + 2 * ε := by
+  by_cases hs:bounded s
+  · exact (diam_mono (thickening_subset_cthickening _ _) hs.cthickening).trans (diam_cthickening_le _ hε)
+    
+  obtain rfl | hε := hε.eq_or_lt
+  · simp [thickening_of_nonpos, diam_nonneg]
+    
+  · rw [diam_eq_zero_of_unbounded (mt (bounded.mono <| self_subset_thickening hε _) hs)]
+    positivity
+    
+#align metric.diam_thickening_le Metric.diam_thickening_le
+
 @[simp]
 theorem thickening_closure : Thickening δ (Closure s) = Thickening δ s := by simp_rw [thickening, inf_edist_closure]
 #align metric.thickening_closure Metric.thickening_closure

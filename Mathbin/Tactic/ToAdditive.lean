@@ -245,6 +245,7 @@ unsafe def tr : Bool → List String → List String
   | is_comm, "zpow" :: s => add_comm_prefix is_comm "zsmul" :: tr false s
   | is_comm, "is" :: "square" :: s => add_comm_prefix is_comm "even" :: tr false s
   | is_comm, "is" :: "scalar" :: "tower" :: s => add_comm_prefix is_comm "vadd_assoc_class" :: tr false s
+  | is_comm, "is" :: "central" :: "scalar" :: s => add_comm_prefix is_comm "is_central_vadd" :: tr false s
   | is_comm, "is" :: "regular" :: s => add_comm_prefix is_comm "is_add_regular" :: tr false s
   | is_comm, "is" :: "left" :: "regular" :: s => add_comm_prefix is_comm "is_add_left_regular" :: tr false s
   | is_comm, "is" :: "right" :: "regular" :: s => add_comm_prefix is_comm "is_add_right_regular" :: tr false s

@@ -40,6 +40,7 @@ theorem smul_mk : a • mk i b = ⟨i, a • b⟩ :=
   rfl
 #align sigma.smul_mk Sigma.smul_mk
 
+@[to_additive]
 instance [HasSmul M N] [∀ i, IsScalarTower M N (α i)] : IsScalarTower M N (Σi, α i) :=
   ⟨fun a b x => by
     cases x
@@ -51,6 +52,7 @@ instance [∀ i, SmulCommClass M N (α i)] : SmulCommClass M N (Σi, α i) :=
     cases x
     rw [smul_mk, smul_mk, smul_mk, smul_mk, smul_comm]⟩
 
+@[to_additive]
 instance [∀ i, HasSmul Mᵐᵒᵖ (α i)] [∀ i, IsCentralScalar M (α i)] : IsCentralScalar M (Σi, α i) :=
   ⟨fun a x => by
     cases x

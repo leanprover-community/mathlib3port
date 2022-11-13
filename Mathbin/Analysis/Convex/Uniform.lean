@@ -128,9 +128,8 @@ variable [NormedAddCommGroup E] [NormedSpace ℝ E] [UniformConvexSpace E]
 
 -- See note [lower instance priority]
 instance (priority := 100) UniformConvexSpace.toStrictConvexSpace : StrictConvexSpace ℝ E :=
-  (StrictConvexSpace.ofNormAddLt one_half_pos one_half_pos (add_halves _)) fun x y hx hy hxy => by
-    obtain ⟨δ, hδ, h⟩ := exists_forall_closed_ball_dist_add_le_two_sub E (norm_sub_pos_iff.2 hxy)
-    rw [← smul_add, norm_smul_of_nonneg one_half_pos.le, ← lt_div_iff' one_half_pos, one_div_one_div]
-    exact (h hx hy le_rfl).trans_lt (sub_lt_self _ hδ)
+  StrictConvexSpace.ofNormAddNeTwo fun x y hx hy hxy =>
+    let ⟨δ, hδ, h⟩ := exists_forall_closed_ball_dist_add_le_two_sub E (norm_sub_pos_iff.2 hxy)
+    ((h hx.le hy.le le_rfl).trans_lt <| sub_lt_self _ hδ).Ne
 #align uniform_convex_space.to_strict_convex_space UniformConvexSpace.toStrictConvexSpace
 

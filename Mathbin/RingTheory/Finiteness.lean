@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Mathbin.GroupTheory.Finiteness
-import Mathbin.RingTheory.AlgebraTower
+import Mathbin.RingTheory.Adjoin.Tower
 import Mathbin.RingTheory.MvPolynomial.Tower
 import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.RingTheory.Noetherian

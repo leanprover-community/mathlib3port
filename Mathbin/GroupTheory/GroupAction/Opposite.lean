@@ -49,6 +49,7 @@ instance {M N} [HasSmul M N] [HasSmul M α] [HasSmul N α] [IsScalarTower M N α
 instance {M N} [HasSmul M α] [HasSmul N α] [SmulCommClass M N α] : SmulCommClass M N αᵐᵒᵖ :=
   ⟨fun x y z => unop_injective <| smul_comm _ _ _⟩
 
+@[to_additive]
 instance (R : Type _) [HasSmul R α] [HasSmul Rᵐᵒᵖ α] [IsCentralScalar R α] : IsCentralScalar R αᵐᵒᵖ :=
   ⟨fun r m => unop_injective <| op_smul_eq_smul _ _⟩
 

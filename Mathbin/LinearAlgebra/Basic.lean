@@ -227,28 +227,34 @@ theorem subtype_comp_cod_restrict (p : Submodule R₂ M₂) (h : ∀ b, f b ∈ 
   ext fun b => rfl
 #align linear_map.subtype_comp_cod_restrict LinearMap.subtype_comp_cod_restrict
 
-/-- Restrict domain and codomain of an endomorphism. -/
-def restrict (f : M →ₗ[R] M) {p : Submodule R M} (hf : ∀ x ∈ p, f x ∈ p) : p →ₗ[R] p :=
-  (f.domRestrict p).codRestrict p <| SetLike.forall.2 hf
+/-- Restrict domain and codomain of a linear map. -/
+def restrict (f : M →ₗ[R] M₁) {p : Submodule R M} {q : Submodule R M₁} (hf : ∀ x ∈ p, f x ∈ q) : p →ₗ[R] q :=
+  (f.domRestrict p).codRestrict q <| SetLike.forall.2 hf
 #align linear_map.restrict LinearMap.restrict
 
-theorem restrict_apply {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x ∈ p, f x ∈ p) (x : p) :
+@[simp]
+theorem restrict_coe_apply (f : M →ₗ[R] M₁) {p : Submodule R M} {q : Submodule R M₁} (hf : ∀ x ∈ p, f x ∈ q) (x : p) :
+    ↑(f.restrict hf x) = f x :=
+  rfl
+#align linear_map.restrict_coe_apply LinearMap.restrict_coe_apply
+
+theorem restrict_apply {f : M →ₗ[R] M₁} {p : Submodule R M} {q : Submodule R M₁} (hf : ∀ x ∈ p, f x ∈ q) (x : p) :
     f.restrict hf x = ⟨f x, hf x.1 x.2⟩ :=
   rfl
 #align linear_map.restrict_apply LinearMap.restrict_apply
 
-theorem subtype_comp_restrict {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x ∈ p, f x ∈ p) :
-    p.Subtype.comp (f.restrict hf) = f.domRestrict p :=
+theorem subtype_comp_restrict {f : M →ₗ[R] M₁} {p : Submodule R M} {q : Submodule R M₁} (hf : ∀ x ∈ p, f x ∈ q) :
+    q.Subtype.comp (f.restrict hf) = f.domRestrict p :=
   rfl
 #align linear_map.subtype_comp_restrict LinearMap.subtype_comp_restrict
 
-theorem restrict_eq_cod_restrict_dom_restrict {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x ∈ p, f x ∈ p) :
-    f.restrict hf = (f.domRestrict p).codRestrict p fun x => hf x.1 x.2 :=
+theorem restrict_eq_cod_restrict_dom_restrict {f : M →ₗ[R] M₁} {p : Submodule R M} {q : Submodule R M₁}
+    (hf : ∀ x ∈ p, f x ∈ q) : f.restrict hf = (f.domRestrict p).codRestrict q fun x => hf x.1 x.2 :=
   rfl
 #align linear_map.restrict_eq_cod_restrict_dom_restrict LinearMap.restrict_eq_cod_restrict_dom_restrict
 
-theorem restrict_eq_dom_restrict_cod_restrict {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x, f x ∈ p) :
-    (f.restrict fun x _ => hf x) = (f.codRestrict p hf).domRestrict p :=
+theorem restrict_eq_dom_restrict_cod_restrict {f : M →ₗ[R] M₁} {p : Submodule R M} {q : Submodule R M₁}
+    (hf : ∀ x, f x ∈ q) : (f.restrict fun x _ => hf x) = (f.codRestrict q hf).domRestrict p :=
   rfl
 #align linear_map.restrict_eq_dom_restrict_cod_restrict LinearMap.restrict_eq_dom_restrict_cod_restrict
 
@@ -1058,7 +1064,7 @@ variable [Ring R] [AddCommGroup M] [Module R M] (p : Submodule R M)
 
 variable [AddCommGroup M₂] [Module R M₂]
 
-@[simp]
+-- See `neg_coe_set`
 theorem neg_coe : -(p : Set M) = p :=
   Set.ext fun x => p.neg_mem_iff
 #align submodule.neg_coe Submodule.neg_coe
@@ -1647,8 +1653,9 @@ theorem range_cod_restrict {τ₂₁ : R₂ →+* R} [RingHomSurjective τ₂₁
     range (codRestrict p f hf) = comap p.Subtype f.range := by simpa only [range_eq_map] using map_cod_restrict _ _ _ _
 #align linear_map.range_cod_restrict LinearMap.range_cod_restrict
 
-theorem ker_restrict {p : Submodule R M} {f : M →ₗ[R] M} (hf : ∀ x : M, x ∈ p → f x ∈ p) :
-    ker (f.restrict hf) = (f.domRestrict p).ker := by rw [restrict_eq_cod_restrict_dom_restrict, ker_cod_restrict]
+theorem ker_restrict [AddCommMonoid M₁] [Module R M₁] {p : Submodule R M} {q : Submodule R M₁} {f : M →ₗ[R] M₁}
+    (hf : ∀ x : M, x ∈ p → f x ∈ q) : ker (f.restrict hf) = (f.domRestrict p).ker := by
+  rw [restrict_eq_cod_restrict_dom_restrict, ker_cod_restrict]
 #align linear_map.ker_restrict LinearMap.ker_restrict
 
 include sc

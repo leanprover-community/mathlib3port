@@ -275,13 +275,14 @@ theorem coe_map_to_endomorphism_le : (N : Submodule R M).map (LieModule.toEndomo
 
 variable (N x)
 
-theorem to_endomorphism_comp_subtype_mem (m : M) (hm : m ∈ N) :
-    (toEndomorphism R L M x).comp (N : Submodule R M).Subtype ⟨m, hm⟩ ∈ N := by simpa using N.lie_mem hm
+theorem to_endomorphism_comp_subtype_mem (m : M) (hm : m ∈ (N : Submodule R M)) :
+    (toEndomorphism R L M x).comp (N : Submodule R M).Subtype ⟨m, hm⟩ ∈ (N : Submodule R M) := by
+  simpa using N.lie_mem hm
 #align lie_submodule.to_endomorphism_comp_subtype_mem LieSubmodule.to_endomorphism_comp_subtype_mem
 
 @[simp]
 theorem to_endomorphism_restrict_eq_to_endomorphism (h := N.to_endomorphism_comp_subtype_mem x) :
-    ((toEndomorphism R L M x).restrict h : (N : Submodule R M) →ₗ[R] N) = toEndomorphism R L N x := by
+    (toEndomorphism R L M x).restrict h = toEndomorphism R L N x := by
   ext
   simp [LinearMap.restrict_apply]
 #align

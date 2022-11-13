@@ -61,6 +61,7 @@ instance [SmulCommClass M N α] [SmulCommClass M N β] : SmulCommClass M N (Sum 
     cases x
     exacts[congr_arg inl (smul_comm _ _ _), congr_arg inr (smul_comm _ _ _)]⟩
 
+@[to_additive]
 instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCentralScalar M β] : IsCentralScalar M (Sum α β) :=
   ⟨fun a x => by
     cases x

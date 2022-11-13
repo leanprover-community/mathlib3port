@@ -7,6 +7,7 @@ import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.GroupAction.Group
 import Mathbin.Data.Setoid.Basic
+import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Data.Fintype.Card
 
 /-!

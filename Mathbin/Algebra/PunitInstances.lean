@@ -94,21 +94,26 @@ instance : LinearOrderedCancelAddCommMonoid PUnit :=
 instance : LinearOrderedAddCommMonoidWithTop PUnit :=
   { PUnit.completeBooleanAlgebra, PUnit.linearOrderedCancelAddCommMonoid with top_add' := fun _ => rfl }
 
-instance : HasSmul R PUnit where smul _ _ := unit
+@[to_additive]
+instance : HasSmul R PUnit :=
+  ⟨fun _ _ => unit⟩
 
-@[simp]
+@[simp, to_additive]
 theorem smul_eq (r : R) : r • y = star :=
   rfl
 #align punit.smul_eq PUnit.smul_eq
 
+@[to_additive]
 instance : IsCentralScalar R PUnit :=
   ⟨fun _ _ => rfl⟩
 
+@[to_additive]
 instance : SmulCommClass R S PUnit :=
-  ⟨fun _ _ _ => Subsingleton.elim _ _⟩
+  ⟨fun _ _ _ => rfl⟩
 
+@[to_additive]
 instance [HasSmul R S] : IsScalarTower R S PUnit :=
-  ⟨fun _ _ _ => Subsingleton.elim _ _⟩
+  ⟨fun _ _ _ => rfl⟩
 
 instance [Zero R] : SmulWithZero R PUnit := by
   refine' { PUnit.hasSmul with .. } <;> intros <;> exact Subsingleton.elim _ _

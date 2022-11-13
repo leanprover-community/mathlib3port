@@ -86,10 +86,15 @@ theorem coe_div_circle (z w : circle) : ↑(z / w) = (z : ℂ) / w :=
 #align coe_div_circle coe_div_circle
 
 /-- The elements of the circle embed into the units. -/
-@[simps apply]
 def circle.toUnits : circle →* Units ℂ :=
   unitSphereToUnits ℂ
 #align circle.to_units circle.toUnits
+
+-- written manually because `@[simps]` was slow and generated the wrong lemma
+@[simp]
+theorem circle.to_units_apply (z : circle) : circle.toUnits z = Units.mk0 z (ne_zero_of_mem_circle z) :=
+  rfl
+#align circle.to_units_apply circle.to_units_apply
 
 instance : CompactSpace circle :=
   Metric.Sphere.compact_space _ _

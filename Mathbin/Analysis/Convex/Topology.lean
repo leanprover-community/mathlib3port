@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 -/
 import Mathbin.Analysis.Convex.Jensen
+import Mathbin.Analysis.Convex.Strict
 import Mathbin.Analysis.Normed.Group.Pointwise
 import Mathbin.Topology.Algebra.Module.FiniteDimension
 import Mathbin.Analysis.NormedSpace.Ray
@@ -211,6 +212,38 @@ protected theorem Convex.closure {s : Set E} (hs : Convex 𝕜 s) : Convex 𝕜 
   have hf : Continuous (Function.uncurry f) := (continuous_fst.const_smul _).add (continuous_snd.const_smul _)
   show f x y ∈ Closure s from map_mem_closure₂ hf hx hy fun x' hx' y' hy' => hs hx' hy' ha hb hab
 #align convex.closure Convex.closure
+
+open AffineMap
+
+/-- A convex set `s` is strictly convex provided that for any two distinct points of
+`s \ interior s`, the line passing through these points has nonempty intersection with
+`interior s`. -/
+protected theorem Convex.strict_convex' {s : Set E} (hs : Convex 𝕜 s)
+    (h : (s \ Interior s).Pairwise fun x y => ∃ c : 𝕜, lineMap x y c ∈ Interior s) : StrictConvex 𝕜 s := by
+  refine' strict_convex_iff_open_segment_subset.2 _
+  intro x hx y hy hne
+  by_cases hx':x ∈ Interior s
+  · exact hs.open_segment_interior_self_subset_interior hx' hy
+    
+  by_cases hy':y ∈ Interior s
+  · exact hs.open_segment_self_interior_subset_interior hx hy'
+    
+  rcases h ⟨hx, hx'⟩ ⟨hy, hy'⟩ hne with ⟨c, hc⟩
+  refine' (open_segment_subset_union x y ⟨c, rfl⟩).trans (insert_subset.2 ⟨hc, union_subset _ _⟩)
+  exacts[hs.open_segment_self_interior_subset_interior hx hc, hs.open_segment_interior_self_subset_interior hc hy]
+#align convex.strict_convex' Convex.strict_convex'
+
+/-- A convex set `s` is strictly convex provided that for any two distinct points `x`, `y` of
+`s \ interior s`, the segment with endpoints `x`, `y` has nonempty intersection with
+`interior s`. -/
+protected theorem Convex.strict_convex {s : Set E} (hs : Convex 𝕜 s)
+    (h : (s \ Interior s).Pairwise fun x y => ([x -[𝕜] y] \ Frontier s).Nonempty) : StrictConvex 𝕜 s := by
+  refine' hs.strict_convex' <| h.imp_on fun x hx y hy hne => _
+  simp only [segment_eq_image_line_map, ← self_diff_frontier]
+  rintro ⟨_, ⟨⟨c, hc, rfl⟩, hcs⟩⟩
+  refine' ⟨c, hs.segment_subset hx.1 hy.1 _, hcs⟩
+  exact (segment_eq_image_line_map 𝕜 x y).symm ▸ mem_image_of_mem _ hc
+#align convex.strict_convex Convex.strict_convex
 
 end HasContinuousConstSmul
 

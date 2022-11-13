@@ -96,7 +96,9 @@ theorem UniformContinuous.const_smul [HasUniformContinuousConstSmul M X] {f : Y 
   (uniform_continuous_const_smul c).comp hf
 #align uniform_continuous.const_smul UniformContinuous.const_smul
 
-/-- If a scalar is central, then its right action is uniform continuous when its left action is. -/
+/-- If a scalar action is central, then its right action is uniform continuous when its left action
+is. -/
+@[to_additive "If an additive action is central, then its right action is uniform\ncontinuous when its left action,is."]
 instance (priority := 100) HasUniformContinuousConstSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X]
     [HasUniformContinuousConstSmul M X] : HasUniformContinuousConstSmul Mᵐᵒᵖ X :=
   ⟨MulOpposite.rec fun c => by
@@ -131,6 +133,7 @@ variable [HasSmul M X]
 instance : HasSmul M (Completion X) :=
   ⟨fun c => Completion.map ((· • ·) c)⟩
 
+@[to_additive]
 theorem smul_def (c : M) (x : Completion X) : c • x = Completion.map ((· • ·) c) x :=
   rfl
 #align uniform_space.completion.smul_def UniformSpace.Completion.smul_def
@@ -139,6 +142,7 @@ theorem smul_def (c : M) (x : Completion X) : c • x = Completion.map ((· • 
 instance : HasUniformContinuousConstSmul M (Completion X) :=
   ⟨fun c => uniform_continuous_map⟩
 
+@[to_additive]
 instance [HasSmul N X] [HasSmul M N] [HasUniformContinuousConstSmul M X] [HasUniformContinuousConstSmul N X]
     [IsScalarTower M N X] : IsScalarTower M N (Completion X) :=
   ⟨fun m n x => by
@@ -147,6 +151,7 @@ instance [HasSmul N X] [HasSmul M N] [HasUniformContinuousConstSmul M X] [HasUni
     refine' Eq.trans _ (congr_fun this.symm x)
     exact congr_arg (fun f => completion.map f x) (funext (smul_assoc _ _))⟩
 
+@[to_additive]
 instance [HasSmul N X] [SmulCommClass M N X] [HasUniformContinuousConstSmul M X] [HasUniformContinuousConstSmul N X] :
     SmulCommClass M N (Completion X) :=
   ⟨fun m n x => by
@@ -156,6 +161,7 @@ instance [HasSmul N X] [SmulCommClass M N X] [HasUniformContinuousConstSmul M X]
     exact congr_arg (fun f => completion.map f x) (funext (smul_comm _ _))
     repeat' exact uniform_continuous_const_smul _⟩
 
+@[to_additive]
 instance [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : IsCentralScalar M (Completion X) :=
   ⟨fun c a => (congr_arg fun f => Completion.map f a) <| funext (op_smul_eq_smul c)⟩
 

@@ -47,6 +47,7 @@ theorem smul_some : a • some b = some (a • b) :=
   rfl
 #align option.smul_some Option.smul_some
 
+@[to_additive]
 instance [HasSmul M N] [IsScalarTower M N α] : IsScalarTower M N (Option α) :=
   ⟨fun a b x => by
     cases x
@@ -56,6 +57,7 @@ instance [HasSmul M N] [IsScalarTower M N α] : IsScalarTower M N (Option α) :=
 instance [SmulCommClass M N α] : SmulCommClass M N (Option α) :=
   ⟨fun a b => Function.Commute.option_map <| smul_comm _ _⟩
 
+@[to_additive]
 instance [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] : IsCentralScalar M (Option α) :=
   ⟨fun a x => by
     cases x

@@ -5,6 +5,7 @@ Authors: Damiano Testa, Junyan Xu
 -/
 import Mathbin.Data.Dfinsupp.Order
 import Mathbin.Data.Dfinsupp.NeLocus
+import Mathbin.Order.WellFoundedSet
 
 /-!
 # Lexicographic order on finitely supported dependent functions
