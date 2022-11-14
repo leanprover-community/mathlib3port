@@ -30,7 +30,7 @@ open Filter intervalIntegral Set Real MeasureTheory Asymptotics
 
 open TopologicalSpace
 
-theorem integral_exp_neg_Ioi : (∫ x : ℝ in IoiCat 0, exp (-x)) = 1 := by
+theorem integral_exp_neg_Ioi : (∫ x : ℝ in ioi 0, exp (-x)) = 1 := by
   refine' tendsto_nhds_unique (interval_integral_tendsto_integral_Ioi _ _ tendsto_id) _
   · simpa only [neg_mul, one_mul] using expNegIntegrableOnIoi 0 zero_lt_one
     
@@ -60,12 +60,11 @@ theorem Gamma_integrand_is_o (s : ℝ) : (fun x : ℝ => exp (-x) * x ^ s) =o[at
 
 See `Gamma_integral_convergent` for a proof of the convergence of the integral for `0 < s`. -/
 def gammaIntegral (s : ℝ) : ℝ :=
-  ∫ x in IoiCat (0 : ℝ), exp (-x) * x ^ (s - 1)
+  ∫ x in ioi (0 : ℝ), exp (-x) * x ^ (s - 1)
 #align real.Gamma_integral Real.gammaIntegral
 
 /-- The integral defining the `Γ` function converges for positive real `s`. -/
-theorem gammaIntegralConvergent {s : ℝ} (h : 0 < s) : IntegrableOn (fun x : ℝ => exp (-x) * x ^ (s - 1)) (IoiCat 0) :=
-  by
+theorem gammaIntegralConvergent {s : ℝ} (h : 0 < s) : IntegrableOn (fun x : ℝ => exp (-x) * x ^ (s - 1)) (ioi 0) := by
   rw [← Ioc_union_Ioi_eq_Ioi (@zero_le_one ℝ _ _ _ _), integrable_on_union]
   constructor
   · rw [← integrable_on_Icc_iff_integrable_on_Ioc]
@@ -95,7 +94,7 @@ equal but not definitionally so. We use the first of these throughout. -/
 
 This is proved by reduction to the real case. -/
 theorem gammaIntegralConvergent {s : ℂ} (hs : 0 < s.re) :
-    IntegrableOn (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) (IoiCat 0) := by
+    IntegrableOn (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) (ioi 0) := by
   constructor
   · refine' ContinuousOn.aeStronglyMeasurable _ measurableSetIoi
     apply (continuous_of_real.comp continuous_neg.exp).ContinuousOn.mul
@@ -122,7 +121,7 @@ theorem gammaIntegralConvergent {s : ℂ} (hs : 0 < s.re) :
 See `complex.Gamma_integral_convergent` for a proof of the convergence of the integral for
 `0 < re s`. -/
 def gammaIntegral (s : ℂ) : ℂ :=
-  ∫ x in IoiCat (0 : ℝ), ↑(-x).exp * ↑x ^ (s - 1)
+  ∫ x in ioi (0 : ℝ), ↑(-x).exp * ↑x ^ (s - 1)
 #align complex.Gamma_integral Complex.gammaIntegral
 
 theorem Gamma_integral_of_real (s : ℝ) : gammaIntegral ↑s = ↑s.gammaIntegral := by
@@ -442,7 +441,7 @@ theorem dGamma_integrand_is_o_at_top (s : ℝ) :
 /-- Absolute convergence of the integral which will give the derivative of the `Γ` function on
 `1 < re s`. -/
 theorem dGammaIntegralAbsConvergent (s : ℝ) (hs : 1 < s) :
-    IntegrableOn (fun x : ℝ => ∥exp (-x) * log x * x ^ (s - 1)∥) (IoiCat 0) := by
+    IntegrableOn (fun x : ℝ => ∥exp (-x) * log x * x ^ (s - 1)∥) (ioi 0) := by
   rw [← Ioc_union_Ioi_eq_Ioi (@zero_le_one ℝ _ _ _ _), integrable_on_union]
   refine' ⟨⟨_, _⟩, _⟩
   · refine' ContinuousOn.aeStronglyMeasurable (ContinuousOn.mul _ _).norm measurableSetIoc
@@ -514,8 +513,8 @@ namespace Complex
 /-- The derivative of the `Γ` integral, at any `s ∈ ℂ` with `1 < re s`, is given by the integral
 of `exp (-x) * log x * x ^ (s - 1)` over `[0, ∞)`. -/
 theorem has_deriv_at_Gamma_integral {s : ℂ} (hs : 1 < s.re) :
-    IntegrableOn (fun x => Real.exp (-x) * Real.log x * x ^ (s - 1) : ℝ → ℂ) (IoiCat 0) volume ∧
-      HasDerivAt gammaIntegral (∫ x : ℝ in IoiCat 0, Real.exp (-x) * Real.log x * x ^ (s - 1)) s :=
+    IntegrableOn (fun x => Real.exp (-x) * Real.log x * x ^ (s - 1) : ℝ → ℂ) (ioi 0) volume ∧
+      HasDerivAt gammaIntegral (∫ x : ℝ in ioi 0, Real.exp (-x) * Real.log x * x ^ (s - 1)) s :=
   by
   let ε := (s.re - 1) / 2
   let μ := volume.restrict (Ioi (0 : ℝ))
@@ -541,7 +540,7 @@ theorem has_deriv_at_Gamma_integral {s : ℂ} (hs : 1 < s.re) :
     rw [this]
     refine' ContinuousOn.mul (cont s) (ContinuousAt.continuous_on _)
     exact fun x hx => continuous_of_real.continuous_at.comp (continuous_at_log (mem_Ioi.mp hx).ne')
-  have h_bound : ∀ᵐ x : ℝ ∂μ, ∀ t : ℂ, t ∈ Metric.Ball s ε → ∥dGammaIntegrand t x∥ ≤ bound x := by
+  have h_bound : ∀ᵐ x : ℝ ∂μ, ∀ t : ℂ, t ∈ Metric.ball s ε → ∥dGammaIntegrand t x∥ ≤ bound x := by
     refine' (ae_restrict_iff' measurableSetIoi).mpr (ae_of_all _ fun x hx => _)
     intro t ht
     rw [Metric.mem_ball, Complex.dist_eq] at ht
@@ -567,7 +566,7 @@ theorem has_deriv_at_Gamma_integral {s : ℂ} (hs : 1 < s.re) :
   have h_diff :
     ∀ᵐ x : ℝ ∂μ,
       ∀ t : ℂ,
-        t ∈ Metric.Ball s ε → HasDerivAt (fun u => Real.exp (-x) * x ^ (u - 1) : ℂ → ℂ) (dGammaIntegrand t x) t :=
+        t ∈ Metric.ball s ε → HasDerivAt (fun u => Real.exp (-x) * x ^ (u - 1) : ℂ → ℂ) (dGammaIntegrand t x) t :=
     by
     refine' (ae_restrict_iff' measurableSetIoi).mpr (ae_of_all _ fun x hx => _)
     intro t ht

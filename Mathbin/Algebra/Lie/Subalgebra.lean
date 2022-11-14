@@ -141,7 +141,7 @@ theorem lie_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (⁅x, y⁆ : L) ∈
 #align lie_subalgebra.lie_mem LieSubalgebra.lie_mem
 
 @[simp]
-theorem mem_carrier {x : L} : x ∈ L'.Carrier ↔ x ∈ (L' : Set L) :=
+theorem mem_carrier {x : L} : x ∈ L'.carrier ↔ x ∈ (L' : Set L) :=
   Iff.rfl
 #align lie_subalgebra.mem_carrier LieSubalgebra.mem_carrier
 
@@ -306,7 +306,7 @@ def range : LieSubalgebra R L₂ :=
 #align lie_hom.range LieHom.range
 
 @[simp]
-theorem range_coe : (f.range : Set L₂) = Set.Range f :=
+theorem range_coe : (f.range : Set L₂) = Set.range f :=
   LinearMap.range_coe ↑f
 #align lie_hom.range_coe LieHom.range_coe
 
@@ -742,7 +742,7 @@ theorem span_empty : lieSpan R L (∅ : Set L) = ⊥ :=
 #align lie_subalgebra.span_empty LieSubalgebra.span_empty
 
 @[simp]
-theorem span_univ : lieSpan R L (Set.Univ : Set L) = ⊤ :=
+theorem span_univ : lieSpan R L (Set.univ : Set L) = ⊤ :=
   eq_top_iff.2 <| SetLike.le_def.2 <| subset_lie_span
 #align lie_subalgebra.span_univ LieSubalgebra.span_univ
 

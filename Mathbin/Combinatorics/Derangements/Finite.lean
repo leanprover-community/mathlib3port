@@ -26,24 +26,24 @@ This file contains lemmas that describe the cardinality of `derangements α` whe
 -/
 
 
-open Derangements Equiv Fintype
+open derangements Equiv Fintype
 
 open BigOperators
 
 variable {α : Type _} [DecidableEq α] [Fintype α]
 
-instance : DecidablePred (Derangements α) := fun _ => Fintype.decidableForallFintype
+instance : DecidablePred (derangements α) := fun _ => Fintype.decidableForallFintype
 
-instance : Fintype (Derangements α) := by delta_instance derangements
+instance : Fintype (derangements α) := by delta_instance derangements
 
 theorem card_derangements_invariant {α β : Type _} [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β]
-    (h : card α = card β) : card (Derangements α) = card (Derangements β) :=
+    (h : card α = card β) : card (derangements α) = card (derangements β) :=
   Fintype.card_congr (Equiv.derangementsCongr <| equivOfCardEq h)
 #align card_derangements_invariant card_derangements_invariant
 
 theorem card_derangements_fin_add_two (n : ℕ) :
-    card (Derangements (Fin (n + 2))) =
-      (n + 1) * card (Derangements (Fin n)) + (n + 1) * card (Derangements (Fin (n + 1))) :=
+    card (derangements (Fin (n + 2))) =
+      (n + 1) * card (derangements (Fin n)) + (n + 1) * card (derangements (Fin (n + 1))) :=
   by
   -- get some basic results about the size of fin (n+1) plus or minus an element
   have h1 : ∀ a : Fin (n + 1), card ({a}ᶜ : Set (Fin (n + 1))) = card (Fin n) := by
@@ -92,7 +92,7 @@ theorem num_derangements_succ (n : ℕ) : (numDerangements (n + 1) : ℤ) = (n +
     
 #align num_derangements_succ num_derangements_succ
 
-theorem card_derangements_fin_eq_num_derangements {n : ℕ} : card (Derangements (Fin n)) = numDerangements n := by
+theorem card_derangements_fin_eq_num_derangements {n : ℕ} : card (derangements (Fin n)) = numDerangements n := by
   induction' n using Nat.strong_induction_on with n hyp
   obtain _ | _ | n := n
   · rfl
@@ -107,7 +107,7 @@ theorem card_derangements_fin_eq_num_derangements {n : ℕ} : card (Derangements
 #align card_derangements_fin_eq_num_derangements card_derangements_fin_eq_num_derangements
 
 theorem card_derangements_eq_num_derangements (α : Type _) [Fintype α] [DecidableEq α] :
-    card (Derangements α) = numDerangements (card α) := by
+    card (derangements α) = numDerangements (card α) := by
   rw [← card_derangements_invariant (card_fin _)]
   exact card_derangements_fin_eq_num_derangements
 #align card_derangements_eq_num_derangements card_derangements_eq_num_derangements

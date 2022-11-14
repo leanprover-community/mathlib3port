@@ -76,12 +76,12 @@ def ψ₂ {X Y : C} (w : X ⟶ Y) (hw : W w) : ιPaths W Y ⟶ ιPaths W X :=
 #align category_theory.localization.construction.ψ₂ CategoryTheory.Localization.Construction.ψ₂
 
 /-- The relations by which we take the quotient in order to get the localized category. -/
-inductive Relations : HomRel (Paths (LocQuiver W))
+inductive relations : HomRel (Paths (LocQuiver W))
   | id (X : C) : relations (ψ₁ W (𝟙 X)) (𝟙 _)
   | comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : relations (ψ₁ W (f ≫ g)) (ψ₁ W f ≫ ψ₁ W g)
   | Winv₁ {X Y : C} (w : X ⟶ Y) (hw : W w) : relations (ψ₁ W w ≫ ψ₂ W w hw) (𝟙 _)
   | Winv₂ {X Y : C} (w : X ⟶ Y) (hw : W w) : relations (ψ₂ W w hw ≫ ψ₁ W w) (𝟙 _)
-#align category_theory.localization.construction.relations CategoryTheory.Localization.Construction.Relations
+#align category_theory.localization.construction.relations CategoryTheory.Localization.Construction.relations
 
 end Construction
 
@@ -95,15 +95,15 @@ open Localization.Construction
 in `W : morphism_property C` -/
 @[nolint has_nonempty_instance]
 def Localization :=
-  CategoryTheory.Quotient (Localization.Construction.Relations W)deriving Category
+  CategoryTheory.Quotient (Localization.Construction.relations W)deriving Category
 #align category_theory.morphism_property.localization CategoryTheory.MorphismProperty.Localization
 
 /-- The obvious functor `C ⥤ W.localization` -/
 def q : C ⥤ W.Localization where
   obj X := (Quotient.functor _).obj (Paths.of.obj ⟨X⟩)
   map X Y f := (Quotient.functor _).map (ψ₁ W f)
-  map_id' X := Quotient.sound _ (Relations.id X)
-  map_comp' X Z Y f g := Quotient.sound _ (Relations.comp f g)
+  map_id' X := Quotient.sound _ (relations.id X)
+  map_comp' X Z Y f g := Quotient.sound _ (relations.comp f g)
 #align category_theory.morphism_property.Q CategoryTheory.MorphismProperty.q
 
 end MorphismProperty
@@ -118,8 +118,8 @@ variable {W}
 def wiso {X Y : C} (w : X ⟶ Y) (hw : W w) : Iso (W.q.obj X) (W.q.obj Y) where
   Hom := W.q.map w
   inv := (Quotient.functor _).map (Paths.of.map (Sum.inr ⟨w, hw⟩))
-  hom_inv_id' := Quotient.sound _ (Relations.Winv₁ w hw)
-  inv_hom_id' := Quotient.sound _ (Relations.Winv₂ w hw)
+  hom_inv_id' := Quotient.sound _ (relations.Winv₁ w hw)
+  inv_hom_id' := Quotient.sound _ (relations.Winv₂ w hw)
 #align category_theory.localization.construction.Wiso CategoryTheory.Localization.Construction.wiso
 
 /-- The formal inverse in `W.localization` of a morphism `w` in `W`. -/
@@ -156,7 +156,7 @@ def liftToPathCategory : Paths (LocQuiver W) ⥤ D :=
 /-- The lifting of a functor `C ⥤ D` inverting `W` as a functor `W.localization ⥤ D` -/
 @[simps]
 def lift : W.Localization ⥤ D :=
-  Quotient.lift (Relations W) (liftToPathCategory G hG)
+  Quotient.lift (relations W) (liftToPathCategory G hG)
     (by
       rintro ⟨X⟩ ⟨Y⟩ f₁ f₂ r
       rcases r with ⟨⟩

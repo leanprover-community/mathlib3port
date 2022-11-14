@@ -187,7 +187,7 @@ add_decl_doc Subsemiring.toAddSubmonoid
 namespace Subsemiring
 
 instance : SetLike (Subsemiring R) R where
-  coe := Subsemiring.Carrier
+  coe := Subsemiring.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
 instance : SubsemiringClass (Subsemiring R) R where
@@ -197,7 +197,7 @@ instance : SubsemiringClass (Subsemiring R) R where
   mul_mem := mul_mem'
 
 @[simp]
-theorem mem_carrier {s : Subsemiring R} {x : R} : x ∈ s.Carrier ↔ x ∈ s :=
+theorem mem_carrier {s : Subsemiring R} {x : R} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align subsemiring.mem_carrier Subsemiring.mem_carrier
 
@@ -210,7 +210,7 @@ theorem ext {S T : Subsemiring R} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 /-- Copy of a subsemiring with a new `carrier` equal to the old one. Useful to fix definitional
 equalities.-/
 protected def copy (S : Subsemiring R) (s : Set R) (hs : s = ↑S) : Subsemiring R :=
-  { S.toAddSubmonoid.copy s hs, S.toSubmonoid.copy s hs with Carrier := s }
+  { S.toAddSubmonoid.copy s hs, S.toSubmonoid.copy s hs with carrier := s }
 #align subsemiring.copy Subsemiring.copy
 
 @[simp]
@@ -252,7 +252,7 @@ theorem to_add_submonoid_mono : Monotone (toAddSubmonoid : Subsemiring R → Add
 submonoid `sa` such that `x ∈ s ↔ x ∈ sm ↔ x ∈ sa`. -/
 protected def mk' (s : Set R) (sm : Submonoid R) (hm : ↑sm = s) (sa : AddSubmonoid R) (ha : ↑sa = s) :
     Subsemiring R where
-  Carrier := s
+  carrier := s
   zero_mem' := ha ▸ sa.zero_mem
   one_mem' := hm ▸ sm.one_mem
   add_mem' x y := by simpa only [← ha] using sa.add_mem
@@ -486,7 +486,7 @@ theorem mem_top (x : R) : x ∈ (⊤ : Subsemiring R) :=
 #align subsemiring.mem_top Subsemiring.mem_top
 
 @[simp]
-theorem coe_top : ((⊤ : Subsemiring R) : Set R) = Set.Univ :=
+theorem coe_top : ((⊤ : Subsemiring R) : Set R) = Set.univ :=
   rfl
 #align subsemiring.coe_top Subsemiring.coe_top
 
@@ -503,7 +503,7 @@ def topEquiv : (⊤ : Subsemiring R) ≃+* R where
 
 /-- The preimage of a subsemiring along a ring homomorphism is a subsemiring. -/
 def comap (f : R →+* S) (s : Subsemiring S) : Subsemiring R :=
-  { s.toSubmonoid.comap (f : R →* S), s.toAddSubmonoid.comap (f : R →+ S) with Carrier := f ⁻¹' s }
+  { s.toSubmonoid.comap (f : R →* S), s.toAddSubmonoid.comap (f : R →+ S) with carrier := f ⁻¹' s }
 #align subsemiring.comap Subsemiring.comap
 
 @[simp]
@@ -522,7 +522,7 @@ theorem comap_comap (s : Subsemiring T) (g : S →+* T) (f : R →+* S) : (s.com
 
 /-- The image of a subsemiring along a ring homomorphism is a subsemiring. -/
 def map (f : R →+* S) (s : Subsemiring R) : Subsemiring S :=
-  { s.toSubmonoid.map (f : R →* S), s.toAddSubmonoid.map (f : R →+ S) with Carrier := f '' s }
+  { s.toSubmonoid.map (f : R →* S), s.toAddSubmonoid.map (f : R →+ S) with carrier := f '' s }
 #align subsemiring.map Subsemiring.map
 
 @[simp]
@@ -571,11 +571,11 @@ variable (g : S →+* T) (f : R →+* S)
 
 /-- The range of a ring homomorphism is a subsemiring. See Note [range copy pattern]. -/
 def srange : Subsemiring S :=
-  ((⊤ : Subsemiring R).map f).copy (Set.Range f) Set.image_univ.symm
+  ((⊤ : Subsemiring R).map f).copy (Set.range f) Set.image_univ.symm
 #align ring_hom.srange RingHom.srange
 
 @[simp]
-theorem coe_srange : (f.srange : Set S) = Set.Range f :=
+theorem coe_srange : (f.srange : Set S) = Set.range f :=
   rfl
 #align ring_hom.coe_srange RingHom.coe_srange
 
@@ -614,7 +614,7 @@ instance : HasBot (Subsemiring R) :=
 instance : Inhabited (Subsemiring R) :=
   ⟨⊥⟩
 
-theorem coe_bot : ((⊥ : Subsemiring R) : Set R) = Set.Range (coe : ℕ → R) :=
+theorem coe_bot : ((⊥ : Subsemiring R) : Set R) = Set.range (coe : ℕ → R) :=
   (Nat.castRingHom R).coe_srange
 #align subsemiring.coe_bot Subsemiring.coe_bot
 
@@ -624,7 +624,7 @@ theorem mem_bot {x : R} : x ∈ (⊥ : Subsemiring R) ↔ ∃ n : ℕ, ↑n = x 
 
 /-- The inf of two subsemirings is their intersection. -/
 instance : HasInf (Subsemiring R) :=
-  ⟨fun s t => { s.toSubmonoid ⊓ t.toSubmonoid, s.toAddSubmonoid ⊓ t.toAddSubmonoid with Carrier := s ∩ t }⟩
+  ⟨fun s t => { s.toSubmonoid ⊓ t.toSubmonoid, s.toAddSubmonoid ⊓ t.toAddSubmonoid with carrier := s ∩ t }⟩
 
 @[simp]
 theorem coe_inf (p p' : Subsemiring R) : ((p ⊓ p' : Subsemiring R) : Set R) = p ∩ p' :=
@@ -680,11 +680,11 @@ section Center
 
 /-- The center of a semiring `R` is the set of elements that commute with everything in `R` -/
 def center (R) [Semiring R] : Subsemiring R :=
-  { Submonoid.center R with Carrier := Set.Center R, zero_mem' := Set.zero_mem_center R,
+  { Submonoid.center R with carrier := Set.center R, zero_mem' := Set.zero_mem_center R,
     add_mem' := fun a b => Set.add_mem_center }
 #align subsemiring.center Subsemiring.center
 
-theorem coe_center (R) [Semiring R] : ↑(center R) = Set.Center R :=
+theorem coe_center (R) [Semiring R] : ↑(center R) = Set.center R :=
   rfl
 #align subsemiring.coe_center Subsemiring.coe_center
 
@@ -716,12 +716,12 @@ section Centralizer
 
 /-- The centralizer of a set as subsemiring. -/
 def centralizer {R} [Semiring R] (s : Set R) : Subsemiring R :=
-  { Submonoid.centralizer s with Carrier := s.Centralizer, zero_mem' := Set.zero_mem_centralizer _,
+  { Submonoid.centralizer s with carrier := s.centralizer, zero_mem' := Set.zero_mem_centralizer _,
     add_mem' := fun x y hx hy => Set.add_mem_centralizer hx hy }
 #align subsemiring.centralizer Subsemiring.centralizer
 
 @[simp, norm_cast]
-theorem coe_centralizer {R} [Semiring R] (s : Set R) : (centralizer s : Set R) = s.Centralizer :=
+theorem coe_centralizer {R} [Semiring R] (s : Set R) : (centralizer s : Set R) = s.centralizer :=
   rfl
 #align subsemiring.coe_centralizer Subsemiring.coe_centralizer
 
@@ -738,7 +738,7 @@ theorem centralizer_le {R} [Semiring R] (s t : Set R) (h : s ⊆ t) : centralize
 #align subsemiring.centralizer_le Subsemiring.centralizer_le
 
 @[simp]
-theorem centralizer_univ {R} [Semiring R] : centralizer Set.Univ = center R :=
+theorem centralizer_univ {R} [Semiring R] : centralizer Set.univ = center R :=
   SetLike.ext' (Set.centralizer_univ R)
 #align subsemiring.centralizer_univ Subsemiring.centralizer_univ
 
@@ -914,7 +914,7 @@ theorem closure_empty : closure (∅ : Set R) = ⊥ :=
 #align subsemiring.closure_empty Subsemiring.closure_empty
 
 @[simp]
-theorem closure_univ : closure (Set.Univ : Set R) = ⊤ :=
+theorem closure_univ : closure (Set.univ : Set R) = ⊤ :=
   @coe_top R _ ▸ closure_eq ⊤
 #align subsemiring.closure_univ Subsemiring.closure_univ
 
@@ -960,7 +960,7 @@ theorem comap_top (f : R →+* S) : (⊤ : Subsemiring S).comap f = ⊤ :=
 /-- Given `subsemiring`s `s`, `t` of semirings `R`, `S` respectively, `s.prod t` is `s × t`
 as a subsemiring of `R × S`. -/
 def prod (s : Subsemiring R) (t : Subsemiring S) : Subsemiring (R × S) :=
-  { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubmonoid.Prod t.toAddSubmonoid with Carrier := s ×ˢ t }
+  { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubmonoid.Prod t.toAddSubmonoid with carrier := s ×ˢ t }
 #align subsemiring.prod Subsemiring.prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1087,7 +1087,7 @@ theorem srange_top_of_surjective (f : R →+* S) (hf : Function.Surjective f) : 
 
 /-- The subsemiring of elements `x : R` such that `f x = g x` -/
 def eqSlocus (f g : R →+* S) : Subsemiring R :=
-  { (f : R →* S).eqMlocus g, (f : R →+ S).eqMlocus g with Carrier := { x | f x = g x } }
+  { (f : R →* S).eqMlocus g, (f : R →+ S).eqMlocus g with carrier := { x | f x = g x } }
 #align ring_hom.eq_slocus RingHom.eqSlocus
 
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subsemiring closure. -/
@@ -1300,7 +1300,7 @@ end Actions
 -- both `strict_ordered_semiring` and `submonoid` available.
 /-- Submonoid of positive elements of an ordered semiring. -/
 def posSubmonoid (R : Type _) [StrictOrderedSemiring R] [Nontrivial R] : Submonoid R where
-  Carrier := { x | 0 < x }
+  carrier := { x | 0 < x }
   one_mem' := show (0 : R) < 1 from zero_lt_one
   mul_mem' x y (hx : 0 < x) (hy : 0 < y) := mul_pos hx hy
 #align pos_submonoid posSubmonoid

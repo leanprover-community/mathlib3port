@@ -169,7 +169,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
       
   -- the sets `M n z` are relatively closed in `s`, as all the conditions defining it are clearly
   -- closed
-  have closure_M_subset : ∀ n z, s ∩ Closure (M n z) ⊆ M n z := by
+  have closure_M_subset : ∀ n z, s ∩ closure (M n z) ⊆ M n z := by
     rintro n z x ⟨xs, hx⟩
     refine' ⟨xs, fun y hy => _⟩
     obtain ⟨a, aM, a_lim⟩ : ∃ a : ℕ → E, (∀ k, a k ∈ M n z) ∧ tendsto a at_top (𝓝 x) := mem_closure_iff_seq_limit.1 hx
@@ -193,7 +193,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
   rcases TopologicalSpace.exists_dense_seq E with ⟨d, hd⟩
   -- split `M n z` into subsets `K n z p` of small diameters by intersecting with the ball
   -- `closed_ball (d p) (u n / 3)`.
-  let K : ℕ → T → ℕ → Set E := fun n z p => Closure (M n z) ∩ closed_ball (d p) (u n / 3)
+  let K : ℕ → T → ℕ → Set E := fun n z p => closure (M n z) ∩ closed_ball (d p) (u n / 3)
   -- on the sets `K n z p`, the map `f` is well approximated by `f' z` by design.
   have K_approx : ∀ (n) (z : T) (p), ApproximatesLinearOn f (f' z) (s ∩ K n z p) (r (f' z)) := by
     intro n z p x hx y hy
@@ -288,7 +288,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
   -- construct a small neighborhood of `A '' (closed_ball 0 1)` with measure comparable to
   -- the determinant of `A`.
   obtain ⟨ε, hε, εpos⟩ : ∃ ε : ℝ, μ (closed_ball 0 ε + A '' closed_ball 0 1) < m * μ (closed_ball 0 1) ∧ 0 < ε := by
-    have HC : IsCompact (A '' closed_ball 0 1) := (ProperSpace.is_compact_closed_ball _ _).Image A.continuous
+    have HC : IsCompact (A '' closed_ball 0 1) := (ProperSpace.is_compact_closed_ball _ _).image A.continuous
     have L0 : tendsto (fun ε => μ (cthickening ε (A '' closed_ball 0 1))) (𝓝[>] 0) (𝓝 (μ (A '' closed_ball 0 1))) := by
       apply tendsto.mono_left _ nhds_within_le_nhds
       exact tendsto_measure_cthickening_of_is_compact HC
@@ -611,8 +611,8 @@ theorem add_haar_image_eq_zero_of_differentiable_on_of_add_haar_eq_zero (hf : Di
 a set where the differential is not invertible, then the image of this set has zero measure.
 Here, we give an auxiliary statement towards this result. -/
 theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (R : ℝ)
-    (hs : s ⊆ ClosedBall 0 R) (ε : ℝ≥0) (εpos : 0 < ε) (h'f' : ∀ x ∈ s, (f' x).det = 0) :
-    μ (f '' s) ≤ ε * μ (ClosedBall 0 R) := by
+    (hs : s ⊆ closedBall 0 R) (ε : ℝ≥0) (εpos : 0 < ε) (h'f' : ∀ x ∈ s, (f' x).det = 0) :
+    μ (f '' s) ≤ ε * μ (closedBall 0 R) := by
   rcases eq_empty_or_nonempty s with (rfl | h's)
   · simp only [measure_empty, zero_le, image_empty]
     
@@ -1253,8 +1253,8 @@ theorem integral_image_eq_integral_abs_det_fderiv_smul [CompleteSpace F] (hs : M
   measure_theory.integral_image_eq_integral_abs_det_fderiv_smul MeasureTheory.integral_image_eq_integral_abs_det_fderiv_smul
 
 theorem integral_target_eq_integral_abs_det_fderiv_smul [CompleteSpace F] {f : LocalHomeomorph E E}
-    (hf' : ∀ x ∈ f.Source, HasFderivAt f (f' x) x) (g : E → F) :
-    (∫ x in f.Target, g x ∂μ) = ∫ x in f.Source, |(f' x).det| • g (f x) ∂μ := by
+    (hf' : ∀ x ∈ f.source, HasFderivAt f (f' x) x) (g : E → F) :
+    (∫ x in f.target, g x ∂μ) = ∫ x in f.source, |(f' x).det| • g (f x) ∂μ := by
   have : f '' f.source = f.target := LocalEquiv.image_source_eq_target f.to_local_equiv
   rw [← this]
   apply integral_image_eq_integral_abs_det_fderiv_smul μ f.open_source.measurable_set _ f.inj_on

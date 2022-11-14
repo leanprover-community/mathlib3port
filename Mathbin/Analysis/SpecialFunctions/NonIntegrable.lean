@@ -49,7 +49,7 @@ by convex sets, the norm of `f` tends to infinity along `l`, and `f' = O(g)` alo
 is the derivative of `f`, then `g` is not integrable on any interval `a..b` such that
 `[a, b] ∈ l`. -/
 theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f : ℝ → E} {g : ℝ → F} {a b : ℝ}
-    (l : Filter ℝ) [NeBot l] [TendstoIxxClass IccCat l l] (hl : [a, b] ∈ l) (hd : ∀ᶠ x in l, DifferentiableAt ℝ f x)
+    (l : Filter ℝ) [NeBot l] [TendstoIxxClass icc l l] (hl : [a, b] ∈ l) (hd : ∀ᶠ x in l, DifferentiableAt ℝ f x)
     (hf : Tendsto (fun x => ∥f x∥) l atTop) (hfg : deriv f =O[l] g) : ¬IntervalIntegrable g volume a b := by
   intro hgi
   obtain ⟨C, hC₀, s, hsl, hsub, hfd, hg⟩ :

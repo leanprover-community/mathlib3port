@@ -54,24 +54,24 @@ open Filter
 /-- The forward map of a filter under a relation. Generalization of `filter.map` to relations. Note
 that `rel.core` generalizes `set.preimage`. -/
 def rmap (r : Rel α β) (l : Filter α) : Filter β where
-  Sets := { s | r.Core s ∈ l }
+  sets := { s | r.core s ∈ l }
   univ_sets := by simp
   sets_of_superset s t hs st := mem_of_superset hs <| Rel.core_mono _ st
   inter_sets s t hs ht := by simp [Rel.core_inter, inter_mem hs ht]
 #align filter.rmap Filter.rmap
 
-theorem rmap_sets (r : Rel α β) (l : Filter α) : (l.rmap r).Sets = r.Core ⁻¹' l.Sets :=
+theorem rmap_sets (r : Rel α β) (l : Filter α) : (l.rmap r).sets = r.core ⁻¹' l.sets :=
   rfl
 #align filter.rmap_sets Filter.rmap_sets
 
 @[simp]
-theorem mem_rmap (r : Rel α β) (l : Filter α) (s : Set β) : s ∈ l.rmap r ↔ r.Core s ∈ l :=
+theorem mem_rmap (r : Rel α β) (l : Filter α) (s : Set β) : s ∈ l.rmap r ↔ r.core s ∈ l :=
   Iff.rfl
 #align filter.mem_rmap Filter.mem_rmap
 
 @[simp]
 theorem rmap_rmap (r : Rel α β) (s : Rel β γ) (l : Filter α) : rmap s (rmap r l) = rmap (r.comp s) l :=
-  filter_eq <| by simp [rmap_sets, Set.Preimage, Rel.core_comp]
+  filter_eq <| by simp [rmap_sets, Set.preimage, Rel.core_comp]
 #align filter.rmap_rmap Filter.rmap_rmap
 
 @[simp]
@@ -86,34 +86,34 @@ def Rtendsto (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁.rmap r ≤ l₂
 #align filter.rtendsto Filter.Rtendsto
 
-theorem rtendsto_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : Rtendsto r l₁ l₂ ↔ ∀ s ∈ l₂, r.Core s ∈ l₁ :=
+theorem rtendsto_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : Rtendsto r l₁ l₂ ↔ ∀ s ∈ l₂, r.core s ∈ l₁ :=
   Iff.rfl
 #align filter.rtendsto_def Filter.rtendsto_def
 
 /-- One way of taking the inverse map of a filter under a relation. One generalization of
 `filter.comap` to relations. Note that `rel.core` generalizes `set.preimage`. -/
 def rcomap (r : Rel α β) (f : Filter β) : Filter α where
-  Sets := Rel.Image (fun s t => r.Core s ⊆ t) f.Sets
-  univ_sets := ⟨Set.Univ, univ_mem, Set.subset_univ _⟩
+  sets := Rel.image (fun s t => r.core s ⊆ t) f.sets
+  univ_sets := ⟨Set.univ, univ_mem, Set.subset_univ _⟩
   sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩
   inter_sets := fun a b ⟨a', ha₁, ha₂⟩ ⟨b', hb₁, hb₂⟩ =>
     ⟨a' ∩ b', inter_mem ha₁ hb₁, (r.core_inter a' b').Subset.trans (Set.inter_subset_inter ha₂ hb₂)⟩
 #align filter.rcomap Filter.rcomap
 
-theorem rcomap_sets (r : Rel α β) (f : Filter β) : (rcomap r f).Sets = Rel.Image (fun s t => r.Core s ⊆ t) f.Sets :=
+theorem rcomap_sets (r : Rel α β) (f : Filter β) : (rcomap r f).sets = Rel.image (fun s t => r.core s ⊆ t) f.sets :=
   rfl
 #align filter.rcomap_sets Filter.rcomap_sets
 
 theorem rcomap_rcomap (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap r (rcomap s l) = rcomap (r.comp s) l :=
   filter_eq <| by
     ext t
-    simp [rcomap_sets, Rel.Image, Rel.core_comp]
+    simp [rcomap_sets, Rel.image, Rel.core_comp]
     constructor
     · rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
       exact ⟨v, vsets, Set.Subset.trans (Rel.core_mono _ hv) h⟩
       
     rintro ⟨t, tsets, ht⟩
-    exact ⟨Rel.Core s t, ⟨t, tsets, Set.Subset.rfl⟩, ht⟩
+    exact ⟨Rel.core s t, ⟨t, tsets, Set.Subset.rfl⟩, ht⟩
 #align filter.rcomap_rcomap Filter.rcomap_rcomap
 
 @[simp]
@@ -138,8 +138,8 @@ theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter
 /-- One way of taking the inverse map of a filter under a relation. Generalization of `filter.comap`
 to relations. -/
 def rcomap' (r : Rel α β) (f : Filter β) : Filter α where
-  Sets := Rel.Image (fun s t => r.Preimage s ⊆ t) f.Sets
-  univ_sets := ⟨Set.Univ, univ_mem, Set.subset_univ _⟩
+  sets := Rel.image (fun s t => r.Preimage s ⊆ t) f.sets
+  univ_sets := ⟨Set.univ, univ_mem, Set.subset_univ _⟩
   sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩
   inter_sets := fun a b ⟨a', ha₁, ha₂⟩ ⟨b', hb₁, hb₂⟩ =>
     ⟨a' ∩ b', inter_mem ha₁ hb₁, (@Rel.preimage_inter _ _ r _ _).trans (Set.inter_subset_inter ha₂ hb₂)⟩
@@ -151,14 +151,14 @@ theorem mem_rcomap' (r : Rel α β) (l : Filter β) (s : Set α) : s ∈ l.rcoma
 #align filter.mem_rcomap' Filter.mem_rcomap'
 
 theorem rcomap'_sets (r : Rel α β) (f : Filter β) :
-    (rcomap' r f).Sets = Rel.Image (fun s t => r.Preimage s ⊆ t) f.Sets :=
+    (rcomap' r f).sets = Rel.image (fun s t => r.Preimage s ⊆ t) f.sets :=
   rfl
 #align filter.rcomap'_sets Filter.rcomap'_sets
 
 @[simp]
 theorem rcomap'_rcomap' (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap' r (rcomap' s l) = rcomap' (r.comp s) l :=
   Filter.ext fun t => by
-    simp [rcomap'_sets, Rel.Image, Rel.preimage_comp]
+    simp [rcomap'_sets, Rel.image, Rel.preimage_comp]
     constructor
     · rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
       exact ⟨v, vsets, (Rel.preimage_mono _ hv).trans h⟩
@@ -191,13 +191,13 @@ theorem rtendsto'_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : Rt
 #align filter.rtendsto'_def Filter.rtendsto'_def
 
 theorem tendsto_iff_rtendsto (l₁ : Filter α) (l₂ : Filter β) (f : α → β) :
-    Tendsto f l₁ l₂ ↔ Rtendsto (Function.Graph f) l₁ l₂ := by
-  simp [tendsto_def, Function.Graph, rtendsto_def, Rel.Core, Set.Preimage]
+    Tendsto f l₁ l₂ ↔ Rtendsto (Function.graph f) l₁ l₂ := by
+  simp [tendsto_def, Function.graph, rtendsto_def, Rel.core, Set.preimage]
 #align filter.tendsto_iff_rtendsto Filter.tendsto_iff_rtendsto
 
 theorem tendsto_iff_rtendsto' (l₁ : Filter α) (l₂ : Filter β) (f : α → β) :
-    Tendsto f l₁ l₂ ↔ Rtendsto' (Function.Graph f) l₁ l₂ := by
-  simp [tendsto_def, Function.Graph, rtendsto'_def, Rel.preimage_def, Set.Preimage]
+    Tendsto f l₁ l₂ ↔ Rtendsto' (Function.graph f) l₁ l₂ := by
+  simp [tendsto_def, Function.graph, rtendsto'_def, Rel.preimage_def, Set.preimage]
 #align filter.tendsto_iff_rtendsto' Filter.tendsto_iff_rtendsto'
 
 /-! ### Partial functions -/
@@ -206,11 +206,11 @@ theorem tendsto_iff_rtendsto' (l₁ : Filter α) (l₂ : Filter β) (f : α → 
 /-- The forward map of a filter under a partial function. Generalization of `filter.map` to partial
 functions. -/
 def pmap (f : α →. β) (l : Filter α) : Filter β :=
-  Filter.rmap f.Graph' l
+  Filter.rmap f.graph' l
 #align filter.pmap Filter.pmap
 
 @[simp]
-theorem mem_pmap (f : α →. β) (l : Filter α) (s : Set β) : s ∈ l.pmap f ↔ f.Core s ∈ l :=
+theorem mem_pmap (f : α →. β) (l : Filter α) (s : Set β) : s ∈ l.pmap f ↔ f.core s ∈ l :=
   Iff.rfl
 #align filter.mem_pmap Filter.mem_pmap
 
@@ -221,12 +221,12 @@ def Ptendsto (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁.pmap f ≤ l₂
 #align filter.ptendsto Filter.Ptendsto
 
-theorem ptendsto_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) : Ptendsto f l₁ l₂ ↔ ∀ s ∈ l₂, f.Core s ∈ l₁ :=
+theorem ptendsto_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) : Ptendsto f l₁ l₂ ↔ ∀ s ∈ l₂, f.core s ∈ l₁ :=
   Iff.rfl
 #align filter.ptendsto_def Filter.ptendsto_def
 
 theorem ptendsto_iff_rtendsto (l₁ : Filter α) (l₂ : Filter β) (f : α →. β) :
-    Ptendsto f l₁ l₂ ↔ Rtendsto f.Graph' l₁ l₂ :=
+    Ptendsto f l₁ l₂ ↔ Rtendsto f.graph' l₁ l₂ :=
   Iff.rfl
 #align filter.ptendsto_iff_rtendsto Filter.ptendsto_iff_rtendsto
 
@@ -241,7 +241,7 @@ theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) 
 #align filter.tendsto_iff_ptendsto Filter.tendsto_iff_ptendsto
 
 theorem tendsto_iff_ptendsto_univ (l₁ : Filter α) (l₂ : Filter β) (f : α → β) :
-    Tendsto f l₁ l₂ ↔ Ptendsto (Pfun.res f Set.Univ) l₁ l₂ := by
+    Tendsto f l₁ l₂ ↔ Ptendsto (Pfun.res f Set.univ) l₁ l₂ := by
   rw [← tendsto_iff_ptendsto]
   simp [principal_univ]
 #align filter.tendsto_iff_ptendsto_univ Filter.tendsto_iff_ptendsto_univ
@@ -249,14 +249,14 @@ theorem tendsto_iff_ptendsto_univ (l₁ : Filter α) (l₂ : Filter β) (f : α 
 /-- Inverse map of a filter under a partial function. One generalization of `filter.comap` to
 partial functions. -/
 def pcomap' (f : α →. β) (l : Filter β) : Filter α :=
-  Filter.rcomap' f.Graph' l
+  Filter.rcomap' f.graph' l
 #align filter.pcomap' Filter.pcomap'
 
 /-- Generic "limit of a partial function" predicate. `ptendsto' r l₁ l₂` asserts that for every
 `l₂`-neighborhood `a`, the `p`-preimage of `a` is an `l₁`-neighborhood. One generalization of
 `filter.tendsto` to partial functions. -/
 def Ptendsto' (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
-  l₁ ≤ l₂.rcomap' f.Graph'
+  l₁ ≤ l₂.rcomap' f.graph'
 #align filter.ptendsto' Filter.Ptendsto'
 
 theorem ptendsto'_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) : Ptendsto' f l₁ l₂ ↔ ∀ s ∈ l₂, f.Preimage s ∈ l₁ :=

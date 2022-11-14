@@ -128,7 +128,7 @@ theorem not_is_succ_limit_iff : ¬IsSuccLimit a ↔ ∃ b, ¬IsMax b ∧ succ b 
 
 /-- See `not_is_succ_limit_iff` for a version that states that `a` is a successor of a value other
 than itself. -/
-theorem mem_range_succ_of_not_is_succ_limit (h : ¬IsSuccLimit a) : a ∈ Range (@succ α _ _) := by
+theorem mem_range_succ_of_not_is_succ_limit (h : ¬IsSuccLimit a) : a ∈ range (@succ α _ _) := by
   cases' not_is_succ_limit_iff.1 h with b hb
   exact ⟨b, hb.2⟩
 #align order.mem_range_succ_of_not_is_succ_limit Order.mem_range_succ_of_not_is_succ_limit
@@ -198,7 +198,7 @@ theorem is_succ_limit_iff_succ_ne : IsSuccLimit a ↔ ∀ b, succ b ≠ a :=
   ⟨IsSuccLimit.succ_ne, is_succ_limit_of_succ_ne⟩
 #align order.is_succ_limit_iff_succ_ne Order.is_succ_limit_iff_succ_ne
 
-theorem not_is_succ_limit_iff' : ¬IsSuccLimit a ↔ a ∈ Range (@succ α _ _) := by
+theorem not_is_succ_limit_iff' : ¬IsSuccLimit a ↔ a ∈ range (@succ α _ _) := by
   simp_rw [is_succ_limit_iff_succ_ne, not_forall, not_ne_iff]
   rfl
 #align order.not_is_succ_limit_iff' Order.not_is_succ_limit_iff'
@@ -336,7 +336,7 @@ theorem not_is_pred_limit_iff : ¬IsPredLimit a ↔ ∃ b, ¬IsMin b ∧ pred b 
 
 /-- See `not_is_pred_limit_iff` for a version that states that `a` is a successor of a value other
 than itself. -/
-theorem mem_range_pred_of_not_is_pred_limit (h : ¬IsPredLimit a) : a ∈ Range (@pred α _ _) := by
+theorem mem_range_pred_of_not_is_pred_limit (h : ¬IsPredLimit a) : a ∈ range (@pred α _ _) := by
   cases' not_is_pred_limit_iff.1 h with b hb
   exact ⟨b, hb.2⟩
 #align order.mem_range_pred_of_not_is_pred_limit Order.mem_range_pred_of_not_is_pred_limit

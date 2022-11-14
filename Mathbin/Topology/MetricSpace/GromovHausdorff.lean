@@ -100,7 +100,7 @@ def GHSpace.Rep (p : GHSpace) : Type :=
 #align Gromov_Hausdorff.GH_space.rep GromovHausdorff.GHSpace.Rep
 
 theorem eq_to_GH_space_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {p : NonemptyCompacts ℓ_infty_ℝ} :
-    ⟦p⟧ = toGHSpace X ↔ ∃ Ψ : X → ℓ_infty_ℝ, Isometry Ψ ∧ Range Ψ = p := by
+    ⟦p⟧ = toGHSpace X ↔ ∃ Ψ : X → ℓ_infty_ℝ, Isometry Ψ ∧ range Ψ = p := by
   simp only [to_GH_space, Quotient.eq]
   refine' ⟨fun h => _, _⟩
   · rcases Setoid.symm h with ⟨e⟩
@@ -199,7 +199,7 @@ theorem dist_GH_dist (p q : GHSpace) : dist p q = gHDist p.rep q.rep := by
 of isometric copies of the spaces, in any metric space. -/
 theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v}
     [MetricSpace Y] [CompactSpace Y] [Nonempty Y] {γ : Type w} [MetricSpace γ] {Φ : X → γ} {Ψ : Y → γ} (ha : Isometry Φ)
-    (hb : Isometry Ψ) : gHDist X Y ≤ hausdorffDist (Range Φ) (Range Ψ) := by
+    (hb : Isometry Ψ) : gHDist X Y ≤ hausdorffDist (range Φ) (range Ψ) := by
   /- For the proof, we want to embed `γ` in `ℓ^∞(ℝ)`, to say that the Hausdorff distance is realized
     in `ℓ^∞(ℝ)` and therefore bounded below by the Gromov-Hausdorff-distance. However, `γ` is not
     separable in general. We restrict to the union of the images of `X` and `Y` in `γ`, which is
@@ -232,11 +232,11 @@ theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] 
   -- Let `A` and `B` be the images of `X` and `Y` under this embedding. They are in `ℓ^∞(ℝ)`, and
   -- their Hausdorff distance is the same as in the original space.
   let A : nonempty_compacts ℓ_infty_ℝ :=
-    ⟨⟨F '' range Φ', (is_compact_range IΦ'.continuous).Image (kuratowskiEmbedding.isometry _).Continuous⟩,
-      (range_nonempty _).Image _⟩
+    ⟨⟨F '' range Φ', (is_compact_range IΦ'.continuous).image (kuratowskiEmbedding.isometry _).Continuous⟩,
+      (range_nonempty _).image _⟩
   let B : nonempty_compacts ℓ_infty_ℝ :=
-    ⟨⟨F '' range Ψ', (is_compact_range IΨ'.continuous).Image (kuratowskiEmbedding.isometry _).Continuous⟩,
-      (range_nonempty _).Image _⟩
+    ⟨⟨F '' range Ψ', (is_compact_range IΨ'.continuous).image (kuratowskiEmbedding.isometry _).Continuous⟩,
+      (range_nonempty _).image _⟩
   have AX : ⟦A⟧ = to_GH_space X := by
     rw [eq_to_GH_space_iff]
     exact ⟨fun x => F (Φ' x), (kuratowskiEmbedding.isometry _).comp IΦ', range_comp _ _⟩
@@ -244,7 +244,7 @@ theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] 
     rw [eq_to_GH_space_iff]
     exact ⟨fun x => F (Ψ' x), (kuratowskiEmbedding.isometry _).comp IΨ', range_comp _ _⟩
   refine' cInf_le ⟨0, _⟩ _
-  · simp only [LowerBounds, mem_image, mem_prod, mem_set_of_eq, Prod.exists, and_imp, forall_exists_index]
+  · simp only [lowerBounds, mem_image, mem_prod, mem_set_of_eq, Prod.exists, and_imp, forall_exists_index]
     intro t _ _ _ _ ht
     rw [← ht]
     exact Hausdorff_dist_nonneg
@@ -258,7 +258,7 @@ theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] 
 essentially by design. -/
 theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v} [MetricSpace Y]
     [CompactSpace Y] [Nonempty Y] :
-    hausdorffDist (Range (optimalGHInjl X Y)) (Range (optimalGHInjr X Y)) = gHDist X Y := by
+    hausdorffDist (range (optimalGHInjl X Y)) (range (optimalGHInjr X Y)) = gHDist X Y := by
   inhabit X
   inhabit Y
   /- we only need to check the inequality `≤`, as the other one follows from the previous lemma.
@@ -403,7 +403,7 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
       
   refine' le_antisymm _ _
   · apply le_cInf
-    · refine' (Set.Nonempty.prod _ _).Image _ <;> exact ⟨_, rfl⟩
+    · refine' (Set.Nonempty.prod _ _).image _ <;> exact ⟨_, rfl⟩
       
     · rintro b ⟨⟨p, q⟩, ⟨hp, hq⟩, rfl⟩
       exact B p q hp hq
@@ -418,7 +418,7 @@ the optimal coupling through its Kuratowski embedding. -/
 theorem GH_dist_eq_Hausdorff_dist (X : Type u) [MetricSpace X] [CompactSpace X] [Nonempty X] (Y : Type v)
     [MetricSpace Y] [CompactSpace Y] [Nonempty Y] :
     ∃ Φ : X → ℓ_infty_ℝ,
-      ∃ Ψ : Y → ℓ_infty_ℝ, Isometry Φ ∧ Isometry Ψ ∧ gHDist X Y = hausdorffDist (Range Φ) (Range Ψ) :=
+      ∃ Ψ : Y → ℓ_infty_ℝ, Isometry Φ ∧ Isometry Ψ ∧ gHDist X Y = hausdorffDist (range Φ) (range Ψ) :=
   by
   let F := kuratowskiEmbedding (optimal_GH_coupling X Y)
   let Φ := F ∘ optimal_GH_injl X Y
@@ -454,7 +454,7 @@ instance : MetricSpace GHSpace where
         
       
     · apply le_cInf
-      · exact (nonempty.prod ⟨y, hy⟩ ⟨y, hy⟩).Image _
+      · exact (nonempty.prod ⟨y, hy⟩ ⟨y, hy⟩).image _
         
       · rintro b ⟨⟨u, v⟩, ⟨hu, hv⟩, rfl⟩
         exact Hausdorff_dist_nonneg
@@ -650,7 +650,7 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
       Hausdorff_dist (Fl '' s) (Fr '' range Φ) + Hausdorff_dist (Fr '' range Φ) (range Fr) :=
     haveI B : bounded (range Fr) := (is_compact_range Ir.continuous).Bounded
     Hausdorff_dist_triangle'
-      (Hausdorff_edist_ne_top_of_nonempty_of_bounded ((range_nonempty _).Image _) (range_nonempty _)
+      (Hausdorff_edist_ne_top_of_nonempty_of_bounded ((range_nonempty _).image _) (range_nonempty _)
         (bounded.mono (image_subset_range _ _) B) B)
   have : Hausdorff_dist (range Fl) (Fl '' s) ≤ ε₁ := by
     rw [← image_univ, Hausdorff_dist_image Il]
@@ -827,8 +827,8 @@ a uniformly bounded diameter, and for all `ε` the number of balls of radius `ε
 to cover the spaces is uniformly bounded. This is an equivalence, but we only prove the
 interesting direction that these conditions imply compactness. -/
 theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ → ℕ} (ulim : Tendsto u atTop (𝓝 0))
-    (hdiam : ∀ p ∈ t, diam (Univ : Set (GHSpace.Rep p)) ≤ C)
-    (hcov : ∀ p ∈ t, ∀ n : ℕ, ∃ s : Set (GHSpace.Rep p), Cardinal.mk s ≤ K n ∧ univ ⊆ ⋃ x ∈ s, Ball x (u n)) :
+    (hdiam : ∀ p ∈ t, diam (univ : Set (GHSpace.Rep p)) ≤ C)
+    (hcov : ∀ p ∈ t, ∀ n : ℕ, ∃ s : Set (GHSpace.Rep p), Cardinal.mk s ≤ K n ∧ univ ⊆ ⋃ x ∈ s, ball x (u n)) :
     TotallyBounded t := by
   /- Let `δ>0`, and `ε = δ/5`. For each `p`, we construct a finite subset `s p` of `p`, which
     is `ε`-dense and has cardinality at most `K n`. Encoding the mutual distances of points in `s p`,

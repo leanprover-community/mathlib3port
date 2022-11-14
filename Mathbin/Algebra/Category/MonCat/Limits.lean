@@ -40,7 +40,7 @@ instance monoidObj (F : J ⥤ MonCat.{max v u}) (j) : Monoid ((F ⋙ forget MonC
 -/
 @[to_additive "The flat sections of a functor into `AddMon` form an additive submonoid of all sections."]
 def sectionsSubmonoid (F : J ⥤ MonCat.{max v u}) : Submonoid (∀ j, F.obj j) where
-  Carrier := (F ⋙ forget MonCat).sections
+  carrier := (F ⋙ forget MonCat).sections
   one_mem' j j' f := by simp
   mul_mem' a b ah bh j j' f := by
     simp only [forget_map_eq_coe, functor.comp_map, MonoidHom.map_mul, Pi.mul_apply]

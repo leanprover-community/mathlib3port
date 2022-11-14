@@ -602,12 +602,12 @@ theorem comp_change_of_variables_blocks_fun (m M N : ℕ) {i : Σn, Fin n → �
 
 /-- Target set in the change of variables to compute the composition of partial sums of formal
 power series, here given a a set. -/
-def CompPartialSumTargetSet (m M N : ℕ) : Set (Σn, Composition n) :=
+def compPartialSumTargetSet (m M N : ℕ) : Set (Σn, Composition n) :=
   { i | m ≤ i.2.length ∧ i.2.length < M ∧ ∀ j : Fin i.2.length, i.2.blocksFun j < N }
-#align formal_multilinear_series.comp_partial_sum_target_set FormalMultilinearSeries.CompPartialSumTargetSet
+#align formal_multilinear_series.comp_partial_sum_target_set FormalMultilinearSeries.compPartialSumTargetSet
 
 theorem comp_partial_sum_target_subset_image_comp_partial_sum_source (m M N : ℕ) (i : Σn, Composition n)
-    (hi : i ∈ CompPartialSumTargetSet m M N) :
+    (hi : i ∈ compPartialSumTargetSet m M N) :
     ∃ (j : _)(hj : j ∈ compPartialSumSource m M N), i = compChangeOfVariables m M N j hj := by
   rcases i with ⟨n, c⟩
   refine' ⟨⟨c.length, c.blocks_fun⟩, _, _⟩
@@ -750,8 +750,8 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
     `f (x + y)` is close enough to `f x` to be in the disk where `g` is well behaved. Let
     `min (r, rf, δ)` be this new radius.-/
   have : ContinuousAt f x := Hf.analytic_at.continuous_at
-  obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ≥0∞)(H : 0 < δ), ∀ {z : E}, z ∈ Emetric.Ball x δ → f z ∈ Emetric.Ball (f x) rg := by
-    have : Emetric.Ball (f x) rg ∈ 𝓝 (f x) := Emetric.ball_mem_nhds _ Hg.r_pos
+  obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ≥0∞)(H : 0 < δ), ∀ {z : E}, z ∈ Emetric.ball x δ → f z ∈ Emetric.ball (f x) rg := by
+    have : Emetric.ball (f x) rg ∈ 𝓝 (f x) := Emetric.ball_mem_nhds _ Hg.r_pos
     rcases Emetric.mem_nhds_iff.1 (Hf.analytic_at.continuous_at this) with ⟨δ, δpos, Hδ⟩
     exact ⟨δ, δpos, fun z hz => Hδ hz⟩
   let rf' := min rf δ
@@ -765,11 +765,11 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
   /- Let `y` satisfy `∥y∥ < min (r, rf', δ)`. We want to show that `g (f (x + y))` is the sum of
     `q.comp p` applied to `y`. -/
   -- First, check that `y` is small enough so that estimates for `f` and `g` apply.
-  have y_mem : y ∈ Emetric.Ball (0 : E) rf :=
+  have y_mem : y ∈ Emetric.ball (0 : E) rf :=
     (Emetric.ball_subset_ball (le_trans (min_le_left _ _) (min_le_left _ _))) hy
-  have fy_mem : f (x + y) ∈ Emetric.Ball (f x) rg := by
+  have fy_mem : f (x + y) ∈ Emetric.ball (f x) rg := by
     apply hδ
-    have : y ∈ Emetric.Ball (0 : E) δ := (Emetric.ball_subset_ball (le_trans (min_le_left _ _) (min_le_right _ _))) hy
+    have : y ∈ Emetric.ball (0 : E) δ := (Emetric.ball_subset_ball (le_trans (min_le_left _ _) (min_le_right _ _))) hy
     simpa [edist_eq_coe_nnnorm_sub, edist_eq_coe_nnnorm]
   /- Now the proof starts. To show that the sum of `q.comp p` at `y` is `g (f (x + y))`, we will
     write `q.comp p` applied to `y` as a big sum over all compositions. Since the sum is
@@ -796,7 +796,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       refine' ContinuousAt.comp _ (continuous_const.add continuous_id).ContinuousAt
       simp only [add_sub_cancel'_right, id.def]
       exact Hg.continuous_on.continuous_at (IsOpen.mem_nhds Emetric.is_open_ball fy_mem)
-    have B₂ : f (x + y) - f x ∈ Emetric.Ball (0 : F) rg := by
+    have B₂ : f (x + y) - f x ∈ Emetric.ball (0 : F) rg := by
       simpa [edist_eq_coe_nnnorm, edist_eq_coe_nnnorm_sub] using fy_mem
     rw [← emetric.is_open_ball.nhds_within_eq B₂] at A
     convert Hg.tendsto_locally_uniformly_on.tendsto_comp B₁.continuous_within_at B₂ A

@@ -114,13 +114,13 @@ theorem zpowers_quotient_stabilizer_equiv_symm_apply (n : Zmod (minimalPeriod ((
 #align mul_action.zpowers_quotient_stabilizer_equiv_symm_apply MulAction.zpowers_quotient_stabilizer_equiv_symm_apply
 
 /-- The orbit `(a ^ ℤ) • b` is a cycle of order `minimal_period ((•) a) b`. -/
-noncomputable def orbitZpowersEquiv : Orbit (zpowers a) b ≃ Zmod (minimalPeriod ((· • ·) a) b) :=
+noncomputable def orbitZpowersEquiv : orbit (zpowers a) b ≃ Zmod (minimalPeriod ((· • ·) a) b) :=
   (orbitEquivQuotientStabilizer _ b).trans (zpowersQuotientStabilizerEquiv a b).toEquiv
 #align mul_action.orbit_zpowers_equiv MulAction.orbitZpowersEquiv
 
 /-- The orbit `(ℤ • a) +ᵥ b` is a cycle of order `minimal_period ((+ᵥ) a) b`. -/
 noncomputable def _root_.add_action.orbit_zmultiples_equiv {α β : Type _} [AddGroup α] (a : α) [AddAction α β] (b : β) :
-    AddAction.Orbit (zmultiples a) b ≃ Zmod (minimalPeriod ((· +ᵥ ·) a) b) :=
+    AddAction.orbit (zmultiples a) b ≃ Zmod (minimalPeriod ((· +ᵥ ·) a) b) :=
   (AddAction.orbitEquivQuotientStabilizer (zmultiples a) b).trans (zmultiplesQuotientStabilizerEquiv a b).toEquiv
 #align mul_action._root_.add_action.orbit_zmultiples_equiv mul_action._root_.add_action.orbit_zmultiples_equiv
 
@@ -151,13 +151,13 @@ theorem _root_.add_action.orbit_zmultiples_equiv_symm_apply' {α β : Type _} [A
 attribute [to_additive orbit_zmultiples_equiv_symm_apply'] orbit_zpowers_equiv_symm_apply'
 
 @[to_additive]
-theorem minimal_period_eq_card [Fintype (Orbit (zpowers a) b)] :
-    minimalPeriod ((· • ·) a) b = Fintype.card (Orbit (zpowers a) b) := by
+theorem minimal_period_eq_card [Fintype (orbit (zpowers a) b)] :
+    minimalPeriod ((· • ·) a) b = Fintype.card (orbit (zpowers a) b) := by
   rw [← Fintype.of_equiv_card (orbit_zpowers_equiv a b), Zmod.card]
 #align mul_action.minimal_period_eq_card MulAction.minimal_period_eq_card
 
 @[to_additive]
-instance minimal_period_pos [Fintype <| Orbit (zpowers a) b] : NeZero <| minimalPeriod ((· • ·) a) b :=
+instance minimal_period_pos [Fintype <| orbit (zpowers a) b] : NeZero <| minimalPeriod ((· • ·) a) b :=
   ⟨by
     haveI : Nonempty (orbit (zpowers a) b) := (orbit_nonempty b).to_subtype
     rw [minimal_period_eq_card]

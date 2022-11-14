@@ -26,27 +26,27 @@ variable {α : Type _} (S : Set (Set α))
 
 /-- A structure encapsulating the fact that a set of sets is closed under finite intersection. -/
 structure HasFiniteInter where
-  univ_mem : Set.Univ ∈ S
+  univ_mem : Set.univ ∈ S
   inter_mem : ∀ ⦃s⦄, s ∈ S → ∀ ⦃t⦄, t ∈ S → s ∩ t ∈ S
 #align has_finite_inter HasFiniteInter
 
 namespace HasFiniteInter
 
 -- Satisfying the inhabited linter...
-instance : Inhabited (HasFiniteInter ({Set.Univ} : Set (Set α))) :=
+instance : Inhabited (HasFiniteInter ({Set.univ} : Set (Set α))) :=
   ⟨⟨by tauto, fun _ h1 _ h2 => by simp [Set.mem_singleton_iff.1 h1, Set.mem_singleton_iff.1 h2]⟩⟩
 
 /-- The smallest set of sets containing `S` which is closed under finite intersections. -/
-inductive FiniteInterClosure : Set (Set α)
+inductive finiteInterClosure : Set (Set α)
   | basic {s} : s ∈ S → finite_inter_closure s
-  | univ : finite_inter_closure Set.Univ
+  | univ : finite_inter_closure Set.univ
   | inter {s t} : finite_inter_closure s → finite_inter_closure t → finite_inter_closure (s ∩ t)
-#align has_finite_inter.finite_inter_closure HasFiniteInter.FiniteInterClosure
+#align has_finite_inter.finite_inter_closure HasFiniteInter.finiteInterClosure
 
 /-- Defines `has_finite_inter` for `finite_inter_closure S`. -/
-def finiteInterClosureHasFiniteInter : HasFiniteInter (FiniteInterClosure S) where
-  univ_mem := FiniteInterClosure.univ
-  inter_mem _ h _ := FiniteInterClosure.inter h
+def finiteInterClosureHasFiniteInter : HasFiniteInter (finiteInterClosure S) where
+  univ_mem := finiteInterClosure.univ
+  inter_mem _ h _ := finiteInterClosure.inter h
 #align has_finite_inter.finite_inter_closure_has_finite_inter HasFiniteInter.finiteInterClosureHasFiniteInter
 
 variable {S}
@@ -61,10 +61,10 @@ theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S)) -/
 theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) (P)
-    (_ : P ∈ FiniteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q := by
+    (_ : P ∈ finiteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q := by
   induction' H with S h T1 T2 _ _ h1 h2
   · cases h
-    · exact Or.inr ⟨Set.Univ, cond.univ_mem, by simpa⟩
+    · exact Or.inr ⟨Set.univ, cond.univ_mem, by simpa⟩
       
     · exact Or.inl h
       

@@ -83,7 +83,7 @@ theorem coe_of : (CompHausCat.of X : Type _) = X :=
 
 /-- Any continuous function on compact Hausdorff spaces is a closed map. -/
 theorem is_closed_map {X Y : CompHausCat.{u}} (f : X ⟶ Y) : IsClosedMap f := fun C hC =>
-  (hC.IsCompact.Image f.Continuous).IsClosed
+  (hC.IsCompact.image f.Continuous).IsClosed
 #align CompHaus.is_closed_map CompHausCat.is_closed_map
 
 /-- Any continuous bijection of compact Hausdorff spaces is an isomorphism. -/
@@ -229,7 +229,7 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
   constructor
   · contrapose!
     rintro ⟨y, hy⟩ hf
-    let C := Set.Range f
+    let C := Set.range f
     have hC : IsClosed C := (is_compact_range f.continuous).IsClosed
     let D := {y}
     have hD : IsClosed D := isClosedSingleton
@@ -239,9 +239,9 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
       exact hy y' hy'
     haveI : NormalSpace ↥Y.to_Top := normalOfCompactT2
     obtain ⟨φ, hφ0, hφ1, hφ01⟩ := exists_continuous_zero_one_of_closed hC hD hCD
-    haveI : CompactSpace (ULift.{u} <| Set.IccCat (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
-    haveI : T2Space (ULift.{u} <| Set.IccCat (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
-    let Z := of (ULift.{u} <| Set.IccCat (0 : ℝ) 1)
+    haveI : CompactSpace (ULift.{u} <| Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
+    haveI : T2Space (ULift.{u} <| Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
+    let Z := of (ULift.{u} <| Set.icc (0 : ℝ) 1)
     let g : Y ⟶ Z := ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩, continuous_ulift_up.comp (φ.continuous.subtype_mk fun y' => hφ01 y')⟩
     let h : Y ⟶ Z := ⟨fun _ => ⟨⟨0, set.left_mem_Icc.mpr zero_le_one⟩⟩, continuous_const⟩
     have H : h = g := by

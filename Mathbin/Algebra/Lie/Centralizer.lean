@@ -47,7 +47,7 @@ variable (N : LieSubmodule R L M) {N₁ N₂ : LieSubmodule R L M}
 
 /-- The centralizer of a Lie submodule. -/
 def centralizer : LieSubmodule R L M where
-  Carrier := { m | ∀ x : L, ⁅x, m⁆ ∈ N }
+  carrier := { m | ∀ x : L, ⁅x, m⁆ ∈ N }
   add_mem' m₁ m₂ hm₁ hm₂ x := by
     rw [lie_add]
     exact N.add_mem' (hm₁ x) (hm₂ x)
@@ -61,17 +61,17 @@ def centralizer : LieSubmodule R L M where
 #align lie_submodule.centralizer LieSubmodule.centralizer
 
 @[simp]
-theorem mem_centralizer (m : M) : m ∈ N.Centralizer ↔ ∀ x : L, ⁅x, m⁆ ∈ N :=
+theorem mem_centralizer (m : M) : m ∈ N.centralizer ↔ ∀ x : L, ⁅x, m⁆ ∈ N :=
   Iff.rfl
 #align lie_submodule.mem_centralizer LieSubmodule.mem_centralizer
 
-theorem le_centralizer : N ≤ N.Centralizer := by
+theorem le_centralizer : N ≤ N.centralizer := by
   intro m hm
   rw [mem_centralizer]
   exact fun x => N.lie_mem hm
 #align lie_submodule.le_centralizer LieSubmodule.le_centralizer
 
-theorem centralizer_inf : (N₁ ⊓ N₂).Centralizer = N₁.Centralizer ⊓ N₂.Centralizer := by
+theorem centralizer_inf : (N₁ ⊓ N₂).centralizer = N₁.centralizer ⊓ N₂.centralizer := by
   ext
   simp [← forall_and]
 #align lie_submodule.centralizer_inf LieSubmodule.centralizer_inf
@@ -84,12 +84,12 @@ theorem monotone_centalizer : Monotone (centralizer : LieSubmodule R L M → Lie
 #align lie_submodule.monotone_centalizer LieSubmodule.monotone_centalizer
 
 @[simp]
-theorem comap_centralizer (f : M' →ₗ⁅R,L⁆ M) : N.Centralizer.comap f = (N.comap f).Centralizer := by
+theorem comap_centralizer (f : M' →ₗ⁅R,L⁆ M) : N.centralizer.comap f = (N.comap f).centralizer := by
   ext
   simp
 #align lie_submodule.comap_centralizer LieSubmodule.comap_centralizer
 
-theorem top_lie_le_iff_le_centralizer (N' : LieSubmodule R L M) : ⁅(⊤ : LieIdeal R L), N⁆ ≤ N' ↔ N ≤ N'.Centralizer :=
+theorem top_lie_le_iff_le_centralizer (N' : LieSubmodule R L M) : ⁅(⊤ : LieIdeal R L), N⁆ ≤ N' ↔ N ≤ N'.centralizer :=
   by
   rw [lie_le_iff]
   tauto
@@ -102,7 +102,7 @@ theorem gc_top_lie_centralizer : GaloisConnection (fun N : LieSubmodule R L M =>
 variable (R L M)
 
 theorem centralizer_bot_eq_max_triv_submodule :
-    (⊥ : LieSubmodule R L M).Centralizer = LieModule.maxTrivSubmodule R L M :=
+    (⊥ : LieSubmodule R L M).centralizer = LieModule.maxTrivSubmodule R L M :=
   rfl
 #align lie_submodule.centralizer_bot_eq_max_triv_submodule LieSubmodule.centralizer_bot_eq_max_triv_submodule
 
@@ -115,7 +115,7 @@ variable (H : LieSubalgebra R L)
 /-- Regarding a Lie subalgebra `H ⊆ L` as a module over itself, its centralizer is in fact a Lie
 subalgebra. This is called the normalizer of the Lie subalgebra. -/
 def normalizer : LieSubalgebra R L :=
-  { H.toLieSubmodule.Centralizer with
+  { H.toLieSubmodule.centralizer with
     lie_mem' := fun y z hy hz x => by
       rw [coe_bracket_of_module, mem_to_lie_submodule, leibniz_lie, ← lie_skew y, ← sub_eq_add_neg]
       exact H.sub_mem (hz ⟨_, hy x⟩) (hy ⟨_, hz x⟩) }
@@ -136,7 +136,7 @@ theorem le_normalizer : H ≤ H.normalizer :=
   H.toLieSubmodule.le_centralizer
 #align lie_subalgebra.le_normalizer LieSubalgebra.le_normalizer
 
-theorem coe_centralizer_eq_normalizer : (H.toLieSubmodule.Centralizer : Submodule R L) = H.normalizer :=
+theorem coe_centralizer_eq_normalizer : (H.toLieSubmodule.centralizer : Submodule R L) = H.normalizer :=
   rfl
 #align lie_subalgebra.coe_centralizer_eq_normalizer LieSubalgebra.coe_centralizer_eq_normalizer
 

@@ -87,12 +87,12 @@ theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z 
 #align complex.abs_eq_one_iff Complex.abs_eq_one_iff
 
 @[simp]
-theorem range_exp_mul_I : (Range fun x : ℝ => exp (x * I)) = Metric.Sphere 0 1 := by
+theorem range_exp_mul_I : (range fun x : ℝ => exp (x * I)) = Metric.sphere 0 1 := by
   ext x
   simp only [mem_sphere_zero_iff_norm, norm_eq_abs, abs_eq_one_iff, mem_range]
 #align complex.range_exp_mul_I Complex.range_exp_mul_I
 
-theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ ∈ IocCat (-π) π) :
+theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ ∈ ioc (-π) π) :
     arg (r * (cos θ + sin θ * I)) = θ := by
   simp only [arg, map_mul, abs_cos_add_sin_mul_I, abs_of_nonneg hr.le, mul_one]
   simp only [of_real_mul_re, of_real_mul_im, neg_im, ← of_real_cos, ← of_real_sin, ← mk_eq_add_mul_I, neg_div,
@@ -120,7 +120,7 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
     
 #align complex.arg_mul_cos_add_sin_mul_I Complex.arg_mul_cos_add_sin_mul_I
 
-theorem arg_cos_add_sin_mul_I {θ : ℝ} (hθ : θ ∈ IocCat (-π) π) : arg (cos θ + sin θ * I) = θ := by
+theorem arg_cos_add_sin_mul_I {θ : ℝ} (hθ : θ ∈ ioc (-π) π) : arg (cos θ + sin θ * I) = θ := by
   rw [← one_mul (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I zero_lt_one hθ]
 #align complex.arg_cos_add_sin_mul_I Complex.arg_cos_add_sin_mul_I
 
@@ -136,7 +136,7 @@ theorem ext_abs_arg_iff {x y : ℂ} : x = y ↔ abs x = abs y ∧ arg x = arg y 
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, and_imp.2 ext_abs_arg⟩
 #align complex.ext_abs_arg_iff Complex.ext_abs_arg_iff
 
-theorem arg_mem_Ioc (z : ℂ) : arg z ∈ IocCat (-π) π := by
+theorem arg_mem_Ioc (z : ℂ) : arg z ∈ ioc (-π) π := by
   have hπ : 0 < π := Real.pi_pos
   rcases eq_or_ne z 0 with (rfl | hz)
   simp [hπ, hπ.le]
@@ -148,7 +148,7 @@ theorem arg_mem_Ioc (z : ℂ) : arg z ∈ IocCat (-π) π := by
 #align complex.arg_mem_Ioc Complex.arg_mem_Ioc
 
 @[simp]
-theorem range_arg : Range arg = IocCat (-π) π :=
+theorem range_arg : range arg = ioc (-π) π :=
   (range_subset_iff.2 arg_mem_Ioc).antisymm fun x hx => ⟨_, arg_cos_add_sin_mul_I hx⟩
 #align complex.range_arg Complex.range_arg
 

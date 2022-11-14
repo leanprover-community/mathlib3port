@@ -743,11 +743,11 @@ theorem Sup_of_not_bdd_above {s : Set ℝ} (hs : ¬BddAbove s) : sup s = 0 :=
   dif_neg fun h => hs h.2
 #align real.Sup_of_not_bdd_above Real.Sup_of_not_bdd_above
 
-theorem supr_of_not_bdd_above {α : Sort _} {f : α → ℝ} (hf : ¬BddAbove (Set.Range f)) : (⨆ i, f i) = 0 :=
+theorem supr_of_not_bdd_above {α : Sort _} {f : α → ℝ} (hf : ¬BddAbove (Set.range f)) : (⨆ i, f i) = 0 :=
   Sup_of_not_bdd_above hf
 #align real.supr_of_not_bdd_above Real.supr_of_not_bdd_above
 
-theorem Sup_univ : sup (@Set.Univ ℝ) = 0 :=
+theorem Sup_univ : sup (@Set.univ ℝ) = 0 :=
   Real.Sup_of_not_bdd_above fun ⟨x, h⟩ => not_le_of_lt (lt_add_one _) <| h (Set.mem_univ _)
 #align real.Sup_univ Real.Sup_univ
 
@@ -771,7 +771,7 @@ theorem Inf_of_not_bdd_below {s : Set ℝ} (hs : ¬BddBelow s) : inf s = 0 :=
   neg_eq_zero.2 <| Sup_of_not_bdd_above <| mt bdd_above_neg.1 hs
 #align real.Inf_of_not_bdd_below Real.Inf_of_not_bdd_below
 
-theorem infi_of_not_bdd_below {α : Sort _} {f : α → ℝ} (hf : ¬BddBelow (Set.Range f)) : (⨅ i, f i) = 0 :=
+theorem infi_of_not_bdd_below {α : Sort _} {f : α → ℝ} (hf : ¬BddBelow (Set.range f)) : (⨅ i, f i) = 0 :=
   Inf_of_not_bdd_below hf
 #align real.infi_of_not_bdd_below Real.infi_of_not_bdd_below
 

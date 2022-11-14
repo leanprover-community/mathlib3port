@@ -98,7 +98,7 @@ theorem bottom_row_coprime {R : Type _} [CommRing R] (g : SL(2, R)) :
 /-- Every pair `![c, d]` of coprime integers is the "bottom_row" of some element `g=[[*,*],[c,d]]`
 of `SL(2,ℤ)`. -/
 theorem bottom_row_surj {R : Type _} [CommRing R] :
-    Set.SurjOn (fun g : SL(2, R) => @coe _ (Matrix (Fin 2) (Fin 2) R) _ g 1) Set.Univ
+    Set.SurjOn (fun g : SL(2, R) => @coe _ (Matrix (Fin 2) (Fin 2) R) _ g 1) Set.univ
       { cd | IsCoprime (cd 0) (cd 1) } :=
   by
   rintro cd ⟨b₀, a, gcd_eqn⟩
@@ -475,20 +475,20 @@ theorem im_lt_im_S_smul (h : normSq z < 1) : z.im < (S • z).im := by
 #align modular_group.im_lt_im_S_smul ModularGroup.im_lt_im_S_smul
 
 /-- The standard (closed) fundamental domain of the action of `SL(2,ℤ)` on `ℍ`. -/
-def Fd : Set ℍ :=
+def fd : Set ℍ :=
   { z | 1 ≤ (z : ℂ).normSq ∧ |z.re| ≤ (1 : ℝ) / 2 }
-#align modular_group.fd ModularGroup.Fd
+#align modular_group.fd ModularGroup.fd
 
 /-- The standard open fundamental domain of the action of `SL(2,ℤ)` on `ℍ`. -/
-def Fdo : Set ℍ :=
+def fdo : Set ℍ :=
   { z | 1 < (z : ℂ).normSq ∧ |z.re| < (1 : ℝ) / 2 }
-#align modular_group.fdo ModularGroup.Fdo
+#align modular_group.fdo ModularGroup.fdo
 
 -- mathport name: modular_group.fd
-localized [Modular] notation "𝒟" => ModularGroup.Fd
+localized [Modular] notation "𝒟" => ModularGroup.fd
 
 -- mathport name: modular_group.fdo
-localized [Modular] notation "𝒟ᵒ" => ModularGroup.Fdo
+localized [Modular] notation "𝒟ᵒ" => ModularGroup.fdo
 
 theorem abs_two_mul_re_lt_one_of_mem_fdo (h : z ∈ 𝒟ᵒ) : |2 * z.re| < 1 := by
   rw [abs_mul, abs_two, ← lt_div_iff' (@two_pos ℝ _ _)]

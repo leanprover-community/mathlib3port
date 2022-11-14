@@ -23,7 +23,7 @@ predicate `S`) but are not completely determined.
   is hidden by a quotient construction, allowing for the representation
   of nondeterministic functions. -/
 structure Semiquot.{u} (α : Type _) where mk' ::
-  S : Set α
+  s : Set α
   val : Trunc ↥s
 #align semiquot Semiquot
 
@@ -32,14 +32,14 @@ namespace Semiquot
 variable {α : Type _} {β : Type _}
 
 instance : Membership α (Semiquot α) :=
-  ⟨fun a q => a ∈ q.S⟩
+  ⟨fun a q => a ∈ q.s⟩
 
 /-- Construct a `semiquot α` from `h : a ∈ s` where `s : set α`. -/
 def mk {a : α} {s : Set α} (h : a ∈ s) : Semiquot α :=
   ⟨s, Trunc.mk ⟨a, h⟩⟩
 #align semiquot.mk Semiquot.mk
 
-theorem ext_s {q₁ q₂ : Semiquot α} : q₁ = q₂ ↔ q₁.S = q₂.S := by
+theorem ext_s {q₁ q₂ : Semiquot α} : q₁ = q₂ ↔ q₁.s = q₂.s := by
   refine' ⟨congr_arg _, fun h => _⟩
   cases q₁
   cases q₂
@@ -59,7 +59,7 @@ theorem eq_mk_of_mem {q : Semiquot α} {a : α} (h : a ∈ q) : q = @mk _ a q.1 
   ext_s.2 rfl
 #align semiquot.eq_mk_of_mem Semiquot.eq_mk_of_mem
 
-theorem nonempty (q : Semiquot α) : q.S.Nonempty :=
+theorem nonempty (q : Semiquot α) : q.s.Nonempty :=
   q.exists_mem
 #align semiquot.nonempty Semiquot.nonempty
 
@@ -74,27 +74,27 @@ theorem mem_pure' {a b : α} : a ∈ Semiquot.pure b ↔ a = b :=
 #align semiquot.mem_pure' Semiquot.mem_pure'
 
 /-- Replace `s` in a `semiquot` with a superset. -/
-def blur' (q : Semiquot α) {s : Set α} (h : q.S ⊆ s) : Semiquot α :=
-  ⟨s, Trunc.lift (fun a : q.S => Trunc.mk ⟨a.1, h a.2⟩) (fun _ _ => Trunc.eq _ _) q.2⟩
+def blur' (q : Semiquot α) {s : Set α} (h : q.s ⊆ s) : Semiquot α :=
+  ⟨s, Trunc.lift (fun a : q.s => Trunc.mk ⟨a.1, h a.2⟩) (fun _ _ => Trunc.eq _ _) q.2⟩
 #align semiquot.blur' Semiquot.blur'
 
 /-- Replace `s` in a `q : semiquot α` with a union `s ∪ q.s` -/
 def blur (s : Set α) (q : Semiquot α) : Semiquot α :=
-  blur' q (Set.subset_union_right s q.S)
+  blur' q (Set.subset_union_right s q.s)
 #align semiquot.blur Semiquot.blur
 
-theorem blur_eq_blur' (q : Semiquot α) (s : Set α) (h : q.S ⊆ s) : blur s q = blur' q h := by
+theorem blur_eq_blur' (q : Semiquot α) (s : Set α) (h : q.s ⊆ s) : blur s q = blur' q h := by
   unfold blur <;> congr <;> exact Set.union_eq_self_of_subset_right h
 #align semiquot.blur_eq_blur' Semiquot.blur_eq_blur'
 
 @[simp]
-theorem mem_blur' (q : Semiquot α) {s : Set α} (h : q.S ⊆ s) {a : α} : a ∈ blur' q h ↔ a ∈ s :=
+theorem mem_blur' (q : Semiquot α) {s : Set α} (h : q.s ⊆ s) {a : α} : a ∈ blur' q h ↔ a ∈ s :=
   Iff.rfl
 #align semiquot.mem_blur' Semiquot.mem_blur'
 
 /-- Convert a `trunc α` to a `semiquot α`. -/
 def ofTrunc (q : Trunc α) : Semiquot α :=
-  ⟨Set.Univ, q.map fun a => ⟨a, trivial⟩⟩
+  ⟨Set.univ, q.map fun a => ⟨a, trivial⟩⟩
 #align semiquot.of_trunc Semiquot.ofTrunc
 
 /-- Convert a `semiquot α` to a `trunc α`. -/
@@ -173,7 +173,7 @@ instance : LawfulMonad Semiquot where
   bind_pure_comp_eq_map α β f s := ext.2 <| by simp [eq_comm]
 
 instance : LE (Semiquot α) :=
-  ⟨fun s t => s.S ⊆ t.S⟩
+  ⟨fun s t => s.s ⊆ t.s⟩
 
 instance : PartialOrder (Semiquot α) where
   le s t := ∀ ⦃x⦄, x ∈ s → x ∈ t
@@ -182,7 +182,7 @@ instance : PartialOrder (Semiquot α) where
   le_antisymm s t h₁ h₂ := ext_s.2 (Set.Subset.antisymm h₁ h₂)
 
 instance : SemilatticeSup (Semiquot α) :=
-  { Semiquot.partialOrder with sup := fun s => blur s.S, le_sup_left := fun s t => Set.subset_union_left _ _,
+  { Semiquot.partialOrder with sup := fun s => blur s.s, le_sup_left := fun s t => Set.subset_union_left _ _,
     le_sup_right := fun s t => Set.subset_union_right _ _, sup_le := fun s t u => Set.union_subset }
 
 @[simp]

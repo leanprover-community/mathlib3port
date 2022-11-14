@@ -275,11 +275,11 @@ def Liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
 
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `supp x` is the set of values of type `α` that `x` contains. -/
-def Supp {α : Type u} (x : F α) : Set α :=
+def supp {α : Type u} (x : F α) : Set α :=
   { y : α | ∀ ⦃p⦄, Liftp p x → p y }
-#align functor.supp Functor.Supp
+#align functor.supp Functor.supp
 
-theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : Liftp p x) : ∀ y ∈ Supp x, p y := fun y hy => hy h
+theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : Liftp p x) : ∀ y ∈ supp x, p y := fun y hy => hy h
 #align functor.of_mem_supp Functor.of_mem_supp
 
 end Functor

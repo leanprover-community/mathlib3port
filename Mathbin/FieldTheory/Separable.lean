@@ -403,7 +403,7 @@ theorem X_pow_sub_one_separable_iff {n : ℕ} : (X ^ n - 1 : F[X]).Separable ↔
 section Splits
 
 theorem card_root_set_eq_nat_degree [Algebra F K] {p : F[X]} (hsep : p.Separable) (hsplit : Splits (algebraMap F K) p) :
-    Fintype.card (p.RootSet K) = p.natDegree := by
+    Fintype.card (p.rootSet K) = p.natDegree := by
   simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
   rw [Multiset.to_finset_card_of_nodup, ← nat_degree_eq_card_roots hsplit]
   exact nodup_roots hsep.map

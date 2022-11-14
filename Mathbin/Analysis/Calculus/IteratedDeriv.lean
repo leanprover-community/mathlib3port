@@ -66,7 +66,7 @@ def iteratedDerivWithin (n : ℕ) (f : 𝕜 → F) (s : Set 𝕜) (x : 𝕜) : F
 
 variable {n : ℕ} {f : 𝕜 → F} {s : Set 𝕜} {x : 𝕜}
 
-theorem iterated_deriv_within_univ : iteratedDerivWithin n f Univ = iteratedDeriv n f := by
+theorem iterated_deriv_within_univ : iteratedDerivWithin n f univ = iteratedDeriv n f := by
   ext x
   rw [iteratedDerivWithin, iteratedDeriv, iterated_fderiv_within_univ]
 #align iterated_deriv_within_univ iterated_deriv_within_univ

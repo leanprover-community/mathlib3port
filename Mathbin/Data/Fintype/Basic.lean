@@ -6,6 +6,7 @@ Authors: Mario Carneiro
 import Mathbin.Logic.Embedding.Set
 import Mathbin.Algebra.Parity
 import Mathbin.Data.Array.Lemmas
+import Mathbin.Data.Int.Units
 import Mathbin.Data.Finset.Fin
 import Mathbin.Data.Finset.Option
 import Mathbin.Data.Finset.Pi
@@ -125,11 +126,11 @@ theorem eq_univ_of_forall : (∀ x, x ∈ s) → s = univ :=
 #align finset.eq_univ_of_forall Finset.eq_univ_of_forall
 
 @[simp, norm_cast]
-theorem coe_univ : ↑(univ : Finset α) = (Set.Univ : Set α) := by ext <;> simp
+theorem coe_univ : ↑(univ : Finset α) = (Set.univ : Set α) := by ext <;> simp
 #align finset.coe_univ Finset.coe_univ
 
 @[simp, norm_cast]
-theorem coe_eq_univ : (s : Set α) = Set.Univ ↔ s = univ := by rw [← coe_univ, coe_inj]
+theorem coe_eq_univ : (s : Set α) = Set.univ ↔ s = univ := by rw [← coe_univ, coe_inj]
 #align finset.coe_eq_univ Finset.coe_eq_univ
 
 theorem Nonempty.eq_univ [Subsingleton α] : s.Nonempty → s = univ := by
@@ -278,7 +279,7 @@ theorem insert_inj_on' (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ :
   exact s.insert_inj_on
 #align finset.insert_inj_on' Finset.insert_inj_on'
 
-theorem image_univ_of_surjective [Fintype β] {f : β → α} (hf : Surjective f) : univ.Image f = univ :=
+theorem image_univ_of_surjective [Fintype β] {f : β → α} (hf : Surjective f) : univ.image f = univ :=
   eq_univ_of_forall <| hf.forall.2 fun _ => mem_image_of_mem _ <| mem_univ _
 #align finset.image_univ_of_surjective Finset.image_univ_of_surjective
 
@@ -328,14 +329,14 @@ theorem univ_map_equiv_to_embedding {α β : Type _} [Fintype α] [Fintype β] (
 
 @[simp]
 theorem univ_filter_exists (f : α → β) [Fintype β] [DecidablePred fun y => ∃ x, f x = y] [DecidableEq β] :
-    (Finset.univ.filter fun y => ∃ x, f x = y) = Finset.univ.Image f := by
+    (Finset.univ.filter fun y => ∃ x, f x = y) = Finset.univ.image f := by
   ext
   simp
 #align finset.univ_filter_exists Finset.univ_filter_exists
 
 /-- Note this is a special case of `(finset.image_preimage f univ _).symm`. -/
-theorem univ_filter_mem_range (f : α → β) [Fintype β] [DecidablePred fun y => y ∈ Set.Range f] [DecidableEq β] :
-    (Finset.univ.filter fun y => y ∈ Set.Range f) = Finset.univ.Image f :=
+theorem univ_filter_mem_range (f : α → β) [Fintype β] [DecidablePred fun y => y ∈ Set.range f] [DecidableEq β] :
+    (Finset.univ.filter fun y => y ∈ Set.range f) = Finset.univ.image f :=
   univ_filter_exists f
 #align finset.univ_filter_mem_range Finset.univ_filter_mem_range
 
@@ -381,7 +382,7 @@ instance decidableExistsFintype {p : α → Prop} [DecidablePred p] [Fintype α]
   decidable_of_iff (∃ a ∈ @univ α _, p a) (by simp)
 #align fintype.decidable_exists_fintype Fintype.decidableExistsFintype
 
-instance decidableMemRangeFintype [Fintype α] [DecidableEq β] (f : α → β) : DecidablePred (· ∈ Set.Range f) := fun x =>
+instance decidableMemRangeFintype [Fintype α] [DecidableEq β] (f : α → β) : DecidablePred (· ∈ Set.range f) := fun x =>
   Fintype.decidableExistsFintype
 #align fintype.decidable_mem_range_fintype Fintype.decidableMemRangeFintype
 
@@ -552,7 +553,7 @@ def ofBijective [Fintype α] (f : α → β) (H : Function.Bijective f) : Fintyp
 
 /-- If `f : α → β` is a surjection and `α` is a fintype, then `β` is also a fintype. -/
 def ofSurjective [DecidableEq β] [Fintype α] (f : α → β) (H : Function.Surjective f) : Fintype β :=
-  ⟨univ.Image f, fun b =>
+  ⟨univ.image f, fun b =>
     let ⟨a, e⟩ := H b
     e ▸ mem_image_of_mem _ (mem_univ _)⟩
 #align fintype.of_surjective Fintype.ofSurjective
@@ -577,12 +578,12 @@ an explicit inverse can be stated that has better computational properties.
 This function computes by checking all terms `a : α` to find the `f a = b`, so it is O(N) where
 `N = fintype.card α`.
 -/
-def invOfMemRange : Set.Range f → α := fun b =>
+def invOfMemRange : Set.range f → α := fun b =>
   Finset.choose (fun a => f a = b) Finset.univ
     ((exists_unique_congr (by simp)).mp (hf.exists_unique_of_mem_range b.property))
 #align function.injective.inv_of_mem_range Function.Injective.invOfMemRange
 
-theorem left_inv_of_inv_of_mem_range (b : Set.Range f) : f (hf.invOfMemRange b) = b :=
+theorem left_inv_of_inv_of_mem_range (b : Set.range f) : f (hf.invOfMemRange b) = b :=
   (Finset.choose_spec (fun a => f a = b) _ _).right
 #align function.injective.left_inv_of_inv_of_mem_range Function.Injective.left_inv_of_inv_of_mem_range
 
@@ -591,7 +592,7 @@ theorem right_inv_of_inv_of_mem_range (a : α) : hf.invOfMemRange ⟨f a, Set.me
   hf (Finset.choose_spec (fun a' => f a' = f a) _ _).right
 #align function.injective.right_inv_of_inv_of_mem_range Function.Injective.right_inv_of_inv_of_mem_range
 
-theorem inv_fun_restrict [Nonempty α] : (Set.Range f).restrict (invFun f) = hf.invOfMemRange := by
+theorem inv_fun_restrict [Nonempty α] : (Set.range f).restrict (invFun f) = hf.invOfMemRange := by
   ext ⟨b, h⟩
   apply hf
   simp [hf.left_inv_of_inv_of_mem_range, @inv_fun_eq _ _ _ f b (set.mem_range.mp h)]
@@ -605,7 +606,7 @@ end Injective
 
 namespace Embedding
 
-variable (f : α ↪ β) (b : Set.Range f)
+variable (f : α ↪ β) (b : Set.range f)
 
 /-- The inverse of an embedding `f : α ↪ β`, of the type `↥(set.range f) → α`.
 This is the computable version of `function.inv_fun` that requires `fintype α` and `decidable_eq β`,
@@ -629,7 +630,7 @@ theorem right_inv_of_inv_of_mem_range (a : α) : f.invOfMemRange ⟨f a, Set.mem
   f.Injective.right_inv_of_inv_of_mem_range a
 #align function.embedding.right_inv_of_inv_of_mem_range Function.Embedding.right_inv_of_inv_of_mem_range
 
-theorem inv_fun_restrict [Nonempty α] : (Set.Range f).restrict (invFun f) = f.invOfMemRange := by
+theorem inv_fun_restrict [Nonempty α] : (Set.range f).restrict (invFun f) = f.invOfMemRange := by
   ext ⟨b, h⟩
   apply f.injective
   simp [f.left_inv_of_inv_of_mem_range, @inv_fun_eq _ _ _ f b (set.mem_range.mp h)]
@@ -887,13 +888,13 @@ theorem to_finset_prod (s : Set α) (t : Set β) [Fintype s] [Fintype t] [Fintyp
   simp
 #align set.to_finset_prod Set.to_finset_prod
 
-theorem to_finset_off_diag {s : Set α} [DecidableEq α] [Fintype s] [Fintype s.OffDiag] :
-    s.OffDiag.toFinset = s.toFinset.OffDiag :=
+theorem to_finset_off_diag {s : Set α} [DecidableEq α] [Fintype s] [Fintype s.offDiag] :
+    s.offDiag.toFinset = s.toFinset.offDiag :=
   Finset.ext <| by simp
 #align set.to_finset_off_diag Set.to_finset_off_diag
 
 @[simp]
-theorem to_finset_eq_univ [Fintype α] {s : Set α} [Fintype s] : s.toFinset = Finset.univ ↔ s = Set.Univ := by
+theorem to_finset_eq_univ [Fintype α] {s : Set α} [Fintype s] : s.toFinset = Finset.univ ↔ s = Set.univ := by
   rw [← coe_inj, coe_to_finset, coe_univ]
 #align set.to_finset_eq_univ Set.to_finset_eq_univ
 
@@ -901,7 +902,7 @@ theorem to_finset_eq_univ [Fintype α] {s : Set α} [Fintype s] : s.toFinset = F
 it essentially infers `fintype.{v} (set.univ.{u} : set α)` with `v` and `u` distinct.
 Reported in leanprover-community/lean#672 -/
 @[simp]
-theorem to_finset_univ [Fintype ↥(Set.Univ : Set α)] [Fintype α] : (Set.Univ : Set α).toFinset = Finset.univ :=
+theorem to_finset_univ [Fintype ↥(Set.univ : Set α)] [Fintype α] : (Set.univ : Set α).toFinset = Finset.univ :=
   to_finset_eq_univ.2 rfl
 #align set.to_finset_univ Set.to_finset_univ
 
@@ -911,8 +912,8 @@ theorem to_finset_ssubset_univ [Fintype α] {s : Set α} [Fintype s] : s.toFinse
 #align set.to_finset_ssubset_univ Set.to_finset_ssubset_univ
 
 @[simp]
-theorem to_finset_range [DecidableEq α] [Fintype β] (f : β → α) [Fintype (Set.Range f)] :
-    (Set.Range f).toFinset = Finset.univ.Image f := by
+theorem to_finset_range [DecidableEq α] [Fintype β] (f : β → α) [Fintype (Set.range f)] :
+    (Set.range f).toFinset = Finset.univ.image f := by
   ext
   simp
 #align set.to_finset_range Set.to_finset_range
@@ -1034,18 +1035,18 @@ theorem Fin.equiv_iff_eq {m n : ℕ} : Nonempty (Fin m ≃ Fin n) ↔ m = n :=
 #align fin.equiv_iff_eq Fin.equiv_iff_eq
 
 @[simp]
-theorem Fin.image_succ_above_univ {n : ℕ} (i : Fin (n + 1)) : univ.Image i.succAbove = {i}ᶜ := by
+theorem Fin.image_succ_above_univ {n : ℕ} (i : Fin (n + 1)) : univ.image i.succAbove = {i}ᶜ := by
   ext m
   simp
 #align fin.image_succ_above_univ Fin.image_succ_above_univ
 
 @[simp]
-theorem Fin.image_succ_univ (n : ℕ) : (univ : Finset (Fin n)).Image Fin.succ = {0}ᶜ := by
+theorem Fin.image_succ_univ (n : ℕ) : (univ : Finset (Fin n)).image Fin.succ = {0}ᶜ := by
   rw [← Fin.succ_above_zero, Fin.image_succ_above_univ]
 #align fin.image_succ_univ Fin.image_succ_univ
 
 @[simp]
-theorem Fin.image_cast_succ (n : ℕ) : (univ : Finset (Fin n)).Image Fin.castSucc = {Fin.last n}ᶜ := by
+theorem Fin.image_cast_succ (n : ℕ) : (univ : Finset (Fin n)).image Fin.castSucc = {Fin.last n}ᶜ := by
   rw [← Fin.succ_above_last, Fin.image_succ_above_univ]
 #align fin.image_cast_succ Fin.image_cast_succ
 
@@ -1227,14 +1228,14 @@ theorem Fintype.card_prod (α β : Type _) [Fintype α] [Fintype β] :
 
 /-- Given that `α × β` is a fintype, `α` is also a fintype. -/
 def Fintype.prodLeft {α β} [DecidableEq α] [Fintype (α × β)] [Nonempty β] : Fintype α :=
-  ⟨(Fintype.elems (α × β)).Image Prod.fst, fun a => by
+  ⟨(Fintype.elems (α × β)).image Prod.fst, fun a => by
     let ⟨b⟩ := ‹Nonempty β›
     simp <;> exact ⟨b, Fintype.complete _⟩⟩
 #align fintype.prod_left Fintype.prodLeft
 
 /-- Given that `α × β` is a fintype, `β` is also a fintype. -/
 def Fintype.prodRight {α β} [DecidableEq β] [Fintype (α × β)] [Nonempty α] : Fintype β :=
-  ⟨(Fintype.elems (α × β)).Image Prod.snd, fun b => by
+  ⟨(Fintype.elems (α × β)).image Prod.snd, fun b => by
     let ⟨a⟩ := ‹Nonempty α›
     simp <;> exact ⟨a, Fintype.complete _⟩⟩
 #align fintype.prod_right Fintype.prodRight
@@ -1403,7 +1404,7 @@ theorem card_le_of_embedding (f : α ↪ β) : card α ≤ card β :=
   card_le_of_injective f f.2
 #align fintype.card_le_of_embedding Fintype.card_le_of_embedding
 
-theorem card_lt_of_injective_of_not_mem (f : α → β) (h : Function.Injective f) {b : β} (w : b ∉ Set.Range f) :
+theorem card_lt_of_injective_of_not_mem (f : α → β) (h : Function.Injective f) {b : β} (w : b ∉ Set.range f) :
     card α < card β :=
   calc
     card α = (univ.map ⟨f, h⟩).card := (card_map _).symm
@@ -1421,13 +1422,13 @@ theorem card_le_of_surjective (f : α → β) (h : Function.Surjective f) : card
   card_le_of_injective _ (Function.injective_surj_inv h)
 #align fintype.card_le_of_surjective Fintype.card_le_of_surjective
 
-theorem card_range_le {α β : Type _} (f : α → β) [Fintype α] [Fintype (Set.Range f)] :
-    Fintype.card (Set.Range f) ≤ Fintype.card α :=
+theorem card_range_le {α β : Type _} (f : α → β) [Fintype α] [Fintype (Set.range f)] :
+    Fintype.card (Set.range f) ≤ Fintype.card α :=
   Fintype.card_le_of_surjective (fun a => ⟨f a, by simp⟩) fun ⟨_, a, ha⟩ => ⟨a, by simpa using ha⟩
 #align fintype.card_range_le Fintype.card_range_le
 
-theorem card_range {α β F : Type _} [EmbeddingLike F α β] (f : F) [Fintype α] [Fintype (Set.Range f)] :
-    Fintype.card (Set.Range f) = Fintype.card α :=
+theorem card_range {α β F : Type _} [EmbeddingLike F α β] (f : F) [Fintype α] [Fintype (Set.range f)] :
+    Fintype.card (Set.range f) = Fintype.card α :=
   Eq.symm <| Fintype.card_congr <| Equiv.ofInjective _ <| EmbeddingLike.injective f
 #align fintype.card_range Fintype.card_range
 
@@ -1627,7 +1628,7 @@ def ofRightInverseOfCardLe (hαβ : card α ≤ card β) (f : α → β) (g : β
 
 end Equiv
 
-theorem Fintype.coe_image_univ [Fintype α] [DecidableEq β] {f : α → β} : ↑(Finset.image f Finset.univ) = Set.Range f :=
+theorem Fintype.coe_image_univ [Fintype α] [DecidableEq β] {f : α → β} : ↑(Finset.image f Finset.univ) = Set.range f :=
   by
   ext x
   simp
@@ -1745,7 +1746,7 @@ theorem set_fintype_card_le_univ [Fintype α] (s : Set α) [Fintype ↥s] : Fint
 #align set_fintype_card_le_univ set_fintype_card_le_univ
 
 theorem set_fintype_card_eq_univ_iff [Fintype α] (s : Set α) [Fintype ↥s] :
-    Fintype.card s = Fintype.card α ↔ s = Set.Univ := by
+    Fintype.card s = Fintype.card α ↔ s = Set.univ := by
   rw [← Set.to_finset_card, Finset.card_eq_iff_eq_univ, ← Set.to_finset_univ, Set.to_finset_inj]
 #align set_fintype_card_eq_univ_iff set_fintype_card_eq_univ_iff
 
@@ -1820,8 +1821,12 @@ theorem nonempty_of_card_le [Fintype α] [Fintype β] (h : Fintype.card α ≤ F
   classical exact (trunc_of_card_le h).Nonempty
 #align function.embedding.nonempty_of_card_le Function.Embedding.nonempty_of_card_le
 
+theorem nonempty_iff_card_le [Fintype α] [Fintype β] : Nonempty (α ↪ β) ↔ Fintype.card α ≤ Fintype.card β :=
+  ⟨fun ⟨e⟩ => Fintype.card_le_of_embedding e, nonempty_of_card_le⟩
+#align function.embedding.nonempty_iff_card_le Function.Embedding.nonempty_iff_card_le
+
 theorem exists_of_card_le_finset [Fintype α] {s : Finset β} (h : Fintype.card α ≤ s.card) :
-    ∃ f : α ↪ β, Set.Range f ⊆ s := by
+    ∃ f : α ↪ β, Set.range f ⊆ s := by
   rw [← Fintype.card_coe] at h
   rcases nonempty_of_card_le h with ⟨f⟩
   exact ⟨f.trans (embedding.subtype _), by simp [Set.range_subset_iff]⟩
@@ -1837,7 +1842,7 @@ theorem Finset.univ_map_embedding {α : Type _} [Fintype α] (e : α ↪ α) : u
 /-- Any injection from a finset `s` in a fintype `α` to a finset `t` of the same cardinality as `α`
 can be extended to a bijection between `α` and `t`. -/
 theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β} (hαt : Fintype.card α = t.card) {s : Finset α}
-    {f : α → β} (hfst : s.Image f ⊆ t) (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by
+    {f : α → β} (hfst : s.image f ⊆ t) (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by
   classical induction' s using Finset.induction with a s has H generalizing f
     have hfst' : Finset.image f s ⊆ t := (Finset.image_mono _ (s.subset_insert a)).trans hfst
     obtain ⟨g', hg'⟩ := H hfst' hfs'
@@ -1910,7 +1915,7 @@ theorem mem_pi_finset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFin
 #align fintype.mem_pi_finset Fintype.mem_pi_finset
 
 @[simp]
-theorem coe_pi_finset (t : ∀ a, Finset (δ a)) : (piFinset t : Set (∀ a, δ a)) = Set.Pi Set.Univ fun a => t a :=
+theorem coe_pi_finset (t : ∀ a, Finset (δ a)) : (piFinset t : Set (∀ a, δ a)) = Set.pi Set.univ fun a => t a :=
   Set.ext fun x => by
     rw [Set.mem_univ_pi]
     exact Fintype.mem_pi_finset
@@ -1975,7 +1980,7 @@ instance Quotient.fintype [Fintype α] (s : Setoid α) [DecidableRel ((· ≈ ·
 #align quotient.fintype Quotient.fintype
 
 instance Finset.fintype [Fintype α] : Fintype (Finset α) :=
-  ⟨univ.Powerset, fun x => Finset.mem_powerset.2 (Finset.subset_univ _)⟩
+  ⟨univ.powerset, fun x => Finset.mem_powerset.2 (Finset.subset_univ _)⟩
 #align finset.fintype Finset.fintype
 
 instance Function.Embedding.fintype {α β} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] : Fintype (α ↪ β) :=
@@ -1994,12 +1999,12 @@ theorem Fintype.card_finset [Fintype α] : Fintype.card (Finset α) = 2 ^ Fintyp
 #align fintype.card_finset Fintype.card_finset
 
 @[simp]
-theorem Finset.powerset_univ [Fintype α] : (univ : Finset α).Powerset = univ :=
+theorem Finset.powerset_univ [Fintype α] : (univ : Finset α).powerset = univ :=
   coe_injective <| by simp [-coe_eq_univ]
 #align finset.powerset_univ Finset.powerset_univ
 
 @[simp]
-theorem Finset.powerset_eq_univ [Fintype α] {s : Finset α} : s.Powerset = univ ↔ s = univ := by
+theorem Finset.powerset_eq_univ [Fintype α] {s : Finset α} : s.powerset = univ ↔ s = univ := by
   rw [← Finset.powerset_univ, powerset_inj]
 #align finset.powerset_eq_univ Finset.powerset_eq_univ
 
@@ -2098,7 +2103,7 @@ instance PSigma.fintypePropProp {α : Prop} {β : α → Prop} [Decidable α] [�
 #align psigma.fintype_prop_prop PSigma.fintypePropProp
 
 instance Set.fintype [Fintype α] : Fintype (Set α) :=
-  ⟨(@Finset.univ α _).Powerset.map ⟨coe, coe_injective⟩, fun s => by
+  ⟨(@Finset.univ α _).powerset.map ⟨coe, coe_injective⟩, fun s => by
     classical refine' mem_map.2 ⟨finset.univ.filter s, mem_powerset.2 (subset_univ _), _⟩
       rw [coe_univ, Set.sep_univ]⟩
 #align set.fintype Set.fintype
@@ -2127,7 +2132,7 @@ theorem Finset.univ_pi_univ {α : Type _} {β : α → Type _} [DecidableEq α] 
 #align finset.univ_pi_univ Finset.univ_pi_univ
 
 theorem mem_image_univ_iff_mem_range {α β : Type _} [Fintype α] [DecidableEq β] {f : α → β} {b : β} :
-    b ∈ univ.Image f ↔ b ∈ Set.Range f := by simp
+    b ∈ univ.image f ↔ b ∈ Set.range f := by simp
 #align mem_image_univ_iff_mem_range mem_image_univ_iff_mem_range
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -3687,7 +3692,7 @@ end
 theorem Finset.exists_minimal {α : Type _} [Preorder α] (s : Finset α) (h : s.Nonempty) : ∃ m ∈ s, ∀ x ∈ s, ¬x < m := by
   obtain ⟨c, hcs : c ∈ s⟩ := h
   have : WellFounded (@LT.lt { x // x ∈ s } _) := Finite.well_founded_of_trans_of_irrefl _
-  obtain ⟨⟨m, hms : m ∈ s⟩, -, H⟩ := this.has_min Set.Univ ⟨⟨c, hcs⟩, trivial⟩
+  obtain ⟨⟨m, hms : m ∈ s⟩, -, H⟩ := this.has_min Set.univ ⟨⟨c, hcs⟩, trivial⟩
   exact ⟨m, hms, fun x hx hxm => H ⟨x, hx⟩ trivial hxm⟩
 #align finset.exists_minimal Finset.exists_minimal
 
@@ -3702,14 +3707,14 @@ theorem of_not_fintype (h : Fintype α → False) : Infinite α :=
 #align infinite.of_not_fintype Infinite.of_not_fintype
 
 /-- If `s : set α` is a proper subset of `α` and `f : α → s` is injective, then `α` is infinite. -/
-theorem of_injective_to_set {s : Set α} (hs : s ≠ Set.Univ) {f : α → s} (hf : Injective f) : Infinite α :=
+theorem of_injective_to_set {s : Set α} (hs : s ≠ Set.univ) {f : α → s} (hf : Injective f) : Infinite α :=
   of_not_fintype fun h => by
     skip
     classical refine' lt_irrefl (Fintype.card α) _
 #align infinite.of_injective_to_set Infinite.of_injective_to_set
 
 /-- If `s : set α` is a proper subset of `α` and `f : s → α` is surjective, then `α` is infinite. -/
-theorem of_surjective_from_set {s : Set α} (hs : s ≠ Set.Univ) {f : s → α} (hf : Surjective f) : Infinite α :=
+theorem of_surjective_from_set {s : Set α} (hs : s ≠ Set.univ) {f : s → α} (hf : Surjective f) : Infinite α :=
   of_injective_to_set hs (injective_surj_inv hf)
 #align infinite.of_surjective_from_set Infinite.of_surjective_from_set
 
@@ -3726,11 +3731,11 @@ instance (priority := 100) (α : Type _) [H : Infinite α] : Nontrivial α :=
 protected theorem nonempty (α : Type _) [Infinite α] : Nonempty α := by infer_instance
 #align infinite.nonempty Infinite.nonempty
 
-theorem of_injective [Infinite β] (f : β → α) (hf : Injective f) : Infinite α :=
+theorem of_injective {α β} [Infinite β] (f : β → α) (hf : Injective f) : Infinite α :=
   ⟨fun I => (Finite.of_injective f hf).False⟩
 #align infinite.of_injective Infinite.of_injective
 
-theorem of_surjective [Infinite β] (f : α → β) (hf : Surjective f) : Infinite α :=
+theorem of_surjective {α β} [Infinite β] (f : α → β) (hf : Surjective f) : Infinite α :=
   ⟨fun I => (Finite.of_surjective f hf).False⟩
 #align infinite.of_surjective Infinite.of_surjective
 
@@ -3894,7 +3899,7 @@ theorem Finite.exists_infinite_fiber [Infinite α] [Finite β] (f : α → β) :
     exact key.false
 #align finite.exists_infinite_fiber Finite.exists_infinite_fiber
 
-theorem not_surjective_finite_infinite [Finite α] [Infinite β] (f : α → β) : ¬Surjective f := fun hf =>
+theorem not_surjective_finite_infinite {α β} [Finite α] [Infinite β] (f : α → β) : ¬Surjective f := fun hf =>
   (Infinite.of_surjective f hf).not_finite ‹_›
 #align not_surjective_finite_infinite not_surjective_finite_infinite
 

@@ -107,19 +107,19 @@ variable {V : Type u} [Quiver.{v + 1} V] (r : V) [RootedConnected r]
 
 /-- A path from `r` of minimal length. -/
 noncomputable def shortestPath (b : V) : Path r b :=
-  WellFounded.min (measure_wf Path.length) Set.Univ Set.univ_nonempty
+  WellFounded.min (measure_wf Path.length) Set.univ Set.univ_nonempty
 #align quiver.shortest_path Quiver.shortestPath
 
 /-- The length of a path is at least the length of the shortest path -/
 theorem shortest_path_spec {a : V} (p : Path r a) : (shortestPath r a).length ≤ p.length :=
-  not_lt.mp (WellFounded.not_lt_min (measure_wf _) Set.Univ _ trivial)
+  not_lt.mp (WellFounded.not_lt_min (measure_wf _) Set.univ _ trivial)
 #align quiver.shortest_path_spec Quiver.shortest_path_spec
 
 /-- A subquiver which by construction is an arborescence. -/
-def GeodesicSubtree : WideSubquiver V := fun a b => { e | ∃ p : Path r a, shortestPath r b = p.cons e }
-#align quiver.geodesic_subtree Quiver.GeodesicSubtree
+def geodesicSubtree : WideSubquiver V := fun a b => { e | ∃ p : Path r a, shortestPath r b = p.cons e }
+#align quiver.geodesic_subtree Quiver.geodesicSubtree
 
-noncomputable instance geodesicArborescence : Arborescence (GeodesicSubtree r) :=
+noncomputable instance geodesicArborescence : Arborescence (geodesicSubtree r) :=
   arborescenceMk r (fun a => (shortestPath r a).length)
     (by
       rintro a b ⟨e, p, h⟩

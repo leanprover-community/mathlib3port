@@ -78,20 +78,20 @@ section Intervals
 
 open Set
 
-theorem strict_mono_on_nat_abs : StrictMonoOn natAbs (IciCat 0) := fun a ha b hb hab =>
+theorem strict_mono_on_nat_abs : StrictMonoOn natAbs (ici 0) := fun a ha b hb hab =>
   nat_abs_lt_nat_abs_of_nonneg_of_lt ha hab
 #align int.strict_mono_on_nat_abs Int.strict_mono_on_nat_abs
 
-theorem strict_anti_on_nat_abs : StrictAntiOn natAbs (IicCat 0) := fun a ha b hb hab => by
+theorem strict_anti_on_nat_abs : StrictAntiOn natAbs (iic 0) := fun a ha b hb hab => by
   simpa [Int.nat_abs_neg] using
     nat_abs_lt_nat_abs_of_nonneg_of_lt (right.nonneg_neg_iff.mpr hb) (neg_lt_neg_iff.mpr hab)
 #align int.strict_anti_on_nat_abs Int.strict_anti_on_nat_abs
 
-theorem inj_on_nat_abs_Ici : InjOn natAbs (IciCat 0) :=
+theorem inj_on_nat_abs_Ici : InjOn natAbs (ici 0) :=
   strict_mono_on_nat_abs.InjOn
 #align int.inj_on_nat_abs_Ici Int.inj_on_nat_abs_Ici
 
-theorem inj_on_nat_abs_Iic : InjOn natAbs (IicCat 0) :=
+theorem inj_on_nat_abs_Iic : InjOn natAbs (iic 0) :=
   strict_anti_on_nat_abs.InjOn
 #align int.inj_on_nat_abs_Iic Int.inj_on_nat_abs_Iic
 

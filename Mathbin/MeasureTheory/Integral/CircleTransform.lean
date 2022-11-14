@@ -73,8 +73,8 @@ theorem integral_circle_transform [CompleteSpace E] (f : ℂ → E) :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr continuous.smul, ",", expr continuous_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr continuous.mul, ",", expr continuous_circle_map 0 R, ",", expr continuous_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-theorem continuous_circle_transform {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w : ℂ} (hf : ContinuousOn f <| Sphere z R)
-    (hw : w ∈ Ball z R) : Continuous (circleTransform R z w f) := by
+theorem continuous_circle_transform {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w : ℂ} (hf : ContinuousOn f <| sphere z R)
+    (hw : w ∈ ball z R) : Continuous (circleTransform R z w f) := by
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous.smul, \",\", expr continuous_const, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   simp_rw [deriv_circle_map]
@@ -87,8 +87,8 @@ theorem continuous_circle_transform {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w 
     
 #align complex.continuous_circle_transform Complex.continuous_circle_transform
 
-theorem continuous_circle_transform_deriv {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w : ℂ} (hf : ContinuousOn f (Sphere z R))
-    (hw : w ∈ Ball z R) : Continuous (circleTransformDeriv R z w f) := by
+theorem continuous_circle_transform_deriv {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w : ℂ} (hf : ContinuousOn f (sphere z R))
+    (hw : w ∈ ball z R) : Continuous (circleTransformDeriv R z w f) := by
   rw [circle_transform_deriv_eq]
   exact (continuous_circle_map_inv hw).smul (continuous_circle_transform hR hf hw)
 #align complex.continuous_circle_transform_deriv Complex.continuous_circle_transform_deriv
@@ -101,7 +101,7 @@ def circleTransformBoundingFunction (R : ℝ) (z : ℂ) (w : ℂ × ℝ) : ℂ :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr continuous_on.pow, ",", expr continuous_on.div, ",", expr continuous_on_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem continuous_on_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z : ℂ} :
-    ContinuousOn (fun w : ℂ × ℝ => (circleMap z R w.snd - w.fst)⁻¹ ^ 2) (ClosedBall z r ×ˢ univ) := by
+    ContinuousOn (fun w : ℂ × ℝ => (circleMap z R w.snd - w.fst)⁻¹ ^ 2) (closedBall z r ×ˢ univ) := by
   simp_rw [← one_div]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous_on.pow, \",\", expr continuous_on.div, \",\", expr continuous_on_const, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
@@ -123,7 +123,7 @@ theorem continuous_on_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r < R) (z : ℂ) :
-    ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t) (ClosedBall z r ×ˢ univ) := by
+    ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t) (closedBall z r ×ˢ univ) := by
   have : ContinuousOn (circle_transform_bounding_function R z) (closed_ball z r ×ˢ (⊤ : Set ℝ)) := by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous_on.smul, \",\", expr continuous_on_const, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
@@ -146,8 +146,8 @@ theorem continuous_on_abs_circle_transform_bounding_function {R r : ℝ} (hr : r
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' : 0 ≤ r) (z : ℂ) :
-    ∃ x : ClosedBall z r ×ˢ [0, 2 * π],
-      ∀ y : ClosedBall z r ×ˢ [0, 2 * π],
+    ∃ x : closedBall z r ×ˢ [0, 2 * π],
+      ∀ y : closedBall z r ×ˢ [0, 2 * π],
         abs (circleTransformBoundingFunction R z y) ≤ abs (circleTransformBoundingFunction R z x) :=
   by
   have cts := continuous_on_abs_circle_transform_bounding_function hr z
@@ -166,9 +166,9 @@ theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' 
 #align complex.abs_circle_transform_bounding_function_le Complex.abs_circle_transform_bounding_function_le
 
 /-- The derivative of a `circle_transform` is locally bounded. -/
-theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ → ℂ} (hx : x ∈ Ball z R)
-    (hf : ContinuousOn f (Sphere z R)) :
-    ∃ B ε : ℝ, 0 < ε ∧ Ball x ε ⊆ Ball z R ∧ ∀ (t : ℝ), ∀ y ∈ Ball x ε, ∥circleTransformDeriv R z y f t∥ ≤ B := by
+theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ → ℂ} (hx : x ∈ ball z R)
+    (hf : ContinuousOn f (sphere z R)) :
+    ∃ B ε : ℝ, 0 < ε ∧ ball x ε ⊆ ball z R ∧ ∀ (t : ℝ), ∀ y ∈ ball x ε, ∥circleTransformDeriv R z y f t∥ ≤ B := by
   obtain ⟨r, hr, hrx⟩ := exists_lt_mem_ball_of_mem_ball hx
   obtain ⟨ε', hε', H⟩ := exists_ball_subset_ball hrx
   obtain ⟨⟨⟨a, b⟩, ⟨ha, hb⟩⟩, hab⟩ := abs_circle_transform_bounding_function_le hr (pos_of_mem_ball hrx).le z

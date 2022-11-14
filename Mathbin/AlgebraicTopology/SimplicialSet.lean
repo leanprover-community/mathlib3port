@@ -92,7 +92,7 @@ It consists of all `m`-simplices `α` of `Δ[n]`
 for which the union of `{i}` and the range of `α` is not all of `n`
 (when viewing `α` as monotone function `m → n`). -/
 def horn (n : ℕ) (i : Fin (n + 1)) : SSet where
-  obj m := { α : Δ[n].obj m // Set.Range (asOrderHom α) ∪ {i} ≠ Set.Univ }
+  obj m := { α : Δ[n].obj m // Set.range (asOrderHom α) ∪ {i} ≠ Set.univ }
   map m₁ m₂ f α :=
     ⟨f.unop ≫ (α : Δ[n].obj m₁), by
       intro h

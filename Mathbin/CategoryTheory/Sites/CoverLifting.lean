@@ -71,7 +71,7 @@ if for all covering sieves `R` in `D`, `R.pullback G` is a covering sieve in `C`
 -/
 @[nolint has_nonempty_instance]
 structure CoverLifting (G : C ⥤ D) : Prop where
-  cover_lift : ∀ {U : C} {S : Sieve (G.obj U)} (hS : S ∈ K (G.obj U)), S.FunctorPullback G ∈ J U
+  cover_lift : ∀ {U : C} {S : Sieve (G.obj U)} (hS : S ∈ K (G.obj U)), S.functorPullback G ∈ J U
 #align category_theory.cover_lifting CategoryTheory.CoverLifting
 
 /-- The identity functor on a site is cover-lifting. -/
@@ -127,13 +127,13 @@ instance (X : Dᵒᵖ) : HasLimitsOfShape (StructuredArrow X G.op) A :=
   haveI := Limits.has_limits_of_size_shrink.{v, max u v, max u v, max u v} A
   has_limits_of_size.has_limits_of_shape _
 
-variable (x : S.Arrows.FamilyOfElements ((ran G.op).obj ℱ.val ⋙ coyoneda.obj (op X)))
+variable (x : S.arrows.FamilyOfElements ((ran G.op).obj ℱ.val ⋙ coyoneda.obj (op X)))
 
 variable (hx : x.Compatible)
 
 /-- The family of morphisms `X ⟶ 𝒢(G(Y')) ⟶ ℱ(Y')` defined on `{ Y' ⊆ Y : G(Y') ⊆ U ∈ S}`. -/
 def pulledbackFamily (Y : StructuredArrow (op U) G.op) :=
-  ((x.pullback Y.Hom.unop).FunctorPullback G).compPresheafMap
+  ((x.pullback Y.Hom.unop).functorPullback G).compPresheafMap
     (show _ ⟶ _ from whiskerRight ((ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X)))
 #align
   category_theory.Ran_is_sheaf_of_cover_lifting.pulledback_family CategoryTheory.RanIsSheafOfCoverLifting.pulledbackFamily
@@ -154,7 +154,7 @@ include hu hS hx
 def getSection (Y : StructuredArrow (op U) G.op) : X ⟶ ℱ.val.obj Y.right := by
   let hom_sh := whisker_right ((Ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X))
   have S' := K.pullback_stable Y.hom.unop hS
-  have hs' := ((hx.pullback Y.3.unop).FunctorPullback G).compPresheafMap hom_sh
+  have hs' := ((hx.pullback Y.3.unop).functorPullback G).compPresheafMap hom_sh
   exact (ℱ.2 X _ (hu.cover_lift S')).amalgamate _ hs'
 #align category_theory.Ran_is_sheaf_of_cover_lifting.get_section CategoryTheory.RanIsSheafOfCoverLifting.getSection
 

@@ -137,7 +137,7 @@ instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [�
 
 theorem IsCompact.smul {α β} [HasSmul α β] [TopologicalSpace β] [HasContinuousConstSmul α β] (a : α) {s : Set β}
     (hs : IsCompact s) : IsCompact (a • s) :=
-  hs.Image (continuous_id'.const_smul a)
+  hs.image (continuous_id'.const_smul a)
 #align is_compact.smul IsCompact.smul
 
 end HasSmul
@@ -154,12 +154,12 @@ instance Units.has_continuous_const_smul :
 #align units.has_continuous_const_smul Units.has_continuous_const_smul
 
 @[to_additive]
-theorem smul_closure_subset (c : M) (s : Set α) : c • Closure s ⊆ Closure (c • s) :=
+theorem smul_closure_subset (c : M) (s : Set α) : c • closure s ⊆ closure (c • s) :=
   ((Set.maps_to_image _ _).closure <| continuous_id.const_smul c).image_subset
 #align smul_closure_subset smul_closure_subset
 
 @[to_additive]
-theorem smul_closure_orbit_subset (c : M) (x : α) : c • Closure (MulAction.Orbit M x) ⊆ Closure (MulAction.Orbit M x) :=
+theorem smul_closure_orbit_subset (c : M) (x : α) : c • closure (MulAction.orbit M x) ⊆ closure (MulAction.orbit M x) :=
   (smul_closure_subset c _).trans <| closure_mono <| MulAction.smul_orbit_subset _ _
 #align smul_closure_orbit_subset smul_closure_orbit_subset
 
@@ -232,7 +232,7 @@ theorem IsClosed.smul {s : Set α} (hs : IsClosed s) (c : G) : IsClosed (c • s
 #align is_closed.smul IsClosed.smul
 
 @[to_additive]
-theorem closure_smul (c : G) (s : Set α) : Closure (c • s) = c • Closure s :=
+theorem closure_smul (c : G) (s : Set α) : closure (c • s) = c • closure s :=
   ((Homeomorph.smul c).image_closure s).symm
 #align closure_smul closure_smul
 
@@ -242,7 +242,7 @@ theorem Dense.smul (c : G) {s : Set α} (hs : Dense s) : Dense (c • s) := by
 #align dense.smul Dense.smul
 
 @[to_additive]
-theorem interior_smul (c : G) (s : Set α) : Interior (c • s) = c • Interior s :=
+theorem interior_smul (c : G) (s : Set α) : interior (c • s) = c • interior s :=
   ((Homeomorph.smul c).image_interior s).symm
 #align interior_smul interior_smul
 
@@ -290,12 +290,12 @@ theorem IsOpen.smul₀ {c : G₀} {s : Set α} (hs : IsOpen s) (hc : c ≠ 0) : 
   is_open_map_smul₀ hc s hs
 #align is_open.smul₀ IsOpen.smul₀
 
-theorem interior_smul₀ {c : G₀} (hc : c ≠ 0) (s : Set α) : Interior (c • s) = c • Interior s :=
+theorem interior_smul₀ {c : G₀} (hc : c ≠ 0) (s : Set α) : interior (c • s) = c • interior s :=
   ((Homeomorph.smulOfNeZero c hc).image_interior s).symm
 #align interior_smul₀ interior_smul₀
 
 theorem closure_smul₀ {E} [Zero E] [MulActionWithZero G₀ E] [TopologicalSpace E] [T1Space E]
-    [HasContinuousConstSmul G₀ E] (c : G₀) (s : Set E) : Closure (c • s) = c • Closure s := by
+    [HasContinuousConstSmul G₀ E] (c : G₀) (s : Set E) : closure (c • s) = c • closure s := by
   rcases eq_or_ne c 0 with (rfl | hc)
   · rcases eq_empty_or_nonempty s with (rfl | hs)
     · simp

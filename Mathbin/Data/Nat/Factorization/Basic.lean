@@ -47,7 +47,7 @@ namespace Nat
 /-- `n.factorization` is the finitely supported function `ℕ →₀ ℕ`
  mapping each prime factor of `n` to its multiplicity in `n`. -/
 def factorization (n : ℕ) : ℕ →₀ ℕ where
-  Support := n.factors.toFinset
+  support := n.factors.toFinset
   toFun p := if p.Prime then padicValNat p n else 0
   mem_support_to_fun := by
     rcases eq_or_ne n 0 with (rfl | hn0)
@@ -120,22 +120,22 @@ theorem factorization_one : factorization 1 = 0 := by simpa [factorization]
 
 /-- The support of `n.factorization` is exactly `n.factors.to_finset` -/
 @[simp]
-theorem support_factorization {n : ℕ} : n.factorization.Support = n.factors.toFinset := by simp [factorization]
+theorem support_factorization {n : ℕ} : n.factorization.support = n.factors.toFinset := by simp [factorization]
 #align nat.support_factorization Nat.support_factorization
 
-theorem factor_iff_mem_factorization {n p : ℕ} : p ∈ n.factorization.Support ↔ p ∈ n.factors := by
+theorem factor_iff_mem_factorization {n p : ℕ} : p ∈ n.factorization.support ↔ p ∈ n.factors := by
   simp only [support_factorization, List.mem_to_finset]
 #align nat.factor_iff_mem_factorization Nat.factor_iff_mem_factorization
 
-theorem prime_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.Support) : p.Prime :=
+theorem prime_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.support) : p.Prime :=
   prime_of_mem_factors (factor_iff_mem_factorization.mp hp)
 #align nat.prime_of_mem_factorization Nat.prime_of_mem_factorization
 
-theorem pos_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.Support) : 0 < p :=
+theorem pos_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.support) : 0 < p :=
   Prime.pos (prime_of_mem_factorization hp)
 #align nat.pos_of_mem_factorization Nat.pos_of_mem_factorization
 
-theorem le_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.Support) : p ≤ n :=
+theorem le_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.support) : p ≤ n :=
   le_of_mem_factors (factor_iff_mem_factorization.mp h)
 #align nat.le_of_mem_factorization Nat.le_of_mem_factorization
 
@@ -218,7 +218,7 @@ theorem factorization_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
 #align nat.factorization_mul Nat.factorization_mul
 
 theorem factorization_mul_support {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
-    (a * b).factorization.Support = a.factorization.Support ∪ b.factorization.Support := by
+    (a * b).factorization.support = a.factorization.support ∪ b.factorization.support := by
   ext q
   simp only [Finset.mem_union, factor_iff_mem_factorization]
   exact mem_factors_mul ha hb
@@ -290,7 +290,7 @@ theorem Prime.eq_of_factorization_pos {p q : ℕ} (hp : Prime p) (h : p.factoriz
 
 /-- Any finsupp `f : ℕ →₀ ℕ` whose support is in the primes is equal to the factorization of
 the product `∏ (a : ℕ) in f.support, a ^ f a`. -/
-theorem prod_pow_factorization_eq_self {f : ℕ →₀ ℕ} (hf : ∀ p : ℕ, p ∈ f.Support → Prime p) :
+theorem prod_pow_factorization_eq_self {f : ℕ →₀ ℕ} (hf : ∀ p : ℕ, p ∈ f.support → Prime p) :
     (f.Prod pow).factorization = f := by
   have h : ∀ x : ℕ, x ∈ f.support → x ^ f x ≠ 0 := fun p hp => pow_ne_zero _ (Prime.ne_zero (hf p hp))
   simp only [Finsupp.prod, factorization_prod h]
@@ -298,13 +298,13 @@ theorem prod_pow_factorization_eq_self {f : ℕ →₀ ℕ} (hf : ∀ p : ℕ, p
   exact sum_congr rfl fun p hp => prime.factorization_pow (hf p hp)
 #align nat.prod_pow_factorization_eq_self Nat.prod_pow_factorization_eq_self
 
-theorem eq_factorization_iff {n : ℕ} {f : ℕ →₀ ℕ} (hn : n ≠ 0) (hf : ∀ p ∈ f.Support, Prime p) :
+theorem eq_factorization_iff {n : ℕ} {f : ℕ →₀ ℕ} (hn : n ≠ 0) (hf : ∀ p ∈ f.support, Prime p) :
     f = n.factorization ↔ f.Prod pow = n :=
   ⟨fun h => by rw [h, factorization_prod_pow_eq_self hn], fun h => by rw [← h, prod_pow_factorization_eq_self hf]⟩
 #align nat.eq_factorization_iff Nat.eq_factorization_iff
 
 /-- The equiv between `ℕ+` and `ℕ →₀ ℕ` with support in the primes. -/
-def factorizationEquiv : ℕ+ ≃ { f : ℕ →₀ ℕ | ∀ p ∈ f.Support, Prime p } where
+def factorizationEquiv : ℕ+ ≃ { f : ℕ →₀ ℕ | ∀ p ∈ f.support, Prime p } where
   toFun := fun ⟨n, hn⟩ => ⟨n.factorization, fun _ => prime_of_mem_factorization⟩
   invFun := fun ⟨f, hf⟩ => ⟨f.Prod pow, prod_pow_pos_of_zero_not_mem_support fun H => not_prime_zero (hf 0 H)⟩
   left_inv := fun ⟨x, hx⟩ => Subtype.ext <| factorization_prod_pow_eq_self hx.Ne.symm
@@ -316,7 +316,7 @@ theorem factorization_equiv_apply (n : ℕ+) : (factorizationEquiv n).1 = n.1.fa
   rfl
 #align nat.factorization_equiv_apply Nat.factorization_equiv_apply
 
-theorem factorization_equiv_inv_apply {f : ℕ →₀ ℕ} (hf : ∀ p ∈ f.Support, Prime p) :
+theorem factorization_equiv_inv_apply {f : ℕ →₀ ℕ} (hf : ∀ p ∈ f.support, Prime p) :
     (factorizationEquiv.symm ⟨f, hf⟩).1 = f.Prod pow :=
   rfl
 #align nat.factorization_equiv_inv_apply Nat.factorization_equiv_inv_apply
@@ -407,7 +407,7 @@ theorem ord_compl_mul (a b p : ℕ) : ord_compl[p] (a * b) = ord_compl[p] a * or
 /-! ### Factorization and divisibility -/
 
 
-theorem dvd_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.Support) : p ∣ n := by
+theorem dvd_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.support) : p ∣ n := by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
     
@@ -719,7 +719,7 @@ theorem prod_factors_gcd_mul_prod_factors_mul {β : Type _} [CommMonoid β] (m n
 #align nat.prod_factors_gcd_mul_prod_factors_mul Nat.prod_factors_gcd_mul_prod_factors_mul
 
 theorem set_of_pow_dvd_eq_Icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
-    { i : ℕ | i ≠ 0 ∧ p ^ i ∣ n } = Set.IccCat 1 (n.factorization p) := by
+    { i : ℕ | i ≠ 0 ∧ p ^ i ∣ n } = Set.icc 1 (n.factorization p) := by
   ext
   simp [lt_succ_iff, one_le_iff_ne_zero, pp.pow_dvd_iff_le_factorization hn]
 #align nat.set_of_pow_dvd_eq_Icc_factorization Nat.set_of_pow_dvd_eq_Icc_factorization
@@ -783,13 +783,13 @@ theorem factorization_eq_of_coprime_right {p a b : ℕ} (hab : Coprime a b) (hpb
 
 /-- The prime factorizations of coprime `a` and `b` are disjoint -/
 theorem factorization_disjoint_of_coprime {a b : ℕ} (hab : Coprime a b) :
-    Disjoint a.factorization.Support b.factorization.Support := by
+    Disjoint a.factorization.support b.factorization.support := by
   simpa only [support_factorization] using disjoint_to_finset_iff_disjoint.mpr (coprime_factors_disjoint hab)
 #align nat.factorization_disjoint_of_coprime Nat.factorization_disjoint_of_coprime
 
 /-- For coprime `a` and `b` the prime factorization `a * b` is the union of those of `a` and `b` -/
 theorem factorization_mul_support_of_coprime {a b : ℕ} (hab : Coprime a b) :
-    (a * b).factorization.Support = a.factorization.Support ∪ b.factorization.Support := by
+    (a * b).factorization.support = a.factorization.support ∪ b.factorization.support := by
   rw [factorization_mul_of_coprime hab]
   exact support_add_eq (factorization_disjoint_of_coprime hab)
 #align nat.factorization_mul_support_of_coprime Nat.factorization_mul_support_of_coprime

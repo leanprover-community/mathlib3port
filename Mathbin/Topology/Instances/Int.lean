@@ -49,19 +49,19 @@ theorem closedEmbeddingCoeReal : ClosedEmbedding (coe : ℤ → ℝ) :=
 instance : MetricSpace ℤ :=
   Int.uniform_embedding_coe_real.comapMetricSpace _
 
-theorem preimage_ball (x : ℤ) (r : ℝ) : coe ⁻¹' Ball (x : ℝ) r = Ball x r :=
+theorem preimage_ball (x : ℤ) (r : ℝ) : coe ⁻¹' ball (x : ℝ) r = ball x r :=
   rfl
 #align int.preimage_ball Int.preimage_ball
 
-theorem preimage_closed_ball (x : ℤ) (r : ℝ) : coe ⁻¹' ClosedBall (x : ℝ) r = ClosedBall x r :=
+theorem preimage_closed_ball (x : ℤ) (r : ℝ) : coe ⁻¹' closedBall (x : ℝ) r = closedBall x r :=
   rfl
 #align int.preimage_closed_ball Int.preimage_closed_ball
 
-theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : Ball x r = IooCat ⌊↑x - r⌋ ⌈↑x + r⌉ := by
+theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : ball x r = ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
   rw [← preimage_ball, Real.ball_eq_Ioo, preimage_Ioo]
 #align int.ball_eq_Ioo Int.ball_eq_Ioo
 
-theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : ClosedBall x r = IccCat ⌈↑x - r⌉ ⌊↑x + r⌋ := by
+theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : closedBall x r = icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
   rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
 #align int.closed_ball_eq_Icc Int.closed_ball_eq_Icc
 

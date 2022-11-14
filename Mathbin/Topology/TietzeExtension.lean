@@ -175,9 +175,8 @@ for any interval (finite or infinite, open or closed).
 If `e : X → Y` is a closed embedding and `f : X →ᵇ ℝ` is a bounded continuous function such that
 `f x ∈ [a, b]` for all `x`, where `a ≤ b`, then there exists a bounded continuous function
 `g : Y →ᵇ ℝ` such that `g y ∈ [a, b]` for all `y` and `g ∘ e = f`. -/
-theorem exists_extension_forall_mem_Icc_of_closed_embedding (f : X →ᵇ ℝ) {a b : ℝ} {e : X → Y}
-    (hf : ∀ x, f x ∈ IccCat a b) (hle : a ≤ b) (he : ClosedEmbedding e) :
-    ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ IccCat a b) ∧ g ∘ e = f := by
+theorem exists_extension_forall_mem_Icc_of_closed_embedding (f : X →ᵇ ℝ) {a b : ℝ} {e : X → Y} (hf : ∀ x, f x ∈ icc a b)
+    (hle : a ≤ b) (he : ClosedEmbedding e) : ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ icc a b) ∧ g ∘ e = f := by
   rcases exists_extension_norm_eq_of_closed_embedding (f - const X ((a + b) / 2)) he with ⟨g, hgf, hge⟩
   refine' ⟨const Y ((a + b) / 2) + g, fun y => _, _⟩
   · suffices ∥f - const X ((a + b) / 2)∥ ≤ (b - a) / 2 by
@@ -199,7 +198,7 @@ topological space `Y`. Let `f` be a bounded continuous real-valued function on `
 exists a bounded continuous function `g : Y →ᵇ ℝ` such that `g ∘ e = f` and each value `g y` belongs
 to a closed interval `[f x₁, f x₂]` for some `x₁` and `x₂`.  -/
 theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f : X →ᵇ ℝ) {e : X → Y}
-    (he : ClosedEmbedding e) : ∃ g : Y →ᵇ ℝ, (∀ y, ∃ x₁ x₂, g y ∈ IccCat (f x₁) (f x₂)) ∧ g ∘ e = f := by
+    (he : ClosedEmbedding e) : ∃ g : Y →ᵇ ℝ, (∀ y, ∃ x₁ x₂, g y ∈ icc (f x₁) (f x₂)) ∧ g ∘ e = f := by
   inhabit X
   -- Put `a = ⨅ x, f x` and `b = ⨆ x, f x`
   obtain ⟨a, ha⟩ : ∃ a, IsGlb (range f) a

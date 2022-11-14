@@ -61,7 +61,7 @@ private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrdered
   rw [coeff_zero_eq_eval_zero] at h0
   by_contra' hx
   have := intermediate_value_univ (-1) 0 (cyclotomic n ℝ).Continuous
-  obtain ⟨y, hy : is_root _ y⟩ := this (show (0 : ℝ) ∈ Set.IccCat _ _ by simpa [h0] using hx)
+  obtain ⟨y, hy : is_root _ y⟩ := this (show (0 : ℝ) ∈ Set.icc _ _ by simpa [h0] using hx)
   rw [is_root_cyclotomic_iff] at hy
   rw [hy.eq_order_of] at hn
   exact hn.not_le LinearOrderedRing.order_of_le_two

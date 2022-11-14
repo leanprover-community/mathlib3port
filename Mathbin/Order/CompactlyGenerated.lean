@@ -212,16 +212,16 @@ theorem IsSupFiniteCompact.isSupClosedCompact (h : IsSupFiniteCompact α) : IsSu
 
 theorem IsSupClosedCompact.well_founded (h : IsSupClosedCompact α) : WellFounded ((· > ·) : α → α → Prop) := by
   refine' rel_embedding.well_founded_iff_no_descending_seq.mpr ⟨fun a => _⟩
-  suffices Sup (Set.Range a) ∈ Set.Range a by
+  suffices Sup (Set.range a) ∈ Set.range a by
     obtain ⟨n, hn⟩ := set.mem_range.mp this
-    have h' : Sup (Set.Range a) < a (n + 1) := by
+    have h' : Sup (Set.range a) < a (n + 1) := by
       change _ > _
       simp [← hn, a.map_rel_iff]
     apply lt_irrefl (a (n + 1))
     apply lt_of_le_of_lt _ h'
     apply le_Sup
     apply Set.mem_range_self
-  apply h (Set.Range a)
+  apply h (Set.range a)
   · use a 37
     apply Set.mem_range_self
     
@@ -550,15 +550,15 @@ theorem compactlyGeneratedOfWellFounded (h : WellFounded ((· > ·) : α → α 
 
 /-- A compact element `k` has the property that any `b < k` lies below a "maximal element below
 `k`", which is to say `[⊥, k]` is coatomic. -/
-theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCoatomic (Set.IicCat k) :=
+theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCoatomic (Set.iic k) :=
   ⟨fun ⟨b, hbk⟩ => by
     by_cases htriv:b = k
     · left
       ext
-      simp only [htriv, Set.IicCat.coe_top, Subtype.coe_mk]
+      simp only [htriv, Set.iic.coe_top, Subtype.coe_mk]
       
     right
-    obtain ⟨a, a₀, ba, h⟩ := zorn_nonempty_partial_order₀ (Set.IioCat k) _ b (lt_of_le_of_ne hbk htriv)
+    obtain ⟨a, a₀, ba, h⟩ := zorn_nonempty_partial_order₀ (Set.iio k) _ b (lt_of_le_of_ne hbk htriv)
     · refine' ⟨⟨a, le_of_lt a₀⟩, ⟨ne_of_lt a₀, fun c hck => by_contradiction fun c₀ => _⟩, ba⟩
       cases h c.1 (lt_of_le_of_ne c.2 fun con => c₀ (Subtype.ext con)) hck.le
       exact lt_irrefl _ hck
@@ -596,10 +596,10 @@ instance (priority := 100) is_atomic_of_complemented_lattice [ComplementedLattic
       have hc' := CompleteLattice.Iic_coatomic_of_compact_element hc
       rw [← is_atomic_iff_is_coatomic] at hc'
       haveI := hc'
-      obtain con | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le (⟨c, le_refl c⟩ : Set.IicCat c)
+      obtain con | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le (⟨c, le_refl c⟩ : Set.iic c)
       · exfalso
         apply hcbot
-        simp only [Subtype.ext_iff, Set.IicCat.coe_bot, Subtype.coe_mk] at con
+        simp only [Subtype.ext_iff, Set.iic.coe_bot, Subtype.coe_mk] at con
         exact con
         
       rw [← Subtype.coe_le_coe, Subtype.coe_mk] at hac
@@ -614,7 +614,7 @@ instance (priority := 100) isAtomisticOfComplementedLattice [ComplementedLattice
       symm
       have hle : Sup { a : α | IsAtom a ∧ a ≤ b } ≤ b := Sup_le fun _ => And.right
       apply (lt_or_eq_of_le hle).resolve_left fun con => _
-      obtain ⟨c, hc⟩ := exists_is_compl (⟨Sup { a : α | IsAtom a ∧ a ≤ b }, hle⟩ : Set.IicCat b)
+      obtain ⟨c, hc⟩ := exists_is_compl (⟨Sup { a : α | IsAtom a ∧ a ≤ b }, hle⟩ : Set.iic b)
       obtain rfl | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le c
       · exact ne_of_lt con (Subtype.ext_iff.1 (eq_top_of_is_compl_bot hc))
         

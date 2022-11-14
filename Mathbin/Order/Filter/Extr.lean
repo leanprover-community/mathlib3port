@@ -133,19 +133,19 @@ theorem is_max_on_iff : IsMaxOn f s a ↔ ∀ x ∈ s, f x ≤ f a :=
   Iff.rfl
 #align is_max_on_iff is_max_on_iff
 
-theorem is_min_on_univ_iff : IsMinOn f Univ a ↔ ∀ x, f a ≤ f x :=
+theorem is_min_on_univ_iff : IsMinOn f univ a ↔ ∀ x, f a ≤ f x :=
   univ_subset_iff.trans eq_univ_iff_forall
 #align is_min_on_univ_iff is_min_on_univ_iff
 
-theorem is_max_on_univ_iff : IsMaxOn f Univ a ↔ ∀ x, f x ≤ f a :=
+theorem is_max_on_univ_iff : IsMaxOn f univ a ↔ ∀ x, f x ≤ f a :=
   univ_subset_iff.trans eq_univ_iff_forall
 #align is_max_on_univ_iff is_max_on_univ_iff
 
-theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : Tendsto f l (𝓟 <| IciCat (f a)) :=
+theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : Tendsto f l (𝓟 <| ici (f a)) :=
   tendsto_principal.2 h
 #align is_min_filter.tendsto_principal_Ici IsMinFilter.tendsto_principal_Ici
 
-theorem IsMaxFilter.tendsto_principal_Iic (h : IsMaxFilter f l a) : Tendsto f l (𝓟 <| IicCat (f a)) :=
+theorem IsMaxFilter.tendsto_principal_Iic (h : IsMaxFilter f l a) : Tendsto f l (𝓟 <| iic (f a)) :=
   tendsto_principal.2 h
 #align is_max_filter.tendsto_principal_Iic IsMaxFilter.tendsto_principal_Iic
 

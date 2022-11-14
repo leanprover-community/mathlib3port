@@ -149,12 +149,12 @@ theorem directed_id_iff : Directed r id ↔ IsDirected α r :=
   ⟨fun h => ⟨h⟩, @directed_id _ _⟩
 #align directed_id_iff directed_id_iff
 
-theorem directed_on_univ [IsDirected α r] : DirectedOn r Set.Univ := fun a _ b _ =>
+theorem directed_on_univ [IsDirected α r] : DirectedOn r Set.univ := fun a _ b _ =>
   let ⟨c, hc⟩ := directed_of r a b
   ⟨c, trivial, hc⟩
 #align directed_on_univ directed_on_univ
 
-theorem directed_on_univ_iff : DirectedOn r Set.Univ ↔ IsDirected α r :=
+theorem directed_on_univ_iff : DirectedOn r Set.univ ↔ IsDirected α r :=
   ⟨fun h =>
     ⟨fun a b =>
       let ⟨c, _, hc⟩ := h a trivial b trivial

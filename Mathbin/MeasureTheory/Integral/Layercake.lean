@@ -66,8 +66,7 @@ See `measure_theory.layercake` for the main formulation of the layer cake theore
 theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f)
     (f_mble : Measurable f) (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t) (g_mble : Measurable g)
     (g_nn : ∀ t > 0, 0 ≤ g t) :
-    (∫⁻ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) = ∫⁻ t in IoiCat 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t) :=
-  by
+    (∫⁻ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) = ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t) := by
   have g_intble' : ∀ t : ℝ, 0 ≤ t → IntervalIntegrable g volume 0 t := by
     intro t ht
     cases eq_or_lt_of_le ht
@@ -162,9 +161,8 @@ weighted by `g`.
 
 Roughly speaking, the statement is: `∫⁻ (G ∘ f) ∂μ = ∫⁻ t in 0 .. ∞, g(t) * μ {ω | f(ω) ≥ t}`. -/
 theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f) (f_mble : Measurable f)
-    (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t) (g_nn : ∀ᵐ t ∂volume.restrict (IoiCat 0), 0 ≤ g t) :
-    (∫⁻ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) = ∫⁻ t in IoiCat 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t) :=
-  by
+    (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t) (g_nn : ∀ᵐ t ∂volume.restrict (ioi 0), 0 ≤ g t) :
+    (∫⁻ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) = ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t) := by
   have ex_G : ∃ G : ℝ → ℝ, Measurable G ∧ 0 ≤ G ∧ g =ᵐ[volume.restrict (Ioi 0)] G := by
     refine' AeMeasurable.exists_measurable_nonneg _ g_nn
     exact aeMeasurableIoiOfForallIoc fun t ht => (g_intble t ht).1.1.AeMeasurable
@@ -196,7 +194,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
 For a nonnegative function `f` on a sigma-finite measure space, the Lebesgue integral of `f` can
 be written (roughly speaking) as: `∫⁻ f ∂μ = ∫⁻ t in 0 .. ∞, μ {ω | f(ω) ≥ t}`. -/
 theorem lintegral_eq_lintegral_meas_le (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f) (f_mble : Measurable f) :
-    (∫⁻ ω, Ennreal.ofReal (f ω) ∂μ) = ∫⁻ t in IoiCat 0, μ { a : α | t ≤ f a } := by
+    (∫⁻ ω, Ennreal.ofReal (f ω) ∂μ) = ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } := by
   set cst := fun t : ℝ => (1 : ℝ) with def_cst
   have cst_intble : ∀ t > 0, IntervalIntegrable cst volume 0 t := fun _ _ => intervalIntegrableConst
   have key :=
@@ -214,7 +212,7 @@ be written (roughly speaking) as: `∫⁻ f^p ∂μ = p * ∫⁻ t in 0 .. ∞, 
 theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f) (f_mble : Measurable f)
     {p : ℝ} (p_pos : 0 < p) :
     (∫⁻ ω, Ennreal.ofReal (f ω ^ p) ∂μ) =
-      Ennreal.ofReal p * ∫⁻ t in IoiCat 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (t ^ (p - 1)) :=
+      Ennreal.ofReal p * ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (t ^ (p - 1)) :=
   by
   have one_lt_p : -1 < p - 1 := by linarith
   have obs : ∀ x : ℝ, (∫ t : ℝ in 0 ..x, t ^ (p - 1)) = x ^ p / p := by

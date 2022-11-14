@@ -141,15 +141,15 @@ def coeff (x : X) : FreeAbelianGroup X →+ ℤ :=
 /-- `support a` for `a : free_abelian_group X` is the finite set of `x : X`
 that occur in the formal sum `a`. -/
 def support (a : FreeAbelianGroup X) : Finset X :=
-  a.toFinsupp.Support
+  a.toFinsupp.support
 #align free_abelian_group.support FreeAbelianGroup.support
 
-theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.Support ↔ coeff x a ≠ 0 := by
+theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.support ↔ coeff x a ≠ 0 := by
   rw [support, Finsupp.mem_support_iff]
   exact Iff.rfl
 #align free_abelian_group.mem_support_iff FreeAbelianGroup.mem_support_iff
 
-theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∉ a.Support ↔ coeff x a = 0 := by
+theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∉ a.support ↔ coeff x a = 0 := by
   rw [support, Finsupp.not_mem_support_iff]
   exact Iff.rfl
 #align free_abelian_group.not_mem_support_iff FreeAbelianGroup.not_mem_support_iff
@@ -184,7 +184,7 @@ theorem support_nsmul (k : ℕ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support
 
 open Classical
 
-theorem support_add (a b : FreeAbelianGroup X) : support (a + b) ⊆ a.Support ∪ b.Support := by
+theorem support_add (a b : FreeAbelianGroup X) : support (a + b) ⊆ a.support ∪ b.support := by
   simp only [support, AddMonoidHom.map_add]
   apply Finsupp.support_add
 #align free_abelian_group.support_add FreeAbelianGroup.support_add

@@ -191,15 +191,15 @@ theorem self_comp_symm (h : α ≃ᵤ β) : ⇑h ∘ ⇑h.symm = id :=
 #align uniform_equiv.self_comp_symm UniformEquiv.self_comp_symm
 
 @[simp]
-theorem range_coe (h : α ≃ᵤ β) : Range h = univ :=
+theorem range_coe (h : α ≃ᵤ β) : range h = univ :=
   h.Surjective.range_eq
 #align uniform_equiv.range_coe UniformEquiv.range_coe
 
-theorem image_symm (h : α ≃ᵤ β) : Image h.symm = Preimage h :=
+theorem image_symm (h : α ≃ᵤ β) : image h.symm = preimage h :=
   funext h.symm.toEquiv.image_eq_preimage
 #align uniform_equiv.image_symm UniformEquiv.image_symm
 
-theorem preimage_symm (h : α ≃ᵤ β) : Preimage h.symm = Image h :=
+theorem preimage_symm (h : α ≃ᵤ β) : preimage h.symm = image h :=
   (funext h.toEquiv.image_eq_preimage).symm
 #align uniform_equiv.preimage_symm UniformEquiv.preimage_symm
 
@@ -227,7 +227,7 @@ protected theorem uniform_embedding (h : α ≃ᵤ β) : UniformEmbedding h :=
 #align uniform_equiv.uniform_embedding UniformEquiv.uniform_embedding
 
 /-- Uniform equiv given a uniform embedding. -/
-noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) : α ≃ᵤ Set.Range f where
+noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) : α ≃ᵤ Set.range f where
   uniform_continuous_to_fun := hf.to_uniform_inducing.UniformContinuous.subtype_mk _
   uniform_continuous_inv_fun := by simp [hf.to_uniform_inducing.uniform_continuous_iff, uniform_continuous_subtype_coe]
   toEquiv := Equiv.ofInjective f hf.inj
@@ -349,7 +349,7 @@ def finTwoArrow : (Fin 2 → α) ≃ᵤ α × α :=
 def image (e : α ≃ᵤ β) (s : Set α) : s ≃ᵤ e '' s where
   uniform_continuous_to_fun := (e.UniformContinuous.comp uniform_continuous_subtype_val).subtype_mk _
   uniform_continuous_inv_fun := (e.symm.UniformContinuous.comp uniform_continuous_subtype_val).subtype_mk _
-  toEquiv := e.toEquiv.Image s
+  toEquiv := e.toEquiv.image s
 #align uniform_equiv.image UniformEquiv.image
 
 end UniformEquiv

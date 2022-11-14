@@ -264,7 +264,7 @@ theorem well_founded_gt_exact_sequence {β γ : Type _} [Preorder β] [PartialOr
 #align well_founded_gt_exact_sequence well_founded_gt_exact_sequence
 
 /-- The diamond isomorphism between the intervals `[a ⊓ b, a]` and `[b, a ⊔ b]` -/
-def infIccOrderIsoIccSup (a b : α) : Set.IccCat (a ⊓ b) a ≃o Set.IccCat b (a ⊔ b) where
+def infIccOrderIsoIccSup (a b : α) : Set.icc (a ⊓ b) a ≃o Set.icc b (a ⊔ b) where
   toFun x := ⟨x ⊔ b, ⟨le_sup_right, sup_le_sup_right x.Prop.2 b⟩⟩
   invFun x := ⟨a ⊓ x, ⟨inf_le_inf_left a x.Prop.1, inf_le_left⟩⟩
   left_inv x :=
@@ -293,10 +293,10 @@ namespace IsCompl
 variable [Lattice α] [BoundedOrder α] [IsModularLattice α]
 
 /-- The diamond isomorphism between the intervals `set.Iic a` and `set.Ici b`. -/
-def iicOrderIsoIci {a b : α} (h : IsCompl a b) : Set.IicCat a ≃o Set.IciCat b :=
-  (OrderIso.setCongr (Set.IicCat a) (Set.IccCat (a ⊓ b) a) (h.inf_eq_bot.symm ▸ Set.Icc_bot.symm)).trans <|
+def iicOrderIsoIci {a b : α} (h : IsCompl a b) : Set.iic a ≃o Set.ici b :=
+  (OrderIso.setCongr (Set.iic a) (Set.icc (a ⊓ b) a) (h.inf_eq_bot.symm ▸ Set.Icc_bot.symm)).trans <|
     (infIccOrderIsoIccSup a b).trans
-      (OrderIso.setCongr (Set.IccCat b (a ⊔ b)) (Set.IciCat b) (h.sup_eq_top.symm ▸ Set.Icc_top))
+      (OrderIso.setCongr (Set.icc b (a ⊔ b)) (Set.ici b) (h.sup_eq_top.symm ▸ Set.Icc_top))
 #align is_compl.Iic_order_iso_Ici IsCompl.iicOrderIsoIci
 
 end IsCompl
@@ -332,11 +332,11 @@ namespace IsModularLattice
 
 variable [Lattice α] [IsModularLattice α] {a : α}
 
-instance isModularLatticeIic : IsModularLattice (Set.IicCat a) :=
+instance isModularLatticeIic : IsModularLattice (Set.iic a) :=
   ⟨fun x y z xz => (sup_inf_le_assoc_of_le (y : α) xz : (↑x ⊔ ↑y) ⊓ ↑z ≤ ↑x ⊔ ↑y ⊓ ↑z)⟩
 #align is_modular_lattice.is_modular_lattice_Iic IsModularLattice.isModularLatticeIic
 
-instance isModularLatticeIci : IsModularLattice (Set.IciCat a) :=
+instance isModularLatticeIci : IsModularLattice (Set.ici a) :=
   ⟨fun x y z xz => (sup_inf_le_assoc_of_le (y : α) xz : (↑x ⊔ ↑y) ⊓ ↑z ≤ ↑x ⊔ ↑y ⊓ ↑z)⟩
 #align is_modular_lattice.is_modular_lattice_Ici IsModularLattice.isModularLatticeIci
 
@@ -344,7 +344,7 @@ section ComplementedLattice
 
 variable [BoundedOrder α] [ComplementedLattice α]
 
-instance complementedLatticeIic : ComplementedLattice (Set.IicCat a) :=
+instance complementedLatticeIic : ComplementedLattice (Set.iic a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_is_compl x
     ⟨⟨y ⊓ a, Set.mem_Iic.2 inf_le_right⟩, by
@@ -362,7 +362,7 @@ instance complementedLatticeIic : ComplementedLattice (Set.IicCat a) :=
         ⟩⟩
 #align is_modular_lattice.complemented_lattice_Iic IsModularLattice.complementedLatticeIic
 
-instance complementedLatticeIci : ComplementedLattice (Set.IciCat a) :=
+instance complementedLatticeIci : ComplementedLattice (Set.ici a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_is_compl x
     ⟨⟨y ⊔ a, Set.mem_Ici.2 le_sup_right⟩, by

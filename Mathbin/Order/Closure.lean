@@ -160,28 +160,28 @@ theorem le_closure_iff (x y : α) : x ≤ c y ↔ c x ≤ c y :=
 #align closure_operator.le_closure_iff ClosureOperator.le_closure_iff
 
 /-- An element `x` is closed for the closure operator `c` if it is a fixed point for it. -/
-def Closed : Set α := fun x => c x = x
-#align closure_operator.closed ClosureOperator.Closed
+def closed : Set α := fun x => c x = x
+#align closure_operator.closed ClosureOperator.closed
 
-theorem mem_closed_iff (x : α) : x ∈ c.Closed ↔ c x = x :=
+theorem mem_closed_iff (x : α) : x ∈ c.closed ↔ c x = x :=
   Iff.rfl
 #align closure_operator.mem_closed_iff ClosureOperator.mem_closed_iff
 
-theorem mem_closed_iff_closure_le (x : α) : x ∈ c.Closed ↔ c x ≤ x :=
+theorem mem_closed_iff_closure_le (x : α) : x ∈ c.closed ↔ c x ≤ x :=
   ⟨le_of_eq, fun h => h.antisymm (c.le_closure x)⟩
 #align closure_operator.mem_closed_iff_closure_le ClosureOperator.mem_closed_iff_closure_le
 
-theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ c.Closed) : c x = x :=
+theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ c.closed) : c x = x :=
   h
 #align closure_operator.closure_eq_self_of_mem_closed ClosureOperator.closure_eq_self_of_mem_closed
 
 @[simp]
-theorem closure_is_closed (x : α) : c x ∈ c.Closed :=
+theorem closure_is_closed (x : α) : c x ∈ c.closed :=
   c.idempotent x
 #align closure_operator.closure_is_closed ClosureOperator.closure_is_closed
 
 /-- The set of closed elements for `c` is exactly its range. -/
-theorem closed_eq_range_close : c.Closed = Set.Range c :=
+theorem closed_eq_range_close : c.closed = Set.range c :=
   Set.ext fun x =>
     ⟨fun h => ⟨x, h⟩, by
       rintro ⟨y, rfl⟩
@@ -189,26 +189,26 @@ theorem closed_eq_range_close : c.Closed = Set.Range c :=
 #align closure_operator.closed_eq_range_close ClosureOperator.closed_eq_range_close
 
 /-- Send an `x` to an element of the set of closed elements (by taking the closure). -/
-def toClosed (x : α) : c.Closed :=
+def toClosed (x : α) : c.closed :=
   ⟨c x, c.closure_is_closed x⟩
 #align closure_operator.to_closed ClosureOperator.toClosed
 
 @[simp]
-theorem closure_le_closed_iff_le (x : α) {y : α} (hy : c.Closed y) : c x ≤ y ↔ x ≤ y := by
+theorem closure_le_closed_iff_le (x : α) {y : α} (hy : c.closed y) : c x ≤ y ↔ x ≤ y := by
   rw [← c.closure_eq_self_of_mem_closed hy, ← le_closure_iff]
 #align closure_operator.closure_le_closed_iff_le ClosureOperator.closure_le_closed_iff_le
 
 /-- A closure operator is equal to the closure operator obtained by feeding `c.closed` into the
 `mk₃` constructor. -/
 theorem eq_mk₃_closed (c : ClosureOperator α) :
-    c = mk₃ c c.Closed c.le_closure c.closure_is_closed fun x y hxy hy => (c.closure_le_closed_iff_le x hy).2 hxy := by
+    c = mk₃ c c.closed c.le_closure c.closure_is_closed fun x y hxy hy => (c.closure_le_closed_iff_le x hy).2 hxy := by
   ext
   rfl
 #align closure_operator.eq_mk₃_closed ClosureOperator.eq_mk₃_closed
 
 /-- The property `p` fed into the `mk₃` constructor implies being closed. -/
 theorem mem_mk₃_closed {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
-    {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) : x ∈ (mk₃ f p hf hfp hmin).Closed :=
+    {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) : x ∈ (mk₃ f p hf hfp hmin).closed :=
   (hmin le_rfl hx).antisymm (hf _)
 #align closure_operator.mem_mk₃_closed ClosureOperator.mem_mk₃_closed
 
@@ -225,7 +225,7 @@ theorem closure_top : c ⊤ = ⊤ :=
   le_top.antisymm (c.le_closure _)
 #align closure_operator.closure_top ClosureOperator.closure_top
 
-theorem top_mem_closed : ⊤ ∈ c.Closed :=
+theorem top_mem_closed : ⊤ ∈ c.closed :=
   c.closure_top
 #align closure_operator.top_mem_closed ClosureOperator.top_mem_closed
 
@@ -373,14 +373,14 @@ section Preorder
 variable [Preorder α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 
 /-- An element `x` is closed for `l : lower_adjoint u` if it is a fixed point: `u (l x) = x` -/
-def Closed : Set α := fun x => u (l x) = x
-#align lower_adjoint.closed LowerAdjoint.Closed
+def closed : Set α := fun x => u (l x) = x
+#align lower_adjoint.closed LowerAdjoint.closed
 
-theorem mem_closed_iff (x : α) : x ∈ l.Closed ↔ u (l x) = x :=
+theorem mem_closed_iff (x : α) : x ∈ l.closed ↔ u (l x) = x :=
   Iff.rfl
 #align lower_adjoint.mem_closed_iff LowerAdjoint.mem_closed_iff
 
-theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ l.Closed) : u (l x) = x :=
+theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ l.closed) : u (l x) = x :=
   h
 #align lower_adjoint.closure_eq_self_of_mem_closed LowerAdjoint.closure_eq_self_of_mem_closed
 
@@ -390,27 +390,27 @@ section PartialOrder
 
 variable [PartialOrder α] [PartialOrder β] {u : β → α} (l : LowerAdjoint u)
 
-theorem mem_closed_iff_closure_le (x : α) : x ∈ l.Closed ↔ u (l x) ≤ x :=
+theorem mem_closed_iff_closure_le (x : α) : x ∈ l.closed ↔ u (l x) ≤ x :=
   l.ClosureOperator.mem_closed_iff_closure_le _
 #align lower_adjoint.mem_closed_iff_closure_le LowerAdjoint.mem_closed_iff_closure_le
 
 @[simp]
-theorem closure_is_closed (x : α) : u (l x) ∈ l.Closed :=
+theorem closure_is_closed (x : α) : u (l x) ∈ l.closed :=
   l.idempotent x
 #align lower_adjoint.closure_is_closed LowerAdjoint.closure_is_closed
 
 /-- The set of closed elements for `l` is the range of `u ∘ l`. -/
-theorem closed_eq_range_close : l.Closed = Set.Range (u ∘ l) :=
+theorem closed_eq_range_close : l.closed = Set.range (u ∘ l) :=
   l.ClosureOperator.closed_eq_range_close
 #align lower_adjoint.closed_eq_range_close LowerAdjoint.closed_eq_range_close
 
 /-- Send an `x` to an element of the set of closed elements (by taking the closure). -/
-def toClosed (x : α) : l.Closed :=
+def toClosed (x : α) : l.closed :=
   ⟨u (l x), l.closure_is_closed x⟩
 #align lower_adjoint.to_closed LowerAdjoint.toClosed
 
 @[simp]
-theorem closure_le_closed_iff_le (x : α) {y : α} (hy : l.Closed y) : u (l x) ≤ y ↔ x ≤ y :=
+theorem closure_le_closed_iff_le (x : α) {y : α} (hy : l.closed y) : u (l x) ≤ y ↔ x ≤ y :=
   l.ClosureOperator.closure_le_closed_iff_le x hy
 #align lower_adjoint.closure_le_closed_iff_le LowerAdjoint.closure_le_closed_iff_le
 

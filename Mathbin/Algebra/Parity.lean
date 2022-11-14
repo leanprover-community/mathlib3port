@@ -211,7 +211,7 @@ theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by simp [Even, Dvd.Dvd
 #align even_iff_two_dvd even_iff_two_dvd
 
 @[simp]
-theorem range_two_mul (α : Type _) [Semiring α] : (Set.Range fun x : α => 2 * x) = { a | Even a } := by
+theorem range_two_mul (α : Type _) [Semiring α] : (Set.range fun x : α => 2 * x) = { a | Even a } := by
   ext x
   simp [eq_comm, two_mul, Even]
 #align range_two_mul range_two_mul
@@ -268,7 +268,7 @@ theorem odd_bit1 (a : α) : Odd (bit1 a) :=
 #align odd_bit1 odd_bit1
 
 @[simp]
-theorem range_two_mul_add_one (α : Type _) [Semiring α] : (Set.Range fun x : α => 2 * x + 1) = { a | Odd a } := by
+theorem range_two_mul_add_one (α : Type _) [Semiring α] : (Set.range fun x : α => 2 * x + 1) = { a | Odd a } := by
   ext x
   simp [Odd, eq_comm]
 #align range_two_mul_add_one range_two_mul_add_one

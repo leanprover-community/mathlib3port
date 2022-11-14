@@ -58,7 +58,7 @@ instance : Add (Language α) :=
 /-- The product of two languages `l` and `m` is the language made of the strings `x ++ y` where
 `x ∈ l` and `y ∈ m`. -/
 instance : Mul (Language α) :=
-  ⟨Image2 (· ++ ·)⟩
+  ⟨image2 (· ++ ·)⟩
 
 theorem zero_def : (0 : Language α) = (∅ : Set _) :=
   rfl
@@ -72,15 +72,15 @@ theorem add_def (l m : Language α) : l + m = l ∪ m :=
   rfl
 #align language.add_def Language.add_def
 
-theorem mul_def (l m : Language α) : l * m = Image2 (· ++ ·) l m :=
+theorem mul_def (l m : Language α) : l * m = image2 (· ++ ·) l m :=
   rfl
 #align language.mul_def Language.mul_def
 
 /-- The star of a language `L` is the set of all strings which can be written by concatenating
   strings from `L`. -/
-def Star (l : Language α) : Language α :=
+def star (l : Language α) : Language α :=
   { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l }
-#align language.star Language.Star
+#align language.star Language.star
 
 theorem star_def (l : Language α) : l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l } :=
   rfl
@@ -151,7 +151,7 @@ theorem add_self (l : Language α) : l + l = l :=
 
 /-- Maps the alphabet of a language. -/
 def map (f : α → β) : Language α →+* Language β where
-  toFun := Image (List.map f)
+  toFun := image (List.map f)
   map_zero' := image_empty _
   map_one' := image_singleton
   map_add' := image_union _
@@ -251,7 +251,7 @@ theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i := by
 #align language.star_eq_supr_pow Language.star_eq_supr_pow
 
 @[simp]
-theorem map_star (f : α → β) (l : Language α) : map f (Star l) = Star (map f l) := by
+theorem map_star (f : α → β) (l : Language α) : map f (star l) = star (map f l) := by
   rw [star_eq_supr_pow, star_eq_supr_pow]
   simp_rw [← map_pow]
   exact image_Union

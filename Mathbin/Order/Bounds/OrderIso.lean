@@ -19,13 +19,13 @@ namespace OrderIso
 
 variable [Preorder α] [Preorder β] (f : α ≃o β)
 
-theorem upper_bounds_image {s : Set α} : UpperBounds (f '' s) = f '' UpperBounds s :=
+theorem upper_bounds_image {s : Set α} : upperBounds (f '' s) = f '' upperBounds s :=
   Subset.antisymm
     (fun x hx => ⟨f.symm x, fun y hy => f.le_symm_apply.2 (hx <| mem_image_of_mem _ hy), f.apply_symm_apply x⟩)
     f.Monotone.image_upper_bounds_subset_upper_bounds_image
 #align order_iso.upper_bounds_image OrderIso.upper_bounds_image
 
-theorem lower_bounds_image {s : Set α} : LowerBounds (f '' s) = f '' LowerBounds s :=
+theorem lower_bounds_image {s : Set α} : lowerBounds (f '' s) = f '' lowerBounds s :=
   @upper_bounds_image αᵒᵈ βᵒᵈ _ _ f.dual _
 #align order_iso.lower_bounds_image OrderIso.lower_bounds_image
 

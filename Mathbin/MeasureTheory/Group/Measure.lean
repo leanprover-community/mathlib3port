@@ -488,9 +488,9 @@ theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant (U : Set G) (hU : 
 it gives finite mass to any compact set. -/
 @[to_additive
       "If a left-invariant measure gives finite mass to a set with nonempty interior, then\nit gives finite mass to any compact set."]
-theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant' {U : Set G} (hU : (Interior U).Nonempty) (h : μ U ≠ ∞)
+theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant' {U : Set G} (hU : (interior U).Nonempty) (h : μ U ≠ ∞)
     {K : Set G} (hK : IsCompact K) : μ K < ∞ :=
-  measure_lt_top_of_is_compact_of_is_mul_left_invariant (Interior U) is_open_interior hU
+  measure_lt_top_of_is_compact_of_is_mul_left_invariant (interior U) is_open_interior hU
     ((measure_mono interior_subset).trans_lt (lt_top_iff_ne_top.2 h)).Ne hK
 #align
   measure_theory.measure_lt_top_of_is_compact_of_is_mul_left_invariant' MeasureTheory.measure_lt_top_of_is_compact_of_is_mul_left_invariant'
@@ -564,7 +564,7 @@ it is a Haar measure. -/
 @[to_additive
       "If a left-invariant measure gives positive mass to some compact set with nonempty\ninterior, then it is an additive Haar measure."]
 theorem isHaarMeasureOfIsCompactNonemptyInterior [TopologicalGroup G] [BorelSpace G] (μ : Measure G)
-    [IsMulLeftInvariant μ] (K : Set G) (hK : IsCompact K) (h'K : (Interior K).Nonempty) (h : μ K ≠ 0) (h' : μ K ≠ ∞) :
+    [IsMulLeftInvariant μ] (K : Set G) (hK : IsCompact K) (h'K : (interior K).Nonempty) (h : μ K ≠ 0) (h' : μ K ≠ ∞) :
     IsHaarMeasure μ :=
   { lt_top_of_is_compact := fun L hL => measure_lt_top_of_is_compact_of_is_mul_left_invariant' h'K h' hL,
     toIsOpenPosMeasure := isOpenPosMeasureOfMulLeftInvariantOfCompact K hK h }
@@ -602,7 +602,7 @@ theorem _root_.mul_equiv.is_haar_measure_map [BorelSpace G] [TopologicalGroup G]
 See Note [lower instance priority] -/
 @[to_additive "A Haar measure on a σ-compact space is σ-finite.\n\nSee Note [lower instance priority]"]
 instance (priority := 100) IsHaarMeasure.sigmaFinite [SigmaCompactSpace G] : SigmaFinite μ :=
-  ⟨⟨{ Set := CompactCovering G, set_mem := fun n => mem_univ _,
+  ⟨⟨{ Set := compactCovering G, set_mem := fun n => mem_univ _,
         Finite := fun n => IsCompact.measure_lt_top <| is_compact_compact_covering G n,
         spanning := Union_compact_covering G }⟩⟩
 #align measure_theory.measure.is_haar_measure.sigma_finite MeasureTheory.Measure.IsHaarMeasure.sigmaFinite
@@ -627,7 +627,7 @@ instance (priority := 100) IsHaarMeasure.hasNoAtoms [TopologicalGroup G] [BorelS
   · constructor
     simp [le_bot_iff.1 H]
     
-  obtain ⟨K, K_compact, K_int⟩ : ∃ K : Set G, IsCompact K ∧ (1 : G) ∈ Interior K := by
+  obtain ⟨K, K_compact, K_int⟩ : ∃ K : Set G, IsCompact K ∧ (1 : G) ∈ interior K := by
     rcases exists_compact_subset is_open_univ (mem_univ (1 : G)) with ⟨K, hK⟩
     exact ⟨K, hK.1, hK.2.1⟩
   have K_inf : Set.Infinite K := infinite_of_mem_nhds (1 : G) (mem_interior_iff_mem_nhds.1 K_int)

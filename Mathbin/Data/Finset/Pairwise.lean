@@ -21,7 +21,7 @@ variable {α ι ι' : Type _}
 instance [DecidableEq α] {r : α → α → Prop} [DecidableRel r] {s : Finset α} : Decidable ((s : Set α).Pairwise r) :=
   decidable_of_iff' (∀ a ∈ s, ∀ b ∈ s, a ≠ b → r a b) Iff.rfl
 
-theorem Finset.pairwise_disjoint_range_singleton : (Set.Range (singleton : α → Finset α)).PairwiseDisjoint id := by
+theorem Finset.pairwise_disjoint_range_singleton : (Set.range (singleton : α → Finset α)).PairwiseDisjoint id := by
   rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ h
   exact disjoint_singleton.2 (ne_of_apply_ne _ h)
 #align finset.pairwise_disjoint_range_singleton Finset.pairwise_disjoint_range_singleton
@@ -35,7 +35,7 @@ theorem PairwiseDisjoint.elim_finset {s : Set ι} {f : ι → Finset α} (hs : s
 
 theorem PairwiseDisjoint.image_finset_of_le [DecidableEq ι] [SemilatticeInf α] [OrderBot α] {s : Finset ι} {f : ι → α}
     (hs : (s : Set ι).PairwiseDisjoint f) {g : ι → ι} (hf : ∀ a, f (g a) ≤ f a) :
-    (s.Image g : Set ι).PairwiseDisjoint f := by
+    (s.image g : Set ι).PairwiseDisjoint f := by
   rw [coe_image]
   exact hs.image_of_le hf
 #align set.pairwise_disjoint.image_finset_of_le Set.PairwiseDisjoint.image_finset_of_le

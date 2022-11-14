@@ -106,7 +106,7 @@ theorem norm_of_mem_sphere {x : Fin n → ℕ} (hx : x ∈ sphere n d k) :
 theorem sphere_subset_preimage_metric_sphere :
     (sphere n d k : Set (Fin n → ℕ)) ⊆
       (fun x : Fin n → ℕ => (PiLp.equiv 2 _).symm (coe ∘ x : Fin n → ℝ)) ⁻¹'
-        Metric.Sphere (0 : PiLp 2 fun _ : Fin n => ℝ) (sqrt k) :=
+        Metric.sphere (0 : PiLp 2 fun _ : Fin n => ℝ) (sqrt k) :=
   fun x hx => by rw [Set.mem_preimage, mem_sphere_zero_iff_norm, norm_of_mem_sphere hx]
 #align behrend.sphere_subset_preimage_metric_sphere Behrend.sphere_subset_preimage_metric_sphere
 
@@ -176,7 +176,7 @@ theorem add_salem_spencer_sphere : AddSalemSpencer (sphere n d k : Set (Fin n �
   exact norm_of_mem_sphere
 #align behrend.add_salem_spencer_sphere Behrend.add_salem_spencer_sphere
 
-theorem add_salem_spencer_image_sphere : AddSalemSpencer ((sphere n d k).Image (map (2 * d - 1)) : Set ℕ) := by
+theorem add_salem_spencer_image_sphere : AddSalemSpencer ((sphere n d k).image (map (2 * d - 1)) : Set ℕ) := by
   rw [coe_image]
   refine'
     @AddSalemSpencer.image _ (Fin n → ℕ) ℕ _ _ (sphere n d k) _ (map (2 * d - 1)) (map_inj_on.mono _)

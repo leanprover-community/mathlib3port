@@ -55,7 +55,7 @@ variable [DecidableEq α] {𝒜 : Finset (Finset α)} {s t : Finset α} {a : α}
 `𝒜`, and the (`k` times) iterated shadow (`shadow^[k]`) is all sets we can get by removing `k`
 elements from any set in `𝒜`. -/
 def shadow (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  𝒜.sup fun s => s.Image (erase s)
+  𝒜.sup fun s => s.image (erase s)
 #align finset.shadow Finset.shadow
 
 -- mathport name: finset.shadow
@@ -178,7 +178,7 @@ variable [DecidableEq α] [Fintype α] {𝒜 : Finset (Finset α)} {s t : Finset
 `𝒜`, and the (`k` times) iterated upper shadow (`up_shadow^[k]`) is all sets we can get by adding
 `k` elements from any set in `𝒜`. -/
 def upShadow (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  𝒜.sup fun s => sᶜ.Image fun a => insert a s
+  𝒜.sup fun s => sᶜ.image fun a => insert a s
 #align finset.up_shadow Finset.upShadow
 
 -- mathport name: finset.up_shadow
@@ -278,7 +278,7 @@ theorem mem_up_shadow_iff_exists_mem_card_add : s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃
 #align finset.mem_up_shadow_iff_exists_mem_card_add Finset.mem_up_shadow_iff_exists_mem_card_add
 
 @[simp]
-theorem shadow_image_compl : ((∂ ) 𝒜).Image compl = (∂⁺ ) (𝒜.Image compl) := by
+theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image compl) := by
   ext s
   simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
   constructor
@@ -291,7 +291,7 @@ theorem shadow_image_compl : ((∂ ) 𝒜).Image compl = (∂⁺ ) (𝒜.Image c
 #align finset.shadow_image_compl Finset.shadow_image_compl
 
 @[simp]
-theorem up_shadow_image_compl : ((∂⁺ ) 𝒜).Image compl = (∂ ) (𝒜.Image compl) := by
+theorem up_shadow_image_compl : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.image compl) := by
   ext s
   simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
   constructor

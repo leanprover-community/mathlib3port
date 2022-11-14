@@ -268,9 +268,9 @@ theorem Ioo_self : ioo a a = ∅ :=
 variable {a}
 
 /-- A set with upper and lower bounds in a locally finite order is a fintype -/
-def _root_.set.fintype_of_mem_bounds {s : Set α} [DecidablePred (· ∈ s)] (ha : a ∈ LowerBounds s)
-    (hb : b ∈ UpperBounds s) : Fintype s :=
-  (Set.fintypeSubset (Set.IccCat a b)) fun x hx => ⟨ha hx, hb hx⟩
+def _root_.set.fintype_of_mem_bounds {s : Set α} [DecidablePred (· ∈ s)] (ha : a ∈ lowerBounds s)
+    (hb : b ∈ upperBounds s) : Fintype s :=
+  (Set.fintypeSubset (Set.icc a b)) fun x hx => ⟨ha hx, hb hx⟩
 #align finset._root_.set.fintype_of_mem_bounds finset._root_.set.fintype_of_mem_bounds
 
 theorem _root_.bdd_below.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.Finite := by
@@ -773,7 +773,7 @@ section OrderedCancelAddCommMonoid
 
 variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [DecidableEq α] [LocallyFiniteOrder α]
 
-theorem image_add_left_Icc (a b c : α) : (icc a b).Image ((· + ·) c) = icc (c + a) (c + b) := by
+theorem image_add_left_Icc (a b c : α) : (icc a b).image ((· + ·) c) = icc (c + a) (c + b) := by
   ext x
   rw [mem_image, mem_Icc]
   constructor
@@ -789,7 +789,7 @@ theorem image_add_left_Icc (a b c : α) : (icc a b).Image ((· + ·) c) = icc (c
     
 #align finset.image_add_left_Icc Finset.image_add_left_Icc
 
-theorem image_add_left_Ico (a b c : α) : (ico a b).Image ((· + ·) c) = ico (c + a) (c + b) := by
+theorem image_add_left_Ico (a b c : α) : (ico a b).image ((· + ·) c) = ico (c + a) (c + b) := by
   ext x
   rw [mem_image, mem_Ico]
   constructor
@@ -805,7 +805,7 @@ theorem image_add_left_Ico (a b c : α) : (ico a b).Image ((· + ·) c) = ico (c
     
 #align finset.image_add_left_Ico Finset.image_add_left_Ico
 
-theorem image_add_left_Ioc (a b c : α) : (ioc a b).Image ((· + ·) c) = ioc (c + a) (c + b) := by
+theorem image_add_left_Ioc (a b c : α) : (ioc a b).image ((· + ·) c) = ioc (c + a) (c + b) := by
   ext x
   rw [mem_image, mem_Ioc]
   refine' ⟨_, fun hx => _⟩
@@ -820,7 +820,7 @@ theorem image_add_left_Ioc (a b c : α) : (ioc a b).Image ((· + ·) c) = ioc (c
     
 #align finset.image_add_left_Ioc Finset.image_add_left_Ioc
 
-theorem image_add_left_Ioo (a b c : α) : (ioo a b).Image ((· + ·) c) = ioo (c + a) (c + b) := by
+theorem image_add_left_Ioo (a b c : α) : (ioo a b).image ((· + ·) c) = ioo (c + a) (c + b) := by
   ext x
   rw [mem_image, mem_Ioo]
   refine' ⟨_, fun hx => _⟩
@@ -835,22 +835,22 @@ theorem image_add_left_Ioo (a b c : α) : (ioo a b).Image ((· + ·) c) = ioo (c
     
 #align finset.image_add_left_Ioo Finset.image_add_left_Ioo
 
-theorem image_add_right_Icc (a b c : α) : (icc a b).Image (· + c) = icc (a + c) (b + c) := by
+theorem image_add_right_Icc (a b c : α) : (icc a b).image (· + c) = icc (a + c) (b + c) := by
   simp_rw [add_comm _ c]
   exact image_add_left_Icc a b c
 #align finset.image_add_right_Icc Finset.image_add_right_Icc
 
-theorem image_add_right_Ico (a b c : α) : (ico a b).Image (· + c) = ico (a + c) (b + c) := by
+theorem image_add_right_Ico (a b c : α) : (ico a b).image (· + c) = ico (a + c) (b + c) := by
   simp_rw [add_comm _ c]
   exact image_add_left_Ico a b c
 #align finset.image_add_right_Ico Finset.image_add_right_Ico
 
-theorem image_add_right_Ioc (a b c : α) : (ioc a b).Image (· + c) = ioc (a + c) (b + c) := by
+theorem image_add_right_Ioc (a b c : α) : (ioc a b).image (· + c) = ioc (a + c) (b + c) := by
   simp_rw [add_comm _ c]
   exact image_add_left_Ioc a b c
 #align finset.image_add_right_Ioc Finset.image_add_right_Ioc
 
-theorem image_add_right_Ioo (a b c : α) : (ioo a b).Image (· + c) = ioo (a + c) (b + c) := by
+theorem image_add_right_Ioo (a b c : α) : (ioo a b).image (· + c) = ioo (a + c) (b + c) := by
   simp_rw [add_comm _ c]
   exact image_add_left_Ioo a b c
 #align finset.image_add_right_Ioo Finset.image_add_right_Ioo

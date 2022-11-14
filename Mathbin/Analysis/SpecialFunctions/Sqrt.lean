@@ -28,8 +28,8 @@ namespace Real
 noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ where
   toFun x := x ^ 2
   invFun := sqrt
-  Source := IoiCat 0
-  Target := IoiCat 0
+  source := ioi 0
+  target := ioi 0
   map_source' x hx := mem_Ioi.2 (pow_pos hx _)
   map_target' x hx := mem_Ioi.2 (sqrt_pos.2 hx)
   left_inv' x hx := sqrt_sq (le_of_lt hx)

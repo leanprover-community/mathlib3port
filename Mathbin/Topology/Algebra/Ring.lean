@@ -112,12 +112,12 @@ end Subsemiring
 /-- The (topological-space) closure of a subsemiring of a topological semiring is
 itself a subsemiring. -/
 def Subsemiring.topologicalClosure (s : Subsemiring α) : Subsemiring α :=
-  { s.toSubmonoid.topologicalClosure, s.toAddSubmonoid.topologicalClosure with Carrier := Closure (s : Set α) }
+  { s.toSubmonoid.topologicalClosure, s.toAddSubmonoid.topologicalClosure with carrier := closure (s : Set α) }
 #align subsemiring.topological_closure Subsemiring.topologicalClosure
 
 @[simp]
 theorem Subsemiring.topological_closure_coe (s : Subsemiring α) :
-    (s.topologicalClosure : Set α) = Closure (s : Set α) :=
+    (s.topologicalClosure : Set α) = closure (s : Set α) :=
   rfl
 #align subsemiring.topological_closure_coe Subsemiring.topological_closure_coe
 
@@ -274,7 +274,7 @@ end Subring
 /-- The (topological-space) closure of a subring of a topological ring is
 itself a subring. -/
 def Subring.topologicalClosure (S : Subring α) : Subring α :=
-  { S.toSubmonoid.topologicalClosure, S.toAddSubgroup.topologicalClosure with Carrier := Closure (S : Set α) }
+  { S.toSubmonoid.topologicalClosure, S.toAddSubgroup.topologicalClosure with carrier := closure (S : Set α) }
 #align subring.topological_closure Subring.topologicalClosure
 
 theorem Subring.subring_topological_closure (s : Subring α) : s ≤ s.topologicalClosure :=
@@ -304,12 +304,12 @@ variable {α : Type _} [TopologicalSpace α] [Ring α] [TopologicalRing α]
 
 /-- The closure of an ideal in a topological ring as an ideal. -/
 def Ideal.closure (S : Ideal α) : Ideal α :=
-  { AddSubmonoid.topologicalClosure S.toAddSubmonoid with Carrier := Closure S,
+  { AddSubmonoid.topologicalClosure S.toAddSubmonoid with carrier := closure S,
     smul_mem' := fun c x hx => (map_mem_closure (mul_left_continuous _) hx) fun a => S.mul_mem_left c }
 #align ideal.closure Ideal.closure
 
 @[simp]
-theorem Ideal.coe_closure (S : Ideal α) : (S.closure : Set α) = Closure S :=
+theorem Ideal.coe_closure (S : Ideal α) : (S.closure : Set α) = closure S :=
   rfl
 #align ideal.coe_closure Ideal.coe_closure
 

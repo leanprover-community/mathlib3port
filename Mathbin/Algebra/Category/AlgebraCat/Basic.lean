@@ -27,7 +27,7 @@ variable (R : Type u) [CommRing R]
 
 /-- The category of R-algebras and their morphisms. -/
 structure AlgebraCat where
-  Carrier : Type v
+  carrier : Type v
   [isRing : Ring carrier]
   [isAlgebra : Algebra R carrier]
 #align Algebra AlgebraCat
@@ -112,7 +112,7 @@ variable (R)
 /-- The "free algebra" functor, sending a type `S` to the free algebra on `S`. -/
 @[simps]
 def free : Type u ⥤ AlgebraCat.{u} R where
-  obj S := { Carrier := FreeAlgebra R S, isRing := Algebra.semiringToRing R }
+  obj S := { carrier := FreeAlgebra R S, isRing := Algebra.semiringToRing R }
   map S T f := FreeAlgebra.lift _ <| FreeAlgebra.ι _ ∘ f
   -- obviously can fill the next two goals, but it is slow
   map_id' := by

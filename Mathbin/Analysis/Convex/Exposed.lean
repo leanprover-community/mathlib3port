@@ -60,12 +60,12 @@ variable {𝕜}
 
 /-- A useful way to build exposed sets from intersecting `A` with halfspaces (modelled by an
 inequality with a functional). -/
-def ContinuousLinearMap.ToExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
+def ContinuousLinearMap.toExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
   { x ∈ A | ∀ y ∈ A, l y ≤ l x }
-#align continuous_linear_map.to_exposed ContinuousLinearMap.ToExposed
+#align continuous_linear_map.to_exposed ContinuousLinearMap.toExposed
 
-theorem ContinuousLinearMap.ToExposed.isExposed : IsExposed 𝕜 A (l.ToExposed A) := fun h => ⟨l, rfl⟩
-#align continuous_linear_map.to_exposed.is_exposed ContinuousLinearMap.ToExposed.isExposed
+theorem ContinuousLinearMap.toExposed.isExposed : IsExposed 𝕜 A (l.toExposed A) := fun h => ⟨l, rfl⟩
+#align continuous_linear_map.to_exposed.is_exposed ContinuousLinearMap.toExposed.isExposed
 
 theorem isExposedEmpty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ => by
   exfalso
@@ -207,26 +207,26 @@ variable (𝕜)
 
 /-- A point is exposed with respect to `A` iff there exists an hyperplane whose intersection with
 `A` is exactly that point. -/
-def Set.ExposedPoints (A : Set E) : Set E :=
+def Set.exposedPoints (A : Set E) : Set E :=
   { x ∈ A | ∃ l : E →L[𝕜] 𝕜, ∀ y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) }
-#align set.exposed_points Set.ExposedPoints
+#align set.exposed_points Set.exposedPoints
 
 variable {𝕜}
 
-theorem exposed_point_def : x ∈ A.ExposedPoints 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀ y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) :=
+theorem exposed_point_def : x ∈ A.exposedPoints 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀ y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) :=
   Iff.rfl
 #align exposed_point_def exposed_point_def
 
-theorem exposed_points_subset : A.ExposedPoints 𝕜 ⊆ A := fun x hx => hx.1
+theorem exposed_points_subset : A.exposedPoints 𝕜 ⊆ A := fun x hx => hx.1
 #align exposed_points_subset exposed_points_subset
 
 @[simp]
-theorem exposed_points_empty : (∅ : Set E).ExposedPoints 𝕜 = ∅ :=
+theorem exposed_points_empty : (∅ : Set E).exposedPoints 𝕜 = ∅ :=
   subset_empty_iff.1 exposed_points_subset
 #align exposed_points_empty exposed_points_empty
 
 /-- Exposed points exactly correspond to exposed singletons. -/
-theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.ExposedPoints 𝕜 ↔ IsExposed 𝕜 A {x} := by
+theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.exposedPoints 𝕜 ↔ IsExposed 𝕜 A {x} := by
   use fun ⟨hxA, l, hl⟩ h =>
     ⟨l,
       Eq.symm <| eq_singleton_iff_unique_mem.2 ⟨⟨hxA, fun y hy => (hl y hy).1⟩, fun z hz => (hl z hz.1).2 (hz.2 x hxA)⟩⟩
@@ -236,7 +236,7 @@ theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.ExposedPoints 𝕜 �
   exact ⟨hl.1.1, l, fun y hy => ⟨hl.1.2 y hy, fun hxy => hl.2 y ⟨hy, fun z hz => (hl.1.2 z hz).trans hxy⟩⟩⟩
 #align mem_exposed_points_iff_exposed_singleton mem_exposed_points_iff_exposed_singleton
 
-theorem exposed_points_subset_extreme_points : A.ExposedPoints 𝕜 ⊆ A.ExtremePoints 𝕜 := fun x hx =>
+theorem exposed_points_subset_extreme_points : A.exposedPoints 𝕜 ⊆ A.extremePoints 𝕜 := fun x hx =>
   mem_extreme_points_iff_extreme_singleton.2 (mem_exposed_points_iff_exposed_singleton.1 hx).IsExtreme
 #align exposed_points_subset_extreme_points exposed_points_subset_extreme_points
 

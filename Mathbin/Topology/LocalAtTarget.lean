@@ -70,7 +70,7 @@ theorem is_open_iff_inter_of_supr_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOp
   · exact fun H i => H.inter (U i).2
     
   · intro H
-    have : (⋃ i, (U i : Set β)) = Set.Univ := by
+    have : (⋃ i, (U i : Set β)) = Set.univ := by
       convert congr_arg coe hU
       simp
     rw [← s.inter_univ, ← this, Set.inter_Union]

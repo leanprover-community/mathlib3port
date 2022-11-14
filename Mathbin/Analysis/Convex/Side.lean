@@ -778,7 +778,7 @@ theorem s_opp_side_line_map_right {s : AffineSubspace R P} {x y : P} (hx : x ∈
 #align affine_subspace.s_opp_side_line_map_right AffineSubspace.s_opp_side_line_map_right
 
 theorem set_of_w_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.WSameSide x y } = Set.Image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.IciCat 0) s := by
+    { y | s.WSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.ici 0) s := by
   ext y
   simp_rw [Set.mem_set_of, Set.mem_image2, Set.mem_Ici, mem_coe]
   constructor
@@ -801,7 +801,7 @@ theorem set_of_w_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x 
 #align affine_subspace.set_of_w_same_side_eq_image2 AffineSubspace.set_of_w_same_side_eq_image2
 
 theorem set_of_s_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.SSameSide x y } = Set.Image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.IoiCat 0) s := by
+    { y | s.SSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.ioi 0) s := by
   ext y
   simp_rw [Set.mem_set_of, Set.mem_image2, Set.mem_Ioi, mem_coe]
   constructor
@@ -823,7 +823,7 @@ theorem set_of_s_same_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x 
 #align affine_subspace.set_of_s_same_side_eq_image2 AffineSubspace.set_of_s_same_side_eq_image2
 
 theorem set_of_w_opp_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.WOppSide x y } = Set.Image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.IicCat 0) s := by
+    { y | s.WOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.iic 0) s := by
   ext y
   simp_rw [Set.mem_set_of, Set.mem_image2, Set.mem_Iic, mem_coe]
   constructor
@@ -847,7 +847,7 @@ theorem set_of_w_opp_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x �
 #align affine_subspace.set_of_w_opp_side_eq_image2 AffineSubspace.set_of_w_opp_side_eq_image2
 
 theorem set_of_s_opp_side_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.SOppSide x y } = Set.Image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.IioCat 0) s := by
+    { y | s.SOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.iio 0) s := by
   ext y
   simp_rw [Set.mem_set_of, Set.mem_image2, Set.mem_Iio, mem_coe]
   constructor
@@ -903,7 +903,7 @@ theorem is_connected_set_of_w_same_side {s : AffineSubspace ℝ P} (x : P) (h : 
     
   · rw [set_of_w_same_side_eq_image2 hx hp, ← Set.image_prod]
     refine'
-      (is_connected_Ici.prod (is_connected_iff_connected_space.2 _)).Image _
+      (is_connected_Ici.prod (is_connected_iff_connected_space.2 _)).image _
         ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
     convert AddTorsor.connected_space s.direction s
     
@@ -927,7 +927,7 @@ theorem is_connected_set_of_s_same_side {s : AffineSubspace ℝ P} {x : P} (hx :
   haveI : Nonempty s := ⟨⟨p, hp⟩⟩
   rw [set_of_s_same_side_eq_image2 hx hp, ← Set.image_prod]
   refine'
-    (is_connected_Ioi.prod (is_connected_iff_connected_space.2 _)).Image _
+    (is_connected_Ioi.prod (is_connected_iff_connected_space.2 _)).image _
       ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
   convert AddTorsor.connected_space s.direction s
 #align affine_subspace.is_connected_set_of_s_same_side AffineSubspace.is_connected_set_of_s_same_side
@@ -963,7 +963,7 @@ theorem is_connected_set_of_w_opp_side {s : AffineSubspace ℝ P} (x : P) (h : (
     
   · rw [set_of_w_opp_side_eq_image2 hx hp, ← Set.image_prod]
     refine'
-      (is_connected_Iic.prod (is_connected_iff_connected_space.2 _)).Image _
+      (is_connected_Iic.prod (is_connected_iff_connected_space.2 _)).image _
         ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
     convert AddTorsor.connected_space s.direction s
     
@@ -986,7 +986,7 @@ theorem is_connected_set_of_s_opp_side {s : AffineSubspace ℝ P} {x : P} (hx : 
   haveI : Nonempty s := ⟨⟨p, hp⟩⟩
   rw [set_of_s_opp_side_eq_image2 hx hp, ← Set.image_prod]
   refine'
-    (is_connected_Iio.prod (is_connected_iff_connected_space.2 _)).Image _
+    (is_connected_Iio.prod (is_connected_iff_connected_space.2 _)).image _
       ((continuous_fst.smul continuous_const).vadd continuous_snd).ContinuousOn
   convert AddTorsor.connected_space s.direction s
 #align affine_subspace.is_connected_set_of_s_opp_side AffineSubspace.is_connected_set_of_s_opp_side

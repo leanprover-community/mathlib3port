@@ -83,7 +83,7 @@ theorem card_eq_one_iff_unique : Nat.card α = 1 ↔ Subsingleton α ∧ Nonempt
   Cardinal.to_nat_eq_one_iff_unique
 #align nat.card_eq_one_iff_unique Nat.card_eq_one_iff_unique
 
-theorem card_eq_two_iff : Nat.card α = 2 ↔ ∃ x y : α, x ≠ y ∧ {x, y} = @Set.Univ α :=
+theorem card_eq_two_iff : Nat.card α = 2 ↔ ∃ x y : α, x ≠ y ∧ {x, y} = @Set.univ α :=
   (to_nat_eq_iff two_ne_zero).trans <| Iff.trans (by rw [Nat.cast_two]) mk_eq_two_iff
 #align nat.card_eq_two_iff Nat.card_eq_two_iff
 

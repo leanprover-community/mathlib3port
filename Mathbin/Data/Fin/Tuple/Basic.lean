@@ -235,13 +235,13 @@ theorem pi_lex_lt_cons_cons {x₀ y₀ : α 0} {x y : ∀ i : Fin n, α i.succ} 
   simp [and_assoc', exists_and_left]
 #align fin.pi_lex_lt_cons_cons Fin.pi_lex_lt_cons_cons
 
-theorem range_fin_succ {α} (f : Fin (n + 1) → α) : Set.Range f = insert (f 0) (Set.Range (Fin.tail f)) :=
+theorem range_fin_succ {α} (f : Fin (n + 1) → α) : Set.range f = insert (f 0) (Set.range (Fin.tail f)) :=
   Set.ext fun y => exists_fin_succ.trans <| eq_comm.Or Iff.rfl
 #align fin.range_fin_succ Fin.range_fin_succ
 
 @[simp]
 theorem range_cons {α : Type _} {n : ℕ} (x : α) (b : Fin n → α) :
-    Set.Range (Fin.cons x b : Fin n.succ → α) = insert x (Set.Range b) := by rw [range_fin_succ, cons_zero, tail_cons]
+    Set.range (Fin.cons x b : Fin n.succ → α) = insert x (Set.range b) := by rw [range_fin_succ, cons_zero, tail_cons]
 #align fin.range_cons Fin.range_cons
 
 /-- `fin.append ho u v` appends two vectors of lengths `m` and `n` to produce
@@ -635,18 +635,18 @@ theorem le_insert_nth_iff {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbo
 open Set
 
 theorem insert_nth_mem_Icc {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q₁ q₂ : ∀ j, α j} :
-    i.insertNth x p ∈ IccCat q₁ q₂ ↔
-      x ∈ IccCat (q₁ i) (q₂ i) ∧ p ∈ IccCat (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
+    i.insertNth x p ∈ icc q₁ q₂ ↔
+      x ∈ icc (q₁ i) (q₂ i) ∧ p ∈ icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
   by simp only [mem_Icc, insert_nth_le_iff, le_insert_nth_iff, and_assoc, and_left_comm]
 #align fin.insert_nth_mem_Icc Fin.insert_nth_mem_Icc
 
-theorem preimage_insert_nth_Icc_of_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j} (hx : x ∈ IccCat (q₁ i) (q₂ i)) :
-    i.insertNth x ⁻¹' IccCat q₁ q₂ = IccCat (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
+theorem preimage_insert_nth_Icc_of_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j} (hx : x ∈ icc (q₁ i) (q₂ i)) :
+    i.insertNth x ⁻¹' icc q₁ q₂ = icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
   Set.ext fun p => by simp only [mem_preimage, insert_nth_mem_Icc, hx, true_and_iff]
 #align fin.preimage_insert_nth_Icc_of_mem Fin.preimage_insert_nth_Icc_of_mem
 
-theorem preimage_insert_nth_Icc_of_not_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j}
-    (hx : x ∉ IccCat (q₁ i) (q₂ i)) : i.insertNth x ⁻¹' IccCat q₁ q₂ = ∅ :=
+theorem preimage_insert_nth_Icc_of_not_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j} (hx : x ∉ icc (q₁ i) (q₂ i)) :
+    i.insertNth x ⁻¹' icc q₁ q₂ = ∅ :=
   Set.ext fun p => by simp only [mem_preimage, insert_nth_mem_Icc, hx, false_and_iff, mem_empty_iff_false]
 #align fin.preimage_insert_nth_Icc_of_not_mem Fin.preimage_insert_nth_Icc_of_not_mem
 

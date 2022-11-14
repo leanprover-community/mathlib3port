@@ -39,7 +39,7 @@ theorem zero_is_zero_at_filter [Zero β] [TopologicalSpace β] (l : Filter α) :
 tend to zero along `l`. -/
 def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [HasContinuousAdd β] [HasContinuousMul β] (l : Filter α) :
     Submodule β (α → β) where
-  Carrier := ZeroAtFilter l
+  carrier := ZeroAtFilter l
   zero_mem' := zero_is_zero_at_filter l
   add_mem' := by
     intro a b ha hb
@@ -53,7 +53,7 @@ def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [HasContinuousAdd 
 which tend to zero along `l`. -/
 def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [HasContinuousAdd β] (l : Filter α) :
     AddSubmonoid (α → β) where
-  Carrier := ZeroAtFilter l
+  carrier := ZeroAtFilter l
   add_mem' := by
     intro a b ha hb
     simpa using ha.add hb
@@ -81,7 +81,7 @@ theorem zero_is_bounded_at_filter [NormedField β] (l : Filter α) : BoundedAtFi
 
 /-- The submodule of functions that are bounded along a filter `l`. -/
 def boundedFilterSubmodule [NormedField β] (l : Filter α) : Submodule β (α → β) where
-  Carrier := BoundedAtFilter l
+  carrier := BoundedAtFilter l
   zero_mem' := zero_is_bounded_at_filter l
   add_mem' := by
     intro f g hf hg

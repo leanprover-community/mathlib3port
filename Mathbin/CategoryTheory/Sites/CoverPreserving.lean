@@ -73,7 +73,7 @@ if for all covering sieves `R` in `C`, `R.pushforward_functor G` is a covering s
 -/
 @[nolint has_nonempty_instance]
 structure CoverPreserving (G : C ⥤ D) : Prop where
-  cover_preserve : ∀ {U : C} {S : Sieve U} (hS : S ∈ J U), S.FunctorPushforward G ∈ K (G.obj U)
+  cover_preserve : ∀ {U : C} {S : Sieve U} (hS : S ∈ J U), S.functorPushforward G ∈ K (G.obj U)
 #align category_theory.cover_preserving CategoryTheory.CoverPreserving
 
 /-- The identity functor on a site is cover-preserving. -/
@@ -112,7 +112,7 @@ variable {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Com
 include h hG
 
 /-- `compatible_preserving` functors indeed preserve compatible families. -/
-theorem Presieve.FamilyOfElements.Compatible.functor_pushforward : (x.FunctorPushforward G).Compatible := by
+theorem Presieve.FamilyOfElements.Compatible.functor_pushforward : (x.functorPushforward G).Compatible := by
   rintro Z₁ Z₂ W g₁ g₂ f₁' f₂' H₁ H₂ eq
   unfold family_of_elements.functor_pushforward
   rcases get_functor_pushforward_structure H₁ with ⟨X₁, f₁, h₁, hf₁, rfl⟩
@@ -126,7 +126,7 @@ theorem Presieve.FamilyOfElements.Compatible.functor_pushforward : (x.FunctorPus
 
 @[simp]
 theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
-    x.FunctorPushforward G (G.map f) (image_mem_functor_pushforward G T hf) = x f hf := by
+    x.functorPushforward G (G.map f) (image_mem_functor_pushforward G T hf) = x f hf := by
   unfold family_of_elements.functor_pushforward
   rcases e₁ : get_functor_pushforward_structure (image_mem_functor_pushforward G T hf) with ⟨X, g, f', hg, eq⟩
   simpa using hG.compatible ℱ h f' (𝟙 _) hg hf (by simp [Eq])

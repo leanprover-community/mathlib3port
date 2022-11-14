@@ -157,7 +157,7 @@ def multinomial (f : α →₀ ℕ) : ℕ :=
   (f.Sum fun _ => id)! / f.Prod fun _ n => n !
 #align finsupp.multinomial Finsupp.multinomial
 
-theorem multinomial_eq (f : α →₀ ℕ) : f.multinomial = Nat.multinomial f.Support f :=
+theorem multinomial_eq (f : α →₀ ℕ) : f.multinomial = Nat.multinomial f.support f :=
   rfl
 #align finsupp.multinomial_eq Finsupp.multinomial_eq
 

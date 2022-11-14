@@ -30,7 +30,7 @@ def LocallyFinite (f : ι → Set X) :=
   ∀ x : X, ∃ t ∈ 𝓝 x, { i | (f i ∩ t).Nonempty }.Finite
 #align locally_finite LocallyFinite
 
-theorem locally_finite_of_finite [Finite ι] (f : ι → Set X) : LocallyFinite f := fun x => ⟨Univ, univ_mem, to_finite _⟩
+theorem locally_finite_of_finite [Finite ι] (f : ι → Set X) : LocallyFinite f := fun x => ⟨univ, univ_mem, to_finite _⟩
 #align locally_finite_of_finite locally_finite_of_finite
 
 namespace LocallyFinite
@@ -72,10 +72,10 @@ theorem exists_mem_basis {ι' : Sort _} (hf : LocallyFinite f) {p : ι' → Prop
   ⟨i, hpi, hi Subset.rfl⟩
 #align locally_finite.exists_mem_basis LocallyFinite.exists_mem_basis
 
-protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => Closure (f i) := by
+protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => closure (f i) := by
   intro x
   rcases hf x with ⟨s, hsx, hsf⟩
-  refine' ⟨Interior s, interior_mem_nhds.2 hsx, hsf.subset fun i hi => _⟩
+  refine' ⟨interior s, interior_mem_nhds.2 hsx, hsf.subset fun i hi => _⟩
   exact (hi.mono is_open_interior.closure_inter).of_closure.mono (inter_subset_inter_right _ interior_subset)
 #align locally_finite.closure LocallyFinite.closure
 
@@ -91,7 +91,7 @@ theorem isClosedUnion (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsCl
   exact hn i ⟨b, hfb, hbt⟩ hfb
 #align locally_finite.is_closed_Union LocallyFinite.isClosedUnion
 
-theorem closure_Union (h : LocallyFinite f) : Closure (⋃ i, f i) = ⋃ i, Closure (f i) :=
+theorem closure_Union (h : LocallyFinite f) : closure (⋃ i, f i) = ⋃ i, closure (f i) :=
   Subset.antisymm
     (closure_minimal (Union_mono fun _ => subset_closure) <| h.closure.isClosedUnion fun _ => isClosedClosure)
     (Union_subset fun i => closure_mono <| subset_Union _ _)

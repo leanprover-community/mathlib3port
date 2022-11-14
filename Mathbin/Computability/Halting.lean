@@ -241,7 +241,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
         («term_↔_»
          (Term.app `ComputablePred [(Term.fun "fun" (Term.basicFun [`c] [] "=>" («term_∈_» `c "∈" `C)))])
          "↔"
-         («term_∨_» («term_=_» `C "=" («term∅» "∅")) "∨" («term_=_» `C "=" `Set.Univ)))))
+         («term_∨_» («term_=_» `C "=" («term∅» "∅")) "∨" («term_=_» `C "=" `Set.univ)))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -1890,7 +1890,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 theorem
   rice₂
   ( C : Set Code ) ( H : ∀ cf cg , eval cf = eval cg → cf ∈ C ↔ cg ∈ C )
-    : ComputablePred fun c => c ∈ C ↔ C = ∅ ∨ C = Set.Univ
+    : ComputablePred fun c => c ∈ C ↔ C = ∅ ∨ C = Set.univ
   :=
     by
       skip

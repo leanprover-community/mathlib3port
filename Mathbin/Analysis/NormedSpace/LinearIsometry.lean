@@ -105,7 +105,7 @@ theorem ediam_image [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) (s
 #align semilinear_isometry_class.ediam_image SemilinearIsometryClass.ediam_image
 
 theorem ediam_range [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) :
-    Emetric.diam (Range f) = Emetric.diam (Univ : Set E) :=
+    Emetric.diam (range f) = Emetric.diam (univ : Set E) :=
   (SemilinearIsometryClass.isometry f).ediam_range
 #align semilinear_isometry_class.ediam_range SemilinearIsometryClass.ediam_range
 
@@ -113,7 +113,7 @@ theorem diam_image [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) (s 
   (SemilinearIsometryClass.isometry f).diam_image s
 #align semilinear_isometry_class.diam_image SemilinearIsometryClass.diam_image
 
-theorem diam_range [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : Metric.diam (Range f) = Metric.diam (Univ : Set E) :=
+theorem diam_range [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : Metric.diam (range f) = Metric.diam (univ : Set E) :=
   (SemilinearIsometryClass.isometry f).diam_range
 #align semilinear_isometry_class.diam_range SemilinearIsometryClass.diam_range
 
@@ -291,17 +291,17 @@ protected theorem continuous : Continuous f :=
 #align linear_isometry.continuous LinearIsometry.continuous
 
 @[simp]
-theorem preimage_ball (x : E) (r : ℝ) : f ⁻¹' Metric.Ball (f x) r = Metric.Ball x r :=
+theorem preimage_ball (x : E) (r : ℝ) : f ⁻¹' Metric.ball (f x) r = Metric.ball x r :=
   f.Isometry.preimage_ball x r
 #align linear_isometry.preimage_ball LinearIsometry.preimage_ball
 
 @[simp]
-theorem preimage_sphere (x : E) (r : ℝ) : f ⁻¹' Metric.Sphere (f x) r = Metric.Sphere x r :=
+theorem preimage_sphere (x : E) (r : ℝ) : f ⁻¹' Metric.sphere (f x) r = Metric.sphere x r :=
   f.Isometry.preimage_sphere x r
 #align linear_isometry.preimage_sphere LinearIsometry.preimage_sphere
 
 @[simp]
-theorem preimage_closed_ball (x : E) (r : ℝ) : f ⁻¹' Metric.ClosedBall (f x) r = Metric.ClosedBall x r :=
+theorem preimage_closed_ball (x : E) (r : ℝ) : f ⁻¹' Metric.closedBall (f x) r = Metric.closedBall x r :=
   f.Isometry.preimage_closed_ball x r
 #align linear_isometry.preimage_closed_ball LinearIsometry.preimage_closed_ball
 
@@ -309,7 +309,7 @@ theorem ediam_image (s : Set E) : Emetric.diam (f '' s) = Emetric.diam s :=
   f.Isometry.ediam_image s
 #align linear_isometry.ediam_image LinearIsometry.ediam_image
 
-theorem ediam_range : Emetric.diam (Range f) = Emetric.diam (Univ : Set E) :=
+theorem ediam_range : Emetric.diam (range f) = Emetric.diam (univ : Set E) :=
   f.Isometry.ediam_range
 #align linear_isometry.ediam_range LinearIsometry.ediam_range
 
@@ -317,7 +317,7 @@ theorem diam_image (s : Set E) : Metric.diam (f '' s) = Metric.diam s :=
   Isometry.diam_image (LinearIsometry.isometry f) s
 #align linear_isometry.diam_image LinearIsometry.diam_image
 
-theorem diam_range : Metric.diam (Range f) = Metric.diam (Univ : Set E) :=
+theorem diam_range : Metric.diam (range f) = Metric.diam (univ : Set E) :=
   Isometry.diam_range (LinearIsometry.isometry f)
 #align linear_isometry.diam_range LinearIsometry.diam_range
 
@@ -640,7 +640,7 @@ theorem coe_to_isometric : ⇑e.toIsometric = e :=
   rfl
 #align linear_isometry_equiv.coe_to_isometric LinearIsometryEquiv.coe_to_isometric
 
-theorem range_eq_univ (e : E ≃ₛₗᵢ[σ₁₂] E₂) : Set.Range e = Set.Univ := by
+theorem range_eq_univ (e : E ≃ₛₗᵢ[σ₁₂] E₂) : Set.range e = Set.univ := by
   rw [← coe_to_isometric]
   exact Isometric.range_eq_univ _
 #align linear_isometry_equiv.range_eq_univ LinearIsometryEquiv.range_eq_univ
@@ -1028,32 +1028,32 @@ theorem diam_image (s : Set E) : Metric.diam (e '' s) = Metric.diam s :=
 #align linear_isometry_equiv.diam_image LinearIsometryEquiv.diam_image
 
 @[simp]
-theorem preimage_ball (x : E₂) (r : ℝ) : e ⁻¹' Metric.Ball x r = Metric.Ball (e.symm x) r :=
+theorem preimage_ball (x : E₂) (r : ℝ) : e ⁻¹' Metric.ball x r = Metric.ball (e.symm x) r :=
   e.toIsometric.preimage_ball x r
 #align linear_isometry_equiv.preimage_ball LinearIsometryEquiv.preimage_ball
 
 @[simp]
-theorem preimage_sphere (x : E₂) (r : ℝ) : e ⁻¹' Metric.Sphere x r = Metric.Sphere (e.symm x) r :=
+theorem preimage_sphere (x : E₂) (r : ℝ) : e ⁻¹' Metric.sphere x r = Metric.sphere (e.symm x) r :=
   e.toIsometric.preimage_sphere x r
 #align linear_isometry_equiv.preimage_sphere LinearIsometryEquiv.preimage_sphere
 
 @[simp]
-theorem preimage_closed_ball (x : E₂) (r : ℝ) : e ⁻¹' Metric.ClosedBall x r = Metric.ClosedBall (e.symm x) r :=
+theorem preimage_closed_ball (x : E₂) (r : ℝ) : e ⁻¹' Metric.closedBall x r = Metric.closedBall (e.symm x) r :=
   e.toIsometric.preimage_closed_ball x r
 #align linear_isometry_equiv.preimage_closed_ball LinearIsometryEquiv.preimage_closed_ball
 
 @[simp]
-theorem image_ball (x : E) (r : ℝ) : e '' Metric.Ball x r = Metric.Ball (e x) r :=
+theorem image_ball (x : E) (r : ℝ) : e '' Metric.ball x r = Metric.ball (e x) r :=
   e.toIsometric.image_ball x r
 #align linear_isometry_equiv.image_ball LinearIsometryEquiv.image_ball
 
 @[simp]
-theorem image_sphere (x : E) (r : ℝ) : e '' Metric.Sphere x r = Metric.Sphere (e x) r :=
+theorem image_sphere (x : E) (r : ℝ) : e '' Metric.sphere x r = Metric.sphere (e x) r :=
   e.toIsometric.image_sphere x r
 #align linear_isometry_equiv.image_sphere LinearIsometryEquiv.image_sphere
 
 @[simp]
-theorem image_closed_ball (x : E) (r : ℝ) : e '' Metric.ClosedBall x r = Metric.ClosedBall (e x) r :=
+theorem image_closed_ball (x : E) (r : ℝ) : e '' Metric.closedBall x r = Metric.closedBall (e x) r :=
   e.toIsometric.image_closed_ball x r
 #align linear_isometry_equiv.image_closed_ball LinearIsometryEquiv.image_closed_ball
 

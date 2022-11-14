@@ -149,7 +149,7 @@ noncomputable def fintypeBasisIndex {ι : Type _} [FiniteDimensional K V] (b : B
 
 /-- If a vector space is `finite_dimensional`, `basis.of_vector_space` is indexed by
   a finite type.-/
-noncomputable instance [FiniteDimensional K V] : Fintype (Basis.OfVectorSpaceIndex K V) := by
+noncomputable instance [FiniteDimensional K V] : Fintype (Basis.ofVectorSpaceIndex K V) := by
   letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   infer_instance
 
@@ -330,15 +330,15 @@ whole space. -/
 theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V} (h : finrank K S = finrank K V) : S = ⊤ := by
   haveI : IsNoetherian K V := iff_fg.2 inferInstance
   set bS := Basis.ofVectorSpace K S with bS_eq
-  have : LinearIndependent K (coe : (coe '' Basis.OfVectorSpaceIndex K S : Set V) → V) :=
+  have : LinearIndependent K (coe : (coe '' Basis.ofVectorSpaceIndex K S : Set V) → V) :=
     @LinearIndependent.image_subtype _ _ _ _ _ _ _ _ _ (Submodule.subtype S) (by simpa using bS.linear_independent)
       (by simp)
   set b := Basis.extend this with b_eq
   letI : Fintype (this.extend _) := (finite_of_linear_independent (by simpa using b.linear_independent)).Fintype
-  letI : Fintype (coe '' Basis.OfVectorSpaceIndex K S) := (finite_of_linear_independent this).Fintype
-  letI : Fintype (Basis.OfVectorSpaceIndex K S) :=
+  letI : Fintype (coe '' Basis.ofVectorSpaceIndex K S) := (finite_of_linear_independent this).Fintype
+  letI : Fintype (Basis.ofVectorSpaceIndex K S) :=
     (finite_of_linear_independent (by simpa using bS.linear_independent)).Fintype
-  have : coe '' Basis.OfVectorSpaceIndex K S = this.extend (Set.subset_univ _) :=
+  have : coe '' Basis.ofVectorSpaceIndex K S = this.extend (Set.subset_univ _) :=
     Set.eq_of_subset_of_card_le (this.subset_extend _)
       (by
         rw [Set.card_image_of_injective _ Subtype.coe_injective, ← finrank_eq_card_basis bS, ← finrank_eq_card_basis b,
@@ -610,7 +610,7 @@ theorem basis_singleton_apply (ι : Type _) [Unique ι] (h : finrank K V = 1) (v
 
 @[simp]
 theorem range_basis_singleton (ι : Type _) [Unique ι] (h : finrank K V = 1) (v : V) (hv : v ≠ 0) :
-    Set.Range (basisSingleton ι h v hv) = {v} := by rw [Set.range_unique, basis_singleton_apply]
+    Set.range (basisSingleton ι h v hv) = {v} := by rw [Set.range_unique, basis_singleton_apply]
 #align finite_dimensional.range_basis_singleton FiniteDimensional.range_basis_singleton
 
 end DivisionRing
@@ -1245,11 +1245,11 @@ section Field
 variable [Field K] [AddCommGroup V] [Module K V]
 
 theorem span_eq_top_of_linear_independent_of_card_eq_finrank {ι : Type _} [hι : Nonempty ι] [Fintype ι] {b : ι → V}
-    (lin_ind : LinearIndependent K b) (card_eq : Fintype.card ι = finrank K V) : span K (Set.Range b) = ⊤ := by
+    (lin_ind : LinearIndependent K b) (card_eq : Fintype.card ι = finrank K V) : span K (Set.range b) = ⊤ := by
   by_cases fin:FiniteDimensional K V
   · haveI := Fin
     by_contra ne_top
-    have lt_top : span K (Set.Range b) < ⊤ := lt_of_le_of_ne le_top ne_top
+    have lt_top : span K (Set.range b) < ⊤ := lt_of_le_of_ne le_top ne_top
     exact ne_of_lt (Submodule.finrank_lt lt_top) (trans (finrank_span_eq_card lin_ind) card_eq)
     
   · exfalso
@@ -1563,7 +1563,7 @@ open Cardinal
 
 theorem cardinal_mk_eq_cardinal_mk_field_pow_dim (K V : Type u) [Field K] [AddCommGroup V] [Module K V]
     [FiniteDimensional K V] : (#V) = (#K) ^ Module.rank K V := by
-  let s := Basis.OfVectorSpaceIndex K V
+  let s := Basis.ofVectorSpaceIndex K V
   let hs := Basis.ofVectorSpace K V
   calc
     (#V) = (#s →₀ K) := Quotient.sound ⟨hs.repr.to_equiv⟩

@@ -1582,8 +1582,8 @@ theorem Orthonormal.comp {ι' : Type _} {v : ι → E} (hv : Orthonormal 𝕜 v)
 /-- An injective family `v : ι → E` is orthonormal if and only if `coe : (range v) → E` is
 orthonormal. -/
 theorem orthonormal_subtype_range {v : ι → E} (hv : Function.Injective v) :
-    Orthonormal 𝕜 (coe : Set.Range v → E) ↔ Orthonormal 𝕜 v := by
-  let f : ι ≃ Set.Range v := Equiv.ofInjective v hv
+    Orthonormal 𝕜 (coe : Set.range v → E) ↔ Orthonormal 𝕜 v := by
+  let f : ι ≃ Set.range v := Equiv.ofInjective v hv
   refine' ⟨fun h => h.comp f f.injective, fun h => _⟩
   rw [← Equiv.self_comp_of_injective_symm hv]
   exact h.comp f.symm f.symm.injective
@@ -1591,7 +1591,7 @@ theorem orthonormal_subtype_range {v : ι → E} (hv : Function.Injective v) :
 
 /-- If `v : ι → E` is an orthonormal family, then `coe : (range v) → E` is an orthonormal
 family. -/
-theorem Orthonormal.toSubtypeRange {v : ι → E} (hv : Orthonormal 𝕜 v) : Orthonormal 𝕜 (coe : Set.Range v → E) :=
+theorem Orthonormal.toSubtypeRange {v : ι → E} (hv : Orthonormal 𝕜 v) : Orthonormal 𝕜 (coe : Set.range v → E) :=
   (orthonormal_subtype_range hv.LinearIndependent.Injective).2 hv
 #align orthonormal.to_subtype_range Orthonormal.toSubtypeRange
 
@@ -2761,9 +2761,9 @@ theorem Orthonormal.codRestrict {ι : Type _} {v : ι → E} (hv : Orthonormal �
 #align orthonormal.cod_restrict Orthonormal.codRestrict
 
 theorem orthonormalSpan {ι : Type _} {v : ι → E} (hv : Orthonormal 𝕜 v) :
-    @Orthonormal 𝕜 (Submodule.span 𝕜 (Set.Range v)) _ _ ι fun i : ι =>
+    @Orthonormal 𝕜 (Submodule.span 𝕜 (Set.range v)) _ _ ι fun i : ι =>
       ⟨v i, Submodule.subset_span (Set.mem_range_self i)⟩ :=
-  hv.codRestrict (Submodule.span 𝕜 (Set.Range v)) fun i => Submodule.subset_span (Set.mem_range_self i)
+  hv.codRestrict (Submodule.span 𝕜 (Set.range v)) fun i => Submodule.subset_span (Set.mem_range_self i)
 #align orthonormal_span orthonormalSpan
 
 /-! ### Families of mutually-orthogonal subspaces of an inner product space -/
@@ -4907,7 +4907,7 @@ variable (K : Submodule 𝕜 E)
 
 /-- The subspace of vectors orthogonal to a given subspace. -/
 def Submodule.orthogonal : Submodule 𝕜 E where
-  Carrier := { v | ∀ u ∈ K, ⟪u, v⟫ = 0 }
+  carrier := { v | ∀ u ∈ K, ⟪u, v⟫ = 0 }
   zero_mem' _ _ := inner_zero_right
   add_mem' x y hx hy u hu := by rw [inner_add_right, hx u hu, hy u hu, add_zero]
   smul_mem' c x hx u hu := by rw [inner_smul_right, hx u hu, mul_zero]

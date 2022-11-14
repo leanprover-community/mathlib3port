@@ -43,7 +43,7 @@ namespace Ideal
 -/
 @[nolint has_nonempty_instance]
 structure PrimePair (P : Type _) [Preorder P] where
-  I : Ideal P
+  i : Ideal P
   f : Pfilter P
   is_compl_I_F : IsCompl (I : Set P) F
 #align order.ideal.prime_pair Order.Ideal.PrimePair
@@ -52,29 +52,29 @@ namespace PrimePair
 
 variable [Preorder P] (IF : PrimePair P)
 
-theorem compl_I_eq_F : (IF.I : Set P)ᶜ = IF.f :=
+theorem compl_I_eq_F : (IF.i : Set P)ᶜ = IF.f :=
   IF.is_compl_I_F.compl_eq
 #align order.ideal.prime_pair.compl_I_eq_F Order.Ideal.PrimePair.compl_I_eq_F
 
-theorem compl_F_eq_I : (IF.f : Set P)ᶜ = IF.I :=
+theorem compl_F_eq_I : (IF.f : Set P)ᶜ = IF.i :=
   IF.is_compl_I_F.eq_compl.symm
 #align order.ideal.prime_pair.compl_F_eq_I Order.Ideal.PrimePair.compl_F_eq_I
 
-theorem I_is_proper : IsProper IF.I := by
+theorem I_is_proper : IsProper IF.i := by
   cases IF.F.nonempty
   apply is_proper_of_not_mem (_ : w ∉ IF.I)
   rwa [← IF.compl_I_eq_F] at h
 #align order.ideal.prime_pair.I_is_proper Order.Ideal.PrimePair.I_is_proper
 
-theorem disjoint : Disjoint (IF.I : Set P) IF.f :=
+theorem disjoint : Disjoint (IF.i : Set P) IF.f :=
   IF.is_compl_I_F.Disjoint
 #align order.ideal.prime_pair.disjoint Order.Ideal.PrimePair.disjoint
 
-theorem I_union_F : (IF.I : Set P) ∪ IF.f = Set.Univ :=
+theorem I_union_F : (IF.i : Set P) ∪ IF.f = Set.univ :=
   IF.is_compl_I_F.sup_eq_top
 #align order.ideal.prime_pair.I_union_F Order.Ideal.PrimePair.I_union_F
 
-theorem F_union_I : (IF.f : Set P) ∪ IF.I = Set.Univ :=
+theorem F_union_I : (IF.f : Set P) ∪ IF.i = Set.univ :=
   IF.is_compl_I_F.symm.sup_eq_top
 #align order.ideal.prime_pair.F_union_I Order.Ideal.PrimePair.F_union_I
 
@@ -94,10 +94,10 @@ variable [Preorder P]
 /-- Create an element of type `order.ideal.prime_pair` from an ideal satisfying the predicate
 `order.ideal.is_prime`. -/
 def IsPrime.toPrimePair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
-  { I, f := h.compl_filter.toPfilter, is_compl_I_F := is_compl_compl }
+  { i, f := h.compl_filter.toPfilter, is_compl_I_F := is_compl_compl }
 #align order.ideal.is_prime.to_prime_pair Order.Ideal.IsPrime.toPrimePair
 
-theorem PrimePair.iIsPrime (IF : PrimePair P) : IsPrime IF.I :=
+theorem PrimePair.iIsPrime (IF : PrimePair P) : IsPrime IF.i :=
   { IF.I_is_proper with
     compl_filter := by
       rw [IF.compl_I_eq_F]
@@ -149,7 +149,7 @@ instance (priority := 100) IsMaximal.isPrime [IsMaximal I] : IsPrime I := by
   rintro ⟨hx, hynI⟩ hxy
   apply hynI
   let J := I ⊔ principal x
-  have hJuniv : (J : Set P) = Set.Univ := is_maximal.maximal_proper (lt_sup_principal_of_not_mem ‹_›)
+  have hJuniv : (J : Set P) = Set.univ := is_maximal.maximal_proper (lt_sup_principal_of_not_mem ‹_›)
   have hyJ : y ∈ ↑J := set.eq_univ_iff_forall.mp hJuniv y
   rw [coe_sup_eq] at hyJ
   rcases hyJ with ⟨a, ha, b, hb, hy⟩
@@ -215,7 +215,7 @@ class IsPrime (F : Pfilter P) : Prop where
 /-- Create an element of type `order.ideal.prime_pair` from a filter satisfying the predicate
 `order.pfilter.is_prime`. -/
 def IsPrime.toPrimePair {F : Pfilter P} (h : IsPrime F) : Ideal.PrimePair P :=
-  { I := h.compl_ideal.toIdeal, f, is_compl_I_F := is_compl_compl.symm }
+  { i := h.compl_ideal.toIdeal, f, is_compl_I_F := is_compl_compl.symm }
 #align order.pfilter.is_prime.to_prime_pair Order.Pfilter.IsPrime.toPrimePair
 
 theorem _root_.order.ideal.prime_pair.F_is_prime (IF : Ideal.PrimePair P) : IsPrime IF.f :=

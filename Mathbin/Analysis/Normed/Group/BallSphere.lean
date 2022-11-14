@@ -19,43 +19,43 @@ variable {E : Type _} [SeminormedAddCommGroup E] {r : ℝ}
 
 /-- We equip the sphere, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
-instance : HasInvolutiveNeg (Sphere (0 : E) r) where
+instance : HasInvolutiveNeg (sphere (0 : E) r) where
   neg := (Subtype.map Neg.neg) fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]
-theorem coe_neg_sphere {r : ℝ} (v : Sphere (0 : E) r) : ↑(-v) = (-v : E) :=
+theorem coe_neg_sphere {r : ℝ} (v : sphere (0 : E) r) : ↑(-v) = (-v : E) :=
   rfl
 #align coe_neg_sphere coe_neg_sphere
 
-instance : HasContinuousNeg (Sphere (0 : E) r) :=
+instance : HasContinuousNeg (sphere (0 : E) r) :=
   ⟨continuous_neg.subtypeMap _⟩
 
 /-- We equip the ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
-instance {r : ℝ} : HasInvolutiveNeg (Ball (0 : E) r) where
+instance {r : ℝ} : HasInvolutiveNeg (ball (0 : E) r) where
   neg := (Subtype.map Neg.neg) fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]
-theorem coe_neg_ball {r : ℝ} (v : Ball (0 : E) r) : ↑(-v) = (-v : E) :=
+theorem coe_neg_ball {r : ℝ} (v : ball (0 : E) r) : ↑(-v) = (-v : E) :=
   rfl
 #align coe_neg_ball coe_neg_ball
 
-instance : HasContinuousNeg (Ball (0 : E) r) :=
+instance : HasContinuousNeg (ball (0 : E) r) :=
   ⟨continuous_neg.subtypeMap _⟩
 
 /-- We equip the closed ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
-instance {r : ℝ} : HasInvolutiveNeg (ClosedBall (0 : E) r) where
+instance {r : ℝ} : HasInvolutiveNeg (closedBall (0 : E) r) where
   neg := (Subtype.map Neg.neg) fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
 
 @[simp]
-theorem coe_neg_closed_ball {r : ℝ} (v : ClosedBall (0 : E) r) : ↑(-v) = (-v : E) :=
+theorem coe_neg_closed_ball {r : ℝ} (v : closedBall (0 : E) r) : ↑(-v) = (-v : E) :=
   rfl
 #align coe_neg_closed_ball coe_neg_closed_ball
 
-instance : HasContinuousNeg (ClosedBall (0 : E) r) :=
+instance : HasContinuousNeg (closedBall (0 : E) r) :=
   ⟨continuous_neg.subtypeMap _⟩
 

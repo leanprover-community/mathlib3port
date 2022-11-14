@@ -553,7 +553,7 @@ theorem _root_.basis.coe_to_orthonormal_basis (v : Basis ι 𝕜 E) (hv : Orthon
 variable {v : ι → E}
 
 /-- A finite orthonormal set that spans is an orthonormal basis -/
-protected def mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.span 𝕜 (Set.Range v)) : OrthonormalBasis ι 𝕜 E :=
+protected def mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.span 𝕜 (Set.range v)) : OrthonormalBasis ι 𝕜 E :=
   (Basis.mk (Orthonormal.linear_independent hon) hsp).toOrthonormalBasis (by rwa [Basis.coe_mk])
 #align orthonormal_basis.mk OrthonormalBasis.mk
 
@@ -575,7 +575,7 @@ protected def mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.span 𝕜 (
          "("
          [`hsp]
          [":"
-          («term_≤_» (Order.BoundedOrder.«term⊤» "⊤") "≤" (Term.app `Submodule.span [`𝕜 (Term.app `Set.Range [`v])]))]
+          («term_≤_» (Order.BoundedOrder.«term⊤» "⊤") "≤" (Term.app `Submodule.span [`𝕜 (Term.app `Set.range [`v])]))]
          []
          ")")]
        (Term.typeSpec ":" («term_=_» (Init.Coe.«term⇑_» "⇑" (Term.app `OrthonormalBasis.mk [`hon `hsp])) "=" `v)))
@@ -680,13 +680,13 @@ protected def mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.span 𝕜 (
 @[ simp ] protected
   theorem
     coe_mk
-    ( hon : Orthonormal 𝕜 v ) ( hsp : ⊤ ≤ Submodule.span 𝕜 Set.Range v ) : ⇑ OrthonormalBasis.mk hon hsp = v
+    ( hon : Orthonormal 𝕜 v ) ( hsp : ⊤ ≤ Submodule.span 𝕜 Set.range v ) : ⇑ OrthonormalBasis.mk hon hsp = v
     := by skip <;> rw [ OrthonormalBasis.mk , _root_.basis.coe_to_orthonormal_basis , Basis.coe_mk ]
 #align orthonormal_basis.coe_mk OrthonormalBasis.coe_mk
 
 /-- Any finite subset of a orthonormal family is an `orthonormal_basis` for its span. -/
 protected def span {v' : ι' → E} (h : Orthonormal 𝕜 v') (s : Finset ι') :
-    OrthonormalBasis s 𝕜 (span 𝕜 (s.Image v' : Set E)) :=
+    OrthonormalBasis s 𝕜 (span 𝕜 (s.image v' : Set E)) :=
   let e₀' : Basis s 𝕜 _ := Basis.span (h.LinearIndependent.comp (coe : s → ι') Subtype.coe_injective)
   let e₀ : OrthonormalBasis s 𝕜 _ :=
     OrthonormalBasis.mk
@@ -695,7 +695,7 @@ protected def span {v' : ι' → E} (h : Orthonormal 𝕜 v') (s : Finset ι') :
         ext
         simp [e₀', Basis.span_apply])
       e₀'.span_eq.ge
-  let φ : span 𝕜 (s.Image v' : Set E) ≃ₗᵢ[𝕜] span 𝕜 (Range (v' ∘ (coe : s → ι'))) :=
+  let φ : span 𝕜 (s.image v' : Set E) ≃ₗᵢ[𝕜] span 𝕜 (range (v' ∘ (coe : s → ι'))) :=
     LinearIsometryEquiv.ofEq _ _
       (by
         rw [Finset.coe_image, image_eq_range]
@@ -714,7 +714,7 @@ open Submodule
 
 /-- A finite orthonormal family of vectors whose span has trivial orthogonal complement is an
 orthonormal basis. -/
-protected def mkOfOrthogonalEqBot (hon : Orthonormal 𝕜 v) (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) :
+protected def mkOfOrthogonalEqBot (hon : Orthonormal 𝕜 v) (hsp : (span 𝕜 (Set.range v))ᗮ = ⊥) :
     OrthonormalBasis ι 𝕜 E :=
   OrthonormalBasis.mk hon
     (by
@@ -725,7 +725,7 @@ protected def mkOfOrthogonalEqBot (hon : Orthonormal 𝕜 v) (hsp : (span 𝕜 (
 #align orthonormal_basis.mk_of_orthogonal_eq_bot OrthonormalBasis.mkOfOrthogonalEqBot
 
 @[simp]
-protected theorem coe_of_orthogonal_eq_bot_mk (hon : Orthonormal 𝕜 v) (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) :
+protected theorem coe_of_orthogonal_eq_bot_mk (hon : Orthonormal 𝕜 v) (hsp : (span 𝕜 (Set.range v))ᗮ = ⊥) :
     ⇑(OrthonormalBasis.mkOfOrthogonalEqBot hon hsp) = v :=
   OrthonormalBasis.coe_mk hon _
 #align orthonormal_basis.coe_of_orthogonal_eq_bot_mk OrthonormalBasis.coe_of_orthogonal_eq_bot_mk
@@ -919,7 +919,7 @@ theorem _root_.orthonormal.exists_orthonormal_basis_extension_of_card_eq {ι : T
     (card_ι : finrank 𝕜 E = Fintype.card ι) {v : ι → E} {s : Set ι} (hv : Orthonormal 𝕜 (s.restrict v)) :
     ∃ b : OrthonormalBasis ι 𝕜 E, ∀ i ∈ s, b i = v i := by
   have hsv : injective (s.restrict v) := hv.linear_independent.injective
-  have hX : Orthonormal 𝕜 (coe : Set.Range (s.restrict v) → E) := by rwa [orthonormal_subtype_range hsv]
+  have hX : Orthonormal 𝕜 (coe : Set.range (s.restrict v) → E) := by rwa [orthonormal_subtype_range hsv]
   obtain ⟨Y, b₀, hX, hb₀⟩ := hX.exists_orthonormal_basis_extension
   have hιY : Fintype.card ι = Y.card := by
     refine' card_ι.symm.trans _

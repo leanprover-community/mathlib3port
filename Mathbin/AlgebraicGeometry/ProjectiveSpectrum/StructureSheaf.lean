@@ -185,7 +185,7 @@ variable {𝒜}
 /-- The functions satisfying `is_locally_fraction` form a subring of all dependent functions
 `Π x : U, homogeneous_localization 𝒜 x`.-/
 def sectionsSubring (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) : Subring (∀ x : unop U, at x.1) where
-  Carrier := { f | (isLocallyFraction 𝒜).pred f }
+  carrier := { f | (isLocallyFraction 𝒜).pred f }
   zero_mem' := zero_mem' U
   one_mem' := one_mem' U
   add_mem' := add_mem' U
@@ -257,7 +257,7 @@ theorem res_apply (U V : Opens (ProjectiveSpectrum.top 𝒜)) (i : V ⟶ U) (s :
 
 /-- `Proj` of a graded ring as a `SheafedSpace`-/
 def ProjCat.toSheafedSpace : SheafedSpaceCat CommRingCat where
-  Carrier := TopCat.of (ProjectiveSpectrum 𝒜)
+  carrier := TopCat.of (ProjectiveSpectrum 𝒜)
   Presheaf := (ProjCat.structureSheaf 𝒜).1
   IsSheaf := (ProjCat.structureSheaf 𝒜).2
 #align algebraic_geometry.Proj.to_SheafedSpace AlgebraicGeometry.ProjCat.toSheafedSpace

@@ -141,7 +141,7 @@ theorem aeStronglyMeasurableSnd [TopologicalSpace γ] [MetrizableSpace γ] [Bore
     (hf : AeStronglyMeasurable f μ) : AeStronglyMeasurable g ν := by
   refine' ae_strongly_measurable_iff_ae_measurable_separable.2 ⟨h.ae_measurable_snd, _⟩
   rcases(ae_strongly_measurable_iff_ae_measurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
-  refine' ⟨Closure t, t_sep.closure, _⟩
+  refine' ⟨closure t, t_sep.closure, _⟩
   apply h.ae_mem_snd is_closed_closure.measurable_set
   filter_upwards [ht] with x hx using subset_closure hx
 #align
@@ -171,7 +171,7 @@ theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace 
   · have A : ae_strongly_measurable id (measure.map f μ) := by
       rw [ae_strongly_measurable_iff_ae_measurable_separable]
       rcases(ae_strongly_measurable_iff_ae_measurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
-      refine' ⟨aeMeasurableId, ⟨Closure t, t_sep.closure, _⟩⟩
+      refine' ⟨aeMeasurableId, ⟨closure t, t_sep.closure, _⟩⟩
       rw [ae_map_iff h.ae_measurable_fst]
       · filter_upwards [ht] with x hx using subset_closure hx
         

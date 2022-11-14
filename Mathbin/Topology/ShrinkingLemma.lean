@@ -53,10 +53,10 @@ a maximal element, then show that the maximal element must have `carrier = univ`
 @[nolint has_nonempty_instance]
 structure PartialRefinement (u : ι → Set X) (s : Set X) where
   toFun : ι → Set X
-  Carrier : Set ι
+  carrier : Set ι
   is_open' : ∀ i, IsOpen (to_fun i)
   subset_Union' : s ⊆ ⋃ i, to_fun i
-  closure_subset' : ∀ i ∈ carrier, Closure (to_fun i) ⊆ u i
+  closure_subset' : ∀ i ∈ carrier, closure (to_fun i) ⊆ u i
   apply_eq' : ∀ (i) (_ : i ∉ carrier), to_fun i = u i
 #align shrinking_lemma.partial_refinement ShrinkingLemma.PartialRefinement
 
@@ -65,17 +65,17 @@ namespace PartialRefinement
 variable {u : ι → Set X} {s : Set X}
 
 instance : CoeFun (PartialRefinement u s) fun _ => ι → Set X :=
-  ⟨ToFun⟩
+  ⟨toFun⟩
 
 theorem subset_Union (v : PartialRefinement u s) : s ⊆ ⋃ i, v i :=
   v.subset_Union'
 #align shrinking_lemma.partial_refinement.subset_Union ShrinkingLemma.PartialRefinement.subset_Union
 
-theorem closure_subset (v : PartialRefinement u s) {i : ι} (hi : i ∈ v.Carrier) : Closure (v i) ⊆ u i :=
+theorem closure_subset (v : PartialRefinement u s) {i : ι} (hi : i ∈ v.carrier) : closure (v i) ⊆ u i :=
   v.closure_subset' i hi
 #align shrinking_lemma.partial_refinement.closure_subset ShrinkingLemma.PartialRefinement.closure_subset
 
-theorem apply_eq (v : PartialRefinement u s) {i : ι} (hi : i ∉ v.Carrier) : v i = u i :=
+theorem apply_eq (v : PartialRefinement u s) {i : ι} (hi : i ∉ v.carrier) : v i = u i :=
   v.apply_eq' i hi
 #align shrinking_lemma.partial_refinement.apply_eq ShrinkingLemma.PartialRefinement.apply_eq
 
@@ -84,40 +84,40 @@ protected theorem is_open (v : PartialRefinement u s) (i : ι) : IsOpen (v i) :=
 #align shrinking_lemma.partial_refinement.is_open ShrinkingLemma.PartialRefinement.is_open
 
 protected theorem subset (v : PartialRefinement u s) (i : ι) : v i ⊆ u i :=
-  if h : i ∈ v.Carrier then Subset.trans subset_closure (v.closure_subset h) else (v.apply_eq h).le
+  if h : i ∈ v.carrier then Subset.trans subset_closure (v.closure_subset h) else (v.apply_eq h).le
 #align shrinking_lemma.partial_refinement.subset ShrinkingLemma.PartialRefinement.subset
 
 attribute [ext.1] partial_refinement
 
 instance : PartialOrder (PartialRefinement u s) where
-  le v₁ v₂ := v₁.Carrier ⊆ v₂.Carrier ∧ ∀ i ∈ v₁.Carrier, v₁ i = v₂ i
+  le v₁ v₂ := v₁.carrier ⊆ v₂.carrier ∧ ∀ i ∈ v₁.carrier, v₁ i = v₂ i
   le_refl v := ⟨Subset.refl _, fun _ _ => rfl⟩
   le_trans v₁ v₂ v₃ h₁₂ h₂₃ := ⟨Subset.trans h₁₂.1 h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i <| h₁₂.1 hi)⟩
   le_antisymm v₁ v₂ h₁₂ h₂₁ :=
-    have hc : v₁.Carrier = v₂.Carrier := Subset.antisymm h₁₂.1 h₂₁.1
+    have hc : v₁.carrier = v₂.carrier := Subset.antisymm h₁₂.1 h₂₁.1
     ext _ _
       (funext fun x =>
-        if hx : x ∈ v₁.Carrier then h₁₂.2 _ hx else (v₁.apply_eq hx).trans (Eq.symm <| v₂.apply_eq <| hc ▸ hx))
+        if hx : x ∈ v₁.carrier then h₁₂.2 _ hx else (v₁.apply_eq hx).trans (Eq.symm <| v₂.apply_eq <| hc ▸ hx))
       hc
 
 /-- If two partial refinements `v₁`, `v₂` belong to a chain (hence, they are comparable)
 and `i` belongs to the carriers of both partial refinements, then `v₁ i = v₂ i`. -/
 theorem apply_eq_of_chain {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c) {v₁ v₂} (h₁ : v₁ ∈ c) (h₂ : v₂ ∈ c)
-    {i} (hi₁ : i ∈ v₁.Carrier) (hi₂ : i ∈ v₂.Carrier) : v₁ i = v₂ i := by
+    {i} (hi₁ : i ∈ v₁.carrier) (hi₂ : i ∈ v₂.carrier) : v₁ i = v₂ i := by
   wlog hle : v₁ ≤ v₂ := hc.total h₁ h₂ using v₁ v₂, v₂ v₁
   exact hle.2 _ hi₁
 #align shrinking_lemma.partial_refinement.apply_eq_of_chain ShrinkingLemma.PartialRefinement.apply_eq_of_chain
 
 /-- The carrier of the least upper bound of a non-empty chain of partial refinements
 is the union of their carriers. -/
-def ChainSupCarrier (c : Set (PartialRefinement u s)) : Set ι :=
-  ⋃ v ∈ c, Carrier v
-#align shrinking_lemma.partial_refinement.chain_Sup_carrier ShrinkingLemma.PartialRefinement.ChainSupCarrier
+def chainSupCarrier (c : Set (PartialRefinement u s)) : Set ι :=
+  ⋃ v ∈ c, carrier v
+#align shrinking_lemma.partial_refinement.chain_Sup_carrier ShrinkingLemma.PartialRefinement.chainSupCarrier
 
 /-- Choice of an element of a nonempty chain of partial refinements. If `i` belongs to one of
 `carrier v`, `v ∈ c`, then `find c ne i` is one of these partial refinements. -/
 def find (c : Set (PartialRefinement u s)) (ne : c.Nonempty) (i : ι) : PartialRefinement u s :=
-  if hi : ∃ v ∈ c, i ∈ Carrier v then hi.some else Ne.some
+  if hi : ∃ v ∈ c, i ∈ carrier v then hi.some else Ne.some
 #align shrinking_lemma.partial_refinement.find ShrinkingLemma.PartialRefinement.find
 
 theorem find_mem {c : Set (PartialRefinement u s)} (i : ι) (ne : c.Nonempty) : find c Ne i ∈ c := by
@@ -127,7 +127,7 @@ theorem find_mem {c : Set (PartialRefinement u s)} (i : ι) (ne : c.Nonempty) : 
 #align shrinking_lemma.partial_refinement.find_mem ShrinkingLemma.PartialRefinement.find_mem
 
 theorem mem_find_carrier_iff {c : Set (PartialRefinement u s)} {i : ι} (ne : c.Nonempty) :
-    i ∈ (find c Ne i).Carrier ↔ i ∈ ChainSupCarrier c := by
+    i ∈ (find c Ne i).carrier ↔ i ∈ chainSupCarrier c := by
   rw [find]
   split_ifs
   · have : i ∈ h.some.carrier ∧ i ∈ chain_Sup_carrier c := ⟨h.some_spec.snd, mem_Union₂.2 h⟩
@@ -139,7 +139,7 @@ theorem mem_find_carrier_iff {c : Set (PartialRefinement u s)} {i : ι} (ne : c.
 #align shrinking_lemma.partial_refinement.mem_find_carrier_iff ShrinkingLemma.PartialRefinement.mem_find_carrier_iff
 
 theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty) {i v}
-    (hv : v ∈ c) (hi : i ∈ Carrier v) : find c Ne i i = v i :=
+    (hv : v ∈ c) (hi : i ∈ carrier v) : find c Ne i i = v i :=
   apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_Union₂.2 ⟨v, hv, hi⟩) hi
 #align shrinking_lemma.partial_refinement.find_apply_of_mem ShrinkingLemma.PartialRefinement.find_apply_of_mem
 
@@ -179,7 +179,7 @@ theorem le_chain_Sup {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·)
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- If `s` is a closed set, `v` is a partial refinement, and `i` is an index such that
 `i ∉ v.carrier`, then there exists a partial refinement that is strictly greater than `v`. -/
-theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i ∉ v.Carrier) :
+theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i ∉ v.carrier) :
     ∃ v' : PartialRefinement u s, v < v' := by
   have I : (s ∩ ⋂ (j) (_ : j ≠ i), v jᶜ) ⊆ v i := by
     simp only [subset_def, mem_inter_iff, mem_Inter, and_imp]
@@ -235,7 +235,7 @@ to a new open cover so that the closure of each new open set is contained in the
 original open set. -/
 theorem exists_subset_Union_closure_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
     (uf : ∀ x ∈ s, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
-    ∃ v : ι → Set X, s ⊆ UnionCat v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, Closure (v i) ⊆ u i := by
+    ∃ v : ι → Set X, s ⊆ union v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i := by
   classical haveI : Nonempty (partial_refinement u s) := ⟨⟨u, ∅, uo, us, fun _ => False.elim, fun _ _ => rfl⟩⟩
     exact fun c hc ne =>
       ⟨partial_refinement.chain_Sup c hc Ne uf us, fun v hv => partial_refinement.le_chain_Sup _ _ _ _ hv⟩
@@ -249,16 +249,16 @@ to a new closed cover so that each new closed set is contained in the correspond
 set. See also `exists_subset_Union_closure_subset` for a stronger statement. -/
 theorem exists_subset_Union_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
     (uf : ∀ x ∈ s, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
-    ∃ v : ι → Set X, s ⊆ UnionCat v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
+    ∃ v : ι → Set X, s ⊆ union v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, hsv, hvo, hv⟩ := exists_subset_Union_closure_subset hs uo uf us
-  ⟨fun i => Closure (v i), Subset.trans hsv (Union_mono fun i => subset_closure), fun i => isClosedClosure, hv⟩
+  ⟨fun i => closure (v i), Subset.trans hsv (Union_mono fun i => subset_closure), fun i => isClosedClosure, hv⟩
 #align exists_subset_Union_closed_subset exists_subset_Union_closed_subset
 
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
 to a new open cover so that the closure of each new open set is contained in the corresponding
 original open set. -/
 theorem exists_Union_eq_closure_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
-    (uU : (⋃ i, u i) = univ) : ∃ v : ι → Set X, UnionCat v = univ ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, Closure (v i) ⊆ u i :=
+    (uU : (⋃ i, u i) = univ) : ∃ v : ι → Set X, union v = univ ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i :=
   let ⟨v, vU, hv⟩ := exists_subset_Union_closure_subset isClosedUniv uo (fun x _ => uf x) uU.ge
   ⟨v, univ_subset_iff.1 vU, hv⟩
 #align exists_Union_eq_closure_subset exists_Union_eq_closure_subset
@@ -267,7 +267,7 @@ theorem exists_Union_eq_closure_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, {
 to a new closed cover so that each of the new closed sets is contained in the corresponding
 original open set. See also `exists_Union_eq_closure_subset` for a stronger statement. -/
 theorem exists_Union_eq_closed_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
-    (uU : (⋃ i, u i) = univ) : ∃ v : ι → Set X, UnionCat v = univ ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
+    (uU : (⋃ i, u i) = univ) : ∃ v : ι → Set X, union v = univ ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, vU, hv⟩ := exists_subset_Union_closed_subset isClosedUniv uo (fun x _ => uf x) uU.ge
   ⟨v, univ_subset_iff.1 vU, hv⟩
 #align exists_Union_eq_closed_subset exists_Union_eq_closed_subset

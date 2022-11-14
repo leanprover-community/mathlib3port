@@ -691,7 +691,7 @@ include sc
 
 /-- The pushforward of a submodule `p ⊆ M` by `f : M → M₂` -/
 def map (f : F) (p : Submodule R M) : Submodule R₂ M₂ :=
-  { p.toAddSubmonoid.map f with Carrier := f '' p,
+  { p.toAddSubmonoid.map f with carrier := f '' p,
     smul_mem' := by
       rintro c x ⟨y, hy, rfl⟩
       obtain ⟨a, rfl⟩ := σ₁₂.is_surjective c
@@ -762,7 +762,7 @@ theorem map_add_le (f g : M →ₛₗ[σ₁₂] M₂) : map (f + g) p ≤ map f 
 #align submodule.map_add_le Submodule.map_add_le
 
 theorem range_map_nonempty (N : Submodule R M) :
-    (Set.Range (fun ϕ => Submodule.map ϕ N : (M →ₛₗ[σ₁₂] M₂) → Submodule R₂ M₂)).Nonempty :=
+    (Set.range (fun ϕ => Submodule.map ϕ N : (M →ₛₗ[σ₁₂] M₂) → Submodule R₂ M₂)).Nonempty :=
   ⟨_, Set.mem_range.mpr ⟨0, rfl⟩⟩
 #align submodule.range_map_nonempty Submodule.range_map_nonempty
 
@@ -797,7 +797,7 @@ omit σ₂₁
 
 /-- The pullback of a submodule `p ⊆ M₂` along `f : M → M₂` -/
 def comap (f : F) (p : Submodule R₂ M₂) : Submodule R M :=
-  { p.toAddSubmonoid.comap f with Carrier := f ⁻¹' p, smul_mem' := fun a x h => by simp [p.smul_mem _ h] }
+  { p.toAddSubmonoid.comap f with carrier := f ⁻¹' p, smul_mem' := fun a x h => by simp [p.smul_mem _ h] }
 #align submodule.comap Submodule.comap
 
 @[simp]
@@ -1470,10 +1470,10 @@ include sc
 /-- The range of a linear map `f : M → M₂` is a submodule of `M₂`.
 See Note [range copy pattern]. -/
 def range [RingHomSurjective τ₁₂] (f : F) : Submodule R₂ M₂ :=
-  (map f ⊤).copy (Set.Range f) Set.image_univ.symm
+  (map f ⊤).copy (Set.range f) Set.image_univ.symm
 #align linear_map.range LinearMap.range
 
-theorem range_coe [RingHomSurjective τ₁₂] (f : F) : (range f : Set M₂) = Set.Range f :=
+theorem range_coe [RingHomSurjective τ₁₂] (f : F) : (range f : Set M₂) = Set.range f :=
   rfl
 #align linear_map.range_coe LinearMap.range_coe
 
@@ -2842,7 +2842,7 @@ theorem inf_comap_le_comap_add (f₁ f₂ : M →ₛₗ[τ₁₂] M₂) : comap 
 /-- Given modules `M`, `M₂` over a commutative ring, together with submodules `p ⊆ M`, `q ⊆ M₂`,
 the set of maps $\{f ∈ Hom(M, M₂) | f(p) ⊆ q \}$ is a submodule of `Hom(M, M₂)`. -/
 def compatibleMaps : Submodule R (N →ₗ[R] N₂) where
-  Carrier := { fₗ | pₗ ≤ comap fₗ qₗ }
+  carrier := { fₗ | pₗ ≤ comap fₗ qₗ }
   zero_mem' := by
     change pₗ ≤ comap (0 : N →ₗ[R] N₂) qₗ
     rw [comap_zero]

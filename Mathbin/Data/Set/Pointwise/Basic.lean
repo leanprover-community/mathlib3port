@@ -156,7 +156,7 @@ equal to `{x⁻¹ | x ∈ s}`, see `set.image_inv`. -/
 @[to_additive
       "The pointwise negation of set `-s` is defined as `{x | -x ∈ s}` in locale\n`pointwise`. It is equal to `{-x | x ∈ s}`, see `set.image_neg`."]
 protected def hasInv [Inv α] : Inv (Set α) :=
-  ⟨Preimage Inv.inv⟩
+  ⟨preimage Inv.inv⟩
 #align set.has_inv Set.hasInv
 
 localized [Pointwise] attribute [instance] Set.hasInv Set.hasNeg
@@ -181,7 +181,7 @@ theorem inv_empty : (∅ : Set α)⁻¹ = ∅ :=
 #align set.inv_empty Set.inv_empty
 
 @[simp, to_additive]
-theorem inv_univ : (Univ : Set α)⁻¹ = univ :=
+theorem inv_univ : (univ : Set α)⁻¹ = univ :=
   rfl
 #align set.inv_univ Set.inv_univ
 
@@ -264,7 +264,7 @@ theorem inv_insert (a : α) (s : Set α) : (insert a s)⁻¹ = insert a⁻¹ s�
 #align set.inv_insert Set.inv_insert
 
 @[to_additive]
-theorem inv_range {ι : Sort _} {f : ι → α} : (Range f)⁻¹ = Range fun i => (f i)⁻¹ := by
+theorem inv_range {ι : Sort _} {f : ι → α} : (range f)⁻¹ = range fun i => (f i)⁻¹ := by
   rw [← image_inv]
   exact (range_comp _ _).symm
 #align set.inv_range Set.inv_range
@@ -292,13 +292,13 @@ variable {ι : Sort _} {κ : ι → Sort _} [Mul α] {s s₁ s₂ t t₁ t₂ u 
 locale `pointwise`. -/
 @[to_additive "The pointwise addition of sets `s + t` is defined as `{x + y | x ∈ s, y ∈ t}` in\nlocale `pointwise`."]
 protected def hasMul : Mul (Set α) :=
-  ⟨Image2 (· * ·)⟩
+  ⟨image2 (· * ·)⟩
 #align set.has_mul Set.hasMul
 
 localized [Pointwise] attribute [instance] Set.hasMul Set.hasAdd
 
 @[simp, to_additive]
-theorem image2_mul : Image2 Mul.mul s t = s * t :=
+theorem image2_mul : image2 Mul.mul s t = s * t :=
   rfl
 #align set.image2_mul Set.image2_mul
 
@@ -516,13 +516,13 @@ variable {ι : Sort _} {κ : ι → Sort _} [Div α] {s s₁ s₂ t t₁ t₂ u 
 @[to_additive
       "The pointwise subtraction of sets `s - t` is defined as `{x - y | x ∈ s, y ∈ t}` in\nlocale `pointwise`."]
 protected def hasDiv : Div (Set α) :=
-  ⟨Image2 (· / ·)⟩
+  ⟨image2 (· / ·)⟩
 #align set.has_div Set.hasDiv
 
 localized [Pointwise] attribute [instance] Set.hasDiv Set.hasSub
 
 @[simp, to_additive]
-theorem image2_div : Image2 Div.div s t = s / t :=
+theorem image2_div : image2 Div.div s t = s / t :=
   rfl
 #align set.image2_div Set.image2_div
 
@@ -885,20 +885,20 @@ theorem univ_mul_of_one_mem (ht : (1 : α) ∈ t) : univ * t = univ :=
 #align set.univ_mul_of_one_mem Set.univ_mul_of_one_mem
 
 @[simp, to_additive]
-theorem univ_mul_univ : (Univ : Set α) * univ = univ :=
+theorem univ_mul_univ : (univ : Set α) * univ = univ :=
   mul_univ_of_one_mem <| mem_univ _
 #align set.univ_mul_univ Set.univ_mul_univ
 
 --TODO: `to_additive` trips up on the `1 : ℕ` used in the pattern-matching.
 @[simp]
-theorem nsmul_univ {α : Type _} [AddMonoid α] : ∀ {n : ℕ}, n ≠ 0 → n • (Univ : Set α) = univ
+theorem nsmul_univ {α : Type _} [AddMonoid α] : ∀ {n : ℕ}, n ≠ 0 → n • (univ : Set α) = univ
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => one_nsmul _
   | n + 2 => fun _ => by rw [succ_nsmul, nsmul_univ n.succ_ne_zero, univ_add_univ]
 #align set.nsmul_univ Set.nsmul_univ
 
 @[simp, to_additive nsmul_univ]
-theorem univ_pow : ∀ {n : ℕ}, n ≠ 0 → (Univ : Set α) ^ n = univ
+theorem univ_pow : ∀ {n : ℕ}, n ≠ 0 → (univ : Set α) ^ n = univ
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => pow_one _
   | n + 2 => fun _ => by rw [pow_succ, univ_pow n.succ_ne_zero, univ_mul_univ]
@@ -1116,13 +1116,13 @@ theorem preimage_mul_right_one' : (· * b⁻¹) ⁻¹' 1 = {b} := by simp
 #align set.preimage_mul_right_one' Set.preimage_mul_right_one'
 
 @[simp, to_additive]
-theorem mul_univ (hs : s.Nonempty) : s * (Univ : Set α) = univ :=
+theorem mul_univ (hs : s.Nonempty) : s * (univ : Set α) = univ :=
   let ⟨a, ha⟩ := hs
   eq_univ_of_forall fun b => ⟨a, a⁻¹ * b, ha, trivial, mul_inv_cancel_left _ _⟩
 #align set.mul_univ Set.mul_univ
 
 @[simp, to_additive]
-theorem univ_mul (ht : t.Nonempty) : (Univ : Set α) * t = univ :=
+theorem univ_mul (ht : t.Nonempty) : (univ : Set α) * t = univ :=
   let ⟨a, ha⟩ := ht
   eq_univ_of_forall fun b => ⟨b * a⁻¹, a, trivial, ha, inv_mul_cancel_right _ _⟩
 #align set.univ_mul Set.univ_mul
@@ -1205,7 +1205,7 @@ section Smul
 /-- The dilation of set `x • s` is defined as `{x • y | y ∈ s}` in locale `pointwise`. -/
 @[to_additive "The translation of set `x +ᵥ s` is defined as `{x +ᵥ y | y ∈ s}` in\nlocale `pointwise`."]
 protected def hasSmulSet [HasSmul α β] : HasSmul α (Set β) :=
-  ⟨fun a => Image (HasSmul.smul a)⟩
+  ⟨fun a => image (HasSmul.smul a)⟩
 #align set.has_smul_set Set.hasSmulSet
 
 /-- The pointwise scalar multiplication of sets `s • t` is defined as `{x • y | x ∈ s, y ∈ t}` in
@@ -1213,7 +1213,7 @@ locale `pointwise`. -/
 @[to_additive
       "The pointwise scalar addition of sets `s +ᵥ t` is defined as\n`{x +ᵥ y | x ∈ s, y ∈ t}` in locale `pointwise`."]
 protected def hasSmul [HasSmul α β] : HasSmul (Set α) (Set β) :=
-  ⟨Image2 HasSmul.smul⟩
+  ⟨image2 HasSmul.smul⟩
 #align set.has_smul Set.hasSmul
 
 localized [Pointwise] attribute [instance] Set.hasSmulSet Set.hasSmul
@@ -1225,7 +1225,7 @@ section HasSmul
 variable {ι : Sort _} {κ : ι → Sort _} [HasSmul α β] {s s₁ s₂ : Set α} {t t₁ t₂ u : Set β} {a : α} {b : β}
 
 @[simp, to_additive]
-theorem image2_smul : Image2 HasSmul.smul s t = s • t :=
+theorem image2_smul : image2 HasSmul.smul s t = s • t :=
   rfl
 #align set.image2_smul Set.image2_smul
 
@@ -1519,19 +1519,19 @@ theorem smul_set_inter₀ [GroupWithZero α] [MulAction α β] {s t : Set β} (h
 #align set.smul_set_inter₀ Set.smul_set_inter₀
 
 @[simp, to_additive]
-theorem smul_set_univ [Group α] [MulAction α β] {a : α} : a • (Univ : Set β) = univ :=
+theorem smul_set_univ [Group α] [MulAction α β] {a : α} : a • (univ : Set β) = univ :=
   eq_univ_of_forall fun b => ⟨a⁻¹ • b, trivial, smul_inv_smul _ _⟩
 #align set.smul_set_univ Set.smul_set_univ
 
 @[simp, to_additive]
-theorem smul_univ [Group α] [MulAction α β] {s : Set α} (hs : s.Nonempty) : s • (Univ : Set β) = univ :=
+theorem smul_univ [Group α] [MulAction α β] {s : Set α} (hs : s.Nonempty) : s • (univ : Set β) = univ :=
   let ⟨a, ha⟩ := hs
   eq_univ_of_forall fun b => ⟨a, a⁻¹ • b, ha, trivial, smul_inv_smul _ _⟩
 #align set.smul_univ Set.smul_univ
 
 @[to_additive]
 theorem range_smul_range {ι κ : Type _} [HasSmul α β] (b : ι → α) (c : κ → β) :
-    Range b • Range c = Range fun p : ι × κ => b p.1 • c p.2 :=
+    range b • range c = range fun p : ι × κ => b p.1 • c p.2 :=
   ext fun x =>
     ⟨fun hx =>
       let ⟨p, q, ⟨i, hi⟩, ⟨j, hj⟩, hpq⟩ := Set.mem_smul.1 hx
@@ -1540,7 +1540,7 @@ theorem range_smul_range {ι κ : Type _} [HasSmul α β] (b : ι → α) (c : �
 #align set.range_smul_range Set.range_smul_range
 
 @[to_additive]
-theorem smul_set_range [HasSmul α β] {ι : Sort _} {f : ι → β} : a • Range f = Range fun i => a • f i :=
+theorem smul_set_range [HasSmul α β] {ι : Sort _} {f : ι → β} : a • range f = range fun i => a • f i :=
   (range_comp _ _).symm
 #align set.smul_set_range Set.smul_set_range
 
@@ -1653,11 +1653,11 @@ variable {ι : Sort _} {κ : ι → Sort _} [HasVsub α β] {s s₁ s₂ t t₁ 
 include α
 
 instance hasVsub : HasVsub (Set α) (Set β) :=
-  ⟨Image2 (· -ᵥ ·)⟩
+  ⟨image2 (· -ᵥ ·)⟩
 #align set.has_vsub Set.hasVsub
 
 @[simp]
-theorem image2_vsub : (Image2 HasVsub.vsub s t : Set α) = s -ᵥ t :=
+theorem image2_vsub : (image2 HasVsub.vsub s t : Set α) = s -ᵥ t :=
   rfl
 #align set.image2_vsub Set.image2_vsub
 
@@ -1807,7 +1807,7 @@ theorem vsub_Inter₂_subset (s : Set β) (t : ∀ i, κ i → Set β) : (s -ᵥ
 #align set.vsub_Inter₂_subset Set.vsub_Inter₂_subset
 
 theorem Finite.vsub (hs : s.Finite) (ht : t.Finite) : Set.Finite (s -ᵥ t) :=
-  hs.Image2 _ ht
+  hs.image2 _ ht
 #align set.finite.vsub Set.Finite.vsub
 
 end Vsub
@@ -2013,12 +2013,12 @@ theorem subset_set_smul_iff₀ (ha : a ≠ 0) {A B : Set β} : A ⊆ a • B ↔
   show _ ⊆ Units.mk0 a ha • _ ↔ _ from subset_set_smul_iff
 #align set.subset_set_smul_iff₀ Set.subset_set_smul_iff₀
 
-theorem smul_univ₀ (hs : ¬s ⊆ 0) : s • (Univ : Set β) = univ :=
+theorem smul_univ₀ (hs : ¬s ⊆ 0) : s • (univ : Set β) = univ :=
   let ⟨a, ha, ha₀⟩ := not_subset.1 hs
   eq_univ_of_forall fun b => ⟨a, a⁻¹ • b, ha, trivial, smul_inv_smul₀ ha₀ _⟩
 #align set.smul_univ₀ Set.smul_univ₀
 
-theorem smul_set_univ₀ (ha : a ≠ 0) : a • (Univ : Set β) = univ :=
+theorem smul_set_univ₀ (ha : a ≠ 0) : a • (univ : Set β) = univ :=
   eq_univ_of_forall fun b => ⟨a⁻¹ • b, trivial, smul_inv_smul₀ ha _⟩
 #align set.smul_set_univ₀ Set.smul_set_univ₀
 

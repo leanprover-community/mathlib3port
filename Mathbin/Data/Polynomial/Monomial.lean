@@ -32,7 +32,7 @@ theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : R[X]) =
 instance [Nontrivial R] : Infinite R[X] :=
   (Infinite.of_injective fun i => monomial i 1) fun m n h => by simpa [monomial_one_eq_iff] using h
 
-theorem card_support_le_one_iff_monomial {f : R[X]} : Finset.card f.Support ≤ 1 ↔ ∃ n a, f = monomial n a := by
+theorem card_support_le_one_iff_monomial {f : R[X]} : Finset.card f.support ≤ 1 ↔ ∃ n a, f = monomial n a := by
   constructor
   · intro H
     rw [Finset.card_le_one_iff_subset_singleton] at H

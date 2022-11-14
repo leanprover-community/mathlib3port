@@ -55,7 +55,7 @@ variable {α : Type u}
 /-- The open sets of the least topology containing a collection of basic sets. -/
 inductive GenerateOpen (g : Set (Set α)) : Set α → Prop
   | basic : ∀ s ∈ g, generate_open s
-  | univ : generate_open Univ
+  | univ : generate_open univ
   | inter : ∀ s t, generate_open s → generate_open t → generate_open (s ∩ t)
   | sUnion : ∀ k, (∀ s ∈ k, generate_open s) → generate_open (⋃₀k)
 #align topological_space.generate_open TopologicalSpace.GenerateOpen
@@ -405,7 +405,7 @@ variable {α : Type _} {β : Type _} {γ : Type _}
   makes `f` continuous. -/
 def TopologicalSpace.induced {α : Type u} {β : Type v} (f : α → β) (t : TopologicalSpace β) : TopologicalSpace α where
   IsOpen s := ∃ s', t.IsOpen s' ∧ f ⁻¹' s' = s
-  is_open_univ := ⟨Univ, t.is_open_univ, preimage_univ⟩
+  is_open_univ := ⟨univ, t.is_open_univ, preimage_univ⟩
   is_open_inter := by
     rintro s₁ s₂ ⟨s'₁, hs₁, rfl⟩ ⟨s'₂, hs₂, rfl⟩ <;> exact ⟨s'₁ ∩ s'₂, t.is_open_inter _ _ hs₁ hs₂, preimage_inter⟩
   is_open_sUnion s h := by
@@ -527,7 +527,7 @@ theorem induced_compose [tγ : TopologicalSpace γ] {f : α → β} {g : β → 
   topological_space_eq <|
     funext fun s =>
       propext <|
-        ⟨fun ⟨s', ⟨s, hs, h₂⟩, h₁⟩ => h₁ ▸ h₂ ▸ ⟨s, hs, rfl⟩, fun ⟨s, hs, h⟩ => ⟨Preimage g s, ⟨s, hs, rfl⟩, h ▸ rfl⟩⟩
+        ⟨fun ⟨s', ⟨s, hs, h₂⟩, h₁⟩ => h₁ ▸ h₂ ▸ ⟨s, hs, rfl⟩, fun ⟨s, hs, h⟩ => ⟨preimage g s, ⟨s, hs, rfl⟩, h ▸ rfl⟩⟩
 #align induced_compose induced_compose
 
 theorem induced_const [t : TopologicalSpace α] {x : α} : (t.induced fun y : β => x) = ⊤ :=
@@ -635,7 +635,7 @@ theorem le_generate_from {t : TopologicalSpace α} {g : Set (Set α)} (h : ∀ s
 #align le_generate_from le_generate_from
 
 theorem induced_generate_from_eq {α β} {b : Set (Set β)} {f : α → β} :
-    (generateFrom b).induced f = TopologicalSpace.generateFrom (Preimage f '' b) :=
+    (generateFrom b).induced f = TopologicalSpace.generateFrom (preimage f '' b) :=
   le_antisymm (le_generate_from <| ball_image_iff.2 fun s hs => ⟨s, GenerateOpen.basic _ hs, rfl⟩)
     (coinduced_le_iff_le_induced.1 <| le_generate_from fun s hs => GenerateOpen.basic _ <| mem_image_of_mem _ hs)
 #align induced_generate_from_eq induced_generate_from_eq
@@ -924,7 +924,7 @@ variable {α : Type _} {β : Type _}
 
 variable [t : TopologicalSpace β] {f : α → β}
 
-theorem is_open_induced_eq {s : Set α} : @IsOpen _ (induced f t) s ↔ s ∈ Preimage f '' { s | IsOpen s } :=
+theorem is_open_induced_eq {s : Set α} : @IsOpen _ (induced f t) s ↔ s ∈ preimage f '' { s | IsOpen s } :=
   Iff.rfl
 #align is_open_induced_eq is_open_induced_eq
 
@@ -932,21 +932,21 @@ theorem is_open_induced {s : Set β} (h : IsOpen s) : (induced f t).IsOpen (f �
   ⟨s, h, rfl⟩
 #align is_open_induced is_open_induced
 
-theorem map_nhds_induced_eq (a : α) : map f (@nhds α (induced f t) a) = 𝓝[Range f] f a := by
+theorem map_nhds_induced_eq (a : α) : map f (@nhds α (induced f t) a) = 𝓝[range f] f a := by
   rw [nhds_induced, Filter.map_comap, nhdsWithin]
 #align map_nhds_induced_eq map_nhds_induced_eq
 
-theorem map_nhds_induced_of_mem {a : α} (h : Range f ∈ 𝓝 (f a)) : map f (@nhds α (induced f t) a) = 𝓝 (f a) := by
+theorem map_nhds_induced_of_mem {a : α} (h : range f ∈ 𝓝 (f a)) : map f (@nhds α (induced f t) a) = 𝓝 (f a) := by
   rw [nhds_induced, Filter.map_comap_of_mem h]
 #align map_nhds_induced_of_mem map_nhds_induced_of_mem
 
 theorem closure_induced [t : TopologicalSpace β] {f : α → β} {a : α} {s : Set α} :
-    a ∈ @Closure α (TopologicalSpace.induced f t) s ↔ f a ∈ Closure (f '' s) := by
+    a ∈ @closure α (TopologicalSpace.induced f t) s ↔ f a ∈ closure (f '' s) := by
   simp only [mem_closure_iff_frequently, nhds_induced, frequently_comap, mem_image, and_comm']
 #align closure_induced closure_induced
 
 theorem is_closed_induced_iff' [t : TopologicalSpace β] {f : α → β} {s : Set α} :
-    @IsClosed α (t.induced f) s ↔ ∀ a, f a ∈ Closure (f '' s) → a ∈ s := by
+    @IsClosed α (t.induced f) s ↔ ∀ a, f a ∈ closure (f '' s) → a ∈ s := by
   simp only [← closure_subset_iff_is_closed, subset_def, closure_induced]
 #align is_closed_induced_iff' is_closed_induced_iff'
 
@@ -1046,7 +1046,7 @@ theorem generate_from_Inter_of_generate_from_eq_self (f : ι → Set (Set α))
 variable {t : ι → TopologicalSpace α}
 
 theorem is_open_supr_iff {s : Set α} : @IsOpen _ (⨆ i, t i) s ↔ ∀ i, @IsOpen _ (t i) s :=
-  show s ∈ SetOf (supr t).IsOpen ↔ s ∈ { x : Set α | ∀ i : ι, (t i).IsOpen x } by simp [set_of_is_open_supr]
+  show s ∈ setOf (supr t).IsOpen ↔ s ∈ { x : Set α | ∀ i : ι, (t i).IsOpen x } by simp [set_of_is_open_supr]
 #align is_open_supr_iff is_open_supr_iff
 
 theorem is_closed_supr_iff {s : Set α} : @IsClosed _ (⨆ i, t i) s ↔ ∀ i, @IsClosed _ (t i) s := by

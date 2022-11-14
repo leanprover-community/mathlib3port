@@ -6,7 +6,7 @@ Authors: Johannes Hölzl, Zhouhang Zhou
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.Order.Filter.Germ
 import Mathbin.Topology.ContinuousFunction.Algebra
-import Mathbin.MeasureTheory.Function.StronglyMeasurable
+import Mathbin.MeasureTheory.Function.StronglyMeasurable.Basic
 
 /-!
 
@@ -867,3 +867,5 @@ def toAeEqFunLinearMap : C(α, γ) →ₗ[𝕜] α →ₘ[μ] γ :=
 
 end ContinuousMap
 
+/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
+-- Guard against import creep

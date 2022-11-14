@@ -219,12 +219,12 @@ def pathComposition : Paths C ⥤ C where
 /-- The canonical relation on the path category of a category:
 two paths are related if they compose to the same morphism. -/
 @[simp]
-def PathsHomRel : HomRel (Paths C) := fun X Y p q => (pathComposition C).map p = (pathComposition C).map q
-#align category_theory.paths_hom_rel CategoryTheory.PathsHomRel
+def pathsHomRel : HomRel (Paths C) := fun X Y p q => (pathComposition C).map p = (pathComposition C).map q
+#align category_theory.paths_hom_rel CategoryTheory.pathsHomRel
 
 /-- The functor from a category to the canonical quotient of its path category. -/
 @[simps]
-def toQuotientPaths : C ⥤ Quotient (PathsHomRel C) where
+def toQuotientPaths : C ⥤ Quotient (pathsHomRel C) where
   obj X := Quotient.mk X
   map X Y f := Quot.mk _ f.toPath
   map_id' X := Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
@@ -234,13 +234,13 @@ def toQuotientPaths : C ⥤ Quotient (PathsHomRel C) where
 /-- The functor from the canonical quotient of a path category of a category
 to the original category. -/
 @[simps]
-def quotientPathsTo : Quotient (PathsHomRel C) ⥤ C :=
+def quotientPathsTo : Quotient (pathsHomRel C) ⥤ C :=
   Quotient.lift _ (pathComposition C) fun X Y p q w => w
 #align category_theory.quotient_paths_to CategoryTheory.quotientPathsTo
 
 /-- The canonical quotient of the path category of a category
 is equivalent to the original category. -/
-def quotientPathsEquiv : Quotient (PathsHomRel C) ≌ C where
+def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C where
   Functor := quotientPathsTo C
   inverse := toQuotientPaths C
   unitIso :=

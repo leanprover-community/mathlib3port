@@ -55,7 +55,7 @@ namespace Submodule
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 instance : SetLike (Submodule R M) M where
-  coe := Submodule.Carrier
+  coe := Submodule.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
 instance : AddSubmonoidClass (Submodule R M) M where
@@ -95,7 +95,7 @@ theorem ext (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
 /-- Copy of a submodule with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (p : Submodule R M) (s : Set M) (hs : s = ↑p) : Submodule R M where
-  Carrier := s
+  carrier := s
   zero_mem' := hs.symm ▸ p.zero_mem'
   add_mem' _ _ := hs.symm ▸ p.add_mem'
   smul_mem' := hs.symm ▸ p.smul_mem'
@@ -204,7 +204,7 @@ variable {r : R} {x y : M}
 variable (p)
 
 @[simp]
-theorem mem_carrier : x ∈ p.Carrier ↔ x ∈ (p : Set M) :=
+theorem mem_carrier : x ∈ p.carrier ↔ x ∈ (p : Set M) :=
   Iff.rfl
 #align submodule.mem_carrier Submodule.mem_carrier
 
@@ -368,7 +368,7 @@ variable (S) [Semiring S] [Module S M] [Module R M] [HasSmul S R] [IsScalarTower
 corresponding to `V`, an `R`-submodule of the original `R`-module.
 -/
 def restrictScalars (V : Submodule R M) : Submodule S M where
-  Carrier := V
+  carrier := V
   zero_mem' := V.zero_mem
   smul_mem' c m h := V.smul_of_tower_mem c h
   add_mem' x y hx hy := V.add_mem hx hy

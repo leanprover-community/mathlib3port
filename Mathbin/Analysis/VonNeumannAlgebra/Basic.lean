@@ -66,7 +66,7 @@ and instead will use `⊤ : von_neumann_algebra H`.
 @[nolint has_nonempty_instance]
 structure VonNeumannAlgebra (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H] extends
   StarSubalgebra ℂ (H →L[ℂ] H) where
-  double_commutant : Set.Centralizer (Set.Centralizer carrier) = carrier
+  double_commutant : Set.centralizer (Set.centralizer carrier) = carrier
 #align von_neumann_algebra VonNeumannAlgebra
 
 /-- Consider a von Neumann algebra acting on a Hilbert space `H` as a *-subalgebra of `H →L[ℂ] H`.
@@ -80,7 +80,7 @@ namespace VonNeumannAlgebra
 variable (H : Type u) [InnerProductSpace ℂ H] [CompleteSpace H]
 
 instance : SetLike (VonNeumannAlgebra H) (H →L[ℂ] H) :=
-  ⟨VonNeumannAlgebra.Carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨VonNeumannAlgebra.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
 
 end VonNeumannAlgebra
 

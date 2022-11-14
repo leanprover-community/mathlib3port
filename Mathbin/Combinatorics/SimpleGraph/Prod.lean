@@ -62,7 +62,7 @@ theorem box_prod_adj_right : (G □ H).Adj (a, b₁) (a, b₂) ↔ H.Adj b₁ b�
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem box_prod_neighbor_set (x : α × β) :
-    (G □ H).NeighborSet x = G.NeighborSet x.1 ×ˢ {x.2} ∪ {x.1} ×ˢ H.NeighborSet x.2 := by
+    (G □ H).neighborSet x = G.neighborSet x.1 ×ˢ {x.2} ∪ {x.1} ×ˢ H.neighborSet x.2 := by
   ext ⟨a', b'⟩
   simp only [mem_neighbor_set, Set.mem_union, box_prod_adj, Set.mem_prod, Set.mem_singleton_iff]
   simp only [eq_comm, and_comm']
@@ -199,13 +199,13 @@ theorem box_prod_connected : (G □ H).Connected ↔ G.Connected ∧ H.Connected
   ⟨fun h => ⟨h.ofBoxProdLeft, h.ofBoxProdRight⟩, fun h => h.1.boxProd h.2⟩
 #align simple_graph.box_prod_connected SimpleGraph.box_prod_connected
 
-instance [DecidableEq α] [DecidableEq β] (x : α × β) [Fintype (G.NeighborSet x.1)] [Fintype (H.NeighborSet x.2)] :
-    Fintype ((G □ H).NeighborSet x) := by
+instance [DecidableEq α] [DecidableEq β] (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)] :
+    Fintype ((G □ H).neighborSet x) := by
   rw [box_prod_neighbor_set]
   infer_instance
 
-theorem box_prod_degree (x : α × β) [Fintype (G.NeighborSet x.1)] [Fintype (H.NeighborSet x.2)]
-    [Fintype ((G □ H).NeighborSet x)] : (G □ H).degree x = G.degree x.1 + H.degree x.2 := by
+theorem box_prod_degree (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)]
+    [Fintype ((G □ H).neighborSet x)] : (G □ H).degree x = G.degree x.1 + H.degree x.2 := by
   classical simp_rw [← card_neighbor_set_eq_degree, box_prod_neighbor_set, ← Set.to_finset_card, Set.to_finset_union]
     · rw [Finset.disjoint_left]
       rintro ⟨_, _⟩ hG hH

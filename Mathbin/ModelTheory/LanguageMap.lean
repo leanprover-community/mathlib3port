@@ -215,11 +215,11 @@ protected structure Injective : Prop where
 /-- Pulls a `L`-structure along a language map `ϕ : L →ᴸ L'`, and then expands it
   to an `L'`-structure arbitrarily. -/
 noncomputable def defaultExpansion (ϕ : L →ᴸ L')
-    [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.Range fun f : L.Functions n => onFunction ϕ f)]
-    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.Range fun r : L.Relations n => onRelation ϕ r)] (M : Type _)
+    [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.range fun f : L.Functions n => onFunction ϕ f)]
+    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.range fun r : L.Relations n => onRelation ϕ r)] (M : Type _)
     [Inhabited M] [L.StructureCat M] : L'.StructureCat M where
-  funMap n f xs := if h' : f ∈ Set.Range fun f : L.Functions n => onFunction ϕ f then funMap h'.some xs else default
-  rel_map n r xs := if h' : r ∈ Set.Range fun r : L.Relations n => onRelation ϕ r then RelMap h'.some xs else default
+  funMap n f xs := if h' : f ∈ Set.range fun f : L.Functions n => onFunction ϕ f then funMap h'.some xs else default
+  rel_map n r xs := if h' : r ∈ Set.range fun r : L.Relations n => onRelation ϕ r then RelMap h'.some xs else default
 #align first_order.language.Lhom.default_expansion FirstOrder.Language.LhomCat.defaultExpansion
 
 /-- A language homomorphism is an expansion on a structure if it commutes with the interpretation of
@@ -297,16 +297,16 @@ instance (priority := 100) is_expansion_on_reduct (ϕ : L →ᴸ L') (M : Type _
 #align first_order.language.Lhom.is_expansion_on_reduct FirstOrder.Language.LhomCat.is_expansion_on_reduct
 
 theorem Injective.is_expansion_on_default {ϕ : L →ᴸ L'}
-    [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.Range fun f : L.Functions n => onFunction ϕ f)]
-    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.Range fun r : L.Relations n => onRelation ϕ r)] (h : ϕ.Injective)
+    [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.range fun f : L.Functions n => onFunction ϕ f)]
+    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.range fun r : L.Relations n => onRelation ϕ r)] (h : ϕ.Injective)
     (M : Type _) [Inhabited M] [L.StructureCat M] : @IsExpansionOn L L' ϕ M _ (ϕ.defaultExpansion M) := by
   letI := ϕ.default_expansion M
   refine' ⟨fun n f xs => _, fun n r xs => _⟩
-  · have hf : ϕ.on_function f ∈ Set.Range fun f : L.functions n => ϕ.on_function f := ⟨f, rfl⟩
+  · have hf : ϕ.on_function f ∈ Set.range fun f : L.functions n => ϕ.on_function f := ⟨f, rfl⟩
     refine' (dif_pos hf).trans _
     rw [h.on_function hf.some_spec]
     
-  · have hr : ϕ.on_relation r ∈ Set.Range fun r : L.relations n => ϕ.on_relation r := ⟨r, rfl⟩
+  · have hr : ϕ.on_relation r ∈ Set.range fun r : L.relations n => ϕ.on_relation r := ⟨r, rfl⟩
     refine' (dif_pos hr).trans _
     rw [h.on_relation hr.some_spec]
     

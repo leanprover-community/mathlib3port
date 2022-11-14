@@ -134,11 +134,11 @@ theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (HasSmul.smul c : M → 
   smul_lt_smul_of_pos h hc
 #align strict_mono_smul_left strict_mono_smul_left
 
-theorem smul_lower_bounds_subset_lower_bounds_smul (hc : 0 ≤ c) : c • LowerBounds s ⊆ LowerBounds (c • s) :=
+theorem smul_lower_bounds_subset_lower_bounds_smul (hc : 0 ≤ c) : c • lowerBounds s ⊆ lowerBounds (c • s) :=
   (monotone_smul_left hc).image_lower_bounds_subset_lower_bounds_image
 #align smul_lower_bounds_subset_lower_bounds_smul smul_lower_bounds_subset_lower_bounds_smul
 
-theorem smul_upper_bounds_subset_upper_bounds_smul (hc : 0 ≤ c) : c • UpperBounds s ⊆ UpperBounds (c • s) :=
+theorem smul_upper_bounds_subset_upper_bounds_smul (hc : 0 ≤ c) : c • upperBounds s ⊆ upperBounds (c • s) :=
   (monotone_smul_left hc).image_upper_bounds_subset_upper_bounds_image
 #align smul_upper_bounds_subset_upper_bounds_smul smul_upper_bounds_subset_upper_bounds_smul
 
@@ -268,12 +268,12 @@ def OrderIso.smulLeft (hc : 0 < c) : M ≃o M where
 variable {M}
 
 @[simp]
-theorem lower_bounds_smul_of_pos (hc : 0 < c) : LowerBounds (c • s) = c • LowerBounds s :=
+theorem lower_bounds_smul_of_pos (hc : 0 < c) : lowerBounds (c • s) = c • lowerBounds s :=
   (OrderIso.smulLeft _ hc).lower_bounds_image
 #align lower_bounds_smul_of_pos lower_bounds_smul_of_pos
 
 @[simp]
-theorem upper_bounds_smul_of_pos (hc : 0 < c) : UpperBounds (c • s) = c • UpperBounds s :=
+theorem upper_bounds_smul_of_pos (hc : 0 < c) : upperBounds (c • s) = c • upperBounds s :=
   (OrderIso.smulLeft _ hc).upper_bounds_image
 #align upper_bounds_smul_of_pos upper_bounds_smul_of_pos
 

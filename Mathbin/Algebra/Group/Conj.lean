@@ -290,25 +290,25 @@ section Monoid
 variable [Monoid α]
 
 /-- Given an element `a`, `conjugates a` is the set of conjugates. -/
-def ConjugatesOf (a : α) : Set α :=
+def conjugatesOf (a : α) : Set α :=
   { b | IsConj a b }
-#align conjugates_of ConjugatesOf
+#align conjugates_of conjugatesOf
 
-theorem mem_conjugates_of_self {a : α} : a ∈ ConjugatesOf a :=
+theorem mem_conjugates_of_self {a : α} : a ∈ conjugatesOf a :=
   IsConj.refl _
 #align mem_conjugates_of_self mem_conjugates_of_self
 
-theorem IsConj.conjugates_of_eq {a b : α} (ab : IsConj a b) : ConjugatesOf a = ConjugatesOf b :=
+theorem IsConj.conjugates_of_eq {a b : α} (ab : IsConj a b) : conjugatesOf a = conjugatesOf b :=
   Set.ext fun g => ⟨fun ag => ab.symm.trans ag, fun bg => ab.trans bg⟩
 #align is_conj.conjugates_of_eq IsConj.conjugates_of_eq
 
-theorem is_conj_iff_conjugates_of_eq {a b : α} : IsConj a b ↔ ConjugatesOf a = ConjugatesOf b :=
+theorem is_conj_iff_conjugates_of_eq {a b : α} : IsConj a b ↔ conjugatesOf a = conjugatesOf b :=
   ⟨IsConj.conjugates_of_eq, fun h => by
     have ha := mem_conjugates_of_self
     rwa [← h] at ha⟩
 #align is_conj_iff_conjugates_of_eq is_conj_iff_conjugates_of_eq
 
-instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] {a : α} : Fintype (ConjugatesOf a) :=
+instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] {a : α} : Fintype (conjugatesOf a) :=
   @Subtype.fintype _ _ (‹DecidableRel IsConj› a) _
 
 end Monoid
@@ -320,15 +320,15 @@ variable [Monoid α]
 attribute [local instance] IsConj.setoid
 
 /-- Given a conjugacy class `a`, `carrier a` is the set it represents. -/
-def Carrier : ConjClasses α → Set α :=
-  Quotient.lift ConjugatesOf fun (a : α) b ab => IsConj.conjugates_of_eq ab
-#align conj_classes.carrier ConjClasses.Carrier
+def carrier : ConjClasses α → Set α :=
+  Quotient.lift conjugatesOf fun (a : α) b ab => IsConj.conjugates_of_eq ab
+#align conj_classes.carrier ConjClasses.carrier
 
-theorem mem_carrier_mk {a : α} : a ∈ Carrier (ConjClasses.mk a) :=
+theorem mem_carrier_mk {a : α} : a ∈ carrier (ConjClasses.mk a) :=
   IsConj.refl _
 #align conj_classes.mem_carrier_mk ConjClasses.mem_carrier_mk
 
-theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ Carrier b ↔ ConjClasses.mk a = b := by
+theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ carrier b ↔ ConjClasses.mk a = b := by
   revert b
   rw [forall_is_conj]
   intro b
@@ -336,7 +336,7 @@ theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ Carrier b �
   rfl
 #align conj_classes.mem_carrier_iff_mk_eq ConjClasses.mem_carrier_iff_mk_eq
 
-theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.Carrier = ConjClasses.mk ⁻¹' {a} :=
+theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.carrier = ConjClasses.mk ⁻¹' {a} :=
   Set.ext fun x => mem_carrier_iff_mk_eq
 #align conj_classes.carrier_eq_preimage_mk ConjClasses.carrier_eq_preimage_mk
 
@@ -344,8 +344,8 @@ section Fintype
 
 variable [Fintype α] [DecidableRel (IsConj : α → α → Prop)]
 
-instance {x : ConjClasses α} : Fintype (Carrier x) :=
-  (Quotient.recOnSubsingleton x) fun a => ConjugatesOf.fintype
+instance {x : ConjClasses α} : Fintype (carrier x) :=
+  (Quotient.recOnSubsingleton x) fun a => conjugatesOf.fintype
 
 end Fintype
 

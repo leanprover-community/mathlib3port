@@ -304,7 +304,7 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
 
 theorem integral_cpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) (hr : r ≠ -1) :
     (∫ x : ℝ in a..b, (x : ℂ) ^ r) = (b ^ (r + 1) - a ^ (r + 1)) / (r + 1) := by
-  suffices ∀ x ∈ Set.Interval a b, HasDerivAt (fun x : ℝ => (x : ℂ) ^ (r + 1) / (r + 1)) (x ^ r) x by
+  suffices ∀ x ∈ Set.interval a b, HasDerivAt (fun x : ℝ => (x : ℂ) ^ (r + 1) / (r + 1)) (x ^ r) x by
     rw [sub_div]
     exact integral_eq_sub_of_has_deriv_at this (interval_integrable_cpow ha hb)
   intro x hx

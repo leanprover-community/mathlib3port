@@ -140,7 +140,7 @@ theorem sup_eq_closure (H K : Subgroup G) : H ⊔ K = closure (H * K) :=
 
 @[to_additive]
 private def mul_normal_aux (H N : Subgroup G) [hN : N.Normal] : Subgroup G where
-  Carrier := (H : Set G) * N
+  carrier := (H : Set G) * N
   one_mem' := ⟨1, 1, H.one_mem, N.one_mem, by rw [mul_one]⟩
   mul_mem' := fun a b ⟨h, n, hh, hn, ha⟩ ⟨h', n', hh', hn', hb⟩ =>
     ⟨h * h', h'⁻¹ * n * h' * n', H.mul_mem hh hh', N.mul_mem (by simpa using hN.conj_mem _ hn h'⁻¹) hn', by
@@ -164,7 +164,7 @@ theorem mul_normal (H N : Subgroup G) [N.Normal] : (↑(H ⊔ N) : Set G) = H * 
 
 @[to_additive]
 private def normal_mul_aux (N H : Subgroup G) [hN : N.Normal] : Subgroup G where
-  Carrier := (N : Set G) * H
+  carrier := (N : Set G) * H
   one_mem' := ⟨1, 1, N.one_mem, H.one_mem, by rw [mul_one]⟩
   mul_mem' := fun a b ⟨n, h, hn, hh, ha⟩ ⟨n', h', hn', hh', hb⟩ =>
     ⟨n * (h * n' * h⁻¹), h * h', N.mul_mem hn (hN.conj_mem _ hn' _), H.mul_mem hh hh', by simp [← ha, ← hb, mul_assoc]⟩

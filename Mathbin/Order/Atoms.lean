@@ -64,11 +64,11 @@ def IsAtom (a : α) : Prop :=
   a ≠ ⊥ ∧ ∀ b, b < a → b = ⊥
 #align is_atom IsAtom
 
-theorem IsAtom.Iic (ha : IsAtom a) (hax : a ≤ x) : IsAtom (⟨a, hax⟩ : Set.IicCat x) :=
+theorem IsAtom.Iic (ha : IsAtom a) (hax : a ≤ x) : IsAtom (⟨a, hax⟩ : Set.iic x) :=
   ⟨fun con => ha.1 (Subtype.mk_eq_mk.1 con), fun ⟨b, hb⟩ hba => Subtype.mk_eq_mk.2 (ha.2 b hba)⟩
 #align is_atom.Iic IsAtom.Iic
 
-theorem IsAtom.of_is_atom_coe_Iic {a : Set.IicCat x} (ha : IsAtom a) : IsAtom (a : α) :=
+theorem IsAtom.of_is_atom_coe_Iic {a : Set.iic x} (ha : IsAtom a) : IsAtom (a : α) :=
   ⟨fun con => ha.1 (Subtype.ext con), fun b hba => Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.Prop⟩ hba)⟩
 #align is_atom.of_is_atom_coe_Iic IsAtom.of_is_atom_coe_Iic
 
@@ -88,7 +88,7 @@ theorem IsAtom.lt_iff (h : IsAtom a) : x < a ↔ x = ⊥ :=
 theorem IsAtom.le_iff (h : IsAtom a) : x ≤ a ↔ x = ⊥ ∨ x = a := by rw [le_iff_lt_or_eq, h.lt_iff]
 #align is_atom.le_iff IsAtom.le_iff
 
-theorem IsAtom.Iic_eq (h : IsAtom a) : Set.IicCat a = {⊥, a} :=
+theorem IsAtom.Iic_eq (h : IsAtom a) : Set.iic a = {⊥, a} :=
   Set.ext fun x => h.le_iff
 #align is_atom.Iic_eq IsAtom.Iic_eq
 
@@ -128,11 +128,11 @@ alias is_atom_dual_iff_is_coatom ↔ _ IsCoatom.dual
 
 variable [OrderTop α] {a x : α}
 
-theorem IsCoatom.Ici (ha : IsCoatom a) (hax : x ≤ a) : IsCoatom (⟨a, hax⟩ : Set.IciCat x) :=
-  ha.dual.IicCat hax
+theorem IsCoatom.Ici (ha : IsCoatom a) (hax : x ≤ a) : IsCoatom (⟨a, hax⟩ : Set.ici x) :=
+  ha.dual.iic hax
 #align is_coatom.Ici IsCoatom.Ici
 
-theorem IsCoatom.of_is_coatom_coe_Ici {a : Set.IciCat x} (ha : IsCoatom a) : IsCoatom (a : α) :=
+theorem IsCoatom.of_is_coatom_coe_Ici {a : Set.ici x} (ha : IsCoatom a) : IsCoatom (a : α) :=
   @IsAtom.of_is_atom_coe_Iic αᵒᵈ _ _ x a ha
 #align is_coatom.of_is_coatom_coe_Ici IsCoatom.of_is_coatom_coe_Ici
 
@@ -153,7 +153,7 @@ theorem IsCoatom.le_iff (h : IsCoatom a) : a ≤ x ↔ x = ⊤ ∨ x = a :=
   h.dual.le_iff
 #align is_coatom.le_iff IsCoatom.le_iff
 
-theorem IsCoatom.Ici_eq (h : IsCoatom a) : Set.IciCat a = {⊤, a} :=
+theorem IsCoatom.Ici_eq (h : IsCoatom a) : Set.ici a = {⊤, a} :=
   h.dual.Iic_eq
 #align is_coatom.Ici_eq IsCoatom.Ici_eq
 
@@ -227,10 +227,10 @@ instance is_coatomic_dual : IsCoatomic αᵒᵈ :=
   is_coatomic_dual_iff_is_atomic.2 ‹IsAtomic α›
 #align is_atomic.is_coatomic_dual IsAtomic.is_coatomic_dual
 
-instance {x : α} : IsAtomic (Set.IicCat x) :=
+instance {x : α} : IsAtomic (Set.iic x) :=
   ⟨fun ⟨y, hy⟩ =>
     (eq_bot_or_exists_atom_le y).imp Subtype.mk_eq_mk.2 fun ⟨a, ha, hay⟩ =>
-      ⟨⟨a, hay.trans hy⟩, ha.IicCat (hay.trans hy), hay⟩⟩
+      ⟨⟨a, hay.trans hy⟩, ha.iic (hay.trans hy), hay⟩⟩
 
 end IsAtomic
 
@@ -242,21 +242,21 @@ instance is_coatomic : IsAtomic αᵒᵈ :=
   is_atomic_dual_iff_is_coatomic.2 ‹IsCoatomic α›
 #align is_coatomic.is_coatomic IsCoatomic.is_coatomic
 
-instance {x : α} : IsCoatomic (Set.IciCat x) :=
+instance {x : α} : IsCoatomic (Set.ici x) :=
   ⟨fun ⟨y, hy⟩ =>
     (eq_top_or_exists_le_coatom y).imp Subtype.mk_eq_mk.2 fun ⟨a, ha, hay⟩ =>
-      ⟨⟨a, le_trans hy hay⟩, ha.IciCat (le_trans hy hay), hay⟩⟩
+      ⟨⟨a, le_trans hy hay⟩, ha.ici (le_trans hy hay), hay⟩⟩
 
 end IsCoatomic
 
-theorem is_atomic_iff_forall_is_atomic_Iic [OrderBot α] : IsAtomic α ↔ ∀ x : α, IsAtomic (Set.IicCat x) :=
+theorem is_atomic_iff_forall_is_atomic_Iic [OrderBot α] : IsAtomic α ↔ ∀ x : α, IsAtomic (Set.iic x) :=
   ⟨@IsAtomic.Set.IicCat.is_atomic _ _ _, fun h =>
     ⟨fun x =>
-      ((@eq_bot_or_exists_atom_le _ _ _ (h x)) (⊤ : Set.IicCat x)).imp Subtype.mk_eq_mk.1
+      ((@eq_bot_or_exists_atom_le _ _ _ (h x)) (⊤ : Set.iic x)).imp Subtype.mk_eq_mk.1
         (Exists.imp' coe fun ⟨a, ha⟩ => And.imp_left IsAtom.of_is_atom_coe_Iic)⟩⟩
 #align is_atomic_iff_forall_is_atomic_Iic is_atomic_iff_forall_is_atomic_Iic
 
-theorem is_coatomic_iff_forall_is_coatomic_Ici [OrderTop α] : IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.IciCat x) :=
+theorem is_coatomic_iff_forall_is_coatomic_Ici [OrderTop α] : IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.ici x) :=
   is_atomic_dual_iff_is_coatomic.symm.trans <|
     is_atomic_iff_forall_is_atomic_Iic.trans <| forall_congr' fun x => is_coatomic_dual_iff_is_atomic.symm.trans Iff.rfl
 #align is_coatomic_iff_forall_is_coatomic_Ici is_coatomic_iff_forall_is_coatomic_Ici
@@ -664,15 +664,14 @@ theorem is_simple_order_iff_is_coatom_bot [PartialOrder α] [BoundedOrder α] : 
 
 namespace Set
 
-theorem is_simple_order_Iic_iff_is_atom [PartialOrder α] [OrderBot α] {a : α} : IsSimpleOrder (IicCat a) ↔ IsAtom a :=
+theorem is_simple_order_Iic_iff_is_atom [PartialOrder α] [OrderBot α] {a : α} : IsSimpleOrder (iic a) ↔ IsAtom a :=
   is_simple_order_iff_is_atom_top.trans <|
     and_congr (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_lt ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 #align set.is_simple_order_Iic_iff_is_atom Set.is_simple_order_Iic_iff_is_atom
 
-theorem is_simple_order_Ici_iff_is_coatom [PartialOrder α] [OrderTop α] {a : α} :
-    IsSimpleOrder (IciCat a) ↔ IsCoatom a :=
+theorem is_simple_order_Ici_iff_is_coatom [PartialOrder α] [OrderTop α] {a : α} : IsSimpleOrder (ici a) ↔ IsCoatom a :=
   is_simple_order_iff_is_coatom_bot.trans <|
     and_congr (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_lt ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
@@ -842,7 +841,7 @@ theorem is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular [IsAtomic
       
     · rintro ⟨a, ha, ay⟩
       rcases exists_is_compl (xy.symm.Iic_order_iso_Ici ⟨a, ay⟩) with ⟨⟨b, xb⟩, hb⟩
-      refine' ⟨↑(⟨b, xb⟩ : Set.IciCat x), IsCoatom.of_is_coatom_coe_Ici _, xb⟩
+      refine' ⟨↑(⟨b, xb⟩ : Set.ici x), IsCoatom.of_is_coatom_coe_Ici _, xb⟩
       rw [← hb.is_atom_iff_is_coatom, OrderIso.is_atom_iff]
       apply ha.Iic
       ⟩

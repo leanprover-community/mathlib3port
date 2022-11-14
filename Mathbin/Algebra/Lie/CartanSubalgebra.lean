@@ -53,7 +53,7 @@ instance [H.IsCartanSubalgebra] : LieAlgebra.IsNilpotent R H :=
 
 @[simp]
 theorem centralizer_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanSubalgebra] :
-    H.toLieSubmodule.Centralizer = H.toLieSubmodule := by
+    H.toLieSubmodule.centralizer = H.toLieSubmodule := by
   rw [← LieSubmodule.coe_to_submodule_eq_iff, coe_centralizer_eq_normalizer, is_cartan_subalgebra.self_normalizing,
     coe_to_lie_submodule]
 #align

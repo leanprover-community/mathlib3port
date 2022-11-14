@@ -120,27 +120,27 @@ theorem card_Iio : (iio b).card = b := by rw [Iio_eq_Ico, card_Ico, bot_eq_zero,
 #align nat.card_Iio Nat.card_Iio
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.IccCat a b) = b + 1 - a := by rw [Fintype.card_of_finset, card_Icc]
+theorem card_fintype_Icc : Fintype.card (Set.icc a b) = b + 1 - a := by rw [Fintype.card_of_finset, card_Icc]
 #align nat.card_fintype_Icc Nat.card_fintype_Icc
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.IcoCat a b) = b - a := by rw [Fintype.card_of_finset, card_Ico]
+theorem card_fintype_Ico : Fintype.card (Set.ico a b) = b - a := by rw [Fintype.card_of_finset, card_Ico]
 #align nat.card_fintype_Ico Nat.card_fintype_Ico
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.IocCat a b) = b - a := by rw [Fintype.card_of_finset, card_Ioc]
+theorem card_fintype_Ioc : Fintype.card (Set.ioc a b) = b - a := by rw [Fintype.card_of_finset, card_Ioc]
 #align nat.card_fintype_Ioc Nat.card_fintype_Ioc
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.IooCat a b) = b - a - 1 := by rw [Fintype.card_of_finset, card_Ioo]
+theorem card_fintype_Ioo : Fintype.card (Set.ioo a b) = b - a - 1 := by rw [Fintype.card_of_finset, card_Ioo]
 #align nat.card_fintype_Ioo Nat.card_fintype_Ioo
 
 @[simp]
-theorem card_fintype_Iic : Fintype.card (Set.IicCat b) = b + 1 := by rw [Fintype.card_of_finset, card_Iic]
+theorem card_fintype_Iic : Fintype.card (Set.iic b) = b + 1 := by rw [Fintype.card_of_finset, card_Iic]
 #align nat.card_fintype_Iic Nat.card_fintype_Iic
 
 @[simp]
-theorem card_fintype_Iio : Fintype.card (Set.IioCat b) = b := by rw [Fintype.card_of_finset, card_Iio]
+theorem card_fintype_Iio : Fintype.card (Set.iio b) = b := by rw [Fintype.card_of_finset, card_Iio]
 #align nat.card_fintype_Iio Nat.card_fintype_Iio
 
 -- TODO@Yaël: Generalize all the following lemmas to `succ_order`
@@ -191,7 +191,7 @@ theorem Ico_insert_succ_left (h : a < b) : insert a (ico a.succ b) = ico a b := 
   rw [Ico_succ_left, ← Ioo_insert_left h]
 #align nat.Ico_insert_succ_left Nat.Ico_insert_succ_left
 
-theorem image_sub_const_Ico (h : c ≤ a) : ((ico a b).Image fun x => x - c) = ico (a - c) (b - c) := by
+theorem image_sub_const_Ico (h : c ≤ a) : ((ico a b).image fun x => x - c) = ico (a - c) (b - c) := by
   ext x
   rw [mem_image]
   constructor
@@ -206,7 +206,7 @@ theorem image_sub_const_Ico (h : c ≤ a) : ((ico a b).Image fun x => x - c) = i
     
 #align nat.image_sub_const_Ico Nat.image_sub_const_Ico
 
-theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).Image fun x => c - x) = ico (c + 1 - b) (c + 1 - a) := by
+theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).image fun x => c - x) = ico (c + 1 - b) (c + 1 - a) := by
   ext x
   rw [mem_image, mem_Ico]
   constructor
@@ -268,7 +268,7 @@ theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.ico n (n + a)) :
 
 /-- Note that while this lemma cannot be easily generalized to a type class, it holds for ℤ as
 well. See `int.image_Ico_mod` for the ℤ version. -/
-theorem image_Ico_mod (n a : ℕ) : (ico n (n + a)).Image (· % a) = range a := by
+theorem image_Ico_mod (n a : ℕ) : (ico n (n + a)).image (· % a) = range a := by
   obtain rfl | ha := eq_or_ne a 0
   · rw [range_zero, add_zero, Ico_self, image_empty]
     
@@ -320,7 +320,7 @@ end Nat
 
 namespace Finset
 
-theorem range_image_pred_top_sub (n : ℕ) : ((Finset.range n).Image fun j => n - 1 - j) = Finset.range n := by
+theorem range_image_pred_top_sub (n : ℕ) : ((Finset.range n).image fun j => n - 1 - j) = Finset.range n := by
   cases n
   · rw [range_zero, image_empty]
     

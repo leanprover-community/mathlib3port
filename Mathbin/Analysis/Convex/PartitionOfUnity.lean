@@ -49,7 +49,7 @@ theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t 
     (H : ∀ x : X, ∃ U ∈ 𝓝 x, ∃ g : X → E, ContinuousOn g U ∧ ∀ y ∈ U, g y ∈ t y) : ∃ g : C(X, E), ∀ x, g x ∈ t x := by
   choose U hU g hgc hgt using H
   obtain ⟨f, hf⟩ :=
-    PartitionOfUnity.exists_is_subordinate isClosedUniv (fun x => Interior (U x)) (fun x => is_open_interior)
+    PartitionOfUnity.exists_is_subordinate isClosedUniv (fun x => interior (U x)) (fun x => is_open_interior)
       fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   refine'
     ⟨⟨fun x => ∑ᶠ i, f i x • g i x,

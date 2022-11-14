@@ -81,7 +81,7 @@ theorem split_lower_eq_bot {i x} : I.splitLower i x = ⊥ ↔ x ≤ I.lower i :=
 theorem split_lower_eq_self : I.splitLower i x = I ↔ I.upper i ≤ x := by simp [split_lower, update_eq_iff]
 #align box_integral.box.split_lower_eq_self BoxIntegral.Box.split_lower_eq_self
 
-theorem split_lower_def [DecidableEq ι] {i x} (h : x ∈ IooCat (I.lower i) (I.upper i))
+theorem split_lower_def [DecidableEq ι] {i x} (h : x ∈ ioo (I.lower i) (I.upper i))
     (h' : ∀ j, I.lower j < update I.upper i x j :=
       (forall_update_iff I.upper fun j y => I.lower j < y).2 ⟨h.1, fun j hne => I.lower_lt_upper _⟩) :
     I.splitLower i x = (⟨I.lower, update I.upper i x, h'⟩ : Box ι) := by
@@ -121,7 +121,7 @@ theorem split_upper_eq_bot {i x} : I.splitUpper i x = ⊥ ↔ I.upper i ≤ x :=
 theorem split_upper_eq_self : I.splitUpper i x = I ↔ x ≤ I.lower i := by simp [split_upper, update_eq_iff]
 #align box_integral.box.split_upper_eq_self BoxIntegral.Box.split_upper_eq_self
 
-theorem split_upper_def [DecidableEq ι] {i x} (h : x ∈ IooCat (I.lower i) (I.upper i))
+theorem split_upper_def [DecidableEq ι] {i x} (h : x ∈ ioo (I.lower i) (I.upper i))
     (h' : ∀ j, update I.lower i x j < I.upper j :=
       (forall_update_iff I.lower fun j y => y < I.upper j).2 ⟨h.2, fun j hne => I.lower_lt_upper _⟩) :
     I.splitUpper i x = (⟨update I.lower i x, I.upper, h'⟩ : Box ι) := by
@@ -179,7 +179,7 @@ theorem mem_split_iff' :
 #align box_integral.prepartition.mem_split_iff' BoxIntegral.Prepartition.mem_split_iff'
 
 @[simp]
-theorem Union_split (I : Box ι) (i : ι) (x : ℝ) : (split I i x).UnionCat = I := by
+theorem Union_split (I : Box ι) (i : ι) (x : ℝ) : (split I i x).union = I := by
   simp [split, ← inter_union_distrib_left, ← set_of_or, le_or_lt]
 #align box_integral.prepartition.Union_split BoxIntegral.Prepartition.Union_split
 
@@ -193,7 +193,7 @@ theorem sum_split_boxes {M : Type _} [AddCommMonoid M] (I : Box ι) (i : ι) (x 
 #align box_integral.prepartition.sum_split_boxes BoxIntegral.Prepartition.sum_split_boxes
 
 /-- If `x ∉ (I.lower i, I.upper i)`, then the hyperplane `{y | y i = x}` does not split `I`. -/
-theorem split_of_not_mem_Ioo (h : x ∉ IooCat (I.lower i) (I.upper i)) : split I i x = ⊤ := by
+theorem split_of_not_mem_Ioo (h : x ∉ ioo (I.lower i) (I.upper i)) : split I i x = ⊤ := by
   refine' ((is_partition_top I).eq_of_boxes_subset fun J hJ => _).symm
   rcases mem_top.1 hJ with rfl
   clear hJ
@@ -260,7 +260,7 @@ theorem isPartitionSplitMany (I : Box ι) (s : Finset (ι × ℝ)) : IsPartition
 #align box_integral.prepartition.is_partition_split_many BoxIntegral.Prepartition.isPartitionSplitMany
 
 @[simp]
-theorem Union_split_many (I : Box ι) (s : Finset (ι × ℝ)) : (splitMany I s).UnionCat = I :=
+theorem Union_split_many (I : Box ι) (s : Finset (ι × ℝ)) : (splitMany I s).union = I :=
   (isPartitionSplitMany I s).Union_eq
 #align box_integral.prepartition.Union_split_many BoxIntegral.Prepartition.Union_split_many
 
@@ -319,7 +319,7 @@ theorem eventually_not_disjoint_imp_le_of_mem_split_many (s : Finset (Box ι)) :
   box_integral.prepartition.eventually_not_disjoint_imp_le_of_mem_split_many BoxIntegral.Prepartition.eventually_not_disjoint_imp_le_of_mem_split_many
 
 theorem eventually_split_many_inf_eq_filter (π : Prepartition I) :
-    ∀ᶠ t : Finset (ι × ℝ) in at_top, π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.UnionCat := by
+    ∀ᶠ t : Finset (ι × ℝ) in at_top, π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.union := by
   refine' (eventually_not_disjoint_imp_le_of_mem_split_many π.boxes).mono fun t ht => _
   refine' le_antisymm ((bUnion_le_iff _).2 fun J hJ => _) (le_inf (fun J hJ => _) (filter_le _ _))
   · refine' of_with_bot_mono _
@@ -337,7 +337,7 @@ theorem eventually_split_many_inf_eq_filter (π : Prepartition I) :
   box_integral.prepartition.eventually_split_many_inf_eq_filter BoxIntegral.Prepartition.eventually_split_many_inf_eq_filter
 
 theorem exists_split_many_inf_eq_filter_of_finite (s : Set (Prepartition I)) (hs : s.Finite) :
-    ∃ t : Finset (ι × ℝ), ∀ π ∈ s, π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.UnionCat :=
+    ∃ t : Finset (ι × ℝ), ∀ π ∈ s, π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.union :=
   haveI := fun π (hπ : π ∈ s) => eventually_split_many_inf_eq_filter π
   (hs.eventually_all.2 this).exists
 #align
@@ -355,7 +355,7 @@ theorem IsPartition.exists_split_many_le {I : Box ι} {π : Prepartition I} (h :
 
 /-- For every prepartition `π` of `I` there exists a prepartition that covers exactly
 `I \ π.Union`. -/
-theorem exists_Union_eq_diff (π : Prepartition I) : ∃ π' : Prepartition I, π'.UnionCat = I \ π.UnionCat := by
+theorem exists_Union_eq_diff (π : Prepartition I) : ∃ π' : Prepartition I, π'.union = I \ π.union := by
   rcases π.eventually_split_many_inf_eq_filter.exists with ⟨s, hs⟩
   use (split_many I s).filter fun J => ¬(J : Set (ι → ℝ)) ⊆ π.Union
   simp [← hs]
@@ -368,13 +368,13 @@ def compl (π : Prepartition I) : Prepartition I :=
 #align box_integral.prepartition.compl BoxIntegral.Prepartition.compl
 
 @[simp]
-theorem Union_compl (π : Prepartition I) : π.compl.UnionCat = I \ π.UnionCat :=
+theorem Union_compl (π : Prepartition I) : π.compl.union = I \ π.union :=
   π.exists_Union_eq_diff.some_spec
 #align box_integral.prepartition.Union_compl BoxIntegral.Prepartition.Union_compl
 
 /-- Since the definition of `box_integral.prepartition.compl` uses `Exists.some`,
 the result depends only on `π.Union`. -/
-theorem compl_congr {π₁ π₂ : Prepartition I} (h : π₁.UnionCat = π₂.UnionCat) : π₁.compl = π₂.compl := by
+theorem compl_congr {π₁ π₂ : Prepartition I} (h : π₁.union = π₂.union) : π₁.compl = π₂.compl := by
   dsimp only [compl]
   congr 1
   rw [h]

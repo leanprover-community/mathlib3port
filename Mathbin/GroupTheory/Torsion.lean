@@ -120,7 +120,7 @@ theorem ExponentExists.is_torsion (h : ExponentExists G) : IsTorsion G := fun g 
 
 /-- The group exponent exists for any bounded torsion group. -/
 @[to_additive IsAddTorsion.exponent_exists "The group exponent exists for any bounded additive torsion group."]
-theorem IsTorsion.exponent_exists (tG : IsTorsion G) (bounded : (Set.Range fun g : G => orderOf g).Finite) :
+theorem IsTorsion.exponent_exists (tG : IsTorsion G) (bounded : (Set.range fun g : G => orderOf g).Finite) :
     ExponentExists G :=
   exponent_exists_iff_ne_zero.mpr <|
     (exponent_ne_zero_iff_range_order_of_finite fun g => order_of_pos' (tG g)).mpr bounded
@@ -169,7 +169,7 @@ namespace CommMonoid
 -/
 @[to_additive add_torsion "The torsion submonoid of an additive commutative monoid."]
 def torsion : Submonoid G where
-  Carrier := { x | IsOfFinOrder x }
+  carrier := { x | IsOfFinOrder x }
   one_mem' := is_of_fin_order_one
   mul_mem' _ _ hx hy := hx.mul hy
 #align comm_monoid.torsion CommMonoid.torsion
@@ -192,7 +192,7 @@ include hp
 /-- The `p`-primary component is the submonoid of elements with order prime-power of `p`. -/
 @[to_additive "The `p`-primary component is the submonoid of elements with additive order prime-power of `p`.", simps]
 def primaryComponent : Submonoid G where
-  Carrier := { g | ∃ n : ℕ, orderOf g = p ^ n }
+  carrier := { g | ∃ n : ℕ, orderOf g = p ^ n }
   one_mem' := ⟨0, by rw [pow_zero, order_of_one]⟩
   mul_mem' g₁ g₂ hg₁ hg₂ :=
     exists_order_of_eq_prime_pow_iff.mpr <| by

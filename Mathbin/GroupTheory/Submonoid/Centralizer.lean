@@ -29,13 +29,13 @@ variable [Monoid M] (S)
 /-- The centralizer of a subset of a monoid `M`. -/
 @[to_additive "The centralizer of a subset of an additive monoid."]
 def centralizer : Submonoid M where
-  Carrier := S.Centralizer
+  carrier := S.centralizer
   one_mem' := S.one_mem_centralizer
   mul_mem' a b := Set.mul_mem_centralizer
 #align submonoid.centralizer Submonoid.centralizer
 
 @[simp, norm_cast, to_additive]
-theorem coe_centralizer : ↑(centralizer S) = S.Centralizer :=
+theorem coe_centralizer : ↑(centralizer S) = S.centralizer :=
   rfl
 #align submonoid.coe_centralizer Submonoid.coe_centralizer
 
@@ -71,7 +71,7 @@ theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
 variable (M)
 
 @[simp, to_additive]
-theorem centralizer_univ : centralizer Set.Univ = center M :=
+theorem centralizer_univ : centralizer Set.univ = center M :=
   SetLike.ext' (Set.centralizer_univ M)
 #align submonoid.centralizer_univ Submonoid.centralizer_univ
 

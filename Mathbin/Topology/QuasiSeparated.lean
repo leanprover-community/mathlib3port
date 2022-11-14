@@ -48,20 +48,20 @@ class QuasiSeparatedSpace (α : Type _) [TopologicalSpace α] : Prop where
 #align quasi_separated_space QuasiSeparatedSpace
 
 theorem is_quasi_separated_univ_iff {α : Type _} [TopologicalSpace α] :
-    IsQuasiSeparated (Set.Univ : Set α) ↔ QuasiSeparatedSpace α := by
+    IsQuasiSeparated (Set.univ : Set α) ↔ QuasiSeparatedSpace α := by
   rw [quasi_separated_space_iff]
   simp [IsQuasiSeparated]
 #align is_quasi_separated_univ_iff is_quasi_separated_univ_iff
 
 theorem is_quasi_separated_univ {α : Type _} [TopologicalSpace α] [QuasiSeparatedSpace α] :
-    IsQuasiSeparated (Set.Univ : Set α) :=
+    IsQuasiSeparated (Set.univ : Set α) :=
   is_quasi_separated_univ_iff.mpr inferInstance
 #align is_quasi_separated_univ is_quasi_separated_univ
 
 theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s) (h : Embedding f) :
     IsQuasiSeparated (f '' s) := by
   intro U V hU hU' hU'' hV hV' hV''
-  convert (H (f ⁻¹' U) (f ⁻¹' V) _ (h.continuous.1 _ hU') _ _ (h.continuous.1 _ hV') _).Image h.continuous
+  convert (H (f ⁻¹' U) (f ⁻¹' V) _ (h.continuous.1 _ hU') _ _ (h.continuous.1 _ hV') _).image h.continuous
   · symm
     rw [← Set.preimage_inter, Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset]
     exact (Set.inter_subset_left _ _).trans (hU.trans (Set.image_subset_range _ _))

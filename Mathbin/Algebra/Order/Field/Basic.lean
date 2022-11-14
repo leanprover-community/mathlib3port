@@ -573,7 +573,7 @@ theorem max_div_div_right {c : α} (hc : 0 ≤ c) (a b : α) : max (a / c) (b / 
   Eq.symm <| Monotone.map_max fun x y => div_le_div_of_le hc
 #align max_div_div_right max_div_div_right
 
-theorem one_div_strict_anti_on : StrictAntiOn (fun x : α => 1 / x) (Set.IoiCat 0) := fun x x1 y y1 xy =>
+theorem one_div_strict_anti_on : StrictAntiOn (fun x : α => 1 / x) (Set.ioi 0) := fun x x1 y y1 xy =>
   (one_div_lt_one_div (Set.mem_Ioi.mp y1) (Set.mem_Ioi.mp x1)).mpr xy
 #align one_div_strict_anti_on one_div_strict_anti_on
 
@@ -593,8 +593,7 @@ theorem one_div_pow_strict_anti (a1 : 1 < a) : StrictAnti fun n : ℕ => 1 / a ^
   one_div_pow_lt_one_div_pow_of_lt a1
 #align one_div_pow_strict_anti one_div_pow_strict_anti
 
-theorem inv_strict_anti_on : StrictAntiOn (fun x : α => x⁻¹) (Set.IoiCat 0) := fun x hx y hy xy =>
-  (inv_lt_inv hy hx).2 xy
+theorem inv_strict_anti_on : StrictAntiOn (fun x : α => x⁻¹) (Set.ioi 0) := fun x hx y hy xy => (inv_lt_inv hy hx).2 xy
 #align inv_strict_anti_on inv_strict_anti_on
 
 theorem inv_pow_le_inv_pow_of_le (a1 : 1 ≤ a) {m n : ℕ} (mn : m ≤ n) : (a ^ n)⁻¹ ≤ (a ^ m)⁻¹ := by

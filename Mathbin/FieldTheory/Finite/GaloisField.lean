@@ -72,18 +72,18 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisFi
   set g_poly := (X ^ p ^ n - X : (Zmod p)[X])
   have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
   have aux : g_poly ≠ 0 := FiniteField.X_pow_card_pow_sub_X_ne_zero _ h hp
-  have key : Fintype.card (g_poly.RootSet (GaloisField p n)) = g_poly.natDegree :=
+  have key : Fintype.card (g_poly.rootSet (GaloisField p n)) = g_poly.natDegree :=
     card_root_set_eq_nat_degree (galois_poly_separable p _ (dvd_pow (dvd_refl p) h)) (splitting_field.splits g_poly)
   have nat_degree_eq : g_poly.natDegree = p ^ n := FiniteField.X_pow_card_pow_sub_X_nat_degree_eq _ h hp
   rw [nat_degree_eq] at key
-  suffices g_poly.RootSet (GaloisField p n) = Set.Univ by
+  suffices g_poly.rootSet (GaloisField p n) = Set.univ by
     simp_rw [this, ← Fintype.of_equiv_card (Equiv.Set.univ _)] at key
     rw [@card_eq_pow_finrank (Zmod p), Zmod.card] at key
     exact Nat.pow_right_injective (Nat.Prime.one_lt' p).out key
   rw [Set.eq_univ_iff_forall]
   suffices
     ∀ (x) (hx : x ∈ (⊤ : Subalgebra (Zmod p) (GaloisField p n))),
-      x ∈ (X ^ p ^ n - X : (Zmod p)[X]).RootSet (GaloisField p n)
+      x ∈ (X ^ p ^ n - X : (Zmod p)[X]).rootSet (GaloisField p n)
     by simpa
   rw [← splitting_field.adjoin_root_set]
   simp_rw [Algebra.mem_adjoin_iff]

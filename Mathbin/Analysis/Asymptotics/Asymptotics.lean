@@ -1290,7 +1290,7 @@ theorem is_o_one_left_iff : (fun x => 1 : α → F) =o[l] f ↔ Tendsto (fun x =
   calc
     (fun x => 1 : α → F) =o[l] f ↔ ∀ n : ℕ, ∀ᶠ x in l, ↑n * ∥(1 : F)∥ ≤ ∥f x∥ :=
       is_o_iff_nat_mul_le_aux <| Or.inl fun x => by simp only [norm_one, zero_le_one]
-    _ ↔ ∀ n : ℕ, True → ∀ᶠ x in l, ∥f x∥ ∈ IciCat (n : ℝ) := by simp only [norm_one, mul_one, true_imp_iff, mem_Ici]
+    _ ↔ ∀ n : ℕ, True → ∀ᶠ x in l, ∥f x∥ ∈ ici (n : ℝ) := by simp only [norm_one, mul_one, true_imp_iff, mem_Ici]
     _ ↔ Tendsto (fun x => ∥f x∥) l atTop := at_top_countable_basis_of_archimedean.1.tendsto_right_iff.symm
     
 #align asymptotics.is_o_one_left_iff Asymptotics.is_o_one_left_iff
@@ -2127,7 +2127,7 @@ variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 variable {E : Type _} [HasNorm E] {F : Type _} [HasNorm F]
 
 /-- Transfer `is_O_with` over a `local_homeomorph`. -/
-theorem is_O_with_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.Target) {f : β → E} {g : β → F} {C : ℝ} :
+theorem is_O_with_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E} {g : β → F} {C : ℝ} :
     IsOWith C (𝓝 b) f g ↔ IsOWith C (𝓝 (e.symm b)) (f ∘ e) (g ∘ e) :=
   ⟨fun h =>
     h.compTendsto <| by
@@ -2140,14 +2140,14 @@ theorem is_O_with_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.Targe
 #align local_homeomorph.is_O_with_congr LocalHomeomorph.is_O_with_congr
 
 /-- Transfer `is_O` over a `local_homeomorph`. -/
-theorem is_O_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.Target) {f : β → E} {g : β → F} :
+theorem is_O_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E} {g : β → F} :
     f =O[𝓝 b] g ↔ (f ∘ e) =O[𝓝 (e.symm b)] (g ∘ e) := by
   unfold is_O
   exact exists_congr fun C => e.is_O_with_congr hb
 #align local_homeomorph.is_O_congr LocalHomeomorph.is_O_congr
 
 /-- Transfer `is_o` over a `local_homeomorph`. -/
-theorem is_o_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.Target) {f : β → E} {g : β → F} :
+theorem is_o_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E} {g : β → F} :
     f =o[𝓝 b] g ↔ (f ∘ e) =o[𝓝 (e.symm b)] (g ∘ e) := by
   unfold is_o
   exact forall₂_congr fun c hc => e.is_O_with_congr hb

@@ -984,7 +984,7 @@ theorem induction₂ {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (h0 : p 
 #align dfinsupp.induction₂ Dfinsupp.induction₂
 
 @[simp]
-theorem add_closure_Union_range_single : AddSubmonoid.closure (⋃ i : ι, Set.Range (single i : β i → Π₀ i, β i)) = ⊤ :=
+theorem add_closure_Union_range_single : AddSubmonoid.closure (⋃ i : ι, Set.range (single i : β i → Π₀ i, β i)) = ⊤ :=
   top_unique fun x hx => by
     apply Dfinsupp.induction x
     exact AddSubmonoid.zero_mem _

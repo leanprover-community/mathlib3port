@@ -73,10 +73,10 @@ local infixl:50 " ≺ " => r
 If every chain has an upper bound, then there exists a maximal element. -/
 theorem exists_maximal_of_chains_bounded (h : ∀ c, IsChain r c → ∃ ub, ∀ a ∈ c, a ≺ ub)
     (trans : ∀ {a b c}, a ≺ b → b ≺ c → a ≺ c) : ∃ m, ∀ a, m ≺ a → a ≺ m :=
-  have : ∃ ub, ∀ a ∈ MaxChain r, a ≺ ub := h _ <| max_chain_spec.left
-  let ⟨ub, (hub : ∀ a ∈ MaxChain r, a ≺ ub)⟩ := this
+  have : ∃ ub, ∀ a ∈ maxChain r, a ≺ ub := h _ <| max_chain_spec.left
+  let ⟨ub, (hub : ∀ a ∈ maxChain r, a ≺ ub)⟩ := this
   ⟨ub, fun a ha =>
-    have : IsChain r (insert a <| MaxChain r) := max_chain_spec.1.insert fun b hb _ => Or.inr <| trans (hub b hb) ha
+    have : IsChain r (insert a <| maxChain r) := max_chain_spec.1.insert fun b hb _ => Or.inr <| trans (hub b hb) ha
     hub a <| by
       rw [max_chain_spec.right this (subset_insert _ _)]
       exact mem_insert _ _⟩
@@ -138,9 +138,9 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
 theorem zorn_nonempty_Ici₀ (a : α)
-    (ih : ∀ (c) (_ : c ⊆ IciCat a), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, a ≤ ub ∧ ∀ z ∈ c, z ≤ ub) (x : α) (hax : a ≤ x) :
+    (ih : ∀ (c) (_ : c ⊆ ici a), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, a ≤ ub ∧ ∀ z ∈ c, z ≤ ub) (x : α) (hax : a ≤ x) :
     ∃ m, x ≤ m ∧ ∀ z, m ≤ z → z ≤ m :=
-  let ⟨m, hma, hxm, hm⟩ := zorn_nonempty_preorder₀ (IciCat a) (by simpa using ih) x hax
+  let ⟨m, hma, hxm, hm⟩ := zorn_nonempty_preorder₀ (ici a) (by simpa using ih) x hax
   ⟨m, hxm, fun z hmz => hm _ (hax.trans <| hxm.trans hmz) hmz⟩
 #align zorn_nonempty_Ici₀ zorn_nonempty_Ici₀
 

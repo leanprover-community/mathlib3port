@@ -6,6 +6,7 @@ Authors: Johan Commelin
 import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Algebra.Hom.Units
 import Mathbin.GroupTheory.GroupAction.Units
+import Mathbin.Tactic.Nontriviality
 
 /-!
 # Lemmas about units in a `monoid_with_zero` or a `group_with_zero`.

@@ -119,7 +119,7 @@ theorem continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
 instance : TopologicalRing ℚ :=
   { Rat.topological_add_group with continuous_mul := Rat.continuous_mul }
 
-theorem totally_bounded_Icc (a b : ℚ) : TotallyBounded (IccCat a b) := by
+theorem totally_bounded_Icc (a b : ℚ) : TotallyBounded (icc a b) := by
   simpa only [preimage_cast_Icc] using totally_bounded_preimage Rat.uniform_embedding_coe_real (totally_bounded_Icc a b)
 #align rat.totally_bounded_Icc Rat.totally_bounded_Icc
 

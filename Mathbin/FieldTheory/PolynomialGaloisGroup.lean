@@ -64,7 +64,7 @@ instance applyMulSemiringAction : MulSemiringAction p.Gal p.SplittingField :=
 #align polynomial.gal.apply_mul_semiring_action Polynomial.Gal.applyMulSemiringAction
 
 @[ext.1]
-theorem ext {σ τ : p.Gal} (h : ∀ x ∈ p.RootSet p.SplittingField, σ x = τ x) : σ = τ := by
+theorem ext {σ τ : p.Gal} (h : ∀ x ∈ p.rootSet p.SplittingField, σ x = τ x) : σ = τ := by
   refine'
     AlgEquiv.ext fun x =>
       (AlgHom.mem_equalizer σ.to_alg_hom τ.to_alg_hom x).mp ((set_like.ext_iff.mp _ x).mpr Algebra.mem_top)
@@ -133,7 +133,7 @@ section RootsAction
 
 /-- The function taking `roots p p.splitting_field` to `roots p E`. This is actually a bijection,
 see `polynomial.gal.map_roots_bijective`. -/
-def mapRoots [Fact (p.Splits (algebraMap F E))] : RootSet p p.SplittingField → RootSet p E := fun x =>
+def mapRoots [Fact (p.Splits (algebraMap F E))] : rootSet p p.SplittingField → rootSet p E := fun x =>
   ⟨IsScalarTower.toAlgHom F p.SplittingField E x, by
     have key := Subtype.mem x
     by_cases p = 0
@@ -162,11 +162,11 @@ theorem map_roots_bijective [h : Fact (p.Splits (algebraMap F E))] : Function.Bi
 #align polynomial.gal.map_roots_bijective Polynomial.Gal.map_roots_bijective
 
 /-- The bijection between `root_set p p.splitting_field` and `root_set p E`. -/
-def rootsEquivRoots [Fact (p.Splits (algebraMap F E))] : RootSet p p.SplittingField ≃ RootSet p E :=
+def rootsEquivRoots [Fact (p.Splits (algebraMap F E))] : rootSet p p.SplittingField ≃ rootSet p E :=
   Equiv.ofBijective (mapRoots p E) (map_roots_bijective p E)
 #align polynomial.gal.roots_equiv_roots Polynomial.Gal.rootsEquivRoots
 
-instance galActionAux : MulAction p.Gal (RootSet p p.SplittingField) where
+instance galActionAux : MulAction p.Gal (rootSet p p.SplittingField) where
   smul ϕ x :=
     ⟨ϕ x, by
       have key := Subtype.mem x
@@ -188,7 +188,7 @@ instance galActionAux : MulAction p.Gal (RootSet p p.SplittingField) where
 #align polynomial.gal.gal_action_aux Polynomial.Gal.galActionAux
 
 /-- The action of `gal p` on the roots of `p` in `E`. -/
-instance galAction [Fact (p.Splits (algebraMap F E))] : MulAction p.Gal (RootSet p E) where
+instance galAction [Fact (p.Splits (algebraMap F E))] : MulAction p.Gal (rootSet p E) where
   smul ϕ x := rootsEquivRoots p E (ϕ • (rootsEquivRoots p E).symm x)
   one_smul _ := by simp only [Equiv.apply_symm_apply, one_smul]
   mul_smul _ _ _ := by simp only [Equiv.apply_symm_apply, Equiv.symm_apply_apply, mul_smul]
@@ -198,7 +198,7 @@ variable {p E}
 
 /-- `polynomial.gal.restrict p E` is compatible with `polynomial.gal.gal_action p E`. -/
 @[simp]
-theorem restrict_smul [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : RootSet p E) :
+theorem restrict_smul [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : rootSet p E) :
     ↑(restrict p E ϕ • x) = ϕ x := by
   let ψ := AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F p.splitting_field E)
   change ↑(ψ (ψ.symm _)) = ϕ x
@@ -210,11 +210,11 @@ theorem restrict_smul [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x
 variable (p E)
 
 /-- `polynomial.gal.gal_action` as a permutation representation -/
-def galActionHom [Fact (p.Splits (algebraMap F E))] : p.Gal →* Equiv.Perm (RootSet p E) :=
+def galActionHom [Fact (p.Splits (algebraMap F E))] : p.Gal →* Equiv.Perm (rootSet p E) :=
   MulAction.toPermHom _ _
 #align polynomial.gal.gal_action_hom Polynomial.Gal.galActionHom
 
-theorem gal_action_hom_restrict [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : RootSet p E) :
+theorem gal_action_hom_restrict [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : rootSet p E) :
     ↑(galActionHom p E (restrict p E ϕ) x) = ϕ x :=
   restrict_smul ϕ x
 #align polynomial.gal.gal_action_hom_restrict Polynomial.Gal.gal_action_hom_restrict
@@ -401,8 +401,8 @@ attribute [local instance] splits_ℚ_ℂ
 /-- The number of complex roots equals the number of real roots plus
     the number of roots not fixed by complex conjugation (i.e. with some imaginary component). -/
 theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
-    (p.RootSet ℂ).toFinset.card =
-      (p.RootSet ℝ).toFinset.card + (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).Support.card :=
+    (p.rootSet ℂ).toFinset.card =
+      (p.rootSet ℝ).toFinset.card + (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).support.card :=
   by
   by_cases hp:p = 0
   · simp_rw [hp, root_set_zero, set.to_finset_eq_empty_iff.mpr rfl, Finset.card_empty, zero_add]
@@ -465,7 +465,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
 
 /-- An irreducible polynomial of prime degree with two non-real roots has full Galois group. -/
 theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducible p) (p_deg : p.natDegree.Prime)
-    (p_roots : Fintype.card (p.RootSet ℂ) = Fintype.card (p.RootSet ℝ) + 2) : Function.Bijective (galActionHom p ℂ) :=
+    (p_roots : Fintype.card (p.rootSet ℂ) = Fintype.card (p.rootSet ℝ) + 2) : Function.Bijective (galActionHom p ℂ) :=
   by
   have h1 : Fintype.card (p.root_set ℂ) = p.nat_degree := by
     simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
@@ -498,11 +498,11 @@ theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducib
 
 /-- An irreducible polynomial of prime degree with 1-3 non-real roots has full Galois group. -/
 theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreducible p) (p_deg : p.natDegree.Prime)
-    (p_roots1 : Fintype.card (p.RootSet ℝ) + 1 ≤ Fintype.card (p.RootSet ℂ))
-    (p_roots2 : Fintype.card (p.RootSet ℂ) ≤ Fintype.card (p.RootSet ℝ) + 3) : Function.Bijective (galActionHom p ℂ) :=
+    (p_roots1 : Fintype.card (p.rootSet ℝ) + 1 ≤ Fintype.card (p.rootSet ℂ))
+    (p_roots2 : Fintype.card (p.rootSet ℂ) ≤ Fintype.card (p.rootSet ℝ) + 3) : Function.Bijective (galActionHom p ℂ) :=
   by
   apply gal_action_hom_bijective_of_prime_degree p_irr p_deg
-  let n := (gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ))).Support.card
+  let n := (gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ))).support.card
   have hn : 2 ∣ n :=
     Equiv.Perm.two_dvd_card_support
       (by

@@ -91,14 +91,14 @@ theorem Antitone.tendsto_indicator {ι} [Preorder ι] [Zero β] (s : ι → Set 
 #align antitone.tendsto_indicator Antitone.tendsto_indicator
 
 theorem tendsto_indicator_bUnion_finset {ι} [Zero β] (s : ι → Set α) (f : α → β) (a : α) :
-    Tendsto (fun n : Finset ι => indicator (⋃ i ∈ n, s i) f a) atTop (pure <| indicator (UnionCat s) f a) := by
+    Tendsto (fun n : Finset ι => indicator (⋃ i ∈ n, s i) f a) atTop (pure <| indicator (union s) f a) := by
   rw [Union_eq_Union_finset s]
   refine' Monotone.tendsto_indicator (fun n : Finset ι => ⋃ i ∈ n, s i) _ f a
   exact fun t₁ t₂ => bUnion_subset_bUnion_left
 #align tendsto_indicator_bUnion_finset tendsto_indicator_bUnion_finset
 
 theorem Filter.EventuallyEq.support [Zero β] {f g : α → β} {l : Filter α} (h : f =ᶠ[l] g) :
-    Function.Support f =ᶠ[l] Function.Support g := by
+    Function.support f =ᶠ[l] Function.support g := by
   filter_upwards [h] with x hx
   rw [eq_iff_iff]
   change f x ≠ 0 ↔ g x ≠ 0

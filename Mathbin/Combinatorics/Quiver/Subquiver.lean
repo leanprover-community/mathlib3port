@@ -47,7 +47,7 @@ instance {V} [Quiver V] : HasBot (WideSubquiver V) :=
   ⟨fun a b => ∅⟩
 
 instance {V} [Quiver V] : HasTop (WideSubquiver V) :=
-  ⟨fun a b => Set.Univ⟩
+  ⟨fun a b => Set.univ⟩
 
 instance {V} [Quiver V] : Inhabited (WideSubquiver V) :=
   ⟨⊤⟩

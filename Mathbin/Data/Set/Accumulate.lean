@@ -17,29 +17,29 @@ variable {α β γ : Type _} {s : α → Set β} {t : α → Set γ}
 namespace Set
 
 /-- `accumulate s` is the union of `s y` for `y ≤ x`. -/
-def Accumulate [LE α] (s : α → Set β) (x : α) : Set β :=
+def accumulate [LE α] (s : α → Set β) (x : α) : Set β :=
   ⋃ y ≤ x, s y
-#align set.accumulate Set.Accumulate
+#align set.accumulate Set.accumulate
 
 variable {s}
 
-theorem accumulate_def [LE α] {x : α} : Accumulate s x = ⋃ y ≤ x, s y :=
+theorem accumulate_def [LE α] {x : α} : accumulate s x = ⋃ y ≤ x, s y :=
   rfl
 #align set.accumulate_def Set.accumulate_def
 
 @[simp]
-theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ Accumulate s x ↔ ∃ y ≤ x, z ∈ s y :=
+theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ accumulate s x ↔ ∃ y ≤ x, z ∈ s y :=
   mem_Union₂
 #align set.mem_accumulate Set.mem_accumulate
 
-theorem subset_accumulate [Preorder α] {x : α} : s x ⊆ Accumulate s x := fun z => mem_bUnion le_rfl
+theorem subset_accumulate [Preorder α] {x : α} : s x ⊆ accumulate s x := fun z => mem_bUnion le_rfl
 #align set.subset_accumulate Set.subset_accumulate
 
-theorem monotone_accumulate [Preorder α] : Monotone (Accumulate s) := fun x y hxy =>
+theorem monotone_accumulate [Preorder α] : Monotone (accumulate s) := fun x y hxy =>
   bUnion_subset_bUnion_left fun z hz => le_trans hz hxy
 #align set.monotone_accumulate Set.monotone_accumulate
 
-theorem bUnion_accumulate [Preorder α] (x : α) : (⋃ y ≤ x, Accumulate s y) = ⋃ y ≤ x, s y := by
+theorem bUnion_accumulate [Preorder α] (x : α) : (⋃ y ≤ x, accumulate s y) = ⋃ y ≤ x, s y := by
   apply subset.antisymm
   · exact Union₂_subset fun y hy => monotone_accumulate hy
     
@@ -47,7 +47,7 @@ theorem bUnion_accumulate [Preorder α] (x : α) : (⋃ y ≤ x, Accumulate s y)
     
 #align set.bUnion_accumulate Set.bUnion_accumulate
 
-theorem Union_accumulate [Preorder α] : (⋃ x, Accumulate s x) = ⋃ x, s x := by
+theorem Union_accumulate [Preorder α] : (⋃ x, accumulate s x) = ⋃ x, s x := by
   apply subset.antisymm
   · simp only [subset_def, mem_Union, exists_imp, mem_accumulate]
     intro z x x' hx'x hz

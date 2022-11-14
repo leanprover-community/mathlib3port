@@ -51,7 +51,7 @@ def stalkMap {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (x : X) : Y.stalk (
 #align algebraic_geometry.PresheafedSpace.stalk_map AlgebraicGeometry.PresheafedSpaceCat.stalkMap
 
 @[simp, elementwise, reassoc]
-theorem stalk_map_germ {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (U : Opens Y.Carrier)
+theorem stalk_map_germ {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (U : Opens Y.carrier)
     (x : (Opens.map α.base).obj U) :
     Y.Presheaf.germ ⟨α.base x, x.2⟩ ≫ stalkMap α ↑x = α.c.app (op U) ≫ X.Presheaf.germ x := by
   rw [stalk_map, stalk_functor_map_germ_assoc, stalk_pushforward_germ]

@@ -172,7 +172,7 @@ theorem condexp_ae_eq_restrict_of_measurable_space_eq_on {m m₂ m0 : Measurable
     (hm₂ : m₂ ≤ m0) [SigmaFinite (μ.trim hm)] [SigmaFinite (μ.trim hm₂)] (hs_m : measurable_set[m] s)
     (hs : ∀ t, measurable_set[m] (s ∩ t) ↔ measurable_set[m₂] (s ∩ t)) : μ[f|m] =ᵐ[μ.restrict s] μ[f|m₂] := by
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
-  have hs_m₂ : measurable_set[m₂] s := by rwa [← Set.inter_univ s, ← hs Set.Univ, Set.inter_univ]
+  have hs_m₂ : measurable_set[m₂] s := by rwa [← Set.inter_univ s, ← hs Set.univ, Set.inter_univ]
   by_cases hf_int:integrable f μ
   swap
   · simp_rw [condexp_undef hf_int]

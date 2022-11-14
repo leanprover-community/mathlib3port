@@ -773,7 +773,7 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
   · intro f
     haveI : Nontrivial (End X) := nontrivial_of_ne _ _ id_nonzero
     obtain ⟨c, nu⟩ :=
-      @Spectrum.nonempty_of_is_alg_closed_of_finite_dimensional 𝕜 (End X) _ _ _ _ _
+      @spectrum.nonempty_of_is_alg_closed_of_finite_dimensional 𝕜 (End X) _ _ _ _ _
         (by
           convert I
           ext
@@ -782,7 +782,7 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
           rfl)
         (End.of f)
     use c
-    rw [Spectrum.mem_iff, IsUnit.sub_iff, is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def, not_not, sub_eq_zero,
+    rw [spectrum.mem_iff, IsUnit.sub_iff, is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def, not_not, sub_eq_zero,
       Algebra.algebra_map_eq_smul_one] at nu
     exact nu.symm
     

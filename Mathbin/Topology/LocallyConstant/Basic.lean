@@ -775,7 +775,7 @@ theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f �
   ⟨fun h x y => h.apply_eq_of_is_preconnected is_preconnected_univ trivial trivial, of_constant _⟩
 #align is_locally_constant.iff_is_const IsLocallyConstant.iff_is_const
 
-theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) : (Set.Range f).Finite := by
+theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) : (Set.range f).Finite := by
   letI : TopologicalSpace Y := ⊥
   haveI : DiscreteTopology Y := ⟨rfl⟩
   rw [@iff_continuous X Y ‹_› ‹_›] at hf
@@ -817,15 +817,15 @@ theorem desc {α β : Type _} (f : X → α) (g : α → β) (h : IsLocallyConst
 #align is_locally_constant.desc IsLocallyConstant.desc
 
 theorem of_constant_on_connected_components [LocallyConnectedSpace X] {f : X → Y}
-    (h : ∀ x, ∀ y ∈ ConnectedComponent x, f y = f x) : IsLocallyConstant f := by
+    (h : ∀ x, ∀ y ∈ connectedComponent x, f y = f x) : IsLocallyConstant f := by
   rw [iff_exists_open]
-  exact fun x => ⟨ConnectedComponent x, is_open_connected_component, mem_connected_component, h x⟩
+  exact fun x => ⟨connectedComponent x, is_open_connected_component, mem_connected_component, h x⟩
 #align is_locally_constant.of_constant_on_connected_components IsLocallyConstant.of_constant_on_connected_components
 
 theorem of_constant_on_preconnected_clopens [LocallyConnectedSpace X] {f : X → Y}
     (h : ∀ U : Set X, IsPreconnected U → IsClopen U → ∀ x ∈ U, ∀ y ∈ U, f y = f x) : IsLocallyConstant f :=
   of_constant_on_connected_components fun x =>
-    h (ConnectedComponent x) is_preconnected_connected_component is_clopen_connected_component x mem_connected_component
+    h (connectedComponent x) is_preconnected_connected_component is_clopen_connected_component x mem_connected_component
 #align is_locally_constant.of_constant_on_preconnected_clopens IsLocallyConstant.of_constant_on_preconnected_clopens
 
 end IsLocallyConstant
@@ -972,7 +972,7 @@ theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X] (
   exact Fin.fin_two_eq_of_eq_zero_iff (h x)
 #align locally_constant.locally_constant_eq_of_fiber_zero_eq LocallyConstant.locally_constant_eq_of_fiber_zero_eq
 
-theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.Range f).Finite :=
+theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.range f).Finite :=
   f.IsLocallyConstant.range_finite
 #align locally_constant.range_finite LocallyConstant.range_finite
 

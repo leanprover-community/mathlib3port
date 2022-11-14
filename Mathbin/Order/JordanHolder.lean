@@ -173,9 +173,9 @@ protected theorem inj (s : CompositionSeries X) {i j : Fin s.length.succ} : s i 
 #align composition_series.inj CompositionSeries.inj
 
 instance : Membership X (CompositionSeries X) :=
-  ⟨fun x s => x ∈ Set.Range s⟩
+  ⟨fun x s => x ∈ Set.range s⟩
 
-theorem mem_def {x : X} {s : CompositionSeries X} : x ∈ s ↔ x ∈ Set.Range s :=
+theorem mem_def {x : X} {s : CompositionSeries X} : x ∈ s ↔ x ∈ Set.range s :=
   Iff.rfl
 #align composition_series.mem_def CompositionSeries.mem_def
 

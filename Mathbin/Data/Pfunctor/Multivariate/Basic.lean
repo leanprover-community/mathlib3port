@@ -212,7 +212,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
 open Set Mvfunctor
 
 theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) (i) :
-    @Supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ := by
+    @supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ := by
   ext
   simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h

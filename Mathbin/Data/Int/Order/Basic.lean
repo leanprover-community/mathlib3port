@@ -859,13 +859,6 @@ theorem to_nat_sub_of_le {a b : ℤ} (h : b ≤ a) : (toNat (a - b) : ℤ) = a -
   Int.to_nat_of_nonneg (sub_nonneg_of_le h)
 #align int.to_nat_sub_of_le Int.to_nat_sub_of_le
 
-/-! ### units -/
-
-
-theorem is_unit_iff_abs_eq {x : ℤ} : IsUnit x ↔ abs x = 1 := by
-  rw [is_unit_iff_nat_abs_eq, abs_eq_nat_abs, ← Int.coe_nat_one, coe_nat_inj']
-#align int.is_unit_iff_abs_eq Int.is_unit_iff_abs_eq
-
 end Int
 
 /- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/

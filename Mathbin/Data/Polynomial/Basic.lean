@@ -341,25 +341,25 @@ theorem to_finsupp_sum {ι : Type _} (s : Finset ι) (f : ι → R[X]) :
 -/
 @[simp]
 def support : R[X] → Finset ℕ
-  | ⟨p⟩ => p.Support
+  | ⟨p⟩ => p.support
 #align polynomial.support Polynomial.support
 
 @[simp]
-theorem support_of_finsupp (p) : support (⟨p⟩ : R[X]) = p.Support := by rw [support]
+theorem support_of_finsupp (p) : support (⟨p⟩ : R[X]) = p.support := by rw [support]
 #align polynomial.support_of_finsupp Polynomial.support_of_finsupp
 
 @[simp]
-theorem support_zero : (0 : R[X]).Support = ∅ :=
+theorem support_zero : (0 : R[X]).support = ∅ :=
   rfl
 #align polynomial.support_zero Polynomial.support_zero
 
 @[simp]
-theorem support_eq_empty : p.Support = ∅ ↔ p = 0 := by
+theorem support_eq_empty : p.support = ∅ ↔ p = 0 := by
   rcases p with ⟨⟩
   simp [support]
 #align polynomial.support_eq_empty Polynomial.support_eq_empty
 
-theorem card_support_eq_zero : p.Support.card = 0 ↔ p = 0 := by simp
+theorem card_support_eq_zero : p.support.card = 0 ↔ p = 0 := by simp
 #align polynomial.card_support_eq_zero Polynomial.card_support_eq_zero
 
 /-- `monomial s a` is the monomial `a * X^s` -/
@@ -419,7 +419,7 @@ theorem monomial_eq_zero_iff (t : R) (n : ℕ) : monomial n t = 0 ↔ t = 0 :=
   LinearMap.map_eq_zero_iff _ (Polynomial.monomial_injective n)
 #align polynomial.monomial_eq_zero_iff Polynomial.monomial_eq_zero_iff
 
-theorem support_add : (p + q).Support ⊆ p.Support ∪ q.Support := by
+theorem support_add : (p + q).support ⊆ p.support ∪ q.support := by
   rcases p with ⟨⟩
   rcases q with ⟨⟩
   simp only [← of_finsupp_add, support]
@@ -637,12 +637,12 @@ theorem coeff_X_of_ne_one {n : ℕ} (hn : n ≠ 1) : coeff (x : R[X]) n = 0 := b
 #align polynomial.coeff_X_of_ne_one Polynomial.coeff_X_of_ne_one
 
 @[simp]
-theorem mem_support_iff : n ∈ p.Support ↔ p.coeff n ≠ 0 := by
+theorem mem_support_iff : n ∈ p.support ↔ p.coeff n ≠ 0 := by
   rcases p with ⟨⟩
   simp
 #align polynomial.mem_support_iff Polynomial.mem_support_iff
 
-theorem not_mem_support_iff : n ∉ p.Support ↔ p.coeff n = 0 := by simp
+theorem not_mem_support_iff : n ∉ p.support ↔ p.coeff n = 0 := by simp
 #align polynomial.not_mem_support_iff Polynomial.not_mem_support_iff
 
 theorem coeff_C : coeff (c a) n = ite (n = 0) a 0 := by
@@ -741,33 +741,33 @@ theorem eq_zero_of_eq_zero (h : (0 : R) = (1 : R)) (p : R[X]) : p = 0 := by rw [
 
 section Fewnomials
 
-theorem support_monomial (n) {a : R} (H : a ≠ 0) : (monomial n a).Support = singleton n := by
+theorem support_monomial (n) {a : R} (H : a ≠ 0) : (monomial n a).support = singleton n := by
   rw [← of_finsupp_single, support, Finsupp.support_single_ne_zero _ H]
 #align polynomial.support_monomial Polynomial.support_monomial
 
-theorem support_monomial' (n) (a : R) : (monomial n a).Support ⊆ singleton n := by
+theorem support_monomial' (n) (a : R) : (monomial n a).support ⊆ singleton n := by
   rw [← of_finsupp_single, support]
   exact Finsupp.support_single_subset
 #align polynomial.support_monomial' Polynomial.support_monomial'
 
-theorem support_C_mul_X_pow (n : ℕ) {c : R} (h : c ≠ 0) : (c c * X ^ n).Support = singleton n := by
+theorem support_C_mul_X_pow (n : ℕ) {c : R} (h : c ≠ 0) : (c c * X ^ n).support = singleton n := by
   rw [← monomial_eq_C_mul_X, support_monomial n h]
 #align polynomial.support_C_mul_X_pow Polynomial.support_C_mul_X_pow
 
-theorem support_C_mul_X_pow' (n : ℕ) (c : R) : (c c * X ^ n).Support ⊆ singleton n := by
+theorem support_C_mul_X_pow' (n : ℕ) (c : R) : (c c * X ^ n).support ⊆ singleton n := by
   rw [← monomial_eq_C_mul_X]
   exact support_monomial' n c
 #align polynomial.support_C_mul_X_pow' Polynomial.support_C_mul_X_pow'
 
 open Finset
 
-theorem support_binomial' (k m : ℕ) (x y : R) : (c x * X ^ k + c y * X ^ m).Support ⊆ {k, m} :=
+theorem support_binomial' (k m : ℕ) (x y : R) : (c x * X ^ k + c y * X ^ m).support ⊆ {k, m} :=
   support_add.trans
     (union_subset ((support_C_mul_X_pow' k x).trans (singleton_subset_iff.mpr (mem_insert_self k {m})))
       ((support_C_mul_X_pow' m y).trans (singleton_subset_iff.mpr (mem_insert_of_mem (mem_singleton_self m)))))
 #align polynomial.support_binomial' Polynomial.support_binomial'
 
-theorem support_trinomial' (k m n : ℕ) (x y z : R) : (c x * X ^ k + c y * X ^ m + c z * X ^ n).Support ⊆ {k, m, n} :=
+theorem support_trinomial' (k m n : ℕ) (x y z : R) : (c x * X ^ k + c y * X ^ m + c z * X ^ n).support ⊆ {k, m, n} :=
   support_add.trans
     (union_subset
       (support_add.trans
@@ -795,15 +795,15 @@ theorem monomial_eq_smul_X {n} : monomial n (a : R) = a • X ^ n :=
     
 #align polynomial.monomial_eq_smul_X Polynomial.monomial_eq_smul_X
 
-theorem support_X_pow (H : ¬(1 : R) = 0) (n : ℕ) : (X ^ n : R[X]).Support = singleton n := by
+theorem support_X_pow (H : ¬(1 : R) = 0) (n : ℕ) : (X ^ n : R[X]).support = singleton n := by
   convert support_monomial n H
   exact X_pow_eq_monomial n
 #align polynomial.support_X_pow Polynomial.support_X_pow
 
-theorem support_X_empty (H : (1 : R) = 0) : (x : R[X]).Support = ∅ := by rw [X, H, monomial_zero_right, support_zero]
+theorem support_X_empty (H : (1 : R) = 0) : (x : R[X]).support = ∅ := by rw [X, H, monomial_zero_right, support_zero]
 #align polynomial.support_X_empty Polynomial.support_X_empty
 
-theorem support_X (H : ¬(1 : R) = 0) : (x : R[X]).Support = singleton 1 := by rw [← pow_one X, support_X_pow H 1]
+theorem support_X (H : ¬(1 : R) = 0) : (x : R[X]).support = singleton 1 := by rw [← pow_one X, support_X_pow H 1]
 #align polynomial.support_X Polynomial.support_X
 
 theorem monomial_left_inj {a : R} (ha : a ≠ 0) {i j : ℕ} : monomial i a = monomial j a ↔ i = j := by
@@ -824,23 +824,23 @@ theorem nat_cast_mul (n : ℕ) (p : R[X]) : (n : R[X]) * p = n • p :=
 
 /-- Summing the values of a function applied to the coefficients of a polynomial -/
 def sum {S : Type _} [AddCommMonoid S] (p : R[X]) (f : ℕ → R → S) : S :=
-  ∑ n in p.Support, f n (p.coeff n)
+  ∑ n in p.support, f n (p.coeff n)
 #align polynomial.sum Polynomial.sum
 
 theorem sum_def {S : Type _} [AddCommMonoid S] (p : R[X]) (f : ℕ → R → S) :
-    p.Sum f = ∑ n in p.Support, f n (p.coeff n) :=
+    p.Sum f = ∑ n in p.support, f n (p.coeff n) :=
   rfl
 #align polynomial.sum_def Polynomial.sum_def
 
 theorem sum_eq_of_subset {S : Type _} [AddCommMonoid S] (p : R[X]) (f : ℕ → R → S) (hf : ∀ i, f i 0 = 0) (s : Finset ℕ)
-    (hs : p.Support ⊆ s) : p.Sum f = ∑ n in s, f n (p.coeff n) := by
+    (hs : p.support ⊆ s) : p.Sum f = ∑ n in s, f n (p.coeff n) := by
   apply Finset.sum_subset hs fun n hn h'n => _
   rw [not_mem_support_iff] at h'n
   simp [h'n, hf]
 #align polynomial.sum_eq_of_subset Polynomial.sum_eq_of_subset
 
 /-- Expressing the product of two polynomials as a double sum. -/
-theorem mul_eq_sum_sum : p * q = ∑ i in p.Support, q.Sum fun j a => (monomial (i + j)) (p.coeff i * a) := by
+theorem mul_eq_sum_sum : p * q = ∑ i in p.support, q.Sum fun j a => (monomial (i + j)) (p.coeff i * a) := by
   apply to_finsupp_injective
   rcases p with ⟨⟩
   rcases q with ⟨⟩
@@ -993,13 +993,13 @@ theorem update_zero_eq_erase (p : R[X]) (n : ℕ) : p.update n 0 = p.erase n := 
 #align polynomial.update_zero_eq_erase Polynomial.update_zero_eq_erase
 
 theorem support_update (p : R[X]) (n : ℕ) (a : R) [Decidable (a = 0)] :
-    support (p.update n a) = if a = 0 then p.Support.erase n else insert n p.Support := by
+    support (p.update n a) = if a = 0 then p.support.erase n else insert n p.support := by
   cases p
   simp only [support, update, support_update]
   congr
 #align polynomial.support_update Polynomial.support_update
 
-theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.Support.erase n := by
+theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.support.erase n := by
   rw [update_zero_eq_erase, support_erase]
 #align polynomial.support_update_zero Polynomial.support_update_zero
 
@@ -1019,7 +1019,7 @@ theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.Su
         («term_=_»
          (Term.app `support [(Term.app (Term.proj `p "." `update) [`n `a])])
          "="
-         (Term.app `insert [`n (Term.proj `p "." `Support)]))))
+         (Term.app `insert [`n (Term.proj `p "." `support)]))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -1103,7 +1103,7 @@ theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.Su
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   support_update_ne_zero
-  ( p : R [X] ) ( n : ℕ ) { a : R } ( ha : a ≠ 0 ) : support p . update n a = insert n p . Support
+  ( p : R [X] ) ( n : ℕ ) { a : R } ( ha : a ≠ 0 ) : support p . update n a = insert n p . support
   := by skip <;> rw [ support_update , if_neg ha ]
 #align polynomial.support_update_ne_zero Polynomial.support_update_ne_zero
 
@@ -1152,7 +1152,7 @@ theorem monomial_neg (n : ℕ) (a : R) : monomial n (-a) = -monomial n a := by
 #align polynomial.monomial_neg Polynomial.monomial_neg
 
 @[simp]
-theorem support_neg {p : R[X]} : (-p).Support = p.Support := by
+theorem support_neg {p : R[X]} : (-p).support = p.support := by
   rcases p with ⟨⟩
   rw [← of_finsupp_neg, support, support, Finsupp.support_neg]
 #align polynomial.support_neg Polynomial.support_neg
@@ -1203,7 +1203,7 @@ instance [Repr R] : Repr R[X] :=
   ⟨fun p =>
     if p = 0 then "0"
     else
-      (p.Support.sort (· ≤ ·)).foldr
+      (p.support.sort (· ≤ ·)).foldr
         (fun n a =>
           (a ++ if a = "" then "" else " + ") ++
             if n = 0 then "C (" ++ repr (coeff p n) ++ ")"

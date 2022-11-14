@@ -53,12 +53,12 @@ def Liftr {α : Typevec n} (r : ∀ {i}, α i → α i → Prop) (x y : F α) : 
 
 /-- given `x : F α` and a projection `i` of type vector `α`, `supp x i` is the set
 of `α.i` contained in `x` -/
-def Supp {α : Typevec n} (x : F α) (i : Fin2 n) : Set (α i) :=
+def supp {α : Typevec n} (x : F α) (i : Fin2 n) : Set (α i) :=
   { y : α i | ∀ ⦃p⦄, Liftp p x → p i y }
-#align mvfunctor.supp Mvfunctor.Supp
+#align mvfunctor.supp Mvfunctor.supp
 
 theorem of_mem_supp {α : Typevec n} {x : F α} {p : ∀ ⦃i⦄, α i → Prop} (h : Liftp p x) (i : Fin2 n) :
-    ∀ y ∈ Supp x i, p y := fun y hy => hy h
+    ∀ y ∈ supp x i, p y := fun y hy => hy h
 #align mvfunctor.of_mem_supp Mvfunctor.of_mem_supp
 
 end Mvfunctor
@@ -81,7 +81,7 @@ variable {α β γ : Typevec.{u} n}
 
 variable {F : Typevec.{u} n → Type v} [Mvfunctor F]
 
-variable (p : α ⟹ Repeat n Prop) (r : α ⊗ α ⟹ Repeat n Prop)
+variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
 
 /-- adapt `mvfunctor.liftp` to accept predicates as arrows -/
 def Liftp' : F α → Prop :=
@@ -90,7 +90,7 @@ def Liftp' : F α → Prop :=
 
 /-- adapt `mvfunctor.liftp` to accept relations as arrows -/
 def Liftr' : F α → F α → Prop :=
-  Mvfunctor.Liftr fun i x y => of_repeat <| r i <| Typevec.Prod.mk _ x y
+  Mvfunctor.Liftr fun i x y => of_repeat <| r i <| Typevec.prod.mk _ x y
 #align mvfunctor.liftr' Mvfunctor.Liftr'
 
 variable [IsLawfulMvfunctor F]
@@ -125,14 +125,14 @@ theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : �
 
 variable {F}
 
-theorem liftp_def (x : F α) : Liftp' p x ↔ ∃ u : F (Subtype_ p), subtypeVal p <$$> u = x :=
+theorem liftp_def (x : F α) : Liftp' p x ↔ ∃ u : F (subtype_ p), subtypeVal p <$$> u = x :=
   exists_iff_exists_of_mono F _ _ (to_subtype_of_subtype p) (by simp [Mvfunctor.map_map])
 #align mvfunctor.liftp_def Mvfunctor.liftp_def
 
 theorem liftr_def (x y : F α) :
     Liftr' r x y ↔
-      ∃ u : F (Subtype_ r),
-        (Typevec.Prod.fst ⊚ subtypeVal r) <$$> u = x ∧ (Typevec.Prod.snd ⊚ subtypeVal r) <$$> u = y :=
+      ∃ u : F (subtype_ r),
+        (Typevec.prod.fst ⊚ subtypeVal r) <$$> u = x ∧ (Typevec.prod.snd ⊚ subtypeVal r) <$$> u = y :=
   exists_iff_exists_of_mono _ _ _ (to_subtype'_of_subtype' r)
     (by simp only [map_map, comp_assoc, subtype_val_to_subtype'] <;> simp [comp])
 #align mvfunctor.liftr_def Mvfunctor.liftr_def
@@ -151,7 +151,7 @@ section LiftpLastPredIff
 
 variable {F : Typevec.{u} (n + 1) → Type _} [Mvfunctor F] [IsLawfulMvfunctor F] {α : Typevec.{u} n}
 
-variable (p : α ⟹ Repeat n Prop) (r : α ⊗ α ⟹ Repeat n Prop)
+variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
 
 open Mvfunctor
 
@@ -198,7 +198,7 @@ variable (rr : β → β → Prop)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private def f :
     ∀ n α,
-      (fun i : Fin2 (n + 1) => { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.Prod.mk _ p_1.fst p_1.snd)) }) ⟹
+      (fun i : Fin2 (n + 1) => { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.prod.mk _ p_1.fst p_1.snd)) }) ⟹
         fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }
   | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
@@ -208,7 +208,7 @@ private def f :
 private def g :
     ∀ n α,
       (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }) ⟹ fun i : Fin2 (n + 1) =>
-        { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.Prod.mk _ p_1.1 p_1.2)) }
+        { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.prod.mk _ p_1.1 p_1.2)) }
   | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 #align mvfunctor.g mvfunctor.g

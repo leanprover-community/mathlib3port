@@ -67,7 +67,7 @@ Warning: these are analytic sets in the context of descriptive set theory (which
 registered in the namespace `measure_theory`). They have nothing to do with analytic sets in the
 context of complex analysis. -/
 irreducible_def AnalyticSet (s : Set α) : Prop :=
-  s = ∅ ∨ ∃ f : (ℕ → ℕ) → α, Continuous f ∧ Range f = s
+  s = ∅ ∨ ∃ f : (ℕ → ℕ) → α, Continuous f ∧ range f = s
 #align measure_theory.analytic_set MeasureTheory.AnalyticSet
 
 theorem analytic_set_empty : AnalyticSet (∅ : Set α) := by
@@ -76,7 +76,7 @@ theorem analytic_set_empty : AnalyticSet (∅ : Set α) := by
 #align measure_theory.analytic_set_empty MeasureTheory.analytic_set_empty
 
 theorem analytic_set_range_of_polish_space {β : Type _} [TopologicalSpace β] [PolishSpace β] {f : β → α}
-    (f_cont : Continuous f) : AnalyticSet (Range f) := by
+    (f_cont : Continuous f) : AnalyticSet (range f) := by
   cases isEmpty_or_nonempty β
   · rw [range_eq_empty]
     exact analytic_set_empty
@@ -99,7 +99,7 @@ theorem _root_.is_open.analytic_set_image {β : Type _} [TopologicalSpace β] [P
 /-- A set is analytic if and only if it is the continuous image of some Polish space. -/
 theorem analytic_set_iff_exists_polish_space_range {s : Set α} :
     AnalyticSet s ↔
-      ∃ (β : Type)(h : TopologicalSpace β)(h' : @PolishSpace β h)(f : β → α), @Continuous _ _ h _ f ∧ Range f = s :=
+      ∃ (β : Type)(h : TopologicalSpace β)(h' : @PolishSpace β h)(f : β → α), @Continuous _ _ h _ f ∧ range f = s :=
   by
   constructor
   · intro h
@@ -286,8 +286,8 @@ contained in disjoint Borel sets (see the full statement in `analytic_set.measur
 Here, we prove this when our analytic sets are the ranges of functions from `ℕ → ℕ`.
 -/
 theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [BorelSpace α] {f g : (ℕ → ℕ) → α}
-    (hf : Continuous f) (hg : Continuous g) (h : Disjoint (Range f) (Range g)) :
-    MeasurablySeparable (Range f) (Range g) := by
+    (hf : Continuous f) (hg : Continuous g) (h : Disjoint (range f) (range g)) :
+    MeasurablySeparable (range f) (range g) := by
   /- We follow [Kechris, *Classical Descriptive Set Theory* (Theorem 14.7)][kechris1995].
     If the ranges are not Borel-separated, then one can find two cylinders of length one whose images
     are not Borel-separated, and then two smaller cylinders of length two whose images are not
@@ -377,10 +377,10 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
     apply t2_separation
     exact disjoint_iff_forall_ne.1 h _ (mem_range_self _) _ (mem_range_self _)
   letI : MetricSpace (ℕ → ℕ) := metric_space_nat_nat
-  obtain ⟨εx, εxpos, hεx⟩ : ∃ (εx : ℝ)(H : εx > 0), Metric.Ball x εx ⊆ f ⁻¹' u := by
+  obtain ⟨εx, εxpos, hεx⟩ : ∃ (εx : ℝ)(H : εx > 0), Metric.ball x εx ⊆ f ⁻¹' u := by
     apply Metric.mem_nhds_iff.1
     exact hf.continuous_at.preimage_mem_nhds (u_open.mem_nhds xu)
-  obtain ⟨εy, εypos, hεy⟩ : ∃ (εy : ℝ)(H : εy > 0), Metric.Ball y εy ⊆ g ⁻¹' v := by
+  obtain ⟨εy, εypos, hεy⟩ : ∃ (εy : ℝ)(H : εy > 0), Metric.ball y εy ⊆ g ⁻¹' v := by
     apply Metric.mem_nhds_iff.1
     exact hg.continuous_at.preimage_mem_nhds (v_open.mem_nhds yv)
   obtain ⟨n, hn⟩ : ∃ n : ℕ, (1 / 2 : ℝ) ^ n < min εx εy := exists_pow_lt_of_lt_one (lt_min εxpos εypos) (by norm_num)
@@ -429,7 +429,7 @@ include tγ
 /-- The Lusin-Souslin theorem: the range of a continuous injective function defined on a Polish
 space is Borel-measurable. -/
 theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace β] [T2Space β] [MeasurableSpace β]
-    [BorelSpace β] {f : γ → β} (f_cont : Continuous f) (f_inj : Injective f) : MeasurableSet (Range f) := by
+    [BorelSpace β] {f : γ → β} (f_cont : Continuous f) (f_inj : Injective f) : MeasurableSet (range f) := by
   /- We follow [Fremlin, *Measure Theory* (volume 4, 423I)][fremlin_vol4].
     Let `b = {s i}` be a countable basis for `α`. When `s i` and `s j` are disjoint, their images are
     disjoint analytic sets, hence by the separation theorem one can find a Borel-measurable set
@@ -465,7 +465,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
   choose q hq1 hq2 q_meas using this
   -- define sets `E i` and `F n` as in the proof sketch above
   let E : b → Set β := fun s =>
-    Closure (f '' s) ∩ ⋂ (t : b) (ht : Disjoint s.1 t.1), q ⟨(s, t), ht⟩ \ q ⟨(t, s), ht.symm⟩
+    closure (f '' s) ∩ ⋂ (t : b) (ht : Disjoint s.1 t.1), q ⟨(s, t), ht⟩ \ q ⟨(t, s), ht.symm⟩
   obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
     exists_seq_strict_anti_tendsto (0 : ℝ)
   let F : ℕ → Set β := fun n => ⋃ (s : b) (hs : bounded s.1 ∧ diam s.1 ≤ u n), E s
@@ -572,7 +572,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
         _ < δ := hn
         
     -- as `x` belongs to the closure of `f '' (s n)`, it belongs to the closure of `v`.
-    have : x ∈ Closure v := closure_mono fsnv (hxs n).1
+    have : x ∈ closure v := closure_mono fsnv (hxs n).1
     -- this is a contradiction, as `x` is supposed to belong to `w`, which is disjoint from
     -- the closure of `v`.
     exact disjoint_left.1 (hvw.closure_left w_open) this xw

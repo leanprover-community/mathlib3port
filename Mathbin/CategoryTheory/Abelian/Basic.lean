@@ -138,7 +138,7 @@ namespace OfCoimageImageComparisonIsIso
 /-- The factorisation of a morphism through its abelian image. -/
 @[simps]
 def imageMonoFactorisation {X Y : C} (f : X ⟶ Y) : MonoFactorisation f where
-  I := Abelian.image f
+  i := Abelian.image f
   m := kernel.ι _
   m_mono := inferInstance
   e := kernel.lift _ f (cokernel.condition _)
@@ -347,7 +347,7 @@ end
 /-- Factoring through the image is a strong epi-mono factorisation. -/
 @[simps]
 def imageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
-  I := Abelian.image f
+  i := Abelian.image f
   m := image.ι f
   m_mono := by infer_instance
   e := Abelian.factorThruImage f
@@ -358,7 +358,7 @@ def imageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
 /-- Factoring through the coimage is a strong epi-mono factorisation. -/
 @[simps]
 def coimageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
-  I := Abelian.coimage f
+  i := Abelian.coimage f
   m := Abelian.factorThruCoimage f
   m_mono := by infer_instance
   e := coimage.π f

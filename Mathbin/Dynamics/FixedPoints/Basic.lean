@@ -91,7 +91,7 @@ protected theorem map {x : α} (hx : IsFixedPt fa x) {g : α → β} (h : Semico
 protected theorem apply {x : α} (hx : IsFixedPt f x) : IsFixedPt f (f x) := by convert hx
 #align function.is_fixed_pt.apply Function.IsFixedPt.apply
 
-theorem preimage_iterate {s : Set α} (h : IsFixedPt (Set.Preimage f) s) (n : ℕ) : IsFixedPt (Set.Preimage (f^[n])) s :=
+theorem preimage_iterate {s : Set α} (h : IsFixedPt (Set.preimage f) s) (n : ℕ) : IsFixedPt (Set.preimage (f^[n])) s :=
   by
   rw [Set.preimage_iterate_eq]
   exact h.iterate n
@@ -105,34 +105,34 @@ theorem Injective.is_fixed_pt_apply_iff (hf : Injective f) {x : α} : IsFixedPt 
 #align function.injective.is_fixed_pt_apply_iff Function.Injective.is_fixed_pt_apply_iff
 
 /-- The set of fixed points of a map `f : α → α`. -/
-def FixedPoints (f : α → α) : Set α :=
+def fixedPoints (f : α → α) : Set α :=
   { x : α | IsFixedPt f x }
-#align function.fixed_points Function.FixedPoints
+#align function.fixed_points Function.fixedPoints
 
-instance FixedPoints.decidable [DecidableEq α] (f : α → α) (x : α) : Decidable (x ∈ FixedPoints f) :=
+instance fixedPoints.decidable [DecidableEq α] (f : α → α) (x : α) : Decidable (x ∈ fixedPoints f) :=
   is_fixed_pt.decidable
-#align function.fixed_points.decidable Function.FixedPoints.decidable
+#align function.fixed_points.decidable Function.fixedPoints.decidable
 
 @[simp]
-theorem mem_fixed_points : x ∈ FixedPoints f ↔ IsFixedPt f x :=
+theorem mem_fixed_points : x ∈ fixedPoints f ↔ IsFixedPt f x :=
   Iff.rfl
 #align function.mem_fixed_points Function.mem_fixed_points
 
-theorem mem_fixed_points_iff {α : Type _} {f : α → α} {x : α} : x ∈ FixedPoints f ↔ f x = x := by rfl
+theorem mem_fixed_points_iff {α : Type _} {f : α → α} {x : α} : x ∈ fixedPoints f ↔ f x = x := by rfl
 #align function.mem_fixed_points_iff Function.mem_fixed_points_iff
 
 @[simp]
-theorem fixed_points_id : FixedPoints (@id α) = Set.Univ :=
+theorem fixed_points_id : fixedPoints (@id α) = Set.univ :=
   Set.ext fun _ => by simpa using is_fixed_pt_id _
 #align function.fixed_points_id Function.fixed_points_id
 
-theorem fixed_points_subset_range : FixedPoints f ⊆ Set.Range f := fun x hx => ⟨x, hx⟩
+theorem fixed_points_subset_range : fixedPoints f ⊆ Set.range f := fun x hx => ⟨x, hx⟩
 #align function.fixed_points_subset_range Function.fixed_points_subset_range
 
 /-- If `g` semiconjugates `fa` to `fb`, then it sends fixed points of `fa` to fixed points
 of `fb`. -/
 theorem Semiconj.maps_to_fixed_pts {g : α → β} (h : Semiconj g fa fb) :
-    Set.MapsTo g (FixedPoints fa) (FixedPoints fb) := fun x hx => hx.map h
+    Set.MapsTo g (fixedPoints fa) (fixedPoints fb) := fun x hx => hx.map h
 #align function.semiconj.maps_to_fixed_pts Function.Semiconj.maps_to_fixed_pts
 
 /-- Any two maps `f : α → β` and `g : β → α` are inverse of each other on the sets of fixed points

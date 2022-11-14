@@ -26,7 +26,7 @@ variable {x₀ x₁ : X}
 
 noncomputable section
 
-open UnitInterval
+open unitInterval
 
 namespace Path
 
@@ -86,14 +86,14 @@ theorem refl_trans_symm_aux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
     · apply mul_nonneg
       · unit_interval
         
-      linarith [UnitInterval.nonneg x.2, UnitInterval.le_one x.2]
+      linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
       
     · apply mul_le_one
       · unit_interval
         
-      · linarith [UnitInterval.nonneg x.2, UnitInterval.le_one x.2]
+      · linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
         
-      · linarith [UnitInterval.nonneg x.2, UnitInterval.le_one x.2]
+      · linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
         
       
     
@@ -112,8 +112,8 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
     · rw [Path.extend, Set.Icc_extend_of_mem]
       · norm_num
         
-      · rw [UnitInterval.mul_pos_mem_iff zero_lt_two]
-        exact ⟨UnitInterval.nonneg x, h⟩
+      · rw [unitInterval.mul_pos_mem_iff zero_lt_two]
+        exact ⟨unitInterval.nonneg x, h⟩
         
       
     · rw [Path.symm, Path.extend, Set.Icc_extend_of_mem]
@@ -121,8 +121,8 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
         ext
         norm_num [sub_sub_eq_add_sub]
         
-      · rw [UnitInterval.two_mul_sub_one_mem_iff]
-        exact ⟨(not_le.1 h).le, UnitInterval.le_one x⟩
+      · rw [unitInterval.two_mul_sub_one_mem_iff]
+        exact ⟨(not_le.1 h).le, unitInterval.le_one x⟩
         
       
   prop' t x hx := by
@@ -161,7 +161,7 @@ theorem continuous_trans_refl_reparam_aux : Continuous transReflReparamAux := by
 
 theorem trans_refl_reparam_aux_mem_I (t : I) : transReflReparamAux t ∈ I := by
   unfold trans_refl_reparam_aux
-  split_ifs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
+  split_ifs <;> constructor <;> linarith [unitInterval.le_one t, unitInterval.nonneg t]
 #align path.homotopy.trans_refl_reparam_aux_mem_I Path.Homotopy.trans_refl_reparam_aux_mem_I
 
 theorem trans_refl_reparam_aux_zero : transReflReparamAux 0 = 0 := by norm_num [trans_refl_reparam_aux]
@@ -221,7 +221,7 @@ theorem continuous_trans_assoc_reparam_aux : Continuous transAssocReparamAux := 
 
 theorem trans_assoc_reparam_aux_mem_I (t : I) : transAssocReparamAux t ∈ I := by
   unfold trans_assoc_reparam_aux
-  split_ifs <;> constructor <;> linarith [UnitInterval.le_one t, UnitInterval.nonneg t]
+  split_ifs <;> constructor <;> linarith [unitInterval.le_one t, unitInterval.nonneg t]
 #align path.homotopy.trans_assoc_reparam_aux_mem_I Path.Homotopy.trans_assoc_reparam_aux_mem_I
 
 theorem trans_assoc_reparam_aux_zero : transAssocReparamAux 0 = 0 := by norm_num [trans_assoc_reparam_aux]

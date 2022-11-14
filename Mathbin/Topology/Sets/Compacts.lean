@@ -33,7 +33,7 @@ namespace TopologicalSpace
 
 /-- The type of compact sets of a topological space. -/
 structure Compacts (α : Type _) [TopologicalSpace α] where
-  Carrier : Set α
+  carrier : Set α
   is_compact' : IsCompact carrier
 #align topological_space.compacts TopologicalSpace.Compacts
 
@@ -42,7 +42,7 @@ namespace Compacts
 variable {α}
 
 instance : SetLike (Compacts α) α where
-  coe := Compacts.Carrier
+  coe := Compacts.carrier
   coe_injective' s t h := by
     cases s
     cases t
@@ -68,7 +68,7 @@ theorem coe_mk (s : Set α) (h) : (mk s h : Set α) = s :=
 #align topological_space.compacts.coe_mk TopologicalSpace.Compacts.coe_mk
 
 @[simp]
-theorem carrier_eq_coe (s : Compacts α) : s.Carrier = s :=
+theorem carrier_eq_coe (s : Compacts α) : s.carrier = s :=
   rfl
 #align topological_space.compacts.carrier_eq_coe TopologicalSpace.Compacts.carrier_eq_coe
 
@@ -79,7 +79,7 @@ instance [T2Space α] : HasInf (Compacts α) :=
   ⟨fun s t => ⟨s ∩ t, s.IsCompact.inter t.IsCompact⟩⟩
 
 instance [CompactSpace α] : HasTop (Compacts α) :=
-  ⟨⟨Univ, is_compact_univ⟩⟩
+  ⟨⟨univ, is_compact_univ⟩⟩
 
 instance : HasBot (Compacts α) :=
   ⟨⟨∅, is_compact_empty⟩⟩
@@ -129,7 +129,7 @@ theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} : 
 
 /-- The image of a compact set under a continuous function. -/
 protected def map (f : α → β) (hf : Continuous f) (K : Compacts α) : Compacts β :=
-  ⟨f '' K.1, K.2.Image hf⟩
+  ⟨f '' K.1, K.2.image hf⟩
 #align topological_space.compacts.map TopologicalSpace.Compacts.map
 
 @[simp]
@@ -158,7 +158,7 @@ theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two `compacts`, as a `compacts` in the product space. -/
 protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β) where
-  Carrier := K ×ˢ L
+  carrier := K ×ˢ L
   is_compact' := IsCompact.prod K.2 L.2
 #align topological_space.compacts.prod TopologicalSpace.Compacts.prod
 
@@ -181,7 +181,7 @@ structure NonemptyCompacts (α : Type _) [TopologicalSpace α] extends Compacts 
 namespace NonemptyCompacts
 
 instance : SetLike (NonemptyCompacts α) α where
-  coe s := s.Carrier
+  coe s := s.carrier
   coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
@@ -211,7 +211,7 @@ theorem coe_mk (s : Compacts α) (h) : (mk s h : Set α) = s :=
 #align topological_space.nonempty_compacts.coe_mk TopologicalSpace.NonemptyCompacts.coe_mk
 
 @[simp]
-theorem carrier_eq_coe (s : NonemptyCompacts α) : s.Carrier = s :=
+theorem carrier_eq_coe (s : NonemptyCompacts α) : s.carrier = s :=
   rfl
 #align topological_space.nonempty_compacts.carrier_eq_coe TopologicalSpace.NonemptyCompacts.carrier_eq_coe
 
@@ -240,7 +240,7 @@ theorem coe_top [CompactSpace α] [Nonempty α] : (↑(⊤ : NonemptyCompacts α
 /-- In an inhabited space, the type of nonempty compact subsets is also inhabited, with
 default element the singleton set containing the default element. -/
 instance [Inhabited α] : Inhabited (NonemptyCompacts α) :=
-  ⟨{ Carrier := {default}, is_compact' := is_compact_singleton, nonempty' := singleton_nonempty _ }⟩
+  ⟨{ carrier := {default}, is_compact' := is_compact_singleton, nonempty' := singleton_nonempty _ }⟩
 
 instance to_compact_space {s : NonemptyCompacts α} : CompactSpace s :=
   is_compact_iff_compact_space.1 s.IsCompact
@@ -269,13 +269,13 @@ end NonemptyCompacts
 /-- The type of compact sets with nonempty interior of a topological space.
 See also `compacts` and `nonempty_compacts`. -/
 structure PositiveCompacts (α : Type _) [TopologicalSpace α] extends Compacts α where
-  interior_nonempty' : (Interior carrier).Nonempty
+  interior_nonempty' : (interior carrier).Nonempty
 #align topological_space.positive_compacts TopologicalSpace.PositiveCompacts
 
 namespace PositiveCompacts
 
 instance : SetLike (PositiveCompacts α) α where
-  coe s := s.Carrier
+  coe s := s.carrier
   coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
@@ -285,7 +285,7 @@ protected theorem is_compact (s : PositiveCompacts α) : IsCompact (s : Set α) 
   s.is_compact'
 #align topological_space.positive_compacts.is_compact TopologicalSpace.PositiveCompacts.is_compact
 
-theorem interior_nonempty (s : PositiveCompacts α) : (Interior (s : Set α)).Nonempty :=
+theorem interior_nonempty (s : PositiveCompacts α) : (interior (s : Set α)).Nonempty :=
   s.interior_nonempty'
 #align topological_space.positive_compacts.interior_nonempty TopologicalSpace.PositiveCompacts.interior_nonempty
 
@@ -309,7 +309,7 @@ theorem coe_mk (s : Compacts α) (h) : (mk s h : Set α) = s :=
 #align topological_space.positive_compacts.coe_mk TopologicalSpace.PositiveCompacts.coe_mk
 
 @[simp]
-theorem carrier_eq_coe (s : PositiveCompacts α) : s.Carrier = s :=
+theorem carrier_eq_coe (s : PositiveCompacts α) : s.carrier = s :=
   rfl
 #align topological_space.positive_compacts.carrier_eq_coe TopologicalSpace.PositiveCompacts.carrier_eq_coe
 
@@ -379,7 +379,7 @@ structure CompactOpens (α : Type _) [TopologicalSpace α] extends Compacts α w
 namespace CompactOpens
 
 instance : SetLike (CompactOpens α) α where
-  coe s := s.Carrier
+  coe s := s.carrier
   coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t

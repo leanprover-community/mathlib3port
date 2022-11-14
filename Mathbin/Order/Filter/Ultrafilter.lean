@@ -226,7 +226,7 @@ theorem map_map (f : Ultrafilter α) (m : α → β) (n : β → γ) : (f.map m)
 
 /-- The pullback of an ultrafilter along an injection whose range is large with respect to the given
 ultrafilter. -/
-def comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.Range m ∈ u) : Ultrafilter α where
+def comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.range m ∈ u) : Ultrafilter α where
   toFilter := comap m u
   neBot' := u.neBot'.comapOfRangeMem large
   le_of_le g hg hgu := by
@@ -235,20 +235,20 @@ def comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.
 #align ultrafilter.comap Ultrafilter.comap
 
 @[simp]
-theorem mem_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.Range m ∈ u) {s : Set α} :
+theorem mem_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.range m ∈ u) {s : Set α} :
     s ∈ u.comap inj large ↔ m '' s ∈ u :=
   mem_comap_iff inj large
 #align ultrafilter.mem_comap Ultrafilter.mem_comap
 
 @[simp, norm_cast]
-theorem coe_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.Range m ∈ u) :
+theorem coe_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.range m ∈ u) :
     (u.comap inj large : Filter α) = Filter.comap m u :=
   rfl
 #align ultrafilter.coe_comap Ultrafilter.coe_comap
 
 @[simp]
 theorem comap_id (f : Ultrafilter α) (h₀ : Injective (id : α → α) := injective_id)
-    (h₁ : Range id ∈ f := by
+    (h₁ : range id ∈ f := by
       rw [range_id]
       exact univ_mem) :
     f.comap h₀ h₁ = f :=
@@ -256,9 +256,9 @@ theorem comap_id (f : Ultrafilter α) (h₀ : Injective (id : α → α) := inje
 #align ultrafilter.comap_id Ultrafilter.comap_id
 
 @[simp]
-theorem comap_comap (f : Ultrafilter γ) {m : α → β} {n : β → γ} (inj₀ : Injective n) (large₀ : Range n ∈ f)
-    (inj₁ : Injective m) (large₁ : Range m ∈ f.comap inj₀ large₀) (inj₂ : Injective (n ∘ m) := inj₀.comp inj₁)
-    (large₂ : Range (n ∘ m) ∈ f := by
+theorem comap_comap (f : Ultrafilter γ) {m : α → β} {n : β → γ} (inj₀ : Injective n) (large₀ : range n ∈ f)
+    (inj₁ : Injective m) (large₁ : range m ∈ f.comap inj₀ large₀) (inj₂ : Injective (n ∘ m) := inj₀.comp inj₁)
+    (large₂ : range (n ∘ m) ∈ f := by
       rw [range_comp]
       exact image_mem_of_mem_comap large₀ large₁) :
     (f.comap inj₀ large₀).comap inj₁ large₁ = f.comap inj₂ large₂ :=
@@ -372,7 +372,7 @@ theorem of_coe (f : Ultrafilter α) : of ↑f = f :=
 
 theorem exists_ultrafilter_of_finite_inter_nonempty (S : Set (Set α))
     (cond : ∀ T : Finset (Set α), (↑T : Set (Set α)) ⊆ S → (⋂₀ (↑T : Set (Set α))).Nonempty) :
-    ∃ F : Ultrafilter α, S ⊆ F.Sets :=
+    ∃ F : Ultrafilter α, S ⊆ F.sets :=
   haveI : ne_bot (generate S) :=
     generate_ne_bot_iff.2 fun t hts ht => ht.coe_to_finset ▸ cond ht.toFinset (ht.coe_to_finset.symm ▸ hts)
   ⟨of (generate S), fun t ht => (of_le <| generate S) <| generate_sets.basic ht⟩
@@ -404,7 +404,7 @@ theorem le_pure_iff' : f ≤ pure a ↔ f = ⊥ ∨ f = pure a :=
 #align filter.le_pure_iff' Filter.le_pure_iff'
 
 @[simp]
-theorem Iic_pure (a : α) : IicCat (pure a : Filter α) = {⊥, pure a} :=
+theorem Iic_pure (a : α) : iic (pure a : Filter α) = {⊥, pure a} :=
   is_atom_pure.Iic_eq
 #align filter.Iic_pure Filter.Iic_pure
 

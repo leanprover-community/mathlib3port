@@ -18,7 +18,7 @@ variable {ι ι' : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t�
   {x : Σi, α i} {i j : ι} {a : α i}
 
 @[simp]
-theorem range_sigma_mk (i : ι) : Range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} := by
+theorem range_sigma_mk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} := by
   apply subset.antisymm
   · rintro _ ⟨b, rfl⟩
     simp
@@ -52,9 +52,9 @@ theorem image_sigma_mk_preimage_sigma_map {β : ι' → Type _} {f : ι → ι'}
 
 /-- Indexed sum of sets. `s.sigma t` is the set of dependent pairs `⟨i, a⟩` such that `i ∈ s` and
 `a ∈ t i`.-/
-protected def Sigma (s : Set ι) (t : ∀ i, Set (α i)) : Set (Σi, α i) :=
+protected def sigma (s : Set ι) (t : ∀ i, Set (α i)) : Set (Σi, α i) :=
   { x | x.1 ∈ s ∧ x.2 ∈ t x.1 }
-#align set.sigma Set.Sigma
+#align set.sigma Set.sigma
 
 @[simp]
 theorem mem_sigma_iff : x ∈ s.Sigma t ↔ x.1 ∈ s ∧ x.2 ∈ t x.1 :=
@@ -96,12 +96,12 @@ theorem empty_sigma : (∅ : Set ι).Sigma t = ∅ :=
   ext fun _ => false_and_iff _
 #align set.empty_sigma Set.empty_sigma
 
-theorem univ_sigma_univ : ((@Univ ι).Sigma fun _ => @Univ (α i)) = univ :=
+theorem univ_sigma_univ : ((@univ ι).Sigma fun _ => @univ (α i)) = univ :=
   ext fun _ => true_and_iff _
 #align set.univ_sigma_univ Set.univ_sigma_univ
 
 @[simp]
-theorem sigma_univ : s.Sigma (fun _ => Univ : ∀ i, Set (α i)) = Sigma.fst ⁻¹' s :=
+theorem sigma_univ : s.Sigma (fun _ => univ : ∀ i, Set (α i)) = Sigma.fst ⁻¹' s :=
   ext fun _ => and_true_iff _
 #align set.sigma_univ Set.sigma_univ
 
@@ -192,7 +192,7 @@ theorem mk_preimage_sigma_fn_eq_if {β : Type _} [DecidablePred (· ∈ s)] (g :
 #align set.mk_preimage_sigma_fn_eq_if Set.mk_preimage_sigma_fn_eq_if
 
 theorem sigma_univ_range_eq {f : ∀ i, α i → β i} :
-    ((Univ : Set ι).Sigma fun i => Range (f i)) = Range fun x : Σi, α i => ⟨x.1, f _ x.2⟩ :=
+    ((univ : Set ι).Sigma fun i => range (f i)) = range fun x : Σi, α i => ⟨x.1, f _ x.2⟩ :=
   ext <| by simp [range]
 #align set.sigma_univ_range_eq Set.sigma_univ_range_eq
 

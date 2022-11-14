@@ -61,7 +61,7 @@ noncomputable section
 @[ext.1]
 structure HahnSeries (Γ : Type _) (R : Type _) [PartialOrder Γ] [Zero R] where
   coeff : Γ → R
-  is_pwo_support' : (Support coeff).IsPwo
+  is_pwo_support' : (support coeff).IsPwo
 #align hahn_series HahnSeries
 
 variable {Γ : Type _} {R : Type _}
@@ -83,22 +83,22 @@ theorem coeff_inj {x y : HahnSeries Γ R} : x.coeff = y.coeff ↔ x = y :=
 
 /-- The support of a Hahn series is just the set of indices whose coefficients are nonzero.
   Notably, it is well-founded. -/
-def Support (x : HahnSeries Γ R) : Set Γ :=
-  Support x.coeff
-#align hahn_series.support HahnSeries.Support
+def support (x : HahnSeries Γ R) : Set Γ :=
+  support x.coeff
+#align hahn_series.support HahnSeries.support
 
 @[simp]
-theorem is_pwo_support (x : HahnSeries Γ R) : x.Support.IsPwo :=
+theorem is_pwo_support (x : HahnSeries Γ R) : x.support.IsPwo :=
   x.is_pwo_support'
 #align hahn_series.is_pwo_support HahnSeries.is_pwo_support
 
 @[simp]
-theorem is_wf_support (x : HahnSeries Γ R) : x.Support.IsWf :=
+theorem is_wf_support (x : HahnSeries Γ R) : x.support.IsWf :=
   x.is_pwo_support.IsWf
 #align hahn_series.is_wf_support HahnSeries.is_wf_support
 
 @[simp]
-theorem mem_support (x : HahnSeries Γ R) (a : Γ) : a ∈ x.Support ↔ x.coeff a ≠ 0 :=
+theorem mem_support (x : HahnSeries Γ R) (a : Γ) : a ∈ x.support ↔ x.coeff a ≠ 0 :=
   Iff.refl _
 #align hahn_series.mem_support HahnSeries.mem_support
 
@@ -126,17 +126,17 @@ theorem ne_zero_of_coeff_ne_zero {x : HahnSeries Γ R} {g : Γ} (h : x.coeff g �
 #align hahn_series.ne_zero_of_coeff_ne_zero HahnSeries.ne_zero_of_coeff_ne_zero
 
 @[simp]
-theorem support_zero : Support (0 : HahnSeries Γ R) = ∅ :=
+theorem support_zero : support (0 : HahnSeries Γ R) = ∅ :=
   Function.support_zero
 #align hahn_series.support_zero HahnSeries.support_zero
 
 @[simp]
-theorem support_nonempty_iff {x : HahnSeries Γ R} : x.Support.Nonempty ↔ x ≠ 0 := by
+theorem support_nonempty_iff {x : HahnSeries Γ R} : x.support.Nonempty ↔ x ≠ 0 := by
   rw [support, support_nonempty_iff, Ne.def, coeff_fun_eq_zero_iff]
 #align hahn_series.support_nonempty_iff HahnSeries.support_nonempty_iff
 
 @[simp]
-theorem support_eq_empty_iff {x : HahnSeries Γ R} : x.Support = ∅ ↔ x = 0 :=
+theorem support_eq_empty_iff {x : HahnSeries Γ R} : x.support = ∅ ↔ x = 0 :=
   support_eq_empty_iff.trans coeff_fun_eq_zero_iff
 #align hahn_series.support_eq_empty_iff HahnSeries.support_eq_empty_iff
 
@@ -162,15 +162,15 @@ theorem single_coeff : (single a r).coeff b = if b = a then r else 0 := by split
 #align hahn_series.single_coeff HahnSeries.single_coeff
 
 @[simp]
-theorem support_single_of_ne (h : r ≠ 0) : Support (single a r) = {a} :=
+theorem support_single_of_ne (h : r ≠ 0) : support (single a r) = {a} :=
   Pi.support_single_of_ne h
 #align hahn_series.support_single_of_ne HahnSeries.support_single_of_ne
 
-theorem support_single_subset : Support (single a r) ⊆ {a} :=
+theorem support_single_subset : support (single a r) ⊆ {a} :=
   Pi.support_single_subset
 #align hahn_series.support_single_subset HahnSeries.support_single_subset
 
-theorem eq_of_mem_support_single {b : Γ} (h : b ∈ Support (single a r)) : b = a :=
+theorem eq_of_mem_support_single {b : Γ} (h : b ∈ support (single a r)) : b = a :=
   support_single_subset h
 #align hahn_series.eq_of_mem_support_single HahnSeries.eq_of_mem_support_single
 
@@ -256,7 +256,7 @@ variable {Γ' : Type _} [PartialOrder Γ']
 
 /-- Extends the domain of a `hahn_series` by an `order_embedding`. -/
 def embDomain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R := fun x =>
-  { coeff := fun b : Γ' => if h : b ∈ f '' x.Support then x.coeff (Classical.choose h) else 0,
+  { coeff := fun b : Γ' => if h : b ∈ f '' x.support then x.coeff (Classical.choose h) else 0,
     is_pwo_support' :=
       (x.is_pwo_support.image_of_monotone f.Monotone).mono fun b hb => by
         contrapose! hb
@@ -284,18 +284,18 @@ theorem emb_domain_mk_coeff {f : Γ → Γ'} (hfi : Function.Injective f) (hf : 
   emb_domain_coeff
 #align hahn_series.emb_domain_mk_coeff HahnSeries.emb_domain_mk_coeff
 
-theorem emb_domain_notin_image_support {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {b : Γ'} (hb : b ∉ f '' x.Support) :
+theorem emb_domain_notin_image_support {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {b : Γ'} (hb : b ∉ f '' x.support) :
     (embDomain f x).coeff b = 0 :=
   dif_neg hb
 #align hahn_series.emb_domain_notin_image_support HahnSeries.emb_domain_notin_image_support
 
-theorem support_emb_domain_subset {f : Γ ↪o Γ'} {x : HahnSeries Γ R} : Support (embDomain f x) ⊆ f '' x.Support := by
+theorem support_emb_domain_subset {f : Γ ↪o Γ'} {x : HahnSeries Γ R} : support (embDomain f x) ⊆ f '' x.support := by
   intro g hg
   contrapose! hg
   rw [mem_support, emb_domain_notin_image_support hg, not_not]
 #align hahn_series.support_emb_domain_subset HahnSeries.support_emb_domain_subset
 
-theorem emb_domain_notin_range {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {b : Γ'} (hb : b ∉ Set.Range f) :
+theorem emb_domain_notin_range {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {b : Γ'} (hb : b ∉ Set.range f) :
     (embDomain f x).coeff b = 0 :=
   emb_domain_notin_image_support fun con => hb (Set.image_subset_range _ _ Con)
 #align hahn_series.emb_domain_notin_range HahnSeries.emb_domain_notin_range
@@ -368,7 +368,7 @@ theorem add_coeff {x y : HahnSeries Γ R} {a : Γ} : (x + y).coeff a = x.coeff a
   rfl
 #align hahn_series.add_coeff HahnSeries.add_coeff
 
-theorem support_add_subset {x y : HahnSeries Γ R} : Support (x + y) ⊆ Support x ∪ Support y := fun a ha => by
+theorem support_add_subset {x y : HahnSeries Γ R} : support (x + y) ⊆ support x ∪ support y := fun a ha => by
   rw [mem_support, add_coeff] at ha
   rw [Set.mem_union, mem_support, mem_support]
   contrapose! ha
@@ -415,7 +415,7 @@ variable {Γ' : Type _} [PartialOrder Γ']
 
 theorem emb_domain_add (f : Γ ↪o Γ') (x y : HahnSeries Γ R) : embDomain f (x + y) = embDomain f x + embDomain f y := by
   ext g
-  by_cases hg:g ∈ Set.Range f
+  by_cases hg:g ∈ Set.range f
   · obtain ⟨a, rfl⟩ := hg
     simp
     
@@ -458,7 +458,7 @@ theorem neg_coeff {x : HahnSeries Γ R} {a : Γ} : (-x).coeff a = -x.coeff a :=
 #align hahn_series.neg_coeff HahnSeries.neg_coeff
 
 @[simp]
-theorem support_neg {x : HahnSeries Γ R} : (-x).Support = x.Support := by
+theorem support_neg {x : HahnSeries Γ R} : (-x).support = x.support := by
   ext
   simp
 #align hahn_series.support_neg HahnSeries.support_neg
@@ -555,7 +555,7 @@ variable {Γ' : Type _} [PartialOrder Γ']
 
 theorem emb_domain_smul (f : Γ ↪o Γ') (r : R) (x : HahnSeries Γ R) : embDomain f (r • x) = r • embDomain f x := by
   ext g
-  by_cases hg:g ∈ Set.Range f
+  by_cases hg:g ∈ Set.range f
   · obtain ⟨a, rfl⟩ := hg
     simp
     
@@ -593,7 +593,7 @@ theorem single_zero_one [Zero R] [One R] : single 0 (1 : R) = 1 :=
 #align hahn_series.single_zero_one HahnSeries.single_zero_one
 
 @[simp]
-theorem support_one [MulZeroOneClass R] [Nontrivial R] : Support (1 : HahnSeries Γ R) = {0} :=
+theorem support_one [MulZeroOneClass R] [Nontrivial R] : support (1 : HahnSeries Γ R) = {0} :=
   support_single_of_ne one_ne_zero
 #align hahn_series.support_one HahnSeries.support_one
 
@@ -630,7 +630,7 @@ theorem mul_coeff [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a : Γ}
 #align hahn_series.mul_coeff HahnSeries.mul_coeff
 
 theorem mul_coeff_right' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a : Γ} {s : Set Γ} (hs : s.IsPwo)
-    (hys : y.Support ⊆ s) :
+    (hys : y.support ⊆ s) :
     (x * y).coeff a = ∑ ij in addAntidiagonal x.is_pwo_support hs a, x.coeff ij.fst * y.coeff ij.snd := by
   rw [mul_coeff]
   apply sum_subset_zero_on_sdiff (add_antidiagonal_mono_right hys) _ fun _ _ => rfl
@@ -640,7 +640,7 @@ theorem mul_coeff_right' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {
 #align hahn_series.mul_coeff_right' HahnSeries.mul_coeff_right'
 
 theorem mul_coeff_left' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a : Γ} {s : Set Γ} (hs : s.IsPwo)
-    (hxs : x.Support ⊆ s) :
+    (hxs : x.support ⊆ s) :
     (x * y).coeff a = ∑ ij in addAntidiagonal hs y.is_pwo_support a, x.coeff ij.fst * y.coeff ij.snd := by
   rw [mul_coeff]
   apply sum_subset_zero_on_sdiff (add_antidiagonal_mono_left hxs) _ fun _ _ => rfl
@@ -760,7 +760,7 @@ theorem single_zero_mul_eq_smul [Semiring R] {r : R} {x : HahnSeries Γ R} : sin
 #align hahn_series.single_zero_mul_eq_smul HahnSeries.single_zero_mul_eq_smul
 
 theorem support_mul_subset_add_support [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} :
-    Support (x * y) ⊆ Support x + Support y := by
+    support (x * y) ⊆ support x + support y := by
   apply Set.Subset.trans (fun x hx => _) support_add_antidiagonal_subset_add
   · exact x.is_pwo_support
     
@@ -997,7 +997,7 @@ variable {Γ' : Type _} [OrderedCancelAddCommMonoid Γ']
 theorem emb_domain_mul [NonUnitalNonAssocSemiring R] (f : Γ ↪o Γ') (hf : ∀ x y, f (x + y) = f x + f y)
     (x y : HahnSeries Γ R) : embDomain f (x * y) = embDomain f x * embDomain f y := by
   ext g
-  by_cases hg:g ∈ Set.Range f
+  by_cases hg:g ∈ Set.range f
   · obtain ⟨g, rfl⟩ := hg
     simp only [mul_coeff, emb_domain_coeff]
     trans
@@ -1367,7 +1367,7 @@ theorem add_val_le_of_coeff_ne_zero {x : HahnSeries Γ R} {g : Γ} (h : x.coeff 
 end Valuation
 
 theorem is_pwo_Union_support_powers [LinearOrderedCancelAddCommMonoid Γ] [Ring R] [IsDomain R] {x : HahnSeries Γ R}
-    (hx : 0 < addVal Γ R x) : (⋃ n : ℕ, (x ^ n).Support).IsPwo := by
+    (hx : 0 < addVal Γ R x) : (⋃ n : ℕ, (x ^ n).support).IsPwo := by
   apply (x.is_wf_support.is_pwo.add_submonoid_closure fun g hg => _).mono _
   · exact WithTop.coe_le_coe.1 (le_trans (le_of_lt hx) (add_val_le_of_coeff_ne_zero hg))
     
@@ -1392,7 +1392,7 @@ variable (Γ) (R) [PartialOrder Γ] [AddCommMonoid R]
   and that only finitely many series are nonzero at any given coefficient. -/
 structure SummableFamily (α : Type _) where
   toFun : α → HahnSeries Γ R
-  is_pwo_Union_support' : Set.IsPwo (⋃ a : α, (to_fun a).Support)
+  is_pwo_Union_support' : Set.IsPwo (⋃ a : α, (to_fun a).support)
   finite_co_support' : ∀ g : Γ, { a | (to_fun a).coeff g ≠ 0 }.Finite
 #align hahn_series.summable_family HahnSeries.SummableFamily
 
@@ -1407,11 +1407,11 @@ variable [PartialOrder Γ] [AddCommMonoid R] {α : Type _}
 instance : CoeFun (SummableFamily Γ R α) fun _ => α → HahnSeries Γ R :=
   ⟨toFun⟩
 
-theorem is_pwo_Union_support (s : SummableFamily Γ R α) : Set.IsPwo (⋃ a : α, (s a).Support) :=
+theorem is_pwo_Union_support (s : SummableFamily Γ R α) : Set.IsPwo (⋃ a : α, (s a).support) :=
   s.is_pwo_Union_support'
 #align hahn_series.summable_family.is_pwo_Union_support HahnSeries.SummableFamily.is_pwo_Union_support
 
-theorem finite_co_support (s : SummableFamily Γ R α) (g : Γ) : (Function.Support fun a => (s a).coeff g).Finite :=
+theorem finite_co_support (s : SummableFamily Γ R α) (g : Γ) : (Function.support fun a => (s a).coeff g).Finite :=
   s.finite_co_support' g
 #align hahn_series.summable_family.finite_co_support HahnSeries.SummableFamily.finite_co_support
 
@@ -1500,7 +1500,7 @@ theorem hsum_coeff {s : SummableFamily Γ R α} {g : Γ} : s.hsum.coeff g = ∑�
   rfl
 #align hahn_series.summable_family.hsum_coeff HahnSeries.SummableFamily.hsum_coeff
 
-theorem support_hsum_subset {s : SummableFamily Γ R α} : s.hsum.Support ⊆ ⋃ a : α, (s a).Support := fun g hg => by
+theorem support_hsum_subset {s : SummableFamily Γ R α} : s.hsum.support ⊆ ⋃ a : α, (s a).support := fun g hg => by
   rw [mem_support, hsum_coeff, finsum_eq_sum _ (s.finite_co_support _)] at hg
   obtain ⟨a, h1, h2⟩ := exists_ne_zero_of_sum_ne_zero hg
   rw [Set.mem_Union]
@@ -1572,7 +1572,7 @@ instance :
         refine'
           ((add_antidiagonal x.is_pwo_support s.is_pwo_Union_support g).finite_to_set.bUnion' fun ij hij => _).Subset
             fun a ha => _
-        · exact fun ij hij => Function.Support fun a => (s a).coeff ij.2
+        · exact fun ij hij => Function.support fun a => (s a).coeff ij.2
           
         · apply s.finite_co_support
           
@@ -1600,7 +1600,7 @@ instance : Module (HahnSeries Γ R) (SummableFamily Γ R α) where
 theorem hsum_smul {x : HahnSeries Γ R} {s : SummableFamily Γ R α} : (x • s).hsum = x * s.hsum := by
   ext g
   simp only [mul_coeff, hsum_coeff, smul_apply]
-  have h : ∀ i, (s i).Support ⊆ ⋃ j, (s j).Support := Set.subset_Union _
+  have h : ∀ i, (s i).support ⊆ ⋃ j, (s j).support := Set.subset_Union _
   refine'
     (Eq.trans (finsum_congr fun a => _)
           (finsum_sum_comm (add_antidiagonal x.is_pwo_support s.is_pwo_Union_support g)
@@ -1695,10 +1695,10 @@ variable [PartialOrder Γ] [AddCommMonoid R] {α β : Type _}
 
 /-- A summable family can be reindexed by an embedding without changing its sum. -/
 def embDomain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R β where
-  toFun b := if h : b ∈ Set.Range f then s (Classical.choose h) else 0
+  toFun b := if h : b ∈ Set.range f then s (Classical.choose h) else 0
   is_pwo_Union_support' := by
     refine' s.is_pwo_Union_support.mono (Set.Union_subset fun b g h => _)
-    by_cases hb:b ∈ Set.Range f
+    by_cases hb:b ∈ Set.range f
     · rw [dif_pos hb] at h
       exact Set.mem_Union.2 ⟨Classical.choose hb, h⟩
       
@@ -1706,10 +1706,10 @@ def embDomain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R
       simp [hb]
       
   finite_co_support' g :=
-    ((s.finite_co_support g).Image f).Subset
+    ((s.finite_co_support g).image f).Subset
       (by
         intro b h
-        by_cases hb:b ∈ Set.Range f
+        by_cases hb:b ∈ Set.range f
         · simp only [Ne.def, Set.mem_set_of_eq, dif_pos hb] at h
           exact ⟨Classical.choose hb, h, Classical.choose_spec hb⟩
           
@@ -1720,7 +1720,7 @@ def embDomain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R
 
 variable (s : SummableFamily Γ R α) (f : α ↪ β) {a : α} {b : β}
 
-theorem emb_domain_apply : s.embDomain f b = if h : b ∈ Set.Range f then s (Classical.choose h) else 0 :=
+theorem emb_domain_apply : s.embDomain f b = if h : b ∈ Set.range f then s (Classical.choose h) else 0 :=
   rfl
 #align hahn_series.summable_family.emb_domain_apply HahnSeries.SummableFamily.emb_domain_apply
 
@@ -1731,7 +1731,7 @@ theorem emb_domain_image : s.embDomain f (f a) = s a := by
 #align hahn_series.summable_family.emb_domain_image HahnSeries.SummableFamily.emb_domain_image
 
 @[simp]
-theorem emb_domain_notin_range (h : b ∉ Set.Range f) : s.embDomain f b = 0 := by rw [emb_domain_apply, dif_neg h]
+theorem emb_domain_notin_range (h : b ∉ Set.range f) : s.embDomain f b = 0 := by rw [emb_domain_apply, dif_neg h]
 #align hahn_series.summable_family.emb_domain_notin_range HahnSeries.SummableFamily.emb_domain_notin_range
 
 @[simp]
@@ -1760,7 +1760,7 @@ def powers (x : HahnSeries Γ R) (hx : 0 < addVal Γ R x) : SummableFamily Γ R 
     apply hpwo.is_wf.induction hg
     intro y ys hy
     refine'
-      ((((add_antidiagonal x.is_pwo_support hpwo y).finite_to_set.bUnion fun ij hij => hy ij.snd _ _).Image
+      ((((add_antidiagonal x.is_pwo_support hpwo y).finite_to_set.bUnion fun ij hij => hy ij.snd _ _).image
                 Nat.succ).union
             (Set.finite_singleton 0)).Subset
         _

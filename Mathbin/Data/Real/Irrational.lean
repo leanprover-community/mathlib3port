@@ -25,7 +25,7 @@ open Rat Real multiplicity
 
 /-- A real number is irrational if it is not equal to any rational number. -/
 def Irrational (x : ℝ) :=
-  x ∉ Set.Range (coe : ℚ → ℝ)
+  x ∉ Set.range (coe : ℚ → ℝ)
 #align irrational Irrational
 
 theorem irrational_iff_ne_rational (x : ℝ) : Irrational x ↔ ∀ a b : ℤ, x ≠ a / b := by

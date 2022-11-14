@@ -116,7 +116,7 @@ theorem strongTopology.has_continuous_smul [RingHomSurjective σ] [RingHomIsomet
   let φ : (E →SL[σ] F) →ₗ[𝕜₂] E → F := ⟨(coeFn : (E →SL[σ] F) → E → F), fun _ _ => rfl, fun _ _ => rfl⟩
   exact
     UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded 𝕜₂ E F (E →SL[σ] F) h𝔖₁ h𝔖₂ φ ⟨rfl⟩ fun u s hs =>
-      (h𝔖₃ s hs).Image u
+      (h𝔖₃ s hs).image u
 #align continuous_linear_map.strong_topology.has_continuous_smul ContinuousLinearMap.strongTopology.has_continuous_smul
 
 theorem strongTopology.has_basis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F] {ι : Type _}

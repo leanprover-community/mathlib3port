@@ -84,7 +84,7 @@ alias lipschitz_on_with_iff_dist_le_mul ↔ LipschitzOnWith.dist_le_mul Lipschit
 
 @[simp]
 theorem lipschitz_on_univ [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0} {f : α → β} :
-    LipschitzOnWith K f Univ ↔ LipschitzWith K f := by simp [LipschitzOnWith, LipschitzWith]
+    LipschitzOnWith K f univ ↔ LipschitzWith K f := by simp [LipschitzOnWith, LipschitzWith]
 #align lipschitz_on_univ lipschitz_on_univ
 
 theorem lipschitz_on_with_iff_restrict [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0} {f : α → β} {s : Set α} :
@@ -127,11 +127,11 @@ theorem edist_lt_mul_of_lt (h : LipschitzWith K f) (hK : K ≠ 0) (hr : edist x 
 #align lipschitz_with.edist_lt_mul_of_lt LipschitzWith.edist_lt_mul_of_lt
 
 theorem maps_to_emetric_closed_ball (h : LipschitzWith K f) (x : α) (r : ℝ≥0∞) :
-    MapsTo f (ClosedBall x r) (ClosedBall (f x) (K * r)) := fun y hy => h.edist_le_mul_of_le hy
+    MapsTo f (closedBall x r) (closedBall (f x) (K * r)) := fun y hy => h.edist_le_mul_of_le hy
 #align lipschitz_with.maps_to_emetric_closed_ball LipschitzWith.maps_to_emetric_closed_ball
 
 theorem maps_to_emetric_ball (h : LipschitzWith K f) (hK : K ≠ 0) (x : α) (r : ℝ≥0∞) :
-    MapsTo f (Ball x r) (Ball (f x) (K * r)) := fun y hy => h.edist_lt_mul_of_lt hK hy
+    MapsTo f (ball x r) (ball (f x) (K * r)) := fun y hy => h.edist_lt_mul_of_lt hK hy
 #align lipschitz_with.maps_to_emetric_ball LipschitzWith.maps_to_emetric_ball
 
 theorem edist_lt_top (hf : LipschitzWith K f) {x y : α} (h : edist x y ≠ ⊤) : edist (f x) (f y) < ⊤ :=
@@ -336,7 +336,7 @@ theorem dist_le_mul_of_le (hf : LipschitzWith K f) (hr : dist x y ≤ r) : dist 
 #align lipschitz_with.dist_le_mul_of_le LipschitzWith.dist_le_mul_of_le
 
 theorem maps_to_closed_ball (hf : LipschitzWith K f) (x : α) (r : ℝ) :
-    MapsTo f (Metric.ClosedBall x r) (Metric.ClosedBall (f x) (K * r)) := fun y hy => hf.dist_le_mul_of_le hy
+    MapsTo f (Metric.closedBall x r) (Metric.closedBall (f x) (K * r)) := fun y hy => hf.dist_le_mul_of_le hy
 #align lipschitz_with.maps_to_closed_ball LipschitzWith.maps_to_closed_ball
 
 theorem dist_lt_mul_of_lt (hf : LipschitzWith K f) (hK : K ≠ 0) (hr : dist x y < r) : dist (f x) (f y) < K * r :=
@@ -344,7 +344,7 @@ theorem dist_lt_mul_of_lt (hf : LipschitzWith K f) (hK : K ≠ 0) (hr : dist x y
 #align lipschitz_with.dist_lt_mul_of_lt LipschitzWith.dist_lt_mul_of_lt
 
 theorem maps_to_ball (hf : LipschitzWith K f) (hK : K ≠ 0) (x : α) (r : ℝ) :
-    MapsTo f (Metric.Ball x r) (Metric.Ball (f x) (K * r)) := fun y hy => hf.dist_lt_mul_of_lt hK hy
+    MapsTo f (Metric.ball x r) (Metric.ball (f x) (K * r)) := fun y hy => hf.dist_lt_mul_of_lt hK hy
 #align lipschitz_with.maps_to_ball LipschitzWith.maps_to_ball
 
 /-- A Lipschitz continuous map is a locally bounded map. -/
@@ -567,7 +567,7 @@ theorem continuous_on_prod_of_continuous_on_lipschitz_on [PseudoEmetricSpace α]
   refine' Emetric.tendsto_nhds.2 fun ε (ε0 : 0 < ε) => _
   replace ε0 : 0 < ε / 2 := Ennreal.half_pos (ne_of_gt ε0)
   have εK : 0 < ε / 2 / K := Ennreal.div_pos_iff.2 ⟨ε0.ne', Ennreal.coe_ne_top⟩
-  have A : s ∩ Emetric.Ball x (ε / 2 / K) ∈ 𝓝[s] x := inter_mem_nhds_within _ (Emetric.ball_mem_nhds _ εK)
+  have A : s ∩ Emetric.ball x (ε / 2 / K) ∈ 𝓝[s] x := inter_mem_nhds_within _ (Emetric.ball_mem_nhds _ εK)
   have B : { b : β | b ∈ t ∧ edist (f (x, b)) (f (x, y)) < ε / 2 } ∈ 𝓝[t] y :=
     inter_mem self_mem_nhds_within (ha x hx y hy (Emetric.ball_mem_nhds _ ε0))
   filter_upwards [nhds_within_prod A B]

@@ -44,33 +44,33 @@ countable unions of already constructed sets. We index this construction by an o
 this will be enough to generate all sets in the sigma-algebra.
 
 This construction is very similar to that of the Borel hierarchy. -/
-def GenerateMeasurableRec (s : Set (Set α)) : ω₁ → Set (Set α)
+def generateMeasurableRec (s : Set (Set α)) : ω₁ → Set (Set α)
   | i =>
-    let S := ⋃ j : IioCat i, generate_measurable_rec j.1
-    s ∪ {∅} ∪ compl '' S ∪ Set.Range fun f : ℕ → S => ⋃ n, (f n).1
-#align measurable_space.generate_measurable_rec MeasurableSpace.GenerateMeasurableRec
+    let S := ⋃ j : iio i, generate_measurable_rec j.1
+    s ∪ {∅} ∪ compl '' S ∪ Set.range fun f : ℕ → S => ⋃ n, (f n).1
+#align measurable_space.generate_measurable_rec MeasurableSpace.generateMeasurableRec
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr subset_union_of_subset_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-theorem self_subset_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : s ⊆ GenerateMeasurableRec s i := by
+theorem self_subset_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : s ⊆ generateMeasurableRec s i := by
   unfold generate_measurable_rec
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr subset_union_of_subset_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   exact subset_rfl
 #align measurable_space.self_subset_generate_measurable_rec MeasurableSpace.self_subset_generate_measurable_rec
 
-theorem empty_mem_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : ∅ ∈ GenerateMeasurableRec s i := by
+theorem empty_mem_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : ∅ ∈ generateMeasurableRec s i := by
   unfold generate_measurable_rec
   exact mem_union_left _ (mem_union_left _ (mem_union_right _ (mem_singleton ∅)))
 #align measurable_space.empty_mem_generate_measurable_rec MeasurableSpace.empty_mem_generate_measurable_rec
 
 theorem compl_mem_generate_measurable_rec {s : Set (Set α)} {i j : ω₁} (h : j < i) {t : Set α}
-    (ht : t ∈ GenerateMeasurableRec s j) : tᶜ ∈ GenerateMeasurableRec s i := by
+    (ht : t ∈ generateMeasurableRec s j) : tᶜ ∈ generateMeasurableRec s i := by
   unfold generate_measurable_rec
   exact mem_union_left _ (mem_union_right _ ⟨t, mem_Union.2 ⟨⟨j, h⟩, ht⟩, rfl⟩)
 #align measurable_space.compl_mem_generate_measurable_rec MeasurableSpace.compl_mem_generate_measurable_rec
 
 theorem Union_mem_generate_measurable_rec {s : Set (Set α)} {i : ω₁} {f : ℕ → Set α}
-    (hf : ∀ n, ∃ j < i, f n ∈ GenerateMeasurableRec s j) : (⋃ n, f n) ∈ GenerateMeasurableRec s i := by
+    (hf : ∀ n, ∃ j < i, f n ∈ generateMeasurableRec s j) : (⋃ n, f n) ∈ generateMeasurableRec s i := by
   unfold generate_measurable_rec
   exact
     mem_union_right _
@@ -82,7 +82,7 @@ theorem Union_mem_generate_measurable_rec {s : Set (Set α)} {i : ω₁} {f : �
 #align measurable_space.Union_mem_generate_measurable_rec MeasurableSpace.Union_mem_generate_measurable_rec
 
 theorem generate_measurable_rec_subset (s : Set (Set α)) {i j : ω₁} (h : i ≤ j) :
-    GenerateMeasurableRec s i ⊆ GenerateMeasurableRec s j := fun x hx => by
+    generateMeasurableRec s i ⊆ generateMeasurableRec s j := fun x hx => by
   rcases eq_or_lt_of_le h with (rfl | h)
   · exact hx
     
@@ -95,7 +95,7 @@ theorem generate_measurable_rec_subset (s : Set (Set α)) {i j : ω₁} (h : i �
 /-- At each step of the inductive construction, the cardinality bound `≤ (max (#s) 2) ^ ℵ₀` holds.
 -/
 theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
-    (#GenerateMeasurableRec s i) ≤ max (#s) 2 ^ aleph_0.{u} := by
+    (#generateMeasurableRec s i) ≤ max (#s) 2 ^ aleph_0.{u} := by
   apply (aleph 1).ord.out.wo.wf.induction i
   intro i IH
   have A := aleph_0_le_aleph 1
@@ -124,7 +124,7 @@ theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
 
 /-- `generate_measurable_rec s` generates precisely the smallest sigma-algebra containing `s`. -/
 theorem generate_measurable_eq_rec (s : Set (Set α)) :
-    { t | GenerateMeasurable s t } = ⋃ i, GenerateMeasurableRec s i := by
+    { t | GenerateMeasurable s t } = ⋃ i, generateMeasurableRec s i := by
   ext t
   refine' ⟨fun ht => _, fun ht => _⟩
   · inhabit ω₁

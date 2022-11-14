@@ -60,7 +60,7 @@ integral.
 For the average on a set, use `⨍ x in s, f x ∂μ` (defined as `⨍ x, f x ∂(μ.restrict s)`). For
 average w.r.t. the volume, one can omit `∂volume`. -/
 noncomputable def average (f : α → E) :=
-  ∫ x, f x ∂(μ Univ)⁻¹ • μ
+  ∫ x, f x ∂(μ univ)⁻¹ • μ
 #align measure_theory.average MeasureTheory.average
 
 -- mathport name: «expr⨍ , ∂ »
@@ -89,11 +89,11 @@ theorem average_neg (f : α → E) : (⨍ x, -f x ∂μ) = -⨍ x, f x ∂μ :=
   integral_neg f
 #align measure_theory.average_neg MeasureTheory.average_neg
 
-theorem average_eq' (f : α → E) : (⨍ x, f x ∂μ) = ∫ x, f x ∂(μ Univ)⁻¹ • μ :=
+theorem average_eq' (f : α → E) : (⨍ x, f x ∂μ) = ∫ x, f x ∂(μ univ)⁻¹ • μ :=
   rfl
 #align measure_theory.average_eq' MeasureTheory.average_eq'
 
-theorem average_eq (f : α → E) : (⨍ x, f x ∂μ) = (μ Univ).toReal⁻¹ • ∫ x, f x ∂μ := by
+theorem average_eq (f : α → E) : (⨍ x, f x ∂μ) = (μ univ).toReal⁻¹ • ∫ x, f x ∂μ := by
   rw [average_eq', integral_smul_measure, Ennreal.to_real_inv]
 #align measure_theory.average_eq MeasureTheory.average_eq
 
@@ -102,7 +102,7 @@ theorem average_eq_integral [IsProbabilityMeasure μ] (f : α → E) : (⨍ x, f
 #align measure_theory.average_eq_integral MeasureTheory.average_eq_integral
 
 @[simp]
-theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) : ((μ Univ).toReal • ⨍ x, f x ∂μ) = ∫ x, f x ∂μ := by
+theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) : ((μ univ).toReal • ⨍ x, f x ∂μ) = ∫ x, f x ∂μ := by
   cases' eq_or_ne μ 0 with hμ hμ
   · rw [hμ, integral_zero_measure, average_zero_measure, smul_zero]
     
@@ -129,8 +129,8 @@ theorem average_congr {f g : α → E} (h : f =ᵐ[μ] g) : (⨍ x, f x ∂μ) =
 theorem average_add_measure [IsFiniteMeasure μ] {ν : Measure α} [IsFiniteMeasure ν] {f : α → E} (hμ : Integrable f μ)
     (hν : Integrable f ν) :
     (⨍ x, f x ∂μ + ν) =
-      (((μ Univ).toReal / ((μ Univ).toReal + (ν Univ).toReal)) • ⨍ x, f x ∂μ) +
-        ((ν Univ).toReal / ((μ Univ).toReal + (ν Univ).toReal)) • ⨍ x, f x ∂ν :=
+      (((μ univ).toReal / ((μ univ).toReal + (ν univ).toReal)) • ⨍ x, f x ∂μ) +
+        ((ν univ).toReal / ((μ univ).toReal + (ν univ).toReal)) • ⨍ x, f x ∂ν :=
   by
   simp only [div_eq_inv_mul, mul_smul, measure_smul_average, ← smul_add, ← integral_add_measure hμ hν, ←
     Ennreal.to_real_add (measure_ne_top μ _) (measure_ne_top ν _)]
@@ -161,7 +161,7 @@ theorem average_union {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht
 
 theorem average_union_mem_open_segment {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht : NullMeasurableSet t μ)
     (hs₀ : μ s ≠ 0) (ht₀ : μ t ≠ 0) (hsμ : μ s ≠ ∞) (htμ : μ t ≠ ∞) (hfs : IntegrableOn f s μ)
-    (hft : IntegrableOn f t μ) : (⨍ x in s ∪ t, f x ∂μ) ∈ OpenSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in t, f x ∂μ) := by
+    (hft : IntegrableOn f t μ) : (⨍ x in s ∪ t, f x ∂μ) ∈ openSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in t, f x ∂μ) := by
   replace hs₀ : 0 < (μ s).toReal
   exact Ennreal.to_real_pos hs₀ hsμ
   replace ht₀ : 0 < (μ t).toReal
@@ -191,7 +191,7 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint
 
 theorem average_mem_open_segment_compl_self [IsFiniteMeasure μ] {f : α → E} {s : Set α} (hs : NullMeasurableSet s μ)
     (hs₀ : μ s ≠ 0) (hsc₀ : μ (sᶜ) ≠ 0) (hfi : Integrable f μ) :
-    (⨍ x, f x ∂μ) ∈ OpenSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in sᶜ, f x ∂μ) := by
+    (⨍ x, f x ∂μ) ∈ openSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in sᶜ, f x ∂μ) := by
   simpa only [union_compl_self, restrict_univ] using
     average_union_mem_open_segment ae_disjoint_compl_right hs.compl hs₀ hsc₀ (measure_ne_top _ _) (measure_ne_top _ _)
       hfi.integrable_on hfi.integrable_on

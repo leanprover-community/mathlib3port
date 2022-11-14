@@ -68,7 +68,7 @@ theorem eq_restrict_iff {s : Set α} {f : ∀ a : s, π a} {g : ∀ a, π a} :
 #align set.eq_restrict_iff Set.eq_restrict_iff
 
 @[simp]
-theorem range_restrict (f : α → β) (s : Set α) : Set.Range (s.restrict f) = f '' s :=
+theorem range_restrict (f : α → β) (s : Set α) : Set.range (s.restrict f) = f '' s :=
   (range_comp _ _).trans <| congr_arg ((· '' ·) f) Subtype.range_coe
 #align set.range_restrict Set.range_restrict
 
@@ -115,22 +115,22 @@ theorem restrict_piecewise_compl (f g : α → β) (s : Set α) [∀ x, Decidabl
 #align set.restrict_piecewise_compl Set.restrict_piecewise_compl
 
 theorem restrict_extend_range (f : α → β) (g : α → γ) (g' : β → γ) :
-    (Range f).restrict (extend f g g') = fun x => g x.coe_prop.some := by convert restrict_dite _ _
+    (range f).restrict (extend f g g') = fun x => g x.coe_prop.some := by convert restrict_dite _ _
 #align set.restrict_extend_range Set.restrict_extend_range
 
 @[simp]
 theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β → γ) :
-    Range fᶜ.restrict (extend f g g') = g' ∘ coe := by convert restrict_dite_compl _ _
+    range fᶜ.restrict (extend f g g') = g' ∘ coe := by convert restrict_dite_compl _ _
 #align set.restrict_extend_compl_range Set.restrict_extend_compl_range
 
-theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : Range (extend f g g') ⊆ Range g ∪ g' '' Range fᶜ :=
+theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : range (extend f g g') ⊆ range g ∪ g' '' range fᶜ :=
   by
   classical rintro _ ⟨y, rfl⟩
     split_ifs
 #align set.range_extend_subset Set.range_extend_subset
 
 theorem range_extend {f : α → β} (hf : Injective f) (g : α → γ) (g' : β → γ) :
-    Range (extend f g g') = Range g ∪ g' '' Range fᶜ := by
+    range (extend f g g') = range g ∪ g' '' range fᶜ := by
   refine' (range_extend_subset _ _ _).antisymm _
   rintro z (⟨x, rfl⟩ | ⟨y, hy, rfl⟩)
   exacts[⟨f x, extend_apply hf _ _ _⟩, ⟨y, extend_apply' _ _ _ hy⟩]
@@ -220,7 +220,7 @@ theorem EqOn.comp_left (h : s.EqOn f₁ f₂) : s.EqOn (g ∘ f₁) (g ∘ f₂)
 #align set.eq_on.comp_left Set.EqOn.comp_left
 
 @[simp]
-theorem eq_on_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} : EqOn g₁ g₂ (Range f) ↔ g₁ ∘ f = g₂ ∘ f :=
+theorem eq_on_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} : EqOn g₁ g₂ (range f) ↔ g₁ ∘ f = g₂ ∘ f :=
   forall_range_iff.trans <| funext_iff.symm
 #align set.eq_on_range Set.eq_on_range
 
@@ -349,7 +349,7 @@ theorem MapsTo.coe_restrict (h : Set.MapsTo f s t) : coe ∘ h.restrict f s t = 
 #align set.maps_to.coe_restrict Set.MapsTo.coe_restrict
 
 theorem MapsTo.range_restrict (f : α → β) (s : Set α) (t : Set β) (h : MapsTo f s t) :
-    Range (h.restrict f s t) = coe ⁻¹' (f '' s) :=
+    range (h.restrict f s t) = coe ⁻¹' (f '' s) :=
   Set.range_subtype_map f h
 #align set.maps_to.range_restrict Set.MapsTo.range_restrict
 
@@ -448,7 +448,7 @@ theorem maps_to_inter : MapsTo f s (t₁ ∩ t₂) ↔ MapsTo f s t₁ ∧ MapsT
     fun h => h.1.inter h.2⟩
 #align set.maps_to_inter Set.maps_to_inter
 
-theorem maps_to_univ (f : α → β) (s : Set α) : MapsTo f s Univ := fun x h => trivial
+theorem maps_to_univ (f : α → β) (s : Set α) : MapsTo f s univ := fun x h => trivial
 #align set.maps_to_univ Set.maps_to_univ
 
 theorem maps_to_image (f : α → β) (s : Set α) : MapsTo f s (f '' s) := by rw [maps_to']
@@ -458,7 +458,7 @@ theorem maps_to_preimage (f : α → β) (t : Set β) : MapsTo f (f ⁻¹' t) t 
   Subset.refl _
 #align set.maps_to_preimage Set.maps_to_preimage
 
-theorem maps_to_range (f : α → β) (s : Set α) : MapsTo f s (Range f) :=
+theorem maps_to_range (f : α → β) (s : Set α) : MapsTo f s (range f) :=
   (maps_to_image f s).mono (Subset.refl s) (image_subset_range _ _)
 #align set.maps_to_range Set.maps_to_range
 
@@ -468,12 +468,12 @@ theorem maps_image_to (f : α → β) (g : γ → α) (s : Set γ) (t : Set β) 
 #align set.maps_image_to Set.maps_image_to
 
 @[simp]
-theorem maps_univ_to (f : α → β) (s : Set β) : MapsTo f Univ s ↔ ∀ a, f a ∈ s :=
+theorem maps_univ_to (f : α → β) (s : Set β) : MapsTo f univ s ↔ ∀ a, f a ∈ s :=
   ⟨fun h a => h (mem_univ _), fun h x _ => h x⟩
 #align set.maps_univ_to Set.maps_univ_to
 
 @[simp]
-theorem maps_range_to (f : α → β) (g : γ → α) (s : Set β) : MapsTo f (Range g) s ↔ MapsTo (f ∘ g) Univ s := by
+theorem maps_range_to (f : α → β) (g : γ → α) (s : Set β) : MapsTo f (range g) s ↔ MapsTo (f ∘ g) univ s := by
   rw [← image_univ, maps_image_to]
 #align set.maps_range_to Set.maps_range_to
 
@@ -498,7 +498,7 @@ def restrictPreimage : f ⁻¹' t → t :=
   (Set.maps_to_preimage f t).restrict _ _ _
 #align set.restrict_preimage Set.restrictPreimage
 
-theorem range_restrict_preimage : Range (t.restrictPreimage f) = coe ⁻¹' Range f := by
+theorem range_restrict_preimage : range (t.restrictPreimage f) = coe ⁻¹' range f := by
   delta Set.restrictPreimage
   rw [maps_to.range_restrict, Set.image_preimage_eq_inter_range, Set.preimage_inter, Subtype.coe_preimage_self,
     Set.univ_inter]
@@ -568,7 +568,7 @@ theorem inj_on_insert {f : α → β} {s : Set α} {a : α} (has : a ∉ s) :
   simp
 #align set.inj_on_insert Set.inj_on_insert
 
-theorem injective_iff_inj_on_univ : Injective f ↔ InjOn f Univ :=
+theorem injective_iff_inj_on_univ : Injective f ↔ InjOn f univ :=
   ⟨fun h x hx y hy hxy => h hxy, fun h _ _ heq => h trivial trivial HEq⟩
 #align set.injective_iff_inj_on_univ Set.injective_iff_inj_on_univ
 
@@ -581,7 +581,7 @@ theorem InjOn.comp (hg : InjOn g t) (hf : InjOn f s) (h : MapsTo f s t) : InjOn 
   hf hx hy <| hg (h hx) (h hy) HEq
 #align set.inj_on.comp Set.InjOn.comp
 
-theorem _root_.function.injective.inj_on_range (h : Injective (g ∘ f)) : InjOn g (Range f) := by
+theorem _root_.function.injective.inj_on_range (h : Injective (g ∘ f)) : InjOn g (range f) := by
   rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ H
   exact congr_arg f (h H)
 #align set._root_.function.injective.inj_on_range set._root_.function.injective.inj_on_range
@@ -602,7 +602,7 @@ theorem exists_inj_on_iff_injective [Nonempty β] : (∃ f : α → β, InjOn f 
     exact ⟨f, inj_on_iff_injective.2 hf⟩⟩
 #align set.exists_inj_on_iff_injective Set.exists_inj_on_iff_injective
 
-theorem inj_on_preimage {B : Set (Set β)} (hB : B ⊆ 𝒫 Range f) : InjOn (Preimage f) B := fun s hs t ht hst =>
+theorem inj_on_preimage {B : Set (Set β)} (hB : B ⊆ 𝒫 range f) : InjOn (preimage f) B := fun s hs t ht hst =>
   (preimage_eq_preimage' (hB hs) (hB ht)).1 hst
 #align set.inj_on_preimage Set.inj_on_preimage
 
@@ -636,7 +636,7 @@ def SurjOn (f : α → β) (s : Set α) (t : Set β) : Prop :=
   t ⊆ f '' s
 #align set.surj_on Set.SurjOn
 
-theorem SurjOn.subset_range (h : SurjOn f s t) : t ⊆ Range f :=
+theorem SurjOn.subset_range (h : SurjOn f s t) : t ⊆ range f :=
   Subset.trans h <| image_subset_range f s
 #align set.surj_on.subset_range Set.SurjOn.subset_range
 
@@ -696,10 +696,10 @@ theorem SurjOn.comp (hg : SurjOn g t p) (hf : SurjOn f s t) : SurjOn (g ∘ f) s
   Subset.trans hg <| Subset.trans (image_subset g hf) <| image_comp g f s ▸ Subset.refl _
 #align set.surj_on.comp Set.SurjOn.comp
 
-theorem surjective_iff_surj_on_univ : Surjective f ↔ SurjOn f Univ Univ := by simp [surjective, surj_on, subset_def]
+theorem surjective_iff_surj_on_univ : Surjective f ↔ SurjOn f univ univ := by simp [surjective, surj_on, subset_def]
 #align set.surjective_iff_surj_on_univ Set.surjective_iff_surj_on_univ
 
-theorem surj_on_iff_surjective : SurjOn f s Univ ↔ Surjective (s.restrict f) :=
+theorem surj_on_iff_surjective : SurjOn f s univ ↔ Surjective (s.restrict f) :=
   ⟨fun H b =>
     let ⟨a, as, e⟩ := @H b trivial
     ⟨⟨a, as⟩, e⟩,
@@ -777,7 +777,7 @@ theorem BijOn.union (h₁ : BijOn f s₁ t₁) (h₂ : BijOn f s₂ t₂) (h : I
   ⟨h₁.MapsTo.union_union h₂.MapsTo, h, h₁.SurjOn.union_union h₂.SurjOn⟩
 #align set.bij_on.union Set.BijOn.union
 
-theorem BijOn.subset_range (h : BijOn f s t) : t ⊆ Range f :=
+theorem BijOn.subset_range (h : BijOn f s t) : t ⊆ range f :=
   h.SurjOn.subset_range
 #align set.bij_on.subset_range Set.BijOn.subset_range
 
@@ -807,7 +807,7 @@ theorem BijOn.bijective (h : BijOn f s t) : Bijective ((t.codRestrict (s.restric
     ⟨⟨x, hx⟩, Subtype.eq hxy⟩⟩
 #align set.bij_on.bijective Set.BijOn.bijective
 
-theorem bijective_iff_bij_on_univ : Bijective f ↔ BijOn f Univ Univ :=
+theorem bijective_iff_bij_on_univ : Bijective f ↔ BijOn f univ univ :=
   Iff.intro
     (fun h =>
       let ⟨inj, surj⟩ := h
@@ -1076,7 +1076,7 @@ theorem surj_on_iff_exists_bij_on_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' 
 #align set.surj_on_iff_exists_bij_on_subset Set.surj_on_iff_exists_bij_on_subset
 
 theorem preimage_inv_fun_of_mem [n : Nonempty α] {f : α → β} (hf : Injective f) {s : Set α}
-    (h : Classical.choice n ∈ s) : invFun f ⁻¹' s = f '' s ∪ Range fᶜ := by
+    (h : Classical.choice n ∈ s) : invFun f ⁻¹' s = f '' s ∪ range fᶜ := by
   ext x
   rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
   · simp [left_inverse_inv_fun hf _, hf.mem_set_image]
@@ -1132,7 +1132,7 @@ theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Set α))] : piecewi
 #align set.piecewise_empty Set.piecewise_empty
 
 @[simp]
-theorem piecewise_univ [∀ i : α, Decidable (i ∈ (Set.Univ : Set α))] : piecewise Set.Univ f g = f := by
+theorem piecewise_univ [∀ i : α, Decidable (i ∈ (Set.univ : Set α))] : piecewise Set.univ f g = f := by
   ext i
   simp [piecewise]
 #align set.piecewise_univ Set.piecewise_univ
@@ -1216,8 +1216,8 @@ theorem piecewise_compl [∀ i, Decidable (i ∈ sᶜ)] : sᶜ.piecewise f g = s
 #align set.piecewise_compl Set.piecewise_compl
 
 @[simp]
-theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j ∈ Range f)] (g₁ g₂ : α → β) :
-    (Range f).piecewise g₁ g₂ ∘ f = g₁ ∘ f :=
+theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j ∈ range f)] (g₁ g₂ : α → β) :
+    (range f).piecewise g₁ g₂ ∘ f = g₁ ∘ f :=
   eq_on.comp_eq <| piecewise_eq_on _ _ _
 #align set.piecewise_range_comp Set.piecewise_range_comp
 
@@ -1245,7 +1245,7 @@ theorem EqOn.piecewise_ite {f f' g : α → β} {t t'} (h : EqOn f g t) (h' : Eq
 #align set.eq_on.piecewise_ite Set.EqOn.piecewise_ite
 
 theorem piecewise_preimage (f g : α → β) (t) : s.piecewise f g ⁻¹' t = s.ite (f ⁻¹' t) (g ⁻¹' t) :=
-  ext fun x => by by_cases x ∈ s <;> simp [*, Set.Ite]
+  ext fun x => by by_cases x ∈ s <;> simp [*, Set.ite]
 #align set.piecewise_preimage Set.piecewise_preimage
 
 theorem apply_piecewise {δ' : α → Sort _} (h : ∀ i, δ i → δ' i) {x : α} :
@@ -1276,7 +1276,7 @@ theorem piecewise_same : s.piecewise f f = f := by
   by_cases hx:x ∈ s <;> simp [hx]
 #align set.piecewise_same Set.piecewise_same
 
-theorem range_piecewise (f g : α → β) : Range (s.piecewise f g) = f '' s ∪ g '' sᶜ := by
+theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪ g '' sᶜ := by
   ext y
   constructor
   · rintro ⟨x, rfl⟩
@@ -1295,15 +1295,15 @@ theorem injective_piecewise_iff {f g : α → β} :
   rw [piecewise_eq_of_mem s f g hx, piecewise_eq_of_not_mem s f g hy]
 #align set.injective_piecewise_iff Set.injective_piecewise_iff
 
-theorem piecewise_mem_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ Pi t t')
-    (hg : g ∈ Pi t t') : s.piecewise f g ∈ Pi t t' := by
+theorem piecewise_mem_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ pi t t')
+    (hg : g ∈ pi t t') : s.piecewise f g ∈ pi t t' := by
   intro i ht
   by_cases hs:i ∈ s <;> simp [hf i ht, hg i ht, hs]
 #align set.piecewise_mem_pi Set.piecewise_mem_pi
 
 @[simp]
 theorem pi_piecewise {ι : Type _} {α : ι → Type _} (s s' : Set ι) (t t' : ∀ i, Set (α i)) [∀ x, Decidable (x ∈ s')] :
-    Pi s (s'.piecewise t t') = Pi (s ∩ s') t ∩ Pi (s \ s') t' := by
+    pi s (s'.piecewise t t') = pi (s ∩ s') t ∩ pi (s \ s') t' := by
   ext x
   simp only [mem_pi, mem_inter_iff, ← forall_and]
   refine' forall_congr' fun i => _
@@ -1311,7 +1311,7 @@ theorem pi_piecewise {ι : Type _} {α : ι → Type _} (s s' : Set ι) (t t' : 
 #align set.pi_piecewise Set.pi_piecewise
 
 theorem univ_pi_piecewise {ι : Type _} {α : ι → Type _} (s : Set ι) (t : ∀ i, Set (α i)) [∀ x, Decidable (x ∈ s)] :
-    Pi Univ (s.piecewise t fun _ => Univ) = Pi s t := by simp
+    pi univ (s.piecewise t fun _ => univ) = pi s t := by simp
 #align set.univ_pi_piecewise Set.univ_pi_piecewise
 
 end Set
@@ -1356,10 +1356,10 @@ open Set
 variable {fa : α → α} {fb : β → β} {f : α → β} {g : β → γ} {s t : Set α}
 
 theorem Injective.comp_inj_on (hg : Injective g) (hf : s.InjOn f) : s.InjOn (g ∘ f) :=
-  (hg.InjOn Univ).comp hf (maps_to_univ _ _)
+  (hg.InjOn univ).comp hf (maps_to_univ _ _)
 #align function.injective.comp_inj_on Function.Injective.comp_inj_on
 
-theorem Surjective.surj_on (hf : Surjective f) (s : Set β) : SurjOn f Univ s :=
+theorem Surjective.surj_on (hf : Surjective f) (s : Set β) : SurjOn f univ s :=
   (surjective_iff_surj_on_univ.1 hf).mono (Subset.refl _) (subset_univ _)
 #align function.surjective.surj_on Function.Surjective.surj_on
 
@@ -1369,7 +1369,7 @@ theorem LeftInverse.left_inv_on {g : β → α} (h : LeftInverse f g) (s : Set �
 theorem RightInverse.right_inv_on {g : β → α} (h : RightInverse f g) (s : Set α) : RightInvOn f g s := fun x hx => h x
 #align function.right_inverse.right_inv_on Function.RightInverse.right_inv_on
 
-theorem LeftInverse.right_inv_on_range {g : β → α} (h : LeftInverse f g) : RightInvOn f g (Range g) :=
+theorem LeftInverse.right_inv_on_range {g : β → α} (h : LeftInverse f g) : RightInvOn f g (range g) :=
   forall_range_iff.2 fun i => congr_arg g (h i)
 #align function.left_inverse.right_inv_on_range Function.LeftInverse.right_inv_on_range
 
@@ -1379,7 +1379,7 @@ theorem maps_to_image (h : Semiconj f fa fb) (ha : MapsTo fa s t) : MapsTo fb (f
   hy ▸ ⟨fa x, ha hx, h x⟩
 #align function.semiconj.maps_to_image Function.Semiconj.maps_to_image
 
-theorem maps_to_range (h : Semiconj f fa fb) : MapsTo fb (Range f) (Range f) := fun y ⟨x, hy⟩ => hy ▸ ⟨fa x, h x⟩
+theorem maps_to_range (h : Semiconj f fa fb) : MapsTo fb (range f) (range f) := fun y ⟨x, hy⟩ => hy ▸ ⟨fa x, h x⟩
 #align function.semiconj.maps_to_range Function.Semiconj.maps_to_range
 
 theorem surj_on_image (h : Semiconj f fa fb) (ha : SurjOn fa s t) : SurjOn fb (f '' s) (f '' t) := by
@@ -1389,7 +1389,7 @@ theorem surj_on_image (h : Semiconj f fa fb) (ha : SurjOn fa s t) : SurjOn fb (f
   exact mem_image_of_mem _ (mem_image_of_mem _ hxs)
 #align function.semiconj.surj_on_image Function.Semiconj.surj_on_image
 
-theorem surj_on_range (h : Semiconj f fa fb) (ha : Surjective fa) : SurjOn fb (Range f) (Range f) := by
+theorem surj_on_range (h : Semiconj f fa fb) (ha : Surjective fa) : SurjOn fb (range f) (range f) := by
   rw [← image_univ]
   exact h.surj_on_image (ha.surj_on univ)
 #align function.semiconj.surj_on_range Function.Semiconj.surj_on_range
@@ -1400,7 +1400,7 @@ theorem inj_on_image (h : Semiconj f fa fb) (ha : InjOn fa s) (hf : InjOn f (fa 
   exact congr_arg f (ha hx hy <| hf (mem_image_of_mem fa hx) (mem_image_of_mem fa hy) H)
 #align function.semiconj.inj_on_image Function.Semiconj.inj_on_image
 
-theorem inj_on_range (h : Semiconj f fa fb) (ha : Injective fa) (hf : InjOn f (Range fa)) : InjOn fb (Range f) := by
+theorem inj_on_range (h : Semiconj f fa fb) (ha : Injective fa) (hf : InjOn f (range fa)) : InjOn fb (range f) := by
   rw [← image_univ] at *
   exact h.inj_on_image (ha.inj_on univ) hf
 #align function.semiconj.inj_on_range Function.Semiconj.inj_on_range
@@ -1409,7 +1409,7 @@ theorem bij_on_image (h : Semiconj f fa fb) (ha : BijOn fa s t) (hf : InjOn f t)
   ⟨h.maps_to_image ha.MapsTo, h.inj_on_image ha.InjOn (ha.image_eq.symm ▸ hf), h.surj_on_image ha.SurjOn⟩
 #align function.semiconj.bij_on_image Function.Semiconj.bij_on_image
 
-theorem bij_on_range (h : Semiconj f fa fb) (ha : Bijective fa) (hf : Injective f) : BijOn fb (Range f) (Range f) := by
+theorem bij_on_range (h : Semiconj f fa fb) (ha : Bijective fa) (hf : Injective f) : BijOn fb (range f) (range f) := by
   rw [← image_univ]
   exact h.bij_on_image (bijective_iff_bij_on_univ.1 ha) (hf.inj_on univ)
 #align function.semiconj.bij_on_range Function.Semiconj.bij_on_range
@@ -1429,13 +1429,13 @@ theorem inj_on_preimage (h : Semiconj f fa fb) {s : Set β} (hb : InjOn fb s) (h
 end Semiconj
 
 theorem update_comp_eq_of_not_mem_range' {α β : Sort _} {γ : β → Sort _} [DecidableEq β] (g : ∀ b, γ b) {f : α → β}
-    {i : β} (a : γ i) (h : i ∉ Set.Range f) : (fun j => (Function.update g i a) (f j)) = fun j => g (f j) :=
+    {i : β} (a : γ i) (h : i ∉ Set.range f) : (fun j => (Function.update g i a) (f j)) = fun j => g (f j) :=
   (update_comp_eq_of_forall_ne' _ _) fun x hx => h ⟨x, hx⟩
 #align function.update_comp_eq_of_not_mem_range' Function.update_comp_eq_of_not_mem_range'
 
 /-- Non-dependent version of `function.update_comp_eq_of_not_mem_range'` -/
 theorem update_comp_eq_of_not_mem_range {α β γ : Sort _} [DecidableEq β] (g : β → γ) {f : α → β} {i : β} (a : γ)
-    (h : i ∉ Set.Range f) : Function.update g i a ∘ f = g ∘ f :=
+    (h : i ∉ Set.range f) : Function.update g i a ∘ f = g ∘ f :=
   update_comp_eq_of_not_mem_range' g a h
 #align function.update_comp_eq_of_not_mem_range Function.update_comp_eq_of_not_mem_range
 

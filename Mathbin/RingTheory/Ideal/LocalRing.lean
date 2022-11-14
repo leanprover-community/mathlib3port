@@ -50,7 +50,7 @@ theorem ofIsUnitOrIsUnitOfIsUnitAdd [Nontrivial R] (h : ∀ a b : R, IsUnit (a +
 #align local_ring.of_is_unit_or_is_unit_of_is_unit_add LocalRing.ofIsUnitOrIsUnitOfIsUnitAdd
 
 /-- A semiring is local if it is nontrivial and the set of nonunits is closed under the addition. -/
-theorem ofNonunitsAdd [Nontrivial R] (h : ∀ a b : R, a ∈ Nonunits R → b ∈ Nonunits R → a + b ∈ Nonunits R) :
+theorem ofNonunitsAdd [Nontrivial R] (h : ∀ a b : R, a ∈ nonunits R → b ∈ nonunits R → a + b ∈ nonunits R) :
     LocalRing R :=
   ⟨fun a b hab => or_iff_not_and_not.2 fun H => h a b H.1 H.2 <| hab.symm ▸ is_unit_one⟩
 #align local_ring.of_nonunits_add LocalRing.ofNonunitsAdd
@@ -91,7 +91,7 @@ theorem is_unit_or_is_unit_of_is_unit_add {a b : R} (h : IsUnit (a + b)) : IsUni
   apply Or.imp _ _ (is_unit_or_is_unit_of_add_one hu) <;> exact is_unit_of_mul_is_unit_right
 #align local_ring.is_unit_or_is_unit_of_is_unit_add LocalRing.is_unit_or_is_unit_of_is_unit_add
 
-theorem nonunits_add {a b : R} (ha : a ∈ Nonunits R) (hb : b ∈ Nonunits R) : a + b ∈ Nonunits R := fun H =>
+theorem nonunits_add {a b : R} (ha : a ∈ nonunits R) (hb : b ∈ nonunits R) : a + b ∈ nonunits R := fun H =>
   not_or_of_not ha hb (is_unit_or_is_unit_of_is_unit_add H)
 #align local_ring.nonunits_add LocalRing.nonunits_add
 
@@ -99,7 +99,7 @@ variable (R)
 
 /-- The ideal of elements that are not units. -/
 def maximalIdeal : Ideal R where
-  Carrier := Nonunits R
+  carrier := nonunits R
   zero_mem' := zero_mem_nonunits.2 <| zero_ne_one
   add_mem' x y hx hy := nonunits_add hx hy
   smul_mem' a x := mul_mem_nonunits_right
@@ -136,7 +136,7 @@ theorem le_maximal_ideal {J : Ideal R} (hJ : J ≠ ⊤) : J ≤ maximalIdeal R :
 #align local_ring.le_maximal_ideal LocalRing.le_maximal_ideal
 
 @[simp]
-theorem mem_maximal_ideal (x) : x ∈ maximalIdeal R ↔ x ∈ Nonunits R :=
+theorem mem_maximal_ideal (x) : x ∈ maximalIdeal R ↔ x ∈ nonunits R :=
   Iff.rfl
 #align local_ring.mem_maximal_ideal LocalRing.mem_maximal_ideal
 
@@ -160,11 +160,11 @@ theorem is_unit_or_is_unit_one_sub_self (a : R) : IsUnit a ∨ IsUnit (1 - a) :=
   is_unit_or_is_unit_of_is_unit_add <| (add_sub_cancel'_right a 1).symm ▸ is_unit_one
 #align local_ring.is_unit_or_is_unit_one_sub_self LocalRing.is_unit_or_is_unit_one_sub_self
 
-theorem is_unit_of_mem_nonunits_one_sub_self (a : R) (h : 1 - a ∈ Nonunits R) : IsUnit a :=
+theorem is_unit_of_mem_nonunits_one_sub_self (a : R) (h : 1 - a ∈ nonunits R) : IsUnit a :=
   or_iff_not_imp_right.1 (is_unit_or_is_unit_one_sub_self a) h
 #align local_ring.is_unit_of_mem_nonunits_one_sub_self LocalRing.is_unit_of_mem_nonunits_one_sub_self
 
-theorem is_unit_one_sub_self_of_mem_nonunits (a : R) (h : a ∈ Nonunits R) : IsUnit (1 - a) :=
+theorem is_unit_one_sub_self_of_mem_nonunits (a : R) (h : a ∈ nonunits R) : IsUnit (1 - a) :=
   or_iff_not_imp_left.1 (is_unit_or_is_unit_one_sub_self a) h
 #align local_ring.is_unit_one_sub_self_of_mem_nonunits LocalRing.is_unit_one_sub_self_of_mem_nonunits
 
@@ -210,7 +210,7 @@ theorem is_unit_map_iff (f : R →+* S) [IsLocalRingHom f] (a) : IsUnit (f a) �
 #align is_unit_map_iff is_unit_map_iff
 
 @[simp]
-theorem map_mem_nonunits_iff (f : R →+* S) [IsLocalRingHom f] (a) : f a ∈ Nonunits S ↔ a ∈ Nonunits R :=
+theorem map_mem_nonunits_iff (f : R →+* S) [IsLocalRingHom f] (a) : f a ∈ nonunits S ↔ a ∈ nonunits R :=
   ⟨fun h ha => h <| (is_unit_map_iff f a).mpr ha, fun h ha => h <| (is_unit_map_iff f a).mp ha⟩
 #align map_mem_nonunits_iff map_mem_nonunits_iff
 

@@ -131,14 +131,14 @@ open Classical
   over the powerset of `s` of the product of `f` over a subset `t` times
   the product of `g` over the complement of `t`  -/
 theorem prod_add (f g : α → β) (s : Finset α) :
-    (∏ a in s, f a + g a) = ∑ t in s.Powerset, (∏ a in t, f a) * ∏ a in s \ t, g a :=
+    (∏ a in s, f a + g a) = ∑ t in s.powerset, (∏ a in t, f a) * ∏ a in s \ t, g a :=
   calc
     (∏ a in s, f a + g a) = ∏ a in s, ∑ p in ({True, False} : Finset Prop), if p then f a else g a := by simp
     _ =
         ∑ p in (s.pi fun _ => {True, False} : Finset (∀ a ∈ s, Prop)),
           ∏ a in s.attach, if p a.1 a.2 then f a.1 else g a.1 :=
       prod_sum
-    _ = ∑ t in s.Powerset, (∏ a in t, f a) * ∏ a in s \ t, g a := by
+    _ = ∑ t in s.powerset, (∏ a in t, f a) * ∏ a in s \ t, g a := by
       refine' Eq.symm (sum_bij (fun t _ a _ => a ∈ t) _ _ _ _)
       · simp [subset_iff] <;> tauto
         
@@ -216,7 +216,7 @@ theorem prod_one_sub_ordered {ι R : Type _} [CommRing R] [LinearOrder ι] (s : 
 /-- Summing `a^s.card * b^(n-s.card)` over all finite subsets `s` of a `finset`
 gives `(a + b)^s.card`.-/
 theorem sum_pow_mul_eq_add_pow {α R : Type _} [CommSemiring R] (a b : R) (s : Finset α) :
-    (∑ t in s.Powerset, a ^ t.card * b ^ (s.card - t.card)) = (a + b) ^ s.card := by
+    (∑ t in s.powerset, a ^ t.card * b ^ (s.card - t.card)) = (a + b) ^ s.card := by
   rw [← prod_const, prod_add]
   refine' Finset.sum_congr rfl fun t ht => _
   rw [prod_const, prod_const, ← card_sdiff (mem_powerset.1 ht)]
@@ -254,7 +254,7 @@ of `s`, and over all subsets of `s` to which one adds `x`. -/
 @[to_additive
       "A sum over all subsets of `s ∪ {x}` is obtained by summing the sum over all subsets\nof `s`, and over all subsets of `s` to which one adds `x`."]
 theorem prod_powerset_insert [DecidableEq α] [CommMonoid β] {s : Finset α} {x : α} (h : x ∉ s) (f : Finset α → β) :
-    (∏ a in (insert x s).Powerset, f a) = (∏ a in s.Powerset, f a) * ∏ t in s.Powerset, f (insert x t) := by
+    (∏ a in (insert x s).powerset, f a) = (∏ a in s.powerset, f a) * ∏ t in s.powerset, f (insert x t) := by
   rw [powerset_insert, Finset.prod_union, Finset.prod_image]
   · intro t₁ h₁ t₂ h₂ heq
     rw [← Finset.erase_insert (not_mem_of_mem_powerset_of_not_mem h₁ h), ←

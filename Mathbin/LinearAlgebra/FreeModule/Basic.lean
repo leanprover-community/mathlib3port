@@ -47,19 +47,19 @@ Note that if `M` does not fit in `w`, the reverse direction of this implication 
 `module.free.of_basis`. -/
 theorem Module.free_def [Small.{w} M] : Module.Free R M ↔ ∃ I : Type w, Nonempty (Basis I R M) :=
   ⟨fun h =>
-    ⟨Shrink (Set.Range h.exists_basis.some.2), ⟨(Basis.reindexRange h.exists_basis.some.2).reindex (equivShrink _)⟩⟩,
-    fun h => ⟨(nonempty_sigma.2 h).map fun ⟨i, b⟩ => ⟨Set.Range b, b.reindexRange⟩⟩⟩
+    ⟨Shrink (Set.range h.exists_basis.some.2), ⟨(Basis.reindexRange h.exists_basis.some.2).reindex (equivShrink _)⟩⟩,
+    fun h => ⟨(nonempty_sigma.2 h).map fun ⟨i, b⟩ => ⟨Set.range b, b.reindexRange⟩⟩⟩
 #align module.free_def Module.free_def
 
 theorem Module.free_iff_set : Module.Free R M ↔ ∃ S : Set M, Nonempty (Basis S R M) :=
-  ⟨fun h => ⟨Set.Range h.exists_basis.some.2, ⟨Basis.reindexRange h.exists_basis.some.2⟩⟩, fun ⟨S, hS⟩ =>
+  ⟨fun h => ⟨Set.range h.exists_basis.some.2, ⟨Basis.reindexRange h.exists_basis.some.2⟩⟩, fun ⟨S, hS⟩ =>
     ⟨nonempty_sigma.2 ⟨S, hS⟩⟩⟩
 #align module.free_iff_set Module.free_iff_set
 
 variable {R M}
 
 theorem Module.Free.ofBasis {ι : Type w} (b : Basis ι R M) : Module.Free R M :=
-  (Module.free_def R M).2 ⟨Set.Range b, ⟨b.reindexRange⟩⟩
+  (Module.free_def R M).2 ⟨Set.range b, ⟨b.reindexRange⟩⟩
 #align module.free.of_basis Module.Free.ofBasis
 
 end Basic

@@ -36,11 +36,11 @@ def toIcoDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
 #align to_Ico_div toIcoDiv
 
 theorem add_to_Ico_div_zsmul_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) :
-    x + toIcoDiv a hb x • b ∈ Set.IcoCat a (a + b) :=
+    x + toIcoDiv a hb x • b ∈ Set.ico a (a + b) :=
   (exists_unique_add_zsmul_mem_Ico hb x a).some_spec.1
 #align add_to_Ico_div_zsmul_mem_Ico add_to_Ico_div_zsmul_mem_Ico
 
-theorem eq_to_Ico_div_of_add_zsmul_mem_Ico {a b x : α} (hb : 0 < b) {y : ℤ} (hy : x + y • b ∈ Set.IcoCat a (a + b)) :
+theorem eq_to_Ico_div_of_add_zsmul_mem_Ico {a b x : α} (hb : 0 < b) {y : ℤ} (hy : x + y • b ∈ Set.ico a (a + b)) :
     y = toIcoDiv a hb x :=
   (exists_unique_add_zsmul_mem_Ico hb x a).some_spec.2 y hy
 #align eq_to_Ico_div_of_add_zsmul_mem_Ico eq_to_Ico_div_of_add_zsmul_mem_Ico
@@ -51,11 +51,11 @@ def toIocDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
 #align to_Ioc_div toIocDiv
 
 theorem add_to_Ioc_div_zsmul_mem_Ioc (a : α) {b : α} (hb : 0 < b) (x : α) :
-    x + toIocDiv a hb x • b ∈ Set.IocCat a (a + b) :=
+    x + toIocDiv a hb x • b ∈ Set.ioc a (a + b) :=
   (exists_unique_add_zsmul_mem_Ioc hb x a).some_spec.1
 #align add_to_Ioc_div_zsmul_mem_Ioc add_to_Ioc_div_zsmul_mem_Ioc
 
-theorem eq_to_Ioc_div_of_add_zsmul_mem_Ioc {a b x : α} (hb : 0 < b) {y : ℤ} (hy : x + y • b ∈ Set.IocCat a (a + b)) :
+theorem eq_to_Ioc_div_of_add_zsmul_mem_Ioc {a b x : α} (hb : 0 < b) {y : ℤ} (hy : x + y • b ∈ Set.ioc a (a + b)) :
     y = toIocDiv a hb x :=
   (exists_unique_add_zsmul_mem_Ioc hb x a).some_spec.2 y hy
 #align eq_to_Ioc_div_of_add_zsmul_mem_Ioc eq_to_Ioc_div_of_add_zsmul_mem_Ioc
@@ -70,16 +70,16 @@ def toIocMod (a : α) {b : α} (hb : 0 < b) (x : α) : α :=
   x + toIocDiv a hb x • b
 #align to_Ioc_mod toIocMod
 
-theorem to_Ico_mod_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) : toIcoMod a hb x ∈ Set.IcoCat a (a + b) :=
+theorem to_Ico_mod_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) : toIcoMod a hb x ∈ Set.ico a (a + b) :=
   add_to_Ico_div_zsmul_mem_Ico a hb x
 #align to_Ico_mod_mem_Ico to_Ico_mod_mem_Ico
 
-theorem to_Ico_mod_mem_Ico' {b : α} (hb : 0 < b) (x : α) : toIcoMod 0 hb x ∈ Set.IcoCat 0 b := by
+theorem to_Ico_mod_mem_Ico' {b : α} (hb : 0 < b) (x : α) : toIcoMod 0 hb x ∈ Set.ico 0 b := by
   convert to_Ico_mod_mem_Ico 0 hb x
   exact (zero_add b).symm
 #align to_Ico_mod_mem_Ico' to_Ico_mod_mem_Ico'
 
-theorem to_Ioc_mod_mem_Ioc (a : α) {b : α} (hb : 0 < b) (x : α) : toIocMod a hb x ∈ Set.IocCat a (a + b) :=
+theorem to_Ioc_mod_mem_Ioc (a : α) {b : α} (hb : 0 < b) (x : α) : toIocMod a hb x ∈ Set.ioc a (a + b) :=
   add_to_Ioc_div_zsmul_mem_Ioc a hb x
 #align to_Ioc_mod_mem_Ioc to_Ioc_mod_mem_Ioc
 

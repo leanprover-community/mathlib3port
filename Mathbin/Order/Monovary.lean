@@ -67,12 +67,12 @@ theorem AntivaryOn.empty : AntivaryOn f g ∅ := fun i => False.elim
 #align antivary_on.empty AntivaryOn.empty
 
 @[simp]
-theorem monovary_on_univ : MonovaryOn f g Univ ↔ Monovary f g :=
+theorem monovary_on_univ : MonovaryOn f g univ ↔ Monovary f g :=
   ⟨fun h i j => h trivial trivial, fun h i _ j _ hij => h hij⟩
 #align monovary_on_univ monovary_on_univ
 
 @[simp]
-theorem antivary_on_univ : AntivaryOn f g Univ ↔ Antivary f g :=
+theorem antivary_on_univ : AntivaryOn f g univ ↔ Antivary f g :=
   ⟨fun h i j => h trivial trivial, fun h i _ j _ hij => h hij⟩
 #align antivary_on_univ antivary_on_univ
 

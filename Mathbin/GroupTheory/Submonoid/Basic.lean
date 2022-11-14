@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzzard,
 Amelia Livingston, Yury Kudryashov
 -/
+import Mathbin.Algebra.Group.Units
 import Mathbin.GroupTheory.Subsemigroup.Basic
 
 /-!
@@ -140,7 +141,7 @@ namespace Submonoid
 
 @[to_additive]
 instance : SetLike (Submonoid M) M where
-  coe := Submonoid.Carrier
+  coe := Submonoid.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
 @[to_additive]
@@ -150,16 +151,16 @@ instance : SubmonoidClass (Submonoid M) M where
 
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection]"]
-def Simps.Coe (S : Submonoid M) : Set M :=
+def Simps.coe (S : Submonoid M) : Set M :=
   S
-#align submonoid.simps.coe Submonoid.Simps.Coe
+#align submonoid.simps.coe Submonoid.Simps.coe
 
-initialize_simps_projections Submonoid (Carrier → coe)
+initialize_simps_projections Submonoid (carrier → coe)
 
-initialize_simps_projections AddSubmonoid (Carrier → coe)
+initialize_simps_projections AddSubmonoid (carrier → coe)
 
 @[simp, to_additive]
-theorem mem_carrier {s : Submonoid M} {x : M} : x ∈ s.Carrier ↔ x ∈ s :=
+theorem mem_carrier {s : Submonoid M} {x : M} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align submonoid.mem_carrier Submonoid.mem_carrier
 
@@ -187,7 +188,7 @@ theorem ext {S T : Submonoid M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 /-- Copy a submonoid replacing `carrier` with a set that is equal to it. -/
 @[to_additive "Copy an additive submonoid replacing `carrier` with a set that is equal to it."]
 protected def copy (S : Submonoid M) (s : Set M) (hs : s = S) : Submonoid M where
-  Carrier := s
+  carrier := s
   one_mem' := hs.symm ▸ S.one_mem'
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
 #align submonoid.copy Submonoid.copy
@@ -221,12 +222,12 @@ protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
 /-- The submonoid `M` of the monoid `M`. -/
 @[to_additive "The additive submonoid `M` of the `add_monoid M`."]
 instance : HasTop (Submonoid M) :=
-  ⟨{ Carrier := Set.Univ, one_mem' := Set.mem_univ 1, mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
+  ⟨{ carrier := Set.univ, one_mem' := Set.mem_univ 1, mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
 
 /-- The trivial submonoid `{1}` of an monoid `M`. -/
 @[to_additive "The trivial `add_submonoid` `{0}` of an `add_monoid` `M`."]
 instance : HasBot (Submonoid M) :=
-  ⟨{ Carrier := {1}, one_mem' := Set.mem_singleton 1,
+  ⟨{ carrier := {1}, one_mem' := Set.mem_singleton 1,
       mul_mem' := fun a b ha hb => by
         simp only [Set.mem_singleton_iff] at *
         rw [ha, hb, mul_one] }⟩
@@ -246,7 +247,7 @@ theorem mem_top (x : M) : x ∈ (⊤ : Submonoid M) :=
 #align submonoid.mem_top Submonoid.mem_top
 
 @[simp, to_additive]
-theorem coe_top : ((⊤ : Submonoid M) : Set M) = Set.Univ :=
+theorem coe_top : ((⊤ : Submonoid M) : Set M) = Set.univ :=
   rfl
 #align submonoid.coe_top Submonoid.coe_top
 
@@ -259,7 +260,7 @@ theorem coe_bot : ((⊥ : Submonoid M) : Set M) = {1} :=
 @[to_additive "The inf of two `add_submonoid`s is their intersection."]
 instance : HasInf (Submonoid M) :=
   ⟨fun S₁ S₂ =>
-    { Carrier := S₁ ∩ S₂, one_mem' := ⟨S₁.one_mem, S₂.one_mem⟩,
+    { carrier := S₁ ∩ S₂, one_mem' := ⟨S₁.one_mem, S₂.one_mem⟩,
       mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
 
 @[simp, to_additive]
@@ -275,7 +276,7 @@ theorem mem_inf {p p' : Submonoid M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x 
 @[to_additive]
 instance : HasInf (Submonoid M) :=
   ⟨fun s =>
-    { Carrier := ⋂ t ∈ s, ↑t, one_mem' := Set.mem_bInter fun i h => i.one_mem,
+    { carrier := ⋂ t ∈ s, ↑t, one_mem' := Set.mem_bInter fun i h => i.one_mem,
       mul_mem' := fun x y hx hy =>
         Set.mem_bInter fun i h => i.mul_mem (by apply Set.mem_Inter₂.1 hx i h) (by apply Set.mem_Inter₂.1 hy i h) }⟩
 
@@ -442,7 +443,7 @@ theorem closure_empty : closure (∅ : Set M) = ⊥ :=
 #align submonoid.closure_empty Submonoid.closure_empty
 
 @[simp, to_additive]
-theorem closure_univ : closure (Univ : Set M) = ⊤ :=
+theorem closure_univ : closure (univ : Set M) = ⊤ :=
   @coe_top M _ ▸ closure_eq ⊤
 #align submonoid.closure_univ Submonoid.closure_univ
 
@@ -493,7 +494,7 @@ open Submonoid
 /-- The submonoid of elements `x : M` such that `f x = g x` -/
 @[to_additive "The additive submonoid of elements `x : M` such that `f x = g x`"]
 def eqMlocus (f g : M →* N) : Submonoid M where
-  Carrier := { x | f x = g x }
+  carrier := { x | f x = g x }
   one_mem' := by rw [Set.mem_set_of_eq, f.map_one, g.map_one]
   mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 #align monoid_hom.eq_mlocus MonoidHom.eqMlocus
@@ -527,7 +528,7 @@ section IsUnit
 /-- The submonoid consisting of the units of a monoid -/
 @[to_additive "The additive submonoid consisting of the additive units of an additive monoid"]
 def IsUnit.submonoid (M : Type _) [Monoid M] : Submonoid M where
-  Carrier := SetOf IsUnit
+  carrier := setOf IsUnit
   one_mem' := by simp only [is_unit_one, Set.mem_set_of_eq]
   mul_mem' := by
     intro a b ha hb
@@ -537,7 +538,7 @@ def IsUnit.submonoid (M : Type _) [Monoid M] : Submonoid M where
 
 @[to_additive]
 theorem IsUnit.mem_submonoid_iff {M : Type _} [Monoid M] (a : M) : a ∈ IsUnit.submonoid M ↔ IsUnit a := by
-  change a ∈ SetOf IsUnit ↔ IsUnit a
+  change a ∈ setOf IsUnit ↔ IsUnit a
   rw [Set.mem_set_of_eq]
 #align is_unit.mem_submonoid_iff IsUnit.mem_submonoid_iff
 

@@ -126,18 +126,16 @@ theorem Continuous.locallyIntegrable (hf : Continuous f) : LocallyIntegrable f �
   hf.ContinuousOn.integrableOnCompact hs
 #align continuous.locally_integrable Continuous.locallyIntegrable
 
-theorem ContinuousOn.integrableOnIcc [Preorder X] [CompactIccSpace X] (hf : ContinuousOn f (IccCat a b)) :
-    IntegrableOn f (IccCat a b) μ :=
+theorem ContinuousOn.integrableOnIcc [Preorder X] [CompactIccSpace X] (hf : ContinuousOn f (icc a b)) :
+    IntegrableOn f (icc a b) μ :=
   hf.integrableOnCompact is_compact_Icc
 #align continuous_on.integrable_on_Icc ContinuousOn.integrableOnIcc
 
-theorem Continuous.integrableOnIcc [Preorder X] [CompactIccSpace X] (hf : Continuous f) :
-    IntegrableOn f (IccCat a b) μ :=
+theorem Continuous.integrableOnIcc [Preorder X] [CompactIccSpace X] (hf : Continuous f) : IntegrableOn f (icc a b) μ :=
   hf.LocallyIntegrable is_compact_Icc
 #align continuous.integrable_on_Icc Continuous.integrableOnIcc
 
-theorem Continuous.integrableOnIoc [Preorder X] [CompactIccSpace X] (hf : Continuous f) :
-    IntegrableOn f (IocCat a b) μ :=
+theorem Continuous.integrableOnIoc [Preorder X] [CompactIccSpace X] (hf : Continuous f) : IntegrableOn f (ioc a b) μ :=
   hf.integrableOnIcc.monoSet Ioc_subset_Icc_self
 #align continuous.integrable_on_Ioc Continuous.integrableOnIoc
 

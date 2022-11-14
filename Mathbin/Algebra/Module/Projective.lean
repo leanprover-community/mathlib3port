@@ -119,8 +119,7 @@ instance [hP : Projective R P] [hQ : Projective R Q] : Projective R (P × Q) := 
   use coprod (lmap_domain R R (inl R P Q)) (lmap_domain R R (inr R P Q)) ∘ₗ sP.prod_map sQ
   ext <;>
     simp only [coe_inl, coe_inr, coe_comp, Function.comp_apply, prod_map_apply, map_zero, coprod_apply,
-      lmap_domain_apply, map_domain_zero, add_zero, zero_add, id_comp, total_map_domain R _ (Prod.mk.inj_right (0 : Q)),
-      total_map_domain R _ (Prod.mk.inj_left (0 : P))]
+      lmap_domain_apply, map_domain_zero, add_zero, zero_add, id_comp, total_map_domain]
   · rw [← fst_apply _, apply_total R]
     exact hsP x
     
@@ -142,10 +141,10 @@ instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := b
     letI : ∀ i : ι, Module R (A i →₀ R) := fun i => by infer_instance
     letI : Module R (Π₀ i : ι, A i →₀ R) := @Dfinsupp.module ι R (fun i => A i →₀ R) _ _ _
     use Dfinsupp.coprodMap f ∘ₗ Dfinsupp.mapRange.linearMap s
-    simp only [Dfinsupp.coprodMap, DirectSum.lof, total_map_domain R _ Dfinsupp.single_injective, coe_comp, coe_lsum,
-      id_coe, LinearEquiv.coe_to_linear_map, finsupp_lequiv_dfinsupp_symm_apply, Function.comp_apply,
-      Dfinsupp.lsingle_apply, Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_single, lmap_domain_apply,
-      Dfinsupp.to_finsupp_single, Finsupp.sum_single_index, id.def, Function.comp.left_id, Dfinsupp.single_apply]
+    simp only [Dfinsupp.coprodMap, DirectSum.lof, total_map_domain, coe_comp, coe_lsum, id_coe,
+      LinearEquiv.coe_to_linear_map, finsupp_lequiv_dfinsupp_symm_apply, Function.comp_apply, Dfinsupp.lsingle_apply,
+      Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_single, lmap_domain_apply, Dfinsupp.to_finsupp_single,
+      Finsupp.sum_single_index, id.def, Function.comp.left_id, Dfinsupp.single_apply]
     obtain rfl | hij := eq_or_ne i j
     · convert Finsupp.total_zero_apply _ ((s i) x)
       · ext

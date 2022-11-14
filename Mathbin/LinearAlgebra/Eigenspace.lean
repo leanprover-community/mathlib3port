@@ -102,7 +102,7 @@ theorem HasEigenvalue.exists_has_eigenvector {f : EndCat R M} {μ : R} (hμ : f.
   Submodule.exists_mem_ne_zero_of_ne_bot hμ
 #align module.End.has_eigenvalue.exists_has_eigenvector Module.EndCat.HasEigenvalue.exists_has_eigenvector
 
-theorem mem_spectrum_of_has_eigenvalue {f : EndCat R M} {μ : R} (hμ : HasEigenvalue f μ) : μ ∈ Spectrum R f := by
+theorem mem_spectrum_of_has_eigenvalue {f : EndCat R M} {μ : R} (hμ : HasEigenvalue f μ) : μ ∈ spectrum R f := by
   refine' spectrum.mem_iff.mpr fun h_unit => _
   set f' := LinearMap.GeneralLinearGroup.toLinearEquiv h_unit.unit
   rcases hμ.exists_has_eigenvector with ⟨v, hv⟩
@@ -111,9 +111,9 @@ theorem mem_spectrum_of_has_eigenvalue {f : EndCat R M} {μ : R} (hμ : HasEigen
 #align module.End.mem_spectrum_of_has_eigenvalue Module.EndCat.mem_spectrum_of_has_eigenvalue
 
 theorem has_eigenvalue_iff_mem_spectrum [FiniteDimensional K V] {f : EndCat K V} {μ : K} :
-    f.HasEigenvalue μ ↔ μ ∈ Spectrum K f :=
+    f.HasEigenvalue μ ↔ μ ∈ spectrum K f :=
   Iff.intro mem_spectrum_of_has_eigenvalue fun h => by
-    rwa [Spectrum.mem_iff, IsUnit.sub_iff, LinearMap.is_unit_iff_ker_eq_bot] at h
+    rwa [spectrum.mem_iff, IsUnit.sub_iff, LinearMap.is_unit_iff_ker_eq_bot] at h
 #align module.End.has_eigenvalue_iff_mem_spectrum Module.EndCat.has_eigenvalue_iff_mem_spectrum
 
 theorem eigenspace_div (f : EndCat K V) (a b : K) (hb : b ≠ 0) :
@@ -221,7 +221,7 @@ end minpoly
 theorem exists_eigenvalue [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : EndCat K V) :
     ∃ c : K, f.HasEigenvalue c := by
   simp_rw [has_eigenvalue_iff_mem_spectrum]
-  exact Spectrum.nonempty_of_is_alg_closed_of_finite_dimensional K f
+  exact spectrum.nonempty_of_is_alg_closed_of_finite_dimensional K f
 #align module.End.exists_eigenvalue Module.EndCat.exists_eigenvalue
 
 noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : EndCat K V) :

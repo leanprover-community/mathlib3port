@@ -50,11 +50,11 @@ theorem map_apply : (map f p) b = ∑' a, if b = f a then p a else 0 := by simp 
 #align pmf.map_apply Pmf.map_apply
 
 @[simp]
-theorem support_map : (map f p).Support = f '' p.Support :=
+theorem support_map : (map f p).support = f '' p.support :=
   Set.ext fun b => by simp [map, @eq_comm β b]
 #align pmf.support_map Pmf.support_map
 
-theorem mem_support_map_iff : b ∈ (map f p).Support ↔ ∃ a ∈ p.Support, f a = b := by simp
+theorem mem_support_map_iff : b ∈ (map f p).support ↔ ∃ a ∈ p.support, f a = b := by simp
 #align pmf.mem_support_map_iff Pmf.mem_support_map_iff
 
 theorem bind_pure_comp : bind p (pure ∘ f) = map f p :=
@@ -112,11 +112,11 @@ theorem seq_apply : (seq q p) b = ∑' (f : α → β) (a : α), if b = f a then
 #align pmf.seq_apply Pmf.seq_apply
 
 @[simp]
-theorem support_seq : (seq q p).Support = ⋃ f ∈ q.Support, f '' p.Support :=
+theorem support_seq : (seq q p).support = ⋃ f ∈ q.support, f '' p.support :=
   Set.ext fun b => by simp [-mem_support_iff, seq, @eq_comm β b]
 #align pmf.support_seq Pmf.support_seq
 
-theorem mem_support_seq_iff : b ∈ (seq q p).Support ↔ ∃ f ∈ q.Support, b ∈ f '' p.Support := by simp
+theorem mem_support_seq_iff : b ∈ (seq q p).support ↔ ∃ f ∈ q.support, b ∈ f '' p.support := by simp
 #align pmf.mem_support_seq_iff Pmf.mem_support_seq_iff
 
 end Seq
@@ -150,11 +150,11 @@ theorem of_finset_apply (a : α) : ofFinset f s h h' a = f a :=
 #align pmf.of_finset_apply Pmf.of_finset_apply
 
 @[simp]
-theorem support_of_finset : (ofFinset f s h h').Support = s ∩ Function.Support f :=
+theorem support_of_finset : (ofFinset f s h h').support = s ∩ Function.support f :=
   Set.ext fun a => by simpa [mem_support_iff] using mt (h' a)
 #align pmf.support_of_finset Pmf.support_of_finset
 
-theorem mem_support_of_finset_iff (a : α) : a ∈ (ofFinset f s h h').Support ↔ a ∈ s ∧ f a ≠ 0 := by simp
+theorem mem_support_of_finset_iff (a : α) : a ∈ (ofFinset f s h h').support ↔ a ∈ s ∧ f a ≠ 0 := by simp
 #align pmf.mem_support_of_finset_iff Pmf.mem_support_of_finset_iff
 
 theorem of_finset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofFinset f s h h' a = 0 :=
@@ -195,11 +195,11 @@ theorem of_fintype_apply (a : α) : ofFintype f h a = f a :=
 #align pmf.of_fintype_apply Pmf.of_fintype_apply
 
 @[simp]
-theorem support_of_fintype : (ofFintype f h).Support = Function.Support f :=
+theorem support_of_fintype : (ofFintype f h).support = Function.support f :=
   rfl
 #align pmf.support_of_fintype Pmf.support_of_fintype
 
-theorem mem_support_of_fintype_iff (a : α) : a ∈ (ofFintype f h).Support ↔ f a ≠ 0 :=
+theorem mem_support_of_fintype_iff (a : α) : a ∈ (ofFintype f h).support ↔ f a ≠ 0 :=
   Iff.rfl
 #align pmf.mem_support_of_fintype_iff Pmf.mem_support_of_fintype_iff
 
@@ -239,11 +239,11 @@ theorem normalize_apply (a : α) : (normalize f hf0) a = f a * (∑' x, f x)⁻�
 #align pmf.normalize_apply Pmf.normalize_apply
 
 @[simp]
-theorem support_normalize : (normalize f hf0).Support = Function.Support f :=
+theorem support_normalize : (normalize f hf0).support = Function.support f :=
   Set.ext (by simp [mem_support_iff, hf0])
 #align pmf.support_normalize Pmf.support_normalize
 
-theorem mem_support_normalize_iff (a : α) : a ∈ (normalize f hf0).Support ↔ f a ≠ 0 := by simp
+theorem mem_support_normalize_iff (a : α) : a ∈ (normalize f hf0).support ↔ f a ≠ 0 := by simp
 #align pmf.mem_support_normalize_iff Pmf.mem_support_normalize_iff
 
 end normalize
@@ -251,11 +251,11 @@ end normalize
 section Filter
 
 /-- Create new `pmf` by filtering on a set with non-zero measure and normalizing -/
-def filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.Support) : Pmf α :=
+def filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.support) : Pmf α :=
   Pmf.normalize (s.indicator p) <| Nnreal.tsum_indicator_ne_zero p.2.Summable h
 #align pmf.filter Pmf.filter
 
-variable {p : Pmf α} {s : Set α} (h : ∃ a ∈ s, a ∈ p.Support)
+variable {p : Pmf α} {s : Set α} (h : ∃ a ∈ s, a ∈ p.support)
 
 @[simp]
 theorem filter_apply (a : α) : (p.filter s h) a = s.indicator p a * (∑' a', (s.indicator p) a')⁻¹ := by
@@ -266,20 +266,20 @@ theorem filter_apply_eq_zero_of_not_mem {a : α} (ha : a ∉ s) : (p.filter s h)
   rw [filter_apply, set.indicator_apply_eq_zero.mpr fun ha' => absurd ha' ha, zero_mul]
 #align pmf.filter_apply_eq_zero_of_not_mem Pmf.filter_apply_eq_zero_of_not_mem
 
-theorem mem_support_filter_iff {a : α} : a ∈ (p.filter s h).Support ↔ a ∈ s ∧ a ∈ p.Support :=
+theorem mem_support_filter_iff {a : α} : a ∈ (p.filter s h).support ↔ a ∈ s ∧ a ∈ p.support :=
   (mem_support_normalize_iff _ _).trans Set.indicator_apply_ne_zero
 #align pmf.mem_support_filter_iff Pmf.mem_support_filter_iff
 
 @[simp]
-theorem support_filter : (p.filter s h).Support = s ∩ p.Support :=
+theorem support_filter : (p.filter s h).support = s ∩ p.support :=
   Set.ext fun x => mem_support_filter_iff _
 #align pmf.support_filter Pmf.support_filter
 
-theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ a ∉ s ∨ a ∉ p.Support := by
+theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ a ∉ s ∨ a ∉ p.support := by
   erw [apply_eq_zero_iff, support_filter, Set.mem_inter_iff, not_and_or]
 #align pmf.filter_apply_eq_zero_iff Pmf.filter_apply_eq_zero_iff
 
-theorem filter_apply_ne_zero_iff (a : α) : (p.filter s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.Support := by
+theorem filter_apply_ne_zero_iff (a : α) : (p.filter s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.support := by
   rw [Ne.def, filter_apply_eq_zero_iff, not_or, not_not, not_not]
 #align pmf.filter_apply_ne_zero_iff Pmf.filter_apply_ne_zero_iff
 
@@ -300,7 +300,7 @@ theorem bernoulli_apply : bernoulli p h b = cond b p (1 - p) :=
 #align pmf.bernoulli_apply Pmf.bernoulli_apply
 
 @[simp]
-theorem support_bernoulli : (bernoulli p h).Support = { b | cond b (p ≠ 0) (p ≠ 1) } := by
+theorem support_bernoulli : (bernoulli p h).support = { b | cond b (p ≠ 0) (p ≠ 1) } := by
   refine' Set.ext fun b => _
   induction b
   · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_false, Ne.def, tsub_eq_zero_iff_le, not_le]
@@ -310,7 +310,7 @@ theorem support_bernoulli : (bernoulli p h).Support = { b | cond b (p ≠ 0) (p 
     
 #align pmf.support_bernoulli Pmf.support_bernoulli
 
-theorem mem_support_bernoulli_iff : b ∈ (bernoulli p h).Support ↔ cond b (p ≠ 0) (p ≠ 1) := by simp
+theorem mem_support_bernoulli_iff : b ∈ (bernoulli p h).support ↔ cond b (p ≠ 0) (p ≠ 1) := by simp
 #align pmf.mem_support_bernoulli_iff Pmf.mem_support_bernoulli_iff
 
 end Bernoulli

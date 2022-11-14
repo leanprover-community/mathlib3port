@@ -33,7 +33,7 @@ theorem is_diag_mk_of_mem_diag {a : α × α} (h : a ∈ s.diag) : Sym2.IsDiag �
   (Sym2.is_diag_iff_proj_eq _).2 (mem_diag.1 h).2
 #align finset.is_diag_mk_of_mem_diag Finset.is_diag_mk_of_mem_diag
 
-theorem not_is_diag_mk_of_mem_off_diag {a : α × α} (h : a ∈ s.OffDiag) : ¬Sym2.IsDiag ⟦a⟧ := by
+theorem not_is_diag_mk_of_mem_off_diag {a : α × α} (h : a ∈ s.offDiag) : ¬Sym2.IsDiag ⟦a⟧ := by
   rw [Sym2.is_diag_iff_proj_eq]
   exact (mem_off_diag.1 h).2.2
 #align finset.not_is_diag_mk_of_mem_off_diag Finset.not_is_diag_mk_of_mem_off_diag
@@ -45,7 +45,7 @@ variable {m : Sym2 α}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Lifts a finset to `sym2 α`. `s.sym2` is the finset of all pairs with elements in `s`. -/
 protected def sym2 (s : Finset α) : Finset (Sym2 α) :=
-  (s ×ˢ s).Image Quotient.mk''
+  (s ×ˢ s).image Quotient.mk''
 #align finset.sym2 Finset.sym2
 
 @[simp]
@@ -96,7 +96,7 @@ theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.Sym2 ↔ a ∈ s :=
 theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he => mem_sym2_iff.2 fun a ha => h <| mem_sym2_iff.1 he _ ha
 #align finset.sym2_mono Finset.sym2_mono
 
-theorem image_diag_union_image_off_diag : s.diag.Image Quotient.mk'' ∪ s.OffDiag.Image Quotient.mk'' = s.Sym2 := by
+theorem image_diag_union_image_off_diag : s.diag.image Quotient.mk'' ∪ s.offDiag.image Quotient.mk'' = s.Sym2 := by
   rw [← image_union, diag_union_off_diag]
   rfl
 #align finset.image_diag_union_image_off_diag Finset.image_diag_union_image_off_diag
@@ -111,7 +111,7 @@ variable {n : ℕ} {m : Sym α n}
 with elements in `s`. -/
 protected def sym (s : Finset α) : ∀ n, Finset (Sym α n)
   | 0 => {∅}
-  | n + 1 => s.sup fun a => (Sym n).Image <| Sym.cons a
+  | n + 1 => s.sup fun a => (Sym n).image <| Sym.cons a
 #align finset.sym Finset.sym
 
 @[simp]
@@ -120,7 +120,7 @@ theorem sym_zero : s.Sym 0 = {∅} :=
 #align finset.sym_zero Finset.sym_zero
 
 @[simp]
-theorem sym_succ : s.Sym (n + 1) = s.sup fun a => (s.Sym n).Image <| Sym.cons a :=
+theorem sym_succ : s.Sym (n + 1) = s.sup fun a => (s.Sym n).image <| Sym.cons a :=
   rfl
 #align finset.sym_succ Finset.sym_succ
 

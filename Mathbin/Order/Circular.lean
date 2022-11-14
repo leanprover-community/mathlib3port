@@ -307,22 +307,22 @@ section CircularPreorder
 variable {α : Type _} [CircularPreorder α]
 
 /-- Closed-closed circular interval -/
-def CIcc (a b : α) : Set α :=
+def cIcc (a b : α) : Set α :=
   { x | Btw a x b }
-#align set.cIcc Set.CIcc
+#align set.cIcc Set.cIcc
 
 /-- Open-open circular interval -/
-def CIoo (a b : α) : Set α :=
+def cIoo (a b : α) : Set α :=
   { x | Sbtw a x b }
-#align set.cIoo Set.CIoo
+#align set.cIoo Set.cIoo
 
 @[simp]
-theorem mem_cIcc {a b x : α} : x ∈ CIcc a b ↔ Btw a x b :=
+theorem mem_cIcc {a b x : α} : x ∈ cIcc a b ↔ Btw a x b :=
   Iff.rfl
 #align set.mem_cIcc Set.mem_cIcc
 
 @[simp]
-theorem mem_cIoo {a b x : α} : x ∈ CIoo a b ↔ Sbtw a x b :=
+theorem mem_cIoo {a b x : α} : x ∈ cIoo a b ↔ Sbtw a x b :=
   Iff.rfl
 #align set.mem_cIoo Set.mem_cIoo
 
@@ -332,21 +332,21 @@ section CircularOrder
 
 variable {α : Type _} [CircularOrder α]
 
-theorem left_mem_cIcc (a b : α) : a ∈ CIcc a b :=
+theorem left_mem_cIcc (a b : α) : a ∈ cIcc a b :=
   btw_rfl_left
 #align set.left_mem_cIcc Set.left_mem_cIcc
 
-theorem right_mem_cIcc (a b : α) : b ∈ CIcc a b :=
+theorem right_mem_cIcc (a b : α) : b ∈ cIcc a b :=
   btw_rfl_right
 #align set.right_mem_cIcc Set.right_mem_cIcc
 
-theorem compl_cIcc {a b : α} : CIcc a bᶜ = CIoo b a := by
+theorem compl_cIcc {a b : α} : cIcc a bᶜ = cIoo b a := by
   ext
   rw [Set.mem_cIoo, sbtw_iff_not_btw]
   rfl
 #align set.compl_cIcc Set.compl_cIcc
 
-theorem compl_cIoo {a b : α} : CIoo a bᶜ = CIcc b a := by
+theorem compl_cIoo {a b : α} : cIoo a bᶜ = cIcc b a := by
   ext
   rw [Set.mem_cIcc, btw_iff_not_sbtw]
   rfl

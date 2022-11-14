@@ -107,19 +107,19 @@ instance : IsOrdered (L.Sum Language.order) :=
   ⟨Sum.inr IsOrdered.leSymb⟩
 
 /-- The theory of preorders. -/
-protected def TheoryCat.Preorder : Language.order.TheoryCat :=
+protected def TheoryCat.preorder : Language.order.TheoryCat :=
   {leSymb.Reflexive, leSymb.Transitive}
-#align first_order.language.Theory.preorder FirstOrder.Language.TheoryCat.Preorder
+#align first_order.language.Theory.preorder FirstOrder.Language.TheoryCat.preorder
 
 /-- The theory of partial orders. -/
-protected def TheoryCat.PartialOrder : Language.order.TheoryCat :=
+protected def TheoryCat.partialOrder : Language.order.TheoryCat :=
   {leSymb.Reflexive, leSymb.antisymmetric, leSymb.Transitive}
-#align first_order.language.Theory.partial_order FirstOrder.Language.TheoryCat.PartialOrder
+#align first_order.language.Theory.partial_order FirstOrder.Language.TheoryCat.partialOrder
 
 /-- The theory of linear orders. -/
-protected def TheoryCat.LinearOrder : Language.order.TheoryCat :=
+protected def TheoryCat.linearOrder : Language.order.TheoryCat :=
   {leSymb.Reflexive, leSymb.antisymmetric, leSymb.Transitive, leSymb.Total}
-#align first_order.language.Theory.linear_order FirstOrder.Language.TheoryCat.LinearOrder
+#align first_order.language.Theory.linear_order FirstOrder.Language.TheoryCat.linearOrder
 
 /-- A sentence indicating that an order has no top element:
 $\forall x, \exists y, \neg y \le x$.   -/
@@ -140,9 +140,9 @@ protected def Sentence.denselyOrdered : Language.order.Sentence :=
 #align first_order.language.sentence.densely_ordered FirstOrder.Language.Sentence.denselyOrdered
 
 /-- The theory of dense linear orders without endpoints. -/
-protected def TheoryCat.DLO : Language.order.TheoryCat :=
+protected def TheoryCat.dLO : Language.order.TheoryCat :=
   Theory.linear_order ∪ {Sentence.noTopOrder, Sentence.noBotOrder, Sentence.denselyOrdered}
-#align first_order.language.Theory.DLO FirstOrder.Language.TheoryCat.DLO
+#align first_order.language.Theory.DLO FirstOrder.Language.TheoryCat.dLO
 
 variable (L M)
 

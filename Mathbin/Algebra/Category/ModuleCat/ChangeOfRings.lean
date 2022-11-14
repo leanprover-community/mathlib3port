@@ -40,7 +40,7 @@ variable (M : ModuleCat.{v} S)
 /-- Any `S`-module M is also an `R`-module via a ring homomorphism `f : R ⟶ S` by defining
     `r • m := f r • m` (`module.comp_hom`). This is called restriction of scalars. -/
 def obj' : ModuleCat R where
-  Carrier := M
+  carrier := M
   isModule := Module.compHom M f
 #align category_theory.Module.restrict_scalars.obj' CategoryTheory.ModuleCat.RestrictScalars.obj'
 

@@ -139,17 +139,17 @@ section Pointwise
 open Pointwise
 
 @[simp]
-theorem vadd_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.Ball y r = Metric.Ball (x +ᵥ y) r :=
+theorem vadd_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.ball y r = Metric.ball (x +ᵥ y) r :=
   (Isometric.constVadd P x).image_ball y r
 #align vadd_ball vadd_ball
 
 @[simp]
-theorem vadd_closed_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.ClosedBall y r = Metric.ClosedBall (x +ᵥ y) r :=
+theorem vadd_closed_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.closedBall y r = Metric.closedBall (x +ᵥ y) r :=
   (Isometric.constVadd P x).image_closed_ball y r
 #align vadd_closed_ball vadd_closed_ball
 
 @[simp]
-theorem vadd_sphere (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.Sphere y r = Metric.Sphere (x +ᵥ y) r :=
+theorem vadd_sphere (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.sphere y r = Metric.sphere (x +ᵥ y) r :=
   (Isometric.constVadd P x).image_sphere y r
 #align vadd_sphere vadd_sphere
 

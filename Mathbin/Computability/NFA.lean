@@ -40,23 +40,23 @@ instance : Inhabited (NFA α σ) :=
   ⟨NFA.mk (fun _ _ => ∅) ∅ ∅⟩
 
 /-- `M.step_set S a` is the union of `M.step s a` for all `s ∈ S`. -/
-def StepSet (S : Set σ) (a : α) : Set σ :=
+def stepSet (S : Set σ) (a : α) : Set σ :=
   ⋃ s ∈ S, M.step s a
-#align NFA.step_set NFA.StepSet
+#align NFA.step_set NFA.stepSet
 
-theorem mem_step_set (s : σ) (S : Set σ) (a : α) : s ∈ M.StepSet S a ↔ ∃ t ∈ S, s ∈ M.step t a :=
+theorem mem_step_set (s : σ) (S : Set σ) (a : α) : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.step t a :=
   mem_Union₂
 #align NFA.mem_step_set NFA.mem_step_set
 
 @[simp]
-theorem step_set_empty (a : α) : M.StepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
+theorem step_set_empty (a : α) : M.stepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
 #align NFA.step_set_empty NFA.step_set_empty
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
   of `S`. -/
-def EvalFrom (start : Set σ) : List α → Set σ :=
-  List.foldl M.StepSet start
-#align NFA.eval_from NFA.EvalFrom
+def evalFrom (start : Set σ) : List α → Set σ :=
+  List.foldl M.stepSet start
+#align NFA.eval_from NFA.evalFrom
 
 @[simp]
 theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = S :=
@@ -64,21 +64,21 @@ theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = S :=
 #align NFA.eval_from_nil NFA.eval_from_nil
 
 @[simp]
-theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.StepSet S a :=
+theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.stepSet S a :=
   rfl
 #align NFA.eval_from_singleton NFA.eval_from_singleton
 
 @[simp]
 theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
-    M.evalFrom S (x ++ [a]) = M.StepSet (M.evalFrom S x) a := by
+    M.evalFrom S (x ++ [a]) = M.stepSet (M.evalFrom S x) a := by
   simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
 #align NFA.eval_from_append_singleton NFA.eval_from_append_singleton
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
   `M.start`. -/
-def Eval : List α → Set σ :=
+def eval : List α → Set σ :=
   M.evalFrom M.start
-#align NFA.eval NFA.Eval
+#align NFA.eval NFA.eval
 
 @[simp]
 theorem eval_nil : M.eval [] = M.start :=
@@ -86,41 +86,41 @@ theorem eval_nil : M.eval [] = M.start :=
 #align NFA.eval_nil NFA.eval_nil
 
 @[simp]
-theorem eval_singleton (a : α) : M.eval [a] = M.StepSet M.start a :=
+theorem eval_singleton (a : α) : M.eval [a] = M.stepSet M.start a :=
   rfl
 #align NFA.eval_singleton NFA.eval_singleton
 
 @[simp]
-theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.StepSet (M.eval x) a :=
+theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.stepSet (M.eval x) a :=
   eval_from_append_singleton _ _ _ _
 #align NFA.eval_append_singleton NFA.eval_append_singleton
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
-def Accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
-#align NFA.accepts NFA.Accepts
+def accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
+#align NFA.accepts NFA.accepts
 
 /-- `M.to_DFA` is an `DFA` constructed from a `NFA` `M` using the subset construction. The
   states is the type of `set`s of `M.state` and the step function is `M.step_set`. -/
 def toDFA : DFA α (Set σ) where
-  step := M.StepSet
+  step := M.stepSet
   start := M.start
   accept := { S | ∃ s ∈ S, s ∈ M.accept }
 #align NFA.to_DFA NFA.toDFA
 
 @[simp]
-theorem to_DFA_correct : M.toDFA.Accepts = M.Accepts := by
+theorem to_DFA_correct : M.toDFA.accepts = M.accepts := by
   ext x
-  rw [accepts, DFA.Accepts, eval, DFA.eval]
+  rw [accepts, DFA.accepts, eval, DFA.eval]
   change List.foldl _ _ _ ∈ { S | _ } ↔ _
   constructor <;>
     · exact fun ⟨w, h2, h3⟩ => ⟨w, h3, h2⟩
       
 #align NFA.to_DFA_correct NFA.to_DFA_correct
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
+        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
   by
   rw [← to_DFA_correct] at hx⊢
   exact M.to_DFA.pumping_lemma hx hlen
@@ -145,13 +145,13 @@ theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
   induction' s with a s ih generalizing start
   · tauto
     
-  · rw [List.foldl, List.foldl, show M.to_NFA.step_set {start} a = {M.step start a} by simpa [NFA.StepSet] ]
+  · rw [List.foldl, List.foldl, show M.to_NFA.step_set {start} a = {M.step start a} by simpa [NFA.stepSet] ]
     tauto
     
 #align DFA.to_NFA_eval_from_match DFA.to_NFA_eval_from_match
 
 @[simp]
-theorem to_NFA_correct (M : DFA α σ) : M.toNFA.Accepts = M.Accepts := by
+theorem to_NFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts := by
   ext x
   change (∃ S H, S ∈ M.to_NFA.eval_from {M.start} x) ↔ _
   rw [to_NFA_eval_from_match]

@@ -26,20 +26,20 @@ attribute [local instance] CategoryTheory.ConcreteCategory.hasCoeToSort Category
 
 /-- The topological simplex associated to `x : simplex_category`.
   This is the object part of the functor `simplex_category.to_Top`. -/
-def ToTopObj (x : SimplexCategory) :=
+def toTopObj (x : SimplexCategory) :=
   { f : x → ℝ≥0 | (∑ i, f i) = 1 }
-#align simplex_category.to_Top_obj SimplexCategory.ToTopObj
+#align simplex_category.to_Top_obj SimplexCategory.toTopObj
 
-instance (x : SimplexCategory) : CoeFun x.ToTopObj fun _ => x → ℝ≥0 :=
+instance (x : SimplexCategory) : CoeFun x.toTopObj fun _ => x → ℝ≥0 :=
   ⟨fun f => (f : x → ℝ≥0)⟩
 
 @[ext.1]
-theorem ToTopObj.ext {x : SimplexCategory} (f g : x.ToTopObj) : (f : x → ℝ≥0) = g → f = g :=
+theorem toTopObj.ext {x : SimplexCategory} (f g : x.toTopObj) : (f : x → ℝ≥0) = g → f = g :=
   Subtype.ext
-#align simplex_category.to_Top_obj.ext SimplexCategory.ToTopObj.ext
+#align simplex_category.to_Top_obj.ext SimplexCategory.toTopObj.ext
 
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
-def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.ToTopObj → y.ToTopObj := fun g =>
+def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj := fun g =>
   ⟨fun i => ∑ j in Finset.univ.filter fun k => f k = i, g j, by
     simp only [Finset.filter_congr_decidable, Finset.sum_congr, to_Top_obj, Set.mem_set_of]
     rw [← Finset.sum_bUnion]
@@ -59,7 +59,7 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.ToTopObj → y.ToTopObj :
 #align simplex_category.to_Top_map SimplexCategory.toTopMap
 
 @[simp]
-theorem coe_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) (g : x.ToTopObj) (i : y) :
+theorem coe_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) (g : x.toTopObj) (i : y) :
     toTopMap f g i = ∑ j in Finset.univ.filter fun k => f k = i, g j :=
   rfl
 #align simplex_category.coe_to_Top_map SimplexCategory.coe_to_Top_map
@@ -73,7 +73,7 @@ theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous
 /-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/
 @[simps]
 def toTop : SimplexCategory ⥤ TopCat where
-  obj x := TopCat.of x.ToTopObj
+  obj x := TopCat.of x.toTopObj
   map x y f := ⟨toTopMap f⟩
   map_id' := by
     intro x

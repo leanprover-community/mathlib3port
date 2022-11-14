@@ -38,7 +38,7 @@ namespace Submodule
 
 /-- The set `{0}` is the bottom element of the lattice of submodules. -/
 instance : HasBot (Submodule R M) :=
-  ⟨{ (⊥ : AddSubmonoid M) with Carrier := {0}, smul_mem' := by simp (config := { contextual := true }) }⟩
+  ⟨{ (⊥ : AddSubmonoid M) with carrier := {0}, smul_mem' := by simp (config := { contextual := true }) }⟩
 
 instance inhabited' : Inhabited (Submodule R M) :=
   ⟨⊥⟩
@@ -137,10 +137,10 @@ theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ :=
 
 /-- The universal set is the top element of the lattice of submodules. -/
 instance : HasTop (Submodule R M) :=
-  ⟨{ (⊤ : AddSubmonoid M) with Carrier := Set.Univ, smul_mem' := fun _ _ _ => trivial }⟩
+  ⟨{ (⊤ : AddSubmonoid M) with carrier := Set.univ, smul_mem' := fun _ _ _ => trivial }⟩
 
 @[simp]
-theorem top_coe : ((⊤ : Submodule R M) : Set M) = Set.Univ :=
+theorem top_coe : ((⊤ : Submodule R M) : Set M) = Set.univ :=
   rfl
 #align submodule.top_coe Submodule.top_coe
 
@@ -201,7 +201,7 @@ def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M where
 
 instance : HasInf (Submodule R M) :=
   ⟨fun S =>
-    { Carrier := ⋂ s ∈ S, (s : Set M), zero_mem' := by simp [zero_mem],
+    { carrier := ⋂ s ∈ S, (s : Set M), zero_mem' := by simp [zero_mem],
       add_mem' := by simp (config := { contextual := true }) [add_mem],
       smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 
@@ -215,7 +215,7 @@ private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q ∈ S, p ≤ q) �
 
 instance : HasInf (Submodule R M) :=
   ⟨fun p q =>
-    { Carrier := p ∩ q, zero_mem' := by simp [zero_mem],
+    { carrier := p ∩ q, zero_mem' := by simp [zero_mem],
       add_mem' := by simp (config := { contextual := true }) [add_mem],
       smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 

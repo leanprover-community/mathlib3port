@@ -220,7 +220,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
     -- we `bind` the set of `y` that solve the equation `x = y + y⁻¹`.
     -- For every `x`, that set is finite (since it is governed by a quadratic equation).
     -- For the moment, we claim that all these sets together cover `K`.
-    suffices (Set.Univ : Set K) = { x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0 } >>= fun x => { y | x = y + y⁻¹ ∨ y = 0 } by
+    suffices (Set.univ : Set K) = { x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0 } >>= fun x => { y | x = y + y⁻¹ ∨ y = 0 } by
       rw [this]
       clear this
       refine' h.bUnion fun x hx => _

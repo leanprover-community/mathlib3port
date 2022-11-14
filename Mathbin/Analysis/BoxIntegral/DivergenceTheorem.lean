@@ -70,8 +70,8 @@ open MeasureTheory
 
 /-- Auxiliary lemma for the divergence theorem. -/
 theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ → E} {f' : ℝⁿ⁺¹ →L[ℝ] E}
-    (hfc : ContinuousOn f I.IccCat) {x : ℝⁿ⁺¹} (hxI : x ∈ I.IccCat) {a : E} {ε : ℝ} (h0 : 0 < ε)
-    (hε : ∀ y ∈ I.IccCat, ∥f y - a - f' (y - x)∥ ≤ ε * ∥y - x∥) {c : ℝ≥0} (hc : I.distortion ≤ c) :
+    (hfc : ContinuousOn f I.icc) {x : ℝⁿ⁺¹} (hxI : x ∈ I.icc) {a : E} {ε : ℝ} (h0 : 0 < ε)
+    (hε : ∀ y ∈ I.icc, ∥f y - a - f' (y - x)∥ ≤ ε * ∥y - x∥) {c : ℝ≥0} (hc : I.distortion ≤ c) :
     ∥(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
           (integral (I.face i) ⊥ (f ∘ i.insertNth (I.upper i)) BoxAdditiveMap.volume -
             integral (I.face i) ⊥ (f ∘ i.insertNth (I.lower i)) BoxAdditiveMap.volume)∥ ≤
@@ -94,7 +94,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     of `f'` on `pi.single i (I.upper i - I.lower i) = lᵢ • eᵢ`, where `lᵢ = I.upper i - I.lower i`
     is the length of `i`-th edge of `I` and `eᵢ = pi.single i 1` is the `i`-th unit vector. -/
   have :
-    ∀ y ∈ (I.face i).IccCat,
+    ∀ y ∈ (I.face i).icc,
       ∥f' (Pi.single i (I.upper i - I.lower i)) - (f (i.insert_nth (I.upper i) y) - f (i.insert_nth (I.lower i) y))∥ ≤
         2 * ε * diam I.Icc :=
     by
@@ -159,7 +159,7 @@ TODO: If `n > 0`, then the condition at `x ∈ s` can be replaced by a much weak
 requires either better integrability theorems, or usage of a filter depending on the countable set
 `s` (we need to ensure that none of the faces of a partition contain a point from `s`). -/
 theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹) (hs : s.Countable)
-    (Hs : ∀ x ∈ s, ContinuousWithinAt f I.IccCat x) (Hd : ∀ x ∈ I.IccCat \ s, HasFderivWithinAt f (f' x) I.IccCat x)
+    (Hs : ∀ x ∈ s, ContinuousWithinAt f I.icc x) (Hd : ∀ x ∈ I.icc \ s, HasFderivWithinAt f (f' x) I.icc x)
     (i : Fin (n + 1)) :
     HasIntegral.{0, u, u} I gP (fun x => f' x (Pi.single i 1)) BoxAdditiveMap.volume
       (integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.upper i) x)) BoxAdditiveMap.volume -
@@ -226,8 +226,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
         Integrable.{0, u, u} (J.face i) GP (fun y => f (i.insert_nth x y)) box_additive_map.volume :=
       fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc (Hc.mono <| box.le_iff_Icc.1 hJI) hx) volume
     have hJδ' : J.Icc ⊆ closed_ball x δ ∩ I.Icc := subset_inter hJδ (box.le_iff_Icc.1 hJI)
-    have Hmaps :
-      ∀ z ∈ Icc (J.lower i) (J.upper i), maps_to (i.insert_nth z) (J.face i).IccCat (closed_ball x δ ∩ I.Icc) :=
+    have Hmaps : ∀ z ∈ Icc (J.lower i) (J.upper i), maps_to (i.insert_nth z) (J.face i).icc (closed_ball x δ ∩ I.Icc) :=
       fun z hz => (J.maps_to_insert_nth_face_Icc hz).mono subset.rfl hJδ'
     simp only [dist_eq_norm, F, fI]
     dsimp
@@ -293,8 +292,8 @@ the sum of integrals of `f` over the faces of `I` taken with appropriate signs.
 More precisely, we use a non-standard generalization of the Henstock-Kurzweil integral and
 we allow `f` to be non-differentiable (but still continuous) at a countable set of points. -/
 theorem hasIntegralGPDivergenceOfForallHasDerivWithinAt (f : ℝⁿ⁺¹ → Eⁿ⁺¹) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹) (s : Set ℝⁿ⁺¹)
-    (hs : s.Countable) (Hs : ∀ x ∈ s, ContinuousWithinAt f I.IccCat x)
-    (Hd : ∀ x ∈ I.IccCat \ s, HasFderivWithinAt f (f' x) I.IccCat x) :
+    (hs : s.Countable) (Hs : ∀ x ∈ s, ContinuousWithinAt f I.icc x)
+    (Hd : ∀ x ∈ I.icc \ s, HasFderivWithinAt f (f' x) I.icc x) :
     HasIntegral.{0, u, u} I gP (fun x => ∑ i, f' x (Pi.single i 1) i) BoxAdditiveMap.volume
       (∑ i,
         integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.upper i) x) i) BoxAdditiveMap.volume -

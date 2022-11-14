@@ -206,7 +206,7 @@ theorem eq_of_le_of_domain_eq {f g : E →ₗ.[R] F} (hle : f ≤ g) (heq : f.do
 /-- Given two partial linear maps `f`, `g`, the set of points `x` such that
 both `f` and `g` are defined at `x` and `f x = g x` form a submodule. -/
 def eqLocus (f g : E →ₗ.[R] F) : Submodule R E where
-  Carrier := { x | ∃ (hf : x ∈ f.domain)(hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩ }
+  carrier := { x | ∃ (hf : x ∈ f.domain)(hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩ }
   zero_mem' := ⟨zero_mem _, zero_mem _, f.map_zero.trans g.map_zero.symm⟩
   add_mem' := fun x y ⟨hfx, hgx, hx⟩ ⟨hfy, hgy, hy⟩ =>
     ⟨add_mem hfx hfy, add_mem hgx hgy, by erw [f.map_add ⟨x, hfx⟩ ⟨y, hfy⟩, g.map_add ⟨x, hgx⟩ ⟨y, hgy⟩, hx, hy]⟩
@@ -428,7 +428,7 @@ theorem sup_span_singleton_apply_mk (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x
 end
 
 private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) c) :
-    ∃ f : ↥(sup (domain '' c)) →ₗ[R] F, (⟨_, f⟩ : E →ₗ.[R] F) ∈ UpperBounds c := by
+    ∃ f : ↥(sup (domain '' c)) →ₗ[R] F, (⟨_, f⟩ : E →ₗ.[R] F) ∈ upperBounds c := by
   cases' c.eq_empty_or_nonempty with ceq cne
   · subst c
     simp
@@ -698,7 +698,7 @@ theorem image_iff {f : E →ₗ.[R] F} {x : E} {y : F} (hx : x ∈ f.domain) : y
   simp only [← h2, h1]
 #align linear_pmap.image_iff LinearPmap.image_iff
 
-theorem mem_range_iff {f : E →ₗ.[R] F} {y : F} : y ∈ Set.Range f ↔ ∃ x : E, (x, y) ∈ f.graph := by
+theorem mem_range_iff {f : E →ₗ.[R] F} {y : F} : y ∈ Set.range f ↔ ∃ x : E, (x, y) ∈ f.graph := by
   constructor <;> intro h
   · rw [Set.mem_range] at h
     rcases h with ⟨⟨x, hx⟩, h⟩

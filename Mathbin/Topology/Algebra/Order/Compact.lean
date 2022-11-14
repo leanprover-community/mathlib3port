@@ -45,7 +45,7 @@ We also prove some simple lemmas about spaces with this property.
 conditionally complete linear orders with order topology and products (finite or infinite)
 of such spaces. -/
 class CompactIccSpace (α : Type _) [TopologicalSpace α] [Preorder α] : Prop where
-  is_compact_Icc : ∀ {a b : α}, IsCompact (IccCat a b)
+  is_compact_Icc : ∀ {a b : α}, IsCompact (icc a b)
 #align compact_Icc_space CompactIccSpace
 
 export CompactIccSpace (is_compact_Icc)
@@ -63,7 +63,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
   rw [le_principal_iff]
   have hpt : ∀ x ∈ Icc a b, {x} ∉ f := fun x hx hxf => hf x hx ((le_pure_iff.2 hxf).trans (pure_le_nhds x))
   set s := { x ∈ Icc a b | Icc a x ∉ f }
-  have hsb : b ∈ UpperBounds s := fun x hx => hx.1.2
+  have hsb : b ∈ upperBounds s := fun x hx => hx.1.2
   have sbd : BddAbove s := ⟨b, hsb⟩
   have ha : a ∈ s := by simp [hpt, hab]
   rcases hab.eq_or_lt with (rfl | hlt)
@@ -118,7 +118,7 @@ instance {α β : Type _} [Preorder α] [TopologicalSpace α] [CompactIccSpace �
 
 /-- An unordered closed interval is compact. -/
 theorem is_compact_interval {α : Type _} [LinearOrder α] [TopologicalSpace α] [CompactIccSpace α] {a b : α} :
-    IsCompact (Interval a b) :=
+    IsCompact (interval a b) :=
   is_compact_Icc
 #align is_compact_interval is_compact_interval
 
@@ -137,7 +137,7 @@ section
 
 variable {α : Type _} [Preorder α] [TopologicalSpace α] [CompactIccSpace α]
 
-instance compact_space_Icc (a b : α) : CompactSpace (IccCat a b) :=
+instance compact_space_Icc (a b : α) : CompactSpace (icc a b) :=
   is_compact_iff_compact_space.mp is_compact_Icc
 #align compact_space_Icc compact_space_Icc
 
@@ -193,7 +193,7 @@ theorem IsCompact.exists_is_lub {s : Set α} (hs : IsCompact s) (ne_s : s.Nonemp
 
 theorem IsCompact.exists_Inf_image_eq_and_le {s : Set β} (hs : IsCompact s) (ne_s : s.Nonempty) {f : β → α}
     (hf : ContinuousOn f s) : ∃ x ∈ s, inf (f '' s) = f x ∧ ∀ y ∈ s, f x ≤ f y :=
-  let ⟨x, hxs, hx⟩ := (hs.image_of_continuous_on hf).Inf_mem (ne_s.Image f)
+  let ⟨x, hxs, hx⟩ := (hs.image_of_continuous_on hf).Inf_mem (ne_s.image f)
   ⟨x, hxs, hx.symm, fun y hy => hx.trans_le <| cInf_le (hs.image_of_continuous_on hf).BddBelow <| mem_image_of_mem f hy⟩
 #align is_compact.exists_Inf_image_eq_and_le IsCompact.exists_Inf_image_eq_and_le
 
@@ -213,7 +213,7 @@ theorem IsCompact.exists_Sup_image_eq :
   @IsCompact.exists_Inf_image_eq αᵒᵈ _ _ _ _ _
 #align is_compact.exists_Sup_image_eq IsCompact.exists_Sup_image_eq
 
-theorem eq_Icc_of_connected_compact {s : Set α} (h₁ : IsConnected s) (h₂ : IsCompact s) : s = IccCat (inf s) (sup s) :=
+theorem eq_Icc_of_connected_compact {s : Set α} (h₁ : IsConnected s) (h₂ : IsCompact s) : s = icc (inf s) (sup s) :=
   eq_Icc_cInf_cSup_of_connected_bdd_closed h₁ h₂.BddBelow h₂.BddAbove h₂.IsClosed
 #align eq_Icc_of_connected_compact eq_Icc_of_connected_compact
 
@@ -361,14 +361,14 @@ variable [DenselyOrdered α] [ConditionallyCompleteLinearOrder β] [OrderTopolog
 
 open Interval
 
-theorem image_Icc (hab : a ≤ b) (h : ContinuousOn f <| IccCat a b) :
-    f '' IccCat a b = IccCat (Inf <| f '' IccCat a b) (Sup <| f '' IccCat a b) :=
-  eq_Icc_of_connected_compact ⟨(nonempty_Icc.2 hab).Image f, is_preconnected_Icc.Image f h⟩
+theorem image_Icc (hab : a ≤ b) (h : ContinuousOn f <| icc a b) :
+    f '' icc a b = icc (Inf <| f '' icc a b) (Sup <| f '' icc a b) :=
+  eq_Icc_of_connected_compact ⟨(nonempty_Icc.2 hab).image f, is_preconnected_Icc.image f h⟩
     (is_compact_Icc.image_of_continuous_on h)
 #align continuous_on.image_Icc ContinuousOn.image_Icc
 
 theorem image_interval_eq_Icc (h : ContinuousOn f <| [a, b]) :
-    f '' [a, b] = IccCat (inf (f '' [a, b])) (sup (f '' [a, b])) := by
+    f '' [a, b] = icc (inf (f '' [a, b])) (sup (f '' [a, b])) := by
   cases' le_total a b with h2 h2
   · simp_rw [interval_of_le h2] at h⊢
     exact h.image_Icc h2
@@ -384,7 +384,7 @@ theorem image_interval (h : ContinuousOn f <| [a, b]) : f '' [a, b] = [inf (f ''
   exacts[bdd_below_Icc, bdd_above_Icc]
 #align continuous_on.image_interval ContinuousOn.image_interval
 
-theorem Inf_image_Icc_le (h : ContinuousOn f <| IccCat a b) (hc : c ∈ IccCat a b) : inf (f '' IccCat a b) ≤ f c := by
+theorem Inf_image_Icc_le (h : ContinuousOn f <| icc a b) (hc : c ∈ icc a b) : inf (f '' icc a b) ≤ f c := by
   rw [h.image_Icc (nonempty_Icc.mp (Set.nonempty_of_mem hc))]
   exact
     cInf_le bdd_below_Icc
@@ -393,7 +393,7 @@ theorem Inf_image_Icc_le (h : ContinuousOn f <| IccCat a b) (hc : c ∈ IccCat a
           le_cSup (is_compact_Icc.bdd_above_image h) ⟨c, hc, rfl⟩⟩)
 #align continuous_on.Inf_image_Icc_le ContinuousOn.Inf_image_Icc_le
 
-theorem le_Sup_image_Icc (h : ContinuousOn f <| IccCat a b) (hc : c ∈ IccCat a b) : f c ≤ sup (f '' IccCat a b) := by
+theorem le_Sup_image_Icc (h : ContinuousOn f <| icc a b) (hc : c ∈ icc a b) : f c ≤ sup (f '' icc a b) := by
   rw [h.image_Icc (nonempty_Icc.mp (Set.nonempty_of_mem hc))]
   exact
     le_cSup bdd_above_Icc

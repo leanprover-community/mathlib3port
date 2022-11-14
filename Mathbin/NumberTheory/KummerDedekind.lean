@@ -62,7 +62,7 @@ local notation:max R "<" x ">" => adjoin R ({x} : Set S)
 /-- Let `S / R` be a ring extension and `x : S`, then the conductor of `R<x>` is the
     biggest ideal of `S` contained in `R<x>`. -/
 def conductor (x : S) : Ideal S where
-  Carrier := { a | ∀ b : S, a * b ∈ R<x> }
+  carrier := { a | ∀ b : S, a * b ∈ R<x> }
   zero_mem' b := by simpa only [zero_mul] using Subalgebra.zero_mem _
   add_mem' a b ha hb c := by simpa only [add_mul] using Subalgebra.add_mem _ (ha c) (hb c)
   smul_mem' c a ha b := by simpa only [smul_eq_mul, mul_left_comm, mul_assoc] using ha (c * b)

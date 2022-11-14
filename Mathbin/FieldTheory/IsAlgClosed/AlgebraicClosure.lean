@@ -54,7 +54,7 @@ def evalXSelf (f : MonicIrreducible k) : MvPolynomial (MonicIrreducible k) k :=
 /-- The span of `f(x_f)` across monic irreducible polynomials `f` where `x_f` is an
 indeterminate. -/
 def spanEval : Ideal (MvPolynomial (MonicIrreducible k) k) :=
-  Ideal.span <| Set.Range <| evalXSelf k
+  Ideal.span <| Set.range <| evalXSelf k
 #align algebraic_closure.span_eval AlgebraicClosure.spanEval
 
 /-- Given a finset of monic irreducible polynomials, construct an algebra homomorphism to the

@@ -113,10 +113,9 @@ is bounded by `gronwall_bound δ K ε (x - a)` on `[a, b]`.
 
 See also `norm_le_gronwall_bound_of_norm_deriv_right_le` for a version bounding `∥f x∥`,
 `f : ℝ → E`. -/
-theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε : ℝ} {a b : ℝ}
-    (hf : ContinuousOn f (IccCat a b))
-    (hf' : ∀ x ∈ IcoCat a b, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (f z - f x) < r) (ha : f a ≤ δ)
-    (bound : ∀ x ∈ IcoCat a b, f' x ≤ K * f x + ε) : ∀ x ∈ IccCat a b, f x ≤ gronwallBound δ K ε (x - a) := by
+theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε : ℝ} {a b : ℝ} (hf : ContinuousOn f (icc a b))
+    (hf' : ∀ x ∈ ico a b, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (f z - f x) < r) (ha : f a ≤ δ)
+    (bound : ∀ x ∈ ico a b, f' x ≤ K * f x + ε) : ∀ x ∈ icc a b, f x ≤ gronwallBound δ K ε (x - a) := by
   have H : ∀ x ∈ Icc a b, ∀ ε' ∈ Ioi ε, f x ≤ gronwallBound δ K ε' (x - a) := by
     intro x hx ε' hε'
     apply image_le_of_liminf_slope_right_lt_deriv_boundary hf hf'
@@ -144,8 +143,8 @@ theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε
 `∀ x ∈ [a, b), ∥f' x∥ ≤ K * ∥f x∥ + ε`, then `∥f x∥` is bounded by `gronwall_bound δ K ε (x - a)`
 on `[a, b]`. -/
 theorem norm_le_gronwall_bound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K ε : ℝ} {a b : ℝ}
-    (hf : ContinuousOn f (IccCat a b)) (hf' : ∀ x ∈ IcoCat a b, HasDerivWithinAt f (f' x) (IciCat x) x) (ha : ∥f a∥ ≤ δ)
-    (bound : ∀ x ∈ IcoCat a b, ∥f' x∥ ≤ K * ∥f x∥ + ε) : ∀ x ∈ IccCat a b, ∥f x∥ ≤ gronwallBound δ K ε (x - a) :=
+    (hf : ContinuousOn f (icc a b)) (hf' : ∀ x ∈ ico a b, HasDerivWithinAt f (f' x) (ici x) x) (ha : ∥f a∥ ≤ δ)
+    (bound : ∀ x ∈ ico a b, ∥f' x∥ ≤ K * ∥f x∥ + ε) : ∀ x ∈ icc a b, ∥f x∥ ≤ gronwallBound δ K ε (x - a) :=
   le_gronwall_bound_of_liminf_deriv_right_le (continuous_norm.comp_continuous_on hf)
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha bound
 #align norm_le_gronwall_bound_of_norm_deriv_right_le norm_le_gronwall_bound_of_norm_deriv_right_le
@@ -159,11 +158,11 @@ This version assumes all inequalities to be true in some time-dependent set `s t
 and assumes that the solutions never leave this set. -/
 theorem dist_le_of_approx_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
     (hv : ∀ t, ∀ (x y) (_ : x ∈ s t) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y) {f g f' g' : ℝ → E} {a b : ℝ}
-    {εf εg δ : ℝ} (hf : ContinuousOn f (IccCat a b)) (hf' : ∀ t ∈ IcoCat a b, HasDerivWithinAt f (f' t) (IciCat t) t)
-    (f_bound : ∀ t ∈ IcoCat a b, dist (f' t) (v t (f t)) ≤ εf) (hfs : ∀ t ∈ IcoCat a b, f t ∈ s t)
-    (hg : ContinuousOn g (IccCat a b)) (hg' : ∀ t ∈ IcoCat a b, HasDerivWithinAt g (g' t) (IciCat t) t)
-    (g_bound : ∀ t ∈ IcoCat a b, dist (g' t) (v t (g t)) ≤ εg) (hgs : ∀ t ∈ IcoCat a b, g t ∈ s t)
-    (ha : dist (f a) (g a) ≤ δ) : ∀ t ∈ IccCat a b, dist (f t) (g t) ≤ gronwallBound δ K (εf + εg) (t - a) := by
+    {εf εg δ : ℝ} (hf : ContinuousOn f (icc a b)) (hf' : ∀ t ∈ ico a b, HasDerivWithinAt f (f' t) (ici t) t)
+    (f_bound : ∀ t ∈ ico a b, dist (f' t) (v t (f t)) ≤ εf) (hfs : ∀ t ∈ ico a b, f t ∈ s t)
+    (hg : ContinuousOn g (icc a b)) (hg' : ∀ t ∈ ico a b, HasDerivWithinAt g (g' t) (ici t) t)
+    (g_bound : ∀ t ∈ ico a b, dist (g' t) (v t (g t)) ≤ εg) (hgs : ∀ t ∈ ico a b, g t ∈ s t)
+    (ha : dist (f a) (g a) ≤ δ) : ∀ t ∈ icc a b, dist (f t) (g t) ≤ gronwallBound δ K (εf + εg) (t - a) := by
   simp only [dist_eq_norm] at ha⊢
   have h_deriv : ∀ t ∈ Ico a b, HasDerivWithinAt (fun t => f t - g t) (f' t - g' t) (Ici t) t := fun t ht =>
     (hf' t ht).sub (hg' t ht)
@@ -183,13 +182,12 @@ people call this Grönwall's inequality too.
 
 This version assumes all inequalities to be true in the whole space. -/
 theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, LipschitzWith K (v t))
-    {f g f' g' : ℝ → E} {a b : ℝ} {εf εg δ : ℝ} (hf : ContinuousOn f (IccCat a b))
-    (hf' : ∀ t ∈ IcoCat a b, HasDerivWithinAt f (f' t) (IciCat t) t)
-    (f_bound : ∀ t ∈ IcoCat a b, dist (f' t) (v t (f t)) ≤ εf) (hg : ContinuousOn g (IccCat a b))
-    (hg' : ∀ t ∈ IcoCat a b, HasDerivWithinAt g (g' t) (IciCat t) t)
-    (g_bound : ∀ t ∈ IcoCat a b, dist (g' t) (v t (g t)) ≤ εg) (ha : dist (f a) (g a) ≤ δ) :
-    ∀ t ∈ IccCat a b, dist (f t) (g t) ≤ gronwallBound δ K (εf + εg) (t - a) :=
-  have hfs : ∀ t ∈ IcoCat a b, f t ∈ @Univ E := fun t ht => trivial
+    {f g f' g' : ℝ → E} {a b : ℝ} {εf εg δ : ℝ} (hf : ContinuousOn f (icc a b))
+    (hf' : ∀ t ∈ ico a b, HasDerivWithinAt f (f' t) (ici t) t) (f_bound : ∀ t ∈ ico a b, dist (f' t) (v t (f t)) ≤ εf)
+    (hg : ContinuousOn g (icc a b)) (hg' : ∀ t ∈ ico a b, HasDerivWithinAt g (g' t) (ici t) t)
+    (g_bound : ∀ t ∈ ico a b, dist (g' t) (v t (g t)) ≤ εg) (ha : dist (f a) (g a) ≤ δ) :
+    ∀ t ∈ icc a b, dist (f t) (g t) ≤ gronwallBound δ K (εf + εg) (t - a) :=
+  have hfs : ∀ t ∈ ico a b, f t ∈ @univ E := fun t ht => trivial
   dist_le_of_approx_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' f_bound hfs hg hg'
     g_bound (fun t ht => trivial) ha
 #align dist_le_of_approx_trajectories_ODE dist_le_of_approx_trajectories_ODE
@@ -203,10 +201,10 @@ This version assumes all inequalities to be true in some time-dependent set `s t
 and assumes that the solutions never leave this set. -/
 theorem dist_le_of_trajectories_ODE_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
     (hv : ∀ t, ∀ (x y) (_ : x ∈ s t) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y) {f g : ℝ → E} {a b : ℝ} {δ : ℝ}
-    (hf : ContinuousOn f (IccCat a b)) (hf' : ∀ t ∈ IcoCat a b, HasDerivWithinAt f (v t (f t)) (IciCat t) t)
-    (hfs : ∀ t ∈ IcoCat a b, f t ∈ s t) (hg : ContinuousOn g (IccCat a b))
-    (hg' : ∀ t ∈ IcoCat a b, HasDerivWithinAt g (v t (g t)) (IciCat t) t) (hgs : ∀ t ∈ IcoCat a b, g t ∈ s t)
-    (ha : dist (f a) (g a) ≤ δ) : ∀ t ∈ IccCat a b, dist (f t) (g t) ≤ δ * exp (K * (t - a)) := by
+    (hf : ContinuousOn f (icc a b)) (hf' : ∀ t ∈ ico a b, HasDerivWithinAt f (v t (f t)) (ici t) t)
+    (hfs : ∀ t ∈ ico a b, f t ∈ s t) (hg : ContinuousOn g (icc a b))
+    (hg' : ∀ t ∈ ico a b, HasDerivWithinAt g (v t (g t)) (ici t) t) (hgs : ∀ t ∈ ico a b, g t ∈ s t)
+    (ha : dist (f a) (g a) ≤ δ) : ∀ t ∈ icc a b, dist (f t) (g t) ≤ δ * exp (K * (t - a)) := by
   have f_bound : ∀ t ∈ Ico a b, dist (v t (f t)) (v t (f t)) ≤ 0 := by
     intros
     rw [dist_self]
@@ -224,10 +222,10 @@ people call this Grönwall's inequality too.
 
 This version assumes all inequalities to be true in the whole space. -/
 theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, LipschitzWith K (v t)) {f g : ℝ → E} {a b : ℝ}
-    {δ : ℝ} (hf : ContinuousOn f (IccCat a b)) (hf' : ∀ t ∈ IcoCat a b, HasDerivWithinAt f (v t (f t)) (IciCat t) t)
-    (hg : ContinuousOn g (IccCat a b)) (hg' : ∀ t ∈ IcoCat a b, HasDerivWithinAt g (v t (g t)) (IciCat t) t)
-    (ha : dist (f a) (g a) ≤ δ) : ∀ t ∈ IccCat a b, dist (f t) (g t) ≤ δ * exp (K * (t - a)) :=
-  have hfs : ∀ t ∈ IcoCat a b, f t ∈ @Univ E := fun t ht => trivial
+    {δ : ℝ} (hf : ContinuousOn f (icc a b)) (hf' : ∀ t ∈ ico a b, HasDerivWithinAt f (v t (f t)) (ici t) t)
+    (hg : ContinuousOn g (icc a b)) (hg' : ∀ t ∈ ico a b, HasDerivWithinAt g (v t (g t)) (ici t) t)
+    (ha : dist (f a) (g a) ≤ δ) : ∀ t ∈ icc a b, dist (f t) (g t) ≤ δ * exp (K * (t - a)) :=
+  have hfs : ∀ t ∈ ico a b, f t ∈ @univ E := fun t ht => trivial
   dist_le_of_trajectories_ODE_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
     (fun t ht => trivial) ha
 #align dist_le_of_trajectories_ODE dist_le_of_trajectories_ODE
@@ -238,10 +236,10 @@ a given initial value provided that RHS is Lipschitz continuous in `x` within `s
 and we consider only solutions included in `s`. -/
 theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E} {K : ℝ}
     (hv : ∀ t, ∀ (x y) (_ : x ∈ s t) (_ : y ∈ s t), dist (v t x) (v t y) ≤ K * dist x y) {f g : ℝ → E} {a b : ℝ}
-    (hf : ContinuousOn f (IccCat a b)) (hf' : ∀ t ∈ IcoCat a b, HasDerivWithinAt f (v t (f t)) (IciCat t) t)
-    (hfs : ∀ t ∈ IcoCat a b, f t ∈ s t) (hg : ContinuousOn g (IccCat a b))
-    (hg' : ∀ t ∈ IcoCat a b, HasDerivWithinAt g (v t (g t)) (IciCat t) t) (hgs : ∀ t ∈ IcoCat a b, g t ∈ s t)
-    (ha : f a = g a) : ∀ t ∈ IccCat a b, f t = g t := by
+    (hf : ContinuousOn f (icc a b)) (hf' : ∀ t ∈ ico a b, HasDerivWithinAt f (v t (f t)) (ici t) t)
+    (hfs : ∀ t ∈ ico a b, f t ∈ s t) (hg : ContinuousOn g (icc a b))
+    (hg' : ∀ t ∈ ico a b, HasDerivWithinAt g (v t (g t)) (ici t) t) (hgs : ∀ t ∈ ico a b, g t ∈ s t) (ha : f a = g a) :
+    ∀ t ∈ icc a b, f t = g t := by
   intro t ht
   have := dist_le_of_trajectories_ODE_of_mem_set hv hf hf' hfs hg hg' hgs (dist_le_zero.2 ha) t ht
   rwa [zero_mul, dist_le_zero] at this
@@ -250,10 +248,10 @@ theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E}
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) with
 a given initial value provided that RHS is Lipschitz continuous in `x`. -/
 theorem ODE_solution_unique {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, LipschitzWith K (v t)) {f g : ℝ → E} {a b : ℝ}
-    (hf : ContinuousOn f (IccCat a b)) (hf' : ∀ t ∈ IcoCat a b, HasDerivWithinAt f (v t (f t)) (IciCat t) t)
-    (hg : ContinuousOn g (IccCat a b)) (hg' : ∀ t ∈ IcoCat a b, HasDerivWithinAt g (v t (g t)) (IciCat t) t)
-    (ha : f a = g a) : ∀ t ∈ IccCat a b, f t = g t :=
-  have hfs : ∀ t ∈ IcoCat a b, f t ∈ @Univ E := fun t ht => trivial
+    (hf : ContinuousOn f (icc a b)) (hf' : ∀ t ∈ ico a b, HasDerivWithinAt f (v t (f t)) (ici t) t)
+    (hg : ContinuousOn g (icc a b)) (hg' : ∀ t ∈ ico a b, HasDerivWithinAt g (v t (g t)) (ici t) t) (ha : f a = g a) :
+    ∀ t ∈ icc a b, f t = g t :=
+  have hfs : ∀ t ∈ ico a b, f t ∈ @univ E := fun t ht => trivial
   ODE_solution_unique_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg' (fun t ht => trivial) ha
 #align ODE_solution_unique ODE_solution_unique
 

@@ -347,7 +347,7 @@ def image : Over X ⥤ MonoOver X where
   map f g k := by
     apply (forget X).preimage _
     apply over.hom_mk _ _
-    refine' image.lift { I := image _, m := image.ι g.hom, e := k.left ≫ factor_thru_image g.hom }
+    refine' image.lift { i := image _, m := image.ι g.hom, e := k.left ≫ factor_thru_image g.hom }
     apply image.lift_fac
 #align category_theory.mono_over.image CategoryTheory.MonoOver.image
 
@@ -364,7 +364,7 @@ def imageForgetAdj : image ⊣ forget X :=
             apply image.fac,
           invFun := fun k => by
             refine' over.hom_mk _ _
-            refine' image.lift { I := g.obj.left, m := g.arrow, e := k.left, fac' := over.w k }
+            refine' image.lift { i := g.obj.left, m := g.arrow, e := k.left, fac' := over.w k }
             apply image.lift_fac,
           left_inv := fun k => Subsingleton.elim _ _,
           right_inv := fun k => by

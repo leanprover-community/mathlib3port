@@ -354,6 +354,7 @@ import Mathbin.Algebra.Regular.Smul
 import Mathbin.Algebra.Ring.Aut
 import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Ring.BooleanRing
+import Mathbin.Algebra.Ring.Commute
 import Mathbin.Algebra.Ring.CompTypeclasses
 import Mathbin.Algebra.Ring.Default
 import Mathbin.Algebra.Ring.Defs
@@ -367,7 +368,9 @@ import Mathbin.Algebra.Ring.OrderSynonym
 import Mathbin.Algebra.Ring.Pi
 import Mathbin.Algebra.Ring.Prod
 import Mathbin.Algebra.Ring.Regular
+import Mathbin.Algebra.Ring.Semiconj
 import Mathbin.Algebra.Ring.Ulift
+import Mathbin.Algebra.Ring.Units
 import Mathbin.Algebra.RingQuot
 import Mathbin.Algebra.SmulWithZero
 import Mathbin.Algebra.Squarefree
@@ -720,6 +723,7 @@ import Mathbin.CategoryTheory.Abelian.Subobject
 import Mathbin.CategoryTheory.Abelian.Transfer
 import Mathbin.CategoryTheory.Action
 import Mathbin.CategoryTheory.Additive.Basic
+import Mathbin.CategoryTheory.Adhesive
 import Mathbin.CategoryTheory.Adjunction.AdjointFunctorTheorems
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Adjunction.Comma
@@ -1285,6 +1289,7 @@ import Mathbin.Data.Int.Modeq
 import Mathbin.Data.Int.NatPrime
 import Mathbin.Data.Int.Order.Basic
 import Mathbin.Data.Int.Order.Lemmas
+import Mathbin.Data.Int.Order.Units
 import Mathbin.Data.Int.Parity
 import Mathbin.Data.Int.Range
 import Mathbin.Data.Int.Sqrt
@@ -1428,6 +1433,7 @@ import Mathbin.Data.Nat.SqrtNormNum
 import Mathbin.Data.Nat.Squarefree
 import Mathbin.Data.Nat.SuccPred
 import Mathbin.Data.Nat.Totient
+import Mathbin.Data.Nat.Units
 import Mathbin.Data.Nat.Upto
 import Mathbin.Data.Nat.WithBot
 import Mathbin.Data.Num.Basic
@@ -1998,9 +2004,12 @@ import Mathbin.MeasureTheory.Function.LpOrder
 import Mathbin.MeasureTheory.Function.LpSpace
 import Mathbin.MeasureTheory.Function.SimpleFuncDense
 import Mathbin.MeasureTheory.Function.SimpleFuncDenseLp
-import Mathbin.MeasureTheory.Function.SpecialFunctions
-import Mathbin.MeasureTheory.Function.StronglyMeasurable
-import Mathbin.MeasureTheory.Function.StronglyMeasurableLp
+import Mathbin.MeasureTheory.Function.SpecialFunctions.Arctan
+import Mathbin.MeasureTheory.Function.SpecialFunctions.Basic
+import Mathbin.MeasureTheory.Function.SpecialFunctions.Inner
+import Mathbin.MeasureTheory.Function.StronglyMeasurable.Basic
+import Mathbin.MeasureTheory.Function.StronglyMeasurable.Inner
+import Mathbin.MeasureTheory.Function.StronglyMeasurable.Lp
 import Mathbin.MeasureTheory.Function.UniformIntegrable
 import Mathbin.MeasureTheory.Group.Action
 import Mathbin.MeasureTheory.Group.Arithmetic
@@ -2424,6 +2433,7 @@ import Mathbin.RingTheory.ReesAlgebra
 import Mathbin.RingTheory.RingHom.Finite
 import Mathbin.RingTheory.RingHom.FiniteType
 import Mathbin.RingTheory.RingHom.Integral
+import Mathbin.RingTheory.RingHom.Surjective
 import Mathbin.RingTheory.RingHomProperties
 import Mathbin.RingTheory.RingInvo
 import Mathbin.RingTheory.RootsOfUnity
@@ -2568,6 +2578,7 @@ import Mathbin.Tactic.Monotonicity.Interactive
 import Mathbin.Tactic.Monotonicity.Lemmas
 import Mathbin.Tactic.MoveAdd
 import Mathbin.Tactic.NoncommRing
+import Mathbin.Tactic.Nontriviality
 import Mathbin.Tactic.NormCast
 import Mathbin.Tactic.NormFin
 import Mathbin.Tactic.NormNum
@@ -2704,6 +2715,7 @@ import Mathbin.Topology.Algebra.Polynomial
 import Mathbin.Topology.Algebra.Ring
 import Mathbin.Topology.Algebra.Semigroup
 import Mathbin.Topology.Algebra.Star
+import Mathbin.Topology.Algebra.StarSubalgebra
 import Mathbin.Topology.Algebra.UniformConvergence
 import Mathbin.Topology.Algebra.UniformField
 import Mathbin.Topology.Algebra.UniformFilterBasis
@@ -2846,6 +2858,7 @@ import Mathbin.Topology.Sheaves.Forget
 import Mathbin.Topology.Sheaves.Functors
 import Mathbin.Topology.Sheaves.Limits
 import Mathbin.Topology.Sheaves.LocalPredicate
+import Mathbin.Topology.Sheaves.LocallySurjective
 import Mathbin.Topology.Sheaves.Operations
 import Mathbin.Topology.Sheaves.Presheaf
 import Mathbin.Topology.Sheaves.PresheafOfFunctions

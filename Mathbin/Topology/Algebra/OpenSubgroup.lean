@@ -171,7 +171,7 @@ variable {H : Type _} [Group H] [TopologicalSpace H]
 /-- The product of two open subgroups as an open subgroup of the product group. -/
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
-  { (U : Subgroup G).Prod (V : Subgroup H) with Carrier := U ×ˢ V, is_open' := U.IsOpen.Prod V.IsOpen }
+  { (U : Subgroup G).Prod (V : Subgroup H) with carrier := U ×ˢ V, is_open' := U.IsOpen.Prod V.IsOpen }
 #align open_subgroup.prod OpenSubgroup.prod
 
 end
@@ -260,7 +260,7 @@ theorem is_open_of_open_subgroup {U : OpenSubgroup G} (h : U.1 ≤ H) : IsOpen (
 /-- If a subgroup of a topological group has `1` in its interior, then it is open. -/
 @[to_additive "If a subgroup of an additive topological group has `0` in its interior, then it is\nopen."]
 theorem is_open_of_one_mem_interior {G : Type _} [Group G] [TopologicalSpace G] [TopologicalGroup G] {H : Subgroup G}
-    (h_1_int : (1 : G) ∈ Interior (H : Set G)) : IsOpen (H : Set G) := by
+    (h_1_int : (1 : G) ∈ interior (H : Set G)) : IsOpen (H : Set G) := by
   have h : 𝓝 1 ≤ Filter.principal (H : Set G) :=
     nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
   rw [is_open_iff_nhds]

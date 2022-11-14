@@ -104,7 +104,7 @@ variable [FloorRing 𝕜] [hp : Fact (0 < p)]
 include hp
 
 /-- The natural equivalence between `add_circle p` and the half-open interval `[0, p)`. -/
-def equivIco : AddCircle p ≃ IcoCat 0 p where
+def equivIco : AddCircle p ≃ ico 0 p where
   invFun := QuotientAddGroup.mk' _ ∘ coe
   toFun x := ⟨(to_Ico_mod_periodic 0 hp.out).lift x, Quot.induction_on x <| to_Ico_mod_mem_Ico' hp.out⟩
   right_inv := by
@@ -131,7 +131,7 @@ theorem continuous_equiv_Ico_symm : Continuous (equivIco p).symm :=
 /-- The image of the closed interval `[0, p]` under the quotient map `𝕜 → add_circle p` is the
 entire space. -/
 @[simp]
-theorem coe_image_Icc_eq : (coe : 𝕜 → AddCircle p) '' IccCat 0 p = univ := by
+theorem coe_image_Icc_eq : (coe : 𝕜 → AddCircle p) '' icc 0 p = univ := by
   refine' eq_univ_iff_forall.mpr fun x => _
   let y := equiv_Ico p x
   exact ⟨y, ⟨y.2.1, y.2.2.le⟩, (equiv_Ico p).symm_apply_apply x⟩

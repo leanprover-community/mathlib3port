@@ -622,11 +622,11 @@ variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
 include q
 
-open Functor (Liftp Liftr Supp)
+open Functor (Liftp Liftr supp)
 
 open Set
 
-theorem mem_supp {α : Type u} (x : F α) (u : α) : u ∈ Supp x ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ := by
+theorem mem_supp {α : Type u} (x : F α) (u : α) : u ∈ supp x ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ := by
   rw [supp]
   dsimp
   constructor
@@ -644,12 +644,12 @@ theorem mem_supp {α : Type u} (x : F α) (u : α) : u ∈ Supp x ↔ ∀ a f, a
   apply h'
 #align qpf.mem_supp Qpf.mem_supp
 
-theorem supp_eq {α : Type u} (x : F α) : Supp x = { u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ } := by
+theorem supp_eq {α : Type u} (x : F α) : supp x = { u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ } := by
   ext <;> apply mem_supp
 #align qpf.supp_eq Qpf.supp_eq
 
 theorem has_good_supp_iff {α : Type u} (x : F α) :
-    (∀ p, Liftp p x ↔ ∀ u ∈ Supp x, p u) ↔ ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ a' f', abs ⟨a', f'⟩ = x → f '' univ ⊆ f' '' univ :=
+    (∀ p, Liftp p x ↔ ∀ u ∈ supp x, p u) ↔ ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ a' f', abs ⟨a', f'⟩ = x → f '' univ ⊆ f' '' univ :=
   by
   constructor
   · intro h
@@ -696,13 +696,13 @@ def LiftpPreservation : Prop :=
 
 /-- does `abs` preserve `supp`? -/
 def SuppPreservation : Prop :=
-  ∀ ⦃α⦄ (x : q.p.Obj α), Supp (abs x) = Supp x
+  ∀ ⦃α⦄ (x : q.p.Obj α), supp (abs x) = supp x
 #align qpf.supp_preservation Qpf.SuppPreservation
 
 variable (q)
 
 theorem supp_eq_of_is_uniform (h : q.IsUniform) {α : Type u} (a : q.p.A) (f : q.p.B a → α) :
-    Supp (abs ⟨a, f⟩) = f '' univ := by
+    supp (abs ⟨a, f⟩) = f '' univ := by
   ext u
   rw [mem_supp]
   constructor
@@ -715,7 +715,7 @@ theorem supp_eq_of_is_uniform (h : q.IsUniform) {α : Type u} (a : q.p.A) (f : q
 #align qpf.supp_eq_of_is_uniform Qpf.supp_eq_of_is_uniform
 
 theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Type u} (x : F α) (p : α → Prop) :
-    Liftp p x ↔ ∀ u ∈ Supp x, p u := by
+    Liftp p x ↔ ∀ u ∈ supp x, p u := by
   rw [liftp_iff, ← abs_repr x]
   cases' repr x with a f
   constructor
@@ -731,7 +731,7 @@ theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Type u} (x : F α) (p : 
   exact ⟨i, mem_univ i, rfl⟩
 #align qpf.liftp_iff_of_is_uniform Qpf.liftp_iff_of_is_uniform
 
-theorem supp_map (h : q.IsUniform) {α β : Type u} (g : α → β) (x : F α) : Supp (g <$> x) = g '' Supp x := by
+theorem supp_map (h : q.IsUniform) {α β : Type u} (g : α → β) (x : F α) : supp (g <$> x) = g '' supp x := by
   rw [← abs_repr x]
   cases' repr x with a f
   rw [← abs_map, Pfunctor.map_eq]

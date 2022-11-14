@@ -169,8 +169,8 @@ dilations of balls in `u`. -/
 theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace α] (t : Set ι) (x : ι → α) (r : ι → ℝ)
     (R : ℝ) (hr : ∀ a ∈ t, r a ≤ R) :
     ∃ (u : _)(_ : u ⊆ t),
-      (u.PairwiseDisjoint fun a => ClosedBall (x a) (r a)) ∧
-        ∀ a ∈ t, ∃ b ∈ u, ClosedBall (x a) (r a) ⊆ ClosedBall (x b) (5 * r b) :=
+      (u.PairwiseDisjoint fun a => closedBall (x a) (r a)) ∧
+        ∀ a ∈ t, ∃ b ∈ u, closedBall (x a) (r a) ⊆ closedBall (x b) (5 * r b) :=
   by
   rcases eq_empty_or_nonempty t with (rfl | tnonempty)
   · exact ⟨∅, subset.refl _, pairwise_disjoint_empty, by simp⟩
@@ -217,8 +217,8 @@ For more flexibility, we give a statement with a parameterized family of sets.
 -/
 theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
     [SecondCountableTopology α] (μ : Measure α) [IsLocallyFiniteMeasure μ] (s : Set α) (t : Set ι) (C : ℝ≥0) (r : ι → ℝ)
-    (c : ι → α) (B : ι → Set α) (hB : ∀ a ∈ t, B a ⊆ ClosedBall (c a) (r a))
-    (μB : ∀ a ∈ t, μ (ClosedBall (c a) (3 * r a)) ≤ C * μ (B a)) (ht : ∀ a ∈ t, (Interior (B a)).Nonempty)
+    (c : ι → α) (B : ι → Set α) (hB : ∀ a ∈ t, B a ⊆ closedBall (c a) (r a))
+    (μB : ∀ a ∈ t, μ (closedBall (c a) (3 * r a)) ≤ C * μ (B a)) (ht : ∀ a ∈ t, (interior (B a)).Nonempty)
     (h't : ∀ a ∈ t, IsClosed (B a)) (hf : ∀ x ∈ s, ∀ ε > (0 : ℝ), ∃ a ∈ t, r a ≤ ε ∧ c a = x) :
     ∃ (u : _)(_ : u ⊆ t), u.Countable ∧ u.PairwiseDisjoint B ∧ μ (s \ ⋃ a ∈ u, B a) = 0 := by
   /- The idea of the proof is the following. Assume for simplicity that `μ` is finite. Applying the
@@ -419,8 +419,8 @@ covering a fixed proportion `1/C` of the ball `closed_ball x (3 * r)` forms a Vi
 This is essentially a restatement of the measurable Vitali theorem. -/
 protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α] [SecondCountableTopology α]
     (μ : Measure α) [IsLocallyFiniteMeasure μ] (C : ℝ≥0)
-    (h : ∀ x, ∃ᶠ r in 𝓝[>] 0, μ (ClosedBall x (3 * r)) ≤ C * μ (ClosedBall x r)) : VitaliFamily μ where
-  SetsAt x := { a | IsClosed a ∧ (Interior a).Nonempty ∧ ∃ r, a ⊆ ClosedBall x r ∧ μ (ClosedBall x (3 * r)) ≤ C * μ a }
+    (h : ∀ x, ∃ᶠ r in 𝓝[>] 0, μ (closedBall x (3 * r)) ≤ C * μ (closedBall x r)) : VitaliFamily μ where
+  setsAt x := { a | IsClosed a ∧ (interior a).Nonempty ∧ ∃ r, a ⊆ closedBall x r ∧ μ (closedBall x (3 * r)) ≤ C * μ a }
   MeasurableSet' x a ha := ha.1.MeasurableSet
   nonempty_interior x a ha := ha.2.1
   Nontrivial x ε εpos := by
@@ -434,7 +434,7 @@ protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
       { p |
         p.2.2 ⊆ closed_ball p.2.1 p.1 ∧
           μ (closed_ball p.2.1 (3 * p.1)) ≤ C * μ p.2.2 ∧
-            (Interior p.2.2).Nonempty ∧ IsClosed p.2.2 ∧ p.2.2 ∈ f p.2.1 ∧ p.2.1 ∈ s }
+            (interior p.2.2).Nonempty ∧ IsClosed p.2.2 ∧ p.2.2 ∈ f p.2.1 ∧ p.2.1 ∈ s }
     have A : ∀ x ∈ s, ∀ ε : ℝ, ε > 0 → ∃ (p : ℝ × α × Set α)(Hp : p ∈ t), p.1 ≤ ε ∧ p.2.1 = x := by
       intro x xs ε εpos
       rcases ffine x xs ε εpos with ⟨a, ha, h'a⟩

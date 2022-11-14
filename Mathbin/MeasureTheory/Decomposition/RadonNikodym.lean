@@ -48,7 +48,7 @@ theorem with_density_rn_deriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition
   obtain ⟨hf₁, ⟨E, hE₁, hE₂, hE₃⟩, hadd⟩ := have_lebesgue_decomposition_spec μ ν
   have : singular_part μ ν = 0 := by
     refine' le_antisymm (fun A hA => _) (measure.zero_le _)
-    suffices singular_part μ ν Set.Univ = 0 by
+    suffices singular_part μ ν Set.univ = 0 by
       rw [measure.coe_zero, Pi.zero_apply, ← this]
       exact measure_mono (Set.subset_univ _)
     rw [← measure_add_measure_compl hE₁, hE₂, zero_add]

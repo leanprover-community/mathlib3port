@@ -50,7 +50,7 @@ def piFinTwoEquiv (α : Fin 2 → Type u) : (∀ i, α i) ≃ α 0 × α 1 where
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Fin.preimage_apply_01_prod {α : Fin 2 → Type u} (s : Set (α 0)) (t : Set (α 1)) :
-    (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.Pi Set.Univ (Fin.cons s <| Fin.cons t Fin.elim0) := by
+    (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.pi Set.univ (Fin.cons s <| Fin.cons t Fin.elim0) := by
   ext f
   have : (Fin.cons s (Fin.cons t Fin.elim0) : ∀ i, Set (α i)) 1 = t := rfl
   simp [Fin.forall_fin_two, this]
@@ -58,7 +58,7 @@ theorem Fin.preimage_apply_01_prod {α : Fin 2 → Type u} (s : Set (α 0)) (t :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Fin.preimage_apply_01_prod' {α : Type u} (s t : Set α) :
-    (fun f : Fin 2 → α => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.Pi Set.Univ ![s, t] :=
+    (fun f : Fin 2 → α => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.pi Set.univ ![s, t] :=
   Fin.preimage_apply_01_prod s t
 #align fin.preimage_apply_01_prod' Fin.preimage_apply_01_prod'
 

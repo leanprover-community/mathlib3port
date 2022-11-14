@@ -35,8 +35,8 @@ variable {α α' β β' γ γ' δ δ' ε ε' : Type _} {m : α → β → γ} {f
 /-- The image of a binary function `m : α → β → γ` as a function `filter α → filter β → filter γ`.
 Mathematically this should be thought of as the image of the corresponding function `α × β → γ`. -/
 def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) : Filter γ where
-  Sets := { s | ∃ u v, u ∈ f ∧ v ∈ g ∧ Image2 m u v ⊆ s }
-  univ_sets := ⟨Univ, Univ, univ_sets _, univ_sets _, subset_univ _⟩
+  sets := { s | ∃ u v, u ∈ f ∧ v ∈ g ∧ image2 m u v ⊆ s }
+  univ_sets := ⟨univ, univ, univ_sets _, univ_sets _, subset_univ _⟩
   sets_of_superset s t hs hst :=
     Exists₂Cat.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets s t := by
@@ -49,11 +49,11 @@ def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) : Filter γ wh
 #align filter.map₂ Filter.map₂
 
 @[simp]
-theorem mem_map₂_iff : u ∈ map₂ m f g ↔ ∃ s t, s ∈ f ∧ t ∈ g ∧ Image2 m s t ⊆ u :=
+theorem mem_map₂_iff : u ∈ map₂ m f g ↔ ∃ s t, s ∈ f ∧ t ∈ g ∧ image2 m s t ⊆ u :=
   Iff.rfl
 #align filter.mem_map₂_iff Filter.mem_map₂_iff
 
-theorem image2_mem_map₂ (hs : s ∈ f) (ht : t ∈ g) : Image2 m s t ∈ map₂ m f g :=
+theorem image2_mem_map₂ (hs : s ∈ f) (ht : t ∈ g) : image2 m s t ∈ map₂ m f g :=
   ⟨_, _, hs, ht, Subset.rfl⟩
 #align filter.image2_mem_map₂ Filter.image2_mem_map₂
 
@@ -107,18 +107,18 @@ theorem map₂_mono_right (h : f₁ ≤ f₂) : map₂ m f₁ g ≤ map₂ m f�
 #align filter.map₂_mono_right Filter.map₂_mono_right
 
 @[simp]
-theorem le_map₂_iff {h : Filter γ} : h ≤ map₂ m f g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → Image2 m s t ∈ h :=
+theorem le_map₂_iff {h : Filter γ} : h ≤ map₂ m f g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → image2 m s t ∈ h :=
   ⟨fun H s hs t ht => H <| image2_mem_map₂ hs ht, fun H u ⟨s, t, hs, ht, hu⟩ => mem_of_superset (H hs ht) hu⟩
 #align filter.le_map₂_iff Filter.le_map₂_iff
 
 @[simp]
 theorem map₂_bot_left : map₂ m ⊥ g = ⊥ :=
-  empty_mem_iff_bot.1 ⟨∅, Univ, trivial, univ_mem, image2_empty_left.Subset⟩
+  empty_mem_iff_bot.1 ⟨∅, univ, trivial, univ_mem, image2_empty_left.Subset⟩
 #align filter.map₂_bot_left Filter.map₂_bot_left
 
 @[simp]
 theorem map₂_bot_right : map₂ m f ⊥ = ⊥ :=
-  empty_mem_iff_bot.1 ⟨Univ, ∅, univ_mem, trivial, image2_empty_right.Subset⟩
+  empty_mem_iff_bot.1 ⟨univ, ∅, univ_mem, trivial, image2_empty_right.Subset⟩
 #align filter.map₂_bot_right Filter.map₂_bot_right
 
 @[simp]
@@ -236,8 +236,8 @@ theorem map₂_right (h : f.ne_bot) : map₂ (fun x y => y) f g = g := by rw [ma
 `filter α → filter β → filter γ → filter δ`. Mathematically this should be thought of as the image
 of the corresponding function `α × β × γ → δ`. -/
 def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Filter γ) : Filter δ where
-  Sets := { s | ∃ u v w, u ∈ f ∧ v ∈ g ∧ w ∈ h ∧ Image3 m u v w ⊆ s }
-  univ_sets := ⟨Univ, Univ, Univ, univ_sets _, univ_sets _, univ_sets _, subset_univ _⟩
+  sets := { s | ∃ u v w, u ∈ f ∧ v ∈ g ∧ w ∈ h ∧ image3 m u v w ⊆ s }
+  univ_sets := ⟨univ, univ, univ, univ_sets _, univ_sets _, univ_sets _, subset_univ _⟩
   sets_of_superset s t hs hst :=
     Exists₃Cat.imp (fun u v w => And.imp_right <| And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets s t := by

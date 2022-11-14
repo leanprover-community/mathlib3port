@@ -92,7 +92,7 @@ instance : Inhabited (StrictUniversalPropertyFixedTarget W.q W E) :=
 /-- When `W` consists of isomorphisms, the identity satisfies the universal property
 of the localization. -/
 @[simps]
-def strictUniversalPropertyFixedTargetId (hW : W ⊆ MorphismProperty.Isomorphisms C) :
+def strictUniversalPropertyFixedTargetId (hW : W ⊆ MorphismProperty.isomorphisms C) :
     StrictUniversalPropertyFixedTarget (𝟭 C) W E where
   inverts X Y f hf := hW f hf
   lift F hF := F
@@ -127,7 +127,7 @@ theorem IsLocalization.mk' (h₁ : Localization.StrictUniversalPropertyFixedTarg
             simpa only [eq_to_iso.hom, eq_to_hom_app, eq_to_hom_map, eq_to_hom_trans, eq_to_hom_refl] } }
 #align category_theory.functor.is_localization.mk' CategoryTheory.Functor.IsLocalization.mk'
 
-theorem IsLocalization.for_id (hW : W ⊆ MorphismProperty.Isomorphisms C) : (𝟭 C).IsLocalization W :=
+theorem IsLocalization.for_id (hW : W ⊆ MorphismProperty.isomorphisms C) : (𝟭 C).IsLocalization W :=
   IsLocalization.mk' _ _ (Localization.strictUniversalPropertyFixedTargetId W _ hW)
     (Localization.strictUniversalPropertyFixedTargetId W _ hW)
 #align category_theory.functor.is_localization.for_id CategoryTheory.Functor.IsLocalization.for_id

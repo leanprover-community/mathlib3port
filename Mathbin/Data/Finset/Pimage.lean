@@ -60,13 +60,13 @@ theorem mem_pimage : b ∈ s.pimage f ↔ ∃ a ∈ s, b ∈ f a := by simp [pim
 #align finset.mem_pimage Finset.mem_pimage
 
 @[simp, norm_cast]
-theorem coe_pimage : (s.pimage f : Set β) = f.Image s :=
+theorem coe_pimage : (s.pimage f : Set β) = f.image s :=
   Set.ext fun x => mem_pimage
 #align finset.coe_pimage Finset.coe_pimage
 
 @[simp]
 theorem pimage_some (s : Finset α) (f : α → β) [∀ x, Decidable (Part.some <| f x).Dom] :
-    (s.pimage fun x => Part.some (f x)) = s.Image f := by
+    (s.pimage fun x => Part.some (f x)) = s.image f := by
   ext
   simp [eq_comm]
 #align finset.pimage_some Finset.pimage_some
@@ -79,7 +79,7 @@ theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f
 
 /-- Rewrite `s.pimage f` in terms of `finset.filter`, `finset.attach`, and `finset.image`. -/
 theorem pimage_eq_image_filter :
-    s.pimage f = (filter (fun x => (f x).Dom) s).attach.Image fun x => (f x).get (mem_filter.1 x.coe_prop).2 := by
+    s.pimage f = (filter (fun x => (f x).Dom) s).attach.image fun x => (f x).get (mem_filter.1 x.coe_prop).2 := by
   ext x
   simp [Part.mem_eq, And.exists, -exists_prop]
 #align finset.pimage_eq_image_filter Finset.pimage_eq_image_filter

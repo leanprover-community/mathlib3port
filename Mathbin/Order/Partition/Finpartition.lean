@@ -260,7 +260,7 @@ variable [DecidableEq α] {a b c : α}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance : HasInf (Finpartition a) :=
   ⟨fun P Q =>
-    ofErase ((P.parts ×ˢ Q.parts).Image fun bc => bc.1 ⊓ bc.2)
+    ofErase ((P.parts ×ˢ Q.parts).image fun bc => bc.1 ⊓ bc.2)
       (by
         rw [sup_indep_iff_disjoint_erase]
         simp only [mem_image, and_imp, exists_prop, forall_exists_index, id.def, Prod.exists, mem_product,
@@ -284,7 +284,7 @@ instance : HasInf (Finpartition a) :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem parts_inf (P Q : Finpartition a) :
-    (P ⊓ Q).parts = ((P.parts ×ˢ Q.parts).Image fun bc : α × α => bc.1 ⊓ bc.2).erase ⊥ :=
+    (P ⊓ Q).parts = ((P.parts ×ˢ Q.parts).image fun bc : α × α => bc.1 ⊓ bc.2).erase ⊥ :=
   rfl
 #align finpartition.parts_inf Finpartition.parts_inf
 
@@ -412,7 +412,7 @@ variable [GeneralizedBooleanAlgebra α] [DecidableEq α] {a b c : α} (P : Finpa
 /-- Restricts a finpartition to avoid a given element. -/
 @[simps]
 def avoid (b : α) : Finpartition (a \ b) :=
-  ofErase (P.parts.Image (· \ b)) (P.Disjoint.image_finset_of_le fun a => sdiff_le).SupIndep
+  ofErase (P.parts.image (· \ b)) (P.Disjoint.image_finset_of_le fun a => sdiff_le).SupIndep
     (by rw [sup_image, comp.left_id, Finset.sup_sdiff_right, ← id_def, P.sup_parts])
 #align finpartition.avoid Finpartition.avoid
 
@@ -496,7 +496,7 @@ section Atomise
 /-- Cuts `s` along the finsets in `F`: Two elements of `s` will be in the same part if they are
 in the same finsets of `F`. -/
 def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
-  ofErase (F.Powerset.Image fun Q => s.filter fun i => ∀ t ∈ F, t ∈ Q ↔ i ∈ t)
+  ofErase (F.powerset.image fun Q => s.filter fun i => ∀ t ∈ F, t ∈ Q ↔ i ∈ t)
     (Set.PairwiseDisjoint.supIndep fun x hx y hy h =>
       disjoint_left.mpr fun z hz1 hz2 =>
         h
@@ -563,7 +563,7 @@ theorem card_filter_atomise_le_two_pow (ht : t ∈ F) :
     ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty).card ≤ 2 ^ (F.card - 1) := by
   suffices h :
     ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty) ⊆
-      (F.erase t).Powerset.Image fun P => s.filter fun i => ∀ x ∈ F, x ∈ insert t P ↔ i ∈ x
+      (F.erase t).powerset.image fun P => s.filter fun i => ∀ x ∈ F, x ∈ insert t P ↔ i ∈ x
   · refine' (card_le_of_subset h).trans (card_image_le.trans _)
     rw [card_powerset, card_erase_of_mem ht]
     

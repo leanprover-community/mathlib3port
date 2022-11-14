@@ -142,7 +142,7 @@ theorem isVonNBoundedSingleton (x : E) : IsVonNBounded 𝕜 ({x} : Set E) := fun
 #align bornology.is_vonN_bounded_singleton Bornology.isVonNBoundedSingleton
 
 /-- The union of all bounded set is the whole space. -/
-theorem is_vonN_bounded_covers : ⋃₀SetOf (IsVonNBounded 𝕜) = (Set.Univ : Set E) :=
+theorem is_vonN_bounded_covers : ⋃₀setOf (IsVonNBounded 𝕜) = (Set.univ : Set E) :=
   Set.eq_univ_iff_forall.mpr fun x => Set.mem_sUnion.mpr ⟨{x}, isVonNBoundedSingleton _, Set.mem_singleton _⟩
 #align bornology.is_vonN_bounded_covers Bornology.is_vonN_bounded_covers
 
@@ -155,7 +155,7 @@ Note that this is not registered as an instance, in order to avoid diamonds with
 metric bornology.-/
 @[reducible]
 def vonNBornology : Bornology E :=
-  Bornology.ofBounded (SetOf (IsVonNBounded 𝕜)) (isVonNBoundedEmpty 𝕜 E) (fun _ hs _ ht => hs.Subset ht)
+  Bornology.ofBounded (setOf (IsVonNBounded 𝕜)) (isVonNBoundedEmpty 𝕜 E) (fun _ hs _ ht => hs.Subset ht)
     (fun _ hs _ => hs.union) isVonNBoundedSingleton
 #align bornology.vonN_bornology Bornology.vonNBornology
 
@@ -206,12 +206,12 @@ variable (𝕜 E) [NontriviallyNormedField 𝕜] [SeminormedAddCommGroup E] [Nor
 
 namespace NormedSpace
 
-theorem isVonNBoundedBall (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.Ball (0 : E) r) := by
+theorem isVonNBoundedBall (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.ball (0 : E) r) := by
   rw [metric.nhds_basis_ball.is_vonN_bounded_basis_iff, ← ball_norm_seminorm 𝕜 E]
   exact fun ε hε => (normSeminorm 𝕜 E).ballZeroAbsorbsBallZero hε
 #align normed_space.is_vonN_bounded_ball NormedSpace.isVonNBoundedBall
 
-theorem isVonNBoundedClosedBall (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.ClosedBall (0 : E) r) :=
+theorem isVonNBoundedClosedBall (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.closedBall (0 : E) r) :=
   (isVonNBoundedBall 𝕜 E (r + 1)).Subset (Metric.closed_ball_subset_ball <| by linarith)
 #align normed_space.is_vonN_bounded_closed_ball NormedSpace.isVonNBoundedClosedBall
 
@@ -249,7 +249,7 @@ theorem vonN_bornology_eq : Bornology.vonNBornology 𝕜 E = PseudoMetricSpace.t
 
 variable (𝕜)
 
-theorem is_bounded_iff_subset_smul_ball {s : Set E} : Bornology.IsBounded s ↔ ∃ a : 𝕜, s ⊆ a • Metric.Ball 0 1 := by
+theorem is_bounded_iff_subset_smul_ball {s : Set E} : Bornology.IsBounded s ↔ ∃ a : 𝕜, s ⊆ a • Metric.ball 0 1 := by
   rw [← is_vonN_bounded_iff 𝕜]
   constructor
   · intro h
@@ -258,19 +258,19 @@ theorem is_bounded_iff_subset_smul_ball {s : Set E} : Bornology.IsBounded s ↔ 
     exact ⟨a, hρball a ha.le⟩
     
   · rintro ⟨a, ha⟩
-    exact ((is_vonN_bounded_ball 𝕜 E 1).Image (a • 1 : E →L[𝕜] E)).Subset ha
+    exact ((is_vonN_bounded_ball 𝕜 E 1).image (a • 1 : E →L[𝕜] E)).Subset ha
     
 #align normed_space.is_bounded_iff_subset_smul_ball NormedSpace.is_bounded_iff_subset_smul_ball
 
 theorem is_bounded_iff_subset_smul_closed_ball {s : Set E} :
-    Bornology.IsBounded s ↔ ∃ a : 𝕜, s ⊆ a • Metric.ClosedBall 0 1 := by
+    Bornology.IsBounded s ↔ ∃ a : 𝕜, s ⊆ a • Metric.closedBall 0 1 := by
   constructor
   · rw [is_bounded_iff_subset_smul_ball 𝕜]
     exact Exists.imp fun a ha => ha.trans <| Set.smul_set_mono <| Metric.ball_subset_closed_ball
     
   · rw [← is_vonN_bounded_iff 𝕜]
     rintro ⟨a, ha⟩
-    exact ((is_vonN_bounded_closed_ball 𝕜 E 1).Image (a • 1 : E →L[𝕜] E)).Subset ha
+    exact ((is_vonN_bounded_closed_ball 𝕜 E 1).image (a • 1 : E →L[𝕜] E)).Subset ha
     
 #align normed_space.is_bounded_iff_subset_smul_closed_ball NormedSpace.is_bounded_iff_subset_smul_closed_ball
 

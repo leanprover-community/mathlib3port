@@ -76,15 +76,15 @@ instance imFiniteDimensional {K L : Type _} [Field K] [Field L] [Algebra K L] {E
 
 /-- Given a field extension `L/K`, `finite_exts K L` is the set of
 intermediate field extensions `L/E/K` such that `E/K` is finite -/
-def FiniteExts (K : Type _) [Field K] (L : Type _) [Field L] [Algebra K L] : Set (IntermediateField K L) :=
+def finiteExts (K : Type _) [Field K] (L : Type _) [Field L] [Algebra K L] : Set (IntermediateField K L) :=
   { E | FiniteDimensional K E }
-#align finite_exts FiniteExts
+#align finite_exts finiteExts
 
 /-- Given a field extension `L/K`, `fixed_by_finite K L` is the set of
 subsets `Gal(L/E)` of `L ≃ₐ[K] L`, where `E/K` is finite -/
-def FixedByFinite (K L : Type _) [Field K] [Field L] [Algebra K L] : Set (Subgroup (L ≃ₐ[K] L)) :=
-  IntermediateField.fixingSubgroup '' FiniteExts K L
-#align fixed_by_finite FixedByFinite
+def fixedByFinite (K L : Type _) [Field K] [Field L] [Algebra K L] : Set (Subgroup (L ≃ₐ[K] L)) :=
+  IntermediateField.fixingSubgroup '' finiteExts K L
+#align fixed_by_finite fixedByFinite
 
 /-- For an field extension `L/K`, the intermediate field `K` is finite-dimensional over `K` -/
 theorem IntermediateField.finiteDimensionalBot (K L : Type _) [Field K] [Field L] [Algebra K L] :
@@ -104,7 +104,7 @@ theorem IntermediateField.fixingSubgroup.bot {K L : Type _} [Field K] [Field L] 
 #align intermediate_field.fixing_subgroup.bot IntermediateField.fixingSubgroup.bot
 
 /-- If `L/K` is a field extension, then we have `Gal(L/K) ∈ fixed_by_finite K L` -/
-theorem top_fixed_by_finite {K L : Type _} [Field K] [Field L] [Algebra K L] : ⊤ ∈ FixedByFinite K L :=
+theorem top_fixed_by_finite {K L : Type _} [Field K] [Field L] [Algebra K L] : ⊤ ∈ fixedByFinite K L :=
   ⟨⊥, IntermediateField.finiteDimensionalBot K L, IntermediateField.fixingSubgroup.bot⟩
 #align top_fixed_by_finite top_fixed_by_finite
 
@@ -131,11 +131,11 @@ theorem IntermediateField.fixingSubgroup.antimono {K L : Type _} [Field K] [Fiel
 /-- Given a field extension `L/K`, `gal_basis K L` is the filter basis on `L ≃ₐ[K] L` whose sets
 are `Gal(L/E)` for intermediate fields `E` with `E/K` finite dimensional -/
 def galBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : FilterBasis (L ≃ₐ[K] L) where
-  Sets := Subgroup.Carrier '' FixedByFinite K L
+  sets := Subgroup.carrier '' fixedByFinite K L
   Nonempty := ⟨⊤, ⊤, top_fixed_by_finite, rfl⟩
   inter_sets := by
     rintro X Y ⟨H1, ⟨E1, h_E1, rfl⟩, rfl⟩ ⟨H2, ⟨E2, h_E2, rfl⟩, rfl⟩
-    use (IntermediateField.fixingSubgroup (E1 ⊔ E2)).Carrier
+    use (IntermediateField.fixingSubgroup (E1 ⊔ E2)).carrier
     refine' ⟨⟨_, ⟨_, finiteDimensionalSup E1 E2 h_E1 h_E2, rfl⟩, rfl⟩, _⟩
     rw [Set.subset_inter_iff]
     exact
@@ -145,7 +145,7 @@ def galBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : FilterBasis (L �
 /-- A subset of `L ≃ₐ[K] L` is a member of `gal_basis K L` if and only if it is the underlying set
 of `Gal(L/E)` for some finite subextension `E/K`-/
 theorem mem_gal_basis_iff (K L : Type _) [Field K] [Field L] [Algebra K L] (U : Set (L ≃ₐ[K] L)) :
-    U ∈ galBasis K L ↔ U ∈ Subgroup.Carrier '' FixedByFinite K L :=
+    U ∈ galBasis K L ↔ U ∈ Subgroup.carrier '' fixedByFinite K L :=
   Iff.rfl
 #align mem_gal_basis_iff mem_gal_basis_iff
 
@@ -238,7 +238,7 @@ theorem krullTopologyT2 {K L : Type _} [Field K] [Field L] [Algebra K L] (h_int 
       rw [mem_nhds_iff] at h_nhd
       rcases h_nhd with ⟨W, hWH, hW_open, hW_1⟩
       refine'
-        ⟨LeftCoset f W, LeftCoset g W,
+        ⟨leftCoset f W, leftCoset g W,
           ⟨hW_open.left_coset f, hW_open.left_coset g, ⟨1, hW_1, mul_one _⟩, ⟨1, hW_1, mul_one _⟩, _⟩⟩
       rw [Set.disjoint_left]
       rintro σ ⟨w1, hw1, h⟩ ⟨w2, hw2, rfl⟩
@@ -261,7 +261,7 @@ section TotallyDisconnected
 /-- If `L/K` is an algebraic field extension, then the Krull topology on `L ≃ₐ[K] L` is
   totally disconnected. -/
 theorem krull_topology_totally_disconnected {K L : Type _} [Field K] [Field L] [Algebra K L]
-    (h_int : Algebra.IsIntegral K L) : IsTotallyDisconnected (Set.Univ : Set (L ≃ₐ[K] L)) := by
+    (h_int : Algebra.IsIntegral K L) : IsTotallyDisconnected (Set.univ : Set (L ≃ₐ[K] L)) := by
   apply is_totally_disconnected_of_clopen_set
   intro σ τ h_diff
   have hστ : σ⁻¹ * τ ≠ 1 := by rwa [Ne.def, inv_mul_eq_one]
@@ -269,7 +269,7 @@ theorem krull_topology_totally_disconnected {K L : Type _} [Field K] [Field L] [
   let E := IntermediateField.adjoin K ({x} : Set L)
   haveI := IntermediateField.adjoin.finiteDimensional (h_int x)
   refine'
-    ⟨LeftCoset σ E.fixing_subgroup, ⟨E.fixing_subgroup_is_open.left_coset σ, E.fixing_subgroup_is_closed.left_coset σ⟩,
+    ⟨leftCoset σ E.fixing_subgroup, ⟨E.fixing_subgroup_is_open.left_coset σ, E.fixing_subgroup_is_closed.left_coset σ⟩,
       ⟨1, E.fixing_subgroup.one_mem', mul_one σ⟩, _⟩
   simp only [mem_left_coset_iff, SetLike.mem_coe, IntermediateField.mem_fixing_subgroup_iff, not_forall]
   exact ⟨x, IntermediateField.mem_adjoin_simple_self K x, hx⟩

@@ -60,7 +60,7 @@ theorem mem_lifts (p : S[X]) : p ∈ lifts f ↔ ∃ q : R[X], map f q = p := by
   simp only [coe_map_ring_hom, lifts, RingHom.mem_srange]
 #align polynomial.mem_lifts Polynomial.mem_lifts
 
-theorem lifts_iff_set_range (p : S[X]) : p ∈ lifts f ↔ p ∈ Set.Range (map f) := by
+theorem lifts_iff_set_range (p : S[X]) : p ∈ lifts f ↔ p ∈ Set.range (map f) := by
   simp only [coe_map_ring_hom, lifts, Set.mem_range, RingHom.mem_srange]
 #align polynomial.lifts_iff_set_range Polynomial.lifts_iff_set_range
 
@@ -68,7 +68,7 @@ theorem lifts_iff_ring_hom_srange (p : S[X]) : p ∈ lifts f ↔ p ∈ (mapRingH
   simp only [coe_map_ring_hom, lifts, Set.mem_range, RingHom.mem_srange]
 #align polynomial.lifts_iff_ring_hom_srange Polynomial.lifts_iff_ring_hom_srange
 
-theorem lifts_iff_coeff_lifts (p : S[X]) : p ∈ lifts f ↔ ∀ n : ℕ, p.coeff n ∈ Set.Range f := by
+theorem lifts_iff_coeff_lifts (p : S[X]) : p ∈ lifts f ↔ ∀ n : ℕ, p.coeff n ∈ Set.range f := by
   rw [lifts_iff_ring_hom_srange, mem_map_srange f]
   rfl
 #align polynomial.lifts_iff_coeff_lifts Polynomial.lifts_iff_coeff_lifts
@@ -79,7 +79,7 @@ theorem C_mem_lifts (f : R →+* S) (r : R) : c (f r) ∈ lifts f :=
 #align polynomial.C_mem_lifts Polynomial.C_mem_lifts
 
 /-- If `(s : S)` is in the image of `f`, then `C s` lifts. -/
-theorem C'_mem_lifts {f : R →+* S} {s : S} (h : s ∈ Set.Range f) : c s ∈ lifts f := by
+theorem C'_mem_lifts {f : R →+* S} {s : S} (h : s ∈ Set.range f) : c s ∈ lifts f := by
   obtain ⟨r, rfl⟩ := Set.mem_range.1 h
   use C r
   simp only [coe_map_ring_hom, map_C, Set.mem_univ, Subsemiring.coe_top, eq_self_iff_true, and_self_iff]
@@ -105,7 +105,7 @@ theorem base_mul_mem_lifts {p : S[X]} (r : R) (hp : p ∈ lifts f) : c (f r) * p
 #align polynomial.base_mul_mem_lifts Polynomial.base_mul_mem_lifts
 
 /-- If `(s : S)` is in the image of `f`, then `monomial n s` lifts. -/
-theorem monomial_mem_lifts {s : S} (n : ℕ) (h : s ∈ Set.Range f) : monomial n s ∈ lifts f := by
+theorem monomial_mem_lifts {s : S} (n : ℕ) (h : s ∈ Set.range f) : monomial n s ∈ lifts f := by
   obtain ⟨r, rfl⟩ := Set.mem_range.1 h
   use monomial n r
   simp only [coe_map_ring_hom, Set.mem_univ, map_monomial, Subsemiring.coe_top, eq_self_iff_true, and_self_iff]

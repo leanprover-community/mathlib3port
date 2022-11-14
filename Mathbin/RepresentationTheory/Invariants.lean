@@ -74,7 +74,7 @@ variable (ρ : Representation k G V)
 /-- The subspace of invariants, consisting of the vectors fixed by all elements of `G`.
 -/
 def invariants : Submodule k V where
-  Carrier := SetOf fun v => ∀ g : G, ρ g v = v
+  carrier := setOf fun v => ∀ g : G, ρ g v = v
   zero_mem' g := by simp only [map_zero]
   add_mem' v w hv hw g := by simp only [hv g, hw g, map_add]
   smul_mem' r v hv g := by simp only [hv g, LinearMap.map_smulₛₗ, RingHom.id_apply]
@@ -84,7 +84,7 @@ def invariants : Submodule k V where
 theorem mem_invariants (v : V) : v ∈ invariants ρ ↔ ∀ g : G, ρ g v = v := by rfl
 #align representation.mem_invariants Representation.mem_invariants
 
-theorem invariants_eq_inter : (invariants ρ).Carrier = ⋂ g : G, Function.FixedPoints (ρ g) := by
+theorem invariants_eq_inter : (invariants ρ).carrier = ⋂ g : G, Function.fixedPoints (ρ g) := by
   ext
   simp [Function.IsFixedPt]
 #align representation.invariants_eq_inter Representation.invariants_eq_inter

@@ -63,7 +63,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         
     obtain ⟨a, ha⟩ : ∃ a : ℕ, ∀ b : ℕ, a ≤ b → (c (b + 1) : ℝ) ≤ (1 + ε) * c b ∧ u (c b) - c b * l ≤ ε * c b :=
       eventually_at_top.1 (cgrowth.and L)
-    let M := ((Finset.range (a + 1)).Image fun i => c i).max' (by simp)
+    let M := ((Finset.range (a + 1)).image fun i => c i).max' (by simp)
     filter_upwards [Ici_mem_at_top M] with n hn
     have exN : ∃ N, n < c N := by
       rcases(tendsto_at_top.1 ctop (n + 1)).exists with ⟨N, hN⟩
@@ -123,7 +123,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         
     obtain ⟨a, ha⟩ : ∃ a : ℕ, ∀ b : ℕ, a ≤ b → (c (b + 1) : ℝ) ≤ (1 + ε) * c b ∧ (c b : ℝ) * l - u (c b) ≤ ε * c b :=
       eventually_at_top.1 (cgrowth.and L)
-    let M := ((Finset.range (a + 1)).Image fun i => c i).max' (by simp)
+    let M := ((Finset.range (a + 1)).image fun i => c i).max' (by simp)
     filter_upwards [Ici_mem_at_top M] with n hn
     have exN : ∃ N, n < c N := by
       rcases(tendsto_at_top.1 ctop (n + 1)).exists with ⟨N, hN⟩

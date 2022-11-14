@@ -310,33 +310,33 @@ variable {γ : Type w} [Primcodable γ] [Inhabited γ]
 
 /-- Computable and injective mapping of predicates to sets of natural numbers.
 -/
-def ToNat (p : Set α) : Set ℕ :=
+def toNat (p : Set α) : Set ℕ :=
   { n | p ((Encodable.decode α n).getOrElse default) }
-#align to_nat ToNat
+#align to_nat toNat
 
 @[simp]
-theorem to_nat_many_one_reducible {p : Set α} : ToNat p ≤₀ p :=
+theorem to_nat_many_one_reducible {p : Set α} : toNat p ≤₀ p :=
   ⟨fun n => (Encodable.decode α n).getOrElse default,
     Computable.option_get_or_else Computable.decode (Computable.const _), fun _ => Iff.rfl⟩
 #align to_nat_many_one_reducible to_nat_many_one_reducible
 
 @[simp]
-theorem many_one_reducible_to_nat {p : Set α} : p ≤₀ ToNat p :=
-  ⟨Encodable.encode, Computable.encode, by simp [ToNat, SetOf]⟩
+theorem many_one_reducible_to_nat {p : Set α} : p ≤₀ toNat p :=
+  ⟨Encodable.encode, Computable.encode, by simp [toNat, setOf]⟩
 #align many_one_reducible_to_nat many_one_reducible_to_nat
 
 @[simp]
-theorem many_one_reducible_to_nat_to_nat {p : Set α} {q : Set β} : ToNat p ≤₀ ToNat q ↔ p ≤₀ q :=
+theorem many_one_reducible_to_nat_to_nat {p : Set α} {q : Set β} : toNat p ≤₀ toNat q ↔ p ≤₀ q :=
   ⟨fun h => many_one_reducible_to_nat.trans (h.trans to_nat_many_one_reducible), fun h =>
     to_nat_many_one_reducible.trans (h.trans many_one_reducible_to_nat)⟩
 #align many_one_reducible_to_nat_to_nat many_one_reducible_to_nat_to_nat
 
 @[simp]
-theorem to_nat_many_one_equiv {p : Set α} : ManyOneEquiv (ToNat p) p := by simp [ManyOneEquiv]
+theorem to_nat_many_one_equiv {p : Set α} : ManyOneEquiv (toNat p) p := by simp [ManyOneEquiv]
 #align to_nat_many_one_equiv to_nat_many_one_equiv
 
 @[simp]
-theorem many_one_equiv_to_nat (p : Set α) (q : Set β) : ManyOneEquiv (ToNat p) (ToNat q) ↔ ManyOneEquiv p q := by
+theorem many_one_equiv_to_nat (p : Set α) (q : Set β) : ManyOneEquiv (toNat p) (toNat q) ↔ ManyOneEquiv p q := by
   simp [ManyOneEquiv]
 #align many_one_equiv_to_nat many_one_equiv_to_nat
 
@@ -349,7 +349,7 @@ namespace ManyOneDegree
 
 /-- The many-one degree of a set on a primcodable type. -/
 def of (p : α → Prop) : ManyOneDegree :=
-  Quotient.mk' (ToNat p)
+  Quotient.mk' (toNat p)
 #align many_one_degree.of ManyOneDegree.of
 
 @[elab_as_elim]

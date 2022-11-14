@@ -26,7 +26,7 @@ such as typeclass instances and `0 : α`.
 unsafe structure context where
   red : Transparency
   α : expr
-  Univ : level
+  univ : level
   α0 : expr
   is_group : Bool
   inst : expr
@@ -49,7 +49,7 @@ unsafe def mk_context (red : Transparency) (e : expr) : tactic context := do
 /-- Apply the function `n : ∀ {α} [inst : add_whatever α], _` to the
 implicit parameters in the context, and the given list of arguments. -/
 unsafe def context.app (c : context) (n : Name) (inst : expr) : List expr → expr :=
-  (@expr.const true n [c.Univ] c.α inst).mk_app
+  (@expr.const true n [c.univ] c.α inst).mk_app
 #align tactic.abel.context.app tactic.abel.context.app
 
 /-- Apply the function `n : ∀ {α} [inst α], _` to the implicit parameters in the
@@ -59,7 +59,7 @@ Compared to `context.app`, this takes the name of the typeclass, rather than an
 inferred typeclass instance.
 -/
 unsafe def context.mk_app (c : context) (n inst : Name) (l : List expr) : tactic expr := do
-  let m ← mk_instance ((expr.const inst [c.Univ] : expr) c.α)
+  let m ← mk_instance ((expr.const inst [c.univ] : expr) c.α)
   return <| c n m l
 #align tactic.abel.context.mk_app tactic.abel.context.mk_app
 

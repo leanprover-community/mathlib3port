@@ -153,7 +153,7 @@ theorem is_locally_fraction_pred {U : Opens (PrimeSpectrum.top R)} (f : ∀ x : 
 /-- The functions satisfying `is_locally_fraction` form a subring.
 -/
 def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) : Subring (∀ x : unop U, Localizations R x) where
-  Carrier := { f | (isLocallyFraction R).pred f }
+  carrier := { f | (isLocallyFraction R).pred f }
   zero_mem' := by
     refine' fun x => ⟨unop U, x.2, 𝟙 _, 0, 1, fun y => ⟨_, _⟩⟩
     · rw [← Ideal.ne_top_iff_one]
@@ -638,7 +638,7 @@ theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :
   -- This amounts showing that `a * d * r = c * b * r`, for some power `r = f ^ n` of `f`.
   -- We define `I` as the ideal of *all* elements `r` satisfying the above equation.
   let I : Ideal R :=
-    { Carrier := { r : R | a * d * r = c * b * r }, zero_mem' := by simp only [Set.mem_set_of_eq, mul_zero],
+    { carrier := { r : R | a * d * r = c * b * r }, zero_mem' := by simp only [Set.mem_set_of_eq, mul_zero],
       add_mem' := fun r₁ r₂ hr₁ hr₂ => by
         dsimp at hr₁ hr₂⊢
         simp only [mul_add, hr₁, hr₂],

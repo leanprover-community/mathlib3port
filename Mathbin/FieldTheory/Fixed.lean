@@ -42,7 +42,7 @@ variable (F : Type v) [Field F] [MulSemiringAction M F] [MulSemiringAction G F] 
 
 /-- The subfield of F fixed by the field endomorphism `m`. -/
 def FixedBy.subfield : Subfield F where
-  Carrier := FixedBy M F m
+  carrier := fixedBy M F m
   zero_mem' := smul_zero m
   add_mem' x y hx hy := (smul_add m x y).trans <| congr_arg₂ _ hx hy
   neg_mem' x hx := (smul_neg m x).trans <| congr_arg _ hx
@@ -83,7 +83,7 @@ variable (M)
 -- we use `subfield.copy` so that the underlying set is `fixed_points M F`
 /-- The subfield of fixed points by a monoid action. -/
 def subfield : Subfield F :=
-  Subfield.copy (⨅ m : M, FixedBy.subfield F m) (FixedPoints M F)
+  Subfield.copy (⨅ m : M, FixedBy.subfield F m) (fixedPoints M F)
     (by
       ext z
       simp [fixed_points, FixedBy.subfield, infi, Subfield.mem_Inf])
@@ -335,7 +335,7 @@ theorem finrank_eq_card (G : Type u) (F : Type v) [Group G] [Field F] [Fintype G
     calc
       Fintype.card G ≤ Fintype.card (F →ₐ[FixedPoints.subfield G F] F) :=
         Fintype.card_le_of_injective _ (MulSemiringAction.to_alg_hom_injective _ F)
-      _ ≤ finrank F (F →ₗ[FixedPoints.subfield G F] F) := finrank_alg_hom (FixedPoints G F) F
+      _ ≤ finrank F (F →ₗ[FixedPoints.subfield G F] F) := finrank_alg_hom (fixedPoints G F) F
       _ = finrank (FixedPoints.subfield G F) F := finrank_linear_map' _ _ _
       
 #align fixed_points.finrank_eq_card FixedPoints.finrank_eq_card

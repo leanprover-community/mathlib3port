@@ -224,7 +224,7 @@ variable (E)
 
 /-- The intermediate field of solvable-by-radicals elements -/
 def solvableByRad : IntermediateField F E where
-  Carrier := IsSolvableByRad F
+  carrier := IsSolvableByRad F
   zero_mem' := by
     convert IsSolvableByRad.base (0 : F)
     rw [RingHom.map_zero]

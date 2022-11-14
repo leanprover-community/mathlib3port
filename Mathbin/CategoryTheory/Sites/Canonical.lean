@@ -151,7 +151,7 @@ This is a special case of https://stacks.math.columbia.edu/tag/00Z9, but followi
 proof (see the comments there).
 -/
 def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C where
-  Sieves X S := ∀ (Y) (f : Y ⟶ X), Presieve.IsSheafFor P (S.pullback f)
+  sieves X S := ∀ (Y) (f : Y ⟶ X), Presieve.IsSheafFor P (S.pullback f)
   top_mem' X Y f := by
     rw [sieve.pullback_top]
     exact presieve.is_sheaf_for_top_sieve P
@@ -202,7 +202,7 @@ representable presheaf is a sheaf.
 See <https://stacks.math.columbia.edu/tag/00ZA>
 -/
 def canonicalTopology (C : Type u) [Category.{v} C] : GrothendieckTopology C :=
-  finestTopology (Set.Range yoneda.obj)
+  finestTopology (Set.range yoneda.obj)
 #align category_theory.sheaf.canonical_topology CategoryTheory.Sheaf.canonicalTopology
 
 /-- `yoneda.obj X` is a sheaf for the canonical topology. -/

@@ -494,41 +494,41 @@ theorem norm_le_mul_norm_add (u v : E) : ∥u∥ ≤ ∥u * v∥ + ∥v∥ :=
 #align norm_le_mul_norm_add norm_le_mul_norm_add
 
 @[to_additive ball_eq]
-theorem ball_eq' (y : E) (ε : ℝ) : Ball y ε = { x | ∥x / y∥ < ε } :=
+theorem ball_eq' (y : E) (ε : ℝ) : ball y ε = { x | ∥x / y∥ < ε } :=
   Set.ext fun a => by simp [dist_eq_norm_div]
 #align ball_eq' ball_eq'
 
 @[to_additive]
-theorem ball_one_eq (r : ℝ) : Ball (1 : E) r = { x | ∥x∥ < r } :=
+theorem ball_one_eq (r : ℝ) : ball (1 : E) r = { x | ∥x∥ < r } :=
   Set.ext fun a => by simp
 #align ball_one_eq ball_one_eq
 
 @[to_additive mem_ball_iff_norm]
-theorem mem_ball_iff_norm'' : b ∈ Ball a r ↔ ∥b / a∥ < r := by rw [mem_ball, dist_eq_norm_div]
+theorem mem_ball_iff_norm'' : b ∈ ball a r ↔ ∥b / a∥ < r := by rw [mem_ball, dist_eq_norm_div]
 #align mem_ball_iff_norm'' mem_ball_iff_norm''
 
 @[to_additive mem_ball_iff_norm']
-theorem mem_ball_iff_norm''' : b ∈ Ball a r ↔ ∥a / b∥ < r := by rw [mem_ball', dist_eq_norm_div]
+theorem mem_ball_iff_norm''' : b ∈ ball a r ↔ ∥a / b∥ < r := by rw [mem_ball', dist_eq_norm_div]
 #align mem_ball_iff_norm''' mem_ball_iff_norm'''
 
 @[simp, to_additive]
-theorem mem_ball_one_iff : a ∈ Ball (1 : E) r ↔ ∥a∥ < r := by rw [mem_ball, dist_one_right]
+theorem mem_ball_one_iff : a ∈ ball (1 : E) r ↔ ∥a∥ < r := by rw [mem_ball, dist_one_right]
 #align mem_ball_one_iff mem_ball_one_iff
 
 @[to_additive mem_closed_ball_iff_norm]
-theorem mem_closed_ball_iff_norm'' : b ∈ ClosedBall a r ↔ ∥b / a∥ ≤ r := by rw [mem_closed_ball, dist_eq_norm_div]
+theorem mem_closed_ball_iff_norm'' : b ∈ closedBall a r ↔ ∥b / a∥ ≤ r := by rw [mem_closed_ball, dist_eq_norm_div]
 #align mem_closed_ball_iff_norm'' mem_closed_ball_iff_norm''
 
 @[simp, to_additive]
-theorem mem_closed_ball_one_iff : a ∈ ClosedBall (1 : E) r ↔ ∥a∥ ≤ r := by rw [mem_closed_ball, dist_one_right]
+theorem mem_closed_ball_one_iff : a ∈ closedBall (1 : E) r ↔ ∥a∥ ≤ r := by rw [mem_closed_ball, dist_one_right]
 #align mem_closed_ball_one_iff mem_closed_ball_one_iff
 
 @[to_additive mem_closed_ball_iff_norm']
-theorem mem_closed_ball_iff_norm''' : b ∈ ClosedBall a r ↔ ∥a / b∥ ≤ r := by rw [mem_closed_ball', dist_eq_norm_div]
+theorem mem_closed_ball_iff_norm''' : b ∈ closedBall a r ↔ ∥a / b∥ ≤ r := by rw [mem_closed_ball', dist_eq_norm_div]
 #align mem_closed_ball_iff_norm''' mem_closed_ball_iff_norm'''
 
 @[to_additive norm_le_of_mem_closed_ball]
-theorem norm_le_of_mem_closed_ball' (h : b ∈ ClosedBall a r) : ∥b∥ ≤ ∥a∥ + r :=
+theorem norm_le_of_mem_closed_ball' (h : b ∈ closedBall a r) : ∥b∥ ≤ ∥a∥ + r :=
   (norm_le_norm_add_norm_div' _ _).trans <| add_le_add_left (by rwa [← dist_eq_norm_div]) _
 #align norm_le_of_mem_closed_ball' norm_le_of_mem_closed_ball'
 
@@ -538,7 +538,7 @@ theorem norm_le_norm_add_const_of_dist_le' : dist a b ≤ r → ∥a∥ ≤ ∥b
 #align norm_le_norm_add_const_of_dist_le' norm_le_norm_add_const_of_dist_le'
 
 @[to_additive norm_lt_of_mem_ball]
-theorem norm_lt_of_mem_ball' (h : b ∈ Ball a r) : ∥b∥ < ∥a∥ + r :=
+theorem norm_lt_of_mem_ball' (h : b ∈ ball a r) : ∥b∥ < ∥a∥ + r :=
   (norm_le_norm_add_norm_div' _ _).trans_lt <| add_lt_add_left (by rwa [← dist_eq_norm_div]) _
 #align norm_lt_of_mem_ball' norm_lt_of_mem_ball'
 
@@ -565,25 +565,25 @@ theorem Metric.Bounded.exists_pos_norm_le' (hs : Metric.Bounded s) : ∃ R > 0, 
 #align metric.bounded.exists_pos_norm_le' Metric.Bounded.exists_pos_norm_le'
 
 @[simp, to_additive mem_sphere_iff_norm]
-theorem mem_sphere_iff_norm' : b ∈ Sphere a r ↔ ∥b / a∥ = r := by simp [dist_eq_norm_div]
+theorem mem_sphere_iff_norm' : b ∈ sphere a r ↔ ∥b / a∥ = r := by simp [dist_eq_norm_div]
 #align mem_sphere_iff_norm' mem_sphere_iff_norm'
 
 @[simp, to_additive]
-theorem mem_sphere_one_iff_norm : a ∈ Sphere (1 : E) r ↔ ∥a∥ = r := by simp [dist_eq_norm_div]
+theorem mem_sphere_one_iff_norm : a ∈ sphere (1 : E) r ↔ ∥a∥ = r := by simp [dist_eq_norm_div]
 #align mem_sphere_one_iff_norm mem_sphere_one_iff_norm
 
 @[simp, to_additive norm_eq_of_mem_sphere]
-theorem norm_eq_of_mem_sphere' (x : Sphere (1 : E) r) : ∥(x : E)∥ = r :=
+theorem norm_eq_of_mem_sphere' (x : sphere (1 : E) r) : ∥(x : E)∥ = r :=
   mem_sphere_one_iff_norm.mp x.2
 #align norm_eq_of_mem_sphere' norm_eq_of_mem_sphere'
 
 @[to_additive]
-theorem ne_one_of_mem_sphere (hr : r ≠ 0) (x : Sphere (1 : E) r) : (x : E) ≠ 1 :=
+theorem ne_one_of_mem_sphere (hr : r ≠ 0) (x : sphere (1 : E) r) : (x : E) ≠ 1 :=
   ne_one_of_norm_ne_zero <| by rwa [norm_eq_of_mem_sphere' x]
 #align ne_one_of_mem_sphere ne_one_of_mem_sphere
 
 @[to_additive ne_zero_of_mem_unit_sphere]
-theorem ne_one_of_mem_unit_sphere (x : Sphere (1 : E) 1) : (x : E) ≠ 1 :=
+theorem ne_one_of_mem_unit_sphere (x : sphere (1 : E) 1) : (x : E) ≠ 1 :=
   ne_one_of_mem_sphere one_ne_zero _
 #align ne_one_of_mem_unit_sphere ne_one_of_mem_unit_sphere
 
@@ -845,7 +845,7 @@ theorem edist_eq_coe_nnnorm' (x : E) : edist x 1 = (∥x∥₊ : ℝ≥0∞) := 
 #align edist_eq_coe_nnnorm' edist_eq_coe_nnnorm'
 
 @[to_additive]
-theorem mem_emetric_ball_one_iff {r : ℝ≥0∞} : a ∈ Emetric.Ball (1 : E) r ↔ ↑∥a∥₊ < r := by
+theorem mem_emetric_ball_one_iff {r : ℝ≥0∞} : a ∈ Emetric.ball (1 : E) r ↔ ↑∥a∥₊ < r := by
   rw [Emetric.mem_ball, edist_eq_coe_nnnorm']
 #align mem_emetric_ball_one_iff mem_emetric_ball_one_iff
 
@@ -962,12 +962,12 @@ theorem uniform_continuous_nnnorm' : UniformContinuous fun a : E => ∥a∥₊ :
 #align uniform_continuous_nnnorm' uniform_continuous_nnnorm'
 
 @[to_additive]
-theorem mem_closure_one_iff_norm {x : E} : x ∈ Closure ({1} : Set E) ↔ ∥x∥ = 0 := by
+theorem mem_closure_one_iff_norm {x : E} : x ∈ closure ({1} : Set E) ↔ ∥x∥ = 0 := by
   rw [← closed_ball_zero', mem_closed_ball_one_iff, (norm_nonneg' x).le_iff_eq]
 #align mem_closure_one_iff_norm mem_closure_one_iff_norm
 
 @[to_additive]
-theorem closure_one_eq : Closure ({1} : Set E) = { x | ∥x∥ = 0 } :=
+theorem closure_one_eq : closure ({1} : Set E) = { x | ∥x∥ = 0 } :=
   Set.ext fun x => mem_closure_one_iff_norm
 #align closure_one_eq closure_one_eq
 
@@ -1085,7 +1085,7 @@ theorem eventually_ne_of_tendsto_norm_at_top' {l : Filter α} {f : α → E} (h 
 #align eventually_ne_of_tendsto_norm_at_top' eventually_ne_of_tendsto_norm_at_top'
 
 @[to_additive]
-theorem SeminormedCommGroup.mem_closure_iff : a ∈ Closure s ↔ ∀ ε, 0 < ε → ∃ b ∈ s, ∥a / b∥ < ε := by
+theorem SeminormedCommGroup.mem_closure_iff : a ∈ closure s ↔ ∀ ε, 0 < ε → ∃ b ∈ s, ∥a / b∥ < ε := by
   simp [Metric.mem_closure_iff, dist_eq_norm_div]
 #align seminormed_comm_group.mem_closure_iff SeminormedCommGroup.mem_closure_iff
 
@@ -1302,28 +1302,28 @@ theorem dist_prod_prod_le (s : Finset ι) (f a : ι → E) :
 #align dist_prod_prod_le dist_prod_prod_le
 
 @[to_additive]
-theorem mul_mem_ball_iff_norm : a * b ∈ Ball a r ↔ ∥b∥ < r := by rw [mem_ball_iff_norm'', mul_div_cancel''']
+theorem mul_mem_ball_iff_norm : a * b ∈ ball a r ↔ ∥b∥ < r := by rw [mem_ball_iff_norm'', mul_div_cancel''']
 #align mul_mem_ball_iff_norm mul_mem_ball_iff_norm
 
 @[to_additive]
-theorem mul_mem_closed_ball_iff_norm : a * b ∈ ClosedBall a r ↔ ∥b∥ ≤ r := by
+theorem mul_mem_closed_ball_iff_norm : a * b ∈ closedBall a r ↔ ∥b∥ ≤ r := by
   rw [mem_closed_ball_iff_norm'', mul_div_cancel''']
 #align mul_mem_closed_ball_iff_norm mul_mem_closed_ball_iff_norm
 
 @[simp, to_additive]
-theorem preimage_mul_ball (a b : E) (r : ℝ) : (· * ·) b ⁻¹' Ball a r = Ball (a / b) r := by
+theorem preimage_mul_ball (a b : E) (r : ℝ) : (· * ·) b ⁻¹' ball a r = ball (a / b) r := by
   ext c
   simp only [dist_eq_norm_div, Set.mem_preimage, mem_ball, div_div_eq_mul_div, mul_comm]
 #align preimage_mul_ball preimage_mul_ball
 
 @[simp, to_additive]
-theorem preimage_mul_closed_ball (a b : E) (r : ℝ) : (· * ·) b ⁻¹' ClosedBall a r = ClosedBall (a / b) r := by
+theorem preimage_mul_closed_ball (a b : E) (r : ℝ) : (· * ·) b ⁻¹' closedBall a r = closedBall (a / b) r := by
   ext c
   simp only [dist_eq_norm_div, Set.mem_preimage, mem_closed_ball, div_div_eq_mul_div, mul_comm]
 #align preimage_mul_closed_ball preimage_mul_closed_ball
 
 @[simp, to_additive]
-theorem preimage_mul_sphere (a b : E) (r : ℝ) : (· * ·) b ⁻¹' Sphere a r = Sphere (a / b) r := by
+theorem preimage_mul_sphere (a b : E) (r : ℝ) : (· * ·) b ⁻¹' sphere a r = sphere (a / b) r := by
   ext c
   simp only [Set.mem_preimage, mem_sphere_iff_norm', div_div_eq_mul_div, mul_comm]
 #align preimage_mul_sphere preimage_mul_sphere
@@ -1383,7 +1383,7 @@ end Isometric
 open Finset
 
 @[to_additive]
-theorem controlled_prod_of_mem_closure {s : Subgroup E} (hg : a ∈ Closure (s : Set E)) {b : ℕ → ℝ}
+theorem controlled_prod_of_mem_closure {s : Subgroup E} (hg : a ∈ closure (s : Set E)) {b : ℕ → ℝ}
     (b_pos : ∀ n, 0 < b n) :
     ∃ v : ℕ → E,
       Tendsto (fun n => ∏ i in range (n + 1), v i) atTop (𝓝 a) ∧
@@ -1420,7 +1420,7 @@ theorem controlled_prod_of_mem_closure {s : Subgroup E} (hg : a ∈ Closure (s :
 #align controlled_prod_of_mem_closure controlled_prod_of_mem_closure
 
 @[to_additive]
-theorem controlled_prod_of_mem_closure_range {j : E →* F} {b : F} (hb : b ∈ Closure (j.range : Set F)) {f : ℕ → ℝ}
+theorem controlled_prod_of_mem_closure_range {j : E →* F} {b : F} (hb : b ∈ closure (j.range : Set F)) {f : ℕ → ℝ}
     (b_pos : ∀ n, 0 < f n) :
     ∃ a : ℕ → E,
       Tendsto (fun n => ∏ i in range (n + 1), j (a i)) atTop (𝓝 b) ∧

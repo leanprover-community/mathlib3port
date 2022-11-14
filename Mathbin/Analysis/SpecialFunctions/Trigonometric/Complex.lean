@@ -187,7 +187,7 @@ theorem cos_surjective : Function.Surjective cos := by
 #align complex.cos_surjective Complex.cos_surjective
 
 @[simp]
-theorem range_cos : Range cos = Set.Univ :=
+theorem range_cos : range cos = Set.univ :=
   cos_surjective.range_eq
 #align complex.range_cos Complex.range_cos
 
@@ -198,7 +198,7 @@ theorem sin_surjective : Function.Surjective sin := by
 #align complex.sin_surjective Complex.sin_surjective
 
 @[simp]
-theorem range_sin : Range sin = Set.Univ :=
+theorem range_sin : range sin = Set.univ :=
   sin_surjective.range_eq
 #align complex.range_sin Complex.range_sin
 

@@ -154,7 +154,7 @@ theorem has_finite_integral_congr {f g : α → β} (h : f =ᵐ[μ] g) : HasFini
   has_finite_integral_congr' <| h.fun_comp norm
 #align measure_theory.has_finite_integral_congr MeasureTheory.has_finite_integral_congr
 
-theorem has_finite_integral_const_iff {c : β} : HasFiniteIntegral (fun x : α => c) μ ↔ c = 0 ∨ μ Univ < ∞ := by
+theorem has_finite_integral_const_iff {c : β} : HasFiniteIntegral (fun x : α => c) μ ↔ c = 0 ∨ μ univ < ∞ := by
   simp [has_finite_integral, lintegral_const, lt_top_iff_ne_top, or_iff_not_imp_left]
 #align measure_theory.has_finite_integral_const_iff MeasureTheory.has_finite_integral_const_iff
 
@@ -459,7 +459,7 @@ theorem integrable_congr {f g : α → β} (h : f =ᵐ[μ] g) : Integrable f μ 
   ⟨fun hf => hf.congr h, fun hg => hg.congr h.symm⟩
 #align measure_theory.integrable_congr MeasureTheory.integrable_congr
 
-theorem integrable_const_iff {c : β} : Integrable (fun x : α => c) μ ↔ c = 0 ∨ μ Univ < ∞ := by
+theorem integrable_const_iff {c : β} : Integrable (fun x : α => c) μ ↔ c = 0 ∨ μ univ < ∞ := by
   have : ae_strongly_measurable (fun x : α => c) μ := ae_strongly_measurable_const
   rw [integrable, and_iff_right this, has_finite_integral_const_iff]
 #align measure_theory.integrable_const_iff MeasureTheory.integrable_const_iff
@@ -543,7 +543,7 @@ theorem integrable_inv_smul_measure {f : α → β} {c : ℝ≥0∞} (h₁ : c �
   integrable_smul_measure (by simpa using h₂) (by simpa using h₁)
 #align measure_theory.integrable_inv_smul_measure MeasureTheory.integrable_inv_smul_measure
 
-theorem Integrable.toAverage {f : α → β} (h : Integrable f μ) : Integrable f ((μ Univ)⁻¹ • μ) := by
+theorem Integrable.toAverage {f : α → β} (h : Integrable f μ) : Integrable f ((μ univ)⁻¹ • μ) := by
   rcases eq_or_ne μ 0 with (rfl | hne)
   · rwa [smul_zero]
     
@@ -552,7 +552,7 @@ theorem Integrable.toAverage {f : α → β} (h : Integrable f μ) : Integrable 
     
 #align measure_theory.integrable.to_average MeasureTheory.Integrable.toAverage
 
-theorem integrable_average [IsFiniteMeasure μ] {f : α → β} : Integrable f ((μ Univ)⁻¹ • μ) ↔ Integrable f μ :=
+theorem integrable_average [IsFiniteMeasure μ] {f : α → β} : Integrable f ((μ univ)⁻¹ • μ) ↔ Integrable f μ :=
   ((eq_or_ne μ 0).byCases fun h => by simp [h]) fun h =>
     integrable_smul_measure (Ennreal.inv_ne_zero.2 <| measure_ne_top _ _)
       (Ennreal.inv_ne_top.2 <| mt Measure.measure_univ_eq_zero.1 h)

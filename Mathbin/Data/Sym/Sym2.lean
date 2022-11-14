@@ -425,13 +425,13 @@ theorem diag_is_diag (a : α) : IsDiag (diag a) :=
   Eq.refl a
 #align sym2.diag_is_diag Sym2.diag_is_diag
 
-theorem IsDiag.mem_range_diag {z : Sym2 α} : IsDiag z → z ∈ Set.Range (@diag α) := by
+theorem IsDiag.mem_range_diag {z : Sym2 α} : IsDiag z → z ∈ Set.range (@diag α) := by
   induction' z using Sym2.ind with x y
   rintro (rfl : x = y)
   exact ⟨_, rfl⟩
 #align sym2.is_diag.mem_range_diag Sym2.IsDiag.mem_range_diag
 
-theorem is_diag_iff_mem_range_diag (z : Sym2 α) : IsDiag z ↔ z ∈ Set.Range (@diag α) :=
+theorem is_diag_iff_mem_range_diag (z : Sym2 α) : IsDiag z ↔ z ∈ Set.range (@diag α) :=
   ⟨IsDiag.mem_range_diag, fun ⟨i, hi⟩ => hi ▸ diag_is_diag i⟩
 #align sym2.is_diag_iff_mem_range_diag Sym2.is_diag_iff_mem_range_diag
 
@@ -459,33 +459,33 @@ variable {r : α → α → Prop}
 /-- Symmetric relations define a set on `sym2 α` by taking all those pairs
 of elements that are related.
 -/
-def FromRel (sym : Symmetric r) : Set (Sym2 α) :=
-  SetOf (lift ⟨r, fun x y => propext ⟨fun h => Sym h, fun h => Sym h⟩⟩)
-#align sym2.from_rel Sym2.FromRel
+def fromRel (sym : Symmetric r) : Set (Sym2 α) :=
+  setOf (lift ⟨r, fun x y => propext ⟨fun h => Sym h, fun h => Sym h⟩⟩)
+#align sym2.from_rel Sym2.fromRel
 
 @[simp]
-theorem from_rel_proj_prop {sym : Symmetric r} {z : α × α} : ⟦z⟧ ∈ FromRel Sym ↔ r z.1 z.2 :=
+theorem from_rel_proj_prop {sym : Symmetric r} {z : α × α} : ⟦z⟧ ∈ fromRel Sym ↔ r z.1 z.2 :=
   Iff.rfl
 #align sym2.from_rel_proj_prop Sym2.from_rel_proj_prop
 
 @[simp]
-theorem from_rel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ FromRel Sym ↔ r a b :=
+theorem from_rel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ fromRel Sym ↔ r a b :=
   Iff.rfl
 #align sym2.from_rel_prop Sym2.from_rel_prop
 
-theorem from_rel_bot : FromRel (fun (x y : α) z => z : Symmetric ⊥) = ∅ := by
+theorem from_rel_bot : fromRel (fun (x y : α) z => z : Symmetric ⊥) = ∅ := by
   apply Set.eq_empty_of_forall_not_mem fun e => _
   refine' e.ind _
   simp [-Set.bot_eq_empty, PropCat.bot_eq_false]
 #align sym2.from_rel_bot Sym2.from_rel_bot
 
-theorem from_rel_top : FromRel (fun (x y : α) z => z : Symmetric ⊤) = Set.Univ := by
+theorem from_rel_top : fromRel (fun (x y : α) z => z : Symmetric ⊤) = Set.univ := by
   apply Set.eq_univ_of_forall fun e => _
   refine' e.ind _
   simp [-Set.top_eq_univ, PropCat.top_eq_true]
 #align sym2.from_rel_top Sym2.from_rel_top
 
-theorem from_rel_irreflexive {sym : Symmetric r} : Irreflexive r ↔ ∀ {z}, z ∈ FromRel Sym → ¬IsDiag z :=
+theorem from_rel_irreflexive {sym : Symmetric r} : Irreflexive r ↔ ∀ {z}, z ∈ fromRel Sym → ¬IsDiag z :=
   { mp := fun h =>
       Sym2.ind <| by
         rintro a b hr (rfl : a = b)
@@ -494,13 +494,13 @@ theorem from_rel_irreflexive {sym : Symmetric r} : Irreflexive r ↔ ∀ {z}, z 
 #align sym2.from_rel_irreflexive Sym2.from_rel_irreflexive
 
 theorem mem_from_rel_irrefl_other_ne {sym : Symmetric r} (irrefl : Irreflexive r) {a : α} {z : Sym2 α}
-    (hz : z ∈ FromRel Sym) (h : a ∈ z) : h.other ≠ a :=
+    (hz : z ∈ fromRel Sym) (h : a ∈ z) : h.other ≠ a :=
   other_ne (from_rel_irreflexive.mp irrefl hz) h
 #align sym2.mem_from_rel_irrefl_other_ne Sym2.mem_from_rel_irrefl_other_ne
 
-instance FromRel.decidablePred (sym : Symmetric r) [h : DecidableRel r] : DecidablePred (· ∈ Sym2.FromRel Sym) :=
+instance fromRel.decidablePred (sym : Symmetric r) [h : DecidableRel r] : DecidablePred (· ∈ Sym2.fromRel Sym) :=
   fun z => Quotient.recOnSubsingleton z fun x => h _ _
-#align sym2.from_rel.decidable_pred Sym2.FromRel.decidablePred
+#align sym2.from_rel.decidable_pred Sym2.fromRel.decidablePred
 
 /-- The inverse to `sym2.from_rel`. Given a set on `sym2 α`, give a symmetric relation on `α`
 (see `sym2.to_rel_symmetric`). -/
@@ -516,11 +516,11 @@ theorem to_rel_prop (s : Set (Sym2 α)) (x y : α) : ToRel s x y ↔ ⟦(x, y)�
 theorem to_rel_symmetric (s : Set (Sym2 α)) : Symmetric (ToRel s) := fun x y => by simp [eq_swap]
 #align sym2.to_rel_symmetric Sym2.to_rel_symmetric
 
-theorem to_rel_from_rel (sym : Symmetric r) : ToRel (FromRel Sym) = r :=
+theorem to_rel_from_rel (sym : Symmetric r) : ToRel (fromRel Sym) = r :=
   rfl
 #align sym2.to_rel_from_rel Sym2.to_rel_from_rel
 
-theorem from_rel_to_rel (s : Set (Sym2 α)) : FromRel (to_rel_symmetric s) = s :=
+theorem from_rel_to_rel (s : Set (Sym2 α)) : fromRel (to_rel_symmetric s) = s :=
   Set.ext fun z => Sym2.ind (fun x y => Iff.rfl) z
 #align sym2.from_rel_to_rel Sym2.from_rel_to_rel
 
@@ -752,7 +752,7 @@ theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
-    ((s ×ˢ s).Image Quotient.mk'').filter IsDiag = s.diag.Image Quotient.mk'' := by
+    ((s ×ˢ s).image Quotient.mk'').filter IsDiag = s.diag.image Quotient.mk'' := by
   ext z
   induction z using Quotient.induction_on
   rcases z with ⟨x, y⟩
@@ -770,7 +770,7 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
-    (((s ×ˢ s).Image Quotient.mk'').filter fun a : Sym2 α => ¬a.IsDiag) = s.OffDiag.Image Quotient.mk'' := by
+    (((s ×ˢ s).image Quotient.mk'').filter fun a : Sym2 α => ¬a.IsDiag) = s.offDiag.image Quotient.mk'' := by
   ext z
   induction z using Quotient.induction_on
   rcases z with ⟨x, y⟩

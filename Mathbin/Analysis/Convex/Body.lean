@@ -39,7 +39,7 @@ variable (V : Type _) [SeminormedAddCommGroup V] [NormedSpace ℝ V]
 it is convex, compact, and nonempty.
 -/
 structure ConvexBody where
-  Carrier : Set V
+  carrier : Set V
   convex' : Convex ℝ carrier
   is_compact' : IsCompact carrier
   nonempty' : carrier.Nonempty
@@ -50,7 +50,7 @@ namespace ConvexBody
 variable {V}
 
 instance : SetLike (ConvexBody V) V where
-  coe := ConvexBody.Carrier
+  coe := ConvexBody.carrier
   coe_injective' K L h := by
     cases K
     cases L
@@ -80,7 +80,7 @@ theorem coe_mk (s : Set V) (h₁ h₂ h₃) : (mk s h₁ h₂ h₃ : Set V) = s 
 
 instance : AddMonoid (ConvexBody V) where
   -- we cannot write K + L to avoid reducibility issues with the set.has_add instance
-  add K L := ⟨Set.Image2 (· + ·) K L, K.Convex.add L.Convex, K.IsCompact.add L.IsCompact, K.Nonempty.add L.Nonempty⟩
+  add K L := ⟨Set.image2 (· + ·) K L, K.Convex.add L.Convex, K.IsCompact.add L.IsCompact, K.Nonempty.add L.Nonempty⟩
   add_assoc K L M := by
     ext
     simp only [coe_mk, Set.image2_add, add_assoc]

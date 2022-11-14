@@ -46,7 +46,7 @@ variable (σ R)
 
 /-- The submodule of homogeneous `mv_polynomial`s of degree `n`. -/
 def homogeneousSubmodule [CommSemiring R] (n : ℕ) : Submodule R (MvPolynomial σ R) where
-  Carrier := { x | x.IsHomogeneous n }
+  carrier := { x | x.IsHomogeneous n }
   smul_mem' r a ha c hc := by
     rw [coeff_smul] at hc
     apply ha

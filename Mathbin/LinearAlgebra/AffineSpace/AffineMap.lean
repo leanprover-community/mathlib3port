@@ -622,7 +622,7 @@ theorem decomp' (f : V1 →ᵃ[k] V2) : (f.linear : V1 → V2) = f - fun z => f 
 omit V1
 
 theorem image_interval {k : Type _} [LinearOrderedField k] (f : k →ᵃ[k] k) (a b : k) :
-    f '' Set.Interval a b = Set.Interval (f a) (f b) := by
+    f '' Set.interval a b = Set.interval (f a) (f b) := by
   have : ⇑f = (fun x => x + f 0) ∘ fun x => x * (f 1 - f 0) := by
     ext x
     change f x = x • (f 1 -ᵥ f 0) +ᵥ f 0

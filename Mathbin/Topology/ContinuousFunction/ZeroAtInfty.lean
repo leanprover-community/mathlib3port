@@ -362,7 +362,7 @@ protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x
   exact (dist_triangle (f x) 0 (f y)).trans (add_le_add (mem_closed_ball.mp <| this x) (mem_closed_ball'.mp <| this y))
 #align zero_at_infty_continuous_map.bounded ZeroAtInftyContinuousMap.bounded
 
-theorem boundedRange (f : C₀(α, β)) : Bounded (Range f) :=
+theorem boundedRange (f : C₀(α, β)) : Bounded (range f) :=
   bounded_range_iff.2 f.Bounded
 #align zero_at_infty_continuous_map.bounded_range ZeroAtInftyContinuousMap.boundedRange
 
@@ -414,7 +414,7 @@ theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → C₀(α, β)} {f
 theorem isometryToBcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by tauto
 #align zero_at_infty_continuous_map.isometry_to_bcf ZeroAtInftyContinuousMap.isometryToBcf
 
-theorem closedRangeToBcf : IsClosed (Range (toBcf : C₀(α, β) → α →ᵇ β)) := by
+theorem closedRangeToBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ β)) := by
   refine' is_closed_iff_cluster_pt.mpr fun f hf => _
   rw [cluster_pt_principal_iff] at hf
   have : tendsto f (cocompact α) (𝓝 0) := by

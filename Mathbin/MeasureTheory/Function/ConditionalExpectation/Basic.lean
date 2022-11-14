@@ -5,7 +5,7 @@ Authors: Rémy Degenne
 -/
 import Mathbin.Analysis.InnerProductSpace.Projection
 import Mathbin.MeasureTheory.Function.L2Space
-import Mathbin.MeasureTheory.Decomposition.RadonNikodym
+import Mathbin.MeasureTheory.Function.AeEqOfIntegral
 import Mathbin.MeasureTheory.Function.UniformIntegrable
 
 /-! # Conditional expectation
@@ -241,7 +241,7 @@ variable (F)
 `ae_strongly_measurable' m f μ`, i.e. functions which are `μ`-a.e. equal to
 an `m`-strongly measurable function. -/
 def lpMeasSubgroup (m : MeasurableSpace α) [MeasurableSpace α] (p : ℝ≥0∞) (μ : Measure α) : AddSubgroup (lp F p μ) where
-  Carrier := { f : lp F p μ | AeStronglyMeasurable' m f μ }
+  carrier := { f : lp F p μ | AeStronglyMeasurable' m f μ }
   zero_mem' := ⟨(0 : α → F), @stronglyMeasurableZero _ _ m _ _, lp.coe_fn_zero _ _ _⟩
   add_mem' f g hf hg := (hf.add hg).congr (lp.coe_fn_add f g).symm
   neg_mem' f hf := AeStronglyMeasurable'.congr hf.neg (lp.coe_fn_neg f).symm
@@ -253,7 +253,7 @@ variable (𝕜)
 `ae_strongly_measurable' m f μ`, i.e. functions which are `μ`-a.e. equal to
 an `m`-strongly measurable function. -/
 def lpMeas (m : MeasurableSpace α) [MeasurableSpace α] (p : ℝ≥0∞) (μ : Measure α) : Submodule 𝕜 (lp F p μ) where
-  Carrier := { f : lp F p μ | AeStronglyMeasurable' m f μ }
+  carrier := { f : lp F p μ | AeStronglyMeasurable' m f μ }
   zero_mem' := ⟨(0 : α → F), @stronglyMeasurableZero _ _ m _ _, lp.coe_fn_zero _ _ _⟩
   add_mem' f g hf hg := (hf.add hg).congr (lp.coe_fn_add f g).symm
   smul_mem' c f hf := (hf.const_smul c).congr (lp.coe_fn_smul c f).symm
@@ -579,7 +579,7 @@ theorem lp.inductionStronglyMeasurableAux (hm : m ≤ m0) (hp_ne_top : p ≠ ∞
           ∀ hg : Memℒp g p μ,
             ∀ hfm : AeStronglyMeasurable' m f μ,
               ∀ hgm : AeStronglyMeasurable' m g μ,
-                Disjoint (Function.Support f) (Function.Support g) →
+                Disjoint (Function.support f) (Function.support g) →
                   P (hf.toLp f) → P (hg.toLp g) → P (hf.toLp f + hg.toLp g))
     (h_closed : IsClosed { f : lpMeas F ℝ m p μ | P f }) : ∀ f : lp F p μ, AeStronglyMeasurable' m f μ → P f := by
   intro f hf
@@ -634,7 +634,7 @@ theorem lp.inductionStronglyMeasurable (hm : m ≤ m0) (hp_ne_top : p ≠ ∞) (
           ∀ hg : Memℒp g p μ,
             ∀ hfm : strongly_measurable[m] f,
               ∀ hgm : strongly_measurable[m] g,
-                Disjoint (Function.Support f) (Function.Support g) →
+                Disjoint (Function.support f) (Function.support g) →
                   P (hf.toLp f) → P (hg.toLp g) → P (hf.toLp f + hg.toLp g))
     (h_closed : IsClosed { f : lpMeas F ℝ m p μ | P f }) : ∀ f : lp F p μ, AeStronglyMeasurable' m f μ → P f := by
   intro f hf
@@ -644,19 +644,19 @@ theorem lp.inductionStronglyMeasurable (hm : m ≤ m0) (hp_ne_top : p ≠ ∞) (
         ∀ hg : mem_ℒp g p μ,
           ∀ hfm : ae_strongly_measurable' m f μ,
             ∀ hgm : ae_strongly_measurable' m g μ,
-              Disjoint (Function.Support f) (Function.Support g) →
+              Disjoint (Function.support f) (Function.support g) →
                 P (hf.toLp f) → P (hg.toLp g) → P (hf.toLp f + hg.toLp g)
   exact Lp.induction_strongly_measurable_aux hm hp_ne_top P h_ind h_add_ae h_closed f hf
   intro f g hf hg hfm hgm h_disj hPf hPg
-  let s_f : Set α := Function.Support (hfm.mk f)
+  let s_f : Set α := Function.support (hfm.mk f)
   have hs_f : measurable_set[m] s_f := hfm.strongly_measurable_mk.measurable_set_support
-  have hs_f_eq : s_f =ᵐ[μ] Function.Support f := hfm.ae_eq_mk.symm.support
-  let s_g : Set α := Function.Support (hgm.mk g)
+  have hs_f_eq : s_f =ᵐ[μ] Function.support f := hfm.ae_eq_mk.symm.support
+  let s_g : Set α := Function.support (hgm.mk g)
   have hs_g : measurable_set[m] s_g := hgm.strongly_measurable_mk.measurable_set_support
-  have hs_g_eq : s_g =ᵐ[μ] Function.Support g := hgm.ae_eq_mk.symm.support
+  have hs_g_eq : s_g =ᵐ[μ] Function.support g := hgm.ae_eq_mk.symm.support
   have h_inter_empty : (s_f ∩ s_g : Set α) =ᵐ[μ] (∅ : Set α) := by
     refine' (hs_f_eq.inter hs_g_eq).trans _
-    suffices Function.Support f ∩ Function.Support g = ∅ by rw [this]
+    suffices Function.support f ∩ Function.support g = ∅ by rw [this]
     exact set.disjoint_iff_inter_eq_empty.mp h_disj
   let f' := (s_f \ s_g).indicator (hfm.mk f)
   have hff' : f =ᵐ[μ] f' := by
@@ -680,7 +680,7 @@ theorem lp.inductionStronglyMeasurable (hm : m ≤ m0) (hp_ne_top : p ≠ ∞) (
     exact hgm.ae_eq_mk.symm
   have hg'_meas : strongly_measurable[m] g' := hgm.strongly_measurable_mk.indicator (hs_g.diff hs_f)
   have hg'_Lp : mem_ℒp g' p μ := hg.ae_eq hgg'
-  have h_disj : Disjoint (Function.Support f') (Function.Support g') :=
+  have h_disj : Disjoint (Function.support f') (Function.support g') :=
     haveI : Disjoint (s_f \ s_g) (s_g \ s_f) := disjoint_sdiff_sdiff
     this.mono Set.support_indicator_subset Set.support_indicator_subset
   rw [← mem_ℒp.to_Lp_congr hf'_Lp hf hff'.symm] at hPf⊢
@@ -701,7 +701,7 @@ theorem Memℒp.inductionStronglyMeasurable (hm : m ≤ m0) (hp_ne_top : p ≠ �
     (h_ind : ∀ (c : F) ⦃s⦄, measurable_set[m] s → μ s < ∞ → P (s.indicator fun _ => c))
     (h_add :
       ∀ ⦃f g : α → F⦄,
-        Disjoint (Function.Support f) (Function.Support g) →
+        Disjoint (Function.support f) (Function.support g) →
           Memℒp f p μ → Memℒp g p μ → strongly_measurable[m] f → strongly_measurable[m] g → P f → P g → P (f + g))
     (h_closed : IsClosed { f : lpMeas F ℝ m p μ | P f }) (h_ae : ∀ ⦃f g⦄, f =ᵐ[μ] g → Memℒp f p μ → P f → P g) :
     ∀ ⦃f : α → F⦄ (hf : Memℒp f p μ) (hfm : AeStronglyMeasurable' m f μ), P f := by
@@ -2100,7 +2100,7 @@ theorem set_integral_condexp (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hf : In
 
 theorem integral_condexp (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] (hf : Integrable f μ) :
     (∫ x, (μ[f|m]) x ∂μ) = ∫ x, f x ∂μ := by
-  suffices (∫ x in Set.Univ, (μ[f|m]) x ∂μ) = ∫ x in Set.Univ, f x ∂μ by
+  suffices (∫ x in Set.univ, (μ[f|m]) x ∂μ) = ∫ x in Set.univ, f x ∂μ by
     simp_rw [integral_univ] at this
     exact this
   exact set_integral_condexp hm hf (@MeasurableSet.univ _ m)
@@ -2119,7 +2119,7 @@ theorem ae_eq_condexp_of_forall_set_integral_eq (hm : m ≤ m0) [SigmaFinite (μ
   rw [hg_eq s hs hμs, set_integral_condexp hm hf hs]
 #align measure_theory.ae_eq_condexp_of_forall_set_integral_eq MeasureTheory.ae_eq_condexp_of_forall_set_integral_eq
 
-theorem condexp_bot' [hμ : μ.ae.ne_bot] (f : α → F') : μ[f|⊥] = fun _ => (μ Set.Univ).toReal⁻¹ • ∫ x, f x ∂μ := by
+theorem condexp_bot' [hμ : μ.ae.ne_bot] (f : α → F') : μ[f|⊥] = fun _ => (μ Set.univ).toReal⁻¹ • ∫ x, f x ∂μ := by
   by_cases hμ_finite:is_finite_measure μ
   swap
   · have h : ¬sigma_finite (μ.trim bot_le) := by rwa [sigma_finite_trim_bot_iff]
@@ -2142,10 +2142,10 @@ theorem condexp_bot' [hμ : μ.ae.ne_bot] (f : α → F') : μ[f|⊥] = fun _ =>
   rw [← h_integral, ← smul_assoc, smul_eq_mul, inv_mul_cancel, one_smul]
   rw [Ne.def, Ennreal.to_real_eq_zero_iff, Auto.not_or_eq, measure.measure_univ_eq_zero, ← ae_eq_bot, ← Ne.def, ←
     ne_bot_iff]
-  exact ⟨hμ, measure_ne_top μ Set.Univ⟩
+  exact ⟨hμ, measure_ne_top μ Set.univ⟩
 #align measure_theory.condexp_bot' MeasureTheory.condexp_bot'
 
-theorem condexp_bot_ae_eq (f : α → F') : μ[f|⊥] =ᵐ[μ] fun _ => (μ Set.Univ).toReal⁻¹ • ∫ x, f x ∂μ := by
+theorem condexp_bot_ae_eq (f : α → F') : μ[f|⊥] =ᵐ[μ] fun _ => (μ Set.univ).toReal⁻¹ • ∫ x, f x ∂μ := by
   by_cases μ.ae.ne_bot
   · refine' eventually_of_forall fun x => _
     rw [condexp_bot' f]

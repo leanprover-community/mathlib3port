@@ -147,7 +147,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
   -- Choose a countable basis, and consider the set `s` of pairs of set `(U, V)` such that `U ∈ B`,
   -- `V ∈ B`, and `closure U ⊆ V`.
   rcases exists_countable_basis X with ⟨B, hBc, -, hB⟩
-  set s : Set (Set X × Set X) := { UV ∈ B ×ˢ B | Closure UV.1 ⊆ UV.2 }
+  set s : Set (Set X × Set X) := { UV ∈ B ×ˢ B | closure UV.1 ⊆ UV.2 }
   -- `s` is a countable set.
   haveI : Encodable s := ((hBc.prod hBc).mono (inter_subset_left _ _)).toEncodable
   -- We don't have the space of bounded (possibly discontinuous) functions, so we equip `s`
@@ -159,7 +159,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
       ⟨fun x => (f x).extend (Encodable.encode' s) 0,
         (BoundedContinuousFunction.isometryExtend (Encodable.encode' s) (0 : ℕ →ᵇ ℝ)).Embedding.comp hf⟩
     
-  have hd : ∀ UV : s, Disjoint (Closure UV.1.1) (UV.1.2ᶜ) := fun UV =>
+  have hd : ∀ UV : s, Disjoint (closure UV.1.1) (UV.1.2ᶜ) := fun UV =>
     disjoint_compl_right.mono_right (compl_subset_compl.2 UV.2.2)
   -- Choose a sequence of `εₙ > 0`, `n : s`, that is bounded above by `1` and tends to zero
   -- along the `cofinite` filter.

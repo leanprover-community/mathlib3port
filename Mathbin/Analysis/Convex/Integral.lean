@@ -61,7 +61,7 @@ theorem Convex.integral_mem [IsProbabilityMeasure μ] (hs : Convex ℝ s) (hsc :
     exact ⟨f x₀, by simp only [h₀.2, mem_range_self], h₀.1⟩
   rw [integral_congr_ae hfg]
   rw [integrable_congr hfg] at hfi
-  have hg : ∀ᵐ x ∂μ, g x ∈ Closure (range g ∩ s) := by
+  have hg : ∀ᵐ x ∂μ, g x ∈ closure (range g ∩ s) := by
     filter_upwards [hfg.rw (fun x y => y ∈ s) hf] with x hx
     apply subset_closure
     exact ⟨mem_range_self _, hx⟩
@@ -105,7 +105,7 @@ theorem Convex.set_average_mem (hs : Convex ℝ s) (hsc : IsClosed s) (h0 : μ t
 function sending `μ`-a.e. points to `s`, then the average value of `f` belongs to `closure s`:
 `⨍ x, f x ∂μ ∈ s`. See also `convex.center_mass_mem` for a finite sum version of this lemma. -/
 theorem Convex.set_average_mem_closure (hs : Convex ℝ s) (h0 : μ t ≠ 0) (ht : μ t ≠ ∞)
-    (hfs : ∀ᵐ x ∂μ.restrict t, f x ∈ s) (hfi : IntegrableOn f t μ) : (⨍ x in t, f x ∂μ) ∈ Closure s :=
+    (hfs : ∀ᵐ x ∂μ.restrict t, f x ∈ s) (hfi : IntegrableOn f t μ) : (⨍ x in t, f x ∂μ) ∈ closure s :=
   hs.closure.set_average_mem isClosedClosure h0 ht (hfs.mono fun x hx => subset_closure hx) hfi
 #align convex.set_average_mem_closure Convex.set_average_mem_closure
 
@@ -248,7 +248,7 @@ theorem ae_eq_const_or_exists_average_ne_compl [IsFiniteMeasure μ] (hfi : Integ
 positive measure, the average value of `f` over `t` belongs to the interior of `s`, then the average
 of `f` over the whole space belongs to the interior of `s`. -/
 theorem Convex.average_mem_interior_of_set [IsFiniteMeasure μ] (hs : Convex ℝ s) (h0 : μ t ≠ 0) (hfs : ∀ᵐ x ∂μ, f x ∈ s)
-    (hfi : Integrable f μ) (ht : (⨍ x in t, f x ∂μ) ∈ Interior s) : (⨍ x, f x ∂μ) ∈ Interior s := by
+    (hfi : Integrable f μ) (ht : (⨍ x in t, f x ∂μ) ∈ interior s) : (⨍ x, f x ∂μ) ∈ interior s := by
   rw [← measure_to_measurable] at h0
   rw [← restrict_to_measurable (measure_ne_top μ t)] at ht
   by_cases h0':μ (to_measurable μ tᶜ) = 0
@@ -265,7 +265,7 @@ theorem Convex.average_mem_interior_of_set [IsFiniteMeasure μ] (hs : Convex ℝ
 either it is a.e. equal to its average value, or its average value belongs to the interior of
 `s`. -/
 theorem StrictConvex.ae_eq_const_or_average_mem_interior [IsFiniteMeasure μ] (hs : StrictConvex ℝ s) (hsc : IsClosed s)
-    (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ (⨍ x, f x ∂μ) ∈ Interior s := by
+    (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ (⨍ x, f x ∂μ) ∈ interior s := by
   have : ∀ {t}, μ t ≠ 0 → (⨍ x in t, f x ∂μ) ∈ s := fun t ht =>
     hs.convex.set_average_mem hsc ht (measure_ne_top _ _) (ae_restrict_of_ae hfs) hfi.integrable_on
   refine' (ae_eq_const_or_exists_average_ne_compl hfi).imp_right _
@@ -338,7 +338,7 @@ theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E
 a.e., then either this function is a.e. equal to its average value, or the norm of its integral is
 strictly less than `(μ univ).to_real * C`. -/
 theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ E] [IsFiniteMeasure μ]
-    (h_le : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥∫ x, f x ∂μ∥ < (μ Univ).toReal * C := by
+    (h_le : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥∫ x, f x ∂μ∥ < (μ univ).toReal * C := by
   cases' eq_or_ne μ 0 with h₀ h₀
   · left
     simp [h₀]

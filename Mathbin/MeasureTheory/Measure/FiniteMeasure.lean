@@ -144,12 +144,12 @@ theorem coe_injective : Function.Injective (coe : FiniteMeasure Ω → Measure �
 /-- The (total) mass of a finite measure `μ` is `μ univ`, i.e., the cast to `nnreal` of
 `(μ : measure Ω) univ`. -/
 def mass (μ : FiniteMeasure Ω) : ℝ≥0 :=
-  μ Univ
+  μ univ
 #align measure_theory.finite_measure.mass MeasureTheory.FiniteMeasure.mass
 
 @[simp]
-theorem ennreal_mass {μ : FiniteMeasure Ω} : (μ.mass : ℝ≥0∞) = (μ : Measure Ω) Univ :=
-  ennreal_coe_fn_eq_coe_fn_to_measure μ Set.Univ
+theorem ennreal_mass {μ : FiniteMeasure Ω} : (μ.mass : ℝ≥0∞) = (μ : Measure Ω) univ :=
+  ennreal_coe_fn_eq_coe_fn_to_measure μ Set.univ
 #align measure_theory.finite_measure.ennreal_mass MeasureTheory.FiniteMeasure.ennreal_mass
 
 instance hasZero : Zero (FiniteMeasure Ω) where zero := ⟨0, MeasureTheory.isFiniteMeasureZero⟩

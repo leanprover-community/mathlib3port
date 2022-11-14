@@ -75,7 +75,7 @@ theorem is_open_ne_top : IsOpen { a : ℝ≥0∞ | a ≠ ⊤ } :=
   is_open_ne
 #align ennreal.is_open_ne_top Ennreal.is_open_ne_top
 
-theorem is_open_Ico_zero : IsOpen (IcoCat 0 b) := by
+theorem is_open_Ico_zero : IsOpen (ico 0 b) := by
   rw [Ennreal.Ico_eq_Iio]
   exact is_open_Iio
 #align ennreal.is_open_Ico_zero Ennreal.is_open_Ico_zero
@@ -86,7 +86,7 @@ theorem open_embedding_coe : OpenEmbedding (coe : ℝ≥0 → ℝ≥0∞) :=
     ext (x | _) <;> simp [none_eq_top, some_eq_coe]⟩
 #align ennreal.open_embedding_coe Ennreal.open_embedding_coe
 
-theorem coe_range_mem_nhds : Range (coe : ℝ≥0 → ℝ≥0∞) ∈ 𝓝 (r : ℝ≥0∞) :=
+theorem coe_range_mem_nhds : range (coe : ℝ≥0 → ℝ≥0∞) ∈ 𝓝 (r : ℝ≥0∞) :=
   IsOpen.mem_nhds open_embedding_coe.open_range <| mem_range_self _
 #align ennreal.coe_range_mem_nhds Ennreal.coe_range_mem_nhds
 
@@ -164,15 +164,15 @@ def ltTopHomeomorphNnreal : { a | a < ∞ } ≃ₜ ℝ≥0 := by
 #align ennreal.lt_top_homeomorph_nnreal Ennreal.ltTopHomeomorphNnreal
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
-theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (IoiCat a) :=
+theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
 #align ennreal.nhds_top Ennreal.nhds_top
 
-theorem nhds_top' : 𝓝 ∞ = ⨅ r : ℝ≥0, 𝓟 (IoiCat r) :=
+theorem nhds_top' : 𝓝 ∞ = ⨅ r : ℝ≥0, 𝓟 (ioi r) :=
   nhds_top.trans <| infi_ne_top _
 #align ennreal.nhds_top' Ennreal.nhds_top'
 
-theorem nhds_top_basis : (𝓝 ∞).HasBasis (fun a => a < ∞) fun a => IoiCat a :=
+theorem nhds_top_basis : (𝓝 ∞).HasBasis (fun a => a < ∞) fun a => ioi a :=
   nhds_top_basis
 #align ennreal.nhds_top_basis Ennreal.nhds_top_basis
 
@@ -203,15 +203,15 @@ theorem tendsto_coe_nhds_top {f : α → ℝ≥0} {l : Filter α} :
 #align ennreal.tendsto_coe_nhds_top Ennreal.tendsto_coe_nhds_top
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ≠ » 0) -/
-theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (IioCat a) :=
+theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot, Iio]
 #align ennreal.nhds_zero Ennreal.nhds_zero
 
-theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) fun a => IioCat a :=
+theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) fun a => iio a :=
   nhds_bot_basis
 #align ennreal.nhds_zero_basis Ennreal.nhds_zero_basis
 
-theorem nhds_zero_basis_Iic : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) IicCat :=
+theorem nhds_zero_basis_Iic : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) iic :=
   nhds_bot_basis_Iic
 #align ennreal.nhds_zero_basis_Iic Ennreal.nhds_zero_basis_Iic
 
@@ -228,7 +228,7 @@ theorem nhdsWithinIoiZeroNeBot : (𝓝[>] (0 : ℝ≥0∞)).ne_bot :=
 -- using Icc because
 -- • don't have 'Ioo (x - ε) (x + ε) ∈ 𝓝 x' unless x > 0
 -- • (x - y ≤ ε ↔ x ≤ ε + y) is true, while (x - y < ε ↔ x < ε + y) is not
-theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : IccCat (x - ε) (x + ε) ∈ 𝓝 x := by
+theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : icc (x - ε) (x + ε) ∈ 𝓝 x := by
   rw [_root_.mem_nhds_iff]
   by_cases x0:x = 0
   · use Iio (x + ε)
@@ -245,7 +245,7 @@ theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : IccCat (x - ε) (x + ε
     
 #align ennreal.Icc_mem_nhds Ennreal.Icc_mem_nhds
 
-theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (IccCat (x - ε) (x + ε)) := by
+theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (icc (x - ε) (x + ε)) := by
   refine' le_antisymm _ _
   -- first direction
   simp only [le_infi_iff, le_principal_iff]
@@ -286,7 +286,7 @@ theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (IccCat (x -
 /-- Characterization of neighborhoods for `ℝ≥0∞` numbers. See also `tendsto_order`
 for a version with strict inequalities. -/
 protected theorem tendsto_nhds {f : Filter α} {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha : a ≠ ⊤) :
-    Tendsto u f (𝓝 a) ↔ ∀ ε > 0, ∀ᶠ x in f, u x ∈ IccCat (a - ε) (a + ε) := by
+    Tendsto u f (𝓝 a) ↔ ∀ ε > 0, ∀ᶠ x in f, u x ∈ icc (a - ε) (a + ε) := by
   simp only [nhds_of_ne_top ha, tendsto_infi, tendsto_principal, mem_Icc]
 #align ennreal.tendsto_nhds Ennreal.tendsto_nhds
 
@@ -297,7 +297,7 @@ protected theorem tendsto_nhds_zero {f : Filter α} {u : α → ℝ≥0∞} : Te
 #align ennreal.tendsto_nhds_zero Ennreal.tendsto_nhds_zero
 
 protected theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {f : β → ℝ≥0∞} {a : ℝ≥0∞} (ha : a ≠ ⊤) :
-    Tendsto f atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, f n ∈ IccCat (a - ε) (a + ε) := by
+    Tendsto f atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, f n ∈ icc (a - ε) (a + ε) := by
   simp only [Ennreal.tendsto_nhds ha, mem_at_top_sets, mem_set_of_eq, Filter.Eventually]
 #align ennreal.tendsto_at_top Ennreal.tendsto_at_top
 
@@ -709,7 +709,7 @@ protected theorem tendsto_coe_sub : ∀ {b : ℝ≥0∞}, Tendsto (fun b : ℝ�
 
 theorem sub_supr {ι : Sort _} [Nonempty ι] {b : ι → ℝ≥0∞} (hr : a < ⊤) : (a - ⨆ i, b i) = ⨅ i, a - b i := by
   let ⟨r, Eq, _⟩ := lt_iff_exists_coe.mp hr
-  have : inf ((fun b => ↑r - b) '' Range b) = ↑r - ⨆ i, b i :=
+  have : inf ((fun b => ↑r - b) '' range b) = ↑r - ⨆ i, b i :=
     IsGlb.Inf_eq <|
       is_lub_supr.is_glb_of_tendsto (fun x _ y _ => tsub_le_tsub (le_refl (r : ℝ≥0∞))) (range_nonempty _)
         (Ennreal.tendsto_coe_sub.comp (tendsto_id'.2 inf_le_left))
@@ -1370,7 +1370,7 @@ variable [EmetricSpace β]
 open Ennreal Filter Emetric
 
 /-- In an emetric ball, the distance between points is everywhere finite -/
-theorem edist_ne_top_of_mem_ball {a : β} {r : ℝ≥0∞} (x y : Ball a r) : edist x.1 y.1 ≠ ⊤ :=
+theorem edist_ne_top_of_mem_ball {a : β} {r : ℝ≥0∞} (x y : ball a r) : edist x.1 y.1 ≠ ⊤ :=
   lt_top_iff_ne_top.1 <|
     calc
       edist x y ≤ edist a x + edist a y := edist_triangle_left x.1 y.1 a
@@ -1381,13 +1381,13 @@ theorem edist_ne_top_of_mem_ball {a : β} {r : ℝ≥0∞} (x y : Ball a r) : ed
 
 /-- Each ball in an extended metric space gives us a metric space, as the edist
 is everywhere finite. -/
-def metricSpaceEmetricBall (a : β) (r : ℝ≥0∞) : MetricSpace (Ball a r) :=
+def metricSpaceEmetricBall (a : β) (r : ℝ≥0∞) : MetricSpace (ball a r) :=
   EmetricSpace.toMetricSpace edist_ne_top_of_mem_ball
 #align metric_space_emetric_ball metricSpaceEmetricBall
 
 attribute [local instance] metricSpaceEmetricBall
 
-theorem nhds_eq_nhds_emetric_ball (a x : β) (r : ℝ≥0∞) (h : x ∈ Ball a r) : 𝓝 x = map (coe : Ball a r → β) (𝓝 ⟨x, h⟩) :=
+theorem nhds_eq_nhds_emetric_ball (a x : β) (r : ℝ≥0∞) (h : x ∈ ball a r) : 𝓝 x = map (coe : ball a r → β) (𝓝 ⟨x, h⟩) :=
   (map_nhds_subtype_coe_eq _ <| IsOpen.mem_nhds Emetric.is_open_ball h).symm
 #align nhds_eq_nhds_emetric_ball nhds_eq_nhds_emetric_ball
 
@@ -1518,20 +1518,20 @@ theorem cauchySeqOfEdistLeOfTsumNeTop {f : ℕ → α} (d : ℕ → ℝ≥0∞) 
   exact cauchySeqOfEdistLeOfSummable d hf hd
 #align cauchy_seq_of_edist_le_of_tsum_ne_top cauchySeqOfEdistLeOfTsumNeTop
 
-theorem Emetric.isClosedBall {a : α} {r : ℝ≥0∞} : IsClosed (ClosedBall a r) :=
+theorem Emetric.isClosedBall {a : α} {r : ℝ≥0∞} : IsClosed (closedBall a r) :=
   isClosedLe (continuous_id.edist continuous_const) continuous_const
 #align emetric.is_closed_ball Emetric.isClosedBall
 
 @[simp]
-theorem Emetric.diam_closure (s : Set α) : diam (Closure s) = diam s := by
+theorem Emetric.diam_closure (s : Set α) : diam (closure s) = diam s := by
   refine' le_antisymm (diam_le fun x hx y hy => _) (diam_mono subset_closure)
-  have : edist x y ∈ Closure (Iic (diam s)) :=
+  have : edist x y ∈ closure (Iic (diam s)) :=
     map_mem_closure₂ continuous_edist hx hy fun x hx y hy => edist_le_diam_of_mem hx hy
   rwa [closure_Iic] at this
 #align emetric.diam_closure Emetric.diam_closure
 
 @[simp]
-theorem Metric.diam_closure {α : Type _} [PseudoMetricSpace α] (s : Set α) : Metric.diam (Closure s) = diam s := by
+theorem Metric.diam_closure {α : Type _} [PseudoMetricSpace α] (s : Set α) : Metric.diam (closure s) = diam s := by
   simp only [Metric.diam, Emetric.diam_closure]
 #align metric.diam_closure Metric.diam_closure
 
@@ -1563,7 +1563,7 @@ theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = Ennreal.ofReal
     have h' := Real.bounded_iff_bdd_below_bdd_above.1 h
     calc
       Sup s - Inf s ≤ dist (Sup s) (Inf s) := le_abs_self _
-      _ ≤ diam (Closure s) := dist_le_diam_of_mem h.closure (cSup_mem_closure hne h'.2) (cInf_mem_closure hne h'.1)
+      _ ≤ diam (closure s) := dist_le_diam_of_mem h.closure (cSup_mem_closure hne h'.2) (cInf_mem_closure hne h'.1)
       
     
 #align real.ediam_eq Real.ediam_eq
@@ -1576,7 +1576,7 @@ theorem diam_eq {s : Set ℝ} (h : Bounded s) : Metric.diam s = sup s - inf s :=
 #align real.diam_eq Real.diam_eq
 
 @[simp]
-theorem ediam_Ioo (a b : ℝ) : Emetric.diam (IooCat a b) = Ennreal.ofReal (b - a) := by
+theorem ediam_Ioo (a b : ℝ) : Emetric.diam (ioo a b) = Ennreal.ofReal (b - a) := by
   rcases le_or_lt b a with (h | h)
   · simp [h]
     
@@ -1585,7 +1585,7 @@ theorem ediam_Ioo (a b : ℝ) : Emetric.diam (IooCat a b) = Ennreal.ofReal (b - 
 #align real.ediam_Ioo Real.ediam_Ioo
 
 @[simp]
-theorem ediam_Icc (a b : ℝ) : Emetric.diam (IccCat a b) = Ennreal.ofReal (b - a) := by
+theorem ediam_Icc (a b : ℝ) : Emetric.diam (icc a b) = Ennreal.ofReal (b - a) := by
   rcases le_or_lt a b with (h | h)
   · rw [Real.ediam_eq (bounded_Icc _ _), cSup_Icc h, cInf_Icc h]
     
@@ -1594,28 +1594,28 @@ theorem ediam_Icc (a b : ℝ) : Emetric.diam (IccCat a b) = Ennreal.ofReal (b - 
 #align real.ediam_Icc Real.ediam_Icc
 
 @[simp]
-theorem ediam_Ico (a b : ℝ) : Emetric.diam (IcoCat a b) = Ennreal.ofReal (b - a) :=
+theorem ediam_Ico (a b : ℝ) : Emetric.diam (ico a b) = Ennreal.ofReal (b - a) :=
   le_antisymm (ediam_Icc a b ▸ diam_mono Ico_subset_Icc_self) (ediam_Ioo a b ▸ diam_mono Ioo_subset_Ico_self)
 #align real.ediam_Ico Real.ediam_Ico
 
 @[simp]
-theorem ediam_Ioc (a b : ℝ) : Emetric.diam (IocCat a b) = Ennreal.ofReal (b - a) :=
+theorem ediam_Ioc (a b : ℝ) : Emetric.diam (ioc a b) = Ennreal.ofReal (b - a) :=
   le_antisymm (ediam_Icc a b ▸ diam_mono Ioc_subset_Icc_self) (ediam_Ioo a b ▸ diam_mono Ioo_subset_Ioc_self)
 #align real.ediam_Ioc Real.ediam_Ioc
 
-theorem diam_Icc {a b : ℝ} (h : a ≤ b) : Metric.diam (IccCat a b) = b - a := by
+theorem diam_Icc {a b : ℝ} (h : a ≤ b) : Metric.diam (icc a b) = b - a := by
   simp [Metric.diam, Ennreal.to_real_of_real, sub_nonneg.2 h]
 #align real.diam_Icc Real.diam_Icc
 
-theorem diam_Ico {a b : ℝ} (h : a ≤ b) : Metric.diam (IcoCat a b) = b - a := by
+theorem diam_Ico {a b : ℝ} (h : a ≤ b) : Metric.diam (ico a b) = b - a := by
   simp [Metric.diam, Ennreal.to_real_of_real, sub_nonneg.2 h]
 #align real.diam_Ico Real.diam_Ico
 
-theorem diam_Ioc {a b : ℝ} (h : a ≤ b) : Metric.diam (IocCat a b) = b - a := by
+theorem diam_Ioc {a b : ℝ} (h : a ≤ b) : Metric.diam (ioc a b) = b - a := by
   simp [Metric.diam, Ennreal.to_real_of_real, sub_nonneg.2 h]
 #align real.diam_Ioc Real.diam_Ioc
 
-theorem diam_Ioo {a b : ℝ} (h : a ≤ b) : Metric.diam (IooCat a b) = b - a := by
+theorem diam_Ioo {a b : ℝ} (h : a ≤ b) : Metric.diam (ioo a b) = b - a := by
   simp [Metric.diam, Ennreal.to_real_of_real, sub_nonneg.2 h]
 #align real.diam_Ioo Real.diam_Ioo
 

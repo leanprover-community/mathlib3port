@@ -857,7 +857,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
   apply Ennreal.tendsto_nhds_zero.2 fun ε εpos => _
   obtain ⟨c, ct, xc⟩ : ∃ c ∈ t, (∥f x - c∥₊ : ℝ≥0∞) < ε / 2 := by
     simp_rw [← edist_eq_coe_nnnorm_sub]
-    have : f x ∈ Closure t := ht (mem_range_self _)
+    have : f x ∈ closure t := ht (mem_range_self _)
     exact Emetric.mem_closure_iff.1 this (ε / 2) (Ennreal.half_pos (ne_of_gt εpos))
   filter_upwards [(tendsto_order.1 (M c ct)).2 (ε / 2) xc, h'x, v.eventually_measure_lt_top x] with a ha h'a h''a
   apply Ennreal.div_le_of_le_mul

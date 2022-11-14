@@ -32,10 +32,10 @@ variable {l l' la : Filter α} {lb : Filter β}
 
 /-- The filter `l.small_sets` is the largest filter containing all powersets of members of `l`. -/
 def smallSets (l : Filter α) : Filter (Set α) :=
-  l.lift' Powerset
+  l.lift' powerset
 #align filter.small_sets Filter.smallSets
 
-theorem small_sets_eq_generate {f : Filter α} : f.smallSets = generate (powerset '' f.Sets) := by
+theorem small_sets_eq_generate {f : Filter α} : f.smallSets = generate (powerset '' f.sets) := by
   simp_rw [generate_eq_binfi, small_sets, infi_image]
   rfl
 #align filter.small_sets_eq_generate Filter.small_sets_eq_generate
@@ -45,7 +45,7 @@ theorem HasBasis.small_sets {p : ι → Prop} {s : ι → Set α} (h : HasBasis 
   h.lift' monotone_powerset
 #align filter.has_basis.small_sets Filter.HasBasis.small_sets
 
-theorem has_basis_small_sets (l : Filter α) : HasBasis l.smallSets (fun t : Set α => t ∈ l) Powerset :=
+theorem has_basis_small_sets (l : Filter α) : HasBasis l.smallSets (fun t : Set α => t ∈ l) powerset :=
   l.basis_sets.smallSets
 #align filter.has_basis_small_sets Filter.has_basis_small_sets
 
@@ -97,11 +97,11 @@ theorem small_sets_principal (s : Set α) : (𝓟 s).smallSets = 𝓟 (𝒫 s) :
   lift'_principal monotone_powerset
 #align filter.small_sets_principal Filter.small_sets_principal
 
-theorem small_sets_comap (l : Filter β) (f : α → β) : (comap f l).smallSets = l.lift' (powerset ∘ Preimage f) :=
+theorem small_sets_comap (l : Filter β) (f : α → β) : (comap f l).smallSets = l.lift' (powerset ∘ preimage f) :=
   comap_lift'_eq2 monotone_powerset
 #align filter.small_sets_comap Filter.small_sets_comap
 
-theorem comap_small_sets (l : Filter β) (f : α → Set β) : comap f l.smallSets = l.lift' (Preimage f ∘ powerset) :=
+theorem comap_small_sets (l : Filter β) (f : α → Set β) : comap f l.smallSets = l.lift' (preimage f ∘ powerset) :=
   comap_lift'_eq
 #align filter.comap_small_sets Filter.comap_small_sets
 

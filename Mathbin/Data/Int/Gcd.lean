@@ -421,7 +421,7 @@ theorem gcd_least_linear {a b : ℤ} (ha : a ≠ 0) : IsLeast { n : ℕ | 0 < n 
   constructor
   · simpa [and_true_iff, dvd_refl, Set.mem_set_of_eq] using gcd_pos_of_non_zero_left b ha
     
-  · simp only [LowerBounds, and_imp, Set.mem_set_of_eq]
+  · simp only [lowerBounds, and_imp, Set.mem_set_of_eq]
     exact fun n hn_pos hn => Nat.le_of_dvd hn_pos hn
     
 #align int.gcd_least_linear Int.gcd_least_linear

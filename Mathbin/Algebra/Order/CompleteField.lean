@@ -100,27 +100,27 @@ variable (β) [DivisionRing β] {a a₁ a₂ : α} {b : β} {q : ℚ}
 
 /-- The lower cut of rationals inside a linear ordered field that are less than a given element of
 another linear ordered field. -/
-def CutMap (a : α) : Set β :=
+def cutMap (a : α) : Set β :=
   (coe : ℚ → β) '' { t | ↑t < a }
-#align linear_ordered_field.cut_map LinearOrderedField.CutMap
+#align linear_ordered_field.cut_map LinearOrderedField.cutMap
 
-theorem cut_map_mono (h : a₁ ≤ a₂) : CutMap β a₁ ⊆ CutMap β a₂ :=
+theorem cut_map_mono (h : a₁ ≤ a₂) : cutMap β a₁ ⊆ cutMap β a₂ :=
   (image_subset _) fun _ => h.trans_lt'
 #align linear_ordered_field.cut_map_mono LinearOrderedField.cut_map_mono
 
 variable {β}
 
 @[simp]
-theorem mem_cut_map_iff : b ∈ CutMap β a ↔ ∃ q : ℚ, (q : α) < a ∧ (q : β) = b :=
+theorem mem_cut_map_iff : b ∈ cutMap β a ↔ ∃ q : ℚ, (q : α) < a ∧ (q : β) = b :=
   Iff.rfl
 #align linear_ordered_field.mem_cut_map_iff LinearOrderedField.mem_cut_map_iff
 
 @[simp]
-theorem coe_mem_cut_map_iff [CharZero β] : (q : β) ∈ CutMap β a ↔ (q : α) < a :=
+theorem coe_mem_cut_map_iff [CharZero β] : (q : β) ∈ cutMap β a ↔ (q : α) < a :=
   Rat.cast_injective.mem_set_image
 #align linear_ordered_field.coe_mem_cut_map_iff LinearOrderedField.coe_mem_cut_map_iff
 
-theorem cut_map_self (a : α) : CutMap α a = IioCat a ∩ Range (coe : ℚ → α) := by
+theorem cut_map_self (a : α) : cutMap α a = iio a ∩ range (coe : ℚ → α) := by
   ext
   constructor
   · rintro ⟨q, h, rfl⟩
@@ -135,21 +135,21 @@ end DivisionRing
 
 variable (β) [LinearOrderedField β] {a a₁ a₂ : α} {b : β} {q : ℚ}
 
-theorem cut_map_coe (q : ℚ) : CutMap β (q : α) = coe '' { r : ℚ | (r : β) < q } := by simp_rw [cut_map, Rat.cast_lt]
+theorem cut_map_coe (q : ℚ) : cutMap β (q : α) = coe '' { r : ℚ | (r : β) < q } := by simp_rw [cut_map, Rat.cast_lt]
 #align linear_ordered_field.cut_map_coe LinearOrderedField.cut_map_coe
 
 variable [Archimedean α]
 
-theorem cut_map_nonempty (a : α) : (CutMap β a).Nonempty :=
+theorem cut_map_nonempty (a : α) : (cutMap β a).Nonempty :=
   Nonempty.image _ <| exists_rat_lt a
 #align linear_ordered_field.cut_map_nonempty LinearOrderedField.cut_map_nonempty
 
-theorem cut_map_bdd_above (a : α) : BddAbove (CutMap β a) := by
+theorem cut_map_bdd_above (a : α) : BddAbove (cutMap β a) := by
   obtain ⟨q, hq⟩ := exists_rat_gt a
   exact ⟨q, ball_image_iff.2 fun r hr => by exact_mod_cast (hq.trans' hr).le⟩
 #align linear_ordered_field.cut_map_bdd_above LinearOrderedField.cut_map_bdd_above
 
-theorem cut_map_add (a b : α) : CutMap β (a + b) = CutMap β a + CutMap β b := by
+theorem cut_map_add (a b : α) : cutMap β (a + b) = cutMap β a + cutMap β b := by
   refine' (image_subset_iff.2 fun q hq => _).antisymm _
   · rw [mem_set_of_eq, ← sub_lt_iff_lt_add] at hq
     obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
@@ -181,7 +181,7 @@ variable (α β γ) [LinearOrderedField α] [ConditionallyCompleteLinearOrderedF
 linear ordered field, defined by taking the Sup in the codomain of all the rationals less than the
 input. -/
 def inducedMap (x : α) : β :=
-  Sup <| CutMap β x
+  Sup <| cutMap β x
 #align linear_ordered_field.induced_map LinearOrderedField.inducedMap
 
 variable [Archimedean α]
@@ -258,7 +258,7 @@ theorem induced_map_add (x y : α) : inducedMap α β (x + y) = inducedMap α β
 variable {α β}
 
 /-- Preparatory lemma for `induced_ring_hom`. -/
-theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈ CutMap β (a * a)) :
+theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈ cutMap β (a * a)) :
     b ≤ inducedMap α β a * inducedMap α β a := by
   obtain ⟨q, hb, rfl⟩ := hb
   obtain ⟨q', hq', hqq', hqa⟩ := exists_rat_pow_btwn two_ne_zero hb (mul_self_pos.2 ha.ne')
@@ -273,7 +273,7 @@ theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈
 
 /-- Preparatory lemma for `induced_ring_hom`. -/
 theorem exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self (ha : 0 < a) (b : β)
-    (hba : b < inducedMap α β a * inducedMap α β a) : ∃ c ∈ CutMap β (a * a), b < c := by
+    (hba : b < inducedMap α β a * inducedMap α β a) : ∃ c ∈ cutMap β (a * a), b < c := by
   obtain hb | hb := lt_or_le b 0
   · refine' ⟨0, _, hb⟩
     rw [← Rat.cast_zero, coe_mem_cut_map_iff, Rat.cast_zero]

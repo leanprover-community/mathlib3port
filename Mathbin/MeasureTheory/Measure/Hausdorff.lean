@@ -313,12 +313,12 @@ theorem eq_supr_nat (m : Set X → ℝ≥0∞) : mkMetric' m = ⨆ n : ℕ, MkMe
 
 /-- `measure_theory.outer_measure.mk_metric'.pre m r` is a trimmed measure provided that
 `m (closure s) = m s` for any set `s`. -/
-theorem trim_pre [MeasurableSpace X] [OpensMeasurableSpace X] (m : Set X → ℝ≥0∞) (hcl : ∀ s, m (Closure s) = m s)
+theorem trim_pre [MeasurableSpace X] [OpensMeasurableSpace X] (m : Set X → ℝ≥0∞) (hcl : ∀ s, m (closure s) = m s)
     (r : ℝ≥0∞) : (pre m r).trim = pre m r := by
   refine' le_antisymm (le_pre.2 fun s hs => _) (le_trim _)
   rw [trim_eq_infi]
   refine'
-    infi_le_of_le (Closure s) <|
+    infi_le_of_le (closure s) <|
       infi_le_of_le subset_closure <| infi_le_of_le measurableSetClosure ((pre_le _).trans_eq (hcl _))
   rwa [diam_closure]
 #align measure_theory.outer_measure.mk_metric'.trim_pre MeasureTheory.OuterMeasure.mkMetric'.trim_pre
@@ -380,7 +380,7 @@ theorem isometry_comap_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) {f : X → Y} (
 #align measure_theory.outer_measure.isometry_comap_mk_metric MeasureTheory.OuterMeasure.isometry_comap_mk_metric
 
 theorem isometry_map_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) {f : X → Y} (hf : Isometry f) (H : Monotone m ∨ Surjective f) :
-    map f (mkMetric m) = restrict (Range f) (mkMetric m) := by rw [← isometry_comap_mk_metric _ hf H, map_comap]
+    map f (mkMetric m) = restrict (range f) (mkMetric m) := by rw [← isometry_comap_mk_metric _ hf H, map_comap]
 #align measure_theory.outer_measure.isometry_map_mk_metric MeasureTheory.OuterMeasure.isometry_map_mk_metric
 
 theorem isometric_comap_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) (f : X ≃ᵢ Y) : comap f (mkMetric m) = mkMetric m :=
@@ -476,7 +476,7 @@ theorem mk_metric_mono {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} (hle : m₁ ≤�
 theorem mk_metric_apply (m : ℝ≥0∞ → ℝ≥0∞) (s : Set X) :
     mkMetric m s =
       ⨆ (r : ℝ≥0∞) (hr : 0 < r),
-        ⨅ (t : ℕ → Set X) (h : s ⊆ UnionCat t) (h' : ∀ n, diam (t n) ≤ r), ∑' n, ⨆ h : (t n).Nonempty, m (diam (t n)) :=
+        ⨅ (t : ℕ → Set X) (h : s ⊆ union t) (h' : ∀ n, diam (t n) ≤ r), ∑' n, ⨆ h : (t n).Nonempty, m (diam (t n)) :=
   by
   classical-- We mostly unfold the definitions but we need to switch the order of `∑'` and `⨅`
     simp only [← outer_measure.coe_mk_metric, outer_measure.mk_metric, outer_measure.mk_metric',
@@ -726,11 +726,11 @@ theorem hausdorff_measure_pi_real {ι : Type _} [Fintype ι] : (μH[Fintype.card
     let γ := fun n : ℕ => ∀ i : ι, Fin ⌈((b i : ℝ) - a i) * n⌉₊
     have A : tendsto (fun n : ℕ => 1 / (n : ℝ≥0∞)) at_top (𝓝 0)
     have B : ∀ᶠ n in at_top, ∀ i : γ n, diam (t n i) ≤ 1 / n
-    have C : ∀ᶠ n in at_top, (Set.Pi univ fun i : ι => Ioo (a i : ℝ) (b i)) ⊆ ⋃ i : γ n, t n i
+    have C : ∀ᶠ n in at_top, (Set.pi univ fun i : ι => Ioo (a i : ℝ) (b i)) ⊆ ⋃ i : γ n, t n i
     calc
-      μH[Fintype.card ι] (Set.Pi univ fun i : ι => Ioo (a i : ℝ) (b i)) ≤
+      μH[Fintype.card ι] (Set.pi univ fun i : ι => Ioo (a i : ℝ) (b i)) ≤
           liminf (fun n : ℕ => ∑ i : γ n, diam (t n i) ^ ↑(Fintype.card ι)) at_top :=
-        hausdorff_measure_le_liminf_sum _ (Set.Pi univ fun i => Ioo (a i : ℝ) (b i)) (fun n : ℕ => 1 / (n : ℝ≥0∞)) A t B
+        hausdorff_measure_le_liminf_sum _ (Set.pi univ fun i => Ioo (a i : ℝ) (b i)) (fun n : ℕ => 1 / (n : ℝ≥0∞)) A t B
           C
       _ ≤ liminf (fun n : ℕ => ∑ i : γ n, (1 / n) ^ Fintype.card ι) at_top := by
         refine'
@@ -927,11 +927,11 @@ theorem hausdorff_measure_image (hf : Isometry f) (hd : 0 ≤ d ∨ Surjective f
 #align isometry.hausdorff_measure_image Isometry.hausdorff_measure_image
 
 theorem hausdorff_measure_preimage (hf : Isometry f) (hd : 0 ≤ d ∨ Surjective f) (s : Set Y) :
-    μH[d] (f ⁻¹' s) = μH[d] (s ∩ Range f) := by rw [← hf.hausdorff_measure_image hd, image_preimage_eq_inter_range]
+    μH[d] (f ⁻¹' s) = μH[d] (s ∩ range f) := by rw [← hf.hausdorff_measure_image hd, image_preimage_eq_inter_range]
 #align isometry.hausdorff_measure_preimage Isometry.hausdorff_measure_preimage
 
 theorem map_hausdorff_measure (hf : Isometry f) (hd : 0 ≤ d ∨ Surjective f) :
-    Measure.map f μH[d] = μH[d].restrict (Range f) := by
+    Measure.map f μH[d] = μH[d].restrict (range f) := by
   ext1 s hs
   rw [map_apply hf.continuous.measurable hs, restrict_apply hs, hf.hausdorff_measure_preimage hd]
 #align isometry.map_hausdorff_measure Isometry.map_hausdorff_measure

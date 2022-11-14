@@ -392,7 +392,7 @@ theorem conj_eq_two_re_sub : a.conj = ↑(2 * a.re) - a :=
 
 theorem commute_conj_self : Commute a.conj a := by
   rw [a.conj_eq_two_re_sub]
-  exact (coe_commute (2 * a.re) a).sub_left (Commute.refl a)
+  exact (coe_commute (2 * a.re) a).subLeft (Commute.refl a)
 #align quaternion_algebra.commute_conj_self QuaternionAlgebra.commute_conj_self
 
 theorem commute_self_conj : Commute a a.conj :=
@@ -423,7 +423,7 @@ theorem conj_one : conj (1 : ℍ[R,c₁,c₂]) = 1 :=
 theorem eq_re_of_eq_coe {a : ℍ[R,c₁,c₂]} {x : R} (h : a = x) : a = a.re := by rw [h, coe_re]
 #align quaternion_algebra.eq_re_of_eq_coe QuaternionAlgebra.eq_re_of_eq_coe
 
-theorem eq_re_iff_mem_range_coe {a : ℍ[R,c₁,c₂]} : a = a.re ↔ a ∈ Set.Range (coe : R → ℍ[R,c₁,c₂]) :=
+theorem eq_re_iff_mem_range_coe {a : ℍ[R,c₁,c₂]} : a = a.re ↔ a ∈ Set.range (coe : R → ℍ[R,c₁,c₂]) :=
   ⟨fun h => ⟨a.re, h.symm⟩, fun ⟨x, h⟩ => eq_re_of_eq_coe h.symm⟩
 #align quaternion_algebra.eq_re_iff_mem_range_coe QuaternionAlgebra.eq_re_iff_mem_range_coe
 
@@ -848,7 +848,7 @@ theorem eq_re_of_eq_coe {a : ℍ[R]} {x : R} (h : a = x) : a = a.re :=
   QuaternionAlgebra.eq_re_of_eq_coe h
 #align quaternion.eq_re_of_eq_coe Quaternion.eq_re_of_eq_coe
 
-theorem eq_re_iff_mem_range_coe {a : ℍ[R]} : a = a.re ↔ a ∈ Set.Range (coe : R → ℍ[R]) :=
+theorem eq_re_iff_mem_range_coe {a : ℍ[R]} : a = a.re ↔ a ∈ Set.range (coe : R → ℍ[R]) :=
   QuaternionAlgebra.eq_re_iff_mem_range_coe
 #align quaternion.eq_re_iff_mem_range_coe Quaternion.eq_re_iff_mem_range_coe
 
@@ -1028,11 +1028,11 @@ theorem mk_quaternion_algebra_of_infinite [Infinite R] : (#ℍ[R,c₁,c₂]) = (
 #align cardinal.mk_quaternion_algebra_of_infinite Cardinal.mk_quaternion_algebra_of_infinite
 
 /-- The cardinality of a quaternion algebra, as a set. -/
-theorem mk_univ_quaternion_algebra : (#(Set.Univ : Set ℍ[R,c₁,c₂])) = (#R) ^ 4 := by rw [mk_univ, mk_quaternion_algebra]
+theorem mk_univ_quaternion_algebra : (#(Set.univ : Set ℍ[R,c₁,c₂])) = (#R) ^ 4 := by rw [mk_univ, mk_quaternion_algebra]
 #align cardinal.mk_univ_quaternion_algebra Cardinal.mk_univ_quaternion_algebra
 
 @[simp]
-theorem mk_univ_quaternion_algebra_of_infinite [Infinite R] : (#(Set.Univ : Set ℍ[R,c₁,c₂])) = (#R) := by
+theorem mk_univ_quaternion_algebra_of_infinite [Infinite R] : (#(Set.univ : Set ℍ[R,c₁,c₂])) = (#R) := by
   rw [mk_univ_quaternion_algebra, pow_four]
 #align cardinal.mk_univ_quaternion_algebra_of_infinite Cardinal.mk_univ_quaternion_algebra_of_infinite
 
@@ -1054,12 +1054,12 @@ theorem mk_quaternion_of_infinite [Infinite R] : (#ℍ[R]) = (#R) := by rw [mk_q
 
 /-- The cardinality of the quaternions, as a set. -/
 @[simp]
-theorem mk_univ_quaternion : (#(Set.Univ : Set ℍ[R])) = (#R) ^ 4 :=
+theorem mk_univ_quaternion : (#(Set.univ : Set ℍ[R])) = (#R) ^ 4 :=
   mk_univ_quaternion_algebra _ _
 #align cardinal.mk_univ_quaternion Cardinal.mk_univ_quaternion
 
 @[simp]
-theorem mk_univ_quaternion_of_infinite [Infinite R] : (#(Set.Univ : Set ℍ[R])) = (#R) := by
+theorem mk_univ_quaternion_of_infinite [Infinite R] : (#(Set.univ : Set ℍ[R])) = (#R) := by
   rw [mk_univ_quaternion, pow_four]
 #align cardinal.mk_univ_quaternion_of_infinite Cardinal.mk_univ_quaternion_of_infinite
 

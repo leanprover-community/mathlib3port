@@ -29,11 +29,11 @@ variable {R : Type _} [CommRing R] {f : R[X]}
 of the coefficients of `f` does not vanish.  Lemma `image_of_Df_eq_comap_C_compl_zero_locus`
 proves that `image_of_Df` is the image of `(zero_locus {f})ᶜ` under the morphism
 `comap C : Spec R[x] → Spec R`. -/
-def ImageOfDf (f) : Set (PrimeSpectrum R) :=
+def imageOfDf (f) : Set (PrimeSpectrum R) :=
   { p : PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.asIdeal }
-#align algebraic_geometry.polynomial.image_of_Df AlgebraicGeometry.Polynomial.ImageOfDf
+#align algebraic_geometry.polynomial.image_of_Df AlgebraicGeometry.Polynomial.imageOfDf
 
-theorem is_open_image_of_Df : IsOpen (ImageOfDf f) := by
+theorem is_open_image_of_Df : IsOpen (imageOfDf f) := by
   rw [image_of_Df, set_of_exists fun i (x : PrimeSpectrum R) => coeff f i ∉ x.val]
   exact is_open_Union fun i => is_open_basic_open
 #align algebraic_geometry.polynomial.is_open_image_of_Df AlgebraicGeometry.Polynomial.is_open_image_of_Df
@@ -41,15 +41,15 @@ theorem is_open_image_of_Df : IsOpen (ImageOfDf f) := by
 /-- If a point of `Spec R[x]` is not contained in the vanishing set of `f`, then its image in
 `Spec R` is contained in the open set where at least one of the coefficients of `f` is non-zero.
 This lemma is a reformulation of `exists_C_coeff_not_mem`. -/
-theorem comap_C_mem_image_of_Df {I : PrimeSpectrum R[X]} (H : I ∈ (ZeroLocus {f} : Set (PrimeSpectrum R[X]))ᶜ) :
-    PrimeSpectrum.comap (Polynomial.c : R →+* R[X]) I ∈ ImageOfDf f :=
+theorem comap_C_mem_image_of_Df {I : PrimeSpectrum R[X]} (H : I ∈ (zeroLocus {f} : Set (PrimeSpectrum R[X]))ᶜ) :
+    PrimeSpectrum.comap (Polynomial.c : R →+* R[X]) I ∈ imageOfDf f :=
   exists_C_coeff_not_mem (mem_compl_zero_locus_iff_not_mem.mp H)
 #align algebraic_geometry.polynomial.comap_C_mem_image_of_Df AlgebraicGeometry.Polynomial.comap_C_mem_image_of_Df
 
 /-- The open set `image_of_Df f` coincides with the image of `basic_open f` under the
 morphism `C⁺ : Spec R[x] → Spec R`. -/
 theorem image_of_Df_eq_comap_C_compl_zero_locus :
-    ImageOfDf f = PrimeSpectrum.comap (c : R →+* R[X]) '' ZeroLocus {f}ᶜ := by
+    imageOfDf f = PrimeSpectrum.comap (c : R →+* R[X]) '' zeroLocus {f}ᶜ := by
   refine' ext fun x => ⟨fun hx => ⟨⟨map C x.val, is_prime_map_C_of_is_prime x.property⟩, ⟨_, _⟩⟩, _⟩
   · rw [mem_compl_iff, mem_zero_locus, singleton_subset_iff]
     cases' hx with i hi

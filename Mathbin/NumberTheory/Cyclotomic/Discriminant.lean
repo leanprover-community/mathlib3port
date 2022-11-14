@@ -36,8 +36,8 @@ discriminant of the power basis given by `ζ - 1`. -/
 theorem discr_zeta_eq_discr_zeta_sub_one (hζ : IsPrimitiveRoot ζ n) :
     discr ℚ (hζ.PowerBasis ℚ).Basis = discr ℚ (hζ.subOnePowerBasis ℚ).Basis := by
   haveI : NumberField K := NumberField.mk
-  have H₁ : (aeval (hζ.power_basis ℚ).Gen) (X - 1 : ℤ[X]) = (hζ.sub_one_power_basis ℚ).Gen := by simp
-  have H₂ : (aeval (hζ.sub_one_power_basis ℚ).Gen) (X + 1 : ℤ[X]) = (hζ.power_basis ℚ).Gen := by simp
+  have H₁ : (aeval (hζ.power_basis ℚ).gen) (X - 1 : ℤ[X]) = (hζ.sub_one_power_basis ℚ).gen := by simp
+  have H₂ : (aeval (hζ.sub_one_power_basis ℚ).gen) (X + 1 : ℤ[X]) = (hζ.power_basis ℚ).gen := by simp
   refine'
     discr_eq_discr_of_to_matrix_coeff_is_integral _ (fun i j => to_matrix_is_integral H₁ _ _ _ _) fun i j =>
       to_matrix_is_integral H₂ _ _ _ _

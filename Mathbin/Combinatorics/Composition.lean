@@ -351,7 +351,7 @@ theorem embedding_comp_inv (j : Fin n) : c.Embedding (c.index j) (c.invEmbedding
 #align composition.embedding_comp_inv Composition.embedding_comp_inv
 
 theorem mem_range_embedding_iff {j : Fin n} {i : Fin c.length} :
-    j ∈ Set.Range (c.Embedding i) ↔ c.sizeUpTo i ≤ j ∧ (j : ℕ) < c.sizeUpTo (i : ℕ).succ := by
+    j ∈ Set.range (c.Embedding i) ↔ c.sizeUpTo i ≤ j ∧ (j : ℕ) < c.sizeUpTo (i : ℕ).succ := by
   constructor
   · intro h
     rcases Set.mem_range.2 h with ⟨k, hk⟩
@@ -377,10 +377,10 @@ theorem mem_range_embedding_iff {j : Fin n} {i : Fin c.length} :
 
 /-- The embeddings of different blocks of a composition are disjoint. -/
 theorem disjoint_range {i₁ i₂ : Fin c.length} (h : i₁ ≠ i₂) :
-    Disjoint (Set.Range (c.Embedding i₁)) (Set.Range (c.Embedding i₂)) := by
+    Disjoint (Set.range (c.Embedding i₁)) (Set.range (c.Embedding i₂)) := by
   classical wlog h' : i₁ ≤ i₂ using i₁ i₂
     exact (this h.symm).symm
-    obtain ⟨x, hx₁, hx₂⟩ : ∃ x : Fin n, x ∈ Set.Range (c.embedding i₁) ∧ x ∈ Set.Range (c.embedding i₂) :=
+    obtain ⟨x, hx₁, hx₂⟩ : ∃ x : Fin n, x ∈ Set.range (c.embedding i₁) ∧ x ∈ Set.range (c.embedding i₂) :=
       Set.not_disjoint_iff.1 d
     have A : (i₁ : ℕ).succ ≤ i₂ := Nat.succ_le_of_lt this
     calc
@@ -390,12 +390,12 @@ theorem disjoint_range {i₁ i₂ : Fin c.length} (h : i₁ ≠ i₂) :
       
 #align composition.disjoint_range Composition.disjoint_range
 
-theorem mem_range_embedding (j : Fin n) : j ∈ Set.Range (c.Embedding (c.index j)) := by
-  have : c.embedding (c.index j) (c.inv_embedding j) ∈ Set.Range (c.embedding (c.index j)) := Set.mem_range_self _
+theorem mem_range_embedding (j : Fin n) : j ∈ Set.range (c.Embedding (c.index j)) := by
+  have : c.embedding (c.index j) (c.inv_embedding j) ∈ Set.range (c.embedding (c.index j)) := Set.mem_range_self _
   rwa [c.embedding_comp_inv j] at this
 #align composition.mem_range_embedding Composition.mem_range_embedding
 
-theorem mem_range_embedding_iff' {j : Fin n} {i : Fin c.length} : j ∈ Set.Range (c.Embedding i) ↔ i = c.index j := by
+theorem mem_range_embedding_iff' {j : Fin n} {i : Fin c.length} : j ∈ Set.range (c.Embedding i) ↔ i = c.index j := by
   constructor
   · rw [← not_imp_not]
     intro h

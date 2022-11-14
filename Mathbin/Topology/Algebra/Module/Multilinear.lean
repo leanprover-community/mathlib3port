@@ -309,7 +309,7 @@ theorem cons_smul (f : ContinuousMultilinearMap R M M₂) (m : ∀ i : Fin n, M 
 #align continuous_multilinear_map.cons_smul ContinuousMultilinearMap.cons_smul
 
 theorem map_piecewise_add (m m' : ∀ i, M₁ i) (t : Finset ι) :
-    f (t.piecewise (m + m') m') = ∑ s in t.Powerset, f (s.piecewise m m') :=
+    f (t.piecewise (m + m') m') = ∑ s in t.powerset, f (s.piecewise m m') :=
   f.toMultilinearMap.map_piecewise_add _ _ _
 #align continuous_multilinear_map.map_piecewise_add ContinuousMultilinearMap.map_piecewise_add
 

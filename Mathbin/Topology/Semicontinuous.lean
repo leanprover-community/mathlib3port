@@ -130,7 +130,7 @@ theorem LowerSemicontinuousWithinAt.mono (h : LowerSemicontinuousWithinAt f s x)
     LowerSemicontinuousWithinAt f t x := fun y hy => Filter.Eventually.filter_mono (nhds_within_mono _ hst) (h y hy)
 #align lower_semicontinuous_within_at.mono LowerSemicontinuousWithinAt.mono
 
-theorem lower_semicontinuous_within_at_univ_iff : LowerSemicontinuousWithinAt f Univ x ↔ LowerSemicontinuousAt f x := by
+theorem lower_semicontinuous_within_at_univ_iff : LowerSemicontinuousWithinAt f univ x ↔ LowerSemicontinuousAt f x := by
   simp [LowerSemicontinuousWithinAt, LowerSemicontinuousAt, nhds_within_univ]
 #align lower_semicontinuous_within_at_univ_iff lower_semicontinuous_within_at_univ_iff
 
@@ -147,7 +147,7 @@ theorem LowerSemicontinuousOn.mono (h : LowerSemicontinuousOn f s) (hst : t ⊆ 
   fun x hx => (h x (hst hx)).mono hst
 #align lower_semicontinuous_on.mono LowerSemicontinuousOn.mono
 
-theorem lower_semicontinuous_on_univ_iff : LowerSemicontinuousOn f Univ ↔ LowerSemicontinuous f := by
+theorem lower_semicontinuous_on_univ_iff : LowerSemicontinuousOn f univ ↔ LowerSemicontinuous f := by
   simp [LowerSemicontinuousOn, LowerSemicontinuous, lower_semicontinuous_within_at_univ_iff]
 #align lower_semicontinuous_on_univ_iff lower_semicontinuous_on_univ_iff
 
@@ -248,11 +248,11 @@ end
 /-! #### Relationship with continuity -/
 
 
-theorem lower_semicontinuous_iff_is_open_preimage : LowerSemicontinuous f ↔ ∀ y, IsOpen (f ⁻¹' IoiCat y) :=
+theorem lower_semicontinuous_iff_is_open_preimage : LowerSemicontinuous f ↔ ∀ y, IsOpen (f ⁻¹' ioi y) :=
   ⟨fun H y => is_open_iff_mem_nhds.2 fun x hx => H x y hx, fun H x y y_lt => IsOpen.mem_nhds (H y) y_lt⟩
 #align lower_semicontinuous_iff_is_open_preimage lower_semicontinuous_iff_is_open_preimage
 
-theorem LowerSemicontinuous.is_open_preimage (hf : LowerSemicontinuous f) (y : β) : IsOpen (f ⁻¹' IoiCat y) :=
+theorem LowerSemicontinuous.is_open_preimage (hf : LowerSemicontinuous f) (y : β) : IsOpen (f ⁻¹' ioi y) :=
   lower_semicontinuous_iff_is_open_preimage.1 hf y
 #align lower_semicontinuous.is_open_preimage LowerSemicontinuous.is_open_preimage
 
@@ -261,8 +261,8 @@ section
 variable {γ : Type _} [LinearOrder γ]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
-theorem lower_semicontinuous_iff_is_closed_preimage {f : α → γ} :
-    LowerSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' IicCat y) := by
+theorem lower_semicontinuous_iff_is_closed_preimage {f : α → γ} : LowerSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' iic y) :=
+  by
   rw [lower_semicontinuous_iff_is_open_preimage]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
@@ -270,7 +270,7 @@ theorem lower_semicontinuous_iff_is_closed_preimage {f : α → γ} :
 #align lower_semicontinuous_iff_is_closed_preimage lower_semicontinuous_iff_is_closed_preimage
 
 theorem LowerSemicontinuous.isClosedPreimage {f : α → γ} (hf : LowerSemicontinuous f) (y : γ) :
-    IsClosed (f ⁻¹' IicCat y) :=
+    IsClosed (f ⁻¹' iic y) :=
   lower_semicontinuous_iff_is_closed_preimage.1 hf y
 #align lower_semicontinuous.is_closed_preimage LowerSemicontinuous.isClosedPreimage
 
@@ -666,7 +666,7 @@ theorem UpperSemicontinuousWithinAt.mono (h : UpperSemicontinuousWithinAt f s x)
     UpperSemicontinuousWithinAt f t x := fun y hy => Filter.Eventually.filter_mono (nhds_within_mono _ hst) (h y hy)
 #align upper_semicontinuous_within_at.mono UpperSemicontinuousWithinAt.mono
 
-theorem upper_semicontinuous_within_at_univ_iff : UpperSemicontinuousWithinAt f Univ x ↔ UpperSemicontinuousAt f x := by
+theorem upper_semicontinuous_within_at_univ_iff : UpperSemicontinuousWithinAt f univ x ↔ UpperSemicontinuousAt f x := by
   simp [UpperSemicontinuousWithinAt, UpperSemicontinuousAt, nhds_within_univ]
 #align upper_semicontinuous_within_at_univ_iff upper_semicontinuous_within_at_univ_iff
 
@@ -683,7 +683,7 @@ theorem UpperSemicontinuousOn.mono (h : UpperSemicontinuousOn f s) (hst : t ⊆ 
   fun x hx => (h x (hst hx)).mono hst
 #align upper_semicontinuous_on.mono UpperSemicontinuousOn.mono
 
-theorem upper_semicontinuous_on_univ_iff : UpperSemicontinuousOn f Univ ↔ UpperSemicontinuous f := by
+theorem upper_semicontinuous_on_univ_iff : UpperSemicontinuousOn f univ ↔ UpperSemicontinuous f := by
   simp [UpperSemicontinuousOn, UpperSemicontinuous, upper_semicontinuous_within_at_univ_iff]
 #align upper_semicontinuous_on_univ_iff upper_semicontinuous_on_univ_iff
 
@@ -770,11 +770,11 @@ end
 /-! #### Relationship with continuity -/
 
 
-theorem upper_semicontinuous_iff_is_open_preimage : UpperSemicontinuous f ↔ ∀ y, IsOpen (f ⁻¹' IioCat y) :=
+theorem upper_semicontinuous_iff_is_open_preimage : UpperSemicontinuous f ↔ ∀ y, IsOpen (f ⁻¹' iio y) :=
   ⟨fun H y => is_open_iff_mem_nhds.2 fun x hx => H x y hx, fun H x y y_lt => IsOpen.mem_nhds (H y) y_lt⟩
 #align upper_semicontinuous_iff_is_open_preimage upper_semicontinuous_iff_is_open_preimage
 
-theorem UpperSemicontinuous.is_open_preimage (hf : UpperSemicontinuous f) (y : β) : IsOpen (f ⁻¹' IioCat y) :=
+theorem UpperSemicontinuous.is_open_preimage (hf : UpperSemicontinuous f) (y : β) : IsOpen (f ⁻¹' iio y) :=
   upper_semicontinuous_iff_is_open_preimage.1 hf y
 #align upper_semicontinuous.is_open_preimage UpperSemicontinuous.is_open_preimage
 
@@ -783,8 +783,8 @@ section
 variable {γ : Type _} [LinearOrder γ]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]] -/
-theorem upper_semicontinuous_iff_is_closed_preimage {f : α → γ} :
-    UpperSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' IciCat y) := by
+theorem upper_semicontinuous_iff_is_closed_preimage {f : α → γ} : UpperSemicontinuous f ↔ ∀ y, IsClosed (f ⁻¹' ici y) :=
+  by
   rw [upper_semicontinuous_iff_is_open_preimage]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ y, (_ : exprProp())]]"
@@ -792,7 +792,7 @@ theorem upper_semicontinuous_iff_is_closed_preimage {f : α → γ} :
 #align upper_semicontinuous_iff_is_closed_preimage upper_semicontinuous_iff_is_closed_preimage
 
 theorem UpperSemicontinuous.isClosedPreimage {f : α → γ} (hf : UpperSemicontinuous f) (y : γ) :
-    IsClosed (f ⁻¹' IciCat y) :=
+    IsClosed (f ⁻¹' ici y) :=
   upper_semicontinuous_iff_is_closed_preimage.1 hf y
 #align upper_semicontinuous.is_closed_preimage UpperSemicontinuous.isClosedPreimage
 

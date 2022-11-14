@@ -504,7 +504,7 @@ variable {R : Type _} [LinearOrderedCommRing R]
 variable {M : Type _} [AddCommGroup M] [Module R M]
 
 /-- `same_ray` follows from membership of `mul_action.orbit` for the `units.pos_subgroup`. -/
-theorem same_ray_of_mem_orbit {v₁ v₂ : M} (h : v₁ ∈ MulAction.Orbit (Units.posSubgroup R) v₂) : SameRay R v₁ v₂ := by
+theorem same_ray_of_mem_orbit {v₁ v₂ : M} (h : v₁ ∈ MulAction.orbit (Units.posSubgroup R) v₂) : SameRay R v₁ v₂ := by
   rcases h with ⟨⟨r, hr : 0 < (r : R)⟩, rfl : r • v₂ = v₁⟩
   exact same_ray_pos_smul_left _ hr
 #align same_ray_of_mem_orbit same_ray_of_mem_orbit

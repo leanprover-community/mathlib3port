@@ -174,7 +174,7 @@ open Set
 
 open Mvfunctor
 
-theorem mem_supp {α : Typevec n} (x : F α) (i) (u : α i) : u ∈ Supp x i ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ := by
+theorem mem_supp {α : Typevec n} (x : F α) (i) (u : α i) : u ∈ supp x i ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ := by
   rw [supp]
   dsimp
   constructor
@@ -194,12 +194,12 @@ theorem mem_supp {α : Typevec n} (x : F α) (i) (u : α i) : u ∈ Supp x i ↔
   apply h'
 #align mvqpf.mem_supp Mvqpf.mem_supp
 
-theorem supp_eq {α : Typevec n} {i} (x : F α) : Supp x i = { u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ } := by
+theorem supp_eq {α : Typevec n} {i} (x : F α) : supp x i = { u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ } := by
   ext <;> apply mem_supp
 #align mvqpf.supp_eq Mvqpf.supp_eq
 
 theorem has_good_supp_iff {α : Typevec n} (x : F α) :
-    (∀ p, Liftp p x ↔ ∀ (i), ∀ u ∈ Supp x i, p i u) ↔
+    (∀ p, Liftp p x ↔ ∀ (i), ∀ u ∈ supp x i, p i u) ↔
       ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ i a' f', abs ⟨a', f'⟩ = x → f i '' univ ⊆ f' i '' univ :=
   by
   constructor
@@ -250,13 +250,13 @@ def LiftpPreservation : Prop :=
 
 /-- does `abs` preserve `supp`? -/
 def SuppPreservation : Prop :=
-  ∀ ⦃α⦄ (x : q.p.Obj α), Supp (abs x) = Supp x
+  ∀ ⦃α⦄ (x : q.p.Obj α), supp (abs x) = supp x
 #align mvqpf.supp_preservation Mvqpf.SuppPreservation
 
 variable (q)
 
 theorem supp_eq_of_is_uniform (h : q.IsUniform) {α : Typevec n} (a : q.p.A) (f : q.p.B a ⟹ α) :
-    ∀ i, Supp (abs ⟨a, f⟩) i = f i '' univ := by
+    ∀ i, supp (abs ⟨a, f⟩) i = f i '' univ := by
   intro
   ext u
   rw [mem_supp]
@@ -270,7 +270,7 @@ theorem supp_eq_of_is_uniform (h : q.IsUniform) {α : Typevec n} (a : q.p.A) (f 
 #align mvqpf.supp_eq_of_is_uniform Mvqpf.supp_eq_of_is_uniform
 
 theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Typevec n} (x : F α) (p : ∀ i, α i → Prop) :
-    Liftp p x ↔ ∀ (i), ∀ u ∈ Supp x i, p i u := by
+    Liftp p x ↔ ∀ (i), ∀ u ∈ supp x i, p i u := by
   rw [liftp_iff, ← abs_repr x]
   cases' repr x with a f
   constructor
@@ -286,7 +286,7 @@ theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Typevec n} (x : F α) (p
   exact ⟨i, mem_univ i, rfl⟩
 #align mvqpf.liftp_iff_of_is_uniform Mvqpf.liftp_iff_of_is_uniform
 
-theorem supp_map (h : q.IsUniform) {α β : Typevec n} (g : α ⟹ β) (x : F α) (i) : Supp (g <$$> x) i = g i '' Supp x i :=
+theorem supp_map (h : q.IsUniform) {α β : Typevec n} (g : α ⟹ β) (x : F α) (i) : supp (g <$$> x) i = g i '' supp x i :=
   by
   rw [← abs_repr x]
   cases' repr x with a f

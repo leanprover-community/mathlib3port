@@ -46,7 +46,7 @@ variable (M : Type _) {α : Type _} [Monoid M] [MulAction M α]
 /-- The submonoid fixing a set under a `mul_action`. -/
 @[to_additive " The additive submonoid fixing a set under an `add_action`. "]
 def fixingSubmonoid (s : Set α) : Submonoid M where
-  Carrier := { ϕ : M | ∀ x : s, ϕ • (x : α) = x }
+  carrier := { ϕ : M | ∀ x : s, ϕ • (x : α) = x }
   one_mem' _ := one_smul _ _
   mul_mem' x y hx hy z := by rw [mul_smul, hy z, hx z]
 #align fixing_submonoid fixingSubmonoid
@@ -60,7 +60,7 @@ variable (α)
 /-- The Galois connection between fixing submonoids and fixed points of a monoid action -/
 theorem fixing_submonoid_fixed_points_gc :
     GaloisConnection (OrderDual.toDual ∘ fixingSubmonoid M)
-      ((fun P : Submonoid M => FixedPoints P α) ∘ OrderDual.ofDual) :=
+      ((fun P : Submonoid M => fixedPoints P α) ∘ OrderDual.ofDual) :=
   fun s P => ⟨fun h s hs p => h p.2 ⟨s, hs⟩, fun h p hp s => h s.2 ⟨p, hp⟩⟩
 #align fixing_submonoid_fixed_points_gc fixing_submonoid_fixed_points_gc
 
@@ -68,7 +68,7 @@ theorem fixing_submonoid_antitone : Antitone fun s : Set α => fixingSubmonoid M
   (fixing_submonoid_fixed_points_gc M α).monotone_l
 #align fixing_submonoid_antitone fixing_submonoid_antitone
 
-theorem fixed_points_antitone : Antitone fun P : Submonoid M => FixedPoints P α :=
+theorem fixed_points_antitone : Antitone fun P : Submonoid M => fixedPoints P α :=
   (fixing_submonoid_fixed_points_gc M α).monotone_u.dual_left
 #align fixed_points_antitone fixed_points_antitone
 
@@ -84,13 +84,13 @@ theorem fixing_submonoid_Union {ι : Sort _} {s : ι → Set α} :
 #align fixing_submonoid_Union fixing_submonoid_Union
 
 /-- Fixed points of sup of submonoids is intersection -/
-theorem fixed_points_submonoid_sup {P Q : Submonoid M} : FixedPoints (↥(P ⊔ Q)) α = FixedPoints P α ∩ FixedPoints Q α :=
+theorem fixed_points_submonoid_sup {P Q : Submonoid M} : fixedPoints (↥(P ⊔ Q)) α = fixedPoints P α ∩ fixedPoints Q α :=
   (fixing_submonoid_fixed_points_gc M α).u_inf
 #align fixed_points_submonoid_sup fixed_points_submonoid_sup
 
 /-- Fixed points of supr of submonoids is intersection -/
 theorem fixed_points_submonoid_supr {ι : Sort _} {P : ι → Submonoid M} :
-    FixedPoints (↥(supr P)) α = ⋂ i, FixedPoints (P i) α :=
+    fixedPoints (↥(supr P)) α = ⋂ i, fixedPoints (P i) α :=
   (fixing_submonoid_fixed_points_gc M α).u_infi
 #align fixed_points_submonoid_supr fixed_points_submonoid_supr
 
@@ -117,7 +117,7 @@ variable (α)
 /-- The Galois connection between fixing subgroups and fixed points of a group action -/
 theorem fixing_subgroup_fixed_points_gc :
     GaloisConnection (OrderDual.toDual ∘ fixingSubgroup M)
-      ((fun P : Subgroup M => FixedPoints P α) ∘ OrderDual.ofDual) :=
+      ((fun P : Subgroup M => fixedPoints P α) ∘ OrderDual.ofDual) :=
   fun s P => ⟨fun h s hs p => h p.2 ⟨s, hs⟩, fun h p hp s => h s.2 ⟨p, hp⟩⟩
 #align fixing_subgroup_fixed_points_gc fixing_subgroup_fixed_points_gc
 
@@ -125,7 +125,7 @@ theorem fixing_subgroup_antitone : Antitone (fixingSubgroup M : Set α → Subgr
   (fixing_subgroup_fixed_points_gc M α).monotone_l
 #align fixing_subgroup_antitone fixing_subgroup_antitone
 
-theorem fixed_points_subgroup_antitone : Antitone fun P : Subgroup M => FixedPoints P α :=
+theorem fixed_points_subgroup_antitone : Antitone fun P : Subgroup M => fixedPoints P α :=
   (fixing_subgroup_fixed_points_gc M α).monotone_u.dual_left
 #align fixed_points_subgroup_antitone fixed_points_subgroup_antitone
 
@@ -141,13 +141,13 @@ theorem fixing_subgroup_Union {ι : Sort _} {s : ι → Set α} :
 #align fixing_subgroup_Union fixing_subgroup_Union
 
 /-- Fixed points of sup of subgroups is intersection -/
-theorem fixed_points_subgroup_sup {P Q : Subgroup M} : FixedPoints (↥(P ⊔ Q)) α = FixedPoints P α ∩ FixedPoints Q α :=
+theorem fixed_points_subgroup_sup {P Q : Subgroup M} : fixedPoints (↥(P ⊔ Q)) α = fixedPoints P α ∩ fixedPoints Q α :=
   (fixing_subgroup_fixed_points_gc M α).u_inf
 #align fixed_points_subgroup_sup fixed_points_subgroup_sup
 
 /-- Fixed points of supr of subgroups is intersection -/
 theorem fixed_points_subgroup_supr {ι : Sort _} {P : ι → Subgroup M} :
-    FixedPoints (↥(supr P)) α = ⋂ i, FixedPoints (P i) α :=
+    fixedPoints (↥(supr P)) α = ⋂ i, fixedPoints (P i) α :=
   (fixing_subgroup_fixed_points_gc M α).u_infi
 #align fixed_points_subgroup_supr fixed_points_subgroup_supr
 

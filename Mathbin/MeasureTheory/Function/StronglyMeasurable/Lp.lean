@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
 import Mathbin.MeasureTheory.Function.SimpleFuncDenseLp
-import Mathbin.MeasureTheory.Function.StronglyMeasurable
+import Mathbin.MeasureTheory.Function.StronglyMeasurable.Basic
 
 /-!
 # Finitely strongly measurable functions in `Lp`
@@ -38,8 +38,8 @@ variable {α G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Meas
 theorem Memℒp.finStronglyMeasurableOfStronglyMeasurable (hf : Memℒp f p μ) (hf_meas : StronglyMeasurable f)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) : FinStronglyMeasurable f μ := by
   borelize G
-  haveI : separable_space (Set.Range f ∪ {0} : Set G) := hf_meas.separable_space_range_union_singleton
-  let fs := simple_func.approx_on f hf_meas.measurable (Set.Range f ∪ {0}) 0 (by simp)
+  haveI : separable_space (Set.range f ∪ {0} : Set G) := hf_meas.separable_space_range_union_singleton
+  let fs := simple_func.approx_on f hf_meas.measurable (Set.range f ∪ {0}) 0 (by simp)
   refine' ⟨fs, _, _⟩
   · have h_fs_Lp : ∀ n, mem_ℒp (fs n) p μ := simple_func.mem_ℒp_approx_on_range hf_meas.measurable hf
     exact fun n => (fs n).measure_support_lt_top_of_mem_ℒp (h_fs_Lp n) hp_ne_zero hp_ne_top

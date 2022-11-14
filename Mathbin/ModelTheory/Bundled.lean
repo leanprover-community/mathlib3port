@@ -68,7 +68,7 @@ namespace TheoryCat
 
 /-- The type of nonempty models of a first-order theory. -/
 structure ModelCat where
-  Carrier : Type w
+  carrier : Type w
   [struc : L.StructureCat carrier]
   [is_model : T.Model carrier]
   [nonempty' : Nonempty carrier]
@@ -82,7 +82,7 @@ instance : CoeSort T.ModelCat (Type w) :=
   ⟨ModelCat.Carrier⟩
 
 @[simp]
-theorem carrier_eq_coe (M : T.ModelCat) : M.Carrier = M :=
+theorem carrier_eq_coe (M : T.ModelCat) : M.carrier = M :=
   rfl
 #align first_order.language.Theory.Model.carrier_eq_coe FirstOrder.Language.TheoryCat.ModelCat.carrier_eq_coe
 
@@ -115,7 +115,7 @@ variable {T}
 
 /-- Maps a bundled model along a bijection. -/
 def equivInduced {M : ModelCat.{u, v, w} T} {N : Type w'} (e : M ≃ N) : ModelCat.{u, v, w'} T where
-  Carrier := N
+  carrier := N
   struc := e.inducedStructure
   is_model := @Equiv.Theory_model L M N _ e.inducedStructure T e.inducedStructureEquiv _
   nonempty' := e.symm.Nonempty
@@ -139,8 +139,8 @@ def ulift (M : ModelCat.{u, v, w} T) : ModelCat.{u, v, max w w'} T :=
 
 /-- The reduct of any model of `φ.on_Theory T` is a model of `T`. -/
 @[simps]
-def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.OnTheory T).ModelCat) : T.ModelCat where
-  Carrier := M
+def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.onTheory T).ModelCat) : T.ModelCat where
+  carrier := M
   struc := φ.reduct M
   nonempty' := M.nonempty'
   is_model := (@LhomCat.on_Theory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
@@ -150,10 +150,10 @@ def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.OnTheory T).ModelCat) : T
   arbitrarily. -/
 @[simps]
 noncomputable def defaultExpansion {L' : Language} {φ : L →ᴸ L'} (h : φ.Injective)
-    [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.Range fun f : L.Functions n => φ.onFunction f)]
-    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.Range fun r : L.Relations n => φ.onRelation r)] (M : T.ModelCat)
-    [Inhabited M] : (φ.OnTheory T).ModelCat where
-  Carrier := M
+    [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.range fun f : L.Functions n => φ.onFunction f)]
+    [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.range fun r : L.Relations n => φ.onRelation r)] (M : T.ModelCat)
+    [Inhabited M] : (φ.onTheory T).ModelCat where
+  carrier := M
   struc := φ.defaultExpansion M
   nonempty' := M.nonempty'
   is_model := (@LhomCat.on_Theory_model L L' M _ (φ.defaultExpansion M) φ (h.is_expansion_on_default M) T).2 M.is_model
@@ -170,7 +170,7 @@ instance rightStructure {L' : Language} {T : (L.Sum L').TheoryCat} (M : T.ModelC
 /-- A model of a theory is also a model of any subtheory. -/
 @[simps]
 def subtheoryModel (M : T.ModelCat) {T' : L.TheoryCat} (h : T' ⊆ T) : T'.ModelCat where
-  Carrier := M
+  carrier := M
   is_model := ⟨fun φ hφ => realize_sentence_of_mem T (h hφ)⟩
 #align first_order.language.Theory.Model.subtheory_Model FirstOrder.Language.TheoryCat.ModelCat.subtheoryModel
 
@@ -201,7 +201,7 @@ end TheoryCat
 /-- A structure that is elementarily equivalent to a model, bundled as a model. -/
 def ElementarilyEquivalent.toModel {M : T.ModelCat} {N : Type _} [LN : L.StructureCat N] (h : M ≅[L] N) :
     T.ModelCat where
-  Carrier := N
+  carrier := N
   struc := LN
   nonempty' := h.Nonempty
   is_model := h.Theory_model

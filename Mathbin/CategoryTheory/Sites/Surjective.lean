@@ -39,7 +39,7 @@ variable {A : Type u'} [Category.{v'} A] [ConcreteCategory.{w'} A]
 of `U` consisting of the `i : V ⟶ U` such that `s` restricted along `i` is in the image of `f`. -/
 @[simps (config := lemmasOnly)]
 def imageSieve {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : G.obj (op U)) : Sieve U where
-  Arrows V i := ∃ t : F.obj (op V), f.app _ t = G.map i.op s
+  arrows V i := ∃ t : F.obj (op V), f.app _ t = G.map i.op s
   downward_closed' := by
     rintro V W i ⟨t, ht⟩ j
     refine' ⟨F.map j.op t, _⟩

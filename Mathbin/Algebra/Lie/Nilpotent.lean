@@ -385,7 +385,7 @@ theorem ucs_zero : N.ucs 0 = N :=
 #align lie_submodule.ucs_zero LieSubmodule.ucs_zero
 
 @[simp]
-theorem ucs_succ (k : ℕ) : N.ucs (k + 1) = (N.ucs k).Centralizer :=
+theorem ucs_succ (k : ℕ) : N.ucs (k + 1) = (N.ucs k).centralizer :=
   Function.iterate_succ_apply' centralizer k N
 #align lie_submodule.ucs_succ LieSubmodule.ucs_succ
 
@@ -402,7 +402,7 @@ theorem ucs_mono (k : ℕ) (h : N₁ ≤ N₂) : N₁.ucs k ≤ N₂.ucs k := by
   mono
 #align lie_submodule.ucs_mono LieSubmodule.ucs_mono
 
-theorem ucs_eq_self_of_centralizer_eq_self (h : N₁.Centralizer = N₁) (k : ℕ) : N₁.ucs k = N₁ := by
+theorem ucs_eq_self_of_centralizer_eq_self (h : N₁.centralizer = N₁) (k : ℕ) : N₁.ucs k = N₁ := by
   induction' k with k ih
   · simp
     
@@ -415,7 +415,7 @@ central series of `M` are contained in `N`.
 
 An important instance of this situation arises from a Cartan subalgebra `H ⊆ L` with the roles of
 `L`, `M`, `N` played by `H`, `L`, `H`, respectively. -/
-theorem ucs_le_of_centralizer_eq_self (h : N₁.Centralizer = N₁) (k : ℕ) : (⊥ : LieSubmodule R L M).ucs k ≤ N₁ := by
+theorem ucs_le_of_centralizer_eq_self (h : N₁.centralizer = N₁) (k : ℕ) : (⊥ : LieSubmodule R L M).ucs k ≤ N₁ := by
   rw [← ucs_eq_self_of_centralizer_eq_self h k]
   mono
   simp

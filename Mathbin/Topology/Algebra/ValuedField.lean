@@ -331,10 +331,10 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀ where
 
 -- Bourbaki CA VI §5 no.3 Proposition 5 (d)
 theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
-    Closure (coe '' { x : K | v x < (γ : Γ₀) }) = { x : hat K | extensionValuation x < (γ : Γ₀) } := by
+    closure (coe '' { x : K | v x < (γ : Γ₀) }) = { x : hat K | extensionValuation x < (γ : Γ₀) } := by
   ext x
   let γ₀ := extension_valuation x
-  suffices γ₀ ≠ 0 → (x ∈ Closure (coe '' { x : K | v x < (γ : Γ₀) }) ↔ γ₀ < (γ : Γ₀)) by
+  suffices γ₀ ≠ 0 → (x ∈ closure (coe '' { x : K | v x < (γ : Γ₀) }) ↔ γ₀ < (γ : Γ₀)) by
     cases eq_or_ne γ₀ 0
     · simp only [h, (Valuation.zero_iff _).mp h, mem_set_of_eq, Valuation.map_zero, Units.zero_lt, iff_true_iff]
       apply subset_closure

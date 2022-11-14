@@ -25,7 +25,7 @@ open CategoryTheory.TypeCat
 /-- A Grothendieck topology associated to the category of all types.
 A sieve is a covering iff it is jointly surjective. -/
 def typesGrothendieckTopology : GrothendieckTopology (Type u) where
-  Sieves α S := ∀ x : α, S fun _ : PUnit => x
+  sieves α S := ∀ x : α, S fun _ : PUnit => x
   top_mem' α x := trivial
   pullback_stable' α β S f hs x := hs (f x)
   transitive' α S hs R hr x := hr (hs x) PUnit.unit
@@ -34,7 +34,7 @@ def typesGrothendieckTopology : GrothendieckTopology (Type u) where
 /-- The discrete sieve on a type, which only includes arrows whose image is a subsingleton. -/
 @[simps]
 def discreteSieve (α : Type u) : Sieve α where
-  Arrows β f := ∃ x, ∀ y, f y = x
+  arrows β f := ∃ x, ∀ y, f y = x
   downward_closed' := fun β γ f ⟨x, hx⟩ g => ⟨x, fun y => hx <| g y⟩
 #align category_theory.discrete_sieve CategoryTheory.discreteSieve
 
@@ -42,11 +42,11 @@ theorem discrete_sieve_mem (α : Type u) : discreteSieve α ∈ typesGrothendiec
 #align category_theory.discrete_sieve_mem CategoryTheory.discrete_sieve_mem
 
 /-- The discrete presieve on a type, which only includes arrows whose domain is a singleton. -/
-def DiscretePresieve (α : Type u) : Presieve α := fun β f => ∃ x : β, ∀ y : β, y = x
-#align category_theory.discrete_presieve CategoryTheory.DiscretePresieve
+def discretePresieve (α : Type u) : Presieve α := fun β f => ∃ x : β, ∀ y : β, y = x
+#align category_theory.discrete_presieve CategoryTheory.discretePresieve
 
 theorem generate_discrete_presieve_mem (α : Type u) :
-    Sieve.generate (DiscretePresieve α) ∈ typesGrothendieckTopology α := fun x =>
+    Sieve.generate (discretePresieve α) ∈ typesGrothendieckTopology α := fun x =>
   ⟨PUnit, id, fun _ => x, ⟨PUnit.unit, fun _ => Subsingleton.elim _ _⟩, rfl⟩
 #align category_theory.generate_discrete_presieve_mem CategoryTheory.generate_discrete_presieve_mem
 

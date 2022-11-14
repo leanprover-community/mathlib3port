@@ -29,7 +29,7 @@ def horner {α} [CommSemiring α] (a x : α) (n : ℕ) (b : α) :=
 /-- This cache contains data required by the `ring` tactic during execution. -/
 unsafe structure cache where
   α : expr
-  Univ : level
+  univ : level
   comm_semiring_inst : expr
   red : Transparency
   ic : ref instance_cache
@@ -119,7 +119,7 @@ unsafe def nc_lift {α} : (instance_cache → tactic (instance_cache × α)) →
 `ic_lift mk_app`, but it comes up often because `horner` and all its theorems have this assumption;
 it also does not require the tactic monad which improves access speed a bit. -/
 unsafe def cache.cs_app (c : cache) (n : Name) : List expr → expr :=
-  (@expr.const true n [c.Univ] c.α c.comm_semiring_inst).mk_app
+  (@expr.const true n [c.univ] c.α c.comm_semiring_inst).mk_app
 #align tactic.ring.cache.cs_app tactic.ring.cache.cs_app
 
 /-- Every expression in the language of commutative semirings can be viewed as a sum of monomials,

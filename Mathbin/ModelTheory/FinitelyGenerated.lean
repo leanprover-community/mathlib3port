@@ -51,7 +51,7 @@ theorem fg_def {N : L.Substructure M} : N.Fg ↔ ∃ S : Set M, S.Finite ∧ clo
 #align first_order.language.substructure.fg_def FirstOrder.Language.Substructure.fg_def
 
 theorem fg_iff_exists_fin_generating_family {N : L.Substructure M} :
-    N.Fg ↔ ∃ (n : ℕ)(s : Fin n → M), closure L (Range s) = N := by
+    N.Fg ↔ ∃ (n : ℕ)(s : Fin n → M), closure L (range s) = N := by
   rw [fg_def]
   constructor
   · rintro ⟨S, Sfin, hS⟩
@@ -84,7 +84,7 @@ theorem Fg.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.Fg) (hN₂ : N₂.Fg
 
 theorem Fg.map {N : Type _} [L.StructureCat N] (f : M →[L] N) {s : L.Substructure M} (hs : s.Fg) : (s.map f).Fg :=
   let ⟨t, ht⟩ := fg_def.1 hs
-  fg_def.2 ⟨f '' t, ht.1.Image _, by rw [closure_image, ht.2]⟩
+  fg_def.2 ⟨f '' t, ht.1.image _, by rw [closure_image, ht.2]⟩
 #align first_order.language.substructure.fg.map FirstOrder.Language.Substructure.Fg.map
 
 theorem Fg.of_map_embedding {N : Type _} [L.StructureCat N] (f : M ↪[L] N) {s : L.Substructure M}
@@ -117,7 +117,7 @@ theorem Fg.cg {N : L.Substructure M} (h : N.Fg) : N.Cg := by
 #align first_order.language.substructure.fg.cg FirstOrder.Language.Substructure.Fg.cg
 
 theorem cg_iff_empty_or_exists_nat_generating_family {N : L.Substructure M} :
-    N.Cg ↔ ↑N = (∅ : Set M) ∨ ∃ s : ℕ → M, closure L (Range s) = N := by
+    N.Cg ↔ ↑N = (∅ : Set M) ∨ ∃ s : ℕ → M, closure L (range s) = N := by
   rw [cg_def]
   constructor
   · rintro ⟨S, Scount, hS⟩
@@ -162,7 +162,7 @@ theorem Cg.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.Cg) (hN₂ : N₂.Cg
 
 theorem Cg.map {N : Type _} [L.StructureCat N] (f : M →[L] N) {s : L.Substructure M} (hs : s.Cg) : (s.map f).Cg :=
   let ⟨t, ht⟩ := cg_def.1 hs
-  cg_def.2 ⟨f '' t, ht.1.Image _, by rw [closure_image, ht.2]⟩
+  cg_def.2 ⟨f '' t, ht.1.image _, by rw [closure_image, ht.2]⟩
 #align first_order.language.substructure.cg.map FirstOrder.Language.Substructure.Cg.map
 
 theorem Cg.of_map_embedding {N : Type _} [L.StructureCat N] (f : M ↪[L] N) {s : L.Substructure M}

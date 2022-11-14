@@ -100,7 +100,7 @@ noncomputable def reflect (N : ℕ) : R[X] → R[X]
   | ⟨f⟩ => ⟨Finsupp.embDomain (revAt N) f⟩
 #align polynomial.reflect Polynomial.reflect
 
-theorem reflect_support (N : ℕ) (f : R[X]) : (reflect N f).Support = Finset.image (revAt N) f.Support := by
+theorem reflect_support (N : ℕ) (f : R[X]) : (reflect N f).support = Finset.image (revAt N) f.support := by
   rcases f with ⟨⟩
   ext1
   simp only [reflect, support_of_finsupp, support_emb_domain, Finset.mem_map, Finset.mem_image]
@@ -167,8 +167,8 @@ theorem reflect_monomial (N n : ℕ) : reflect N ((x : R[X]) ^ n) = X ^ revAt N 
 theorem reflect_mul_induction (cf cg : ℕ) :
     ∀ N O : ℕ,
       ∀ f g : R[X],
-        f.Support.card ≤ cf.succ →
-          g.Support.card ≤ cg.succ →
+        f.support.card ≤ cf.succ →
+          g.support.card ≤ cg.succ →
             f.natDegree ≤ N → g.natDegree ≤ O → reflect (N + O) (f * g) = reflect N f * reflect O g :=
   by
   induction' cf with cf hcf
@@ -216,7 +216,7 @@ theorem reflect_mul_induction (cf cg : ℕ) :
 @[simp]
 theorem reflect_mul (f g : R[X]) {F G : ℕ} (Ff : f.natDegree ≤ F) (Gg : g.natDegree ≤ G) :
     reflect (F + G) (f * g) = reflect F f * reflect G g :=
-  reflect_mul_induction _ _ F G f g f.Support.card.le_succ g.Support.card.le_succ Ff Gg
+  reflect_mul_induction _ _ F G f g f.support.card.le_succ g.support.card.le_succ Ff Gg
 #align polynomial.reflect_mul Polynomial.reflect_mul
 
 section Eval₂

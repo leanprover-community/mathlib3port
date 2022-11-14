@@ -54,7 +54,7 @@ theorem mem_lists_iff (s : Multiset α) (l : List α) : l ∈ lists s ↔ s = �
 end Multiset
 
 instance fintypeNodupList [Fintype α] : Fintype { l : List α // l.Nodup } :=
-  Fintype.subtype ((Finset.univ : Finset α).Powerset.bUnion fun s => s.val.lists) fun l => by
+  Fintype.subtype ((Finset.univ : Finset α).powerset.bUnion fun s => s.val.lists) fun l => by
     suffices (∃ a : Finset α, a.val = ↑l) ↔ l.nodup by simpa
     constructor
     · rintro ⟨s, hs⟩

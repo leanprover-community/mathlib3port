@@ -38,7 +38,7 @@ theorem rpow_mul_exp_neg_mul_sq_is_o_exp_neg {b : ℝ} (hb : 0 < b) (s : ℝ) :
 #align rpow_mul_exp_neg_mul_sq_is_o_exp_neg rpow_mul_exp_neg_mul_sq_is_o_exp_neg
 
 theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
-    IntegrableOn (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) (IoiCat 0) := by
+    IntegrableOn (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) (ioi 0) := by
   rw [← Ioc_union_Ioi_eq_Ioi (zero_le_one : (0 : ℝ) ≤ 1), integrable_on_union]
   constructor
   · rw [← integrable_on_Icc_iff_integrable_on_Ioc]
@@ -104,7 +104,7 @@ theorem integrableMulExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ
   simp
 #align integrable_mul_exp_neg_mul_sq integrableMulExpNegMulSq
 
-theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : (∫ r in IoiCat 0, r * exp (-b * r ^ 2)) = (2 * b)⁻¹ := by
+theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : (∫ r in ioi 0, r * exp (-b * r ^ 2)) = (2 * b)⁻¹ := by
   have I : integrable fun x => x * exp (-b * x ^ 2) := integrableMulExpNegMulSq hb
   refine' tendsto_nhds_unique (interval_integral_tendsto_integral_Ioi _ I.integrable_on Filter.tendsto_id) _
   have A : ∀ x, HasDerivAt (fun x => -(2 * b)⁻¹ * exp (-b * x ^ 2)) (x * exp (-b * x ^ 2)) x := by

@@ -230,7 +230,7 @@ noncomputable def fieldEquivOfRingEquiv [Algebra B L] [IsFractionRing B L] (h : 
     (by
       ext b
       show b ∈ h.to_equiv '' _ ↔ _
-      erw [h.to_equiv.image_eq_preimage, Set.Preimage, Set.mem_set_of_eq, mem_non_zero_divisors_iff_ne_zero,
+      erw [h.to_equiv.image_eq_preimage, Set.preimage, Set.mem_set_of_eq, mem_non_zero_divisors_iff_ne_zero,
         mem_non_zero_divisors_iff_ne_zero]
       exact h.symm.map_ne_zero_iff)
 #align is_fraction_ring.field_equiv_of_ring_equiv IsFractionRing.fieldEquivOfRingEquiv

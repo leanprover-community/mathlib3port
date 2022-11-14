@@ -33,7 +33,7 @@ variable [DecidableEq N] [Zero N] (f g : α →₀ N)
 /-- Given two finitely supported functions `f g : α →₀ N`, `finsupp.ne_locus f g` is the `finset`
 where `f` and `g` differ. This generalizes `(f - g).support` to situations without subtraction. -/
 def neLocus (f g : α →₀ N) : Finset α :=
-  (f.Support ∪ g.Support).filter fun x => f x ≠ g x
+  (f.support ∪ g.support).filter fun x => f x ≠ g x
 #align finsupp.ne_locus Finsupp.neLocus
 
 @[simp]
@@ -66,13 +66,13 @@ theorem ne_locus_comm : f.neLocus g = g.neLocus f := by simp_rw [ne_locus, Finse
 #align finsupp.ne_locus_comm Finsupp.ne_locus_comm
 
 @[simp]
-theorem ne_locus_zero_right : f.neLocus 0 = f.Support := by
+theorem ne_locus_zero_right : f.neLocus 0 = f.support := by
   ext
   rw [mem_ne_locus, mem_support_iff, Finsupp.coe_zero, Pi.zero_apply]
 #align finsupp.ne_locus_zero_right Finsupp.ne_locus_zero_right
 
 @[simp]
-theorem ne_locus_zero_left : (0 : α →₀ N).neLocus f = f.Support :=
+theorem ne_locus_zero_left : (0 : α →₀ N).neLocus f = f.support :=
   (ne_locus_comm _ _).trans (ne_locus_zero_right _)
 #align finsupp.ne_locus_zero_left Finsupp.ne_locus_zero_left
 
@@ -131,7 +131,7 @@ theorem ne_locus_neg_neg : neLocus (-f) (-g) = f.neLocus g :=
 theorem ne_locus_neg : neLocus (-f) g = f.neLocus (-g) := by rw [← ne_locus_neg_neg, neg_neg]
 #align finsupp.ne_locus_neg Finsupp.ne_locus_neg
 
-theorem ne_locus_eq_support_sub : f.neLocus g = (f - g).Support := by
+theorem ne_locus_eq_support_sub : f.neLocus g = (f - g).support := by
   rw [← ne_locus_add_right _ _ (-g), add_right_neg, ne_locus_zero_right, sub_eq_add_neg]
 #align finsupp.ne_locus_eq_support_sub Finsupp.ne_locus_eq_support_sub
 
@@ -146,21 +146,21 @@ theorem ne_locus_sub_right : neLocus (f₁ - g) (f₂ - g) = neLocus f₁ f₂ :
 #align finsupp.ne_locus_sub_right Finsupp.ne_locus_sub_right
 
 @[simp]
-theorem ne_locus_self_add_right : neLocus f (f + g) = g.Support := by
+theorem ne_locus_self_add_right : neLocus f (f + g) = g.support := by
   rw [← ne_locus_zero_left, ← ne_locus_add_left f 0 g, add_zero]
 #align finsupp.ne_locus_self_add_right Finsupp.ne_locus_self_add_right
 
 @[simp]
-theorem ne_locus_self_add_left : neLocus (f + g) f = g.Support := by rw [ne_locus_comm, ne_locus_self_add_right]
+theorem ne_locus_self_add_left : neLocus (f + g) f = g.support := by rw [ne_locus_comm, ne_locus_self_add_right]
 #align finsupp.ne_locus_self_add_left Finsupp.ne_locus_self_add_left
 
 @[simp]
-theorem ne_locus_self_sub_right : neLocus f (f - g) = g.Support := by
+theorem ne_locus_self_sub_right : neLocus f (f - g) = g.support := by
   rw [sub_eq_add_neg, ne_locus_self_add_right, support_neg]
 #align finsupp.ne_locus_self_sub_right Finsupp.ne_locus_self_sub_right
 
 @[simp]
-theorem ne_locus_self_sub_left : neLocus (f - g) f = g.Support := by rw [ne_locus_comm, ne_locus_self_sub_right]
+theorem ne_locus_self_sub_left : neLocus (f - g) f = g.support := by rw [ne_locus_comm, ne_locus_self_sub_right]
 #align finsupp.ne_locus_self_sub_left Finsupp.ne_locus_self_sub_left
 
 end AddGroup

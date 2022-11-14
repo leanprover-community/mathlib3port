@@ -36,11 +36,11 @@ theorem Filter.Tendsto.is_bounded_under_le {f : Filter β} {u : β → α} {a : 
 #align filter.tendsto.is_bounded_under_le Filter.Tendsto.is_bounded_under_le
 
 theorem Filter.Tendsto.bdd_above_range_of_cofinite {u : β → α} {a : α} (h : Tendsto u cofinite (𝓝 a)) :
-    BddAbove (Set.Range u) :=
+    BddAbove (Set.range u) :=
   h.is_bounded_under_le.bdd_above_range_of_cofinite
 #align filter.tendsto.bdd_above_range_of_cofinite Filter.Tendsto.bdd_above_range_of_cofinite
 
-theorem Filter.Tendsto.bdd_above_range {u : ℕ → α} {a : α} (h : Tendsto u atTop (𝓝 a)) : BddAbove (Set.Range u) :=
+theorem Filter.Tendsto.bdd_above_range {u : ℕ → α} {a : α} (h : Tendsto u atTop (𝓝 a)) : BddAbove (Set.range u) :=
   h.is_bounded_under_le.bdd_above_range
 #align filter.tendsto.bdd_above_range Filter.Tendsto.bdd_above_range
 
@@ -54,7 +54,7 @@ theorem Filter.Tendsto.is_cobounded_under_ge {f : Filter β} {u : β → α} {a 
 #align filter.tendsto.is_cobounded_under_ge Filter.Tendsto.is_cobounded_under_ge
 
 theorem is_bounded_le_at_bot (α : Type _) [hα : Nonempty α] [Preorder α] : (atBot : Filter α).IsBounded (· ≤ ·) :=
-  is_bounded_iff.2 ⟨Set.IicCat hα.some, mem_at_bot _, hα.some, fun x hx => hx⟩
+  is_bounded_iff.2 ⟨Set.iic hα.some, mem_at_bot _, hα.some, fun x hx => hx⟩
 #align is_bounded_le_at_bot is_bounded_le_at_bot
 
 theorem Filter.Tendsto.is_bounded_under_le_at_bot {α : Type _} [Nonempty α] [Preorder α] {f : Filter β} {u : β → α}
@@ -63,7 +63,7 @@ theorem Filter.Tendsto.is_bounded_under_le_at_bot {α : Type _} [Nonempty α] [P
 #align filter.tendsto.is_bounded_under_le_at_bot Filter.Tendsto.is_bounded_under_le_at_bot
 
 theorem bdd_above_range_of_tendsto_at_top_at_bot {α : Type _} [Nonempty α] [SemilatticeSup α] {u : ℕ → α}
-    (hx : Tendsto u atTop atBot) : BddAbove (Set.Range u) :=
+    (hx : Tendsto u atTop atBot) : BddAbove (Set.range u) :=
   (Filter.Tendsto.is_bounded_under_le_at_bot hx).bdd_above_range
 #align bdd_above_range_of_tendsto_at_top_at_bot bdd_above_range_of_tendsto_at_top_at_bot
 
@@ -83,11 +83,11 @@ theorem Filter.Tendsto.is_bounded_under_ge {f : Filter β} {u : β → α} {a : 
 #align filter.tendsto.is_bounded_under_ge Filter.Tendsto.is_bounded_under_ge
 
 theorem Filter.Tendsto.bdd_below_range_of_cofinite {u : β → α} {a : α} (h : Tendsto u cofinite (𝓝 a)) :
-    BddBelow (Set.Range u) :=
+    BddBelow (Set.range u) :=
   h.is_bounded_under_ge.bdd_below_range_of_cofinite
 #align filter.tendsto.bdd_below_range_of_cofinite Filter.Tendsto.bdd_below_range_of_cofinite
 
-theorem Filter.Tendsto.bdd_below_range {u : ℕ → α} {a : α} (h : Tendsto u atTop (𝓝 a)) : BddBelow (Set.Range u) :=
+theorem Filter.Tendsto.bdd_below_range {u : ℕ → α} {a : α} (h : Tendsto u atTop (𝓝 a)) : BddBelow (Set.range u) :=
   h.is_bounded_under_ge.bdd_below_range
 #align filter.tendsto.bdd_below_range Filter.Tendsto.bdd_below_range
 
@@ -110,7 +110,7 @@ theorem Filter.Tendsto.is_bounded_under_ge_at_top {α : Type _} [Nonempty α] [P
 #align filter.tendsto.is_bounded_under_ge_at_top Filter.Tendsto.is_bounded_under_ge_at_top
 
 theorem bdd_below_range_of_tendsto_at_top_at_top {α : Type _} [Nonempty α] [SemilatticeInf α] {u : ℕ → α}
-    (hx : Tendsto u atTop atTop) : BddBelow (Set.Range u) :=
+    (hx : Tendsto u atTop atTop) : BddBelow (Set.range u) :=
   (Filter.Tendsto.is_bounded_under_ge_at_top hx).bdd_below_range
 #align bdd_below_range_of_tendsto_at_top_at_top bdd_below_range_of_tendsto_at_top_at_top
 
@@ -245,9 +245,9 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
   apply tendsto_of_le_liminf_of_limsup_le _ le_rfl h h'
   by_contra' hlt
   obtain ⟨a, ⟨⟨la, au⟩, as⟩⟩ : ∃ a, (f.liminf u < a ∧ a < f.limsup u) ∧ a ∈ s :=
-    dense_iff_inter_open.1 hs (Set.IooCat (f.liminf u) (f.limsup u)) is_open_Ioo (Set.nonempty_Ioo.2 hlt)
+    dense_iff_inter_open.1 hs (Set.ioo (f.liminf u) (f.limsup u)) is_open_Ioo (Set.nonempty_Ioo.2 hlt)
   obtain ⟨b, ⟨⟨ab, bu⟩, bs⟩⟩ : ∃ b, (a < b ∧ b < f.limsup u) ∧ b ∈ s :=
-    dense_iff_inter_open.1 hs (Set.IooCat a (f.limsup u)) is_open_Ioo (Set.nonempty_Ioo.2 au)
+    dense_iff_inter_open.1 hs (Set.ioo a (f.limsup u)) is_open_Ioo (Set.nonempty_Ioo.2 au)
   have A : ∃ᶠ n in f, u n < a := frequently_lt_of_liminf_lt (is_bounded.is_cobounded_ge h) la
   have B : ∃ᶠ n in f, b < u n := frequently_lt_of_lt_limsup (is_bounded.is_cobounded_le h') bu
   exact H a as b bs ab ⟨A, B⟩
@@ -286,7 +286,7 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
       intro x
       exact f_decr bot_le
       
-    by_cases h':∃ c, c < F.Limsup ∧ Set.IooCat c F.Limsup = ∅
+    by_cases h':∃ c, c < F.Limsup ∧ Set.ioo c F.Limsup = ∅
     · rcases h' with ⟨c, c_lt, hc⟩
       have B : ∃ᶠ n in F, F.Limsup ≤ n := by
         apply
@@ -297,15 +297,15 @@ theorem Antitone.map_Limsup_of_continuous_at {F : Filter R} [NeBot F] {f : R →
               c_lt).mono
         intro x hx
         by_contra'
-        have : (Set.IooCat c F.Limsup).Nonempty := ⟨x, ⟨hx, this⟩⟩
+        have : (Set.ioo c F.Limsup).Nonempty := ⟨x, ⟨hx, this⟩⟩
         simpa [hc]
       apply liminf_le_of_frequently_le
       exact B.mono fun x hx => f_decr hx
       
     by_contra' H
-    obtain ⟨l, l_lt, h'l⟩ : ∃ l < F.Limsup, Set.IocCat l F.Limsup ⊆ { x : R | f x < F.liminf f }
+    obtain ⟨l, l_lt, h'l⟩ : ∃ l < F.Limsup, Set.ioc l F.Limsup ⊆ { x : R | f x < F.liminf f }
     exact exists_Ioc_subset_of_mem_nhds ((tendsto_order.1 f_cont.tendsto).2 _ H) ⟨⊥, Limsup_ne_bot⟩
-    obtain ⟨m, l_m, m_lt⟩ : (Set.IooCat l F.Limsup).Nonempty := by
+    obtain ⟨m, l_m, m_lt⟩ : (Set.ioo l F.Limsup).Nonempty := by
       contrapose! h'
       refine' ⟨l, l_lt, by rwa [Set.not_nonempty_iff_eq_empty] at h'⟩
     have B : F.liminf f ≤ f m := by

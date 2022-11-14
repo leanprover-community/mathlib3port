@@ -292,7 +292,7 @@ variable (I)
 /-- If `x` is an `I`-multiple of the submodule spanned by `f '' s`,
 then we can write `x` as an `I`-linear combination of the elements of `f '' s`. -/
 theorem mem_ideal_smul_span_iff_exists_sum {ι : Type _} (f : ι → M) (x : M) :
-    x ∈ I • span R (Set.Range f) ↔ ∃ (a : ι →₀ R)(ha : ∀ i, a i ∈ I), (a.Sum fun i c => c • f i) = x := by
+    x ∈ I • span R (Set.range f) ↔ ∃ (a : ι →₀ R)(ha : ∀ i, a i ∈ I), (a.Sum fun i c => c • f i) = x := by
   constructor
   swap
   · rintro ⟨a, ha, rfl⟩
@@ -760,7 +760,7 @@ theorem prod_eq_bot {R : Type _} [CommRing R] [IsDomain R] {s : Multiset (Ideal 
 
 /-- The radical of an ideal `I` consists of the elements `r` such that `r^n ∈ I` for some `n`. -/
 def radical (I : Ideal R) : Ideal R where
-  Carrier := { r | ∃ n : ℕ, r ^ n ∈ I }
+  carrier := { r | ∃ n : ℕ, r ^ n ∈ I }
   zero_mem' := ⟨1, (pow_one (0 : R)).symm ▸ I.zero_mem⟩
   add_mem' := fun x y ⟨m, hxmi⟩ ⟨n, hyni⟩ =>
     ⟨m + n,
@@ -1174,7 +1174,7 @@ def map (I : Ideal R) : Ideal S :=
 
 /-- `I.comap f` is the preimage of `I` under `f`. -/
 def comap (I : Ideal S) : Ideal R where
-  Carrier := f ⁻¹' I
+  carrier := f ⁻¹' I
   add_mem' x y hx hy := by simp only [Set.mem_preimage, SetLike.mem_coe, map_add, add_mem hx hy] at *
   zero_mem' := by simp only [Set.mem_preimage, map_zero, SetLike.mem_coe, Submodule.zero_mem]
   smul_mem' c x hx := by
@@ -1779,7 +1779,7 @@ variable (ι : Type _)
 
 variable (M : Type _) [AddCommGroup M] {R : Type _} [CommRing R] [Module R M] (I : Ideal R)
 
-variable (v : ι → M) (hv : Submodule.span R (Set.Range v) = ⊤)
+variable (v : ι → M) (hv : Submodule.span R (Set.range v) = ⊤)
 
 open BigOperators
 
@@ -1801,7 +1801,7 @@ theorem finsupp_total_apply_eq_of_fintype [Fintype ι] (f : ι →₀ I) : finsu
   exact fun _ => zero_smul _ _
 #align ideal.finsupp_total_apply_eq_of_fintype Ideal.finsupp_total_apply_eq_of_fintype
 
-theorem range_finsupp_total : (finsuppTotal ι M I v).range = I • Submodule.span R (Set.Range v) := by
+theorem range_finsupp_total : (finsuppTotal ι M I v).range = I • Submodule.span R (Set.range v) := by
   ext
   rw [Submodule.mem_ideal_smul_span_iff_exists_sum]
   refine' ⟨fun ⟨f, h⟩ => ⟨Finsupp.mapRange.linearMap I.subtype f, fun i => (f i).2, h⟩, _⟩
@@ -1858,7 +1858,7 @@ def ker : Ideal R :=
 theorem mem_ker {r} : r ∈ ker f ↔ f r = 0 := by rw [ker, Ideal.mem_comap, Submodule.mem_bot]
 #align ring_hom.mem_ker RingHom.mem_ker
 
-theorem ker_eq : (ker f : Set R) = Set.Preimage f {0} :=
+theorem ker_eq : (ker f : Set R) = Set.preimage f {0} :=
   rfl
 #align ring_hom.ker_eq RingHom.ker_eq
 

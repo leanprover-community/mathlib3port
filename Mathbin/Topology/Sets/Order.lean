@@ -28,7 +28,7 @@ structure ClopenUpperSet (α : Type _) [TopologicalSpace α] [LE α] extends Clo
 namespace ClopenUpperSet
 
 instance : SetLike (ClopenUpperSet α) α where
-  coe s := s.Carrier
+  coe s := s.carrier
   coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t

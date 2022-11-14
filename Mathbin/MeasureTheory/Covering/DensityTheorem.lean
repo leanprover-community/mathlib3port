@@ -67,7 +67,7 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ := by
 /-- In the Vitali family `is_doubling_measure.vitali_family K`, the sets based at `x` contain all
 balls `closed_ball y r` when `dist x y ≤ K * r`. -/
 theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ} (h : dist x y ≤ K * r) (rpos : 0 < r) :
-    ClosedBall y r ∈ (vitaliFamily μ K).SetsAt x := by
+    closedBall y r ∈ (vitaliFamily μ K).setsAt x := by
   let R := scaling_scale_of μ (max (4 * K + 3) 3)
   simp only [VitaliFamily, VitaliFamily.enlarge, Vitali.vitaliFamily, mem_union, mem_set_of_eq, is_closed_ball,
     true_and_iff, (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball, measurableSetClosedBall]
@@ -113,8 +113,8 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
   is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closed_ball_mem_vitali_family_of_dist_le_mul
 
 theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α) (δ : ι → ℝ)
-    (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ ClosedBall (w j) (K * δ j)) :
-    Tendsto (fun j => ClosedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) := by
+    (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)) :
+    Tendsto (fun j => closedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) := by
   refine' (VitaliFamily μ K).tendsto_filter_at_iff.mpr ⟨_, fun ε hε => _⟩
   · filter_upwards [xmem, δlim self_mem_nhds_within] with j hj h'j
     exact closed_ball_mem_vitali_family_of_dist_le_mul μ hj h'j
@@ -154,8 +154,8 @@ See also `besicovitch.ae_tendsto_measure_inter_div`. -/
 theorem ae_tendsto_measure_inter_div (S : Set α) (K : ℝ) :
     ∀ᵐ x ∂μ.restrict S,
       ∀ {ι : Type _} {l : Filter ι} (w : ι → α) (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0))
-        (xmem : ∀ᶠ j in l, x ∈ ClosedBall (w j) (K * δ j)),
-        Tendsto (fun j => μ (S ∩ ClosedBall (w j) (δ j)) / μ (ClosedBall (w j) (δ j))) l (𝓝 1) :=
+        (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)),
+        Tendsto (fun j => μ (S ∩ closedBall (w j) (δ j)) / μ (closedBall (w j) (δ j))) l (𝓝 1) :=
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_measure_inter_div
       S] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
@@ -166,8 +166,8 @@ centers are not required to be fixed. -/
 theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) (K : ℝ) :
     ∀ᵐ x ∂μ,
       ∀ {ι : Type _} {l : Filter ι} (w : ι → α) (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0))
-        (xmem : ∀ᶠ j in l, x ∈ ClosedBall (w j) (K * δ j)),
-        Tendsto (fun j => ⨍ y in ClosedBall (w j) (δ j), ∥f y - f x∥ ∂μ) l (𝓝 0) :=
+        (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)),
+        Tendsto (fun j => ⨍ y in closedBall (w j) (δ j), ∥f y - f x∥ ∂μ) l (𝓝 0) :=
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_average_norm_sub
       hf] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
@@ -178,8 +178,8 @@ centers are not required to be fixed. -/
 theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} (hf : Integrable f μ) (K : ℝ) :
     ∀ᵐ x ∂μ,
       ∀ {ι : Type _} {l : Filter ι} (w : ι → α) (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0))
-        (xmem : ∀ᶠ j in l, x ∈ ClosedBall (w j) (K * δ j)),
-        Tendsto (fun j => ⨍ y in ClosedBall (w j) (δ j), f y ∂μ) l (𝓝 (f x)) :=
+        (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)),
+        Tendsto (fun j => ⨍ y in closedBall (w j) (δ j), f y ∂μ) l (𝓝 (f x)) :=
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_average
       hf] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)

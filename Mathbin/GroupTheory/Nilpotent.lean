@@ -88,7 +88,7 @@ is a subgroup of `G` (because it is the preimage in `G` of the centre of the
 quotient group `G/H`.)
 -/
 def upperCentralSeriesStep : Subgroup G where
-  Carrier := { x : G | ∀ y : G, x * y * x⁻¹ * y⁻¹ ∈ H }
+  carrier := { x : G | ∀ y : G, x * y * x⁻¹ * y⁻¹ ∈ H }
   one_mem' y := by simp [Subgroup.one_mem]
   mul_mem' a b ha hb y := by
     convert Subgroup.mul_mem _ (ha (b * y * b⁻¹)) (hb y) using 1
@@ -149,7 +149,7 @@ theorem upper_central_series_zero : upperCentralSeries G 0 = ⊥ :=
 @[simp]
 theorem upper_central_series_one : upperCentralSeries G 1 = center G := by
   ext
-  simp only [upperCentralSeries, upperCentralSeriesAux, upperCentralSeriesStep, center, Set.Center, mem_mk, mem_bot,
+  simp only [upperCentralSeries, upperCentralSeriesAux, upperCentralSeriesStep, center, Set.center, mem_mk, mem_bot,
     Set.mem_set_of_eq]
   exact forall_congr' fun y => by rw [mul_inv_eq_one, mul_inv_eq_iff_eq_mul, eq_comm]
 #align upper_central_series_one upper_central_series_one
@@ -761,8 +761,8 @@ section BoundedPi
 variable {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs i)]
 
 theorem lower_central_series_pi_le (n : ℕ) :
-    lowerCentralSeries (∀ i, Gs i) n ≤ Subgroup.pi Set.Univ fun i => lowerCentralSeries (Gs i) n := by
-  let pi := fun f : ∀ i, Subgroup (Gs i) => Subgroup.pi Set.Univ f
+    lowerCentralSeries (∀ i, Gs i) n ≤ Subgroup.pi Set.univ fun i => lowerCentralSeries (Gs i) n := by
+  let pi := fun f : ∀ i, Subgroup (Gs i) => Subgroup.pi Set.univ f
   induction' n with n ih
   · simp [pi_top]
     
@@ -796,8 +796,8 @@ section FinitePi
 variable {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs i)]
 
 theorem lower_central_series_pi_of_finite [Finite η] (n : ℕ) :
-    lowerCentralSeries (∀ i, Gs i) n = Subgroup.pi Set.Univ fun i => lowerCentralSeries (Gs i) n := by
-  let pi := fun f : ∀ i, Subgroup (Gs i) => Subgroup.pi Set.Univ f
+    lowerCentralSeries (∀ i, Gs i) n = Subgroup.pi Set.univ fun i => lowerCentralSeries (Gs i) n := by
+  let pi := fun f : ∀ i, Subgroup (Gs i) => Subgroup.pi Set.univ f
   induction' n with n ih
   · simp [pi_top]
     
@@ -894,8 +894,8 @@ variable [Fintype G]
 
 /-- If a finite group is the direct product of its Sylow groups, it is nilpotent -/
 theorem is_nilpotent_of_product_of_sylow_group
-    (e : (∀ p : (Fintype.card G).factorization.Support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G) : IsNilpotent G := by
-  classical let ps := (Fintype.card G).factorization.Support
+    (e : (∀ p : (Fintype.card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G) : IsNilpotent G := by
+  classical let ps := (Fintype.card G).factorization.support
     · intro p P
       haveI : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_factorization (Finset.coe_mem p))
       exact P.is_p_group'.is_nilpotent
@@ -953,7 +953,7 @@ theorem is_nilpotent_of_product_of_sylow_group
                (Term.forall
                 "∀"
                 [`p]
-                [(Term.typeSpec ":" (Term.proj (Term.proj (Term.app `card [`G]) "." `factorization) "." `Support))]
+                [(Term.typeSpec ":" (Term.proj (Term.proj (Term.app `card [`G]) "." `factorization) "." `support))]
                 ","
                 (Term.forall
                  "∀"
@@ -1180,7 +1180,7 @@ theorem is_nilpotent_of_product_of_sylow_group
             ,
             ∀ ( p : ℕ ) ( hp : Fact p . Prime ) ( P : Sylow p G ) , ( ↑ P : Subgroup G ) . Normal
             ,
-            Nonempty ∀ p : card G . factorization . Support , ∀ P : Sylow p G , ( ↑ P : Subgroup G ) ≃* G
+            Nonempty ∀ p : card G . factorization . support , ∀ P : Sylow p G , ( ↑ P : Subgroup G ) ≃* G
           ]
     :=
       by

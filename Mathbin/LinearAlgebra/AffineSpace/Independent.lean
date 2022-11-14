@@ -258,10 +258,10 @@ protected theorem AffineIndependent.subtype {p : ι → P} (ha : AffineIndepende
 /-- If an indexed family of points is affinely independent, so is the
 corresponding set of points. -/
 protected theorem AffineIndependent.range {p : ι → P} (ha : AffineIndependent k p) :
-    AffineIndependent k (fun x => x : Set.Range p → P) := by
-  let f : Set.Range p → ι := fun x => x.property.some
+    AffineIndependent k (fun x => x : Set.range p → P) := by
+  let f : Set.range p → ι := fun x => x.property.some
   have hf : ∀ x, p (f x) = x := fun x => x.property.some_spec
-  let fe : Set.Range p ↪ ι := ⟨f, fun x₁ x₂ he => Subtype.ext (hf x₁ ▸ hf x₂ ▸ he ▸ rfl)⟩
+  let fe : Set.range p ↪ ι := ⟨f, fun x₁ x₂ he => Subtype.ext (hf x₁ ▸ hf x₂ ▸ he ▸ rfl)⟩
   convert ha.comp_embedding fe
   ext
   simp [hf]
@@ -286,9 +286,9 @@ protected theorem AffineIndependent.mono {s t : Set P} (ha : AffineIndependent k
 
 /-- If the range of an injective indexed family of points is affinely
 independent, so is that family. -/
-theorem AffineIndependent.of_set_of_injective {p : ι → P} (ha : AffineIndependent k (fun x => x : Set.Range p → P))
+theorem AffineIndependent.of_set_of_injective {p : ι → P} (ha : AffineIndependent k (fun x => x : Set.range p → P))
     (hi : Function.Injective p) : AffineIndependent k p :=
-  ha.comp_embedding (⟨fun i => ⟨p i, Set.mem_range_self _⟩, fun x y h => hi (Subtype.mk_eq_mk.1 h)⟩ : ι ↪ Set.Range p)
+  ha.comp_embedding (⟨fun i => ⟨p i, Set.mem_range_self _⟩, fun x y h => hi (Subtype.mk_eq_mk.1 h)⟩ : ι ↪ Set.range p)
 #align affine_independent.of_set_of_injective AffineIndependent.of_set_of_injective
 
 section Composition
@@ -341,7 +341,7 @@ theorem AffineEquiv.affine_independent_iff {p : ι → P} (e : P ≃ᵃ[k] P₂)
 /-- Affine equivalences preserve affine independence of subsets. -/
 theorem AffineEquiv.affine_independent_set_of_eq_iff {s : Set P} (e : P ≃ᵃ[k] P₂) :
     AffineIndependent k (coe : e '' s → P₂) ↔ AffineIndependent k (coe : s → P) := by
-  have : e ∘ (coe : s → P) = (coe : e '' s → P₂) ∘ (e : P ≃ P₂).Image s := rfl
+  have : e ∘ (coe : s → P) = (coe : e '' s → P₂) ∘ (e : P ≃ P₂).image s := rfl
   rw [← e.affine_independent_iff, this, affine_independent_equiv]
 #align affine_equiv.affine_independent_set_of_eq_iff AffineEquiv.affine_independent_set_of_eq_iff
 
@@ -442,7 +442,7 @@ theorem exists_subset_affine_independent_affine_span_eq_top {s : Set P} (h : Aff
     have hsvi := hsv.linear_independent
     have hsvt := hsv.span_eq
     rw [Basis.coe_of_vector_space] at hsvi hsvt
-    have h0 : ∀ v : V, v ∈ Basis.OfVectorSpaceIndex _ _ → v ≠ 0 := by
+    have h0 : ∀ v : V, v ∈ Basis.ofVectorSpaceIndex _ _ → v ≠ 0 := by
       intro v hv
       simpa using hsv.ne_zero ⟨v, hv⟩
     rw [linear_independent_set_iff_affine_independent_vadd_union_singleton k h0 p₁] at hsvi
@@ -679,7 +679,7 @@ theorem face_eq_mk_of_point {n : ℕ} (s : Simplex k P n) (i : Fin (n + 1)) :
 /-- The set of points of a face. -/
 @[simp]
 theorem range_face_points {n : ℕ} (s : Simplex k P n) {fs : Finset (Fin (n + 1))} {m : ℕ} (h : fs.card = m + 1) :
-    Set.Range (s.face h).points = s.points '' ↑fs := by rw [face_points', Set.range_comp, Finset.range_order_emb_of_fin]
+    Set.range (s.face h).points = s.points '' ↑fs := by rw [face_points', Set.range_comp, Finset.range_order_emb_of_fin]
 #align affine.simplex.range_face_points Affine.Simplex.range_face_points
 
 end Simplex
@@ -743,7 +743,7 @@ theorem face_centroid_eq_iff [CharZero k] {n : ℕ} (s : Simplex k P n) {fs₁ f
 #align affine.simplex.face_centroid_eq_iff Affine.Simplex.face_centroid_eq_iff
 
 /-- Two simplices with the same points have the same centroid. -/
-theorem centroid_eq_of_range_eq {n : ℕ} {s₁ s₂ : Simplex k P n} (h : Set.Range s₁.points = Set.Range s₂.points) :
+theorem centroid_eq_of_range_eq {n : ℕ} {s₁ s₂ : Simplex k P n} (h : Set.range s₁.points = Set.range s₂.points) :
     Finset.univ.centroid k s₁.points = Finset.univ.centroid k s₂.points := by
   rw [← Set.image_univ, ← Set.image_univ, ← Finset.coe_univ] at h
   exact

@@ -54,7 +54,7 @@ open TopologicalSpace
 
 variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F] {s : Set E}
   (s_conv : Convex ℝ s) {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
-  (hf : ∀ x ∈ Interior s, HasFderivAt f (f' x) x) {x : E} (xs : x ∈ s) (hx : HasFderivWithinAt f' f'' (Interior s) x)
+  (hf : ∀ x ∈ interior s, HasFderivAt f (f' x) x) {x : E} (xs : x ∈ s) (hx : HasFderivWithinAt f' f'' (interior s) x)
 
 include s_conv xs hx hf
 
@@ -75,7 +75,7 @@ bilinear estimate for `f (x + hv + hw) - f (x + hv)` in terms of `f' w` and of `
 
 This is a technical statement used to show that the second derivative is symmetric.
 -/
-theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (hw : x + v + w ∈ Interior s) :
+theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s) (hw : x + v + w ∈ interior s) :
     (fun h : ℝ =>
         f (x + h • v + h • w) - f (x + h • v) - h • f' x w - h ^ 2 • f'' v w - (h ^ 2 / 2) • f'' w w) =o[𝓝[>] 0]
       fun h => h ^ 2 :=
@@ -98,9 +98,9 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
   -- we consider `h` small enough that all points under consideration belong to this ball,
   -- and also with `0 < h < 1`.
   replace hpos : 0 < h := hpos
-  have xt_mem : ∀ t ∈ Icc (0 : ℝ) 1, x + h • v + (t * h) • w ∈ Interior s := by
+  have xt_mem : ∀ t ∈ Icc (0 : ℝ) 1, x + h • v + (t * h) • w ∈ interior s := by
     intro t ht
-    have : x + h • v ∈ Interior s := s_conv.add_smul_mem_interior xs hv ⟨hpos, h_lt_1.le⟩
+    have : x + h • v ∈ interior s := s_conv.add_smul_mem_interior xs hv ⟨hpos, h_lt_1.le⟩
     rw [← smul_smul]
     apply s_conv.interior.add_smul_mem this _ ht
     rw [add_assoc] at hw
@@ -163,7 +163,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
         ContinuousLinearMap.le_op_norm _ _
       _ ≤ ε * ∥h • v + (t * h) • w∥ * ∥h • w∥ := by
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
-        have H : x + h • v + (t * h) • w ∈ Metric.Ball x δ ∩ Interior s := by
+        have H : x + h • v + (t * h) • w ∈ Metric.ball x δ ∩ interior s := by
           refine' ⟨_, xt_mem t ⟨ht.1, ht.2.le⟩⟩
           rw [add_assoc, add_mem_ball_iff_norm]
           exact I.trans_lt hδ
@@ -199,8 +199,8 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
 along the vertices of a quadrilateral with sides `h v` and `h w` based at `x`.
 In a setting where `f` is not guaranteed to be continuous at `f`, we can still
 get this if we use a quadrilateral based at `h v + h w`. -/
-theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈ Interior s)
-    (h4w : x + (4 : ℝ) • w ∈ Interior s) :
+theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈ interior s)
+    (h4w : x + (4 : ℝ) • w ∈ interior s) :
     (fun h : ℝ =>
         f (x + h • (2 • v + 2 • w)) + f (x + h • (v + w)) - f (x + h • (2 • v + w)) - f (x + h • (v + 2 • w)) -
           h ^ 2 • f'' v w) =o[𝓝[>] 0]
@@ -209,35 +209,35 @@ theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v �
   have A : (1 : ℝ) / 2 ∈ Ioc (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
   have B : (1 : ℝ) / 2 ∈ Icc (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
   have C : ∀ w : E, (2 : ℝ) • w = 2 • w := fun w => by simp only [two_smul]
-  have h2v2w : x + (2 : ℝ) • v + (2 : ℝ) • w ∈ Interior s := by
+  have h2v2w : x + (2 : ℝ) • v + (2 : ℝ) • w ∈ interior s := by
     convert s_conv.interior.add_smul_sub_mem h4v h4w B using 1
     simp only [smul_sub, smul_smul, one_div, add_sub_add_left_eq_sub, mul_add, add_smul]
     norm_num
     simp only [show (4 : ℝ) = (2 : ℝ) + (2 : ℝ) by norm_num, add_smul]
     abel
-  have h2vww : x + (2 • v + w) + w ∈ Interior s := by
+  have h2vww : x + (2 • v + w) + w ∈ interior s := by
     convert h2v2w using 1
     simp only [two_smul]
     abel
-  have h2v : x + (2 : ℝ) • v ∈ Interior s := by
+  have h2v : x + (2 : ℝ) • v ∈ interior s := by
     convert s_conv.add_smul_sub_mem_interior xs h4v A using 1
     simp only [smul_smul, one_div, add_sub_cancel', add_right_inj]
     norm_num
-  have h2w : x + (2 : ℝ) • w ∈ Interior s := by
+  have h2w : x + (2 : ℝ) • w ∈ interior s := by
     convert s_conv.add_smul_sub_mem_interior xs h4w A using 1
     simp only [smul_smul, one_div, add_sub_cancel', add_right_inj]
     norm_num
-  have hvw : x + (v + w) ∈ Interior s := by
+  have hvw : x + (v + w) ∈ interior s := by
     convert s_conv.add_smul_sub_mem_interior xs h2v2w A using 1
     simp only [smul_smul, one_div, add_sub_cancel', add_right_inj, smul_add, smul_sub]
     norm_num
     abel
-  have h2vw : x + (2 • v + w) ∈ Interior s := by
+  have h2vw : x + (2 • v + w) ∈ interior s := by
     convert s_conv.interior.add_smul_sub_mem h2v h2v2w B using 1
     simp only [smul_add, smul_sub, smul_smul, ← C]
     norm_num
     abel
-  have hvww : x + (v + w) + w ∈ Interior s := by
+  have hvww : x + (v + w) + w ∈ interior s := by
     convert s_conv.interior.add_smul_sub_mem h2w h2v2w B using 1
     simp only [one_div, add_sub_cancel', inv_smul_smul₀, add_sub_add_right_eq_sub, Ne.def, not_false_iff, bit0_eq_zero,
       one_ne_zero]
@@ -257,8 +257,8 @@ differentiable at a point `x`. Then, given two vectors `v` and `w` pointing insi
 has `f'' v w = f'' w v`. Superseded by `convex.second_derivative_within_at_symmetric`, which
 removes the assumption that `v` and `w` point inside `s`.
 -/
-theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E} (h4v : x + (4 : ℝ) • v ∈ Interior s)
-    (h4w : x + (4 : ℝ) • w ∈ Interior s) : f'' w v = f'' v w := by
+theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E} (h4v : x + (4 : ℝ) • v ∈ interior s)
+    (h4w : x + (4 : ℝ) • w ∈ interior s) : f'' w v = f'' v w := by
   have A : (fun h : ℝ => h ^ 2 • (f'' w v - f'' v w)) =o[𝓝[>] 0] fun h => h ^ 2 := by
     convert (s_conv.is_o_alternate_sum_square hf xs hx h4v h4w).sub (s_conv.is_o_alternate_sum_square hf xs hx h4w h4v)
     ext h
@@ -285,9 +285,9 @@ omit s_conv xs hx hf
 
 /-- If a function is differentiable inside a convex set with nonempty interior, and has a second
 derivative at a point of this convex set, then this second derivative is symmetric. -/
-theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Convex ℝ s) (hne : (Interior s).Nonempty)
-    {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F} (hf : ∀ x ∈ Interior s, HasFderivAt f (f' x) x) {x : E}
-    (xs : x ∈ s) (hx : HasFderivWithinAt f' f'' (Interior s) x) (v w : E) : f'' v w = f'' w v := by
+theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Convex ℝ s) (hne : (interior s).Nonempty)
+    {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F} (hf : ∀ x ∈ interior s, HasFderivAt f (f' x) x) {x : E}
+    (xs : x ∈ s) (hx : HasFderivWithinAt f' f'' (interior s) x) (v w : E) : f'' v w = f'' w v := by
   /- we work around a point `x + 4 z` in the interior of `s`. For any vector `m`,
     then `x + 4 (z + t m)` also belongs to the interior of `s` for small enough `t`. This means that
     we will be able to apply `second_derivative_within_at_symmetric_of_mem_interior` to show
@@ -302,7 +302,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
     refine' tendsto_const_nhds.smul _
     refine' tendsto_const_nhds.add _
     exact continuous_at_id.smul continuous_at_const
-  have B : ∀ m : E, ∀ᶠ t in 𝓝[>] (0 : ℝ), x + (4 : ℝ) • (z + t • m) ∈ Interior s := by
+  have B : ∀ m : E, ∀ᶠ t in 𝓝[>] (0 : ℝ), x + (4 : ℝ) • (z + t • m) ∈ interior s := by
     intro m
     apply nhds_within_le_nhds
     apply A m
@@ -340,7 +340,7 @@ derivative is symmetric. -/
 theorem second_derivative_symmetric_of_eventually {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
     (hf : ∀ᶠ y in 𝓝 x, HasFderivAt f (f' y) y) (hx : HasFderivAt f' f'' x) (v w : E) : f'' v w = f'' w v := by
   rcases Metric.mem_nhds_iff.1 hf with ⟨ε, εpos, hε⟩
-  have A : (Interior (Metric.Ball x ε)).Nonempty := by rwa [metric.is_open_ball.interior_eq, Metric.nonempty_ball]
+  have A : (interior (Metric.ball x ε)).Nonempty := by rwa [metric.is_open_ball.interior_eq, Metric.nonempty_ball]
   exact
     Convex.second_derivative_within_at_symmetric (convex_ball x ε) A (fun y hy => hε (interior_subset hy))
       (Metric.mem_ball_self εpos) hx.has_fderiv_within_at v w

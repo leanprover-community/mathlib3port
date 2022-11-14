@@ -122,7 +122,7 @@ order takes values within `s`, for all nonempty bounded-above subsets of `s`. -/
 theorem Sup_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Set s⦄ (ht : t.Nonempty)
     (h_bdd : BddAbove t) : sup (coe '' t : Set α) ∈ s := by
   obtain ⟨c, hct⟩ : ∃ c, c ∈ t := ht
-  obtain ⟨B, hB⟩ : ∃ B, B ∈ UpperBounds t := h_bdd
+  obtain ⟨B, hB⟩ : ∃ B, B ∈ upperBounds t := h_bdd
   refine' hs.out c.2 B.2 ⟨_, _⟩
   · exact (Subtype.mono_coe s).le_cSup_image hct ⟨B, hB⟩
     
@@ -135,7 +135,7 @@ order takes values within `s`, for all nonempty bounded-below subsets of `s`. -/
 theorem Inf_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Set s⦄ (ht : t.Nonempty)
     (h_bdd : BddBelow t) : inf (coe '' t : Set α) ∈ s := by
   obtain ⟨c, hct⟩ : ∃ c, c ∈ t := ht
-  obtain ⟨B, hB⟩ : ∃ B, B ∈ LowerBounds t := h_bdd
+  obtain ⟨B, hB⟩ : ∃ B, B ∈ lowerBounds t := h_bdd
   refine' hs.out B.2 c.2 ⟨_, _⟩
   · exact (Subtype.mono_coe s).le_cInf_image ⟨c, hct⟩ hB
     

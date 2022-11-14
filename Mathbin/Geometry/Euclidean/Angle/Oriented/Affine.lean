@@ -493,10 +493,10 @@ theorem _root_.collinear.oangle_sign_of_same_ray_vsub {p₁ p₂ p₃ p₄ : P} 
     rw [hs₁₅₂, hs₃₅₄]
     
   · let s : Set (P × P × P) :=
-      (fun x : line[ℝ, p₁, p₂] × V => (x.1, p₅, x.2 +ᵥ x.1)) '' Set.Univ ×ˢ { v | SameRay ℝ (p₂ -ᵥ p₁) v ∧ v ≠ 0 }
+      (fun x : line[ℝ, p₁, p₂] × V => (x.1, p₅, x.2 +ᵥ x.1)) '' Set.univ ×ˢ { v | SameRay ℝ (p₂ -ᵥ p₁) v ∧ v ≠ 0 }
     have hco : IsConnected s :=
       haveI : ConnectedSpace line[ℝ, p₁, p₂] := AddTorsor.connected_space _ _
-      (is_connected_univ.prod (is_connected_set_of_same_ray_and_ne_zero (vsub_ne_zero.2 hp₁p₂.symm))).Image _
+      (is_connected_univ.prod (is_connected_set_of_same_ray_and_ne_zero (vsub_ne_zero.2 hp₁p₂.symm))).image _
         (continuous_fst.subtype_coe.prod_mk
             (continuous_const.prod_mk (continuous_snd.vadd continuous_fst.subtype_coe))).ContinuousOn
     have hf : ContinuousOn (fun p : P × P × P => ∡ p.1 p.2.1 p.2.2) s := by
@@ -606,7 +606,7 @@ theorem _root_.affine_subspace.s_same_side.oangle_sign_eq {s : AffineSubspace �
     
   let sp : Set (P × P × P) := (fun p : P => (p₁, p, p₂)) '' { p | s.s_same_side p₃ p }
   have hc : IsConnected sp :=
-    (is_connected_set_of_s_same_side hp₃p₄.2.1 hp₃p₄.nonempty).Image _
+    (is_connected_set_of_s_same_side hp₃p₄.2.1 hp₃p₄.nonempty).image _
       (continuous_const.prod_mk (Continuous.Prod.mk_left _)).ContinuousOn
   have hf : ContinuousOn (fun p : P × P × P => ∡ p.1 p.2.1 p.2.2) sp := by
     refine' ContinuousAt.continuous_on fun p hp => continuous_at_oangle _ _

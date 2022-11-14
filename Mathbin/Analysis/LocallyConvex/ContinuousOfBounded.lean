@@ -152,7 +152,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     rw [← hu1, ← mul_smul]
     simp only [h, mul_inv_cancel, Ne.def, Nat.cast_eq_zero, not_false_iff, one_smul]
   -- The image `(λ n, n • u n)` is von Neumann bounded:
-  have h_bounded : is_vonN_bounded 𝕜 (Set.Range fun n : ℕ => (n : 𝕜) • u n) :=
+  have h_bounded : is_vonN_bounded 𝕜 (Set.range fun n : ℕ => (n : 𝕜) • u n) :=
     h_tendsto.cauchy_seq.totally_bounded_range.is_vonN_bounded 𝕜
   -- Since `range u` is bounded it absorbs `V`
   rcases hf _ h_bounded hV with ⟨r, hr, h'⟩

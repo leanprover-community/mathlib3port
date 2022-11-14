@@ -70,7 +70,7 @@ theorem central_moment_zero (hp : p ≠ 0) : centralMoment 0 p μ = 0 := by
 #align probability_theory.central_moment_zero ProbabilityTheory.central_moment_zero
 
 theorem central_moment_one' [IsFiniteMeasure μ] (h_int : Integrable X μ) :
-    centralMoment X 1 μ = (1 - (μ Set.Univ).toReal) * μ[X] := by
+    centralMoment X 1 μ = (1 - (μ Set.univ).toReal) * μ[X] := by
   simp only [central_moment, Pi.sub_apply, pow_one]
   rw [integral_sub h_int (integrable_const _)]
   simp only [sub_mul, integral_const, Algebra.id.smul_eq_mul, one_mul]
@@ -114,12 +114,12 @@ def cgf (X : Ω → ℝ) (μ : Measure Ω) (t : ℝ) : ℝ :=
 #align probability_theory.cgf ProbabilityTheory.cgf
 
 @[simp]
-theorem mgf_zero_fun : mgf 0 μ t = (μ Set.Univ).toReal := by
+theorem mgf_zero_fun : mgf 0 μ t = (μ Set.univ).toReal := by
   simp only [mgf, Pi.zero_apply, mul_zero, exp_zero, integral_const, Algebra.id.smul_eq_mul, mul_one]
 #align probability_theory.mgf_zero_fun ProbabilityTheory.mgf_zero_fun
 
 @[simp]
-theorem cgf_zero_fun : cgf 0 μ t = log (μ Set.Univ).toReal := by simp only [cgf, mgf_zero_fun]
+theorem cgf_zero_fun : cgf 0 μ t = log (μ Set.univ).toReal := by simp only [cgf, mgf_zero_fun]
 #align probability_theory.cgf_zero_fun ProbabilityTheory.cgf_zero_fun
 
 @[simp]
@@ -131,7 +131,7 @@ theorem cgf_zero_measure : cgf X (0 : Measure Ω) t = 0 := by simp only [cgf, lo
 #align probability_theory.cgf_zero_measure ProbabilityTheory.cgf_zero_measure
 
 @[simp]
-theorem mgf_const' (c : ℝ) : mgf (fun _ => c) μ t = (μ Set.Univ).toReal * exp (t * c) := by
+theorem mgf_const' (c : ℝ) : mgf (fun _ => c) μ t = (μ Set.univ).toReal * exp (t * c) := by
   simp only [mgf, integral_const, Algebra.id.smul_eq_mul]
 #align probability_theory.mgf_const' ProbabilityTheory.mgf_const'
 
@@ -141,14 +141,14 @@ theorem mgf_const (c : ℝ) [IsProbabilityMeasure μ] : mgf (fun _ => c) μ t = 
 #align probability_theory.mgf_const ProbabilityTheory.mgf_const
 
 @[simp]
-theorem cgf_const' [IsFiniteMeasure μ] (hμ : μ ≠ 0) (c : ℝ) : cgf (fun _ => c) μ t = log (μ Set.Univ).toReal + t * c :=
+theorem cgf_const' [IsFiniteMeasure μ] (hμ : μ ≠ 0) (c : ℝ) : cgf (fun _ => c) μ t = log (μ Set.univ).toReal + t * c :=
   by
   simp only [cgf, mgf_const']
   rw [log_mul _ (exp_pos _).ne']
   · rw [log_exp _]
     
   · rw [Ne.def, Ennreal.to_real_eq_zero_iff, measure.measure_univ_eq_zero]
-    simp only [hμ, measure_ne_top μ Set.Univ, or_self_iff, not_false_iff]
+    simp only [hμ, measure_ne_top μ Set.univ, or_self_iff, not_false_iff]
     
 #align probability_theory.cgf_const' ProbabilityTheory.cgf_const'
 
@@ -158,7 +158,7 @@ theorem cgf_const [IsProbabilityMeasure μ] (c : ℝ) : cgf (fun _ => c) μ t = 
 #align probability_theory.cgf_const ProbabilityTheory.cgf_const
 
 @[simp]
-theorem mgf_zero' : mgf X μ 0 = (μ Set.Univ).toReal := by
+theorem mgf_zero' : mgf X μ 0 = (μ Set.univ).toReal := by
   simp only [mgf, zero_mul, exp_zero, integral_const, Algebra.id.smul_eq_mul, mul_one]
 #align probability_theory.mgf_zero' ProbabilityTheory.mgf_zero'
 
@@ -167,7 +167,7 @@ theorem mgf_zero [IsProbabilityMeasure μ] : mgf X μ 0 = 1 := by simp only [mgf
 #align probability_theory.mgf_zero ProbabilityTheory.mgf_zero
 
 @[simp]
-theorem cgf_zero' : cgf X μ 0 = log (μ Set.Univ).toReal := by simp only [cgf, mgf_zero']
+theorem cgf_zero' : cgf X μ 0 = log (μ Set.univ).toReal := by simp only [cgf, mgf_zero']
 #align probability_theory.cgf_zero' ProbabilityTheory.cgf_zero'
 
 @[simp]
@@ -191,9 +191,9 @@ theorem mgf_nonneg : 0 ≤ mgf X μ t := by
 
 theorem mgf_pos' (hμ : μ ≠ 0) (h_int_X : Integrable (fun ω => exp (t * X ω)) μ) : 0 < mgf X μ t := by
   simp_rw [mgf]
-  have : (∫ x : Ω, exp (t * X x) ∂μ) = ∫ x : Ω in Set.Univ, exp (t * X x) ∂μ := by simp only [measure.restrict_univ]
+  have : (∫ x : Ω, exp (t * X x) ∂μ) = ∫ x : Ω in Set.univ, exp (t * X x) ∂μ := by simp only [measure.restrict_univ]
   rw [this, set_integral_pos_iff_support_of_nonneg_ae _ _]
-  · have h_eq_univ : (Function.Support fun x : Ω => exp (t * X x)) = Set.Univ := by
+  · have h_eq_univ : (Function.support fun x : Ω => exp (t * X x)) = Set.univ := by
       ext1 x
       simp only [Function.mem_support, Set.mem_univ, iff_true_iff]
       exact (exp_pos _).ne'

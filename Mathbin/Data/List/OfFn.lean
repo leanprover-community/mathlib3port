@@ -197,7 +197,7 @@ theorem of_fn_nth_le : ∀ l : List α, (ofFn fun i => nthLe l i i.2) = l
 
 -- not registered as a simp lemma, as otherwise it fires before `forall_mem_of_fn_iff` which
 -- is much more useful
-theorem mem_of_fn {n} (f : Fin n → α) (a : α) : a ∈ ofFn f ↔ a ∈ Set.Range f := by
+theorem mem_of_fn {n} (f : Fin n → α) (a : α) : a ∈ ofFn f ↔ a ∈ Set.range f := by
   simp only [mem_iff_nth_le, Set.mem_range, nth_le_of_fn']
   exact ⟨fun ⟨i, hi, h⟩ => ⟨_, h⟩, fun ⟨i, hi⟩ => ⟨i.1, (length_of_fn f).symm ▸ i.2, by simpa using hi⟩⟩
 #align list.mem_of_fn List.mem_of_fn

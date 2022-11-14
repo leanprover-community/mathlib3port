@@ -102,9 +102,9 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
     (d0 : ∀ a : N, 1 ≤ d a)
     (e0 : 0 < ε)
     -- function is Lipschitz at α
-    (B : ∀ ⦃y : R⦄, y ∈ ClosedBall α ε → dist (f α) (f y) ≤ dist α y * M)
+    (B : ∀ ⦃y : R⦄, y ∈ closedBall α ε → dist (f α) (f y) ≤ dist α y * M)
     -- clear denominators
-    (L : ∀ ⦃z : Z⦄, ∀ ⦃a : N⦄, j z a ∈ ClosedBall α ε → 1 ≤ d a * dist (f α) (f (j z a))) :
+    (L : ∀ ⦃z : Z⦄, ∀ ⦃a : N⦄, j z a ∈ closedBall α ε → 1 ≤ d a * dist (f α) (f (j z a))) :
     ∃ A : ℝ, 0 < A ∧ ∀ z : Z, ∀ a : N, 1 ≤ d a * (dist α (j z a) * A) := by
   -- A useful inequality to keep at hand
   have me0 : 0 < max (1 / ε) M := lt_max_iff.mpr (Or.inl (one_div_pos.mpr e0))

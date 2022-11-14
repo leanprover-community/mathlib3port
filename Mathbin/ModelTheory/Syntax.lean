@@ -1051,13 +1051,13 @@ def onSentence (g : L →ᴸ L') : L.Sentence → L'.Sentence :=
 #align first_order.language.Lhom.on_sentence FirstOrder.Language.LhomCat.onSentence
 
 /-- Maps a theory's symbols along a language map. -/
-def OnTheory (g : L →ᴸ L') (T : L.TheoryCat) : L'.TheoryCat :=
+def onTheory (g : L →ᴸ L') (T : L.TheoryCat) : L'.TheoryCat :=
   g.onSentence '' T
-#align first_order.language.Lhom.on_Theory FirstOrder.Language.LhomCat.OnTheory
+#align first_order.language.Lhom.on_Theory FirstOrder.Language.LhomCat.onTheory
 
 @[simp]
 theorem mem_on_Theory {g : L →ᴸ L'} {T : L.TheoryCat} {φ : L'.Sentence} :
-    φ ∈ g.OnTheory T ↔ ∃ φ₀, φ₀ ∈ T ∧ g.onSentence φ₀ = φ :=
+    φ ∈ g.onTheory T ↔ ∃ φ₀, φ₀ ∈ T ∧ g.onSentence φ₀ = φ :=
   Set.mem_image _ _ _
 #align first_order.language.Lhom.mem_on_Theory FirstOrder.Language.LhomCat.mem_on_Theory
 
@@ -1208,36 +1208,36 @@ protected def Sentence.cardGe (n) : L.Sentence :=
 #align first_order.language.sentence.card_ge FirstOrder.Language.Sentence.cardGe
 
 /-- A theory indicating that a structure is infinite. -/
-def InfiniteTheory : L.TheoryCat :=
-  Set.Range (Sentence.cardGe L)
-#align first_order.language.infinite_theory FirstOrder.Language.InfiniteTheory
+def infiniteTheory : L.TheoryCat :=
+  Set.range (Sentence.cardGe L)
+#align first_order.language.infinite_theory FirstOrder.Language.infiniteTheory
 
 /-- A theory that indicates a structure is nonempty. -/
-def NonemptyTheory : L.TheoryCat :=
+def nonemptyTheory : L.TheoryCat :=
   {Sentence.cardGe L 1}
-#align first_order.language.nonempty_theory FirstOrder.Language.NonemptyTheory
+#align first_order.language.nonempty_theory FirstOrder.Language.nonemptyTheory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A theory indicating that each of a set of constants is distinct. -/
-def DistinctConstantsTheory (s : Set α) : L[[α]].TheoryCat :=
-  (fun ab : α × α => ((L.con ab.1).term.equal (L.con ab.2).term).Not) '' (s ×ˢ s ∩ Set.Diagonal αᶜ)
-#align first_order.language.distinct_constants_theory FirstOrder.Language.DistinctConstantsTheory
+def distinctConstantsTheory (s : Set α) : L[[α]].TheoryCat :=
+  (fun ab : α × α => ((L.con ab.1).term.equal (L.con ab.2).term).Not) '' (s ×ˢ s ∩ Set.diagonal αᶜ)
+#align first_order.language.distinct_constants_theory FirstOrder.Language.distinctConstantsTheory
 
 variable {L} {α}
 
 open Set
 
-theorem monotone_distinct_constants_theory : Monotone (L.DistinctConstantsTheory : Set α → L[[α]].TheoryCat) :=
+theorem monotone_distinct_constants_theory : Monotone (L.distinctConstantsTheory : Set α → L[[α]].TheoryCat) :=
   fun s t st => image_subset _ (inter_subset_inter_left _ (prod_mono st st))
 #align first_order.language.monotone_distinct_constants_theory FirstOrder.Language.monotone_distinct_constants_theory
 
-theorem directed_distinct_constants_theory : Directed (· ⊆ ·) (L.DistinctConstantsTheory : Set α → L[[α]].TheoryCat) :=
+theorem directed_distinct_constants_theory : Directed (· ⊆ ·) (L.distinctConstantsTheory : Set α → L[[α]].TheoryCat) :=
   Monotone.directed_le monotone_distinct_constants_theory
 #align first_order.language.directed_distinct_constants_theory FirstOrder.Language.directed_distinct_constants_theory
 
 theorem distinct_constants_theory_eq_Union (s : Set α) :
-    L.DistinctConstantsTheory s =
-      ⋃ t : Finset s, L.DistinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
+    L.distinctConstantsTheory s =
+      ⋃ t : Finset s, L.distinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
   by
   classical simp only [distinct_constants_theory]
     refine' congr rfl (congr (congr rfl _) rfl)

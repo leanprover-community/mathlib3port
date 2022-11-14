@@ -59,7 +59,7 @@ variable (X : Type _) [TopologicalSpace X]
 structure DiscreteQuotient where
   Rel : X → X → Prop
   Equiv : Equivalence Rel
-  clopen : ∀ x, IsClopen (SetOf (Rel x))
+  clopen : ∀ x, IsClopen (setOf (Rel x))
 #align discrete_quotient DiscreteQuotient
 
 namespace DiscreteQuotient
@@ -125,7 +125,7 @@ theorem proj_surjective : Function.Surjective S.proj :=
   Quotient.surjective_Quotient_mk''
 #align discrete_quotient.proj_surjective DiscreteQuotient.proj_surjective
 
-theorem fiber_eq (x : X) : S.proj ⁻¹' {S.proj x} = SetOf (S.Rel x) := by
+theorem fiber_eq (x : X) : S.proj ⁻¹' {S.proj x} = setOf (S.Rel x) := by
   ext1 y
   simp only [Set.mem_preimage, Set.mem_singleton_iff, Quotient.eq', DiscreteQuotient.proj.equations._eqn_1,
     Set.mem_set_of_eq]

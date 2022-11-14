@@ -100,7 +100,7 @@ instance Wcovby.is_refl : IsRefl α (· ⩿ ·) :=
   ⟨Wcovby.refl⟩
 #align wcovby.is_refl Wcovby.is_refl
 
-theorem Wcovby.Ioo_eq (h : a ⩿ b) : IooCat a b = ∅ :=
+theorem Wcovby.Ioo_eq (h : a ⩿ b) : ioo a b = ∅ :=
   eq_empty_iff_forall_not_mem.2 fun x hx => h.2 hx.1 hx.2
 #align wcovby.Ioo_eq Wcovby.Ioo_eq
 
@@ -108,15 +108,15 @@ theorem Wcovby.of_image (f : α ↪o β) (h : f a ⩿ f b) : a ⩿ b :=
   ⟨f.le_iff_le.mp h.le, fun c hac hcb => h.2 (f.lt_iff_lt.mpr hac) (f.lt_iff_lt.mpr hcb)⟩
 #align wcovby.of_image Wcovby.of_image
 
-theorem Wcovby.image (f : α ↪o β) (hab : a ⩿ b) (h : (Range f).OrdConnected) : f a ⩿ f b := by
+theorem Wcovby.image (f : α ↪o β) (hab : a ⩿ b) (h : (range f).OrdConnected) : f a ⩿ f b := by
   refine' ⟨f.monotone hab.le, fun c ha hb => _⟩
   obtain ⟨c, rfl⟩ := h.out (mem_range_self _) (mem_range_self _) ⟨ha.le, hb.le⟩
   rw [f.lt_iff_lt] at ha hb
   exact hab.2 ha hb
 #align wcovby.image Wcovby.image
 
-theorem Set.OrdConnected.apply_wcovby_apply_iff (f : α ↪o β) (h : (Range f).OrdConnected) : f a ⩿ f b ↔ a ⩿ b :=
-  ⟨fun h2 => h2.of_image f, fun hab => hab.Image f h⟩
+theorem Set.OrdConnected.apply_wcovby_apply_iff (f : α ↪o β) (h : (range f).OrdConnected) : f a ⩿ f b ↔ a ⩿ b :=
+  ⟨fun h2 => h2.of_image f, fun hab => hab.image f h⟩
 #align set.ord_connected.apply_wcovby_apply_iff Set.OrdConnected.apply_wcovby_apply_iff
 
 @[simp]
@@ -165,16 +165,16 @@ theorem Wcovby.le_and_le_iff (h : a ⩿ b) : a ≤ c ∧ c ≤ b ↔ c = a ∨ c
   exacts[⟨le_rfl, h.le⟩, ⟨h.le, le_rfl⟩]
 #align wcovby.le_and_le_iff Wcovby.le_and_le_iff
 
-theorem Wcovby.Icc_eq (h : a ⩿ b) : IccCat a b = {a, b} := by
+theorem Wcovby.Icc_eq (h : a ⩿ b) : icc a b = {a, b} := by
   ext c
   exact h.le_and_le_iff
 #align wcovby.Icc_eq Wcovby.Icc_eq
 
-theorem Wcovby.Ico_subset (h : a ⩿ b) : IcoCat a b ⊆ {a} := by
+theorem Wcovby.Ico_subset (h : a ⩿ b) : ico a b ⊆ {a} := by
   rw [← Icc_diff_right, h.Icc_eq, diff_singleton_subset_iff, pair_comm]
 #align wcovby.Ico_subset Wcovby.Ico_subset
 
-theorem Wcovby.Ioc_subset (h : a ⩿ b) : IocCat a b ⊆ {b} := by rw [← Icc_diff_left, h.Icc_eq, diff_singleton_subset_iff]
+theorem Wcovby.Ioc_subset (h : a ⩿ b) : ioc a b ⊆ {b} := by rw [← Icc_diff_left, h.Icc_eq, diff_singleton_subset_iff]
 #align wcovby.Ioc_subset Wcovby.Ioc_subset
 
 end PartialOrder
@@ -320,7 +320,7 @@ instance Covby.is_irrefl : IsIrrefl α (· ⋖ ·) :=
   ⟨fun a ha => ha.Ne rfl⟩
 #align covby.is_irrefl Covby.is_irrefl
 
-theorem Covby.Ioo_eq (h : a ⋖ b) : IooCat a b = ∅ :=
+theorem Covby.Ioo_eq (h : a ⋖ b) : ioo a b = ∅ :=
   h.Wcovby.Ioo_eq
 #align covby.Ioo_eq Covby.Ioo_eq
 
@@ -328,12 +328,12 @@ theorem Covby.of_image (f : α ↪o β) (h : f a ⋖ f b) : a ⋖ b :=
   ⟨f.lt_iff_lt.mp h.lt, fun c hac hcb => h.2 (f.lt_iff_lt.mpr hac) (f.lt_iff_lt.mpr hcb)⟩
 #align covby.of_image Covby.of_image
 
-theorem Covby.image (f : α ↪o β) (hab : a ⋖ b) (h : (Range f).OrdConnected) : f a ⋖ f b :=
-  (hab.Wcovby.Image f h).covby_of_lt <| f.StrictMono hab.lt
+theorem Covby.image (f : α ↪o β) (hab : a ⋖ b) (h : (range f).OrdConnected) : f a ⋖ f b :=
+  (hab.Wcovby.image f h).covby_of_lt <| f.StrictMono hab.lt
 #align covby.image Covby.image
 
-theorem Set.OrdConnected.apply_covby_apply_iff (f : α ↪o β) (h : (Range f).OrdConnected) : f a ⋖ f b ↔ a ⋖ b :=
-  ⟨Covby.of_image f, fun hab => hab.Image f h⟩
+theorem Set.OrdConnected.apply_covby_apply_iff (f : α ↪o β) (h : (range f).OrdConnected) : f a ⋖ f b ↔ a ⋖ b :=
+  ⟨Covby.of_image f, fun hab => hab.image f h⟩
 #align set.ord_connected.apply_covby_apply_iff Set.OrdConnected.apply_covby_apply_iff
 
 @[simp]
@@ -371,13 +371,13 @@ theorem covby_iff_lt_and_eq_or_eq : a ⋖ b ↔ a < b ∧ ∀ c, a ≤ c → c �
   ⟨fun h => ⟨h.lt, fun c => h.eq_or_eq⟩, And.ndrec covby_of_eq_or_eq⟩
 #align covby_iff_lt_and_eq_or_eq covby_iff_lt_and_eq_or_eq
 
-theorem Covby.Ico_eq (h : a ⋖ b) : IcoCat a b = {a} := by rw [← Ioo_union_left h.lt, h.Ioo_eq, empty_union]
+theorem Covby.Ico_eq (h : a ⋖ b) : ico a b = {a} := by rw [← Ioo_union_left h.lt, h.Ioo_eq, empty_union]
 #align covby.Ico_eq Covby.Ico_eq
 
-theorem Covby.Ioc_eq (h : a ⋖ b) : IocCat a b = {b} := by rw [← Ioo_union_right h.lt, h.Ioo_eq, empty_union]
+theorem Covby.Ioc_eq (h : a ⋖ b) : ioc a b = {b} := by rw [← Ioo_union_right h.lt, h.Ioo_eq, empty_union]
 #align covby.Ioc_eq Covby.Ioc_eq
 
-theorem Covby.Icc_eq (h : a ⋖ b) : IccCat a b = {a, b} :=
+theorem Covby.Icc_eq (h : a ⋖ b) : icc a b = {a, b} :=
   h.Wcovby.Icc_eq
 #align covby.Icc_eq Covby.Icc_eq
 
@@ -387,10 +387,10 @@ section LinearOrder
 
 variable [LinearOrder α] {a b c : α}
 
-theorem Covby.Ioi_eq (h : a ⋖ b) : IoiCat a = IciCat b := by rw [← Ioo_union_Ici_eq_Ioi h.lt, h.Ioo_eq, empty_union]
+theorem Covby.Ioi_eq (h : a ⋖ b) : ioi a = ici b := by rw [← Ioo_union_Ici_eq_Ioi h.lt, h.Ioo_eq, empty_union]
 #align covby.Ioi_eq Covby.Ioi_eq
 
-theorem Covby.Iio_eq (h : a ⋖ b) : IioCat b = IicCat a := by rw [← Iic_union_Ioo_eq_Iio h.lt, h.Ioo_eq, union_empty]
+theorem Covby.Iio_eq (h : a ⋖ b) : iio b = iic a := by rw [← Iic_union_Ioo_eq_Iio h.lt, h.Ioo_eq, union_empty]
 #align covby.Iio_eq Covby.Iio_eq
 
 theorem Wcovby.le_of_lt (hab : a ⩿ b) (hcb : c < b) : c ≤ a :=

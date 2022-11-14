@@ -215,7 +215,7 @@ protected theorem injective (e : P₁ ≃ᵃ[k] P₂) : Injective e :=
 #align affine_equiv.injective AffineEquiv.injective
 
 @[simp]
-theorem range_eq (e : P₁ ≃ᵃ[k] P₂) : Range e = univ :=
+theorem range_eq (e : P₁ ≃ᵃ[k] P₂) : range e = univ :=
   e.Surjective.range_eq
 #align affine_equiv.range_eq AffineEquiv.range_eq
 

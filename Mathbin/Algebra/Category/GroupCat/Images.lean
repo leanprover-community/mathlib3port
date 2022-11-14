@@ -60,8 +60,8 @@ attribute [local simp] image.fac
 variable {f}
 
 /-- the universal property for the image factorisation -/
-noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.I where
-  toFun := (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : image f → F'.I)
+noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.i where
+  toFun := (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : image f → F'.i)
   map_zero' := by
     haveI := F'.m_mono
     apply injective_of_mono F'.m
@@ -92,7 +92,7 @@ end
 
 /-- the factorisation of any morphism in AddCommGroup through a mono. -/
 def monoFactorisation : MonoFactorisation f where
-  I := image f
+  i := image f
   m := image.ι f
   e := factorThruImage f
 #align AddCommGroup.mono_factorisation AddCommGroupCat.monoFactorisation

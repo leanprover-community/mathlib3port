@@ -26,93 +26,93 @@ variable (𝕜) [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] {s t s�
 
 /-- The join of two sets is the union of the segments joining them. This can be interpreted as the
 topological join, but within the original space. -/
-def ConvexJoin (s t : Set E) : Set E :=
-  ⋃ (x ∈ s) (y ∈ t), Segment 𝕜 x y
-#align convex_join ConvexJoin
+def convexJoin (s t : Set E) : Set E :=
+  ⋃ (x ∈ s) (y ∈ t), segment 𝕜 x y
+#align convex_join convexJoin
 
 variable {𝕜}
 
-theorem mem_convex_join : x ∈ ConvexJoin 𝕜 s t ↔ ∃ a ∈ s, ∃ b ∈ t, x ∈ Segment 𝕜 a b := by simp [ConvexJoin]
+theorem mem_convex_join : x ∈ convexJoin 𝕜 s t ↔ ∃ a ∈ s, ∃ b ∈ t, x ∈ segment 𝕜 a b := by simp [convexJoin]
 #align mem_convex_join mem_convex_join
 
-theorem convex_join_comm (s t : Set E) : ConvexJoin 𝕜 s t = ConvexJoin 𝕜 t s :=
-  (Union₂_comm _).trans <| by simp_rw [ConvexJoin, segment_symm]
+theorem convex_join_comm (s t : Set E) : convexJoin 𝕜 s t = convexJoin 𝕜 t s :=
+  (Union₂_comm _).trans <| by simp_rw [convexJoin, segment_symm]
 #align convex_join_comm convex_join_comm
 
-theorem convex_join_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : ConvexJoin 𝕜 s₁ t₁ ⊆ ConvexJoin 𝕜 s₂ t₂ :=
+theorem convex_join_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : convexJoin 𝕜 s₁ t₁ ⊆ convexJoin 𝕜 s₂ t₂ :=
   (bUnion_mono hs) fun x hx => (bUnion_mono ht) fun y hy => Subset.rfl
 #align convex_join_mono convex_join_mono
 
-theorem convex_join_mono_left (hs : s₁ ⊆ s₂) : ConvexJoin 𝕜 s₁ t ⊆ ConvexJoin 𝕜 s₂ t :=
+theorem convex_join_mono_left (hs : s₁ ⊆ s₂) : convexJoin 𝕜 s₁ t ⊆ convexJoin 𝕜 s₂ t :=
   convex_join_mono hs Subset.rfl
 #align convex_join_mono_left convex_join_mono_left
 
-theorem convex_join_mono_right (ht : t₁ ⊆ t₂) : ConvexJoin 𝕜 s t₁ ⊆ ConvexJoin 𝕜 s t₂ :=
+theorem convex_join_mono_right (ht : t₁ ⊆ t₂) : convexJoin 𝕜 s t₁ ⊆ convexJoin 𝕜 s t₂ :=
   convex_join_mono Subset.rfl ht
 #align convex_join_mono_right convex_join_mono_right
 
 @[simp]
-theorem convex_join_empty_left (t : Set E) : ConvexJoin 𝕜 ∅ t = ∅ := by simp [ConvexJoin]
+theorem convex_join_empty_left (t : Set E) : convexJoin 𝕜 ∅ t = ∅ := by simp [convexJoin]
 #align convex_join_empty_left convex_join_empty_left
 
 @[simp]
-theorem convex_join_empty_right (s : Set E) : ConvexJoin 𝕜 s ∅ = ∅ := by simp [ConvexJoin]
+theorem convex_join_empty_right (s : Set E) : convexJoin 𝕜 s ∅ = ∅ := by simp [convexJoin]
 #align convex_join_empty_right convex_join_empty_right
 
 @[simp]
-theorem convex_join_singleton_left (t : Set E) (x : E) : ConvexJoin 𝕜 {x} t = ⋃ y ∈ t, Segment 𝕜 x y := by
-  simp [ConvexJoin]
+theorem convex_join_singleton_left (t : Set E) (x : E) : convexJoin 𝕜 {x} t = ⋃ y ∈ t, segment 𝕜 x y := by
+  simp [convexJoin]
 #align convex_join_singleton_left convex_join_singleton_left
 
 @[simp]
-theorem convex_join_singleton_right (s : Set E) (y : E) : ConvexJoin 𝕜 s {y} = ⋃ x ∈ s, Segment 𝕜 x y := by
-  simp [ConvexJoin]
+theorem convex_join_singleton_right (s : Set E) (y : E) : convexJoin 𝕜 s {y} = ⋃ x ∈ s, segment 𝕜 x y := by
+  simp [convexJoin]
 #align convex_join_singleton_right convex_join_singleton_right
 
 @[simp]
-theorem convex_join_singletons (x : E) : ConvexJoin 𝕜 {x} {y} = Segment 𝕜 x y := by simp [ConvexJoin]
+theorem convex_join_singletons (x : E) : convexJoin 𝕜 {x} {y} = segment 𝕜 x y := by simp [convexJoin]
 #align convex_join_singletons convex_join_singletons
 
 @[simp]
-theorem convex_join_union_left (s₁ s₂ t : Set E) : ConvexJoin 𝕜 (s₁ ∪ s₂) t = ConvexJoin 𝕜 s₁ t ∪ ConvexJoin 𝕜 s₂ t :=
-  by simp_rw [ConvexJoin, mem_union, Union_or, Union_union_distrib]
+theorem convex_join_union_left (s₁ s₂ t : Set E) : convexJoin 𝕜 (s₁ ∪ s₂) t = convexJoin 𝕜 s₁ t ∪ convexJoin 𝕜 s₂ t :=
+  by simp_rw [convexJoin, mem_union, Union_or, Union_union_distrib]
 #align convex_join_union_left convex_join_union_left
 
 @[simp]
-theorem convex_join_union_right (s t₁ t₂ : Set E) : ConvexJoin 𝕜 s (t₁ ∪ t₂) = ConvexJoin 𝕜 s t₁ ∪ ConvexJoin 𝕜 s t₂ :=
-  by simp_rw [ConvexJoin, mem_union, Union_or, Union_union_distrib]
+theorem convex_join_union_right (s t₁ t₂ : Set E) : convexJoin 𝕜 s (t₁ ∪ t₂) = convexJoin 𝕜 s t₁ ∪ convexJoin 𝕜 s t₂ :=
+  by simp_rw [convexJoin, mem_union, Union_or, Union_union_distrib]
 #align convex_join_union_right convex_join_union_right
 
 @[simp]
-theorem convex_join_Union_left (s : ι → Set E) (t : Set E) : ConvexJoin 𝕜 (⋃ i, s i) t = ⋃ i, ConvexJoin 𝕜 (s i) t := by
-  simp_rw [ConvexJoin, mem_Union, Union_exists]
+theorem convex_join_Union_left (s : ι → Set E) (t : Set E) : convexJoin 𝕜 (⋃ i, s i) t = ⋃ i, convexJoin 𝕜 (s i) t := by
+  simp_rw [convexJoin, mem_Union, Union_exists]
   exact Union_comm _
 #align convex_join_Union_left convex_join_Union_left
 
 @[simp]
-theorem convex_join_Union_right (s : Set E) (t : ι → Set E) : ConvexJoin 𝕜 s (⋃ i, t i) = ⋃ i, ConvexJoin 𝕜 s (t i) :=
+theorem convex_join_Union_right (s : Set E) (t : ι → Set E) : convexJoin 𝕜 s (⋃ i, t i) = ⋃ i, convexJoin 𝕜 s (t i) :=
   by simp_rw [convex_join_comm s, convex_join_Union_left]
 #align convex_join_Union_right convex_join_Union_right
 
-theorem segment_subset_convex_join (hx : x ∈ s) (hy : y ∈ t) : Segment 𝕜 x y ⊆ ConvexJoin 𝕜 s t :=
+theorem segment_subset_convex_join (hx : x ∈ s) (hy : y ∈ t) : segment 𝕜 x y ⊆ convexJoin 𝕜 s t :=
   (subset_Union₂ y hy).trans (subset_Union₂ x hx)
 #align segment_subset_convex_join segment_subset_convex_join
 
-theorem subset_convex_join_left (h : t.Nonempty) : s ⊆ ConvexJoin 𝕜 s t := fun x hx =>
+theorem subset_convex_join_left (h : t.Nonempty) : s ⊆ convexJoin 𝕜 s t := fun x hx =>
   let ⟨y, hy⟩ := h
   segment_subset_convex_join hx hy <| left_mem_segment _ _ _
 #align subset_convex_join_left subset_convex_join_left
 
-theorem subset_convex_join_right (h : s.Nonempty) : t ⊆ ConvexJoin 𝕜 s t := fun y hy =>
+theorem subset_convex_join_right (h : s.Nonempty) : t ⊆ convexJoin 𝕜 s t := fun y hy =>
   let ⟨x, hx⟩ := h
   segment_subset_convex_join hx hy <| right_mem_segment _ _ _
 #align subset_convex_join_right subset_convex_join_right
 
-theorem convex_join_subset (hs : s ⊆ u) (ht : t ⊆ u) (hu : Convex 𝕜 u) : ConvexJoin 𝕜 s t ⊆ u :=
+theorem convex_join_subset (hs : s ⊆ u) (ht : t ⊆ u) (hu : Convex 𝕜 u) : convexJoin 𝕜 s t ⊆ u :=
   Union₂_subset fun x hx => Union₂_subset fun y hy => hu.segment_subset (hs hx) (ht hy)
 #align convex_join_subset convex_join_subset
 
-theorem convex_join_subset_convex_hull (s t : Set E) : ConvexJoin 𝕜 s t ⊆ convexHull 𝕜 (s ∪ t) :=
+theorem convex_join_subset_convex_hull (s t : Set E) : convexJoin 𝕜 s t ⊆ convexHull 𝕜 (s ∪ t) :=
   convex_join_subset ((subset_union_left _ _).trans <| subset_convex_hull _ _)
       ((subset_union_right _ _).trans <| subset_convex_hull _ _) <|
     convex_convex_hull _ _
@@ -124,7 +124,7 @@ section LinearOrderedField
 
 variable [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s t u : Set E} {x y : E}
 
-theorem convex_join_assoc_aux (s t u : Set E) : ConvexJoin 𝕜 (ConvexJoin 𝕜 s t) u ⊆ ConvexJoin 𝕜 s (ConvexJoin 𝕜 t u) :=
+theorem convex_join_assoc_aux (s t u : Set E) : convexJoin 𝕜 (convexJoin 𝕜 s t) u ⊆ convexJoin 𝕜 s (convexJoin 𝕜 t u) :=
   by
   simp_rw [subset_def, mem_convex_join]
   rintro _ ⟨z, ⟨x, hx, y, hy, a₁, b₁, ha₁, hb₁, hab₁, rfl⟩, z, hz, a₂, b₂, ha₂, hb₂, hab₂, rfl⟩
@@ -150,27 +150,27 @@ theorem convex_join_assoc_aux (s t u : Set E) : ConvexJoin 𝕜 (ConvexJoin 𝕜
     
 #align convex_join_assoc_aux convex_join_assoc_aux
 
-theorem convex_join_assoc (s t u : Set E) : ConvexJoin 𝕜 (ConvexJoin 𝕜 s t) u = ConvexJoin 𝕜 s (ConvexJoin 𝕜 t u) := by
+theorem convex_join_assoc (s t u : Set E) : convexJoin 𝕜 (convexJoin 𝕜 s t) u = convexJoin 𝕜 s (convexJoin 𝕜 t u) := by
   refine' (convex_join_assoc_aux _ _ _).antisymm _
   simp_rw [convex_join_comm s, convex_join_comm _ u]
   exact convex_join_assoc_aux _ _ _
 #align convex_join_assoc convex_join_assoc
 
-theorem convex_join_left_comm (s t u : Set E) : ConvexJoin 𝕜 s (ConvexJoin 𝕜 t u) = ConvexJoin 𝕜 t (ConvexJoin 𝕜 s u) :=
+theorem convex_join_left_comm (s t u : Set E) : convexJoin 𝕜 s (convexJoin 𝕜 t u) = convexJoin 𝕜 t (convexJoin 𝕜 s u) :=
   by simp_rw [← convex_join_assoc, convex_join_comm]
 #align convex_join_left_comm convex_join_left_comm
 
 theorem convex_join_right_comm (s t u : Set E) :
-    ConvexJoin 𝕜 (ConvexJoin 𝕜 s t) u = ConvexJoin 𝕜 (ConvexJoin 𝕜 s u) t := by
+    convexJoin 𝕜 (convexJoin 𝕜 s t) u = convexJoin 𝕜 (convexJoin 𝕜 s u) t := by
   simp_rw [convex_join_assoc, convex_join_comm]
 #align convex_join_right_comm convex_join_right_comm
 
 theorem convex_join_convex_join_convex_join_comm (s t u v : Set E) :
-    ConvexJoin 𝕜 (ConvexJoin 𝕜 s t) (ConvexJoin 𝕜 u v) = ConvexJoin 𝕜 (ConvexJoin 𝕜 s u) (ConvexJoin 𝕜 t v) := by
+    convexJoin 𝕜 (convexJoin 𝕜 s t) (convexJoin 𝕜 u v) = convexJoin 𝕜 (convexJoin 𝕜 s u) (convexJoin 𝕜 t v) := by
   simp_rw [← convex_join_assoc, convex_join_right_comm]
 #align convex_join_convex_join_convex_join_comm convex_join_convex_join_convex_join_comm
 
-theorem convex_hull_insert (hs : s.Nonempty) : convexHull 𝕜 (insert x s) = ConvexJoin 𝕜 {x} (convexHull 𝕜 s) := by
+theorem convex_hull_insert (hs : s.Nonempty) : convexHull 𝕜 (insert x s) = convexJoin 𝕜 {x} (convexHull 𝕜 s) := by
   classical refine'
       (convex_join_subset ((singleton_subset_iff.2 <| mem_insert _ _).trans <| subset_convex_hull _ _)
               (convex_hull_mono <| subset_insert _ _) <|
@@ -198,21 +198,21 @@ theorem convex_hull_insert (hs : s.Nonempty) : convexHull 𝕜 (insert x s) = Co
       
 #align convex_hull_insert convex_hull_insert
 
-theorem convex_join_segments (a b c d : E) : ConvexJoin 𝕜 (Segment 𝕜 a b) (Segment 𝕜 c d) = convexHull 𝕜 {a, b, c, d} :=
+theorem convex_join_segments (a b c d : E) : convexJoin 𝕜 (segment 𝕜 a b) (segment 𝕜 c d) = convexHull 𝕜 {a, b, c, d} :=
   by
   simp only [convex_hull_insert, insert_nonempty, singleton_nonempty, convex_hull_pair, ← convex_join_assoc,
     convex_join_singletons]
 #align convex_join_segments convex_join_segments
 
-theorem convex_join_segment_singleton (a b c : E) : ConvexJoin 𝕜 (Segment 𝕜 a b) {c} = convexHull 𝕜 {a, b, c} := by
+theorem convex_join_segment_singleton (a b c : E) : convexJoin 𝕜 (segment 𝕜 a b) {c} = convexHull 𝕜 {a, b, c} := by
   rw [← pair_eq_singleton, ← convex_join_segments, segment_same, pair_eq_singleton]
 #align convex_join_segment_singleton convex_join_segment_singleton
 
-theorem convex_join_singleton_segment (a b c : E) : ConvexJoin 𝕜 {a} (Segment 𝕜 b c) = convexHull 𝕜 {a, b, c} := by
+theorem convex_join_singleton_segment (a b c : E) : convexJoin 𝕜 {a} (segment 𝕜 b c) = convexHull 𝕜 {a, b, c} := by
   rw [← segment_same 𝕜, convex_join_segments, insert_idem]
 #align convex_join_singleton_segment convex_join_singleton_segment
 
-protected theorem Convex.convex_join (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (ConvexJoin 𝕜 s t) := by
+protected theorem Convex.convex_join (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (convexJoin 𝕜 s t) := by
   rw [convex_iff_segment_subset] at ht hs⊢
   simp_rw [mem_convex_join]
   rintro x ⟨xa, hxa, xb, hxb, hx⟩ y ⟨ya, hya, yb, hyb, hy⟩
@@ -223,14 +223,14 @@ protected theorem Convex.convex_join (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) :
 #align convex.convex_join Convex.convex_join
 
 protected theorem Convex.convex_hull_union (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) (hs₀ : s.Nonempty) (ht₀ : t.Nonempty) :
-    convexHull 𝕜 (s ∪ t) = ConvexJoin 𝕜 s t :=
+    convexHull 𝕜 (s ∪ t) = convexJoin 𝕜 s t :=
   (convex_hull_min (union_subset (subset_convex_join_left ht₀) <| subset_convex_join_right hs₀) <|
-        hs.ConvexJoin ht).antisymm <|
+        hs.convexJoin ht).antisymm <|
     convex_join_subset_convex_hull _ _
 #align convex.convex_hull_union Convex.convex_hull_union
 
 theorem convex_hull_union (hs : s.Nonempty) (ht : t.Nonempty) :
-    convexHull 𝕜 (s ∪ t) = ConvexJoin 𝕜 (convexHull 𝕜 s) (convexHull 𝕜 t) := by
+    convexHull 𝕜 (s ∪ t) = convexJoin 𝕜 (convexHull 𝕜 s) (convexHull 𝕜 t) := by
   rw [← convex_hull_convex_hull_union_left, ← convex_hull_convex_hull_union_right]
   exact (convex_convex_hull 𝕜 s).convex_hull_union (convex_convex_hull 𝕜 t) hs.convex_hull ht.convex_hull
 #align convex_hull_union convex_hull_union

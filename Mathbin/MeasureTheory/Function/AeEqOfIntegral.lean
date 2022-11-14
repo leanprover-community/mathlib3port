@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
 import Mathbin.Analysis.NormedSpace.Dual
-import Mathbin.MeasureTheory.Function.StronglyMeasurableLp
+import Mathbin.MeasureTheory.Function.StronglyMeasurable.Lp
 import Mathbin.MeasureTheory.Integral.SetIntegral
 
 /-! # From equality of integrals to equality of functions
@@ -79,7 +79,7 @@ theorem ae_eq_zero_of_forall_dual_of_is_separable [NormedAddCommGroup E] [Normed
     intro a hat ha
     contrapose! ha
     have a_pos : 0 < ∥a∥ := by simp only [ha, norm_pos_iff, Ne.def, not_false_iff]
-    have a_mem : a ∈ Closure d := hd hat
+    have a_mem : a ∈ closure d := hd hat
     obtain ⟨x, hx⟩ : ∃ x : d, dist a x < ∥a∥ / 2 := by
       rcases Metric.mem_closure_iff.1 a_mem (∥a∥ / 2) (half_pos a_pos) with ⟨x, h'x, hx⟩
       exact ⟨⟨x, h'x⟩, hx⟩
@@ -107,7 +107,7 @@ theorem ae_eq_zero_of_forall_dual_of_is_separable [NormedAddCommGroup E] [Normed
 
 theorem ae_eq_zero_of_forall_dual [NormedAddCommGroup E] [NormedSpace 𝕜 E] [SecondCountableTopology E] {f : α → E}
     (hf : ∀ c : Dual 𝕜 E, (fun x => ⟪f x, c⟫) =ᵐ[μ] 0) : f =ᵐ[μ] 0 :=
-  ae_eq_zero_of_forall_dual_of_is_separable 𝕜 (is_separable_of_separable_space (Set.Univ : Set E)) hf
+  ae_eq_zero_of_forall_dual_of_is_separable 𝕜 (is_separable_of_separable_space (Set.univ : Set E)) hf
     (eventually_of_forall fun x => Set.mem_univ _)
 #align measure_theory.ae_eq_zero_of_forall_dual MeasureTheory.ae_eq_zero_of_forall_dual
 
@@ -135,15 +135,15 @@ theorem ae_const_le_iff_forall_lt_measure_zero {β} [LinearOrder β] [Topologica
       exact (lt_irrefl _ (lt_of_lt_of_le hx (h (f x)))).elim
     simp [this]
     
-  by_cases H:¬IsLub (Set.IioCat c) c
-  · have : c ∈ UpperBounds (Set.IioCat c) := fun y hy => le_of_lt hy
-    obtain ⟨b, b_up, bc⟩ : ∃ b : β, b ∈ UpperBounds (Set.IioCat c) ∧ b < c := by
-      simpa [IsLub, IsLeast, this, LowerBounds] using H
+  by_cases H:¬IsLub (Set.iio c) c
+  · have : c ∈ upperBounds (Set.iio c) := fun y hy => le_of_lt hy
+    obtain ⟨b, b_up, bc⟩ : ∃ b : β, b ∈ upperBounds (Set.iio c) ∧ b < c := by
+      simpa [IsLub, IsLeast, this, lowerBounds] using H
     exact measure_mono_null (fun x hx => b_up hx) (hc b bc)
     
   push_neg  at H h
   obtain ⟨u, u_mono, u_lt, u_lim, -⟩ :
-    ∃ u : ℕ → β, StrictMono u ∧ (∀ n : ℕ, u n < c) ∧ tendsto u at_top (nhds c) ∧ ∀ n : ℕ, u n ∈ Set.IioCat c :=
+    ∃ u : ℕ → β, StrictMono u ∧ (∀ n : ℕ, u n < c) ∧ tendsto u at_top (nhds c) ∧ ∀ n : ℕ, u n ∈ Set.iio c :=
     H.exists_seq_strict_mono_tendsto_of_not_mem (lt_irrefl c) h
   have h_Union : { x | f x < c } = ⋃ n : ℕ, { x | f x ≤ u n } := by
     ext1 x

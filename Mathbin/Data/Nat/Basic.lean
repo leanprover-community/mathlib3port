@@ -134,36 +134,6 @@ theorem or_exists_succ {p : ℕ → Prop} : (p 0 ∨ ∃ n, p (n + 1)) ↔ ∃ n
     exacts[Or.inl hn, Or.inr ⟨n, hn⟩]⟩
 #align nat.or_exists_succ Nat.or_exists_succ
 
-/-! ### The units of the natural numbers as a `monoid` and `add_monoid` -/
-
-
-theorem units_eq_one (u : ℕˣ) : u = 1 :=
-  Units.ext <| Nat.eq_one_of_dvd_one ⟨u.inv, u.val_inv.symm⟩
-#align nat.units_eq_one Nat.units_eq_one
-
-theorem add_units_eq_zero (u : AddUnits ℕ) : u = 0 :=
-  AddUnits.ext <| (Nat.eq_zero_of_add_eq_zero u.val_neg).1
-#align nat.add_units_eq_zero Nat.add_units_eq_zero
-
-@[simp]
-protected theorem is_unit_iff {n : ℕ} : IsUnit n ↔ n = 1 :=
-  Iff.intro
-    (fun ⟨u, hu⟩ =>
-      match n, u, hu, Nat.units_eq_one u with
-      | _, _, rfl, rfl => rfl)
-    fun h => h.symm ▸ ⟨1, rfl⟩
-#align nat.is_unit_iff Nat.is_unit_iff
-
-instance uniqueUnits : Unique ℕˣ where
-  default := 1
-  uniq := Nat.units_eq_one
-#align nat.unique_units Nat.uniqueUnits
-
-instance uniqueAddUnits : Unique (AddUnits ℕ) where
-  default := 0
-  uniq := Nat.add_units_eq_zero
-#align nat.unique_add_units Nat.uniqueAddUnits
-
 /-! ### `succ` -/
 
 

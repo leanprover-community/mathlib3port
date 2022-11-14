@@ -144,12 +144,12 @@ variable [LinearOrder α] [OrderTopology α] {a b : α} (h : a ≤ b)
 
 /-- Extend a continuous function `f : C(set.Icc a b, β)` to a function `f : C(α, β)`.
 -/
-def iccExtend (f : C(Set.IccCat a b, β)) : C(α, β) :=
+def iccExtend (f : C(Set.icc a b, β)) : C(α, β) :=
   ⟨Set.iccExtend h f⟩
 #align continuous_map.Icc_extend ContinuousMap.iccExtend
 
 @[simp]
-theorem coe_Icc_extend (f : C(Set.IccCat a b, β)) : ((iccExtend h f : C(α, β)) : α → β) = Set.iccExtend h f :=
+theorem coe_Icc_extend (f : C(Set.icc a b, β)) : ((iccExtend h f : C(α, β)) : α → β) = Set.iccExtend h f :=
   rfl
 #align continuous_map.coe_Icc_extend ContinuousMap.coe_Icc_extend
 

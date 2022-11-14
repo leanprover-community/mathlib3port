@@ -547,13 +547,13 @@ instance orderIsoUnique : Unique (Fin n ≃o Fin n) :=
 
 /-- Two strictly monotone functions from `fin n` are equal provided that their ranges
 are equal. -/
-theorem strict_mono_unique {f g : Fin n → α} (hf : StrictMono f) (hg : StrictMono g) (h : Range f = Range g) : f = g :=
+theorem strict_mono_unique {f g : Fin n → α} (hf : StrictMono f) (hg : StrictMono g) (h : range f = range g) : f = g :=
   have : (hf.OrderIso f).trans (OrderIso.setCongr _ _ h) = hg.OrderIso g := Subsingleton.elim _ _
-  congr_arg (Function.comp (coe : Range g → α)) (funext <| RelIso.ext_iff.1 this)
+  congr_arg (Function.comp (coe : range g → α)) (funext <| RelIso.ext_iff.1 this)
 #align fin.strict_mono_unique Fin.strict_mono_unique
 
 /-- Two order embeddings of `fin n` are equal provided that their ranges are equal. -/
-theorem order_embedding_eq {f g : Fin n ↪o α} (h : Range f = Range g) : f = g :=
+theorem order_embedding_eq {f g : Fin n ↪o α} (h : range f = range g) : f = g :=
   RelEmbedding.ext <| funext_iff.1 <| strict_mono_unique f.StrictMono g.StrictMono h
 #align fin.order_embedding_eq Fin.order_embedding_eq
 
@@ -969,7 +969,7 @@ theorem cast_le_zero {n m : ℕ} (h : n.succ ≤ m.succ) : castLe h 0 = 0 := by 
 #align fin.cast_le_zero Fin.cast_le_zero
 
 @[simp]
-theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.Range (castLe h) = { i | (i : ℕ) < n } :=
+theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.range (castLe h) = { i | (i : ℕ) < n } :=
   Set.ext fun x => ⟨fun ⟨y, hy⟩ => hy ▸ y.2, fun hx => ⟨⟨x, hx⟩, Fin.ext rfl⟩⟩
 #align fin.range_cast_le Fin.range_cast_le
 
@@ -1238,7 +1238,7 @@ theorem lt_succ : a.cast_succ < a.succ := by
 #align fin.lt_succ Fin.lt_succ
 
 @[simp]
-theorem range_cast_succ {n : ℕ} : Set.Range (castSucc : Fin n → Fin n.succ) = { i | (i : ℕ) < n } :=
+theorem range_cast_succ {n : ℕ} : Set.range (castSucc : Fin n → Fin n.succ) = { i | (i : ℕ) < n } :=
   range_cast_le _
 #align fin.range_cast_succ Fin.range_cast_succ
 
@@ -2032,12 +2032,12 @@ theorem exists_succ_above_eq_iff {x y : Fin (n + 1)} : (∃ z, x.succAbove z = y
 
 /-- The range of `p.succ_above` is everything except `p`. -/
 @[simp]
-theorem range_succ_above (p : Fin (n + 1)) : Set.Range p.succAbove = {p}ᶜ :=
+theorem range_succ_above (p : Fin (n + 1)) : Set.range p.succAbove = {p}ᶜ :=
   Set.ext fun _ => exists_succ_above_eq_iff
 #align fin.range_succ_above Fin.range_succ_above
 
 @[simp]
-theorem range_succ (n : ℕ) : Set.Range (Fin.succ : Fin n → Fin (n + 1)) = {0}ᶜ :=
+theorem range_succ (n : ℕ) : Set.range (Fin.succ : Fin n → Fin (n + 1)) = {0}ᶜ :=
   range_succ_above 0
 #align fin.range_succ Fin.range_succ
 
@@ -2058,7 +2058,7 @@ theorem succ_above_right_inj {x : Fin (n + 1)} : x.succAbove a = x.succAbove b �
 
 /-- `succ_above` is injective at the pivot -/
 theorem succ_above_left_injective : Injective (@succAbove n) := fun _ _ h => by
-  simpa [range_succ_above] using congr_arg (fun f : Fin n ↪o Fin (n + 1) => Set.Range fᶜ) h
+  simpa [range_succ_above] using congr_arg (fun f : Fin n ↪o Fin (n + 1) => Set.range fᶜ) h
 #align fin.succ_above_left_injective Fin.succ_above_left_injective
 
 /-- `succ_above` is injective at the pivot -/

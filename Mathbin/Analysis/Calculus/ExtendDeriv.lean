@@ -37,11 +37,11 @@ derivative converges to a limit `f'` at a point on the boundary, then `f` is dif
 with derivative `f'`. -/
 theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f' : E →L[ℝ] F}
     (f_diff : DifferentiableOn ℝ f s) (s_conv : Convex ℝ s) (s_open : IsOpen s)
-    (f_cont : ∀ y ∈ Closure s, ContinuousWithinAt f s y) (h : Tendsto (fun y => fderiv ℝ f y) (𝓝[s] x) (𝓝 f')) :
-    HasFderivWithinAt f f' (Closure s) x := by
+    (f_cont : ∀ y ∈ closure s, ContinuousWithinAt f s y) (h : Tendsto (fun y => fderiv ℝ f y) (𝓝[s] x) (𝓝 f')) :
+    HasFderivWithinAt f f' (closure s) x := by
   classical-- one can assume without loss of generality that `x` belongs to the closure of `s`, as the
     -- statement is empty otherwise
-    by_cases hx:x ∉ Closure s
+    by_cases hx:x ∉ closure s
     push_neg  at hx
     /- One needs to show that `∥f y - f x - f' (y - x)∥ ≤ ε ∥y - x∥` for `y` close to `x` in `closure
       s`, where `ε` is an arbitrary positive constant. By continuity of the functions, it suffices to
@@ -50,15 +50,15 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
     intro ε ε_pos
     · simpa [dist_zero_right] using tendsto_nhds_within_nhds.1 h ε ε_pos
       
-    suffices : ∀ y ∈ B ∩ Closure s, ∥f y - f x - (f' y - f' x)∥ ≤ ε * ∥y - x∥
-    suffices : ∀ p : E × E, p ∈ Closure ((B ∩ s) ×ˢ (B ∩ s)) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥
+    suffices : ∀ y ∈ B ∩ closure s, ∥f y - f x - (f' y - f' x)∥ ≤ ε * ∥y - x∥
+    suffices : ∀ p : E × E, p ∈ closure ((B ∩ s) ×ˢ (B ∩ s)) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥
     have key : ∀ p : E × E, p ∈ (B ∩ s) ×ˢ (B ∩ s) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥
     rintro ⟨u, v⟩ uv_in
-    have f_cont' : ∀ y ∈ Closure s, ContinuousWithinAt (f - f') s y
+    have f_cont' : ∀ y ∈ closure s, ContinuousWithinAt (f - f') s y
     all_goals
     -- common start for both continuity proofs
     have : (B ∩ s) ×ˢ (B ∩ s) ⊆ s ×ˢ s := by mono <;> exact inter_subset_right _ _
-    obtain ⟨u_in, v_in⟩ : u ∈ Closure s ∧ v ∈ Closure s := by simpa [closure_prod_eq] using closure_mono this uv_in
+    obtain ⟨u_in, v_in⟩ : u ∈ closure s ∧ v ∈ closure s := by simpa [closure_prod_eq] using closure_mono this uv_in
     apply ContinuousWithinAt.mono _ this
     simp only [ContinuousWithinAt]
     · have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) := by
@@ -75,7 +75,7 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
 its derivative also converges at `a`, then `f` is differentiable on the right at `a`. -/
 theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
     (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a) (hs : s ∈ 𝓝[>] a)
-    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[>] a) (𝓝 e)) : HasDerivWithinAt f e (IciCat a) a := by
+    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[>] a) (𝓝 e)) : HasDerivWithinAt f e (ici a) a := by
   /- This is a specialization of `has_fderiv_at_boundary_of_tendsto_fderiv`. To be in the setting of
     this theorem, we need to work on an open interval with closure contained in `s ∪ {a}`, that we
     call `t = (a, b)`. Then, we check all the assumptions of this theorem and we apply it. -/
@@ -85,8 +85,8 @@ theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : 
   have t_diff : DifferentiableOn ℝ f t := f_diff.mono ts
   have t_conv : Convex ℝ t := convex_Ioo a b
   have t_open : IsOpen t := is_open_Ioo
-  have t_closure : Closure t = Icc a b := closure_Ioo ab.ne
-  have t_cont : ∀ y ∈ Closure t, ContinuousWithinAt f t y := by
+  have t_closure : closure t = Icc a b := closure_Ioo ab.ne
+  have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y := by
     rw [t_closure]
     intro y hy
     by_cases h:y = a
@@ -112,7 +112,7 @@ theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : 
 its derivative also converges at `a`, then `f` is differentiable on the left at `a`. -/
 theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
     (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a) (hs : s ∈ 𝓝[<] a)
-    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[<] a) (𝓝 e)) : HasDerivWithinAt f e (IicCat a) a := by
+    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[<] a) (𝓝 e)) : HasDerivWithinAt f e (iic a) a := by
   /- This is a specialization of `has_fderiv_at_boundary_of_differentiable`. To be in the setting of
     this theorem, we need to work on an open interval with closure contained in `s ∪ {a}`, that we
     call `t = (b, a)`. Then, we check all the assumptions of this theorem and we apply it. -/
@@ -122,8 +122,8 @@ theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a :
   have t_diff : DifferentiableOn ℝ f t := f_diff.mono ts
   have t_conv : Convex ℝ t := convex_Ioo b a
   have t_open : IsOpen t := is_open_Ioo
-  have t_closure : Closure t = Icc b a := closure_Ioo (ne_of_lt ba)
-  have t_cont : ∀ y ∈ Closure t, ContinuousWithinAt f t y := by
+  have t_closure : closure t = Icc b a := closure_Ioo (ne_of_lt ba)
+  have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y := by
     rw [t_closure]
     intro y hy
     by_cases h:y = a

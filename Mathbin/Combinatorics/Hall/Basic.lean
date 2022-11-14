@@ -55,40 +55,40 @@ open Finset
 universe u v
 
 /-- The set of matchings for `t` when restricted to a `finset` of `ι`. -/
-def HallMatchingsOn {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :=
+def hallMatchingsOn {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :=
   { f : ι' → α | Function.Injective f ∧ ∀ x, f x ∈ t x }
-#align hall_matchings_on HallMatchingsOn
+#align hall_matchings_on hallMatchingsOn
 
 /-- Given a matching on a finset, construct the restriction of that matching to a subset. -/
-def HallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) {ι' ι'' : Finset ι} (h : ι' ⊆ ι'')
-    (f : HallMatchingsOn t ι'') : HallMatchingsOn t ι' := by
+def hallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) {ι' ι'' : Finset ι} (h : ι' ⊆ ι'')
+    (f : hallMatchingsOn t ι'') : hallMatchingsOn t ι' := by
   refine' ⟨fun i => f.val ⟨i, h i.property⟩, _⟩
   cases' f.property with hinj hc
   refine' ⟨_, fun i => hc ⟨i, h i.property⟩⟩
   rintro ⟨i, hi⟩ ⟨j, hj⟩ hh
   simpa only [Subtype.mk_eq_mk] using hinj hh
-#align hall_matchings_on.restrict HallMatchingsOn.restrict
+#align hall_matchings_on.restrict hallMatchingsOn.restrict
 
 /-- When the Hall condition is satisfied, the set of matchings on a finite set is nonempty.
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
-theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
-    (h : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (ι' : Finset ι) : Nonempty (HallMatchingsOn t ι') := by
+theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
+    (h : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (ι' : Finset ι) : Nonempty (hallMatchingsOn t ι') := by
   classical refine' ⟨Classical.indefiniteDescription _ _⟩
     intro s'
     simp only [card_image_of_injective s' Subtype.coe_injective]
-#align hall_matchings_on.nonempty HallMatchingsOn.nonempty
+#align hall_matchings_on.nonempty hallMatchingsOn.nonempty
 
 -- TODO: This takes a long time to elaborate for an unknown reason.
 /-- This is the `hall_matchings_on` sets assembled into a directed system.
 -/
 def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : (Finset ι)ᵒᵖ ⥤ Type max u v where
-  obj ι' := HallMatchingsOn t ι'.unop
-  map ι' ι'' g f := HallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f
+  obj ι' := hallMatchingsOn t ι'.unop
+  map ι' ι'' g f := hallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f
 #align hall_matchings_functor hallMatchingsFunctor
 
-noncomputable instance HallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :
-    Fintype (HallMatchingsOn t ι') := by
-  classical rw [HallMatchingsOn]
+noncomputable instance hallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :
+    Fintype (hallMatchingsOn t ι') := by
+  classical rw [hallMatchingsOn]
     · rintro f i
       refine' ⟨f.val i, _⟩
       rw [mem_bUnion]
@@ -96,7 +96,7 @@ noncomputable instance HallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : 
       
     intro f f' h
     ext a
-#align hall_matchings_on.fintype HallMatchingsOn.fintype
+#align hall_matchings_on.fintype hallMatchingsOn.fintype
 
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
 families of finite sets `t : ι → finset α`.  It states that there is a
@@ -115,7 +115,7 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
   · intro h
     -- Set up the functor
     haveI : ∀ ι' : (Finset ι)ᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
-      HallMatchingsOn.nonempty t h ι'.unop
+      hallMatchingsOn.nonempty t h ι'.unop
     classical haveI : ∀ ι' : (Finset ι)ᵒᵖ, Fintype ((hallMatchingsFunctor t).obj ι') := by
         intro ι'
         rw [hallMatchingsFunctor]
@@ -145,11 +145,11 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
 
 /-- Given a relation such that the image of every singleton set is finite, then the image of every
 finite set is finite. -/
-instance {α : Type u} {β : Type v} [DecidableEq β] (r : α → β → Prop) [∀ a : α, Fintype (Rel.Image r {a})]
-    (A : Finset α) : Fintype (Rel.Image r A) := by
-  have h : Rel.Image r A = (A.bUnion fun a => (Rel.Image r {a}).toFinset : Set β) := by
+instance {α : Type u} {β : Type v} [DecidableEq β] (r : α → β → Prop) [∀ a : α, Fintype (Rel.image r {a})]
+    (A : Finset α) : Fintype (Rel.image r A) := by
+  have h : Rel.image r A = (A.bUnion fun a => (Rel.image r {a}).toFinset : Set β) := by
     ext
-    simp [Rel.Image]
+    simp [Rel.image]
   rw [h]
   apply FinsetCoe.fintype
 
@@ -164,16 +164,16 @@ a subrelation of the relation) iff every subset of
 Note: if `[fintype β]`, then there exist instances for `[∀ (a : α), fintype (rel.image r {a})]`.
 -/
 theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {β : Type v} [DecidableEq β]
-    (r : α → β → Prop) [∀ a : α, Fintype (Rel.Image r {a})] :
-    (∀ A : Finset α, A.card ≤ Fintype.card (Rel.Image r A)) ↔ ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) := by
-  let r' a := (Rel.Image r {a}).toFinset
-  have h : ∀ A : Finset α, Fintype.card (Rel.Image r A) = (A.bUnion r').card := by
+    (r : α → β → Prop) [∀ a : α, Fintype (Rel.image r {a})] :
+    (∀ A : Finset α, A.card ≤ Fintype.card (Rel.image r A)) ↔ ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) := by
+  let r' a := (Rel.image r {a}).toFinset
+  have h : ∀ A : Finset α, Fintype.card (Rel.image r A) = (A.bUnion r').card := by
     intro A
     rw [← Set.to_finset_card]
     apply congr_arg
     ext b
-    simp [Rel.Image]
-  have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by simp [Rel.Image]
+    simp [Rel.image]
+  have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by simp [Rel.image]
   simp only [h, h']
   apply Finset.all_card_le_bUnion_card_iff_exists_injective
 #align fintype.all_card_le_rel_image_card_iff_exists_injective Fintype.all_card_le_rel_image_card_iff_exists_injective

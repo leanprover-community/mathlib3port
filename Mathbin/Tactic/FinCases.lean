@@ -67,7 +67,7 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
               tactic.interactive.conv (some sn) none <|
                 to_rhs >>
                   conv.interactive.norm_num
-                    [simp_arg_type.expr (pquote.1 max_def), simp_arg_type.expr (pquote.1 min_def)]
+                    [simp_arg_type.expr (pquote.1 max_def'), simp_arg_type.expr (pquote.1 min_def)]
         let s ← get_local sn
         try sorry
         let ng' ← num_goals

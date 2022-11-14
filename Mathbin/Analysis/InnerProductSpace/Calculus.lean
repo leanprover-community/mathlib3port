@@ -346,7 +346,7 @@ theorem contDiffHomeomorphUnitBall : (ContDiff ℝ n) fun x : E => (homeomorphUn
 #align cont_diff_homeomorph_unit_ball contDiffHomeomorphUnitBall
 
 theorem contDiffOnHomeomorphUnitBallSymm {f : E → E}
-    (h : ∀ (y) (hy : y ∈ Ball (0 : E) 1), f y = homeomorphUnitBall.symm ⟨y, hy⟩) : ContDiffOn ℝ n f <| Ball 0 1 := by
+    (h : ∀ (y) (hy : y ∈ ball (0 : E) 1), f y = homeomorphUnitBall.symm ⟨y, hy⟩) : ContDiffOn ℝ n f <| ball 0 1 := by
   intro y hy
   apply ContDiffAt.contDiffWithinAt
   have hf : f =ᶠ[𝓝 y] fun y => (1 - ∥(y : E)∥ ^ 2).sqrt⁻¹ • (y : E) := by

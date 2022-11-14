@@ -135,10 +135,10 @@ variable [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [No
 
 theorem map_cSup (hf : LeftOrdContinuous f) {s : Set α} (sne : s.Nonempty) (sbdd : BddAbove s) :
     f (sup s) = sup (f '' s) :=
-  ((hf <| is_lub_cSup sne sbdd).cSup_eq <| sne.Image f).symm
+  ((hf <| is_lub_cSup sne sbdd).cSup_eq <| sne.image f).symm
 #align left_ord_continuous.map_cSup LeftOrdContinuous.map_cSup
 
-theorem map_csupr (hf : LeftOrdContinuous f) {g : ι → α} (hg : BddAbove (Range g)) : f (⨆ i, g i) = ⨆ i, f (g i) := by
+theorem map_csupr (hf : LeftOrdContinuous f) {g : ι → α} (hg : BddAbove (range g)) : f (⨆ i, g i) = ⨆ i, f (g i) := by
   simp only [supr, hf.map_cSup (range_nonempty _) hg, ← range_comp]
 #align left_ord_continuous.map_csupr LeftOrdContinuous.map_csupr
 
@@ -238,7 +238,7 @@ theorem map_cInf (hf : RightOrdContinuous f) {s : Set α} (sne : s.Nonempty) (sb
   hf.OrderDual.map_cSup sne sbdd
 #align right_ord_continuous.map_cInf RightOrdContinuous.map_cInf
 
-theorem map_cinfi (hf : RightOrdContinuous f) {g : ι → α} (hg : BddBelow (Range g)) : f (⨅ i, g i) = ⨅ i, f (g i) :=
+theorem map_cinfi (hf : RightOrdContinuous f) {g : ι → α} (hg : BddBelow (range g)) : f (⨅ i, g i) = ⨅ i, f (g i) :=
   hf.OrderDual.map_csupr hg
 #align right_ord_continuous.map_cinfi RightOrdContinuous.map_cinfi
 

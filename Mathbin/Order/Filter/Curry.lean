@@ -50,7 +50,7 @@ variable {α β γ : Type _}
 in adding quantifiers to the middle of `tendsto`s. See
 `has_fderiv_at_of_tendsto_uniformly_on_filter`. -/
 def curry (f : Filter α) (g : Filter β) : Filter (α × β) where
-  Sets := { s | ∀ᶠ a : α in f, ∀ᶠ b : β in g, (a, b) ∈ s }
+  sets := { s | ∀ᶠ a : α in f, ∀ᶠ b : β in g, (a, b) ∈ s }
   univ_sets := by simp only [Set.mem_set_of_eq, Set.mem_univ, eventually_true]
   sets_of_superset := by
     intro x y hx hxy
@@ -81,7 +81,7 @@ theorem Tendsto.curry {f : α → β → γ} {la : Filter α} {lb : Filter β} {
   simp only [curry, Filter.mem_mk, Set.mem_set_of_eq, Set.mem_preimage]
   simp_rw [tendsto_def] at h
   refine' fun s hs => h.mono fun a ha => eventually_iff.mpr _
-  simpa [Function.HasUncurry.uncurry, Set.Preimage] using ha s hs
+  simpa [Function.HasUncurry.uncurry, Set.preimage] using ha s hs
 #align filter.tendsto.curry Filter.Tendsto.curry
 
 end Filter

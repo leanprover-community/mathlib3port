@@ -188,7 +188,7 @@ theorem norm_mk_nonneg (S : AddSubgroup M) (m : M) : 0 ≤ ∥mk' S m∥ :=
 
 /-- The norm of the image of `m : M` in the quotient by `S` is zero if and only if `m` belongs
 to the closure of `S`. -/
-theorem quotient_norm_eq_zero_iff (S : AddSubgroup M) (m : M) : ∥mk' S m∥ = 0 ↔ m ∈ Closure (S : Set M) := by
+theorem quotient_norm_eq_zero_iff (S : AddSubgroup M) (m : M) : ∥mk' S m∥ = 0 ↔ m ∈ closure (S : Set M) := by
   have : 0 ≤ ∥mk' S m∥ := norm_mk_nonneg S m
   rw [← this.le_iff_eq, quotient_norm_mk_eq, Real.Inf_le_iff]
   simp_rw [zero_add]
@@ -196,8 +196,8 @@ theorem quotient_norm_eq_zero_iff (S : AddSubgroup M) (m : M) : ∥mk' S m∥ = 
       (∀ ε > (0 : ℝ), ∃ r ∈ (fun x => ∥m + x∥) '' (S : Set M), r < ε) ↔ ∀ ε > 0, ∃ x ∈ S, ∥m + x∥ < ε := by
         simp [Set.bex_image_iff]
       _ ↔ ∀ ε > 0, ∃ x ∈ S, ∥m + -x∥ < ε := _
-      _ ↔ ∀ ε > 0, ∃ x ∈ S, x ∈ Metric.Ball m ε := by simp [dist_eq_norm, ← sub_eq_add_neg, norm_sub_rev]
-      _ ↔ m ∈ Closure ↑S := by simp [Metric.mem_closure_iff, dist_comm]
+      _ ↔ ∀ ε > 0, ∃ x ∈ S, x ∈ Metric.ball m ε := by simp [dist_eq_norm, ← sub_eq_add_neg, norm_sub_rev]
+      _ ↔ m ∈ closure ↑S := by simp [Metric.mem_closure_iff, dist_comm]
       
     refine' forall₂_congr fun ε ε_pos => _
     rw [← S.exists_neg_mem_iff_exists_mem]
@@ -420,7 +420,7 @@ theorem norm_normed_mk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) �
 #align add_subgroup.norm_normed_mk AddSubgroup.norm_normed_mk
 
 /-- The operator norm of the projection is `0` if the subspace is dense. -/
-theorem norm_trivial_quotient_mk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) = Set.Univ) :
+theorem norm_trivial_quotient_mk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) = Set.univ) :
     ∥S.normedMk∥ = 0 := by
   refine' le_antisymm (op_norm_le_bound _ le_rfl fun x => _) (norm_nonneg _)
   have hker : x ∈ S.normed_mk.ker.topologicalClosure := by

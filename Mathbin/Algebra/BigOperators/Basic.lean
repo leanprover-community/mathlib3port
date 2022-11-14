@@ -269,7 +269,7 @@ theorem prod_const_one : (∏ x in s, (1 : β)) = 1 := by
 
 @[simp, to_additive]
 theorem prod_image [DecidableEq α] {s : Finset γ} {g : γ → α} :
-    (∀ x ∈ s, ∀ y ∈ s, g x = g y → x = y) → (∏ x in s.Image g, f x) = ∏ x in s, f (g x) :=
+    (∀ x ∈ s, ∀ y ∈ s, g x = g y → x = y) → (∏ x in s.image g, f x) = ∏ x in s, f (g x) :=
   fold_image
 #align finset.prod_image Finset.prod_image
 
@@ -1878,7 +1878,7 @@ See `equiv.prod_comp` for the version where `s` and `s'` are `univ`. -/
 @[to_additive
       " Reindexing a sum over a finset along an equivalence.\nSee `equiv.sum_comp` for the version where `s` and `s'` are `univ`. "]
 theorem Equiv.prod_comp_finset {ι'} [DecidableEq ι] (e : ι ≃ ι') (f : ι' → β) {s' : Finset ι'} {s : Finset ι}
-    (h : s = s'.Image e.symm) : (∏ i' in s', f i') = ∏ i in s, f (e i) := by
+    (h : s = s'.image e.symm) : (∏ i' in s', f i') = ∏ i in s, f (e i) := by
   rw [h]
   refine'
     Finset.prod_bij' (fun i' hi' => e.symm i') (fun a ha => Finset.mem_image_of_mem _ ha)
@@ -1936,9 +1936,9 @@ theorem prod_fiberwise_of_maps_to [DecidableEq γ] {s : Finset α} {t : Finset �
 
 @[to_additive]
 theorem prod_image' [DecidableEq α] {s : Finset γ} {g : γ → α} (h : γ → β)
-    (eq : ∀ c ∈ s, f (g c) = ∏ x in s.filter fun c' => g c' = g c, h x) : (∏ x in s.Image g, f x) = ∏ x in s, h x :=
+    (eq : ∀ c ∈ s, f (g c) = ∏ x in s.filter fun c' => g c' = g c, h x) : (∏ x in s.image g, f x) = ∏ x in s, h x :=
   calc
-    (∏ x in s.Image g, f x) = ∏ x in s.Image g, ∏ x in s.filter fun c' => g c' = x, h x :=
+    (∏ x in s.image g, f x) = ∏ x in s.image g, ∏ x in s.filter fun c' => g c' = x, h x :=
       (prod_congr rfl) fun x hx =>
         let ⟨c, hcs, hc⟩ := mem_image.1 hx
         hc ▸ Eq c hcs
@@ -2124,7 +2124,7 @@ theorem prod_eq_mul {s : Finset α} {f : α → β} (a b : α) (hn : a ≠ b) (h
 theorem prod_attach {f : α → β} : (∏ x in s.attach, f x) = ∏ x in s, f x :=
   haveI := Classical.decEq α
   calc
-    (∏ x in s.attach, f x.val) = ∏ x in s.attach.Image Subtype.val, f x := by
+    (∏ x in s.attach, f x.val) = ∏ x in s.attach.image Subtype.val, f x := by
       rw [prod_image] <;> exact fun x _ y _ => Subtype.eq
     _ = _ := by rw [attach_image_val]
     
@@ -4772,19 +4772,19 @@ theorem prod_involution {s : Finset α} {f : α → β} :
 @[to_additive
       "The sum of the composition of functions `f` and `g`, is the sum over `b ∈ s.image g`\nof `f b` times of the cardinality of the fibre of `b`. See also `finset.sum_image`."]
 theorem prod_comp [DecidableEq γ] (f : γ → β) (g : α → γ) :
-    (∏ a in s, f (g a)) = ∏ b in s.Image g, f b ^ (s.filter fun a => g a = b).card :=
+    (∏ a in s, f (g a)) = ∏ b in s.image g, f b ^ (s.filter fun a => g a = b).card :=
   calc
-    (∏ a in s, f (g a)) = ∏ x in (s.Image g).Sigma fun b : γ => s.filter fun a => g a = b, f (g x.2) :=
+    (∏ a in s, f (g a)) = ∏ x in (s.image g).Sigma fun b : γ => s.filter fun a => g a = b, f (g x.2) :=
       prod_bij (fun a ha => ⟨g a, a⟩) (by simp <;> tauto) (fun _ _ => rfl) (by simp)
         (-- `(by finish)` closes this
         by
           rintro ⟨b_fst, b_snd⟩ H
           simp only [mem_image, exists_prop, mem_filter, mem_sigma] at H
           tauto)
-    _ = ∏ b in s.Image g, ∏ a in s.filter fun a => g a = b, f (g a) := prod_sigma _ _ _
-    _ = ∏ b in s.Image g, ∏ a in s.filter fun a => g a = b, f b :=
+    _ = ∏ b in s.image g, ∏ a in s.filter fun a => g a = b, f (g a) := prod_sigma _ _ _
+    _ = ∏ b in s.image g, ∏ a in s.filter fun a => g a = b, f b :=
       prod_congr rfl fun b hb => prod_congr rfl (by simp (config := { contextual := true }))
-    _ = ∏ b in s.Image g, f b ^ (s.filter fun a => g a = b).card := prod_congr rfl fun _ _ => prod_const _
+    _ = ∏ b in s.image g, f b ^ (s.filter fun a => g a = b).card := prod_congr rfl fun _ _ => prod_const _
     
 #align finset.prod_comp Finset.prod_comp
 
@@ -4832,7 +4832,7 @@ theorem dvd_prod_of_mem (f : α → β) {a : α} {s : Finset α} (ha : a ∈ s) 
 /-- A product can be partitioned into a product of products, each equivalent under a setoid. -/
 @[to_additive "A sum can be partitioned into a sum of sums, each equivalent under a setoid."]
 theorem prod_partition (R : Setoid α) [DecidableRel R.R] :
-    (∏ x in s, f x) = ∏ xbar in s.Image Quotient.mk'', ∏ y in s.filter fun y => ⟦y⟧ = xbar, f y := by
+    (∏ x in s, f x) = ∏ xbar in s.image Quotient.mk'', ∏ y in s.filter fun y => ⟦y⟧ = xbar, f y := by
   refine' (Finset.prod_image' f fun x hx => _).symm
   rfl
 #align finset.prod_partition Finset.prod_partition
@@ -5077,7 +5077,7 @@ theorem card_eq_sum_card_fiberwise [DecidableEq β] {f : α → β} {s : Finset 
 #align finset.card_eq_sum_card_fiberwise Finset.card_eq_sum_card_fiberwise
 
 theorem card_eq_sum_card_image [DecidableEq β] (f : α → β) (s : Finset α) :
-    s.card = ∑ a in s.Image f, (s.filter fun x => f x = a).card :=
+    s.card = ∑ a in s.image f, (s.filter fun x => f x = a).card :=
   card_eq_sum_card_fiberwise fun _ => mem_image_of_mem _
 #align finset.card_eq_sum_card_image Finset.card_eq_sum_card_image
 
@@ -5280,7 +5280,7 @@ theorem finset_sum_eq_sup_iff_disjoint {β : Type _} {i : Finset β} {f : β →
 #align multiset.finset_sum_eq_sup_iff_disjoint Multiset.finset_sum_eq_sup_iff_disjoint
 
 theorem sup_powerset_len {α : Type _} [DecidableEq α] (x : Multiset α) :
-    (Finset.sup (Finset.range (x.card + 1)) fun k => x.powersetLen k) = x.Powerset := by
+    (Finset.sup (Finset.range (x.card + 1)) fun k => x.powersetLen k) = x.powerset := by
   convert bind_powerset_len x
   rw [Multiset.bind, Multiset.join, ← Finset.range_coe, ← Finset.sum_eq_multiset_sum]
   exact Eq.symm (finset_sum_eq_sup_iff_disjoint.mpr fun _ _ _ _ h => disjoint_powerset_len x h)

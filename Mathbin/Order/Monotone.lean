@@ -383,11 +383,11 @@ protected theorem Antitone.antitone_on (hf : Antitone f) (s : Set α) : Antitone
 #align antitone.antitone_on Antitone.antitone_on
 -/
 
-theorem monotone_on_univ : MonotoneOn f Set.Univ ↔ Monotone f :=
+theorem monotone_on_univ : MonotoneOn f Set.univ ↔ Monotone f :=
   ⟨fun h a b => h trivial trivial, fun h => h.MonotoneOn _⟩
 #align monotone_on_univ monotone_on_univ
 
-theorem antitone_on_univ : AntitoneOn f Set.Univ ↔ Antitone f :=
+theorem antitone_on_univ : AntitoneOn f Set.univ ↔ Antitone f :=
   ⟨fun h a b => h trivial trivial, fun h => h.AntitoneOn _⟩
 #align antitone_on_univ antitone_on_univ
 
@@ -401,11 +401,11 @@ protected theorem StrictAnti.strict_anti_on (hf : StrictAnti f) (s : Set α) : S
 #align strict_anti.strict_anti_on StrictAnti.strict_anti_on
 -/
 
-theorem strict_mono_on_univ : StrictMonoOn f Set.Univ ↔ StrictMono f :=
+theorem strict_mono_on_univ : StrictMonoOn f Set.univ ↔ StrictMono f :=
   ⟨fun h a b => h trivial trivial, fun h => h.StrictMonoOn _⟩
 #align strict_mono_on_univ strict_mono_on_univ
 
-theorem strict_anti_on_univ : StrictAntiOn f Set.Univ ↔ StrictAnti f :=
+theorem strict_anti_on_univ : StrictAntiOn f Set.univ ↔ StrictAnti f :=
   ⟨fun h a b => h trivial trivial, fun h => h.StrictAntiOn _⟩
 #align strict_anti_on_univ strict_anti_on_univ
 
@@ -823,19 +823,19 @@ theorem StrictAntiOn.lt_iff_lt (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s)
 #align strict_anti_on.lt_iff_lt StrictAntiOn.lt_iff_lt
 
 theorem StrictMono.le_iff_le (hf : StrictMono f) {a b : α} : f a ≤ f b ↔ a ≤ b :=
-  (hf.StrictMonoOn Set.Univ).le_iff_le trivial trivial
+  (hf.StrictMonoOn Set.univ).le_iff_le trivial trivial
 #align strict_mono.le_iff_le StrictMono.le_iff_le
 
 theorem StrictAnti.le_iff_le (hf : StrictAnti f) {a b : α} : f a ≤ f b ↔ b ≤ a :=
-  (hf.StrictAntiOn Set.Univ).le_iff_le trivial trivial
+  (hf.StrictAntiOn Set.univ).le_iff_le trivial trivial
 #align strict_anti.le_iff_le StrictAnti.le_iff_le
 
 theorem StrictMono.lt_iff_lt (hf : StrictMono f) {a b : α} : f a < f b ↔ a < b :=
-  (hf.StrictMonoOn Set.Univ).lt_iff_lt trivial trivial
+  (hf.StrictMonoOn Set.univ).lt_iff_lt trivial trivial
 #align strict_mono.lt_iff_lt StrictMono.lt_iff_lt
 
 theorem StrictAnti.lt_iff_lt (hf : StrictAnti f) {a b : α} : f a < f b ↔ b < a :=
-  (hf.StrictAntiOn Set.Univ).lt_iff_lt trivial trivial
+  (hf.StrictAntiOn Set.univ).lt_iff_lt trivial trivial
 #align strict_anti.lt_iff_lt StrictAnti.lt_iff_lt
 
 protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
@@ -852,12 +852,12 @@ protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha :
 
 protected theorem StrictMono.compares (hf : StrictMono f) {a b : α} {o : Ordering} :
     o.Compares (f a) (f b) ↔ o.Compares a b :=
-  (hf.StrictMonoOn Set.Univ).Compares trivial trivial
+  (hf.StrictMonoOn Set.univ).Compares trivial trivial
 #align strict_mono.compares StrictMono.compares
 
 protected theorem StrictAnti.compares (hf : StrictAnti f) {a b : α} {o : Ordering} :
     o.Compares (f a) (f b) ↔ o.Compares b a :=
-  (hf.StrictAntiOn Set.Univ).Compares trivial trivial
+  (hf.StrictAntiOn Set.univ).Compares trivial trivial
 #align strict_anti.compares StrictAnti.compares
 
 theorem StrictMono.injective (hf : StrictMono f) : Injective f := fun x y h => show Compares Eq x y from hf.Compares.1 h
@@ -911,7 +911,7 @@ theorem StrictMonoOn.cmp_map_eq (hf : StrictMonoOn f s) (hx : x ∈ s) (hy : y �
 #align strict_mono_on.cmp_map_eq StrictMonoOn.cmp_map_eq
 
 theorem StrictMono.cmp_map_eq (hf : StrictMono f) (x y : α) : Cmp (f x) (f y) = Cmp x y :=
-  (hf.StrictMonoOn Set.Univ).cmp_map_eq trivial trivial
+  (hf.StrictMonoOn Set.univ).cmp_map_eq trivial trivial
 #align strict_mono.cmp_map_eq StrictMono.cmp_map_eq
 
 theorem StrictAntiOn.cmp_map_eq (hf : StrictAntiOn f s) (hx : x ∈ s) (hy : y ∈ s) : Cmp (f x) (f y) = Cmp y x :=
@@ -919,7 +919,7 @@ theorem StrictAntiOn.cmp_map_eq (hf : StrictAntiOn f s) (hx : x ∈ s) (hy : y �
 #align strict_anti_on.cmp_map_eq StrictAntiOn.cmp_map_eq
 
 theorem StrictAnti.cmp_map_eq (hf : StrictAnti f) (x y : α) : Cmp (f x) (f y) = Cmp y x :=
-  (hf.StrictAntiOn Set.Univ).cmp_map_eq trivial trivial
+  (hf.StrictAntiOn Set.univ).cmp_map_eq trivial trivial
 #align strict_anti.cmp_map_eq StrictAnti.cmp_map_eq
 
 end LinearOrder

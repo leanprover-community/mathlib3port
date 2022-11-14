@@ -80,7 +80,7 @@ theorem mem_pi {s : Set (∀ i, α i)} :
 #align filter.mem_pi Filter.mem_pi
 
 theorem mem_pi' {s : Set (∀ i, α i)} :
-    s ∈ pi f ↔ ∃ I : Finset ι, ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ Set.Pi (↑I) t ⊆ s :=
+    s ∈ pi f ↔ ∃ I : Finset ι, ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ Set.pi (↑I) t ⊆ s :=
   mem_pi.trans exists_finite_iff_finset
 #align filter.mem_pi' Filter.mem_pi'
 
@@ -112,7 +112,7 @@ theorem has_basis_pi {ι' : ι → Type} {s : ∀ i, ι' i → Set (α i)} {p : 
 #align filter.has_basis_pi Filter.has_basis_pi
 
 @[simp]
-theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.Pi Univ s) = ⊥ ↔ ∃ i, f i ⊓ 𝓟 (s i) = ⊥ := by
+theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.pi univ s) = ⊥ ↔ ∃ i, f i ⊓ 𝓟 (s i) = ⊥ := by
   constructor
   · simp only [inf_principal_eq_bot, mem_pi]
     contrapose!
@@ -129,14 +129,14 @@ theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.Pi Univ s) = ⊥ �
 
 @[simp]
 theorem pi_inf_principal_pi_eq_bot [∀ i, NeBot (f i)] {I : Set ι} :
-    pi f ⊓ 𝓟 (Set.Pi I s) = ⊥ ↔ ∃ i ∈ I, f i ⊓ 𝓟 (s i) = ⊥ := by
+    pi f ⊓ 𝓟 (Set.pi I s) = ⊥ ↔ ∃ i ∈ I, f i ⊓ 𝓟 (s i) = ⊥ := by
   rw [← univ_pi_piecewise I, pi_inf_principal_univ_pi_eq_bot]
   refine' exists_congr fun i => _
   by_cases hi:i ∈ I <;> simp [hi, (‹∀ i, ne_bot (f i)› i).Ne]
 #align filter.pi_inf_principal_pi_eq_bot Filter.pi_inf_principal_pi_eq_bot
 
 @[simp]
-theorem pi_inf_principal_univ_pi_ne_bot : NeBot (pi f ⊓ 𝓟 (Set.Pi Univ s)) ↔ ∀ i, NeBot (f i ⊓ 𝓟 (s i)) := by
+theorem pi_inf_principal_univ_pi_ne_bot : NeBot (pi f ⊓ 𝓟 (Set.pi univ s)) ↔ ∀ i, NeBot (f i ⊓ 𝓟 (s i)) := by
   simp [ne_bot_iff]
 #align filter.pi_inf_principal_univ_pi_ne_bot Filter.pi_inf_principal_univ_pi_ne_bot
 

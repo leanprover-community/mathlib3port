@@ -30,8 +30,8 @@ It is a homeomorphism between `ℝ^2 - (-∞, 0]` and `(0, +∞) × (-π, π)`. 
 def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ) where
   toFun q := (Real.sqrt (q.1 ^ 2 + q.2 ^ 2), Complex.arg (Complex.equivRealProd.symm q))
   invFun p := (p.1 * cos p.2, p.1 * sin p.2)
-  Source := { q | 0 < q.1 } ∪ { q | q.2 ≠ 0 }
-  Target := IoiCat (0 : ℝ) ×ˢ IooCat (-π) π
+  source := { q | 0 < q.1 } ∪ { q | q.2 ≠ 0 }
+  target := ioi (0 : ℝ) ×ˢ ioo (-π) π
   map_target' := by
     rintro ⟨r, θ⟩ ⟨hr, hθ⟩
     dsimp at hr hθ
@@ -119,7 +119,7 @@ theorem hasFderivAtPolarCoordSymm (p : ℝ × ℝ) :
     simp only [smul_smul, add_comm, neg_mul, neg_smul, smul_neg]
 #align has_fderiv_at_polar_coord_symm hasFderivAtPolarCoordSymm
 
-theorem polar_coord_source_ae_eq_univ : polarCoord.Source =ᵐ[volume] univ := by
+theorem polar_coord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ := by
   have A : polar_coord.sourceᶜ ⊆ (LinearMap.snd ℝ ℝ ℝ).ker := by
     intro x hx
     simp only [polar_coord_source, compl_union, mem_inter_iff, mem_compl_iff, mem_set_of_eq, not_lt, not_not] at hx
@@ -137,7 +137,7 @@ theorem polar_coord_source_ae_eq_univ : polarCoord.Source =ᵐ[volume] univ := b
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
 theorem integral_comp_polar_coord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-    (f : ℝ × ℝ → E) : (∫ p in polarCoord.Target, p.1 • f (polarCoord.symm p)) = ∫ p, f p := by
+    (f : ℝ × ℝ → E) : (∫ p in polarCoord.target, p.1 • f (polarCoord.symm p)) = ∫ p, f p := by
   set B : ℝ × ℝ → ℝ × ℝ →L[ℝ] ℝ × ℝ := fun p =>
     (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
         («expr!![ »

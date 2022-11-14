@@ -997,45 +997,45 @@ protected theorem exists_nat_gt {r : ℝ≥0∞} (h : r ≠ ∞) : ∃ n : ℕ, 
 #align ennreal.exists_nat_gt Ennreal.exists_nat_gt
 
 @[simp]
-theorem Union_Iio_coe_nat : (⋃ n : ℕ, IioCat (n : ℝ≥0∞)) = {∞}ᶜ := by
+theorem Union_Iio_coe_nat : (⋃ n : ℕ, iio (n : ℝ≥0∞)) = {∞}ᶜ := by
   ext x
   rw [mem_Union]
   exact ⟨fun ⟨n, hn⟩ => ne_top_of_lt hn, Ennreal.exists_nat_gt⟩
 #align ennreal.Union_Iio_coe_nat Ennreal.Union_Iio_coe_nat
 
 @[simp]
-theorem Union_Iic_coe_nat : (⋃ n : ℕ, IicCat (n : ℝ≥0∞)) = {∞}ᶜ :=
+theorem Union_Iic_coe_nat : (⋃ n : ℕ, iic (n : ℝ≥0∞)) = {∞}ᶜ :=
   Subset.antisymm (Union_subset fun n x hx => ne_top_of_le_ne_top (nat_ne_top n) hx) <|
     Union_Iio_coe_nat ▸ Union_mono fun n => Iio_subset_Iic_self
 #align ennreal.Union_Iic_coe_nat Ennreal.Union_Iic_coe_nat
 
 @[simp]
-theorem Union_Ioc_coe_nat : (⋃ n : ℕ, IocCat a n) = IoiCat a \ {∞} := by
+theorem Union_Ioc_coe_nat : (⋃ n : ℕ, ioc a n) = ioi a \ {∞} := by
   simp only [← Ioi_inter_Iic, ← inter_Union, Union_Iic_coe_nat, diff_eq]
 #align ennreal.Union_Ioc_coe_nat Ennreal.Union_Ioc_coe_nat
 
 @[simp]
-theorem Union_Ioo_coe_nat : (⋃ n : ℕ, IooCat a n) = IoiCat a \ {∞} := by
+theorem Union_Ioo_coe_nat : (⋃ n : ℕ, ioo a n) = ioi a \ {∞} := by
   simp only [← Ioi_inter_Iio, ← inter_Union, Union_Iio_coe_nat, diff_eq]
 #align ennreal.Union_Ioo_coe_nat Ennreal.Union_Ioo_coe_nat
 
 @[simp]
-theorem Union_Icc_coe_nat : (⋃ n : ℕ, IccCat a n) = IciCat a \ {∞} := by
+theorem Union_Icc_coe_nat : (⋃ n : ℕ, icc a n) = ici a \ {∞} := by
   simp only [← Ici_inter_Iic, ← inter_Union, Union_Iic_coe_nat, diff_eq]
 #align ennreal.Union_Icc_coe_nat Ennreal.Union_Icc_coe_nat
 
 @[simp]
-theorem Union_Ico_coe_nat : (⋃ n : ℕ, IcoCat a n) = IciCat a \ {∞} := by
+theorem Union_Ico_coe_nat : (⋃ n : ℕ, ico a n) = ici a \ {∞} := by
   simp only [← Ici_inter_Iio, ← inter_Union, Union_Iio_coe_nat, diff_eq]
 #align ennreal.Union_Ico_coe_nat Ennreal.Union_Ico_coe_nat
 
 @[simp]
-theorem Inter_Ici_coe_nat : (⋂ n : ℕ, IciCat (n : ℝ≥0∞)) = {∞} := by
+theorem Inter_Ici_coe_nat : (⋂ n : ℕ, ici (n : ℝ≥0∞)) = {∞} := by
   simp only [← compl_Iio, ← compl_Union, Union_Iio_coe_nat, compl_compl]
 #align ennreal.Inter_Ici_coe_nat Ennreal.Inter_Ici_coe_nat
 
 @[simp]
-theorem Inter_Ioi_coe_nat : (⋂ n : ℕ, IoiCat (n : ℝ≥0∞)) = {∞} := by
+theorem Inter_Ioi_coe_nat : (⋂ n : ℕ, ioi (n : ℝ≥0∞)) = {∞} := by
   simp only [← compl_Iic, ← compl_Union, Union_Iic_coe_nat, compl_compl]
 #align ennreal.Inter_Ioi_coe_nat Ennreal.Inter_Ioi_coe_nat
 
@@ -1089,11 +1089,11 @@ theorem coe_Inf {s : Set ℝ≥0} : s.Nonempty → (↑(inf s) : ℝ≥0∞) = �
 #align ennreal.coe_Inf Ennreal.coe_Inf
 
 @[simp]
-theorem top_mem_upper_bounds {s : Set ℝ≥0∞} : ∞ ∈ UpperBounds s := fun x hx => le_top
+theorem top_mem_upper_bounds {s : Set ℝ≥0∞} : ∞ ∈ upperBounds s := fun x hx => le_top
 #align ennreal.top_mem_upper_bounds Ennreal.top_mem_upper_bounds
 
-theorem coe_mem_upper_bounds {s : Set ℝ≥0} : ↑r ∈ UpperBounds ((coe : ℝ≥0 → ℝ≥0∞) '' s) ↔ r ∈ UpperBounds s := by
-  simp (config := { contextual := true }) [UpperBounds, ball_image_iff, -mem_image, *]
+theorem coe_mem_upper_bounds {s : Set ℝ≥0} : ↑r ∈ upperBounds ((coe : ℝ≥0 → ℝ≥0∞) '' s) ↔ r ∈ upperBounds s := by
+  simp (config := { contextual := true }) [upperBounds, ball_image_iff, -mem_image, *]
 #align ennreal.coe_mem_upper_bounds Ennreal.coe_mem_upper_bounds
 
 end CompleteLattice
@@ -1425,14 +1425,14 @@ section Interval
 
 variable {x y z : ℝ≥0∞} {ε ε₁ ε₂ : ℝ≥0∞} {s : Set ℝ≥0∞}
 
-protected theorem Ico_eq_Iio : IcoCat 0 y = IioCat y :=
+protected theorem Ico_eq_Iio : ico 0 y = iio y :=
   Ico_bot
 #align ennreal.Ico_eq_Iio Ennreal.Ico_eq_Iio
 
-theorem mem_Iio_self_add : x ≠ ∞ → ε ≠ 0 → x ∈ IioCat (x + ε) := fun xt ε0 => lt_add_right xt ε0
+theorem mem_Iio_self_add : x ≠ ∞ → ε ≠ 0 → x ∈ iio (x + ε) := fun xt ε0 => lt_add_right xt ε0
 #align ennreal.mem_Iio_self_add Ennreal.mem_Iio_self_add
 
-theorem mem_Ioo_self_sub_add : x ≠ ∞ → x ≠ 0 → ε₁ ≠ 0 → ε₂ ≠ 0 → x ∈ IooCat (x - ε₁) (x + ε₂) := fun xt x0 ε0 ε0' =>
+theorem mem_Ioo_self_sub_add : x ≠ ∞ → x ≠ 0 → ε₁ ≠ 0 → ε₂ ≠ 0 → x ∈ ioo (x - ε₁) (x + ε₂) := fun xt x0 ε0 ε0' =>
   ⟨Ennreal.sub_lt_self xt x0 ε0, lt_add_right xt ε0'⟩
 #align ennreal.mem_Ioo_self_sub_add Ennreal.mem_Ioo_self_sub_add
 
@@ -1952,7 +1952,7 @@ theorem one_sub_inv_two : (1 : ℝ≥0∞) - 2⁻¹ = 2⁻¹ := by simpa only [d
 
 /-- The birational order isomorphism between `ℝ≥0∞` and the unit interval `set.Iic (1 : ℝ≥0∞)`. -/
 @[simps apply_coe]
-def orderIsoIicOneBirational : ℝ≥0∞ ≃o IicCat (1 : ℝ≥0∞) := by
+def orderIsoIicOneBirational : ℝ≥0∞ ≃o iic (1 : ℝ≥0∞) := by
   refine'
     StrictMono.orderIsoOfRightInverse (fun x => ⟨(x⁻¹ + 1)⁻¹, inv_le_one.2 <| le_add_self⟩) (fun x y hxy => _)
       (fun x => (x⁻¹ - 1)⁻¹) fun x => Subtype.ext _
@@ -1964,14 +1964,13 @@ def orderIsoIicOneBirational : ℝ≥0∞ ≃o IicCat (1 : ℝ≥0∞) := by
 #align ennreal.order_iso_Iic_one_birational Ennreal.orderIsoIicOneBirational
 
 @[simp]
-theorem order_iso_Iic_one_birational_symm_apply (x : IicCat (1 : ℝ≥0∞)) :
-    orderIsoIicOneBirational.symm x = (x⁻¹ - 1)⁻¹ :=
+theorem order_iso_Iic_one_birational_symm_apply (x : iic (1 : ℝ≥0∞)) : orderIsoIicOneBirational.symm x = (x⁻¹ - 1)⁻¹ :=
   rfl
 #align ennreal.order_iso_Iic_one_birational_symm_apply Ennreal.order_iso_Iic_one_birational_symm_apply
 
 /-- Order isomorphism between an initial interval in `ℝ≥0∞` and an initial interval in `ℝ≥0`. -/
 @[simps apply_coe]
-def orderIsoIicCoe (a : ℝ≥0) : IicCat (a : ℝ≥0∞) ≃o IicCat a :=
+def orderIsoIicCoe (a : ℝ≥0) : iic (a : ℝ≥0∞) ≃o iic a :=
   OrderIso.symm
     { toFun := fun x => ⟨x, coe_le_coe.2 x.2⟩,
       invFun := fun x => ⟨Ennreal.toNnreal x, coe_le_coe.1 <| coe_to_nnreal_le_self.trans x.2⟩,
@@ -1982,12 +1981,12 @@ def orderIsoIicCoe (a : ℝ≥0) : IicCat (a : ℝ≥0∞) ≃o IicCat a :=
 #align ennreal.order_iso_Iic_coe Ennreal.orderIsoIicCoe
 
 @[simp]
-theorem order_iso_Iic_coe_symm_apply_coe (a : ℝ≥0) (b : IicCat a) : ((orderIsoIicCoe a).symm b : ℝ≥0∞) = b :=
+theorem order_iso_Iic_coe_symm_apply_coe (a : ℝ≥0) (b : iic a) : ((orderIsoIicCoe a).symm b : ℝ≥0∞) = b :=
   rfl
 #align ennreal.order_iso_Iic_coe_symm_apply_coe Ennreal.order_iso_Iic_coe_symm_apply_coe
 
 /-- An order isomorphism between the extended nonnegative real numbers and the unit interval. -/
-def orderIsoUnitIntervalBirational : ℝ≥0∞ ≃o IccCat (0 : ℝ) 1 :=
+def orderIsoUnitIntervalBirational : ℝ≥0∞ ≃o icc (0 : ℝ) 1 :=
   orderIsoIicOneBirational.trans <| (orderIsoIicCoe 1).trans <| (Nnreal.orderIsoIccZeroCoe 1).symm
 #align ennreal.order_iso_unit_interval_birational Ennreal.orderIsoUnitIntervalBirational
 
@@ -2062,7 +2061,7 @@ theorem zpow_lt_top (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : a ^ n < ∞ := 
 #align ennreal.zpow_lt_top Ennreal.zpow_lt_top
 
 theorem exists_mem_Ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
-    ∃ n : ℤ, x ∈ IcoCat (y ^ n) (y ^ (n + 1)) := by
+    ∃ n : ℤ, x ∈ ico (y ^ n) (y ^ (n + 1)) := by
   lift x to ℝ≥0 using h'x
   lift y to ℝ≥0 using h'y
   have A : y ≠ 0 := by simpa only [Ne.def, coe_eq_zero] using (zero_lt_one.trans hy).ne'
@@ -2077,7 +2076,7 @@ theorem exists_mem_Ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) 
 #align ennreal.exists_mem_Ico_zpow Ennreal.exists_mem_Ico_zpow
 
 theorem exists_mem_Ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
-    ∃ n : ℤ, x ∈ IocCat (y ^ n) (y ^ (n + 1)) := by
+    ∃ n : ℤ, x ∈ ioc (y ^ n) (y ^ (n + 1)) := by
   lift x to ℝ≥0 using h'x
   lift y to ℝ≥0 using h'y
   have A : y ≠ 0 := by simpa only [Ne.def, coe_eq_zero] using (zero_lt_one.trans hy).ne'
@@ -2092,7 +2091,7 @@ theorem exists_mem_Ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) 
 #align ennreal.exists_mem_Ioc_zpow Ennreal.exists_mem_Ioc_zpow
 
 theorem Ioo_zero_top_eq_Union_Ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y ≠ ⊤) :
-    IooCat (0 : ℝ≥0∞) (∞ : ℝ≥0∞) = ⋃ n : ℤ, IcoCat (y ^ n) (y ^ (n + 1)) := by
+    ioo (0 : ℝ≥0∞) (∞ : ℝ≥0∞) = ⋃ n : ℤ, ico (y ^ n) (y ^ (n + 1)) := by
   ext x
   simp only [mem_Union, mem_Ioo, mem_Ico]
   constructor

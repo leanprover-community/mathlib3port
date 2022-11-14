@@ -155,7 +155,7 @@ theorem Int.alternating_sum_range_choose_of_ne {n : ℕ} (h0 : n ≠ 0) :
 namespace Finset
 
 theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ → α) {x : Finset β} :
-    (∑ m in x.Powerset, f m.card) = ∑ m in range (x.card + 1), x.card.choose m • f m := by
+    (∑ m in x.powerset, f m.card) = ∑ m in range (x.card + 1), x.card.choose m • f m := by
   trans ∑ m in range (x.card + 1), ∑ j in x.powerset.filter fun z => z.card = m, f j.card
   · refine' (sum_fiberwise_of_maps_to _ _).symm
     intro y hy
@@ -171,13 +171,13 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ →
 #align finset.sum_powerset_apply_card Finset.sum_powerset_apply_card
 
 theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset α} :
-    (∑ m in x.Powerset, (-1 : ℤ) ^ m.card) = if x = ∅ then 1 else 0 := by
+    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = if x = ∅ then 1 else 0 := by
   rw [sum_powerset_apply_card]
   simp only [nsmul_eq_mul', ← card_eq_zero, Int.alternating_sum_range_choose]
 #align finset.sum_powerset_neg_one_pow_card Finset.sum_powerset_neg_one_pow_card
 
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
-    (∑ m in x.Powerset, (-1 : ℤ) ^ m.card) = 0 := by
+    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = 0 := by
   classical rw [sum_powerset_neg_one_pow_card, if_neg]
     apply h0
 #align finset.sum_powerset_neg_one_pow_card_of_nonempty Finset.sum_powerset_neg_one_pow_card_of_nonempty

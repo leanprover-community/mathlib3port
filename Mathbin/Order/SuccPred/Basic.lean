@@ -243,27 +243,27 @@ theorem le_succ_iterate (k : ℕ) (x : α) : x ≤ (succ^[k]) x := by
   exact Monotone.le_iterate_of_le succ_mono le_succ k x
 #align order.le_succ_iterate Order.le_succ_iterate
 
-theorem Iio_succ_of_not_is_max (ha : ¬IsMax a) : IioCat (succ a) = IicCat a :=
+theorem Iio_succ_of_not_is_max (ha : ¬IsMax a) : iio (succ a) = iic a :=
   Set.ext fun x => lt_succ_iff_of_not_is_max ha
 #align order.Iio_succ_of_not_is_max Order.Iio_succ_of_not_is_max
 
-theorem Ici_succ_of_not_is_max (ha : ¬IsMax a) : IciCat (succ a) = IoiCat a :=
+theorem Ici_succ_of_not_is_max (ha : ¬IsMax a) : ici (succ a) = ioi a :=
   Set.ext fun x => succ_le_iff_of_not_is_max ha
 #align order.Ici_succ_of_not_is_max Order.Ici_succ_of_not_is_max
 
-theorem Ico_succ_right_of_not_is_max (hb : ¬IsMax b) : IcoCat a (succ b) = IccCat a b := by
+theorem Ico_succ_right_of_not_is_max (hb : ¬IsMax b) : ico a (succ b) = icc a b := by
   rw [← Ici_inter_Iio, Iio_succ_of_not_is_max hb, Ici_inter_Iic]
 #align order.Ico_succ_right_of_not_is_max Order.Ico_succ_right_of_not_is_max
 
-theorem Ioo_succ_right_of_not_is_max (hb : ¬IsMax b) : IooCat a (succ b) = IocCat a b := by
+theorem Ioo_succ_right_of_not_is_max (hb : ¬IsMax b) : ioo a (succ b) = ioc a b := by
   rw [← Ioi_inter_Iio, Iio_succ_of_not_is_max hb, Ioi_inter_Iic]
 #align order.Ioo_succ_right_of_not_is_max Order.Ioo_succ_right_of_not_is_max
 
-theorem Icc_succ_left_of_not_is_max (ha : ¬IsMax a) : IccCat (succ a) b = IocCat a b := by
+theorem Icc_succ_left_of_not_is_max (ha : ¬IsMax a) : icc (succ a) b = ioc a b := by
   rw [← Ici_inter_Iic, Ici_succ_of_not_is_max ha, Ioi_inter_Iic]
 #align order.Icc_succ_left_of_not_is_max Order.Icc_succ_left_of_not_is_max
 
-theorem Ico_succ_left_of_not_is_max (ha : ¬IsMax a) : IcoCat (succ a) b = IooCat a b := by
+theorem Ico_succ_left_of_not_is_max (ha : ¬IsMax a) : ico (succ a) b = ioo a b := by
   rw [← Ici_inter_Iio, Ici_succ_of_not_is_max ha, Ioi_inter_Iio]
 #align order.Ico_succ_left_of_not_is_max Order.Ico_succ_left_of_not_is_max
 
@@ -303,32 +303,32 @@ theorem covby_succ (a : α) : a ⋖ succ a :=
 #align order.covby_succ Order.covby_succ
 
 @[simp]
-theorem Iio_succ (a : α) : IioCat (succ a) = IicCat a :=
+theorem Iio_succ (a : α) : iio (succ a) = iic a :=
   Iio_succ_of_not_is_max <| not_is_max _
 #align order.Iio_succ Order.Iio_succ
 
 @[simp]
-theorem Ici_succ (a : α) : IciCat (succ a) = IoiCat a :=
+theorem Ici_succ (a : α) : ici (succ a) = ioi a :=
   Ici_succ_of_not_is_max <| not_is_max _
 #align order.Ici_succ Order.Ici_succ
 
 @[simp]
-theorem Ico_succ_right (a b : α) : IcoCat a (succ b) = IccCat a b :=
+theorem Ico_succ_right (a b : α) : ico a (succ b) = icc a b :=
   Ico_succ_right_of_not_is_max <| not_is_max _
 #align order.Ico_succ_right Order.Ico_succ_right
 
 @[simp]
-theorem Ioo_succ_right (a b : α) : IooCat a (succ b) = IocCat a b :=
+theorem Ioo_succ_right (a b : α) : ioo a (succ b) = ioc a b :=
   Ioo_succ_right_of_not_is_max <| not_is_max _
 #align order.Ioo_succ_right Order.Ioo_succ_right
 
 @[simp]
-theorem Icc_succ_left (a b : α) : IccCat (succ a) b = IocCat a b :=
+theorem Icc_succ_left (a b : α) : icc (succ a) b = ioc a b :=
   Icc_succ_left_of_not_is_max <| not_is_max _
 #align order.Icc_succ_left Order.Icc_succ_left
 
 @[simp]
-theorem Ico_succ_left (a b : α) : IcoCat (succ a) b = IooCat a b :=
+theorem Ico_succ_left (a b : α) : ico (succ a) b = ioo a b :=
   Ico_succ_left_of_not_is_max <| not_is_max _
 #align order.Ico_succ_left Order.Ico_succ_left
 
@@ -377,29 +377,27 @@ theorem lt_succ_iff_eq_or_lt_of_not_is_max (hb : ¬IsMax b) : a < succ b ↔ a =
   (lt_succ_iff_of_not_is_max hb).trans le_iff_eq_or_lt
 #align order.lt_succ_iff_eq_or_lt_of_not_is_max Order.lt_succ_iff_eq_or_lt_of_not_is_max
 
-theorem Iic_succ (a : α) : IicCat (succ a) = insert (succ a) (IicCat a) :=
+theorem Iic_succ (a : α) : iic (succ a) = insert (succ a) (iic a) :=
   ext fun _ => le_succ_iff_eq_or_le
 #align order.Iic_succ Order.Iic_succ
 
-theorem Icc_succ_right (h : a ≤ succ b) : IccCat a (succ b) = insert (succ b) (IccCat a b) := by
+theorem Icc_succ_right (h : a ≤ succ b) : icc a (succ b) = insert (succ b) (icc a b) := by
   simp_rw [← Ici_inter_Iic, Iic_succ, inter_insert_of_mem (mem_Ici.2 h)]
 #align order.Icc_succ_right Order.Icc_succ_right
 
-theorem Ioc_succ_right (h : a < succ b) : IocCat a (succ b) = insert (succ b) (IocCat a b) := by
+theorem Ioc_succ_right (h : a < succ b) : ioc a (succ b) = insert (succ b) (ioc a b) := by
   simp_rw [← Ioi_inter_Iic, Iic_succ, inter_insert_of_mem (mem_Ioi.2 h)]
 #align order.Ioc_succ_right Order.Ioc_succ_right
 
-theorem Iio_succ_eq_insert_of_not_is_max (h : ¬IsMax a) : IioCat (succ a) = insert a (IioCat a) :=
+theorem Iio_succ_eq_insert_of_not_is_max (h : ¬IsMax a) : iio (succ a) = insert a (iio a) :=
   ext fun _ => lt_succ_iff_eq_or_lt_of_not_is_max h
 #align order.Iio_succ_eq_insert_of_not_is_max Order.Iio_succ_eq_insert_of_not_is_max
 
-theorem Ico_succ_right_eq_insert_of_not_is_max (h₁ : a ≤ b) (h₂ : ¬IsMax b) :
-    IcoCat a (succ b) = insert b (IcoCat a b) := by
+theorem Ico_succ_right_eq_insert_of_not_is_max (h₁ : a ≤ b) (h₂ : ¬IsMax b) : ico a (succ b) = insert b (ico a b) := by
   simp_rw [← Iio_inter_Ici, Iio_succ_eq_insert_of_not_is_max h₂, insert_inter_of_mem (mem_Ici.2 h₁)]
 #align order.Ico_succ_right_eq_insert_of_not_is_max Order.Ico_succ_right_eq_insert_of_not_is_max
 
-theorem Ioo_succ_right_eq_insert_of_not_is_max (h₁ : a < b) (h₂ : ¬IsMax b) :
-    IooCat a (succ b) = insert b (IooCat a b) := by
+theorem Ioo_succ_right_eq_insert_of_not_is_max (h₁ : a < b) (h₂ : ¬IsMax b) : ioo a (succ b) = insert b (ioo a b) := by
   simp_rw [← Iio_inter_Ioi, Iio_succ_eq_insert_of_not_is_max h₂, insert_inter_of_mem (mem_Ioi.2 h₁)]
 #align order.Ioo_succ_right_eq_insert_of_not_is_max Order.Ioo_succ_right_eq_insert_of_not_is_max
 
@@ -431,15 +429,15 @@ theorem succ_eq_iff_covby : succ a = b ↔ a ⋖ b :=
     exact covby_succ _, Covby.succ_eq⟩
 #align order.succ_eq_iff_covby Order.succ_eq_iff_covby
 
-theorem Iio_succ_eq_insert (a : α) : IioCat (succ a) = insert a (IioCat a) :=
+theorem Iio_succ_eq_insert (a : α) : iio (succ a) = insert a (iio a) :=
   Iio_succ_eq_insert_of_not_is_max <| not_is_max a
 #align order.Iio_succ_eq_insert Order.Iio_succ_eq_insert
 
-theorem Ico_succ_right_eq_insert (h : a ≤ b) : IcoCat a (succ b) = insert b (IcoCat a b) :=
+theorem Ico_succ_right_eq_insert (h : a ≤ b) : ico a (succ b) = insert b (ico a b) :=
   Ico_succ_right_eq_insert_of_not_is_max h <| not_is_max b
 #align order.Ico_succ_right_eq_insert Order.Ico_succ_right_eq_insert
 
-theorem Ioo_succ_right_eq_insert (h : a < b) : IooCat a (succ b) = insert b (IooCat a b) :=
+theorem Ioo_succ_right_eq_insert (h : a < b) : ioo a (succ b) = insert b (ioo a b) :=
   Ioo_succ_right_eq_insert_of_not_is_max h <| not_is_max b
 #align order.Ioo_succ_right_eq_insert Order.Ioo_succ_right_eq_insert
 
@@ -587,27 +585,27 @@ theorem pred_iterate_le (k : ℕ) (x : α) : (pred^[k]) x ≤ x := by
   exact Monotone.iterate_le_of_le pred_mono pred_le k x
 #align order.pred_iterate_le Order.pred_iterate_le
 
-theorem Ioi_pred_of_not_is_min (ha : ¬IsMin a) : IoiCat (pred a) = IciCat a :=
+theorem Ioi_pred_of_not_is_min (ha : ¬IsMin a) : ioi (pred a) = ici a :=
   Set.ext fun x => pred_lt_iff_of_not_is_min ha
 #align order.Ioi_pred_of_not_is_min Order.Ioi_pred_of_not_is_min
 
-theorem Iic_pred_of_not_is_min (ha : ¬IsMin a) : IicCat (pred a) = IioCat a :=
+theorem Iic_pred_of_not_is_min (ha : ¬IsMin a) : iic (pred a) = iio a :=
   Set.ext fun x => le_pred_iff_of_not_is_min ha
 #align order.Iic_pred_of_not_is_min Order.Iic_pred_of_not_is_min
 
-theorem Ioc_pred_left_of_not_is_min (ha : ¬IsMin a) : IocCat (pred a) b = IccCat a b := by
+theorem Ioc_pred_left_of_not_is_min (ha : ¬IsMin a) : ioc (pred a) b = icc a b := by
   rw [← Ioi_inter_Iic, Ioi_pred_of_not_is_min ha, Ici_inter_Iic]
 #align order.Ioc_pred_left_of_not_is_min Order.Ioc_pred_left_of_not_is_min
 
-theorem Ioo_pred_left_of_not_is_min (ha : ¬IsMin a) : IooCat (pred a) b = IcoCat a b := by
+theorem Ioo_pred_left_of_not_is_min (ha : ¬IsMin a) : ioo (pred a) b = ico a b := by
   rw [← Ioi_inter_Iio, Ioi_pred_of_not_is_min ha, Ici_inter_Iio]
 #align order.Ioo_pred_left_of_not_is_min Order.Ioo_pred_left_of_not_is_min
 
-theorem Icc_pred_right_of_not_is_min (ha : ¬IsMin b) : IccCat a (pred b) = IcoCat a b := by
+theorem Icc_pred_right_of_not_is_min (ha : ¬IsMin b) : icc a (pred b) = ico a b := by
   rw [← Ici_inter_Iic, Iic_pred_of_not_is_min ha, Ici_inter_Iio]
 #align order.Icc_pred_right_of_not_is_min Order.Icc_pred_right_of_not_is_min
 
-theorem Ioc_pred_right_of_not_is_min (ha : ¬IsMin b) : IocCat a (pred b) = IooCat a b := by
+theorem Ioc_pred_right_of_not_is_min (ha : ¬IsMin b) : ioc a (pred b) = ioo a b := by
   rw [← Ioi_inter_Iic, Iic_pred_of_not_is_min ha, Ioi_inter_Iio]
 #align order.Ioc_pred_right_of_not_is_min Order.Ioc_pred_right_of_not_is_min
 
@@ -647,32 +645,32 @@ theorem pred_covby (a : α) : pred a ⋖ a :=
 #align order.pred_covby Order.pred_covby
 
 @[simp]
-theorem Ioi_pred (a : α) : IoiCat (pred a) = IciCat a :=
+theorem Ioi_pred (a : α) : ioi (pred a) = ici a :=
   Ioi_pred_of_not_is_min <| not_is_min a
 #align order.Ioi_pred Order.Ioi_pred
 
 @[simp]
-theorem Iic_pred (a : α) : IicCat (pred a) = IioCat a :=
+theorem Iic_pred (a : α) : iic (pred a) = iio a :=
   Iic_pred_of_not_is_min <| not_is_min a
 #align order.Iic_pred Order.Iic_pred
 
 @[simp]
-theorem Ioc_pred_left (a b : α) : IocCat (pred a) b = IccCat a b :=
+theorem Ioc_pred_left (a b : α) : ioc (pred a) b = icc a b :=
   Ioc_pred_left_of_not_is_min <| not_is_min _
 #align order.Ioc_pred_left Order.Ioc_pred_left
 
 @[simp]
-theorem Ioo_pred_left (a b : α) : IooCat (pred a) b = IcoCat a b :=
+theorem Ioo_pred_left (a b : α) : ioo (pred a) b = ico a b :=
   Ioo_pred_left_of_not_is_min <| not_is_min _
 #align order.Ioo_pred_left Order.Ioo_pred_left
 
 @[simp]
-theorem Icc_pred_right (a b : α) : IccCat a (pred b) = IcoCat a b :=
+theorem Icc_pred_right (a b : α) : icc a (pred b) = ico a b :=
   Icc_pred_right_of_not_is_min <| not_is_min _
 #align order.Icc_pred_right Order.Icc_pred_right
 
 @[simp]
-theorem Ioc_pred_right (a b : α) : IocCat a (pred b) = IooCat a b :=
+theorem Ioc_pred_right (a b : α) : ioc a (pred b) = ioo a b :=
   Ioc_pred_right_of_not_is_min <| not_is_min _
 #align order.Ioc_pred_right Order.Ioc_pred_right
 
@@ -716,21 +714,21 @@ theorem pred_lt_iff_eq_or_lt_of_not_is_min (ha : ¬IsMin a) : pred a < b ↔ a =
   (pred_lt_iff_of_not_is_min ha).trans le_iff_eq_or_lt
 #align order.pred_lt_iff_eq_or_lt_of_not_is_min Order.pred_lt_iff_eq_or_lt_of_not_is_min
 
-theorem Ici_pred (a : α) : IciCat (pred a) = insert (pred a) (IciCat a) :=
+theorem Ici_pred (a : α) : ici (pred a) = insert (pred a) (ici a) :=
   ext fun _ => pred_le_iff_eq_or_le
 #align order.Ici_pred Order.Ici_pred
 
-theorem Ioi_pred_eq_insert_of_not_is_min (ha : ¬IsMin a) : IoiCat (pred a) = insert a (IoiCat a) := by
+theorem Ioi_pred_eq_insert_of_not_is_min (ha : ¬IsMin a) : ioi (pred a) = insert a (ioi a) := by
   ext x
   simp only [insert, mem_set_of, @eq_comm _ x a]
   exact pred_lt_iff_eq_or_lt_of_not_is_min ha
 #align order.Ioi_pred_eq_insert_of_not_is_min Order.Ioi_pred_eq_insert_of_not_is_min
 
-theorem Icc_pred_left (h : pred a ≤ b) : IccCat (pred a) b = insert (pred a) (IccCat a b) := by
+theorem Icc_pred_left (h : pred a ≤ b) : icc (pred a) b = insert (pred a) (icc a b) := by
   simp_rw [← Ici_inter_Iic, Ici_pred, insert_inter_of_mem (mem_Iic.2 h)]
 #align order.Icc_pred_left Order.Icc_pred_left
 
-theorem Ico_pred_left (h : pred a < b) : IcoCat (pred a) b = insert (pred a) (IcoCat a b) := by
+theorem Ico_pred_left (h : pred a < b) : ico (pred a) b = insert (pred a) (ico a b) := by
   simp_rw [← Ici_inter_Iio, Ici_pred, insert_inter_of_mem (mem_Iio.2 h)]
 #align order.Ico_pred_left Order.Ico_pred_left
 
@@ -761,15 +759,15 @@ theorem pred_eq_iff_covby : pred b = a ↔ a ⋖ b :=
     exact pred_covby _, Covby.pred_eq⟩
 #align order.pred_eq_iff_covby Order.pred_eq_iff_covby
 
-theorem Ioi_pred_eq_insert (a : α) : IoiCat (pred a) = insert a (IoiCat a) :=
+theorem Ioi_pred_eq_insert (a : α) : ioi (pred a) = insert a (ioi a) :=
   ext fun _ => pred_lt_iff_eq_or_lt.trans <| or_congr_left eq_comm
 #align order.Ioi_pred_eq_insert Order.Ioi_pred_eq_insert
 
-theorem Ico_pred_right_eq_insert (h : a ≤ b) : IocCat (pred a) b = insert a (IocCat a b) := by
+theorem Ico_pred_right_eq_insert (h : a ≤ b) : ioc (pred a) b = insert a (ioc a b) := by
   simp_rw [← Ioi_inter_Iic, Ioi_pred_eq_insert, insert_inter_of_mem (mem_Iic.2 h)]
 #align order.Ico_pred_right_eq_insert Order.Ico_pred_right_eq_insert
 
-theorem Ioo_pred_right_eq_insert (h : a < b) : IooCat (pred a) b = insert a (IooCat a b) := by
+theorem Ioo_pred_right_eq_insert (h : a < b) : ioo (pred a) b = insert a (ioo a b) := by
   simp_rw [← Ioi_inter_Iio, Ioi_pred_eq_insert, insert_inter_of_mem (mem_Iio.2 h)]
 #align order.Ioo_pred_right_eq_insert Order.Ioo_pred_right_eq_insert
 

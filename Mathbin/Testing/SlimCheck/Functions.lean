@@ -160,7 +160,7 @@ def zeroDefaultSupp : TotalFunction α β → Finset α
 /-- Create a finitely supported function from a total function by taking the default value to
 zero. -/
 def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
-  Support := zeroDefaultSupp tf
+  support := zeroDefaultSupp tf
   toFun := tf.zeroDefault.apply
   mem_support_to_fun := by
     intro a

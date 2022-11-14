@@ -30,27 +30,27 @@ variable {X Y : SchemeCat.{u}} (f : X ⟶ Y)
 
 open CategoryTheory.MorphismProperty
 
-open AlgebraicGeometry.MorphismProperty (Topologically)
+open AlgebraicGeometry.MorphismProperty (topologically)
 
 /-- A morphism of schemes `f : X ⟶ Y` is universally closed if the base change `X ×[Y] Y' ⟶ Y'`
 along any morphism `Y' ⟶ Y` is (topologically) a closed map.
 -/
 @[mk_iff]
 class UniversallyClosed (f : X ⟶ Y) : Prop where
-  out : Universally (Topologically @IsClosedMap) f
+  out : universally (topologically @IsClosedMap) f
 #align algebraic_geometry.universally_closed AlgebraicGeometry.UniversallyClosed
 
-theorem universally_closed_eq : @UniversallyClosed = Universally (Topologically @IsClosedMap) := by
+theorem universally_closed_eq : @UniversallyClosed = universally (topologically @IsClosedMap) := by
   ext (X Y f)
   rw [universally_closed_iff]
 #align algebraic_geometry.universally_closed_eq AlgebraicGeometry.universally_closed_eq
 
 theorem universally_closed_respects_iso : RespectsIso @UniversallyClosed :=
-  universally_closed_eq.symm ▸ universally_respects_iso (Topologically @IsClosedMap)
+  universally_closed_eq.symm ▸ universally_respects_iso (topologically @IsClosedMap)
 #align algebraic_geometry.universally_closed_respects_iso AlgebraicGeometry.universally_closed_respects_iso
 
 theorem universally_closed_stable_under_base_change : StableUnderBaseChange @UniversallyClosed :=
-  universally_closed_eq.symm ▸ universally_stable_under_base_change (Topologically @IsClosedMap)
+  universally_closed_eq.symm ▸ universally_stable_under_base_change (topologically @IsClosedMap)
 #align
   algebraic_geometry.universally_closed_stable_under_base_change AlgebraicGeometry.universally_closed_stable_under_base_change
 
@@ -75,7 +75,7 @@ instance universally_closed_snd {X Y Z : SchemeCat} (f : X ⟶ Z) (g : Y ⟶ Z) 
   universally_closed_stable_under_base_change.snd f g hf
 #align algebraic_geometry.universally_closed_snd AlgebraicGeometry.universally_closed_snd
 
-theorem morphism_restrict_base {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.Carrier) :
+theorem morphism_restrict_base {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carrier) :
     ⇑(f ∣_ U).1.base = U.1.restrictPreimage f.1 :=
   funext fun x => Subtype.ext <| morphism_restrict_base_coe f U x
 #align algebraic_geometry.morphism_restrict_base AlgebraicGeometry.morphism_restrict_base

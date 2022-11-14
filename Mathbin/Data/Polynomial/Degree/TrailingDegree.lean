@@ -42,7 +42,7 @@ variable [Semiring R] {p q r : R[X]}
 in `p`, otherwise
 `trailing_degree 0 = ⊤`. -/
 def trailingDegree (p : R[X]) : ℕ∞ :=
-  p.Support.min
+  p.support.min
 #align polynomial.trailing_degree Polynomial.trailingDegree
 
 theorem trailing_degree_lt_wf : WellFounded fun p q : R[X] => trailingDegree p < trailingDegree q :=
@@ -149,7 +149,7 @@ theorem nat_trailing_degree_eq_of_trailing_degree_eq [Semiring S] {q : S[X]} (h 
 #align polynomial.nat_trailing_degree_eq_of_trailing_degree_eq Polynomial.nat_trailing_degree_eq_of_trailing_degree_eq
 
 theorem le_trailing_degree_of_ne_zero (h : coeff p n ≠ 0) : trailingDegree p ≤ n :=
-  show @LE.le ℕ∞ _ p.Support.min n from min_le (mem_support_iff.2 h)
+  show @LE.le ℕ∞ _ p.support.min n from min_le (mem_support_iff.2 h)
 #align polynomial.le_trailing_degree_of_ne_zero Polynomial.le_trailing_degree_of_ne_zero
 
 theorem nat_trailing_degree_le_of_ne_zero (h : coeff p n ≠ 0) : natTrailingDegree p ≤ n := by
@@ -290,16 +290,16 @@ theorem trailing_coeff_nonzero_iff_nonzero : trailingCoeff p ≠ 0 ↔ p ≠ 0 :
   not_congr trailing_coeff_eq_zero
 #align polynomial.trailing_coeff_nonzero_iff_nonzero Polynomial.trailing_coeff_nonzero_iff_nonzero
 
-theorem nat_trailing_degree_mem_support_of_nonzero : p ≠ 0 → natTrailingDegree p ∈ p.Support :=
+theorem nat_trailing_degree_mem_support_of_nonzero : p ≠ 0 → natTrailingDegree p ∈ p.support :=
   mem_support_iff.mpr ∘ trailing_coeff_nonzero_iff_nonzero.mpr
 #align polynomial.nat_trailing_degree_mem_support_of_nonzero Polynomial.nat_trailing_degree_mem_support_of_nonzero
 
-theorem nat_trailing_degree_le_of_mem_supp (a : ℕ) : a ∈ p.Support → natTrailingDegree p ≤ a :=
+theorem nat_trailing_degree_le_of_mem_supp (a : ℕ) : a ∈ p.support → natTrailingDegree p ≤ a :=
   nat_trailing_degree_le_of_ne_zero ∘ mem_support_iff.mp
 #align polynomial.nat_trailing_degree_le_of_mem_supp Polynomial.nat_trailing_degree_le_of_mem_supp
 
 theorem nat_trailing_degree_eq_support_min' (h : p ≠ 0) :
-    natTrailingDegree p = p.Support.min' (nonempty_support_iff.mpr h) := by
+    natTrailingDegree p = p.support.min' (nonempty_support_iff.mpr h) := by
   apply le_antisymm
   · apply le_min'
     intro y hy

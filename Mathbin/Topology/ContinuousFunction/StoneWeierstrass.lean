@@ -53,7 +53,7 @@ open Polynomial
 thereby explicitly attaching bounds.
 -/
 def attachBound (f : C(X, ℝ)) :
-    C(X, Set.IccCat (-∥f∥) ∥f∥) where toFun x := ⟨f x, ⟨neg_norm_le_apply f x, apply_le_norm f x⟩⟩
+    C(X, Set.icc (-∥f∥) ∥f∥) where toFun x := ⟨f x, ⟨neg_norm_le_apply f x, apply_le_norm f x⟩⟩
 #align continuous_map.attach_bound ContinuousMap.attachBound
 
 @[simp]
@@ -62,7 +62,7 @@ theorem attach_bound_apply_coe (f : C(X, ℝ)) (x : X) : ((attachBound f) x : �
 #align continuous_map.attach_bound_apply_coe ContinuousMap.attach_bound_apply_coe
 
 theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : ℝ[X]) :
-    (g.toContinuousMapOn (Set.IccCat (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
+    (g.toContinuousMapOn (Set.icc (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
   ext
   simp only [ContinuousMap.coe_comp, Function.comp_apply, ContinuousMap.attach_bound_apply_coe,
     Polynomial.to_continuous_map_on_apply, Polynomial.aeval_subalgebra_coe, Polynomial.aeval_continuous_map_apply,
@@ -78,15 +78,15 @@ and then postcompose with a polynomial function on that interval.
 This is in fact the same situation as above, and so also gives a function in `A`.
 -/
 theorem polynomial_comp_attach_bound_mem (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : ℝ[X]) :
-    (g.toContinuousMapOn (Set.IccCat (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound ∈ A := by
+    (g.toContinuousMapOn (Set.icc (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound ∈ A := by
   rw [polynomial_comp_attach_bound]
   apply SetLike.coe_mem
 #align continuous_map.polynomial_comp_attach_bound_mem ContinuousMap.polynomial_comp_attach_bound_mem
 
-theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p : C(Set.IccCat (-∥f∥) ∥f∥, ℝ)) :
+theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p : C(Set.icc (-∥f∥) ∥f∥, ℝ)) :
     p.comp (attachBound f) ∈ A.topologicalClosure := by
   -- `p` itself is in the closure of polynomials, by the Weierstrass theorem,
-  have mem_closure : p ∈ (polynomialFunctions (Set.IccCat (-∥f∥) ∥f∥)).topologicalClosure :=
+  have mem_closure : p ∈ (polynomialFunctions (Set.icc (-∥f∥) ∥f∥)).topologicalClosure :=
     continuous_map_mem_polynomial_functions_closure _ _ p
   -- and so there are polynomials arbitrarily close.
   have frequently_mem_polynomials := mem_closure_iff_frequently.mp mem_closure
@@ -107,7 +107,7 @@ theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p 
 theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) : (f : C(X, ℝ)).abs ∈ A.topologicalClosure := by
   let M := ∥f∥
   let f' := attach_bound (f : C(X, ℝ))
-  let abs : C(Set.IccCat (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.IccCat (-∥f∥) ∥f∥ => |(x : ℝ)| }
+  let abs : C(Set.icc (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.icc (-∥f∥) ∥f∥ => |(x : ℝ)| }
   change abs.comp f' ∈ A.topological_closure
   apply comp_attach_bound_mem_closure
 #align continuous_map.abs_mem_subalgebra_closure ContinuousMap.abs_mem_subalgebra_closure
@@ -163,7 +163,7 @@ open TopologicalSpace
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊓ g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊔ g ∈ L)
-    (sep : L.SeparatesPointsStrongly) : Closure L = ⊤ := by
+    (sep : L.SeparatesPointsStrongly) : closure L = ⊤ := by
   -- We start by boiling down to a statement about close approximation.
   apply eq_top_iff.mpr
   rintro f -

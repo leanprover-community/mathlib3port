@@ -73,7 +73,7 @@ def enumerateCountable {s : Set α} (h : s.Countable) (default : α) : ℕ → �
   | none => default
 #align set.enumerate_countable Set.enumerateCountable
 
-theorem subset_range_enumerate {s : Set α} (h : s.Countable) (default : α) : s ⊆ Range (enumerateCountable h default) :=
+theorem subset_range_enumerate {s : Set α} (h : s.Countable) (default : α) : s ⊆ range (enumerateCountable h default) :=
   fun x hx => ⟨@Encodable.encode s h.toEncodable ⟨x, hx⟩, by simp [enumerate_countable, Encodable.encodek]⟩
 #align set.subset_range_enumerate Set.subset_range_enumerate
 
@@ -83,11 +83,11 @@ theorem Countable.mono {s₁ s₂ : Set α} (h : s₁ ⊆ s₂) : s₂.Countable
   | ⟨H⟩ => ⟨@ofInj _ _ H _ (embeddingOfSubset _ _ h).2⟩
 #align set.countable.mono Set.Countable.mono
 
-theorem countable_range [Countable ι] (f : ι → β) : (Range f).Countable :=
+theorem countable_range [Countable ι] (f : ι → β) : (range f).Countable :=
   surjective_onto_range.Countable.to_set
 #align set.countable_range Set.countable_range
 
-theorem countable_iff_exists_subset_range [Nonempty α] {s : Set α} : s.Countable ↔ ∃ f : ℕ → α, s ⊆ Range f :=
+theorem countable_iff_exists_subset_range [Nonempty α] {s : Set α} : s.Countable ↔ ∃ f : ℕ → α, s ⊆ range f :=
   ⟨fun h => by
     inhabit α
     exact ⟨enumerate_countable h default, subset_range_enumerate _ _⟩, fun ⟨f, hsf⟩ => (countable_range f).mono hsf⟩
@@ -103,13 +103,13 @@ protected theorem countable_iff_exists_surjective {s : Set α} (hs : s.Nonempty)
 
 alias Set.countable_iff_exists_surjective ↔ countable.exists_surjective _
 
-theorem countable_univ [Countable α] : (Univ : Set α).Countable :=
-  to_countable Univ
+theorem countable_univ [Countable α] : (univ : Set α).Countable :=
+  to_countable univ
 #align set.countable_univ Set.countable_univ
 
 /-- If `s : set α` is a nonempty countable set, then there exists a map
 `f : ℕ → α` such that `s = range f`. -/
-theorem Countable.exists_eq_range {s : Set α} (hc : s.Countable) (hs : s.Nonempty) : ∃ f : ℕ → α, s = Range f := by
+theorem Countable.exists_eq_range {s : Set α} (hc : s.Countable) (hs : s.Nonempty) : ∃ f : ℕ → α, s = range f := by
   rcases hc.exists_surjective hs with ⟨f, hf⟩
   refine' ⟨coe ∘ f, _⟩
   rw [hf.range_comp, Subtype.range_coe]
@@ -256,7 +256,7 @@ theorem countable_set_of_finite_subset {s : Set α} : s.Countable → { t | Set.
 #align set.countable_set_of_finite_subset Set.countable_set_of_finite_subset
 
 theorem countable_univ_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (hs : ∀ a, (s a).Countable) :
-    (Pi Univ s).Countable :=
+    (pi univ s).Countable :=
   haveI := fun a => (hs a).to_subtype
   (Countable.of_equiv _ (Equiv.Set.univPi s).symm).to_set
 #align set.countable_univ_pi Set.countable_univ_pi
@@ -274,9 +274,9 @@ protected theorem Countable.prod {s : Set α} {t : Set β} (hs : s.Countable) (h
 #align set.countable.prod Set.Countable.prod
 
 theorem Countable.image2 {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) (f : α → β → γ) :
-    (Image2 f s t).Countable := by
+    (image2 f s t).Countable := by
   rw [← image_prod]
-  exact (hs.prod ht).Image _
+  exact (hs.prod ht).image _
 #align set.countable.image2 Set.Countable.image2
 
 end Set

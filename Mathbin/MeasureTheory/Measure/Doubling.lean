@@ -40,7 +40,7 @@ exponentially in hyperbolic space. To be really explicit, consider the hyperboli
 curvature -1, the area of a disc of radius `ε` is `A(ε) = 2π(cosh(ε) - 1)` so `A(2ε)/A(ε) ~ exp(ε)`.
 -/
 class IsDoublingMeasure {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α) where
-  exists_measure_closed_ball_le_mul : ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (ClosedBall x (2 * ε)) ≤ C * μ (ClosedBall x ε)
+  exists_measure_closed_ball_le_mul : ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ C * μ (closedBall x ε)
 #align is_doubling_measure IsDoublingMeasure
 
 namespace IsDoublingMeasure
@@ -55,12 +55,12 @@ def doublingConstant : ℝ≥0 :=
 #align is_doubling_measure.doubling_constant IsDoublingMeasure.doublingConstant
 
 theorem exists_measure_closed_ball_le_mul' :
-    ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (ClosedBall x (2 * ε)) ≤ doublingConstant μ * μ (ClosedBall x ε) :=
+    ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ doublingConstant μ * μ (closedBall x ε) :=
   Classical.choose_spec <| exists_measure_closed_ball_le_mul μ
 #align is_doubling_measure.exists_measure_closed_ball_le_mul' IsDoublingMeasure.exists_measure_closed_ball_le_mul'
 
 theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
-    ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ (x t) (ht : t ≤ K), μ (ClosedBall x (t * ε)) ≤ C * μ (ClosedBall x ε) := by
+    ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ (x t) (ht : t ≤ K), μ (closedBall x (t * ε)) ≤ C * μ (closedBall x ε) := by
   let C := doubling_constant μ
   have hμ : ∀ n : ℕ, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closed_ball x (2 ^ n * ε)) ≤ ↑(C ^ n) * μ (closed_ball x ε) := by
     intro n
@@ -103,8 +103,8 @@ def scalingConstantOf (K : ℝ) : ℝ≥0 :=
 theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
     ∃ R : ℝ,
       0 < R ∧
-        ∀ (x t r) (ht : t ∈ IocCat 0 K) (hr : r ≤ R),
-          μ (ClosedBall x (t * r)) ≤ scalingConstantOf μ K * μ (ClosedBall x r) :=
+        ∀ (x t r) (ht : t ∈ ioc 0 K) (hr : r ≤ R),
+          μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   by
   have h := Classical.choose_spec (exists_eventually_forall_measure_closed_ball_le_mul μ K)
   rcases mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 h with ⟨R, Rpos, hR⟩
@@ -134,8 +134,8 @@ theorem scaling_scale_of_pos (K : ℝ) : 0 < scalingScaleOf μ K :=
   (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.1
 #align is_doubling_measure.scaling_scale_of_pos IsDoublingMeasure.scaling_scale_of_pos
 
-theorem measure_mul_le_scaling_constant_of_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ IocCat 0 K)
-    (hr : r ≤ scalingScaleOf μ K) : μ (ClosedBall x (t * r)) ≤ scalingConstantOf μ K * μ (ClosedBall x r) :=
+theorem measure_mul_le_scaling_constant_of_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ ioc 0 K)
+    (hr : r ≤ scalingScaleOf μ K) : μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.2 x t r ht hr
 #align
   is_doubling_measure.measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.measure_mul_le_scaling_constant_of_mul

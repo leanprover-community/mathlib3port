@@ -191,11 +191,11 @@ section OrderedRing
 
 variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {s : Set M} {c : k}
 
-theorem smul_lower_bounds_subset_upper_bounds_smul (hc : c ≤ 0) : c • LowerBounds s ⊆ UpperBounds (c • s) :=
+theorem smul_lower_bounds_subset_upper_bounds_smul (hc : c ≤ 0) : c • lowerBounds s ⊆ upperBounds (c • s) :=
   (antitone_smul_left hc).image_lower_bounds_subset_upper_bounds_image
 #align smul_lower_bounds_subset_upper_bounds_smul smul_lower_bounds_subset_upper_bounds_smul
 
-theorem smul_upper_bounds_subset_lower_bounds_smul (hc : c ≤ 0) : c • UpperBounds s ⊆ LowerBounds (c • s) :=
+theorem smul_upper_bounds_subset_lower_bounds_smul (hc : c ≤ 0) : c • upperBounds s ⊆ lowerBounds (c • s) :=
   (antitone_smul_left hc).image_upper_bounds_subset_lower_bounds_image
 #align smul_upper_bounds_subset_lower_bounds_smul smul_upper_bounds_subset_lower_bounds_smul
 
@@ -214,12 +214,12 @@ section LinearOrderedField
 variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {s : Set M} {c : k}
 
 @[simp]
-theorem lower_bounds_smul_of_neg (hc : c < 0) : LowerBounds (c • s) = c • UpperBounds s :=
+theorem lower_bounds_smul_of_neg (hc : c < 0) : lowerBounds (c • s) = c • upperBounds s :=
   (OrderIso.smulLeftDual M hc).upper_bounds_image
 #align lower_bounds_smul_of_neg lower_bounds_smul_of_neg
 
 @[simp]
-theorem upper_bounds_smul_of_neg (hc : c < 0) : UpperBounds (c • s) = c • LowerBounds s :=
+theorem upper_bounds_smul_of_neg (hc : c < 0) : upperBounds (c • s) = c • lowerBounds s :=
   (OrderIso.smulLeftDual M hc).lower_bounds_image
 #align upper_bounds_smul_of_neg upper_bounds_smul_of_neg
 

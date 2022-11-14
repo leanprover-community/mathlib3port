@@ -63,16 +63,16 @@ theorem tsum_coe (p : Pmf α) : (∑' a, p a) = 1 :=
 #align pmf.tsum_coe Pmf.tsum_coe
 
 /-- The support of a `pmf` is the set where it is nonzero. -/
-def Support (p : Pmf α) : Set α :=
-  Function.Support p
-#align pmf.support Pmf.Support
+def support (p : Pmf α) : Set α :=
+  Function.support p
+#align pmf.support Pmf.support
 
 @[simp]
-theorem mem_support_iff (p : Pmf α) (a : α) : a ∈ p.Support ↔ p a ≠ 0 :=
+theorem mem_support_iff (p : Pmf α) (a : α) : a ∈ p.support ↔ p a ≠ 0 :=
   Iff.rfl
 #align pmf.mem_support_iff Pmf.mem_support_iff
 
-theorem apply_eq_zero_iff (p : Pmf α) (a : α) : p a = 0 ↔ a ∉ p.Support := by rw [mem_support_iff, not_not]
+theorem apply_eq_zero_iff (p : Pmf α) (a : α) : p a = 0 ↔ a ∉ p.support := by rw [mem_support_iff, not_not]
 #align pmf.apply_eq_zero_iff Pmf.apply_eq_zero_iff
 
 theorem coe_le_one (p : Pmf α) (a : α) : p a ≤ 1 :=
@@ -121,12 +121,12 @@ theorem to_outer_measure_apply_singleton (a : α) : p.toOuterMeasure {a} = p a :
     
 #align pmf.to_outer_measure_apply_singleton Pmf.to_outer_measure_apply_singleton
 
-theorem to_outer_measure_apply_eq_zero_iff : p.toOuterMeasure s = 0 ↔ Disjoint p.Support s := by
+theorem to_outer_measure_apply_eq_zero_iff : p.toOuterMeasure s = 0 ↔ Disjoint p.support s := by
   rw [to_outer_measure_apply', Ennreal.coe_eq_zero, tsum_eq_zero_iff (Nnreal.indicator_summable (summable_coe p) s)]
   exact function.funext_iff.symm.trans Set.indicator_eq_zero'
 #align pmf.to_outer_measure_apply_eq_zero_iff Pmf.to_outer_measure_apply_eq_zero_iff
 
-theorem to_outer_measure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.Support ⊆ s := by
+theorem to_outer_measure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.support ⊆ s := by
   rw [to_outer_measure_apply', Ennreal.coe_eq_one]
   refine' ⟨fun h a ha => _, fun h => _⟩
   · have hsp : ∀ x, s.indicator p x ≤ p x := fun _ => Set.indicator_apply_le fun _ => le_rfl
@@ -144,19 +144,19 @@ theorem to_outer_measure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.Support
 #align pmf.to_outer_measure_apply_eq_one_iff Pmf.to_outer_measure_apply_eq_one_iff
 
 @[simp]
-theorem to_outer_measure_apply_inter_support : p.toOuterMeasure (s ∩ p.Support) = p.toOuterMeasure s := by
-  simp only [to_outer_measure_apply', Ennreal.coe_eq_coe, Pmf.Support, Set.indicator_inter_support]
+theorem to_outer_measure_apply_inter_support : p.toOuterMeasure (s ∩ p.support) = p.toOuterMeasure s := by
+  simp only [to_outer_measure_apply', Ennreal.coe_eq_coe, Pmf.support, Set.indicator_inter_support]
 #align pmf.to_outer_measure_apply_inter_support Pmf.to_outer_measure_apply_inter_support
 
 /-- Slightly stronger than `outer_measure.mono` having an intersection with `p.support` -/
-theorem to_outer_measure_mono {s t : Set α} (h : s ∩ p.Support ⊆ t) : p.toOuterMeasure s ≤ p.toOuterMeasure t :=
+theorem to_outer_measure_mono {s t : Set α} (h : s ∩ p.support ⊆ t) : p.toOuterMeasure s ≤ p.toOuterMeasure t :=
   le_trans (le_of_eq (to_outer_measure_apply_inter_support p s).symm) (p.toOuterMeasure.mono h)
 #align pmf.to_outer_measure_mono Pmf.to_outer_measure_mono
 
-theorem to_outer_measure_apply_eq_of_inter_support_eq {s t : Set α} (h : s ∩ p.Support = t ∩ p.Support) :
+theorem to_outer_measure_apply_eq_of_inter_support_eq {s t : Set α} (h : s ∩ p.support = t ∩ p.support) :
     p.toOuterMeasure s = p.toOuterMeasure t :=
-  le_antisymm (p.to_outer_measure_mono (h.symm ▸ Set.inter_subset_left t p.Support))
-    (p.to_outer_measure_mono (h ▸ Set.inter_subset_left s p.Support))
+  le_antisymm (p.to_outer_measure_mono (h.symm ▸ Set.inter_subset_left t p.support))
+    (p.to_outer_measure_mono (h ▸ Set.inter_subset_left s p.support))
 #align pmf.to_outer_measure_apply_eq_of_inter_support_eq Pmf.to_outer_measure_apply_eq_of_inter_support_eq
 
 @[simp]
@@ -205,28 +205,28 @@ theorem to_measure_apply_singleton (a : α) (h : MeasurableSet ({a} : Set α)) :
   simp [to_measure_apply_eq_to_outer_measure_apply p {a} h, to_outer_measure_apply_singleton]
 #align pmf.to_measure_apply_singleton Pmf.to_measure_apply_singleton
 
-theorem to_measure_apply_eq_zero_iff (hs : MeasurableSet s) : p.toMeasure s = 0 ↔ Disjoint p.Support s := by
+theorem to_measure_apply_eq_zero_iff (hs : MeasurableSet s) : p.toMeasure s = 0 ↔ Disjoint p.support s := by
   rw [to_measure_apply_eq_to_outer_measure_apply p s hs, to_outer_measure_apply_eq_zero_iff]
 #align pmf.to_measure_apply_eq_zero_iff Pmf.to_measure_apply_eq_zero_iff
 
-theorem to_measure_apply_eq_one_iff (hs : MeasurableSet s) : p.toMeasure s = 1 ↔ p.Support ⊆ s :=
+theorem to_measure_apply_eq_one_iff (hs : MeasurableSet s) : p.toMeasure s = 1 ↔ p.support ⊆ s :=
   (p.to_measure_apply_eq_to_outer_measure_apply s hs : p.toMeasure s = p.toOuterMeasure s).symm ▸
     p.to_outer_measure_apply_eq_one_iff s
 #align pmf.to_measure_apply_eq_one_iff Pmf.to_measure_apply_eq_one_iff
 
 @[simp]
-theorem to_measure_apply_inter_support (hs : MeasurableSet s) (hp : MeasurableSet p.Support) :
-    p.toMeasure (s ∩ p.Support) = p.toMeasure s := by
+theorem to_measure_apply_inter_support (hs : MeasurableSet s) (hp : MeasurableSet p.support) :
+    p.toMeasure (s ∩ p.support) = p.toMeasure s := by
   simp [p.to_measure_apply_eq_to_outer_measure_apply s hs, p.to_measure_apply_eq_to_outer_measure_apply _ (hs.inter hp)]
 #align pmf.to_measure_apply_inter_support Pmf.to_measure_apply_inter_support
 
-theorem to_measure_mono {s t : Set α} (hs : MeasurableSet s) (ht : MeasurableSet t) (h : s ∩ p.Support ⊆ t) :
+theorem to_measure_mono {s t : Set α} (hs : MeasurableSet s) (ht : MeasurableSet t) (h : s ∩ p.support ⊆ t) :
     p.toMeasure s ≤ p.toMeasure t := by
   simpa only [p.to_measure_apply_eq_to_outer_measure_apply, hs, ht] using to_outer_measure_mono p h
 #align pmf.to_measure_mono Pmf.to_measure_mono
 
 theorem to_measure_apply_eq_of_inter_support_eq {s t : Set α} (hs : MeasurableSet s) (ht : MeasurableSet t)
-    (h : s ∩ p.Support = t ∩ p.Support) : p.toMeasure s = p.toMeasure t := by
+    (h : s ∩ p.support = t ∩ p.support) : p.toMeasure s = p.toMeasure t := by
   simpa only [p.to_measure_apply_eq_to_outer_measure_apply, hs, ht] using
     to_outer_measure_apply_eq_of_inter_support_eq p h
 #align pmf.to_measure_apply_eq_of_inter_support_eq Pmf.to_measure_apply_eq_of_inter_support_eq
@@ -260,7 +260,7 @@ instance toMeasure.isProbabilityMeasure (p : Pmf α) : IsProbabilityMeasure p.to
 
 end Measure
 
-theorem apply_eq_one_iff (p : Pmf α) (a : α) : p a = 1 ↔ p.Support = {a} := by
+theorem apply_eq_one_iff (p : Pmf α) (a : α) : p a = 1 ↔ p.support = {a} := by
   refine' ⟨fun h => _, fun h => _⟩
   · have : {a} ⊆ p.support := fun x hx => (p.mem_support_iff x).2 (ne_zero_of_eq_one <| hx.symm ▸ h)
     refine' antisymm ((p.to_outer_measure_apply_eq_one_iff {a}).1 _) this

@@ -1380,9 +1380,9 @@ theorem continuous_of_real_cpow_const {y : ℂ} (hs : 0 < y.re) : Continuous (fu
   · refine' (continuous_at_cpow_const_of_re_pos _ hs).comp continuous_of_real.continuous_at
     exact Or.inl hx
     
-  · suffices : ContinuousOn (fun x => x ^ y : ℝ → ℂ) (Set.IioCat 0)
+  · suffices : ContinuousOn (fun x => x ^ y : ℝ → ℂ) (Set.iio 0)
     exact ContinuousOn.continuous_at this (Iio_mem_nhds hx)
-    have : eq_on (fun x => x ^ y : ℝ → ℂ) (fun x => (-x : ℂ) ^ y * exp (π * I * y)) (Set.IioCat 0) := fun y hy =>
+    have : eq_on (fun x => x ^ y : ℝ → ℂ) (fun x => (-x : ℂ) ^ y * exp (π * I * y)) (Set.iio 0) := fun y hy =>
       of_real_cpow_of_nonpos (le_of_lt hy) _
     refine' (ContinuousOn.mul (fun y hy => _) continuous_on_const).congr this
     refine' continuous_of_real.continuous_within_at.neg.cpow continuous_within_at_const _
@@ -2276,7 +2276,7 @@ theorem tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ≥0∞
   rw [tendsto_nhds_top_iff_nnreal]
   intro x
   obtain ⟨c, _, hc⟩ := (at_top_basis_Ioi.tendsto_iff at_top_basis_Ioi).mp (Nnreal.tendsto_rpow_at_top hy) x trivial
-  have hc' : Set.IoiCat ↑c ∈ 𝓝 (⊤ : ℝ≥0∞) := Ioi_mem_nhds coe_lt_top
+  have hc' : Set.ioi ↑c ∈ 𝓝 (⊤ : ℝ≥0∞) := Ioi_mem_nhds coe_lt_top
   refine' eventually_of_mem hc' _
   intro a ha
   by_cases ha':a = ⊤

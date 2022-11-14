@@ -101,7 +101,7 @@ theorem erase_none_map_some (s : Finset α) : (s.map Embedding.some).eraseNone =
 #align finset.erase_none_map_some Finset.erase_none_map_some
 
 @[simp]
-theorem erase_none_image_some [DecidableEq (Option α)] (s : Finset α) : (s.Image some).eraseNone = s := by
+theorem erase_none_image_some [DecidableEq (Option α)] (s : Finset α) : (s.image some).eraseNone = s := by
   simpa only [map_eq_image] using erase_none_map_some s
 #align finset.erase_none_image_some Finset.erase_none_image_some
 
@@ -138,7 +138,7 @@ theorem erase_none_none : ({none} : Finset (Option α)).eraseNone = ∅ := by
 
 @[simp]
 theorem image_some_erase_none [DecidableEq (Option α)] (s : Finset (Option α)) :
-    s.eraseNone.Image some = s.erase none := by ext (_ | x) <;> simp
+    s.eraseNone.image some = s.erase none := by ext (_ | x) <;> simp
 #align finset.image_some_erase_none Finset.image_some_erase_none
 
 @[simp]

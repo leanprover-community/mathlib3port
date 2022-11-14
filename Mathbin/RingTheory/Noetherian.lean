@@ -91,7 +91,7 @@ theorem fg_iff_add_subgroup_fg {G : Type _} [AddCommGroup G] (P : Submodule ℤ 
 #align submodule.fg_iff_add_subgroup_fg Submodule.fg_iff_add_subgroup_fg
 
 theorem fg_iff_exists_fin_generating_family {N : Submodule R M} :
-    N.Fg ↔ ∃ (n : ℕ)(s : Fin n → M), span R (Range s) = N := by
+    N.Fg ↔ ∃ (n : ℕ)(s : Fin n → M), span R (range s) = N := by
   rw [fg_def]
   constructor
   · rintro ⟨S, Sfin, hS⟩
@@ -219,7 +219,7 @@ variable (f : M →ₗ[R] P)
 
 theorem Fg.map {N : Submodule R M} (hs : N.Fg) : (N.map f).Fg :=
   let ⟨t, ht⟩ := fg_def.1 hs
-  fg_def.2 ⟨f '' t, ht.1.Image _, by rw [span_image, ht.2]⟩
+  fg_def.2 ⟨f '' t, ht.1.image _, by rw [span_image, ht.2]⟩
 #align submodule.fg.map Submodule.Fg.map
 
 variable {f}
@@ -252,14 +252,14 @@ theorem Fg.prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.Fg) (hsc : s
   let ⟨tb, htb⟩ := fg_def.1 hsb
   let ⟨tc, htc⟩ := fg_def.1 hsc
   fg_def.2
-    ⟨LinearMap.inl R M P '' tb ∪ LinearMap.inr R M P '' tc, (htb.1.Image _).union (htc.1.Image _), by
+    ⟨LinearMap.inl R M P '' tb ∪ LinearMap.inr R M P '' tc, (htb.1.image _).union (htc.1.image _), by
       rw [LinearMap.span_inl_union_inr, htb.2, htc.2]⟩
 #align submodule.fg.prod Submodule.Fg.prod
 
 theorem fg_pi {ι : Type _} {M : ι → Type _} [Finite ι] [∀ i, AddCommMonoid (M i)] [∀ i, Module R (M i)]
-    {p : ∀ i, Submodule R (M i)} (hsb : ∀ i, (p i).Fg) : (Submodule.pi Set.Univ p).Fg := by
+    {p : ∀ i, Submodule R (M i)} (hsb : ∀ i, (p i).Fg) : (Submodule.pi Set.univ p).Fg := by
   classical simp_rw [fg_def] at hsb⊢
-    refine' ⟨⋃ i, (LinearMap.single i : _ →ₗ[R] _) '' t i, Set.finite_Union fun i => (htf i).Image _, _⟩
+    refine' ⟨⋃ i, (LinearMap.single i : _ →ₗ[R] _) '' t i, Set.finite_Union fun i => (htf i).image _, _⟩
 #align submodule.fg_pi Submodule.fg_pi
 
 /-- If 0 → M' → M → M'' → 0 is exact and M' and M'' are
@@ -1036,7 +1036,7 @@ theorem Fg.map₂ (f : M →ₗ[R] N →ₗ[R] P) {p : Submodule R M} {q : Submo
     (map₂ f p q).Fg :=
   let ⟨sm, hfm, hm⟩ := fg_def.1 hp
   let ⟨sn, hfn, hn⟩ := fg_def.1 hq
-  fg_def.2 ⟨Set.Image2 (fun m n => f m n) sm sn, hfm.Image2 _ hfn, map₂_span_span R f sm sn ▸ hm ▸ hn ▸ rfl⟩
+  fg_def.2 ⟨Set.image2 (fun m n => f m n) sm sn, hfm.image2 _ hfn, map₂_span_span R f sm sn ▸ hm ▸ hn ▸ rfl⟩
 #align submodule.fg.map₂ Submodule.Fg.map₂
 
 end Map₂

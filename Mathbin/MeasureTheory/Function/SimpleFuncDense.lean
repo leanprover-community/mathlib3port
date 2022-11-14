@@ -115,7 +115,7 @@ theorem edist_nearest_pt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N)
     
 #align measure_theory.simple_func.edist_nearest_pt_le MeasureTheory.SimpleFunc.edist_nearest_pt_le
 
-theorem tendsto_nearest_pt {e : ℕ → α} {x : α} (hx : x ∈ Closure (range e)) :
+theorem tendsto_nearest_pt {e : ℕ → α} {x : α} (hx : x ∈ closure (range e)) :
     Tendsto (fun N => nearestPt e N x) atTop (𝓝 x) := by
   refine' (at_top_basis.tendsto_iff nhds_basis_eball).2 fun ε hε => _
   rcases Emetric.mem_closure_iff.1 hx ε hε with ⟨_, ⟨N, rfl⟩, hN⟩
@@ -155,7 +155,7 @@ theorem approx_on_comp {γ : Type _} [MeasurableSpace γ] {f : β → α} (hf : 
 #align measure_theory.simple_func.approx_on_comp MeasureTheory.SimpleFunc.approx_on_comp
 
 theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s] {x : β}
-    (hx : f x ∈ Closure s) : Tendsto (fun n => approxOn f hf s y₀ h₀ n x) atTop (𝓝 <| f x) := by
+    (hx : f x ∈ closure s) : Tendsto (fun n => approxOn f hf s y₀ h₀ n x) atTop (𝓝 <| f x) := by
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
   rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
   simp only [approx_on, coe_comp]

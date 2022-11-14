@@ -33,7 +33,7 @@ variable {α α' β β' γ γ' δ δ' ε ε' : Type _} [DecidableEq α'] [Decida
 /-- The image of a binary function `f : α → β → γ` as a function `finset α → finset β → finset γ`.
 Mathematically this should be thought of as the image of the corresponding function `α × β → γ`. -/
 def image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : Finset γ :=
-  (s ×ˢ t).Image <| uncurry f
+  (s ×ˢ t).image <| uncurry f
 #align finset.image₂ Finset.image₂
 
 @[simp]
@@ -41,7 +41,7 @@ theorem mem_image₂ : c ∈ image₂ f s t ↔ ∃ a b, a ∈ s ∧ b ∈ t ∧
 #align finset.mem_image₂ Finset.mem_image₂
 
 @[simp, norm_cast]
-theorem coe_image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : (image₂ f s t : Set γ) = Set.Image2 f s t :=
+theorem coe_image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : (image₂ f s t : Set γ) = Set.image2 f s t :=
   Set.ext fun _ => mem_image₂
 #align finset.coe_image₂ Finset.coe_image₂
 
@@ -131,16 +131,16 @@ theorem image₂_eq_empty_iff : image₂ f s t = ∅ ↔ s = ∅ ∨ t = ∅ := 
 #align finset.image₂_eq_empty_iff Finset.image₂_eq_empty_iff
 
 @[simp]
-theorem image₂_singleton_left : image₂ f {a} t = t.Image fun b => f a b :=
+theorem image₂_singleton_left : image₂ f {a} t = t.image fun b => f a b :=
   ext fun x => by simp
 #align finset.image₂_singleton_left Finset.image₂_singleton_left
 
 @[simp]
-theorem image₂_singleton_right : image₂ f s {b} = s.Image fun a => f a b :=
+theorem image₂_singleton_right : image₂ f s {b} = s.image fun a => f a b :=
   ext fun x => by simp
 #align finset.image₂_singleton_right Finset.image₂_singleton_right
 
-theorem image₂_singleton_left' : image₂ f {a} t = t.Image (f a) :=
+theorem image₂_singleton_left' : image₂ f {a} t = t.image (f a) :=
   image₂_singleton_left
 #align finset.image₂_singleton_left' Finset.image₂_singleton_left'
 
@@ -182,7 +182,7 @@ theorem image₂_congr' (h : ∀ a b, f a b = f' a b) : image₂ f s t = image�
   image₂_congr fun a _ b _ => h a b
 #align finset.image₂_congr' Finset.image₂_congr'
 
-theorem subset_image₂ {s : Set α} {t : Set β} (hu : ↑u ⊆ Image2 f s t) :
+theorem subset_image₂ {s : Set α} {t : Set β} (hu : ↑u ⊆ image2 f s t) :
     ∃ (s' : Finset α)(t' : Finset β), ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ image₂ f s' t' := by
   apply Finset.induction_on' u
   · exact ⟨∅, ∅, Set.empty_subset _, Set.empty_subset _, empty_subset _⟩
@@ -235,13 +235,13 @@ theorem card_le_card_image₂_right {t : Finset β} (ht : t.Nonempty) (hf : ∀ 
 
 variable {s t}
 
-theorem bUnion_image_left : (s.bUnion fun a => t.Image <| f a) = image₂ f s t :=
+theorem bUnion_image_left : (s.bUnion fun a => t.image <| f a) = image₂ f s t :=
   coe_injective <| by
     push_cast
     exact Set.Union_image_left _
 #align finset.bUnion_image_left Finset.bUnion_image_left
 
-theorem bUnion_image_right : (t.bUnion fun b => s.Image fun a => f a b) = image₂ f s t :=
+theorem bUnion_image_right : (t.bUnion fun b => s.image fun a => f a b) = image₂ f s t :=
   coe_injective <| by
     push_cast
     exact Set.Union_image_right _
@@ -258,19 +258,19 @@ The proof pattern is `image₂_lemma operation_lemma`. For example, `image₂_co
 -/
 
 
-theorem image_image₂ (f : α → β → γ) (g : γ → δ) : (image₂ f s t).Image g = image₂ (fun a b => g (f a b)) s t :=
+theorem image_image₂ (f : α → β → γ) (g : γ → δ) : (image₂ f s t).image g = image₂ (fun a b => g (f a b)) s t :=
   coe_injective <| by
     push_cast
     exact image_image2 _ _
 #align finset.image_image₂ Finset.image_image₂
 
-theorem image₂_image_left (f : γ → β → δ) (g : α → γ) : image₂ f (s.Image g) t = image₂ (fun a b => f (g a) b) s t :=
+theorem image₂_image_left (f : γ → β → δ) (g : α → γ) : image₂ f (s.image g) t = image₂ (fun a b => f (g a) b) s t :=
   coe_injective <| by
     push_cast
     exact image2_image_left _ _
 #align finset.image₂_image_left Finset.image₂_image_left
 
-theorem image₂_image_right (f : α → γ → δ) (g : β → γ) : image₂ f s (t.Image g) = image₂ (fun a b => f a (g b)) s t :=
+theorem image₂_image_right (f : α → γ → δ) (g : β → γ) : image₂ f s (t.image g) = image₂ (fun a b => f a (g b)) s t :=
   coe_injective <| by
     push_cast
     exact image2_image_right _ _
@@ -290,14 +290,14 @@ theorem image₂_mk_eq_product [DecidableEq α] [DecidableEq β] (s : Finset α)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem image₂_curry (f : α × β → γ) (s : Finset α) (t : Finset β) : image₂ (curry f) s t = (s ×ˢ t).Image f := by
+theorem image₂_curry (f : α × β → γ) (s : Finset α) (t : Finset β) : image₂ (curry f) s t = (s ×ˢ t).image f := by
   classical rw [← image₂_mk_eq_product, image_image₂, curry]
 #align finset.image₂_curry Finset.image₂_curry
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem image_uncurry_product (f : α → β → γ) (s : Finset α) (t : Finset β) :
-    (s ×ˢ t).Image (uncurry f) = image₂ f s t := by rw [← image₂_curry, curry_uncurry]
+    (s ×ˢ t).image (uncurry f) = image₂ f s t := by rw [← image₂_curry, curry_uncurry]
 #align finset.image_uncurry_product Finset.image_uncurry_product
 
 @[simp]
@@ -341,7 +341,7 @@ theorem image₂_right_comm {γ : Type _} {u : Finset γ} {f : δ → γ → ε}
 #align finset.image₂_right_comm Finset.image₂_right_comm
 
 theorem image_image₂_distrib {g : γ → δ} {f' : α' → β' → δ} {g₁ : α → α'} {g₂ : β → β'}
-    (h_distrib : ∀ a b, g (f a b) = f' (g₁ a) (g₂ b)) : (image₂ f s t).Image g = image₂ f' (s.Image g₁) (t.Image g₂) :=
+    (h_distrib : ∀ a b, g (f a b) = f' (g₁ a) (g₂ b)) : (image₂ f s t).image g = image₂ f' (s.image g₁) (t.image g₂) :=
   coe_injective <| by
     push_cast
     exact image_image2_distrib h_distrib
@@ -349,7 +349,7 @@ theorem image_image₂_distrib {g : γ → δ} {f' : α' → β' → δ} {g₁ :
 
 /-- Symmetric statement to `finset.image₂_image_left_comm`. -/
 theorem image_image₂_distrib_left {g : γ → δ} {f' : α' → β → δ} {g' : α → α'}
-    (h_distrib : ∀ a b, g (f a b) = f' (g' a) b) : (image₂ f s t).Image g = image₂ f' (s.Image g') t :=
+    (h_distrib : ∀ a b, g (f a b) = f' (g' a) b) : (image₂ f s t).image g = image₂ f' (s.image g') t :=
   coe_injective <| by
     push_cast
     exact image_image2_distrib_left h_distrib
@@ -357,7 +357,7 @@ theorem image_image₂_distrib_left {g : γ → δ} {f' : α' → β → δ} {g'
 
 /-- Symmetric statement to `finset.image_image₂_right_comm`. -/
 theorem image_image₂_distrib_right {g : γ → δ} {f' : α → β' → δ} {g' : β → β'}
-    (h_distrib : ∀ a b, g (f a b) = f' a (g' b)) : (image₂ f s t).Image g = image₂ f' s (t.Image g') :=
+    (h_distrib : ∀ a b, g (f a b) = f' a (g' b)) : (image₂ f s t).image g = image₂ f' s (t.image g') :=
   coe_injective <| by
     push_cast
     exact image_image2_distrib_right h_distrib
@@ -365,13 +365,13 @@ theorem image_image₂_distrib_right {g : γ → δ} {f' : α → β' → δ} {g
 
 /-- Symmetric statement to `finset.image_image₂_distrib_left`. -/
 theorem image₂_image_left_comm {f : α' → β → γ} {g : α → α'} {f' : α → β → δ} {g' : δ → γ}
-    (h_left_comm : ∀ a b, f (g a) b = g' (f' a b)) : image₂ f (s.Image g) t = (image₂ f' s t).Image g' :=
+    (h_left_comm : ∀ a b, f (g a) b = g' (f' a b)) : image₂ f (s.image g) t = (image₂ f' s t).image g' :=
   (image_image₂_distrib_left fun a b => (h_left_comm a b).symm).symm
 #align finset.image₂_image_left_comm Finset.image₂_image_left_comm
 
 /-- Symmetric statement to `finset.image_image₂_distrib_right`. -/
 theorem image_image₂_right_comm {f : α → β' → γ} {g : β → β'} {f' : α → β → δ} {g' : δ → γ}
-    (h_right_comm : ∀ a b, f a (g b) = g' (f' a b)) : image₂ f s (t.Image g) = (image₂ f' s t).Image g' :=
+    (h_right_comm : ∀ a b, f a (g b) = g' (f' a b)) : image₂ f s (t.image g) = (image₂ f' s t).image g' :=
   (image_image₂_distrib_right fun a b => (h_right_comm a b).symm).symm
 #align finset.image_image₂_right_comm Finset.image_image₂_right_comm
 
@@ -395,14 +395,14 @@ theorem image₂_distrib_subset_right {γ : Type _} {u : Finset γ} {f : δ → 
 
 theorem image_image₂_antidistrib {g : γ → δ} {f' : β' → α' → δ} {g₁ : β → β'} {g₂ : α → α'}
     (h_antidistrib : ∀ a b, g (f a b) = f' (g₁ b) (g₂ a)) :
-    (image₂ f s t).Image g = image₂ f' (t.Image g₁) (s.Image g₂) := by
+    (image₂ f s t).image g = image₂ f' (t.image g₁) (s.image g₂) := by
   rw [image₂_swap f]
   exact image_image₂_distrib fun _ _ => h_antidistrib _ _
 #align finset.image_image₂_antidistrib Finset.image_image₂_antidistrib
 
 /-- Symmetric statement to `finset.image₂_image_left_anticomm`. -/
 theorem image_image₂_antidistrib_left {g : γ → δ} {f' : β' → α → δ} {g' : β → β'}
-    (h_antidistrib : ∀ a b, g (f a b) = f' (g' b) a) : (image₂ f s t).Image g = image₂ f' (t.Image g') s :=
+    (h_antidistrib : ∀ a b, g (f a b) = f' (g' b) a) : (image₂ f s t).image g = image₂ f' (t.image g') s :=
   coe_injective <| by
     push_cast
     exact image_image2_antidistrib_left h_antidistrib
@@ -410,7 +410,7 @@ theorem image_image₂_antidistrib_left {g : γ → δ} {f' : β' → α → δ}
 
 /-- Symmetric statement to `finset.image_image₂_right_anticomm`. -/
 theorem image_image₂_antidistrib_right {g : γ → δ} {f' : β → α' → δ} {g' : α → α'}
-    (h_antidistrib : ∀ a b, g (f a b) = f' b (g' a)) : (image₂ f s t).Image g = image₂ f' t (s.Image g') :=
+    (h_antidistrib : ∀ a b, g (f a b) = f' b (g' a)) : (image₂ f s t).image g = image₂ f' t (s.image g') :=
   coe_injective <| by
     push_cast
     exact image_image2_antidistrib_right h_antidistrib
@@ -418,13 +418,13 @@ theorem image_image₂_antidistrib_right {g : γ → δ} {f' : β → α' → δ
 
 /-- Symmetric statement to `finset.image_image₂_antidistrib_left`. -/
 theorem image₂_image_left_anticomm {f : α' → β → γ} {g : α → α'} {f' : β → α → δ} {g' : δ → γ}
-    (h_left_anticomm : ∀ a b, f (g a) b = g' (f' b a)) : image₂ f (s.Image g) t = (image₂ f' t s).Image g' :=
+    (h_left_anticomm : ∀ a b, f (g a) b = g' (f' b a)) : image₂ f (s.image g) t = (image₂ f' t s).image g' :=
   (image_image₂_antidistrib_left fun a b => (h_left_anticomm b a).symm).symm
 #align finset.image₂_image_left_anticomm Finset.image₂_image_left_anticomm
 
 /-- Symmetric statement to `finset.image_image₂_antidistrib_right`. -/
 theorem image_image₂_right_anticomm {f : α → β' → γ} {g : β → β'} {f' : β → α → δ} {g' : δ → γ}
-    (h_right_anticomm : ∀ a b, f a (g b) = g' (f' b a)) : image₂ f s (t.Image g) = (image₂ f' t s).Image g' :=
+    (h_right_anticomm : ∀ a b, f a (g b) = g' (f' b a)) : image₂ f s (t.image g) = (image₂ f' t s).image g' :=
   (image_image₂_antidistrib_right fun a b => (h_right_anticomm b a).symm).symm
 #align finset.image_image₂_right_anticomm Finset.image_image₂_right_anticomm
 

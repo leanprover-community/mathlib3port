@@ -4,15 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Analysis.SpecialFunctions.Pow
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Arctan
-import Mathbin.Analysis.InnerProductSpace.Basic
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 
 /-!
 # Measurability of real and complex functions
 
 We show that most standard real and complex functions are measurable, notably `exp`, `cos`, `sin`,
-`cosh`, `sinh`, `log`, `pow`, `arcsin`, `arccos`, `arctan`, and scalar products.
+`cosh`, `sinh`, `log`, `pow`, `arcsin`, `arccos`.
+
+See also `measure_theory.function.special_functions.arctan` and
+`measure_theory.function.special_functions.inner`, which have been split off to minimize imports.
 -/
 
 
@@ -62,11 +63,6 @@ theorem measurableArcsin : Measurable arcsin :=
 theorem measurableArccos : Measurable arccos :=
   continuous_arccos.Measurable
 #align real.measurable_arccos Real.measurableArccos
-
-@[measurability]
-theorem measurableArctan : Measurable arctan :=
-  continuous_arctan.Measurable
-#align real.measurable_arctan Real.measurableArctan
 
 end Real
 
@@ -181,11 +177,6 @@ theorem Measurable.cosh : Measurable fun x => Real.cosh (f x) :=
 theorem Measurable.sinh : Measurable fun x => Real.sinh (f x) :=
   Real.measurableSinh.comp hf
 #align measurable.sinh Measurable.sinh
-
-@[measurability]
-theorem Measurable.arctan : Measurable fun x => arctan (f x) :=
-  measurableArctan.comp hf
-#align measurable.arctan Measurable.arctan
 
 @[measurability]
 theorem Measurable.sqrt : Measurable fun x => sqrt (f x) :=
@@ -329,30 +320,6 @@ instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ := by
 
 end PowInstances
 
-section
-
-variable {α : Type _} {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E]
-
--- mathport name: «expr⟪ , ⟫»
-local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
-
-@[measurability]
-theorem Measurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMeasurableSpace E]
-    [TopologicalSpace.SecondCountableTopology E] {f g : α → E} (hf : Measurable f) (hg : Measurable g) :
-    Measurable fun t => ⟪f t, g t⟫ :=
-  Continuous.measurable2 continuous_inner hf hg
-#align measurable.inner Measurable.inner
-
-@[measurability]
-theorem AeMeasurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMeasurableSpace E]
-    [TopologicalSpace.SecondCountableTopology E] {μ : MeasureTheory.Measure α} {f g : α → E} (hf : AeMeasurable f μ)
-    (hg : AeMeasurable g μ) : AeMeasurable (fun x => ⟪f x, g x⟫) μ := by
-  refine' ⟨fun x => ⟪hf.mk f x, hg.mk g x⟫, hf.measurable_mk.inner hg.measurable_mk, _⟩
-  refine' hf.ae_eq_mk.mp (hg.ae_eq_mk.mono fun x hxg hxf => _)
-  dsimp only
-  congr
-  exacts[hxf, hxg]
-#align ae_measurable.inner AeMeasurable.inner
-
-end
-
+/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
+-- Guard against import creep:

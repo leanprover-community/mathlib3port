@@ -1228,7 +1228,7 @@ theorem oangle_sign_smul_add_right (x y : V) (r : ℝ) : (o.oangle x (r • x + 
   have h' : ∀ r' : ℝ, o.oangle x (r' • x + y) ≠ 0 ∧ o.oangle x (r' • x + y) ≠ π := by
     intro r'
     rwa [← o.oangle_smul_add_right_eq_zero_or_eq_pi_iff r', not_or] at h
-  let s : Set (V × V) := (fun r' : ℝ => (x, r' • x + y)) '' Set.Univ
+  let s : Set (V × V) := (fun r' : ℝ => (x, r' • x + y)) '' Set.univ
   have hc : IsConnected s :=
     is_connected_univ.image _
       (continuous_const.prod_mk ((continuous_id.smul continuous_const).add continuous_const)).ContinuousOn

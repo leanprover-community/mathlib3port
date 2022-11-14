@@ -21,7 +21,7 @@ open Filter Set Metric
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem set_of_liouville_eq_Inter_Union :
-    { x | Liouville x } = ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), Ball (a / b) (1 / b ^ n) \ {a / b} := by
+    { x | Liouville x } = ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), ball (a / b) (1 / b ^ n) \ {a / b} := by
   ext x
   simp only [mem_Inter, mem_Union, Liouville, mem_set_of_eq, exists_prop, mem_diff, mem_singleton_iff, mem_ball,
     Real.dist_eq, and_comm']
@@ -36,7 +36,7 @@ theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } := by
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem set_of_liouville_eq_irrational_inter_Inter_Union :
-    { x | Liouville x } = { x | Irrational x } ∩ ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), Ball (a / b) (1 / b ^ n) := by
+    { x | Liouville x } = { x | Irrational x } ∩ ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), ball (a / b) (1 / b ^ n) := by
   refine' subset.antisymm _ _
   · refine' subset_inter (fun x hx => hx.Irrational) _
     rw [set_of_liouville_eq_Inter_Union]

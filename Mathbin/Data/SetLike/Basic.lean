@@ -94,7 +94,7 @@ variable {A : Type _} {B : Type _} [i : SetLike A B]
 include i
 
 instance : CoeTC A (Set B) :=
-  ⟨SetLike.Coe⟩
+  ⟨SetLike.coe⟩
 
 instance (priority := 100) : Membership B A :=
   ⟨fun x p => x ∈ (p : Set B)⟩

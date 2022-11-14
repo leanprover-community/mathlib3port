@@ -24,7 +24,7 @@ section nonZeroDivisors
 
 /-- The submonoid of non-zero-divisors of a `monoid_with_zero` `R`. -/
 def nonZeroDivisors (R : Type _) [MonoidWithZero R] : Submonoid R where
-  Carrier := { x | ∀ z, z * x = 0 → z = 0 }
+  carrier := { x | ∀ z, z * x = 0 → z = 0 }
   one_mem' z hz := by rwa [mul_one] at hz
   mul_mem' x₁ x₂ hx₁ hx₂ z hz :=
     have : z * x₁ * x₂ = 0 := by rwa [mul_assoc]

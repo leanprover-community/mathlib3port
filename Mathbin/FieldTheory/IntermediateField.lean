@@ -62,7 +62,7 @@ def toSubfield : Subfield L :=
 #align intermediate_field.to_subfield IntermediateField.toSubfield
 
 instance : SetLike (IntermediateField K L) L :=
-  ⟨fun S => S.toSubalgebra.Carrier, by
+  ⟨fun S => S.toSubalgebra.carrier, by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨h⟩
     congr ⟩
 
@@ -75,7 +75,7 @@ instance : SubfieldClass (IntermediateField K L) L where
   inv_mem := inv_mem'
 
 @[simp]
-theorem mem_carrier {s : IntermediateField K L} {x : L} : x ∈ s.Carrier ↔ x ∈ s :=
+theorem mem_carrier {s : IntermediateField K L} {x : L} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align intermediate_field.mem_carrier IntermediateField.mem_carrier
 
@@ -114,12 +114,12 @@ theorem mem_to_subfield (s : IntermediateField K L) (x : L) : x ∈ s.toSubfield
 /-- Copy of an intermediate field with a new `carrier` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : IntermediateField K L where
-  toSubalgebra := S.toSubalgebra.copy s (hs : s = S.toSubalgebra.Carrier)
+  toSubalgebra := S.toSubalgebra.copy s (hs : s = S.toSubalgebra.carrier)
   neg_mem' :=
-    have hs' : (S.toSubalgebra.copy s hs).Carrier = S.toSubalgebra.Carrier := hs
+    have hs' : (S.toSubalgebra.copy s hs).carrier = S.toSubalgebra.carrier := hs
     hs'.symm ▸ S.neg_mem'
   inv_mem' :=
-    have hs' : (S.toSubalgebra.copy s hs).Carrier = S.toSubalgebra.Carrier := hs
+    have hs' : (S.toSubalgebra.copy s hs).carrier = S.toSubalgebra.carrier := hs
     hs'.symm ▸ S.inv_mem'
 #align intermediate_field.copy IntermediateField.copy
 
@@ -446,7 +446,7 @@ def fieldRange : IntermediateField K L' :=
 #align alg_hom.field_range AlgHom.fieldRange
 
 @[simp]
-theorem coe_field_range : ↑f.fieldRange = Set.Range f :=
+theorem coe_field_range : ↑f.fieldRange = Set.range f :=
   rfl
 #align alg_hom.coe_field_range AlgHom.coe_field_range
 
@@ -547,7 +547,7 @@ theorem to_subalgebra_injective {S S' : IntermediateField K L} (h : S.toSubalgeb
 
 variable (S)
 
-theorem set_range_subset : Set.Range (algebraMap K L) ⊆ S :=
+theorem set_range_subset : Set.range (algebraMap K L) ⊆ S :=
   S.toSubalgebra.range_subset
 #align intermediate_field.set_range_subset IntermediateField.set_range_subset
 
@@ -585,7 +585,7 @@ variable (K) [Algebra L' L] [IsScalarTower K L' L]
 /-- Given a tower `L / ↥E / L' / K` of field extensions, where `E` is an `L'`-intermediate field of
 `L`, reinterpret `E` as a `K`-intermediate field of `L`. -/
 def restrictScalars (E : IntermediateField L' L) : IntermediateField K L :=
-  { E.toSubfield, E.toSubalgebra.restrictScalars K with Carrier := E.Carrier }
+  { E.toSubfield, E.toSubalgebra.restrictScalars K with carrier := E.carrier }
 #align intermediate_field.restrict_scalars IntermediateField.restrictScalars
 
 @[simp]

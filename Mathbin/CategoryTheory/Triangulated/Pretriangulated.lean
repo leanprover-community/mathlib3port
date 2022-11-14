@@ -45,7 +45,7 @@ variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ] [Pread
 variable (D : Type u₂) [Category.{v₂} D] [HasZeroObject D] [HasShift D ℤ] [Preadditive D]
   [∀ n : ℤ, Functor.Additive (shiftFunctor D n)]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`DistinguishedTriangles] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`distinguishedTriangles] [] -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (T₂ «expr ≅ » T₁) -/
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:
@@ -69,7 +69,7 @@ relative to that shift is called pretriangulated if the following hold:
 See <https://stacks.math.columbia.edu/tag/0145>
 -/
 class Pretriangulated where
-  DistinguishedTriangles : Set (Triangle C)
+  distinguishedTriangles : Set (Triangle C)
   isomorphic_distinguished : ∀ T₁ ∈ distinguished_triangles, ∀ (T₂) (_ : T₂ ≅ T₁), T₂ ∈ distinguished_triangles
   contractible_distinguished : ∀ X : C, contractibleTriangle X ∈ distinguished_triangles
   distinguished_cocone_triangle :
@@ -88,7 +88,7 @@ variable [hC : Pretriangulated C]
 include hC
 
 -- mathport name: «exprdist_triang »
-notation:20 "dist_triang " C => DistinguishedTriangles C
+notation:20 "dist_triang " C => distinguishedTriangles C
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle `T`, then we know `T.rotate` is also distinguished.

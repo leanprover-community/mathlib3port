@@ -76,7 +76,7 @@ theorem card_comm_eq_card_conj_classes_mul_card :
       card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (Σg, { h // g * h = h * g }) :=
         card_congr (Equiv.subtypeProdEquivSigmaSubtype fun g h : G => g * h = h * g)
       _ = ∑ g, card { h // g * h = h * g } := card_sigma _
-      _ = ∑ g, card (MulAction.FixedBy (ConjAct G) G g) :=
+      _ = ∑ g, card (MulAction.fixedBy (ConjAct G) G g) :=
         sum_equiv conj_act.to_conj_act.to_equiv _ _ fun g =>
           card_congr' <| congr_arg _ <| funext fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
       _ = card (Quotient (MulAction.orbitRel (ConjAct G) G)) * card G :=

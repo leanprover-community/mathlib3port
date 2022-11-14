@@ -30,7 +30,7 @@ theorem via_embedding_apply (x : α) : e.viaEmbedding ι (ι x) = ι (e x) :=
   extend_domain_apply_image e (ofInjective ι.1 ι.2) x
 #align equiv.perm.via_embedding_apply Equiv.Perm.via_embedding_apply
 
-theorem via_embedding_apply_of_not_mem (x : β) (hx : x ∉ Set.Range ι) : e.viaEmbedding ι x = x :=
+theorem via_embedding_apply_of_not_mem (x : β) (hx : x ∉ Set.range ι) : e.viaEmbedding ι x = x :=
   extend_domain_apply_not_subtype e (ofInjective ι.1 ι.2) hx
 #align equiv.perm.via_embedding_apply_of_not_mem Equiv.Perm.via_embedding_apply_of_not_mem
 

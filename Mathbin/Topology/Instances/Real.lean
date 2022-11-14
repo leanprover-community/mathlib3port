@@ -64,12 +64,12 @@ instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {IooCat a b}) :=
+theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {ioo a b}) :=
   is_topological_basis_of_open_of_nhds (by simp (config := { contextual := true }) [is_open_Ioo]) fun a v hav hv =>
     let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
-    ⟨IooCat q p, by
+    ⟨ioo q p, by
       simp only [mem_Union]
       exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
@@ -86,7 +86,7 @@ _
 
 lemma uniform_embedding_mul_rat {q : ℚ} (hq : q ≠ 0) : uniform_embedding ((*) q) :=
 _ -/
-theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ Closure s ↔ ∀ ε > 0, ∃ y ∈ s, |y - x| < ε := by
+theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ closure s ↔ ∀ ε > 0, ∃ y ∈ s, |y - x| < ε := by
   simp [mem_closure_iff_nhds_basis nhds_basis_ball, Real.dist_eq]
 #align real.mem_closure_iff Real.mem_closure_iff
 
@@ -156,13 +156,13 @@ instance : CompleteSpace ℝ := by
   simp only [mem_map, mem_at_top_sets, mem_set_of_eq]
   refine' this.imp fun N hN n hn => hε (hN n hn)
 
-theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (Ball x ε) := by
+theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := by
   rw [Real.ball_eq_Ioo] <;> apply totally_bounded_Ioo
 #align real.totally_bounded_ball Real.totally_bounded_ball
 
 section
 
-theorem closure_of_rat_image_lt {q : ℚ} : Closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
+theorem closure_of_rat_image_lt {q : ℚ} : closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
   (Subset.antisymm
       ((isClosedGe' _).closure_subset_iff.2 (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h)))
     fun x hx =>
@@ -191,7 +191,7 @@ theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBe
     fun h => boundedOfBddAboveOfBddBelow h.2 h.1⟩
 #align real.bounded_iff_bdd_below_bdd_above Real.bounded_iff_bdd_below_bdd_above
 
-theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) : s ⊆ IccCat (inf s) (sup s) :=
+theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) : s ⊆ icc (inf s) (sup s) :=
   subset_Icc_cInf_cSup (Real.bounded_iff_bdd_below_bdd_above.1 h).1 (Real.bounded_iff_bdd_below_bdd_above.1 h).2
 #align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_Inf_Sup_of_bounded
 
@@ -202,7 +202,7 @@ section Periodic
 namespace Function
 
 theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : 0 < c)
-    (hf : Continuous f) : IsCompact (Range f) := by
+    (hf : Continuous f) : IsCompact (range f) := by
   convert is_compact_Icc.image hf
   ext x
   refine' ⟨_, mem_range_of_mem_image f (Icc 0 c)⟩
@@ -213,14 +213,14 @@ theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {
 
 /-- A continuous, periodic function has compact range. -/
 theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
-    (hf : Continuous f) : IsCompact (Range f) := by
+    (hf : Continuous f) : IsCompact (range f) := by
   cases' lt_or_gt_of_ne hc with hneg hpos
   exacts[hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
 #align function.periodic.compact_of_continuous Function.Periodic.compact_of_continuous
 
 /-- A continuous, periodic function is bounded. -/
 theorem Periodic.boundedOfContinuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
-    (hf : Continuous f) : Bounded (Range f) :=
+    (hf : Continuous f) : Bounded (range f) :=
   (hp.compact_of_continuous hc hf).Bounded
 #align function.periodic.bounded_of_continuous Function.Periodic.boundedOfContinuous
 

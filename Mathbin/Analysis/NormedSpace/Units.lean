@@ -90,22 +90,22 @@ protected theorem nhds (x : Rˣ) : { x : R | IsUnit x } ∈ 𝓝 (x : R) :=
 
 end Units
 
-namespace Nonunits
+namespace nonunits
 
 /-- The `nonunits` in a complete normed ring are contained in the complement of the ball of radius
 `1` centered at `1 : R`. -/
-theorem subset_compl_ball : Nonunits R ⊆ Metric.Ball (1 : R) 1ᶜ :=
+theorem subset_compl_ball : nonunits R ⊆ Metric.ball (1 : R) 1ᶜ :=
   Set.subset_compl_comm.mp fun x hx => by
     simpa [sub_sub_self, Units.coe_one_sub] using
       (Units.oneSub (1 - x) (by rwa [Metric.mem_ball, dist_eq_norm, norm_sub_rev] at hx)).IsUnit
-#align nonunits.subset_compl_ball Nonunits.subset_compl_ball
+#align nonunits.subset_compl_ball nonunits.subset_compl_ball
 
 -- The `nonunits` in a complete normed ring are a closed set
-protected theorem isClosed : IsClosed (Nonunits R) :=
+protected theorem isClosed : IsClosed (nonunits R) :=
   Units.is_open.isClosedCompl
-#align nonunits.is_closed Nonunits.isClosed
+#align nonunits.is_closed nonunits.isClosed
 
-end Nonunits
+end nonunits
 
 namespace NormedRing
 
@@ -295,7 +295,7 @@ theorem is_open_map_coe : IsOpenMap (coe : Rˣ → R) := by
   rintro ⟨t, ht, hts⟩
   obtain ⟨u, hu, v, hv, huvt⟩ : ∃ u : Set R, u ∈ 𝓝 ↑x ∧ ∃ v : Set Rᵐᵒᵖ, v ∈ 𝓝 (op ↑x⁻¹) ∧ u ×ˢ v ⊆ t := by
     simpa [embed_product, mem_nhds_prod_iff] using ht
-  have : u ∩ op ∘ Ring.inverse ⁻¹' v ∩ Set.Range (coe : Rˣ → R) ∈ 𝓝 ↑x := by
+  have : u ∩ op ∘ Ring.inverse ⁻¹' v ∩ Set.range (coe : Rˣ → R) ∈ 𝓝 ↑x := by
     refine' inter_mem (inter_mem hu _) (Units.nhds x)
     refine' (continuous_op.continuous_at.comp (inverse_continuous_at x)).preimage_mem_nhds _
     simpa using hv
@@ -323,7 +323,7 @@ theorem eq_top_of_norm_lt_one (I : Ideal R) {x : R} (hxI : x ∈ I) (hx : ∥1 -
 
 /-- The `ideal.closure` of a proper ideal in a complete normed ring is proper. -/
 theorem closure_ne_top (I : Ideal R) (hI : I ≠ ⊤) : I.closure ≠ ⊤ := by
-  have h := closure_minimal (coe_subset_nonunits hI) Nonunits.isClosed
+  have h := closure_minimal (coe_subset_nonunits hI) nonunits.isClosed
   simpa only [I.closure.eq_top_iff_one, Ne.def] using mt (@h 1) one_not_mem_nonunits
 #align ideal.closure_ne_top Ideal.closure_ne_top
 

@@ -132,12 +132,12 @@ protected theorem bot_eq_zero : (⊥ : ι →₀ α) = 0 :=
 theorem add_eq_zero_iff (f g : ι →₀ α) : f + g = 0 ↔ f = 0 ∧ g = 0 := by simp [ext_iff, forall_and]
 #align finsupp.add_eq_zero_iff Finsupp.add_eq_zero_iff
 
-theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.Support ⊆ s) : f ≤ g ↔ ∀ i ∈ s, f i ≤ g i :=
+theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.support ⊆ s) : f ≤ g ↔ ∀ i ∈ s, f i ≤ g i :=
   ⟨fun h s hs => h s, fun h s =>
-    if H : s ∈ f.Support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
+    if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 #align finsupp.le_iff' Finsupp.le_iff'
 
-theorem le_iff (f g : ι →₀ α) : f ≤ g ↔ ∀ i ∈ f.Support, f i ≤ g i :=
+theorem le_iff (f g : ι →₀ α) : f ≤ g ↔ ∀ i ∈ f.support, f i ≤ g i :=
   le_iff' f g <| Subset.refl _
 #align finsupp.le_iff Finsupp.le_iff
 
@@ -185,12 +185,12 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
     
 #align finsupp.single_tsub Finsupp.single_tsub
 
-theorem support_tsub {f1 f2 : ι →₀ α} : (f1 - f2).Support ⊆ f1.Support := by
+theorem support_tsub {f1 f2 : ι →₀ α} : (f1 - f2).support ⊆ f1.support := by
   simp (config := { contextual := true }) only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff, Ne.def, coe_tsub,
     Pi.sub_apply, not_imp_not, zero_le, imp_true_iff]
 #align finsupp.support_tsub Finsupp.support_tsub
 
-theorem subset_support_tsub {f1 f2 : ι →₀ α} : f1.Support \ f2.Support ⊆ (f1 - f2).Support := by
+theorem subset_support_tsub {f1 f2 : ι →₀ α} : f1.support \ f2.support ⊆ (f1 - f2).support := by
   simp (config := { contextual := true }) [subset_iff]
 #align finsupp.subset_support_tsub Finsupp.subset_support_tsub
 
@@ -201,20 +201,20 @@ section CanonicallyLinearOrderedAddMonoid
 variable [CanonicallyLinearOrderedAddMonoid α]
 
 @[simp]
-theorem support_inf [DecidableEq ι] (f g : ι →₀ α) : (f ⊓ g).Support = f.Support ∩ g.Support := by
+theorem support_inf [DecidableEq ι] (f g : ι →₀ α) : (f ⊓ g).support = f.support ∩ g.support := by
   ext
   simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
   simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or]
 #align finsupp.support_inf Finsupp.support_inf
 
 @[simp]
-theorem support_sup [DecidableEq ι] (f g : ι →₀ α) : (f ⊔ g).Support = f.Support ∪ g.Support := by
+theorem support_sup [DecidableEq ι] (f g : ι →₀ α) : (f ⊔ g).support = f.support ∪ g.support := by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
   rw [_root_.sup_eq_bot_iff, not_and_or]
 #align finsupp.support_sup Finsupp.support_sup
 
-theorem disjoint_iff {f g : ι →₀ α} : Disjoint f g ↔ Disjoint f.Support g.Support := by
+theorem disjoint_iff {f g : ι →₀ α} : Disjoint f g ↔ Disjoint f.support g.support := by
   rw [disjoint_iff, disjoint_iff, Finsupp.bot_eq_zero, ← Finsupp.support_eq_empty, Finsupp.support_inf]
   rfl
 #align finsupp.disjoint_iff Finsupp.disjoint_iff

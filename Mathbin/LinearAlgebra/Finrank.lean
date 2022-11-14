@@ -291,17 +291,17 @@ theorem finrank_span_finset_le_card (s : Finset V) : (s : Set V).finrank K ≤ s
     
 #align finrank_span_finset_le_card finrank_span_finset_le_card
 
-theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} : (Set.Range b).finrank K ≤ Fintype.card ι :=
+theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} : (Set.range b).finrank K ≤ Fintype.card ι :=
   (finrank_span_le_card _).trans <| by
     rw [Set.to_finset_range]
     exact Finset.card_image_le
 #align finrank_range_le_card finrank_range_le_card
 
 theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : LinearIndependent K b) :
-    finrank K (span K (Set.Range b)) = Fintype.card ι :=
+    finrank K (span K (Set.range b)) = Fintype.card ι :=
   finrank_eq_of_dim_eq
     (by
-      have : Module.rank K (span K (Set.Range b)) = (#Set.Range b) := dim_span hb
+      have : Module.rank K (span K (Set.range b)) = (#Set.range b) := dim_span hb
       rwa [← lift_inj, mk_range_eq_of_injective hb.injective, Cardinal.mk_fintype, lift_nat_cast, lift_eq_nat_iff] at
         this)
 #align finrank_span_eq_card finrank_span_eq_card
@@ -342,17 +342,17 @@ section DivisionRing
 variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
 theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fintype ι] {b : ι → V}
-    (spans : ⊤ ≤ span K (Set.Range b)) (card_eq : Fintype.card ι = finrank K V) : LinearIndependent K b :=
+    (spans : ⊤ ≤ span K (Set.range b)) (card_eq : Fintype.card ι = finrank K V) : LinearIndependent K b :=
   linear_independent_iff'.mpr fun s g dependent i i_mem_s => by
     by_contra gx_ne_zero
     -- We'll derive a contradiction by showing `b '' (univ \ {i})` of cardinality `n - 1`
     -- spans a vector space of dimension `n`.
     refine'
-      not_le_of_gt (span_lt_top_of_card_lt_finrank (show (b '' (Set.Univ \ {i})).toFinset.card < finrank K V from _)) _
+      not_le_of_gt (span_lt_top_of_card_lt_finrank (show (b '' (Set.univ \ {i})).toFinset.card < finrank K V from _)) _
     · calc
-        (b '' (Set.Univ \ {i})).toFinset.card = ((Set.Univ \ {i}).toFinset.Image b).card := by
+        (b '' (Set.univ \ {i})).toFinset.card = ((Set.univ \ {i}).toFinset.image b).card := by
           rw [Set.to_finset_card, Fintype.card_of_finset]
-        _ ≤ (Set.Univ \ {i}).toFinset.card := Finset.card_image_le
+        _ ≤ (Set.univ \ {i}).toFinset.card := Finset.card_image_le
         _ = (finset.univ.erase i).card := congr_arg Finset.card (Finset.ext (by simp [and_comm']))
         _ < finset.univ.card := Finset.card_erase_lt_of_mem (Finset.mem_univ i)
         _ = finrank K V := card_eq
@@ -393,22 +393,22 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
 /-- A finite family of vectors is linearly independent if and only if
 its cardinality equals the dimension of its span. -/
 theorem linear_independent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {b : ι → V} :
-    LinearIndependent K b ↔ Fintype.card ι = (Set.Range b).finrank K := by
+    LinearIndependent K b ↔ Fintype.card ι = (Set.range b).finrank K := by
   constructor
   · intro h
     exact (finrank_span_eq_card h).symm
     
   · intro hc
-    let f := Submodule.subtype (span K (Set.Range b))
-    let b' : ι → span K (Set.Range b) := fun i => ⟨b i, mem_span.2 fun p hp => hp (Set.mem_range_self _)⟩
-    have hs : ⊤ ≤ span K (Set.Range b') := by
+    let f := Submodule.subtype (span K (Set.range b))
+    let b' : ι → span K (Set.range b) := fun i => ⟨b i, mem_span.2 fun p hp => hp (Set.mem_range_self _)⟩
+    have hs : ⊤ ≤ span K (Set.range b') := by
       intro x
-      have h : span K (f '' Set.Range b') = map f (span K (Set.Range b')) := span_image f
-      have hf : f '' Set.Range b' = Set.Range b := by
+      have h : span K (f '' Set.range b') = map f (span K (Set.range b')) := span_image f
+      have hf : f '' Set.range b' = Set.range b := by
         ext x
         simp [Set.mem_image, Set.mem_range]
       rw [hf] at h
-      have hx : (x : V) ∈ span K (Set.Range b) := x.property
+      have hx : (x : V) ∈ span K (Set.range b) := x.property
       conv at hx =>
       congr
       skip
@@ -420,19 +420,19 @@ theorem linear_independent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {
 #align linear_independent_iff_card_eq_finrank_span linear_independent_iff_card_eq_finrank_span
 
 theorem linear_independent_iff_card_le_finrank_span {ι : Type _} [Fintype ι] {b : ι → V} :
-    LinearIndependent K b ↔ Fintype.card ι ≤ (Set.Range b).finrank K := by
+    LinearIndependent K b ↔ Fintype.card ι ≤ (Set.range b).finrank K := by
   rw [linear_independent_iff_card_eq_finrank_span, finrank_range_le_card.le_iff_eq]
 #align linear_independent_iff_card_le_finrank_span linear_independent_iff_card_le_finrank_span
 
 /-- A family of `finrank K V` vectors forms a basis if they span the whole space. -/
 noncomputable def basisOfTopLeSpanOfCardEqFinrank {ι : Type _} [Fintype ι] (b : ι → V)
-    (le_span : ⊤ ≤ span K (Set.Range b)) (card_eq : Fintype.card ι = finrank K V) : Basis ι K V :=
+    (le_span : ⊤ ≤ span K (Set.range b)) (card_eq : Fintype.card ι = finrank K V) : Basis ι K V :=
   Basis.mk (linear_independent_of_top_le_span_of_card_eq_finrank le_span card_eq) le_span
 #align basis_of_top_le_span_of_card_eq_finrank basisOfTopLeSpanOfCardEqFinrank
 
 @[simp]
 theorem coe_basis_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fintype ι] (b : ι → V)
-    (le_span : ⊤ ≤ span K (Set.Range b)) (card_eq : Fintype.card ι = finrank K V) :
+    (le_span : ⊤ ≤ span K (Set.range b)) (card_eq : Fintype.card ι = finrank K V) :
     ⇑(basisOfTopLeSpanOfCardEqFinrank b le_span card_eq) = b :=
   Basis.coe_mk _ _
 #align coe_basis_of_top_le_span_of_card_eq_finrank coe_basis_of_top_le_span_of_card_eq_finrank

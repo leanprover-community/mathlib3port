@@ -308,7 +308,7 @@ theorem st_eq_Sup {x : ℝ*} : st x = sup { y : ℝ | (y : ℝ*) < x } := by
   · exact is_st_unique (Classical.choose_spec h) (is_st_Sup (not_infinite_of_exists_st h))
     
   · cases' not_imp_comm.mp exists_st_of_not_infinite h with H H
-    · rw [(Set.ext fun i => ⟨fun hi => Set.mem_univ i, fun hi => H i⟩ : { y : ℝ | (y : ℝ*) < x } = Set.Univ)]
+    · rw [(Set.ext fun i => ⟨fun hi => Set.mem_univ i, fun hi => H i⟩ : { y : ℝ | (y : ℝ*) < x } = Set.univ)]
       exact real.Sup_univ.symm
       
     · rw [(Set.ext fun i =>

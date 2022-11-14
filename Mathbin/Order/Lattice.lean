@@ -75,6 +75,7 @@ end
 /-- A `semilattice_sup` is a join-semilattice, that is, a partial order
   with a join (a.k.a. lub / least upper bound, sup / supremum) operation
   `⊔` which is the least element larger than both factors. -/
+@[protect_proj]
 class SemilatticeSup (α : Type u) extends HasSup α, PartialOrder α where
   le_sup_left : ∀ a b : α, a ≤ a ⊔ b
   le_sup_right : ∀ a b : α, b ≤ a ⊔ b
@@ -342,6 +343,7 @@ end SemilatticeSup
 /-- A `semilattice_inf` is a meet-semilattice, that is, a partial order
   with a meet (a.k.a. glb / greatest lower bound, inf / infimum) operation
   `⊓` which is the greatest element smaller than both factors. -/
+@[protect_proj]
 class SemilatticeInf (α : Type u) extends HasInf α, PartialOrder α where
   inf_le_left : ∀ a b : α, a ⊓ b ≤ a
   inf_le_right : ∀ a b : α, a ⊓ b ≤ b
@@ -740,6 +742,7 @@ A classic example of a distributive lattice
 is the lattice of subsets of a set, and in fact this example is
 generic in the sense that every distributive lattice is realizable
 as a sublattice of a powerset lattice. -/
+@[protect_proj]
 class DistribLattice (α) extends Lattice α where
   le_sup_inf : ∀ x y z : α, (x ⊔ y) ⊓ (x ⊔ z) ≤ x ⊔ y ⊓ z
 #align distrib_lattice DistribLattice
@@ -885,12 +888,15 @@ theorem sup_eq_max_default [SemilatticeSup α] [DecidableRel ((· ≤ ·) : α �
   ext (x y)
   dsimp only [maxDefault]
   split_ifs with h'
-  exacts[sup_of_le_left h', sup_of_le_right <| (total_of (· ≤ ·) x y).resolve_right h']
+  exacts[sup_of_le_right h', sup_of_le_left <| (total_of (· ≤ ·) x y).resolve_left h']
 #align sup_eq_max_default sup_eq_max_default
 
 theorem inf_eq_min_default [SemilatticeInf α] [DecidableRel ((· ≤ ·) : α → α → Prop)] [IsTotal α (· ≤ ·)] :
-    (· ⊓ ·) = (minDefault : α → α → α) :=
-  @sup_eq_max_default αᵒᵈ _ _ _
+    (· ⊓ ·) = (minDefault : α → α → α) := by
+  ext (x y)
+  dsimp only [minDefault]
+  split_ifs with h'
+  exacts[inf_of_le_left h', inf_of_le_right <| (total_of (· ≤ ·) x y).resolve_left h']
 #align inf_eq_min_default inf_eq_min_default
 
 /-- A lattice with total order is a linear order.

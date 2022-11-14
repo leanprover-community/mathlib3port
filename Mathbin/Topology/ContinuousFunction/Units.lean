@@ -96,9 +96,9 @@ theorem is_unit_iff_forall_ne_zero (f : C(X, 𝕜)) : IsUnit f ↔ ∀ x, f x �
   simp_rw [f.is_unit_iff_forall_is_unit, is_unit_iff_ne_zero]
 #align continuous_map.is_unit_iff_forall_ne_zero ContinuousMap.is_unit_iff_forall_ne_zero
 
-theorem spectrum_eq_range (f : C(X, 𝕜)) : Spectrum 𝕜 f = Set.Range f := by
+theorem spectrum_eq_range (f : C(X, 𝕜)) : spectrum 𝕜 f = Set.range f := by
   ext
-  simp only [Spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, ContinuousMap.coe_sub, Pi.sub_apply,
+  simp only [spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, ContinuousMap.coe_sub, Pi.sub_apply,
     algebra_map_apply, Algebra.id.smul_eq_mul, mul_one, not_not, Set.mem_range, sub_eq_zero, @eq_comm _ x _]
 #align continuous_map.spectrum_eq_range ContinuousMap.spectrum_eq_range
 

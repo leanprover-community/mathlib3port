@@ -57,7 +57,7 @@ variable {K : Type u} [Field K]
 
 -- maybe try to relax the universe constraint
 theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
-    ker (diagonal w).toLin' = ⨆ i ∈ { i | w i = 0 }, Range (LinearMap.stdBasis K (fun i => K) i) := by
+    ker (diagonal w).toLin' = ⨆ i ∈ { i | w i = 0 }, range (LinearMap.stdBasis K (fun i => K) i) := by
   rw [← comap_bot, ← infi_ker_proj, comap_infi]
   have := fun i : m => ker_comp (to_lin' (diagonal w)) (proj i)
   simp only [comap_infi, ← this, proj_diagonal, ker_smul']

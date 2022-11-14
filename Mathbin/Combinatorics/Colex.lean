@@ -106,7 +106,7 @@ namespace Colex
 
 /-- Strictly monotone functions preserve the colex ordering. -/
 theorem hom_lt_iff {β : Type _} [LinearOrder α] [DecidableEq β] [Preorder β] {f : α → β} (h₁ : StrictMono f)
-    (A B : Finset α) : (A.Image f).toColex < (B.Image f).toColex ↔ A.toColex < B.toColex := by
+    (A B : Finset α) : (A.image f).toColex < (B.image f).toColex ↔ A.toColex < B.toColex := by
   simp only [Colex.lt_def, not_exists, mem_image, exists_prop, not_and]
   constructor
   · rintro ⟨k, z, q, k', _, rfl⟩
@@ -129,7 +129,7 @@ theorem hom_lt_iff {β : Type _} [LinearOrder α] [DecidableEq β] [Preorder β]
 /-- A special case of `colex.hom_lt_iff` which is sometimes useful. -/
 @[simp]
 theorem hom_fin_lt_iff {n : ℕ} (A B : Finset (Fin n)) :
-    (A.Image fun i : Fin n => (i : ℕ)).toColex < (B.Image fun i : Fin n => (i : ℕ)).toColex ↔ A.toColex < B.toColex :=
+    (A.image fun i : Fin n => (i : ℕ)).toColex < (B.image fun i : Fin n => (i : ℕ)).toColex ↔ A.toColex < B.toColex :=
   Colex.hom_lt_iff (fun x y k => k) _ _
 #align colex.hom_fin_lt_iff Colex.hom_fin_lt_iff
 
@@ -231,13 +231,13 @@ example [LinearOrder α] : IsStrictTotalOrder (Finset.Colex α) (· < ·) :=
 
 /-- Strictly monotone functions preserve the colex ordering. -/
 theorem hom_le_iff {β : Type _} [LinearOrder α] [LinearOrder β] {f : α → β} (h₁ : StrictMono f) (A B : Finset α) :
-    (A.Image f).toColex ≤ (B.Image f).toColex ↔ A.toColex ≤ B.toColex := by rw [le_iff_le_iff_lt_iff_lt, hom_lt_iff h₁]
+    (A.image f).toColex ≤ (B.image f).toColex ↔ A.toColex ≤ B.toColex := by rw [le_iff_le_iff_lt_iff_lt, hom_lt_iff h₁]
 #align colex.hom_le_iff Colex.hom_le_iff
 
 /-- A special case of `colex_hom` which is sometimes useful. -/
 @[simp]
 theorem hom_fin_le_iff {n : ℕ} (A B : Finset (Fin n)) :
-    (A.Image fun i : Fin n => (i : ℕ)).toColex ≤ (B.Image fun i : Fin n => (i : ℕ)).toColex ↔ A.toColex ≤ B.toColex :=
+    (A.image fun i : Fin n => (i : ℕ)).toColex ≤ (B.image fun i : Fin n => (i : ℕ)).toColex ↔ A.toColex ≤ B.toColex :=
   Colex.hom_le_iff (fun x y k => k) _ _
 #align colex.hom_fin_le_iff Colex.hom_fin_le_iff
 

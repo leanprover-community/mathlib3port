@@ -44,7 +44,7 @@ variable {α : Type _} {β : Type _}
 /-- A subset of a finite Cartesian product of a structure is definable over a set `A` when
   membership in the set is given by a first-order formula with parameters from `A`. -/
 def Definable (s : Set (α → M)) : Prop :=
-  ∃ φ : L[[A]].Formula α, s = SetOf φ.realize
+  ∃ φ : L[[A]].Formula α, s = setOf φ.realize
 #align set.definable Set.Definable
 
 variable {L} {A} {B : Set M} {s : Set (α → M)}
@@ -57,7 +57,7 @@ theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.StructureCat M] (
   simp only [mem_set_of_eq, Lhom.realize_on_formula]
 #align set.definable.map_expansion Set.Definable.map_expansion
 
-theorem empty_definable_iff : (∅ : Set M).Definable L s ↔ ∃ φ : L.Formula α, s = SetOf φ.realize := by
+theorem empty_definable_iff : (∅ : Set M).Definable L s ↔ ∃ φ : L.Formula α, s = setOf φ.realize := by
   rw [definable, Equiv.exists_congr_left (Lequiv.add_empty_constants L (∅ : Set M)).onFormula]
   simp
 #align set.empty_definable_iff Set.empty_definable_iff
@@ -79,7 +79,7 @@ theorem definable_empty : A.Definable L (∅ : Set (α → M)) :=
 #align set.definable_empty Set.definable_empty
 
 @[simp]
-theorem definable_univ : A.Definable L (Univ : Set (α → M)) :=
+theorem definable_univ : A.Definable L (univ : Set (α → M)) :=
   ⟨⊤, by
     ext
     simp⟩

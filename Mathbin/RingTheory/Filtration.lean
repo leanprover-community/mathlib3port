@@ -262,7 +262,7 @@ variable (F F')
 
 /-- The `R[IX]`-submodule of `M[X]` associated with an `I`-filtration. -/
 protected def submodule : Submodule (reesAlgebra I) (PolynomialModule R M) where
-  Carrier := { f | ∀ i, f i ∈ F.n i }
+  carrier := { f | ∀ i, f i ∈ F.n i }
   add_mem' f g hf hg i := Submodule.add_mem _ (hf i) (hg i)
   zero_mem' i := Submodule.zero_mem _
   smul_mem' r f hf i := by

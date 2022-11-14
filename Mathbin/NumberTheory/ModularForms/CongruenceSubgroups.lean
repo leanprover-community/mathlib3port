@@ -100,7 +100,7 @@ theorem Gamma_zero_bot : gamma 0 = ⊥ := by
 /-- The congruence subgroup of `SL(2,ℤ)` of matrices whose lower left-hand entry reduces to zero
 modulo `N`. -/
 def gamma0 (N : ℕ) : Subgroup SL(2, ℤ) where
-  Carrier := { g : SL(2, ℤ) | ((↑ₘg 1 0 : ℤ) : Zmod N) = 0 }
+  carrier := { g : SL(2, ℤ) | ((↑ₘg 1 0 : ℤ) : Zmod N) = 0 }
   one_mem' := by simp
   mul_mem' := by
     intro a b ha hb

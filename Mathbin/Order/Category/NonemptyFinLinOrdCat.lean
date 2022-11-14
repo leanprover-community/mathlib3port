@@ -196,7 +196,7 @@ instance : SplitEpiCategory NonemptyFinLinOrdCat.{u} :=
 
 instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdCat.{u} :=
   ⟨fun X Y f => by
-    let I : NonemptyFinLinOrdCat.{u} := ⟨Set.Image (coeFn f) ⊤, ⟨⟩⟩
+    let I : NonemptyFinLinOrdCat.{u} := ⟨Set.image (coeFn f) ⊤, ⟨⟩⟩
     let e : X ⟶ I := ⟨fun x => ⟨f x, ⟨x, by tidy⟩⟩, fun x₁ x₂ h => f.monotone h⟩
     let m : I ⟶ Y := ⟨fun y => y, by tidy⟩
     haveI : epi e := by
@@ -204,7 +204,7 @@ instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdCat.{u} :=
       tidy
     haveI : strong_epi e := strong_epi_of_epi e
     haveI : mono m := concrete_category.mono_of_injective _ (by tidy)
-    exact Nonempty.intro { I, m, e }⟩
+    exact Nonempty.intro { i, m, e }⟩
 
 end NonemptyFinLinOrdCat
 

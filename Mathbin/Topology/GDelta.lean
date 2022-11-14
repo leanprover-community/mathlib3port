@@ -61,17 +61,17 @@ theorem is_Gδ_empty : IsGδ (∅ : Set α) :=
 #align is_Gδ_empty is_Gδ_empty
 
 @[simp]
-theorem is_Gδ_univ : IsGδ (Univ : Set α) :=
+theorem is_Gδ_univ : IsGδ (univ : Set α) :=
   is_open_univ.IsGδ
 #align is_Gδ_univ is_Gδ_univ
 
 theorem is_Gδ_bInter_of_open {I : Set ι} (hI : I.Countable) {f : ι → Set α} (hf : ∀ i ∈ I, IsOpen (f i)) :
     IsGδ (⋂ i ∈ I, f i) :=
-  ⟨f '' I, by rwa [ball_image_iff], hI.Image _, by rw [sInter_image]⟩
+  ⟨f '' I, by rwa [ball_image_iff], hI.image _, by rw [sInter_image]⟩
 #align is_Gδ_bInter_of_open is_Gδ_bInter_of_open
 
 theorem is_Gδ_Inter_of_open [Encodable ι] {f : ι → Set α} (hf : ∀ i, IsOpen (f i)) : IsGδ (⋂ i, f i) :=
-  ⟨Range f, by rwa [forall_range_iff], countable_range _, by rw [sInter_range]⟩
+  ⟨range f, by rwa [forall_range_iff], countable_range _, by rw [sInter_range]⟩
 #align is_Gδ_Inter_of_open is_Gδ_Inter_of_open
 
 /-- The intersection of an encodable family of Gδ sets is a Gδ set. -/

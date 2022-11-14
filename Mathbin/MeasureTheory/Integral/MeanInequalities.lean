@@ -6,7 +6,7 @@ Authors: Rémy Degenne
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.Analysis.MeanInequalities
 import Mathbin.Analysis.MeanInequalitiesPow
-import Mathbin.MeasureTheory.Function.SpecialFunctions
+import Mathbin.MeasureTheory.Function.SpecialFunctions.Basic
 
 /-!
 # Mean value inequalities for integrals

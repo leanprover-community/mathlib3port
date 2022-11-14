@@ -44,13 +44,13 @@ variable (i) [HasFiniteProducts C] [CartesianClosed C]
 `B ∈ D` implies `A ⟹ B ∈ D` for all `A`.
 -/
 class ExponentialIdeal : Prop where
-  exp_closed : ∀ {B}, B ∈ i.EssImage → ∀ A, (A ⟹ B) ∈ i.EssImage
+  exp_closed : ∀ {B}, B ∈ i.essImage → ∀ A, (A ⟹ B) ∈ i.essImage
 #align category_theory.exponential_ideal CategoryTheory.ExponentialIdeal
 
 /-- To show `i` is an exponential ideal it suffices to show that `A ⟹ iB` is "in" `D` for any `A` in
 `C` and `B` in `D`.
 -/
-theorem ExponentialIdeal.mk' (h : ∀ (B : D) (A : C), (A ⟹ i.obj B) ∈ i.EssImage) : ExponentialIdeal i :=
+theorem ExponentialIdeal.mk' (h : ∀ (B : D) (A : C), (A ⟹ i.obj B) ∈ i.essImage) : ExponentialIdeal i :=
   ⟨fun B hB A => by
     rcases hB with ⟨B', ⟨iB'⟩⟩
     exact functor.ess_image.of_iso ((exp A).mapIso iB') (h B' A)⟩

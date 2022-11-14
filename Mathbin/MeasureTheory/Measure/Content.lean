@@ -225,7 +225,7 @@ theorem is_mul_left_invariant_inner_content [Group G] [TopologicalGroup G]
 theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Group G] [TopologicalGroup G]
     (h3 : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G) (hK : μ K ≠ 0)
     (U : Opens G) (hU : (U : Set G).Nonempty) : 0 < μ.innerContent U := by
-  have : (Interior (U : Set G)).Nonempty
+  have : (interior (U : Set G)).Nonempty
   rwa [U.prop.interior_eq]
   rcases compact_covered_by_mul_left_translates K.2 this with ⟨s, hs⟩
   suffices μ K ≤ s.card * μ.inner_content U by exact (ennreal.mul_pos_iff.mp <| hK.bot_lt.trans_le this).2
@@ -278,7 +278,7 @@ theorem outer_measure_eq_infi (A : Set G) :
   induced_outer_measure_eq_infi _ μ.inner_content_Union_nat μ.inner_content_mono A
 #align measure_theory.content.outer_measure_eq_infi MeasureTheory.Content.outer_measure_eq_infi
 
-theorem outer_measure_interior_compacts (K : Compacts G) : μ.OuterMeasure (Interior K) ≤ μ K :=
+theorem outer_measure_interior_compacts (K : Compacts G) : μ.OuterMeasure (interior K) ≤ μ K :=
   (μ.outer_measure_opens <| Opens.interior K).le.trans <| μ.inner_content_le _ _ interior_subset
 #align measure_theory.content.outer_measure_interior_compacts MeasureTheory.Content.outer_measure_interior_compacts
 
@@ -309,8 +309,8 @@ theorem outer_measure_lt_top_of_is_compact [LocallyCompactSpace G] {K : Set G} (
     μ.OuterMeasure K < ∞ := by
   rcases exists_compact_superset hK with ⟨F, h1F, h2F⟩
   calc
-    μ.outer_measure K ≤ μ.outer_measure (Interior F) := outer_measure.mono' _ h2F
-    _ ≤ μ ⟨F, h1F⟩ := by apply μ.outer_measure_le ⟨Interior F, is_open_interior⟩ ⟨F, h1F⟩ interior_subset
+    μ.outer_measure K ≤ μ.outer_measure (interior F) := outer_measure.mono' _ h2F
+    _ ≤ μ ⟨F, h1F⟩ := by apply μ.outer_measure_le ⟨interior F, is_open_interior⟩ ⟨F, h1F⟩ interior_subset
     _ < ⊤ := μ.lt_top _
     
 #align
@@ -417,15 +417,15 @@ section RegularContents
   `μ(K) = inf {μ(K') : K ⊂ int K' ⊂ K'`. See Paul Halmos (1950), Measure Theory, §54-/
 def ContentRegular :=
   ∀ ⦃K : TopologicalSpace.Compacts G⦄,
-    μ K = ⨅ (K' : TopologicalSpace.Compacts G) (hK : (K : Set G) ⊆ Interior (K' : Set G)), μ K'
+    μ K = ⨅ (K' : TopologicalSpace.Compacts G) (hK : (K : Set G) ⊆ interior (K' : Set G)), μ K'
 #align measure_theory.content.content_regular MeasureTheory.Content.ContentRegular
 
 theorem content_regular_exists_compact (H : ContentRegular μ) (K : TopologicalSpace.Compacts G) {ε : Nnreal}
-    (hε : ε ≠ 0) : ∃ K' : TopologicalSpace.Compacts G, K.Carrier ⊆ Interior K'.Carrier ∧ μ K' ≤ μ K + ε := by
+    (hε : ε ≠ 0) : ∃ K' : TopologicalSpace.Compacts G, K.carrier ⊆ interior K'.carrier ∧ μ K' ≤ μ K + ε := by
   by_contra hc
   simp only [not_exists, not_and, not_le] at hc
   have lower_bound_infi :
-    μ K + ε ≤ ⨅ (K' : TopologicalSpace.Compacts G) (h : (K : Set G) ⊆ Interior (K' : Set G)), μ K' :=
+    μ K + ε ≤ ⨅ (K' : TopologicalSpace.Compacts G) (h : (K : Set G) ⊆ interior (K' : Set G)), μ K' :=
     le_infi fun K' => le_infi fun K'_hyp => le_of_lt (hc K' K'_hyp)
   rw [← H] at lower_bound_infi
   exact
@@ -444,7 +444,7 @@ theorem measure_eq_content_of_regular (H : MeasureTheory.Content.ContentRegular 
     intro ε εpos content_K_finite
     obtain ⟨K', K'_hyp⟩ := content_regular_exists_compact μ H K (ne_bot_of_gt εpos)
     calc
-      μ.measure ↑K ≤ μ.measure (Interior ↑K') := _
+      μ.measure ↑K ≤ μ.measure (interior ↑K') := _
       _ ≤ μ K' := _
       _ ≤ μ K + ε := K'_hyp.right
       

@@ -613,7 +613,7 @@ spaces is an open subset of the space of linear maps between them.
 -/
 
 
-protected theorem is_open [CompleteSpace E] : IsOpen (Range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F)) := by
+protected theorem is_open [CompleteSpace E] : IsOpen (range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F)) := by
   rw [is_open_iff_mem_nhds, forall_range_iff]
   refine' fun e => IsOpen.mem_nhds _ (mem_range_self _)
   let O : (E →L[𝕜] F) → E →L[𝕜] E := fun f => (e.symm : F →L[𝕜] E).comp f
@@ -631,7 +631,7 @@ protected theorem is_open [CompleteSpace E] : IsOpen (Range (coe : (E ≃L[𝕜]
     
 #align continuous_linear_equiv.is_open ContinuousLinearEquiv.is_open
 
-protected theorem nhds [CompleteSpace E] (e : E ≃L[𝕜] F) : Range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F) ∈ 𝓝 (e : E →L[𝕜] F) :=
+protected theorem nhds [CompleteSpace E] (e : E ≃L[𝕜] F) : range (coe : (E ≃L[𝕜] F) → E →L[𝕜] F) ∈ 𝓝 (e : E →L[𝕜] F) :=
   IsOpen.mem_nhds ContinuousLinearEquiv.is_open (by simp)
 #align continuous_linear_equiv.nhds ContinuousLinearEquiv.nhds
 

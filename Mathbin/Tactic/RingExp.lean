@@ -375,7 +375,7 @@ and the `context` combines the two types, one for bases and one for exponents.
 -/
 unsafe structure eval_info where
   α : expr
-  Univ : level
+  univ : level
   -- Cache the instances for optimization and consistency
   csr_instance : expr
   ha_instance : expr

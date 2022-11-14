@@ -193,7 +193,7 @@ open Subalgebra AlgHom Function
 /-- This structure is used to prove the existence of a homomorphism from any algebraic extension
 into an algebraic closure -/
 structure SubfieldWithHom where
-  Carrier : Subalgebra K L
+  carrier : Subalgebra K L
   emb : carrier →ₐ[K] M
 #align lift.subfield_with_hom lift.SubfieldWithHom
 
@@ -205,12 +205,12 @@ variable {E₁ E₂ E₃ : SubfieldWithHom K L M hL}
 
 instance :
     LE
-      (SubfieldWithHom K L M hL) where le E₁ E₂ := ∃ h : E₁.Carrier ≤ E₂.Carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x
+      (SubfieldWithHom K L M hL) where le E₁ E₂ := ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x
 
 noncomputable instance : Inhabited (SubfieldWithHom K L M hL) :=
-  ⟨{ Carrier := ⊥, emb := (Algebra.ofId K M).comp (Algebra.botEquiv K L).toAlgHom }⟩
+  ⟨{ carrier := ⊥, emb := (Algebra.ofId K M).comp (Algebra.botEquiv K L).toAlgHom }⟩
 
-theorem le_def : E₁ ≤ E₂ ↔ ∃ h : E₁.Carrier ≤ E₂.Carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x :=
+theorem le_def : E₁ ≤ E₂ ↔ ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x :=
   Iff.rfl
 #align lift.subfield_with_hom.le_def lift.SubfieldWithHom.le_def
 
@@ -233,9 +233,9 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
   if hcn : c.Nonempty then
     let ub : SubfieldWithHom K L M hL :=
       haveI : Nonempty c := Set.Nonempty.to_subtype hcn
-      { Carrier := ⨆ i : c, (i : subfield_with_hom K L M hL).Carrier,
+      { carrier := ⨆ i : c, (i : subfield_with_hom K L M hL).carrier,
         emb :=
-          Subalgebra.suprLift (fun i : c => (i : subfield_with_hom K L M hL).Carrier)
+          Subalgebra.suprLift (fun i : c => (i : subfield_with_hom K L M hL).carrier)
             (fun i j =>
               let ⟨k, hik, hjk⟩ := directed_on_iff_directed.1 hc.directed_on i j
               ⟨k, hik.fst, hjk.fst⟩)
@@ -251,7 +251,7 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
                 )
             _ rfl }
     ⟨ub, fun N hN =>
-      ⟨(le_supr (fun i : c => (i : SubfieldWithHom K L M hL).Carrier) ⟨N, hN⟩ : _), by
+      ⟨(le_supr (fun i : c => (i : SubfieldWithHom K L M hL).carrier) ⟨N, hN⟩ : _), by
         intro x
         simp [ub]
         rfl⟩⟩
@@ -278,11 +278,11 @@ theorem maximal_subfield_with_hom_is_maximal :
 #align
   lift.subfield_with_hom.maximal_subfield_with_hom_is_maximal lift.SubfieldWithHom.maximal_subfield_with_hom_is_maximal
 
-theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).Carrier = ⊤ := by
+theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).carrier = ⊤ := by
   rw [eq_top_iff]
   intro x _
   let p := minpoly K x
-  let N : Subalgebra K L := (maximal_subfield_with_hom M hL).Carrier
+  let N : Subalgebra K L := (maximal_subfield_with_hom M hL).carrier
   letI : Field N := (Subalgebra.isFieldOfAlgebraic N hL).toField
   letI : Algebra N M := (maximal_subfield_with_hom M hL).emb.toRingHom.toAlgebra
   cases'
@@ -296,7 +296,7 @@ theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).Carrier
     intro z hz
     show algebraMap N L ⟨z, hz⟩ ∈ O
     exact O.algebra_map_mem _
-  let O' : subfield_with_hom K L M hL := { Carrier := O.restrict_scalars K, emb := larger_emb.restrict_scalars K }
+  let O' : subfield_with_hom K L M hL := { carrier := O.restrict_scalars K, emb := larger_emb.restrict_scalars K }
   have hO' : maximal_subfield_with_hom M hL ≤ O' := by
     refine' ⟨hNO, _⟩
     intro z
@@ -503,7 +503,7 @@ end IsAlgClosure
   the roots in `A` of the minimal polynomial of `x` over `F`. -/
 theorem Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly {F K} (A) [Field F] [Field K] [Field A] [IsAlgClosed A]
     [Algebra F K] (hK : Algebra.IsAlgebraic F K) [Algebra F A] (x : K) :
-    (Set.Range fun ψ : K →ₐ[F] A => ψ x) = (minpoly F x).RootSet A := by
+    (Set.range fun ψ : K →ₐ[F] A => ψ x) = (minpoly F x).rootSet A := by
   have := Algebra.is_algebraic_iff_is_integral.1 hK
   ext a
   rw [mem_root_set_iff (minpoly.ne_zero <| this x) a]

@@ -30,9 +30,9 @@ instance :
     One
       (SubMulAction R
         M) where one :=
-    { Carrier := Set.Range fun r : R => r • (1 : M), smul_mem' := fun r m ⟨r', hr'⟩ => hr' ▸ ⟨r * r', mul_smul _ _ _⟩ }
+    { carrier := Set.range fun r : R => r • (1 : M), smul_mem' := fun r m ⟨r', hr'⟩ => hr' ▸ ⟨r * r', mul_smul _ _ _⟩ }
 
-theorem coe_one : ↑(1 : SubMulAction R M) = Set.Range fun r : R => r • (1 : M) :=
+theorem coe_one : ↑(1 : SubMulAction R M) = Set.range fun r : R => r • (1 : M) :=
   rfl
 #align sub_mul_action.coe_one SubMulAction.coe_one
 
@@ -54,7 +54,7 @@ instance :
     Mul
       (SubMulAction R
         M) where mul p q :=
-    { Carrier := Set.Image2 (· * ·) p q,
+    { carrier := Set.image2 (· * ·) p q,
       smul_mem' := fun r m ⟨m₁, m₂, hm₁, hm₂, h⟩ =>
         h ▸ smul_mul_assoc r m₁ m₂ ▸ Set.mul_mem_mul (p.smul_mem _ hm₁) hm₂ }
 

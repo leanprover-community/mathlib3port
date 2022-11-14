@@ -357,7 +357,7 @@ open Real (smoothTransition)
 
 open Real.smoothTransition Metric
 
-theorem one_of_mem_closed_ball (hx : x ∈ ClosedBall c f.R) : f x = 1 :=
+theorem one_of_mem_closed_ball (hx : x ∈ closedBall c f.R) : f x = 1 :=
   one_of_one_le <| (one_le_div (sub_pos.2 f.r_lt_R)).2 <| sub_le_sub_left hx _
 #align cont_diff_bump_of_inner.one_of_mem_closed_ball ContDiffBumpOfInner.one_of_mem_closed_ball
 
@@ -374,7 +374,7 @@ theorem le_one : f x ≤ 1 :=
   le_one _
 #align cont_diff_bump_of_inner.le_one ContDiffBumpOfInner.le_one
 
-theorem pos_of_mem_ball (hx : x ∈ Ball c f.r) : 0 < f x :=
+theorem pos_of_mem_ball (hx : x ∈ ball c f.r) : 0 < f x :=
   pos_of_pos <| div_pos (sub_pos.2 hx) (sub_pos.2 f.r_lt_R)
 #align cont_diff_bump_of_inner.pos_of_mem_ball ContDiffBumpOfInner.pos_of_mem_ball
 
@@ -386,7 +386,7 @@ theorem zero_of_le_dist (hx : f.r ≤ dist x c) : f x = 0 :=
   zero_of_nonpos <| div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 hx) (sub_nonneg.2 f.r_lt_R.le)
 #align cont_diff_bump_of_inner.zero_of_le_dist ContDiffBumpOfInner.zero_of_le_dist
 
-theorem support_eq : Support (f : E → ℝ) = Metric.Ball c f.r := by
+theorem support_eq : support (f : E → ℝ) = Metric.ball c f.r := by
   ext x
   suffices f x ≠ 0 ↔ dist x c < f.R by simpa [mem_support]
   cases' lt_or_le (dist x c) f.R with hx hx
@@ -396,14 +396,14 @@ theorem support_eq : Support (f : E → ℝ) = Metric.Ball c f.r := by
     
 #align cont_diff_bump_of_inner.support_eq ContDiffBumpOfInner.support_eq
 
-theorem tsupport_eq : Tsupport f = ClosedBall c f.r := by simp_rw [Tsupport, f.support_eq, closure_ball _ f.R_pos.ne']
+theorem tsupport_eq : tsupport f = closedBall c f.r := by simp_rw [tsupport, f.support_eq, closure_ball _ f.R_pos.ne']
 #align cont_diff_bump_of_inner.tsupport_eq ContDiffBumpOfInner.tsupport_eq
 
 protected theorem has_compact_support [FiniteDimensional ℝ E] : HasCompactSupport f := by
   simp_rw [HasCompactSupport, f.tsupport_eq, is_compact_closed_ball]
 #align cont_diff_bump_of_inner.has_compact_support ContDiffBumpOfInner.has_compact_support
 
-theorem eventually_eq_one_of_mem_ball (h : x ∈ Ball c f.R) : f =ᶠ[𝓝 x] 1 :=
+theorem eventually_eq_one_of_mem_ball (h : x ∈ ball c f.R) : f =ᶠ[𝓝 x] 1 :=
   ((is_open_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono fun z hz =>
     f.one_of_mem_closed_ball (le_of_lt hz)
 #align cont_diff_bump_of_inner.eventually_eq_one_of_mem_ball ContDiffBumpOfInner.eventually_eq_one_of_mem_ball
@@ -506,12 +506,12 @@ theorem integral_normed : (∫ x, f.normed μ x ∂μ) = 1 := by
   exact inv_mul_cancel f.integral_pos.ne'
 #align cont_diff_bump_of_inner.integral_normed ContDiffBumpOfInner.integral_normed
 
-theorem support_normed_eq : Support (f.normed μ) = Metric.Ball c f.r := by
+theorem support_normed_eq : support (f.normed μ) = Metric.ball c f.r := by
   simp_rw [ContDiffBumpOfInner.normed, support_div, f.support_eq, support_const f.integral_pos.ne', inter_univ]
 #align cont_diff_bump_of_inner.support_normed_eq ContDiffBumpOfInner.support_normed_eq
 
-theorem tsupport_normed_eq : Tsupport (f.normed μ) = Metric.ClosedBall c f.r := by
-  simp_rw [Tsupport, f.support_normed_eq, closure_ball _ f.R_pos.ne']
+theorem tsupport_normed_eq : tsupport (f.normed μ) = Metric.closedBall c f.r := by
+  simp_rw [tsupport, f.support_normed_eq, closure_ball _ f.R_pos.ne']
 #align cont_diff_bump_of_inner.tsupport_normed_eq ContDiffBumpOfInner.tsupport_normed_eq
 
 theorem has_compact_support_normed : HasCompactSupport (f.normed μ) := by
@@ -520,7 +520,7 @@ theorem has_compact_support_normed : HasCompactSupport (f.normed μ) := by
 
 theorem tendsto_support_normed_small_sets {ι} {φ : ι → ContDiffBumpOfInner c} {l : Filter ι}
     (hφ : Tendsto (fun i => (φ i).r) l (𝓝 0)) :
-    Tendsto (fun i => Support fun x => (φ i).normed μ x) l (𝓝 c).smallSets := by
+    Tendsto (fun i => support fun x => (φ i).normed μ x) l (𝓝 c).smallSets := by
   simp_rw [NormedAddCommGroup.tendsto_nhds_zero, Real.norm_eq_abs, abs_eq_self.mpr (φ _).R_pos.le] at hφ
   rw [tendsto_small_sets_iff]
   intro t ht
@@ -575,7 +575,7 @@ theorem coe_eq_comp : ⇑f = f.toContDiffBumpOfInner ∘ toEuclidean :=
   rfl
 #align cont_diff_bump.coe_eq_comp ContDiffBump.coe_eq_comp
 
-theorem one_of_mem_closed_ball (hx : x ∈ Euclidean.ClosedBall c f.R) : f x = 1 :=
+theorem one_of_mem_closed_ball (hx : x ∈ Euclidean.closedBall c f.R) : f x = 1 :=
   f.toContDiffBumpOfInner.one_of_mem_closed_ball hx
 #align cont_diff_bump.one_of_mem_closed_ball ContDiffBump.one_of_mem_closed_ball
 
@@ -587,7 +587,7 @@ theorem le_one : f x ≤ 1 :=
   f.toContDiffBumpOfInner.le_one
 #align cont_diff_bump.le_one ContDiffBump.le_one
 
-theorem pos_of_mem_ball (hx : x ∈ Euclidean.Ball c f.r) : 0 < f x :=
+theorem pos_of_mem_ball (hx : x ∈ Euclidean.ball c f.r) : 0 < f x :=
   f.toContDiffBumpOfInner.pos_of_mem_ball hx
 #align cont_diff_bump.pos_of_mem_ball ContDiffBump.pos_of_mem_ball
 
@@ -599,19 +599,19 @@ theorem zero_of_le_dist (hx : f.r ≤ Euclidean.dist x c) : f x = 0 :=
   f.toContDiffBumpOfInner.zero_of_le_dist hx
 #align cont_diff_bump.zero_of_le_dist ContDiffBump.zero_of_le_dist
 
-theorem support_eq : Support (f : E → ℝ) = Euclidean.Ball c f.r := by
+theorem support_eq : support (f : E → ℝ) = Euclidean.ball c f.r := by
   rw [Euclidean.ball_eq_preimage, ← f.to_cont_diff_bump_of_inner.support_eq, ← support_comp_eq_preimage, coe_eq_comp]
 #align cont_diff_bump.support_eq ContDiffBump.support_eq
 
-theorem tsupport_eq : Tsupport f = Euclidean.ClosedBall c f.r := by
-  rw [Tsupport, f.support_eq, Euclidean.closure_ball _ f.R_pos.ne']
+theorem tsupport_eq : tsupport f = Euclidean.closedBall c f.r := by
+  rw [tsupport, f.support_eq, Euclidean.closure_ball _ f.R_pos.ne']
 #align cont_diff_bump.tsupport_eq ContDiffBump.tsupport_eq
 
 protected theorem has_compact_support : HasCompactSupport f := by
   simp_rw [HasCompactSupport, f.tsupport_eq, Euclidean.is_compact_closed_ball]
 #align cont_diff_bump.has_compact_support ContDiffBump.has_compact_support
 
-theorem eventually_eq_one_of_mem_ball (h : x ∈ Euclidean.Ball c f.R) : f =ᶠ[𝓝 x] 1 :=
+theorem eventually_eq_one_of_mem_ball (h : x ∈ Euclidean.ball c f.R) : f =ᶠ[𝓝 x] 1 :=
   toEuclidean.ContinuousAt (f.toContDiffBumpOfInner.eventually_eq_one_of_mem_ball h)
 #align cont_diff_bump.eventually_eq_one_of_mem_ball ContDiffBump.eventually_eq_one_of_mem_ball
 
@@ -631,13 +631,13 @@ protected theorem contDiffWithinAt {s n} : ContDiffWithinAt ℝ n f s x :=
   f.ContDiffAt.ContDiffWithinAt
 #align cont_diff_bump.cont_diff_within_at ContDiffBump.contDiffWithinAt
 
-theorem exists_tsupport_subset {s : Set E} (hs : s ∈ 𝓝 c) : ∃ f : ContDiffBump c, Tsupport f ⊆ s :=
+theorem exists_tsupport_subset {s : Set E} (hs : s ∈ 𝓝 c) : ∃ f : ContDiffBump c, tsupport f ⊆ s :=
   let ⟨R, h0, hR⟩ := Euclidean.nhds_basis_closed_ball.mem_iff.1 hs
   ⟨⟨⟨R / 2, R, half_pos h0, half_lt_self h0⟩⟩, by rwa [tsupport_eq]⟩
 #align cont_diff_bump.exists_tsupport_subset ContDiffBump.exists_tsupport_subset
 
-theorem exists_closure_subset {R : ℝ} (hR : 0 < R) {s : Set E} (hs : IsClosed s) (hsR : s ⊆ Euclidean.Ball c R) :
-    ∃ f : ContDiffBump c, f.r = R ∧ s ⊆ Euclidean.Ball c f.R := by
+theorem exists_closure_subset {R : ℝ} (hR : 0 < R) {s : Set E} (hs : IsClosed s) (hsR : s ⊆ Euclidean.ball c R) :
+    ∃ f : ContDiffBump c, f.r = R ∧ s ⊆ Euclidean.ball c f.R := by
   rcases Euclidean.exists_pos_lt_subset_ball hR hs hsR with ⟨r, hr, hsr⟩
   exact ⟨⟨⟨r, R, hr.1, hr.2⟩⟩, rfl, hsr⟩
 #align cont_diff_bump.exists_closure_subset ContDiffBump.exists_closure_subset
@@ -658,7 +658,7 @@ This lemma is a simple wrapper around lemmas about bundled smooth bump functions
 `cont_diff_bump`. -/
 theorem exists_cont_diff_bump_function_of_mem_nhds [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     {x : E} {s : Set E} (hs : s ∈ 𝓝 x) :
-    ∃ f : E → ℝ, f =ᶠ[𝓝 x] 1 ∧ (∀ y, f y ∈ IccCat (0 : ℝ) 1) ∧ ContDiff ℝ ⊤ f ∧ HasCompactSupport f ∧ Tsupport f ⊆ s :=
+    ∃ f : E → ℝ, f =ᶠ[𝓝 x] 1 ∧ (∀ y, f y ∈ icc (0 : ℝ) 1) ∧ ContDiff ℝ ⊤ f ∧ HasCompactSupport f ∧ tsupport f ⊆ s :=
   let ⟨f, hf⟩ := ContDiffBump.exists_tsupport_subset hs
   ⟨f, f.eventually_eq_one, fun y => ⟨f.Nonneg, f.le_one⟩, f.ContDiff, f.HasCompactSupport, hf⟩
 #align exists_cont_diff_bump_function_of_mem_nhds exists_cont_diff_bump_function_of_mem_nhds

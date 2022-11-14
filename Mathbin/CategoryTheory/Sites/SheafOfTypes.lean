@@ -294,12 +294,12 @@ variable {T : Presieve (F.obj Z)} {x : FamilyOfElements P T}
 /-- Given a family of elements of a sieve `S` on `F(X)`, we can realize it as a family of elements of
 `S.functor_pullback F`.
 -/
-def FamilyOfElements.functorPullback (x : FamilyOfElements P T) : FamilyOfElements (F.op ⋙ P) (T.FunctorPullback F) :=
+def FamilyOfElements.functorPullback (x : FamilyOfElements P T) : FamilyOfElements (F.op ⋙ P) (T.functorPullback F) :=
   fun Y f hf => x (F.map f) hf
 #align
   category_theory.presieve.family_of_elements.functor_pullback CategoryTheory.Presieve.FamilyOfElements.functorPullback
 
-theorem FamilyOfElements.Compatible.functor_pullback (h : x.Compatible) : (x.FunctorPullback F).Compatible := by
+theorem FamilyOfElements.Compatible.functor_pullback (h : x.Compatible) : (x.functorPullback F).Compatible := by
   intro Z₁ Z₂ W g₁ g₂ f₁ f₂ h₁ h₂ eq
   exact h (F.map g₁) (F.map g₂) h₁ h₂ (by simp only [← F.map_comp, Eq])
 #align
@@ -312,7 +312,7 @@ realize it as a family of elements of `S.functor_pushforward F`. Since the preim
 choice, this is not well-defined generally.
 -/
 noncomputable def FamilyOfElements.functorPushforward {D : Type u₂} [Category.{v₂} D] (F : D ⥤ C) {X : D}
-    {T : Presieve X} (x : FamilyOfElements (F.op ⋙ P) T) : FamilyOfElements P (T.FunctorPushforward F) := fun Y f h =>
+    {T : Presieve X} (x : FamilyOfElements (F.op ⋙ P) T) : FamilyOfElements P (T.functorPushforward F) := fun Y f h =>
   by
   obtain ⟨Z, g, h, h₁, _⟩ := get_functor_pushforward_structure h
   exact P.map h.op (x g h₁)
@@ -656,7 +656,7 @@ theorem is_sheaf_for_iff_generate (R : Presieve X) : IsSheafFor P R ↔ IsSheafF
 
 [Elephant] C2.1.5(i)
 -/
-theorem is_sheaf_for_singleton_iso (P : Cᵒᵖ ⥤ Type w) : IsSheafFor P (Presieve.Singleton (𝟙 X)) := by
+theorem is_sheaf_for_singleton_iso (P : Cᵒᵖ ⥤ Type w) : IsSheafFor P (Presieve.singleton (𝟙 X)) := by
   intro x hx
   refine' ⟨x _ (presieve.singleton_self _), _, _⟩
   · rintro _ _ ⟨rfl, rfl⟩

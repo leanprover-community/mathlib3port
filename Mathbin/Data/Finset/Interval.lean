@@ -26,9 +26,9 @@ namespace Finset
 variable [DecidableEq α] (s t : Finset α)
 
 instance : LocallyFiniteOrder (Finset α) where
-  finsetIcc s t := t.Powerset.filter ((· ⊆ ·) s)
+  finsetIcc s t := t.powerset.filter ((· ⊆ ·) s)
   finsetIco s t := t.ssubsets.filter ((· ⊆ ·) s)
-  finsetIoc s t := t.Powerset.filter ((· ⊂ ·) s)
+  finsetIoc s t := t.powerset.filter ((· ⊂ ·) s)
   finsetIoo s t := t.ssubsets.filter ((· ⊂ ·) s)
   finset_mem_Icc s t u := by
     rw [mem_filter, mem_powerset]
@@ -43,7 +43,7 @@ instance : LocallyFiniteOrder (Finset α) where
     rw [mem_filter, mem_ssubsets]
     exact and_comm' _ _
 
-theorem Icc_eq_filter_powerset : icc s t = t.Powerset.filter ((· ⊆ ·) s) :=
+theorem Icc_eq_filter_powerset : icc s t = t.powerset.filter ((· ⊆ ·) s) :=
   rfl
 #align finset.Icc_eq_filter_powerset Finset.Icc_eq_filter_powerset
 
@@ -51,7 +51,7 @@ theorem Ico_eq_filter_ssubsets : ico s t = t.ssubsets.filter ((· ⊆ ·) s) :=
   rfl
 #align finset.Ico_eq_filter_ssubsets Finset.Ico_eq_filter_ssubsets
 
-theorem Ioc_eq_filter_powerset : ioc s t = t.Powerset.filter ((· ⊂ ·) s) :=
+theorem Ioc_eq_filter_powerset : ioc s t = t.powerset.filter ((· ⊂ ·) s) :=
   rfl
 #align finset.Ioc_eq_filter_powerset Finset.Ioc_eq_filter_powerset
 
@@ -59,7 +59,7 @@ theorem Ioo_eq_filter_ssubsets : ioo s t = t.ssubsets.filter ((· ⊂ ·) s) :=
   rfl
 #align finset.Ioo_eq_filter_ssubsets Finset.Ioo_eq_filter_ssubsets
 
-theorem Iic_eq_powerset : iic s = s.Powerset :=
+theorem Iic_eq_powerset : iic s = s.powerset :=
   filter_true_of_mem fun t _ => empty_subset t
 #align finset.Iic_eq_powerset Finset.Iic_eq_powerset
 
@@ -69,7 +69,7 @@ theorem Iio_eq_ssubsets : iio s = s.ssubsets :=
 
 variable {s t}
 
-theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).Powerset.Image ((· ∪ ·) s) := by
+theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).powerset.image ((· ∪ ·) s) := by
   ext u
   simp_rw [mem_Icc, mem_image, exists_prop, mem_powerset]
   constructor
@@ -81,7 +81,7 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).Powerset.Image (
     
 #align finset.Icc_eq_image_powerset Finset.Icc_eq_image_powerset
 
-theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.Image ((· ∪ ·) s) := by
+theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.image ((· ∪ ·) s) := by
   ext u
   simp_rw [mem_Ico, mem_image, exists_prop, mem_ssubsets]
   constructor

@@ -74,16 +74,16 @@ variable [TopologicalSpace X] [TopologicalSpace Y]
 /-- The sequential closure of a set `s : set X` in a topological space `X` is the set of all `a : X`
 which arise as limit of sequences in `s`. Note that the sequential closure of a set is not
 guaranteed to be sequentially closed. -/
-def SeqClosure (s : Set X) : Set X :=
+def seqClosure (s : Set X) : Set X :=
   { a | ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) }
-#align seq_closure SeqClosure
+#align seq_closure seqClosure
 
-theorem subset_seq_closure {s : Set X} : s ⊆ SeqClosure s := fun p hp => ⟨const ℕ p, fun _ => hp, tendsto_const_nhds⟩
+theorem subset_seq_closure {s : Set X} : s ⊆ seqClosure s := fun p hp => ⟨const ℕ p, fun _ => hp, tendsto_const_nhds⟩
 #align subset_seq_closure subset_seq_closure
 
 /-- The sequential closure of a set is contained in the closure of that set.
 The converse is not true. -/
-theorem seq_closure_subset_closure {s : Set X} : SeqClosure s ⊆ Closure s := fun p ⟨x, xM, xp⟩ =>
+theorem seq_closure_subset_closure {s : Set X} : seqClosure s ⊆ closure s := fun p ⟨x, xM, xp⟩ =>
   mem_closure_of_tendsto xp (univ_mem' xM)
 #align seq_closure_subset_closure seq_closure_subset_closure
 
@@ -95,17 +95,17 @@ def IsSeqClosed (s : Set X) : Prop :=
 #align is_seq_closed IsSeqClosed
 
 /-- The sequential closure of a sequentially closed set is the set itself. -/
-theorem IsSeqClosed.seq_closure_eq {s : Set X} (hs : IsSeqClosed s) : SeqClosure s = s :=
+theorem IsSeqClosed.seq_closure_eq {s : Set X} (hs : IsSeqClosed s) : seqClosure s = s :=
   Subset.antisymm (fun p ⟨x, hx, hp⟩ => hs hx hp) subset_seq_closure
 #align is_seq_closed.seq_closure_eq IsSeqClosed.seq_closure_eq
 
 /-- If a set is equal to its sequential closure, then it is sequentially closed. -/
-theorem is_seq_closed_of_seq_closure_eq {s : Set X} (hs : SeqClosure s = s) : IsSeqClosed s := fun x p hxs hxp =>
+theorem is_seq_closed_of_seq_closure_eq {s : Set X} (hs : seqClosure s = s) : IsSeqClosed s := fun x p hxs hxp =>
   hs ▸ ⟨x, hxs, hxp⟩
 #align is_seq_closed_of_seq_closure_eq is_seq_closed_of_seq_closure_eq
 
 /-- A set is sequentially closed iff it is equal to its sequential closure. -/
-theorem is_seq_closed_iff {s : Set X} : IsSeqClosed s ↔ SeqClosure s = s :=
+theorem is_seq_closed_iff {s : Set X} : IsSeqClosed s ↔ seqClosure s = s :=
   ⟨IsSeqClosed.seq_closure_eq, is_seq_closed_of_seq_closure_eq⟩
 #align is_seq_closed_iff is_seq_closed_iff
 
@@ -118,17 +118,17 @@ protected theorem IsClosed.is_seq_closed {s : Set X} (hc : IsClosed s) : IsSeqCl
 is equal to its closure. Since one of the inclusions is trivial, we require only the non-trivial one
 in the definition. -/
 class FrechetUrysohnSpace (X : Type _) [TopologicalSpace X] : Prop where
-  closure_subset_seq_closure : ∀ s : Set X, Closure s ⊆ SeqClosure s
+  closure_subset_seq_closure : ∀ s : Set X, closure s ⊆ seqClosure s
 #align frechet_urysohn_space FrechetUrysohnSpace
 
-theorem seq_closure_eq_closure [FrechetUrysohnSpace X] (s : Set X) : SeqClosure s = Closure s :=
+theorem seq_closure_eq_closure [FrechetUrysohnSpace X] (s : Set X) : seqClosure s = closure s :=
   seq_closure_subset_closure.antisymm <| FrechetUrysohnSpace.closure_subset_seq_closure s
 #align seq_closure_eq_closure seq_closure_eq_closure
 
 /-- In a Fréchet-Urysohn space, a point belongs to the closure of a set iff it is a limit
 of a sequence taking values in this set. -/
 theorem mem_closure_iff_seq_limit [FrechetUrysohnSpace X] {s : Set X} {a : X} :
-    a ∈ Closure s ↔ ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) := by
+    a ∈ closure s ↔ ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) := by
   rw [← seq_closure_eq_closure]
   rfl
 #align mem_closure_iff_seq_limit mem_closure_iff_seq_limit
@@ -143,7 +143,7 @@ theorem tendsto_nhds_iff_seq_tendsto [FrechetUrysohnSpace X] {f : X → Y} {a : 
     Tendsto f (𝓝 a) (𝓝 b) ↔ ∀ u : ℕ → X, Tendsto u atTop (𝓝 a) → Tendsto (f ∘ u) atTop (𝓝 b) := by
   refine' ⟨fun hf u hu => hf.comp hu, fun h => ((nhds_basis_closeds _).tendsto_iff (nhds_basis_closeds _)).2 _⟩
   rintro s ⟨hbs, hsc⟩
-  refine' ⟨Closure (f ⁻¹' s), ⟨mt _ hbs, isClosedClosure⟩, fun x => mt fun hx => subset_closure hx⟩
+  refine' ⟨closure (f ⁻¹' s), ⟨mt _ hbs, isClosedClosure⟩, fun x => mt fun hx => subset_closure hx⟩
   rw [← seq_closure_eq_closure]
   rintro ⟨u, hus, hu⟩
   exact hsc.mem_of_tendsto (h u hu) (eventually_of_forall hus)
@@ -254,7 +254,7 @@ def IsSeqCompact (s : Set X) :=
 converging subsequence. -/
 @[mk_iff]
 class SeqCompactSpace (X : Type _) [TopologicalSpace X] : Prop where
-  seq_compact_univ : IsSeqCompact (Univ : Set X)
+  seq_compact_univ : IsSeqCompact (univ : Set X)
 #align seq_compact_space SeqCompactSpace
 
 export SeqCompactSpace (seq_compact_univ)
@@ -402,7 +402,7 @@ variable [PseudoMetricSpace X]
 open Metric
 
 theorem SeqCompact.lebesgue_number_lemma_of_metric {ι : Sort _} {c : ι → Set X} {s : Set X} (hs : IsSeqCompact s)
-    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ δ > 0, ∀ a ∈ s, ∃ i, Ball a δ ⊆ c i :=
+    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ δ > 0, ∀ a ∈ s, ∃ i, ball a δ ⊆ c i :=
   lebesgue_number_lemma_of_metric hs.IsCompact hc₁ hc₂
 #align seq_compact.lebesgue_number_lemma_of_metric SeqCompact.lebesgue_number_lemma_of_metric
 
@@ -412,16 +412,16 @@ variable [ProperSpace X] {s : Set X}
 every bounded sequence has a converging subsequence. This version assumes only
 that the sequence is frequently in some bounded set. -/
 theorem tendsto_subseq_of_frequently_bounded (hs : Bounded s) {x : ℕ → X} (hx : ∃ᶠ n in at_top, x n ∈ s) :
-    ∃ a ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
-  have hcs : IsSeqCompact (Closure s) := hs.is_compact_closure.IsSeqCompact
-  have hu' : ∃ᶠ n in at_top, x n ∈ Closure s := hx.mono fun n hn => subset_closure hn
+    ∃ a ∈ closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+  have hcs : IsSeqCompact (closure s) := hs.is_compact_closure.IsSeqCompact
+  have hu' : ∃ᶠ n in at_top, x n ∈ closure s := hx.mono fun n hn => subset_closure hn
   hcs.subseq_of_frequently_in hu'
 #align tendsto_subseq_of_frequently_bounded tendsto_subseq_of_frequently_bounded
 
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. -/
 theorem tendsto_subseq_of_bounded (hs : Bounded s) {x : ℕ → X} (hx : ∀ n, x n ∈ s) :
-    ∃ a ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
+    ∃ a ∈ closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (x ∘ φ) atTop (𝓝 a) :=
   tendsto_subseq_of_frequently_bounded hs <| frequently_of_forall hx
 #align tendsto_subseq_of_bounded tendsto_subseq_of_bounded
 

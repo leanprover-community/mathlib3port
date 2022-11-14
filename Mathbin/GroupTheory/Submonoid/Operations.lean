@@ -76,8 +76,8 @@ section
 /-- Submonoids of monoid `M` are isomorphic to additive submonoids of `additive M`. -/
 @[simps]
 def Submonoid.toAddSubmonoid : Submonoid M ≃o AddSubmonoid (Additive M) where
-  toFun S := { Carrier := Additive.toMul ⁻¹' S, zero_mem' := S.one_mem', add_mem' := fun _ _ => S.mul_mem' }
-  invFun S := { Carrier := Additive.ofMul ⁻¹' S, one_mem' := S.zero_mem', mul_mem' := fun _ _ => S.add_mem' }
+  toFun S := { carrier := Additive.toMul ⁻¹' S, zero_mem' := S.one_mem', add_mem' := fun _ _ => S.mul_mem' }
+  invFun S := { carrier := Additive.ofMul ⁻¹' S, one_mem' := S.zero_mem', mul_mem' := fun _ _ => S.add_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
   map_rel_iff' a b := Iff.rfl
@@ -110,8 +110,8 @@ variable {A : Type _} [AddZeroClass A]
 multiplicative submonoids of `multiplicative A`. -/
 @[simps]
 def AddSubmonoid.toSubmonoid : AddSubmonoid A ≃o Submonoid (Multiplicative A) where
-  toFun S := { Carrier := Multiplicative.toAdd ⁻¹' S, one_mem' := S.zero_mem', mul_mem' := fun _ _ => S.add_mem' }
-  invFun S := { Carrier := Multiplicative.ofAdd ⁻¹' S, zero_mem' := S.one_mem', add_mem' := fun _ _ => S.mul_mem' }
+  toFun S := { carrier := Multiplicative.toAdd ⁻¹' S, one_mem' := S.zero_mem', mul_mem' := fun _ _ => S.add_mem' }
+  invFun S := { carrier := Multiplicative.ofAdd ⁻¹' S, zero_mem' := S.one_mem', add_mem' := fun _ _ => S.mul_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
   map_rel_iff' a b := Iff.rfl
@@ -153,7 +153,7 @@ include mc
 /-- The preimage of a submonoid along a monoid homomorphism is a submonoid. -/
 @[to_additive "The preimage of an `add_submonoid` along an `add_monoid` homomorphism is an\n`add_submonoid`."]
 def comap (f : F) (S : Submonoid N) : Submonoid M where
-  Carrier := f ⁻¹' S
+  carrier := f ⁻¹' S
   one_mem' := show f 1 ∈ S by rw [map_one] <;> exact S.one_mem
   mul_mem' a b ha hb := show f (a * b) ∈ S by rw [map_mul] <;> exact S.mul_mem ha hb
 #align submonoid.comap Submonoid.comap
@@ -185,7 +185,7 @@ include mc
 /-- The image of a submonoid along a monoid homomorphism is a submonoid. -/
 @[to_additive "The image of an `add_submonoid` along an `add_monoid` homomorphism is\nan `add_submonoid`."]
 def map (f : F) (S : Submonoid M) : Submonoid N where
-  Carrier := f '' S
+  carrier := f '' S
   one_mem' := ⟨1, S.one_mem, map_one f⟩
   mul_mem' := by
     rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩
@@ -733,7 +733,7 @@ of `M × N`. -/
 @[to_additive Prod
       "Given `add_submonoid`s `s`, `t` of `add_monoid`s `A`, `B` respectively, `s × t`\nas an `add_submonoid` of `A × B`."]
 def prod (s : Submonoid M) (t : Submonoid N) : Submonoid (M × N) where
-  Carrier := s ×ˢ t
+  carrier := s ×ˢ t
   one_mem' := ⟨s.one_mem, t.one_mem⟩
   mul_mem' p q hp hq := ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
 #align submonoid.prod Submonoid.prod
@@ -913,11 +913,11 @@ include mc
 /-- The range of a monoid homomorphism is a submonoid. See Note [range copy pattern]. -/
 @[to_additive "The range of an `add_monoid_hom` is an `add_submonoid`."]
 def mrange (f : F) : Submonoid N :=
-  ((⊤ : Submonoid M).map f).copy (Set.Range f) Set.image_univ.symm
+  ((⊤ : Submonoid M).map f).copy (Set.range f) Set.image_univ.symm
 #align monoid_hom.mrange MonoidHom.mrange
 
 @[simp, to_additive]
-theorem coe_mrange (f : F) : (mrange f : Set N) = Set.Range f :=
+theorem coe_mrange (f : F) : (mrange f : Set N) = Set.range f :=
   rfl
 #align monoid_hom.coe_mrange MonoidHom.coe_mrange
 
@@ -1247,7 +1247,7 @@ def submonoidMap (e : M ≃* N) (S : Submonoid M) : S ≃* S.map e.toMonoidHom :
   { -- we restate this for `simps` to avoid `⇑e.symm.to_equiv x`
           e.toMonoidHom.submonoidMap
       S,
-    e.toEquiv.Image S with toFun := fun x => ⟨e x, _⟩, invFun := fun x => ⟨e.symm x, _⟩ }
+    e.toEquiv.image S with toFun := fun x => ⟨e x, _⟩, invFun := fun x => ⟨e.symm x, _⟩ }
 #align mul_equiv.submonoid_map MulEquiv.submonoidMap
 
 end MulEquiv

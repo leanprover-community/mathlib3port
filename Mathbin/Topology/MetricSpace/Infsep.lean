@@ -161,25 +161,25 @@ theorem einfsep_pair_eq_inf (hxy : x ≠ y) : ({x, y} : Set α).einfsep = edist 
   le_antisymm (le_inf (einfsep_pair_le_left hxy) (einfsep_pair_le_right hxy)) le_einfsep_pair
 #align set.einfsep_pair_eq_inf Set.einfsep_pair_eq_inf
 
-theorem einfsep_eq_infi : s.einfsep = ⨅ d : s.OffDiag, (uncurry edist) (d : α × α) := by
+theorem einfsep_eq_infi : s.einfsep = ⨅ d : s.offDiag, (uncurry edist) (d : α × α) := by
   refine' eq_of_forall_le_iff fun _ => _
   simp_rw [le_einfsep_iff, le_infi_iff, imp_forall_iff, SetCoe.forall, Subtype.coe_mk, mem_off_diag, Prod.forall,
     uncurry_apply_pair, and_imp]
 #align set.einfsep_eq_infi Set.einfsep_eq_infi
 
-theorem einfsep_of_fintype [DecidableEq α] [Fintype s] : s.einfsep = s.OffDiag.toFinset.inf (uncurry edist) := by
+theorem einfsep_of_fintype [DecidableEq α] [Fintype s] : s.einfsep = s.offDiag.toFinset.inf (uncurry edist) := by
   refine' eq_of_forall_le_iff fun _ => _
   simp_rw [le_einfsep_iff, imp_forall_iff, Finset.le_inf_iff, mem_to_finset, mem_off_diag, Prod.forall,
     uncurry_apply_pair, and_imp]
 #align set.einfsep_of_fintype Set.einfsep_of_fintype
 
-theorem Finite.einfsep (hs : s.Finite) : s.einfsep = hs.OffDiag.toFinset.inf (uncurry edist) := by
+theorem Finite.einfsep (hs : s.Finite) : s.einfsep = hs.offDiag.toFinset.inf (uncurry edist) := by
   refine' eq_of_forall_le_iff fun _ => _
   simp_rw [le_einfsep_iff, imp_forall_iff, Finset.le_inf_iff, finite.mem_to_finset, mem_off_diag, Prod.forall,
     uncurry_apply_pair, and_imp]
 #align set.finite.einfsep Set.Finite.einfsep
 
-theorem Finset.coe_einfsep [DecidableEq α] {s : Finset α} : (s : Set α).einfsep = s.OffDiag.inf (uncurry edist) := by
+theorem Finset.coe_einfsep [DecidableEq α] {s : Finset α} : (s : Set α).einfsep = s.offDiag.inf (uncurry edist) := by
   simp_rw [einfsep_of_fintype, ← Finset.coe_off_diag, Finset.to_finset_coe]
 #align set.finset.coe_einfsep Set.Finset.coe_einfsep
 
@@ -232,7 +232,7 @@ theorem einfsep_triple (hxy : x ≠ y) (hyz : y ≠ z) (hxz : x ≠ z) :
 #align set.einfsep_triple Set.einfsep_triple
 
 theorem le_einfsep_pi_of_le {π : β → Type _} [Fintype β] [∀ b, PseudoEmetricSpace (π b)] {s : ∀ b : β, Set (π b)}
-    {c : ℝ≥0∞} (h : ∀ b, c ≤ einfsep (s b)) : c ≤ einfsep (Set.Pi Univ s) := by
+    {c : ℝ≥0∞} (h : ∀ b, c ≤ einfsep (s b)) : c ≤ einfsep (Set.pi univ s) := by
   refine' le_einfsep fun x hx y hy hxy => _
   rw [mem_univ_pi] at hx hy
   rcases function.ne_iff.mp hxy with ⟨i, hi⟩
@@ -445,7 +445,7 @@ theorem Nontrivial.infsep_anti (hs : s.Nontrivial) (hst : s ⊆ t) : t.infsep �
 #align set.nontrivial.infsep_anti Set.Nontrivial.infsep_anti
 
 theorem infsep_eq_infi [Decidable s.Nontrivial] :
-    s.infsep = if s.Nontrivial then ⨅ d : s.OffDiag, (uncurry dist) (d : α × α) else 0 := by
+    s.infsep = if s.Nontrivial then ⨅ d : s.offDiag, (uncurry dist) (d : α × α) else 0 := by
   split_ifs with hs
   · have hb : BddBelow (uncurry dist '' s.off_diag) := by
       refine' ⟨0, fun d h => _⟩
@@ -460,12 +460,12 @@ theorem infsep_eq_infi [Decidable s.Nontrivial] :
     
 #align set.infsep_eq_infi Set.infsep_eq_infi
 
-theorem Nontrivial.infsep_eq_infi (hs : s.Nontrivial) : s.infsep = ⨅ d : s.OffDiag, (uncurry dist) (d : α × α) := by
+theorem Nontrivial.infsep_eq_infi (hs : s.Nontrivial) : s.infsep = ⨅ d : s.offDiag, (uncurry dist) (d : α × α) := by
   classical rw [infsep_eq_infi, if_pos hs]
 #align set.nontrivial.infsep_eq_infi Set.Nontrivial.infsep_eq_infi
 
 theorem infsep_of_fintype [Decidable s.Nontrivial] [DecidableEq α] [Fintype s] :
-    s.infsep = if hs : s.Nontrivial then s.OffDiag.toFinset.inf' (by simpa) (uncurry dist) else 0 := by
+    s.infsep = if hs : s.Nontrivial then s.offDiag.toFinset.inf' (by simpa) (uncurry dist) else 0 := by
   split_ifs with hs
   · refine' eq_of_forall_le_iff fun _ => _
     simp_rw [hs.le_infsep_iff, imp_forall_iff, Finset.le_inf'_iff, mem_to_finset, mem_off_diag, Prod.forall,
@@ -477,11 +477,11 @@ theorem infsep_of_fintype [Decidable s.Nontrivial] [DecidableEq α] [Fintype s] 
 #align set.infsep_of_fintype Set.infsep_of_fintype
 
 theorem Nontrivial.infsep_of_fintype [DecidableEq α] [Fintype s] (hs : s.Nontrivial) :
-    s.infsep = s.OffDiag.toFinset.inf' (by simpa) (uncurry dist) := by classical rw [infsep_of_fintype, dif_pos hs]
+    s.infsep = s.offDiag.toFinset.inf' (by simpa) (uncurry dist) := by classical rw [infsep_of_fintype, dif_pos hs]
 #align set.nontrivial.infsep_of_fintype Set.Nontrivial.infsep_of_fintype
 
 theorem Finite.infsep [Decidable s.Nontrivial] (hsf : s.Finite) :
-    s.infsep = if hs : s.Nontrivial then hsf.OffDiag.toFinset.inf' (by simpa) (uncurry dist) else 0 := by
+    s.infsep = if hs : s.Nontrivial then hsf.offDiag.toFinset.inf' (by simpa) (uncurry dist) else 0 := by
   split_ifs with hs
   · refine' eq_of_forall_le_iff fun _ => _
     simp_rw [hs.le_infsep_iff, imp_forall_iff, Finset.le_inf'_iff, finite.mem_to_finset, mem_off_diag, Prod.forall,
@@ -493,11 +493,11 @@ theorem Finite.infsep [Decidable s.Nontrivial] (hsf : s.Finite) :
 #align set.finite.infsep Set.Finite.infsep
 
 theorem Finite.infsep_of_nontrivial (hsf : s.Finite) (hs : s.Nontrivial) :
-    s.infsep = hsf.OffDiag.toFinset.inf' (by simpa) (uncurry dist) := by classical simp_rw [hsf.infsep, dif_pos hs]
+    s.infsep = hsf.offDiag.toFinset.inf' (by simpa) (uncurry dist) := by classical simp_rw [hsf.infsep, dif_pos hs]
 #align set.finite.infsep_of_nontrivial Set.Finite.infsep_of_nontrivial
 
 theorem _root_.finset.coe_infsep [DecidableEq α] (s : Finset α) :
-    (s : Set α).infsep = if hs : s.OffDiag.Nonempty then s.OffDiag.inf' hs (uncurry dist) else 0 := by
+    (s : Set α).infsep = if hs : s.offDiag.Nonempty then s.offDiag.inf' hs (uncurry dist) else 0 := by
   have H : (s : Set α).Nontrivial ↔ s.off_diag.nonempty := by
     rwa [← Set.off_diag_nonempty, ← Finset.coe_off_diag, Finset.coe_nonempty]
   split_ifs with hs
@@ -507,11 +507,11 @@ theorem _root_.finset.coe_infsep [DecidableEq α] (s : Finset α) :
     
 #align set._root_.finset.coe_infsep set._root_.finset.coe_infsep
 
-theorem _root_.finset.coe_infsep_of_off_diag_nonempty [DecidableEq α] {s : Finset α} (hs : s.OffDiag.Nonempty) :
-    (s : Set α).infsep = s.OffDiag.inf' hs (uncurry dist) := by rw [Finset.coe_infsep, dif_pos hs]
+theorem _root_.finset.coe_infsep_of_off_diag_nonempty [DecidableEq α] {s : Finset α} (hs : s.offDiag.Nonempty) :
+    (s : Set α).infsep = s.offDiag.inf' hs (uncurry dist) := by rw [Finset.coe_infsep, dif_pos hs]
 #align set._root_.finset.coe_infsep_of_off_diag_nonempty set._root_.finset.coe_infsep_of_off_diag_nonempty
 
-theorem _root_.finset.coe_infsep_of_off_diag_empty [DecidableEq α] {s : Finset α} (hs : s.OffDiag = ∅) :
+theorem _root_.finset.coe_infsep_of_off_diag_empty [DecidableEq α] {s : Finset α} (hs : s.offDiag = ∅) :
     (s : Set α).infsep = 0 := by
   rw [← Finset.not_nonempty_iff_eq_empty] at hs
   rw [Finset.coe_infsep, dif_neg hs]

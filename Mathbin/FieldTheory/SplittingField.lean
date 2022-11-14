@@ -327,7 +327,7 @@ theorem adjoin_roots :
   SplittingFieldAux.adjoin_roots _ _ rfl
 #align polynomial.splitting_field.adjoin_roots Polynomial.SplittingField.adjoin_roots
 
-theorem adjoin_root_set : Algebra.adjoin K (f.RootSet f.SplittingField) = ⊤ :=
+theorem adjoin_root_set : Algebra.adjoin K (f.rootSet f.SplittingField) = ⊤ :=
   adjoin_roots f
 #align polynomial.splitting_field.adjoin_root_set Polynomial.SplittingField.adjoin_root_set
 
@@ -478,7 +478,7 @@ open Polynomial
 
 variable [Field K] [Field L] [Algebra K L] {p : K[X]}
 
-theorem splitsOfSplits {F : IntermediateField K L} (h : p.Splits (algebraMap K L)) (hF : ∀ x ∈ p.RootSet L, x ∈ F) :
+theorem splitsOfSplits {F : IntermediateField K L} (h : p.Splits (algebraMap K L)) (hF : ∀ x ∈ p.rootSet L, x ∈ F) :
     p.Splits (algebraMap K F) := by
   simp_rw [root_set, Finset.mem_coe, Multiset.mem_to_finset] at hF
   rw [splits_iff_exists_multiset]

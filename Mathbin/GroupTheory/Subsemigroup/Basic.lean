@@ -74,13 +74,13 @@ attribute [to_additive] MulMemClass
 
 /-- A subsemigroup of a magma `M` is a subset closed under multiplication. -/
 structure Subsemigroup (M : Type _) [Mul M] where
-  Carrier : Set M
+  carrier : Set M
   mul_mem' {a b} : a ∈ carrier → b ∈ carrier → a * b ∈ carrier
 #align subsemigroup Subsemigroup
 
 /-- An additive subsemigroup of an additive magma `M` is a subset closed under addition. -/
 structure AddSubsemigroup (M : Type _) [Add M] where
-  Carrier : Set M
+  carrier : Set M
   add_mem' {a b} : a ∈ carrier → b ∈ carrier → a + b ∈ carrier
 #align add_subsemigroup AddSubsemigroup
 
@@ -90,23 +90,23 @@ namespace Subsemigroup
 
 @[to_additive]
 instance : SetLike (Subsemigroup M) M :=
-  ⟨Subsemigroup.Carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨Subsemigroup.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
 
 @[to_additive]
 instance : MulMemClass (Subsemigroup M) M where mul_mem := Subsemigroup.mul_mem'
 
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection]"]
-def Simps.Coe (S : Subsemigroup M) : Set M :=
+def Simps.coe (S : Subsemigroup M) : Set M :=
   S
-#align subsemigroup.simps.coe Subsemigroup.Simps.Coe
+#align subsemigroup.simps.coe Subsemigroup.Simps.coe
 
-initialize_simps_projections Subsemigroup (Carrier → coe)
+initialize_simps_projections Subsemigroup (carrier → coe)
 
-initialize_simps_projections AddSubsemigroup (Carrier → coe)
+initialize_simps_projections AddSubsemigroup (carrier → coe)
 
 @[simp, to_additive]
-theorem mem_carrier {s : Subsemigroup M} {x : M} : x ∈ s.Carrier ↔ x ∈ s :=
+theorem mem_carrier {s : Subsemigroup M} {x : M} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align subsemigroup.mem_carrier Subsemigroup.mem_carrier
 
@@ -134,7 +134,7 @@ theorem ext {S T : Subsemigroup M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 /-- Copy a subsemigroup replacing `carrier` with a set that is equal to it. -/
 @[to_additive "Copy an additive subsemigroup replacing `carrier` with a set that is equal to\nit."]
 protected def copy (S : Subsemigroup M) (s : Set M) (hs : s = S) : Subsemigroup M where
-  Carrier := s
+  carrier := s
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
 #align subsemigroup.copy Subsemigroup.copy
 
@@ -161,12 +161,12 @@ protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
 /-- The subsemigroup `M` of the magma `M`. -/
 @[to_additive "The additive subsemigroup `M` of the magma `M`."]
 instance : HasTop (Subsemigroup M) :=
-  ⟨{ Carrier := Set.Univ, mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
+  ⟨{ carrier := Set.univ, mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
 
 /-- The trivial subsemigroup `∅` of a magma `M`. -/
 @[to_additive "The trivial `add_subsemigroup` `∅` of an additive magma `M`."]
 instance : HasBot (Subsemigroup M) :=
-  ⟨{ Carrier := ∅, mul_mem' := fun a b => by simp }⟩
+  ⟨{ carrier := ∅, mul_mem' := fun a b => by simp }⟩
 
 @[to_additive]
 instance : Inhabited (Subsemigroup M) :=
@@ -183,7 +183,7 @@ theorem mem_top (x : M) : x ∈ (⊤ : Subsemigroup M) :=
 #align subsemigroup.mem_top Subsemigroup.mem_top
 
 @[simp, to_additive]
-theorem coe_top : ((⊤ : Subsemigroup M) : Set M) = Set.Univ :=
+theorem coe_top : ((⊤ : Subsemigroup M) : Set M) = Set.univ :=
   rfl
 #align subsemigroup.coe_top Subsemigroup.coe_top
 
@@ -196,7 +196,7 @@ theorem coe_bot : ((⊥ : Subsemigroup M) : Set M) = ∅ :=
 @[to_additive "The inf of two `add_subsemigroup`s is their intersection."]
 instance : HasInf (Subsemigroup M) :=
   ⟨fun S₁ S₂ =>
-    { Carrier := S₁ ∩ S₂, mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
+    { carrier := S₁ ∩ S₂, mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
 
 @[simp, to_additive]
 theorem coe_inf (p p' : Subsemigroup M) : ((p ⊓ p' : Subsemigroup M) : Set M) = p ∩ p' :=
@@ -211,7 +211,7 @@ theorem mem_inf {p p' : Subsemigroup M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧
 @[to_additive]
 instance : HasInf (Subsemigroup M) :=
   ⟨fun s =>
-    { Carrier := ⋂ t ∈ s, ↑t,
+    { carrier := ⋂ t ∈ s, ↑t,
       mul_mem' := fun x y hx hy =>
         Set.mem_bInter fun i h => i.mul_mem (by apply Set.mem_Inter₂.1 hx i h) (by apply Set.mem_Inter₂.1 hy i h) }⟩
 
@@ -369,7 +369,7 @@ theorem closure_empty : closure (∅ : Set M) = ⊥ :=
 #align subsemigroup.closure_empty Subsemigroup.closure_empty
 
 @[simp, to_additive]
-theorem closure_univ : closure (Univ : Set M) = ⊤ :=
+theorem closure_univ : closure (univ : Set M) = ⊤ :=
   @coe_top M _ ▸ closure_eq ⊤
 #align subsemigroup.closure_univ Subsemigroup.closure_univ
 
@@ -411,7 +411,7 @@ open Subsemigroup
 /-- The subsemigroup of elements `x : M` such that `f x = g x` -/
 @[to_additive "The additive subsemigroup of elements `x : M` such that `f x = g x`"]
 def eqMlocus (f g : M →ₙ* N) : Subsemigroup M where
-  Carrier := { x | f x = g x }
+  carrier := { x | f x = g x }
   mul_mem' x y (hx : _ = _) (hy : _ = _) := by simp [*]
 #align mul_hom.eq_mlocus MulHom.eqMlocus
 

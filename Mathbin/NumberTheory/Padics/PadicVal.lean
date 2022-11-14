@@ -527,7 +527,7 @@ protected theorem padicValNat.div' [hp : Fact p.Prime] :
 open BigOperators
 
 theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
-    (Finset.range (padicValNat p n + 1)).Image (pow p) ⊆ n.divisors := by
+    (Finset.range (padicValNat p n + 1)).image (pow p) ⊆ n.divisors := by
   intro t ht
   simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
   obtain ⟨k, hk, rfl⟩ := ht
@@ -536,7 +536,7 @@ theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
 #align range_pow_padic_val_nat_subset_divisors range_pow_padic_val_nat_subset_divisors
 
 theorem range_pow_padic_val_nat_subset_divisors' {n : ℕ} [hp : Fact p.Prime] :
-    ((Finset.range (padicValNat p n)).Image fun t => p ^ (t + 1)) ⊆ n.divisors \ {1} := by
+    ((Finset.range (padicValNat p n)).image fun t => p ^ (t + 1)) ⊆ n.divisors \ {1} := by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
     

@@ -76,7 +76,7 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
     { ω |
         tendsto (fun n => ∑ k in Finset.range n, (μ[(s (k + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm k]) ω)
           at_top at_top } =ᵐ[μ]
-      Set.Univ
+      Set.univ
     by rw [measure_congr this, measure_univ]
   have : ∀ᵐ ω ∂μ, ∀ n, (μ[(s (n + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm n]) ω = _ :=
     ae_all_iff.2 fun n => hs.condexp_indicator_filtration_of_set_ae_eq hsm n.lt_succ_self

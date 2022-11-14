@@ -67,7 +67,7 @@ def cof (r : α → α → Prop) : Cardinal :=
 
 /-- The set in the definition of `order.cof` is nonempty. -/
 theorem cof_nonempty (r : α → α → Prop) [IsRefl α r] : { c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c }.Nonempty :=
-  ⟨_, Set.Univ, fun a => ⟨a, ⟨⟩, refl _⟩, rfl⟩
+  ⟨_, Set.univ, fun a => ⟨a, ⟨⟩, refl _⟩, rfl⟩
 #align order.cof_nonempty Order.cof_nonempty
 
 theorem cof_le (r : α → α → Prop) {S : Set α} (h : ∀ a, ∃ b ∈ S, r a b) : cof r ≤ (#S) :=
@@ -89,7 +89,7 @@ theorem RelIso.cof_le_lift {α : Type u} {β : Type v} {r : α → α → Prop} 
   rw [Order.cof, Order.cof, lift_Inf, lift_Inf, le_cInf_iff'' (nonempty_image_iff.2 (Order.cof_nonempty s))]
   rintro - ⟨-, ⟨u, H, rfl⟩, rfl⟩
   apply cInf_le'
-  refine' ⟨_, ⟨f.symm '' u, fun a => _, rfl⟩, lift_mk_eq.{u, v, max u v}.2 ⟨(f.symm.toEquiv.Image u).symm⟩⟩
+  refine' ⟨_, ⟨f.symm '' u, fun a => _, rfl⟩, lift_mk_eq.{u, v, max u v}.2 ⟨(f.symm.toEquiv.image u).symm⟩⟩
   rcases H (f a) with ⟨b, hb, hb'⟩
   refine' ⟨f.symm b, mem_image_of_mem _ hb, f.map_rel_iff.1 _⟩
   rwa [RelIso.apply_symm_apply]
@@ -231,7 +231,7 @@ theorem cof_eq_Inf_lsub (o : Ordinal.{u}) :
     refine'
       (cof_type_le fun a => _).trans
         (@mk_le_of_injective _ _
-          (fun s : typein ((· < ·) : o.out.α → o.out.α → Prop) ⁻¹' Set.Range f => Classical.choose s.Prop)
+          (fun s : typein ((· < ·) : o.out.α → o.out.α → Prop) ⁻¹' Set.range f => Classical.choose s.Prop)
           fun s t hst => by
           let H := congr_arg f hst
           rwa [Classical.choose_spec s.prop, Classical.choose_spec t.prop, typein_inj, Subtype.coe_inj] at H)
@@ -1090,7 +1090,7 @@ then the cardinality of the collection of those finite sets
 must be at least the cardinality of `β`.
 -/
 theorem le_range_of_union_finset_eq_top {α β : Type _} [Infinite β] (f : α → Finset β) (w : (⋃ a, (f a : Set β)) = ⊤) :
-    (#β) ≤ (#Range f) := by
+    (#β) ≤ (#range f) := by
   have k : _root_.infinite (range f) := by
     rw [infinite_coe_iff]
     apply mt (union_finset_finite_of_range_finite f)

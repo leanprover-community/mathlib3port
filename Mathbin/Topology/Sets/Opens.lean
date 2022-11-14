@@ -85,7 +85,7 @@ instance : PartialOrder (Opens α) :=
 
 /-- The interior of a set, as an element of `opens`. -/
 def interior (s : Set α) : Opens α :=
-  ⟨Interior s, is_open_interior⟩
+  ⟨interior s, is_open_interior⟩
 #align topological_space.opens.interior TopologicalSpace.Opens.interior
 
 theorem gc : GaloisConnection (coe : Opens α → Set α) interior := fun U s =>
@@ -107,7 +107,7 @@ instance : CompleteLattice (Opens α) :=
     (-- le
     fun U V => U ⊆ V)
     rfl-- top
-    ⟨Univ, is_open_univ⟩
+    ⟨univ, is_open_univ⟩
     (ext interior_univ.symm)-- bot
     ⟨∅, is_open_empty⟩
     rfl
@@ -149,7 +149,7 @@ theorem coe_bot : ((⊥ : Opens α) : Set α) = ∅ :=
 #align topological_space.opens.coe_bot TopologicalSpace.Opens.coe_bot
 
 @[simp, norm_cast]
-theorem coe_top : ((⊤ : Opens α) : Set α) = Set.Univ :=
+theorem coe_top : ((⊤ : Opens α) : Set α) = Set.univ :=
   rfl
 #align topological_space.opens.coe_top TopologicalSpace.Opens.coe_top
 
@@ -296,7 +296,7 @@ theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α
 /-- If `α` has a basis consisting of compact opens, then an open set in `α` is compact open iff
   it is a finite union of some elements in the basis -/
 theorem is_compact_open_iff_eq_finite_Union_of_is_basis {ι : Type _} (b : ι → Opens α)
-    (hb : Opens.IsBasis (Set.Range b)) (hb' : ∀ i, IsCompact (b i : Set α)) (U : Set α) :
+    (hb : Opens.IsBasis (Set.range b)) (hb' : ∀ i, IsCompact (b i : Set α)) (U : Set α) :
     IsCompact U ∧ IsOpen U ↔ ∃ s : Set ι, s.Finite ∧ U = ⋃ i ∈ s, b i := by
   apply is_compact_open_iff_eq_finite_Union_of_is_topological_basis fun i : ι => (b i).1
   · convert hb
@@ -400,7 +400,7 @@ def OpenNhdsOf (x : α) : Type _ :=
 #align topological_space.open_nhds_of TopologicalSpace.OpenNhdsOf
 
 instance OpenNhdsOf.inhabited {α : Type _} [TopologicalSpace α] (x : α) : Inhabited (OpenNhdsOf x) :=
-  ⟨⟨Set.Univ, is_open_univ, Set.mem_univ _⟩⟩
+  ⟨⟨Set.univ, is_open_univ, Set.mem_univ _⟩⟩
 #align topological_space.open_nhds_of.inhabited TopologicalSpace.OpenNhdsOf.inhabited
 
 instance [Finite α] : Finite (Opens α) :=

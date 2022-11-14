@@ -122,7 +122,7 @@ theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Fin E.order → α}
 
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/
 def solSpace : Submodule α (ℕ → α) where
-  Carrier := { u | E.IsSolution u }
+  carrier := { u | E.IsSolution u }
   zero_mem' n := by simp
   add_mem' u v hu hv n := by simp [mul_add, sum_add_distrib, hu n, hv n]
   smul_mem' a u hu n := by simp [hu n, mul_sum] <;> congr <;> ext <;> ac_rfl

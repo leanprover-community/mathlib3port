@@ -52,7 +52,7 @@ protected theorem continuous (di : DenseInducing i) : Continuous i :=
   di.to_inducing.Continuous
 #align dense_inducing.continuous DenseInducing.continuous
 
-theorem closure_range : Closure (Range i) = univ :=
+theorem closure_range : closure (range i) = univ :=
   di.dense.closure_range
 #align dense_inducing.closure_range DenseInducing.closure_range
 
@@ -60,14 +60,14 @@ protected theorem preconnected_space [PreconnectedSpace α] (di : DenseInducing 
   di.dense.PreconnectedSpace di.Continuous
 #align dense_inducing.preconnected_space DenseInducing.preconnected_space
 
-theorem closure_image_mem_nhds {s : Set α} {a : α} (di : DenseInducing i) (hs : s ∈ 𝓝 a) : Closure (i '' s) ∈ 𝓝 (i a) :=
+theorem closure_image_mem_nhds {s : Set α} {a : α} (di : DenseInducing i) (hs : s ∈ 𝓝 a) : closure (i '' s) ∈ 𝓝 (i a) :=
   by
   rw [di.nhds_eq_comap a, ((nhds_basis_opens _).comap _).mem_iff] at hs
   rcases hs with ⟨U, ⟨haU, hUo⟩, sub : i ⁻¹' U ⊆ s⟩
   refine' mem_of_superset (hUo.mem_nhds haU) _
   calc
-    U ⊆ Closure (i '' (i ⁻¹' U)) := di.dense.subset_closure_image_preimage_of_is_open hUo
-    _ ⊆ Closure (i '' s) := closure_mono (image_subset i sub)
+    U ⊆ closure (i '' (i ⁻¹' U)) := di.dense.subset_closure_image_preimage_of_is_open hUo
+    _ ⊆ closure (i '' s) := closure_mono (image_subset i sub)
     
 #align dense_inducing.closure_image_mem_nhds DenseInducing.closure_image_mem_nhds
 
@@ -79,8 +79,8 @@ theorem dense_image (di : DenseInducing i) {s : Set α} : Dense (i '' s) ↔ Den
 
 /-- If `i : α → β` is a dense embedding with dense complement of the range, then any compact set in
 `α` has empty interior. -/
-theorem interior_compact_eq_empty [T2Space β] (di : DenseInducing i) (hd : Dense (Range iᶜ)) {s : Set α}
-    (hs : IsCompact s) : Interior s = ∅ := by
+theorem interior_compact_eq_empty [T2Space β] (di : DenseInducing i) (hd : Dense (range iᶜ)) {s : Set α}
+    (hs : IsCompact s) : interior s = ∅ := by
   refine' eq_empty_iff_forall_not_mem.2 fun x hx => _
   rw [mem_interior_iff_mem_nhds] at hx
   have := di.closure_image_mem_nhds hx
@@ -120,7 +120,7 @@ theorem tendsto_comap_nhds_nhds {d : δ} {a : α} (di : DenseInducing i) (H : Te
   exact le_trans lim1 lim2
 #align dense_inducing.tendsto_comap_nhds_nhds DenseInducing.tendsto_comap_nhds_nhds
 
-protected theorem nhdsWithinNeBot (di : DenseInducing i) (b : β) : NeBot (𝓝[Range i] b) :=
+protected theorem nhdsWithinNeBot (di : DenseInducing i) (b : β) : NeBot (𝓝[range i] b) :=
   di.dense.nhdsWithinNeBot b
 #align dense_inducing.nhds_within_ne_bot DenseInducing.nhdsWithinNeBot
 
@@ -212,7 +212,7 @@ theorem continuous_extend [T3Space γ] {f : α → γ} (di : DenseInducing i)
   continuous_iff_continuous_at.mpr fun b => di.continuous_at_extend <| univ_mem' hf
 #align dense_inducing.continuous_extend DenseInducing.continuous_extend
 
-theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (Range i))
+theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ closure (range i))
     (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 (i a), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
   { induced :=
       (induced_iff_nhds_eq i).2 fun a =>
@@ -263,7 +263,7 @@ protected theorem prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbed
 
 /-- The dense embedding of a subtype inside its closure. -/
 @[simps]
-def subtypeEmb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }) : { x // x ∈ Closure (e '' { x | p x }) } :=
+def subtypeEmb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }) : { x // x ∈ closure (e '' { x | p x }) } :=
   ⟨e x, subset_closure <| mem_image_of_mem e x.Prop⟩
 #align dense_embedding.subtype_emb DenseEmbedding.subtypeEmb
 
@@ -293,8 +293,8 @@ theorem isClosedProperty [TopologicalSpace β] {e : α → β} {p : β → Prop}
     (h : ∀ a, p (e a)) : ∀ b, p b :=
   have : univ ⊆ { b | p b } :=
     calc
-      univ = Closure (Range e) := he.closure_range.symm
-      _ ⊆ Closure { b | p b } := closure_mono <| range_subset_iff.mpr h
+      univ = closure (range e) := he.closure_range.symm
+      _ ⊆ closure { b | p b } := closure_mono <| range_subset_iff.mpr h
       _ = _ := hp.closure_eq
       
   fun b => this trivial
@@ -349,7 +349,7 @@ end
 -- Bourbaki GT III §3 no.4 Proposition 7 (generalised to any dense-inducing map to a T₃ space)
 theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [TopologicalSpace β] [T3Space β] {ι : Type _}
     {s : ι → Set α} {p : ι → Prop} {x : α} (h : (𝓝 x).HasBasis p s) {f : α → β} (hf : DenseInducing f) :
-    ((𝓝 (f x)).HasBasis p) fun i => Closure <| f '' s i := by
+    ((𝓝 (f x)).HasBasis p) fun i => closure <| f '' s i := by
   rw [Filter.has_basis_iff] at h⊢
   intro T
   refine' ⟨fun hT => _, fun hT => _⟩
@@ -364,7 +364,7 @@ theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [Topol
           (subset.trans (closure_minimal (image_subset_iff.mpr subset.rfl) hT₂) hT₃)⟩
     
   · obtain ⟨i, hi, hi'⟩ := hT
-    suffices Closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this] using hi'
+    suffices closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this] using hi'
     replace h := (h (s i)).mpr ⟨i, hi, subset.rfl⟩
     exact hf.closure_image_mem_nhds h
     

@@ -40,36 +40,36 @@ open FundamentalGroupoidFunctor
 
 open FundamentalGroupoid
 
-open UnitInterval
+open unitInterval
 
-namespace UnitInterval
+namespace unitInterval
 
 /-- The path 0 ⟶ 1 in I -/
 def path01 : Path (0 : I) 1 where
   toFun := id
   source' := rfl
   target' := rfl
-#align unit_interval.path01 UnitInterval.path01
+#align unit_interval.path01 unitInterval.path01
 
 /-- The path 0 ⟶ 1 in ulift I -/
 def upath01 : Path (ULift.up 0 : ULift.{u} I) (ULift.up 1) where
   toFun := ULift.up
   source' := rfl
   target' := rfl
-#align unit_interval.upath01 UnitInterval.upath01
+#align unit_interval.upath01 unitInterval.upath01
 
 attribute [local instance] Path.Homotopic.setoid
 
 /-- The homotopy path class of 0 → 1 in `ulift I` -/
 def uhpath01 : @fromTop (TopCat.of <| ULift.{u} I) (ULift.up (0 : I)) ⟶ fromTop (ULift.up 1) :=
   ⟦upath01⟧
-#align unit_interval.uhpath01 UnitInterval.uhpath01
+#align unit_interval.uhpath01 unitInterval.uhpath01
 
-end UnitInterval
+end unitInterval
 
 namespace ContinuousMap.Homotopy
 
-open UnitInterval (uhpath01)
+open unitInterval (uhpath01)
 
 attribute [local instance] Path.Homotopic.setoid
 

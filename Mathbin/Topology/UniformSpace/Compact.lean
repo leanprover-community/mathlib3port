@@ -46,7 +46,7 @@ variable {α β γ : Type _} [UniformSpace α] [UniformSpace β]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- On a compact uniform space, the topology determines the uniform structure, entourages are
 exactly the neighborhoods of the diagonal. -/
-theorem nhds_set_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (Diagonal α) = 𝓤 α := by
+theorem nhds_set_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (diagonal α) = 𝓤 α := by
   refine' nhds_set_diagonal_le_uniformity.antisymm _
   have :
     (𝓤 (α × α)).HasBasis (fun U => U ∈ 𝓤 α) fun U =>
@@ -111,10 +111,10 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     -- In particular (x, y) is a cluster point of 𝓟 Vᶜ, hence is not in the interior of V,
     -- and a fortiori not in Δ, so x ≠ y
     have clV : ClusterPt (x, y) (𝓟 <| Vᶜ) := hxy.of_inf_right
-    have : (x, y) ∉ Interior V := by
-      have : (x, y) ∈ Closure (Vᶜ) := by rwa [mem_closure_iff_cluster_pt]
+    have : (x, y) ∉ interior V := by
+      have : (x, y) ∈ closure (Vᶜ) := by rwa [mem_closure_iff_cluster_pt]
       rwa [closure_compl] at this
-    have diag_subset : diagonal γ ⊆ Interior V := by
+    have diag_subset : diagonal γ ⊆ interior V := by
       rw [subset_interior_iff_nhds]
       rintro ⟨x, x⟩ ⟨⟩
       exact (mem_supr.mp V_in : _) x

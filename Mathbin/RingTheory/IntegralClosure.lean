@@ -83,10 +83,10 @@ theorem isIntegralAlgebraMap {x : R} : IsIntegral R (algebraMap R A x) :=
 theorem isIntegralOfNoetherian (H : IsNoetherian R A) (x : A) : IsIntegral R x := by
   let leval : R[X] →ₗ[R] A := (aeval x).toLinearMap
   let D : ℕ → Submodule R A := fun n => (degree_le R n).map leval
-  let M := WellFounded.min (is_noetherian_iff_well_founded.1 H) (Set.Range D) ⟨_, ⟨0, rfl⟩⟩
-  have HM : M ∈ Set.Range D := WellFounded.min_mem _ _ _
+  let M := WellFounded.min (is_noetherian_iff_well_founded.1 H) (Set.range D) ⟨_, ⟨0, rfl⟩⟩
+  have HM : M ∈ Set.range D := WellFounded.min_mem _ _ _
   cases' HM with N HN
-  have HM : ¬M < D (N + 1) := WellFounded.not_lt_min (is_noetherian_iff_well_founded.1 H) (Set.Range D) _ ⟨N + 1, rfl⟩
+  have HM : ¬M < D (N + 1) := WellFounded.not_lt_min (is_noetherian_iff_well_founded.1 H) (Set.range D) _ ⟨N + 1, rfl⟩
   rw [← HN] at HM
   have HN2 : D (N + 1) ≤ D N :=
     Classical.by_contradiction fun H =>
@@ -294,7 +294,7 @@ theorem isIntegralOfMemOfFg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x : A)
     exact smul_mem _ _ (subset_span <| Or.inr <| hly1 _ ht)
   -- Hence this span is a subring. Call this subring `S₁`.
   let S₁ : Subring A :=
-    { Carrier := span S₀ (insert 1 ↑y : Set A), one_mem' := subset_span <| Or.inl rfl,
+    { carrier := span S₀ (insert 1 ↑y : Set A), one_mem' := subset_span <| Or.inl rfl,
       mul_mem' := fun p q hp hq => this <| mul_mem_mul hp hq, zero_mem' := (span S₀ (insert 1 ↑y : Set A)).zero_mem,
       add_mem' := fun _ _ => (span S₀ (insert 1 ↑y : Set A)).add_mem,
       neg_mem' := fun _ => (span S₀ (insert 1 ↑y : Set A)).neg_mem }
@@ -305,7 +305,7 @@ theorem isIntegralOfMemOfFg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x : A)
     · exact (span_le.2 (Set.insert_subset.2 ⟨(Algebra.adjoin S₀ ↑y).one_mem, Algebra.subset_adjoin⟩)) hz
       
     · rw [Subalgebra.mem_to_submodule, Algebra.mem_adjoin_iff] at hz
-      suffices Subring.closure (Set.Range ⇑(algebraMap (↥S₀) A) ∪ ↑y) ≤ S₁ by exact this hz
+      suffices Subring.closure (Set.range ⇑(algebraMap (↥S₀) A) ∪ ↑y) ≤ S₁ by exact this hz
       refine' Subring.closure_le.2 (Set.union_subset _ fun t ht => subset_span <| Or.inr ht)
       rw [Set.range_subset_iff]
       intro y
@@ -343,7 +343,7 @@ theorem isIntegralOfSmulMemSubmodule {M : Type _} [AddCommGroup M] [Module R M] 
     [NoZeroSmulDivisors A M] (N : Submodule R M) (hN : N ≠ ⊥) (hN' : N.Fg) (x : A) (hx : ∀ n ∈ N, x • n ∈ N) :
     IsIntegral R x := by
   let A' : Subalgebra R A :=
-    { Carrier := { x | ∀ n ∈ N, x • n ∈ N }, mul_mem' := fun a b ha hb n hn => smul_smul a b n ▸ ha _ (hb _ hn),
+    { carrier := { x | ∀ n ∈ N, x • n ∈ N }, mul_mem' := fun a b ha hb n hn => smul_smul a b n ▸ ha _ (hb _ hn),
       one_mem' := fun n hn => (one_smul A n).symm ▸ hn,
       add_mem' := fun a b ha hb n hn => (add_smul a b n).symm ▸ N.add_mem (ha _ hn) (hb _ hn),
       zero_mem' := fun n hn => (zero_smul A n).symm ▸ N.zero_mem,
@@ -509,7 +509,7 @@ variable (R A)
 
 /-- The integral closure of R in an R-algebra A. -/
 def integralClosure : Subalgebra R A where
-  Carrier := { r | IsIntegral R r }
+  carrier := { r | IsIntegral R r }
   zero_mem' := isIntegralZero
   one_mem' := isIntegralOne
   add_mem' _ _ := isIntegralAdd
@@ -655,7 +655,7 @@ variable (p : R[X]) (x : S)
 
 /-- The monic polynomial whose roots are `p.leading_coeff * x` for roots `x` of `p`. -/
 noncomputable def normalizeScaleRoots (p : R[X]) : R[X] :=
-  ∑ i in p.Support, monomial i (if i = p.natDegree then 1 else p.coeff i * p.leadingCoeff ^ (p.natDegree - 1 - i))
+  ∑ i in p.support, monomial i (if i = p.natDegree then 1 else p.coeff i * p.leadingCoeff ^ (p.natDegree - 1 - i))
 #align normalize_scale_roots normalizeScaleRoots
 
 theorem normalize_scale_roots_coeff_mul_leading_coeff_pow (i : ℕ) (hp : 1 ≤ natDegree p) :
@@ -690,7 +690,7 @@ theorem leading_coeff_smul_normalize_scale_roots (p : R[X]) :
     
 #align leading_coeff_smul_normalize_scale_roots leading_coeff_smul_normalize_scale_roots
 
-theorem normalize_scale_roots_support : (normalizeScaleRoots p).Support ≤ p.Support := by
+theorem normalize_scale_roots_support : (normalizeScaleRoots p).support ≤ p.support := by
   intro x
   contrapose
   simp only [not_mem_support_iff, normalizeScaleRoots, finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq',

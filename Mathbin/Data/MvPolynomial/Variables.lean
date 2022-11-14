@@ -795,7 +795,7 @@ theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPo
 #align mv_polynomial.hom_congr_vars MvPolynomial.hom_congr_vars
 
 theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ → σ) (hfi : Injective f)
-    (hf : ↑p.vars ⊆ Set.Range f) : ∃ q : MvPolynomial τ R, rename f q = p :=
+    (hf : ↑p.vars ⊆ Set.range f) : ∃ q : MvPolynomial τ R, rename f q = p :=
   ⟨bind₁ (fun i : σ => Option.elim' 0 x <| partialInv f i) p, by
     show (rename f).toRingHom.comp _ p = RingHom.id _ p
     refine' hom_congr_vars _ _ _
@@ -852,7 +852,7 @@ theorem mem_vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R)
   simpa only [exists_prop, Finset.mem_bUnion, mem_support_iff, Ne.def] using vars_bind₁ f φ h
 #align mv_polynomial.mem_vars_bind₁ MvPolynomial.mem_vars_bind₁
 
-theorem vars_rename (f : σ → τ) (φ : MvPolynomial σ R) : (rename f φ).vars ⊆ φ.vars.Image f := by
+theorem vars_rename (f : σ → τ) (φ : MvPolynomial σ R) : (rename f φ).vars ⊆ φ.vars.image f := by
   intro i hi
   simp only [vars, exists_prop, Multiset.mem_to_finset, Finset.mem_image] at hi⊢
   simpa only [Multiset.mem_map] using degrees_rename _ _ hi

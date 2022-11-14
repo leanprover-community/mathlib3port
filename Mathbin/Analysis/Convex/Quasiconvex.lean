@@ -141,7 +141,7 @@ theorem quasilinear_on_iff_mem_interval :
     QuasilinearOn 𝕜 s f ↔
       Convex 𝕜 s ∧
         ∀ ⦃x⦄,
-          x ∈ s → ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → f (a • x + b • y) ∈ Interval (f x) (f y) :=
+          x ∈ s → ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → f (a • x + b • y) ∈ interval (f x) (f y) :=
   by
   rw [QuasilinearOn, quasiconvex_on_iff_le_max, quasiconcave_on_iff_min_le, and_and_and_comm, and_self_iff]
   apply and_congr_right'
@@ -206,27 +206,27 @@ theorem AntitoneOn.quasilinear_on (hf : AntitoneOn f s) (hs : Convex 𝕜 s) : Q
   ⟨hf.QuasiconvexOn hs, hf.QuasiconcaveOn hs⟩
 #align antitone_on.quasilinear_on AntitoneOn.quasilinear_on
 
-theorem Monotone.quasiconvex_on (hf : Monotone f) : QuasiconvexOn 𝕜 Univ f :=
+theorem Monotone.quasiconvex_on (hf : Monotone f) : QuasiconvexOn 𝕜 univ f :=
   (hf.MonotoneOn _).QuasiconvexOn convex_univ
 #align monotone.quasiconvex_on Monotone.quasiconvex_on
 
-theorem Monotone.quasiconcave_on (hf : Monotone f) : QuasiconcaveOn 𝕜 Univ f :=
+theorem Monotone.quasiconcave_on (hf : Monotone f) : QuasiconcaveOn 𝕜 univ f :=
   (hf.MonotoneOn _).QuasiconcaveOn convex_univ
 #align monotone.quasiconcave_on Monotone.quasiconcave_on
 
-theorem Monotone.quasilinear_on (hf : Monotone f) : QuasilinearOn 𝕜 Univ f :=
+theorem Monotone.quasilinear_on (hf : Monotone f) : QuasilinearOn 𝕜 univ f :=
   ⟨hf.QuasiconvexOn, hf.QuasiconcaveOn⟩
 #align monotone.quasilinear_on Monotone.quasilinear_on
 
-theorem Antitone.quasiconvex_on (hf : Antitone f) : QuasiconvexOn 𝕜 Univ f :=
+theorem Antitone.quasiconvex_on (hf : Antitone f) : QuasiconvexOn 𝕜 univ f :=
   (hf.AntitoneOn _).QuasiconvexOn convex_univ
 #align antitone.quasiconvex_on Antitone.quasiconvex_on
 
-theorem Antitone.quasiconcave_on (hf : Antitone f) : QuasiconcaveOn 𝕜 Univ f :=
+theorem Antitone.quasiconcave_on (hf : Antitone f) : QuasiconcaveOn 𝕜 univ f :=
   (hf.AntitoneOn _).QuasiconcaveOn convex_univ
 #align antitone.quasiconcave_on Antitone.quasiconcave_on
 
-theorem Antitone.quasilinear_on (hf : Antitone f) : QuasilinearOn 𝕜 Univ f :=
+theorem Antitone.quasilinear_on (hf : Antitone f) : QuasilinearOn 𝕜 univ f :=
   ⟨hf.QuasiconvexOn, hf.QuasiconcaveOn⟩
 #align antitone.quasilinear_on Antitone.quasilinear_on
 

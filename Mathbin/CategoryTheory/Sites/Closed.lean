@@ -58,7 +58,7 @@ namespace GrothendieckTopology
 /-- The `J`-closure of a sieve is the collection of arrows which it covers. -/
 @[simps]
 def close {X : C} (S : Sieve X) : Sieve X where
-  Arrows Y f := J₁.Covers S f
+  arrows Y f := J₁.Covers S f
   downward_closed' Y Z f hS := J₁.arrowStable _ _ hS
 #align category_theory.grothendieck_topology.close CategoryTheory.GrothendieckTopology.close
 
@@ -298,7 +298,7 @@ In fact, such operations are in bijection with Grothendieck topologies.
 @[simps]
 def topologyOfClosureOperator (c : ∀ X : C, ClosureOperator (Sieve X))
     (hc : ∀ ⦃X Y : C⦄ (f : Y ⟶ X) (S : Sieve X), c _ (S.pullback f) = (c _ S).pullback f) : GrothendieckTopology C where
-  Sieves X := { S | c X S = ⊤ }
+  sieves X := { S | c X S = ⊤ }
   top_mem' X := top_unique ((c X).le_closure _)
   pullback_stable' X Y S f hS := by
     rw [Set.mem_set_of_eq] at hS

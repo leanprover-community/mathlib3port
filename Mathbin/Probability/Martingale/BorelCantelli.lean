@@ -46,7 +46,7 @@ variable {Ω : Type _} {m0 : MeasurableSpace Ω} {μ : Measure Ω} {ℱ : Filtra
 -- refactor is complete
 /-- `least_ge f r n` is the stopping time corresponding to the first time `f ≥ r`. -/
 noncomputable def leastGe (f : ℕ → Ω → ℝ) (r : ℝ) (n : ℕ) :=
-  hitting f (Set.IciCat r) 0 n
+  hitting f (Set.ici r) 0 n
 #align measure_theory.least_ge MeasureTheory.leastGe
 
 theorem Adapted.isStoppingTimeLeastGe (r : ℝ) (n : ℕ) (hf : Adapted ℱ f) : IsStoppingTime ℱ (leastGe f r n) :=
@@ -69,7 +69,7 @@ theorem least_ge_eq_min (π : Ω → ℕ) (r : ℝ) (ω : Ω) {n : ℕ} (hπn : 
     leastGe f r (π ω) ω = min (π ω) (leastGe f r n ω) := by
   classical refine' le_antisymm (le_min (least_ge_le _) (least_ge_mono (hπn ω) r ω)) _
     · rw [min_eq_left hle, least_ge]
-      by_cases h:∃ j ∈ Set.IccCat 0 (π ω), f j ω ∈ Set.IciCat r
+      by_cases h:∃ j ∈ Set.icc 0 (π ω), f j ω ∈ Set.ici r
       · refine' hle.trans (Eq.le _)
         rw [least_ge, ← hitting_eq_hitting_of_exists (hπn ω) h]
         
@@ -128,7 +128,7 @@ theorem norm_stopped_value_least_ge_le (hr : 0 ≤ r) (hf0 : f 0 = 0) (hbdd : �
 
 theorem Submartingale.stopped_value_least_ge_snorm_le [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (hr : 0 ≤ r)
     (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) (i : ℕ) :
-    snorm (stoppedValue f (leastGe f r i)) 1 μ ≤ 2 * μ Set.Univ * Ennreal.ofReal (r + R) := by
+    snorm (stoppedValue f (leastGe f r i)) 1 μ ≤ 2 * μ Set.univ * Ennreal.ofReal (r + R) := by
   refine'
     snorm_one_le_of_le' ((hf.stopped_value_least_ge r).Integrable _) _ (norm_stopped_value_least_ge_le hr hf0 hbdd i)
   rw [← integral_univ]
@@ -139,7 +139,7 @@ theorem Submartingale.stopped_value_least_ge_snorm_le [IsFiniteMeasure μ] (hf :
 
 theorem Submartingale.stopped_value_least_ge_snorm_le' [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (hr : 0 ≤ r)
     (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) (i : ℕ) :
-    snorm (stoppedValue f (leastGe f r i)) 1 μ ≤ Ennreal.toNnreal (2 * μ Set.Univ * Ennreal.ofReal (r + R)) := by
+    snorm (stoppedValue f (leastGe f r i)) 1 μ ≤ Ennreal.toNnreal (2 * μ Set.univ * Ennreal.ofReal (r + R)) := by
   refine' (hf.stopped_value_least_ge_snorm_le hr hf0 hbdd i).trans _
   simp [Ennreal.coe_to_nnreal (measure_ne_top μ _), Ennreal.coe_to_nnreal]
 #align
@@ -148,7 +148,7 @@ theorem Submartingale.stopped_value_least_ge_snorm_le' [IsFiniteMeasure μ] (hf 
 /-- This lemma is superceded by `submartingale.bdd_above_iff_exists_tendsto`. -/
 theorem Submartingale.exists_tendsto_of_abs_bdd_above_aux [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (hf0 : f 0 = 0)
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
-    ∀ᵐ ω ∂μ, BddAbove (Set.Range fun n => f n ω) → ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
+    ∀ᵐ ω ∂μ, BddAbove (Set.range fun n => f n ω) → ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   have ht : ∀ᵐ ω ∂μ, ∀ i : ℕ, ∃ c, tendsto (fun n => stopped_value f (least_ge f i n) ω) at_top (𝓝 c) := by
     rw [ae_all_iff]
     exact fun i =>
@@ -174,7 +174,7 @@ theorem Submartingale.exists_tendsto_of_abs_bdd_above_aux [IsFiniteMeasure μ] (
 
 theorem Submartingale.bdd_above_iff_exists_tendsto_aux [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (hf0 : f 0 = 0)
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
-    ∀ᵐ ω ∂μ, BddAbove (Set.Range fun n => f n ω) ↔ ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
+    ∀ᵐ ω ∂μ, BddAbove (Set.range fun n => f n ω) ↔ ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   filter_upwards [hf.exists_tendsto_of_abs_bdd_above_aux hf0
       hbdd] with ω hω using⟨hω, fun ⟨c, hc⟩ => hc.bdd_above_range⟩
 #align
@@ -184,7 +184,7 @@ theorem Submartingale.bdd_above_iff_exists_tendsto_aux [IsFiniteMeasure μ] (hf 
 then for almost every `ω`, `f n ω` is bounded above (in `n`) if and only if it converges. -/
 theorem Submartingale.bdd_above_iff_exists_tendsto [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
-    ∀ᵐ ω ∂μ, BddAbove (Set.Range fun n => f n ω) ↔ ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
+    ∀ᵐ ω ∂μ, BddAbove (Set.range fun n => f n ω) ↔ ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   set g : ℕ → Ω → ℝ := fun n ω => f n ω - f 0 ω with hgdef
   have hg : submartingale g ℱ μ := hf.sub_martingale (martingale_const_fun _ _ (hf.adapted 0) (hf.integrable 0))
   have hg0 : g 0 = 0 := by
@@ -239,7 +239,7 @@ almost everywhere, the result follows.
 
 theorem Martingale.bdd_above_range_iff_bdd_below_range [IsFiniteMeasure μ] (hf : Martingale f ℱ μ)
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
-    ∀ᵐ ω ∂μ, BddAbove (Set.Range fun n => f n ω) ↔ BddBelow (Set.Range fun n => f n ω) := by
+    ∀ᵐ ω ∂μ, BddAbove (Set.range fun n => f n ω) ↔ BddBelow (Set.range fun n => f n ω) := by
   have hbdd' : ∀ᵐ ω ∂μ, ∀ i, |(-f) (i + 1) ω - (-f) i ω| ≤ R := by
     filter_upwards [hbdd] with ω hω i
     erw [← abs_neg, neg_sub, sub_neg_eq_add, neg_add_eq_sub]

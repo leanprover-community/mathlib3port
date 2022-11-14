@@ -104,10 +104,10 @@ noncomputable def closure (f : E →ₗ.[R] F) : E →ₗ.[R] F :=
   if hf : f.IsClosable then hf.some else f
 #align linear_pmap.closure LinearPmap.closure
 
-theorem closure_def {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure = hf.some := by simp [Closure, hf]
+theorem closure_def {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure = hf.some := by simp [closure, hf]
 #align linear_pmap.closure_def LinearPmap.closure_def
 
-theorem closure_def' {f : E →ₗ.[R] F} (hf : ¬f.IsClosable) : f.closure = f := by simp [Closure, hf]
+theorem closure_def' {f : E →ₗ.[R] F} (hf : ¬f.IsClosable) : f.closure = f := by simp [closure, hf]
 #align linear_pmap.closure_def' LinearPmap.closure_def'
 
 /-- The closure (as a submodule) of the graph is equal to the graph of the closure

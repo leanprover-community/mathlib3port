@@ -164,7 +164,7 @@ theorem iterate_derivative_C_mul (a : R) (p : R[X]) (k : ℕ) : (derivative^[k])
   by simp_rw [← smul_eq_C_mul, iterate_derivative_smul]
 #align polynomial.iterate_derivative_C_mul Polynomial.iterate_derivative_C_mul
 
-theorem of_mem_support_derivative {p : R[X]} {n : ℕ} (h : n ∈ p.derivative.Support) : n + 1 ∈ p.Support :=
+theorem of_mem_support_derivative {p : R[X]} {n : ℕ} (h : n ∈ p.derivative.support) : n + 1 ∈ p.support :=
   mem_support_iff.2 fun h1 : p.coeff (n + 1) = 0 =>
     mem_support_iff.1 h <| show p.derivative.coeff n = 0 by rw [coeff_derivative, h1, zero_mul]
 #align polynomial.of_mem_support_derivative Polynomial.of_mem_support_derivative
@@ -327,7 +327,7 @@ theorem iterate_derivative_nat_cast_mul {n k : ℕ} {f : R[X]} : (derivative^[k]
 #align polynomial.iterate_derivative_nat_cast_mul Polynomial.iterate_derivative_nat_cast_mul
 
 theorem mem_support_derivative [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :
-    n ∈ (derivative p).Support ↔ n + 1 ∈ p.Support := by
+    n ∈ (derivative p).support ↔ n + 1 ∈ p.support := by
   suffices ¬p.coeff (n + 1) * (n + 1 : ℕ) = 0 ↔ coeff p (n + 1) ≠ 0 by
     simpa only [mem_support_iff, coeff_derivative, Ne.def, Nat.cast_succ]
   rw [← nsmul_eq_mul', smul_eq_zero]

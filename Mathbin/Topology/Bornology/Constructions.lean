@@ -109,15 +109,15 @@ theorem forall_is_bounded_image_eval_iff {s : Set (∀ i, π i)} : (∀ i, IsBou
   compl_mem_Coprod.symm
 #align bornology.forall_is_bounded_image_eval_iff Bornology.forall_is_bounded_image_eval_iff
 
-theorem IsBounded.pi (h : ∀ i, IsBounded (S i)) : IsBounded (pi Univ S) :=
+theorem IsBounded.pi (h : ∀ i, IsBounded (S i)) : IsBounded (pi univ S) :=
   forall_is_bounded_image_eval_iff.1 fun i => (h i).Subset eval_image_univ_pi_subset
 #align bornology.is_bounded.pi Bornology.IsBounded.pi
 
-theorem is_bounded_pi_of_nonempty (hne : (pi Univ S).Nonempty) : IsBounded (pi Univ S) ↔ ∀ i, IsBounded (S i) :=
+theorem is_bounded_pi_of_nonempty (hne : (pi univ S).Nonempty) : IsBounded (pi univ S) ↔ ∀ i, IsBounded (S i) :=
   ⟨fun H i => @eval_image_univ_pi _ _ _ i hne ▸ forall_is_bounded_image_eval_iff.2 H i, IsBounded.pi⟩
 #align bornology.is_bounded_pi_of_nonempty Bornology.is_bounded_pi_of_nonempty
 
-theorem is_bounded_pi : IsBounded (pi Univ S) ↔ (∃ i, S i = ∅) ∨ ∀ i, IsBounded (S i) := by
+theorem is_bounded_pi : IsBounded (pi univ S) ↔ (∃ i, S i = ∅) ∨ ∀ i, IsBounded (S i) := by
   by_cases hne:∃ i, S i = ∅
   · simp [hne, univ_pi_eq_empty_iff.2 hne]
     
@@ -156,7 +156,7 @@ instance [BoundedSpace α] [BoundedSpace β] : BoundedSpace (α × β) := by sim
 instance [∀ i, BoundedSpace (π i)] : BoundedSpace (∀ i, π i) := by simp [← cobounded_eq_bot_iff, cobounded_pi]
 
 theorem bounded_space_induced_iff {α β : Type _} [Bornology β] {f : α → β} :
-    @BoundedSpace α (Bornology.induced f) ↔ IsBounded (Range f) := by
+    @BoundedSpace α (Bornology.induced f) ↔ IsBounded (range f) := by
   rw [← is_bounded_univ, is_bounded_induced, image_univ]
 #align bounded_space_induced_iff bounded_space_induced_iff
 

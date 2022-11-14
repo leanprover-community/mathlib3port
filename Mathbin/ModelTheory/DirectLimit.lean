@@ -79,7 +79,7 @@ end DirectedSystem
 namespace DirectLimit
 
 /-- Raises a family of elements in the `Σ`-type to the same level along the embeddings. -/
-def unify {α : Type _} (x : α → Σi, G i) (i : ι) (h : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) (a : α) : G i :=
+def unify {α : Type _} (x : α → Σi, G i) (i : ι) (h : i ∈ upperBounds (range (Sigma.fst ∘ x))) (a : α) : G i :=
   f (x a).1 i (h (mem_range_self a)) (x a).2
 #align first_order.language.direct_limit.unify FirstOrder.Language.DirectLimit.unify
 
@@ -92,7 +92,7 @@ theorem unify_sigma_mk_self {α : Type _} {i : ι} {x : α → G i} :
   simp only [unify, DirectedSystem.map_self]
 #align first_order.language.direct_limit.unify_sigma_mk_self FirstOrder.Language.DirectLimit.unify_sigma_mk_self
 
-theorem comp_unify {α : Type _} {x : α → Σi, G i} {i j : ι} (ij : i ≤ j) (h : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
+theorem comp_unify {α : Type _} {x : α → Σi, G i} {i j : ι} (ij : i ≤ j) (h : i ∈ upperBounds (range (Sigma.fst ∘ x))) :
     f i j ij ∘ unify f x i h = unify f x j fun k hk => trans (mem_upper_bounds.1 h k hk) ij := by
   ext a
   simp [unify, DirectedSystem.map_map]
@@ -162,7 +162,7 @@ theorem equiv_iff {x y : Σi, G i} {i : ι} (hx : x.1 ≤ i) (hy : y.1 ≤ i) : 
 #align first_order.language.direct_limit.equiv_iff FirstOrder.Language.DirectLimit.equiv_iff
 
 theorem fun_map_unify_equiv {n : ℕ} (F : L.Functions n) (x : Fin n → Σi, G i) (i j : ι)
-    (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) (hj : j ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
+    (hi : i ∈ upperBounds (range (Sigma.fst ∘ x))) (hj : j ∈ upperBounds (range (Sigma.fst ∘ x))) :
     (⟨i, funMap F (unify f x i hi)⟩ : Σi, G i) ≈ ⟨j, funMap F (unify f x j hj)⟩ := by
   obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i j
   refine' ⟨k, ik, jk, _⟩
@@ -170,7 +170,7 @@ theorem fun_map_unify_equiv {n : ℕ} (F : L.Functions n) (x : Fin n → Σi, G 
 #align first_order.language.direct_limit.fun_map_unify_equiv FirstOrder.Language.DirectLimit.fun_map_unify_equiv
 
 theorem rel_map_unify_equiv {n : ℕ} (R : L.Relations n) (x : Fin n → Σi, G i) (i j : ι)
-    (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) (hj : j ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
+    (hi : i ∈ upperBounds (range (Sigma.fst ∘ x))) (hj : j ∈ upperBounds (range (Sigma.fst ∘ x))) :
     RelMap R (unify f x i hi) = RelMap R (unify f x j hj) := by
   obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i j
   rw [← (f i k ik).map_rel, comp_unify, ← (f j k jk).map_rel, comp_unify]
@@ -179,7 +179,7 @@ theorem rel_map_unify_equiv {n : ℕ} (R : L.Relations n) (x : Fin n → Σi, G 
 variable [Nonempty ι]
 
 theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σi, G i} (xy : x ≈ y) :
-    ∃ (i : ι)(hx : i ∈ UpperBounds (Range (Sigma.fst ∘ x)))(hy : i ∈ UpperBounds (Range (Sigma.fst ∘ y))),
+    ∃ (i : ι)(hx : i ∈ upperBounds (range (Sigma.fst ∘ x)))(hy : i ∈ upperBounds (range (Sigma.fst ∘ y))),
       unify f x i hx = unify f y i hy :=
   by
   obtain ⟨i, hi⟩ := Fintype.bdd_above_range (Sum.elim (fun a => (x a).1) fun a => (y a).1)
@@ -189,13 +189,13 @@ theorem exists_unify_eq {α : Type _} [Fintype α] {x y : α → Σi, G i} (xy :
 #align first_order.language.direct_limit.exists_unify_eq FirstOrder.Language.DirectLimit.exists_unify_eq
 
 theorem fun_map_equiv_unify {n : ℕ} (F : L.Functions n) (x : Fin n → Σi, G i) (i : ι)
-    (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
+    (hi : i ∈ upperBounds (range (Sigma.fst ∘ x))) :
     @funMap _ _ (sigmaStructure G f) _ F x ≈ ⟨_, funMap F (unify f x i hi)⟩ :=
   fun_map_unify_equiv G f F x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
 #align first_order.language.direct_limit.fun_map_equiv_unify FirstOrder.Language.DirectLimit.fun_map_equiv_unify
 
 theorem rel_map_equiv_unify {n : ℕ} (R : L.Relations n) (x : Fin n → Σi, G i) (i : ι)
-    (hi : i ∈ UpperBounds (Range (Sigma.fst ∘ x))) :
+    (hi : i ∈ upperBounds (range (Sigma.fst ∘ x))) :
     @RelMap _ _ (sigmaStructure G f) _ R x = RelMap R (unify f x i hi) :=
   rel_map_unify_equiv G f R x (Classical.choose (Fintype.bdd_above_range fun a => (x a).1)) i _ hi
 #align first_order.language.direct_limit.rel_map_equiv_unify FirstOrder.Language.DirectLimit.rel_map_equiv_unify

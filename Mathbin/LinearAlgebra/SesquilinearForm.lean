@@ -324,7 +324,7 @@ chirality; in addition to this "left" orthogonal complement one could define a "
 complement for which, for all `y` in `N`, `B y x = 0`.  This variant definition is not currently
 provided in mathlib. -/
 def orthogonalBilin (N : Submodule R₁ M₁) (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₂] R) : Submodule R₁ M₁ where
-  Carrier := { m | ∀ n ∈ N, B.IsOrtho n m }
+  carrier := { m | ∀ n ∈ N, B.IsOrtho n m }
   zero_mem' x _ := B.isOrthoZeroRight x
   add_mem' x y hx hy n hn := by
     rw [LinearMap.IsOrtho, map_add, show B n x = 0 from hx n hn, show B n y = 0 from hy n hn, zero_add]
@@ -541,7 +541,7 @@ variable [AddCommGroup M₁] [Module R M₁] (B F : M →ₗ[R] M →ₗ[R] R)
 
 /-- The set of pair-self-adjoint endomorphisms are a submodule of the type of all endomorphisms. -/
 def isPairSelfAdjointSubmodule : Submodule R (Module.EndCat R M) where
-  Carrier := { f | IsPairSelfAdjoint B F f }
+  carrier := { f | IsPairSelfAdjoint B F f }
   zero_mem' := isAdjointPairZero
   add_mem' f g hf hg := hf.add hg
   smul_mem' c f h := h.smul c

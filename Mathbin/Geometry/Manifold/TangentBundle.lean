@@ -89,14 +89,14 @@ is a vector bundle. -/
 structure BasicSmoothVectorBundleCore {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M]
   [ChartedSpace H M] [SmoothManifoldWithCorners I M] (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F] where
-  coordChange : Atlas H M → Atlas H M → H → F →L[𝕜] F
-  coord_change_self : ∀ i : Atlas H M, ∀ x ∈ i.1.Target, ∀ v, coord_change i i x v = v
+  coordChange : atlas H M → atlas H M → H → F →L[𝕜] F
+  coord_change_self : ∀ i : atlas H M, ∀ x ∈ i.1.target, ∀ v, coord_change i i x v = v
   coord_change_comp :
-    ∀ i j k : Atlas H M,
-      ∀ x ∈ ((i.1.symm.trans j.1).trans (j.1.symm.trans k.1)).Source,
+    ∀ i j k : atlas H M,
+      ∀ x ∈ ((i.1.symm.trans j.1).trans (j.1.symm.trans k.1)).source,
         ∀ v, (coord_change j k ((i.1.symm.trans j.1) x)) (coord_change i j x v) = coord_change i k x v
   coordChangeSmoothClm :
-    ∀ i j : Atlas H M, ContDiffOn 𝕜 ∞ (coord_change i j ∘ I.symm) (I '' (i.1.symm.trans j.1).Source)
+    ∀ i j : atlas H M, ContDiffOn 𝕜 ∞ (coord_change i j ∘ I.symm) (I '' (i.1.symm.trans j.1).source)
 #align basic_smooth_vector_bundle_core BasicSmoothVectorBundleCore
 
 /-- The trivial basic smooth bundle core, in which all the changes of coordinates are the
@@ -125,7 +125,7 @@ instance : Inhabited (BasicSmoothVectorBundleCore I M F) :=
 
 /-- A reformulation of `coord_change_comp`, formulated in terms of a point in `M`.
 The conditions on this point a significantly simpler than in `coord_change_comp`. -/
-theorem coord_change_comp' {i j k : Atlas H M} {x : M} (hi : x ∈ i.1.Source) (hj : x ∈ j.1.Source) (hk : x ∈ k.1.Source)
+theorem coord_change_comp' {i j k : atlas H M} {x : M} (hi : x ∈ i.1.source) (hj : x ∈ j.1.source) (hk : x ∈ k.1.source)
     (v : F) : Z.coordChange j k (j x) (Z.coordChange i j (i x) v) = Z.coordChange i k (i x) v := by
   rw [show j x = _ by rw [← i.1.left_inv hi]]
   apply Z.coord_change_comp
@@ -133,12 +133,12 @@ theorem coord_change_comp' {i j k : Atlas H M} {x : M} (hi : x ∈ i.1.Source) (
 #align basic_smooth_vector_bundle_core.coord_change_comp' BasicSmoothVectorBundleCore.coord_change_comp'
 
 /-- A reformulation of `coord_change_self`, formulated in terms of a point in `M`. -/
-theorem coord_change_self' {i : Atlas H M} {x : M} (hi : x ∈ i.1.Source) (v : F) : Z.coordChange i i (i x) v = v :=
+theorem coord_change_self' {i : atlas H M} {x : M} (hi : x ∈ i.1.source) (v : F) : Z.coordChange i i (i x) v = v :=
   Z.coord_change_self i (i x) (i.1.MapsTo hi) v
 #align basic_smooth_vector_bundle_core.coord_change_self' BasicSmoothVectorBundleCore.coord_change_self'
 
 /-- `Z.coord_change j i` is a partial inverse of `Z.coord_change i j`. -/
-theorem coord_change_comp_eq_self (i j : Atlas H M) {x : H} (hx : x ∈ (i.1.symm.trans j.1).Source) (v : F) :
+theorem coord_change_comp_eq_self (i j : atlas H M) {x : H} (hx : x ∈ (i.1.symm.trans j.1).source) (v : F) :
     Z.coordChange j i (i.1.symm.trans j.1 x) (Z.coordChange i j x v) = v := by
   rw [Z.coord_change_comp i j i x _ v, Z.coord_change_self _ _ hx.1]
   simp only [mfld_simps] at hx
@@ -147,12 +147,12 @@ theorem coord_change_comp_eq_self (i j : Atlas H M) {x : H} (hx : x ∈ (i.1.sym
 
 /-- `Z.coord_change j i` is a partial inverse of `Z.coord_change i j`,
 formulated in terms of a point in `M`. -/
-theorem coord_change_comp_eq_self' {i j : Atlas H M} {x : M} (hi : x ∈ i.1.Source) (hj : x ∈ j.1.Source) (v : F) :
+theorem coord_change_comp_eq_self' {i j : atlas H M} {x : M} (hi : x ∈ i.1.source) (hj : x ∈ j.1.source) (v : F) :
     Z.coordChange j i (j x) (Z.coordChange i j (i x) v) = v := by
   rw [Z.coord_change_comp' hi hj hi v, Z.coord_change_self' hi]
 #align basic_smooth_vector_bundle_core.coord_change_comp_eq_self' BasicSmoothVectorBundleCore.coord_change_comp_eq_self'
 
-theorem coord_change_continuous (i j : Atlas H M) : ContinuousOn (Z.coordChange i j) (i.1.symm.trans j.1).Source := by
+theorem coord_change_continuous (i j : atlas H M) : ContinuousOn (Z.coordChange i j) (i.1.symm.trans j.1).source := by
   intro x hx
   apply
     (((Z.coord_change_smooth_clm i j).ContinuousOn.ContinuousWithinAt (mem_image_of_mem I hx)).comp
@@ -168,15 +168,15 @@ theorem coord_change_continuous (i j : Atlas H M) : ContinuousOn (Z.coordChange 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem coordChangeSmooth (i j : Atlas H M) :
-    ContDiffOn 𝕜 ∞ (fun p : E × F => Z.coordChange i j (I.symm p.1) p.2) ((I '' (i.1.symm.trans j.1).Source) ×ˢ univ) :=
+theorem coordChangeSmooth (i j : atlas H M) :
+    ContDiffOn 𝕜 ∞ (fun p : E × F => Z.coordChange i j (I.symm p.1) p.2) ((I '' (i.1.symm.trans j.1).source) ×ˢ univ) :=
   by
   have A : ContDiff 𝕜 ∞ fun p : (F →L[𝕜] F) × F => p.1 p.2 := by
     apply IsBoundedBilinearMap.contDiff
     exact isBoundedBilinearMapApply
   have B :
     ContDiffOn 𝕜 ∞ (fun p : E × F => (Z.coord_change i j (I.symm p.1), p.snd))
-      ((I '' (i.1.symm.trans j.1).Source) ×ˢ univ) :=
+      ((I '' (i.1.symm.trans j.1).source) ×ˢ univ) :=
     by
     apply ContDiffOn.prod _ _
     · exact (Z.coord_change_smooth_clm i j).comp cont_diff_fst.cont_diff_on (prod_subset_preimage_fst _ _)
@@ -188,8 +188,8 @@ theorem coordChangeSmooth (i j : Atlas H M) :
 
 /-- Vector bundle core associated to a basic smooth bundle core -/
 @[simps coordChange indexAt]
-def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (Atlas H M) where
-  BaseSet i := i.1.Source
+def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (atlas H M) where
+  baseSet i := i.1.source
   is_open_base_set i := i.1.open_source
   indexAt := achart H
   mem_base_set_at x := mem_chart_source H x
@@ -211,18 +211,18 @@ def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (Atlas 
   basic_smooth_vector_bundle_core.to_topological_vector_bundle_core BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore
 
 @[simp, mfld_simps]
-theorem base_set (i : Atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).BaseSet = i.1.Source :=
+theorem base_set (i : atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).baseSet = i.1.source :=
   rfl
 #align basic_smooth_vector_bundle_core.base_set BasicSmoothVectorBundleCore.base_set
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, mfld_simps]
-theorem target (i : Atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).Target = i.1.Source ×ˢ univ :=
+theorem target (i : atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).target = i.1.source ×ˢ univ :=
   rfl
 #align basic_smooth_vector_bundle_core.target BasicSmoothVectorBundleCore.target
 
 /-- Local chart for the total space of a basic smooth bundle -/
-def chart {e : LocalHomeomorph M H} (he : e ∈ Atlas H M) :
+def chart {e : LocalHomeomorph M H} (he : e ∈ atlas H M) :
     LocalHomeomorph Z.toTopologicalVectorBundleCore.TotalSpace (ModelProd H F) :=
   (Z.toTopologicalVectorBundleCore.localTriv ⟨e, he⟩).toLocalHomeomorph.trans
     (LocalHomeomorph.prod e (LocalHomeomorph.refl F))
@@ -235,15 +235,15 @@ theorem chart_apply {x : M} (z : Z.toTopologicalVectorBundleCore.TotalSpace) :
 #align basic_smooth_vector_bundle_core.chart_apply BasicSmoothVectorBundleCore.chart_apply
 
 @[simp, mfld_simps]
-theorem chart_source (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) :
-    (Z.chart he).Source = Z.toTopologicalVectorBundleCore.proj ⁻¹' e.Source := by
+theorem chart_source (e : LocalHomeomorph M H) (he : e ∈ atlas H M) :
+    (Z.chart he).source = Z.toTopologicalVectorBundleCore.proj ⁻¹' e.source := by
   simp only [chart, mem_prod]
   mfld_set_tac
 #align basic_smooth_vector_bundle_core.chart_source BasicSmoothVectorBundleCore.chart_source
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, mfld_simps]
-theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) : (Z.chart he).Target = e.Target ×ˢ univ := by
+theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ atlas H M) : (Z.chart he).target = e.target ×ˢ univ := by
   simp only [chart]
   mfld_set_tac
 #align basic_smooth_vector_bundle_core.chart_target BasicSmoothVectorBundleCore.chart_target
@@ -252,7 +252,7 @@ theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ Atlas H M) : (Z.chart
 charts are in bijection with the charts of the basis. -/
 @[simps (config := lemmasOnly) chartAt]
 instance toChartedSpace : ChartedSpace (ModelProd H F) Z.toTopologicalVectorBundleCore.TotalSpace where
-  Atlas := ⋃ (e : LocalHomeomorph M H) (he : e ∈ Atlas H M), {Z.chart he}
+  atlas := ⋃ (e : LocalHomeomorph M H) (he : e ∈ atlas H M), {Z.chart he}
   chartAt p := Z.chart (chart_mem_atlas H p.1)
   mem_chart_source p := by simp [mem_chart_source]
   chart_mem_atlas p := by
@@ -261,19 +261,19 @@ instance toChartedSpace : ChartedSpace (ModelProd H F) Z.toTopologicalVectorBund
 #align basic_smooth_vector_bundle_core.to_charted_space BasicSmoothVectorBundleCore.toChartedSpace
 
 theorem mem_atlas_iff (f : LocalHomeomorph Z.toTopologicalVectorBundleCore.TotalSpace (ModelProd H F)) :
-    f ∈ Atlas (ModelProd H F) Z.toTopologicalVectorBundleCore.TotalSpace ↔
-      ∃ (e : LocalHomeomorph M H)(he : e ∈ Atlas H M), f = Z.chart he :=
+    f ∈ atlas (ModelProd H F) Z.toTopologicalVectorBundleCore.TotalSpace ↔
+      ∃ (e : LocalHomeomorph M H)(he : e ∈ atlas H M), f = Z.chart he :=
   by simp only [atlas, mem_Union, mem_singleton_iff]
 #align basic_smooth_vector_bundle_core.mem_atlas_iff BasicSmoothVectorBundleCore.mem_atlas_iff
 
 @[simp, mfld_simps]
 theorem mem_chart_source_iff (p q : Z.toTopologicalVectorBundleCore.TotalSpace) :
-    p ∈ (chartAt (ModelProd H F) q).Source ↔ p.1 ∈ (chartAt H q.1).Source := by simp only [chart_at, mfld_simps]
+    p ∈ (chartAt (ModelProd H F) q).source ↔ p.1 ∈ (chartAt H q.1).source := by simp only [chart_at, mfld_simps]
 #align basic_smooth_vector_bundle_core.mem_chart_source_iff BasicSmoothVectorBundleCore.mem_chart_source_iff
 
 @[simp, mfld_simps]
 theorem mem_chart_target_iff (p : H × F) (q : Z.toTopologicalVectorBundleCore.TotalSpace) :
-    p ∈ (chartAt (ModelProd H F) q).Target ↔ p.1 ∈ (chartAt H q.1).Target := by simp only [chart_at, mfld_simps]
+    p ∈ (chartAt (ModelProd H F) q).target ↔ p.1 ∈ (chartAt H q.1).target := by simp only [chart_at, mfld_simps]
 #align basic_smooth_vector_bundle_core.mem_chart_target_iff BasicSmoothVectorBundleCore.mem_chart_target_iff
 
 @[simp, mfld_simps]
@@ -301,12 +301,12 @@ instance toSmoothManifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.t
   have A :
     ∀ (e e' : LocalHomeomorph M H) (he : e ∈ atlas H M) (he' : e' ∈ atlas H M),
       ContDiffOn 𝕜 ∞ (J ∘ (Z.chart he).symm.trans (Z.chart he') ∘ J.symm)
-        (J.symm ⁻¹' ((Z.chart he).symm.trans (Z.chart he')).Source ∩ range J) :=
+        (J.symm ⁻¹' ((Z.chart he).symm.trans (Z.chart he')).source ∩ range J) :=
     by
     intro e e' he he'
     have :
-      J.symm ⁻¹' ((chart Z he).symm.trans (chart Z he')).Source ∩ range J =
-        (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ univ :=
+      J.symm ⁻¹' ((chart Z he).symm.trans (chart Z he')).source ∩ range J =
+        (I.symm ⁻¹' (e.symm.trans e').source ∩ range I) ×ˢ univ :=
       by
       simp only [J, chart, ModelWithCorners.prod]
       mfld_set_tac
@@ -315,12 +315,12 @@ instance toSmoothManifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.t
     apply ContDiffOn.prod
     show
       ContDiffOn 𝕜 ∞ (fun p : E × F => (I ∘ e' ∘ e.symm ∘ I.symm) p.1)
-        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ univ)
+        ((I.symm ⁻¹' (e.symm.trans e').source ∩ range I) ×ˢ univ)
     · -- the coordinate change on the base is just a coordinate change for `M`, smooth since
       -- `M` is smooth
-      have A : ContDiffOn 𝕜 ∞ (I ∘ e.symm.trans e' ∘ I.symm) (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) :=
+      have A : ContDiffOn 𝕜 ∞ (I ∘ e.symm.trans e' ∘ I.symm) (I.symm ⁻¹' (e.symm.trans e').source ∩ range I) :=
         (HasGroupoid.compatible (contDiffGroupoid ∞ I) he he').1
-      have B : ContDiffOn 𝕜 ∞ (fun p : E × F => p.1) ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ univ) :=
+      have B : ContDiffOn 𝕜 ∞ (fun p : E × F => p.1) ((I.symm ⁻¹' (e.symm.trans e').source ∩ range I) ×ˢ univ) :=
         cont_diff_fst.cont_diff_on
       exact ContDiffOn.comp A B (prod_subset_preimage_fst _ _)
       
@@ -330,7 +330,7 @@ instance toSmoothManifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.t
           Z.coord_change ⟨chart_at H (e.symm (I.symm p.1)), _⟩ ⟨e', he'⟩
             ((chart_at H (e.symm (I.symm p.1)) : M → H) (e.symm (I.symm p.1)))
             (Z.coord_change ⟨e, he⟩ ⟨chart_at H (e.symm (I.symm p.1)), _⟩ (e (e.symm (I.symm p.1))) p.2))
-        ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ univ)
+        ((I.symm ⁻¹' (e.symm.trans e').source ∩ range I) ×ˢ univ)
     · /- The coordinate change in the fiber is more complicated as its definition involves the
             reference chart chosen at each point. However, it appears with its inverse, so using the
             cocycle property one can get rid of it, and then conclude using the smoothness of the
@@ -341,7 +341,7 @@ instance toSmoothManifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.t
       rintro ⟨x, v⟩ hx
       simp only [mfld_simps] at hx
       let f := chart_at H (e.symm (I.symm x))
-      have A : I.symm x ∈ ((e.symm.trans f).trans (f.symm.trans e')).Source := by simp only [hx.1.1, hx.1.2, mfld_simps]
+      have A : I.symm x ∈ ((e.symm.trans f).trans (f.symm.trans e')).source := by simp only [hx.1.1, hx.1.2, mfld_simps]
       rw [e.right_inv hx.1.1]
       have := Z.coord_change_comp ⟨e, he⟩ ⟨f, chart_mem_atlas _ _⟩ ⟨e', he'⟩ (I.symm x) A v
       simpa only using this
@@ -368,26 +368,26 @@ model with corners `I` on `(E, H)`. The fibers are equal to `E`, and the coordin
 fiber corresponds to the derivative of the coordinate change in `M`. -/
 @[simps]
 def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
-  coordChange i j x := fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (Range I) (I x)
+  coordChange i j x := fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) (I x)
   coordChangeSmoothClm i j := by
     rw [I.image_eq]
-    have A : ContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
+    have A : ContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).source ∩ range I) :=
       (HasGroupoid.compatible (contDiffGroupoid ∞ I) i.2 j.2).1
-    have B : UniqueDiffOn 𝕜 (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) := I.unique_diff_preimage_source
+    have B : UniqueDiffOn 𝕜 (I.symm ⁻¹' (i.1.symm.trans j.1).source ∩ range I) := I.unique_diff_preimage_source
     have C :
       ContDiffOn 𝕜 ∞
         (fun p : E × E =>
-          (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) p.1 : E → E)
+          (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).source ∩ range I) p.1 : E → E)
             p.2)
-        ((I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) ×ˢ univ) :=
+        ((I.symm ⁻¹' (i.1.symm.trans j.1).source ∩ range I) ×ˢ univ) :=
       contDiffOnFderivWithinApply A B le_top
     have D :
-      ∀ x ∈ I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I,
+      ∀ x ∈ I.symm ⁻¹' (i.1.symm.trans j.1).source ∩ range I,
         fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) x =
-          fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) x :=
+          fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).source ∩ range I) x :=
       by
       intro x hx
-      have N : I.symm ⁻¹' (i.1.symm.trans j.1).Source ∈ nhds x :=
+      have N : I.symm ⁻¹' (i.1.symm.trans j.1).source ∈ nhds x :=
         I.continuous_symm.continuous_at.preimage_mem_nhds (IsOpen.mem_nhds (LocalHomeomorph.open_source _) hx.1)
       symm
       rw [inter_comm]
@@ -400,7 +400,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
     /- Locally, a self-change of coordinate is just the identity, thus its derivative is the
         identity. One just needs to write this carefully, paying attention to the sets where the
         functions are defined. -/
-    have A : I.symm ⁻¹' (i.1.symm.trans i.1).Source ∩ range I ∈ 𝓝[range I] I x := by
+    have A : I.symm ⁻¹' (i.1.symm.trans i.1).source ∩ range I ∈ 𝓝[range I] I x := by
       rw [inter_comm]
       apply inter_mem_nhds_within
       apply I.continuous_symm.continuous_at.preimage_mem_nhds (IsOpen.mem_nhds (LocalHomeomorph.open_source _) _)
@@ -422,40 +422,40 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
         the derivatives. One needs however to check that all the functions one considers are smooth, and
         to pay attention to the domains where these functions are defined, making this proof a little
         bit cumbersome although there is nothing complicated here. -/
-    have M : I x ∈ I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I :=
+    have M : I x ∈ I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I :=
       ⟨by simpa only [mem_preimage, ModelWithCorners.left_inv] using hx, mem_range_self _⟩
     have U :
-      UniqueDiffWithinAt 𝕜 (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) :=
+      UniqueDiffWithinAt 𝕜 (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I) (I x) :=
       I.unique_diff_preimage_source _ M
     have A :
       fderivWithin 𝕜 ((I ∘ u.1 ∘ j.1.symm ∘ I.symm) ∘ I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) =
-        (fderivWithin 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I)
+          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I) (I x) =
+        (fderivWithin 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).source ∩ range I)
               ((I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I x))).comp
           (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-            (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x)) :=
+            (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I) (I x)) :=
       by
       apply fderivWithin.comp _ _ _ _ U
       show
         DifferentiableWithinAt 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x)
-      · have A : ContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
+          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I) (I x)
+      · have A : ContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).source ∩ range I) :=
           (HasGroupoid.compatible (contDiffGroupoid ∞ I) i.2 j.2).1
         have B :
           DifferentiableOn 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-            (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) :=
+            (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I) :=
           by
           apply (A.differentiable_on le_top).mono
-          have : ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ⊆ (i.1.symm.trans j.1).Source :=
+          have : ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ⊆ (i.1.symm.trans j.1).source :=
             inter_subset_left _ _
           exact inter_subset_inter (preimage_mono this) (subset.refl (range I))
         apply B
         simpa only [mfld_simps] using hx
         
       show
-        DifferentiableWithinAt 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I)
+        DifferentiableWithinAt 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).source ∩ range I)
           ((I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I x))
-      · have A : ContDiffOn 𝕜 ∞ (I ∘ j.1.symm.trans u.1 ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I) :=
+      · have A : ContDiffOn 𝕜 ∞ (I ∘ j.1.symm.trans u.1 ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).source ∩ range I) :=
           (HasGroupoid.compatible (contDiffGroupoid ∞ I) j.2 u.2).1
         apply A.differentiable_on le_top
         rw [LocalHomeomorph.trans_source] at hx
@@ -463,8 +463,8 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
         exact hx.2
         
       show
-        I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I ⊆
-          I ∘ j.1 ∘ i.1.symm ∘ I.symm ⁻¹' (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I)
+        I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I ⊆
+          I ∘ j.1 ∘ i.1.symm ∘ I.symm ⁻¹' (I.symm ⁻¹' (j.1.symm.trans u.1).source ∩ range I)
       · intro y hy
         simp only [mfld_simps] at hy
         rw [LocalHomeomorph.left_inv] at hy
@@ -475,11 +475,11 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
         
     have B :
       fderivWithin 𝕜 ((I ∘ u.1 ∘ j.1.symm ∘ I.symm) ∘ I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) =
+          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I) (I x) =
         fderivWithin 𝕜 (I ∘ u.1 ∘ i.1.symm ∘ I.symm)
-          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) :=
+          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I) (I x) :=
       haveI E :
-        ∀ y ∈ I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I,
+        ∀ y ∈ I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I,
           ((I ∘ u.1 ∘ j.1.symm ∘ I.symm) ∘ I ∘ j.1 ∘ i.1.symm ∘ I.symm) y = (I ∘ u.1 ∘ i.1.symm ∘ I.symm) y :=
         by
         intro y hy
@@ -489,7 +489,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
       fderiv_within_congr U E (E _ M)
     have C :
       fderivWithin 𝕜 (I ∘ u.1 ∘ i.1.symm ∘ I.symm)
-          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) =
+          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I) (I x) =
         fderivWithin 𝕜 (I ∘ u.1 ∘ i.1.symm ∘ I.symm) (range I) (I x) :=
       by
       rw [inter_comm]
@@ -497,7 +497,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
       apply I.continuous_symm.continuous_at.preimage_mem_nhds (IsOpen.mem_nhds (LocalHomeomorph.open_source _) _)
       simpa only [ModelWithCorners.left_inv] using hx
     have D :
-      fderivWithin 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I)
+      fderivWithin 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).source ∩ range I)
           ((I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I x)) =
         fderivWithin 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (range I) ((I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I x)) :=
       by
@@ -509,7 +509,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E where
       exact hx.2
     have E :
       fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) =
+          (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source ∩ range I) (I x) =
         fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) (I x) :=
       by
       rw [inter_comm]
@@ -588,7 +588,7 @@ end
 variable (M)
 
 instance : TopologicalSpace TM :=
-  (tangentBundleCore I M).toTopologicalVectorBundleCore.toTopologicalSpace (Atlas H M)
+  (tangentBundleCore I M).toTopologicalVectorBundleCore.toTopologicalSpace (atlas H M)
 
 instance : ChartedSpace (ModelProd H E) TM :=
   (tangentBundleCore I M).toChartedSpace
@@ -637,7 +637,7 @@ theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
       ContinuousLinearMap.coe_id', BasicSmoothVectorBundleCore.chart, chart_at, ContinuousLinearMap.coe_coe,
       Sigma.mk.inj_iff, mfld_simps]
     
-  show (chart_at (ModelProd H E) p).toLocalEquiv.Source = univ
+  show (chart_at (ModelProd H E) p).toLocalEquiv.source = univ
   · simp only [chart_at, mfld_simps]
     
 #align tangent_bundle_model_space_chart_at tangent_bundle_model_space_chart_at

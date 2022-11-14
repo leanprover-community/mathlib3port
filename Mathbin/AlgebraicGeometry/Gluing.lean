@@ -157,7 +157,7 @@ instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
   infer_instance
 #align algebraic_geometry.Scheme.glue_data.ι_is_open_immersion AlgebraicGeometry.SchemeCat.GlueData.ι_is_open_immersion
 
-theorem ι_jointly_surjective (x : 𝖣.glued.Carrier) : ∃ (i : D.J)(y : (D.U i).Carrier), (D.ι i).1.base y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued.carrier) : ∃ (i : D.J)(y : (D.U i).carrier), (D.ι i).1.base y = x :=
   𝖣.ι_jointly_surjective (forget_to_Top ⋙ forget TopCat) x
 #align
   algebraic_geometry.Scheme.glue_data.ι_jointly_surjective AlgebraicGeometry.SchemeCat.GlueData.ι_jointly_surjective
@@ -188,7 +188,7 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (D.vPullbackCone i j) :=
 /-- The underlying topological space of the glued scheme is isomorphic to the gluing of the
 underlying spacess -/
 def isoCarrier :
-    D.glued.Carrier ≅
+    D.glued.carrier ≅
       D.toLocallyRingedSpaceGlueData.toSheafedSpaceGlueData.toPresheafedSpaceGlueData.toTopGlueData.toGlueData.glued :=
   by
   refine' (PresheafedSpace.forget _).mapIso _ ≪≫ glue_data.glued_iso _ (PresheafedSpace.forget _)
@@ -216,11 +216,11 @@ theorem ι_iso_carrier_inv (i : D.J) :
 
 /-- An equivalence relation on `Σ i, D.U i` that holds iff `𝖣 .ι i x = 𝖣 .ι j y`.
 See `Scheme.gluing_data.ι_eq_iff`. -/
-def Rel (a b : Σi, ((D.U i).Carrier : Type _)) : Prop :=
-  a = b ∨ ∃ x : (D.V (a.1, b.1)).Carrier, (D.f _ _).1.base x = a.2 ∧ (D.t _ _ ≫ D.f _ _).1.base x = b.2
+def Rel (a b : Σi, ((D.U i).carrier : Type _)) : Prop :=
+  a = b ∨ ∃ x : (D.V (a.1, b.1)).carrier, (D.f _ _).1.base x = a.2 ∧ (D.t _ _ ≫ D.f _ _).1.base x = b.2
 #align algebraic_geometry.Scheme.glue_data.rel AlgebraicGeometry.SchemeCat.GlueData.Rel
 
-theorem ι_eq_iff (i j : D.J) (x : (D.U i).Carrier) (y : (D.U j).Carrier) :
+theorem ι_eq_iff (i j : D.J) (x : (D.U i).carrier) (y : (D.U j).carrier) :
     (𝖣.ι i).1.base x = (𝖣.ι j).1.base y ↔ D.Rel ⟨i, x⟩ ⟨j, y⟩ := by
   refine'
     Iff.trans _
@@ -230,7 +230,7 @@ theorem ι_eq_iff (i j : D.J) (x : (D.U i).Carrier) (y : (D.U j).Carrier) :
   simp_rw [← comp_apply, D.ι_iso_carrier_inv]
 #align algebraic_geometry.Scheme.glue_data.ι_eq_iff AlgebraicGeometry.SchemeCat.GlueData.ι_eq_iff
 
-theorem is_open_iff (U : Set D.glued.Carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) := by
+theorem is_open_iff (U : Set D.glued.carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) := by
   rw [← (TopCat.homeoOfIso D.iso_carrier.symm).is_open_preimage]
   rw [TopCat.GlueData.is_open_iff]
   apply forall_congr'
@@ -376,7 +376,7 @@ theorem from_glued_injective : Function.Injective 𝒰.fromGlued.1.base := by
 #align
   algebraic_geometry.Scheme.open_cover.from_glued_injective AlgebraicGeometry.SchemeCat.OpenCover.from_glued_injective
 
-instance from_glued_stalk_iso (x : 𝒰.gluedCover.glued.Carrier) :
+instance from_glued_stalk_iso (x : 𝒰.gluedCover.glued.carrier) :
     IsIso (PresheafedSpaceCat.stalkMap 𝒰.fromGlued.val x) := by
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
   have := PresheafedSpace.stalk_map.congr_hom _ _ (congr_arg LocallyRingedSpace.hom.val <| 𝒰.ι_from_glued i) x
@@ -392,7 +392,7 @@ theorem from_glued_open_map : IsOpenMap 𝒰.fromGlued.1.base := by
   rw [is_open_iff_forall_mem_open]
   intro x hx
   rw [𝒰.glued_cover.is_open_iff] at hU
-  use 𝒰.from_glued.val.base '' U ∩ Set.Range (𝒰.map (𝒰.f x)).1.base
+  use 𝒰.from_glued.val.base '' U ∩ Set.range (𝒰.map (𝒰.f x)).1.base
   use Set.inter_subset_left _ _
   constructor
   · rw [← Set.image_preimage_eq_inter_range]

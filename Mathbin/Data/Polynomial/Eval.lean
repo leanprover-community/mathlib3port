@@ -1102,14 +1102,14 @@ theorem map_dvd {R S} [Semiring R] [CommSemiring S] (f : R →+* S) {x y : R[X]}
   eval₂_dvd _ _
 #align polynomial.map_dvd Polynomial.map_dvd
 
-theorem support_map_subset [Semiring R] [Semiring S] (f : R →+* S) (p : R[X]) : (map f p).Support ⊆ p.Support := by
+theorem support_map_subset [Semiring R] [Semiring S] (f : R →+* S) (p : R[X]) : (map f p).support ⊆ p.support := by
   intro x
   contrapose!
   simp (config := { contextual := true })
 #align polynomial.support_map_subset Polynomial.support_map_subset
 
 theorem support_map_of_injective [Semiring R] [Semiring S] (p : R[X]) {f : R →+* S} (hf : Function.Injective f) :
-    (map f p).Support = p.Support := by
+    (map f p).support = p.support := by
   simp_rw [Finset.ext_iff, mem_support_iff, coeff_map, ← map_zero f, hf.ne_iff, iff_self_iff, forall_const]
 #align polynomial.support_map_of_injective Polynomial.support_map_of_injective
 

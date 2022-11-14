@@ -103,7 +103,7 @@ def ofMeasurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m �
     Measure α :=
   { inducedOuterMeasure m _ m0 with
     m_Union := fun f hf hd =>
-      show inducedOuterMeasure m _ m0 (UnionCat f) = ∑' i, inducedOuterMeasure m _ m0 (f i) by
+      show inducedOuterMeasure m _ m0 (union f) = ∑' i, inducedOuterMeasure m _ m0 (f i) by
         rw [induced_outer_measure_eq m0 mU, mU hf hd]
         congr
         funext n
@@ -228,7 +228,7 @@ theorem exists_measurable_superset_iff_measure_eq_zero : (∃ t, s ⊆ t ∧ Mea
   measure_theory.exists_measurable_superset_iff_measure_eq_zero MeasureTheory.exists_measurable_superset_iff_measure_eq_zero
 
 theorem measure_Union_le [Countable β] (s : β → Set α) : μ (⋃ i, s i) ≤ ∑' i, μ (s i) :=
-  μ.toOuterMeasure.UnionCat _
+  μ.toOuterMeasure.union _
 #align measure_theory.measure_Union_le MeasureTheory.measure_Union_le
 
 theorem measure_bUnion_le {s : Set β} (hs : s.Countable) (f : β → Set α) : μ (⋃ b ∈ s, f b) ≤ ∑' p : s, μ (f p) := by
@@ -347,7 +347,7 @@ theorem measure_inter_null_of_null_left {S : Set α} (T : Set α) (h : μ S = 0)
 
 /-- The “almost everywhere” filter of co-null sets. -/
 def Measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α where
-  Sets := { s | μ (sᶜ) = 0 }
+  sets := { s | μ (sᶜ) = 0 }
   univ_sets := by simp
   inter_sets s t hs ht := by simp only [compl_inter, mem_set_of_eq] <;> exact measure_union_null hs ht
   sets_of_superset s t hs hst := measure_mono_null (Set.compl_subset_compl.2 hst) hs
@@ -435,7 +435,7 @@ theorem ae_eq_empty : s =ᵐ[μ] (∅ : Set α) ↔ μ s = 0 :=
 #align measure_theory.ae_eq_empty MeasureTheory.ae_eq_empty
 
 @[simp]
-theorem ae_eq_univ : s =ᵐ[μ] (Univ : Set α) ↔ μ (sᶜ) = 0 :=
+theorem ae_eq_univ : s =ᵐ[μ] (univ : Set α) ↔ μ (sᶜ) = 0 :=
   eventually_eq_univ
 #align measure_theory.ae_eq_univ MeasureTheory.ae_eq_univ
 
@@ -485,7 +485,7 @@ theorem ae_eq_set_inter {s' t' : Set α} (h : s =ᵐ[μ] t) (h' : s' =ᵐ[μ] t'
 
 @[to_additive]
 theorem _root_.set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α} (h : s.mulIndicator f =ᵐ[μ] 1) :
-    μ (s ∩ Function.MulSupport f) = 0 := by simpa [Filter.EventuallyEq, ae_iff] using h
+    μ (s ∩ Function.mulSupport f) = 0 := by simpa [Filter.EventuallyEq, ae_iff] using h
 #align measure_theory._root_.set.mul_indicator_ae_eq_one measure_theory._root_.set.mul_indicator_ae_eq_one
 
 /-- If `s ⊆ t` modulo a set of measure `0`, then `μ s ≤ μ t`. -/
@@ -521,32 +521,32 @@ see `measure_to_measurable_inter_of_sigma_finite`).
 If `s` is a null measurable set, then
 we also have `t =ᵐ[μ] s`, see `null_measurable_set.to_measurable_ae_eq`.
 This notion is sometimes called a "measurable hull" in the literature. -/
-irreducible_def ToMeasurable (μ : Measure α) (s : Set α) : Set α :=
+irreducible_def toMeasurable (μ : Measure α) (s : Set α) : Set α :=
   if h : ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s then h.some
   else
     if h' : ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ ∀ u, MeasurableSet u → μ (t ∩ u) = μ (s ∩ u) then h'.some
     else (exists_measurable_superset μ s).some
-#align measure_theory.to_measurable MeasureTheory.ToMeasurable
+#align measure_theory.to_measurable MeasureTheory.toMeasurable
 
-theorem subset_to_measurable (μ : Measure α) (s : Set α) : s ⊆ ToMeasurable μ s := by
+theorem subset_to_measurable (μ : Measure α) (s : Set α) : s ⊆ toMeasurable μ s := by
   rw [to_measurable]
   split_ifs with hs h's
   exacts[hs.some_spec.fst, h's.some_spec.fst, (exists_measurable_superset μ s).some_spec.1]
 #align measure_theory.subset_to_measurable MeasureTheory.subset_to_measurable
 
-theorem ae_le_to_measurable : s ≤ᵐ[μ] ToMeasurable μ s :=
+theorem ae_le_to_measurable : s ≤ᵐ[μ] toMeasurable μ s :=
   (subset_to_measurable _ _).EventuallyLe
 #align measure_theory.ae_le_to_measurable MeasureTheory.ae_le_to_measurable
 
 @[simp]
-theorem measurableSetToMeasurable (μ : Measure α) (s : Set α) : MeasurableSet (ToMeasurable μ s) := by
+theorem measurableSetToMeasurable (μ : Measure α) (s : Set α) : MeasurableSet (toMeasurable μ s) := by
   rw [to_measurable]
   split_ifs with hs h's
   exacts[hs.some_spec.snd.1, h's.some_spec.snd.1, (exists_measurable_superset μ s).some_spec.2.1]
 #align measure_theory.measurable_set_to_measurable MeasureTheory.measurableSetToMeasurable
 
 @[simp]
-theorem measure_to_measurable (s : Set α) : μ (ToMeasurable μ s) = μ s := by
+theorem measure_to_measurable (s : Set α) : μ (toMeasurable μ s) = μ s := by
   rw [to_measurable]
   split_ifs with hs h's
   · exact measure_congr hs.some_spec.snd.2

@@ -348,7 +348,7 @@ instance OuterMeasure.orderBot : OrderBot (OuterMeasure α) :=
   { OuterMeasure.hasBot with bot_le := fun a s => by simp only [coe_zero, Pi.zero_apply, coe_bot, zero_le] }
 #align measure_theory.outer_measure.outer_measure.order_bot MeasureTheory.OuterMeasure.OuterMeasure.orderBot
 
-theorem univ_eq_zero_iff (m : OuterMeasure α) : m Univ = 0 ↔ m = 0 :=
+theorem univ_eq_zero_iff (m : OuterMeasure α) : m univ = 0 ↔ m = 0 :=
   ⟨fun h => bot_unique fun s => (m.mono' <| subset_univ s).trans_eq h, fun h => h.symm ▸ rfl⟩
 #align measure_theory.outer_measure.univ_eq_zero_iff MeasureTheory.OuterMeasure.univ_eq_zero_iff
 
@@ -528,7 +528,7 @@ theorem restrict_mono {s t : Set α} (h : s ⊆ t) {m m' : OuterMeasure α} (hm 
 #align measure_theory.outer_measure.restrict_mono MeasureTheory.OuterMeasure.restrict_mono
 
 @[simp]
-theorem restrict_univ (m : OuterMeasure α) : restrict Univ m = m :=
+theorem restrict_univ (m : OuterMeasure α) : restrict univ m = m :=
   ext fun s => by simp
 #align measure_theory.outer_measure.restrict_univ MeasureTheory.OuterMeasure.restrict_univ
 
@@ -542,7 +542,7 @@ theorem restrict_supr {ι} (s : Set α) (m : ι → OuterMeasure α) : restrict 
   simp [restrict]
 #align measure_theory.outer_measure.restrict_supr MeasureTheory.OuterMeasure.restrict_supr
 
-theorem map_comap {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) = restrict (Range f) m :=
+theorem map_comap {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) = restrict (range f) m :=
   ext fun s => congr_arg m <| by simp only [image_preimage_eq_inter_range, Subtype.range_coe]
 #align measure_theory.outer_measure.map_comap MeasureTheory.OuterMeasure.map_comap
 
@@ -556,7 +556,7 @@ theorem restrict_le_self (m : OuterMeasure α) (s : Set α) : restrict s m ≤ m
 
 @[simp]
 theorem map_le_restrict_range {β} {ma : OuterMeasure α} {mb : OuterMeasure β} {f : α → β} :
-    map f ma ≤ restrict (Range f) mb ↔ map f ma ≤ mb :=
+    map f ma ≤ restrict (range f) mb ↔ map f ma ≤ mb :=
   ⟨fun h => h.trans (restrict_le_self _ _), fun h s => by simpa using h (s ∩ range f)⟩
 #align measure_theory.outer_measure.map_le_restrict_range MeasureTheory.OuterMeasure.map_le_restrict_range
 
@@ -587,7 +587,7 @@ theorem comap_top (f : α → β) : comap f ⊤ = ⊤ :=
   ext_nonempty fun s hs => by rw [comap_apply, top_apply hs, top_apply (hs.image _)]
 #align measure_theory.outer_measure.comap_top MeasureTheory.OuterMeasure.comap_top
 
-theorem map_top (f : α → β) : map f ⊤ = restrict (Range f) ⊤ :=
+theorem map_top (f : α → β) : map f ⊤ = restrict (range f) ⊤ :=
   ext fun s => by
     rw [map_apply, restrict_apply, ← image_preimage_eq_inter_range, top_apply', top_apply', Set.image_eq_empty]
 #align measure_theory.outer_measure.map_top MeasureTheory.OuterMeasure.map_top
@@ -640,7 +640,7 @@ protected def ofFunction : OuterMeasure α :=
 #align measure_theory.outer_measure.of_function MeasureTheory.OuterMeasure.ofFunction
 
 theorem of_function_apply (s : Set α) :
-    OuterMeasure.ofFunction m m_empty s = ⨅ (t : ℕ → Set α) (h : s ⊆ UnionCat t), ∑' n, m (t n) :=
+    OuterMeasure.ofFunction m m_empty s = ⨅ (t : ℕ → Set α) (h : s ⊆ union t), ∑' n, m (t n) :=
   rfl
 #align measure_theory.outer_measure.of_function_apply MeasureTheory.OuterMeasure.of_function_apply
 
@@ -660,7 +660,7 @@ theorem of_function_eq (s : Set α) (m_mono : ∀ ⦃t : Set α⦄, s ⊆ t → 
 theorem le_of_function {μ : OuterMeasure α} : μ ≤ OuterMeasure.ofFunction m m_empty ↔ ∀ s, μ s ≤ m s :=
   ⟨fun H s => le_trans (H s) (of_function_le s), fun H s =>
     le_infi fun f =>
-      le_infi fun hs => le_trans (μ.mono hs) <| le_trans (μ.UnionCat f) <| Ennreal.tsum_le_tsum fun i => H _⟩
+      le_infi fun hs => le_trans (μ.mono hs) <| le_trans (μ.union f) <| Ennreal.tsum_le_tsum fun i => H _⟩
 #align measure_theory.outer_measure.le_of_function MeasureTheory.OuterMeasure.le_of_function
 
 theorem is_greatest_of_function :
@@ -799,7 +799,7 @@ theorem bounded_by_eq_of_function (m_empty : m ∅ = 0) (s : Set α) :
 #align measure_theory.outer_measure.bounded_by_eq_of_function MeasureTheory.OuterMeasure.bounded_by_eq_of_function
 
 theorem bounded_by_apply (s : Set α) :
-    boundedBy m s = ⨅ (t : ℕ → Set α) (h : s ⊆ UnionCat t), ∑' n, ⨆ h : (t n).Nonempty, m (t n) := by
+    boundedBy m s = ⨅ (t : ℕ → Set α) (h : s ⊆ union t), ∑' n, ⨆ h : (t n).Nonempty, m (t n) := by
   simp [bounded_by, of_function_apply]
 #align measure_theory.outer_measure.bounded_by_apply MeasureTheory.OuterMeasure.bounded_by_apply
 
@@ -810,7 +810,7 @@ theorem bounded_by_eq (s : Set α) (m_empty : m ∅ = 0) (m_mono : ∀ ⦃t : Se
 
 @[simp]
 theorem bounded_by_eq_self (m : OuterMeasure α) : boundedBy m = m :=
-  ext fun s => bounded_by_eq _ m.empty' (fun t ht => m.mono' ht) m.UnionCat
+  ext fun s => bounded_by_eq _ m.empty' (fun t ht => m.mono' ht) m.union
 #align measure_theory.outer_measure.bounded_by_eq_self MeasureTheory.OuterMeasure.bounded_by_eq_self
 
 theorem le_bounded_by {μ : OuterMeasure α} : μ ≤ boundedBy m ↔ ∀ s, μ s ≤ m s := by
@@ -1096,7 +1096,7 @@ theorem supr_Inf_gen_nonempty {m : Set (OuterMeasure α)} (h : m.Nonempty) (t : 
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem Inf_apply {m : Set (OuterMeasure α)} {s : Set α} (h : m.Nonempty) :
-    inf m s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ UnionCat t), ∑' n, ⨅ (μ : OuterMeasure α) (h3 : μ ∈ m), μ (t n) := by
+    inf m s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ union t), ∑' n, ⨅ (μ : OuterMeasure α) (h3 : μ ∈ m), μ (t n) := by
   simp_rw [Inf_eq_bounded_by_Inf_gen, bounded_by_apply, supr_Inf_gen_nonempty h]
 #align measure_theory.outer_measure.Inf_apply MeasureTheory.OuterMeasure.Inf_apply
 
@@ -1104,7 +1104,7 @@ theorem Inf_apply {m : Set (OuterMeasure α)} {s : Set α} (h : m.Nonempty) :
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem Inf_apply' {m : Set (OuterMeasure α)} {s : Set α} (h : s.Nonempty) :
-    inf m s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ UnionCat t), ∑' n, ⨅ (μ : OuterMeasure α) (h3 : μ ∈ m), μ (t n) :=
+    inf m s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ union t), ∑' n, ⨅ (μ : OuterMeasure α) (h3 : μ ∈ m), μ (t n) :=
   m.eq_empty_or_nonempty.elim (fun hm => by simp [hm, h]) Inf_apply
 #align measure_theory.outer_measure.Inf_apply' MeasureTheory.OuterMeasure.Inf_apply'
 
@@ -1112,7 +1112,7 @@ theorem Inf_apply' {m : Set (OuterMeasure α)} {s : Set α} (h : s.Nonempty) :
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem infi_apply {ι} [Nonempty ι] (m : ι → OuterMeasure α) (s : Set α) :
-    (⨅ i, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ UnionCat t), ∑' n, ⨅ i, m i (t n) := by
+    (⨅ i, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ union t), ∑' n, ⨅ i, m i (t n) := by
   rw [infi, Inf_apply (range_nonempty m)]
   simp only [infi_range]
 #align measure_theory.outer_measure.infi_apply MeasureTheory.OuterMeasure.infi_apply
@@ -1121,7 +1121,7 @@ theorem infi_apply {ι} [Nonempty ι] (m : ι → OuterMeasure α) (s : Set α) 
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem infi_apply' {ι} (m : ι → OuterMeasure α) {s : Set α} (hs : s.Nonempty) :
-    (⨅ i, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ UnionCat t), ∑' n, ⨅ i, m i (t n) := by
+    (⨅ i, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ union t), ∑' n, ⨅ i, m i (t n) := by
   rw [infi, Inf_apply' hs]
   simp only [infi_range]
 #align measure_theory.outer_measure.infi_apply' MeasureTheory.OuterMeasure.infi_apply'
@@ -1130,7 +1130,7 @@ theorem infi_apply' {ι} (m : ι → OuterMeasure α) {s : Set α} (hs : s.Nonem
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem binfi_apply {ι} {I : Set ι} (hI : I.Nonempty) (m : ι → OuterMeasure α) (s : Set α) :
-    (⨅ i ∈ I, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ UnionCat t), ∑' n, ⨅ i ∈ I, m i (t n) := by
+    (⨅ i ∈ I, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ union t), ∑' n, ⨅ i ∈ I, m i (t n) := by
   haveI := hI.to_subtype
   simp only [← infi_subtype'', infi_apply]
 #align measure_theory.outer_measure.binfi_apply MeasureTheory.OuterMeasure.binfi_apply
@@ -1139,7 +1139,7 @@ theorem binfi_apply {ι} {I : Set ι} (hI : I.Nonempty) (m : ι → OuterMeasure
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
 theorem binfi_apply' {ι} (I : Set ι) (m : ι → OuterMeasure α) {s : Set α} (hs : s.Nonempty) :
-    (⨅ i ∈ I, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ UnionCat t), ∑' n, ⨅ i ∈ I, m i (t n) := by
+    (⨅ i ∈ I, m i) s = ⨅ (t : ℕ → Set α) (h2 : s ⊆ union t), ∑' n, ⨅ i ∈ I, m i (t n) := by
   simp only [← infi_subtype'', infi_apply' _ hs]
 #align measure_theory.outer_measure.binfi_apply' MeasureTheory.OuterMeasure.binfi_apply'
 
@@ -1157,7 +1157,7 @@ theorem comap_infi {ι β} (f : α → β) (m : ι → OuterMeasure β) : comap 
 #align measure_theory.outer_measure.comap_infi MeasureTheory.OuterMeasure.comap_infi
 
 theorem map_infi {ι β} {f : α → β} (hf : Injective f) (m : ι → OuterMeasure α) :
-    map f (⨅ i, m i) = restrict (Range f) (⨅ i, map f (m i)) := by
+    map f (⨅ i, m i) = restrict (range f) (⨅ i, map f (m i)) := by
   refine' Eq.trans _ (map_comap _ _)
   simp only [comap_infi, comap_map hf]
 #align measure_theory.outer_measure.map_infi MeasureTheory.OuterMeasure.map_infi
@@ -1185,7 +1185,7 @@ theorem map_binfi_comap {ι β} {I : Set ι} (hI : I.Nonempty) {f : α → β} (
 theorem restrict_infi_restrict {ι} (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i, restrict s (m i)) = restrict s (⨅ i, m i) :=
   calc
-    restrict s (⨅ i, restrict s (m i)) = restrict (Range (coe : s → α)) (⨅ i, restrict s (m i)) := by
+    restrict s (⨅ i, restrict s (m i)) = restrict (range (coe : s → α)) (⨅ i, restrict s (m i)) := by
       rw [Subtype.range_coe]
     _ = map (coe : s → α) (⨅ i, comap coe (m i)) := (map_infi Subtype.coe_injective _).symm
     _ = restrict s (⨅ i, m i) := congr_arg (map coe) (comap_infi _ _).symm

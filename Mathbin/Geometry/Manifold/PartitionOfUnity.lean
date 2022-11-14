@@ -99,11 +99,11 @@ subordinate to `U`, see `smooth_bump_covering.exists_is_subordinate`.
 This covering can be used, e.g., to construct a partition of unity and to prove the weak
 Whitney embedding theorem. -/
 @[nolint has_nonempty_instance]
-structure SmoothBumpCovering (s : Set M := Univ) where
+structure SmoothBumpCovering (s : Set M := univ) where
   c : ι → M
   toFun : ∀ i, SmoothBumpFunction I (c i)
   c_mem' : ∀ i, c i ∈ s
-  locally_finite' : LocallyFinite fun i => Support (to_fun i)
+  locally_finite' : LocallyFinite fun i => support (to_fun i)
   eventually_eq_one' : ∀ x ∈ s, ∃ i, to_fun i =ᶠ[𝓝 x] 1
 #align smooth_bump_covering SmoothBumpCovering
 
@@ -113,9 +113,9 @@ structure SmoothBumpCovering (s : Set M := Univ) where
 * the family `λ i, support (f i)` is locally finite;
 * for all `x ∈ s` the sum `∑ᶠ i, f i x` equals one;
 * for all `x`, the sum `∑ᶠ i, f i x` is less than or equal to one. -/
-structure SmoothPartitionOfUnity (s : Set M := Univ) where
+structure SmoothPartitionOfUnity (s : Set M := univ) where
   toFun : ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯
-  locally_finite' : LocallyFinite fun i => Support (to_fun i)
+  locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : ∀ i x, 0 ≤ to_fun i x
   sum_eq_one' : ∀ x ∈ s, (∑ᶠ i, to_fun i x) = 1
   sum_le_one' : ∀ x, (∑ᶠ i, to_fun i x) ≤ 1
@@ -130,7 +130,7 @@ variable {s : Set M} (f : SmoothPartitionOfUnity ι I M s) {n : ℕ∞}
 instance {s : Set M} : CoeFun (SmoothPartitionOfUnity ι I M s) fun _ => ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯ :=
   ⟨SmoothPartitionOfUnity.toFun⟩
 
-protected theorem locally_finite : LocallyFinite fun i => Support (f i) :=
+protected theorem locally_finite : LocallyFinite fun i => support (f i) :=
   f.locally_finite'
 #align smooth_partition_of_unity.locally_finite SmoothPartitionOfUnity.locally_finite
 
@@ -163,13 +163,13 @@ theorem sum_nonneg (x : M) : 0 ≤ ∑ᶠ i, f i x :=
   f.toPartitionOfUnity.sum_nonneg x
 #align smooth_partition_of_unity.sum_nonneg SmoothPartitionOfUnity.sum_nonneg
 
-theorem contMdiffSmul {g : M → F} {i} (hg : ∀ x ∈ Tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n g x) :
+theorem contMdiffSmul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n g x) :
     ContMdiff I 𝓘(ℝ, F) n fun x => f i x • g x :=
   contMdiffOfSupport fun x hx =>
     ((f i).ContMdiff.ContMdiffAt.of_le le_top).smul <| hg x <| tsupport_smul_subset_left _ _ hx
 #align smooth_partition_of_unity.cont_mdiff_smul SmoothPartitionOfUnity.contMdiffSmul
 
-theorem smoothSmul {g : M → F} {i} (hg : ∀ x ∈ Tsupport (f i), SmoothAt I 𝓘(ℝ, F) g x) :
+theorem smoothSmul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), SmoothAt I 𝓘(ℝ, F) g x) :
     Smooth I 𝓘(ℝ, F) fun x => f i x • g x :=
   f.contMdiffSmul hg
 #align smooth_partition_of_unity.smooth_smul SmoothPartitionOfUnity.smoothSmul
@@ -177,7 +177,7 @@ theorem smoothSmul {g : M → F} {i} (hg : ∀ x ∈ Tsupport (f i), SmoothAt I 
 /-- If `f` is a smooth partition of unity on a set `s : set M` and `g : ι → M → F` is a family of
 functions such that `g i` is $C^n$ smooth at every point of the topological support of `f i`, then
 the sum `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
-theorem contMdiffFinsumSmul {g : ι → M → F} (hg : ∀ (i), ∀ x ∈ Tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n (g i) x) :
+theorem contMdiffFinsumSmul {g : ι → M → F} (hg : ∀ (i), ∀ x ∈ tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n (g i) x) :
     ContMdiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
   (contMdiffFinsum fun i => f.contMdiffSmul (hg i)) <| f.LocallyFinite.Subset fun i => support_smul_subset_left _ _
 #align smooth_partition_of_unity.cont_mdiff_finsum_smul SmoothPartitionOfUnity.contMdiffFinsumSmul
@@ -185,7 +185,7 @@ theorem contMdiffFinsumSmul {g : ι → M → F} (hg : ∀ (i), ∀ x ∈ Tsuppo
 /-- If `f` is a smooth partition of unity on a set `s : set M` and `g : ι → M → F` is a family of
 functions such that `g i` is smooth at every point of the topological support of `f i`, then the sum
 `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
-theorem smoothFinsumSmul {g : ι → M → F} (hg : ∀ (i), ∀ x ∈ Tsupport (f i), SmoothAt I 𝓘(ℝ, F) (g i) x) :
+theorem smoothFinsumSmul {g : ι → M → F} (hg : ∀ (i), ∀ x ∈ tsupport (f i), SmoothAt I 𝓘(ℝ, F) (g i) x) :
     Smooth I 𝓘(ℝ, F) fun x => ∑ᶠ i, f i x • g i x :=
   f.contMdiffFinsumSmul hg
 #align smooth_partition_of_unity.smooth_finsum_smul SmoothPartitionOfUnity.smoothFinsumSmul
@@ -198,7 +198,7 @@ theorem finsum_smul_mem_convex {g : ι → M → F} {t : Set F} {x : M} (hx : x 
 /-- A smooth partition of unity `f i` is subordinate to a family of sets `U i` indexed by the same
 type if for each `i` the closure of the support of `f i` is a subset of `U i`. -/
 def IsSubordinate (f : SmoothPartitionOfUnity ι I M s) (U : ι → Set M) :=
-  ∀ i, Tsupport (f i) ⊆ U i
+  ∀ i, tsupport (f i) ⊆ U i
 #align smooth_partition_of_unity.is_subordinate SmoothPartitionOfUnity.IsSubordinate
 
 variable {f} {U : ι → Set M}
@@ -295,11 +295,11 @@ being subordinate to an open covering of `M`, because we make no assumption abou
 depends on `x`.
 -/
 def IsSubordinate {s : Set M} (f : SmoothBumpCovering ι I M s) (U : M → Set M) :=
-  ∀ i, Tsupport (f i) ⊆ U (f.c i)
+  ∀ i, tsupport (f i) ⊆ U (f.c i)
 #align smooth_bump_covering.is_subordinate SmoothBumpCovering.IsSubordinate
 
 theorem IsSubordinate.support_subset {fs : SmoothBumpCovering ι I M s} {U : M → Set M} (h : fs.IsSubordinate U)
-    (i : ι) : Support (fs i) ⊆ U (fs.c i) :=
+    (i : ι) : support (fs i) ⊆ U (fs.c i) :=
   Subset.trans subset_closure (h i)
 #align smooth_bump_covering.is_subordinate.support_subset SmoothBumpCovering.IsSubordinate.support_subset
 
@@ -330,13 +330,13 @@ theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s
   · refine' (mem_Union.1 <| hsV hx).imp fun i hi => _
     exact ((f i).updateR _ _).eventually_eq_one_of_dist_lt ((f i).support_subset_source <| hVf _ hi) (hr i hi).2
     
-  · simpa only [coe_mk, SmoothBumpFunction.support_update_r, Tsupport] using hfU i
+  · simpa only [coe_mk, SmoothBumpFunction.support_update_r, tsupport] using hfU i
     
 #align smooth_bump_covering.exists_is_subordinate SmoothBumpCovering.exists_is_subordinate
 
 variable {I M}
 
-protected theorem locally_finite : LocallyFinite fun i => Support (fs i) :=
+protected theorem locally_finite : LocallyFinite fun i => support (fs i) :=
   fs.locally_finite'
 #align smooth_bump_covering.locally_finite SmoothBumpCovering.locally_finite
 
@@ -344,11 +344,11 @@ protected theorem point_finite (x : M) : { i | fs i x ≠ 0 }.Finite :=
   fs.LocallyFinite.point_finite x
 #align smooth_bump_covering.point_finite SmoothBumpCovering.point_finite
 
-theorem mem_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (chartAt H (fs.c i)).Source :=
+theorem mem_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (chartAt H (fs.c i)).source :=
   (fs i).support_subset_source <| by simp [h]
 #align smooth_bump_covering.mem_chart_at_source_of_eq_one SmoothBumpCovering.mem_chart_at_source_of_eq_one
 
-theorem mem_ext_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (extChartAt I (fs.c i)).Source := by
+theorem mem_ext_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) : x ∈ (extChartAt I (fs.c i)).source := by
   rw [ext_chart_at_source]
   exact fs.mem_chart_at_source_of_eq_one h
 #align smooth_bump_covering.mem_ext_chart_at_source_of_eq_one SmoothBumpCovering.mem_ext_chart_at_source_of_eq_one
@@ -366,14 +366,14 @@ theorem apply_ind (x : M) (hx : x ∈ s) : fs (fs.ind x hx) x = 1 :=
   (fs.eventually_eq_one x hx).eq_of_nhds
 #align smooth_bump_covering.apply_ind SmoothBumpCovering.apply_ind
 
-theorem mem_support_ind (x : M) (hx : x ∈ s) : x ∈ Support (fs <| fs.ind x hx) := by simp [fs.apply_ind x hx]
+theorem mem_support_ind (x : M) (hx : x ∈ s) : x ∈ support (fs <| fs.ind x hx) := by simp [fs.apply_ind x hx]
 #align smooth_bump_covering.mem_support_ind SmoothBumpCovering.mem_support_ind
 
-theorem mem_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (chartAt H (fs.c (fs.ind x hx))).Source :=
+theorem mem_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (chartAt H (fs.c (fs.ind x hx))).source :=
   fs.mem_chart_at_source_of_eq_one (fs.apply_ind x hx)
 #align smooth_bump_covering.mem_chart_at_ind_source SmoothBumpCovering.mem_chart_at_ind_source
 
-theorem mem_ext_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (extChartAt I (fs.c (fs.ind x hx))).Source :=
+theorem mem_ext_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (extChartAt I (fs.c (fs.ind x hx))).source :=
   fs.mem_ext_chart_at_source_of_eq_one (fs.apply_ind x hx)
 #align smooth_bump_covering.mem_ext_chart_at_ind_source SmoothBumpCovering.mem_ext_chart_at_ind_source
 
@@ -433,7 +433,7 @@ theorem to_smooth_partition_of_unity_zero_of_zero {i : ι} {x : M} (h : fs i x =
   smooth_bump_covering.to_smooth_partition_of_unity_zero_of_zero SmoothBumpCovering.to_smooth_partition_of_unity_zero_of_zero
 
 theorem support_to_smooth_partition_of_unity_subset (i : ι) :
-    Support (fs.toSmoothPartitionOfUnity i) ⊆ Support (fs i) :=
+    support (fs.toSmoothPartitionOfUnity i) ⊆ support (fs i) :=
   fs.toBumpCovering.support_to_partition_of_unity_subset i
 #align
   smooth_bump_covering.support_to_smooth_partition_of_unity_subset SmoothBumpCovering.support_to_smooth_partition_of_unity_subset
@@ -457,7 +457,7 @@ exists an infinitely smooth function that is equal to `0` on one of them and is 
 other. -/
 theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t : Set M} (hs : IsClosed s)
     (ht : IsClosed t) (hd : Disjoint s t) :
-    ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ IccCat (0 : ℝ) 1 := by
+    ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1 := by
   have : ∀ x ∈ t, sᶜ ∈ 𝓝 x := fun x hx => hs.is_open_compl.mem_nhds (disjoint_right.1 hd hx)
   rcases SmoothBumpCovering.exists_is_subordinate I ht this with ⟨ι, f, hf⟩
   set g := f.to_smooth_partition_of_unity
@@ -516,7 +516,7 @@ theorem exists_cont_mdiff_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t 
     ∃ g : C^n⟮I, M; 𝓘(ℝ, F), F⟯, ∀ x, g x ∈ t x := by
   choose U hU g hgs hgt using Hloc
   obtain ⟨f, hf⟩ :=
-    SmoothPartitionOfUnity.exists_is_subordinate I isClosedUniv (fun x => Interior (U x)) (fun x => is_open_interior)
+    SmoothPartitionOfUnity.exists_is_subordinate I isClosedUniv (fun x => interior (U x)) (fun x => is_open_interior)
       fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   refine'
     ⟨⟨fun x => ∑ᶠ i, f i x • g i x,
@@ -556,7 +556,7 @@ all `i`. Then there exists a positive smooth function `δ : M → ℝ≥0` such 
 theorem Emetric.exists_smooth_forall_closed_ball_subset {M} [EmetricSpace M] [ChartedSpace H M]
     [SmoothManifoldWithCorners I M] [SigmaCompactSpace M] {K : ι → Set M} {U : ι → Set M} (hK : ∀ i, IsClosed (K i))
     (hU : ∀ i, IsOpen (U i)) (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) :
-    ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯, (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, Emetric.ClosedBall x (Ennreal.ofReal (δ x)) ⊆ U i :=
+    ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯, (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, Emetric.closedBall x (Ennreal.ofReal (δ x)) ⊆ U i :=
   by
   simpa only [mem_inter_iff, forall_and, mem_preimage, mem_Inter, @forall_swap ι M] using
     exists_smooth_forall_mem_convex_of_local_const I Emetric.exists_forall_closed_ball_subset_aux₂
@@ -570,7 +570,7 @@ we have `metric.closed_ball x (δ x) ⊆ U i`. -/
 theorem Metric.exists_smooth_forall_closed_ball_subset {M} [MetricSpace M] [ChartedSpace H M]
     [SmoothManifoldWithCorners I M] [SigmaCompactSpace M] {K : ι → Set M} {U : ι → Set M} (hK : ∀ i, IsClosed (K i))
     (hU : ∀ i, IsOpen (U i)) (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) :
-    ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯, (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, Metric.ClosedBall x (δ x) ⊆ U i := by
+    ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯, (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, Metric.closedBall x (δ x) ⊆ U i := by
   rcases Emetric.exists_smooth_forall_closed_ball_subset I hK hU hKU hfin with ⟨δ, hδ0, hδ⟩
   refine' ⟨δ, hδ0, fun i x hx => _⟩
   rw [← Metric.emetric_closed_ball (hδ0 _).le]

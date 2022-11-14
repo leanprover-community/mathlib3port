@@ -387,39 +387,39 @@ section Cauchy
 variable (G : Type _) [Group G] (n : ℕ)
 
 /-- The type of vectors with terms from `G`, length `n`, and product equal to `1:G`. -/
-def VectorsProdEqOne : Set (Vector G n) :=
+def vectorsProdEqOne : Set (Vector G n) :=
   { v | v.toList.Prod = 1 }
-#align equiv.perm.vectors_prod_eq_one Equiv.Perm.VectorsProdEqOne
+#align equiv.perm.vectors_prod_eq_one Equiv.Perm.vectorsProdEqOne
 
 namespace VectorsProdEqOne
 
-theorem mem_iff {n : ℕ} (v : Vector G n) : v ∈ VectorsProdEqOne G n ↔ v.toList.Prod = 1 :=
+theorem mem_iff {n : ℕ} (v : Vector G n) : v ∈ vectorsProdEqOne G n ↔ v.toList.Prod = 1 :=
   Iff.rfl
-#align equiv.perm.vectors_prod_eq_one.mem_iff Equiv.Perm.VectorsProdEqOne.mem_iff
+#align equiv.perm.vectors_prod_eq_one.mem_iff Equiv.Perm.vectorsProdEqOne.mem_iff
 
-theorem zero_eq : VectorsProdEqOne G 0 = {Vector.nil} :=
+theorem zero_eq : vectorsProdEqOne G 0 = {Vector.nil} :=
   Set.eq_singleton_iff_unique_mem.mpr ⟨Eq.refl (1 : G), fun v hv => v.eq_nil⟩
-#align equiv.perm.vectors_prod_eq_one.zero_eq Equiv.Perm.VectorsProdEqOne.zero_eq
+#align equiv.perm.vectors_prod_eq_one.zero_eq Equiv.Perm.vectorsProdEqOne.zero_eq
 
-theorem one_eq : VectorsProdEqOne G 1 = {Vector.nil.cons 1} := by
+theorem one_eq : vectorsProdEqOne G 1 = {Vector.nil.cons 1} := by
   simp_rw [Set.eq_singleton_iff_unique_mem, mem_iff, Vector.to_list_singleton, List.prod_singleton, Vector.head_cons]
   exact ⟨rfl, fun v hv => v.cons_head_tail.symm.trans (congr_arg₂ Vector.cons hv v.tail.eq_nil)⟩
-#align equiv.perm.vectors_prod_eq_one.one_eq Equiv.Perm.VectorsProdEqOne.one_eq
+#align equiv.perm.vectors_prod_eq_one.one_eq Equiv.Perm.vectorsProdEqOne.one_eq
 
-instance zeroUnique : Unique (VectorsProdEqOne G 0) := by
+instance zeroUnique : Unique (vectorsProdEqOne G 0) := by
   rw [zero_eq]
   exact Set.uniqueSingleton Vector.nil
-#align equiv.perm.vectors_prod_eq_one.zero_unique Equiv.Perm.VectorsProdEqOne.zeroUnique
+#align equiv.perm.vectors_prod_eq_one.zero_unique Equiv.Perm.vectorsProdEqOne.zeroUnique
 
-instance oneUnique : Unique (VectorsProdEqOne G 1) := by
+instance oneUnique : Unique (vectorsProdEqOne G 1) := by
   rw [one_eq]
   exact Set.uniqueSingleton (vector.nil.cons 1)
-#align equiv.perm.vectors_prod_eq_one.one_unique Equiv.Perm.VectorsProdEqOne.oneUnique
+#align equiv.perm.vectors_prod_eq_one.one_unique Equiv.Perm.vectorsProdEqOne.oneUnique
 
 /-- Given a vector `v` of length `n`, make a vector of length `n + 1` whose product is `1`,
 by appending the inverse of the product of `v`. -/
 @[simps]
-def vectorEquiv : Vector G n ≃ VectorsProdEqOne G (n + 1) where
+def vectorEquiv : Vector G n ≃ vectorsProdEqOne G (n + 1) where
   toFun v := ⟨v.toList.Prod⁻¹ ::ᵥ v, by rw [mem_iff, Vector.to_list_cons, List.prod_cons, inv_mul_self]⟩
   invFun v := v.1.tail
   left_inv v := v.tail_cons v.toList.Prod⁻¹
@@ -432,44 +432,44 @@ def vectorEquiv : Vector G n ≃ VectorsProdEqOne G (n + 1) where
                   exact v.2)).symm
             rfl).trans
         v.1.cons_head_tail)
-#align equiv.perm.vectors_prod_eq_one.vector_equiv Equiv.Perm.VectorsProdEqOne.vectorEquiv
+#align equiv.perm.vectors_prod_eq_one.vector_equiv Equiv.Perm.vectorsProdEqOne.vectorEquiv
 
 /-- Given a vector `v` of length `n` whose product is 1, make a vector of length `n - 1`,
 by deleting the last entry of `v`. -/
-def equivVector : VectorsProdEqOne G n ≃ Vector G (n - 1) :=
+def equivVector : vectorsProdEqOne G n ≃ Vector G (n - 1) :=
   ((vectorEquiv G (n - 1)).trans
       (if hn : n = 0 then
-        show VectorsProdEqOne G (n - 1 + 1) ≃ VectorsProdEqOne G n by
+        show vectorsProdEqOne G (n - 1 + 1) ≃ vectorsProdEqOne G n by
           rw [hn]
           apply equiv_of_unique
       else by rw [tsub_add_cancel_of_le (Nat.pos_of_ne_zero hn).nat_succ_le])).symm
-#align equiv.perm.vectors_prod_eq_one.equiv_vector Equiv.Perm.VectorsProdEqOne.equivVector
+#align equiv.perm.vectors_prod_eq_one.equiv_vector Equiv.Perm.vectorsProdEqOne.equivVector
 
-instance [Fintype G] : Fintype (VectorsProdEqOne G n) :=
+instance [Fintype G] : Fintype (vectorsProdEqOne G n) :=
   Fintype.ofEquiv (Vector G (n - 1)) (equivVector G n).symm
 
-theorem card [Fintype G] : Fintype.card (VectorsProdEqOne G n) = Fintype.card G ^ (n - 1) :=
+theorem card [Fintype G] : Fintype.card (vectorsProdEqOne G n) = Fintype.card G ^ (n - 1) :=
   (Fintype.card_congr (equivVector G n)).trans (card_vector (n - 1))
-#align equiv.perm.vectors_prod_eq_one.card Equiv.Perm.VectorsProdEqOne.card
+#align equiv.perm.vectors_prod_eq_one.card Equiv.Perm.vectorsProdEqOne.card
 
-variable {G n} {g : G} (v : VectorsProdEqOne G n) (j k : ℕ)
+variable {G n} {g : G} (v : vectorsProdEqOne G n) (j k : ℕ)
 
 /-- Rotate a vector whose product is 1. -/
-def rotate : VectorsProdEqOne G n :=
+def rotate : vectorsProdEqOne G n :=
   ⟨⟨_, (v.1.1.length_rotate k).trans v.1.2⟩, List.prod_rotate_eq_one_of_prod_eq_one v.2 k⟩
-#align equiv.perm.vectors_prod_eq_one.rotate Equiv.Perm.VectorsProdEqOne.rotate
+#align equiv.perm.vectors_prod_eq_one.rotate Equiv.Perm.vectorsProdEqOne.rotate
 
 theorem rotate_zero : rotate v 0 = v :=
   Subtype.ext (Subtype.ext v.1.1.rotate_zero)
-#align equiv.perm.vectors_prod_eq_one.rotate_zero Equiv.Perm.VectorsProdEqOne.rotate_zero
+#align equiv.perm.vectors_prod_eq_one.rotate_zero Equiv.Perm.vectorsProdEqOne.rotate_zero
 
 theorem rotate_rotate : rotate (rotate v j) k = rotate v (j + k) :=
   Subtype.ext (Subtype.ext (v.1.1.rotate_rotate j k))
-#align equiv.perm.vectors_prod_eq_one.rotate_rotate Equiv.Perm.VectorsProdEqOne.rotate_rotate
+#align equiv.perm.vectors_prod_eq_one.rotate_rotate Equiv.Perm.vectorsProdEqOne.rotate_rotate
 
 theorem rotate_length : rotate v n = v :=
   Subtype.ext (Subtype.ext ((congr_arg _ v.1.2.symm).trans v.1.1.rotate_length))
-#align equiv.perm.vectors_prod_eq_one.rotate_length Equiv.Perm.VectorsProdEqOne.rotate_length
+#align equiv.perm.vectors_prod_eq_one.rotate_length Equiv.Perm.vectorsProdEqOne.rotate_length
 
 end VectorsProdEqOne
 

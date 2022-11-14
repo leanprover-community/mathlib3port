@@ -382,12 +382,12 @@ theorem mem_roots_map [CommRing k] [IsDomain k] {f : R →+* k} {x : k} (hp : p 
   rw [Polynomial.eval_map]
 #align polynomial.mem_roots_map Polynomial.mem_roots_map
 
-theorem mem_root_set [CommRing k] [IsDomain k] [Algebra R k] {x : k} (hp : p ≠ 0) : x ∈ p.RootSet k ↔ aeval x p = 0 :=
+theorem mem_root_set [CommRing k] [IsDomain k] [Algebra R k] {x : k} (hp : p ≠ 0) : x ∈ p.rootSet k ↔ aeval x p = 0 :=
   Iff.trans Multiset.mem_to_finset (mem_roots_map hp)
 #align polynomial.mem_root_set Polynomial.mem_root_set
 
 theorem root_set_C_mul_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
-    (c a * X ^ n).RootSet S = {0} := by
+    (c a * X ^ n).rootSet S = {0} := by
   ext x
   rw [Set.mem_singleton_iff, mem_root_set, aeval_mul, aeval_C, aeval_X_pow, mul_eq_zero]
   · simp_rw [_root_.map_eq_zero, pow_eq_zero_iff (Nat.pos_of_ne_zero hn), or_iff_right_iff_imp]
@@ -398,17 +398,17 @@ theorem root_set_C_mul_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (
 #align polynomial.root_set_C_mul_X_pow Polynomial.root_set_C_mul_X_pow
 
 theorem root_set_monomial [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
-    (monomial n a).RootSet S = {0} := by rw [← C_mul_X_pow_eq_monomial, root_set_C_mul_X_pow hn ha]
+    (monomial n a).rootSet S = {0} := by rw [← C_mul_X_pow_eq_monomial, root_set_C_mul_X_pow hn ha]
 #align polynomial.root_set_monomial Polynomial.root_set_monomial
 
-theorem root_set_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) : (X ^ n : R[X]).RootSet S = {0} :=
+theorem root_set_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) : (X ^ n : R[X]).rootSet S = {0} :=
   by
   rw [← one_mul (X ^ n : R[X]), ← C_1, root_set_C_mul_X_pow hn]
   exact one_ne_zero
 #align polynomial.root_set_X_pow Polynomial.root_set_X_pow
 
 theorem root_set_prod [CommRing S] [IsDomain S] [Algebra R S] {ι : Type _} (f : ι → R[X]) (s : Finset ι)
-    (h : s.Prod f ≠ 0) : (s.Prod f).RootSet S = ⋃ i ∈ s, (f i).RootSet S := by
+    (h : s.Prod f ≠ 0) : (s.Prod f).rootSet S = ⋃ i ∈ s, (f i).rootSet S := by
   simp only [root_set, ← Finset.mem_coe]
   rw [Polynomial.map_prod, roots_prod, Finset.bind_to_finset, s.val_to_finset, Finset.coe_bUnion]
   rwa [← Polynomial.map_prod, Ne, map_eq_zero]

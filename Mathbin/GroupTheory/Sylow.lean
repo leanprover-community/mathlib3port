@@ -138,7 +138,7 @@ theorem IsPGroup.exists_le_sylow {P : Subgroup G} (hP : IsPGroup p P) : ∃ Q : 
   Exists.elim
     (zorn_nonempty_partial_order₀ { Q : Subgroup G | IsPGroup p Q }
       (fun c hc1 hc2 Q hQ =>
-        ⟨{ Carrier := ⋃ R : c, R, one_mem' := ⟨Q, ⟨⟨Q, hQ⟩, rfl⟩, Q.one_mem⟩,
+        ⟨{ carrier := ⋃ R : c, R, one_mem' := ⟨Q, ⟨⟨Q, hQ⟩, rfl⟩, Q.one_mem⟩,
             inv_mem' := fun g ⟨_, ⟨R, rfl⟩, hg⟩ => ⟨R, ⟨R, rfl⟩, R.1.inv_mem hg⟩,
             mul_mem' := fun g h ⟨_, ⟨R, rfl⟩, hg⟩ ⟨_, ⟨S, rfl⟩, hh⟩ =>
               (hc2.Total R.2 S.2).elim (fun T => ⟨S, ⟨S, rfl⟩, S.1.mul_mem (T hg) hh⟩) fun T =>
@@ -257,7 +257,7 @@ theorem Sylow.smul_eq_of_normal {g : G} {P : Sylow p G} [h : (P : Subgroup G).No
 #align sylow.smul_eq_of_normal Sylow.smul_eq_of_normal
 
 theorem Subgroup.sylow_mem_fixed_points_iff (H : Subgroup G) {P : Sylow p G} :
-    P ∈ FixedPoints H (Sylow p G) ↔ H ≤ (P : Subgroup G).normalizer := by
+    P ∈ fixedPoints H (Sylow p G) ↔ H ≤ (P : Subgroup G).normalizer := by
   simp_rw [SetLike.le_def, ← Sylow.smul_eq_iff_mem_normalizer] <;> exact Subtype.forall
 #align subgroup.sylow_mem_fixed_points_iff Subgroup.sylow_mem_fixed_points_iff
 
@@ -269,7 +269,7 @@ theorem IsPGroup.inf_normalizer_sylow {P : Subgroup G} (hP : IsPGroup p P) (Q : 
 #align is_p_group.inf_normalizer_sylow IsPGroup.inf_normalizer_sylow
 
 theorem IsPGroup.sylow_mem_fixed_points_iff {P : Subgroup G} (hP : IsPGroup p P) {Q : Sylow p G} :
-    Q ∈ FixedPoints P (Sylow p G) ↔ P ≤ Q := by
+    Q ∈ fixedPoints P (Sylow p G) ↔ P ≤ Q := by
   rw [P.sylow_mem_fixed_points_iff, ← inf_eq_left, hP.inf_normalizer_sylow, inf_eq_left]
 #align is_p_group.sylow_mem_fixed_points_iff IsPGroup.sylow_mem_fixed_points_iff
 
@@ -328,7 +328,7 @@ noncomputable def Sylow.equiv [Fact p.Prime] [Finite (Sylow p G)] (P Q : Sylow p
 #align sylow.equiv Sylow.equiv
 
 @[simp]
-theorem Sylow.orbit_eq_top [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G) : Orbit G P = ⊤ :=
+theorem Sylow.orbit_eq_top [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G) : orbit G P = ⊤ :=
   top_le_iff.mp fun Q hQ => exists_smul_eq G P Q
 #align sylow.orbit_eq_top Sylow.orbit_eq_top
 
@@ -337,16 +337,16 @@ theorem Sylow.stabilizer_eq_normalizer (P : Sylow p G) : stabilizer G P = (P : S
 #align sylow.stabilizer_eq_normalizer Sylow.stabilizer_eq_normalizer
 
 theorem Sylow.conj_eq_normalizer_conj_of_mem_centralizer [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G) (x g : G)
-    (hx : x ∈ (P : Subgroup G).Centralizer) (hy : g⁻¹ * x * g ∈ (P : Subgroup G).Centralizer) :
+    (hx : x ∈ (P : Subgroup G).centralizer) (hy : g⁻¹ * x * g ∈ (P : Subgroup G).centralizer) :
     ∃ n ∈ (P : Subgroup G).normalizer, g⁻¹ * x * g = n⁻¹ * x * n := by
-  have h1 : ↑P ≤ (zpowers x).Centralizer := by rwa [le_centralizer_iff, zpowers_le]
-  have h2 : ↑(g • P) ≤ (zpowers x).Centralizer := by
+  have h1 : ↑P ≤ (zpowers x).centralizer := by rwa [le_centralizer_iff, zpowers_le]
+  have h2 : ↑(g • P) ≤ (zpowers x).centralizer := by
     rw [le_centralizer_iff, zpowers_le]
     rintro - ⟨z, hz, rfl⟩
     specialize hy z hz
     rwa [← mul_assoc, ← eq_mul_inv_iff_mul_eq, mul_assoc, mul_assoc, mul_assoc, ← mul_assoc, eq_inv_mul_iff_mul_eq, ←
       mul_assoc, ← mul_assoc] at hy
-  obtain ⟨h, hh⟩ := exists_smul_eq (zpowers x).Centralizer ((g • P).Subtype h2) (P.subtype h1)
+  obtain ⟨h, hh⟩ := exists_smul_eq (zpowers x).centralizer ((g • P).Subtype h2) (P.subtype h1)
   simp_rw [Sylow.smul_subtype, smul_def, smul_smul] at hh
   refine' ⟨h * g, sylow.smul_eq_iff_mem_normalizer.mp (Sylow.subtype_injective hh), _⟩
   rw [← mul_assoc, Commute.right_comm (h.prop x (mem_zpowers x)), mul_inv_rev, inv_mul_cancel_right]
@@ -363,7 +363,7 @@ noncomputable def Sylow.equivQuotientNormalizer [Fact p.Prime] [Fintype (Sylow p
     Sylow p G ≃ G ⧸ (P : Subgroup G).normalizer :=
   calc
     Sylow p G ≃ (⊤ : Set (Sylow p G)) := (Equiv.Set.univ (Sylow p G)).symm
-    _ ≃ Orbit G P := by rw [P.orbit_eq_top]
+    _ ≃ orbit G P := by rw [P.orbit_eq_top]
     _ ≃ G ⧸ stabilizer G P := orbitEquivQuotientStabilizer G P
     _ ≃ G ⧸ (P : Subgroup G).normalizer := by rw [P.stabilizer_eq_normalizer]
     
@@ -457,9 +457,9 @@ namespace Sylow
 open Subgroup Submonoid MulAction
 
 theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Finite ↥(H : Set G)] {x : G} :
-    (x : G ⧸ H) ∈ FixedPoints H (G ⧸ H) ↔ x ∈ normalizer H :=
+    (x : G ⧸ H) ∈ fixedPoints H (G ⧸ H) ↔ x ∈ normalizer H :=
   ⟨fun hx =>
-    have ha : ∀ {y : G ⧸ H}, y ∈ Orbit H (x : G ⧸ H) → y = x := fun _ => (mem_fixed_points' _).1 hx _
+    have ha : ∀ {y : G ⧸ H}, y ∈ orbit H (x : G ⧸ H) → y = x := fun _ => (mem_fixed_points' _).1 hx _
     inv_mem_iff.1
       (mem_normalizer_fintype fun n (hn : n ∈ H) =>
         have : (n⁻¹ * x)⁻¹ * x ∈ H := QuotientGroup.eq.1 (ha (mem_orbit _ ⟨n⁻¹, H.inv_mem hn⟩))
@@ -481,8 +481,8 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
 
 /-- The fixed points of the action of `H` on its cosets correspond to `normalizer H / H`. -/
 def fixedPointsMulLeftCosetsEquivQuotient (H : Subgroup G) [Finite (H : Set G)] :
-    MulAction.FixedPoints H (G ⧸ H) ≃ normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H :=
-  @subtypeQuotientEquivQuotientSubtype G (normalizer H : Set G) (id _) (id _) (FixedPoints _ _)
+    MulAction.fixedPoints H (G ⧸ H) ≃ normalizer H ⧸ Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H :=
+  @subtypeQuotientEquivQuotientSubtype G (normalizer H : Set G) (id _) (id _) (fixedPoints _ _)
     (fun a => (@mem_fixed_points_mul_left_cosets_iff_mem_normalizer _ _ _ ‹_› _).symm)
     (by
       intros
@@ -708,8 +708,8 @@ of these sylow groups.
 -/
 noncomputable def directProductOfNormal [Fintype G]
     (hn : ∀ {p : ℕ} [Fact p.Prime] (P : Sylow p G), (↑P : Subgroup G).Normal) :
-    (∀ p : (card G).factorization.Support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G := by
-  set ps := (Fintype.card G).factorization.Support
+    (∀ p : (card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G := by
+  set ps := (Fintype.card G).factorization.support
   -- “The” sylow group for p
   let P : ∀ p, Sylow p G := default
   have hcomm : Pairwise fun p₁ p₂ : ps => ∀ x y : G, x ∈ P p₁ → y ∈ P p₂ → Commute x y := by

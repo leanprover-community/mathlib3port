@@ -81,24 +81,24 @@ variable {M : Type _} [Mul M] [Preorder M] [CovariantClass M M (· * ·) (· ≤
   [CovariantClass M M (swap (· * ·)) (· ≤ ·)]
 
 @[to_additive]
-theorem mul_mem_upper_bounds_mul {s t : Set M} {a b : M} (ha : a ∈ UpperBounds s) (hb : b ∈ UpperBounds t) :
-    a * b ∈ UpperBounds (s * t) :=
+theorem mul_mem_upper_bounds_mul {s t : Set M} {a b : M} (ha : a ∈ upperBounds s) (hb : b ∈ upperBounds t) :
+    a * b ∈ upperBounds (s * t) :=
   forall_image2_iff.2 fun x hx y hy => mul_le_mul' (ha hx) (hb hy)
 #align mul_mem_upper_bounds_mul mul_mem_upper_bounds_mul
 
 @[to_additive]
-theorem subset_upper_bounds_mul (s t : Set M) : UpperBounds s * UpperBounds t ⊆ UpperBounds (s * t) :=
+theorem subset_upper_bounds_mul (s t : Set M) : upperBounds s * upperBounds t ⊆ upperBounds (s * t) :=
   image2_subset_iff.2 fun x hx y hy => mul_mem_upper_bounds_mul hx hy
 #align subset_upper_bounds_mul subset_upper_bounds_mul
 
 @[to_additive]
-theorem mul_mem_lower_bounds_mul {s t : Set M} {a b : M} (ha : a ∈ LowerBounds s) (hb : b ∈ LowerBounds t) :
-    a * b ∈ LowerBounds (s * t) :=
+theorem mul_mem_lower_bounds_mul {s t : Set M} {a b : M} (ha : a ∈ lowerBounds s) (hb : b ∈ lowerBounds t) :
+    a * b ∈ lowerBounds (s * t) :=
   @mul_mem_upper_bounds_mul Mᵒᵈ _ _ _ _ _ _ _ _ ha hb
 #align mul_mem_lower_bounds_mul mul_mem_lower_bounds_mul
 
 @[to_additive]
-theorem subset_lower_bounds_mul (s t : Set M) : LowerBounds s * LowerBounds t ⊆ LowerBounds (s * t) :=
+theorem subset_lower_bounds_mul (s t : Set M) : lowerBounds s * lowerBounds t ⊆ lowerBounds (s * t) :=
   @subset_upper_bounds_mul Mᵒᵈ _ _ _ _ _ _
 #align subset_lower_bounds_mul subset_lower_bounds_mul
 
@@ -122,12 +122,12 @@ variable {ι G : Type _} [Group G] [ConditionallyCompleteLattice G] [CovariantCl
   [Nonempty ι] {f : ι → G}
 
 @[to_additive]
-theorem csupr_mul (hf : BddAbove (Set.Range f)) (a : G) : (⨆ i, f i) * a = ⨆ i, f i * a :=
+theorem csupr_mul (hf : BddAbove (Set.range f)) (a : G) : (⨆ i, f i) * a = ⨆ i, f i * a :=
   (OrderIso.mulRight a).map_csupr hf
 #align csupr_mul csupr_mul
 
 @[to_additive]
-theorem csupr_div (hf : BddAbove (Set.Range f)) (a : G) : (⨆ i, f i) / a = ⨆ i, f i / a := by
+theorem csupr_div (hf : BddAbove (Set.range f)) (a : G) : (⨆ i, f i) / a = ⨆ i, f i / a := by
   simp only [div_eq_mul_inv, csupr_mul hf]
 #align csupr_div csupr_div
 
@@ -139,7 +139,7 @@ variable {ι G : Type _} [Group G] [ConditionallyCompleteLattice G] [CovariantCl
   {f : ι → G}
 
 @[to_additive]
-theorem mul_csupr (hf : BddAbove (Set.Range f)) (a : G) : (a * ⨆ i, f i) = ⨆ i, a * f i :=
+theorem mul_csupr (hf : BddAbove (Set.range f)) (a : G) : (a * ⨆ i, f i) = ⨆ i, a * f i :=
   (OrderIso.mulLeft a).map_csupr hf
 #align mul_csupr mul_csupr
 

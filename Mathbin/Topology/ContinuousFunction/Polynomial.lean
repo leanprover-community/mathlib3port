@@ -143,7 +143,7 @@ def polynomialFunctions (X : Set R) : Subalgebra R C(X, R) :=
 
 @[simp]
 theorem polynomial_functions_coe (X : Set R) :
-    (polynomialFunctions X : Set C(X, R)) = Set.Range (Polynomial.toContinuousMapOnAlgHom X) := by
+    (polynomialFunctions X : Set C(X, R)) = Set.range (Polynomial.toContinuousMapOnAlgHom X) := by
   ext
   simp [polynomialFunctions]
 #align polynomial_functions_coe polynomial_functions_coe
@@ -160,7 +160,7 @@ theorem polynomialFunctionsSeparatesPoints (X : Set R) : (polynomialFunctions X)
   exact fun h' => h (Subtype.ext h')
 #align polynomial_functions_separates_points polynomialFunctionsSeparatesPoints
 
-open UnitInterval
+open unitInterval
 
 open ContinuousMap
 
@@ -168,7 +168,7 @@ open ContinuousMap
 is the polynomials on `[a,b]`. -/
 theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h : a < b) :
     (polynomialFunctions I).comap (compRightAlgHom ℝ ℝ (iccHomeoI a b h).symm.toContinuousMap) =
-      polynomialFunctions (Set.IccCat a b) :=
+      polynomialFunctions (Set.icc a b) :=
   by
   ext f
   fconstructor

@@ -177,9 +177,9 @@ def wMk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → 
 
 /- warning: mvpfunctor.W_rec -> Mvpfunctor.wRec is a dubious translation:
 lean 3 declaration is
-  forall {n : Nat} (P : Mvpfunctor.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : Typevec.{u} n} {C : Type.{u_1}}, (forall (a : Mvpfunctor.A.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P), (Typevec.Arrow.{u u} n (Mvpfunctor.B.{u} n (Mvpfunctor.drop.{u} n P) a) α) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> (Mvpfunctor.W.{u} n P α)) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u} n P α) -> C
+  forall {n : Nat} (P : Mvpfunctor.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : Typevec.{u} n} {C : Type.{u_1}}, (forall (a : Mvpfunctor.A.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P), (Typevec.Arrow.{u u} n (Mvpfunctor.b.{u} n (Mvpfunctor.drop.{u} n P) a) α) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> (Mvpfunctor.W.{u} n P α)) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u} n P α) -> C
 but is expected to have type
-  forall {n : Nat} (P : Mvpfunctor.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : Typevec.{u} n} {C : Type.{_aux_param_0}}, (forall (a : Mvpfunctor.A.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P), (Typevec.Arrow.{u u} n (Mvpfunctor.B.{u} n (Mvpfunctor.drop.{u} n P) a) α) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> (Mvpfunctor.W.{u} n P α)) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u} n P α) -> C
+  forall {n : Nat} (P : Mvpfunctor.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) {α : Typevec.{u} n} {C : Type.{_aux_param_0}}, (forall (a : Mvpfunctor.A.{u} (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) P), (Typevec.Arrow.{u u} n (Mvpfunctor.b.{u} n (Mvpfunctor.drop.{u} n P) a) α) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> (Mvpfunctor.W.{u} n P α)) -> ((Pfunctor.B.{u} (Mvpfunctor.last.{u} n P) a) -> C) -> C) -> (Mvpfunctor.W.{u} n P α) -> C
 Case conversion may be inaccurate. Consider using '#align mvpfunctor.W_rec Mvpfunctor.wRecₓ'. -/
 /-- Recursor for `W` -/
 def wRec {α : Typevec n} {C : Type _} (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) :
@@ -281,7 +281,7 @@ def wMk' {α : Typevec n} : P.Obj (α ::: P.W α) → P.W α
 #align mvpfunctor.W_mk' Mvpfunctor.wMk'
 
 /-- Destructor for the W-type of `P` -/
-def wDest' {α : Typevec.{u} n} : P.W α → P.Obj (α.Append1 (P.W α)) :=
+def wDest' {α : Typevec.{u} n} : P.W α → P.Obj (α.append1 (P.W α)) :=
   P.wRec fun a f' f _ => ⟨a, splitFun f' f⟩
 #align mvpfunctor.W_dest' Mvpfunctor.wDest'
 
@@ -289,7 +289,7 @@ theorem W_dest'_W_mk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.
     P.wDest' (P.wMk a f' f) = ⟨a, splitFun f' f⟩ := by rw [W_dest', W_rec_eq]
 #align mvpfunctor.W_dest'_W_mk Mvpfunctor.W_dest'_W_mk
 
-theorem W_dest'_W_mk' {α : Typevec n} (x : P.Obj (α.Append1 (P.W α))) : P.wDest' (P.wMk' x) = x := by
+theorem W_dest'_W_mk' {α : Typevec n} (x : P.Obj (α.append1 (P.W α))) : P.wDest' (P.wMk' x) = x := by
   cases' x with a f <;> rw [W_mk', W_dest'_W_mk, split_drop_fun_last_fun]
 #align mvpfunctor.W_dest'_W_mk' Mvpfunctor.W_dest'_W_mk'
 

@@ -30,7 +30,7 @@ def atImInfty :=
   Filter.atTop.comap UpperHalfPlane.im
 #align upper_half_plane.at_im_infty UpperHalfPlane.atImInfty
 
-theorem at_im_infty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im ⁻¹' Set.IciCat i :=
+theorem at_im_infty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im ⁻¹' Set.ici i :=
   Filter.HasBasis.comap UpperHalfPlane.im Filter.at_top_basis
 #align upper_half_plane.at_im_infty_basis UpperHalfPlane.at_im_infty_basis
 
@@ -82,7 +82,7 @@ theorem zero_at_im_infty (f : ℍ → ℂ) :
   constructor
   · simp_rw [Filter.Eventually, at_im_infty_mem]
     intro h ε hε
-    simpa using h (Metric.ClosedBall (0 : ℂ) ε) (Metric.closed_ball_mem_nhds (0 : ℂ) hε)
+    simpa using h (Metric.closedBall (0 : ℂ) ε) (Metric.closed_ball_mem_nhds (0 : ℂ) hε)
     
   · simp_rw [Metric.mem_nhds_iff]
     intro h s hs

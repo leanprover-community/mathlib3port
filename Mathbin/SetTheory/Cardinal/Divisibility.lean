@@ -83,7 +83,7 @@ theorem primeOfAleph0Le (ha : ℵ₀ ≤ a) : Prime a := by
   wlog h : c ≤ b
   left
   have habc := le_of_dvd hz hbc
-  rwa [mul_eq_max' <| ha.trans <| habc, max_def, if_pos h] at hbc
+  rwa [mul_eq_max' <| ha.trans <| habc, max_def', if_pos h] at hbc
 #align cardinal.prime_of_aleph_0_le Cardinal.primeOfAleph0Le
 
 theorem not_irreducible_of_aleph_0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a := by

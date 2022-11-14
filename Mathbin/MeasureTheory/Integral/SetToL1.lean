@@ -1567,7 +1567,7 @@ theorem tendsto_set_to_fun_of_L1 (hT : DominatedFinMeasAdditive μ T C) {ι} (f 
 
 theorem tendsto_set_to_fun_approx_on_of_measurable (hT : DominatedFinMeasAdditive μ T C) [MeasurableSpace E]
     [BorelSpace E] {f : α → E} {s : Set E} [SeparableSpace s] (hfi : Integrable f μ) (hfm : Measurable f)
-    (hs : ∀ᵐ x ∂μ, f x ∈ Closure s) {y₀ : E} (h₀ : y₀ ∈ s) (h₀i : Integrable (fun x => y₀) μ) :
+    (hs : ∀ᵐ x ∂μ, f x ∈ closure s) {y₀ : E} (h₀ : y₀ ∈ s) (h₀i : Integrable (fun x => y₀) μ) :
     Tendsto (fun n => setToFun μ T hT (SimpleFunc.approxOn f hfm s y₀ h₀ n)) atTop (𝓝 <| setToFun μ T hT f) :=
   tendsto_set_to_fun_of_L1 hT _ hfi (eventually_of_forall (SimpleFunc.integrableApproxOn hfm hfi h₀ h₀i))
     (SimpleFunc.tendsto_approx_on_L1_nnnorm hfm _ hs (hfi.sub h₀i).2)

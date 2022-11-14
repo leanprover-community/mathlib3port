@@ -99,7 +99,7 @@ theorem nat_degree_mul_C_le (f : R[X]) (a : R) : (f * c a).natDegree ≤ f.natDe
     
 #align polynomial.nat_degree_mul_C_le Polynomial.nat_degree_mul_C_le
 
-theorem eq_nat_degree_of_le_mem_support (pn : p.natDegree ≤ n) (ns : n ∈ p.Support) : p.natDegree = n :=
+theorem eq_nat_degree_of_le_mem_support (pn : p.natDegree ≤ n) (ns : n ∈ p.support) : p.natDegree = n :=
   le_antisymm pn (le_nat_degree_of_mem_supp _ ns)
 #align polynomial.eq_nat_degree_of_le_mem_support Polynomial.eq_nat_degree_of_le_mem_support
 

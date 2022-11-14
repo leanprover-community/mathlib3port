@@ -572,7 +572,7 @@ theorem codomain_trivial_iff_range_trivial : (0 : β) = 1 ↔ ∀ x, f x = 0 :=
 #align ring_hom.codomain_trivial_iff_range_trivial RingHom.codomain_trivial_iff_range_trivial
 
 /-- `f : α →+* β` has a trivial codomain iff its range is `{0}`. -/
-theorem codomain_trivial_iff_range_eq_singleton_zero : (0 : β) = 1 ↔ Set.Range f = {0} :=
+theorem codomain_trivial_iff_range_eq_singleton_zero : (0 : β) = 1 ↔ Set.range f = {0} :=
   f.codomain_trivial_iff_range_trivial.trans
     ⟨fun h => Set.ext fun y => ⟨fun ⟨x, hx⟩ => by simp [← hx, h x], fun hy => ⟨0, by simpa using hy.symm⟩⟩, fun h x =>
       Set.mem_singleton_iff.mp (h ▸ Set.mem_range_self x)⟩

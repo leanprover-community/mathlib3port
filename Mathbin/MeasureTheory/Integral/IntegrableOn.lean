@@ -56,7 +56,7 @@ protected theorem StronglyMeasurableAtFilter.filterMono (h : StronglyMeasurableA
 
 protected theorem MeasureTheory.AeStronglyMeasurable.stronglyMeasurableAtFilter (h : AeStronglyMeasurable f μ) :
     StronglyMeasurableAtFilter f l μ :=
-  ⟨Univ, univ_mem, by rwa [measure.restrict_univ]⟩
+  ⟨univ, univ_mem, by rwa [measure.restrict_univ]⟩
 #align
   measure_theory.ae_strongly_measurable.strongly_measurable_at_filter MeasureTheory.AeStronglyMeasurable.stronglyMeasurableAtFilter
 
@@ -100,7 +100,7 @@ theorem integrableOnEmpty : IntegrableOn f ∅ μ := by simp [integrable_on, int
 #align measure_theory.integrable_on_empty MeasureTheory.integrableOnEmpty
 
 @[simp]
-theorem integrable_on_univ : IntegrableOn f Univ μ ↔ Integrable f μ := by rw [integrable_on, measure.restrict_univ]
+theorem integrable_on_univ : IntegrableOn f univ μ ↔ Integrable f μ := by rw [integrable_on, measure.restrict_univ]
 #align measure_theory.integrable_on_univ MeasureTheory.integrable_on_univ
 
 theorem integrableOnZero : IntegrableOn (fun _ => (0 : E)) s μ :=
@@ -259,7 +259,7 @@ theorem integrableIndicatorConstLp {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {
   simpa only [Set.univ_inter, MeasurableSet.univ, measure.restrict_apply] using hμs
 #align measure_theory.integrable_indicator_const_Lp MeasureTheory.integrableIndicatorConstLp
 
-theorem integrable_on_iff_integable_of_support_subset {f : α → E} {s : Set α} (h1s : Support f ⊆ s)
+theorem integrable_on_iff_integable_of_support_subset {f : α → E} {s : Set α} (h1s : support f ⊆ s)
     (h2s : MeasurableSet s) : IntegrableOn f s μ ↔ Integrable f μ := by
   refine' ⟨fun h => _, fun h => h.IntegrableOn⟩
   rwa [← indicator_eq_self.2 h1s, integrable_indicator_iff h2s]
@@ -269,7 +269,7 @@ theorem integrable_on_iff_integable_of_support_subset {f : α → E} {s : Set α
 theorem integrableOnLpOfMeasureNeTop {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {s : Set α} (f : lp E p μ) (hp : 1 ≤ p)
     (hμs : μ s ≠ ∞) : IntegrableOn f s μ := by
   refine' mem_ℒp_one_iff_integrable.mp _
-  have hμ_restrict_univ : (μ.restrict s) Set.Univ < ∞ := by
+  have hμ_restrict_univ : (μ.restrict s) Set.univ < ∞ := by
     simpa only [Set.univ_inter, MeasurableSet.univ, measure.restrict_apply, lt_top_iff_ne_top]
   haveI hμ_finite : is_finite_measure (μ.restrict s) := ⟨hμ_restrict_univ⟩
   exact ((Lp.mem_ℒp _).restrict s).memℒpOfExponentLe hp
@@ -360,7 +360,7 @@ theorem Measure.FiniteAtFilter.integrableAtFilterOfTendsto {l : Filter α} [IsMe
 
 alias measure.finite_at_filter.integrable_at_filter_of_tendsto ← _root_.filter.tendsto.integrable_at_filter
 
-theorem integrable_add_of_disjoint {f g : α → E} (h : Disjoint (Support f) (Support g)) (hf : StronglyMeasurable f)
+theorem integrable_add_of_disjoint {f g : α → E} (h : Disjoint (support f) (support g)) (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : Integrable (f + g) μ ↔ Integrable f μ ∧ Integrable g μ := by
   refine' ⟨fun hfg => ⟨_, _⟩, fun h => h.1.add h.2⟩
   · rw [← indicator_add_eq_left h]
@@ -391,7 +391,7 @@ theorem ContinuousOn.aeMeasurable [TopologicalSpace α] [OpensMeasurableSpace α
   apply measurableOfIsOpen
   intro t ht
   obtain ⟨u, u_open, hu⟩ : ∃ u : Set α, IsOpen u ∧ f ⁻¹' t ∩ s = u ∩ s := _root_.continuous_on_iff'.1 hf t ht
-  rw [piecewise_preimage, Set.Ite, hu]
+  rw [piecewise_preimage, Set.ite, hu]
   exact (u_open.measurable_set.inter hs).union ((measurableConst ht.measurable_set).diff hs)
 #align continuous_on.ae_measurable ContinuousOn.aeMeasurable
 

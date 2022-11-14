@@ -158,8 +158,8 @@ theorem min_le {x : β} {s : Set β} (hx : x ∈ s) (hne : s.Nonempty := ⟨x, h
 #align well_founded.min_le WellFounded.min_le
 
 private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g)
-    (hfg : Set.Range f = Set.Range g) {b : β} (H : ∀ a < b, f a = g a) : f b ≤ g b := by
-  obtain ⟨c, hc⟩ : g b ∈ Set.Range f := by
+    (hfg : Set.range f = Set.range g) {b : β} (H : ∀ a < b, f a = g a) : f b ≤ g b := by
+  obtain ⟨c, hc⟩ : g b ∈ Set.range f := by
     rw [hfg]
     exact Set.mem_range_self b
   cases' lt_or_le c b with hcb hbc
@@ -175,7 +175,7 @@ private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMo
 include h
 
 theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g) :
-    Set.Range f = Set.Range g ↔ f = g :=
+    Set.range f = Set.range g ↔ f = g :=
   ⟨fun hfg => by
     funext a
     apply h.induction a
@@ -206,7 +206,7 @@ variable [LT β] (h : WellFounded ((· < ·) : β → β → Prop))
 /-- Given a function `f : α → β` where `β` carries a well-founded `<`, this is an element of `α`
 whose image under `f` is minimal in the sense of `function.not_lt_argmin`. -/
 noncomputable def argmin [Nonempty α] : α :=
-  WellFounded.min (InvImage.wf f h) Set.Univ Set.univ_nonempty
+  WellFounded.min (InvImage.wf f h) Set.univ Set.univ_nonempty
 #align function.argmin Function.argmin
 
 theorem not_lt_argmin [Nonempty α] (a : α) : ¬f a < f (argmin f h) :=

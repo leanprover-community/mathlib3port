@@ -29,92 +29,92 @@ section Preorder
 variable [Preorder α] {a b c : α}
 
 @[simp]
-theorem Iic_disjoint_Ioi (h : a ≤ b) : Disjoint (IicCat a) (IoiCat b) :=
+theorem Iic_disjoint_Ioi (h : a ≤ b) : Disjoint (iic a) (ioi b) :=
   disjoint_left.mpr fun x ha hb => (h.trans_lt hb).not_le ha
 #align set.Iic_disjoint_Ioi Set.Iic_disjoint_Ioi
 
 @[simp]
-theorem Iic_disjoint_Ioc (h : a ≤ b) : Disjoint (IicCat a) (IocCat b c) :=
+theorem Iic_disjoint_Ioc (h : a ≤ b) : Disjoint (iic a) (ioc b c) :=
   (Iic_disjoint_Ioi h).mono le_rfl fun _ => And.left
 #align set.Iic_disjoint_Ioc Set.Iic_disjoint_Ioc
 
 @[simp]
-theorem Ioc_disjoint_Ioc_same {a b c : α} : Disjoint (IocCat a b) (IocCat b c) :=
+theorem Ioc_disjoint_Ioc_same {a b c : α} : Disjoint (ioc a b) (ioc b c) :=
   (Iic_disjoint_Ioc (le_refl b)).mono (fun _ => And.right) le_rfl
 #align set.Ioc_disjoint_Ioc_same Set.Ioc_disjoint_Ioc_same
 
 @[simp]
-theorem Ico_disjoint_Ico_same {a b c : α} : Disjoint (IcoCat a b) (IcoCat b c) :=
+theorem Ico_disjoint_Ico_same {a b c : α} : Disjoint (ico a b) (ico b c) :=
   disjoint_left.mpr fun x hab hbc => hab.2.not_le hbc.1
 #align set.Ico_disjoint_Ico_same Set.Ico_disjoint_Ico_same
 
 @[simp]
-theorem Ici_disjoint_Iic : Disjoint (IciCat a) (IicCat b) ↔ ¬a ≤ b := by
+theorem Ici_disjoint_Iic : Disjoint (ici a) (iic b) ↔ ¬a ≤ b := by
   rw [Set.disjoint_iff_inter_eq_empty, Ici_inter_Iic, Icc_eq_empty_iff]
 #align set.Ici_disjoint_Iic Set.Ici_disjoint_Iic
 
 @[simp]
-theorem Iic_disjoint_Ici : Disjoint (IicCat a) (IciCat b) ↔ ¬b ≤ a :=
+theorem Iic_disjoint_Ici : Disjoint (iic a) (ici b) ↔ ¬b ≤ a :=
   Disjoint.comm.trans Ici_disjoint_Iic
 #align set.Iic_disjoint_Ici Set.Iic_disjoint_Ici
 
 @[simp]
-theorem Union_Iic : (⋃ a : α, IicCat a) = univ :=
+theorem Union_Iic : (⋃ a : α, iic a) = univ :=
   Union_eq_univ_iff.2 fun x => ⟨x, right_mem_Iic⟩
 #align set.Union_Iic Set.Union_Iic
 
 @[simp]
-theorem Union_Ici : (⋃ a : α, IciCat a) = univ :=
+theorem Union_Ici : (⋃ a : α, ici a) = univ :=
   Union_eq_univ_iff.2 fun x => ⟨x, left_mem_Ici⟩
 #align set.Union_Ici Set.Union_Ici
 
 @[simp]
-theorem Union_Icc_right (a : α) : (⋃ b, IccCat a b) = IciCat a := by
+theorem Union_Icc_right (a : α) : (⋃ b, icc a b) = ici a := by
   simp only [← Ici_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
 #align set.Union_Icc_right Set.Union_Icc_right
 
 @[simp]
-theorem Union_Ioc_right (a : α) : (⋃ b, IocCat a b) = IoiCat a := by
+theorem Union_Ioc_right (a : α) : (⋃ b, ioc a b) = ioi a := by
   simp only [← Ioi_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
 #align set.Union_Ioc_right Set.Union_Ioc_right
 
 @[simp]
-theorem Union_Icc_left (b : α) : (⋃ a, IccCat a b) = IicCat b := by
+theorem Union_Icc_left (b : α) : (⋃ a, icc a b) = iic b := by
   simp only [← Ici_inter_Iic, ← Union_inter, Union_Ici, univ_inter]
 #align set.Union_Icc_left Set.Union_Icc_left
 
 @[simp]
-theorem Union_Ico_left (b : α) : (⋃ a, IcoCat a b) = IioCat b := by
+theorem Union_Ico_left (b : α) : (⋃ a, ico a b) = iio b := by
   simp only [← Ici_inter_Iio, ← Union_inter, Union_Ici, univ_inter]
 #align set.Union_Ico_left Set.Union_Ico_left
 
 @[simp]
-theorem Union_Iio [NoMaxOrder α] : (⋃ a : α, IioCat a) = univ :=
+theorem Union_Iio [NoMaxOrder α] : (⋃ a : α, iio a) = univ :=
   Union_eq_univ_iff.2 exists_gt
 #align set.Union_Iio Set.Union_Iio
 
 @[simp]
-theorem Union_Ioi [NoMinOrder α] : (⋃ a : α, IoiCat a) = univ :=
+theorem Union_Ioi [NoMinOrder α] : (⋃ a : α, ioi a) = univ :=
   Union_eq_univ_iff.2 exists_lt
 #align set.Union_Ioi Set.Union_Ioi
 
 @[simp]
-theorem Union_Ico_right [NoMaxOrder α] (a : α) : (⋃ b, IcoCat a b) = IciCat a := by
+theorem Union_Ico_right [NoMaxOrder α] (a : α) : (⋃ b, ico a b) = ici a := by
   simp only [← Ici_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
 #align set.Union_Ico_right Set.Union_Ico_right
 
 @[simp]
-theorem Union_Ioo_right [NoMaxOrder α] (a : α) : (⋃ b, IooCat a b) = IoiCat a := by
+theorem Union_Ioo_right [NoMaxOrder α] (a : α) : (⋃ b, ioo a b) = ioi a := by
   simp only [← Ioi_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
 #align set.Union_Ioo_right Set.Union_Ioo_right
 
 @[simp]
-theorem Union_Ioc_left [NoMinOrder α] (b : α) : (⋃ a, IocCat a b) = IicCat b := by
+theorem Union_Ioc_left [NoMinOrder α] (b : α) : (⋃ a, ioc a b) = iic b := by
   simp only [← Ioi_inter_Iic, ← Union_inter, Union_Ioi, univ_inter]
 #align set.Union_Ioc_left Set.Union_Ioc_left
 
 @[simp]
-theorem Union_Ioo_left [NoMinOrder α] (b : α) : (⋃ a, IooCat a b) = IioCat b := by
+theorem Union_Ioo_left [NoMinOrder α] (b : α) : (⋃ a, ioo a b) = iio b := by
   simp only [← Ioi_inter_Iio, ← Union_inter, Union_Ioi, univ_inter]
 #align set.Union_Ioo_left Set.Union_Ioo_left
 
@@ -125,44 +125,44 @@ section LinearOrder
 variable [LinearOrder α] {a₁ a₂ b₁ b₂ : α}
 
 @[simp]
-theorem Ico_disjoint_Ico : Disjoint (IcoCat a₁ a₂) (IcoCat b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ := by
+theorem Ico_disjoint_Ico : Disjoint (ico a₁ a₂) (ico b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ := by
   simp_rw [Set.disjoint_iff_inter_eq_empty, Ico_inter_Ico, Ico_eq_empty_iff, inf_eq_min, sup_eq_max, not_lt]
 #align set.Ico_disjoint_Ico Set.Ico_disjoint_Ico
 
 @[simp]
-theorem Ioc_disjoint_Ioc : Disjoint (IocCat a₁ a₂) (IocCat b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ := by
+theorem Ioc_disjoint_Ioc : Disjoint (ioc a₁ a₂) (ioc b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ := by
   have h : _ ↔ min (toDual a₁) (toDual b₁) ≤ max (toDual a₂) (toDual b₂) := Ico_disjoint_Ico
   simpa only [dual_Ico] using h
 #align set.Ioc_disjoint_Ioc Set.Ioc_disjoint_Ioc
 
 /-- If two half-open intervals are disjoint and the endpoint of one lies in the other,
   then it must be equal to the endpoint of the other. -/
-theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (IcoCat x₁ x₂) (IcoCat y₁ y₂)) (hx : x₁ < x₂)
-    (h2 : x₂ ∈ IcoCat y₁ y₂) : y₁ = x₂ := by
+theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (ico x₁ x₂) (ico y₁ y₂)) (hx : x₁ < x₂)
+    (h2 : x₂ ∈ ico y₁ y₂) : y₁ = x₂ := by
   rw [Ico_disjoint_Ico, min_eq_left (le_of_lt h2.2), le_max_iff] at h
   apply le_antisymm h2.1
   exact h.elim (fun h => absurd hx (not_lt_of_le h)) id
 #align set.eq_of_Ico_disjoint Set.eq_of_Ico_disjoint
 
 @[simp]
-theorem Union_Ico_eq_Iio_self_iff {f : ι → α} {a : α} : (⋃ i, IcoCat (f i) a) = IioCat a ↔ ∀ x < a, ∃ i, f i ≤ x := by
+theorem Union_Ico_eq_Iio_self_iff {f : ι → α} {a : α} : (⋃ i, ico (f i) a) = iio a ↔ ∀ x < a, ∃ i, f i ≤ x := by
   simp [← Ici_inter_Iio, ← Union_inter, subset_def]
 #align set.Union_Ico_eq_Iio_self_iff Set.Union_Ico_eq_Iio_self_iff
 
 @[simp]
-theorem Union_Ioc_eq_Ioi_self_iff {f : ι → α} {a : α} : (⋃ i, IocCat a (f i)) = IoiCat a ↔ ∀ x, a < x → ∃ i, x ≤ f i :=
-  by simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
+theorem Union_Ioc_eq_Ioi_self_iff {f : ι → α} {a : α} : (⋃ i, ioc a (f i)) = ioi a ↔ ∀ x, a < x → ∃ i, x ≤ f i := by
+  simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
 #align set.Union_Ioc_eq_Ioi_self_iff Set.Union_Ioc_eq_Ioi_self_iff
 
 @[simp]
 theorem bUnion_Ico_eq_Iio_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
-    (⋃ (i) (hi : p i), IcoCat (f i hi) a) = IioCat a ↔ ∀ x < a, ∃ i hi, f i hi ≤ x := by
+    (⋃ (i) (hi : p i), ico (f i hi) a) = iio a ↔ ∀ x < a, ∃ i hi, f i hi ≤ x := by
   simp [← Ici_inter_Iio, ← Union_inter, subset_def]
 #align set.bUnion_Ico_eq_Iio_self_iff Set.bUnion_Ico_eq_Iio_self_iff
 
 @[simp]
 theorem bUnion_Ioc_eq_Ioi_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
-    (⋃ (i) (hi : p i), IocCat a (f i hi)) = IoiCat a ↔ ∀ x, a < x → ∃ i hi, x ≤ f i hi := by
+    (⋃ (i) (hi : p i), ioc a (f i hi)) = ioi a ↔ ∀ x, a < x → ∃ i hi, x ≤ f i hi := by
   simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
 #align set.bUnion_Ioc_eq_Ioi_self_iff Set.bUnion_Ioc_eq_Ioi_self_iff
 
@@ -174,7 +174,7 @@ section UnionIxx
 
 variable [LinearOrder α] {s : Set α} {a : α} {f : ι → α}
 
-theorem IsGlb.bUnion_Ioi_eq (h : IsGlb s a) : (⋃ x ∈ s, IoiCat x) = IoiCat a := by
+theorem IsGlb.bUnion_Ioi_eq (h : IsGlb s a) : (⋃ x ∈ s, ioi x) = ioi a := by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ioi_subset_Ioi (h.1 hx)
     
@@ -183,15 +183,15 @@ theorem IsGlb.bUnion_Ioi_eq (h : IsGlb s a) : (⋃ x ∈ s, IoiCat x) = IoiCat a
     
 #align is_glb.bUnion_Ioi_eq IsGlb.bUnion_Ioi_eq
 
-theorem IsGlb.Union_Ioi_eq (h : IsGlb (Range f) a) : (⋃ x, IoiCat (f x)) = IoiCat a :=
+theorem IsGlb.Union_Ioi_eq (h : IsGlb (range f) a) : (⋃ x, ioi (f x)) = ioi a :=
   bUnion_range.symm.trans h.bUnion_Ioi_eq
 #align is_glb.Union_Ioi_eq IsGlb.Union_Ioi_eq
 
-theorem IsLub.bUnion_Iio_eq (h : IsLub s a) : (⋃ x ∈ s, IioCat x) = IioCat a :=
+theorem IsLub.bUnion_Iio_eq (h : IsLub s a) : (⋃ x ∈ s, iio x) = iio a :=
   h.dual.bUnion_Ioi_eq
 #align is_lub.bUnion_Iio_eq IsLub.bUnion_Iio_eq
 
-theorem IsLub.Union_Iio_eq (h : IsLub (Range f) a) : (⋃ x, IioCat (f x)) = IioCat a :=
+theorem IsLub.Union_Iio_eq (h : IsLub (range f) a) : (⋃ x, iio (f x)) = iio a :=
   h.dual.Union_Ioi_eq
 #align is_lub.Union_Iio_eq IsLub.Union_Iio_eq
 

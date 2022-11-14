@@ -89,7 +89,7 @@ variable {α β γ ι M M' N P G H R S : Type _}
 /-- `finsupp α M`, denoted `α →₀ M`, is the type of functions `f : α → M` such that
   `f x = 0` for all but finitely many `x`. -/
 structure Finsupp (α : Type _) (M : Type _) [Zero M] where
-  Support : Finset α
+  support : Finset α
   toFun : α → M
   mem_support_to_fun : ∀ a, a ∈ support ↔ to_fun a ≠ 0
 #align finsupp Finsupp
@@ -162,7 +162,7 @@ theorem zero_apply {a : α} : (0 : α →₀ M) a = 0 :=
 #align finsupp.zero_apply Finsupp.zero_apply
 
 @[simp]
-theorem support_zero : (0 : α →₀ M).Support = ∅ :=
+theorem support_zero : (0 : α →₀ M).support = ∅ :=
   rfl
 #align finsupp.support_zero Finsupp.support_zero
 
@@ -170,16 +170,16 @@ instance : Inhabited (α →₀ M) :=
   ⟨0⟩
 
 @[simp]
-theorem mem_support_iff {f : α →₀ M} : ∀ {a : α}, a ∈ f.Support ↔ f a ≠ 0 :=
+theorem mem_support_iff {f : α →₀ M} : ∀ {a : α}, a ∈ f.support ↔ f a ≠ 0 :=
   f.mem_support_to_fun
 #align finsupp.mem_support_iff Finsupp.mem_support_iff
 
 @[simp, norm_cast]
-theorem fun_support_eq (f : α →₀ M) : Function.Support f = f.Support :=
+theorem fun_support_eq (f : α →₀ M) : Function.support f = f.support :=
   Set.ext fun x => mem_support_iff.symm
 #align finsupp.fun_support_eq Finsupp.fun_support_eq
 
-theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.Support ↔ f a = 0 :=
+theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.support ↔ f a = 0 :=
   not_iff_comm.1 mem_support_iff.symm
 #align finsupp.not_mem_support_iff Finsupp.not_mem_support_iff
 
@@ -187,10 +187,10 @@ theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.Support ↔ f a = 0 
 theorem coe_eq_zero {f : α →₀ M} : (f : α → M) = 0 ↔ f = 0 := by rw [← Finsupp.coe_zero, coe_fn_inj]
 #align finsupp.coe_eq_zero Finsupp.coe_eq_zero
 
-theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.Support = g.Support ∧ ∀ x ∈ f.Support, f x = g x :=
+theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.support = g.support ∧ ∀ x ∈ f.support, f x = g x :=
   ⟨fun h => h ▸ ⟨rfl, fun _ _ => rfl⟩, fun ⟨h₁, h₂⟩ =>
     ext fun a =>
-      if h : a ∈ f.Support then h₂ a h
+      if h : a ∈ f.support then h₂ a h
       else by
         have hf : f a = 0 := not_mem_support_iff.1 h
         have hg : g a = 0 := by rwa [h₁, not_mem_support_iff] at h
@@ -198,11 +198,11 @@ theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.Support = g.Support ∧ ∀ x
 #align finsupp.ext_iff' Finsupp.ext_iff'
 
 @[simp]
-theorem support_eq_empty {f : α →₀ M} : f.Support = ∅ ↔ f = 0 := by
+theorem support_eq_empty {f : α →₀ M} : f.support = ∅ ↔ f = 0 := by
   exact_mod_cast @Function.support_eq_empty_iff _ _ _ f
 #align finsupp.support_eq_empty Finsupp.support_eq_empty
 
-theorem support_nonempty_iff {f : α →₀ M} : f.Support.Nonempty ↔ f ≠ 0 := by
+theorem support_nonempty_iff {f : α →₀ M} : f.support.Nonempty ↔ f ≠ 0 := by
   simp only [Finsupp.support_eq_empty, Finset.nonempty_iff_ne_empty, Ne.def]
 #align finsupp.support_nonempty_iff Finsupp.support_nonempty_iff
 
@@ -210,18 +210,18 @@ theorem nonzero_iff_exists {f : α →₀ M} : f ≠ 0 ↔ ∃ a : α, f a ≠ 0
   simp [← Finsupp.support_eq_empty, Finset.eq_empty_iff_forall_not_mem]
 #align finsupp.nonzero_iff_exists Finsupp.nonzero_iff_exists
 
-theorem card_support_eq_zero {f : α →₀ M} : card f.Support = 0 ↔ f = 0 := by simp
+theorem card_support_eq_zero {f : α →₀ M} : card f.support = 0 ↔ f = 0 := by simp
 #align finsupp.card_support_eq_zero Finsupp.card_support_eq_zero
 
 instance [DecidableEq α] [DecidableEq M] : DecidableEq (α →₀ M) := fun f g =>
-  decidable_of_iff (f.Support = g.Support ∧ ∀ a ∈ f.Support, f a = g a) ext_iff'.symm
+  decidable_of_iff (f.support = g.support ∧ ∀ a ∈ f.support, f a = g a) ext_iff'.symm
 
-theorem finite_support (f : α →₀ M) : Set.Finite (Function.Support f) :=
-  f.fun_support_eq.symm ▸ f.Support.finite_to_set
+theorem finite_support (f : α →₀ M) : Set.Finite (Function.support f) :=
+  f.fun_support_eq.symm ▸ f.support.finite_to_set
 #align finsupp.finite_support Finsupp.finite_support
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ∉ » s) -/
-theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.Support ⊆ s ↔ ∀ (a) (_ : a ∉ s), f a = 0 := by
+theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.support ⊆ s ↔ ∀ (a) (_ : a ∉ s), f a = 0 := by
   simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congr' fun a => not_imp_comm
 #align finsupp.support_subset_iff Finsupp.support_subset_iff
 
@@ -325,11 +325,11 @@ theorem single_of_single_apply (a a' : α) (b : M) : single a ((single a' b) a) 
     
 #align finsupp.single_of_single_apply Finsupp.single_of_single_apply
 
-theorem support_single_ne_zero (a : α) (hb : b ≠ 0) : (single a b).Support = {a} :=
+theorem support_single_ne_zero (a : α) (hb : b ≠ 0) : (single a b).support = {a} :=
   if_neg hb
 #align finsupp.support_single_ne_zero Finsupp.support_single_ne_zero
 
-theorem support_single_subset : (single a b).Support ⊆ {a} :=
+theorem support_single_subset : (single a b).support ⊆ {a} :=
   show ite _ _ _ ⊆ _ by split_ifs <;> [exact empty_subset _, exact subset.refl _]
 #align finsupp.support_single_subset Finsupp.support_single_subset
 
@@ -337,7 +337,7 @@ theorem single_apply_mem (x) : single a b x ∈ ({0, b} : Set M) := by
   rcases em (a = x) with (rfl | hx) <;> [simp, simp [single_eq_of_ne hx]]
 #align finsupp.single_apply_mem Finsupp.single_apply_mem
 
-theorem range_single_subset : Set.Range (single a b) ⊆ {0, b} :=
+theorem range_single_subset : Set.range (single a b) ⊆ {0, b} :=
   Set.range_subset_iff.2 single_apply_mem
 #align finsupp.range_single_subset Finsupp.range_single_subset
 
@@ -354,11 +354,11 @@ theorem single_apply_eq_zero {a x : α} {b : M} : single a b x = 0 ↔ x = a →
 theorem single_apply_ne_zero {a x : α} {b : M} : single a b x ≠ 0 ↔ x = a ∧ b ≠ 0 := by simp [single_apply_eq_zero]
 #align finsupp.single_apply_ne_zero Finsupp.single_apply_ne_zero
 
-theorem mem_support_single (a a' : α) (b : M) : a ∈ (single a' b).Support ↔ a = a' ∧ b ≠ 0 := by
+theorem mem_support_single (a a' : α) (b : M) : a ∈ (single a' b).support ↔ a = a' ∧ b ≠ 0 := by
   simp [single_apply_eq_zero, not_or]
 #align finsupp.mem_support_single Finsupp.mem_support_single
 
-theorem eq_single_iff {f : α →₀ M} {a b} : f = single a b ↔ f.Support ⊆ {a} ∧ f a = b := by
+theorem eq_single_iff {f : α →₀ M} {a b} : f = single a b ↔ f.support ⊆ {a} ∧ f a = b := by
   refine' ⟨fun h => h.symm ▸ ⟨support_single_subset, single_eq_same⟩, _⟩
   rintro ⟨h, rfl⟩
   ext x
@@ -399,12 +399,12 @@ theorem single_left_inj (h : b ≠ 0) : single a b = single a' b ↔ a = a' :=
   (single_left_injective h).eq_iff
 #align finsupp.single_left_inj Finsupp.single_left_inj
 
-theorem support_single_ne_bot (i : α) (h : b ≠ 0) : (single i b).Support ≠ ⊥ := by
+theorem support_single_ne_bot (i : α) (h : b ≠ 0) : (single i b).support ≠ ⊥ := by
   simpa only [support_single_ne_zero _ h] using singleton_ne_empty _
 #align finsupp.support_single_ne_bot Finsupp.support_single_ne_bot
 
 theorem support_single_disjoint {b' : M} (hb : b ≠ 0) (hb' : b' ≠ 0) {i j : α} :
-    Disjoint (single i b).Support (single j b').Support ↔ i ≠ j := by
+    Disjoint (single i b).support (single j b').support ↔ i ≠ j := by
   rw [support_single_ne_zero _ hb, support_single_ne_zero _ hb', disjoint_singleton]
 #align finsupp.support_single_disjoint Finsupp.support_single_disjoint
 
@@ -438,41 +438,41 @@ theorem unique_single_eq_iff [Unique α] {b' : M} : single a b = single a' b' �
   rw [unique_ext_iff, Unique.eq_default a, Unique.eq_default a', single_eq_same, single_eq_same]
 #align finsupp.unique_single_eq_iff Finsupp.unique_single_eq_iff
 
-theorem support_eq_singleton {f : α →₀ M} {a : α} : f.Support = {a} ↔ f a ≠ 0 ∧ f = single a (f a) :=
+theorem support_eq_singleton {f : α →₀ M} {a : α} : f.support = {a} ↔ f a ≠ 0 ∧ f = single a (f a) :=
   ⟨fun h => ⟨mem_support_iff.1 <| h.symm ▸ Finset.mem_singleton_self a, eq_single_iff.2 ⟨subset_of_eq h, rfl⟩⟩, fun h =>
     h.2.symm ▸ support_single_ne_zero _ h.1⟩
 #align finsupp.support_eq_singleton Finsupp.support_eq_singleton
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ≠ » 0) -/
-theorem support_eq_singleton' {f : α →₀ M} {a : α} : f.Support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
+theorem support_eq_singleton' {f : α →₀ M} {a : α} : f.support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
   ⟨fun h =>
     let h := support_eq_singleton.1 h
     ⟨_, h.1, h.2⟩,
     fun ⟨b, hb, hf⟩ => hf.symm ▸ support_single_ne_zero _ hb⟩
 #align finsupp.support_eq_singleton' Finsupp.support_eq_singleton'
 
-theorem card_support_eq_one {f : α →₀ M} : card f.Support = 1 ↔ ∃ a, f a ≠ 0 ∧ f = single a (f a) := by
+theorem card_support_eq_one {f : α →₀ M} : card f.support = 1 ↔ ∃ a, f a ≠ 0 ∧ f = single a (f a) := by
   simp only [card_eq_one, support_eq_singleton]
 #align finsupp.card_support_eq_one Finsupp.card_support_eq_one
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ≠ » 0) -/
-theorem card_support_eq_one' {f : α →₀ M} : card f.Support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b := by
+theorem card_support_eq_one' {f : α →₀ M} : card f.support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b := by
   simp only [card_eq_one, support_eq_singleton']
 #align finsupp.card_support_eq_one' Finsupp.card_support_eq_one'
 
-theorem support_subset_singleton {f : α →₀ M} {a : α} : f.Support ⊆ {a} ↔ f = single a (f a) :=
+theorem support_subset_singleton {f : α →₀ M} {a : α} : f.support ⊆ {a} ↔ f = single a (f a) :=
   ⟨fun h => eq_single_iff.mpr ⟨h, rfl⟩, fun h => (eq_single_iff.mp h).left⟩
 #align finsupp.support_subset_singleton Finsupp.support_subset_singleton
 
-theorem support_subset_singleton' {f : α →₀ M} {a : α} : f.Support ⊆ {a} ↔ ∃ b, f = single a b :=
+theorem support_subset_singleton' {f : α →₀ M} {a : α} : f.support ⊆ {a} ↔ ∃ b, f = single a b :=
   ⟨fun h => ⟨f a, support_subset_singleton.mp h⟩, fun ⟨b, hb⟩ => by rw [hb, support_subset_singleton, single_eq_same]⟩
 #align finsupp.support_subset_singleton' Finsupp.support_subset_singleton'
 
-theorem card_support_le_one [Nonempty α] {f : α →₀ M} : card f.Support ≤ 1 ↔ ∃ a, f = single a (f a) := by
+theorem card_support_le_one [Nonempty α] {f : α →₀ M} : card f.support ≤ 1 ↔ ∃ a, f = single a (f a) := by
   simp only [card_le_one_iff_subset_singleton, support_subset_singleton]
 #align finsupp.card_support_le_one Finsupp.card_support_le_one
 
-theorem card_support_le_one' [Nonempty α] {f : α →₀ M} : card f.Support ≤ 1 ↔ ∃ a b, f = single a b := by
+theorem card_support_le_one' [Nonempty α] {f : α →₀ M} : card f.support ≤ 1 ↔ ∃ a b, f = single a b := by
   simp only [card_le_one_iff_subset_singleton, support_subset_singleton']
 #align finsupp.card_support_le_one' Finsupp.card_support_le_one'
 
@@ -505,7 +505,7 @@ Otherwise, if `a` was not in the `finsupp.support`, it is added to it.
 
 This is the finitely-supported version of `function.update`. -/
 def update : α →₀ M :=
-  ⟨if b = 0 then f.Support.erase a else insert a f.Support, Function.update f a b, fun i => by
+  ⟨if b = 0 then f.support.erase a else insert a f.support, Function.update f a b, fun i => by
     simp only [Function.update_apply, Ne.def]
     split_ifs with hb ha ha hb <;> simp [ha, hb]⟩
 #align finsupp.update Finsupp.update
@@ -528,16 +528,16 @@ theorem zero_update : update 0 a b = single a b := by
 #align finsupp.zero_update Finsupp.zero_update
 
 theorem support_update [DecidableEq α] :
-    support (f.update a b) = if b = 0 then f.Support.erase a else insert a f.Support := by convert rfl
+    support (f.update a b) = if b = 0 then f.support.erase a else insert a f.support := by convert rfl
 #align finsupp.support_update Finsupp.support_update
 
 @[simp]
-theorem support_update_zero [DecidableEq α] : support (f.update a 0) = f.Support.erase a := by convert if_pos rfl
+theorem support_update_zero [DecidableEq α] : support (f.update a 0) = f.support.erase a := by convert if_pos rfl
 #align finsupp.support_update_zero Finsupp.support_update_zero
 
 variable {b}
 
-theorem support_update_ne_zero [DecidableEq α] (h : b ≠ 0) : support (f.update a b) = insert a f.Support := by
+theorem support_update_ne_zero [DecidableEq α] (h : b ≠ 0) : support (f.update a b) = insert a f.support := by
   convert if_neg h
 #align finsupp.support_update_ne_zero Finsupp.support_update_ne_zero
 
@@ -554,13 +554,13 @@ variable [Zero M]
 If `a` is not in the support of `f` then `erase a f = f`.
 -/
 def erase (a : α) (f : α →₀ M) : α →₀ M :=
-  ⟨f.Support.erase a, fun a' => if a' = a then 0 else f a', fun a' => by
+  ⟨f.support.erase a, fun a' => if a' = a then 0 else f a', fun a' => by
     rw [mem_erase, mem_support_iff] <;>
       split_ifs <;> [exact ⟨fun H _ => H.1 h, fun H => (H rfl).elim⟩, exact and_iff_right h]⟩
 #align finsupp.erase Finsupp.erase
 
 @[simp]
-theorem support_erase [DecidableEq α] {a : α} {f : α →₀ M} : (f.erase a).Support = f.Support.erase a := by convert rfl
+theorem support_erase [DecidableEq α] {a : α} {f : α →₀ M} : (f.erase a).support = f.support.erase a := by convert rfl
 #align finsupp.support_erase Finsupp.support_erase
 
 @[simp]
@@ -595,7 +595,7 @@ theorem erase_single_ne {a a' : α} {b : M} (h : a ≠ a') : erase a (single a' 
 #align finsupp.erase_single_ne Finsupp.erase_single_ne
 
 @[simp]
-theorem erase_of_not_mem_support {f : α →₀ M} {a} (haf : a ∉ f.Support) : erase a f = f := by
+theorem erase_of_not_mem_support {f : α →₀ M} {a} (haf : a ∉ f.support) : erase a f = f := by
   ext b
   by_cases hab:b = a
   · rwa [hab, erase_same, eq_comm, ← not_mem_support_iff]
@@ -631,17 +631,17 @@ theorem on_finset_apply {s : Finset α} {f : α → M} {hf a} : (onFinset s f hf
 #align finsupp.on_finset_apply Finsupp.on_finset_apply
 
 @[simp]
-theorem support_on_finset_subset {s : Finset α} {f : α → M} {hf} : (onFinset s f hf).Support ⊆ s :=
+theorem support_on_finset_subset {s : Finset α} {f : α → M} {hf} : (onFinset s f hf).support ⊆ s :=
   filter_subset _ _
 #align finsupp.support_on_finset_subset Finsupp.support_on_finset_subset
 
 @[simp]
 theorem mem_support_on_finset {s : Finset α} {f : α → M} (hf : ∀ a : α, f a ≠ 0 → a ∈ s) {a : α} :
-    a ∈ (Finsupp.onFinset s f hf).Support ↔ f a ≠ 0 := by rw [Finsupp.mem_support_iff, Finsupp.on_finset_apply]
+    a ∈ (Finsupp.onFinset s f hf).support ↔ f a ≠ 0 := by rw [Finsupp.mem_support_iff, Finsupp.on_finset_apply]
 #align finsupp.mem_support_on_finset Finsupp.mem_support_on_finset
 
 theorem support_on_finset {s : Finset α} {f : α → M} (hf : ∀ a : α, f a ≠ 0 → a ∈ s) :
-    (Finsupp.onFinset s f hf).Support = s.filter fun a => f a ≠ 0 :=
+    (Finsupp.onFinset s f hf).support = s.filter fun a => f a ≠ 0 :=
   rfl
 #align finsupp.support_on_finset Finsupp.support_on_finset
 
@@ -652,18 +652,18 @@ section OfSupportFinite
 variable [Zero M]
 
 /-- The natural `finsupp` induced by the function `f` given that it has finite support. -/
-noncomputable def ofSupportFinite (f : α → M) (hf : (Function.Support f).Finite) : α →₀ M where
-  Support := hf.toFinset
+noncomputable def ofSupportFinite (f : α → M) (hf : (Function.support f).Finite) : α →₀ M where
+  support := hf.toFinset
   toFun := f
   mem_support_to_fun _ := hf.mem_to_finset
 #align finsupp.of_support_finite Finsupp.ofSupportFinite
 
-theorem of_support_finite_coe {f : α → M} {hf : (Function.Support f).Finite} : (ofSupportFinite f hf : α → M) = f :=
+theorem of_support_finite_coe {f : α → M} {hf : (Function.support f).Finite} : (ofSupportFinite f hf : α → M) = f :=
   rfl
 #align finsupp.of_support_finite_coe Finsupp.of_support_finite_coe
 
 instance canLift :
-    CanLift (α → M) (α →₀ M) coeFn fun f => (Function.Support f).Finite where prf f hf := ⟨ofSupportFinite f hf, rfl⟩
+    CanLift (α → M) (α →₀ M) coeFn fun f => (Function.support f).Finite where prf f hf := ⟨ofSupportFinite f hf, rfl⟩
 #align finsupp.can_lift Finsupp.canLift
 
 end OfSupportFinite
@@ -689,7 +689,7 @@ bundled (defined in `data/finsupp/basic`):
 * `finsupp.map_range.linear_equiv`
 -/
 def mapRange (f : M → N) (hf : f 0 = 0) (g : α →₀ M) : α →₀ N :=
-  (onFinset g.Support (f ∘ g)) fun a => by rw [mem_support_iff, not_imp_not] <;> exact fun H => (congr_arg f H).trans hf
+  (onFinset g.support (f ∘ g)) fun a => by rw [mem_support_iff, not_imp_not] <;> exact fun H => (congr_arg f H).trans hf
 #align finsupp.map_range Finsupp.mapRange
 
 @[simp]
@@ -712,7 +712,7 @@ theorem map_range_comp (f : N → P) (hf : f 0 = 0) (f₂ : M → N) (hf₂ : f�
   ext fun _ => rfl
 #align finsupp.map_range_comp Finsupp.map_range_comp
 
-theorem support_map_range {f : M → N} {hf : f 0 = 0} {g : α →₀ M} : (mapRange f hf g).Support ⊆ g.Support :=
+theorem support_map_range {f : M → N} {hf : f 0 = 0} {g : α →₀ M} : (mapRange f hf g).support ⊆ g.support :=
   support_on_finset_subset
 #align finsupp.support_map_range Finsupp.support_map_range
 
@@ -722,7 +722,7 @@ theorem map_range_single {f : M → N} {hf : f 0 = 0} {a : α} {b : M} : mapRang
 #align finsupp.map_range_single Finsupp.map_range_single
 
 theorem support_map_range_of_injective {e : M → N} (he0 : e 0 = 0) (f : ι →₀ M) (he : Function.Injective e) :
-    (Finsupp.mapRange e he0 f).Support = f.Support := by
+    (Finsupp.mapRange e he0 f).support = f.support := by
   ext
   simp only [Finsupp.mem_support_iff, Ne.def, Finsupp.map_range_apply]
   exact he.ne_iff' he0
@@ -758,7 +758,7 @@ def embDomain (f : α ↪ β) (v : α →₀ M) : β →₀ M := by
 #align finsupp.emb_domain Finsupp.embDomain
 
 @[simp]
-theorem support_emb_domain (f : α ↪ β) (v : α →₀ M) : (embDomain f v).Support = v.Support.map f :=
+theorem support_emb_domain (f : α ↪ β) (v : α →₀ M) : (embDomain f v).support = v.support.map f :=
   rfl
 #align finsupp.support_emb_domain Finsupp.support_emb_domain
 
@@ -778,7 +778,7 @@ theorem emb_domain_apply (f : α ↪ β) (v : α →₀ M) (a : α) : embDomain 
     
 #align finsupp.emb_domain_apply Finsupp.emb_domain_apply
 
-theorem emb_domain_notin_range (f : α ↪ β) (v : α →₀ M) (a : β) (h : a ∉ Set.Range f) : embDomain f v a = 0 := by
+theorem emb_domain_notin_range (f : α ↪ β) (v : α →₀ M) (a : β) (h : a ∉ Set.range f) : embDomain f v a = 0 := by
   refine' dif_neg (mt (fun h => _) h)
   rcases Finset.mem_map.1 h with ⟨a, h, rfl⟩
   exact Set.mem_range_self a
@@ -801,7 +801,7 @@ theorem emb_domain_eq_zero {f : α ↪ β} {l : α →₀ M} : embDomain f l = 0
 theorem emb_domain_map_range (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg : g 0 = 0) :
     embDomain f (mapRange g hg p) = mapRange g hg (embDomain f p) := by
   ext a
-  by_cases a ∈ Set.Range f
+  by_cases a ∈ Set.range f
   · rcases h with ⟨a', rfl⟩
     rw [map_range_apply, emb_domain_apply, emb_domain_apply, map_range_apply]
     
@@ -834,7 +834,7 @@ theorem single_of_emb_domain_single (l : α →₀ M) (f : α ↪ β) (a : β) (
 @[simp]
 theorem emb_domain_single (f : α ↪ β) (a : α) (m : M) : embDomain f (single a m) = single (f a) m := by
   ext b
-  by_cases h:b ∈ Set.Range f
+  by_cases h:b ∈ Set.range f
   · rcases h with ⟨a', rfl⟩
     simp [single_apply]
     
@@ -858,7 +858,7 @@ variable [Zero M] [Zero N] [Zero P]
 `zip_with f hf g₁ g₂` is the finitely supported function `α →₀ P` satisfying
 `zip_with f hf g₁ g₂ a = f (g₁ a) (g₂ a)`, which is well-defined when `f 0 0 = 0`. -/
 def zipWith (f : M → N → P) (hf : f 0 0 = 0) (g₁ : α →₀ M) (g₂ : α →₀ N) : α →₀ P :=
-  (onFinset (g₁.Support ∪ g₂.Support) fun a => f (g₁ a) (g₂ a)) fun a H => by
+  (onFinset (g₁.support ∪ g₂.support) fun a => f (g₁ a) (g₂ a)) fun a H => by
     simp only [mem_union, mem_support_iff, Ne]
     rw [← not_and_or]
     rintro ⟨h₁, h₂⟩
@@ -873,7 +873,7 @@ theorem zip_with_apply {f : M → N → P} {hf : f 0 0 = 0} {g₁ : α →₀ M}
 #align finsupp.zip_with_apply Finsupp.zip_with_apply
 
 theorem support_zip_with [D : DecidableEq α] {f : M → N → P} {hf : f 0 0 = 0} {g₁ : α →₀ M} {g₂ : α →₀ N} :
-    (zipWith f hf g₁ g₂).Support ⊆ g₁.Support ∪ g₂.Support := by
+    (zipWith f hf g₁ g₂).support ⊆ g₁.support ∪ g₂.support := by
   rw [Subsingleton.elim D] <;> exact support_on_finset_subset
 #align finsupp.support_zip_with Finsupp.support_zip_with
 
@@ -898,19 +898,19 @@ theorem add_apply (g₁ g₂ : α →₀ M) (a : α) : (g₁ + g₂) a = g₁ a 
   rfl
 #align finsupp.add_apply Finsupp.add_apply
 
-theorem support_add [DecidableEq α] {g₁ g₂ : α →₀ M} : (g₁ + g₂).Support ⊆ g₁.Support ∪ g₂.Support :=
+theorem support_add [DecidableEq α] {g₁ g₂ : α →₀ M} : (g₁ + g₂).support ⊆ g₁.support ∪ g₂.support :=
   support_zip_with
 #align finsupp.support_add Finsupp.support_add
 
-theorem support_add_eq [DecidableEq α] {g₁ g₂ : α →₀ M} (h : Disjoint g₁.Support g₂.Support) :
-    (g₁ + g₂).Support = g₁.Support ∪ g₂.Support :=
+theorem support_add_eq [DecidableEq α] {g₁ g₂ : α →₀ M} (h : Disjoint g₁.support g₂.support) :
+    (g₁ + g₂).support = g₁.support ∪ g₂.support :=
   (le_antisymm support_zip_with) fun a ha =>
     (Finset.mem_union.1 ha).elim
       (fun ha => by
-        have : a ∉ g₂.Support := disjoint_left.1 h ha
+        have : a ∉ g₂.support := disjoint_left.1 h ha
         simp only [mem_support_iff, not_not] at * <;> simpa only [add_apply, this, add_zero] )
       fun ha => by
-      have : a ∉ g₁.Support := disjoint_right.1 h ha
+      have : a ∉ g₁.support := disjoint_right.1 h ha
       simp only [mem_support_iff, not_not] at * <;> simpa only [add_apply, this, zero_add]
 #align finsupp.support_add_eq Finsupp.support_add_eq
 
@@ -996,8 +996,8 @@ def eraseAddHom (a : α) : (α →₀ M) →+ α →₀ M where
 
 @[elab_as_elim]
 protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
-    (ha : ∀ (a b) (f : α →₀ M), a ∉ f.Support → b ≠ 0 → p f → p (single a b + f)) : p f :=
-  suffices ∀ (s) (f : α →₀ M), f.Support = s → p f from this _ _ rfl
+    (ha : ∀ (a b) (f : α →₀ M), a ∉ f.support → b ≠ 0 → p f → p (single a b + f)) : p f :=
+  suffices ∀ (s) (f : α →₀ M), f.support = s → p f from this _ _ rfl
   fun s =>
   (Finset.induction_on s fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf => by
     suffices p (single a (f a) + f.erase a) by rwa [single_add_erase] at this
@@ -1014,8 +1014,8 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
 #align finsupp.induction Finsupp.induction
 
 theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
-    (ha : ∀ (a b) (f : α →₀ M), a ∉ f.Support → b ≠ 0 → p f → p (f + single a b)) : p f :=
-  suffices ∀ (s) (f : α →₀ M), f.Support = s → p f from this _ _ rfl
+    (ha : ∀ (a b) (f : α →₀ M), a ∉ f.support → b ≠ 0 → p f → p (f + single a b)) : p f :=
+  suffices ∀ (s) (f : α →₀ M), f.support = s → p f from this _ _ rfl
   fun s =>
   (Finset.induction_on s fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf => by
     suffices p (f.erase a + single a (f a)) by rwa [erase_add_single] at this
@@ -1086,7 +1086,7 @@ def embDomain.addMonoidHom (f : α ↪ β) : (α →₀ M) →+ β →₀ M wher
   map_zero' := by simp
   map_add' v w := by
     ext b
-    by_cases h:b ∈ Set.Range f
+    by_cases h:b ∈ Set.range f
     · rcases h with ⟨a, rfl⟩
       simp
       

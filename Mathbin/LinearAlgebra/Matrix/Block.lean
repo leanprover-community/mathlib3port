@@ -200,7 +200,7 @@ theorem two_block_triangular_det' (M : Matrix m m R) (p : m → Prop) [Decidable
 #align matrix.two_block_triangular_det' Matrix.two_block_triangular_det'
 
 protected theorem BlockTriangular.det [DecidableEq α] [LinearOrder α] (hM : BlockTriangular M b) :
-    M.det = ∏ a in univ.Image b, (M.toSquareBlock b a).det := by
+    M.det = ∏ a in univ.image b, (M.toSquareBlock b a).det := by
   induction' hs : univ.image b using Finset.strongInduction with s ih generalizing m
   subst hs
   cases isEmpty_or_nonempty m

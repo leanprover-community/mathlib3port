@@ -67,7 +67,7 @@ impose here that the `ℤ`-multiplication field from the module structure is def
 from the `is_add_comm_group` structure (contrary to what we do for all module structures in
 mathlib), which creates some difficulties down the road. -/
 structure ModuleCat where
-  Carrier : Type v
+  carrier : Type v
   [isAddCommGroup : AddCommGroup carrier]
   [isModule : Module R carrier]
 #align Module ModuleCat

@@ -34,7 +34,7 @@ variable {α : Type _} [LinearOrder α]
 equipped with the lexicographic order.
 -/
 def graph (f : Fin n → α) : Finset (α ×ₗ Fin n) :=
-  Finset.univ.Image fun i => (f i, i)
+  Finset.univ.image fun i => (f i, i)
 #align tuple.graph Tuple.graph
 
 /-- Given `p : α ×ₗ (fin n) := (f i, i)` with `p ∈ graph f`,

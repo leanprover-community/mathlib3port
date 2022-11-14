@@ -29,13 +29,13 @@ variable (M : Type _) [Monoid M]
 /-- The center of a monoid `M` is the set of elements that commute with everything in `M` -/
 @[to_additive "The center of a monoid `M` is the set of elements that commute with everything in\n`M`"]
 def center : Submonoid M where
-  Carrier := Set.Center M
+  carrier := Set.center M
   one_mem' := Set.one_mem_center M
   mul_mem' a b := Set.mul_mem_center
 #align submonoid.center Submonoid.center
 
 @[to_additive]
-theorem coe_center : ↑(center M) = Set.Center M :=
+theorem coe_center : ↑(center M) = Set.center M :=
   rfl
 #align submonoid.coe_center Submonoid.coe_center
 

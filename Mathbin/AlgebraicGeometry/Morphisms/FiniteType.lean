@@ -36,10 +36,10 @@ variable {X Y : SchemeCat.{u}} (f : X ⟶ Y)
 @[mk_iff]
 class LocallyOfFiniteType (f : X ⟶ Y) : Prop where
   finiteTypeOfAffineSubset :
-    ∀ (U : Y.AffineOpens) (V : X.AffineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1), (f.appLe e).FiniteType
+    ∀ (U : Y.affineOpens) (V : X.affineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1), (f.appLe e).FiniteType
 #align algebraic_geometry.locally_of_finite_type AlgebraicGeometry.LocallyOfFiniteType
 
-theorem locally_of_finite_type_eq : @LocallyOfFiniteType = AffineLocally @RingHom.FiniteType := by
+theorem locally_of_finite_type_eq : @LocallyOfFiniteType = affineLocally @RingHom.FiniteType := by
   ext (X Y f)
   rw [locally_of_finite_type_iff, affine_locally_iff_affine_opens_le]
   exact RingHom.finiteTypeRespectsIso

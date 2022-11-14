@@ -870,7 +870,7 @@ unsafe def simp_bottom_up' (post : expr → tactic (expr × expr)) (e : expr) (c
 /-- Caches unary type classes on a type `α : Type.{univ}`. -/
 unsafe structure instance_cache where
   α : expr
-  Univ : level
+  univ : level
   inst : name_map expr
 #align tactic.instance_cache tactic.instance_cache
 

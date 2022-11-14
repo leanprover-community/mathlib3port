@@ -43,7 +43,7 @@ variable (R) [CommSemiring R]
 
 /-- The submodule corresponding to each grade given by the degree function `f`. -/
 abbrev gradeBy (f : M → ι) (i : ι) : Submodule R (AddMonoidAlgebra R M) :=
-  { Carrier := { a | ∀ m, m ∈ a.Support → f m = i }, zero_mem' := Set.empty_subset _,
+  { carrier := { a | ∀ m, m ∈ a.support → f m = i }, zero_mem' := Set.empty_subset _,
     add_mem' := fun a b ha hb m h => Or.rec_on (Finset.mem_union.mp (Finsupp.support_add h)) (ha m) (hb m),
     smul_mem' := fun a m h => Set.Subset.trans Finsupp.support_smul h }
 #align add_monoid_algebra.grade_by AddMonoidAlgebra.gradeBy
@@ -57,10 +57,10 @@ theorem grade_by_id : gradeBy R (id : M → M) = grade R := by rfl
 #align add_monoid_algebra.grade_by_id AddMonoidAlgebra.grade_by_id
 
 theorem mem_grade_by_iff (f : M → ι) (i : ι) (a : AddMonoidAlgebra R M) :
-    a ∈ gradeBy R f i ↔ (a.Support : Set M) ⊆ f ⁻¹' {i} := by rfl
+    a ∈ gradeBy R f i ↔ (a.support : Set M) ⊆ f ⁻¹' {i} := by rfl
 #align add_monoid_algebra.mem_grade_by_iff AddMonoidAlgebra.mem_grade_by_iff
 
-theorem mem_grade_iff (m : M) (a : AddMonoidAlgebra R M) : a ∈ grade R m ↔ a.Support ⊆ {m} := by
+theorem mem_grade_iff (m : M) (a : AddMonoidAlgebra R M) : a ∈ grade R m ↔ a.support ⊆ {m} := by
   rw [← Finset.coe_subset, Finset.coe_singleton]
   rfl
 #align add_monoid_algebra.mem_grade_iff AddMonoidAlgebra.mem_grade_iff
@@ -164,7 +164,7 @@ theorem decompose_aux_coe {i : ι} (x : gradeBy R f i) : decomposeAux f ↑x = D
     exact AddMonoidHom.map_zero _
     
   · intro m b y hmy hb ih hmby
-    have : Disjoint (Finsupp.single m b).Support y.support := by
+    have : Disjoint (Finsupp.single m b).support y.support := by
       simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
     rw [mem_grade_by_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff] at hmby
     cases' hmby with h1 h2

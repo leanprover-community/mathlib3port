@@ -85,41 +85,41 @@ def Coloring.mk (color : V → α) (valid : ∀ {v w : V}, G.Adj v w → color v
 
 /-- The color class of a given color.
 -/
-def Coloring.ColorClass (c : α) : Set V :=
+def Coloring.colorClass (c : α) : Set V :=
   { v : V | C v = c }
-#align simple_graph.coloring.color_class SimpleGraph.Coloring.ColorClass
+#align simple_graph.coloring.color_class SimpleGraph.Coloring.colorClass
 
 /-- The set containing all color classes. -/
-def Coloring.ColorClasses : Set (Set V) :=
-  (Setoid.ker C).Classes
-#align simple_graph.coloring.color_classes SimpleGraph.Coloring.ColorClasses
+def Coloring.colorClasses : Set (Set V) :=
+  (Setoid.ker C).classes
+#align simple_graph.coloring.color_classes SimpleGraph.Coloring.colorClasses
 
-theorem Coloring.mem_color_class (v : V) : v ∈ C.ColorClass (C v) :=
+theorem Coloring.mem_color_class (v : V) : v ∈ C.colorClass (C v) :=
   rfl
 #align simple_graph.coloring.mem_color_class SimpleGraph.Coloring.mem_color_class
 
-theorem Coloring.color_classes_is_partition : Setoid.IsPartition C.ColorClasses :=
+theorem Coloring.color_classes_is_partition : Setoid.IsPartition C.colorClasses :=
   Setoid.is_partition_classes (Setoid.ker C)
 #align simple_graph.coloring.color_classes_is_partition SimpleGraph.Coloring.color_classes_is_partition
 
-theorem Coloring.mem_color_classes {v : V} : C.ColorClass (C v) ∈ C.ColorClasses :=
+theorem Coloring.mem_color_classes {v : V} : C.colorClass (C v) ∈ C.colorClasses :=
   ⟨v, rfl⟩
 #align simple_graph.coloring.mem_color_classes SimpleGraph.Coloring.mem_color_classes
 
-theorem Coloring.color_classes_finite [Finite α] : C.ColorClasses.Finite :=
+theorem Coloring.color_classes_finite [Finite α] : C.colorClasses.Finite :=
   Setoid.finite_classes_ker _
 #align simple_graph.coloring.color_classes_finite SimpleGraph.Coloring.color_classes_finite
 
-theorem Coloring.card_color_classes_le [Fintype α] [Fintype C.ColorClasses] :
-    Fintype.card C.ColorClasses ≤ Fintype.card α :=
+theorem Coloring.card_color_classes_le [Fintype α] [Fintype C.colorClasses] :
+    Fintype.card C.colorClasses ≤ Fintype.card α :=
   Setoid.card_classes_ker_le C
 #align simple_graph.coloring.card_color_classes_le SimpleGraph.Coloring.card_color_classes_le
 
-theorem Coloring.not_adj_of_mem_color_class {c : α} {v w : V} (hv : v ∈ C.ColorClass c) (hw : w ∈ C.ColorClass c) :
+theorem Coloring.not_adj_of_mem_color_class {c : α} {v w : V} (hv : v ∈ C.colorClass c) (hw : w ∈ C.colorClass c) :
     ¬G.Adj v w := fun h => C.valid h (Eq.trans hv (Eq.symm hw))
 #align simple_graph.coloring.not_adj_of_mem_color_class SimpleGraph.Coloring.not_adj_of_mem_color_class
 
-theorem Coloring.color_classes_independent (c : α) : IsAntichain G.Adj (C.ColorClass c) := fun v hv w hw h =>
+theorem Coloring.color_classes_independent (c : α) : IsAntichain G.Adj (C.colorClass c) := fun v hv w hw h =>
   C.not_adj_of_mem_color_class hv hw
 #align simple_graph.coloring.color_classes_independent SimpleGraph.Coloring.color_classes_independent
 

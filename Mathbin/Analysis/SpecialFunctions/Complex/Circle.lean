@@ -49,8 +49,8 @@ namespace circle
 noncomputable def argLocalEquiv : LocalEquiv circle ℝ where
   toFun := arg ∘ coe
   invFun := expMapCircle
-  Source := Univ
-  Target := IocCat (-π) π
+  source := univ
+  target := ioc (-π) π
   map_source' z _ := ⟨neg_pi_lt_arg _, arg_le_pi _⟩
   map_target' := maps_to_univ _ _
   left_inv' z _ := exp_map_circle_arg z
@@ -59,7 +59,7 @@ noncomputable def argLocalEquiv : LocalEquiv circle ℝ where
 
 /-- `complex.arg` and `exp_map_circle` define an equivalence between `circle and `(-π, π]`. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def argEquiv : circle ≃ IocCat (-π) π where
+noncomputable def argEquiv : circle ≃ ioc (-π) π where
   toFun z := ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
   invFun := expMapCircle ∘ coe
   left_inv z := argLocalEquiv.left_inv trivial
@@ -72,11 +72,11 @@ theorem left_inverse_exp_map_circle_arg : LeftInverse expMapCircle (arg ∘ coe)
   exp_map_circle_arg
 #align left_inverse_exp_map_circle_arg left_inverse_exp_map_circle_arg
 
-theorem inv_on_arg_exp_map_circle : InvOn (arg ∘ coe) expMapCircle (IocCat (-π) π) Univ :=
+theorem inv_on_arg_exp_map_circle : InvOn (arg ∘ coe) expMapCircle (ioc (-π) π) univ :=
   circle.argLocalEquiv.symm.InvOn
 #align inv_on_arg_exp_map_circle inv_on_arg_exp_map_circle
 
-theorem surj_on_exp_map_circle_neg_pi_pi : SurjOn expMapCircle (IocCat (-π) π) Univ :=
+theorem surj_on_exp_map_circle_neg_pi_pi : SurjOn expMapCircle (ioc (-π) π) univ :=
   circle.argLocalEquiv.symm.SurjOn
 #align surj_on_exp_map_circle_neg_pi_pi surj_on_exp_map_circle_neg_pi_pi
 

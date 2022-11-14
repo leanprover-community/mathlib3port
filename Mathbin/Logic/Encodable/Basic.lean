@@ -193,8 +193,8 @@ theorem decode₂_encode [Encodable α] (a : α) : decode₂ α (encode a) = som
   simp [mem_decode₂, eq_comm]
 #align encodable.decode₂_encode Encodable.decode₂_encode
 
-theorem decode₂_ne_none_iff [Encodable α] {n : ℕ} : decode₂ α n ≠ none ↔ n ∈ Set.Range (encode : α → ℕ) := by
-  simp_rw [Set.Range, Set.mem_set_of_eq, Ne.def, Option.eq_none_iff_forall_not_mem, Encodable.mem_decode₂, not_forall,
+theorem decode₂_ne_none_iff [Encodable α] {n : ℕ} : decode₂ α n ≠ none ↔ n ∈ Set.range (encode : α → ℕ) := by
+  simp_rw [Set.range, Set.mem_set_of_eq, Ne.def, Option.eq_none_iff_forall_not_mem, Encodable.mem_decode₂, not_forall,
     not_not]
 #align encodable.decode₂_ne_none_iff Encodable.decode₂_ne_none_iff
 
@@ -210,14 +210,14 @@ theorem encodek₂ [Encodable α] (a : α) : decode₂ α (encode a) = some a :=
 #align encodable.encodek₂ Encodable.encodek₂
 
 /-- The encoding function has decidable range. -/
-def decidableRangeEncode (α : Type _) [Encodable α] : DecidablePred (· ∈ Set.Range (@encode α _)) := fun x =>
+def decidableRangeEncode (α : Type _) [Encodable α] : DecidablePred (· ∈ Set.range (@encode α _)) := fun x =>
   decidable_of_iff (Option.isSome (decode₂ α x))
     ⟨fun h => ⟨Option.get h, by rw [← decode₂_is_partial_inv (Option.get h), Option.some_get]⟩, fun ⟨n, hn⟩ => by
       rw [← hn, encodek₂] <;> exact rfl⟩
 #align encodable.decidable_range_encode Encodable.decidableRangeEncode
 
 /-- An encodable type is equivalent to the range of its encoding function. -/
-def equivRangeEncode (α : Type _) [Encodable α] : α ≃ Set.Range (@encode α _) where
+def equivRangeEncode (α : Type _) [Encodable α] : α ≃ Set.range (@encode α _) where
   toFun := fun a : α => ⟨encode a, Set.mem_range_self _⟩
   invFun n := Option.get (show isSome (decode₂ α n.1) by cases' n.2 with x hx <;> rw [← hx, encodek₂] <;> exact rfl)
   left_inv a := by dsimp <;> rw [← Option.some_inj, Option.some_get, encodek₂]
@@ -454,7 +454,7 @@ attribute [local instance] Encodable.decidableRangeEncode
 
 /-- `ulower α : Type` is an equivalent type in the lowest universe, given `encodable α`. -/
 def Ulower (α : Type _) [Encodable α] : Type :=
-  Set.Range (Encodable.encode : α → ℕ)deriving DecidableEq, Encodable
+  Set.range (Encodable.encode : α → ℕ)deriving DecidableEq, Encodable
 #align ulower Ulower
 
 end Ulower

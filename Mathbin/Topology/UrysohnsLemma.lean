@@ -88,7 +88,7 @@ structure CU (X : Type _) [TopologicalSpace X] where
 #align urysohns.CU Urysohns.CU
 
 instance : Inhabited (CU X) :=
-  ⟨⟨∅, Univ, isClosedEmpty, is_open_univ, empty_subset _⟩⟩
+  ⟨⟨∅, univ, isClosedEmpty, is_open_univ, empty_subset _⟩⟩
 
 variable [NormalSpace X]
 
@@ -109,7 +109,7 @@ def left (c : CU X) : CU X where
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.right` is the pair `(closure u, c.U)`. -/
 @[simps U]
 def right (c : CU X) : CU X where
-  c := Closure (normal_exists_closure_subset c.closedC c.open_U c.Subset).some
+  c := closure (normal_exists_closure_subset c.closedC c.open_U c.Subset).some
   U := c.U
   closedC := isClosedClosure
   open_U := c.open_U
@@ -193,7 +193,7 @@ theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (
 #align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_U_sub_C
 
 theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
-    c.approx n x ∈ IccCat (c.right.approx n x) (c.left.approx n x) := by
+    c.approx n x ∈ icc (c.right.approx n x) (c.left.approx n x) := by
   induction' n with n ihn generalizing c
   · exact ⟨le_rfl, indicator_le_indicator_of_subset (compl_subset_compl.2 c.left_U_subset) (fun _ => zero_le_one) _⟩
     
@@ -256,7 +256,7 @@ theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
   csupr_le fun n => c.approx_le_one _ _
 #align urysohns.CU.lim_le_one Urysohns.CU.lim_le_one
 
-theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ IccCat (0 : ℝ) 1 :=
+theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ icc (0 : ℝ) 1 :=
   ⟨c.lim_nonneg x, c.lim_le_one x⟩
 #align urysohns.CU.lim_mem_Icc Urysohns.CU.lim_mem_Icc
 
@@ -318,7 +318,7 @@ then there exists a continuous function `f : X → ℝ` such that
 * `0 ≤ f x ≤ 1` for all `x`.
 -/
 theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
-    ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ IccCat (0 : ℝ) 1 := by
+    ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1 := by
   -- The actual proof is in the code above. Here we just repack it into the expected format.
   set c : Urysohns.CU X := ⟨s, tᶜ, hs, ht.is_open_compl, disjoint_left.1 hd⟩
   exact ⟨⟨c.lim, c.continuous_lim⟩, c.lim_of_mem_C, fun x hx => c.lim_of_nmem_U _ fun h => h hx, c.lim_mem_Icc⟩

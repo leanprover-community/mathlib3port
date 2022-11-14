@@ -394,7 +394,7 @@ inferrable. -/
 @[to_additive
       " An additive monoid homomorphism is naturally an `add_freiman_hom` on its entire\ndomain.\n\nWe can't leave the domain `A : set α` of the `freiman_hom` a free variable, since it wouldn't be\ninferrable."]
 instance MonoidHom.freimanHomClass :
-    FreimanHomClass (α →* β) Set.Univ β
+    FreimanHomClass (α →* β) Set.univ β
       n where map_prod_eq_map_prod' f s t _ _ _ _ h := by rw [← f.map_multiset_prod, h, f.map_multiset_prod]
 #align monoid_hom.freiman_hom_class MonoidHom.freimanHomClass
 

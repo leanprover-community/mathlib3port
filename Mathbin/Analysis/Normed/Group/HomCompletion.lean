@@ -200,7 +200,7 @@ theorem NormedAddGroupHom.ker_le_ker_completion (f : NormedAddGroupHom G H) :
 #align normed_add_group_hom.ker_le_ker_completion NormedAddGroupHom.ker_le_ker_completion
 
 theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ} (h : f.SurjectiveOnWith f.range C) :
-    (f.Completion.ker : Set <| Completion G) = Closure (toCompl.comp <| incl f.ker).range := by
+    (f.Completion.ker : Set <| Completion G) = closure (toCompl.comp <| incl f.ker).range := by
   rcases h.exists_pos with ⟨C', C'_pos, hC'⟩
   apply le_antisymm
   · intro hatg hatg_in

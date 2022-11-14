@@ -75,13 +75,13 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   have key₁ : (chart_at E p).symm ⁻¹' s ∈ 𝓝 (chart_at E p p) := by
     rw [← Filter.mem_map, (chart_at E p).symm_map_nhds_eq (mem_chart_source E p)]
     exact hps'
-  have key₂ : (chart_at E p).Target ∈ 𝓝 (chart_at E p p) :=
+  have key₂ : (chart_at E p).target ∈ 𝓝 (chart_at E p p) :=
     (LocalHomeomorph.open_target _).mem_nhds (mem_chart_target E p)
   -- `f` pulled back by the chart at `p` is differentiable around `chart_at E p p`
   have hf' : ∀ᶠ z : E in 𝓝 (chart_at E p p), DifferentiableAt ℂ (f ∘ (chart_at E p).symm) z := by
     refine' Filter.eventually_of_mem key₂ fun z hz => _
-    have H₁ : (chart_at E p).symm z ∈ (chart_at E p).Source := (chart_at E p).map_target hz
-    have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).Source := trivial
+    have H₁ : (chart_at E p).symm z ∈ (chart_at E p).source := (chart_at E p).map_target hz
+    have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).source := trivial
     have H := (mdifferentiable_at_iff_of_mem_source H₁ H₂).mp (hf ((chart_at E p).symm z))
     simp only [differentiable_within_at_univ, mfld_simps] at H
     simpa [LocalHomeomorph.right_inv _ hz] using H.2
@@ -93,7 +93,7 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   -- so by the maximum principle `f` is equal to `f p` near `p`
   obtain ⟨U, hU, hUf⟩ := (Complex.eventually_eq_of_is_local_max_norm hf' hf'').exists_mem
   have H₁ : chart_at E p ⁻¹' U ∈ 𝓝 p := (chart_at E p).ContinuousAt (mem_chart_source E p) hU
-  have H₂ : (chart_at E p).Source ∈ 𝓝 p := (LocalHomeomorph.open_source _).mem_nhds (mem_chart_source E p)
+  have H₂ : (chart_at E p).source ∈ 𝓝 p := (LocalHomeomorph.open_source _).mem_nhds (mem_chart_source E p)
   apply Filter.mem_of_superset (Filter.inter_mem hps' (Filter.inter_mem H₁ H₂))
   rintro q ⟨hqs, hq : chart_at E p q ∈ _, hq'⟩
   refine' ⟨_, hqs⟩

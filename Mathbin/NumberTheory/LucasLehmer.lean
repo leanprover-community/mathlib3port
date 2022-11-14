@@ -100,7 +100,7 @@ theorem mersenne_int_ne_zero (p : ℕ) (w : 0 < p) : (2 ^ p - 1 : ℤ) ≠ 0 := 
 
 theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i := by
   cases i <;> dsimp [s_mod]
-  · exact sup_eq_left.mp rfl
+  · exact sup_eq_right.mp rfl
     
   · apply Int.mod_nonneg
     exact mersenne_int_ne_zero p w

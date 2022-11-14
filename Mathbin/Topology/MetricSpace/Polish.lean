@@ -194,7 +194,7 @@ theorem exists_polish_space_forall_le {ι : Type _} [Countable ι] [t : Topologi
   -- show that the induced topology is finer than all the `m n`.
   have T_le_m : ∀ n, T.induced f ≤ m n := by
     intro n s hs
-    refine' ⟨Set.Pi ({n} : Set ι) fun i => s, _, _⟩
+    refine' ⟨Set.pi ({n} : Set ι) fun i => s, _, _⟩
     · apply is_open_set_pi (finite_singleton _)
       intro a ha
       rw [mem_singleton_iff.1 ha]

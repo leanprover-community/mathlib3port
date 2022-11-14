@@ -184,7 +184,7 @@ variable (R φ)
 
 /-- If `I` and `J` are disjoint index sets, the product of the kernels of the `J`th projections of
 `φ` is linearly equivalent to the product over `I`. -/
-def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J) :
+def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.univ ⊆ I ∪ J) :
     (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) : Submodule R (∀ i, φ i)) ≃ₗ[R] ∀ i : I, φ i := by
   refine'
     LinearEquiv.ofLinear (pi fun i => (proj (i : ι)).comp (Submodule.subtype _))
@@ -248,7 +248,7 @@ open LinearMap
 `p : Π i, submodule R (φ i)`, `pi I s` is the submodule of dependent functions `f : Π i, φ i`
 such that `f i` belongs to `p a` whenever `i ∈ I`. -/
 def pi (I : Set ι) (p : ∀ i, Submodule R (φ i)) : Submodule R (∀ i, φ i) where
-  Carrier := Set.Pi I fun i => p i
+  carrier := Set.pi I fun i => p i
   zero_mem' i hi := (p i).zero_mem
   add_mem' x y hx hy i hi := (p i).add_mem (hx i hi) (hy i hi)
   smul_mem' c x hx i hi := (p i).smul_mem c (hx i hi)
@@ -262,7 +262,7 @@ theorem mem_pi : x ∈ pi I p ↔ ∀ i ∈ I, x i ∈ p i :=
 #align submodule.mem_pi Submodule.mem_pi
 
 @[simp, norm_cast]
-theorem coe_pi : (pi I p : Set (∀ i, φ i)) = Set.Pi I fun i => p i :=
+theorem coe_pi : (pi I p : Set (∀ i, φ i)) = Set.pi I fun i => p i :=
   rfl
 #align submodule.coe_pi Submodule.coe_pi
 
@@ -285,13 +285,13 @@ theorem binfi_comap_proj : (⨅ i ∈ I, comap (proj i : (∀ i, φ i) →ₗ[R]
   simp
 #align submodule.binfi_comap_proj Submodule.binfi_comap_proj
 
-theorem infi_comap_proj : (⨅ i, comap (proj i : (∀ i, φ i) →ₗ[R] φ i) (p i)) = pi Set.Univ p := by
+theorem infi_comap_proj : (⨅ i, comap (proj i : (∀ i, φ i) →ₗ[R] φ i) (p i)) = pi Set.univ p := by
   ext x
   simp
 #align submodule.infi_comap_proj Submodule.infi_comap_proj
 
 theorem supr_map_single [DecidableEq ι] [Finite ι] :
-    (⨆ i, map (LinearMap.single i : φ i →ₗ[R] ∀ i, φ i) (p i)) = pi Set.Univ p := by
+    (⨆ i, map (LinearMap.single i : φ i →ₗ[R] ∀ i, φ i) (p i)) = pi Set.univ p := by
   cases nonempty_fintype ι
   refine' (supr_le fun i => _).antisymm _
   · rintro _ ⟨x, hx : x ∈ p i, rfl⟩ j -
@@ -304,7 +304,7 @@ theorem supr_map_single [DecidableEq ι] [Finite ι] :
 #align submodule.supr_map_single Submodule.supr_map_single
 
 theorem le_comap_single_pi [DecidableEq ι] (p : ∀ i, Submodule R (φ i)) {i} :
-    p i ≤ Submodule.comap (LinearMap.single i : φ i →ₗ[R] _) (Submodule.pi Set.Univ p) := by
+    p i ≤ Submodule.comap (LinearMap.single i : φ i →ₗ[R] _) (Submodule.pi Set.univ p) := by
   intro x hx
   rw [Submodule.mem_comap, Submodule.mem_pi]
   rintro j -

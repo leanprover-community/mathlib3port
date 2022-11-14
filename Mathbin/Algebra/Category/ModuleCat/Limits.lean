@@ -45,7 +45,7 @@ instance moduleObj (F : J ⥤ ModuleCat.{max v w} R) (j) : Module R ((F ⋙ forg
 def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.obj j) :=
   { AddGroupCat.sectionsAddSubgroup
       (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v w} ⋙ forget₂ AddCommGroupCat AddGroupCat.{max v w}) with
-    Carrier := (F ⋙ forget (ModuleCat R)).sections,
+    carrier := (F ⋙ forget (ModuleCat R)).sections,
     smul_mem' := fun r s sh j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
       dsimp [functor.sections] at sh

@@ -49,7 +49,7 @@ variable (A : Type v) [Category.{u} A]
 for each covering sieve `T` in `D`, `T ∩ mor(C)` generates a covering sieve in `D`.
 -/
 def LocallyCoverDense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop :=
-  ∀ ⦃X⦄ (T : K (G.obj X)), (T.val.FunctorPullback G).FunctorPushforward G ∈ K (G.obj X)
+  ∀ ⦃X⦄ (T : K (G.obj X)), (T.val.functorPullback G).functorPushforward G ∈ K (G.obj X)
 #align category_theory.locally_cover_dense CategoryTheory.LocallyCoverDense
 
 namespace LocallyCoverDense
@@ -59,7 +59,7 @@ variable [Full G] [Faithful G] (Hld : LocallyCoverDense K G)
 include Hld
 
 theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
-    K _ (S.FunctorPushforward G) ↔ ∃ T : K (G.obj X), T.val.FunctorPullback G = S := by
+    K _ (S.functorPushforward G) ↔ ∃ T : K (G.obj X), T.val.functorPullback G = S := by
   constructor
   · intro hS
     exact ⟨⟨_, hS⟩, (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S⟩
@@ -75,13 +75,13 @@ then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
 -/
 @[simps]
 def inducedTopology : GrothendieckTopology C where
-  Sieves X S := K _ (S.FunctorPushforward G)
+  sieves X S := K _ (S.functorPushforward G)
   top_mem' X := by
     change K _ _
     rw [sieve.functor_pushforward_top]
     exact K.top_mem _
   pullback_stable' X Y S f hS := by
-    have : S.pullback f = ((S.functor_pushforward G).pullback (G.map f)).FunctorPullback G := by
+    have : S.pullback f = ((S.functor_pushforward G).pullback (G.map f)).functorPullback G := by
       conv_lhs => rw [← (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S]
       ext
       change (S.functor_pushforward G) _ ↔ (S.functor_pushforward G) _

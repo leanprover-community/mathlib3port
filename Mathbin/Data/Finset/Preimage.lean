@@ -76,7 +76,7 @@ theorem monotone_preimage {f : α → β} (h : Injective f) : Monotone fun s => 
 #align finset.monotone_preimage Finset.monotone_preimage
 
 theorem image_subset_iff_subset_preimage [DecidableEq β] {f : α → β} {s : Finset α} {t : Finset β}
-    (hf : Set.InjOn f (f ⁻¹' ↑t)) : s.Image f ⊆ t ↔ s ⊆ t.Preimage f hf :=
+    (hf : Set.InjOn f (f ⁻¹' ↑t)) : s.image f ⊆ t ↔ s ⊆ t.Preimage f hf :=
   image_subset_iff.trans <| by simp only [subset_iff, mem_preimage]
 #align finset.image_subset_iff_subset_preimage Finset.image_subset_iff_subset_preimage
 
@@ -186,8 +186,8 @@ theorem
   := by skip <;> rw [ map_eq_image , image_subset_iff_subset_preimage ]
 #align finset.map_subset_iff_subset_preimage Finset.map_subset_iff_subset_preimage
 
-theorem image_preimage [DecidableEq β] (f : α → β) (s : Finset β) [∀ x, Decidable (x ∈ Set.Range f)]
-    (hf : Set.InjOn f (f ⁻¹' ↑s)) : image f (preimage s f hf) = s.filter fun x => x ∈ Set.Range f :=
+theorem image_preimage [DecidableEq β] (f : α → β) (s : Finset β) [∀ x, Decidable (x ∈ Set.range f)]
+    (hf : Set.InjOn f (f ⁻¹' ↑s)) : image f (preimage s f hf) = s.filter fun x => x ∈ Set.range f :=
   Finset.coe_inj.1 <| by
     simp only [coe_image, coe_preimage, coe_filter, Set.image_preimage_eq_inter_range, Set.sep_mem_eq]
 #align finset.image_preimage Finset.image_preimage
@@ -216,32 +216,32 @@ theorem sigma_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σa
 #align finset.sigma_preimage_mk Finset.sigma_preimage_mk
 
 theorem sigma_preimage_mk_of_subset {β : α → Type _} [DecidableEq α] (s : Finset (Σa, β a)) {t : Finset α}
-    (ht : s.Image Sigma.fst ⊆ t) : (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) = s := by
+    (ht : s.image Sigma.fst ⊆ t) : (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) = s := by
   rw [sigma_preimage_mk, filter_true_of_mem <| image_subset_iff.1 ht]
 #align finset.sigma_preimage_mk_of_subset Finset.sigma_preimage_mk_of_subset
 
 theorem sigma_image_fst_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σa, β a)) :
-    ((s.Image Sigma.fst).Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) = s :=
+    ((s.image Sigma.fst).Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) = s :=
   s.sigma_preimage_mk_of_subset (Subset.refl _)
 #align finset.sigma_image_fst_preimage_mk Finset.sigma_image_fst_preimage_mk
 
 end Preimage
 
 @[to_additive]
-theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x ∈ Set.Range f] (s : Finset γ)
+theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x ∈ Set.range f] (s : Finset γ)
     (hf : Set.InjOn f (f ⁻¹' ↑s)) (g : γ → β) :
-    (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s.filter fun x => x ∈ Set.Range f, g x := by
+    (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s.filter fun x => x ∈ Set.range f, g x := by
   haveI := Classical.decEq γ <;>
     calc
       (∏ x in preimage s f hf, g (f x)) = ∏ x in image f (preimage s f hf), g x :=
         Eq.symm <| prod_image <| by simpa only [mem_preimage, inj_on] using hf
-      _ = ∏ x in s.filter fun x => x ∈ Set.Range f, g x := by rw [image_preimage]
+      _ = ∏ x in s.filter fun x => x ∈ Set.range f, g x := by rw [image_preimage]
       
 #align finset.prod_preimage' Finset.prod_preimage'
 
 @[to_additive]
 theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s)) (g : γ → β)
-    (hg : ∀ x ∈ s, x ∉ Set.Range f → g x = 1) : (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s, g x := by
+    (hg : ∀ x ∈ s, x ∉ Set.range f → g x = 1) : (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s, g x := by
   classical rw [prod_preimage', prod_filter_of_ne]
 #align finset.prod_preimage Finset.prod_preimage
 

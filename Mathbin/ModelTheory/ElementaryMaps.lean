@@ -215,16 +215,16 @@ variable (L) (M)
 
 /-- The elementary diagram of an `L`-structure is the set of all sentences with parameters it
   satisfies. -/
-abbrev ElementaryDiagram : L[[M]].TheoryCat :=
-  L[[M]].CompleteTheory M
-#align first_order.language.elementary_diagram FirstOrder.Language.ElementaryDiagram
+abbrev elementaryDiagram : L[[M]].TheoryCat :=
+  L[[M]].completeTheory M
+#align first_order.language.elementary_diagram FirstOrder.Language.elementaryDiagram
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The canonical elementary embedding of an `L`-structure into any model of its elementary diagram
 -/
 @[simps]
 def ElementaryEmbedding.ofModelsElementaryDiagram (N : Type _) [L.StructureCat N] [L[[M]].StructureCat N]
-    [(lhomWithConstants L M).IsExpansionOn N] [N ⊨ L.ElementaryDiagram M] : M ↪ₑ[L] N :=
+    [(lhomWithConstants L M).IsExpansionOn N] [N ⊨ L.elementaryDiagram M] : M ↪ₑ[L] N :=
   ⟨(coe : L[[M]].Constants → N) ∘ Sum.inr, fun n φ x => by
     refine'
       trans _
@@ -366,7 +366,7 @@ instance : Coe (L.ElementarySubstructure M) (L.Substructure M) :=
   ⟨ElementarySubstructure.toSubstructure⟩
 
 instance : SetLike (L.ElementarySubstructure M) M :=
-  ⟨fun x => x.toSubstructure.Carrier, fun ⟨⟨s, hs1⟩, hs2⟩ ⟨⟨t, ht1⟩, ht2⟩ h => by
+  ⟨fun x => x.toSubstructure.carrier, fun ⟨⟨s, hs1⟩, hs2⟩ ⟨⟨t, ht1⟩, ht2⟩ h => by
     congr
     exact h⟩
 
@@ -405,7 +405,7 @@ theorem mem_top (x : M) : x ∈ (⊤ : L.ElementarySubstructure M) :=
 #align first_order.language.elementary_substructure.mem_top FirstOrder.Language.ElementarySubstructure.mem_top
 
 @[simp]
-theorem coe_top : ((⊤ : L.ElementarySubstructure M) : Set M) = Set.Univ :=
+theorem coe_top : ((⊤ : L.ElementarySubstructure M) : Set M) = Set.univ :=
   rfl
 #align first_order.language.elementary_substructure.coe_top FirstOrder.Language.ElementarySubstructure.coe_top
 

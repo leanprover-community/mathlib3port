@@ -472,7 +472,7 @@ section
 -- implementation of `has_image`
 /-- the image of a morphism in Type is just `set.range f` -/
 def Image : Type u :=
-  Set.Range f
+  Set.range f
 #align category_theory.limits.types.image CategoryTheory.Limits.Types.Image
 
 instance [Inhabited α] : Inhabited (Image f) where default := ⟨f default, ⟨_, rfl⟩⟩
@@ -488,8 +488,8 @@ instance : Mono (Image.ι f) :=
 variable {f}
 
 /-- the universal property for the image factorisation -/
-noncomputable def Image.lift (F' : MonoFactorisation f) : Image f ⟶ F'.I :=
-  (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : Image f → F'.I)
+noncomputable def Image.lift (F' : MonoFactorisation f) : Image f ⟶ F'.i :=
+  (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : Image f → F'.i)
 #align category_theory.limits.types.image.lift CategoryTheory.Limits.Types.Image.lift
 
 theorem Image.lift_fac (F' : MonoFactorisation f) : Image.lift F' ≫ F'.m = Image.ι f := by
@@ -503,7 +503,7 @@ end
 
 /-- the factorisation of any morphism in Type through a mono. -/
 def monoFactorisation : MonoFactorisation f where
-  I := Image f
+  i := Image f
   m := Image.ι f
   e := Set.rangeFactorization f
 #align category_theory.limits.types.mono_factorisation CategoryTheory.Limits.Types.monoFactorisation

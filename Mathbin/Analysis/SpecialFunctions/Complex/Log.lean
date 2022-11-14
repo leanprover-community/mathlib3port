@@ -47,7 +47,7 @@ theorem exp_log {x : ℂ} (hx : x ≠ 0) : exp (log x) = x := by
 #align complex.exp_log Complex.exp_log
 
 @[simp]
-theorem range_exp : Range exp = {0}ᶜ :=
+theorem range_exp : range exp = {0}ᶜ :=
   Set.ext fun x =>
     ⟨by
       rintro ⟨x, rfl⟩

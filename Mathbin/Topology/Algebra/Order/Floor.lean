@@ -54,11 +54,11 @@ theorem tendsto_ceil_at_bot : Tendsto (ceil : α → ℤ) atBot atBot :=
 
 variable [TopologicalSpace α]
 
-theorem continuous_on_floor (n : ℤ) : ContinuousOn (fun x => floor x : α → α) (IcoCat n (n + 1) : Set α) :=
+theorem continuous_on_floor (n : ℤ) : ContinuousOn (fun x => floor x : α → α) (ico n (n + 1) : Set α) :=
   (continuous_on_congr <| floor_eq_on_Ico' n).mpr continuous_on_const
 #align continuous_on_floor continuous_on_floor
 
-theorem continuous_on_ceil (n : ℤ) : ContinuousOn (fun x => ceil x : α → α) (IocCat (n - 1) n : Set α) :=
+theorem continuous_on_ceil (n : ℤ) : ContinuousOn (fun x => ceil x : α → α) (ioc (n - 1) n : Set α) :=
   (continuous_on_congr <| ceil_eq_on_Ioc' n).mpr continuous_on_const
 #align continuous_on_ceil continuous_on_ceil
 
@@ -128,7 +128,7 @@ theorem tendsto_ceil_right' [OrderClosedTopology α] (n : ℤ) : Tendsto (fun x 
   exact tendsto_nhds_within_mono_right (subset_univ _) (tendsto_ceil_right n)
 #align tendsto_ceil_right' tendsto_ceil_right'
 
-theorem continuous_on_fract [TopologicalAddGroup α] (n : ℤ) : ContinuousOn (fract : α → α) (IcoCat n (n + 1) : Set α) :=
+theorem continuous_on_fract [TopologicalAddGroup α] (n : ℤ) : ContinuousOn (fract : α → α) (ico n (n + 1) : Set α) :=
   continuous_on_id.sub (continuous_on_floor n)
 #align continuous_on_fract continuous_on_fract
 
@@ -159,7 +159,7 @@ theorem tendsto_fract_right [OrderClosedTopology α] [TopologicalAddGroup α] (n
 #align tendsto_fract_right tendsto_fract_right
 
 -- mathport name: exprI
-local notation "I" => (IccCat 0 1 : Set α)
+local notation "I" => (icc 0 1 : Set α)
 
 variable [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β] [TopologicalSpace γ]
 
@@ -210,7 +210,7 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
 #align continuous_on.comp_fract' ContinuousOn.comp_fract'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem ContinuousOn.comp_fract {s : β → α} {f : β → α → γ} (h : ContinuousOn (uncurry f) <| univ ×ˢ IccCat 0 1)
+theorem ContinuousOn.comp_fract {s : β → α} {f : β → α → γ} (h : ContinuousOn (uncurry f) <| univ ×ˢ icc 0 1)
     (hs : Continuous s) (hf : ∀ s, f s 0 = f s 1) : Continuous fun x : β => f x <| Int.fract (s x) :=
   (h.comp_fract' hf).comp (continuous_id.prod_mk hs)
 #align continuous_on.comp_fract ContinuousOn.comp_fract

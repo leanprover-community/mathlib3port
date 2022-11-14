@@ -54,7 +54,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
 
 theorem ContMdiffWithinAt.mdifferentiableWithinAt (hf : ContMdiffWithinAt I I' n f s x) (hn : 1 ≤ n) :
     MdifferentiableWithinAt I I' f s x := by
-  suffices h : MdifferentiableWithinAt I I' f (s ∩ f ⁻¹' (extChartAt I' (f x)).Source) x
+  suffices h : MdifferentiableWithinAt I I' f (s ∩ f ⁻¹' (extChartAt I' (f x)).source) x
   · rwa [mdifferentiable_within_at_inter'] at h
     apply hf.1.preimage_mem_nhds_within
     exact IsOpen.mem_nhds (ext_chart_at_open_source I' (f x)) (mem_ext_chart_source I' (f x))
@@ -387,7 +387,7 @@ theorem ContMdiffOn.contMdiffOnTangentMapWithin (hf : ContMdiffOn I I' n f s) (h
         simp only [hq, mfld_simps]
       rw [this, tangent_map_chart_symm, hDl]
       · simp only [hq, mfld_simps]
-        have : q ∈ (chart_at (ModelProd H E) p).Source := by simp only [hq, mfld_simps]
+        have : q ∈ (chart_at (ModelProd H E) p).source := by simp only [hq, mfld_simps]
         exact (chart_at (ModelProd H E) p).left_inv this
         
       · simp only [hq, mfld_simps]
@@ -422,7 +422,7 @@ theorem ContMdiffOn.contMdiffOnTangentMapWithin (hf : ContMdiffOn I I' n f s) (h
       dsimp [r, Dr]
       rw [this, tangent_map_chart]
       · simp only [hq, mfld_simps]
-        have : tangentMapWithin I I' f s' q ∈ (chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)).Source := by
+        have : tangentMapWithin I I' f s' q ∈ (chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)).source := by
           simp only [hq, mfld_simps]
         exact (chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)).left_inv this
         
@@ -547,7 +547,7 @@ corresponding section of the fiber bundle, which is smooth. This applies in part
 zero section of a vector bundle. Another example (not yet defined) would be the identity
 section of the endomorphism bundle of a vector bundle. -/
 theorem smoothConstSection (v : E')
-    (h : ∀ i j : Atlas H M, ∀ x ∈ i.1.Source ∩ j.1.Source, Z.coordChange i j (i.1 x) v = v) :
+    (h : ∀ i j : atlas H M, ∀ x ∈ i.1.source ∩ j.1.source, Z.coordChange i j (i.1 x) v = v) :
     Smooth I (I.Prod 𝓘(𝕜, E')) (show M → Z.toTopologicalVectorBundleCore.TotalSpace from fun x => ⟨x, v⟩) := by
   intro x
   rw [ContMdiffAt, cont_mdiff_within_at_iff']
@@ -648,13 +648,13 @@ TODO define splittings of vector bundles; state this result invariantly. -/
 theorem tangent_map_tangent_bundle_pure (p : TangentBundle I M) :
     tangentMap I I.tangent (TangentBundle.zeroSection I M) p = ⟨⟨p.1, 0⟩, ⟨p.2, 0⟩⟩ := by
   rcases p with ⟨x, v⟩
-  have N : I.symm ⁻¹' (chart_at H x).Target ∈ 𝓝 (I ((chart_at H x) x)) := by
+  have N : I.symm ⁻¹' (chart_at H x).target ∈ 𝓝 (I ((chart_at H x) x)) := by
     apply IsOpen.mem_nhds
     apply (LocalHomeomorph.open_target _).Preimage I.continuous_inv_fun
     simp only [mfld_simps]
   have A : MdifferentiableAt I I.tangent (fun x => @total_space_mk M (TangentSpace I) x 0) x :=
     tangent_bundle.smooth_zero_section.mdifferentiable_at
-  have B : fderivWithin 𝕜 (fun x_1 : E => (x_1, (0 : E))) (Set.Range ⇑I) (I ((chart_at H x) x)) v = (v, 0) := by
+  have B : fderivWithin 𝕜 (fun x_1 : E => (x_1, (0 : E))) (Set.range ⇑I) (I ((chart_at H x) x)) v = (v, 0) := by
     rw [fderiv_within_eq_fderiv, DifferentiableAt.fderiv_prod]
     · simp
       

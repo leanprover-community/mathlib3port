@@ -82,13 +82,13 @@ theorem mono_iff_injective : Mono f ↔ Function.Injective f :=
 namespace SurjectiveOfEpiAuxs
 
 -- mathport name: exprX
-local notation "X" => Set.Range (Function.swap LeftCoset f.range.Carrier)
+local notation "X" => Set.range (Function.swap leftCoset f.range.carrier)
 
 /-- Define `X'` to be the set of all left cosets with an extra point at "infinity".
 -/
 @[nolint has_nonempty_instance]
 inductive XWithInfinity
-  | from_coset : Set.Range (Function.swap LeftCoset f.range.Carrier) → X_with_infinity
+  | from_coset : Set.range (Function.swap leftCoset f.range.carrier) → X_with_infinity
   | infinity : X_with_infinity
 #align Group.surjective_of_epi_auxs.X_with_infinity GroupCat.SurjectiveOfEpiAuxs.XWithInfinity
 
@@ -132,7 +132,7 @@ theorem one_smul (x : X') : (1 : B) • x = x :=
 #align Group.surjective_of_epi_auxs.one_smul GroupCat.SurjectiveOfEpiAuxs.one_smul
 
 theorem from_coset_eq_of_mem_range {b : B} (hb : b ∈ f.range) :
-    from_coset ⟨b *l f.range.Carrier, ⟨b, rfl⟩⟩ = from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩ := by
+    from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ = from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ := by
   congr
   change b *l f.range = f.range
   nth_rw 1 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]
@@ -141,7 +141,7 @@ theorem from_coset_eq_of_mem_range {b : B} (hb : b ∈ f.range) :
 #align Group.surjective_of_epi_auxs.from_coset_eq_of_mem_range GroupCat.SurjectiveOfEpiAuxs.from_coset_eq_of_mem_range
 
 theorem from_coset_ne_of_nin_range {b : B} (hb : b ∉ f.range) :
-    from_coset ⟨b *l f.range.Carrier, ⟨b, rfl⟩⟩ ≠ from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩ := by
+    from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ ≠ from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ := by
   intro r
   simp only [Subtype.mk_eq_mk] at r
   change b *l f.range = f.range at r
@@ -156,29 +156,29 @@ instance : DecidableEq X' :=
 /-- Let `τ` be the permutation on `X'` exchanging `f.range` and the point at infinity.
 -/
 noncomputable def tau : SX' :=
-  Equiv.swap (from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩) ∞
+  Equiv.swap (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) ∞
 #align Group.surjective_of_epi_auxs.tau GroupCat.SurjectiveOfEpiAuxs.tau
 
 -- mathport name: exprτ
 local notation "τ" => tau f
 
-theorem τ_apply_infinity : τ ∞ = from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩ :=
+theorem τ_apply_infinity : τ ∞ = from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ :=
   Equiv.swap_apply_right _ _
 #align Group.surjective_of_epi_auxs.τ_apply_infinity GroupCat.SurjectiveOfEpiAuxs.τ_apply_infinity
 
-theorem τ_apply_from_coset : τ (from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩) = ∞ :=
+theorem τ_apply_from_coset : τ (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) = ∞ :=
   Equiv.swap_apply_left _ _
 #align Group.surjective_of_epi_auxs.τ_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.τ_apply_from_coset
 
-theorem τ_apply_from_coset' (x : B) (hx : x ∈ f.range) : τ (from_coset ⟨x *l f.range.Carrier, ⟨x, rfl⟩⟩) = ∞ :=
+theorem τ_apply_from_coset' (x : B) (hx : x ∈ f.range) : τ (from_coset ⟨x *l f.range.carrier, ⟨x, rfl⟩⟩) = ∞ :=
   (from_coset_eq_of_mem_range _ hx).symm ▸ τ_apply_from_coset _
 #align Group.surjective_of_epi_auxs.τ_apply_from_coset' GroupCat.SurjectiveOfEpiAuxs.τ_apply_from_coset'
 
-theorem τ_symm_apply_from_coset : (Equiv.symm τ) (from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩) = ∞ := by
+theorem τ_symm_apply_from_coset : (Equiv.symm τ) (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) = ∞ := by
   rw [tau, Equiv.symm_swap, Equiv.swap_apply_left]
 #align Group.surjective_of_epi_auxs.τ_symm_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.τ_symm_apply_from_coset
 
-theorem τ_symm_apply_infinity : (Equiv.symm τ) ∞ = from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩ := by
+theorem τ_symm_apply_infinity : (Equiv.symm τ) ∞ = from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ := by
   rw [tau, Equiv.symm_swap, Equiv.swap_apply_right]
 #align Group.surjective_of_epi_auxs.τ_symm_apply_infinity GroupCat.SurjectiveOfEpiAuxs.τ_symm_apply_infinity
 
@@ -243,17 +243,17 @@ theorem h_apply_infinity (x : B) (hx : x ∈ f.range) : (h x) ∞ = ∞ := by
 #align Group.surjective_of_epi_auxs.h_apply_infinity GroupCat.SurjectiveOfEpiAuxs.h_apply_infinity
 
 theorem h_apply_from_coset (x : B) :
-    (h x) (from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩) = from_coset ⟨f.range.Carrier, ⟨1, one_left_coset _⟩⟩ :=
+    (h x) (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) = from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ :=
   by simp [H, τ_symm_apply_from_coset, g_apply_infinity, τ_apply_infinity]
 #align Group.surjective_of_epi_auxs.h_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset
 
 theorem h_apply_from_coset' (x : B) (b : B) (hb : b ∈ f.range) :
-    (h x) (from_coset ⟨b *l f.range.Carrier, ⟨b, rfl⟩⟩) = from_coset ⟨b *l f.range.Carrier, ⟨b, rfl⟩⟩ :=
+    (h x) (from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩) = from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ :=
   (from_coset_eq_of_mem_range _ hb).symm ▸ h_apply_from_coset f x
 #align Group.surjective_of_epi_auxs.h_apply_from_coset' GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset'
 
 theorem h_apply_from_coset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : b ∉ f.range) :
-    (h x) (from_coset ⟨b *l f.range.Carrier, ⟨b, rfl⟩⟩) = from_coset ⟨x * b *l f.range.Carrier, ⟨x * b, rfl⟩⟩ := by
+    (h x) (from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩) = from_coset ⟨x * b *l f.range.carrier, ⟨x * b, rfl⟩⟩ := by
   simp only [H, tau, MonoidHom.coe_mk, Equiv.to_fun_as_coe, Equiv.coe_trans, Function.comp_apply]
   rw [Equiv.symm_swap,
     @Equiv.swap_apply_of_ne_of_ne X' _ (from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩) ∞
@@ -265,7 +265,7 @@ theorem h_apply_from_coset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : 
 #align
   Group.surjective_of_epi_auxs.h_apply_from_coset_nin_range GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset_nin_range
 
-theorem agree : f.range.Carrier = { x | h x = g x } := by
+theorem agree : f.range.carrier = { x | h x = g x } := by
   refine' Set.ext fun b => ⟨_, fun hb : h b = g b => Classical.by_contradiction fun r => _⟩
   · rintro ⟨a, rfl⟩
     change h (f a) = g (f a)

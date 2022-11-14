@@ -159,11 +159,11 @@ theorem to_local_homeomorph_apply (x : E) : φ.toLocalHomeomorph x = (φ.leftFun
   rfl
 #align implicit_function_data.to_local_homeomorph_apply ImplicitFunctionData.to_local_homeomorph_apply
 
-theorem pt_mem_to_local_homeomorph_source : φ.pt ∈ φ.toLocalHomeomorph.Source :=
+theorem pt_mem_to_local_homeomorph_source : φ.pt ∈ φ.toLocalHomeomorph.source :=
   φ.HasStrictFderivAt.mem_to_local_homeomorph_source
 #align implicit_function_data.pt_mem_to_local_homeomorph_source ImplicitFunctionData.pt_mem_to_local_homeomorph_source
 
-theorem map_pt_mem_to_local_homeomorph_target : (φ.leftFun φ.pt, φ.rightFun φ.pt) ∈ φ.toLocalHomeomorph.Target :=
+theorem map_pt_mem_to_local_homeomorph_target : (φ.leftFun φ.pt, φ.rightFun φ.pt) ∈ φ.toLocalHomeomorph.target :=
   φ.toLocalHomeomorph.map_source <| φ.pt_mem_to_local_homeomorph_source
 #align
   implicit_function_data.map_pt_mem_to_local_homeomorph_target ImplicitFunctionData.map_pt_mem_to_local_homeomorph_target
@@ -294,14 +294,14 @@ theorem implicit_to_local_homeomorph_of_complemented_self (hf : HasStrictFderivA
   has_strict_fderiv_at.implicit_to_local_homeomorph_of_complemented_self HasStrictFderivAt.implicit_to_local_homeomorph_of_complemented_self
 
 theorem mem_implicit_to_local_homeomorph_of_complemented_source (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤)
-    (hker : (ker f').ClosedComplemented) : a ∈ (hf.implicitToLocalHomeomorphOfComplemented f f' hf' hker).Source :=
+    (hker : (ker f').ClosedComplemented) : a ∈ (hf.implicitToLocalHomeomorphOfComplemented f f' hf' hker).source :=
   mem_to_local_homeomorph_source _
 #align
   has_strict_fderiv_at.mem_implicit_to_local_homeomorph_of_complemented_source HasStrictFderivAt.mem_implicit_to_local_homeomorph_of_complemented_source
 
 theorem mem_implicit_to_local_homeomorph_of_complemented_target (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤)
     (hker : (ker f').ClosedComplemented) :
-    (f a, (0 : ker f')) ∈ (hf.implicitToLocalHomeomorphOfComplemented f f' hf' hker).Target := by
+    (f a, (0 : ker f')) ∈ (hf.implicitToLocalHomeomorphOfComplemented f f' hf' hker).target := by
   simpa only [implicit_to_local_homeomorph_of_complemented_self] using
     (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).map_source <|
       hf.mem_implicit_to_local_homeomorph_of_complemented_source hf' hker
@@ -416,13 +416,13 @@ theorem implicit_to_local_homeomorph_self (hf : HasStrictFderivAt f f' a) (hf' :
 #align has_strict_fderiv_at.implicit_to_local_homeomorph_self HasStrictFderivAt.implicit_to_local_homeomorph_self
 
 theorem mem_implicit_to_local_homeomorph_source (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤) :
-    a ∈ (hf.implicitToLocalHomeomorph f f' hf').Source :=
+    a ∈ (hf.implicitToLocalHomeomorph f f' hf').source :=
   mem_to_local_homeomorph_source _
 #align
   has_strict_fderiv_at.mem_implicit_to_local_homeomorph_source HasStrictFderivAt.mem_implicit_to_local_homeomorph_source
 
 theorem mem_implicit_to_local_homeomorph_target (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤) :
-    (f a, (0 : ker f')) ∈ (hf.implicitToLocalHomeomorph f f' hf').Target := by
+    (f a, (0 : ker f')) ∈ (hf.implicitToLocalHomeomorph f f' hf').target := by
   apply mem_implicit_to_local_homeomorph_of_complemented_target
 #align
   has_strict_fderiv_at.mem_implicit_to_local_homeomorph_target HasStrictFderivAt.mem_implicit_to_local_homeomorph_target

@@ -157,35 +157,35 @@ namespace Set
 
 open List
 
-/- warning: set.tprod -> Set.Tprod is a dubious translation:
+/- warning: set.tprod -> Set.tprod is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), Set.{u_2} (α i)) -> (Set.{(max u_2 u_3)} (List.Tprod.{u_1 u_2 u_3} ι α l))
 but is expected to have type
   forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), Set.{u_2} (α i)) -> (Set.{(max u_2 _aux_param_0)} (List.Tprod.{u_1 u_2 _aux_param_0} ι α l))
-Case conversion may be inaccurate. Consider using '#align set.tprod Set.Tprodₓ'. -/
+Case conversion may be inaccurate. Consider using '#align set.tprod Set.tprodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A product of sets in `tprod α l`. -/
 @[simp]
-protected def Tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (Tprod α l)
-  | [], t => Univ
+protected def tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (Tprod α l)
+  | [], t => univ
   | i :: is, t => t i ×ˢ tprod is t
-#align set.tprod Set.Tprod
+#align set.tprod Set.tprod
 
-theorem mk_preimage_tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk l ⁻¹' Set.Tprod l t = { i | i ∈ l }.pi t
-  | [], t => by simp [Set.Tprod]
+theorem mk_preimage_tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk l ⁻¹' Set.tprod l t = { i | i ∈ l }.pi t
+  | [], t => by simp [Set.tprod]
   | i :: l, t => by
     ext f
-    have : f ∈ tprod.mk l ⁻¹' Set.Tprod l t ↔ f ∈ { x | x ∈ l }.pi t := by rw [mk_preimage_tprod l t]
-    change tprod.mk l f ∈ Set.Tprod l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i at this
+    have : f ∈ tprod.mk l ⁻¹' Set.tprod l t ↔ f ∈ { x | x ∈ l }.pi t := by rw [mk_preimage_tprod l t]
+    change tprod.mk l f ∈ Set.tprod l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i at this
     -- `simp [set.tprod, tprod.mk, this]` can close this goal but is slow.
-    rw [Set.Tprod, tprod.mk, mem_preimage, mem_pi, prod_mk_mem_set_prod_eq]
+    rw [Set.tprod, tprod.mk, mem_preimage, mem_pi, prod_mk_mem_set_prod_eq]
     simp_rw [mem_set_of_eq, mem_cons_iff]
     rw [forall_eq_or_imp, and_congr_right_iff]
     exact fun _ => this
 #align set.mk_preimage_tprod Set.mk_preimage_tprod
 
 theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l) (t : ∀ i, Set (α i)) :
-    Tprod.elim' h ⁻¹' Pi Univ t = Set.Tprod l t := by
+    Tprod.elim' h ⁻¹' pi univ t = Set.tprod l t := by
   have : { i | i ∈ l } = univ := by
     ext i
     simp [h]

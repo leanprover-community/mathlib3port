@@ -43,7 +43,7 @@ theorem finiteDimensionalVectorSpanOfFinite {s : Set P} (h : Set.Finite s) : Fin
 
 /-- The `vector_span` of a family indexed by a `fintype` is
 finite-dimensional. -/
-instance finiteDimensionalVectorSpanRange [Finite ι] (p : ι → P) : FiniteDimensional k (vectorSpan k (Set.Range p)) :=
+instance finiteDimensionalVectorSpanRange [Finite ι] (p : ι → P) : FiniteDimensional k (vectorSpan k (Set.range p)) :=
   finiteDimensionalVectorSpanOfFinite k (Set.finite_range _)
 #align finite_dimensional_vector_span_range finiteDimensionalVectorSpanRange
 
@@ -64,7 +64,7 @@ theorem finiteDimensionalDirectionAffineSpanOfFinite {s : Set P} (h : Set.Finite
 /-- The direction of the affine span of a family indexed by a
 `fintype` is finite-dimensional. -/
 instance finiteDimensionalDirectionAffineSpanRange [Finite ι] (p : ι → P) :
-    FiniteDimensional k (affineSpan k (Set.Range p)).direction :=
+    FiniteDimensional k (affineSpan k (Set.range p)).direction :=
   finiteDimensionalDirectionAffineSpanOfFinite k (Set.finite_range _)
 #align finite_dimensional_direction_affine_span_range finiteDimensionalDirectionAffineSpanRange
 
@@ -98,7 +98,7 @@ variable {k}
 /-- The `vector_span` of a finite subset of an affinely independent
 family has dimension one less than its cardinality. -/
 theorem AffineIndependent.finrank_vector_span_image_finset {p : ι → P} (hi : AffineIndependent k p) {s : Finset ι}
-    {n : ℕ} (hc : Finset.card s = n + 1) : finrank k (vectorSpan k (s.Image p : Set P)) = n := by
+    {n : ℕ} (hc : Finset.card s = n + 1) : finrank k (vectorSpan k (s.image p : Set P)) = n := by
   have hi' := hi.range.mono (Set.image_subset_range p ↑s)
   have hc' : (s.image p).card = n + 1 := by rwa [s.card_image_of_injective hi.injective]
   have hn : (s.image p).Nonempty := by simp [hc', ← Finset.card_pos]
@@ -115,7 +115,7 @@ theorem AffineIndependent.finrank_vector_span_image_finset {p : ι → P} (hi : 
 /-- The `vector_span` of a finite affinely independent family has
 dimension one less than its cardinality. -/
 theorem AffineIndependent.finrank_vector_span [Fintype ι] {p : ι → P} (hi : AffineIndependent k p) {n : ℕ}
-    (hc : Fintype.card ι = n + 1) : finrank k (vectorSpan k (Set.Range p)) = n := by
+    (hc : Fintype.card ι = n + 1) : finrank k (vectorSpan k (Set.range p)) = n := by
   rw [← Finset.card_univ] at hc
   rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image]
   exact hi.finrank_vector_span_image_finset hc
@@ -125,7 +125,7 @@ theorem AffineIndependent.finrank_vector_span [Fintype ι] {p : ι → P} (hi : 
 cardinality is one more than that of the finite-dimensional space is
 `⊤`. -/
 theorem AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one [FiniteDimensional k V] [Fintype ι] {p : ι → P}
-    (hi : AffineIndependent k p) (hc : Fintype.card ι = finrank k V + 1) : vectorSpan k (Set.Range p) = ⊤ :=
+    (hi : AffineIndependent k p) (hc : Fintype.card ι = finrank k V + 1) : vectorSpan k (Set.range p) = ⊤ :=
   eq_top_of_finrank_eq <| hi.finrank_vector_span hc
 #align
   affine_independent.vector_span_eq_top_of_card_eq_finrank_add_one AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one
@@ -135,13 +135,13 @@ variable (k)
 /-- The `vector_span` of `n + 1` points in an indexed family has
 dimension at most `n`. -/
 theorem finrank_vector_span_image_finset_le (p : ι → P) (s : Finset ι) {n : ℕ} (hc : Finset.card s = n + 1) :
-    finrank k (vectorSpan k (s.Image p : Set P)) ≤ n := by
+    finrank k (vectorSpan k (s.image p : Set P)) ≤ n := by
   have hn : (s.image p).Nonempty := by
     rw [Finset.Nonempty.image_iff, ← Finset.card_pos, hc]
     apply Nat.succ_pos
   rcases hn with ⟨p₁, hp₁⟩
   rw [vector_span_eq_span_vsub_finset_right_ne k hp₁]
-  refine' le_trans (finrank_span_finset_le_card (((s.image p).erase p₁).Image fun p => p -ᵥ p₁)) _
+  refine' le_trans (finrank_span_finset_le_card (((s.image p).erase p₁).image fun p => p -ᵥ p₁)) _
   rw [Finset.card_image_of_injective _ (vsub_left_injective p₁), Finset.card_erase_of_mem hp₁, tsub_le_iff_right, ← hc]
   apply Finset.card_image_le
 #align finrank_vector_span_image_finset_le finrank_vector_span_image_finset_le
@@ -149,7 +149,7 @@ theorem finrank_vector_span_image_finset_le (p : ι → P) (s : Finset ι) {n : 
 /-- The `vector_span` of an indexed family of `n + 1` points has
 dimension at most `n`. -/
 theorem finrank_vector_span_range_le [Fintype ι] (p : ι → P) {n : ℕ} (hc : Fintype.card ι = n + 1) :
-    finrank k (vectorSpan k (Set.Range p)) ≤ n := by
+    finrank k (vectorSpan k (Set.range p)) ≤ n := by
   rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image]
   rw [← Finset.card_univ] at hc
   exact finrank_vector_span_image_finset_le _ _ _ hc
@@ -158,7 +158,7 @@ theorem finrank_vector_span_range_le [Fintype ι] (p : ι → P) {n : ℕ} (hc :
 /-- `n + 1` points are affinely independent if and only if their
 `vector_span` has dimension `n`. -/
 theorem affine_independent_iff_finrank_vector_span_eq [Fintype ι] (p : ι → P) {n : ℕ} (hc : Fintype.card ι = n + 1) :
-    AffineIndependent k p ↔ finrank k (vectorSpan k (Set.Range p)) = n := by
+    AffineIndependent k p ↔ finrank k (vectorSpan k (Set.range p)) = n := by
   have hn : Nonempty ι := by simp [← Fintype.card_pos_iff, hc]
   cases' hn with i₁
   rw [affine_independent_iff_linear_independent_vsub _ _ i₁, linear_independent_iff_card_eq_finrank_span, eq_comm,
@@ -172,7 +172,7 @@ theorem affine_independent_iff_finrank_vector_span_eq [Fintype ι] (p : ι → P
 /-- `n + 1` points are affinely independent if and only if their
 `vector_span` has dimension at least `n`. -/
 theorem affine_independent_iff_le_finrank_vector_span [Fintype ι] (p : ι → P) {n : ℕ} (hc : Fintype.card ι = n + 1) :
-    AffineIndependent k p ↔ n ≤ finrank k (vectorSpan k (Set.Range p)) := by
+    AffineIndependent k p ↔ n ≤ finrank k (vectorSpan k (Set.range p)) := by
   rw [affine_independent_iff_finrank_vector_span_eq k p hc]
   constructor
   · rintro rfl
@@ -185,14 +185,14 @@ theorem affine_independent_iff_le_finrank_vector_span [Fintype ι] (p : ι → P
 /-- `n + 2` points are affinely independent if and only if their
 `vector_span` does not have dimension at most `n`. -/
 theorem affine_independent_iff_not_finrank_vector_span_le [Fintype ι] (p : ι → P) {n : ℕ}
-    (hc : Fintype.card ι = n + 2) : AffineIndependent k p ↔ ¬finrank k (vectorSpan k (Set.Range p)) ≤ n := by
+    (hc : Fintype.card ι = n + 2) : AffineIndependent k p ↔ ¬finrank k (vectorSpan k (Set.range p)) ≤ n := by
   rw [affine_independent_iff_le_finrank_vector_span k p hc, ← Nat.lt_iff_add_one_le, lt_iff_not_ge]
 #align affine_independent_iff_not_finrank_vector_span_le affine_independent_iff_not_finrank_vector_span_le
 
 /-- `n + 2` points have a `vector_span` with dimension at most `n` if
 and only if they are not affinely independent. -/
 theorem finrank_vector_span_le_iff_not_affine_independent [Fintype ι] (p : ι → P) {n : ℕ}
-    (hc : Fintype.card ι = n + 2) : finrank k (vectorSpan k (Set.Range p)) ≤ n ↔ ¬AffineIndependent k p :=
+    (hc : Fintype.card ι = n + 2) : finrank k (vectorSpan k (Set.range p)) ≤ n ↔ ¬AffineIndependent k p :=
   (not_iff_comm.1 (affine_independent_iff_not_finrank_vector_span_le k p hc).symm).symm
 #align finrank_vector_span_le_iff_not_affine_independent finrank_vector_span_le_iff_not_affine_independent
 
@@ -203,8 +203,8 @@ family lies in a submodule with dimension one less than its
 cardinality, it equals that submodule. -/
 theorem AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one {p : ι → P}
     (hi : AffineIndependent k p) {s : Finset ι} {sm : Submodule k V} [FiniteDimensional k sm]
-    (hle : vectorSpan k (s.Image p : Set P) ≤ sm) (hc : Finset.card s = finrank k sm + 1) :
-    vectorSpan k (s.Image p : Set P) = sm :=
+    (hle : vectorSpan k (s.image p : Set P) ≤ sm) (hc : Finset.card s = finrank k sm + 1) :
+    vectorSpan k (s.image p : Set P) = sm :=
   eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span_image_finset hc
 #align
   affine_independent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one
@@ -213,8 +213,8 @@ theorem AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_a
 family lies in a submodule with dimension one less than its
 cardinality, it equals that submodule. -/
 theorem AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one [Fintype ι] {p : ι → P}
-    (hi : AffineIndependent k p) {sm : Submodule k V} [FiniteDimensional k sm] (hle : vectorSpan k (Set.Range p) ≤ sm)
-    (hc : Fintype.card ι = finrank k sm + 1) : vectorSpan k (Set.Range p) = sm :=
+    (hi : AffineIndependent k p) {sm : Submodule k V} [FiniteDimensional k sm] (hle : vectorSpan k (Set.range p) ≤ sm)
+    (hc : Fintype.card ι = finrank k sm + 1) : vectorSpan k (Set.range p) = sm :=
   eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span hc
 #align
   affine_independent.vector_span_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one
@@ -224,8 +224,8 @@ family lies in an affine subspace whose direction has dimension one
 less than its cardinality, it equals that subspace. -/
 theorem AffineIndependent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one {p : ι → P}
     (hi : AffineIndependent k p) {s : Finset ι} {sp : AffineSubspace k P} [FiniteDimensional k sp.direction]
-    (hle : affineSpan k (s.Image p : Set P) ≤ sp) (hc : Finset.card s = finrank k sp.direction + 1) :
-    affineSpan k (s.Image p : Set P) = sp := by
+    (hle : affineSpan k (s.image p : Set P) ≤ sp) (hc : Finset.card s = finrank k sp.direction + 1) :
+    affineSpan k (s.image p : Set P) = sp := by
   have hn : (s.image p).Nonempty := by
     rw [Finset.Nonempty.image_iff, ← Finset.card_pos, hc]
     apply Nat.succ_pos
@@ -241,8 +241,8 @@ in an affine subspace whose direction has dimension one less than its
 cardinality, it equals that subspace. -/
 theorem AffineIndependent.affine_span_eq_of_le_of_card_eq_finrank_add_one [Fintype ι] {p : ι → P}
     (hi : AffineIndependent k p) {sp : AffineSubspace k P} [FiniteDimensional k sp.direction]
-    (hle : affineSpan k (Set.Range p) ≤ sp) (hc : Fintype.card ι = finrank k sp.direction + 1) :
-    affineSpan k (Set.Range p) = sp := by
+    (hle : affineSpan k (Set.range p) ≤ sp) (hc : Fintype.card ι = finrank k sp.direction + 1) :
+    affineSpan k (Set.range p) = sp := by
   rw [← Finset.card_univ] at hc
   rw [← Set.image_univ, ← Finset.coe_univ, ← Finset.coe_image] at hle⊢
   exact hi.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one hle hc
@@ -252,7 +252,7 @@ theorem AffineIndependent.affine_span_eq_of_le_of_card_eq_finrank_add_one [Finty
 /-- The `affine_span` of a finite affinely independent family is `⊤` iff the
 family's cardinality is one more than that of the finite-dimensional space. -/
 theorem AffineIndependent.affine_span_eq_top_iff_card_eq_finrank_add_one [FiniteDimensional k V] [Fintype ι] {p : ι → P}
-    (hi : AffineIndependent k p) : affineSpan k (Set.Range p) = ⊤ ↔ Fintype.card ι = finrank k V + 1 := by
+    (hi : AffineIndependent k p) : affineSpan k (Set.range p) = ⊤ ↔ Fintype.card ι = finrank k V + 1 := by
   constructor
   · intro h_tot
     let n := Fintype.card ι - 1
@@ -433,13 +433,13 @@ variable {k}
 
 /-- Three points are affinely independent if and only if they are not
 collinear. -/
-theorem affine_independent_iff_not_collinear {p : Fin 3 → P} : AffineIndependent k p ↔ ¬Collinear k (Set.Range p) := by
+theorem affine_independent_iff_not_collinear {p : Fin 3 → P} : AffineIndependent k p ↔ ¬Collinear k (Set.range p) := by
   rw [collinear_iff_finrank_le_one, affine_independent_iff_not_finrank_vector_span_le k p (Fintype.card_fin 3)]
 #align affine_independent_iff_not_collinear affine_independent_iff_not_collinear
 
 /-- Three points are collinear if and only if they are not affinely
 independent. -/
-theorem collinear_iff_not_affine_independent {p : Fin 3 → P} : Collinear k (Set.Range p) ↔ ¬AffineIndependent k p := by
+theorem collinear_iff_not_affine_independent {p : Fin 3 → P} : Collinear k (Set.range p) ↔ ¬AffineIndependent k p := by
   rw [collinear_iff_finrank_le_one, finrank_vector_span_le_iff_not_affine_independent k p (Fintype.card_fin 3)]
 #align collinear_iff_not_affine_independent collinear_iff_not_affine_independent
 

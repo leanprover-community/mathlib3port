@@ -94,9 +94,9 @@ If `X` is a normal paracompact space, then `partition_of_unity.exists_is_subordi
 that for every open covering `U : set (set X)` of `s` there exists a partition of unity that is
 subordinate to `U`.
 -/
-structure PartitionOfUnity (ι X : Type _) [TopologicalSpace X] (s : Set X := Univ) where
+structure PartitionOfUnity (ι X : Type _) [TopologicalSpace X] (s : Set X := univ) where
   toFun : ι → C(X, ℝ)
-  locally_finite' : LocallyFinite fun i => Support (to_fun i)
+  locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : 0 ≤ to_fun
   sum_eq_one' : ∀ x ∈ s, (∑ᶠ i, to_fun i x) = 1
   sum_le_one' : ∀ x, (∑ᶠ i, to_fun i x) ≤ 1
@@ -117,9 +117,9 @@ If `X` is a normal paracompact space, then `bump_covering.exists_is_subordinate`
 every open covering `U : set (set X)` of `s` there exists a `bump_covering` of `s` that is
 subordinate to `U`.
 -/
-structure BumpCovering (ι X : Type _) [TopologicalSpace X] (s : Set X := Univ) where
+structure BumpCovering (ι X : Type _) [TopologicalSpace X] (s : Set X := univ) where
   toFun : ι → C(X, ℝ)
-  locally_finite' : LocallyFinite fun i => Support (to_fun i)
+  locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : 0 ≤ to_fun
   le_one' : to_fun ≤ 1
   eventually_eq_one' : ∀ x ∈ s, ∃ i, to_fun i =ᶠ[𝓝 x] 1
@@ -135,11 +135,11 @@ variable {E : Type _} [AddCommMonoid E] [SmulWithZero ℝ E] [TopologicalSpace E
 instance : CoeFun (PartitionOfUnity ι X s) fun _ => ι → C(X, ℝ) :=
   ⟨toFun⟩
 
-protected theorem locally_finite : LocallyFinite fun i => Support (f i) :=
+protected theorem locally_finite : LocallyFinite fun i => support (f i) :=
   f.locally_finite'
 #align partition_of_unity.locally_finite PartitionOfUnity.locally_finite
 
-theorem locally_finite_tsupport : LocallyFinite fun i => Tsupport (f i) :=
+theorem locally_finite_tsupport : LocallyFinite fun i => tsupport (f i) :=
   f.LocallyFinite.closure
 #align partition_of_unity.locally_finite_tsupport PartitionOfUnity.locally_finite_tsupport
 
@@ -173,7 +173,7 @@ theorem le_one (i : ι) (x : X) : f i x ≤ 1 :=
 
 /-- If `f` is a partition of unity on `s : set X` and `g : X → E` is continuous at every point of
 the topological support of some `f i`, then `λ x, f i x • g x` is continuous on the whole space. -/
-theorem continuous_smul {g : X → E} {i : ι} (hg : ∀ x ∈ Tsupport (f i), ContinuousAt g x) :
+theorem continuous_smul {g : X → E} {i : ι} (hg : ∀ x ∈ tsupport (f i), ContinuousAt g x) :
     Continuous fun x => f i x • g x :=
   continuous_of_tsupport fun x hx => ((f i).ContinuousAt x).smul <| hg x <| tsupport_smul_subset_left _ _ hx
 #align partition_of_unity.continuous_smul PartitionOfUnity.continuous_smul
@@ -182,20 +182,20 @@ theorem continuous_smul {g : X → E} {i : ι} (hg : ∀ x ∈ Tsupport (f i), C
 such that each `g i` is continuous at every point of the topological support of `f i`, then the sum
 `λ x, ∑ᶠ i, f i x • g i x` is continuous on the whole space. -/
 theorem continuous_finsum_smul [HasContinuousAdd E] {g : ι → X → E}
-    (hg : ∀ (i), ∀ x ∈ Tsupport (f i), ContinuousAt (g i) x) : Continuous fun x => ∑ᶠ i, f i x • g i x :=
+    (hg : ∀ (i), ∀ x ∈ tsupport (f i), ContinuousAt (g i) x) : Continuous fun x => ∑ᶠ i, f i x • g i x :=
   (continuous_finsum fun i => f.continuous_smul (hg i)) <| f.LocallyFinite.Subset fun i => support_smul_subset_left _ _
 #align partition_of_unity.continuous_finsum_smul PartitionOfUnity.continuous_finsum_smul
 
 /-- A partition of unity `f i` is subordinate to a family of sets `U i` indexed by the same type if
 for each `i` the closure of the support of `f i` is a subset of `U i`. -/
 def IsSubordinate (U : ι → Set X) : Prop :=
-  ∀ i, Tsupport (f i) ⊆ U i
+  ∀ i, tsupport (f i) ⊆ U i
 #align partition_of_unity.is_subordinate PartitionOfUnity.IsSubordinate
 
 variable {f}
 
 theorem exists_finset_nhd_support_subset {U : ι → Set X} (hso : f.IsSubordinate U) (ho : ∀ i, IsOpen (U i)) (x : X) :
-    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i), ∀ z ∈ n, (Support fun i => f i z) ⊆ is :=
+    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i), ∀ z ∈ n, (support fun i => f i z) ⊆ is :=
   f.LocallyFinite.exists_finset_nhd_support_subset hso ho x
 #align partition_of_unity.exists_finset_nhd_support_subset PartitionOfUnity.exists_finset_nhd_support_subset
 
@@ -217,11 +217,11 @@ variable {s : Set X} (f : BumpCovering ι X s)
 instance : CoeFun (BumpCovering ι X s) fun _ => ι → C(X, ℝ) :=
   ⟨toFun⟩
 
-protected theorem locally_finite : LocallyFinite fun i => Support (f i) :=
+protected theorem locally_finite : LocallyFinite fun i => support (f i) :=
   f.locally_finite'
 #align bump_covering.locally_finite BumpCovering.locally_finite
 
-theorem locally_finite_tsupport : LocallyFinite fun i => Tsupport (f i) :=
+theorem locally_finite_tsupport : LocallyFinite fun i => tsupport (f i) :=
   f.LocallyFinite.closure
 #align bump_covering.locally_finite_tsupport BumpCovering.locally_finite_tsupport
 
@@ -263,7 +263,7 @@ instance [Inhabited ι] : Inhabited (BumpCovering ι X s) :=
 /-- A collection of bump functions `f i` is subordinate to a family of sets `U i` indexed by the
 same type if for each `i` the closure of the support of `f i` is a subset of `U i`. -/
 def IsSubordinate (f : BumpCovering ι X s) (U : ι → Set X) : Prop :=
-  ∀ i, Tsupport (f i) ⊆ U i
+  ∀ i, tsupport (f i) ⊆ U i
 #align bump_covering.is_subordinate BumpCovering.IsSubordinate
 
 theorem IsSubordinate.mono {f : BumpCovering ι X s} {U V : ι → Set X} (hU : f.IsSubordinate U) (hV : ∀ i, U i ⊆ V i) :
@@ -280,7 +280,7 @@ theorem exists_is_subordinate_of_locally_finite_of_prop [NormalSpace X] (p : (X 
     (h01 :
       ∀ s t,
         IsClosed s →
-          IsClosed t → Disjoint s t → ∃ f : C(X, ℝ), p f ∧ EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ IccCat (0 : ℝ) 1)
+          IsClosed t → Disjoint s t → ∃ f : C(X, ℝ), p f ∧ EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1)
     (hs : IsClosed s) (U : ι → Set X) (ho : ∀ i, IsOpen (U i)) (hf : LocallyFinite U) (hU : s ⊆ ⋃ i, U i) :
     ∃ f : BumpCovering ι X s, (∀ i, p (f i)) ∧ f.IsSubordinate U := by
   rcases exists_subset_Union_closure_subset hs ho (fun x _ => hf.point_finite x) hU with ⟨V, hsV, hVo, hVU⟩
@@ -319,7 +319,7 @@ theorem exists_is_subordinate_of_prop [NormalSpace X] [ParacompactSpace X] (p : 
     (h01 :
       ∀ s t,
         IsClosed s →
-          IsClosed t → Disjoint s t → ∃ f : C(X, ℝ), p f ∧ EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ IccCat (0 : ℝ) 1)
+          IsClosed t → Disjoint s t → ∃ f : C(X, ℝ), p f ∧ EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1)
     (hs : IsClosed s) (U : ι → Set X) (ho : ∀ i, IsOpen (U i)) (hU : s ⊆ ⋃ i, U i) :
     ∃ f : BumpCovering ι X s, (∀ i, p (f i)) ∧ f.IsSubordinate U := by
   rcases precise_refinement_set hs _ ho hU with ⟨V, hVo, hsV, hVf, hVU⟩
@@ -366,7 +366,7 @@ def toPouFun (i : ι) (x : X) : ℝ :=
 theorem to_pou_fun_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.toPouFun i x = 0 := by rw [to_pou_fun, h, zero_mul]
 #align bump_covering.to_pou_fun_zero_of_zero BumpCovering.to_pou_fun_zero_of_zero
 
-theorem support_to_pou_fun_subset (i : ι) : Support (f.toPouFun i) ⊆ Support (f i) := fun x =>
+theorem support_to_pou_fun_subset (i : ι) : support (f.toPouFun i) ⊆ support (f i) := fun x =>
   mt <| f.to_pou_fun_zero_of_zero
 #align bump_covering.support_to_pou_fun_subset BumpCovering.support_to_pou_fun_subset
 
@@ -458,7 +458,7 @@ theorem to_partition_of_unity_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.
   f.to_pou_fun_zero_of_zero h
 #align bump_covering.to_partition_of_unity_zero_of_zero BumpCovering.to_partition_of_unity_zero_of_zero
 
-theorem support_to_partition_of_unity_subset (i : ι) : Support (f.toPartitionOfUnity i) ⊆ Support (f i) :=
+theorem support_to_partition_of_unity_subset (i : ι) : support (f.toPartitionOfUnity i) ⊆ support (f i) :=
   f.support_to_pou_fun_subset i
 #align bump_covering.support_to_partition_of_unity_subset BumpCovering.support_to_partition_of_unity_subset
 

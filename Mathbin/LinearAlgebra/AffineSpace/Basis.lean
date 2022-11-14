@@ -51,7 +51,7 @@ structure AffineBasis (ι : Type u₁) (k : Type u₂) {V : Type u₃} (P : Type
   [Ring k] [Module k V] where
   points : ι → P
   ind : AffineIndependent k points
-  tot : affineSpan k (Range points) = ⊤
+  tot : affineSpan k (range points) = ⊤
 #align affine_basis AffineBasis
 
 variable {ι : Type u₁} {k : Type u₂} {V : Type u₃} {P : Type u₄}
@@ -275,7 +275,7 @@ theorem affine_independent_of_to_matrix_right_inv [DecidableEq ι'] (p : ι' →
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
 coordinates of `p` with respect `b` has a left inverse, then `p` spans the entire space. -/
 theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k] (p : ι' → P) {A : Matrix ι ι' k}
-    (hA : A ⬝ b.toMatrix p = 1) : affineSpan k (Range p) = ⊤ := by
+    (hA : A ⬝ b.toMatrix p = 1) : affineSpan k (range p) = ⊤ := by
   suffices ∀ i, b.points i ∈ affineSpan k (range p) by
     rw [eq_top_iff, ← b.tot, affine_span_le]
     rintro q ⟨i, rfl⟩
@@ -327,7 +327,7 @@ theorem is_unit_to_matrix : IsUnit (b.toMatrix b₂.points) :=
 #align affine_basis.is_unit_to_matrix AffineBasis.is_unit_to_matrix
 
 theorem is_unit_to_matrix_iff [Nontrivial k] (p : ι → P) :
-    IsUnit (b.toMatrix p) ↔ AffineIndependent k p ∧ affineSpan k (Range p) = ⊤ := by
+    IsUnit (b.toMatrix p) ↔ AffineIndependent k p ∧ affineSpan k (range p) = ⊤ := by
   constructor
   · rintro ⟨⟨B, A, hA, hA'⟩, rfl : B = b.to_matrix p⟩
     rw [Matrix.mul_eq_mul] at hA hA'

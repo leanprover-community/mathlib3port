@@ -62,7 +62,7 @@ instance is_empty_to_pgame_right_moves (o : Ordinal) : IsEmpty o.toPgame.RightMo
 
 /-- Converts an ordinal less than `o` into a move for the `pgame` corresponding to `o`, and vice
 versa. -/
-noncomputable def toLeftMovesToPgame {o : Ordinal} : Set.IioCat o ≃ o.toPgame.LeftMoves :=
+noncomputable def toLeftMovesToPgame {o : Ordinal} : Set.iio o ≃ o.toPgame.LeftMoves :=
   (enumIsoOut o).toEquiv.trans (Equiv.cast (to_pgame_left_moves o).symm)
 #align ordinal.to_left_moves_to_pgame Ordinal.toLeftMovesToPgame
 

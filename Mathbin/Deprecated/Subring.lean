@@ -40,7 +40,7 @@ structure IsSubring (S : Set R) extends IsAddSubgroup S, IsSubmonoid S : Prop
 
 /-- Construct a `subring` from a set satisfying `is_subring`. -/
 def IsSubring.subring {S : Set R} (hs : IsSubring S) : Subring R where
-  Carrier := S
+  carrier := S
   one_mem' := hs.one_mem
   mul_mem' _ _ := hs.mul_mem
   zero_mem' := hs.zero_mem
@@ -62,7 +62,7 @@ theorem isSubringImage {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* 
     IsSubmonoid.image f.to_is_monoid_hom hs.to_is_submonoid with }
 #align ring_hom.is_subring_image RingHom.isSubringImage
 
-theorem isSubringSetRange {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) : IsSubring (Set.Range f) :=
+theorem isSubringSetRange {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) : IsSubring (Set.range f) :=
   { IsAddGroupHom.range_add_subgroup f.to_is_add_group_hom, Range.is_submonoid f.to_is_monoid_hom with }
 #align ring_hom.is_subring_set_range RingHom.isSubringSetRange
 
@@ -78,11 +78,11 @@ theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : Is
 /- warning: is_subring.Inter clashes with is_subring.inter -> IsSubring.inter
 warning: is_subring.Inter -> IsSubring.inter is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u}} [_inst_1 : Ring.{u} R] {ι : Sort.{u_1}} {S : ι -> (Set.{u} R)}, (forall (y : ι), IsSubring.{u} R _inst_1 (S y)) -> (IsSubring.{u} R _inst_1 (Set.InterCat.{u u_1} R ι S))
+  forall {R : Type.{u}} [_inst_1 : Ring.{u} R] {ι : Sort.{u_1}} {S : ι -> (Set.{u} R)}, (forall (y : ι), IsSubring.{u} R _inst_1 (S y)) -> (IsSubring.{u} R _inst_1 (Set.inter.{u u_1} R ι S))
 but is expected to have type
   PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align is_subring.Inter IsSubring.interₓ'. -/
-theorem IsSubring.inter {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) : IsSubring (Set.InterCat S) :=
+theorem IsSubring.inter {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) : IsSubring (Set.inter S) :=
   { IsAddSubgroup.Inter fun i => (h i).to_is_add_subgroup, IsSubmonoid.Inter fun i => (h i).to_is_submonoid with }
 #align is_subring.Inter IsSubring.inter
 
@@ -96,15 +96,15 @@ namespace Ring
 
 /-- The smallest subring containing a given subset of a ring, considered as a set. This function
 is deprecated; use `subring.closure`. -/
-def Closure (s : Set R) :=
-  AddGroup.Closure (Monoid.Closure s)
-#align ring.closure Ring.Closure
+def closure (s : Set R) :=
+  AddGroup.closure (Monoid.closure s)
+#align ring.closure Ring.closure
 
 variable {s : Set R}
 
 attribute [local reducible] closure
 
-theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
+theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
     ∃ L : List (List R), (∀ l ∈ L, ∀ x ∈ l, x ∈ s ∨ x = (-1 : R)) ∧ (L.map List.prod).Sum = a :=
   AddGroup.InClosure.rec_on h
     (fun x hx =>
@@ -131,7 +131,7 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[elab_as_elim]
-protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure s) (h1 : C 1) (hneg1 : C (-1))
+protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1) (hneg1 : C (-1))
     (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) : C x := by
   have h0 : C 0 := add_neg_self (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
@@ -182,43 +182,43 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
     
 #align ring.in_closure.rec_on Ring.InClosure.rec_on
 
-theorem Closure.isSubring : IsSubring (Closure s) :=
-  { AddGroup.Closure.is_add_subgroup _ with
-    one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.Closure.is_submonoid _,
+theorem closure.isSubring : IsSubring (closure s) :=
+  { AddGroup.closure.is_add_subgroup _ with
+    one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.is_submonoid _,
     mul_mem := fun a b ha hb =>
       AddGroup.InClosure.rec_on hb
         (fun c hc =>
           AddGroup.InClosure.rec_on ha
-            (fun d hd => AddGroup.subset_closure ((Monoid.Closure.is_submonoid _).mul_mem hd hc))
-            ((zero_mul c).symm ▸ (AddGroup.Closure.is_add_subgroup _).zero_mem)
-            (fun d hd hdc => neg_mul_eq_neg_mul d c ▸ (AddGroup.Closure.is_add_subgroup _).neg_mem hdc)
-            fun d e hd he hdc hec => (add_mul d e c).symm ▸ (AddGroup.Closure.is_add_subgroup _).add_mem hdc hec)
-        ((mul_zero a).symm ▸ (AddGroup.Closure.is_add_subgroup _).zero_mem)
-        (fun c hc hac => neg_mul_eq_mul_neg a c ▸ (AddGroup.Closure.is_add_subgroup _).neg_mem hac)
-        fun c d hc hd hac had => (mul_add a c d).symm ▸ (AddGroup.Closure.is_add_subgroup _).add_mem hac had }
-#align ring.closure.is_subring Ring.Closure.isSubring
+            (fun d hd => AddGroup.subset_closure ((Monoid.closure.is_submonoid _).mul_mem hd hc))
+            ((zero_mul c).symm ▸ (AddGroup.closure.is_add_subgroup _).zero_mem)
+            (fun d hd hdc => neg_mul_eq_neg_mul d c ▸ (AddGroup.closure.is_add_subgroup _).neg_mem hdc)
+            fun d e hd he hdc hec => (add_mul d e c).symm ▸ (AddGroup.closure.is_add_subgroup _).add_mem hdc hec)
+        ((mul_zero a).symm ▸ (AddGroup.closure.is_add_subgroup _).zero_mem)
+        (fun c hc hac => neg_mul_eq_mul_neg a c ▸ (AddGroup.closure.is_add_subgroup _).neg_mem hac)
+        fun c d hc hd hac had => (mul_add a c d).symm ▸ (AddGroup.closure.is_add_subgroup _).add_mem hac had }
+#align ring.closure.is_subring Ring.closure.isSubring
 
-theorem mem_closure {a : R} : a ∈ s → a ∈ Closure s :=
+theorem mem_closure {a : R} : a ∈ s → a ∈ closure s :=
   AddGroup.mem_closure ∘ @Monoid.subset_closure _ _ _ _
 #align ring.mem_closure Ring.mem_closure
 
-theorem subset_closure : s ⊆ Closure s := fun _ => mem_closure
+theorem subset_closure : s ⊆ closure s := fun _ => mem_closure
 #align ring.subset_closure Ring.subset_closure
 
-theorem closure_subset {t : Set R} (ht : IsSubring t) : s ⊆ t → Closure s ⊆ t :=
+theorem closure_subset {t : Set R} (ht : IsSubring t) : s ⊆ t → closure s ⊆ t :=
   AddGroup.closure_subset ht.to_is_add_subgroup ∘ Monoid.closure_subset ht.to_is_submonoid
 #align ring.closure_subset Ring.closure_subset
 
-theorem closure_subset_iff {s t : Set R} (ht : IsSubring t) : Closure s ⊆ t ↔ s ⊆ t :=
+theorem closure_subset_iff {s t : Set R} (ht : IsSubring t) : closure s ⊆ t ↔ s ⊆ t :=
   (AddGroup.closure_subset_iff ht.to_is_add_subgroup).trans
     ⟨Set.Subset.trans Monoid.subset_closure, Monoid.closure_subset ht.to_is_submonoid⟩
 #align ring.closure_subset_iff Ring.closure_subset_iff
 
-theorem closure_mono {s t : Set R} (H : s ⊆ t) : Closure s ⊆ Closure t :=
-  closure_subset Closure.isSubring <| Set.Subset.trans H subset_closure
+theorem closure_mono {s t : Set R} (H : s ⊆ t) : closure s ⊆ closure t :=
+  closure_subset closure.isSubring <| Set.Subset.trans H subset_closure
 #align ring.closure_mono Ring.closure_mono
 
-theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) : f '' Closure s = Closure (f '' s) :=
+theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) : f '' closure s = closure (f '' s) :=
   le_antisymm
     (by
       rintro _ ⟨x, hx, rfl⟩
@@ -237,7 +237,7 @@ theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) : f '' C
         apply closure.is_subring.to_is_add_submonoid.add_mem
         assumption'
         )
-    (closure_subset (RingHom.isSubringImage _ Closure.isSubring) <| Set.image_subset _ subset_closure)
+    (closure_subset (RingHom.isSubringImage _ closure.isSubring) <| Set.image_subset _ subset_closure)
 #align ring.image_closure Ring.image_closure
 
 end Ring

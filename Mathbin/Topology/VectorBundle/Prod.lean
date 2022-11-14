@@ -82,7 +82,7 @@ variable {e₁ e₂}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Prod.continuous_to_fun :
-    ContinuousOn (Prod.toFun' e₁ e₂) (@TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)) := by
+    ContinuousOn (Prod.toFun' e₁ e₂) (@TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.baseSet ∩ e₂.baseSet)) := by
   let f₁ : total_space (E₁ ×ᵇ E₂) → total_space E₁ × total_space E₂ := fun p =>
     ((⟨p.1, p.2.1⟩ : total_space E₁), (⟨p.1, p.2.2⟩ : total_space E₂))
   let f₂ : total_space E₁ × total_space E₂ → (B × F₁) × B × F₂ := fun p => ⟨e₁ p.1, e₂ p.2⟩
@@ -114,7 +114,7 @@ def Prod.invFun' (p : B × F₁ × F₂) : TotalSpace (E₁ ×ᵇ E₂) :=
 variable {e₁ e₂}
 
 theorem Prod.left_inv {x : TotalSpace (E₁ ×ᵇ E₂)}
-    (h : x ∈ @TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)) :
+    (h : x ∈ @TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.baseSet ∩ e₂.baseSet)) :
     Prod.invFun' e₁ e₂ (Prod.toFun' e₁ e₂ x) = x := by
   obtain ⟨x, v₁, v₂⟩ := x
   obtain ⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩ := h
@@ -122,7 +122,7 @@ theorem Prod.left_inv {x : TotalSpace (E₁ ×ᵇ E₂)}
 #align trivialization.prod.left_inv Trivialization.Prod.left_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Prod.right_inv {x : B × F₁ × F₂} (h : x ∈ (e₁.BaseSet ∩ e₂.BaseSet) ×ˢ (Univ : Set (F₁ × F₂))) :
+theorem Prod.right_inv {x : B × F₁ × F₂} (h : x ∈ (e₁.baseSet ∩ e₂.baseSet) ×ˢ (univ : Set (F₁ × F₂))) :
     Prod.toFun' e₁ e₂ (Prod.invFun' e₁ e₂ x) = x := by
   obtain ⟨x, w₁, w₂⟩ := x
   obtain ⟨⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩, -⟩ := h
@@ -130,7 +130,7 @@ theorem Prod.right_inv {x : B × F₁ × F₂} (h : x ∈ (e₁.BaseSet ∩ e₂
 #align trivialization.prod.right_inv Trivialization.Prod.right_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Prod.continuous_inv_fun : ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.BaseSet ∩ e₂.BaseSet) ×ˢ univ) := by
+theorem Prod.continuous_inv_fun : ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.baseSet ∩ e₂.baseSet) ×ˢ univ) := by
   rw [(prod.inducing_diag E₁ E₂).continuous_on_iff]
   have H₁ : Continuous fun p : B × F₁ × F₂ => ((p.1, p.2.1), (p.1, p.2.2)) :=
     (continuous_id.prod_map continuous_fst).prod_mk (continuous_id.prod_map continuous_snd)
@@ -153,8 +153,8 @@ trivialization for the direct sum of `E₁` and `E₂`, whose base set is `e₁.
 def prod : Trivialization (F₁ × F₂) (π (E₁ ×ᵇ E₂)) where
   toFun := Prod.toFun' e₁ e₂
   invFun := Prod.invFun' e₁ e₂
-  Source := @TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)
-  Target := (e₁.BaseSet ∩ e₂.BaseSet) ×ˢ Set.Univ
+  source := @TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.baseSet ∩ e₂.baseSet)
+  target := (e₁.baseSet ∩ e₂.baseSet) ×ˢ Set.univ
   map_source' x h := ⟨h, Set.mem_univ _⟩
   map_target' x h := h.1
   left_inv' x := Prod.left_inv
@@ -166,7 +166,7 @@ def prod : Trivialization (F₁ × F₂) (π (E₁ ×ᵇ E₂)) where
   open_target := (e₁.open_base_set.inter e₂.open_base_set).Prod is_open_univ
   continuous_to_fun := Prod.continuous_to_fun
   continuous_inv_fun := Prod.continuous_inv_fun
-  BaseSet := e₁.BaseSet ∩ e₂.BaseSet
+  baseSet := e₁.baseSet ∩ e₂.baseSet
   open_base_set := e₁.open_base_set.inter e₂.open_base_set
   source_eq := rfl
   target_eq := rfl
@@ -181,7 +181,7 @@ instance prod.is_linear [e₁.is_linear R] [e₂.is_linear R] :
 #align trivialization.prod.is_linear Trivialization.prod.is_linear
 
 @[simp]
-theorem base_set_prod : (prod R e₁ e₂).BaseSet = e₁.BaseSet ∩ e₂.BaseSet :=
+theorem base_set_prod : (prod R e₁ e₂).baseSet = e₁.baseSet ∩ e₂.baseSet :=
   rfl
 #align trivialization.base_set_prod Trivialization.base_set_prod
 
@@ -189,7 +189,7 @@ variable {e₁ e₂}
 
 variable (R)
 
-theorem prod_apply [e₁.is_linear R] [e₂.is_linear R] {x : B} (hx₁ : x ∈ e₁.BaseSet) (hx₂ : x ∈ e₂.BaseSet) (v₁ : E₁ x)
+theorem prod_apply [e₁.is_linear R] [e₂.is_linear R] {x : B} (hx₁ : x ∈ e₁.baseSet) (hx₂ : x ∈ e₂.baseSet) (v₁ : E₁ x)
     (v₂ : E₂ x) :
     prod R e₁ e₂ ⟨x, (v₁, v₂)⟩ = ⟨x, e₁.continuousLinearEquivAt R x hx₁ v₁, e₂.continuousLinearEquivAt R x hx₂ v₂⟩ :=
   rfl
@@ -216,7 +216,7 @@ instance _root_.bundle.prod.topological_vector_bundle : TopologicalVectorBundle 
   total_space_mk_inducing b := by
     rw [(prod.inducing_diag E₁ E₂).inducing_iff]
     exact (total_space_mk_inducing R F₁ E₁ b).prod_mk (total_space_mk_inducing R F₂ E₂ b)
-  TrivializationAtlas :=
+  trivializationAtlas :=
     { e |
       ∃ (e₁ : Trivialization F₁ (π E₁))(e₂ : Trivialization F₂ (π E₂))(_ : MemTrivializationAtlas R e₁)(_ :
         MemTrivializationAtlas R e₂), e = Trivialization.prod R e₁ e₂ }
@@ -262,7 +262,7 @@ variable {R F₁ E₁ F₂ E₂}
 
 @[simp]
 theorem Trivialization.continuous_linear_equiv_at_prod {e₁ : Trivialization F₁ (π E₁)} {e₂ : Trivialization F₂ (π E₂)}
-    [e₁.is_linear R] [e₂.is_linear R] {x : B} (hx₁ : x ∈ e₁.BaseSet) (hx₂ : x ∈ e₂.BaseSet) :
+    [e₁.is_linear R] [e₂.is_linear R] {x : B} (hx₁ : x ∈ e₁.baseSet) (hx₂ : x ∈ e₂.baseSet) :
     (e₁.Prod R e₂).continuousLinearEquivAt R x ⟨hx₁, hx₂⟩ =
       (e₁.continuousLinearEquivAt R x hx₁).Prod (e₂.continuousLinearEquivAt R x hx₂) :=
   by

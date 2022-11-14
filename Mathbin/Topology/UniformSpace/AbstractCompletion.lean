@@ -81,7 +81,7 @@ def ofComplete [SeparatedSpace α] [CompleteSpace α] : AbstractCompletion α :=
   mk α id inferInstance inferInstance inferInstance uniform_inducing_id dense_range_id
 #align abstract_completion.of_complete AbstractCompletion.ofComplete
 
-theorem closure_range : Closure (Range ι) = univ :=
+theorem closure_range : closure (range ι) = univ :=
   pkg.dense.closure_range
 #align abstract_completion.closure_range AbstractCompletion.closure_range
 

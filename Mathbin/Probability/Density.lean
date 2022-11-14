@@ -131,7 +131,7 @@ namespace Pdf
 
 variable {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E}
 
-theorem lintegral_eq_measure_univ {X : Ω → E} [HasPdf X ℙ μ] : (∫⁻ x, pdf X ℙ μ x ∂μ) = ℙ Set.Univ := by
+theorem lintegral_eq_measure_univ {X : Ω → E} [HasPdf X ℙ μ] : (∫⁻ x, pdf X ℙ μ x ∂μ) = ℙ Set.univ := by
   rw [← set_lintegral_univ, ← map_eq_set_lintegral_pdf X ℙ μ MeasurableSet.univ,
     measure.map_apply (has_pdf.measurable X ℙ μ) MeasurableSet.univ, Set.preimage_univ]
 #align measure_theory.pdf.lintegral_eq_measure_univ MeasureTheory.pdf.lintegral_eq_measure_univ
@@ -338,8 +338,8 @@ theorem hasPdf {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : 
     (by
       intro hpdf
       rw [is_uniform, hpdf] at hu
-      suffices μ (s ∩ Function.Support ((μ s)⁻¹ • 1)) = 0 by
-        have heq : Function.Support ((μ s)⁻¹ • (1 : E → ℝ≥0∞)) = Set.Univ := by
+      suffices μ (s ∩ Function.support ((μ s)⁻¹ • 1)) = 0 by
+        have heq : Function.support ((μ s)⁻¹ • (1 : E → ℝ≥0∞)) = Set.univ := by
           ext x
           rw [Function.mem_support]
           simp [hnt]
@@ -368,7 +368,7 @@ theorem measure_preimage {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure 
 theorem isProbabilityMeasure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E} {s : Set E}
     (hns : μ s ≠ 0) (hnt : μ s ≠ ∞) (hms : MeasurableSet s) (hu : IsUniform X s ℙ μ) : IsProbabilityMeasure ℙ :=
   ⟨by
-    have : X ⁻¹' Set.Univ = Set.Univ := by simp only [Set.preimage_univ]
+    have : X ⁻¹' Set.univ = Set.univ := by simp only [Set.preimage_univ]
     rw [← this, hu.measure_preimage hns hnt hms MeasurableSet.univ, Set.inter_univ, Ennreal.div_self hns hnt]⟩
 #align measure_theory.pdf.is_uniform.is_probability_measure MeasureTheory.pdf.IsUniform.isProbabilityMeasure
 

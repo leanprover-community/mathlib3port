@@ -31,7 +31,7 @@ variable {α : Sort u} {β : Sort v} {γ : Sort w}
 namespace Equiv
 
 @[simp]
-theorem range_eq_univ {α : Type _} {β : Type _} (e : α ≃ β) : Range e = univ :=
+theorem range_eq_univ {α : Type _} {β : Type _} (e : α ≃ β) : range e = univ :=
   eq_univ_of_forall e.Surjective
 #align equiv.range_eq_univ Equiv.range_eq_univ
 
@@ -131,13 +131,13 @@ theorem eq_preimage_iff_image_eq {α β} (e : α ≃ β) (s t) : s = e ⁻¹' t 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem prod_comm_preimage {α β} {s : Set α} {t : Set β} : Equiv.prodComm α β ⁻¹' t ×ˢ s = s ×ˢ t :=
-  preimage_swap_prod
+  preimage_swap_prod _ _
 #align equiv.prod_comm_preimage Equiv.prod_comm_preimage
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_comm_image {α β} {s : Set α} {t : Set β} : Equiv.prodComm α β '' s ×ˢ t = t ×ˢ s :=
-  image_swap_prod
+  image_swap_prod _ _
 #align equiv.prod_comm_image Equiv.prod_comm_image
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -215,7 +215,7 @@ namespace Set
 
 /-- `univ α` is equivalent to `α`. -/
 @[simps apply symmApply]
-protected def univ (α) : @Univ α ≃ α :=
+protected def univ (α) : @univ α ≃ α :=
   ⟨coe, fun a => ⟨a, trivial⟩, fun ⟨a, _⟩ => rfl, fun a => rfl⟩
 #align equiv.set.univ Equiv.Set.univ
 
@@ -324,7 +324,7 @@ theorem insert_apply_right {α} {s : Set.{u} α} [DecidablePred (· ∈ s)] {a :
 protected def sumCompl {α} (s : Set α) [DecidablePred (· ∈ s)] : Sum s (sᶜ : Set α) ≃ α :=
   calc
     Sum s (sᶜ : Set α) ≃ ↥(s ∪ sᶜ) := (Equiv.Set.union (by simp [Set.ext_iff])).symm
-    _ ≃ @Univ α := Equiv.Set.ofEq (by simp)
+    _ ≃ @univ α := Equiv.Set.ofEq (by simp)
     _ ≃ α := Equiv.Set.univ _
     
 #align equiv.set.sum_compl Equiv.Set.sumCompl
@@ -464,7 +464,7 @@ protected def prod {α β} (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ s × t 
 
 /-- The set `set.pi set.univ s` is equivalent to `Π a, s a`. -/
 @[simps]
-protected def univPi {α : Type _} {β : α → Type _} (s : ∀ a, Set (β a)) : Pi Univ s ≃ ∀ a, s a where
+protected def univPi {α : Type _} {β : α → Type _} (s : ∀ a, Set (β a)) : pi univ s ≃ ∀ a, s a where
   toFun f a := ⟨(f : ∀ a, β a) a, f.2 a (mem_univ a)⟩
   invFun f := ⟨fun a => f a, fun a ha => (f a).2⟩
   left_inv := fun ⟨f, hf⟩ => by
@@ -491,8 +491,8 @@ protected noncomputable def image {α β} (f : α → β) (s : Set α) (H : Inje
 @[simp]
 protected theorem image_symm_apply {α β} (f : α → β) (s : Set α) (H : Injective f) (x : α) (h : x ∈ s) :
     (Set.image f s H).symm ⟨f x, ⟨x, ⟨h, rfl⟩⟩⟩ = ⟨x, h⟩ := by
-  apply (Set.Image f s H).Injective
-  simp [(Set.Image f s H).apply_symm_apply]
+  apply (Set.image f s H).Injective
+  simp [(Set.image f s H).apply_symm_apply]
 #align equiv.set.image_symm_apply Equiv.Set.image_symm_apply
 
 theorem image_symm_preimage {α β} {f : α → β} (hf : Injective f) (u s : Set α) :
@@ -525,7 +525,7 @@ protected def powerset {α} (S : Set α) : 𝒫 S ≃ Set S where
 then its image under `range_splitting f` is in bijection (via `f`) with `s`.
 -/
 @[simps]
-noncomputable def rangeSplittingImageEquiv {α β : Type _} (f : α → β) (s : Set (Range f)) :
+noncomputable def rangeSplittingImageEquiv {α β : Type _} (f : α → β) (s : Set (range f)) :
     rangeSplitting f '' s ≃ s where
   toFun x :=
     ⟨⟨f x, by simp⟩, by
@@ -549,7 +549,7 @@ empty too. This hypothesis is absent on analogous definitions on stronger `equiv
 are already sufficient to ensure non-emptiness. -/
 @[simps]
 def ofLeftInverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β → α)
-    (hf : ∀ h : Nonempty α, LeftInverse (f_inv h) f) : α ≃ Range f where
+    (hf : ∀ h : Nonempty α, LeftInverse (f_inv h) f) : α ≃ range f where
   toFun a := ⟨f a, a, rfl⟩
   invFun b := f_inv (nonempty_of_exists b.2) b
   left_inv a := hf ⟨a⟩ a
@@ -560,17 +560,17 @@ def ofLeftInverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β �
 
 Note that if `α` is empty, no such `f_inv` exists and so this definition can't be used, unlike
 the stronger but less convenient `of_left_inverse`. -/
-abbrev ofLeftInverse' {α β : Sort _} (f : α → β) (f_inv : β → α) (hf : LeftInverse f_inv f) : α ≃ Range f :=
+abbrev ofLeftInverse' {α β : Sort _} (f : α → β) (f_inv : β → α) (hf : LeftInverse f_inv f) : α ≃ range f :=
   ofLeftInverse f (fun _ => f_inv) fun _ => hf
 #align equiv.of_left_inverse' Equiv.ofLeftInverse'
 
 /-- If `f : α → β` is an injective function, then domain `α` is equivalent to the range of `f`. -/
 @[simps apply]
-noncomputable def ofInjective {α β} (f : α → β) (hf : Injective f) : α ≃ Range f :=
+noncomputable def ofInjective {α β} (f : α → β) (hf : Injective f) : α ≃ range f :=
   Equiv.ofLeftInverse f (fun h => Function.invFun f) fun h => Function.left_inverse_inv_fun hf
 #align equiv.of_injective Equiv.ofInjective
 
-theorem apply_of_injective_symm {α β} {f : α → β} (hf : Injective f) (b : Range f) :
+theorem apply_of_injective_symm {α β} {f : α → β} (hf : Injective f) (b : range f) :
     f ((ofInjective f hf).symm b) = b :=
   Subtype.ext_iff.1 <| (ofInjective f hf).apply_symm_apply b
 #align equiv.apply_of_injective_symm Equiv.apply_of_injective_symm
@@ -583,7 +583,7 @@ theorem of_injective_symm_apply {α β} {f : α → β} (hf : Injective f) (a : 
 #align equiv.of_injective_symm_apply Equiv.of_injective_symm_apply
 
 theorem coe_of_injective_symm {α β} {f : α → β} (hf : Injective f) :
-    ((ofInjective f hf).symm : Range f → α) = rangeSplitting f := by
+    ((ofInjective f hf).symm : range f → α) = rangeSplitting f := by
   ext ⟨y, x, rfl⟩
   apply hf
   simp [apply_range_splitting f]
@@ -619,8 +619,8 @@ protected theorem set_forall_iff {α β} (e : α ≃ β) {p : Set α → Prop} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem preimage_pi_equiv_pi_subtype_prod_symm_pi {α : Type _} {β : α → Type _} (p : α → Prop) [DecidablePred p]
     (s : ∀ i, Set (β i)) :
-    (piEquivPiSubtypeProd p β).symm ⁻¹' Pi Univ s =
-      (Pi Univ fun i : { i // p i } => s i) ×ˢ Pi Univ fun i : { i // ¬p i } => s i :=
+    (piEquivPiSubtypeProd p β).symm ⁻¹' pi univ s =
+      (pi univ fun i : { i // p i } => s i) ×ˢ pi univ fun i : { i // ¬p i } => s i :=
   by
   ext ⟨f, g⟩
   simp only [mem_preimage, mem_univ_pi, prod_mk_mem_set_prod_eq, Subtype.forall, ← forall_and]

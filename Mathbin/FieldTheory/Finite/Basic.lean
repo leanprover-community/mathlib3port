@@ -65,7 +65,7 @@ open Polynomial
 /-- The cardinality of a field is at most `n` times the cardinality of the image of a degree `n`
   polynomial -/
 theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 0 < p.degree) :
-    Fintype.card R ≤ natDegree p * (univ.Image fun x => eval x p).card :=
+    Fintype.card R ≤ natDegree p * (univ.image fun x => eval x p).card :=
   Finset.card_le_mul_card_image _ _ fun a _ =>
     calc
       _ = (p - c a).roots.toFinset.card := congr_arg card (by simp [Finset.ext_iff, mem_roots_sub_C hp])

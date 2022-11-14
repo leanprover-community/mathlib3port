@@ -142,7 +142,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
                       "if"
                       (Lean.binderIdent `h)
                       ":"
-                      («term_∈_» `z "∈" (Term.app `Set.Range [`f]))
+                      («term_∈_» `z "∈" (Term.app `Set.range [`f]))
                       "then"
                       (Term.app `g [(Term.app `Classical.choose [`h])])
                       "else"
@@ -223,7 +223,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
                  "if"
                  (Lean.binderIdent `h)
                  ":"
-                 («term_∈_» `z "∈" (Term.app `Set.Range [`f]))
+                 («term_∈_» `z "∈" (Term.app `Set.range [`f]))
                  "then"
                  (Term.app `g [(Term.app `Classical.choose [`h])])
                  "else"
@@ -474,7 +474,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
                "if"
                (Lean.binderIdent `h)
                ":"
-               («term_∈_» `z "∈" (Term.app `Set.Range [`f]))
+               («term_∈_» `z "∈" (Term.app `Set.range [`f]))
                "then"
                (Term.app `g [(Term.app `Classical.choose [`h])])
                "else"
@@ -493,7 +493,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
              "if"
              (Lean.binderIdent `h)
              ":"
-             («term_∈_» `z "∈" (Term.app `Set.Range [`f]))
+             («term_∈_» `z "∈" (Term.app `Set.range [`f]))
              "then"
              (Term.app `g [(Term.app `Classical.choose [`h])])
              "else"
@@ -509,7 +509,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
          "if"
          (Lean.binderIdent `h)
          ":"
-         («term_∈_» `z "∈" (Term.app `Set.Range [`f]))
+         («term_∈_» `z "∈" (Term.app `Set.range [`f]))
          "then"
          (Term.app `g [(Term.app `Classical.choose [`h])])
          "else"
@@ -521,7 +521,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
         "if"
         (Lean.binderIdent `h)
         ":"
-        («term_∈_» `z "∈" (Term.app `Set.Range [`f]))
+        («term_∈_» `z "∈" (Term.app `Set.range [`f]))
         "then"
         (Term.app `g [(Term.app `Classical.choose [`h])])
         "else"
@@ -531,7 +531,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
        "if"
        (Lean.binderIdent `h)
        ":"
-       («term_∈_» `z "∈" (Term.app `Set.Range [`f]))
+       («term_∈_» `z "∈" (Term.app `Set.range [`f]))
        "then"
        (Term.app `g [(Term.app `Classical.choose [`h])])
        "else"
@@ -568,16 +568,16 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» `z "∈" (Term.app `Set.Range [`f]))
+      («term_∈_» `z "∈" (Term.app `Set.range [`f]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `Set.Range [`f])
+      (Term.app `Set.range [`f])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `Set.Range
+      `Set.range
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
@@ -605,7 +605,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
         Y Z g f mono
         :=
         ⟨
-          fun z => by skip <;> exact if h : z ∈ Set.Range f then g Classical.choose h else Nonempty.some inferInstance
+          fun z => by skip <;> exact if h : z ∈ Set.range f then g Classical.choose h else Nonempty.some inferInstance
             ,
             by
               ext y

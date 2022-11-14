@@ -44,7 +44,7 @@ namespace Nonneg
 The `set.Ici` data fields are definitionally equal, but that requires unfolding semireducible
 definitions, so type-class inference won't see this. -/
 instance orderBot [Preorder α] {a : α} : OrderBot { x : α // a ≤ x } :=
-  { Set.IciCat.orderBot with }
+  { Set.ici.orderBot with }
 #align nonneg.order_bot Nonneg.orderBot
 
 theorem bot_eq [Preorder α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le_rfl⟩ :=
@@ -52,30 +52,30 @@ theorem bot_eq [Preorder α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le
 #align nonneg.bot_eq Nonneg.bot_eq
 
 instance no_max_order [PartialOrder α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
-  Set.IciCat.no_max_order
+  Set.ici.no_max_order
 #align nonneg.no_max_order Nonneg.no_max_order
 
 instance semilatticeSup [SemilatticeSup α] {a : α} : SemilatticeSup { x : α // a ≤ x } :=
-  Set.IciCat.semilatticeSup
+  Set.ici.semilatticeSup
 #align nonneg.semilattice_sup Nonneg.semilatticeSup
 
 instance semilatticeInf [SemilatticeInf α] {a : α} : SemilatticeInf { x : α // a ≤ x } :=
-  Set.IciCat.semilatticeInf
+  Set.ici.semilatticeInf
 #align nonneg.semilattice_inf Nonneg.semilatticeInf
 
 instance distribLattice [DistribLattice α] {a : α} : DistribLattice { x : α // a ≤ x } :=
-  Set.IciCat.distribLattice
+  Set.ici.distribLattice
 #align nonneg.distrib_lattice Nonneg.distribLattice
 
 instance densely_ordered [Preorder α] [DenselyOrdered α] {a : α} : DenselyOrdered { x : α // a ≤ x } :=
-  show DenselyOrdered (IciCat a) from Set.densely_ordered
+  show DenselyOrdered (ici a) from Set.densely_ordered
 #align nonneg.densely_ordered Nonneg.densely_ordered
 
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order`. -/
 @[reducible]
 protected noncomputable def conditionallyCompleteLinearOrder [ConditionallyCompleteLinearOrder α] {a : α} :
     ConditionallyCompleteLinearOrder { x : α // a ≤ x } :=
-  { @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.IciCat a) _ ⟨⟨a, le_rfl⟩⟩ _ with }
+  { @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.ici a) _ ⟨⟨a, le_rfl⟩⟩ _ with }
 #align nonneg.conditionally_complete_linear_order Nonneg.conditionallyCompleteLinearOrder
 
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order_bot`.
@@ -88,7 +88,7 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
     (h : sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
-      (Function.funext_iff.1 (@subset_Sup_def α (Set.IciCat a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
+      (Function.funext_iff.1 (@subset_Sup_def α (Set.ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
         Subtype.eq <| by
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2

@@ -255,7 +255,7 @@ theorem symm_image_eq_preimage (h : M ≃ₘ^n⟮I, J⟯ N) (s : Set N) : h.symm
 #align diffeomorph.symm_image_eq_preimage Diffeomorph.symm_image_eq_preimage
 
 @[simp, mfld_simps]
-theorem range_comp {α} (h : M ≃ₘ^n⟮I, J⟯ N) (f : α → M) : Range (h ∘ f) = h.symm ⁻¹' Range f := by
+theorem range_comp {α} (h : M ≃ₘ^n⟮I, J⟯ N) (f : α → M) : range (h ∘ f) = h.symm ⁻¹' range f := by
   rw [range_comp, image_eq_preimage]
 #align diffeomorph.range_comp Diffeomorph.range_comp
 
@@ -494,7 +494,7 @@ theorem coe_trans_diffeomorph_symm : ⇑(I.transDiffeomorph e).symm = I.symm ∘
   rfl
 #align model_with_corners.coe_trans_diffeomorph_symm ModelWithCorners.coe_trans_diffeomorph_symm
 
-theorem trans_diffeomorph_range : Range (I.transDiffeomorph e) = e '' Range I :=
+theorem trans_diffeomorph_range : range (I.transDiffeomorph e) = e '' range I :=
   range_comp e I
 #align model_with_corners.trans_diffeomorph_range ModelWithCorners.trans_diffeomorph_range
 
@@ -509,7 +509,7 @@ theorem coe_ext_chart_at_trans_diffeomorph_symm (x : M) :
   model_with_corners.coe_ext_chart_at_trans_diffeomorph_symm ModelWithCorners.coe_ext_chart_at_trans_diffeomorph_symm
 
 theorem ext_chart_at_trans_diffeomorph_target (x : M) :
-    (extChartAt (I.transDiffeomorph e) x).Target = e.symm ⁻¹' (extChartAt I x).Target := by
+    (extChartAt (I.transDiffeomorph e) x).target = e.symm ⁻¹' (extChartAt I x).target := by
   simp only [range_comp e, e.image_eq_preimage, preimage_preimage, mfld_simps]
 #align model_with_corners.ext_chart_at_trans_diffeomorph_target ModelWithCorners.ext_chart_at_trans_diffeomorph_target
 

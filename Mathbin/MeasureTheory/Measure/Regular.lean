@@ -238,7 +238,7 @@ instance (priority := 100) Regular.weaklyRegular [T2Space α] [Regular μ] :
 namespace OuterRegular
 
 instance zero : OuterRegular (0 : Measure α) :=
-  ⟨fun A hA r hr => ⟨Univ, subset_univ A, is_open_univ, hr⟩⟩
+  ⟨fun A hA r hr => ⟨univ, subset_univ A, is_open_univ, hr⟩⟩
 #align measure_theory.measure.outer_regular.zero MeasureTheory.Measure.OuterRegular.zero
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (U «expr ⊇ » A) -/
@@ -475,7 +475,7 @@ theorem ofPseudoEmetricSpace {X : Type _} [PseudoEmetricSpace X] [MeasurableSpac
 theorem isCompactIsClosed {X : Type _} [TopologicalSpace X] [SigmaCompactSpace X] [MeasurableSpace X] (μ : Measure X) :
     InnerRegular μ IsCompact IsClosed := by
   intro F hF r hr
-  set B : ℕ → Set X := CompactCovering X
+  set B : ℕ → Set X := compactCovering X
   have hBc : ∀ n, IsCompact (F ∩ B n) := fun n => (is_compact_compact_covering X n).inter_left hF
   have hBU : (⋃ n, F ∩ B n) = F := by rw [← inter_Union, Union_compact_covering, Set.inter_univ]
   have : μ F = ⨆ n, μ (F ∩ B n) := by
@@ -566,7 +566,7 @@ protected theorem map [OpensMeasurableSpace α] [MeasurableSpace β] [Topologica
   haveI := IsFiniteMeasureOnCompacts.map μ f
   exact
     ⟨regular.inner_regular.map f.to_equiv f.measurable.ae_measurable (fun U hU => hU.Preimage f.continuous)
-        (fun K hK => hK.Image f.continuous) (fun K hK => hK.MeasurableSet) fun U hU => hU.MeasurableSet⟩
+        (fun K hK => hK.image f.continuous) (fun K hK => hK.MeasurableSet) fun U hU => hU.MeasurableSet⟩
 #align measure_theory.measure.regular.map MeasureTheory.Measure.Regular.map
 
 protected theorem smul [Regular μ] {x : ℝ≥0∞} (hx : x ≠ ∞) : (x • μ).regular := by
@@ -578,7 +578,7 @@ protected theorem smul [Regular μ] {x : ℝ≥0∞} (hx : x ≠ ∞) : (x • �
 -- see Note [lower instance priority]
 /-- A regular measure in a σ-compact space is σ-finite. -/
 instance (priority := 100) sigmaFinite [SigmaCompactSpace α] [Regular μ] : SigmaFinite μ :=
-  ⟨⟨{ Set := CompactCovering α, set_mem := fun n => trivial,
+  ⟨⟨{ Set := compactCovering α, set_mem := fun n => trivial,
         Finite := fun n => (is_compact_compact_covering α n).measure_lt_top, spanning := Union_compact_covering α }⟩⟩
 #align measure_theory.measure.regular.sigma_finite MeasureTheory.Measure.Regular.sigmaFinite
 

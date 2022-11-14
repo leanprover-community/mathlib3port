@@ -219,7 +219,7 @@ theorem sup_def {r s : Setoid α} : r ⊔ s = EqvGen.Setoid (r.Rel ⊔ s.Rel) :=
 theorem Sup_eq_eqv_gen (S : Set (Setoid α)) : sup S = EqvGen.Setoid fun x y => ∃ r : Setoid α, r ∈ S ∧ r.Rel x y := by
   rw [eqv_gen_eq]
   apply congr_arg Inf
-  simp only [UpperBounds, le_def, and_imp, exists_imp]
+  simp only [upperBounds, le_def, and_imp, exists_imp]
   ext
   exact ⟨fun H x y r hr => H hr, fun H r hr x y => H r hr⟩
 #align setoid.Sup_eq_eqv_gen Setoid.Sup_eq_eqv_gen
@@ -311,9 +311,9 @@ variable (r : Setoid α) (f : α → β)
 
 /-- The first isomorphism theorem for sets: the quotient of α by the kernel of a function f
     bijects with f's image. -/
-noncomputable def quotientKerEquivRange : Quotient (ker f) ≃ Set.Range f :=
+noncomputable def quotientKerEquivRange : Quotient (ker f) ≃ Set.range f :=
   Equiv.ofBijective
-    ((@Quotient.lift _ (Set.Range f) (ker f) fun x => ⟨f x, Set.mem_range_self x⟩) fun _ _ h => Subtype.ext_val h)
+    ((@Quotient.lift _ (Set.range f) (ker f) fun x => ⟨f x, Set.mem_range_self x⟩) fun _ _ h => Subtype.ext_val h)
     ⟨fun x y h => ker_lift_injective f <| by rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> injections, fun ⟨w, z, hz⟩ =>
       ⟨@Quotient.mk'' _ (ker f) z, by rw [Quotient.lift_mk] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
 #align setoid.quotient_ker_equiv_range Setoid.quotientKerEquivRange
@@ -383,7 +383,7 @@ theorem comap_eq {f : α → β} {r : Setoid β} : comap f r = ker (@Quotient.mk
 
 /-- The second isomorphism theorem for sets. -/
 noncomputable def comapQuotientEquiv (f : α → β) (r : Setoid β) :
-    Quotient (comap f r) ≃ Set.Range (@Quotient.mk'' _ r ∘ f) :=
+    Quotient (comap f r) ≃ Set.range (@Quotient.mk'' _ r ∘ f) :=
   (Quotient.congrRight <| ext_iff.1 comap_eq).trans <| quotient_ker_equiv_range <| Quotient.mk'' ∘ f
 #align setoid.comap_quotient_equiv Setoid.comapQuotientEquiv
 

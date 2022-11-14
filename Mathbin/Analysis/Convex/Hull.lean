@@ -82,7 +82,7 @@ theorem Convex.convex_hull_eq (hs : Convex 𝕜 s) : convexHull 𝕜 s = s :=
 #align convex.convex_hull_eq Convex.convex_hull_eq
 
 @[simp]
-theorem convex_hull_univ : convexHull 𝕜 (Univ : Set E) = univ :=
+theorem convex_hull_univ : convexHull 𝕜 (univ : Set E) = univ :=
   ClosureOperator.closure_top (convexHull 𝕜)
 #align convex_hull_univ convex_hull_univ
 
@@ -113,7 +113,7 @@ alias convex_hull_nonempty_iff ↔ _ Set.Nonempty.convex_hull
 
 attribute [protected] Set.Nonempty.convex_hull
 
-theorem segment_subset_convex_hull (hx : x ∈ s) (hy : y ∈ s) : Segment 𝕜 x y ⊆ convexHull 𝕜 s :=
+theorem segment_subset_convex_hull (hx : x ∈ s) (hy : y ∈ s) : segment 𝕜 x y ⊆ convexHull 𝕜 s :=
   (convex_convex_hull _ _).segment_subset (subset_convex_hull _ _ hx) (subset_convex_hull _ _ hy)
 #align segment_subset_convex_hull segment_subset_convex_hull
 
@@ -123,7 +123,7 @@ theorem convex_hull_singleton (x : E) : convexHull 𝕜 ({x} : Set E) = {x} :=
 #align convex_hull_singleton convex_hull_singleton
 
 @[simp]
-theorem convex_hull_pair (x y : E) : convexHull 𝕜 {x, y} = Segment 𝕜 x y := by
+theorem convex_hull_pair (x y : E) : convexHull 𝕜 {x, y} = segment 𝕜 x y := by
   refine'
     (convex_hull_min _ <| convex_segment _ _).antisymm
       (segment_subset_convex_hull (mem_insert _ _) <| mem_insert_of_mem _ <| mem_singleton _)

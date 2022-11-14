@@ -377,7 +377,7 @@ theorem gcd_is_unit_iff (x y : R) : IsUnit (gcd x y) ↔ IsCoprime x y := by
 #align gcd_is_unit_iff gcd_is_unit_iff
 
 -- this should be proved for UFDs surely?
-theorem is_coprime_of_dvd (x y : R) (nonzero : ¬(x = 0 ∧ y = 0)) (H : ∀ z ∈ Nonunits R, z ≠ 0 → z ∣ x → ¬z ∣ y) :
+theorem is_coprime_of_dvd (x y : R) (nonzero : ¬(x = 0 ∧ y = 0)) (H : ∀ z ∈ nonunits R, z ≠ 0 → z ∣ x → ¬z ∣ y) :
     IsCoprime x y := by
   rw [← gcd_is_unit_iff]
   by_contra h

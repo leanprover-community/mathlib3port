@@ -80,10 +80,10 @@ theorem eval_from_of_append (start : σ) (x y : List α) :
 #align DFA.eval_from_of_append DFA.eval_from_of_append
 
 /-- `M.accepts` is the language of `x` such that `M.eval x` is an accept state. -/
-def Accepts : Language α := fun x => M.eval x ∈ M.accept
-#align DFA.accepts DFA.Accepts
+def accepts : Language α := fun x => M.eval x ∈ M.accept
+#align DFA.accepts DFA.accepts
 
-theorem mem_accepts (x : List α) : x ∈ M.Accepts ↔ M.evalFrom M.start x ∈ M.accept := by rfl
+theorem mem_accepts (x : List α) : x ∈ M.accepts ↔ M.evalFrom M.start x ∈ M.accept := by rfl
 #align DFA.mem_accepts DFA.mem_accepts
 
 theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.card σ ≤ x.length)
@@ -124,7 +124,7 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
     List.take_append_drop]
 #align DFA.eval_from_split DFA.eval_from_split
 
-theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy : y ∈ @Language.Star α {x}) :
+theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy : y ∈ @Language.star α {x}) :
     M.evalFrom s y = s := by
   rw [Language.mem_star] at hy
   rcases hy with ⟨S, rfl, hS⟩
@@ -140,9 +140,9 @@ theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy 
     
 #align DFA.eval_from_of_pow DFA.eval_from_of_pow
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card σ ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card σ ≤ List.length x) :
     ∃ a b c,
-      x = a ++ b ++ c ∧ a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
+      x = a ++ b ++ c ∧ a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
   by
   obtain ⟨_, a, b, c, hx, hlen, hnil, rfl, hb, hc⟩ := M.eval_from_split hlen rfl
   use a, b, c, hx, hlen, hnil

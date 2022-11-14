@@ -20,7 +20,7 @@ variable {α : Sort u} {β : Sort v} (f : α ≃ β)
 
 @[simp]
 theorem Equiv.as_embedding_range {α β : Sort _} {p : β → Prop} (e : α ≃ Subtype p) :
-    Set.Range e.asEmbedding = SetOf p :=
+    Set.range e.asEmbedding = setOf p :=
   Set.ext fun x => ⟨fun ⟨y, h⟩ => h ▸ Subtype.coe_prop (e y), fun hs => ⟨e.symm ⟨x, hs⟩, by simp⟩⟩
 #align equiv.as_embedding_range Equiv.as_embedding_range
 
@@ -39,13 +39,13 @@ def coeWithTop {α} : α ↪ WithTop α :=
 /-- Given an embedding `f : α ↪ β` and a point outside of `set.range f`, construct an embedding
 `option α ↪ β`. -/
 @[simps]
-def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.Range f) : Option α ↪ β :=
+def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.range f) : Option α ↪ β :=
   ⟨Option.elim' x f, Option.injective_iff.2 ⟨f.2, h⟩⟩
 #align function.embedding.option_elim Function.Embedding.optionElim
 
 /-- Equivalence between embeddings of `option α` and a sigma type over the embeddings of `α`. -/
 @[simps]
-def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.Range fᶜ) where
+def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.range fᶜ) where
   toFun f := ⟨coeOption.trans f, f none, fun ⟨x, hx⟩ => Option.some_ne_none x <| f.Injective hx⟩
   invFun f := f.1.optionElim f.2 f.2.2
   left_inv f := ext <| by rintro (_ | _) <;> simp [Option.coe_def]
@@ -67,7 +67,7 @@ open Set
 /-- `set.image` as an embedding `set α ↪ set β`. -/
 @[simps apply]
 protected def image {α β} (f : α ↪ β) : Set α ↪ Set β :=
-  ⟨Image f, f.2.image_injective⟩
+  ⟨image f, f.2.image_injective⟩
 #align function.embedding.image Function.Embedding.image
 
 end Embedding

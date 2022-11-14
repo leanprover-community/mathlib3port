@@ -40,9 +40,9 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {U : Set E} {f 
 
 /-- If the modulus of a holomorphic function `f` is bounded below by `ε` on a circle, then its range
 contains a disk of radius `ε / 2`. -/
-theorem DiffContOnCl.ball_subset_image_closed_ball (h : DiffContOnCl ℂ f (Ball z₀ r)) (hr : 0 < r)
-    (hf : ∀ z ∈ Sphere z₀ r, ε ≤ ∥f z - f z₀∥) (hz₀ : ∃ᶠ z in 𝓝 z₀, f z ≠ f z₀) :
-    Ball (f z₀) (ε / 2) ⊆ f '' ClosedBall z₀ r := by
+theorem DiffContOnCl.ball_subset_image_closed_ball (h : DiffContOnCl ℂ f (ball z₀ r)) (hr : 0 < r)
+    (hf : ∀ z ∈ sphere z₀ r, ε ≤ ∥f z - f z₀∥) (hz₀ : ∃ᶠ z in 𝓝 z₀, f z ≠ f z₀) :
+    ball (f z₀) (ε / 2) ⊆ f '' closedBall z₀ r := by
   /- This is a direct application of the maximum principle. Pick `v` close to `f z₀`, and look at
     the function `λ z, ∥f z - v∥`: it is bounded below on the circle, and takes a small value at `z₀`
     so it is not constant on the disk, which implies that its infimum is equal to `0` and hence that

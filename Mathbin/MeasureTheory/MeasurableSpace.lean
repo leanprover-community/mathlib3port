@@ -180,7 +180,7 @@ theorem le_map_comap : m ≤ (m.comap g).map g :=
 
 end Functors
 
-theorem comap_generate_from {f : α → β} {s : Set (Set β)} : (generateFrom s).comap f = generateFrom (Preimage f '' s) :=
+theorem comap_generate_from {f : α → β} {s : Set (Set β)} : (generateFrom s).comap f = generateFrom (preimage f '' s) :=
   le_antisymm
     (comap_le_iff_le_map.2 <| generate_from_le fun t hts => GenerateMeasurable.basic _ <| mem_image_of_mem _ <| hts)
     (generate_from_le fun t ⟨u, hu, Eq⟩ => Eq ▸ ⟨u, GenerateMeasurable.basic _ hu, rfl⟩)
@@ -316,7 +316,7 @@ theorem Measurable.indicator [Zero β] (hf : Measurable f) (hs : MeasurableSet s
 
 @[measurability, to_additive]
 theorem measurableSetMulSupport [One β] [MeasurableSingletonClass β] (hf : Measurable f) :
-    MeasurableSet (MulSupport f) :=
+    MeasurableSet (mulSupport f) :=
   hf (measurableSetSingleton 1).compl
 #align measurable_set_mul_support measurableSetMulSupport
 
@@ -791,19 +791,19 @@ theorem MeasurableSet.pi {s : Set δ} {t : ∀ i : δ, Set (π i)} (hs : s.Count
 #align measurable_set.pi MeasurableSet.pi
 
 theorem MeasurableSet.univPi [Countable δ] {t : ∀ i : δ, Set (π i)} (ht : ∀ i, MeasurableSet (t i)) :
-    MeasurableSet (Pi Univ t) :=
+    MeasurableSet (pi univ t) :=
   MeasurableSet.pi (to_countable _) fun i _ => ht i
 #align measurable_set.univ_pi MeasurableSet.univPi
 
-theorem measurable_set_pi_of_nonempty {s : Set δ} {t : ∀ i, Set (π i)} (hs : s.Countable) (h : (Pi s t).Nonempty) :
-    MeasurableSet (Pi s t) ↔ ∀ i ∈ s, MeasurableSet (t i) := by
+theorem measurable_set_pi_of_nonempty {s : Set δ} {t : ∀ i, Set (π i)} (hs : s.Countable) (h : (pi s t).Nonempty) :
+    MeasurableSet (pi s t) ↔ ∀ i ∈ s, MeasurableSet (t i) := by
   classical rcases h with ⟨f, hf⟩
     convert measurableUpdate f hst
     exact fun j hj _ => hf j hj
 #align measurable_set_pi_of_nonempty measurable_set_pi_of_nonempty
 
 theorem measurable_set_pi {s : Set δ} {t : ∀ i, Set (π i)} (hs : s.Countable) :
-    MeasurableSet (Pi s t) ↔ (∀ i ∈ s, MeasurableSet (t i)) ∨ Pi s t = ∅ := by
+    MeasurableSet (pi s t) ↔ (∀ i ∈ s, MeasurableSet (t i)) ∨ pi s t = ∅ := by
   cases' (pi s t).eq_empty_or_nonempty with h h
   · simp [h]
     
@@ -883,7 +883,7 @@ theorem measurableTprodElim' [DecidableEq δ] {l : List δ} (h : ∀ i, i ∈ l)
 #align measurable_tprod_elim' measurableTprodElim'
 
 theorem MeasurableSet.tprod (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, MeasurableSet (s i)) :
-    MeasurableSet (Set.Tprod l s) := by
+    MeasurableSet (Set.tprod l s) := by
   induction' l with i l ih
   exact MeasurableSet.univ
   exact (hs i).Prod ih
@@ -946,12 +946,12 @@ theorem measurableSetInrImage {s : Set β} (hs : MeasurableSet s) : MeasurableSe
 
 omit m
 
-theorem measurableSetRangeInl [MeasurableSpace α] : MeasurableSet (Range Sum.inl : Set (Sum α β)) := by
+theorem measurableSetRangeInl [MeasurableSpace α] : MeasurableSet (range Sum.inl : Set (Sum α β)) := by
   rw [← image_univ]
   exact measurable_set.univ.inl_image
 #align measurable_set_range_inl measurableSetRangeInl
 
-theorem measurableSetRangeInr [MeasurableSpace α] : MeasurableSet (Range Sum.inr : Set (Sum α β)) := by
+theorem measurableSetRangeInr [MeasurableSpace α] : MeasurableSet (range Sum.inr : Set (Sum α β)) := by
   rw [← image_univ]
   exact measurableSetInrImage MeasurableSet.univ
 #align measurable_set_range_inr measurableSetRangeInr
@@ -1005,13 +1005,13 @@ theorem subtypeCoe {s : Set α} (hs : MeasurableSet s) : MeasurableEmbedding (co
     measurableSetImage' := fun _ => MeasurableSet.subtypeImage hs }
 #align measurable_embedding.subtype_coe MeasurableEmbedding.subtypeCoe
 
-theorem measurableSetRange (hf : MeasurableEmbedding f) : MeasurableSet (Range f) := by
+theorem measurableSetRange (hf : MeasurableEmbedding f) : MeasurableSet (range f) := by
   rw [← image_univ]
   exact hf.measurable_set_image' MeasurableSet.univ
 #align measurable_embedding.measurable_set_range MeasurableEmbedding.measurableSetRange
 
 theorem measurable_set_preimage (hf : MeasurableEmbedding f) {s : Set β} :
-    MeasurableSet (f ⁻¹' s) ↔ MeasurableSet (s ∩ Range f) := by
+    MeasurableSet (f ⁻¹' s) ↔ MeasurableSet (s ∩ range f) := by
   rw [← image_preimage_eq_inter_range, hf.measurable_set_image]
 #align measurable_embedding.measurable_set_preimage MeasurableEmbedding.measurable_set_preimage
 
@@ -1292,7 +1292,7 @@ def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ᵐ s × t where
 #align measurable_equiv.set.prod MeasurableEquiv.Set.prod
 
 /-- `univ α ≃ α` as measurable spaces. -/
-def Set.univ (α : Type _) [MeasurableSpace α] : (Univ : Set α) ≃ᵐ α where
+def Set.univ (α : Type _) [MeasurableSpace α] : (univ : Set α) ≃ᵐ α where
   toEquiv := Equiv.Set.univ α
   measurableToFun := measurableId.subtype_coe
   measurableInvFun := measurableId.subtype_mk
@@ -1320,14 +1320,14 @@ noncomputable def Set.image (f : α → β) (s : Set α) (hf : Injective f) (hfm
 /-- The domain of `f` is equivalent to its range as measurable spaces,
   if `f` is an injective measurable function that sends measurable sets to measurable sets. -/
 noncomputable def Set.range (f : α → β) (hf : Injective f) (hfm : Measurable f)
-    (hfi : ∀ s, MeasurableSet s → MeasurableSet (f '' s)) : α ≃ᵐ Range f :=
+    (hfi : ∀ s, MeasurableSet s → MeasurableSet (f '' s)) : α ≃ᵐ range f :=
   (MeasurableEquiv.Set.univ _).symm.trans <|
-    (MeasurableEquiv.Set.image f Univ hf hfm hfi).trans <|
+    (MeasurableEquiv.Set.image f univ hf hfm hfi).trans <|
       MeasurableEquiv.cast (by rw [image_univ]) (by rw [image_univ])
 #align measurable_equiv.set.range MeasurableEquiv.Set.range
 
 /-- `α` is equivalent to its image in `α ⊕ β` as measurable spaces. -/
-def Set.rangeInl : (Range Sum.inl : Set (Sum α β)) ≃ᵐ α where
+def Set.rangeInl : (range Sum.inl : Set (Sum α β)) ≃ᵐ α where
   toFun ab :=
     match ab with
     | ⟨Sum.inl a, _⟩ => a
@@ -1349,7 +1349,7 @@ def Set.rangeInl : (Range Sum.inl : Set (Sum α β)) ≃ᵐ α where
 #align measurable_equiv.set.range_inl MeasurableEquiv.Set.rangeInl
 
 /-- `β` is equivalent to its image in `α ⊕ β` as measurable spaces. -/
-def Set.rangeInr : (Range Sum.inr : Set (Sum α β)) ≃ᵐ β where
+def Set.rangeInr : (range Sum.inr : Set (Sum α β)) ≃ᵐ β where
   toFun ab :=
     match ab with
     | ⟨Sum.inr b, _⟩ => b
@@ -1381,15 +1381,15 @@ def sumProdDistrib (α β γ) [MeasurableSpace α] [MeasurableSpace β] [Measura
       measurableOfMeasurableUnionCover (range Sum.inl ×ˢ (univ : Set γ)) (range Sum.inr ×ˢ (univ : Set γ))
         (measurable_set_range_inl.prod MeasurableSet.univ) (measurable_set_range_inr.prod MeasurableSet.univ)
         (by rintro ⟨a | b, c⟩ <;> simp [Set.prod_eq]) _ _
-    · refine' (Set.Prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
-      refine' (prod_congr set.range_inl (Set.Univ _)).symm.measurable_comp_iff.1 _
+    · refine' (Set.prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
+      refine' (prod_congr set.range_inl (Set.univ _)).symm.measurable_comp_iff.1 _
       dsimp [(· ∘ ·)]
       convert measurableInl
       ext ⟨a, c⟩
       rfl
       
-    · refine' (Set.Prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
-      refine' (prod_congr set.range_inr (Set.Univ _)).symm.measurable_comp_iff.1 _
+    · refine' (Set.prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
+      refine' (prod_congr set.range_inr (Set.univ _)).symm.measurable_comp_iff.1 _
       dsimp [(· ∘ ·)]
       convert measurableInr
       ext ⟨b, c⟩
@@ -1484,7 +1484,7 @@ variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α 
 
 /-- A measurable embedding defines a measurable equivalence between its domain
 and its range. -/
-noncomputable def equivRange (f : α → β) (hf : MeasurableEmbedding f) : α ≃ᵐ Range f where
+noncomputable def equivRange (f : α → β) (hf : MeasurableEmbedding f) : α ≃ᵐ range f where
   toEquiv := Equiv.ofInjective f hf.Injective
   measurableToFun := hf.Measurable.subtype_mk
   measurableInvFun := by
@@ -1492,14 +1492,14 @@ noncomputable def equivRange (f : α → β) (hf : MeasurableEmbedding f) : α �
     exact hf.measurable_range_splitting
 #align measurable_embedding.equiv_range MeasurableEmbedding.equivRange
 
-theorem ofMeasurableInverseOnRange {g : Range f → α} (hf₁ : Measurable f) (hf₂ : MeasurableSet (Range f))
+theorem ofMeasurableInverseOnRange {g : range f → α} (hf₁ : Measurable f) (hf₂ : MeasurableSet (range f))
     (hg : Measurable g) (H : LeftInverse g (rangeFactorization f)) : MeasurableEmbedding f := by
   set e : α ≃ᵐ range f :=
     ⟨⟨range_factorization f, g, H, H.right_inverse_of_surjective surjective_onto_range⟩, hf₁.subtype_mk, hg⟩
   exact (MeasurableEmbedding.subtypeCoe hf₂).comp e.measurable_embedding
 #align measurable_embedding.of_measurable_inverse_on_range MeasurableEmbedding.ofMeasurableInverseOnRange
 
-theorem ofMeasurableInverse {g : β → α} (hf₁ : Measurable f) (hf₂ : MeasurableSet (Range f)) (hg : Measurable g)
+theorem ofMeasurableInverse {g : β → α} (hf₁ : Measurable f) (hf₂ : MeasurableSet (range f)) (hg : Measurable g)
     (H : LeftInverse g f) : MeasurableEmbedding f :=
   ofMeasurableInverseOnRange hf₁ hf₂ (hg.comp measurableSubtypeCoe) H
 #align measurable_embedding.of_measurable_inverse MeasurableEmbedding.ofMeasurableInverse
@@ -1520,7 +1520,7 @@ instance isMeasurablyGeneratedBot : IsMeasurablyGenerated (⊥ : Filter α) :=
 #align filter.is_measurably_generated_bot Filter.isMeasurablyGeneratedBot
 
 instance isMeasurablyGeneratedTop : IsMeasurablyGenerated (⊤ : Filter α) :=
-  ⟨fun s hs => ⟨Univ, univ_mem, MeasurableSet.univ, fun x _ => hs x⟩⟩
+  ⟨fun s hs => ⟨univ, univ_mem, MeasurableSet.univ, fun x _ => hs x⟩⟩
 #align filter.is_measurably_generated_top Filter.isMeasurablyGeneratedTop
 
 theorem Eventually.exists_measurable_mem {f : Filter α} [IsMeasurablyGenerated f] {p : α → Prop} (h : ∀ᶠ x in f, p x) :
@@ -1584,7 +1584,7 @@ def IsCountablySpanning (C : Set (Set α)) : Prop :=
 
 theorem is_countably_spanning_measurable_set [MeasurableSpace α] :
     IsCountablySpanning { s : Set α | MeasurableSet s } :=
-  ⟨fun _ => Univ, fun _ => MeasurableSet.univ, Union_const _⟩
+  ⟨fun _ => univ, fun _ => MeasurableSet.univ, Union_const _⟩
 #align is_countably_spanning_measurable_set is_countably_spanning_measurable_set
 
 namespace MeasurableSet

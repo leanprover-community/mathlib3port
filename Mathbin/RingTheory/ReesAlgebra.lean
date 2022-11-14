@@ -36,7 +36,7 @@ open Polynomial BigOperators
 /-- The Rees algebra of an ideal `I`, defined as the subalgebra of `R[X]` whose `i`-th coefficient
 falls in `I ^ i`. -/
 def reesAlgebra : Subalgebra R R[X] where
-  Carrier := { f | ∀ i, f.coeff i ∈ I ^ i }
+  carrier := { f | ∀ i, f.coeff i ∈ I ^ i }
   mul_mem' f g hf hg i := by
     rw [coeff_mul]
     apply Ideal.sum_mem
@@ -69,7 +69,7 @@ theorem mem_rees_algebra_iff (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i, f.coeff
   Iff.rfl
 #align mem_rees_algebra_iff mem_rees_algebra_iff
 
-theorem mem_rees_algebra_iff_support (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i ∈ f.Support, f.coeff i ∈ I ^ i := by
+theorem mem_rees_algebra_iff_support (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i ∈ f.support, f.coeff i ∈ I ^ i := by
   apply forall_congr'
   intro a
   rw [mem_support_iff, Iff.comm, imp_iff_right_iff, Ne.def, ← imp_iff_not_or]

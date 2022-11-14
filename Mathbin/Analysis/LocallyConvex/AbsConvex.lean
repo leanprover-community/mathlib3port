@@ -54,10 +54,10 @@ theorem nhds_basis_abs_convex : (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 
   by
   refine'
     (LocallyConvexSpace.convex_basis_zero ℝ E).to_has_basis (fun s hs => _) fun s hs => ⟨s, ⟨hs.1, hs.2.2⟩, rfl.subset⟩
-  refine' ⟨convexHull ℝ (BalancedCore 𝕜 s), _, convex_hull_min (balanced_core_subset s) hs.2⟩
+  refine' ⟨convexHull ℝ (balancedCore 𝕜 s), _, convex_hull_min (balanced_core_subset s) hs.2⟩
   refine' ⟨Filter.mem_of_superset (balanced_core_mem_nhds_zero hs.1) (subset_convex_hull ℝ _), _⟩
   refine' ⟨balancedConvexHullOfBalanced (balancedCoreBalanced s), _⟩
-  exact convex_convex_hull ℝ (BalancedCore 𝕜 s)
+  exact convex_convex_hull ℝ (balancedCore 𝕜 s)
 #align nhds_basis_abs_convex nhds_basis_abs_convex
 
 variable [HasContinuousSmul ℝ E] [TopologicalAddGroup E]
@@ -66,7 +66,7 @@ theorem nhds_basis_abs_convex_open :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => (0 : E) ∈ s ∧ IsOpen s ∧ Balanced 𝕜 s ∧ Convex ℝ s) id := by
   refine' (nhds_basis_abs_convex 𝕜 E).to_has_basis _ _
   · rintro s ⟨hs_nhds, hs_balanced, hs_convex⟩
-    refine' ⟨Interior s, _, interior_subset⟩
+    refine' ⟨interior s, _, interior_subset⟩
     exact
       ⟨mem_interior_iff_mem_nhds.mpr hs_nhds, is_open_interior,
         hs_balanced.interior (mem_interior_iff_mem_nhds.mpr hs_nhds), hs_convex.interior⟩
@@ -124,7 +124,7 @@ instance : Nonempty (AbsConvexOpenSets 𝕜 E) := by
   rw [← exists_true_iff_nonempty]
   dsimp only [AbsConvexOpenSets]
   rw [Subtype.exists]
-  exact ⟨Set.Univ, ⟨mem_univ 0, is_open_univ, balancedUniv, convex_univ⟩, trivial⟩
+  exact ⟨Set.univ, ⟨mem_univ 0, is_open_univ, balancedUniv, convex_univ⟩, trivial⟩
 
 end AbsolutelyConvexSets
 

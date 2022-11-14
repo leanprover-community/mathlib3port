@@ -51,7 +51,7 @@ section DegreeSum
 variable [Fintype V] [DecidableRel G.Adj]
 
 theorem dart_fst_fiber [DecidableEq V] (v : V) :
-    (univ.filter fun d : G.Dart => d.fst = v) = univ.Image (G.dartOfNeighborSet v) := by
+    (univ.filter fun d : G.Dart => d.fst = v) = univ.image (G.dartOfNeighborSet v) := by
   ext d
   simp only [mem_image, true_and_iff, mem_filter, SetCoe.exists, mem_univ, exists_prop_of_true]
   constructor
@@ -83,7 +83,7 @@ theorem Dart.edge_fiber (d : G.Dart) : (univ.filter fun d' : G.Dart => d'.edge =
 
 variable (G)
 
-theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.EdgeSet) : (univ.filter fun d : G.Dart => d.edge = e).card = 2 :=
+theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.edgeSet) : (univ.filter fun d : G.Dart => d.edge = e).card = 2 :=
   by
   refine' Sym2.ind (fun v w h => _) e h
   let d : G.dart := ⟨(v, w), h⟩

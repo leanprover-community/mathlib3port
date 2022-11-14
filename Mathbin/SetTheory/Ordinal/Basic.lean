@@ -1053,7 +1053,7 @@ theorem nat_cast_succ (n : ℕ) : ↑n.succ = succ (n : Ordinal) :=
   rfl
 #align ordinal.nat_cast_succ Ordinal.nat_cast_succ
 
-instance uniqueIioOne : Unique (IioCat (1 : Ordinal)) where
+instance uniqueIioOne : Unique (iio (1 : Ordinal)) where
   default := ⟨0, zero_lt_one⟩
   uniq a := Subtype.ext <| lt_one_iff_zero.1 a.Prop
 #align ordinal.unique_Iio_one Ordinal.uniqueIioOne
@@ -1149,7 +1149,7 @@ def enumIso (r : α → α → Prop) [IsWellOrder α r] : Subrel (· < ·) (· <
 
 /-- The order isomorphism between ordinals less than `o` and `o.out.α`. -/
 @[simps]
-noncomputable def enumIsoOut (o : Ordinal) : Set.IioCat o ≃o o.out.α where
+noncomputable def enumIsoOut (o : Ordinal) : Set.iio o ≃o o.out.α where
   toFun x :=
     enum (· < ·) x.1 <| by
       rw [type_lt]

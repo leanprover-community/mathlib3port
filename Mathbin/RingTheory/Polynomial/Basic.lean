@@ -69,7 +69,7 @@ theorem degree_le_mono {m n : WithBot ℕ} (H : m ≤ n) : degreeLe R m ≤ degr
 #align polynomial.degree_le_mono Polynomial.degree_le_mono
 
 theorem degree_le_eq_span_X_pow {n : ℕ} :
-    degreeLe R n = Submodule.span R ↑((Finset.range (n + 1)).Image fun n => (x : R[X]) ^ n) := by
+    degreeLe R n = Submodule.span R ↑((Finset.range (n + 1)).image fun n => (x : R[X]) ^ n) := by
   apply le_antisymm
   · intro p hp
     replace hp := mem_degree_le.1 hp
@@ -101,7 +101,7 @@ theorem degree_lt_mono {m n : ℕ} (H : m ≤ n) : degreeLt R m ≤ degreeLt R n
 #align polynomial.degree_lt_mono Polynomial.degree_lt_mono
 
 theorem degree_lt_eq_span_X_pow {n : ℕ} :
-    degreeLt R n = Submodule.span R ↑((Finset.range n).Image fun n => X ^ n : Finset R[X]) := by
+    degreeLt R n = Submodule.span R ↑((Finset.range n).image fun n => X ^ n : Finset R[X]) := by
   apply le_antisymm
   · intro p hp
     replace hp := mem_degree_lt.1 hp
@@ -172,14 +172,14 @@ theorem eval_eq_sum_degree_lt_equiv {n : ℕ} {p : R[X]} (hp : p ∈ degreeLt R 
 
 /-- The finset of nonzero coefficients of a polynomial. -/
 def frange (p : R[X]) : Finset R :=
-  Finset.image (fun n => p.coeff n) p.Support
+  Finset.image (fun n => p.coeff n) p.support
 #align polynomial.frange Polynomial.frange
 
 theorem frange_zero : frange (0 : R[X]) = ∅ :=
   rfl
 #align polynomial.frange_zero Polynomial.frange_zero
 
-theorem mem_frange_iff {p : R[X]} {c : R} : c ∈ p.frange ↔ ∃ n ∈ p.Support, c = p.coeff n := by simp [frange, eq_comm]
+theorem mem_frange_iff {p : R[X]} {c : R} : c ∈ p.frange ↔ ∃ n ∈ p.support, c = p.coeff n := by simp [frange, eq_comm]
 #align polynomial.mem_frange_iff Polynomial.mem_frange_iff
 
 theorem frange_one : frange (1 : R[X]) ⊆ {1} := by
@@ -256,7 +256,7 @@ variable [Ring R]
 /-- Given a polynomial, return the polynomial whose coefficients are in
 the ring closure of the original coefficients. -/
 def restriction (p : R[X]) : Polynomial (Subring.closure (↑p.frange : Set R)) :=
-  ∑ i in p.Support,
+  ∑ i in p.support,
     monomial i
       (⟨p.coeff i,
         if H : p.coeff i = 0 then H.symm ▸ (Subring.closure _).zero_mem
@@ -338,7 +338,7 @@ variable (p : R[X]) (T : Subring R)
 /-- Given a polynomial `p` and a subring `T` that contains the coefficients of `p`,
 return the corresponding polynomial whose coefficients are in `T`. -/
 def toSubring (hp : (↑p.frange : Set R) ⊆ T) : T[X] :=
-  ∑ i in p.Support,
+  ∑ i in p.support,
     monomial i (⟨p.coeff i, if H : p.coeff i = 0 then H.symm ▸ T.zero_mem else hp (p.coeff_mem_frange _ H)⟩ : T)
 #align polynomial.to_subring Polynomial.toSubring
 
@@ -417,7 +417,7 @@ variable (T : Subring R)
 /-- Given a polynomial whose coefficients are in some subring, return
 the corresponding polynomial whose coefficients are in the ambient ring. -/
 def ofSubring (p : T[X]) : R[X] :=
-  ∑ i in p.Support, monomial i (p.coeff i : R)
+  ∑ i in p.support, monomial i (p.coeff i : R)
 #align polynomial.of_subring Polynomial.ofSubring
 
 theorem coeff_of_subring (p : T[X]) (n : ℕ) : coeff (ofSubring T p) n = (coeff p n : T) := by
@@ -472,7 +472,7 @@ variable [Semiring R]
 
 /-- Transport an ideal of `R[X]` to an `R`-submodule of `R[X]`. -/
 def ofPolynomial (I : Ideal R[X]) : Submodule R R[X] where
-  Carrier := I.Carrier
+  carrier := I.carrier
   zero_mem' := I.zero_mem
   add_mem' _ _ := I.add_mem
   smul_mem' c x H := by
@@ -917,9 +917,9 @@ protected theorem Polynomial.is_noetherian_ring [IsNoetherianRing R] : IsNoether
   is_noetherian_ring_iff.2
     ⟨fun I : Ideal R[X] =>
       let M :=
-        WellFounded.min (is_noetherian_iff_well_founded.1 (by infer_instance)) (Set.Range I.leadingCoeffNth)
+        WellFounded.min (is_noetherian_iff_well_founded.1 (by infer_instance)) (Set.range I.leadingCoeffNth)
           ⟨_, ⟨0, rfl⟩⟩
-      have hm : M ∈ Set.Range I.leadingCoeffNth := WellFounded.min_mem _ _ _
+      have hm : M ∈ Set.range I.leadingCoeffNth := WellFounded.min_mem _ _ _
       let ⟨N, HN⟩ := hm
       let ⟨s, hs⟩ := I.is_fg_degree_le N
       have hm2 : ∀ k, I.leadingCoeffNth k ≤ M := fun k =>

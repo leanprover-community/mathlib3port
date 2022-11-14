@@ -83,7 +83,7 @@ def SpecCat.toTop : CommRingCatᵒᵖ ⥤ TopCat where
 -/
 @[simps]
 def SpecCat.sheafedSpaceObj (R : CommRingCat) : SheafedSpaceCat CommRingCat where
-  Carrier := SpecCat.topObj R
+  carrier := SpecCat.topObj R
   Presheaf := (structureSheaf R).1
   IsSheaf := (structureSheaf R).2
 #align algebraic_geometry.Spec.SheafedSpace_obj AlgebraicGeometry.SpecCat.sheafedSpaceObj

@@ -96,8 +96,8 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
     exact ⟨b, fun p hp => f.prop _ hp _ hb⟩
     
   have :
-    ∀ x ∈ (f.val.filter fun p : α × β => p.fst < a).Image Prod.snd,
-      ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).Image Prod.snd, x < y :=
+    ∀ x ∈ (f.val.filter fun p : α × β => p.fst < a).image Prod.snd,
+      ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).image Prod.snd, x < y :=
     by
     intro x hx y hy
     rw [Finset.mem_image] at hx hy
@@ -140,7 +140,7 @@ variable (β)
 /-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
 def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) : Cofinal (PartialIso α β) where
-  Carrier f := ∃ b : β, (a, b) ∈ f.val
+  carrier f := ∃ b : β, (a, b) ∈ f.val
   mem_gt f := by
     cases' exists_across f a with b a_b
     refine' ⟨⟨insert (a, b) f.val, fun p hp q hq => _⟩, ⟨b, Finset.mem_insert_self _ _⟩, Finset.subset_insert _ _⟩
@@ -163,7 +163,7 @@ variable (α) {β}
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
 def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
     Cofinal (PartialIso α β) where
-  Carrier f := ∃ a, (a, b) ∈ f.val
+  carrier f := ∃ a, (a, b) ∈ f.val
   mem_gt f := by
     rcases(defined_at_left α b).mem_gt f.comm with ⟨f', ⟨a, ha⟩, hl⟩
     refine' ⟨f'.comm, ⟨a, _⟩, _⟩
@@ -203,8 +203,8 @@ variable (α β)
 theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [Nontrivial β] : Nonempty (α ↪o β) := by
   rcases exists_pair_lt β with ⟨x, y, hxy⟩
   cases' exists_between hxy with a ha
-  haveI : Nonempty (Set.IooCat x y) := ⟨⟨a, ha⟩⟩
-  let our_ideal : ideal (partial_iso α _) := ideal_of_cofinals default (defined_at_left (Set.IooCat x y))
+  haveI : Nonempty (Set.ioo x y) := ⟨⟨a, ha⟩⟩
+  let our_ideal : ideal (partial_iso α _) := ideal_of_cofinals default (defined_at_left (Set.ioo x y))
   let F a := fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
   refine'
     ⟨RelEmbedding.trans (OrderEmbedding.ofStrictMono (fun a => (F a).val) fun a₁ a₂ => _) (OrderEmbedding.subtype _)⟩

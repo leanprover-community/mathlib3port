@@ -121,7 +121,7 @@ theorem span_empty : span (∅ : Set α) = ⊥ :=
 #align ideal.span_empty Ideal.span_empty
 
 @[simp]
-theorem span_univ : span (Set.Univ : Set α) = ⊤ :=
+theorem span_univ : span (Set.univ : Set α) = ⊤ :=
   Submodule.span_univ
 #align ideal.span_univ Ideal.span_univ
 
@@ -396,7 +396,7 @@ variable (ι : Type v)
 
 /-- `I^n` as an ideal of `R^n`. -/
 def pi : Ideal (ι → α) where
-  Carrier := { x | ∀ i, x i ∈ I }
+  carrier := { x | ∀ i, x i ∈ I }
   zero_mem' i := I.zero_mem
   add_mem' a b ha hb i := I.add_mem (ha i) (hb i)
   smul_mem' a b hb i := I.mul_mem_left (a i) (hb i)
@@ -766,37 +766,37 @@ end Ideal
 variable {a b : α}
 
 /-- The set of non-invertible elements of a monoid. -/
-def Nonunits (α : Type u) [Monoid α] : Set α :=
+def nonunits (α : Type u) [Monoid α] : Set α :=
   { a | ¬IsUnit a }
-#align nonunits Nonunits
+#align nonunits nonunits
 
 @[simp]
-theorem mem_nonunits_iff [Monoid α] : a ∈ Nonunits α ↔ ¬IsUnit a :=
+theorem mem_nonunits_iff [Monoid α] : a ∈ nonunits α ↔ ¬IsUnit a :=
   Iff.rfl
 #align mem_nonunits_iff mem_nonunits_iff
 
-theorem mul_mem_nonunits_right [CommMonoid α] : b ∈ Nonunits α → a * b ∈ Nonunits α :=
+theorem mul_mem_nonunits_right [CommMonoid α] : b ∈ nonunits α → a * b ∈ nonunits α :=
   mt is_unit_of_mul_is_unit_right
 #align mul_mem_nonunits_right mul_mem_nonunits_right
 
-theorem mul_mem_nonunits_left [CommMonoid α] : a ∈ Nonunits α → a * b ∈ Nonunits α :=
+theorem mul_mem_nonunits_left [CommMonoid α] : a ∈ nonunits α → a * b ∈ nonunits α :=
   mt is_unit_of_mul_is_unit_left
 #align mul_mem_nonunits_left mul_mem_nonunits_left
 
-theorem zero_mem_nonunits [Semiring α] : 0 ∈ Nonunits α ↔ (0 : α) ≠ 1 :=
+theorem zero_mem_nonunits [Semiring α] : 0 ∈ nonunits α ↔ (0 : α) ≠ 1 :=
   not_congr is_unit_zero_iff
 #align zero_mem_nonunits zero_mem_nonunits
 
 @[simp]
-theorem one_not_mem_nonunits [Monoid α] : (1 : α) ∉ Nonunits α :=
+theorem one_not_mem_nonunits [Monoid α] : (1 : α) ∉ nonunits α :=
   not_not_intro is_unit_one
 #align one_not_mem_nonunits one_not_mem_nonunits
 
-theorem coe_subset_nonunits [Semiring α] {I : Ideal α} (h : I ≠ ⊤) : (I : Set α) ⊆ Nonunits α := fun x hx hu =>
+theorem coe_subset_nonunits [Semiring α] {I : Ideal α} (h : I ≠ ⊤) : (I : Set α) ⊆ nonunits α := fun x hx hu =>
   h <| I.eq_top_of_is_unit_mem hx hu
 #align coe_subset_nonunits coe_subset_nonunits
 
-theorem exists_max_ideal_of_mem_nonunits [CommSemiring α] (h : a ∈ Nonunits α) : ∃ I : Ideal α, I.IsMaximal ∧ a ∈ I :=
+theorem exists_max_ideal_of_mem_nonunits [CommSemiring α] (h : a ∈ nonunits α) : ∃ I : Ideal α, I.IsMaximal ∧ a ∈ I :=
   by
   have : Ideal.span ({a} : Set α) ≠ ⊤ := by
     intro H

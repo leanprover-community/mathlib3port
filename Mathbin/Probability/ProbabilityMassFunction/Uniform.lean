@@ -61,14 +61,14 @@ theorem uniform_of_finset_apply_of_not_mem (ha : a ∉ s) : uniformOfFinset s hs
 #align pmf.uniform_of_finset_apply_of_not_mem Pmf.uniform_of_finset_apply_of_not_mem
 
 @[simp]
-theorem support_uniform_of_finset : (uniformOfFinset s hs).Support = s :=
+theorem support_uniform_of_finset : (uniformOfFinset s hs).support = s :=
   Set.ext
     (by
       let ⟨a, ha⟩ := hs
       simp [mem_support_iff, Finset.ne_empty_of_mem ha])
 #align pmf.support_uniform_of_finset Pmf.support_uniform_of_finset
 
-theorem mem_support_uniform_of_finset_iff (a : α) : a ∈ (uniformOfFinset s hs).Support ↔ a ∈ s := by simp
+theorem mem_support_uniform_of_finset_iff (a : α) : a ∈ (uniformOfFinset s hs).support ↔ a ∈ s := by simp
 #align pmf.mem_support_uniform_of_finset_iff Pmf.mem_support_uniform_of_finset_iff
 
 section Measure
@@ -128,11 +128,11 @@ theorem uniform_of_fintype_apply (a : α) : uniformOfFintype α a = (Fintype.car
 #align pmf.uniform_of_fintype_apply Pmf.uniform_of_fintype_apply
 
 @[simp]
-theorem support_uniform_of_fintype (α : Type _) [Fintype α] [Nonempty α] : (uniformOfFintype α).Support = ⊤ :=
+theorem support_uniform_of_fintype (α : Type _) [Fintype α] [Nonempty α] : (uniformOfFintype α).support = ⊤ :=
   Set.ext fun x => by simpa [mem_support_iff] using Fintype.card_ne_zero
 #align pmf.support_uniform_of_fintype Pmf.support_uniform_of_fintype
 
-theorem mem_support_uniform_of_fintype (a : α) : a ∈ (uniformOfFintype α).Support := by simp
+theorem mem_support_uniform_of_fintype (a : α) : a ∈ (uniformOfFintype α).support := by simp
 #align pmf.mem_support_uniform_of_fintype Pmf.mem_support_uniform_of_fintype
 
 section Measure
@@ -176,11 +176,11 @@ theorem of_multiset_apply (a : α) : ofMultiset s hs a = s.count a / s.card :=
 #align pmf.of_multiset_apply Pmf.of_multiset_apply
 
 @[simp]
-theorem support_of_multiset : (ofMultiset s hs).Support = s.toFinset :=
+theorem support_of_multiset : (ofMultiset s hs).support = s.toFinset :=
   Set.ext (by simp [mem_support_iff, hs])
 #align pmf.support_of_multiset Pmf.support_of_multiset
 
-theorem mem_support_of_multiset_iff (a : α) : a ∈ (ofMultiset s hs).Support ↔ a ∈ s.toFinset := by simp
+theorem mem_support_of_multiset_iff (a : α) : a ∈ (ofMultiset s hs).support ↔ a ∈ s.toFinset := by simp
 #align pmf.mem_support_of_multiset_iff Pmf.mem_support_of_multiset_iff
 
 theorem of_multiset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofMultiset s hs a = 0 :=

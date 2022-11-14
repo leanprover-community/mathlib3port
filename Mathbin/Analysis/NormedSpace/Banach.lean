@@ -82,14 +82,14 @@ For further use, we will only need such an element whose image
 is within distance `∥y∥/2` of `y`, to apply an iterative process. -/
 theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     ∃ C ≥ 0, ∀ y, ∃ x, dist (f x) y ≤ 1 / 2 * ∥y∥ ∧ ∥x∥ ≤ C * ∥y∥ := by
-  have A : (⋃ n : ℕ, Closure (f '' ball 0 n)) = univ := by
+  have A : (⋃ n : ℕ, closure (f '' ball 0 n)) = univ := by
     refine' subset.antisymm (subset_univ _) fun y hy => _
     rcases surj y with ⟨x, hx⟩
     rcases exists_nat_gt ∥x∥ with ⟨n, hn⟩
     refine' mem_Union.2 ⟨n, subset_closure _⟩
     refine' (mem_image _ _ _).2 ⟨x, ⟨_, hx⟩⟩
     rwa [mem_ball, dist_eq_norm, sub_zero]
-  have : ∃ (n : ℕ)(x : _), x ∈ Interior (Closure (f '' ball 0 n)) :=
+  have : ∃ (n : ℕ)(x : _), x ∈ interior (closure (f '' ball 0 n)) :=
     nonempty_interior_of_Union_of_closed (fun n => isClosedClosure) A
   simp only [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at this
   rcases this with ⟨n, a, ε, ⟨εpos, H⟩⟩
@@ -284,15 +284,15 @@ theorem _root_.affine_map.is_open_map {P Q : Type _} [MetricSpace P] [NormedAddT
 /-! ### Applications of the Banach open mapping theorem -/
 
 
-theorem interior_preimage (hsurj : Surjective f) (s : Set F) : Interior (f ⁻¹' s) = f ⁻¹' Interior s :=
+theorem interior_preimage (hsurj : Surjective f) (s : Set F) : interior (f ⁻¹' s) = f ⁻¹' interior s :=
   ((f.IsOpenMap hsurj).preimage_interior_eq_interior_preimage f.Continuous s).symm
 #align continuous_linear_map.interior_preimage ContinuousLinearMap.interior_preimage
 
-theorem closure_preimage (hsurj : Surjective f) (s : Set F) : Closure (f ⁻¹' s) = f ⁻¹' Closure s :=
+theorem closure_preimage (hsurj : Surjective f) (s : Set F) : closure (f ⁻¹' s) = f ⁻¹' closure s :=
   ((f.IsOpenMap hsurj).preimage_closure_eq_closure_preimage f.Continuous s).symm
 #align continuous_linear_map.closure_preimage ContinuousLinearMap.closure_preimage
 
-theorem frontier_preimage (hsurj : Surjective f) (s : Set F) : Frontier (f ⁻¹' s) = f ⁻¹' Frontier s :=
+theorem frontier_preimage (hsurj : Surjective f) (s : Set F) : frontier (f ⁻¹' s) = f ⁻¹' frontier s :=
   ((f.IsOpenMap hsurj).preimage_frontier_eq_frontier_preimage f.Continuous s).symm
 #align continuous_linear_map.frontier_preimage ContinuousLinearMap.frontier_preimage
 
@@ -450,7 +450,7 @@ variable [CompleteSpace E] (g : E →ₗ[𝕜] F)
 
 /-- The **closed graph theorem** : a linear map between two Banach spaces whose graph is closed
 is continuous. -/
-theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.Graph : Set <| E × F)) : Continuous g := by
+theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) : Continuous g := by
   letI : CompleteSpace g.graph := complete_space_coe_iff_is_complete.mpr hg.is_complete
   let φ₀ : E →ₗ[𝕜] E × F := linear_map.id.prod g
   have : Function.LeftInverse Prod.fst φ₀ := fun x => rfl
@@ -479,18 +479,18 @@ variable {g}
 namespace ContinuousLinearMap
 
 /-- Upgrade a `linear_map` to a `continuous_linear_map` using the **closed graph theorem**. -/
-def ofIsClosedGraph (hg : IsClosed (g.Graph : Set <| E × F)) : E →L[𝕜] F where
+def ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) : E →L[𝕜] F where
   toLinearMap := g
   cont := g.continuous_of_is_closed_graph hg
 #align continuous_linear_map.of_is_closed_graph ContinuousLinearMap.ofIsClosedGraph
 
 @[simp]
-theorem coe_fn_of_is_closed_graph (hg : IsClosed (g.Graph : Set <| E × F)) :
+theorem coe_fn_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) :
     ⇑(ContinuousLinearMap.ofIsClosedGraph hg) = g :=
   rfl
 #align continuous_linear_map.coe_fn_of_is_closed_graph ContinuousLinearMap.coe_fn_of_is_closed_graph
 
-theorem coe_of_is_closed_graph (hg : IsClosed (g.Graph : Set <| E × F)) :
+theorem coe_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) :
     ↑(ContinuousLinearMap.ofIsClosedGraph hg) = g := by
   ext
   rfl

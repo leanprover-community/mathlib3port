@@ -62,7 +62,7 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) : x * (2 * 
   rw [← div_le_one (rpow_pos_of_pos four_pos x), ← div_div_eq_mul_div, ← rpow_sub four_pos, ← mul_div 2 x,
     mul_div_left_comm, ← mul_one_sub, (by norm_num1 : (1 : ℝ) - 2 / 3 = 1 / 3), mul_one_div, ←
     log_nonpos_iff (hf' x h5), ← hf x h5]
-  have h : ConcaveOn ℝ (Set.IoiCat 0.5) f := by
+  have h : ConcaveOn ℝ (Set.ioi 0.5) f := by
     refine'
         ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_Ioi 0.5)).add
               ((strict_concave_on_sqrt_mul_log_Ioi.concave_on.comp_linear_map ((2 : ℝ) • LinearMap.id)).Subset

@@ -69,7 +69,7 @@ See <https://stacks.math.columbia.edu/tag/00Z4>, or [nlab], or [MM92][] Chapter 
 Definition 1.
 -/
 structure GrothendieckTopology where
-  Sieves : ∀ X : C, Set (Sieve X)
+  sieves : ∀ X : C, Set (Sieve X)
   top_mem' : ∀ X, ⊤ ∈ sieves X
   pullback_stable' : ∀ ⦃X Y : C⦄ ⦃S : Sieve X⦄ (f : Y ⟶ X), S ∈ sieves X → S.pullback f ∈ sieves Y
   transitive' :
@@ -80,7 +80,7 @@ structure GrothendieckTopology where
 namespace GrothendieckTopology
 
 instance : CoeFun (GrothendieckTopology C) fun _ => ∀ X : C, Set (Sieve X) :=
-  ⟨Sieves⟩
+  ⟨sieves⟩
 
 variable {C} {X Y : C} {S R : Sieve X}
 
@@ -99,7 +99,7 @@ theorem ext {J₁ J₂ : GrothendieckTopology C} (h : (J₁ : ∀ X : C, Set (Si
 #align category_theory.grothendieck_topology.ext CategoryTheory.GrothendieckTopology.ext
 
 @[simp]
-theorem mem_sieves_iff_coe : S ∈ J.Sieves X ↔ S ∈ J X :=
+theorem mem_sieves_iff_coe : S ∈ J.sieves X ↔ S ∈ J X :=
   Iff.rfl
 #align category_theory.grothendieck_topology.mem_sieves_iff_coe CategoryTheory.GrothendieckTopology.mem_sieves_iff_coe
 
@@ -210,7 +210,7 @@ See [MM92] Chapter III, Section 2, example (a), or
 https://en.wikipedia.org/wiki/Grothendieck_topology#The_discrete_and_indiscrete_topologies
 -/
 def trivial : GrothendieckTopology C where
-  Sieves X := {⊤}
+  sieves X := {⊤}
   top_mem' X := rfl
   pullback_stable' X Y S f hf := by
     rw [Set.mem_singleton_iff] at hf⊢
@@ -225,7 +225,7 @@ def trivial : GrothendieckTopology C where
 See https://en.wikipedia.org/wiki/Grothendieck_topology#The_discrete_and_indiscrete_topologies.
 -/
 def discrete : GrothendieckTopology C where
-  Sieves X := Set.Univ
+  sieves X := Set.univ
   top_mem' := by simp
   pullback_stable' X Y f := by simp
   transitive' := by simp
@@ -253,7 +253,7 @@ instance : PartialOrder (GrothendieckTopology C) :=
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
 instance :
     HasInf (GrothendieckTopology C) where inf T :=
-    { Sieves := inf (sieves '' T),
+    { sieves := inf (sieves '' T),
       top_mem' := by
         rintro X S ⟨⟨_, J, hJ, rfl⟩, rfl⟩
         simp,
@@ -333,7 +333,7 @@ theorem topCovers (S : Sieve X) (f : Y ⟶ X) : (⊤ : GrothendieckTopology C).C
 See https://ncatlab.org/nlab/show/dense+topology, or [MM92] Chapter III, Section 2, example (e).
 -/
 def dense : GrothendieckTopology C where
-  Sieves X S := ∀ {Y : C} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f)
+  sieves X S := ∀ {Y : C} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f)
   top_mem' X Y f := ⟨Y, 𝟙 Y, ⟨⟩⟩
   pullback_stable' := by
     intro X Y S h H Z f
@@ -369,7 +369,7 @@ For the pullback stability condition, we need the right Ore condition to hold.
 See https://ncatlab.org/nlab/show/atomic+site, or [MM92] Chapter III, Section 2, example (f).
 -/
 def atomic (hro : RightOreCondition C) : GrothendieckTopology C where
-  Sieves X S := ∃ (Y : _)(f : Y ⟶ X), S f
+  sieves X S := ∃ (Y : _)(f : Y ⟶ X), S f
   top_mem' X := ⟨_, 𝟙 _, ⟨⟩⟩
   pullback_stable' := by
     rintro X Y S h ⟨Z, f, hf⟩

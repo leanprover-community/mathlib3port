@@ -96,7 +96,7 @@ theorem supported_eq_adjoin_X : supported R s = Algebra.adjoin R (X '' s) :=
 #align mv_polynomial.supported_eq_adjoin_X MvPolynomial.supported_eq_adjoin_X
 
 @[simp]
-theorem supported_univ : supported R (Set.Univ : Set σ) = ⊤ := by simp [Algebra.eq_top_iff, mem_supported]
+theorem supported_univ : supported R (Set.univ : Set σ) = ⊤ := by simp [Algebra.eq_top_iff, mem_supported]
 #align mv_polynomial.supported_univ MvPolynomial.supported_univ
 
 @[simp]

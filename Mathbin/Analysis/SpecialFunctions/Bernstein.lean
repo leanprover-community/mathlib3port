@@ -51,7 +51,7 @@ open BigOperators
 
 open BoundedContinuousFunction
 
-open UnitInterval
+open unitInterval
 
 /-- The Bernstein polynomials, as continuous functions on `[0,1]`.
 -/

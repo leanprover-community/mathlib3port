@@ -181,7 +181,7 @@ theorem factor_order_iso_map_one_eq_bot {m : Associates M} {n : Associates N}
 #align factor_order_iso_map_one_eq_bot factor_order_iso_map_one_eq_bot
 
 theorem coe_factor_order_iso_map_eq_one_iff {m u : Associates M} {n : Associates N} (hu' : u ≤ m)
-    (d : Set.IicCat m ≃o Set.IicCat n) : (d ⟨u, hu'⟩ : Associates N) = 1 ↔ u = 1 :=
+    (d : Set.iic m ≃o Set.iic n) : (d ⟨u, hu'⟩ : Associates N) = 1 ↔ u = 1 :=
   ⟨fun hu => by
     rw [show u = ↑(d.symm ⟨↑(d ⟨u, hu'⟩), (d ⟨u, hu'⟩).Prop⟩) by
         simp only [Subtype.coe_eta, OrderIso.symm_apply_apply, Subtype.coe_mk]]
@@ -197,7 +197,7 @@ variable [UniqueFactorizationMonoid N] [UniqueFactorizationMonoid M]
 open DivisorChain
 
 theorem pow_image_of_prime_by_factor_order_iso_dvd [DecidableEq (Associates M)] {m p : Associates M} {n : Associates N}
-    (hn : n ≠ 0) (hp : p ∈ normalizedFactors m) (d : Set.IicCat m ≃o Set.IicCat n) {s : ℕ} (hs' : p ^ s ≤ m) :
+    (hn : n ≠ 0) (hp : p ∈ normalizedFactors m) (d : Set.iic m ≃o Set.iic n) {s : ℕ} (hs' : p ^ s ≤ m) :
     (d ⟨p, dvd_of_mem_normalized_factors hp⟩ : Associates N) ^ s ≤ n := by
   by_cases hs:s = 0
   · simp [hs]
@@ -230,7 +230,7 @@ theorem pow_image_of_prime_by_factor_order_iso_dvd [DecidableEq (Associates M)] 
 #align pow_image_of_prime_by_factor_order_iso_dvd pow_image_of_prime_by_factor_order_iso_dvd
 
 theorem mapPrimeOfFactorOrderIso [DecidableEq (Associates M)] {m p : Associates M} {n : Associates N} (hn : n ≠ 0)
-    (hp : p ∈ normalizedFactors m) (d : Set.IicCat m ≃o Set.IicCat n) :
+    (hp : p ∈ normalizedFactors m) (d : Set.iic m ≃o Set.iic n) :
     Prime (d ⟨p, dvd_of_mem_normalized_factors hp⟩ : Associates N) := by
   rw [← irreducible_iff_prime]
   refine' (Associates.is_atom_iff <| ne_zero_of_dvd_ne_zero hn (d ⟨p, _⟩).Prop).mp ⟨_, fun b hb => _⟩
@@ -259,7 +259,7 @@ theorem mapPrimeOfFactorOrderIso [DecidableEq (Associates M)] {m p : Associates 
 
 theorem mem_normalized_factors_factor_order_iso_of_mem_normalized_factors [DecidableEq (Associates M)]
     [DecidableEq (Associates N)] {m p : Associates M} {n : Associates N} (hn : n ≠ 0) (hp : p ∈ normalizedFactors m)
-    (d : Set.IicCat m ≃o Set.IicCat n) : ↑(d ⟨p, dvd_of_mem_normalized_factors hp⟩) ∈ normalizedFactors n := by
+    (d : Set.iic m ≃o Set.iic n) : ↑(d ⟨p, dvd_of_mem_normalized_factors hp⟩) ∈ normalizedFactors n := by
   obtain ⟨q, hq, hq'⟩ :=
     exists_mem_normalized_factors_of_dvd hn (mapPrimeOfFactorOrderIso hn hp d).Irreducible
       (d ⟨p, dvd_of_mem_normalized_factors hp⟩).Prop
@@ -271,7 +271,7 @@ theorem mem_normalized_factors_factor_order_iso_of_mem_normalized_factors [Decid
 variable [DecidableRel ((· ∣ ·) : M → M → Prop)] [DecidableRel ((· ∣ ·) : N → N → Prop)]
 
 theorem multiplicity_prime_le_multiplicity_image_by_factor_order_iso [DecidableEq (Associates M)] {m p : Associates M}
-    {n : Associates N} (hp : p ∈ normalizedFactors m) (d : Set.IicCat m ≃o Set.IicCat n) :
+    {n : Associates N} (hp : p ∈ normalizedFactors m) (d : Set.iic m ≃o Set.iic n) :
     multiplicity p m ≤ multiplicity (↑(d ⟨p, dvd_of_mem_normalized_factors hp⟩)) n := by
   by_cases hn:n = 0
   · simp [hn]
@@ -286,7 +286,7 @@ theorem multiplicity_prime_le_multiplicity_image_by_factor_order_iso [DecidableE
   multiplicity_prime_le_multiplicity_image_by_factor_order_iso multiplicity_prime_le_multiplicity_image_by_factor_order_iso
 
 theorem multiplicity_prime_eq_multiplicity_image_by_factor_order_iso [DecidableEq (Associates M)] {m p : Associates M}
-    {n : Associates N} (hn : n ≠ 0) (hp : p ∈ normalizedFactors m) (d : Set.IicCat m ≃o Set.IicCat n) :
+    {n : Associates N} (hn : n ≠ 0) (hp : p ∈ normalizedFactors m) (d : Set.iic m ≃o Set.iic n) :
     multiplicity p m = multiplicity (↑(d ⟨p, dvd_of_mem_normalized_factors hp⟩)) n := by
   refine' le_antisymm (multiplicity_prime_le_multiplicity_image_by_factor_order_iso hp d) _
   suffices
@@ -310,8 +310,7 @@ variable [Unique Mˣ] [Unique Nˣ]
   bijection between the factors of `m` and the factors of `n` that preserves `∣`. -/
 @[simps]
 def mkFactorOrderIsoOfFactorDvdEquiv {m : M} {n : N} {d : { l : M // l ∣ m } ≃ { l : N // l ∣ n }}
-    (hd : ∀ l l', (d l : N) ∣ d l' ↔ (l : M) ∣ (l' : M)) :
-    Set.IicCat (Associates.mk m) ≃o Set.IicCat (Associates.mk n) where
+    (hd : ∀ l l', (d l : N) ∣ d l' ↔ (l : M) ∣ (l' : M)) : Set.iic (Associates.mk m) ≃o Set.iic (Associates.mk n) where
   toFun l :=
     ⟨Associates.mk
         (d

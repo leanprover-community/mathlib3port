@@ -171,7 +171,7 @@ theorem card_image_le {s : Set α} [Finite s] (f : α → β) : Nat.card (f '' s
   card_le_of_surjective _ Set.surjective_onto_image
 #align finite.card_image_le Finite.card_image_le
 
-theorem card_range_le [Finite α] (f : α → β) : Nat.card (Set.Range f) ≤ Nat.card α :=
+theorem card_range_le [Finite α] (f : α → β) : Nat.card (Set.range f) ≤ Nat.card α :=
   card_le_of_surjective _ Set.surjective_onto_range
 #align finite.card_range_le Finite.card_range_le
 

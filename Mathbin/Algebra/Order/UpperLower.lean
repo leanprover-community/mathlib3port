@@ -115,18 +115,18 @@ instance : One (UpperSet α) :=
 
 @[to_additive]
 instance : Mul (UpperSet α) :=
-  ⟨fun s t => ⟨Image2 (· * ·) s t, s.2.mul_right⟩⟩
+  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mul_right⟩⟩
 
 @[to_additive]
 instance : Div (UpperSet α) :=
-  ⟨fun s t => ⟨Image2 (· / ·) s t, s.2.divRight⟩⟩
+  ⟨fun s t => ⟨image2 (· / ·) s t, s.2.divRight⟩⟩
 
 @[to_additive]
 instance : HasSmul α (UpperSet α) :=
   ⟨fun a s => ⟨(· • ·) a '' s, s.2.smul⟩⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_one : ((1 : UpperSet α) : Set α) = Set.IciCat 1 :=
+theorem coe_one : ((1 : UpperSet α) : Set α) = Set.ici 1 :=
   rfl
 #align upper_set.coe_one UpperSet.coe_one
 
@@ -183,11 +183,11 @@ instance : One (LowerSet α) :=
 
 @[to_additive]
 instance : Mul (LowerSet α) :=
-  ⟨fun s t => ⟨Image2 (· * ·) s t, s.2.mul_right⟩⟩
+  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mul_right⟩⟩
 
 @[to_additive]
 instance : Div (LowerSet α) :=
-  ⟨fun s t => ⟨Image2 (· / ·) s t, s.2.divRight⟩⟩
+  ⟨fun s t => ⟨image2 (· / ·) s t, s.2.divRight⟩⟩
 
 @[to_additive]
 instance : HasSmul α (LowerSet α) :=

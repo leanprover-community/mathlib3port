@@ -154,7 +154,7 @@ theorem map_update_zero (m : ∀ i, M₁ i) (i : ι) : f (update m i 0) = 0 :=
 
 @[simp]
 theorem map_zero [Nonempty ι] : f 0 = 0 := by
-  obtain ⟨i, _⟩ : ∃ i : ι, i ∈ Set.Univ := Set.exists_mem_of_nonempty ι
+  obtain ⟨i, _⟩ : ∃ i : ι, i ∈ Set.univ := Set.exists_mem_of_nonempty ι
   exact map_coord_zero f i rfl
 #align multilinear_map.map_zero MultilinearMap.map_zero
 
@@ -387,7 +387,7 @@ the image under a multilinear map `f` is the sum of `f (s.piecewise m m')` along
 `map_add_univ`, although it can be useful in its own right as it does not require the index set `ι`
 to be finite.-/
 theorem map_piecewise_add (m m' : ∀ i, M₁ i) (t : Finset ι) :
-    f (t.piecewise (m + m') m') = ∑ s in t.Powerset, f (s.piecewise m m') := by
+    f (t.piecewise (m + m') m') = ∑ s in t.powerset, f (s.piecewise m m') := by
   revert m'
   refine' Finset.induction_on t (by simp) _
   intro i t hit Hrec m'
@@ -1474,7 +1474,7 @@ variable {R M M₂} [Ring R] [∀ i, AddCommMonoid (M₁ i)] [AddCommMonoid M'] 
 
 Note that this is not a submodule - it is not closed under addition. -/
 def map [Nonempty ι] (f : MultilinearMap R M₁ M₂) (p : ∀ i, Submodule R (M₁ i)) : SubMulAction R M₂ where
-  Carrier := f '' { v | ∀ i, v i ∈ p i }
+  carrier := f '' { v | ∀ i, v i ∈ p i }
   smul_mem' := fun c _ ⟨x, hx, hf⟩ => by
     let ⟨i⟩ := ‹Nonempty ι›
     refine' ⟨update x i (c • x i), fun j => if hij : j = i then _ else _, hf ▸ _⟩

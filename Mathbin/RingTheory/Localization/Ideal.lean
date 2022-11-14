@@ -34,7 +34,7 @@ In practice, this ideal differs only in that the carrier set is defined explicit
 This definition is only meant to be used in proving `mem_map_algebra_map_iff`,
 and any proof that needs to refer to the explicit carrier set should use that theorem. -/
 private def map_ideal (I : Ideal R) : Ideal S where
-  Carrier := { z : S | ∃ x : I × M, z * algebraMap R S x.2 = algebraMap R S x.1 }
+  carrier := { z : S | ∃ x : I × M, z * algebraMap R S x.2 = algebraMap R S x.1 }
   zero_mem' := ⟨⟨0, 1⟩, by simp⟩
   add_mem' := by
     rintro a b ⟨a', ha⟩ ⟨b', hb⟩

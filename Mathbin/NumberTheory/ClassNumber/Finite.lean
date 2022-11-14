@@ -59,7 +59,7 @@ noncomputable def normBound : ℤ :=
   let n := Fintype.card ι
   let i : ι := Nonempty.some bS.index_nonempty
   let m : ℤ :=
-    Finset.max' (Finset.univ.Image fun ijk : ι × ι × ι => abv (Algebra.leftMulMatrix bS (bS ijk.1) ijk.2.1 ijk.2.2))
+    Finset.max' (Finset.univ.image fun ijk : ι × ι × ι => abv (Algebra.leftMulMatrix bS (bS ijk.1) ijk.2.1 ijk.2.2))
       ⟨_, Finset.mem_image.mpr ⟨⟨i, i, i⟩, Finset.mem_univ _, rfl⟩⟩
   Nat.factorial n • (n • m) ^ n
 #align class_group.norm_bound ClassGroup.normBound
@@ -176,7 +176,7 @@ variable [DecidableEq R]
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
 contains an element close to `finset_approx`. -/
 noncomputable def finsetApprox : Finset R :=
-  (Finset.univ.Image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase 0
+  (Finset.univ.image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase 0
 #align class_group.finset_approx ClassGroup.finsetApprox
 
 theorem finsetApprox.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=

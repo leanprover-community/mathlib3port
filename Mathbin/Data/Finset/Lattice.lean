@@ -54,7 +54,7 @@ theorem sup_insert [DecidableEq β] {b : β} : (insert b s : Finset β).sup f = 
   fold_insert_idem
 #align finset.sup_insert Finset.sup_insert
 
-theorem sup_image [DecidableEq β] (s : Finset γ) (f : γ → β) (g : β → α) : (s.Image f).sup g = s.sup (g ∘ f) :=
+theorem sup_image [DecidableEq β] (s : Finset γ) (f : γ → β) (g : β → α) : (s.image f).sup g = s.sup (g ∘ f) :=
   fold_image_idem
 #align finset.sup_image Finset.sup_image
 
@@ -315,7 +315,7 @@ theorem inf_insert [DecidableEq β] {b : β} : (insert b s : Finset β).inf f = 
   fold_insert_idem
 #align finset.inf_insert Finset.inf_insert
 
-theorem inf_image [DecidableEq β] (s : Finset γ) (f : γ → β) (g : β → α) : (s.Image f).inf g = s.inf (g ∘ f) :=
+theorem inf_image [DecidableEq β] (s : Finset γ) (f : γ → β) (g : β → α) : (s.image f).inf g = s.inf (g ∘ f) :=
   fold_image_idem
 #align finset.inf_image Finset.inf_image
 
@@ -1284,42 +1284,42 @@ theorem min'_lt_max'_of_card (h₂ : 1 < card s) :
   exact s.min'_lt_max' ha hb hab
 #align finset.min'_lt_max'_of_card Finset.min'_lt_max'_of_card
 
-theorem map_of_dual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.Image ofDual).max := by
+theorem map_of_dual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.image ofDual).max := by
   rw [max_eq_sup_with_bot, sup_image]
   exact congr_fun Option.map_id _
 #align finset.map_of_dual_min Finset.map_of_dual_min
 
-theorem map_of_dual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.Image ofDual).min := by
+theorem map_of_dual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.image ofDual).min := by
   rw [min_eq_inf_with_top, inf_image]
   exact congr_fun Option.map_id _
 #align finset.map_of_dual_max Finset.map_of_dual_max
 
-theorem map_to_dual_min (s : Finset α) : s.min.map toDual = (s.Image toDual).max := by
+theorem map_to_dual_min (s : Finset α) : s.min.map toDual = (s.image toDual).max := by
   rw [max_eq_sup_with_bot, sup_image]
   exact congr_fun Option.map_id _
 #align finset.map_to_dual_min Finset.map_to_dual_min
 
-theorem map_to_dual_max (s : Finset α) : s.max.map toDual = (s.Image toDual).min := by
+theorem map_to_dual_max (s : Finset α) : s.max.map toDual = (s.image toDual).min := by
   rw [min_eq_inf_with_top, inf_image]
   exact congr_fun Option.map_id _
 #align finset.map_to_dual_max Finset.map_to_dual_max
 
-theorem of_dual_min' {s : Finset αᵒᵈ} (hs : s.Nonempty) : ofDual (min' s hs) = max' (s.Image ofDual) (hs.Image _) := by
+theorem of_dual_min' {s : Finset αᵒᵈ} (hs : s.Nonempty) : ofDual (min' s hs) = max' (s.image ofDual) (hs.image _) := by
   convert rfl
   exact image_id
 #align finset.of_dual_min' Finset.of_dual_min'
 
-theorem of_dual_max' {s : Finset αᵒᵈ} (hs : s.Nonempty) : ofDual (max' s hs) = min' (s.Image ofDual) (hs.Image _) := by
+theorem of_dual_max' {s : Finset αᵒᵈ} (hs : s.Nonempty) : ofDual (max' s hs) = min' (s.image ofDual) (hs.image _) := by
   convert rfl
   exact image_id
 #align finset.of_dual_max' Finset.of_dual_max'
 
-theorem to_dual_min' {s : Finset α} (hs : s.Nonempty) : toDual (min' s hs) = max' (s.Image toDual) (hs.Image _) := by
+theorem to_dual_min' {s : Finset α} (hs : s.Nonempty) : toDual (min' s hs) = max' (s.image toDual) (hs.image _) := by
   convert rfl
   exact image_id
 #align finset.to_dual_min' Finset.to_dual_min'
 
-theorem to_dual_max' {s : Finset α} (hs : s.Nonempty) : toDual (max' s hs) = min' (s.Image toDual) (hs.Image _) := by
+theorem to_dual_max' {s : Finset α} (hs : s.Nonempty) : toDual (max' s hs) = min' (s.image toDual) (hs.image _) := by
   convert rfl
   exact image_id
 #align finset.to_dual_max' Finset.to_dual_max'
@@ -1355,16 +1355,16 @@ theorem min'_lt_of_mem_erase_min' [DecidableEq α] {a : α} (ha : a ∈ s.erase 
 #align finset.min'_lt_of_mem_erase_min' Finset.min'_lt_of_mem_erase_min'
 
 @[simp]
-theorem max'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α) (h : (s.Image f).Nonempty) :
-    (s.Image f).max' h = f (s.max' ((Nonempty.image_iff f).mp h)) := by
+theorem max'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α) (h : (s.image f).Nonempty) :
+    (s.image f).max' h = f (s.max' ((Nonempty.image_iff f).mp h)) := by
   refine' le_antisymm (max'_le _ _ _ fun y hy => _) (le_max' _ _ (mem_image.mpr ⟨_, max'_mem _ _, rfl⟩))
   obtain ⟨x, hx, rfl⟩ := mem_image.mp hy
   exact hf (le_max' _ _ hx)
 #align finset.max'_image Finset.max'_image
 
 @[simp]
-theorem min'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α) (h : (s.Image f).Nonempty) :
-    (s.Image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) := by
+theorem min'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α) (h : (s.image f).Nonempty) :
+    (s.image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) := by
   convert @max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => to_dual (f (of_dual a))) (by simpa) _ _ <;> convert h
   rw [nonempty.image_iff]
 #align finset.min'_image Finset.min'_image
@@ -1552,7 +1552,7 @@ theorem sup_eq_bUnion {α β} [DecidableEq β] (s : Finset α) (t : α → Finse
 #align finset.sup_eq_bUnion Finset.sup_eq_bUnion
 
 @[simp]
-theorem sup_singleton'' [DecidableEq α] (s : Finset β) (f : β → α) : (s.sup fun b => {f b}) = s.Image f := by
+theorem sup_singleton'' [DecidableEq α] (s : Finset β) (f : β → α) : (s.sup fun b => {f b}) = s.image f := by
   ext a
   rw [mem_sup, mem_image]
   simp only [mem_singleton, eq_comm]
@@ -1710,16 +1710,16 @@ theorem infi_insert (a : α) (s : Finset α) (t : α → β) : (⨅ x ∈ insert
   @supr_insert α βᵒᵈ _ _ _ _ _
 #align finset.infi_insert Finset.infi_insert
 
-theorem supr_finset_image {f : γ → α} {g : α → β} {s : Finset γ} : (⨆ x ∈ s.Image f, g x) = ⨆ y ∈ s, g (f y) := by
+theorem supr_finset_image {f : γ → α} {g : α → β} {s : Finset γ} : (⨆ x ∈ s.image f, g x) = ⨆ y ∈ s, g (f y) := by
   rw [← supr_coe, coe_image, supr_image, supr_coe]
 #align finset.supr_finset_image Finset.supr_finset_image
 
 theorem sup_finset_image {β γ : Type _} [SemilatticeSup β] [OrderBot β] (f : γ → α) (g : α → β) (s : Finset γ) :
-    (s.Image f).sup g = s.sup (g ∘ f) := by
+    (s.image f).sup g = s.sup (g ∘ f) := by
   classical induction' s using Finset.induction_on with a s' ha ih <;> simp [*]
 #align finset.sup_finset_image Finset.sup_finset_image
 
-theorem infi_finset_image {f : γ → α} {g : α → β} {s : Finset γ} : (⨅ x ∈ s.Image f, g x) = ⨅ y ∈ s, g (f y) := by
+theorem infi_finset_image {f : γ → α} {g : α → β} {s : Finset γ} : (⨅ x ∈ s.image f, g x) = ⨅ y ∈ s, g (f y) := by
   rw [← infi_coe, coe_image, infi_image, infi_coe]
 #align finset.infi_finset_image Finset.infi_finset_image
 
@@ -1800,12 +1800,12 @@ theorem set_bInter_insert (a : α) (s : Finset α) (t : α → Set β) : (⋂ x 
 #align finset.set_bInter_insert Finset.set_bInter_insert
 
 theorem set_bUnion_finset_image {f : γ → α} {g : α → Set β} {s : Finset γ} :
-    (⋃ x ∈ s.Image f, g x) = ⋃ y ∈ s, g (f y) :=
+    (⋃ x ∈ s.image f, g x) = ⋃ y ∈ s, g (f y) :=
   supr_finset_image
 #align finset.set_bUnion_finset_image Finset.set_bUnion_finset_image
 
 theorem set_bInter_finset_image {f : γ → α} {g : α → Set β} {s : Finset γ} :
-    (⋂ x ∈ s.Image f, g x) = ⋂ y ∈ s, g (f y) :=
+    (⋂ x ∈ s.image f, g x) = ⋂ y ∈ s, g (f y) :=
   infi_finset_image
 #align finset.set_bInter_finset_image Finset.set_bInter_finset_image
 

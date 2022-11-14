@@ -373,49 +373,49 @@ theorem cast_abs {q : ℚ} : ((|q| : ℚ) : K) = |q| := by simp [abs_eq_max_neg]
 open Set
 
 @[simp]
-theorem preimage_cast_Icc (a b : ℚ) : coe ⁻¹' IccCat (a : K) b = IccCat a b := by
+theorem preimage_cast_Icc (a b : ℚ) : coe ⁻¹' icc (a : K) b = icc a b := by
   ext x
   simp
 #align rat.preimage_cast_Icc Rat.preimage_cast_Icc
 
 @[simp]
-theorem preimage_cast_Ico (a b : ℚ) : coe ⁻¹' IcoCat (a : K) b = IcoCat a b := by
+theorem preimage_cast_Ico (a b : ℚ) : coe ⁻¹' ico (a : K) b = ico a b := by
   ext x
   simp
 #align rat.preimage_cast_Ico Rat.preimage_cast_Ico
 
 @[simp]
-theorem preimage_cast_Ioc (a b : ℚ) : coe ⁻¹' IocCat (a : K) b = IocCat a b := by
+theorem preimage_cast_Ioc (a b : ℚ) : coe ⁻¹' ioc (a : K) b = ioc a b := by
   ext x
   simp
 #align rat.preimage_cast_Ioc Rat.preimage_cast_Ioc
 
 @[simp]
-theorem preimage_cast_Ioo (a b : ℚ) : coe ⁻¹' IooCat (a : K) b = IooCat a b := by
+theorem preimage_cast_Ioo (a b : ℚ) : coe ⁻¹' ioo (a : K) b = ioo a b := by
   ext x
   simp
 #align rat.preimage_cast_Ioo Rat.preimage_cast_Ioo
 
 @[simp]
-theorem preimage_cast_Ici (a : ℚ) : coe ⁻¹' IciCat (a : K) = IciCat a := by
+theorem preimage_cast_Ici (a : ℚ) : coe ⁻¹' ici (a : K) = ici a := by
   ext x
   simp
 #align rat.preimage_cast_Ici Rat.preimage_cast_Ici
 
 @[simp]
-theorem preimage_cast_Iic (a : ℚ) : coe ⁻¹' IicCat (a : K) = IicCat a := by
+theorem preimage_cast_Iic (a : ℚ) : coe ⁻¹' iic (a : K) = iic a := by
   ext x
   simp
 #align rat.preimage_cast_Iic Rat.preimage_cast_Iic
 
 @[simp]
-theorem preimage_cast_Ioi (a : ℚ) : coe ⁻¹' IoiCat (a : K) = IoiCat a := by
+theorem preimage_cast_Ioi (a : ℚ) : coe ⁻¹' ioi (a : K) = ioi a := by
   ext x
   simp
 #align rat.preimage_cast_Ioi Rat.preimage_cast_Ioi
 
 @[simp]
-theorem preimage_cast_Iio (a : ℚ) : coe ⁻¹' IioCat (a : K) = IioCat a := by
+theorem preimage_cast_Iio (a : ℚ) : coe ⁻¹' iio (a : K) = iio a := by
   ext x
   simp
 #align rat.preimage_cast_Iio Rat.preimage_cast_Iio

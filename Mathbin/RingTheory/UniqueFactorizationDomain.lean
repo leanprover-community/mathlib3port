@@ -1844,7 +1844,7 @@ noncomputable def fintypeSubtypeDvd {M : Type _} [CancelCommMonoidWithZero M] [U
   -- and has image exactly the divisors of `y`.
   refine'
     Fintype.ofFinset
-      (((normalized_factors y).Powerset.toFinset.product (Finset.univ : Finset Mˣ)).Image fun s =>
+      (((normalized_factors y).powerset.toFinset.product (Finset.univ : Finset Mˣ)).image fun s =>
         (s.snd : M) * s.fst.prod)
       fun x => _
   simp only [exists_prop, Finset.mem_image, Finset.mem_product, Finset.mem_univ, and_true_iff, Multiset.mem_to_finset,
@@ -1901,7 +1901,7 @@ theorem factorization_one : factorization (1 : α) = 0 := by simp [factorization
 
 /-- The support of `factorization n` is exactly the finset of normalized factors -/
 @[simp]
-theorem support_factorization {n : α} : (factorization n).Support = (normalizedFactors n).toFinset := by
+theorem support_factorization {n : α} : (factorization n).support = (normalizedFactors n).toFinset := by
   simp [factorization, Multiset.to_finsupp_support]
 #align support_factorization support_factorization
 

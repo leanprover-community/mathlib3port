@@ -3,6 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
+import Mathbin.Data.Int.Units
 import Mathbin.GroupTheory.Perm.Support
 import Mathbin.Data.Fintype.Basic
 import Mathbin.GroupTheory.OrderOfElement
@@ -96,7 +97,7 @@ theorem subtype_perm_of_fintype_one (p : α → Prop) [Fintype { x // p x }] (h 
 #align equiv.perm.subtype_perm_of_fintype_one Equiv.Perm.subtype_perm_of_fintype_one
 
 theorem perm_maps_to_inl_iff_maps_to_inr {m n : Type _} [Finite m] [Finite n] (σ : Perm (Sum m n)) :
-    Set.MapsTo σ (Set.Range Sum.inl) (Set.Range Sum.inl) ↔ Set.MapsTo σ (Set.Range Sum.inr) (Set.Range Sum.inr) := by
+    Set.MapsTo σ (Set.range Sum.inl) (Set.range Sum.inl) ↔ Set.MapsTo σ (Set.range Sum.inr) (Set.range Sum.inr) := by
   cases nonempty_fintype m
   cases nonempty_fintype n
   constructor <;> (
@@ -122,7 +123,7 @@ theorem perm_maps_to_inl_iff_maps_to_inr {m n : Type _} [Finite m] [Finite n] (�
 #align equiv.perm.perm_maps_to_inl_iff_maps_to_inr Equiv.Perm.perm_maps_to_inl_iff_maps_to_inr
 
 theorem mem_sum_congr_hom_range_of_perm_maps_to_inl {m n : Type _} [Finite m] [Finite n] {σ : Perm (Sum m n)}
-    (h : Set.MapsTo σ (Set.Range Sum.inl) (Set.Range Sum.inl)) : σ ∈ (sumCongrHom m n).range := by
+    (h : Set.MapsTo σ (Set.range Sum.inl) (Set.range Sum.inl)) : σ ∈ (sumCongrHom m n).range := by
   cases nonempty_fintype m
   cases nonempty_fintype n
   classical have h1 : ∀ x : Sum m n, (∃ a : m, Sum.inl a = x) → ∃ a : m, Sum.inl a = σ x

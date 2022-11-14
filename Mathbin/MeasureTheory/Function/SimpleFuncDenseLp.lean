@@ -85,7 +85,7 @@ theorem norm_approx_on_zero_le [OpensMeasurableSpace E] {f : β → E} (hf : Mea
 #align measure_theory.simple_func.norm_approx_on_zero_le MeasureTheory.SimpleFunc.norm_approx_on_zero_le
 
 theorem tendsto_approx_on_Lp_snorm [OpensMeasurableSpace E] {f : β → E} (hf : Measurable f) {s : Set E} {y₀ : E}
-    (h₀ : y₀ ∈ s) [SeparableSpace s] (hp_ne_top : p ≠ ∞) {μ : Measure β} (hμ : ∀ᵐ x ∂μ, f x ∈ Closure s)
+    (h₀ : y₀ ∈ s) [SeparableSpace s] (hp_ne_top : p ≠ ∞) {μ : Measure β} (hμ : ∀ᵐ x ∂μ, f x ∈ closure s)
     (hi : snorm (fun x => f x - y₀) p μ < ∞) : Tendsto (fun n => snorm (approxOn f hf s y₀ h₀ n - f) p μ) atTop (𝓝 0) :=
   by
   by_cases hp_zero:p = 0
@@ -193,7 +193,7 @@ variable [MeasurableSpace β]
 variable [MeasurableSpace E] [NormedAddCommGroup E]
 
 theorem tendsto_approx_on_L1_nnnorm [OpensMeasurableSpace E] {f : β → E} (hf : Measurable f) {s : Set E} {y₀ : E}
-    (h₀ : y₀ ∈ s) [SeparableSpace s] {μ : Measure β} (hμ : ∀ᵐ x ∂μ, f x ∈ Closure s)
+    (h₀ : y₀ ∈ s) [SeparableSpace s] {μ : Measure β} (hμ : ∀ᵐ x ∂μ, f x ∈ closure s)
     (hi : HasFiniteIntegral (fun x => f x - y₀) μ) :
     Tendsto (fun n => ∫⁻ x, ∥approxOn f hf s y₀ h₀ n x - f x∥₊ ∂μ) atTop (𝓝 0) := by
   simpa [snorm_one_eq_lintegral_nnnorm] using
@@ -369,7 +369,7 @@ theorem measure_preimage_lt_top_of_integrable (f : α →ₛ E) (hf : Integrable
   measure_theory.simple_func.measure_preimage_lt_top_of_integrable MeasureTheory.SimpleFunc.measure_preimage_lt_top_of_integrable
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y «expr ≠ » 0) -/
-theorem measure_support_lt_top [Zero β] (f : α →ₛ β) (hf : ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) : μ (Support f) < ∞ :=
+theorem measure_support_lt_top [Zero β] (f : α →ₛ β) (hf : ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) : μ (support f) < ∞ :=
   by
   rw [support_eq]
   refine' (measure_bUnion_finset_le _ _).trans_lt (ennreal.sum_lt_top_iff.mpr fun y hy => _)
@@ -378,19 +378,19 @@ theorem measure_support_lt_top [Zero β] (f : α →ₛ β) (hf : ∀ (y) (_ : y
 #align measure_theory.simple_func.measure_support_lt_top MeasureTheory.SimpleFunc.measure_support_lt_top
 
 theorem measure_support_lt_top_of_mem_ℒp (f : α →ₛ E) (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
-    μ (Support f) < ∞ :=
+    μ (support f) < ∞ :=
   f.measure_support_lt_top ((mem_ℒp_iff hp_ne_zero hp_ne_top).mp hf)
 #align
   measure_theory.simple_func.measure_support_lt_top_of_mem_ℒp MeasureTheory.SimpleFunc.measure_support_lt_top_of_mem_ℒp
 
-theorem measure_support_lt_top_of_integrable (f : α →ₛ E) (hf : Integrable f μ) : μ (Support f) < ∞ :=
+theorem measure_support_lt_top_of_integrable (f : α →ₛ E) (hf : Integrable f μ) : μ (support f) < ∞ :=
   f.measure_support_lt_top (integrable_iff.mp hf)
 #align
   measure_theory.simple_func.measure_support_lt_top_of_integrable MeasureTheory.SimpleFunc.measure_support_lt_top_of_integrable
 
 theorem measure_lt_top_of_mem_ℒp_indicator (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) {c : E} (hc : c ≠ 0) {s : Set α}
     (hs : MeasurableSet s) (hcs : Memℒp ((const α c).piecewise s hs (const α 0)) p μ) : μ s < ⊤ := by
-  have : Function.Support (const α c) = Set.Univ := Function.support_const hc
+  have : Function.support (const α c) = Set.univ := Function.support_const hc
   simpa only [mem_ℒp_iff_fin_meas_supp hp_pos hp_ne_top, fin_meas_supp_iff_support, support_indicator, Set.inter_univ,
     this] using hcs
 #align
@@ -414,7 +414,7 @@ variable (E)
 /-- `Lp.simple_func` is a subspace of Lp consisting of equivalence classes of an integrable simple
     function. -/
 def simpleFunc : AddSubgroup (lp E p μ) where
-  Carrier := { f : lp E p μ | ∃ s : α →ₛ E, (AeEqFun.mk s s.AeStronglyMeasurable : α →ₘ[μ] E) = f }
+  carrier := { f : lp E p μ | ∃ s : α →ₛ E, (AeEqFun.mk s s.AeStronglyMeasurable : α →ₘ[μ] E) = f }
   zero_mem' := ⟨0, rfl⟩
   add_mem' := fun f g ⟨s, hs⟩ ⟨t, ht⟩ =>
     ⟨s + t, by
@@ -686,7 +686,7 @@ protected theorem induction (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) {P : lp.s
       ∀ ⦃f g : α →ₛ E⦄,
         ∀ hf : Memℒp f p μ,
           ∀ hg : Memℒp g p μ,
-            Disjoint (Support f) (Support g) →
+            Disjoint (support f) (support g) →
               P (lp.simpleFunc.toLp f hf) →
                 P (lp.simpleFunc.toLp g hg) → P (lp.simpleFunc.toLp f hf + lp.simpleFunc.toLp g hg))
     (f : lp.simpleFunc E p μ) : P f := by
@@ -929,7 +929,7 @@ theorem lp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : lp E p �
       ∀ ⦃f g⦄,
         ∀ hf : Memℒp f p μ,
           ∀ hg : Memℒp g p μ,
-            Disjoint (Support f) (Support g) → P (hf.toLp f) → P (hg.toLp g) → P (hf.toLp f + hg.toLp g))
+            Disjoint (support f) (support g) → P (hf.toLp f) → P (hg.toLp g) → P (hf.toLp f + hg.toLp g))
     (h_closed : IsClosed { f : lp E p μ | P f }) : ∀ f : lp E p μ, P f := by
   refine' fun f => (Lp.simple_func.dense_range hp_ne_top).induction_on f h_closed _
   refine' Lp.simple_func.induction (lt_of_lt_of_le Ennreal.zero_lt_one _i.elim).ne' hp_ne_top _ _
@@ -954,7 +954,7 @@ of their images is a subset of `{0}`).
 @[elab_as_elim]
 theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α → E) → Prop)
     (h_ind : ∀ (c : E) ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
-    (h_add : ∀ ⦃f g : α → E⦄, Disjoint (Support f) (Support g) → Memℒp f p μ → Memℒp g p μ → P f → P g → P (f + g))
+    (h_add : ∀ ⦃f g : α → E⦄, Disjoint (support f) (support g) → Memℒp f p μ → Memℒp g p μ → P f → P g → P (f + g))
     (h_closed : IsClosed { f : lp E p μ | P f }) (h_ae : ∀ ⦃f g⦄, f =ᵐ[μ] g → Memℒp f p μ → P f → P g) :
     ∀ ⦃f : α → E⦄ (hf : Memℒp f p μ), P f := by
   have : ∀ f : simple_func α E, mem_ℒp f p μ → P f := by
@@ -1013,7 +1013,7 @@ of their images is a subset of `{0}`).
 theorem Integrable.induction (P : (α → E) → Prop)
     (h_ind : ∀ (c : E) ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
     (h_add :
-      ∀ ⦃f g : α → E⦄, Disjoint (Support f) (Support g) → Integrable f μ → Integrable g μ → P f → P g → P (f + g))
+      ∀ ⦃f g : α → E⦄, Disjoint (support f) (support g) → Integrable f μ → Integrable g μ → P f → P g → P (f + g))
     (h_closed : IsClosed { f : α →₁[μ] E | P f }) (h_ae : ∀ ⦃f g⦄, f =ᵐ[μ] g → Integrable f μ → P f → P g) :
     ∀ ⦃f : α → E⦄ (hf : Integrable f μ), P f := by
   simp only [← mem_ℒp_one_iff_integrable] at *

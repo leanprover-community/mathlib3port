@@ -72,7 +72,7 @@ def RandG.next {g : Type} [RandomGen g] : RandG g ℕ :=
 #align rand_g.next RandG.next
 
 -- mathport name: «expr .. »
-local infixl:41 " .. " => Set.IccCat
+local infixl:41 " .. " => Set.icc
 
 open Stream
 

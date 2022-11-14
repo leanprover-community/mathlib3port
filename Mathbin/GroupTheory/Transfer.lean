@@ -37,7 +37,7 @@ open Finset MulAction
 
 open Pointwise
 
-variable (R S T : LeftTransversals (H : Set G)) [FiniteIndex H]
+variable (R S T : leftTransversals (H : Set G)) [FiniteIndex H]
 
 /-- The difference of two left transversals -/
 @[to_additive "The difference of two left transversals"]
@@ -48,7 +48,7 @@ noncomputable def diff : A :=
     ϕ
       ⟨(α q)⁻¹ * β q,
         QuotientGroup.left_rel_apply.mp <| Quotient.exact' ((α.symm_apply_apply q).trans (β.symm_apply_apply q).symm)⟩
-#align subgroup.left_transversals.diff Subgroup.LeftTransversals.diff
+#align subgroup.left_transversals.diff Subgroup.leftTransversals.diff
 
 @[to_additive]
 theorem diff_mul_diff : diff ϕ R S * diff ϕ S T = diff ϕ R T :=
@@ -56,17 +56,17 @@ theorem diff_mul_diff : diff ϕ R S * diff ϕ S T = diff ϕ R T :=
     (prod_congr rfl fun q hq =>
       (ϕ.map_mul _ _).symm.trans
         (congr_arg ϕ (by simp_rw [Subtype.ext_iff, coe_mul, coe_mk, mul_assoc, mul_inv_cancel_left])))
-#align subgroup.left_transversals.diff_mul_diff Subgroup.LeftTransversals.diff_mul_diff
+#align subgroup.left_transversals.diff_mul_diff Subgroup.leftTransversals.diff_mul_diff
 
 @[to_additive]
 theorem diff_self : diff ϕ T T = 1 :=
   mul_right_eq_self.mp (diff_mul_diff ϕ T T T)
-#align subgroup.left_transversals.diff_self Subgroup.LeftTransversals.diff_self
+#align subgroup.left_transversals.diff_self Subgroup.leftTransversals.diff_self
 
 @[to_additive]
 theorem diff_inv : (diff ϕ S T)⁻¹ = diff ϕ T S :=
   inv_eq_of_mul_eq_one_right <| (diff_mul_diff ϕ S T S).trans <| diff_self ϕ S
-#align subgroup.left_transversals.diff_inv Subgroup.LeftTransversals.diff_inv
+#align subgroup.left_transversals.diff_inv Subgroup.leftTransversals.diff_inv
 
 @[to_additive]
 theorem smul_diff_smul (g : G) : diff ϕ (g • S) (g • T) = diff ϕ S T :=
@@ -78,7 +78,7 @@ theorem smul_diff_smul (g : G) : diff ϕ (g • S) (g • T) = diff ϕ S T :=
           simp_rw [coe_mk, smul_apply_eq_smul_apply_inv_smul, smul_eq_mul, mul_inv_rev, mul_assoc,
             inv_mul_cancel_left]))
     (fun q _ => g • q) (fun _ _ => mem_univ _) (fun q _ => smul_inv_smul g q) fun q _ => inv_smul_smul g q
-#align subgroup.left_transversals.smul_diff_smul Subgroup.LeftTransversals.smul_diff_smul
+#align subgroup.left_transversals.smul_diff_smul Subgroup.leftTransversals.smul_diff_smul
 
 end LeftTransversals
 
@@ -86,19 +86,19 @@ end Subgroup
 
 namespace MonoidHom
 
-open MulAction Subgroup Subgroup.LeftTransversals
+open MulAction Subgroup Subgroup.leftTransversals
 
 /-- Given `ϕ : H →* A` from `H : subgroup G` to a commutative group `A`,
 the transfer homomorphism is `transfer ϕ : G →* A`. -/
 @[to_additive
       "Given `ϕ : H →+ A` from `H : add_subgroup G` to an additive commutative group `A`,\nthe transfer homomorphism is `transfer ϕ : G →+ A`."]
 noncomputable def transfer [FiniteIndex H] : G →* A :=
-  let T : LeftTransversals (H : Set G) := Inhabited.default
+  let T : leftTransversals (H : Set G) := Inhabited.default
   { toFun := fun g => diff ϕ T (g • T), map_one' := by rw [one_smul, diff_self],
     map_mul' := fun g h => by rw [mul_smul, ← diff_mul_diff, smul_diff_smul] }
 #align monoid_hom.transfer MonoidHom.transfer
 
-variable (T : LeftTransversals (H : Set G))
+variable (T : leftTransversals (H : Set G))
 
 @[to_additive]
 theorem transfer_def [FiniteIndex H] (g : G) : transfer ϕ g = diff ϕ T (g • T) := by
@@ -171,7 +171,7 @@ theorem transfer_center_pow_apply [FiniteIndex (center G)] (g : G) : ↑(transfe
 
 section BurnsideTransfer
 
-variable {p : ℕ} (P : Sylow p G) (hP : (P : Subgroup G).normalizer ≤ (P : Subgroup G).Centralizer)
+variable {p : ℕ} (P : Sylow p G) (hP : (P : Subgroup G).normalizer ≤ (P : Subgroup G).centralizer)
 
 include hP
 

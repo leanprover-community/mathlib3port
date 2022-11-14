@@ -170,7 +170,7 @@ def torsionBySet (s : Set R) : Submodule R M :=
 `a` in `S`. -/
 @[simps]
 def torsion' (S : Type _) [CommMonoid S] [DistribMulAction S M] [SmulCommClass S R M] : Submodule R M where
-  Carrier := { x | ∃ a : S, a • x = 0 }
+  carrier := { x | ∃ a : S, a • x = 0 }
   zero_mem' := ⟨1, smul_zero _⟩
   add_mem' := fun x y ⟨a, hx⟩ ⟨b, hy⟩ =>
     ⟨b * a, by rw [smul_add, mul_smul, mul_comm, mul_smul, hx, hy, smul_zero, smul_zero, add_zero]⟩
@@ -289,7 +289,7 @@ theorem torsion_by_one : torsionBy R M 1 = ⊥ :=
 #align submodule.torsion_by_one Submodule.torsion_by_one
 
 @[simp]
-theorem torsion_by_univ : torsionBySet R M Set.Univ = ⊥ := by
+theorem torsion_by_univ : torsionBySet R M Set.univ = ⊥ := by
   rw [eq_bot_iff, ← torsion_by_one, ← torsion_by_singleton_eq]
   exact torsion_by_set_le_torsion_by_set_of_subset fun _ _ => trivial
 #align submodule.torsion_by_univ Submodule.torsion_by_univ
@@ -762,7 +762,7 @@ end
 variable [CommSemiring R] [AddCommMonoid M] [Module R M] [∀ x : M, Decidable (x = 0)]
 
 theorem exists_is_torsion_by {p : R} (hM : IsTorsion' M <| Submonoid.powers p) (d : ℕ) (hd : d ≠ 0) (s : Fin d → M)
-    (hs : span R (Set.Range s) = ⊤) : ∃ j : Fin d, Module.IsTorsionBy R M (p ^ pOrder hM (s j)) := by
+    (hs : span R (Set.range s) = ⊤) : ∃ j : Fin d, Module.IsTorsionBy R M (p ^ pOrder hM (s j)) := by
   let oj := List.argmax (fun i => p_order hM <| s i) (List.finRange d)
   have hoj : oj.is_some :=
     option.ne_none_iff_is_some.mp fun eq_none => hd <| list.fin_range_eq_nil.mp <| list.argmax_eq_none.mp eq_none

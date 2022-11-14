@@ -73,7 +73,7 @@ variable {α : Type _} {E : α → Type _} {p q : ℝ≥0∞} [∀ i, NormedAddC
 * has the series `∑' i, ∥f i∥ ^ p` be summable, if `0 < p < ∞`. -/
 def Memℓp (f : ∀ i, E i) (p : ℝ≥0∞) : Prop :=
   if p = 0 then Set.Finite { i | f i ≠ 0 }
-  else if p = ∞ then BddAbove (Set.Range fun i => ∥f i∥) else Summable fun i => ∥f i∥ ^ p.toReal
+  else if p = ∞ then BddAbove (Set.range fun i => ∥f i∥) else Summable fun i => ∥f i∥ ^ p.toReal
 #align mem_ℓp Memℓp
 
 theorem mem_ℓp_zero_iff {f : ∀ i, E i} : Memℓp f 0 ↔ Set.Finite { i | f i ≠ 0 } := by dsimp [Memℓp] <;> rw [if_pos rfl]
@@ -83,11 +83,11 @@ theorem memℓpZero {f : ∀ i, E i} (hf : Set.Finite { i | f i ≠ 0 }) : Mem�
   mem_ℓp_zero_iff.2 hf
 #align mem_ℓp_zero memℓpZero
 
-theorem mem_ℓp_infty_iff {f : ∀ i, E i} : Memℓp f ∞ ↔ BddAbove (Set.Range fun i => ∥f i∥) := by
+theorem mem_ℓp_infty_iff {f : ∀ i, E i} : Memℓp f ∞ ↔ BddAbove (Set.range fun i => ∥f i∥) := by
   dsimp [Memℓp] <;> rw [if_neg Ennreal.top_ne_zero, if_pos rfl]
 #align mem_ℓp_infty_iff mem_ℓp_infty_iff
 
-theorem memℓpInfty {f : ∀ i, E i} (hf : BddAbove (Set.Range fun i => ∥f i∥)) : Memℓp f ∞ :=
+theorem memℓpInfty {f : ∀ i, E i} (hf : BddAbove (Set.range fun i => ∥f i∥)) : Memℓp f ∞ :=
   mem_ℓp_infty_iff.2 hf
 #align mem_ℓp_infty memℓpInfty
 
@@ -105,7 +105,7 @@ theorem memℓpGen {f : ∀ i, E i} (hf : Summable fun i => ∥f i∥ ^ p.toReal
     
   · apply memℓpInfty
     have H : Summable fun i : α => (1 : ℝ) := by simpa using hf
-    simpa using ((finite_of_summable_const (by norm_num) H).Image fun i => ∥f i∥).BddAbove
+    simpa using ((finite_of_summable_const (by norm_num) H).image fun i => ∥f i∥).BddAbove
     
   exact (mem_ℓp_gen_iff hp).2 hf
 #align mem_ℓp_gen memℓpGen
@@ -147,7 +147,7 @@ theorem finite_dsupport {f : ∀ i, E i} (hf : Memℓp f 0) : Set.Finite { i | f
   mem_ℓp_zero_iff.1 hf
 #align mem_ℓp.finite_dsupport Memℓp.finite_dsupport
 
-theorem bdd_above {f : ∀ i, E i} (hf : Memℓp f ∞) : BddAbove (Set.Range fun i => ∥f i∥) :=
+theorem bdd_above {f : ∀ i, E i} (hf : Memℓp f ∞) : BddAbove (Set.range fun i => ∥f i∥) :=
   mem_ℓp_infty_iff.1 hf
 #align mem_ℓp.bdd_above Memℓp.bdd_above
 
@@ -329,7 +329,7 @@ instance PreLp.unique [IsEmpty α] : Unique (PreLp E) :=
 
 /-- lp space -/
 def lp (E : α → Type _) [∀ i, NormedAddCommGroup (E i)] (p : ℝ≥0∞) : AddSubgroup (PreLp E) where
-  Carrier := { f | Memℓp f p }
+  carrier := { f | Memℓp f p }
   zero_mem' := zeroMemℓp
   add_mem' f g := Memℓp.add
   neg_mem' f := Memℓp.neg
@@ -409,7 +409,7 @@ theorem norm_eq_csupr (f : lp E ∞) : ∥f∥ = ⨆ i, ∥f i∥ := by
   rw [dif_neg Ennreal.top_ne_zero, if_pos rfl]
 #align lp.norm_eq_csupr lp.norm_eq_csupr
 
-theorem is_lub_norm [Nonempty α] (f : lp E ∞) : IsLub (Set.Range fun i => ∥f i∥) ∥f∥ := by
+theorem is_lub_norm [Nonempty α] (f : lp E ∞) : IsLub (Set.range fun i => ∥f i∥) ∥f∥ := by
   rw [lp.norm_eq_csupr]
   exact is_lub_csupr (lp.memℓp f)
 #align lp.is_lub_norm lp.is_lub_norm
@@ -849,7 +849,7 @@ variable (B)
 /-- The `𝕜`-subring of elements of `Π i : α, B i` whose `lp` norm is finite. This is `lp E ∞`,
 with extra structure. -/
 def _root_.lp_infty_subring : Subring (PreLp B) :=
-  { lp B ∞ with Carrier := { f | Memℓp f ∞ }, one_mem' := oneMemℓpInfty, mul_mem' := fun f g hf hg => hf.inftyMul hg }
+  { lp B ∞ with carrier := { f | Memℓp f ∞ }, one_mem' := oneMemℓpInfty, mul_mem' := fun f g hf hg => hf.inftyMul hg }
 #align lp._root_.lp_infty_subring lp._root_.lp_infty_subring
 
 variable {B}
@@ -944,7 +944,7 @@ variable (𝕜 B)
 /-- The `𝕜`-subalgebra of elements of `Π i : α, B i` whose `lp` norm is finite. This is `lp E ∞`,
 with extra structure. -/
 def _root_.lp_infty_subalgebra : Subalgebra 𝕜 (PreLp B) :=
-  { lpInftySubring B with Carrier := { f | Memℓp f ∞ }, algebra_map_mem' := algebraMapMemℓpInfty }
+  { lpInftySubring B with carrier := { f | Memℓp f ∞ }, algebra_map_mem' := algebraMapMemℓpInfty }
 #align lp._root_.lp_infty_subalgebra lp._root_.lp_infty_subalgebra
 
 variable {𝕜 B}
@@ -1147,7 +1147,7 @@ theorem norm_le_of_tendsto {C : ℝ} {F : ι → lp E p} (hCF : ∀ᶠ k in l, �
 #align lp.norm_le_of_tendsto lp.norm_le_of_tendsto
 
 /-- If `f` is the pointwise limit of a bounded sequence in `lp E p`, then `f` is in `lp E p`. -/
-theorem memℓpOfTendsto {F : ι → lp E p} (hF : Metric.Bounded (Set.Range F)) {f : ∀ a, E a}
+theorem memℓpOfTendsto {F : ι → lp E p} (hF : Metric.Bounded (Set.range F)) {f : ∀ a, E a}
     (hf : Tendsto (id fun i => F i : ι → ∀ a, E a) l (𝓝 f)) : Memℓp f p := by
   obtain ⟨C, hC, hCF'⟩ := hF.exists_pos_norm_le
   have hCF : ∀ k, ∥F k∥ ≤ C := fun k => hCF' _ ⟨k, rfl⟩

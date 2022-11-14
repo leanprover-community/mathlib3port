@@ -108,7 +108,7 @@ theorem ext (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align bounded_continuous_function.ext BoundedContinuousFunction.ext
 
-theorem boundedRange (f : α →ᵇ β) : Bounded (Range f) :=
+theorem boundedRange (f : α →ᵇ β) : Bounded (range f) :=
   bounded_range_iff.2 f.Bounded
 #align bounded_continuous_function.bounded_range BoundedContinuousFunction.boundedRange
 
@@ -439,7 +439,7 @@ theorem extend_comp (f : α ↪ δ) (g : α →ᵇ β) (h : δ →ᵇ β) : exte
   extend_comp f.Injective _ _
 #align bounded_continuous_function.extend_comp BoundedContinuousFunction.extend_comp
 
-theorem extend_apply' {f : α ↪ δ} {x : δ} (hx : x ∉ Range f) (g : α →ᵇ β) (h : δ →ᵇ β) : extend f g h x = h x :=
+theorem extend_apply' {f : α ↪ δ} {x : δ} (hx : x ∉ range f) (g : α →ᵇ β) (h : δ →ᵇ β) : extend f g h x = h x :=
   extend_apply' _ _ _ hx
 #align bounded_continuous_function.extend_apply' BoundedContinuousFunction.extend_apply'
 
@@ -450,7 +450,7 @@ theorem extend_of_empty [IsEmpty α] (f : α ↪ δ) (g : α →ᵇ β) (h : δ 
 @[simp]
 theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂ : δ →ᵇ β) :
     dist (g₁.extend f h₁) (g₂.extend f h₂) =
-      max (dist g₁ g₂) (dist (h₁.restrict (Range fᶜ)) (h₂.restrict (Range fᶜ))) :=
+      max (dist g₁ g₂) (dist (h₁.restrict (range fᶜ)) (h₂.restrict (range fᶜ))) :=
   by
   refine' le_antisymm ((dist_le <| le_max_iff.2 <| Or.inl dist_nonneg).2 fun x => _) (max_le _ _)
   · rcases em (∃ y, f y = x) with (⟨x, rfl⟩ | hx)
@@ -570,7 +570,7 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
   using compactness there and then lifting everything to the original space. -/
   have M : LipschitzWith 1 coe := LipschitzWith.subtypeCoe s
   let F : (α →ᵇ s) → α →ᵇ β := comp coe M
-  refine' is_compact_of_is_closed_subset ((_ : IsCompact (F ⁻¹' A)).Image (continuous_comp M)) closed fun f hf => _
+  refine' is_compact_of_is_closed_subset ((_ : IsCompact (F ⁻¹' A)).image (continuous_comp M)) closed fun f hf => _
   · haveI : CompactSpace s := is_compact_iff_compact_space.1 hs
     refine'
       arzela_ascoli₁ _ (continuous_iff_is_closed.1 (continuous_comp M) _ closed) fun x ε ε0 =>
@@ -593,17 +593,17 @@ without closedness. The closure is then compact -/
 theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β))
     (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
     (H : ∀ (x : α), ∀ ε > 0, ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
-    IsCompact (Closure A) :=
+    IsCompact (closure A) :=
   /- This version is deduced from the previous one by checking that the closure of A, in
     addition to being closed, still satisfies the properties of compact range and equicontinuity -/
     arzela_ascoli₂
-    s hs (Closure A) isClosedClosure
+    s hs (closure A) isClosedClosure
     (fun f x hf =>
       (mem_of_closed' hs.IsClosed).2 fun ε ε0 =>
         let ⟨g, gA, dist_fg⟩ := Metric.mem_closure_iff.1 hf ε ε0
         ⟨g x, in_s g x gA, lt_of_le_of_lt (dist_coe_le_dist _) dist_fg⟩)
     fun x ε ε0 =>
-    show ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U), ∀ f : α →ᵇ β, f ∈ Closure A → dist (f y) (f z) < ε by
+    show ∃ U ∈ 𝓝 x, ∀ (y z) (_ : y ∈ U) (_ : z ∈ U), ∀ f : α →ᵇ β, f ∈ closure A → dist (f y) (f z) < ε by
       refine' BEx.imp_right (fun U U_set hU y hy z hz f hf => _) (H x (ε / 2) (half_pos ε0))
       rcases Metric.mem_closure_iff.1 hf (ε / 2 / 2) (half_pos (half_pos ε0)) with ⟨g, gA, dist_fg⟩
       replace dist_fg := fun x => lt_of_le_of_lt (dist_coe_le_dist x) dist_fg
@@ -955,7 +955,7 @@ theorem coe_norm_comp : (f.normComp : α → ℝ) = norm ∘ f :=
 theorem norm_norm_comp : ∥f.normComp∥ = ∥f∥ := by simp only [norm_eq, coe_norm_comp, norm_norm]
 #align bounded_continuous_function.norm_norm_comp BoundedContinuousFunction.norm_norm_comp
 
-theorem bdd_above_range_norm_comp : BddAbove <| Set.Range <| norm ∘ f :=
+theorem bdd_above_range_norm_comp : BddAbove <| Set.range <| norm ∘ f :=
   (Real.bounded_iff_bdd_below_bdd_above.mp <| @boundedRange _ _ _ _ f.normComp).2
 #align bounded_continuous_function.bdd_above_range_norm_comp BoundedContinuousFunction.bdd_above_range_norm_comp
 

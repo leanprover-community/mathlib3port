@@ -31,7 +31,7 @@ variable [Zero α] {s : Finset ι} (f : ∀ i ∈ s, α) {i : ι}
 /-- Create an element of `ι →₀ α` from a finset `s` and a function `f` defined on this finset. -/
 def indicator (s : Finset ι) (f : ∀ i ∈ s, α) : ι →₀ α where
   toFun i := if H : i ∈ s then f i H else 0
-  Support := (s.attach.filter fun i : s => f i.1 i.2 ≠ 0).map <| Embedding.subtype _
+  support := (s.attach.filter fun i : s => f i.1 i.2 ≠ 0).map <| Embedding.subtype _
   mem_support_to_fun i := by
     rw [mem_map, dite_ne_right_iff]
     exact
@@ -61,7 +61,7 @@ theorem indicator_injective : Injective fun f : ∀ i ∈ s, α => indicator s f
   exact congr_fun h i
 #align finsupp.indicator_injective Finsupp.indicator_injective
 
-theorem support_indicator_subset : ((indicator s f).Support : Set ι) ⊆ s := by
+theorem support_indicator_subset : ((indicator s f).support : Set ι) ⊆ s := by
   intro i hi
   rw [mem_coe, mem_support_iff] at hi
   by_contra

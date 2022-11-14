@@ -64,11 +64,11 @@ theorem cont_diff_at_tan {n x} : ContDiffAt ℝ n tan x ↔ cos x ≠ 0 :=
     (Complex.cont_diff_at_tan.2 <| by exact_mod_cast h).realOfComplex⟩
 #align real.cont_diff_at_tan Real.cont_diff_at_tan
 
-theorem hasDerivAtTanOfMemIoo {x : ℝ} (h : x ∈ IooCat (-(π / 2) : ℝ) (π / 2)) : HasDerivAt tan (1 / cos x ^ 2) x :=
+theorem hasDerivAtTanOfMemIoo {x : ℝ} (h : x ∈ ioo (-(π / 2) : ℝ) (π / 2)) : HasDerivAt tan (1 / cos x ^ 2) x :=
   hasDerivAtTan (cos_pos_of_mem_Ioo h).ne'
 #align real.has_deriv_at_tan_of_mem_Ioo Real.hasDerivAtTanOfMemIoo
 
-theorem differentiableAtTanOfMemIoo {x : ℝ} (h : x ∈ IooCat (-(π / 2) : ℝ) (π / 2)) : DifferentiableAt ℝ tan x :=
+theorem differentiableAtTanOfMemIoo {x : ℝ} (h : x ∈ ioo (-(π / 2) : ℝ) (π / 2)) : DifferentiableAt ℝ tan x :=
   (hasDerivAtTanOfMemIoo h).DifferentiableAt
 #align real.differentiable_at_tan_of_mem_Ioo Real.differentiableAtTanOfMemIoo
 

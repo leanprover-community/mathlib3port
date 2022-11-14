@@ -89,28 +89,28 @@ namespace ContinuousMap
 
 /-- Given `K ⊆ α`, `V ⊆ β × β`, and `f : C(α, β)`, we define `compact_conv_nhd K V f` to be the set
 of `g : C(α, β)` that are `V`-close to `f` on `K`. -/
-def CompactConvNhd : Set C(α, β) :=
+def compactConvNhd : Set C(α, β) :=
   { g | ∀ x ∈ K, (f x, g x) ∈ V }
-#align continuous_map.compact_conv_nhd ContinuousMap.CompactConvNhd
+#align continuous_map.compact_conv_nhd ContinuousMap.compactConvNhd
 
 variable {K V}
 
-theorem self_mem_compact_conv_nhd (hV : V ∈ 𝓤 β) : f ∈ CompactConvNhd K V f := fun x hx => refl_mem_uniformity hV
+theorem self_mem_compact_conv_nhd (hV : V ∈ 𝓤 β) : f ∈ compactConvNhd K V f := fun x hx => refl_mem_uniformity hV
 #align continuous_map.self_mem_compact_conv_nhd ContinuousMap.self_mem_compact_conv_nhd
 
 @[mono]
-theorem compact_conv_nhd_mono {V' : Set (β × β)} (hV' : V' ⊆ V) : CompactConvNhd K V' f ⊆ CompactConvNhd K V f :=
+theorem compact_conv_nhd_mono {V' : Set (β × β)} (hV' : V' ⊆ V) : compactConvNhd K V' f ⊆ compactConvNhd K V f :=
   fun x hx a ha => hV' (hx a ha)
 #align continuous_map.compact_conv_nhd_mono ContinuousMap.compact_conv_nhd_mono
 
-theorem compact_conv_nhd_mem_comp {g₁ g₂ : C(α, β)} {V' : Set (β × β)} (hg₁ : g₁ ∈ CompactConvNhd K V f)
-    (hg₂ : g₂ ∈ CompactConvNhd K V' g₁) : g₂ ∈ CompactConvNhd K (V ○ V') f := fun x hx => ⟨g₁ x, hg₁ x hx, hg₂ x hx⟩
+theorem compact_conv_nhd_mem_comp {g₁ g₂ : C(α, β)} {V' : Set (β × β)} (hg₁ : g₁ ∈ compactConvNhd K V f)
+    (hg₂ : g₂ ∈ compactConvNhd K V' g₁) : g₂ ∈ compactConvNhd K (V ○ V') f := fun x hx => ⟨g₁ x, hg₁ x hx, hg₂ x hx⟩
 #align continuous_map.compact_conv_nhd_mem_comp ContinuousMap.compact_conv_nhd_mem_comp
 
 /-- A key property of `compact_conv_nhd`. It allows us to apply
 `topological_space.nhds_mk_of_nhds_filter_basis` below. -/
 theorem compact_conv_nhd_nhd_basis (hV : V ∈ 𝓤 β) :
-    ∃ V' ∈ 𝓤 β, V' ⊆ V ∧ ∀ g ∈ CompactConvNhd K V' f, CompactConvNhd K V' g ⊆ CompactConvNhd K V f := by
+    ∃ V' ∈ 𝓤 β, V' ⊆ V ∧ ∀ g ∈ compactConvNhd K V' f, compactConvNhd K V' g ⊆ compactConvNhd K V f := by
   obtain ⟨V', h₁, h₂⟩ := comp_mem_uniformity_sets hV
   exact
     ⟨V', h₁, subset.trans (subset_comp_self_of_mem_uniformity h₁) h₂, fun g hg g' hg' =>
@@ -118,19 +118,19 @@ theorem compact_conv_nhd_nhd_basis (hV : V ∈ 𝓤 β) :
 #align continuous_map.compact_conv_nhd_nhd_basis ContinuousMap.compact_conv_nhd_nhd_basis
 
 theorem compact_conv_nhd_subset_inter (K₁ K₂ : Set α) (V₁ V₂ : Set (β × β)) :
-    CompactConvNhd (K₁ ∪ K₂) (V₁ ∩ V₂) f ⊆ CompactConvNhd K₁ V₁ f ∩ CompactConvNhd K₂ V₂ f := fun g hg =>
+    compactConvNhd (K₁ ∪ K₂) (V₁ ∩ V₂) f ⊆ compactConvNhd K₁ V₁ f ∩ compactConvNhd K₂ V₂ f := fun g hg =>
   ⟨fun x hx => mem_of_mem_inter_left (hg x (mem_union_left K₂ hx)), fun x hx =>
     mem_of_mem_inter_right (hg x (mem_union_right K₁ hx))⟩
 #align continuous_map.compact_conv_nhd_subset_inter ContinuousMap.compact_conv_nhd_subset_inter
 
 theorem compact_conv_nhd_compact_entourage_nonempty :
     { KV : Set α × Set (β × β) | IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β }.Nonempty :=
-  ⟨⟨∅, Univ⟩, is_compact_empty, Filter.univ_mem⟩
+  ⟨⟨∅, univ⟩, is_compact_empty, Filter.univ_mem⟩
 #align
   continuous_map.compact_conv_nhd_compact_entourage_nonempty ContinuousMap.compact_conv_nhd_compact_entourage_nonempty
 
 theorem compact_conv_nhd_filter_is_basis :
-    Filter.IsBasis (fun KV : Set α × Set (β × β) => IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β) fun KV => CompactConvNhd KV.1 KV.2 f :=
+    Filter.IsBasis (fun KV : Set α × Set (β × β) => IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β) fun KV => compactConvNhd KV.1 KV.2 f :=
   { Nonempty := compact_conv_nhd_compact_entourage_nonempty,
     inter := by
       rintro ⟨K₁, V₁⟩ ⟨K₂, V₂⟩ ⟨hK₁, hV₁⟩ ⟨hK₂, hV₂⟩
@@ -145,7 +145,7 @@ def compactConvergenceFilterBasis (f : C(α, β)) : FilterBasis C(α, β) :=
 
 theorem mem_compact_convergence_nhd_filter (Y : Set C(α, β)) :
     Y ∈ (compactConvergenceFilterBasis f).filter ↔
-      ∃ (K : Set α)(V : Set (β × β))(hK : IsCompact K)(hV : V ∈ 𝓤 β), CompactConvNhd K V f ⊆ Y :=
+      ∃ (K : Set α)(V : Set (β × β))(hK : IsCompact K)(hV : V ∈ 𝓤 β), compactConvNhd K V f ⊆ Y :=
   by
   constructor
   · rintro ⟨X, ⟨⟨K, V⟩, ⟨hK, hV⟩, rfl⟩, hY⟩
@@ -176,7 +176,7 @@ theorem nhds_compact_convergence : @nhds _ compactConvergenceTopology f = (compa
 
 theorem has_basis_nhds_compact_convergence :
     HasBasis (@nhds _ compactConvergenceTopology f) (fun p : Set α × Set (β × β) => IsCompact p.1 ∧ p.2 ∈ 𝓤 β) fun p =>
-      CompactConvNhd p.1 p.2 f :=
+      compactConvNhd p.1 p.2 f :=
   (nhds_compact_convergence f).symm ▸ (compact_conv_nhd_filter_is_basis f).HasBasis
 #align continuous_map.has_basis_nhds_compact_convergence ContinuousMap.has_basis_nhds_compact_convergence
 
@@ -199,7 +199,7 @@ convergence.
 
 The topology of compact convergence is thus at least as fine as the compact-open topology. -/
 theorem compact_conv_nhd_subset_compact_open (hK : IsCompact K) {U : Set β} (hU : IsOpen U)
-    (hf : f ∈ CompactOpen.Gen K U) : ∃ V ∈ 𝓤 β, IsOpen V ∧ CompactConvNhd K V f ⊆ CompactOpen.Gen K U := by
+    (hf : f ∈ CompactOpen.gen K U) : ∃ V ∈ 𝓤 β, IsOpen V ∧ compactConvNhd K V f ⊆ CompactOpen.gen K U := by
   obtain ⟨V, hV₁, hV₂, hV₃⟩ := lebesgue_number_of_compact_open (hK.image f.continuous) hU hf
   refine' ⟨V, hV₁, hV₂, _⟩
   rintro g hg _ ⟨x, hx, rfl⟩
@@ -214,7 +214,7 @@ the compact-open topology is at least as fine as the topology of compact converg
 theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : V ∈ 𝓤 β) :
     ∃ (ι : Sort (u₁ + 1))(_ : Fintype ι)(C : ι → Set α)(hC : ∀ i, IsCompact (C i))(U : ι → Set β)(hU :
       ∀ i, IsOpen (U i)),
-      (f ∈ ⋂ i, CompactOpen.Gen (C i) (U i)) ∧ (⋂ i, CompactOpen.Gen (C i) (U i)) ⊆ CompactConvNhd K V f :=
+      (f ∈ ⋂ i, CompactOpen.gen (C i) (U i)) ∧ (⋂ i, CompactOpen.gen (C i) (U i)) ⊆ compactConvNhd K V f :=
   by
   obtain ⟨W, hW₁, hW₄, hW₂, hW₃⟩ := comp_open_symm_mem_uniformity_sets hV
   obtain ⟨Z, hZ₁, hZ₄, hZ₂, hZ₃⟩ := comp_open_symm_mem_uniformity_sets hW₁
@@ -225,7 +225,7 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
     simp only [exists_prop, mem_Union, Union_coe_set, mem_preimage]
     exact ⟨(⟨x, hx⟩ : K), by simp [hx, mem_ball_self (f x) hZ₁]⟩
   obtain ⟨t, ht⟩ := hK.elim_finite_subcover _ (fun x : K => hU x.val) hUK
-  let C : t → Set α := fun i => K ∩ Closure (U ((i : K) : α))
+  let C : t → Set α := fun i => K ∩ closure (U ((i : K) : α))
   have hC : K ⊆ ⋃ i, C i := by
     rw [← K.inter_Union, subset_inter_iff]
     refine' ⟨subset.rfl, ht.trans _⟩
@@ -234,14 +234,14 @@ theorem Inter_compact_open_gen_subset_compact_conv_nhd (hK : IsCompact K) (hV : 
   have hfC : ∀ i : t, C i ⊆ f ⁻¹' ball (f ((i : K) : α)) W := by
     simp only [← image_subset_iff, ← mem_preimage]
     rintro ⟨⟨x, hx₁⟩, hx₂⟩
-    have hZW : Closure (ball (f x) Z) ⊆ ball (f x) W := by
+    have hZW : closure (ball (f x) Z) ⊆ ball (f x) W := by
       intro y hy
       obtain ⟨z, hz₁, hz₂⟩ := uniform_space.mem_closure_iff_ball.mp hy hZ₁
       exact ball_mono hZ₃ _ (mem_ball_comp hz₂ ((mem_ball_symmetry hZ₂).mp hz₁))
     calc
-      f '' (K ∩ Closure (U x)) ⊆ f '' Closure (U x) := image_subset _ (inter_subset_right _ _)
-      _ ⊆ Closure (f '' U x) := f.continuous.continuous_on.image_closure
-      _ ⊆ Closure (ball (f x) Z) := by
+      f '' (K ∩ closure (U x)) ⊆ f '' closure (U x) := image_subset _ (inter_subset_right _ _)
+      _ ⊆ closure (f '' U x) := f.continuous.continuous_on.image_closure
+      _ ⊆ closure (ball (f x) Z) := by
         apply closure_mono
         simp
       _ ⊆ ball (f x) W := hZW
@@ -418,7 +418,7 @@ theorem has_basis_compact_convergence_uniformity_of_compact :
     HasBasis (𝓤 C(α, β)) (fun V : Set (β × β) => V ∈ 𝓤 β) fun V =>
       { fg : C(α, β) × C(α, β) | ∀ x, (fg.1 x, fg.2 x) ∈ V } :=
   has_basis_compact_convergence_uniformity.to_has_basis (fun p hp => ⟨p.2, hp.2, fun fg hfg x hx => hfg x⟩) fun V hV =>
-    ⟨⟨Univ, V⟩, ⟨is_compact_univ, hV⟩, fun fg hfg x => hfg x (mem_univ x)⟩
+    ⟨⟨univ, V⟩, ⟨is_compact_univ, hV⟩, fun fg hfg x => hfg x (mem_univ x)⟩
 #align
   continuous_map.has_basis_compact_convergence_uniformity_of_compact ContinuousMap.has_basis_compact_convergence_uniformity_of_compact
 

@@ -68,7 +68,7 @@ end
 /-- The filter represented by a `cfilter` is the collection of supersets of
   elements of the filter base. -/
 def toFilter (F : Cfilter (Set α) σ) : Filter α where
-  Sets := { a | ∃ b, F b ⊆ a }
+  sets := { a | ∃ b, F b ⊆ a }
   univ_sets := ⟨F.pt, subset_univ _⟩
   sets_of_superset := fun x y ⟨b, h⟩ s => ⟨b, Subset.trans h s⟩
   inter_sets := fun x y ⟨a, h₁⟩ ⟨b, h₂⟩ =>
@@ -107,8 +107,8 @@ def ofEq {f g : Filter α} (e : f = g) (F : f.Realizer) : g.Realizer :=
 
 /-- A filter realizes itself. -/
 def ofFilter (f : Filter α) : f.Realizer :=
-  ⟨f.Sets,
-    { f := Subtype.val, pt := ⟨Univ, univ_mem⟩, inf := fun ⟨x, h₁⟩ ⟨y, h₂⟩ => ⟨_, inter_mem h₁ h₂⟩,
+  ⟨f.sets,
+    { f := Subtype.val, pt := ⟨univ, univ_mem⟩, inf := fun ⟨x, h₁⟩ ⟨y, h₂⟩ => ⟨_, inter_mem h₁ h₂⟩,
       inf_le_left := fun ⟨x, h₁⟩ ⟨y, h₂⟩ => inter_subset_left x y,
       inf_le_right := fun ⟨x, h₁⟩ ⟨y, h₂⟩ => inter_subset_right x y },
     filter_eq <| Set.ext fun x => SetCoe.exists.trans exists_mem_subset_iff⟩
@@ -185,7 +185,7 @@ theorem bot_F (u : Unit) : (@Realizer.bot α).f u = ∅ :=
 /-- Construct a realizer for `map m f` given a realizer for `f` -/
 protected def map (m : α → β) {f : Filter α} (F : f.Realizer) : (map m f).Realizer :=
   ⟨F.σ,
-    { f := fun s => Image m (F.f s), pt := F.f.pt, inf := F.f.inf,
+    { f := fun s => image m (F.f s), pt := F.f.pt, inf := F.f.inf,
       inf_le_left := fun a b => image_subset _ (F.f.inf_le_left _ _),
       inf_le_right := fun a b => image_subset _ (F.f.inf_le_right _ _) },
     filter_eq <| Set.ext fun x => by simp [Cfilter.toFilter] <;> rw [F.mem_sets] <;> rfl⟩
@@ -197,14 +197,14 @@ theorem map_σ (m : α → β) {f : Filter α} (F : f.Realizer) : (F.map m).σ =
 #align filter.realizer.map_σ Filter.Realizer.map_σ
 
 @[simp]
-theorem map_F (m : α → β) {f : Filter α} (F : f.Realizer) (s) : (F.map m).f s = Image m (F.f s) :=
+theorem map_F (m : α → β) {f : Filter α} (F : f.Realizer) (s) : (F.map m).f s = image m (F.f s) :=
   rfl
 #align filter.realizer.map_F Filter.Realizer.map_F
 
 /-- Construct a realizer for `comap m f` given a realizer for `f` -/
 protected def comap (m : α → β) {f : Filter β} (F : f.Realizer) : (comap m f).Realizer :=
   ⟨F.σ,
-    { f := fun s => Preimage m (F.f s), pt := F.f.pt, inf := F.f.inf,
+    { f := fun s => preimage m (F.f s), pt := F.f.pt, inf := F.f.inf,
       inf_le_left := fun a b => preimage_mono (F.f.inf_le_left _ _),
       inf_le_right := fun a b => preimage_mono (F.f.inf_le_right _ _) },
     filter_eq <|

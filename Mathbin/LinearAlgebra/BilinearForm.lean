@@ -986,7 +986,7 @@ def IsPairSelfAdjoint (f : Module.EndCat R M) :=
 
 /-- The set of pair-self-adjoint endomorphisms are a submodule of the type of all endomorphisms. -/
 def isPairSelfAdjointSubmodule : Submodule R₂ (Module.EndCat R₂ M₂) where
-  Carrier := { f | IsPairSelfAdjoint B₂ F₂ f }
+  carrier := { f | IsPairSelfAdjoint B₂ F₂ f }
   zero_mem' := isAdjointPairZero
   add_mem' f g hf hg := hf.add hg
   smul_mem' c f h := h.smul c
@@ -1070,7 +1070,7 @@ chirality; in addition to this "left" orthogonal complement one could define a "
 complement for which, for all `y` in `N`, `B y x = 0`.  This variant definition is not currently
 provided in mathlib. -/
 def orthogonal (B : BilinForm R M) (N : Submodule R M) : Submodule R M where
-  Carrier := { m | ∀ n ∈ N, IsOrtho B n m }
+  carrier := { m | ∀ n ∈ N, IsOrtho B n m }
   zero_mem' x _ := is_ortho_zero_right x
   add_mem' x y hx hy n hn := by
     rw [is_ortho, add_right, show B n x = 0 from hx n hn, show B n y = 0 from hy n hn, zero_add]

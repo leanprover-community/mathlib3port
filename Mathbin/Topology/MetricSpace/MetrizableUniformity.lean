@@ -135,7 +135,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
   have hs₀ : 0 ∈ s := by simp [s]
   have hsne : s.nonempty := ⟨0, hs₀⟩
   obtain ⟨M, hMl, hMs⟩ : ∃ M ≤ length l, IsGreatest s M := by
-    have hs_ub : length l ∈ UpperBounds s := by
+    have hs_ub : length l ∈ upperBounds s := by
       intro m hm
       rw [← not_lt, Nat.lt_iff_add_one_le, ← hL_len]
       intro hLm

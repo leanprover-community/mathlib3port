@@ -204,9 +204,9 @@ variable {V}
 -- `quiver.{max u_2 u_3 + 1}`. This causes problems elsewhere, so we write `quiver.{v+1}`.
 /-- A wide subquiver `H` of `G.symmetrify` determines a wide subquiver of `G`, containing an
     an arrow `e` if either `e` or its reversal is in `H`. -/
-def WideSubquiverSymmetrify (H : WideSubquiver (Symmetrify V)) : WideSubquiver V := fun a b =>
+def wideSubquiverSymmetrify (H : WideSubquiver (Symmetrify V)) : WideSubquiver V := fun a b =>
   { e | Sum.inl e ∈ H a b ∨ Sum.inr e ∈ H b a }
-#align quiver.wide_subquiver_symmetrify Quiver.WideSubquiverSymmetrify
+#align quiver.wide_subquiver_symmetrify Quiver.wideSubquiverSymmetrify
 
 end Quiver
 

@@ -68,10 +68,10 @@ theorem is_upper_set_empty : IsUpperSet (∅ : Set α) := fun _ _ _ => id
 theorem is_lower_set_empty : IsLowerSet (∅ : Set α) := fun _ _ _ => id
 #align is_lower_set_empty is_lower_set_empty
 
-theorem is_upper_set_univ : IsUpperSet (Univ : Set α) := fun _ _ _ => id
+theorem is_upper_set_univ : IsUpperSet (univ : Set α) := fun _ _ _ => id
 #align is_upper_set_univ is_upper_set_univ
 
-theorem is_lower_set_univ : IsLowerSet (Univ : Set α) := fun _ _ _ => id
+theorem is_lower_set_univ : IsLowerSet (univ : Set α) := fun _ _ _ => id
 #align is_lower_set_univ is_lower_set_univ
 
 theorem IsUpperSet.compl (hs : IsUpperSet s) : IsLowerSet (sᶜ) := fun a b h hb ha => hb <| hs h ha
@@ -196,23 +196,23 @@ section Preorder
 
 variable [Preorder α] [Preorder β] {s : Set α} {p : α → Prop} (a : α)
 
-theorem is_upper_set_Ici : IsUpperSet (IciCat a) := fun _ _ => ge_trans
+theorem is_upper_set_Ici : IsUpperSet (ici a) := fun _ _ => ge_trans
 #align is_upper_set_Ici is_upper_set_Ici
 
-theorem is_lower_set_Iic : IsLowerSet (IicCat a) := fun _ _ => le_trans
+theorem is_lower_set_Iic : IsLowerSet (iic a) := fun _ _ => le_trans
 #align is_lower_set_Iic is_lower_set_Iic
 
-theorem is_upper_set_Ioi : IsUpperSet (IoiCat a) := fun _ _ => flip lt_of_lt_of_le
+theorem is_upper_set_Ioi : IsUpperSet (ioi a) := fun _ _ => flip lt_of_lt_of_le
 #align is_upper_set_Ioi is_upper_set_Ioi
 
-theorem is_lower_set_Iio : IsLowerSet (IioCat a) := fun _ _ => lt_of_le_of_lt
+theorem is_lower_set_Iio : IsLowerSet (iio a) := fun _ _ => lt_of_le_of_lt
 #align is_lower_set_Iio is_lower_set_Iio
 
-theorem is_upper_set_iff_Ici_subset : IsUpperSet s ↔ ∀ ⦃a⦄, a ∈ s → IciCat a ⊆ s := by
+theorem is_upper_set_iff_Ici_subset : IsUpperSet s ↔ ∀ ⦃a⦄, a ∈ s → ici a ⊆ s := by
   simp [IsUpperSet, subset_def, @forall_swap (_ ∈ s)]
 #align is_upper_set_iff_Ici_subset is_upper_set_iff_Ici_subset
 
-theorem is_lower_set_iff_Iic_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → IicCat a ⊆ s := by
+theorem is_lower_set_iff_Iic_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → iic a ⊆ s := by
   simp [IsLowerSet, subset_def, @forall_swap (_ ∈ s)]
 #align is_lower_set_iff_Iic_subset is_lower_set_iff_Iic_subset
 
@@ -314,11 +314,11 @@ theorem IsUpperSet.not_bdd_above (hs : IsUpperSet s) : s.Nonempty → ¬BddAbove
   exact hc.not_le (hb <| hs ((hb ha).trans hc.le) ha)
 #align is_upper_set.not_bdd_above IsUpperSet.not_bdd_above
 
-theorem not_bdd_above_Ici : ¬BddAbove (IciCat a) :=
+theorem not_bdd_above_Ici : ¬BddAbove (ici a) :=
   (is_upper_set_Ici _).not_bdd_above nonempty_Ici
 #align not_bdd_above_Ici not_bdd_above_Ici
 
-theorem not_bdd_above_Ioi : ¬BddAbove (IoiCat a) :=
+theorem not_bdd_above_Ioi : ¬BddAbove (ioi a) :=
   (is_upper_set_Ioi _).not_bdd_above nonempty_Ioi
 #align not_bdd_above_Ioi not_bdd_above_Ioi
 
@@ -334,11 +334,11 @@ theorem IsLowerSet.not_bdd_below (hs : IsLowerSet s) : s.Nonempty → ¬BddBelow
   exact hc.not_le (hb <| hs (hc.le.trans <| hb ha) ha)
 #align is_lower_set.not_bdd_below IsLowerSet.not_bdd_below
 
-theorem not_bdd_below_Iic : ¬BddBelow (IicCat a) :=
+theorem not_bdd_below_Iic : ¬BddBelow (iic a) :=
   (is_lower_set_Iic _).not_bdd_below nonempty_Iic
 #align not_bdd_below_Iic not_bdd_below_Iic
 
-theorem not_bdd_below_Iio : ¬BddBelow (IioCat a) :=
+theorem not_bdd_below_Iio : ¬BddBelow (iio a) :=
   (is_lower_set_Iio _).not_bdd_below nonempty_Iio
 #align not_bdd_below_Iio not_bdd_below_Iio
 
@@ -358,11 +358,11 @@ theorem is_lower_set_iff_forall_lt : IsLowerSet s ↔ ∀ ⦃a b : α⦄, b < a 
   forall_congr' fun a => by simp [le_iff_eq_or_lt, or_imp, forall_and]
 #align is_lower_set_iff_forall_lt is_lower_set_iff_forall_lt
 
-theorem is_upper_set_iff_Ioi_subset : IsUpperSet s ↔ ∀ ⦃a⦄, a ∈ s → IoiCat a ⊆ s := by
+theorem is_upper_set_iff_Ioi_subset : IsUpperSet s ↔ ∀ ⦃a⦄, a ∈ s → ioi a ⊆ s := by
   simp [is_upper_set_iff_forall_lt, subset_def, @forall_swap (_ ∈ s)]
 #align is_upper_set_iff_Ioi_subset is_upper_set_iff_Ioi_subset
 
-theorem is_lower_set_iff_Iio_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → IioCat a ⊆ s := by
+theorem is_lower_set_iff_Iio_subset : IsLowerSet s ↔ ∀ ⦃a⦄, a ∈ s → iio a ⊆ s := by
   simp [is_lower_set_iff_forall_lt, subset_def, @forall_swap (_ ∈ s)]
 #align is_lower_set_iff_Iio_subset is_lower_set_iff_Iio_subset
 
@@ -381,20 +381,20 @@ variable [LE α]
 
 /-- The type of upper sets of an order. -/
 structure UpperSet (α : Type _) [LE α] where
-  Carrier : Set α
+  carrier : Set α
   upper' : IsUpperSet carrier
 #align upper_set UpperSet
 
 /-- The type of lower sets of an order. -/
 structure LowerSet (α : Type _) [LE α] where
-  Carrier : Set α
+  carrier : Set α
   lower' : IsLowerSet carrier
 #align lower_set LowerSet
 
 namespace UpperSet
 
 instance : SetLike (UpperSet α) α where
-  coe := UpperSet.Carrier
+  coe := UpperSet.carrier
   coe_injective' s t h := by
     cases s
     cases t
@@ -406,7 +406,7 @@ theorem ext {s t : UpperSet α} : (s : Set α) = t → s = t :=
 #align upper_set.ext UpperSet.ext
 
 @[simp]
-theorem carrier_eq_coe (s : UpperSet α) : s.Carrier = s :=
+theorem carrier_eq_coe (s : UpperSet α) : s.carrier = s :=
   rfl
 #align upper_set.carrier_eq_coe UpperSet.carrier_eq_coe
 
@@ -424,7 +424,7 @@ end UpperSet
 namespace LowerSet
 
 instance : SetLike (LowerSet α) α where
-  coe := LowerSet.Carrier
+  coe := LowerSet.carrier
   coe_injective' s t h := by
     cases s
     cases t
@@ -436,7 +436,7 @@ theorem ext {s t : LowerSet α} : (s : Set α) = t → s = t :=
 #align lower_set.ext LowerSet.ext
 
 @[simp]
-theorem carrier_eq_coe (s : LowerSet α) : s.Carrier = s :=
+theorem carrier_eq_coe (s : LowerSet α) : s.carrier = s :=
   rfl
 #align lower_set.carrier_eq_coe LowerSet.carrier_eq_coe
 
@@ -468,7 +468,7 @@ instance : HasTop (UpperSet α) :=
   ⟨⟨∅, is_upper_set_empty⟩⟩
 
 instance : HasBot (UpperSet α) :=
-  ⟨⟨Univ, is_upper_set_univ⟩⟩
+  ⟨⟨univ, is_upper_set_univ⟩⟩
 
 instance : HasSup (UpperSet α) :=
   ⟨fun S => ⟨⋂ s ∈ S, ↑s, is_upper_set_Inter₂ fun s _ => s.upper⟩⟩
@@ -607,7 +607,7 @@ instance : HasInf (LowerSet α) :=
   ⟨fun s t => ⟨s ∩ t, fun a b h => And.imp (s.lower h) (t.lower h)⟩⟩
 
 instance : HasTop (LowerSet α) :=
-  ⟨⟨Univ, fun a b h => id⟩⟩
+  ⟨⟨univ, fun a b h => id⟩⟩
 
 instance : HasBot (LowerSet α) :=
   ⟨⟨∅, fun a b h => id⟩⟩
@@ -929,7 +929,7 @@ variable {f : α ≃o β} {s t : UpperSet α} {a : α} {b : β}
 
 /-- An order isomorphism of preorders induces an order isomorphism of their upper sets. -/
 def map (f : α ≃o β) : UpperSet α ≃o UpperSet β where
-  toFun s := ⟨f '' s, s.upper.Image f⟩
+  toFun s := ⟨f '' s, s.upper.image f⟩
   invFun t := ⟨f ⁻¹' t, t.upper.Preimage f.Monotone⟩
   left_inv _ := ext <| f.preimage_image _
   right_inv _ := ext <| f.image_preimage _
@@ -1022,7 +1022,7 @@ variable {f : α ≃o β} {s t : LowerSet α} {a : α} {b : β}
 
 /-- An order isomorphism of preorders induces an order isomorphism of their lower sets. -/
 def map (f : α ≃o β) : LowerSet α ≃o LowerSet β where
-  toFun s := ⟨f '' s, s.lower.Image f⟩
+  toFun s := ⟨f '' s, s.lower.image f⟩
   invFun t := ⟨f ⁻¹' t, t.lower.Preimage f.Monotone⟩
   left_inv _ := SetLike.coe_injective <| f.preimage_image _
   right_inv _ := SetLike.coe_injective <| f.image_preimage _
@@ -1137,21 +1137,21 @@ variable [Preorder α] [Preorder β] {s : UpperSet α} {a b : α}
 
 /-- The smallest upper set containing a given element. -/
 def ici (a : α) : UpperSet α :=
-  ⟨IciCat a, is_upper_set_Ici a⟩
+  ⟨ici a, is_upper_set_Ici a⟩
 #align upper_set.Ici UpperSet.ici
 
 /-- The smallest upper set containing a given element. -/
 def ioi (a : α) : UpperSet α :=
-  ⟨IoiCat a, is_upper_set_Ioi a⟩
+  ⟨ioi a, is_upper_set_Ioi a⟩
 #align upper_set.Ioi UpperSet.ioi
 
 @[simp]
-theorem coe_Ici (a : α) : ↑(ici a) = Set.IciCat a :=
+theorem coe_Ici (a : α) : ↑(ici a) = Set.ici a :=
   rfl
 #align upper_set.coe_Ici UpperSet.coe_Ici
 
 @[simp]
-theorem coe_Ioi (a : α) : ↑(ioi a) = Set.IoiCat a :=
+theorem coe_Ioi (a : α) : ↑(ioi a) = Set.ioi a :=
   rfl
 #align upper_set.coe_Ioi UpperSet.coe_Ioi
 
@@ -1261,21 +1261,21 @@ variable [Preorder α] [Preorder β] {s : LowerSet α} {a b : α}
 /-- Principal lower set. `set.Iic` as a lower set. The smallest lower set containing a given
 element. -/
 def iic (a : α) : LowerSet α :=
-  ⟨IicCat a, is_lower_set_Iic a⟩
+  ⟨iic a, is_lower_set_Iic a⟩
 #align lower_set.Iic LowerSet.iic
 
 /-- Strict principal lower set. `set.Iio` as a lower set. -/
 def iio (a : α) : LowerSet α :=
-  ⟨IioCat a, is_lower_set_Iio a⟩
+  ⟨iio a, is_lower_set_Iio a⟩
 #align lower_set.Iio LowerSet.iio
 
 @[simp]
-theorem coe_Iic (a : α) : ↑(iic a) = Set.IicCat a :=
+theorem coe_Iic (a : α) : ↑(iic a) = Set.iic a :=
   rfl
 #align lower_set.coe_Iic LowerSet.coe_Iic
 
 @[simp]
-theorem coe_Iio (a : α) : ↑(iio a) = Set.IioCat a :=
+theorem coe_Iio (a : α) : ↑(iio a) = Set.iio a :=
   rfl
 #align lower_set.coe_Iio LowerSet.coe_Iio
 
@@ -1301,7 +1301,7 @@ theorem map_Iio (f : α ≃o β) (a : α) : map f (iio a) = iio (f a) := by
   simp
 #align lower_set.map_Iio LowerSet.map_Iio
 
-theorem Ioi_le_Ici (a : α) : IoiCat a ≤ IciCat a :=
+theorem Ioi_le_Ici (a : α) : ioi a ≤ ici a :=
   Ioi_subset_Ici_self
 #align lower_set.Ioi_le_Ici LowerSet.Ioi_le_Ici
 
@@ -1536,12 +1536,12 @@ theorem lower_closure_singleton (a : α) : lowerClosure ({a} : Set α) = LowerSe
 #align lower_closure_singleton lower_closure_singleton
 
 @[simp]
-theorem upper_closure_univ : upperClosure (Univ : Set α) = ⊥ :=
+theorem upper_closure_univ : upperClosure (univ : Set α) = ⊥ :=
   le_bot_iff.1 subset_upper_closure
 #align upper_closure_univ upper_closure_univ
 
 @[simp]
-theorem lower_closure_univ : lowerClosure (Univ : Set α) = ⊤ :=
+theorem lower_closure_univ : lowerClosure (univ : Set α) = ⊤ :=
   top_le_iff.1 subset_lower_closure
 #align lower_closure_univ lower_closure_univ
 

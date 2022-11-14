@@ -50,7 +50,7 @@ structure Subpresheaf (F : Cᵒᵖ ⥤ Type w) where
 variable {F F' F'' : Cᵒᵖ ⥤ Type w} (G G' : Subpresheaf F)
 
 instance : PartialOrder (Subpresheaf F) :=
-  PartialOrder.lift Subpresheaf.Obj Subpresheaf.ext
+  PartialOrder.lift Subpresheaf.obj Subpresheaf.ext
 
 instance : HasTop (Subpresheaf F) :=
   ⟨⟨fun U => ⊤, fun U V i x h => trivial⟩⟩
@@ -148,7 +148,7 @@ theorem Subpresheaf.lift_ι (f : F' ⟶ F) (hf : ∀ U x, f.app U x ∈ G.obj U)
 consisting of all `f : V ⟶ U` such that the restriction of `s` along `f` is in `G`. -/
 @[simps]
 def Subpresheaf.sieveOfSection {U : Cᵒᵖ} (s : F.obj U) : Sieve (unop U) where
-  Arrows V f := F.map f.op s ∈ G.obj (op V)
+  arrows V f := F.map f.op s ∈ G.obj (op V)
   downward_closed' V W i hi j := by
     rw [op_comp, functor_to_types.map_comp_apply]
     exact G.map _ hi
@@ -343,7 +343,7 @@ section Image
 /-- The image presheaf of a morphism, whose components are the set-theoretic images. -/
 @[simps]
 def imagePresheaf (f : F' ⟶ F) : Subpresheaf F where
-  obj U := Set.Range (f.app U)
+  obj U := Set.range (f.app U)
   map U V i := by
     rintro _ ⟨x, rfl⟩
     have := elementwise_of f.naturality
@@ -451,7 +451,7 @@ instance {F F' : SheafCat J (Type w)} (f : F ⟶ F') : Epi (toImageSheaf f) := b
 
 /-- The mono factorization given by `image_sheaf` for a morphism. -/
 def imageMonoFactorization {F F' : SheafCat J (Type w)} (f : F ⟶ F') : Limits.MonoFactorisation f where
-  I := imageSheaf f
+  i := imageSheaf f
   m := imageSheafι f
   e := toImageSheaf f
 #align

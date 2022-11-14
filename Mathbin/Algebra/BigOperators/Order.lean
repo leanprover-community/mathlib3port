@@ -984,7 +984,7 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
     (h : ∀ (y) (_ : y ∉ t), (1 : N) ≤ ∏ x in s.filter fun x => g x = y, f x) :
     (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ x in s, f x :=
   calc
-    (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ y in t ∪ s.Image g, ∏ x in s.filter fun x => g x = y, f x :=
+    (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ y in t ∪ s.image g, ∏ x in s.filter fun x => g x = y, f x :=
       (prod_le_prod_of_subset_of_one_le' (subset_union_left _ _)) fun y hyts => h y
     _ = ∏ x in s, f x := prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
     
@@ -1032,7 +1032,7 @@ theorem card_le_mul_card_image_of_maps_to {f : α → β} {s : Finset α} {t : F
 #align finset.card_le_mul_card_image_of_maps_to Finset.card_le_mul_card_image_of_maps_to
 
 theorem card_le_mul_card_image {f : α → β} (s : Finset α) (n : ℕ)
-    (hn : ∀ a ∈ s.Image f, (s.filter fun x => f x = a).card ≤ n) : s.card ≤ n * (s.Image f).card :=
+    (hn : ∀ a ∈ s.image f, (s.filter fun x => f x = a).card ≤ n) : s.card ≤ n * (s.image f).card :=
   card_le_mul_card_image_of_maps_to (fun x => mem_image_of_mem _) n hn
 #align finset.card_le_mul_card_image Finset.card_le_mul_card_image
 
@@ -1046,7 +1046,7 @@ theorem mul_card_image_le_card_of_maps_to {f : α → β} {s : Finset α} {t : F
 #align finset.mul_card_image_le_card_of_maps_to Finset.mul_card_image_le_card_of_maps_to
 
 theorem mul_card_image_le_card {f : α → β} (s : Finset α) (n : ℕ)
-    (hn : ∀ a ∈ s.Image f, n ≤ (s.filter fun x => f x = a).card) : n * (s.Image f).card ≤ s.card :=
+    (hn : ∀ a ∈ s.image f, n ≤ (s.filter fun x => f x = a).card) : n * (s.image f).card ≤ s.card :=
   mul_card_image_le_card_of_maps_to (fun x => mem_image_of_mem _) n hn
 #align finset.mul_card_image_le_card Finset.mul_card_image_le_card
 

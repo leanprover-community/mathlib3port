@@ -202,7 +202,7 @@ variable (H : Subgroup (E ≃ₐ[F] E)) (K : IntermediateField F E)
 `F`-action on `E`. -/
 def FixedPoints.intermediateField (M : Type _) [Monoid M] [MulSemiringAction M E] [SmulCommClass M F E] :
     IntermediateField F E :=
-  { FixedPoints.subfield M E with Carrier := MulAction.FixedPoints M E,
+  { FixedPoints.subfield M E with carrier := MulAction.fixedPoints M E,
     algebra_map_mem' := fun a g => by rw [Algebra.algebra_map_eq_smul_one, smul_comm, smul_one] }
 #align fixed_points.intermediate_field FixedPoints.intermediateField
 

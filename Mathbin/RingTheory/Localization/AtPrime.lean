@@ -44,7 +44,7 @@ namespace Ideal
 
 /-- The complement of a prime ideal `I ⊆ R` is a submonoid of `R`. -/
 def primeCompl : Submonoid R where
-  Carrier := (Iᶜ : Set R)
+  carrier := (Iᶜ : Set R)
   one_mem' := by convert I.ne_top_iff_one.1 hp.1 <;> rfl
   mul_mem' x y hnx hny hxy := Or.cases_on (hp.mem_or_mem hxy) hnx hny
 #align ideal.prime_compl Ideal.primeCompl
@@ -86,7 +86,7 @@ theorem AtPrime.localRing [IsLocalization.AtPrime S I] : LocalRing S :=
     (by
       intro x y hx hy hu
       cases' is_unit_iff_exists_inv.1 hu with z hxyz
-      have : ∀ {r : R} {s : I.prime_compl}, mk' S r s ∈ Nonunits S → r ∈ I := fun (r : R) (s : I.prime_compl) =>
+      have : ∀ {r : R} {s : I.prime_compl}, mk' S r s ∈ nonunits S → r ∈ I := fun (r : R) (s : I.prime_compl) =>
         not_imp_comm.1 fun nr =>
           is_unit_iff_exists_inv.2 ⟨mk' S ↑s (⟨r, nr⟩ : I.prime_compl), mk'_mul_mk'_eq_one' _ _ nr⟩
       rcases mk'_surjective I.prime_compl x with ⟨rx, sx, hrx⟩

@@ -1,0 +1,55 @@
+/-
+Copyright (c) 2021 Rémy Degenne. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Rémy Degenne, Sébastien Gouëzel
+-/
+import Mathbin.MeasureTheory.Function.StronglyMeasurable.Basic
+import Mathbin.MeasureTheory.Function.SpecialFunctions.Inner
+
+/-!
+# Inner products of strongly measurable functions are strongly measurable.
+
+-/
+
+
+variable {α : Type _}
+
+namespace MeasureTheory
+
+/-! ## Strongly measurable functions -/
+
+
+namespace StronglyMeasurable
+
+protected theorem inner {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E] {m : MeasurableSpace α}
+    {f g : α → E} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
+    StronglyMeasurable fun t => @inner 𝕜 _ _ (f t) (g t) :=
+  Continuous.compStronglyMeasurable continuous_inner (hf.prod_mk hg)
+#align measure_theory.strongly_measurable.inner MeasureTheory.StronglyMeasurable.inner
+
+end StronglyMeasurable
+
+namespace AeStronglyMeasurable
+
+variable {m : MeasurableSpace α} {μ : Measure α} {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E]
+
+-- mathport name: «expr⟪ , ⟫»
+local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
+
+protected theorem re {f : α → 𝕜} (hf : AeStronglyMeasurable f μ) : AeStronglyMeasurable (fun x => IsROrC.re (f x)) μ :=
+  IsROrC.continuous_re.compAeStronglyMeasurable hf
+#align measure_theory.ae_strongly_measurable.re MeasureTheory.AeStronglyMeasurable.re
+
+protected theorem im {f : α → 𝕜} (hf : AeStronglyMeasurable f μ) : AeStronglyMeasurable (fun x => IsROrC.im (f x)) μ :=
+  IsROrC.continuous_im.compAeStronglyMeasurable hf
+#align measure_theory.ae_strongly_measurable.im MeasureTheory.AeStronglyMeasurable.im
+
+protected theorem inner {m : MeasurableSpace α} {μ : Measure α} {f g : α → E} (hf : AeStronglyMeasurable f μ)
+    (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (fun x => ⟪f x, g x⟫) μ :=
+  continuous_inner.compAeStronglyMeasurable (hf.prod_mk hg)
+#align measure_theory.ae_strongly_measurable.inner MeasureTheory.AeStronglyMeasurable.inner
+
+end AeStronglyMeasurable
+
+end MeasureTheory
+

@@ -66,13 +66,13 @@ then prove that any closed ball is strictly convex in `strict_convex_closed_ball
 See also `strict_convex_space.of_strict_convex_closed_unit_ball`. -/
 class StrictConvexSpace (𝕜 E : Type _) [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] :
   Prop where
-  strict_convex_closed_ball : ∀ r : ℝ, 0 < r → StrictConvex 𝕜 (ClosedBall (0 : E) r)
+  strict_convex_closed_ball : ∀ r : ℝ, 0 < r → StrictConvex 𝕜 (closedBall (0 : E) r)
 #align strict_convex_space StrictConvexSpace
 
 variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 /-- A closed ball in a strictly convex space is strictly convex. -/
-theorem strict_convex_closed_ball [StrictConvexSpace 𝕜 E] (x : E) (r : ℝ) : StrictConvex 𝕜 (ClosedBall x r) := by
+theorem strict_convex_closed_ball [StrictConvexSpace 𝕜 E] (x : E) (r : ℝ) : StrictConvex 𝕜 (closedBall x r) := by
   cases' le_or_lt r 0 with hr hr
   · exact (subsingleton_closed_ball x hr).StrictConvex
     
@@ -84,7 +84,7 @@ variable [NormedSpace ℝ E]
 
 /-- A real normed vector space is strictly convex provided that the unit ball is strictly convex. -/
 theorem StrictConvexSpace.ofStrictConvexClosedUnitBall [LinearMap.CompatibleSmul E E 𝕜 ℝ]
-    (h : StrictConvex 𝕜 (ClosedBall (0 : E) 1)) : StrictConvexSpace 𝕜 E :=
+    (h : StrictConvex 𝕜 (closedBall (0 : E) 1)) : StrictConvexSpace 𝕜 E :=
   ⟨fun r hr => by simpa only [smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
 #align strict_convex_space.of_strict_convex_closed_unit_ball StrictConvexSpace.ofStrictConvexClosedUnitBall
 
@@ -124,7 +124,7 @@ theorem StrictConvexSpace.ofNormAddNeTwo (h : ∀ ⦃x y : E⦄, ∥x∥ = 1 →
   exact h hx hy hne
 #align strict_convex_space.of_norm_add_ne_two StrictConvexSpace.ofNormAddNeTwo
 
-theorem StrictConvexSpace.ofPairwiseSphereNormNeTwo (h : (Sphere (0 : E) 1).Pairwise fun x y => ∥x + y∥ ≠ 2) :
+theorem StrictConvexSpace.ofPairwiseSphereNormNeTwo (h : (sphere (0 : E) 1).Pairwise fun x y => ∥x + y∥ ≠ 2) :
     StrictConvexSpace ℝ E :=
   StrictConvexSpace.ofNormAddNeTwo fun x y hx hy => h (mem_sphere_zero_iff_norm.2 hx) (mem_sphere_zero_iff_norm.2 hy)
 #align strict_convex_space.of_pairwise_sphere_norm_ne_two StrictConvexSpace.ofPairwiseSphereNormNeTwo
@@ -142,8 +142,8 @@ variable [StrictConvexSpace ℝ E] {x y z : E} {a b r : ℝ}
 
 /-- If `x ≠ y` belong to the same closed ball, then a convex combination of `x` and `y` with
 positive coefficients belongs to the corresponding open ball. -/
-theorem combo_mem_ball_of_ne (hx : x ∈ ClosedBall z r) (hy : y ∈ ClosedBall z r) (hne : x ≠ y) (ha : 0 < a) (hb : 0 < b)
-    (hab : a + b = 1) : a • x + b • y ∈ Ball z r := by
+theorem combo_mem_ball_of_ne (hx : x ∈ closedBall z r) (hy : y ∈ closedBall z r) (hne : x ≠ y) (ha : 0 < a) (hb : 0 < b)
+    (hab : a + b = 1) : a • x + b • y ∈ ball z r := by
   rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero, mem_singleton_iff] at hx hy
     exact (hne (hx.trans hy.symm)).elim
@@ -155,8 +155,8 @@ theorem combo_mem_ball_of_ne (hx : x ∈ ClosedBall z r) (hy : y ∈ ClosedBall 
 
 /-- If `x ≠ y` belong to the same closed ball, then the open segment with endpoints `x` and `y` is
 included in the corresponding open ball. -/
-theorem open_segment_subset_ball_of_ne (hx : x ∈ ClosedBall z r) (hy : y ∈ ClosedBall z r) (hne : x ≠ y) :
-    OpenSegment ℝ x y ⊆ Ball z r :=
+theorem open_segment_subset_ball_of_ne (hx : x ∈ closedBall z r) (hy : y ∈ closedBall z r) (hne : x ≠ y) :
+    openSegment ℝ x y ⊆ ball z r :=
   (open_segment_subset_iff _).2 fun a b => combo_mem_ball_of_ne hx hy hne
 #align open_segment_subset_ball_of_ne open_segment_subset_ball_of_ne
 

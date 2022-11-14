@@ -78,7 +78,7 @@ theorem IsStoppingTime.measurableSetLtOfPred [PredOrder ι] (hτ : IsStoppingTim
     rw [is_min_iff_forall_not_lt] at hi_min
     exact hi_min (τ ω)
     
-  have : { ω : Ω | τ ω < i } = τ ⁻¹' Set.IioCat i := rfl
+  have : { ω : Ω | τ ω < i } = τ ⁻¹' Set.iio i := rfl
   rw [this, ← Iic_pred_of_not_is_min hi_min]
   exact f.mono (pred_le i) _ (hτ.measurable_set_le <| pred i)
 #align measure_theory.is_stopping_time.measurable_set_lt_of_pred MeasureTheory.IsStoppingTime.measurableSetLtOfPred
@@ -91,9 +91,9 @@ namespace IsStoppingTime
 
 variable [PartialOrder ι] {τ : Ω → ι} {f : Filtration ι m}
 
-protected theorem measurableSetEqOfCountableRange (hτ : IsStoppingTime f τ) (h_countable : (Set.Range τ).Countable)
+protected theorem measurableSetEqOfCountableRange (hτ : IsStoppingTime f τ) (h_countable : (Set.range τ).Countable)
     (i : ι) : measurable_set[f i] { ω | τ ω = i } := by
-  have : { ω | τ ω = i } = { ω | τ ω ≤ i } \ ⋃ (j ∈ Set.Range τ) (hj : j < i), { ω | τ ω ≤ j } := by
+  have : { ω | τ ω = i } = { ω | τ ω ≤ i } \ ⋃ (j ∈ Set.range τ) (hj : j < i), { ω | τ ω ≤ j } := by
     ext1 a
     simp only [Set.mem_set_of_eq, Set.mem_range, Set.Union_exists, Set.Union_Union_eq', Set.mem_diff, Set.mem_Union,
       exists_prop, not_exists, not_and, not_le]
@@ -127,7 +127,7 @@ protected theorem measurableSetEqOfCountable [Countable ι] (hτ : IsStoppingTim
 #align
   measure_theory.is_stopping_time.measurable_set_eq_of_countable MeasureTheory.IsStoppingTime.measurableSetEqOfCountable
 
-protected theorem measurableSetLtOfCountableRange (hτ : IsStoppingTime f τ) (h_countable : (Set.Range τ).Countable)
+protected theorem measurableSetLtOfCountableRange (hτ : IsStoppingTime f τ) (h_countable : (Set.range τ).Countable)
     (i : ι) : measurable_set[f i] { ω | τ ω < i } := by
   have : { ω | τ ω < i } = { ω | τ ω ≤ i } \ { ω | τ ω = i } := by
     ext1 ω
@@ -144,7 +144,7 @@ protected theorem measurableSetLtOfCountable [Countable ι] (hτ : IsStoppingTim
   measure_theory.is_stopping_time.measurable_set_lt_of_countable MeasureTheory.IsStoppingTime.measurableSetLtOfCountable
 
 protected theorem measurableSetGeOfCountableRange {ι} [LinearOrder ι] {τ : Ω → ι} {f : Filtration ι m}
-    (hτ : IsStoppingTime f τ) (h_countable : (Set.Range τ).Countable) (i : ι) : measurable_set[f i] { ω | i ≤ τ ω } :=
+    (hτ : IsStoppingTime f τ) (h_countable : (Set.range τ).Countable) (i : ι) : measurable_set[f i] { ω | i ≤ τ ω } :=
   by
   have : { ω | i ≤ τ ω } = { ω | τ ω < i }ᶜ := by
     ext1 ω
@@ -181,7 +181,7 @@ section TopologicalSpace
 variable [TopologicalSpace ι] [OrderTopology ι] [FirstCountableTopology ι]
 
 /-- Auxiliary lemma for `is_stopping_time.measurable_set_lt`. -/
-theorem IsStoppingTime.measurableSetLtOfIsLub (hτ : IsStoppingTime f τ) (i : ι) (h_lub : IsLub (Set.IioCat i) i) :
+theorem IsStoppingTime.measurableSetLtOfIsLub (hτ : IsStoppingTime f τ) (i : ι) (h_lub : IsLub (Set.iio i) i) :
     measurable_set[f i] { ω | τ ω < i } := by
   by_cases hi_min:IsMin i
   · suffices { ω | τ ω < i } = ∅ by
@@ -194,20 +194,19 @@ theorem IsStoppingTime.measurableSetLtOfIsLub (hτ : IsStoppingTime f τ) (i : �
   obtain ⟨seq, -, -, h_tendsto, h_bound⟩ :
     ∃ seq : ℕ → ι, Monotone seq ∧ (∀ j, seq j ≤ i) ∧ tendsto seq at_top (𝓝 i) ∧ ∀ j, seq j < i
   exact h_lub.exists_seq_monotone_tendsto (not_is_min_iff.mp hi_min)
-  have h_Ioi_eq_Union : Set.IioCat i = ⋃ j, { k | k ≤ seq j } := by
+  have h_Ioi_eq_Union : Set.iio i = ⋃ j, { k | k ≤ seq j } := by
     ext1 k
     simp only [Set.mem_Iio, Set.mem_Union, Set.mem_set_of_eq]
     refine' ⟨fun hk_lt_i => _, fun h_exists_k_le_seq => _⟩
     · rw [tendsto_at_top'] at h_tendsto
-      have h_nhds : Set.IciCat k ∈ 𝓝 i :=
-        mem_nhds_iff.mpr ⟨Set.IoiCat k, Set.Ioi_subset_Ici le_rfl, is_open_Ioi, hk_lt_i⟩
-      obtain ⟨a, ha⟩ : ∃ a : ℕ, ∀ b : ℕ, b ≥ a → k ≤ seq b := h_tendsto (Set.IciCat k) h_nhds
+      have h_nhds : Set.ici k ∈ 𝓝 i := mem_nhds_iff.mpr ⟨Set.ioi k, Set.Ioi_subset_Ici le_rfl, is_open_Ioi, hk_lt_i⟩
+      obtain ⟨a, ha⟩ : ∃ a : ℕ, ∀ b : ℕ, b ≥ a → k ≤ seq b := h_tendsto (Set.ici k) h_nhds
       exact ⟨a, ha a le_rfl⟩
       
     · obtain ⟨j, hk_seq_j⟩ := h_exists_k_le_seq
       exact hk_seq_j.trans_lt (h_bound j)
       
-  have h_lt_eq_preimage : { ω | τ ω < i } = τ ⁻¹' Set.IioCat i := by
+  have h_lt_eq_preimage : { ω | τ ω < i } = τ ⁻¹' Set.iio i := by
     ext1 ω
     simp only [Set.mem_set_of_eq, Set.mem_preimage, Set.mem_Iio]
   rw [h_lt_eq_preimage, h_Ioi_eq_Union]
@@ -216,13 +215,13 @@ theorem IsStoppingTime.measurableSetLtOfIsLub (hτ : IsStoppingTime f τ) (i : �
 #align measure_theory.is_stopping_time.measurable_set_lt_of_is_lub MeasureTheory.IsStoppingTime.measurableSetLtOfIsLub
 
 theorem IsStoppingTime.measurableSetLt (hτ : IsStoppingTime f τ) (i : ι) : measurable_set[f i] { ω | τ ω < i } := by
-  obtain ⟨i', hi'_lub⟩ : ∃ i', IsLub (Set.IioCat i) i'
+  obtain ⟨i', hi'_lub⟩ : ∃ i', IsLub (Set.iio i) i'
   exact exists_lub_Iio i
   cases' lub_Iio_eq_self_or_Iio_eq_Iic i hi'_lub with hi'_eq_i h_Iio_eq_Iic
   · rw [← hi'_eq_i] at hi'_lub⊢
     exact hτ.measurable_set_lt_of_is_lub i' hi'_lub
     
-  · have h_lt_eq_preimage : { ω : Ω | τ ω < i } = τ ⁻¹' Set.IioCat i := rfl
+  · have h_lt_eq_preimage : { ω : Ω | τ ω < i } = τ ⁻¹' Set.iio i := rfl
     rw [h_lt_eq_preimage, h_Iio_eq_Iic]
     exact f.mono (lub_Iio_le i hi'_lub) _ (hτ.measurable_set_le i')
     
@@ -580,7 +579,7 @@ protected theorem measurableSetLt' [TopologicalSpace ι] [OrderTopology ι] [Fir
 
 section Countable
 
-protected theorem measurableSetEqOfCountableRange' (hτ : IsStoppingTime f τ) (h_countable : (Set.Range τ).Countable)
+protected theorem measurableSetEqOfCountableRange' (hτ : IsStoppingTime f τ) (h_countable : (Set.range τ).Countable)
     (i : ι) : measurable_set[hτ.MeasurableSpace] { ω | τ ω = i } := by
   rw [← Set.univ_inter { ω | τ ω = i }, measurable_set_inter_eq_iff, Set.univ_inter]
   exact hτ.measurable_set_eq_of_countable_range h_countable i
@@ -593,7 +592,7 @@ protected theorem measurableSetEqOfCountable' [Countable ι] (hτ : IsStoppingTi
 #align
   measure_theory.is_stopping_time.measurable_set_eq_of_countable' MeasureTheory.IsStoppingTime.measurableSetEqOfCountable'
 
-protected theorem measurableSetGeOfCountableRange' (hτ : IsStoppingTime f τ) (h_countable : (Set.Range τ).Countable)
+protected theorem measurableSetGeOfCountableRange' (hτ : IsStoppingTime f τ) (h_countable : (Set.range τ).Countable)
     (i : ι) : measurable_set[hτ.MeasurableSpace] { ω | i ≤ τ ω } := by
   have : { ω | i ≤ τ ω } = { ω | τ ω = i } ∪ { ω | i < τ ω } := by
     ext1 ω
@@ -610,7 +609,7 @@ protected theorem measurableSetGeOfCountable' [Countable ι] (hτ : IsStoppingTi
 #align
   measure_theory.is_stopping_time.measurable_set_ge_of_countable' MeasureTheory.IsStoppingTime.measurableSetGeOfCountable'
 
-protected theorem measurableSetLtOfCountableRange' (hτ : IsStoppingTime f τ) (h_countable : (Set.Range τ).Countable)
+protected theorem measurableSetLtOfCountableRange' (hτ : IsStoppingTime f τ) (h_countable : (Set.range τ).Countable)
     (i : ι) : measurable_set[hτ.MeasurableSpace] { ω | τ ω < i } := by
   have : { ω | τ ω < i } = { ω | τ ω ≤ i } \ { ω | τ ω = i } := by
     ext1 ω
@@ -627,10 +626,10 @@ protected theorem measurableSetLtOfCountable' [Countable ι] (hτ : IsStoppingTi
   measure_theory.is_stopping_time.measurable_set_lt_of_countable' MeasureTheory.IsStoppingTime.measurableSetLtOfCountable'
 
 protected theorem measurable_space_le_of_countable_range (hτ : IsStoppingTime f τ)
-    (h_countable : (Set.Range τ).Countable) : hτ.MeasurableSpace ≤ m := by
+    (h_countable : (Set.range τ).Countable) : hτ.MeasurableSpace ≤ m := by
   intro s hs
   change ∀ i, measurable_set[f i] (s ∩ { ω | τ ω ≤ i }) at hs
-  rw [(_ : s = ⋃ i ∈ Set.Range τ, s ∩ { ω | τ ω ≤ i })]
+  rw [(_ : s = ⋃ i ∈ Set.range τ, s ∩ { ω | τ ω ≤ i })]
   · exact MeasurableSet.bUnion h_countable fun i _ => f.le i _ (hs i)
     
   · ext ω
@@ -913,38 +912,37 @@ variable [MeasurableSpace ι] [TopologicalSpace ι] [OrderTopology ι] [SecondCo
 theorem progMeasurableMinStoppingTime [MetrizableSpace ι] (hτ : IsStoppingTime f τ) :
     ProgMeasurable f fun i ω => min i (τ ω) := by
   intro i
-  let m_prod : MeasurableSpace (Set.IicCat i × Ω) := MeasurableSpace.prod _ (f i)
-  let m_set : ∀ t : Set (Set.IicCat i × Ω), MeasurableSpace t := fun _ =>
-    @Subtype.measurableSpace (Set.IicCat i × Ω) _ m_prod
-  let s := { p : Set.IicCat i × Ω | τ p.2 ≤ i }
-  have hs : measurable_set[m_prod] s := @measurableSnd (Set.IicCat i) Ω _ (f i) _ (hτ i)
-  have h_meas_fst : ∀ t : Set (Set.IicCat i × Ω), measurable[m_set t] fun x : t => ((x : Set.IicCat i × Ω).fst : ι) :=
-    fun t => (@measurableSubtypeCoe (Set.IicCat i × Ω) m_prod _).fst.subtype_coe
+  let m_prod : MeasurableSpace (Set.iic i × Ω) := MeasurableSpace.prod _ (f i)
+  let m_set : ∀ t : Set (Set.iic i × Ω), MeasurableSpace t := fun _ => @Subtype.measurableSpace (Set.iic i × Ω) _ m_prod
+  let s := { p : Set.iic i × Ω | τ p.2 ≤ i }
+  have hs : measurable_set[m_prod] s := @measurableSnd (Set.iic i) Ω _ (f i) _ (hτ i)
+  have h_meas_fst : ∀ t : Set (Set.iic i × Ω), measurable[m_set t] fun x : t => ((x : Set.iic i × Ω).fst : ι) :=
+    fun t => (@measurableSubtypeCoe (Set.iic i × Ω) m_prod _).fst.subtype_coe
   apply Measurable.stronglyMeasurable
   refine' measurableOfRestrictOfRestrictCompl hs _ _
   · refine' @Measurable.min _ _ _ _ _ (m_set s) _ _ _ _ _ (h_meas_fst s) _
     refine' @measurableOfIic ι s _ _ _ (m_set s) _ _ _ _ fun j => _
     have h_set_eq :
-      (fun x : s => τ (x : Set.IicCat i × Ω).snd) ⁻¹' Set.IicCat j =
-        (fun x : s => (x : Set.IicCat i × Ω).snd) ⁻¹' { ω | τ ω ≤ min i j } :=
+      (fun x : s => τ (x : Set.iic i × Ω).snd) ⁻¹' Set.iic j =
+        (fun x : s => (x : Set.iic i × Ω).snd) ⁻¹' { ω | τ ω ≤ min i j } :=
       by
       ext1 ω
       simp only [Set.mem_preimage, Set.mem_Iic, iff_and_self, le_min_iff, Set.mem_set_of_eq]
       exact fun _ => ω.prop
     rw [h_set_eq]
-    suffices h_meas : @Measurable _ _ (m_set s) (f i) fun x : s => (x : Set.IicCat i × Ω).snd
+    suffices h_meas : @Measurable _ _ (m_set s) (f i) fun x : s => (x : Set.iic i × Ω).snd
     exact h_meas (f.mono (min_le_left _ _) _ (hτ.measurable_set_le (min i j)))
     exact measurable_snd.comp (@measurableSubtypeCoe _ m_prod _)
     
   · suffices h_min_eq_left :
-      (fun x : sᶜ => min (↑(x : Set.IicCat i × Ω).fst) (τ (x : Set.IicCat i × Ω).snd)) = fun x : sᶜ =>
-        ↑(x : Set.IicCat i × Ω).fst
+      (fun x : sᶜ => min (↑(x : Set.iic i × Ω).fst) (τ (x : Set.iic i × Ω).snd)) = fun x : sᶜ =>
+        ↑(x : Set.iic i × Ω).fst
     · rw [Set.restrict, h_min_eq_left]
       exact h_meas_fst _
       
     ext1 ω
     rw [min_eq_left]
-    have hx_fst_le : ↑(ω : Set.IicCat i × Ω).fst ≤ i := (ω : Set.IicCat i × Ω).fst.Prop
+    have hx_fst_le : ↑(ω : Set.iic i × Ω).fst ≤ i := (ω : Set.iic i × Ω).fst.Prop
     refine' hx_fst_le.trans (le_of_lt _)
     convert ω.prop
     simp only [not_le, Set.mem_compl_iff, Set.mem_set_of_eq]
@@ -969,7 +967,7 @@ theorem ProgMeasurable.stronglyMeasurableStoppedProcess [MetrizableSpace ι] (hu
 
 theorem stronglyMeasurableStoppedValueOfLe (h : ProgMeasurable f u) (hτ : IsStoppingTime f τ) {n : ι}
     (hτ_le : ∀ ω, τ ω ≤ n) : strongly_measurable[f n] (stoppedValue u τ) := by
-  have : stopped_value u τ = (fun p : Set.IicCat n × Ω => u (↑p.fst) p.snd) ∘ fun ω => (⟨τ ω, hτ_le ω⟩, ω) := by
+  have : stopped_value u τ = (fun p : Set.iic n × Ω => u (↑p.fst) p.snd) ∘ fun ω => (⟨τ ω, hτ_le ω⟩, ω) := by
     ext1 ω
     simp only [stopped_value, Function.comp_apply, Subtype.coe_mk]
   rw [this]

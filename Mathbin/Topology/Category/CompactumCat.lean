@@ -188,10 +188,10 @@ private def basic {X : CompactumCat} (A : Set X) : Set (Ultrafilter X) :=
 
 /-- A local definition used only in the proofs. -/
 private def cl {X : CompactumCat} (A : Set X) : Set X :=
-  X.str '' Basic A
+  X.str '' basic A
 #align Compactum.cl Compactum.cl
 
-private theorem basic_inter {X : CompactumCat} (A B : Set X) : Basic (A ∩ B) = Basic A ∩ Basic B := by
+private theorem basic_inter {X : CompactumCat} (A B : Set X) : basic (A ∩ B) = basic A ∩ basic B := by
   ext G
   constructor
   · intro hG
@@ -203,11 +203,11 @@ private theorem basic_inter {X : CompactumCat} (A B : Set X) : Basic (A ∩ B) =
     
 #align Compactum.basic_inter Compactum.basic_inter
 
-private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ Cl A := fun a ha => ⟨X.incl a, ha, by simp⟩
+private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ cl A := fun a ha => ⟨X.incl a, ha, by simp⟩
 #align Compactum.subset_cl Compactum.subset_cl
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
-private theorem cl_cl {X : CompactumCat} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
+private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))
@@ -269,7 +269,7 @@ private theorem cl_cl {X : CompactumCat} (A : Set X) : Cl (Cl A) ⊆ Cl A := by
   exact finite_inter_closure.basic (@hT t ht)
 #align Compactum.cl_cl Compactum.cl_cl
 
-theorem isClosedCl {X : CompactumCat} (A : Set X) : IsClosed (Cl A) := by
+theorem isClosedCl {X : CompactumCat} (A : Set X) : IsClosed (cl A) := by
   rw [is_closed_iff]
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
@@ -324,7 +324,7 @@ theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F 
     intro S hS
     apply finite_inter_closure_insert
     · constructor
-      · use Set.Univ
+      · use Set.univ
         refine' ⟨Filter.univ_sets _, _⟩
         ext
         refine' ⟨_, by tauto⟩
@@ -370,7 +370,7 @@ theorem Lim_eq_str {X : CompactumCat} (F : Ultrafilter X) : F.lim = X.str F := b
   tauto
 #align Compactum.Lim_eq_str CompactumCat.Lim_eq_str
 
-theorem cl_eq_closure {X : CompactumCat} (A : Set X) : Cl A = Closure A := by
+theorem cl_eq_closure {X : CompactumCat} (A : Set X) : cl A = closure A := by
   ext
   rw [mem_closure_iff_ultrafilter]
   constructor

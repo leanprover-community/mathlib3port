@@ -28,8 +28,8 @@ variable {𝕜 E ι : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module
 /-- In a tetrahedron with vertices `x`, `y`, `p`, `q`, any segment `[u, v]` joining the opposite
 edges `[x, p]` and `[y, q]` passes through any triangle of vertices `p`, `q`, `z` where
 `z ∈ [x, y]`. -/
-theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ Segment 𝕜 x y) (hu : u ∈ Segment 𝕜 x p)
-    (hv : v ∈ Segment 𝕜 y q) : ¬Disjoint (Segment 𝕜 u v) (convexHull 𝕜 {p, q, z}) := by
+theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ segment 𝕜 x y) (hu : u ∈ segment 𝕜 x p)
+    (hv : v ∈ segment 𝕜 y q) : ¬Disjoint (segment 𝕜 u v) (convexHull 𝕜 {p, q, z}) := by
   rw [not_disjoint_iff]
   obtain ⟨az, bz, haz, hbz, habz, rfl⟩ := hz
   obtain rfl | haz' := haz.eq_or_lt
@@ -77,7 +77,7 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
           fun s => subset_sUnion_of_mem⟩)
       s ⟨hs, hst⟩
   refine' ⟨C, hC.1, convex_iff_segment_subset.2 fun x hx y hy z hz hzC => _, hsC, hC.2.subset_compl_left⟩
-  suffices h : ∀ c ∈ Cᶜ, ∃ a ∈ C, (Segment 𝕜 c a ∩ t).Nonempty
+  suffices h : ∀ c ∈ Cᶜ, ∃ a ∈ C, (segment 𝕜 c a ∩ t).Nonempty
   · obtain ⟨p, hp, u, hu, hut⟩ := h x hx
     obtain ⟨q, hq, v, hv, hvt⟩ := h y hy
     refine'

@@ -46,7 +46,7 @@ variable {C}
 
 namespace SheafedSpaceCat
 
-instance coeCarrier : Coe (SheafedSpaceCat C) TopCat where coe X := X.Carrier
+instance coeCarrier : Coe (SheafedSpaceCat C) TopCat where coe X := X.carrier
 #align algebraic_geometry.SheafedSpace.coe_carrier AlgebraicGeometry.SheafedSpaceCat.coeCarrier
 
 /-- Extract the `sheaf C (X : Top)` from a `SheafedSpace C`. -/
@@ -55,18 +55,18 @@ def sheaf (X : SheafedSpaceCat C) : Sheaf C (X : TopCat.{v}) :=
 #align algebraic_geometry.SheafedSpace.sheaf AlgebraicGeometry.SheafedSpaceCat.sheaf
 
 @[simp]
-theorem as_coe (X : SheafedSpaceCat.{v} C) : X.Carrier = (X : TopCat.{v}) :=
+theorem as_coe (X : SheafedSpaceCat.{v} C) : X.carrier = (X : TopCat.{v}) :=
   rfl
 #align algebraic_geometry.SheafedSpace.as_coe AlgebraicGeometry.SheafedSpaceCat.as_coe
 
 @[simp]
 theorem mk_coe (carrier) (presheaf) (h) :
-    (({ Carrier, Presheaf, IsSheaf := h } : SheafedSpaceCat.{v} C) : TopCat.{v}) = carrier :=
+    (({ carrier, Presheaf, IsSheaf := h } : SheafedSpaceCat.{v} C) : TopCat.{v}) = carrier :=
   rfl
 #align algebraic_geometry.SheafedSpace.mk_coe AlgebraicGeometry.SheafedSpaceCat.mk_coe
 
 instance (X : SheafedSpaceCat.{v} C) : TopologicalSpace X :=
-  X.Carrier.str
+  X.carrier.str
 
 /-- The trivial `unit` valued sheaf on any topological space. -/
 def unit (X : TopCat) : SheafedSpaceCat (discrete Unit) :=

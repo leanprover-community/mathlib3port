@@ -42,7 +42,7 @@ protected def finsupp (s : Finset ι) (t : ι → Finset α) : Finset (ι →₀
   (s.pi t).map ⟨indicator s, indicator_injective s⟩
 #align finset.finsupp Finset.finsupp
 
-theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.Support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i := by
+theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i := by
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
     refine' ⟨support_indicator_subset _ _, fun i hi => _⟩
@@ -57,7 +57,7 @@ theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.Support
 
 /-- When `t` is supported on `s`, `f ∈ s.finsupp t` precisely means that `f` is pointwise in `t`. -/
 @[simp]
-theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.Support ⊆ s) : f ∈ s.Finsupp t ↔ ∀ i, f i ∈ t i :=
+theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.support ⊆ s) : f ∈ s.Finsupp t ↔ ∀ i, f i ∈ t i :=
   by
   refine'
     mem_finsupp_iff.trans
@@ -89,7 +89,7 @@ namespace Finsupp
 /-- Given a finitely supported function `f : ι →₀ finset α`, one can define the finset
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
 def pi (f : ι →₀ Finset α) : Finset (ι →₀ α) :=
-  f.Support.Finsupp f
+  f.support.Finsupp f
 #align finsupp.pi Finsupp.pi
 
 @[simp]

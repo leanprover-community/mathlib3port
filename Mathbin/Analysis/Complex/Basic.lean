@@ -420,7 +420,7 @@ theorem of_real_clm_nnnorm : ∥of_real_clm∥₊ = 1 :=
 noncomputable instance : IsROrC ℂ where
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
-  I := Complex.i
+  i := Complex.i
   I_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.I_re]
   I_mul_I_ax := by simp only [Complex.I_mul_I, eq_self_iff_true, or_true_iff]
   re_add_im_ax z := by

@@ -116,7 +116,7 @@ open Pointwise
 @[to_additive " The additive submonoid with every element negated. "]
 protected def hasInv :
     Inv (Submonoid G) where inv S :=
-    { Carrier := (S : Set G)⁻¹,
+    { carrier := (S : Set G)⁻¹,
       one_mem' :=
         show (1 : G)⁻¹ ∈ S by
           rw [inv_one]

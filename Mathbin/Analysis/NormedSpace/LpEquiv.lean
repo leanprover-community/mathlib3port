@@ -47,7 +47,7 @@ theorem Memℓp.all [Finite α] (f : ∀ i, E i) : Memℓp f p := by
   rcases p.trichotomy with (rfl | rfl | h)
   · exact mem_ℓp_zero_iff.mpr { i : α | f i ≠ 0 }.to_finite
     
-  · exact mem_ℓp_infty_iff.mpr (Set.Finite.bdd_above (Set.Range fun i : α => ∥f i∥).to_finite)
+  · exact mem_ℓp_infty_iff.mpr (Set.Finite.bdd_above (Set.range fun i : α => ∥f i∥).to_finite)
     
   · cases nonempty_fintype α
     exact memℓpGen ⟨finset.univ.sum _, has_sum_fintype _⟩

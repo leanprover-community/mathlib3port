@@ -45,7 +45,7 @@ variable {V : Type _} (G : SimpleGraph V)
 /-- The distance between two vertices is the length of the shortest walk between them.
 If no such walk exists, this uses the junk value of `0`. -/
 noncomputable def dist (u v : V) : ℕ :=
-  inf (Set.Range (Walk.length : G.Walk u v → ℕ))
+  inf (Set.range (Walk.length : G.Walk u v → ℕ))
 #align simple_graph.dist SimpleGraph.dist
 
 variable {G}
@@ -90,7 +90,7 @@ protected theorem Connected.pos_dist_of_ne {u v : V} (hconn : G.Connected) (hne 
 theorem dist_eq_zero_of_not_reachable {u v : V} (h : ¬G.Reachable u v) : G.dist u v = 0 := by simp [h]
 #align simple_graph.dist_eq_zero_of_not_reachable SimpleGraph.dist_eq_zero_of_not_reachable
 
-theorem nonempty_of_pos_dist {u v : V} (h : 0 < G.dist u v) : (Set.Univ : Set (G.Walk u v)).Nonempty := by
+theorem nonempty_of_pos_dist {u v : V} (h : 0 < G.dist u v) : (Set.univ : Set (G.Walk u v)).Nonempty := by
   simpa [Set.range_nonempty_iff_nonempty, Set.nonempty_iff_univ_nonempty] using Nat.nonempty_of_pos_Inf h
 #align simple_graph.nonempty_of_pos_dist SimpleGraph.nonempty_of_pos_dist
 

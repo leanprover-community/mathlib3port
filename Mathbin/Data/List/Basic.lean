@@ -439,7 +439,7 @@ theorem map_bind (g : β → List γ) (f : α → β) : ∀ l : List α, (List.m
   | a :: l => by simp only [cons_bind, map_cons, map_bind l]
 #align list.map_bind List.map_bind
 
-theorem range_map (f : α → β) : Set.Range (map f) = { l | ∀ x ∈ l, x ∈ Set.Range f } := by
+theorem range_map (f : α → β) : Set.range (map f) = { l | ∀ x ∈ l, x ∈ Set.range f } := by
   refine'
     Set.Subset.antisymm (Set.range_subset_iff.2 fun l => forall_mem_map_iff.2 fun y _ => Set.mem_range_self _)
       fun l hl => _
@@ -451,7 +451,7 @@ theorem range_map (f : α → β) : Set.Range (map f) = { l | ∀ x ∈ l, x ∈
   exact ⟨a :: l, map_cons _ _ _⟩
 #align list.range_map List.range_map
 
-theorem range_map_coe (s : Set α) : Set.Range (map (coe : s → α)) = { l | ∀ x ∈ l, x ∈ s } := by
+theorem range_map_coe (s : Set α) : Set.range (map (coe : s → α)) = { l | ∀ x ∈ l, x ∈ s } := by
   rw [range_map, Subtype.range_coe]
 #align list.range_map_coe List.range_map_coe
 
@@ -3285,11 +3285,6 @@ theorem foldr_fixed {b : β} : ∀ l : List α, foldr (fun a b => b) b l = b :=
 #align list.foldr_fixed List.foldr_fixed
 
 @[simp]
-theorem foldl_combinator_K {a : α} : ∀ l : List β, foldl Combinator.K a l = a :=
-  foldl_fixed
-#align list.foldl_combinator_K List.foldl_combinator_K
-
-@[simp]
 theorem foldl_join (f : α → β → α) : ∀ (a : α) (L : List (List β)), foldl f a (join L) = foldl (foldl f) a L
   | a, [] => rfl
   | a, l :: L => by simp only [join, foldl_append, foldl_cons, foldl_join (foldl f a l) L]
@@ -4924,16 +4919,12 @@ section Erase
 
 variable [DecidableEq α]
 
-/- warning: list.erase_nil -> List.erase_nil is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α), Eq.{succ u} (List.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.nil.{u} α) a) (List.nil.{u} α)
-but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.20527 : DecidableEq.{succ u_1} α] (a : α), Eq.{succ u_1} (List.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.20527 a b)) (List.nil.{u_1} α) a) (List.nil.{u_1} α)
-Case conversion may be inaccurate. Consider using '#align list.erase_nil List.erase_nilₓ'. -/
+#print List.erase_nil /-
 @[simp]
 theorem erase_nil (a : α) : [].erase a = [] :=
   rfl
 #align list.erase_nil List.erase_nil
+-/
 
 /- warning: list.erase_cons -> List.erase_cons is a dubious translation:
 lean 3 declaration is

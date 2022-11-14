@@ -254,7 +254,7 @@ theorem mk_le_of_surjective {α β : Type u} {f : α → β} (hf : Surjective f)
 #align cardinal.mk_le_of_surjective Cardinal.mk_le_of_surjective
 
 theorem le_mk_iff_exists_set {c : Cardinal} {α : Type u} : c ≤ (#α) ↔ ∃ p : Set α, (#p) = c :=
-  ⟨(induction_on c) fun β ⟨⟨f, hf⟩⟩ => ⟨Set.Range f, (Equiv.ofInjective f hf).cardinal_eq.symm⟩, fun ⟨p, e⟩ =>
+  ⟨(induction_on c) fun β ⟨⟨f, hf⟩⟩ => ⟨Set.range f, (Equiv.ofInjective f hf).cardinal_eq.symm⟩, fun ⟨p, e⟩ =>
     e ▸ ⟨⟨Subtype.val, fun a b => Subtype.eq⟩⟩⟩
 #align cardinal.le_mk_iff_exists_set Cardinal.le_mk_iff_exists_set
 
@@ -617,9 +617,9 @@ instance : CanonicallyOrderedCommSemiring Cardinal.{u} :=
     add_le_add_left := fun a b => add_le_add_left,
     exists_add_of_le := fun a b =>
       (induction_on₂ a b) fun α β ⟨⟨f, hf⟩⟩ =>
-        have : Sum α (Range fᶜ : Set β) ≃ β :=
-          (Equiv.sumCongr (Equiv.ofInjective f hf) (Equiv.refl _)).trans <| Equiv.Set.sumCompl (Range f)
-        ⟨#↥(Range fᶜ), mk_congr this.symm⟩,
+        have : Sum α (range fᶜ : Set β) ≃ β :=
+          (Equiv.sumCongr (Equiv.ofInjective f hf) (Equiv.refl _)).trans <| Equiv.Set.sumCompl (range f)
+        ⟨#↥(range fᶜ), mk_congr this.symm⟩,
     le_self_add := fun a b => (add_zero a).ge.trans <| add_le_add_left (Cardinal.zero_le _) _,
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b =>
       (induction_on₂ a b) fun α β => by simpa only [mul_def, mk_eq_zero_iff, isEmpty_prod] using id }
@@ -810,24 +810,24 @@ theorem mk_le_mk_mul_of_mk_preimage_le {c : Cardinal} (f : α → β) (hf : ∀ 
 
 /-- The range of an indexed cardinal function, whose outputs live in a higher universe than the
     inputs, is always bounded above. -/
-theorem bdd_above_range {ι : Type u} (f : ι → Cardinal.{max u v}) : BddAbove (Set.Range f) :=
+theorem bdd_above_range {ι : Type u} (f : ι → Cardinal.{max u v}) : BddAbove (Set.range f) :=
   ⟨_, by
     rintro a ⟨i, rfl⟩
     exact le_sum f i⟩
 #align cardinal.bdd_above_range Cardinal.bdd_above_range
 
-instance (a : Cardinal.{u}) : Small.{u} (Set.IicCat a) := by
+instance (a : Cardinal.{u}) : Small.{u} (Set.iic a) := by
   rw [← mk_out a]
   apply @small_of_surjective (Set a.out) (Iic (#a.out)) _ fun x => ⟨#x, mk_set_le x⟩
   rintro ⟨x, hx⟩
   simpa using le_mk_iff_exists_set.1 hx
 
-instance (a : Cardinal.{u}) : Small.{u} (Set.IioCat a) :=
+instance (a : Cardinal.{u}) : Small.{u} (Set.iio a) :=
   small_subset Iio_subset_Iic_self
 
 /-- A set of cardinals is bounded above iff it's small, i.e. it corresponds to an usual ZFC set. -/
 theorem bdd_above_iff_small {s : Set Cardinal.{u}} : BddAbove s ↔ Small.{u} s :=
-  ⟨fun ⟨a, ha⟩ => @small_subset _ (IicCat a) s (fun x h => ha h) _, by
+  ⟨fun ⟨a, ha⟩ => @small_subset _ (iic a) s (fun x h => ha h) _, by
     rintro ⟨ι, ⟨e⟩⟩
     suffices (range fun x : ι => (e.symm x).1) = s by
       rw [← this]
@@ -852,8 +852,8 @@ theorem bdd_above_image (f : Cardinal.{u} → Cardinal.{max u v}) {s : Set Cardi
   exact small_lift _
 #align cardinal.bdd_above_image Cardinal.bdd_above_image
 
-theorem bdd_above_range_comp {ι : Type u} {f : ι → Cardinal.{v}} (hf : BddAbove (Range f))
-    (g : Cardinal.{v} → Cardinal.{max v w}) : BddAbove (Range (g ∘ f)) := by
+theorem bdd_above_range_comp {ι : Type u} {f : ι → Cardinal.{v}} (hf : BddAbove (range f))
+    (g : Cardinal.{v} → Cardinal.{max v w}) : BddAbove (range (g ∘ f)) := by
   rw [range_comp]
   exact bdd_above_image g hf
 #align cardinal.bdd_above_range_comp Cardinal.bdd_above_range_comp
@@ -978,7 +978,7 @@ theorem lift_down {a : Cardinal.{u}} {b : Cardinal.{max u v}} : b ≤ lift a →
   (induction_on₂ a b) fun α β => by
     rw [← lift_id (#β), ← lift_umax, ← lift_umax.{u, v}, lift_mk_le] <;>
       exact fun ⟨f⟩ =>
-        ⟨#Set.Range f,
+        ⟨#Set.range f,
           Eq.symm <|
             lift_mk_eq.2
               ⟨(embedding.equiv_of_surjective (embedding.cod_restrict _ f Set.mem_range_self)) fun ⟨a, ⟨b, e⟩⟩ =>
@@ -1039,20 +1039,20 @@ theorem lift_Sup {s : Set Cardinal} (hs : BddAbove s) : lift.{u} (sup s) = sup (
 #align cardinal.lift_Sup Cardinal.lift_Sup
 
 /-- The lift of a supremum is the supremum of the lifts. -/
-theorem lift_supr {ι : Type v} {f : ι → Cardinal.{w}} (hf : BddAbove (Range f)) :
+theorem lift_supr {ι : Type v} {f : ι → Cardinal.{w}} (hf : BddAbove (range f)) :
     lift.{u} (supr f) = ⨆ i, lift.{u} (f i) := by rw [supr, supr, lift_Sup hf, ← range_comp]
 #align cardinal.lift_supr Cardinal.lift_supr
 
 /-- To prove that the lift of a supremum is bounded by some cardinal `t`,
 it suffices to show that the lift of each cardinal is bounded by `t`. -/
-theorem lift_supr_le {ι : Type v} {f : ι → Cardinal.{w}} {t : Cardinal} (hf : BddAbove (Range f))
+theorem lift_supr_le {ι : Type v} {f : ι → Cardinal.{w}} {t : Cardinal} (hf : BddAbove (range f))
     (w : ∀ i, lift.{u} (f i) ≤ t) : lift.{u} (supr f) ≤ t := by
   rw [lift_supr hf]
   exact csupr_le' w
 #align cardinal.lift_supr_le Cardinal.lift_supr_le
 
 @[simp]
-theorem lift_supr_le_iff {ι : Type v} {f : ι → Cardinal.{w}} (hf : BddAbove (Range f)) {t : Cardinal} :
+theorem lift_supr_le_iff {ι : Type v} {f : ι → Cardinal.{w}} (hf : BddAbove (range f)) {t : Cardinal} :
     lift.{u} (supr f) ≤ t ↔ ∀ i, lift.{u} (f i) ≤ t := by
   rw [lift_supr hf]
   exact csupr_le_iff' (bdd_above_range_comp hf _)
@@ -1065,7 +1065,7 @@ it suffices to show that the lift of each cardinal from the smaller supremum
 if bounded by the lift of some cardinal from the larger supremum.
 -/
 theorem lift_supr_le_lift_supr {ι : Type v} {ι' : Type v'} {f : ι → Cardinal.{w}} {f' : ι' → Cardinal.{w'}}
-    (hf : BddAbove (Range f)) (hf' : BddAbove (Range f')) {g : ι → ι'}
+    (hf : BddAbove (range f)) (hf' : BddAbove (range f')) {g : ι → ι'}
     (h : ∀ i, lift.{w'} (f i) ≤ lift.{w} (f' (g i))) : lift.{w'} (supr f) ≤ lift.{w} (supr f') := by
   rw [lift_supr hf, lift_supr hf']
   exact csupr_mono' (bdd_above_range_comp hf' _) fun i => ⟨_, h i⟩
@@ -1074,7 +1074,7 @@ theorem lift_supr_le_lift_supr {ι : Type v} {ι' : Type v'} {f : ι → Cardina
 /-- A variant of `lift_supr_le_lift_supr` with universes specialized via `w = v` and `w' = v'`.
 This is sometimes necessary to avoid universe unification issues. -/
 theorem lift_supr_le_lift_supr' {ι : Type v} {ι' : Type v'} {f : ι → Cardinal.{v}} {f' : ι' → Cardinal.{v'}}
-    (hf : BddAbove (Range f)) (hf' : BddAbove (Range f')) (g : ι → ι')
+    (hf : BddAbove (range f)) (hf' : BddAbove (range f')) (g : ι → ι')
     (h : ∀ i, lift.{v'} (f i) ≤ lift.{v} (f' (g i))) : lift.{v'} (supr f) ≤ lift.{v} (supr f') :=
   lift_supr_le_lift_supr hf hf' h
 #align cardinal.lift_supr_le_lift_supr' Cardinal.lift_supr_le_lift_supr'
@@ -1248,7 +1248,7 @@ theorem aleph_0_le {c : Cardinal} : ℵ₀ ≤ c ↔ ∀ n : ℕ, ↑n ≤ c :=
 #align cardinal.aleph_0_le Cardinal.aleph_0_le
 
 @[simp]
-theorem range_nat_cast : Range (coe : ℕ → Cardinal) = IioCat ℵ₀ :=
+theorem range_nat_cast : range (coe : ℕ → Cardinal) = iio ℵ₀ :=
   ext fun x => by simp only [mem_Iio, mem_range, eq_comm, lt_aleph_0]
 #align cardinal.range_nat_cast Cardinal.range_nat_cast
 
@@ -1743,7 +1743,7 @@ theorem mk_emptyc_iff {α : Type u} {s : Set α} : (#s) = 0 ↔ s = ∅ := by
 #align cardinal.mk_emptyc_iff Cardinal.mk_emptyc_iff
 
 @[simp]
-theorem mk_univ {α : Type u} : (#@Univ α) = (#α) :=
+theorem mk_univ {α : Type u} : (#@univ α) = (#α) :=
   mk_congr (Equiv.Set.univ α)
 #align cardinal.mk_univ Cardinal.mk_univ
 
@@ -1755,25 +1755,25 @@ theorem mk_image_le_lift {α : Type u} {β : Type v} {f : α → β} {s : Set α
   lift_mk_le.{v, u, 0}.mpr ⟨Embedding.ofSurjective _ surjective_onto_image⟩
 #align cardinal.mk_image_le_lift Cardinal.mk_image_le_lift
 
-theorem mk_range_le {α β : Type u} {f : α → β} : (#Range f) ≤ (#α) :=
+theorem mk_range_le {α β : Type u} {f : α → β} : (#range f) ≤ (#α) :=
   mk_le_of_surjective surjective_onto_range
 #align cardinal.mk_range_le Cardinal.mk_range_le
 
-theorem mk_range_le_lift {α : Type u} {β : Type v} {f : α → β} : lift.{u} (#Range f) ≤ lift.{v} (#α) :=
+theorem mk_range_le_lift {α : Type u} {β : Type v} {f : α → β} : lift.{u} (#range f) ≤ lift.{v} (#α) :=
   lift_mk_le.{v, u, 0}.mpr ⟨Embedding.ofSurjective _ surjective_onto_range⟩
 #align cardinal.mk_range_le_lift Cardinal.mk_range_le_lift
 
-theorem mk_range_eq (f : α → β) (h : Injective f) : (#Range f) = (#α) :=
+theorem mk_range_eq (f : α → β) (h : Injective f) : (#range f) = (#α) :=
   mk_congr (Equiv.ofInjective f h).symm
 #align cardinal.mk_range_eq Cardinal.mk_range_eq
 
 theorem mk_range_eq_of_injective {α : Type u} {β : Type v} {f : α → β} (hf : Injective f) :
-    lift.{u} (#Range f) = lift.{v} (#α) :=
+    lift.{u} (#range f) = lift.{v} (#α) :=
   lift_mk_eq'.mpr ⟨(Equiv.ofInjective f hf).symm⟩
 #align cardinal.mk_range_eq_of_injective Cardinal.mk_range_eq_of_injective
 
 theorem mk_range_eq_lift {α : Type u} {β : Type v} {f : α → β} (hf : Injective f) :
-    lift.{max u w} (#Range f) = lift.{max v w} (#α) :=
+    lift.{max u w} (#range f) = lift.{max v w} (#α) :=
   lift_mk_eq.mpr ⟨(Equiv.ofInjective f hf).symm⟩
 #align cardinal.mk_range_eq_lift Cardinal.mk_range_eq_lift
 
@@ -1912,7 +1912,7 @@ theorem mk_preimage_of_injective_lift {α : Type u} {β : Type v} (f : α → β
   exact h.comp Subtype.val_injective
 #align cardinal.mk_preimage_of_injective_lift Cardinal.mk_preimage_of_injective_lift
 
-theorem mk_preimage_of_subset_range_lift {α : Type u} {β : Type v} (f : α → β) (s : Set β) (h : s ⊆ Range f) :
+theorem mk_preimage_of_subset_range_lift {α : Type u} {β : Type v} (f : α → β) (s : Set β) (h : s ⊆ range f) :
     lift.{u} (#s) ≤ lift.{v} (#f ⁻¹' s) := by
   rw [lift_mk_le.{v, u, 0}]
   refine' ⟨⟨_, _⟩⟩
@@ -1930,7 +1930,7 @@ theorem mk_preimage_of_subset_range_lift {α : Type u} {β : Type v} (f : α →
 #align cardinal.mk_preimage_of_subset_range_lift Cardinal.mk_preimage_of_subset_range_lift
 
 theorem mk_preimage_of_injective_of_subset_range_lift {β : Type v} (f : α → β) (s : Set β) (h : Injective f)
-    (h2 : s ⊆ Range f) : lift.{v} (#f ⁻¹' s) = lift.{u} (#s) :=
+    (h2 : s ⊆ range f) : lift.{v} (#f ⁻¹' s) = lift.{u} (#s) :=
   le_antisymm (mk_preimage_of_injective_lift f s h) (mk_preimage_of_subset_range_lift f s h2)
 #align cardinal.mk_preimage_of_injective_of_subset_range_lift Cardinal.mk_preimage_of_injective_of_subset_range_lift
 
@@ -1938,11 +1938,11 @@ theorem mk_preimage_of_injective (f : α → β) (s : Set β) (h : Injective f) 
   convert mk_preimage_of_injective_lift.{u, u} f s h using 1 <;> rw [lift_id]
 #align cardinal.mk_preimage_of_injective Cardinal.mk_preimage_of_injective
 
-theorem mk_preimage_of_subset_range (f : α → β) (s : Set β) (h : s ⊆ Range f) : (#s) ≤ (#f ⁻¹' s) := by
+theorem mk_preimage_of_subset_range (f : α → β) (s : Set β) (h : s ⊆ range f) : (#s) ≤ (#f ⁻¹' s) := by
   convert mk_preimage_of_subset_range_lift.{u, u} f s h using 1 <;> rw [lift_id]
 #align cardinal.mk_preimage_of_subset_range Cardinal.mk_preimage_of_subset_range
 
-theorem mk_preimage_of_injective_of_subset_range (f : α → β) (s : Set β) (h : Injective f) (h2 : s ⊆ Range f) :
+theorem mk_preimage_of_injective_of_subset_range (f : α → β) (s : Set β) (h : Injective f) (h2 : s ⊆ range f) :
     (#f ⁻¹' s) = (#s) := by
   convert mk_preimage_of_injective_of_subset_range_lift.{u, u} f s h h2 using 1 <;> rw [lift_id]
 #align cardinal.mk_preimage_of_injective_of_subset_range Cardinal.mk_preimage_of_injective_of_subset_range
@@ -2006,7 +2006,7 @@ theorem mk_eq_two_iff' (x : α) : (#α) = 2 ↔ ∃! y, y ≠ x := by
 theorem exists_not_mem_of_length_lt {α : Type _} (l : List α) (h : ↑l.length < (#α)) : ∃ z : α, z ∉ l := by
   contrapose! h
   calc
-    (#α) = (#(Set.Univ : Set α)) := mk_univ.symm
+    (#α) = (#(Set.univ : Set α)) := mk_univ.symm
     _ ≤ (#l.to_finset) := mk_le_mk_of_subset fun x _ => list.mem_to_finset.mpr (h x)
     _ = l.to_finset.card := Cardinal.mk_coe_finset
     _ ≤ l.length := cardinal.nat_cast_le.mpr (List.to_finset_card_le l)
@@ -2024,7 +2024,7 @@ theorem three_le {α : Type _} (h : 3 ≤ (#α)) (x : α) (y : α) : ∃ z : α,
 
 /-- The function `a ^< b`, defined as the supremum of `a ^ c` for `c < b`. -/
 def powerlt (a b : Cardinal.{u}) : Cardinal.{u} :=
-  ⨆ c : IioCat b, a^c
+  ⨆ c : iio b, a^c
 #align cardinal.powerlt Cardinal.powerlt
 
 -- mathport name: «expr ^< »

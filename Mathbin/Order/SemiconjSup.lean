@@ -95,7 +95,7 @@ theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} 
 variable {G : Type _}
 
 theorem semiconj_of_is_lub [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃o α) {h : α → α}
-    (H : ∀ x, IsLub (Range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) : Function.Semiconj h (f₂ g) (f₁ g) := by
+    (H : ∀ x, IsLub (range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) : Function.Semiconj h (f₂ g) (f₁ g) := by
   refine' fun y => (H _).unique _
   have := (f₁ g).LeftOrdContinuous (H y)
   rw [← range_comp, ← (Equiv.mulRight g).Surjective.range_comp _] at this

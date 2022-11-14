@@ -169,7 +169,7 @@ theorem Prime.dvd_finset_prod_iff {S : Finset α} {p : M} (pp : Prime p) (g : α
 #align prime.dvd_finset_prod_iff Prime.dvd_finset_prod_iff
 
 theorem Prime.dvd_finsupp_prod_iff {f : α →₀ M} {g : α → M → ℕ} {p : ℕ} (pp : Prime p) :
-    p ∣ f.Prod g ↔ ∃ a ∈ f.Support, p ∣ g a (f a) :=
+    p ∣ f.Prod g ↔ ∃ a ∈ f.support, p ∣ g a (f a) :=
   Prime.dvd_finset_prod_iff pp _
 #align prime.dvd_finsupp_prod_iff Prime.dvd_finsupp_prod_iff
 

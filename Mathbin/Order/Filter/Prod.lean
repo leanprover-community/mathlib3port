@@ -524,7 +524,7 @@ identity function.  Together with the previous lemma,
 `map_const_principal_coprod_map_id_principal`, this provides an example showing that the inequality
 in the lemma `map_prod_map_coprod_le` can be strict. -/
 theorem map_prod_map_const_id_principal_coprod_principal {α β ι : Type _} (a : α) (b : β) (i : ι) :
-    map (Prod.map (fun _ : α => b) id) ((𝓟 {a}).coprod (𝓟 {i})) = 𝓟 (({b} : Set β) ×ˢ (Univ : Set ι)) := by
+    map (Prod.map (fun _ : α => b) id) ((𝓟 {a}).coprod (𝓟 {i})) = 𝓟 (({b} : Set β) ×ˢ (univ : Set ι)) := by
   rw [principal_coprod_principal, map_principal]
   congr
   ext ⟨b', i'⟩

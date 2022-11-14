@@ -164,7 +164,7 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
   have := hf.mul_lintegral_upcrossings_le_lintegral_pos_part a b
   rw [mul_comm, ← Ennreal.le_div_iff_mul_le] at this
   · refine' (lt_of_le_of_lt this (Ennreal.div_lt_top _ _)).Ne
-    · have hR' : ∀ n, (∫⁻ ω, ∥f n ω - a∥₊ ∂μ) ≤ R + ∥a∥₊ * μ Set.Univ := by
+    · have hR' : ∀ n, (∫⁻ ω, ∥f n ω - a∥₊ ∂μ) ≤ R + ∥a∥₊ * μ Set.univ := by
         simp_rw [snorm_one_eq_lintegral_nnnorm] at hbdd
         intro n
         refine' (lintegral_mono _ : (∫⁻ ω, ∥f n ω - a∥₊ ∂μ) ≤ ∫⁻ ω, ∥f n ω∥₊ + ∥a∥₊ ∂μ).trans _
@@ -178,7 +178,7 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
       refine'
         ne_of_lt
           (supr_lt_iff.2
-            ⟨R + ∥a∥₊ * μ Set.Univ,
+            ⟨R + ∥a∥₊ * μ Set.univ,
               Ennreal.add_lt_top.2 ⟨Ennreal.coe_lt_top, Ennreal.mul_lt_top ennreal.coe_lt_top.ne (measure_ne_top _ _)⟩,
               fun n => le_trans _ (hR' n)⟩)
       refine' lintegral_mono fun ω => _

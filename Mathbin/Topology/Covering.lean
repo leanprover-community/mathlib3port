@@ -26,7 +26,7 @@ variable {E X : Type _} [TopologicalSpace E] [TopologicalSpace X] (f : E → X) 
 
 /-- A point `x : X` is evenly covered by `f : E → X` if `x` has an evenly covered neighborhood. -/
 def IsEvenlyCovered (x : X) (I : Type _) [TopologicalSpace I] :=
-  DiscreteTopology I ∧ ∃ t : Trivialization I f, x ∈ t.BaseSet
+  DiscreteTopology I ∧ ∃ t : Trivialization I f, x ∈ t.baseSet
 #align is_evenly_covered IsEvenlyCovered
 
 namespace IsEvenlyCovered
@@ -41,7 +41,7 @@ noncomputable def toTrivialization {x : X} {I : Type _} [TopologicalSpace I] (h 
 #align is_evenly_covered.to_trivialization IsEvenlyCovered.toTrivialization
 
 theorem mem_to_trivialization_base_set {x : X} {I : Type _} [TopologicalSpace I] (h : IsEvenlyCovered f x I) :
-    x ∈ h.toTrivialization.BaseSet :=
+    x ∈ h.toTrivialization.baseSet :=
   Classical.choose_spec h.2
 #align is_evenly_covered.mem_to_trivialization_base_set IsEvenlyCovered.mem_to_trivialization_base_set
 
@@ -79,7 +79,7 @@ def IsCoveringMapOn :=
 namespace IsCoveringMapOn
 
 theorem mk (F : X → Type _) [∀ x, TopologicalSpace (F x)] [hF : ∀ x, DiscreteTopology (F x)]
-    (e : ∀ x ∈ s, Trivialization (F x) f) (h : ∀ (x : X) (hx : x ∈ s), x ∈ (e x hx).BaseSet) : IsCoveringMapOn f s :=
+    (e : ∀ x ∈ s, Trivialization (F x) f) (h : ∀ (x : X) (hx : x ∈ s), x ∈ (e x hx).baseSet) : IsCoveringMapOn f s :=
   fun x hx => IsEvenlyCovered.to_is_evenly_covered_preimage ⟨hF x, e x hx, h x hx⟩
 #align is_covering_map_on.mk IsCoveringMapOn.mk
 
@@ -102,7 +102,7 @@ protected theorem is_locally_homeomorph_on (hf : IsCoveringMapOn f s) : IsLocall
   refine'
     ⟨e.to_local_homeomorph.trans
         { toFun := fun p => p.1, invFun := fun p => ⟨p, x, rfl⟩,
-          Source := e.base_set ×ˢ ({⟨x, rfl⟩} : Set (f ⁻¹' {f x})), Target := e.base_set,
+          source := e.base_set ×ˢ ({⟨x, rfl⟩} : Set (f ⁻¹' {f x})), target := e.base_set,
           open_source := e.open_base_set.prod (singletons_open_iff_discrete.2 (hf (f x) hx).1 ⟨x, rfl⟩),
           open_target := e.open_base_set, map_source' := fun p => And.left, map_target' := fun p hp => ⟨hp, rfl⟩,
           left_inv' := fun p hp => Prod.ext rfl hp.2.symm, right_inv' := fun p hp => rfl,
@@ -122,11 +122,11 @@ def IsCoveringMap :=
 
 variable {f}
 
-theorem is_covering_map_iff_is_covering_map_on_univ : IsCoveringMap f ↔ IsCoveringMapOn f Set.Univ := by
+theorem is_covering_map_iff_is_covering_map_on_univ : IsCoveringMap f ↔ IsCoveringMapOn f Set.univ := by
   simp only [IsCoveringMap, IsCoveringMapOn, Set.mem_univ, forall_true_left]
 #align is_covering_map_iff_is_covering_map_on_univ is_covering_map_iff_is_covering_map_on_univ
 
-protected theorem IsCoveringMap.is_covering_map_on (hf : IsCoveringMap f) : IsCoveringMapOn f Set.Univ :=
+protected theorem IsCoveringMap.is_covering_map_on (hf : IsCoveringMap f) : IsCoveringMapOn f Set.univ :=
   is_covering_map_iff_is_covering_map_on_univ.mp hf
 #align is_covering_map.is_covering_map_on IsCoveringMap.is_covering_map_on
 
@@ -135,8 +135,8 @@ variable (f)
 namespace IsCoveringMap
 
 theorem mk (F : X → Type _) [∀ x, TopologicalSpace (F x)] [hF : ∀ x, DiscreteTopology (F x)]
-    (e : ∀ x, Trivialization (F x) f) (h : ∀ x, x ∈ (e x).BaseSet) : IsCoveringMap f :=
-  is_covering_map_iff_is_covering_map_on_univ.mpr (IsCoveringMapOn.mk f Set.Univ F (fun x hx => e x) fun x hx => h x)
+    (e : ∀ x, Trivialization (F x) f) (h : ∀ x, x ∈ (e x).baseSet) : IsCoveringMap f :=
+  is_covering_map_iff_is_covering_map_on_univ.mpr (IsCoveringMapOn.mk f Set.univ F (fun x hx => e x) fun x hx => h x)
 #align is_covering_map.mk IsCoveringMap.mk
 
 variable {f}

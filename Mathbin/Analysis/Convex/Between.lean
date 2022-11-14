@@ -38,15 +38,15 @@ include V
 abstract affine combination spaces, this will no longer need to be a separate definition from
 `segment`. However, lemmas involving `+ᵥ` or `-ᵥ` will still be relevant after such a
 refactoring, as distinct from versions involving `+` or `-` in a module. -/
-def AffineSegment (x y : P) :=
-  lineMap x y '' Set.IccCat (0 : R) 1
-#align affine_segment AffineSegment
+def affineSegment (x y : P) :=
+  lineMap x y '' Set.icc (0 : R) 1
+#align affine_segment affineSegment
 
-theorem affine_segment_eq_segment (x y : V) : AffineSegment R x y = Segment R x y := by
-  rw [segment_eq_image_line_map, AffineSegment]
+theorem affine_segment_eq_segment (x y : V) : affineSegment R x y = segment R x y := by
+  rw [segment_eq_image_line_map, affineSegment]
 #align affine_segment_eq_segment affine_segment_eq_segment
 
-theorem affine_segment_comm (x y : P) : AffineSegment R x y = AffineSegment R y x := by
+theorem affine_segment_comm (x y : P) : affineSegment R x y = affineSegment R y x := by
   refine' Set.ext fun z => _
   constructor <;>
     · rintro ⟨t, ht, hxy⟩
@@ -58,11 +58,11 @@ theorem affine_segment_comm (x y : P) : AffineSegment R x y = AffineSegment R y 
       
 #align affine_segment_comm affine_segment_comm
 
-theorem left_mem_affine_segment (x y : P) : x ∈ AffineSegment R x y :=
+theorem left_mem_affine_segment (x y : P) : x ∈ affineSegment R x y :=
   ⟨0, Set.left_mem_Icc.2 zero_le_one, line_map_apply_zero _ _⟩
 #align left_mem_affine_segment left_mem_affine_segment
 
-theorem right_mem_affine_segment (x y : P) : y ∈ AffineSegment R x y :=
+theorem right_mem_affine_segment (x y : P) : y ∈ affineSegment R x y :=
   ⟨1, Set.right_mem_Icc.2 zero_le_one, line_map_apply_one _ _⟩
 #align right_mem_affine_segment right_mem_affine_segment
 
@@ -71,8 +71,8 @@ include V'
 variable {R}
 
 @[simp]
-theorem affine_segment_image (f : P →ᵃ[R] P') (x y : P) : f '' AffineSegment R x y = AffineSegment R (f x) (f y) := by
-  rw [AffineSegment, AffineSegment, Set.image_image, ← comp_line_map]
+theorem affine_segment_image (f : P →ᵃ[R] P') (x y : P) : f '' affineSegment R x y = affineSegment R (f x) (f y) := by
+  rw [affineSegment, affineSegment, Set.image_image, ← comp_line_map]
   rfl
 #align affine_segment_image affine_segment_image
 
@@ -82,25 +82,25 @@ variable (R)
 
 @[simp]
 theorem affine_segment_const_vadd_image (x y : P) (v : V) :
-    (· +ᵥ ·) v '' AffineSegment R x y = AffineSegment R (v +ᵥ x) (v +ᵥ y) :=
+    (· +ᵥ ·) v '' affineSegment R x y = affineSegment R (v +ᵥ x) (v +ᵥ y) :=
   affine_segment_image (AffineEquiv.constVadd R P v : P →ᵃ[R] P) x y
 #align affine_segment_const_vadd_image affine_segment_const_vadd_image
 
 @[simp]
 theorem affine_segment_vadd_const_image (x y : V) (p : P) :
-    (· +ᵥ p) '' AffineSegment R x y = AffineSegment R (x +ᵥ p) (y +ᵥ p) :=
+    (· +ᵥ p) '' affineSegment R x y = affineSegment R (x +ᵥ p) (y +ᵥ p) :=
   affine_segment_image (AffineEquiv.vaddConst R p : V →ᵃ[R] P) x y
 #align affine_segment_vadd_const_image affine_segment_vadd_const_image
 
 @[simp]
 theorem affine_segment_const_vsub_image (x y p : P) :
-    (· -ᵥ ·) p '' AffineSegment R x y = AffineSegment R (p -ᵥ x) (p -ᵥ y) :=
+    (· -ᵥ ·) p '' affineSegment R x y = affineSegment R (p -ᵥ x) (p -ᵥ y) :=
   affine_segment_image (AffineEquiv.constVsub R p : P →ᵃ[R] V) x y
 #align affine_segment_const_vsub_image affine_segment_const_vsub_image
 
 @[simp]
 theorem affine_segment_vsub_const_image (x y p : P) :
-    (· -ᵥ p) '' AffineSegment R x y = AffineSegment R (x -ᵥ p) (y -ᵥ p) :=
+    (· -ᵥ p) '' affineSegment R x y = affineSegment R (x -ᵥ p) (y -ᵥ p) :=
   affine_segment_image ((AffineEquiv.vaddConst R p).symm : P →ᵃ[R] V) x y
 #align affine_segment_vsub_const_image affine_segment_vsub_const_image
 
@@ -108,13 +108,13 @@ variable {R}
 
 @[simp]
 theorem mem_const_vadd_affine_segment {x y z : P} (v : V) :
-    v +ᵥ z ∈ AffineSegment R (v +ᵥ x) (v +ᵥ y) ↔ z ∈ AffineSegment R x y := by
+    v +ᵥ z ∈ affineSegment R (v +ᵥ x) (v +ᵥ y) ↔ z ∈ affineSegment R x y := by
   rw [← affine_segment_const_vadd_image, (AddAction.injective v).mem_set_image]
 #align mem_const_vadd_affine_segment mem_const_vadd_affine_segment
 
 @[simp]
 theorem mem_vadd_const_affine_segment {x y z : V} (p : P) :
-    z +ᵥ p ∈ AffineSegment R (x +ᵥ p) (y +ᵥ p) ↔ z ∈ AffineSegment R x y := by
+    z +ᵥ p ∈ affineSegment R (x +ᵥ p) (y +ᵥ p) ↔ z ∈ affineSegment R x y := by
   rw [← affine_segment_vadd_const_image, (vadd_right_injective p).mem_set_image]
 #align mem_vadd_const_affine_segment mem_vadd_const_affine_segment
 
@@ -122,13 +122,13 @@ variable {R}
 
 @[simp]
 theorem mem_const_vsub_affine_segment {x y z : P} (p : P) :
-    p -ᵥ z ∈ AffineSegment R (p -ᵥ x) (p -ᵥ y) ↔ z ∈ AffineSegment R x y := by
+    p -ᵥ z ∈ affineSegment R (p -ᵥ x) (p -ᵥ y) ↔ z ∈ affineSegment R x y := by
   rw [← affine_segment_const_vsub_image, (vsub_right_injective p).mem_set_image]
 #align mem_const_vsub_affine_segment mem_const_vsub_affine_segment
 
 @[simp]
 theorem mem_vsub_const_affine_segment {x y z : P} (p : P) :
-    z -ᵥ p ∈ AffineSegment R (x -ᵥ p) (y -ᵥ p) ↔ z ∈ AffineSegment R x y := by
+    z -ᵥ p ∈ affineSegment R (x -ᵥ p) (y -ᵥ p) ↔ z ∈ affineSegment R x y := by
   rw [← affine_segment_vsub_const_image, (vsub_left_injective p).mem_set_image]
 #align mem_vsub_const_affine_segment mem_vsub_const_affine_segment
 
@@ -136,7 +136,7 @@ variable (R)
 
 /-- The point `y` is weakly between `x` and `z`. -/
 def Wbtw (x y z : P) : Prop :=
-  y ∈ AffineSegment R x z
+  y ∈ affineSegment R x z
 #align wbtw Wbtw
 
 /-- The point `y` is strictly between `x` and `z`. -/
@@ -237,7 +237,7 @@ theorem Sbtw.right_ne {x y z : P} (h : Sbtw R x y z) : z ≠ y :=
   h.2.2.symm
 #align sbtw.right_ne Sbtw.right_ne
 
-theorem Sbtw.mem_image_Ioo {x y z : P} (h : Sbtw R x y z) : y ∈ lineMap x z '' Set.IooCat (0 : R) 1 := by
+theorem Sbtw.mem_image_Ioo {x y z : P} (h : Sbtw R x y z) : y ∈ lineMap x z '' Set.ioo (0 : R) 1 := by
   rcases h with ⟨⟨t, ht, rfl⟩, hyx, hyz⟩
   rcases Set.eq_endpoints_or_mem_Ioo_of_mem_Icc ht with (rfl | rfl | ho)
   · exfalso
@@ -276,7 +276,7 @@ theorem wbtw_self_right (x y : P) : Wbtw R x y y :=
 @[simp]
 theorem wbtw_self_iff {x y : P} : Wbtw R x y x ↔ y = x := by
   refine' ⟨fun h => _, fun h => _⟩
-  · simpa [Wbtw, AffineSegment] using h
+  · simpa [Wbtw, affineSegment] using h
     
   · rw [h]
     exact wbtw_self_left R x x
@@ -310,7 +310,7 @@ theorem Sbtw.left_ne_right {x y z : P} (h : Sbtw R x y z) : x ≠ z :=
 #align sbtw.left_ne_right Sbtw.left_ne_right
 
 theorem sbtw_iff_mem_image_Ioo_and_ne [NoZeroSmulDivisors R V] {x y z : P} :
-    Sbtw R x y z ↔ y ∈ lineMap x z '' Set.IooCat (0 : R) 1 ∧ x ≠ z := by
+    Sbtw R x y z ↔ y ∈ lineMap x z '' Set.ioo (0 : R) 1 ∧ x ≠ z := by
   refine' ⟨fun h => ⟨h.mem_image_Ioo, h.left_ne_right⟩, fun h => _⟩
   rcases h with ⟨⟨t, ht, rfl⟩, hxz⟩
   refine' ⟨⟨t, Set.mem_Icc_of_Ioo ht, rfl⟩, _⟩

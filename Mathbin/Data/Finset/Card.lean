@@ -217,15 +217,15 @@ theorem length_to_list (s : Finset α) : s.toList.length = s.card := by
   rfl
 #align finset.length_to_list Finset.length_to_list
 
-theorem card_image_le [DecidableEq β] : (s.Image f).card ≤ s.card := by
+theorem card_image_le [DecidableEq β] : (s.image f).card ≤ s.card := by
   simpa only [card_map] using (s.1.map f).to_finset_card_le
 #align finset.card_image_le Finset.card_image_le
 
-theorem card_image_of_inj_on [DecidableEq β] (H : Set.InjOn f s) : (s.Image f).card = s.card := by
+theorem card_image_of_inj_on [DecidableEq β] (H : Set.InjOn f s) : (s.image f).card = s.card := by
   simp only [card, image_val_of_inj_on H, card_map]
 #align finset.card_image_of_inj_on Finset.card_image_of_inj_on
 
-theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.Image f).card = s.card) : Set.InjOn f s := by
+theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.image f).card = s.card) : Set.InjOn f s := by
   change (s.1.map f).dedup.card = s.1.card at H
   have : (s.1.map f).dedup = s.1.map f := by
     refine' Multiset.eq_of_le_of_card_le (Multiset.dedup_le _) _
@@ -235,16 +235,16 @@ theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.Image f).card = s.card)
   exact inj_on_of_nodup_map this
 #align finset.inj_on_of_card_image_eq Finset.inj_on_of_card_image_eq
 
-theorem card_image_iff [DecidableEq β] : (s.Image f).card = s.card ↔ Set.InjOn f s :=
+theorem card_image_iff [DecidableEq β] : (s.image f).card = s.card ↔ Set.InjOn f s :=
   ⟨inj_on_of_card_image_eq, card_image_of_inj_on⟩
 #align finset.card_image_iff Finset.card_image_iff
 
-theorem card_image_of_injective [DecidableEq β] (s : Finset α) (H : Injective f) : (s.Image f).card = s.card :=
+theorem card_image_of_injective [DecidableEq β] (s : Finset α) (H : Injective f) : (s.image f).card = s.card :=
   card_image_of_inj_on fun x _ y _ h => H h
 #align finset.card_image_of_injective Finset.card_image_of_injective
 
 theorem fiber_card_ne_zero_iff_mem_image (s : Finset α) (f : α → β) [DecidableEq β] (y : β) :
-    (s.filter fun x => f x = y).card ≠ 0 ↔ y ∈ s.Image f := by
+    (s.filter fun x => f x = y).card ≠ 0 ↔ y ∈ s.image f := by
   rw [← pos_iff_ne_zero, card_pos, fiber_nonempty_iff_mem_image]
 #align finset.fiber_card_ne_zero_iff_mem_image Finset.fiber_card_ne_zero_iff_mem_image
 
@@ -284,9 +284,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
     (hf' : ∀ (i) (h : i < n), f i h ∈ s) (f_inj : ∀ (i j) (hi : i < n) (hj : j < n), f i hi = f j hj → i = j) :
     s.card = n := by
   classical have : ∀ a : α, a ∈ s ↔ ∃ (i : _)(hi : i ∈ range n), f i (mem_range.1 hi) = a
-    have : s = (range n).attach.Image fun i => f i.1 (mem_range.1 i.2)
+    have : s = (range n).attach.image fun i => f i.1 (mem_range.1 i.2)
     calc
-      s.card = card ((range n).attach.Image fun i => f i.1 (mem_range.1 i.2)) := by rw [this]
+      s.card = card ((range n).attach.image fun i => f i.1 (mem_range.1 i.2)) := by rw [this]
       _ = card (range n).attach :=
         (card_image_of_injective _) fun ⟨i, hi⟩ ⟨j, hj⟩ eq =>
           Subtype.eq <| f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq

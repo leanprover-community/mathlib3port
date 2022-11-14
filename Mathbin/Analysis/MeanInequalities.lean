@@ -402,7 +402,7 @@ theorem inner_le_Lp_mul_Lq_tsum {f g : ι → ℝ≥0} {p q : ℝ} (hpq : p.IsCo
     · rw [Nnreal.rpow_le_rpow_iff (one_div_pos.mpr hpq.symm.pos)]
       exact sum_le_tsum _ (fun _ _ => zero_le _) hg
       
-  have bdd : BddAbove (Set.Range fun s => ∑ i in s, f i * g i) := by
+  have bdd : BddAbove (Set.range fun s => ∑ i in s, f i * g i) := by
     refine' ⟨(∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q), _⟩
     rintro a ⟨s, rfl⟩
     exact H₁ s
@@ -517,7 +517,7 @@ theorem Lp_add_le_tsum {f g : ι → ℝ≥0} {p : ℝ} (hp : 1 ≤ p) (hf : Sum
     refine' le_trans (Lp_add_le s f g hp) (add_le_add _ _) <;>
       rw [Nnreal.rpow_le_rpow_iff (one_div_pos.mpr Pos)] <;> refine' sum_le_tsum _ (fun _ _ => zero_le _) _
     exacts[hf, hg]
-  have bdd : BddAbove (Set.Range fun s => ∑ i in s, (f i + g i) ^ p) := by
+  have bdd : BddAbove (Set.range fun s => ∑ i in s, (f i + g i) ^ p) := by
     refine' ⟨((∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p)) ^ p, _⟩
     rintro a ⟨s, rfl⟩
     exact H₁ s

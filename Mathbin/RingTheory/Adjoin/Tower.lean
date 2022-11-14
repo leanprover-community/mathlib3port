@@ -55,7 +55,7 @@ theorem Algebra.fgTrans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [Com
     (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := hRS
   let ⟨t, ht⟩ := hSA
-  ⟨s.Image (algebraMap S A) ∪ t, by
+  ⟨s.image (algebraMap S A) ∪ t, by
     rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin, Algebra.adjoin_algebra_map, hs,
       Algebra.map_top, IsScalarTower.adjoin_range_to_alg_hom, ht, Subalgebra.restrict_scalars_top]⟩
 #align algebra.fg_trans' Algebra.fgTrans'

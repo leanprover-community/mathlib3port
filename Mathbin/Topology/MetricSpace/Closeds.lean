@@ -67,7 +67,7 @@ theorem isClosedSubsetsOfIsClosed (hs : IsClosed s) : IsClosed { t : Closeds α 
   -- t : closeds α,  ht : t ∈ closure {t : closeds α | t ⊆ s},
   -- x : α,  hx : x ∈ t
   -- goal : x ∈ s
-  have : x ∈ Closure s := by
+  have : x ∈ closure s := by
     refine' mem_closure_iff.2 fun ε εpos => _
     rcases mem_closure_iff.1 ht ε εpos with ⟨u, hu, Dtu⟩
     -- u : closeds α,  hu : u ∈ {t : closeds α | t ⊆ s},  hu' : edist t u < ε
@@ -98,7 +98,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
     in `t0` is close to a point in `s n`. The completeness then follows from a
     standard criterion. -/
   refine' complete_of_convergent_controlled_sequences B B_pos fun s hs => _
-  let t0 := ⋂ n, Closure (⋃ m ≥ n, s m : Set α)
+  let t0 := ⋂ n, closure (⋃ m ≥ n, s m : Set α)
   let t : closeds α := ⟨t0, isClosedInter fun _ => isClosedClosure⟩
   use t
   -- The inequality is written this way to agree with `edist_le_of_edist_le_geometric_of_tendsto₀`
@@ -152,7 +152,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
             `s n` are close, this point is itself well approximated by a point `y` in `s n`,
             as required. -/
     intro n x xt0
-    have : x ∈ Closure (⋃ m ≥ n, s m : Set α) := by apply mem_Inter.1 xt0 n
+    have : x ∈ closure (⋃ m ≥ n, s m : Set α) := by apply mem_Inter.1 xt0 n
     rcases mem_closure_iff.1 this (B n) (B_pos n) with ⟨z, hz, Dxz⟩
     -- z : α,  Dxz : edist x z < B n,
     simp only [exists_prop, Set.mem_Union] at hz
@@ -243,7 +243,7 @@ instance NonemptyCompacts.emetricSpace : EmetricSpace (NonemptyCompacts α) wher
   edist_triangle s t u := Hausdorff_edist_triangle
   eq_of_edist_eq_zero s t h :=
     nonempty_compacts.ext <| by
-      have : Closure (s : Set α) = Closure t := Hausdorff_edist_zero_iff_closure_eq_closure.1 h
+      have : closure (s : Set α) = closure t := Hausdorff_edist_zero_iff_closure_eq_closure.1 h
       rwa [s.is_compact.is_closed.closure_eq, t.is_compact.is_closed.closure_eq] at this
 #align emetric.nonempty_compacts.emetric_space Emetric.NonemptyCompacts.emetricSpace
 

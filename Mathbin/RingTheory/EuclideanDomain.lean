@@ -85,7 +85,7 @@ theorem gcd_is_unit_iff {α} [EuclideanDomain α] {x y : α} : IsUnit (gcd x y) 
 
 -- this should be proved for UFDs surely?
 theorem is_coprime_of_dvd {α} [EuclideanDomain α] {x y : α} (nonzero : ¬(x = 0 ∧ y = 0))
-    (H : ∀ z ∈ Nonunits α, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
+    (H : ∀ z ∈ nonunits α, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
   letI := EuclideanDomain.gcdMonoid α
   is_coprime_of_dvd x y nonzero H
 #align euclidean_domain.is_coprime_of_dvd EuclideanDomain.is_coprime_of_dvd

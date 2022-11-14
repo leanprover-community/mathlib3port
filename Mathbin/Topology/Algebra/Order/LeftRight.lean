@@ -32,12 +32,12 @@ section PartialOrder
 variable {α β : Type _} [TopologicalSpace α] [PartialOrder α] [TopologicalSpace β]
 
 theorem continuous_within_at_Ioi_iff_Ici {a : α} {f : α → β} :
-    ContinuousWithinAt f (IoiCat a) a ↔ ContinuousWithinAt f (IciCat a) a := by
+    ContinuousWithinAt f (ioi a) a ↔ ContinuousWithinAt f (ici a) a := by
   simp only [← Ici_diff_left, continuous_within_at_diff_self]
 #align continuous_within_at_Ioi_iff_Ici continuous_within_at_Ioi_iff_Ici
 
 theorem continuous_within_at_Iio_iff_Iic {a : α} {f : α → β} :
-    ContinuousWithinAt f (IioCat a) a ↔ ContinuousWithinAt f (IicCat a) a :=
+    ContinuousWithinAt f (iio a) a ↔ ContinuousWithinAt f (iic a) a :=
   @continuous_within_at_Ioi_iff_Ici αᵒᵈ _ ‹TopologicalSpace α› _ _ _ f
 #align continuous_within_at_Iio_iff_Iic continuous_within_at_Iio_iff_Iic
 
@@ -71,12 +71,12 @@ theorem nhds_left'_sup_nhds_right' (a : α) : 𝓝[<] a ⊔ 𝓝[>] a = 𝓝[≠
 #align nhds_left'_sup_nhds_right' nhds_left'_sup_nhds_right'
 
 theorem continuous_at_iff_continuous_left_right {a : α} {f : α → β} :
-    ContinuousAt f a ↔ ContinuousWithinAt f (IicCat a) a ∧ ContinuousWithinAt f (IciCat a) a := by
+    ContinuousAt f a ↔ ContinuousWithinAt f (iic a) a ∧ ContinuousWithinAt f (ici a) a := by
   simp only [ContinuousWithinAt, ContinuousAt, ← tendsto_sup, nhds_left_sup_nhds_right]
 #align continuous_at_iff_continuous_left_right continuous_at_iff_continuous_left_right
 
 theorem continuous_at_iff_continuous_left'_right' {a : α} {f : α → β} :
-    ContinuousAt f a ↔ ContinuousWithinAt f (IioCat a) a ∧ ContinuousWithinAt f (IoiCat a) a := by
+    ContinuousAt f a ↔ ContinuousWithinAt f (iio a) a ∧ ContinuousWithinAt f (ioi a) a := by
   rw [continuous_within_at_Ioi_iff_Ici, continuous_within_at_Iio_iff_Iic, continuous_at_iff_continuous_left_right]
 #align continuous_at_iff_continuous_left'_right' continuous_at_iff_continuous_left'_right'
 

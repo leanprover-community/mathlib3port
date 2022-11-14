@@ -241,12 +241,12 @@ theorem of_set_symm : (ofSet s).symm = ofSet s :=
 #align pequiv.of_set_symm Pequiv.of_set_symm
 
 @[simp]
-theorem of_set_univ : ofSet Set.Univ = Pequiv.refl α :=
+theorem of_set_univ : ofSet Set.univ = Pequiv.refl α :=
   rfl
 #align pequiv.of_set_univ Pequiv.of_set_univ
 
 @[simp]
-theorem of_set_eq_refl {s : Set α} [DecidablePred (· ∈ s)] : ofSet s = Pequiv.refl α ↔ s = Set.Univ :=
+theorem of_set_eq_refl {s : Set α} [DecidablePred (· ∈ s)] : ofSet s = Pequiv.refl α ↔ s = Set.univ :=
   ⟨fun h => by
     rw [Set.eq_univ_iff_forall]
     intro

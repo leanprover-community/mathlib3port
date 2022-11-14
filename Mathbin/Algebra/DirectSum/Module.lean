@@ -375,7 +375,7 @@ theorem IsInternal.collected_basis_mem (h : IsInternal A) {α : ι → Type _} (
 /-- When indexed by only two distinct elements, `direct_sum.is_internal` implies
 the two submodules are complementary. Over a `ring R`, this is true as an iff, as
 `direct_sum.is_internal_iff_is_compl`. --/
-theorem IsInternal.is_compl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j) (h : (Set.Univ : Set ι) = {i, j})
+theorem IsInternal.is_compl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j) (h : (Set.univ : Set ι) = {i, j})
     (hi : IsInternal A) : IsCompl (A i) (A j) :=
   ⟨hi.submoduleIndependent.PairwiseDisjoint hij,
     codisjoint_iff.mpr <|
@@ -417,7 +417,7 @@ theorem is_internal_submodule_iff_independent_and_supr_eq_top (A : ι → Submod
 /-- If a collection of submodules has just two indices, `i` and `j`, then
 `direct_sum.is_internal` is equivalent to `is_compl`. -/
 theorem is_internal_submodule_iff_is_compl (A : ι → Submodule R M) {i j : ι} (hij : i ≠ j)
-    (h : (Set.Univ : Set ι) = {i, j}) : IsInternal A ↔ IsCompl (A i) (A j) := by
+    (h : (Set.univ : Set ι) = {i, j}) : IsInternal A ↔ IsCompl (A i) (A j) := by
   have : ∀ k, k = i ∨ k = j := fun k => by simpa using set.ext_iff.mp h k
   rw [is_internal_submodule_iff_independent_and_supr_eq_top, supr, ← Set.image_univ, h, Set.image_insert_eq,
     Set.image_singleton, Sup_pair, CompleteLattice.independent_pair hij this]

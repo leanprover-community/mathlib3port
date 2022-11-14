@@ -55,7 +55,7 @@ variable (K A : Type _) [Field K] [NumberField K] [Field A] [Algebra ℚ A] [IsA
 /-- Let `A` be an algebraically closed field and let `x ∈ K`, with `K` a number field.
 The images of `x` by the embeddings of `K` in `A` are exactly the roots in `A` of
 the minimal polynomial of `x` over `ℚ`. -/
-theorem range_eval_eq_root_set_minpoly : (Range fun φ : K →+* A => φ x) = (minpoly ℚ x).RootSet A := by
+theorem range_eval_eq_root_set_minpoly : (range fun φ : K →+* A => φ x) = (minpoly ℚ x).rootSet A := by
   convert (NumberField.isAlgebraic K).range_eval_eq_root_set_minpoly A x using 1
   ext a
   exact ⟨fun ⟨φ, hφ⟩ => ⟨φ.toRatAlgHom, hφ⟩, fun ⟨φ, hφ⟩ => ⟨φ.toRingHom, hφ⟩⟩

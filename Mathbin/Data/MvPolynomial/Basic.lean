@@ -446,7 +446,7 @@ theorem alg_hom_C (f : MvPolynomial σ R →ₐ[R] MvPolynomial σ R) (r : R) : 
 #align mv_polynomial.alg_hom_C MvPolynomial.alg_hom_C
 
 @[simp]
-theorem adjoin_range_X : Algebra.adjoin R (Range (x : σ → MvPolynomial σ R)) = ⊤ := by
+theorem adjoin_range_X : Algebra.adjoin R (range (x : σ → MvPolynomial σ R)) = ⊤ := by
   set S := Algebra.adjoin R (range (X : σ → MvPolynomial σ R))
   refine' top_unique fun p hp => _
   clear hp
@@ -1453,7 +1453,7 @@ theorem aeval_prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R)
 
 variable (R)
 
-theorem _root_.algebra.adjoin_range_eq_range_aeval : Algebra.adjoin R (Set.Range f) = (MvPolynomial.aeval f).range := by
+theorem _root_.algebra.adjoin_range_eq_range_aeval : Algebra.adjoin R (Set.range f) = (MvPolynomial.aeval f).range := by
   simp only [← Algebra.map_top, ← MvPolynomial.adjoin_range_X, AlgHom.map_adjoin, ← Set.range_comp, (· ∘ ·),
     MvPolynomial.aeval_X]
 #align mv_polynomial._root_.algebra.adjoin_range_eq_range_aeval mv_polynomial._root_.algebra.adjoin_range_eq_range_aeval

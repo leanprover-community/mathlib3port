@@ -131,7 +131,7 @@ theorem LinearMap.lift_dim_le_of_injective (f : M →ₗ[R] M') (i : Injective f
   apply csupr_mono' (Cardinal.bdd_above_range.{v', v} _)
   rintro ⟨s, li⟩
   refine' ⟨⟨f '' s, _⟩, cardinal.lift_mk_le'.mpr ⟨(Equiv.Set.image f s i).toEmbedding⟩⟩
-  exact (li.map' _ <| linear_map.ker_eq_bot.mpr i).Image
+  exact (li.map' _ <| linear_map.ker_eq_bot.mpr i).image
 #align linear_map.lift_dim_le_of_injective LinearMap.lift_dim_le_of_injective
 
 theorem LinearMap.dim_le_of_injective (f : M →ₗ[R] M₁) (i : Injective f) : Module.rank R M ≤ Module.rank R M₁ :=
@@ -421,10 +421,10 @@ then the cardinality of `b` is bounded by the cardinality of `s`.
 theorem infinite_basis_le_maximal_linear_independent' {ι : Type w} (b : Basis ι R M) [Infinite ι] {κ : Type w'}
     (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) : Cardinal.lift.{w'} (#ι) ≤ Cardinal.lift.{w} (#κ) := by
   let Φ := fun k : κ => (b.repr (v k)).support
-  have w₁ : (#ι) ≤ (#Set.Range Φ) := by
+  have w₁ : (#ι) ≤ (#Set.range Φ) := by
     apply Cardinal.le_range_of_union_finset_eq_top
     exact union_support_maximal_linear_independent_eq_range_basis b v i m
-  have w₂ : Cardinal.lift.{w'} (#Set.Range Φ) ≤ Cardinal.lift.{w} (#κ) := Cardinal.mk_range_le_lift
+  have w₂ : Cardinal.lift.{w'} (#Set.range Φ) ≤ Cardinal.lift.{w} (#κ) := Cardinal.mk_range_le_lift
   exact (cardinal.lift_le.mpr w₁).trans w₂
 #align infinite_basis_le_maximal_linear_independent' infinite_basis_le_maximal_linear_independent'
 
@@ -588,7 +588,7 @@ theorem basis_le_span' {ι : Type _} (b : Basis ι R M) {w : Set M} [Fintype w] 
 /-- If `R` satisfies the rank condition,
 then the cardinality of any basis is bounded by the cardinality of any spanning set.
 -/
-theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : (#Range v) ≤ (#J) := by
+theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : (#range v) ≤ (#J) := by
   haveI := nontrivial_of_invariant_basis_number R
   cases fintypeOrInfinite J
   · rw [← Cardinal.lift_le, Cardinal.mk_range_eq_of_injective v.injective, Cardinal.mk_fintype J]
@@ -635,7 +635,7 @@ open Submodule
 -- An auxiliary lemma for `linear_independent_le_span'`,
 -- with the additional assumption that the linearly independent family is finite.
 theorem linear_independent_le_span_aux' {ι : Type _} [Fintype ι] (v : ι → M) (i : LinearIndependent R v) (w : Set M)
-    [Fintype w] (s : Range v ≤ span R w) : Fintype.card ι ≤ Fintype.card w := by
+    [Fintype w] (s : range v ≤ span R w) : Fintype.card ι ≤ Fintype.card w := by
   -- We construct an injective linear map `(ι → R) →ₗ[R] (w → R)`,
   -- by thinking of `f : ι → R` as a linear combination of the finite family `v`,
   -- and expressing that (using the axiom of choice) as a linear combination over `w`.
@@ -658,7 +658,7 @@ contained in the span of some finite `w : set M`,
 is itself finite.
 -/
 def linearIndependentFintypeOfLeSpanFintype {ι : Type _} (v : ι → M) (i : LinearIndependent R v) (w : Set M) [Fintype w]
-    (s : Range v ≤ span R w) : Fintype ι :=
+    (s : range v ≤ span R w) : Fintype ι :=
   fintypeOfFinsetCardLe (Fintype.card w) fun t => by
     let v' := fun x : (t : Set ι) => v x
     have i' : LinearIndependent R v' := i.comp _ Subtype.val_injective
@@ -672,7 +672,7 @@ contained in the span of some finite `w : set M`,
 the cardinality of `ι` is bounded by the cardinality of `w`.
 -/
 theorem linear_independent_le_span' {ι : Type _} (v : ι → M) (i : LinearIndependent R v) (w : Set M) [Fintype w]
-    (s : Range v ≤ span R w) : (#ι) ≤ Fintype.card w := by
+    (s : range v ≤ span R w) : (#ι) ≤ Fintype.card w := by
   haveI : Fintype ι := linearIndependentFintypeOfLeSpanFintype v i w s
   rw [Cardinal.mk_fintype]
   simp only [Cardinal.nat_cast_le]
@@ -762,7 +762,7 @@ theorem Basis.mk_eq_dim'' {ι : Type v} (v : Basis ι R M) : (#ι) = Module.rank
     swap
     apply le_csupr (Cardinal.bdd_above_range.{v, v} _)
     exact
-      ⟨Set.Range v, by
+      ⟨Set.range v, by
         convert v.reindex_range.linear_independent
         ext
         simp⟩
@@ -776,7 +776,7 @@ theorem Basis.mk_eq_dim'' {ι : Type v} (v : Basis ι R M) : (#ι) = Module.rank
 
 -- By this stage we want to have a complete API for `module.rank`,
 -- so we set it `irreducible` here, to keep ourselves honest.
-theorem Basis.mk_range_eq_dim (v : Basis ι R M) : (#Range v) = Module.rank R M :=
+theorem Basis.mk_range_eq_dim (v : Basis ι R M) : (#range v) = Module.rank R M :=
   v.reindexRange.mk_eq_dim''
 #align basis.mk_range_eq_dim Basis.mk_range_eq_dim
 
@@ -833,7 +833,7 @@ theorem Basis.finite_index_of_dim_lt_aleph_0 {ι : Type _} {s : Set ι} (b : Bas
   finite_def.2 (b.nonempty_fintype_index_of_dim_lt_aleph_0 h)
 #align basis.finite_index_of_dim_lt_aleph_0 Basis.finite_index_of_dim_lt_aleph_0
 
-theorem dim_span {v : ι → M} (hv : LinearIndependent R v) : Module.rank R ↥(span R (Range v)) = (#Range v) := by
+theorem dim_span {v : ι → M} (hv : LinearIndependent R v) : Module.rank R ↥(span R (range v)) = (#range v) := by
   haveI := nontrivial_of_invariant_basis_number R
   rw [← Cardinal.lift_inj, ← (Basis.span hv).mk_eq_dim,
     Cardinal.mk_range_eq_of_injective (@LinearIndependent.injective ι R M v _ _ _ _ hv)]
@@ -892,7 +892,7 @@ variable {K V}
 
 /-- If a vector space has a finite dimension, the index set of `basis.of_vector_space` is finite. -/
 theorem Basis.finite_of_vector_space_index_of_dim_lt_aleph_0 (h : Module.rank K V < ℵ₀) :
-    (Basis.OfVectorSpaceIndex K V).Finite :=
+    (Basis.ofVectorSpaceIndex K V).Finite :=
   finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_aleph_0 h
 #align basis.finite_of_vector_space_index_of_dim_lt_aleph_0 Basis.finite_of_vector_space_index_of_dim_lt_aleph_0
 

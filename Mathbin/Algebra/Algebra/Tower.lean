@@ -357,10 +357,10 @@ theorem adjoin_range_to_alg_hom (t : Set A) :
     (Algebra.adjoin (toAlgHom R S A).range t).restrictScalars R = (Algebra.adjoin S t).restrictScalars R :=
   Subalgebra.ext fun z =>
     show
-      z ∈ Subsemiring.closure (Set.Range (algebraMap (toAlgHom R S A).range A) ∪ t : Set A) ↔
-        z ∈ Subsemiring.closure (Set.Range (algebraMap S A) ∪ t : Set A)
+      z ∈ Subsemiring.closure (Set.range (algebraMap (toAlgHom R S A).range A) ∪ t : Set A) ↔
+        z ∈ Subsemiring.closure (Set.range (algebraMap S A) ∪ t : Set A)
       by
-      suffices Set.Range (algebraMap (toAlgHom R S A).range A) = Set.Range (algebraMap S A) by rw [this]
+      suffices Set.range (algebraMap (toAlgHom R S A).range A) = Set.range (algebraMap S A) by rw [this]
       ext z
       exact ⟨fun ⟨⟨x, y, h1⟩, h2⟩ => ⟨y, h2 ▸ h1⟩, fun ⟨y, hy⟩ => ⟨⟨z, y, hy⟩, rfl⟩⟩
 #align is_scalar_tower.adjoin_range_to_alg_hom IsScalarTower.adjoin_range_to_alg_hom

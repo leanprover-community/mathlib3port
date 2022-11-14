@@ -50,7 +50,7 @@ variable [Monoid M] (S : Submonoid M)
 /-- `S.left_inv` is the submonoid containing all the left inverses of `S`. -/
 @[to_additive "`S.left_neg` is the additive submonoid containing all the left additive inverses\nof `S`."]
 def leftInv : Submonoid M where
-  Carrier := { x : M | ∃ y : S, x * y = 1 }
+  carrier := { x : M | ∃ y : S, x * y = 1 }
   one_mem' := ⟨1, mul_one 1⟩
   mul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ => ⟨b' * a', by rw [coe_mul, ← mul_assoc, mul_assoc a, hb, mul_one, ha]⟩
 #align submonoid.left_inv Submonoid.leftInv

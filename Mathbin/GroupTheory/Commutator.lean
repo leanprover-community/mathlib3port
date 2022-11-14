@@ -90,7 +90,7 @@ theorem commutator_mono (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁,
   commutator_le.mpr fun g₁ hg₁ g₂ hg₂ => commutator_mem_commutator (h₁ hg₁) (h₂ hg₂)
 #align subgroup.commutator_mono Subgroup.commutator_mono
 
-theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ ≤ H₂.Centralizer := by
+theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ ≤ H₂.centralizer := by
   rw [eq_bot_iff, commutator_le]
   refine' forall_congr' fun p => forall_congr' fun hp => forall_congr' fun q => forall_congr' fun hq => _
   rw [mem_bot, commutator_element_eq_one_iff_mul_comm, eq_comm]
@@ -126,7 +126,7 @@ section Normal
 instance commutator_normal [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal ⁅H₁, H₂⁆ := by
   let base : Set G := { x | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = x }
   change (closure base).Normal
-  suffices h_base : base = Group.ConjugatesOfSet base
+  suffices h_base : base = Group.conjugatesOfSet base
   · rw [h_base]
     exact Subgroup.normal_closure_normal
     
@@ -211,7 +211,7 @@ theorem commutator_prod_prod (K₁ K₂ : Subgroup G') : ⁅H₁.Prod K₁, H₂
 See `commutator_pi_pi_of_finite` for equality given `fintype η`.
 -/
 theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs i)] (H K : ∀ i, Subgroup (Gs i)) :
-    ⁅Subgroup.pi Set.Univ H, Subgroup.pi Set.Univ K⁆ ≤ Subgroup.pi Set.Univ fun i => ⁅H i, K i⁆ :=
+    ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ ≤ Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ :=
   commutator_le.mpr fun p hp q hq i hi => commutator_mem_commutator (hp i hi) (hq i hi)
 #align subgroup.commutator_pi_pi_le Subgroup.commutator_pi_pi_le
 
@@ -219,7 +219,7 @@ theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs
 -/
 theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _} [∀ i, Group (Gs i)]
     (H K : ∀ i, Subgroup (Gs i)) :
-    ⁅Subgroup.pi Set.Univ H, Subgroup.pi Set.Univ K⁆ = Subgroup.pi Set.Univ fun i => ⁅H i, K i⁆ := by
+    ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ = Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ := by
   classical apply le_antisymm (commutator_pi_pi_le H K)
 #align subgroup.commutator_pi_pi_of_finite Subgroup.commutator_pi_pi_of_finite
 
@@ -228,28 +228,28 @@ end Subgroup
 variable (G)
 
 /-- The set of commutator elements `⁅g₁, g₂⁆` in `G`. -/
-def CommutatorSet : Set G :=
+def commutatorSet : Set G :=
   { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g }
-#align commutator_set CommutatorSet
+#align commutator_set commutatorSet
 
-theorem commutator_set_def : CommutatorSet G = { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g } :=
+theorem commutator_set_def : commutatorSet G = { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g } :=
   rfl
 #align commutator_set_def commutator_set_def
 
-theorem one_mem_commutator_set : (1 : G) ∈ CommutatorSet G :=
+theorem one_mem_commutator_set : (1 : G) ∈ commutatorSet G :=
   ⟨1, 1, commutator_element_self 1⟩
 #align one_mem_commutator_set one_mem_commutator_set
 
-instance : Nonempty (CommutatorSet G) :=
+instance : Nonempty (commutatorSet G) :=
   ⟨⟨1, one_mem_commutator_set G⟩⟩
 
 variable {G g}
 
-theorem mem_commutator_set_iff : g ∈ CommutatorSet G ↔ ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g :=
+theorem mem_commutator_set_iff : g ∈ commutatorSet G ↔ ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g :=
   Iff.rfl
 #align mem_commutator_set_iff mem_commutator_set_iff
 
-theorem commutator_mem_commutator_set : ⁅g₁, g₂⁆ ∈ CommutatorSet G :=
+theorem commutator_mem_commutator_set : ⁅g₁, g₂⁆ ∈ commutatorSet G :=
   ⟨g₁, g₂, rfl⟩
 #align commutator_mem_commutator_set commutator_mem_commutator_set
 

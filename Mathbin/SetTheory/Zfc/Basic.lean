@@ -327,18 +327,18 @@ theorem mem_irrefl (x : PSet) : x ∉ x :=
 #align pSet.mem_irrefl PSet.mem_irrefl
 
 /-- Convert a pre-set to a `set` of pre-sets. -/
-def ToSet (u : PSet.{u}) : Set PSet.{u} :=
+def toSet (u : PSet.{u}) : Set PSet.{u} :=
   { x | x ∈ u }
-#align pSet.to_set PSet.ToSet
+#align pSet.to_set PSet.toSet
 
 @[simp]
-theorem mem_to_set (a u : PSet.{u}) : a ∈ u.ToSet ↔ a ∈ u :=
+theorem mem_to_set (a u : PSet.{u}) : a ∈ u.toSet ↔ a ∈ u :=
   Iff.rfl
 #align pSet.mem_to_set PSet.mem_to_set
 
 /-- A nonempty set is one that contains some element. -/
 protected def Nonempty (u : PSet) : Prop :=
-  u.ToSet.Nonempty
+  u.toSet.Nonempty
 #align pSet.nonempty PSet.Nonempty
 
 theorem nonempty_def (u : PSet) : u.Nonempty ↔ ∃ x, x ∈ u :=
@@ -350,7 +350,7 @@ theorem nonempty_of_mem {x u : PSet} (h : x ∈ u) : u.Nonempty :=
 #align pSet.nonempty_of_mem PSet.nonempty_of_mem
 
 @[simp]
-theorem nonempty_to_set_iff {u : PSet} : u.ToSet.Nonempty ↔ u.Nonempty :=
+theorem nonempty_to_set_iff {u : PSet} : u.toSet.Nonempty ↔ u.Nonempty :=
   Iff.rfl
 #align pSet.nonempty_to_set_iff PSet.nonempty_to_set_iff
 
@@ -363,12 +363,12 @@ theorem nonempty_of_nonempty_type (x : PSet) [h : Nonempty x.type] : PSet.Nonemp
 #align pSet.nonempty_of_nonempty_type PSet.nonempty_of_nonempty_type
 
 /-- Two pre-sets are equivalent iff they have the same members. -/
-theorem Equiv.eq {x y : PSet} : Equiv x y ↔ ToSet x = ToSet y :=
+theorem Equiv.eq {x y : PSet} : Equiv x y ↔ toSet x = toSet y :=
   equiv_iff_mem.trans Set.ext_iff.symm
 #align pSet.equiv.eq PSet.Equiv.eq
 
 instance : Coe PSet (Set PSet) :=
-  ⟨ToSet⟩
+  ⟨toSet⟩
 
 /-- The empty pre-set -/
 protected def empty : PSet :=
@@ -390,7 +390,7 @@ theorem mem_empty (x : PSet.{u}) : x ∉ (∅ : PSet.{u}) :=
 #align pSet.mem_empty PSet.mem_empty
 
 @[simp]
-theorem to_set_empty : ToSet ∅ = ∅ := by simp [to_set]
+theorem to_set_empty : toSet ∅ = ∅ := by simp [to_set]
 #align pSet.to_set_empty PSet.to_set_empty
 
 @[simp]
@@ -482,7 +482,7 @@ theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem to_set_sUnion (x : PSet.{u}) : (⋃₀ x).ToSet = ⋃₀ (to_set '' x.ToSet) := by
+theorem to_set_sUnion (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (to_set '' x.toSet) := by
   ext
   simp
 #align pSet.to_set_sUnion PSet.to_set_sUnion
@@ -701,18 +701,18 @@ theorem mk_mem_iff {x y : PSet} : mk x ∈ mk y ↔ x ∈ y :=
 #align Set.mk_mem_iff SetCat.mk_mem_iff
 
 /-- Convert a ZFC set into a `set` of ZFC sets -/
-def ToSet (u : SetCat.{u}) : Set SetCat.{u} :=
+def toSet (u : SetCat.{u}) : Set SetCat.{u} :=
   { x | x ∈ u }
-#align Set.to_set SetCat.ToSet
+#align Set.to_set SetCat.toSet
 
 @[simp]
-theorem mem_to_set (a u : SetCat.{u}) : a ∈ u.ToSet ↔ a ∈ u :=
+theorem mem_to_set (a u : SetCat.{u}) : a ∈ u.toSet ↔ a ∈ u :=
   Iff.rfl
 #align Set.mem_to_set SetCat.mem_to_set
 
-instance small_to_set (x : SetCat.{u}) : Small.{u} x.ToSet :=
+instance small_to_set (x : SetCat.{u}) : Small.{u} x.toSet :=
   (Quotient.induction_on x) fun a => by
-    let f : a.type → (mk a).ToSet := fun i => ⟨mk <| a.func i, func_mem a i⟩
+    let f : a.type → (mk a).toSet := fun i => ⟨mk <| a.func i, func_mem a i⟩
     suffices Function.Surjective f by exact small_of_surjective this
     rintro ⟨y, hb⟩
     induction y using Quotient.induction_on
@@ -722,7 +722,7 @@ instance small_to_set (x : SetCat.{u}) : Small.{u} x.ToSet :=
 
 /-- A nonempty set is one that contains some element. -/
 protected def Nonempty (u : SetCat) : Prop :=
-  u.ToSet.Nonempty
+  u.toSet.Nonempty
 #align Set.nonempty SetCat.Nonempty
 
 theorem nonempty_def (u : SetCat) : u.Nonempty ↔ ∃ x, x ∈ u :=
@@ -734,7 +734,7 @@ theorem nonempty_of_mem {x u : SetCat} (h : x ∈ u) : u.Nonempty :=
 #align Set.nonempty_of_mem SetCat.nonempty_of_mem
 
 @[simp]
-theorem nonempty_to_set_iff {u : SetCat} : u.ToSet.Nonempty ↔ u.Nonempty :=
+theorem nonempty_to_set_iff {u : SetCat} : u.toSet.Nonempty ↔ u.Nonempty :=
   Iff.rfl
 #align Set.nonempty_to_set_iff SetCat.nonempty_to_set_iff
 
@@ -767,7 +767,7 @@ theorem subset_iff : ∀ {x y : PSet}, mk x ⊆ mk y ↔ x ⊆ y
 #align Set.subset_iff SetCat.subset_iff
 
 @[simp]
-theorem to_set_subset_iff {x y : SetCat} : x.ToSet ⊆ y.ToSet ↔ x ⊆ y := by simp [subset_def, Set.subset_def]
+theorem to_set_subset_iff {x y : SetCat} : x.toSet ⊆ y.toSet ↔ x ⊆ y := by simp [subset_def, Set.subset_def]
 #align Set.to_set_subset_iff SetCat.to_set_subset_iff
 
 @[ext.1]
@@ -779,11 +779,11 @@ theorem ext_iff {x y : SetCat.{u}} : x = y ↔ ∀ z : SetCat.{u}, z ∈ x ↔ z
   ⟨fun h => by simp [h], ext⟩
 #align Set.ext_iff SetCat.ext_iff
 
-theorem to_set_injective : Function.Injective ToSet := fun x y h => ext <| Set.ext_iff.1 h
+theorem to_set_injective : Function.Injective toSet := fun x y h => ext <| Set.ext_iff.1 h
 #align Set.to_set_injective SetCat.to_set_injective
 
 @[simp]
-theorem to_set_inj {x y : SetCat} : x.ToSet = y.ToSet ↔ x = y :=
+theorem to_set_inj {x y : SetCat} : x.toSet = y.toSet ↔ x = y :=
   to_set_injective.eq_iff
 #align Set.to_set_inj SetCat.to_set_inj
 
@@ -807,7 +807,7 @@ theorem mem_empty (x) : x ∉ (∅ : SetCat.{u}) :=
 #align Set.mem_empty SetCat.mem_empty
 
 @[simp]
-theorem to_set_empty : ToSet ∅ = ∅ := by simp [to_set]
+theorem to_set_empty : toSet ∅ = ∅ := by simp [to_set]
 #align Set.to_set_empty SetCat.to_set_empty
 
 @[simp]
@@ -882,7 +882,7 @@ theorem mem_insert_of_mem {y z : SetCat} (x) (h : z ∈ y) : z ∈ insert x y :=
 #align Set.mem_insert_of_mem SetCat.mem_insert_of_mem
 
 @[simp]
-theorem to_set_insert (x y : SetCat) : (insert x y).ToSet = insert x y.ToSet := by
+theorem to_set_insert (x y : SetCat) : (insert x y).toSet = insert x y.toSet := by
   ext
   simp
 #align Set.to_set_insert SetCat.to_set_insert
@@ -893,7 +893,7 @@ theorem mem_singleton {x y : SetCat.{u}} : x ∈ @singleton SetCat.{u} SetCat.{u
 #align Set.mem_singleton SetCat.mem_singleton
 
 @[simp]
-theorem to_set_singleton (x : SetCat) : ({x} : SetCat).ToSet = {x} := by
+theorem to_set_singleton (x : SetCat) : ({x} : SetCat).toSet = {x} := by
   ext
   simp
 #align Set.to_set_singleton SetCat.to_set_singleton
@@ -949,7 +949,7 @@ theorem mem_sep {p : SetCat.{u} → Prop} {x y : SetCat.{u}} : y ∈ { y ∈ x |
 #align Set.mem_sep SetCat.mem_sep
 
 @[simp]
-theorem to_set_sep (a : SetCat) (p : SetCat → Prop) : { x ∈ a | p x }.ToSet = { x ∈ a.ToSet | p x } := by
+theorem to_set_sep (a : SetCat) (p : SetCat → Prop) : { x ∈ a | p x }.toSet = { x ∈ a.toSet | p x } := by
   ext
   simp
 #align Set.to_set_sep SetCat.to_set_sep
@@ -1038,7 +1038,7 @@ theorem singleton_inj {x y : SetCat} : ({x} : SetCat) = {y} ↔ x = y :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem to_set_sUnion (x : SetCat.{u}) : (⋃₀ x).ToSet = ⋃₀ (to_set '' x.ToSet) := by
+theorem to_set_sUnion (x : SetCat.{u}) : (⋃₀ x).toSet = ⋃₀ (to_set '' x.toSet) := by
   ext
   simp
 #align Set.to_set_sUnion SetCat.to_set_sUnion
@@ -1069,14 +1069,14 @@ instance : Sdiff SetCat :=
   ⟨SetCat.diff⟩
 
 @[simp]
-theorem to_set_union (x y : SetCat.{u}) : (x ∪ y).ToSet = x.ToSet ∪ y.ToSet := by
+theorem to_set_union (x y : SetCat.{u}) : (x ∪ y).toSet = x.toSet ∪ y.toSet := by
   unfold Union.union
   rw [SetCat.union]
   simp
 #align Set.to_set_union SetCat.to_set_union
 
 @[simp]
-theorem to_set_inter (x y : SetCat.{u}) : (x ∩ y).ToSet = x.ToSet ∩ y.ToSet := by
+theorem to_set_inter (x y : SetCat.{u}) : (x ∩ y).toSet = x.toSet ∩ y.toSet := by
   unfold Inter.inter
   rw [SetCat.inter]
   ext
@@ -1084,8 +1084,8 @@ theorem to_set_inter (x y : SetCat.{u}) : (x ∩ y).ToSet = x.ToSet ∩ y.ToSet 
 #align Set.to_set_inter SetCat.to_set_inter
 
 @[simp]
-theorem to_set_sdiff (x y : SetCat.{u}) : (x \ y).ToSet = x.ToSet \ y.ToSet := by
-  change { z ∈ x | z ∉ y }.ToSet = _
+theorem to_set_sdiff (x y : SetCat.{u}) : (x \ y).toSet = x.toSet \ y.toSet := by
+  change { z ∈ x | z ∉ y }.toSet = _
   ext
   simp
 #align Set.to_set_sdiff SetCat.to_set_sdiff
@@ -1175,7 +1175,7 @@ theorem mem_image :
 #align Set.mem_image SetCat.mem_image
 
 @[simp]
-theorem to_set_image (f : SetCat → SetCat) [H : Definable 1 f] (x : SetCat) : (image f x).ToSet = f '' x.ToSet := by
+theorem to_set_image (f : SetCat → SetCat) [H : Definable 1 f] (x : SetCat) : (image f x).toSet = f '' x.toSet := by
   ext
   simp
 #align Set.to_set_image SetCat.to_set_image
@@ -1186,7 +1186,7 @@ def pair (x y : SetCat.{u}) : SetCat.{u} :=
 #align Set.pair SetCat.pair
 
 @[simp]
-theorem to_set_pair (x y : SetCat.{u}) : (pair x y).ToSet = {{x}, {x, y}} := by simp [pair]
+theorem to_set_pair (x y : SetCat.{u}) : (pair x y).toSet = {{x}, {x, y}} := by simp [pair]
 #align Set.to_set_pair SetCat.to_set_pair
 
 /-- A subset of pairs `{(a, b) ∈ x × y | p a b}` -/
@@ -1331,17 +1331,17 @@ def ClassCat :=
 namespace ClassCat
 
 /-- Coerce a ZFC set into a class -/
-def OfSet (x : SetCat.{u}) : ClassCat.{u} :=
+def ofSet (x : SetCat.{u}) : ClassCat.{u} :=
   { y | y ∈ x }
-#align Class.of_Set ClassCat.OfSet
+#align Class.of_Set ClassCat.ofSet
 
 instance : Coe SetCat ClassCat :=
-  ⟨OfSet⟩
+  ⟨ofSet⟩
 
 /-- The universal class -/
-def Univ : ClassCat :=
-  Set.Univ
-#align Class.univ ClassCat.Univ
+def univ : ClassCat :=
+  Set.univ
+#align Class.univ ClassCat.univ
 
 /-- Assert that `A` is a ZFC set satisfying `B` -/
 def ToSet (B : ClassCat.{u}) (A : ClassCat.{u}) : Prop :=
@@ -1392,34 +1392,34 @@ theorem univ_not_mem_univ : univ ∉ univ :=
 #align Class.univ_not_mem_univ ClassCat.univ_not_mem_univ
 
 /-- Convert a conglomerate (a collection of classes) into a class -/
-def CongToClass (x : Set ClassCat.{u}) : ClassCat.{u} :=
+def congToClass (x : Set ClassCat.{u}) : ClassCat.{u} :=
   { y | ↑y ∈ x }
-#align Class.Cong_to_Class ClassCat.CongToClass
+#align Class.Cong_to_Class ClassCat.congToClass
 
 /-- Convert a class into a conglomerate (a collection of classes) -/
-def ClassToCong (x : ClassCat.{u}) : Set ClassCat.{u} :=
+def classToCong (x : ClassCat.{u}) : Set ClassCat.{u} :=
   { y | y ∈ x }
-#align Class.Class_to_Cong ClassCat.ClassToCong
+#align Class.Class_to_Cong ClassCat.classToCong
 
 /-- The power class of a class is the class of all subclasses that are ZFC sets -/
-def Powerset (x : ClassCat) : ClassCat :=
-  CongToClass (Set.Powerset x)
-#align Class.powerset ClassCat.Powerset
+def powerset (x : ClassCat) : ClassCat :=
+  congToClass (Set.powerset x)
+#align Class.powerset ClassCat.powerset
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The union of a class is the class of all members of ZFC sets in the class -/
-def SUnion (x : ClassCat) : ClassCat :=
-  ⋃₀ ClassToCong x
-#align Class.sUnion ClassCat.SUnion
+def sUnion (x : ClassCat) : ClassCat :=
+  ⋃₀ classToCong x
+#align Class.sUnion ClassCat.sUnion
 
 -- mathport name: Class.sUnion
-prefix:110 "⋃₀ " => ClassCat.SUnion
+prefix:110 "⋃₀ " => ClassCat.sUnion
 
-theorem OfSet.inj {x y : SetCat.{u}} (h : (x : ClassCat.{u}) = y) : x = y :=
+theorem ofSet.inj {x y : SetCat.{u}} (h : (x : ClassCat.{u}) = y) : x = y :=
   SetCat.ext fun z => by
     change (x : ClassCat.{u}) z ↔ (y : ClassCat.{u}) z
     rw [h]
-#align Class.of_Set.inj ClassCat.OfSet.inj
+#align Class.of_Set.inj ClassCat.ofSet.inj
 
 @[simp]
 theorem to_Set_of_Set (A : ClassCat.{u}) (x : SetCat.{u}) : ToSet A x ↔ A x :=
@@ -1472,7 +1472,7 @@ theorem diff_hom (x y : SetCat.{u}) : (x : ClassCat.{u}) \ y = (x \ y : SetCat.{
 #align Class.diff_hom ClassCat.diff_hom
 
 @[simp]
-theorem powerset_hom (x : SetCat.{u}) : Powerset.{u} x = SetCat.powerset x :=
+theorem powerset_hom (x : SetCat.{u}) : powerset.{u} x = SetCat.powerset x :=
   Set.ext fun z => Iff.symm SetCat.mem_powerset
 #align Class.powerset_hom ClassCat.powerset_hom
 
@@ -1487,30 +1487,30 @@ theorem sUnion_hom (x : SetCat.{u}) : ⋃₀ (x : ClassCat.{u}) = ⋃₀ x :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The definite description operator, which is `{x}` if `{y | A y} = {x}` and `∅` otherwise. -/
-def Iota (A : ClassCat) : ClassCat :=
+def iota (A : ClassCat) : ClassCat :=
   ⋃₀ { x | ∀ y, A y ↔ y = x }
-#align Class.iota ClassCat.Iota
+#align Class.iota ClassCat.iota
 
-theorem iota_val (A : ClassCat) (x : SetCat) (H : ∀ y, A y ↔ y = x) : Iota A = ↑x :=
+theorem iota_val (A : ClassCat) (x : SetCat) (H : ∀ y, A y ↔ y = x) : iota A = ↑x :=
   Set.ext fun y => ⟨fun ⟨_, ⟨x', rfl, h⟩, yx'⟩ => by rwa [← (H x').1 <| (h x').2 rfl], fun yx => ⟨_, ⟨x, rfl, H⟩, yx⟩⟩
 #align Class.iota_val ClassCat.iota_val
 
 /-- Unlike the other set constructors, the `iota` definite descriptor
   is a set for any set input, but not constructively so, so there is no
   associated `Class → Set` function. -/
-theorem iota_ex (A) : Iota.{u} A ∈ univ.{u} :=
+theorem iota_ex (A) : iota.{u} A ∈ univ.{u} :=
   mem_univ.2 <|
     Or.elim (Classical.em <| ∃ x, ∀ y, A y ↔ y = x) (fun ⟨x, h⟩ => ⟨x, Eq.symm <| iota_val A x h⟩) fun hn =>
       ⟨∅, Set.ext fun z => empty_hom.symm ▸ ⟨False.ndrec _, fun ⟨_, ⟨x, rfl, H⟩, zA⟩ => hn ⟨x, H⟩⟩⟩
 #align Class.iota_ex ClassCat.iota_ex
 
 /-- Function value -/
-def Fval (F A : ClassCat.{u}) : ClassCat.{u} :=
-  Iota fun y => ToSet (fun x => F (SetCat.pair x y)) A
-#align Class.fval ClassCat.Fval
+def fval (F A : ClassCat.{u}) : ClassCat.{u} :=
+  iota fun y => ToSet (fun x => F (SetCat.pair x y)) A
+#align Class.fval ClassCat.fval
 
 -- mathport name: «expr ′ »
-infixl:100 " ′ " => Fval
+infixl:100 " ′ " => fval
 
 theorem fval_ex (F A : ClassCat.{u}) : F ′ A ∈ univ.{u} :=
   iota_ex _

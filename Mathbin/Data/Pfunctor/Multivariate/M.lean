@@ -134,7 +134,7 @@ def M.corec' {α : Typevec n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ b : 
 #align mvpfunctor.M.corec' Mvpfunctor.M.corec'
 
 /-- Corecursor for M-type of `P` -/
-def M.corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.Append1 β)) : β → P.M α :=
+def M.corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.append1 β)) : β → P.M α :=
   M.corec' P (fun b => (g b).fst) (fun b => dropFun (g b).snd) fun b => lastFun (g b).snd
 #align mvpfunctor.M.corec Mvpfunctor.M.corec
 
@@ -151,7 +151,7 @@ def M.pathDestRight {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a �
 
 /-- Destructor for M-type of `P` -/
 def M.dest' {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M} (h : Pfunctor.M.dest x = ⟨a, f⟩)
-    (f' : M.Path P x ⟹ α) : P.Obj (α.Append1 (P.M α)) :=
+    (f' : M.Path P x ⟹ α) : P.Obj (α.append1 (P.M α)) :=
   ⟨a, splitFun (M.pathDestLeft P h f') fun x => ⟨f x, M.pathDestRight P h f' x⟩⟩
 #align mvpfunctor.M.dest' Mvpfunctor.M.dest'
 
@@ -162,7 +162,7 @@ def M.dest {α : Typevec n} (x : P.M α) : P.Obj (α ::: P.M α) :=
 #align mvpfunctor.M.dest Mvpfunctor.M.dest
 
 /-- Constructor for M-types -/
-def M.mk {α : Typevec n} : P.Obj (α.Append1 (P.M α)) → P.M α :=
+def M.mk {α : Typevec n} : P.Obj (α.append1 (P.M α)) → P.M α :=
   M.corec _ fun i => appendFun id (M.dest P) <$$> i
 #align mvpfunctor.M.mk Mvpfunctor.M.mk
 
@@ -182,7 +182,7 @@ theorem M.dest_corec' {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A) (g�
   rfl
 #align mvpfunctor.M.dest_corec' Mvpfunctor.M.dest_corec'
 
-theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.Append1 β)) (x : β) :
+theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.append1 β)) (x : β) :
     M.dest P (M.corec P g x) = appendFun id (M.corec P g) <$$> g x := by
   trans
   apply M.dest_corec'

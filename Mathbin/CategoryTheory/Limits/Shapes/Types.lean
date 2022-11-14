@@ -243,16 +243,16 @@ theorem binary_coproduct_iso_inr_comp_inv (X Y : Type u) :
 open Function (Injective)
 
 theorem binary_cofan_is_colimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
-    Nonempty (IsColimit c) ↔ Injective c.inl ∧ Injective c.inr ∧ IsCompl (Set.Range c.inl) (Set.Range c.inr) := by
+    Nonempty (IsColimit c) ↔ Injective c.inl ∧ Injective c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) := by
   classical constructor
     · rintro ⟨h₁, h₂, h₃⟩
-      have : ∀ x, x ∈ Set.Range c.inl ∨ x ∈ Set.Range c.inr := by
+      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr := by
         rw [eq_compl_iff_is_compl.mpr h₃.symm]
         exact fun _ => or_not
       refine' ⟨binary_cofan.is_colimit.mk _ _ _ _ _⟩
       · intro T f g x
         exact
-          if h : x ∈ Set.Range c.inl then f ((Equiv.ofInjective _ h₁).symm ⟨x, h⟩)
+          if h : x ∈ Set.range c.inl then f ((Equiv.ofInjective _ h₁).symm ⟨x, h⟩)
           else g ((Equiv.ofInjective _ h₂).symm ⟨x, (this x).resolve_left h⟩)
         
       · intro T f g
@@ -265,7 +265,7 @@ theorem binary_cofan_is_colimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
         dsimp
         simp only [forall_exists_index, Equiv.of_injective_symm_apply, dif_ctx_congr, dite_eq_right_iff]
         intro y e
-        have : c.inr x ∈ Set.Range c.inl ⊓ Set.Range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
+        have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
         rw [disjoint_iff.mp h₃.1] at this
         exact this.elim
         
@@ -279,7 +279,7 @@ theorem binary_cofan_is_colimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
 
 /-- Any monomorphism in `Type` is an coproduct injection. -/
 noncomputable def isCoprodOfMono {X Y : Type u} (f : X ⟶ Y) [Mono f] :
-    IsColimit (BinaryCofan.mk f (Subtype.val : Set.Range fᶜ → Y)) :=
+    IsColimit (BinaryCofan.mk f (Subtype.val : Set.range fᶜ → Y)) :=
   Nonempty.some <|
     (binary_cofan_is_colimit_iff _).mpr
       ⟨(mono_iff_injective f).mp inferInstance, Subtype.val_injective,

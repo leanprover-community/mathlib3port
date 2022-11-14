@@ -141,6 +141,7 @@ The type is required to come with an “inverse” function, and the inverse of 
 
 Examples include division rings and the ordered monoids that are the
 target of valuations in general valuation theory.-/
+@[protect_proj]
 class GroupWithZero (G₀ : Type u) extends MonoidWithZero G₀, DivInvMonoid G₀, Nontrivial G₀ where
   inv_zero : (0 : G₀)⁻¹ = 0
   mul_inv_cancel : ∀ a : G₀, a ≠ 0 → a * a⁻¹ = 1
@@ -167,6 +168,7 @@ end GroupWithZero
 if it is a commutative monoid with zero element (distinct from `1`)
 such that every nonzero element is invertible.
 The type is required to come with an “inverse” function, and the inverse of `0` must be `0`. -/
+@[protect_proj]
 class CommGroupWithZero (G₀ : Type _) extends CommMonoidWithZero G₀, GroupWithZero G₀
 #align comm_group_with_zero CommGroupWithZero
 

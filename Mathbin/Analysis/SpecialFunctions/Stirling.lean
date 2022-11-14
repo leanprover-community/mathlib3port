@@ -207,7 +207,7 @@ theorem stirling_seq'_antitone : Antitone (stirling_seq ∘ succ) := fun n m h =
 /-- The limit `a` of the sequence `stirling_seq` satisfies `0 < a` -/
 theorem stirling_seq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSeq atTop (𝓝 a) := by
   obtain ⟨x, x_pos, hx⟩ := stirling_seq'_bounded_by_pos_constant
-  have hx' : x ∈ LowerBounds (Set.Range (stirling_seq ∘ succ)) := by simpa [LowerBounds] using hx
+  have hx' : x ∈ lowerBounds (Set.range (stirling_seq ∘ succ)) := by simpa [lowerBounds] using hx
   refine' ⟨_, lt_of_lt_of_le x_pos (le_cInf (Set.range_nonempty _) hx'), _⟩
   rw [← Filter.tendsto_add_at_top_iff_nat 1]
   exact tendsto_at_top_cinfi stirling_seq'_antitone ⟨x, hx'⟩

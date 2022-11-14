@@ -175,7 +175,7 @@ theorem eq_on_zero_of_preconnected_of_frequently_eq_zero (hf : AnalyticOn 𝕜 f
   analytic_on.eq_on_zero_of_preconnected_of_frequently_eq_zero AnalyticOn.eq_on_zero_of_preconnected_of_frequently_eq_zero
 
 theorem eq_on_zero_of_preconnected_of_mem_closure (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) (h₀ : z₀ ∈ U)
-    (hfz₀ : z₀ ∈ Closure ({ z | f z = 0 } \ {z₀})) : EqOn f 0 U :=
+    (hfz₀ : z₀ ∈ closure ({ z | f z = 0 } \ {z₀})) : EqOn f 0 U :=
   hf.eq_on_zero_of_preconnected_of_frequently_eq_zero hU h₀ (mem_closure_ne_iff_frequently_within.mp hfz₀)
 #align analytic_on.eq_on_zero_of_preconnected_of_mem_closure AnalyticOn.eq_on_zero_of_preconnected_of_mem_closure
 
@@ -191,7 +191,7 @@ theorem eq_on_of_preconnected_of_frequently_eq (hf : AnalyticOn 𝕜 f U) (hg : 
 #align analytic_on.eq_on_of_preconnected_of_frequently_eq AnalyticOn.eq_on_of_preconnected_of_frequently_eq
 
 theorem eq_on_of_preconnected_of_mem_closure (hf : AnalyticOn 𝕜 f U) (hg : AnalyticOn 𝕜 g U) (hU : IsPreconnected U)
-    (h₀ : z₀ ∈ U) (hfg : z₀ ∈ Closure ({ z | f z = g z } \ {z₀})) : EqOn f g U :=
+    (h₀ : z₀ ∈ U) (hfg : z₀ ∈ closure ({ z | f z = g z } \ {z₀})) : EqOn f g U :=
   hf.eq_on_of_preconnected_of_frequently_eq hg hU h₀ (mem_closure_ne_iff_frequently_within.mp hfg)
 #align analytic_on.eq_on_of_preconnected_of_mem_closure AnalyticOn.eq_on_of_preconnected_of_mem_closure
 

@@ -39,7 +39,7 @@ def nhdsSet (s : Set α) : Filter α :=
 -- mathport name: nhds_set
 localized [TopologicalSpace] notation "𝓝ˢ" => nhdsSet
 
-theorem nhds_set_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (Diagonal α) = ⨆ x, 𝓝 (x, x) := by
+theorem nhds_set_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal α) = ⨆ x, 𝓝 (x, x) := by
   rw [nhdsSet, ← range_diag, ← range_comp]
   rfl
 #align nhds_set_diagonal nhds_set_diagonal
@@ -52,7 +52,7 @@ theorem bUnion_mem_nhds_set {t : α → Set α} (h : ∀ x ∈ s, t x ∈ 𝓝 x
   mem_nhds_set_iff_forall.2 fun x hx => mem_of_superset (h x hx) (subset_Union₂ x hx)
 #align bUnion_mem_nhds_set bUnion_mem_nhds_set
 
-theorem subset_interior_iff_mem_nhds_set : s ⊆ Interior t ↔ t ∈ 𝓝ˢ s := by
+theorem subset_interior_iff_mem_nhds_set : s ⊆ interior t ↔ t ∈ 𝓝ˢ s := by
   simp_rw [mem_nhds_set_iff_forall, subset_interior_iff_nhds]
 #align subset_interior_iff_mem_nhds_set subset_interior_iff_mem_nhds_set
 
@@ -80,7 +80,7 @@ theorem nhds_set_eq_principal_iff : 𝓝ˢ s = 𝓟 s ↔ IsOpen s := by
 alias nhds_set_eq_principal_iff ↔ _ IsOpen.nhds_set_eq
 
 @[simp]
-theorem nhds_set_interior : 𝓝ˢ (Interior s) = 𝓟 (Interior s) :=
+theorem nhds_set_interior : 𝓝ˢ (interior s) = 𝓟 (interior s) :=
   is_open_interior.nhds_set_eq
 #align nhds_set_interior nhds_set_interior
 
@@ -90,7 +90,7 @@ theorem nhds_set_singleton : 𝓝ˢ {x} = 𝓝 x := by
   rw [← subset_interior_iff_mem_nhds_set, ← mem_interior_iff_mem_nhds, singleton_subset_iff]
 #align nhds_set_singleton nhds_set_singleton
 
-theorem mem_nhds_set_interior : s ∈ 𝓝ˢ (Interior s) :=
+theorem mem_nhds_set_interior : s ∈ 𝓝ˢ (interior s) :=
   subset_interior_iff_mem_nhds_set.mp Subset.rfl
 #align mem_nhds_set_interior mem_nhds_set_interior
 
@@ -102,7 +102,7 @@ theorem mem_nhds_set_empty : s ∈ 𝓝ˢ (∅ : Set α) := by simp
 #align mem_nhds_set_empty mem_nhds_set_empty
 
 @[simp]
-theorem nhds_set_univ : 𝓝ˢ (Univ : Set α) = ⊤ := by rw [is_open_univ.nhds_set_eq, principal_univ]
+theorem nhds_set_univ : 𝓝ˢ (univ : Set α) = ⊤ := by rw [is_open_univ.nhds_set_eq, principal_univ]
 #align nhds_set_univ nhds_set_univ
 
 @[mono]

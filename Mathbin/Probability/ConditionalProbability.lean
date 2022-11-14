@@ -96,7 +96,7 @@ theorem cond_empty : μ[|∅] = 0 := by simp [cond]
 #align probability_theory.cond_empty ProbabilityTheory.cond_empty
 
 @[simp]
-theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.Univ] = μ := by simp [cond, measure_univ, measure.restrict_univ]
+theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.univ] = μ := by simp [cond, measure_univ, measure.restrict_univ]
 #align probability_theory.cond_univ ProbabilityTheory.cond_univ
 
 /-- The axiomatic definition of conditional probability derived from a measure-theoretic one. -/

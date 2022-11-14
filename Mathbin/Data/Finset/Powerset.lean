@@ -23,8 +23,8 @@ section Powerset
 
 /-- When `s` is a finset, `s.powerset` is the finset of all subsets of `s` (seen as finsets). -/
 def powerset (s : Finset α) : Finset (Finset α) :=
-  ⟨(s.1.Powerset.pmap Finset.mk) fun t h => nodup_of_le (mem_powerset.1 h) s.Nodup,
-    s.Nodup.Powerset.pmap fun a ha b hb => congr_arg Finset.val⟩
+  ⟨(s.1.powerset.pmap Finset.mk) fun t h => nodup_of_le (mem_powerset.1 h) s.Nodup,
+    s.Nodup.powerset.pmap fun a ha b hb => congr_arg Finset.val⟩
 #align finset.powerset Finset.powerset
 
 @[simp]
@@ -33,7 +33,7 @@ theorem mem_powerset {s t : Finset α} : s ∈ powerset t ↔ s ⊆ t := by
 #align finset.mem_powerset Finset.mem_powerset
 
 @[simp, norm_cast]
-theorem coe_powerset (s : Finset α) : (s.Powerset : Set (Finset α)) = coe ⁻¹' (s : Set α).Powerset := by
+theorem coe_powerset (s : Finset α) : (s.powerset : Set (Finset α)) = coe ⁻¹' (s : Set α).powerset := by
   ext
   simp
 #align finset.coe_powerset Finset.coe_powerset
@@ -48,7 +48,7 @@ theorem mem_powerset_self (s : Finset α) : s ∈ powerset s :=
   mem_powerset.2 Subset.rfl
 #align finset.mem_powerset_self Finset.mem_powerset_self
 
-theorem powerset_nonempty (s : Finset α) : s.Powerset.Nonempty :=
+theorem powerset_nonempty (s : Finset α) : s.powerset.Nonempty :=
   ⟨∅, empty_mem_powerset _⟩
 #align finset.powerset_nonempty Finset.powerset_nonempty
 
@@ -68,12 +68,12 @@ theorem powerset_inj : powerset s = powerset t ↔ s = t :=
 #align finset.powerset_inj Finset.powerset_inj
 
 @[simp]
-theorem powerset_empty : (∅ : Finset α).Powerset = {∅} :=
+theorem powerset_empty : (∅ : Finset α).powerset = {∅} :=
   rfl
 #align finset.powerset_empty Finset.powerset_empty
 
 @[simp]
-theorem powerset_eq_singleton_empty : s.Powerset = {∅} ↔ s = ∅ := by rw [← powerset_empty, powerset_inj]
+theorem powerset_eq_singleton_empty : s.powerset = {∅} ↔ s = ∅ := by rw [← powerset_empty, powerset_inj]
 #align finset.powerset_eq_singleton_empty Finset.powerset_eq_singleton_empty
 
 /-- **Number of Subsets of a Set** -/
@@ -82,13 +82,13 @@ theorem card_powerset (s : Finset α) : card (powerset s) = 2 ^ card s :=
   (card_pmap _ _ _).trans (card_powerset s.1)
 #align finset.card_powerset Finset.card_powerset
 
-theorem not_mem_of_mem_powerset_of_not_mem {s t : Finset α} {a : α} (ht : t ∈ s.Powerset) (h : a ∉ s) : a ∉ t := by
+theorem not_mem_of_mem_powerset_of_not_mem {s t : Finset α} {a : α} (ht : t ∈ s.powerset) (h : a ∉ s) : a ∉ t := by
   apply mt _ h
   apply mem_powerset.1 ht
 #align finset.not_mem_of_mem_powerset_of_not_mem Finset.not_mem_of_mem_powerset_of_not_mem
 
 theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
-    powerset (insert a s) = s.Powerset ∪ s.Powerset.Image (insert a) := by
+    powerset (insert a s) = s.powerset ∪ s.powerset.image (insert a) := by
   ext t
   simp only [exists_prop, mem_powerset, mem_image, mem_union, subset_insert_iff]
   by_cases h:a ∈ t
@@ -114,7 +114,7 @@ theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for any subset. -/
 instance decidableExistsOfDecidableSubsets {s : Finset α} {p : ∀ (t) (_ : t ⊆ s), Prop}
     [∀ (t) (h : t ⊆ s), Decidable (p t h)] : Decidable (∃ (t : _)(h : t ⊆ s), p t h) :=
-  decidable_of_iff (∃ (t : _)(hs : t ∈ s.Powerset), p t (mem_powerset.1 hs))
+  decidable_of_iff (∃ (t : _)(hs : t ∈ s.powerset), p t (mem_powerset.1 hs))
     ⟨fun ⟨t, _, hp⟩ => ⟨t, _, hp⟩, fun ⟨t, hs, hp⟩ => ⟨t, mem_powerset.2 hs, hp⟩⟩
 #align finset.decidable_exists_of_decidable_subsets Finset.decidableExistsOfDecidableSubsets
 
@@ -122,7 +122,7 @@ instance decidableExistsOfDecidableSubsets {s : Finset α} {p : ∀ (t) (_ : t �
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for every subset. -/
 instance decidableForallOfDecidableSubsets {s : Finset α} {p : ∀ (t) (_ : t ⊆ s), Prop}
     [∀ (t) (h : t ⊆ s), Decidable (p t h)] : Decidable (∀ (t) (h : t ⊆ s), p t h) :=
-  decidable_of_iff (∀ (t) (h : t ∈ s.Powerset), p t (mem_powerset.1 h))
+  decidable_of_iff (∀ (t) (h : t ∈ s.powerset), p t (mem_powerset.1 h))
     ⟨fun h t hs => h t (mem_powerset.2 hs), fun h _ _ => h _ _⟩
 #align finset.decidable_forall_of_decidable_subsets Finset.decidableForallOfDecidableSubsets
 
@@ -239,7 +239,7 @@ theorem powerset_len_eq_filter {n} {s : Finset α} : powersetLen n s = (powerset
 #align finset.powerset_len_eq_filter Finset.powerset_len_eq_filter
 
 theorem powerset_len_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : x ∉ s) (n : ℕ) :
-    powersetLen n.succ (insert x s) = powersetLen n.succ s ∪ (powersetLen n s).Image (insert x) := by
+    powersetLen n.succ (insert x s) = powersetLen n.succ s ∪ (powersetLen n s).image (insert x) := by
   rw [powerset_len_eq_filter, powerset_insert, filter_union, ← powerset_len_eq_filter]
   congr
   rw [powerset_len_eq_filter, image_filter]
@@ -258,7 +258,7 @@ theorem powerset_len_nonempty {n : ℕ} {s : Finset α} (h : n ≤ s.card) : (po
         
       · rw [card_insert_of_not_mem hx, Nat.succ_le_succ_iff] at h
         rw [powerset_len_succ_insert hx]
-        refine' nonempty.mono _ ((IH h).Image (insert x))
+        refine' nonempty.mono _ ((IH h).image (insert x))
         convert subset_union_right _ _
         
       

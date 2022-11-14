@@ -94,7 +94,7 @@ theorem Sup_simples_eq_top : sup { m : Submodule R M | IsSimpleModule R m } = �
 #align is_semisimple_module.Sup_simples_eq_top IsSemisimpleModule.Sup_simples_eq_top
 
 instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
-  haveI f : Submodule R m ≃o Set.IicCat m := Submodule.MapSubtype.relIso m
+  haveI f : Submodule R m ≃o Set.iic m := Submodule.MapSubtype.relIso m
   f.complemented_lattice_iff.2 IsModularLattice.complementedLatticeIic
 #align is_semisimple_module.is_semisimple_submodule IsSemisimpleModule.is_semisimple_submodule
 

@@ -414,7 +414,7 @@ theorem union : ∀ (d : Dioph S) (d' : Dioph S'), Dioph (S ∪ S')
 
 /-- A partial function is Diophantine if its graph is Diophantine. -/
 def DiophPfun (f : (α → ℕ) →. ℕ) : Prop :=
-  Dioph { v : Option α → ℕ | f.Graph (v ∘ some, v none) }
+  Dioph { v : Option α → ℕ | f.graph (v ∘ some, v none) }
 #align dioph.dioph_pfun Dioph.DiophPfun
 
 /-- A function is Diophantine if its graph is Diophantine. -/
@@ -539,7 +539,7 @@ theorem dioph_fn_vec (f : Vector3 ℕ n → ℕ) : DiophFn f ↔ Dioph { v | f (
 #align dioph.dioph_fn_vec Dioph.dioph_fn_vec
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem dioph_pfun_vec (f : Vector3 ℕ n →. ℕ) : DiophPfun f ↔ Dioph { v | f.Graph (v ∘ fs, v fz) } :=
+theorem dioph_pfun_vec (f : Vector3 ℕ n →. ℕ) : DiophPfun f ↔ Dioph { v | f.graph (v ∘ fs, v fz) } :=
   ⟨reindex_dioph _ (fz ::ₒ fs), reindex_dioph _ (none::some)⟩
 #align dioph.dioph_pfun_vec Dioph.dioph_pfun_vec
 

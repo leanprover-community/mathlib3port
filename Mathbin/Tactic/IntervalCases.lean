@@ -190,7 +190,7 @@ unsafe def get_bounds (n : expr) : tactic (expr × expr) := do
 
 /-- The finset of elements of a set `s` for which we have `fintype s`. -/
 def setElems {α} [DecidableEq α] (s : Set α) [Fintype s] : Finset α :=
-  (Fintype.elems s).Image Subtype.val
+  (Fintype.elems s).image Subtype.val
 #align tactic.interval_cases.set_elems Tactic.IntervalCases.setElems
 
 /-- Each element of `s` is a member of `set_elems s`. -/
@@ -212,7 +212,7 @@ By default `interval_cases_using` automatically generates a name for the new hyp
 can be specified via the optional argument `n`.
 -/
 unsafe def interval_cases_using (hl hu : expr) (n : Option Name) : tactic Unit :=
-  (to_expr (pquote.1 (mem_set_elems (IcoCat _ _) ⟨%%ₓhl, %%ₓhu⟩)) >>=
+  (to_expr (pquote.1 (mem_set_elems (ico _ _) ⟨%%ₓhl, %%ₓhu⟩)) >>=
       if hn : n.isSome then note (Option.get hn) else note_anon none) >>=
     fin_cases_at none none
 #align tactic.interval_cases_using tactic.interval_cases_using

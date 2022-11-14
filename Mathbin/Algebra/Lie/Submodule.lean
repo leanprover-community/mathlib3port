@@ -53,7 +53,7 @@ namespace LieSubmodule
 variable {R L M} (N N' : LieSubmodule R L M)
 
 instance : SetLike (LieSubmodule R L M) M where
-  coe := Carrier
+  coe := carrier
   coe_injective' N O h := by cases N <;> cases O <;> congr
 
 instance : AddSubgroupClass (LieSubmodule R L M) M where
@@ -86,7 +86,7 @@ theorem coe_to_submodule : ((N : Submodule R M) : Set M) = N :=
 #align lie_submodule.coe_to_submodule LieSubmodule.coe_to_submodule
 
 @[simp]
-theorem mem_carrier {x : M} : x ∈ N.Carrier ↔ x ∈ (N : Set M) :=
+theorem mem_carrier {x : M} : x ∈ N.carrier ↔ x ∈ (N : Set M) :=
   Iff.rfl
 #align lie_submodule.mem_carrier LieSubmodule.mem_carrier
 
@@ -147,7 +147,7 @@ theorem coe_to_submodule_eq_iff : (N : Submodule R M) = (N' : Submodule R M) ↔
 /-- Copy of a lie_submodule with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (s : Set M) (hs : s = ↑N) : LieSubmodule R L M where
-  Carrier := s
+  carrier := s
   zero_mem' := hs.symm ▸ N.zero_mem'
   add_mem' _ _ := hs.symm ▸ N.add_mem'
   smul_mem' := hs.symm ▸ N.smul_mem'
@@ -697,7 +697,7 @@ theorem span_empty : lieSpan R L (∅ : Set M) = ⊥ :=
 #align lie_submodule.span_empty LieSubmodule.span_empty
 
 @[simp]
-theorem span_univ : lieSpan R L (Set.Univ : Set M) = ⊤ :=
+theorem span_univ : lieSpan R L (Set.univ : Set M) = ⊤ :=
   eq_top_iff.2 <| SetLike.le_def.2 <| subset_lie_span
 #align lie_submodule.span_univ LieSubmodule.span_univ
 
@@ -1257,11 +1257,11 @@ variable (f)
 /-- The range of a morphism of Lie modules `f : M → N` is a Lie submodule of `N`.
 See Note [range copy pattern]. -/
 def range : LieSubmodule R L N :=
-  (LieSubmodule.map f ⊤).copy (Set.Range f) Set.image_univ.symm
+  (LieSubmodule.map f ⊤).copy (Set.range f) Set.image_univ.symm
 #align lie_module_hom.range LieModuleHom.range
 
 @[simp]
-theorem coe_range : (f.range : Set N) = Set.Range f :=
+theorem coe_range : (f.range : Set N) = Set.range f :=
   rfl
 #align lie_module_hom.coe_range LieModuleHom.coe_range
 

@@ -426,7 +426,7 @@ variable (F E K : Type _) [Field F] [Ring E] [CommRing K] [IsDomain K] [Algebra 
 -- Marked as `noncomputable!` since this definition takes multiple seconds to compile,
 -- and isn't very computable in practice (since neither `finrank` nor `fin_basis` are).
 /-- Function from Hom_K(E,L) to pi type Π (x : basis), roots of min poly of x -/
-noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K) (x : Range (FiniteDimensional.finBasis F E : _ → E)) :
+noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K) (x : range (FiniteDimensional.finBasis F E : _ → E)) :
     { l : K // l ∈ (((minpoly F x.1).map (algebraMap F K)).roots : Multiset K) } :=
   ⟨φ x, by
     rw [mem_roots_map (minpoly.ne_zero_of_finite_field_extension F x.val), Subtype.val_eq_coe, ← aeval_def,

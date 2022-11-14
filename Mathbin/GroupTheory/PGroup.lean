@@ -160,7 +160,7 @@ theorem nontrivial_iff_card [Fintype G] : Nontrivial G ↔ ∃ n > 0, card G = p
 
 variable {α : Type _} [MulAction G α]
 
-theorem card_orbit (a : α) [Fintype (Orbit G a)] : ∃ n : ℕ, card (Orbit G a) = p ^ n := by
+theorem card_orbit (a : α) [Fintype (orbit G a)] : ∃ n : ℕ, card (orbit G a) = p ^ n := by
   let ϕ := orbit_equiv_quotient_stabilizer G a
   haveI := Fintype.ofEquiv (orbit G a) ϕ
   haveI := (stabilizer G a).finite_index_of_finite_quotient
@@ -172,7 +172,7 @@ variable (α) [Fintype α]
 
 /-- If `G` is a `p`-group acting on a finite set `α`, then the number of fixed points
   of the action is congruent mod `p` to the cardinality of `α` -/
-theorem card_modeq_card_fixed_points [Fintype (FixedPoints G α)] : card α ≡ card (FixedPoints G α) [MOD p] := by
+theorem card_modeq_card_fixed_points [Fintype (fixedPoints G α)] : card α ≡ card (fixedPoints G α) [MOD p] := by
   classical calc
       card α = card (Σy : Quotient (orbit_rel G α), { x // Quotient.mk' x = y }) :=
         card_congr (Equiv.sigmaFiberEquiv (@Quotient.mk' _ (orbit_rel G α))).symm
@@ -190,8 +190,8 @@ theorem card_modeq_card_fixed_points [Fintype (FixedPoints G α)] : card α ≡ 
 
 /-- If a p-group acts on `α` and the cardinality of `α` is not a multiple
   of `p` then the action has a fixed point. -/
-theorem nonempty_fixed_point_of_prime_not_dvd_card (hpα : ¬p ∣ card α) [Finite (FixedPoints G α)] :
-    (FixedPoints G α).Nonempty :=
+theorem nonempty_fixed_point_of_prime_not_dvd_card (hpα : ¬p ∣ card α) [Finite (fixedPoints G α)] :
+    (fixedPoints G α).Nonempty :=
   @Set.nonempty_of_nonempty_subtype _ _
     (by
       cases nonempty_fintype (fixed_points G α)
@@ -203,8 +203,8 @@ theorem nonempty_fixed_point_of_prime_not_dvd_card (hpα : ¬p ∣ card α) [Fin
 
 /-- If a p-group acts on `α` and the cardinality of `α` is a multiple
   of `p`, and the action has one fixed point, then it has another fixed point. -/
-theorem exists_fixed_point_of_prime_dvd_card_of_fixed_point (hpα : p ∣ card α) {a : α} (ha : a ∈ FixedPoints G α) :
-    ∃ b, b ∈ FixedPoints G α ∧ a ≠ b := by
+theorem exists_fixed_point_of_prime_dvd_card_of_fixed_point (hpα : p ∣ card α) {a : α} (ha : a ∈ fixedPoints G α) :
+    ∃ b, b ∈ fixedPoints G α ∧ a ≠ b := by
   cases nonempty_fintype (fixed_points G α)
   have hpf : p ∣ card (fixed_points G α) :=
     nat.modeq_zero_iff_dvd.mp ((hG.card_modeq_card_fixed_points α).symm.trans hpα.modeq_zero_nat)

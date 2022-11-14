@@ -44,7 +44,7 @@ theorem tendsto_extend_from {A : Set X} {f : X → Y} {x : X} (h : ∃ y, Tendst
   tendsto_nhds_lim h
 #align tendsto_extend_from tendsto_extend_from
 
-theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ Closure A)
+theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ closure A)
     (hf : Tendsto f (𝓝[A] x) (𝓝 y)) : extendFrom A f x = y :=
   haveI := mem_closure_iff_nhds_within_ne_bot.mp hx
   tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf
@@ -56,7 +56,7 @@ theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : Continuo
 
 /-- If `f` is a function to a T₃ space `Y` which has a limit within `A` at any
 point of a set `B ⊆ closure A`, then `extend_from A f` is continuous on `B`. -/
-theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (hB : B ⊆ Closure A)
+theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (hB : B ⊆ closure A)
     (hf : ∀ x ∈ B, ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) : ContinuousOn (extendFrom A f) B := by
   set φ := extendFrom A f
   intro x x_in

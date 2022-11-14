@@ -130,19 +130,19 @@ theorem uniform_cauchy_seq_on_filter_of_fderiv (hf' : UniformCauchySeqOnFilter f
     obtain ⟨R, hR, hR'⟩ := metric.nhds_basis_ball.eventually_iff.mp d
     let r := min 1 R
     have hr : 0 < r := by simp [hR]
-    have hr' : ∀ ⦃y : E⦄, y ∈ Metric.Ball x r → c y := fun y hy =>
+    have hr' : ∀ ⦃y : E⦄, y ∈ Metric.ball x r → c y := fun y hy =>
       hR' (lt_of_lt_of_le (metric.mem_ball.mp hy) (min_le_right _ _))
-    have hxy : ∀ y : E, y ∈ Metric.Ball x r → ∥y - x∥ < 1 := by
+    have hxy : ∀ y : E, y ∈ Metric.ball x r → ∥y - x∥ < 1 := by
       intro y hy
       rw [Metric.mem_ball, dist_eq_norm] at hy
       exact lt_of_lt_of_le hy (min_le_left _ _)
-    have hxyε : ∀ y : E, y ∈ Metric.Ball x r → ε * ∥y - x∥ < ε := by
+    have hxyε : ∀ y : E, y ∈ Metric.ball x r → ε * ∥y - x∥ < ε := by
       intro y hy
       exact (mul_lt_iff_lt_one_right hε.lt).mpr (hxy y hy)
     -- With a small ball in hand, apply the mean value theorem
     refine'
       eventually_prod_iff.mpr
-        ⟨_, b, fun e : E => Metric.Ball x r e, eventually_mem_set.mpr (metric.nhds_basis_ball.mem_of_mem hr),
+        ⟨_, b, fun e : E => Metric.ball x r e, eventually_mem_set.mpr (metric.nhds_basis_ball.mem_of_mem hr),
           fun n hn y hy => _⟩
     simp only [Pi.zero_apply, dist_zero_left] at e⊢
     refine' lt_of_le_of_lt _ (hxyε y hy)
@@ -172,9 +172,9 @@ and Dirichlet series (our primary use case). However, this can be generalized by
 with any connected, bounded, open set and replacing uniform convergence with local uniform
 convergence. See `cauchy_map_of_uniform_cauchy_seq_on_fderiv`.
 -/
-theorem uniform_cauchy_seq_on_ball_of_fderiv {r : ℝ} (hf' : UniformCauchySeqOn f' l (Metric.Ball x r))
-    (hf : ∀ n : ι, ∀ y : E, y ∈ Metric.Ball x r → HasFderivAt (f n) (f' n y) y)
-    (hfg : Cauchy (map (fun n => f n x) l)) : UniformCauchySeqOn f l (Metric.Ball x r) := by
+theorem uniform_cauchy_seq_on_ball_of_fderiv {r : ℝ} (hf' : UniformCauchySeqOn f' l (Metric.ball x r))
+    (hf : ∀ n : ι, ∀ y : E, y ∈ Metric.ball x r → HasFderivAt (f n) (f' n y) y)
+    (hfg : Cauchy (map (fun n => f n x) l)) : UniformCauchySeqOn f l (Metric.ball x r) := by
   let : NormedSpace ℝ E
   exact NormedSpace.restrictScalars ℝ 𝕜 _
   have : ne_bot l := (cauchy_map_iff.1 hfg).1
@@ -185,8 +185,8 @@ theorem uniform_cauchy_seq_on_ball_of_fderiv {r : ℝ} (hf' : UniformCauchySeqOn
   rw [SeminormedAddGroup.uniform_cauchy_seq_on_iff_tendsto_uniformly_on_zero] at hf'⊢
   suffices
     TendstoUniformlyOn (fun (n : ι × ι) (z : E) => f n.1 z - f n.2 z - (f n.1 x - f n.2 x)) 0 (l ×ᶠ l)
-        (Metric.Ball x r) ∧
-      TendstoUniformlyOn (fun (n : ι × ι) (z : E) => f n.1 x - f n.2 x) 0 (l ×ᶠ l) (Metric.Ball x r)
+        (Metric.ball x r) ∧
+      TendstoUniformlyOn (fun (n : ι × ι) (z : E) => f n.1 x - f n.2 x) 0 (l ×ᶠ l) (Metric.ball x r)
     by
     have := this.1.add this.2
     rw [add_zero] at this
@@ -234,7 +234,7 @@ theorem cauchy_map_of_uniform_cauchy_seq_on_fderiv {s : Set E} (hs : IsOpen s) (
   let t := { y | y ∈ s ∧ Cauchy (map (fun n => f n y) l) }
   suffices H : s ⊆ t
   exact (H hx).2
-  have A : ∀ x ε, x ∈ t → Metric.Ball x ε ⊆ s → Metric.Ball x ε ⊆ t := fun x ε xt hx y hy =>
+  have A : ∀ x ε, x ∈ t → Metric.ball x ε ⊆ s → Metric.ball x ε ⊆ t := fun x ε xt hx y hy =>
     ⟨hx hy, (uniform_cauchy_seq_on_ball_of_fderiv (hf'.mono hx) (fun n y hy => hf n y (hx hy)) xt.2).cauchy_map hy⟩
   have open_t : IsOpen t := by
     rw [Metric.is_open_iff]
@@ -242,14 +242,14 @@ theorem cauchy_map_of_uniform_cauchy_seq_on_fderiv {s : Set E} (hs : IsOpen s) (
     rcases Metric.is_open_iff.1 hs x hx.1 with ⟨ε, εpos, hε⟩
     exact ⟨ε, εpos, A x ε hx hε⟩
   have st_nonempty : (s ∩ t).Nonempty := ⟨x₀, hx₀, ⟨hx₀, hfg⟩⟩
-  suffices H : Closure t ∩ s ⊆ t
+  suffices H : closure t ∩ s ⊆ t
   exact h's.subset_of_closure_inter_subset open_t st_nonempty H
   rintro x ⟨xt, xs⟩
-  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), Metric.Ball x ε ⊆ s
+  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), Metric.ball x ε ⊆ s
   exact Metric.is_open_iff.1 hs x xs
   obtain ⟨y, yt, hxy⟩ : ∃ (y : E)(yt : y ∈ t), dist x y < ε / 2
   exact Metric.mem_closure_iff.1 xt _ (half_pos εpos)
-  have B : Metric.Ball y (ε / 2) ⊆ Metric.Ball x ε := by
+  have B : Metric.ball y (ε / 2) ⊆ Metric.ball x ε := by
     apply Metric.ball_subset_ball'
     rw [dist_comm]
     linarith
@@ -287,7 +287,7 @@ theorem difference_quotients_converge_uniformly (hf' : TendstoUniformlyOnFilter 
   obtain ⟨r, hr, hr'⟩ := metric.nhds_basis_ball.eventually_iff.mp d
   rw [eventually_prod_iff]
   refine'
-    ⟨_, b, fun e : E => Metric.Ball x r e, eventually_mem_set.mpr (metric.nhds_basis_ball.mem_of_mem hr),
+    ⟨_, b, fun e : E => Metric.ball x r e, eventually_mem_set.mpr (metric.nhds_basis_ball.mem_of_mem hr),
       fun n hn y hy => _⟩
   simp only [Pi.zero_apply, dist_zero_left]
   rw [← smul_sub, norm_smul, norm_inv, IsROrC.norm_coe_norm]
@@ -438,9 +438,9 @@ theorem hasFderivAtOfTendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
     (hf : ∀ n : ι, ∀ x : E, HasFderivAt (f n) (f' n x) x) (hfg : ∀ x : E, Tendsto (fun n => f n x) l (𝓝 (g x))) :
     ∀ x : E, HasFderivAt g (g' x) x := by
   intro x
-  have hf : ∀ n : ι, ∀ x : E, x ∈ Set.Univ → HasFderivAt (f n) (f' n x) x := by simp [hf]
-  have hfg : ∀ x : E, x ∈ Set.Univ → tendsto (fun n => f n x) l (𝓝 (g x)) := by simp [hfg]
-  have hf' : TendstoUniformlyOn f' g' l Set.Univ := by rwa [tendsto_uniformly_on_univ]
+  have hf : ∀ n : ι, ∀ x : E, x ∈ Set.univ → HasFderivAt (f n) (f' n x) x := by simp [hf]
+  have hfg : ∀ x : E, x ∈ Set.univ → tendsto (fun n => f n x) l (𝓝 (g x)) := by simp [hfg]
+  have hf' : TendstoUniformlyOn f' g' l Set.univ := by rwa [tendsto_uniformly_on_univ]
   refine' hasFderivAtOfTendstoUniformlyOn is_open_univ hf' hf hfg x (Set.mem_univ x)
 #align has_fderiv_at_of_tendsto_uniformly hasFderivAtOfTendstoUniformly
 
@@ -488,12 +488,12 @@ theorem uniform_cauchy_seq_on_filter_of_deriv (hf' : UniformCauchySeqOnFilter f'
   exact uniform_cauchy_seq_on_filter_of_fderiv hf'.one_smul_right hf hfg
 #align uniform_cauchy_seq_on_filter_of_deriv uniform_cauchy_seq_on_filter_of_deriv
 
-theorem uniform_cauchy_seq_on_ball_of_deriv {r : ℝ} (hf' : UniformCauchySeqOn f' l (Metric.Ball x r))
-    (hf : ∀ n : ι, ∀ y : 𝕜, y ∈ Metric.Ball x r → HasDerivAt (f n) (f' n y) y) (hfg : Cauchy (map (fun n => f n x) l)) :
-    UniformCauchySeqOn f l (Metric.Ball x r) := by
+theorem uniform_cauchy_seq_on_ball_of_deriv {r : ℝ} (hf' : UniformCauchySeqOn f' l (Metric.ball x r))
+    (hf : ∀ n : ι, ∀ y : 𝕜, y ∈ Metric.ball x r → HasDerivAt (f n) (f' n y) y) (hfg : Cauchy (map (fun n => f n x) l)) :
+    UniformCauchySeqOn f l (Metric.ball x r) := by
   simp_rw [has_deriv_at_iff_has_fderiv_at] at hf
   rw [uniform_cauchy_seq_on_iff_uniform_cauchy_seq_on_filter] at hf'
-  have hf' : UniformCauchySeqOn (fun n => fun z => (1 : 𝕜 →L[𝕜] 𝕜).smul_right (f' n z)) l (Metric.Ball x r) := by
+  have hf' : UniformCauchySeqOn (fun n => fun z => (1 : 𝕜 →L[𝕜] 𝕜).smul_right (f' n z)) l (Metric.ball x r) := by
     rw [uniform_cauchy_seq_on_iff_uniform_cauchy_seq_on_filter]
     exact hf'.one_smul_right
   exact uniform_cauchy_seq_on_ball_of_fderiv hf' hf hfg
@@ -546,9 +546,9 @@ theorem hasDerivAtOfTendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
     (hf : ∀ n : ι, ∀ x : 𝕜, HasDerivAt (f n) (f' n x) x) (hfg : ∀ x : 𝕜, Tendsto (fun n => f n x) l (𝓝 (g x))) :
     ∀ x : 𝕜, HasDerivAt g (g' x) x := by
   intro x
-  have hf : ∀ n : ι, ∀ x : 𝕜, x ∈ Set.Univ → HasDerivAt (f n) (f' n x) x := by simp [hf]
-  have hfg : ∀ x : 𝕜, x ∈ Set.Univ → tendsto (fun n => f n x) l (𝓝 (g x)) := by simp [hfg]
-  have hf' : TendstoUniformlyOn f' g' l Set.Univ := by rwa [tendsto_uniformly_on_univ]
+  have hf : ∀ n : ι, ∀ x : 𝕜, x ∈ Set.univ → HasDerivAt (f n) (f' n x) x := by simp [hf]
+  have hfg : ∀ x : 𝕜, x ∈ Set.univ → tendsto (fun n => f n x) l (𝓝 (g x)) := by simp [hfg]
+  have hf' : TendstoUniformlyOn f' g' l Set.univ := by rwa [tendsto_uniformly_on_univ]
   exact hasDerivAtOfTendstoUniformlyOn is_open_univ hf' hf hfg x (Set.mem_univ x)
 #align has_deriv_at_of_tendsto_uniformly hasDerivAtOfTendstoUniformly
 

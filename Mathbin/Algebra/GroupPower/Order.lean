@@ -347,7 +347,7 @@ theorem pow_lt_pow_of_lt_left (h : x < y) (hx : 0 ≤ x) : ∀ {n : ℕ}, 0 < n 
       mul_lt_mul_of_le_of_le' (pow_le_pow_of_le_left hx h.le _) h (pow_pos (hx.trans_lt h) _) hx
 #align pow_lt_pow_of_lt_left pow_lt_pow_of_lt_left
 
-theorem strict_mono_on_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.IciCat 0) := fun x hx y hy h =>
+theorem strict_mono_on_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.ici 0) := fun x hx y hy h =>
   pow_lt_pow_of_lt_left h hx hn
 #align strict_mono_on_pow strict_mono_on_pow
 

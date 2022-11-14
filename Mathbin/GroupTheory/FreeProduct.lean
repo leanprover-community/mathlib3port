@@ -151,7 +151,7 @@ theorem lift_of {N} [Monoid N] (fi : ∀ i, M i →* N) {i} (m : M i) : lift fi 
 @[elab_as_elim]
 theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C 1) (h_of : ∀ (i) (m : M i), C (of m))
     (h_mul : ∀ x y, C x → C y → C (x * y)) : C m := by
-  let S : Submonoid (FreeProduct M) := Submonoid.mk (SetOf C) h_mul h_one
+  let S : Submonoid (FreeProduct M) := Submonoid.mk (setOf C) h_mul h_one
   convert Subtype.prop (lift (fun i => of.cod_restrict S (h_of i)) m)
   change MonoidHom.id _ m = S.subtype.comp _ m
   congr

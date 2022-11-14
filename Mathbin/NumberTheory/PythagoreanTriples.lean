@@ -272,7 +272,7 @@ theorem coprime_of_coprime (hc : Int.gcd x y = 1) : Int.gcd y z = 1 := by
   apply Nat.dvd_gcd (Int.Prime.dvd_nat_abs_of_coe_dvd_sq hp _ _) hpy
   rw [sq, eq_sub_of_add_eq h]
   rw [← Int.coe_nat_dvd_left] at hpy hpz
-  exact dvd_sub (hpz.mul_right _) (hpy.mul_right _)
+  exact dvd_sub (hpz.mulRight _) (hpy.mulRight _)
 #align pythagorean_triple.coprime_of_coprime PythagoreanTriple.coprime_of_coprime
 
 end PythagoreanTriple
@@ -405,7 +405,7 @@ private theorem coprime_sq_sub_mul_of_even_odd {m n : ℤ} (h : Int.gcd m n = 1)
   apply Int.Prime.dvd_mul' hp
   rw [(by ring : m * m = m ^ 2 - n ^ 2 + n * n)]
   apply dvd_add hp1
-  exact (int.coe_nat_dvd_left.mpr hpn).mul_right n
+  exact (int.coe_nat_dvd_left.mpr hpn).mulRight n
 #align coprime_sq_sub_mul_of_even_odd coprime_sq_sub_mul_of_even_odd
 
 private theorem coprime_sq_sub_mul_of_odd_even {m n : ℤ} (h : Int.gcd m n = 1) (hm : m % 2 = 1) (hn : n % 2 = 0) :

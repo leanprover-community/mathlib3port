@@ -376,7 +376,7 @@ protected theorem IsHilbertSum.linear_isometry_equiv_apply_dfinsupp_sum_single (
 /-- Given a total orthonormal family `v : ι → E`, `E` is a Hilbert sum of `λ i : ι, 𝕜` relative to
 the family of linear isometries `λ i, λ k, k • v i`. -/
 theorem Orthonormal.isHilbertSum {v : ι → E} (hv : Orthonormal 𝕜 v)
-    (hsp : ⊤ ≤ (span 𝕜 (Set.Range v)).topologicalClosure) :
+    (hsp : ⊤ ≤ (span 𝕜 (Set.range v)).topologicalClosure) :
     @IsHilbertSum _ 𝕜 _ _ _ _ (fun i : ι => 𝕜) _ fun i => LinearIsometry.toSpanSingleton 𝕜 E (hv.1 i) :=
   IsHilbertSum.mk hv.OrthogonalFamily
     (by
@@ -467,7 +467,7 @@ protected theorem has_sum_repr (b : HilbertBasis ι 𝕜 E) (x : E) : HasSum (fu
 #align hilbert_basis.has_sum_repr HilbertBasis.has_sum_repr
 
 @[simp]
-protected theorem dense_span (b : HilbertBasis ι 𝕜 E) : (span 𝕜 (Set.Range b)).topologicalClosure = ⊤ := by
+protected theorem dense_span (b : HilbertBasis ι 𝕜 E) : (span 𝕜 (Set.range b)).topologicalClosure = ⊤ := by
   classical rw [eq_top_iff]
     refine' mem_closure_of_tendsto (b.has_sum_repr x) (eventually_of_forall _)
     simp only [SetLike.mem_coe]
@@ -514,7 +514,7 @@ protected theorem has_sum_orthogonal_projection {U : Submodule 𝕜 E} [Complete
 #align hilbert_basis.has_sum_orthogonal_projection HilbertBasis.has_sum_orthogonal_projection
 
 theorem finite_spans_dense (b : HilbertBasis ι 𝕜 E) :
-    (⨆ J : Finset ι, span 𝕜 (J.Image b : Set E)).topologicalClosure = ⊤ :=
+    (⨆ J : Finset ι, span 𝕜 (J.image b : Set E)).topologicalClosure = ⊤ :=
   eq_top_iff.mpr <|
     b.dense_span.ge.trans
       (by
@@ -532,7 +532,7 @@ variable {v : ι → E} (hv : Orthonormal 𝕜 v)
 include hv cplt
 
 /-- An orthonormal family of vectors whose span is dense in the whole module is a Hilbert basis. -/
-protected def mk (hsp : ⊤ ≤ (span 𝕜 (Set.Range v)).topologicalClosure) : HilbertBasis ι 𝕜 E :=
+protected def mk (hsp : ⊤ ≤ (span 𝕜 (Set.range v)).topologicalClosure) : HilbertBasis ι 𝕜 E :=
   HilbertBasis.of_repr <| (hv.IsHilbertSum hsp).LinearIsometryEquiv
 #align hilbert_basis.mk HilbertBasis.mk
 
@@ -543,18 +543,18 @@ theorem _root_.orthonormal.linear_isometry_equiv_symm_apply_single_one (h i) :
   hilbert_basis._root_.orthonormal.linear_isometry_equiv_symm_apply_single_one hilbert_basis._root_.orthonormal.linear_isometry_equiv_symm_apply_single_one
 
 @[simp]
-protected theorem coe_mk (hsp : ⊤ ≤ (span 𝕜 (Set.Range v)).topologicalClosure) : ⇑(HilbertBasis.mk hv hsp) = v := by
+protected theorem coe_mk (hsp : ⊤ ≤ (span 𝕜 (Set.range v)).topologicalClosure) : ⇑(HilbertBasis.mk hv hsp) = v := by
   apply funext <| Orthonormal.linear_isometry_equiv_symm_apply_single_one hv hsp
 #align hilbert_basis.coe_mk HilbertBasis.coe_mk
 
 /-- An orthonormal family of vectors whose span has trivial orthogonal complement is a Hilbert
 basis. -/
-protected def mkOfOrthogonalEqBot (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) : HilbertBasis ι 𝕜 E :=
+protected def mkOfOrthogonalEqBot (hsp : (span 𝕜 (Set.range v))ᗮ = ⊥) : HilbertBasis ι 𝕜 E :=
   HilbertBasis.mk hv (by rw [← orthogonal_orthogonal_eq_closure, ← eq_top_iff, orthogonal_eq_top_iff, hsp])
 #align hilbert_basis.mk_of_orthogonal_eq_bot HilbertBasis.mkOfOrthogonalEqBot
 
 @[simp]
-protected theorem coe_of_orthogonal_eq_bot_mk (hsp : (span 𝕜 (Set.Range v))ᗮ = ⊥) :
+protected theorem coe_of_orthogonal_eq_bot_mk (hsp : (span 𝕜 (Set.range v))ᗮ = ⊥) :
     ⇑(HilbertBasis.mkOfOrthogonalEqBot hv hsp) = v :=
   HilbertBasis.coe_mk hv _
 #align hilbert_basis.coe_of_orthogonal_eq_bot_mk HilbertBasis.coe_of_orthogonal_eq_bot_mk

@@ -107,26 +107,26 @@ protected def rec (C : Alexandroff X → Sort _) (h₁ : C ∞) (h₂ : ∀ x : 
   Option.rec h₁ h₂
 #align alexandroff.rec Alexandroff.rec
 
-theorem is_compl_range_coe_infty : IsCompl (Range (coe : X → Alexandroff X)) {∞} :=
+theorem is_compl_range_coe_infty : IsCompl (range (coe : X → Alexandroff X)) {∞} :=
   is_compl_range_some_none X
 #align alexandroff.is_compl_range_coe_infty Alexandroff.is_compl_range_coe_infty
 
 @[simp]
-theorem range_coe_union_infty : Range (coe : X → Alexandroff X) ∪ {∞} = univ :=
+theorem range_coe_union_infty : range (coe : X → Alexandroff X) ∪ {∞} = univ :=
   range_some_union_none X
 #align alexandroff.range_coe_union_infty Alexandroff.range_coe_union_infty
 
 @[simp]
-theorem range_coe_inter_infty : Range (coe : X → Alexandroff X) ∩ {∞} = ∅ :=
+theorem range_coe_inter_infty : range (coe : X → Alexandroff X) ∩ {∞} = ∅ :=
   range_some_inter_none X
 #align alexandroff.range_coe_inter_infty Alexandroff.range_coe_inter_infty
 
 @[simp]
-theorem compl_range_coe : Range (coe : X → Alexandroff X)ᶜ = {∞} :=
+theorem compl_range_coe : range (coe : X → Alexandroff X)ᶜ = {∞} :=
   compl_range_some X
 #align alexandroff.compl_range_coe Alexandroff.compl_range_coe
 
-theorem compl_infty : ({∞}ᶜ : Set (Alexandroff X)) = Range (coe : X → Alexandroff X) :=
+theorem compl_infty : ({∞}ᶜ : Set (Alexandroff X)) = range (coe : X → Alexandroff X) :=
   (@is_compl_range_coe_infty X).symm.compl_eq
 #align alexandroff.compl_infty Alexandroff.compl_infty
 
@@ -142,11 +142,11 @@ instance canLift : CanLift (Alexandroff X) X coe fun x => x ≠ ∞ :=
   WithTop.canLift
 #align alexandroff.can_lift Alexandroff.canLift
 
-theorem not_mem_range_coe_iff {x : Alexandroff X} : x ∉ Range (coe : X → Alexandroff X) ↔ x = ∞ := by
+theorem not_mem_range_coe_iff {x : Alexandroff X} : x ∉ range (coe : X → Alexandroff X) ↔ x = ∞ := by
   rw [← mem_compl_iff, compl_range_coe, mem_singleton_iff]
 #align alexandroff.not_mem_range_coe_iff Alexandroff.not_mem_range_coe_iff
 
-theorem infty_not_mem_range_coe : ∞ ∉ Range (coe : X → Alexandroff X) :=
+theorem infty_not_mem_range_coe : ∞ ∉ range (coe : X → Alexandroff X) :=
   not_mem_range_coe_iff.2 rfl
 #align alexandroff.infty_not_mem_range_coe Alexandroff.infty_not_mem_range_coe
 
@@ -258,7 +258,7 @@ theorem open_embedding_coe : OpenEmbedding (coe : X → Alexandroff X) :=
   open_embedding_of_continuous_injective_open continuous_coe coe_injective is_open_map_coe
 #align alexandroff.open_embedding_coe Alexandroff.open_embedding_coe
 
-theorem is_open_range_coe : IsOpen (Range (coe : X → Alexandroff X)) :=
+theorem is_open_range_coe : IsOpen (range (coe : X → Alexandroff X)) :=
   open_embedding_coe.open_range
 #align alexandroff.is_open_range_coe Alexandroff.is_open_range_coe
 
@@ -445,7 +445,7 @@ instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) := by
     intro z
     rcases exists_open_with_compact_closure z with ⟨u, hu, huy', Hu⟩
     exact
-      ⟨coe '' u, (coe '' Closure u)ᶜ, is_open_image_coe.2 hu, is_open_compl_image_coe.2 ⟨isClosedClosure, Hu⟩,
+      ⟨coe '' u, (coe '' closure u)ᶜ, is_open_image_coe.2 hu, is_open_compl_image_coe.2 ⟨isClosedClosure, Hu⟩,
         mem_image_of_mem _ huy', mem_compl infty_not_mem_image_coe,
         (image_subset _ subset_closure).disjoint_compl_right⟩
   refine' @normalOfCompactT2 _ _ _ ⟨fun x y hxy => _⟩

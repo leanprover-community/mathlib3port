@@ -176,7 +176,7 @@ theorem TendstoUniformly.tendsto_at (h : TendstoUniformly F f p) (x : α) : Tend
   h.TendstoUniformlyOnFilter.tendsto_at le_top
 #align tendsto_uniformly.tendsto_at TendstoUniformly.tendsto_at
 
-theorem tendsto_uniformly_on_univ : TendstoUniformlyOn F f p Univ ↔ TendstoUniformly F f p := by
+theorem tendsto_uniformly_on_univ : TendstoUniformlyOn F f p univ ↔ TendstoUniformly F f p := by
   simp [TendstoUniformlyOn, TendstoUniformly]
 #align tendsto_uniformly_on_univ tendsto_uniformly_on_univ
 
@@ -358,7 +358,7 @@ theorem Filter.Tendsto.tendsto_uniformly_on_const {g : ι → β} {b : β} (hg :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem UniformContinuousOn.tendsto_uniformly [UniformSpace α] [UniformSpace γ] {x : α} {U : Set α} (hU : U ∈ 𝓝 x)
-    {F : α → β → γ} (hF : UniformContinuousOn (↿F) (U ×ˢ (Univ : Set β))) : TendstoUniformly F (F x) (𝓝 x) := by
+    {F : α → β → γ} (hF : UniformContinuousOn (↿F) (U ×ˢ (univ : Set β))) : TendstoUniformly F (F x) (𝓝 x) := by
   let φ := fun q : α × β => ((x, q.2), q)
   rw [tendsto_uniformly_iff_tendsto,
     show (fun q : α × β => (F x q.2, F q.1 q.2)) = Prod.map (↿F) ↿F ∘ φ by ext <;> simpa]
@@ -642,7 +642,7 @@ protected theorem TendstoUniformlyOn.tendsto_locally_uniformly_on (h : TendstoUn
 #align tendsto_uniformly_on.tendsto_locally_uniformly_on TendstoUniformlyOn.tendsto_locally_uniformly_on
 
 protected theorem TendstoUniformly.tendsto_locally_uniformly (h : TendstoUniformly F f p) :
-    TendstoLocallyUniformly F f p := fun u hu x => ⟨Univ, univ_mem, by simpa using h u hu⟩
+    TendstoLocallyUniformly F f p := fun u hu x => ⟨univ, univ_mem, by simpa using h u hu⟩
 #align tendsto_uniformly.tendsto_locally_uniformly TendstoUniformly.tendsto_locally_uniformly
 
 theorem TendstoLocallyUniformlyOn.mono (h : TendstoLocallyUniformlyOn F f p s) (h' : s' ⊆ s) :
@@ -680,7 +680,7 @@ theorem TendstoLocallyUniformlyOn.union {s₁ s₂ : Set α} (hs₁ : IsOpen s�
   refine' tendsto_locally_uniformly_on_sUnion _ _ _ <;> simp [*]
 #align tendsto_locally_uniformly_on.union TendstoLocallyUniformlyOn.union
 
-theorem tendsto_locally_uniformly_on_univ : TendstoLocallyUniformlyOn F f p Univ ↔ TendstoLocallyUniformly F f p := by
+theorem tendsto_locally_uniformly_on_univ : TendstoLocallyUniformlyOn F f p univ ↔ TendstoLocallyUniformly F f p := by
   simp [TendstoLocallyUniformlyOn, TendstoLocallyUniformly, nhds_within_univ]
 #align tendsto_locally_uniformly_on_univ tendsto_locally_uniformly_on_univ
 
@@ -748,9 +748,9 @@ theorem continuous_within_at_of_locally_uniform_approx_of_continuous_within_at (
     (L : ∀ u ∈ 𝓤 β, ∃ t ∈ 𝓝[s] x, ∃ F : α → β, ContinuousWithinAt F s x ∧ ∀ y ∈ t, (f y, F y) ∈ u) :
     ContinuousWithinAt f s x := by
   apply Uniform.continuous_within_at_iff'_left.2 fun u₀ hu₀ => _
-  obtain ⟨u₁, h₁, u₁₀⟩ : ∃ (u : Set (β × β))(H : u ∈ 𝓤 β), CompRel u u ⊆ u₀ := comp_mem_uniformity_sets hu₀
+  obtain ⟨u₁, h₁, u₁₀⟩ : ∃ (u : Set (β × β))(H : u ∈ 𝓤 β), compRel u u ⊆ u₀ := comp_mem_uniformity_sets hu₀
   obtain ⟨u₂, h₂, hsymm, u₂₁⟩ :
-    ∃ (u : Set (β × β))(H : u ∈ 𝓤 β), (∀ {a b}, (a, b) ∈ u → (b, a) ∈ u) ∧ CompRel u u ⊆ u₁ :=
+    ∃ (u : Set (β × β))(H : u ∈ 𝓤 β), (∀ {a b}, (a, b) ∈ u → (b, a) ∈ u) ∧ compRel u u ⊆ u₁ :=
     comp_symm_of_uniformity h₁
   rcases L u₂ h₂ with ⟨t, tx, F, hFc, hF⟩
   have A : ∀ᶠ y in 𝓝[s] x, (f y, F y) ∈ u₂ := eventually.mono tx hF
@@ -853,7 +853,7 @@ theorem tendsto_comp_of_locally_uniform_limit_within (h : ContinuousWithinAt f s
     (hunif : ∀ u ∈ 𝓤 β, ∃ t ∈ 𝓝[s] x, ∀ᶠ n in p, ∀ y ∈ t, (f y, F n y) ∈ u) :
     Tendsto (fun n => F n (g n)) p (𝓝 (f x)) := by
   apply Uniform.tendsto_nhds_right.2 fun u₀ hu₀ => _
-  obtain ⟨u₁, h₁, u₁₀⟩ : ∃ (u : Set (β × β))(H : u ∈ 𝓤 β), CompRel u u ⊆ u₀ := comp_mem_uniformity_sets hu₀
+  obtain ⟨u₁, h₁, u₁₀⟩ : ∃ (u : Set (β × β))(H : u ∈ 𝓤 β), compRel u u ⊆ u₀ := comp_mem_uniformity_sets hu₀
   rcases hunif u₁ h₁ with ⟨s, sx, hs⟩
   have A : ∀ᶠ n in p, g n ∈ s := hg sx
   have B : ∀ᶠ n in p, (f x, f (g n)) ∈ u₁ := hg (Uniform.continuous_within_at_iff'_right.1 h h₁)

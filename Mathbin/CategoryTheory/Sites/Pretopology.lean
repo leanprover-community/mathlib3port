@@ -59,9 +59,9 @@ a basis for a topology.
 -/
 @[ext.1]
 structure Pretopology where
-  Coverings : ∀ X : C, Set (Presieve X)
-  has_isos : ∀ ⦃X Y⦄ (f : Y ⟶ X) [IsIso f], Presieve.Singleton f ∈ coverings X
-  pullbacks : ∀ ⦃X Y⦄ (f : Y ⟶ X) (S), S ∈ coverings X → PullbackArrows f S ∈ coverings Y
+  coverings : ∀ X : C, Set (Presieve X)
+  has_isos : ∀ ⦃X Y⦄ (f : Y ⟶ X) [IsIso f], Presieve.singleton f ∈ coverings X
+  pullbacks : ∀ ⦃X Y⦄ (f : Y ⟶ X) (S), S ∈ coverings X → pullbackArrows f S ∈ coverings Y
   Transitive :
     ∀ ⦃X : C⦄ (S : Presieve X) (Ti : ∀ ⦃Y⦄ (f : Y ⟶ X), S f → Presieve Y),
       S ∈ coverings X → (∀ ⦃Y⦄ (f) (H : S f), Ti f H ∈ coverings Y) → S.bind Ti ∈ coverings X
@@ -70,7 +70,7 @@ structure Pretopology where
 namespace Pretopology
 
 instance : CoeFun (Pretopology C) fun _ => ∀ X : C, Set (Presieve X) :=
-  ⟨Coverings⟩
+  ⟨coverings⟩
 
 variable {C}
 
@@ -89,7 +89,7 @@ instance : PartialOrder (Pretopology C) :=
 
 instance : OrderTop (Pretopology C) where
   top :=
-    { Coverings := fun _ => Set.Univ, has_isos := fun _ _ _ _ => Set.mem_univ _,
+    { coverings := fun _ => Set.univ, has_isos := fun _ _ _ _ => Set.mem_univ _,
       pullbacks := fun _ _ _ _ _ => Set.mem_univ _, Transitive := fun _ _ _ _ _ => Set.mem_univ _ }
   le_top K X S hS := Set.mem_univ _
 
@@ -102,8 +102,8 @@ instance : Inhabited (Pretopology C) :=
 See <https://stacks.math.columbia.edu/tag/00ZC>, or [MM92] Chapter III, Section 2, Equation (2).
 -/
 def toGrothendieck (K : Pretopology C) : GrothendieckTopology C where
-  Sieves X S := ∃ R ∈ K X, R ≤ (S : Presieve _)
-  top_mem' X := ⟨Presieve.Singleton (𝟙 _), K.has_isos _, fun _ _ _ => ⟨⟩⟩
+  sieves X S := ∃ R ∈ K X, R ≤ (S : Presieve _)
+  top_mem' X := ⟨Presieve.singleton (𝟙 _), K.has_isos _, fun _ _ _ => ⟨⟩⟩
   pullback_stable' X Y S g := by
     rintro ⟨R, hR, RS⟩
     refine' ⟨_, K.pullbacks g _ hR, _⟩
@@ -127,7 +127,7 @@ theorem mem_to_grothendieck (K : Pretopology C) (X S) : S ∈ toGrothendieck C K
 See [MM92] Chapter III, Section 2, Equations (3,4).
 -/
 def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C where
-  Coverings X R := Sieve.generate R ∈ J X
+  coverings X R := Sieve.generate R ∈ J X
   has_isos X Y f i := J.covering_of_eq_top (by simp)
   pullbacks X Y f R hR := by
     rw [Set.mem_def, sieve.pullback_arrows_comm]
@@ -165,7 +165,7 @@ also known as the indiscrete, coarse, or chaotic topology.
 See <https://stacks.math.columbia.edu/tag/07GE>
 -/
 def trivial : Pretopology C where
-  Coverings X S := ∃ (Y : _)(f : Y ⟶ X)(h : IsIso f), S = Presieve.Singleton f
+  coverings X S := ∃ (Y : _)(f : Y ⟶ X)(h : IsIso f), S = Presieve.singleton f
   has_isos X Y f i := ⟨_, _, i, rfl⟩
   pullbacks X Y f S := by
     rintro ⟨Z, g, i, rfl⟩

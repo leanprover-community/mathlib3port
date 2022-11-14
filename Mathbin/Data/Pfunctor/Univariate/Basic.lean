@@ -225,7 +225,7 @@ theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.Obj α) :
 
 open Set
 
-theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) : @Supp.{u} P.Obj _ α (⟨a, f⟩ : P.Obj α) = f '' univ := by
+theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) : @supp.{u} P.Obj _ α (⟨a, f⟩ : P.Obj α) = f '' univ := by
   ext
   simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h

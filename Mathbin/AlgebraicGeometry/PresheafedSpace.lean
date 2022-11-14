@@ -37,7 +37,7 @@ namespace AlgebraicGeometry
 
 /-- A `PresheafedSpace C` is a topological space equipped with a presheaf of `C`s. -/
 structure PresheafedSpaceCat where
-  Carrier : TopCat.{w}
+  carrier : TopCat.{w}
   Presheaf : carrier.Presheaf C
 #align algebraic_geometry.PresheafedSpace AlgebraicGeometry.PresheafedSpaceCat
 
@@ -47,25 +47,25 @@ namespace PresheafedSpaceCat
 
 attribute [protected] presheaf
 
-instance coeCarrier : Coe (PresheafedSpaceCat.{w, v, u} C) TopCat.{w} where coe X := X.Carrier
+instance coeCarrier : Coe (PresheafedSpaceCat.{w, v, u} C) TopCat.{w} where coe X := X.carrier
 #align algebraic_geometry.PresheafedSpace.coe_carrier AlgebraicGeometry.PresheafedSpaceCat.coeCarrier
 
 @[simp]
-theorem as_coe (X : PresheafedSpaceCat.{w, v, u} C) : X.Carrier = (X : TopCat.{w}) :=
+theorem as_coe (X : PresheafedSpaceCat.{w, v, u} C) : X.carrier = (X : TopCat.{w}) :=
   rfl
 #align algebraic_geometry.PresheafedSpace.as_coe AlgebraicGeometry.PresheafedSpaceCat.as_coe
 
 @[simp]
-theorem mk_coe (carrier) (presheaf) : (({ Carrier, Presheaf } : PresheafedSpaceCat.{v} C) : TopCat.{v}) = carrier :=
+theorem mk_coe (carrier) (presheaf) : (({ carrier, Presheaf } : PresheafedSpaceCat.{v} C) : TopCat.{v}) = carrier :=
   rfl
 #align algebraic_geometry.PresheafedSpace.mk_coe AlgebraicGeometry.PresheafedSpaceCat.mk_coe
 
 instance (X : PresheafedSpaceCat.{v} C) : TopologicalSpace X :=
-  X.Carrier.str
+  X.carrier.str
 
 /-- The constant presheaf on `X` with value `Z`. -/
 def const (X : TopCat) (Z : C) : PresheafedSpaceCat C where
-  Carrier := X
+  carrier := X
   Presheaf := { obj := fun U => Z, map := fun U V f => 𝟙 Z }
 #align algebraic_geometry.PresheafedSpace.const AlgebraicGeometry.PresheafedSpaceCat.const
 
@@ -320,7 +320,7 @@ section Restrict
 @[simps]
 def restrict {U : TopCat} (X : PresheafedSpaceCat.{v, v, u} C) {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) :
     PresheafedSpaceCat C where
-  Carrier := U
+  carrier := U
   Presheaf := h.IsOpenMap.Functor.op ⋙ X.Presheaf
 #align algebraic_geometry.PresheafedSpace.restrict AlgebraicGeometry.PresheafedSpaceCat.restrict
 
@@ -366,7 +366,7 @@ instance of_restrict_mono {U : TopCat} (X : PresheafedSpaceCat C) (f : U ⟶ X.1
 #align algebraic_geometry.PresheafedSpace.of_restrict_mono AlgebraicGeometry.PresheafedSpaceCat.of_restrict_mono
 
 theorem restrict_top_presheaf (X : PresheafedSpaceCat C) :
-    (X.restrict (Opens.open_embedding ⊤)).Presheaf = (Opens.inclusionTopIso X.Carrier).inv _* X.Presheaf := by
+    (X.restrict (Opens.open_embedding ⊤)).Presheaf = (Opens.inclusionTopIso X.carrier).inv _* X.Presheaf := by
   dsimp
   rw [opens.inclusion_top_functor X.carrier]
   rfl
@@ -404,7 +404,7 @@ subspace.
 -/
 @[simps]
 def toRestrictTop (X : PresheafedSpaceCat C) : X ⟶ X.restrict (Opens.open_embedding ⊤) where
-  base := (Opens.inclusionTopIso X.Carrier).inv
+  base := (Opens.inclusionTopIso X.carrier).inv
   c := eqToHom (restrict_top_presheaf X)
 #align algebraic_geometry.PresheafedSpace.to_restrict_top AlgebraicGeometry.PresheafedSpaceCat.toRestrictTop
 
@@ -465,7 +465,7 @@ namespace Functor
 /-- We can apply a functor `F : C ⥤ D` to the values of the presheaf in any `PresheafedSpace C`,
     giving a functor `PresheafedSpace C ⥤ PresheafedSpace D` -/
 def mapPresheaf (F : C ⥤ D) : PresheafedSpaceCat.{v, v, u} C ⥤ PresheafedSpaceCat.{v, v, u} D where
-  obj X := { Carrier := X.Carrier, Presheaf := X.Presheaf ⋙ F }
+  obj X := { carrier := X.carrier, Presheaf := X.Presheaf ⋙ F }
   map X Y f := { base := f.base, c := whiskerRight f.c F }
 #align category_theory.functor.map_presheaf CategoryTheory.Functor.mapPresheaf
 

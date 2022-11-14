@@ -176,7 +176,7 @@ variable (R)
 def zpowLogGi {b : ℕ} (hb : 1 < b) :
     GaloisCoinsertion
       (fun z : ℤ => Subtype.mk ((b : R) ^ z) <| zpow_pos_of_pos (by exact_mod_cast zero_lt_one.trans hb) z)
-      fun r : Set.IoiCat (0 : R) => Int.log b (r : R) :=
+      fun r : Set.ioi (0 : R) => Int.log b (r : R) :=
   GaloisCoinsertion.monotoneIntro (fun r₁ r₂ => log_mono_right r₁.Prop)
     (fun z₁ z₂ hz => Subtype.coe_le_coe.mp <| (zpow_strict_mono <| by exact_mod_cast hb).Monotone hz)
     (fun r => Subtype.coe_le_coe.mp <| zpow_log_le_self hb r.Prop) fun _ => log_zpow hb _
@@ -304,7 +304,7 @@ variable (R)
 
 /-- Over suitable subtypes, `int.clog` and `zpow` form a galois insertion -/
 def clogZpowGi {b : ℕ} (hb : 1 < b) :
-    GaloisInsertion (fun r : Set.IoiCat (0 : R) => Int.clog b (r : R)) fun z : ℤ =>
+    GaloisInsertion (fun r : Set.ioi (0 : R) => Int.clog b (r : R)) fun z : ℤ =>
       ⟨(b : R) ^ z, zpow_pos_of_pos (by exact_mod_cast zero_lt_one.trans hb) z⟩ :=
   GaloisInsertion.monotoneIntro
     (fun z₁ z₂ hz => Subtype.coe_le_coe.mp <| (zpow_strict_mono <| by exact_mod_cast hb).Monotone hz)

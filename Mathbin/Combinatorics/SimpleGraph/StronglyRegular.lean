@@ -47,8 +47,8 @@ variable (G : SimpleGraph V) [DecidableRel G.Adj]
 structure IsSRGWith (n k ℓ μ : ℕ) : Prop where
   card : Fintype.card V = n
   regular : G.IsRegularOfDegree k
-  of_adj : ∀ v w : V, G.Adj v w → Fintype.card (G.CommonNeighbors v w) = ℓ
-  of_not_adj : ∀ v w : V, v ≠ w → ¬G.Adj v w → Fintype.card (G.CommonNeighbors v w) = μ
+  of_adj : ∀ v w : V, G.Adj v w → Fintype.card (G.commonNeighbors v w) = ℓ
+  of_not_adj : ∀ v w : V, v ≠ w → ¬G.Adj v w → Fintype.card (G.commonNeighbors v w) = μ
 #align simple_graph.is_SRG_with SimpleGraph.IsSRGWith
 
 variable {G} {n k ℓ μ : ℕ}
@@ -74,7 +74,7 @@ theorem IsSRGWith.top : (⊤ : SimpleGraph V).IsSRGWith (Fintype.card V) (Fintyp
 #align simple_graph.is_SRG_with.top SimpleGraph.IsSRGWith.top
 
 theorem IsSRGWith.card_neighbor_finset_union_eq {v w : V} (h : G.IsSRGWith n k ℓ μ) :
-    (G.neighborFinset v ∪ G.neighborFinset w).card = 2 * k - Fintype.card (G.CommonNeighbors v w) := by
+    (G.neighborFinset v ∪ G.neighborFinset w).card = 2 * k - Fintype.card (G.commonNeighbors v w) := by
   apply @Nat.add_right_cancel _ (Fintype.card (G.common_neighbors v w))
   rw [Nat.sub_add_cancel, ← Set.to_finset_card]
   · simp [neighbor_finset, common_neighbors, Set.to_finset_inter, Finset.card_union_add_card_inter, h.regular.degree_eq,
@@ -130,7 +130,7 @@ theorem IsSRGWith.compl_is_regular (h : G.IsSRGWith n k ℓ μ) : Gᶜ.IsRegular
 #align simple_graph.is_SRG_with.compl_is_regular SimpleGraph.IsSRGWith.compl_is_regular
 
 theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V} (ha : Gᶜ.Adj v w) :
-    Fintype.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - μ) - 2 := by
+    Fintype.card ↥(Gᶜ.commonNeighbors v w) = n - (2 * k - μ) - 2 := by
   simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_diff,
     Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
   simp_rw [compl_neighbor_finset_sdiff_inter_eq]
@@ -150,7 +150,7 @@ theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ
   simple_graph.is_SRG_with.card_common_neighbors_eq_of_adj_compl SimpleGraph.IsSRGWith.card_common_neighbors_eq_of_adj_compl
 
 theorem IsSRGWith.card_common_neighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V} (hn : v ≠ w)
-    (hna : ¬Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - ℓ) := by
+    (hna : ¬Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.commonNeighbors v w) = n - (2 * k - ℓ) := by
   simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_diff,
     Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
   simp only [not_and, not_not, compl_adj] at hna

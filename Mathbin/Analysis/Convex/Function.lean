@@ -486,7 +486,7 @@ theorem ConcaveOn.convex_gt (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({ 
 #align concave_on.convex_gt ConcaveOn.convex_gt
 
 theorem ConvexOn.open_segment_subset_strict_epigraph (hf : ConvexOn 𝕜 s f) (p q : E × β) (hp : p.1 ∈ s ∧ f p.1 < p.2)
-    (hq : q.1 ∈ s ∧ f q.1 ≤ q.2) : OpenSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } := by
+    (hq : q.1 ∈ s ∧ f q.1 ≤ q.2) : openSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } := by
   rintro _ ⟨a, b, ha, hb, hab, rfl⟩
   refine' ⟨hf.1 hp.1 hq.1 ha.le hb.le hab, _⟩
   calc
@@ -496,7 +496,7 @@ theorem ConvexOn.open_segment_subset_strict_epigraph (hf : ConvexOn 𝕜 s f) (p
 #align convex_on.open_segment_subset_strict_epigraph ConvexOn.open_segment_subset_strict_epigraph
 
 theorem ConcaveOn.open_segment_subset_strict_hypograph (hf : ConcaveOn 𝕜 s f) (p q : E × β) (hp : p.1 ∈ s ∧ p.2 < f p.1)
-    (hq : q.1 ∈ s ∧ q.2 ≤ f q.1) : OpenSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
+    (hq : q.1 ∈ s ∧ q.2 ≤ f q.1) : openSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
   hf.dual.open_segment_subset_strict_epigraph p q hp hq
 #align concave_on.open_segment_subset_strict_hypograph ConcaveOn.open_segment_subset_strict_hypograph
 
@@ -611,7 +611,7 @@ theorem StrictConcaveOn.lt_on_open_segment' (hf : StrictConcaveOn 𝕜 s f) {x y
 /-- A strictly convex function on an open segment is strictly upper-bounded by the max of its
 endpoints. -/
 theorem StrictConvexOn.lt_on_open_segment (hf : StrictConvexOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hxy : x ≠ y) (hz : z ∈ OpenSegment 𝕜 x y) : f z < max (f x) (f y) :=
+    (hxy : x ≠ y) (hz : z ∈ openSegment 𝕜 x y) : f z < max (f x) (f y) :=
   let ⟨a, b, ha, hb, hab, hz⟩ := hz
   hz ▸ hf.lt_on_open_segment' hx hy hxy ha hb hab
 #align strict_convex_on.lt_on_open_segment StrictConvexOn.lt_on_open_segment
@@ -619,7 +619,7 @@ theorem StrictConvexOn.lt_on_open_segment (hf : StrictConvexOn 𝕜 s f) {x y z 
 /-- A strictly concave function on an open segment is strictly lower-bounded by the min of its
 endpoints. -/
 theorem StrictConcaveOn.lt_on_open_segment (hf : StrictConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hxy : x ≠ y) (hz : z ∈ OpenSegment 𝕜 x y) : min (f x) (f y) < f z :=
+    (hxy : x ≠ y) (hz : z ∈ openSegment 𝕜 x y) : min (f x) (f y) < f z :=
   hf.dual.lt_on_open_segment hx hy hxy hz
 #align strict_concave_on.lt_on_open_segment StrictConcaveOn.lt_on_open_segment
 
@@ -662,24 +662,24 @@ theorem ConcaveOn.right_le_of_le_left' (hf : ConcaveOn 𝕜 s f) {x y : E} {a b 
 #align concave_on.right_le_of_le_left' ConcaveOn.right_le_of_le_left'
 
 theorem ConvexOn.le_left_of_right_le (hf : ConvexOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hz : z ∈ OpenSegment 𝕜 x y) (hyz : f y ≤ f z) : f z ≤ f x := by
+    (hz : z ∈ openSegment 𝕜 x y) (hyz : f y ≤ f z) : f z ≤ f x := by
   obtain ⟨a, b, ha, hb, hab, rfl⟩ := hz
   exact hf.le_left_of_right_le' hx hy ha hb.le hab hyz
 #align convex_on.le_left_of_right_le ConvexOn.le_left_of_right_le
 
 theorem ConcaveOn.left_le_of_le_right (hf : ConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hz : z ∈ OpenSegment 𝕜 x y) (hyz : f z ≤ f y) : f x ≤ f z :=
+    (hz : z ∈ openSegment 𝕜 x y) (hyz : f z ≤ f y) : f x ≤ f z :=
   hf.dual.le_left_of_right_le hx hy hz hyz
 #align concave_on.left_le_of_le_right ConcaveOn.left_le_of_le_right
 
 theorem ConvexOn.le_right_of_left_le (hf : ConvexOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hz : z ∈ OpenSegment 𝕜 x y) (hxz : f x ≤ f z) : f z ≤ f y := by
+    (hz : z ∈ openSegment 𝕜 x y) (hxz : f x ≤ f z) : f z ≤ f y := by
   obtain ⟨a, b, ha, hb, hab, rfl⟩ := hz
   exact hf.le_right_of_left_le' hx hy ha.le hb hab hxz
 #align convex_on.le_right_of_left_le ConvexOn.le_right_of_left_le
 
 theorem ConcaveOn.right_le_of_le_left (hf : ConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hz : z ∈ OpenSegment 𝕜 x y) (hxz : f z ≤ f x) : f y ≤ f z :=
+    (hz : z ∈ openSegment 𝕜 x y) (hxz : f z ≤ f x) : f y ≤ f z :=
   hf.dual.le_right_of_left_le hx hy hz hxz
 #align concave_on.right_le_of_le_left ConcaveOn.right_le_of_le_left
 
@@ -726,24 +726,24 @@ theorem StrictConcaveOn.lt_right_of_left_lt' (hf : StrictConcaveOn 𝕜 s f) {x 
 #align strict_concave_on.lt_right_of_left_lt' StrictConcaveOn.lt_right_of_left_lt'
 
 theorem StrictConvexOn.lt_left_of_right_lt (hf : StrictConvexOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hz : z ∈ OpenSegment 𝕜 x y) (hyz : f y < f z) : f z < f x := by
+    (hz : z ∈ openSegment 𝕜 x y) (hyz : f y < f z) : f z < f x := by
   obtain ⟨a, b, ha, hb, hab, rfl⟩ := hz
   exact hf.lt_left_of_right_lt' hx hy ha hb hab hyz
 #align strict_convex_on.lt_left_of_right_lt StrictConvexOn.lt_left_of_right_lt
 
 theorem StrictConcaveOn.left_lt_of_lt_right (hf : StrictConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hz : z ∈ OpenSegment 𝕜 x y) (hyz : f z < f y) : f x < f z :=
+    (hz : z ∈ openSegment 𝕜 x y) (hyz : f z < f y) : f x < f z :=
   hf.dual.lt_left_of_right_lt hx hy hz hyz
 #align strict_concave_on.left_lt_of_lt_right StrictConcaveOn.left_lt_of_lt_right
 
 theorem StrictConvexOn.lt_right_of_left_lt (hf : StrictConvexOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hz : z ∈ OpenSegment 𝕜 x y) (hxz : f x < f z) : f z < f y := by
+    (hz : z ∈ openSegment 𝕜 x y) (hxz : f x < f z) : f z < f y := by
   obtain ⟨a, b, ha, hb, hab, rfl⟩ := hz
   exact hf.lt_right_of_left_lt' hx hy ha hb hab hxz
 #align strict_convex_on.lt_right_of_left_lt StrictConvexOn.lt_right_of_left_lt
 
 theorem StrictConcaveOn.lt_right_of_left_lt (hf : StrictConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s) (hy : y ∈ s)
-    (hz : z ∈ OpenSegment 𝕜 x y) (hxz : f z < f x) : f y < f z :=
+    (hz : z ∈ openSegment 𝕜 x y) (hxz : f z < f x) : f y < f z :=
   hf.dual.lt_right_of_left_lt hx hy hz hxz
 #align strict_concave_on.lt_right_of_left_lt StrictConcaveOn.lt_right_of_left_lt
 

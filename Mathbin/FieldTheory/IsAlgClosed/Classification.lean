@@ -95,7 +95,7 @@ variable {κ : Type _} (w : κ → L)
 variable (hv : AlgebraicIndependent R v)
 
 theorem isAlgClosureOfTranscendenceBasis [IsAlgClosed K] (hv : IsTranscendenceBasis R v) :
-    IsAlgClosure (Algebra.adjoin R (Set.Range v)) K :=
+    IsAlgClosure (Algebra.adjoin R (Set.range v)) K :=
   letI := RingHom.domain_nontrivial (algebraMap R K)
   { algClosed := by infer_instance, algebraic := hv.is_algebraic }
 #align is_alg_closed.is_alg_closure_of_transcendence_basis IsAlgClosed.isAlgClosureOfTranscendenceBasis
@@ -109,7 +109,7 @@ def equivOfTranscendenceBasis [IsAlgClosed K] [IsAlgClosed L] (e : ι ≃ κ) (h
     (hw : IsTranscendenceBasis R w) : K ≃+* L := by
   letI := is_alg_closure_of_transcendence_basis v hv <;>
     letI := is_alg_closure_of_transcendence_basis w hw <;>
-      have e : Algebra.adjoin R (Set.Range v) ≃+* Algebra.adjoin R (Set.Range w)
+      have e : Algebra.adjoin R (Set.range v) ≃+* Algebra.adjoin R (Set.range w)
   · refine' hv.1.aevalEquiv.symm.toRingEquiv.trans _
     refine' (AlgEquiv.ofAlgHom (MvPolynomial.rename e) (MvPolynomial.rename e.symm) _ _).toRingEquiv.trans _
     · ext
@@ -137,7 +137,7 @@ variable (hv : IsTranscendenceBasis R v)
 
 theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) : (#K) ≤ max (max (#R) (#ι)) ℵ₀ :=
   calc
-    (#K) ≤ max (#Algebra.adjoin R (Set.Range v)) ℵ₀ :=
+    (#K) ≤ max (#Algebra.adjoin R (Set.range v)) ℵ₀ :=
       letI := is_alg_closure_of_transcendence_basis v hv
       Algebra.IsAlgebraic.cardinal_mk_le_max _ _ IsAlgClosure.algebraic
     _ = max (#MvPolynomial ι R) ℵ₀ := by rw [Cardinal.eq.2 ⟨hv.1.aevalEquiv.toEquiv⟩]

@@ -119,12 +119,12 @@ theorem rightInv {f : α → β} {g : β → α} (h : Isometry f) (hg : RightInv
 #align isometry.right_inv Isometry.rightInv
 
 theorem preimage_emetric_closed_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) :
-    f ⁻¹' Emetric.ClosedBall (f x) r = Emetric.ClosedBall x r := by
+    f ⁻¹' Emetric.closedBall (f x) r = Emetric.closedBall x r := by
   ext y
   simp [h.edist_eq]
 #align isometry.preimage_emetric_closed_ball Isometry.preimage_emetric_closed_ball
 
-theorem preimage_emetric_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) : f ⁻¹' Emetric.Ball (f x) r = Emetric.Ball x r := by
+theorem preimage_emetric_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) : f ⁻¹' Emetric.ball (f x) r = Emetric.ball x r := by
   ext y
   simp [h.edist_eq]
 #align isometry.preimage_emetric_ball Isometry.preimage_emetric_ball
@@ -134,18 +134,18 @@ theorem ediam_image (hf : Isometry f) (s : Set α) : Emetric.diam (f '' s) = Eme
   eq_of_forall_ge_iff fun d => by simp only [Emetric.diam_le_iff, ball_image_iff, hf.edist_eq]
 #align isometry.ediam_image Isometry.ediam_image
 
-theorem ediam_range (hf : Isometry f) : Emetric.diam (Range f) = Emetric.diam (Univ : Set α) := by
+theorem ediam_range (hf : Isometry f) : Emetric.diam (range f) = Emetric.diam (univ : Set α) := by
   rw [← image_univ]
   exact hf.ediam_image univ
 #align isometry.ediam_range Isometry.ediam_range
 
 theorem maps_to_emetric_ball (hf : Isometry f) (x : α) (r : ℝ≥0∞) :
-    MapsTo f (Emetric.Ball x r) (Emetric.Ball (f x) r) :=
+    MapsTo f (Emetric.ball x r) (Emetric.ball (f x) r) :=
   (hf.preimage_emetric_ball x r).ge
 #align isometry.maps_to_emetric_ball Isometry.maps_to_emetric_ball
 
 theorem maps_to_emetric_closed_ball (hf : Isometry f) (x : α) (r : ℝ≥0∞) :
-    MapsTo f (Emetric.ClosedBall x r) (Emetric.ClosedBall (f x) r) :=
+    MapsTo f (Emetric.closedBall x r) (Emetric.closedBall (f x) r) :=
   (hf.preimage_emetric_closed_ball x r).ge
 #align isometry.maps_to_emetric_closed_ball Isometry.maps_to_emetric_closed_ball
 
@@ -202,7 +202,7 @@ theorem diam_image (hf : Isometry f) (s : Set α) : Metric.diam (f '' s) = Metri
   rw [Metric.diam, Metric.diam, hf.ediam_image]
 #align isometry.diam_image Isometry.diam_image
 
-theorem diam_range (hf : Isometry f) : Metric.diam (Range f) = Metric.diam (Univ : Set α) := by
+theorem diam_range (hf : Isometry f) : Metric.diam (range f) = Metric.diam (univ : Set α) := by
   rw [← image_univ]
   exact hf.diam_image univ
 #align isometry.diam_range Isometry.diam_range
@@ -214,28 +214,28 @@ theorem preimage_set_of_dist (hf : Isometry f) (x : α) (p : ℝ → Prop) :
 #align isometry.preimage_set_of_dist Isometry.preimage_set_of_dist
 
 theorem preimage_closed_ball (hf : Isometry f) (x : α) (r : ℝ) :
-    f ⁻¹' Metric.ClosedBall (f x) r = Metric.ClosedBall x r :=
+    f ⁻¹' Metric.closedBall (f x) r = Metric.closedBall x r :=
   hf.preimage_set_of_dist x (· ≤ r)
 #align isometry.preimage_closed_ball Isometry.preimage_closed_ball
 
-theorem preimage_ball (hf : Isometry f) (x : α) (r : ℝ) : f ⁻¹' Metric.Ball (f x) r = Metric.Ball x r :=
+theorem preimage_ball (hf : Isometry f) (x : α) (r : ℝ) : f ⁻¹' Metric.ball (f x) r = Metric.ball x r :=
   hf.preimage_set_of_dist x (· < r)
 #align isometry.preimage_ball Isometry.preimage_ball
 
-theorem preimage_sphere (hf : Isometry f) (x : α) (r : ℝ) : f ⁻¹' Metric.Sphere (f x) r = Metric.Sphere x r :=
+theorem preimage_sphere (hf : Isometry f) (x : α) (r : ℝ) : f ⁻¹' Metric.sphere (f x) r = Metric.sphere x r :=
   hf.preimage_set_of_dist x (· = r)
 #align isometry.preimage_sphere Isometry.preimage_sphere
 
-theorem maps_to_ball (hf : Isometry f) (x : α) (r : ℝ) : MapsTo f (Metric.Ball x r) (Metric.Ball (f x) r) :=
+theorem maps_to_ball (hf : Isometry f) (x : α) (r : ℝ) : MapsTo f (Metric.ball x r) (Metric.ball (f x) r) :=
   (hf.preimage_ball x r).ge
 #align isometry.maps_to_ball Isometry.maps_to_ball
 
-theorem maps_to_sphere (hf : Isometry f) (x : α) (r : ℝ) : MapsTo f (Metric.Sphere x r) (Metric.Sphere (f x) r) :=
+theorem maps_to_sphere (hf : Isometry f) (x : α) (r : ℝ) : MapsTo f (Metric.sphere x r) (Metric.sphere (f x) r) :=
   (hf.preimage_sphere x r).ge
 #align isometry.maps_to_sphere Isometry.maps_to_sphere
 
 theorem maps_to_closed_ball (hf : Isometry f) (x : α) (r : ℝ) :
-    MapsTo f (Metric.ClosedBall x r) (Metric.ClosedBall (f x) r) :=
+    MapsTo f (Metric.closedBall x r) (Metric.closedBall (f x) r) :=
   (hf.preimage_closed_ball x r).ge
 #align isometry.maps_to_closed_ball Isometry.maps_to_closed_ball
 
@@ -423,15 +423,15 @@ theorem self_comp_symm (h : α ≃ᵢ β) : ⇑h ∘ ⇑h.symm = id :=
 #align isometric.self_comp_symm Isometric.self_comp_symm
 
 @[simp]
-theorem range_eq_univ (h : α ≃ᵢ β) : Range h = univ :=
+theorem range_eq_univ (h : α ≃ᵢ β) : range h = univ :=
   h.toEquiv.range_eq_univ
 #align isometric.range_eq_univ Isometric.range_eq_univ
 
-theorem image_symm (h : α ≃ᵢ β) : Image h.symm = Preimage h :=
+theorem image_symm (h : α ≃ᵢ β) : image h.symm = preimage h :=
   image_eq_preimage_of_inverse h.symm.toEquiv.left_inv h.symm.toEquiv.right_inv
 #align isometric.image_symm Isometric.image_symm
 
-theorem preimage_symm (h : α ≃ᵢ β) : Preimage h.symm = Image h :=
+theorem preimage_symm (h : α ≃ᵢ β) : preimage h.symm = image h :=
   (image_eq_preimage_of_inverse h.toEquiv.left_inv h.toEquiv.right_inv).symm
 #align isometric.preimage_symm Isometric.preimage_symm
 
@@ -440,7 +440,7 @@ theorem symm_trans_apply (h₁ : α ≃ᵢ β) (h₂ : β ≃ᵢ γ) (x : γ) : 
   rfl
 #align isometric.symm_trans_apply Isometric.symm_trans_apply
 
-theorem ediam_univ (h : α ≃ᵢ β) : Emetric.diam (Univ : Set α) = Emetric.diam (Univ : Set β) := by
+theorem ediam_univ (h : α ≃ᵢ β) : Emetric.diam (univ : Set α) = Emetric.diam (univ : Set β) := by
   rw [← h.range_eq_univ, h.isometry.ediam_range]
 #align isometric.ediam_univ Isometric.ediam_univ
 
@@ -450,24 +450,24 @@ theorem ediam_preimage (h : α ≃ᵢ β) (s : Set β) : Emetric.diam (h ⁻¹' 
 #align isometric.ediam_preimage Isometric.ediam_preimage
 
 @[simp]
-theorem preimage_emetric_ball (h : α ≃ᵢ β) (x : β) (r : ℝ≥0∞) : h ⁻¹' Emetric.Ball x r = Emetric.Ball (h.symm x) r := by
+theorem preimage_emetric_ball (h : α ≃ᵢ β) (x : β) (r : ℝ≥0∞) : h ⁻¹' Emetric.ball x r = Emetric.ball (h.symm x) r := by
   rw [← h.isometry.preimage_emetric_ball (h.symm x) r, h.apply_symm_apply]
 #align isometric.preimage_emetric_ball Isometric.preimage_emetric_ball
 
 @[simp]
 theorem preimage_emetric_closed_ball (h : α ≃ᵢ β) (x : β) (r : ℝ≥0∞) :
-    h ⁻¹' Emetric.ClosedBall x r = Emetric.ClosedBall (h.symm x) r := by
+    h ⁻¹' Emetric.closedBall x r = Emetric.closedBall (h.symm x) r := by
   rw [← h.isometry.preimage_emetric_closed_ball (h.symm x) r, h.apply_symm_apply]
 #align isometric.preimage_emetric_closed_ball Isometric.preimage_emetric_closed_ball
 
 @[simp]
-theorem image_emetric_ball (h : α ≃ᵢ β) (x : α) (r : ℝ≥0∞) : h '' Emetric.Ball x r = Emetric.Ball (h x) r := by
+theorem image_emetric_ball (h : α ≃ᵢ β) (x : α) (r : ℝ≥0∞) : h '' Emetric.ball x r = Emetric.ball (h x) r := by
   rw [← h.preimage_symm, h.symm.preimage_emetric_ball, symm_symm]
 #align isometric.image_emetric_ball Isometric.image_emetric_ball
 
 @[simp]
 theorem image_emetric_closed_ball (h : α ≃ᵢ β) (x : α) (r : ℝ≥0∞) :
-    h '' Emetric.ClosedBall x r = Emetric.ClosedBall (h x) r := by
+    h '' Emetric.closedBall x r = Emetric.closedBall (h x) r := by
   rw [← h.preimage_symm, h.symm.preimage_emetric_closed_ball, symm_symm]
 #align isometric.image_emetric_closed_ball Isometric.image_emetric_closed_ball
 
@@ -565,38 +565,38 @@ theorem diam_image (s : Set α) : Metric.diam (h '' s) = Metric.diam s :=
 theorem diam_preimage (s : Set β) : Metric.diam (h ⁻¹' s) = Metric.diam s := by rw [← image_symm, diam_image]
 #align isometric.diam_preimage Isometric.diam_preimage
 
-theorem diam_univ : Metric.diam (Univ : Set α) = Metric.diam (Univ : Set β) :=
+theorem diam_univ : Metric.diam (univ : Set α) = Metric.diam (univ : Set β) :=
   congr_arg Ennreal.toReal h.ediam_univ
 #align isometric.diam_univ Isometric.diam_univ
 
 @[simp]
-theorem preimage_ball (h : α ≃ᵢ β) (x : β) (r : ℝ) : h ⁻¹' Metric.Ball x r = Metric.Ball (h.symm x) r := by
+theorem preimage_ball (h : α ≃ᵢ β) (x : β) (r : ℝ) : h ⁻¹' Metric.ball x r = Metric.ball (h.symm x) r := by
   rw [← h.isometry.preimage_ball (h.symm x) r, h.apply_symm_apply]
 #align isometric.preimage_ball Isometric.preimage_ball
 
 @[simp]
-theorem preimage_sphere (h : α ≃ᵢ β) (x : β) (r : ℝ) : h ⁻¹' Metric.Sphere x r = Metric.Sphere (h.symm x) r := by
+theorem preimage_sphere (h : α ≃ᵢ β) (x : β) (r : ℝ) : h ⁻¹' Metric.sphere x r = Metric.sphere (h.symm x) r := by
   rw [← h.isometry.preimage_sphere (h.symm x) r, h.apply_symm_apply]
 #align isometric.preimage_sphere Isometric.preimage_sphere
 
 @[simp]
 theorem preimage_closed_ball (h : α ≃ᵢ β) (x : β) (r : ℝ) :
-    h ⁻¹' Metric.ClosedBall x r = Metric.ClosedBall (h.symm x) r := by
+    h ⁻¹' Metric.closedBall x r = Metric.closedBall (h.symm x) r := by
   rw [← h.isometry.preimage_closed_ball (h.symm x) r, h.apply_symm_apply]
 #align isometric.preimage_closed_ball Isometric.preimage_closed_ball
 
 @[simp]
-theorem image_ball (h : α ≃ᵢ β) (x : α) (r : ℝ) : h '' Metric.Ball x r = Metric.Ball (h x) r := by
+theorem image_ball (h : α ≃ᵢ β) (x : α) (r : ℝ) : h '' Metric.ball x r = Metric.ball (h x) r := by
   rw [← h.preimage_symm, h.symm.preimage_ball, symm_symm]
 #align isometric.image_ball Isometric.image_ball
 
 @[simp]
-theorem image_sphere (h : α ≃ᵢ β) (x : α) (r : ℝ) : h '' Metric.Sphere x r = Metric.Sphere (h x) r := by
+theorem image_sphere (h : α ≃ᵢ β) (x : α) (r : ℝ) : h '' Metric.sphere x r = Metric.sphere (h x) r := by
   rw [← h.preimage_symm, h.symm.preimage_sphere, symm_symm]
 #align isometric.image_sphere Isometric.image_sphere
 
 @[simp]
-theorem image_closed_ball (h : α ≃ᵢ β) (x : α) (r : ℝ) : h '' Metric.ClosedBall x r = Metric.ClosedBall (h x) r := by
+theorem image_closed_ball (h : α ≃ᵢ β) (x : α) (r : ℝ) : h '' Metric.closedBall x r = Metric.closedBall (h x) r := by
   rw [← h.preimage_symm, h.symm.preimage_closed_ball, symm_symm]
 #align isometric.image_closed_ball Isometric.image_closed_ball
 
@@ -607,7 +607,7 @@ end Isometric
 /-- An isometry induces an isometric isomorphism between the source space and the
 range of the isometry. -/
 @[simps (config := { simpRhs := true }) toEquiv apply]
-def Isometry.isometricOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : Isometry f) : α ≃ᵢ Range f where
+def Isometry.isometricOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : Isometry f) : α ≃ᵢ range f where
   isometryToFun x y := by simpa [Subtype.edist_eq] using h x y
   toEquiv := Equiv.ofInjective f h.Injective
 #align isometry.isometric_on_range Isometry.isometricOnRange

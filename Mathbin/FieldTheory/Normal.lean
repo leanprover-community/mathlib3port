@@ -225,7 +225,7 @@ instance normalSupr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i,
     Normal F (⨆ i, t i : IntermediateField F K) := by
   refine' ⟨is_algebraic_supr fun i => (h i).1, fun x => _⟩
   obtain ⟨s, hx⟩ := exists_finset_of_mem_supr'' (fun i => (h i).1) x.2
-  let E : IntermediateField F K := ⨆ i ∈ s, adjoin F ((minpoly F (i.2 : _)).RootSet K)
+  let E : IntermediateField F K := ⨆ i ∈ s, adjoin F ((minpoly F (i.2 : _)).rootSet K)
   have hF : Normal F E := by
     apply Normal.ofIsSplittingField (∏ i in s, minpoly F i.2)
     refine' is_splitting_field_supr _ fun i hi => adjoin_root_set_is_splitting_field _
@@ -435,16 +435,16 @@ noncomputable def normalClosure : IntermediateField K L :=
 namespace normalClosure
 
 theorem restrict_scalars_eq_supr_adjoin [h : Normal F L] :
-    (normalClosure F K L).restrictScalars F = ⨆ x : K, adjoin F ((minpoly F x).RootSet L) := by
+    (normalClosure F K L).restrictScalars F = ⨆ x : K, adjoin F ((minpoly F x).rootSet L) := by
   refine' le_antisymm (supr_le _) (supr_le fun x => adjoin_le_iff.mpr fun y hy => _)
   · rintro f _ ⟨x, rfl⟩
-    refine' le_supr (fun x => adjoin F ((minpoly F x).RootSet L)) x (subset_adjoin F ((minpoly F x).RootSet L) _)
+    refine' le_supr (fun x => adjoin F ((minpoly F x).rootSet L)) x (subset_adjoin F ((minpoly F x).rootSet L) _)
     rw [Polynomial.mem_root_set, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom, Polynomial.aeval_alg_hom_apply,
       minpoly.aeval, map_zero]
     exact
       minpoly.ne_zero ((is_integral_algebra_map_iff (algebraMap K L).Injective).mp (h.is_integral (algebraMap K L x)))
     
-  · rw [Polynomial.RootSet, Finset.mem_coe, Multiset.mem_to_finset] at hy
+  · rw [Polynomial.rootSet, Finset.mem_coe, Multiset.mem_to_finset] at hy
     let g :=
       (alg_hom_adjoin_integral_equiv F
             ((is_integral_algebra_map_iff (algebraMap K L).Injective).mp (h.is_integral (algebraMap K L x)))).symm

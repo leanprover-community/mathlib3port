@@ -833,6 +833,38 @@ theorem of_vert_is_iso [IsIso g] [IsIso inl] (sq : CommSq f g inl inr) : IsPusho
 
 end IsPushout
 
+section Equalizer
+
+variable {X Y Z : C} {f f' : X ⟶ Y} {g g' : Y ⟶ Z}
+
+/-- If `f : X ⟶ Y`, `g g' : Y ⟶ Z` forms a pullback square, then `f` is the equalizer of
+`g` and `g'`. -/
+noncomputable def IsPullback.isLimitFork (H : IsPullback f f g g') : IsLimit (Fork.ofι f H.w) := by
+  fapply fork.is_limit.mk
+  · exact fun s => H.is_limit.lift (pullback_cone.mk s.ι s.ι s.condition)
+    
+  · exact fun s => H.is_limit.fac _ walking_cospan.left
+    
+  · intro s m e
+    apply pullback_cone.is_limit.hom_ext H.is_limit <;> refine' e.trans _ <;> symm <;> exact H.is_limit.fac _ _
+    
+#align category_theory.is_pullback.is_limit_fork CategoryTheory.IsPullback.isLimitFork
+
+/-- If `f f' : X ⟶ Y`, `g : Y ⟶ Z` forms a pushout square, then `g` is the coequalizer of
+`f` and `f'`. -/
+noncomputable def IsPushout.isLimitFork (H : IsPushout f f' g g) : IsColimit (Cofork.ofπ g H.w) := by
+  fapply cofork.is_colimit.mk
+  · exact fun s => H.is_colimit.desc (pushout_cocone.mk s.π s.π s.condition)
+    
+  · exact fun s => H.is_colimit.fac _ walking_span.left
+    
+  · intro s m e
+    apply pushout_cocone.is_colimit.hom_ext H.is_colimit <;> refine' e.trans _ <;> symm <;> exact H.is_colimit.fac _ _
+    
+#align category_theory.is_pushout.is_limit_fork CategoryTheory.IsPushout.isLimitFork
+
+end Equalizer
+
 namespace BicartesianSq
 
 variable {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}

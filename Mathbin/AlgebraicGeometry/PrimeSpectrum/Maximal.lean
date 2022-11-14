@@ -59,7 +59,7 @@ theorem to_prime_spectrum_injective : (@toPrimeSpectrum R _).Injective := fun �
 
 open PrimeSpectrum Set
 
-theorem to_prime_spectrum_range : Set.Range (@toPrimeSpectrum R _) = { x | IsClosed ({x} : Set <| PrimeSpectrum R) } :=
+theorem to_prime_spectrum_range : Set.range (@toPrimeSpectrum R _) = { x | IsClosed ({x} : Set <| PrimeSpectrum R) } :=
   by
   simp only [is_closed_singleton_iff_is_maximal]
   ext ⟨x, _⟩

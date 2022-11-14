@@ -56,7 +56,7 @@ theorem inversion_dist_center (c x : P) : inversion c (dist x c) x = x := by
     
 #align euclidean_geometry.inversion_dist_center EuclideanGeometry.inversion_dist_center
 
-theorem inversion_of_mem_sphere (h : x ∈ Metric.Sphere c R) : inversion c R x = x :=
+theorem inversion_of_mem_sphere (h : x ∈ Metric.sphere c R) : inversion c R x = x :=
   h.out ▸ inversion_dist_center c x
 #align euclidean_geometry.inversion_of_mem_sphere EuclideanGeometry.inversion_of_mem_sphere
 

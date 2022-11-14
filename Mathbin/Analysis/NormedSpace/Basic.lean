@@ -81,7 +81,7 @@ theorem abs_norm_eq_norm (z : β) : |∥z∥| = ∥z∥ :=
   (abs_eq (norm_nonneg z)).mpr (Or.inl rfl)
 #align abs_norm_eq_norm abs_norm_eq_norm
 
-theorem inv_norm_smul_mem_closed_unit_ball [NormedSpace ℝ β] (x : β) : ∥x∥⁻¹ • x ∈ ClosedBall (0 : β) 1 := by
+theorem inv_norm_smul_mem_closed_unit_ball [NormedSpace ℝ β] (x : β) : ∥x∥⁻¹ • x ∈ closedBall (0 : β) 1 := by
   simp only [mem_closed_ball_zero_iff, norm_smul, norm_inv, norm_norm, ← div_eq_inv_mul, div_self_le_one]
 #align inv_norm_smul_mem_closed_unit_ball inv_norm_smul_mem_closed_unit_ball
 
@@ -125,7 +125,7 @@ theorem Filter.IsBoundedUnder.smul_tendsto_zero {f : ι → α} {g : ι → E} {
   hg.op_zero_is_bounded_under_le hf (flip (· • ·)) fun x y => ((norm_smul y x).trans (mul_comm _ _)).le
 #align filter.is_bounded_under.smul_tendsto_zero Filter.IsBoundedUnder.smul_tendsto_zero
 
-theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : Closure (Ball x r) = ClosedBall x r := by
+theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : closure (ball x r) = closedBall x r := by
   refine' subset.antisymm closure_ball_subset_closed_ball fun y hy => _
   have : ContinuousWithinAt (fun c : ℝ => c • (y - x) + x) (Ico 0 1) 1 :=
     ((continuous_id.smul continuous_const).add continuous_const).ContinuousWithinAt
@@ -143,13 +143,13 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : Clos
     
 #align closure_ball closure_ball
 
-theorem frontier_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : Frontier (Ball x r) = Sphere x r := by
-  rw [Frontier, closure_ball x hr, is_open_ball.interior_eq]
+theorem frontier_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : frontier (ball x r) = sphere x r := by
+  rw [frontier, closure_ball x hr, is_open_ball.interior_eq]
   ext x
   exact (@eq_iff_le_not_lt ℝ _ _ _).symm
 #align frontier_ball frontier_ball
 
-theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : Interior (ClosedBall x r) = Ball x r := by
+theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : interior (closedBall x r) = ball x r := by
   cases' hr.lt_or_lt with hr hr
   · rw [closed_ball_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
     
@@ -161,8 +161,8 @@ theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
   set f : ℝ → E := fun c : ℝ => c • (y - x) + x
   suffices f ⁻¹' closed_ball x (dist y x) ⊆ Icc (-1) 1 by
     have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const
-    have hf1 : (1 : ℝ) ∈ f ⁻¹' Interior (closed_ball x <| dist y x) := by simpa [f]
-    have h1 : (1 : ℝ) ∈ Interior (Icc (-1 : ℝ) 1) :=
+    have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closed_ball x <| dist y x) := by simpa [f]
+    have h1 : (1 : ℝ) ∈ interior (Icc (-1 : ℝ) 1) :=
       interior_mono this (preimage_interior_subset_interior_preimage hfc hf1)
     contrapose h1
     simp
@@ -171,8 +171,8 @@ theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
   simpa [f, dist_eq_norm, norm_smul] using hc
 #align interior_closed_ball interior_closed_ball
 
-theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : Frontier (ClosedBall x r) = Sphere x r :=
-  by rw [Frontier, closure_closed_ball, interior_closed_ball x hr, closed_ball_diff_ball]
+theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : frontier (closedBall x r) = sphere x r :=
+  by rw [frontier, closure_closed_ball, interior_closed_ball x hr, closed_ball_diff_ball]
 #align frontier_closed_ball frontier_closed_ball
 
 instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) : DiscreteTopology <| AddSubgroup.zmultiples e :=
@@ -182,7 +182,7 @@ instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) : Discr
     infer_instance
     
   · rw [discrete_topology_iff_open_singleton_zero, is_open_induced_iff]
-    refine' ⟨Metric.Ball 0 ∥e∥, Metric.is_open_ball, _⟩
+    refine' ⟨Metric.ball 0 ∥e∥, Metric.is_open_ball, _⟩
     ext ⟨x, hx⟩
     obtain ⟨k, rfl⟩ := add_subgroup.mem_zmultiples_iff.mp hx
     rw [mem_preimage, mem_ball_zero_iff, AddSubgroup.coe_mk, mem_singleton_iff, Subtype.ext_iff, AddSubgroup.coe_mk,
@@ -200,7 +200,7 @@ In many cases the actual implementation is not important, so we don't mark the p
 See also `cont_diff_homeomorph_unit_ball` and `cont_diff_on_homeomorph_unit_ball_symm` for
 smoothness properties that hold when `E` is an inner-product space. -/
 @[simps (config := { attrs := [] })]
-def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ Ball (0 : E) 1 where
+def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1 where
   toFun x :=
     ⟨(1 + ∥x∥ ^ 2).sqrt⁻¹ • x, by
       have : 0 < 1 + ∥x∥ ^ 2 := by positivity
@@ -347,7 +347,7 @@ theorem exists_norm_eq {c : ℝ} (hc : 0 ≤ c) : ∃ x : E, ∥x∥ = c := by
 #align exists_norm_eq exists_norm_eq
 
 @[simp]
-theorem range_norm : Range (norm : E → ℝ) = IciCat 0 :=
+theorem range_norm : range (norm : E → ℝ) = ici 0 :=
   Subset.antisymm (range_subset_iff.2 norm_nonneg) fun _ => exists_norm_eq E
 #align range_norm range_norm
 
@@ -356,13 +356,13 @@ theorem nnnorm_surjective : Surjective (nnnorm : E → ℝ≥0) := fun c =>
 #align nnnorm_surjective nnnorm_surjective
 
 @[simp]
-theorem range_nnnorm : Range (nnnorm : E → ℝ≥0) = univ :=
+theorem range_nnnorm : range (nnnorm : E → ℝ≥0) = univ :=
   (nnnorm_surjective E).range_eq
 #align range_nnnorm range_nnnorm
 
 end Surj
 
-theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) : Interior (ClosedBall x r) = Ball x r :=
+theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) : interior (closedBall x r) = ball x r :=
   by
   rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero, ball_zero, interior_singleton]
@@ -372,8 +372,8 @@ theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : �
 #align interior_closed_ball' interior_closed_ball'
 
 theorem frontier_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
-    Frontier (ClosedBall x r) = Sphere x r := by
-  rw [Frontier, closure_closed_ball, interior_closed_ball' x r, closed_ball_diff_ball]
+    frontier (closedBall x r) = sphere x r := by
+  rw [frontier, closure_closed_ball, interior_closed_ball' x r, closed_ball_diff_ball]
 #align frontier_closed_ball' frontier_closed_ball'
 
 variable {α}
@@ -404,7 +404,7 @@ theorem NormedSpace.exists_lt_norm (c : ℝ) : ∃ x : E, c < ∥x∥ := by
   rwa [norm_pos_iff]
 #align normed_space.exists_lt_norm NormedSpace.exists_lt_norm
 
-protected theorem NormedSpace.unbounded_univ : ¬Bounded (Univ : Set E) := fun h =>
+protected theorem NormedSpace.unbounded_univ : ¬Bounded (univ : Set E) := fun h =>
   let ⟨R, hR⟩ := bounded_iff_forall_norm_le.1 h
   let ⟨x, hx⟩ := NormedSpace.exists_lt_norm 𝕜 E R
   hx.not_le (hR x trivial)

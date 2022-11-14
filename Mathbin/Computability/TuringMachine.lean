@@ -1129,7 +1129,7 @@ theorem step_supports (M : machine) {S} (ss : supports M S) : ∀ {c c' : cfg}, 
     exact ss.2 h h₂
 #align turing.TM0.step_supports Turing.TM0Cat.step_supports
 
-theorem univ_supports (M : machine) : supports M Set.Univ :=
+theorem univ_supports (M : machine) : supports M Set.univ :=
   ⟨trivial, fun q a q' s h₁ h₂ => trivial⟩
 #align turing.TM0.univ_supports Turing.TM0Cat.univ_supports
 
@@ -1938,7 +1938,7 @@ parameter [Fintype Γ]
 /-- The set of accessible `Λ'.write` machine states. -/
 noncomputable def writes : stmt₁ → Finset Λ'
   | stmt.move d q => writes q
-  | stmt.write f q => (Finset.univ.Image fun a => Λ'.write a q) ∪ writes q
+  | stmt.write f q => (Finset.univ.image fun a => Λ'.write a q) ∪ writes q
   | stmt.load f q => writes q
   | stmt.branch p q₁ q₂ => writes q₁ ∪ writes q₂
   | stmt.goto l => ∅

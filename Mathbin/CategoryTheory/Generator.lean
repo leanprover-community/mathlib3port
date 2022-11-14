@@ -570,7 +570,7 @@ theorem is_separator_coprod_of_is_separator_right (G H : C) [HasBinaryCoproduct 
 #align
   category_theory.is_separator_coprod_of_is_separator_right CategoryTheory.is_separator_coprod_of_is_separator_right
 
-theorem is_separator_sigma {β : Type w} (f : β → C) [HasCoproduct f] : IsSeparator (∐ f) ↔ IsSeparating (Set.Range f) :=
+theorem is_separator_sigma {β : Type w} (f : β → C) [HasCoproduct f] : IsSeparator (∐ f) ↔ IsSeparating (Set.range f) :=
   by
   refine' ⟨fun h X Y u v huv => _, fun h => (is_separator_def _).2 fun X Y u v huv => h _ _ fun Z hZ g => _⟩
   · refine' h.def _ _ fun g => colimit.hom_ext fun b => _
@@ -617,7 +617,7 @@ theorem is_coseparator_prod_of_is_coseparator_right (G H : C) [HasBinaryProduct 
   category_theory.is_coseparator_prod_of_is_coseparator_right CategoryTheory.is_coseparator_prod_of_is_coseparator_right
 
 theorem is_coseparator_pi {β : Type w} (f : β → C) [HasProduct f] :
-    IsCoseparator (∏ f) ↔ IsCoseparating (Set.Range f) := by
+    IsCoseparator (∏ f) ↔ IsCoseparating (Set.range f) := by
   refine' ⟨fun h X Y u v huv => _, fun h => (is_coseparator_def _).2 fun X Y u v huv => h _ _ fun Z hZ g => _⟩
   · refine' h.def _ _ fun g => limit.hom_ext fun b => _
     simpa using huv (f b.as) (by simp) (g ≫ limit.π (discrete.functor f) _)

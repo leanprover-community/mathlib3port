@@ -138,7 +138,7 @@ noncomputable def commonDenomOfFinset (s : Finset S) : M :=
 
 /-- The finset of numerators after clearing the denominators of a finite set of fractions. -/
 noncomputable def finsetIntegerMultiple [DecidableEq R] (s : Finset S) : Finset R :=
-  s.attach.Image fun t => integerMultiple M s id t
+  s.attach.image fun t => integerMultiple M s id t
 #align is_localization.finset_integer_multiple IsLocalization.finsetIntegerMultiple
 
 open Pointwise

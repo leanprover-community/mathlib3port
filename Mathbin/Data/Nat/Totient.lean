@@ -180,7 +180,7 @@ theorem sum_totient' (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ 
 theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n + 1)) = p ^ n * (p - 1) :=
   calc
     φ (p ^ (n + 1)) = ((range (p ^ (n + 1))).filter (Coprime (p ^ (n + 1)))).card := totient_eq_card_coprime _
-    _ = (range (p ^ (n + 1)) \ (range (p ^ n)).Image (· * p)).card :=
+    _ = (range (p ^ (n + 1)) \ (range (p ^ n)).image (· * p)).card :=
       congr_arg card
         (by
           rw [sdiff_eq_filter]
@@ -198,7 +198,7 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
             )
     _ = _ := by
       have h1 : Function.Injective (· * p) := mul_left_injective₀ hp.NeZero
-      have h2 : (range (p ^ n)).Image (· * p) ⊆ range (p ^ (n + 1)) := fun a => by
+      have h2 : (range (p ^ n)).image (· * p) ⊆ range (p ^ (n + 1)) := fun a => by
         simp only [mem_image, mem_range, exists_imp]
         rintro b h rfl
         rw [pow_succ']

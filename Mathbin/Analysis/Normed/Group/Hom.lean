@@ -186,7 +186,7 @@ theorem SurjectiveOnWith.exists_pos {f : NormedAddGroupHom V₁ V₂} {K : AddSu
 #align normed_add_group_hom.surjective_on_with.exists_pos NormedAddGroupHom.SurjectiveOnWith.exists_pos
 
 theorem SurjectiveOnWith.surj_on {f : NormedAddGroupHom V₁ V₂} {K : AddSubgroup V₂} {C : ℝ}
-    (h : f.SurjectiveOnWith K C) : Set.SurjOn f Set.Univ K := fun x hx =>
+    (h : f.SurjectiveOnWith K C) : Set.SurjOn f Set.univ K := fun x hx =>
   (h x hx).imp fun a ⟨ha, _⟩ => ⟨Set.mem_univ _, ha⟩
 #align normed_add_group_hom.surjective_on_with.surj_on NormedAddGroupHom.SurjectiveOnWith.surj_on
 

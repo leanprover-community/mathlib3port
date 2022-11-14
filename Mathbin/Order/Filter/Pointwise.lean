@@ -226,7 +226,7 @@ variable [Mul α] [Mul β] {f f₁ f₂ g g₁ g₂ h : Filter α} {s t : Set α
 protected def hasMul : Mul (Filter α) :=
   ⟨/- This is defeq to `map₂ (*) f g`, but the hypothesis unfolds to `t₁ * t₂ ⊆ s` rather than all the
   way to `set.image2 (*) t₁ t₂ ⊆ s`. -/
-  fun f g => { map₂ (· * ·) f g with Sets := { s | ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ * t₂ ⊆ s } }⟩
+  fun f g => { map₂ (· * ·) f g with sets := { s | ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ * t₂ ⊆ s } }⟩
 #align filter.has_mul Filter.hasMul
 
 localized [Pointwise] attribute [instance] Filter.hasMul Filter.hasAdd
@@ -346,7 +346,7 @@ variable [Div α] {f f₁ f₂ g g₁ g₂ h : Filter α} {s t : Set α} {a b : 
 protected def hasDiv : Div (Filter α) :=
   ⟨/- This is defeq to `map₂ (/) f g`, but the hypothesis unfolds to `t₁ / t₂ ⊆ s` rather than all the
   way to `set.image2 (/) t₁ t₂ ⊆ s`. -/
-  fun f g => { map₂ (· / ·) f g with Sets := { s | ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ / t₂ ⊆ s } }⟩
+  fun f g => { map₂ (· / ·) f g with sets := { s | ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ / t₂ ⊆ s } }⟩
 #align filter.has_div Filter.hasDiv
 
 localized [Pointwise] attribute [instance] Filter.hasDiv Filter.hasSub
@@ -830,7 +830,7 @@ variable [HasSmul α β] {f f₁ f₂ : Filter α} {g g₁ g₂ h : Filter β} {
 protected def hasSmul : HasSmul (Filter α) (Filter β) :=
   ⟨/- This is defeq to `map₂ (•) f g`, but the hypothesis unfolds to `t₁ • t₂ ⊆ s` rather than all the
   way to `set.image2 (•) t₁ t₂ ⊆ s`. -/
-  fun f g => { map₂ (· • ·) f g with Sets := { s | ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ • t₂ ⊆ s } }⟩
+  fun f g => { map₂ (· • ·) f g with sets := { s | ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ • t₂ ⊆ s } }⟩
 #align filter.has_smul Filter.hasSmul
 
 localized [Pointwise] attribute [instance] Filter.hasSmul Filter.hasVadd
@@ -940,7 +940,7 @@ include α
 protected def hasVsub : HasVsub (Filter α) (Filter β) :=
   ⟨/- This is defeq to `map₂ (-ᵥ) f g`, but the hypothesis unfolds to `t₁ -ᵥ t₂ ⊆ s` rather than all
   the way to `set.image2 (-ᵥ) t₁ t₂ ⊆ s`. -/
-  fun f g => { map₂ (· -ᵥ ·) f g with Sets := { s | ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ -ᵥ t₂ ⊆ s } }⟩
+  fun f g => { map₂ (· -ᵥ ·) f g with sets := { s | ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ -ᵥ t₂ ⊆ s } }⟩
 #align filter.has_vsub Filter.hasVsub
 
 localized [Pointwise] attribute [instance] Filter.hasVsub

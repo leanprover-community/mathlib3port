@@ -57,7 +57,7 @@ protected theorem eq' (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b �
   (hs.Eq hb ha h).symm
 #align is_antichain.eq' IsAntichain.eq'
 
-protected theorem is_antisymm (h : IsAntichain r Univ) : IsAntisymm α r :=
+protected theorem is_antisymm (h : IsAntichain r univ) : IsAntisymm α r :=
   ⟨fun a b ha _ => h.Eq trivial trivial ha⟩
 #align is_antichain.is_antisymm IsAntichain.is_antisymm
 

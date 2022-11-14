@@ -60,7 +60,7 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : Set α, s₂ ⊆ s₁ → s₂ ∈ B)
     (union_mem : ∀ (s₁ s₂) (_ : s₁ ∈ B) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B) (singleton_mem : ∀ x, {x} ∈ B) : Bornology α where
   cobounded :=
-    { Sets := { s : Set α | sᶜ ∈ B }, univ_sets := by rwa [← compl_univ] at empty_mem,
+    { sets := { s : Set α | sᶜ ∈ B }, univ_sets := by rwa [← compl_univ] at empty_mem,
       sets_of_superset := fun x y hx hy => subset_mem (xᶜ) hx (yᶜ) (compl_subset_compl.mpr hy),
       inter_sets := fun x y hx hy => by simpa [compl_inter] using union_mem (xᶜ) hx (yᶜ) hy }
   le_cofinite := by
@@ -135,7 +135,7 @@ theorem is_bounded_singleton : IsBounded ({x} : Set α) := by
 #align bornology.is_bounded_singleton Bornology.is_bounded_singleton
 
 @[simp]
-theorem is_cobounded_univ : IsCobounded (Univ : Set α) :=
+theorem is_cobounded_univ : IsCobounded (univ : Set α) :=
   univ_mem
 #align bornology.is_cobounded_univ Bornology.is_cobounded_univ
 
@@ -182,7 +182,7 @@ theorem comap_cobounded_le_iff [Bornology β] {f : α → β} :
 
 end
 
-theorem ext_iff' {t t' : Bornology α} : t = t' ↔ ∀ s, (@cobounded α t).Sets s ↔ (@cobounded α t').Sets s :=
+theorem ext_iff' {t t' : Bornology α} : t = t' ↔ ∀ s, (@cobounded α t).sets s ↔ (@cobounded α t').sets s :=
   (ext_iff _ _).trans Filter.ext_iff
 #align bornology.ext_iff' Bornology.ext_iff'
 
@@ -264,14 +264,14 @@ def Bornology.cofinite : Bornology α where
 
 /-- A space with a `bornology` is a **bounded space** if `set.univ : set α` is bounded. -/
 class BoundedSpace (α : Type _) [Bornology α] : Prop where
-  bounded_univ : Bornology.IsBounded (Univ : Set α)
+  bounded_univ : Bornology.IsBounded (univ : Set α)
 #align bounded_space BoundedSpace
 
 namespace Bornology
 
 variable [Bornology α]
 
-theorem is_bounded_univ : IsBounded (Univ : Set α) ↔ BoundedSpace α :=
+theorem is_bounded_univ : IsBounded (univ : Set α) ↔ BoundedSpace α :=
   ⟨fun h => ⟨h⟩, fun h => h.1⟩
 #align bornology.is_bounded_univ Bornology.is_bounded_univ
 

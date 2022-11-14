@@ -1261,7 +1261,7 @@ theorem HasFtaylorSeriesUpTo.zero_eq' (h : HasFtaylorSeriesUpTo n f p) (x : E) :
   exact ContinuousMultilinearMap.uncurry0_curry0 _
 #align has_ftaylor_series_up_to.zero_eq' HasFtaylorSeriesUpTo.zero_eq'
 
-theorem has_ftaylor_series_up_to_on_univ_iff : HasFtaylorSeriesUpToOn n f p Univ ↔ HasFtaylorSeriesUpTo n f p := by
+theorem has_ftaylor_series_up_to_on_univ_iff : HasFtaylorSeriesUpToOn n f p univ ↔ HasFtaylorSeriesUpTo n f p := by
   constructor
   · intro H
     constructor
@@ -1346,12 +1346,12 @@ variable (𝕜)
 there is a neighborhood of `x` where `f` admits derivatives up to order `n`, which are continuous.
 -/
 def ContDiffAt (n : ℕ∞) (f : E → F) (x : E) :=
-  ContDiffWithinAt 𝕜 n f Univ x
+  ContDiffWithinAt 𝕜 n f univ x
 #align cont_diff_at ContDiffAt
 
 variable {𝕜}
 
-theorem cont_diff_within_at_univ : ContDiffWithinAt 𝕜 n f Univ x ↔ ContDiffAt 𝕜 n f x :=
+theorem cont_diff_within_at_univ : ContDiffWithinAt 𝕜 n f univ x ↔ ContDiffAt 𝕜 n f x :=
   Iff.rfl
 #align cont_diff_within_at_univ cont_diff_within_at_univ
 
@@ -1426,7 +1426,7 @@ def ContDiff (n : ℕ∞) (f : E → F) :=
 
 variable {𝕜}
 
-theorem cont_diff_on_univ : ContDiffOn 𝕜 n f Univ ↔ ContDiff 𝕜 n f := by
+theorem cont_diff_on_univ : ContDiffOn 𝕜 n f univ ↔ ContDiff 𝕜 n f := by
   constructor
   · intro H
     use ftaylorSeriesWithin 𝕜 f univ
@@ -1553,7 +1553,7 @@ theorem norm_fderiv_iterated_fderiv {n : ℕ} : ∥fderiv 𝕜 (iteratedFderiv �
   rw [iterated_fderiv_succ_eq_comp_left, LinearIsometryEquiv.norm_map]
 #align norm_fderiv_iterated_fderiv norm_fderiv_iterated_fderiv
 
-theorem iterated_fderiv_within_univ {n : ℕ} : iteratedFderivWithin 𝕜 n f Univ = iteratedFderiv 𝕜 n f := by
+theorem iterated_fderiv_within_univ {n : ℕ} : iteratedFderivWithin 𝕜 n f univ = iteratedFderiv 𝕜 n f := by
   induction' n with n IH
   · ext x
     simp
@@ -1583,7 +1583,7 @@ theorem iterated_fderiv_within_of_is_open (n : ℕ) (hs : IsOpen s) :
     
 #align iterated_fderiv_within_of_is_open iterated_fderiv_within_of_is_open
 
-theorem ftaylor_series_within_univ : ftaylorSeriesWithin 𝕜 f Univ = ftaylorSeries 𝕜 f := by
+theorem ftaylor_series_within_univ : ftaylorSeriesWithin 𝕜 f univ = ftaylorSeries 𝕜 f := by
   ext1 x
   ext1 n
   change iteratedFderivWithin 𝕜 n f univ x = iteratedFderiv 𝕜 n f x
@@ -3112,7 +3112,7 @@ then `f.symm` is `n` times continuously differentiable at the point `a`.
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
 theorem LocalHomeomorph.contDiffAtSymm [CompleteSpace E] (f : LocalHomeomorph E F) {f₀' : E ≃L[𝕜] F} {a : F}
-    (ha : a ∈ f.Target) (hf₀' : HasFderivAt f (f₀' : E →L[𝕜] F) (f.symm a)) (hf : ContDiffAt 𝕜 n f (f.symm a)) :
+    (ha : a ∈ f.target) (hf₀' : HasFderivAt f (f₀' : E →L[𝕜] F) (f.symm a)) (hf : ContDiffAt 𝕜 n f (f.symm a)) :
     ContDiffAt 𝕜 n f.symm a := by
   -- We prove this by induction on `n`
   induction' n using Enat.nat_induction with n IH Itop
@@ -3182,7 +3182,7 @@ target. if `f` is `n` times continuously differentiable at `f.symm a`, and if th
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
 theorem LocalHomeomorph.contDiffAtSymmDeriv [CompleteSpace 𝕜] (f : LocalHomeomorph 𝕜 𝕜) {f₀' a : 𝕜} (h₀ : f₀' ≠ 0)
-    (ha : a ∈ f.Target) (hf₀' : HasDerivAt f f₀' (f.symm a)) (hf : ContDiffAt 𝕜 n f (f.symm a)) :
+    (ha : a ∈ f.target) (hf₀' : HasDerivAt f f₀' (f.symm a)) (hf : ContDiffAt 𝕜 n f (f.symm a)) :
     ContDiffAt 𝕜 n f.symm a :=
   f.contDiffAtSymm ha (hf₀'.hasFderivAtEquiv h₀) hf
 #align local_homeomorph.cont_diff_at_symm_deriv LocalHomeomorph.contDiffAtSymmDeriv
@@ -3354,7 +3354,7 @@ theorem ContDiffWithinAt.exists_lipschitz_on_with {E F : Type _} [NormedAddCommG
     (hs : Convex ℝ s) : ∃ K : ℝ≥0, ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t := by
   rcases hf 1 le_rfl with ⟨t, hst, p, hp⟩
   rcases metric.mem_nhds_within_iff.mp hst with ⟨ε, ε0, hε⟩
-  replace hp : HasFtaylorSeriesUpToOn 1 f p (Metric.Ball x ε ∩ insert x s) := hp.mono hε
+  replace hp : HasFtaylorSeriesUpToOn 1 f p (Metric.ball x ε ∩ insert x s) := hp.mono hε
   clear hst hε t
   rw [← insert_eq_of_mem (Metric.mem_ball_self ε0), ← insert_inter_distrib] at hp
   rcases hp.exists_lipschitz_on_with ((convex_ball _ _).inter hs) with ⟨K, t, hst, hft⟩

@@ -99,7 +99,7 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ∥c∥) {R : ℝ} (hR : ∥
 #align riesz_lemma_of_norm_lt riesz_lemma_of_norm_lt
 
 theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx : x ∈ s) :
-    ClosedBall x (infDist x (sᶜ)) ⊆ Closure s := by
+    closedBall x (infDist x (sᶜ)) ⊆ closure s := by
   cases' eq_or_ne (inf_dist x (sᶜ)) 0 with h₀ h₀
   · rw [h₀, closed_ball_zero']
     exact closure_mono (singleton_subset_iff.2 hx)

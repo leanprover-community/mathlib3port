@@ -256,7 +256,7 @@ theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) 
 #align real.tendsto_div_pow_mul_exp_add_at_top Real.tendsto_div_pow_mul_exp_add_at_top
 
 /-- `real.exp` as an order isomorphism between `ℝ` and `(0, +∞)`. -/
-def expOrderIso : ℝ ≃o IoiCat (0 : ℝ) :=
+def expOrderIso : ℝ ≃o ioi (0 : ℝ) :=
   StrictMono.orderIsoOfSurjective _ (exp_strict_mono.codRestrict exp_pos) <|
     (continuous_exp.subtype_mk _).Surjective (by simp only [tendsto_Ioi_at_top, Subtype.coe_mk, tendsto_exp_at_top])
       (by simp [tendsto_exp_at_bot_nhds_within])
@@ -273,7 +273,7 @@ theorem coe_comp_exp_order_iso : coe ∘ exp_order_iso = exp :=
 #align real.coe_comp_exp_order_iso Real.coe_comp_exp_order_iso
 
 @[simp]
-theorem range_exp : Range exp = IoiCat 0 := by
+theorem range_exp : range exp = ioi 0 := by
   rw [← coe_comp_exp_order_iso, range_comp, exp_order_iso.range_eq, image_univ, Subtype.range_coe]
 #align real.range_exp Real.range_exp
 

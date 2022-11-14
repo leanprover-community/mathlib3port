@@ -272,7 +272,7 @@ open UniqueFactorizationMonoid
 
 theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
     (n.divisors.filter Squarefree).val =
-      (UniqueFactorizationMonoid.normalizedFactors n).toFinset.Powerset.val.map fun x => x.val.Prod :=
+      (UniqueFactorizationMonoid.normalizedFactors n).toFinset.powerset.val.map fun x => x.val.Prod :=
   by
   rw [(Finset.nodup _).ext ((Finset.nodup _).map_on _)]
   · intro a
@@ -328,7 +328,7 @@ open BigOperators
 
 theorem sum_divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) {α : Type _} [AddCommMonoid α] {f : ℕ → α} :
     (∑ i in n.divisors.filter Squarefree, f i) =
-      ∑ i in (UniqueFactorizationMonoid.normalizedFactors n).toFinset.Powerset, f i.val.Prod :=
+      ∑ i in (UniqueFactorizationMonoid.normalizedFactors n).toFinset.powerset, f i.val.Prod :=
   by rw [Finset.sum_eq_multiset_sum, divisors_filter_squarefree h0, Multiset.map_map, Finset.sum_eq_multiset_sum]
 #align nat.sum_divisors_filter_squarefree Nat.sum_divisors_filter_squarefree
 

@@ -78,7 +78,7 @@ theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring 
       (Algebra.adjoin ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) S).restrictScalars C :=
   by
   suffices
-    Set.Range (algebraMap D E) = Set.Range (algebraMap ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) E) by
+    Set.range (algebraMap D E) = Set.range (algebraMap ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) E) by
     ext x
     change x ∈ Subsemiring.closure (_ ∪ S) ↔ x ∈ Subsemiring.closure (_ ∪ S)
     rw [this]

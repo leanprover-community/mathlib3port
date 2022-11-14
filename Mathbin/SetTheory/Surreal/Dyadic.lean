@@ -297,9 +297,9 @@ theorem dyadic_map_apply_pow (m : ℤ) (n : ℕ) :
 #align surreal.dyadic_map_apply_pow Surreal.dyadic_map_apply_pow
 
 /-- We define dyadic surreals as the range of the map `dyadic_map`. -/
-def Dyadic : Set Surreal :=
-  Set.Range dyadicMap
-#align surreal.dyadic Surreal.Dyadic
+def dyadic : Set Surreal :=
+  Set.range dyadicMap
+#align surreal.dyadic Surreal.dyadic
 
 -- We conclude with some ideas for further work on surreals; these would make fun projects.
 -- TODO show that the map from dyadic rationals to surreals is injective

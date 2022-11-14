@@ -84,7 +84,7 @@ variable {α β : Type _} [LinearOrder α] [ConditionallyCompleteLinearOrder β]
 
 include hf
 
-theorem left_lim_eq_Sup [TopologicalSpace α] [OrderTopology α] (h : 𝓝[<] x ≠ ⊥) : leftLim f x = sup (f '' IioCat x) :=
+theorem left_lim_eq_Sup [TopologicalSpace α] [OrderTopology α] (h : 𝓝[<] x ≠ ⊥) : leftLim f x = sup (f '' iio x) :=
   left_lim_eq_of_tendsto h (hf.tendsto_nhds_within_Iio x)
 #align monotone.left_lim_eq_Sup Monotone.left_lim_eq_Sup
 
@@ -115,7 +115,7 @@ theorem le_left_lim (h : x < y) : f x ≤ leftLim f y := by
     
   rw [left_lim_eq_Sup hf h']
   refine' le_cSup ⟨f y, _⟩ (mem_image_of_mem _ h)
-  simp only [UpperBounds, mem_image, mem_Iio, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂, mem_set_of_eq]
+  simp only [upperBounds, mem_image, mem_Iio, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂, mem_set_of_eq]
   intro z hz
   exact hf hz.le
 #align monotone.le_left_lim Monotone.le_left_lim
@@ -186,7 +186,7 @@ theorem tendsto_right_lim_within (x : α) : Tendsto f (𝓝[>] x) (𝓝[≥] rig
 
 /-- A monotone function is continuous to the left at a point if and only if its left limit
 coincides with the value of the function. -/
-theorem continuous_within_at_Iio_iff_left_lim_eq : ContinuousWithinAt f (IioCat x) x ↔ leftLim f x = f x := by
+theorem continuous_within_at_Iio_iff_left_lim_eq : ContinuousWithinAt f (iio x) x ↔ leftLim f x = f x := by
   rcases eq_or_ne (𝓝[<] x) ⊥ with (h' | h')
   · simp [left_lim_eq_of_eq_bot f h', ContinuousWithinAt, h']
     
@@ -198,7 +198,7 @@ theorem continuous_within_at_Iio_iff_left_lim_eq : ContinuousWithinAt f (IioCat 
 
 /-- A monotone function is continuous to the right at a point if and only if its right limit
 coincides with the value of the function. -/
-theorem continuous_within_at_Ioi_iff_right_lim_eq : ContinuousWithinAt f (IoiCat x) x ↔ rightLim f x = f x :=
+theorem continuous_within_at_Ioi_iff_right_lim_eq : ContinuousWithinAt f (ioi x) x ↔ rightLim f x = f x :=
   hf.dual.continuous_within_at_Iio_iff_left_lim_eq
 #align monotone.continuous_within_at_Ioi_iff_right_lim_eq Monotone.continuous_within_at_Ioi_iff_right_lim_eq
 
@@ -227,7 +227,7 @@ theorem continuous_at_iff_left_lim_eq_right_lim : ContinuousAt f x ↔ leftLim f
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
 version. -/
 theorem countable_not_continuous_within_at_Ioi [TopologicalSpace.SecondCountableTopology β] :
-    Set.Countable { x | ¬ContinuousWithinAt f (IoiCat x) x } := by
+    Set.Countable { x | ¬ContinuousWithinAt f (ioi x) x } := by
   /- If `f` is not continuous on the right at `x`, there is an interval `(f x, z x)` which is not
     reached by `f`. This gives a family of disjoint open intervals in `β`. Such a family can only
     be countable as `β` is second-countable. -/
@@ -279,7 +279,7 @@ theorem countable_not_continuous_within_at_Ioi [TopologicalSpace.SecondCountable
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
 version. -/
 theorem countable_not_continuous_within_at_Iio [TopologicalSpace.SecondCountableTopology β] :
-    Set.Countable { x | ¬ContinuousWithinAt f (IioCat x) x } :=
+    Set.Countable { x | ¬ContinuousWithinAt f (iio x) x } :=
   hf.dual.countable_not_continuous_within_at_Ioi
 #align monotone.countable_not_continuous_within_at_Iio Monotone.countable_not_continuous_within_at_Iio
 
@@ -358,13 +358,13 @@ theorem tendsto_right_lim_within (x : α) : Tendsto f (𝓝[>] x) (𝓝[≤] rig
 
 /-- An antitone function is continuous to the left at a point if and only if its left limit
 coincides with the value of the function. -/
-theorem continuous_within_at_Iio_iff_left_lim_eq : ContinuousWithinAt f (IioCat x) x ↔ leftLim f x = f x :=
+theorem continuous_within_at_Iio_iff_left_lim_eq : ContinuousWithinAt f (iio x) x ↔ leftLim f x = f x :=
   hf.dual_right.continuous_within_at_Iio_iff_left_lim_eq
 #align antitone.continuous_within_at_Iio_iff_left_lim_eq Antitone.continuous_within_at_Iio_iff_left_lim_eq
 
 /-- An antitone function is continuous to the right at a point if and only if its right limit
 coincides with the value of the function. -/
-theorem continuous_within_at_Ioi_iff_right_lim_eq : ContinuousWithinAt f (IoiCat x) x ↔ rightLim f x = f x :=
+theorem continuous_within_at_Ioi_iff_right_lim_eq : ContinuousWithinAt f (ioi x) x ↔ rightLim f x = f x :=
   hf.dual_right.continuous_within_at_Ioi_iff_right_lim_eq
 #align antitone.continuous_within_at_Ioi_iff_right_lim_eq Antitone.continuous_within_at_Ioi_iff_right_lim_eq
 

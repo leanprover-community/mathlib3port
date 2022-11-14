@@ -80,7 +80,7 @@ variable (p)
 
 /-- The `p`-adic integers as a subring of `ℚ_[p]`. -/
 def subring : Subring ℚ_[p] where
-  Carrier := { x : ℚ_[p] | ∥x∥ ≤ 1 }
+  carrier := { x : ℚ_[p] | ∥x∥ ≤ 1 }
   zero_mem' := by norm_num
   one_mem' := by norm_num
   add_mem' x y hx hy := (padicNormE.nonarchimedean _ _).trans <| max_le_iff.2 ⟨hx, hy⟩
@@ -505,8 +505,8 @@ theorem norm_lt_one_mul {z1 z2 : ℤ_[p]} (hz2 : ∥z2∥ < 1) : ∥z1 * z2∥ <
 #align padic_int.norm_lt_one_mul PadicInt.norm_lt_one_mul
 
 @[simp]
-theorem mem_nonunits {z : ℤ_[p]} : z ∈ Nonunits ℤ_[p] ↔ ∥z∥ < 1 := by
-  rw [lt_iff_le_and_ne] <;> simp [norm_le_one z, Nonunits, is_unit_iff]
+theorem mem_nonunits {z : ℤ_[p]} : z ∈ nonunits ℤ_[p] ↔ ∥z∥ < 1 := by
+  rw [lt_iff_le_and_ne] <;> simp [norm_le_one z, nonunits, is_unit_iff]
 #align padic_int.mem_nonunits PadicInt.mem_nonunits
 
 /-- A `p`-adic number `u` with `∥u∥ = 1` is a unit of `ℤ_[p]`. -/
@@ -635,7 +635,7 @@ section Dvr
 instance : LocalRing ℤ_[p] :=
   LocalRing.ofNonunitsAdd <| by simp only [mem_nonunits] <;> exact fun x y => norm_lt_one_add
 
-theorem p_nonnunit : (p : ℤ_[p]) ∈ Nonunits ℤ_[p] := by
+theorem p_nonnunit : (p : ℤ_[p]) ∈ nonunits ℤ_[p] := by
   have : (p : ℝ)⁻¹ < 1 := inv_lt_one <| by exact_mod_cast hp.1.one_lt
   simp [this]
 #align padic_int.p_nonnunit PadicInt.p_nonnunit

@@ -58,7 +58,7 @@ theorem ofComm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A) (inter : 
 
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
 def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A where
-  Sets := { U | ∃ i, U = B i }
+  sets := { U | ∃ i, U = B i }
   Nonempty := by
     inhabit ι
     exact ⟨B default, default, rfl⟩
@@ -228,7 +228,7 @@ include hB
 
 /-- The image of a submodules basis is a module filter basis. -/
 def toModuleFilterBasis : ModuleFilterBasis R M where
-  Sets := { U | ∃ i, U = B i }
+  sets := { U | ∃ i, U = B i }
   Nonempty := by
     inhabit ι
     exact ⟨B default, default, rfl⟩

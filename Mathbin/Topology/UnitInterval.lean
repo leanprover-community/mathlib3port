@@ -23,61 +23,61 @@ noncomputable section
 
 open Classical TopologicalSpace Filter
 
-open Set Int Set.IccCat
+open Set Int Set.icc
 
 /-! ### The unit interval -/
 
 
 /-- The unit interval `[0,1]` in ℝ. -/
-abbrev UnitInterval : Set ℝ :=
-  Set.IccCat 0 1
-#align unit_interval UnitInterval
+abbrev unitInterval : Set ℝ :=
+  Set.icc 0 1
+#align unit_interval unitInterval
 
 -- mathport name: unit_interval
-localized [UnitInterval] notation "I" => UnitInterval
+localized [unitInterval] notation "I" => unitInterval
 
-namespace UnitInterval
+namespace unitInterval
 
 theorem zero_mem : (0 : ℝ) ∈ I :=
   ⟨le_rfl, zero_le_one⟩
-#align unit_interval.zero_mem UnitInterval.zero_mem
+#align unit_interval.zero_mem unitInterval.zero_mem
 
 theorem one_mem : (1 : ℝ) ∈ I :=
   ⟨zero_le_one, le_rfl⟩
-#align unit_interval.one_mem UnitInterval.one_mem
+#align unit_interval.one_mem unitInterval.one_mem
 
 theorem mul_mem {x y : ℝ} (hx : x ∈ I) (hy : y ∈ I) : x * y ∈ I :=
   ⟨mul_nonneg hx.1 hy.1, (mul_le_mul hx.2 hy.2 hy.1 zero_le_one).trans_eq <| one_mul 1⟩
-#align unit_interval.mul_mem UnitInterval.mul_mem
+#align unit_interval.mul_mem unitInterval.mul_mem
 
 theorem div_mem {x y : ℝ} (hx : 0 ≤ x) (hy : 0 ≤ y) (hxy : x ≤ y) : x / y ∈ I :=
   ⟨div_nonneg hx hy, div_le_one_of_le hxy hy⟩
-#align unit_interval.div_mem UnitInterval.div_mem
+#align unit_interval.div_mem unitInterval.div_mem
 
 theorem fract_mem (x : ℝ) : fract x ∈ I :=
   ⟨fract_nonneg _, (fract_lt_one _).le⟩
-#align unit_interval.fract_mem UnitInterval.fract_mem
+#align unit_interval.fract_mem unitInterval.fract_mem
 
 theorem mem_iff_one_sub_mem {t : ℝ} : t ∈ I ↔ 1 - t ∈ I := by
   rw [mem_Icc, mem_Icc]
   constructor <;> intro <;> constructor <;> linarith
-#align unit_interval.mem_iff_one_sub_mem UnitInterval.mem_iff_one_sub_mem
+#align unit_interval.mem_iff_one_sub_mem unitInterval.mem_iff_one_sub_mem
 
 instance hasZero : Zero I :=
   ⟨⟨0, zero_mem⟩⟩
-#align unit_interval.has_zero UnitInterval.hasZero
+#align unit_interval.has_zero unitInterval.hasZero
 
 instance hasOne : One I :=
   ⟨⟨1, by constructor <;> norm_num⟩⟩
-#align unit_interval.has_one UnitInterval.hasOne
+#align unit_interval.has_one unitInterval.hasOne
 
 theorem coe_ne_zero {x : I} : (x : ℝ) ≠ 0 ↔ x ≠ 0 :=
   not_iff_not.mpr coe_eq_zero
-#align unit_interval.coe_ne_zero UnitInterval.coe_ne_zero
+#align unit_interval.coe_ne_zero unitInterval.coe_ne_zero
 
 theorem coe_ne_one {x : I} : (x : ℝ) ≠ 1 ↔ x ≠ 1 :=
   not_iff_not.mpr coe_eq_one
-#align unit_interval.coe_ne_one UnitInterval.coe_ne_one
+#align unit_interval.coe_ne_one unitInterval.coe_ne_one
 
 instance : Nonempty I :=
   ⟨0⟩
@@ -88,42 +88,42 @@ instance : Mul I :=
 -- todo: we could set up a `linear_ordered_comm_monoid_with_zero I` instance
 theorem mul_le_left {x y : I} : x * y ≤ x :=
   Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_left y.2.2 x.2.1).trans_eq <| mul_one x
-#align unit_interval.mul_le_left UnitInterval.mul_le_left
+#align unit_interval.mul_le_left unitInterval.mul_le_left
 
 theorem mul_le_right {x y : I} : x * y ≤ y :=
   Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_right x.2.2 y.2.1).trans_eq <| one_mul y
-#align unit_interval.mul_le_right UnitInterval.mul_le_right
+#align unit_interval.mul_le_right unitInterval.mul_le_right
 
 /-- Unit interval central symmetry. -/
 def symm : I → I := fun t => ⟨1 - t, mem_iff_one_sub_mem.mp t.Prop⟩
-#align unit_interval.symm UnitInterval.symm
+#align unit_interval.symm unitInterval.symm
 
 -- mathport name: unit_interval.symm
-localized [UnitInterval] notation "σ" => UnitInterval.symm
+localized [unitInterval] notation "σ" => unitInterval.symm
 
 @[simp]
 theorem symm_zero : σ 0 = 1 :=
   Subtype.ext <| by simp [symm]
-#align unit_interval.symm_zero UnitInterval.symm_zero
+#align unit_interval.symm_zero unitInterval.symm_zero
 
 @[simp]
 theorem symm_one : σ 1 = 0 :=
   Subtype.ext <| by simp [symm]
-#align unit_interval.symm_one UnitInterval.symm_one
+#align unit_interval.symm_one unitInterval.symm_one
 
 @[simp]
 theorem symm_symm (x : I) : σ (σ x) = x :=
   Subtype.ext <| by simp [symm]
-#align unit_interval.symm_symm UnitInterval.symm_symm
+#align unit_interval.symm_symm unitInterval.symm_symm
 
 @[simp]
 theorem coe_symm_eq (x : I) : (σ x : ℝ) = 1 - x :=
   rfl
-#align unit_interval.coe_symm_eq UnitInterval.coe_symm_eq
+#align unit_interval.coe_symm_eq unitInterval.coe_symm_eq
 
 @[continuity]
 theorem continuous_symm : Continuous σ := by continuity!
-#align unit_interval.continuous_symm UnitInterval.continuous_symm
+#align unit_interval.continuous_symm unitInterval.continuous_symm
 
 instance : ConnectedSpace I :=
   Subtype.connected_space ⟨nonempty_Icc.mpr zero_le_one, is_preconnected_Icc⟩
@@ -133,33 +133,33 @@ example : CompactSpace I := by infer_instance
 
 theorem nonneg (x : I) : 0 ≤ (x : ℝ) :=
   x.2.1
-#align unit_interval.nonneg UnitInterval.nonneg
+#align unit_interval.nonneg unitInterval.nonneg
 
 theorem one_minus_nonneg (x : I) : 0 ≤ 1 - (x : ℝ) := by simpa using x.2.2
-#align unit_interval.one_minus_nonneg UnitInterval.one_minus_nonneg
+#align unit_interval.one_minus_nonneg unitInterval.one_minus_nonneg
 
 theorem le_one (x : I) : (x : ℝ) ≤ 1 :=
   x.2.2
-#align unit_interval.le_one UnitInterval.le_one
+#align unit_interval.le_one unitInterval.le_one
 
 theorem one_minus_le_one (x : I) : 1 - (x : ℝ) ≤ 1 := by simpa using x.2.1
-#align unit_interval.one_minus_le_one UnitInterval.one_minus_le_one
+#align unit_interval.one_minus_le_one unitInterval.one_minus_le_one
 
 theorem add_pos {t : I} {x : ℝ} (hx : 0 < x) : 0 < (x + t : ℝ) :=
   add_pos_of_pos_of_nonneg hx <| nonneg _
-#align unit_interval.add_pos UnitInterval.add_pos
+#align unit_interval.add_pos unitInterval.add_pos
 
 /-- like `unit_interval.nonneg`, but with the inequality in `I`. -/
 theorem nonneg' {t : I} : 0 ≤ t :=
   t.2.1
-#align unit_interval.nonneg' UnitInterval.nonneg'
+#align unit_interval.nonneg' unitInterval.nonneg'
 
 /-- like `unit_interval.le_one`, but with the inequality in `I`. -/
 theorem le_one' {t : I} : t ≤ 1 :=
   t.2.2
-#align unit_interval.le_one' UnitInterval.le_one'
+#align unit_interval.le_one' unitInterval.le_one'
 
-theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.IccCat (0 : ℝ) (1 / a) := by
+theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.icc (0 : ℝ) (1 / a) := by
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor
   · exact nonneg_of_mul_nonneg_right h₁ ha
     
@@ -169,13 +169,13 @@ theorem mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ Set.Icc
     
   · rwa [le_div_iff ha, mul_comm] at h₂
     
-#align unit_interval.mul_pos_mem_iff UnitInterval.mul_pos_mem_iff
+#align unit_interval.mul_pos_mem_iff unitInterval.mul_pos_mem_iff
 
-theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.IccCat (1 / 2 : ℝ) 1 := by
+theorem two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ Set.icc (1 / 2 : ℝ) 1 := by
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith
-#align unit_interval.two_mul_sub_one_mem_iff UnitInterval.two_mul_sub_one_mem_iff
+#align unit_interval.two_mul_sub_one_mem_iff unitInterval.two_mul_sub_one_mem_iff
 
-end UnitInterval
+end unitInterval
 
 @[simp]
 theorem proj_Icc_eq_zero {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 0 ↔ x ≤ 0 :=
@@ -209,26 +209,25 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Topo
 /-- The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
 -/
 theorem affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
-    affineHomeomorph a b h.Ne.symm '' Set.IccCat 0 1 = Set.IccCat b (a + b) := by simp [h]
+    affineHomeomorph a b h.Ne.symm '' Set.icc 0 1 = Set.icc b (a + b) := by simp [h]
 #align affine_homeomorph_image_I affine_homeomorph_image_I
 
 /-- The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
 -/
-def iccHomeoI (a b : 𝕜) (h : a < b) : Set.IccCat a b ≃ₜ Set.IccCat (0 : 𝕜) (1 : 𝕜) := by
-  let e := Homeomorph.image (affineHomeomorph (b - a) a (sub_pos.mpr h).Ne.symm) (Set.IccCat 0 1)
+def iccHomeoI (a b : 𝕜) (h : a < b) : Set.icc a b ≃ₜ Set.icc (0 : 𝕜) (1 : 𝕜) := by
+  let e := Homeomorph.image (affineHomeomorph (b - a) a (sub_pos.mpr h).Ne.symm) (Set.icc 0 1)
   refine' (e.trans _).symm
   apply Homeomorph.setCongr
   simp [sub_pos.mpr h]
 #align Icc_homeo_I iccHomeoI
 
 @[simp]
-theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.IccCat a b) :
-    ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=
+theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.icc a b) : ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=
   rfl
 #align Icc_homeo_I_apply_coe Icc_homeo_I_apply_coe
 
 @[simp]
-theorem Icc_homeo_I_symm_apply_coe (a b : 𝕜) (h : a < b) (x : Set.IccCat (0 : 𝕜) (1 : 𝕜)) :
+theorem Icc_homeo_I_symm_apply_coe (a b : 𝕜) (h : a < b) (x : Set.icc (0 : 𝕜) (1 : 𝕜)) :
     ((iccHomeoI a b h).symm x : 𝕜) = (b - a) * x + a :=
   rfl
 #align Icc_homeo_I_symm_apply_coe Icc_homeo_I_symm_apply_coe

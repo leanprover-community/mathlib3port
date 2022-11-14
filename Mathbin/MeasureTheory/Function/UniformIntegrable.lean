@@ -683,7 +683,7 @@ theorem unifIntegrableOf' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → β
     (h : ∀ ε : ℝ, 0 < ε → ∃ C : ℝ≥0, 0 < C ∧ ∀ i, snorm ({ x | C ≤ ∥f i x∥₊ }.indicator (f i)) p μ ≤ Ennreal.ofReal ε) :
     UnifIntegrable f p μ := by
   have hpzero := (lt_of_lt_of_le Ennreal.zero_lt_one hp).Ne.symm
-  by_cases hμ:μ Set.Univ = 0
+  by_cases hμ:μ Set.univ = 0
   · rw [measure.measure_univ_eq_zero] at hμ
     exact hμ.symm ▸ unif_integrable_zero_meas
     
@@ -717,7 +717,7 @@ theorem unifIntegrableOf' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → β
         rw [← inter_union_distrib_left,
           (by
             ext
-            simp [le_or_lt] : { x : α | C ≤ ∥f i x∥₊ } ∪ { x : α | ∥f i x∥₊ < C } = Set.Univ),
+            simp [le_or_lt] : { x : α | C ≤ ∥f i x∥₊ } ∪ { x : α | ∥f i x∥₊ < C } = Set.univ),
           inter_univ]
         
       · refine' (Disjoint.inf_right' _ _).inf_left' _

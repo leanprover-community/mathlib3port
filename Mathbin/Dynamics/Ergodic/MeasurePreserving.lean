@@ -114,7 +114,7 @@ variable {μ : Measure α} {f : α → α} {s : Set α}
 /-- If `μ univ < n * μ s` and `f` is a map preserving measure `μ`,
 then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
 theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f μ μ) (hs : MeasurableSet s) {n : ℕ}
-    (hvol : μ (Univ : Set α) < n * μ s) : ∃ x ∈ s, ∃ m ∈ IooCat 0 n, (f^[m]) x ∈ s := by
+    (hvol : μ (univ : Set α) < n * μ s) : ∃ x ∈ s, ∃ m ∈ ioo 0 n, (f^[m]) x ∈ s := by
   have A : ∀ m, MeasurableSet (f^[m] ⁻¹' s) := fun m => (hf.iterate m).Measurable hs
   have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s := fun m => (hf.iterate m).measure_preimage hs
   have : μ (univ : Set α) < (Finset.range n).Sum fun m => μ (f^[m] ⁻¹' s) := by

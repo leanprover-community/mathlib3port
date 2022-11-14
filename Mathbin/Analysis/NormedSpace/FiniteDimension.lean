@@ -194,7 +194,7 @@ theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace
     ∃ g : α → E', LipschitzWith (lipschitzExtensionConstant E' * K) g ∧ EqOn f g s := by
   /- This result is already known for spaces `ι → ℝ`. We use a continuous linear equiv between
     `E'` and such a space to transfer the result to `E'`. -/
-  let ι : Type _ := Basis.OfVectorSpaceIndex ℝ E'
+  let ι : Type _ := Basis.ofVectorSpaceIndex ℝ E'
   let A := (Basis.ofVectorSpace ℝ E').equivFun.toContinuousLinearEquiv
   have LA : LipschitzWith ∥A.to_continuous_linear_map∥₊ A := by apply A.lipschitz
   have L : LipschitzOnWith (∥A.to_continuous_linear_map∥₊ * K) (A ∘ f) s := LA.comp_lipschitz_on_with hf
@@ -375,7 +375,7 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] : SecondCountabl
     have : ∀ i, ∃ n, ∥φ (v i) - u n∥ ≤ ε / (2 * C) := by
       simp only [norm_sub_rev]
       intro i
-      have : φ (v i) ∈ Closure (range u) := hu _
+      have : φ (v i) ∈ closure (range u) := hu _
       obtain ⟨n, hn⟩ : ∃ n, ∥u n - φ (v i)∥ < ε / (2 * C) := by
         rw [mem_closure_iff_nhds_basis Metric.nhds_basis_ball] at this
         specialize this (ε / (2 * C)) hε2C
@@ -478,7 +478,7 @@ variable (𝕜)
 
 /-- **Riesz's theorem**: if a closed ball with center zero of positive radius is compact in a vector
 space, then the space is finite-dimensional. -/
-theorem finiteDimensionalOfIsCompactClosedBall₀ {r : ℝ} (rpos : 0 < r) (h : IsCompact (Metric.ClosedBall (0 : E) r)) :
+theorem finiteDimensionalOfIsCompactClosedBall₀ {r : ℝ} (rpos : 0 < r) (h : IsCompact (Metric.closedBall (0 : E) r)) :
     FiniteDimensional 𝕜 E := by
   by_contra hfin
   obtain ⟨R, f, Rgt, fle, lef⟩ : ∃ (R : ℝ)(f : ℕ → E), 1 < R ∧ (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ :=
@@ -486,7 +486,7 @@ theorem finiteDimensionalOfIsCompactClosedBall₀ {r : ℝ} (rpos : 0 < r) (h : 
   have rRpos : 0 < r / R := div_pos rpos (zero_lt_one.trans Rgt)
   obtain ⟨c, hc⟩ : ∃ c : 𝕜, 0 < ∥c∥ ∧ ∥c∥ < r / R := NormedField.exists_norm_lt _ rRpos
   let g := fun n : ℕ => c • f n
-  have A : ∀ n, g n ∈ Metric.ClosedBall (0 : E) r := by
+  have A : ∀ n, g n ∈ Metric.closedBall (0 : E) r := by
     intro n
     simp only [norm_smul, dist_zero_right, Metric.mem_closed_ball]
     calc
@@ -494,7 +494,7 @@ theorem finiteDimensionalOfIsCompactClosedBall₀ {r : ℝ} (rpos : 0 < r) (h : 
       _ = r := by field_simp [(zero_lt_one.trans Rgt).ne']
       
   obtain ⟨x, hx, φ, φmono, φlim⟩ :
-    ∃ (x : E)(H : x ∈ Metric.ClosedBall (0 : E) r)(φ : ℕ → ℕ), StrictMono φ ∧ tendsto (g ∘ φ) at_top (𝓝 x) :=
+    ∃ (x : E)(H : x ∈ Metric.closedBall (0 : E) r)(φ : ℕ → ℕ), StrictMono φ ∧ tendsto (g ∘ φ) at_top (𝓝 x) :=
     h.tendsto_subseq A
   have B : CauchySeq (g ∘ φ) := φlim.cauchy_seq
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ n : ℕ, N ≤ n → dist ((g ∘ φ) n) ((g ∘ φ) N) < ∥c∥ := Metric.cauchy_seq_iff'.1 B ∥c∥ hc.1
@@ -511,7 +511,7 @@ theorem finiteDimensionalOfIsCompactClosedBall₀ {r : ℝ} (rpos : 0 < r) (h : 
 
 /-- **Riesz's theorem**: if a closed ball of positive radius is compact in a vector space, then the
 space is finite-dimensional. -/
-theorem finiteDimensionalOfIsCompactClosedBall {r : ℝ} (rpos : 0 < r) {c : E} (h : IsCompact (Metric.ClosedBall c r)) :
+theorem finiteDimensionalOfIsCompactClosedBall {r : ℝ} (rpos : 0 < r) {c : E} (h : IsCompact (Metric.closedBall c r)) :
     FiniteDimensional 𝕜 E := by
   apply finiteDimensionalOfIsCompactClosedBall₀ 𝕜 rpos
   have : Continuous fun x => -c + x := continuous_const.add continuous_id
@@ -533,10 +533,10 @@ theorem HasCompactMulSupport.eq_one_or_finite_dimensional {X : Type _} [Topologi
   push_neg  at h
   obtain ⟨x, hx⟩ : ∃ x, f x ≠ 1
   exact h
-  have : Function.MulSupport f ∈ 𝓝 x := h'f.is_open_mul_support.mem_nhds hx
-  obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ)(hi : 0 < r), Metric.ClosedBall x r ⊆ Function.MulSupport f
+  have : Function.mulSupport f ∈ 𝓝 x := h'f.is_open_mul_support.mem_nhds hx
+  obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ)(hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f
   exact metric.nhds_basis_closed_ball.mem_iff.1 this
-  have : IsCompact (Metric.ClosedBall x r) :=
+  have : IsCompact (Metric.closedBall x r) :=
     is_compact_of_is_closed_subset hf Metric.isClosedBall (hr.trans (subset_mul_tsupport _))
   exact finiteDimensionalOfIsCompactClosedBall 𝕜 rpos this
 #align has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finite_dimensional
@@ -647,7 +647,7 @@ instance (priority := 900) FiniteDimensional.properReal (E : Type u) [NormedAddC
 `is_compact.exists_mem_frontier_inf_dist_compl_eq_dist`. -/
 theorem exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {x : E} {s : Set E} (hx : x ∈ s) (hs : s ≠ univ) :
-    ∃ y ∈ Frontier s, Metric.infDist x (sᶜ) = dist x y := by
+    ∃ y ∈ frontier s, Metric.infDist x (sᶜ) = dist x y := by
   rcases Metric.exists_mem_closure_inf_dist_eq_dist (nonempty_compl.2 hs) x with ⟨y, hys, hyd⟩
   rw [closure_compl] at hys
   refine' ⟨y, ⟨Metric.closed_ball_inf_dist_compl_subset_closure hx <| Metric.mem_closed_ball.2 <| ge_of_eq _, hys⟩, hyd⟩
@@ -659,8 +659,8 @@ theorem exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedAddCommGr
 `exists_mem_frontier_inf_dist_compl_eq_dist`. -/
 theorem IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [Nontrivial E] {x : E} {K : Set E} (hK : IsCompact K) (hx : x ∈ K) :
-    ∃ y ∈ Frontier K, Metric.infDist x (Kᶜ) = dist x y := by
-  obtain hx' | hx' : x ∈ Interior K ∪ Frontier K := by
+    ∃ y ∈ frontier K, Metric.infDist x (Kᶜ) = dist x y := by
+  obtain hx' | hx' : x ∈ interior K ∪ frontier K := by
     rw [← closure_eq_interior_union_frontier]
     exact subset_closure hx
   · rw [mem_interior_iff_mem_nhds, metric.nhds_basis_closed_ball.mem_iff] at hx'

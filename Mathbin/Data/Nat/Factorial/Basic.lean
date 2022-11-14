@@ -76,7 +76,7 @@ theorem factorial_dvd_factorial {m n} (h : m ≤ n) : m ! ∣ n ! := by
   obtain rfl | hl := h.eq_or_lt
   · simp
     
-  exact (IH (le_of_lt_succ hl)).mul_left _
+  exact (IH (le_of_lt_succ hl)).mulLeft _
 #align nat.factorial_dvd_factorial Nat.factorial_dvd_factorial
 
 theorem dvd_factorial : ∀ {m n}, 0 < m → m ≤ n → m ∣ n !

@@ -176,7 +176,7 @@ theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroup O] [M
     by
     obtain ⟨P, P_eq, P_max⟩ :=
       set_has_maximal_iff_noetherian.mpr (inferInstance : IsNoetherian R R) _
-        (show (Set.Range fun ψ : M →ₗ[R] R => ψ.submoduleImage N).Nonempty from ⟨_, set.mem_range.mpr ⟨0, rfl⟩⟩)
+        (show (Set.range fun ψ : M →ₗ[R] R => ψ.submoduleImage N).Nonempty from ⟨_, set.mem_range.mpr ⟨0, rfl⟩⟩)
     obtain ⟨ϕ, rfl⟩ := set.mem_range.mp P_eq
     exact ⟨ϕ, fun ψ hψ => P_max _ ⟨_, rfl⟩ hψ⟩
   let ϕ := this.some
@@ -346,7 +346,7 @@ noncomputable def Submodule.basisOfPidOfLe {ι : Type _} [Fintype ι] {N O : Sub
 /-- A submodule inside the span of a linear independent family is a free `R`-module of finite rank,
 if `R` is a principal ideal domain. -/
 noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Fintype ι] {b : ι → M} (hb : LinearIndependent R b)
-    {N : Submodule R M} (le : N ≤ Submodule.span R (Set.Range b)) : Σn : ℕ, Basis (Fin n) R N :=
+    {N : Submodule R M} (le : N ≤ Submodule.span R (Set.range b)) : Σn : ℕ, Basis (Fin n) R N :=
   Submodule.basisOfPidOfLe le (Basis.span hb)
 #align submodule.basis_of_pid_of_le_span Submodule.basisOfPidOfLeSpan
 
@@ -354,7 +354,7 @@ variable {M}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (i «expr ∉ » I) -/
 /-- A finite type torsion free module over a PID is free. -/
-noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M} (hs : span R (Range s) = ⊤)
+noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M} (hs : span R (range s) = ⊤)
     [NoZeroSmulDivisors R M] : Σn : ℕ, Basis (Fin n) R M := by
   classical-- We define `N` as the submodule spanned by a maximal linear independent subfamily of `s`
     have := exists_maximal_independent R s

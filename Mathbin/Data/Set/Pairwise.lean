@@ -176,7 +176,7 @@ theorem pairwise_pair_of_symmetric (hr : Symmetric r) : Set.Pairwise {a, b} r �
   simp [pairwise_insert_of_symmetric hr]
 #align set.pairwise_pair_of_symmetric Set.pairwise_pair_of_symmetric
 
-theorem pairwise_univ : (Univ : Set α).Pairwise r ↔ Pairwise r := by
+theorem pairwise_univ : (univ : Set α).Pairwise r ↔ Pairwise r := by
   simp only [Set.Pairwise, Pairwise, mem_univ, forall_const]
 #align set.pairwise_univ Set.pairwise_univ
 
@@ -281,7 +281,7 @@ theorem InjOn.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.InjO
 #align set.inj_on.pairwise_disjoint_image Set.InjOn.pairwise_disjoint_image
 
 theorem PairwiseDisjoint.range (g : s → ι) (hg : ∀ i : s, f (g i) ≤ f i) (ht : s.PairwiseDisjoint f) :
-    (Range g).PairwiseDisjoint f := by
+    (range g).PairwiseDisjoint f := by
   rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
   exact ((ht x.2 y.2) fun h => hxy <| congr_arg g <| Subtype.ext h).mono (hg x) (hg y)
 #align set.pairwise_disjoint.range Set.PairwiseDisjoint.range
@@ -357,7 +357,7 @@ end CompleteLattice
 /-! ### Pairwise disjoint set of sets -/
 
 
-theorem pairwise_disjoint_range_singleton : (Set.Range (singleton : ι → Set ι)).PairwiseDisjoint id := by
+theorem pairwise_disjoint_range_singleton : (Set.range (singleton : ι → Set ι)).PairwiseDisjoint id := by
   rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ h
   exact disjoint_singleton.2 (ne_of_apply_ne _ h)
 #align set.pairwise_disjoint_range_singleton Set.pairwise_disjoint_range_singleton
@@ -426,7 +426,7 @@ theorem pairwise_disjoint_image_left_iff {f : α → β → γ} {s : Set α} {t 
 end Set
 
 theorem pairwise_disjoint_fiber (f : ι → α) : Pairwise (Disjoint on fun a : α => f ⁻¹' {a}) :=
-  Set.pairwise_univ.1 <| Set.pairwise_disjoint_fiber f Univ
+  Set.pairwise_univ.1 <| Set.pairwise_disjoint_fiber f univ
 #align pairwise_disjoint_fiber pairwise_disjoint_fiber
 
 section

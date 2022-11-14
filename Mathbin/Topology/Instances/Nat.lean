@@ -52,15 +52,15 @@ theorem closedEmbeddingCoeReal : ClosedEmbedding (coe : ℕ → ℝ) :=
 instance : MetricSpace ℕ :=
   Nat.uniform_embedding_coe_real.comapMetricSpace _
 
-theorem preimage_ball (x : ℕ) (r : ℝ) : coe ⁻¹' Ball (x : ℝ) r = Ball x r :=
+theorem preimage_ball (x : ℕ) (r : ℝ) : coe ⁻¹' ball (x : ℝ) r = ball x r :=
   rfl
 #align nat.preimage_ball Nat.preimage_ball
 
-theorem preimage_closed_ball (x : ℕ) (r : ℝ) : coe ⁻¹' ClosedBall (x : ℝ) r = ClosedBall x r :=
+theorem preimage_closed_ball (x : ℕ) (r : ℝ) : coe ⁻¹' closedBall (x : ℝ) r = closedBall x r :=
   rfl
 #align nat.preimage_closed_ball Nat.preimage_closed_ball
 
-theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : ClosedBall x r = IccCat ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
+theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
   rcases le_or_lt 0 r with (hr | hr)
   · rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
     exact add_nonneg (cast_nonneg x) hr

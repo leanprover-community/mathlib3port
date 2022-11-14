@@ -308,7 +308,7 @@ theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fu
   constructor
   · contrapose!
     rintro ⟨y, hy⟩ hf
-    let C := Set.Range f
+    let C := Set.range f
     have hC : IsClosed C := (is_compact_range f.continuous).IsClosed
     let U := Cᶜ
     have hU : IsOpen U := is_open_compl_iff.mpr hC

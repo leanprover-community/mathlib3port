@@ -62,7 +62,7 @@ variable {r : α → α → Prop} {f g : Filter α}
 
 /-- `f` is eventually bounded if and only if, there exists an admissible set on which it is
 bounded. -/
-theorem is_bounded_iff : f.IsBounded r ↔ ∃ s ∈ f.Sets, ∃ b, s ⊆ { x | r x b } :=
+theorem is_bounded_iff : f.IsBounded r ↔ ∃ s ∈ f.sets, ∃ b, s ⊆ { x | r x b } :=
   Iff.intro (fun ⟨b, hb⟩ => ⟨{ a | r a b }, hb, b, Subset.refl _⟩) fun ⟨s, hs, b, hb⟩ => ⟨b, mem_of_superset hs hb⟩
 #align filter.is_bounded_iff Filter.is_bounded_iff
 
@@ -131,7 +131,7 @@ theorem not_is_bounded_under_of_tendsto_at_bot [Preorder β] [NoMinOrder β] {f 
 #align filter.not_is_bounded_under_of_tendsto_at_bot Filter.not_is_bounded_under_of_tendsto_at_bot
 
 theorem IsBoundedUnder.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α → β}
-    (hf : IsBoundedUnder (· ≤ ·) cofinite f) : BddAbove (Range f) := by
+    (hf : IsBoundedUnder (· ≤ ·) cofinite f) : BddAbove (range f) := by
   rcases hf with ⟨b, hb⟩
   haveI : Nonempty β := ⟨b⟩
   rw [← image_univ, ← union_compl_self { x | f x ≤ b }, image_union, bdd_above_union]
@@ -139,18 +139,18 @@ theorem IsBoundedUnder.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α �
 #align filter.is_bounded_under.bdd_above_range_of_cofinite Filter.IsBoundedUnder.bdd_above_range_of_cofinite
 
 theorem IsBoundedUnder.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
-    (hf : IsBoundedUnder (· ≥ ·) cofinite f) : BddBelow (Range f) :=
+    (hf : IsBoundedUnder (· ≥ ·) cofinite f) : BddBelow (range f) :=
   @IsBoundedUnder.bdd_above_range_of_cofinite α βᵒᵈ _ _ hf
 #align filter.is_bounded_under.bdd_below_range_of_cofinite Filter.IsBoundedUnder.bdd_below_range_of_cofinite
 
 theorem IsBoundedUnder.bdd_above_range [SemilatticeSup β] {f : ℕ → β} (hf : IsBoundedUnder (· ≤ ·) atTop f) :
-    BddAbove (Range f) := by
+    BddAbove (range f) := by
   rw [← Nat.cofinite_eq_at_top] at hf
   exact hf.bdd_above_range_of_cofinite
 #align filter.is_bounded_under.bdd_above_range Filter.IsBoundedUnder.bdd_above_range
 
 theorem IsBoundedUnder.bdd_below_range [SemilatticeInf β] {f : ℕ → β} (hf : IsBoundedUnder (· ≥ ·) atTop f) :
-    BddBelow (Range f) :=
+    BddBelow (range f) :=
   @IsBoundedUnder.bdd_above_range βᵒᵈ _ _ hf
 #align filter.is_bounded_under.bdd_below_range Filter.IsBoundedUnder.bdd_below_range
 
@@ -782,7 +782,7 @@ theorem bliminf_eq_supr_binfi {f : Filter β} {p : β → Prop} {u : β → α} 
 #align filter.bliminf_eq_supr_binfi Filter.bliminf_eq_supr_binfi
 
 theorem limsup_eq_Inf_Sup {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a : ι → R) :
-    limsup a F = inf ((fun I => sup (a '' I)) '' F.Sets) := by
+    limsup a F = inf ((fun I => sup (a '' I)) '' F.sets) := by
   refine' le_antisymm _ _
   · rw [limsup_eq]
     refine' Inf_le_Inf fun x hx => _
@@ -797,7 +797,7 @@ theorem limsup_eq_Inf_Sup {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a
 #align filter.limsup_eq_Inf_Sup Filter.limsup_eq_Inf_Sup
 
 theorem liminf_eq_Sup_Inf {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a : ι → R) :
-    liminf a F = sup ((fun I => inf (a '' I)) '' F.Sets) :=
+    liminf a F = sup ((fun I => inf (a '' I)) '' F.sets) :=
   @Filter.limsup_eq_Inf_Sup ι (OrderDual R) _ _ a
 #align filter.liminf_eq_Sup_Inf Filter.liminf_eq_Sup_Inf
 

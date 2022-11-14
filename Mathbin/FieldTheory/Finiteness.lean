@@ -30,7 +30,7 @@ theorem iff_dim_lt_aleph_0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ := by
   rw [← b.mk_eq_dim'', lt_aleph_0_iff_set_finite]
   constructor
   · intro
-    exact finite_of_linear_independent (Basis.OfVectorSpaceIndex.linear_independent K V)
+    exact finite_of_linear_independent (Basis.ofVectorSpaceIndex.linear_independent K V)
     
   · intro hbfinite
     refine' @is_noetherian_of_linear_equiv K (⊤ : Submodule K V) V _ _ _ _ _ (LinearEquiv.ofTop _ rfl) (id _)
@@ -56,7 +56,7 @@ noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis 
 
 /-- In a noetherian module over a division ring,
 `basis.of_vector_space` is indexed by a finite type. -/
-noncomputable instance [IsNoetherian K V] : Fintype (Basis.OfVectorSpaceIndex K V) :=
+noncomputable instance [IsNoetherian K V] : Fintype (Basis.ofVectorSpaceIndex K V) :=
   fintypeBasisIndex (Basis.ofVectorSpace K V)
 
 /-- In a noetherian module over a division ring,
@@ -74,13 +74,13 @@ noncomputable def finsetBasisIndex [IsNoetherian K V] : Finset V :=
 #align is_noetherian.finset_basis_index IsNoetherian.finsetBasisIndex
 
 @[simp]
-theorem coe_finset_basis_index [IsNoetherian K V] : (↑(finsetBasisIndex K V) : Set V) = Basis.OfVectorSpaceIndex K V :=
+theorem coe_finset_basis_index [IsNoetherian K V] : (↑(finsetBasisIndex K V) : Set V) = Basis.ofVectorSpaceIndex K V :=
   Set.Finite.coe_to_finset _
 #align is_noetherian.coe_finset_basis_index IsNoetherian.coe_finset_basis_index
 
 @[simp]
 theorem coe_sort_finset_basis_index [IsNoetherian K V] :
-    (finsetBasisIndex K V : Type _) = Basis.OfVectorSpaceIndex K V :=
+    (finsetBasisIndex K V : Type _) = Basis.ofVectorSpaceIndex K V :=
   Set.Finite.coe_sort_to_finset _
 #align is_noetherian.coe_sort_finset_basis_index IsNoetherian.coe_sort_finset_basis_index
 
@@ -94,7 +94,7 @@ noncomputable def finsetBasis [IsNoetherian K V] : Basis (finsetBasisIndex K V) 
 #align is_noetherian.finset_basis IsNoetherian.finsetBasis
 
 @[simp]
-theorem range_finset_basis [IsNoetherian K V] : Set.Range (finsetBasis K V) = Basis.OfVectorSpaceIndex K V := by
+theorem range_finset_basis [IsNoetherian K V] : Set.range (finsetBasis K V) = Basis.ofVectorSpaceIndex K V := by
   rw [finset_basis, Basis.range_reindex, Basis.range_of_vector_space]
 #align is_noetherian.range_finset_basis IsNoetherian.range_finset_basis
 

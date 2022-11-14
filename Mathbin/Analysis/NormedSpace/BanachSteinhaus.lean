@@ -47,7 +47,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
   rcases metric.is_open_iff.mp is_open_interior x hx with ⟨ε, ε_pos, hε⟩
   obtain ⟨k, hk⟩ := NormedField.exists_one_lt_norm 𝕜
   -- show all elements in the ball have norm bounded by `m` after applying any `g i`
-  have real_norm_le : ∀ z : E, z ∈ Metric.Ball x ε → ∀ i : ι, ∥g i z∥ ≤ m := by
+  have real_norm_le : ∀ z : E, z ∈ Metric.ball x ε → ∀ i : ι, ∥g i z∥ ≤ m := by
     intro z hz i
     replace hz := mem_Inter.mp (interior_Inter_subset _ (hε hz)) i
     apply interior_subset hz

@@ -99,7 +99,7 @@ theorem prod_to_multiset [CommMonoid α] (f : α →₀ ℕ) : f.toMultiset.Prod
 #align finsupp.prod_to_multiset Finsupp.prod_to_multiset
 
 @[simp]
-theorem to_finset_to_multiset [DecidableEq α] (f : α →₀ ℕ) : f.toMultiset.toFinset = f.Support := by
+theorem to_finset_to_multiset [DecidableEq α] (f : α →₀ ℕ) : f.toMultiset.toFinset = f.support := by
   refine' f.induction _ _
   · rw [to_multiset_zero, Multiset.to_finset_zero, support_zero]
     
@@ -115,7 +115,7 @@ theorem to_finset_to_multiset [DecidableEq α] (f : α →₀ ℕ) : f.toMultise
 theorem count_to_multiset [DecidableEq α] (f : α →₀ ℕ) (a : α) : f.toMultiset.count a = f a :=
   calc
     f.toMultiset.count a = f.Sum fun x n => (n • {x} : Multiset α).count a :=
-      (Multiset.countAddMonoidHom a).map_sum _ f.Support
+      (Multiset.countAddMonoidHom a).map_sum _ f.support
     _ = f.Sum fun x n => n * ({x} : Multiset α).count a := by simp only [Multiset.count_nsmul]
     _ = f a * ({a} : Multiset α).count a :=
       sum_eq_single _ (fun a' _ H => by simp only [Multiset.count_singleton, if_false, H.symm, mul_zero]) fun H => by
@@ -125,7 +125,7 @@ theorem count_to_multiset [DecidableEq α] (f : α →₀ ℕ) (a : α) : f.toMu
 #align finsupp.count_to_multiset Finsupp.count_to_multiset
 
 @[simp]
-theorem mem_to_multiset (f : α →₀ ℕ) (i : α) : i ∈ f.toMultiset ↔ i ∈ f.Support := by
+theorem mem_to_multiset (f : α →₀ ℕ) (i : α) : i ∈ f.toMultiset ↔ i ∈ f.support := by
   rw [← Multiset.count_ne_zero, Finsupp.count_to_multiset, Finsupp.mem_support_iff]
 #align finsupp.mem_to_multiset Finsupp.mem_to_multiset
 
@@ -140,7 +140,7 @@ def toFinsupp : Multiset α ≃+ (α →₀ ℕ) :=
 #align multiset.to_finsupp Multiset.toFinsupp
 
 @[simp]
-theorem to_finsupp_support [DecidableEq α] (s : Multiset α) : s.toFinsupp.Support = s.toFinset := by convert rfl
+theorem to_finsupp_support [DecidableEq α] (s : Multiset α) : s.toFinsupp.support = s.toFinset := by convert rfl
 #align multiset.to_finsupp_support Multiset.to_finsupp_support
 
 @[simp]

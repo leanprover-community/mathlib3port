@@ -35,66 +35,66 @@ section DenselyOrdered
 
 variable [DenselyOrdered α] {a b : α} (h : a < b)
 
-theorem IooCat.infinite : Infinite (IooCat a b) :=
+theorem ioo.infinite : Infinite (ioo a b) :=
   @NoMaxOrder.infinite _ _ (nonempty_Ioo_subtype h) _
-#align set.Ioo.infinite Set.IooCat.infinite
+#align set.Ioo.infinite Set.ioo.infinite
 
-theorem Ioo_infinite : (IooCat a b).Infinite :=
-  infinite_coe_iff.1 <| IooCat.infinite h
+theorem Ioo_infinite : (ioo a b).Infinite :=
+  infinite_coe_iff.1 <| ioo.infinite h
 #align set.Ioo_infinite Set.Ioo_infinite
 
-theorem Ico_infinite : (IcoCat a b).Infinite :=
+theorem Ico_infinite : (ico a b).Infinite :=
   (Ioo_infinite h).mono Ioo_subset_Ico_self
 #align set.Ico_infinite Set.Ico_infinite
 
-theorem IcoCat.infinite : Infinite (IcoCat a b) :=
+theorem ico.infinite : Infinite (ico a b) :=
   infinite_coe_iff.2 <| Ico_infinite h
-#align set.Ico.infinite Set.IcoCat.infinite
+#align set.Ico.infinite Set.ico.infinite
 
-theorem Ioc_infinite : (IocCat a b).Infinite :=
+theorem Ioc_infinite : (ioc a b).Infinite :=
   (Ioo_infinite h).mono Ioo_subset_Ioc_self
 #align set.Ioc_infinite Set.Ioc_infinite
 
-theorem IocCat.infinite : Infinite (IocCat a b) :=
+theorem ioc.infinite : Infinite (ioc a b) :=
   infinite_coe_iff.2 <| Ioc_infinite h
-#align set.Ioc.infinite Set.IocCat.infinite
+#align set.Ioc.infinite Set.ioc.infinite
 
-theorem Icc_infinite : (IccCat a b).Infinite :=
+theorem Icc_infinite : (icc a b).Infinite :=
   (Ioo_infinite h).mono Ioo_subset_Icc_self
 #align set.Icc_infinite Set.Icc_infinite
 
-theorem IccCat.infinite : Infinite (IccCat a b) :=
+theorem icc.infinite : Infinite (icc a b) :=
   infinite_coe_iff.2 <| Icc_infinite h
-#align set.Icc.infinite Set.IccCat.infinite
+#align set.Icc.infinite Set.icc.infinite
 
 end DenselyOrdered
 
-instance [NoMinOrder α] {a : α} : Infinite (IioCat a) :=
+instance [NoMinOrder α] {a : α} : Infinite (iio a) :=
   NoMinOrder.infinite
 
-theorem Iio_infinite [NoMinOrder α] (a : α) : (IioCat a).Infinite :=
-  infinite_coe_iff.1 IioCat.infinite
+theorem Iio_infinite [NoMinOrder α] (a : α) : (iio a).Infinite :=
+  infinite_coe_iff.1 iio.infinite
 #align set.Iio_infinite Set.Iio_infinite
 
-instance [NoMinOrder α] {a : α} : Infinite (IicCat a) :=
+instance [NoMinOrder α] {a : α} : Infinite (iic a) :=
   NoMinOrder.infinite
 
-theorem Iic_infinite [NoMinOrder α] (a : α) : (IicCat a).Infinite :=
-  infinite_coe_iff.1 IicCat.infinite
+theorem Iic_infinite [NoMinOrder α] (a : α) : (iic a).Infinite :=
+  infinite_coe_iff.1 iic.infinite
 #align set.Iic_infinite Set.Iic_infinite
 
-instance [NoMaxOrder α] {a : α} : Infinite (IoiCat a) :=
+instance [NoMaxOrder α] {a : α} : Infinite (ioi a) :=
   NoMaxOrder.infinite
 
-theorem Ioi_infinite [NoMinOrder α] (a : α) : (IioCat a).Infinite :=
-  infinite_coe_iff.1 IioCat.infinite
+theorem Ioi_infinite [NoMinOrder α] (a : α) : (iio a).Infinite :=
+  infinite_coe_iff.1 iio.infinite
 #align set.Ioi_infinite Set.Ioi_infinite
 
-instance [NoMaxOrder α] {a : α} : Infinite (IciCat a) :=
+instance [NoMaxOrder α] {a : α} : Infinite (ici a) :=
   NoMaxOrder.infinite
 
-theorem Ici_infinite [NoMaxOrder α] (a : α) : (IciCat a).Infinite :=
-  infinite_coe_iff.1 IciCat.infinite
+theorem Ici_infinite [NoMaxOrder α] (a : α) : (ici a).Infinite :=
+  infinite_coe_iff.1 ici.infinite
 #align set.Ici_infinite Set.Ici_infinite
 
 end Set

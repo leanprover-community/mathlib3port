@@ -33,7 +33,7 @@ if `α` is a `fintype`. Has poor computational performance, due to exhaustive se
 constructed inverse. When a better inverse is known, use `equiv.of_left_inverse'` or
 `equiv.of_left_inverse` instead. This is the computable version of `equiv.of_injective`.
 -/
-def Function.Embedding.toEquivRange : α ≃ Set.Range f :=
+def Function.Embedding.toEquivRange : α ≃ Set.range f :=
   ⟨fun a => ⟨f a, Set.mem_range_self a⟩, f.invOfMemRange, fun _ => by simp, fun _ => by simp⟩
 #align function.embedding.to_equiv_range Function.Embedding.toEquivRange
 
@@ -69,12 +69,12 @@ theorem Equiv.Perm.via_fintype_embedding_apply_image (a : α) : e.viaFintypeEmbe
   convert Equiv.Perm.extend_domain_apply_image e _ _
 #align equiv.perm.via_fintype_embedding_apply_image Equiv.Perm.via_fintype_embedding_apply_image
 
-theorem Equiv.Perm.via_fintype_embedding_apply_mem_range {b : β} (h : b ∈ Set.Range f) :
+theorem Equiv.Perm.via_fintype_embedding_apply_mem_range {b : β} (h : b ∈ Set.range f) :
     e.viaFintypeEmbedding f b = f (e (f.invOfMemRange ⟨b, h⟩)) := by
   simpa [Equiv.Perm.viaFintypeEmbedding, Equiv.Perm.extend_domain_apply_subtype, h]
 #align equiv.perm.via_fintype_embedding_apply_mem_range Equiv.Perm.via_fintype_embedding_apply_mem_range
 
-theorem Equiv.Perm.via_fintype_embedding_apply_not_mem_range {b : β} (h : b ∉ Set.Range f) :
+theorem Equiv.Perm.via_fintype_embedding_apply_not_mem_range {b : β} (h : b ∉ Set.range f) :
     e.viaFintypeEmbedding f b = b := by rwa [Equiv.Perm.viaFintypeEmbedding, Equiv.Perm.extend_domain_apply_not_subtype]
 #align equiv.perm.via_fintype_embedding_apply_not_mem_range Equiv.Perm.via_fintype_embedding_apply_not_mem_range
 

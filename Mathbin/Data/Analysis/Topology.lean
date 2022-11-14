@@ -51,7 +51,7 @@ section
 variable (F : Ctop α σ)
 
 instance : CoeFun (Ctop α σ) fun _ => σ → Set α :=
-  ⟨Ctop.F⟩
+  ⟨Ctop.f⟩
 
 @[simp]
 theorem coe_mk (f T h₁ I h₂ h₃ a) : (@Ctop.mk α σ f T h₁ I h₂ h₃) a = f a :=
@@ -75,11 +75,11 @@ end
 
 /-- Every `ctop` is a topological space. -/
 def toTopsp (F : Ctop α σ) : TopologicalSpace α :=
-  TopologicalSpace.generateFrom (Set.Range F.f)
+  TopologicalSpace.generateFrom (Set.range F.f)
 #align ctop.to_topsp Ctop.toTopsp
 
 theorem to_topsp_is_topological_basis (F : Ctop α σ) :
-    @TopologicalSpace.IsTopologicalBasis _ F.toTopsp (Set.Range F.f) :=
+    @TopologicalSpace.IsTopologicalBasis _ F.toTopsp (Set.range F.f) :=
   letI := F.to_topsp
   ⟨fun u ⟨a, e₁⟩ v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
     eq_univ_iff_forall.2 fun x => ⟨_, ⟨_, rfl⟩, F.top_mem x⟩, rfl⟩
@@ -114,7 +114,7 @@ instance (F : Ctop α σ) : Inhabited (@Ctop.Realizer _ F.toTopsp) :=
 namespace Ctop.Realizer
 
 protected theorem is_basis [T : TopologicalSpace α] (F : Realizer α) :
-    TopologicalSpace.IsTopologicalBasis (Set.Range F.f.f) := by
+    TopologicalSpace.IsTopologicalBasis (Set.range F.f.f) := by
   have := to_topsp_is_topological_basis F.F <;> rwa [F.eq] at this
 #align ctop.realizer.is_basis Ctop.Realizer.is_basis
 
@@ -137,7 +137,7 @@ theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
 #align ctop.realizer.is_closed_iff Ctop.Realizer.is_closed_iff
 
 theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :
-    a ∈ Interior s ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
+    a ∈ interior s ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
   mem_interior_iff_mem_nhds.trans F.mem_nhds
 #align ctop.realizer.mem_interior_iff Ctop.Realizer.mem_interior_iff
 
@@ -162,7 +162,7 @@ variable [TopologicalSpace α]
 /-- The topological space realizer made of the open sets. -/
 protected def id : Realizer α :=
   ⟨{ x : Set α // IsOpen x },
-    { f := Subtype.val, top := fun _ => ⟨Univ, is_open_univ⟩, top_mem := mem_univ,
+    { f := Subtype.val, top := fun _ => ⟨univ, is_open_univ⟩, top_mem := mem_univ,
       inter := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => ⟨_, h₁.inter h₂⟩, inter_mem := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a => id,
       inter_sub := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => Subset.refl _ },
     (ext Subtype.property) fun x s h =>
@@ -222,12 +222,12 @@ choice of open sets from the basis of `F` such that they intersect only finitely
 of `f`.  -/
 structure LocallyFinite.Realizer [TopologicalSpace α] (F : Realizer α) (f : β → Set α) where
   bas : ∀ a, { s // a ∈ F.f s }
-  Sets : ∀ x : α, Fintype { i | (f i ∩ F.f (bas x)).Nonempty }
+  sets : ∀ x : α, Fintype { i | (f i ∩ F.f (bas x)).Nonempty }
 #align locally_finite.realizer LocallyFinite.Realizer
 
 theorem LocallyFinite.Realizer.to_locally_finite [TopologicalSpace α] {F : Realizer α} {f : β → Set α}
     (R : LocallyFinite.Realizer F f) : LocallyFinite f := fun a =>
-  ⟨_, F.mem_nhds.2 ⟨(R.bas a).1, (R.bas a).2, Subset.refl _⟩, ⟨R.Sets a⟩⟩
+  ⟨_, F.mem_nhds.2 ⟨(R.bas a).1, (R.bas a).2, Subset.refl _⟩, ⟨R.sets a⟩⟩
 #align locally_finite.realizer.to_locally_finite LocallyFinite.Realizer.to_locally_finite
 
 theorem locally_finite_iff_exists_realizer [TopologicalSpace α] (F : Realizer α) {f : β → Set α} :

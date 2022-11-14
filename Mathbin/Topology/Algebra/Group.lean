@@ -77,7 +77,7 @@ theorem is_open_map_mul_left (a : G) : IsOpenMap fun x => a * x :=
 #align is_open_map_mul_left is_open_map_mul_left
 
 @[to_additive IsOpen.left_add_coset]
-theorem IsOpen.left_coset {U : Set G} (h : IsOpen U) (x : G) : IsOpen (LeftCoset x U) :=
+theorem IsOpen.left_coset {U : Set G} (h : IsOpen U) (x : G) : IsOpen (leftCoset x U) :=
   is_open_map_mul_left x _ h
 #align is_open.left_coset IsOpen.left_coset
 
@@ -87,7 +87,7 @@ theorem is_closed_map_mul_left (a : G) : IsClosedMap fun x => a * x :=
 #align is_closed_map_mul_left is_closed_map_mul_left
 
 @[to_additive IsClosed.leftAddCoset]
-theorem IsClosed.leftCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (LeftCoset x U) :=
+theorem IsClosed.leftCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (leftCoset x U) :=
   is_closed_map_mul_left x _ h
 #align is_closed.left_coset IsClosed.leftCoset
 
@@ -115,7 +115,7 @@ theorem is_open_map_mul_right (a : G) : IsOpenMap fun x => x * a :=
 #align is_open_map_mul_right is_open_map_mul_right
 
 @[to_additive IsOpen.right_add_coset]
-theorem IsOpen.right_coset {U : Set G} (h : IsOpen U) (x : G) : IsOpen (RightCoset U x) :=
+theorem IsOpen.right_coset {U : Set G} (h : IsOpen U) (x : G) : IsOpen (rightCoset U x) :=
   is_open_map_mul_right x _ h
 #align is_open.right_coset IsOpen.right_coset
 
@@ -125,7 +125,7 @@ theorem is_closed_map_mul_right (a : G) : IsClosedMap fun x => x * a :=
 #align is_closed_map_mul_right is_closed_map_mul_right
 
 @[to_additive IsClosed.rightAddCoset]
-theorem IsClosed.rightCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (RightCoset U x) :=
+theorem IsClosed.rightCoset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (rightCoset U x) :=
   is_closed_map_mul_right x _ h
 #align is_closed.right_coset IsClosed.rightCoset
 
@@ -314,7 +314,7 @@ theorem IsClosed.inv (hs : IsClosed s) : IsClosed s⁻¹ :=
 #align is_closed.inv IsClosed.inv
 
 @[to_additive]
-theorem inv_closure : ∀ s : Set G, (Closure s)⁻¹ = Closure s⁻¹ :=
+theorem inv_closure : ∀ s : Set G, (closure s)⁻¹ = closure s⁻¹ :=
   (Homeomorph.inv G).preimage_closure
 #align inv_closure inv_closure
 
@@ -591,12 +591,12 @@ itself a subgroup. -/
 @[to_additive
       "The (topological-space) closure of an additive subgroup of a space `M` with\n`has_continuous_add` is itself an additive subgroup."]
 def Subgroup.topologicalClosure (s : Subgroup G) : Subgroup G :=
-  { s.toSubmonoid.topologicalClosure with Carrier := Closure (s : Set G),
+  { s.toSubmonoid.topologicalClosure with carrier := closure (s : Set G),
     inv_mem' := fun g m => by simpa [← Set.mem_inv, inv_closure] using m }
 #align subgroup.topological_closure Subgroup.topologicalClosure
 
 @[simp, to_additive]
-theorem Subgroup.topological_closure_coe {s : Subgroup G} : (s.topologicalClosure : Set G) = Closure s :=
+theorem Subgroup.topological_closure_coe {s : Subgroup G} : (s.topologicalClosure : Set G) = closure s :=
   rfl
 #align subgroup.topological_closure_coe Subgroup.topological_closure_coe
 
@@ -636,10 +636,10 @@ theorem Subgroup.is_normal_topological_closure {G : Type _} [TopologicalSpace G]
 
 @[to_additive]
 theorem mul_mem_connected_component_one {G : Type _} [TopologicalSpace G] [MulOneClass G] [HasContinuousMul G] {g h : G}
-    (hg : g ∈ ConnectedComponent (1 : G)) (hh : h ∈ ConnectedComponent (1 : G)) : g * h ∈ ConnectedComponent (1 : G) :=
+    (hg : g ∈ connectedComponent (1 : G)) (hh : h ∈ connectedComponent (1 : G)) : g * h ∈ connectedComponent (1 : G) :=
   by
   rw [connected_component_eq hg]
-  have hmul : g ∈ ConnectedComponent (g * h) := by
+  have hmul : g ∈ connectedComponent (g * h) := by
     apply Continuous.image_connected_component_subset (continuous_mul_left g)
     rw [← connected_component_eq hh]
     exact ⟨(1 : G), mem_connected_component, by simp only [mul_one]⟩
@@ -648,7 +648,7 @@ theorem mul_mem_connected_component_one {G : Type _} [TopologicalSpace G] [MulOn
 
 @[to_additive]
 theorem inv_mem_connected_component_one {G : Type _} [TopologicalSpace G] [Group G] [TopologicalGroup G] {g : G}
-    (hg : g ∈ ConnectedComponent (1 : G)) : g⁻¹ ∈ ConnectedComponent (1 : G) := by
+    (hg : g ∈ connectedComponent (1 : G)) : g⁻¹ ∈ connectedComponent (1 : G) := by
   rw [← inv_one]
   exact Continuous.image_connected_component_subset continuous_inv _ ((Set.mem_image _ _ _).mp ⟨g, hg, rfl⟩)
 #align inv_mem_connected_component_one inv_mem_connected_component_one
@@ -656,7 +656,7 @@ theorem inv_mem_connected_component_one {G : Type _} [TopologicalSpace G] [Group
 /-- The connected component of 1 is a subgroup of `G`. -/
 @[to_additive "The connected component of 0 is a subgroup of `G`."]
 def Subgroup.connectedComponentOfOne (G : Type _) [TopologicalSpace G] [Group G] [TopologicalGroup G] : Subgroup G where
-  Carrier := ConnectedComponent (1 : G)
+  carrier := connectedComponent (1 : G)
   one_mem' := mem_connected_component
   mul_mem' g h hg hh := mul_mem_connected_component_one hg hh
   inv_mem' g hg := inv_mem_connected_component_one hg
@@ -1031,14 +1031,14 @@ theorem IsOpen.smul_left (ht : IsOpen t) : IsOpen (s • t) := by
 #align is_open.smul_left IsOpen.smul_left
 
 @[to_additive]
-theorem subset_interior_smul_right : s • Interior t ⊆ Interior (s • t) :=
+theorem subset_interior_smul_right : s • interior t ⊆ interior (s • t) :=
   interior_maximal (Set.smul_subset_smul_left interior_subset) is_open_interior.smul_left
 #align subset_interior_smul_right subset_interior_smul_right
 
 variable [TopologicalSpace α]
 
 @[to_additive]
-theorem subset_interior_smul : Interior s • Interior t ⊆ Interior (s • t) :=
+theorem subset_interior_smul : interior s • interior t ⊆ interior (s • t) :=
   (Set.smul_subset_smul_right interior_subset).trans subset_interior_smul_right
 #align subset_interior_smul subset_interior_smul
 
@@ -1054,12 +1054,12 @@ theorem IsOpen.mul_left : IsOpen t → IsOpen (s * t) :=
 #align is_open.mul_left IsOpen.mul_left
 
 @[to_additive]
-theorem subset_interior_mul_right : s * Interior t ⊆ Interior (s * t) :=
+theorem subset_interior_mul_right : s * interior t ⊆ interior (s * t) :=
   subset_interior_smul_right
 #align subset_interior_mul_right subset_interior_mul_right
 
 @[to_additive]
-theorem subset_interior_mul : Interior s * Interior t ⊆ Interior (s * t) :=
+theorem subset_interior_mul : interior s * interior t ⊆ interior (s * t) :=
   subset_interior_smul
 #align subset_interior_mul subset_interior_mul
 
@@ -1076,12 +1076,12 @@ theorem IsOpen.mul_right (hs : IsOpen s) : IsOpen (s * t) := by
 #align is_open.mul_right IsOpen.mul_right
 
 @[to_additive]
-theorem subset_interior_mul_left : Interior s * t ⊆ Interior (s * t) :=
+theorem subset_interior_mul_left : interior s * t ⊆ interior (s * t) :=
   interior_maximal (Set.mul_subset_mul_right interior_subset) is_open_interior.mul_right
 #align subset_interior_mul_left subset_interior_mul_left
 
 @[to_additive]
-theorem subset_interior_mul' : Interior s * Interior t ⊆ Interior (s * t) :=
+theorem subset_interior_mul' : interior s * interior t ⊆ interior (s * t) :=
   (Set.mul_subset_mul_left interior_subset).trans subset_interior_mul_left
 #align subset_interior_mul' subset_interior_mul'
 
@@ -1104,22 +1104,22 @@ theorem IsOpen.div_right (hs : IsOpen s) : IsOpen (s / t) := by
 #align is_open.div_right IsOpen.div_right
 
 @[to_additive]
-theorem subset_interior_div_left : Interior s / t ⊆ Interior (s / t) :=
+theorem subset_interior_div_left : interior s / t ⊆ interior (s / t) :=
   interior_maximal (div_subset_div_right interior_subset) is_open_interior.div_right
 #align subset_interior_div_left subset_interior_div_left
 
 @[to_additive]
-theorem subset_interior_div_right : s / Interior t ⊆ Interior (s / t) :=
+theorem subset_interior_div_right : s / interior t ⊆ interior (s / t) :=
   interior_maximal (div_subset_div_left interior_subset) is_open_interior.div_left
 #align subset_interior_div_right subset_interior_div_right
 
 @[to_additive]
-theorem subset_interior_div : Interior s / Interior t ⊆ Interior (s / t) :=
+theorem subset_interior_div : interior s / interior t ⊆ interior (s / t) :=
   (div_subset_div_left interior_subset).trans subset_interior_div_left
 #align subset_interior_div subset_interior_div
 
 @[to_additive]
-theorem IsOpen.mul_closure (hs : IsOpen s) (t : Set α) : s * Closure t = s * t := by
+theorem IsOpen.mul_closure (hs : IsOpen s) (t : Set α) : s * closure t = s * t := by
   refine' (mul_subset_iff.2 fun a ha b hb => _).antisymm (mul_subset_mul_left subset_closure)
   rw [mem_closure_iff] at hb
   have hbU : b ∈ s⁻¹ * {a * b} := ⟨a⁻¹, a * b, Set.inv_mem_inv.2 ha, rfl, inv_mul_cancel_left _ _⟩
@@ -1128,17 +1128,17 @@ theorem IsOpen.mul_closure (hs : IsOpen s) (t : Set α) : s * Closure t = s * t 
 #align is_open.mul_closure IsOpen.mul_closure
 
 @[to_additive]
-theorem IsOpen.closure_mul (ht : IsOpen t) (s : Set α) : Closure s * t = s * t := by
-  rw [← inv_inv (Closure s * t), mul_inv_rev, inv_closure, ht.inv.mul_closure, mul_inv_rev, inv_inv, inv_inv]
+theorem IsOpen.closure_mul (ht : IsOpen t) (s : Set α) : closure s * t = s * t := by
+  rw [← inv_inv (closure s * t), mul_inv_rev, inv_closure, ht.inv.mul_closure, mul_inv_rev, inv_inv, inv_inv]
 #align is_open.closure_mul IsOpen.closure_mul
 
 @[to_additive]
-theorem IsOpen.div_closure (hs : IsOpen s) (t : Set α) : s / Closure t = s / t := by
+theorem IsOpen.div_closure (hs : IsOpen s) (t : Set α) : s / closure t = s / t := by
   simp_rw [div_eq_mul_inv, inv_closure, hs.mul_closure]
 #align is_open.div_closure IsOpen.div_closure
 
 @[to_additive]
-theorem IsOpen.closure_div (ht : IsOpen t) (s : Set α) : Closure s / t = s / t := by
+theorem IsOpen.closure_div (ht : IsOpen t) (s : Set α) : closure s / t = s / t := by
   simp_rw [div_eq_mul_inv, ht.inv.closure_mul]
 #align is_open.closure_div IsOpen.closure_div
 
@@ -1176,10 +1176,10 @@ instance (priority := 100) TopologicalGroup.regularSpace : RegularSpace G := by
   have : tendsto (fun p : G × G => p.1 * p.2) (𝓝 (a, 1)) (𝓝 a) := continuous_mul.tendsto' _ _ (mul_one a)
   rcases mem_nhds_prod_iff.mp (this hs) with ⟨U, hU, V, hV, hUV⟩
   rw [← image_subset_iff, image_prod] at hUV
-  refine' ⟨Closure U, mem_of_superset hU subset_closure, isClosedClosure, _⟩
+  refine' ⟨closure U, mem_of_superset hU subset_closure, isClosedClosure, _⟩
   calc
-    Closure U ⊆ Closure U * Interior V := subset_mul_left _ (mem_interior_iff_mem_nhds.2 hV)
-    _ = U * Interior V := is_open_interior.closure_mul U
+    closure U ⊆ closure U * interior V := subset_mul_left _ (mem_interior_iff_mem_nhds.2 hV)
+    _ = U * interior V := is_open_interior.closure_mul U
     _ ⊆ U * V := mul_subset_mul_left interior_subset
     _ ⊆ s := hUV
     
@@ -1216,7 +1216,7 @@ theorem Subgroup.properly_discontinuous_smul_of_tendsto_cofinite (S : Subgroup G
     (hS : Tendsto S.Subtype cofinite (cocompact G)) : ProperlyDiscontinuousSmul S G :=
   { finite_disjoint_inter_image := by
       intro K L hK hL
-      have H : Set.Finite _ := hS ((hL.prod hK).Image continuous_div').compl_mem_cocompact
+      have H : Set.Finite _ := hS ((hL.prod hK).image continuous_div').compl_mem_cocompact
       rw [preimage_compl, compl_compl] at H
       convert H
       ext x
@@ -1238,7 +1238,7 @@ theorem Subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite (S : S
   { finite_disjoint_inter_image := by
       intro K L hK hL
       have : Continuous fun p : G × G => (p.1⁻¹, p.2) := continuous_inv.prod_map continuous_id
-      have H : Set.Finite _ := hS ((hK.prod hL).Image (continuous_mul.comp this)).compl_mem_cocompact
+      have H : Set.Finite _ := hS ((hK.prod hL).image (continuous_mul.comp this)).compl_mem_cocompact
       rw [preimage_compl, compl_compl] at H
       convert H
       ext x
@@ -1301,10 +1301,10 @@ theorem compact_open_separated_mul_left {K U : Set G} (hK : IsCompact K) (hU : I
 /-- A compact set is covered by finitely many left multiplicative translates of a set
   with non-empty interior. -/
 @[to_additive "A compact set is covered by finitely many left additive translates of a set\n  with non-empty interior."]
-theorem compact_covered_by_mul_left_translates {K V : Set G} (hK : IsCompact K) (hV : (Interior V).Nonempty) :
+theorem compact_covered_by_mul_left_translates {K V : Set G} (hK : IsCompact K) (hV : (interior V).Nonempty) :
     ∃ t : Finset G, K ⊆ ⋃ g ∈ t, (fun h => g * h) ⁻¹' V := by
-  obtain ⟨t, ht⟩ : ∃ t : Finset G, K ⊆ ⋃ x ∈ t, Interior ((· * ·) x ⁻¹' V) := by
-    refine' hK.elim_finite_subcover (fun x => Interior <| (· * ·) x ⁻¹' V) (fun x => is_open_interior) _
+  obtain ⟨t, ht⟩ : ∃ t : Finset G, K ⊆ ⋃ x ∈ t, interior ((· * ·) x ⁻¹' V) := by
+    refine' hK.elim_finite_subcover (fun x => interior <| (· * ·) x ⁻¹' V) (fun x => is_open_interior) _
     cases' hV with g₀ hg₀
     refine' fun g hg => mem_Union.2 ⟨g₀ * g⁻¹, _⟩
     refine' preimage_interior_subset_interior_preimage (continuous_const.mul continuous_id) _
@@ -1314,9 +1314,9 @@ theorem compact_covered_by_mul_left_translates {K V : Set G} (hK : IsCompact K) 
 
 /-- Every locally compact separable topological group is σ-compact.
   Note: this is not true if we drop the topological group hypothesis. -/
-@[to_additive SeparableLocallyCompactAddGroup.sigma_compact_space
+@[to_additive SeparableLocallyCompactAddGroup.sigmaCompactSpace
       "Every locally\ncompact separable topological group is σ-compact.\nNote: this is not true if we drop the topological group hypothesis."]
-instance (priority := 100) SeparableLocallyCompactGroup.sigma_compact_space [SeparableSpace G] [LocallyCompactSpace G] :
+instance (priority := 100) SeparableLocallyCompactGroup.sigmaCompactSpace [SeparableSpace G] [LocallyCompactSpace G] :
     SigmaCompactSpace G := by
   obtain ⟨L, hLc, hL1⟩ := exists_compact_mem_nhds (1 : G)
   refine' ⟨⟨fun n => (fun x => x * dense_seq G n) ⁻¹' L, _, _⟩⟩
@@ -1329,7 +1329,7 @@ instance (priority := 100) SeparableLocallyCompactGroup.sigma_compact_space [Sep
       exact (dense_range_dense_seq G).inter_nhds_nonempty ((Homeomorph.mulLeft x).Continuous.ContinuousAt <| hL1)
     exact ⟨n, hn⟩
     
-#align separable_locally_compact_group.sigma_compact_space SeparableLocallyCompactGroup.sigma_compact_space
+#align separable_locally_compact_group.sigma_compact_space SeparableLocallyCompactGroup.sigmaCompactSpace
 
 /-- Every separated topological group in which there exists a compact set with nonempty interior
 is locally compact. -/

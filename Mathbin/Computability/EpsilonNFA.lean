@@ -54,33 +54,33 @@ theorem ε_closure_empty : M.εClosure ∅ = ∅ :=
 #align ε_NFA.ε_closure_empty εNFA.ε_closure_empty
 
 @[simp]
-theorem ε_closure_univ : M.εClosure Univ = univ :=
+theorem ε_closure_univ : M.εClosure univ = univ :=
   eq_univ_of_univ_subset <| subset_ε_closure _ _
 #align ε_NFA.ε_closure_univ εNFA.ε_closure_univ
 
 /-- `M.step_set S a` is the union of the ε-closure of `M.step s a` for all `s ∈ S`. -/
-def StepSet (S : Set σ) (a : α) : Set σ :=
+def stepSet (S : Set σ) (a : α) : Set σ :=
   ⋃ s ∈ S, M.εClosure <| M.step s a
-#align ε_NFA.step_set εNFA.StepSet
+#align ε_NFA.step_set εNFA.stepSet
 
 variable {M}
 
 @[simp]
-theorem mem_step_set_iff : s ∈ M.StepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosure (M.step t a) :=
+theorem mem_step_set_iff : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosure (M.step t a) :=
   mem_Union₂
 #align ε_NFA.mem_step_set_iff εNFA.mem_step_set_iff
 
 @[simp]
-theorem step_set_empty (a : α) : M.StepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
+theorem step_set_empty (a : α) : M.stepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
 #align ε_NFA.step_set_empty εNFA.step_set_empty
 
 variable (M)
 
 /-- `M.eval_from S x` computes all possible paths through `M` with input `x` starting at an element
 of `S`. -/
-def EvalFrom (start : Set σ) : List α → Set σ :=
-  List.foldl M.StepSet (M.εClosure start)
-#align ε_NFA.eval_from εNFA.EvalFrom
+def evalFrom (start : Set σ) : List α → Set σ :=
+  List.foldl M.stepSet (M.εClosure start)
+#align ε_NFA.eval_from εNFA.evalFrom
 
 @[simp]
 theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = M.εClosure S :=
@@ -88,13 +88,13 @@ theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = M.εClosure S :=
 #align ε_NFA.eval_from_nil εNFA.eval_from_nil
 
 @[simp]
-theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.StepSet (M.εClosure S) a :=
+theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.stepSet (M.εClosure S) a :=
   rfl
 #align ε_NFA.eval_from_singleton εNFA.eval_from_singleton
 
 @[simp]
 theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
-    M.evalFrom S (x ++ [a]) = M.StepSet (M.evalFrom S x) a := by
+    M.evalFrom S (x ++ [a]) = M.stepSet (M.evalFrom S x) a := by
   simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
 #align ε_NFA.eval_from_append_singleton εNFA.eval_from_append_singleton
 
@@ -109,9 +109,9 @@ theorem eval_from_empty (x : List α) : M.evalFrom ∅ x = ∅ := by
 
 /-- `M.eval x` computes all possible paths through `M` with input `x` starting at an element of
 `M.start`. -/
-def Eval :=
+def eval :=
   M.evalFrom M.start
-#align ε_NFA.eval εNFA.Eval
+#align ε_NFA.eval εNFA.eval
 
 @[simp]
 theorem eval_nil : M.eval [] = M.εClosure M.start :=
@@ -119,19 +119,19 @@ theorem eval_nil : M.eval [] = M.εClosure M.start :=
 #align ε_NFA.eval_nil εNFA.eval_nil
 
 @[simp]
-theorem eval_singleton (a : α) : M.eval [a] = M.StepSet (M.εClosure M.start) a :=
+theorem eval_singleton (a : α) : M.eval [a] = M.stepSet (M.εClosure M.start) a :=
   rfl
 #align ε_NFA.eval_singleton εNFA.eval_singleton
 
 @[simp]
-theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.StepSet (M.eval x) a :=
+theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.stepSet (M.eval x) a :=
   eval_from_append_singleton _ _ _ _
 #align ε_NFA.eval_append_singleton εNFA.eval_append_singleton
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
-def Accepts : Language α :=
+def accepts : Language α :=
   { x | ∃ S ∈ M.accept, S ∈ M.eval x }
-#align ε_NFA.accepts εNFA.Accepts
+#align ε_NFA.accepts εNFA.accepts
 
 /-! ### Conversions between `ε_NFA` and `NFA` -/
 
@@ -149,16 +149,16 @@ theorem to_NFA_eval_from_match (start : Set σ) : M.toNFA.evalFrom (M.εClosure 
 #align ε_NFA.to_NFA_eval_from_match εNFA.to_NFA_eval_from_match
 
 @[simp]
-theorem to_NFA_correct : M.toNFA.Accepts = M.Accepts := by
+theorem to_NFA_correct : M.toNFA.accepts = M.accepts := by
   ext x
-  rw [accepts, NFA.Accepts, eval, NFA.Eval, ← to_NFA_eval_from_match]
+  rw [accepts, NFA.accepts, eval, NFA.eval, ← to_NFA_eval_from_match]
   rfl
 #align ε_NFA.to_NFA_correct εNFA.to_NFA_correct
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.Accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.Star {b} * {c} ≤ M.Accepts :=
+        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
   by
   rw [← to_NFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen
@@ -189,10 +189,10 @@ theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure 
 
 @[simp]
 theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.evalFrom start = M.evalFrom start := by
-  rw [eval_from, εNFA.EvalFrom, to_ε_NFA_ε_closure]
+  rw [eval_from, εNFA.evalFrom, to_ε_NFA_ε_closure]
   congr
   ext (S s)
-  simp only [step_set, εNFA.StepSet, exists_prop, Set.mem_Union, Set.bind_def]
+  simp only [step_set, εNFA.stepSet, exists_prop, Set.mem_Union, Set.bind_def]
   apply exists_congr
   simp only [and_congr_right_iff]
   intro t ht
@@ -201,8 +201,8 @@ theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.e
 #align NFA.to_ε_NFA_eval_from_match NFA.to_ε_NFA_eval_from_match
 
 @[simp]
-theorem to_ε_NFA_correct (M : NFA α σ) : M.toεNFA.Accepts = M.Accepts := by
-  rw [accepts, εNFA.Accepts, eval, εNFA.Eval, to_ε_NFA_eval_from_match]
+theorem to_ε_NFA_correct (M : NFA α σ) : M.toεNFA.accepts = M.accepts := by
+  rw [accepts, εNFA.accepts, eval, εNFA.eval, to_ε_NFA_eval_from_match]
   rfl
 #align NFA.to_ε_NFA_correct NFA.to_ε_NFA_correct
 
@@ -217,7 +217,7 @@ instance : Zero (εNFA α σ) :=
   ⟨⟨fun _ _ => ∅, ∅, ∅⟩⟩
 
 instance : One (εNFA α σ) :=
-  ⟨⟨fun _ _ => ∅, Univ, Univ⟩⟩
+  ⟨⟨fun _ _ => ∅, univ, univ⟩⟩
 
 instance : Inhabited (εNFA α σ) :=
   ⟨0⟩

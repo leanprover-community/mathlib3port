@@ -64,7 +64,7 @@ theorem finite_of_cond_count_ne_zero {s t : Set Ω} (h : condCount s t ≠ 0) : 
   simpa [cond_count, cond, measure.count_apply_infinite hs'] using h
 #align probability_theory.finite_of_cond_count_ne_zero ProbabilityTheory.finite_of_cond_count_ne_zero
 
-theorem cond_count_univ [Fintype Ω] {s : Set Ω} : condCount Set.Univ s = Measure.count s / Fintype.card Ω := by
+theorem cond_count_univ [Fintype Ω] {s : Set Ω} : condCount Set.univ s = Measure.count s / Fintype.card Ω := by
   rw [cond_count, cond_apply _ MeasurableSet.univ, ← Ennreal.div_eq_inv_mul, Set.univ_inter]
   congr
   rw [← Finset.coe_univ, measure.count_apply, finset.univ.tsum_subtype' fun _ => (1 : Ennreal)]
@@ -135,7 +135,7 @@ theorem cond_count_eq_zero_iff (hs : s.Finite) : condCount s t = 0 ↔ s ∩ t =
     measure.count_apply_finite _ (hs.inter_of_left _)]
 #align probability_theory.cond_count_eq_zero_iff ProbabilityTheory.cond_count_eq_zero_iff
 
-theorem cond_count_of_univ (hs : s.Finite) (hs' : s.Nonempty) : condCount s Set.Univ = 1 :=
+theorem cond_count_of_univ (hs : s.Finite) (hs' : s.Nonempty) : condCount s Set.univ = 1 :=
   cond_count_eq_one_of hs hs' s.subset_univ
 #align probability_theory.cond_count_of_univ ProbabilityTheory.cond_count_of_univ
 

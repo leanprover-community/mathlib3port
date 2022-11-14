@@ -77,9 +77,9 @@ variable {E 𝕜 F} {K : Type _} [ContinuousMapClass K B' B]
 def Trivialization.pullback (e : Trivialization F (π E)) (f : K) : Trivialization F (π ((f : B' → B) *ᵖ E)) where
   toFun z := (z.proj, (e (Pullback.lift f z)).2)
   invFun y := @totalSpaceMk _ (f *ᵖ E) y.1 (e.symm (f y.1) y.2)
-  Source := Pullback.lift f ⁻¹' e.Source
-  BaseSet := f ⁻¹' e.BaseSet
-  Target := (f ⁻¹' e.BaseSet) ×ˢ univ
+  source := Pullback.lift f ⁻¹' e.source
+  baseSet := f ⁻¹' e.baseSet
+  target := (f ⁻¹' e.baseSet) ×ˢ univ
   map_source' x h := by
     simp_rw [e.source_eq, mem_preimage, pullback.proj_lift] at h
     simp_rw [prod_mk_mem_set_prod_eq, mem_univ, and_true_iff, mem_preimage, h]
@@ -125,7 +125,7 @@ instance TopologicalVectorBundle.pullback [∀ x, TopologicalSpace (E x)] [Topol
   total_space_mk_inducing x :=
     inducing_of_inducing_compose (Pullback.continuous_total_space_mk 𝕜 F E) (Pullback.continuous_lift E f)
       (total_space_mk_inducing 𝕜 F E (f x))
-  TrivializationAtlas := { ef | ∃ (e : Trivialization F (π E))(_ : MemTrivializationAtlas 𝕜 e), ef = e.pullback f }
+  trivializationAtlas := { ef | ∃ (e : Trivialization F (π E))(_ : MemTrivializationAtlas 𝕜 e), ef = e.pullback f }
   trivialization_linear' := by
     rintro _ ⟨e, he, rfl⟩
     skip

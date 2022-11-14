@@ -72,7 +72,7 @@ theorem thickened_indicator_aux_lt_top {δ : ℝ} {E : Set α} {x : α} : thicke
 #align thickened_indicator_aux_lt_top thickened_indicator_aux_lt_top
 
 theorem thickened_indicator_aux_closure_eq (δ : ℝ) (E : Set α) :
-    thickenedIndicatorAux δ (Closure E) = thickenedIndicatorAux δ E := by
+    thickenedIndicatorAux δ (closure E) = thickenedIndicatorAux δ E := by
   simp_rw [thickenedIndicatorAux, inf_edist_closure]
 #align thickened_indicator_aux_closure_eq thickened_indicator_aux_closure_eq
 
@@ -80,12 +80,12 @@ theorem thickened_indicator_aux_one (δ : ℝ) (E : Set α) {x : α} (x_in_E : x
   simp [thickenedIndicatorAux, inf_edist_zero_of_mem x_in_E, tsub_zero]
 #align thickened_indicator_aux_one thickened_indicator_aux_one
 
-theorem thickened_indicator_aux_one_of_mem_closure (δ : ℝ) (E : Set α) {x : α} (x_mem : x ∈ Closure E) :
+theorem thickened_indicator_aux_one_of_mem_closure (δ : ℝ) (E : Set α) {x : α} (x_mem : x ∈ closure E) :
     thickenedIndicatorAux δ E x = 1 := by
-  rw [← thickened_indicator_aux_closure_eq, thickened_indicator_aux_one δ (Closure E) x_mem]
+  rw [← thickened_indicator_aux_closure_eq, thickened_indicator_aux_one δ (closure E) x_mem]
 #align thickened_indicator_aux_one_of_mem_closure thickened_indicator_aux_one_of_mem_closure
 
-theorem thickened_indicator_aux_zero {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : α} (x_out : x ∉ Thickening δ E) :
+theorem thickened_indicator_aux_zero {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : α} (x_out : x ∉ thickening δ E) :
     thickenedIndicatorAux δ E x = 0 := by
   rw [thickening, mem_set_of_eq, not_lt] at x_out
   unfold thickenedIndicatorAux
@@ -124,15 +124,15 @@ This statement is for the unbundled `ℝ≥0∞`-valued functions `thickened_ind
 bounded continuous functions. -/
 theorem thickened_indicator_aux_tendsto_indicator_closure {δseq : ℕ → ℝ} (δseq_lim : Tendsto δseq atTop (𝓝 0))
     (E : Set α) :
-    Tendsto (fun n => thickenedIndicatorAux (δseq n) E) atTop (𝓝 (indicator (Closure E) fun x => (1 : ℝ≥0∞))) := by
+    Tendsto (fun n => thickenedIndicatorAux (δseq n) E) atTop (𝓝 (indicator (closure E) fun x => (1 : ℝ≥0∞))) := by
   rw [tendsto_pi_nhds]
   intro x
-  by_cases x_mem_closure:x ∈ Closure E
+  by_cases x_mem_closure:x ∈ closure E
   · simp_rw [thickened_indicator_aux_one_of_mem_closure _ E x_mem_closure]
-    rw [show (indicator (Closure E) fun _ => (1 : ℝ≥0∞)) x = 1 by simp only [x_mem_closure, indicator_of_mem]]
+    rw [show (indicator (closure E) fun _ => (1 : ℝ≥0∞)) x = 1 by simp only [x_mem_closure, indicator_of_mem]]
     exact tendsto_const_nhds
     
-  · rw [show (Closure E).indicator (fun _ => (1 : ℝ≥0∞)) x = 0 by
+  · rw [show (closure E).indicator (fun _ => (1 : ℝ≥0∞)) x = 0 by
         simp only [x_mem_closure, indicator_of_not_mem, not_false_iff]]
     rw [mem_closure_iff_inf_edist_zero] at x_mem_closure
     obtain ⟨ε, ⟨ε_pos, ε_le⟩⟩ : ∃ ε : ℝ, 0 < ε ∧ Ennreal.ofReal ε ≤ inf_edist x E := by
@@ -193,7 +193,7 @@ theorem thickened_indicator_le_one {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) (x 
     (to_nnreal_le_to_nnreal thickened_indicator_aux_lt_top.ne one_ne_top).mpr (thickened_indicator_aux_le_one δ E x)
 #align thickened_indicator_le_one thickened_indicator_le_one
 
-theorem thickened_indicator_one_of_mem_closure {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : α} (x_mem : x ∈ Closure E) :
+theorem thickened_indicator_one_of_mem_closure {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : α} (x_mem : x ∈ closure E) :
     thickenedIndicator δ_pos E x = 1 := by
   rw [thickened_indicator_apply, thickened_indicator_aux_one_of_mem_closure δ E x_mem, one_to_nnreal]
 #align thickened_indicator_one_of_mem_closure thickened_indicator_one_of_mem_closure
@@ -203,7 +203,7 @@ theorem thickened_indicator_one {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : �
   thickened_indicator_one_of_mem_closure _ _ (subset_closure x_in_E)
 #align thickened_indicator_one thickened_indicator_one
 
-theorem thickened_indicator_zero {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : α} (x_out : x ∉ Thickening δ E) :
+theorem thickened_indicator_zero {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : α} (x_out : x ∉ thickening δ E) :
     thickenedIndicator δ_pos E x = 0 := by
   rw [thickened_indicator_apply, thickened_indicator_aux_zero δ_pos E x_out, zero_to_nnreal]
 #align thickened_indicator_zero thickened_indicator_zero
@@ -240,15 +240,15 @@ instance is the product topology (the topology of pointwise convergence). -/
 theorem thickened_indicator_tendsto_indicator_closure {δseq : ℕ → ℝ} (δseq_pos : ∀ n, 0 < δseq n)
     (δseq_lim : Tendsto δseq atTop (𝓝 0)) (E : Set α) :
     Tendsto (fun n : ℕ => (coeFn : (α →ᵇ ℝ≥0) → α → ℝ≥0) (thickenedIndicator (δseq_pos n) E)) atTop
-      (𝓝 (indicator (Closure E) fun x => (1 : ℝ≥0))) :=
+      (𝓝 (indicator (closure E) fun x => (1 : ℝ≥0))) :=
   by
   have key := thickened_indicator_aux_tendsto_indicator_closure δseq_lim E
   rw [tendsto_pi_nhds] at *
   intro x
-  rw [show indicator (Closure E) (fun x => (1 : ℝ≥0)) x = (indicator (Closure E) (fun x => (1 : ℝ≥0∞)) x).toNnreal by
+  rw [show indicator (closure E) (fun x => (1 : ℝ≥0)) x = (indicator (closure E) (fun x => (1 : ℝ≥0∞)) x).toNnreal by
       refine' (congr_fun (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
   refine' tendsto.comp (tendsto_to_nnreal _) (key x)
-  by_cases x_mem:x ∈ Closure E <;> simp [x_mem]
+  by_cases x_mem:x ∈ closure E <;> simp [x_mem]
 #align thickened_indicator_tendsto_indicator_closure thickened_indicator_tendsto_indicator_closure
 
 end thickenedIndicator

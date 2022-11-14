@@ -325,7 +325,7 @@ norm equal to the norm of `a`. -/
 theorem op_nnnorm_mul : ∥mul 𝕜 E a∥₊ = ∥a∥₊ := by
   rw [← Sup_closed_unit_ball_eq_nnnorm]
   refine' cSup_eq_of_forall_le_of_forall_lt_exists_gt _ _ fun r hr => _
-  · exact (metric.nonempty_closed_ball.mpr zero_le_one).Image _
+  · exact (metric.nonempty_closed_ball.mpr zero_le_one).image _
     
   · rintro - ⟨x, hx, rfl⟩
     exact ((mul 𝕜 E a).unit_le_op_norm x <| mem_closed_ball_zero_iff.mp hx).trans (op_norm_mul_apply_le 𝕜 E a)

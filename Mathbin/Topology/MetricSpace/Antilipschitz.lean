@@ -137,7 +137,7 @@ theorem toRightInvOn' {s : Set α} (hf : AntilipschitzWith K (s.restrict f)) {g 
 
 theorem toRightInvOn (hf : AntilipschitzWith K f) {g : β → α} {t : Set β} (h : RightInvOn g f t) :
     LipschitzWith K (t.restrict g) :=
-  (hf.restrict Univ).toRightInvOn' (maps_to_univ g t) h
+  (hf.restrict univ).toRightInvOn' (maps_to_univ g t) h
 #align antilipschitz_with.to_right_inv_on AntilipschitzWith.toRightInvOn
 
 theorem toRightInverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) : LipschitzWith K g :=
@@ -166,12 +166,12 @@ protected theorem uniform_embedding {α : Type _} {β : Type _} [EmetricSpace α
 #align antilipschitz_with.uniform_embedding AntilipschitzWith.uniform_embedding
 
 theorem is_complete_range [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
-    IsComplete (Range f) :=
+    IsComplete (range f) :=
   (hf.UniformInducing hfc).is_complete_range
 #align antilipschitz_with.is_complete_range AntilipschitzWith.is_complete_range
 
 theorem isClosedRange {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace β] [CompleteSpace α] {f : α → β} {K : ℝ≥0}
-    (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : IsClosed (Range f) :=
+    (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) : IsClosed (range f) :=
   (hf.is_complete_range hfc).IsClosed
 #align antilipschitz_with.is_closed_range AntilipschitzWith.isClosedRange
 

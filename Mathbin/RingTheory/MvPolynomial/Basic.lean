@@ -90,7 +90,7 @@ theorem mem_restrict_total_degree (p : MvPolynomial σ R) : p ∈ restrictTotalD
 #align mv_polynomial.mem_restrict_total_degree MvPolynomial.mem_restrict_total_degree
 
 theorem mem_restrict_degree (p : MvPolynomial σ R) (n : ℕ) :
-    p ∈ restrictDegree σ R n ↔ ∀ s ∈ p.Support, ∀ i, (s : σ →₀ ℕ) i ≤ n := by
+    p ∈ restrictDegree σ R n ↔ ∀ s ∈ p.support, ∀ i, (s : σ →₀ ℕ) i ≤ n := by
   rw [restrict_degree, Finsupp.mem_supported]
   rfl
 #align mv_polynomial.mem_restrict_degree MvPolynomial.mem_restrict_degree

@@ -57,14 +57,14 @@ def gauge (s : Set E) (x : E) : ℝ :=
 
 variable {s t : Set E} {a : ℝ} {x : E}
 
-theorem gauge_def : gauge s x = inf ({ r ∈ Set.IoiCat 0 | x ∈ r • s }) :=
+theorem gauge_def : gauge s x = inf ({ r ∈ Set.ioi 0 | x ∈ r • s }) :=
   rfl
 #align gauge_def gauge_def
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]] -/
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
-theorem gauge_def' : gauge s x = inf ({ r ∈ Set.IoiCat 0 | r⁻¹ • x ∈ s }) := by
+theorem gauge_def' : gauge s x = inf ({ r ∈ Set.ioi 0 | r⁻¹ • x ∈ s }) := by
   trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr Inf (λ r, _)]]"
   exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
 #align gauge_def' gauge_def'
@@ -175,7 +175,7 @@ theorem gauge_lt_eq' (absorbs : Absorbent ℝ s) (a : ℝ) :
   exact ⟨exists_lt_of_gauge_lt Absorbs, fun ⟨r, hr₀, hr₁, hx⟩ => (gauge_le_of_mem hr₀.le hx).trans_lt hr₁⟩
 #align gauge_lt_eq' gauge_lt_eq'
 
-theorem gauge_lt_eq (absorbs : Absorbent ℝ s) (a : ℝ) : { x | gauge s x < a } = ⋃ r ∈ Set.IooCat 0 (a : ℝ), r • s := by
+theorem gauge_lt_eq (absorbs : Absorbent ℝ s) (a : ℝ) : { x | gauge s x < a } = ⋃ r ∈ Set.ioo 0 (a : ℝ), r • s := by
   ext
   simp_rw [mem_set_of_eq, mem_Union, exists_prop, mem_Ioo, and_assoc']
   exact ⟨exists_lt_of_gauge_lt Absorbs, fun ⟨r, hr₀, hr₁, hx⟩ => (gauge_le_of_mem hr₀.le hx).trans_lt hr₁⟩
@@ -332,11 +332,11 @@ section TopologicalSpace
 
 variable [TopologicalSpace E] [HasContinuousSmul ℝ E]
 
-theorem interior_subset_gauge_lt_one (s : Set E) : Interior s ⊆ { x | gauge s x < 1 } := by
+theorem interior_subset_gauge_lt_one (s : Set E) : interior s ⊆ { x | gauge s x < 1 } := by
   intro x hx
   let f : ℝ → E := fun t => t • x
   have hf : Continuous f := by continuity
-  let s' := f ⁻¹' Interior s
+  let s' := f ⁻¹' interior s
   have hs' : IsOpen s' := hf.is_open_preimage _ is_open_interior
   have one_mem : (1 : ℝ) ∈ s' := by simpa only [s', f, Set.mem_preimage, one_smul]
   obtain ⟨ε, hε₀, hε⟩ := (Metric.nhds_basis_closed_ball.1 _).1 (is_open_iff_mem_nhds.1 hs' 1 one_mem)
@@ -447,7 +447,7 @@ section Norm
 
 variable [SeminormedAddCommGroup E] [NormedSpace ℝ E] {s : Set E} {r : ℝ} {x : E}
 
-theorem gauge_unit_ball (x : E) : gauge (Metric.Ball (0 : E) 1) x = ∥x∥ := by
+theorem gauge_unit_ball (x : E) : gauge (Metric.ball (0 : E) 1) x = ∥x∥ := by
   obtain rfl | hx := eq_or_ne x 0
   · rw [norm_zero, gauge_zero]
     
@@ -467,14 +467,14 @@ theorem gauge_unit_ball (x : E) : gauge (Metric.Ball (0 : E) 1) x = ∥x∥ := b
     
 #align gauge_unit_ball gauge_unit_ball
 
-theorem gauge_ball (hr : 0 < r) (x : E) : gauge (Metric.Ball (0 : E) r) x = ∥x∥ / r := by
+theorem gauge_ball (hr : 0 < r) (x : E) : gauge (Metric.ball (0 : E) r) x = ∥x∥ / r := by
   rw [← smul_unit_ball_of_pos hr, gauge_smul_left, Pi.smul_apply, gauge_unit_ball, smul_eq_mul, abs_of_nonneg hr.le,
     div_eq_inv_mul]
   simp_rw [mem_ball_zero_iff, norm_neg]
   exact fun _ => id
 #align gauge_ball gauge_ball
 
-theorem mul_gauge_le_norm (hs : Metric.Ball (0 : E) r ⊆ s) : r * gauge s x ≤ ∥x∥ := by
+theorem mul_gauge_le_norm (hs : Metric.ball (0 : E) r ⊆ s) : r * gauge s x ≤ ∥x∥ := by
   obtain hr | hr := le_or_lt r 0
   · exact (mul_nonpos_of_nonpos_of_nonneg hr <| gauge_nonneg _).trans (norm_nonneg _)
     

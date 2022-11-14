@@ -74,7 +74,7 @@ instance [Inhabited P] : Inhabited (Pfilter P) :=
 
 /-- A filter on `P` is a subset of `P`. -/
 instance : Coe (Pfilter P) (Set P) :=
-  ⟨fun F => F.dual.Carrier⟩
+  ⟨fun F => F.dual.carrier⟩
 
 /-- For the notation `x ∈ F`. -/
 instance : Membership P (Pfilter P) :=

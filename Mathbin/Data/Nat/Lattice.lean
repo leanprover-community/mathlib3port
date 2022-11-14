@@ -99,7 +99,7 @@ theorem nonempty_of_Inf_eq_succ {s : Set ℕ} {k : ℕ} (h : inf s = k + 1) : s.
 #align nat.nonempty_of_Inf_eq_succ Nat.nonempty_of_Inf_eq_succ
 
 theorem eq_Ici_of_nonempty_of_upward_closed {s : Set ℕ} (hs : s.Nonempty)
-    (hs' : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) : s = IciCat (inf s) :=
+    (hs' : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) : s = ici (inf s) :=
   ext fun n => ⟨fun H => Nat.Inf_le H, fun H => hs' (inf s) n H (Inf_mem hs)⟩
 #align nat.eq_Ici_of_nonempty_of_upward_closed Nat.eq_Ici_of_nonempty_of_upward_closed
 

@@ -120,7 +120,7 @@ open Classical
   `kill_compl hf` is the `alg_hom` from `R[τ]` to `R[σ]` that is left inverse to
   `rename f : R[σ] → R[τ]` and sends the variables in the complement of the range of `f` to `0`. -/
 def killCompl : MvPolynomial τ R →ₐ[R] MvPolynomial σ R :=
-  aeval fun i => if h : i ∈ Set.Range f then X <| (Equiv.ofInjective f hf).symm ⟨i, h⟩ else 0
+  aeval fun i => if h : i ∈ Set.range f then X <| (Equiv.ofInjective f hf).symm ⟨i, h⟩ else 0
 #align mv_polynomial.kill_compl MvPolynomial.killCompl
 
 theorem kill_compl_comp_rename : (killCompl hf).comp (rename f) = AlgHom.id R _ :=

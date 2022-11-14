@@ -753,7 +753,7 @@ end ZeroObject
 section SubobjectSubobject
 
 /-- The subobject lattice of a subobject `Y` is order isomorphic to the interval `set.Iic Y`. -/
-def subobjectOrderIso {X : C} (Y : Subobject X) : Subobject (Y : C) ≃o Set.IicCat Y where
+def subobjectOrderIso {X : C} (Y : Subobject X) : Subobject (Y : C) ≃o Set.iic Y where
   toFun Z :=
     ⟨Subobject.mk (Z.arrow ≫ Y.arrow), Set.mem_Iic.mpr (le_of_comm ((underlyingIso _).Hom ≫ Z.arrow) (by simp))⟩
   invFun Z := Subobject.mk (ofLe _ _ Z.2)

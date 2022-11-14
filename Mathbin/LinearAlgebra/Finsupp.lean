@@ -167,7 +167,7 @@ variable (M R)
 
 /-- `finsupp.supported M R s` is the `R`-submodule of all `p : α →₀ M` such that `p.support ⊆ s`. -/
 def supported (s : Set α) : Submodule R (α →₀ M) := by
-  refine' ⟨{ p | ↑p.Support ⊆ s }, _, _, _⟩
+  refine' ⟨{ p | ↑p.support ⊆ s }, _, _, _⟩
   · intro p q hp hq
     refine' subset.trans (subset.trans (Finset.coe_subset.2 support_add) _) (union_subset hp hq)
     rw [Finset.coe_union]
@@ -183,7 +183,7 @@ def supported (s : Set α) : Submodule R (α →₀ M) := by
 
 variable {M}
 
-theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ↑p.Support ⊆ s :=
+theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ↑p.support ⊆ s :=
   Iff.rfl
 #align finsupp.mem_supported Finsupp.mem_supported
 
@@ -192,7 +192,7 @@ theorem mem_supported' {s : Set α} (p : α →₀ M) : p ∈ supported M R s �
   haveI := Classical.decPred fun x : α => x ∈ s <;> simp [mem_supported, Set.subset_def, not_imp_comm]
 #align finsupp.mem_supported' Finsupp.mem_supported'
 
-theorem mem_supported_support (p : α →₀ M) : p ∈ Finsupp.supported M R (p.Support : Set α) := by
+theorem mem_supported_support (p : α →₀ M) : p ∈ Finsupp.supported M R (p.support : Set α) := by
   rw [Finsupp.mem_supported]
 #align finsupp.mem_supported_support Finsupp.mem_supported_support
 
@@ -256,7 +256,7 @@ theorem supported_empty : supported M R (∅ : Set α) = ⊥ :=
 #align finsupp.supported_empty Finsupp.supported_empty
 
 @[simp]
-theorem supported_univ : supported M R (Set.Univ : Set α) = ⊤ :=
+theorem supported_univ : supported M R (Set.univ : Set α) = ⊤ :=
   eq_top_iff.2 fun l _ => Set.subset_univ _
 #align finsupp.supported_univ Finsupp.supported_univ
 
@@ -412,8 +412,8 @@ theorem lmap_domain_comp (f : α → α') (g : α' → α'') :
 #align finsupp.lmap_domain_comp Finsupp.lmap_domain_comp
 
 theorem supported_comap_lmap_domain (f : α → α') (s : Set α') :
-    supported M R (f ⁻¹' s) ≤ (supported M R s).comap (lmapDomain M R f) := fun l (hl : ↑l.Support ⊆ f ⁻¹' s) =>
-  show ↑(mapDomain f l).Support ⊆ s by
+    supported M R (f ⁻¹' s) ≤ (supported M R s).comap (lmapDomain M R f) := fun l (hl : ↑l.support ⊆ f ⁻¹' s) =>
+  show ↑(mapDomain f l).support ⊆ s by
     rw [← Set.image_subset_iff, ← Finset.coe_image] at hl
     exact Set.Subset.trans map_domain_support hl
 #align finsupp.supported_comap_lmap_domain Finsupp.supported_comap_lmap_domain
@@ -552,25 +552,28 @@ theorem lmap_domain_total (f : α → α') (g : M →ₗ[R] M') (h : ∀ i, g (v
   ext l <;> simp [total_apply, Finsupp.sum_map_domain_index, add_smul, h]
 #align finsupp.lmap_domain_total Finsupp.lmap_domain_total
 
+theorem total_comp_lmap_domain (f : α → α') :
+    (Finsupp.total α' M' R v').comp (Finsupp.lmapDomain R R f) = Finsupp.total α M' R (v' ∘ f) := by
+  ext
+  simp
+#align finsupp.total_comp_lmap_domain Finsupp.total_comp_lmap_domain
+
 @[simp]
 theorem total_emb_domain (f : α ↪ α') (l : α →₀ R) :
     (Finsupp.total α' M' R v') (embDomain f l) = (Finsupp.total α M' R (v' ∘ f)) l := by
   simp [total_apply, Finsupp.sum, support_emb_domain, emb_domain_apply]
 #align finsupp.total_emb_domain Finsupp.total_emb_domain
 
-theorem total_map_domain (f : α → α') (hf : Function.Injective f) (l : α →₀ R) :
-    (Finsupp.total α' M' R v') (mapDomain f l) = (Finsupp.total α M' R (v' ∘ f)) l := by
-  have : map_domain f l = emb_domain ⟨f, hf⟩ l := by
-    rw [emb_domain_eq_map_domain ⟨f, hf⟩]
-    rfl
-  rw [this]
-  apply total_emb_domain R ⟨f, hf⟩ l
+@[simp]
+theorem total_map_domain (f : α → α') (l : α →₀ R) :
+    (Finsupp.total α' M' R v') (mapDomain f l) = (Finsupp.total α M' R (v' ∘ f)) l :=
+  LinearMap.congr_fun (total_comp_lmap_domain _ _) l
 #align finsupp.total_map_domain Finsupp.total_map_domain
 
 @[simp]
 theorem total_equiv_map_domain (f : α ≃ α') (l : α →₀ R) :
     (Finsupp.total α' M' R v') (equivMapDomain f l) = (Finsupp.total α M' R (v' ∘ f)) l := by
-  rw [equiv_map_domain_eq_map_domain, total_map_domain _ _ f.injective]
+  rw [equiv_map_domain_eq_map_domain, total_map_domain]
 #align finsupp.total_equiv_map_domain Finsupp.total_equiv_map_domain
 
 /-- A version of `finsupp.range_total` which is useful for going in the other direction -/
@@ -671,8 +674,8 @@ theorem total_comp (f : α' → α) : Finsupp.total α' M R (v ∘ f) = (Finsupp
   simp [total_apply]
 #align finsupp.total_comp Finsupp.total_comp
 
-theorem total_comap_domain (f : α → α') (l : α' →₀ R) (hf : Set.InjOn f (f ⁻¹' ↑l.Support)) :
-    Finsupp.total α M R v (Finsupp.comapDomain f l hf) = (l.Support.Preimage f hf).Sum fun i => l (f i) • v i := by
+theorem total_comap_domain (f : α → α') (l : α' →₀ R) (hf : Set.InjOn f (f ⁻¹' ↑l.support)) :
+    Finsupp.total α M R v (Finsupp.comapDomain f l hf) = (l.support.Preimage f hf).Sum fun i => l (f i) • v i := by
   rw [Finsupp.total_apply] <;> rfl
 #align finsupp.total_comap_domain Finsupp.total_comap_domain
 
@@ -986,7 +989,7 @@ theorem Finsupp.total_eq_fintype_total :
 variable {S}
 
 @[simp]
-theorem Fintype.range_total : (Fintype.total R S v).range = Submodule.span R (Set.Range v) := by
+theorem Fintype.range_total : (Fintype.total R S v).range = Submodule.span R (Set.range v) := by
   rw [← Finsupp.total_eq_fintype_total, LinearMap.range_comp, LinearEquiv.to_linear_map_eq_coe, LinearEquiv.range,
     Submodule.map_top, Finsupp.range_total]
 #align fintype.range_total Fintype.range_total
@@ -1074,7 +1077,7 @@ theorem mem_span_finset {s : Finset M} {x : M} : x ∈ span R (↑s : Set M) ↔
 `m` can be written as a finite `R`-linear combination of elements of `s`.
 The implementation uses `finsupp.sum`. -/
 theorem mem_span_set {m : M} {s : Set M} :
-    m ∈ Submodule.span R s ↔ ∃ c : M →₀ R, (c.Support : Set M) ⊆ s ∧ (c.Sum fun mi r => r • mi) = m := by
+    m ∈ Submodule.span R s ↔ ∃ c : M →₀ R, (c.support : Set M) ⊆ s ∧ (c.Sum fun mi r => r • mi) = m := by
   conv_lhs => rw [← Set.image_id s]
   simp_rw [← exists_prop]
   exact Finsupp.mem_span_image_iff_total R

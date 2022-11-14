@@ -42,7 +42,7 @@ instance : SetLike (ValuationSubring K) K where
     congr
 
 @[simp]
-theorem mem_carrier (x : K) : x ∈ A.Carrier ↔ x ∈ A :=
+theorem mem_carrier (x : K) : x ∈ A.carrier ↔ x ∈ A :=
   Iff.refl _
 #align valuation_subring.mem_carrier ValuationSubring.mem_carrier
 
@@ -230,7 +230,7 @@ theorem valuation_lt_one_or_eq_one (a : A) : A.Valuation a < 1 ∨ A.Valuation a
 
 theorem valuation_lt_one_iff (a : A) : a ∈ LocalRing.maximalIdeal A ↔ A.Valuation a < 1 := by
   rw [LocalRing.mem_maximal_ideal]
-  dsimp [Nonunits]
+  dsimp [nonunits]
   rw [valuation_eq_one_iff]
   exact (A.valuation_le_one a).lt_iff_ne.symm
 #align valuation_subring.valuation_lt_one_iff ValuationSubring.valuation_lt_one_iff
@@ -377,7 +377,7 @@ theorem of_prime_ideal_of_le (R S : ValuationSubring K) (h : R ≤ S) : ofPrime 
     replace hr := (R.mem_or_inv_mem x).resolve_left hr
     · use 1, x⁻¹, hr
       constructor
-      · change (⟨x⁻¹, h hr⟩ : S) ∉ Nonunits S
+      · change (⟨x⁻¹, h hr⟩ : S) ∉ nonunits S
         erw [mem_nonunits_iff, not_not]
         apply is_unit_of_mul_eq_one _ (⟨x, hx⟩ : S)
         ext
@@ -595,19 +595,19 @@ theorem unit_group_strict_mono : StrictMono (unitGroup : ValuationSubring K → 
 
 end UnitGroup
 
-section Nonunits
+section nonunits
 
 /-- The nonunits of a valuation subring of `K`, as a subsemigroup of `K`-/
 def nonunits : Subsemigroup K where
-  Carrier := { x | A.Valuation x < 1 }
+  carrier := { x | A.Valuation x < 1 }
   mul_mem' a b ha hb := (mul_lt_mul₀ ha hb).trans_eq <| mul_one _
 #align valuation_subring.nonunits ValuationSubring.nonunits
 
-theorem mem_nonunits_iff {x : K} : x ∈ A.Nonunits ↔ A.Valuation x < 1 :=
+theorem mem_nonunits_iff {x : K} : x ∈ A.nonunits ↔ A.Valuation x < 1 :=
   Iff.rfl
 #align valuation_subring.mem_nonunits_iff ValuationSubring.mem_nonunits_iff
 
-theorem nonunits_le_nonunits {A B : ValuationSubring K} : B.Nonunits ≤ A.Nonunits ↔ A ≤ B := by
+theorem nonunits_le_nonunits {A B : ValuationSubring K} : B.nonunits ≤ A.nonunits ↔ A ≤ B := by
   constructor
   · intro h x hx
     by_cases h_1:x = 0
@@ -627,13 +627,13 @@ theorem nonunits_injective : Function.Injective (nonunits : ValuationSubring K �
   simpa only [le_antisymm_iff, nonunits_le_nonunits] using h.symm
 #align valuation_subring.nonunits_injective ValuationSubring.nonunits_injective
 
-theorem nonunits_inj {A B : ValuationSubring K} : A.Nonunits = B.Nonunits ↔ A = B :=
+theorem nonunits_inj {A B : ValuationSubring K} : A.nonunits = B.nonunits ↔ A = B :=
   nonunits_injective.eq_iff
 #align valuation_subring.nonunits_inj ValuationSubring.nonunits_inj
 
 /-- The map on valuation subrings to their nonunits is a dual order embedding. -/
 def nonunitsOrderEmbedding : ValuationSubring K ↪o (Subsemigroup K)ᵒᵈ where
-  toFun A := A.Nonunits
+  toFun A := A.nonunits
   inj' := nonunits_injective
   map_rel_iff' A B := nonunits_le_nonunits
 #align valuation_subring.nonunits_order_embedding ValuationSubring.nonunitsOrderEmbedding
@@ -645,15 +645,15 @@ variable {A}
 See also `mem_nonunits_iff_exists_mem_maximal_ideal`, which gets rid of the coercion to `K`,
 at the expense of a more complicated right hand side.
  -/
-theorem coe_mem_nonunits_iff {a : A} : (a : K) ∈ A.Nonunits ↔ a ∈ LocalRing.maximalIdeal A :=
+theorem coe_mem_nonunits_iff {a : A} : (a : K) ∈ A.nonunits ↔ a ∈ LocalRing.maximalIdeal A :=
   (valuation_lt_one_iff _ _).symm
 #align valuation_subring.coe_mem_nonunits_iff ValuationSubring.coe_mem_nonunits_iff
 
-theorem nonunits_le : A.Nonunits ≤ A.toSubring.toSubmonoid.toSubsemigroup := fun a ha =>
+theorem nonunits_le : A.nonunits ≤ A.toSubring.toSubmonoid.toSubsemigroup := fun a ha =>
   (A.valuation_le_one_iff _).mp (A.mem_nonunits_iff.mp ha).le
 #align valuation_subring.nonunits_le ValuationSubring.nonunits_le
 
-theorem nonunits_subset : (A.Nonunits : Set K) ⊆ A :=
+theorem nonunits_subset : (A.nonunits : Set K) ⊆ A :=
   nonunits_le
 #align valuation_subring.nonunits_subset ValuationSubring.nonunits_subset
 
@@ -663,26 +663,26 @@ See also `coe_mem_nonunits_iff`, which has a simpler right hand side but require
 to be in `A` already.
  -/
 theorem mem_nonunits_iff_exists_mem_maximal_ideal {a : K} :
-    a ∈ A.Nonunits ↔ ∃ ha, (⟨a, ha⟩ : A) ∈ LocalRing.maximalIdeal A :=
+    a ∈ A.nonunits ↔ ∃ ha, (⟨a, ha⟩ : A) ∈ LocalRing.maximalIdeal A :=
   ⟨fun h => ⟨nonunits_subset h, coe_mem_nonunits_iff.mp h⟩, fun ⟨ha, h⟩ => coe_mem_nonunits_iff.mpr h⟩
 #align
   valuation_subring.mem_nonunits_iff_exists_mem_maximal_ideal ValuationSubring.mem_nonunits_iff_exists_mem_maximal_ideal
 
 /-- `A.nonunits` agrees with the maximal ideal of `A`, after taking its image in `K`. -/
-theorem image_maximal_ideal : (coe : A → K) '' LocalRing.maximalIdeal A = A.Nonunits := by
+theorem image_maximal_ideal : (coe : A → K) '' LocalRing.maximalIdeal A = A.nonunits := by
   ext a
   simp only [Set.mem_image, SetLike.mem_coe, mem_nonunits_iff_exists_mem_maximal_ideal]
   erw [Subtype.exists]
   simp_rw [Subtype.coe_mk, exists_and_right, exists_eq_right]
 #align valuation_subring.image_maximal_ideal ValuationSubring.image_maximal_ideal
 
-end Nonunits
+end nonunits
 
 section PrincipalUnitGroup
 
 /-- The principal unit group of a valuation subring, as a subgroup of `Kˣ`. -/
 def principalUnitGroup : Subgroup Kˣ where
-  Carrier := { x | A.Valuation (x - 1) < 1 }
+  carrier := { x | A.Valuation (x - 1) < 1 }
   mul_mem' := by
     intro a b ha hb
     refine' lt_of_le_of_lt _ (max_lt hb ha)

@@ -238,16 +238,16 @@ section CliqueSet
 variable (G) {n : ℕ} {a b c : α} {s : Finset α}
 
 /-- The `n`-cliques in a graph as a set. -/
-def CliqueSet (n : ℕ) : Set (Finset α) :=
+def cliqueSet (n : ℕ) : Set (Finset α) :=
   { s | G.IsNClique n s }
-#align simple_graph.clique_set SimpleGraph.CliqueSet
+#align simple_graph.clique_set SimpleGraph.cliqueSet
 
-theorem mem_clique_set_iff : s ∈ G.CliqueSet n ↔ G.IsNClique n s :=
+theorem mem_clique_set_iff : s ∈ G.cliqueSet n ↔ G.IsNClique n s :=
   Iff.rfl
 #align simple_graph.mem_clique_set_iff SimpleGraph.mem_clique_set_iff
 
 @[simp]
-theorem clique_set_eq_empty_iff : G.CliqueSet n = ∅ ↔ G.CliqueFree n := by
+theorem clique_set_eq_empty_iff : G.cliqueSet n = ∅ ↔ G.CliqueFree n := by
   simp_rw [clique_free, Set.eq_empty_iff_forall_not_mem, mem_clique_set_iff]
 #align simple_graph.clique_set_eq_empty_iff SimpleGraph.clique_set_eq_empty_iff
 
@@ -258,10 +258,10 @@ attribute [protected] clique_free.clique_set
 variable {G H}
 
 @[mono]
-theorem clique_set_mono (h : G ≤ H) : G.CliqueSet n ⊆ H.CliqueSet n := fun _ => IsNClique.mono h
+theorem clique_set_mono (h : G ≤ H) : G.cliqueSet n ⊆ H.cliqueSet n := fun _ => IsNClique.mono h
 #align simple_graph.clique_set_mono SimpleGraph.clique_set_mono
 
-theorem clique_set_mono' (h : G ≤ H) : G.CliqueSet ≤ H.CliqueSet := fun _ => clique_set_mono h
+theorem clique_set_mono' (h : G ≤ H) : G.cliqueSet ≤ H.cliqueSet := fun _ => clique_set_mono h
 #align simple_graph.clique_set_mono' SimpleGraph.clique_set_mono'
 
 end CliqueSet
@@ -283,7 +283,7 @@ theorem mem_clique_finset_iff : s ∈ G.cliqueFinset n ↔ G.IsNClique n s :=
 #align simple_graph.mem_clique_finset_iff SimpleGraph.mem_clique_finset_iff
 
 @[simp]
-theorem coe_clique_finset (n : ℕ) : (G.cliqueFinset n : Set (Finset α)) = G.CliqueSet n :=
+theorem coe_clique_finset (n : ℕ) : (G.cliqueFinset n : Set (Finset α)) = G.cliqueSet n :=
   Set.ext fun _ => mem_clique_finset_iff _
 #align simple_graph.coe_clique_finset SimpleGraph.coe_clique_finset
 

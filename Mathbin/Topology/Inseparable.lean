@@ -111,15 +111,15 @@ infixl:300 " ⤳ " => Specializes
              `y
              "∈"
              (Term.app
-              `Closure
+              `closure
               [(Term.paren "(" [(«term{_}» "{" [`x] "}") [(Term.typeAscription ":" [(Term.app `Set [`X])])]] ")")]))
             ","
             («term_⊆_»
              (Term.app
-              `Closure
+              `closure
               [(Term.paren "(" [(«term{_}» "{" [`y] "}") [(Term.typeAscription ":" [(Term.app `Set [`X])])]] ")")])
              "⊆"
-             (Term.app `Closure [(«term{_}» "{" [`x] "}")]))
+             (Term.app `closure [(«term{_}» "{" [`x] "}")]))
             ","
             (Term.app `ClusterPt [`y (Term.app `pure [`x])])]
            "]")])))
@@ -630,9 +630,9 @@ infixl:300 " ⤳ " => Specializes
               ,
               ∀ s : Set X , IsClosed s → x ∈ s → y ∈ s
               ,
-              y ∈ Closure ( { x } : Set X )
+              y ∈ closure ( { x } : Set X )
               ,
-              Closure ( { y } : Set X ) ⊆ Closure { x }
+              closure ( { y } : Set X ) ⊆ closure { x }
               ,
               ClusterPt y pure x
             ]
@@ -694,13 +694,13 @@ theorem IsClosed.not_specializes (hs : IsClosed s) (hx : x ∈ s) (hy : y ∉ s)
   hy <| h.mem_closed hs hx
 #align is_closed.not_specializes IsClosed.not_specializes
 
-theorem specializes_iff_mem_closure : x ⤳ y ↔ y ∈ Closure ({x} : Set X) :=
+theorem specializes_iff_mem_closure : x ⤳ y ↔ y ∈ closure ({x} : Set X) :=
   (specializes_tfae x y).out 0 4
 #align specializes_iff_mem_closure specializes_iff_mem_closure
 
 alias specializes_iff_mem_closure ↔ Specializes.mem_closure _
 
-theorem specializes_iff_closure_subset : x ⤳ y ↔ Closure ({y} : Set X) ⊆ Closure {x} :=
+theorem specializes_iff_closure_subset : x ⤳ y ↔ closure ({y} : Set X) ⊆ closure {x} :=
   (specializes_tfae x y).out 0 5
 #align specializes_iff_closure_subset specializes_iff_closure_subset
 
@@ -843,11 +843,11 @@ theorem inseparable_iff_forall_closed : (x ~ y) ↔ ∀ s : Set X, IsClosed s �
   simp only [inseparable_iff_specializes_and, specializes_iff_forall_closed, ← forall_and, ← iff_def]
 #align inseparable_iff_forall_closed inseparable_iff_forall_closed
 
-theorem inseparable_iff_mem_closure : (x ~ y) ↔ x ∈ Closure ({y} : Set X) ∧ y ∈ Closure ({x} : Set X) :=
+theorem inseparable_iff_mem_closure : (x ~ y) ↔ x ∈ closure ({y} : Set X) ∧ y ∈ closure ({x} : Set X) :=
   inseparable_iff_specializes_and.trans <| by simp only [specializes_iff_mem_closure, and_comm']
 #align inseparable_iff_mem_closure inseparable_iff_mem_closure
 
-theorem inseparable_iff_closure_eq : (x ~ y) ↔ Closure ({x} : Set X) = Closure {y} := by
+theorem inseparable_iff_closure_eq : (x ~ y) ↔ closure ({x} : Set X) = closure {y} := by
   simp only [inseparable_iff_specializes_and, specializes_iff_closure_subset, ← subset_antisymm_iff, eq_comm]
 #align inseparable_iff_closure_eq inseparable_iff_closure_eq
 
@@ -975,7 +975,7 @@ theorem surjective_mk : Surjective (mk : X → SeparationQuotient X) :=
 #align separation_quotient.surjective_mk SeparationQuotient.surjective_mk
 
 @[simp]
-theorem range_mk : Range (mk : X → SeparationQuotient X) = univ :=
+theorem range_mk : range (mk : X → SeparationQuotient X) = univ :=
   surjective_mk.range_eq
 #align separation_quotient.range_mk SeparationQuotient.range_mk
 
@@ -1036,19 +1036,19 @@ theorem comap_mk_nhds_set : comap mk (𝓝ˢ t) = 𝓝ˢ (mk ⁻¹' t) := by
   conv_lhs => rw [← image_preimage_eq t surjective_mk, comap_mk_nhds_set_image]
 #align separation_quotient.comap_mk_nhds_set SeparationQuotient.comap_mk_nhds_set
 
-theorem preimage_mk_closure : mk ⁻¹' Closure t = Closure (mk ⁻¹' t) :=
+theorem preimage_mk_closure : mk ⁻¹' closure t = closure (mk ⁻¹' t) :=
   is_open_map_mk.preimage_closure_eq_closure_preimage continuous_mk t
 #align separation_quotient.preimage_mk_closure SeparationQuotient.preimage_mk_closure
 
-theorem preimage_mk_interior : mk ⁻¹' Interior t = Interior (mk ⁻¹' t) :=
+theorem preimage_mk_interior : mk ⁻¹' interior t = interior (mk ⁻¹' t) :=
   is_open_map_mk.preimage_interior_eq_interior_preimage continuous_mk t
 #align separation_quotient.preimage_mk_interior SeparationQuotient.preimage_mk_interior
 
-theorem preimage_mk_frontier : mk ⁻¹' Frontier t = Frontier (mk ⁻¹' t) :=
+theorem preimage_mk_frontier : mk ⁻¹' frontier t = frontier (mk ⁻¹' t) :=
   is_open_map_mk.preimage_frontier_eq_frontier_preimage continuous_mk t
 #align separation_quotient.preimage_mk_frontier SeparationQuotient.preimage_mk_frontier
 
-theorem image_mk_closure : mk '' Closure s = Closure (mk '' s) :=
+theorem image_mk_closure : mk '' closure s = closure (mk '' s) :=
   (image_closure_subset_closure_image continuous_mk).antisymm <| is_closed_map_mk.closure_image_subset _
 #align separation_quotient.image_mk_closure SeparationQuotient.image_mk_closure
 

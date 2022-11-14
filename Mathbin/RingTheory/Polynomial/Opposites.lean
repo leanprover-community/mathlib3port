@@ -92,7 +92,7 @@ theorem coeff_op_ring_equiv (p : R[X]ᵐᵒᵖ) (n : ℕ) : (opRingEquiv R p).co
 #align polynomial.coeff_op_ring_equiv Polynomial.coeff_op_ring_equiv
 
 @[simp]
-theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).Support = (unop p).Support := by
+theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).support = (unop p).support := by
   induction p using MulOpposite.rec
   cases p
   exact Finsupp.support_map_range_of_injective _ _ op_injective

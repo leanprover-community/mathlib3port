@@ -146,7 +146,7 @@ open Classical
 
 theorem Fg.map {S : Subalgebra R A} (f : A →ₐ[R] B) (hs : S.Fg) : (S.map f).Fg :=
   let ⟨s, hs⟩ := hs
-  ⟨s.Image f, by rw [Finset.coe_image, Algebra.adjoin_image, hs]⟩
+  ⟨s.image f, by rw [Finset.coe_image, Algebra.adjoin_image, hs]⟩
 #align subalgebra.fg.map Subalgebra.Fg.map
 
 end

@@ -8,6 +8,7 @@ import Mathbin.Algebra.Order.Monoid.Cancel.Defs
 import Mathbin.Algebra.Order.Sub.Defs
 import Mathbin.Algebra.Order.Group.Defs
 import Mathbin.Algebra.Order.Ring.Lemmas
+import Mathbin.Tactic.Nontriviality
 
 /-!
 # Ordered rings and semirings

@@ -86,7 +86,7 @@ end SetLike
 
 /-- A sub_mul_action is a set which is closed under scalar multiplication.  -/
 structure SubMulAction (R : Type u) (M : Type v) [HasSmul R M] : Type v where
-  Carrier : Set M
+  carrier : Set M
   smul_mem' : ∀ (c : R) {x : M}, x ∈ carrier → c • x ∈ carrier
 #align sub_mul_action SubMulAction
 
@@ -95,12 +95,12 @@ namespace SubMulAction
 variable [HasSmul R M]
 
 instance : SetLike (SubMulAction R M) M :=
-  ⟨SubMulAction.Carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨SubMulAction.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
 
 instance : SmulMemClass (SubMulAction R M) R M where smul_mem := smul_mem'
 
 @[simp]
-theorem mem_carrier {p : SubMulAction R M} {x : M} : x ∈ p.Carrier ↔ x ∈ (p : Set M) :=
+theorem mem_carrier {p : SubMulAction R M} {x : M} : x ∈ p.carrier ↔ x ∈ (p : Set M) :=
   Iff.rfl
 #align sub_mul_action.mem_carrier SubMulAction.mem_carrier
 
@@ -112,7 +112,7 @@ theorem ext {p q : SubMulAction R M} (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
 /-- Copy of a sub_mul_action with a new `carrier` equal to the old one. Useful to fix definitional
 equalities.-/
 protected def copy (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) : SubMulAction R M where
-  Carrier := s
+  carrier := s
   smul_mem' := hs.symm ▸ p.smul_mem'
 #align sub_mul_action.copy SubMulAction.copy
 
@@ -126,7 +126,7 @@ theorem copy_eq (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) : p.copy s hs
 #align sub_mul_action.copy_eq SubMulAction.copy_eq
 
 instance : HasBot (SubMulAction R M) :=
-  ⟨{ Carrier := ∅, smul_mem' := fun c => Set.not_mem_empty }⟩
+  ⟨{ carrier := ∅, smul_mem' := fun c => Set.not_mem_empty }⟩
 
 instance : Inhabited (SubMulAction R M) :=
   ⟨⊥⟩
@@ -263,7 +263,7 @@ instance : MulAction R p :=
 end
 
 /-- Orbits in a `sub_mul_action` coincide with orbits in the ambient space. -/
-theorem coe_image_orbit {p : SubMulAction R M} (m : p) : coe '' MulAction.Orbit R m = MulAction.Orbit R (m : M) :=
+theorem coe_image_orbit {p : SubMulAction R M} (m : p) : coe '' MulAction.orbit R m = MulAction.orbit R (m : M) :=
   (Set.range_comp _ _).symm
 #align sub_mul_action.coe_image_orbit SubMulAction.coe_image_orbit
 

@@ -81,7 +81,7 @@ protected theorem UniformConvergence.has_basis_nhds_one_of_basis {p : ι → Pro
   rw [← uniformity_eq_comap_nhds_one] at this
   convert UniformConvergence.has_basis_nhds_of_basis α _ 1 this
   ext (i f)
-  simp [UniformConvergence.Gen]
+  simp [UniformConvergence.gen]
 #align uniform_convergence.has_basis_nhds_one_of_basis UniformConvergence.has_basis_nhds_one_of_basis
 
 @[to_additive]
@@ -119,7 +119,7 @@ protected theorem UniformConvergenceOn.has_basis_nhds_one_of_basis (𝔖 : Set <
   rw [← uniformity_eq_comap_nhds_one_swapped] at this
   convert UniformConvergenceOn.has_basis_nhds_of_basis α _ 𝔖 1 h𝔖₁ h𝔖₂ this
   ext (i f)
-  simp [UniformConvergenceOn.Gen]
+  simp [UniformConvergenceOn.gen]
 #align uniform_convergence_on.has_basis_nhds_one_of_basis UniformConvergenceOn.has_basis_nhds_one_of_basis
 
 @[to_additive]

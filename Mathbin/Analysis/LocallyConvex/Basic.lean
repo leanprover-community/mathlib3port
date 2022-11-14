@@ -163,7 +163,7 @@ theorem balancedEmpty : Balanced 𝕜 (∅ : Set E) := fun _ _ => by rw [smul_se
 #align balanced_empty balancedEmpty
 
 @[simp]
-theorem balancedUniv : Balanced 𝕜 (Univ : Set E) := fun a ha => subset_univ _
+theorem balancedUniv : Balanced 𝕜 (univ : Set E) := fun a ha => subset_univ _
 #align balanced_univ balancedUniv
 
 theorem Balanced.union (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 𝕜 (A ∪ B) := fun a ha =>
@@ -319,7 +319,7 @@ theorem absorbs_inter : Absorbs 𝕜 (s ∩ t) u ↔ Absorbs 𝕜 s u ∧ Absorb
   ⟨fun h => ⟨h.mono_left <| inter_subset_left _ _, h.mono_left <| inter_subset_right _ _⟩, fun h => h.1.inter h.2⟩
 #align absorbs_inter absorbs_inter
 
-theorem absorbentUniv : Absorbent 𝕜 (Univ : Set E) := by
+theorem absorbentUniv : Absorbent 𝕜 (univ : Set E) := by
   refine' fun x => ⟨1, zero_lt_one, fun a ha => _⟩
   rw [smul_set_univ₀ (norm_pos_iff.1 <| zero_lt_one.trans_le ha)]
   exact trivial
@@ -345,7 +345,7 @@ theorem absorbentNhdsZero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A := by
 #align absorbent_nhds_zero absorbentNhdsZero
 
 /-- The union of `{0}` with the interior of a balanced set is balanced. -/
-theorem balancedZeroUnionInterior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : Set E) ∪ Interior A) := by
+theorem balancedZeroUnionInterior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : Set E) ∪ interior A) := by
   intro a ha
   obtain rfl | h := eq_or_ne a 0
   · rw [zero_smul_set]
@@ -357,20 +357,20 @@ theorem balancedZeroUnionInterior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : S
       rfl
       
     · calc
-        a • Interior A ⊆ Interior (a • A) := (is_open_map_smul₀ h).image_interior_subset A
-        _ ⊆ Interior A := interior_mono (hA _ ha)
+        a • interior A ⊆ interior (a • A) := (is_open_map_smul₀ h).image_interior_subset A
+        _ ⊆ interior A := interior_mono (hA _ ha)
         
       
     
 #align balanced_zero_union_interior balancedZeroUnionInterior
 
 /-- The interior of a balanced set is balanced if it contains the origin. -/
-theorem Balanced.interior (hA : Balanced 𝕜 A) (h : (0 : E) ∈ Interior A) : Balanced 𝕜 (Interior A) := by
+theorem Balanced.interior (hA : Balanced 𝕜 A) (h : (0 : E) ∈ interior A) : Balanced 𝕜 (interior A) := by
   rw [← union_eq_self_of_subset_left (singleton_subset_iff.2 h)]
   exact balancedZeroUnionInterior hA
 #align balanced.interior Balanced.interior
 
-theorem Balanced.closure (hA : Balanced 𝕜 A) : Balanced 𝕜 (Closure A) := fun a ha =>
+theorem Balanced.closure (hA : Balanced 𝕜 A) : Balanced 𝕜 (closure A) := fun a ha =>
   (image_closure_subset_closure_image <| continuous_id.const_smul _).trans <| closure_mono <| hA _ ha
 #align balanced.closure Balanced.closure
 

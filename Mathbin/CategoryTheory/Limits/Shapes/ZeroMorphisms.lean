@@ -575,7 +575,7 @@ open ZeroObject
 -/
 @[simps]
 def monoFactorisationZero (X Y : C) : MonoFactorisation (0 : X ⟶ Y) where
-  I := 0
+  i := 0
   m := 0
   e := 0
 #align category_theory.limits.mono_factorisation_zero CategoryTheory.Limits.monoFactorisationZero

@@ -76,11 +76,11 @@ instance [Zero (Fin n)] : Inhabited (EuclideanHalfSpace n) :=
 instance : Inhabited (EuclideanQuadrant n) :=
   ⟨⟨0, fun i => le_rfl⟩⟩
 
-theorem range_half_space (n : ℕ) [Zero (Fin n)] : (Range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } := by
+theorem range_half_space (n : ℕ) [Zero (Fin n)] : (range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } := by
   simp
 #align range_half_space range_half_space
 
-theorem range_quadrant (n : ℕ) : (Range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Fin n, 0 ≤ y i } := by simp
+theorem range_quadrant (n : ℕ) : (range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Fin n, 0 ≤ y i } := by simp
 #align range_quadrant range_quadrant
 
 end
@@ -93,8 +93,8 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
     ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n)) (EuclideanHalfSpace n) where
   toFun := Subtype.val
   invFun x := ⟨update x 0 (max (x 0) 0), by simp [le_refl]⟩
-  Source := Univ
-  Target := { x | 0 ≤ x 0 }
+  source := univ
+  target := { x | 0 ≤ x 0 }
   map_source' x hx := x.property
   map_target' x hx := mem_univ _
   left_inv' := fun ⟨xval, xprop⟩ hx => by
@@ -116,8 +116,8 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
     ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n)) (EuclideanQuadrant n) where
   toFun := Subtype.val
   invFun x := ⟨fun i => max (x i) 0, fun i => by simp only [le_refl, or_true_iff, le_max_iff]⟩
-  Source := Univ
-  Target := { x | ∀ i, 0 ≤ x i }
+  source := univ
+  target := { x | ∀ i, 0 ≤ x i }
   map_source' x hx := by simpa only [Subtype.range_val] using x.property
   map_target' x hx := mem_univ _
   left_inv' := fun ⟨xval, xprop⟩ hx => by
@@ -149,10 +149,10 @@ localized [Manifold]
 /-- The left chart for the topological space `[x, y]`, defined on `[x,y)` and sending `x` to `0` in
 `euclidean_half_space 1`.
 -/
-def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (IccCat x y) (EuclideanHalfSpace 1) where
-  Source := { z : IccCat x y | z.val < y }
-  Target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
-  toFun := fun z : IccCat x y => ⟨fun i => z.val - x, sub_nonneg.mpr z.property.1⟩
+def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (EuclideanHalfSpace 1) where
+  source := { z : icc x y | z.val < y }
+  target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
+  toFun := fun z : icc x y => ⟨fun i => z.val - x, sub_nonneg.mpr z.property.1⟩
   invFun z := ⟨min (z.val 0 + x) y, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y))]⟩
   map_source' := by simp only [imp_self, sub_lt_sub_iff_right, mem_set_of_eq, forall_true_iff]
   map_target' := by
@@ -198,10 +198,10 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (IccCat x y) (Eucl
 /-- The right chart for the topological space `[x, y]`, defined on `(x,y]` and sending `y` to `0` in
 `euclidean_half_space 1`.
 -/
-def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (IccCat x y) (EuclideanHalfSpace 1) where
-  Source := { z : IccCat x y | x < z.val }
-  Target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
-  toFun := fun z : IccCat x y => ⟨fun i => y - z.val, sub_nonneg.mpr z.property.2⟩
+def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (EuclideanHalfSpace 1) where
+  source := { z : icc x y | x < z.val }
+  target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
+  toFun := fun z : icc x y => ⟨fun i => y - z.val, sub_nonneg.mpr z.property.2⟩
   invFun z := ⟨max (y - z.val 0) x, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y)), sub_eq_add_neg]⟩
   map_source' := by simp only [imp_self, mem_set_of_eq, sub_lt_sub_iff_left, forall_true_iff]
   map_target' := by
@@ -246,8 +246,8 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (IccCat x y) (Euc
 /-- Charted space structure on `[x, y]`, using only two charts taking values in
 `euclidean_half_space 1`.
 -/
-instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpace 1) (IccCat x y) where
-  Atlas := {iccLeftChart x y, iccRightChart x y}
+instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpace 1) (icc x y) where
+  atlas := {iccLeftChart x y, iccRightChart x y}
   chartAt z := if z.val < y then iccLeftChart x y else iccRightChart x y
   mem_chart_source z := by
     by_cases h':z.val < y
@@ -263,7 +263,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
 
 /-- The manifold structure on `[x, y]` is smooth.
 -/
-instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorners (𝓡∂ 1) (IccCat x y) := by
+instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorners (𝓡∂ 1) (icc x y) := by
   have M : ContDiffOn ℝ ∞ (fun z : EuclideanSpace ℝ (Fin 1) => -z + fun i => y - x) univ := by
     rw [cont_diff_on_univ]
     exact cont_diff_id.neg.add contDiffConst
@@ -318,9 +318,9 @@ theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
 
 attribute [local instance] fact_zero_lt_one
 
-instance : ChartedSpace (EuclideanHalfSpace 1) (IccCat (0 : ℝ) 1) := by infer_instance
+instance : ChartedSpace (EuclideanHalfSpace 1) (icc (0 : ℝ) 1) := by infer_instance
 
-instance : SmoothManifoldWithCorners (𝓡∂ 1) (IccCat (0 : ℝ) 1) := by infer_instance
+instance : SmoothManifoldWithCorners (𝓡∂ 1) (icc (0 : ℝ) 1) := by infer_instance
 
 end
 

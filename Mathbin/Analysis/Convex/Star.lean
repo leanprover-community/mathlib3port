@@ -82,7 +82,7 @@ theorem StarConvex.segment_subset (h : StarConvex 𝕜 x s) {y : E} (hy : y ∈ 
   star_convex_iff_segment_subset.1 h hy
 #align star_convex.segment_subset StarConvex.segment_subset
 
-theorem StarConvex.open_segment_subset (h : StarConvex 𝕜 x s) {y : E} (hy : y ∈ s) : OpenSegment 𝕜 x y ⊆ s :=
+theorem StarConvex.open_segment_subset (h : StarConvex 𝕜 x s) {y : E} (hy : y ∈ s) : openSegment 𝕜 x y ⊆ s :=
   (open_segment_subset_segment 𝕜 x y).trans (h.segment_subset hy)
 #align star_convex.open_segment_subset StarConvex.open_segment_subset
 
@@ -97,7 +97,7 @@ theorem star_convex_iff_pointwise_add_subset :
 theorem star_convex_empty (x : E) : StarConvex 𝕜 x ∅ := fun y hy => hy.elim
 #align star_convex_empty star_convex_empty
 
-theorem star_convex_univ (x : E) : StarConvex 𝕜 x Univ := fun _ _ _ _ _ _ _ => trivial
+theorem star_convex_univ (x : E) : StarConvex 𝕜 x univ := fun _ _ _ _ _ _ _ => trivial
 #align star_convex_univ star_convex_univ
 
 theorem StarConvex.inter (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) : StarConvex 𝕜 x (s ∩ t) :=
@@ -188,7 +188,7 @@ theorem star_convex_iff_forall_ne_pos (hx : x ∈ s) :
   exact h hy hxy ha' hb' hab
 #align star_convex_iff_forall_ne_pos star_convex_iff_forall_ne_pos
 
-theorem star_convex_iff_open_segment_subset (hx : x ∈ s) : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → OpenSegment 𝕜 x y ⊆ s :=
+theorem star_convex_iff_open_segment_subset (hx : x ∈ s) : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → openSegment 𝕜 x y ⊆ s :=
   star_convex_iff_segment_subset.trans <| forall₂_congr fun y hy => (open_segment_subset_iff_segment_subset hx hy).symm
 #align star_convex_iff_open_segment_subset star_convex_iff_open_segment_subset
 
@@ -197,7 +197,7 @@ theorem star_convex_singleton (x : E) : StarConvex 𝕜 x {x} := by
   exact Convex.combo_self hab _
 #align star_convex_singleton star_convex_singleton
 
-theorem StarConvex.linear_image (hs : StarConvex 𝕜 x s) (f : E →ₗ[𝕜] F) : StarConvex 𝕜 (f x) (s.Image f) := by
+theorem StarConvex.linear_image (hs : StarConvex 𝕜 x s) (f : E →ₗ[𝕜] F) : StarConvex 𝕜 (f x) (s.image f) := by
   intro y hy a b ha hb hab
   obtain ⟨y', hy', rfl⟩ := hy
   exact ⟨a • x + b • y', hs hy' ha hb hab, by rw [f.map_add, f.map_smul, f.map_smul]⟩
@@ -216,7 +216,7 @@ theorem StarConvex.linear_preimage {s : Set F} (f : E →ₗ[𝕜] F) (hs : Star
 #align star_convex.linear_preimage StarConvex.linear_preimage
 
 theorem StarConvex.is_linear_preimage {s : Set F} {f : E → F} (hs : StarConvex 𝕜 (f x) s) (hf : IsLinearMap 𝕜 f) :
-    StarConvex 𝕜 x (Preimage f s) :=
+    StarConvex 𝕜 x (preimage f s) :=
   hs.linear_preimage <| hf.mk' f
 #align star_convex.is_linear_preimage StarConvex.is_linear_preimage
 

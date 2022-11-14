@@ -69,7 +69,7 @@ variable [NormalizedGcdMonoid R]
 
 /-- `p.content` is the `gcd` of the coefficients of `p`. -/
 def content (p : R[X]) : R :=
-  p.Support.gcd p.coeff
+  p.support.gcd p.coeff
 #align polynomial.content Polynomial.content
 
 theorem content_dvd_coeff {p : R[X]} (n : ℕ) : p.content ∣ p.coeff n := by
@@ -87,7 +87,7 @@ theorem content_C {r : R} : (c r).content = normalize r := by
   by_cases h0:r = 0
   · simp [h0]
     
-  have h : (C r).Support = {0} := support_monomial _ h0
+  have h : (C r).support = {0} := support_monomial _ h0
   simp [h]
 #align polynomial.content_C Polynomial.content_C
 
@@ -102,7 +102,7 @@ theorem content_one : content (1 : R[X]) = 1 := by rw [← C_1, content_C, norma
 theorem content_X_mul {p : R[X]} : content (X * p) = content p := by
   rw [content, content, Finset.gcd_def, Finset.gcd_def]
   refine' congr rfl _
-  have h : (X * p).Support = p.support.map ⟨Nat.succ, Nat.succ_injective⟩ := by
+  have h : (X * p).support = p.support.map ⟨Nat.succ, Nat.succ_injective⟩ := by
     ext a
     simp only [exists_prop, Finset.mem_map, Function.Embedding.coe_fn_mk, Ne.def, mem_support_iff]
     cases a

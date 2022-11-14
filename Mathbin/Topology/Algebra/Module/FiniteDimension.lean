@@ -103,7 +103,7 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
     have : {ξ₀}ᶜ ∈ @nhds 𝕜 t 0 := IsOpen.mem_nhds is_open_compl_singleton (Ne.symm <| norm_ne_zero_iff.mp hξ₀.ne.symm)
     -- Thus, its balanced core `𝓑` is too. Let's show that the closed ball of radius `ε` contains
     -- `𝓑`, which will imply that the closed ball is indeed a `𝓣`-neighborhood of 0.
-    have : BalancedCore 𝕜 ({ξ₀}ᶜ) ∈ @nhds 𝕜 t 0 := balanced_core_mem_nhds_zero this
+    have : balancedCore 𝕜 ({ξ₀}ᶜ) ∈ @nhds 𝕜 t 0 := balanced_core_mem_nhds_zero this
     refine' mem_of_superset this fun ξ hξ => _
     -- Let `ξ ∈ 𝓑`. We want to show `∥ξ∥ < ε`. If `ξ = 0`, this is trivial.
     by_cases hξ0:ξ = 0
@@ -114,7 +114,7 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
       -- Now suppose `ξ ≠ 0`. By contradiction, let's assume `ε < ∥ξ∥`, and show that
       -- `ξ₀ ∈ 𝓑 ⊆ {ξ₀}ᶜ`, which is a contradiction.
       by_contra' h
-      suffices (ξ₀ * ξ⁻¹) • ξ ∈ BalancedCore 𝕜 ({ξ₀}ᶜ) by
+      suffices (ξ₀ * ξ⁻¹) • ξ ∈ balancedCore 𝕜 ({ξ₀}ᶜ) by
         rw [smul_eq_mul 𝕜, mul_assoc, inv_mul_cancel hξ0, mul_one] at this
         exact not_mem_compl_iff.mpr (mem_singleton ξ₀) ((balanced_core_subset _) this)
       -- For that, we use that `𝓑` is balanced : since `∥ξ₀∥ < ε < ∥ξ∥`, we have `∥ξ₀ / ξ∥ ≤ 1`,
@@ -197,7 +197,7 @@ theorem LinearMap.continuous_of_nonzero_on_open (l : E →ₗ[𝕜] 𝕜) (s : S
     (hs₃ : ∀ x ∈ s, l x ≠ 0) : Continuous l := by
   refine' l.continuous_of_is_closed_ker (l.is_closed_or_dense_ker.resolve_right fun hl => _)
   rcases hs₂ with ⟨x, hx⟩
-  have : x ∈ Interior ((l.ker : Set E)ᶜ) := by
+  have : x ∈ interior ((l.ker : Set E)ᶜ) := by
     rw [mem_interior_iff_mem_nhds]
     exact mem_of_superset (hs₁.mem_nhds hx) hs₃
   rwa [hl.interior_compl] at this
@@ -224,7 +224,7 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
       letI : UniformAddGroup s := s.to_add_subgroup.uniform_add_group
       let b := Basis.ofVectorSpace 𝕜 s
       have U : UniformEmbedding b.equiv_fun.symm.to_equiv := by
-        have : Fintype.card (Basis.OfVectorSpaceIndex 𝕜 s) = n := by
+        have : Fintype.card (Basis.ofVectorSpaceIndex 𝕜 s) = n := by
           rw [← s_dim]
           exact (finrank_eq_card_basis b).symm
         have : Continuous b.equiv_fun := IH b this
@@ -263,9 +263,9 @@ theorem LinearMap.continuous_of_finite_dimensional [T2Space E] [FiniteDimensiona
   -- argue that all linear maps there are continuous.
   let b := Basis.ofVectorSpace 𝕜 E
   have A : Continuous b.equiv_fun := continuous_equiv_fun_basis_aux b
-  have B : Continuous (f.comp (b.equiv_fun.symm : (Basis.OfVectorSpaceIndex 𝕜 E → 𝕜) →ₗ[𝕜] E)) :=
+  have B : Continuous (f.comp (b.equiv_fun.symm : (Basis.ofVectorSpaceIndex 𝕜 E → 𝕜) →ₗ[𝕜] E)) :=
     LinearMap.continuous_on_pi _
-  have : Continuous (f.comp (b.equiv_fun.symm : (Basis.OfVectorSpaceIndex 𝕜 E → 𝕜) →ₗ[𝕜] E) ∘ b.equiv_fun) := B.comp A
+  have : Continuous (f.comp (b.equiv_fun.symm : (Basis.ofVectorSpaceIndex 𝕜 E → 𝕜) →ₗ[𝕜] E) ∘ b.equiv_fun) := B.comp A
   convert this
   ext x
   dsimp

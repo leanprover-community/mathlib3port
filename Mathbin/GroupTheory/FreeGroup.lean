@@ -647,7 +647,7 @@ theorem lift.of_eq (x : FreeGroup α) : lift of x = x :=
   MonoidHom.congr_fun (lift.apply_symm_apply (MonoidHom.id _)) x
 #align free_group.lift.of_eq FreeGroup.lift.of_eq
 
-theorem lift.range_le {s : Subgroup β} (H : Set.Range f ⊆ s) : (lift f).range ≤ s := by
+theorem lift.range_le {s : Subgroup β} (H : Set.range f ⊆ s) : (lift f).range ≤ s := by
   rintro _ ⟨⟨L⟩, rfl⟩ <;>
     exact
       List.recOn L s.one_mem fun ⟨x, b⟩ tl ih =>
@@ -655,7 +655,7 @@ theorem lift.range_le {s : Subgroup β} (H : Set.Range f ⊆ s) : (lift f).range
           (by simp at ih⊢ <;> exact s.mul_mem (H ⟨x, rfl⟩) ih)
 #align free_group.lift.range_le FreeGroup.lift.range_le
 
-theorem lift.range_eq_closure : (lift f).range = Subgroup.closure (Set.Range f) := by
+theorem lift.range_eq_closure : (lift f).range = Subgroup.closure (Set.range f) := by
   apply le_antisymm (lift.range_le Subgroup.subset_closure)
   rw [Subgroup.closure_le]
   rintro _ ⟨a, rfl⟩

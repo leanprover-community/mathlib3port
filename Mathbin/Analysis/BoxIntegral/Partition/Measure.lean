@@ -40,8 +40,8 @@ namespace Box
 
 variable (I : Box ι)
 
-theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.IccCat < ∞ :=
-  show μ (IccCat I.lower I.upper) < ∞ from I.is_compact_Icc.measure_lt_top
+theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.icc < ∞ :=
+  show μ (icc I.lower I.upper) < ∞ from I.is_compact_Icc.measure_lt_top
 #align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_Icc_lt_top
 
 theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
@@ -57,11 +57,11 @@ theorem measurableSetCoe : MeasurableSet (I : Set (ι → ℝ)) := by
   exact MeasurableSet.univPi fun i => measurableSetIoc
 #align box_integral.box.measurable_set_coe BoxIntegral.Box.measurableSetCoe
 
-theorem measurableSetIcc : MeasurableSet I.IccCat :=
+theorem measurableSetIcc : MeasurableSet I.icc :=
   measurableSetIcc
 #align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurableSetIcc
 
-theorem measurableSetIoo : MeasurableSet I.IooCat :=
+theorem measurableSetIoo : MeasurableSet I.ioo :=
   MeasurableSet.univPi fun i => measurableSetIoo
 #align box_integral.box.measurable_set_Ioo BoxIntegral.Box.measurableSetIoo
 
@@ -69,19 +69,19 @@ end Countable
 
 variable [Fintype ι]
 
-theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.IccCat := by
+theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.icc := by
   rw [coe_eq_pi]
   exact measure.univ_pi_Ioc_ae_eq_Icc
 #align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_Icc
 
-theorem Ioo_ae_eq_Icc : I.IooCat =ᵐ[volume] I.IccCat :=
+theorem Ioo_ae_eq_Icc : I.ioo =ᵐ[volume] I.icc :=
   measure.univ_pi_Ioo_ae_eq_Icc
 #align box_integral.box.Ioo_ae_eq_Icc BoxIntegral.Box.Ioo_ae_eq_Icc
 
 end Box
 
 theorem Prepartition.measure_Union_to_real [Finite ι] {I : Box ι} (π : Prepartition I) (μ : Measure (ι → ℝ))
-    [IsLocallyFiniteMeasure μ] : (μ π.UnionCat).toReal = ∑ J in π.boxes, (μ J).toReal := by
+    [IsLocallyFiniteMeasure μ] : (μ π.union).toReal = ∑ J in π.boxes, (μ J).toReal := by
   erw [← Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
   exacts[fun J hJ => J.measurableSetCoe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
 #align box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_Union_to_real

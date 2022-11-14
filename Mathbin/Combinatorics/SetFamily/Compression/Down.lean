@@ -48,7 +48,7 @@ def nonMemberSubfamily (a : α) (𝒜 : Finset (Finset α)) : Finset (Finset α)
 /-- Image of the elements of `𝒜` which contain `a` under removing `a`. Finsets that do not contain
 `a` such that `insert a s ∈ 𝒜`. -/
 def memberSubfamily (a : α) (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  (𝒜.filter fun s => a ∈ s).Image fun s => erase s a
+  (𝒜.filter fun s => a ∈ s).image fun s => erase s a
 #align finset.member_subfamily Finset.memberSubfamily
 
 @[simp]
@@ -96,7 +96,7 @@ theorem card_member_subfamily_add_card_non_member_subfamily (a : α) (𝒜 : Fin
   finset.card_member_subfamily_add_card_non_member_subfamily Finset.card_member_subfamily_add_card_non_member_subfamily
 
 theorem member_subfamily_union_non_member_subfamily (a : α) (𝒜 : Finset (Finset α)) :
-    𝒜.memberSubfamily a ∪ 𝒜.nonMemberSubfamily a = 𝒜.Image fun s => s.erase a := by
+    𝒜.memberSubfamily a ∪ 𝒜.nonMemberSubfamily a = 𝒜.image fun s => s.erase a := by
   ext s
   simp only [mem_union, mem_member_subfamily, mem_non_member_subfamily, mem_image, exists_prop]
   constructor
@@ -150,7 +150,7 @@ namespace Down
 /-- `a`-down-compressing `𝒜` means removing `a` from the elements of `𝒜` that contain it, when the
 resulting finset is not already in `𝒜`. -/
 def compression (a : α) (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  (𝒜.filter fun s => erase s a ∈ 𝒜).disjUnion ((𝒜.Image fun s => erase s a).filter fun s => s ∉ 𝒜) <|
+  (𝒜.filter fun s => erase s a ∈ 𝒜).disjUnion ((𝒜.image fun s => erase s a).filter fun s => s ∉ 𝒜) <|
     disjoint_left.2 fun s h₁ h₂ => (mem_filter.1 h₂).2 (mem_filter.1 h₁).1
 #align down.compression Down.compression
 

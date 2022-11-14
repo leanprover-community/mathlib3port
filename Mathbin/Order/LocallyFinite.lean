@@ -297,22 +297,22 @@ theorem mem_Ioo : x ∈ ioo a b ↔ a < x ∧ x < b :=
 #align finset.mem_Ioo Finset.mem_Ioo
 
 @[simp, norm_cast]
-theorem coe_Icc (a b : α) : (icc a b : Set α) = Set.IccCat a b :=
+theorem coe_Icc (a b : α) : (icc a b : Set α) = Set.icc a b :=
   Set.ext fun _ => mem_Icc
 #align finset.coe_Icc Finset.coe_Icc
 
 @[simp, norm_cast]
-theorem coe_Ico (a b : α) : (ico a b : Set α) = Set.IcoCat a b :=
+theorem coe_Ico (a b : α) : (ico a b : Set α) = Set.ico a b :=
   Set.ext fun _ => mem_Ico
 #align finset.coe_Ico Finset.coe_Ico
 
 @[simp, norm_cast]
-theorem coe_Ioc (a b : α) : (ioc a b : Set α) = Set.IocCat a b :=
+theorem coe_Ioc (a b : α) : (ioc a b : Set α) = Set.ioc a b :=
   Set.ext fun _ => mem_Ioc
 #align finset.coe_Ioc Finset.coe_Ioc
 
 @[simp, norm_cast]
-theorem coe_Ioo (a b : α) : (ioo a b : Set α) = Set.IooCat a b :=
+theorem coe_Ioo (a b : α) : (ioo a b : Set α) = Set.ioo a b :=
   Set.ext fun _ => mem_Ioo
 #align finset.coe_Ioo Finset.coe_Ioo
 
@@ -343,12 +343,12 @@ theorem mem_Ioi : x ∈ ioi a ↔ a < x :=
 #align finset.mem_Ioi Finset.mem_Ioi
 
 @[simp, norm_cast]
-theorem coe_Ici (a : α) : (ici a : Set α) = Set.IciCat a :=
+theorem coe_Ici (a : α) : (ici a : Set α) = Set.ici a :=
   Set.ext fun _ => mem_Ici
 #align finset.coe_Ici Finset.coe_Ici
 
 @[simp, norm_cast]
-theorem coe_Ioi (a : α) : (ioi a : Set α) = Set.IoiCat a :=
+theorem coe_Ioi (a : α) : (ioi a : Set α) = Set.ioi a :=
   Set.ext fun _ => mem_Ioi
 #align finset.coe_Ioi Finset.coe_Ioi
 
@@ -379,12 +379,12 @@ theorem mem_Iio : x ∈ iio a ↔ x < a :=
 #align finset.mem_Iio Finset.mem_Iio
 
 @[simp, norm_cast]
-theorem coe_Iic (a : α) : (iic a : Set α) = Set.IicCat a :=
+theorem coe_Iic (a : α) : (iic a : Set α) = Set.iic a :=
   Set.ext fun _ => mem_Iic
 #align finset.coe_Iic Finset.coe_Iic
 
 @[simp, norm_cast]
-theorem coe_Iio (a : α) : (iio a : Set α) = Set.IioCat a :=
+theorem coe_Iio (a : α) : (iio a : Set α) = Set.iio a :=
   Set.ext fun _ => mem_Iio
 #align finset.coe_Iio Finset.coe_Iio
 
@@ -549,36 +549,36 @@ section Preorder
 
 variable [Preorder α] [LocallyFiniteOrder α] (a b : α)
 
-instance fintypeIcc : Fintype (IccCat a b) :=
+instance fintypeIcc : Fintype (icc a b) :=
   Fintype.ofFinset (Finset.icc a b) fun x => by rw [Finset.mem_Icc, mem_Icc]
 #align set.fintype_Icc Set.fintypeIcc
 
-instance fintypeIco : Fintype (IcoCat a b) :=
+instance fintypeIco : Fintype (ico a b) :=
   Fintype.ofFinset (Finset.ico a b) fun x => by rw [Finset.mem_Ico, mem_Ico]
 #align set.fintype_Ico Set.fintypeIco
 
-instance fintypeIoc : Fintype (IocCat a b) :=
+instance fintypeIoc : Fintype (ioc a b) :=
   Fintype.ofFinset (Finset.ioc a b) fun x => by rw [Finset.mem_Ioc, mem_Ioc]
 #align set.fintype_Ioc Set.fintypeIoc
 
-instance fintypeIoo : Fintype (IooCat a b) :=
+instance fintypeIoo : Fintype (ioo a b) :=
   Fintype.ofFinset (Finset.ioo a b) fun x => by rw [Finset.mem_Ioo, mem_Ioo]
 #align set.fintype_Ioo Set.fintypeIoo
 
-theorem finite_Icc : (IccCat a b).Finite :=
-  (IccCat a b).to_finite
+theorem finite_Icc : (icc a b).Finite :=
+  (icc a b).to_finite
 #align set.finite_Icc Set.finite_Icc
 
-theorem finite_Ico : (IcoCat a b).Finite :=
-  (IcoCat a b).to_finite
+theorem finite_Ico : (ico a b).Finite :=
+  (ico a b).to_finite
 #align set.finite_Ico Set.finite_Ico
 
-theorem finite_Ioc : (IocCat a b).Finite :=
-  (IocCat a b).to_finite
+theorem finite_Ioc : (ioc a b).Finite :=
+  (ioc a b).to_finite
 #align set.finite_Ioc Set.finite_Ioc
 
-theorem finite_Ioo : (IooCat a b).Finite :=
-  (IooCat a b).to_finite
+theorem finite_Ioo : (ioo a b).Finite :=
+  (ioo a b).to_finite
 #align set.finite_Ioo Set.finite_Ioo
 
 end Preorder
@@ -587,20 +587,20 @@ section OrderTop
 
 variable [Preorder α] [LocallyFiniteOrderTop α] (a : α)
 
-instance fintypeIci : Fintype (IciCat a) :=
+instance fintypeIci : Fintype (ici a) :=
   Fintype.ofFinset (Finset.ici a) fun x => by rw [Finset.mem_Ici, mem_Ici]
 #align set.fintype_Ici Set.fintypeIci
 
-instance fintypeIoi : Fintype (IoiCat a) :=
+instance fintypeIoi : Fintype (ioi a) :=
   Fintype.ofFinset (Finset.ioi a) fun x => by rw [Finset.mem_Ioi, mem_Ioi]
 #align set.fintype_Ioi Set.fintypeIoi
 
-theorem finite_Ici : (IciCat a).Finite :=
-  (IciCat a).to_finite
+theorem finite_Ici : (ici a).Finite :=
+  (ici a).to_finite
 #align set.finite_Ici Set.finite_Ici
 
-theorem finite_Ioi : (IoiCat a).Finite :=
-  (IoiCat a).to_finite
+theorem finite_Ioi : (ioi a).Finite :=
+  (ioi a).to_finite
 #align set.finite_Ioi Set.finite_Ioi
 
 end OrderTop
@@ -609,20 +609,20 @@ section OrderBot
 
 variable [Preorder α] [LocallyFiniteOrderBot α] (b : α)
 
-instance fintypeIic : Fintype (IicCat b) :=
+instance fintypeIic : Fintype (iic b) :=
   Fintype.ofFinset (Finset.iic b) fun x => by rw [Finset.mem_Iic, mem_Iic]
 #align set.fintype_Iic Set.fintypeIic
 
-instance fintypeIio : Fintype (IioCat b) :=
+instance fintypeIio : Fintype (iio b) :=
   Fintype.ofFinset (Finset.iio b) fun x => by rw [Finset.mem_Iio, mem_Iio]
 #align set.fintype_Iio Set.fintypeIio
 
-theorem finite_Iic : (IicCat b).Finite :=
-  (IicCat b).to_finite
+theorem finite_Iic : (iic b).Finite :=
+  (iic b).to_finite
 #align set.finite_Iic Set.finite_Iic
 
-theorem finite_Iio : (IioCat b).Finite :=
-  (IioCat b).to_finite
+theorem finite_Iio : (iio b).Finite :=
+  (iio b).to_finite
 #align set.finite_Iio Set.finite_Iio
 
 end OrderBot
@@ -639,7 +639,7 @@ section Preorder
 variable [Preorder α] [Preorder β]
 
 /-- A noncomputable constructor from the finiteness of all closed intervals. -/
-noncomputable def LocallyFiniteOrder.ofFiniteIcc (h : ∀ a b : α, (Set.IccCat a b).Finite) : LocallyFiniteOrder α :=
+noncomputable def LocallyFiniteOrder.ofFiniteIcc (h : ∀ a b : α, (Set.icc a b).Finite) : LocallyFiniteOrder α :=
   @LocallyFiniteOrder.ofIcc' α _ (Classical.decRel _) (fun a b => (h a b).toFinset) fun a b x => by
     rw [Set.Finite.mem_to_finset, Set.mem_Icc]
 #align locally_finite_order.of_finite_Icc LocallyFiniteOrder.ofFiniteIcc
@@ -652,10 +652,10 @@ This is not an instance as it would not be defeq to better instances such as
 @[reducible]
 def Fintype.toLocallyFiniteOrder [Fintype α] [@DecidableRel α (· < ·)] [@DecidableRel α (· ≤ ·)] :
     LocallyFiniteOrder α where
-  finsetIcc a b := (Set.IccCat a b).toFinset
-  finsetIco a b := (Set.IcoCat a b).toFinset
-  finsetIoc a b := (Set.IocCat a b).toFinset
-  finsetIoo a b := (Set.IooCat a b).toFinset
+  finsetIcc a b := (Set.icc a b).toFinset
+  finsetIco a b := (Set.ico a b).toFinset
+  finsetIoc a b := (Set.ioc a b).toFinset
+  finsetIoo a b := (Set.ioo a b).toFinset
   finset_mem_Icc a b x := by simp only [Set.mem_to_finset, Set.mem_Icc]
   finset_mem_Ico a b x := by simp only [Set.mem_to_finset, Set.mem_Ico]
   finset_mem_Ioc a b x := by simp only [Set.mem_to_finset, Set.mem_Ioc]

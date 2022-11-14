@@ -742,7 +742,7 @@ theorem LhomCat.realize_on_formula [L'.StructureCat M] (φ : L →ᴸ L') [φ.Is
 
 @[simp]
 theorem LhomCat.set_of_realize_on_formula [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (ψ : L.Formula α) :
-    (SetOf (φ.onFormula ψ).realize : Set (α → M)) = SetOf ψ.realize := by
+    (setOf (φ.onFormula ψ).realize : Set (α → M)) = setOf ψ.realize := by
   ext
   simp
 #align first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.LhomCat.set_of_realize_on_formula
@@ -773,15 +773,15 @@ theorem LhomCat.realize_on_sentence [L'.StructureCat M] (φ : L →ᴸ L') [φ.I
 variable (L)
 
 /-- The complete theory of a structure `M` is the set of all sentences `M` satisfies. -/
-def CompleteTheory : L.TheoryCat :=
+def completeTheory : L.TheoryCat :=
   { φ | M ⊨ φ }
-#align first_order.language.complete_theory FirstOrder.Language.CompleteTheory
+#align first_order.language.complete_theory FirstOrder.Language.completeTheory
 
 variable (N)
 
 /-- Two structures are elementarily equivalent when they satisfy the same sentences. -/
 def ElementarilyEquivalent : Prop :=
-  L.CompleteTheory M = L.CompleteTheory N
+  L.completeTheory M = L.completeTheory N
 #align first_order.language.elementarily_equivalent FirstOrder.Language.ElementarilyEquivalent
 
 -- mathport name: elementarily_equivalent
@@ -790,7 +790,7 @@ localized [FirstOrder] notation:25 A " ≅[" L "] " B:50 => FirstOrder.Language.
 variable {L} {M} {N}
 
 @[simp]
-theorem mem_complete_theory {φ : Sentence L} : φ ∈ L.CompleteTheory M ↔ M ⊨ φ :=
+theorem mem_complete_theory {φ : Sentence L} : φ ∈ L.completeTheory M ↔ M ⊨ φ :=
   Iff.rfl
 #align first_order.language.mem_complete_theory FirstOrder.Language.mem_complete_theory
 
@@ -829,7 +829,7 @@ theorem TheoryCat.realize_sentence_of_mem [M ⊨ T] {φ : L.Sentence} (h : φ �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem LhomCat.on_Theory_model [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (T : L.TheoryCat) :
-    M ⊨ φ.OnTheory T ↔ M ⊨ T := by simp [Theory.model_iff, Lhom.on_Theory]
+    M ⊨ φ.onTheory T ↔ M ⊨ T := by simp [Theory.model_iff, Lhom.on_Theory]
 #align first_order.language.Lhom.on_Theory_model FirstOrder.Language.LhomCat.on_Theory_model
 
 variable {M} {T}
@@ -869,20 +869,20 @@ theorem model_singleton_iff {φ : L.Sentence} : M ⊨ ({φ} : L.TheoryCat) ↔ M
 #align first_order.language.Theory.model_singleton_iff FirstOrder.Language.TheoryCat.model_singleton_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem model_iff_subset_complete_theory : M ⊨ T ↔ T ⊆ L.CompleteTheory M :=
+theorem model_iff_subset_complete_theory : M ⊨ T ↔ T ⊆ L.completeTheory M :=
   T.model_iff
 #align
   first_order.language.Theory.model_iff_subset_complete_theory FirstOrder.Language.TheoryCat.model_iff_subset_complete_theory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem CompleteTheory.subset [MT : M ⊨ T] : T ⊆ L.CompleteTheory M :=
+theorem CompleteTheory.subset [MT : M ⊨ T] : T ⊆ L.completeTheory M :=
   model_iff_subset_complete_theory.1 MT
 #align first_order.language.Theory.complete_theory.subset FirstOrder.Language.TheoryCat.CompleteTheory.subset
 
 end TheoryCat
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance model_complete_theory : M ⊨ L.CompleteTheory M :=
+instance model_complete_theory : M ⊨ L.completeTheory M :=
   TheoryCat.model_iff_subset_complete_theory.2 (subset_refl _)
 #align first_order.language.model_complete_theory FirstOrder.Language.model_complete_theory
 
@@ -891,7 +891,7 @@ variable (M N)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem realize_iff_of_model_complete_theory [N ⊨ L.CompleteTheory M] (φ : L.Sentence) : N ⊨ φ ↔ M ⊨ φ := by
+theorem realize_iff_of_model_complete_theory [N ⊨ L.completeTheory M] (φ : L.Sentence) : N ⊨ φ ↔ M ⊨ φ := by
   refine' ⟨fun h => _, (L.complete_theory M).realize_sentence_of_mem⟩
   contrapose! h
   rw [← sentence.realize_not] at *
@@ -1092,30 +1092,30 @@ theorem Sentence.realize_card_ge (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ (#
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem model_infinite_theory_iff : M ⊨ L.InfiniteTheory ↔ Infinite M := by
+theorem model_infinite_theory_iff : M ⊨ L.infiniteTheory ↔ Infinite M := by
   simp [infinite_theory, infinite_iff, aleph_0_le]
 #align first_order.language.model_infinite_theory_iff FirstOrder.Language.model_infinite_theory_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance model_infinite_theory [h : Infinite M] : M ⊨ L.InfiniteTheory :=
+instance model_infinite_theory [h : Infinite M] : M ⊨ L.infiniteTheory :=
   L.model_infinite_theory_iff.2 h
 #align first_order.language.model_infinite_theory FirstOrder.Language.model_infinite_theory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem model_nonempty_theory_iff : M ⊨ L.NonemptyTheory ↔ Nonempty M := by
+theorem model_nonempty_theory_iff : M ⊨ L.nonemptyTheory ↔ Nonempty M := by
   simp only [nonempty_theory, Theory.model_iff, Set.mem_singleton_iff, forall_eq, sentence.realize_card_ge,
     Nat.cast_one, one_le_iff_ne_zero, mk_ne_zero_iff]
 #align first_order.language.model_nonempty_theory_iff FirstOrder.Language.model_nonempty_theory_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance model_nonempty [h : Nonempty M] : M ⊨ L.NonemptyTheory :=
+instance model_nonempty [h : Nonempty M] : M ⊨ L.nonemptyTheory :=
   L.model_nonempty_theory_iff.2 h
 #align first_order.language.model_nonempty FirstOrder.Language.model_nonempty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem model_distinct_constants_theory {M : Type w} [L[[α]].StructureCat M] (s : Set α) :
-    M ⊨ L.DistinctConstantsTheory s ↔ Set.InjOn (fun i : α => (L.con i : M)) s := by
+    M ⊨ L.distinctConstantsTheory s ↔ Set.InjOn (fun i : α => (L.con i : M)) s := by
   simp only [distinct_constants_theory, Theory.model_iff, Set.mem_image, Set.mem_inter_iff, Set.mem_prod,
     Set.mem_compl_iff, Prod.exists, forall_exists_index, and_imp]
   refine' ⟨fun h a as b bs ab => _, _⟩
@@ -1132,7 +1132,7 @@ theorem model_distinct_constants_theory {M : Type w} [L[[α]].StructureCat M] (s
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem card_le_of_model_distinct_constants_theory (s : Set α) (M : Type w) [L[[α]].StructureCat M]
-    [h : M ⊨ L.DistinctConstantsTheory s] : Cardinal.lift.{w} (#s) ≤ Cardinal.lift.{u'} (#M) :=
+    [h : M ⊨ L.distinctConstantsTheory s] : Cardinal.lift.{w} (#s) ≤ Cardinal.lift.{u'} (#M) :=
   lift_mk_le'.2 ⟨⟨_, Set.inj_on_iff_injective.1 ((L.model_distinct_constants_theory s).1 h)⟩⟩
 #align
   first_order.language.card_le_of_model_distinct_constants_theory FirstOrder.Language.card_le_of_model_distinct_constants_theory
@@ -1151,7 +1151,7 @@ theorem trans (MN : M ≅[L] N) (NP : N ≅[L] P) : M ≅[L] P :=
   MN.trans NP
 #align first_order.language.elementarily_equivalent.trans FirstOrder.Language.ElementarilyEquivalent.trans
 
-theorem complete_theory_eq (h : M ≅[L] N) : L.CompleteTheory M = L.CompleteTheory N :=
+theorem complete_theory_eq (h : M ≅[L] N) : L.completeTheory M = L.completeTheory N :=
   h
 #align
   first_order.language.elementarily_equivalent.complete_theory_eq FirstOrder.Language.ElementarilyEquivalent.complete_theory_eq

@@ -60,7 +60,7 @@ theorem map₂_le {f : M →ₗ[R] N →ₗ[R] P} {p : Submodule R M} {q : Submo
 variable (R)
 
 theorem map₂_span_span (f : M →ₗ[R] N →ₗ[R] P) (s : Set M) (t : Set N) :
-    map₂ f (span R s) (span R t) = span R (Set.Image2 (fun m n => f m n) s t) := by
+    map₂ f (span R s) (span R t) = span R (Set.image2 (fun m n => f m n) s t) := by
   apply le_antisymm
   · rw [map₂_le]
     intro a ha b hb
@@ -138,13 +138,13 @@ theorem map₂_sup_left (f : M →ₗ[R] N →ₗ[R] P) (p₁ p₂ : Submodule R
 #align submodule.map₂_sup_left Submodule.map₂_sup_left
 
 theorem image2_subset_map₂ (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q : Submodule R N) :
-    Set.Image2 (fun m n => f m n) (↑p : Set M) (↑q : Set N) ⊆ (↑(map₂ f p q) : Set P) := by
+    Set.image2 (fun m n => f m n) (↑p : Set M) (↑q : Set N) ⊆ (↑(map₂ f p q) : Set P) := by
   rintro _ ⟨i, j, hi, hj, rfl⟩
   exact apply_mem_map₂ _ hi hj
 #align submodule.image2_subset_map₂ Submodule.image2_subset_map₂
 
 theorem map₂_eq_span_image2 (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q : Submodule R N) :
-    map₂ f p q = span R (Set.Image2 (fun m n => f m n) (p : Set M) (q : Set N)) := by
+    map₂ f p q = span R (Set.image2 (fun m n => f m n) (p : Set M) (q : Set N)) := by
   rw [← map₂_span_span, span_eq, span_eq]
 #align submodule.map₂_eq_span_image2 Submodule.map₂_eq_span_image2
 

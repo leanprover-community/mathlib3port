@@ -193,15 +193,15 @@ theorem self_comp_symm (h : α ≃ₜ β) : ⇑h ∘ ⇑h.symm = id :=
 #align homeomorph.self_comp_symm Homeomorph.self_comp_symm
 
 @[simp]
-theorem range_coe (h : α ≃ₜ β) : Range h = univ :=
+theorem range_coe (h : α ≃ₜ β) : range h = univ :=
   h.Surjective.range_eq
 #align homeomorph.range_coe Homeomorph.range_coe
 
-theorem image_symm (h : α ≃ₜ β) : Image h.symm = Preimage h :=
+theorem image_symm (h : α ≃ₜ β) : image h.symm = preimage h :=
   funext h.symm.toEquiv.image_eq_preimage
 #align homeomorph.image_symm Homeomorph.image_symm
 
-theorem preimage_symm (h : α ≃ₜ β) : Preimage h.symm = Image h :=
+theorem preimage_symm (h : α ≃ₜ β) : preimage h.symm = image h :=
   (funext h.toEquiv.image_eq_preimage).symm
 #align homeomorph.preimage_symm Homeomorph.preimage_symm
 
@@ -236,7 +236,7 @@ protected theorem embedding (h : α ≃ₜ β) : Embedding h :=
 #align homeomorph.embedding Homeomorph.embedding
 
 /-- Homeomorphism given an embedding. -/
-noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.Range f where
+noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.range f where
   continuous_to_fun := hf.Continuous.subtype_mk _
   continuous_inv_fun := by simp [hf.continuous_iff, continuous_subtype_coe]
   toEquiv := Equiv.ofInjective f hf.inj
@@ -330,23 +330,23 @@ protected theorem normalSpace [NormalSpace α] (h : α ≃ₜ β) : NormalSpace 
   h.symm.ClosedEmbedding.NormalSpace
 #align homeomorph.normal_space Homeomorph.normalSpace
 
-theorem preimage_closure (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Closure s = Closure (h ⁻¹' s) :=
+theorem preimage_closure (h : α ≃ₜ β) (s : Set β) : h ⁻¹' closure s = closure (h ⁻¹' s) :=
   h.IsOpenMap.preimage_closure_eq_closure_preimage h.Continuous _
 #align homeomorph.preimage_closure Homeomorph.preimage_closure
 
-theorem image_closure (h : α ≃ₜ β) (s : Set α) : h '' Closure s = Closure (h '' s) := by
+theorem image_closure (h : α ≃ₜ β) (s : Set α) : h '' closure s = closure (h '' s) := by
   rw [← preimage_symm, preimage_closure]
 #align homeomorph.image_closure Homeomorph.image_closure
 
-theorem preimage_interior (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Interior s = Interior (h ⁻¹' s) :=
+theorem preimage_interior (h : α ≃ₜ β) (s : Set β) : h ⁻¹' interior s = interior (h ⁻¹' s) :=
   h.IsOpenMap.preimage_interior_eq_interior_preimage h.Continuous _
 #align homeomorph.preimage_interior Homeomorph.preimage_interior
 
-theorem image_interior (h : α ≃ₜ β) (s : Set α) : h '' Interior s = Interior (h '' s) := by
+theorem image_interior (h : α ≃ₜ β) (s : Set α) : h '' interior s = interior (h '' s) := by
   rw [← preimage_symm, preimage_interior]
 #align homeomorph.image_interior Homeomorph.image_interior
 
-theorem preimage_frontier (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Frontier s = Frontier (h ⁻¹' s) :=
+theorem preimage_frontier (h : α ≃ₜ β) (s : Set β) : h ⁻¹' frontier s = frontier (h ⁻¹' s) :=
   h.IsOpenMap.preimage_frontier_eq_frontier_preimage h.Continuous _
 #align homeomorph.preimage_frontier Homeomorph.preimage_frontier
 
@@ -594,12 +594,12 @@ def finTwoArrow : (Fin 2 → α) ≃ₜ α × α :=
 def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s where
   continuous_to_fun := by continuity!
   continuous_inv_fun := by continuity!
-  toEquiv := e.toEquiv.Image s
+  toEquiv := e.toEquiv.image s
 #align homeomorph.image Homeomorph.image
 
 /-- `set.univ α` is homeomorphic to `α`. -/
 @[simps (config := { fullyApplied := false })]
-def Set.univ (α : Type _) [TopologicalSpace α] : (Univ : Set α) ≃ₜ α where
+def Set.univ (α : Type _) [TopologicalSpace α] : (univ : Set α) ≃ₜ α where
   toEquiv := Equiv.Set.univ α
   continuous_to_fun := continuous_subtype_coe
   continuous_inv_fun := continuous_id.subtype_mk _

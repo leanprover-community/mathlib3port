@@ -137,7 +137,7 @@ theorem gram_schmidt_inv_triangular (v : ι → E) {i j : ι} (hij : i < j) : �
 
 open Submodule Set Order
 
-theorem mem_span_gram_schmidt (f : ι → E) {i j : ι} (hij : i ≤ j) : f i ∈ span 𝕜 (gramSchmidt 𝕜 f '' IicCat j) := by
+theorem mem_span_gram_schmidt (f : ι → E) {i j : ι} (hij : i ≤ j) : f i ∈ span 𝕜 (gramSchmidt 𝕜 f '' iic j) := by
   rw [gram_schmidt_def' 𝕜 f i]
   simp_rw [orthogonal_projection_singleton]
   exact
@@ -147,7 +147,7 @@ theorem mem_span_gram_schmidt (f : ι → E) {i j : ι} (hij : i ≤ j) : f i �
           subset_span <| mem_image_of_mem (gramSchmidt 𝕜 f) <| (Finset.mem_Iio.1 hk).le.trans hij)
 #align mem_span_gram_schmidt mem_span_gram_schmidt
 
-theorem gram_schmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmidt 𝕜 f i ∈ span 𝕜 (f '' IicCat j)
+theorem gram_schmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmidt 𝕜 f i ∈ span 𝕜 (f '' iic j)
   | j => fun i hij => by
     rw [gram_schmidt_def 𝕜 f i]
     simp_rw [orthogonal_projection_singleton]
@@ -156,12 +156,12 @@ theorem gram_schmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmid
     exact smul_mem _ _ (span_mono (image_subset f <| Iic_subset_Iic.2 hkj.le) <| gram_schmidt_mem_span le_rfl)
 #align gram_schmidt_mem_span gram_schmidt_mem_span
 
-theorem span_gram_schmidt_Iic (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' IicCat c) = span 𝕜 (f '' IicCat c) :=
+theorem span_gram_schmidt_Iic (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' iic c) = span 𝕜 (f '' iic c) :=
   span_eq_span (Set.image_subset_iff.2 fun i => gram_schmidt_mem_span _ _) <|
     Set.image_subset_iff.2 fun i => mem_span_gram_schmidt _ _
 #align span_gram_schmidt_Iic span_gram_schmidt_Iic
 
-theorem span_gram_schmidt_Iio (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' IioCat c) = span 𝕜 (f '' IioCat c) :=
+theorem span_gram_schmidt_Iio (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' iio c) = span 𝕜 (f '' iio c) :=
   span_eq_span
       (Set.image_subset_iff.2 fun i hi =>
         span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| gram_schmidt_mem_span _ _ le_rfl) <|
@@ -170,7 +170,7 @@ theorem span_gram_schmidt_Iio (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt �
 #align span_gram_schmidt_Iio span_gram_schmidt_Iio
 
 /-- `gram_schmidt` preserves span of vectors. -/
-theorem span_gram_schmidt (f : ι → E) : span 𝕜 (Range (gramSchmidt 𝕜 f)) = span 𝕜 (Range f) :=
+theorem span_gram_schmidt (f : ι → E) : span 𝕜 (range (gramSchmidt 𝕜 f)) = span 𝕜 (range f) :=
   span_eq_span (range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| gram_schmidt_mem_span _ _ le_rfl) <|
     range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| mem_span_gram_schmidt _ _ le_rfl
 #align span_gram_schmidt span_gram_schmidt
@@ -183,7 +183,7 @@ theorem gram_schmidt_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f
     apply Finset.sum_eq_zero
     intro j hj
     rw [coe_eq_zero]
-    suffices span 𝕜 (f '' Set.IicCat j) ≤ (𝕜 ∙ f i)ᗮ by
+    suffices span 𝕜 (f '' Set.iic j) ≤ (𝕜 ∙ f i)ᗮ by
       apply orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero
       apply mem_orthogonal_singleton_of_inner_left
       apply inner_right_of_mem_orthogonal_singleton
@@ -201,7 +201,7 @@ theorem gram_schmidt_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f
 
 variable {𝕜}
 
-theorem gram_schmidt_ne_zero_coe {f : ι → E} (n : ι) (h₀ : LinearIndependent 𝕜 (f ∘ (coe : Set.IicCat n → ι))) :
+theorem gram_schmidt_ne_zero_coe {f : ι → E} (n : ι) (h₀ : LinearIndependent 𝕜 (f ∘ (coe : Set.iic n → ι))) :
     gramSchmidt 𝕜 f n ≠ 0 := by
   by_contra h
   have h₁ : f n ∈ span 𝕜 (f '' Iio n) := by
@@ -212,8 +212,7 @@ theorem gram_schmidt_ne_zero_coe {f : ι → E} (n : ι) (h₀ : LinearIndepende
     apply Submodule.smul_mem _ _ _
     rw [Finset.mem_Iio] at ha
     refine' subset_span ⟨a, ha, by rfl⟩
-  have h₂ :
-    (f ∘ (coe : Set.IicCat n → ι)) ⟨n, le_refl n⟩ ∈ span 𝕜 (f ∘ (coe : Set.IicCat n → ι) '' Iio ⟨n, le_refl n⟩) := by
+  have h₂ : (f ∘ (coe : Set.iic n → ι)) ⟨n, le_refl n⟩ ∈ span 𝕜 (f ∘ (coe : Set.iic n → ι) '' Iio ⟨n, le_refl n⟩) := by
     rw [image_comp]
     convert h₁ using 3
     ext i
@@ -230,11 +229,10 @@ theorem gram_schmidt_ne_zero {f : ι → E} (n : ι) (h₀ : LinearIndependent �
 
 /-- `gram_schmidt` produces a triangular matrix of vectors when given a basis. -/
 theorem gram_schmidt_triangular {i j : ι} (hij : i < j) (b : Basis ι 𝕜 E) : b.repr (gramSchmidt 𝕜 b i) j = 0 := by
-  have : gramSchmidt 𝕜 b i ∈ span 𝕜 (gramSchmidt 𝕜 b '' Set.IioCat j) :=
+  have : gramSchmidt 𝕜 b i ∈ span 𝕜 (gramSchmidt 𝕜 b '' Set.iio j) :=
     subset_span ((Set.mem_image _ _ _).2 ⟨i, hij, rfl⟩)
-  have : gramSchmidt 𝕜 b i ∈ span 𝕜 (b '' Set.IioCat j) := by rwa [← span_gram_schmidt_Iio 𝕜 b j]
-  have : ↑(b.repr (gramSchmidt 𝕜 b i)).Support ⊆ Set.IioCat j :=
-    Basis.repr_support_subset_of_mem_span b (Set.IioCat j) this
+  have : gramSchmidt 𝕜 b i ∈ span 𝕜 (b '' Set.iio j) := by rwa [← span_gram_schmidt_Iio 𝕜 b j]
+  have : ↑(b.repr (gramSchmidt 𝕜 b i)).support ⊆ Set.iio j := Basis.repr_support_subset_of_mem_span b (Set.iio j) this
   exact (Finsupp.mem_supported' _ _).1 ((Finsupp.mem_supported 𝕜 _).2 this) j Set.not_mem_Iio_self
 #align gram_schmidt_triangular gram_schmidt_triangular
 
@@ -264,8 +262,8 @@ noncomputable def gramSchmidtNormed (f : ι → E) (n : ι) : E :=
 
 variable {𝕜}
 
-theorem gram_schmidt_normed_unit_length_coe {f : ι → E} (n : ι)
-    (h₀ : LinearIndependent 𝕜 (f ∘ (coe : Set.IicCat n → ι))) : ∥gramSchmidtNormed 𝕜 f n∥ = 1 := by
+theorem gram_schmidt_normed_unit_length_coe {f : ι → E} (n : ι) (h₀ : LinearIndependent 𝕜 (f ∘ (coe : Set.iic n → ι))) :
+    ∥gramSchmidtNormed 𝕜 f n∥ = 1 := by
   simp only [gram_schmidt_ne_zero_coe n h₀, gramSchmidtNormed, norm_smul_inv_norm, Ne.def, not_false_iff]
 #align gram_schmidt_normed_unit_length_coe gram_schmidt_normed_unit_length_coe
 
@@ -323,7 +321,7 @@ theorem span_gram_schmidt_normed (f : ι → E) (s : Set ι) :
 #align span_gram_schmidt_normed span_gram_schmidt_normed
 
 theorem span_gram_schmidt_normed_range (f : ι → E) :
-    span 𝕜 (Range (gramSchmidtNormed 𝕜 f)) = span 𝕜 (Range (gramSchmidt 𝕜 f)) := by
+    span 𝕜 (range (gramSchmidtNormed 𝕜 f)) = span 𝕜 (range (gramSchmidt 𝕜 f)) := by
   simpa only [image_univ.symm] using span_gram_schmidt_normed f univ
 #align span_gram_schmidt_normed_range span_gram_schmidt_normed_range
 

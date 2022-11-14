@@ -64,7 +64,7 @@ def uniformSpaceCore : UniformSpace.Core R where
               _ < ε / 2 + ε / 2 := add_lt_add hac hcb
               _ = ε := by rw [div_add_div_same, add_self_div_two]
               
-          simpa [CompRel]
+          simpa [compRel]
 #align is_absolute_value.uniform_space_core IsAbsoluteValue.uniformSpaceCore
 
 /-- The uniform structure coming from an absolute value. -/

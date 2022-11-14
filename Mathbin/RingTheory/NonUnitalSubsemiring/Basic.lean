@@ -106,7 +106,7 @@ add_decl_doc NonUnitalSubsemiring.toAddSubmonoid
 namespace NonUnitalSubsemiring
 
 instance : SetLike (NonUnitalSubsemiring R) R where
-  coe := NonUnitalSubsemiring.Carrier
+  coe := NonUnitalSubsemiring.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
 instance : NonUnitalSubsemiringClass (NonUnitalSubsemiring R) R where
@@ -115,7 +115,7 @@ instance : NonUnitalSubsemiringClass (NonUnitalSubsemiring R) R where
   mul_mem := mul_mem'
 
 @[simp]
-theorem mem_carrier {s : NonUnitalSubsemiring R} {x : R} : x ∈ s.Carrier ↔ x ∈ s :=
+theorem mem_carrier {s : NonUnitalSubsemiring R} {x : R} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align non_unital_subsemiring.mem_carrier NonUnitalSubsemiring.mem_carrier
 
@@ -128,7 +128,7 @@ theorem ext {S T : NonUnitalSubsemiring R} (h : ∀ x, x ∈ S ↔ x ∈ T) : S 
 /-- Copy of a non-unital subsemiring with a new `carrier` equal to the old one. Useful to fix
 definitional equalities.-/
 protected def copy (S : NonUnitalSubsemiring R) (s : Set R) (hs : s = ↑S) : NonUnitalSubsemiring R :=
-  { S.toAddSubmonoid.copy s hs, S.toSubsemigroup.copy s hs with Carrier := s }
+  { S.toAddSubmonoid.copy s hs, S.toSubsemigroup.copy s hs with carrier := s }
 #align non_unital_subsemiring.copy NonUnitalSubsemiring.copy
 
 @[simp]
@@ -172,7 +172,7 @@ theorem to_add_submonoid_mono : Monotone (toAddSubmonoid : NonUnitalSubsemiring 
 submonoid `sa` such that `x ∈ s ↔ x ∈ sg ↔ x ∈ sa`. -/
 protected def mk' (s : Set R) (sg : Subsemigroup R) (hg : ↑sg = s) (sa : AddSubmonoid R) (ha : ↑sa = s) :
     NonUnitalSubsemiring R where
-  Carrier := s
+  carrier := s
   zero_mem' := ha ▸ sa.zero_mem
   add_mem' x y := by simpa only [← ha] using sa.add_mem
   mul_mem' x y := by simpa only [← hg] using sg.mul_mem
@@ -256,14 +256,14 @@ theorem mem_top (x : R) : x ∈ (⊤ : NonUnitalSubsemiring R) :=
 #align non_unital_subsemiring.mem_top NonUnitalSubsemiring.mem_top
 
 @[simp]
-theorem coe_top : ((⊤ : NonUnitalSubsemiring R) : Set R) = Set.Univ :=
+theorem coe_top : ((⊤ : NonUnitalSubsemiring R) : Set R) = Set.univ :=
   rfl
 #align non_unital_subsemiring.coe_top NonUnitalSubsemiring.coe_top
 
 /-- The preimage of a non-unital subsemiring along a non-unital ring homomorphism is a
 non-unital subsemiring. -/
 def comap (f : F) (s : NonUnitalSubsemiring S) : NonUnitalSubsemiring R :=
-  { s.toSubsemigroup.comap (f : MulHom R S), s.toAddSubmonoid.comap (f : R →+ S) with Carrier := f ⁻¹' s }
+  { s.toSubsemigroup.comap (f : MulHom R S), s.toAddSubmonoid.comap (f : R →+ S) with carrier := f ⁻¹' s }
 #align non_unital_subsemiring.comap NonUnitalSubsemiring.comap
 
 @[simp]
@@ -285,7 +285,7 @@ theorem comap_comap (s : NonUnitalSubsemiring T) (g : G) (f : F) :
 
 /-- The image of a non-unital subsemiring along a ring homomorphism is a non-unital subsemiring. -/
 def map (f : F) (s : NonUnitalSubsemiring R) : NonUnitalSubsemiring S :=
-  { s.toSubsemigroup.map (f : R →ₙ* S), s.toAddSubmonoid.map (f : R →+ S) with Carrier := f '' s }
+  { s.toSubsemigroup.map (f : R →ₙ* S), s.toAddSubmonoid.map (f : R →+ S) with carrier := f '' s }
 #align non_unital_subsemiring.map NonUnitalSubsemiring.map
 
 @[simp]
@@ -342,11 +342,11 @@ variable {F G : Type _} [NonUnitalRingHomClass F R S] [NonUnitalRingHomClass G S
 /-- The range of a non-unital ring homomorphism is a non-unital subsemiring.
 See note [range copy pattern]. -/
 def srange : NonUnitalSubsemiring S :=
-  ((⊤ : NonUnitalSubsemiring R).map (f : R →ₙ+* S)).copy (Set.Range f) Set.image_univ.symm
+  ((⊤ : NonUnitalSubsemiring R).map (f : R →ₙ+* S)).copy (Set.range f) Set.image_univ.symm
 #align non_unital_ring_hom.srange NonUnitalRingHom.srange
 
 @[simp]
-theorem coe_srange : (@srange R S _ _ _ _ f : Set S) = Set.Range f :=
+theorem coe_srange : (@srange R S _ _ _ _ f : Set S) = Set.range f :=
   rfl
 #align non_unital_ring_hom.coe_srange NonUnitalRingHom.coe_srange
 
@@ -379,7 +379,7 @@ namespace NonUnitalSubsemiring
 
 -- should we define this as the range of the zero homomorphism?
 instance : HasBot (NonUnitalSubsemiring R) :=
-  ⟨{ Carrier := {0}, add_mem' := fun _ _ _ _ => by simp_all, zero_mem' := Set.mem_singleton 0,
+  ⟨{ carrier := {0}, add_mem' := fun _ _ _ _ => by simp_all, zero_mem' := Set.mem_singleton 0,
       mul_mem' := fun _ _ _ _ => by simp_all }⟩
 
 instance : Inhabited (NonUnitalSubsemiring R) :=
@@ -395,7 +395,7 @@ theorem mem_bot {x : R} : x ∈ (⊥ : NonUnitalSubsemiring R) ↔ x = 0 :=
 
 /-- The inf of two non-unital subsemirings is their intersection. -/
 instance : HasInf (NonUnitalSubsemiring R) :=
-  ⟨fun s t => { s.toSubsemigroup ⊓ t.toSubsemigroup, s.toAddSubmonoid ⊓ t.toAddSubmonoid with Carrier := s ∩ t }⟩
+  ⟨fun s t => { s.toSubsemigroup ⊓ t.toSubsemigroup, s.toAddSubmonoid ⊓ t.toAddSubmonoid with carrier := s ∩ t }⟩
 
 @[simp]
 theorem coe_inf (p p' : NonUnitalSubsemiring R) : ((p ⊓ p' : NonUnitalSubsemiring R) : Set R) = p ∩ p' :=
@@ -449,11 +449,11 @@ section Center
 
 /-- The center of a semiring `R` is the set of elements that commute with everything in `R` -/
 def center (R) [NonUnitalSemiring R] : NonUnitalSubsemiring R :=
-  { Subsemigroup.center R with Carrier := Set.Center R, zero_mem' := Set.zero_mem_center R,
+  { Subsemigroup.center R with carrier := Set.center R, zero_mem' := Set.zero_mem_center R,
     add_mem' := fun a b => Set.add_mem_center }
 #align non_unital_subsemiring.center NonUnitalSubsemiring.center
 
-theorem coe_center (R) [NonUnitalSemiring R] : ↑(center R) = Set.Center R :=
+theorem coe_center (R) [NonUnitalSemiring R] : ↑(center R) = Set.center R :=
   rfl
 #align non_unital_subsemiring.coe_center NonUnitalSubsemiring.coe_center
 
@@ -485,12 +485,12 @@ section Centralizer
 
 /-- The centralizer of a set as non-unital subsemiring. -/
 def centralizer {R} [NonUnitalSemiring R] (s : Set R) : NonUnitalSubsemiring R :=
-  { Subsemigroup.centralizer s with Carrier := s.Centralizer, zero_mem' := Set.zero_mem_centralizer _,
+  { Subsemigroup.centralizer s with carrier := s.centralizer, zero_mem' := Set.zero_mem_centralizer _,
     add_mem' := fun x y hx hy => Set.add_mem_centralizer hx hy }
 #align non_unital_subsemiring.centralizer NonUnitalSubsemiring.centralizer
 
 @[simp, norm_cast]
-theorem coe_centralizer {R} [NonUnitalSemiring R] (s : Set R) : (centralizer s : Set R) = s.Centralizer :=
+theorem coe_centralizer {R} [NonUnitalSemiring R] (s : Set R) : (centralizer s : Set R) = s.centralizer :=
   rfl
 #align non_unital_subsemiring.coe_centralizer NonUnitalSubsemiring.coe_centralizer
 
@@ -509,7 +509,7 @@ theorem centralizer_le {R} [NonUnitalSemiring R] (s t : Set R) (h : s ⊆ t) : c
 #align non_unital_subsemiring.centralizer_le NonUnitalSubsemiring.centralizer_le
 
 @[simp]
-theorem centralizer_univ {R} [NonUnitalSemiring R] : centralizer Set.Univ = center R :=
+theorem centralizer_univ {R} [NonUnitalSemiring R] : centralizer Set.univ = center R :=
   SetLike.ext' (Set.centralizer_univ R)
 #align non_unital_subsemiring.centralizer_univ NonUnitalSubsemiring.centralizer_univ
 
@@ -670,7 +670,7 @@ theorem closure_empty : closure (∅ : Set R) = ⊥ :=
 #align non_unital_subsemiring.closure_empty NonUnitalSubsemiring.closure_empty
 
 @[simp]
-theorem closure_univ : closure (Set.Univ : Set R) = ⊤ :=
+theorem closure_univ : closure (Set.univ : Set R) = ⊤ :=
   @coe_top R _ ▸ closure_eq ⊤
 #align non_unital_subsemiring.closure_univ NonUnitalSubsemiring.closure_univ
 
@@ -720,7 +720,7 @@ theorem comap_top (f : F) : comap f (⊤ : NonUnitalSubsemiring S) = (⊤ : NonU
 `s × t` as a non-unital subsemiring of `R × S`. -/
 def prod (s : NonUnitalSubsemiring R) (t : NonUnitalSubsemiring S) : NonUnitalSubsemiring (R × S) :=
   { s.toSubsemigroup.Prod t.toSubsemigroup, s.toAddSubmonoid.Prod t.toAddSubmonoid with
-    Carrier := (s : Set R) ×ˢ (t : Set S) }
+    carrier := (s : Set R) ×ˢ (t : Set S) }
 #align non_unital_subsemiring.prod NonUnitalSubsemiring.prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -841,7 +841,7 @@ theorem srange_top_of_surjective (f : F) (hf : Function.Surjective (f : R → S)
 
 /-- The non-unital subsemiring of elements `x : R` such that `f x = g x` -/
 def eqSlocus (f g : F) : NonUnitalSubsemiring R :=
-  { (f : R →ₙ* S).eqMlocus (g : R →ₙ* S), (f : R →+ S).eqMlocus g with Carrier := { x | f x = g x } }
+  { (f : R →ₙ* S).eqMlocus (g : R →ₙ* S), (f : R →+ S).eqMlocus g with carrier := { x | f x = g x } }
 #align non_unital_ring_hom.eq_slocus NonUnitalRingHom.eqSlocus
 
 /-- If two non-unital ring homomorphisms are equal on a set, then they are equal on its

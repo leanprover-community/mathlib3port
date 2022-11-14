@@ -351,7 +351,7 @@ theorem one_lt_val_iff (v : Valuation K Γ₀) {x : K} (h : x ≠ 0) : 1 < v x �
 
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
 def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R where
-  Carrier := { x | v x < γ }
+  carrier := { x | v x < γ }
   zero_mem' := by
     have h := Units.ne_zero γ
     contrapose! h
@@ -726,7 +726,7 @@ variable (v : Valuation R Γ₀)
 
 /-- The support of a valuation `v : R → Γ₀` is the ideal of `R` where `v` vanishes. -/
 def supp : Ideal R where
-  Carrier := { x | v x = 0 }
+  carrier := { x | v x = 0 }
   zero_mem' := map_zero v
   add_mem' x y hx hy :=
     le_zero_iff.mp <|
@@ -750,7 +750,7 @@ theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = 0 :=
 -- @[simp] lemma mem_supp_iff' (x : R) : x ∈ (supp v : set R) ↔ v x = 0 := iff.rfl
 /-- The support of a valuation is a prime ideal. -/
 instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
-  ⟨fun h : v.Supp = ⊤ =>
+  ⟨fun h : v.supp = ⊤ =>
     one_ne_zero <|
       show (1 : Γ₀) = 0 from
         calc
@@ -802,13 +802,13 @@ theorem on_quot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) : (v.onQuot hJ).comap
   ext fun r => rfl
 #align valuation.on_quot_comap_eq Valuation.on_quot_comap_eq
 
-theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) : supp (v.comap f) = Ideal.comap f v.Supp :=
+theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) : supp (v.comap f) = Ideal.comap f v.supp :=
   Ideal.ext fun x => by
     rw [mem_supp_iff, Ideal.mem_comap, mem_supp_iff]
     rfl
 #align valuation.comap_supp Valuation.comap_supp
 
-theorem self_le_supp_comap (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) : J ≤ (v.comap (Ideal.Quotient.mk J)).Supp := by
+theorem self_le_supp_comap (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) : J ≤ (v.comap (Ideal.Quotient.mk J)).supp := by
   rw [comap_supp, ← Ideal.map_le_iff_le_comap]
   simp
 #align valuation.self_le_supp_comap Valuation.self_le_supp_comap
@@ -1111,7 +1111,7 @@ variable (v : AddValuation R Γ₀)
 
 /-- The support of an additive valuation `v : R → Γ₀` is the ideal of `R` where `v x = ⊤` -/
 def supp : Ideal R :=
-  v.Supp
+  v.supp
 #align add_valuation.supp AddValuation.supp
 
 @[simp]
@@ -1139,11 +1139,11 @@ theorem on_quot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) : (v.onQuot hJ).comap
   v.on_quot_comap_eq hJ
 #align add_valuation.on_quot_comap_eq AddValuation.on_quot_comap_eq
 
-theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) : supp (v.comap f) = Ideal.comap f v.Supp :=
+theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) : supp (v.comap f) = Ideal.comap f v.supp :=
   v.comap_supp f
 #align add_valuation.comap_supp AddValuation.comap_supp
 
-theorem self_le_supp_comap (J : Ideal R) (v : AddValuation (R ⧸ J) Γ₀) : J ≤ (v.comap (Ideal.Quotient.mk J)).Supp :=
+theorem self_le_supp_comap (J : Ideal R) (v : AddValuation (R ⧸ J) Γ₀) : J ≤ (v.comap (Ideal.Quotient.mk J)).supp :=
   v.self_le_supp_comap J
 #align add_valuation.self_le_supp_comap AddValuation.self_le_supp_comap
 

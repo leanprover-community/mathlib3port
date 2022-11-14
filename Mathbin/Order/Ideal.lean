@@ -93,7 +93,7 @@ theorem to_lower_set_injective : Injective (toLowerSet : Ideal P → LowerSet P)
 #align order.ideal.to_lower_set_injective Order.Ideal.to_lower_set_injective
 
 instance : SetLike (Ideal P) P where
-  coe s := s.Carrier
+  coe s := s.carrier
   coe_injective' s t h := to_lower_set_injective <| SetLike.coe_injective h
 
 @[ext.1]
@@ -102,7 +102,7 @@ theorem ext {s t : Ideal P} : (s : Set P) = t → s = t :=
 #align order.ideal.ext Order.Ideal.ext
 
 @[simp]
-theorem carrier_eq_coe (s : Ideal P) : s.Carrier = s :=
+theorem carrier_eq_coe (s : Ideal P) : s.carrier = s :=
   rfl
 #align order.ideal.carrier_eq_coe Order.Ideal.carrier_eq_coe
 
@@ -351,7 +351,7 @@ instance : HasInf (Ideal P) :=
 supremum of `I` and `J`. -/
 instance : HasSup (Ideal P) :=
   ⟨fun I J =>
-    { Carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j },
+    { carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j },
       nonempty' := by
         cases inter_nonempty I J
         exact ⟨w, w, h.1, w, h.2, le_sup_left⟩,
@@ -493,7 +493,7 @@ end Ideal
   containing arbitrarily large elements. They are the dense sets in
   the topology whose open sets are terminal segments. -/
 structure Cofinal (P) [Preorder P] where
-  Carrier : Set P
+  carrier : Set P
   mem_gt : ∀ x : P, ∃ y ∈ carrier, x ≤ y
 #align order.cofinal Order.Cofinal
 
@@ -502,10 +502,10 @@ namespace Cofinal
 variable [Preorder P]
 
 instance : Inhabited (Cofinal P) :=
-  ⟨{ Carrier := Univ, mem_gt := fun x => ⟨x, trivial, le_rfl⟩ }⟩
+  ⟨{ carrier := univ, mem_gt := fun x => ⟨x, trivial, le_rfl⟩ }⟩
 
 instance : Membership P (Cofinal P) :=
-  ⟨fun x D => x ∈ D.Carrier⟩
+  ⟨fun x D => x ∈ D.carrier⟩
 
 variable (D : Cofinal P) (x : P)
 
@@ -562,7 +562,7 @@ theorem sequenceOfCofinals.encode_mem (i : ι) : sequenceOfCofinals p 𝒟 (Enco
 
   This proves the Rasiowa–Sikorski lemma. -/
 def idealOfCofinals : Ideal P where
-  Carrier := { x : P | ∃ n, x ≤ sequenceOfCofinals p 𝒟 n }
+  carrier := { x : P | ∃ n, x ≤ sequenceOfCofinals p 𝒟 n }
   lower' := fun x y hxy ⟨n, hn⟩ => ⟨n, le_trans hxy hn⟩
   nonempty' := ⟨p, 0, le_rfl⟩
   directed' := fun x ⟨n, hn⟩ y ⟨m, hm⟩ =>

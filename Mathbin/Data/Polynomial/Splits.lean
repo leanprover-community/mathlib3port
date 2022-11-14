@@ -303,13 +303,13 @@ theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots =
 #align polynomial.roots_map Polynomial.roots_map
 
 theorem image_root_set [Algebra F K] [Algebra F L] {p : F[X]} (h : p.Splits (algebraMap F K)) (f : K →ₐ[F] L) :
-    f '' p.RootSet K = p.RootSet L := by
+    f '' p.rootSet K = p.rootSet L := by
   classical rw [root_set, ← Finset.coe_image, ← Multiset.to_finset_map, ← f.coe_to_ring_hom, ←
       roots_map (↑f) ((splits_id_iff_splits (algebraMap F K)).mpr h), map_map, f.comp_algebra_map, ← root_set]
 #align polynomial.image_root_set Polynomial.image_root_set
 
 theorem adjoin_root_set_eq_range [Algebra F K] [Algebra F L] {p : F[X]} (h : p.Splits (algebraMap F K))
-    (f : K →ₐ[F] L) : Algebra.adjoin F (p.RootSet L) = f.range ↔ Algebra.adjoin F (p.RootSet K) = ⊤ := by
+    (f : K →ₐ[F] L) : Algebra.adjoin F (p.rootSet L) = f.range ↔ Algebra.adjoin F (p.rootSet K) = ⊤ := by
   rw [← image_root_set h f, Algebra.adjoin_image, ← Algebra.map_top]
   exact (Subalgebra.map_injective f.to_ring_hom.injective).eq_iff
 #align polynomial.adjoin_root_set_eq_range Polynomial.adjoin_root_set_eq_range

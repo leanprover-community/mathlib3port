@@ -95,7 +95,7 @@ theorem MulSalemSpencer.prod {t : Set β} (hs : MulSalemSpencer s) (ht : MulSale
 
 @[to_additive]
 theorem mul_salem_spencer_pi {ι : Type _} {α : ι → Type _} [∀ i, Monoid (α i)] {s : ∀ i, Set (α i)}
-    (hs : ∀ i, MulSalemSpencer (s i)) : MulSalemSpencer ((Univ : Set ι).pi s) := fun a b c ha hb hc h =>
+    (hs : ∀ i, MulSalemSpencer (s i)) : MulSalemSpencer ((univ : Set ι).pi s) := fun a b c ha hb hc h =>
   funext fun i => hs i (ha i trivial) (hb i trivial) (hc i trivial) <| congr_fun h i
 #align mul_salem_spencer_pi mul_salem_spencer_pi
 
@@ -272,7 +272,7 @@ end Nat
 The idea is that an arithmetic progression is contained on a line and the frontier of a strictly
 convex set does not contain lines. -/
 theorem add_salem_spencer_frontier [LinearOrderedField 𝕜] [TopologicalSpace E] [AddCommMonoid E] [Module 𝕜 E]
-    {s : Set E} (hs₀ : IsClosed s) (hs₁ : StrictConvex 𝕜 s) : AddSalemSpencer (Frontier s) := by
+    {s : Set E} (hs₀ : IsClosed s) (hs₁ : StrictConvex 𝕜 s) : AddSalemSpencer (frontier s) := by
   intro a b c ha hb hc habc
   obtain rfl : (1 / 2 : 𝕜) • a + (1 / 2 : 𝕜) • b = c := by
     rwa [← smul_add, one_div, inv_smul_eq_iff₀ (show (2 : 𝕜) ≠ 0 by norm_num), two_smul]
@@ -280,7 +280,7 @@ theorem add_salem_spencer_frontier [LinearOrderedField 𝕜] [TopologicalSpace E
 #align add_salem_spencer_frontier add_salem_spencer_frontier
 
 theorem add_salem_spencer_sphere [NormedAddCommGroup E] [NormedSpace ℝ E] [StrictConvexSpace ℝ E] (x : E) (r : ℝ) :
-    AddSalemSpencer (Sphere x r) := by
+    AddSalemSpencer (sphere x r) := by
   obtain rfl | hr := eq_or_ne r 0
   · rw [sphere_zero]
     exact add_salem_spencer_singleton _

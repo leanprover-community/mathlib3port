@@ -126,7 +126,7 @@ def finVectCoevaluation : 𝟙_ (FinVectCat K) ⟶ V ⊗ finVectDual K V := by a
 
 theorem FinVect_coevaluation_apply_one :
     finVectCoevaluation K V (1 : K) =
-      ∑ i : Basis.OfVectorSpaceIndex K V.obj,
+      ∑ i : Basis.ofVectorSpaceIndex K V.obj,
         (Basis.ofVectorSpace K V.obj) i ⊗ₜ[K] (Basis.ofVectorSpace K V.obj).Coord i :=
   by apply coevaluation_apply_one K V.obj
 #align FinVect.FinVect_coevaluation_apply_one FinVectCat.FinVect_coevaluation_apply_one

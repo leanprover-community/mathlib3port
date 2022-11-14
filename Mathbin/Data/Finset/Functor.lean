@@ -35,14 +35,14 @@ variable {α β : Type u} [∀ P, Decidable P]
 
 /-- Because `finset.image` requires a `decidable_eq` instance for the target type, we can only
 construct `functor finset` when working classically. -/
-instance : Functor Finset where map α β f s := s.Image f
+instance : Functor Finset where map α β f s := s.image f
 
 instance : IsLawfulFunctor Finset where
   id_map α s := image_id
   comp_map α β γ f g s := image_image.symm
 
 @[simp]
-theorem fmap_def {s : Finset α} (f : α → β) : f <$> s = s.Image f :=
+theorem fmap_def {s : Finset α} (f : α → β) : f <$> s = s.image f :=
   rfl
 #align finset.fmap_def Finset.fmap_def
 
@@ -67,11 +67,11 @@ section Applicative
 variable {α β : Type u} [∀ P, Decidable P]
 
 instance : Applicative Finset :=
-  { Finset.functor, Finset.hasPure with seq := fun α β t s => t.sup fun f => s.Image f,
+  { Finset.functor, Finset.hasPure with seq := fun α β t s => t.sup fun f => s.image f,
     seqLeft := fun α β s t => if t = ∅ then ∅ else s, seqRight := fun α β s t => if s = ∅ then ∅ else t }
 
 @[simp]
-theorem seq_def (s : Finset α) (t : Finset (α → β)) : t <*> s = t.sup fun f => s.Image f :=
+theorem seq_def (s : Finset α) (t : Finset (α → β)) : t <*> s = t.sup fun f => s.image f :=
   rfl
 #align finset.seq_def Finset.seq_def
 

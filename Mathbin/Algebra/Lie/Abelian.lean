@@ -113,7 +113,7 @@ protected theorem mem_ker (x : L) : x ∈ LieModule.ker R L M ↔ ∀ m : M, ⁅
 
 /-- The largest submodule of a Lie module `M` on which the Lie algebra `L` acts trivially. -/
 def maxTrivSubmodule : LieSubmodule R L M where
-  Carrier := { m | ∀ x : L, ⁅x, m⁆ = 0 }
+  carrier := { m | ∀ x : L, ⁅x, m⁆ = 0 }
   zero_mem' x := lie_zero x
   add_mem' x y hx hy z := by rw [lie_add, hx, hy, add_zero]
   smul_mem' c x hx y := by rw [lie_smul, hx, smul_zero]

@@ -90,48 +90,48 @@ theorem comp_def (P Q : RegularExpression α) : comp P Q = P * Q :=
 
 /-- `matches P` provides a language which contains all strings that `P` matches -/
 @[simp]
-def Matches : RegularExpression α → Language α
+def matches : RegularExpression α → Language α
   | 0 => 0
   | 1 => 1
   | Char a => {[a]}
-  | P + Q => P.Matches + Q.Matches
-  | P * Q => P.Matches * Q.Matches
-  | star P => P.Matches.star
-#align regular_expression.matches RegularExpression.Matches
+  | P + Q => P.matches + Q.matches
+  | P * Q => P.matches * Q.matches
+  | star P => P.matches.star
+#align regular_expression.matches RegularExpression.matches
 
 @[simp]
-theorem matches_zero : (0 : RegularExpression α).Matches = 0 :=
+theorem matches_zero : (0 : RegularExpression α).matches = 0 :=
   rfl
 #align regular_expression.matches_zero RegularExpression.matches_zero
 
 @[simp]
-theorem matches_epsilon : (1 : RegularExpression α).Matches = 1 :=
+theorem matches_epsilon : (1 : RegularExpression α).matches = 1 :=
   rfl
 #align regular_expression.matches_epsilon RegularExpression.matches_epsilon
 
 @[simp]
-theorem matches_char (a : α) : (char a).Matches = {[a]} :=
+theorem matches_char (a : α) : (char a).matches = {[a]} :=
   rfl
 #align regular_expression.matches_char RegularExpression.matches_char
 
 @[simp]
-theorem matches_add (P Q : RegularExpression α) : (P + Q).Matches = P.Matches + Q.Matches :=
+theorem matches_add (P Q : RegularExpression α) : (P + Q).matches = P.matches + Q.matches :=
   rfl
 #align regular_expression.matches_add RegularExpression.matches_add
 
 @[simp]
-theorem matches_mul (P Q : RegularExpression α) : (P * Q).Matches = P.Matches * Q.Matches :=
+theorem matches_mul (P Q : RegularExpression α) : (P * Q).matches = P.matches * Q.matches :=
   rfl
 #align regular_expression.matches_mul RegularExpression.matches_mul
 
 @[simp]
-theorem matches_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).Matches = P.Matches ^ n
+theorem matches_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).matches = P.matches ^ n
   | 0 => matches_epsilon
   | n + 1 => (matches_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succ _ _).symm
 #align regular_expression.matches_pow RegularExpression.matches_pow
 
 @[simp]
-theorem matches_star (P : RegularExpression α) : P.star.Matches = P.Matches.star :=
+theorem matches_star (P : RegularExpression α) : P.star.matches = P.matches.star :=
   rfl
 #align regular_expression.matches_star RegularExpression.matches_star
 
@@ -360,7 +360,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
 #align regular_expression.star_rmatch_iff RegularExpression.star_rmatch_iff
 
 @[simp]
-theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.Matches := by
+theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.matches := by
   intro x
   induction P generalizing x
   all_goals
@@ -410,7 +410,7 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
     
 #align regular_expression.rmatch_iff_matches RegularExpression.rmatch_iff_matches
 
-instance (P : RegularExpression α) : DecidablePred P.Matches := by
+instance (P : RegularExpression α) : DecidablePred P.matches := by
   intro x
   change Decidable (x ∈ P.matches)
   rw [← rmatch_iff_matches]
@@ -457,7 +457,7 @@ theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, 
 
 /-- The language of the map is the map of the language. -/
 @[simp]
-theorem matches_map (f : α → β) : ∀ P : RegularExpression α, (P.map f).Matches = Language.map f P.Matches
+theorem matches_map (f : α → β) : ∀ P : RegularExpression α, (P.map f).matches = Language.map f P.matches
   | 0 => (map_zero _).symm
   | 1 => (map_one _).symm
   | Char a => by

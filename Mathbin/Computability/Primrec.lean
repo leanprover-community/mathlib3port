@@ -677,7 +677,7 @@ theorem nat_min : Primrec₂ (@min ℕ _) :=
 #align primrec.nat_min Primrec.nat_min
 
 theorem nat_max : Primrec₂ (@max ℕ _) :=
-  ite (nat_le.comp Primrec.snd Primrec.fst) fst snd
+  ite (nat_le.comp Primrec.fst Primrec.snd) snd fst
 #align primrec.nat_max Primrec.nat_max
 
 theorem dom_bool (f : Bool → α) : Primrec f :=
@@ -1251,12 +1251,12 @@ theorem option_get {f : α → Option β} {h : ∀ a, (f a).isSome} : Primrec f 
 #align primrec.option_get Primrec.option_get
 
 theorem ulower_down : Primrec (Ulower.down : α → Ulower α) :=
-  letI : ∀ a, Decidable (a ∈ Set.Range (encode : α → ℕ)) := decidable_range_encode _
+  letI : ∀ a, Decidable (a ∈ Set.range (encode : α → ℕ)) := decidable_range_encode _
   subtype_mk Primrec.encode
 #align primrec.ulower_down Primrec.ulower_down
 
 theorem ulower_up : Primrec (Ulower.up : Ulower α → α) :=
-  letI : ∀ a, Decidable (a ∈ Set.Range (encode : α → ℕ)) := decidable_range_encode _
+  letI : ∀ a, Decidable (a ∈ Set.range (encode : α → ℕ)) := decidable_range_encode _
   option_get (primrec.decode₂.comp subtype_val)
 #align primrec.ulower_up Primrec.ulower_up
 

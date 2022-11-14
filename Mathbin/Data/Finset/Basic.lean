@@ -2246,8 +2246,8 @@ theorem piecewise_cases {i} (p : δ i → Prop) (hf : p (f i)) (hg : p (g i)) : 
   by_cases hi:i ∈ s <;> simpa [hi]
 #align finset.piecewise_cases Finset.piecewise_cases
 
-theorem piecewise_mem_set_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ Set.Pi t t')
-    (hg : g ∈ Set.Pi t t') : s.piecewise f g ∈ Set.Pi t t' := by classical rw [← piecewise_coe]
+theorem piecewise_mem_set_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ Set.pi t t')
+    (hg : g ∈ Set.pi t t') : s.piecewise f g ∈ Set.pi t t' := by classical rw [← piecewise_coe]
 #align finset.piecewise_mem_set_pi Finset.piecewise_mem_set_pi
 
 theorem piecewise_singleton [DecidableEq α] (i : α) : piecewise {i} f g = update g i (f i) := by
@@ -2319,17 +2319,17 @@ theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {f 
 #align finset.piecewise_le_piecewise Finset.piecewise_le_piecewise
 
 theorem piecewise_mem_Icc_of_mem_of_mem {δ : α → Type _} [∀ i, Preorder (δ i)] {f f₁ g g₁ : ∀ i, δ i}
-    (hf : f ∈ Set.IccCat f₁ g₁) (hg : g ∈ Set.IccCat f₁ g₁) : s.piecewise f g ∈ Set.IccCat f₁ g₁ :=
+    (hf : f ∈ Set.icc f₁ g₁) (hg : g ∈ Set.icc f₁ g₁) : s.piecewise f g ∈ Set.icc f₁ g₁ :=
   ⟨le_piecewise_of_le_of_le _ hf.1 hg.1, piecewise_le_of_le_of_le _ hf.2 hg.2⟩
 #align finset.piecewise_mem_Icc_of_mem_of_mem Finset.piecewise_mem_Icc_of_mem_of_mem
 
 theorem piecewise_mem_Icc {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : f ≤ g) :
-    s.piecewise f g ∈ Set.IccCat f g :=
+    s.piecewise f g ∈ Set.icc f g :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.left_mem_Icc.2 h) (Set.right_mem_Icc.2 h)
 #align finset.piecewise_mem_Icc Finset.piecewise_mem_Icc
 
 theorem piecewise_mem_Icc' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : g ≤ f) :
-    s.piecewise f g ∈ Set.IccCat g f :=
+    s.piecewise f g ∈ Set.icc g f :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.right_mem_Icc.2 h) (Set.left_mem_Icc.2 h)
 #align finset.piecewise_mem_Icc' Finset.piecewise_mem_Icc'
 
@@ -2972,7 +2972,7 @@ theorem to_finset_cons : toFinset (a :: l) = insert a (toFinset l) :=
   Finset.eq_of_veq <| by by_cases h:a ∈ l <;> simp [Finset.insert_val', Multiset.dedup_cons, h]
 #align list.to_finset_cons List.to_finset_cons
 
-theorem to_finset_surj_on : Set.SurjOn toFinset { l : List α | l.Nodup } Set.Univ := by
+theorem to_finset_surj_on : Set.SurjOn toFinset { l : List α | l.Nodup } Set.univ := by
   rintro ⟨⟨l⟩, hl⟩ _
   exact ⟨l, hl, (to_finset_eq hl).symm⟩
 #align list.to_finset_surj_on List.to_finset_surj_on
@@ -3105,10 +3105,10 @@ theorem coe_map (f : α ↪ β) (s : Finset α) : (s.map f : Set β) = f '' s :=
   Set.ext fun x => mem_map.trans Set.mem_image_iff_bex.symm
 #align finset.coe_map Finset.coe_map
 
-theorem coe_map_subset_range (f : α ↪ β) (s : Finset α) : (s.map f : Set β) ⊆ Set.Range f :=
+theorem coe_map_subset_range (f : α ↪ β) (s : Finset α) : (s.map f : Set β) ⊆ Set.range f :=
   calc
     ↑(s.map f) = f '' s := coe_map f s
-    _ ⊆ Set.Range f := Set.image_subset_range f ↑s
+    _ ⊆ Set.range f := Set.image_subset_range f ↑s
     
 #align finset.coe_map_subset_range Finset.coe_map_subset_range
 
@@ -3280,29 +3280,29 @@ theorem image_val (f : α → β) (s : Finset α) : (image f s).1 = (s.1.map f).
 #align finset.image_val Finset.image_val
 
 @[simp]
-theorem image_empty (f : α → β) : (∅ : Finset α).Image f = ∅ :=
+theorem image_empty (f : α → β) : (∅ : Finset α).image f = ∅ :=
   rfl
 #align finset.image_empty Finset.image_empty
 
 variable {f g : α → β} {s : Finset α} {t : Finset β} {a : α} {b c : β}
 
 @[simp]
-theorem mem_image : b ∈ s.Image f ↔ ∃ a ∈ s, f a = b := by
+theorem mem_image : b ∈ s.image f ↔ ∃ a ∈ s, f a = b := by
   simp only [mem_def, image_val, mem_dedup, Multiset.mem_map, exists_prop]
 #align finset.mem_image Finset.mem_image
 
-theorem mem_image_of_mem (f : α → β) {a} (h : a ∈ s) : f a ∈ s.Image f :=
+theorem mem_image_of_mem (f : α → β) {a} (h : a ∈ s) : f a ∈ s.image f :=
   mem_image.2 ⟨_, h, rfl⟩
 #align finset.mem_image_of_mem Finset.mem_image_of_mem
 
 @[simp]
-theorem mem_image_const : c ∈ s.Image (const α b) ↔ s.Nonempty ∧ b = c := by
+theorem mem_image_const : c ∈ s.image (const α b) ↔ s.Nonempty ∧ b = c := by
   rw [mem_image]
   simp only [exists_prop, const_apply, exists_and_right]
   rfl
 #align finset.mem_image_const Finset.mem_image_const
 
-theorem mem_image_const_self : b ∈ s.Image (const α b) ↔ s.Nonempty :=
+theorem mem_image_const_self : b ∈ s.image (const α b) ↔ s.Nonempty :=
   mem_image_const.trans <| and_iff_left rfl
 #align finset.mem_image_const_self Finset.mem_image_const_self
 
@@ -3319,14 +3319,14 @@ theorem image_congr (h : (s : Set α).EqOn f g) : Finset.image f s = Finset.imag
   exact bex_congr fun x hx => by rw [h hx]
 #align finset.image_congr Finset.image_congr
 
-theorem _root_.function.injective.mem_finset_image (hf : Injective f) : f a ∈ s.Image f ↔ a ∈ s := by
+theorem _root_.function.injective.mem_finset_image (hf : Injective f) : f a ∈ s.image f ↔ a ∈ s := by
   refine' ⟨fun h => _, Finset.mem_image_of_mem f⟩
   obtain ⟨y, hy, heq⟩ := mem_image.1 h
   exact hf HEq ▸ hy
 #align finset._root_.function.injective.mem_finset_image finset._root_.function.injective.mem_finset_image
 
 theorem filter_mem_image_eq_image (f : α → β) (s : Finset α) (t : Finset β) (h : ∀ x ∈ s, f x ∈ t) :
-    (t.filter fun y => y ∈ s.Image f) = s.Image f := by
+    (t.filter fun y => y ∈ s.image f) = s.image f := by
   ext
   rw [mem_filter, mem_image]
   simp only [and_imp, exists_prop, and_iff_right_iff_imp, exists_imp]
@@ -3335,28 +3335,28 @@ theorem filter_mem_image_eq_image (f : α → β) (s : Finset α) (t : Finset β
 #align finset.filter_mem_image_eq_image Finset.filter_mem_image_eq_image
 
 theorem fiber_nonempty_iff_mem_image (f : α → β) (s : Finset α) (y : β) :
-    (s.filter fun x => f x = y).Nonempty ↔ y ∈ s.Image f := by simp [Finset.Nonempty]
+    (s.filter fun x => f x = y).Nonempty ↔ y ∈ s.image f := by simp [Finset.Nonempty]
 #align finset.fiber_nonempty_iff_mem_image Finset.fiber_nonempty_iff_mem_image
 
 @[simp, norm_cast]
-theorem coe_image {f : α → β} : ↑(s.Image f) = f '' ↑s :=
+theorem coe_image {f : α → β} : ↑(s.image f) = f '' ↑s :=
   Set.ext fun _ => mem_image.trans Set.mem_image_iff_bex.symm
 #align finset.coe_image Finset.coe_image
 
-protected theorem Nonempty.image (h : s.Nonempty) (f : α → β) : (s.Image f).Nonempty :=
+protected theorem Nonempty.image (h : s.Nonempty) (f : α → β) : (s.image f).Nonempty :=
   let ⟨a, ha⟩ := h
   ⟨f a, mem_image_of_mem f ha⟩
 #align finset.nonempty.image Finset.Nonempty.image
 
 @[simp]
-theorem Nonempty.image_iff (f : α → β) : (s.Image f).Nonempty ↔ s.Nonempty :=
+theorem Nonempty.image_iff (f : α → β) : (s.image f).Nonempty ↔ s.Nonempty :=
   ⟨fun ⟨y, hy⟩ =>
     let ⟨x, hx, _⟩ := mem_image.mp hy
     ⟨x, hx⟩,
-    fun h => h.Image f⟩
+    fun h => h.image f⟩
 #align finset.nonempty.image_iff Finset.Nonempty.image_iff
 
-theorem image_to_finset [DecidableEq α] {s : Multiset α} : s.toFinset.Image f = (s.map f).toFinset :=
+theorem image_to_finset [DecidableEq α] {s : Multiset α} : s.toFinset.image f = (s.map f).toFinset :=
   ext fun _ => by simp only [mem_image, Multiset.mem_to_finset, exists_prop, Multiset.mem_map]
 #align finset.image_to_finset Finset.image_to_finset
 
@@ -3365,21 +3365,21 @@ theorem image_val_of_inj_on (H : Set.InjOn f s) : (image f s).1 = s.1.map f :=
 #align finset.image_val_of_inj_on Finset.image_val_of_inj_on
 
 @[simp]
-theorem image_id [DecidableEq α] : s.Image id = s :=
+theorem image_id [DecidableEq α] : s.image id = s :=
   ext fun _ => by simp only [mem_image, exists_prop, id, exists_eq_right]
 #align finset.image_id Finset.image_id
 
 @[simp]
-theorem image_id' [DecidableEq α] : (s.Image fun x => x) = s :=
+theorem image_id' [DecidableEq α] : (s.image fun x => x) = s :=
   image_id
 #align finset.image_id' Finset.image_id'
 
-theorem image_image [DecidableEq γ] {g : β → γ} : (s.Image f).Image g = s.Image (g ∘ f) :=
+theorem image_image [DecidableEq γ] {g : β → γ} : (s.image f).image g = s.image (g ∘ f) :=
   eq_of_veq <| by simp only [image_val, dedup_map_dedup_eq, Multiset.map_map]
 #align finset.image_image Finset.image_image
 
 theorem image_comm {β'} [DecidableEq β'] [DecidableEq γ] {f : β → γ} {g : α → β} {f' : α → β'} {g' : β' → γ}
-    (h_comm : ∀ a, f (g a) = g' (f' a)) : (s.Image g).Image f = (s.Image f').Image g' := by
+    (h_comm : ∀ a, f (g a) = g' (f' a)) : (s.image g).image f = (s.image f').image g' := by
   simp_rw [image_image, comp, h_comm]
 #align finset.image_comm Finset.image_comm
 
@@ -3392,13 +3392,13 @@ theorem _root_.function.commute.finset_image [DecidableEq α] {f g : α → α} 
   h.finset_image
 #align finset._root_.function.commute.finset_image finset._root_.function.commute.finset_image
 
-theorem image_subset_image {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₁.Image f ⊆ s₂.Image f := by
+theorem image_subset_image {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₁.image f ⊆ s₂.image f := by
   simp only [subset_def, image_val, subset_dedup', dedup_subset', Multiset.map_subset_map h]
 #align finset.image_subset_image Finset.image_subset_image
 
-theorem image_subset_iff : s.Image f ⊆ t ↔ ∀ x ∈ s, f x ∈ t :=
+theorem image_subset_iff : s.image f ⊆ t ↔ ∀ x ∈ s, f x ∈ t :=
   calc
-    s.Image f ⊆ t ↔ f '' ↑s ⊆ ↑t := by norm_cast
+    s.image f ⊆ t ↔ f '' ↑s ⊆ ↑t := by norm_cast
     _ ↔ _ := Set.image_subset_iff
     
 #align finset.image_subset_iff Finset.image_subset_iff
@@ -3406,20 +3406,20 @@ theorem image_subset_iff : s.Image f ⊆ t ↔ ∀ x ∈ s, f x ∈ t :=
 theorem image_mono (f : α → β) : Monotone (Finset.image f) := fun _ _ => image_subset_image
 #align finset.image_mono Finset.image_mono
 
-theorem image_subset_image_iff {t : Finset α} (hf : Injective f) : s.Image f ⊆ t.Image f ↔ s ⊆ t := by
+theorem image_subset_image_iff {t : Finset α} (hf : Injective f) : s.image f ⊆ t.image f ↔ s ⊆ t := by
   simp_rw [← coe_subset]
   push_cast
   exact Set.image_subset_image_iff hf
 #align finset.image_subset_image_iff Finset.image_subset_image_iff
 
-theorem coe_image_subset_range : ↑(s.Image f) ⊆ Set.Range f :=
+theorem coe_image_subset_range : ↑(s.image f) ⊆ Set.range f :=
   calc
-    ↑(s.Image f) = f '' ↑s := coe_image
-    _ ⊆ Set.Range f := Set.image_subset_range f ↑s
+    ↑(s.image f) = f '' ↑s := coe_image
+    _ ⊆ Set.range f := Set.image_subset_range f ↑s
     
 #align finset.coe_image_subset_range Finset.coe_image_subset_range
 
-theorem image_filter {p : β → Prop} [DecidablePred p] : (s.Image f).filter p = (s.filter (p ∘ f)).Image f :=
+theorem image_filter {p : β → Prop} [DecidablePred p] : (s.image f).filter p = (s.filter (p ∘ f)).image f :=
   ext fun b => by
     simp only [mem_filter, mem_image, exists_prop] <;>
       exact
@@ -3427,16 +3427,16 @@ theorem image_filter {p : β → Prop} [DecidablePred p] : (s.Image f).filter p 
           rintro ⟨x, ⟨h1, h2⟩, rfl⟩ <;> exact ⟨⟨x, h1, rfl⟩, h2⟩⟩
 #align finset.image_filter Finset.image_filter
 
-theorem image_union [DecidableEq α] {f : α → β} (s₁ s₂ : Finset α) : (s₁ ∪ s₂).Image f = s₁.Image f ∪ s₂.Image f :=
+theorem image_union [DecidableEq α] {f : α → β} (s₁ s₂ : Finset α) : (s₁ ∪ s₂).image f = s₁.image f ∪ s₂.image f :=
   ext fun _ => by simp only [mem_image, mem_union, exists_prop, or_and_right, exists_or]
 #align finset.image_union Finset.image_union
 
-theorem image_inter_subset [DecidableEq α] (f : α → β) (s t : Finset α) : (s ∩ t).Image f ⊆ s.Image f ∩ t.Image f :=
+theorem image_inter_subset [DecidableEq α] (f : α → β) (s t : Finset α) : (s ∩ t).image f ⊆ s.image f ∩ t.image f :=
   subset_inter (image_subset_image <| inter_subset_left _ _) <| image_subset_image <| inter_subset_right _ _
 #align finset.image_inter_subset Finset.image_inter_subset
 
 theorem image_inter_of_inj_on [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Set.InjOn f (s ∪ t)) :
-    (s ∩ t).Image f = s.Image f ∩ t.Image f :=
+    (s ∩ t).image f = s.image f ∩ t.image f :=
   (image_inter_subset _ _ _).antisymm fun x => by
     simp only [mem_inter, mem_image]
     rintro ⟨⟨a, ha, rfl⟩, b, hb, h⟩
@@ -3444,7 +3444,7 @@ theorem image_inter_of_inj_on [DecidableEq α] {f : α → β} (s t : Finset α)
 #align finset.image_inter_of_inj_on Finset.image_inter_of_inj_on
 
 theorem image_inter [DecidableEq α] (s₁ s₂ : Finset α) (hf : Injective f) :
-    (s₁ ∩ s₂).Image f = s₁.Image f ∩ s₂.Image f :=
+    (s₁ ∩ s₂).image f = s₁.image f ∩ s₂.image f :=
   image_inter_of_inj_on _ _ <| hf.InjOn _
 #align finset.image_inter Finset.image_inter
 
@@ -3455,11 +3455,11 @@ theorem image_singleton (f : α → β) (a : α) : image f {a} = {f a} :=
 
 @[simp]
 theorem image_insert [DecidableEq α] (f : α → β) (a : α) (s : Finset α) :
-    (insert a s).Image f = insert (f a) (s.Image f) := by simp only [insert_eq, image_singleton, image_union]
+    (insert a s).image f = insert (f a) (s.image f) := by simp only [insert_eq, image_singleton, image_union]
 #align finset.image_insert Finset.image_insert
 
 theorem erase_image_subset_image_erase [DecidableEq α] (f : α → β) (s : Finset α) (a : α) :
-    (s.Image f).erase (f a) ⊆ (s.erase a).Image f := by
+    (s.image f).erase (f a) ⊆ (s.erase a).image f := by
   simp only [subset_iff, and_imp, exists_prop, mem_image, exists_imp, mem_erase]
   rintro b hb x hx rfl
   exact ⟨_, ⟨ne_of_apply_ne f hb, hx⟩, rfl⟩
@@ -3467,7 +3467,7 @@ theorem erase_image_subset_image_erase [DecidableEq α] (f : α → β) (s : Fin
 
 @[simp]
 theorem image_erase [DecidableEq α] {f : α → β} (hf : Injective f) (s : Finset α) (a : α) :
-    (s.erase a).Image f = (s.Image f).erase (f a) := by
+    (s.erase a).image f = (s.image f).erase (f a) := by
   refine' (erase_image_subset_image_erase _ _ _).antisymm' fun b => _
   simp only [mem_image, exists_prop, mem_erase]
   rintro ⟨a', ⟨haa', ha'⟩, rfl⟩
@@ -3475,19 +3475,19 @@ theorem image_erase [DecidableEq α] {f : α → β} (hf : Injective f) (s : Fin
 #align finset.image_erase Finset.image_erase
 
 @[simp]
-theorem image_eq_empty : s.Image f = ∅ ↔ s = ∅ :=
+theorem image_eq_empty : s.image f = ∅ ↔ s = ∅ :=
   ⟨fun h => eq_empty_of_forall_not_mem fun a m => ne_empty_of_mem (mem_image_of_mem _ m) h, fun e => e.symm ▸ rfl⟩
 #align finset.image_eq_empty Finset.image_eq_empty
 
 @[simp]
-theorem _root_.disjoint.of_image_finset {s t : Finset α} {f : α → β} (h : Disjoint (s.Image f) (t.Image f)) :
+theorem _root_.disjoint.of_image_finset {s t : Finset α} {f : α → β} (h : Disjoint (s.image f) (t.image f)) :
     Disjoint s t :=
   disjoint_iff_ne.2 fun a ha b hb =>
     ne_of_apply_ne f <| h.forall_ne_finset (mem_image_of_mem _ ha) (mem_image_of_mem _ hb)
 #align finset._root_.disjoint.of_image_finset finset._root_.disjoint.of_image_finset
 
 theorem mem_range_iff_mem_finset_range_of_mod_eq' [DecidableEq α] {f : ℕ → α} {a : α} {n : ℕ} (hn : 0 < n)
-    (h : ∀ i, f (i % n) = f i) : a ∈ Set.Range f ↔ a ∈ (Finset.range n).Image fun i => f i := by
+    (h : ∀ i, f (i % n) = f i) : a ∈ Set.range f ↔ a ∈ (Finset.range n).image fun i => f i := by
   constructor
   · rintro ⟨i, hi⟩
     simp only [mem_image, exists_prop, mem_range]
@@ -3501,7 +3501,7 @@ theorem mem_range_iff_mem_finset_range_of_mod_eq' [DecidableEq α] {f : ℕ → 
 #align finset.mem_range_iff_mem_finset_range_of_mod_eq' Finset.mem_range_iff_mem_finset_range_of_mod_eq'
 
 theorem mem_range_iff_mem_finset_range_of_mod_eq [DecidableEq α] {f : ℤ → α} {a : α} {n : ℕ} (hn : 0 < n)
-    (h : ∀ i, f (i % n) = f i) : a ∈ Set.Range f ↔ a ∈ (Finset.range n).Image fun i => f i :=
+    (h : ∀ i, f (i % n) = f i) : a ∈ Set.range f ↔ a ∈ (Finset.range n).image fun i => f i :=
   suffices (∃ i, f (i % n) = a) ↔ ∃ i, i < n ∧ f ↑i = a by simpa [h]
   have hn' : 0 < (n : ℤ) := Int.coe_nat_lt.mpr hn
   Iff.intro
@@ -3517,12 +3517,12 @@ theorem range_add (a b : ℕ) : range (a + b) = range a ∪ (range b).map (addLe
 #align finset.range_add Finset.range_add
 
 @[simp]
-theorem attach_image_val [DecidableEq α] {s : Finset α} : s.attach.Image Subtype.val = s :=
+theorem attach_image_val [DecidableEq α] {s : Finset α} : s.attach.image Subtype.val = s :=
   eq_of_veq <| by rw [image_val, attach_val, Multiset.attach_map_val, dedup_eq_self]
 #align finset.attach_image_val Finset.attach_image_val
 
 @[simp]
-theorem attach_image_coe [DecidableEq α] {s : Finset α} : s.attach.Image coe = s :=
+theorem attach_image_coe [DecidableEq α] {s : Finset α} : s.attach.image coe = s :=
   Finset.attach_image_val
 #align finset.attach_image_coe Finset.attach_image_coe
 
@@ -3530,23 +3530,23 @@ theorem attach_image_coe [DecidableEq α] {s : Finset α} : s.attach.Image coe =
 theorem attach_insert [DecidableEq α] {a : α} {s : Finset α} :
     attach (insert a s) =
       insert (⟨a, mem_insert_self a s⟩ : { x // x ∈ insert a s })
-        ((attach s).Image fun x => ⟨x.1, mem_insert_of_mem x.2⟩) :=
+        ((attach s).image fun x => ⟨x.1, mem_insert_of_mem x.2⟩) :=
   ext fun ⟨x, hx⟩ =>
     ⟨Or.cases_on (mem_insert.1 hx) (fun h : x = a => fun _ => mem_insert.2 <| Or.inl <| Subtype.eq h) fun h : x ∈ s =>
         fun _ => mem_insert_of_mem <| mem_image.2 <| ⟨⟨x, h⟩, mem_attach _ _, Subtype.eq rfl⟩,
       fun _ => Finset.mem_attach _ _⟩
 #align finset.attach_insert Finset.attach_insert
 
-theorem map_eq_image (f : α ↪ β) (s : Finset α) : s.map f = s.Image f :=
+theorem map_eq_image (f : α ↪ β) (s : Finset α) : s.map f = s.image f :=
   eq_of_veq (s.map f).2.dedup.symm
 #align finset.map_eq_image Finset.map_eq_image
 
 @[simp]
 theorem disjoint_image {s t : Finset α} {f : α → β} (hf : Injective f) :
-    Disjoint (s.Image f) (t.Image f) ↔ Disjoint s t := by convert disjoint_map ⟨_, hf⟩ <;> simp [map_eq_image]
+    Disjoint (s.image f) (t.image f) ↔ Disjoint s t := by convert disjoint_map ⟨_, hf⟩ <;> simp [map_eq_image]
 #align finset.disjoint_image Finset.disjoint_image
 
-theorem image_const {s : Finset α} (h : s.Nonempty) (b : β) : (s.Image fun a => b) = singleton b :=
+theorem image_const {s : Finset α} (h : s.Nonempty) (b : β) : (s.image fun a => b) = singleton b :=
   ext fun b' => by simp only [mem_image, exists_prop, exists_and_right, h.bex, true_and_iff, mem_singleton, eq_comm]
 #align finset.image_const Finset.image_const
 
@@ -3643,7 +3643,7 @@ theorem fin_map {n} {s : Finset ℕ} : (s.Fin n).map Fin.coeEmbedding = s.filter
   simp [Finset.fin, Finset.map_map]
 #align finset.fin_map Finset.fin_map
 
-theorem subset_image_iff {s : Set α} : ↑t ⊆ f '' s ↔ ∃ s' : Finset α, ↑s' ⊆ s ∧ s'.Image f = t := by
+theorem subset_image_iff {s : Set α} : ↑t ⊆ f '' s ↔ ∃ s' : Finset α, ↑s' ⊆ s ∧ s'.image f = t := by
   constructor
   swap
   · rintro ⟨t, ht, rfl⟩
@@ -3658,7 +3658,7 @@ theorem subset_image_iff {s : Set α} : ↑t ⊆ f '' s ↔ ∃ s' : Finset α, 
   simp
 #align finset.subset_image_iff Finset.subset_image_iff
 
-theorem range_sdiff_zero {n : ℕ} : range (n + 1) \ {0} = (range n).Image Nat.succ := by
+theorem range_sdiff_zero {n : ℕ} : range (n + 1) \ {0} = (range n).image Nat.succ := by
   induction' n with k hk
   · simp
     
@@ -3670,7 +3670,7 @@ theorem range_sdiff_zero {n : ℕ} : range (n + 1) \ {0} = (range n).Image Nat.s
 end Image
 
 theorem _root_.multiset.to_finset_map [DecidableEq α] [DecidableEq β] (f : α → β) (m : Multiset α) :
-    (m.map f).toFinset = m.toFinset.Image f :=
+    (m.map f).toFinset = m.toFinset.image f :=
   Finset.val_inj.1 (Multiset.dedup_map_dedup_eq _ _).symm
 #align finset._root_.multiset.to_finset_map finset._root_.multiset.to_finset_map
 
@@ -3915,13 +3915,13 @@ theorem inter_bUnion (t : Finset β) (s : Finset α) (f : α → Finset β) : t 
 #align finset.inter_bUnion Finset.inter_bUnion
 
 theorem image_bUnion [DecidableEq γ] {f : α → β} {s : Finset α} {t : β → Finset γ} :
-    (s.Image f).bUnion t = s.bUnion fun a => t (f a) :=
+    (s.image f).bUnion t = s.bUnion fun a => t (f a) :=
   haveI := Classical.decEq α
   Finset.induction_on s rfl fun a s has ih => by simp only [image_insert, bUnion_insert, ih]
 #align finset.image_bUnion Finset.image_bUnion
 
 theorem bUnion_image [DecidableEq γ] {s : Finset α} {t : α → Finset β} {f : β → γ} :
-    (s.bUnion t).Image f = s.bUnion fun a => (t a).Image f :=
+    (s.bUnion t).image f = s.bUnion fun a => (t a).image f :=
   haveI := Classical.decEq α
   Finset.induction_on s rfl fun a s has ih => by simp only [bUnion_insert, image_union, ih]
 #align finset.bUnion_image Finset.bUnion_image
@@ -3963,7 +3963,7 @@ theorem bUnion_subset_iff_forall_subset {α β : Type _} [DecidableEq β] {s : F
     h _ ha₁ ha₂⟩
 #align finset.bUnion_subset_iff_forall_subset Finset.bUnion_subset_iff_forall_subset
 
-theorem bUnion_singleton {f : α → β} : (s.bUnion fun a => {f a}) = s.Image f :=
+theorem bUnion_singleton {f : α → β} : (s.bUnion fun a => {f a}) = s.image f :=
   ext fun x => by simp only [mem_bUnion, mem_image, mem_singleton, eq_comm]
 #align finset.bUnion_singleton Finset.bUnion_singleton
 
@@ -3992,7 +3992,7 @@ theorem bUnion_filter_eq_of_maps_to [DecidableEq α] {s : Finset α} {t : Finset
 #align finset.bUnion_filter_eq_of_maps_to Finset.bUnion_filter_eq_of_maps_to
 
 theorem image_bUnion_filter_eq [DecidableEq α] (s : Finset β) (g : β → α) :
-    ((s.Image g).bUnion fun a => s.filter fun c => g c = a) = s :=
+    ((s.image g).bUnion fun a => s.filter fun c => g c = a) = s :=
   bUnion_filter_eq_of_maps_to fun x => mem_image_of_mem g
 #align finset.image_bUnion_filter_eq Finset.image_bUnion_filter_eq
 

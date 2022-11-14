@@ -34,7 +34,7 @@ def antidiagonal' (f : α →₀ ℕ) : (α →₀ ℕ) × (α →₀ ℕ) →�
 /-- The antidiagonal of `s : α →₀ ℕ` is the finset of all pairs `(t₁, t₂) : (α →₀ ℕ) × (α →₀ ℕ)`
 such that `t₁ + t₂ = s`. -/
 def antidiagonal (f : α →₀ ℕ) : Finset ((α →₀ ℕ) × (α →₀ ℕ)) :=
-  f.antidiagonal'.Support
+  f.antidiagonal'.support
 #align finsupp.antidiagonal Finsupp.antidiagonal
 
 @[simp]

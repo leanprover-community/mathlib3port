@@ -463,18 +463,18 @@ namespace LebesgueDecomposition
 functions `f`, such that, for all measurable sets `A`, `∫⁻ x in A, f x ∂μ ≤ ν A`.
 
 This is useful for the Lebesgue decomposition theorem. -/
-def MeasurableLe (μ ν : Measure α) : Set (α → ℝ≥0∞) :=
+def measurableLe (μ ν : Measure α) : Set (α → ℝ≥0∞) :=
   { f | Measurable f ∧ ∀ (A : Set α) (hA : MeasurableSet A), (∫⁻ x in A, f x ∂μ) ≤ ν A }
 #align
-  measure_theory.measure.lebesgue_decomposition.measurable_le MeasureTheory.Measure.LebesgueDecomposition.MeasurableLe
+  measure_theory.measure.lebesgue_decomposition.measurable_le MeasureTheory.Measure.LebesgueDecomposition.measurableLe
 
-theorem zero_mem_measurable_le : (0 : α → ℝ≥0∞) ∈ MeasurableLe μ ν :=
+theorem zero_mem_measurable_le : (0 : α → ℝ≥0∞) ∈ measurableLe μ ν :=
   ⟨measurableZero, fun A hA => by simp⟩
 #align
   measure_theory.measure.lebesgue_decomposition.zero_mem_measurable_le MeasureTheory.Measure.LebesgueDecomposition.zero_mem_measurable_le
 
-theorem sup_mem_measurable_le {f g : α → ℝ≥0∞} (hf : f ∈ MeasurableLe μ ν) (hg : g ∈ MeasurableLe μ ν) :
-    (fun a => f a ⊔ g a) ∈ MeasurableLe μ ν := by
+theorem sup_mem_measurable_le {f g : α → ℝ≥0∞} (hf : f ∈ measurableLe μ ν) (hg : g ∈ measurableLe μ ν) :
+    (fun a => f a ⊔ g a) ∈ measurableLe μ ν := by
   simp_rw [Ennreal.sup_eq_max]
   refine' ⟨Measurable.max hf.1 hg.1, fun A hA => _⟩
   have h₁ := hA.inter (measurableSetLe hf.1 hg.1)
@@ -513,8 +513,8 @@ theorem supr_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : α)
 #align
   measure_theory.measure.lebesgue_decomposition.supr_succ_eq_sup MeasureTheory.Measure.LebesgueDecomposition.supr_succ_eq_sup
 
-theorem supr_mem_measurable_le (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ MeasurableLe μ ν) (n : ℕ) :
-    (fun x => ⨆ (k) (hk : k ≤ n), f k x) ∈ MeasurableLe μ ν := by
+theorem supr_mem_measurable_le (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ measurableLe μ ν) (n : ℕ) :
+    (fun x => ⨆ (k) (hk : k ≤ n), f k x) ∈ measurableLe μ ν := by
   induction' n with m hm
   · refine' ⟨_, _⟩
     · simp [(hf 0).1]
@@ -532,8 +532,8 @@ theorem supr_mem_measurable_le (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n 
 #align
   measure_theory.measure.lebesgue_decomposition.supr_mem_measurable_le MeasureTheory.Measure.LebesgueDecomposition.supr_mem_measurable_le
 
-theorem supr_mem_measurable_le' (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ MeasurableLe μ ν) (n : ℕ) :
-    (⨆ (k) (hk : k ≤ n), f k) ∈ MeasurableLe μ ν := by
+theorem supr_mem_measurable_le' (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ measurableLe μ ν) (n : ℕ) :
+    (⨆ (k) (hk : k ≤ n), f k) ∈ measurableLe μ ν := by
   convert supr_mem_measurable_le f hf n
   ext
   simp
@@ -562,10 +562,10 @@ theorem supr_le_le {α : Type _} (f : ℕ → α → ℝ≥0∞) (n k : ℕ) (hk
 end SuprLemmas
 
 /-- `measurable_le_eval μ ν` is the set of `∫⁻ x, f x ∂μ` for all `f ∈ measurable_le μ ν`. -/
-def MeasurableLeEval (μ ν : Measure α) : Set ℝ≥0∞ :=
-  (fun f : α → ℝ≥0∞ => ∫⁻ x, f x ∂μ) '' MeasurableLe μ ν
+def measurableLeEval (μ ν : Measure α) : Set ℝ≥0∞ :=
+  (fun f : α → ℝ≥0∞ => ∫⁻ x, f x ∂μ) '' measurableLe μ ν
 #align
-  measure_theory.measure.lebesgue_decomposition.measurable_le_eval MeasureTheory.Measure.LebesgueDecomposition.MeasurableLeEval
+  measure_theory.measure.lebesgue_decomposition.measurable_le_eval MeasureTheory.Measure.LebesgueDecomposition.measurableLeEval
 
 end LebesgueDecomposition
 

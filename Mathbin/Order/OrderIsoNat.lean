@@ -59,7 +59,7 @@ theorem exists_not_acc_lt_of_not_acc {a : α} {r} (h : ¬Acc r a) : ∃ b, ¬Acc
 #align rel_embedding.exists_not_acc_lt_of_not_acc RelEmbedding.exists_not_acc_lt_of_not_acc
 
 /-- A value is accessible iff it isn't contained in any infinite decreasing sequence. -/
-theorem acc_iff_no_decreasing_seq {x} : Acc r x ↔ IsEmpty { f : ((· > ·) : ℕ → ℕ → Prop) ↪r r // x ∈ Set.Range f } := by
+theorem acc_iff_no_decreasing_seq {x} : Acc r x ↔ IsEmpty { f : ((· > ·) : ℕ → ℕ → Prop) ↪r r // x ∈ Set.range f } := by
   constructor
   · refine' fun h => h.recOn fun x h IH => _
     constructor
@@ -140,7 +140,7 @@ theorem Subtype.order_iso_of_nat_apply {n : ℕ} : Subtype.orderIsoOfNat s n = S
 
 variable (s)
 
-theorem order_embedding_of_set_range : Set.Range (Nat.orderEmbeddingOfSet s) = s :=
+theorem order_embedding_of_set_range : Set.range (Nat.orderEmbeddingOfSet s) = s :=
   subtype.coe_comp_of_nat_range
 #align nat.order_embedding_of_set_range Nat.order_embedding_of_set_range
 
@@ -184,7 +184,7 @@ theorem exists_increasing_or_nonincreasing_subseq (r : α → α → Prop) [IsTr
 theorem WellFounded.monotone_chain_condition' [Preorder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → ¬a n < a m := by
   refine' ⟨fun h a => _, fun h => _⟩
-  · have hne : (Set.Range a).Nonempty := ⟨a 0, by simp⟩
+  · have hne : (Set.range a).Nonempty := ⟨a 0, by simp⟩
     obtain ⟨x, ⟨n, rfl⟩, H⟩ := h.has_min _ hne
     exact ⟨n, fun m hm => H _ (Set.mem_range_self _)⟩
     

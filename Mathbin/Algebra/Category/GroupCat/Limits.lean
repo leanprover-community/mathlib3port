@@ -41,7 +41,7 @@ instance groupObj (F : J ⥤ GroupCat.{max v u}) (j) : Group ((F ⋙ forget Grou
 -/
 @[to_additive "The flat sections of a functor into `AddGroup` form an additive subgroup of all sections."]
 def sectionsSubgroup (F : J ⥤ GroupCat) : Subgroup (∀ j, F.obj j) :=
-  { MonCat.sectionsSubmonoid (F ⋙ forget₂ GroupCat MonCat) with Carrier := (F ⋙ forget GroupCat).sections,
+  { MonCat.sectionsSubmonoid (F ⋙ forget₂ GroupCat MonCat) with carrier := (F ⋙ forget GroupCat).sections,
     inv_mem' := fun a ah j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
       dsimp [functor.sections] at ah

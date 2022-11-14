@@ -63,7 +63,7 @@ to this basis.
 TODO Restate this result for affine spaces (instead of vector spaces) once the definition of
 convexity is generalised to this setting. -/
 theorem AffineBasis.interior_convex_hull {ι E : Type _} [Finite ι] [NormedAddCommGroup E] [NormedSpace ℝ E]
-    (b : AffineBasis ι ℝ E) : Interior (convexHull ℝ (Range b.points)) = { x | ∀ i, 0 < b.Coord i x } := by
+    (b : AffineBasis ι ℝ E) : interior (convexHull ℝ (range b.points)) = { x | ∀ i, 0 < b.Coord i x } := by
   cases subsingleton_or_nontrivial ι
   · -- The zero-dimensional case.
     have : range b.points = univ := AffineSubspace.eq_univ_of_subsingleton_span_eq_top (subsingleton_range _) b.tot
@@ -131,24 +131,24 @@ theorem IsOpen.affine_span_eq_top {u : Set P} (hu : IsOpen u) (hne : u.Nonempty)
   top_unique <| hs' ▸ affine_span_mono _ hsu
 #align is_open.affine_span_eq_top IsOpen.affine_span_eq_top
 
-theorem affine_span_eq_top_of_nonempty_interior {s : Set V} (hs : (Interior <| convexHull ℝ s).Nonempty) :
+theorem affine_span_eq_top_of_nonempty_interior {s : Set V} (hs : (interior <| convexHull ℝ s).Nonempty) :
     affineSpan ℝ s = ⊤ :=
   top_unique <|
     is_open_interior.affine_span_eq_top hs ▸ (affine_span_mono _ interior_subset).trans_eq (affine_span_convex_hull _)
 #align affine_span_eq_top_of_nonempty_interior affine_span_eq_top_of_nonempty_interior
 
 theorem AffineBasis.centroid_mem_interior_convex_hull {ι} [Fintype ι] (b : AffineBasis ι ℝ V) :
-    Finset.univ.centroid ℝ b.points ∈ Interior (convexHull ℝ (Range b.points)) := by
+    Finset.univ.centroid ℝ b.points ∈ interior (convexHull ℝ (range b.points)) := by
   haveI := b.nonempty
   simp only [b.interior_convex_hull, mem_set_of_eq, b.coord_apply_centroid (Finset.mem_univ _), inv_pos, Nat.cast_pos,
     Finset.card_pos, Finset.univ_nonempty, forall_true_iff]
 #align affine_basis.centroid_mem_interior_convex_hull AffineBasis.centroid_mem_interior_convex_hull
 
 theorem interior_convex_hull_nonempty_iff_affine_span_eq_top [FiniteDimensional ℝ V] {s : Set V} :
-    (Interior (convexHull ℝ s)).Nonempty ↔ affineSpan ℝ s = ⊤ := by
+    (interior (convexHull ℝ s)).Nonempty ↔ affineSpan ℝ s = ⊤ := by
   refine' ⟨affine_span_eq_top_of_nonempty_interior, fun h => _⟩
   obtain ⟨t, hts, b, hb⟩ := AffineBasis.exists_affine_subbasis h
-  suffices (Interior (convexHull ℝ (range b.points))).Nonempty by
+  suffices (interior (convexHull ℝ (range b.points))).Nonempty by
     rw [hb, Subtype.range_coe_subtype, set_of_mem_eq] at this
     refine' this.mono _
     mono*
@@ -157,7 +157,7 @@ theorem interior_convex_hull_nonempty_iff_affine_span_eq_top [FiniteDimensional 
 #align interior_convex_hull_nonempty_iff_affine_span_eq_top interior_convex_hull_nonempty_iff_affine_span_eq_top
 
 theorem Convex.interior_nonempty_iff_affine_span_eq_top [FiniteDimensional ℝ V] {s : Set V} (hs : Convex ℝ s) :
-    (Interior s).Nonempty ↔ affineSpan ℝ s = ⊤ := by
+    (interior s).Nonempty ↔ affineSpan ℝ s = ⊤ := by
   rw [← interior_convex_hull_nonempty_iff_affine_span_eq_top, hs.convex_hull_eq]
 #align convex.interior_nonempty_iff_affine_span_eq_top Convex.interior_nonempty_iff_affine_span_eq_top
 

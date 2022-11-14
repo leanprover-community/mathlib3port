@@ -22,7 +22,7 @@ section LE
 
 variable [LE α] [LE β] [LE γ]
 
-theorem range_eq (e : α ≃o β) : Set.Range e = Set.Univ :=
+theorem range_eq (e : α ≃o β) : Set.range e = Set.univ :=
   e.Surjective.range_eq
 #align order_iso.range_eq OrderIso.range_eq
 
@@ -73,7 +73,7 @@ def setCongr (s t : Set α) (h : s = t) : s ≃o t where
 #align order_iso.set_congr OrderIso.setCongr
 
 /-- Order isomorphism between `univ : set α` and `α`. -/
-def Set.univ : (Set.Univ : Set α) ≃o α where
+def Set.univ : (Set.univ : Set α) ≃o α where
   toEquiv := Equiv.Set.univ α
   map_rel_iff' x y := Iff.rfl
 #align order_iso.set.univ OrderIso.Set.univ
@@ -97,7 +97,7 @@ variable (f : α → β) (h_mono : StrictMono f) (h_surj : Function.Surjective f
 /-- A strictly monotone function from a linear order is an order isomorphism between its domain and
 its range. -/
 @[simps apply]
-protected noncomputable def orderIso : α ≃o Set.Range f where
+protected noncomputable def orderIso : α ≃o Set.range f where
   toEquiv := Equiv.ofInjective f h_mono.Injective
   map_rel_iff' a b := h_mono.le_iff_le
 #align strict_mono.order_iso StrictMono.orderIso

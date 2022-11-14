@@ -120,7 +120,7 @@ protected noncomputable def powerBasis : PowerBasis K L :=
     (Subalgebra.equivOfEq _ _ (IsCyclotomicExtension.adjoin_primitive_root_eq_top hζ)).trans Subalgebra.topEquiv
 #align is_primitive_root.power_basis IsPrimitiveRoot.powerBasis
 
-theorem power_basis_gen_mem_adjoin_zeta_sub_one : (hζ.PowerBasis K).Gen ∈ adjoin K ({ζ - 1} : Set L) := by
+theorem power_basis_gen_mem_adjoin_zeta_sub_one : (hζ.PowerBasis K).gen ∈ adjoin K ({ζ - 1} : Set L) := by
   rw [power_basis_gen, adjoin_singleton_eq_range_aeval, AlgHom.mem_range]
   exact ⟨X + 1, by simp⟩
 #align is_primitive_root.power_basis_gen_mem_adjoin_zeta_sub_one IsPrimitiveRoot.power_basis_gen_mem_adjoin_zeta_sub_one

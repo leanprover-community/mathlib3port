@@ -67,8 +67,8 @@ integrable Lipschitz bound `bound` (with a ball radius independent of `a`), and 
 ae-measurable for `x` in the same ball. See `has_fderiv_at_integral_of_dominated_loc_of_lip` for a
 slightly less general but usually more useful version. -/
 theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H} {bound : α → ℝ}
-    {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ x ∈ Ball x₀ ε, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
-    (hF'_meas : AeStronglyMeasurable F' μ) (h_lipsch : ∀ᵐ a ∂μ, ∀ x ∈ Ball x₀ ε, ∥F x a - F x₀ a∥ ≤ bound a * ∥x - x₀∥)
+    {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ x ∈ ball x₀ ε, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
+    (hF'_meas : AeStronglyMeasurable F' μ) (h_lipsch : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ∥F x a - F x₀ a∥ ≤ bound a * ∥x - x₀∥)
     (bound_integrable : Integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasFderivAt (fun x => F x a) (F' a) x₀) :
     Integrable F' μ ∧ HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ := by
   have x₀_in : x₀ ∈ ball x₀ ε := mem_ball_self ε_pos
@@ -158,7 +158,7 @@ for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H} {bound : α → ℝ}
     {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
     (hF'_meas : AeStronglyMeasurable F' μ)
-    (h_lip : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (Ball x₀ ε))
+    (h_lip : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
     (bound_integrable : Integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasFderivAt (fun x => F x a) (F' a) x₀) :
     Integrable F' μ ∧ HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ := by
   obtain ⟨δ, δ_pos, hδ⟩ : ∃ δ > 0, ∀ x ∈ ball x₀ δ, ae_strongly_measurable (F x) μ ∧ x ∈ ball x₀ ε
@@ -176,9 +176,9 @@ derivative norm uniformly bounded by an integrable function (the ball radius is 
 and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → α → E} {F' : H → α → H →L[𝕜] E} {x₀ : H} {bound : α → ℝ}
     {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
-    (hF'_meas : AeStronglyMeasurable (F' x₀) μ) (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ Ball x₀ ε, ∥F' x a∥ ≤ bound a)
+    (hF'_meas : AeStronglyMeasurable (F' x₀) μ) (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ∥F' x a∥ ≤ bound a)
     (bound_integrable : Integrable (bound : α → ℝ) μ)
-    (h_diff : ∀ᵐ a ∂μ, ∀ x ∈ Ball x₀ ε, HasFderivAt (fun x => F x a) (F' x a) x) :
+    (h_diff : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, HasFderivAt (fun x => F x a) (F' x a) x) :
     HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' x₀ a ∂μ) x₀ := by
   letI : NormedSpace ℝ H := NormedSpace.restrictScalars ℝ 𝕜 H
   have x₀_in : x₀ ∈ ball x₀ ε := mem_ball_self ε_pos
@@ -201,7 +201,7 @@ ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' : α → E} {x₀ : 𝕜} {ε : ℝ} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
     (hF'_meas : AeStronglyMeasurable F' μ) {bound : α → ℝ}
-    (h_lipsch : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (Ball x₀ ε))
+    (h_lipsch : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
     (bound_integrable : Integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasDerivAt (fun x => F x a) (F' a) x₀) :
     Integrable F' μ ∧ HasDerivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ := by
   set L : E →L[𝕜] 𝕜 →L[𝕜] E := ContinuousLinearMap.smulRightL 𝕜 𝕜 E 1
@@ -227,9 +227,9 @@ theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F
 function, and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → E} {F' : 𝕜 → α → E} {x₀ : 𝕜} {ε : ℝ}
     (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
-    (hF'_meas : AeStronglyMeasurable (F' x₀) μ) {bound : α → ℝ} (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ Ball x₀ ε, ∥F' x a∥ ≤ bound a)
+    (hF'_meas : AeStronglyMeasurable (F' x₀) μ) {bound : α → ℝ} (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ∥F' x a∥ ≤ bound a)
     (bound_integrable : Integrable bound μ)
-    (h_diff : ∀ᵐ a ∂μ, ∀ x ∈ Ball x₀ ε, HasDerivAt (fun x => F x a) (F' x a) x) :
+    (h_diff : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, HasDerivAt (fun x => F x a) (F' x a) x) :
     Integrable (F' x₀) μ ∧ HasDerivAt (fun n => ∫ a, F n a ∂μ) (∫ a, F' x₀ a ∂μ) x₀ := by
   have x₀_in : x₀ ∈ ball x₀ ε := mem_ball_self ε_pos
   have diff_x₀ : ∀ᵐ a ∂μ, HasDerivAt (fun x => F x a) (F' x₀ a) x₀ := h_diff.mono fun a ha => ha x₀ x₀_in

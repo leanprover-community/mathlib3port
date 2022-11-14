@@ -184,7 +184,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
         exact ho
         
       
-  have hbs : Submodule.span ℝ (Set.Range b) = s.direction := by
+  have hbs : Submodule.span ℝ (Set.range b) = s.direction := by
     refine' eq_of_le_of_finrank_eq _ _
     · rw [Submodule.span_le, Set.range_subset_iff]
       intro i
@@ -198,7 +198,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
       
   have hv : ∀ v ∈ s.direction, ∃ t₁ t₂ : ℝ, v = t₁ • (c₂ -ᵥ c₁) + t₂ • (p₂ -ᵥ p₁) := by
     intro v hv
-    have hr : Set.Range b = {c₂ -ᵥ c₁, p₂ -ᵥ p₁} := by
+    have hr : Set.range b = {c₂ -ᵥ c₁, p₂ -ᵥ p₁} := by
       have hu : (Finset.univ : Finset (Fin 2)) = {0, 1} := by decide
       rw [← Fintype.coe_image_univ, hu]
       simp
@@ -684,7 +684,7 @@ variable (P)
 be positive; that should be given as a hypothesis to lemmas that require it. -/
 @[ext.1]
 structure Sphere where
-  Center : P
+  center : P
   radius : ℝ
 #align euclidean_geometry.sphere EuclideanGeometry.Sphere
 
@@ -694,12 +694,12 @@ instance [Nonempty P] : Nonempty (Sphere P) :=
   ⟨⟨Classical.arbitrary P, 0⟩⟩
 
 instance : Coe (Sphere P) (Set P) :=
-  ⟨fun s => Metric.Sphere s.Center s.radius⟩
+  ⟨fun s => Metric.sphere s.center s.radius⟩
 
 instance : Membership P (Sphere P) :=
   ⟨fun p s => p ∈ (s : Set P)⟩
 
-theorem Sphere.mk_center (c : P) (r : ℝ) : (⟨c, r⟩ : Sphere P).Center = c :=
+theorem Sphere.mk_center (c : P) (r : ℝ) : (⟨c, r⟩ : Sphere P).center = c :=
   rfl
 #align euclidean_geometry.sphere.mk_center EuclideanGeometry.Sphere.mk_center
 
@@ -708,15 +708,15 @@ theorem Sphere.mk_radius (c : P) (r : ℝ) : (⟨c, r⟩ : Sphere P).radius = r 
 #align euclidean_geometry.sphere.mk_radius EuclideanGeometry.Sphere.mk_radius
 
 @[simp]
-theorem Sphere.mk_center_radius (s : Sphere P) : (⟨s.Center, s.radius⟩ : Sphere P) = s := by ext <;> rfl
+theorem Sphere.mk_center_radius (s : Sphere P) : (⟨s.center, s.radius⟩ : Sphere P) = s := by ext <;> rfl
 #align euclidean_geometry.sphere.mk_center_radius EuclideanGeometry.Sphere.mk_center_radius
 
-theorem Sphere.coe_def (s : Sphere P) : (s : Set P) = Metric.Sphere s.Center s.radius :=
+theorem Sphere.coe_def (s : Sphere P) : (s : Set P) = Metric.sphere s.center s.radius :=
   rfl
 #align euclidean_geometry.sphere.coe_def EuclideanGeometry.Sphere.coe_def
 
 @[simp]
-theorem Sphere.coe_mk (c : P) (r : ℝ) : ↑(⟨c, r⟩ : Sphere P) = Metric.Sphere c r :=
+theorem Sphere.coe_mk (c : P) (r : ℝ) : ↑(⟨c, r⟩ : Sphere P) = Metric.sphere c r :=
   rfl
 #align euclidean_geometry.sphere.coe_mk EuclideanGeometry.Sphere.coe_mk
 
@@ -725,11 +725,11 @@ theorem Sphere.mem_coe {p : P} {s : Sphere P} : p ∈ (s : Set P) ↔ p ∈ s :=
   Iff.rfl
 #align euclidean_geometry.sphere.mem_coe EuclideanGeometry.Sphere.mem_coe
 
-theorem mem_sphere {p : P} {s : Sphere P} : p ∈ s ↔ dist p s.Center = s.radius :=
+theorem mem_sphere {p : P} {s : Sphere P} : p ∈ s ↔ dist p s.center = s.radius :=
   Iff.rfl
 #align euclidean_geometry.mem_sphere EuclideanGeometry.mem_sphere
 
-theorem mem_sphere' {p : P} {s : Sphere P} : p ∈ s ↔ dist s.Center p = s.radius :=
+theorem mem_sphere' {p : P} {s : Sphere P} : p ∈ s ↔ dist s.center p = s.radius :=
   Metric.mem_sphere'
 #align euclidean_geometry.mem_sphere' EuclideanGeometry.mem_sphere'
 
@@ -738,7 +738,7 @@ theorem subset_sphere {ps : Set P} {s : Sphere P} : ps ⊆ s ↔ ∀ p ∈ ps, p
 #align euclidean_geometry.subset_sphere EuclideanGeometry.subset_sphere
 
 theorem dist_of_mem_subset_sphere {p : P} {ps : Set P} {s : Sphere P} (hp : p ∈ ps) (hps : ps ⊆ (s : Set P)) :
-    dist p s.Center = s.radius :=
+    dist p s.center = s.radius :=
   mem_sphere.1 (Sphere.mem_coe.1 (Set.mem_of_mem_of_subset hp hps))
 #align euclidean_geometry.dist_of_mem_subset_sphere EuclideanGeometry.dist_of_mem_subset_sphere
 
@@ -747,29 +747,29 @@ theorem dist_of_mem_subset_mk_sphere {p c : P} {ps : Set P} {r : ℝ} (hp : p �
   dist_of_mem_subset_sphere hp hps
 #align euclidean_geometry.dist_of_mem_subset_mk_sphere EuclideanGeometry.dist_of_mem_subset_mk_sphere
 
-theorem Sphere.ne_iff {s₁ s₂ : Sphere P} : s₁ ≠ s₂ ↔ s₁.Center ≠ s₂.Center ∨ s₁.radius ≠ s₂.radius := by
+theorem Sphere.ne_iff {s₁ s₂ : Sphere P} : s₁ ≠ s₂ ↔ s₁.center ≠ s₂.center ∨ s₁.radius ≠ s₂.radius := by
   rw [← not_and_or, ← sphere.ext_iff]
 #align euclidean_geometry.sphere.ne_iff EuclideanGeometry.Sphere.ne_iff
 
 theorem Sphere.center_eq_iff_eq_of_mem {s₁ s₂ : Sphere P} {p : P} (hs₁ : p ∈ s₁) (hs₂ : p ∈ s₂) :
-    s₁.Center = s₂.Center ↔ s₁ = s₂ := by
+    s₁.center = s₂.center ↔ s₁ = s₂ := by
   refine' ⟨fun h => sphere.ext _ _ h _, fun h => h ▸ rfl⟩
   rw [mem_sphere] at hs₁ hs₂
   rw [← hs₁, ← hs₂, h]
 #align euclidean_geometry.sphere.center_eq_iff_eq_of_mem EuclideanGeometry.Sphere.center_eq_iff_eq_of_mem
 
 theorem Sphere.center_ne_iff_ne_of_mem {s₁ s₂ : Sphere P} {p : P} (hs₁ : p ∈ s₁) (hs₂ : p ∈ s₂) :
-    s₁.Center ≠ s₂.Center ↔ s₁ ≠ s₂ :=
+    s₁.center ≠ s₂.center ↔ s₁ ≠ s₂ :=
   (Sphere.center_eq_iff_eq_of_mem hs₁ hs₂).Not
 #align euclidean_geometry.sphere.center_ne_iff_ne_of_mem EuclideanGeometry.Sphere.center_ne_iff_ne_of_mem
 
 theorem dist_center_eq_dist_center_of_mem_sphere {p₁ p₂ : P} {s : Sphere P} (hp₁ : p₁ ∈ s) (hp₂ : p₂ ∈ s) :
-    dist p₁ s.Center = dist p₂ s.Center := by rw [mem_sphere.1 hp₁, mem_sphere.1 hp₂]
+    dist p₁ s.center = dist p₂ s.center := by rw [mem_sphere.1 hp₁, mem_sphere.1 hp₂]
 #align
   euclidean_geometry.dist_center_eq_dist_center_of_mem_sphere EuclideanGeometry.dist_center_eq_dist_center_of_mem_sphere
 
 theorem dist_center_eq_dist_center_of_mem_sphere' {p₁ p₂ : P} {s : Sphere P} (hp₁ : p₁ ∈ s) (hp₂ : p₂ ∈ s) :
-    dist s.Center p₁ = dist s.Center p₂ := by rw [mem_sphere'.1 hp₁, mem_sphere'.1 hp₂]
+    dist s.center p₁ = dist s.center p₂ := by rw [mem_sphere'.1 hp₁, mem_sphere'.1 hp₂]
 #align
   euclidean_geometry.dist_center_eq_dist_center_of_mem_sphere' EuclideanGeometry.dist_center_eq_dist_center_of_mem_sphere'
 
@@ -845,7 +845,7 @@ theorem cosphericalPair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := 
 #align euclidean_geometry.cospherical_pair EuclideanGeometry.cosphericalPair
 
 /-- Any three points in a cospherical set are affinely independent. -/
-theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin 3 → P} (hps : Set.Range p ⊆ s)
+theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin 3 → P} (hps : Set.range p ⊆ s)
     (hpi : Function.Injective p) : AffineIndependent ℝ p := by
   rw [affine_independent_iff_not_collinear]
   intro hc
@@ -887,7 +887,7 @@ of those spheres is orthogonal to that between `p₁` and `p₂`; this is a vers
 `inner_vsub_vsub_of_dist_eq_of_dist_eq` for bundled spheres.  (In two dimensions, this says that
 the diagonals of a kite are orthogonal.) -/
 theorem inner_vsub_vsub_of_mem_sphere_of_mem_sphere {p₁ p₂ : P} {s₁ s₂ : Sphere P} (hp₁s₁ : p₁ ∈ s₁) (hp₂s₁ : p₂ ∈ s₁)
-    (hp₁s₂ : p₁ ∈ s₂) (hp₂s₂ : p₂ ∈ s₂) : ⟪s₂.Center -ᵥ s₁.Center, p₂ -ᵥ p₁⟫ = 0 :=
+    (hp₁s₂ : p₁ ∈ s₂) (hp₂s₂ : p₂ ∈ s₂) : ⟪s₂.center -ᵥ s₁.center, p₂ -ᵥ p₁⟫ = 0 :=
   inner_vsub_vsub_of_dist_eq_of_dist_eq (dist_center_eq_dist_center_of_mem_sphere hp₁s₁ hp₂s₁)
     (dist_center_eq_dist_center_of_mem_sphere hp₁s₂ hp₂s₂)
 #align
@@ -898,7 +898,7 @@ centers; this is a version of `eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two
 spheres. -/
 theorem eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two {s : AffineSubspace ℝ P}
     [FiniteDimensional ℝ s.direction] (hd : finrank ℝ s.direction = 2) {s₁ s₂ : Sphere P} {p₁ p₂ p : P}
-    (hs₁ : s₁.Center ∈ s) (hs₂ : s₂.Center ∈ s) (hp₁s : p₁ ∈ s) (hp₂s : p₂ ∈ s) (hps : p ∈ s) (hs : s₁ ≠ s₂)
+    (hs₁ : s₁.center ∈ s) (hs₂ : s₂.center ∈ s) (hp₁s : p₁ ∈ s) (hp₂s : p₂ ∈ s) (hps : p ∈ s) (hs : s₁ ≠ s₂)
     (hp : p₁ ≠ p₂) (hp₁s₁ : p₁ ∈ s₁) (hp₂s₁ : p₂ ∈ s₁) (hps₁ : p ∈ s₁) (hp₁s₂ : p₁ ∈ s₂) (hp₂s₂ : p₂ ∈ s₂)
     (hps₂ : p ∈ s₂) : p = p₁ ∨ p = p₂ :=
   eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd hs₁ hs₂ hp₁s hp₂s hps

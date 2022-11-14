@@ -183,43 +183,43 @@ theorem eq_of_apply_eq (hx : IsPeriodicPt f m x) (hy : IsPeriodicPt f n y) (hm :
 end IsPeriodicPt
 
 /-- The set of periodic points of a given (possibly non-minimal) period. -/
-def PtsOfPeriod (f : α → α) (n : ℕ) : Set α :=
+def ptsOfPeriod (f : α → α) (n : ℕ) : Set α :=
   { x : α | IsPeriodicPt f n x }
-#align function.pts_of_period Function.PtsOfPeriod
+#align function.pts_of_period Function.ptsOfPeriod
 
 @[simp]
-theorem mem_pts_of_period : x ∈ PtsOfPeriod f n ↔ IsPeriodicPt f n x :=
+theorem mem_pts_of_period : x ∈ ptsOfPeriod f n ↔ IsPeriodicPt f n x :=
   Iff.rfl
 #align function.mem_pts_of_period Function.mem_pts_of_period
 
 theorem Semiconj.maps_to_pts_of_period {g : α → β} (h : Semiconj g fa fb) (n : ℕ) :
-    MapsTo g (PtsOfPeriod fa n) (PtsOfPeriod fb n) :=
+    MapsTo g (ptsOfPeriod fa n) (ptsOfPeriod fb n) :=
   (h.iterate_right n).maps_to_fixed_pts
 #align function.semiconj.maps_to_pts_of_period Function.Semiconj.maps_to_pts_of_period
 
-theorem bij_on_pts_of_period (f : α → α) {n : ℕ} (hn : 0 < n) : BijOn f (PtsOfPeriod f n) (PtsOfPeriod f n) :=
+theorem bij_on_pts_of_period (f : α → α) {n : ℕ} (hn : 0 < n) : BijOn f (ptsOfPeriod f n) (ptsOfPeriod f n) :=
   ⟨(Commute.refl f).maps_to_pts_of_period n, fun x hx y hy hxy => hx.eq_of_apply_eq_same hy hn hxy, fun x hx =>
     ⟨(f^[n.pred]) x, hx.apply_iterate _, by rw [← comp_app f, comp_iterate_pred_of_pos f hn, hx.eq]⟩⟩
 #align function.bij_on_pts_of_period Function.bij_on_pts_of_period
 
-theorem directed_pts_of_period_pnat (f : α → α) : Directed (· ⊆ ·) fun n : ℕ+ => PtsOfPeriod f n := fun m n =>
+theorem directed_pts_of_period_pnat (f : α → α) : Directed (· ⊆ ·) fun n : ℕ+ => ptsOfPeriod f n := fun m n =>
   ⟨m * n, fun x hx => hx.mul_const n, fun x hx => hx.const_mul m⟩
 #align function.directed_pts_of_period_pnat Function.directed_pts_of_period_pnat
 
 /-- The set of periodic points of a map `f : α → α`. -/
-def PeriodicPts (f : α → α) : Set α :=
+def periodicPts (f : α → α) : Set α :=
   { x : α | ∃ n > 0, IsPeriodicPt f n x }
-#align function.periodic_pts Function.PeriodicPts
+#align function.periodic_pts Function.periodicPts
 
-theorem mk_mem_periodic_pts (hn : 0 < n) (hx : IsPeriodicPt f n x) : x ∈ PeriodicPts f :=
+theorem mk_mem_periodic_pts (hn : 0 < n) (hx : IsPeriodicPt f n x) : x ∈ periodicPts f :=
   ⟨n, hn, hx⟩
 #align function.mk_mem_periodic_pts Function.mk_mem_periodic_pts
 
-theorem mem_periodic_pts : x ∈ PeriodicPts f ↔ ∃ n > 0, IsPeriodicPt f n x :=
+theorem mem_periodic_pts : x ∈ periodicPts f ↔ ∃ n > 0, IsPeriodicPt f n x :=
   Iff.rfl
 #align function.mem_periodic_pts Function.mem_periodic_pts
 
-theorem is_periodic_pt_of_mem_periodic_pts_of_is_periodic_pt_iterate (hx : x ∈ PeriodicPts f)
+theorem is_periodic_pt_of_mem_periodic_pts_of_is_periodic_pt_iterate (hx : x ∈ periodicPts f)
     (hm : IsPeriodicPt f m ((f^[n]) x)) : IsPeriodicPt f m x := by
   rcases hx with ⟨r, hr, hr'⟩
   convert (hm.apply_iterate ((n / r + 1) * r - n)).Eq
@@ -231,22 +231,22 @@ theorem is_periodic_pt_of_mem_periodic_pts_of_is_periodic_pt_iterate (hx : x ∈
 
 variable (f)
 
-theorem bUnion_pts_of_period : (⋃ n > 0, PtsOfPeriod f n) = PeriodicPts f :=
+theorem bUnion_pts_of_period : (⋃ n > 0, ptsOfPeriod f n) = periodicPts f :=
   Set.ext fun x => by simp [mem_periodic_pts]
 #align function.bUnion_pts_of_period Function.bUnion_pts_of_period
 
-theorem Union_pnat_pts_of_period : (⋃ n : ℕ+, PtsOfPeriod f n) = PeriodicPts f :=
+theorem Union_pnat_pts_of_period : (⋃ n : ℕ+, ptsOfPeriod f n) = periodicPts f :=
   supr_subtype.trans <| bUnion_pts_of_period f
 #align function.Union_pnat_pts_of_period Function.Union_pnat_pts_of_period
 
-theorem bij_on_periodic_pts : BijOn f (PeriodicPts f) (PeriodicPts f) :=
+theorem bij_on_periodic_pts : BijOn f (periodicPts f) (periodicPts f) :=
   Union_pnat_pts_of_period f ▸
     bij_on_Union_of_directed (directed_pts_of_period_pnat f) fun i => bij_on_pts_of_period f i.Pos
 #align function.bij_on_periodic_pts Function.bij_on_periodic_pts
 
 variable {f}
 
-theorem Semiconj.maps_to_periodic_pts {g : α → β} (h : Semiconj g fa fb) : MapsTo g (PeriodicPts fa) (PeriodicPts fb) :=
+theorem Semiconj.maps_to_periodic_pts {g : α → β} (h : Semiconj g fa fb) : MapsTo g (periodicPts fa) (periodicPts fb) :=
   fun x ⟨n, hn, hx⟩ => ⟨n, hn, hx.map h⟩
 #align function.semiconj.maps_to_periodic_pts Function.Semiconj.maps_to_periodic_pts
 
@@ -257,7 +257,7 @@ noncomputable section
 /-- Minimal period of a point `x` under an endomorphism `f`. If `x` is not a periodic point of `f`,
 then `minimal_period f x = 0`. -/
 def minimalPeriod (f : α → α) (x : α) :=
-  if h : x ∈ PeriodicPts f then Nat.find h else 0
+  if h : x ∈ periodicPts f then Nat.find h else 0
 #align function.minimal_period Function.minimalPeriod
 
 theorem is_periodic_pt_minimal_period (f : α → α) (x : α) : IsPeriodicPt f (minimalPeriod f x) x := by
@@ -286,11 +286,11 @@ theorem iterate_mod_minimal_period_eq : (f^[n % minimalPeriod f x]) x = (f^[n]) 
   (is_periodic_pt_minimal_period f x).iterate_mod_apply n
 #align function.iterate_mod_minimal_period_eq Function.iterate_mod_minimal_period_eq
 
-theorem minimal_period_pos_of_mem_periodic_pts (hx : x ∈ PeriodicPts f) : 0 < minimalPeriod f x := by
+theorem minimal_period_pos_of_mem_periodic_pts (hx : x ∈ periodicPts f) : 0 < minimalPeriod f x := by
   simp only [minimal_period, dif_pos hx, (Nat.find_spec hx).fst.lt]
 #align function.minimal_period_pos_of_mem_periodic_pts Function.minimal_period_pos_of_mem_periodic_pts
 
-theorem minimal_period_eq_zero_of_nmem_periodic_pts (hx : x ∉ PeriodicPts f) : minimalPeriod f x = 0 := by
+theorem minimal_period_eq_zero_of_nmem_periodic_pts (hx : x ∉ periodicPts f) : minimalPeriod f x = 0 := by
   simp only [minimal_period, dif_neg hx]
 #align function.minimal_period_eq_zero_of_nmem_periodic_pts Function.minimal_period_eq_zero_of_nmem_periodic_pts
 
@@ -298,12 +298,12 @@ theorem IsPeriodicPt.minimal_period_pos (hn : 0 < n) (hx : IsPeriodicPt f n x) :
   minimal_period_pos_of_mem_periodic_pts <| mk_mem_periodic_pts hn hx
 #align function.is_periodic_pt.minimal_period_pos Function.IsPeriodicPt.minimal_period_pos
 
-theorem minimal_period_pos_iff_mem_periodic_pts : 0 < minimalPeriod f x ↔ x ∈ PeriodicPts f :=
+theorem minimal_period_pos_iff_mem_periodic_pts : 0 < minimalPeriod f x ↔ x ∈ periodicPts f :=
   ⟨not_imp_not.1 fun h => by simp only [minimal_period, dif_neg h, lt_irrefl 0, not_false_iff],
     minimal_period_pos_of_mem_periodic_pts⟩
 #align function.minimal_period_pos_iff_mem_periodic_pts Function.minimal_period_pos_iff_mem_periodic_pts
 
-theorem minimal_period_eq_zero_iff_nmem_periodic_pts : minimalPeriod f x = 0 ↔ x ∉ PeriodicPts f := by
+theorem minimal_period_eq_zero_iff_nmem_periodic_pts : minimalPeriod f x = 0 ↔ x ∉ periodicPts f := by
   rw [← minimal_period_pos_iff_mem_periodic_pts, not_lt, nonpos_iff_eq_zero]
 #align function.minimal_period_eq_zero_iff_nmem_periodic_pts Function.minimal_period_eq_zero_iff_nmem_periodic_pts
 
@@ -312,7 +312,7 @@ theorem IsPeriodicPt.minimal_period_le (hn : 0 < n) (hx : IsPeriodicPt f n x) : 
   exact Nat.find_min' (mk_mem_periodic_pts hn hx) ⟨hn, hx⟩
 #align function.is_periodic_pt.minimal_period_le Function.IsPeriodicPt.minimal_period_le
 
-theorem minimal_period_apply_iterate (hx : x ∈ PeriodicPts f) (n : ℕ) :
+theorem minimal_period_apply_iterate (hx : x ∈ periodicPts f) (n : ℕ) :
     minimalPeriod f ((f^[n]) x) = minimalPeriod f x := by
   apply
     (is_periodic_pt.minimal_period_le (minimal_period_pos_of_mem_periodic_pts hx) _).antisymm
@@ -326,7 +326,7 @@ theorem minimal_period_apply_iterate (hx : x ∈ PeriodicPts f) (n : ℕ) :
     
 #align function.minimal_period_apply_iterate Function.minimal_period_apply_iterate
 
-theorem minimal_period_apply (hx : x ∈ PeriodicPts f) : minimalPeriod f (f x) = minimalPeriod f x :=
+theorem minimal_period_apply (hx : x ∈ periodicPts f) : minimalPeriod f (f x) = minimalPeriod f x :=
   minimal_period_apply_iterate hx 1
 #align function.minimal_period_apply Function.minimal_period_apply
 
@@ -460,7 +460,7 @@ theorem minimal_period_iterate_eq_div_gcd (h : n ≠ 0) :
   minimal_period_iterate_eq_div_gcd_aux <| gcd_pos_of_pos_right _ (Nat.pos_of_ne_zero h)
 #align function.minimal_period_iterate_eq_div_gcd Function.minimal_period_iterate_eq_div_gcd
 
-theorem minimal_period_iterate_eq_div_gcd' (h : x ∈ PeriodicPts f) :
+theorem minimal_period_iterate_eq_div_gcd' (h : x ∈ periodicPts f) :
     minimalPeriod (f^[n]) x = minimalPeriod f x / Nat.gcd (minimalPeriod f x) n :=
   minimal_period_iterate_eq_div_gcd_aux <| gcd_pos_of_pos_left n (minimal_period_pos_iff_mem_periodic_pts.mpr h)
 #align function.minimal_period_iterate_eq_div_gcd' Function.minimal_period_iterate_eq_div_gcd'
@@ -491,17 +491,17 @@ theorem periodic_orbit_length : (periodicOrbit f x).length = minimalPeriod f x :
 #align function.periodic_orbit_length Function.periodic_orbit_length
 
 @[simp]
-theorem periodic_orbit_eq_nil_iff_not_periodic_pt : periodicOrbit f x = Cycle.nil ↔ x ∉ PeriodicPts f := by
+theorem periodic_orbit_eq_nil_iff_not_periodic_pt : periodicOrbit f x = Cycle.nil ↔ x ∉ periodicPts f := by
   simp [periodic_orbit]
   exact minimal_period_eq_zero_iff_nmem_periodic_pts
 #align function.periodic_orbit_eq_nil_iff_not_periodic_pt Function.periodic_orbit_eq_nil_iff_not_periodic_pt
 
-theorem periodic_orbit_eq_nil_of_not_periodic_pt (h : x ∉ PeriodicPts f) : periodicOrbit f x = Cycle.nil :=
+theorem periodic_orbit_eq_nil_of_not_periodic_pt (h : x ∉ periodicPts f) : periodicOrbit f x = Cycle.nil :=
   periodic_orbit_eq_nil_iff_not_periodic_pt.2 h
 #align function.periodic_orbit_eq_nil_of_not_periodic_pt Function.periodic_orbit_eq_nil_of_not_periodic_pt
 
 @[simp]
-theorem mem_periodic_orbit_iff (hx : x ∈ PeriodicPts f) : y ∈ periodicOrbit f x ↔ ∃ n, (f^[n]) x = y := by
+theorem mem_periodic_orbit_iff (hx : x ∈ periodicPts f) : y ∈ periodicOrbit f x ↔ ∃ n, (f^[n]) x = y := by
   simp only [periodic_orbit, Cycle.mem_coe_iff, List.mem_map, List.mem_range]
   use fun ⟨a, ha, ha'⟩ => ⟨a, ha'⟩
   rintro ⟨n, rfl⟩
@@ -510,12 +510,12 @@ theorem mem_periodic_orbit_iff (hx : x ∈ PeriodicPts f) : y ∈ periodicOrbit 
 #align function.mem_periodic_orbit_iff Function.mem_periodic_orbit_iff
 
 @[simp]
-theorem iterate_mem_periodic_orbit (hx : x ∈ PeriodicPts f) (n : ℕ) : (f^[n]) x ∈ periodicOrbit f x :=
+theorem iterate_mem_periodic_orbit (hx : x ∈ periodicPts f) (n : ℕ) : (f^[n]) x ∈ periodicOrbit f x :=
   (mem_periodic_orbit_iff hx).2 ⟨n, rfl⟩
 #align function.iterate_mem_periodic_orbit Function.iterate_mem_periodic_orbit
 
 @[simp]
-theorem self_mem_periodic_orbit (hx : x ∈ PeriodicPts f) : x ∈ periodicOrbit f x :=
+theorem self_mem_periodic_orbit (hx : x ∈ periodicPts f) : x ∈ periodicOrbit f x :=
   iterate_mem_periodic_orbit hx 0
 #align function.self_mem_periodic_orbit Function.self_mem_periodic_orbit
 
@@ -526,7 +526,7 @@ theorem nodup_periodic_orbit : (periodicOrbit f x).Nodup := by
   rwa [eq_iff_lt_minimal_period_of_iterate_eq hm hn] at hmn
 #align function.nodup_periodic_orbit Function.nodup_periodic_orbit
 
-theorem periodic_orbit_apply_iterate_eq (hx : x ∈ PeriodicPts f) (n : ℕ) :
+theorem periodic_orbit_apply_iterate_eq (hx : x ∈ periodicPts f) (n : ℕ) :
     periodicOrbit f ((f^[n]) x) = periodicOrbit f x :=
   Eq.symm <|
     Cycle.coe_eq_coe.2 <|
@@ -539,7 +539,7 @@ theorem periodic_orbit_apply_iterate_eq (hx : x ∈ PeriodicPts f) (n : ℕ) :
           ⟩
 #align function.periodic_orbit_apply_iterate_eq Function.periodic_orbit_apply_iterate_eq
 
-theorem periodic_orbit_apply_eq (hx : x ∈ PeriodicPts f) : periodicOrbit f (f x) = periodicOrbit f x :=
+theorem periodic_orbit_apply_eq (hx : x ∈ periodicPts f) : periodicOrbit f (f x) = periodicOrbit f x :=
   periodic_orbit_apply_iterate_eq hx 1
 #align function.periodic_orbit_apply_eq Function.periodic_orbit_apply_eq
 
@@ -568,7 +568,7 @@ theorem periodic_orbit_chain (r : α → α → Prop) {f : α → α} {x : α} :
     
 #align function.periodic_orbit_chain Function.periodic_orbit_chain
 
-theorem periodic_orbit_chain' (r : α → α → Prop) {f : α → α} {x : α} (hx : x ∈ PeriodicPts f) :
+theorem periodic_orbit_chain' (r : α → α → Prop) {f : α → α} {x : α} (hx : x ∈ periodicPts f) :
     (periodicOrbit f x).Chain r ↔ ∀ n, r ((f^[n]) x) ((f^[n + 1]) x) := by
   rw [periodic_orbit_chain r]
   refine' ⟨fun H n => _, fun H n _ => H n⟩

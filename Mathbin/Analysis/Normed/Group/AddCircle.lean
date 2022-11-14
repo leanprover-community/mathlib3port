@@ -172,19 +172,19 @@ theorem norm_coe_eq_abs_iff {x : ℝ} (hp : p ≠ 0) : ∥(x : AddCircle p)∥ =
 open Metric
 
 theorem closed_ball_eq_univ_of_half_period_le (hp : p ≠ 0) (x : AddCircle p) {ε : ℝ} (hε : |p| / 2 ≤ ε) :
-    ClosedBall x ε = univ :=
+    closedBall x ε = univ :=
   eq_univ_iff_forall.mpr fun x => by
     simpa only [mem_closed_ball, dist_eq_norm] using (norm_le_half_period p hp).trans hε
 #align add_circle.closed_ball_eq_univ_of_half_period_le AddCircle.closed_ball_eq_univ_of_half_period_le
 
 @[simp]
 theorem coe_real_preimage_closed_ball_period_zero (x ε : ℝ) :
-    coe ⁻¹' ClosedBall (x : AddCircle (0 : ℝ)) ε = ClosedBall x ε := by
+    coe ⁻¹' closedBall (x : AddCircle (0 : ℝ)) ε = closedBall x ε := by
   ext y <;> simp [dist_eq_norm, ← QuotientAddGroup.coe_sub]
 #align add_circle.coe_real_preimage_closed_ball_period_zero AddCircle.coe_real_preimage_closed_ball_period_zero
 
 theorem coe_real_preimage_closed_ball_eq_Union (x ε : ℝ) :
-    coe ⁻¹' ClosedBall (x : AddCircle p) ε = ⋃ z : ℤ, ClosedBall (x + z • p) ε := by
+    coe ⁻¹' closedBall (x : AddCircle p) ε = ⋃ z : ℤ, closedBall (x + z • p) ε := by
   rcases eq_or_ne p 0 with (rfl | hp)
   · simp [Union_const]
     
@@ -198,8 +198,8 @@ theorem coe_real_preimage_closed_ball_eq_Union (x ε : ℝ) :
   exact (round_le (p⁻¹ * (y - x)) n).trans hn
 #align add_circle.coe_real_preimage_closed_ball_eq_Union AddCircle.coe_real_preimage_closed_ball_eq_Union
 
-theorem coe_real_preimage_closed_ball_inter_eq {x ε : ℝ} (s : Set ℝ) (hs : s ⊆ ClosedBall x (|p| / 2)) :
-    coe ⁻¹' ClosedBall (x : AddCircle p) ε ∩ s = if ε < |p| / 2 then ClosedBall x ε ∩ s else s := by
+theorem coe_real_preimage_closed_ball_inter_eq {x ε : ℝ} (s : Set ℝ) (hs : s ⊆ closedBall x (|p| / 2)) :
+    coe ⁻¹' closedBall (x : AddCircle p) ε ∩ s = if ε < |p| / 2 then closedBall x ε ∩ s else s := by
   cases' le_or_lt (|p| / 2) ε with hε hε
   · rcases eq_or_ne p 0 with (rfl | hp)
     · simp only [abs_zero, zero_div] at hε

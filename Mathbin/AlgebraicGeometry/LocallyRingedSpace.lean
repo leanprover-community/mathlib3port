@@ -55,7 +55,7 @@ def toRingedSpace : RingedSpaceCat :=
 
 /-- The underlying topological space of a locally ringed space. -/
 def toTop : TopCat :=
-  X.1.Carrier
+  X.1.carrier
 #align algebraic_geometry.LocallyRingedSpace.to_Top AlgebraicGeometry.LocallyRingedSpaceCat.toTop
 
 instance : CoeSort LocallyRingedSpaceCat (Type u) :=
@@ -289,7 +289,7 @@ theorem preimage_basic_open {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) {U : Ope
 
 -- This actually holds for all ringed spaces with nontrivial stalks.
 @[simp]
-theorem basic_open_zero (X : LocallyRingedSpaceCat) (U : Opens X.Carrier) :
+theorem basic_open_zero (X : LocallyRingedSpaceCat) (U : Opens X.carrier) :
     X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ := by
   ext
   simp only [Set.mem_empty_iff_false, TopologicalSpace.Opens.mem_coe, opens.coe_bot, iff_false_iff,
@@ -298,7 +298,7 @@ theorem basic_open_zero (X : LocallyRingedSpaceCat) (U : Opens X.Carrier) :
   exact @zero_ne_one (X.presheaf.stalk y) _ _ h
 #align algebraic_geometry.LocallyRingedSpace.basic_open_zero AlgebraicGeometry.LocallyRingedSpaceCat.basic_open_zero
 
-instance component_nontrivial (X : LocallyRingedSpaceCat) (U : Opens X.Carrier) [hU : Nonempty U] :
+instance component_nontrivial (X : LocallyRingedSpaceCat) (U : Opens X.carrier) [hU : Nonempty U] :
     Nontrivial (X.Presheaf.obj <| op U) :=
   (X.toPresheafedSpace.Presheaf.germ hU.some).domain_nontrivial
 #align

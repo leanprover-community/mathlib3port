@@ -7,6 +7,7 @@ import Mathbin.Data.Nat.Order.Basic
 import Mathbin.Algebra.Order.Group.Abs
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Hom.Ring
+import Mathbin.Algebra.Ring.Commute
 
 /-!
 # Cast of natural numbers (additional theorems)

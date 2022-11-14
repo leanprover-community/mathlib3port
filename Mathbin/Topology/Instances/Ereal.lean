@@ -237,11 +237,11 @@ theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} : (Continuous fun a =
 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
-theorem nhds_top : 𝓝 (⊤ : Ereal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (IoiCat a) :=
+theorem nhds_top : 𝓝 (⊤ : Ereal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
 #align ereal.nhds_top Ereal.nhds_top
 
-theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (IoiCat a) := by
+theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (ioi a) := by
   rw [nhds_top]
   apply le_antisymm
   · exact infi_mono' fun x => ⟨x, by simp⟩
@@ -257,7 +257,7 @@ theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (IoiCat a) := by
     
 #align ereal.nhds_top' Ereal.nhds_top'
 
-theorem mem_nhds_top_iff {s : Set Ereal} : s ∈ 𝓝 (⊤ : Ereal) ↔ ∃ y : ℝ, IoiCat (y : Ereal) ⊆ s := by
+theorem mem_nhds_top_iff {s : Set Ereal} : s ∈ 𝓝 (⊤ : Ereal) ↔ ∃ y : ℝ, ioi (y : Ereal) ⊆ s := by
   rw [nhds_top', mem_infi_of_directed]
   · rfl
     
@@ -270,11 +270,11 @@ theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → Ereal} {f : Filter �
 #align ereal.tendsto_nhds_top_iff_real Ereal.tendsto_nhds_top_iff_real
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
-theorem nhds_bot : 𝓝 (⊥ : Ereal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (IioCat a) :=
+theorem nhds_bot : 𝓝 (⊥ : Ereal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 #align ereal.nhds_bot Ereal.nhds_bot
 
-theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (IioCat a) := by
+theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (iio a) := by
   rw [nhds_bot]
   apply le_antisymm
   · exact infi_mono' fun x => ⟨x, by simp⟩
@@ -290,7 +290,7 @@ theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (IioCat a) := by
     
 #align ereal.nhds_bot' Ereal.nhds_bot'
 
-theorem mem_nhds_bot_iff {s : Set Ereal} : s ∈ 𝓝 (⊥ : Ereal) ↔ ∃ y : ℝ, IioCat (y : Ereal) ⊆ s := by
+theorem mem_nhds_bot_iff {s : Set Ereal} : s ∈ 𝓝 (⊥ : Ereal) ↔ ∃ y : ℝ, iio (y : Ereal) ⊆ s := by
   rw [nhds_bot', mem_infi_of_directed]
   · rfl
     

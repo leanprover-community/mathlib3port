@@ -69,7 +69,7 @@ theorem ne_zero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
 #align ne_zero_of_mem_circle ne_zero_of_mem_circle
 
 instance : CommGroup circle :=
-  Metric.Sphere.commGroup
+  Metric.sphere.commGroup
 
 @[simp]
 theorem coe_inv_circle (z : circle) : ↑z⁻¹ = (z : ℂ)⁻¹ :=
@@ -97,10 +97,10 @@ theorem circle.to_units_apply (z : circle) : circle.toUnits z = Units.mk0 z (ne_
 #align circle.to_units_apply circle.to_units_apply
 
 instance : CompactSpace circle :=
-  Metric.Sphere.compact_space _ _
+  Metric.sphere.compact_space _ _
 
 instance : TopologicalGroup circle :=
-  Metric.Sphere.topological_group
+  Metric.sphere.topological_group
 
 /-- If `z` is a nonzero complex number, then `conj z / z` belongs to the unit circle. -/
 @[simps]

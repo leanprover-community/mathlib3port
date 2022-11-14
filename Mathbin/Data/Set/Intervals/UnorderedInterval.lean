@@ -39,12 +39,12 @@ section LinearOrder
 variable {α : Type u} [LinearOrder α] {a a₁ a₂ b b₁ b₂ c x : α}
 
 /-- `interval a b` is the set of elements lying between `a` and `b`, with `a` and `b` included. -/
-def Interval (a b : α) :=
-  IccCat (min a b) (max a b)
-#align set.interval Set.Interval
+def interval (a b : α) :=
+  icc (min a b) (max a b)
+#align set.interval Set.interval
 
 -- mathport name: set.interval
-localized [Interval] notation "[" a ", " b "]" => Set.Interval a b
+localized [Interval] notation "[" a ", " b "]" => Set.interval a b
 
 @[simp]
 theorem dual_interval (a b : α) : [toDual a, toDual b] = of_dual ⁻¹' [a, b] :=
@@ -52,33 +52,33 @@ theorem dual_interval (a b : α) : [toDual a, toDual b] = of_dual ⁻¹' [a, b] 
 #align set.dual_interval Set.dual_interval
 
 @[simp]
-theorem interval_of_le (h : a ≤ b) : [a, b] = IccCat a b := by rw [interval, min_eq_left h, max_eq_right h]
+theorem interval_of_le (h : a ≤ b) : [a, b] = icc a b := by rw [interval, min_eq_left h, max_eq_right h]
 #align set.interval_of_le Set.interval_of_le
 
 @[simp]
-theorem interval_of_ge (h : b ≤ a) : [a, b] = IccCat b a := by rw [interval, min_eq_right h, max_eq_left h]
+theorem interval_of_ge (h : b ≤ a) : [a, b] = icc b a := by rw [interval, min_eq_right h, max_eq_left h]
 #align set.interval_of_ge Set.interval_of_ge
 
 theorem interval_swap (a b : α) : [a, b] = [b, a] := by rw [interval, interval, min_comm, max_comm]
 #align set.interval_swap Set.interval_swap
 
-theorem interval_of_lt (h : a < b) : [a, b] = IccCat a b :=
+theorem interval_of_lt (h : a < b) : [a, b] = icc a b :=
   interval_of_le (le_of_lt h)
 #align set.interval_of_lt Set.interval_of_lt
 
-theorem interval_of_gt (h : b < a) : [a, b] = IccCat b a :=
+theorem interval_of_gt (h : b < a) : [a, b] = icc b a :=
   interval_of_ge (le_of_lt h)
 #align set.interval_of_gt Set.interval_of_gt
 
-theorem interval_of_not_le (h : ¬a ≤ b) : [a, b] = IccCat b a :=
+theorem interval_of_not_le (h : ¬a ≤ b) : [a, b] = icc b a :=
   interval_of_gt (lt_of_not_ge h)
 #align set.interval_of_not_le Set.interval_of_not_le
 
-theorem interval_of_not_ge (h : ¬b ≤ a) : [a, b] = IccCat a b :=
+theorem interval_of_not_ge (h : ¬b ≤ a) : [a, b] = icc a b :=
   interval_of_lt (lt_of_not_ge h)
 #align set.interval_of_not_ge Set.interval_of_not_ge
 
-theorem interval_eq_union : [a, b] = IccCat a b ∪ IccCat b a := by rw [Icc_union_Icc', max_comm] <;> rfl
+theorem interval_eq_union : [a, b] = icc a b ∪ icc b a := by rw [Icc_union_Icc', max_comm] <;> rfl
 #align set.interval_eq_union Set.interval_eq_union
 
 theorem mem_interval : a ∈ [b, c] ↔ b ≤ a ∧ a ≤ c ∨ c ≤ a ∧ a ≤ b := by simp [interval_eq_union]
@@ -105,11 +105,11 @@ theorem left_mem_interval : a ∈ [a, b] := by simp [mem_interval, le_total]
 theorem right_mem_interval : b ∈ [a, b] := by simp [mem_interval, le_total]
 #align set.right_mem_interval Set.right_mem_interval
 
-theorem Icc_subset_interval : IccCat a b ⊆ [a, b] :=
+theorem Icc_subset_interval : icc a b ⊆ [a, b] :=
   Icc_subset_Icc (min_le_left _ _) (le_max_right _ _)
 #align set.Icc_subset_interval Set.Icc_subset_interval
 
-theorem Icc_subset_interval' : IccCat b a ⊆ [a, b] := by
+theorem Icc_subset_interval' : icc b a ⊆ [a, b] := by
   rw [interval_swap]
   apply Icc_subset_interval
 #align set.Icc_subset_interval' Set.Icc_subset_interval'
@@ -134,7 +134,7 @@ theorem interval_subset_interval (h₁ : a₁ ∈ [a₂, b₂]) (h₂ : b₁ ∈
   Icc_subset_Icc (le_min h₁.1 h₂.1) (max_le h₁.2 h₂.2)
 #align set.interval_subset_interval Set.interval_subset_interval
 
-theorem interval_subset_Icc (ha : a₁ ∈ IccCat a₂ b₂) (hb : b₁ ∈ IccCat a₂ b₂) : [a₁, b₁] ⊆ IccCat a₂ b₂ :=
+theorem interval_subset_Icc (ha : a₁ ∈ icc a₂ b₂) (hb : b₁ ∈ icc a₂ b₂) : [a₁, b₁] ⊆ icc a₂ b₂ :=
   Icc_subset_Icc (le_min ha.1 hb.1) (max_le ha.2 hb.2)
 #align set.interval_subset_Icc Set.interval_subset_Icc
 
@@ -173,12 +173,12 @@ theorem eq_of_mem_interval_of_mem_interval' : b ∈ [a, c] → c ∈ [a, b] → 
   simpa only [interval_swap a] using eq_of_mem_interval_of_mem_interval
 #align set.eq_of_mem_interval_of_mem_interval' Set.eq_of_mem_interval_of_mem_interval'
 
-theorem interval_injective_right (a : α) : Injective fun b => Interval b a := fun b c h => by
+theorem interval_injective_right (a : α) : Injective fun b => interval b a := fun b c h => by
   rw [ext_iff] at h
   exact eq_of_mem_interval_of_mem_interval ((h _).1 left_mem_interval) ((h _).2 left_mem_interval)
 #align set.interval_injective_right Set.interval_injective_right
 
-theorem interval_injective_left (a : α) : Injective (Interval a) := by
+theorem interval_injective_left (a : α) : Injective (interval a) := by
   simpa only [interval_swap] using interval_injective_right a
 #align set.interval_injective_left Set.interval_injective_left
 
@@ -194,22 +194,22 @@ theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) : BddBelow s ∧ Bd
 #align set.bdd_below_bdd_above_iff_subset_interval Set.bdd_below_bdd_above_iff_subset_interval
 
 /-- The open-closed interval with unordered bounds. -/
-def IntervalOc : α → α → Set α := fun a b => IocCat (min a b) (max a b)
-#align set.interval_oc Set.IntervalOc
+def intervalOc : α → α → Set α := fun a b => ioc (min a b) (max a b)
+#align set.interval_oc Set.intervalOc
 
 -- mathport name: exprΙ
 -- Below is a capital iota
-localized [Interval] notation "Ι" => Set.IntervalOc
+localized [Interval] notation "Ι" => Set.intervalOc
 
 @[simp]
-theorem interval_oc_of_le (h : a ≤ b) : Ι a b = IocCat a b := by simp [interval_oc, h]
+theorem interval_oc_of_le (h : a ≤ b) : Ι a b = ioc a b := by simp [interval_oc, h]
 #align set.interval_oc_of_le Set.interval_oc_of_le
 
 @[simp]
-theorem interval_oc_of_lt (h : b < a) : Ι a b = IocCat b a := by simp [interval_oc, le_of_lt h]
+theorem interval_oc_of_lt (h : b < a) : Ι a b = ioc b a := by simp [interval_oc, le_of_lt h]
 #align set.interval_oc_of_lt Set.interval_oc_of_lt
 
-theorem interval_oc_eq_union : Ι a b = IocCat a b ∪ IocCat b a := by cases le_total a b <;> simp [interval_oc, *]
+theorem interval_oc_eq_union : Ι a b = ioc a b ∪ ioc b a := by cases le_total a b <;> simp [interval_oc, *]
 #align set.interval_oc_eq_union Set.interval_oc_eq_union
 
 theorem mem_interval_oc : a ∈ Ι b c ↔ b < a ∧ a ≤ c ∨ c < a ∧ a ≤ b := by
@@ -229,8 +229,8 @@ theorem left_mem_interval_oc : a ∈ Ι a b ↔ b < a := by simp [mem_interval_o
 theorem right_mem_interval_oc : b ∈ Ι a b ↔ a < b := by simp [mem_interval_oc]
 #align set.right_mem_interval_oc Set.right_mem_interval_oc
 
-theorem forall_interval_oc_iff {P : α → Prop} : (∀ x ∈ Ι a b, P x) ↔ (∀ x ∈ IocCat a b, P x) ∧ ∀ x ∈ IocCat b a, P x :=
-  by simp only [interval_oc_eq_union, mem_union, or_imp, forall_and]
+theorem forall_interval_oc_iff {P : α → Prop} : (∀ x ∈ Ι a b, P x) ↔ (∀ x ∈ ioc a b, P x) ∧ ∀ x ∈ ioc b a, P x := by
+  simp only [interval_oc_eq_union, mem_union, or_imp, forall_and]
 #align set.forall_interval_oc_iff Set.forall_interval_oc_iff
 
 theorem interval_oc_subset_interval_oc_of_interval_subset_interval {a b c d : α} (h : [a, b] ⊆ [c, d]) :
@@ -242,11 +242,11 @@ theorem interval_oc_subset_interval_oc_of_interval_subset_interval {a b c d : α
 theorem interval_oc_swap (a b : α) : Ι a b = Ι b a := by simp only [interval_oc, min_comm a b, max_comm a b]
 #align set.interval_oc_swap Set.interval_oc_swap
 
-theorem Ioc_subset_interval_oc : IocCat a b ⊆ Ι a b :=
+theorem Ioc_subset_interval_oc : ioc a b ⊆ Ι a b :=
   Ioc_subset_Ioc (min_le_left _ _) (le_max_right _ _)
 #align set.Ioc_subset_interval_oc Set.Ioc_subset_interval_oc
 
-theorem Ioc_subset_interval_oc' : IocCat a b ⊆ Ι b a :=
+theorem Ioc_subset_interval_oc' : ioc a b ⊆ Ι b a :=
   Ioc_subset_Ioc (min_le_right _ _) (le_max_left _ _)
 #align set.Ioc_subset_interval_oc' Set.Ioc_subset_interval_oc'
 

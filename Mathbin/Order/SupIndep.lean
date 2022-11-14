@@ -291,7 +291,7 @@ theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht
   exact (ht i').mono_right (bsupr_mono fun j' hij => mt (congr_arg f) hij)
 #align complete_lattice.independent.comp' CompleteLattice.Independent.comp'
 
-theorem Independent.setIndependentRange (ht : Independent t) : set_independent <| Range t := by
+theorem Independent.setIndependentRange (ht : Independent t) : set_independent <| range t := by
   rw [set_independent_iff]
   rw [← coe_comp_range_factorization t] at ht
   exact ht.comp' surjective_onto_range

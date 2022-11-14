@@ -449,7 +449,7 @@ theorem to_real_coe_eq_self_iff {θ : ℝ} : (θ : Angle).toReal = θ ↔ -π < 
   ring_nf
 #align real.angle.to_real_coe_eq_self_iff Real.Angle.to_real_coe_eq_self_iff
 
-theorem to_real_coe_eq_self_iff_mem_Ioc {θ : ℝ} : (θ : Angle).toReal = θ ↔ θ ∈ Set.IocCat (-π) π := by
+theorem to_real_coe_eq_self_iff_mem_Ioc {θ : ℝ} : (θ : Angle).toReal = θ ↔ θ ∈ Set.ioc (-π) π := by
   rw [to_real_coe_eq_self_iff, ← Set.mem_Ioc]
 #align real.angle.to_real_coe_eq_self_iff_mem_Ioc Real.Angle.to_real_coe_eq_self_iff_mem_Ioc
 
@@ -487,7 +487,7 @@ theorem abs_to_real_le_pi (θ : Angle) : |θ.toReal| ≤ π :=
   abs_le.2 ⟨(neg_pi_lt_to_real _).le, to_real_le_pi _⟩
 #align real.angle.abs_to_real_le_pi Real.Angle.abs_to_real_le_pi
 
-theorem to_real_mem_Ioc (θ : Angle) : θ.toReal ∈ Set.IocCat (-π) π :=
+theorem to_real_mem_Ioc (θ : Angle) : θ.toReal ∈ Set.ioc (-π) π :=
   ⟨neg_pi_lt_to_real _, to_real_le_pi _⟩
 #align real.angle.to_real_mem_Ioc Real.Angle.to_real_mem_Ioc
 
@@ -824,7 +824,7 @@ or `π` on that set. Then the values of the function on that set all have the sa
 theorem sign_eq_of_continuous_on {α : Type _} [TopologicalSpace α] {f : α → Angle} {s : Set α} {x y : α}
     (hc : IsConnected s) (hf : ContinuousOn f s) (hs : ∀ z ∈ s, f z ≠ 0 ∧ f z ≠ π) (hx : x ∈ s) (hy : y ∈ s) :
     (f y).sign = (f x).sign :=
-  (hc.Image _ (hf.angle_sign_comp hs)).IsPreconnected.Subsingleton (Set.mem_image_of_mem _ hy)
+  (hc.image _ (hf.angle_sign_comp hs)).IsPreconnected.Subsingleton (Set.mem_image_of_mem _ hy)
     (Set.mem_image_of_mem _ hx)
 #align real.angle.sign_eq_of_continuous_on Real.Angle.sign_eq_of_continuous_on
 

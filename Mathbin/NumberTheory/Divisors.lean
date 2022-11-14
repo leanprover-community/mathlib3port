@@ -239,13 +239,13 @@ theorem map_swap_divisors_antidiagonal :
 #align nat.map_swap_divisors_antidiagonal Nat.map_swap_divisors_antidiagonal
 
 @[simp]
-theorem image_fst_divisors_antidiagonal : (divisorsAntidiagonal n).Image Prod.fst = divisors n := by
+theorem image_fst_divisors_antidiagonal : (divisorsAntidiagonal n).image Prod.fst = divisors n := by
   ext
   simp [Dvd.Dvd, @eq_comm _ n (_ * _)]
 #align nat.image_fst_divisors_antidiagonal Nat.image_fst_divisors_antidiagonal
 
 @[simp]
-theorem image_snd_divisors_antidiagonal : (divisorsAntidiagonal n).Image Prod.snd = divisors n := by
+theorem image_snd_divisors_antidiagonal : (divisorsAntidiagonal n).image Prod.snd = divisors n := by
   rw [← map_swap_divisors_antidiagonal, map_eq_image, image_image]
   exact image_fst_divisors_antidiagonal
 #align nat.image_snd_divisors_antidiagonal Nat.image_snd_divisors_antidiagonal

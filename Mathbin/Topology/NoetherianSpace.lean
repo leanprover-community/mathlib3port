@@ -70,7 +70,7 @@ instance NoetherianSpace.set [h : NoetherianSpace α] (s : Set α) : NoetherianS
   rintro ⟨_, x, hx, rfl⟩ hx' hx''
   refine' le_antisymm (Set.preimage_mono (_ : (⟨x, hx⟩ : opens α) ≤ U)) hx''
   refine' sup_eq_right.mp (hU' (⟨x, hx⟩ ⊔ U) _ le_sup_right)
-  dsimp [Set.Preimage]
+  dsimp [Set.preimage]
   rw [map_sup]
   convert hx'
   exact sup_eq_left.mpr hx''
@@ -328,7 +328,7 @@ theorem noetherian_space_of_surjective [NoetherianSpace α] (f : α → β) (hf 
   rw [noetherian_space_iff_opens]
   intro s
   obtain ⟨t, e⟩ := set.image_surjective.mpr hf' s
-  exact e ▸ (noetherian_space.is_compact t).Image hf
+  exact e ▸ (noetherian_space.is_compact t).image hf
 #align topological_space.noetherian_space_of_surjective TopologicalSpace.noetherian_space_of_surjective
 
 theorem noetherian_space_iff_of_homeomorph (f : α ≃ₜ β) : NoetherianSpace α ↔ NoetherianSpace β :=
@@ -336,7 +336,7 @@ theorem noetherian_space_iff_of_homeomorph (f : α ≃ₜ β) : NoetherianSpace 
     @noetherian_space_of_surjective _ _ h f.symm f.symm.Continuous f.symm.Surjective⟩
 #align topological_space.noetherian_space_iff_of_homeomorph TopologicalSpace.noetherian_space_iff_of_homeomorph
 
-theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continuous f) : NoetherianSpace (Set.Range f) :=
+theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continuous f) : NoetherianSpace (Set.range f) :=
   noetherian_space_of_surjective (Set.codRestrict f _ Set.mem_range_self) (by continuity) fun ⟨a, b, h⟩ =>
     ⟨b, Subtype.ext h⟩
 #align topological_space.noetherian_space.range TopologicalSpace.NoetherianSpace.range
@@ -356,7 +356,7 @@ theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_
 #align topological_space.noetherian_space_set_iff TopologicalSpace.noetherian_space_set_iff
 
 @[simp]
-theorem noetherian_univ_iff : NoetherianSpace (Set.Univ : Set α) ↔ NoetherianSpace α :=
+theorem noetherian_univ_iff : NoetherianSpace (Set.univ : Set α) ↔ NoetherianSpace α :=
   noetherian_space_iff_of_homeomorph (Homeomorph.Set.univ α)
 #align topological_space.noetherian_univ_iff TopologicalSpace.noetherian_univ_iff
 
@@ -378,7 +378,7 @@ attribute [local instance] noetherian_space.discrete
 
 /-- Spaces that are both Noetherian and Hausdorff is finite. -/
 theorem NoetherianSpace.finite [NoetherianSpace α] [T2Space α] : Finite α := by
-  letI : Fintype α := Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.Univ).finite_of_discrete
+  letI : Fintype α := Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.univ).finite_of_discrete
   infer_instance
 #align topological_space.noetherian_space.finite TopologicalSpace.NoetherianSpace.finite
 
@@ -412,9 +412,9 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
 #align
   topological_space.noetherian_space.exists_finset_irreducible TopologicalSpace.NoetherianSpace.exists_finset_irreducible
 
-theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] : (IrreducibleComponents α).Finite := by
+theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] : (irreducibleComponents α).Finite := by
   classical obtain ⟨S, hS₁, hS₂⟩ := noetherian_space.exists_finset_irreducible (⊤ : closeds α)
-    · exact Set.Finite.subset ((Set.Finite.intro inferInstance).Image _) this
+    · exact Set.Finite.subset ((Set.Finite.intro inferInstance).image _) this
       
     obtain ⟨z, hz, hz'⟩ : ∃ (z : Set α)(H : z ∈ Finset.image coe S), K ⊆ z
     obtain ⟨s, hs, e⟩ := finset.mem_image.mp hz

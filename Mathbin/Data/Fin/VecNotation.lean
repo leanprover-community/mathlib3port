@@ -140,12 +140,12 @@ theorem cons_head_tail (u : Fin m.succ → α) : vecCons (vecHead u) (vecTail u)
 #align matrix.cons_head_tail Matrix.cons_head_tail
 
 @[simp]
-theorem range_cons (x : α) (u : Fin n → α) : Set.Range (vecCons x u) = {x} ∪ Set.Range u :=
+theorem range_cons (x : α) (u : Fin n → α) : Set.range (vecCons x u) = {x} ∪ Set.range u :=
   Set.ext fun y => by simp [Fin.exists_fin_succ, eq_comm]
 #align matrix.range_cons Matrix.range_cons
 
 @[simp]
-theorem range_empty (u : Fin 0 → α) : Set.Range u = ∅ :=
+theorem range_empty (u : Fin 0 → α) : Set.range u = ∅ :=
   Set.range_eq_empty _
 #align matrix.range_empty Matrix.range_empty
 

@@ -63,7 +63,7 @@ theorem to_seminorm_apply {f : E →ₗ[𝕜] 𝕜} {x : E} : f.toSeminorm x = �
   rfl
 #align linear_map.to_seminorm_apply LinearMap.to_seminorm_apply
 
-theorem to_seminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} : Seminorm.Ball f.toSeminorm 0 r = { x : E | ∥f x∥ < r } := by
+theorem to_seminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} : Seminorm.ball f.toSeminorm 0 r = { x : E | ∥f x∥ < r } := by
   simp only [Seminorm.ball_zero_eq, to_seminorm_apply]
 #align linear_map.to_seminorm_ball_zero LinearMap.to_seminorm_ball_zero
 

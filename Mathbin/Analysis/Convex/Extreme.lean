@@ -54,14 +54,14 @@ variable [OrderedSemiring 𝕜] [AddCommMonoid E] [HasSmul 𝕜 E]
 /-- A set `B` is an extreme subset of `A` if `B ⊆ A` and all points of `B` only belong to open
 segments whose ends are in `B`. -/
 def IsExtreme (A B : Set E) : Prop :=
-  B ⊆ A ∧ ∀ ⦃x₁⦄, x₁ ∈ A → ∀ ⦃x₂⦄, x₂ ∈ A → ∀ ⦃x⦄, x ∈ B → x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ ∈ B ∧ x₂ ∈ B
+  B ⊆ A ∧ ∀ ⦃x₁⦄, x₁ ∈ A → ∀ ⦃x₂⦄, x₂ ∈ A → ∀ ⦃x⦄, x ∈ B → x ∈ openSegment 𝕜 x₁ x₂ → x₁ ∈ B ∧ x₂ ∈ B
 #align is_extreme IsExtreme
 
 /-- A point `x` is an extreme point of a set `A` if `x` belongs to no open segment with ends in
 `A`, except for the obvious `open_segment x x`. -/
-def Set.ExtremePoints (A : Set E) : Set E :=
-  { x ∈ A | ∀ ⦃x₁⦄, x₁ ∈ A → ∀ ⦃x₂⦄, x₂ ∈ A → x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x }
-#align set.extreme_points Set.ExtremePoints
+def Set.extremePoints (A : Set E) : Set E :=
+  { x ∈ A | ∀ ⦃x₁⦄, x₁ ∈ A → ∀ ⦃x₂⦄, x₂ ∈ A → x ∈ openSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x }
+#align set.extreme_points Set.extremePoints
 
 @[refl]
 protected theorem IsExtreme.refl (A : Set E) : IsExtreme 𝕜 A A :=
@@ -131,12 +131,12 @@ theorem is_extreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 theorem extreme_points_def :
-    x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ ∀ (x₁ x₂) (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
+    x ∈ A.extremePoints 𝕜 ↔ x ∈ A ∧ ∀ (x₁ x₂) (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ openSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
   Iff.rfl
 #align extreme_points_def extreme_points_def
 
 /-- x is an extreme point to A iff {x} is an extreme set of A. -/
-theorem mem_extreme_points_iff_extreme_singleton : x ∈ A.ExtremePoints 𝕜 ↔ IsExtreme 𝕜 A {x} := by
+theorem mem_extreme_points_iff_extreme_singleton : x ∈ A.extremePoints 𝕜 ↔ IsExtreme 𝕜 A {x} := by
   refine' ⟨_, fun hx => ⟨singleton_subset_iff.1 hx.1, fun x₁ hx₁ x₂ hx₂ => hx.2 hx₁ hx₂ rfl⟩⟩
   rintro ⟨hxA, hAx⟩
   use singleton_subset_iff.2 hxA
@@ -144,30 +144,30 @@ theorem mem_extreme_points_iff_extreme_singleton : x ∈ A.ExtremePoints 𝕜 �
   exact hAx hx₁A hx₂A
 #align mem_extreme_points_iff_extreme_singleton mem_extreme_points_iff_extreme_singleton
 
-theorem extreme_points_subset : A.ExtremePoints 𝕜 ⊆ A := fun x hx => hx.1
+theorem extreme_points_subset : A.extremePoints 𝕜 ⊆ A := fun x hx => hx.1
 #align extreme_points_subset extreme_points_subset
 
 @[simp]
-theorem extreme_points_empty : (∅ : Set E).ExtremePoints 𝕜 = ∅ :=
+theorem extreme_points_empty : (∅ : Set E).extremePoints 𝕜 = ∅ :=
   subset_empty_iff.1 extreme_points_subset
 #align extreme_points_empty extreme_points_empty
 
 @[simp]
-theorem extreme_points_singleton : ({x} : Set E).ExtremePoints 𝕜 = {x} :=
+theorem extreme_points_singleton : ({x} : Set E).extremePoints 𝕜 = {x} :=
   extreme_points_subset.antisymm <| singleton_subset_iff.2 ⟨mem_singleton x, fun x₁ hx₁ x₂ hx₂ _ => ⟨hx₁, hx₂⟩⟩
 #align extreme_points_singleton extreme_points_singleton
 
 theorem inter_extreme_points_subset_extreme_points_of_subset (hBA : B ⊆ A) :
-    B ∩ A.ExtremePoints 𝕜 ⊆ B.ExtremePoints 𝕜 := fun x ⟨hxB, hxA⟩ =>
+    B ∩ A.extremePoints 𝕜 ⊆ B.extremePoints 𝕜 := fun x ⟨hxB, hxA⟩ =>
   ⟨hxB, fun x₁ hx₁ x₂ hx₂ hx => hxA.2 (hBA hx₁) (hBA hx₂) hx⟩
 #align inter_extreme_points_subset_extreme_points_of_subset inter_extreme_points_subset_extreme_points_of_subset
 
 theorem IsExtreme.extreme_points_subset_extreme_points (hAB : IsExtreme 𝕜 A B) :
-    B.ExtremePoints 𝕜 ⊆ A.ExtremePoints 𝕜 := fun x hx =>
+    B.extremePoints 𝕜 ⊆ A.extremePoints 𝕜 := fun x hx =>
   mem_extreme_points_iff_extreme_singleton.2 (hAB.trans (mem_extreme_points_iff_extreme_singleton.1 hx))
 #align is_extreme.extreme_points_subset_extreme_points IsExtreme.extreme_points_subset_extreme_points
 
-theorem IsExtreme.extreme_points_eq (hAB : IsExtreme 𝕜 A B) : B.ExtremePoints 𝕜 = B ∩ A.ExtremePoints 𝕜 :=
+theorem IsExtreme.extreme_points_eq (hAB : IsExtreme 𝕜 A B) : B.extremePoints 𝕜 = B ∩ A.extremePoints 𝕜 :=
   Subset.antisymm (fun x hx => ⟨hx.1, hAB.extreme_points_subset_extreme_points hx⟩)
     (inter_extreme_points_subset_extreme_points_of_subset hAB.1)
 #align is_extreme.extreme_points_eq IsExtreme.extreme_points_eq
@@ -195,7 +195,7 @@ variable [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] {A B : Set E} {x : E}
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extreme_points_iff_forall_segment :
-    x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ ∀ (x₁ x₂) (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ Segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x := by
+    x ∈ A.extremePoints 𝕜 ↔ x ∈ A ∧ ∀ (x₁ x₂) (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x := by
   refine' and_congr_right fun hxA => forall₄_congr fun x₁ h₁ x₂ h₂ => _
   constructor
   · rw [← insert_endpoints_open_segment]
@@ -209,7 +209,7 @@ theorem mem_extreme_points_iff_forall_segment :
 #align mem_extreme_points_iff_forall_segment mem_extreme_points_iff_forall_segment
 
 theorem Convex.mem_extreme_points_iff_convex_diff (hA : Convex 𝕜 A) :
-    x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ Convex 𝕜 (A \ {x}) := by
+    x ∈ A.extremePoints 𝕜 ↔ x ∈ A ∧ Convex 𝕜 (A \ {x}) := by
   use fun hx => ⟨hx.1, (mem_extreme_points_iff_extreme_singleton.1 hx).convex_diff hA⟩
   rintro ⟨hxA, hAx⟩
   refine' mem_extreme_points_iff_forall_segment.2 ⟨hxA, fun x₁ hx₁ x₂ hx₂ hx => _⟩
@@ -219,11 +219,11 @@ theorem Convex.mem_extreme_points_iff_convex_diff (hA : Convex 𝕜 A) :
 #align convex.mem_extreme_points_iff_convex_diff Convex.mem_extreme_points_iff_convex_diff
 
 theorem Convex.mem_extreme_points_iff_mem_diff_convex_hull_diff (hA : Convex 𝕜 A) :
-    x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A \ convexHull 𝕜 (A \ {x}) := by
+    x ∈ A.extremePoints 𝕜 ↔ x ∈ A \ convexHull 𝕜 (A \ {x}) := by
   rw [hA.mem_extreme_points_iff_convex_diff, hA.convex_remove_iff_not_mem_convex_hull_remove, mem_diff]
 #align convex.mem_extreme_points_iff_mem_diff_convex_hull_diff Convex.mem_extreme_points_iff_mem_diff_convex_hull_diff
 
-theorem extreme_points_convex_hull_subset : (convexHull 𝕜 A).ExtremePoints 𝕜 ⊆ A := by
+theorem extreme_points_convex_hull_subset : (convexHull 𝕜 A).extremePoints 𝕜 ⊆ A := by
   rintro x hx
   rw [(convex_convex_hull 𝕜 _).mem_extreme_points_iff_convex_diff] at hx
   by_contra

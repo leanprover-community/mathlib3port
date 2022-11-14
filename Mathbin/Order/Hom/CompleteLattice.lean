@@ -1005,13 +1005,13 @@ namespace CompleteLatticeHom
 
 /-- `set.preimage` as a complete lattice homomorphism. -/
 def setPreimage (f : α → β) : CompleteLatticeHom (Set β) (Set α) where
-  toFun := Preimage f
+  toFun := preimage f
   map_Sup' s := preimage_sUnion.trans <| by simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
   map_Inf' s := preimage_sInter.trans <| by simp only [Set.Inf_eq_sInter, Set.sInter_image]
 #align complete_lattice_hom.set_preimage CompleteLatticeHom.setPreimage
 
 @[simp]
-theorem coe_set_preimage (f : α → β) : ⇑(setPreimage f) = Preimage f :=
+theorem coe_set_preimage (f : α → β) : ⇑(setPreimage f) = preimage f :=
   rfl
 #align complete_lattice_hom.coe_set_preimage CompleteLatticeHom.coe_set_preimage
 

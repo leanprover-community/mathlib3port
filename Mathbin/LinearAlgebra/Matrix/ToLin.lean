@@ -306,7 +306,7 @@ theorem Matrix.ker_to_lin'_eq_bot_iff {M : Matrix n n R} : M.toLin'.ker = ⊥ �
   simp only [Submodule.eq_bot_iff, LinearMap.mem_ker, Matrix.to_lin'_apply]
 #align matrix.ker_to_lin'_eq_bot_iff Matrix.ker_to_lin'_eq_bot_iff
 
-theorem Matrix.range_to_lin' (M : Matrix m n R) : M.toLin'.range = span R (Range Mᵀ) := by
+theorem Matrix.range_to_lin' (M : Matrix m n R) : M.toLin'.range = span R (range Mᵀ) := by
   simp_rw [range_eq_map, ← supr_range_std_basis, map_supr, range_eq_map, ← Ideal.span_singleton_one, Ideal.span,
     Submodule.map_span, image_image, image_singleton, Matrix.to_lin'_apply, M.mul_vec_std_basis_apply, supr_span,
     range_eq_Union]

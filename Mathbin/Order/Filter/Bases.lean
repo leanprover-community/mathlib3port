@@ -82,12 +82,12 @@ variable {α β γ : Type _} {ι ι' : Sort _}
 such that the intersection of two elements of this collection contains some element
 of the collection. -/
 structure FilterBasis (α : Type _) where
-  Sets : Set (Set α)
+  sets : Set (Set α)
   Nonempty : sets.Nonempty
   inter_sets {x y} : x ∈ sets → y ∈ sets → ∃ z ∈ sets, z ⊆ x ∩ y
 #align filter_basis FilterBasis
 
-instance FilterBasis.nonempty_sets (B : FilterBasis α) : Nonempty B.Sets :=
+instance FilterBasis.nonempty_sets (B : FilterBasis α) : Nonempty B.sets :=
   B.Nonempty.to_subtype
 #align filter_basis.nonempty_sets FilterBasis.nonempty_sets
 
@@ -95,11 +95,11 @@ instance FilterBasis.nonempty_sets (B : FilterBasis α) : Nonempty B.Sets :=
 on paper. -/
 @[reducible]
 instance {α : Type _} : Membership (Set α) (FilterBasis α) :=
-  ⟨fun U B => U ∈ B.Sets⟩
+  ⟨fun U B => U ∈ B.sets⟩
 
 -- For illustration purposes, the filter basis defining (at_top : filter ℕ)
 instance : Inhabited (FilterBasis ℕ) :=
-  ⟨{ Sets := Range IciCat, Nonempty := ⟨IciCat 0, mem_range_self 0⟩,
+  ⟨{ sets := range ici, Nonempty := ⟨ici 0, mem_range_self 0⟩,
       inter_sets := by
         rintro _ _ ⟨n, rfl⟩ ⟨m, rfl⟩
         refine' ⟨Ici (max n m), mem_range_self _, _⟩
@@ -110,7 +110,7 @@ instance : Inhabited (FilterBasis ℕ) :=
 
 /-- View a filter as a filter basis. -/
 def Filter.asBasis (f : Filter α) : FilterBasis α :=
-  ⟨f.Sets, ⟨Univ, univ_mem⟩, fun x y hx hy => ⟨x ∩ y, inter_mem hx hy, subset_rfl⟩⟩
+  ⟨f.sets, ⟨univ, univ_mem⟩, fun x y hx hy => ⟨x ∩ y, inter_mem hx hy, subset_rfl⟩⟩
 #align filter.as_basis Filter.asBasis
 
 /-- `is_basis p s` means the image of `s` bounded by `p` is a filter basis. -/
@@ -125,7 +125,7 @@ namespace IsBasis
 
 /-- Constructs a filter basis from an indexed family of sets satisfying `is_basis`. -/
 protected def filterBasis {p : ι → Prop} {s : ι → Set α} (h : IsBasis p s) : FilterBasis α where
-  Sets := { t | ∃ i, p i ∧ s i = t }
+  sets := { t | ∃ i, p i ∧ s i = t }
   Nonempty :=
     let ⟨i, hi⟩ := h.Nonempty
     ⟨s i, ⟨i, hi, rfl⟩⟩
@@ -149,7 +149,7 @@ namespace FilterBasis
 
 /-- The filter associated to a filter basis. -/
 protected def filter (B : FilterBasis α) : Filter α where
-  Sets := { s | ∃ t ∈ B, t ⊆ s }
+  sets := { s | ∃ t ∈ B, t ⊆ s }
   univ_sets :=
     let ⟨s, s_in⟩ := B.Nonempty
     ⟨s, s_in, s.subset_univ⟩
@@ -166,7 +166,7 @@ theorem mem_filter_iff (B : FilterBasis α) {U : Set α} : U ∈ B.filter ↔ �
 theorem mem_filter_of_mem (B : FilterBasis α) {U : Set α} : U ∈ B → U ∈ B.filter := fun U_in => ⟨U, U_in, Subset.refl _⟩
 #align filter_basis.mem_filter_of_mem FilterBasis.mem_filter_of_mem
 
-theorem eq_infi_principal (B : FilterBasis α) : B.filter = ⨅ s : B.Sets, 𝓟 s := by
+theorem eq_infi_principal (B : FilterBasis α) : B.filter = ⨅ s : B.sets, 𝓟 s := by
   have : Directed (· ≥ ·) fun s : B.sets => 𝓟 (s : Set α) := by
     rintro ⟨U, U_in⟩ ⟨V, V_in⟩
     rcases B.inter_sets U_in V_in with ⟨W, W_in, W_sub⟩
@@ -177,7 +177,7 @@ theorem eq_infi_principal (B : FilterBasis α) : B.filter = ⨅ s : B.Sets, 𝓟
   simp [mem_filter_iff, mem_infi_of_directed this]
 #align filter_basis.eq_infi_principal FilterBasis.eq_infi_principal
 
-protected theorem generate (B : FilterBasis α) : generate B.Sets = B.filter := by
+protected theorem generate (B : FilterBasis α) : generate B.sets = B.filter := by
   apply le_antisymm
   · intro U U_in
     rcases B.mem_filter_iff.mp U_in with ⟨V, V_in, h⟩
@@ -235,8 +235,8 @@ theorem has_basis_generate (s : Set (Set α)) : (generate s).HasBasis (fun t => 
 
 /-- The smallest filter basis containing a given collection of sets. -/
 def FilterBasis.ofSets (s : Set (Set α)) : FilterBasis α where
-  Sets := sInter '' { t | Set.Finite t ∧ t ⊆ s }
-  Nonempty := ⟨Univ, ∅, ⟨⟨finite_empty, empty_subset s⟩, sInter_empty⟩⟩
+  sets := sInter '' { t | Set.Finite t ∧ t ⊆ s }
+  Nonempty := ⟨univ, ∅, ⟨⟨finite_empty, empty_subset s⟩, sInter_empty⟩⟩
   inter_sets := by
     rintro _ _ ⟨a, ⟨fina, suba⟩, rfl⟩ ⟨b, ⟨finb, subb⟩, rfl⟩
     exact ⟨⋂₀ (a ∪ b), mem_image_of_mem _ ⟨fina.union finb, union_subset suba subb⟩, by rw [sInter_union]⟩
@@ -686,7 +686,7 @@ theorem disjoint_pure_pure {x y : α} : Disjoint (pure x : Filter α) (pure y) �
 #align filter.disjoint_pure_pure Filter.disjoint_pure_pure
 
 @[simp]
-theorem compl_diagonal_mem_prod {l₁ l₂ : Filter α} : Diagonal αᶜ ∈ l₁ ×ᶠ l₂ ↔ Disjoint l₁ l₂ := by
+theorem compl_diagonal_mem_prod {l₁ l₂ : Filter α} : diagonal αᶜ ∈ l₁ ×ᶠ l₂ ↔ Disjoint l₁ l₂ := by
   simp only [mem_prod_iff, Filter.disjoint_iff, prod_subset_compl_diagonal_iff_disjoint]
 #align filter.compl_diagonal_mem_prod Filter.compl_diagonal_mem_prod
 
@@ -793,7 +793,7 @@ protected theorem HasBasis.bInter_mem {f : Set α → Set β} (h : HasBasis l p 
   h.binfi_mem hf
 #align filter.has_basis.bInter_mem Filter.HasBasis.bInter_mem
 
-theorem HasBasis.sInter_sets (h : HasBasis l p s) : ⋂₀ l.Sets = ⋂ (i) (hi : p i), s i := by
+theorem HasBasis.sInter_sets (h : HasBasis l p s) : ⋂₀ l.sets = ⋂ (i) (hi : p i), s i := by
   rw [sInter_eq_bInter]
   exact h.bInter_mem monotone_id
 #align filter.has_basis.sInter_sets Filter.HasBasis.sInter_sets
@@ -950,14 +950,14 @@ class IsCountablyGenerated (f : Filter α) : Prop where
 
 /-- `is_countable_basis p s` means the image of `s` bounded by `p` is a countable filter basis. -/
 structure IsCountableBasis (p : ι → Prop) (s : ι → Set α) extends IsBasis p s : Prop where
-  Countable : (SetOf p).Countable
+  Countable : (setOf p).Countable
 #align filter.is_countable_basis Filter.IsCountableBasis
 
 /-- We say that a filter `l` has a countable basis `s : ι → set α` bounded by `p : ι → Prop`,
 if `t ∈ l` if and only if `t` includes `s i` for some `i` such that `p i`, and the set
 defined by `p` is countable. -/
 structure HasCountableBasis (l : Filter α) (p : ι → Prop) (s : ι → Set α) extends HasBasis l p s : Prop where
-  Countable : (SetOf p).Countable
+  Countable : (setOf p).Countable
 #align filter.has_countable_basis Filter.HasCountableBasis
 
 /-- A countable filter basis `B` on a type `α` is a nonempty countable collection of sets of `α`
@@ -969,12 +969,12 @@ structure CountableFilterBasis (α : Type _) extends FilterBasis α where
 
 -- For illustration purposes, the countable filter basis defining (at_top : filter ℕ)
 instance Nat.inhabitedCountableFilterBasis : Inhabited (CountableFilterBasis ℕ) :=
-  ⟨{ (default : FilterBasis ℕ) with Countable := countable_range fun n => IciCat n }⟩
+  ⟨{ (default : FilterBasis ℕ) with Countable := countable_range fun n => ici n }⟩
 #align filter.nat.inhabited_countable_filter_basis Filter.Nat.inhabitedCountableFilterBasis
 
 theorem HasCountableBasis.is_countably_generated {f : Filter α} {p : ι → Prop} {s : ι → Set α}
     (h : f.HasCountableBasis p s) : f.IsCountablyGenerated :=
-  ⟨⟨{ t | ∃ i, p i ∧ s i = t }, h.Countable.Image s, h.to_has_basis.eq_generate⟩⟩
+  ⟨⟨{ t | ∃ i, p i ∧ s i = t }, h.Countable.image s, h.to_has_basis.eq_generate⟩⟩
 #align filter.has_countable_basis.is_countably_generated Filter.HasCountableBasis.is_countably_generated
 
 theorem antitone_seq_of_seq (s : ℕ → Set α) : ∃ t : ℕ → Set α, Antitone t ∧ (⨅ i, 𝓟 <| s i) = ⨅ i, 𝓟 (t i) := by

@@ -277,12 +277,12 @@ theorem of_nat_surjective : Surjective (ofNat s) := fun ⟨x, hx⟩ => of_nat_su
 #align nat.subtype.of_nat_surjective Nat.Subtype.of_nat_surjective
 
 @[simp]
-theorem of_nat_range : Set.Range (ofNat s) = Set.Univ :=
+theorem of_nat_range : Set.range (ofNat s) = Set.univ :=
   of_nat_surjective.range_eq
 #align nat.subtype.of_nat_range Nat.Subtype.of_nat_range
 
 @[simp]
-theorem coe_comp_of_nat_range : Set.Range (coe ∘ ofNat s : ℕ → ℕ) = s := by
+theorem coe_comp_of_nat_range : Set.range (coe ∘ ofNat s : ℕ → ℕ) = s := by
   rw [Set.range_comp coe, of_nat_range, Set.image_univ, Subtype.range_coe]
 #align nat.subtype.coe_comp_of_nat_range Nat.Subtype.coe_comp_of_nat_range
 
@@ -335,10 +335,10 @@ open Encodable
 /-- An infinite encodable type is denumerable. -/
 def ofEncodableOfInfinite (α : Type _) [Encodable α] [Infinite α] : Denumerable α := by
   letI := @decidable_range_encode α _ <;>
-    letI : Infinite (Set.Range (@encode α _)) :=
+    letI : Infinite (Set.range (@encode α _)) :=
       Infinite.of_injective _ (Equiv.ofInjective _ encode_injective).Injective
-  letI := Nat.Subtype.denumerable (Set.Range (@encode α _))
-  exact Denumerable.ofEquiv (Set.Range (@encode α _)) (equiv_range_encode α)
+  letI := Nat.Subtype.denumerable (Set.range (@encode α _))
+  exact Denumerable.ofEquiv (Set.range (@encode α _)) (equiv_range_encode α)
 #align denumerable.of_encodable_of_infinite Denumerable.ofEncodableOfInfinite
 
 end Denumerable

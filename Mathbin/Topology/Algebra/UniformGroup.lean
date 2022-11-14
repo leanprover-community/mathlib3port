@@ -321,9 +321,9 @@ theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped {ι} {p : ι → 
 #align filter.has_basis.uniformity_of_nhds_one_inv_mul_swapped Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped
 
 @[to_additive]
-theorem group_separation_rel (x y : α) : (x, y) ∈ SeparationRel α ↔ x / y ∈ Closure ({1} : Set α) :=
+theorem group_separation_rel (x y : α) : (x, y) ∈ separationRel α ↔ x / y ∈ closure ({1} : Set α) :=
   have : Embedding fun a => a * (y / x) := (uniform_embedding_translate_mul (y / x)).Embedding
-  show (x, y) ∈ ⋂₀ (𝓤 α).Sets ↔ x / y ∈ Closure ({1} : Set α) by
+  show (x, y) ∈ ⋂₀ (𝓤 α).sets ↔ x / y ∈ closure ({1} : Set α) by
     rw [this.closure_eq_preimage_closure_image, uniformity_eq_comap_nhds_one α, sInter_comap_sets]
     simp [mem_closure_iff_nhds, inter_singleton_nonempty, sub_eq_add_neg, add_assoc]
 #align group_separation_rel group_separation_rel
@@ -495,7 +495,7 @@ def TopologicalGroup.toUniformSpace : UniformSpace G where
         exists V, V_nhds <;> rfl
       exists H
       have comp_rel_sub :
-        CompRel ((fun p : G × G => p.2 / p.1) ⁻¹' V) ((fun p => p.2 / p.1) ⁻¹' V) ⊆
+        compRel ((fun p : G × G => p.2 / p.1) ⁻¹' V) ((fun p => p.2 / p.1) ⁻¹' V) ⊆
           (fun p : G × G => p.2 / p.1) ⁻¹' U :=
         by
         intro p p_comp_rel

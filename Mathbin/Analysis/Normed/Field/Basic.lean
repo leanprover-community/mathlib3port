@@ -671,7 +671,7 @@ theorem exists_lt_nnnorm_lt {r₁ r₂ : ℝ≥0} (h : r₁ < r₂) : ∃ x : α
 #align normed_field.exists_lt_nnnorm_lt NormedField.exists_lt_nnnorm_lt
 
 instance densely_ordered_range_norm :
-    DenselyOrdered (Set.Range (norm : α → ℝ)) where dense := by
+    DenselyOrdered (Set.range (norm : α → ℝ)) where dense := by
     rintro ⟨-, x, rfl⟩ ⟨-, y, rfl⟩ hxy
     exact
       let ⟨z, h⟩ := exists_lt_norm_lt α (norm_nonneg _) hxy
@@ -679,7 +679,7 @@ instance densely_ordered_range_norm :
 #align normed_field.densely_ordered_range_norm NormedField.densely_ordered_range_norm
 
 instance densely_ordered_range_nnnorm :
-    DenselyOrdered (Set.Range (nnnorm : α → ℝ≥0)) where dense := by
+    DenselyOrdered (Set.range (nnnorm : α → ℝ≥0)) where dense := by
     rintro ⟨-, x, rfl⟩ ⟨-, y, rfl⟩ hxy
     exact
       let ⟨z, h⟩ := exists_lt_nnnorm_lt α hxy
@@ -888,13 +888,13 @@ theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable
     summable_of_sum_le (fun x => mul_nonneg (hf' _) (hg' _)) this
   fun u =>
   calc
-    (∑ x in u, f x.1 * g x.2) ≤ ∑ x in u.Image Prod.fst ×ˢ u.Image Prod.snd, f x.1 * g x.2 :=
+    (∑ x in u, f x.1 * g x.2) ≤ ∑ x in u.image Prod.fst ×ˢ u.image Prod.snd, f x.1 * g x.2 :=
       sum_mono_set_of_nonneg (fun x => mul_nonneg (hf' _) (hg' _)) subset_product
-    _ = ∑ x in u.Image Prod.fst, ∑ y in u.Image Prod.snd, f x * g y := sum_product
-    _ = ∑ x in u.Image Prod.fst, f x * ∑ y in u.Image Prod.snd, g y := sum_congr rfl fun x _ => mul_sum.symm
-    _ ≤ ∑ x in u.Image Prod.fst, f x * t :=
+    _ = ∑ x in u.image Prod.fst, ∑ y in u.image Prod.snd, f x * g y := sum_product
+    _ = ∑ x in u.image Prod.fst, f x * ∑ y in u.image Prod.snd, g y := sum_congr rfl fun x _ => mul_sum.symm
+    _ ≤ ∑ x in u.image Prod.fst, f x * t :=
       sum_le_sum fun x _ => mul_le_mul_of_nonneg_left (sum_le_has_sum _ (fun _ _ => hg' _) hg) (hf' _)
-    _ = (∑ x in u.Image Prod.fst, f x) * t := sum_mul.symm
+    _ = (∑ x in u.image Prod.fst, f x) * t := sum_mul.symm
     _ ≤ s * t := mul_le_mul_of_nonneg_right (sum_le_has_sum _ (fun _ _ => hf' _) hf) (hg.Nonneg fun _ => hg' _)
     
 #align summable.mul_of_nonneg Summable.mul_of_nonneg

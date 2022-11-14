@@ -66,7 +66,7 @@ reflection of `A`, with the isomorphism as `η_A`.
 
 (For any `B` in the reflective subcategory, we automatically have that `ε_B` is an iso.)
 -/
-theorem Functor.EssImage.unit_is_iso [Reflective i] {A : C} (h : A ∈ i.EssImage) :
+theorem Functor.essImage.unit_is_iso [Reflective i] {A : C} (h : A ∈ i.essImage) :
     IsIso ((ofRightAdjoint i).Unit.app A) := by
   suffices
     (of_right_adjoint i).Unit.app A =
@@ -76,17 +76,17 @@ theorem Functor.EssImage.unit_is_iso [Reflective i] {A : C} (h : A ∈ i.EssImag
     infer_instance
   rw [← nat_trans.naturality]
   simp
-#align category_theory.functor.ess_image.unit_is_iso CategoryTheory.Functor.EssImage.unit_is_iso
+#align category_theory.functor.ess_image.unit_is_iso CategoryTheory.Functor.essImage.unit_is_iso
 
 /-- If `η_A` is an isomorphism, then `A` is in the essential image of `i`. -/
 theorem mem_ess_image_of_unit_is_iso [IsRightAdjoint i] (A : C) [IsIso ((ofRightAdjoint i).Unit.app A)] :
-    A ∈ i.EssImage :=
+    A ∈ i.essImage :=
   ⟨(leftAdjoint i).obj A, ⟨(asIso ((ofRightAdjoint i).Unit.app A)).symm⟩⟩
 #align category_theory.mem_ess_image_of_unit_is_iso CategoryTheory.mem_ess_image_of_unit_is_iso
 
 /-- If `η_A` is a split monomorphism, then `A` is in the reflective subcategory. -/
 theorem mem_ess_image_of_unit_is_split_mono [Reflective i] {A : C} [IsSplitMono ((ofRightAdjoint i).Unit.app A)] :
-    A ∈ i.EssImage := by
+    A ∈ i.essImage := by
   let η : 𝟭 C ⟶ left_adjoint i ⋙ i := (of_right_adjoint i).Unit
   haveI : is_iso (η.app (i.obj ((left_adjoint i).obj A))) := (i.obj_mem_ess_image _).unit_is_iso
   have : epi (η.app A) := by
@@ -128,7 +128,7 @@ This establishes there is a natural bijection `(A ⟶ B) ≃ (i.obj (L.obj A) �
 from the point of view of objects in `D`, `A` and `i.obj (L.obj A)` look the same: specifically
 that `η.app A` is an isomorphism.
 -/
-def unitCompPartialBijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssImage) :
+def unitCompPartialBijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.essImage) :
     (A ⟶ B) ≃ (i.obj ((leftAdjoint i).obj A) ⟶ B) :=
   calc
     (A ⟶ B) ≃ (A ⟶ i.obj hB.witness) := Iso.homCongr (Iso.refl _) hB.getIso.symm
@@ -138,18 +138,18 @@ def unitCompPartialBijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssIma
 #align category_theory.unit_comp_partial_bijective CategoryTheory.unitCompPartialBijective
 
 @[simp]
-theorem unit_comp_partial_bijective_symm_apply [Reflective i] (A : C) {B : C} (hB : B ∈ i.EssImage) (f) :
+theorem unit_comp_partial_bijective_symm_apply [Reflective i] (A : C) {B : C} (hB : B ∈ i.essImage) (f) :
     (unitCompPartialBijective A hB).symm f = (ofRightAdjoint i).Unit.app A ≫ f := by
   simp [unit_comp_partial_bijective, unit_comp_partial_bijective_aux_symm_apply]
 #align category_theory.unit_comp_partial_bijective_symm_apply CategoryTheory.unit_comp_partial_bijective_symm_apply
 
-theorem unit_comp_partial_bijective_symm_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B') (hB : B ∈ i.EssImage)
-    (hB' : B' ∈ i.EssImage) (f : i.obj ((leftAdjoint i).obj A) ⟶ B) :
+theorem unit_comp_partial_bijective_symm_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B') (hB : B ∈ i.essImage)
+    (hB' : B' ∈ i.essImage) (f : i.obj ((leftAdjoint i).obj A) ⟶ B) :
     (unitCompPartialBijective A hB').symm (f ≫ h) = (unitCompPartialBijective A hB).symm f ≫ h := by simp
 #align category_theory.unit_comp_partial_bijective_symm_natural CategoryTheory.unit_comp_partial_bijective_symm_natural
 
-theorem unit_comp_partial_bijective_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B') (hB : B ∈ i.EssImage)
-    (hB' : B' ∈ i.EssImage) (f : A ⟶ B) :
+theorem unit_comp_partial_bijective_natural [Reflective i] (A : C) {B B' : C} (h : B ⟶ B') (hB : B ∈ i.essImage)
+    (hB' : B' ∈ i.essImage) (f : A ⟶ B) :
     (unitCompPartialBijective A hB') (f ≫ h) = unitCompPartialBijective A hB f ≫ h := by
   rw [← Equiv.eq_symm_apply, unit_comp_partial_bijective_symm_natural A h, Equiv.symm_apply_apply]
 #align category_theory.unit_comp_partial_bijective_natural CategoryTheory.unit_comp_partial_bijective_natural

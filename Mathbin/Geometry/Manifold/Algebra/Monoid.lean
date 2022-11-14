@@ -365,7 +365,7 @@ theorem smoothFinsetProd (h : ∀ i ∈ t, Smooth I' I (f i)) : Smooth I' I fun 
 open Function Filter
 
 @[to_additive]
-theorem contMdiffFinprod (h : ∀ i, ContMdiff I' I n (f i)) (hfin : LocallyFinite fun i => MulSupport (f i)) :
+theorem contMdiffFinprod (h : ∀ i, ContMdiff I' I n (f i)) (hfin : LocallyFinite fun i => mulSupport (f i)) :
     ContMdiff I' I n fun x => ∏ᶠ i, f i x := by
   intro x
   rcases finprod_eventually_eq_prod hfin x with ⟨s, hs⟩
@@ -373,20 +373,20 @@ theorem contMdiffFinprod (h : ∀ i, ContMdiff I' I n (f i)) (hfin : LocallyFini
 #align cont_mdiff_finprod contMdiffFinprod
 
 @[to_additive]
-theorem contMdiffFinprodCond (hc : ∀ i, p i → ContMdiff I' I n (f i)) (hf : LocallyFinite fun i => MulSupport (f i)) :
+theorem contMdiffFinprodCond (hc : ∀ i, p i → ContMdiff I' I n (f i)) (hf : LocallyFinite fun i => mulSupport (f i)) :
     ContMdiff I' I n fun x => ∏ᶠ (i) (hi : p i), f i x := by
   simp only [← finprod_subtype_eq_finprod_cond]
   exact contMdiffFinprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
 #align cont_mdiff_finprod_cond contMdiffFinprodCond
 
 @[to_additive]
-theorem smoothFinprod (h : ∀ i, Smooth I' I (f i)) (hfin : LocallyFinite fun i => MulSupport (f i)) :
+theorem smoothFinprod (h : ∀ i, Smooth I' I (f i)) (hfin : LocallyFinite fun i => mulSupport (f i)) :
     Smooth I' I fun x => ∏ᶠ i, f i x :=
   contMdiffFinprod h hfin
 #align smooth_finprod smoothFinprod
 
 @[to_additive]
-theorem smoothFinprodCond (hc : ∀ i, p i → Smooth I' I (f i)) (hf : LocallyFinite fun i => MulSupport (f i)) :
+theorem smoothFinprodCond (hc : ∀ i, p i → Smooth I' I (f i)) (hf : LocallyFinite fun i => mulSupport (f i)) :
     Smooth I' I fun x => ∏ᶠ (i) (hi : p i), f i x :=
   contMdiffFinprodCond hc hf
 #align smooth_finprod_cond smoothFinprodCond

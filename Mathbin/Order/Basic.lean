@@ -497,6 +497,31 @@ theorem ne_iff_lt_iff_le [PartialOrder α] {a b : α} : (a ≠ b ↔ a < b) ↔ 
 #align ne_iff_lt_iff_le ne_iff_lt_iff_le
 -/
 
+-- Variant of `min_def` with the branches reversed.
+theorem min_def' [LinearOrder α] (a b : α) : min a b = if b ≤ a then b else a := by
+  rw [min_def]
+  rcases lt_trichotomy a b with (lt | eq | gt)
+  · rw [if_pos lt.le, if_neg (not_le.mpr lt)]
+    
+  · rw [if_pos Eq.le, if_pos Eq.ge, Eq]
+    
+  · rw [if_neg (not_le.mpr GT.gt), if_pos gt.le]
+    
+#align min_def' min_def'
+
+-- Variant of `min_def` with the branches reversed.
+-- This is sometimes useful as it used to be the default.
+theorem max_def' [LinearOrder α] (a b : α) : max a b = if b ≤ a then a else b := by
+  rw [max_def]
+  rcases lt_trichotomy a b with (lt | eq | gt)
+  · rw [if_pos lt.le, if_neg (not_le.mpr lt)]
+    
+  · rw [if_pos Eq.le, if_pos Eq.ge, Eq]
+    
+  · rw [if_neg (not_le.mpr GT.gt), if_pos gt.le]
+    
+#align max_def' max_def'
+
 theorem lt_of_not_le [LinearOrder α] {a b : α} (h : ¬b ≤ a) : a < b :=
   ((le_total _ _).resolve_right h).lt_of_not_le h
 #align lt_of_not_le lt_of_not_le
@@ -784,7 +809,7 @@ instance (α : Type _) [LinearOrder α] : LinearOrder αᵒᵈ :=
   { OrderDual.partialOrder α with le_total := fun a b : α => le_total b a,
     decidableLe := (inferInstance : DecidableRel fun a b : α => b ≤ a),
     decidableLt := (inferInstance : DecidableRel fun a b : α => b < a), min := @max α _, max := @min α _,
-    min_def := @LinearOrder.max_def α _, max_def := @LinearOrder.min_def α _ }
+    min_def := funext₂ <| @max_def' α _, max_def := funext₂ <| @min_def' α _ }
 
 instance : ∀ [Inhabited α], Inhabited αᵒᵈ :=
   id
@@ -1027,15 +1052,15 @@ theorem max_rec' (p : α → Prop) (hx : p x) (hy : p y) : p (max x y) :=
   max_rec (fun _ => hx) fun _ => hy
 #align max_rec' max_rec'
 
-theorem min_def' (x y : α) : min x y = if x < y then x else y := by
+theorem min_def_lt (x y : α) : min x y = if x < y then x else y := by
   rw [min_comm, min_def, ← ite_not]
   simp only [not_le]
-#align min_def' min_def'
+#align min_def_lt min_def_lt
 
-theorem max_def' (x y : α) : max x y = if y < x then x else y := by
+theorem max_def_lt (x y : α) : max x y = if x < y then y else x := by
   rw [max_comm, max_def, ← ite_not]
   simp only [not_le]
-#align max_def' max_def'
+#align max_def_lt max_def_lt
 
 end MinMaxRec
 
@@ -1120,7 +1145,7 @@ for a version that takes `[has_sup α]` and `[has_inf α]`, then uses them as `m
 See note [reducible non-instances]. -/
 @[reducible]
 def LinearOrder.lift' {α β} [LinearOrder β] (f : α → β) (inj : Injective f) : LinearOrder α :=
-  @LinearOrder.lift α β _ ⟨fun x y => if f y ≤ f x then x else y⟩ ⟨fun x y => if f x ≤ f y then x else y⟩ f inj
+  @LinearOrder.lift α β _ ⟨fun x y => if f x ≤ f y then y else x⟩ ⟨fun x y => if f x ≤ f y then x else y⟩ f inj
     (fun x y => (apply_ite f _ _ _).trans (max_def _ _).symm) fun x y => (apply_ite f _ _ _).trans (min_def _ _).symm
 #align linear_order.lift' LinearOrder.lift'
 

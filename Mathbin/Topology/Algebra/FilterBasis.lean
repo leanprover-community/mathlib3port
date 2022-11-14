@@ -81,7 +81,7 @@ def groupFilterBasisOfComm {G : Type _} [CommGroup G] (sets : Set (Set G)) (none
     (inter_sets : ∀ x y, x ∈ sets → y ∈ sets → ∃ z ∈ sets, z ⊆ x ∩ y) (one : ∀ U ∈ sets, (1 : G) ∈ U)
     (mul : ∀ U ∈ sets, ∃ V ∈ sets, V * V ⊆ U) (inv : ∀ U ∈ sets, ∃ V ∈ sets, V ⊆ (fun x => x⁻¹) ⁻¹' U) :
     GroupFilterBasis G :=
-  { Sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv, conj' := fun x U U_in => ⟨U, U_in, by simp⟩ }
+  { sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv, conj' := fun x U U_in => ⟨U, U_in, by simp⟩ }
 #align group_filter_basis_of_comm groupFilterBasisOfComm
 
 namespace GroupFilterBasis
@@ -90,7 +90,7 @@ variable {G : Type u} [Group G] {B : GroupFilterBasis G}
 
 @[to_additive]
 instance : Membership (Set G) (GroupFilterBasis G) :=
-  ⟨fun s f => s ∈ f.Sets⟩
+  ⟨fun s f => s ∈ f.sets⟩
 
 @[to_additive]
 theorem one {U : Set G} : U ∈ B → (1 : G) ∈ U :=
@@ -117,7 +117,7 @@ is discrete. -/
 @[to_additive "The trivial additive group filter basis consists of `{0}` only. The associated\ntopology is discrete."]
 instance : Inhabited (GroupFilterBasis G) :=
   ⟨by
-    refine' { Sets := {{1}}, Nonempty := singleton_nonempty _.. }
+    refine' { sets := {{1}}, Nonempty := singleton_nonempty _.. }
     all_goals simp only [exists_prop, mem_singleton_iff]
     · rintro - - rfl rfl
       use {1}
@@ -268,7 +268,7 @@ namespace RingFilterBasis
 variable {R : Type u} [Ring R] (B : RingFilterBasis R)
 
 instance : Membership (Set R) (RingFilterBasis R) :=
-  ⟨fun s B => s ∈ B.Sets⟩
+  ⟨fun s B => s ∈ B.sets⟩
 
 theorem mul {U : Set R} (hU : U ∈ B) : ∃ V ∈ B, V * V ⊆ U :=
   mul' hU
@@ -336,7 +336,7 @@ namespace ModuleFilterBasis
 variable {R M : Type _} [CommRing R] [TopologicalSpace R] [AddCommGroup M] [Module R M] (B : ModuleFilterBasis R M)
 
 instance GroupFilterBasis.hasMem : Membership (Set M) (ModuleFilterBasis R M) :=
-  ⟨fun s B => s ∈ B.Sets⟩
+  ⟨fun s B => s ∈ B.sets⟩
 #align module_filter_basis.group_filter_basis.has_mem ModuleFilterBasis.GroupFilterBasis.hasMem
 
 theorem smul {U : Set M} (hU : U ∈ B) : ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ B, V • W ⊆ U :=

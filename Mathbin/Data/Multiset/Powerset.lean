@@ -299,7 +299,7 @@ theorem disjoint_powerset_len (s : Multiset α) {i j : ℕ} (h : i ≠ j) :
 #align multiset.disjoint_powerset_len Multiset.disjoint_powerset_len
 
 theorem bind_powerset_len {α : Type _} (S : Multiset α) :
-    (bind (Multiset.range (S.card + 1)) fun k => S.powersetLen k) = S.Powerset := by
+    (bind (Multiset.range (S.card + 1)) fun k => S.powersetLen k) = S.powerset := by
   induction S using Quotient.induction_on
   simp_rw [quot_mk_to_coe, powerset_coe', powerset_len_coe, ← coe_range, coe_bind, ← List.bind_map, coe_card]
   exact coe_eq_coe.mpr ((List.range_bind_sublists_len_perm S).map _)

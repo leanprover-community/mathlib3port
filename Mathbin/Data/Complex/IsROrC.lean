@@ -51,7 +51,7 @@ open ComplexConjugate
 class IsROrC (K : Type _) extends DenselyNormedField K, StarRing K, NormedAlgebra ℝ K, CompleteSpace K where
   re : K →+ ℝ
   im : K →+ ℝ
-  I : K
+  i : K
   -- Meant to be set to 0 for K=ℝ
   I_re_ax : re I = 0
   I_mul_I_ax : I = 0 ∨ I * I = -1
@@ -990,7 +990,7 @@ end FiniteDimensional
 section Instances
 
 noncomputable instance Real.isROrC : IsROrC ℝ :=
-  { Real.denselyNormedField, Real.metricSpace with re := AddMonoidHom.id ℝ, im := 0, I := 0,
+  { Real.denselyNormedField, Real.metricSpace with re := AddMonoidHom.id ℝ, im := 0, i := 0,
     I_re_ax := by simp only [AddMonoidHom.map_zero], I_mul_I_ax := Or.intro_left _ rfl,
     re_add_im_ax := fun z => by
       simp only [add_zero, mul_zero, Algebra.id.map_eq_id, RingHom.id_apply, AddMonoidHom.id_apply],

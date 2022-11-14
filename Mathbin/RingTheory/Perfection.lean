@@ -34,7 +34,7 @@ open Nnreal
 using the `p`-th power maps `M → M` indexed by the natural numbers, implemented as
 `{ f : ℕ → M | ∀ n, f (n + 1) ^ p = f n }`. -/
 def Monoid.perfection (M : Type u₁) [CommMonoid M] (p : ℕ) : Submonoid (ℕ → M) where
-  Carrier := { f | ∀ n, f (n + 1) ^ p = f n }
+  carrier := { f | ∀ n, f (n + 1) ^ p = f n }
   one_mem' n := one_pow _
   mul_mem' f g hf hg n := (mul_pow _ _ _).trans <| congr_arg₂ _ (hf n) (hg n)
 #align monoid.perfection Monoid.perfection

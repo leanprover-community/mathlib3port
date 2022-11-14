@@ -72,19 +72,19 @@ theorem card_Ioo : (ioo a b).card = b - a - 1 := by rw [← Nat.card_Ioo, ← ma
 #align pnat.card_Ioo Pnat.card_Ioo
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.IccCat a b) = b + 1 - a := by rw [← card_Icc, Fintype.card_of_finset]
+theorem card_fintype_Icc : Fintype.card (Set.icc a b) = b + 1 - a := by rw [← card_Icc, Fintype.card_of_finset]
 #align pnat.card_fintype_Icc Pnat.card_fintype_Icc
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.IcoCat a b) = b - a := by rw [← card_Ico, Fintype.card_of_finset]
+theorem card_fintype_Ico : Fintype.card (Set.ico a b) = b - a := by rw [← card_Ico, Fintype.card_of_finset]
 #align pnat.card_fintype_Ico Pnat.card_fintype_Ico
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.IocCat a b) = b - a := by rw [← card_Ioc, Fintype.card_of_finset]
+theorem card_fintype_Ioc : Fintype.card (Set.ioc a b) = b - a := by rw [← card_Ioc, Fintype.card_of_finset]
 #align pnat.card_fintype_Ioc Pnat.card_fintype_Ioc
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.IooCat a b) = b - a - 1 := by rw [← card_Ioo, Fintype.card_of_finset]
+theorem card_fintype_Ioo : Fintype.card (Set.ioo a b) = b - a - 1 := by rw [← card_Ioo, Fintype.card_of_finset]
 #align pnat.card_fintype_Ioo Pnat.card_fintype_Ioo
 
 end Pnat

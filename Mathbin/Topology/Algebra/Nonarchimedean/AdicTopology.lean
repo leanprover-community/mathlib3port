@@ -231,7 +231,7 @@ end IsAdic
 
 /-- The ring `R` is equipped with a preferred ideal. -/
 class WithIdeal (R : Type _) [CommRing R] where
-  I : Ideal R
+  i : Ideal R
 #align with_ideal WithIdeal
 
 namespace WithIdeal

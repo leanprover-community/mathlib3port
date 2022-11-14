@@ -162,14 +162,14 @@ section Fewnomials
 open Finset
 
 theorem support_binomial {k m : ℕ} (hkm : k ≠ m) {x y : R} (hx : x ≠ 0) (hy : y ≠ 0) :
-    (c x * X ^ k + c y * X ^ m).Support = {k, m} := by
+    (c x * X ^ k + c y * X ^ m).support = {k, m} := by
   apply subset_antisymm (support_binomial' k m x y)
   simp_rw [insert_subset, singleton_subset_iff, mem_support_iff, coeff_add, coeff_C_mul, coeff_X_pow_self, mul_one,
     coeff_X_pow, if_neg hkm, if_neg hkm.symm, mul_zero, zero_add, add_zero, Ne.def, hx, hy, and_self_iff, not_false_iff]
 #align polynomial.support_binomial Polynomial.support_binomial
 
 theorem support_trinomial {k m n : ℕ} (hkm : k < m) (hmn : m < n) {x y z : R} (hx : x ≠ 0) (hy : y ≠ 0) (hz : z ≠ 0) :
-    (c x * X ^ k + c y * X ^ m + c z * X ^ n).Support = {k, m, n} := by
+    (c x * X ^ k + c y * X ^ m + c z * X ^ n).support = {k, m, n} := by
   apply subset_antisymm (support_trinomial' k m n x y z)
   simp_rw [insert_subset, singleton_subset_iff, mem_support_iff, coeff_add, coeff_C_mul, coeff_X_pow_self, mul_one,
     coeff_X_pow, if_neg hkm.ne, if_neg hkm.ne', if_neg hmn.ne, if_neg hmn.ne', if_neg (hkm.trans hmn).Ne,
@@ -177,12 +177,12 @@ theorem support_trinomial {k m n : ℕ} (hkm : k < m) (hmn : m < n) {x y z : R} 
 #align polynomial.support_trinomial Polynomial.support_trinomial
 
 theorem card_support_binomial {k m : ℕ} (h : k ≠ m) {x y : R} (hx : x ≠ 0) (hy : y ≠ 0) :
-    (c x * X ^ k + c y * X ^ m).Support.card = 2 := by
+    (c x * X ^ k + c y * X ^ m).support.card = 2 := by
   rw [support_binomial h hx hy, card_insert_of_not_mem (mt mem_singleton.mp h), card_singleton]
 #align polynomial.card_support_binomial Polynomial.card_support_binomial
 
 theorem card_support_trinomial {k m n : ℕ} (hkm : k < m) (hmn : m < n) {x y z : R} (hx : x ≠ 0) (hy : y ≠ 0)
-    (hz : z ≠ 0) : (c x * X ^ k + c y * X ^ m + c z * X ^ n).Support.card = 3 := by
+    (hz : z ≠ 0) : (c x * X ^ k + c y * X ^ m + c z * X ^ n).support.card = 3 := by
   rw [support_trinomial hkm hmn hx hy hz,
     card_insert_of_not_mem (mt mem_insert.mp (not_or_of_not hkm.ne (mt mem_singleton.mp (hkm.trans hmn).Ne))),
     card_insert_of_not_mem (mt mem_singleton.mp hmn.ne), card_singleton]

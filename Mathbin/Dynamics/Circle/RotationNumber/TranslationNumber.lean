@@ -893,7 +893,7 @@ theorem translation_number_of_map_pow_eq_add_int {x : ℝ} {n : ℕ} {m : ℤ} (
 
 /-- If a predicate depends only on `f x - x` and holds for all `0 ≤ x ≤ 1`,
 then it holds for all `x`. -/
-theorem forall_map_sub_of_Icc (P : ℝ → Prop) (h : ∀ x ∈ IccCat (0 : ℝ) 1, P (f x - x)) (x : ℝ) : P (f x - x) :=
+theorem forall_map_sub_of_Icc (P : ℝ → Prop) (h : ∀ x ∈ icc (0 : ℝ) 1, P (f x - x)) (x : ℝ) : P (f x - x) :=
   f.map_fract_sub_fract_eq x ▸ h _ ⟨fract_nonneg _, le_of_lt (fract_lt_one _)⟩
 #align circle_deg1_lift.forall_map_sub_of_Icc CircleDeg1Lift.forall_map_sub_of_Icc
 

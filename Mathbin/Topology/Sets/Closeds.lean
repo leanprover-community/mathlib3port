@@ -29,7 +29,7 @@ namespace TopologicalSpace
 
 /-- The type of closed subsets of a topological space. -/
 structure Closeds (α : Type _) [TopologicalSpace α] where
-  Carrier : Set α
+  carrier : Set α
   closed' : IsClosed carrier
 #align topological_space.closeds TopologicalSpace.Closeds
 
@@ -38,7 +38,7 @@ namespace Closeds
 variable {α}
 
 instance : SetLike (Closeds α) α where
-  coe := Closeds.Carrier
+  coe := Closeds.carrier
   coe_injective' s t h := by
     cases s
     cases t
@@ -60,7 +60,7 @@ theorem coe_mk (s : Set α) (h) : (mk s h : Set α) = s :=
 
 /-- The closure of a set, as an element of `closeds`. -/
 protected def closure (s : Set α) : Closeds α :=
-  ⟨Closure s, isClosedClosure⟩
+  ⟨closure s, isClosedClosure⟩
 #align topological_space.closeds.closure TopologicalSpace.Closeds.closure
 
 theorem gc : GaloisConnection Closeds.closure (coe : Closeds α → Set α) := fun s U =>
@@ -80,7 +80,7 @@ instance : CompleteLattice (Closeds α) :=
     (GaloisInsertion.liftCompleteLattice gi)-- le
     _
     rfl-- top
-    ⟨Univ, isClosedUniv⟩
+    ⟨univ, isClosedUniv⟩
     rfl-- bot
     ⟨∅, isClosedEmpty⟩
     (SetLike.coe_injective closure_empty.symm)
@@ -251,14 +251,14 @@ theorem Opens.is_coatom_iff [T1Space α] {s : Opens α} : IsCoatom s ↔ ∃ x, 
 
 /-- The type of clopen sets of a topological space. -/
 structure Clopens (α : Type _) [TopologicalSpace α] where
-  Carrier : Set α
+  carrier : Set α
   clopen' : IsClopen carrier
 #align topological_space.clopens TopologicalSpace.Clopens
 
 namespace Clopens
 
 instance : SetLike (Clopens α) α where
-  coe s := s.Carrier
+  coe s := s.carrier
   coe_injective' s t h := by
     cases s
     cases t

@@ -48,7 +48,7 @@ def sectionsSubsemiring (F : J ⥤ SemiRingCat.{max v u}) : Subsemiring (∀ j, 
   { AddMonCat.sectionsAddSubmonoid
       (F ⋙ forget₂ SemiRingCat AddCommMonCat.{max v u} ⋙ forget₂ AddCommMonCat AddMonCat.{max v u}),
     MonCat.sectionsSubmonoid (F ⋙ forget₂ SemiRingCat MonCat.{max v u}) with
-    Carrier := (F ⋙ forget SemiRingCat).sections }
+    carrier := (F ⋙ forget SemiRingCat).sections }
 #align SemiRing.sections_subsemiring SemiRingCat.sectionsSubsemiring
 
 instance limitSemiring (F : J ⥤ SemiRingCat.{max v u}) :
@@ -271,7 +271,7 @@ def sectionsSubring (F : J ⥤ RingCat.{max v u}) : Subring (∀ j, F.obj j) :=
   { AddGroupCat.sectionsAddSubgroup
       (F ⋙ forget₂ RingCat AddCommGroupCat.{max v u} ⋙ forget₂ AddCommGroupCat AddGroupCat.{max v u}),
     SemiRingCat.sectionsSubsemiring (F ⋙ forget₂ RingCat SemiRingCat.{max v u}) with
-    Carrier := (F ⋙ forget RingCat).sections }
+    carrier := (F ⋙ forget RingCat).sections }
 #align Ring.sections_subring RingCat.sectionsSubring
 
 instance limitRing (F : J ⥤ RingCat.{max v u}) : Ring (Types.limitCone (F ⋙ forget RingCat.{max v u})).x :=

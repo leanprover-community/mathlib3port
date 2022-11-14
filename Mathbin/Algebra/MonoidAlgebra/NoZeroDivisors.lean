@@ -49,7 +49,7 @@ variable {R A : Type _} [Semiring R]
 /-- The coefficient of a monomial in a product `f * g` that can be reached in at most one way
 as a product of monomials in the supports of `f` and `g` is a product. -/
 theorem mul_apply_add_eq_mul_of_forall_ne [Add A] {f g : AddMonoidAlgebra R A} {a0 b0 : A}
-    (h : ∀ {a b : A}, a ∈ f.Support → b ∈ g.Support → a ≠ a0 ∨ b ≠ b0 → a + b ≠ a0 + b0) :
+    (h : ∀ {a b : A}, a ∈ f.support → b ∈ g.support → a ≠ a0 ∨ b ≠ b0 → a + b ≠ a0 + b0) :
     (f * g) (a0 + b0) = f a0 * g b0 := by
   classical rw [mul_apply]
     · exact fun b H hb => Finset.sum_eq_zero fun x H1 => if_neg (h H H1 (Or.inl hb))
@@ -69,13 +69,13 @@ theorem mul_apply_add_eq_mul_of_forall_ne [Add A] {f g : AddMonoidAlgebra R A} {
 section LeftOrRightOrderability
 
 theorem Left.exists_add_of_mem_support_single_mul [AddLeftCancelSemigroup A] {g : AddMonoidAlgebra R A} (a x : A)
-    (hx : x ∈ (single a 1 * g : AddMonoidAlgebra R A).Support) : ∃ b ∈ g.Support, a + b = x := by
+    (hx : x ∈ (single a 1 * g : AddMonoidAlgebra R A).support) : ∃ b ∈ g.support, a + b = x := by
   rwa [support_single_mul _ _ (fun y => by rw [one_mul] : ∀ y : R, 1 * y = 0 ↔ _), Finset.mem_map] at hx
 #align
   add_monoid_algebra.left.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Left.exists_add_of_mem_support_single_mul
 
 theorem Right.exists_add_of_mem_support_single_mul [AddRightCancelSemigroup A] {f : AddMonoidAlgebra R A} (b x : A)
-    (hx : x ∈ (f * single b 1 : AddMonoidAlgebra R A).Support) : ∃ a ∈ f.Support, a + b = x := by
+    (hx : x ∈ (f * single b 1 : AddMonoidAlgebra R A).support) : ∃ a ∈ f.support, a + b = x := by
   rwa [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _), Finset.mem_map] at hx
 #align
   add_monoid_algebra.right.exists_add_of_mem_support_single_mul AddMonoidAlgebra.Right.exists_add_of_mem_support_single_mul
@@ -90,7 +90,7 @@ theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigro
     refine' support_nonempty_iff.mp _
     obtain ⟨a, ha, H⟩ :=
       right.exists_add_of_mem_support_single_mul gmin
-        ((f * single gmin 1 : AddMonoidAlgebra R A).Support.min'
+        ((f * single gmin 1 : AddMonoidAlgebra R A).support.min'
           (by rw [support_mul_single] <;> simp [support_nonempty_iff.mpr fg.1]))
         (Finset.min'_mem _ _)
     refine' ⟨a + gmin, mem_support_iff.mpr _⟩
@@ -136,7 +136,7 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
     refine' support_nonempty_iff.mp _
     obtain ⟨a, ha, H⟩ :=
       left.exists_add_of_mem_support_single_mul fmin
-        ((single fmin 1 * g : AddMonoidAlgebra R A).Support.min'
+        ((single fmin 1 * g : AddMonoidAlgebra R A).support.min'
           (by rw [support_single_mul] <;> simp [support_nonempty_iff.mpr fg.2]))
         (Finset.min'_mem _ _)
     refine' ⟨fmin + a, mem_support_iff.mpr _⟩

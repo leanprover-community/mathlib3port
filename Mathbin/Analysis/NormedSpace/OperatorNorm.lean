@@ -359,7 +359,7 @@ theorem op_norm_le_of_shell {f : E →SL[σ₁₂] F} {ε C : ℝ} (ε_pos : 0 <
 #align continuous_linear_map.op_norm_le_of_shell ContinuousLinearMap.op_norm_le_of_shell
 
 theorem op_norm_le_of_ball {f : E →SL[σ₁₂] F} {ε : ℝ} {C : ℝ} (ε_pos : 0 < ε) (hC : 0 ≤ C)
-    (hf : ∀ x ∈ Ball (0 : E) ε, ∥f x∥ ≤ C * ∥x∥) : ∥f∥ ≤ C := by
+    (hf : ∀ x ∈ ball (0 : E) ε, ∥f x∥ ≤ C * ∥x∥) : ∥f∥ ≤ C := by
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
   refine' op_norm_le_of_shell ε_pos hC hc fun x _ hx => hf x _
   rwa [ball_zero_eq]
@@ -480,7 +480,7 @@ protected theorem tmp_topological_add_group : TopologicalAddGroup (E →SL[σ₁
 #align continuous_linear_map.tmp_topological_add_group ContinuousLinearMap.tmp_topological_add_group
 
 protected theorem tmp_closed_ball_div_subset {a b : ℝ} (ha : 0 < a) (hb : 0 < b) :
-    ClosedBall (0 : E →SL[σ₁₂] F) (a / b) ⊆ { f | ∀ x ∈ ClosedBall (0 : E) b, f x ∈ ClosedBall (0 : F) a } := by
+    closedBall (0 : E →SL[σ₁₂] F) (a / b) ⊆ { f | ∀ x ∈ closedBall (0 : E) b, f x ∈ closedBall (0 : F) a } := by
   intro f hf x hx
   rw [mem_closed_ball_zero_iff] at hf hx⊢
   calc
@@ -663,8 +663,8 @@ theorem exists_lt_apply_of_lt_op_norm {𝕜 𝕜₂ E F : Type _} [NormedAddComm
 
 theorem Sup_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
     [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
-    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥₊) '' Ball 0 1) = ∥f∥₊ := by
-  refine' cSup_eq_of_forall_le_of_forall_lt_exists_gt ((nonempty_ball.mpr zero_lt_one).Image _) _ fun ub hub => _
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥₊) '' ball 0 1) = ∥f∥₊ := by
+  refine' cSup_eq_of_forall_le_of_forall_lt_exists_gt ((nonempty_ball.mpr zero_lt_one).image _) _ fun ub hub => _
   · rintro - ⟨x, hx, rfl⟩
     simpa only [mul_one] using f.le_op_norm_of_le (mem_ball_zero_iff.1 hx).le
     
@@ -675,24 +675,24 @@ theorem Sup_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup 
 
 theorem Sup_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
     [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
-    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥) '' Ball 0 1) = ∥f∥ := by
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥) '' ball 0 1) = ∥f∥ := by
   simpa only [Nnreal.coe_Sup, Set.image_image] using Nnreal.coe_eq.2 f.Sup_unit_ball_eq_nnnorm
 #align continuous_linear_map.Sup_unit_ball_eq_norm ContinuousLinearMap.Sup_unit_ball_eq_norm
 
 theorem Sup_closed_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
     [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
-    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥₊) '' ClosedBall 0 1) = ∥f∥₊ := by
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥₊) '' closedBall 0 1) = ∥f∥₊ := by
   have hbdd : ∀ y ∈ (fun x => ∥f x∥₊) '' closed_ball 0 1, y ≤ ∥f∥₊ := by
     rintro - ⟨x, hx, rfl⟩
     exact f.unit_le_op_norm x (mem_closed_ball_zero_iff.1 hx)
-  refine' le_antisymm (cSup_le ((nonempty_closed_ball.mpr zero_le_one).Image _) hbdd) _
+  refine' le_antisymm (cSup_le ((nonempty_closed_ball.mpr zero_le_one).image _) hbdd) _
   rw [← Sup_unit_ball_eq_nnnorm]
-  exact cSup_le_cSup ⟨∥f∥₊, hbdd⟩ ((nonempty_ball.2 zero_lt_one).Image _) (Set.image_subset _ ball_subset_closed_ball)
+  exact cSup_le_cSup ⟨∥f∥₊, hbdd⟩ ((nonempty_ball.2 zero_lt_one).image _) (Set.image_subset _ ball_subset_closed_ball)
 #align continuous_linear_map.Sup_closed_unit_ball_eq_nnnorm ContinuousLinearMap.Sup_closed_unit_ball_eq_nnnorm
 
 theorem Sup_closed_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
     [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
-    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥) '' ClosedBall 0 1) = ∥f∥ := by
+    [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) : sup ((fun x => ∥f x∥) '' closedBall 0 1) = ∥f∥ := by
   simpa only [Nnreal.coe_Sup, Set.image_image] using Nnreal.coe_eq.2 f.Sup_closed_unit_ball_eq_nnnorm
 #align continuous_linear_map.Sup_closed_unit_ball_eq_norm ContinuousLinearMap.Sup_closed_unit_ball_eq_norm
 
@@ -1540,7 +1540,7 @@ theorem LinearMap.bound_of_shell [RingHomIsometric σ₁₂] (f : E →ₛₗ[σ
 that produces a concrete bound.
 -/
 theorem LinearMap.bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] Fₗ)
-    (h : ∀ z ∈ Metric.Ball (0 : E) r, ∥f z∥ ≤ c) : ∃ C, ∀ z : E, ∥f z∥ ≤ C * ∥z∥ := by
+    (h : ∀ z ∈ Metric.ball (0 : E) r, ∥f z∥ ≤ c) : ∃ C, ∀ z : E, ∥f z∥ ≤ C * ∥z∥ := by
   cases' @NontriviallyNormedField.non_trivial 𝕜 _ with k hk
   use c * (∥k∥ / r)
   intro z
@@ -1664,7 +1664,7 @@ that it belongs to the closure of the image of a bounded set `s : set (E →SL[�
 to function. Coercion to function of the result is definitionally equal to `f`. -/
 @[simps (config := { fullyApplied := false }) apply]
 def ofMemClosureImageCoeBounded (f : E' → F) {s : Set (E' →SL[σ₁₂] F)} (hs : Bounded s)
-    (hf : f ∈ Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) : E' →SL[σ₁₂] F := by
+    (hf : f ∈ closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) : E' →SL[σ₁₂] F := by
   -- `f` is a linear map due to `linear_map_of_mem_closure_range_coe`
   refine' (linearMapOfMemClosureRangeCoe f _).mkContinuousOfExistsBound _
   · refine' closure_mono (image_subset_iff.2 fun g hg => _) hf
@@ -1685,7 +1685,7 @@ that takes values in a bounded set and converges to `f` pointwise along a nontri
 `f` is a continuous (semi)linear map. -/
 @[simps (config := { fullyApplied := false }) apply]
 def ofTendstoOfBoundedRange {α : Type _} {l : Filter α} [l.ne_bot] (f : E' → F) (g : α → E' →SL[σ₁₂] F)
-    (hf : Tendsto (fun a x => g a x) l (𝓝 f)) (hg : Bounded (Set.Range g)) : E' →SL[σ₁₂] F :=
+    (hf : Tendsto (fun a x => g a x) l (𝓝 f)) (hg : Bounded (Set.range g)) : E' →SL[σ₁₂] F :=
   ofMemClosureImageCoeBounded f hg <|
     mem_closure_of_tendsto hf <| eventually_of_forall fun a => mem_image_of_mem _ <| Set.mem_range_self _
 #align continuous_linear_map.of_tendsto_of_bounded_range ContinuousLinearMap.ofTendstoOfBoundedRange
@@ -1736,8 +1736,8 @@ instance [CompleteSpace F] : CompleteSpace (E' →SL[σ₁₂] F) := by
 in a proper space. Then `s` interpreted as a set in the space of maps `E → F` with topology of
 pointwise convergence is precompact: its closure is a compact set. -/
 theorem is_compact_closure_image_coe_of_bounded [ProperSpace F] {s : Set (E' →SL[σ₁₂] F)} (hb : Bounded s) :
-    IsCompact (Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) :=
-  have : ∀ x, IsCompact (Closure (apply' F σ₁₂ x '' s)) := fun x =>
+    IsCompact (closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) :=
+  have : ∀ x, IsCompact (closure (apply' F σ₁₂ x '' s)) := fun x =>
     ((apply' F σ₁₂ x).lipschitz.boundedImage hb).is_compact_closure
   is_compact_closure_of_subset_compact (is_compact_pi_infinite this)
     (image_subset_iff.2 fun g hg x => subset_closure <| mem_image_of_mem _ hg)
@@ -1761,7 +1761,7 @@ with weak-* topology in `mathlib`, so we use an equivalent condition (see `is_cl
 
 TODO: reformulate this in terms of a type synonym with the right topology. -/
 theorem isClosedImageCoeOfBoundedOfWeakClosed {s : Set (E' →SL[σ₁₂] F)} (hb : Bounded s)
-    (hc : ∀ f, (⇑f : E' → F) ∈ Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) → f ∈ s) :
+    (hc : ∀ f, (⇑f : E' → F) ∈ closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) → f ∈ s) :
     IsClosed ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
   isClosedOfClosureSubset fun f hf =>
     ⟨ofMemClosureImageCoeBounded f hb hf, hc (ofMemClosureImageCoeBounded f hb hf) hf, rfl⟩
@@ -1773,7 +1773,7 @@ image under coercion to functions `E → F` is a compact set. We don't have a na
 with weak-* topology in `mathlib`, so we use an equivalent condition (see `is_closed_induced_iff'`).
 -/
 theorem is_compact_image_coe_of_bounded_of_weak_closed [ProperSpace F] {s : Set (E' →SL[σ₁₂] F)} (hb : Bounded s)
-    (hc : ∀ f, (⇑f : E' → F) ∈ Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) → f ∈ s) :
+    (hc : ∀ f, (⇑f : E' → F) ∈ closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) → f ∈ s) :
     IsCompact ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
   is_compact_image_coe_of_bounded_of_closed_image hb <| isClosedImageCoeOfBoundedOfWeakClosed hb hc
 #align
@@ -1782,7 +1782,7 @@ theorem is_compact_image_coe_of_bounded_of_weak_closed [ProperSpace F] {s : Set 
 /-- A closed ball is closed in the weak-* topology. We don't have a name for `E →SL[σ] F` with
 weak-* topology in `mathlib`, so we use an equivalent condition (see `is_closed_induced_iff'`). -/
 theorem is_weak_closed_closed_ball (f₀ : E' →SL[σ₁₂] F) (r : ℝ) ⦃f : E' →SL[σ₁₂] F⦄
-    (hf : ⇑f ∈ Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' ClosedBall f₀ r)) : f ∈ ClosedBall f₀ r := by
+    (hf : ⇑f ∈ closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' closedBall f₀ r)) : f ∈ closedBall f₀ r := by
   have hr : 0 ≤ r := nonempty_closed_ball.1 (nonempty_image_iff.1 (closure_nonempty_iff.1 ⟨_, hf⟩))
   refine' mem_closed_ball_iff_norm.2 ((op_norm_le_bound _ hr) fun x => _)
   have : IsClosed { g : E' → F | ∥g x - f₀ x∥ ≤ r * ∥x∥ } :=
@@ -1795,7 +1795,7 @@ theorem is_weak_closed_closed_ball (f₀ : E' →SL[σ₁₂] F) (r : ℝ) ⦃f 
 at distance `≤ r` from `f₀ : E →SL[σ₁₂] F` is closed in the topology of pointwise convergence.
 This is one of the key steps in the proof of the **Banach-Alaoglu** theorem. -/
 theorem isClosedImageCoeClosedBall (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
-    IsClosed ((coeFn : (E →SL[σ₁₂] F) → E → F) '' ClosedBall f₀ r) :=
+    IsClosed ((coeFn : (E →SL[σ₁₂] F) → E → F) '' closedBall f₀ r) :=
   isClosedImageCoeOfBoundedOfWeakClosed boundedClosedBall (is_weak_closed_closed_ball f₀ r)
 #align continuous_linear_map.is_closed_image_coe_closed_ball ContinuousLinearMap.isClosedImageCoeClosedBall
 
@@ -1804,7 +1804,7 @@ maps `f : E →SL[σ₁₂] F` at distance `≤ r` from `f₀ : E →SL[σ₁₂
 pointwise convergence. Other versions of this theorem can be found in
 `analysis.normed_space.weak_dual`. -/
 theorem is_compact_image_coe_closed_ball [ProperSpace F] (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
-    IsCompact ((coeFn : (E →SL[σ₁₂] F) → E → F) '' ClosedBall f₀ r) :=
+    IsCompact ((coeFn : (E →SL[σ₁₂] F) → E → F) '' closedBall f₀ r) :=
   is_compact_image_coe_of_bounded_of_weak_closed boundedClosedBall <| is_weak_closed_closed_ball f₀ r
 #align continuous_linear_map.is_compact_image_coe_closed_ball ContinuousLinearMap.is_compact_image_coe_closed_ball
 

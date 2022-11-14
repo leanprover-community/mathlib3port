@@ -32,8 +32,8 @@ def IsωSup {α : Type u} [Preorder α] (c : Chain α) (x : α) : Prop :=
   (∀ i, c i ≤ x) ∧ ∀ y, (∀ i, c i ≤ y) → x ≤ y
 #align Scott.is_ωSup ScottCat.IsωSup
 
-theorem is_ωSup_iff_is_lub {α : Type u} [Preorder α] {c : Chain α} {x : α} : IsωSup c x ↔ IsLub (Range c) x := by
-  simp [is_ωSup, IsLub, IsLeast, UpperBounds, LowerBounds]
+theorem is_ωSup_iff_is_lub {α : Type u} [Preorder α] {c : Chain α} {x : α} : IsωSup c x ↔ IsLub (range c) x := by
+  simp [is_ωSup, IsLub, IsLeast, upperBounds, lowerBounds]
 #align Scott.is_ωSup_iff_is_lub ScottCat.is_ωSup_iff_is_lub
 
 variable (α : Type u) [OmegaCompletePartialOrder α]
@@ -44,7 +44,7 @@ def IsOpen (s : Set α) : Prop :=
   Continuous' fun x => x ∈ s
 #align Scott.is_open ScottCat.IsOpen
 
-theorem is_open_univ : IsOpen α Univ :=
+theorem is_open_univ : IsOpen α univ :=
   ⟨fun x y h hx => mem_univ _, by
     convert @CompleteLattice.top_continuous α Prop _ _
     exact rfl⟩
@@ -56,13 +56,13 @@ theorem IsOpen.inter (s t : Set α) : IsOpen α s → IsOpen α t → IsOpen α 
 
 theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀s) := by
   simp only [IsOpen] at hs⊢
-  convert CompleteLattice.Sup_continuous' (SetOf ⁻¹' s) _
+  convert CompleteLattice.Sup_continuous' (setOf ⁻¹' s) _
   · ext1 x
     simp only [Sup_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage, SetCoe.exists, supr_Prop_eq,
       mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
     
   · intro p hp
-    convert hs (SetOf p) (mem_preimage.1 hp)
+    convert hs (setOf p) (mem_preimage.1 hp)
     simp only [mem_set_of_eq]
     
 #align Scott.is_open_sUnion ScottCat.is_open_sUnion
@@ -84,20 +84,20 @@ instance ScottCat.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] 
   is_open_sUnion := ScottCat.is_open_sUnion α
 #align Scott.topological_space ScottCat.topologicalSpace
 
-section NotBelow
+section notBelow
 
 variable {α : Type _} [OmegaCompletePartialOrder α] (y : ScottCat α)
 
 /-- `not_below` is an open set in `Scott α` used
 to prove the monotonicity of continuous functions -/
-def NotBelow :=
+def notBelow :=
   { x | ¬x ≤ y }
-#align not_below NotBelow
+#align not_below notBelow
 
-theorem not_below_is_open : IsOpen (NotBelow y) := by
-  have h : Monotone (NotBelow y) := by
+theorem not_below_is_open : IsOpen (notBelow y) := by
+  have h : Monotone (notBelow y) := by
     intro x y' h
-    simp only [NotBelow, SetOf, le_Prop_eq]
+    simp only [notBelow, setOf, le_Prop_eq]
     intro h₀ h₁
     apply h₀ (le_trans h h₁)
   exists h
@@ -105,11 +105,11 @@ theorem not_below_is_open : IsOpen (NotBelow y) := by
   apply eq_of_forall_ge_iff
   intro z
   rw [ωSup_le_iff]
-  simp only [ωSup_le_iff, NotBelow, mem_set_of_eq, le_Prop_eq, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_apply,
+  simp only [ωSup_le_iff, notBelow, mem_set_of_eq, le_Prop_eq, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_apply,
     exists_imp, not_forall]
 #align not_below_is_open not_below_is_open
 
-end NotBelow
+end notBelow
 
 open ScottCat hiding IsOpen
 
@@ -142,7 +142,7 @@ theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α] [O
   specialize «./././Mathport/Syntax/Translate/Tactic/Lean3.lean:560:11: unsupported: specialize non-hyp»
   cases hf
   specialize hf_h c
-  simp only [NotBelow, OrderHom.coe_fun_mk, eq_iff_iff, mem_set_of_eq] at hf_h
+  simp only [notBelow, OrderHom.coe_fun_mk, eq_iff_iff, mem_set_of_eq] at hf_h
   rw [← not_iff_not]
   simp only [ωSup_le_iff, hf_h, ωSup, supr, Sup, CompleteLattice.sup, CompleteSemilatticeSup.sup, exists_prop,
     mem_range, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_apply, eq_iff_iff, not_forall]

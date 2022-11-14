@@ -133,7 +133,7 @@ theorem measure_diff_right (h : AeDisjoint μ s t) : μ (t \ s) = μ t :=
 /-- If `s` and `t` are `μ`-a.e. disjoint, then `s \ u` and `t` are disjoint for some measurable null
 set `u`. -/
 theorem exists_disjoint_diff (h : AeDisjoint μ s t) : ∃ u, MeasurableSet u ∧ μ u = 0 ∧ Disjoint (s \ u) t :=
-  ⟨ToMeasurable μ (s ∩ t), measurableSetToMeasurable _ _, (measure_to_measurable _).trans h,
+  ⟨toMeasurable μ (s ∩ t), measurableSetToMeasurable _ _, (measure_to_measurable _).trans h,
     disjoint_diff.symm.mono_left fun x hx => ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
 #align measure_theory.ae_disjoint.exists_disjoint_diff MeasureTheory.AeDisjoint.exists_disjoint_diff
 

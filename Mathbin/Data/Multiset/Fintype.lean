@@ -214,7 +214,7 @@ theorem Multiset.map_to_enum_finset_fst (m : Multiset α) : m.toEnumFinset.val.m
 #align multiset.map_to_enum_finset_fst Multiset.map_to_enum_finset_fst
 
 @[simp]
-theorem Multiset.image_to_enum_finset_fst (m : Multiset α) : m.toEnumFinset.Image Prod.fst = m.toFinset := by
+theorem Multiset.image_to_enum_finset_fst (m : Multiset α) : m.toEnumFinset.image Prod.fst = m.toFinset := by
   rw [Finset.image, Multiset.map_to_enum_finset_fst]
 #align multiset.image_to_enum_finset_fst Multiset.image_to_enum_finset_fst
 

@@ -265,7 +265,7 @@ theorem Periodic.int_mul_eq [Ring α] (h : Periodic f c) (n : ℤ) : f (n * c) =
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ico 0 c` such that `f x = f y`. -/
 theorem Periodic.exists_mem_Ico₀ [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) (x) :
-    ∃ y ∈ Set.IcoCat 0 c, f x = f y :=
+    ∃ y ∈ Set.ico 0 c, f x = f y :=
   let ⟨n, H, _⟩ := exists_unique_zsmul_near_of_pos' hc x
   ⟨x - n • c, H, (h.sub_zsmul_eq n).symm⟩
 #align function.periodic.exists_mem_Ico₀ Function.Periodic.exists_mem_Ico₀
@@ -273,7 +273,7 @@ theorem Periodic.exists_mem_Ico₀ [LinearOrderedAddCommGroup α] [Archimedean �
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ico a (a + c)` such that `f x = f y`. -/
 theorem Periodic.exists_mem_Ico [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) (x a) :
-    ∃ y ∈ Set.IcoCat a (a + c), f x = f y :=
+    ∃ y ∈ Set.ico a (a + c), f x = f y :=
   let ⟨n, H, _⟩ := exists_unique_add_zsmul_mem_Ico hc x a
   ⟨x + n • c, H, (h.zsmul n x).symm⟩
 #align function.periodic.exists_mem_Ico Function.Periodic.exists_mem_Ico
@@ -281,13 +281,13 @@ theorem Periodic.exists_mem_Ico [LinearOrderedAddCommGroup α] [Archimedean α] 
 /-- If a function `f` is `periodic` with positive period `c`, then for all `x` there exists some
   `y ∈ Ioc a (a + c)` such that `f x = f y`. -/
 theorem Periodic.exists_mem_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) (x a) :
-    ∃ y ∈ Set.IocCat a (a + c), f x = f y :=
+    ∃ y ∈ Set.ioc a (a + c), f x = f y :=
   let ⟨n, H, _⟩ := exists_unique_add_zsmul_mem_Ioc hc x a
   ⟨x + n • c, H, (h.zsmul n x).symm⟩
 #align function.periodic.exists_mem_Ioc Function.Periodic.exists_mem_Ioc
 
 theorem Periodic.image_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) (a : α) :
-    f '' Set.IocCat a (a + c) = Set.Range f :=
+    f '' Set.ioc a (a + c) = Set.range f :=
   (Set.image_subset_range _ _).antisymm <|
     Set.range_subset_iff.2 fun x =>
       let ⟨y, hy, hyx⟩ := h.exists_mem_Ioc hc x a

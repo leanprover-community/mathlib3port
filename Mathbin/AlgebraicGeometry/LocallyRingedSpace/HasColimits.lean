@@ -112,7 +112,7 @@ variable {X Y : LocallyRingedSpaceCat.{v}} (f g : X ⟶ Y)
 
 namespace HasCoequalizer
 
-instance coequalizerπAppIsLocalRingHom (U : TopologicalSpace.Opens (coequalizer f.val g.val).Carrier) :
+instance coequalizerπAppIsLocalRingHom (U : TopologicalSpace.Opens (coequalizer f.val g.val).carrier) :
     IsLocalRingHom ((coequalizer.π f.val g.val : _).c.app (op U)) := by
   have := ι_comp_coequalizer_comparison f.1 g.1 SheafedSpace.forget_to_PresheafedSpace
   rw [← preserves_coequalizer.iso_hom] at this
@@ -141,7 +141,7 @@ are local ring homs.
 -/
 
 
-variable (U : Opens (coequalizer f.1 g.1).Carrier)
+variable (U : Opens (coequalizer f.1 g.1).carrier)
 
 variable (s : (coequalizer f.1 g.1).Presheaf.obj (op U))
 

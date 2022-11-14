@@ -67,12 +67,12 @@ theorem im_surjective : Surjective im := fun y => ⟨⟨0, y⟩, rfl⟩
 #align complex.im_surjective Complex.im_surjective
 
 @[simp]
-theorem range_re : Range re = univ :=
+theorem range_re : range re = univ :=
   re_surjective.range_eq
 #align complex.range_re Complex.range_re
 
 @[simp]
-theorem range_im : Range im = univ :=
+theorem range_im : range im = univ :=
   im_surjective.range_eq
 #align complex.range_im Complex.range_im
 
@@ -111,7 +111,7 @@ def _root_.set.re_prod_im (s t : Set ℝ) : Set ℂ :=
 #align complex._root_.set.re_prod_im complex._root_.set.re_prod_im
 
 -- mathport name: «expr ×ℂ »
-infixl:72 " ×ℂ " => Set.ReProdIm
+infixl:72 " ×ℂ " => Set.reProdIm
 
 theorem mem_re_prod_im {z : ℂ} {s t : Set ℝ} : z ∈ s ×ℂ t ↔ z.re ∈ s ∧ z.im ∈ t :=
   Iff.rfl
@@ -523,7 +523,7 @@ theorem norm_sq_nonneg (z : ℂ) : 0 ≤ normSq z :=
 #align complex.norm_sq_nonneg Complex.norm_sq_nonneg
 
 @[simp]
-theorem range_norm_sq : Range normSq = IciCat 0 :=
+theorem range_norm_sq : range normSq = ici 0 :=
   (Subset.antisymm (range_subset_iff.2 norm_sq_nonneg)) fun x hx =>
     ⟨Real.sqrt x, by rw [norm_sq_of_real, Real.mul_self_sqrt hx]⟩
 #align complex.range_norm_sq Complex.range_norm_sq
@@ -865,7 +865,7 @@ theorem abs_two : abs 2 = 2 :=
 #align complex.abs_two Complex.abs_two
 
 @[simp]
-theorem range_abs : Range abs = IciCat 0 :=
+theorem range_abs : range abs = ici 0 :=
   (Subset.antisymm (range_subset_iff.2 abs.Nonneg)) fun x hx => ⟨x, abs_of_nonneg hx⟩
 #align complex.range_abs Complex.range_abs
 

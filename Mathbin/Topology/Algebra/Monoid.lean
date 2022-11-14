@@ -231,7 +231,7 @@ homomorphisms that has a `monoid_hom_class` instance) to `M₁ → M₂`. -/
 @[to_additive
       "Construct a bundled additive monoid homomorphism `M₁ →+ M₂` from a function `f`\nand a proof that it belongs to the closure of the range of the coercion from `M₁ →+ M₂` (or another\ntype of bundled homomorphisms that has a `add_monoid_hom_class` instance) to `M₁ → M₂`.",
   simps (config := { fullyApplied := false })]
-def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ Closure (Range fun (f : F) (x : M₁) => f x)) : M₁ →* M₂ where
+def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ closure (range fun (f : F) (x : M₁) => f x)) : M₁ →* M₂ where
   toFun := f
   map_one' := (isClosedSetOfMapOne M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_one) hf
   map_mul' := (isClosedSetOfMapMul M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_mul) hf
@@ -248,7 +248,7 @@ def monoidHomOfTendsto (f : M₁ → M₂) (g : α → F) [l.ne_bot] (h : Tendst
 variable (M₁ M₂)
 
 @[to_additive]
-theorem MonoidHom.isClosedRangeCoe : IsClosed (Range (coeFn : (M₁ →* M₂) → M₁ → M₂)) :=
+theorem MonoidHom.isClosedRangeCoe : IsClosed (range (coeFn : (M₁ →* M₂) → M₁ → M₂)) :=
   isClosedOfClosureSubset fun f hf => ⟨monoidHomOfMemClosureRangeCoe f hf, rfl⟩
 #align monoid_hom.is_closed_range_coe MonoidHom.isClosedRangeCoe
 
@@ -284,12 +284,12 @@ section HasContinuousMul
 variable [TopologicalSpace M] [Monoid M] [HasContinuousMul M]
 
 @[to_additive]
-theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) : Closure (s : Set M) * Closure s ⊆ Closure s :=
+theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) : closure (s : Set M) * closure s ⊆ closure s :=
   image2_subset_iff.2 fun x hx y hy => (map_mem_closure₂ continuous_mul hx hy) fun a ha b hb => s.mul_mem ha hb
 #align submonoid.top_closure_mul_self_subset Submonoid.top_closure_mul_self_subset
 
 @[to_additive]
-theorem Submonoid.top_closure_mul_self_eq (s : Submonoid M) : Closure (s : Set M) * Closure s = Closure s :=
+theorem Submonoid.top_closure_mul_self_eq (s : Submonoid M) : closure (s : Set M) * closure s = closure s :=
   Subset.antisymm s.top_closure_mul_self_subset fun x hx => ⟨x, 1, hx, subset_closure s.one_mem, mul_one _⟩
 #align submonoid.top_closure_mul_self_eq Submonoid.top_closure_mul_self_eq
 
@@ -298,7 +298,7 @@ itself a submonoid. -/
 @[to_additive
       "The (topological-space) closure of an additive submonoid of a space `M` with\n`has_continuous_add` is itself an additive submonoid."]
 def Submonoid.topologicalClosure (s : Submonoid M) : Submonoid M where
-  Carrier := Closure (s : Set M)
+  carrier := closure (s : Set M)
   one_mem' := subset_closure s.one_mem
   mul_mem' a b ha hb := s.top_closure_mul_self_subset ⟨a, b, ha, hb, rfl⟩
 #align submonoid.topological_closure Submonoid.topologicalClosure
@@ -367,7 +367,7 @@ theorem exists_open_nhds_one_mul_subset {U : Set M} (hU : U ∈ 𝓝 (1 : M)) :
 @[to_additive]
 theorem IsCompact.mul {s t : Set M} (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s * t) := by
   rw [← image_mul_prod]
-  exact (hs.prod ht).Image continuous_mul
+  exact (hs.prod ht).image continuous_mul
 #align is_compact.mul IsCompact.mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -597,7 +597,7 @@ open Function
 @[to_additive]
 theorem LocallyFinite.exists_finset_mul_support {M : Type _} [CommMonoid M] {f : ι → X → M}
     (hf : LocallyFinite fun i => mul_support <| f i) (x₀ : X) :
-    ∃ I : Finset ι, ∀ᶠ x in 𝓝 x₀, (MulSupport fun i => f i x) ⊆ I := by
+    ∃ I : Finset ι, ∀ᶠ x in 𝓝 x₀, (mulSupport fun i => f i x) ⊆ I := by
   rcases hf x₀ with ⟨U, hxU, hUf⟩
   refine' ⟨hUf.to_finset, (mem_of_superset hxU) fun y hy i hi => _⟩
   rw [hUf.coe_to_finset]
@@ -606,14 +606,14 @@ theorem LocallyFinite.exists_finset_mul_support {M : Type _} [CommMonoid M] {f :
 
 @[to_additive]
 theorem finprod_eventually_eq_prod {M : Type _} [CommMonoid M] {f : ι → X → M}
-    (hf : LocallyFinite fun i => MulSupport (f i)) (x : X) :
+    (hf : LocallyFinite fun i => mulSupport (f i)) (x : X) :
     ∃ s : Finset ι, ∀ᶠ y in 𝓝 x, (∏ᶠ i, f i y) = ∏ i in s, f i y :=
   let ⟨I, hI⟩ := hf.exists_finset_mul_support x
   ⟨I, hI.mono fun y hy => (finprod_eq_prod_of_mul_support_subset _) fun i hi => hy hi⟩
 #align finprod_eventually_eq_prod finprod_eventually_eq_prod
 
 @[to_additive]
-theorem continuous_finprod {f : ι → X → M} (hc : ∀ i, Continuous (f i)) (hf : LocallyFinite fun i => MulSupport (f i)) :
+theorem continuous_finprod {f : ι → X → M} (hc : ∀ i, Continuous (f i)) (hf : LocallyFinite fun i => mulSupport (f i)) :
     Continuous fun x => ∏ᶠ i, f i x := by
   refine' continuous_iff_continuous_at.2 fun x => _
   rcases finprod_eventually_eq_prod hf x with ⟨s, hs⟩
@@ -623,7 +623,7 @@ theorem continuous_finprod {f : ι → X → M} (hc : ∀ i, Continuous (f i)) (
 
 @[to_additive]
 theorem continuous_finprod_cond {f : ι → X → M} {p : ι → Prop} (hc : ∀ i, p i → Continuous (f i))
-    (hf : LocallyFinite fun i => MulSupport (f i)) : Continuous fun x => ∏ᶠ (i) (hi : p i), f i x := by
+    (hf : LocallyFinite fun i => mulSupport (f i)) : Continuous fun x => ∏ᶠ (i) (hi : p i), f i x := by
   simp only [← finprod_subtype_eq_finprod_cond]
   exact continuous_finprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
 #align continuous_finprod_cond continuous_finprod_cond

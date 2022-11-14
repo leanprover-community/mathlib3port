@@ -357,8 +357,8 @@ theorem prod_topology {X Y : TopCat} :
 #align Top.prod_topology TopCat.prod_topology
 
 theorem range_prod_map {W X Y Z : TopCat.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
-    Set.Range (Limits.prod.map f g) =
-      (Limits.prod.fst : Y ⨯ Z ⟶ _) ⁻¹' Set.Range f ∩ (Limits.prod.snd : Y ⨯ Z ⟶ _) ⁻¹' Set.Range g :=
+    Set.range (Limits.prod.map f g) =
+      (Limits.prod.fst : Y ⨯ Z ⟶ _) ⁻¹' Set.range f ∩ (Limits.prod.snd : Y ⨯ Z ⟶ _) ⁻¹' Set.range g :=
   by
   ext
   constructor
@@ -507,7 +507,7 @@ theorem pullback_topology {X Y Z : TopCat.{u}} (f : X ⟶ Z) (g : Y ⟶ Z) :
 #align Top.pullback_topology TopCat.pullback_topology
 
 theorem range_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
-    Set.Range (prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) =
+    Set.range (prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) =
       { x | (limits.prod.fst ≫ f) x = (limits.prod.snd ≫ g) x } :=
   by
   ext x
@@ -537,8 +537,8 @@ theorem embedding_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) 
 /-- If the map `S ⟶ T` is mono, then there is a description of the image of `W ×ₛ X ⟶ Y ×ₜ Z`. -/
 theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶ S) (g₁ : Y ⟶ T) (g₂ : Z ⟶ T) (i₁ : W ⟶ Y)
     (i₂ : X ⟶ Z) (i₃ : S ⟶ T) [H₃ : Mono i₃] (eq₁ : f₁ ≫ i₃ = i₁ ≫ g₁) (eq₂ : f₂ ≫ i₃ = i₂ ≫ g₂) :
-    Set.Range (pullback.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) =
-      (pullback.fst : pullback g₁ g₂ ⟶ _) ⁻¹' Set.Range i₁ ∩ (pullback.snd : pullback g₁ g₂ ⟶ _) ⁻¹' Set.Range i₂ :=
+    Set.range (pullback.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) =
+      (pullback.fst : pullback g₁ g₂ ⟶ _) ⁻¹' Set.range i₁ ∩ (pullback.snd : pullback g₁ g₂ ⟶ _) ⁻¹' Set.range i₂ :=
   by
   ext
   constructor
@@ -567,7 +567,7 @@ theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶
 #align Top.range_pullback_map TopCat.range_pullback_map
 
 theorem pullback_fst_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
-    Set.Range (pullback.fst : pullback f g ⟶ _) = { x : X | ∃ y : Y, f x = g y } := by
+    Set.range (pullback.fst : pullback f g ⟶ _) = { x : X | ∃ y : Y, f x = g y } := by
   ext x
   constructor
   · rintro ⟨y, rfl⟩
@@ -581,7 +581,7 @@ theorem pullback_fst_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
 #align Top.pullback_fst_range TopCat.pullback_fst_range
 
 theorem pullback_snd_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
-    Set.Range (pullback.snd : pullback f g ⟶ _) = { y : Y | ∃ x : X, f x = g y } := by
+    Set.range (pullback.snd : pullback f g ⟶ _) = { y : Y | ∃ x : X, f x = g y } := by
   ext y
   constructor
   · rintro ⟨x, rfl⟩
@@ -695,7 +695,7 @@ theorem open_embedding_of_pullback_open_embeddings {X Y S : TopCat} {f : X ⟶ S
 #align Top.open_embedding_of_pullback_open_embeddings TopCat.open_embedding_of_pullback_open_embeddings
 
 theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S} (hg : Embedding g)
-    (H : Set.Range f ⊆ Set.Range g) : IsIso (pullback.fst : pullback f g ⟶ X) := by
+    (H : Set.range f ⊆ Set.range g) : IsIso (pullback.fst : pullback f g ⟶ X) := by
   let this : (pullback f g : TopCat) ≃ₜ X :=
     (Homeomorph.ofEmbedding _ (fst_embedding_of_right_embedding f hg)).trans
       { toFun := coe,
@@ -710,7 +710,7 @@ theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {
 #align Top.fst_iso_of_right_embedding_range_subset TopCat.fst_iso_of_right_embedding_range_subset
 
 theorem snd_iso_of_left_embedding_range_subset {X Y S : TopCat} {f : X ⟶ S} (hf : Embedding f) (g : Y ⟶ S)
-    (H : Set.Range g ⊆ Set.Range f) : IsIso (pullback.snd : pullback f g ⟶ Y) := by
+    (H : Set.range g ⊆ Set.range f) : IsIso (pullback.snd : pullback f g ⟶ Y) := by
   let this : (pullback f g : TopCat) ≃ₜ Y :=
     (Homeomorph.ofEmbedding _ (snd_embedding_of_left_embedding hf g)).trans
       { toFun := coe,
@@ -797,23 +797,23 @@ def binaryCofanIsColimit (X Y : TopCat.{u}) : IsColimit (TopCat.binaryCofan X Y)
 #align Top.binary_cofan_is_colimit TopCat.binaryCofanIsColimit
 
 theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
-    Nonempty (IsColimit c) ↔ OpenEmbedding c.inl ∧ OpenEmbedding c.inr ∧ IsCompl (Set.Range c.inl) (Set.Range c.inr) :=
+    Nonempty (IsColimit c) ↔ OpenEmbedding c.inl ∧ OpenEmbedding c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) :=
   by
   classical constructor
     · rintro ⟨h₁, h₂, h₃⟩
-      have : ∀ x, x ∈ Set.Range c.inl ∨ x ∈ Set.Range c.inr := by
+      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr := by
         rw [eq_compl_iff_is_compl.mpr h₃.symm]
         exact fun _ => or_not
       refine' ⟨binary_cofan.is_colimit.mk _ _ _ _ _⟩
       · intro T f g
         refine' ContinuousMap.mk _ _
         · exact fun x =>
-            if h : x ∈ Set.Range c.inl then f ((Equiv.ofInjective _ h₁.inj).symm ⟨x, h⟩)
+            if h : x ∈ Set.range c.inl then f ((Equiv.ofInjective _ h₁.inj).symm ⟨x, h⟩)
             else g ((Equiv.ofInjective _ h₂.inj).symm ⟨x, (this x).resolve_left h⟩)
           
         rw [continuous_iff_continuous_at]
         intro x
-        by_cases x ∈ Set.Range c.inl
+        by_cases x ∈ Set.range c.inl
         · revert h x
           apply (IsOpen.continuous_on_iff _).mp
           · rw [continuous_on_iff_continuous_restrict]
@@ -829,8 +829,8 @@ theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
         · revert h x
           apply (IsOpen.continuous_on_iff _).mp
           · rw [continuous_on_iff_continuous_restrict]
-            have : ∀ a, a ∉ Set.Range c.inl → a ∈ Set.Range c.inr := by
-              rintro a (h : a ∈ Set.Range c.inlᶜ)
+            have : ∀ a, a ∉ Set.range c.inl → a ∈ Set.range c.inr := by
+              rintro a (h : a ∈ Set.range c.inlᶜ)
               rwa [eq_compl_iff_is_compl.mpr h₃.symm]
             convert_to Continuous (g ∘ (Homeomorph.ofEmbedding _ h₂.to_embedding).symm ∘ Subtype.map _ this)
             · ext ⟨x, hx⟩
@@ -840,7 +840,7 @@ theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
             rw [embedding_subtype_coe.to_inducing.continuous_iff]
             exact continuous_subtype_coe
             
-          · change IsOpen (Set.Range c.inlᶜ)
+          · change IsOpen (Set.range c.inlᶜ)
             rw [← eq_compl_iff_is_compl.mpr h₃.symm]
             exact h₂.open_range
             
@@ -858,7 +858,7 @@ theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
         ext x
         refine' (dif_neg _).trans _
         · rintro ⟨y, e⟩
-          have : c.inr x ∈ Set.Range c.inl ⊓ Set.Range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
+          have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
           rwa [disjoint_iff.mp h₃.1] at this
           
         · exact congr_arg g (Equiv.of_injective_symm_apply _ _)
@@ -924,7 +924,7 @@ which contain `set.univ` and are closed under intersections, the induced *naive*
 of sets in the limit is, in fact, a topological basis.
 -/
 theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (hT : ∀ j, IsTopologicalBasis (T j))
-    (univ : ∀ i : J, Set.Univ ∈ T i) (inter : ∀ (i) (U1 U2 : Set (F.obj i)), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
+    (univ : ∀ i : J, Set.univ ∈ T i) (inter : ∀ (i) (U1 U2 : Set (F.obj i)), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
     (compat : ∀ (i j : J) (f : i ⟶ j) (V : Set (F.obj j)) (hV : V ∈ T j), F.map f ⁻¹' V ∈ T i) :
     IsTopologicalBasis { U : Set C.x | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } := by
   classical-- The limit cone for `F` whose topology is defined as an infimum.
@@ -946,7 +946,7 @@ theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (
         if h : i = j then by
           rw [h]
           exact V
-        else Set.Univ
+        else Set.univ
       refine' ⟨U, {j}, _, _⟩
       · rintro i h
         rw [Finset.mem_singleton] at h
@@ -1004,33 +1004,33 @@ private abbrev finite_diagram (J : Type u) [SmallCategory J] :=
 /-- Partial sections of a cofiltered limit are sections when restricted to
 a finite subset of objects and morphisms of `J`.
 -/
-def PartialSections {J : Type u} [SmallCategory J] (F : J ⥤ TopCat.{u}) {G : Finset J}
+def partialSections {J : Type u} [SmallCategory J] (F : J ⥤ TopCat.{u}) {G : Finset J}
     (H : Finset (FiniteDiagramArrow G)) : Set (∀ j, F.obj j) :=
   { u | ∀ {f : FiniteDiagramArrow G} (hf : f ∈ H), F.map f.2.2.2.2 (u f.1) = u f.2.1 }
-#align Top.partial_sections TopCat.PartialSections
+#align Top.partial_sections TopCat.partialSections
 
-theorem PartialSections.nonempty [IsCofiltered J] [h : ∀ j : J, Nonempty (F.obj j)] {G : Finset J}
-    (H : Finset (FiniteDiagramArrow G)) : (PartialSections F H).Nonempty := by
+theorem partialSections.nonempty [IsCofiltered J] [h : ∀ j : J, Nonempty (F.obj j)] {G : Finset J}
+    (H : Finset (FiniteDiagramArrow G)) : (partialSections F H).Nonempty := by
   classical use fun j : J =>
       if hj : j ∈ G then F.map (is_cofiltered.inf_to G H hj) (h (is_cofiltered.inf G H)).some else (h _).some
     dsimp only
-#align Top.partial_sections.nonempty TopCat.PartialSections.nonempty
+#align Top.partial_sections.nonempty TopCat.partialSections.nonempty
 
-theorem PartialSections.directed : Directed Superset fun G : FiniteDiagram J => PartialSections F G.2 := by
+theorem partialSections.directed : Directed Superset fun G : FiniteDiagram J => partialSections F G.2 := by
   classical intro A B
     let ιB : finite_diagram_arrow B.1 → finite_diagram_arrow (A.1 ⊔ B.1) := fun f =>
       ⟨f.1, f.2.1, Finset.mem_union_right _ f.2.2.1, Finset.mem_union_right _ f.2.2.2.1, f.2.2.2.2⟩
     · rintro u hu f hf
-      have : ιA f ∈ A.2.Image ιA ⊔ B.2.Image ιB := by
+      have : ιA f ∈ A.2.image ιA ⊔ B.2.image ιB := by
         apply Finset.mem_union_left
         rw [Finset.mem_image]
         refine' ⟨f, hf, rfl⟩
       exact hu this
       
-#align Top.partial_sections.directed TopCat.PartialSections.directed
+#align Top.partial_sections.directed TopCat.partialSections.directed
 
-theorem PartialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H : Finset (FiniteDiagramArrow G)) :
-    IsClosed (PartialSections F H) := by
+theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H : Finset (FiniteDiagramArrow G)) :
+    IsClosed (partialSections F H) := by
   have :
     partial_sections F H = ⋂ (f : finite_diagram_arrow G) (hf : f ∈ H), { u | F.map f.2.2.2.2 (u f.1) = u f.2.1 } := by
     ext1
@@ -1041,7 +1041,7 @@ theorem PartialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H 
   intro f hf
   apply isClosedEq
   continuity
-#align Top.partial_sections.closed TopCat.PartialSections.closed
+#align Top.partial_sections.closed TopCat.partialSections.closed
 
 /-- Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.
 --/

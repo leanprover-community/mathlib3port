@@ -135,7 +135,7 @@ instance small_set {α} [Small.{w} α] : Small.{w} (Set α) :=
   ⟨⟨Set (Shrink α), ⟨Equiv.Set.congr (equivShrink α)⟩⟩⟩
 #align small_set small_set
 
-instance small_range {α : Type v} {β : Type w} (f : α → β) [Small.{u} α] : Small.{u} (Set.Range f) :=
+instance small_range {α : Type v} {β : Type w} (f : α → β) [Small.{u} α] : Small.{u} (Set.range f) :=
   small_of_surjective Set.surjective_onto_range
 #align small_range small_range
 

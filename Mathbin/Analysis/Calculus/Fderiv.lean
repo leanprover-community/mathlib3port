@@ -239,7 +239,7 @@ theorem HasFderivWithinAt.lim (h : HasFderivWithinAt f f' s x) {α : Type _} (l 
     conv in 𝓝[s] x => rw [← add_zero x]
     rw [nhdsWithin, tendsto_inf]
     constructor
-    · apply tendsto_const_nhds.add (TangentConeAt.lim_zero l clim cdlim)
+    · apply tendsto_const_nhds.add (tangentConeAt.lim_zero l clim cdlim)
       
     · rwa [tendsto_principal]
       
@@ -260,7 +260,7 @@ theorem HasFderivWithinAt.lim (h : HasFderivWithinAt f f' s x) {α : Type _} (l 
 /-- If `f'` and `f₁'` are two derivatives of `f` within `s` at `x`, then they are equal on the
 tangent cone to `s` at `x` -/
 theorem HasFderivWithinAt.unique_on (hf : HasFderivWithinAt f f' s x) (hg : HasFderivWithinAt f f₁' s x) :
-    EqOn f' f₁' (TangentConeAt 𝕜 s x) := fun y ⟨c, d, dtop, clim, cdlim⟩ =>
+    EqOn f' f₁' (tangentConeAt 𝕜 s x) := fun y ⟨c, d, dtop, clim, cdlim⟩ =>
   tendsto_nhds_unique (hf.lim atTop dtop clim cdlim) (hg.lim atTop dtop clim cdlim)
 #align has_fderiv_within_at.unique_on HasFderivWithinAt.unique_on
 
@@ -362,7 +362,7 @@ theorem HasFderivAt.differentiableAt (h : HasFderivAt f f' x) : DifferentiableAt
 #align has_fderiv_at.differentiable_at HasFderivAt.differentiableAt
 
 @[simp]
-theorem has_fderiv_within_at_univ : HasFderivWithinAt f f' Univ x ↔ HasFderivAt f f' x := by
+theorem has_fderiv_within_at_univ : HasFderivWithinAt f f' univ x ↔ HasFderivAt f f' x := by
   simp only [HasFderivWithinAt, nhds_within_univ]
   rfl
 #align has_fderiv_within_at_univ has_fderiv_within_at_univ
@@ -519,7 +519,7 @@ theorem HasFderivWithinAt.fderiv_within (h : HasFderivWithinAt f f' s x) (hxs : 
 
 /-- If `x` is not in the closure of `s`, then `f` has any derivative at `x` within `s`,
 as this statement is empty. -/
-theorem hasFderivWithinAtOfNotMemClosure (h : x ∉ Closure s) : HasFderivWithinAt f f' s x := by
+theorem hasFderivWithinAtOfNotMemClosure (h : x ∉ closure s) : HasFderivWithinAt f f' s x := by
   simp only [mem_closure_iff_nhds_within_ne_bot, ne_bot_iff, Ne.def, not_not] at h
   simp [HasFderivWithinAt, HasFderivAtFilter, h, is_o, is_O_with]
 #align has_fderiv_within_at_of_not_mem_closure hasFderivWithinAtOfNotMemClosure
@@ -535,7 +535,7 @@ theorem DifferentiableWithinAt.monoOfMem (h : DifferentiableWithinAt 𝕜 f s x)
   (h.HasFderivWithinAt.mono_of_mem hst).DifferentiableWithinAt
 #align differentiable_within_at.mono_of_mem DifferentiableWithinAt.monoOfMem
 
-theorem differentiable_within_at_univ : DifferentiableWithinAt 𝕜 f Univ x ↔ DifferentiableAt 𝕜 f x := by
+theorem differentiable_within_at_univ : DifferentiableWithinAt 𝕜 f univ x ↔ DifferentiableAt 𝕜 f x := by
   simp only [DifferentiableWithinAt, has_fderiv_within_at_univ, DifferentiableAt]
 #align differentiable_within_at_univ differentiable_within_at_univ
 
@@ -576,7 +576,7 @@ theorem DifferentiableOn.mono (h : DifferentiableOn 𝕜 f t) (st : s ⊆ t) : D
   (h x (st hx)).mono st
 #align differentiable_on.mono DifferentiableOn.mono
 
-theorem differentiable_on_univ : DifferentiableOn 𝕜 f Univ ↔ Differentiable 𝕜 f := by
+theorem differentiable_on_univ : DifferentiableOn 𝕜 f univ ↔ Differentiable 𝕜 f := by
   simp only [DifferentiableOn, differentiable_within_at_univ, mem_univ, forall_true_left]
   rfl
 #align differentiable_on_univ differentiable_on_univ
@@ -603,7 +603,7 @@ theorem fderiv_within_subset' (st : s ⊆ t) (ht : UniqueDiffWithinAt 𝕜 s x) 
 #align fderiv_within_subset' fderiv_within_subset'
 
 @[simp]
-theorem fderiv_within_univ : fderivWithin 𝕜 f Univ = fderiv 𝕜 f := by
+theorem fderiv_within_univ : fderivWithin 𝕜 f univ = fderiv 𝕜 f := by
   ext x : 1
   by_cases h:DifferentiableAt 𝕜 f x
   · apply HasFderivWithinAt.fderiv_within _ uniqueDiffWithinAtUniv
@@ -2006,12 +2006,12 @@ theorem differentiable_pi : Differentiable 𝕜 Φ ↔ ∀ i, Differentiable �
 
 -- TODO: find out which version (`φ` or `Φ`) works better with `rw`/`simp`
 theorem fderiv_within_pi (h : ∀ i, DifferentiableWithinAt 𝕜 (φ i) s x) (hs : UniqueDiffWithinAt 𝕜 s x) :
-    fderivWithin 𝕜 (fun x i => φ i x) s x = Pi fun i => fderivWithin 𝕜 (φ i) s x :=
+    fderivWithin 𝕜 (fun x i => φ i x) s x = pi fun i => fderivWithin 𝕜 (φ i) s x :=
   (has_fderiv_within_at_pi.2 fun i => (h i).HasFderivWithinAt).fderivWithin hs
 #align fderiv_within_pi fderiv_within_pi
 
 theorem fderiv_pi (h : ∀ i, DifferentiableAt 𝕜 (φ i) x) :
-    fderiv 𝕜 (fun x i => φ i x) x = Pi fun i => fderiv 𝕜 (φ i) x :=
+    fderiv 𝕜 (fun x i => φ i x) x = pi fun i => fderiv 𝕜 (φ i) x :=
   (has_fderiv_at_pi.2 fun i => (h i).HasFderivAt).fderiv
 #align fderiv_pi fderiv_pi
 
@@ -3079,7 +3079,7 @@ the derivative `f'⁻¹` at `a`.
 
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
-theorem LocalHomeomorph.hasStrictFderivAtSymm (f : LocalHomeomorph E F) {f' : E ≃L[𝕜] F} {a : F} (ha : a ∈ f.Target)
+theorem LocalHomeomorph.hasStrictFderivAtSymm (f : LocalHomeomorph E F) {f' : E ≃L[𝕜] F} {a : F} (ha : a ∈ f.target)
     (htff' : HasStrictFderivAt f (f' : E →L[𝕜] F) (f.symm a)) : HasStrictFderivAt f.symm (f'.symm : F →L[𝕜] E) a :=
   htff'.ofLocalLeftInverse (f.symm.ContinuousAt ha) (f.eventually_right_inverse ha)
 #align local_homeomorph.has_strict_fderiv_at_symm LocalHomeomorph.hasStrictFderivAtSymm
@@ -3089,7 +3089,7 @@ invertible derivative `f'` at `f.symm a`, then `f.symm` has the derivative `f'�
 
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
-theorem LocalHomeomorph.hasFderivAtSymm (f : LocalHomeomorph E F) {f' : E ≃L[𝕜] F} {a : F} (ha : a ∈ f.Target)
+theorem LocalHomeomorph.hasFderivAtSymm (f : LocalHomeomorph E F) {f' : E ≃L[𝕜] F} {a : F} (ha : a ∈ f.target)
     (htff' : HasFderivAt f (f' : E →L[𝕜] F) (f.symm a)) : HasFderivAt f.symm (f'.symm : F →L[𝕜] E) a :=
   htff'.ofLocalLeftInverse (f.symm.ContinuousAt ha) (f.eventually_right_inverse ha)
 #align local_homeomorph.has_fderiv_at_symm LocalHomeomorph.hasFderivAtSymm
@@ -3151,7 +3151,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 /-- The image of a tangent cone under the differential of a map is included in the tangent cone to
 the image. -/
 theorem HasFderivWithinAt.maps_to_tangent_cone {x : E} (h : HasFderivWithinAt f f' s x) :
-    MapsTo f' (TangentConeAt 𝕜 s x) (TangentConeAt 𝕜 (f '' s) (f x)) := by
+    MapsTo f' (tangentConeAt 𝕜 s x) (tangentConeAt 𝕜 (f '' s) (f x)) := by
   rintro v ⟨c, d, dtop, clim, cdlim⟩
   refine' ⟨c, fun n => f (x + d n) - f x, mem_of_superset dtop _, clim, h.lim at_top dtop clim cdlim⟩
   simp (config := { contextual := true }) [-mem_image, mem_image_of_mem]
@@ -3163,7 +3163,7 @@ under a map with onto derivative has also the unique differentiability property 
 theorem HasFderivWithinAt.uniqueDiffWithinAt {x : E} (h : HasFderivWithinAt f f' s x) (hs : UniqueDiffWithinAt 𝕜 s x)
     (h' : DenseRange f') : UniqueDiffWithinAt 𝕜 (f '' s) (f x) := by
   refine' ⟨h'.dense_of_maps_to f'.continuous hs.1 _, h.continuous_within_at.mem_closure_image hs.2⟩
-  show Submodule.span 𝕜 (TangentConeAt 𝕜 s x) ≤ (Submodule.span 𝕜 (TangentConeAt 𝕜 (f '' s) (f x))).comap f'
+  show Submodule.span 𝕜 (tangentConeAt 𝕜 s x) ≤ (Submodule.span 𝕜 (tangentConeAt 𝕜 (f '' s) (f x))).comap f'
   rw [Submodule.span_le]
   exact h.maps_to_tangent_cone.mono (subset.refl _) Submodule.subset_span
 #align has_fderiv_within_at.unique_diff_within_at HasFderivWithinAt.uniqueDiffWithinAt
@@ -3181,7 +3181,7 @@ theorem HasFderivWithinAt.uniqueDiffWithinAtOfContinuousLinearEquiv {x : E} (e' 
   has_fderiv_within_at.unique_diff_within_at_of_continuous_linear_equiv HasFderivWithinAt.uniqueDiffWithinAtOfContinuousLinearEquiv
 
 theorem ContinuousLinearEquiv.uniqueDiffOnImage (e : E ≃L[𝕜] F) (h : UniqueDiffOn 𝕜 s) : UniqueDiffOn 𝕜 (e '' s) :=
-  h.Image (fun x _ => e.HasFderivWithinAt) fun x hx => e.Surjective.DenseRange
+  h.image (fun x _ => e.HasFderivWithinAt) fun x hx => e.Surjective.DenseRange
 #align continuous_linear_equiv.unique_diff_on_image ContinuousLinearEquiv.uniqueDiffOnImage
 
 @[simp]
@@ -3303,7 +3303,7 @@ open Function
 variable (𝕜 : Type _) {E F : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
   [NormedAddCommGroup F] [NormedSpace 𝕜 F] {f : E → F}
 
-theorem support_fderiv_subset : Support (fderiv 𝕜 f) ⊆ Tsupport f := by
+theorem support_fderiv_subset : support (fderiv 𝕜 f) ⊆ tsupport f := by
   intro x
   rw [← not_imp_not]
   intro h2x

@@ -87,7 +87,7 @@ def HausdorffificationCat : Type _ :=
 /-- The completion of a module with respect to an ideal. This is not necessarily Hausdorff.
 In fact, this is only complete if the ideal is finitely generated. -/
 def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule R M)) where
-  Carrier :=
+  carrier :=
     { f |
       ∀ {m n} (h : m ≤ n),
         liftq _ (mkq _)

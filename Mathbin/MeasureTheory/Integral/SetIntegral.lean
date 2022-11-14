@@ -390,7 +390,7 @@ theorem set_integral_eq_zero_iff_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ
 #align measure_theory.set_integral_eq_zero_iff_of_nonneg_ae MeasureTheory.set_integral_eq_zero_iff_of_nonneg_ae
 
 theorem set_integral_pos_iff_support_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ.restrict s] f) (hfi : IntegrableOn f s μ) :
-    (0 < ∫ x in s, f x ∂μ) ↔ 0 < μ (Support f ∩ s) := by
+    (0 < ∫ x in s, f x ∂μ) ↔ 0 < μ (support f ∩ s) := by
   rw [integral_pos_iff_support_of_nonneg_ae hf hfi, measure.restrict_apply₀]
   rw [support_eq_preimage]
   exact hfi.ae_strongly_measurable.ae_measurable.null_measurable (measurable_set_singleton 0).compl
@@ -431,22 +431,22 @@ theorem set_integral_trim {α} {m m0 : MeasurableSpace α} {μ : Measure α} (hm
 #align measure_theory.set_integral_trim MeasureTheory.set_integral_trim
 
 theorem integral_Icc_eq_integral_Ioc' [PartialOrder α] {f : α → E} {a b : α} (ha : μ {a} = 0) :
-    (∫ t in IccCat a b, f t ∂μ) = ∫ t in IocCat a b, f t ∂μ :=
+    (∫ t in icc a b, f t ∂μ) = ∫ t in ioc a b, f t ∂μ :=
   set_integral_congr_set_ae (Ioc_ae_eq_Icc' ha).symm
 #align measure_theory.integral_Icc_eq_integral_Ioc' MeasureTheory.integral_Icc_eq_integral_Ioc'
 
 theorem integral_Ioc_eq_integral_Ioo' [PartialOrder α] {f : α → E} {a b : α} (hb : μ {b} = 0) :
-    (∫ t in IocCat a b, f t ∂μ) = ∫ t in IooCat a b, f t ∂μ :=
+    (∫ t in ioc a b, f t ∂μ) = ∫ t in ioo a b, f t ∂μ :=
   set_integral_congr_set_ae (Ioo_ae_eq_Ioc' hb).symm
 #align measure_theory.integral_Ioc_eq_integral_Ioo' MeasureTheory.integral_Ioc_eq_integral_Ioo'
 
 theorem integral_Icc_eq_integral_Ioc [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
-    (∫ t in IccCat a b, f t ∂μ) = ∫ t in IocCat a b, f t ∂μ :=
+    (∫ t in icc a b, f t ∂μ) = ∫ t in ioc a b, f t ∂μ :=
   integral_Icc_eq_integral_Ioc' <| measure_singleton a
 #align measure_theory.integral_Icc_eq_integral_Ioc MeasureTheory.integral_Icc_eq_integral_Ioc
 
 theorem integral_Ioc_eq_integral_Ioo [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
-    (∫ t in IocCat a b, f t ∂μ) = ∫ t in IooCat a b, f t ∂μ :=
+    (∫ t in ioc a b, f t ∂μ) = ∫ t in ioo a b, f t ∂μ :=
   integral_Ioc_eq_integral_Ioo' <| measure_singleton b
 #align measure_theory.integral_Ioc_eq_integral_Ioo MeasureTheory.integral_Ioc_eq_integral_Ioo
 

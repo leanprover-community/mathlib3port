@@ -41,7 +41,7 @@ variable [Semiring B] [StarRing B] [Algebra R B] [StarModule R B]
 variable [Semiring C] [StarRing C] [Algebra R C] [StarModule R C]
 
 instance : SetLike (StarSubalgebra R A) A :=
-  ⟨StarSubalgebra.Carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
+  ⟨StarSubalgebra.carrier, fun p q h => by cases p <;> cases q <;> congr ⟩
 
 instance : StarMemClass (StarSubalgebra R A) A where star_mem s a := s.star_mem'
 
@@ -67,7 +67,7 @@ instance (s : StarSubalgebra R A) : Algebra R s :=
 instance (s : StarSubalgebra R A) : StarModule R s where star_smul r a := Subtype.ext (star_smul r a)
 
 @[simp]
-theorem mem_carrier {s : StarSubalgebra R A} {x : A} : x ∈ s.Carrier ↔ x ∈ s :=
+theorem mem_carrier {s : StarSubalgebra R A} {x : A} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align star_subalgebra.mem_carrier StarSubalgebra.mem_carrier
 
@@ -101,7 +101,7 @@ theorem to_subalgebra_le_iff {S₁ S₂ : StarSubalgebra R A} : S₁.toSubalgebr
 /-- Copy of a star subalgebra with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (S : StarSubalgebra R A) (s : Set A) (hs : s = ↑S) : StarSubalgebra R A where
-  Carrier := s
+  carrier := s
   add_mem' _ _ := hs.symm ▸ S.add_mem'
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
   algebra_map_mem' := hs.symm ▸ S.algebra_map_mem'
@@ -126,10 +126,10 @@ theorem algebra_map_mem (r : R) : algebraMap R A r ∈ S :=
 theorem srange_le : (algebraMap R A).srange ≤ S.toSubalgebra.toSubsemiring := fun x ⟨r, hr⟩ => hr ▸ S.algebra_map_mem r
 #align star_subalgebra.srange_le StarSubalgebra.srange_le
 
-theorem range_subset : Set.Range (algebraMap R A) ⊆ S := fun x ⟨r, hr⟩ => hr ▸ S.algebra_map_mem r
+theorem range_subset : Set.range (algebraMap R A) ⊆ S := fun x ⟨r, hr⟩ => hr ▸ S.algebra_map_mem r
 #align star_subalgebra.range_subset StarSubalgebra.range_subset
 
-theorem range_le : Set.Range (algebraMap R A) ≤ S :=
+theorem range_le : Set.range (algebraMap R A) ≤ S :=
   S.range_subset
 #align star_subalgebra.range_le StarSubalgebra.range_le
 
@@ -275,7 +275,7 @@ def centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : StarSuba
 #align star_subalgebra.centralizer StarSubalgebra.centralizer
 
 @[simp]
-theorem coe_centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : (centralizer R s w : Set A) = s.Centralizer :=
+theorem coe_centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : (centralizer R s w : Set A) = s.centralizer :=
   rfl
 #align star_subalgebra.coe_centralizer StarSubalgebra.coe_centralizer
 
@@ -308,7 +308,7 @@ variable [Semiring B] [Algebra R B] [StarRing B] [StarModule R B]
 /-- The pointwise `star` of a subalgebra is a subalgebra. -/
 instance : HasInvolutiveStar (Subalgebra R A) where
   star S :=
-    { Carrier := star S.Carrier,
+    { carrier := star S.carrier,
       mul_mem' := fun x y hx hy => by
         simp only [Set.mem_star, Subalgebra.mem_carrier] at *
         exact (star_mul x y).symm ▸ mul_mem hy hx,
@@ -564,7 +564,7 @@ instance : Inhabited (StarSubalgebra R A) :=
   ⟨⊤⟩
 
 @[simp]
-theorem coe_top : (↑(⊤ : StarSubalgebra R A) : Set A) = Set.Univ :=
+theorem coe_top : (↑(⊤ : StarSubalgebra R A) : Set A) = Set.univ :=
   rfl
 #align star_subalgebra.coe_top StarSubalgebra.coe_top
 
@@ -648,12 +648,12 @@ theorem bot_to_subalgebra : (⊥ : StarSubalgebra R A).toSubalgebra = ⊥ := by
   simp
 #align star_subalgebra.bot_to_subalgebra StarSubalgebra.bot_to_subalgebra
 
-theorem mem_bot {x : A} : x ∈ (⊥ : StarSubalgebra R A) ↔ x ∈ Set.Range (algebraMap R A) := by
+theorem mem_bot {x : A} : x ∈ (⊥ : StarSubalgebra R A) ↔ x ∈ Set.range (algebraMap R A) := by
   rw [← mem_to_subalgebra, bot_to_subalgebra, Algebra.mem_bot]
 #align star_subalgebra.mem_bot StarSubalgebra.mem_bot
 
 @[simp]
-theorem coe_bot : ((⊥ : StarSubalgebra R A) : Set A) = Set.Range (algebraMap R A) := by simp [Set.ext_iff, mem_bot]
+theorem coe_bot : ((⊥ : StarSubalgebra R A) : Set A) = Set.range (algebraMap R A) := by simp [Set.ext_iff, mem_bot]
 #align star_subalgebra.coe_bot StarSubalgebra.coe_bot
 
 theorem eq_top_iff {S : StarSubalgebra R A} : S = ⊤ ↔ ∀ x : A, x ∈ S :=
@@ -678,7 +678,7 @@ include hF
 
 /-- The equalizer of two star `R`-algebra homomorphisms. -/
 def equalizer : StarSubalgebra R A where
-  Carrier := { a | f a = g a }
+  carrier := { a | f a = g a }
   mul_mem' a b (ha : f a = g a) (hb : f b = g b) := by rw [Set.mem_set_of_eq, map_mul f, map_mul g, ha, hb]
   add_mem' a b (ha : f a = g a) (hb : f b = g b) := by rw [Set.mem_set_of_eq, map_add f, map_add g, ha, hb]
   algebra_map_mem' r := by simp only [Set.mem_set_of_eq, AlgHomClass.commutes]

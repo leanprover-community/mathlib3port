@@ -327,7 +327,7 @@ include hφ hS
 of each point in `α` and the functions `φ i` agree pairwise on intersections, can be glued to
 construct a continuous map in `C(α, β)`. -/
 noncomputable def liftCover : C(α, β) := by
-  have H : (⋃ i, S i) = Set.Univ := by
+  have H : (⋃ i, S i) = Set.univ := by
     rw [Set.eq_univ_iff_forall]
     intro x
     rw [Set.mem_Union]

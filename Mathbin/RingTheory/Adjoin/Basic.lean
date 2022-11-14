@@ -65,7 +65,7 @@ theorem adjoin_eq (S : Subalgebra R A) : adjoin R ↑S = S :=
   adjoin_eq_of_le _ (Set.Subset.refl _) subset_adjoin
 #align algebra.adjoin_eq Algebra.adjoin_eq
 
-theorem adjoin_Union {α : Type _} (s : α → Set A) : adjoin R (Set.UnionCat s) = ⨆ i : α, adjoin R (s i) :=
+theorem adjoin_Union {α : Type _} (s : α → Set A) : adjoin R (Set.union s) = ⨆ i : α, adjoin R (s i) :=
   (@Algebra.gc R A _ _ _).l_supr
 #align algebra.adjoin_Union Algebra.adjoin_Union
 
@@ -77,7 +77,7 @@ theorem adjoin_attach_bUnion [DecidableEq A] {α : Type _} {s : Finset α} (f : 
 theorem adjoinInduction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : ∀ x ∈ s, p x)
     (Halg : ∀ r, p (algebraMap R A r)) (Hadd : ∀ x y, p x → p y → p (x + y)) (Hmul : ∀ x y, p x → p y → p (x * y)) :
     p x :=
-  let S : Subalgebra R A := { Carrier := p, mul_mem' := Hmul, add_mem' := Hadd, algebra_map_mem' := Halg }
+  let S : Subalgebra R A := { carrier := p, mul_mem' := Hmul, add_mem' := Hadd, algebra_map_mem' := Halg }
   adjoin_le (show s ≤ S from Hs) h
 #align algebra.adjoin_induction Algebra.adjoinInduction
 
@@ -143,7 +143,7 @@ theorem adjoin_empty : adjoin R (∅ : Set A) = ⊥ :=
 #align algebra.adjoin_empty Algebra.adjoin_empty
 
 @[simp]
-theorem adjoin_univ : adjoin R (Set.Univ : Set A) = ⊤ :=
+theorem adjoin_univ : adjoin R (Set.univ : Set A) = ⊤ :=
   eq_top_iff.2 fun x => subset_adjoin <| Set.mem_univ _
 #align algebra.adjoin_univ Algebra.adjoin_univ
 
@@ -361,16 +361,16 @@ theorem adjoin_int (s : Set R) : adjoin ℤ s = subalgebraOfSubring (Subring.clo
     (Subring.closure_le.2 subset_adjoin : Subring.closure s ≤ (adjoin ℤ s).toSubring)
 #align algebra.adjoin_int Algebra.adjoin_int
 
-theorem mem_adjoin_iff {s : Set A} {x : A} : x ∈ adjoin R s ↔ x ∈ Subring.closure (Set.Range (algebraMap R A) ∪ s) :=
+theorem mem_adjoin_iff {s : Set A} {x : A} : x ∈ adjoin R s ↔ x ∈ Subring.closure (Set.range (algebraMap R A) ∪ s) :=
   ⟨fun hx =>
     Subsemiring.closure_induction hx Subring.subset_closure (Subring.zero_mem _) (Subring.one_mem _)
       (fun _ _ => Subring.add_mem _) fun _ _ => Subring.mul_mem _,
-    suffices Subring.closure (Set.Range ⇑(algebraMap R A) ∪ s) ≤ (adjoin R s).toSubring from @this x
+    suffices Subring.closure (Set.range ⇑(algebraMap R A) ∪ s) ≤ (adjoin R s).toSubring from @this x
     Subring.closure_le.2 Subsemiring.subset_closure⟩
 #align algebra.mem_adjoin_iff Algebra.mem_adjoin_iff
 
 theorem adjoin_eq_ring_closure (s : Set A) :
-    (adjoin R s).toSubring = Subring.closure (Set.Range (algebraMap R A) ∪ s) :=
+    (adjoin R s).toSubring = Subring.closure (Set.range (algebraMap R A) ∪ s) :=
   Subring.ext fun x => mem_adjoin_iff
 #align algebra.adjoin_eq_ring_closure Algebra.adjoin_eq_ring_closure
 

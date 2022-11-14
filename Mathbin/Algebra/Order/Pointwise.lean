@@ -158,7 +158,7 @@ open Set
 
 include hr
 
-theorem smul_Ioo : r • IooCat a b = IooCat (r • a) (r • b) := by
+theorem smul_Ioo : r • ioo a b = ioo (r • a) (r • b) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioo]
   constructor
@@ -174,7 +174,7 @@ theorem smul_Ioo : r • IooCat a b = IooCat (r • a) (r • b) := by
     
 #align linear_ordered_field.smul_Ioo LinearOrderedField.smul_Ioo
 
-theorem smul_Icc : r • IccCat a b = IccCat (r • a) (r • b) := by
+theorem smul_Icc : r • icc a b = icc (r • a) (r • b) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Icc]
   constructor
@@ -190,7 +190,7 @@ theorem smul_Icc : r • IccCat a b = IccCat (r • a) (r • b) := by
     
 #align linear_ordered_field.smul_Icc LinearOrderedField.smul_Icc
 
-theorem smul_Ico : r • IcoCat a b = IcoCat (r • a) (r • b) := by
+theorem smul_Ico : r • ico a b = ico (r • a) (r • b) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ico]
   constructor
@@ -206,7 +206,7 @@ theorem smul_Ico : r • IcoCat a b = IcoCat (r • a) (r • b) := by
     
 #align linear_ordered_field.smul_Ico LinearOrderedField.smul_Ico
 
-theorem smul_Ioc : r • IocCat a b = IocCat (r • a) (r • b) := by
+theorem smul_Ioc : r • ioc a b = ioc (r • a) (r • b) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioc]
   constructor
@@ -222,7 +222,7 @@ theorem smul_Ioc : r • IocCat a b = IocCat (r • a) (r • b) := by
     
 #align linear_ordered_field.smul_Ioc LinearOrderedField.smul_Ioc
 
-theorem smul_Ioi : r • IoiCat a = IoiCat (r • a) := by
+theorem smul_Ioi : r • ioi a = ioi (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
@@ -237,7 +237,7 @@ theorem smul_Ioi : r • IoiCat a = IoiCat (r • a) := by
     
 #align linear_ordered_field.smul_Ioi LinearOrderedField.smul_Ioi
 
-theorem smul_Iio : r • IioCat a = IioCat (r • a) := by
+theorem smul_Iio : r • iio a = iio (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor
@@ -252,7 +252,7 @@ theorem smul_Iio : r • IioCat a = IioCat (r • a) := by
     
 #align linear_ordered_field.smul_Iio LinearOrderedField.smul_Iio
 
-theorem smul_Ici : r • IciCat a = IciCat (r • a) := by
+theorem smul_Ici : r • ici a = ici (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
@@ -267,7 +267,7 @@ theorem smul_Ici : r • IciCat a = IciCat (r • a) := by
     
 #align linear_ordered_field.smul_Ici LinearOrderedField.smul_Ici
 
-theorem smul_Iic : r • IicCat a = IicCat (r • a) := by
+theorem smul_Iic : r • iic a = iic (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor

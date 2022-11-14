@@ -30,10 +30,10 @@ variable (c : ComplexShape ι)
 
 /-- The congruence on `homological_complex V c` given by the existence of a homotopy.
 -/
-def Homotopic : HomRel (HomologicalComplex V c) := fun C D f g => Nonempty (Homotopy f g)
-#align homotopic Homotopic
+def homotopic : HomRel (HomologicalComplex V c) := fun C D f g => Nonempty (Homotopy f g)
+#align homotopic homotopic
 
-instance homotopy_congruence : Congruence (Homotopic V c) where
+instance homotopy_congruence : Congruence (homotopic V c) where
   IsEquiv C D :=
     { refl := fun C => ⟨Homotopy.refl C⟩, symm := fun f g ⟨w⟩ => ⟨w.symm⟩,
       trans := fun f g h ⟨w₁⟩ ⟨w₂⟩ => ⟨w₁.trans w₂⟩ }
@@ -44,7 +44,7 @@ instance homotopy_congruence : Congruence (Homotopic V c) where
 /-- `homotopy_category V c` is the category of chain complexes of shape `c` in `V`,
 with chain maps identified when they are homotopic. -/
 def HomotopyCategory :=
-  CategoryTheory.Quotient (Homotopic V c)deriving Category
+  CategoryTheory.Quotient (homotopic V c)deriving Category
 #align homotopy_category HomotopyCategory
 
 -- TODO the homotopy_category is preadditive

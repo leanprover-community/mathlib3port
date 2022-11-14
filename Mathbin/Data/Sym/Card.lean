@@ -136,7 +136,7 @@ namespace Sym2
 variable [DecidableEq α]
 
 /-- The `diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.card`. -/
-theorem card_image_diag (s : Finset α) : (s.diag.Image Quotient.mk'').card = s.card := by
+theorem card_image_diag (s : Finset α) : (s.diag.image Quotient.mk'').card = s.card := by
   rw [card_image_of_inj_on, diag_card]
   rintro ⟨x₀, x₁⟩ hx _ _ h
   cases Quotient.eq.1 h
@@ -147,7 +147,7 @@ theorem card_image_diag (s : Finset α) : (s.diag.Image Quotient.mk'').card = s.
     
 #align sym2.card_image_diag Sym2.card_image_diag
 
-theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.OffDiag.Image Quotient.mk'').card = s.OffDiag.card := by
+theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.image Quotient.mk'').card = s.offDiag.card := by
   rw [card_eq_sum_card_fiberwise
       (fun x => mem_image_of_mem _ : ∀ x ∈ s.off_diag, Quotient.mk'' x ∈ s.off_diag.image Quotient.mk''),
     sum_const_nat (Quotient.ind _), mul_comm]
@@ -169,7 +169,7 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.OffDiag.Image Quoti
 /-- The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.
 This is because every element `⟦(x, y)⟧` of `sym2 α` not on the diagonal comes from exactly two
 pairs: `(x, y)` and `(y, x)`. -/
-theorem card_image_off_diag (s : Finset α) : (s.OffDiag.Image Quotient.mk'').card = s.card.choose 2 := by
+theorem card_image_off_diag (s : Finset α) : (s.offDiag.image Quotient.mk'').card = s.card.choose 2 := by
   rw [Nat.choose_two_right, mul_tsub, mul_one, ← off_diag_card,
     Nat.div_eq_of_eq_mul_right zero_lt_two (two_mul_card_image_off_diag s).symm]
 #align sym2.card_image_off_diag Sym2.card_image_off_diag

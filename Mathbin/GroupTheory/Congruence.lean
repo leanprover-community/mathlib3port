@@ -383,7 +383,7 @@ theorem Inf_to_setoid (S : Set (Con M)) : (inf S).toSetoid = inf (to_setoid '' S
     under the map to the underlying binary relation. -/
 @[to_additive
       "The infimum of a set of additive congruence relations is the same as the infimum\nof the set's image under the map to the underlying binary relation."]
-theorem Inf_def (S : Set (Con M)) : ⇑(inf S) = inf (@Set.Image (Con M) (M → M → Prop) coeFn S) := by
+theorem Inf_def (S : Set (Con M)) : ⇑(inf S) = inf (@Set.image (Con M) (M → M → Prop) coeFn S) := by
   ext
   simp only [Inf_image, infi_apply, infi_Prop_eq]
   rfl
@@ -503,7 +503,7 @@ theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con
     containing the supremum of the set's image under the map to the underlying binary relation. -/
 @[to_additive
       "The supremum of a set of additive congruence relations is the same as the smallest\nadditive congruence relation containing the supremum of the set's image under the map to the\nunderlying binary relation."]
-theorem Sup_def {S : Set (Con M)} : sup S = conGen (sup (@Set.Image (Con M) (M → M → Prop) coeFn S)) := by
+theorem Sup_def {S : Set (Con M)} : sup S = conGen (sup (@Set.image (Con M) (M → M → Prop) coeFn S)) := by
   rw [Sup_eq_con_gen, Sup_image]
   congr with (x y)
   simp only [Sup_image, supr_apply, supr_Prop_eq, exists_prop, rel_eq_coe]
@@ -639,7 +639,7 @@ variable (M c)
 /-- The submonoid of `M × M` defined by a congruence relation on a monoid `M`. -/
 @[to_additive "The `add_submonoid` of `M × M` defined by an additive congruence\nrelation on an `add_monoid` `M`."]
 protected def submonoid : Submonoid (M × M) where
-  Carrier := { x | c x.1 x.2 }
+  carrier := { x | c x.1 x.2 }
   one_mem' := c.iseqv.1 1
   mul_mem' _ _ := c.mul
 #align con.submonoid Con.submonoid

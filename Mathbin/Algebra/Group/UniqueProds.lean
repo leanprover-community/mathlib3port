@@ -108,7 +108,7 @@ See `unique_mul.mul_hom_map_iff` for a version with swapped bundling. -/
 @[to_additive
       "`unique_add` is preserved under additive maps that are injective.\n\nSee `unique_add.add_hom_map_iff` for a version with swapped bundling."]
 theorem mul_hom_image_iff [DecidableEq H] (f : G →ₙ* H) (hf : Function.Injective f) :
-    UniqueMul (A.Image f) (B.Image f) (f a0) (f b0) ↔ UniqueMul A B a0 b0 := by
+    UniqueMul (A.image f) (B.image f) (f a0) (f b0) ↔ UniqueMul A B a0 b0 := by
   refine' ⟨fun h => _, fun h => _⟩
   · intro a b ha hb ab
     rw [← hf.eq_iff, ← hf.eq_iff]

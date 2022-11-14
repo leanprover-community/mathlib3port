@@ -241,7 +241,7 @@ sequence converge to its measure under the candidate limit measure.
 -/
 theorem tendsto_measure_of_null_frontier {ι : Type _} {L : Filter ι} {μ : Measure Ω} {μs : ι → Measure Ω}
     [IsProbabilityMeasure μ] [∀ i, IsProbabilityMeasure (μs i)]
-    (h_opens : ∀ G, IsOpen G → μ G ≤ L.liminf fun i => μs i G) {E : Set Ω} (E_nullbdry : μ (Frontier E) = 0) :
+    (h_opens : ∀ G, IsOpen G → μ G ≤ L.liminf fun i => μs i G) {E : Set Ω} (E_nullbdry : μ (frontier E) = 0) :
     L.Tendsto (fun i => μs i E) (𝓝 (μ E)) :=
   haveI h_closeds : ∀ F, IsClosed F → (L.limsup fun i => μs i F) ≤ μ F :=
     limsup_measure_closed_le_iff_liminf_measure_open_ge.mpr h_opens
@@ -400,7 +400,7 @@ theorem ProbabilityMeasure.le_liminf_measure_open_of_tendsto {Ω ι : Type _} {L
 theorem ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto' {Ω ι : Type _} {L : Filter ι}
     [MeasurableSpace Ω] [PseudoEmetricSpace Ω] [OpensMeasurableSpace Ω] {μ : ProbabilityMeasure Ω}
     {μs : ι → ProbabilityMeasure Ω} (μs_lim : Tendsto μs L (𝓝 μ)) {E : Set Ω}
-    (E_nullbdry : (μ : Measure Ω) (Frontier E) = 0) :
+    (E_nullbdry : (μ : Measure Ω) (frontier E) = 0) :
     Tendsto (fun i => (μs i : Measure Ω) E) L (𝓝 ((μ : Measure Ω) E)) :=
   haveI h_opens : ∀ G, IsOpen G → (μ : Measure Ω) G ≤ L.liminf fun i => (μs i : Measure Ω) G := fun G G_open =>
     probability_measure.le_liminf_measure_open_of_tendsto μs_lim G_open
@@ -418,9 +418,9 @@ A version with coercions to ordinary `ℝ≥0∞`-valued measures is
 -/
 theorem ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto {Ω ι : Type _} {L : Filter ι} [MeasurableSpace Ω]
     [PseudoEmetricSpace Ω] [OpensMeasurableSpace Ω] {μ : ProbabilityMeasure Ω} {μs : ι → ProbabilityMeasure Ω}
-    (μs_lim : Tendsto μs L (𝓝 μ)) {E : Set Ω} (E_nullbdry : μ (Frontier E) = 0) :
+    (μs_lim : Tendsto μs L (𝓝 μ)) {E : Set Ω} (E_nullbdry : μ (frontier E) = 0) :
     Tendsto (fun i => μs i E) L (𝓝 (μ E)) := by
-  have E_nullbdry' : (μ : Measure Ω) (Frontier E) = 0 := by
+  have E_nullbdry' : (μ : Measure Ω) (frontier E) = 0 := by
     rw [← probability_measure.ennreal_coe_fn_eq_coe_fn_to_measure, E_nullbdry, Ennreal.coe_zero]
   have key := probability_measure.tendsto_measure_of_null_frontier_of_tendsto' μs_lim E_nullbdry'
   exact (Ennreal.tendsto_to_nnreal (measure_ne_top (↑μ) E)).comp key

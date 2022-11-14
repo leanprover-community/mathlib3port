@@ -356,7 +356,7 @@ theorem maximum_concat (a : α) (l : List α) : maximum (l ++ [a]) = max (maximu
   cases h : argmax id l
   · exact (max_eq_right bot_le).symm
     
-  · simp [Option.coe_def, max_def, ← not_lt]
+  · simp [Option.coe_def, max_def_lt]
     
 #align list.maximum_concat List.maximum_concat
 

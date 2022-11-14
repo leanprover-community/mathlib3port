@@ -71,13 +71,13 @@ theorem exists_unique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) : ∃! k
   simpa only [sub_nonneg, add_zsmul, one_zsmul, sub_lt_iff_lt_add'] using exists_unique_zsmul_near_of_pos ha g
 #align exists_unique_zsmul_near_of_pos' exists_unique_zsmul_near_of_pos'
 
-theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.IcoCat c (c + a) :=
+theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.ico c (c + a) :=
   (Equiv.neg ℤ).Bijective.exists_unique_iff.2 <| by
     simpa only [Equiv.neg_apply, mem_Ico, neg_zsmul, ← sub_eq_add_neg, le_sub_iff_add_le, zero_add, add_comm c,
       sub_lt_iff_lt_add', add_assoc] using exists_unique_zsmul_near_of_pos' ha (b - c)
 #align exists_unique_add_zsmul_mem_Ico exists_unique_add_zsmul_mem_Ico
 
-theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.IocCat c (c + a) :=
+theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.ioc c (c + a) :=
   (Equiv.addRight (1 : ℤ)).Bijective.exists_unique_iff.2 <| by
     simpa only [add_zsmul, sub_lt_iff_lt_add', le_sub_iff_add_le', ← add_assoc, and_comm, mem_Ioc, Equiv.coe_add_right,
       one_zsmul, add_le_add_iff_right] using exists_unique_zsmul_near_of_pos ha (c - b)
@@ -1148,10 +1148,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
          "∃"
          (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (Int.termℤ "ℤ")]))
          ","
-         («term_∈_»
-          `x
-          "∈"
-          (Term.app `IcoCat [(«term_^_» `y "^" `n) («term_^_» `y "^" («term_+_» `n "+" (num "1")))])))))
+         («term_∈_» `x "∈" (Term.app `ico [(«term_^_» `y "^" `n) («term_^_» `y "^" («term_+_» `n "+" (num "1")))])))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -3068,7 +3065,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
     but with ≤ and < the other way around. -/
   theorem
     exists_mem_Ico_zpow
-    ( hx : 0 < x ) ( hy : 1 < y ) : ∃ n : ℤ , x ∈ IcoCat y ^ n y ^ n + 1
+    ( hx : 0 < x ) ( hy : 1 < y ) : ∃ n : ℤ , x ∈ ico y ^ n y ^ n + 1
     :=
       by
         skip
@@ -3112,7 +3109,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 /-- Every positive `x` is between two successive integer powers of
 another `y` greater than one. This is the same as `exists_mem_Ico_zpow`,
 but with ≤ and < the other way around. -/
-theorem exists_mem_Ioc_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ IocCat (y ^ n) (y ^ (n + 1)) :=
+theorem exists_mem_Ioc_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ ioc (y ^ n) (y ^ (n + 1)) :=
   let ⟨m, hle, hlt⟩ := exists_mem_Ico_zpow (inv_pos.2 hx) hy
   have hyp : 0 < y := lt_trans zero_lt_one hy
   ⟨-(m + 1), by rwa [zpow_neg, inv_lt (zpow_pos_of_pos hyp _) hx], by

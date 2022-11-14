@@ -131,7 +131,7 @@ protected theorem kuratowskiEmbedding.isometry (α : Type u) [MetricSpace α] [S
 /-- Version of the Kuratowski embedding for nonempty compacts -/
 def NonemptyCompacts.kuratowskiEmbedding (α : Type u) [MetricSpace α] [CompactSpace α] [Nonempty α] :
     NonemptyCompacts ℓ_infty_ℝ where
-  Carrier := Range (kuratowskiEmbedding α)
+  carrier := range (kuratowskiEmbedding α)
   is_compact' := is_compact_range (kuratowskiEmbedding.isometry α).Continuous
   nonempty' := range_nonempty _
 #align nonempty_compacts.Kuratowski_embedding NonemptyCompacts.kuratowskiEmbedding

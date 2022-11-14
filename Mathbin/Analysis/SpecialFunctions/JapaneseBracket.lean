@@ -70,7 +70,7 @@ theorem le_rpow_one_add_norm_iff_norm_le {r t : ℝ} (hr : 0 < r) (ht : 0 < t) (
 variable (E)
 
 theorem closed_ball_rpow_sub_one_eq_empty_aux {r t : ℝ} (hr : 0 < r) (ht : 1 < t) :
-    Metric.ClosedBall (0 : E) (t ^ (-r⁻¹) - 1) = ∅ := by
+    Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1) = ∅ := by
   rw [Metric.closed_ball_eq_empty, sub_neg]
   exact Real.rpow_lt_one_of_one_lt_of_neg ht (by simp only [hr, Right.neg_neg_iff, inv_pos])
 #align closed_ball_rpow_sub_one_eq_empty_aux closed_ball_rpow_sub_one_eq_empty_aux
@@ -80,7 +80,7 @@ variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 variable {E}
 
 theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ) < r) :
-    (∫⁻ x : ℝ in IocCat 0 1, Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n)) < ∞ := by
+    (∫⁻ x : ℝ in ioc 0 1, Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n)) < ∞ := by
   have hr : 0 < r := lt_of_le_of_lt n.cast_nonneg hnr
   have h_int :
     ∀ (x : ℝ) (hx : x ∈ Ioc (0 : ℝ) 1), Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n) ≤ Ennreal.ofReal (x ^ (-(r⁻¹ * n))) := by
@@ -113,7 +113,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
   -- 0 to 1 and from 1 to ∞
   have h_int :
     ∀ (t : ℝ) (ht : t ∈ Ioi (0 : ℝ)),
-      (volume { a : E | t ≤ (1 + ∥a∥) ^ (-r) } : Ennreal) = volume (Metric.ClosedBall (0 : E) (t ^ (-r⁻¹) - 1)) :=
+      (volume { a : E | t ≤ (1 + ∥a∥) ^ (-r) } : Ennreal) = volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) :=
     by
     intro t ht
     congr 1
@@ -126,8 +126,8 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
   rw [hIoi_eq, lintegral_union measurableSetIoi hdisjoint, Ennreal.add_lt_top]
   have h_int' :
     ∀ (t : ℝ) (ht : t ∈ Ioc (0 : ℝ) 1),
-      (volume (Metric.ClosedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) =
-        Ennreal.ofReal ((t ^ (-r⁻¹) - 1) ^ FiniteDimensional.finrank ℝ E) * volume (Metric.Ball (0 : E) 1) :=
+      (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) =
+        Ennreal.ofReal ((t ^ (-r⁻¹) - 1) ^ FiniteDimensional.finrank ℝ E) * volume (Metric.ball (0 : E) 1) :=
     by
     intro t ht
     refine' volume.add_haar_closed_ball (0 : E) _
@@ -144,7 +144,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
     
   -- The integral from 1 to ∞ is zero:
   have h_int'' :
-    ∀ (t : ℝ) (ht : t ∈ Ioi (1 : ℝ)), (volume (Metric.ClosedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) = 0 := fun t ht =>
+    ∀ (t : ℝ) (ht : t ∈ Ioi (1 : ℝ)), (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) = 0 := fun t ht =>
     by rw [closed_ball_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
   -- The integral over the constant zero function is finite:
   rw [set_lintegral_congr_fun measurableSetIoi (ae_of_all volume <| h_int''), lintegral_const 0, zero_mul]

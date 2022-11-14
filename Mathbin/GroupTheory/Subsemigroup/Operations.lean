@@ -76,8 +76,8 @@ variable [Mul M]
 /-- Subsemigroups of semigroup `M` are isomorphic to additive subsemigroups of `additive M`. -/
 @[simps]
 def Subsemigroup.toAddSubsemigroup : Subsemigroup M ≃o AddSubsemigroup (Additive M) where
-  toFun S := { Carrier := Additive.toMul ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
-  invFun S := { Carrier := Additive.ofMul ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
+  toFun S := { carrier := Additive.toMul ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
+  invFun S := { carrier := Additive.ofMul ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
   map_rel_iff' a b := Iff.rfl
@@ -113,8 +113,8 @@ variable {A : Type _} [Add A]
 multiplicative subsemigroups of `multiplicative A`. -/
 @[simps]
 def AddSubsemigroup.toSubsemigroup : AddSubsemigroup A ≃o Subsemigroup (Multiplicative A) where
-  toFun S := { Carrier := Multiplicative.toAdd ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
-  invFun S := { Carrier := Multiplicative.ofAdd ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
+  toFun S := { carrier := Multiplicative.toAdd ⁻¹' S, mul_mem' := fun _ _ => S.add_mem' }
+  invFun S := { carrier := Multiplicative.ofAdd ⁻¹' S, add_mem' := fun _ _ => S.mul_mem' }
   left_inv x := by cases x <;> rfl
   right_inv x := by cases x <;> rfl
   map_rel_iff' a b := Iff.rfl
@@ -158,7 +158,7 @@ variable [Mul M] [Mul N] [Mul P] (S : Subsemigroup M)
 /-- The preimage of a subsemigroup along a semigroup homomorphism is a subsemigroup. -/
 @[to_additive "The preimage of an `add_subsemigroup` along an `add_semigroup` homomorphism is an\n`add_subsemigroup`."]
 def comap (f : M →ₙ* N) (S : Subsemigroup N) : Subsemigroup M where
-  Carrier := f ⁻¹' S
+  carrier := f ⁻¹' S
   mul_mem' a b ha hb := show f (a * b) ∈ S by rw [map_mul] <;> exact mul_mem ha hb
 #align subsemigroup.comap Subsemigroup.comap
 
@@ -185,7 +185,7 @@ theorem comap_id (S : Subsemigroup P) : S.comap (MulHom.id _) = S :=
 /-- The image of a subsemigroup along a semigroup homomorphism is a subsemigroup. -/
 @[to_additive "The image of an `add_subsemigroup` along an `add_semigroup` homomorphism is\nan `add_subsemigroup`."]
 def map (f : M →ₙ* N) (S : Subsemigroup M) : Subsemigroup N where
-  Carrier := f '' S
+  carrier := f '' S
   mul_mem' := by
     rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩
     exact ⟨x * y, @mul_mem (Subsemigroup M) M _ _ _ _ _ _ hx hy, by rw [map_mul] <;> rfl⟩
@@ -539,7 +539,7 @@ of `M × N`. -/
 @[to_additive Prod
       "Given `add_subsemigroup`s `s`, `t` of `add_semigroup`s `A`, `B` respectively,\n`s × t` as an `add_subsemigroup` of `A × B`."]
 def prod (s : Subsemigroup M) (t : Subsemigroup N) : Subsemigroup (M × N) where
-  Carrier := s ×ˢ t
+  carrier := s ×ˢ t
   mul_mem' p q hp hq := ⟨s.mul_mem hp.1 hq.1, t.mul_mem hp.2 hq.2⟩
 #align subsemigroup.prod Subsemigroup.prod
 
@@ -637,11 +637,11 @@ variable [Mul M] [Mul N] [Mul P] (S : Subsemigroup M)
 /-- The range of a semigroup homomorphism is a subsemigroup. See Note [range copy pattern]. -/
 @[to_additive "The range of an `add_hom` is an `add_subsemigroup`."]
 def srange (f : M →ₙ* N) : Subsemigroup N :=
-  ((⊤ : Subsemigroup M).map f).copy (Set.Range f) Set.image_univ.symm
+  ((⊤ : Subsemigroup M).map f).copy (Set.range f) Set.image_univ.symm
 #align mul_hom.srange MulHom.srange
 
 @[simp, to_additive]
-theorem coe_srange (f : M →ₙ* N) : (f.srange : Set N) = Set.Range f :=
+theorem coe_srange (f : M →ₙ* N) : (f.srange : Set N) = Set.range f :=
   rfl
 #align mul_hom.coe_srange MulHom.coe_srange
 
@@ -831,7 +831,7 @@ def subsemigroupMap (e : M ≃* N) (S : Subsemigroup M) : S ≃* S.map e.toMulHo
   { -- we restate this for `simps` to avoid `⇑e.symm.to_equiv x`
           e.toMulHom.subsemigroupMap
       S,
-    e.toEquiv.Image S with toFun := fun x => ⟨e x, _⟩, invFun := fun x => ⟨e.symm x, _⟩ }
+    e.toEquiv.image S with toFun := fun x => ⟨e x, _⟩, invFun := fun x => ⟨e.symm x, _⟩ }
 #align mul_equiv.subsemigroup_map MulEquiv.subsemigroupMap
 
 end MulEquiv

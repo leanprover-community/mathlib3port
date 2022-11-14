@@ -93,7 +93,7 @@ theorem MeasurableSet.compl_iff : MeasurableSet (sᶜ) ↔ MeasurableSet s :=
 #align measurable_set.compl_iff MeasurableSet.compl_iff
 
 @[simp]
-theorem MeasurableSet.univ : MeasurableSet (Univ : Set α) := by simpa using (@MeasurableSet.empty α _).compl
+theorem MeasurableSet.univ : MeasurableSet (univ : Set α) := by simpa using (@MeasurableSet.empty α _).compl
 #align measurable_set.univ MeasurableSet.univ
 
 @[nontriviality]
@@ -248,7 +248,7 @@ theorem MeasurableSet.const (p : Prop) : MeasurableSet { a : α | p } := by
 
 /-- Every set has a measurable superset. Declare this as local instance as needed. -/
 theorem nonempty_measurable_superset (s : Set α) : Nonempty { t // s ⊆ t ∧ MeasurableSet t } :=
-  ⟨⟨Univ, subset_univ s, MeasurableSet.univ⟩⟩
+  ⟨⟨univ, subset_univ s, MeasurableSet.univ⟩⟩
 #align nonempty_measurable_superset nonempty_measurable_superset
 
 end
@@ -420,7 +420,7 @@ theorem generate_from_sup_generate_from {s t : Set (Set α)} : generateFrom s �
 #align measurable_space.generate_from_sup_generate_from MeasurableSpace.generate_from_sup_generate_from
 
 @[simp]
-theorem generate_from_insert_univ (S : Set (Set α)) : generateFrom (insert Set.Univ S) = generateFrom S := by
+theorem generate_from_insert_univ (S : Set (Set α)) : generateFrom (insert Set.univ S) = generateFrom S := by
   refine' le_antisymm _ (generate_from_mono (Set.subset_insert _ _))
   rw [generate_from_le_iff]
   intro t ht
@@ -452,7 +452,7 @@ theorem generate_from_singleton_empty : generateFrom {∅} = (⊥ : MeasurableSp
 #align measurable_space.generate_from_singleton_empty MeasurableSpace.generate_from_singleton_empty
 
 @[simp]
-theorem generate_from_singleton_univ : generateFrom {Set.Univ} = (⊥ : MeasurableSpace α) := by
+theorem generate_from_singleton_univ : generateFrom {Set.univ} = (⊥ : MeasurableSpace α) := by
   rw [eq_bot_iff, generate_from_le_iff]
   simp
 #align measurable_space.generate_from_singleton_univ MeasurableSpace.generate_from_singleton_univ

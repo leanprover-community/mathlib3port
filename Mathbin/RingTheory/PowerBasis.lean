@@ -88,8 +88,8 @@ theorem finrank [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional.finrank 
 #align power_basis.finrank PowerBasis.finrank
 
 theorem mem_span_pow' {x y : S} {d : ℕ} :
-    y ∈ Submodule.span R (Set.Range fun i : Fin d => x ^ (i : ℕ)) ↔ ∃ f : R[X], f.degree < d ∧ y = aeval x f := by
-  have : (Set.Range fun i : Fin d => x ^ (i : ℕ)) = (fun i : ℕ => x ^ i) '' ↑(Finset.range d) := by
+    y ∈ Submodule.span R (Set.range fun i : Fin d => x ^ (i : ℕ)) ↔ ∃ f : R[X], f.degree < d ∧ y = aeval x f := by
+  have : (Set.range fun i : Fin d => x ^ (i : ℕ)) = (fun i : ℕ => x ^ i) '' ↑(Finset.range d) := by
     ext n
     simp_rw [Set.mem_range, Set.mem_image, Finset.mem_coe, Finset.mem_range]
     exact ⟨fun ⟨⟨i, hi⟩, hy⟩ => ⟨i, hi, hy⟩, fun ⟨i, hi, hy⟩ => ⟨⟨i, hi⟩, hy⟩⟩
@@ -102,7 +102,7 @@ theorem mem_span_pow' {x y : S} {d : ℕ} :
 #align power_basis.mem_span_pow' PowerBasis.mem_span_pow'
 
 theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
-    y ∈ Submodule.span R (Set.Range fun i : Fin d => x ^ (i : ℕ)) ↔ ∃ f : R[X], f.natDegree < d ∧ y = aeval x f := by
+    y ∈ Submodule.span R (Set.range fun i : Fin d => x ^ (i : ℕ)) ↔ ∃ f : R[X], f.natDegree < d ∧ y = aeval x f := by
   rw [mem_span_pow']
   constructor <;>
     · rintro ⟨f, h, hy⟩
@@ -469,7 +469,7 @@ theorem IsIntegral.linear_independent_pow [Algebra K S] {x : S} (hx : IsIntegral
 #align is_integral.linear_independent_pow IsIntegral.linear_independent_pow
 
 theorem IsIntegral.mem_span_pow [Nontrivial R] {x y : S} (hx : IsIntegral R x) (hy : ∃ f : R[X], y = aeval x f) :
-    y ∈ Submodule.span R (Set.Range fun i : Fin (minpoly R x).natDegree => x ^ (i : ℕ)) := by
+    y ∈ Submodule.span R (Set.range fun i : Fin (minpoly R x).natDegree => x ^ (i : ℕ)) := by
   obtain ⟨f, rfl⟩ := hy
   apply mem_span_pow'.mpr _
   have := minpoly.monic hx

@@ -28,21 +28,21 @@ section Ultrafilter
 /- The set of ultrafilters on α carries a natural topology which makes
   it the Stone-Čech compactification of α (viewed as a discrete space). -/
 /-- Basis for the topology on `ultrafilter α`. -/
-def UltrafilterBasis (α : Type u) : Set (Set (Ultrafilter α)) :=
+def ultrafilterBasis (α : Type u) : Set (Set (Ultrafilter α)) :=
   range fun s : Set α => { u | s ∈ u }
-#align ultrafilter_basis UltrafilterBasis
+#align ultrafilter_basis ultrafilterBasis
 
 variable {α : Type u}
 
 instance : TopologicalSpace (Ultrafilter α) :=
-  TopologicalSpace.generateFrom (UltrafilterBasis α)
+  TopologicalSpace.generateFrom (ultrafilterBasis α)
 
-theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (UltrafilterBasis α) :=
+theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (ultrafilterBasis α) :=
   ⟨by
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ u ⟨ua, ub⟩
     refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;>
       apply mem_of_superset hv <;> simp [inter_subset_right a b],
-    eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨Univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
+    eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
 #align ultrafilter_basis_is_basis ultrafilter_basis_is_basis
 
 /-- The basic open sets for the topology on ultrafilters are open. -/
@@ -63,7 +63,7 @@ theorem ultrafilterIsClosedBasic (s : Set α) : IsClosed { u : Ultrafilter α | 
 theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultrafilter α} : ↑u ≤ 𝓝 x ↔ x = joinM u := by
   rw [eq_comm, ← Ultrafilter.coe_le_coe]
   change ↑u ≤ 𝓝 x ↔ ∀ s ∈ x, { v : Ultrafilter α | s ∈ v } ∈ u
-  simp only [TopologicalSpace.nhds_generate_from, le_infi_iff, UltrafilterBasis, le_principal_iff, mem_set_of_eq]
+  simp only [TopologicalSpace.nhds_generate_from, le_infi_iff, ultrafilterBasis, le_principal_iff, mem_set_of_eq]
   constructor
   · intro h a ha
     exact h _ ⟨ha, a, rfl⟩

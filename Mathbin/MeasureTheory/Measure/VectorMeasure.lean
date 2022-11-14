@@ -742,7 +742,7 @@ theorem restrict_empty : v.restrict ∅ = 0 :=
 #align measure_theory.vector_measure.restrict_empty MeasureTheory.VectorMeasure.restrict_empty
 
 @[simp]
-theorem restrict_univ : v.restrict Univ = v :=
+theorem restrict_univ : v.restrict univ = v :=
   ext fun i hi => by rw [restrict_apply v MeasurableSet.univ hi, inter_univ]
 #align measure_theory.vector_measure.restrict_univ MeasureTheory.VectorMeasure.restrict_univ
 
@@ -1500,14 +1500,14 @@ instance toMeasureOfLeZeroFinite (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) :
 #align measure_theory.signed_measure.to_measure_of_le_zero_finite MeasureTheory.SignedMeasure.toMeasureOfLeZeroFinite
 
 theorem to_measure_of_zero_le_to_signed_measure (hs : 0 ≤[univ] s) :
-    (s.toMeasureOfZeroLe Univ MeasurableSet.univ hs).toSignedMeasure = s := by
+    (s.toMeasureOfZeroLe univ MeasurableSet.univ hs).toSignedMeasure = s := by
   ext (i hi)
   simp [measure.to_signed_measure_apply_measurable hi, to_measure_of_zero_le_apply _ _ _ hi]
 #align
   measure_theory.signed_measure.to_measure_of_zero_le_to_signed_measure MeasureTheory.SignedMeasure.to_measure_of_zero_le_to_signed_measure
 
 theorem to_measure_of_le_zero_to_signed_measure (hs : s ≤[univ] 0) :
-    (s.toMeasureOfLeZero Univ MeasurableSet.univ hs).toSignedMeasure = -s := by
+    (s.toMeasureOfLeZero univ MeasurableSet.univ hs).toSignedMeasure = -s := by
   ext (i hi)
   simp [measure.to_signed_measure_apply_measurable hi, to_measure_of_le_zero_apply _ _ _ hi]
 #align
@@ -1529,7 +1529,7 @@ theorem zero_le_to_signed_measure : 0 ≤ μ.toSignedMeasure := by
 #align measure_theory.measure.zero_le_to_signed_measure MeasureTheory.Measure.zero_le_to_signed_measure
 
 theorem to_signed_measure_to_measure_of_zero_le :
-    μ.toSignedMeasure.toMeasureOfZeroLe Univ MeasurableSet.univ
+    μ.toSignedMeasure.toMeasureOfZeroLe univ MeasurableSet.univ
         ((le_restrict_univ_iff_le _ _).2 (zero_le_to_signed_measure μ)) =
       μ :=
   by

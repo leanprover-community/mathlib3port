@@ -29,7 +29,7 @@ TODO: show that `π n x` is a group when `n > 0` and abelian when `n > 1`. Show 
 -/
 
 
-open UnitInterval TopologicalSpace
+open unitInterval TopologicalSpace
 
 noncomputable section
 
@@ -57,9 +57,9 @@ theorem proj_continuous (i : Fin n) : Continuous fun f : I^ n => f i :=
 
 /-- The points of the `n`-dimensional cube with at least one projection equal to 0 or 1.
 -/
-def Boundary (n : ℕ) : Set (I^ n) :=
+def boundary (n : ℕ) : Set (I^ n) :=
   { y | ∃ i, y i = 0 ∨ y i = 1 }
-#align cube.boundary Cube.Boundary
+#align cube.boundary Cube.boundary
 
 /-- The first projection of a positive-dimensional cube.
 -/
@@ -90,7 +90,7 @@ end Cube
 /-- The `n`-dimensional generalized loops; functions `I^n → X` that send the boundary to the base point.
 -/
 structure GenLoop (n : ℕ) (x : X) extends C(I^ n, X) where
-  Boundary : ∀ y ∈ Cube.Boundary n, to_fun y = x
+  boundary : ∀ y ∈ Cube.boundary n, to_fun y = x
 #align gen_loop GenLoop
 
 namespace GenLoop
@@ -124,7 +124,7 @@ instance inhabited : Inhabited (GenLoop n x) where default := const
 /-- The "homotopy relative to boundary" relation between `gen_loop`s.
 -/
 def Homotopic (f g : GenLoop n x) : Prop :=
-  f.toContinuousMap.HomotopicRel g.toContinuousMap (Cube.Boundary n)
+  f.toContinuousMap.HomotopicRel g.toContinuousMap (Cube.boundary n)
 #align gen_loop.homotopic GenLoop.Homotopic
 
 namespace Homotopic
@@ -206,10 +206,10 @@ def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x where
       ⟨fun t => p fun _ => t, by
         continuity
         exact p.1.2⟩
-      (p.Boundary (fun _ => 0) ⟨0, Or.inl rfl⟩) (p.Boundary (fun _ => 1) ⟨1, Or.inr rfl⟩)
+      (p.boundary (fun _ => 0) ⟨0, Or.inl rfl⟩) (p.boundary (fun _ => 1) ⟨1, Or.inr rfl⟩)
   invFun p :=
     { toFun := fun c => p c.head,
-      Boundary := by
+      boundary := by
         rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_arg p iH).trans
         exacts[p.source, p.target] }
   left_inv p := by

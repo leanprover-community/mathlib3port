@@ -132,7 +132,7 @@ theorem coe_injective : Function.Injective (coe : ProbabilityMeasure Ω → Meas
 #align measure_theory.probability_measure.coe_injective MeasureTheory.ProbabilityMeasure.coe_injective
 
 @[simp]
-theorem coe_fn_univ (ν : ProbabilityMeasure Ω) : ν Univ = 1 :=
+theorem coe_fn_univ (ν : ProbabilityMeasure Ω) : ν univ = 1 :=
   congr_arg Ennreal.toNnreal ν.Prop.measure_univ
 #align measure_theory.probability_measure.coe_fn_univ MeasureTheory.ProbabilityMeasure.coe_fn_univ
 

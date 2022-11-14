@@ -167,12 +167,12 @@ protected def hasInv : Inv (Finset α) :=
 localized [Pointwise] attribute [instance] Finset.hasInv Finset.hasNeg
 
 @[to_additive]
-theorem inv_def : s⁻¹ = s.Image fun x => x⁻¹ :=
+theorem inv_def : s⁻¹ = s.image fun x => x⁻¹ :=
   rfl
 #align finset.inv_def Finset.inv_def
 
 @[to_additive]
-theorem image_inv : (s.Image fun x => x⁻¹) = s⁻¹ :=
+theorem image_inv : (s.image fun x => x⁻¹) = s⁻¹ :=
   rfl
 #align finset.image_inv Finset.image_inv
 
@@ -265,13 +265,13 @@ localized [Pointwise] attribute [instance] Finset.hasMul Finset.hasAdd
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
-theorem mul_def : s * t = (s ×ˢ t).Image fun p : α × α => p.1 * p.2 :=
+theorem mul_def : s * t = (s ×ˢ t).image fun p : α × α => p.1 * p.2 :=
   rfl
 #align finset.mul_def Finset.mul_def
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
-theorem image_mul_product : ((s ×ˢ t).Image fun x : α × α => x.fst * x.snd) = s * t :=
+theorem image_mul_product : ((s ×ˢ t).image fun x : α × α => x.fst * x.snd) = s * t :=
   rfl
 #align finset.image_mul_product Finset.image_mul_product
 
@@ -337,12 +337,12 @@ theorem Nonempty.of_mul_right : (s * t).Nonempty → t.Nonempty :=
 #align finset.nonempty.of_mul_right Finset.Nonempty.of_mul_right
 
 @[to_additive]
-theorem mul_singleton (a : α) : s * {a} = s.Image (· * a) :=
+theorem mul_singleton (a : α) : s * {a} = s.image (· * a) :=
   image₂_singleton_right
 #align finset.mul_singleton Finset.mul_singleton
 
 @[to_additive]
-theorem singleton_mul (a : α) : {a} * s = s.Image ((· * ·) a) :=
+theorem singleton_mul (a : α) : {a} * s = s.image ((· * ·) a) :=
   image₂_singleton_left
 #align finset.singleton_mul Finset.singleton_mul
 
@@ -402,7 +402,7 @@ theorem subset_mul {s t : Set α} : ↑u ⊆ s * t → ∃ s' t' : Finset α, �
 #align finset.subset_mul Finset.subset_mul
 
 @[to_additive]
-theorem image_mul : (s * t).Image (f : α → β) = s.Image f * t.Image f :=
+theorem image_mul : (s * t).image (f : α → β) = s.image f * t.image f :=
   image_image₂_distrib <| map_mul f
 #align finset.image_mul Finset.image_mul
 
@@ -450,13 +450,13 @@ localized [Pointwise] attribute [instance] Finset.hasDiv Finset.hasSub
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
-theorem div_def : s / t = (s ×ˢ t).Image fun p : α × α => p.1 / p.2 :=
+theorem div_def : s / t = (s ×ˢ t).image fun p : α × α => p.1 / p.2 :=
   rfl
 #align finset.div_def Finset.div_def
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive add_image_prod]
-theorem image_div_prod : ((s ×ˢ t).Image fun x : α × α => x.fst / x.snd) = s / t :=
+theorem image_div_prod : ((s ×ˢ t).image fun x : α × α => x.fst / x.snd) = s / t :=
   rfl
 #align finset.image_div_prod Finset.image_div_prod
 
@@ -516,12 +516,12 @@ theorem Nonempty.of_div_right : (s / t).Nonempty → t.Nonempty :=
 #align finset.nonempty.of_div_right Finset.Nonempty.of_div_right
 
 @[simp, to_additive]
-theorem div_singleton (a : α) : s / {a} = s.Image (· / a) :=
+theorem div_singleton (a : α) : s / {a} = s.image (· / a) :=
   image₂_singleton_right
 #align finset.div_singleton Finset.div_singleton
 
 @[simp, to_additive]
-theorem singleton_div (a : α) : {a} / s = s.Image ((· / ·) a) :=
+theorem singleton_div (a : α) : {a} / s = s.image ((· / ·) a) :=
   image₂_singleton_left
 #align finset.singleton_div Finset.singleton_div
 
@@ -981,7 +981,7 @@ theorem image_mul_left' : image (fun b => a⁻¹ * b) t = preimage t (fun b => a
 theorem image_mul_right' : image (· * b⁻¹) t = preimage t (· * b) ((mul_left_injective _).InjOn _) := by simp
 #align finset.image_mul_right' Finset.image_mul_right'
 
-theorem image_div : (s / t).Image (f : α → β) = s.Image f / t.Image f :=
+theorem image_div : (s / t).image (f : α → β) = s.image f / t.image f :=
   image_image₂_distrib <| map_div f
 #align finset.image_div Finset.image_div
 
@@ -1062,13 +1062,13 @@ localized [Pointwise] attribute [instance] Finset.hasSmul Finset.hasVadd
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
-theorem smul_def : s • t = (s ×ˢ t).Image fun p : α × β => p.1 • p.2 :=
+theorem smul_def : s • t = (s ×ˢ t).image fun p : α × β => p.1 • p.2 :=
   rfl
 #align finset.smul_def Finset.smul_def
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
-theorem image_smul_product : ((s ×ˢ t).Image fun x : α × β => x.fst • x.snd) = s • t :=
+theorem image_smul_product : ((s ×ˢ t).image fun x : α × β => x.fst • x.snd) = s • t :=
   rfl
 #align finset.image_smul_product Finset.image_smul_product
 
@@ -1128,7 +1128,7 @@ theorem Nonempty.of_smul_right : (s • t).Nonempty → t.Nonempty :=
 #align finset.nonempty.of_smul_right Finset.Nonempty.of_smul_right
 
 @[to_additive]
-theorem smul_singleton (b : β) : s • ({b} : Finset β) = s.Image (· • b) :=
+theorem smul_singleton (b : β) : s • ({b} : Finset β) = s.image (· • b) :=
   image₂_singleton_right
 #align finset.smul_singleton Finset.smul_singleton
 
@@ -1265,11 +1265,11 @@ theorem Nonempty.of_vsub_right : (s -ᵥ t : Finset α).Nonempty → t.Nonempty 
 #align finset.nonempty.of_vsub_right Finset.Nonempty.of_vsub_right
 
 @[simp]
-theorem vsub_singleton (b : β) : s -ᵥ ({b} : Finset β) = s.Image (· -ᵥ b) :=
+theorem vsub_singleton (b : β) : s -ᵥ ({b} : Finset β) = s.image (· -ᵥ b) :=
   image₂_singleton_right
 #align finset.vsub_singleton Finset.vsub_singleton
 
-theorem singleton_vsub (a : β) : ({a} : Finset β) -ᵥ t = t.Image ((· -ᵥ ·) a) :=
+theorem singleton_vsub (a : β) : ({a} : Finset β) -ᵥ t = t.image ((· -ᵥ ·) a) :=
   image₂_singleton_left
 #align finset.singleton_vsub Finset.singleton_vsub
 
@@ -1343,12 +1343,12 @@ protected def hasSmulFinset : HasSmul α (Finset β) :=
 localized [Pointwise] attribute [instance] Finset.hasSmulFinset Finset.hasVaddFinset
 
 @[to_additive]
-theorem smul_finset_def : a • s = s.Image ((· • ·) a) :=
+theorem smul_finset_def : a • s = s.image ((· • ·) a) :=
   rfl
 #align finset.smul_finset_def Finset.smul_finset_def
 
 @[to_additive]
-theorem image_smul : (s.Image fun x => a • x) = a • s :=
+theorem image_smul : (s.image fun x => a • x) = a • s :=
   rfl
 #align finset.image_smul Finset.image_smul
 
@@ -1389,7 +1389,7 @@ theorem smul_finset_nonempty : (a • s).Nonempty ↔ s.Nonempty :=
 
 @[to_additive]
 theorem Nonempty.smul_finset (hs : s.Nonempty) : (a • s).Nonempty :=
-  hs.Image _
+  hs.image _
 #align finset.nonempty.smul_finset Finset.Nonempty.smul_finset
 
 @[simp, to_additive]

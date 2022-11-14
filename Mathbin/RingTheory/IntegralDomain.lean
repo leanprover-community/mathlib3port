@@ -137,8 +137,8 @@ end
 
 variable [Fintype G]
 
-theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G →* H) {x y : H} (hx : x ∈ Set.Range f)
-    (hy : y ∈ Set.Range f) : (univ.filter fun g => f g = x).card = (univ.filter fun g => f g = y).card := by
+theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G →* H) {x y : H} (hx : x ∈ Set.range f)
+    (hy : y ∈ Set.range f) : (univ.filter fun g => f g = x).card = (univ.filter fun g => f g = y).card := by
   rcases hx with ⟨x, rfl⟩
   rcases hy with ⟨y, rfl⟩
   refine' card_congr (fun g _ => g * x⁻¹ * y) _ _ fun g hg => ⟨g * y⁻¹ * x, _⟩

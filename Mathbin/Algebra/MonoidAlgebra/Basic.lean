@@ -126,7 +126,7 @@ instance : NonUnitalNonAssocSemiring (MonoidAlgebra k G) :=
 variable [Semiring R]
 
 theorem lift_nc_mul {g_hom : Type _} [MulHomClass g_hom G R] (f : k →+* R) (g : g_hom) (a b : MonoidAlgebra k G)
-    (h_comm : ∀ {x y}, y ∈ a.Support → Commute (f (b x)) (g y)) :
+    (h_comm : ∀ {x y}, y ∈ a.support → Commute (f (b x)) (g y)) :
     liftNc (f : k →+ R) g (a * b) = liftNc (f : k →+ R) g a * liftNc (f : k →+ R) g b := by
   conv_rhs => rw [← sum_single a, ← sum_single b]
   simp_rw [mul_def, (lift_nc _ g).map_finsupp_sum, lift_nc_single, Finsupp.sum_mul, Finsupp.mul_sum]
@@ -398,13 +398,13 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             "∑"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
             " in "
-            (Term.proj `f "." `Support)
+            (Term.proj `f "." `support)
             ", "
             (BigOperators.Algebra.BigOperators.Basic.finset.sum
              "∑"
              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
              " in "
-             (Term.proj `g "." `Support)
+             (Term.proj `g "." `support)
              ", "
              (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))))
           ":="
@@ -417,7 +417,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
              "∑"
              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
              " in "
-             (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+             (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
              ", "
              (Term.app `F [`p])))
            ":="
@@ -432,7 +432,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
              " in "
              (Term.app
               (Term.proj
-               (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+               (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
                "."
                `filter)
               [(Term.fun
@@ -469,9 +469,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                  [(Term.typeSpec ":" («term_×_» `G "×" `G))]
                  "=>"
                  («term_∧_»
-                  («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `Support))
+                  («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
                   "∧"
-                  («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `Support)))))])
+                  («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
              ", "
              («term_*_»
               (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -622,13 +622,13 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
            " in "
-           (Term.proj `f "." `Support)
+           (Term.proj `f "." `support)
            ", "
            (BigOperators.Algebra.BigOperators.Basic.finset.sum
             "∑"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
             " in "
-            (Term.proj `g "." `Support)
+            (Term.proj `g "." `support)
             ", "
             (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))))
          ":="
@@ -641,7 +641,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             "∑"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
             " in "
-            (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+            (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
             ", "
             (Term.app `F [`p])))
           ":="
@@ -656,7 +656,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             " in "
             (Term.app
              (Term.proj
-              (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+              (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
               "."
               `filter)
              [(Term.fun
@@ -693,9 +693,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                 [(Term.typeSpec ":" («term_×_» `G "×" `G))]
                 "=>"
                 («term_∧_»
-                 («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `Support))
+                 («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
                  "∧"
-                 («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `Support)))))])
+                 («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
             ", "
             («term_*_»
              (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -807,13 +807,13 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
           "∑"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
           " in "
-          (Term.proj `f "." `Support)
+          (Term.proj `f "." `support)
           ", "
           (BigOperators.Algebra.BigOperators.Basic.finset.sum
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
            " in "
-           (Term.proj `g "." `Support)
+           (Term.proj `g "." `support)
            ", "
            (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))))
         ":="
@@ -826,7 +826,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
            " in "
-           (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+           (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
            ", "
            (Term.app `F [`p])))
          ":="
@@ -841,7 +841,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            " in "
            (Term.app
             (Term.proj
-             (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+             (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
              "."
              `filter)
             [(Term.fun
@@ -878,9 +878,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                [(Term.typeSpec ":" («term_×_» `G "×" `G))]
                "=>"
                («term_∧_»
-                («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `Support))
+                («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
                 "∧"
-                («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `Support)))))])
+                («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
            ", "
            («term_*_»
             (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -1536,9 +1536,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             [(Term.typeSpec ":" («term_×_» `G "×" `G))]
             "=>"
             («term_∧_»
-             («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `Support))
+             («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
              "∧"
-             («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `Support)))))])
+             («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
         ", "
         («term_*_»
          (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -1558,9 +1558,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            [(Term.typeSpec ":" («term_×_» `G "×" `G))]
            "=>"
            («term_∧_»
-            («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `Support))
+            («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
             "∧"
-            («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `Support)))))])
+            («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
        ", "
        («term_*_»
         (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -1610,9 +1610,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
           [(Term.typeSpec ":" («term_×_» `G "×" `G))]
           "=>"
           («term_∧_»
-           («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `Support))
+           («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
            "∧"
-           («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `Support)))))])
+           («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1623,18 +1623,18 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         [(Term.typeSpec ":" («term_×_» `G "×" `G))]
         "=>"
         («term_∧_»
-         («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `Support))
+         («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
          "∧"
-         («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `Support)))))
+         («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_∧_»
-       («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `Support))
+       («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
        "∧"
-       («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `Support)))
+       («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `Support))
+      («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `g "." `Support)
+      (Term.proj `g "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
@@ -1647,9 +1647,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 35 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 35, term))
-      («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `Support))
+      («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `f "." `Support)
+      (Term.proj `f "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
@@ -1723,7 +1723,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         " in "
         (Term.app
          (Term.proj
-          (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+          (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
           "."
           `filter)
          [(Term.fun
@@ -1745,7 +1745,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        " in "
        (Term.app
         (Term.proj
-         (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+         (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
          "."
          `filter)
         [(Term.fun
@@ -1797,7 +1797,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj
-        (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+        (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
         "."
         `filter)
        [(Term.fun
@@ -1856,19 +1856,19 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj
-       (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+       (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
        "."
        `filter)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+      (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `g "." `Support)
+      (Term.proj `g "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 82 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 82, term))
-      (Term.proj `f "." `Support)
+      (Term.proj `f "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
@@ -1876,7 +1876,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 82, (some 82, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support)) []]
+     [(Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support)) []]
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -1899,7 +1899,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
         " in "
-        (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+        (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
         ", "
         (Term.app `F [`p])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1907,7 +1907,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        "∑"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
        " in "
-       (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+       (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
        ", "
        (Term.app `F [`p]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1922,15 +1922,15 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `Support) " ×ˢ " (Term.proj `g "." `Support))
+      (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `g "." `Support)
+      (Term.proj `g "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 82 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 82, term))
-      (Term.proj `f "." `Support)
+      (Term.proj `f "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
@@ -1970,13 +1970,13 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
         " in "
-        (Term.proj `f "." `Support)
+        (Term.proj `f "." `support)
         ", "
         (BigOperators.Algebra.BigOperators.Basic.finset.sum
          "∑"
          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
          " in "
-         (Term.proj `g "." `Support)
+         (Term.proj `g "." `support)
          ", "
          (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1984,13 +1984,13 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        "∑"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
        " in "
-       (Term.proj `f "." `Support)
+       (Term.proj `f "." `support)
        ", "
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
         " in "
-        (Term.proj `g "." `Support)
+        (Term.proj `g "." `support)
         ", "
         (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1998,7 +1998,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        "∑"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
        " in "
-       (Term.proj `g "." `Support)
+       (Term.proj `g "." `support)
        ", "
        (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2019,14 +2019,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `g "." `Support)
+      (Term.proj `g "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `f "." `Support)
+      (Term.proj `f "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
@@ -2226,12 +2226,12 @@ theorem
     let
       F : G × G → k := fun p => by skip <;> exact if p . 1 * p . 2 = x then f p . 1 * g p . 2 else 0
       calc
-        f * g x = ∑ a₁ in f . Support , ∑ a₂ in g . Support , F ( a₁ , a₂ ) := mul_apply f g x
-        _ = ∑ p in f . Support ×ˢ g . Support , F p := Finset.sum_product . symm
-          _ = ∑ p in f . Support ×ˢ g . Support . filter fun p : G × G => p . 1 * p . 2 = x , f p . 1 * g p . 2
+        f * g x = ∑ a₁ in f . support , ∑ a₂ in g . support , F ( a₁ , a₂ ) := mul_apply f g x
+        _ = ∑ p in f . support ×ˢ g . support , F p := Finset.sum_product . symm
+          _ = ∑ p in f . support ×ˢ g . support . filter fun p : G × G => p . 1 * p . 2 = x , f p . 1 * g p . 2
             :=
             Finset.sum_filter _ _ . symm
-          _ = ∑ p in s . filter fun p : G × G => p . 1 ∈ f . Support ∧ p . 2 ∈ g . Support , f p . 1 * g p . 2
+          _ = ∑ p in s . filter fun p : G × G => p . 1 ∈ f . support ∧ p . 2 ∈ g . support , f p . 1 * g p . 2
             :=
             sum_congr by ext simp only [ mem_filter , mem_product , hs , and_comm' ] fun _ _ => rfl
           _ = ∑ p in s , f p . 1 * g p . 2
@@ -5057,7 +5057,7 @@ variable [Module k V] [Module (MonoidAlgebra k G) V] [IsScalarTower k (MonoidAlg
 submodule over `monoid_algebra k G`  -/
 def submoduleOfSmulMem (W : Submodule k V) (h : ∀ (g : G) (v : V), v ∈ W → of k G g • v ∈ W) :
     Submodule (MonoidAlgebra k G) V where
-  Carrier := W
+  carrier := W
   zero_mem' := W.zero_mem'
   add_mem' _ _ := W.add_mem'
   smul_mem' := by
@@ -5155,7 +5155,7 @@ instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
 variable [Semiring R]
 
 theorem lift_nc_mul {g_hom : Type _} [MulHomClass g_hom (Multiplicative G) R] (f : k →+* R) (g : g_hom)
-    (a b : AddMonoidAlgebra k G) (h_comm : ∀ {x y}, y ∈ a.Support → Commute (f (b x)) (g <| Multiplicative.ofAdd y)) :
+    (a b : AddMonoidAlgebra k G) (h_comm : ∀ {x y}, y ∈ a.support → Commute (f (b x)) (g <| Multiplicative.ofAdd y)) :
     liftNc (f : k →+ R) g (a * b) = liftNc (f : k →+ R) g a * liftNc (f : k →+ R) g b :=
   (MonoidAlgebra.lift_nc_mul f g _ _ @h_comm : _)
 #align add_monoid_algebra.lift_nc_mul AddMonoidAlgebra.lift_nc_mul

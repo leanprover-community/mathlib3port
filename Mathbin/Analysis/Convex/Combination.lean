@@ -501,7 +501,7 @@ variable (ι) [Fintype ι] {f : ι → R}
 
 /-- `std_simplex 𝕜 ι` is the convex hull of the canonical basis in `ι → 𝕜`. -/
 theorem convex_hull_basis_eq_std_simplex :
-    convexHull R (range fun i j : ι => if i = j then (1 : R) else 0) = StdSimplex R ι := by
+    convexHull R (range fun i j : ι => if i = j then (1 : R) else 0) = stdSimplex R ι := by
   refine' subset.antisymm (convex_hull_min _ (convex_std_simplex R ι)) _
   · rintro _ ⟨i, rfl⟩
     exact ite_eq_mem_std_simplex R i
@@ -524,7 +524,7 @@ to prove that this map is linear. -/
 theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : s.Finite) :
     convexHull R s =
       haveI := hs.fintype
-      ⇑(∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smul_right x.1) '' StdSimplex R s :=
+      ⇑(∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smul_right x.1) '' stdSimplex R s :=
   by
   rw [← convex_hull_basis_eq_std_simplex, ← LinearMap.convex_hull_image, ← Set.range_comp, (· ∘ ·)]
   apply congr_arg
@@ -534,7 +534,7 @@ theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : s.Finite) :
 #align set.finite.convex_hull_eq_image Set.Finite.convex_hull_eq_image
 
 /-- All values of a function `f ∈ std_simplex 𝕜 ι` belong to `[0, 1]`. -/
-theorem mem_Icc_of_mem_std_simplex (hf : f ∈ StdSimplex R ι) (x) : f x ∈ icc (0 : R) 1 :=
+theorem mem_Icc_of_mem_std_simplex (hf : f ∈ stdSimplex R ι) (x) : f x ∈ icc (0 : R) 1 :=
   ⟨hf.1 x, hf.2 ▸ Finset.single_le_sum (fun y hy => hf.1 y) (Finset.mem_univ x)⟩
 #align mem_Icc_of_mem_std_simplex mem_Icc_of_mem_std_simplex
 

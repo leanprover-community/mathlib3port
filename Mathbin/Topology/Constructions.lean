@@ -668,8 +668,8 @@ theorem prod_generate_from_generate_from_eq {α β : Type _} {s : Set (Set α)} 
 theorem prod_eq_generate_from :
     Prod.topologicalSpace = generateFrom { g | ∃ (s : Set α)(t : Set β), IsOpen s ∧ IsOpen t ∧ g = s ×ˢ t } :=
   le_antisymm (le_generate_from fun g ⟨s, t, hs, ht, g_eq⟩ => g_eq.symm ▸ hs.Prod ht)
-    (le_inf (ball_image_of_ball fun t ht => GenerateOpen.basic _ ⟨t, Univ, by simpa [Set.prod_eq] using ht⟩)
-      (ball_image_of_ball fun t ht => GenerateOpen.basic _ ⟨Univ, t, by simpa [Set.prod_eq] using ht⟩))
+    (le_inf (ball_image_of_ball fun t ht => GenerateOpen.basic _ ⟨t, univ, by simpa [Set.prod_eq] using ht⟩)
+      (ball_image_of_ball fun t ht => GenerateOpen.basic _ ⟨univ, t, by simpa [Set.prod_eq] using ht⟩))
 #align prod_eq_generate_from prod_eq_generate_from
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -776,7 +776,7 @@ theorem is_open_prod_iff' {s : Set α} {t : Set β} : IsOpen (s ×ˢ t) ↔ IsOp
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem closure_prod_eq {s : Set α} {t : Set β} : Closure (s ×ˢ t) = Closure s ×ˢ Closure t :=
+theorem closure_prod_eq {s : Set α} {t : Set β} : closure (s ×ˢ t) = closure s ×ˢ closure t :=
   Set.ext fun ⟨a, b⟩ => by
     have : (𝓝 a ×ᶠ 𝓝 b) ⊓ 𝓟 (s ×ˢ t) = 𝓝 a ⊓ 𝓟 s ×ᶠ 𝓝 b ⊓ 𝓟 t := by rw [← prod_inf_prod, prod_principal_principal]
     simp [closure_eq_cluster_pts, ClusterPt, nhds_prod_eq, this] <;> exact prod_ne_bot
@@ -784,7 +784,7 @@ theorem closure_prod_eq {s : Set α} {t : Set β} : Closure (s ×ˢ t) = Closure
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem interior_prod_eq (s : Set α) (t : Set β) : Interior (s ×ˢ t) = Interior s ×ˢ Interior t :=
+theorem interior_prod_eq (s : Set α) (t : Set β) : interior (s ×ˢ t) = interior s ×ˢ interior t :=
   Set.ext fun ⟨a, b⟩ => by simp only [mem_interior_iff_mem_nhds, mem_prod, prod_mem_nhds_iff]
 #align interior_prod_eq interior_prod_eq
 
@@ -792,30 +792,30 @@ theorem interior_prod_eq (s : Set α) (t : Set β) : Interior (s ×ˢ t) = Inter
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem frontier_prod_eq (s : Set α) (t : Set β) :
-    Frontier (s ×ˢ t) = Closure s ×ˢ Frontier t ∪ Frontier s ×ˢ Closure t := by
-  simp only [Frontier, closure_prod_eq, interior_prod_eq, prod_diff_prod]
+    frontier (s ×ˢ t) = closure s ×ˢ frontier t ∪ frontier s ×ˢ closure t := by
+  simp only [frontier, closure_prod_eq, interior_prod_eq, prod_diff_prod]
 #align frontier_prod_eq frontier_prod_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem frontier_prod_univ_eq (s : Set α) : Frontier (s ×ˢ (Univ : Set β)) = Frontier s ×ˢ univ := by
+theorem frontier_prod_univ_eq (s : Set α) : frontier (s ×ˢ (univ : Set β)) = frontier s ×ˢ univ := by
   simp [frontier_prod_eq]
 #align frontier_prod_univ_eq frontier_prod_univ_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem frontier_univ_prod_eq (s : Set β) : Frontier ((Univ : Set α) ×ˢ s) = univ ×ˢ Frontier s := by
+theorem frontier_univ_prod_eq (s : Set β) : frontier ((univ : Set α) ×ˢ s) = univ ×ˢ frontier s := by
   simp [frontier_prod_eq]
 #align frontier_univ_prod_eq frontier_univ_prod_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem map_mem_closure₂ {f : α → β → γ} {a : α} {b : β} {s : Set α} {t : Set β} {u : Set γ}
-    (hf : Continuous (uncurry f)) (ha : a ∈ Closure s) (hb : b ∈ Closure t) (h : ∀ a ∈ s, ∀ b ∈ t, f a b ∈ u) :
-    f a b ∈ Closure u :=
-  have H₁ : (a, b) ∈ Closure (s ×ˢ t) := by simpa only [closure_prod_eq] using mk_mem_prod ha hb
+    (hf : Continuous (uncurry f)) (ha : a ∈ closure s) (hb : b ∈ closure t) (h : ∀ a ∈ s, ∀ b ∈ t, f a b ∈ u) :
+    f a b ∈ closure u :=
+  have H₁ : (a, b) ∈ closure (s ×ˢ t) := by simpa only [closure_prod_eq] using mk_mem_prod ha hb
   have H₂ : MapsTo (uncurry f) (s ×ˢ t) u := forall_prod_set.2 h
   H₂.closure hf H₁
 #align map_mem_closure₂ map_mem_closure₂
@@ -913,20 +913,20 @@ theorem embedding_inr : Embedding (@inr α β) :=
   open_embedding_inr.1
 #align embedding_inr embedding_inr
 
-theorem is_open_range_inl : IsOpen (Range (inl : α → Sum α β)) :=
+theorem is_open_range_inl : IsOpen (range (inl : α → Sum α β)) :=
   open_embedding_inl.2
 #align is_open_range_inl is_open_range_inl
 
-theorem is_open_range_inr : IsOpen (Range (inr : β → Sum α β)) :=
+theorem is_open_range_inr : IsOpen (range (inr : β → Sum α β)) :=
   open_embedding_inr.2
 #align is_open_range_inr is_open_range_inr
 
-theorem isClosedRangeInl : IsClosed (Range (inl : α → Sum α β)) := by
+theorem isClosedRangeInl : IsClosed (range (inl : α → Sum α β)) := by
   rw [← is_open_compl_iff, compl_range_inl]
   exact is_open_range_inr
 #align is_closed_range_inl isClosedRangeInl
 
-theorem isClosedRangeInr : IsClosed (Range (inr : β → Sum α β)) := by
+theorem isClosedRangeInr : IsClosed (range (inr : β → Sum α β)) := by
   rw [← is_open_compl_iff, compl_range_inr]
   exact is_open_range_inl
 #align is_closed_range_inr isClosedRangeInr
@@ -1018,7 +1018,7 @@ theorem Continuous.subtype_coe {f : β → Subtype p} (hf : Continuous f) : Cont
 #align continuous.subtype_coe Continuous.subtype_coe
 
 theorem IsOpen.open_embedding_subtype_coe {s : Set α} (hs : IsOpen s) : OpenEmbedding (coe : s → α) :=
-  { induced := rfl, inj := Subtype.coe_injective, open_range := (Subtype.range_coe : Range coe = s).symm ▸ hs }
+  { induced := rfl, inj := Subtype.coe_injective, open_range := (Subtype.range_coe : range coe = s).symm ▸ hs }
 #align is_open.open_embedding_subtype_coe IsOpen.open_embedding_subtype_coe
 
 theorem IsOpen.is_open_map_subtype_coe {s : Set α} (hs : IsOpen s) : IsOpenMap (coe : s → α) :=
@@ -1030,7 +1030,7 @@ theorem IsOpenMap.restrict {f : α → β} (hf : IsOpenMap f) {s : Set α} (hs :
 #align is_open_map.restrict IsOpenMap.restrict
 
 theorem IsClosed.closedEmbeddingSubtypeCoe {s : Set α} (hs : IsClosed s) : ClosedEmbedding (coe : { x // x ∈ s } → α) :=
-  { induced := rfl, inj := Subtype.coe_injective, closedRange := (Subtype.range_coe : Range coe = s).symm ▸ hs }
+  { induced := rfl, inj := Subtype.coe_injective, closedRange := (Subtype.range_coe : range coe = s).symm ▸ hs }
 #align is_closed.closed_embedding_subtype_coe IsClosed.closedEmbeddingSubtypeCoe
 
 @[continuity]
@@ -1052,7 +1052,7 @@ theorem continuous_at_subtype_coe {p : α → Prop} {a : Subtype p} : Continuous
   continuous_iff_continuous_at.mp continuous_subtype_coe _
 #align continuous_at_subtype_coe continuous_at_subtype_coe
 
-theorem Subtype.dense_iff {s : Set α} {t : Set s} : Dense t ↔ s ⊆ Closure (coe '' t) := by
+theorem Subtype.dense_iff {s : Set α} {t : Set s} : Dense t ↔ s ⊆ closure (coe '' t) := by
   rw [inducing_coe.dense_iff, SetCoe.forall]
   rfl
 #align subtype.dense_iff Subtype.dense_iff
@@ -1104,7 +1104,7 @@ theorem continuous_subtype_is_closed_cover {ι : Sort _} {f : α → β} (c : ι
 #align continuous_subtype_is_closed_cover continuous_subtype_is_closed_cover
 
 theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :
-    x ∈ Closure s ↔ (x : α) ∈ Closure ((coe : _ → α) '' s) :=
+    x ∈ closure s ↔ (x : α) ∈ closure ((coe : _ → α) '' s) :=
   closure_induced
 #align closure_subtype closure_subtype
 
@@ -1302,7 +1302,7 @@ theorem set_pi_mem_nhds_iff {I : Set ι} (hI : I.Finite) {s : ∀ i, Set (π i)}
 #align set_pi_mem_nhds_iff set_pi_mem_nhds_iff
 
 theorem interior_pi_set {I : Set ι} (hI : I.Finite) {s : ∀ i, Set (π i)} :
-    Interior (pi I s) = I.pi fun i => Interior (s i) := by
+    interior (pi I s) = I.pi fun i => interior (s i) := by
   ext a
   simp only [Set.mem_pi, mem_interior_iff_mem_nhds, set_pi_mem_nhds_iff hI]
 #align interior_pi_set interior_pi_set
@@ -1320,7 +1320,7 @@ theorem pi_eq_generate_from :
       generateFrom { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s } :=
   le_antisymm (le_generate_from fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ is_open_set_pi (Finset.finite_to_set _) hi)
     (le_infi fun a s ⟨t, ht, s_eq⟩ =>
-      GenerateOpen.basic _ <| ⟨update (fun a => Univ) a t, {a}, by simpa using ht, s_eq ▸ by ext f <;> simp [Set.Pi]⟩)
+      GenerateOpen.basic _ <| ⟨update (fun a => univ) a t, {a}, by simpa using ht, s_eq ▸ by ext f <;> simp [Set.pi]⟩)
 #align pi_eq_generate_from pi_eq_generate_from
 
 theorem pi_generate_from_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
@@ -1343,7 +1343,7 @@ theorem pi_generate_from_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
 
 theorem pi_generate_from_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π a))} [Finite ι] (hg : ∀ a, ⋃₀g a = univ) :
     (@PiCat.topologicalSpace ι π fun a => generateFrom (g a)) =
-      generateFrom { t | ∃ s : ∀ a, Set (π a), (∀ a, s a ∈ g a) ∧ t = pi Univ s } :=
+      generateFrom { t | ∃ s : ∀ a, Set (π a), (∀ a, s a ∈ g a) ∧ t = pi univ s } :=
   by
   cases nonempty_fintype ι
   rw [pi_generate_from_eq]
@@ -1363,9 +1363,9 @@ theorem pi_generate_from_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π
     · simp [pi_if]
       
     · refine' generate_open.basic _ ⟨_, fun a => _, rfl⟩
-      by_cases a ∈ i <;> simp_all [Set.Pi]
+      by_cases a ∈ i <;> simp_all [Set.pi]
       
-    · have : f ∈ pi { a | a ∉ i } c := by simp_all [Set.Pi]
+    · have : f ∈ pi { a | a ∉ i } c := by simp_all [Set.pi]
       simpa [pi_if, hf]
       
     
@@ -1428,7 +1428,7 @@ theorem is_open_map_sigma_mk {i : ι} : IsOpenMap (@Sigma.mk ι σ i) := by
     
 #align is_open_map_sigma_mk is_open_map_sigma_mk
 
-theorem is_open_range_sigma_mk {i : ι} : IsOpen (Set.Range (@Sigma.mk ι σ i)) :=
+theorem is_open_range_sigma_mk {i : ι} : IsOpen (Set.range (@Sigma.mk ι σ i)) :=
   is_open_map_sigma_mk.is_open_range
 #align is_open_range_sigma_mk is_open_range_sigma_mk
 
@@ -1444,7 +1444,7 @@ theorem is_closed_map_sigma_mk {i : ι} : IsClosedMap (@Sigma.mk ι σ i) := by
     
 #align is_closed_map_sigma_mk is_closed_map_sigma_mk
 
-theorem isClosedRangeSigmaMk {i : ι} : IsClosed (Set.Range (@Sigma.mk ι σ i)) :=
+theorem isClosedRangeSigmaMk {i : ι} : IsClosed (Set.range (@Sigma.mk ι σ i)) :=
   is_closed_map_sigma_mk.closedRange
 #align is_closed_range_sigma_mk isClosedRangeSigmaMk
 

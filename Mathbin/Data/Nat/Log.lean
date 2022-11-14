@@ -189,7 +189,7 @@ theorem log_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : log b n ≤ lo
 theorem log_monotone {b : ℕ} : Monotone (log b) := fun x y => log_mono_right
 #align nat.log_monotone Nat.log_monotone
 
-theorem log_antitone_left {n : ℕ} : AntitoneOn (fun b => log b n) (Set.IoiCat 1) := fun _ hc _ _ hb =>
+theorem log_antitone_left {n : ℕ} : AntitoneOn (fun b => log b n) (Set.ioi 1) := fun _ hc _ _ hb =>
   log_anti_left (Set.mem_Iio.1 hc) hb
 #align nat.log_antitone_left Nat.log_antitone_left
 
@@ -366,7 +366,7 @@ theorem clog_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog b n ≤ 
 theorem clog_monotone (b : ℕ) : Monotone (clog b) := fun x y => clog_mono_right _
 #align nat.clog_monotone Nat.clog_monotone
 
-theorem clog_antitone_left {n : ℕ} : AntitoneOn (fun b : ℕ => clog b n) (Set.IoiCat 1) := fun _ hc _ _ hb =>
+theorem clog_antitone_left {n : ℕ} : AntitoneOn (fun b : ℕ => clog b n) (Set.ioi 1) := fun _ hc _ _ hb =>
   clog_anti_left (Set.mem_Iio.1 hc) hb
 #align nat.clog_antitone_left Nat.clog_antitone_left
 

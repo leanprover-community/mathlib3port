@@ -90,10 +90,10 @@ protected theorem ConvexIndependent.subtype {p : ι → E} (hc : ConvexIndepende
 
 /-- If an indexed family of points is convex independent, so is the corresponding set of points. -/
 protected theorem ConvexIndependent.range {p : ι → E} (hc : ConvexIndependent 𝕜 p) :
-    ConvexIndependent 𝕜 (fun x => x : Set.Range p → E) := by
-  let f : Set.Range p → ι := fun x => x.property.some
+    ConvexIndependent 𝕜 (fun x => x : Set.range p → E) := by
+  let f : Set.range p → ι := fun x => x.property.some
   have hf : ∀ x, p (f x) = x := fun x => x.property.some_spec
-  let fe : Set.Range p ↪ ι := ⟨f, fun x₁ x₂ he => Subtype.ext (hf x₁ ▸ hf x₂ ▸ he ▸ rfl)⟩
+  let fe : Set.range p ↪ ι := ⟨f, fun x₁ x₂ he => Subtype.ext (hf x₁ ▸ hf x₂ ▸ he ▸ rfl)⟩
   convert hc.comp_embedding fe
   ext
   rw [embedding.coe_fn_mk, comp_app, hf]
@@ -107,10 +107,10 @@ protected theorem ConvexIndependent.mono {s t : Set E} (hc : ConvexIndependent �
 
 /-- The range of an injective indexed family of points is convex independent iff that family is. -/
 theorem Function.Injective.convex_independent_iff_set {p : ι → E} (hi : Function.Injective p) :
-    ConvexIndependent 𝕜 (fun x => x : Set.Range p → E) ↔ ConvexIndependent 𝕜 p :=
+    ConvexIndependent 𝕜 (fun x => x : Set.range p → E) ↔ ConvexIndependent 𝕜 p :=
   ⟨fun hc =>
     hc.comp_embedding
-      (⟨fun i => ⟨p i, Set.mem_range_self _⟩, fun x y h => hi (Subtype.mk_eq_mk.1 h)⟩ : ι ↪ Set.Range p),
+      (⟨fun i => ⟨p i, Set.mem_range_self _⟩, fun x y h => hi (Subtype.mk_eq_mk.1 h)⟩ : ι ↪ Set.range p),
     ConvexIndependent.range⟩
 #align function.injective.convex_independent_iff_set Function.Injective.convex_independent_iff_set
 
@@ -174,7 +174,7 @@ variable [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s : Set E}
 
 /-- To check convex independence, one only has to check finsets thanks to Carathéodory's theorem. -/
 theorem convex_independent_iff_finset {p : ι → E} :
-    ConvexIndependent 𝕜 p ↔ ∀ (s : Finset ι) (x : ι), p x ∈ convexHull 𝕜 (s.Image p : Set E) → x ∈ s := by
+    ConvexIndependent 𝕜 p ↔ ∀ (s : Finset ι) (x : ι), p x ∈ convexHull 𝕜 (s.image p : Set E) → x ∈ s := by
   refine' ⟨fun hc s x hx => hc s x _, fun h s x hx => _⟩
   · rwa [Finset.coe_image] at hx
     
@@ -200,7 +200,7 @@ theorem convex_independent_iff_finset {p : ι → E} :
 
 
 theorem Convex.convex_independent_extreme_points (hs : Convex 𝕜 s) :
-    ConvexIndependent 𝕜 (fun p => p : s.ExtremePoints 𝕜 → E) :=
+    ConvexIndependent 𝕜 (fun p => p : s.extremePoints 𝕜 → E) :=
   convex_independent_set_iff_not_mem_convex_hull_diff.2 fun x hx h =>
     (extreme_points_convex_hull_subset
           (inter_extreme_points_subset_extreme_points_of_subset

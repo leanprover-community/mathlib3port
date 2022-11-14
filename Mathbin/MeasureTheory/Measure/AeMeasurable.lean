@@ -187,7 +187,7 @@ theorem prodMk {f : α → β} {g : α → γ} (hf : AeMeasurable f μ) (hg : Ae
 #align ae_measurable.prod_mk AeMeasurable.prodMk
 
 theorem exists_ae_eq_range_subset (H : AeMeasurable f μ) {t : Set β} (ht : ∀ᵐ x ∂μ, f x ∈ t) (h₀ : t.Nonempty) :
-    ∃ g, Measurable g ∧ Range g ⊆ t ∧ f =ᵐ[μ] g := by
+    ∃ g, Measurable g ∧ range g ⊆ t ∧ f =ᵐ[μ] g := by
   let s : Set α := to_measurable μ ({ x | f x = H.mk f x ∧ f x ∈ t }ᶜ)
   let g : α → β := piecewise s (fun x => h₀.some) (H.mk f)
   refine' ⟨g, _, _, _⟩
@@ -241,7 +241,7 @@ end AeMeasurable
 
 theorem ae_measurable_interval_oc_iff [LinearOrder α] {f : α → β} {a b : α} :
     (AeMeasurable f <| μ.restrict <| Ι a b) ↔
-      (AeMeasurable f <| μ.restrict <| IocCat a b) ∧ (AeMeasurable f <| μ.restrict <| IocCat b a) :=
+      (AeMeasurable f <| μ.restrict <| ioc a b) ∧ (AeMeasurable f <| μ.restrict <| ioc b a) :=
   by rw [interval_oc_eq_union, ae_measurable_union_iff]
 #align ae_measurable_interval_oc_iff ae_measurable_interval_oc_iff
 
@@ -303,7 +303,7 @@ theorem AeMeasurable.restrict (hfm : AeMeasurable f μ) {s} : AeMeasurable f (μ
 
 theorem aeMeasurableIoiOfForallIoc {β} {mβ : MeasurableSpace β} [LinearOrder α]
     [(atTop : Filter α).IsCountablyGenerated] {x : α} {g : α → β}
-    (g_meas : ∀ t > x, AeMeasurable g (μ.restrict (IocCat x t))) : AeMeasurable g (μ.restrict (IoiCat x)) := by
+    (g_meas : ∀ t > x, AeMeasurable g (μ.restrict (ioc x t))) : AeMeasurable g (μ.restrict (ioi x)) := by
   haveI : Nonempty α := ⟨x⟩
   haveI : (at_top : Filter α).ne_bot := at_top_ne_bot
   obtain ⟨u, hu_tendsto⟩ := exists_seq_tendsto (at_top : Filter α)

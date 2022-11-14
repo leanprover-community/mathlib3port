@@ -67,7 +67,7 @@ instance : SecondCountableTopology ℝ≥0 :=
   TopologicalSpace.Subtype.second_countable_topology _ _
 
 instance : OrderTopology ℝ≥0 :=
-  @order_topology_of_ord_connected _ _ _ _ (IciCat 0) _
+  @order_topology_of_ord_connected _ _ _ _ (ici 0) _
 
 section coe
 

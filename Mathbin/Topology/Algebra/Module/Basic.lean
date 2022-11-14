@@ -101,7 +101,7 @@ variable {R : Type _} {M : Type _} [Ring R] [TopologicalSpace R] [TopologicalSpa
 `⊤` is the only submodule of `M` with a nonempty interior.
 This is the case, e.g., if `R` is a nontrivially normed field. -/
 theorem Submodule.eq_top_of_nonempty_interior' [NeBot (𝓝[{ x : R | IsUnit x }] 0)] (s : Submodule R M)
-    (hs : (Interior (s : Set M)).Nonempty) : s = ⊤ := by
+    (hs : (interior (s : Set M)).Nonempty) : s = ⊤ := by
   rcases hs with ⟨y, hy⟩
   refine' Submodule.eq_top_iff'.2 fun x => _
   rw [mem_interior_iff_mem_nhds] at hy
@@ -169,7 +169,7 @@ instance [Ring α] [AddCommGroup β] [Module α β] [TopologicalAddGroup β] (S 
 
 end Submodule
 
-section Closure
+section closure
 
 variable {R R' : Type u} {M M' : Type v} [Semiring R] [TopologicalSpace R] [Ring R'] [TopologicalSpace R']
   [TopologicalSpace M] [AddCommMonoid M] [TopologicalSpace M'] [AddCommGroup M'] [Module R M] [HasContinuousSmul R M]
@@ -180,12 +180,12 @@ variable {R R' : Type u} {M M' : Type v} [Semiring R] [TopologicalSpace R] [Ring
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
-    (fun p : R × M => p.1 • p.2) '' Set.Univ ×ˢ Closure s ⊆ Closure s :=
+    (fun p : R × M => p.1 • p.2) '' Set.univ ×ˢ closure s ⊆ closure s :=
   calc
-    (fun p : R × M => p.1 • p.2) '' Set.Univ ×ˢ Closure s = (fun p : R × M => p.1 • p.2) '' Closure (Set.Univ ×ˢ s) :=
+    (fun p : R × M => p.1 • p.2) '' Set.univ ×ˢ closure s = (fun p : R × M => p.1 • p.2) '' closure (Set.univ ×ˢ s) :=
       by simp [closure_prod_eq]
-    _ ⊆ Closure ((fun p : R × M => p.1 • p.2) '' Set.Univ ×ˢ s) := image_closure_subset_closure_image continuous_smul
-    _ = Closure s := by
+    _ ⊆ closure ((fun p : R × M => p.1 • p.2) '' Set.univ ×ˢ s) := image_closure_subset_closure_image continuous_smul
+    _ = closure s := by
       congr
       ext x
       refine' ⟨_, fun hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩⟩
@@ -196,7 +196,7 @@ theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Submodule.closure_smul_self_eq (s : Submodule R M) :
-    (fun p : R × M => p.1 • p.2) '' Set.Univ ×ˢ Closure s = Closure s :=
+    (fun p : R × M => p.1 • p.2) '' Set.univ ×ˢ closure s = closure s :=
   s.closure_smul_self_subset.antisymm fun x hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩
 #align submodule.closure_smul_self_eq Submodule.closure_smul_self_eq
 
@@ -205,12 +205,12 @@ variable [HasContinuousAdd M]
 /-- The (topological-space) closure of a submodule of a topological `R`-module `M` is itself
 a submodule. -/
 def Submodule.topologicalClosure (s : Submodule R M) : Submodule R M :=
-  { s.toAddSubmonoid.topologicalClosure with Carrier := Closure (s : Set M),
+  { s.toAddSubmonoid.topologicalClosure with carrier := closure (s : Set M),
     smul_mem' := fun c x hx => s.closure_smul_self_subset ⟨⟨c, x⟩, ⟨Set.mem_univ _, hx⟩, rfl⟩ }
 #align submodule.topological_closure Submodule.topologicalClosure
 
 @[simp]
-theorem Submodule.topological_closure_coe (s : Submodule R M) : (s.topologicalClosure : Set M) = Closure (s : Set M) :=
+theorem Submodule.topological_closure_coe (s : Submodule R M) : (s.topologicalClosure : Set M) = closure (s : Set M) :=
   rfl
 #align submodule.topological_closure_coe Submodule.topological_closure_coe
 
@@ -268,7 +268,7 @@ theorem LinearMap.is_closed_or_dense_ker [HasContinuousAdd M'] [IsSimpleModule R
     
 #align linear_map.is_closed_or_dense_ker LinearMap.is_closed_or_dense_ker
 
-end Closure
+end closure
 
 /-- Continuous linear maps between modules. We only put the type classes that are necessary for the
 definition, although in applications `M` and `M₂` will be topological modules over the topological
@@ -392,7 +392,7 @@ variable [HasContinuousAdd M₂] {σ : R →+* S} {l : Filter α}
 /-- Constructs a bundled linear map from a function and a proof that this function belongs to the
 closure of the set of linear maps. -/
 @[simps (config := { fullyApplied := false })]
-def linearMapOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ Closure (Set.Range (coeFn : (M₁ →ₛₗ[σ] M₂) → M₁ → M₂))) :
+def linearMapOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ closure (Set.range (coeFn : (M₁ →ₛₗ[σ] M₂) → M₁ → M₂))) :
     M₁ →ₛₗ[σ] M₂ :=
   { addMonoidHomOfMemClosureRangeCoe f hf with toFun := f,
     map_smul' := (isClosedSetOfMapSmul M₁ M₂ σ).closure_subset_iff.2 (Set.range_subset_iff.2 LinearMap.map_smulₛₗ) hf }
@@ -407,7 +407,7 @@ def linearMapOfTendsto (f : M₁ → M₂) (g : α → M₁ →ₛₗ[σ] M₂) 
 
 variable (M₁ M₂ σ)
 
-theorem LinearMap.isClosedRangeCoe : IsClosed (Set.Range (coeFn : (M₁ →ₛₗ[σ] M₂) → M₁ → M₂)) :=
+theorem LinearMap.isClosedRangeCoe : IsClosed (Set.range (coeFn : (M₁ →ₛₗ[σ] M₂) → M₁ → M₂)) :=
   isClosedOfClosureSubset fun f hf => ⟨linearMapOfMemClosureRangeCoe f hf, rfl⟩
 #align linear_map.is_closed_range_coe LinearMap.isClosedRangeCoe
 
@@ -564,7 +564,7 @@ theorem ext_ring_iff [TopologicalSpace R₁] {f g : R₁ →L[R₁] M₁} : f = 
 /-- If two continuous linear maps are equal on a set `s`, then they are equal on the closure
 of the `submodule.span` of this set. -/
 theorem eq_on_closure_span [T2Space M₂] {s : Set M₁} {f g : M₁ →SL[σ₁₂] M₂} (h : Set.EqOn f g s) :
-    Set.EqOn f g (Closure (Submodule.span R₁ s : Set M₁)) :=
+    Set.EqOn f g (closure (Submodule.span R₁ s : Set M₁)) :=
   (LinearMap.eq_on_span' h).closure f.Continuous g.Continuous
 #align continuous_linear_map.eq_on_closure_span ContinuousLinearMap.eq_on_closure_span
 
@@ -1264,7 +1264,7 @@ variable (R φ)
 
 /-- If `I` and `J` are complementary index sets, the product of the kernels of the `J`th projections
 of `φ` is linearly equivalent to the product over `I`. -/
-def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J) :
+def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.univ ⊆ I ∪ J) :
     (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →L[R] φ i) : Submodule R (∀ i, φ i)) ≃L[R] ∀ i : I, φ i where
   toLinearEquiv := LinearMap.infiKerProjEquiv R φ hd hu
   continuous_to_fun :=
@@ -1814,11 +1814,11 @@ theorem coe_to_homeomorph (e : M₁ ≃SL[σ₁₂] M₂) : ⇑e.toHomeomorph = 
   rfl
 #align continuous_linear_equiv.coe_to_homeomorph ContinuousLinearEquiv.coe_to_homeomorph
 
-theorem image_closure (e : M₁ ≃SL[σ₁₂] M₂) (s : Set M₁) : e '' Closure s = Closure (e '' s) :=
+theorem image_closure (e : M₁ ≃SL[σ₁₂] M₂) (s : Set M₁) : e '' closure s = closure (e '' s) :=
   e.toHomeomorph.image_closure s
 #align continuous_linear_equiv.image_closure ContinuousLinearEquiv.image_closure
 
-theorem preimage_closure (e : M₁ ≃SL[σ₁₂] M₂) (s : Set M₂) : e ⁻¹' Closure s = Closure (e ⁻¹' s) :=
+theorem preimage_closure (e : M₁ ≃SL[σ₁₂] M₂) (s : Set M₂) : e ⁻¹' closure s = closure (e ⁻¹' s) :=
   e.toHomeomorph.preimage_closure s
 #align continuous_linear_equiv.preimage_closure ContinuousLinearEquiv.preimage_closure
 

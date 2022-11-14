@@ -32,7 +32,7 @@ variable {α : Type _} {s t : Set α} {a : α}
 In the usual case where `star` is involutive, it is equal to `{star s | x ∈ s}`, see
 `set.image_star`. -/
 protected def hasStar [HasStar α] : HasStar (Set α) :=
-  ⟨Preimage HasStar.star⟩
+  ⟨preimage HasStar.star⟩
 #align set.has_star Set.hasStar
 
 localized [Pointwise] attribute [instance] Set.hasStar
@@ -43,7 +43,7 @@ theorem star_empty [HasStar α] : (∅ : Set α)⋆ = ∅ :=
 #align set.star_empty Set.star_empty
 
 @[simp]
-theorem star_univ [HasStar α] : (Univ : Set α)⋆ = univ :=
+theorem star_univ [HasStar α] : (univ : Set α)⋆ = univ :=
   rfl
 #align set.star_univ Set.star_univ
 

@@ -110,7 +110,7 @@ variable (𝕜 E : Type _) [LinearOrderedField 𝕜] [AddCommGroup E] [Module �
 theorem LocallyConvexSpace.convex_open_basis_zero [LocallyConvexSpace 𝕜 E] :
     (𝓝 0 : Filter E).HasBasis (fun s => (0 : E) ∈ s ∧ IsOpen s ∧ Convex 𝕜 s) id :=
   (LocallyConvexSpace.convex_basis_zero 𝕜 E).to_has_basis
-    (fun s hs => ⟨Interior s, ⟨mem_interior_iff_mem_nhds.mpr hs.1, is_open_interior, hs.2.Interior⟩, interior_subset⟩)
+    (fun s hs => ⟨interior s, ⟨mem_interior_iff_mem_nhds.mpr hs.1, is_open_interior, hs.2.interior⟩, interior_subset⟩)
     fun s hs => ⟨s, ⟨hs.2.1.mem_nhds hs.1, hs.2.2⟩, subset_rfl⟩
 #align locally_convex_space.convex_open_basis_zero LocallyConvexSpace.convex_open_basis_zero
 
@@ -130,7 +130,7 @@ theorem Disjoint.exists_open_convexes [LocallyConvexSpace 𝕜 E] {s t : Set E} 
     ⟨s + V, t + V, hVopen.add_left, hVopen.add_left, hs₁.add hVconvex, ht₁.add hVconvex, subset_add_left _ hV0,
       subset_add_left _ hV0, _⟩
   simp_rw [← Union_add_left_image, image_add_left]
-  simp_rw [UniformSpace.Ball, ← preimage_comp, sub_eq_neg_add] at hV
+  simp_rw [UniformSpace.ball, ← preimage_comp, sub_eq_neg_add] at hV
   exact hV
 #align disjoint.exists_open_convexes Disjoint.exists_open_convexes
 

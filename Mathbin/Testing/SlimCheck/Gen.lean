@@ -49,7 +49,7 @@ def Gen (α : Type u) :=
 variable (α : Type u)
 
 -- mathport name: «expr .. »
-local infixl:41 " .. " => Set.IccCat
+local infixl:41 " .. " => Set.icc
 
 /-- Execute a `gen` inside the `io` monad using `i` as the example
 size and with a fresh random number generator. -/
@@ -87,7 +87,7 @@ def chooseNat (x y : ℕ) (p : x ≤ y) : Gen (x .. y) :=
 #align slim_check.gen.choose_nat SlimCheck.Gen.chooseNat
 
 /-- Generate a `nat` example between `x` and `y`. -/
-def chooseNat' (x y : ℕ) (p : x < y) : Gen (Set.IcoCat x y) :=
+def chooseNat' (x y : ℕ) (p : x < y) : Gen (Set.ico x y) :=
   have : ∀ i, x < i → i ≤ y → i.pred < y := fun i h₀ h₁ =>
     show i.pred.succ ≤ y by rwa [succ_pred_eq_of_pos] <;> apply lt_of_le_of_lt (Nat.zero_le _) h₀
   (Subtype.map pred fun i (h : x + 1 ≤ i ∧ i ≤ y) => ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p

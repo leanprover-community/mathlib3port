@@ -139,7 +139,7 @@ theorem nfp_family_eq_self {f : ι → Ordinal → Ordinal} {a} (h : ∀ i, f i 
 
 /-- A generalization of the fixed point lemma for normal functions: any family of normal functions
     has an unbounded set of common fixed points. -/
-theorem fp_family_unbounded (H : ∀ i, IsNormal (f i)) : (⋂ i, Function.FixedPoints (f i)).Unbounded (· < ·) := fun a =>
+theorem fp_family_unbounded (H : ∀ i, IsNormal (f i)) : (⋂ i, Function.fixedPoints (f i)).Unbounded (· < ·) := fun a =>
   ⟨_, fun s ⟨i, hi⟩ => by
     rw [← hi]
     exact nfp_family_fp (H i) a, (le_nfp_family f a).not_lt⟩
@@ -217,7 +217,7 @@ theorem fp_iff_deriv_family (H : ∀ i, IsNormal (f i)) {a} : (∀ i, f i a = a)
 #align ordinal.fp_iff_deriv_family Ordinal.fp_iff_deriv_family
 
 theorem deriv_family_eq_enum_ord (H : ∀ i, IsNormal (f i)) :
-    derivFamily f = enumOrd (⋂ i, Function.FixedPoints (f i)) := by
+    derivFamily f = enumOrd (⋂ i, Function.fixedPoints (f i)) := by
   rw [← eq_enum_ord _ (fp_family_unbounded H)]
   use (deriv_family_is_normal f).StrictMono
   rw [Set.range_eq_iff]
@@ -324,7 +324,7 @@ theorem nfp_bfamily_eq_self {a} (h : ∀ i hi, f i hi a = a) : nfpBfamily o f a 
 /-- A generalization of the fixed point lemma for normal functions: any family of normal functions
     has an unbounded set of common fixed points. -/
 theorem fp_bfamily_unbounded (H : ∀ i hi, IsNormal (f i hi)) :
-    (⋂ (i) (hi), Function.FixedPoints (f i hi)).Unbounded (· < ·) := fun a =>
+    (⋂ (i) (hi), Function.fixedPoints (f i hi)).Unbounded (· < ·) := fun a =>
   ⟨_, by
     rw [Set.mem_Inter₂]
     exact fun i hi => nfp_bfamily_fp (H i hi) _, (le_nfp_bfamily f a).not_lt⟩
@@ -373,7 +373,7 @@ theorem fp_iff_deriv_bfamily (H : ∀ i hi, IsNormal (f i hi)) {a} :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 theorem deriv_bfamily_eq_enum_ord (H : ∀ i hi, IsNormal (f i hi)) :
-    derivBfamily o f = enumOrd (⋂ (i) (hi), Function.FixedPoints (f i hi)) := by
+    derivBfamily o f = enumOrd (⋂ (i) (hi), Function.fixedPoints (f i hi)) := by
   rw [← eq_enum_ord _ (fp_bfamily_unbounded H)]
   use (deriv_bfamily_is_normal f).StrictMono
   rw [Set.range_eq_iff]
@@ -476,7 +476,7 @@ theorem nfp_eq_self {f : Ordinal → Ordinal} {a} (h : f a = a) : nfp f a = a :=
 
 /-- The fixed point lemma for normal functions: any normal function has an unbounded set of
 fixed points. -/
-theorem fp_unbounded (H : IsNormal f) : (Function.FixedPoints f).Unbounded (· < ·) := by
+theorem fp_unbounded (H : IsNormal f) : (Function.fixedPoints f).Unbounded (· < ·) := by
   convert fp_family_unbounded fun _ : Unit => H
   exact (Set.Inter_const _).symm
 #align ordinal.fp_unbounded Ordinal.fp_unbounded
@@ -526,7 +526,7 @@ theorem IsNormal.fp_iff_deriv {f} (H : IsNormal f) {a} : f a = a ↔ ∃ o, deri
   rw [← H.le_iff_eq, H.le_iff_deriv]
 #align ordinal.is_normal.fp_iff_deriv Ordinal.IsNormal.fp_iff_deriv
 
-theorem deriv_eq_enum_ord (H : IsNormal f) : deriv f = enumOrd (Function.FixedPoints f) := by
+theorem deriv_eq_enum_ord (H : IsNormal f) : deriv f = enumOrd (Function.fixedPoints f) := by
   convert deriv_family_eq_enum_ord fun _ : Unit => H
   exact (Set.Inter_const _).symm
 #align ordinal.deriv_eq_enum_ord Ordinal.deriv_eq_enum_ord

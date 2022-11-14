@@ -39,7 +39,7 @@ If two nonzero vectors determine points which are in the set, and the sum of the
 nonzero, then the point determined by the sum is also in the set. -/
 @[ext.1]
 structure Subspace where
-  Carrier : Set (ℙ K V)
+  carrier : Set (ℙ K V)
   mem_add' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) (hvw : v + w ≠ 0) :
     mk K v hv ∈ carrier → mk K w hw ∈ carrier → mk K (v + w) hvw ∈ carrier
 #align projectivization.subspace Projectivization.Subspace
@@ -49,14 +49,14 @@ namespace Subspace
 variable {K V}
 
 instance : SetLike (Subspace K V) (ℙ K V) where
-  coe := Carrier
+  coe := carrier
   coe_injective' A B := by
     cases A
     cases B
     simp
 
 @[simp]
-theorem mem_carrier_iff (A : Subspace K V) (x : ℙ K V) : x ∈ A.Carrier ↔ x ∈ A :=
+theorem mem_carrier_iff (A : Subspace K V) (x : ℙ K V) : x ∈ A.carrier ↔ x ∈ A :=
   Iff.refl _
 #align projectivization.subspace.mem_carrier_iff Projectivization.Subspace.mem_carrier_iff
 
@@ -68,22 +68,22 @@ theorem mem_add (T : Subspace K V) (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) (hvw 
 /-- The span of a set of points in a projective space is defined inductively to be the set of points
 which contains the original set, and contains all points determined by the (nonzero) sum of two
 nonzero vectors, each of which determine points in the span. -/
-inductive SpanCarrier (S : Set (ℙ K V)) : Set (ℙ K V)
+inductive spanCarrier (S : Set (ℙ K V)) : Set (ℙ K V)
   | of (x : ℙ K V) (hx : x ∈ S) : span_carrier x
   |
   mem_add (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) (hvw : v + w ≠ 0) :
     span_carrier (Projectivization.mk K v hv) →
       span_carrier (Projectivization.mk K w hw) → span_carrier (Projectivization.mk K (v + w) hvw)
-#align projectivization.subspace.span_carrier Projectivization.Subspace.SpanCarrier
+#align projectivization.subspace.span_carrier Projectivization.Subspace.spanCarrier
 
 /-- The span of a set of points in projective space is a subspace. -/
 def span (S : Set (ℙ K V)) : Subspace K V where
-  Carrier := SpanCarrier S
-  mem_add' v w hv hw hvw := SpanCarrier.mem_add v w hv hw hvw
+  carrier := spanCarrier S
+  mem_add' v w hv hw hvw := spanCarrier.mem_add v w hv hw hvw
 #align projectivization.subspace.span Projectivization.Subspace.span
 
 /-- The span of a set of points contains the set of points. -/
-theorem subset_span (S : Set (ℙ K V)) : S ⊆ span S := fun x hx => SpanCarrier.of _ hx
+theorem subset_span (S : Set (ℙ K V)) : S ⊆ span S := fun x hx => spanCarrier.of _ hx
 #align projectivization.subspace.subset_span Projectivization.Subspace.subset_span
 
 /-- The span of a set of points is a Galois insertion between sets of points of a projective space
@@ -149,7 +149,7 @@ theorem span_empty : span (∅ : Set (ℙ K V)) = ⊥ :=
 
 /-- The span of the entire projective space is the top of the lattice of subspaces. -/
 @[simp]
-theorem span_univ : span (Set.Univ : Set (ℙ K V)) = ⊤ := by
+theorem span_univ : span (Set.univ : Set (ℙ K V)) = ⊤ := by
   rw [eq_top_iff, SetLike.le_def]
   intro x hx
   exact subset_span _ (Set.mem_univ x)

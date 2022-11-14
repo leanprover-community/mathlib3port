@@ -127,7 +127,7 @@ theorem isAlgebraicRat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [Alg
 #align is_algebraic_rat isAlgebraicRat
 
 theorem isAlgebraicOfMemRootSet {R : Type u} {A : Type v} [Field R] [Field A] [Algebra R A] {p : R[X]} {x : A}
-    (hx : x ∈ p.RootSet A) : IsAlgebraic R x :=
+    (hx : x ∈ p.rootSet A) : IsAlgebraic R x :=
   ⟨p, ne_zero_of_mem_root_set hx, aeval_eq_zero_of_mem_root_set hx⟩
 #align is_algebraic_of_mem_root_set isAlgebraicOfMemRootSet
 

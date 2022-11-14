@@ -116,7 +116,7 @@ theorem trinomial_mirror (hkm : k < m) (hmn : m < n) (hu : u ≠ 0) (hw : w ≠ 
 #align polynomial.trinomial_mirror Polynomial.trinomial_mirror
 
 theorem trinomial_support (hkm : k < m) (hmn : m < n) (hu : u ≠ 0) (hv : v ≠ 0) (hw : w ≠ 0) :
-    (trinomial k m n u v w).Support = {k, m, n} :=
+    (trinomial k m n u v w).support = {k, m, n} :=
   support_trinomial hkm hmn hu hv hw
 #align polynomial.trinomial_support Polynomial.trinomial_support
 
@@ -141,7 +141,7 @@ theorem not_is_unit (hp : p.IsUnitTrinomial) : ¬IsUnit p := by
         (nat_degree_eq_of_degree_eq_some (degree_eq_zero_of_is_unit h)))
 #align polynomial.is_unit_trinomial.not_is_unit Polynomial.IsUnitTrinomial.not_is_unit
 
-theorem card_support_eq_three (hp : p.IsUnitTrinomial) : p.Support.card = 3 := by
+theorem card_support_eq_three (hp : p.IsUnitTrinomial) : p.support.card = 3 := by
   obtain ⟨k, m, n, hkm, hmn, u, v, w, rfl⟩ := hp
   exact card_support_trinomial hkm hmn u.ne_zero v.ne_zero w.ne_zero
 #align polynomial.is_unit_trinomial.card_support_eq_three Polynomial.IsUnitTrinomial.card_support_eq_three
@@ -151,7 +151,7 @@ theorem ne_zero (hp : p.IsUnitTrinomial) : p ≠ 0 := by
   exact Nat.zero_ne_bit1 1 hp.card_support_eq_three
 #align polynomial.is_unit_trinomial.ne_zero Polynomial.IsUnitTrinomial.ne_zero
 
-theorem coeff_is_unit (hp : p.IsUnitTrinomial) {k : ℕ} (hk : k ∈ p.Support) : IsUnit (p.coeff k) := by
+theorem coeff_is_unit (hp : p.IsUnitTrinomial) {k : ℕ} (hk : k ∈ p.support) : IsUnit (p.coeff k) := by
   obtain ⟨k, m, n, hkm, hmn, u, v, w, rfl⟩ := hp
   have := support_trinomial' k m n (↑u) (↑v) (↑w) hk
   rw [mem_insert, mem_insert, mem_singleton] at this
@@ -174,7 +174,7 @@ theorem trailing_coeff_is_unit (hp : p.IsUnitTrinomial) : IsUnit p.trailingCoeff
 
 end IsUnitTrinomial
 
-theorem is_unit_trinomial_iff : p.IsUnitTrinomial ↔ p.Support.card = 3 ∧ ∀ k ∈ p.Support, IsUnit (p.coeff k) := by
+theorem is_unit_trinomial_iff : p.IsUnitTrinomial ↔ p.support.card = 3 ∧ ∀ k ∈ p.support, IsUnit (p.coeff k) := by
   refine' ⟨fun hp => ⟨hp.card_support_eq_three, fun k => hp.coeff_is_unit⟩, fun hp => _⟩
   obtain ⟨k, m, n, hkm, hmn, x, y, z, hx, hy, hz, rfl⟩ := card_support_eq_three.mp hp.1
   rw [support_trinomial hkm hmn hx hy hz] at hp
@@ -219,7 +219,7 @@ namespace IsUnitTrinomial
 
 theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Units ℤ) (hp : p = trinomial k m n u v w) :
     c ↑v * (c ↑u * X ^ (m + n) + c ↑w * X ^ (n - m + k + n)) =
-      ⟨Finsupp.filter (Set.IooCat (k + n) (n + n)) (p * p.mirror).toFinsupp⟩ :=
+      ⟨Finsupp.filter (Set.ioo (k + n) (n + n)) (p * p.mirror).toFinsupp⟩ :=
   by
   have key : n - m + k < n := by rwa [← lt_tsub_iff_right, tsub_lt_tsub_iff_left_of_le hmn.le]
   rw [hp, trinomial_mirror hkm hmn u.ne_zero w.ne_zero]
@@ -259,7 +259,7 @@ theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Unit
 theorem irreducible_aux2 {k m m' n : ℕ} (hkm : k < m) (hmn : m < n) (hkm' : k < m') (hmn' : m' < n) (u v w : Units ℤ)
     (hp : p = trinomial k m n u v w) (hq : q = trinomial k m' n u v w) (h : p * p.mirror = q * q.mirror) :
     q = p ∨ q = p.mirror := by
-  let f : ℤ[X] → ℤ[X] := fun p => ⟨Finsupp.filter (Set.IooCat (k + n) (n + n)) p.toFinsupp⟩
+  let f : ℤ[X] → ℤ[X] := fun p => ⟨Finsupp.filter (Set.ioo (k + n) (n + n)) p.toFinsupp⟩
   replace h := congr_arg f h
   replace h := (irreducible_aux1 hkm hmn u v w hp).trans h
   replace h := h.trans (irreducible_aux1 hkm' hmn' u v w hq).symm

@@ -84,7 +84,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   -- we obtain a clopen set in `F.obj j0` which works.
   obtain ⟨j0, hj0⟩ := is_cofiltered.inf_objs_exists (G.image j)
   let f : ∀ (s : S) (hs : s ∈ G), j0 ⟶ j s := fun s hs => (hj0 (finset.mem_image.mpr ⟨s, hs, rfl⟩)).some
-  let W : S → Set (F.obj j0) := fun s => if hs : s ∈ G then F.map (f s hs) ⁻¹' V s else Set.Univ
+  let W : S → Set (F.obj j0) := fun s => if hs : s ∈ G then F.map (f s hs) ⁻¹' V s else Set.univ
   -- Conclude, using the `j0` and the clopen set of `F.obj j0` obtained above.
   refine' ⟨j0, ⋃ (s : S) (hs : s ∈ G), W s, _, _⟩
   · apply is_clopen_bUnion_finset

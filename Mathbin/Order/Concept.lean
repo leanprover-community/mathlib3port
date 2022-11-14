@@ -44,63 +44,63 @@ variable {ι : Sort _} {α β γ : Type _} {κ : ι → Sort _} (r : α → β �
 
 /-- The intent closure of `s : set α` along a relation `r : α → β → Prop` is the set of all elements
 which `r` relates to all elements of `s`. -/
-def IntentClosure (s : Set α) : Set β :=
+def intentClosure (s : Set α) : Set β :=
   { b | ∀ ⦃a⦄, a ∈ s → r a b }
-#align intent_closure IntentClosure
+#align intent_closure intentClosure
 
 /-- The extent closure of `t : set β` along a relation `r : α → β → Prop` is the set of all elements
 which `r` relates to all elements of `t`. -/
-def ExtentClosure (t : Set β) : Set α :=
+def extentClosure (t : Set β) : Set α :=
   { a | ∀ ⦃b⦄, b ∈ t → r a b }
-#align extent_closure ExtentClosure
+#align extent_closure extentClosure
 
 variable {r}
 
-theorem subset_intent_closure_iff_subset_extent_closure : t ⊆ IntentClosure r s ↔ s ⊆ ExtentClosure r t :=
+theorem subset_intent_closure_iff_subset_extent_closure : t ⊆ intentClosure r s ↔ s ⊆ extentClosure r t :=
   ⟨fun h a ha b hb => h hb ha, fun h b hb a ha => h ha hb⟩
 #align subset_intent_closure_iff_subset_extent_closure subset_intent_closure_iff_subset_extent_closure
 
 variable (r)
 
-theorem gc_intent_closure_extent_closure : GaloisConnection (to_dual ∘ IntentClosure r) (ExtentClosure r ∘ of_dual) :=
+theorem gc_intent_closure_extent_closure : GaloisConnection (to_dual ∘ intentClosure r) (extentClosure r ∘ of_dual) :=
   fun s t => subset_intent_closure_iff_subset_extent_closure
 #align gc_intent_closure_extent_closure gc_intent_closure_extent_closure
 
-theorem intent_closure_swap (t : Set β) : IntentClosure (swap r) t = ExtentClosure r t :=
+theorem intent_closure_swap (t : Set β) : intentClosure (swap r) t = extentClosure r t :=
   rfl
 #align intent_closure_swap intent_closure_swap
 
-theorem extent_closure_swap (s : Set α) : ExtentClosure (swap r) s = IntentClosure r s :=
+theorem extent_closure_swap (s : Set α) : extentClosure (swap r) s = intentClosure r s :=
   rfl
 #align extent_closure_swap extent_closure_swap
 
 @[simp]
-theorem intent_closure_empty : IntentClosure r ∅ = univ :=
+theorem intent_closure_empty : intentClosure r ∅ = univ :=
   eq_univ_of_forall fun _ _ => False.elim
 #align intent_closure_empty intent_closure_empty
 
 @[simp]
-theorem extent_closure_empty : ExtentClosure r ∅ = univ :=
+theorem extent_closure_empty : extentClosure r ∅ = univ :=
   intent_closure_empty _
 #align extent_closure_empty extent_closure_empty
 
 @[simp]
-theorem intent_closure_union (s₁ s₂ : Set α) : IntentClosure r (s₁ ∪ s₂) = IntentClosure r s₁ ∩ IntentClosure r s₂ :=
+theorem intent_closure_union (s₁ s₂ : Set α) : intentClosure r (s₁ ∪ s₂) = intentClosure r s₁ ∩ intentClosure r s₂ :=
   Set.ext fun _ => ball_or_left
 #align intent_closure_union intent_closure_union
 
 @[simp]
-theorem extent_closure_union (t₁ t₂ : Set β) : ExtentClosure r (t₁ ∪ t₂) = ExtentClosure r t₁ ∩ ExtentClosure r t₂ :=
+theorem extent_closure_union (t₁ t₂ : Set β) : extentClosure r (t₁ ∪ t₂) = extentClosure r t₁ ∩ extentClosure r t₂ :=
   intent_closure_union _ _ _
 #align extent_closure_union extent_closure_union
 
 @[simp]
-theorem intent_closure_Union (f : ι → Set α) : IntentClosure r (⋃ i, f i) = ⋂ i, IntentClosure r (f i) :=
+theorem intent_closure_Union (f : ι → Set α) : intentClosure r (⋃ i, f i) = ⋂ i, intentClosure r (f i) :=
   (gc_intent_closure_extent_closure r).l_supr
 #align intent_closure_Union intent_closure_Union
 
 @[simp]
-theorem extent_closure_Union (f : ι → Set β) : ExtentClosure r (⋃ i, f i) = ⋂ i, ExtentClosure r (f i) :=
+theorem extent_closure_Union (f : ι → Set β) : extentClosure r (⋃ i, f i) = ⋂ i, extentClosure r (f i) :=
   intent_closure_Union _ _
 #align extent_closure_Union extent_closure_Union
 
@@ -108,7 +108,7 @@ theorem extent_closure_Union (f : ι → Set β) : ExtentClosure r (⋃ i, f i) 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem intent_closure_Union₂ (f : ∀ i, κ i → Set α) :
-    IntentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), IntentClosure r (f i j) :=
+    intentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), intentClosure r (f i j) :=
   (gc_intent_closure_extent_closure r).l_supr₂
 #align intent_closure_Union₂ intent_closure_Union₂
 
@@ -116,35 +116,35 @@ theorem intent_closure_Union₂ (f : ∀ i, κ i → Set α) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem extent_closure_Union₂ (f : ∀ i, κ i → Set β) :
-    ExtentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), ExtentClosure r (f i j) :=
+    extentClosure r (⋃ (i) (j), f i j) = ⋂ (i) (j), extentClosure r (f i j) :=
   intent_closure_Union₂ _ _
 #align extent_closure_Union₂ extent_closure_Union₂
 
-theorem subset_extent_closure_intent_closure (s : Set α) : s ⊆ ExtentClosure r (IntentClosure r s) :=
+theorem subset_extent_closure_intent_closure (s : Set α) : s ⊆ extentClosure r (intentClosure r s) :=
   (gc_intent_closure_extent_closure r).le_u_l _
 #align subset_extent_closure_intent_closure subset_extent_closure_intent_closure
 
-theorem subset_intent_closure_extent_closure (t : Set β) : t ⊆ IntentClosure r (ExtentClosure r t) :=
+theorem subset_intent_closure_extent_closure (t : Set β) : t ⊆ intentClosure r (extentClosure r t) :=
   subset_extent_closure_intent_closure _ t
 #align subset_intent_closure_extent_closure subset_intent_closure_extent_closure
 
 @[simp]
 theorem intent_closure_extent_closure_intent_closure (s : Set α) :
-    IntentClosure r (ExtentClosure r <| IntentClosure r s) = IntentClosure r s :=
+    intentClosure r (extentClosure r <| intentClosure r s) = intentClosure r s :=
   (gc_intent_closure_extent_closure r).l_u_l_eq_l _
 #align intent_closure_extent_closure_intent_closure intent_closure_extent_closure_intent_closure
 
 @[simp]
 theorem extent_closure_intent_closure_extent_closure (t : Set β) :
-    ExtentClosure r (IntentClosure r <| ExtentClosure r t) = ExtentClosure r t :=
+    extentClosure r (intentClosure r <| extentClosure r t) = extentClosure r t :=
   intent_closure_extent_closure_intent_closure _ t
 #align extent_closure_intent_closure_extent_closure extent_closure_intent_closure_extent_closure
 
-theorem intent_closure_anti : Antitone (IntentClosure r) :=
+theorem intent_closure_anti : Antitone (intentClosure r) :=
   (gc_intent_closure_extent_closure r).monotone_l
 #align intent_closure_anti intent_closure_anti
 
-theorem extent_closure_anti : Antitone (ExtentClosure r) :=
+theorem extent_closure_anti : Antitone (extentClosure r) :=
   intent_closure_anti _
 #align extent_closure_anti extent_closure_anti
 
@@ -157,8 +157,8 @@ variable (α β)
 such that `s` is the set of all elements that are `r`-related to all of `t` and `t` is the set of
 all elements that are `r`-related to all of `s`. -/
 structure Concept extends Set α × Set β where
-  closure_fst : IntentClosure r fst = snd
-  closure_snd : ExtentClosure r snd = fst
+  closure_fst : intentClosure r fst = snd
+  closure_snd : extentClosure r snd = fst
 #align concept Concept
 
 namespace Concept
@@ -194,14 +194,14 @@ theorem snd_injective : Injective fun c : Concept α β r => c.snd := fun c d =>
 
 instance : HasSup (Concept α β r) :=
   ⟨fun c d =>
-    { fst := ExtentClosure r (c.snd ∩ d.snd), snd := c.snd ∩ d.snd,
+    { fst := extentClosure r (c.snd ∩ d.snd), snd := c.snd ∩ d.snd,
       closure_fst := by
         rw [← c.closure_fst, ← d.closure_fst, ← intent_closure_union, intent_closure_extent_closure_intent_closure],
       closure_snd := rfl }⟩
 
 instance : HasInf (Concept α β r) :=
   ⟨fun c d =>
-    { fst := c.fst ∩ d.fst, snd := IntentClosure r (c.fst ∩ d.fst), closure_fst := rfl,
+    { fst := c.fst ∩ d.fst, snd := intentClosure r (c.fst ∩ d.fst), closure_fst := rfl,
       closure_snd := by
         rw [← c.closure_snd, ← d.closure_snd, ← extent_closure_union, extent_closure_intent_closure_extent_closure] }⟩
 
@@ -248,20 +248,20 @@ instance : Lattice (Concept α β r) :=
       exact subset_inter }
 
 instance : BoundedOrder (Concept α β r) where
-  top := ⟨⟨Univ, IntentClosure r Univ⟩, rfl, eq_univ_of_forall fun a b hb => hb trivial⟩
+  top := ⟨⟨univ, intentClosure r univ⟩, rfl, eq_univ_of_forall fun a b hb => hb trivial⟩
   le_top _ := subset_univ _
-  bot := ⟨⟨ExtentClosure r Univ, Univ⟩, eq_univ_of_forall fun b a ha => ha trivial, rfl⟩
+  bot := ⟨⟨extentClosure r univ, univ⟩, eq_univ_of_forall fun b a ha => ha trivial, rfl⟩
   bot_le _ := snd_subset_snd_iff.1 <| subset_univ _
 
 instance : HasSup (Concept α β r) :=
   ⟨fun S =>
-    { fst := ExtentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd), snd := ⋂ c ∈ S, (c : Concept _ _ _).snd,
+    { fst := extentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd), snd := ⋂ c ∈ S, (c : Concept _ _ _).snd,
       closure_fst := by simp_rw [← closure_fst, ← intent_closure_Union₂, intent_closure_extent_closure_intent_closure],
       closure_snd := rfl }⟩
 
 instance : HasInf (Concept α β r) :=
   ⟨fun S =>
-    { fst := ⋂ c ∈ S, (c : Concept _ _ _).fst, snd := IntentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst),
+    { fst := ⋂ c ∈ S, (c : Concept _ _ _).fst, snd := intentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst),
       closure_fst := rfl,
       closure_snd := by
         simp_rw [← closure_snd, ← extent_closure_Union₂, extent_closure_intent_closure_extent_closure] }⟩
@@ -278,12 +278,12 @@ theorem top_fst : (⊤ : Concept α β r).fst = univ :=
 #align concept.top_fst Concept.top_fst
 
 @[simp]
-theorem top_snd : (⊤ : Concept α β r).snd = IntentClosure r Univ :=
+theorem top_snd : (⊤ : Concept α β r).snd = intentClosure r univ :=
   rfl
 #align concept.top_snd Concept.top_snd
 
 @[simp]
-theorem bot_fst : (⊥ : Concept α β r).fst = ExtentClosure r Univ :=
+theorem bot_fst : (⊥ : Concept α β r).fst = extentClosure r univ :=
   rfl
 #align concept.bot_fst Concept.bot_fst
 
@@ -293,7 +293,7 @@ theorem bot_snd : (⊥ : Concept α β r).snd = univ :=
 #align concept.bot_snd Concept.bot_snd
 
 @[simp]
-theorem sup_fst (c d : Concept α β r) : (c ⊔ d).fst = ExtentClosure r (c.snd ∩ d.snd) :=
+theorem sup_fst (c d : Concept α β r) : (c ⊔ d).fst = extentClosure r (c.snd ∩ d.snd) :=
   rfl
 #align concept.sup_fst Concept.sup_fst
 
@@ -308,12 +308,12 @@ theorem inf_fst (c d : Concept α β r) : (c ⊓ d).fst = c.fst ∩ d.fst :=
 #align concept.inf_fst Concept.inf_fst
 
 @[simp]
-theorem inf_snd (c d : Concept α β r) : (c ⊓ d).snd = IntentClosure r (c.fst ∩ d.fst) :=
+theorem inf_snd (c d : Concept α β r) : (c ⊓ d).snd = intentClosure r (c.fst ∩ d.fst) :=
   rfl
 #align concept.inf_snd Concept.inf_snd
 
 @[simp]
-theorem Sup_fst (S : Set (Concept α β r)) : (sup S).fst = ExtentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd) :=
+theorem Sup_fst (S : Set (Concept α β r)) : (sup S).fst = extentClosure r (⋂ c ∈ S, (c : Concept _ _ _).snd) :=
   rfl
 #align concept.Sup_fst Concept.Sup_fst
 
@@ -328,7 +328,7 @@ theorem Inf_fst (S : Set (Concept α β r)) : (inf S).fst = ⋂ c ∈ S, (c : Co
 #align concept.Inf_fst Concept.Inf_fst
 
 @[simp]
-theorem Inf_snd (S : Set (Concept α β r)) : (inf S).snd = IntentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst) :=
+theorem Inf_snd (S : Set (Concept α β r)) : (inf S).snd = intentClosure r (⋂ c ∈ S, (c : Concept _ _ _).fst) :=
   rfl
 #align concept.Inf_snd Concept.Inf_snd
 

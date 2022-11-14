@@ -226,7 +226,7 @@ instance ι_mono (i : D.J) : Mono (𝖣.ι i) :=
   (TopCat.mono_iff_injective _).mpr (D.ι_injective _)
 #align Top.glue_data.ι_mono TopCat.GlueData.ι_mono
 
-theorem image_inter (i j : D.J) : Set.Range (𝖣.ι i) ∩ Set.Range (𝖣.ι j) = Set.Range (D.f i j ≫ 𝖣.ι _) := by
+theorem image_inter (i j : D.J) : Set.range (𝖣.ι i) ∩ Set.range (𝖣.ι j) = Set.range (D.f i j ≫ 𝖣.ι _) := by
   ext x
   constructor
   · rintro ⟨⟨x₁, eq₁⟩, ⟨x₂, eq₂⟩⟩
@@ -243,8 +243,8 @@ theorem image_inter (i j : D.J) : Set.Range (𝖣.ι i) ∩ Set.Range (𝖣.ι j
     
 #align Top.glue_data.image_inter TopCat.GlueData.image_inter
 
-theorem preimage_range (i j : D.J) : 𝖣.ι j ⁻¹' Set.Range (𝖣.ι i) = Set.Range (D.f j i) := by
-  rw [← Set.preimage_image_eq (Set.Range (D.f j i)) (D.ι_injective j), ← Set.image_univ, ← Set.image_univ, ←
+theorem preimage_range (i j : D.J) : 𝖣.ι j ⁻¹' Set.range (𝖣.ι i) = Set.range (D.f j i) := by
+  rw [← Set.preimage_image_eq (Set.range (D.f j i)) (D.ι_injective j), ← Set.image_univ, ← Set.image_univ, ←
     Set.image_comp, ← coe_comp, Set.image_univ, Set.image_univ, ← image_inter, Set.preimage_range_inter]
 #align Top.glue_data.preimage_range TopCat.GlueData.preimage_range
 
@@ -437,7 +437,7 @@ theorem from_open_subsets_glue_is_open_map : IsOpenMap (fromOpenSubsetsGlue U) :
   rw [is_open_iff_forall_mem_open]
   rintro _ ⟨x, hx, rfl⟩
   obtain ⟨i, ⟨x, hx'⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x
-  use from_open_subsets_glue U '' s ∩ Set.Range (@opens.inclusion (TopCat.of α) (U i))
+  use from_open_subsets_glue U '' s ∩ Set.range (@opens.inclusion (TopCat.of α) (U i))
   use Set.inter_subset_left _ _
   constructor
   · erw [← Set.image_preimage_eq_inter_range]
@@ -458,7 +458,7 @@ theorem from_open_subsets_glue_open_embedding : OpenEmbedding (fromOpenSubsetsGl
     (from_open_subsets_glue_is_open_map U)
 #align Top.glue_data.from_open_subsets_glue_open_embedding TopCat.GlueData.from_open_subsets_glue_open_embedding
 
-theorem range_from_open_subsets_glue : Set.Range (fromOpenSubsetsGlue U) = ⋃ i, (U i : Set α) := by
+theorem range_from_open_subsets_glue : Set.range (fromOpenSubsetsGlue U) = ⋃ i, (U i : Set α) := by
   ext
   constructor
   · rintro ⟨x, rfl⟩
@@ -472,7 +472,7 @@ theorem range_from_open_subsets_glue : Set.Range (fromOpenSubsetsGlue U) = ⋃ i
 #align Top.glue_data.range_from_open_subsets_glue TopCat.GlueData.range_from_open_subsets_glue
 
 /-- The gluing of an open cover is homeomomorphic to the original space. -/
-def openCoverGlueHomeo (h : (⋃ i, (U i : Set α)) = Set.Univ) : (ofOpenSubsets U).toGlueData.glued ≃ₜ α :=
+def openCoverGlueHomeo (h : (⋃ i, (U i : Set α)) = Set.univ) : (ofOpenSubsets U).toGlueData.glued ≃ₜ α :=
   Homeomorph.homeomorphOfContinuousOpen
     (Equiv.ofBijective (fromOpenSubsetsGlue U)
       ⟨from_open_subsets_glue_injective U, Set.range_iff_surjective.mp ((range_from_open_subsets_glue U).symm ▸ h)⟩)

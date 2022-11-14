@@ -82,13 +82,13 @@ theorem is_satisfiable_empty (L : Language.{u, v}) : IsSatisfiable (∅ : L.Theo
 #align first_order.language.Theory.is_satisfiable_empty FirstOrder.Language.TheoryCat.is_satisfiable_empty
 
 theorem is_satisfiable_of_is_satisfiable_on_Theory {L' : Language.{w, w'}} (φ : L →ᴸ L')
-    (h : (φ.OnTheory T).IsSatisfiable) : T.IsSatisfiable :=
+    (h : (φ.onTheory T).IsSatisfiable) : T.IsSatisfiable :=
   Model.is_satisfiable (h.some.reduct φ)
 #align
   first_order.language.Theory.is_satisfiable_of_is_satisfiable_on_Theory FirstOrder.Language.TheoryCat.is_satisfiable_of_is_satisfiable_on_Theory
 
 theorem is_satisfiable_on_Theory_iff {L' : Language.{w, w'}} {φ : L →ᴸ L'} (h : φ.Injective) :
-    (φ.OnTheory T).IsSatisfiable ↔ T.IsSatisfiable := by
+    (φ.onTheory T).IsSatisfiable ↔ T.IsSatisfiable := by
   classical refine' ⟨is_satisfiable_of_is_satisfiable_on_Theory φ, fun h' => _⟩
     exact model.is_satisfiable (h'.some.default_expansion h)
 #align
@@ -123,11 +123,11 @@ theorem is_satisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.TheoryCat) (s : Set α) (M : Type w')
     [Nonempty M] [L.StructureCat M] [M ⊨ T] (h : Cardinal.lift.{w'} (#s) ≤ Cardinal.lift.{w} (#M)) :
-    ((L.lhomWithConstants α).OnTheory T ∪ L.DistinctConstantsTheory s).IsSatisfiable := by
+    ((L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s).IsSatisfiable := by
   haveI : Inhabited M := Classical.inhabitedOfNonempty inferInstance
   rw [Cardinal.lift_mk_le'] at h
   letI : (constants_on α).StructureCat M := constants_on.Structure (Function.extend coe h.some default)
-  have : M ⊨ (L.Lhom_with_constants α).OnTheory T ∪ L.distinct_constants_theory s := by
+  have : M ⊨ (L.Lhom_with_constants α).onTheory T ∪ L.distinct_constants_theory s := by
     refine' ((Lhom.on_Theory_model _ _).2 inferInstance).union _
     rw [model_distinct_constants_theory]
     refine' fun a as b bs ab => _
@@ -143,7 +143,7 @@ theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.TheoryC
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.TheoryCat) (s : Set α) (M : Type w')
     [L.StructureCat M] [M ⊨ T] [Infinite M] :
-    ((L.lhomWithConstants α).OnTheory T ∪ L.DistinctConstantsTheory s).IsSatisfiable := by
+    ((L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s).IsSatisfiable := by
   classical rw [distinct_constants_theory_eq_Union, Set.union_Union, is_satisfiable_directed_union_iff]
     · refine' (monotone_const.union (monotone_distinct_constants_theory.comp _)).directed_le
       simp only [Finset.coe_map, Function.Embedding.coe_subtype]
@@ -157,13 +157,13 @@ theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.Theory
 /-- Any theory with an infinite model has arbitrarily large models. -/
 theorem exists_large_model_of_infinite_model (T : L.TheoryCat) (κ : Cardinal.{w}) (M : Type w') [L.StructureCat M]
     [M ⊨ T] [Infinite M] : ∃ N : ModelCat.{_, _, max u v w} T, Cardinal.lift.{max u v w} κ ≤ (#N) := by
-  obtain ⟨N⟩ := is_satisfiable_union_distinct_constants_theory_of_infinite T (Set.Univ : Set κ.out) M
+  obtain ⟨N⟩ := is_satisfiable_union_distinct_constants_theory_of_infinite T (Set.univ : Set κ.out) M
   refine' ⟨(N.is_model.mono (Set.subset_union_left _ _)).Bundled.reduct _, _⟩
   haveI : N ⊨ distinct_constants_theory _ _ := N.is_model.mono (Set.subset_union_right _ _)
   simp only [Model.reduct_carrier, coe_of, Model.carrier_eq_coe]
   refine' trans (lift_le.2 (le_of_eq (Cardinal.mk_out κ).symm)) _
   rw [← mk_univ]
-  refine' (card_le_of_model_distinct_constants_theory L Set.Univ N).trans (lift_le.1 _)
+  refine' (card_le_of_model_distinct_constants_theory L Set.univ N).trans (lift_le.1 _)
   rw [lift_lift]
 #align
   first_order.language.Theory.exists_large_model_of_infinite_model FirstOrder.Language.TheoryCat.exists_large_model_of_infinite_model
@@ -310,7 +310,7 @@ theorem models_iff_not_satisfiable (φ : L.Sentence) : T ⊨ φ ↔ ¬IsSatisfia
       fun h M => _⟩
   contrapose! h
   rw [← sentence.realize_not] at h
-  refine' ⟨{ Carrier := M, is_model := ⟨fun ψ hψ => hψ.elim (realize_sentence_of_mem _) fun h' => _⟩ }⟩
+  refine' ⟨{ carrier := M, is_model := ⟨fun ψ hψ => hψ.elim (realize_sentence_of_mem _) fun h' => _⟩ }⟩
   rw [Set.mem_singleton_iff.1 h']
   exact h
 #align first_order.language.Theory.models_iff_not_satisfiable FirstOrder.Language.TheoryCat.models_iff_not_satisfiable
@@ -434,21 +434,21 @@ namespace CompleteTheory
 
 variable (L) (M : Type w) [L.StructureCat M]
 
-theorem is_satisfiable [Nonempty M] : (L.CompleteTheory M).IsSatisfiable :=
+theorem is_satisfiable [Nonempty M] : (L.completeTheory M).IsSatisfiable :=
   TheoryCat.Model.is_satisfiable M
-#align first_order.language.complete_theory.is_satisfiable FirstOrder.Language.CompleteTheory.is_satisfiable
+#align first_order.language.complete_theory.is_satisfiable FirstOrder.Language.completeTheory.is_satisfiable
 
-theorem mem_or_not_mem (φ : L.Sentence) : φ ∈ L.CompleteTheory M ∨ φ.Not ∈ L.CompleteTheory M := by
+theorem mem_or_not_mem (φ : L.Sentence) : φ ∈ L.completeTheory M ∨ φ.Not ∈ L.completeTheory M := by
   simp_rw [complete_theory, Set.mem_set_of_eq, sentence.realize, formula.realize_not, or_not]
-#align first_order.language.complete_theory.mem_or_not_mem FirstOrder.Language.CompleteTheory.mem_or_not_mem
+#align first_order.language.complete_theory.mem_or_not_mem FirstOrder.Language.completeTheory.mem_or_not_mem
 
-theorem is_maximal [Nonempty M] : (L.CompleteTheory M).IsMaximal :=
+theorem is_maximal [Nonempty M] : (L.completeTheory M).IsMaximal :=
   ⟨is_satisfiable L M, mem_or_not_mem L M⟩
-#align first_order.language.complete_theory.is_maximal FirstOrder.Language.CompleteTheory.is_maximal
+#align first_order.language.complete_theory.is_maximal FirstOrder.Language.completeTheory.is_maximal
 
-theorem is_complete [Nonempty M] : (L.CompleteTheory M).IsComplete :=
-  (CompleteTheory.is_maximal L M).IsComplete
-#align first_order.language.complete_theory.is_complete FirstOrder.Language.CompleteTheory.is_complete
+theorem is_complete [Nonempty M] : (L.completeTheory M).IsComplete :=
+  (completeTheory.is_maximal L M).IsComplete
+#align first_order.language.complete_theory.is_complete FirstOrder.Language.completeTheory.is_complete
 
 end CompleteTheory
 
@@ -613,7 +613,7 @@ theorem empty_Theory_categorical (T : Language.empty.TheoryCat) : κ.Categorical
   rw [empty.nonempty_equiv_iff, hM, hN]
 #align cardinal.empty_Theory_categorical Cardinal.empty_Theory_categorical
 
-theorem empty_infinite_Theory_is_complete : Language.empty.InfiniteTheory.IsComplete :=
+theorem empty_infinite_Theory_is_complete : Language.empty.infiniteTheory.IsComplete :=
   (empty_Theory_categorical ℵ₀ _).IsComplete ℵ₀ _ le_rfl (by simp)
     ⟨TheoryCat.Model.bundled ((model_infinite_theory_iff Language.empty).2 Nat.infinite)⟩ fun M =>
     (model_infinite_theory_iff Language.empty).1 M.is_model

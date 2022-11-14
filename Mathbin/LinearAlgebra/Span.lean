@@ -213,7 +213,7 @@ theorem span_empty : span R (∅ : Set M) = ⊥ :=
 #align submodule.span_empty Submodule.span_empty
 
 @[simp]
-theorem span_univ : span R (Univ : Set M) = ⊤ :=
+theorem span_univ : span R (univ : Set M) = ⊤ :=
   eq_top_iff.2 <| SetLike.le_def.2 <| subset_span
 #align submodule.span_univ Submodule.span_univ
 
@@ -251,7 +251,7 @@ theorem span_eq_supr_of_singleton_spans (s : Set M) : span R s = ⨆ x ∈ s, R 
   simp only [← span_Union, Set.bUnion_of_singleton s]
 #align submodule.span_eq_supr_of_singleton_spans Submodule.span_eq_supr_of_singleton_spans
 
-theorem span_range_eq_supr {ι : Type _} {v : ι → M} : span R (Range v) = ⨆ i, R ∙ v i := by
+theorem span_range_eq_supr {ι : Type _} {v : ι → M} : span R (range v) = ⨆ i, R ∙ v i := by
   rw [span_eq_supr_of_singleton_spans, supr_range]
 #align submodule.span_range_eq_supr Submodule.span_range_eq_supr
 
@@ -422,7 +422,7 @@ theorem span_zero_singleton : (R ∙ (0 : M)) = ⊥ := by
   simp [mem_span_singleton, eq_comm]
 #align submodule.span_zero_singleton Submodule.span_zero_singleton
 
-theorem span_singleton_eq_range (y : M) : ↑(R ∙ y) = Range ((· • y) : R → M) :=
+theorem span_singleton_eq_range (y : M) : ↑(R ∙ y) = range ((· • y) : R → M) :=
   Set.ext fun x => mem_span_singleton
 #align submodule.span_singleton_eq_range Submodule.span_singleton_eq_range
 
@@ -774,7 +774,7 @@ variable {M' : Type _} [AddCommMonoid M'] [Module R M'] (q₁ q₁' : Submodule 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two submodules is a submodule. -/
 def prod : Submodule R (M × M') :=
-  { p.toAddSubmonoid.Prod q₁.toAddSubmonoid with Carrier := p ×ˢ q₁,
+  { p.toAddSubmonoid.Prod q₁.toAddSubmonoid with carrier := p ×ˢ q₁,
     smul_mem' := by rintro a ⟨x, y⟩ ⟨hx, hy⟩ <;> exact ⟨smul_mem _ a hx, smul_mem _ a hy⟩ }
 #align submodule.prod Submodule.prod
 
@@ -986,7 +986,7 @@ theorem ext_on {s : Set M} {f g : M →ₛₗ[σ₁₂] M₂} (hv : span R s = �
 
 /-- If the range of `v : ι → M` generates the whole module and linear maps `f`, `g` are equal at
 each `v i`, then they are equal. -/
-theorem ext_on_range {ι : Type _} {v : ι → M} {f g : M →ₛₗ[σ₁₂] M₂} (hv : span R (Set.Range v) = ⊤)
+theorem ext_on_range {ι : Type _} {v : ι → M} {f g : M →ₛₗ[σ₁₂] M₂} (hv : span R (Set.range v) = ⊤)
     (h : ∀ i, f (v i) = g (v i)) : f = g :=
   ext_on hv (Set.forall_range_iff.2 h)
 #align linear_map.ext_on_range LinearMap.ext_on_range

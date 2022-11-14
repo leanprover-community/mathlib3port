@@ -139,7 +139,7 @@ theorem antilipschitzWithLineMap {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
 
 variable (𝕜)
 
-theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy : y ∈ Interior s) :
+theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy : y ∈ interior s) :
     ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s := by
   rw [(NormedAddCommGroup.nhds_basis_norm_lt (1 : 𝕜)).eventually_iff]
   cases' eq_or_ne y x with h h
@@ -155,7 +155,7 @@ theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy
 #align eventually_homothety_mem_of_mem_interior eventually_homothety_mem_of_mem_interior
 
 theorem eventually_homothety_image_subset_of_finite_subset_interior (x : Q) {s : Set Q} {t : Set Q} (ht : t.Finite)
-    (h : t ⊆ Interior s) : ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ '' t ⊆ s := by
+    (h : t ⊆ interior s) : ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ '' t ⊆ s := by
   suffices ∀ y ∈ t, ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s by
     simp_rw [Set.image_subset_iff]
     exact (Filter.eventually_all_finite ht).mpr this

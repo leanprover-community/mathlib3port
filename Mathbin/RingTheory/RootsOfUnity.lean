@@ -79,7 +79,7 @@ variable {k l : ℕ+}
 
 /-- `roots_of_unity k M` is the subgroup of elements `m : Mˣ` that satisfy `m ^ k = 1` -/
 def rootsOfUnity (k : ℕ+) (M : Type _) [CommMonoid M] : Subgroup Mˣ where
-  Carrier := { ζ | ζ ^ (k : ℕ) = 1 }
+  carrier := { ζ | ζ ^ (k : ℕ) = 1 }
   one_mem' := one_pow _
   mul_mem' ζ ξ hζ hξ := by simp_all only [Set.mem_set_of_eq, mul_pow, one_mul]
   inv_mem' ζ hζ := by simp_all only [Set.mem_set_of_eq, inv_pow, inv_one]

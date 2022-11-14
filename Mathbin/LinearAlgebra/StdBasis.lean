@@ -105,7 +105,7 @@ theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) 
   exact h.le_bot ⟨hi, hj⟩
 #align linear_map.supr_range_std_basis_le_infi_ker_proj LinearMap.supr_range_std_basis_le_infi_ker_proj
 
-theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu : Set.Univ ⊆ ↑I ∪ J) :
+theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu : Set.univ ⊆ ↑I ∪ J) :
     (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i)) ≤ ⨆ i ∈ I, range (stdBasis R φ i) :=
   SetLike.le_def.2
     (by
@@ -122,10 +122,10 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu :
       exact sum_mem_bsupr fun i hi => mem_range_self (std_basis R φ i) (b i))
 #align linear_map.infi_ker_proj_le_supr_range_std_basis LinearMap.infi_ker_proj_le_supr_range_std_basis
 
-theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J)
+theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J) (hu : Set.univ ⊆ I ∪ J)
     (hI : Set.Finite I) : (⨆ i ∈ I, range (stdBasis R φ i)) = ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) := by
   refine' le_antisymm (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _
-  have : Set.Univ ⊆ ↑hI.to_finset ∪ J := by rwa [hI.coe_to_finset]
+  have : Set.univ ⊆ ↑hI.to_finset ∪ J := by rwa [hI.coe_to_finset]
   refine' le_trans (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_mono fun i => _)
   rw [Set.Finite.mem_to_finset]
   exact le_rfl
@@ -179,7 +179,7 @@ theorem linear_independent_std_basis [Ring R] [∀ i, AddCommGroup (Ms i)] [∀ 
     exact (hs j).map' _ (ker_std_basis _ _ _)
   apply linear_independent_Union_finite hs'
   · intro j J _ hiJ
-    simp [(Set.UnionCat.equations._eqn_1 _).symm, Submodule.span_image, Submodule.span_Union]
+    simp [(Set.union.equations._eqn_1 _).symm, Submodule.span_image, Submodule.span_Union]
     have h₀ : ∀ j, span R (range fun i : ιs j => std_basis R Ms j (v j i)) ≤ range (std_basis R Ms j) := by
       intro j
       rw [span_le, LinearMap.range_coe]

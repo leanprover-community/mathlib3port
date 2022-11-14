@@ -33,7 +33,7 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {
     that its limit points in `U` still belong to it, from which the inclusion `U ⊆ u` will follow
     by connectedness. -/
   let u := { x | f =ᶠ[𝓝 x] 0 }
-  suffices main : Closure u ∩ U ⊆ u
+  suffices main : closure u ∩ U ⊆ u
   · have Uu : U ⊆ u := hU.subset_of_closure_inter_subset is_open_set_of_eventually_nhds ⟨z₀, h₀, hfz₀⟩ main
     intro z hz
     simpa using mem_of_mem_nhds (Uu hz)
@@ -56,7 +56,7 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {
     apply Ennreal.le_sub_of_add_le_left Ennreal.coe_ne_top
     apply (add_le_add A.le (le_refl (r / 2))).trans (le_of_eq _)
     exact Ennreal.add_halves _
-  have M : Emetric.Ball y (r / 2) ∈ 𝓝 x := emetric.is_open_ball.mem_nhds hxy
+  have M : Emetric.ball y (r / 2) ∈ 𝓝 x := emetric.is_open_ball.mem_nhds hxy
   filter_upwards [M] with z hz
   have A : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) (f z) := has_series.has_sum_sub hz
   have B : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) 0 := by

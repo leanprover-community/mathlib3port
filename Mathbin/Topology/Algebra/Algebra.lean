@@ -91,13 +91,13 @@ variable [TopologicalSemiring A]
 
 /-- The closure of a subalgebra in a topological algebra as a subalgebra. -/
 def Subalgebra.topologicalClosure (s : Subalgebra R A) : Subalgebra R A :=
-  { s.toSubsemiring.topologicalClosure with Carrier := Closure (s : Set A),
+  { s.toSubsemiring.topologicalClosure with carrier := closure (s : Set A),
     algebra_map_mem' := fun r => s.toSubsemiring.subring_topological_closure (s.algebra_map_mem r) }
 #align subalgebra.topological_closure Subalgebra.topologicalClosure
 
 @[simp]
 theorem Subalgebra.topological_closure_coe (s : Subalgebra R A) :
-    (s.topologicalClosure : Set A) = Closure (s : Set A) :=
+    (s.topologicalClosure : Set A) = closure (s : Set A) :=
   rfl
 #align subalgebra.topological_closure_coe Subalgebra.topological_closure_coe
 

@@ -626,7 +626,7 @@ This is the general form of the ideal quotient, traditionally written $I : J$.
 -/
 instance : Div (Submodule R A) :=
   ⟨fun I J =>
-    { Carrier := { x | ∀ y ∈ J, x * y ∈ I },
+    { carrier := { x | ∀ y ∈ J, x * y ∈ I },
       zero_mem' := fun y hy => by
         rw [zero_mul]
         apply Submodule.zero_mem,

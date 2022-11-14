@@ -499,7 +499,7 @@ theorem Basis.det_is_empty [IsEmpty ι] : e.det = AlternatingMap.constOfIsEmpty 
 theorem Basis.det_ne_zero [Nontrivial R] : e.det ≠ 0 := fun h => by simpa [h] using e.det_self
 #align basis.det_ne_zero Basis.det_ne_zero
 
-theorem is_basis_iff_det {v : ι → M} : LinearIndependent R v ∧ span R (Set.Range v) = ⊤ ↔ IsUnit (e.det v) := by
+theorem is_basis_iff_det {v : ι → M} : LinearIndependent R v ∧ span R (Set.range v) = ⊤ ↔ IsUnit (e.det v) := by
   constructor
   · rintro ⟨hli, hspan⟩
     set v' := Basis.mk hli hspan.ge with v'_eq
@@ -580,7 +580,7 @@ theorem Pi.basis_fun_det : (Pi.basisFun R ι).det = Matrix.detRowAlternating := 
 
 /-- If we fix a background basis `e`, then for any other basis `v`, we can characterise the
 coordinates provided by `v` in terms of determinants relative to `e`. -/
-theorem Basis.det_smul_mk_coord_eq_det_update {v : ι → M} (hli : LinearIndependent R v) (hsp : ⊤ ≤ span R (Range v))
+theorem Basis.det_smul_mk_coord_eq_det_update {v : ι → M} (hli : LinearIndependent R v) (hsp : ⊤ ≤ span R (range v))
     (i : ι) : e.det v • (Basis.mk hli hsp).Coord i = e.det.toMultilinearMap.toLinearMap v i := by
   apply (Basis.mk hli hsp).ext
   intro k

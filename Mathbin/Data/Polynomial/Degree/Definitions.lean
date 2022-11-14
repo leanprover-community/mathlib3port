@@ -40,7 +40,7 @@ variable [Semiring R] {p q r : R[X]}
 `degree p = some n` when `p ≠ 0` and `n` is the highest power of `X` that appears in `p`, otherwise
 `degree 0 = ⊥`. -/
 def degree (p : R[X]) : WithBot ℕ :=
-  p.Support.max
+  p.support.max
 #align polynomial.degree Polynomial.degree
 
 theorem degree_lt_wf : WellFounded fun p q : R[X] => degree p < degree q :=
@@ -155,7 +155,7 @@ theorem nat_degree_eq_of_degree_eq [Semiring S] {q : S[X]} (h : degree p = degre
 #align polynomial.nat_degree_eq_of_degree_eq Polynomial.nat_degree_eq_of_degree_eq
 
 theorem le_degree_of_ne_zero (h : coeff p n ≠ 0) : (n : WithBot ℕ) ≤ degree p :=
-  show @LE.le (WithBot ℕ) _ (some n : WithBot ℕ) (p.Support.sup some : WithBot ℕ) from
+  show @LE.le (WithBot ℕ) _ (some n : WithBot ℕ) (p.support.sup some : WithBot ℕ) from
     Finset.le_sup (mem_support_iff.2 h)
 #align polynomial.le_degree_of_ne_zero Polynomial.le_degree_of_ne_zero
 
@@ -168,7 +168,7 @@ theorem le_nat_degree_of_ne_zero (h : coeff p n ≠ 0) : n ≤ natDegree p := by
     
 #align polynomial.le_nat_degree_of_ne_zero Polynomial.le_nat_degree_of_ne_zero
 
-theorem le_nat_degree_of_mem_supp (a : ℕ) : a ∈ p.Support → a ≤ natDegree p :=
+theorem le_nat_degree_of_mem_supp (a : ℕ) : a ∈ p.support → a ≤ natDegree p :=
   le_nat_degree_of_ne_zero ∘ mem_support_iff.mp
 #align polynomial.le_nat_degree_of_mem_supp Polynomial.le_nat_degree_of_mem_supp
 
@@ -180,15 +180,15 @@ theorem nat_degree_eq_of_le_of_coeff_ne_zero (pn : p.natDegree ≤ n) (p1 : p.co
   pn.antisymm (le_nat_degree_of_ne_zero p1)
 #align polynomial.nat_degree_eq_of_le_of_coeff_ne_zero Polynomial.nat_degree_eq_of_le_of_coeff_ne_zero
 
-theorem degree_mono [Semiring S] {f : R[X]} {g : S[X]} (h : f.Support ⊆ g.Support) : f.degree ≤ g.degree :=
+theorem degree_mono [Semiring S] {f : R[X]} {g : S[X]} (h : f.support ⊆ g.support) : f.degree ≤ g.degree :=
   Finset.sup_mono h
 #align polynomial.degree_mono Polynomial.degree_mono
 
-theorem supp_subset_range (h : natDegree p < m) : p.Support ⊆ Finset.range m := fun n hn =>
+theorem supp_subset_range (h : natDegree p < m) : p.support ⊆ Finset.range m := fun n hn =>
   mem_range.2 <| (le_nat_degree_of_mem_supp _ hn).trans_lt h
 #align polynomial.supp_subset_range Polynomial.supp_subset_range
 
-theorem supp_subset_range_nat_degree_succ : p.Support ⊆ Finset.range (natDegree p + 1) :=
+theorem supp_subset_range_nat_degree_succ : p.support ⊆ Finset.range (natDegree p + 1) :=
   supp_subset_range (Nat.lt_succ_self _)
 #align polynomial.supp_subset_range_nat_degree_succ Polynomial.supp_subset_range_nat_degree_succ
 
@@ -359,11 +359,11 @@ theorem ite_le_nat_degree_coeff (p : R[X]) (n : ℕ) (I : Decidable (n < 1 + nat
     
 #align polynomial.ite_le_nat_degree_coeff Polynomial.ite_le_nat_degree_coeff
 
-theorem as_sum_support (p : R[X]) : p = ∑ i in p.Support, monomial i (p.coeff i) :=
+theorem as_sum_support (p : R[X]) : p = ∑ i in p.support, monomial i (p.coeff i) :=
   (sum_monomial_eq p).symm
 #align polynomial.as_sum_support Polynomial.as_sum_support
 
-theorem as_sum_support_C_mul_X_pow (p : R[X]) : p = ∑ i in p.Support, c (p.coeff i) * X ^ i :=
+theorem as_sum_support_C_mul_X_pow (p : R[X]) : p = ∑ i in p.support, c (p.coeff i) * X ^ i :=
   trans p.as_sum_support <| by simp only [C_mul_X_pow_eq_monomial]
 #align polynomial.as_sum_support_C_mul_X_pow Polynomial.as_sum_support_C_mul_X_pow
 
@@ -445,25 +445,25 @@ theorem nat_degree_X_le : (x : R[X]).natDegree ≤ 1 :=
   nat_degree_le_of_degree_le degree_X_le
 #align polynomial.nat_degree_X_le Polynomial.nat_degree_X_le
 
-theorem mem_support_C_mul_X_pow {n a : ℕ} {c : R} (h : a ∈ (c c * X ^ n).Support) : a = n :=
+theorem mem_support_C_mul_X_pow {n a : ℕ} {c : R} (h : a ∈ (c c * X ^ n).support) : a = n :=
   mem_singleton.1 <| support_C_mul_X_pow' n c h
 #align polynomial.mem_support_C_mul_X_pow Polynomial.mem_support_C_mul_X_pow
 
-theorem card_support_C_mul_X_pow_le_one {c : R} {n : ℕ} : (c c * X ^ n).Support.card ≤ 1 := by
+theorem card_support_C_mul_X_pow_le_one {c : R} {n : ℕ} : (c c * X ^ n).support.card ≤ 1 := by
   rw [← card_singleton n]
   apply card_le_of_subset (support_C_mul_X_pow' n c)
 #align polynomial.card_support_C_mul_X_pow_le_one Polynomial.card_support_C_mul_X_pow_le_one
 
-theorem card_supp_le_succ_nat_degree (p : R[X]) : p.Support.card ≤ p.natDegree + 1 := by
+theorem card_supp_le_succ_nat_degree (p : R[X]) : p.support.card ≤ p.natDegree + 1 := by
   rw [← Finset.card_range (p.nat_degree + 1)]
   exact Finset.card_le_of_subset supp_subset_range_nat_degree_succ
 #align polynomial.card_supp_le_succ_nat_degree Polynomial.card_supp_le_succ_nat_degree
 
-theorem le_degree_of_mem_supp (a : ℕ) : a ∈ p.Support → ↑a ≤ degree p :=
+theorem le_degree_of_mem_supp (a : ℕ) : a ∈ p.support → ↑a ≤ degree p :=
   le_degree_of_ne_zero ∘ mem_support_iff.mp
 #align polynomial.le_degree_of_mem_supp Polynomial.le_degree_of_mem_supp
 
-theorem nonempty_support_iff : p.Support.Nonempty ↔ p ≠ 0 := by
+theorem nonempty_support_iff : p.support.Nonempty ↔ p ≠ 0 := by
   rw [Ne.def, nonempty_iff_ne_empty, Ne.def, ← support_eq_empty]
 #align polynomial.nonempty_support_iff Polynomial.nonempty_support_iff
 
@@ -594,9 +594,9 @@ theorem degree_le_zero_iff : degree p ≤ 0 ↔ p = c (coeff p 0) :=
 
 theorem degree_add_le (p q : R[X]) : degree (p + q) ≤ max (degree p) (degree q) :=
   calc
-    degree (p + q) = (p + q).Support.sup some := rfl
-    _ ≤ (p.Support ∪ q.Support).sup some := sup_mono support_add
-    _ = p.Support.sup some ⊔ q.Support.sup some := sup_union
+    degree (p + q) = (p + q).support.sup some := rfl
+    _ ≤ (p.support ∪ q.support).sup some := sup_mono support_add
+    _ = p.support.sup some ⊔ q.support.sup some := sup_union
     
 #align polynomial.degree_add_le Polynomial.degree_add_le
 
@@ -631,12 +631,12 @@ theorem leading_coeff_eq_zero_iff_deg_eq_bot : leadingCoeff p = 0 ↔ degree p =
   rw [leading_coeff_eq_zero, degree_eq_bot]
 #align polynomial.leading_coeff_eq_zero_iff_deg_eq_bot Polynomial.leading_coeff_eq_zero_iff_deg_eq_bot
 
-theorem nat_degree_mem_support_of_nonzero (H : p ≠ 0) : p.natDegree ∈ p.Support := by
+theorem nat_degree_mem_support_of_nonzero (H : p ≠ 0) : p.natDegree ∈ p.support := by
   rw [mem_support_iff]
   exact (not_congr leading_coeff_eq_zero).mpr H
 #align polynomial.nat_degree_mem_support_of_nonzero Polynomial.nat_degree_mem_support_of_nonzero
 
-theorem nat_degree_eq_support_max' (h : p ≠ 0) : p.natDegree = p.Support.max' (nonempty_support_iff.mpr h) :=
+theorem nat_degree_eq_support_max' (h : p ≠ 0) : p.natDegree = p.support.max' (nonempty_support_iff.mpr h) :=
   (le_max' _ _ <| nat_degree_mem_support_of_nonzero h).antisymm <| max'_le _ _ _ le_nat_degree_of_mem_supp
 #align polynomial.nat_degree_eq_support_max' Polynomial.nat_degree_eq_support_max'
 
@@ -715,11 +715,11 @@ theorem degree_sum_le (s : Finset ι) (f : ι → R[X]) : degree (∑ i in s, f 
 
 theorem degree_mul_le (p q : R[X]) : degree (p * q) ≤ degree p + degree q :=
   calc
-    degree (p * q) ≤ p.Support.sup fun i => degree (sum q fun j a => c (coeff p i * a) * X ^ (i + j)) := by
+    degree (p * q) ≤ p.support.sup fun i => degree (sum q fun j a => c (coeff p i * a) * X ^ (i + j)) := by
       simp only [monomial_eq_C_mul_X.symm]
       convert degree_sum_le _ _
       exact mul_eq_sum_sum
-    _ ≤ p.Support.sup fun i => q.Support.sup fun j => degree (c (coeff p i * coeff q j) * X ^ (i + j)) :=
+    _ ≤ p.support.sup fun i => q.support.sup fun j => degree (c (coeff p i * coeff q j) * X ^ (i + j)) :=
       Finset.sup_mono_fun fun i hi => degree_sum_le _ _
     _ ≤ degree p + degree q := by
       refine' Finset.sup_le fun a ha => Finset.sup_le fun b hb => le_trans (degree_C_mul_X_pow_le _ _) _
@@ -896,13 +896,13 @@ theorem leading_coeff_mul' (h : leadingCoeff p * leadingCoeff q ≠ 0) :
   rfl
 #align polynomial.leading_coeff_mul' Polynomial.leading_coeff_mul'
 
-theorem monomial_nat_degree_leading_coeff_eq_self (h : p.Support.card ≤ 1) : monomial p.natDegree p.leadingCoeff = p :=
+theorem monomial_nat_degree_leading_coeff_eq_self (h : p.support.card ≤ 1) : monomial p.natDegree p.leadingCoeff = p :=
   by
   rcases card_support_le_one_iff_monomial.1 h with ⟨n, a, rfl⟩
   by_cases ha:a = 0 <;> simp [ha]
 #align polynomial.monomial_nat_degree_leading_coeff_eq_self Polynomial.monomial_nat_degree_leading_coeff_eq_self
 
-theorem C_mul_X_pow_eq_self (h : p.Support.card ≤ 1) : c p.leadingCoeff * X ^ p.natDegree = p := by
+theorem C_mul_X_pow_eq_self (h : p.support.card ≤ 1) : c p.leadingCoeff * X ^ p.natDegree = p := by
   rw [C_mul_X_pow_eq_monomial, monomial_nat_degree_leading_coeff_eq_self h]
 #align polynomial.C_mul_X_pow_eq_self Polynomial.C_mul_X_pow_eq_self
 

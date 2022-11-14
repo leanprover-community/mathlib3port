@@ -40,8 +40,7 @@ instance (priority := 100) DiscreteTopology.second_countable_topology_of_encodab
 #align discrete_topology.second_countable_topology_of_encodable DiscreteTopology.second_countable_topology_of_encodable
 
 theorem bot_topological_space_eq_generate_from_of_pred_succ_order {α} [PartialOrder α] [PredOrder α] [SuccOrder α]
-    [NoMinOrder α] [NoMaxOrder α] : (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = IoiCat a ∨ s = IioCat a } :=
-  by
+    [NoMinOrder α] [NoMaxOrder α] : (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = ioi a ∨ s = iio a } := by
   refine' (eq_bot_of_singletons_open fun a => _).symm
   have h_singleton_eq_inter : {a} = Iio (succ a) ∩ Ioi (pred a) := by
     suffices h_singleton_eq_inter' : {a} = Iic a ∩ Ici a
@@ -74,7 +73,7 @@ instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ' [h : Di
 #align discrete_topology.order_topology_of_pred_succ' DiscreteTopology.order_topology_of_pred_succ'
 
 theorem LinearOrder.bot_topological_space_eq_generate_from {α} [LinearOrder α] [PredOrder α] [SuccOrder α] :
-    (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = IoiCat a ∨ s = IioCat a } := by
+    (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = ioi a ∨ s = iio a } := by
   refine' (eq_bot_of_singletons_open fun a => _).symm
   have h_singleton_eq_inter : {a} = Iic a ∩ Ici a := by rw [inter_comm, Ici_inter_Iic, Icc_self a]
   by_cases ha_top:IsTop a

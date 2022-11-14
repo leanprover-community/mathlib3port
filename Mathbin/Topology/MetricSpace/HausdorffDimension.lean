@@ -308,8 +308,8 @@ theorem dimH_image_le (h : HolderWith C r f) (hr : 0 < r) (s : Set X) : dimH (f 
 
 /-- If `f` is a Hölder continuous map with exponent `r > 0`, then the Hausdorff dimension of its
 range is at most the Hausdorff dimension of its domain divided by `r`. -/
-theorem dimH_range_le (h : HolderWith C r f) (hr : 0 < r) : dimH (Range f) ≤ dimH (Univ : Set X) / r :=
-  @image_univ _ _ f ▸ h.dimH_image_le hr Univ
+theorem dimH_range_le (h : HolderWith C r f) (hr : 0 < r) : dimH (range f) ≤ dimH (univ : Set X) / r :=
+  @image_univ _ _ f ▸ h.dimH_image_le hr univ
 #align holder_with.dimH_range_le HolderWith.dimH_range_le
 
 end HolderWith
@@ -333,7 +333,7 @@ theorem dimH_image_le_of_locally_holder_on [SecondCountableTopology X] {r : ℝ�
 positive exponent `r` but possibly different coefficients, then the Hausdorff dimension of the range
 of `f` is at most the Hausdorff dimension of `X` divided by `r`. -/
 theorem dimH_range_le_of_locally_holder_on [SecondCountableTopology X] {r : ℝ≥0} {f : X → Y} (hr : 0 < r)
-    (hf : ∀ x : X, ∃ C : ℝ≥0, ∃ s ∈ 𝓝 x, HolderOnWith C r f s) : dimH (Range f) ≤ dimH (Univ : Set X) / r := by
+    (hf : ∀ x : X, ∃ C : ℝ≥0, ∃ s ∈ 𝓝 x, HolderOnWith C r f s) : dimH (range f) ≤ dimH (univ : Set X) / r := by
   rw [← image_univ]
   refine' dimH_image_le_of_locally_holder_on hr fun x _ => _
   simpa only [exists_prop, nhds_within_univ] using hf x
@@ -358,8 +358,8 @@ theorem dimH_image_le (h : LipschitzWith K f) (s : Set X) : dimH (f '' s) ≤ di
 
 /-- If `f` is a Lipschitz continuous map, then the Hausdorff dimension of its range is at most the
 Hausdorff dimension of its domain. -/
-theorem dimH_range_le (h : LipschitzWith K f) : dimH (Range f) ≤ dimH (Univ : Set X) :=
-  @image_univ _ _ f ▸ h.dimH_image_le Univ
+theorem dimH_range_le (h : LipschitzWith K f) : dimH (range f) ≤ dimH (univ : Set X) :=
+  @image_univ _ _ f ▸ h.dimH_image_le univ
 #align lipschitz_with.dimH_range_le LipschitzWith.dimH_range_le
 
 end LipschitzWith
@@ -376,7 +376,7 @@ theorem dimH_image_le_of_locally_lipschitz_on [SecondCountableTopology X] {f : X
 /-- If `f : X → Y` is Lipschitz in a neighborhood of each point `x : X`, then the Hausdorff
 dimension of `range f` is at most the Hausdorff dimension of `X`. -/
 theorem dimH_range_le_of_locally_lipschitz_on [SecondCountableTopology X] {f : X → Y}
-    (hf : ∀ x : X, ∃ C : ℝ≥0, ∃ s ∈ 𝓝 x, LipschitzOnWith C f s) : dimH (Range f) ≤ dimH (Univ : Set X) := by
+    (hf : ∀ x : X, ∃ C : ℝ≥0, ∃ s ∈ 𝓝 x, LipschitzOnWith C f s) : dimH (range f) ≤ dimH (univ : Set X) := by
   rw [← image_univ]
   refine' dimH_image_le_of_locally_lipschitz_on fun x _ => _
   simpa only [exists_prop, nhds_within_univ] using hf x
@@ -422,7 +422,7 @@ theorem dimH_image (e : X ≃ᵢ Y) (s : Set X) : dimH (e '' s) = dimH s :=
 theorem dimH_preimage (e : X ≃ᵢ Y) (s : Set Y) : dimH (e ⁻¹' s) = dimH s := by rw [← e.image_symm, e.symm.dimH_image]
 #align isometric.dimH_preimage Isometric.dimH_preimage
 
-theorem dimH_univ (e : X ≃ᵢ Y) : dimH (Univ : Set X) = dimH (Univ : Set Y) := by
+theorem dimH_univ (e : X ≃ᵢ Y) : dimH (univ : Set X) = dimH (univ : Set Y) := by
   rw [← e.dimH_preimage univ, preimage_univ]
 #align isometric.dimH_univ Isometric.dimH_univ
 
@@ -444,7 +444,7 @@ theorem dimH_preimage (e : E ≃L[𝕜] F) (s : Set F) : dimH (e ⁻¹' s) = dim
   rw [← e.image_symm_eq_preimage, e.symm.dimH_image]
 #align continuous_linear_equiv.dimH_preimage ContinuousLinearEquiv.dimH_preimage
 
-theorem dimH_univ (e : E ≃L[𝕜] F) : dimH (Univ : Set E) = dimH (Univ : Set F) := by
+theorem dimH_univ (e : E ≃L[𝕜] F) : dimH (univ : Set E) = dimH (univ : Set F) := by
   rw [← e.dimH_preimage, preimage_univ]
 #align continuous_linear_equiv.dimH_univ ContinuousLinearEquiv.dimH_univ
 
@@ -459,13 +459,13 @@ namespace Real
 
 variable {E : Type _} [Fintype ι] [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
-theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = Fintype.card ι := by
+theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.ball x r) = Fintype.card ι := by
   cases isEmpty_or_nonempty ι
   · rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
     exact fun x _ y _ => Subsingleton.elim x y
     
   · rw [← Ennreal.coe_nat]
-    have : μH[Fintype.card ι] (Metric.Ball x r) = Ennreal.ofReal ((2 * r) ^ Fintype.card ι) := by
+    have : μH[Fintype.card ι] (Metric.ball x r) = Ennreal.ofReal ((2 * r) ^ Fintype.card ι) := by
       rw [hausdorff_measure_pi_real, Real.volume_pi_ball _ hr]
     refine' dimH_of_hausdorff_measure_ne_zero_ne_top _ _ <;> rw [Nnreal.coe_nat_cast, this]
     · simp [pow_pos (mul_pos (zero_lt_two' ℝ) hr)]
@@ -475,15 +475,15 @@ theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball
     
 #align real.dimH_ball_pi Real.dimH_ball_pi
 
-theorem dimH_ball_pi_fin {n : ℕ} (x : Fin n → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = n := by
+theorem dimH_ball_pi_fin {n : ℕ} (x : Fin n → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.ball x r) = n := by
   rw [dimH_ball_pi x hr, Fintype.card_fin]
 #align real.dimH_ball_pi_fin Real.dimH_ball_pi_fin
 
-theorem dimH_univ_pi (ι : Type _) [Fintype ι] : dimH (Univ : Set (ι → ℝ)) = Fintype.card ι := by
+theorem dimH_univ_pi (ι : Type _) [Fintype ι] : dimH (univ : Set (ι → ℝ)) = Fintype.card ι := by
   simp only [← Metric.Union_ball_nat_succ (0 : ι → ℝ), dimH_Union, dimH_ball_pi _ (Nat.cast_add_one_pos _), supr_const]
 #align real.dimH_univ_pi Real.dimH_univ_pi
 
-theorem dimH_univ_pi_fin (n : ℕ) : dimH (Univ : Set (Fin n → ℝ)) = n := by rw [dimH_univ_pi, Fintype.card_fin]
+theorem dimH_univ_pi_fin (n : ℕ) : dimH (univ : Set (Fin n → ℝ)) = n := by rw [dimH_univ_pi, Fintype.card_fin]
 #align real.dimH_univ_pi_fin Real.dimH_univ_pi_fin
 
 theorem dimH_of_mem_nhds {x : E} {s : Set E} (h : s ∈ 𝓝 x) : dimH s = finrank ℝ E := by
@@ -500,18 +500,18 @@ theorem dimH_of_mem_nhds {x : E} {s : Set E} (h : s ∈ 𝓝 x) : dimH s = finra
     
 #align real.dimH_of_mem_nhds Real.dimH_of_mem_nhds
 
-theorem dimH_of_nonempty_interior {s : Set E} (h : (Interior s).Nonempty) : dimH s = finrank ℝ E :=
+theorem dimH_of_nonempty_interior {s : Set E} (h : (interior s).Nonempty) : dimH s = finrank ℝ E :=
   let ⟨x, hx⟩ := h
   dimH_of_mem_nhds (mem_interior_iff_mem_nhds.1 hx)
 #align real.dimH_of_nonempty_interior Real.dimH_of_nonempty_interior
 
 variable (E)
 
-theorem dimH_univ_eq_finrank : dimH (Univ : Set E) = finrank ℝ E :=
+theorem dimH_univ_eq_finrank : dimH (univ : Set E) = finrank ℝ E :=
   dimH_of_mem_nhds (@univ_mem _ (𝓝 0))
 #align real.dimH_univ_eq_finrank Real.dimH_univ_eq_finrank
 
-theorem dimH_univ : dimH (Univ : Set ℝ) = 1 := by
+theorem dimH_univ : dimH (univ : Set ℝ) = 1 := by
   rw [dimH_univ_eq_finrank ℝ, FiniteDimensional.finrank_self, Nat.cast_one]
 #align real.dimH_univ Real.dimH_univ
 
@@ -549,10 +549,10 @@ theorem ContDiffOn.dimH_image_le {f : E → F} {s t : Set E} (hf : ContDiffOn �
 
 /-- The Hausdorff dimension of the range of a `C¹`-smooth function defined on a finite dimensional
 real normed space is at most the dimension of its domain as a vector space over `ℝ`. -/
-theorem ContDiff.dimH_range_le {f : E → F} (h : ContDiff ℝ 1 f) : dimH (Range f) ≤ finrank ℝ E :=
+theorem ContDiff.dimH_range_le {f : E → F} (h : ContDiff ℝ 1 f) : dimH (range f) ≤ finrank ℝ E :=
   calc
-    dimH (Range f) = dimH (f '' univ) := by rw [image_univ]
-    _ ≤ dimH (Univ : Set E) := h.ContDiffOn.dimH_image_le convex_univ Subset.rfl
+    dimH (range f) = dimH (f '' univ) := by rw [image_univ]
+    _ ≤ dimH (univ : Set E) := h.ContDiffOn.dimH_image_le convex_univ Subset.rfl
     _ = finrank ℝ E := Real.dimH_univ_eq_finrank E
     
 #align cont_diff.dimH_range_le ContDiff.dimH_range_le
@@ -569,7 +569,7 @@ theorem ContDiffOn.dense_compl_image_of_dimH_lt_finrank [FiniteDimensional ℝ F
 real vector space `F` of strictly larger dimension, then the complement of the range of `f` is dense
 in `F`. -/
 theorem ContDiff.dense_compl_range_of_finrank_lt_finrank [FiniteDimensional ℝ F] {f : E → F} (h : ContDiff ℝ 1 f)
-    (hEF : finrank ℝ E < finrank ℝ F) : Dense (Range fᶜ) :=
+    (hEF : finrank ℝ E < finrank ℝ F) : Dense (range fᶜ) :=
   dense_compl_of_dimH_lt_finrank <| h.dimH_range_le.trans_lt <| Ennreal.coe_nat_lt_coe_nat.2 hEF
 #align cont_diff.dense_compl_range_of_finrank_lt_finrank ContDiff.dense_compl_range_of_finrank_lt_finrank
 

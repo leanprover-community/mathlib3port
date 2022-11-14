@@ -103,7 +103,7 @@ theorem nullMeasurableSetEmpty : NullMeasurableSet ∅ μ :=
 #align measure_theory.null_measurable_set_empty MeasureTheory.nullMeasurableSetEmpty
 
 @[simp]
-theorem nullMeasurableSetUniv : NullMeasurableSet Univ μ :=
+theorem nullMeasurableSetUniv : NullMeasurableSet univ μ :=
   MeasurableSet.univ
 #align measure_theory.null_measurable_set_univ MeasureTheory.nullMeasurableSetUniv
 
@@ -237,12 +237,12 @@ theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
 #align
   measure_theory.null_measurable_set.exists_measurable_superset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_superset_ae_eq
 
-theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ s =ᵐ[μ] s := by
+theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : toMeasurable μ s =ᵐ[μ] s := by
   rw [to_measurable, dif_pos]
   exact h.exists_measurable_superset_ae_eq.some_spec.snd.2
 #align measure_theory.null_measurable_set.to_measurable_ae_eq MeasureTheory.NullMeasurableSet.to_measurable_ae_eq
 
-theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
+theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : toMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
   simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
 #align
   measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_to_measurable_compl_ae_eq
@@ -250,7 +250,7 @@ theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : ToMeasura
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
-  ⟨ToMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurableSetToMeasurable _ _).compl,
+  ⟨toMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurableSetToMeasurable _ _).compl,
     h.compl_to_measurable_compl_ae_eq⟩
 #align
   measure_theory.null_measurable_set.exists_measurable_subset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_subset_ae_eq
@@ -399,7 +399,7 @@ theorem _root_.set.finite.null_measurable_set_sInter {s : Set (Set α)} (hs : s.
 #align
   measure_theory._root_.set.finite.null_measurable_set_sInter measure_theory._root_.set.finite.null_measurable_set_sInter
 
-theorem nullMeasurableSetToMeasurable : NullMeasurableSet (ToMeasurable μ s) μ :=
+theorem nullMeasurableSetToMeasurable : NullMeasurableSet (toMeasurable μ s) μ :=
   (measurableSetToMeasurable _ _).NullMeasurableSet
 #align measure_theory.null_measurable_set_to_measurable MeasureTheory.nullMeasurableSetToMeasurable
 

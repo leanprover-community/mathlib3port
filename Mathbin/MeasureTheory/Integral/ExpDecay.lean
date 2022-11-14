@@ -46,7 +46,7 @@ theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) : (∫ x in a..X,
 #align integral_exp_neg_le integral_exp_neg_le
 
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
-theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) : IntegrableOn (fun x : ℝ => exp (-b * x)) (IoiCat a) := by
+theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) : IntegrableOn (fun x : ℝ => exp (-b * x)) (ioi a) := by
   have : ∀ X : ℝ, integrable_on (fun x : ℝ => exp (-b * x)) (Ioc a X) := by
     intro X
     exact (continuous_const.mul continuous_id).exp.integrableOnIoc
@@ -57,8 +57,8 @@ theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) : IntegrableOn (fu
 
 /-- If `f` is continuous on `[a, ∞)`, and is `O (exp (-b * x))` at `∞` for some `b > 0`, then
 `f` is integrable on `(a, ∞)`. -/
-theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : ContinuousOn f (IciCat a))
-    (h2 : f =O[at_top] fun x => exp (-b * x)) : IntegrableOn f (IoiCat a) := by
+theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : ContinuousOn f (ici a))
+    (h2 : f =O[at_top] fun x => exp (-b * x)) : IntegrableOn f (ioi a) := by
   cases' h2.is_O_with with c h3
   rw [Asymptotics.is_O_with_iff, eventually_at_top] at h3
   cases' h3 with r bdr

@@ -79,12 +79,12 @@ theorem move_right_nim_heq (o : Ordinal) : HEq (nim o).moveRight fun i : o.out.�
 #align pgame.move_right_nim_heq Pgame.move_right_nim_heq
 
 /-- Turns an ordinal less than `o` into a left move for `nim o` and viceversa. -/
-noncomputable def toLeftMovesNim {o : Ordinal} : Set.IioCat o ≃ (nim o).LeftMoves :=
+noncomputable def toLeftMovesNim {o : Ordinal} : Set.iio o ≃ (nim o).LeftMoves :=
   (enumIsoOut o).toEquiv.trans (Equiv.cast (left_moves_nim o).symm)
 #align pgame.to_left_moves_nim Pgame.toLeftMovesNim
 
 /-- Turns an ordinal less than `o` into a right move for `nim o` and viceversa. -/
-noncomputable def toRightMovesNim {o : Ordinal} : Set.IioCat o ≃ (nim o).RightMoves :=
+noncomputable def toRightMovesNim {o : Ordinal} : Set.iio o ≃ (nim o).RightMoves :=
   (enumIsoOut o).toEquiv.trans (Equiv.cast (right_moves_nim o).symm)
 #align pgame.to_right_moves_nim Pgame.toRightMovesNim
 
@@ -396,7 +396,7 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
     rw [Ordinal.nat_cast_inj] at h
     try rw [Nat.lxor_comm n k, Nat.lxor_comm n m] at h
     exact hk.ne (Nat.lxor_left_injective h)
-  have h₁ : ∀ u : Ordinal, u < Nat.lxor n m → u ∈ Set.Range fun i => grundy_value ((nim n + nim m).moveLeft i) := by
+  have h₁ : ∀ u : Ordinal, u < Nat.lxor n m → u ∈ Set.range fun i => grundy_value ((nim n + nim m).moveLeft i) := by
     -- Take any natural number `u` less than `n xor m`.
     intro ou hu
     obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (lt_trans hu (Ordinal.nat_lt_omega _))

@@ -89,7 +89,7 @@ theorem id_val_base (X : SchemeCat) : (𝟙 X : _).1.base = 𝟙 _ :=
 #align algebraic_geometry.Scheme.id_val_base AlgebraicGeometry.SchemeCat.id_val_base
 
 @[simp]
-theorem id_app {X : SchemeCat} (U : (Opens X.Carrier)ᵒᵖ) :
+theorem id_app {X : SchemeCat} (U : (Opens X.carrier)ᵒᵖ) :
     (𝟙 X : _).val.c.app U =
       X.Presheaf.map
         (eqToHom
@@ -128,7 +128,7 @@ theorem congr_app {X Y : SchemeCat} {f g : X ⟶ Y} (e : f = g) (U) :
   simp
 #align algebraic_geometry.Scheme.congr_app AlgebraicGeometry.SchemeCat.congr_app
 
-theorem app_eq {X Y : SchemeCat} (f : X ⟶ Y) {U V : Opens Y.Carrier} (e : U = V) :
+theorem app_eq {X Y : SchemeCat} (f : X ⟶ Y) {U V : Opens Y.carrier} (e : U = V) :
     f.val.c.app (op U) =
       Y.Presheaf.map (eqToHom e.symm).op ≫
         f.val.c.app (op V) ≫ X.Presheaf.map (eqToHom (congr_arg (Opens.map f.val.base).obj e)).op :=
@@ -142,7 +142,7 @@ instance is_LocallyRingedSpace_iso {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] : @
 #align algebraic_geometry.Scheme.is_LocallyRingedSpace_iso AlgebraicGeometry.SchemeCat.is_LocallyRingedSpace_iso
 
 @[simp]
-theorem inv_val_c_app {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] (U : Opens X.Carrier) :
+theorem inv_val_c_app {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrier) :
     (inv f).val.c.app (op U) =
       X.Presheaf.map
           (eq_to_hom <| by
@@ -160,7 +160,7 @@ theorem inv_val_c_app {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] (U : Opens X.Car
 
 /-- Given a morphism of schemes `f : X ⟶ Y`, and open sets `U ⊆ Y`, `V ⊆ f ⁻¹' U`,
 this is the induced map `Γ(Y, U) ⟶ Γ(X, V)`. -/
-abbrev Hom.appLe {X Y : SchemeCat} (f : X ⟶ Y) {V : Opens X.Carrier} {U : Opens Y.Carrier}
+abbrev Hom.appLe {X Y : SchemeCat} (f : X ⟶ Y) {V : Opens X.carrier} {U : Opens Y.carrier}
     (e : V ≤ (Opens.map f.1.base).obj U) : Y.Presheaf.obj (op U) ⟶ X.Presheaf.obj (op V) :=
   f.1.c.app (op U) ≫ X.Presheaf.map (homOfLe e).op
 #align algebraic_geometry.Scheme.hom.app_le AlgebraicGeometry.SchemeCat.Hom.appLe
@@ -208,7 +208,7 @@ def spec : CommRingCatᵒᵖ ⥤ Scheme where
 -/
 @[simps]
 def empty.{u} : SchemeCat.{u} where
-  Carrier := TopCat.of PEmpty
+  carrier := TopCat.of PEmpty
   Presheaf := (CategoryTheory.Functor.const _).obj (CommRingCat.of PUnit)
   IsSheaf := Presheaf.isSheafOfIsTerminal _ CommRingCat.punitIsTerminal
   LocalRing x := PEmpty.elim x
@@ -251,10 +251,10 @@ theorem Γ_map_op {X Y : SchemeCat} (f : X ⟶ Y) : Γ.map f.op = f.1.c.app (op 
 
 section BasicOpen
 
-variable (X : SchemeCat) {V U : Opens X.Carrier} (f g : X.Presheaf.obj (op U))
+variable (X : SchemeCat) {V U : Opens X.carrier} (f g : X.Presheaf.obj (op U))
 
 /-- The subset of the underlying space where the given section does not vanish. -/
-def basicOpen : Opens X.Carrier :=
+def basicOpen : Opens X.carrier :=
   X.toLocallyRingedSpace.toRingedSpace.basicOpen f
 #align algebraic_geometry.Scheme.basic_open AlgebraicGeometry.SchemeCat.basicOpen
 
@@ -264,7 +264,7 @@ theorem mem_basic_open (x : U) : ↑x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.g
 #align algebraic_geometry.Scheme.mem_basic_open AlgebraicGeometry.SchemeCat.mem_basic_open
 
 @[simp]
-theorem mem_basic_open_top (f : X.Presheaf.obj (op ⊤)) (x : X.Carrier) :
+theorem mem_basic_open_top (f : X.Presheaf.obj (op ⊤)) (x : X.carrier) :
     x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ (⟨x, trivial⟩ : (⊤ : Opens _)) f) :=
   RingedSpaceCat.mem_basic_open _ f ⟨x, trivial⟩
 #align algebraic_geometry.Scheme.mem_basic_open_top AlgebraicGeometry.SchemeCat.mem_basic_open_top
@@ -286,13 +286,13 @@ theorem basic_open_le : X.basicOpen f ≤ U :=
 #align algebraic_geometry.Scheme.basic_open_le AlgebraicGeometry.SchemeCat.basic_open_le
 
 @[simp]
-theorem preimage_basic_open {X Y : SchemeCat} (f : X ⟶ Y) {U : Opens Y.Carrier} (r : Y.Presheaf.obj <| op U) :
+theorem preimage_basic_open {X Y : SchemeCat} (f : X ⟶ Y) {U : Opens Y.carrier} (r : Y.Presheaf.obj <| op U) :
     (Opens.map f.1.base).obj (Y.basicOpen r) = @SchemeCat.basicOpen X ((Opens.map f.1.base).obj U) (f.1.c.app _ r) :=
   LocallyRingedSpaceCat.preimage_basic_open f r
 #align algebraic_geometry.Scheme.preimage_basic_open AlgebraicGeometry.SchemeCat.preimage_basic_open
 
 @[simp]
-theorem basic_open_zero (U : Opens X.Carrier) : X.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ :=
+theorem basic_open_zero (U : Opens X.carrier) : X.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ :=
   LocallyRingedSpaceCat.basic_open_zero _ U
 #align algebraic_geometry.Scheme.basic_open_zero AlgebraicGeometry.SchemeCat.basic_open_zero
 

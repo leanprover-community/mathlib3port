@@ -60,7 +60,7 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
     { uniformity := ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε },
       refl :=
         le_infi fun ε =>
-          le_infi <| by simp (config := { contextual := true }) [Set.subset_def, IdRel, edist_self, (· > ·)],
+          le_infi <| by simp (config := { contextual := true }) [Set.subset_def, idRel, edist_self, (· > ·)],
       comp :=
         le_infi fun ε =>
           le_infi fun h =>
@@ -73,7 +73,7 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
                   _ < ε / 2 + ε / 2 := Ennreal.add_lt_add hac hcb
                   _ = ε := by rw [Ennreal.add_halves]
                   
-              simpa [CompRel] ,
+              simpa [compRel] ,
       symm :=
         tendsto_infi.2 fun ε =>
           tendsto_infi.2 fun h =>
@@ -231,14 +231,14 @@ theorem uniformity_basis_edist_le : (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0
 #align uniformity_basis_edist_le uniformity_basis_edist_le
 
 theorem uniformity_basis_edist' (ε' : ℝ≥0∞) (hε' : 0 < ε') :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ IooCat 0 ε') fun ε => { p : α × α | edist p.1 p.2 < ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ ioo 0 ε') fun ε => { p : α × α | edist p.1 p.2 < ε } :=
   Emetric.mk_uniformity_basis (fun _ => And.left) fun ε ε₀ =>
     let ⟨δ, hδ⟩ := exists_between hε'
     ⟨min ε δ, ⟨lt_min ε₀ hδ.1, lt_of_le_of_lt (min_le_right _ _) hδ.2⟩, min_le_left _ _⟩
 #align uniformity_basis_edist' uniformity_basis_edist'
 
 theorem uniformity_basis_edist_le' (ε' : ℝ≥0∞) (hε' : 0 < ε') :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ IooCat 0 ε') fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ ioo 0 ε') fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
   Emetric.mk_uniformity_basis_le (fun _ => And.left) fun ε ε₀ =>
     let ⟨δ, hδ⟩ := exists_between hε'
     ⟨min ε δ, ⟨lt_min ε₀ hδ.1, lt_of_le_of_lt (min_le_right _ _) hδ.2⟩, min_le_left _ _⟩
@@ -557,69 +557,69 @@ namespace Emetric
 variable {x y z : α} {ε ε₁ ε₂ : ℝ≥0∞} {s t : Set α}
 
 /-- `emetric.ball x ε` is the set of all points `y` with `edist y x < ε` -/
-def Ball (x : α) (ε : ℝ≥0∞) : Set α :=
+def ball (x : α) (ε : ℝ≥0∞) : Set α :=
   { y | edist y x < ε }
-#align emetric.ball Emetric.Ball
+#align emetric.ball Emetric.ball
 
 @[simp]
-theorem mem_ball : y ∈ Ball x ε ↔ edist y x < ε :=
+theorem mem_ball : y ∈ ball x ε ↔ edist y x < ε :=
   Iff.rfl
 #align emetric.mem_ball Emetric.mem_ball
 
-theorem mem_ball' : y ∈ Ball x ε ↔ edist x y < ε := by rw [edist_comm, mem_ball]
+theorem mem_ball' : y ∈ ball x ε ↔ edist x y < ε := by rw [edist_comm, mem_ball]
 #align emetric.mem_ball' Emetric.mem_ball'
 
 /-- `emetric.closed_ball x ε` is the set of all points `y` with `edist y x ≤ ε` -/
-def ClosedBall (x : α) (ε : ℝ≥0∞) :=
+def closedBall (x : α) (ε : ℝ≥0∞) :=
   { y | edist y x ≤ ε }
-#align emetric.closed_ball Emetric.ClosedBall
+#align emetric.closed_ball Emetric.closedBall
 
 @[simp]
-theorem mem_closed_ball : y ∈ ClosedBall x ε ↔ edist y x ≤ ε :=
+theorem mem_closed_ball : y ∈ closedBall x ε ↔ edist y x ≤ ε :=
   Iff.rfl
 #align emetric.mem_closed_ball Emetric.mem_closed_ball
 
-theorem mem_closed_ball' : y ∈ ClosedBall x ε ↔ edist x y ≤ ε := by rw [edist_comm, mem_closed_ball]
+theorem mem_closed_ball' : y ∈ closedBall x ε ↔ edist x y ≤ ε := by rw [edist_comm, mem_closed_ball]
 #align emetric.mem_closed_ball' Emetric.mem_closed_ball'
 
 @[simp]
-theorem closed_ball_top (x : α) : ClosedBall x ∞ = univ :=
+theorem closed_ball_top (x : α) : closedBall x ∞ = univ :=
   eq_univ_of_forall fun y => le_top
 #align emetric.closed_ball_top Emetric.closed_ball_top
 
-theorem ball_subset_closed_ball : Ball x ε ⊆ ClosedBall x ε := fun y hy => le_of_lt hy
+theorem ball_subset_closed_ball : ball x ε ⊆ closedBall x ε := fun y hy => le_of_lt hy
 #align emetric.ball_subset_closed_ball Emetric.ball_subset_closed_ball
 
-theorem pos_of_mem_ball (hy : y ∈ Ball x ε) : 0 < ε :=
+theorem pos_of_mem_ball (hy : y ∈ ball x ε) : 0 < ε :=
   lt_of_le_of_lt (zero_le _) hy
 #align emetric.pos_of_mem_ball Emetric.pos_of_mem_ball
 
-theorem mem_ball_self (h : 0 < ε) : x ∈ Ball x ε :=
+theorem mem_ball_self (h : 0 < ε) : x ∈ ball x ε :=
   show edist x x < ε by rw [edist_self] <;> assumption
 #align emetric.mem_ball_self Emetric.mem_ball_self
 
-theorem mem_closed_ball_self : x ∈ ClosedBall x ε :=
+theorem mem_closed_ball_self : x ∈ closedBall x ε :=
   show edist x x ≤ ε by rw [edist_self] <;> exact bot_le
 #align emetric.mem_closed_ball_self Emetric.mem_closed_ball_self
 
-theorem mem_ball_comm : x ∈ Ball y ε ↔ y ∈ Ball x ε := by rw [mem_ball', mem_ball]
+theorem mem_ball_comm : x ∈ ball y ε ↔ y ∈ ball x ε := by rw [mem_ball', mem_ball]
 #align emetric.mem_ball_comm Emetric.mem_ball_comm
 
-theorem mem_closed_ball_comm : x ∈ ClosedBall y ε ↔ y ∈ ClosedBall x ε := by rw [mem_closed_ball', mem_closed_ball]
+theorem mem_closed_ball_comm : x ∈ closedBall y ε ↔ y ∈ closedBall x ε := by rw [mem_closed_ball', mem_closed_ball]
 #align emetric.mem_closed_ball_comm Emetric.mem_closed_ball_comm
 
-theorem ball_subset_ball (h : ε₁ ≤ ε₂) : Ball x ε₁ ⊆ Ball x ε₂ := fun y (yx : _ < ε₁) => lt_of_lt_of_le yx h
+theorem ball_subset_ball (h : ε₁ ≤ ε₂) : ball x ε₁ ⊆ ball x ε₂ := fun y (yx : _ < ε₁) => lt_of_lt_of_le yx h
 #align emetric.ball_subset_ball Emetric.ball_subset_ball
 
-theorem closed_ball_subset_closed_ball (h : ε₁ ≤ ε₂) : ClosedBall x ε₁ ⊆ ClosedBall x ε₂ := fun y (yx : _ ≤ ε₁) =>
+theorem closed_ball_subset_closed_ball (h : ε₁ ≤ ε₂) : closedBall x ε₁ ⊆ closedBall x ε₂ := fun y (yx : _ ≤ ε₁) =>
   le_trans yx h
 #align emetric.closed_ball_subset_closed_ball Emetric.closed_ball_subset_closed_ball
 
-theorem ball_disjoint (h : ε₁ + ε₂ ≤ edist x y) : Disjoint (Ball x ε₁) (Ball y ε₂) :=
+theorem ball_disjoint (h : ε₁ + ε₂ ≤ edist x y) : Disjoint (ball x ε₁) (ball y ε₂) :=
   Set.disjoint_left.mpr fun z h₁ h₂ => (edist_triangle_left x y z).not_lt <| (Ennreal.add_lt_add h₁ h₂).trans_le h
 #align emetric.ball_disjoint Emetric.ball_disjoint
 
-theorem ball_subset (h : edist x y + ε₁ ≤ ε₂) (h' : edist x y ≠ ∞) : Ball x ε₁ ⊆ Ball y ε₂ := fun z zx =>
+theorem ball_subset (h : edist x y + ε₁ ≤ ε₂) (h' : edist x y ≠ ∞) : ball x ε₁ ⊆ ball y ε₂ := fun z zx =>
   calc
     edist z y ≤ edist z x + edist x y := edist_triangle _ _ _
     _ = edist x y + edist z x := add_comm _ _
@@ -628,23 +628,23 @@ theorem ball_subset (h : edist x y + ε₁ ≤ ε₂) (h' : edist x y ≠ ∞) :
     
 #align emetric.ball_subset Emetric.ball_subset
 
-theorem exists_ball_subset_ball (h : y ∈ Ball x ε) : ∃ ε' > 0, Ball y ε' ⊆ Ball x ε := by
+theorem exists_ball_subset_ball (h : y ∈ ball x ε) : ∃ ε' > 0, ball y ε' ⊆ ball x ε := by
   have : 0 < ε - edist y x := by simpa using h
   refine' ⟨ε - edist y x, this, ball_subset _ (ne_top_of_lt h)⟩
   exact (add_tsub_cancel_of_le (mem_ball.mp h).le).le
 #align emetric.exists_ball_subset_ball Emetric.exists_ball_subset_ball
 
-theorem ball_eq_empty_iff : Ball x ε = ∅ ↔ ε = 0 :=
+theorem ball_eq_empty_iff : ball x ε = ∅ ↔ ε = 0 :=
   eq_empty_iff_forall_not_mem.trans
     ⟨fun h => le_bot_iff.1 (le_of_not_gt fun ε0 => h _ (mem_ball_self ε0)), fun ε0 y h =>
       not_lt_of_le (le_of_eq ε0) (pos_of_mem_ball h)⟩
 #align emetric.ball_eq_empty_iff Emetric.ball_eq_empty_iff
 
-theorem ord_connected_set_of_closed_ball_subset (x : α) (s : Set α) : OrdConnected { r | ClosedBall x r ⊆ s } :=
+theorem ord_connected_set_of_closed_ball_subset (x : α) (s : Set α) : OrdConnected { r | closedBall x r ⊆ s } :=
   ⟨fun r₁ hr₁ r₂ hr₂ r hr => (closed_ball_subset_closed_ball hr.2).trans hr₂⟩
 #align emetric.ord_connected_set_of_closed_ball_subset Emetric.ord_connected_set_of_closed_ball_subset
 
-theorem ord_connected_set_of_ball_subset (x : α) (s : Set α) : OrdConnected { r | Ball x r ⊆ s } :=
+theorem ord_connected_set_of_ball_subset (x : α) (s : Set α) : OrdConnected { r | ball x r ⊆ s } :=
   ⟨fun r₁ hr₁ r₂ hr₂ r hr => (ball_subset_ball hr.2).trans hr₂⟩
 #align emetric.ord_connected_set_of_ball_subset Emetric.ord_connected_set_of_ball_subset
 
@@ -659,34 +659,34 @@ def edistLtTopSetoid : Setoid α where
 #align emetric.edist_lt_top_setoid Emetric.edistLtTopSetoid
 
 @[simp]
-theorem ball_zero : Ball x 0 = ∅ := by rw [Emetric.ball_eq_empty_iff]
+theorem ball_zero : ball x 0 = ∅ := by rw [Emetric.ball_eq_empty_iff]
 #align emetric.ball_zero Emetric.ball_zero
 
-theorem nhds_basis_eball : (𝓝 x).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) (Ball x) :=
+theorem nhds_basis_eball : (𝓝 x).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) (ball x) :=
   nhds_basis_uniformity uniformity_basis_edist
 #align emetric.nhds_basis_eball Emetric.nhds_basis_eball
 
-theorem nhds_within_basis_eball : (𝓝[s] x).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => Ball x ε ∩ s :=
+theorem nhds_within_basis_eball : (𝓝[s] x).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => ball x ε ∩ s :=
   nhds_within_has_basis nhds_basis_eball s
 #align emetric.nhds_within_basis_eball Emetric.nhds_within_basis_eball
 
-theorem nhds_basis_closed_eball : (𝓝 x).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) (ClosedBall x) :=
+theorem nhds_basis_closed_eball : (𝓝 x).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) (closedBall x) :=
   nhds_basis_uniformity uniformity_basis_edist_le
 #align emetric.nhds_basis_closed_eball Emetric.nhds_basis_closed_eball
 
-theorem nhds_within_basis_closed_eball : (𝓝[s] x).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => ClosedBall x ε ∩ s :=
+theorem nhds_within_basis_closed_eball : (𝓝[s] x).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => closedBall x ε ∩ s :=
   nhds_within_has_basis nhds_basis_closed_eball s
 #align emetric.nhds_within_basis_closed_eball Emetric.nhds_within_basis_closed_eball
 
-theorem nhds_eq : 𝓝 x = ⨅ ε > 0, 𝓟 (Ball x ε) :=
+theorem nhds_eq : 𝓝 x = ⨅ ε > 0, 𝓟 (ball x ε) :=
   nhds_basis_eball.eq_binfi
 #align emetric.nhds_eq Emetric.nhds_eq
 
-theorem mem_nhds_iff : s ∈ 𝓝 x ↔ ∃ ε > 0, Ball x ε ⊆ s :=
+theorem mem_nhds_iff : s ∈ 𝓝 x ↔ ∃ ε > 0, ball x ε ⊆ s :=
   nhds_basis_eball.mem_iff
 #align emetric.mem_nhds_iff Emetric.mem_nhds_iff
 
-theorem mem_nhds_within_iff : s ∈ 𝓝[t] x ↔ ∃ ε > 0, Ball x ε ∩ t ⊆ s :=
+theorem mem_nhds_within_iff : s ∈ 𝓝[t] x ↔ ∃ ε > 0, ball x ε ∩ t ⊆ s :=
   nhds_within_basis_eball.mem_iff
 #align emetric.mem_nhds_within_iff Emetric.mem_nhds_within_iff
 
@@ -712,14 +712,14 @@ theorem tendsto_nhds_nhds {a b} : Tendsto f (𝓝 a) (𝓝 b) ↔ ∀ ε > 0, �
 
 end
 
-theorem is_open_iff : IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, Ball x ε ⊆ s := by simp [is_open_iff_nhds, mem_nhds_iff]
+theorem is_open_iff : IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ball x ε ⊆ s := by simp [is_open_iff_nhds, mem_nhds_iff]
 #align emetric.is_open_iff Emetric.is_open_iff
 
-theorem is_open_ball : IsOpen (Ball x ε) :=
+theorem is_open_ball : IsOpen (ball x ε) :=
   is_open_iff.2 fun y => exists_ball_subset_ball
 #align emetric.is_open_ball Emetric.is_open_ball
 
-theorem isClosedBallTop : IsClosed (Ball x ⊤) :=
+theorem isClosedBallTop : IsClosed (ball x ⊤) :=
   is_open_compl_iff.1 <|
     is_open_iff.2 fun y hy =>
       ⟨⊤, Ennreal.coe_lt_top,
@@ -728,27 +728,27 @@ theorem isClosedBallTop : IsClosed (Ball x ⊤) :=
             exact le_of_not_lt hy).subset_compl_right⟩
 #align emetric.is_closed_ball_top Emetric.isClosedBallTop
 
-theorem ball_mem_nhds (x : α) {ε : ℝ≥0∞} (ε0 : 0 < ε) : Ball x ε ∈ 𝓝 x :=
+theorem ball_mem_nhds (x : α) {ε : ℝ≥0∞} (ε0 : 0 < ε) : ball x ε ∈ 𝓝 x :=
   is_open_ball.mem_nhds (mem_ball_self ε0)
 #align emetric.ball_mem_nhds Emetric.ball_mem_nhds
 
-theorem closed_ball_mem_nhds (x : α) {ε : ℝ≥0∞} (ε0 : 0 < ε) : ClosedBall x ε ∈ 𝓝 x :=
+theorem closed_ball_mem_nhds (x : α) {ε : ℝ≥0∞} (ε0 : 0 < ε) : closedBall x ε ∈ 𝓝 x :=
   mem_of_superset (ball_mem_nhds x ε0) ball_subset_closed_ball
 #align emetric.closed_ball_mem_nhds Emetric.closed_ball_mem_nhds
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem ball_prod_same [PseudoEmetricSpace β] (x : α) (y : β) (r : ℝ≥0∞) : Ball x r ×ˢ Ball y r = Ball (x, y) r :=
+theorem ball_prod_same [PseudoEmetricSpace β] (x : α) (y : β) (r : ℝ≥0∞) : ball x r ×ˢ ball y r = ball (x, y) r :=
   ext fun z => max_lt_iff.symm
 #align emetric.ball_prod_same Emetric.ball_prod_same
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem closed_ball_prod_same [PseudoEmetricSpace β] (x : α) (y : β) (r : ℝ≥0∞) :
-    ClosedBall x r ×ˢ ClosedBall y r = ClosedBall (x, y) r :=
+    closedBall x r ×ˢ closedBall y r = closedBall (x, y) r :=
   ext fun z => max_le_iff.symm
 #align emetric.closed_ball_prod_same Emetric.closed_ball_prod_same
 
 /-- ε-characterization of the closure in pseudoemetric spaces -/
-theorem mem_closure_iff : x ∈ Closure s ↔ ∀ ε > 0, ∃ y ∈ s, edist x y < ε :=
+theorem mem_closure_iff : x ∈ closure s ↔ ∀ ε > 0, ∃ y ∈ s, edist x y < ε :=
   (mem_closure_iff_nhds_basis nhds_basis_eball).trans <| by simp only [mem_ball, edist_comm x]
 #align emetric.mem_closure_iff Emetric.mem_closure_iff
 
@@ -788,7 +788,7 @@ theorem cauchy_seq_iff_nnreal [Nonempty β] [SemilatticeSup β] {u : β → α} 
   uniformity_basis_edist_nnreal.cauchy_seq_iff'
 #align emetric.cauchy_seq_iff_nnreal Emetric.cauchy_seq_iff_nnreal
 
-theorem totally_bounded_iff {s : Set α} : TotallyBounded s ↔ ∀ ε > 0, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, Ball y ε :=
+theorem totally_bounded_iff {s : Set α} : TotallyBounded s ↔ ∀ ε > 0, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
   ⟨fun H ε ε0 => H _ (edist_mem_uniformity ε0), fun H r ru =>
     let ⟨ε, ε0, hε⟩ := mem_uniformity_edist.1 ru
     let ⟨t, ft, h⟩ := H ε ε0
@@ -797,7 +797,7 @@ theorem totally_bounded_iff {s : Set α} : TotallyBounded s ↔ ∀ ε > 0, ∃ 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem totally_bounded_iff' {s : Set α} :
-    TotallyBounded s ↔ ∀ ε > 0, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε :=
+    TotallyBounded s ↔ ∀ ε > 0, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, ball y ε :=
   ⟨fun H ε ε0 => (totally_bounded_iff_subset.1 H) _ (edist_mem_uniformity ε0), fun H r ru =>
     let ⟨ε, ε0, hε⟩ := mem_uniformity_edist.1 ru
     let ⟨t, _, ft, h⟩ := H ε ε0
@@ -810,8 +810,8 @@ section Compact
 /-- For a set `s` in a pseudo emetric space, if for every `ε > 0` there exists a countable
 set that is `ε`-dense in `s`, then there exists a countable subset `t ⊆ s` that is dense in `s`. -/
 theorem subset_countable_closure_of_almost_dense_set (s : Set α)
-    (hs : ∀ ε > 0, ∃ t : Set α, t.Countable ∧ s ⊆ ⋃ x ∈ t, ClosedBall x ε) :
-    ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s ⊆ Closure t := by
+    (hs : ∀ ε > 0, ∃ t : Set α, t.Countable ∧ s ⊆ ⋃ x ∈ t, closedBall x ε) :
+    ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s ⊆ closure t := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨x₀, hx₀⟩)
   · exact ⟨∅, empty_subset _, countable_empty, empty_subset _⟩
     
@@ -833,7 +833,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
   choose f hfs hf
   refine'
     ⟨⋃ n : ℕ, f n⁻¹ '' T n, Union_subset fun n => image_subset_iff.2 fun z hz => hfs _ _,
-      countable_Union fun n => (hTc n).Image _, _⟩
+      countable_Union fun n => (hTc n).image _, _⟩
   refine' fun x hx => mem_closure_iff.2 fun ε ε0 => _
   rcases Ennreal.exists_inv_nat_lt (Ennreal.half_pos ε0.lt.ne').ne' with ⟨n, hn⟩
   rcases mem_Union₂.1 (hsT n hx) with ⟨y, hyn, hyx⟩
@@ -848,7 +848,7 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
 /-- A compact set in a pseudo emetric space is separable, i.e., it is a subset of the closure of a
 countable set.  -/
 theorem subset_countable_closure_of_compact {s : Set α} (hs : IsCompact s) :
-    ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s ⊆ Closure t := by
+    ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s ⊆ closure t := by
   refine' subset_countable_closure_of_almost_dense_set s fun ε hε => _
   rcases totally_bounded_iff'.1 hs.totally_bounded ε hε with ⟨t, hts, htf, hst⟩
   exact ⟨t, htf.countable, subset.trans hst <| Union₂_mono fun _ _ => ball_subset_closed_ball⟩
@@ -875,7 +875,7 @@ theorem second_countable_of_sigma_compact [SigmaCompactSpace α] : SecondCountab
 variable {α}
 
 theorem second_countable_of_almost_dense_set
-    (hs : ∀ ε > 0, ∃ t : Set α, t.Countable ∧ (⋃ x ∈ t, ClosedBall x ε) = univ) : SecondCountableTopology α := by
+    (hs : ∀ ε > 0, ∃ t : Set α, t.Countable ∧ (⋃ x ∈ t, closedBall x ε) = univ) : SecondCountableTopology α := by
   suffices separable_space α by exact UniformSpace.second_countable_of_separable α
   rcases subset_countable_closure_of_almost_dense_set (univ : Set α) fun ε ε0 => _ with ⟨t, -, htc, ht⟩
   · exact ⟨⟨t, htc, fun x => ht (mem_univ x)⟩⟩
@@ -990,7 +990,7 @@ theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ d
   simpa using diam_union xs xt
 #align emetric.diam_union' Emetric.diam_union'
 
-theorem diam_closed_ball {r : ℝ≥0∞} : diam (ClosedBall x r) ≤ 2 * r :=
+theorem diam_closed_ball {r : ℝ≥0∞} : diam (closedBall x r) ≤ 2 * r :=
   diam_le fun a ha b hb =>
     calc
       edist a b ≤ edist a x + edist b x := edist_triangle_right _ _ _
@@ -999,12 +999,12 @@ theorem diam_closed_ball {r : ℝ≥0∞} : diam (ClosedBall x r) ≤ 2 * r :=
       
 #align emetric.diam_closed_ball Emetric.diam_closed_ball
 
-theorem diam_ball {r : ℝ≥0∞} : diam (Ball x r) ≤ 2 * r :=
+theorem diam_ball {r : ℝ≥0∞} : diam (ball x r) ≤ 2 * r :=
   le_trans (diam_mono ball_subset_closed_ball) diam_closed_ball
 #align emetric.diam_ball Emetric.diam_ball
 
 theorem diam_pi_le_of_le {π : β → Type _} [Fintype β] [∀ b, PseudoEmetricSpace (π b)] {s : ∀ b : β, Set (π b)}
-    {c : ℝ≥0∞} (h : ∀ b, diam (s b) ≤ c) : diam (Set.Pi Univ s) ≤ c := by
+    {c : ℝ≥0∞} (h : ∀ b, diam (s b) ≤ c) : diam (Set.pi univ s) ≤ c := by
   apply diam_le fun x hx y hy => edist_pi_le_iff.mpr _
   rw [mem_univ_pi] at hx hy
   exact fun b => diam_le_iff.1 (h b) (x b) (hx b) (y b) (hy b)
@@ -1177,7 +1177,7 @@ namespace Emetric
 /- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A compact set in an emetric space is separable, i.e., it is the closure of a countable set. -/
 theorem countable_closure_of_compact {s : Set γ} (hs : IsCompact s) :
-    ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s = Closure t := by
+    ∃ (t : _)(_ : t ⊆ s), t.Countable ∧ s = closure t := by
   rcases subset_countable_closure_of_compact hs with ⟨t, hts, htc, hsub⟩
   exact ⟨t, hts, htc, subset.antisymm hsub (closure_minimal hts hs.is_closed)⟩
 #align emetric.countable_closure_of_compact Emetric.countable_closure_of_compact

@@ -211,7 +211,7 @@ def post (S : C) (F : B ⥤ C) (G : C ⥤ D) : StructuredArrow S F ⥤ Structure
 
 instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) := by
-  suffices (proj S T).obj ⁻¹' 𝒢 = Set.Range fun f : ΣG : 𝒢, S ⟶ T.obj G => mk f.2 by
+  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S ⟶ T.obj G => mk f.2 by
     rw [this]
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩
@@ -396,7 +396,7 @@ def post (F : B ⥤ C) (G : C ⥤ D) (S : C) : CostructuredArrow F S ⥤ Costruc
 
 instance small_proj_preimage_of_locally_small {𝒢 : Set C} [Small.{v₁} 𝒢] [LocallySmall.{v₁} D] :
     Small.{v₁} ((proj S T).obj ⁻¹' 𝒢) := by
-  suffices (proj S T).obj ⁻¹' 𝒢 = Set.Range fun f : ΣG : 𝒢, S.obj G ⟶ T => mk f.2 by
+  suffices (proj S T).obj ⁻¹' 𝒢 = Set.range fun f : ΣG : 𝒢, S.obj G ⟶ T => mk f.2 by
     rw [this]
     infer_instance
   exact Set.ext fun X => ⟨fun h => ⟨⟨⟨_, h⟩, X.Hom⟩, (eq_mk _).symm⟩, by tidy⟩

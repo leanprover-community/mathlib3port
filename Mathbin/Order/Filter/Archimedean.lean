@@ -88,7 +88,7 @@ theorem tendsto_coe_rat_at_bot_iff [LinearOrderedField R] [Archimedean R] {f : �
 #align tendsto_coe_rat_at_bot_iff tendsto_coe_rat_at_bot_iff
 
 theorem at_top_countable_basis_of_archimedean [LinearOrderedSemiring R] [Archimedean R] :
-    (atTop : Filter R).HasCountableBasis (fun n : ℕ => True) fun n => IciCat n :=
+    (atTop : Filter R).HasCountableBasis (fun n : ℕ => True) fun n => ici n :=
   { Countable := to_countable _,
     to_has_basis :=
       at_top_basis.to_has_basis
@@ -99,7 +99,7 @@ theorem at_top_countable_basis_of_archimedean [LinearOrderedSemiring R] [Archime
 #align at_top_countable_basis_of_archimedean at_top_countable_basis_of_archimedean
 
 theorem at_bot_countable_basis_of_archimedean [LinearOrderedRing R] [Archimedean R] :
-    (atBot : Filter R).HasCountableBasis (fun m : ℤ => True) fun m => IicCat m :=
+    (atBot : Filter R).HasCountableBasis (fun m : ℤ => True) fun m => iic m :=
   { Countable := to_countable _,
     to_has_basis :=
       at_bot_basis.to_has_basis

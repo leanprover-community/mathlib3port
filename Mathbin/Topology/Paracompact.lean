@@ -85,7 +85,7 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
   · simp only [eq_univ_iff_forall, mem_Union]
     exact fun x => ⟨ind (t_inv x), _, rfl, ht_inv _⟩
     
-  · refine' fun x => ⟨U x, hxU x, ((hU x).Image ind).Subset _⟩
+  · refine' fun x => ⟨U x, hxU x, ((hU x).image ind).Subset _⟩
     simp only [subset_def, mem_Union, mem_set_of_eq, Set.Nonempty, mem_inter_iff]
     rintro i ⟨y, ⟨a, rfl, hya⟩, hyU⟩
     exact mem_image_of_mem _ ⟨y, hya, hyU⟩
@@ -113,7 +113,7 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
 
 -- See note [lower instance priority]
 /-- A compact space is paracompact. -/
-instance (priority := 100) paracompact_of_compact [CompactSpace X] : ParacompactSpace X := by
+instance (priority := 100) paracompactOfCompact [CompactSpace X] : ParacompactSpace X := by
   -- the proof is trivial: we choose a finite subcover using compactness, and use it
   refine' ⟨fun ι s ho hu => _⟩
   rcases is_compact_univ.elim_finite_subcover _ ho hu.ge with ⟨T, hT⟩
@@ -122,7 +122,7 @@ instance (priority := 100) paracompact_of_compact [CompactSpace X] : Paracompact
   choose i hiT hi using fun x => this x (mem_univ x)
   refine' ⟨(T : Set ι), fun t => s t, fun t => ho _, _, locally_finite_of_finite _, fun t => ⟨t, subset.rfl⟩⟩
   simpa only [Union_coe_set, ← univ_subset_iff]
-#align paracompact_of_compact paracompact_of_compact
+#align paracompact_of_compact paracompactOfCompact
 
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space, let `s` be a closed set
 in `X`. Suppose that for each `x ∈ s` the sets `B x : ι x → set X` with the predicate
@@ -152,7 +152,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
   by
   classical-- For technical reasons we prepend two empty sets to the sequence `compact_exhaustion.choice X`
     set K' : CompactExhaustion X := CompactExhaustion.choice X
-    set Kdiff := fun n => K (n + 1) \ Interior (K n)
+    set Kdiff := fun n => K (n + 1) \ interior (K n)
     · intro x
       simpa only [K'.find_shiftr] using diff_subset_diff_right interior_subset (K'.shiftr.mem_diff_shiftr_find x)
       
@@ -165,7 +165,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
       exact ⟨x.2.2, hrp _ _⟩
       
     · intro x
-      refine' ⟨Interior (K (K'.find x + 3)), IsOpen.mem_nhds is_open_interior (K.subset_interior_succ _ (hKcov x).1), _⟩
+      refine' ⟨interior (K (K'.find x + 3)), IsOpen.mem_nhds is_open_interior (K.subset_interior_succ _ (hKcov x).1), _⟩
       have : (⋃ k ≤ K'.find x + 2, range <| Sigma.mk k : Set (Σn, T' n)).Finite :=
         (finite_le_nat _).bUnion fun k hk => finite_range _
       apply this.subset
@@ -212,7 +212,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis [LocallyCompac
 -- See note [lower instance priority]
 /-- A locally compact sigma compact Hausdorff space is paracompact. See also
 `refinement_of_locally_compact_sigma_compact_of_nhds_basis` for a more precise statement. -/
-instance (priority := 100) paracompact_of_locally_compact_sigma_compact [LocallyCompactSpace X] [SigmaCompactSpace X]
+instance (priority := 100) paracompactOfLocallyCompactSigmaCompact [LocallyCompactSpace X] [SigmaCompactSpace X]
     [T2Space X] : ParacompactSpace X := by
   refine' ⟨fun α s ho hc => _⟩
   choose i hi using Union_eq_univ_iff.1 hc
@@ -220,7 +220,7 @@ instance (priority := 100) paracompact_of_locally_compact_sigma_compact [Locally
     (nhds_basis_opens x).restrict_subset (IsOpen.mem_nhds (ho (i x)) (hi x))
   rcases refinement_of_locally_compact_sigma_compact_of_nhds_basis this with ⟨β, c, t, hto, htc, htf⟩
   exact ⟨β, t, fun x => (hto x).1.2, htc, htf, fun b => ⟨i <| c b, (hto b).2⟩⟩
-#align paracompact_of_locally_compact_sigma_compact paracompact_of_locally_compact_sigma_compact
+#align paracompact_of_locally_compact_sigma_compact paracompactOfLocallyCompactSigmaCompact
 
 /- Dieudonné‘s theorem: a paracompact Hausdorff space is normal. Formalization is based on the proof
 at [ncatlab](https://ncatlab.org/nlab/show/paracompact+Hausdorff+spaces+are+normal). -/
@@ -240,7 +240,7 @@ theorem normalOfParacompactT2 [T2Space X] [ParacompactSpace X] : NormalSpace X :
     choose u v hu hv hxu htv huv using SetCoe.forall'.1 H
     rcases precise_refinement_set hs u hu fun x hx => mem_Union.2 ⟨⟨x, hx⟩, hxu _⟩ with ⟨u', hu'o, hcov', hu'fin, hsub⟩
     refine'
-      ⟨⋃ i, u' i, Closure (⋃ i, u' i)ᶜ, is_open_Union hu'o, is_closed_closure.is_open_compl, hcov', _,
+      ⟨⋃ i, u' i, closure (⋃ i, u' i)ᶜ, is_open_Union hu'o, is_closed_closure.is_open_compl, hcov', _,
         disjoint_compl_right.mono le_rfl (compl_le_compl subset_closure)⟩
     rw [hu'fin.closure_Union, compl_Union, subset_Inter_iff]
     refine' fun i x hxt hxu => absurd (htv i hxt) (closure_minimal _ (is_closed_compl_iff.2 <| hv _) hxu)

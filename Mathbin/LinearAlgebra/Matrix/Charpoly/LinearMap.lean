@@ -25,7 +25,7 @@ variable {ι : Type _} [Fintype ι]
 
 variable {M : Type _} [AddCommGroup M] (R : Type _) [CommRing R] [Module R M] (I : Ideal R)
 
-variable (b : ι → M) (hb : Submodule.span R (Set.Range b) = ⊤)
+variable (b : ι → M) (hb : Submodule.span R (Set.range b) = ⊤)
 
 open BigOperators
 
@@ -67,7 +67,7 @@ theorem PiToModule.from_End_apply_single_one [DecidableEq ι] (f : Module.EndCat
   rw [one_smul]
 #align pi_to_module.from_End_apply_single_one PiToModule.from_End_apply_single_one
 
-theorem PiToModule.from_End_injective (hb : Submodule.span R (Set.Range b) = ⊤) :
+theorem PiToModule.from_End_injective (hb : Submodule.span R (Set.range b) = ⊤) :
     Function.Injective (PiToModule.fromEnd R b) := by
   intro x y e
   ext m
@@ -158,7 +158,7 @@ variable (b R)
 /-- The subalgebra of `matrix ι ι R` that consists of matrices that actually represent
 endomorphisms on `M`. -/
 def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R) where
-  Carrier := { A | ∃ f : Module.EndCat R M, A.Represents b f }
+  carrier := { A | ∃ f : Module.EndCat R M, A.Represents b f }
   mul_mem' := fun A₁ A₂ ⟨f₁, e₁⟩ ⟨f₂, e₂⟩ => ⟨f₁ * f₂, e₁.mul e₂⟩
   one_mem' := ⟨1, Matrix.Represents.one⟩
   add_mem' := fun A₁ A₂ ⟨f₁, e₁⟩ ⟨f₂, e₂⟩ => ⟨f₁ + f₂, e₁.add e₂⟩

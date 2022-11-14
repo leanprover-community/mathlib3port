@@ -62,7 +62,7 @@ theorem HasFpowerSeriesAt.fderiv_eq (h : HasFpowerSeriesAt f p x) :
 #align has_fpower_series_at.fderiv_eq HasFpowerSeriesAt.fderiv_eq
 
 theorem HasFpowerSeriesOnBall.differentiableOn [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r) :
-    DifferentiableOn 𝕜 f (Emetric.Ball x r) := fun y hy => (h.analyticAtOfMem hy).DifferentiableWithinAt
+    DifferentiableOn 𝕜 f (Emetric.ball x r) := fun y hy => (h.analyticAtOfMem hy).DifferentiableWithinAt
 #align has_fpower_series_on_ball.differentiable_on HasFpowerSeriesOnBall.differentiableOn
 
 theorem AnalyticOn.differentiableOn (h : AnalyticOn 𝕜 f s) : DifferentiableOn 𝕜 f s := fun y hy =>

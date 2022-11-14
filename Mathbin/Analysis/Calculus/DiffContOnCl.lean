@@ -26,12 +26,12 @@ closure. This is a common assumption in complex analysis. -/
 @[protect_proj]
 structure DiffContOnCl (f : E → F) (s : Set E) : Prop where
   DifferentiableOn : DifferentiableOn 𝕜 f s
-  ContinuousOn : ContinuousOn f (Closure s)
+  ContinuousOn : ContinuousOn f (closure s)
 #align diff_cont_on_cl DiffContOnCl
 
 variable {𝕜}
 
-theorem DifferentiableOn.diffContOnCl (h : DifferentiableOn 𝕜 f (Closure s)) : DiffContOnCl 𝕜 f s :=
+theorem DifferentiableOn.diffContOnCl (h : DifferentiableOn 𝕜 f (closure s)) : DiffContOnCl 𝕜 f s :=
   ⟨h.mono subset_closure, h.ContinuousOn⟩
 #align differentiable_on.diff_cont_on_cl DifferentiableOn.diffContOnCl
 
@@ -43,7 +43,7 @@ theorem IsClosed.diff_cont_on_cl_iff (hs : IsClosed s) : DiffContOnCl 𝕜 f s �
   ⟨fun h => h.DifferentiableOn, fun h => ⟨h, hs.closure_eq.symm ▸ h.ContinuousOn⟩⟩
 #align is_closed.diff_cont_on_cl_iff IsClosed.diff_cont_on_cl_iff
 
-theorem diff_cont_on_cl_univ : DiffContOnCl 𝕜 f Univ ↔ Differentiable 𝕜 f :=
+theorem diff_cont_on_cl_univ : DiffContOnCl 𝕜 f univ ↔ Differentiable 𝕜 f :=
   isClosedUniv.diff_cont_on_cl_iff.trans differentiable_on_univ
 #align diff_cont_on_cl_univ diff_cont_on_cl_univ
 
@@ -58,8 +58,8 @@ theorem comp {g : G → E} {t : Set G} (hf : DiffContOnCl 𝕜 f s) (hg : DiffCo
   ⟨hf.1.comp hg.1 h, hf.2.comp hg.2 <| h.closure_of_continuous_on hg.2⟩
 #align diff_cont_on_cl.comp DiffContOnCl.comp
 
-theorem continuous_on_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOnCl 𝕜 f (Ball x r)) :
-    ContinuousOn f (ClosedBall x r) := by
+theorem continuous_on_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOnCl 𝕜 f (ball x r)) :
+    ContinuousOn f (closedBall x r) := by
   rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero]
     exact continuous_on_singleton f x
@@ -69,8 +69,8 @@ theorem continuous_on_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOn
     
 #align diff_cont_on_cl.continuous_on_ball DiffContOnCl.continuous_on_ball
 
-theorem mkBall {x : E} {r : ℝ} (hd : DifferentiableOn 𝕜 f (Ball x r)) (hc : ContinuousOn f (ClosedBall x r)) :
-    DiffContOnCl 𝕜 f (Ball x r) :=
+theorem mkBall {x : E} {r : ℝ} (hd : DifferentiableOn 𝕜 f (ball x r)) (hc : ContinuousOn f (closedBall x r)) :
+    DiffContOnCl 𝕜 f (ball x r) :=
   ⟨hd, hc.mono <| closure_ball_subset_closed_ball⟩
 #align diff_cont_on_cl.mk_ball DiffContOnCl.mkBall
 
@@ -131,7 +131,7 @@ theorem smulConst {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebr
   hc.smul diffContOnClConst
 #align diff_cont_on_cl.smul_const DiffContOnCl.smulConst
 
-theorem inv {f : E → 𝕜} (hf : DiffContOnCl 𝕜 f s) (h₀ : ∀ x ∈ Closure s, f x ≠ 0) : DiffContOnCl 𝕜 f⁻¹ s :=
+theorem inv {f : E → 𝕜} (hf : DiffContOnCl 𝕜 f s) (h₀ : ∀ x ∈ closure s, f x ≠ 0) : DiffContOnCl 𝕜 f⁻¹ s :=
   ⟨(differentiableOnInv.comp hf.1) fun x hx => h₀ _ (subset_closure hx), hf.2.inv₀ h₀⟩
 #align diff_cont_on_cl.inv DiffContOnCl.inv
 

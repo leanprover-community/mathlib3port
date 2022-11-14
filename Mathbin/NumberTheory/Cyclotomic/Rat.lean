@@ -204,8 +204,8 @@ noncomputable def integralPowerBasis [hcycl : IsCyclotomicExtension {p ^ k} ℚ 
 
 @[simp]
 theorem integral_power_basis_gen [hcycl : IsCyclotomicExtension {p ^ k} ℚ K] (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
-    hζ.integralPowerBasis.Gen = ⟨ζ, hζ.IsIntegral (p ^ k).Pos⟩ :=
-  Subtype.ext <| show algebraMap _ K hζ.integralPowerBasis.Gen = _ by simpa [integral_power_basis]
+    hζ.integralPowerBasis.gen = ⟨ζ, hζ.IsIntegral (p ^ k).Pos⟩ :=
+  Subtype.ext <| show algebraMap _ K hζ.integralPowerBasis.gen = _ by simpa [integral_power_basis]
 #align is_primitive_root.integral_power_basis_gen IsPrimitiveRoot.integral_power_basis_gen
 
 @[simp]
@@ -248,7 +248,7 @@ noncomputable def integralPowerBasis' [hcycl : IsCyclotomicExtension {p} ℚ K] 
 
 @[simp]
 theorem integral_power_basis'_gen [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ p) :
-    hζ.integralPowerBasis'.Gen = ⟨ζ, hζ.IsIntegral p.Pos⟩ :=
+    hζ.integralPowerBasis'.gen = ⟨ζ, hζ.IsIntegral p.Pos⟩ :=
   @integral_power_basis_gen p 1 K _ _ _ _
     (by
       convert hcycl
@@ -281,7 +281,7 @@ noncomputable def subOneIntegralPowerBasis [IsCyclotomicExtension {p ^ k} ℚ K]
 
 @[simp]
 theorem sub_one_integral_power_basis_gen [IsCyclotomicExtension {p ^ k} ℚ K] (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
-    hζ.subOneIntegralPowerBasis.Gen =
+    hζ.subOneIntegralPowerBasis.gen =
       ⟨ζ - 1, Subalgebra.sub_mem _ (hζ.IsIntegral (p ^ k).Pos) (Subalgebra.one_mem _)⟩ :=
   by simp [sub_one_integral_power_basis]
 #align is_primitive_root.sub_one_integral_power_basis_gen IsPrimitiveRoot.sub_one_integral_power_basis_gen
@@ -299,7 +299,7 @@ noncomputable def subOneIntegralPowerBasis' [hcycl : IsCyclotomicExtension {p} �
 
 @[simp]
 theorem sub_one_integral_power_basis'_gen [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ p) :
-    hζ.subOneIntegralPowerBasis'.Gen = ⟨ζ - 1, Subalgebra.sub_mem _ (hζ.IsIntegral p.Pos) (Subalgebra.one_mem _)⟩ :=
+    hζ.subOneIntegralPowerBasis'.gen = ⟨ζ - 1, Subalgebra.sub_mem _ (hζ.IsIntegral p.Pos) (Subalgebra.one_mem _)⟩ :=
   @sub_one_integral_power_basis_gen p 1 K _ _ _ _
     (by
       convert hcycl

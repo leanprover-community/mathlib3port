@@ -77,7 +77,7 @@ variable [Fintype l]
 
 /-- The group of symplectic matrices over a ring `R`. -/
 def symplecticGroup : Submonoid (Matrix (Sum l l) (Sum l l) R) where
-  Carrier := { A | A ⬝ j l R ⬝ Aᵀ = j l R }
+  carrier := { A | A ⬝ j l R ⬝ Aᵀ = j l R }
   mul_mem' := by
     intro a b ha hb
     simp only [mul_eq_mul, Set.mem_set_of_eq, transpose_mul] at *

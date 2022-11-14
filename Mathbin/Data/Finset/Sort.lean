@@ -188,7 +188,7 @@ theorem order_emb_of_fin_mem (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin
 #align finset.order_emb_of_fin_mem Finset.order_emb_of_fin_mem
 
 @[simp]
-theorem range_order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Set.Range (s.orderEmbOfFin h) = s := by
+theorem range_order_emb_of_fin (s : Finset α) {k : ℕ} (h : s.card = k) : Set.range (s.orderEmbOfFin h) = s := by
   simp only [order_emb_of_fin, Set.range_comp coe (s.order_iso_of_fin h), RelEmbedding.coe_trans, Set.image_univ,
     Finset.orderEmbOfFin.equations._eqn_1, RelIso.range_eq, OrderEmbedding.subtype_apply,
     OrderIso.coe_to_order_embedding, eq_self_iff_true, Subtype.range_coe_subtype, Finset.set_of_mem, Finset.coe_inj]

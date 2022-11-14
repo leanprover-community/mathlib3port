@@ -412,13 +412,13 @@ example : NoMaxOrder ℝ≥0 := by infer_instance
 /-- If `a` is a nonnegative real number, then the closed interval `[0, a]` in `ℝ` is order
 isomorphic to the interval `set.Iic a`. -/
 @[simps apply_coe_coe]
-def orderIsoIccZeroCoe (a : ℝ≥0) : Set.IccCat (0 : ℝ) a ≃o Set.IicCat a where
-  toEquiv := Equiv.Set.sep (Set.IciCat 0) fun x => x ≤ a
+def orderIsoIccZeroCoe (a : ℝ≥0) : Set.icc (0 : ℝ) a ≃o Set.iic a where
+  toEquiv := Equiv.Set.sep (Set.ici 0) fun x => x ≤ a
   map_rel_iff' x y := Iff.rfl
 #align nnreal.order_iso_Icc_zero_coe Nnreal.orderIsoIccZeroCoe
 
 @[simp]
-theorem order_iso_Icc_zero_coe_symm_apply_coe (a : ℝ≥0) (b : Set.IicCat a) : ((orderIsoIccZeroCoe a).symm b : ℝ) = b :=
+theorem order_iso_Icc_zero_coe_symm_apply_coe (a : ℝ≥0) (b : Set.iic a) : ((orderIsoIccZeroCoe a).symm b : ℝ) = b :=
   rfl
 #align nnreal.order_iso_Icc_zero_coe_symm_apply_coe Nnreal.order_iso_Icc_zero_coe_symm_apply_coe
 
@@ -443,7 +443,7 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0 :=
 
 @[norm_cast]
 theorem coe_Sup (s : Set ℝ≥0) : (↑(sup s) : ℝ) = sup ((coe : ℝ≥0 → ℝ) '' s) :=
-  Eq.symm <| @subset_Sup_of_within ℝ (Set.IciCat 0) _ ⟨(0 : ℝ≥0)⟩ s <| (Real.Sup_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
+  Eq.symm <| @subset_Sup_of_within ℝ (Set.ici 0) _ ⟨(0 : ℝ≥0)⟩ s <| (Real.Sup_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Sup Nnreal.coe_Sup
 
 @[norm_cast]
@@ -453,7 +453,7 @@ theorem coe_supr {ι : Sort _} (s : ι → ℝ≥0) : (↑(⨆ i, s i) : ℝ) = 
 
 @[norm_cast]
 theorem coe_Inf (s : Set ℝ≥0) : (↑(inf s) : ℝ) = inf ((coe : ℝ≥0 → ℝ) '' s) :=
-  Eq.symm <| @subset_Inf_of_within ℝ (Set.IciCat 0) _ ⟨(0 : ℝ≥0)⟩ s <| (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
+  Eq.symm <| @subset_Inf_of_within ℝ (Set.ici 0) _ ⟨(0 : ℝ≥0)⟩ s <| (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Inf Nnreal.coe_Inf
 
 @[simp]
@@ -698,7 +698,7 @@ theorem exists_pow_lt_of_lt_one {a b : ℝ≥0} (ha : 0 < a) (hb : b < 1) : ∃ 
 #align nnreal.exists_pow_lt_of_lt_one Nnreal.exists_pow_lt_of_lt_one
 
 theorem exists_mem_Ico_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 < y) :
-    ∃ n : ℤ, x ∈ Set.IcoCat (y ^ n) (y ^ (n + 1)) := by
+    ∃ n : ℤ, x ∈ Set.ico (y ^ n) (y ^ (n + 1)) := by
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, (y : ℝ) ^ n ≤ x ∧ (x : ℝ) < y ^ (n + 1) :=
     exists_mem_Ico_zpow (bot_lt_iff_ne_bot.mpr hx) hy
   rw [← Nnreal.coe_zpow] at hn h'n
@@ -706,7 +706,7 @@ theorem exists_mem_Ico_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 <
 #align nnreal.exists_mem_Ico_zpow Nnreal.exists_mem_Ico_zpow
 
 theorem exists_mem_Ioc_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 < y) :
-    ∃ n : ℤ, x ∈ Set.IocCat (y ^ n) (y ^ (n + 1)) := by
+    ∃ n : ℤ, x ∈ Set.ioc (y ^ n) (y ^ (n + 1)) := by
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, (y : ℝ) ^ n < x ∧ (x : ℝ) ≤ y ^ (n + 1) :=
     exists_mem_Ioc_zpow (bot_lt_iff_ne_bot.mpr hx) hy
   rw [← Nnreal.coe_zpow] at hn h'n
@@ -965,7 +965,7 @@ theorem Sup_of_not_bdd_above {s : Set ℝ≥0} (hs : ¬BddAbove s) : HasSup.sup 
   exact Sup_of_not_bdd_above hs
 #align nnreal.Sup_of_not_bdd_above Nnreal.Sup_of_not_bdd_above
 
-theorem supr_of_not_bdd_above (hf : ¬BddAbove (Range f)) : (⨆ i, f i) = 0 :=
+theorem supr_of_not_bdd_above (hf : ¬BddAbove (range f)) : (⨆ i, f i) = 0 :=
   Sup_of_not_bdd_above hf
 #align nnreal.supr_of_not_bdd_above Nnreal.supr_of_not_bdd_above
 

@@ -192,11 +192,11 @@ namespace Subring
 
 /-- The underlying submonoid of a subring. -/
 def toSubmonoid (s : Subring R) : Submonoid R :=
-  { s.toSubsemiring.toSubmonoid with Carrier := s.Carrier }
+  { s.toSubsemiring.toSubmonoid with carrier := s.carrier }
 #align subring.to_submonoid Subring.toSubmonoid
 
 instance : SetLike (Subring R) R where
-  coe := Subring.Carrier
+  coe := Subring.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
 instance : SubringClass (Subring R) R where
@@ -207,7 +207,7 @@ instance : SubringClass (Subring R) R where
   neg_mem := neg_mem'
 
 @[simp]
-theorem mem_carrier {s : Subring R} {x : R} : x ∈ s.Carrier ↔ x ∈ s :=
+theorem mem_carrier {s : Subring R} {x : R} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align subring.mem_carrier Subring.mem_carrier
 
@@ -236,7 +236,7 @@ theorem ext {S T : Subring R} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 /-- Copy of a subring with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (S : Subring R) (s : Set R) (hs : s = ↑S) : Subring R :=
-  { S.toSubsemiring.copy s hs with Carrier := s, neg_mem' := fun _ => hs.symm ▸ S.neg_mem' }
+  { S.toSubsemiring.copy s hs with carrier := s, neg_mem' := fun _ => hs.symm ▸ S.neg_mem' }
 #align subring.copy Subring.copy
 
 @[simp]
@@ -290,7 +290,7 @@ theorem to_submonoid_mono : Monotone (toSubmonoid : Subring R → Submonoid R) :
 /-- Construct a `subring R` from a set `s`, a submonoid `sm`, and an additive
 subgroup `sa` such that `x ∈ s ↔ x ∈ sm ↔ x ∈ sa`. -/
 protected def mk' (s : Set R) (sm : Submonoid R) (sa : AddSubgroup R) (hm : ↑sm = s) (ha : ↑sa = s) : Subring R where
-  Carrier := s
+  carrier := s
   zero_mem' := ha ▸ sa.zero_mem
   one_mem' := hm ▸ sm.one_mem
   add_mem' x y := by simpa only [← ha] using sa.add_mem
@@ -552,7 +552,7 @@ theorem mem_top (x : R) : x ∈ (⊤ : Subring R) :=
 #align subring.mem_top Subring.mem_top
 
 @[simp]
-theorem coe_top : ((⊤ : Subring R) : Set R) = Set.Univ :=
+theorem coe_top : ((⊤ : Subring R) : Set R) = Set.univ :=
   rfl
 #align subring.coe_top Subring.coe_top
 
@@ -567,7 +567,7 @@ def topEquiv : (⊤ : Subring R) ≃+* R :=
 
 /-- The preimage of a subring along a ring homomorphism is a subring. -/
 def comap {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) (s : Subring S) : Subring R :=
-  { s.toSubmonoid.comap (f : R →* S), s.toAddSubgroup.comap (f : R →+ S) with Carrier := f ⁻¹' s.Carrier }
+  { s.toSubmonoid.comap (f : R →* S), s.toAddSubgroup.comap (f : R →+ S) with carrier := f ⁻¹' s.carrier }
 #align subring.comap Subring.comap
 
 @[simp]
@@ -589,7 +589,7 @@ theorem comap_comap (s : Subring T) (g : S →+* T) (f : R →+* S) : (s.comap g
 
 /-- The image of a subring along a ring homomorphism is a subring. -/
 def map {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) (s : Subring R) : Subring S :=
-  { s.toSubmonoid.map (f : R →* S), s.toAddSubgroup.map (f : R →+ S) with Carrier := f '' s.Carrier }
+  { s.toSubmonoid.map (f : R →* S), s.toAddSubgroup.map (f : R →+ S) with carrier := f '' s.carrier }
 #align subring.map Subring.map
 
 @[simp]
@@ -641,11 +641,11 @@ variable (g : S →+* T) (f : R →+* S)
 
 /-- The range of a ring homomorphism, as a subring of the target. See Note [range copy pattern]. -/
 def range {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) : Subring S :=
-  ((⊤ : Subring R).map f).copy (Set.Range f) Set.image_univ.symm
+  ((⊤ : Subring R).map f).copy (Set.range f) Set.image_univ.symm
 #align ring_hom.range RingHom.range
 
 @[simp]
-theorem coe_range : (f.range : Set S) = Set.Range f :=
+theorem coe_range : (f.range : Set S) = Set.range f :=
   rfl
 #align ring_hom.coe_range RingHom.coe_range
 
@@ -686,7 +686,7 @@ instance : HasBot (Subring R) :=
 instance : Inhabited (Subring R) :=
   ⟨⊥⟩
 
-theorem coe_bot : ((⊥ : Subring R) : Set R) = Set.Range (coe : ℤ → R) :=
+theorem coe_bot : ((⊥ : Subring R) : Set R) = Set.range (coe : ℤ → R) :=
   RingHom.coe_range (Int.castRingHom R)
 #align subring.coe_bot Subring.coe_bot
 
@@ -699,7 +699,7 @@ theorem mem_bot {x : R} : x ∈ (⊥ : Subring R) ↔ ∃ n : ℤ, ↑n = x :=
 
 /-- The inf of two subrings is their intersection. -/
 instance : HasInf (Subring R) :=
-  ⟨fun s t => { s.toSubmonoid ⊓ t.toSubmonoid, s.toAddSubgroup ⊓ t.toAddSubgroup with Carrier := s ∩ t }⟩
+  ⟨fun s t => { s.toSubmonoid ⊓ t.toSubmonoid, s.toAddSubgroup ⊓ t.toAddSubgroup with carrier := s ∩ t }⟩
 
 @[simp]
 theorem coe_inf (p p' : Subring R) : ((p ⊓ p' : Subring R) : Set R) = p ∩ p' :=
@@ -767,10 +767,10 @@ variable (R)
 
 /-- The center of a ring `R` is the set of elements that commute with everything in `R` -/
 def center : Subring R :=
-  { Subsemiring.center R with Carrier := Set.Center R, neg_mem' := fun a => Set.neg_mem_center }
+  { Subsemiring.center R with carrier := Set.center R, neg_mem' := fun a => Set.neg_mem_center }
 #align subring.center Subring.center
 
-theorem coe_center : ↑(center R) = Set.Center R :=
+theorem coe_center : ↑(center R) = Set.center R :=
   rfl
 #align subring.coe_center Subring.coe_center
 
@@ -975,7 +975,7 @@ theorem closure_empty : closure (∅ : Set R) = ⊥ :=
 #align subring.closure_empty Subring.closure_empty
 
 @[simp]
-theorem closure_univ : closure (Set.Univ : Set R) = ⊤ :=
+theorem closure_univ : closure (Set.univ : Set R) = ⊤ :=
   @coe_top R _ ▸ closure_eq ⊤
 #align subring.closure_univ Subring.closure_univ
 
@@ -1021,7 +1021,7 @@ theorem comap_top (f : R →+* S) : (⊤ : Subring S).comap f = ⊤ :=
 /-- Given `subring`s `s`, `t` of rings `R`, `S` respectively, `s.prod t` is `s ×̂ t`
 as a subring of `R × S`. -/
 def prod (s : Subring R) (t : Subring S) : Subring (R × S) :=
-  { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubgroup.Prod t.toAddSubgroup with Carrier := s ×ˢ t }
+  { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubgroup.Prod t.toAddSubgroup with carrier := s ×ˢ t }
 #align subring.prod Subring.prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1144,7 +1144,7 @@ theorem range_top_of_surjective (f : R →+* S) (hf : Function.Surjective f) : f
 /-- The subring of elements `x : R` such that `f x = g x`, i.e.,
   the equalizer of f and g as a subring of R -/
 def eqLocus (f g : R →+* S) : Subring R :=
-  { (f : R →* S).eqMlocus g, (f : R →+ S).eqLocus g with Carrier := { x | f x = g x } }
+  { (f : R →* S).eqMlocus g, (f : R →+ S).eqLocus g with carrier := { x | f x = g x } }
 #align ring_hom.eq_locus RingHom.eqLocus
 
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subring closure. -/
@@ -1403,7 +1403,7 @@ end Actions
 -- both ordered ring structures and submonoids available
 /-- The subgroup of positive units of a linear ordered semiring. -/
 def Units.posSubgroup (R : Type _) [LinearOrderedSemiring R] : Subgroup Rˣ :=
-  { (posSubmonoid R).comap (Units.coeHom R) with Carrier := { x | (0 : R) < x },
+  { (posSubmonoid R).comap (Units.coeHom R) with carrier := { x | (0 : R) < x },
     inv_mem' := fun x => Units.inv_pos.mpr }
 #align units.pos_subgroup Units.posSubgroup
 

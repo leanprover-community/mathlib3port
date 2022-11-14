@@ -88,15 +88,15 @@ open Classical
 is upwards-closed, and is stable under intersection. We do not forbid this collection to be
 all sets of `α`. -/
 structure Filter (α : Type _) where
-  Sets : Set (Set α)
-  univ_sets : Set.Univ ∈ sets
+  sets : Set (Set α)
+  univ_sets : Set.univ ∈ sets
   sets_of_superset {x y} : x ∈ sets → x ⊆ y → y ∈ sets
   inter_sets {x y} : x ∈ sets → y ∈ sets → x ∩ y ∈ sets
 #align filter Filter
 
 /-- If `F` is a filter on `α`, and `U` a subset of `α` then we can write `U ∈ F` as on paper. -/
 instance {α : Type _} : Membership (Set α) (Filter α) :=
-  ⟨fun U F => U ∈ F.Sets⟩
+  ⟨fun U F => U ∈ F.sets⟩
 
 namespace Filter
 
@@ -108,19 +108,19 @@ protected theorem mem_mk {t : Set (Set α)} {h₁ h₂ h₃} : s ∈ mk t h₁ h
 #align filter.mem_mk Filter.mem_mk
 
 @[simp]
-protected theorem mem_sets : s ∈ f.Sets ↔ s ∈ f :=
+protected theorem mem_sets : s ∈ f.sets ↔ s ∈ f :=
   Iff.rfl
 #align filter.mem_sets Filter.mem_sets
 
 instance inhabitedMem : Inhabited { s : Set α // s ∈ f } :=
-  ⟨⟨Univ, f.univ_sets⟩⟩
+  ⟨⟨univ, f.univ_sets⟩⟩
 #align filter.inhabited_mem Filter.inhabitedMem
 
-theorem filter_eq : ∀ {f g : Filter α}, f.Sets = g.Sets → f = g
+theorem filter_eq : ∀ {f g : Filter α}, f.sets = g.sets → f = g
   | ⟨a, _, _, _⟩, ⟨_, _, _, _⟩, rfl => rfl
 #align filter.filter_eq Filter.filter_eq
 
-theorem filter_eq_iff : f = g ↔ f.Sets = g.Sets :=
+theorem filter_eq_iff : f = g ↔ f.sets = g.sets :=
   ⟨congr_arg _, filter_eq⟩
 #align filter.filter_eq_iff Filter.filter_eq_iff
 
@@ -268,7 +268,7 @@ section Principal
 
 /-- The principal filter of `s` is the collection of all supersets of `s`. -/
 def principal (s : Set α) : Filter α where
-  Sets := { t | s ⊆ t }
+  sets := { t | s ⊆ t }
   univ_sets := subset_univ s
   sets_of_superset x y hx := Subset.trans hx
   inter_sets x y := subset_inter
@@ -297,7 +297,7 @@ section Join
 
 /-- The join of a filter of filters is defined by the relation `s ∈ join f ↔ {t | s ∈ t} ∈ f`. -/
 def join (f : Filter (Filter α)) : Filter α where
-  Sets := { s | { t : Filter α | s ∈ t } ∈ f }
+  sets := { s | { t : Filter α | s ∈ t } ∈ f }
   univ_sets := by simp only [mem_set_of_eq, univ_sets, ← Filter.mem_sets, set_of_true]
   sets_of_superset x y hx xy := (mem_of_superset hx) fun f h => mem_of_superset h xy
   inter_sets x y hx hy := (mem_of_superset (inter_mem hx hy)) fun f ⟨h₁, h₂⟩ => inter_mem h₁ h₂
@@ -330,20 +330,20 @@ protected theorem not_le : ¬f ≤ g ↔ ∃ s ∈ g, s ∉ f := by simp_rw [le_
 /-- `generate_sets g s`: `s` is in the filter closure of `g`. -/
 inductive GenerateSets (g : Set (Set α)) : Set α → Prop
   | basic {s : Set α} : s ∈ g → generate_sets s
-  | univ : generate_sets Univ
+  | univ : generate_sets univ
   | Superset {s t : Set α} : generate_sets s → s ⊆ t → generate_sets t
   | inter {s t : Set α} : generate_sets s → generate_sets t → generate_sets (s ∩ t)
 #align filter.generate_sets Filter.GenerateSets
 
 /-- `generate g` is the largest filter containing the sets `g`. -/
 def generate (g : Set (Set α)) : Filter α where
-  Sets := GenerateSets g
+  sets := GenerateSets g
   univ_sets := GenerateSets.univ
   sets_of_superset x y := GenerateSets.superset
   inter_sets s t := GenerateSets.inter
 #align filter.generate Filter.generate
 
-theorem sets_iff_generate {s : Set (Set α)} {f : Filter α} : f ≤ Filter.generate s ↔ s ⊆ f.Sets :=
+theorem sets_iff_generate {s : Set (Set α)} {f : Filter α} : f ≤ Filter.generate s ↔ s ⊆ f.sets :=
   Iff.intro (fun h u hu => h <| generate_sets.basic <| hu) fun h u hu =>
     hu.recOn h univ_mem (fun x y _ hxy hx => mem_of_superset hx hxy) fun x y _ _ hx hy => inter_mem hx hy
 #align filter.sets_iff_generate Filter.sets_iff_generate
@@ -369,19 +369,19 @@ theorem mem_generate_iff {s : Set <| Set α} {U : Set α} :
 
 /-- `mk_of_closure s hs` constructs a filter on `α` whose elements set is exactly
 `s : set (set α)`, provided one gives the assumption `hs : (generate s).sets = s`. -/
-protected def mkOfClosure (s : Set (Set α)) (hs : (generate s).Sets = s) : Filter α where
-  Sets := s
+protected def mkOfClosure (s : Set (Set α)) (hs : (generate s).sets = s) : Filter α where
+  sets := s
   univ_sets := hs ▸ (univ_mem : univ ∈ generate s)
   sets_of_superset x y := hs ▸ (mem_of_superset : x ∈ generate s → x ⊆ y → y ∈ generate s)
   inter_sets x y := hs ▸ (inter_mem : x ∈ generate s → y ∈ generate s → x ∩ y ∈ generate s)
 #align filter.mk_of_closure Filter.mkOfClosure
 
-theorem mk_of_closure_sets {s : Set (Set α)} {hs : (generate s).Sets = s} : Filter.mkOfClosure s hs = generate s :=
-  Filter.ext fun u => show u ∈ (Filter.mkOfClosure s hs).Sets ↔ u ∈ (generate s).Sets from hs.symm ▸ Iff.rfl
+theorem mk_of_closure_sets {s : Set (Set α)} {hs : (generate s).sets = s} : Filter.mkOfClosure s hs = generate s :=
+  Filter.ext fun u => show u ∈ (Filter.mkOfClosure s hs).sets ↔ u ∈ (generate s).sets from hs.symm ▸ Iff.rfl
 #align filter.mk_of_closure_sets Filter.mk_of_closure_sets
 
 /-- Galois insertion from sets of sets into filters. -/
-def giGenerate (α : Type _) : @GaloisInsertion (Set (Set α)) (Filter α)ᵒᵈ _ _ Filter.generate Filter.Sets where
+def giGenerate (α : Type _) : @GaloisInsertion (Set (Set α)) (Filter α)ᵒᵈ _ _ Filter.generate Filter.sets where
   gc s f := sets_iff_generate
   le_l_u f u h := GenerateSets.basic h
   choice s hs := Filter.mkOfClosure s (le_antisymm hs <| sets_iff_generate.1 <| le_rfl)
@@ -392,7 +392,7 @@ def giGenerate (α : Type _) : @GaloisInsertion (Set (Set α)) (Filter α)ᵒᵈ
   of elements of the two filters. -/
 instance : HasInf (Filter α) :=
   ⟨fun f g : Filter α =>
-    { Sets := { s | ∃ a ∈ f, ∃ b ∈ g, s = a ∩ b }, univ_sets := ⟨_, univ_mem, _, univ_mem, by simp⟩,
+    { sets := { s | ∃ a ∈ f, ∃ b ∈ g, s = a ∩ b }, univ_sets := ⟨_, univ_mem, _, univ_mem, by simp⟩,
       sets_of_superset := by
         rintro x y ⟨a, ha, b, hb, rfl⟩ xy
         refine'
@@ -408,11 +408,11 @@ theorem mem_inf_iff {f g : Filter α} {s : Set α} : s ∈ f ⊓ g ↔ ∃ t₁ 
 #align filter.mem_inf_iff Filter.mem_inf_iff
 
 theorem mem_inf_of_left {f g : Filter α} {s : Set α} (h : s ∈ f) : s ∈ f ⊓ g :=
-  ⟨s, h, Univ, univ_mem, (inter_univ s).symm⟩
+  ⟨s, h, univ, univ_mem, (inter_univ s).symm⟩
 #align filter.mem_inf_of_left Filter.mem_inf_of_left
 
 theorem mem_inf_of_right {f g : Filter α} {s : Set α} (h : s ∈ g) : s ∈ f ⊓ g :=
-  ⟨Univ, univ_mem, s, h, (univ_inter s).symm⟩
+  ⟨univ, univ_mem, s, h, (univ_inter s).symm⟩
 #align filter.mem_inf_of_right Filter.mem_inf_of_right
 
 theorem inter_mem_inf {α : Type u} {f g : Filter α} {s t : Set α} (hs : s ∈ f) (ht : t ∈ g) : s ∩ t ∈ f ⊓ g :=
@@ -429,7 +429,7 @@ theorem mem_inf_iff_superset {f g : Filter α} {s : Set α} : s ∈ f ⊓ g ↔ 
 #align filter.mem_inf_iff_superset Filter.mem_inf_iff_superset
 
 instance : HasTop (Filter α) :=
-  ⟨{ Sets := { s | ∀ x, x ∈ s }, univ_sets := fun x => mem_univ x, sets_of_superset := fun x y hx hxy a => hxy (hx a),
+  ⟨{ sets := { s | ∀ x, x ∈ s }, univ_sets := fun x => mem_univ x, sets_of_superset := fun x y hx hxy a => hxy (hx a),
       inter_sets := fun x y hx hy a => mem_inter (hx _) (hy _) }⟩
 
 theorem mem_top_iff_forall {s : Set α} : s ∈ (⊤ : Filter α) ↔ ∀ x, x ∈ s :=
@@ -516,19 +516,19 @@ theorem sup_ne_bot {f g : Filter α} : NeBot (f ⊔ g) ↔ NeBot f ∨ NeBot g :
 theorem not_disjoint_self_iff : ¬Disjoint f f ↔ f.ne_bot := by rw [disjoint_self, ne_bot_iff]
 #align filter.not_disjoint_self_iff Filter.not_disjoint_self_iff
 
-theorem bot_sets_eq : (⊥ : Filter α).Sets = univ :=
+theorem bot_sets_eq : (⊥ : Filter α).sets = univ :=
   rfl
 #align filter.bot_sets_eq Filter.bot_sets_eq
 
-theorem sup_sets_eq {f g : Filter α} : (f ⊔ g).Sets = f.Sets ∩ g.Sets :=
+theorem sup_sets_eq {f g : Filter α} : (f ⊔ g).sets = f.sets ∩ g.sets :=
   (giGenerate α).gc.u_inf
 #align filter.sup_sets_eq Filter.sup_sets_eq
 
-theorem Sup_sets_eq {s : Set (Filter α)} : (sup s).Sets = ⋂ f ∈ s, (f : Filter α).Sets :=
+theorem Sup_sets_eq {s : Set (Filter α)} : (sup s).sets = ⋂ f ∈ s, (f : Filter α).sets :=
   (giGenerate α).gc.u_Inf
 #align filter.Sup_sets_eq Filter.Sup_sets_eq
 
-theorem supr_sets_eq {f : ι → Filter α} : (supr f).Sets = ⋂ i, (f i).Sets :=
+theorem supr_sets_eq {f : ι → Filter α} : (supr f).sets = ⋂ i, (f i).sets :=
   (giGenerate α).gc.u_infi
 #align filter.supr_sets_eq Filter.supr_sets_eq
 
@@ -536,7 +536,7 @@ theorem generate_empty : Filter.generate ∅ = (⊤ : Filter α) :=
   (giGenerate α).gc.l_bot
 #align filter.generate_empty Filter.generate_empty
 
-theorem generate_univ : Filter.generate Univ = (⊥ : Filter α) :=
+theorem generate_univ : Filter.generate univ = (⊥ : Filter α) :=
   mk_of_closure_sets.symm
 #align filter.generate_univ Filter.generate_univ
 
@@ -576,7 +576,7 @@ theorem mem_supr {x : Set α} {f : ι → Filter α} : x ∈ supr f ↔ ∀ i, x
 theorem supr_ne_bot {f : ι → Filter α} : (⨆ i, f i).ne_bot ↔ ∃ i, (f i).ne_bot := by simp [ne_bot_iff]
 #align filter.supr_ne_bot Filter.supr_ne_bot
 
-theorem infi_eq_generate (s : ι → Filter α) : infi s = generate (⋃ i, (s i).Sets) :=
+theorem infi_eq_generate (s : ι → Filter α) : infi s = generate (⋃ i, (s i).sets) :=
   show generate _ = generate _ from congr_arg _ <| congr_arg sup <| (range_comp _ _).symm
 #align filter.infi_eq_generate Filter.infi_eq_generate
 
@@ -652,7 +652,7 @@ theorem le_principal_iff {s : Set α} {f : Filter α} : f ≤ 𝓟 s ↔ s ∈ f
   show (∀ {t}, s ⊆ t → t ∈ f) ↔ s ∈ f from ⟨fun h => h (Subset.refl s), fun hs t ht => mem_of_superset hs ht⟩
 #align filter.le_principal_iff Filter.le_principal_iff
 
-theorem Iic_principal (s : Set α) : IicCat (𝓟 s) = { l | s ∈ l } :=
+theorem Iic_principal (s : Set α) : iic (𝓟 s) = { l | s ∈ l } :=
   Set.ext fun x => le_principal_iff
 #align filter.Iic_principal Filter.Iic_principal
 
@@ -674,7 +674,7 @@ theorem join_principal_eq_Sup {s : Set (Filter α)} : join (𝓟 s) = sup s :=
 #align filter.join_principal_eq_Sup Filter.join_principal_eq_Sup
 
 @[simp]
-theorem principal_univ : 𝓟 (Univ : Set α) = ⊤ :=
+theorem principal_univ : 𝓟 (univ : Set α) = ⊤ :=
   top_unique <| by simp only [le_principal_iff, mem_top, eq_self_iff_true]
 #align filter.principal_univ Filter.principal_univ
 
@@ -807,10 +807,10 @@ theorem eq_binfi_of_mem_iff_exists_mem {f : ι → Filter α} {p : ι → Prop} 
   exact h.trans ⟨fun ⟨i, pi, si⟩ => ⟨⟨i, pi⟩, si⟩, fun ⟨⟨i, pi⟩, si⟩ => ⟨i, pi, si⟩⟩
 #align filter.eq_binfi_of_mem_iff_exists_mem Filter.eq_binfi_of_mem_iff_exists_mem
 
-theorem infi_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : Nonempty ι] : (infi f).Sets = ⋃ i, (f i).Sets :=
+theorem infi_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : Nonempty ι] : (infi f).sets = ⋃ i, (f i).sets :=
   let ⟨i⟩ := Ne
   let u :=
-    { Sets := ⋃ i, (f i).Sets, univ_sets := by simp only [mem_Union] <;> exact ⟨i, univ_mem⟩,
+    { sets := ⋃ i, (f i).sets, univ_sets := by simp only [mem_Union] <;> exact ⟨i, univ_mem⟩,
       sets_of_superset := by
         simp only [mem_Union, exists_imp] <;> intro x y i hx hxy <;> exact ⟨i, mem_of_superset hx hxy⟩,
       inter_sets := by
@@ -819,7 +819,7 @@ theorem infi_sets_eq {f : ι → Filter α} (h : Directed (· ≥ ·) f) [ne : N
         rcases h a b with ⟨c, ha, hb⟩
         exact ⟨c, inter_mem (ha hx) (hb hy)⟩ }
   have : u = infi f := eq_infi_of_mem_iff_exists_mem fun s => by simp only [Filter.mem_mk, mem_Union, Filter.mem_sets]
-  congr_arg Filter.Sets this.symm
+  congr_arg Filter.sets this.symm
 #align filter.infi_sets_eq Filter.infi_sets_eq
 
 theorem mem_infi_of_directed {f : ι → Filter α} (h : Directed (· ≥ ·) f) [Nonempty ι] (s) : s ∈ infi f ↔ ∃ i, s ∈ f i :=
@@ -833,18 +833,18 @@ theorem mem_binfi_of_directed {f : β → Filter α} {s : Set β} (h : DirectedO
 #align filter.mem_binfi_of_directed Filter.mem_binfi_of_directed
 
 theorem binfi_sets_eq {f : β → Filter α} {s : Set β} (h : DirectedOn (f ⁻¹'o (· ≥ ·)) s) (ne : s.Nonempty) :
-    (⨅ i ∈ s, f i).Sets = ⋃ i ∈ s, (f i).Sets :=
+    (⨅ i ∈ s, f i).sets = ⋃ i ∈ s, (f i).sets :=
   ext fun t => by simp [mem_binfi_of_directed h Ne]
 #align filter.binfi_sets_eq Filter.binfi_sets_eq
 
-theorem infi_sets_eq_finite {ι : Type _} (f : ι → Filter α) : (⨅ i, f i).Sets = ⋃ t : Finset ι, (⨅ i ∈ t, f i).Sets :=
+theorem infi_sets_eq_finite {ι : Type _} (f : ι → Filter α) : (⨅ i, f i).sets = ⋃ t : Finset ι, (⨅ i ∈ t, f i).sets :=
   by
   rw [infi_eq_infi_finset, infi_sets_eq]
   exact directed_of_sup fun s₁ s₂ => binfi_mono
 #align filter.infi_sets_eq_finite Filter.infi_sets_eq_finite
 
 theorem infi_sets_eq_finite' (f : ι → Filter α) :
-    (⨅ i, f i).Sets = ⋃ t : Finset (PLift ι), (⨅ i ∈ t, f (PLift.down i)).Sets := by
+    (⨅ i, f i).sets = ⋃ t : Finset (PLift ι), (⨅ i ∈ t, f (PLift.down i)).sets := by
   rw [← infi_sets_eq_finite, ← equiv.plift.surjective.infi_comp]
   rfl
 #align filter.infi_sets_eq_finite' Filter.infi_sets_eq_finite'
@@ -953,7 +953,7 @@ theorem infi_ne_bot_iff_of_directed {f : ι → Filter α} [Nonempty α] (hd : D
 #align filter.infi_ne_bot_iff_of_directed Filter.infi_ne_bot_iff_of_directed
 
 @[elab_as_elim]
-theorem infi_sets_induct {f : ι → Filter α} {s : Set α} (hs : s ∈ infi f) {p : Set α → Prop} (uni : p Univ)
+theorem infi_sets_induct {f : ι → Filter α} {s : Set α} (hs : s ∈ infi f) {p : Set α → Prop} (uni : p univ)
     (ins : ∀ {i s₁ s₂}, s₁ ∈ f i → p s₂ → p (s₁ ∩ s₂)) : p s := by
   rw [mem_infi_finite'] at hs
   simp only [← Finset.inf_eq_infi] at hs
@@ -1739,14 +1739,14 @@ section Map
 
 /-- The forward map of a filter -/
 def map (m : α → β) (f : Filter α) : Filter β where
-  Sets := Preimage m ⁻¹' f.Sets
+  sets := Preimage m ⁻¹' f.sets
   univ_sets := univ_mem
   sets_of_superset s t hs st := mem_of_superset hs <| preimage_mono st
   inter_sets s t hs ht := inter_mem hs ht
 #align filter.map Filter.map
 
 @[simp]
-theorem map_principal {s : Set α} {f : α → β} : map f (𝓟 s) = 𝓟 (Set.Image f s) :=
+theorem map_principal {s : Set α} {f : α → β} : map f (𝓟 s) = 𝓟 (Set.image f s) :=
   Filter.ext fun a => image_subset_iff.symm
 #align filter.map_principal Filter.map_principal
 
@@ -1779,7 +1779,7 @@ theorem image_mem_map_iff (hf : Injective m) : m '' s ∈ map m f ↔ s ∈ f :=
   ⟨fun h => by rwa [← preimage_image_eq s hf], image_mem_map⟩
 #align filter.image_mem_map_iff Filter.image_mem_map_iff
 
-theorem range_mem_map : Range m ∈ map m f := by
+theorem range_mem_map : range m ∈ map m f := by
   rw [← image_univ]
   exact image_mem_map univ_mem
 #align filter.range_mem_map Filter.range_mem_map
@@ -1828,8 +1828,8 @@ equivalent conditions hold.
 3. The set `(m '' sᶜ)ᶜ` belongs to `f`, see `filter.mem_comap_iff_compl` and
 `filter.compl_mem_comap`. -/
 def comap (m : α → β) (f : Filter β) : Filter α where
-  Sets := { s | ∃ t ∈ f, m ⁻¹' t ⊆ s }
-  univ_sets := ⟨Univ, univ_mem, by simp only [subset_univ, preimage_univ]⟩
+  sets := { s | ∃ t ∈ f, m ⁻¹' t ⊆ s }
+  univ_sets := ⟨univ, univ_mem, by simp only [subset_univ, preimage_univ]⟩
   sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩
   inter_sets := fun a b ⟨a', ha₁, ha₂⟩ ⟨b', hb₁, hb₂⟩ => ⟨a' ∩ b', inter_mem ha₁ hb₁, inter_subset_inter ha₂ hb₂⟩
 #align filter.comap Filter.comap
@@ -1871,7 +1871,7 @@ def bind (f : Filter α) (m : α → Filter β) : Filter β :=
 /-- The applicative sequentiation operation. This is not induced by the bind operation. -/
 def seq (f : Filter (α → β)) (g : Filter α) : Filter β :=
   ⟨{ s | ∃ u ∈ f, ∃ t ∈ g, ∀ m ∈ u, ∀ x ∈ t, (m : α → β) x ∈ s },
-    ⟨Univ, univ_mem, Univ, univ_mem, by simp only [forall_prop_of_true, mem_univ, forall_true_iff]⟩,
+    ⟨univ, univ_mem, univ, univ_mem, by simp only [forall_prop_of_true, mem_univ, forall_true_iff]⟩,
     fun s₀ s₁ ⟨t₀, t₁, h₀, h₁, h⟩ hst => ⟨t₀, t₁, h₀, h₁, fun x hx y hy => hst <| h _ hx _ hy⟩,
     fun s₀ s₁ ⟨t₀, ht₀, t₁, ht₁, ht⟩ ⟨u₀, hu₀, u₁, hu₁, hu⟩ =>
     ⟨t₀ ∩ u₀, inter_mem ht₀ hu₀, t₁ ∩ u₁, inter_mem ht₁ hu₁, fun x ⟨hx₀, hx₁⟩ x ⟨hy₀, hy₁⟩ =>
@@ -1882,7 +1882,7 @@ def seq (f : Filter (α → β)) (g : Filter α) : Filter β :=
 with this definition we have `s ∈ pure a` defeq `a ∈ s`. -/
 instance : Pure Filter :=
   ⟨fun (α : Type u) x =>
-    { Sets := { s | x ∈ s }, inter_sets := fun s t => And.intro, sets_of_superset := fun s t hs hst => hst hs,
+    { sets := { s | x ∈ s }, inter_sets := fun s t => And.intro, sets_of_superset := fun s t hs hst => hst hs,
       univ_sets := trivial }⟩
 
 instance : Bind Filter :=
@@ -1893,7 +1893,7 @@ instance : Seq Filter :=
 
 instance : Functor Filter where map := @Filter.map
 
-theorem pure_sets (a : α) : (pure a : Filter α).Sets = { s | a ∈ s } :=
+theorem pure_sets (a : α) : (pure a : Filter α).sets = { s | a ∈ s } :=
   rfl
 #align filter.pure_sets Filter.pure_sets
 
@@ -2093,7 +2093,7 @@ theorem map_supr {f : ι → Filter α} : map m (⨆ i, f i) = ⨆ i, map m (f i
 #align filter.map_supr Filter.map_supr
 
 @[simp]
-theorem map_top (f : α → β) : map f ⊤ = 𝓟 (Range f) := by rw [← principal_univ, map_principal, image_univ]
+theorem map_top (f : α → β) : map f ⊤ = 𝓟 (range f) := by rw [← principal_univ, map_principal, image_univ]
 #align filter.map_top Filter.map_top
 
 @[simp]
@@ -2136,7 +2136,7 @@ theorem neBotOfComap (h : (comap m g).ne_bot) : g.ne_bot := by
   exact comap_bot
 #align filter.ne_bot_of_comap Filter.neBotOfComap
 
-theorem comap_inf_principal_range : comap m (g ⊓ 𝓟 (Range m)) = comap m g := by simp
+theorem comap_inf_principal_range : comap m (g ⊓ 𝓟 (range m)) = comap m g := by simp
 #align filter.comap_inf_principal_range Filter.comap_inf_principal_range
 
 theorem disjoint_comap (h : Disjoint g₁ g₂) : Disjoint (comap m g₁) (comap m g₂) := by
@@ -2162,7 +2162,7 @@ theorem comap_sup : comap m (g₁ ⊔ g₂) = comap m g₁ ⊔ comap m g₂ := b
   rw [sup_eq_supr, comap_supr, supr_bool_eq, Bool.cond_true, Bool.cond_false]
 #align filter.comap_sup Filter.comap_sup
 
-theorem map_comap (f : Filter β) (m : α → β) : (f.comap m).map m = f ⊓ 𝓟 (Range m) := by
+theorem map_comap (f : Filter β) (m : α → β) : (f.comap m).map m = f ⊓ 𝓟 (range m) := by
   refine' le_antisymm (le_inf map_comap_le <| le_principal_iff.2 range_mem_map) _
   rintro t' ⟨t, ht, sub⟩
   refine' mem_inf_principal.2 (mem_of_superset ht _)
@@ -2170,7 +2170,7 @@ theorem map_comap (f : Filter β) (m : α → β) : (f.comap m).map m = f ⊓ �
   exact sub hxt
 #align filter.map_comap Filter.map_comap
 
-theorem map_comap_of_mem {f : Filter β} {m : α → β} (hf : Range m ∈ f) : (f.comap m).map m = f := by
+theorem map_comap_of_mem {f : Filter β} {m : α → β} (hf : range m ∈ f) : (f.comap m).map m = f := by
   rw [map_comap, inf_eq_left.2 (le_principal_iff.2 hf)]
 #align filter.map_comap_of_mem Filter.map_comap_of_mem
 
@@ -2179,7 +2179,7 @@ instance canLift (c) (p) [CanLift α β c p] :
       ∀ᶠ x : α in f, p x where prf f hf := ⟨comap c f, map_comap_of_mem <| hf.mono CanLift.prf⟩
 #align filter.can_lift Filter.canLift
 
-theorem comap_le_comap_iff {f g : Filter β} {m : α → β} (hf : Range m ∈ f) : comap m f ≤ comap m g ↔ f ≤ g :=
+theorem comap_le_comap_iff {f g : Filter β} {m : α → β} (hf : range m ∈ f) : comap m f ≤ comap m g ↔ f ≤ g :=
   ⟨fun h => map_comap_of_mem hf ▸ (map_mono h).trans map_comap_le, fun h => comap_mono h⟩
 #align filter.comap_le_comap_iff Filter.comap_le_comap_iff
 
@@ -2202,7 +2202,7 @@ theorem subtype_coe_map_comap_prod (s : Set α) (f : Filter (α × α)) :
   simp [this, map_comap, ← prod_range_range_eq]
 #align filter.subtype_coe_map_comap_prod Filter.subtype_coe_map_comap_prod
 
-theorem image_mem_of_mem_comap {f : Filter α} {c : β → α} (h : Range c ∈ f) {W : Set β} (W_in : W ∈ comap c f) :
+theorem image_mem_of_mem_comap {f : Filter α} {c : β → α} (h : range c ∈ f) {W : Set β} (W_in : W ∈ comap c f) :
     c '' W ∈ f := by
   rw [← map_comap_of_mem h]
   exact image_mem_map W_in
@@ -2219,7 +2219,7 @@ theorem comap_map {f : Filter α} {m : α → β} (h : Injective m) : comap m (m
     le_comap_map
 #align filter.comap_map Filter.comap_map
 
-theorem mem_comap_iff {f : Filter β} {m : α → β} (inj : Injective m) (large : Set.Range m ∈ f) {S : Set α} :
+theorem mem_comap_iff {f : Filter β} {m : α → β} (inj : Injective m) (large : Set.range m ∈ f) {S : Set α} :
     S ∈ comap m f ↔ m '' S ∈ f := by rw [← image_mem_map_iff inj, map_comap_of_mem large]
 #align filter.mem_comap_iff Filter.mem_comap_iff
 
@@ -2256,15 +2256,15 @@ theorem comapNeBot {f : Filter β} {m : α → β} (hm : ∀ t ∈ f, ∃ a, m a
   comap_ne_bot_iff.mpr hm
 #align filter.comap_ne_bot Filter.comapNeBot
 
-theorem comap_ne_bot_iff_frequently {f : Filter β} {m : α → β} : NeBot (comap m f) ↔ ∃ᶠ y in f, y ∈ Range m := by
+theorem comap_ne_bot_iff_frequently {f : Filter β} {m : α → β} : NeBot (comap m f) ↔ ∃ᶠ y in f, y ∈ range m := by
   simp [comap_ne_bot_iff, frequently_iff, ← exists_and_left, and_comm]
 #align filter.comap_ne_bot_iff_frequently Filter.comap_ne_bot_iff_frequently
 
-theorem comap_ne_bot_iff_compl_range {f : Filter β} {m : α → β} : NeBot (comap m f) ↔ Range mᶜ ∉ f :=
+theorem comap_ne_bot_iff_compl_range {f : Filter β} {m : α → β} : NeBot (comap m f) ↔ range mᶜ ∉ f :=
   comap_ne_bot_iff_frequently
 #align filter.comap_ne_bot_iff_compl_range Filter.comap_ne_bot_iff_compl_range
 
-theorem comap_eq_bot_iff_compl_range {f : Filter β} {m : α → β} : comap m f = ⊥ ↔ Range mᶜ ∈ f :=
+theorem comap_eq_bot_iff_compl_range {f : Filter β} {m : α → β} : comap m f = ⊥ ↔ range mᶜ ∈ f :=
   not_iff_not.mp <| ne_bot_iff.symm.trans comap_ne_bot_iff_compl_range
 #align filter.comap_eq_bot_iff_compl_range Filter.comap_eq_bot_iff_compl_range
 
@@ -2276,7 +2276,7 @@ theorem disjoint_comap_iff (h : Surjective m) : Disjoint (comap m g₁) (comap m
   rw [disjoint_iff, disjoint_iff, ← comap_inf, comap_surjective_eq_bot h]
 #align filter.disjoint_comap_iff Filter.disjoint_comap_iff
 
-theorem NeBot.comapOfRangeMem {f : Filter β} {m : α → β} (hf : NeBot f) (hm : Range m ∈ f) : NeBot (comap m f) :=
+theorem NeBot.comapOfRangeMem {f : Filter β} {m : α → β} (hf : NeBot f) (hm : range m ∈ f) : NeBot (comap m f) :=
   comap_ne_bot_iff_frequently.2 <| Eventually.frequently hm
 #align filter.ne_bot.comap_of_range_mem Filter.NeBot.comapOfRangeMem
 
@@ -2375,7 +2375,7 @@ instance mapNeBot [hf : NeBot f] : NeBot (f.map m) :=
   hf.map m
 #align filter.map_ne_bot Filter.mapNeBot
 
-theorem sInter_comap_sets (f : α → β) (F : Filter β) : ⋂₀ (comap f F).Sets = ⋂ U ∈ F, f ⁻¹' U := by
+theorem sInter_comap_sets (f : α → β) (F : Filter β) : ⋂₀ (comap f F).sets = ⋂ U ∈ F, f ⁻¹' U := by
   ext x
   suffices (∀ (A : Set α) (B : Set β), B ∈ F → f ⁻¹' B ⊆ A → x ∈ A) ↔ ∀ B : Set β, B ∈ F → f x ∈ B by
     simp only [mem_sInter, mem_Inter, Filter.mem_sets, mem_comap, this, and_imp, exists_prop, mem_preimage, exists_imp]
@@ -2520,7 +2520,7 @@ theorem mem_seq_def {f : Filter (α → β)} {g : Filter α} {s : Set β} :
   Iff.rfl
 #align filter.mem_seq_def Filter.mem_seq_def
 
-theorem mem_seq_iff {f : Filter (α → β)} {g : Filter α} {s : Set β} : s ∈ f.seq g ↔ ∃ u ∈ f, ∃ t ∈ g, Set.Seq u t ⊆ s :=
+theorem mem_seq_iff {f : Filter (α → β)} {g : Filter α} {s : Set β} : s ∈ f.seq g ↔ ∃ u ∈ f, ∃ t ∈ g, Set.seq u t ⊆ s :=
   by simp only [mem_seq_def, seq_subset, exists_prop, iff_self_iff]
 #align filter.mem_seq_iff Filter.mem_seq_iff
 
@@ -2535,7 +2535,7 @@ theorem seq_mem_seq {f : Filter (α → β)} {g : Filter α} {s : Set (α → β
   ⟨s, hs, t, ht, fun f hf a ha => ⟨f, hf, a, ha, rfl⟩⟩
 #align filter.seq_mem_seq Filter.seq_mem_seq
 
-theorem le_seq {f : Filter (α → β)} {g : Filter α} {h : Filter β} (hh : ∀ t ∈ f, ∀ u ∈ g, Set.Seq t u ∈ h) :
+theorem le_seq {f : Filter (α → β)} {g : Filter α} {h : Filter β} (hh : ∀ t ∈ f, ∀ u ∈ g, Set.seq t u ∈ h) :
     h ≤ seq f g := fun s ⟨t, ht, u, hu, hs⟩ =>
   (mem_of_superset (hh _ ht _ hu)) fun b ⟨m, hm, a, ha, Eq⟩ => Eq ▸ hs _ hm _ ha
 #align filter.le_seq Filter.le_seq
@@ -2870,7 +2870,7 @@ theorem tendsto_comap_iff {f : α → β} {g : β → γ} {a : Filter α} {c : F
   ⟨fun h => tendsto_comap.comp h, fun h => map_le_iff_le_comap.mp <| by rwa [map_map]⟩
 #align filter.tendsto_comap_iff Filter.tendsto_comap_iff
 
-theorem tendsto_comap'_iff {m : α → β} {f : Filter α} {g : Filter β} {i : γ → α} (h : Range i ∈ f) :
+theorem tendsto_comap'_iff {m : α → β} {f : Filter α} {g : Filter β} {i : γ → α} (h : range i ∈ f) :
     Tendsto (m ∘ i) (comap i f) g ↔ Tendsto m f g := by
   rw [tendsto, ← map_compose]
   simp only [(· ∘ ·), map_comap_of_mem h, tendsto]

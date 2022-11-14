@@ -2012,7 +2012,7 @@ theorem NormedRing.tsum_geometric_of_norm_lt_1 (x : R) (h : ∥x∥ < 1) :
 #align normed_ring.tsum_geometric_of_norm_lt_1 NormedRing.tsum_geometric_of_norm_lt_1
 
 theorem geom_series_mul_neg (x : R) (h : ∥x∥ < 1) : (∑' i : ℕ, x ^ i) * (1 - x) = 1 := by
-  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_right (1 - x)
+  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mulRight (1 - x)
   refine' tendsto_nhds_unique this.tendsto_sum_nat _
   have : tendsto (fun n : ℕ => 1 - x ^ n) at_top (𝓝 1) := by
     simpa using tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)
@@ -2022,7 +2022,7 @@ theorem geom_series_mul_neg (x : R) (h : ∥x∥ < 1) : (∑' i : ℕ, x ^ i) * 
 #align geom_series_mul_neg geom_series_mul_neg
 
 theorem mul_neg_geom_series (x : R) (h : ∥x∥ < 1) : ((1 - x) * ∑' i : ℕ, x ^ i) = 1 := by
-  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_left (1 - x)
+  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mulLeft (1 - x)
   refine' tendsto_nhds_unique this.tendsto_sum_nat _
   have : tendsto (fun n : ℕ => 1 - x ^ n) at_top (nhds 1) := by
     simpa using tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)

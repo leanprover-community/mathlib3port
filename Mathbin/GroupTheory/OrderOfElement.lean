@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Julian Kuelshammer
 -/
 import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Nat.Modeq
-import Mathbin.Data.Int.Units
+import Mathbin.Data.Int.Order.Units
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Dynamics.PeriodicPts
 import Mathbin.GroupTheory.Index
@@ -54,14 +54,14 @@ theorem is_periodic_pt_mul_iff_pow_eq_one (x : G) : IsPeriodicPt ((· * ·) x) n
 /-- `is_of_fin_add_order` is a predicate on an element `a` of an additive monoid to be of finite
 order, i.e. there exists `n ≥ 1` such that `n • a = 0`.-/
 def IsOfFinAddOrder (a : A) : Prop :=
-  (0 : A) ∈ PeriodicPts ((· + ·) a)
+  (0 : A) ∈ periodicPts ((· + ·) a)
 #align is_of_fin_add_order IsOfFinAddOrder
 
 /-- `is_of_fin_order` is a predicate on an element `x` of a monoid to be of finite order, i.e. there
 exists `n ≥ 1` such that `x ^ n = 1`.-/
 @[to_additive IsOfFinAddOrder]
 def IsOfFinOrder (x : G) : Prop :=
-  (1 : G) ∈ PeriodicPts ((· * ·) x)
+  (1 : G) ∈ periodicPts ((· * ·) x)
 #align is_of_fin_order IsOfFinOrder
 
 theorem is_of_fin_add_order_of_mul_iff : IsOfFinAddOrder (Additive.ofMul x) ↔ IsOfFinOrder x :=
@@ -361,7 +361,7 @@ theorem pow_injective_of_lt_order_of (hn : n < orderOf x) (hm : m < orderOf x) (
 
 @[to_additive mem_multiples_iff_mem_range_add_order_of']
 theorem mem_powers_iff_mem_range_order_of' [DecidableEq G] (hx : 0 < orderOf x) :
-    y ∈ Submonoid.powers x ↔ y ∈ (Finset.range (orderOf x)).Image ((· ^ ·) x : ℕ → G) :=
+    y ∈ Submonoid.powers x ↔ y ∈ (Finset.range (orderOf x)).image ((· ^ ·) x : ℕ → G) :=
   Finset.mem_range_iff_mem_finset_range_of_mod_eq' hx fun i => pow_eq_mod_order_of.symm
 #align mem_powers_iff_mem_range_order_of' mem_powers_iff_mem_range_order_of'
 
@@ -580,7 +580,7 @@ theorem order_of_pow [Finite G] (x : G) : orderOf (x ^ n) = orderOf x / gcd (ord
 
 @[to_additive mem_multiples_iff_mem_range_add_order_of]
 theorem mem_powers_iff_mem_range_order_of [Finite G] [DecidableEq G] :
-    y ∈ Submonoid.powers x ↔ y ∈ (Finset.range (orderOf x)).Image ((· ^ ·) x : ℕ → G) :=
+    y ∈ Submonoid.powers x ↔ y ∈ (Finset.range (orderOf x)).image ((· ^ ·) x : ℕ → G) :=
   Finset.mem_range_iff_mem_finset_range_of_mod_eq' (order_of_pos x) fun i => pow_eq_mod_order_of.symm
 #align mem_powers_iff_mem_range_order_of mem_powers_iff_mem_range_order_of
 
@@ -662,7 +662,7 @@ theorem powers_eq_zpowers [Finite G] (x : G) : (Submonoid.powers x : Set G) = zp
 
 @[to_additive mem_zmultiples_iff_mem_range_add_order_of]
 theorem mem_zpowers_iff_mem_range_order_of [Finite G] [DecidableEq G] :
-    y ∈ Subgroup.zpowers x ↔ y ∈ (Finset.range (orderOf x)).Image ((· ^ ·) x : ℕ → G) := by
+    y ∈ Subgroup.zpowers x ↔ y ∈ (Finset.range (orderOf x)).image ((· ^ ·) x : ℕ → G) := by
   rw [← mem_powers_iff_mem_zpowers, mem_powers_iff_mem_range_order_of]
 #align mem_zpowers_iff_mem_range_order_of mem_zpowers_iff_mem_range_order_of
 
@@ -826,7 +826,7 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
   have pow_mem : ∀ a : M, a ∈ S → ∀ n : ℕ, a ^ (n + 1) ∈ S := fun a ha =>
     Nat.rec (by rwa [zero_add, pow_one]) fun n ih =>
       (congr_arg₂ (· ∈ ·) (pow_succ a (n + 1)).symm hS2).mp (Set.mul_mem_mul ha ih)
-  { Carrier := S,
+  { carrier := S,
     one_mem' := by
       obtain ⟨a, ha⟩ := hS1
       rw [← pow_order_of_eq_one a, ← tsub_add_cancel_of_le (succ_le_of_lt (order_of_pos a))]
@@ -838,7 +838,7 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
 @[to_additive "A nonempty idempotent subset of a finite add group is a subgroup"]
 def subgroupOfIdempotent {G : Type _} [Group G] [Fintype G] (S : Set G) (hS1 : S.Nonempty) (hS2 : S * S = S) :
     Subgroup G :=
-  { submonoidOfIdempotent S hS1 hS2 with Carrier := S,
+  { submonoidOfIdempotent S hS1 hS2 with carrier := S,
     inv_mem' := fun a ha =>
       show a⁻¹ ∈ submonoidOfIdempotent S hS1 hS2 by
         rw [← one_mul a⁻¹, ← pow_one a, ← pow_order_of_eq_one a, ← pow_sub a (order_of_pos a)]

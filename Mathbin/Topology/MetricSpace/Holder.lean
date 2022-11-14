@@ -72,7 +72,7 @@ theorem Set.Subsingleton.holderOnWith {s : Set X} (hs : s.Subsingleton) (C r : �
   hs.induction_on (holderOnWithEmpty C r f) (holderOnWithSingleton C r f)
 #align set.subsingleton.holder_on_with Set.Subsingleton.holderOnWith
 
-theorem holder_on_with_univ {C r : ℝ≥0} {f : X → Y} : HolderOnWith C r f Univ ↔ HolderWith C r f := by
+theorem holder_on_with_univ {C r : ℝ≥0} {f : X → Y} : HolderOnWith C r f univ ↔ HolderWith C r f := by
   simp only [HolderOnWith, HolderWith, mem_univ, true_imp_iff]
 #align holder_on_with_univ holder_on_with_univ
 
@@ -122,7 +122,7 @@ theorem comp {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg r
 
 theorem compHolderWith {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0} {f : X → Y}
     (hf : HolderWith Cf rf f) (ht : ∀ x, f x ∈ t) : HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
-  holder_on_with_univ.mp <| hg.comp (hf.HolderOnWith Univ) fun x _ => ht x
+  holder_on_with_univ.mp <| hg.comp (hf.HolderOnWith univ) fun x _ => ht x
 #align holder_on_with.comp_holder_with HolderOnWith.compHolderWith
 
 /-- A Hölder continuous function is uniformly continuous -/
@@ -183,22 +183,22 @@ theorem edist_le (h : HolderWith C r f) (x y : X) : edist (f x) (f y) ≤ C * ed
 
 theorem edist_le_of_le (h : HolderWith C r f) {x y : X} {d : ℝ≥0∞} (hd : edist x y ≤ d) :
     edist (f x) (f y) ≤ C * d ^ (r : ℝ) :=
-  (h.HolderOnWith Univ).edist_le_of_le trivial trivial hd
+  (h.HolderOnWith univ).edist_le_of_le trivial trivial hd
 #align holder_with.edist_le_of_le HolderWith.edist_le_of_le
 
 theorem comp {Cg rg : ℝ≥0} {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0} {f : X → Y} (hf : HolderWith Cf rf f) :
     HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
-  (hg.HolderOnWith Univ).compHolderWith hf fun _ => trivial
+  (hg.HolderOnWith univ).compHolderWith hf fun _ => trivial
 #align holder_with.comp HolderWith.comp
 
 theorem compHolderOnWith {Cg rg : ℝ≥0} {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0} {f : X → Y} {s : Set X}
     (hf : HolderOnWith Cf rf f s) : HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s :=
-  (hg.HolderOnWith Univ).comp hf fun _ _ => trivial
+  (hg.HolderOnWith univ).comp hf fun _ _ => trivial
 #align holder_with.comp_holder_on_with HolderWith.compHolderOnWith
 
 /-- A Hölder continuous function is uniformly continuous -/
 protected theorem uniform_continuous (hf : HolderWith C r f) (h0 : 0 < r) : UniformContinuous f :=
-  uniform_continuous_on_univ.mp <| (hf.HolderOnWith Univ).UniformContinuousOn h0
+  uniform_continuous_on_univ.mp <| (hf.HolderOnWith univ).UniformContinuousOn h0
 #align holder_with.uniform_continuous HolderWith.uniform_continuous
 
 protected theorem continuous (hf : HolderWith C r f) (h0 : 0 < r) : Continuous f :=

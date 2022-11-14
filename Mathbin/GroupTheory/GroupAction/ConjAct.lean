@@ -260,7 +260,7 @@ theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (of
 #align conj_act.smul_eq_mul_aut_conj ConjAct.smul_eq_mul_aut_conj
 
 /-- The set of fixed points of the conjugation action of `G` on itself is the center of `G`. -/
-theorem fixed_points_eq_center : FixedPoints (ConjAct G) G = center G := by
+theorem fixed_points_eq_center : fixedPoints (ConjAct G) G = center G := by
   ext x
   simp [mem_center_iff, smul_def, mul_inv_eq_iff_eq_mul]
 #align conj_act.fixed_points_eq_center ConjAct.fixed_points_eq_center

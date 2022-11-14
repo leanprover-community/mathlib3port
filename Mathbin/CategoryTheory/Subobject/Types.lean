@@ -40,7 +40,7 @@ attribute [local instance] subtype_val_mono
 @[simps]
 noncomputable def Types.monoOverEquivalenceSet (α : Type u) : MonoOver α ≌ Set α where
   Functor :=
-    { obj := fun f => Set.Range f.1.Hom,
+    { obj := fun f => Set.range f.1.Hom,
       map := fun f g t =>
         homOfLe
           (by

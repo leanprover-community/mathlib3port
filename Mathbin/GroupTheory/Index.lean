@@ -240,7 +240,7 @@ theorem relindex_self : H.relindex H = 1 := by rw [relindex, subgroup_of_self, i
 #align subgroup.relindex_self Subgroup.relindex_self
 
 @[to_additive]
-theorem index_ker {H} [Group H] (f : G →* H) : f.ker.index = Nat.card (Set.Range f) := by
+theorem index_ker {H} [Group H] (f : G →* H) : f.ker.index = Nat.card (Set.range f) := by
   rw [← MonoidHom.comap_bot, index_comap, relindex_bot_left]
   rfl
 #align subgroup.index_ker Subgroup.index_ker

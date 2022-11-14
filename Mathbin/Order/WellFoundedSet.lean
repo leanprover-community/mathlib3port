@@ -810,7 +810,7 @@ theorem is_wf_empty : IsWf (∅ : Set α) :=
   wellFounded_of_isEmpty _
 #align set.is_wf_empty Set.is_wf_empty
 
-theorem is_wf_univ_iff : IsWf (Univ : Set α) ↔ WellFounded ((· < ·) : α → α → Prop) := by
+theorem is_wf_univ_iff : IsWf (univ : Set α) ↔ WellFounded ((· < ·) : α → α → Prop) := by
   simp [is_wf, well_founded_on_iff]
 #align set.is_wf_univ_iff Set.is_wf_univ_iff
 
@@ -1246,15 +1246,15 @@ variable [Preorder α] {s : Set α} {a : α}
 
 /-- `is_wf.min` returns a minimal element of a nonempty well-founded set. -/
 noncomputable def IsWf.min (hs : IsWf s) (hn : s.Nonempty) : α :=
-  hs.min Univ (nonempty_iff_univ_nonempty.1 hn.to_subtype)
+  hs.min univ (nonempty_iff_univ_nonempty.1 hn.to_subtype)
 #align set.is_wf.min Set.IsWf.min
 
 theorem IsWf.min_mem (hs : IsWf s) (hn : s.Nonempty) : hs.min hn ∈ s :=
-  (WellFounded.min hs Univ (nonempty_iff_univ_nonempty.1 hn.to_subtype)).2
+  (WellFounded.min hs univ (nonempty_iff_univ_nonempty.1 hn.to_subtype)).2
 #align set.is_wf.min_mem Set.IsWf.min_mem
 
 theorem IsWf.not_lt_min (hs : IsWf s) (hn : s.Nonempty) (ha : a ∈ s) : ¬a < hs.min hn :=
-  hs.not_lt_min Univ (nonempty_iff_univ_nonempty.1 hn.to_subtype) (mem_univ (⟨a, ha⟩ : s))
+  hs.not_lt_min univ (nonempty_iff_univ_nonempty.1 hn.to_subtype) (mem_univ (⟨a, ha⟩ : s))
 #align set.is_wf.not_lt_min Set.IsWf.not_lt_min
 
 @[simp]

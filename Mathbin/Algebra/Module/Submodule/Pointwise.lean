@@ -51,7 +51,7 @@ protected def hasPointwiseNeg :
     Neg
       (Submodule R
         M) where neg p :=
-    { -p.toAddSubmonoid with Carrier := -(p : Set M),
+    { -p.toAddSubmonoid with carrier := -(p : Set M),
       smul_mem' := fun r m hm => Set.mem_neg.2 <| smul_neg r m ▸ p.smul_mem r <| Set.mem_neg.1 hm }
 #align submodule.has_pointwise_neg Submodule.hasPointwiseNeg
 

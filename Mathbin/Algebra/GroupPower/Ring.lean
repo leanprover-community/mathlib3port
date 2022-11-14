@@ -6,6 +6,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis
 import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Algebra.GroupWithZero.Units
 import Mathbin.Algebra.Hom.Ring
+import Mathbin.Algebra.Ring.Commute
 import Mathbin.Data.Nat.Order.Lemmas
 
 /-!

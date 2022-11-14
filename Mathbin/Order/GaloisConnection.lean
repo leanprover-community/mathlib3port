@@ -107,11 +107,11 @@ theorem monotone_l : Monotone l :=
   gc.dual.monotone_u.dual
 #align galois_connection.monotone_l GaloisConnection.monotone_l
 
-theorem upper_bounds_l_image (s : Set α) : UpperBounds (l '' s) = u ⁻¹' UpperBounds s :=
-  Set.ext fun b => by simp [UpperBounds, gc _ _]
+theorem upper_bounds_l_image (s : Set α) : upperBounds (l '' s) = u ⁻¹' upperBounds s :=
+  Set.ext fun b => by simp [upperBounds, gc _ _]
 #align galois_connection.upper_bounds_l_image GaloisConnection.upper_bounds_l_image
 
-theorem lower_bounds_u_image (s : Set β) : LowerBounds (u '' s) = l ⁻¹' LowerBounds s :=
+theorem lower_bounds_u_image (s : Set β) : lowerBounds (u '' s) = l ⁻¹' lowerBounds s :=
   gc.dual.upper_bounds_l_image s
 #align galois_connection.lower_bounds_u_image GaloisConnection.lower_bounds_u_image
 
@@ -293,7 +293,7 @@ include gc
 theorem l_supr {f : ι → α} : l (supr f) = ⨆ i, l (f i) :=
   Eq.symm <|
     IsLub.supr_eq <|
-      show IsLub (Range (l ∘ f)) (l (supr f)) by rw [range_comp, ← Sup_range] <;> exact gc.is_lub_l_image (is_lub_Sup _)
+      show IsLub (range (l ∘ f)) (l (supr f)) by rw [range_comp, ← Sup_range] <;> exact gc.is_lub_l_image (is_lub_Sup _)
 #align galois_connection.l_supr GaloisConnection.l_supr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -382,40 +382,40 @@ variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] {f : α 
   {l u : α → β → γ} {l₁ u₁ : β → γ → α} {l₂ u₂ : α → γ → β}
 
 theorem Sup_image2_eq_Sup_Sup (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b)) (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) :
-    sup (Image2 l s t) = l (sup s) (sup t) := by simp_rw [Sup_image2, ← (h₂ _).l_Sup, ← (h₁ _).l_Sup]
+    sup (image2 l s t) = l (sup s) (sup t) := by simp_rw [Sup_image2, ← (h₂ _).l_Sup, ← (h₁ _).l_Sup]
 #align Sup_image2_eq_Sup_Sup Sup_image2_eq_Sup_Sup
 
 theorem Sup_image2_eq_Sup_Inf (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
-    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) : sup (Image2 l s t) = l (sup s) (inf t) :=
+    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) : sup (image2 l s t) = l (sup s) (inf t) :=
   @Sup_image2_eq_Sup_Sup _ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Sup_image2_eq_Sup_Inf Sup_image2_eq_Sup_Inf
 
 theorem Sup_image2_eq_Inf_Sup (h₁ : ∀ b, GaloisConnection (swap l b ∘ of_dual) (to_dual ∘ u₁ b))
-    (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) : sup (Image2 l s t) = l (inf s) (sup t) :=
+    (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) : sup (image2 l s t) = l (inf s) (sup t) :=
   @Sup_image2_eq_Sup_Sup αᵒᵈ _ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Sup_image2_eq_Inf_Sup Sup_image2_eq_Inf_Sup
 
 theorem Sup_image2_eq_Inf_Inf (h₁ : ∀ b, GaloisConnection (swap l b ∘ of_dual) (to_dual ∘ u₁ b))
-    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) : sup (Image2 l s t) = l (inf s) (inf t) :=
+    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) : sup (image2 l s t) = l (inf s) (inf t) :=
   @Sup_image2_eq_Sup_Sup αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Sup_image2_eq_Inf_Inf Sup_image2_eq_Inf_Inf
 
 theorem Inf_image2_eq_Inf_Inf (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b)) (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) :
-    inf (Image2 u s t) = u (inf s) (inf t) := by simp_rw [Inf_image2, ← (h₂ _).u_Inf, ← (h₁ _).u_Inf]
+    inf (image2 u s t) = u (inf s) (inf t) := by simp_rw [Inf_image2, ← (h₂ _).u_Inf, ← (h₁ _).u_Inf]
 #align Inf_image2_eq_Inf_Inf Inf_image2_eq_Inf_Inf
 
 theorem Inf_image2_eq_Inf_Sup (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
-    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) : inf (Image2 u s t) = u (inf s) (sup t) :=
+    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) : inf (image2 u s t) = u (inf s) (sup t) :=
   @Inf_image2_eq_Inf_Inf _ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Inf_image2_eq_Inf_Sup Inf_image2_eq_Inf_Sup
 
 theorem Inf_image2_eq_Sup_Inf (h₁ : ∀ b, GaloisConnection (to_dual ∘ l₁ b) (swap u b ∘ of_dual))
-    (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) : inf (Image2 u s t) = u (sup s) (inf t) :=
+    (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) : inf (image2 u s t) = u (sup s) (inf t) :=
   @Inf_image2_eq_Inf_Inf αᵒᵈ _ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Inf_image2_eq_Sup_Inf Inf_image2_eq_Sup_Inf
 
 theorem Inf_image2_eq_Sup_Sup (h₁ : ∀ b, GaloisConnection (to_dual ∘ l₁ b) (swap u b ∘ of_dual))
-    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) : inf (Image2 u s t) = u (sup s) (sup t) :=
+    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) : inf (image2 u s t) = u (sup s) (sup t) :=
   @Inf_image2_eq_Inf_Inf αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Inf_image2_eq_Sup_Sup Inf_image2_eq_Sup_Sup
 

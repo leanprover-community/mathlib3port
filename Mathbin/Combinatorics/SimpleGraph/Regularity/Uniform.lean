@@ -207,7 +207,7 @@ open Classical
 /-- The pairs of parts of a partition `P` which are not `ε`-uniform in a graph `G`. Note that we
 dismiss the diagonal. We do not care whether `s` is `ε`-uniform with itself. -/
 noncomputable def nonUniforms (ε : 𝕜) : Finset (Finset α × Finset α) :=
-  P.parts.OffDiag.filter fun uv => ¬G.IsUniform ε uv.1 uv.2
+  P.parts.offDiag.filter fun uv => ¬G.IsUniform ε uv.1 uv.2
 #align finpartition.non_uniforms Finpartition.nonUniforms
 
 theorem mk_mem_non_uniforms_iff (u v : Finset α) (ε : 𝕜) :
@@ -262,7 +262,7 @@ variable (P G ε) (s : Finset α)
 
 /-- A choice of witnesses of non-uniformity among the parts of a finpartition. -/
 noncomputable def nonuniformWitnesses : Finset (Finset α) :=
-  (P.parts.filter fun t => s ≠ t ∧ ¬G.IsUniform ε s t).Image (G.nonuniformWitness ε s)
+  (P.parts.filter fun t => s ≠ t ∧ ¬G.IsUniform ε s t).image (G.nonuniformWitness ε s)
 #align finpartition.nonuniform_witnesses Finpartition.nonuniformWitnesses
 
 variable {P G ε s} {t : Finset α}

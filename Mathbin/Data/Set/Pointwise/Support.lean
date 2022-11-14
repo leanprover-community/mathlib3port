@@ -21,13 +21,13 @@ section Group
 
 variable {α β γ : Type _} [Group α] [MulAction α β]
 
-theorem mul_support_comp_inv_smul [One γ] (c : α) (f : β → γ) : (MulSupport fun x => f (c⁻¹ • x)) = c • MulSupport f :=
+theorem mul_support_comp_inv_smul [One γ] (c : α) (f : β → γ) : (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f :=
   by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem, mem_mul_support]
 #align mul_support_comp_inv_smul mul_support_comp_inv_smul
 
-theorem support_comp_inv_smul [Zero γ] (c : α) (f : β → γ) : (Support fun x => f (c⁻¹ • x)) = c • Support f := by
+theorem support_comp_inv_smul [Zero γ] (c : α) (f : β → γ) : (support fun x => f (c⁻¹ • x)) = c • support f := by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem, mem_support]
 #align support_comp_inv_smul support_comp_inv_smul
@@ -41,13 +41,13 @@ section GroupWithZero
 variable {α β γ : Type _} [GroupWithZero α] [MulAction α β]
 
 theorem mul_support_comp_inv_smul₀ [One γ] {c : α} (hc : c ≠ 0) (f : β → γ) :
-    (MulSupport fun x => f (c⁻¹ • x)) = c • MulSupport f := by
+    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f := by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_mul_support]
 #align mul_support_comp_inv_smul₀ mul_support_comp_inv_smul₀
 
 theorem support_comp_inv_smul₀ [Zero γ] {c : α} (hc : c ≠ 0) (f : β → γ) :
-    (Support fun x => f (c⁻¹ • x)) = c • Support f := by
+    (support fun x => f (c⁻¹ • x)) = c • support f := by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_support]
 #align support_comp_inv_smul₀ support_comp_inv_smul₀

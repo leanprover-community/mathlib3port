@@ -141,7 +141,7 @@ theorem of_quotient_stabilizer_mk (g : α) : ofQuotientStabilizer α x (Quotient
 #align mul_action.of_quotient_stabilizer_mk MulAction.of_quotient_stabilizer_mk
 
 @[to_additive]
-theorem of_quotient_stabilizer_mem_orbit (g) : ofQuotientStabilizer α x g ∈ Orbit α x :=
+theorem of_quotient_stabilizer_mem_orbit (g) : ofQuotientStabilizer α x g ∈ orbit α x :=
   (Quotient.inductionOn' g) fun g => ⟨g, rfl⟩
 #align mul_action.of_quotient_stabilizer_mem_orbit MulAction.of_quotient_stabilizer_mem_orbit
 
@@ -162,7 +162,7 @@ theorem injective_of_quotient_stabilizer : Function.Injective (ofQuotientStabili
 
 /-- Orbit-stabilizer theorem. -/
 @[to_additive "Orbit-stabilizer theorem."]
-noncomputable def orbitEquivQuotientStabilizer (b : β) : Orbit α b ≃ α ⧸ stabilizer α b :=
+noncomputable def orbitEquivQuotientStabilizer (b : β) : orbit α b ≃ α ⧸ stabilizer α b :=
   Equiv.symm <|
     Equiv.ofBijective (fun g => ⟨ofQuotientStabilizer α b g, of_quotient_stabilizer_mem_orbit α b g⟩)
       ⟨fun x y hxy => injective_of_quotient_stabilizer α b (by convert congr_arg Subtype.val hxy), fun ⟨b, ⟨g, hgb⟩⟩ =>
@@ -171,15 +171,15 @@ noncomputable def orbitEquivQuotientStabilizer (b : β) : Orbit α b ≃ α ⧸ 
 
 /-- Orbit-stabilizer theorem. -/
 @[to_additive "Orbit-stabilizer theorem."]
-noncomputable def orbitProdStabilizerEquivGroup (b : β) : Orbit α b × stabilizer α b ≃ α :=
+noncomputable def orbitProdStabilizerEquivGroup (b : β) : orbit α b × stabilizer α b ≃ α :=
   (Equiv.prodCongr (orbitEquivQuotientStabilizer α _) (Equiv.refl _)).trans
     Subgroup.groupEquivQuotientTimesSubgroup.symm
 #align mul_action.orbit_prod_stabilizer_equiv_group MulAction.orbitProdStabilizerEquivGroup
 
 /-- Orbit-stabilizer theorem. -/
 @[to_additive "Orbit-stabilizer theorem."]
-theorem card_orbit_mul_card_stabilizer_eq_card_group (b : β) [Fintype α] [Fintype <| Orbit α b]
-    [Fintype <| stabilizer α b] : Fintype.card (Orbit α b) * Fintype.card (stabilizer α b) = Fintype.card α := by
+theorem card_orbit_mul_card_stabilizer_eq_card_group (b : β) [Fintype α] [Fintype <| orbit α b]
+    [Fintype <| stabilizer α b] : Fintype.card (orbit α b) * Fintype.card (stabilizer α b) = Fintype.card α := by
   rw [← Fintype.card_prod, Fintype.card_congr (orbit_prod_stabilizer_equiv_group α b)]
 #align mul_action.card_orbit_mul_card_stabilizer_eq_card_group MulAction.card_orbit_mul_card_stabilizer_eq_card_group
 
@@ -210,7 +210,7 @@ provide `mul_action.self_equiv_sigma_orbits_quotient_stabilizer` as a special ca
 noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β} (hφ : LeftInverse Quotient.mk' φ) :
     β ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) :=
   calc
-    β ≃ Σω : Ω, orbitRel.Quotient.Orbit ω := selfEquivSigmaOrbits' α β
+    β ≃ Σω : Ω, orbitRel.Quotient.orbit ω := selfEquivSigmaOrbits' α β
     _ ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) :=
       Equiv.sigmaCongrRight fun ω =>
         (Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ hφ).trans <| orbitEquivQuotientStabilizer α (φ ω)
@@ -250,18 +250,18 @@ theorem card_eq_sum_card_group_div_card_stabilizer [Fintype α] [Fintype β] [Fi
 `X/G`denotes the quotient of `X` by the relation `orbit_rel G X`. -/
 @[to_additive
       "**Burnside's lemma** : a (noncomputable) bijection between the disjoint union of all\n`{x ∈ X | g • x = x}` for `g ∈ G` and the product `G × X/G`, where `G` is an additive group acting\non `X` and `X/G`denotes the quotient of `X` by the relation `orbit_rel G X`. "]
-noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σa : α, FixedBy α β a) ≃ Ω × α :=
+noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σa : α, fixedBy α β a) ≃ Ω × α :=
   calc
-    (Σa : α, FixedBy α β a) ≃ { ab : α × β // ab.1 • ab.2 = ab.2 } := (Equiv.subtypeProdEquivSigmaSubtype _).symm
+    (Σa : α, fixedBy α β a) ≃ { ab : α × β // ab.1 • ab.2 = ab.2 } := (Equiv.subtypeProdEquivSigmaSubtype _).symm
     _ ≃ { ba : β × α // ba.2 • ba.1 = ba.1 } := (Equiv.prodComm α β).subtypeEquiv fun ab => Iff.rfl
     _ ≃ Σb : β, stabilizer α b := Equiv.subtypeProdEquivSigmaSubtype fun (b : β) a => a ∈ stabilizer α b
-    _ ≃ Σωb : Σω : Ω, Orbit α ω.out', stabilizer α (ωb.2 : β) := (selfEquivSigmaOrbits α β).sigmaCongrLeft'
-    _ ≃ Σω : Ω, Σb : Orbit α ω.out', stabilizer α (b : β) :=
-      Equiv.sigmaAssoc fun (ω : Ω) (b : Orbit α ω.out') => stabilizer α (b : β)
-    _ ≃ Σω : Ω, Σb : Orbit α ω.out', stabilizer α ω.out' :=
+    _ ≃ Σωb : Σω : Ω, orbit α ω.out', stabilizer α (ωb.2 : β) := (selfEquivSigmaOrbits α β).sigmaCongrLeft'
+    _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α (b : β) :=
+      Equiv.sigmaAssoc fun (ω : Ω) (b : orbit α ω.out') => stabilizer α (b : β)
+    _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α ω.out' :=
       Equiv.sigmaCongrRight fun ω =>
         Equiv.sigmaCongrRight fun ⟨b, hb⟩ => (stabilizerEquivStabilizerOfOrbitRel hb).toEquiv
-    _ ≃ Σω : Ω, Orbit α ω.out' × stabilizer α ω.out' := Equiv.sigmaCongrRight fun ω => Equiv.sigmaEquivProd _ _
+    _ ≃ Σω : Ω, orbit α ω.out' × stabilizer α ω.out' := Equiv.sigmaCongrRight fun ω => Equiv.sigmaEquivProd _ _
     _ ≃ Σω : Ω, α := Equiv.sigmaCongrRight fun ω => orbitProdStabilizerEquivGroup α ω.out'
     _ ≃ Ω × α := Equiv.sigmaEquivProd Ω α
     
@@ -271,8 +271,8 @@ noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σa : α, FixedBy α β a)
 elements fixed by each `g ∈ G` is the number of orbits. -/
 @[to_additive
       "**Burnside's lemma** : given a finite additive group `G` acting on a set `X`,\nthe average number of elements fixed by each `g ∈ G` is the number of orbits. "]
-theorem sum_card_fixed_by_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fintype <| FixedBy α β a] [Fintype Ω] :
-    (∑ a : α, Fintype.card (FixedBy α β a)) = Fintype.card Ω * Fintype.card α := by
+theorem sum_card_fixed_by_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fintype <| fixedBy α β a] [Fintype Ω] :
+    (∑ a : α, Fintype.card (fixedBy α β a)) = Fintype.card Ω * Fintype.card α := by
   rw [← Fintype.card_prod, ← Fintype.card_sigma, Fintype.card_congr (sigma_fixed_by_equiv_orbits_prod_group α β)]
 #align
   mul_action.sum_card_fixed_by_eq_card_orbits_mul_card_group MulAction.sum_card_fixed_by_eq_card_orbits_mul_card_group

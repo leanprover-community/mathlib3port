@@ -112,9 +112,9 @@ such that `F.map f (u j) = u j` for every morphism `f : j ⟶ j'`.
 
 We later use these to define limits in `Type` and in many concrete categories.
 -/
-def Sections (F : J ⥤ Type w) : Set (∀ j, F.obj j) :=
+def sections (F : J ⥤ Type w) : Set (∀ j, F.obj j) :=
   { u | ∀ {j j'} (f : j ⟶ j'), F.map f (u j) = u j' }
-#align category_theory.functor.sections CategoryTheory.Functor.Sections
+#align category_theory.functor.sections CategoryTheory.Functor.sections
 
 end Functor
 

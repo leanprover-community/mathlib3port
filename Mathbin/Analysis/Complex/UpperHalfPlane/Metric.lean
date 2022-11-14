@@ -167,7 +167,7 @@ theorem center_zero (z : ℍ) : center z 0 = z :=
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr two_ne_zero, ",", expr im_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem dist_coe_center_sq (z w : ℍ) (r : ℝ) :
-    dist (z : ℂ) (w.Center r) ^ 2 = 2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2 := by
+    dist (z : ℂ) (w.center r) ^ 2 = 2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2 := by
   have H : 2 * z.im * w.im ≠ 0 := by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr two_ne_zero, \",\", expr im_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
@@ -177,12 +177,12 @@ theorem dist_coe_center_sq (z w : ℍ) (r : ℝ) :
 #align upper_half_plane.dist_coe_center_sq UpperHalfPlane.dist_coe_center_sq
 
 theorem dist_coe_center (z w : ℍ) (r : ℝ) :
-    dist (z : ℂ) (w.Center r) = sqrt (2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2) := by
+    dist (z : ℂ) (w.center r) = sqrt (2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2) := by
   rw [← sqrt_sq dist_nonneg, dist_coe_center_sq]
 #align upper_half_plane.dist_coe_center UpperHalfPlane.dist_coe_center
 
 theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
-    Cmp (dist z w) r = Cmp (dist (z : ℂ) (w.Center r)) (w.im * sinh r) := by
+    Cmp (dist z w) r = Cmp (dist (z : ℂ) (w.center r)) (w.im * sinh r) := by
   letI := metric_space_aux
   cases' lt_or_le r 0 with hr₀ hr₀
   · trans Ordering.gt
@@ -196,34 +196,34 @@ theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
   rw [← cmp_mul_pos_left hzw₀, ← cmp_sub_zero, ← mul_sub, ← cmp_add_right, zero_add]
 #align upper_half_plane.cmp_dist_eq_cmp_dist_coe_center UpperHalfPlane.cmp_dist_eq_cmp_dist_coe_center
 
-theorem dist_eq_iff_dist_coe_center_eq : dist z w = r ↔ dist (z : ℂ) (w.Center r) = w.im * sinh r :=
+theorem dist_eq_iff_dist_coe_center_eq : dist z w = r ↔ dist (z : ℂ) (w.center r) = w.im * sinh r :=
   eq_iff_eq_of_cmp_eq_cmp (cmp_dist_eq_cmp_dist_coe_center z w r)
 #align upper_half_plane.dist_eq_iff_dist_coe_center_eq UpperHalfPlane.dist_eq_iff_dist_coe_center_eq
 
 @[simp]
-theorem dist_self_center (z : ℍ) (r : ℝ) : dist (z : ℂ) (z.Center r) = z.im * (cosh r - 1) := by
+theorem dist_self_center (z : ℍ) (r : ℝ) : dist (z : ℂ) (z.center r) = z.im * (cosh r - 1) := by
   rw [dist_of_re_eq (z.center_re r).symm, dist_comm, Real.dist_eq, mul_sub, mul_one]
   exact abs_of_nonneg (sub_nonneg.2 <| le_mul_of_one_le_right z.im_pos.le (one_le_cosh _))
 #align upper_half_plane.dist_self_center UpperHalfPlane.dist_self_center
 
 @[simp]
-theorem dist_center_dist (z w : ℍ) : dist (z : ℂ) (w.Center (dist z w)) = w.im * sinh (dist z w) :=
+theorem dist_center_dist (z w : ℍ) : dist (z : ℂ) (w.center (dist z w)) = w.im * sinh (dist z w) :=
   dist_eq_iff_dist_coe_center_eq.1 rfl
 #align upper_half_plane.dist_center_dist UpperHalfPlane.dist_center_dist
 
-theorem dist_lt_iff_dist_coe_center_lt : dist z w < r ↔ dist (z : ℂ) (w.Center r) < w.im * sinh r :=
+theorem dist_lt_iff_dist_coe_center_lt : dist z w < r ↔ dist (z : ℂ) (w.center r) < w.im * sinh r :=
   lt_iff_lt_of_cmp_eq_cmp (cmp_dist_eq_cmp_dist_coe_center z w r)
 #align upper_half_plane.dist_lt_iff_dist_coe_center_lt UpperHalfPlane.dist_lt_iff_dist_coe_center_lt
 
-theorem lt_dist_iff_lt_dist_coe_center : r < dist z w ↔ w.im * sinh r < dist (z : ℂ) (w.Center r) :=
+theorem lt_dist_iff_lt_dist_coe_center : r < dist z w ↔ w.im * sinh r < dist (z : ℂ) (w.center r) :=
   lt_iff_lt_of_cmp_eq_cmp (cmp_eq_cmp_symm.1 <| cmp_dist_eq_cmp_dist_coe_center z w r)
 #align upper_half_plane.lt_dist_iff_lt_dist_coe_center UpperHalfPlane.lt_dist_iff_lt_dist_coe_center
 
-theorem dist_le_iff_dist_coe_center_le : dist z w ≤ r ↔ dist (z : ℂ) (w.Center r) ≤ w.im * sinh r :=
+theorem dist_le_iff_dist_coe_center_le : dist z w ≤ r ↔ dist (z : ℂ) (w.center r) ≤ w.im * sinh r :=
   le_iff_le_of_cmp_eq_cmp (cmp_dist_eq_cmp_dist_coe_center z w r)
 #align upper_half_plane.dist_le_iff_dist_coe_center_le UpperHalfPlane.dist_le_iff_dist_coe_center_le
 
-theorem le_dist_iff_le_dist_coe_center : r < dist z w ↔ w.im * sinh r < dist (z : ℂ) (w.Center r) :=
+theorem le_dist_iff_le_dist_coe_center : r < dist z w ↔ w.im * sinh r < dist (z : ℂ) (w.center r) :=
   lt_iff_lt_of_cmp_eq_cmp (cmp_eq_cmp_symm.1 <| cmp_dist_eq_cmp_dist_coe_center z w r)
 #align upper_half_plane.le_dist_iff_le_dist_coe_center UpperHalfPlane.le_dist_iff_le_dist_coe_center
 
@@ -269,7 +269,7 @@ theorem im_div_exp_dist_le (z w : ℍ) : z.im / exp (dist z w) ≤ w.im :=
 and the imaginary part of one of the points. -/
 theorem dist_coe_le (z w : ℍ) : dist (z : ℂ) w ≤ w.im * (exp (dist z w) - 1) :=
   calc
-    dist (z : ℂ) w ≤ dist (z : ℂ) (w.Center (dist z w)) + dist (w : ℂ) (w.Center (dist z w)) :=
+    dist (z : ℂ) w ≤ dist (z : ℂ) (w.center (dist z w)) + dist (w : ℂ) (w.center (dist z w)) :=
       dist_triangle_right _ _ _
     _ = w.im * (exp (dist z w) - 1) := by
       rw [dist_center_dist, dist_self_center, ← mul_add, ← add_sub_assoc, Real.sinh_add_cosh]
@@ -280,7 +280,7 @@ theorem dist_coe_le (z w : ℍ) : dist (z : ℂ) w ≤ w.im * (exp (dist z w) - 
 and the imaginary part of one of the points. -/
 theorem le_dist_coe (z w : ℍ) : w.im * (1 - exp (-dist z w)) ≤ dist (z : ℂ) w :=
   calc
-    w.im * (1 - exp (-dist z w)) = dist (z : ℂ) (w.Center (dist z w)) - dist (w : ℂ) (w.Center (dist z w)) := by
+    w.im * (1 - exp (-dist z w)) = dist (z : ℂ) (w.center (dist z w)) - dist (w : ℂ) (w.center (dist z w)) := by
       rw [dist_center_dist, dist_self_center, ← Real.cosh_sub_sinh]
       ring
     _ ≤ dist (z : ℂ) w := sub_le_iff_le_add.2 <| dist_triangle _ _ _
@@ -314,14 +314,14 @@ instance : MetricSpace ℍ :=
 theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ} (h : dist w (center z r) ≤ z.im * sinh r) : 0 < w.im :=
   calc
     0 < z.im * (cosh r - sinh r) := mul_pos z.im_pos (sub_pos.2 <| sinh_lt_cosh _)
-    _ = (z.Center r).im - z.im * sinh r := mul_sub _ _ _
-    _ ≤ (z.Center r).im - dist (z.Center r : ℂ) w := sub_le_sub_left (by rwa [dist_comm]) _
-    _ ≤ w.im := sub_le_comm.1 <| (le_abs_self _).trans (abs_im_le_abs <| z.Center r - w)
+    _ = (z.center r).im - z.im * sinh r := mul_sub _ _ _
+    _ ≤ (z.center r).im - dist (z.center r : ℂ) w := sub_le_sub_left (by rwa [dist_comm]) _
+    _ ≤ w.im := sub_le_comm.1 <| (le_abs_self _).trans (abs_im_le_abs <| z.center r - w)
     
 #align upper_half_plane.im_pos_of_dist_center_le UpperHalfPlane.im_pos_of_dist_center_le
 
 theorem image_coe_closed_ball (z : ℍ) (r : ℝ) :
-    (coe : ℍ → ℂ) '' ClosedBall z r = ClosedBall (z.Center r) (z.im * sinh r) := by
+    (coe : ℍ → ℂ) '' closedBall z r = closedBall (z.center r) (z.im * sinh r) := by
   ext w
   constructor
   · rintro ⟨w, hw, rfl⟩
@@ -333,7 +333,7 @@ theorem image_coe_closed_ball (z : ℍ) (r : ℝ) :
     
 #align upper_half_plane.image_coe_closed_ball UpperHalfPlane.image_coe_closed_ball
 
-theorem image_coe_ball (z : ℍ) (r : ℝ) : (coe : ℍ → ℂ) '' Ball z r = Ball (z.Center r) (z.im * sinh r) := by
+theorem image_coe_ball (z : ℍ) (r : ℝ) : (coe : ℍ → ℂ) '' ball z r = ball (z.center r) (z.im * sinh r) := by
   ext w
   constructor
   · rintro ⟨w, hw, rfl⟩
@@ -345,7 +345,7 @@ theorem image_coe_ball (z : ℍ) (r : ℝ) : (coe : ℍ → ℂ) '' Ball z r = B
     
 #align upper_half_plane.image_coe_ball UpperHalfPlane.image_coe_ball
 
-theorem image_coe_sphere (z : ℍ) (r : ℝ) : (coe : ℍ → ℂ) '' Sphere z r = Sphere (z.Center r) (z.im * sinh r) := by
+theorem image_coe_sphere (z : ℍ) (r : ℝ) : (coe : ℍ → ℂ) '' sphere z r = sphere (z.center r) (z.im * sinh r) := by
   ext w
   constructor
   · rintro ⟨w, hw, rfl⟩

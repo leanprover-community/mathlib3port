@@ -86,7 +86,7 @@ section Mul
 variable [Mul α]
 
 instance : NonUnitalNonAssocSemiring (SetSemiring α) :=
-  { SetSemiring.addCommMonoid with mul := fun s t => (Image2 (· * ·) s.down t.down).up, zero_mul := fun s => empty_mul,
+  { SetSemiring.addCommMonoid with mul := fun s t => (image2 (· * ·) s.down t.down).up, zero_mul := fun s => empty_mul,
     mul_zero := fun s => mul_empty, left_distrib := fun _ _ _ => mul_union, right_distrib := fun _ _ _ => union_mul }
 
 instance : NoZeroDivisors (SetSemiring α) :=
@@ -124,7 +124,7 @@ instance [CommMonoid α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
 /-- The image of a set under a multiplicative homomorphism is a ring homomorphism
 with respect to the pointwise operations on sets. -/
 def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) : SetSemiring α →+* SetSemiring β where
-  toFun := Image f
+  toFun := image f
   map_zero' := image_empty _
   map_one' := by rw [image_one, map_one, singleton_one]
   map_add' := image_union _

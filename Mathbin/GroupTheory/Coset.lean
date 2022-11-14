@@ -45,28 +45,28 @@ open Set Function
 variable {α : Type _}
 
 /-- The left coset `a * s` for an element `a : α` and a subset `s : set α` -/
-@[to_additive LeftAddCoset "The left coset `a+s` for an element `a : α`\nand a subset `s : set α`"]
-def LeftCoset [Mul α] (a : α) (s : Set α) : Set α :=
+@[to_additive leftAddCoset "The left coset `a+s` for an element `a : α`\nand a subset `s : set α`"]
+def leftCoset [Mul α] (a : α) (s : Set α) : Set α :=
   (fun x => a * x) '' s
-#align left_coset LeftCoset
+#align left_coset leftCoset
 
 /-- The right coset `s * a` for an element `a : α` and a subset `s : set α` -/
-@[to_additive RightAddCoset "The right coset `s+a` for an element `a : α`\nand a subset `s : set α`"]
-def RightCoset [Mul α] (s : Set α) (a : α) : Set α :=
+@[to_additive rightAddCoset "The right coset `s+a` for an element `a : α`\nand a subset `s : set α`"]
+def rightCoset [Mul α] (s : Set α) (a : α) : Set α :=
   (fun x => x * a) '' s
-#align right_coset RightCoset
+#align right_coset rightCoset
 
 -- mathport name: left_coset
-localized [Coset] infixl:70 " *l " => LeftCoset
+localized [Coset] infixl:70 " *l " => leftCoset
 
 -- mathport name: left_add_coset
-localized [Coset] infixl:70 " +l " => LeftAddCoset
+localized [Coset] infixl:70 " +l " => leftAddCoset
 
 -- mathport name: right_coset
-localized [Coset] infixl:70 " *r " => RightCoset
+localized [Coset] infixl:70 " *r " => rightCoset
 
 -- mathport name: right_add_coset
-localized [Coset] infixl:70 " +r " => RightAddCoset
+localized [Coset] infixl:70 " +r " => rightAddCoset
 
 section CosetMul
 
@@ -112,17 +112,17 @@ variable [Semigroup α]
 
 @[simp, to_additive left_add_coset_assoc]
 theorem left_coset_assoc (s : Set α) (a b : α) : a *l (b *l s) = a * b *l s := by
-  simp [LeftCoset, RightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
+  simp [leftCoset, rightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
 #align left_coset_assoc left_coset_assoc
 
 @[simp, to_additive right_add_coset_assoc]
 theorem right_coset_assoc (s : Set α) (a b : α) : s *r a *r b = s *r (a * b) := by
-  simp [LeftCoset, RightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
+  simp [leftCoset, rightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
 #align right_coset_assoc right_coset_assoc
 
 @[to_additive left_add_coset_right_add_coset]
 theorem left_coset_right_coset (s : Set α) (a b : α) : a *l s *r b = a *l (s *r b) := by
-  simp [LeftCoset, RightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
+  simp [leftCoset, rightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
 #align left_coset_right_coset left_coset_right_coset
 
 end CosetSemigroup
@@ -133,12 +133,12 @@ variable [Monoid α] (s : Set α)
 
 @[simp, to_additive zero_left_add_coset]
 theorem one_left_coset : 1 *l s = s :=
-  Set.ext <| by simp [LeftCoset]
+  Set.ext <| by simp [leftCoset]
 #align one_left_coset one_left_coset
 
 @[simp, to_additive right_add_coset_zero]
 theorem right_coset_one : s *r 1 = s :=
-  Set.ext <| by simp [RightCoset]
+  Set.ext <| by simp [rightCoset]
 #align right_coset_one right_coset_one
 
 end CosetMonoid
@@ -206,17 +206,17 @@ theorem right_coset_mem_right_coset {a : α} (ha : a ∈ s) : (s : Set α) *r a 
 #align right_coset_mem_right_coset right_coset_mem_right_coset
 
 @[to_additive]
-theorem orbit_subgroup_eq_right_coset (a : α) : MulAction.Orbit s a = s *r a :=
+theorem orbit_subgroup_eq_right_coset (a : α) : MulAction.orbit s a = s *r a :=
   Set.ext fun b => ⟨fun ⟨c, d⟩ => ⟨c, c.2, d⟩, fun ⟨c, d, e⟩ => ⟨⟨c, d⟩, e⟩⟩
 #align orbit_subgroup_eq_right_coset orbit_subgroup_eq_right_coset
 
 @[to_additive]
-theorem orbit_subgroup_eq_self_of_mem {a : α} (ha : a ∈ s) : MulAction.Orbit s a = s :=
+theorem orbit_subgroup_eq_self_of_mem {a : α} (ha : a ∈ s) : MulAction.orbit s a = s :=
   (orbit_subgroup_eq_right_coset s a).trans (right_coset_mem_right_coset s ha)
 #align orbit_subgroup_eq_self_of_mem orbit_subgroup_eq_self_of_mem
 
 @[to_additive]
-theorem orbit_subgroup_one_eq_self : MulAction.Orbit s (1 : α) = s :=
+theorem orbit_subgroup_one_eq_self : MulAction.orbit s (1 : α) = s :=
   orbit_subgroup_eq_self_of_mem s s.one_mem
 #align orbit_subgroup_one_eq_self orbit_subgroup_one_eq_self
 
@@ -236,7 +236,7 @@ theorem normal_iff_eq_cosets : s.Normal ↔ ∀ g : α, g *l s = s *r g :=
 #align normal_iff_eq_cosets normal_iff_eq_cosets
 
 @[to_additive left_add_coset_eq_iff]
-theorem left_coset_eq_iff {x y : α} : LeftCoset x s = LeftCoset y s ↔ x⁻¹ * y ∈ s := by
+theorem left_coset_eq_iff {x y : α} : leftCoset x s = leftCoset y s ↔ x⁻¹ * y ∈ s := by
   rw [Set.ext_iff]
   simp_rw [mem_left_coset_iff, SetLike.mem_coe]
   constructor
@@ -253,7 +253,7 @@ theorem left_coset_eq_iff {x y : α} : LeftCoset x s = LeftCoset y s ↔ x⁻¹ 
 #align left_coset_eq_iff left_coset_eq_iff
 
 @[to_additive right_add_coset_eq_iff]
-theorem right_coset_eq_iff {x y : α} : RightCoset (↑s) x = RightCoset s y ↔ y * x⁻¹ ∈ s := by
+theorem right_coset_eq_iff {x y : α} : rightCoset (↑s) x = rightCoset s y ↔ y * x⁻¹ ∈ s := by
   rw [Set.ext_iff]
   simp_rw [mem_right_coset_iff, SetLike.mem_coe]
   constructor
@@ -490,7 +490,7 @@ theorem mk_mul_of_mem (g₁ g₂ : α) (hg₂ : g₂ ∈ s) : (mk (g₁ * g₂) 
 #align quotient_group.mk_mul_of_mem QuotientGroup.mk_mul_of_mem
 
 @[to_additive]
-theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x : α | (x : α ⧸ s) = g } = LeftCoset g s :=
+theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x : α | (x : α ⧸ s) = g } = leftCoset g s :=
   Set.ext fun z => by rw [mem_left_coset_iff, Set.mem_set_of_eq, eq_comm, QuotientGroup.eq, SetLike.mem_coe]
 #align quotient_group.eq_class_eq_left_coset QuotientGroup.eq_class_eq_left_coset
 
@@ -513,14 +513,14 @@ variable [Group α] {s : Subgroup α}
 
 /-- The natural bijection between a left coset `g * s` and `s`. -/
 @[to_additive "The natural bijection between the cosets `g + s` and `s`."]
-def leftCosetEquivSubgroup (g : α) : LeftCoset g s ≃ s :=
+def leftCosetEquivSubgroup (g : α) : leftCoset g s ≃ s :=
   ⟨fun x => ⟨g⁻¹ * x.1, (mem_left_coset_iff _).1 x.2⟩, fun x => ⟨g * x.1, x.1, x.2, rfl⟩, fun ⟨x, hx⟩ =>
     Subtype.eq <| by simp, fun ⟨g, hg⟩ => Subtype.eq <| by simp⟩
 #align subgroup.left_coset_equiv_subgroup Subgroup.leftCosetEquivSubgroup
 
 /-- The natural bijection between a right coset `s * g` and `s`. -/
 @[to_additive "The natural bijection between the cosets `s + g` and `s`."]
-def rightCosetEquivSubgroup (g : α) : RightCoset (↑s) g ≃ s :=
+def rightCosetEquivSubgroup (g : α) : rightCoset (↑s) g ≃ s :=
   ⟨fun x => ⟨x.1 * g⁻¹, (mem_right_coset_iff _).1 x.2⟩, fun x => ⟨x.1 * g, x.1, x.2, rfl⟩, fun ⟨x, hx⟩ =>
     Subtype.eq <| by simp, fun ⟨g, hg⟩ => Subtype.eq <| by simp⟩
 #align subgroup.right_coset_equiv_subgroup Subgroup.rightCosetEquivSubgroup
@@ -530,7 +530,7 @@ def rightCosetEquivSubgroup (g : α) : RightCoset (↑s) g ≃ s :=
 noncomputable def groupEquivQuotientTimesSubgroup : α ≃ (α ⧸ s) × s :=
   calc
     α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equiv.sigmaFiberEquiv QuotientGroup.mk).symm
-    _ ≃ ΣL : α ⧸ s, LeftCoset (Quotient.out' L) s :=
+    _ ≃ ΣL : α ⧸ s, leftCoset (Quotient.out' L) s :=
       Equiv.sigmaCongrRight fun L => by
         rw [← eq_class_eq_left_coset]
         show

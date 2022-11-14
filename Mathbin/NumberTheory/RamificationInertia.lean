@@ -425,7 +425,7 @@ theorem finrank_quotient_map [IsDomain R] [IsDomain S] [IsDedekindDomain R] [Alg
   -- and spans the whole of `Frac(S)`.
   let b'' : ι → L := algebraMap S L ∘ b'
   have b''_li : LinearIndependent _ b'' := _
-  have b''_sp : Submodule.span _ (Set.Range b'') = ⊤ := _
+  have b''_sp : Submodule.span _ (Set.range b'') = ⊤ := _
   -- Since the two bases have the same index set, the spaces have the same dimension.
   let c : Basis ι K L := Basis.mk b''_li b''_sp.ge
   rw [finrank_eq_card_basis b, finrank_eq_card_basis c]
@@ -439,7 +439,7 @@ theorem finrank_quotient_map [IsDomain R] [IsDomain S] [IsDedekindDomain R] [Alg
     intro x hx
     have mem_span_b :
       ((Submodule.mkq (map (algebraMap R S) p)) x : S ⧸ map (algebraMap R S) p) ∈
-        Submodule.span (R ⧸ p) (Set.Range b) :=
+        Submodule.span (R ⧸ p) (Set.range b) :=
       b.mem_span _
     rw [← @Submodule.restrict_scalars_mem R,
       Algebra.span_restrict_scalars_eq_span_of_surjective

@@ -77,7 +77,7 @@ variable {α α' β β' γ E : Type _}
 /- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 /-- Rectangles formed by π-systems form a π-system. -/
 theorem IsPiSystem.prod {C : Set (Set α)} {D : Set (Set β)} (hC : IsPiSystem C) (hD : IsPiSystem D) :
-    IsPiSystem (Image2 (· ×ˢ ·) C D) := by
+    IsPiSystem (image2 (· ×ˢ ·) C D) := by
   rintro _ ⟨s₁, t₁, hs₁, ht₁, rfl⟩ _ ⟨s₂, t₂, hs₂, ht₂, rfl⟩ hst
   rw [prod_inter_prod] at hst⊢
   rw [prod_nonempty_iff] at hst
@@ -88,7 +88,7 @@ theorem IsPiSystem.prod {C : Set (Set α)} {D : Set (Set β)} (hC : IsPiSystem C
 /- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 /-- Rectangles of countably spanning sets are countably spanning. -/
 theorem IsCountablySpanning.prod {C : Set (Set α)} {D : Set (Set β)} (hC : IsCountablySpanning C)
-    (hD : IsCountablySpanning D) : IsCountablySpanning (Image2 (· ×ˢ ·) C D) := by
+    (hD : IsCountablySpanning D) : IsCountablySpanning (image2 (· ×ˢ ·) C D) := by
   rcases hC, hD with ⟨⟨s, h1s, h2s⟩, t, h1t, h2t⟩
   refine' ⟨fun n => s n.unpair.1 ×ˢ t n.unpair.2, fun n => mem_image2_of_mem (h1s _) (h1t _), _⟩
   rw [Union_unpair_prod, h2s, h2t, univ_prod_univ]
@@ -115,7 +115,7 @@ along one of the variables (using either the Lebesgue or Bochner integral) is me
   are countably spanning. -/
 theorem generate_from_prod_eq {α β} {C : Set (Set α)} {D : Set (Set β)} (hC : IsCountablySpanning C)
     (hD : IsCountablySpanning D) :
-    @Prod.measurableSpace _ _ (generateFrom C) (generateFrom D) = generateFrom (Image2 (· ×ˢ ·) C D) := by
+    @Prod.measurableSpace _ _ (generateFrom C) (generateFrom D) = generateFrom (image2 (· ×ˢ ·) C D) := by
   apply le_antisymm
   · refine' sup_le _ _ <;> rw [comap_generate_from] <;> apply generate_from_le <;> rintro _ ⟨s, hs, rfl⟩
     · rcases hD with ⟨t, h1t, h2t⟩
@@ -149,14 +149,14 @@ theorem generate_from_prod_eq {α β} {C : Set (Set α)} {D : Set (Set β)} (hC 
   generate the σ-algebra on `α × β`. -/
 theorem generate_from_eq_prod {C : Set (Set α)} {D : Set (Set β)} (hC : generateFrom C = ‹_›)
     (hD : generateFrom D = ‹_›) (h2C : IsCountablySpanning C) (h2D : IsCountablySpanning D) :
-    generateFrom (Image2 (· ×ˢ ·) C D) = Prod.measurableSpace := by rw [← hC, ← hD, generate_from_prod_eq h2C h2D]
+    generateFrom (image2 (· ×ˢ ·) C D) = Prod.measurableSpace := by rw [← hC, ← hD, generate_from_prod_eq h2C h2D]
 #align generate_from_eq_prod generate_from_eq_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 /-- The product σ-algebra is generated from boxes, i.e. `s ×ˢ t` for sets `s : set α` and
   `t : set β`. -/
 theorem generate_from_prod :
-    generateFrom (Image2 (· ×ˢ ·) { s : Set α | MeasurableSet s } { t : Set β | MeasurableSet t }) =
+    generateFrom (image2 (· ×ˢ ·) { s : Set α | MeasurableSet s } { t : Set β | MeasurableSet t }) =
       Prod.measurableSpace :=
   generate_from_eq_prod generate_from_measurable_set generate_from_measurable_set is_countably_spanning_measurable_set
     is_countably_spanning_measurable_set
@@ -165,7 +165,7 @@ theorem generate_from_prod :
 /- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 /-- Rectangles form a π-system. -/
 theorem is_pi_system_prod :
-    IsPiSystem (Image2 (· ×ˢ ·) { s : Set α | MeasurableSet s } { t : Set β | MeasurableSet t }) :=
+    IsPiSystem (image2 (· ×ˢ ·) { s : Set α | MeasurableSet s } { t : Set β | MeasurableSet t }) :=
   is_pi_system_measurable_set.Prod is_pi_system_measurable_set
 #align is_pi_system_prod is_pi_system_prod
 
@@ -525,7 +525,7 @@ theorem ae_ae_of_ae_prod {p : α × β → Prop} (h : ∀ᵐ z ∂μ.Prod ν, p 
 /-- `μ.prod ν` has finite spanning sets in rectangles of finite spanning sets. -/
 noncomputable def FiniteSpanningSetsIn.prod {ν : Measure β} {C : Set (Set α)} {D : Set (Set β)}
     (hμ : μ.FiniteSpanningSetsIn C) (hν : ν.FiniteSpanningSetsIn D) :
-    (μ.Prod ν).FiniteSpanningSetsIn (Image2 (· ×ˢ ·) C D) := by
+    (μ.Prod ν).FiniteSpanningSetsIn (image2 (· ×ˢ ·) C D) := by
   haveI := hν.sigma_finite
   refine'
     ⟨fun n => hμ.set n.unpair.1 ×ˢ hν.set n.unpair.2, fun n => mem_image2_of_mem (hμ.set_mem _) (hν.set_mem _), fun n =>
@@ -614,8 +614,8 @@ theorem prod_restrict (s : Set α) (t : Set β) : (μ.restrict s).Prod (ν.restr
 #align measure_theory.measure.prod_restrict MeasureTheory.Measure.prod_restrict
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem restrict_prod_eq_prod_univ (s : Set α) : (μ.restrict s).Prod ν = (μ.Prod ν).restrict (s ×ˢ (Univ : Set β)) := by
-  have : ν = ν.restrict Set.Univ := measure.restrict_univ.symm
+theorem restrict_prod_eq_prod_univ (s : Set α) : (μ.restrict s).Prod ν = (μ.Prod ν).restrict (s ×ˢ (univ : Set β)) := by
+  have : ν = ν.restrict Set.univ := measure.restrict_univ.symm
   rwa [this, measure.prod_restrict, ← this]
 #align measure_theory.measure.restrict_prod_eq_prod_univ MeasureTheory.Measure.restrict_prod_eq_prod_univ
 

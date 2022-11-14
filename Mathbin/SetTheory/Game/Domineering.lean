@@ -127,8 +127,8 @@ theorem move_right_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
 /-- The instance describing allowed moves on a Domineering board. -/
 instance state : State Board where
   turnBound s := s.card / 2
-  l s := (left s).Image (moveLeft s)
-  r s := (right s).Image (moveRight s)
+  l s := (left s).image (moveLeft s)
+  r s := (right s).image (moveRight s)
   left_bound s t m := by
     simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩

@@ -26,7 +26,7 @@ open Classical TopologicalSpace
 /-- Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
-    (h_local_min : IsLocalMinOn f (IccCat a b) a) (h_conv : ConvexOn ℝ (IccCat a b) f) : IsMinOn f (IccCat a b) a := by
+    (h_local_min : IsLocalMinOn f (icc a b) a) (h_conv : ConvexOn ℝ (icc a b) f) : IsMinOn f (icc a b) a := by
   rintro c hc
   dsimp only [mem_set_of_eq]
   rw [IsLocalMinOn, nhds_within_Icc_eq_nhds_within_Ici a_lt_b] at h_local_min
@@ -74,13 +74,13 @@ theorem IsMaxOn.of_is_local_max_on_of_concave_on {f : E → β} {a : E} (a_in_s 
 
 /-- A local minimum of a convex function is a global minimum. -/
 theorem IsMinOn.of_is_local_min_of_convex_univ {f : E → β} {a : E} (h_local_min : IsLocalMin f a)
-    (h_conv : ConvexOn ℝ Univ f) : ∀ x, f a ≤ f x := fun x =>
-  (IsMinOn.of_is_local_min_on_of_convex_on (mem_univ a) (h_local_min.on Univ) h_conv) (mem_univ x)
+    (h_conv : ConvexOn ℝ univ f) : ∀ x, f a ≤ f x := fun x =>
+  (IsMinOn.of_is_local_min_on_of_convex_on (mem_univ a) (h_local_min.on univ) h_conv) (mem_univ x)
 #align is_min_on.of_is_local_min_of_convex_univ IsMinOn.of_is_local_min_of_convex_univ
 
 /-- A local maximum of a concave function is a global maximum. -/
 theorem IsMaxOn.of_is_local_max_of_convex_univ {f : E → β} {a : E} (h_local_max : IsLocalMax f a)
-    (h_conc : ConcaveOn ℝ Univ f) : ∀ x, f x ≤ f a :=
+    (h_conc : ConcaveOn ℝ univ f) : ∀ x, f x ≤ f a :=
   @IsMinOn.of_is_local_min_of_convex_univ _ βᵒᵈ _ _ _ _ _ _ _ _ f a h_local_max h_conc
 #align is_max_on.of_is_local_max_of_convex_univ IsMaxOn.of_is_local_max_of_convex_univ
 

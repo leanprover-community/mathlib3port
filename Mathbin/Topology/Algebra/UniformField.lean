@@ -135,13 +135,13 @@ theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
     have : ContinuousAt (fun y : hat K => ((y, hat_inv y) : hat K × hat K)) x :=
       continuous_id.continuous_at.prod (continuous_hat_inv x_ne)
     exact (_root_.continuous_mul.continuous_at.comp this : _)
-  have clo : x ∈ Closure (c '' {0}ᶜ) := by
+  have clo : x ∈ closure (c '' {0}ᶜ) := by
     have := dense_inducing_coe.dense x
     rw [← image_univ, show (univ : Set K) = {0} ∪ {0}ᶜ from (union_compl_self _).symm, image_union] at this
     apply mem_closure_of_mem_closure_union this
     rw [image_singleton]
     exact compl_singleton_mem_nhds x_ne
-  have fxclo : f x ∈ Closure (f '' (c '' {0}ᶜ)) := mem_closure_image cont clo
+  have fxclo : f x ∈ closure (f '' (c '' {0}ᶜ)) := mem_closure_image cont clo
   have : f '' (c '' {0}ᶜ) ⊆ {1} := by
     rw [image_image]
     rintro _ ⟨z, z_ne, rfl⟩

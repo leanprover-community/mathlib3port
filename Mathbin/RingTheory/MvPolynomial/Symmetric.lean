@@ -79,7 +79,7 @@ variable (σ R)
 
 /-- The subalgebra of symmetric `mv_polynomial`s. -/
 def symmetricSubalgebra [CommSemiring R] : Subalgebra R (MvPolynomial σ R) where
-  Carrier := SetOf IsSymmetric
+  carrier := setOf IsSymmetric
   algebra_map_mem' r e := rename_C e r
   mul_mem' a b ha hb e := by rw [AlgHom.map_mul, ha, hb]
   add_mem' a b ha hb e := by rw [AlgHom.map_add, ha, hb]
@@ -236,7 +236,7 @@ theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 #align mv_polynomial.support_esymm' MvPolynomial.support_esymm'
 
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-    (esymm σ R n).support = (powersetLen n (univ : Finset σ)).Image fun t => ∑ i : σ in t, Finsupp.single i 1 := by
+    (esymm σ R n).support = (powersetLen n (univ : Finset σ)).image fun t => ∑ i : σ in t, Finsupp.single i 1 := by
   rw [support_esymm']
   exact bUnion_singleton
 #align mv_polynomial.support_esymm MvPolynomial.support_esymm

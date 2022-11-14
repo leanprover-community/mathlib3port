@@ -5,6 +5,7 @@ Authors: Moritz Doll, Anatole Dedecker
 -/
 import Mathbin.Analysis.Seminorm
 import Mathbin.Analysis.LocallyConvex.Bounded
+import Mathbin.Topology.Algebra.Module.LocallyConvex
 
 /-!
 # Topology induced by a family of seminorms
@@ -66,13 +67,13 @@ variable {𝕜 E ι}
 namespace SeminormFamily
 
 /-- The sets of a filter basis for the neighborhood filter of 0. -/
-def BasisSets (p : SeminormFamily 𝕜 E ι) : Set (Set E) :=
-  ⋃ (s : Finset ι) (r) (hr : 0 < r), singleton <| Ball (s.sup p) (0 : E) r
-#align seminorm_family.basis_sets SeminormFamily.BasisSets
+def basisSets (p : SeminormFamily 𝕜 E ι) : Set (Set E) :=
+  ⋃ (s : Finset ι) (r) (hr : 0 < r), singleton <| ball (s.sup p) (0 : E) r
+#align seminorm_family.basis_sets SeminormFamily.basisSets
 
 variable (p : SeminormFamily 𝕜 E ι)
 
-theorem basis_sets_iff {U : Set E} : U ∈ p.basis_sets ↔ ∃ (i : Finset ι)(r : _)(hr : 0 < r), U = Ball (i.sup p) 0 r :=
+theorem basis_sets_iff {U : Set E} : U ∈ p.basis_sets ↔ ∃ (i : Finset ι)(r : _)(hr : 0 < r), U = ball (i.sup p) 0 r :=
   by simp only [basis_sets, mem_Union, mem_singleton_iff]
 #align seminorm_family.basis_sets_iff SeminormFamily.basis_sets_iff
 
@@ -141,16 +142,16 @@ theorem basis_sets_smul_right (v : E) (U : Set E) (hU : U ∈ p.basis_sets) : �
 variable [Nonempty ι]
 
 theorem basis_sets_smul (U) (hU : U ∈ p.basis_sets) :
-    ∃ (V : Set 𝕜)(H : V ∈ 𝓝 (0 : 𝕜))(W : Set E)(H : W ∈ p.AddGroupFilterBasis.Sets), V • W ⊆ U := by
+    ∃ (V : Set 𝕜)(H : V ∈ 𝓝 (0 : 𝕜))(W : Set E)(H : W ∈ p.AddGroupFilterBasis.sets), V • W ⊆ U := by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
-  refine' ⟨Metric.Ball 0 r.sqrt, Metric.ball_mem_nhds 0 (real.sqrt_pos.mpr hr), _⟩
+  refine' ⟨Metric.ball 0 r.sqrt, Metric.ball_mem_nhds 0 (real.sqrt_pos.mpr hr), _⟩
   refine' ⟨(s.sup p).ball 0 r.sqrt, p.basis_sets_mem s (real.sqrt_pos.mpr hr), _⟩
   refine' Set.Subset.trans (ball_smul_ball (s.sup p) r.sqrt r.sqrt) _
   rw [hU, Real.mul_self_sqrt (le_of_lt hr)]
 #align seminorm_family.basis_sets_smul SeminormFamily.basis_sets_smul
 
 theorem basis_sets_smul_left (x : 𝕜) (U : Set E) (hU : U ∈ p.basis_sets) :
-    ∃ (V : Set E)(H : V ∈ p.AddGroupFilterBasis.Sets), V ⊆ (fun y : E => x • y) ⁻¹' U := by
+    ∃ (V : Set E)(H : V ∈ p.AddGroupFilterBasis.sets), V ⊆ (fun y : E => x • y) ⁻¹' U := by
   rcases p.basis_sets_iff.mp hU with ⟨s, r, hr, hU⟩
   rw [hU]
   by_cases h:x ≠ 0
@@ -189,7 +190,7 @@ theorem filter_eq_infi (p : SeminormFamily 𝕜 E ι) : p.ModuleFilterBasis.toFi
     rw [id, Seminorm.ball_finset_sup_eq_Inter _ _ _ hr, s.Inter_mem_sets]
     exact fun i hi =>
       Filter.mem_infi_of_mem i
-        ⟨Metric.Ball 0 r, Metric.ball_mem_nhds 0 hr, Eq.subset (p i).ball_zero_eq_preimage_ball.symm⟩
+        ⟨Metric.ball 0 r, Metric.ball_mem_nhds 0 hr, Eq.subset (p i).ball_zero_eq_preimage_ball.symm⟩
     
 #align seminorm_family.filter_eq_infi SeminormFamily.filter_eq_infi
 
@@ -516,7 +517,7 @@ theorem WithSeminorms.to_locally_convex_space {p : SeminormFamily 𝕜 E ι} (hp
     exact FilterBasis.has_basis _
     
   · intro s hs
-    change s ∈ Set.UnionCat _ at hs
+    change s ∈ Set.union _ at hs
     simp_rw [Set.mem_Union, Set.mem_singleton_iff] at hs
     rcases hs with ⟨I, r, hr, rfl⟩
     exact convex_ball _ _ _

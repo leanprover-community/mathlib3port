@@ -195,7 +195,7 @@ variable (R)
 
 /-- The self-adjoint elements of a star additive group, as an additive subgroup. -/
 def selfAdjoint [AddGroup R] [StarAddMonoid R] : AddSubgroup R where
-  Carrier := { x | IsSelfAdjoint x }
+  carrier := { x | IsSelfAdjoint x }
   zero_mem' := star_zero R
   add_mem' _ _ hx := hx.add
   neg_mem' _ hx := hx.neg
@@ -203,7 +203,7 @@ def selfAdjoint [AddGroup R] [StarAddMonoid R] : AddSubgroup R where
 
 /-- The skew-adjoint elements of a star additive group, as an additive subgroup. -/
 def skewAdjoint [AddCommGroup R] [StarAddMonoid R] : AddSubgroup R where
-  Carrier := { x | star x = -x }
+  carrier := { x | star x = -x }
   zero_mem' := show star (0 : R) = -0 by simp only [star_zero, neg_zero]
   add_mem' x y (hx : star x = -x) (hy : star y = -y) :=
     show star (x + y) = -(x + y) by rw [star_add x y, hx, hy, neg_add]

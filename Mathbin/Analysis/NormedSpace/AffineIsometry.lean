@@ -190,7 +190,7 @@ theorem ediam_image (s : Set P) : Emetric.diam (f '' s) = Emetric.diam s :=
   f.Isometry.ediam_image s
 #align affine_isometry.ediam_image AffineIsometry.ediam_image
 
-theorem ediam_range : Emetric.diam (Range f) = Emetric.diam (Univ : Set P) :=
+theorem ediam_range : Emetric.diam (range f) = Emetric.diam (univ : Set P) :=
   f.Isometry.ediam_range
 #align affine_isometry.ediam_range AffineIsometry.ediam_range
 
@@ -198,7 +198,7 @@ theorem diam_image (s : Set P) : Metric.diam (f '' s) = Metric.diam s :=
   f.Isometry.diam_image s
 #align affine_isometry.diam_image AffineIsometry.diam_image
 
-theorem diam_range : Metric.diam (Range f) = Metric.diam (Univ : Set P) :=
+theorem diam_range : Metric.diam (range f) = Metric.diam (univ : Set P) :=
   f.Isometry.diam_range
 #align affine_isometry.diam_range AffineIsometry.diam_range
 
@@ -463,7 +463,7 @@ theorem coe_to_isometric : ⇑e.toIsometric = e :=
 
 include V V₂
 
-theorem range_eq_univ (e : P ≃ᵃⁱ[𝕜] P₂) : Set.Range e = Set.Univ := by
+theorem range_eq_univ (e : P ≃ᵃⁱ[𝕜] P₂) : Set.range e = Set.univ := by
   rw [← coe_to_isometric]
   exact Isometric.range_eq_univ _
 #align affine_isometry_equiv.range_eq_univ AffineIsometryEquiv.range_eq_univ
