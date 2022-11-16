@@ -35,4 +35,4 @@ sed -i 's|\(.* mathlib commit:\).*|\1 '"[\`$upstream_rev\`](https://github.com/l
 git add Mathbin upstream-rev README.md
 git commit -am "bump to $tag
 
-mathlib commit https://github.com/leanprover-community/mathlib/commit/$upstream_rev"
+mathlib commit https://github.com/leanprover-community/mathlib/commit/$upstream_rev" || true that
