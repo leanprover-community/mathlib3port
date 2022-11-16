@@ -6,6 +6,7 @@ Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 import Mathbin.Data.Rat.Defs
 import Mathbin.Algebra.Field.Defs
 import Mathbin.Algebra.Ring.Basic
+import Mathbin.Algebra.GroupWithZero.Units.Lemmas
 
 /-!
 # Lemmas about division (semi)rings and (semi)fields

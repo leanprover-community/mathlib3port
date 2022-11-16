@@ -334,6 +334,9 @@ theorem equiv_real_prod_symm_apply (p : ℝ × ℝ) : equivRealProd.symm p = p.1
 /- We use a nonstandard formula for the `ℕ` and `ℤ` actions to make sure there is no
 diamond from the other actions they inherit through the `ℝ`-action on `ℂ` and action transitivity
 defined in `data.complex.module.lean`. -/
+instance : Nontrivial ℂ :=
+  pullback_nonzero re rfl rfl
+
 instance : AddCommGroup ℂ := by
   refine_struct
       { zero := (0 : ℂ), add := (· + ·), neg := Neg.neg, sub := Sub.sub,
@@ -648,8 +651,8 @@ protected theorem mul_inv_cancel {z : ℂ} (h : z ≠ 0) : z * z⁻¹ = 1 := by
 
 
 noncomputable instance : Field ℂ :=
-  { Complex.commRing with inv := Inv.inv, exists_pair_ne := ⟨0, 1, mt (congr_arg re) zero_ne_one⟩,
-    mul_inv_cancel := @Complex.mul_inv_cancel, inv_zero := Complex.inv_zero }
+  { Complex.commRing, Complex.nontrivial with inv := Inv.inv, mul_inv_cancel := @Complex.mul_inv_cancel,
+    inv_zero := Complex.inv_zero }
 
 @[simp]
 theorem I_zpow_bit0 (n : ℤ) : I ^ bit0 n = (-1) ^ n := by rw [zpow_bit0', I_mul_I]
@@ -1033,7 +1036,7 @@ theorem eq_re_of_real_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re :
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a strictly ordered ring.
 -/
 protected def strictOrderedCommRing : StrictOrderedCommRing ℂ :=
-  { Complex.partialOrder, Complex.commRing with zero_le_one := ⟨zero_le_one, rfl⟩,
+  { Complex.partialOrder, Complex.commRing, Complex.nontrivial with zero_le_one := ⟨zero_le_one, rfl⟩,
     add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg₂ (· + ·) rfl h.2⟩,
     mul_pos := fun z w hz hw => by simp [lt_def, mul_re, mul_im, ← hz.2, ← hw.2, mul_pos hz.1 hw.1] }
 #align complex.strict_ordered_comm_ring Complex.strictOrderedCommRing

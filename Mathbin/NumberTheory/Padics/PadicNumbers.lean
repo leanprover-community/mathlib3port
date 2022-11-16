@@ -1218,9 +1218,8 @@ theorem norm_le_one_iff_val_nonneg (x : ℚ_[p]) : ∥x∥ ≤ 1 ↔ 0 ≤ x.Val
   by_cases hx:x = 0
   · simp only [hx, norm_zero, valuation_zero, zero_le_one, le_refl]
     
-  · rw [norm_eq_pow_val hx, ← zpow_zero (p : ℝ), zpow_le_iff_le (nat.one_lt_cast.mpr (Nat.Prime.one_lt' p).1),
-      Right.neg_nonpos_iff]
-    infer_instance
+  · rw [norm_eq_pow_val hx, ← zpow_zero (p : ℝ), zpow_le_iff_le, Right.neg_nonpos_iff]
+    exact Nat.one_lt_cast.2 (Nat.Prime.one_lt' p).1
     
 #align padic.norm_le_one_iff_val_nonneg Padic.norm_le_one_iff_val_nonneg
 

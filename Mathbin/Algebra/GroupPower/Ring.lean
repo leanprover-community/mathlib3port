@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 -/
 import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.GroupWithZero.Units
+import Mathbin.Algebra.GroupWithZero.Commute
 import Mathbin.Algebra.Hom.Ring
 import Mathbin.Algebra.Ring.Commute
 import Mathbin.Data.Nat.Order.Lemmas

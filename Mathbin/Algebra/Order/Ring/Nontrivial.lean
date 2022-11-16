@@ -7,32 +7,17 @@ import Mathbin.Algebra.CharZero.Defs
 import Mathbin.Algebra.Order.Ring.Defs
 
 /-!
-# Nontrivial strict ordered semirings (and hence linear ordered semirings) are characteristic zero.
+# Strict ordered semiring have characteristic zero
 -/
 
 
 variable {α : Type _}
 
-section StrictOrderedSemiring
-
-variable [StrictOrderedSemiring α] [Nontrivial α]
-
-/-- Note this is not an instance as `char_zero` implies `nontrivial`, and this would risk forming a
-loop. -/
-theorem StrictOrderedSemiring.to_char_zero : CharZero α :=
-  ⟨Nat.strict_mono_cast.Injective⟩
-#align strict_ordered_semiring.to_char_zero StrictOrderedSemiring.to_char_zero
-
-end StrictOrderedSemiring
-
-section LinearOrderedSemiring
-
-variable [LinearOrderedSemiring α]
-
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedSemiring.to_char_zero : CharZero α :=
-  StrictOrderedSemiring.to_char_zero
-#align linear_ordered_semiring.to_char_zero LinearOrderedSemiring.to_char_zero
-
-end LinearOrderedSemiring
+instance (priority := 100) StrictOrderedSemiring.to_char_zero [StrictOrderedSemiring α] : CharZero α :=
+  ⟨StrictMono.injective <|
+      strict_mono_nat_of_lt_succ fun n => by
+        rw [Nat.cast_succ]
+        apply lt_add_one⟩
+#align strict_ordered_semiring.to_char_zero StrictOrderedSemiring.to_char_zero
 

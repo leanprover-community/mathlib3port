@@ -3,11 +3,13 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Nat.Order.Basic
-import Mathbin.Algebra.Order.Group.Abs
+import Mathbin.Algebra.CharZero.Defs
 import Mathbin.Algebra.Group.Prod
+import Mathbin.Algebra.GroupWithZero.Commute
 import Mathbin.Algebra.Hom.Ring
+import Mathbin.Algebra.Order.Group.Abs
 import Mathbin.Algebra.Ring.Commute
+import Mathbin.Data.Nat.Order.Basic
 
 /-!
 # Cast of natural numbers (additional theorems)
@@ -99,6 +101,8 @@ theorem cast_nonneg (n : ℕ) : 0 ≤ (n : α) :=
   @Nat.cast_zero α _ ▸ mono_cast (Nat.zero_le n)
 #align nat.cast_nonneg Nat.cast_nonneg
 
+section Nontrivial
+
 variable [Nontrivial α]
 
 theorem cast_add_one_pos (n : ℕ) : 0 < (n : α) + 1 :=
@@ -108,6 +112,46 @@ theorem cast_add_one_pos (n : ℕ) : 0 < (n : α) + 1 :=
 @[simp]
 theorem cast_pos {n : ℕ} : (0 : α) < n ↔ 0 < n := by cases n <;> simp [cast_add_one_pos]
 #align nat.cast_pos Nat.cast_pos
+
+end Nontrivial
+
+variable [CharZero α] {m n : ℕ}
+
+theorem strict_mono_cast : StrictMono (coe : ℕ → α) :=
+  mono_cast.strict_mono_of_injective cast_injective
+#align nat.strict_mono_cast Nat.strict_mono_cast
+
+/-- `coe : ℕ → α` as an `order_embedding` -/
+@[simps (config := { fullyApplied := false })]
+def castOrderEmbedding : ℕ ↪o α :=
+  OrderEmbedding.ofStrictMono coe Nat.strict_mono_cast
+#align nat.cast_order_embedding Nat.castOrderEmbedding
+
+@[simp, norm_cast]
+theorem cast_le : (m : α) ≤ n ↔ m ≤ n :=
+  strict_mono_cast.le_iff_le
+#align nat.cast_le Nat.cast_le
+
+@[simp, norm_cast, mono]
+theorem cast_lt : (m : α) < n ↔ m < n :=
+  strict_mono_cast.lt_iff_lt
+#align nat.cast_lt Nat.cast_lt
+
+@[simp, norm_cast]
+theorem one_lt_cast : 1 < (n : α) ↔ 1 < n := by rw [← cast_one, cast_lt]
+#align nat.one_lt_cast Nat.one_lt_cast
+
+@[simp, norm_cast]
+theorem one_le_cast : 1 ≤ (n : α) ↔ 1 ≤ n := by rw [← cast_one, cast_le]
+#align nat.one_le_cast Nat.one_le_cast
+
+@[simp, norm_cast]
+theorem cast_lt_one : (n : α) < 1 ↔ n = 0 := by rw [← cast_one, cast_lt, lt_succ_iff, ← bot_eq_zero, le_bot_iff]
+#align nat.cast_lt_one Nat.cast_lt_one
+
+@[simp, norm_cast]
+theorem cast_le_one : (n : α) ≤ 1 ↔ n ≤ 1 := by rw [← cast_one, cast_le]
+#align nat.cast_le_one Nat.cast_le_one
 
 end OrderedSemiring
 
@@ -124,38 +168,6 @@ theorem cast_tsub [CanonicallyOrderedCommSemiring α] [Sub α] [HasOrderedSub α
     rw [add_tsub_cancel_right, cast_add, add_tsub_cancel_right]
     
 #align nat.cast_tsub Nat.cast_tsub
-
-section StrictOrderedSemiring
-
-variable [StrictOrderedSemiring α] [Nontrivial α]
-
-@[simp, norm_cast]
-theorem cast_le {m n : ℕ} : (m : α) ≤ n ↔ m ≤ n :=
-  strict_mono_cast.le_iff_le
-#align nat.cast_le Nat.cast_le
-
-@[simp, norm_cast, mono]
-theorem cast_lt {m n : ℕ} : (m : α) < n ↔ m < n :=
-  strict_mono_cast.lt_iff_lt
-#align nat.cast_lt Nat.cast_lt
-
-@[simp, norm_cast]
-theorem one_lt_cast {n : ℕ} : 1 < (n : α) ↔ 1 < n := by rw [← cast_one, cast_lt]
-#align nat.one_lt_cast Nat.one_lt_cast
-
-@[simp, norm_cast]
-theorem one_le_cast {n : ℕ} : 1 ≤ (n : α) ↔ 1 ≤ n := by rw [← cast_one, cast_le]
-#align nat.one_le_cast Nat.one_le_cast
-
-@[simp, norm_cast]
-theorem cast_lt_one {n : ℕ} : (n : α) < 1 ↔ n = 0 := by rw [← cast_one, cast_lt, lt_succ_iff] <;> exact le_bot_iff
-#align nat.cast_lt_one Nat.cast_lt_one
-
-@[simp, norm_cast]
-theorem cast_le_one {n : ℕ} : (n : α) ≤ 1 ↔ n ≤ 1 := by rw [← cast_one, cast_le]
-#align nat.cast_le_one Nat.cast_le_one
-
-end StrictOrderedSemiring
 
 @[simp, norm_cast]
 theorem cast_min [LinearOrderedSemiring α] {a b : ℕ} : (↑(min a b) : α) = min a b :=
@@ -179,25 +191,6 @@ theorem coe_nat_dvd [Semiring α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : 
 alias coe_nat_dvd ← _root_.has_dvd.dvd.nat_cast
 
 end Nat
-
-namespace Prod
-
-variable [AddMonoidWithOne α] [AddMonoidWithOne β]
-
-instance : AddMonoidWithOne (α × β) :=
-  { Prod.addMonoid, Prod.hasOne with natCast := fun n => (n, n),
-    nat_cast_zero := congr_arg₂ Prod.mk Nat.cast_zero Nat.cast_zero,
-    nat_cast_succ := fun n => congr_arg₂ Prod.mk (Nat.cast_succ _) (Nat.cast_succ _) }
-
-@[simp]
-theorem fst_nat_cast (n : ℕ) : (n : α × β).fst = n := by induction n <;> simp [*]
-#align prod.fst_nat_cast Prod.fst_nat_cast
-
-@[simp]
-theorem snd_nat_cast (n : ℕ) : (n : α × β).snd = n := by induction n <;> simp [*]
-#align prod.snd_nat_cast Prod.snd_nat_cast
-
-end Prod
 
 section AddMonoidHomClass
 

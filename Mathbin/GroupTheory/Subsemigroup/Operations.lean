@@ -6,6 +6,7 @@ Amelia Livingston, Yury Kudryashov, Yakov Pechersky, Jireh Loreaux
 -/
 import Mathbin.GroupTheory.Subsemigroup.Basic
 import Mathbin.Algebra.Group.Prod
+import Mathbin.Algebra.Group.TypeTags
 
 /-!
 # Operations on `subsemigroup`s

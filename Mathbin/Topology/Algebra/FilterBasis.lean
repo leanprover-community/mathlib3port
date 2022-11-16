@@ -226,9 +226,9 @@ topological group. -/
 instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @TopologicalGroup G B.topology _ := by
   letI := B.topology
   have basis := B.nhds_one_has_basis
-  have basis' := Basis.prod Basis
+  have basis' := basis.prod basis
   refine' TopologicalGroup.of_nhds_one _ _ _ _
-  · rw [basis'.tendsto_iff Basis]
+  · rw [basis'.tendsto_iff basis]
     suffices ∀ U ∈ B, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
     intro U U_in
     rcases mul U_in with ⟨V, V_in, hV⟩
@@ -236,7 +236,7 @@ instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @Topo
     intro a b a_in b_in
     exact hV ⟨a, b, a_in, b_in, rfl⟩
     
-  · rw [basis.tendsto_iff Basis]
+  · rw [basis.tendsto_iff basis]
     intro U U_in
     simpa using inv U_in
     
@@ -245,7 +245,7 @@ instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @Topo
     rfl
     
   · intro x₀
-    rw [basis.tendsto_iff Basis]
+    rw [basis.tendsto_iff basis]
     intro U U_in
     exact conj x₀ U_in
     
@@ -295,10 +295,10 @@ instance (priority := 100) isTopologicalRing {R : Type u} [Ring R] (B : RingFilt
   let B' := B.to_add_group_filter_basis
   letI := B'.topology
   have basis := B'.nhds_zero_has_basis
-  have basis' := Basis.prod Basis
+  have basis' := basis.prod basis
   haveI := B'.is_topological_add_group
   apply TopologicalRing.ofAddGroupOfNhdsZero
-  · rw [basis'.tendsto_iff Basis]
+  · rw [basis'.tendsto_iff basis]
     suffices ∀ U ∈ B', ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
     intro U U_in
     rcases B.mul U_in with ⟨V, V_in, hV⟩
@@ -307,12 +307,12 @@ instance (priority := 100) isTopologicalRing {R : Type u} [Ring R] (B : RingFilt
     exact hV ⟨a, b, a_in, b_in, rfl⟩
     
   · intro x₀
-    rw [basis.tendsto_iff Basis]
+    rw [basis.tendsto_iff basis]
     intro U
     simpa using B.mul_left x₀
     
   · intro x₀
-    rw [basis.tendsto_iff Basis]
+    rw [basis.tendsto_iff basis]
     intro U
     simpa using B.mul_right x₀
     

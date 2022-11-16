@@ -6,6 +6,7 @@ Authors: Scott Morrison
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Algebra.Field
+import Mathbin.RingTheory.Adjoin.Basic
 
 /-!
 # Topological (sub)algebras

@@ -6,7 +6,6 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Ne
 import Mathbin.Algebra.Ring.Defs
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Opposites
-import Mathbin.Algebra.Ring.InjSurj
 
 /-!
 # Semirings and rings
@@ -92,13 +91,6 @@ section HasDistribNeg
 section Mul
 
 variable [Mul α] [HasDistribNeg α]
-
-namespace AddOpposite
-
-instance : HasDistribNeg αᵃᵒᵖ :=
-  unop_injective.HasDistribNeg _ unop_neg unop_mul
-
-end AddOpposite
 
 open MulOpposite
 

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
 import Mathbin.AlgebraicTopology.DoldKan.Faces
+import Mathbin.CategoryTheory.Idempotents.Basic
 
 /-!
 
@@ -28,17 +29,8 @@ strategy of proof of the Dold-Kan equivalence.
 -/
 
 
-open CategoryTheory
-
-open CategoryTheory.Category
-
-open CategoryTheory.Limits
-
-open CategoryTheory.Preadditive
-
-open CategoryTheory.SimplicialObject
-
-open Opposite
+open
+  CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Preadditive CategoryTheory.SimplicialObject Opposite CategoryTheory.Idempotents
 
 open Simplicial DoldKan
 
@@ -162,12 +154,24 @@ theorem P_f_idem (q n : ℕ) : ((p q).f n : X _[n] ⟶ _) ≫ (p q).f n = (p q).
 #align algebraic_topology.dold_kan.P_f_idem AlgebraicTopology.DoldKan.P_f_idem
 
 @[simp, reassoc]
+theorem Q_f_idem (q n : ℕ) : ((q q).f n : X _[n] ⟶ _) ≫ (q q).f n = (q q).f n :=
+  idem_of_id_sub_idem _ (P_f_idem q n)
+#align algebraic_topology.dold_kan.Q_f_idem AlgebraicTopology.DoldKan.Q_f_idem
+
+@[simp, reassoc]
 theorem P_idem (q : ℕ) : (p q : K[X] ⟶ K[X]) ≫ p q = p q := by
   ext n
   exact P_f_idem q n
 #align algebraic_topology.dold_kan.P_idem AlgebraicTopology.DoldKan.P_idem
 
+@[simp, reassoc]
+theorem Q_idem (q : ℕ) : (q q : K[X] ⟶ K[X]) ≫ q q = q q := by
+  ext n
+  exact Q_f_idem q n
+#align algebraic_topology.dold_kan.Q_idem AlgebraicTopology.DoldKan.Q_idem
+
 /-- For each `q`, `P q` is a natural transformation. -/
+@[simps]
 def natTransP (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C where
   app X := p q
   naturality' X Y f := by
@@ -191,6 +195,20 @@ theorem P_f_naturality (q n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
   HomologicalComplex.congr_hom ((natTransP q).naturality f) n
 #align algebraic_topology.dold_kan.P_f_naturality AlgebraicTopology.DoldKan.P_f_naturality
 
+@[simp, reassoc]
+theorem Q_f_naturality (q n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
+    f.app (op [n]) ≫ (q q).f n = (q q).f n ≫ f.app (op [n]) := by
+  simp only [Q, HomologicalComplex.sub_f_apply, HomologicalComplex.id_f, comp_sub, P_f_naturality, sub_comp,
+    sub_left_inj]
+  dsimp
+  simp only [comp_id, id_comp]
+#align algebraic_topology.dold_kan.Q_f_naturality AlgebraicTopology.DoldKan.Q_f_naturality
+
+/-- For each `q`, `Q q` is a natural transformation. -/
+@[simps]
+def natTransQ (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C where app X := q q
+#align algebraic_topology.dold_kan.nat_trans_Q AlgebraicTopology.DoldKan.natTransQ
+
 theorem map_P {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive] (X : SimplicialObject C) (q n : ℕ) :
     G.map ((p q : K[X] ⟶ _).f n) = (p q : K[((whiskering C D).obj G).obj X] ⟶ _).f n := by
   induction' q with q hq
@@ -202,6 +220,12 @@ theorem map_P {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additiv
       functor.map_comp, hq, map_Hσ]
     
 #align algebraic_topology.dold_kan.map_P AlgebraicTopology.DoldKan.map_P
+
+theorem map_Q {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive] (X : SimplicialObject C) (q n : ℕ) :
+    G.map ((q q : K[X] ⟶ _).f n) = (q q : K[((whiskering C D).obj G).obj X] ⟶ _).f n := by
+  rw [← add_right_inj (G.map ((P q : K[X] ⟶ _).f n)), ← G.map_add, map_P G X q n, P_add_Q_f, P_add_Q_f]
+  apply G.map_id
+#align algebraic_topology.dold_kan.map_Q AlgebraicTopology.DoldKan.map_Q
 
 end DoldKan
 

@@ -215,26 +215,6 @@ end cast
 
 end Int
 
-namespace Prod
-
-variable [AddGroupWithOne α] [AddGroupWithOne β]
-
-instance : AddGroupWithOne (α × β) :=
-  { Prod.addMonoidWithOne, Prod.addGroup with intCast := fun n => (n, n), int_cast_of_nat := fun _ => by simp <;> rfl,
-    int_cast_neg_succ_of_nat := fun _ => by simp <;> rfl }
-
-@[simp]
-theorem fst_int_cast (n : ℤ) : (n : α × β).fst = n :=
-  rfl
-#align prod.fst_int_cast Prod.fst_int_cast
-
-@[simp]
-theorem snd_int_cast (n : ℤ) : (n : α × β).snd = n :=
-  rfl
-#align prod.snd_int_cast Prod.snd_int_cast
-
-end Prod
-
 open Int
 
 namespace AddMonoidHom

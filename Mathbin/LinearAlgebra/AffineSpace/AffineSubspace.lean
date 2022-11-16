@@ -515,6 +515,19 @@ theorem direction_mk' (p : P) (direction : Submodule k V) : (mk' p direction).di
     
 #align affine_subspace.direction_mk' AffineSubspace.direction_mk'
 
+/-- A point lies in an affine subspace constructed from another point and a direction if and only
+if their difference is in that direction. -/
+theorem mem_mk'_iff_vsub_mem {p₁ p₂ : P} {direction : Submodule k V} : p₂ ∈ mk' p₁ direction ↔ p₂ -ᵥ p₁ ∈ direction :=
+  by
+  refine' ⟨fun h => _, fun h => _⟩
+  · rw [← direction_mk' p₁ direction]
+    exact vsub_mem_direction h (self_mem_mk' _ _)
+    
+  · rw [← vsub_vadd p₂ p₁]
+    exact vadd_mem_mk' p₁ h
+    
+#align affine_subspace.mem_mk'_iff_vsub_mem AffineSubspace.mem_mk'_iff_vsub_mem
+
 /-- Constructing an affine subspace from a point in a subspace and
 that subspace's direction yields the original subspace. -/
 @[simp]

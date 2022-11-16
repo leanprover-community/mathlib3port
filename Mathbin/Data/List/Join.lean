@@ -19,12 +19,9 @@ namespace List
 
 attribute [simp] join
 
-#print List.join_nil /-
 @[simp]
-theorem join_nil : [([] : List α)].join = [] :=
-  rfl
-#align list.join_nil List.join_nil
--/
+theorem join_singleton (l : List α) : [l].join = l := by rw [join, join, append_nil]
+#align list.join_singleton List.join_singleton
 
 @[simp]
 theorem join_eq_nil : ∀ {L : List (List α)}, join L = [] ↔ ∀ l ∈ L, l = []
@@ -160,6 +157,14 @@ theorem eq_iff_join_eq (L L' : List (List α)) : L = L' ↔ L.join = L'.join ∧
     rw [← drop_take_succ_join_eq_nth_le, ← drop_take_succ_join_eq_nth_le, join_eq, length_eq]
     
 #align list.eq_iff_join_eq List.eq_iff_join_eq
+
+theorem join_drop_length_sub_one {L : List (List α)} (h : L ≠ []) : (L.drop (L.length - 1)).join = L.last h := by
+  induction L using List.reverseRecOn
+  · cases h rfl
+    
+  · simp
+    
+#align list.join_drop_length_sub_one List.join_drop_length_sub_one
 
 end List
 

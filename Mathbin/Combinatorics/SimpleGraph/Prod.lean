@@ -199,20 +199,37 @@ theorem box_prod_connected : (G □ H).Connected ↔ G.Connected ∧ H.Connected
   ⟨fun h => ⟨h.ofBoxProdLeft, h.ofBoxProdRight⟩, fun h => h.1.boxProd h.2⟩
 #align simple_graph.box_prod_connected SimpleGraph.box_prod_connected
 
-instance [DecidableEq α] [DecidableEq β] (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)] :
-    Fintype ((G □ H).neighborSet x) := by
-  rw [box_prod_neighbor_set]
-  infer_instance
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+instance boxProdFintypeNeighborSet (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)] :
+    Fintype ((G □ H).neighborSet x) :=
+  Fintype.ofEquiv
+    ((G.neighborFinset x.1 ×ˢ {x.2}).disjUnion ({x.1} ×ˢ H.neighborFinset x.2) <|
+      Finset.disjoint_product.mpr <| Or.inl <| neighbor_finset_disjoint_singleton _ _)
+    ((Equiv.refl _).subtypeEquiv fun y => by
+      simp_rw [Finset.mem_disj_union, Finset.mem_product, Finset.mem_singleton, mem_neighbor_finset, mem_neighbor_set,
+        Equiv.refl_apply, box_prod_adj]
+      simp only [eq_comm, and_comm'])
+#align simple_graph.box_prod_fintype_neighbor_set SimpleGraph.boxProdFintypeNeighborSet
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem box_prod_neighbor_finset (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)]
+    [Fintype ((G □ H).neighborSet x)] :
+    (G □ H).neighborFinset x =
+      (G.neighborFinset x.1 ×ˢ {x.2}).disjUnion ({x.1} ×ˢ H.neighborFinset x.2)
+        (Finset.disjoint_product.mpr <| Or.inl <| neighbor_finset_disjoint_singleton _ _) :=
+  by
+  -- swap out the fintype instance for the canonical one
+  letI : Fintype ((G □ H).neighborSet x) := SimpleGraph.boxProdFintypeNeighborSet _
+  refine' Eq.trans _ Finset.attach_map_val
+  convert Finset.map_map _ (Function.Embedding.subtype _) Finset.univ
+#align simple_graph.box_prod_neighbor_finset SimpleGraph.box_prod_neighbor_finset
 
 theorem box_prod_degree (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)]
     [Fintype ((G □ H).neighborSet x)] : (G □ H).degree x = G.degree x.1 + H.degree x.2 := by
-  classical simp_rw [← card_neighbor_set_eq_degree, box_prod_neighbor_set, ← Set.to_finset_card, Set.to_finset_union]
-    · rw [Finset.disjoint_left]
-      rintro ⟨_, _⟩ hG hH
-      simp only [Finset.mem_product, Set.mem_to_finset, mem_neighbor_set, Set.mem_singleton_iff] at hG hH
-      obtain ⟨⟨q, rfl⟩, ⟨rfl, _⟩⟩ := hG, hH
-      exact (q.ne rfl).elim
-      
+  rw [degree, degree, degree, box_prod_neighbor_finset, Finset.card_disj_union]
+  simp_rw [Finset.card_product, Finset.card_singleton, mul_one, one_mul]
 #align simple_graph.box_prod_degree SimpleGraph.box_prod_degree
 
 end SimpleGraph

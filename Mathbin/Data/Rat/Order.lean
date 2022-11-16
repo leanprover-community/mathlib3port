@@ -251,7 +251,8 @@ end Rat
 /- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
 /- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
 /- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
 -- We make some assertions here about declarations that do not need to be in the import dependencies
 -- for this file, but have been in the past.
 -- These are less significant, but should not be relaxed until at least after port to Lean 4.
+-- This one doesn't exist anywhere!
+-- assert_not_exists positive.add_comm_semigroup

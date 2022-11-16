@@ -74,7 +74,7 @@ def cyclotomic' (n : ℕ) (R : Type _) [CommRing R] [IsDomain R] : R[X] :=
 /-- The zeroth modified cyclotomic polyomial is `1`. -/
 @[simp]
 theorem cyclotomic'_zero (R : Type _) [CommRing R] [IsDomain R] : cyclotomic' 0 R = 1 := by
-  simp only [cyclotomic', Finset.prod_empty, IsPrimitiveRoot.primitive_roots_zero]
+  simp only [cyclotomic', Finset.prod_empty, primitive_roots_zero]
 #align polynomial.cyclotomic'_zero Polynomial.cyclotomic'_zero
 
 /-- The first modified cyclotomic polyomial is `X - 1`. -/

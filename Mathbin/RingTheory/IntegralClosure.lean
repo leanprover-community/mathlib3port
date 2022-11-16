@@ -7,6 +7,7 @@ import Mathbin.Data.Polynomial.Expand
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.Matrix.Charpoly.LinearMap
 import Mathbin.RingTheory.Adjoin.Fg
+import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.Polynomial.ScaleRoots
 import Mathbin.RingTheory.Polynomial.Tower
 import Mathbin.RingTheory.TensorProduct

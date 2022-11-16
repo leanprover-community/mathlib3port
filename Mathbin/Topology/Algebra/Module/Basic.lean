@@ -11,7 +11,6 @@ import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.LinearAlgebra.Projection
 import Mathbin.LinearAlgebra.Pi
-import Mathbin.LinearAlgebra.Determinant
 import Mathbin.RingTheory.SimpleModule
 
 /-!
@@ -1629,14 +1628,6 @@ end SmulRightₗ
 
 section CommRing
 
-/-- The determinant of a continuous linear map, mainly as a convenience device to be able to
-write `A.det` instead of `(A : M →ₗ[R] M).det`. -/
-@[reducible]
-noncomputable def det {R : Type _} [CommRing R] {M : Type _} [TopologicalSpace M] [AddCommGroup M] [Module R M]
-    (A : M →L[R] M) : R :=
-  LinearMap.det (A : M →ₗ[R] M)
-#align continuous_linear_map.det ContinuousLinearMap.det
-
 variable {R : Type _} [CommRing R] {M : Type _} [TopologicalSpace M] [AddCommGroup M] {M₂ : Type _}
   [TopologicalSpace M₂] [AddCommGroup M₂] {M₃ : Type _} [TopologicalSpace M₃] [AddCommGroup M₃] [Module R M]
   [Module R M₂] [Module R M₃] [HasContinuousConstSmul R M₃]
@@ -2447,12 +2438,6 @@ def finTwoArrow : (Fin 2 → M) ≃L[R] M × M :=
 #align continuous_linear_equiv.fin_two_arrow ContinuousLinearEquiv.finTwoArrow
 
 end
-
-@[simp]
-theorem det_coe_symm {R : Type _} [Field R] {M : Type _} [TopologicalSpace M] [AddCommGroup M] [Module R M]
-    (A : M ≃L[R] M) : (A.symm : M →L[R] M).det = (A : M →L[R] M).det⁻¹ :=
-  LinearEquiv.det_coe_symm A.toLinearEquiv
-#align continuous_linear_equiv.det_coe_symm ContinuousLinearEquiv.det_coe_symm
 
 end ContinuousLinearEquiv
 

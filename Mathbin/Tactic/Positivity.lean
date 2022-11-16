@@ -647,6 +647,23 @@ unsafe def positivity_pow : expr → tactic strictness
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a ^ n`"
 #align tactic.positivity_pow tactic.positivity_pow
 
+/-- Extension for the `positivity` tactic: raising a positive number in a canonically ordered
+semiring gives a positive number. -/
+@[positivity]
+unsafe def positivity_canon_pow : expr → tactic strictness
+  | quote.1 ((%%ₓr) ^ %%ₓn) => do
+    let typ_n ← infer_type n
+    unify typ_n (quote.1 ℕ)
+    let positive p ← core r
+    positive <$> mk_app `` CanonicallyOrderedCommSemiring.pow_pos [p, n]
+  |-- The nonzero never happens because of `tactic.positivity_canon`
+    e =>
+    pp e >>=
+      fail ∘
+        format.bracket "The expression `"
+          "` is not of the form `a ^ n` for `a` in a `canonically_ordered_comm_semiring` and `n : ℕ`"
+#align tactic.positivity_canon_pow tactic.positivity_canon_pow
+
 /- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:87:10: unsupported modifiers in user command -/
 alias abs_pos ↔ _ abs_pos_of_ne_zero
 

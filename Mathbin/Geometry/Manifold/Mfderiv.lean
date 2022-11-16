@@ -1219,6 +1219,89 @@ theorem mfderiv_within_const (hxs : UniqueMdiffWithinAt I s x) :
 
 end Const
 
+section Arithmetic
+
+/-! #### Arithmetic
+
+Note that in the in `has_mfderiv_at` lemmas there is an abuse of the defeq between `E'` and
+`tangent_space 𝓘(𝕜, E') (f z)` (similarly for `g',F',p',q'`). In general this defeq is not
+canonical, but in this case (the tangent space of a vector space) it is canonical.
+ -/
+
+
+variable {z : M} {F' : Type _} [NormedCommRing F'] [NormedAlgebra 𝕜 F'] {f g : M → E'} {p q : M → F'}
+  {f' g' : TangentSpace I z →L[𝕜] E'} {p' q' : TangentSpace I z →L[𝕜] F'}
+
+theorem HasMfderivAt.add (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (hg : HasMfderivAt I 𝓘(𝕜, E') g z g') :
+    HasMfderivAt I 𝓘(𝕜, E') (f + g) z (f' + g') :=
+  ⟨hf.1.add hg.1, hf.2.add hg.2⟩
+#align has_mfderiv_at.add HasMfderivAt.add
+
+theorem MdifferentiableAt.add (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) :
+    MdifferentiableAt I 𝓘(𝕜, E') (f + g) z :=
+  (hf.HasMfderivAt.add I hg.HasMfderivAt).MdifferentiableAt
+#align mdifferentiable_at.add MdifferentiableAt.add
+
+theorem Mdifferentiable.add (hf : Mdifferentiable I 𝓘(𝕜, E') f) (hg : Mdifferentiable I 𝓘(𝕜, E') g) :
+    Mdifferentiable I 𝓘(𝕜, E') (f + g) := fun x => (hf x).add I (hg x)
+#align mdifferentiable.add Mdifferentiable.add
+
+theorem HasMfderivAt.mul (hp : HasMfderivAt I 𝓘(𝕜, F') p z p') (hq : HasMfderivAt I 𝓘(𝕜, F') q z q') :
+    HasMfderivAt I 𝓘(𝕜, F') (p * q) z (p z • q' + q z • p' : E →L[𝕜] F') :=
+  ⟨hp.1.mul hq.1, by simpa only [mfld_simps] using hp.2.mul hq.2⟩
+#align has_mfderiv_at.mul HasMfderivAt.mul
+
+theorem MdifferentiableAt.mul (hp : MdifferentiableAt I 𝓘(𝕜, F') p z) (hq : MdifferentiableAt I 𝓘(𝕜, F') q z) :
+    MdifferentiableAt I 𝓘(𝕜, F') (p * q) z :=
+  (hp.HasMfderivAt.mul I hq.HasMfderivAt).MdifferentiableAt
+#align mdifferentiable_at.mul MdifferentiableAt.mul
+
+theorem Mdifferentiable.mul {f g : M → F'} (hf : Mdifferentiable I 𝓘(𝕜, F') f) (hg : Mdifferentiable I 𝓘(𝕜, F') g) :
+    Mdifferentiable I 𝓘(𝕜, F') (f * g) := fun x => (hf x).mul I (hg x)
+#align mdifferentiable.mul Mdifferentiable.mul
+
+theorem HasMfderivAt.constSmul (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (s : 𝕜) :
+    HasMfderivAt I 𝓘(𝕜, E') (s • f) z (s • f') :=
+  ⟨hf.1.const_smul s, hf.2.const_smul s⟩
+#align has_mfderiv_at.const_smul HasMfderivAt.constSmul
+
+theorem MdifferentiableAt.constSmul (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) (s : 𝕜) :
+    MdifferentiableAt I 𝓘(𝕜, E') (s • f) z :=
+  (hf.HasMfderivAt.const_smul I s).MdifferentiableAt
+#align mdifferentiable_at.const_smul MdifferentiableAt.constSmul
+
+theorem Mdifferentiable.constSmul {f : M → E'} (s : 𝕜) (hf : Mdifferentiable I 𝓘(𝕜, E') f) :
+    Mdifferentiable I 𝓘(𝕜, E') (s • f) := fun x => (hf x).const_smul I s
+#align mdifferentiable.const_smul Mdifferentiable.constSmul
+
+theorem HasMfderivAt.neg (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') : HasMfderivAt I 𝓘(𝕜, E') (-f) z (-f') :=
+  ⟨hf.1.neg, hf.2.neg⟩
+#align has_mfderiv_at.neg HasMfderivAt.neg
+
+theorem MdifferentiableAt.neg (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) : MdifferentiableAt I 𝓘(𝕜, E') (-f) z :=
+  (hf.HasMfderivAt.neg I).MdifferentiableAt
+#align mdifferentiable_at.neg MdifferentiableAt.neg
+
+theorem Mdifferentiable.neg {f : M → E'} (hf : Mdifferentiable I 𝓘(𝕜, E') f) : Mdifferentiable I 𝓘(𝕜, E') (-f) :=
+  fun x => (hf x).neg I
+#align mdifferentiable.neg Mdifferentiable.neg
+
+theorem HasMfderivAt.sub (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (hg : HasMfderivAt I 𝓘(𝕜, E') g z g') :
+    HasMfderivAt I 𝓘(𝕜, E') (f - g) z (f' - g') :=
+  ⟨hf.1.sub hg.1, hf.2.sub hg.2⟩
+#align has_mfderiv_at.sub HasMfderivAt.sub
+
+theorem MdifferentiableAt.sub (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) :
+    MdifferentiableAt I 𝓘(𝕜, E') (f - g) z :=
+  (hf.HasMfderivAt.sub I hg.HasMfderivAt).MdifferentiableAt
+#align mdifferentiable_at.sub MdifferentiableAt.sub
+
+theorem Mdifferentiable.sub {f : M → E'} (hf : Mdifferentiable I 𝓘(𝕜, E') f) (hg : Mdifferentiable I 𝓘(𝕜, E') g) :
+    Mdifferentiable I 𝓘(𝕜, E') (f - g) := fun x => (hf x).sub I (hg x)
+#align mdifferentiable.sub Mdifferentiable.sub
+
+end Arithmetic
+
 namespace ModelWithCorners
 
 /-! #### Model with corners -/

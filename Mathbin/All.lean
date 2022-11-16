@@ -169,12 +169,15 @@ import Mathbin.Algebra.GroupPower.Order
 import Mathbin.Algebra.GroupPower.Ring
 import Mathbin.Algebra.GroupRingAction
 import Mathbin.Algebra.GroupWithZero.Basic
+import Mathbin.Algebra.GroupWithZero.Commute
 import Mathbin.Algebra.GroupWithZero.Default
 import Mathbin.Algebra.GroupWithZero.Defs
 import Mathbin.Algebra.GroupWithZero.Divisibility
 import Mathbin.Algebra.GroupWithZero.InjSurj
 import Mathbin.Algebra.GroupWithZero.Power
-import Mathbin.Algebra.GroupWithZero.Units
+import Mathbin.Algebra.GroupWithZero.Semiconj
+import Mathbin.Algebra.GroupWithZero.Units.Basic
+import Mathbin.Algebra.GroupWithZero.Units.Lemmas
 import Mathbin.Algebra.HierarchyDesign
 import Mathbin.Algebra.Hom.Aut
 import Mathbin.Algebra.Hom.Centroid
@@ -1275,6 +1278,7 @@ import Mathbin.Data.Int.Cast.Basic
 import Mathbin.Data.Int.Cast.Defs
 import Mathbin.Data.Int.Cast.Field
 import Mathbin.Data.Int.Cast.Lemmas
+import Mathbin.Data.Int.Cast.Prod
 import Mathbin.Data.Int.CharZero
 import Mathbin.Data.Int.ConditionallyCompleteOrder
 import Mathbin.Data.Int.Div
@@ -1390,6 +1394,7 @@ import Mathbin.Data.Nat.Bitwise
 import Mathbin.Data.Nat.Cast.Basic
 import Mathbin.Data.Nat.Cast.Defs
 import Mathbin.Data.Nat.Cast.Field
+import Mathbin.Data.Nat.Cast.Prod
 import Mathbin.Data.Nat.Cast.WithTop
 import Mathbin.Data.Nat.Choose.Basic
 import Mathbin.Data.Nat.Choose.Bounds
@@ -1854,6 +1859,7 @@ import Mathbin.LinearAlgebra.FreeAlgebra
 import Mathbin.LinearAlgebra.FreeModule.Basic
 import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
+import Mathbin.LinearAlgebra.FreeModule.IdealQuotient
 import Mathbin.LinearAlgebra.FreeModule.Pid
 import Mathbin.LinearAlgebra.FreeModule.Rank
 import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition
@@ -2273,6 +2279,7 @@ import Mathbin.Order.SemiconjSup
 import Mathbin.Order.SuccPred.Basic
 import Mathbin.Order.SuccPred.IntervalSucc
 import Mathbin.Order.SuccPred.Limit
+import Mathbin.Order.SuccPred.LinearLocallyFinite
 import Mathbin.Order.SuccPred.Relation
 import Mathbin.Order.SupIndep
 import Mathbin.Order.SymmDiff
@@ -2347,6 +2354,8 @@ import Mathbin.RingTheory.EisensteinCriterion
 import Mathbin.RingTheory.Etale
 import Mathbin.RingTheory.EuclideanDomain
 import Mathbin.RingTheory.Filtration
+import Mathbin.RingTheory.FinitePresentation
+import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.Finiteness
 import Mathbin.RingTheory.Fintype
 import Mathbin.RingTheory.Flat
@@ -2363,6 +2372,7 @@ import Mathbin.RingTheory.Ideal.Basic
 import Mathbin.RingTheory.Ideal.Cotangent
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.RingTheory.Ideal.MinimalPrime
+import Mathbin.RingTheory.Ideal.Norm
 import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.RingTheory.Ideal.Over
 import Mathbin.RingTheory.Ideal.Prod
@@ -2684,6 +2694,7 @@ import Mathbin.Topology.Algebra.InfiniteSum
 import Mathbin.Topology.Algebra.Localization
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Algebra.Module.CharacterSpace
+import Mathbin.Topology.Algebra.Module.Determinant
 import Mathbin.Topology.Algebra.Module.FiniteDimension
 import Mathbin.Topology.Algebra.Module.LinearPmap
 import Mathbin.Topology.Algebra.Module.LocallyConvex

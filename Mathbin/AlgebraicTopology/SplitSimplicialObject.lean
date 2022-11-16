@@ -34,13 +34,7 @@ Simplicial objects equipped with a splitting form a category
 
 noncomputable section
 
-open CategoryTheory
-
-open CategoryTheory.Category
-
-open CategoryTheory.Limits
-
-open Opposite
+open CategoryTheory CategoryTheory.Category CategoryTheory.Limits Opposite SimplexCategory
 
 open Simplicial
 
@@ -89,8 +83,7 @@ theorem ext (A₁ A₂ : IndexSet Δ) (h₁ : A₁.1 = A₂.1) (h₂ : A₁.e �
 
 instance : Fintype (IndexSet Δ) :=
   Fintype.ofInjective
-    (fun A =>
-      ⟨⟨A.1.unop.len, Nat.lt_succ_iff.mpr (SimplexCategory.len_le_of_epi (inferInstance : Epi A.e))⟩, A.e.toOrderHom⟩ :
+    (fun A => ⟨⟨A.1.unop.len, Nat.lt_succ_iff.mpr (len_le_of_epi (inferInstance : Epi A.e))⟩, A.e.toOrderHom⟩ :
       IndexSet Δ → Sigma fun k : Fin (Δ.unop.len + 1) => Fin (Δ.unop.len + 1) → Fin (k + 1))
     (by
       rintro ⟨Δ₁, α₁⟩ ⟨Δ₂, α₂⟩ h₁
@@ -139,7 +132,7 @@ theorem eq_id_iff_eq : A.EqId ↔ A.1 = Δ := by
     refine' ext _ _ rfl _
     · haveI := hf
       simp only [eq_to_hom_refl, comp_id]
-      exact SimplexCategory.eq_id_of_epi f
+      exact eq_id_of_epi f
       
     
 #align simplicial_object.splitting.index_set.eq_id_iff_eq SimplicialObject.Splitting.IndexSet.eq_id_iff_eq
@@ -156,6 +149,30 @@ theorem eq_id_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len := by
     exact h
     
 #align simplicial_object.splitting.index_set.eq_id_iff_len_eq SimplicialObject.Splitting.IndexSet.eq_id_iff_len_eq
+
+theorem eq_id_iff_len_le : A.EqId ↔ Δ.unop.len ≤ A.1.unop.len := by
+  rw [eq_id_iff_len_eq]
+  constructor
+  · intro h
+    rw [h]
+    
+  · exact le_antisymm (len_le_of_epi (inferInstance : epi A.e))
+    
+#align simplicial_object.splitting.index_set.eq_id_iff_len_le SimplicialObject.Splitting.IndexSet.eq_id_iff_len_le
+
+theorem eq_id_iff_mono : A.EqId ↔ Mono A.e := by
+  constructor
+  · intro h
+    dsimp at h
+    subst h
+    dsimp only [id, e]
+    infer_instance
+    
+  · intro h
+    rw [eq_id_iff_len_le]
+    exact len_le_of_mono h
+    
+#align simplicial_object.splitting.index_set.eq_id_iff_mono SimplicialObject.Splitting.IndexSet.eq_id_iff_mono
 
 /-- Given `A : index_set Δ₁`, if `p.unop : unop Δ₂ ⟶ unop Δ₁` is an epi, this
 is the obvious element in `A : index_set Δ₂` associated to the composition

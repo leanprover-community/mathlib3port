@@ -1299,15 +1299,14 @@ end Actions
 -- While this definition is not about `subsemiring`s, this is the earliest we have
 -- both `strict_ordered_semiring` and `submonoid` available.
 /-- Submonoid of positive elements of an ordered semiring. -/
-def posSubmonoid (R : Type _) [StrictOrderedSemiring R] [Nontrivial R] : Submonoid R where
+def posSubmonoid (R : Type _) [StrictOrderedSemiring R] : Submonoid R where
   carrier := { x | 0 < x }
   one_mem' := show (0 : R) < 1 from zero_lt_one
   mul_mem' x y (hx : 0 < x) (hy : 0 < y) := mul_pos hx hy
 #align pos_submonoid posSubmonoid
 
 @[simp]
-theorem mem_pos_monoid {R : Type _} [StrictOrderedSemiring R] [Nontrivial R] (u : Rˣ) :
-    ↑u ∈ posSubmonoid R ↔ (0 : R) < u :=
+theorem mem_pos_monoid {R : Type _} [StrictOrderedSemiring R] (u : Rˣ) : ↑u ∈ posSubmonoid R ↔ (0 : R) < u :=
   Iff.rfl
 #align mem_pos_monoid mem_pos_monoid
 

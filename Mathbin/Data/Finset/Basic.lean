@@ -3133,7 +3133,7 @@ theorem map_cast_heq {α β} (h : α = β) (s : Finset α) : HEq (s.map (Equiv.c
   simp
 #align finset.map_cast_heq Finset.map_cast_heq
 
-theorem map_map {g : β ↪ γ} : (s.map f).map g = s.map (f.trans g) :=
+theorem map_map (f : α ↪ β) (g : β ↪ γ) (s : Finset α) : (s.map f).map g = s.map (f.trans g) :=
   eq_of_veq <| by simp only [map_val, Multiset.map_map] <;> rfl
 #align finset.map_map Finset.map_map
 

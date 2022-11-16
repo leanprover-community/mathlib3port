@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
 import Mathbin.GroupTheory.Submonoid.Inverses
-import Mathbin.RingTheory.Finiteness
+import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.Localization.Basic
 import Mathbin.Tactic.RingExp
 

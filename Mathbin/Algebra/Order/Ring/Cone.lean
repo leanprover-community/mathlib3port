@@ -14,6 +14,8 @@ import Mathbin.Algebra.Order.Ring.Defs
 /-! ### Positive cones -/
 
 
+variable {α : Type _} [Ring α] [Nontrivial α]
+
 namespace Ring
 
 /-- A positive cone in a ring consists of a positive cone in underlying `add_comm_group`,
@@ -27,10 +29,9 @@ structure PositiveCone (α : Type _) [Ring α] extends AddCommGroup.PositiveCone
 /-- Forget that a positive cone in a ring respects the multiplicative structure. -/
 add_decl_doc positive_cone.to_positive_cone
 
-/-- A positive cone in a ring induces a linear order if `1` is a positive element. -/
+/-- A total positive cone in a nontrivial ring induces a linear order. -/
 @[nolint has_nonempty_instance]
-structure TotalPositiveCone (α : Type _) [Ring α] extends PositiveCone α, AddCommGroup.TotalPositiveCone α where
-  one_pos : Pos 1
+structure TotalPositiveCone (α : Type _) [Ring α] extends PositiveCone α, AddCommGroup.TotalPositiveCone α
 #align ring.total_positive_cone Ring.TotalPositiveCone
 
 /-- Forget that a `total_positive_cone` in a ring is total. -/
@@ -39,15 +40,18 @@ add_decl_doc total_positive_cone.to_positive_cone
 /-- Forget that a `total_positive_cone` in a ring respects the multiplicative structure. -/
 add_decl_doc total_positive_cone.to_total_positive_cone
 
-end Ring
+theorem PositiveCone.onePos (C : PositiveCone α) : C.Pos 1 :=
+  (C.pos_iff _).2 ⟨C.one_nonneg, fun h => one_ne_zero <| C.nonneg_antisymm C.one_nonneg h⟩
+#align ring.positive_cone.one_pos Ring.PositiveCone.onePos
 
-namespace StrictOrderedRing
+end Ring
 
 open Ring
 
 /-- Construct a `strict_ordered_ring` by designating a positive cone in an existing `ring`. -/
-def mkOfPositiveCone {α : Type _} [Ring α] (C : PositiveCone α) : StrictOrderedRing α :=
+def StrictOrderedRing.mkOfPositiveCone (C : PositiveCone α) : StrictOrderedRing α :=
   { ‹Ring α›, OrderedAddCommGroup.mkOfPositiveCone C.toPositiveCone with
+    exists_pair_ne := ⟨0, 1, fun h => by simpa [← h, C.pos_iff] using C.one_pos⟩,
     zero_le_one := by
       change C.nonneg (1 - 0)
       convert C.one_nonneg
@@ -65,24 +69,10 @@ def mkOfPositiveCone {α : Type _} [Ring α] (C : PositiveCone α) : StrictOrder
       simp }
 #align strict_ordered_ring.mk_of_positive_cone StrictOrderedRing.mkOfPositiveCone
 
-end StrictOrderedRing
-
-namespace LinearOrderedRing
-
-open Ring
-
 /-- Construct a `linear_ordered_ring` by
 designating a positive cone in an existing `ring`. -/
-def mkOfPositiveCone {α : Type _} [Ring α] (C : TotalPositiveCone α) : LinearOrderedRing α :=
+def LinearOrderedRing.mkOfPositiveCone (C : TotalPositiveCone α) : LinearOrderedRing α :=
   { StrictOrderedRing.mkOfPositiveCone C.toPositiveCone,
-    LinearOrderedAddCommGroup.mkOfPositiveCone C.toTotalPositiveCone with
-    exists_pair_ne :=
-      ⟨0, 1, by
-        intro h
-        have one_pos := C.one_pos
-        rw [← h, C.pos_iff] at one_pos
-        simpa using one_pos⟩ }
+    LinearOrderedAddCommGroup.mkOfPositiveCone C.toTotalPositiveCone with }
 #align linear_ordered_ring.mk_of_positive_cone LinearOrderedRing.mkOfPositiveCone
-
-end LinearOrderedRing
 

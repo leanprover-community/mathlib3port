@@ -405,7 +405,7 @@ section Order
 
 variable {n : ℕ} {x : α}
 
-theorem geom_sum_pos [StrictOrderedSemiring α] [Nontrivial α] (hx : 0 ≤ x) (hn : n ≠ 0) : 0 < ∑ i in range n, x ^ i :=
+theorem geom_sum_pos [StrictOrderedSemiring α] (hx : 0 ≤ x) (hn : n ≠ 0) : 0 < ∑ i in range n, x ^ i :=
   sum_pos' (fun k hk => pow_nonneg hx _) ⟨0, mem_range.2 hn.bot_lt, by simp⟩
 #align geom_sum_pos geom_sum_pos
 

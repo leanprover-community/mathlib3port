@@ -558,7 +558,7 @@ theorem dvd_sum [Semiring R] {a} {l : List R} (h : ∀ x ∈ l, a ∣ x) : a ∣
 
 /-- The product of a list of positive natural numbers is positive,
 and likewise for any nontrivial ordered semiring. -/
-theorem prod_pos [StrictOrderedSemiring R] [Nontrivial R] (l : List R) (h : ∀ a ∈ l, (0 : R) < a) : 0 < l.Prod := by
+theorem prod_pos [StrictOrderedSemiring R] (l : List R) (h : ∀ a ∈ l, (0 : R) < a) : 0 < l.Prod := by
   induction' l with a l ih
   · simp
     

@@ -313,6 +313,15 @@ theorem mem_primitive_roots {ζ : R} (h0 : 0 < k) : ζ ∈ primitiveRoots k R �
   exact IsPrimitiveRoot.pow_eq_one
 #align mem_primitive_roots mem_primitive_roots
 
+@[simp]
+theorem primitive_roots_zero : primitiveRoots 0 R = ∅ := by
+  rw [primitiveRoots, nth_roots_zero, Multiset.to_finset_zero, Finset.filter_empty]
+#align primitive_roots_zero primitive_roots_zero
+
+theorem is_primitive_root_of_mem_primitive_roots {ζ : R} (h : ζ ∈ primitiveRoots k R) : IsPrimitiveRoot ζ k :=
+  k.eq_zero_or_pos.elim (fun hk => False.elim <| by simpa [hk] using h) fun hk => (mem_primitive_roots hk).1 h
+#align is_primitive_root_of_mem_primitive_roots is_primitive_root_of_mem_primitive_roots
+
 end primitiveRoots
 
 namespace IsPrimitiveRoot
@@ -325,10 +334,8 @@ theorem iff_def (ζ : M) (k : ℕ) : IsPrimitiveRoot ζ k ↔ ζ ^ k = 1 ∧ ∀
 
 theorem mk_of_lt (ζ : M) (hk : 0 < k) (h1 : ζ ^ k = 1) (h : ∀ l : ℕ, 0 < l → l < k → ζ ^ l ≠ 1) : IsPrimitiveRoot ζ k :=
   by
-  refine' ⟨h1, _⟩
-  intro l hl
-  apply dvd_trans _ (k.gcd_dvd_right l)
-  suffices k.gcd l = k by rw [this]
+  refine' ⟨h1, fun l hl => _⟩
+  suffices k.gcd l = k by exact this ▸ k.gcd_dvd_right l
   rw [eq_iff_le_not_lt]
   refine' ⟨Nat.le_of_dvd hk (k.gcd_dvd_left l), _⟩
   intro h'
@@ -437,15 +444,8 @@ protected theorem order_of (ζ : M) : IsPrimitiveRoot ζ (orderOf ζ) :=
   ⟨pow_order_of_eq_one ζ, fun l => order_of_dvd_of_pow_eq_one⟩
 #align is_primitive_root.order_of IsPrimitiveRoot.order_of
 
-theorem unique {ζ : M} (hk : IsPrimitiveRoot ζ k) (hl : IsPrimitiveRoot ζ l) : k = l := by
-  wlog hkl : k ≤ l
-  rcases hkl.eq_or_lt with (rfl | hkl)
-  · rfl
-    
-  rcases k.eq_zero_or_pos with (rfl | hk')
-  · exact (zero_dvd_iff.mp <| hk.dvd_of_pow_eq_one l hl.pow_eq_one).symm
-    
-  exact absurd hk.pow_eq_one (hl.pow_ne_one_of_pos_of_lt hk' hkl)
+theorem unique {ζ : M} (hk : IsPrimitiveRoot ζ k) (hl : IsPrimitiveRoot ζ l) : k = l :=
+  Nat.dvd_antisymm (hk.2 _ hl.1) (hl.2 _ hk.1)
 #align is_primitive_root.unique IsPrimitiveRoot.unique
 
 theorem eq_order_of : k = orderOf ζ :=
@@ -600,13 +600,6 @@ section IsDomain
 variable {ζ : R}
 
 variable [CommRing R] [IsDomain R]
-
-@[simp]
-theorem primitive_roots_zero : primitiveRoots 0 R = ∅ := by
-  rw [← Finset.val_eq_zero, ← Multiset.subset_zero, ← nth_roots_zero (1 : R), primitiveRoots]
-  simp only [Finset.not_mem_empty, forall_const, forall_prop_of_false, Multiset.to_finset_zero,
-    Finset.filter_true_of_mem, Finset.empty_val, not_false_iff, Multiset.zero_subset, nth_roots_zero]
-#align is_primitive_root.primitive_roots_zero IsPrimitiveRoot.primitive_roots_zero
 
 @[simp]
 theorem primitive_roots_one : primitiveRoots 1 R = {(1 : R)} := by
@@ -915,21 +908,10 @@ theorem card_primitive_roots {ζ : R} {k : ℕ} (h : IsPrimitiveRoot ζ k) : (pr
     
 #align is_primitive_root.card_primitive_roots IsPrimitiveRoot.card_primitive_roots
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr h, ",", expr nat.dvd_antisymm, ",", expr Hzk, ",", expr Hzl, ",", expr hzk, ",", expr hzl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- The sets `primitive_roots k R` are pairwise disjoint. -/
-theorem disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (primitiveRoots l R) := by
-  by_cases hk:k = 0
-  · simp [hk]
-    
-  by_cases hl:l = 0
-  · simp [hl]
-    
-  rw [Finset.disjoint_left]
-  intro z
-  simp only [mem_primitive_roots, Nat.pos_of_ne_zero hk, Nat.pos_of_ne_zero hl, iff_def]
-  rintro ⟨hzk, Hzk⟩ ⟨hzl, Hzl⟩
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr h, \",\", expr nat.dvd_antisymm, \",\", expr Hzk, \",\", expr Hzl, \",\", expr hzk, \",\", expr hzl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+theorem disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (primitiveRoots l R) :=
+  Finset.disjoint_left.2 fun z hk hl =>
+    h <| (is_primitive_root_of_mem_primitive_roots hk).unique <| is_primitive_root_of_mem_primitive_roots hl
 #align is_primitive_root.disjoint IsPrimitiveRoot.disjoint
 
 /-- `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 -/
 import Mathbin.Algebra.Ring.Defs
+import Mathbin.Algebra.Opposites
 import Mathbin.Algebra.GroupWithZero.InjSurj
 
 /-!
@@ -220,6 +221,13 @@ protected def Function.Surjective.hasDistribNeg [Neg β] [Mul β] (f : α → β
         erw [← neg, ← mul, mul_neg, neg, mul]
         rfl }
 #align function.surjective.has_distrib_neg Function.Surjective.hasDistribNeg
+
+namespace AddOpposite
+
+instance : HasDistribNeg αᵃᵒᵖ :=
+  unop_injective.HasDistribNeg _ unop_neg unop_mul
+
+end AddOpposite
 
 end Mul
 

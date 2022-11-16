@@ -120,11 +120,9 @@ theorem val_between_set {a : Int} {l n : Nat} : ∀ {m}, l ≤ n → n < l + m �
 
 @[simp]
 theorem val_set {m : Nat} {a : Int} : val v ([] {m ↦ a}) = a * v m := by
-  apply val_between_set
-  apply zero_le
-  apply lt_of_lt_of_le (lt_add_one _)
-  simp only [length_set, zero_add, le_max_right]
-  infer_instance
+  apply val_between_set (zero_le _)
+  rw [length_set, zero_add]
+  exact lt_max_of_lt_right (lt_add_one _)
 #align omega.coeffs.val_set Omega.Coeffs.val_set
 
 theorem val_between_neg {as : List Int} {l : Nat} : ∀ {o}, valBetween v (neg as) l o = -valBetween v as l o

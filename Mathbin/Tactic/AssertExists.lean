@@ -4,16 +4,23 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 -/
 import Mathbin.Tactic.Core
+import Mathbin.Tactic.Lint.Basic
 
 /-!
 # User commands for assert the (non-)existence of declaration or instances.
 
 These commands are used to enforce the independence of different parts of mathlib.
 
-## Future work
-We should have a linter that collects all `assert_not_exists` and `assert_no_instance` commands,
-and checks that they are eventually satisfied when importing all of mathlib.
-This will protect against typos.
+## Implementation notes
+
+This file provides two linters that verify that things we assert do not _yet_ exist do _eventually_
+exist. This works by creating declarations of the form:
+
+* ``assert_not_exists._checked.<uniq> : name := `foo`` for `assert_not_exists foo`
+* `assert_no_instance._checked.<uniq> := t` for `assert_instance t`
+
+These declarations are then picked up by the linter and analyzed accordingly.
+The `_` in the `_checked` prefix should hide them from doc-gen.
 -/
 
 
@@ -53,8 +60,30 @@ You should *not* delete the `assert_not_exists` statement without careful discus
 @[user_command]
 unsafe def assert_not_exists (_ : parse <| tk "assert_not_exists") : lean.parser Unit := do
   let decl ← ident
-  success_if_fail (get_decl decl) <|> fail f! "Declaration {decl} is not allowed to exist in this file."
+  let ff ← succeeds (get_decl decl) |
+    fail f! "Declaration {decl} is not allowed to exist in this file."
+  let n ← tactic.mk_fresh_name
+  let marker := `assert_not_exists._checked.append n
+  add_decl (declaration.defn marker [] (quote.1 Name) (quote.1 decl) default tt)
+  pure ()
 #align assert_not_exists assert_not_exists
+
+/-- A linter for checking that the declarations marked `assert_not_exists` eventually exist. -/
+unsafe def assert_not_exists.linter : linter where
+  test d := do
+    let n := d.to_name
+    let tt ← pure (`assert_not_exists._checked.isPrefixOf n) |
+      pure none
+    let declaration.defn _ _ (quote.1 Name) val _ _ ← pure d
+    let n ← tactic.eval_expr Name val
+    let tt ← succeeds (get_decl n) |
+      pure (some (f! "`{n}` does not ever exist").toString)
+    pure none
+  auto_decls := true
+  no_errors_found := "All `assert_not_exists` declarations eventually exist."
+  errors_found := "The following declarations used in `assert_not_exists` never exist; perhaps there is a typo."
+  is_fast := true
+#align assert_not_exists.linter assert_not_exists.linter
 
 /-- `assert_instance e` is a user command that asserts that an instance `e` is available
 in the current import scope.
@@ -99,13 +128,34 @@ unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.pars
   let e ← i_to_expr q
   let i ← try_core (mk_instance e)
   match i with
-    | none => skip
-    |-- TODO: record for the linter
-        some
-        i =>
+    | none => do
+      let n ← tactic.mk_fresh_name
+      let marker := `assert_no_instance._checked.append n
+      let et ← infer_type e
+      let tt ← succeeds (get_decl marker) |
+        add_decl (declaration.defn marker [] et e default tt)
+      pure ()
+    | some i =>
       ("./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" :
         tactic Unit)
 #align assert_no_instance assert_no_instance
+
+/-- A linter for checking that the declarations marked `assert_no_instance` eventually exist. -/
+unsafe def assert_no_instance.linter : linter where
+  test d := do
+    let n := d.to_name
+    let tt ← pure (`assert_no_instance._checked.isPrefixOf n) |
+      pure none
+    let declaration.defn _ _ _ val _ _ ← pure d
+    let tt ← succeeds (tactic.mk_instance val) |
+      (some ∘ format.to_string) <$> f!"No instance of `{← val}`"
+    pure none
+  auto_decls := true
+  no_errors_found := "All `assert_no_instance` instances eventually exist."
+  errors_found :=
+    "The following typeclass instances used in `assert_no_instance` never exist; perhaps they " ++ "are missing?"
+  is_fast := false
+#align assert_no_instance.linter assert_no_instance.linter
 
 end
 

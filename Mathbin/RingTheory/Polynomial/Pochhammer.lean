@@ -159,7 +159,7 @@ end Semiring
 
 section StrictOrderedSemiring
 
-variable {S : Type _} [StrictOrderedSemiring S] [Nontrivial S]
+variable {S : Type _} [StrictOrderedSemiring S]
 
 theorem pochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (pochhammer S n).eval s := by
   induction' n with n ih

@@ -265,6 +265,11 @@ theorem fixed_points_eq_center : fixedPoints (ConjAct G) G = center G := by
   simp [mem_center_iff, smul_def, mul_inv_eq_iff_eq_mul]
 #align conj_act.fixed_points_eq_center ConjAct.fixed_points_eq_center
 
+theorem stabilizer_eq_centralizer (g : G) : stabilizer (ConjAct G) g = (zpowers g).centralizer :=
+  le_antisymm (le_centralizer_iff.mp (zpowers_le.mpr fun x => mul_inv_eq_iff_eq_mul.mp)) fun x h =>
+    mul_inv_eq_of_eq_mul (h g (mem_zpowers g)).symm
+#align conj_act.stabilizer_eq_centralizer ConjAct.stabilizer_eq_centralizer
+
 /-- As normal subgroups are closed under conjugation, they inherit the conjugation action
   of the underlying group. -/
 instance Subgroup.conjAction {H : Subgroup G} [hH : H.Normal] : HasSmul (ConjAct G) H :=

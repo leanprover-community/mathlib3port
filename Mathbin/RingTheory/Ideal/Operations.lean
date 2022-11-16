@@ -2584,7 +2584,8 @@ def liftSupQuotQuotMk (I J : Ideal R) : R ⧸ I ⊔ J →+* (R ⧸ I) ⧸ J.map 
   Ideal.Quotient.lift (I ⊔ J) (quotQuotMk I J) (ker_quot_quot_mk I J).symm.le
 #align double_quot.lift_sup_quot_quot_mk DoubleQuot.liftSupQuotQuotMk
 
-/-- `quot_quot_to_quot_add` and `lift_sup_double_qot_mk` are inverse isomorphisms -/
+/-- `quot_quot_to_quot_add` and `lift_sup_double_qot_mk` are inverse isomorphisms. In the case where
+    `I ≤ J`, this is the Third Isomorphism Theorem (see `quot_quot_equiv_quot_of_le`)-/
 def quotQuotEquivQuotSup : (R ⧸ I) ⧸ J.map (Ideal.Quotient.mk I) ≃+* R ⧸ I ⊔ J :=
   RingEquiv.ofHomInv (quotQuotToQuotSup I J) (liftSupQuotQuotMk I J)
     (by
@@ -2627,6 +2628,34 @@ theorem quot_quot_equiv_comm_comp_quot_quot_mk :
 theorem quot_quot_equiv_comm_symm : (quotQuotEquivComm I J).symm = quotQuotEquivComm J I :=
   rfl
 #align double_quot.quot_quot_equiv_comm_symm DoubleQuot.quot_quot_equiv_comm_symm
+
+variable {I J}
+
+/-- **The Third Isomorphism theorem** for rings. See `quot_quot_equiv_quot_sup` for a version
+    that does not assume an inclusion of ideals. -/
+def quotQuotEquivQuotOfLe (h : I ≤ J) : (R ⧸ I) ⧸ J.map I ≃+* R ⧸ J :=
+  (quotQuotEquivQuotSup I J).trans (Ideal.quotEquivOfEq <| sup_eq_right.mpr h)
+#align double_quot.quot_quot_equiv_quot_of_le DoubleQuot.quotQuotEquivQuotOfLe
+
+@[simp]
+theorem quot_quot_equiv_quot_of_le_quot_quot_mk (x : R) (h : I ≤ J) :
+    quotQuotEquivQuotOfLe h (quotQuotMk I J x) = J x :=
+  rfl
+#align double_quot.quot_quot_equiv_quot_of_le_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_of_le_quot_quot_mk
+
+@[simp]
+theorem quot_quot_equiv_quot_of_le_symm_mk (x : R) (h : I ≤ J) :
+    (quotQuotEquivQuotOfLe h).symm (J x) = quotQuotMk I J x :=
+  rfl
+#align double_quot.quot_quot_equiv_quot_of_le_symm_mk DoubleQuot.quot_quot_equiv_quot_of_le_symm_mk
+
+theorem quot_quot_equiv_quot_of_le_comp_quot_quot_mk (h : I ≤ J) :
+    RingHom.comp (↑(quotQuotEquivQuotOfLe h)) (quotQuotMk I J) = J := by ext <;> rfl
+#align double_quot.quot_quot_equiv_quot_of_le_comp_quot_quot_mk DoubleQuot.quot_quot_equiv_quot_of_le_comp_quot_quot_mk
+
+theorem quot_quot_equiv_quot_of_le_symm_comp_mk (h : I ≤ J) :
+    RingHom.comp (↑(quotQuotEquivQuotOfLe h).symm) J = quotQuotMk I J := by ext <;> rfl
+#align double_quot.quot_quot_equiv_quot_of_le_symm_comp_mk DoubleQuot.quot_quot_equiv_quot_of_le_symm_comp_mk
 
 end
 

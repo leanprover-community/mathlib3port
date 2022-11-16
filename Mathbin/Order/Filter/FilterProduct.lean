@@ -154,7 +154,7 @@ instance [OrderedCommRing β] : OrderedCommRing β* :=
   { Germ.orderedRing, Germ.orderedCommSemiring with }
 
 instance [StrictOrderedSemiring β] : StrictOrderedSemiring β* :=
-  { Germ.orderedSemiring, Germ.orderedCancelAddCommMonoid with
+  { Germ.orderedSemiring, Germ.orderedCancelAddCommMonoid, Germ.nontrivial with
     mul_lt_mul_of_pos_left := fun x y z =>
       (induction_on₃ x y z) fun f g h hfg hh =>
         coe_lt.2 <| (coe_lt.1 hh).mp <| (coe_lt.1 hfg).mono fun a => mul_lt_mul_of_pos_left,
@@ -166,7 +166,7 @@ instance [StrictOrderedCommSemiring β] : StrictOrderedCommSemiring β* :=
   { Germ.strictOrderedSemiring, Germ.orderedCommSemiring with }
 
 instance [StrictOrderedRing β] : StrictOrderedRing β* :=
-  { Germ.ring, Germ.orderedAddCommGroup, Germ.nontrivial with zero_le_one := const_le zero_le_one,
+  { Germ.ring, Germ.strictOrderedSemiring with zero_le_one := const_le zero_le_one,
     mul_pos := fun x y =>
       (induction_on₂ x y) fun f g hf hg => coe_pos.2 <| (coe_pos.1 hg).mp <| (coe_pos.1 hf).mono fun x => mul_pos }
 
@@ -174,7 +174,7 @@ instance [StrictOrderedCommRing β] : StrictOrderedCommRing β* :=
   { Germ.strictOrderedRing, Germ.orderedCommRing with }
 
 noncomputable instance [LinearOrderedRing β] : LinearOrderedRing β* :=
-  { Germ.strictOrderedRing, Germ.linearOrder, Germ.nontrivial with }
+  { Germ.strictOrderedRing, Germ.linearOrder with }
 
 noncomputable instance [LinearOrderedField β] : LinearOrderedField β* :=
   { Germ.linearOrderedRing, Germ.field with }

@@ -5,7 +5,7 @@ Authors: Mario Carneiro, Johan Commelin
 -/
 import Mathbin.Order.BoundedOrder
 import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.Algebra.GroupWithZero.Units
+import Mathbin.Algebra.GroupWithZero.Units.Basic
 import Mathbin.Algebra.Ring.Defs
 
 /-!

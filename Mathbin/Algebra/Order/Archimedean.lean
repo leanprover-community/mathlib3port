@@ -85,7 +85,7 @@ theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) : ∃! 
 
 end LinearOrderedAddCommGroup
 
-theorem exists_nat_gt [StrictOrderedSemiring α] [Nontrivial α] [Archimedean α] (x : α) : ∃ n : ℕ, x < n :=
+theorem exists_nat_gt [StrictOrderedSemiring α] [Archimedean α] (x : α) : ∃ n : ℕ, x < n :=
   let ⟨n, h⟩ := Archimedean.arch x zero_lt_one
   ⟨n + 1, lt_of_le_of_lt (by rwa [← nsmul_one]) (Nat.cast_lt.2 (Nat.lt_succ_self _))⟩
 #align exists_nat_gt exists_nat_gt
@@ -95,8 +95,8 @@ theorem exists_nat_ge [StrictOrderedSemiring α] [Archimedean α] (x : α) : ∃
   exact (exists_nat_gt x).imp fun n => le_of_lt
 #align exists_nat_ge exists_nat_ge
 
-theorem add_one_pow_unbounded_of_pos [StrictOrderedSemiring α] [Nontrivial α] [Archimedean α] (x : α) {y : α}
-    (hy : 0 < y) : ∃ n : ℕ, x < (y + 1) ^ n :=
+theorem add_one_pow_unbounded_of_pos [StrictOrderedSemiring α] [Archimedean α] (x : α) {y : α} (hy : 0 < y) :
+    ∃ n : ℕ, x < (y + 1) ^ n :=
   have : 0 ≤ 1 + y := add_nonneg zero_le_one hy.le
   let ⟨n, h⟩ := Archimedean.arch x hy
   ⟨n,
@@ -112,7 +112,7 @@ theorem add_one_pow_unbounded_of_pos [StrictOrderedSemiring α] [Nontrivial α] 
 
 section StrictOrderedRing
 
-variable [StrictOrderedRing α] [Nontrivial α] [Archimedean α]
+variable [StrictOrderedRing α] [Archimedean α]
 
 theorem pow_unbounded_of_one_lt (x : α) {y : α} (hy1 : 1 < y) : ∃ n : ℕ, x < y ^ n :=
   sub_add_cancel y 1 ▸ add_one_pow_unbounded_of_pos _ (sub_pos.2 hy1)
@@ -3223,7 +3223,7 @@ section LinearOrderedField
 variable [LinearOrderedField α]
 
 theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x < n :=
-  ⟨@exists_nat_gt α _ _, fun H =>
+  ⟨@exists_nat_gt α _, fun H =>
     ⟨fun x y y0 => (H (x / y)).imp fun n h => le_of_lt <| by rwa [div_lt_iff y0, ← nsmul_eq_mul] at h⟩⟩
 #align archimedean_iff_nat_lt archimedean_iff_nat_lt
 
@@ -3235,7 +3235,7 @@ theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x �
 #align archimedean_iff_nat_le archimedean_iff_nat_le
 
 theorem archimedean_iff_int_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℤ, x < n :=
-  ⟨@exists_int_gt α _ _, by
+  ⟨@exists_int_gt α _, by
     rw [archimedean_iff_nat_lt]
     intro h x
     obtain ⟨n, h⟩ := h x

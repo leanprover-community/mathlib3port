@@ -21,12 +21,11 @@ variable {α R : Type _}
 open Filter Set
 
 @[simp]
-theorem Nat.comap_coe_at_top [StrictOrderedSemiring R] [Nontrivial R] [Archimedean R] :
-    comap (coe : ℕ → R) atTop = at_top :=
+theorem Nat.comap_coe_at_top [StrictOrderedSemiring R] [Archimedean R] : comap (coe : ℕ → R) atTop = at_top :=
   comap_embedding_at_top (fun _ _ => Nat.cast_le) exists_nat_ge
 #align nat.comap_coe_at_top Nat.comap_coe_at_top
 
-theorem tendsto_coe_nat_at_top_iff [StrictOrderedSemiring R] [Nontrivial R] [Archimedean R] {f : α → ℕ} {l : Filter α} :
+theorem tendsto_coe_nat_at_top_iff [StrictOrderedSemiring R] [Archimedean R] {f : α → ℕ} {l : Filter α} :
     Tendsto (fun n => (f n : R)) l atTop ↔ Tendsto f l atTop :=
   tendsto_at_top_embedding (fun a₁ a₂ => Nat.cast_le) exists_nat_ge
 #align tendsto_coe_nat_at_top_iff tendsto_coe_nat_at_top_iff
@@ -36,26 +35,24 @@ theorem tendsto_coe_nat_at_top_at_top [StrictOrderedSemiring R] [Archimedean R] 
 #align tendsto_coe_nat_at_top_at_top tendsto_coe_nat_at_top_at_top
 
 @[simp]
-theorem Int.comap_coe_at_top [StrictOrderedRing R] [Nontrivial R] [Archimedean R] :
-    comap (coe : ℤ → R) atTop = at_top :=
+theorem Int.comap_coe_at_top [StrictOrderedRing R] [Archimedean R] : comap (coe : ℤ → R) atTop = at_top :=
   (comap_embedding_at_top fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by exact_mod_cast hn⟩
 #align int.comap_coe_at_top Int.comap_coe_at_top
 
 @[simp]
-theorem Int.comap_coe_at_bot [StrictOrderedRing R] [Nontrivial R] [Archimedean R] :
-    comap (coe : ℤ → R) atBot = at_bot :=
+theorem Int.comap_coe_at_bot [StrictOrderedRing R] [Archimedean R] : comap (coe : ℤ → R) atBot = at_bot :=
   (comap_embedding_at_bot fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by simpa [neg_le] using hn⟩
 #align int.comap_coe_at_bot Int.comap_coe_at_bot
 
-theorem tendsto_coe_int_at_top_iff [StrictOrderedRing R] [Nontrivial R] [Archimedean R] {f : α → ℤ} {l : Filter α} :
+theorem tendsto_coe_int_at_top_iff [StrictOrderedRing R] [Archimedean R] {f : α → ℤ} {l : Filter α} :
     Tendsto (fun n => (f n : R)) l atTop ↔ Tendsto f l atTop := by rw [← tendsto_comap_iff, Int.comap_coe_at_top]
 #align tendsto_coe_int_at_top_iff tendsto_coe_int_at_top_iff
 
-theorem tendsto_coe_int_at_bot_iff [StrictOrderedRing R] [Nontrivial R] [Archimedean R] {f : α → ℤ} {l : Filter α} :
+theorem tendsto_coe_int_at_bot_iff [StrictOrderedRing R] [Archimedean R] {f : α → ℤ} {l : Filter α} :
     Tendsto (fun n => (f n : R)) l atBot ↔ Tendsto f l atBot := by rw [← tendsto_comap_iff, Int.comap_coe_at_bot]
 #align tendsto_coe_int_at_bot_iff tendsto_coe_int_at_bot_iff
 

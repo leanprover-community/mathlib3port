@@ -64,10 +64,18 @@ example (s : finset (fin 3)) (f : equiv.perm (fin 3)) : s.map f.to_embedding = s
 example (s : finset (fin 3)) (f : equiv.perm (fin 3)) : s.map f = s.map f.to_embedding := by simp
 ```
 -/
-@[simps]
 protected def Equiv.toEmbedding : α ↪ β :=
   ⟨f, f.Injective⟩
 #align equiv.to_embedding Equiv.toEmbedding
+
+@[simp]
+theorem Equiv.coe_to_embedding : ⇑f.toEmbedding = f :=
+  rfl
+#align equiv.coe_to_embedding Equiv.coe_to_embedding
+
+theorem Equiv.to_embedding_apply (a : α) : f.toEmbedding a = f a :=
+  rfl
+#align equiv.to_embedding_apply Equiv.to_embedding_apply
 
 instance Equiv.coeEmbedding : Coe (α ≃ β) (α ↪ β) :=
   ⟨Equiv.toEmbedding⟩

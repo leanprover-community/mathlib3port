@@ -91,7 +91,8 @@ protected def strictOrderedSemiring [StrictOrderedSemiring α] [Zero β] [One β
     [HasNatCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : StrictOrderedSemiring β :=
-  { hf.OrderedCancelAddCommMonoid f zero add nsmul, hf.OrderedSemiring f zero one add mul nsmul npow nat_cast with
+  { hf.OrderedCancelAddCommMonoid f zero add nsmul, hf.OrderedSemiring f zero one add mul nsmul npow nat_cast,
+    pullback_nonzero f zero one with
     mul_lt_mul_of_pos_left := fun a b c h hc =>
       show f (c * a) < f (c * b) by simpa only [mul, zero] using mul_lt_mul_of_pos_left ‹f a < f b› (by rwa [← zero]),
     mul_lt_mul_of_pos_right := fun a b c h hc =>
@@ -149,8 +150,7 @@ protected def linearOrderedSemiring [LinearOrderedSemiring α] [Zero β] [One β
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
     (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedSemiring β :=
-  { LinearOrder.lift f hf hsup hinf, pullback_nonzero f zero one,
-    hf.StrictOrderedSemiring f zero one add mul nsmul npow nat_cast with }
+  { LinearOrder.lift f hf hsup hinf, hf.StrictOrderedSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.linear_ordered_semiring Function.Injective.linearOrderedSemiring
 
 -- See note [reducible non-instances]
@@ -176,7 +176,7 @@ def linearOrderedRing [LinearOrderedRing α] [Zero β] [One β] [Add β] [Mul β
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
     (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedRing β :=
-  { LinearOrder.lift f hf hsup hinf, pullback_nonzero f zero one,
+  { LinearOrder.lift f hf hsup hinf,
     hf.StrictOrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 #align function.injective.linear_ordered_ring Function.Injective.linearOrderedRing
 
@@ -190,7 +190,7 @@ protected def linearOrderedCommRing [LinearOrderedCommRing α] [Zero β] [One β
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
     (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedCommRing β :=
-  { LinearOrder.lift f hf hsup hinf, pullback_nonzero f zero one,
+  { LinearOrder.lift f hf hsup hinf,
     hf.StrictOrderedCommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 #align function.injective.linear_ordered_comm_ring Function.Injective.linearOrderedCommRing
 

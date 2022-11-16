@@ -5,6 +5,7 @@ Authors: Joël Riou
 -/
 import Mathbin.AlgebraicTopology.SplitSimplicialObject
 import Mathbin.CategoryTheory.Preadditive.Default
+import Mathbin.AlgebraicTopology.DoldKan.Degeneracies
 
 /-!
 
@@ -19,7 +20,8 @@ when `C` is a preadditive category, and get an isomorphism
 
 noncomputable section
 
-open CategoryTheory CategoryTheory.Limits CategoryTheory.Category CategoryTheory.Preadditive Opposite
+open
+  CategoryTheory CategoryTheory.Limits CategoryTheory.Category CategoryTheory.Preadditive Opposite AlgebraicTopology.DoldKan
 
 open BigOperators Simplicial
 
@@ -90,6 +92,16 @@ theorem σ_comp_π_summand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) : X.σ i ≫ s
   dsimp at h⊢
   linarith
 #align simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_π_summand_id_eq_zero
+
+/-- If a simplicial object `X` in an additive category is split,
+then `P_infty` vanishes on all the summands of `X _[n]` which do
+not correspond to the identity of `[n]`. -/
+theorem ι_summand_comp_P_infty_eq_zero {X : SimplicialObject C} (s : SimplicialObject.Splitting X) {n : ℕ}
+    (A : SimplicialObject.Splitting.IndexSet (op [n])) (hA : ¬A.EqId) : s.ιSummand A ≫ pInfty.f n = 0 := by
+  rw [SimplicialObject.Splitting.IndexSet.eq_id_iff_mono] at hA
+  rw [SimplicialObject.Splitting.ι_summand_eq, assoc, degeneracy_comp_P_infty X n A.e hA, comp_zero]
+#align
+  simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ι_summand_comp_P_infty_eq_zero
 
 end Splitting
 

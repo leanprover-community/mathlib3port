@@ -92,5 +92,12 @@ instance (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module
     [∀ i, NoZeroSmulDivisors α <| f i] : NoZeroSmulDivisors α (∀ i : I, f i) :=
   ⟨fun c x h => or_iff_not_imp_left.mpr fun hc => funext fun i => (smul_eq_zero.mp (congr_fun h i)).resolve_left hc⟩
 
+/-- A special case of `pi.no_zero_smul_divisors` for non-dependent types. Lean struggles to
+synthesize this instance by itself elsewhere in the library. -/
+instance _root_.function.no_zero_smul_divisors {ι α β : Type _} {r : Semiring α} {m : AddCommMonoid β} [Module α β]
+    [NoZeroSmulDivisors α β] : NoZeroSmulDivisors α (ι → β) :=
+  Pi.no_zero_smul_divisors _
+#align pi._root_.function.no_zero_smul_divisors pi._root_.function.no_zero_smul_divisors
+
 end Pi
 

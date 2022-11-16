@@ -263,9 +263,9 @@ theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalg
       ⟨(fg_iff_Structure_fg _).1 (fg.sup (Pfg.range _) (Qfg.range _)), ⟨substructure.subtype _⟩⟩, _⟩
   ext n
   have hgn := (embedding.ext_iff.1 hg) ((PM.comp NP).equivRange n)
-  simp only [embedding.comp_apply, equiv.coe_to_embedding, Equiv.symm_apply_apply, substructure.coe_subtype,
+  simp only [embedding.comp_apply, Equiv.coe_to_embedding, Equiv.symm_apply_apply, substructure.coe_subtype,
     embedding.equiv_range_apply] at hgn
-  simp only [embedding.comp_apply, equiv.coe_to_embedding, substructure.coe_inclusion, Set.coe_inclusion,
+  simp only [embedding.comp_apply, Equiv.coe_to_embedding, substructure.coe_inclusion, Set.coe_inclusion,
     embedding.equiv_range_apply, hgn]
 #align first_order.language.is_ultrahomogeneous.amalgamation_age FirstOrder.Language.IsUltrahomogeneous.amalgamation_age
 

@@ -2171,6 +2171,15 @@ theorem last_eq_nth_le :
     exact cons_ne_nil b l
 #align list.last_eq_nth_le List.last_eq_nth_le
 
+theorem nth_le_length_sub_one {l : List α} (h : l.length - 1 < l.length) :
+    l.nthLe (l.length - 1) h =
+      l.last
+        (by
+          rintro rfl
+          exact Nat.lt_irrefl 0 h) :=
+  (last_eq_nth_le l _).symm
+#align list.nth_le_length_sub_one List.nth_le_length_sub_one
+
 @[simp]
 theorem nth_concat_length : ∀ (l : List α) (a : α), (l ++ [a]).nth l.length = some a
   | [], a => rfl
@@ -2183,6 +2192,27 @@ theorem nth_le_cons_length (x : α) (xs : List α) (n : ℕ) (h : n = xs.length)
   congr
   simp [h]
 #align list.nth_le_cons_length List.nth_le_cons_length
+
+theorem take_one_drop_eq_of_lt_length {l : List α} {n : ℕ} (h : n < l.length) : (l.drop n).take 1 = [l.nthLe n h] := by
+  induction' l with x l ih generalizing n
+  · cases h
+    
+  · by_cases h₁:l = []
+    · subst h₁
+      rw [nth_le_singleton]
+      simp at h
+      subst h
+      simp
+      
+    have h₂ := h
+    rw [length_cons, Nat.lt_succ_iff, le_iff_eq_or_lt] at h₂
+    cases n
+    · simp
+      
+    rw [drop, nth_le]
+    apply ih
+    
+#align list.take_one_drop_eq_of_lt_length List.take_one_drop_eq_of_lt_length
 
 /- warning: list.ext -> List.ext is a dubious translation:
 lean 3 declaration is
@@ -2916,6 +2946,36 @@ theorem take_eq_nil_iff {l : List α} {k : ℕ} : l.take k = [] ↔ l = [] ∨ k
   cases l <;> cases k <;> simp [Nat.succ_ne_zero]
 #align list.take_eq_nil_iff List.take_eq_nil_iff
 
+theorem take_eq_take : ∀ {l : List α} {m n : ℕ}, l.take m = l.take n ↔ min m l.length = min n l.length
+  | [], m, n => by simp
+  | x :: xs, 0, 0 => by simp
+  | x :: xs, m + 1, 0 => by simp
+  | x :: xs, 0, n + 1 => by simp [@eq_comm ℕ 0]
+  | x :: xs, m + 1, n + 1 => by simp [Nat.min_succ_succ, take_eq_take]
+#align list.take_eq_take List.take_eq_take
+
+theorem take_add (l : List α) (m n : ℕ) : l.take (m + n) = l.take m ++ (l.drop m).take n := by
+  convert_to take (m + n) (take m l ++ drop m l) = take m l ++ take n (drop m l)
+  · rw [take_append_drop]
+    
+  rw [take_append_eq_append_take, take_all_of_le, append_right_inj]
+  swap
+  · trans m
+    · apply length_take_le
+      
+    · simp
+      
+    
+  simp only [take_eq_take, length_take, length_drop]
+  generalize l.length = k
+  by_cases h:m ≤ k
+  · simp [min_eq_left_iff.mpr h]
+    
+  · push_neg  at h
+    simp [Nat.sub_eq_zero_of_le (le_of_lt h)]
+    
+#align list.take_add List.take_add
+
 theorem init_eq_take (l : List α) : l.init = l.take l.length.pred := by
   cases' l with x l
   · simp [init]
@@ -3031,6 +3091,19 @@ theorem drop_length (l : List α) : l.drop l.length = [] :=
     
 #align list.drop_length List.drop_length
 -/
+
+theorem drop_length_cons {l : List α} (h : l ≠ []) (a : α) : (a :: l).drop l.length = [l.last h] := by
+  induction' l with y l ih generalizing a
+  · cases h rfl
+    
+  · simp only [drop, length]
+    by_cases h₁:l = []
+    · simp [h₁]
+      
+    rw [last_cons h₁]
+    exact ih h₁ y
+    
+#align list.drop_length_cons List.drop_length_cons
 
 /-- Dropping the elements up to `n` in `l₁ ++ l₂` is the same as dropping the elements up to `n`
 in `l₁`, dropping the elements up to `n - l₁.length` in `l₂`, and appending them. -/

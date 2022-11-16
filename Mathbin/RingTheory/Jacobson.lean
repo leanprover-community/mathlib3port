@@ -423,8 +423,8 @@ theorem is_jacobson_polynomial_of_is_jacobson (hR : IsJacobson R) : IsJacobson R
   have hi : Function.Surjective (i : R → R') := ((Quotient.mk'' I).comp C).range_restrict_surjective
   have hi' : (Polynomial.mapRingHom i : R[X] →+* R'[X]).ker ≤ I := by
     refine' fun f hf => polynomial_mem_ideal_of_coeff_mem_ideal I f fun n => _
-    replace hf := congr_arg (fun g : Polynomial ((Quotient.mk'' I).comp C).range => g.Coeff n) hf
-    change (Polynomial.map ((Quotient.mk'' I).comp C).range_restrict f).Coeff n = 0 at hf
+    replace hf := congr_arg (fun g : Polynomial ((Quotient.mk'' I).comp C).range => g.coeff n) hf
+    change (Polynomial.map ((Quotient.mk'' I).comp C).range_restrict f).coeff n = 0 at hf
     rw [coeff_map, Subtype.ext_iff] at hf
     rwa [mem_comap, ← quotient.eq_zero_iff_mem, ← RingHom.comp_apply]
   haveI := map_is_prime_of_surjective (show Function.Surjective (map_ring_hom i) from map_surjective i hi) hi'

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 -/
 import Mathbin.Algebra.EuclideanDomain.Defs
-import Mathbin.Algebra.GroupWithZero.Units
+import Mathbin.Algebra.GroupWithZero.Units.Lemmas
 import Mathbin.Data.Nat.Order.Basic
 import Mathbin.Data.Int.Order.Basic
 

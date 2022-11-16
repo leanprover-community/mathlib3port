@@ -361,7 +361,7 @@ protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b := by
 #align real.mul_pos Real.mul_pos
 
 instance : StrictOrderedCommRing ℝ :=
-  { Real.commRing, Real.partialOrder, Real.semiring with
+  { Real.commRing, Real.partialOrder, Real.semiring with exists_pair_ne := ⟨0, 1, Real.zero_lt_one.Ne⟩,
     add_le_add_left := by
       simp only [le_iff_eq_or_lt]
       rintro a b ⟨rfl, h⟩
@@ -396,7 +396,7 @@ instance : OrderedAddCommMonoid ℝ :=
   inferInstance
 
 instance : Nontrivial ℝ :=
-  ⟨⟨0, 1, ne_of_lt Real.zero_lt_one⟩⟩
+  inferInstance
 
 private irreducible_def sup : ℝ → ℝ → ℝ
   | ⟨x⟩, ⟨y⟩ => ⟨Quotient.map₂ (· ⊔ ·) (fun x₁ x₂ hx y₁ y₂ hy => sup_equiv_sup hx hy) x y⟩

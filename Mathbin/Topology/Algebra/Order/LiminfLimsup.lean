@@ -451,8 +451,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
     
 #align limsup_eq_tendsto_sum_indicator_nat_at_top limsup_eq_tendsto_sum_indicator_nat_at_top
 
-theorem limsup_eq_tendsto_sum_indicator_at_top (R : Type _) [StrictOrderedSemiring R] [Nontrivial R] [Archimedean R]
-    (s : ℕ → Set α) :
+theorem limsup_eq_tendsto_sum_indicator_at_top (R : Type _) [StrictOrderedSemiring R] [Archimedean R] (s : ℕ → Set α) :
     limsup s atTop =
       { ω | Tendsto (fun n => ∑ k in Finset.range n, (s (k + 1)).indicator (1 : α → R) ω) atTop atTop } :=
   by

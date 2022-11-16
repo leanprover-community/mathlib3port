@@ -7,6 +7,8 @@ import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Data.Polynomial.FieldDivision
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.Adjoin.Basic
+import Mathbin.RingTheory.FinitePresentation
+import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.PowerBasis
 import Mathbin.RingTheory.PrincipalIdealDomain
 

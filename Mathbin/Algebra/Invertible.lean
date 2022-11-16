@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Mathbin.Algebra.Group.Units
-import Mathbin.Algebra.GroupWithZero.Units
+import Mathbin.Algebra.GroupWithZero.Units.Lemmas
 import Mathbin.Algebra.Ring.Basic
 
 /-!

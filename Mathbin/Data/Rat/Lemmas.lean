@@ -6,6 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 import Mathbin.Data.Rat.Defs
 import Mathbin.Data.Int.Cast.Lemmas
 import Mathbin.Data.Int.Div
+import Mathbin.Algebra.GroupWithZero.Units.Lemmas
 import Mathbin.Tactic.NthRewrite.Default
 
 /-!

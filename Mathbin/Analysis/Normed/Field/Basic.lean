@@ -3,6 +3,7 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
+import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Analysis.Normed.Group.InfiniteSum
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Instances.Ennreal
@@ -1119,3 +1120,5 @@ instance toNormedCommRing [NormedCommRing R] [SubringClass S R] (s : S) : Normed
 
 end SubringClass
 
+/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
+-- Guard again import creep.

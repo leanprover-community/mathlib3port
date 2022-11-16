@@ -976,6 +976,19 @@ theorem mem_neighbor_finset (w : V) : w ∈ G.neighborFinset v ↔ G.Adj v w :=
   Set.mem_to_finset
 #align simple_graph.mem_neighbor_finset SimpleGraph.mem_neighbor_finset
 
+@[simp]
+theorem not_mem_neighbor_finset_self : v ∉ G.neighborFinset v :=
+  (mem_neighbor_finset _ _ _).Not.mpr <| G.loopless _
+#align simple_graph.not_mem_neighbor_finset_self SimpleGraph.not_mem_neighbor_finset_self
+
+theorem neighbor_finset_disjoint_singleton : Disjoint (G.neighborFinset v) {v} :=
+  Finset.disjoint_singleton_right.mpr <| not_mem_neighbor_finset_self _ _
+#align simple_graph.neighbor_finset_disjoint_singleton SimpleGraph.neighbor_finset_disjoint_singleton
+
+theorem singleton_disjoint_neighbor_finset : Disjoint {v} (G.neighborFinset v) :=
+  Finset.disjoint_singleton_left.mpr <| not_mem_neighbor_finset_self _ _
+#align simple_graph.singleton_disjoint_neighbor_finset SimpleGraph.singleton_disjoint_neighbor_finset
+
 /-- `G.degree v` is the number of vertices adjacent to `v`.
 -/
 def degree : ℕ :=

@@ -129,19 +129,6 @@ theorem eq_preimage_iff_image_eq {α β} (e : α ≃ β) (s t) : s = e ⁻¹' t 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem prod_comm_preimage {α β} {s : Set α} {t : Set β} : Equiv.prodComm α β ⁻¹' t ×ˢ s = s ×ˢ t :=
-  preimage_swap_prod _ _
-#align equiv.prod_comm_preimage Equiv.prod_comm_preimage
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prod_comm_image {α β} {s : Set α} {t : Set β} : Equiv.prodComm α β '' s ×ˢ t = t ×ˢ s :=
-  image_swap_prod _ _
-#align equiv.prod_comm_image Equiv.prod_comm_image
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]

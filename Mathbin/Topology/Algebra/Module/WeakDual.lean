@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Moritz Doll
 -/
 import Mathbin.Topology.Algebra.Module.Basic
+import Mathbin.LinearAlgebra.BilinearMap
 
 /-!
 # Weak dual topology

@@ -5,7 +5,8 @@ Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Data.Rat.Init
 import Mathbin.Data.Int.Cast.Defs
-import Mathbin.Data.Int.Div
+import Mathbin.Data.Int.Dvd.Basic
+import Mathbin.Algebra.Ring.Regular
 import Mathbin.Data.Nat.Gcd.Basic
 import Mathbin.Data.Pnat.Defs
 
@@ -781,3 +782,5 @@ end Casts
 
 end Rat
 
+/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
+-- Guard against import creep.

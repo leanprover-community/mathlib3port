@@ -243,6 +243,25 @@ theorem le_succ_iterate (k : ℕ) (x : α) : x ≤ (succ^[k]) x := by
   exact Monotone.le_iterate_of_le succ_mono le_succ k x
 #align order.le_succ_iterate Order.le_succ_iterate
 
+theorem is_max_iterate_succ_of_eq_of_lt {n m : ℕ} (h_eq : (succ^[n]) a = (succ^[m]) a) (h_lt : n < m) :
+    IsMax ((succ^[n]) a) := by
+  refine' max_of_succ_le (le_trans _ h_eq.symm.le)
+  have : succ ((succ^[n]) a) = (succ^[n + 1]) a := by rw [Function.iterate_succ']
+  rw [this]
+  have h_le : n + 1 ≤ m := Nat.succ_le_of_lt h_lt
+  exact Monotone.monotone_iterate_of_le_map succ_mono (le_succ a) h_le
+#align order.is_max_iterate_succ_of_eq_of_lt Order.is_max_iterate_succ_of_eq_of_lt
+
+theorem is_max_iterate_succ_of_eq_of_ne {n m : ℕ} (h_eq : (succ^[n]) a = (succ^[m]) a) (h_ne : n ≠ m) :
+    IsMax ((succ^[n]) a) := by
+  cases le_total n m
+  · exact is_max_iterate_succ_of_eq_of_lt h_eq (lt_of_le_of_ne h h_ne)
+    
+  · rw [h_eq]
+    exact is_max_iterate_succ_of_eq_of_lt h_eq.symm (lt_of_le_of_ne h h_ne.symm)
+    
+#align order.is_max_iterate_succ_of_eq_of_ne Order.is_max_iterate_succ_of_eq_of_ne
+
 theorem Iio_succ_of_not_is_max (ha : ¬IsMax a) : iio (succ a) = iic a :=
   Set.ext fun x => lt_succ_iff_of_not_is_max ha
 #align order.Iio_succ_of_not_is_max Order.Iio_succ_of_not_is_max
@@ -585,6 +604,16 @@ theorem pred_iterate_le (k : ℕ) (x : α) : (pred^[k]) x ≤ x := by
   exact Monotone.iterate_le_of_le pred_mono pred_le k x
 #align order.pred_iterate_le Order.pred_iterate_le
 
+theorem is_min_iterate_pred_of_eq_of_lt {n m : ℕ} (h_eq : (pred^[n]) a = (pred^[m]) a) (h_lt : n < m) :
+    IsMin ((pred^[n]) a) :=
+  @is_max_iterate_succ_of_eq_of_lt αᵒᵈ _ _ _ _ _ h_eq h_lt
+#align order.is_min_iterate_pred_of_eq_of_lt Order.is_min_iterate_pred_of_eq_of_lt
+
+theorem is_min_iterate_pred_of_eq_of_ne {n m : ℕ} (h_eq : (pred^[n]) a = (pred^[m]) a) (h_ne : n ≠ m) :
+    IsMin ((pred^[n]) a) :=
+  @is_max_iterate_succ_of_eq_of_ne αᵒᵈ _ _ _ _ _ h_eq h_ne
+#align order.is_min_iterate_pred_of_eq_of_ne Order.is_min_iterate_pred_of_eq_of_ne
+
 theorem Ioi_pred_of_not_is_min (ha : ¬IsMin a) : ioi (pred a) = ici a :=
   Set.ext fun x => pred_lt_iff_of_not_is_min ha
 #align order.Ioi_pred_of_not_is_min Order.Ioi_pred_of_not_is_min
@@ -874,6 +903,34 @@ theorem succ_pred [NoMinOrder α] (a : α) : succ (pred a) = a :=
 theorem pred_succ [NoMaxOrder α] (a : α) : pred (succ a) = a :=
   (covby_succ _).pred_eq
 #align order.pred_succ Order.pred_succ
+
+theorem pred_succ_iterate_of_not_is_max (i : α) (n : ℕ) (hin : ¬IsMax ((succ^[n - 1]) i)) :
+    (pred^[n]) ((succ^[n]) i) = i := by
+  induction' n with n hn
+  · simp only [Function.iterate_zero, id.def]
+    
+  rw [Nat.succ_sub_succ_eq_sub, Nat.sub_zero] at hin
+  have h_not_max : ¬IsMax ((succ^[n - 1]) i) := by
+    cases n
+    · simpa using hin
+      
+    rw [Nat.succ_sub_succ_eq_sub, Nat.sub_zero] at hn⊢
+    have h_sub_le : (succ^[n]) i ≤ (succ^[n.succ]) i := by
+      rw [Function.iterate_succ']
+      exact le_succ _
+    refine' fun h_max => hin fun j hj => _
+    have hj_le : j ≤ (succ^[n]) i := h_max (h_sub_le.trans hj)
+    exact hj_le.trans h_sub_le
+  rw [Function.iterate_succ, Function.iterate_succ']
+  simp only [Function.comp_apply]
+  rw [pred_succ_of_not_is_max hin]
+  exact hn h_not_max
+#align order.pred_succ_iterate_of_not_is_max Order.pred_succ_iterate_of_not_is_max
+
+theorem succ_pred_iterate_of_not_is_min (i : α) (n : ℕ) (hin : ¬IsMin ((pred^[n - 1]) i)) :
+    (succ^[n]) ((pred^[n]) i) = i :=
+  @pred_succ_iterate_of_not_is_max αᵒᵈ _ _ _ i n hin
+#align order.succ_pred_iterate_of_not_is_min Order.succ_pred_iterate_of_not_is_min
 
 end SuccPredOrder
 

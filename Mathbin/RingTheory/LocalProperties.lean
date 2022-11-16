@@ -5,7 +5,7 @@ Authors: Andrew Yang
 -/
 import Mathbin.GroupTheory.Submonoid.Pointwise
 import Mathbin.Logic.Equiv.TransferInstance
-import Mathbin.RingTheory.Finiteness
+import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.Localization.AtPrime
 import Mathbin.RingTheory.Localization.Away
 import Mathbin.RingTheory.Localization.Integer

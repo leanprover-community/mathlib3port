@@ -575,6 +575,16 @@ theorem normalized_factors_irreducible {a : α} (ha : Irreducible a) : normalize
 #align
   unique_factorization_monoid.normalized_factors_irreducible UniqueFactorizationMonoid.normalized_factors_irreducible
 
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (p q «expr ∈ » normalized_factors[unique_factorization_monoid.normalized_factors] a) -/
+theorem normalized_factors_eq_of_dvd (a : α) :
+    ∀ (p q) (_ : p ∈ normalizedFactors a) (_ : q ∈ normalizedFactors a), p ∣ q → p = q := by
+  intro p hp q hq hdvd
+  convert
+      normalize_eq_normalize hdvd
+        ((prime_of_normalized_factor _ hp).Irreducible.dvd_symm (prime_of_normalized_factor _ hq).Irreducible hdvd) <;>
+    apply (normalize_normalized_factor _ _).symm <;> assumption
+#align unique_factorization_monoid.normalized_factors_eq_of_dvd UniqueFactorizationMonoid.normalized_factors_eq_of_dvd
+
 theorem exists_mem_normalized_factors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
     p ∣ a → ∃ q ∈ normalizedFactors a, p ~ᵤ q := fun ⟨b, hb⟩ =>
   have hb0 : b ≠ 0 := fun hb0 => by simp_all
@@ -1018,6 +1028,164 @@ theorem count_normalized_factors_eq' {p x : R} (hp : p = 0 ∨ Irreducible p) (h
 #align unique_factorization_monoid.count_normalized_factors_eq' UniqueFactorizationMonoid.count_normalized_factors_eq'
 
 end multiplicity
+
+section Multiplicative
+
+variable [CancelCommMonoidWithZero α] [UniqueFactorizationMonoid α]
+
+variable {β : Type _} [CancelCommMonoidWithZero β]
+
+open BigOperators
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (q q' «expr ∈ » insert[has_insert.insert] p s) -/
+theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s : Finset α} (i : α → ℕ) (p : α) (hps : p ∉ s)
+    (is_prime : ∀ q ∈ insert p s, Prime q)
+    (is_coprime : ∀ (q q') (_ : q ∈ insert p s) (_ : q' ∈ insert p s), q ∣ q' → q = q') :
+    ∀ q : α, q ∣ p ^ i p → (q ∣ ∏ p' in s, p' ^ i p') → IsUnit q := by
+  have hp := is_prime _ (Finset.mem_insert_self _ _)
+  refine' fun _ => no_factors_of_no_prime_factors (pow_ne_zero _ hp.ne_zero) _
+  intro d hdp hdprod hd
+  apply hps
+  replace hdp := hd.dvd_of_dvd_pow hdp
+  obtain ⟨q, q_mem', hdq⟩ := hd.exists_mem_multiset_dvd hdprod
+  obtain ⟨q, q_mem, rfl⟩ := multiset.mem_map.mp q_mem'
+  replace hdq := hd.dvd_of_dvd_pow hdq
+  have : p ∣ q := dvd_trans (hd.irreducible.dvd_symm hp.irreducible hdp) hdq
+  convert q_mem
+  exact IsCoprime _ (Finset.mem_insert_self p s) _ (Finset.mem_insert_of_mem q_mem) this
+#align
+  unique_factorization_monoid.prime_pow_coprime_prod_of_coprime_insert UniqueFactorizationMonoid.prime_pow_coprime_prod_of_coprime_insert
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/-- If `P` holds for units and powers of primes,
+and `P x ∧ P y` for coprime `x, y` implies `P (x * y)`,
+then `P` holds on a product of powers of distinct primes. -/
+@[elab_as_elim]
+theorem inductionOnPrimePower {P : α → Prop} (s : Finset α) (i : α → ℕ) (is_prime : ∀ p ∈ s, Prime p)
+    (is_coprime : ∀ (p q) (_ : p ∈ s) (_ : q ∈ s), p ∣ q → p = q) (h1 : ∀ {x}, IsUnit x → P x)
+    (hpr : ∀ {p} (i : ℕ), Prime p → P (p ^ i))
+    (hcp : ∀ {x y}, (∀ p, p ∣ x → p ∣ y → IsUnit p) → P x → P y → P (x * y)) : P (∏ p in s, p ^ i p) := by
+  letI := Classical.decEq α
+  induction' s using Finset.induction_on with p f' hpf' ih
+  · simpa using h1 is_unit_one
+    
+  rw [Finset.prod_insert hpf']
+  exact
+    hcp (prime_pow_coprime_prod_of_coprime_insert i p hpf' is_prime IsCoprime)
+      (hpr (i p) (is_prime _ (Finset.mem_insert_self _ _)))
+      (ih (fun q hq => is_prime _ (Finset.mem_insert_of_mem hq)) fun q hq q' hq' =>
+        IsCoprime _ (Finset.mem_insert_of_mem hq) _ (Finset.mem_insert_of_mem hq'))
+#align unique_factorization_monoid.induction_on_prime_power UniqueFactorizationMonoid.inductionOnPrimePower
+
+/-- If `P` holds for `0`, units and powers of primes,
+and `P x ∧ P y` for coprime `x, y` implies `P (x * y)`,
+then `P` holds on all `a : α`. -/
+@[elab_as_elim]
+theorem inductionOnCoprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}, IsUnit x → P x)
+    (hpr : ∀ {p} (i : ℕ), Prime p → P (p ^ i))
+    (hcp : ∀ {x y}, (∀ p, p ∣ x → p ∣ y → IsUnit p) → P x → P y → P (x * y)) : P a := by
+  letI := Classical.decEq α
+  have P_of_associated : ∀ {x y}, Associated x y → P x → P y := by
+    rintro x y ⟨u, rfl⟩ hx
+    exact hcp (fun p _ hpx => is_unit_of_dvd_unit hpx u.is_unit) hx (h1 u.is_unit)
+  by_cases ha0:a = 0
+  · rwa [ha0]
+    
+  haveI : Nontrivial α := ⟨⟨_, _, ha0⟩⟩
+  letI : NormalizationMonoid α := UniqueFactorizationMonoid.normalizationMonoid
+  refine' P_of_associated (normalized_factors_prod ha0) _
+  rw [← (normalized_factors a).map_id, Finset.prod_multiset_map_count]
+  refine' induction_on_prime_power _ _ _ _ @h1 @hpr @hcp <;> simp only [Multiset.mem_to_finset]
+  · apply prime_of_normalized_factor
+    
+  · apply normalized_factors_eq_of_dvd
+    
+#align unique_factorization_monoid.induction_on_coprime UniqueFactorizationMonoid.inductionOnCoprime
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (p q «expr ∈ » s) -/
+/-- If `f` maps `p ^ i` to `(f p) ^ i` for primes `p`, and `f`
+is multiplicative on coprime elements, then `f` is multiplicative on all products of primes. -/
+@[elab_as_elim]
+theorem multiplicative_prime_power {f : α → β} (s : Finset α) (i j : α → ℕ) (is_prime : ∀ p ∈ s, Prime p)
+    (is_coprime : ∀ (p q) (_ : p ∈ s) (_ : q ∈ s), p ∣ q → p = q) (h1 : ∀ {x y}, IsUnit y → f (x * y) = f x * f y)
+    (hpr : ∀ {p} (i : ℕ), Prime p → f (p ^ i) = f p ^ i)
+    (hcp : ∀ {x y}, (∀ p, p ∣ x → p ∣ y → IsUnit p) → f (x * y) = f x * f y) :
+    f (∏ p in s, p ^ (i p + j p)) = f (∏ p in s, p ^ i p) * f (∏ p in s, p ^ j p) := by
+  letI := Classical.decEq α
+  induction' s using Finset.induction_on with p s hps ih
+  · simpa using h1 is_unit_one
+    
+  have hpr_p := is_prime _ (Finset.mem_insert_self _ _)
+  have hpr_s : ∀ p ∈ s, Prime p := fun p hp => is_prime _ (Finset.mem_insert_of_mem hp)
+  have hcp_p := fun i => prime_pow_coprime_prod_of_coprime_insert i p hps is_prime IsCoprime
+  have hcp_s : ∀ (p q) (_ : p ∈ s) (_ : q ∈ s), p ∣ q → p = q := fun p hp q hq =>
+    IsCoprime p (Finset.mem_insert_of_mem hp) q (Finset.mem_insert_of_mem hq)
+  rw [Finset.prod_insert hps, Finset.prod_insert hps, Finset.prod_insert hps, hcp (hcp_p _), hpr _ hpr_p, hcp (hcp_p _),
+    hpr _ hpr_p, hcp (hcp_p _), hpr _ hpr_p, ih hpr_s hcp_s, pow_add, mul_assoc, mul_left_comm (f p ^ j p), mul_assoc]
+#align unique_factorization_monoid.multiplicative_prime_power UniqueFactorizationMonoid.multiplicative_prime_power
+
+/-- If `f` maps `p ^ i` to `(f p) ^ i` for primes `p`, and `f`
+is multiplicative on coprime elements, then `f` is multiplicative everywhere. -/
+theorem multiplicative_of_coprime (f : α → β) (a b : α) (h0 : f 0 = 0) (h1 : ∀ {x y}, IsUnit y → f (x * y) = f x * f y)
+    (hpr : ∀ {p} (i : ℕ), Prime p → f (p ^ i) = f p ^ i)
+    (hcp : ∀ {x y}, (∀ p, p ∣ x → p ∣ y → IsUnit p) → f (x * y) = f x * f y) : f (a * b) = f a * f b := by
+  letI := Classical.decEq α
+  by_cases ha0:a = 0
+  · rw [ha0, zero_mul, h0, zero_mul]
+    
+  by_cases hb0:b = 0
+  · rw [hb0, mul_zero, h0, mul_zero]
+    
+  by_cases hf1:f 1 = 0
+  · calc
+      f (a * b) = f (a * b * 1) := by rw [mul_one]
+      _ = 0 := by simp only [h1 is_unit_one, hf1, mul_zero]
+      _ = f a * f (b * 1) := by simp only [h1 is_unit_one, hf1, mul_zero]
+      _ = f a * f b := by rw [mul_one]
+      
+    
+  have h1' : f 1 = 1 := (mul_left_inj' hf1).mp (by rw [← h1 is_unit_one, one_mul, one_mul])
+  haveI : Nontrivial α := ⟨⟨_, _, ha0⟩⟩
+  letI : NormalizationMonoid α := UniqueFactorizationMonoid.normalizationMonoid
+  suffices
+    f
+        (∏ p in (normalized_factors a).toFinset ∪ (normalized_factors b).toFinset,
+          p ^ ((normalized_factors a).count p + (normalized_factors b).count p)) =
+      f (∏ p in (normalized_factors a).toFinset ∪ (normalized_factors b).toFinset, p ^ (normalized_factors a).count p) *
+        f
+          (∏ p : α in (normalized_factors a).toFinset ∪ (normalized_factors b).toFinset,
+            p ^ (normalized_factors b).count p)
+    by
+    obtain ⟨ua, a_eq⟩ := normalized_factors_prod ha0
+    obtain ⟨ub, b_eq⟩ := normalized_factors_prod hb0
+    rw [← a_eq, ← b_eq, mul_right_comm _ ↑ua, h1 ua.is_unit, h1 ub.is_unit, h1 ua.is_unit, ← mul_assoc, h1 ub.is_unit,
+      mul_right_comm _ (f ua), ← mul_assoc]
+    congr
+    rw [← (normalized_factors a).map_id, ← (normalized_factors b).map_id, Finset.prod_multiset_map_count,
+      Finset.prod_multiset_map_count, Finset.prod_subset (Finset.subset_union_left _ (normalized_factors b).toFinset),
+      Finset.prod_subset (Finset.subset_union_right _ (normalized_factors b).toFinset), ← Finset.prod_mul_distrib]
+    simp_rw [id.def, ← pow_add, this]
+    all_goals simp only [Multiset.mem_to_finset]
+    · intro p hpab hpb
+      simp [hpb]
+      
+    · intro p hpab hpa
+      simp [hpa]
+      
+  refine' multiplicative_prime_power _ _ _ _ _ @h1 @hpr @hcp
+  all_goals simp only [Multiset.mem_to_finset, Finset.mem_union]
+  · rintro p (hpa | hpb) <;> apply prime_of_normalized_factor <;> assumption
+    
+  · rintro p (hp | hp) q (hq | hq) hdvd <;>
+      rw [← normalize_normalized_factor _ hp, ← normalize_normalized_factor _ hq] <;>
+        exact
+          normalize_eq_normalize hdvd
+            ((prime_of_normalized_factor _ hp).Irreducible.dvd_symm (prime_of_normalized_factor _ hq).Irreducible hdvd)
+    
+#align unique_factorization_monoid.multiplicative_of_coprime UniqueFactorizationMonoid.multiplicative_of_coprime
+
+end Multiplicative
 
 end UniqueFactorizationMonoid
 

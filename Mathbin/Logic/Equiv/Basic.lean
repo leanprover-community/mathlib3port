@@ -97,10 +97,19 @@ theorem prod_congr_symm {α₁ β₁ α₂ β₂ : Type _} (e₁ : α₁ ≃ α�
 
 /-- Type product is commutative up to an equivalence: `α × β ≃ β × α`. This is `prod.swap` as an
 equivalence.-/
-@[simps apply]
 def prodComm (α β : Type _) : α × β ≃ β × α :=
-  ⟨Prod.swap, Prod.swap, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
+  ⟨Prod.swap, Prod.swap, Prod.swap_swap, Prod.swap_swap⟩
 #align equiv.prod_comm Equiv.prodComm
+
+@[simp]
+theorem coe_prod_comm (α β : Type _) : ⇑(prodComm α β) = Prod.swap :=
+  rfl
+#align equiv.coe_prod_comm Equiv.coe_prod_comm
+
+@[simp]
+theorem prod_comm_apply {α β : Type _} (x : α × β) : prodComm α β x = x.swap :=
+  rfl
+#align equiv.prod_comm_apply Equiv.prod_comm_apply
 
 @[simp]
 theorem prod_comm_symm (α β) : (prodComm α β).symm = prodComm β α :=

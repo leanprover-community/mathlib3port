@@ -1489,6 +1489,30 @@ theorem exists_min_image (s : Finset β) (f : β → α) (h : s.Nonempty) : ∃ 
 
 end ExistsMaxMin
 
+theorem is_glb_iff_is_least [LinearOrder α] (i : α) (s : Finset α) (hs : s.Nonempty) :
+    IsGlb (s : Set α) i ↔ IsLeast (↑s) i := by
+  refine' ⟨fun his => _, IsLeast.is_glb⟩
+  suffices i = min' s hs by
+    rw [this]
+    exact is_least_min' s hs
+  rw [IsGlb, IsGreatest, mem_lower_bounds, mem_upper_bounds] at his
+  exact le_antisymm (his.1 (Finset.min' s hs) (Finset.min'_mem s hs)) (his.2 _ (Finset.min'_le s))
+#align finset.is_glb_iff_is_least Finset.is_glb_iff_is_least
+
+theorem is_lub_iff_is_greatest [LinearOrder α] (i : α) (s : Finset α) (hs : s.Nonempty) :
+    IsLub (s : Set α) i ↔ IsGreatest (↑s) i :=
+  @is_glb_iff_is_least αᵒᵈ _ i s hs
+#align finset.is_lub_iff_is_greatest Finset.is_lub_iff_is_greatest
+
+theorem is_glb_mem [LinearOrder α] {i : α} (s : Finset α) (his : IsGlb (s : Set α) i) (hs : s.Nonempty) : i ∈ s := by
+  rw [← mem_coe]
+  exact ((is_glb_iff_is_least i s hs).mp his).1
+#align finset.is_glb_mem Finset.is_glb_mem
+
+theorem is_lub_mem [LinearOrder α] {i : α} (s : Finset α) (his : IsLub (s : Set α) i) (hs : s.Nonempty) : i ∈ s :=
+  @is_glb_mem αᵒᵈ _ i s his hs
+#align finset.is_lub_mem Finset.is_lub_mem
+
 end Finset
 
 namespace Multiset

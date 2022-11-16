@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
 import Mathbin.Algebra.Hom.Equiv.Units.Basic
-import Mathbin.Algebra.GroupWithZero.Units
+import Mathbin.Algebra.GroupWithZero.Units.Basic
 
 /-!
 # Multiplication by a nonzero element in a `group_with_zero` is a permutation.
