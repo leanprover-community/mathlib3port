@@ -38,7 +38,7 @@ target fetchOleans (_pkg : Package) : Unit := do
     untarReleaseArtifact releaseRepo tag oleanTarName libDir
   return .nil
 
-require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"fda314dc7be6c752c71160adc35a574c8faaa424"
+require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"03bfa2318c1f739e1b0ff77f290e8dc025725b87"
 
 @[default_target]
 lean_lib Mathbin where

@@ -20,7 +20,7 @@ topology on continuous linear maps between general topological vector spaces.
 
 ## Main Definitions
 
-* `bundle.continuous_linear_map.topological_vector_bundle`: continuous semilinear maps between
+* `bundle.continuous_linear_map.vector_bundle`: continuous semilinear maps between
   vector bundles form a vector bundle.
 
 -/
@@ -92,8 +92,6 @@ variable (F₁ : Type _) [NormedAddCommGroup F₁] [NormedSpace 𝕜₁ F₁] (E
 variable (F₂ : Type _) [NormedAddCommGroup F₂] [NormedSpace 𝕜₂ F₂] (E₂ : B → Type _) [∀ x, AddCommMonoid (E₂ x)]
   [∀ x, Module 𝕜₂ (E₂ x)] [TopologicalSpace (TotalSpace E₂)]
 
-open TopologicalVectorBundle
-
 variable {F₁ E₁ F₂ E₂} (e₁ e₁' : Trivialization F₁ (π E₁)) (e₂ e₂' : Trivialization F₂ (π E₂))
 
 namespace Pretrivialization
@@ -112,12 +110,12 @@ def continuousLinearMapCoordChange [e₁.is_linear 𝕜₁] [e₁'.is_linear �
 
 variable {σ e₁ e₁' e₂ e₂'}
 
-variable [∀ x : B, TopologicalSpace (E₁ x)] [TopologicalVectorBundle 𝕜₁ F₁ E₁]
+variable [∀ x : B, TopologicalSpace (E₁ x)] [FiberBundle F₁ E₁]
 
-variable [∀ x : B, TopologicalSpace (E₂ x)] [TopologicalVectorBundle 𝕜₂ F₂ E₂]
+variable [∀ x : B, TopologicalSpace (E₂ x)] [FiberBundle F₂ E₂]
 
-theorem continuous_on_continuous_linear_map_coord_change [MemTrivializationAtlas 𝕜₁ e₁] [MemTrivializationAtlas 𝕜₁ e₁']
-    [MemTrivializationAtlas 𝕜₂ e₂] [MemTrivializationAtlas 𝕜₂ e₂'] :
+theorem continuous_on_continuous_linear_map_coord_change [VectorBundle 𝕜₁ F₁ E₁] [VectorBundle 𝕜₂ F₂ E₂]
+    [MemTrivializationAtlas e₁] [MemTrivializationAtlas e₁'] [MemTrivializationAtlas e₂] [MemTrivializationAtlas e₂'] :
     ContinuousOn (continuousLinearMapCoordChange σ e₁ e₁' e₂ e₂')
       (e₁.baseSet ∩ e₂.baseSet ∩ (e₁'.baseSet ∩ e₂'.baseSet)) :=
   by
@@ -228,61 +226,63 @@ open Pretrivialization
 
 variable (F₁ E₁ F₂ E₂) [RingHomIsometric σ]
 
-variable [∀ x : B, TopologicalSpace (E₁ x)] [TopologicalVectorBundle 𝕜₁ F₁ E₁]
+variable [∀ x : B, TopologicalSpace (E₁ x)] [FiberBundle F₁ E₁] [VectorBundle 𝕜₁ F₁ E₁]
 
-variable [∀ x : B, TopologicalSpace (E₂ x)] [TopologicalVectorBundle 𝕜₂ F₂ E₂]
+variable [∀ x : B, TopologicalSpace (E₂ x)] [FiberBundle F₂ E₂] [VectorBundle 𝕜₂ F₂ E₂]
 
 variable [∀ x, HasContinuousAdd (E₂ x)] [∀ x, HasContinuousSmul 𝕜₂ (E₂ x)]
 
 /-- The continuous `σ`-semilinear maps between two topological vector bundles form a
-`topological_vector_prebundle` (this is an auxiliary construction for the
-`topological_vector_bundle` instance, in which the pretrivializations are collated but no topology
+`vector_prebundle` (this is an auxiliary construction for the
+`vector_bundle` instance, in which the pretrivializations are collated but no topology
 on the total space is yet provided). -/
-def _root_.bundle.continuous_linear_map.topological_vector_prebundle :
-    TopologicalVectorPrebundle 𝕜₂ (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) where
+def _root_.bundle.continuous_linear_map.vector_prebundle :
+    VectorPrebundle 𝕜₂ (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) where
   pretrivializationAtlas :=
     { e |
-      ∃ (e₁ : Trivialization F₁ (π E₁))(e₂ : Trivialization F₂ (π E₂))(_ : MemTrivializationAtlas 𝕜₁ e₁)(_ :
-        MemTrivializationAtlas 𝕜₂ e₂), e = Pretrivialization.continuousLinearMap σ e₁ e₂ }
+      ∃ (e₁ : Trivialization F₁ (π E₁))(e₂ : Trivialization F₂ (π E₂))(_ : MemTrivializationAtlas e₁)(_ :
+        MemTrivializationAtlas e₂), e = Pretrivialization.continuousLinearMap σ e₁ e₂ }
   pretrivialization_linear' := by
     rintro _ ⟨e₁, he₁, e₂, he₂, rfl⟩
     infer_instance
-  pretrivializationAt x :=
-    Pretrivialization.continuousLinearMap σ (trivializationAt 𝕜₁ F₁ E₁ x) (trivializationAt 𝕜₂ F₂ E₂ x)
-  mem_base_pretrivialization_at x :=
-    ⟨mem_base_set_trivialization_at 𝕜₁ F₁ E₁ x, mem_base_set_trivialization_at 𝕜₂ F₂ E₂ x⟩
-  pretrivialization_mem_atlas x := ⟨trivializationAt 𝕜₁ F₁ E₁ x, trivializationAt 𝕜₂ F₂ E₂ x, _, _, rfl⟩
+  pretrivializationAt x := Pretrivialization.continuousLinearMap σ (trivializationAt F₁ E₁ x) (trivializationAt F₂ E₂ x)
+  mem_base_pretrivialization_at x := ⟨mem_base_set_trivialization_at F₁ E₁ x, mem_base_set_trivialization_at F₂ E₂ x⟩
+  pretrivialization_mem_atlas x := ⟨trivializationAt F₁ E₁ x, trivializationAt F₂ E₂ x, _, _, rfl⟩
   exists_coord_change := by
     rintro _ ⟨e₁, e₂, he₁, he₂, rfl⟩ _ ⟨e₁', e₂', he₁', he₂', rfl⟩
     skip
     exact
       ⟨continuous_linear_map_coord_change σ e₁ e₁' e₂ e₂', continuous_on_continuous_linear_map_coord_change,
         continuous_linear_map_coord_change_apply σ e₁ e₁' e₂ e₂'⟩
-#align
-  _root_.bundle.continuous_linear_map.topological_vector_prebundle _root_.bundle.continuous_linear_map.topological_vector_prebundle
+#align _root_.bundle.continuous_linear_map.vector_prebundle _root_.bundle.continuous_linear_map.vector_prebundle
 
 /-- Topology on the continuous `σ`-semilinear_maps between the respective fibers at a point of two
 "normable" vector bundles over the same base. Here "normable" means that the bundles have fibers
 modelled on normed spaces `F₁`, `F₂` respectively.  The topology we put on the continuous
 `σ`-semilinear_maps is the topology coming from the operator norm on maps from `F₁` to `F₂`. -/
 instance (x : B) : TopologicalSpace (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂ x) :=
-  (Bundle.ContinuousLinearMap.topologicalVectorPrebundle σ F₁ E₁ F₂ E₂).fiberTopology x
+  (Bundle.ContinuousLinearMap.vectorPrebundle σ F₁ E₁ F₂ E₂).fiberTopology x
 
 /-- Topology on the total space of the continuous `σ`-semilinear_maps between two "normable" vector
 bundles over the same base. -/
 instance Bundle.ContinuousLinearMap.topologicalSpaceTotalSpace :
     TopologicalSpace (TotalSpace (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :=
-  (Bundle.ContinuousLinearMap.topologicalVectorPrebundle σ F₁ E₁ F₂ E₂).totalSpaceTopology
+  (Bundle.ContinuousLinearMap.vectorPrebundle σ F₁ E₁ F₂ E₂).totalSpaceTopology
 #align bundle.continuous_linear_map.topological_space_total_space Bundle.ContinuousLinearMap.topologicalSpaceTotalSpace
 
-/-- The continuous `σ`-semilinear_maps between two vector bundles form a vector bundle. -/
-instance _root_.bundle.continuous_linear_map.topological_vector_bundle :
-    TopologicalVectorBundle 𝕜₂ (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) :=
-  (Bundle.ContinuousLinearMap.topologicalVectorPrebundle σ F₁ E₁ F₂ E₂).toTopologicalVectorBundle
-#align
-  _root_.bundle.continuous_linear_map.topological_vector_bundle _root_.bundle.continuous_linear_map.topological_vector_bundle
+/-- The continuous `σ`-semilinear_maps between two vector bundles form a fiber bundle. -/
+instance _root_.bundle.continuous_linear_map.fiber_bundle :
+    FiberBundle (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) :=
+  (Bundle.ContinuousLinearMap.vectorPrebundle σ F₁ E₁ F₂ E₂).toFiberBundle
+#align _root_.bundle.continuous_linear_map.fiber_bundle _root_.bundle.continuous_linear_map.fiber_bundle
 
-variable (e₁ e₂) [he₁ : MemTrivializationAtlas 𝕜₁ e₁] [he₂ : MemTrivializationAtlas 𝕜₂ e₂] {F₁ E₁ F₂ E₂}
+/-- The continuous `σ`-semilinear_maps between two vector bundles form a vector bundle. -/
+instance _root_.bundle.continuous_linear_map.vector_bundle :
+    VectorBundle 𝕜₂ (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) :=
+  (Bundle.ContinuousLinearMap.vectorPrebundle σ F₁ E₁ F₂ E₂).toVectorBundle
+#align _root_.bundle.continuous_linear_map.vector_bundle _root_.bundle.continuous_linear_map.vector_bundle
+
+variable (e₁ e₂) [he₁ : MemTrivializationAtlas e₁] [he₂ : MemTrivializationAtlas e₂] {F₁ E₁ F₂ E₂}
 
 include he₁ he₂
 
@@ -290,11 +290,11 @@ include he₁ he₂
 the induced trivialization for the continuous `σ`-semilinear maps from `E₁` to `E₂`,
 whose base set is `e₁.base_set ∩ e₂.base_set`. -/
 def Trivialization.continuousLinearMap : Trivialization (F₁ →SL[σ] F₂) (π (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :=
-  TopologicalVectorPrebundle.trivializationOfMemPretrivializationAtlas _ ⟨e₁, e₂, he₁, he₂, rfl⟩
+  VectorPrebundle.trivializationOfMemPretrivializationAtlas _ ⟨e₁, e₂, he₁, he₂, rfl⟩
 #align trivialization.continuous_linear_map Trivialization.continuousLinearMap
 
 instance _root_.bundle.continuous_linear_map.mem_trivialization_atlas :
-    MemTrivializationAtlas 𝕜₂
+    MemTrivializationAtlas
       (e₁.ContinuousLinearMap σ e₂ :
         Trivialization (F₁ →SL[σ] F₂)
           (π

@@ -16,7 +16,7 @@ topological properties of `complex.re` and `complex.im`.
 
 Each statement about `complex.re` listed below has a counterpart about `complex.im`.
 
-* `complex.is_trivial_topological_fiber_bundle_re`: `complex.re` turns `ℂ` into a trivial
+* `complex.is_homeomorphic_trivial_fiber_bundle_re`: `complex.re` turns `ℂ` into a trivial
   topological fiber bundle over `ℝ`;
 * `complex.is_open_map_re`, `complex.quotient_map_re`: in particular, `complex.re` is an open map
   and is a quotient map;
@@ -39,37 +39,29 @@ noncomputable section
 namespace Complex
 
 /-- `complex.re` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
-theorem is_trivial_topological_fiber_bundle_re : IsTrivialTopologicalFiberBundle ℝ re :=
+theorem is_homeomorphic_trivial_fiber_bundle_re : IsHomeomorphicTrivialFiberBundle ℝ re :=
   ⟨equivRealProdₗ.toHomeomorph, fun z => rfl⟩
-#align complex.is_trivial_topological_fiber_bundle_re Complex.is_trivial_topological_fiber_bundle_re
+#align complex.is_homeomorphic_trivial_fiber_bundle_re Complex.is_homeomorphic_trivial_fiber_bundle_re
 
 /-- `complex.im` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
-theorem is_trivial_topological_fiber_bundle_im : IsTrivialTopologicalFiberBundle ℝ im :=
+theorem is_homeomorphic_trivial_fiber_bundle_im : IsHomeomorphicTrivialFiberBundle ℝ im :=
   ⟨equivRealProdₗ.toHomeomorph.trans (Homeomorph.prodComm ℝ ℝ), fun z => rfl⟩
-#align complex.is_trivial_topological_fiber_bundle_im Complex.is_trivial_topological_fiber_bundle_im
-
-theorem is_topological_fiber_bundle_re : IsTopologicalFiberBundle ℝ re :=
-  is_trivial_topological_fiber_bundle_re.IsTopologicalFiberBundle
-#align complex.is_topological_fiber_bundle_re Complex.is_topological_fiber_bundle_re
-
-theorem is_topological_fiber_bundle_im : IsTopologicalFiberBundle ℝ im :=
-  is_trivial_topological_fiber_bundle_im.IsTopologicalFiberBundle
-#align complex.is_topological_fiber_bundle_im Complex.is_topological_fiber_bundle_im
+#align complex.is_homeomorphic_trivial_fiber_bundle_im Complex.is_homeomorphic_trivial_fiber_bundle_im
 
 theorem is_open_map_re : IsOpenMap re :=
-  is_topological_fiber_bundle_re.is_open_map_proj
+  is_homeomorphic_trivial_fiber_bundle_re.is_open_map_proj
 #align complex.is_open_map_re Complex.is_open_map_re
 
 theorem is_open_map_im : IsOpenMap im :=
-  is_topological_fiber_bundle_im.is_open_map_proj
+  is_homeomorphic_trivial_fiber_bundle_im.is_open_map_proj
 #align complex.is_open_map_im Complex.is_open_map_im
 
 theorem quotient_map_re : QuotientMap re :=
-  is_topological_fiber_bundle_re.quotient_map_proj
+  is_homeomorphic_trivial_fiber_bundle_re.quotient_map_proj
 #align complex.quotient_map_re Complex.quotient_map_re
 
 theorem quotient_map_im : QuotientMap im :=
-  is_topological_fiber_bundle_im.quotient_map_proj
+  is_homeomorphic_trivial_fiber_bundle_im.quotient_map_proj
 #align complex.quotient_map_im Complex.quotient_map_im
 
 theorem interior_preimage_re (s : Set ℝ) : interior (re ⁻¹' s) = re ⁻¹' interior s :=

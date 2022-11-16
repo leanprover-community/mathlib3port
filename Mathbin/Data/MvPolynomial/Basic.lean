@@ -3,10 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 -/
-import Mathbin.RingTheory.Adjoin.Basic
-import Mathbin.Data.Finsupp.Antidiagonal
+import Mathbin.Algebra.Algebra.Tower
 import Mathbin.Algebra.MonoidAlgebra.Support
+import Mathbin.Data.Finsupp.Antidiagonal
 import Mathbin.Order.SymmDiff
+import Mathbin.RingTheory.Adjoin.Basic
 
 /-!
 # Multivariate polynomials

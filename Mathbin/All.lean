@@ -7,6 +7,7 @@ import Mathbin.Algebra.Algebra.RestrictScalars
 import Mathbin.Algebra.Algebra.Spectrum
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Algebra.Algebra.Subalgebra.Pointwise
+import Mathbin.Algebra.Algebra.Subalgebra.Tower
 import Mathbin.Algebra.Algebra.Tower
 import Mathbin.Algebra.Algebra.Unitization
 import Mathbin.Algebra.AlgebraicCard
@@ -1247,6 +1248,7 @@ import Mathbin.Data.Finsupp.BigOperators
 import Mathbin.Data.Finsupp.Default
 import Mathbin.Data.Finsupp.Defs
 import Mathbin.Data.Finsupp.Fin
+import Mathbin.Data.Finsupp.Fintype
 import Mathbin.Data.Finsupp.Indicator
 import Mathbin.Data.Finsupp.Interval
 import Mathbin.Data.Finsupp.Lex
@@ -1269,6 +1271,7 @@ import Mathbin.Data.Fp.Basic
 import Mathbin.Data.FunLike.Basic
 import Mathbin.Data.FunLike.Embedding
 import Mathbin.Data.FunLike.Equiv
+import Mathbin.Data.FunLike.Fintype
 import Mathbin.Data.HashMap
 import Mathbin.Data.Holor
 import Mathbin.Data.Int.AbsoluteValue
@@ -1858,6 +1861,7 @@ import Mathbin.LinearAlgebra.FinsuppVectorSpace
 import Mathbin.LinearAlgebra.FreeAlgebra
 import Mathbin.LinearAlgebra.FreeModule.Basic
 import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
+import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 import Mathbin.LinearAlgebra.FreeModule.IdealQuotient
 import Mathbin.LinearAlgebra.FreeModule.Pid
@@ -2712,6 +2716,7 @@ import Mathbin.Topology.Algebra.Order.Basic
 import Mathbin.Topology.Algebra.Order.Compact
 import Mathbin.Topology.Algebra.Order.ExtendFrom
 import Mathbin.Topology.Algebra.Order.ExtrClosure
+import Mathbin.Topology.Algebra.Order.Field
 import Mathbin.Topology.Algebra.Order.Filter
 import Mathbin.Topology.Algebra.Order.Floor
 import Mathbin.Topology.Algebra.Order.IntermediateValue

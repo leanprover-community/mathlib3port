@@ -1377,6 +1377,22 @@ theorem coe_min' {s : Finset α} (hs : s.Nonempty) : ↑(s.min' hs) = s.min :=
   coe_inf' hs id
 #align finset.coe_min' Finset.coe_min'
 
+theorem max_mem_image_coe {s : Finset α} (hs : s.Nonempty) : s.max ∈ (s.image coe : Finset (WithBot α)) :=
+  mem_image.2 ⟨max' s hs, max'_mem _ _, coe_max' hs⟩
+#align finset.max_mem_image_coe Finset.max_mem_image_coe
+
+theorem min_mem_image_coe {s : Finset α} (hs : s.Nonempty) : s.min ∈ (s.image coe : Finset (WithTop α)) :=
+  mem_image.2 ⟨min' s hs, min'_mem _ _, coe_min' hs⟩
+#align finset.min_mem_image_coe Finset.min_mem_image_coe
+
+theorem max_mem_insert_bot_image_coe (s : Finset α) : s.max ∈ (insert ⊥ (s.image coe) : Finset (WithBot α)) :=
+  mem_insert.2 <| s.eq_empty_or_nonempty.imp max_eq_bot.2 max_mem_image_coe
+#align finset.max_mem_insert_bot_image_coe Finset.max_mem_insert_bot_image_coe
+
+theorem min_mem_insert_top_image_coe (s : Finset α) : s.min ∈ (insert ⊤ (s.image coe) : Finset (WithTop α)) :=
+  mem_insert.2 <| s.eq_empty_or_nonempty.imp min_eq_top.2 min_mem_image_coe
+#align finset.min_mem_insert_top_image_coe Finset.min_mem_insert_top_image_coe
+
 theorem max'_erase_ne_self {s : Finset α} (s0 : (s.erase x).Nonempty) : (s.erase x).max' s0 ≠ x :=
   ne_of_mem_erase (max'_mem _ s0)
 #align finset.max'_erase_ne_self Finset.max'_erase_ne_self
@@ -1397,6 +1413,57 @@ theorem max_erase_ne_self {s : Finset α} : (s.erase x).max ≠ x := by
 
 theorem min_erase_ne_self {s : Finset α} : (s.erase x).min ≠ x := by convert @max_erase_ne_self αᵒᵈ _ _ _
 #align finset.min_erase_ne_self Finset.min_erase_ne_self
+
+theorem exists_next_right {x : α} {s : Finset α} (h : ∃ y ∈ s, x < y) : ∃ y ∈ s, x < y ∧ ∀ z ∈ s, x < z → y ≤ z :=
+  have Hne : (s.filter ((· < ·) x)).Nonempty := h.imp fun y hy => mem_filter.2 ⟨hy.fst, hy.snd⟩
+  ⟨min' _ Hne, (mem_filter.1 (min'_mem _ Hne)).1, (mem_filter.1 (min'_mem _ Hne)).2, fun z hzs hz =>
+    min'_le _ _ <| mem_filter.2 ⟨hzs, hz⟩⟩
+#align finset.exists_next_right Finset.exists_next_right
+
+theorem exists_next_left {x : α} {s : Finset α} (h : ∃ y ∈ s, y < x) : ∃ y ∈ s, y < x ∧ ∀ z ∈ s, z < x → z ≤ y :=
+  @exists_next_right αᵒᵈ _ x s h
+#align finset.exists_next_left Finset.exists_next_left
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/-- If finsets `s` and `t` are interleaved, then `finset.card s ≤ finset.card t + 1`. -/
+theorem card_le_of_interleaved {s t : Finset α}
+    (h : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x < y → (∀ z ∈ s, z ∉ Set.ioo x y) → ∃ z ∈ t, x < z ∧ z < y) :
+    s.card ≤ t.card + 1 := by
+  replace h : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x < y → ∃ z ∈ t, x < z ∧ z < y
+  · intro x hx y hy hxy
+    rcases exists_next_right ⟨y, hy, hxy⟩ with ⟨a, has, hxa, ha⟩
+    rcases h x hx a has hxa fun z hzs hz => hz.2.not_le <| ha _ hzs hz.1 with ⟨b, hbt, hxb, hba⟩
+    exact ⟨b, hbt, hxb, hba.trans_le <| ha _ hy hxy⟩
+    
+  set f : α → WithTop α := fun x => (t.filter fun y => x < y).min
+  have f_mono : StrictMonoOn f s := by
+    intro x hx y hy hxy
+    rcases h x hx y hy hxy with ⟨a, hat, hxa, hay⟩
+    calc
+      f x ≤ a := min_le (mem_filter.2 ⟨hat, hxa⟩)
+      _ < f y :=
+        (Finset.lt_inf_iff <| WithTop.coe_lt_top a).2 fun b hb => WithTop.coe_lt_coe.2 <| hay.trans (mem_filter.1 hb).2
+      
+  calc
+    s.card = (s.image f).card := (card_image_of_inj_on f_mono.inj_on).symm
+    _ ≤ (insert ⊤ (t.image coe) : Finset (WithTop α)).card :=
+      card_mono <|
+        image_subset_iff.2 fun x hx =>
+          insert_subset_insert _ (image_subset_image <| filter_subset _ _) (min_mem_insert_top_image_coe _)
+    _ ≤ t.card + 1 := (card_insert_le _ _).trans (add_le_add_right card_image_le _)
+    
+#align finset.card_le_of_interleaved Finset.card_le_of_interleaved
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/-- If finsets `s` and `t` are interleaved, then `finset.card s ≤ finset.card (t \ s) + 1`. -/
+theorem card_le_diff_of_interleaved {s t : Finset α}
+    (h : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), x < y → (∀ z ∈ s, z ∉ Set.ioo x y) → ∃ z ∈ t, x < z ∧ z < y) :
+    s.card ≤ (t \ s).card + 1 :=
+  card_le_of_interleaved fun x hx y hy hxy hs =>
+    let ⟨z, hzt, hxz, hzy⟩ := h x hx y hy hxy hs
+    ⟨z, mem_sdiff.2 ⟨hzt, fun hzs => hs z hzs ⟨hxz, hzy⟩⟩, hxz, hzy⟩
+#align finset.card_le_diff_of_interleaved Finset.card_le_diff_of_interleaved
 
 /-- Induction principle for `finset`s in a linearly ordered type: a predicate is true on all
 `s : finset α` provided that:

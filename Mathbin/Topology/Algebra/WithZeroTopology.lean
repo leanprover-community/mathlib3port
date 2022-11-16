@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
 import Mathbin.Algebra.Order.WithZero
-import Mathbin.Topology.Algebra.Order.Basic
+import Mathbin.Topology.Algebra.Order.Field
 
 /-!
 # The topology on linearly ordered commutative groups with zero

@@ -39,8 +39,8 @@ specifying the changes in the fiber when one goes from one coordinate chart to a
   bundle with fiber `F` over `M`.
 
 Let `Z` be a basic smooth bundle core over `M` with fiber `F`. We define
-`Z.to_topological_vector_bundle_core`, the (topological) vector bundle core associated to `Z`. From
-it, we get a space `Z.to_topological_vector_bundle_core.total_space` (which as a Type is just
+`Z.to_vector_bundle_core`, the (topological) vector bundle core associated to `Z`. From
+it, we get a space `Z.to_vector_bundle_core.total_space` (which as a Type is just
 `Σ (x : M), F`), with the fiber bundle topology. It inherits a manifold structure (where the
 charts are in bijection with the charts of the basis). We show that this manifold is smooth.
 
@@ -188,7 +188,7 @@ theorem coordChangeSmooth (i j : atlas H M) :
 
 /-- Vector bundle core associated to a basic smooth bundle core -/
 @[simps coordChange indexAt]
-def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (atlas H M) where
+def toVectorBundleCore : VectorBundleCore 𝕜 M F (atlas H M) where
   baseSet i := i.1.source
   is_open_base_set i := i.1.open_source
   indexAt := achart H
@@ -207,28 +207,26 @@ def toTopologicalVectorBundleCore : TopologicalVectorBundleCore 𝕜 M F (atlas 
     rintro p ⟨hp₁, hp₂⟩
     refine' ⟨hp₁, i.1.MapsTo hp₁, _⟩
     simp only [i.1.left_inv hp₁, hp₂, mfld_simps]
-#align
-  basic_smooth_vector_bundle_core.to_topological_vector_bundle_core BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore
+#align basic_smooth_vector_bundle_core.to_vector_bundle_core BasicSmoothVectorBundleCore.toVectorBundleCore
 
 @[simp, mfld_simps]
-theorem base_set (i : atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).baseSet = i.1.source :=
+theorem base_set (i : atlas H M) : (Z.toVectorBundleCore.localTriv i).baseSet = i.1.source :=
   rfl
 #align basic_smooth_vector_bundle_core.base_set BasicSmoothVectorBundleCore.base_set
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, mfld_simps]
-theorem target (i : atlas H M) : (Z.toTopologicalVectorBundleCore.localTriv i).target = i.1.source ×ˢ univ :=
+theorem target (i : atlas H M) : (Z.toVectorBundleCore.localTriv i).target = i.1.source ×ˢ univ :=
   rfl
 #align basic_smooth_vector_bundle_core.target BasicSmoothVectorBundleCore.target
 
 /-- Local chart for the total space of a basic smooth bundle -/
 def chart {e : LocalHomeomorph M H} (he : e ∈ atlas H M) :
-    LocalHomeomorph Z.toTopologicalVectorBundleCore.TotalSpace (ModelProd H F) :=
-  (Z.toTopologicalVectorBundleCore.localTriv ⟨e, he⟩).toLocalHomeomorph.trans
-    (LocalHomeomorph.prod e (LocalHomeomorph.refl F))
+    LocalHomeomorph Z.toVectorBundleCore.TotalSpace (ModelProd H F) :=
+  (Z.toVectorBundleCore.localTriv ⟨e, he⟩).toLocalHomeomorph.trans (LocalHomeomorph.prod e (LocalHomeomorph.refl F))
 #align basic_smooth_vector_bundle_core.chart BasicSmoothVectorBundleCore.chart
 
-theorem chart_apply {x : M} (z : Z.toTopologicalVectorBundleCore.TotalSpace) :
+theorem chart_apply {x : M} (z : Z.toVectorBundleCore.TotalSpace) :
     Z.chart (chart_mem_atlas H x) z =
       (chartAt H x z.proj, Z.coordChange (achart H z.proj) (achart H x) (achart H z.proj z.proj) z.2) :=
   rfl
@@ -236,7 +234,7 @@ theorem chart_apply {x : M} (z : Z.toTopologicalVectorBundleCore.TotalSpace) :
 
 @[simp, mfld_simps]
 theorem chart_source (e : LocalHomeomorph M H) (he : e ∈ atlas H M) :
-    (Z.chart he).source = Z.toTopologicalVectorBundleCore.proj ⁻¹' e.source := by
+    (Z.chart he).source = Z.toVectorBundleCore.proj ⁻¹' e.source := by
   simp only [chart, mem_prod]
   mfld_set_tac
 #align basic_smooth_vector_bundle_core.chart_source BasicSmoothVectorBundleCore.chart_source
@@ -251,7 +249,7 @@ theorem chart_target (e : LocalHomeomorph M H) (he : e ∈ atlas H M) : (Z.chart
 /-- The total space of a basic smooth bundle is endowed with a charted space structure, where the
 charts are in bijection with the charts of the basis. -/
 @[simps (config := lemmasOnly) chartAt]
-instance toChartedSpace : ChartedSpace (ModelProd H F) Z.toTopologicalVectorBundleCore.TotalSpace where
+instance toChartedSpace : ChartedSpace (ModelProd H F) Z.toVectorBundleCore.TotalSpace where
   atlas := ⋃ (e : LocalHomeomorph M H) (he : e ∈ atlas H M), {Z.chart he}
   chartAt p := Z.chart (chart_mem_atlas H p.1)
   mem_chart_source p := by simp [mem_chart_source]
@@ -260,30 +258,30 @@ instance toChartedSpace : ChartedSpace (ModelProd H F) Z.toTopologicalVectorBund
     exact ⟨chart_at H p.1, chart_mem_atlas H p.1, rfl⟩
 #align basic_smooth_vector_bundle_core.to_charted_space BasicSmoothVectorBundleCore.toChartedSpace
 
-theorem mem_atlas_iff (f : LocalHomeomorph Z.toTopologicalVectorBundleCore.TotalSpace (ModelProd H F)) :
-    f ∈ atlas (ModelProd H F) Z.toTopologicalVectorBundleCore.TotalSpace ↔
+theorem mem_atlas_iff (f : LocalHomeomorph Z.toVectorBundleCore.TotalSpace (ModelProd H F)) :
+    f ∈ atlas (ModelProd H F) Z.toVectorBundleCore.TotalSpace ↔
       ∃ (e : LocalHomeomorph M H)(he : e ∈ atlas H M), f = Z.chart he :=
   by simp only [atlas, mem_Union, mem_singleton_iff]
 #align basic_smooth_vector_bundle_core.mem_atlas_iff BasicSmoothVectorBundleCore.mem_atlas_iff
 
 @[simp, mfld_simps]
-theorem mem_chart_source_iff (p q : Z.toTopologicalVectorBundleCore.TotalSpace) :
+theorem mem_chart_source_iff (p q : Z.toVectorBundleCore.TotalSpace) :
     p ∈ (chartAt (ModelProd H F) q).source ↔ p.1 ∈ (chartAt H q.1).source := by simp only [chart_at, mfld_simps]
 #align basic_smooth_vector_bundle_core.mem_chart_source_iff BasicSmoothVectorBundleCore.mem_chart_source_iff
 
 @[simp, mfld_simps]
-theorem mem_chart_target_iff (p : H × F) (q : Z.toTopologicalVectorBundleCore.TotalSpace) :
+theorem mem_chart_target_iff (p : H × F) (q : Z.toVectorBundleCore.TotalSpace) :
     p ∈ (chartAt (ModelProd H F) q).target ↔ p.1 ∈ (chartAt H q.1).target := by simp only [chart_at, mfld_simps]
 #align basic_smooth_vector_bundle_core.mem_chart_target_iff BasicSmoothVectorBundleCore.mem_chart_target_iff
 
 @[simp, mfld_simps]
-theorem coe_chart_at_fst (p q : Z.toTopologicalVectorBundleCore.TotalSpace) :
+theorem coe_chart_at_fst (p q : Z.toVectorBundleCore.TotalSpace) :
     ((chartAt (ModelProd H F) q) p).1 = chartAt H q.1 p.1 :=
   rfl
 #align basic_smooth_vector_bundle_core.coe_chart_at_fst BasicSmoothVectorBundleCore.coe_chart_at_fst
 
 @[simp, mfld_simps]
-theorem coe_chart_at_symm_fst (p : H × F) (q : Z.toTopologicalVectorBundleCore.TotalSpace) :
+theorem coe_chart_at_symm_fst (p : H × F) (q : Z.toVectorBundleCore.TotalSpace) :
     ((chartAt (ModelProd H F) q).symm p).1 = ((chartAt H q.1).symm : H → M) p.1 :=
   rfl
 #align basic_smooth_vector_bundle_core.coe_chart_at_symm_fst BasicSmoothVectorBundleCore.coe_chart_at_symm_fst
@@ -293,7 +291,7 @@ theorem coe_chart_at_symm_fst (p : H × F) (q : Z.toTopologicalVectorBundleCore.
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Smooth manifold structure on the total space of a basic smooth bundle -/
-instance toSmoothManifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.toTopologicalVectorBundleCore.TotalSpace := by
+instance toSmoothManifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.toVectorBundleCore.TotalSpace := by
   /- We have to check that the charts belong to the smooth groupoid, i.e., they are smooth on their
     source, and their inverses are smooth on the target. Since both objects are of the same kind, it
     suffices to prove the first statement in A below, and then glue back the pieces at the end. -/
@@ -525,7 +523,7 @@ variable {M}
 include I
 
 /-- The tangent space at a point of the manifold `M`. It is just `E`. We could use instead
-`(tangent_bundle_core I M).to_topological_vector_bundle_core.fiber x`, but we use `E` to help the
+`(tangent_bundle_core I M).to_vector_bundle_core.fiber x`, but we use `E` to help the
 kernel.
 -/
 @[nolint unused_arguments]
@@ -588,7 +586,7 @@ end
 variable (M)
 
 instance : TopologicalSpace TM :=
-  (tangentBundleCore I M).toTopologicalVectorBundleCore.toTopologicalSpace (atlas H M)
+  (tangentBundleCore I M).toVectorBundleCore.toTopologicalSpace (atlas H M)
 
 instance : ChartedSpace (ModelProd H E) TM :=
   (tangentBundleCore I M).toChartedSpace
@@ -596,8 +594,11 @@ instance : ChartedSpace (ModelProd H E) TM :=
 instance : SmoothManifoldWithCorners I.tangent TM :=
   (tangentBundleCore I M).toSmoothManifold
 
-instance : TopologicalVectorBundle 𝕜 E (TangentSpace I : M → Type _) :=
-  TopologicalVectorBundleCore.Fiber.topologicalVectorBundle (tangentBundleCore I M).toTopologicalVectorBundleCore
+instance : FiberBundle E (TangentSpace I : M → Type _) :=
+  (tangentBundleCore I M).toVectorBundleCore.FiberBundle
+
+instance : VectorBundle 𝕜 E (TangentSpace I : M → Type _) :=
+  (tangentBundleCore I M).toVectorBundleCore.VectorBundle
 
 end TangentBundleInstances
 
@@ -605,12 +606,12 @@ variable (M)
 
 /-- The tangent bundle projection on the basis is a continuous map. -/
 theorem tangent_bundle_proj_continuous : Continuous (TangentBundle.proj I M) :=
-  (tangentBundleCore I M).toTopologicalVectorBundleCore.continuous_proj
+  (tangentBundleCore I M).toVectorBundleCore.continuous_proj
 #align tangent_bundle_proj_continuous tangent_bundle_proj_continuous
 
 /-- The tangent bundle projection on the basis is an open map. -/
 theorem tangent_bundle_proj_open : IsOpenMap (TangentBundle.proj I M) :=
-  (tangentBundleCore I M).toTopologicalVectorBundleCore.is_open_map_proj
+  (tangentBundleCore I M).toVectorBundleCore.is_open_map_proj
 #align tangent_bundle_proj_open tangent_bundle_proj_open
 
 /-- In the tangent bundle to the model space, the charts are just the canonical identification
@@ -628,14 +629,12 @@ theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
   show (chart_at (ModelProd H E) p : TangentBundle I H → ModelProd H E) x = (Equiv.sigmaEquivProd H E) x
   · cases x
     simp only [chart_at, BasicSmoothVectorBundleCore.chart, tangentBundleCore,
-      BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, A, Prod.mk.inj_iff, ContinuousLinearMap.coe_id',
-      mfld_simps]
+      BasicSmoothVectorBundleCore.toVectorBundleCore, A, Prod.mk.inj_iff, ContinuousLinearMap.coe_id', mfld_simps]
     
   show ∀ x, (chart_at (ModelProd H E) p).toLocalEquiv.symm x = (Equiv.sigmaEquivProd H E).symm x
   · rintro ⟨x_fst, x_snd⟩
-    simp only [BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, tangentBundleCore, A,
-      ContinuousLinearMap.coe_id', BasicSmoothVectorBundleCore.chart, chart_at, ContinuousLinearMap.coe_coe,
-      Sigma.mk.inj_iff, mfld_simps]
+    simp only [BasicSmoothVectorBundleCore.toVectorBundleCore, tangentBundleCore, A, ContinuousLinearMap.coe_id',
+      BasicSmoothVectorBundleCore.chart, chart_at, ContinuousLinearMap.coe_coe, Sigma.mk.inj_iff, mfld_simps]
     
   show (chart_at (ModelProd H E) p).toLocalEquiv.source = univ
   · simp only [chart_at, mfld_simps]

@@ -6,7 +6,7 @@ Authors: Nicolò Cavalleri, Sebastien Gouezel, Heather Macbeth, Floris van Doorn
 import Mathbin.Topology.VectorBundle.Basic
 
 /-!
-# Pullbacks of topological vector bundles
+# Pullbacks of fiber and vector bundles
 
 We construct the pullback bundle for a map `f : B' → B` whose fiber map is given simply by
 `f *ᵖ E = E ∘ f` (the type synonym is there for typeclass instance problems).
@@ -15,7 +15,7 @@ We construct the pullback bundle for a map `f : B' → B` whose fiber map is giv
 
 noncomputable section
 
-open Bundle Set TopologicalSpace TopologicalVectorBundle
+open Bundle Set TopologicalSpace
 
 open Classical Bundle
 
@@ -60,20 +60,21 @@ theorem inducing_pullback_total_space_embedding (f : B' → B) : Inducing (@pull
   rfl
 #align inducing_pullback_total_space_embedding inducing_pullback_total_space_embedding
 
-variable (F) [NontriviallyNormedField 𝕜] [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B]
-  [∀ x, AddCommMonoid (E x)] [∀ x, Module 𝕜 (E x)]
+section FiberBundle
 
-theorem Pullback.continuous_total_space_mk [∀ x, TopologicalSpace (E x)] [TopologicalVectorBundle 𝕜 F E] {f : B' → B}
-    {x : B'} : Continuous (@totalSpaceMk _ (f *ᵖ E) x) := by
+variable (F) [TopologicalSpace F] [TopologicalSpace B]
+
+theorem Pullback.continuous_total_space_mk [∀ x, TopologicalSpace (E x)] [FiberBundle F E] {f : B' → B} {x : B'} :
+    Continuous (@totalSpaceMk _ (f *ᵖ E) x) := by
   simp only [continuous_iff_le_induced, Pullback.TotalSpace.topologicalSpace, induced_compose, induced_inf,
     Function.comp, total_space_mk, total_space.proj, induced_const, top_inf_eq, pullbackTopology]
-  exact le_of_eq (TopologicalVectorBundle.total_space_mk_inducing 𝕜 F E (f x)).induced
+  exact le_of_eq (FiberBundle.total_space_mk_inducing F E (f x)).induced
 #align pullback.continuous_total_space_mk Pullback.continuous_total_space_mk
 
-variable {E 𝕜 F} {K : Type _} [ContinuousMapClass K B' B]
+variable {E F} [∀ b, Zero (E b)] {K : Type _} [ContinuousMapClass K B' B]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- A vector bundle trivialization can be pulled back to a trivialization on the pullback bundle. -/
+/-- A fiber bundle trivialization can be pulled back to a trivialization on the pullback bundle. -/
 def Trivialization.pullback (e : Trivialization F (π E)) (f : K) : Trivialization F (π ((f : B' → B) *ᵖ E)) where
   toFun z := (z.proj, (e (Pullback.lift f z)).2)
   invFun y := @totalSpaceMk _ (f *ᵖ E) y.1 (e.symm (f y.1) y.2)
@@ -116,23 +117,36 @@ def Trivialization.pullback (e : Trivialization F (π E)) (f : K) : Trivializati
   proj_to_fun y h := rfl
 #align trivialization.pullback Trivialization.pullback
 
+instance FiberBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E] (f : K) :
+    FiberBundle F ((f : B' → B) *ᵖ E) where
+  total_space_mk_inducing x :=
+    inducing_of_inducing_compose (Pullback.continuous_total_space_mk F E) (Pullback.continuous_lift E f)
+      (total_space_mk_inducing F E (f x))
+  trivializationAtlas := { ef | ∃ (e : Trivialization F (π E))(_ : MemTrivializationAtlas e), ef = e.pullback f }
+  trivializationAt x := (trivializationAt F E (f x)).pullback f
+  mem_base_set_trivialization_at x := mem_base_set_trivialization_at F E (f x)
+  trivialization_mem_atlas x := ⟨trivializationAt F E (f x), by infer_instance, rfl⟩
+#align fiber_bundle.pullback FiberBundle.pullback
+
+end FiberBundle
+
+section VectorBundle
+
+variable (F) [NontriviallyNormedField 𝕜] [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B]
+  [∀ x, AddCommMonoid (E x)] [∀ x, Module 𝕜 (E x)]
+
+variable {E F} {K : Type _} [ContinuousMapClass K B' B]
+
 instance Trivialization.pullback_linear (e : Trivialization F (π E)) [e.is_linear 𝕜] (f : K) :
     (@Trivialization.pullback _ _ _ B' _ _ _ _ _ _ _ e f).is_linear 𝕜 where linear x h := e.linear 𝕜 h
 #align trivialization.pullback_linear Trivialization.pullback_linear
 
-instance TopologicalVectorBundle.pullback [∀ x, TopologicalSpace (E x)] [TopologicalVectorBundle 𝕜 F E] (f : K) :
-    TopologicalVectorBundle 𝕜 F ((f : B' → B) *ᵖ E) where
-  total_space_mk_inducing x :=
-    inducing_of_inducing_compose (Pullback.continuous_total_space_mk 𝕜 F E) (Pullback.continuous_lift E f)
-      (total_space_mk_inducing 𝕜 F E (f x))
-  trivializationAtlas := { ef | ∃ (e : Trivialization F (π E))(_ : MemTrivializationAtlas 𝕜 e), ef = e.pullback f }
+instance VectorBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E] [VectorBundle 𝕜 F E] (f : K) :
+    VectorBundle 𝕜 F ((f : B' → B) *ᵖ E) where
   trivialization_linear' := by
     rintro _ ⟨e, he, rfl⟩
     skip
     infer_instance
-  trivializationAt x := (trivializationAt 𝕜 F E (f x)).pullback f
-  mem_base_set_trivialization_at x := mem_base_set_trivialization_at 𝕜 F E (f x)
-  trivialization_mem_atlas x := ⟨trivializationAt 𝕜 F E (f x), by infer_instance, rfl⟩
   continuous_on_coord_change' := by
     rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩
     skip
@@ -142,5 +156,7 @@ instance TopologicalVectorBundle.pullback [∀ x, TopologicalSpace (E x)] [Topol
     show ((e.pullback f).coordChangeL 𝕜 (e'.pullback f) b) v = (e.coord_changeL 𝕜 e' (f b)) v
     rw [e.coord_changeL_apply e' hb, (e.pullback f).coord_changeL_apply' _]
     exacts[rfl, hb]
-#align topological_vector_bundle.pullback TopologicalVectorBundle.pullback
+#align vector_bundle.pullback VectorBundle.pullback
+
+end VectorBundle
 

@@ -3,10 +3,10 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Algebra.Tower
+import Mathbin.Algebra.Algebra.Operations
+import Mathbin.Algebra.Algebra.Subalgebra.Tower
 import Mathbin.LinearAlgebra.Prod
 import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.Algebra.Algebra.Operations
 
 /-!
 # Adjoining elements to form subalgebras

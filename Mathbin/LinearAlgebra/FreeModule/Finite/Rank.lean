@@ -3,6 +3,7 @@ Copyright (c) 2021 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
+import Mathbin.LinearAlgebra.Finrank
 import Mathbin.LinearAlgebra.FreeModule.Rank
 import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 
@@ -108,13 +109,6 @@ variable [CommRing R] [StrongRankCondition R]
 variable [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M]
 
 variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
-
---TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
-/-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
-theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
-  classical letI := nontrivial_of_invariant_basis_number R
-    let b := (Matrix.stdBasis _ _ _).map h.symm
-#align module.free.finrank_linear_hom Module.Free.finrank_linear_hom
 
 /-- The finrank of `M ⊗[R] N` is `(finrank R M) * (finrank R N)`. -/
 @[simp]

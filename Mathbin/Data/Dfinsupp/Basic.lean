@@ -659,6 +659,13 @@ theorem single_eq_single_iff (i j : ι) (xi : β i) (xj : β j) :
     
 #align dfinsupp.single_eq_single_iff Dfinsupp.single_eq_single_iff
 
+/-- `dfinsupp.single a b` is injective in `a`. For the statement that it is injective in `b`, see
+`dfinsupp.single_injective` -/
+theorem single_left_injective {b : ∀ i : ι, β i} (h : ∀ i, b i ≠ 0) :
+    Function.Injective (fun i => single i (b i) : ι → Π₀ i, β i) := fun a a' H =>
+  (((single_eq_single_iff _ _ _ _).mp H).resolve_right fun hb => h _ hb.1).left
+#align dfinsupp.single_left_injective Dfinsupp.single_left_injective
+
 @[simp]
 theorem single_eq_zero {i : ι} {xi : β i} : single i xi = 0 ↔ xi = 0 := by
   rw [← single_zero i, single_eq_single_iff]
@@ -2316,4 +2323,33 @@ theorem map_dfinsupp_sum_add_hom [AddCommMonoid R] [AddCommMonoid S] [∀ i, Add
 end AddEquiv
 
 end
+
+section FiniteInfinite
+
+instance Dfinsupp.fintype {ι : Sort _} {π : ι → Sort _} [DecidableEq ι] [∀ i, Zero (π i)] [Fintype ι]
+    [∀ i, Fintype (π i)] : Fintype (Π₀ i, π i) :=
+  Fintype.ofEquiv (∀ i, π i) Dfinsupp.equivFunOnFintype.symm
+#align dfinsupp.fintype Dfinsupp.fintype
+
+instance Dfinsupp.infinite_of_left {ι : Sort _} {π : ι → Sort _} [∀ i, Nontrivial (π i)] [∀ i, Zero (π i)]
+    [Infinite ι] : Infinite (Π₀ i, π i) := by
+  letI := Classical.decEq ι <;>
+    choose m hm using fun i => exists_ne (0 : π i) <;> exact Infinite.of_injective _ (Dfinsupp.single_left_injective hm)
+#align dfinsupp.infinite_of_left Dfinsupp.infinite_of_left
+
+/-- See `dfinsupp.infinite_of_right` for this in instance form, with the drawback that
+it needs all `π i` to be infinite. -/
+theorem Dfinsupp.infinite_of_exists_right {ι : Sort _} {π : ι → Sort _} (i : ι) [Infinite (π i)] [∀ i, Zero (π i)] :
+    Infinite (Π₀ i, π i) :=
+  letI := Classical.decEq ι
+  Infinite.of_injective (fun j => Dfinsupp.single i j) Dfinsupp.single_injective
+#align dfinsupp.infinite_of_exists_right Dfinsupp.infinite_of_exists_right
+
+/-- See `dfinsupp.infinite_of_exists_right` for the case that only one `π ι` is infinite. -/
+instance Dfinsupp.infinite_of_right {ι : Sort _} {π : ι → Sort _} [∀ i, Infinite (π i)] [∀ i, Zero (π i)] [Nonempty ι] :
+    Infinite (Π₀ i, π i) :=
+  Dfinsupp.infinite_of_exists_right (Classical.arbitrary ι)
+#align dfinsupp.infinite_of_right Dfinsupp.infinite_of_right
+
+end FiniteInfinite
 

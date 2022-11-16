@@ -22,6 +22,8 @@ This file defines covering maps.
 -/
 
 
+open Bundle
+
 variable {E X : Type _} [TopologicalSpace E] [TopologicalSpace X] (f : E → X) (s : Set X)
 
 /-- A point `x : X` is evenly covered by `f : E → X` if `x` has an evenly covered neighborhood. -/
@@ -161,8 +163,14 @@ end IsCoveringMap
 
 variable {f}
 
-protected theorem IsTopologicalFiberBundle.is_covering_map {F : Type _} [TopologicalSpace F] [DiscreteTopology F]
-    (hf : IsTopologicalFiberBundle F f) : IsCoveringMap f :=
+protected theorem IsFiberBundle.is_covering_map {F : Type _} [TopologicalSpace F] [DiscreteTopology F]
+    (hf : ∀ x : X, ∃ e : Trivialization F f, x ∈ e.baseSet) : IsCoveringMap f :=
   IsCoveringMap.mk f (fun x => F) (fun x => Classical.choose (hf x)) fun x => Classical.choose_spec (hf x)
-#align is_topological_fiber_bundle.is_covering_map IsTopologicalFiberBundle.is_covering_map
+#align is_fiber_bundle.is_covering_map IsFiberBundle.is_covering_map
+
+protected theorem FiberBundle.is_covering_map {F : Type _} {E : X → Type _} [TopologicalSpace F] [DiscreteTopology F]
+    [TopologicalSpace (Bundle.TotalSpace E)] [∀ x, TopologicalSpace (E x)] [hf : FiberBundle F E] :
+    IsCoveringMap (π E) :=
+  IsFiberBundle.is_covering_map fun x => ⟨trivializationAt F E x, mem_base_set_trivialization_at F E x⟩
+#align fiber_bundle.is_covering_map FiberBundle.is_covering_map
 

@@ -3,9 +3,10 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 -/
+import Mathbin.Algebra.BigOperators.Intervals
 import Mathbin.Order.LiminfLimsup
-import Mathbin.Topology.Algebra.Order.Basic
 import Mathbin.Order.Filter.Archimedean
+import Mathbin.Topology.Algebra.Order.Basic
 
 /-!
 # Lemmas about liminf and limsup in an order topology.

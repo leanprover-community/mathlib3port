@@ -831,6 +831,11 @@ theorem univ_pi_singleton (f : ∀ i, α i) : (pi univ fun i => {f i}) = ({f} : 
   ext fun g => by simp [funext_iff]
 #align set.univ_pi_singleton Set.univ_pi_singleton
 
+theorem preimage_pi (s : Set ι) (t : ∀ i, Set (β i)) (f : ∀ i, α i → β i) :
+    (fun (g : ∀ i, α i) i => f _ (g i)) ⁻¹' s.pi t = s.pi fun i => f i ⁻¹' t i :=
+  rfl
+#align set.preimage_pi Set.preimage_pi
+
 theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : ∀ i, Set (α i)) :
     (pi s fun i => if p i then t₁ i else t₂ i) = pi ({ i ∈ s | p i }) t₁ ∩ pi ({ i ∈ s | ¬p i }) t₂ := by
   ext f

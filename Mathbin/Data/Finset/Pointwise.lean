@@ -838,7 +838,7 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} �
 #align finset.mul_eq_one_iff Finset.mul_eq_one_iff
 
 /-- `finset α` is a division monoid under pointwise operations if `α` is. -/
-@[to_additive SubtractionMonoid "`finset α` is a subtraction monoid under pointwise operations if\n`α` is."]
+@[to_additive "`finset α` is a subtraction monoid under pointwise operations if\n`α` is."]
 protected def divisionMonoid : DivisionMonoid (Finset α) :=
   coe_injective.DivisionMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
 #align finset.division_monoid Finset.divisionMonoid

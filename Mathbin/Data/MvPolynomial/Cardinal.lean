@@ -3,6 +3,7 @@ Copyright (c) 2021 Chris Hughes, Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Junyan Xu
 -/
+import Mathbin.Data.Finsupp.Fintype
 import Mathbin.Data.MvPolynomial.Equiv
 import Mathbin.SetTheory.Cardinal.Ordinal
 
@@ -29,10 +30,8 @@ variable {σ : Type u} {R : Type v} [CommSemiring R]
 
 @[simp]
 theorem cardinal_mk_eq_max_lift [Nonempty σ] [Nontrivial R] :
-    (#MvPolynomial σ R) = max (max (Cardinal.lift.{u} <| (#R)) <| Cardinal.lift.{v} <| (#σ)) ℵ₀ := by
-  haveI : Infinite (σ →₀ ℕ) := infinite_iff.2 ((le_max_right _ _).trans (mk_finsupp_nat σ).ge)
-  refine' (mk_finsupp_lift_of_infinite _ R).trans _
-  rw [mk_finsupp_nat, max_assoc, lift_max, lift_aleph_0, max_comm]
+    (#MvPolynomial σ R) = max (max (Cardinal.lift.{u} <| (#R)) <| Cardinal.lift.{v} <| (#σ)) ℵ₀ :=
+  (mk_finsupp_lift_of_infinite _ R).trans <| by rw [mk_finsupp_nat, max_assoc, lift_max, lift_aleph_0, max_comm]
 #align mv_polynomial.cardinal_mk_eq_max_lift MvPolynomial.cardinal_mk_eq_max_lift
 
 @[simp]

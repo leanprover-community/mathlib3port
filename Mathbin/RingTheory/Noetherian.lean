@@ -5,7 +5,7 @@ Authors: Mario Carneiro, Kevin Buzzard
 -/
 import Mathbin.GroupTheory.Finiteness
 import Mathbin.Data.Multiset.FinsetOps
-import Mathbin.Algebra.Algebra.Tower
+import Mathbin.Algebra.Algebra.Subalgebra.Tower
 import Mathbin.Order.OrderIsoNat
 import Mathbin.RingTheory.Nilpotent
 import Mathbin.Order.CompactlyGenerated

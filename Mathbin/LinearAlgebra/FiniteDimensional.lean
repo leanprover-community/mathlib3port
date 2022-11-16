@@ -5,7 +5,7 @@ Authors: Chris Hughes
 -/
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.FieldTheory.Finiteness
-import Mathbin.LinearAlgebra.Finrank
+import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 import Mathbin.Tactic.IntervalCases
 
 /-!
@@ -254,7 +254,8 @@ theorem basisUnique.repr_eq_zero_iff {ι : Type _} [Unique ι] {h : finrank K V 
 theorem cardinal_mk_le_finrank_of_linear_independent [FiniteDimensional K V] {ι : Type w} {b : ι → V}
     (h : LinearIndependent K b) : (#ι) ≤ finrank K V := by
   rw [← lift_le.{_, max v w}]
-  simpa [← finrank_eq_dim K V] using cardinal_lift_le_dim_of_linear_independent.{_, _, _, max v w} h
+  simpa [← finrank_eq_dim K V, -Module.Free.finrank_eq_rank] using
+    cardinal_lift_le_dim_of_linear_independent.{_, _, _, max v w} h
 #align
   finite_dimensional.cardinal_mk_le_finrank_of_linear_independent FiniteDimensional.cardinal_mk_le_finrank_of_linear_independent
 
@@ -381,7 +382,8 @@ instance (f : V →ₗ[K] V₂) (p : Submodule K V) [h : FiniteDimensional K p] 
 
 /-- Pushforwards of finite-dimensional submodules have a smaller finrank. -/
 theorem finrank_map_le (f : V →ₗ[K] V₂) (p : Submodule K V) [FiniteDimensional K p] :
-    finrank K (p.map f) ≤ finrank K p := by simpa [← finrank_eq_dim] using lift_dim_map_le f p
+    finrank K (p.map f) ≤ finrank K p := by
+  simpa [← finrank_eq_dim, -Module.Free.finrank_eq_rank] using lift_dim_map_le f p
 #align finite_dimensional.finrank_map_le FiniteDimensional.finrank_map_le
 
 variable {K}

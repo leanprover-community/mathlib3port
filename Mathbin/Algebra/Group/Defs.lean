@@ -1062,7 +1062,7 @@ class SubtractionMonoid (G : Type u) extends SubNegMonoid G, HasInvolutiveNeg G 
 `(a * b)⁻¹ = b⁻¹ * a⁻¹` and `a * b = 1 → a⁻¹ = b`.
 
 This is the immediate common ancestor of `group` and `group_with_zero`. -/
-@[protect_proj, to_additive SubtractionMonoid]
+@[protect_proj, to_additive]
 class DivisionMonoid (G : Type u) extends DivInvMonoid G, HasInvolutiveInv G where
   mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹
   /- Despite the asymmetry of `inv_eq_of_mul`, the symmetric version is true thanks to the
@@ -1246,7 +1246,7 @@ theorem inv_mul_cancel_right (a b : G) : a * b⁻¹ * b = a := by rw [mul_assoc,
 #align inv_mul_cancel_right inv_mul_cancel_right
 
 #print Group.toDivisionMonoid /-
-@[to_additive]
+@[to_additive AddGroup.toSubtractionMonoid]
 instance (priority := 100) Group.toDivisionMonoid : DivisionMonoid G :=
   { ‹Group G› with inv_inv := fun a => inv_eq_of_mul (mul_left_inv a),
     mul_inv_rev := fun a b => inv_eq_of_mul <| by rw [mul_assoc, mul_inv_cancel_left, mul_right_inv],

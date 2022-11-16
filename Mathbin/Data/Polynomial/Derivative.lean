@@ -229,7 +229,7 @@ theorem iterate_derivative_X {k} (h : 1 < k) : (derivative^[k]) (x : R[X]) = 0 :
   iterate_derivative_eq_zero <| nat_degree_X_le.trans_lt h
 #align polynomial.iterate_derivative_X Polynomial.iterate_derivative_X
 
-theorem nat_degree_eq_zero_of_derivative_eq_zero [NoZeroDivisors R] [CharZero R] {f : R[X]} (h : f.derivative = 0) :
+theorem nat_degree_eq_zero_of_derivative_eq_zero [NoZeroSmulDivisors ℕ R] {f : R[X]} (h : f.derivative = 0) :
     f.natDegree = 0 := by
   rcases eq_or_ne f 0 with (rfl | hf)
   · exact nat_degree_zero
@@ -241,11 +241,15 @@ theorem nat_degree_eq_zero_of_derivative_eq_zero [NoZeroDivisors R] [CharZero R]
   have hm : m + 1 = f.nat_degree := tsub_add_cancel_of_le f_nat_degree_pos
   have h2 := coeff_derivative f m
   rw [Polynomial.ext_iff] at h
-  rw [h m, coeff_zero, zero_eq_mul] at h2
-  replace h2 := h2.resolve_right fun h2 => by norm_cast  at h2
+  rw [h m, coeff_zero, ← Nat.cast_add_one, ← nsmul_eq_mul', eq_comm, smul_eq_zero] at h2
+  replace h2 := h2.resolve_left m.succ_ne_zero
   rw [hm, ← leading_coeff, leading_coeff_eq_zero] at h2
   exact hf h2
 #align polynomial.nat_degree_eq_zero_of_derivative_eq_zero Polynomial.nat_degree_eq_zero_of_derivative_eq_zero
+
+theorem eq_C_of_derivative_eq_zero [NoZeroSmulDivisors ℕ R] {f : R[X]} (h : f.derivative = 0) : f = c (f.coeff 0) :=
+  eq_C_of_nat_degree_eq_zero <| nat_degree_eq_zero_of_derivative_eq_zero h
+#align polynomial.eq_C_of_derivative_eq_zero Polynomial.eq_C_of_derivative_eq_zero
 
 @[simp]
 theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f * derivative g :=

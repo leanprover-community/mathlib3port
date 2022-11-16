@@ -944,7 +944,7 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} �
 #align set.mul_eq_one_iff Set.mul_eq_one_iff
 
 /-- `set α` is a division monoid under pointwise operations if `α` is. -/
-@[to_additive SubtractionMonoid "`set α` is a subtraction monoid under pointwise operations if `α`\nis."]
+@[to_additive "`set α` is a subtraction monoid under pointwise operations if `α` is."]
 protected def divisionMonoid : DivisionMonoid (Set α) :=
   { Set.monoid, Set.hasInvolutiveInv, Set.hasDiv, Set.hasZpow with
     mul_inv_rev := fun s t => by

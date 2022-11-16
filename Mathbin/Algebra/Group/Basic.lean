@@ -672,7 +672,7 @@ theorem one_div_one_div : 1 / (1 / a) = a := by simp
 #align one_div_one_div one_div_one_div
 
 #print DivisionMonoid.toDivInvOneMonoid /-
-@[to_additive]
+@[to_additive SubtractionMonoid.toSubNegZeroMonoid]
 instance (priority := 100) DivisionMonoid.toDivInvOneMonoid : DivInvOneMonoid α :=
   { DivisionMonoid.toDivInvMonoid α with inv_one := by simpa only [one_div, inv_inv] using (inv_div (1 : α) 1).symm }
 #align division_monoid.to_div_inv_one_monoid DivisionMonoid.toDivInvOneMonoid

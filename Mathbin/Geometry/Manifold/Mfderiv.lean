@@ -1424,7 +1424,7 @@ theorem tangent_map_chart_symm {p : TangentBundle I M} {q : TangentBundle I H} (
   · infer_instance
     
   simp only [ContinuousLinearMap.coe_coe, BasicSmoothVectorBundleCore.chart, h, tangentBundleCore,
-    BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, chart_at, Sigma.mk.inj_iff, mfld_simps]
+    BasicSmoothVectorBundleCore.toVectorBundleCore, chart_at, Sigma.mk.inj_iff, mfld_simps]
 #align tangent_map_chart_symm tangent_map_chart_symm
 
 end Charts
@@ -1675,7 +1675,7 @@ variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (Z : BasicSmoo
 /-- In a smooth fiber bundle constructed from core, the preimage under the projection of a set with
 unique differential in the basis also has unique differential. -/
 theorem UniqueMdiffOn.smoothBundlePreimage (hs : UniqueMdiffOn I s) :
-    UniqueMdiffOn (I.Prod 𝓘(𝕜, F)) (Z.toTopologicalVectorBundleCore.proj ⁻¹' s) := by
+    UniqueMdiffOn (I.Prod 𝓘(𝕜, F)) (Z.toVectorBundleCore.proj ⁻¹' s) := by
   /- Using a chart (and the fact that unique differentiability is invariant under charts), we
     reduce the situation to the model space, where we can use the fact that products respect
     unique differentiability. -/
@@ -1686,16 +1686,15 @@ theorem UniqueMdiffOn.smoothBundlePreimage (hs : UniqueMdiffOn I s) :
   let e₀ := chart_at H p.1
   let e := chart_at (ModelProd H F) p
   -- It suffices to prove unique differentiability in a chart
-  suffices h : UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (Z.to_topological_vector_bundle_core.proj ⁻¹' s))
+  suffices h : UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (Z.to_vector_bundle_core.proj ⁻¹' s))
   · have A :
       UniqueMdiffOn (I.prod 𝓘(𝕜, F))
-        (e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_topological_vector_bundle_core.proj ⁻¹' s))) :=
+        (e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_vector_bundle_core.proj ⁻¹' s))) :=
       by
       apply h.unique_mdiff_on_preimage
       exact (mdifferentiableOfMemAtlas _ (chart_mem_atlas _ _)).symm
       infer_instance
-    have :
-      p ∈ e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_topological_vector_bundle_core.proj ⁻¹' s)) := by
+    have : p ∈ e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_vector_bundle_core.proj ⁻¹' s)) := by
       simp only [e, hp, mfld_simps]
     apply (A _ this).mono
     intro q hq

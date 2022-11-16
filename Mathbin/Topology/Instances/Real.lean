@@ -8,6 +8,7 @@ import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.Algebra.UniformMulAction
 import Mathbin.Topology.Algebra.Ring
 import Mathbin.Topology.Algebra.Star
+import Mathbin.Topology.Algebra.Order.Field
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.GroupTheory.Archimedean
 import Mathbin.Algebra.Order.Group.Bounds

@@ -361,24 +361,71 @@ end RolleCat
 
 namespace Polynomial
 
-theorem card_root_set_le_derivative {F : Type _} [Field F] [Algebra F ℝ] (p : F[X]) :
-    Fintype.card (p.rootSet ℝ) ≤ Fintype.card (p.derivative.rootSet ℝ) + 1 := by
-  haveI : CharZero F := (RingHom.char_zero_iff (algebraMap F ℝ).Injective).mpr (by infer_instance)
-  by_cases hp:p = 0
-  · simp_rw [hp, derivative_zero, root_set_zero, Set.empty_card', zero_le_one]
+open BigOperators
+
+/-- The number of roots of a real polynomial `p` is at most the number of roots of its derivative
+that are not roots of `p` plus one. -/
+theorem card_roots_to_finset_le_card_roots_derivative_diff_roots_succ (p : ℝ[X]) :
+    p.roots.toFinset.card ≤ (p.derivative.roots.toFinset \ p.roots.toFinset).card + 1 := by
+  cases' eq_or_ne p.derivative 0 with hp' hp'
+  · rw [eq_C_of_derivative_eq_zero hp', roots_C, Multiset.to_finset_zero, Finset.card_empty]
+    exact zero_le _
     
-  by_cases hp':p.derivative = 0
-  · rw [eq_C_of_nat_degree_eq_zero (nat_degree_eq_zero_of_derivative_eq_zero hp')]
-    simp_rw [root_set_C, Set.empty_card', zero_le]
-    
-  simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
-  refine' Finset.card_le_of_interleaved fun x hx y hy hxy => _
-  rw [← Finset.mem_coe, ← root_set_def, mem_root_set hp] at hx hy
-  obtain ⟨z, hz1, hz2⟩ :=
-    exists_deriv_eq_zero (fun x : ℝ => aeval x p) hxy p.continuous_aeval.continuous_on (hx.trans hy.symm)
+  have hp : p ≠ 0 := ne_of_apply_ne derivative (by rwa [derivative_zero])
+  refine' Finset.card_le_diff_of_interleaved fun x hx y hy hxy hxy' => _
+  rw [Multiset.mem_to_finset, mem_roots hp] at hx hy
+  obtain ⟨z, hz1, hz2⟩ := exists_deriv_eq_zero (fun x : ℝ => eval x p) hxy p.continuous_on (hx.trans hy.symm)
   refine' ⟨z, _, hz1⟩
-  rw [← Finset.mem_coe, ← root_set_def, mem_root_set hp', ← hz2]
-  simp_rw [aeval_def, ← eval_map, Polynomial.deriv, derivative_map]
+  rwa [Multiset.mem_to_finset, mem_roots hp', is_root, ← p.deriv]
+#align
+  polynomial.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ Polynomial.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ
+
+/-- The number of roots of a real polynomial is at most the number of roots of its derivative plus
+one. -/
+theorem card_roots_to_finset_le_derivative (p : ℝ[X]) : p.roots.toFinset.card ≤ p.derivative.roots.toFinset.card + 1 :=
+  p.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ.trans <|
+    add_le_add_right (Finset.card_mono <| Finset.sdiff_subset _ _) _
+#align polynomial.card_roots_to_finset_le_derivative Polynomial.card_roots_to_finset_le_derivative
+
+/-- The number of roots of a real polynomial (counted with multiplicities) is at most the number of
+roots of its derivative (counted with multiplicities) plus one. -/
+theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.roots.card + 1 :=
+  calc
+    p.roots.card = ∑ x in p.roots.toFinset, p.roots.count x := (Multiset.to_finset_sum_count_eq _).symm
+    _ = ∑ x in p.roots.toFinset, p.roots.count x - 1 + 1 :=
+      Eq.symm <|
+        (Finset.sum_congr rfl) fun x hx =>
+          tsub_add_cancel_of_le <| Nat.succ_le_iff.2 <| Multiset.count_pos.2 <| Multiset.mem_to_finset.1 hx
+    _ = (∑ x in p.roots.toFinset, p.rootMultiplicity x - 1) + p.roots.toFinset.card := by
+      simp only [Finset.sum_add_distrib, Finset.card_eq_sum_ones, count_roots]
+    _ ≤
+        (∑ x in p.roots.toFinset, p.derivative.rootMultiplicity x) +
+          ((p.derivative.roots.toFinset \ p.roots.toFinset).card + 1) :=
+      add_le_add (Finset.sum_le_sum fun x hx => root_multiplicity_sub_one_le_derivative_root_multiplicity _ _)
+        p.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ
+    _ ≤
+        (∑ x in p.roots.toFinset, p.derivative.roots.count x) +
+          ((∑ x in p.derivative.roots.toFinset \ p.roots.toFinset, p.derivative.roots.count x) + 1) :=
+      by
+      simp only [← count_roots]
+      refine' add_le_add_left (add_le_add_right ((Finset.card_eq_sum_ones _).trans_le _) _) _
+      refine' Finset.sum_le_sum fun x hx => Nat.succ_le_iff.2 <| _
+      rw [Multiset.count_pos, ← Multiset.mem_to_finset]
+      exact (Finset.mem_sdiff.1 hx).1
+    _ = p.derivative.roots.card + 1 := by
+      rw [← add_assoc, ← Finset.sum_union Finset.disjoint_sdiff, Finset.union_sdiff_self_eq_union, ←
+        Multiset.to_finset_sum_count_eq, ← Finset.sum_subset (Finset.subset_union_right _ _)]
+      intro x hx₁ hx₂
+      simpa only [Multiset.mem_to_finset, Multiset.count_eq_zero] using hx₂
+    
+#align polynomial.card_roots_le_derivative Polynomial.card_roots_le_derivative
+
+/-- The number of real roots of a polynomial is at most the number of roots of its derivative plus
+one. -/
+theorem card_root_set_le_derivative {F : Type _} [CommRing F] [Algebra F ℝ] (p : F[X]) :
+    Fintype.card (p.rootSet ℝ) ≤ Fintype.card (p.derivative.rootSet ℝ) + 1 := by
+  simpa only [root_set_def, Finset.coe_sort_coe, Fintype.card_coe, derivative_map] using
+    card_roots_to_finset_le_derivative (p.map (algebraMap F ℝ))
 #align polynomial.card_root_set_le_derivative Polynomial.card_root_set_le_derivative
 
 end Polynomial

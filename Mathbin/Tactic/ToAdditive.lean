@@ -249,6 +249,7 @@ unsafe def tr : Bool → List String → List String
   | is_comm, "is" :: "regular" :: s => add_comm_prefix is_comm "is_add_regular" :: tr false s
   | is_comm, "is" :: "left" :: "regular" :: s => add_comm_prefix is_comm "is_add_left_regular" :: tr false s
   | is_comm, "is" :: "right" :: "regular" :: s => add_comm_prefix is_comm "is_add_right_regular" :: tr false s
+  | is_comm, "division" :: "monoid" :: s => "subtraction" :: add_comm_prefix is_comm "monoid" :: tr false s
   | is_comm, "monoid" :: s => ("add_" ++ add_comm_prefix is_comm "monoid") :: tr false s
   | is_comm, "submonoid" :: s => ("add_" ++ add_comm_prefix is_comm "submonoid") :: tr false s
   | is_comm, "group" :: s => ("add_" ++ add_comm_prefix is_comm "group") :: tr false s

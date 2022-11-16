@@ -33,6 +33,26 @@ theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiring 
     (Subalgebra.map_le.2 <| adjoin_le fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
 #align algebra.adjoin_algebra_map Algebra.adjoin_algebra_map
 
+theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E] [Algebra C D]
+    [Algebra C E] [Algebra D E] [IsScalarTower C D E] (S : Set E) :
+    (Algebra.adjoin D S).restrictScalars C =
+      (Algebra.adjoin ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) S).restrictScalars C :=
+  by
+  suffices
+    Set.range (algebraMap D E) = Set.range (algebraMap ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) E) by
+    ext x
+    change x ∈ Subsemiring.closure (_ ∪ S) ↔ x ∈ Subsemiring.closure (_ ∪ S)
+    rw [this]
+  ext x
+  constructor
+  · rintro ⟨y, hy⟩
+    exact ⟨⟨algebraMap D E y, ⟨y, ⟨Algebra.mem_top, rfl⟩⟩⟩, hy⟩
+    
+  · rintro ⟨⟨y, ⟨z, ⟨h0, h1⟩⟩⟩, h2⟩
+    exact ⟨z, Eq.trans h1 h2⟩
+    
+#align algebra.adjoin_restrict_scalars Algebra.adjoin_restrict_scalars
+
 theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E] [CommSemiring F]
     [Algebra C D] [Algebra C E] [Algebra C F] [Algebra D F] [Algebra E F] [IsScalarTower C D F] [IsScalarTower C E F]
     {S : Set D} {T : Set E} (hS : Algebra.adjoin C S = ⊤) (hT : Algebra.adjoin C T = ⊤) :

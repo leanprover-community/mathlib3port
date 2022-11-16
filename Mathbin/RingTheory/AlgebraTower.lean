@@ -3,7 +3,6 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Algebra.RestrictScalars
 import Mathbin.Algebra.Algebra.Tower
 import Mathbin.Algebra.Invertible
 import Mathbin.LinearAlgebra.Basis
@@ -69,30 +68,6 @@ variable [Algebra R A] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
 end CommSemiring
 
 end IsScalarTower
-
-namespace Algebra
-
-theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E] [Algebra C D]
-    [Algebra C E] [Algebra D E] [IsScalarTower C D E] (S : Set E) :
-    (Algebra.adjoin D S).restrictScalars C =
-      (Algebra.adjoin ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) S).restrictScalars C :=
-  by
-  suffices
-    Set.range (algebraMap D E) = Set.range (algebraMap ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) E) by
-    ext x
-    change x ∈ Subsemiring.closure (_ ∪ S) ↔ x ∈ Subsemiring.closure (_ ∪ S)
-    rw [this]
-  ext x
-  constructor
-  · rintro ⟨y, hy⟩
-    exact ⟨⟨algebraMap D E y, ⟨y, ⟨Algebra.mem_top, rfl⟩⟩⟩, hy⟩
-    
-  · rintro ⟨⟨y, ⟨z, ⟨h0, h1⟩⟩⟩, h2⟩
-    exact ⟨z, Eq.trans h1 h2⟩
-    
-#align algebra.adjoin_restrict_scalars Algebra.adjoin_restrict_scalars
-
-end Algebra
 
 section AlgebraMapCoeffs
 

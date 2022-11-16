@@ -5,6 +5,7 @@ Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudr
 -/
 import Mathbin.Logic.Function.Iterate
 import Mathbin.Data.Set.Intervals.ProjIcc
+import Mathbin.Topology.Algebra.Order.Field
 import Mathbin.Topology.MetricSpace.Basic
 import Mathbin.Topology.Bornology.Hom
 
