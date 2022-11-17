@@ -6,8 +6,7 @@ Authors: Simon Hudon
 import Mathbin.Control.Traversable.Basic
 import Mathbin.Tactic.Simpa
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def loc.to_string_aux : Option Name → String
   | none => "⊢"
   | some x => toString x
@@ -17,7 +16,7 @@ private unsafe def loc.to_string_aux : Option Name → String
 unsafe def loc.to_string : Loc → String
   | loc.ns [] => ""
   | loc.ns [none] => ""
-  | loc.ns ls => String.join <| List.intersperse " " (" at" :: ls.map loc.to_string_aux)
+  | loc.ns ls => String.join $ List.intersperse " " (" at" :: ls.map loc.to_string_aux)
   | loc.wildcard => " at *"
 #align loc.to_string loc.to_string
 
@@ -45,7 +44,7 @@ open List
 
 /-- parse structure instance of the shape `{ field1 := value1, .. , field2 := value2 }` -/
 unsafe def struct_inst : lean.parser pexpr :=
-  with_desc "cfg" <| do
+  with_desc "cfg" $ do
     tk "{"
     let ls ←
       sep_by (skip_info (tk ","))
@@ -53,7 +52,7 @@ unsafe def struct_inst : lean.parser pexpr :=
     tk "}"
     let (srcs, fields) := partitionMap id ls
     let (names, values) := unzip fields
-    pure <| pexpr.mk_structure_instance { field_names := names, field_values := values, sources := srcs }
+    pure $ pexpr.mk_structure_instance { field_names := names, field_values := values, sources := srcs }
 #align tactic.struct_inst tactic.struct_inst
 
 /-- pretty print structure instance -/
@@ -63,10 +62,10 @@ unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
     mzipWith
         (fun n v => do
           let v ← to_expr v >>= pp
-          pure <| f! "{n } := {v}")
+          pure $ f! "{n } := {v}")
         r.field_names r.field_values
   let ss := r.sources.map fun s => f! " .. {s}"
-  let x : format := format.join <| List.intersperse ", " (fs ++ ss)
+  let x : format := format.join $ List.intersperse ", " (fs ++ ss)
   pure f! " \{{x}}}"
 #align tactic.struct.to_tactic_format tactic.struct.to_tactic_format
 
@@ -94,7 +93,7 @@ Patch: `pp` was changed to `to_string` because it was getting rid of prefixes
 that would be necessary for some disambiguations. -/
 unsafe def render_simp_arg_list : List simp_arg_type → format
   | [] => ""
-  | args => (· ++ ·) " " <| to_line_wrap_format <| args.map toString
+  | args => (· ++ ·) " " $ to_line_wrap_format $ args.map toString
 #align tactic.render_simp_arg_list tactic.render_simp_arg_list
 
 /-- Emit a suggestion to the user. If inside a `squeeze_scope` block,
@@ -107,7 +106,7 @@ unsafe def mk_suggestion (p : Pos) (pre post : String) (args : List simp_arg_typ
   match xs with
     | none => do
       let args := render_simp_arg_list args
-      if at_pos then (@scopeTrace _ p p) fun _ => _root_.trace (s! "{pre }{args }{post}") (pure () : tactic Unit)
+      if at_pos then @scopeTrace _ p p $ fun _ => _root_.trace (s! "{pre }{args }{post}") (pure () : tactic Unit)
         else trace s! "{pre }{args }{post}"
     | some xs => do
       squeeze_loc_attr `` squeeze_loc_attr_carrier ((p, pre, args, post) :: xs) ff
@@ -117,7 +116,7 @@ unsafe def mk_suggestion (p : Pos) (pre post : String) (args : List simp_arg_typ
 unsafe def parse_config : Option pexpr → tactic (simp_config_ext × format)
   | none => pure ({  }, "")
   | some cfg => do
-    let e ← to_expr (pquote.1 (%%ₓcfg : simp_config_ext))
+    let e ← to_expr ``(($(cfg) : simp_config_ext))
     let fmt ← has_to_tactic_format.to_tactic_format cfg
     Prod.mk <$> eval_expr simp_config_ext e <*> struct.to_tactic_format cfg
 #align tactic.parse_config tactic.parse_config
@@ -126,7 +125,7 @@ unsafe def parse_config : Option pexpr → tactic (simp_config_ext × format)
 unsafe def parse_dsimp_config : Option pexpr → tactic (dsimp_config × format)
   | none => pure ({  }, "")
   | some cfg => do
-    let e ← to_expr (pquote.1 (%%ₓcfg : simp_config_ext))
+    let e ← to_expr ``(($(cfg) : simp_config_ext))
     let fmt ← has_to_tactic_format.to_tactic_format cfg
     Prod.mk <$> eval_expr dsimp_config e <*> struct.to_tactic_format cfg
 #align tactic.parse_dsimp_config tactic.parse_dsimp_config
@@ -135,7 +134,7 @@ unsafe def parse_dsimp_config : Option pexpr → tactic (dsimp_config × format)
 produced by `tac` is equivalent to `proof`. -/
 unsafe def same_result (pr : proof_state) (tac : tactic Unit) : tactic Bool := do
   let s ← get_proof_state_after tac
-  pure <| some pr = s
+  pure $ some pr = s
 #align tactic.same_result tactic.same_result
 
 /-- Consumes the first list of `simp` arguments, accumulating required arguments
@@ -171,14 +170,14 @@ unsafe def filter_simp_set (tac : Bool → List simp_arg_type → tactic Unit) (
 
 /-- make a `simp_arg_type` that references the name given as an argument -/
 unsafe def name.to_simp_args (n : Name) : simp_arg_type :=
-  simp_arg_type.expr <| @expr.local_const false n n default pexpr.mk_placeholder
+  simp_arg_type.expr $ @expr.local_const false n n default pexpr.mk_placeholder
 #align tactic.name.to_simp_args tactic.name.to_simp_args
 
 /-- If the `name` is (likely) to be overloaded, then prepend a `_root_` on it. The `expr` of an
 overloaded name is constructed using `expr.macro`; this is how we guess whether it's overloaded. -/
 unsafe def prepend_root_if_needed (n : Name) : tactic Name := do
   let x ← resolve_name' n
-  return <|
+  return $
       match x with
       | expr.macro _ _ => `_root_ ++ n
       | _ => n
@@ -200,12 +199,12 @@ unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
   let args ←
     if slow then do
         let simp_set ← attribute.get_instances `simp
-        let simp_set ← simp_set.mfilter <| has_attribute' `_refl_lemma
-        let simp_set ← simp_set.mmap <| resolve_name' >=> pure ∘ simp_arg_type.expr
-        pure <| args ++ simp_set
+        let simp_set ← simp_set.mfilter $ has_attribute' `_refl_lemma
+        let simp_set ← simp_set.mmap $ resolve_name' >=> pure ∘ simp_arg_type.expr
+        pure $ args ++ simp_set
       else pure args
   let g ←
-    retrieve <| do
+    retrieve $ do
         let g ← main_goal
         tac no_dflt args
         instantiate_mvars g
@@ -213,7 +212,7 @@ unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
   let vs ← vs.mfilter is_simp_lemma
   let vs ← vs.mmap strip_prefix
   let vs ← vs.mmap prepend_root_if_needed
-  with_local_goals' [v] (filter_simp_set tac args <| vs name.to_simp_args) >>= mk_suggestion
+  with_local_goals' [v] (filter_simp_set tac args $ vs name.to_simp_args) >>= mk_suggestion
   tac no_dflt args
 #align tactic.squeeze_simp_core tactic.squeeze_simp_core
 
@@ -248,14 +247,14 @@ unsafe def squeeze_scope (tac : itactic) : tactic Unit := do
   let none ← squeeze_loc_attr.get_param `` squeeze_loc_attr_carrier |
     pure ()
   squeeze_loc_attr `` squeeze_loc_attr_carrier (some []) ff
-  finally tac <| do
+  finally tac $ do
       let some xs ← squeeze_loc_attr `` squeeze_loc_attr_carrier |
         fail "invalid state"
       let m := native.rb_lmap.of_list xs
       squeeze_loc_attr `` squeeze_loc_attr_carrier none ff
-      m fun ⟨p, suggs⟩ => do
+      m $ fun ⟨p, suggs⟩ => do
           let ⟨pre, _, post⟩ := suggs
-          let suggs : List (List simp_arg_type) := suggs <| Prod.fst ∘ Prod.snd
+          let suggs : List (List simp_arg_type) := suggs $ Prod.fst ∘ Prod.snd
           mk_suggestion p pre post (suggs List.union []) tt
           pure ()
 #align tactic.interactive.squeeze_scope tactic.interactive.squeeze_scope

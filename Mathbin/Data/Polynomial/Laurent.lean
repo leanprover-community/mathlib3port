@@ -195,7 +195,7 @@ theorem _root_.polynomial.to_laurent_C_mul_T (n : ℕ) (r : R) :
 @[simp]
 theorem _root_.polynomial.to_laurent_C (r : R) : (Polynomial.c r).toLaurent = c r := by
   convert Polynomial.to_laurent_C_mul_T 0 r
-  simp only [Int.coe_nat_zero, T_zero, mul_one]
+  simp only [Int.ofNat_zero, T_zero, mul_one]
 #align laurent_polynomial._root_.polynomial.to_laurent_C laurent_polynomial._root_.polynomial.to_laurent_C
 
 @[simp]
@@ -285,7 +285,7 @@ protected theorem induction_on' {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_
 #align laurent_polynomial.induction_on' LaurentPolynomial.induction_on'
 
 theorem commute_T (n : ℤ) (f : R[T;T⁻¹]) : Commute (t n) f :=
-  (f.inductionOn' fun p q Tp Tq => Commute.add_right Tp Tq) fun m a =>
+  (f.inductionOn' fun p q Tp Tq => Commute.add_right Tp Tq) $ fun m a =>
     show t n * _ = _ by
       rw [T, T, ← single_eq_C, single_mul_single, single_mul_single, single_mul_single]
       simp [add_comm]
@@ -300,7 +300,7 @@ theorem T_mul (n : ℤ) (f : R[T;T⁻¹]) : t n * f = f * t n :=
 nonnegative degree coincide with the ones of `f`.  The terms of negative degree of `f` "vanish".
 `trunc` is a left-inverse to `polynomial.to_laurent`. -/
 def trunc : R[T;T⁻¹] →+ R[X] :=
-  (toFinsuppIso R).symm.toAddMonoidHom.comp <| comap_domain.add_monoid_hom fun a b => Int.ofNat.inj
+  (toFinsuppIso R).symm.toAddMonoidHom.comp $ comap_domain.add_monoid_hom $ fun a b => Int.ofNat.inj
 #align laurent_polynomial.trunc LaurentPolynomial.trunc
 
 @[simp]
@@ -311,14 +311,14 @@ theorem trunc_C_mul_T (n : ℤ) (r : R) : trunc (c r * t n) = ite (0 ≤ n) (mon
   by_cases n0:0 ≤ n
   · lift n to ℕ using n0
     erw [comap_domain_single, to_finsupp_iso_symm_apply]
-    simp only [Int.coe_nat_nonneg, Int.to_nat_coe_nat, if_true, to_finsupp_iso_apply, to_finsupp_monomial]
+    simp only [Int.coe_nat_nonneg, Int.toNat_coe_nat, if_true, to_finsupp_iso_apply, to_finsupp_monomial]
     
   · lift -n to ℕ using (neg_pos.mpr (not_le.mp n0)).le with m
     rw [to_finsupp_iso_apply, to_finsupp_inj, if_neg n0]
     erw [to_finsupp_iso_symm_apply]
     ext a
-    have := ((not_le.mp n0).trans_le (Int.coe_zero_le a)).ne'
-    simp only [coeff, comap_domain_apply, Int.of_nat_eq_coe, coeff_zero, single_apply_eq_zero, this, IsEmpty.forall_iff]
+    have := ((not_le.mp n0).trans_le (Int.ofNat_zero_le a)).ne'
+    simp only [coeff, comap_domain_apply, Int.ofNat_eq_coe, coeff_zero, single_apply_eq_zero, this, IsEmpty.forall_iff]
     
 #align laurent_polynomial.trunc_C_mul_T LaurentPolynomial.trunc_C_mul_T
 
@@ -328,7 +328,7 @@ theorem left_inverse_trunc_to_laurent : Function.LeftInverse (trunc : R[T;T⁻¹
   · exact fun f g hf hg => by simp only [hf, hg, _root_.map_add]
     
   · exact fun n r => by
-      simp only [Polynomial.to_laurent_C_mul_T, trunc_C_mul_T, Int.coe_nat_nonneg, Int.to_nat_coe_nat, if_true]
+      simp only [Polynomial.to_laurent_C_mul_T, trunc_C_mul_T, Int.coe_nat_nonneg, Int.toNat_coe_nat, if_true]
     
 #align laurent_polynomial.left_inverse_trunc_to_laurent LaurentPolynomial.left_inverse_trunc_to_laurent
 
@@ -351,19 +351,18 @@ theorem _root_.polynomial.to_laurent_ne_zero {f : R[X]} : f ≠ 0 ↔ f.toLauren
   (map_ne_zero_iff _ Polynomial.to_laurent_injective).symm
 #align laurent_polynomial._root_.polynomial.to_laurent_ne_zero laurent_polynomial._root_.polynomial.to_laurent_ne_zero
 
-theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ)(f' : R[X]), f'.toLaurent = f * t n := by
+theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ) (f' : R[X]), f'.toLaurent = f * t n := by
   apply f.induction_on' _ fun n a => _ <;> clear f
   · rintro f g ⟨m, fn, hf⟩ ⟨n, gn, hg⟩
     refine' ⟨m + n, fn * X ^ n + gn * X ^ m, _⟩
     simp only [hf, hg, add_mul, add_comm (n : ℤ), map_add, map_mul, Polynomial.to_laurent_X_pow, mul_T_assoc,
-      Int.coe_nat_add]
+      Int.ofNat_add]
     
   · cases' n with n n
     · exact ⟨0, Polynomial.c a * X ^ n, by simp⟩
       
     · refine' ⟨n + 1, Polynomial.c a, _⟩
-      simp only [Int.neg_succ_of_nat_eq, Polynomial.to_laurent_C, Int.coe_nat_succ, mul_T_assoc, add_left_neg, T_zero,
-        mul_one]
+      simp only [Int.negSucc_eq, Polynomial.to_laurent_C, Int.ofNat_succ, mul_T_assoc, add_left_neg, T_zero, mul_one]
       
     
 #align laurent_polynomial.exists_T_pow LaurentPolynomial.exists_T_pow
@@ -385,7 +384,7 @@ theorem reduce_to_polynomial_of_mul_T (f : R[T;T⁻¹]) {Q : R[T;T⁻¹] → Pro
     (QT : ∀ f, Q (f * t 1) → Q f) : Q f := by
   induction' f using LaurentPolynomial.induction_on_mul_T with f n
   induction' n with n hn
-  · simpa only [Int.coe_nat_zero, neg_zero, T_zero, mul_one] using Qf _
+  · simpa only [Int.ofNat_zero, neg_zero, T_zero, mul_one] using Qf _
     
   · convert QT _ _
     simpa using hn

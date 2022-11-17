@@ -31,11 +31,11 @@ theorem tsub_add_cancel_of_le (h : a ≤ b) : b - a + a = b := by
 #align tsub_add_cancel_of_le tsub_add_cancel_of_le
 
 theorem add_le_of_le_tsub_right_of_le (h : b ≤ c) (h2 : a ≤ c - b) : a + b ≤ c :=
-  (add_le_add_right h2 b).trans_eq <| tsub_add_cancel_of_le h
+  (add_le_add_right h2 b).trans_eq $ tsub_add_cancel_of_le h
 #align add_le_of_le_tsub_right_of_le add_le_of_le_tsub_right_of_le
 
 theorem add_le_of_le_tsub_left_of_le (h : a ≤ c) (h2 : b ≤ c - a) : a + b ≤ c :=
-  (add_le_add_left h2 a).trans_eq <| add_tsub_cancel_of_le h
+  (add_le_add_left h2 a).trans_eq $ add_tsub_cancel_of_le h
 #align add_le_of_le_tsub_left_of_le add_le_of_le_tsub_left_of_le
 
 theorem tsub_le_tsub_iff_right (h : c ≤ b) : a - c ≤ b - c ↔ a ≤ b := by rw [tsub_le_iff_right, tsub_add_cancel_of_le h]
@@ -89,7 +89,7 @@ protected theorem tsub_add_eq_add_tsub (hb : AddLeCancellable b) (h : b ≤ a) :
 
 protected theorem tsub_tsub_assoc (hbc : AddLeCancellable (b - c)) (h₁ : b ≤ a) (h₂ : c ≤ b) :
     a - (b - c) = a - b + c :=
-  hbc.tsub_eq_of_eq_add <| by rw [add_assoc, add_tsub_cancel_of_le h₂, tsub_add_cancel_of_le h₁]
+  hbc.tsub_eq_of_eq_add $ by rw [add_assoc, add_tsub_cancel_of_le h₂, tsub_add_cancel_of_le h₁]
 #align add_le_cancellable.tsub_tsub_assoc AddLeCancellable.tsub_tsub_assoc
 
 protected theorem tsub_add_tsub_comm (hb : AddLeCancellable b) (hd : AddLeCancellable d) (hba : b ≤ a) (hdc : d ≤ c) :
@@ -151,7 +151,7 @@ protected theorem lt_of_tsub_lt_tsub_left_of_le [ContravariantClass α α (· + 
 #align add_le_cancellable.lt_of_tsub_lt_tsub_left_of_le AddLeCancellable.lt_of_tsub_lt_tsub_left_of_le
 
 protected theorem tsub_lt_tsub_left_of_le (hab : AddLeCancellable (a - b)) (h₁ : b ≤ a) (h : c < b) : a - b < a - c :=
-  (tsub_le_tsub_left h.le _).lt_of_ne fun h' => h.ne' <| hab.tsub_inj_right h₁ (h.le.trans h₁) h'
+  (tsub_le_tsub_left h.le _).lt_of_ne $ fun h' => h.ne' $ hab.tsub_inj_right h₁ (h.le.trans h₁) h'
 #align add_le_cancellable.tsub_lt_tsub_left_of_le AddLeCancellable.tsub_lt_tsub_left_of_le
 
 protected theorem tsub_lt_tsub_right_of_le (hc : AddLeCancellable c) (h : c ≤ a) (h2 : a < b) : a - c < b - c := by
@@ -166,7 +166,7 @@ protected theorem tsub_lt_tsub_iff_left_of_le_of_le [ContravariantClass α α (�
 
 @[simp]
 protected theorem add_tsub_tsub_cancel (hac : AddLeCancellable (a - c)) (h : c ≤ a) : a + b - (a - c) = b + c :=
-  hac.tsub_eq_of_eq_add <| by rw [add_assoc, add_tsub_cancel_of_le h, add_comm]
+  hac.tsub_eq_of_eq_add $ by rw [add_assoc, add_tsub_cancel_of_le h, add_comm]
 #align add_le_cancellable.add_tsub_tsub_cancel AddLeCancellable.add_tsub_tsub_cancel
 
 protected theorem tsub_tsub_cancel_of_le (hba : AddLeCancellable (b - a)) (h : a ≤ b) : b - (b - a) = a :=
@@ -318,16 +318,16 @@ theorem tsub_self (a : α) : a - a = 0 :=
 
 @[simp]
 theorem tsub_le_self : a - b ≤ a :=
-  tsub_le_iff_left.mpr <| le_add_left le_rfl
+  tsub_le_iff_left.mpr $ le_add_left le_rfl
 #align tsub_le_self tsub_le_self
 
 @[simp]
 theorem zero_tsub (a : α) : 0 - a = 0 :=
-  tsub_eq_zero_of_le <| zero_le a
+  tsub_eq_zero_of_le $ zero_le a
 #align zero_tsub zero_tsub
 
 theorem tsub_self_add (a b : α) : a - (a + b) = 0 :=
-  tsub_eq_zero_of_le <| self_le_add_right _ _
+  tsub_eq_zero_of_le $ self_le_add_right _ _
 #align tsub_self_add tsub_self_add
 
 theorem tsub_pos_iff_not_le : 0 < a - b ↔ ¬a ≤ b := by rw [pos_iff_ne_zero, Ne.def, tsub_eq_zero_iff_le]
@@ -425,7 +425,7 @@ protected theorem tsub_lt_tsub_iff_right (hc : AddLeCancellable c) (h : c ≤ a)
 protected theorem tsub_lt_self (ha : AddLeCancellable a) (h₁ : 0 < a) (h₂ : 0 < b) : a - b < a := by
   refine' tsub_le_self.lt_of_ne fun h => _
   rw [← h, tsub_pos_iff_lt] at h₁
-  exact h₂.not_le (ha.add_le_iff_nonpos_left.1 <| add_le_of_le_tsub_left_of_le h₁.le h.ge)
+  exact h₂.not_le (ha.add_le_iff_nonpos_left.1 $ add_le_of_le_tsub_left_of_le h₁.le h.ge)
 #align add_le_cancellable.tsub_lt_self AddLeCancellable.tsub_lt_self
 
 protected theorem tsub_lt_self_iff (ha : AddLeCancellable a) : a - b < a ↔ 0 < a ∧ 0 < b := by
@@ -438,7 +438,7 @@ protected theorem tsub_lt_self_iff (ha : AddLeCancellable a) : a - b < a ↔ 0 <
 /-- See `lt_tsub_iff_left_of_le_of_le` for a weaker statement in a partial order. -/
 protected theorem tsub_lt_tsub_iff_left_of_le (ha : AddLeCancellable a) (hb : AddLeCancellable b) (h : b ≤ a) :
     a - b < a - c ↔ c < b :=
-  lt_iff_lt_of_le_iff_le <| ha.tsub_le_tsub_iff_left hb h
+  lt_iff_lt_of_le_iff_le $ ha.tsub_le_tsub_iff_left hb h
 #align add_le_cancellable.tsub_lt_tsub_iff_left_of_le AddLeCancellable.tsub_lt_tsub_iff_left_of_le
 
 end AddLeCancellable

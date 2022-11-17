@@ -32,7 +32,7 @@ open BigOperators
   `a ^ n ∣ b`, as an `part_enat` or natural with infinity. If `∀ n, a ^ n ∣ b`,
   then it returns `⊤`-/
 def multiplicity [Monoid α] [DecidableRel ((· ∣ ·) : α → α → Prop)] (a b : α) : PartEnat :=
-  PartEnat.find fun n => ¬a ^ (n + 1) ∣ b
+  PartEnat.find $ fun n => ¬a ^ (n + 1) ∣ b
 #align multiplicity multiplicity
 
 namespace multiplicity
@@ -123,7 +123,7 @@ theorem pos_of_dvd {a b : α} (hfin : Finite a b) (hdiv : a ∣ b) : 0 < (multip
 #align multiplicity.pos_of_dvd multiplicity.pos_of_dvd
 
 theorem unique {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) ∣ b) : (k : PartEnat) = multiplicity a b :=
-  le_antisymm (le_of_not_gt fun hk' => is_greatest hk' hk) <| by
+  le_antisymm (le_of_not_gt fun hk' => is_greatest hk' hk) $ by
     have : Finite a b := ⟨k, hsucc⟩
     rw [PartEnat.le_coe_iff]
     exact ⟨this, Nat.find_min' _ hsucc⟩
@@ -134,7 +134,7 @@ theorem unique' {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) �
 #align multiplicity.unique' multiplicity.unique'
 
 theorem le_multiplicity_of_pow_dvd {a b : α} {k : ℕ} (hk : a ^ k ∣ b) : (k : PartEnat) ≤ multiplicity a b :=
-  le_of_not_gt fun hk' => is_greatest hk' hk
+  le_of_not_gt $ fun hk' => is_greatest hk' hk
 #align multiplicity.le_multiplicity_of_pow_dvd multiplicity.le_multiplicity_of_pow_dvd
 
 theorem pow_dvd_iff_le_multiplicity {a b : α} {k : ℕ} : a ^ k ∣ b ↔ (k : PartEnat) ≤ multiplicity a b :=
@@ -156,11 +156,11 @@ theorem eq_coe_iff {a b : α} {n : ℕ} : multiplicity a b = (n : PartEnat) ↔ 
             (by
               rw [PartEnat.lt_coe_iff]
               exact ⟨h₁, lt_succ_self _⟩)⟩,
-      fun h => eq_some_iff.2 ⟨⟨n, h.2⟩, Eq.symm <| unique' h.1 h.2⟩⟩
+      fun h => eq_some_iff.2 ⟨⟨n, h.2⟩, Eq.symm $ unique' h.1 h.2⟩⟩
 #align multiplicity.eq_coe_iff multiplicity.eq_coe_iff
 
 theorem eq_top_iff {a b : α} : multiplicity a b = ⊤ ↔ ∀ n : ℕ, a ^ n ∣ b :=
-  (PartEnat.find_eq_top_iff _).trans <| by
+  (PartEnat.find_eq_top_iff _).trans $ by
     simp only [not_not]
     exact
       ⟨fun h n =>
@@ -239,7 +239,7 @@ theorem multiplicity_eq_multiplicity_iff {a b c d : α} :
 #align multiplicity.multiplicity_eq_multiplicity_iff multiplicity.multiplicity_eq_multiplicity_iff
 
 theorem multiplicity_le_multiplicity_of_dvd_right {a b c : α} (h : b ∣ c) : multiplicity a b ≤ multiplicity a c :=
-  multiplicity_le_multiplicity_iff.2 fun n hb => hb.trans h
+  multiplicity_le_multiplicity_iff.2 $ fun n hb => hb.trans h
 #align multiplicity.multiplicity_le_multiplicity_of_dvd_right multiplicity.multiplicity_le_multiplicity_of_dvd_right
 
 theorem eq_of_associated_right {a b c : α} (h : Associated b c) : multiplicity a b = multiplicity a c :=
@@ -308,7 +308,7 @@ theorem unit_right {a : α} (ha : ¬IsUnit a) (u : αˣ) : multiplicity a u = 0 
 open Classical
 
 theorem multiplicity_le_multiplicity_of_dvd_left {a b c : α} (hdvd : a ∣ b) : multiplicity b c ≤ multiplicity a c :=
-  multiplicity_le_multiplicity_iff.2 fun n h => (pow_dvd_pow_of_dvd hdvd n).trans h
+  multiplicity_le_multiplicity_iff.2 $ fun n h => (pow_dvd_pow_of_dvd hdvd n).trans h
 #align multiplicity.multiplicity_le_multiplicity_of_dvd_left multiplicity.multiplicity_le_multiplicity_of_dvd_left
 
 theorem eq_of_associated_left {a b c : α} (h : Associated a b) : multiplicity b c = multiplicity a c :=
@@ -405,7 +405,7 @@ protected theorem neg (a b : α) : multiplicity a (-b) = multiplicity a b :=
 #align multiplicity.neg multiplicity.neg
 
 theorem Int.nat_abs (a : ℕ) (b : ℤ) : multiplicity a b.natAbs = multiplicity (a : ℤ) b := by
-  cases' Int.nat_abs_eq b with h h <;> conv_rhs => rw [h]
+  cases' Int.natAbs_eq b with h h <;> conv_rhs => rw [h]
   · rw [int.coe_nat_multiplicity]
     
   · rw [multiplicity.neg, int.coe_nat_multiplicity]
@@ -463,12 +463,12 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
     (hp.2.2 a b this).elim
       (fun ⟨x, hx⟩ =>
         have hn0 : 0 < n := Nat.pos_of_ne_zero fun hn0 => by clear _fun_match _fun_match <;> simpa [hx, hn0] using ha
-        have wf : n - 1 < n := tsub_lt_self hn0 (by decide)
+        have wf : n - 1 < n := tsub_lt_self hn0 dec_trivial
         have hpx : ¬p ^ (n - 1 + 1) ∣ x := fun ⟨y, hy⟩ =>
           ha
             (hx.symm ▸
               ⟨y,
-                mul_right_cancel₀ hp.1 <| by
+                mul_right_cancel₀ hp.1 $ by
                   rw [tsub_add_cancel_of_le (succ_le_of_lt hn0)] at hy <;>
                     simp [hy, pow_add, mul_comm, mul_assoc, mul_left_comm]⟩)
         have : 1 ≤ n + m := le_trans hn0 (Nat.le_add_right n m)
@@ -481,12 +481,12 @@ theorem finite_mul_aux {p : α} (hp : Prime p) :
                 simp_all [mul_comm, mul_assoc, mul_left_comm, pow_add])⟩)
       fun ⟨x, hx⟩ =>
       have hm0 : 0 < m := Nat.pos_of_ne_zero fun hm0 => by clear _fun_match _fun_match <;> simpa [hx, hm0] using hb
-      have wf : m - 1 < m := tsub_lt_self hm0 (by decide)
+      have wf : m - 1 < m := tsub_lt_self hm0 dec_trivial
       have hpx : ¬p ^ (m - 1 + 1) ∣ x := fun ⟨y, hy⟩ =>
         hb
           (hx.symm ▸
             ⟨y,
-              mul_right_cancel₀ hp.1 <| by
+              mul_right_cancel₀ hp.1 $ by
                 rw [tsub_add_cancel_of_le (succ_le_of_lt hm0)] at hy <;>
                   simp [hy, pow_add, mul_comm, mul_assoc, mul_left_comm]⟩)
       finite_mul_aux ha hpx
@@ -522,7 +522,7 @@ theorem multiplicity_self {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : multiplic
         ha
           (is_unit_iff_dvd_one.2
             ⟨b,
-              mul_left_cancel₀ ha0 <| by
+              mul_left_cancel₀ ha0 $ by
                 clear _fun_match
                 simpa [pow_succ, mul_assoc] using hb⟩)⟩
 #align multiplicity.multiplicity_self multiplicity.multiplicity_self
@@ -573,11 +573,14 @@ protected theorem mul {p a b : α} (hp : Prime p) : multiplicity p (a * b) = mul
 #align multiplicity.mul multiplicity.mul
 
 theorem Finset.prod {β : Type _} {p : α} (hp : Prime p) (s : Finset β) (f : β → α) :
-    multiplicity p (∏ x in s, f x) = ∑ x in s, multiplicity p (f x) := by
-  classical induction' s using Finset.induction with a s has ih h
-    · simp [has, ← ih]
-      convert multiplicity.mul hp
-      
+    multiplicity p (∏ x in s, f x) = ∑ x in s, multiplicity p (f x) := by classical
+  induction' s using Finset.induction with a s has ih h
+  · simp only [Finset.sum_empty, Finset.prod_empty]
+    convert one_right hp.not_unit
+    
+  · simp [has, ← ih]
+    convert multiplicity.mul hp
+    
 #align multiplicity.finset.prod multiplicity.Finset.prod
 
 protected theorem pow' {p a : α} (hp : Prime p) (ha : Finite p a) :

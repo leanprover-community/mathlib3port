@@ -257,7 +257,7 @@ theorem memℒpZero (f : α →ₛ E) (μ : Measure α) : Memℒp f 0 μ :=
 
 theorem memℒpTop (f : α →ₛ E) (μ : Measure α) : Memℒp f ∞ μ :=
   let ⟨C, hfC⟩ := f.exists_forall_norm_le
-  memℒpTopOfBound f.AeStronglyMeasurable C <| eventually_of_forall hfC
+  memℒpTopOfBound f.AeStronglyMeasurable C $ eventually_of_forall hfC
 #align measure_theory.simple_func.mem_ℒp_top MeasureTheory.SimpleFunc.memℒpTop
 
 protected theorem snorm'_eq {p : ℝ} (f : α →ₛ F) (μ : Measure α) :
@@ -299,7 +299,7 @@ theorem measure_preimage_lt_top_of_mem_ℒp (hp_pos : p ≠ 0) (hp_ne_top : p �
 #align
   measure_theory.simple_func.measure_preimage_lt_top_of_mem_ℒp MeasureTheory.SimpleFunc.measure_preimage_lt_top_of_mem_ℒp
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 theorem memℒpOfFiniteMeasurePreimage (p : ℝ≥0∞) {f : α →ₛ E} (hf : ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) :
     Memℒp f p μ := by
   by_cases hp0:p = 0
@@ -322,15 +322,15 @@ theorem memℒpOfFiniteMeasurePreimage (p : ℝ≥0∞) {f : α →ₛ E} (hf : 
 #align
   measure_theory.simple_func.mem_ℒp_of_finite_measure_preimage MeasureTheory.SimpleFunc.memℒpOfFiniteMeasurePreimage
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 theorem mem_ℒp_iff {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     Memℒp f p μ ↔ ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ :=
   ⟨fun h => measure_preimage_lt_top_of_mem_ℒp hp_pos hp_ne_top f h, fun h => memℒpOfFiniteMeasurePreimage p h⟩
 #align measure_theory.simple_func.mem_ℒp_iff MeasureTheory.SimpleFunc.mem_ℒp_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 theorem integrable_iff {f : α →ₛ E} : Integrable f μ ↔ ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ :=
-  mem_ℒp_one_iff_integrable.symm.trans <| mem_ℒp_iff Ennreal.zero_lt_one.ne' Ennreal.coe_ne_top
+  mem_ℒp_one_iff_integrable.symm.trans $ mem_ℒp_iff Ennreal.zero_lt_one.ne' Ennreal.coe_ne_top
 #align measure_theory.simple_func.integrable_iff MeasureTheory.SimpleFunc.integrable_iff
 
 theorem mem_ℒp_iff_integrable {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) : Memℒp f p μ ↔ Integrable f μ :=
@@ -355,7 +355,7 @@ theorem integrablePair {f : α →ₛ E} {g : α →ₛ F} : Integrable f μ →
 
 theorem memℒpOfIsFiniteMeasure (f : α →ₛ E) (p : ℝ≥0∞) (μ : Measure α) [IsFiniteMeasure μ] : Memℒp f p μ :=
   let ⟨C, hfC⟩ := f.exists_forall_norm_le
-  Memℒp.ofBound f.AeStronglyMeasurable C <| eventually_of_forall hfC
+  Memℒp.ofBound f.AeStronglyMeasurable C $ eventually_of_forall hfC
 #align measure_theory.simple_func.mem_ℒp_of_is_finite_measure MeasureTheory.SimpleFunc.memℒpOfIsFiniteMeasure
 
 theorem integrableOfIsFiniteMeasure [IsFiniteMeasure μ] (f : α →ₛ E) : Integrable f μ :=
@@ -368,7 +368,7 @@ theorem measure_preimage_lt_top_of_integrable (f : α →ₛ E) (hf : Integrable
 #align
   measure_theory.simple_func.measure_preimage_lt_top_of_integrable MeasureTheory.SimpleFunc.measure_preimage_lt_top_of_integrable
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 theorem measure_support_lt_top [Zero β] (f : α →ₛ β) (hf : ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) : μ (support f) < ∞ :=
   by
   rw [support_eq]
@@ -585,7 +585,7 @@ theorem to_simple_func_eq_to_fun (f : lp.simpleFunc E p μ) : toSimpleFunc f =�
 
 /-- `to_simple_func f` satisfies the predicate `mem_ℒp`. -/
 protected theorem memℒp (f : lp.simpleFunc E p μ) : Memℒp (toSimpleFunc f) p μ :=
-  Memℒp.aeEq (to_simple_func_eq_to_fun f).symm <| mem_Lp_iff_mem_ℒp.mp (f : lp E p μ).2
+  Memℒp.aeEq (to_simple_func_eq_to_fun f).symm $ mem_Lp_iff_mem_ℒp.mp (f : lp E p μ).2
 #align measure_theory.Lp.simple_func.mem_ℒp MeasureTheory.lp.simpleFunc.memℒp
 
 theorem to_Lp_to_simple_func (f : lp.simpleFunc E p μ) : toLp (toSimpleFunc f) (simpleFunc.memℒp f) = f :=

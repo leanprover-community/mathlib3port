@@ -102,14 +102,14 @@ def toTrunc (q : Semiquot α) : Trunc α :=
   q.2.map Subtype.val
 #align semiquot.to_trunc Semiquot.toTrunc
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 /-- If `f` is a constant on `q.s`, then `q.lift_on f` is the value of `f`
 at any point of `q`. -/
 def liftOn (q : Semiquot α) (f : α → β) (h : ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), f a = f b) : β :=
   Trunc.liftOn q.2 (fun x => f x.1) fun x y => h _ x.2 _ y.2
 #align semiquot.lift_on Semiquot.liftOn
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 theorem lift_on_of_mem (q : Semiquot α) (f : α → β) (h : ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), f a = f b) (a : α)
     (aq : a ∈ q) : liftOn q f h = f a := by revert h <;> rw [eq_mk_of_mem aq] <;> intro <;> rfl
 #align semiquot.lift_on_of_mem Semiquot.lift_on_of_mem
@@ -164,13 +164,13 @@ theorem pure_inj {a b : α} : (pure a : Semiquot α) = pure b ↔ a = b :=
 #align semiquot.pure_inj Semiquot.pure_inj
 
 instance : LawfulMonad Semiquot where
-  pure_bind α β x f := ext.2 <| by simp
+  pure_bind α β x f := ext.2 $ by simp
   bind_assoc α β γ s f g :=
-    ext.2 <| by
+    ext.2 $ by
       simp <;>
         exact fun c => ⟨fun ⟨b, ⟨a, as, bf⟩, cg⟩ => ⟨a, as, b, bf, cg⟩, fun ⟨a, as, b, bf, cg⟩ => ⟨b, ⟨a, as, bf⟩, cg⟩⟩
-  id_map α q := ext.2 <| by simp
-  bind_pure_comp_eq_map α β f s := ext.2 <| by simp [eq_comm]
+  id_map α q := ext.2 $ by simp
+  bind_pure_comp_eq_map α β f s := ext.2 $ by simp [eq_comm]
 
 instance : LE (Semiquot α) :=
   ⟨fun s t => s.s ⊆ t.s⟩
@@ -190,7 +190,7 @@ theorem pure_le {a : α} {s : Semiquot α} : pure a ≤ s ↔ a ∈ s :=
   Set.singleton_subset_iff
 #align semiquot.pure_le Semiquot.pure_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 /-- Assert that a `semiquot` contains only one possible value. -/
 def IsPure (q : Semiquot α) : Prop :=
   ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), a = b
@@ -207,7 +207,7 @@ theorem get_mem {q : Semiquot α} (p) : get q p ∈ q := by
 #align semiquot.get_mem Semiquot.get_mem
 
 theorem eq_pure {q : Semiquot α} (p) : q = pure (get q p) :=
-  ext.2 fun a => by simp <;> exact ⟨fun h => p _ h _ (get_mem _), fun e => e.symm ▸ get_mem _⟩
+  ext.2 $ fun a => by simp <;> exact ⟨fun h => p _ h _ (get_mem _), fun e => e.symm ▸ get_mem _⟩
 #align semiquot.eq_pure Semiquot.eq_pure
 
 @[simp]
@@ -227,7 +227,7 @@ theorem IsPure.mono {s t : Semiquot α} (st : s ≤ t) (h : IsPure t) : IsPure s
 
 theorem IsPure.min {s t : Semiquot α} (h : IsPure t) : s ≤ t ↔ s = t :=
   ⟨fun st =>
-    le_antisymm st <| by rw [eq_pure h, eq_pure (h.mono st)] <;> simp <;> exact h _ (get_mem _) _ (st <| get_mem _),
+    le_antisymm st $ by rw [eq_pure h, eq_pure (h.mono st)] <;> simp <;> exact h _ (get_mem _) _ (st $ get_mem _),
     le_of_eq⟩
 #align semiquot.is_pure.min Semiquot.IsPure.min
 
@@ -237,7 +237,7 @@ theorem is_pure_of_subsingleton [Subsingleton α] (q : Semiquot α) : IsPure q
 
 /-- `univ : semiquot α` represents an unspecified element of `univ : set α`. -/
 def univ [Inhabited α] : Semiquot α :=
-  mk <| Set.mem_univ default
+  mk $ Set.mem_univ default
 #align semiquot.univ Semiquot.univ
 
 instance [Inhabited α] : Inhabited (Semiquot α) :=
@@ -250,7 +250,7 @@ theorem mem_univ [Inhabited α] : ∀ a, a ∈ @univ α _ :=
 
 @[congr]
 theorem univ_unique (I J : Inhabited α) : @univ _ I = @univ _ J :=
-  ext.2 <| by simp
+  ext.2 $ by simp
 #align semiquot.univ_unique Semiquot.univ_unique
 
 @[simp]

@@ -94,7 +94,7 @@ theorem coe_fn_injective : @Injective (P →ᵃⁱ[𝕜] P₂) (P → P₂) coeF
 
 @[ext.1]
 theorem ext {f g : P →ᵃⁱ[𝕜] P₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_fn_injective <| funext h
+  coe_fn_injective $ funext h
 #align affine_isometry.ext AffineIsometry.ext
 
 omit V V₂
@@ -248,12 +248,12 @@ omit V V₂ V₃
 
 @[simp]
 theorem id_comp : (id : P₂ →ᵃⁱ[𝕜] P₂).comp f = f :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align affine_isometry.id_comp AffineIsometry.id_comp
 
 @[simp]
 theorem comp_id : f.comp id = f :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align affine_isometry.comp_id AffineIsometry.comp_id
 
 include V V₂ V₃ V₄
@@ -367,7 +367,7 @@ theorem to_affine_equiv_injective : Injective (toAffineEquiv : (P ≃ᵃⁱ[𝕜
 
 @[ext.1]
 theorem ext {e e' : P ≃ᵃⁱ[𝕜] P₂} (h : ∀ x, e x = e' x) : e = e' :=
-  to_affine_equiv_injective <| AffineEquiv.ext h
+  to_affine_equiv_injective $ AffineEquiv.ext h
 #align affine_isometry_equiv.ext AffineIsometryEquiv.ext
 
 omit V V₂
@@ -549,7 +549,7 @@ theorem symm_apply_apply (x : P) : e.symm (e x) = x :=
 
 @[simp]
 theorem symm_symm : e.symm.symm = e :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align affine_isometry_equiv.symm_symm AffineIsometryEquiv.symm_symm
 
 @[simp]
@@ -585,12 +585,12 @@ omit V V₂ V₃
 
 @[simp]
 theorem trans_refl : e.trans (refl 𝕜 P₂) = e :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align affine_isometry_equiv.trans_refl AffineIsometryEquiv.trans_refl
 
 @[simp]
 theorem refl_trans : (refl 𝕜 P).trans e = e :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align affine_isometry_equiv.refl_trans AffineIsometryEquiv.refl_trans
 
 @[simp]
@@ -789,7 +789,7 @@ theorem coe_const_vadd (v : V) : ⇑(constVadd 𝕜 P v : P ≃ᵃⁱ[𝕜] P) =
 
 @[simp]
 theorem const_vadd_zero : constVadd 𝕜 P (0 : V) = refl 𝕜 P :=
-  ext <| zero_vadd V
+  ext $ zero_vadd V
 #align affine_isometry_equiv.const_vadd_zero AffineIsometryEquiv.const_vadd_zero
 
 include 𝕜 V
@@ -834,7 +834,7 @@ theorem point_reflection_involutive (x : P) : Function.Involutive (pointReflecti
 
 @[simp]
 theorem point_reflection_symm (x : P) : (pointReflection 𝕜 x).symm = pointReflection 𝕜 x :=
-  to_affine_equiv_injective <| AffineEquiv.point_reflection_symm 𝕜 x
+  to_affine_equiv_injective $ AffineEquiv.point_reflection_symm 𝕜 x
 #align affine_isometry_equiv.point_reflection_symm AffineIsometryEquiv.point_reflection_symm
 
 @[simp]
@@ -881,7 +881,7 @@ theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f
   inhabit P
   have :
     (f.linear : V → V₂) =
-      (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
+      (AffineIsometryEquiv.vaddConst 𝕜 $ f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
     by
     ext v
@@ -895,7 +895,7 @@ theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f
   inhabit P
   have :
     (f.linear : V → V₂) =
-      (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
+      (AffineIsometryEquiv.vaddConst 𝕜 $ f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
     by
     ext v

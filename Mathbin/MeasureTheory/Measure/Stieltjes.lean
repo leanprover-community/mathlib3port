@@ -68,13 +68,14 @@ protected def id : StieltjesFunction where
 
 @[simp]
 theorem id_left_lim (x : ℝ) : leftLim StieltjesFunction.id x = x :=
-  tendsto_nhds_unique (StieltjesFunction.id.mono.tendsto_left_lim x) <|
+  tendsto_nhds_unique (StieltjesFunction.id.mono.tendsto_left_lim x) $
     continuous_at_id.Tendsto.mono_left nhds_within_le_nhds
 #align stieltjes_function.id_left_lim StieltjesFunction.id_left_lim
 
 instance : Inhabited StieltjesFunction :=
   ⟨StieltjesFunction.id⟩
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (l u) -/
 /-- If a function `f : ℝ → ℝ` is monotone, then the function mapping `x` to the right limit of `f`
 at `x` is a Stieltjes function, i.e., it is monotone and right-continuous. -/
 noncomputable def _root_.monotone.stieltjes_function {f : ℝ → ℝ} (hf : Monotone f) : StieltjesFunction where
@@ -82,8 +83,9 @@ noncomputable def _root_.monotone.stieltjes_function {f : ℝ → ℝ} (hf : Mon
   mono' x y hxy := hf.rightLim hxy
   right_continuous' := by
     intro x s hs
-    obtain ⟨l, u, hlu, lus⟩ : ∃ l u : ℝ, right_lim f x ∈ Ioo l u ∧ Ioo l u ⊆ s := mem_nhds_iff_exists_Ioo_subset.1 hs
-    obtain ⟨y, xy, h'y⟩ : ∃ (y : ℝ)(H : x < y), Ioc x y ⊆ f ⁻¹' Ioo l u :=
+    obtain ⟨l, u, hlu, lus⟩ : ∃ (l : ℝ) (u : ℝ), right_lim f x ∈ Ioo l u ∧ Ioo l u ⊆ s :=
+      mem_nhds_iff_exists_Ioo_subset.1 hs
+    obtain ⟨y, xy, h'y⟩ : ∃ (y : ℝ) (H : x < y), Ioc x y ⊆ f ⁻¹' Ioo l u :=
       mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 (hf.tendsto_right_lim x (Ioo_mem_nhds hlu.1 hlu.2))
     change ∀ᶠ y in 𝓝[≥] x, right_lim f y ∈ s
     filter_upwards [Ico_mem_nhds_within_Ici ⟨le_refl x, xy⟩] with z hz
@@ -120,14 +122,14 @@ def length (s : Set ℝ) : ℝ≥0∞ :=
 
 @[simp]
 theorem length_empty : f.length ∅ = 0 :=
-  nonpos_iff_eq_zero.1 <| infi_le_of_le 0 <| infi_le_of_le 0 <| by simp
+  nonpos_iff_eq_zero.1 $ infi_le_of_le 0 $ infi_le_of_le 0 $ by simp
 #align stieltjes_function.length_empty StieltjesFunction.length_empty
 
 @[simp]
 theorem length_Ioc (a b : ℝ) : f.length (ioc a b) = ofReal (f b - f a) := by
   refine'
-    le_antisymm (infi_le_of_le a <| infi₂_le b subset.rfl)
-      (le_infi fun a' => le_infi fun b' => le_infi fun h => Ennreal.coe_le_coe.2 _)
+    le_antisymm (infi_le_of_le a $ infi₂_le b subset.rfl)
+      (le_infi $ fun a' => le_infi $ fun b' => le_infi $ fun h => Ennreal.coe_le_coe.2 _)
   cases' le_or_lt b a with ab ab
   · rw [Real.to_nnreal_of_nonpos (sub_nonpos.2 (f.mono ab))]
     apply zero_le
@@ -137,7 +139,7 @@ theorem length_Ioc (a b : ℝ) : f.length (ioc a b) = ofReal (f b - f a) := by
 #align stieltjes_function.length_Ioc StieltjesFunction.length_Ioc
 
 theorem length_mono {s₁ s₂ : Set ℝ} (h : s₁ ⊆ s₂) : f.length s₁ ≤ f.length s₂ :=
-  infi_mono fun a => binfi_mono fun b => h.trans
+  infi_mono $ fun a => binfi_mono $ fun b => h.trans
 #align stieltjes_function.length_mono StieltjesFunction.length_mono
 
 open MeasureTheory
@@ -210,7 +212,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) := by
       (by
         rw [← f.length_Ioc]
         apply outer_le_length)
-      (le_infi₂ fun s hs => Ennreal.le_of_forall_pos_le_add fun ε εpos h => _)
+      (le_infi₂ $ fun s hs => Ennreal.le_of_forall_pos_le_add $ fun ε εpos h => _)
   let δ := ε / 2
   have δpos : 0 < (δ : ℝ≥0∞) := by simpa using εpos.ne'
   rcases Ennreal.exists_pos_sum_of_countable δpos.ne' ℕ with ⟨ε', ε'0, hε⟩
@@ -258,7 +260,7 @@ theorem measurableSetIoi {c : ℝ} : measurable_set[f.outer.caratheodory] (ioi c
   apply outer_measure.of_function_caratheodory fun t => _
   refine' le_infi fun a => le_infi fun b => le_infi fun h => _
   refine'
-    le_trans (add_le_add (f.length_mono <| inter_subset_inter_left _ h) (f.length_mono <| diff_subset_diff_left h)) _
+    le_trans (add_le_add (f.length_mono $ inter_subset_inter_left _ h) (f.length_mono $ diff_subset_diff_left h)) _
   cases' le_total a c with hac hac <;> cases' le_total b c with hbc hbc
   · simp only [Ioc_inter_Ioi, f.length_Ioc, hac, sup_eq_max, hbc, le_refl, Ioc_eq_empty, max_eq_right, min_eq_left,
       Ioc_diff_Ioi, f.length_empty, zero_add, not_lt]
@@ -277,7 +279,7 @@ theorem measurableSetIoi {c : ℝ} : measurable_set[f.outer.caratheodory] (ioi c
 theorem outer_trim : f.outer.trim = f.outer := by
   refine' le_antisymm (fun s => _) (outer_measure.le_trim _)
   rw [outer_measure.trim_eq_infi]
-  refine' le_infi fun t => le_infi fun ht => Ennreal.le_of_forall_pos_le_add fun ε ε0 h => _
+  refine' le_infi fun t => le_infi $ fun ht => Ennreal.le_of_forall_pos_le_add $ fun ε ε0 h => _
   rcases Ennreal.exists_pos_sum_of_countable (Ennreal.coe_pos.2 ε0).ne' ℕ with ⟨ε', ε'0, hε⟩
   refine' le_trans _ (add_le_add_left (le_of_lt hε) _)
   rw [← Ennreal.tsum_add]
@@ -291,12 +293,12 @@ theorem outer_trim : f.outer.trim = f.outer := by
       simp only [infi_lt_iff] at this
       rcases this with ⟨a, b, h₁, h₂⟩
       rw [← f.outer_Ioc] at h₂
-      exact ⟨_, h₁, measurableSetIoc, le_of_lt <| by simpa using h₂⟩
+      exact ⟨_, h₁, measurableSetIoc, le_of_lt $ by simpa using h₂⟩
   simp at hg
   apply infi_le_of_le (Union g) _
-  apply infi_le_of_le (ht.trans <| Union_mono fun i => (hg i).1) _
+  apply infi_le_of_le (ht.trans $ Union_mono fun i => (hg i).1) _
   apply infi_le_of_le (MeasurableSet.union fun i => (hg i).2.1) _
-  exact le_trans (f.outer.Union _) (Ennreal.tsum_le_tsum fun i => (hg i).2.2)
+  exact le_trans (f.outer.Union _) (Ennreal.tsum_le_tsum $ fun i => (hg i).2.2)
 #align stieltjes_function.outer_trim StieltjesFunction.outer_trim
 
 theorem borel_le_measurable : borel ℝ ≤ f.outer.caratheodory := by
@@ -312,7 +314,7 @@ theorem borel_le_measurable : borel ℝ ≤ f.outer.caratheodory := by
 interval `(a, b]`. -/
 protected irreducible_def measure : Measure ℝ :=
   { toOuterMeasure := f.outer,
-    m_Union := fun s hs => f.outer.Union_eq_of_caratheodory fun i => f.borel_le_measurable _ (hs i),
+    m_Union := fun s hs => f.outer.Union_eq_of_caratheodory $ fun i => f.borel_le_measurable _ (hs i),
     trimmed := f.outer_trim }
 #align stieltjes_function.measure StieltjesFunction.measure
 

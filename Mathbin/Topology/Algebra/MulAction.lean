@@ -75,7 +75,7 @@ instance (priority := 100) HasContinuousSmul.has_continuous_const_smul :
 
 @[to_additive]
 theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M} {a : X} (hf : Tendsto f l (𝓝 c))
-    (hg : Tendsto g l (𝓝 a)) : Tendsto (fun x => f x • g x) l (𝓝 <| c • a) :=
+    (hg : Tendsto g l (𝓝 a)) : Tendsto (fun x => f x • g x) l (𝓝 $ c • a) :=
   (continuous_smul.Tendsto _).comp (hf.prod_mk_nhds hg)
 #align filter.tendsto.smul Filter.Tendsto.smul
 
@@ -119,7 +119,7 @@ instance HasContinuousSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : Has
 
 @[to_additive]
 instance MulOpposite.has_continuous_smul : HasContinuousSmul M Xᵐᵒᵖ :=
-  ⟨MulOpposite.continuous_op.comp <| continuous_smul.comp <| continuous_id.prod_map MulOpposite.continuous_unop⟩
+  ⟨MulOpposite.continuous_op.comp $ continuous_smul.comp $ continuous_id.prod_map MulOpposite.continuous_unop⟩
 #align mul_opposite.has_continuous_smul MulOpposite.has_continuous_smul
 
 end HasSmul
@@ -146,8 +146,8 @@ instance [HasSmul M X] [HasSmul M Y] [HasContinuousSmul M X] [HasContinuousSmul 
 @[to_additive]
 instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, HasSmul M (γ i)]
     [∀ i, HasContinuousSmul M (γ i)] : HasContinuousSmul M (∀ i, γ i) :=
-  ⟨continuous_pi fun i =>
-      (continuous_fst.smul continuous_snd).comp <| continuous_fst.prod_mk ((continuous_apply i).comp continuous_snd)⟩
+  ⟨continuous_pi $ fun i =>
+      (continuous_fst.smul continuous_snd).comp $ continuous_fst.prod_mk ((continuous_apply i).comp continuous_snd)⟩
 
 end Main
 
@@ -168,7 +168,7 @@ theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)} (h : ∀ t ∈ t
 @[to_additive]
 theorem has_continuous_smul_infi {ts' : ι → TopologicalSpace X} (h : ∀ i, @HasContinuousSmul M X _ _ (ts' i)) :
     @HasContinuousSmul M X _ _ (⨅ i, ts' i) :=
-  has_continuous_smul_Inf <| Set.forall_range_iff.mpr h
+  has_continuous_smul_Inf $ Set.forall_range_iff.mpr h
 #align has_continuous_smul_infi has_continuous_smul_infi
 
 @[to_additive]

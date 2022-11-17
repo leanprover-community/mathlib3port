@@ -67,7 +67,7 @@ theorem _root_.measure_theory.mem_ℒp.inf {f g : α → E} (hf : Memℒp f p μ
   Memℒp.mono' (hf.norm.add hg.norm) (hf.1.inf hg.1) (Filter.eventually_of_forall fun x => norm_inf_le_add (f x) (g x))
 #align measure_theory.Lp._root_.measure_theory.mem_ℒp.inf measure_theory.Lp._root_.measure_theory.mem_ℒp.inf
 
-theorem _root_.measure_theory.mem_ℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp (|f|) p μ :=
+theorem _root_.measure_theory.mem_ℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp |f| p μ :=
   hf.sup hf.neg
 #align measure_theory.Lp._root_.measure_theory.mem_ℒp.abs measure_theory.Lp._root_.measure_theory.mem_ℒp.abs
 
@@ -88,7 +88,7 @@ theorem coe_fn_inf (f g : lp E p μ) : ⇑(f ⊓ g) =ᵐ[μ] ⇑f ⊓ ⇑g :=
   AeEqFun.coe_fn_inf _ _
 #align measure_theory.Lp.coe_fn_inf MeasureTheory.lp.coe_fn_inf
 
-theorem coe_fn_abs (f : lp E p μ) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
+theorem coe_fn_abs (f : lp E p μ) : ⇑|f| =ᵐ[μ] fun x => |f x| :=
   AeEqFun.coe_fn_abs _
 #align measure_theory.Lp.coe_fn_abs MeasureTheory.lp.coe_fn_abs
 

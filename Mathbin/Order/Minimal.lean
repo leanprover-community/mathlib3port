@@ -56,8 +56,8 @@ theorem minimals_empty : minimals r ∅ = ∅ :=
 
 @[simp]
 theorem maximals_singleton : maximals r {a} = {a} :=
-  (maximals_subset _ _).antisymm <|
-    singleton_subset_iff.2 <|
+  (maximals_subset _ _).antisymm $
+    singleton_subset_iff.2 $
       ⟨rfl, by
         rintro b (rfl : b = a)
         exact id⟩
@@ -81,7 +81,7 @@ section IsAntisymm
 variable {r s t a b} [IsAntisymm α r]
 
 theorem eq_of_mem_maximals (ha : a ∈ maximals r s) (hb : b ∈ s) (h : r a b) : a = b :=
-  antisymm h <| ha.2 hb h
+  antisymm h $ ha.2 hb h
 #align eq_of_mem_maximals eq_of_mem_maximals
 
 theorem eq_of_mem_minimals (ha : a ∈ minimals r s) (hb : b ∈ s) (h : r b a) : a = b :=
@@ -90,7 +90,7 @@ theorem eq_of_mem_minimals (ha : a ∈ minimals r s) (hb : b ∈ s) (h : r b a) 
 
 variable (r s)
 
-theorem maximals_antichain : IsAntichain r (maximals r s) := fun a ha b hb hab h => hab <| eq_of_mem_maximals ha hb.1 h
+theorem maximals_antichain : IsAntichain r (maximals r s) := fun a ha b hb hab h => hab $ eq_of_mem_maximals ha hb.1 h
 #align maximals_antichain maximals_antichain
 
 theorem minimals_antichain : IsAntichain r (minimals r s) :=
@@ -133,9 +133,9 @@ theorem minimals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) 
 theorem maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t := by
   intro a ha
   obtain h | h := ha.1
-  · exact Or.inl ⟨h, fun b hb => ha.2 <| Or.inl hb⟩
+  · exact Or.inl ⟨h, fun b hb => ha.2 $ Or.inl hb⟩
     
-  · exact Or.inr ⟨h, fun b hb => ha.2 <| Or.inr hb⟩
+  · exact Or.inr ⟨h, fun b hb => ha.2 $ Or.inr hb⟩
     
 #align maximals_union maximals_union
 
@@ -160,7 +160,7 @@ theorem inter_minimals_subset : s ∩ minimals r t ⊆ minimals r (s ∩ t) :=
 #align inter_minimals_subset inter_minimals_subset
 
 theorem _root_.is_antichain.maximals_eq (h : IsAntichain r s) : maximals r s = s :=
-  (maximals_subset _ _).antisymm fun a ha =>
+  (maximals_subset _ _).antisymm $ fun a ha =>
     ⟨ha, fun b hb hab => by
       have := h.eq ha hb hab
       subst this
@@ -168,7 +168,7 @@ theorem _root_.is_antichain.maximals_eq (h : IsAntichain r s) : maximals r s = s
 #align _root_.is_antichain.maximals_eq _root_.is_antichain.maximals_eq
 
 theorem _root_.is_antichain.minimals_eq (h : IsAntichain r s) : minimals r s = s :=
-  (minimals_subset _ _).antisymm fun a ha =>
+  (minimals_subset _ _).antisymm $ fun a ha =>
     ⟨ha, fun b hb hab => by
       have := h.eq hb ha hab
       subst this
@@ -177,7 +177,7 @@ theorem _root_.is_antichain.minimals_eq (h : IsAntichain r s) : minimals r s = s
 
 @[simp]
 theorem maximals_idem : maximals r (maximals r s) = maximals r s :=
-  (maximals_subset _ _).antisymm fun a ha => ⟨ha, fun b hb => ha.2 hb.1⟩
+  (maximals_subset _ _).antisymm $ fun a ha => ⟨ha, fun b hb => ha.2 hb.1⟩
 #align maximals_idem maximals_idem
 
 @[simp]
@@ -214,16 +214,16 @@ theorem IsGreatest.mem_maximals (h : IsGreatest s a) : a ∈ maximals (· ≤ ·
 #align is_greatest.mem_maximals IsGreatest.mem_maximals
 
 theorem IsLeast.minimals_eq (h : IsLeast s a) : minimals (· ≤ ·) s = {a} :=
-  eq_singleton_iff_unique_mem.2 ⟨h.mem_minimals, fun b hb => eq_of_mem_minimals hb h.1 <| h.2 hb.1⟩
+  eq_singleton_iff_unique_mem.2 ⟨h.mem_minimals, fun b hb => eq_of_mem_minimals hb h.1 $ h.2 hb.1⟩
 #align is_least.minimals_eq IsLeast.minimals_eq
 
 theorem IsGreatest.maximals_eq (h : IsGreatest s a) : maximals (· ≤ ·) s = {a} :=
-  eq_singleton_iff_unique_mem.2 ⟨h.mem_maximals, fun b hb => eq_of_mem_maximals hb h.1 <| h.2 hb.1⟩
+  eq_singleton_iff_unique_mem.2 ⟨h.mem_maximals, fun b hb => eq_of_mem_maximals hb h.1 $ h.2 hb.1⟩
 #align is_greatest.maximals_eq IsGreatest.maximals_eq
 
 theorem IsAntichain.minimals_upper_closure (hs : IsAntichain (· ≤ ·) s) :
     minimals (· ≤ ·) (upperClosure s : Set α) = s :=
-  (hs.max_minimals fun a ⟨⟨b, hb, hba⟩, h⟩ => by rwa [eq_of_mem_minimals ‹a ∈ _› (subset_upper_closure hb) hba])
+  (hs.max_minimals fun a ⟨⟨b, hb, hba⟩, h⟩ => by rwa [eq_of_mem_minimals ‹a ∈ _› (subset_upper_closure hb) hba]) $
     fun a ha => ⟨a, ⟨subset_upper_closure ha, fun b ⟨c, hc, hcb⟩ hba => by rwa [hs.eq' ha hc (hcb.trans hba)]⟩, le_rfl⟩
 #align is_antichain.minimals_upper_closure IsAntichain.minimals_upper_closure
 

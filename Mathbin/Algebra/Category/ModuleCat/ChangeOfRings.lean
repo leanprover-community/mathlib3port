@@ -61,8 +61,8 @@ def restrictScalars {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →
     ModuleCat.{v} S ⥤ ModuleCat.{v} R where
   obj := RestrictScalars.obj' f
   map _ _ := RestrictScalars.map' f
-  map_id' _ := LinearMap.ext fun m => rfl
-  map_comp' _ _ _ g h := LinearMap.ext fun m => rfl
+  map_id' _ := LinearMap.ext $ fun m => rfl
+  map_comp' _ _ _ g h := LinearMap.ext $ fun m => rfl
 #align category_theory.Module.restrict_scalars CategoryTheory.ModuleCat.restrictScalars
 
 @[simp]
@@ -101,7 +101,7 @@ variable (M : Type v) [AddCommMonoid M] [Module R M]
 -- mathport name: «expr ⊗ₜ[ , ] »
 -- This notation is necessary because we need to reason about `s ⊗ₜ m` where `s : S` and `m : M`;
 -- without this notation, one need to work with `s : (restrict_scalars f).obj ⟨S⟩`.
-localized [ChangeOfRings] notation s "⊗ₜ[" R "," f "]" m => @TensorProduct.tmul R _ _ _ _ _ (Module.compHom _ f) _ s m
+scoped[ChangeOfRings] notation s "⊗ₜ[" R "," f "]" m => @TensorProduct.tmul R _ _ _ _ _ (Module.compHom _ f) _ s m
 
 end Unbundled
 
@@ -124,7 +124,7 @@ def map' {M1 M2 : ModuleCat.{v} R} (l : M1 ⟶ M2) : obj' f M1 ⟶ obj' f M2 :=
 #align category_theory.Module.extend_scalars.map' CategoryTheory.ModuleCat.ExtendScalars.map'
 
 theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
-  LinearMap.ext fun x : obj' f M => by
+  LinearMap.ext $ fun x : obj' f M => by
     dsimp only [map', ModuleCat.id_apply]
     induction' x using TensorProduct.induction_on with _ _ m s ihx ihy
     · simp only [map_zero]
@@ -137,7 +137,7 @@ theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
 
 theorem map'_comp {M₁ M₂ M₃ : ModuleCat.{v} R} (l₁₂ : M₁ ⟶ M₂) (l₂₃ : M₂ ⟶ M₃) :
     map' f (l₁₂ ≫ l₂₃) = map' f l₁₂ ≫ map' f l₂₃ :=
-  LinearMap.ext fun x : obj' f M₁ => by
+  LinearMap.ext $ fun x : obj' f M₁ => by
     dsimp only [map']
     induction' x using TensorProduct.induction_on with _ _ x y ihx ihy
     · rfl

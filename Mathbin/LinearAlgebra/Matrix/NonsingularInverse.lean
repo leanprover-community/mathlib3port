@@ -530,14 +530,14 @@ theorem inv_of_diagonal_eq {α} [Semiring α] (v : n → α) [Invertible v] [Inv
 def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonal v)] : Invertible v where
   invOf := diag (⅟ (diagonal v))
   inv_of_mul_self :=
-    funext fun i => by
+    funext $ fun i => by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp
       rw [mul_assoc, prod_erase_mul _ _ (Finset.mem_univ _), ← det_diagonal]
       exact mul_inv_of_self _
   mul_inv_of_self :=
-    funext fun i => by
+    funext $ fun i => by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp

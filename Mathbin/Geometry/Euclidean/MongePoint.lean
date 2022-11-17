@@ -140,7 +140,7 @@ theorem monge_point_eq_affine_combination_of_points_with_circumcenter {n : ℕ} 
   cases i <;>
     simp_rw [centroid_weights_with_circumcenter, circumcenter_weights_with_circumcenter,
         monge_point_weights_with_circumcenter] <;>
-      rw [add_tsub_assoc_of_le (by decide : 1 ≤ 2), (by decide : 2 - 1 = 1)]
+      rw [add_tsub_assoc_of_le (dec_trivial : 1 ≤ 2), (dec_trivial : 2 - 1 = 1)]
   · rw [if_pos (mem_univ _), sub_zero, add_zero, card_fin]
     have hn3 : (n + 2 + 1 : ℝ) ≠ 0 := by exact_mod_cast Nat.succ_ne_zero _
     field_simp [hn1, hn3, mul_comm]
@@ -502,9 +502,10 @@ theorem altitude_eq_monge_plane (t : Triangle ℝ P) {i₁ i₂ i₃ : Fin 3} (h
   simp [h₂₃, Submodule.span_insert_eq_span]
 #align affine.triangle.altitude_eq_monge_plane Affine.Triangle.altitude_eq_monge_plane
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₂ i₃) -/
 /-- The orthocenter lies in the altitudes. -/
 theorem orthocenter_mem_altitude (t : Triangle ℝ P) {i₁ : Fin 3} : t.orthocenter ∈ t.altitude i₁ := by
-  obtain ⟨i₂, i₃, h₁₂, h₂₃, h₁₃⟩ : ∃ i₂ i₃, i₁ ≠ i₂ ∧ i₂ ≠ i₃ ∧ i₁ ≠ i₃ := by decide!
+  obtain ⟨i₂, i₃, h₁₂, h₂₃, h₁₃⟩ : ∃ (i₂) (i₃), i₁ ≠ i₂ ∧ i₂ ≠ i₃ ∧ i₁ ≠ i₃ := by decide!
   rw [orthocenter_eq_monge_point, t.altitude_eq_monge_plane h₁₂ h₁₃ h₂₃]
   exact t.monge_point_mem_monge_plane
 #align affine.triangle.orthocenter_mem_altitude Affine.Triangle.orthocenter_mem_altitude
@@ -652,6 +653,8 @@ def OrthocentricSystem (s : Set P) : Prop :=
   ∃ t : Triangle ℝ P, t.orthocenter ∉ Set.range t.points ∧ s = insert t.orthocenter (Set.range t.points)
 #align euclidean_geometry.orthocentric_system EuclideanGeometry.OrthocentricSystem
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₂ i₃) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₁ i₂ i₃ j₂ j₃) -/
 /-- This is an auxiliary lemma giving information about the relation
 of two triangles in an orthocentric system; it abstracts some
 reasoning, with no geometric content, that is common to some other
@@ -662,7 +665,7 @@ i₁` is the orthocenter of `t` and `p i₂` and `p i₃` are points `j₂`
 and `j₃` of `t`, or `p` has the same points as `t`. -/
 theorem exists_of_range_subset_orthocentric_system {t : Triangle ℝ P} (ho : t.orthocenter ∉ Set.range t.points)
     {p : Fin 3 → P} (hps : Set.range p ⊆ insert t.orthocenter (Set.range t.points)) (hpi : Function.Injective p) :
-    (∃ i₁ i₂ i₃ j₂ j₃ : Fin 3,
+    (∃ (i₁ : Fin 3) (i₂ : Fin 3) (i₃ : Fin 3) (j₂ : Fin 3) (j₃ : Fin 3),
         i₁ ≠ i₂ ∧
           i₁ ≠ i₃ ∧
             i₂ ≠ i₃ ∧
@@ -674,7 +677,7 @@ theorem exists_of_range_subset_orthocentric_system {t : Triangle ℝ P} (ho : t.
   · left
     rcases h with ⟨i₁, h₁⟩
     obtain ⟨i₂, i₃, h₁₂, h₁₃, h₂₃, h₁₂₃⟩ :
-      ∃ i₂ i₃ : Fin 3, i₁ ≠ i₂ ∧ i₁ ≠ i₃ ∧ i₂ ≠ i₃ ∧ ∀ i : Fin 3, i = i₁ ∨ i = i₂ ∨ i = i₃ := by
+      ∃ (i₂ : Fin 3) (i₃ : Fin 3), i₁ ≠ i₂ ∧ i₁ ≠ i₃ ∧ i₂ ≠ i₃ ∧ ∀ i : Fin 3, i = i₁ ∨ i = i₂ ∨ i = i₃ := by
       clear h₁
       decide!
     have h : ∀ i, i₁ ≠ i → ∃ j : Fin 3, t.points j = p i := by

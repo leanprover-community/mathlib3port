@@ -49,7 +49,7 @@ To show `polynomial.splits p f` for an arbitrary ring homomorphism `f`,
 see `is_alg_closed.splits_codomain` and `is_alg_closed.splits_domain`.
 -/
 class IsAlgClosed : Prop where
-  Splits : ∀ p : k[X], p.Splits <| RingHom.id k
+  Splits : ∀ p : k[X], p.Splits $ RingHom.id k
 #align is_alg_closed IsAlgClosed
 
 /-- Every polynomial splits in the field extension `f : K →+* k` if `k` is algebraically closed.
@@ -68,7 +68,7 @@ See also `is_alg_closed.splits_codomain` for the case where `k` is algebraically
 -/
 theorem IsAlgClosed.splitsDomain {k K : Type _} [Field k] [IsAlgClosed k] [Field K] {f : k →+* K} (p : k[X]) :
     p.Splits f :=
-  Polynomial.splitsOfSplitsId _ <| IsAlgClosed.splits _
+  Polynomial.splitsOfSplitsId _ $ IsAlgClosed.splits _
 #align is_alg_closed.splits_domain IsAlgClosed.splitsDomain
 
 namespace IsAlgClosed
@@ -131,7 +131,7 @@ theorem exists_aeval_eq_zero {R : Type _} [Field R] [IsAlgClosed k] [Algebra R k
 
 theorem ofExistsRoot (H : ∀ p : k[X], p.Monic → Irreducible p → ∃ x, p.eval x = 0) : IsAlgClosed k :=
   ⟨fun p =>
-    Or.inr fun q hq hqp =>
+    Or.inr $ fun q hq hqp =>
       have : Irreducible (q * c (leadingCoeff q)⁻¹) := by
         rw [← coe_norm_unit_of_ne_zero hq.ne_zero]
         exact (associated_normalize _).Irreducible hq
@@ -321,7 +321,7 @@ include hL
 
 /-- Less general version of `lift`. -/
 private noncomputable irreducible_def lift_aux : L →ₐ[K] M :=
-  (lift.SubfieldWithHom.maximalSubfieldWithHom M hL).emb.comp <|
+  (lift.SubfieldWithHom.maximalSubfieldWithHom M hL).emb.comp $
     Eq.recOn (lift.SubfieldWithHom.maximal_subfield_with_hom_eq_top M hL).symm Algebra.toTop
 #align is_alg_closed.lift_aux is_alg_closed.lift_aux
 
@@ -359,7 +359,7 @@ omit hS
 
 noncomputable instance (priority := 100) perfectRing (p : ℕ) [Fact p.Prime] [CharP k p] [IsAlgClosed k] :
     PerfectRing k p :=
-  (PerfectRing.ofSurjective k p) fun x => IsAlgClosed.exists_pow_nat_eq _ <| NeZero.pos p
+  PerfectRing.ofSurjective k p $ fun x => IsAlgClosed.exists_pow_nat_eq _ $ NeZero.pos p
 #align is_alg_closed.perfect_ring IsAlgClosed.perfectRing
 
 /-- Algebraically closed fields are infinite since `Xⁿ⁺¹ - 1` is separable when `#K = n` -/
@@ -506,7 +506,7 @@ theorem Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly {F K} (A) [Field F] [
     (Set.range fun ψ : K →ₐ[F] A => ψ x) = (minpoly F x).rootSet A := by
   have := Algebra.is_algebraic_iff_is_integral.1 hK
   ext a
-  rw [mem_root_set_iff (minpoly.ne_zero <| this x) a]
+  rw [mem_root_set_iff (minpoly.ne_zero $ this x) a]
   refine' ⟨_, fun ha => _⟩
   · rintro ⟨ψ, rfl⟩
     rw [aeval_alg_hom_apply ψ x, minpoly.aeval, map_zero]
@@ -517,10 +517,10 @@ theorem Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly {F K} (A) [Field F] [
   letI : Algebra Fx K := (AdjoinRoot.lift (algebraMap F K) x hx).toAlgebra
   haveI : IsScalarTower F Fx A := IsScalarTower.of_ring_hom (AdjoinRoot.liftHom _ a ha)
   haveI : IsScalarTower F Fx K := IsScalarTower.of_ring_hom (AdjoinRoot.liftHom _ x hx)
-  haveI : Fact (Irreducible <| minpoly F x) := ⟨minpoly.irreducible <| this x⟩
+  haveI : Fact (Irreducible $ minpoly F x) := ⟨minpoly.irreducible $ this x⟩
   let ψ₀ : K →ₐ[Fx] A := IsAlgClosed.lift (Algebra.isAlgebraicOfLargerBase F Fx hK)
   exact
     ⟨ψ₀.restrict_scalars F,
-      (congr_arg ψ₀ (AdjoinRoot.lift_root hx).symm).trans <| (ψ₀.commutes _).trans <| AdjoinRoot.lift_root ha⟩
+      (congr_arg ψ₀ (AdjoinRoot.lift_root hx).symm).trans $ (ψ₀.commutes _).trans $ AdjoinRoot.lift_root ha⟩
 #align algebra.is_algebraic.range_eval_eq_root_set_minpoly Algebra.IsAlgebraic.range_eval_eq_root_set_minpoly
 

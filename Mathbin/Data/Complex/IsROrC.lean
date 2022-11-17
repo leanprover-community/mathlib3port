@@ -208,12 +208,12 @@ theorem of_real_add ⦃r s : ℝ⦄ : ((r + s : ℝ) : K) = r + s := by
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_bit0 (r : ℝ) : ((bit0 r : ℝ) : K) = bit0 (r : K) :=
-  ext_iff.2 <| by simp [bit0]
+  ext_iff.2 $ by simp [bit0]
 #align is_R_or_C.of_real_bit0 IsROrC.of_real_bit0
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_bit1 (r : ℝ) : ((bit1 r : ℝ) : K) = bit1 (r : K) :=
-  ext_iff.2 <| by simp [bit1]
+  ext_iff.2 $ by simp [bit1]
 #align is_R_or_C.of_real_bit1 IsROrC.of_real_bit1
 
 -- Note: This can be proven by `norm_num` once K is proven to be of characteristic zero below.
@@ -225,12 +225,12 @@ theorem two_ne_zero : (2 : K) ≠ 0 := by
 
 @[simp, norm_cast, is_R_or_C_simps]
 theorem of_real_neg (r : ℝ) : ((-r : ℝ) : K) = -r :=
-  ext_iff.2 <| by simp
+  ext_iff.2 $ by simp
 #align is_R_or_C.of_real_neg IsROrC.of_real_neg
 
 @[simp, norm_cast, is_R_or_C_simps]
 theorem of_real_mul (r s : ℝ) : ((r * s : ℝ) : K) = r * s :=
-  ext_iff.2 <| by simp [is_R_or_C_simps]
+  ext_iff.2 $ by simp [is_R_or_C_simps]
 #align is_R_or_C.of_real_mul IsROrC.of_real_mul
 
 @[simp, norm_cast, is_R_or_C_simps]
@@ -471,7 +471,7 @@ noncomputable def coeHom : ℝ →+* K :=
 
 @[simp, norm_cast, is_R_or_C_simps]
 theorem of_real_sub (r s : ℝ) : ((r - s : ℝ) : K) = r - s :=
-  ext_iff.2 <| by simp only [of_real_im, of_real_re, eq_self_iff_true, sub_zero, and_self_iff, map_sub]
+  ext_iff.2 $ by simp only [of_real_im, of_real_re, eq_self_iff_true, sub_zero, and_self_iff, map_sub]
 #align is_R_or_C.of_real_sub IsROrC.of_real_sub
 
 @[simp, norm_cast, is_R_or_C_simps]
@@ -598,7 +598,7 @@ theorem norm_conj {z : K} : ∥conj z∥ = ∥z∥ := by simp only [← sqrt_nor
 #align is_R_or_C.norm_conj IsROrC.norm_conj
 
 instance (priority := 100) :
-    CstarRing K where norm_star_mul_self x := (norm_mul _ _).trans <| congr_arg (· * ∥x∥) norm_conj
+    CstarRing K where norm_star_mul_self x := (norm_mul _ _).trans $ congr_arg (· * ∥x∥) norm_conj
 
 /-! ### Cast lemmas -/
 
@@ -648,7 +648,7 @@ theorem rat_cast_im (q : ℚ) : im (q : K) = 0 := by rw [← of_real_rat_cast, o
 -- see Note [lower instance priority]
 /-- ℝ and ℂ are both of characteristic zero.  -/
 instance (priority := 100) char_zero_R_or_C : CharZero K :=
-  char_zero_of_inj_zero fun n h => by rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
+  char_zero_of_inj_zero $ fun n h => by rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
 #align is_R_or_C.char_zero_R_or_C IsROrC.char_zero_R_or_C
 
 theorem re_eq_add_conj (z : K) : ↑(re z) = (z + conj z) / 2 := by
@@ -728,7 +728,7 @@ theorem abs_nonneg (z : K) : 0 ≤ absK z :=
 
 @[simp, is_R_or_C_simps]
 theorem abs_eq_zero {z : K} : absK z = 0 ↔ z = 0 :=
-  (Real.sqrt_eq_zero <| norm_sq_nonneg _).trans norm_sq_eq_zero
+  (Real.sqrt_eq_zero $ norm_sq_nonneg _).trans norm_sq_eq_zero
 #align is_R_or_C.abs_eq_zero IsROrC.abs_eq_zero
 
 theorem abs_ne_zero {z : K} : abs z ≠ 0 ↔ z ≠ 0 :=
@@ -784,7 +784,7 @@ theorem re_eq_self_of_le {a : K} (h : abs a ≤ re a) : (re a : K) = a := by
 #align is_R_or_C.re_eq_self_of_le IsROrC.re_eq_self_of_le
 
 theorem abs_add (z w : K) : abs (z + w) ≤ abs z + abs w :=
-  (mul_self_le_mul_self_iff (abs_nonneg _) (add_nonneg (abs_nonneg _) (abs_nonneg _))).2 <| by
+  (mul_self_le_mul_self_iff (abs_nonneg _) (add_nonneg (abs_nonneg _) (abs_nonneg _))).2 $ by
     rw [mul_self_abs, add_mul_self_eq, mul_self_abs, mul_self_abs, add_right_comm, norm_sq_add, add_le_add_iff_left,
       mul_assoc, mul_le_mul_left (@zero_lt_two ℝ _ _)]
     simpa [-mul_re, is_R_or_C_simps] using re_le_abs (z * conj w)
@@ -886,11 +886,11 @@ theorem conj_mul_eq_norm_sq_left (x : K) : conj x * x = (normSq x : K) := by
 
 
 theorem isCauSeqRe (f : CauSeq K abs) : IsCauSeq abs' fun n => re (f n) := fun ε ε0 =>
-  (f.cauchy ε0).imp fun i H j ij => lt_of_le_of_lt (by simpa using abs_re_le_abs (f j - f i)) (H _ ij)
+  (f.cauchy ε0).imp $ fun i H j ij => lt_of_le_of_lt (by simpa using abs_re_le_abs (f j - f i)) (H _ ij)
 #align is_R_or_C.is_cau_seq_re IsROrC.isCauSeqRe
 
 theorem isCauSeqIm (f : CauSeq K abs) : IsCauSeq abs' fun n => im (f n) := fun ε ε0 =>
-  (f.cauchy ε0).imp fun i H j ij => lt_of_le_of_lt (by simpa using abs_im_le_abs (f j - f i)) (H _ ij)
+  (f.cauchy ε0).imp $ fun i H j ij => lt_of_le_of_lt (by simpa using abs_im_le_abs (f j - f i)) (H _ ij)
 #align is_R_or_C.is_cau_seq_im IsROrC.isCauSeqIm
 
 /-- The real part of a K Cauchy sequence, as a real Cauchy sequence. -/
@@ -1083,7 +1083,7 @@ theorem re_lm_coe : (reLm : K → ℝ) = re :=
 
 /-- The real part in a `is_R_or_C` field, as a continuous linear map. -/
 noncomputable def reClm : K →L[ℝ] ℝ :=
-  LinearMap.mkContinuous reLm 1 <| by
+  LinearMap.mkContinuous reLm 1 $ by
     simp only [norm_eq_abs, re_lm_coe, one_mul, abs_to_real]
     exact abs_re_le_abs
 #align is_R_or_C.re_clm IsROrC.reClm
@@ -1125,7 +1125,7 @@ theorem im_lm_coe : (imLm : K → ℝ) = im :=
 
 /-- The imaginary part in a `is_R_or_C` field, as a continuous linear map. -/
 noncomputable def imClm : K →L[ℝ] ℝ :=
-  LinearMap.mkContinuous imLm 1 <| by
+  LinearMap.mkContinuous imLm 1 $ by
     simp only [norm_eq_abs, re_lm_coe, one_mul, abs_to_real]
     exact abs_im_le_abs
 #align is_R_or_C.im_clm IsROrC.imClm

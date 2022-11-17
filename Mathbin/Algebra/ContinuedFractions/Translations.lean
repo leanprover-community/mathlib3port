@@ -166,7 +166,7 @@ theorem first_denominator_eq {gp : Pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
 #align generalized_continued_fraction.first_denominator_eq GeneralizedContinuedFraction.first_denominator_eq
 
 @[simp]
-theorem zeroth_convergent'_aux_eq_zero {s : Seq <| Pair K} : convergents'Aux s 0 = 0 :=
+theorem zeroth_convergent'_aux_eq_zero {s : Seq $ Pair K} : convergents'Aux s 0 = 0 :=
   rfl
 #align
   generalized_continued_fraction.zeroth_convergent'_aux_eq_zero GeneralizedContinuedFraction.zeroth_convergent'_aux_eq_zero

@@ -89,7 +89,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     refine' mem_Union.2 ⟨n, subset_closure _⟩
     refine' (mem_image _ _ _).2 ⟨x, ⟨_, hx⟩⟩
     rwa [mem_ball, dist_eq_norm, sub_zero]
-  have : ∃ (n : ℕ)(x : _), x ∈ interior (closure (f '' ball 0 n)) :=
+  have : ∃ (n : ℕ) (x), x ∈ interior (closure (f '' ball 0 n)) :=
     nonempty_interior_of_Union_of_closed (fun n => isClosedClosure) A
   simp only [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at this
   rcases this with ⟨n, a, ε, ⟨εpos, H⟩⟩
@@ -276,7 +276,7 @@ protected theorem quotient_map (surj : Surjective f) : QuotientMap f :=
 
 theorem _root_.affine_map.is_open_map {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q]
     [NormedAddTorsor F Q] (f : P →ᵃ[𝕜] Q) (hf : Continuous f) (surj : Surjective f) : IsOpenMap f :=
-  AffineMap.is_open_map_linear_iff.mp <|
+  AffineMap.is_open_map_linear_iff.mp $
     ContinuousLinearMap.is_open_map { f.linear with cont := AffineMap.continuous_linear_iff.mpr hf }
       (f.surjective_iff_linear_surjective.mpr surj)
 #align continuous_linear_map._root_.affine_map.is_open_map continuous_linear_map._root_.affine_map.is_open_map
@@ -450,7 +450,7 @@ variable [CompleteSpace E] (g : E →ₗ[𝕜] F)
 
 /-- The **closed graph theorem** : a linear map between two Banach spaces whose graph is closed
 is continuous. -/
-theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) : Continuous g := by
+theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.graph : Set $ E × F)) : Continuous g := by
   letI : CompleteSpace g.graph := complete_space_coe_iff_is_complete.mpr hg.is_complete
   let φ₀ : E →ₗ[𝕜] E × F := linear_map.id.prod g
   have : Function.LeftInverse Prod.fst φ₀ := fun x => rfl
@@ -479,18 +479,18 @@ variable {g}
 namespace ContinuousLinearMap
 
 /-- Upgrade a `linear_map` to a `continuous_linear_map` using the **closed graph theorem**. -/
-def ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) : E →L[𝕜] F where
+def ofIsClosedGraph (hg : IsClosed (g.graph : Set $ E × F)) : E →L[𝕜] F where
   toLinearMap := g
   cont := g.continuous_of_is_closed_graph hg
 #align continuous_linear_map.of_is_closed_graph ContinuousLinearMap.ofIsClosedGraph
 
 @[simp]
-theorem coe_fn_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) :
+theorem coe_fn_of_is_closed_graph (hg : IsClosed (g.graph : Set $ E × F)) :
     ⇑(ContinuousLinearMap.ofIsClosedGraph hg) = g :=
   rfl
 #align continuous_linear_map.coe_fn_of_is_closed_graph ContinuousLinearMap.coe_fn_of_is_closed_graph
 
-theorem coe_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) :
+theorem coe_of_is_closed_graph (hg : IsClosed (g.graph : Set $ E × F)) :
     ↑(ContinuousLinearMap.ofIsClosedGraph hg) = g := by
   ext
   rfl

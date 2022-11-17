@@ -48,7 +48,7 @@ protected theorem function.isEmpty [IsEmpty β] (f : α → β) : IsEmpty α :=
 #align function.is_empty function.isEmpty
 
 instance {p : α → Sort _} [h : Nonempty α] [∀ x, IsEmpty (p x)] : IsEmpty (∀ x, p x) :=
-  h.elim fun x => function.isEmpty <| Function.eval x
+  h.elim $ fun x => function.isEmpty $ Function.eval x
 
 instance PProd.is_empty_left [IsEmpty α] : IsEmpty (PProd α β) :=
   function.isEmpty PProd.fst
@@ -69,7 +69,7 @@ instance Prod.is_empty_right {α β} [IsEmpty β] : IsEmpty (α × β) :=
 instance [IsEmpty α] [IsEmpty β] : IsEmpty (PSum α β) :=
   ⟨fun x => PSum.rec IsEmpty.false IsEmpty.false x⟩
 
-instance {α β} [IsEmpty α] [IsEmpty β] : IsEmpty (Sum α β) :=
+instance {α β} [IsEmpty α] [IsEmpty β] : IsEmpty (α ⊕ β) :=
   ⟨fun x => Sum.rec IsEmpty.false IsEmpty.false x⟩
 
 /-- subtypes of an empty type are empty -/
@@ -146,7 +146,7 @@ theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ True :=
 #print IsEmpty.exists_iff /-
 @[simp]
 theorem exists_iff {p : α → Prop} : (∃ a, p a) ↔ False :=
-  iff_false_intro fun ⟨x, hx⟩ => IsEmpty.false x
+  iff_false_intro $ fun ⟨x, hx⟩ => IsEmpty.false x
 #align is_empty.exists_iff IsEmpty.exists_iff
 -/
 
@@ -237,7 +237,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Iff (IsEmpty.{(max (succ u_2) (succ u_1))} (Sum.{u_1 u_2} α β)) (And (IsEmpty.{succ u_1} α) (IsEmpty.{succ u_2} β))
 Case conversion may be inaccurate. Consider using '#align is_empty_sum isEmpty_sumₓ'. -/
 @[simp]
-theorem isEmpty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β := by
+theorem isEmpty_sum {α β} : IsEmpty (α ⊕ β) ↔ IsEmpty α ∧ IsEmpty β := by
   simp only [← not_nonempty_iff, nonempty_sum, not_or]
 #align is_empty_sum isEmpty_sum
 
@@ -276,7 +276,7 @@ variable (α)
 
 #print isEmpty_or_nonempty /-
 theorem isEmpty_or_nonempty : IsEmpty α ∨ Nonempty α :=
-  (em <| IsEmpty α).elim Or.inl <| Or.inr ∘ not_isEmpty_iff.mp
+  (em $ IsEmpty α).elim Or.inl $ Or.inr ∘ not_isEmpty_iff.mp
 #align is_empty_or_nonempty isEmpty_or_nonempty
 -/
 
@@ -290,6 +290,6 @@ theorem not_isEmpty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
 variable {α}
 
 theorem Function.extend_of_isEmpty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) : Function.extend f g h = h :=
-  funext fun x => (Function.extend_apply' _ _ _) fun ⟨a, h⟩ => isEmptyElim a
+  funext $ fun x => Function.extend_apply' _ _ _ $ fun ⟨a, h⟩ => isEmptyElim a
 #align function.extend_of_empty Function.extend_of_isEmpty
 

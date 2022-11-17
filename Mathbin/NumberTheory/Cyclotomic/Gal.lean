@@ -50,7 +50,7 @@ variable [CommRing L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [I
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:130:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 /-- `is_primitive_root.aut_to_pow` is injective in the case that it's considered over a cyclotomic
 field extension. -/
-theorem aut_to_pow_injective : Function.Injective <| hμ.autToPow K := by
+theorem aut_to_pow_injective : Function.Injective $ hμ.autToPow K := by
   intro f g hfg
   apply_fun Units.val  at hfg
   simp only [IsPrimitiveRoot.coe_aut_to_pow_apply, Units.val_eq_coe] at hfg
@@ -136,9 +136,8 @@ variable {L}
 /-- Maps `μ` to the `alg_equiv` that sends `is_cyclotomic_extension.zeta` to `μ`. -/
 noncomputable def fromZetaAut : L ≃ₐ[K] L :=
   let hζ := (zeta_spec n K L).eq_pow_of_pow_eq_one hμ.pow_eq_one n.Pos
-  (autEquivPow L h).symm <|
-    Zmod.unitOfCoprime hζ.some <|
-      ((zeta_spec n K L).pow_iff_coprime n.Pos hζ.some).mp <| hζ.some_spec.some_spec.symm ▸ hμ
+  (autEquivPow L h).symm $
+    Zmod.unitOfCoprime hζ.some $ ((zeta_spec n K L).pow_iff_coprime n.Pos hζ.some).mp $ hζ.some_spec.some_spec.symm ▸ hμ
 #align is_cyclotomic_extension.from_zeta_aut IsCyclotomicExtension.fromZetaAut
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:130:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([4]) } -/

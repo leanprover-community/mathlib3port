@@ -222,7 +222,7 @@ one can find another monotone function `v` parameterizing the same points as `u`
 In particular, the variation of a function along `u` is bounded by its variation along `v`. -/
 theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ → α) (hu : Monotone u) (us : ∀ i, u i ∈ s)
     (n : ℕ) :
-    ∃ (v : ℕ → α)(m : ℕ),
+    ∃ (v : ℕ → α) (m : ℕ),
       Monotone v ∧
         (∀ i, v i ∈ s) ∧
           x ∈ v '' iio m ∧
@@ -510,11 +510,59 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
 /-- If a set `s` is to the left of a set `t`, and both contain the boundary point `x`, then
 the variation of `f` along `s ∪ t` is the sum of the variations. -/
 theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht : IsLeast t x) :
-    evariationOn f (s ∪ t) = evariationOn f s + evariationOn f t := by
-  classical apply le_antisymm _ (evariationOn.add_le_union f fun a ha b hb => le_trans (hs.2 ha) (ht.2 hb))
-    rintro ⟨n, ⟨u, hu, ust⟩⟩
-    exact evariationOn.add_point f (mem_union_left t hs.1) u hu ust n
-    exact xv
+    evariationOn f (s ∪ t) = evariationOn f s + evariationOn f t := by classical
+  apply le_antisymm _ (evariationOn.add_le_union f fun a ha b hb => le_trans (hs.2 ha) (ht.2 hb))
+  apply supr_le _
+  rintro ⟨n, ⟨u, hu, ust⟩⟩
+  obtain ⟨v, m, hv, vst, xv, huv⟩ :
+    ∃ (v : ℕ → α) (m : ℕ),
+      Monotone v ∧
+        (∀ i, v i ∈ s ∪ t) ∧
+          x ∈ v '' Iio m ∧
+            (∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) ≤
+              ∑ j in Finset.range m, edist (f (v (j + 1))) (f (v j))
+  exact evariationOn.add_point f (mem_union_left t hs.1) u hu ust n
+  obtain ⟨N, hN, Nx⟩ : ∃ N, N < m ∧ v N = x
+  exact xv
+  calc
+    (∑ j in Finset.range n, edist (f (u (j + 1))) (f (u j))) ≤ ∑ j in Finset.range m, edist (f (v (j + 1))) (f (v j)) :=
+      huv
+    _ =
+        (∑ j in Finset.ico 0 N, edist (f (v (j + 1))) (f (v j))) +
+          ∑ j in Finset.ico N m, edist (f (v (j + 1))) (f (v j)) :=
+      by rw [Finset.range_eq_Ico, Finset.sum_Ico_consecutive _ (zero_le _) hN.le]
+    _ ≤ evariationOn f s + evariationOn f t := by
+      refine' add_le_add _ _
+      · apply sum_le_of_monotone_on_Icc _ (hv.monotone_on _) fun i hi => _
+        rcases vst i with (h | h)
+        · exact h
+          
+        have : v i = x := by
+          apply le_antisymm
+          · rw [← Nx]
+            exact hv hi.2
+            
+          · exact ht.2 h
+            
+        rw [this]
+        exact hs.1
+        
+      · apply sum_le_of_monotone_on_Icc _ (hv.monotone_on _) fun i hi => _
+        rcases vst i with (h | h)
+        swap
+        · exact h
+          
+        have : v i = x := by
+          apply le_antisymm
+          · exact hs.2 h
+            
+          · rw [← Nx]
+            exact hv hi.1
+            
+        rw [this]
+        exact ht.1
+        
+    
 #align evariation_on.union evariationOn.union
 
 theorem Icc_add_Icc (f : α → E) {s : Set α} {a b c : α} (hab : a ≤ b) (hbc : b ≤ c) (hb : b ∈ s) :
@@ -557,10 +605,12 @@ theorem MonotoneOn.hasLocallyBoundedVariationOn {f : α → ℝ} {s : Set α} (h
   ((hf.evariation_on_le as bs).trans_lt Ennreal.of_real_lt_top).Ne
 #align monotone_on.has_locally_bounded_variation_on MonotoneOn.hasLocallyBoundedVariationOn
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p q) -/
 /-- If a real valued function has bounded variation on a set, then it is a difference of monotone
 functions there. -/
 theorem HasLocallyBoundedVariationOn.exists_monotone_on_sub_monotone_on {f : α → ℝ} {s : Set α}
-    (h : HasLocallyBoundedVariationOn f s) : ∃ p q : α → ℝ, MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q := by
+    (h : HasLocallyBoundedVariationOn f s) : ∃ (p : α → ℝ) (q : α → ℝ), MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q :=
+  by
   rcases eq_empty_or_nonempty s with (rfl | hs)
   · exact ⟨f, 0, subsingleton_empty.monotone_on _, subsingleton_empty.monotone_on _, by simp only [tsub_zero]⟩
     
@@ -669,11 +719,12 @@ theorem LipschitzWith.hasLocallyBoundedVariationOn {f : ℝ → E} {C : ℝ≥0}
 
 namespace HasLocallyBoundedVariationOn
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p q) -/
 /-- A bounded variation function into `ℝ` is differentiable almost everywhere. Superseded by
 `ae_differentiable_within_at_of_mem`. -/
 theorem ae_differentiable_within_at_of_mem_real {f : ℝ → ℝ} {s : Set ℝ} (h : HasLocallyBoundedVariationOn f s) :
     ∀ᵐ x, x ∈ s → DifferentiableWithinAt ℝ f s x := by
-  obtain ⟨p, q, hp, hq, fpq⟩ : ∃ p q, MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q
+  obtain ⟨p, q, hp, hq, fpq⟩ : ∃ (p) (q), MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q
   exact h.exists_monotone_on_sub_monotone_on
   filter_upwards [hp.ae_differentiable_within_at_of_mem, hq.ae_differentiable_within_at_of_mem] with x hxp hxq xs
   have fpq : ∀ x, f x = p x - q x := by simp [fpq]

@@ -41,7 +41,7 @@ theorem to_finset_some {a : α} [Decidable (some a).Dom] : (some a).toFinset = {
 
 @[simp]
 theorem coe_to_finset (o : Part α) [Decidable o.Dom] : (o.toFinset : Set α) = { x | x ∈ o } :=
-  Set.ext fun x => mem_to_finset
+  Set.ext $ fun x => mem_to_finset
 #align part.coe_to_finset Part.coe_to_finset
 
 end Part
@@ -61,11 +61,11 @@ theorem mem_pimage : b ∈ s.pimage f ↔ ∃ a ∈ s, b ∈ f a := by simp [pim
 
 @[simp, norm_cast]
 theorem coe_pimage : (s.pimage f : Set β) = f.image s :=
-  Set.ext fun x => mem_pimage
+  Set.ext $ fun x => mem_pimage
 #align finset.coe_pimage Finset.coe_pimage
 
 @[simp]
-theorem pimage_some (s : Finset α) (f : α → β) [∀ x, Decidable (Part.some <| f x).Dom] :
+theorem pimage_some (s : Finset α) (f : α → β) [∀ x, Decidable (Part.some $ f x).Dom] :
     (s.pimage fun x => Part.some (f x)) = s.image f := by
   ext
   simp [eq_comm]
@@ -85,7 +85,7 @@ theorem pimage_eq_image_filter :
 #align finset.pimage_eq_image_filter Finset.pimage_eq_image_filter
 
 theorem pimage_union [DecidableEq α] : (s ∪ t).pimage f = s.pimage f ∪ t.pimage f :=
-  coe_inj.1 <| by simp only [coe_pimage, Pfun.image_union, coe_union]
+  coe_inj.1 $ by simp only [coe_pimage, Pfun.image_union, coe_union]
 #align finset.pimage_union Finset.pimage_union
 
 @[simp]
@@ -100,7 +100,7 @@ theorem pimage_subset {t : Finset β} : s.pimage f ⊆ t ↔ ∀ x ∈ s, ∀ y 
 
 @[mono]
 theorem pimage_mono (h : s ⊆ t) : s.pimage f ⊆ t.pimage f :=
-  pimage_subset.2 fun x hx y hy => mem_pimage.2 ⟨x, h hx, hy⟩
+  pimage_subset.2 $ fun x hx y hy => mem_pimage.2 ⟨x, h hx, hy⟩
 #align finset.pimage_mono Finset.pimage_mono
 
 theorem pimage_inter [DecidableEq α] : (s ∩ t).pimage f ⊆ s.pimage f ∩ t.pimage f := by

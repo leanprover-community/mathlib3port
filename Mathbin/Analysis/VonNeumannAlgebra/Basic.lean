@@ -44,7 +44,7 @@ and we may be unhappy with the resulting opaqueness of the definition.
 class WstarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Module ℂ M] [NormedAlgebra ℂ M]
   [StarModule ℂ M] where
   exists_predual :
-    ∃ (X : Type u)(_ : NormedAddCommGroup X)(_ : NormedSpace ℂ X)(_ : CompleteSpace X),
+    ∃ (X : Type u) (_ : NormedAddCommGroup X) (_ : NormedSpace ℂ X) (_ : CompleteSpace X),
       Nonempty (NormedSpace.Dual ℂ X ≃ₗᵢ⋆[ℂ] M)
 #align wstar_algebra WstarAlgebra
 

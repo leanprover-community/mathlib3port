@@ -123,7 +123,7 @@ variable [ConditionallyCompleteLinearOrder α]
 
 theorem lt_mem_sets_of_Limsup_lt {f : Filter α} {b} (h : f.IsBounded (· ≤ ·)) (l : f.limsup < b) : ∀ᶠ a in f, a < b :=
   let ⟨c, (h : ∀ᶠ a in f, a ≤ c), hcb⟩ := exists_lt_of_cInf_lt h l
-  (mem_of_superset h) fun a hac => lt_of_le_of_lt hac hcb
+  mem_of_superset h $ fun a hac => lt_of_le_of_lt hac hcb
 #align lt_mem_sets_of_Limsup_lt lt_mem_sets_of_Limsup_lt
 
 theorem gt_mem_sets_of_Liminf_gt : ∀ {f : Filter α} {b}, f.IsBounded (· ≥ ·) → b < f.liminf → ∀ᶠ a in f, b < a :=
@@ -136,15 +136,15 @@ variable [TopologicalSpace α] [OrderTopology α]
 their common value, at least if the filter is eventually bounded above and below. -/
 theorem le_nhds_of_Limsup_eq_Liminf {f : Filter α} {a : α} (hl : f.IsBounded (· ≤ ·)) (hg : f.IsBounded (· ≥ ·))
     (hs : f.limsup = a) (hi : f.liminf = a) : f ≤ 𝓝 a :=
-  tendsto_order.2 <|
-    And.intro (fun b hb => gt_mem_sets_of_Liminf_gt hg <| hi.symm ▸ hb) fun b hb =>
-      lt_mem_sets_of_Limsup_lt hl <| hs.symm ▸ hb
+  tendsto_order.2 $
+    And.intro (fun b hb => gt_mem_sets_of_Liminf_gt hg $ hi.symm ▸ hb) fun b hb =>
+      lt_mem_sets_of_Limsup_lt hl $ hs.symm ▸ hb
 #align le_nhds_of_Limsup_eq_Liminf le_nhds_of_Limsup_eq_Liminf
 
 theorem Limsup_nhds (a : α) : limsup (𝓝 a) = a :=
   cInf_eq_of_forall_ge_of_forall_gt_exists_lt (is_bounded_le_nhds a)
     (fun a' (h : { n : α | n ≤ a' } ∈ 𝓝 a) => show a ≤ a' from @mem_of_mem_nhds α _ a _ h) fun b (hba : a < b) =>
-    show ∃ (c : _)(h : { n : α | n ≤ c } ∈ 𝓝 a), c < b from
+    show ∃ (c) (h : { n : α | n ≤ c } ∈ 𝓝 a), c < b from
       match dense_or_discrete a b with
       | Or.inl ⟨c, hac, hcb⟩ => ⟨c, ge_mem_nhds hac, hcb⟩
       | Or.inr ⟨_, h⟩ => ⟨a, (𝓝 a).sets_of_superset (gt_mem_nhds hba) h, hba⟩
@@ -399,7 +399,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
     induction' i with k hk
     · obtain ⟨j, hj₁, hj₂⟩ := hω 1
       refine'
-        not_lt.2 (h <| j + 1) (lt_of_le_of_lt (finset.sum_const_zero.symm : 0 = ∑ k in Finset.range (j + 1), 0).le _)
+        not_lt.2 (h $ j + 1) (lt_of_le_of_lt (finset.sum_const_zero.symm : 0 = ∑ k in Finset.range (j + 1), 0).le _)
       refine'
         Finset.sum_lt_sum (fun m _ => Set.indicator_nonneg (fun _ _ => zero_le_one) _)
           ⟨j - 1, Finset.mem_range.2 (lt_of_le_of_lt (Nat.sub_le _ _) j.lt_succ_self), _⟩
@@ -411,7 +411,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
       obtain ⟨i, hi⟩ := hk
       obtain ⟨j, hj₁, hj₂⟩ := hω (i + 1)
       replace hi : (∑ k in Finset.range i, (s (k + 1)).indicator 1 ω) = k + 1 := le_antisymm (h i) hi
-      refine' not_lt.2 (h <| j + 1) _
+      refine' not_lt.2 (h $ j + 1) _
       rw [← Finset.sum_range_add_sum_Ico _ (i.le_succ.trans (hj₁.trans j.le_succ)), hi]
       refine' lt_add_of_pos_right _ _
       rw [(finset.sum_const_zero.symm : 0 = ∑ k in Finset.ico i (j + 1), 0)]
@@ -446,9 +446,9 @@ theorem limsup_eq_tendsto_sum_indicator_nat_at_top (s : ℕ → Set α) :
           rw [this, add_zero]
           exact hle _ le_rfl
         rw [Finset.sum_eq_zero fun m hm => _]
-        exact Set.indicator_of_not_mem (hcon _ <| (Finset.mem_Ico.1 hm).1.trans m.le_succ) _
+        exact Set.indicator_of_not_mem (hcon _ $ (Finset.mem_Ico.1 hm).1.trans m.le_succ) _
         
-    exact not_le.2 (lt_of_lt_of_le i.lt_succ_self <| h _ le_rfl) this
+    exact not_le.2 (lt_of_lt_of_le i.lt_succ_self $ h _ le_rfl) this
     
 #align limsup_eq_tendsto_sum_indicator_nat_at_top limsup_eq_tendsto_sum_indicator_nat_at_top
 

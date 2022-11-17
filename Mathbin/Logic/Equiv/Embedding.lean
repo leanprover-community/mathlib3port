@@ -19,7 +19,7 @@ namespace Equiv
 
 /-- Embeddings from a sum type are equivalent to two separate embeddings with disjoint ranges. -/
 def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
-    (Sum α β ↪ γ) ≃ { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.range f.1) (Set.range f.2) } where
+    (α ⊕ β ↪ γ) ≃ { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.range f.1) (Set.range f.2) } where
   toFun f :=
     ⟨(inl.trans f, inr.trans f), by
       rw [Set.disjoint_left]
@@ -68,10 +68,10 @@ def codRestrict (α : Type _) {β : Type _} (bs : Set β) : { f : α ↪ β // �
 /-- Pairs of embeddings with disjoint ranges are equivalent to a dependent sum of embeddings,
 in which the second embedding cannot take values in the range of the first. -/
 def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
-    { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.range f.1) (Set.range f.2) } ≃ Σf : α ↪ γ, β ↪ ↥(Set.range fᶜ) :=
-  (subtype_prod_equiv_sigma_subtype fun (a : α ↪ γ) (b : β ↪ _) => Disjoint (Set.range a) (Set.range b)).trans <|
-    Equiv.sigmaCongrRight fun a =>
-      (subtype_equiv_prop <| by
+    { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.range f.1) (Set.range f.2) } ≃ Σ f : α ↪ γ, β ↪ ↥(Set.range fᶜ) :=
+  (subtype_prod_equiv_sigma_subtype $ fun (a : α ↪ γ) (b : β ↪ _) => Disjoint (Set.range a) (Set.range b)).trans $
+    Equiv.sigmaCongrRight $ fun a =>
+      (subtype_equiv_prop $ by
             ext f
             rw [← Set.range_subset_iff, Set.subset_compl_iff_disjoint_right, Disjoint.comm]).trans
         (codRestrict _ _)
@@ -81,7 +81,7 @@ def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
 /-- A combination of the above results, allowing us to turn one embedding over a sum type
 into two dependent embeddings, the second of which avoids any members of the range
 of the first. This is helpful for constructing larger embeddings out of smaller ones. -/
-def sumEmbeddingEquivSigmaEmbeddingRestricted {α β γ : Type _} : (Sum α β ↪ γ) ≃ Σf : α ↪ γ, β ↪ ↥(Set.range fᶜ) :=
+def sumEmbeddingEquivSigmaEmbeddingRestricted {α β γ : Type _} : (α ⊕ β ↪ γ) ≃ Σ f : α ↪ γ, β ↪ ↥(Set.range fᶜ) :=
   Equiv.trans sumEmbeddingEquivProdEmbeddingDisjoint prodEmbeddingDisjointEquivSigmaEmbeddingRestricted
 #align equiv.sum_embedding_equiv_sigma_embedding_restricted Equiv.sumEmbeddingEquivSigmaEmbeddingRestricted
 

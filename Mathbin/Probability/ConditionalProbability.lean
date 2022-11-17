@@ -76,14 +76,14 @@ def cond (s : Set Ω) : Measure Ω :=
 end Definitions
 
 -- mathport name: probability_theory.cond
-localized [ProbabilityTheory] notation μ "[" s "|" t "]" => ProbabilityTheory.cond μ t s
+scoped notation μ "[" s "|" t "]" => ProbabilityTheory.cond μ t s
 
 -- mathport name: probability_theory.cond_fn
-localized [ProbabilityTheory] notation:60 μ "[|" t "]" => ProbabilityTheory.cond μ t
+scoped notation:60 μ "[|" t "]" => ProbabilityTheory.cond μ t
 
 /-- The conditional probability measure of any finite measure on any set of positive measure
 is a probability measure. -/
-theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) : is_probability_measure <| μ[|s] :=
+theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) : is_probability_measure $ μ[|s] :=
   ⟨by
     rw [cond, measure.smul_apply, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
     exact Ennreal.inv_mul_cancel hcs (measure_ne_top _ s)⟩

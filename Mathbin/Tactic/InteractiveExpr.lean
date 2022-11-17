@@ -49,8 +49,8 @@ unsafe inductive sf : Type
 /-- Prints a debugging representation of an `sf` object. -/
 unsafe def sf.repr : sf → format
   | sf.tag_expr addr e a =>
-    format.group <|
-      format.nest 2 <|
+    format.group $
+      format.nest 2 $
         "(tag_expr " ++ to_fmt addr ++ format.line ++ "`(" ++ to_fmt e ++ ")" ++ format.line ++ a.repr ++ ")"
   | sf.compose a b => a.repr ++ format.line ++ b.repr
   | sf.of_string s => repr s
@@ -69,17 +69,17 @@ unsafe instance : Repr sf :=
 
 /-- Constructs an `sf` from an `eformat` by forgetting grouping, nesting, etc. -/
 unsafe def sf.of_eformat : eformat → sf
-  | tag ⟨ea, e⟩ m => sf.tag_expr ea e <| sf.of_eformat m
-  | group m => sf.block 0 <| sf.of_eformat m
-  | nest i m => sf.block i <| sf.of_eformat m
-  | highlight c m => sf.highlight c <| sf.of_eformat m
-  | of_format f => sf.of_string <| format.to_string f
+  | tag ⟨ea, e⟩ m => sf.tag_expr ea e $ sf.of_eformat m
+  | group m => sf.block 0 $ sf.of_eformat m
+  | nest i m => sf.block i $ sf.of_eformat m
+  | highlight c m => sf.highlight c $ sf.of_eformat m
+  | of_format f => sf.of_string $ format.to_string f
   | compose x y => sf.compose (sf.of_eformat x) (sf.of_eformat y)
 #align widget_override.interactive_expression.sf.of_eformat widget_override.interactive_expression.sf.of_eformat
 
 /-- Flattens an `sf`, i.e. merges adjacent `of_string` constructors. -/
 unsafe def sf.flatten : sf → sf
-  | sf.tag_expr ea e m => sf.tag_expr ea e <| sf.flatten m
+  | sf.tag_expr ea e m => sf.tag_expr ea e $ sf.flatten m
   | sf.compose x y =>
     match sf.flatten x, sf.flatten y with
     | sf.of_string sx, sf.of_string sy => sf.of_string (sx ++ sy)
@@ -103,8 +103,8 @@ private unsafe def elim_part_apps : sf → Expr.Address → sf
     else sf.tag_expr (Acc ++ ea) e (elim_part_apps m [])
   | sf.compose a b, Acc => (elim_part_apps a Acc).compose (elim_part_apps b Acc)
   | sf.of_string s, _ => sf.of_string s
-  | sf.block i a, Acc => sf.block i <| elim_part_apps a Acc
-  | sf.highlight c a, Acc => sf.highlight c <| elim_part_apps a Acc
+  | sf.block i a, Acc => sf.block i $ elim_part_apps a Acc
+  | sf.highlight c a, Acc => sf.highlight c $ elim_part_apps a Acc
 #align widget_override.interactive_expression.elim_part_apps widget_override.interactive_expression.elim_part_apps
 
 /-- Post-process an `sf` object to eliminate tags for partial applications by
@@ -153,13 +153,13 @@ If there is no definition available, then returns an empty list.
 unsafe def goto_def_button {γ} : expr → tactic (List (html (action γ)))
   | e =>
     (do
-        let expr.const n _ ← pure <| expr.get_app_fn e
+        let expr.const n _ ← pure $ expr.get_app_fn e
         let env ← tactic.get_env
         let file := environment.decl_olean env n
         let pos ← environment.decl_pos env n
-        pure <|
+        pure $
             [h "button"
-                [cn "pointer ba br3 mr1", on_click fun _ => action.effect <| widget.effect.reveal_position file Pos,
+                [cn "pointer ba br3 mr1", on_click fun _ => action.effect $ widget.effect.reveal_position file Pos,
                   attr.val "title" "go to definition"]
                 ["↪"]]) <|>
       pure []
@@ -196,12 +196,12 @@ unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address
           let efmt : String ← format.to_string <$> tactic.pp e
           let gd_btn ← goto_def_button e
           pure
-              [tooltip <|
+              [tooltip $
                   h "div" []
                     [h "div" [cn "fr"]
                         (gd_btn ++
                           [h "button"
-                              [cn "pointer ba br3 mr1", on_click fun _ => action.effect <| widget.effect.copy_text efmt,
+                              [cn "pointer ba br3 mr1", on_click fun _ => action.effect $ widget.effect.copy_text efmt,
                                 attr.val "title" "copy expression to clipboard"]
                               ["📋"],
                             h "button"
@@ -231,23 +231,23 @@ unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address
 /-- Make an interactive expression. -/
 unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
   let tooltip_comp :=
-    (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) <|
+    (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) $
       component.map_action action.on_tooltip_action tooltip
-  (component.filter_map_action fun _ (a : Sum γ widget.effect) => Sum.casesOn a some fun _ => none) <|
-    (component.with_effects fun _ (a : Sum γ widget.effect) =>
+  (component.filter_map_action fun _ (a : γ ⊕ widget.effect) => Sum.casesOn a some fun _ => none) $
+    (component.with_effects fun _ (a : γ ⊕ widget.effect) =>
         match a with
         | Sum.inl g => []
-        | Sum.inr s => [s]) <|
-      tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure <| (none, none))
+        | Sum.inr s => [s]) $
+      tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure $ (none, none))
         (fun e ⟨ca, sa⟩ act =>
-          pure <|
+          pure $
             match act with
             | action.on_mouse_enter ⟨e, ea⟩ => ((ca, some (e, ea)), none)
             | action.on_mouse_leave_all => ((ca, none), none)
             | action.on_click ⟨e, ea⟩ => if some (e, ea) = ca then ((none, sa), none) else ((some (e, ea), sa), none)
-            | action.on_tooltip_action g => ((none, sa), some <| Sum.inl g)
+            | action.on_tooltip_action g => ((none, sa), some $ Sum.inl g)
             | action.on_close_tooltip => ((none, sa), none)
-            | action.effect e => ((ca, sa), some <| Sum.inr <| e))
+            | action.effect e => ((ca, sa), some $ Sum.inr $ e))
         fun e ⟨ca, sa⟩ => do
         let m ← sf.of_eformat <$> tactic.pp_tagged e
         let m := m.elim_part_apps
@@ -255,14 +255,14 @@ unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
         let-- [hack] in pp.cpp I forgot to add an expr-boundary for the root expression.
         m := m.tag_expr [] e
         let v ← view tooltip_comp (Prod.snd <$> ca) (Prod.snd <$> sa) ⟨e, []⟩ m
-        pure <| [h "span" [className "expr", key e, on_mouse_leave fun _ => action.on_mouse_leave_all] <| v]
+        pure $ [h "span" [className "expr", key e, on_mouse_leave fun _ => action.on_mouse_leave_all] $ v]
 #align widget_override.interactive_expression.mk widget_override.interactive_expression.mk
 
 /-- Render the implicit arguments for an expression in fancy, little pills. -/
-unsafe def implicit_arg_list (tooltip : tc subexpr Empty) (e : expr) : tactic <| html Empty := do
-  let fn ← mk tooltip <| expr.get_app_fn e
-  let args ← List.mapM (mk tooltip) <| expr.get_app_args e
-  pure <|
+unsafe def implicit_arg_list (tooltip : tc subexpr Empty) (e : expr) : tactic $ html Empty := do
+  let fn ← mk tooltip $ expr.get_app_fn e
+  let args ← List.mapM (mk tooltip) $ expr.get_app_args e
+  pure $
       h "div" [style [("display", "flex"), ("flexWrap", "wrap"), ("alignItems", "baseline")]]
         (h "span" [className "bg-blue br3 ma1 ph2 white"] [fn] ::
           List.map (fun a => h "span" [className "bg-gray br3 ma1 ph2 white"] [a]) args)
@@ -321,7 +321,7 @@ unsafe def filter_component : component filter_type filter_type :=
 /-- Converts a name into an html element.
 -/
 unsafe def html.of_name {α : Type} : Name → html α
-  | n => html.of_string <| Name.toString n
+  | n => html.of_string $ Name.toString n
 #align widget_override.html.of_name widget_override.html.of_name
 
 open Tactic
@@ -331,7 +331,7 @@ open Tactic
 unsafe def show_type_component : tc expr Empty :=
   tc.stateless fun x => do
     let y ← infer_type x
-    let y_comp ← interactive_expression.mk interactive_expression.type_tooltip <| y
+    let y_comp ← interactive_expression.mk interactive_expression.type_tooltip $ y
     pure y_comp
 #align widget_override.show_type_component widget_override.show_type_component
 
@@ -346,9 +346,9 @@ unsafe structure local_collection where
 
 /-- Converts a single local constant into a (singleton) `local_collection` -/
 unsafe def to_local_collection (l : expr) : tactic local_collection :=
-  tactic.unsafe.type_context.run <| do
+  tactic.unsafe.type_context.run $ do
     let lctx ← tactic.unsafe.type_context.get_local_context
-    let some ldecl ← pure <| lctx.get_local_decl l.local_uniq_name
+    let some ldecl ← pure $ lctx.get_local_decl l.local_uniq_name
     pure { key := l, locals := [l], type := ldecl, value := ldecl }
 #align widget_override.to_local_collection widget_override.to_local_collection
 
@@ -356,34 +356,35 @@ unsafe def to_local_collection (l : expr) : tactic local_collection :=
 unsafe def group_local_collection : List local_collection → List local_collection
   | a :: b :: rest =>
     if a.type = b.type ∧ a.value = b.value then
-      group_local_collection <| { a with locals := a.locals ++ b.locals } :: rest
+      group_local_collection $ { a with locals := a.locals ++ b.locals } :: rest
     else a :: group_local_collection (b :: rest)
   | ls => ls
 #align widget_override.group_local_collection widget_override.group_local_collection
 
 /-- Component that displays the main (first) goal. -/
 unsafe def tactic_view_goal {γ} (local_c : tc local_collection γ) (target_c : tc expr γ) : tc filter_type γ :=
-  tc.stateless fun ft => do
+  tc.stateless $ fun ft => do
     let g@(expr.mvar u_n pp_n y) ← main_goal
     let t ← get_tag g
     let case_tag : List (html γ) :=
       match interactive.case_tag.parse t with
       | some t =>
-        [h "li" [key "_case"] <| [h "span" [cn "goal-case b"] ["case"]] ++ t.case_names.bind fun n => [" ", n]]
+        [h "li" [key "_case"] $ [h "span" [cn "goal-case b"] ["case"]] ++ (t.case_names.bind $ fun n => [" ", n])]
       | none => []
     let lcs ← local_context
     let lcs ← List.filterM (filter_local ft) lcs
-    let lcs ← lcs.mmap <| to_local_collection
+    let lcs ← lcs.mmap $ to_local_collection
     let lcs := group_local_collection lcs
     let lchs ←
       lcs.mmap fun lc => do
           let lh ← local_c lc
           let ns : List (html γ) :=
-            lc.locals.map fun n => h "span" [cn "goal-hyp b pr2", key n.local_uniq_name] [html.of_name n.local_pp_name]
-          pure <| h "li" [key lc] (ns ++ [": ", h "span" [cn "goal-hyp-type", key "type"] [lh]])
+            lc.locals.map $ fun n =>
+              h "span" [cn "goal-hyp b pr2", key n.local_uniq_name] [html.of_name n.local_pp_name]
+          pure $ h "li" [key lc] (ns ++ [": ", h "span" [cn "goal-hyp-type", key "type"] [lh]])
     let t_comp ← target_c g
-    pure <|
-        h "ul" [key g, className "list pl0 font-code"] <|
+    pure $
+        h "ul" [key g, className "list pl0 font-code"] $
           case_tag ++ lchs ++ [h "li" [key u_n] [h "span" [cn "goal-vdash b"] ["⊢ "], t_comp]]
 #align widget_override.tactic_view_goal widget_override.tactic_view_goal
 
@@ -406,7 +407,7 @@ unsafe def goals_accomplished_message {α} : html α :=
 
 /-- Component that displays all goals, together with the `$n goals` message. -/
 unsafe def tactic_view_component {γ} (local_c : tc local_collection γ) (target_c : tc expr γ) : tc Unit γ :=
-  tc.mk_simple (tactic_view_action γ) filter_type (fun _ => pure <| filter_type.none)
+  tc.mk_simple (tactic_view_action γ) filter_type (fun _ => pure $ filter_type.none)
     (fun ⟨⟩ ft a =>
       match a with
       | tactic_view_action.out a => pure (ft, some a)
@@ -416,25 +417,25 @@ unsafe def tactic_view_component {γ} (local_c : tc local_collection γ) (target
     let hs ←
       gs.mmap fun g => do
           set_goals [g]
-          flip tc.to_html ft <| tactic_view_goal local_c target_c
+          flip tc.to_html ft $ tactic_view_goal local_c target_c
     set_goals gs
     let goal_message : html γ :=
       if gs.length = 0 then goals_accomplished_message
-      else if gs.length = 1 then "1 goal" else html.of_string <| toString gs.length ++ " goals"
+      else if gs.length = 1 then "1 goal" else html.of_string $ toString gs.length ++ " goals"
     let goal_message : html γ := h "strong" [cn "goal-goals"] [goal_message]
     let goals : html γ :=
-      h "ul" [className "list pl0"] <|
-        (List.mapWithIndex fun i x => h "li" [className <| "lh-copy mt2", key i] [x]) <| goal_message :: hs
+      h "ul" [className "list pl0"] $
+        (List.mapWithIndex fun i x => h "li" [className $ "lh-copy mt2", key i] [x]) $ goal_message :: hs
     pure
         [h "div" [className "fr"]
-            [html.of_component ft <| component.map_action tactic_view_action.filter filter_component],
+            [html.of_component ft $ component.map_action tactic_view_action.filter filter_component],
           html.map_action tactic_view_action.out goals]
 #align widget_override.tactic_view_component widget_override.tactic_view_component
 
 /-- Component that displays the term-mode goal. -/
 unsafe def tactic_view_term_goal {γ} (local_c : tc local_collection γ) (target_c : tc expr γ) : tc Unit γ :=
-  tc.stateless fun _ => do
-    let goal ← flip tc.to_html filter_type.none <| tactic_view_goal local_c target_c
+  tc.stateless $ fun _ => do
+    let goal ← flip tc.to_html filter_type.none $ tactic_view_goal local_c target_c
     pure
         [h "ul" [className "list pl0"]
             [h "li" [className "lh-copy"] [h "strong" [cn "goal-goals"] ["expected type:"]],
@@ -457,7 +458,7 @@ unsafe def show_local_collection_component : tc local_collection Empty :=
 /-- Renders the current tactic state.
 -/
 unsafe def tactic_render : tc Unit Empty :=
-  component.ignore_action <| tactic_view_component show_local_collection_component show_type_component
+  component.ignore_action $ tactic_view_component show_local_collection_component show_type_component
 #align widget_override.tactic_render widget_override.tactic_render
 
 /-- Component showing the current tactic state.

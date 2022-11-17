@@ -43,12 +43,12 @@ noncomputable def gronwallBound (δ K ε x : ℝ) : ℝ :=
 #align gronwall_bound gronwallBound
 
 theorem gronwall_bound_K0 (δ ε : ℝ) : gronwallBound δ 0 ε = fun x => δ + ε * x :=
-  funext fun x => if_pos rfl
+  funext $ fun x => if_pos rfl
 #align gronwall_bound_K0 gronwall_bound_K0
 
 theorem gronwall_bound_of_K_ne_0 {δ K ε : ℝ} (hK : K ≠ 0) :
     gronwallBound δ K ε = fun x => δ * exp (K * x) + ε / K * (exp (K * x) - 1) :=
-  funext fun x => if_neg hK
+  funext $ fun x => if_neg hK
 #align gronwall_bound_of_K_ne_0 gronwall_bound_of_K_ne_0
 
 theorem hasDerivAtGronwallBound (δ K ε x : ℝ) : HasDerivAt (gronwallBound δ K ε) (K * gronwallBound δ K ε x + ε) x := by
@@ -149,7 +149,7 @@ theorem norm_le_gronwall_bound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K �
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha bound
 #align norm_le_gronwall_bound_of_norm_deriv_right_le norm_le_gronwall_bound_of_norm_deriv_right_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- If `f` and `g` are two approximate solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -192,7 +192,7 @@ theorem dist_le_of_approx_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (
     g_bound (fun t ht => trivial) ha
 #align dist_le_of_approx_trajectories_ODE dist_le_of_approx_trajectories_ODE
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- If `f` and `g` are two exact solutions of the same ODE, then the distance between them
 can't grow faster than exponentially. This is a simple corollary of Grönwall's inequality, and some
 people call this Grönwall's inequality too.
@@ -230,7 +230,7 @@ theorem dist_le_of_trajectories_ODE {v : ℝ → E → E} {K : ℝ≥0} (hv : �
     (fun t ht => trivial) ha
 #align dist_le_of_trajectories_ODE dist_le_of_trajectories_ODE
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » s t) -/
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) in a set `s ⊆ ℝ × E` with
 a given initial value provided that RHS is Lipschitz continuous in `x` within `s`,
 and we consider only solutions included in `s`. -/

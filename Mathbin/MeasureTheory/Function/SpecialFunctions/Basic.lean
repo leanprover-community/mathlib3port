@@ -30,8 +30,8 @@ theorem measurableExp : Measurable exp :=
 
 @[measurability]
 theorem measurableLog : Measurable log :=
-  measurableOfMeasurableOnComplSingleton 0 <|
-    Continuous.measurable <| continuous_on_iff_continuous_restrict.1 continuous_on_log
+  measurableOfMeasurableOnComplSingleton 0 $
+    Continuous.measurable $ continuous_on_iff_continuous_restrict.1 continuous_on_log
 #align real.measurable_log Real.measurableLog
 
 @[measurability]
@@ -114,13 +114,13 @@ theorem measurableArg : Measurable arg :=
     Real.measurableArcsin.comp (measurableIm.div measurableNorm)
   have B : Measurable fun x : ℂ => Real.arcsin ((-x).im / x.abs) :=
     Real.measurableArcsin.comp ((measurableIm.comp measurableNeg).div measurableNorm)
-  Measurable.ite (isClosedLe continuous_const continuous_re).MeasurableSet A <|
+  Measurable.ite (isClosedLe continuous_const continuous_re).MeasurableSet A $
     Measurable.ite (isClosedLe continuous_const continuous_im).MeasurableSet (B.AddConst _) (B.sub_const _)
 #align complex.measurable_arg Complex.measurableArg
 
 @[measurability]
 theorem measurableLog : Measurable log :=
-  (measurableOfReal.comp <| Real.measurableLog.comp measurableNorm).add <|
+  (measurableOfReal.comp $ Real.measurableLog.comp measurableNorm).add $
     (measurableOfReal.comp measurableArg).mul_const i
 #align complex.measurable_log Complex.measurableLog
 
@@ -298,7 +298,7 @@ instance Complex.hasMeasurablePow : HasMeasurablePow ℂ ℂ :=
 #align complex.has_measurable_pow Complex.hasMeasurablePow
 
 instance Real.hasMeasurablePow : HasMeasurablePow ℝ ℝ :=
-  ⟨Complex.measurableRe.comp <|
+  ⟨Complex.measurableRe.comp $
       (Complex.measurableOfReal.comp measurableFst).pow (Complex.measurableOfReal.comp measurableSnd)⟩
 #align real.has_measurable_pow Real.hasMeasurablePow
 
@@ -320,6 +320,6 @@ instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ := by
 
 end PowInstances
 
-/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_not_exists -/
 -- Guard against import creep:

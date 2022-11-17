@@ -56,7 +56,7 @@ variable {α : Type _} {β : Type _}
 universe u
 
 theorem encode_injective [Encodable α] : Function.Injective (@encode α _)
-  | x, y, e => Option.some.inj <| by rw [← encodek, e, encodek]
+  | x, y, e => Option.some.inj $ by rw [← encodek, e, encodek]
 #align encodable.encode_injective Encodable.encode_injective
 
 @[simp]
@@ -180,7 +180,7 @@ theorem mem_decode₂' [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n 
 #align encodable.mem_decode₂' Encodable.mem_decode₂'
 
 theorem mem_decode₂ [Encodable α] {n : ℕ} {a : α} : a ∈ decode₂ α n ↔ encode a = n :=
-  mem_decode₂'.trans (and_iff_right_of_imp fun e => e ▸ encodek _)
+  mem_decode₂'.trans (and_iff_right_of_imp $ fun e => e ▸ encodek _)
 #align encodable.mem_decode₂ Encodable.mem_decode₂
 
 theorem decode₂_eq_some [Encodable α] {n : ℕ} {a : α} : decode₂ α n = some a ↔ encode a = n :=
@@ -202,7 +202,7 @@ theorem decode₂_is_partial_inv [Encodable α] : IsPartialInv encode (decode₂
 #align encodable.decode₂_is_partial_inv Encodable.decode₂_is_partial_inv
 
 theorem decode₂_inj [Encodable α] {n : ℕ} {a₁ a₂ : α} (h₁ : a₁ ∈ decode₂ α n) (h₂ : a₂ ∈ decode₂ α n) : a₁ = a₂ :=
-  encode_injective <| (mem_decode₂.1 h₁).trans (mem_decode₂.1 h₂).symm
+  encode_injective $ (mem_decode₂.1 h₁).trans (mem_decode₂.1 h₂).symm
 #align encodable.decode₂_inj Encodable.decode₂_inj
 
 theorem encodek₂ [Encodable α] (a : α) : decode₂ α (encode a) = some a :=
@@ -240,42 +240,42 @@ section Sum
 variable [Encodable α] [Encodable β]
 
 /-- Explicit encoding function for the sum of two encodable types. -/
-def encodeSum : Sum α β → ℕ
-  | Sum.inl a => bit0 <| encode a
-  | Sum.inr b => bit1 <| encode b
+def encodeSum : α ⊕ β → ℕ
+  | Sum.inl a => bit0 $ encode a
+  | Sum.inr b => bit1 $ encode b
 #align encodable.encode_sum Encodable.encodeSum
 
 /-- Explicit decoding function for the sum of two encodable types. -/
-def decodeSum (n : ℕ) : Option (Sum α β) :=
+def decodeSum (n : ℕ) : Option (α ⊕ β) :=
   match boddDiv2 n with
   | (ff, m) => (decode α m).map Sum.inl
   | (tt, m) => (decode β m).map Sum.inr
 #align encodable.decode_sum Encodable.decodeSum
 
 /-- If `α` and `β` are encodable, then so is their sum. -/
-instance _root_.sum.encodable : Encodable (Sum α β) :=
+instance _root_.sum.encodable : Encodable (α ⊕ β) :=
   ⟨encodeSum, decodeSum, fun s => by cases s <;> simp [encode_sum, decode_sum, encodek] <;> rfl⟩
 #align encodable._root_.sum.encodable encodable._root_.sum.encodable
 
 @[simp]
-theorem encode_inl (a : α) : @encode (Sum α β) _ (Sum.inl a) = bit0 (encode a) :=
+theorem encode_inl (a : α) : @encode (α ⊕ β) _ (Sum.inl a) = bit0 (encode a) :=
   rfl
 #align encodable.encode_inl Encodable.encode_inl
 
 @[simp]
-theorem encode_inr (b : β) : @encode (Sum α β) _ (Sum.inr b) = bit1 (encode b) :=
+theorem encode_inr (b : β) : @encode (α ⊕ β) _ (Sum.inr b) = bit1 (encode b) :=
   rfl
 #align encodable.encode_inr Encodable.encode_inr
 
 @[simp]
-theorem decode_sum_val (n : ℕ) : decode (Sum α β) n = decodeSum n :=
+theorem decode_sum_val (n : ℕ) : decode (α ⊕ β) n = decodeSum n :=
   rfl
 #align encodable.decode_sum_val Encodable.decode_sum_val
 
 end Sum
 
 instance _root_.bool.encodable : Encodable Bool :=
-  ofEquiv (Sum Unit Unit) Equiv.boolEquivPunitSumPunit
+  ofEquiv (Unit ⊕ Unit) Equiv.boolEquivPunitSumPunit
 #align encodable._root_.bool.encodable encodable._root_.bool.encodable
 
 @[simp]
@@ -305,7 +305,7 @@ theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none := by
     rfl
   have : 1 ≤ div2 n := by
     rw [div2_val, Nat.le_div_iff_mul_le]
-    exacts[h, by decide]
+    exacts[h, dec_trivial]
   cases' exists_eq_succ_of_ne_zero (ne_of_gt this) with m e
   simp [decode_sum] <;> cases bodd n <;> simp [decode_sum] <;> rw [e] <;> rfl
 #align encodable.decode_ge_two Encodable.decode_ge_two
@@ -326,7 +326,7 @@ def encodeSigma : Sigma γ → ℕ
 /-- Explicit decoding function for `sigma γ` -/
 def decodeSigma (n : ℕ) : Option (Sigma γ) :=
   let (n₁, n₂) := unpair n
-  (decode α n₁).bind fun a => (decode (γ a) n₂).map <| Sigma.mk a
+  (decode α n₁).bind $ fun a => (decode (γ a) n₂).map $ Sigma.mk a
 #align encodable.decode_sigma Encodable.decodeSigma
 
 instance _root_.sigma.encodable : Encodable (Sigma γ) :=
@@ -335,7 +335,7 @@ instance _root_.sigma.encodable : Encodable (Sigma γ) :=
 
 @[simp]
 theorem decode_sigma_val (n : ℕ) :
-    decode (Sigma γ) n = (decode α n.unpair.1).bind fun a => (decode (γ a) n.unpair.2).map <| Sigma.mk a :=
+    decode (Sigma γ) n = (decode α n.unpair.1).bind fun a => (decode (γ a) n.unpair.2).map $ Sigma.mk a :=
   show DecodeSigma._match1 _ = _ by cases n.unpair <;> rfl
 #align encodable.decode_sigma_val Encodable.decode_sigma_val
 
@@ -357,7 +357,7 @@ instance _root_.prod.encodable : Encodable (α × β) :=
 
 @[simp]
 theorem decode_prod_val (n : ℕ) :
-    decode (α × β) n = (decode α n.unpair.1).bind fun a => (decode β n.unpair.2).map <| Prod.mk a :=
+    decode (α × β) n = (decode α n.unpair.1).bind fun a => (decode β n.unpair.2).map $ Prod.mk a :=
   show (decode (Sigma fun _ => β) n).map (Equiv.sigmaEquivProd α β) = _ by
     simp <;> cases decode α n.unpair.1 <;> simp <;> cases decode β n.unpair.2 <;> rfl
 #align encodable.decode_prod_val Encodable.decode_prod_val
@@ -386,7 +386,7 @@ include decP
 
 /-- Explicit decoding function for a decidable subtype of an encodable type -/
 def decodeSubtype (v : ℕ) : Option { a : α // P a } :=
-  (decode α v).bind fun a => if h : P a then some ⟨a, h⟩ else none
+  (decode α v).bind $ fun a => if h : P a then some ⟨a, h⟩ else none
 #align encodable.decode_subtype Encodable.decodeSubtype
 
 /-- A decidable subtype of an encodable type is encodable. -/
@@ -423,12 +423,12 @@ instance _root_.plift.encodable [Encodable α] : Encodable (PLift α) :=
 
 /-- If `β` is encodable and there is an injection `f : α → β`, then `α` is encodable as well. -/
 noncomputable def ofInj [Encodable β] (f : α → β) (hf : Injective f) : Encodable α :=
-  ofLeftInjection f (partialInv f) fun x => (partial_inv_of_injective hf _ _).2 rfl
+  ofLeftInjection f (partialInv f) fun x => (partialInv_of_injective hf _ _).2 rfl
 #align encodable.of_inj Encodable.ofInj
 
 /-- If `α` is countable, then it has a (non-canonical) `encodable` structure. -/
 noncomputable def ofCountable (α : Type _) [Countable α] : Encodable α :=
-  Nonempty.some <|
+  Nonempty.some $
     let ⟨f, hf⟩ := exists_injective_nat α
     ⟨ofInj f hf⟩
 #align encodable.of_countable Encodable.ofCountable
@@ -628,7 +628,7 @@ theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f
 variable [Preorder β] {f : α → β} (hf : Directed (· ≤ ·) f)
 
 theorem sequence_mono : Monotone (f ∘ hf.sequence f) :=
-  monotone_nat_of_le_succ <| hf.sequence_mono_nat
+  monotone_nat_of_le_succ $ hf.sequence_mono_nat
 #align directed.sequence_mono Directed.sequence_mono
 
 theorem le_sequence (a : α) : f a ≤ f (hf.sequence f (encode a + 1)) :=

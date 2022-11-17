@@ -59,7 +59,7 @@ structure BiheytingHom (α β : Type _) [BiheytingAlgebra α] [BiheytingAlgebra 
 /-- `heyting_hom_class F α β` states that `F` is a type of Heyting homomorphisms.
 
 You should extend this class when you extend `heyting_hom`. -/
-class HeytingHomClass (F : Type _) (α β : outParam <| Type _) [HeytingAlgebra α] [HeytingAlgebra β] extends
+class HeytingHomClass (F : Type _) (α β : outParam $ Type _) [HeytingAlgebra α] [HeytingAlgebra β] extends
   LatticeHomClass F α β where
   map_bot (f : F) : f ⊥ = ⊥
   map_himp (f : F) : ∀ a b, f (a ⇨ b) = f a ⇨ f b
@@ -68,7 +68,7 @@ class HeytingHomClass (F : Type _) (α β : outParam <| Type _) [HeytingAlgebra 
 /-- `coheyting_hom_class F α β` states that `F` is a type of co-Heyting homomorphisms.
 
 You should extend this class when you extend `coheyting_hom`. -/
-class CoheytingHomClass (F : Type _) (α β : outParam <| Type _) [CoheytingAlgebra α] [CoheytingAlgebra β] extends
+class CoheytingHomClass (F : Type _) (α β : outParam $ Type _) [CoheytingAlgebra α] [CoheytingAlgebra β] extends
   LatticeHomClass F α β where
   map_top (f : F) : f ⊤ = ⊤
   map_sdiff (f : F) : ∀ a b, f (a \ b) = f a \ f b
@@ -77,7 +77,7 @@ class CoheytingHomClass (F : Type _) (α β : outParam <| Type _) [CoheytingAlge
 /-- `biheyting_hom_class F α β` states that `F` is a type of bi-Heyting homomorphisms.
 
 You should extend this class when you extend `biheyting_hom`. -/
-class BiheytingHomClass (F : Type _) (α β : outParam <| Type _) [BiheytingAlgebra α] [BiheytingAlgebra β] extends
+class BiheytingHomClass (F : Type _) (α β : outParam $ Type _) [BiheytingAlgebra α] [BiheytingAlgebra β] extends
   LatticeHomClass F α β where
   map_himp (f : F) : ∀ a b, f (a ⇨ b) = f a ⇨ f b
   map_sdiff (f : F) : ∀ a b, f (a \ b) = f a \ f b
@@ -119,7 +119,7 @@ instance (priority := 100) OrderIsoClass.toHeytingHomClass [HeytingAlgebra α] [
     HeytingHomClass F α β :=
   { OrderIsoClass.toBoundedLatticeHomClass with
     map_himp := fun f a b =>
-      eq_of_forall_le_iff fun c => by
+      eq_of_forall_le_iff $ fun c => by
         simp only [← map_inv_le_iff, le_himp_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
@@ -130,7 +130,7 @@ instance (priority := 100) OrderIsoClass.toCoheytingHomClass [CoheytingAlgebra �
     [OrderIsoClass F α β] : CoheytingHomClass F α β :=
   { OrderIsoClass.toBoundedLatticeHomClass with
     map_sdiff := fun f a b =>
-      eq_of_forall_ge_iff fun c => by
+      eq_of_forall_ge_iff $ fun c => by
         simp only [← le_map_inv_iff, sdiff_le_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
@@ -141,12 +141,12 @@ instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra �
     [OrderIsoClass F α β] : BiheytingHomClass F α β :=
   { OrderIsoClass.toLatticeHomClass with
     map_himp := fun f a b =>
-      eq_of_forall_le_iff fun c => by
+      eq_of_forall_le_iff $ fun c => by
         simp only [← map_inv_le_iff, le_himp_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp,
     map_sdiff := fun f a b =>
-      eq_of_forall_ge_iff fun c => by
+      eq_of_forall_ge_iff $ fun c => by
         simp only [← le_map_inv_iff, sdiff_le_iff]
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
@@ -294,20 +294,20 @@ theorem comp_assoc (f : HeytingHom γ δ) (g : HeytingHom β γ) (h : HeytingHom
 
 @[simp]
 theorem comp_id (f : HeytingHom α β) : f.comp (HeytingHom.id α) = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align heyting_hom.comp_id HeytingHom.comp_id
 
 @[simp]
 theorem id_comp (f : HeytingHom α β) : (HeytingHom.id β).comp f = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align heyting_hom.id_comp HeytingHom.id_comp
 
 theorem cancel_right (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
 #align heyting_hom.cancel_right HeytingHom.cancel_right
 
 theorem cancel_left (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => HeytingHom.ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => HeytingHom.ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align heyting_hom.cancel_left HeytingHom.cancel_left
 
 end HeytingHom
@@ -399,20 +399,20 @@ theorem comp_assoc (f : CoheytingHom γ δ) (g : CoheytingHom β γ) (h : Coheyt
 
 @[simp]
 theorem comp_id (f : CoheytingHom α β) : f.comp (CoheytingHom.id α) = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align coheyting_hom.comp_id CoheytingHom.comp_id
 
 @[simp]
 theorem id_comp (f : CoheytingHom α β) : (CoheytingHom.id β).comp f = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align coheyting_hom.id_comp CoheytingHom.id_comp
 
 theorem cancel_right (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
 #align coheyting_hom.cancel_right CoheytingHom.cancel_right
 
 theorem cancel_left (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => CoheytingHom.ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => CoheytingHom.ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align coheyting_hom.cancel_left CoheytingHom.cancel_left
 
 end CoheytingHom
@@ -505,20 +505,20 @@ theorem comp_assoc (f : BiheytingHom γ δ) (g : BiheytingHom β γ) (h : Biheyt
 
 @[simp]
 theorem comp_id (f : BiheytingHom α β) : f.comp (BiheytingHom.id α) = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align biheyting_hom.comp_id BiheytingHom.comp_id
 
 @[simp]
 theorem id_comp (f : BiheytingHom α β) : (BiheytingHom.id β).comp f = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align biheyting_hom.id_comp BiheytingHom.id_comp
 
 theorem cancel_right (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
 #align biheyting_hom.cancel_right BiheytingHom.cancel_right
 
 theorem cancel_left (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => BiheytingHom.ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => BiheytingHom.ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align biheyting_hom.cancel_left BiheytingHom.cancel_left
 
 end BiheytingHom

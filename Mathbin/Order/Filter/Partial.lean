@@ -56,7 +56,7 @@ that `rel.core` generalizes `set.preimage`. -/
 def rmap (r : Rel α β) (l : Filter α) : Filter β where
   sets := { s | r.core s ∈ l }
   univ_sets := by simp
-  sets_of_superset s t hs st := mem_of_superset hs <| Rel.core_mono _ st
+  sets_of_superset s t hs st := mem_of_superset hs $ Rel.core_mono _ st
   inter_sets s t hs ht := by simp [Rel.core_inter, inter_mem hs ht]
 #align filter.rmap Filter.rmap
 
@@ -71,12 +71,12 @@ theorem mem_rmap (r : Rel α β) (l : Filter α) (s : Set β) : s ∈ l.rmap r �
 
 @[simp]
 theorem rmap_rmap (r : Rel α β) (s : Rel β γ) (l : Filter α) : rmap s (rmap r l) = rmap (r.comp s) l :=
-  filter_eq <| by simp [rmap_sets, Set.preimage, Rel.core_comp]
+  filter_eq $ by simp [rmap_sets, Set.preimage, Rel.core_comp]
 #align filter.rmap_rmap Filter.rmap_rmap
 
 @[simp]
 theorem rmap_compose (r : Rel α β) (s : Rel β γ) : rmap s ∘ rmap r = rmap (r.comp s) :=
-  funext <| rmap_rmap _ _
+  funext $ rmap_rmap _ _
 #align filter.rmap_compose Filter.rmap_compose
 
 /-- Generic "limit of a relation" predicate. `rtendsto r l₁ l₂` asserts that for every
@@ -105,7 +105,7 @@ theorem rcomap_sets (r : Rel α β) (f : Filter β) : (rcomap r f).sets = Rel.im
 #align filter.rcomap_sets Filter.rcomap_sets
 
 theorem rcomap_rcomap (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap r (rcomap s l) = rcomap (r.comp s) l :=
-  filter_eq <| by
+  filter_eq $ by
     ext t
     simp [rcomap_sets, Rel.image, Rel.core_comp]
     constructor
@@ -118,7 +118,7 @@ theorem rcomap_rcomap (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap r
 
 @[simp]
 theorem rcomap_compose (r : Rel α β) (s : Rel β γ) : rcomap r ∘ rcomap s = rcomap (r.comp s) :=
-  funext <| rcomap_rcomap _ _
+  funext $ rcomap_rcomap _ _
 #align filter.rcomap_compose Filter.rcomap_compose
 
 theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : Rtendsto r l₁ l₂ ↔ l₁ ≤ l₂.rcomap r := by
@@ -157,7 +157,7 @@ theorem rcomap'_sets (r : Rel α β) (f : Filter β) :
 
 @[simp]
 theorem rcomap'_rcomap' (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap' r (rcomap' s l) = rcomap' (r.comp s) l :=
-  Filter.ext fun t => by
+  Filter.ext $ fun t => by
     simp [rcomap'_sets, Rel.image, Rel.preimage_comp]
     constructor
     · rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
@@ -169,7 +169,7 @@ theorem rcomap'_rcomap' (r : Rel α β) (s : Rel β γ) (l : Filter γ) : rcomap
 
 @[simp]
 theorem rcomap'_compose (r : Rel α β) (s : Rel β γ) : rcomap' r ∘ rcomap' s = rcomap' (r.comp s) :=
-  funext <| rcomap'_rcomap' _ _
+  funext $ rcomap'_rcomap' _ _
 #align filter.rcomap'_compose Filter.rcomap'_compose
 
 /-- Generic "limit of a relation" predicate. `rtendsto' r l₁ l₂` asserts that for every

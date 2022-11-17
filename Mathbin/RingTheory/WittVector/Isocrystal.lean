@@ -62,7 +62,7 @@ variable (p : ℕ) [Fact p.Prime]
 variable (k : Type _) [CommRing k]
 
 -- mathport name: witt_vector.fraction_ring
-localized [Isocrystal] notation "K(" p ", " k ")" => FractionRing (WittVector p k)
+scoped[Isocrystal] notation "K(" p ", " k ")" => FractionRing (WittVector p k)
 
 section PerfectRing
 
@@ -82,7 +82,7 @@ def FractionRing.frobeniusRingHom : K(p, k) →+* K(p, k) :=
 #align witt_vector.fraction_ring.frobenius_ring_hom WittVector.FractionRing.frobeniusRingHom
 
 -- mathport name: witt_vector.frobenius_ring_hom
-localized [Isocrystal] notation "φ(" p ", " k ")" => WittVector.FractionRing.frobeniusRingHom p k
+scoped[Isocrystal] notation "φ(" p ", " k ")" => WittVector.FractionRing.frobeniusRingHom p k
 
 instance invPair₁ : RingHomInvPair φ(p, k) _ :=
   RingHomInvPair.ofRingEquiv (FractionRing.frobenius p k)
@@ -93,11 +93,11 @@ instance invPair₂ : RingHomInvPair ((FractionRing.frobenius p k).symm : K(p, k
 #align witt_vector.inv_pair₂ WittVector.invPair₂
 
 -- mathport name: frobenius_ring_hom.linear_map
-localized [Isocrystal]
+scoped[Isocrystal]
   notation:50 M " →ᶠˡ[" p ", " k "] " M₂ => LinearMap (WittVector.FractionRing.frobeniusRingHom p k) M M₂
 
 -- mathport name: frobenius_ring_hom.linear_equiv
-localized [Isocrystal]
+scoped[Isocrystal]
   notation:50 M " ≃ᶠˡ[" p ", " k "] " M₂ => LinearEquiv (WittVector.FractionRing.frobeniusRingHom p k) M M₂
 
 /-! ### Isocrystals -/
@@ -125,7 +125,7 @@ def Isocrystal.frobenius : V ≃ᶠˡ[p, k] V :=
 variable (V)
 
 -- mathport name: «exprΦ( , )»
-localized [Isocrystal] notation "Φ(" p ", " k ")" => WittVector.Isocrystal.frobenius p k
+scoped[Isocrystal] notation "Φ(" p ", " k ")" => WittVector.Isocrystal.frobenius p k
 
 /-- A homomorphism between isocrystals respects the Frobenius map. -/
 @[nolint has_nonempty_instance]
@@ -140,10 +140,10 @@ structure IsocrystalEquiv extends V ≃ₗ[K(p, k)] V₂ where
 #align witt_vector.isocrystal_equiv WittVector.IsocrystalEquiv
 
 -- mathport name: isocrystal_hom
-localized [Isocrystal] notation:50 M " →ᶠⁱ[" p ", " k "] " M₂ => WittVector.IsocrystalHom p k M M₂
+scoped[Isocrystal] notation:50 M " →ᶠⁱ[" p ", " k "] " M₂ => WittVector.IsocrystalHom p k M M₂
 
 -- mathport name: isocrystal_equiv
-localized [Isocrystal] notation:50 M " ≃ᶠⁱ[" p ", " k "] " M₂ => WittVector.IsocrystalEquiv p k M M₂
+scoped[Isocrystal] notation:50 M " ≃ᶠⁱ[" p ", " k "] " M₂ => WittVector.IsocrystalEquiv p k M M₂
 
 end PerfectRing
 

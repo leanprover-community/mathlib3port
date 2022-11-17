@@ -153,7 +153,7 @@ a cokernel cofork is a colimit.
 def isColimitOfHasCokernelOfPreservesColimit [PreservesColimit (parallelPair f 0) G] :
     IsColimit
       (Cofork.ofπ (G.map (cokernel.π f))
-        (by simp only [← G.map_comp, coequalizer.condition, zero_comp, functor.map_zero]) :
+          (by simp only [← G.map_comp, coequalizer.condition, zero_comp, functor.map_zero]) :
         Cofork (G.map f) 0) :=
   isColimitCoforkMapOfIsColimit' G (cokernel.condition f) (cokernelIsCokernel f)
 #align

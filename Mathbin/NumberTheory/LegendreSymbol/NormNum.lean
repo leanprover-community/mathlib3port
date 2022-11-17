@@ -186,7 +186,7 @@ theorem jacobiSymNat.qr₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 b) (bi
 
 theorem jacobiSymNat.qr₁_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 b % bit1 (bit0 a) = ab)
     (hr : jacobiSymNat ab (bit1 (bit0 a)) = r) : jacobiSymNat (bit1 (bit0 a)) (bit1 b) = r :=
-  jacobiSymNat.qr₁ _ _ _ <| jacobiSymNat.mod_left _ _ ab r hab hr
+  jacobiSymNat.qr₁ _ _ _ $ jacobiSymNat.mod_left _ _ ab r hab hr
 #align norm_num.jacobi_sym_nat.qr₁_mod NormNum.jacobiSymNat.qr₁_mod
 
 theorem jacobiSymNat.qr₁' (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit0 b)) (bit1 a) = r) :
@@ -198,7 +198,7 @@ theorem jacobiSymNat.qr₁' (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit0
 
 theorem jacobiSymNat.qr₁'_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 (bit0 b) % bit1 a = ab)
     (hr : jacobiSymNat ab (bit1 a) = r) : jacobiSymNat (bit1 a) (bit1 (bit0 b)) = r :=
-  jacobiSymNat.qr₁' _ _ _ <| jacobiSymNat.mod_left _ _ ab r hab hr
+  jacobiSymNat.qr₁' _ _ _ $ jacobiSymNat.mod_left _ _ ab r hab hr
 #align norm_num.jacobi_sym_nat.qr₁'_mod NormNum.jacobiSymNat.qr₁'_mod
 
 theorem jacobiSymNat.qr₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit1 b)) (bit1 (bit1 a)) = r) :
@@ -210,7 +210,7 @@ theorem jacobiSymNat.qr₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit1 
 
 theorem jacobiSymNat.qr₃_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 (bit1 b) % bit1 (bit1 a) = ab)
     (hr : jacobiSymNat ab (bit1 (bit1 a)) = r) : jacobiSymNat (bit1 (bit1 a)) (bit1 (bit1 b)) = -r :=
-  jacobiSymNat.qr₃ _ _ _ <| jacobiSymNat.mod_left _ _ ab r hab hr
+  jacobiSymNat.qr₃ _ _ _ $ jacobiSymNat.mod_left _ _ ab r hab hr
 #align norm_num.jacobi_sym_nat.qr₃_mod NormNum.jacobiSymNat.qr₃_mod
 
 end NormNum
@@ -240,7 +240,7 @@ unsafe def prove_jacobi_sym_odd :
       |
       match_numeral_result.one =>-- `b = 1`, result is `1`
           pure
-          (zc, nc, quote.1 (1 : ℤ), (quote.1 jacobiSymNat.one_right).mk_app [ea])
+          (zc, nc, q((1 : ℤ)), q(jacobiSymNat.one_right).mk_app [ea])
       | match_numeral_result.bit1 eb₁ => do
         -- `b > 1` (recall that `b` is odd)
           match match_numeral ea with
@@ -248,14 +248,14 @@ unsafe def prove_jacobi_sym_odd :
             let b
               ←-- `a = 0`, result is `0`
                 eb₁
-            let (nc, phb₀) ← prove_ne nc eb₁ (quote.1 (0 : ℕ)) b 0
+            let (nc, phb₀) ← prove_ne nc eb₁ q((0 : ℕ)) b 0
             -- proof of `b ≠ 0`
                 pure
-                (zc, nc, quote.1 (0 : ℤ), (quote.1 jacobiSymNat.zero_left_odd).mk_app [eb₁, phb₀])
+                (zc, nc, q((0 : ℤ)), q(jacobiSymNat.zero_left_odd).mk_app [eb₁, phb₀])
           | match_numeral_result.one => do
             -- `a = 1`, result is `1`
                 pure
-                (zc, nc, quote.1 (1 : ℤ), (quote.1 jacobiSymNat.one_left_odd).mk_app [eb₁])
+                (zc, nc, q((1 : ℤ)), q(jacobiSymNat.one_left_odd).mk_app [eb₁])
           | match_numeral_result.bit0 ea₁ => do
             -- `a` is even; check if divisible by `4`
               match match_numeral ea₁ with
@@ -263,7 +263,7 @@ unsafe def prove_jacobi_sym_odd :
                 let (zc, nc, er, p) ← prove_jacobi_sym_odd zc nc ea₂ eb
                 -- compute `jacobi_sym_nat (a / 4) b`
                     pure
-                    (zc, nc, er, (quote.1 jacobiSymNat.double_even).mk_app [ea₂, eb₁, er, p])
+                    (zc, nc, er, q(jacobiSymNat.double_even).mk_app [ea₂, eb₁, er, p])
               | _ => do
                 let-- reduce to `a / 2`; need to consider `b % 8`
                   (zc, nc, er, p)
@@ -277,7 +277,7 @@ unsafe def prove_jacobi_sym_odd :
                       ←-- `b = 3`
                         er
                     let (zc, er') ← zc (-r)
-                    pure (zc, nc, er', (quote.1 jacobiSymNat.even_odd₃).mk_app [ea₁, quote.1 (0 : ℕ), er, p])
+                    pure (zc, nc, er', q(jacobiSymNat.even_odd₃).mk_app [ea₁, q((0 : ℕ)), er, p])
                   | match_numeral_result.bit0 eb₂ => do
                     -- `b % 4 = 1`
                       match match_numeral eb₂ with
@@ -288,17 +288,17 @@ unsafe def prove_jacobi_sym_odd :
                           ←-- `b = 5`
                             er
                         let (zc, er') ← zc (-r)
-                        pure (zc, nc, er', (quote.1 jacobiSymNat.even_odd₅).mk_app [ea₁, quote.1 (0 : ℕ), er, p])
+                        pure (zc, nc, er', q(jacobiSymNat.even_odd₅).mk_app [ea₁, q((0 : ℕ)), er, p])
                       | match_numeral_result.bit0 eb₃ => do
                         -- `b % 8 = 1`
                             pure
-                            (zc, nc, er, (quote.1 jacobiSymNat.even_odd₁).mk_app [ea₁, eb₃, er, p])
+                            (zc, nc, er, q(jacobiSymNat.even_odd₁).mk_app [ea₁, eb₃, er, p])
                       | match_numeral_result.bit1 eb₃ => do
                         let r
                           ←-- `b % 8 = 5`
                             er
                         let (zc, er') ← zc (-r)
-                        pure (zc, nc, er', (quote.1 jacobiSymNat.even_odd₅).mk_app [ea₁, eb₃, er, p])
+                        pure (zc, nc, er', q(jacobiSymNat.even_odd₅).mk_app [ea₁, eb₃, er, p])
                       | _ => failed
                   | match_numeral_result.bit1 eb₂ => do
                     -- `b % 4 = 3`
@@ -308,17 +308,17 @@ unsafe def prove_jacobi_sym_odd :
                         do
                         -- `b = 7`
                             pure
-                            (zc, nc, er, (quote.1 jacobiSymNat.even_odd₇).mk_app [ea₁, quote.1 (0 : ℕ), er, p])
+                            (zc, nc, er, q(jacobiSymNat.even_odd₇).mk_app [ea₁, q((0 : ℕ)), er, p])
                       | match_numeral_result.bit0 eb₃ => do
                         let r
                           ←-- `b % 8 = 3`
                             er
                         let (zc, er') ← zc (-r)
-                        pure (zc, nc, er', (quote.1 jacobiSymNat.even_odd₃).mk_app [ea₁, eb₃, er, p])
+                        pure (zc, nc, er', q(jacobiSymNat.even_odd₃).mk_app [ea₁, eb₃, er, p])
                       | match_numeral_result.bit1 eb₃ => do
                         -- `b % 8 = 7`
                             pure
-                            (zc, nc, er, (quote.1 jacobiSymNat.even_odd₇).mk_app [ea₁, eb₃, er, p])
+                            (zc, nc, er, q(jacobiSymNat.even_odd₇).mk_app [ea₁, eb₃, er, p])
                       | _ => failed
                   | _ => failed
           | match_numeral_result.bit1 ea₁ => do
@@ -343,18 +343,18 @@ unsafe def prove_jacobi_sym_odd :
                     do
                     -- `b % 4 = 1`
                         pure
-                        (zc, nc, er, (quote.1 jacobiSymNat.qr₁'_mod).mk_app [ea₁, eb₂, bma, er, phab, p])
+                        (zc, nc, er, q(jacobiSymNat.qr₁'_mod).mk_app [ea₁, eb₂, bma, er, phab, p])
                   | match_numeral_result.bit1 eb₂ => do
                     let r
                       ←-- `b % 4 = 3`
                         er
                     let (zc, er') ← zc (-r)
-                    pure (zc, nc, er', (quote.1 jacobiSymNat.qr₃_mod).mk_app [quote.1 (0 : ℕ), eb₂, bma, er, phab, p])
+                    pure (zc, nc, er', q(jacobiSymNat.qr₃_mod).mk_app [q((0 : ℕ)), eb₂, bma, er, phab, p])
                   | _ => failed
               | match_numeral_result.bit0 ea₂ => do
                 -- `a % 4 = 1`
                     pure
-                    (zc, nc, er, (quote.1 jacobiSymNat.qr₁_mod).mk_app [ea₂, eb₁, bma, er, phab, p])
+                    (zc, nc, er, q(jacobiSymNat.qr₁_mod).mk_app [ea₂, eb₁, bma, er, phab, p])
               | match_numeral_result.bit1 ea₂ => do
                 -- `a % 4 = 3`; need to consider `b`
                   match match_numeral eb₁ with
@@ -365,13 +365,13 @@ unsafe def prove_jacobi_sym_odd :
                     do
                     -- `b % 4 = 1`
                         pure
-                        (zc, nc, er, (quote.1 jacobiSymNat.qr₁'_mod).mk_app [ea₁, eb₂, bma, er, phab, p])
+                        (zc, nc, er, q(jacobiSymNat.qr₁'_mod).mk_app [ea₁, eb₂, bma, er, phab, p])
                   | match_numeral_result.bit1 eb₂ => do
                     let r
                       ←-- `b % 4 = 3`
                         er
                     let (zc, er') ← zc (-r)
-                    pure (zc, nc, er', (quote.1 jacobiSymNat.qr₃_mod).mk_app [ea₂, eb₂, bma, er, phab, p])
+                    pure (zc, nc, er', q(jacobiSymNat.qr₃_mod).mk_app [ea₂, eb₂, bma, er, phab, p])
                   | _ => failed
               | _ => failed
           | _ => failed
@@ -387,11 +387,11 @@ unsafe def prove_jacobi_sym_nat :
       |
       match_numeral_result.zero =>-- `b = 0`, result is `1`
           pure
-          (zc, nc, quote.1 (1 : ℤ), (quote.1 jacobiSymNat.zero_right).mk_app [ea])
+          (zc, nc, q((1 : ℤ)), q(jacobiSymNat.zero_right).mk_app [ea])
       |
       match_numeral_result.one =>-- `b = 1`, result is `1`
           pure
-          (zc, nc, quote.1 (1 : ℤ), (quote.1 jacobiSymNat.one_right).mk_app [ea])
+          (zc, nc, q((1 : ℤ)), q(jacobiSymNat.one_right).mk_app [ea])
       |
       match_numeral_result.bit0 eb₁ =>-- `b` is even and nonzero
         match match_numeral ea with
@@ -399,27 +399,27 @@ unsafe def prove_jacobi_sym_nat :
           let b
             ←-- `a = 0`, result is `0`
               eb₁
-          let (nc, phb₀) ← prove_ne nc eb₁ (quote.1 (0 : ℕ)) b 0
+          let (nc, phb₀) ← prove_ne nc eb₁ q((0 : ℕ)) b 0
           -- proof of `b ≠ 0`
               pure
-              (zc, nc, quote.1 (0 : ℤ), (quote.1 jacobiSymNat.zero_left_even).mk_app [eb₁, phb₀])
+              (zc, nc, q((0 : ℤ)), q(jacobiSymNat.zero_left_even).mk_app [eb₁, phb₀])
         | match_numeral_result.one => do
           -- `a = 1`, result is `1`
               pure
-              (zc, nc, quote.1 (1 : ℤ), (quote.1 jacobiSymNat.one_left_even).mk_app [eb₁])
+              (zc, nc, q((1 : ℤ)), q(jacobiSymNat.one_left_even).mk_app [eb₁])
         | match_numeral_result.bit0 ea₁ => do
           let b
             ←-- `a` is even, result is `0`
               eb₁
-          let (nc, phb₀) ← prove_ne nc eb₁ (quote.1 (0 : ℕ)) b 0
+          let (nc, phb₀) ← prove_ne nc eb₁ q((0 : ℕ)) b 0
           let-- proof of `b ≠ 0`
-          er : expr := quote.1 (0 : ℤ)
-          pure (zc, nc, er, (quote.1 jacobiSymNat.even_even).mk_app [ea₁, eb₁, phb₀])
+          er : expr := q((0 : ℤ))
+          pure (zc, nc, er, q(jacobiSymNat.even_even).mk_app [ea₁, eb₁, phb₀])
         | match_numeral_result.bit1 ea₁ => do
           let-- `a` is odd, reduce to `b / 2`
             (zc, nc, er, p)
             ← prove_jacobi_sym_nat zc nc ea eb₁
-          pure (zc, nc, er, (quote.1 jacobiSymNat.odd_even).mk_app [ea₁, eb₁, er, p])
+          pure (zc, nc, er, q(jacobiSymNat.odd_even).mk_app [ea₁, eb₁, er, p])
         | _ => failed
       | match_numeral_result.bit1 eb₁ => do
         let a
@@ -435,7 +435,7 @@ unsafe def prove_jacobi_sym_nat :
               ← prove_jacobi_sym_odd zc nc amb eb
             -- compute `jacobi_sym_nat (a % b) b`
                 pure
-                (zc, nc, er, (quote.1 jacobiSymNat.mod_left).mk_app [ea, eb, amb, er, phab, p])
+                (zc, nc, er, q(jacobiSymNat.mod_left).mk_app [ea, eb, amb, er, phab, p])
           else prove_jacobi_sym_odd zc nc ea eb
       | _ => failed
 #align norm_num.prove_jacobi_sym_nat norm_num.prove_jacobi_sym_nat
@@ -448,8 +448,8 @@ unsafe def prove_jacobi_sym :
     match match_numeral eb with
       |-- deal with simple cases right away
         match_numeral_result.zero =>
-        pure (zc, nc, quote.1 (1 : ℤ), (quote.1 jacobiSym.zero_right).mk_app [ea])
-      | match_numeral_result.one => pure (zc, nc, quote.1 (1 : ℤ), (quote.1 jacobiSym.one_right).mk_app [ea])
+        pure (zc, nc, q((1 : ℤ)), q(jacobiSym.zero_right).mk_app [ea])
+      | match_numeral_result.one => pure (zc, nc, q((1 : ℤ)), q(jacobiSym.one_right).mk_app [ea])
       | _ => do
         let b
           ←-- Now `1 < b`. Compute `jacobi_sym_nat (a % b) b` instead.
@@ -468,7 +468,7 @@ unsafe def prove_jacobi_sym :
           ← prove_jacobi_sym_nat zc nc amb' eb₁
         -- compute `jacobi_sym_nat (a % b) b`
             pure
-            (zc, nc, er, (quote.1 JacobiSym.mod_left).mk_app [ea, eb₁, amb', amb, er, eb', pb', phab, phab', p])
+            (zc, nc, er, q(JacobiSym.mod_left).mk_app [ea, eb₁, amb', amb, er, eb', pb', phab, phab', p])
 #align norm_num.prove_jacobi_sym norm_num.prove_jacobi_sym
 
 end NormNum
@@ -489,28 +489,28 @@ namespace NormNum
 /-- This is the `norm_num` plug-in that evaluates Jacobi and Legendre symbols. -/
 @[norm_num]
 unsafe def eval_jacobi_sym : expr → tactic (expr × expr)
-  | quote.1 (jacobiSym (%%ₓea) (%%ₓeb)) => do
+  | q(jacobiSym $(ea) $(eb)) => do
     let zc
       ←-- Jacobi symbol
           mk_instance_cache
-          (quote.1 ℤ)
-    let nc ← mk_instance_cache (quote.1 ℕ)
+          q(ℤ)
+    let nc ← mk_instance_cache q(ℕ)
     (Prod.snd ∘ Prod.snd) <$> norm_num.prove_jacobi_sym zc nc ea eb
-  | quote.1 (NormNum.jacobiSymNat (%%ₓea) (%%ₓeb)) => do
+  | q(NormNum.jacobiSymNat $(ea) $(eb)) => do
     let zc
       ←-- Jacobi symbol on natural numbers
           mk_instance_cache
-          (quote.1 ℤ)
-    let nc ← mk_instance_cache (quote.1 ℕ)
+          q(ℤ)
+    let nc ← mk_instance_cache q(ℕ)
     (Prod.snd ∘ Prod.snd) <$> norm_num.prove_jacobi_sym_nat zc nc ea eb
-  | quote.1 (@legendreSym (%%ₓep) (%%ₓinst) (%%ₓea)) => do
+  | q(@legendreSym $(ep) $(inst) $(ea)) => do
     let zc
       ←-- Legendre symbol
           mk_instance_cache
-          (quote.1 ℤ)
-    let nc ← mk_instance_cache (quote.1 ℕ)
+          q(ℤ)
+    let nc ← mk_instance_cache q(ℕ)
     let (zc, nc, er, pf) ← norm_num.prove_jacobi_sym zc nc ea ep
-    pure (er, (quote.1 NormNum.LegendreSym.to_jacobi_sym).mk_app [ep, inst, ea, er, pf])
+    pure (er, q(NormNum.LegendreSym.to_jacobi_sym).mk_app [ep, inst, ea, er, pf])
   | _ => failed
 #align tactic.norm_num.eval_jacobi_sym tactic.norm_num.eval_jacobi_sym
 

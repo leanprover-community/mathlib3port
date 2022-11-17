@@ -52,7 +52,7 @@ def Arrow (α β : Typevec n) :=
 #align typevec.arrow Typevec.Arrow
 
 -- mathport name: typevec.arrow
-localized [Mvfunctor] infixl:40 " ⟹ " => Typevec.Arrow
+scoped[Mvfunctor] infixl:40 " ⟹ " => Typevec.Arrow
 
 instance Arrow.inhabited (α β : Typevec n) [∀ i, Inhabited (β i)] : Inhabited (α ⟹ β) :=
   ⟨fun _ _ => default⟩
@@ -67,7 +67,7 @@ def comp {α β γ : Typevec n} (g : β ⟹ γ) (f : α ⟹ β) : α ⟹ γ := f
 #align typevec.comp Typevec.comp
 
 -- mathport name: typevec.comp
-localized [Mvfunctor] infixr:80 " ⊚ " => Typevec.comp
+scoped[Mvfunctor] infixr:80 " ⊚ " => Typevec.comp
 
 -- type as \oo
 @[simp]
@@ -120,7 +120,7 @@ theorem last_append1 {α : Typevec n} {β : Type _} : Last (append1 α β) = β 
 
 @[simp]
 theorem append1_drop_last (α : Typevec (n + 1)) : append1 (drop α) (Last α) = α :=
-  funext fun i => by cases i <;> rfl
+  funext $ fun i => by cases i <;> rfl
 #align typevec.append1_drop_last Typevec.append1_drop_last
 
 /-- cases on `(n+1)-length` vectors -/
@@ -164,7 +164,6 @@ def lastFun {α β : Typevec (n + 1)} (f : α ⟹ β) : Last α → Last β :=
 def nilFun {α : Typevec 0} {β : Typevec 0} : α ⟹ β := fun i => Fin2.elim0 i
 #align typevec.nil_fun Typevec.nilFun
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 theorem eq_of_drop_last_eq {α β : Typevec (n + 1)} {f g : α ⟹ β} (h₀ : dropFun f = dropFun g)
     (h₁ : lastFun f = lastFun g) : f = g := by replace h₀ := congr_fun h₀ <;> ext1 ⟨⟩ <;> apply_assumption
 #align typevec.eq_of_drop_last_eq Typevec.eq_of_drop_last_eq
@@ -259,7 +258,7 @@ theorem append_fun_comp' {α₀ α₁ α₂ : Typevec n} {β₀ β₁ β₂ : Ty
 #align typevec.append_fun_comp' Typevec.append_fun_comp'
 
 theorem nil_fun_comp {α₀ : Typevec 0} (f₀ : α₀ ⟹ Fin2.elim0) : nil_fun ⊚ f₀ = f₀ :=
-  funext fun x => Fin2.elim0 x
+  funext $ fun x => Fin2.elim0 x
 #align typevec.nil_fun_comp Typevec.nil_fun_comp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -296,7 +295,7 @@ theorem append_fun_id_id {α : Typevec n} {β : Type _} : (@Typevec.id n α ::: 
 #align typevec.append_fun_id_id Typevec.append_fun_id_id
 
 instance subsingleton0 : Subsingleton (Typevec 0) :=
-  ⟨fun a b => funext fun a => Fin2.elim0 a⟩
+  ⟨fun a b => funext $ fun a => Fin2.elim0 a⟩
 #align typevec.subsingleton0 Typevec.subsingleton0
 
 run_cmd
@@ -415,7 +414,7 @@ def prod : ∀ {n} (α β : Typevec.{u} n), Typevec n
 #align typevec.prod Typevec.prod
 
 -- mathport name: typevec.prod
-localized [Mvfunctor] infixl:45 " ⊗ " => Typevec.prod
+scoped[Mvfunctor] infixl:45 " ⊗ " => Typevec.prod
 
 /- warning: typevec.const -> Typevec.const is a dubious translation:
 lean 3 declaration is
@@ -485,7 +484,7 @@ def Curry (F : Typevec.{u} (n + 1) → Type _) (α : Type u) (β : Typevec.{u} n
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance Curry.inhabited (F : Typevec.{u} (n + 1) → Type _) (α : Type u) (β : Typevec.{u} n)
-    [I : Inhabited (F <| (β ::: α))] : Inhabited (Curry F α β) :=
+    [I : Inhabited (F $ β ::: α)] : Inhabited (Curry F α β) :=
   I
 #align typevec.curry.inhabited Typevec.Curry.inhabited
 
@@ -552,7 +551,7 @@ protected def prod.map : ∀ {n} {α α' β β' : Typevec.{u} n}, α ⟹ β → 
 #align typevec.prod.map Typevec.prod.map
 
 -- mathport name: typevec.prod.map
-localized [Mvfunctor] infixl:45 " ⊗' " => Typevec.prod.map
+scoped[Mvfunctor] infixl:45 " ⊗' " => Typevec.prod.map
 
 theorem fst_prod_mk {α α' β β' : Typevec n} (f : α ⟹ β) (g : α' ⟹ β') :
     Typevec.prod.fst ⊚ (f ⊗' g) = f ⊚ Typevec.prod.fst := by ext i <;> induction i <;> [rfl, apply i_ih]
@@ -590,7 +589,7 @@ def subtypeVal : ∀ {n} {α : Typevec.{u} n} (p : α ⟹ repeat n Prop), subtyp
 /-- arrow that rearranges the type of `subtype_` to turn a subtype of vector into
 a vector of subtypes -/
 def toSubtype :
-    ∀ {n} {α : Typevec.{u} n} (p : α ⟹ repeat n Prop), (fun i : Fin2 n => { x // of_repeat <| p i x }) ⟹ subtype_ p
+    ∀ {n} {α : Typevec.{u} n} (p : α ⟹ repeat n Prop), (fun i : Fin2 n => { x // of_repeat $ p i x }) ⟹ subtype_ p
   | succ n, α, p, Fin2.fs i, x => to_subtype (dropFun p) i x
   | succ n, α, p, Fin2.fz, x => x
 #align typevec.to_subtype Typevec.toSubtype
@@ -598,7 +597,7 @@ def toSubtype :
 /-- arrow that rearranges the type of `subtype_` to turn a vector of subtypes
 into a subtype of vector -/
 def ofSubtype :
-    ∀ {n} {α : Typevec.{u} n} (p : α ⟹ repeat n Prop), subtype_ p ⟹ fun i : Fin2 n => { x // of_repeat <| p i x }
+    ∀ {n} {α : Typevec.{u} n} (p : α ⟹ repeat n Prop), subtype_ p ⟹ fun i : Fin2 n => { x // of_repeat $ p i x }
   | succ n, α, p, Fin2.fs i, x => of_subtype _ i x
   | succ n, α, p, Fin2.fz, x => x
 #align typevec.of_subtype Typevec.ofSubtype
@@ -606,7 +605,7 @@ def ofSubtype :
 /-- similar to `to_subtype` adapted to relations (i.e. predicate on product) -/
 def toSubtype' :
     ∀ {n} {α : Typevec.{u} n} (p : α ⊗ α ⟹ repeat n Prop),
-      (fun i : Fin2 n => { x : α i × α i // of_repeat <| p i (prod.mk _ x.1 x.2) }) ⟹ subtype_ p
+      (fun i : Fin2 n => { x : α i × α i // of_repeat $ p i (prod.mk _ x.1 x.2) }) ⟹ subtype_ p
   | succ n, α, p, Fin2.fs i, x => to_subtype' (dropFun p) i x
   | succ n, α, p, Fin2.fz, x => ⟨x.val, cast (by congr <;> simp [Prod.mk]) x.property⟩
 #align typevec.to_subtype' Typevec.toSubtype'
@@ -614,7 +613,7 @@ def toSubtype' :
 /-- similar to `of_subtype` adapted to relations (i.e. predicate on product) -/
 def ofSubtype' :
     ∀ {n} {α : Typevec.{u} n} (p : α ⊗ α ⟹ repeat n Prop),
-      subtype_ p ⟹ fun i : Fin2 n => { x : α i × α i // of_repeat <| p i (prod.mk _ x.1 x.2) }
+      subtype_ p ⟹ fun i : Fin2 n => { x : α i × α i // of_repeat $ p i (prod.mk _ x.1 x.2) }
   | _, α, p, Fin2.fs i, x => of_subtype' _ i x
   | _, α, p, Fin2.fz, x => ⟨x.val, cast (by congr <;> simp [Prod.mk]) x.property⟩
 #align typevec.of_subtype' Typevec.ofSubtype'
@@ -627,7 +626,7 @@ def diagSub : ∀ {n} {α : Typevec.{u} n}, α ⟹ subtype_ (repeatEq α)
 #align typevec.diag_sub Typevec.diagSub
 
 theorem subtype_val_nil {α : Typevec.{u} 0} (ps : α ⟹ repeat 0 Prop) : Typevec.subtypeVal ps = nil_fun :=
-  funext <| by rintro ⟨⟩ <;> rfl
+  funext $ by rintro ⟨⟩ <;> rfl
 #align typevec.subtype_val_nil Typevec.subtype_val_nil
 
 theorem diag_sub_val {n} {α : Typevec.{u} n} : subtypeVal (repeatEq α) ⊚ diag_sub = prod.diag := by

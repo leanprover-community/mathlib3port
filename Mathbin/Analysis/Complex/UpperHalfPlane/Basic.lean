@@ -49,7 +49,7 @@ def UpperHalfPlane :=
 #align upper_half_plane UpperHalfPlane
 
 -- mathport name: upper_half_plane
-localized [UpperHalfPlane] notation "ℍ" => UpperHalfPlane
+scoped[UpperHalfPlane] notation "ℍ" => UpperHalfPlane
 
 namespace UpperHalfPlane
 
@@ -143,7 +143,6 @@ def denom (g : GL(2, ℝ)⁺) (z : ℍ) : ℂ :=
   (↑ₘg 1 0 : ℝ) * z + (↑ₘg 1 1 : ℝ)
 #align upper_half_plane.denom UpperHalfPlane.denom
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem linear_ne_zero (cd : Fin 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : ℂ) * z + cd 1 ≠ 0 := by
   contrapose! h
   have : cd 0 = 0 := by
@@ -238,7 +237,7 @@ section ModularScalarTowers
 variable (Γ : Subgroup (SpecialLinearGroup (Fin 2) ℤ))
 
 instance sLAction {R : Type _} [CommRing R] [Algebra R ℝ] : MulAction SL(2, R) ℍ :=
-  MulAction.compHom ℍ <| SpecialLinearGroup.toGLPos.comp <| map (algebraMap R ℝ)
+  MulAction.compHom ℍ $ SpecialLinearGroup.toGLPos.comp $ map (algebraMap R ℝ)
 #align upper_half_plane.SL_action UpperHalfPlane.sLAction
 
 instance : Coe SL(2, ℤ) GL(2, ℝ)⁺ :=
@@ -366,9 +365,9 @@ end SLModularAction
 section PosRealAction
 
 instance posRealAction : MulAction { x : ℝ // 0 < x } ℍ where
-  smul x z := mk ((x : ℝ) • z) <| by simpa using mul_pos x.2 z.2
-  one_smul z := Subtype.ext <| one_smul _ _
-  mul_smul x y z := Subtype.ext <| mul_smul (x : ℝ) y (z : ℂ)
+  smul x z := mk ((x : ℝ) • z) $ by simpa using mul_pos x.2 z.2
+  one_smul z := Subtype.ext $ one_smul _ _
+  mul_smul x y z := Subtype.ext $ mul_smul (x : ℝ) y (z : ℂ)
 #align upper_half_plane.pos_real_action UpperHalfPlane.posRealAction
 
 variable (x : { x : ℝ // 0 < x }) (z : ℍ)
@@ -393,9 +392,9 @@ end PosRealAction
 section RealAddAction
 
 instance : AddAction ℝ ℍ where
-  vadd x z := mk (x + z) <| by simpa using z.im_pos
-  zero_vadd z := Subtype.ext <| by simp
-  add_vadd x y z := Subtype.ext <| by simp [add_assoc]
+  vadd x z := mk (x + z) $ by simpa using z.im_pos
+  zero_vadd z := Subtype.ext $ by simp
+  add_vadd x y z := Subtype.ext $ by simp [add_assoc]
 
 variable (x : ℝ) (z : ℍ)
 

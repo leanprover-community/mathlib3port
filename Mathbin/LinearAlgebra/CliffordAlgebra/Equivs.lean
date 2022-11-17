@@ -106,7 +106,7 @@ theorem involute_eq_id : (involute : CliffordAlgebra (0 : QuadraticForm R Unit) 
 /-- The clifford algebra over a 0-dimensional vector space is isomorphic to its scalars. -/
 protected def equiv : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
   AlgEquiv.ofAlgHom
-    (CliffordAlgebra.lift (0 : QuadraticForm R Unit) <|
+    (CliffordAlgebra.lift (0 : QuadraticForm R Unit) $
       ⟨0, fun m : Unit => (zero_mul (0 : R)).trans (algebraMap R _).map_zero.symm⟩)
     (Algebra.ofId R _)
     (by
@@ -210,7 +210,7 @@ TODO: prove this is true for all `clifford_algebra`s over a 1-dimensional vector
 instance : CommRing (CliffordAlgebra q) :=
   { CliffordAlgebra.ring _ with
     mul_comm := fun x y =>
-      CliffordAlgebraComplex.equiv.Injective <| by rw [AlgEquiv.map_mul, mul_comm, AlgEquiv.map_mul] }
+      CliffordAlgebraComplex.equiv.Injective $ by rw [AlgEquiv.map_mul, mul_comm, AlgEquiv.map_mul] }
 
 /-- `reverse` is a no-op over `clifford_algebra_complex.Q`. -/
 theorem reverse_apply (x : CliffordAlgebra q) : x.reverse = x := by
@@ -229,7 +229,7 @@ theorem reverse_eq_id : (reverse : CliffordAlgebra q →ₗ[ℝ] _) = LinearMap.
 /-- `complex.conj` is analogous to `clifford_algebra.involute`. -/
 @[simp]
 theorem of_complex_conj (c : ℂ) : ofComplex (conj c) = (ofComplex c).involute :=
-  CliffordAlgebraComplex.equiv.Injective <| by
+  CliffordAlgebraComplex.equiv.Injective $ by
     rw [equiv_apply, equiv_apply, to_complex_involute, to_complex_of_complex, to_complex_of_complex]
 #align clifford_algebra_complex.of_complex_conj CliffordAlgebraComplex.of_complex_conj
 
@@ -368,7 +368,7 @@ protected def equiv : CliffordAlgebra (q c₁ c₂) ≃ₐ[R] ℍ[R,c₁,c₂] :
 /-- The quaternion conjugate maps to the "clifford conjugate" (aka `star`). -/
 @[simp]
 theorem of_quaternion_conj (q : ℍ[R,c₁,c₂]) : ofQuaternion q.conj = star (ofQuaternion q) :=
-  CliffordAlgebraQuaternion.equiv.Injective <| by
+  CliffordAlgebraQuaternion.equiv.Injective $ by
     rw [equiv_apply, equiv_apply, to_quaternion_star, to_quaternion_of_quaternion, to_quaternion_of_quaternion]
 #align clifford_algebra_quaternion.of_quaternion_conj CliffordAlgebraQuaternion.of_quaternion_conj
 

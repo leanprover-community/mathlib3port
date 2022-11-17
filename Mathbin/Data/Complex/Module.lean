@@ -132,16 +132,15 @@ section
 open ComplexOrder
 
 protected theorem ordered_smul : OrderedSmul ℝ ℂ :=
-  OrderedSmul.mk' fun a b r hab hr => ⟨by simp [hr, hab.1.le], by simp [hab.2]⟩
+  OrderedSmul.mk' $ fun a b r hab hr => ⟨by simp [hr, hab.1.le], by simp [hab.2]⟩
 #align complex.ordered_smul Complex.ordered_smul
 
-localized [ComplexOrder] attribute [instance] Complex.ordered_smul
+scoped[ComplexOrder] attribute [instance] Complex.ordered_smul
 
 end
 
 open Submodule FiniteDimensional
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
 noncomputable def basisOneI : Basis (Fin 2) ℝ ℂ :=
   Basis.ofEquivFun
@@ -159,13 +158,11 @@ theorem coe_basis_one_I_repr (z : ℂ) : ⇑(basisOneI.repr z) = ![z.re, z.im] :
   rfl
 #align complex.coe_basis_one_I_repr Complex.coe_basis_one_I_repr
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 @[simp]
 theorem coe_basis_one_I : ⇑basis_one_I = ![1, i] :=
-  funext fun i =>
-    Basis.apply_eq_iff.mpr <|
-      Finsupp.ext fun j => by
+  funext $ fun i =>
+    Basis.apply_eq_iff.mpr $
+      Finsupp.ext $ fun j => by
         fin_cases i <;>
           fin_cases j <;>
             simp only [coe_basis_one_I_repr, Finsupp.single_eq_same, Finsupp.single_eq_of_ne, Matrix.cons_val_zero,
@@ -229,7 +226,7 @@ instance (priority := 100) FiniteDimensional.complexToReal (E : Type _) [AddComm
 #align finite_dimensional.complex_to_real FiniteDimensional.complexToReal
 
 theorem dim_real_of_complex (E : Type _) [AddCommGroup E] [Module ℂ E] : Module.rank ℝ E = 2 * Module.rank ℂ E :=
-  Cardinal.lift_inj.1 <| by
+  Cardinal.lift_inj.1 $ by
     rw [← dim_mul_dim' ℝ ℂ E, Complex.dim_real_complex]
     simp [bit0]
 #align dim_real_of_complex dim_real_of_complex
@@ -294,15 +291,13 @@ theorem conj_ae_coe : ⇑conj_ae = conj :=
   rfl
 #align complex.conj_ae_coe Complex.conj_ae_coe
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
 theorem to_matrix_conj_ae :
     LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
-      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   simp [LinearMap.to_matrix_apply]
@@ -311,7 +306,7 @@ theorem to_matrix_conj_ae :
 
 /-- The identity and the complex conjugation are the only two `ℝ`-algebra homomorphisms of `ℂ`. -/
 theorem real_alg_hom_eq_id_or_conj (f : ℂ →ₐ[ℝ] ℂ) : f = AlgHom.id ℝ ℂ ∨ f = conj_ae := by
-  refine' (eq_or_eq_neg_of_sq_eq_sq (f I) I <| by rw [← map_pow, I_sq, map_neg, map_one]).imp _ _ <;>
+  refine' (eq_or_eq_neg_of_sq_eq_sq (f I) I $ by rw [← map_pow, I_sq, map_neg, map_one]).imp _ _ <;>
     refine' fun h => alg_hom_ext _
   exacts[h, conj_I.symm ▸ h]
 #align complex.real_alg_hom_eq_id_or_conj Complex.real_alg_hom_eq_id_or_conj
@@ -359,20 +354,20 @@ This isomorphism is named to match the very similar `zsqrtd.lift`. -/
 def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A) where
   toFun I' := liftAux I' I'.Prop
   invFun F := ⟨F i, by rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩
-  left_inv I' := Subtype.ext <| lift_aux_apply_I I' I'.Prop
-  right_inv F := alg_hom_ext <| lift_aux_apply_I _ _
+  left_inv I' := Subtype.ext $ lift_aux_apply_I I' I'.Prop
+  right_inv F := alg_hom_ext $ lift_aux_apply_I _ _
 #align complex.lift Complex.lift
 
 -- When applied to `complex.I` itself, `lift` is the identity.
 @[simp]
 theorem lift_aux_I : liftAux i I_mul_I = AlgHom.id ℝ ℂ :=
-  alg_hom_ext <| lift_aux_apply_I _ _
+  alg_hom_ext $ lift_aux_apply_I _ _
 #align complex.lift_aux_I Complex.lift_aux_I
 
 -- When applied to `-complex.I`, `lift` is conjugation, `conj`.
 @[simp]
 theorem lift_aux_neg_I : liftAux (-I) ((neg_mul_neg _ _).trans I_mul_I) = conj_ae :=
-  alg_hom_ext <| (lift_aux_apply_I _ _).trans conj_I.symm
+  alg_hom_ext $ (lift_aux_apply_I _ _).trans conj_I.symm
 #align complex.lift_aux_neg_I Complex.lift_aux_neg_I
 
 end lift
@@ -424,10 +419,10 @@ noncomputable def imaginaryPart : A →ₗ[ℝ] selfAdjoint A :=
 #align imaginary_part imaginaryPart
 
 -- mathport name: exprℜ
-localized [ComplexStarModule] notation "ℜ" => realPart
+scoped[ComplexStarModule] notation "ℜ" => realPart
 
 -- mathport name: exprℑ
-localized [ComplexStarModule] notation "ℑ" => imaginaryPart
+scoped[ComplexStarModule] notation "ℑ" => imaginaryPart
 
 @[simp]
 theorem real_part_apply_coe (a : A) : (ℜ a : A) = (2 : ℝ)⁻¹ • (a + star a) := by

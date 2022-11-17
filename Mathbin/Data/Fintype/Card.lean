@@ -56,18 +56,18 @@ variable {M : Type _} [Fintype α] [CommMonoid M]
 
 @[to_additive]
 theorem prod_eq_one (f : α → M) (h : ∀ a, f a = 1) : (∏ a, f a) = 1 :=
-  Finset.prod_eq_one fun a ha => h a
+  Finset.prod_eq_one $ fun a ha => h a
 #align fintype.prod_eq_one Fintype.prod_eq_one
 
 @[to_additive]
 theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : (∏ a, f a) = ∏ a, g a :=
-  (Finset.prod_congr rfl) fun a ha => h a
+  Finset.prod_congr rfl $ fun a ha => h a
 #align fintype.prod_congr Fintype.prod_congr
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » a) -/
 @[to_additive]
 theorem prod_eq_single {f : α → M} (a : α) (h : ∀ (x) (_ : x ≠ a), f x = 1) : (∏ x, f x) = f a :=
-  (Finset.prod_eq_single a fun x _ hx => h x hx) fun ha => (ha (Finset.mem_univ a)).elim
+  (Finset.prod_eq_single a fun x _ hx => h x hx) $ fun ha => (ha (Finset.mem_univ a)).elim
 #align fintype.prod_eq_single Fintype.prod_eq_single
 
 @[to_additive]
@@ -253,7 +253,7 @@ theorem Fintype.prod_sum_elim (f : α₁ → M) (g : α₂ → M) : (∏ x, Sum.
 #align fintype.prod_sum_elim Fintype.prod_sum_elim
 
 @[simp, to_additive]
-theorem Fintype.prod_sum_type (f : Sum α₁ α₂ → M) : (∏ x, f x) = (∏ a₁, f (Sum.inl a₁)) * ∏ a₂, f (Sum.inr a₂) :=
+theorem Fintype.prod_sum_type (f : α₁ ⊕ α₂ → M) : (∏ x, f x) = (∏ a₁, f (Sum.inl a₁)) * ∏ a₂, f (Sum.inr a₂) :=
   prod_disj_sum _ _ _
 #align fintype.prod_sum_type Fintype.prod_sum_type
 

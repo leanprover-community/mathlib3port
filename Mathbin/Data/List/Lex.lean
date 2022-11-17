@@ -104,7 +104,7 @@ instance is_strict_total_order (r : α → α → Prop) [IsStrictTotalOrder α r
 #align list.lex.is_strict_total_order List.Lex.is_strict_total_order
 
 instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (Lex r)
-  | l₁, [] => is_false fun h => by cases h
+  | l₁, [] => is_false $ fun h => by cases h
   | [], b :: l₂ => isTrue Lex.nil
   | a :: l₁, b :: l₂ => by
     haveI := DecidableRel l₁ l₂
@@ -173,13 +173,18 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
       (Command.declId `ne_iff [])
       (Command.declSig
        [(Term.implicitBinder "{" [`l₁ `l₂] [":" (Term.app `List [`α])] "}")
-        (Term.explicitBinder "(" [`H] [":" («term_≤_» (Term.app `length [`l₁]) "≤" (Term.app `length [`l₂]))] [] ")")]
+        (Term.explicitBinder
+         "("
+         [`H]
+         [":" (Init.Core.«term_≤_» (Term.app `length [`l₁]) " ≤ " (Term.app `length [`l₂]))]
+         []
+         ")")]
        (Term.typeSpec
         ":"
-        («term_↔_»
-         (Term.app `Lex [(Term.paren "(" [(«term_≠_» (Term.cdot "·") "≠" (Term.cdot "·")) []] ")") `l₁ `l₂])
-         "↔"
-         («term_≠_» `l₁ "≠" `l₂))))
+        (Init.Logic.«term_↔_»
+         (Term.app `Lex [(Term.paren "(" (Init.Logic.«term_≠_» (Term.cdot "·") " ≠ " (Term.cdot "·")) ")") `l₁ `l₂])
+         " ↔ "
+         (Init.Logic.«term_≠_» `l₁ " ≠ " `l₂))))
       (Command.declValSimple
        ":="
        (Term.byTactic

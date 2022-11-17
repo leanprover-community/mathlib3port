@@ -43,11 +43,11 @@ theorem coe_fold_r (b : α) (l : List α) : fold op b l = l.foldr op b :=
 #align multiset.coe_fold_r Multiset.coe_fold_r
 
 theorem coe_fold_l (b : α) (l : List α) : fold op b l = l.foldl op b :=
-  (coe_foldr_swap op _ b l).trans <| by simp [hc.comm]
+  (coe_foldr_swap op _ b l).trans $ by simp [hc.comm]
 #align multiset.coe_fold_l Multiset.coe_fold_l
 
 theorem fold_eq_foldl (b : α) (s : Multiset α) : fold op b s = foldl op (right_comm _ hc.comm ha.assoc) b s :=
-  (Quot.induction_on s) fun l => coe_fold_l _ _ _
+  Quot.induction_on s $ fun l => coe_fold_l _ _ _
 #align multiset.fold_eq_foldl Multiset.fold_eq_foldl
 
 @[simp]
@@ -107,7 +107,7 @@ theorem fold_union_inter [DecidableEq α] (s₁ s₂ : Multiset α) (b₁ b₂ :
 @[simp]
 theorem fold_dedup_idem [DecidableEq α] [hi : IsIdempotent α op] (s : Multiset α) (b : α) :
     (dedup s).fold op b = s.fold op b :=
-  (Multiset.induction_on s (by simp)) fun a s IH => by
+  Multiset.induction_on s (by simp) $ fun a s IH => by
     by_cases a ∈ s <;> simp [IH, h]
     show fold op b s = op a (fold op b s)
     rw [← cons_erase h, fold_cons_left, ← ha.assoc, hi.idempotent]
@@ -133,10 +133,10 @@ open Nat
 
 theorem le_smul_dedup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n • dedup s :=
   ⟨(s.map fun a => count a s).fold max 0,
-    le_iff_count.2 fun a => by
+    le_iff_count.2 $ fun a => by
       rw [count_nsmul]
       by_cases a ∈ s
-      · refine' le_trans _ (Nat.mul_le_mul_left _ <| count_pos.2 <| mem_dedup.2 h)
+      · refine' le_trans _ (Nat.mul_le_mul_left _ $ count_pos.2 $ mem_dedup.2 h)
         have : count a s ≤ fold max 0 (map (fun a => count a s) (a ::ₘ erase s a)) <;> [simp [le_max_left],
           simpa [cons_erase h] ]
         

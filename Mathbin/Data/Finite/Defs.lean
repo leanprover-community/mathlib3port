@@ -105,7 +105,7 @@ theorem not_infinite_iff_finite : ¬Infinite α ↔ Finite α :=
 #align not_infinite_iff_finite not_infinite_iff_finite
 
 theorem finite_or_infinite (α : Sort _) : Finite α ∨ Infinite α :=
-  or_iff_not_imp_left.2 <| not_finite_iff_infinite.1
+  or_iff_not_imp_left.2 $ not_finite_iff_infinite.1
 #align finite_or_infinite finite_or_infinite
 
 theorem not_finite (α : Sort _) [Infinite α] [Finite α] : False :=

@@ -53,7 +53,7 @@ variable [T2Space M] [Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
   toFun x i := (f i x • extChartAt I (f.c i) x, f i x)
-  contMdiffToFun := cont_mdiff_pi_space.2 fun i => ((f i).smoothSmul contMdiffOnExtChartAt).prodMkSpace (f i).Smooth
+  contMdiffToFun := cont_mdiff_pi_space.2 $ fun i => ((f i).smoothSmul contMdiffOnExtChartAt).prodMkSpace (f i).Smooth
 #align smooth_bump_covering.embedding_pi_tangent SmoothBumpCovering.embeddingPiTangent
 
 @[local simp]
@@ -111,10 +111,10 @@ theorem embedding_pi_tangent_injective_mfderiv (x : M) (hx : x ∈ s) :
 supports of bump functions, then for some `n` it can be immersed into the `n`-dimensional
 Euclidean space. -/
 theorem exists_immersion_euclidean (f : SmoothBumpCovering ι I M) :
-    ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Fin n)),
+    ∃ (n : ℕ) (e : M → EuclideanSpace ℝ (Fin n)),
       Smooth I (𝓡 n) e ∧ Injective e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
-  set F := EuclideanSpace ℝ (Fin <| finrank ℝ (ι → E × ℝ))
+  set F := EuclideanSpace ℝ (Fin $ finrank ℝ (ι → E × ℝ))
   letI : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance
   letI : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance
   set eEF : (ι → E × ℝ) ≃L[ℝ] F := ContinuousLinearEquiv.ofFinrankEq finrank_euclidean_space_fin.symm
@@ -131,7 +131,7 @@ end SmoothBumpCovering
 supports of bump functions, then for some `n` it can be embedded into the `n`-dimensional
 Euclidean space. -/
 theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
-    ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Fin n)),
+    ∃ (n : ℕ) (e : M → EuclideanSpace ℝ (Fin n)),
       Smooth I (𝓡 n) e ∧ ClosedEmbedding e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
   rcases SmoothBumpCovering.exists_is_subordinate I isClosedUniv fun (x : M) _ => univ_mem with ⟨ι, f, -⟩

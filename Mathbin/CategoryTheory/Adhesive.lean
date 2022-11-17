@@ -181,7 +181,7 @@ theorem is_coprod_iff_is_pushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsCo
     fapply limits.binary_cofan.is_colimit_mk
     · exact fun s =>
         H.is_colimit.desc
-          (pushout_cocone.mk s.inr _ <| (hc.fac (binary_cofan.mk (f ≫ s.inr) s.inl) ⟨walking_pair.left⟩).symm)
+          (pushout_cocone.mk s.inr _ $ (hc.fac (binary_cofan.mk (f ≫ s.inr) s.inl) ⟨walking_pair.left⟩).symm)
       
     · intro s
       erw [category.assoc, H.is_colimit.fac _ walking_span.right, hc.fac]
@@ -231,16 +231,16 @@ theorem IsPushout.is_van_kampen_inl {W E X Z : C} (c : BinaryCofan W E) [Finitar
     refine' ⟨hc₄, _⟩
     let Y'' := pullback αZ i
     let cmp : Y' ⟶ Y'' := pullback.lift i' αY hi.w
-    have e₁ : (g' ≫ Cmp) ≫ pullback.snd = αW ≫ c.inl := by rw [category.assoc, pullback.lift_snd, hg.w]
-    have e₂ : (pullback.fst ≫ Cmp : pullback αY c.inr ⟶ _) ≫ pullback.snd = pullback.snd ≫ c.inr := by
+    have e₁ : (g' ≫ cmp) ≫ pullback.snd = αW ≫ c.inl := by rw [category.assoc, pullback.lift_snd, hg.w]
+    have e₂ : (pullback.fst ≫ cmp : pullback αY c.inr ⟶ _) ≫ pullback.snd = pullback.snd ≫ c.inr := by
       rw [category.assoc, pullback.lift_snd, pullback.condition]
     obtain ⟨hc₄⟩ :=
       ((binary_cofan.is_van_kampen_iff _).mp (finitary_extensive.van_kampen c hc) (binary_cofan.mk _ _) αW _ _ e₁.symm
             e₂.symm).mpr
         ⟨_, _⟩
-    · rw [← category.id_comp αZ, ← show Cmp ≫ pullback.snd = αY from pullback.lift_snd _ _ _]
+    · rw [← category.id_comp αZ, ← show cmp ≫ pullback.snd = αY from pullback.lift_snd _ _ _]
       apply is_pullback.paste_vert _ (is_pullback.of_has_pullback αZ i)
-      have : Cmp = (hc₂.cocone_point_unique_up_to_iso hc₄).Hom := by
+      have : cmp = (hc₂.cocone_point_unique_up_to_iso hc₄).Hom := by
         apply binary_cofan.is_colimit.hom_ext hc₂
         exacts[(hc₂.comp_cocone_point_unique_up_to_iso_hom hc₄ ⟨walking_pair.left⟩).symm,
           (hc₂.comp_cocone_point_unique_up_to_iso_hom hc₄ ⟨walking_pair.right⟩).symm]

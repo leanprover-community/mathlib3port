@@ -297,22 +297,22 @@ theorem mul_le_of_le_one_left' [CovariantClass α α (swap (· * ·)) (· ≤ ·
 
 @[to_additive]
 theorem one_le_of_le_mul_right [ContravariantClass α α (· * ·) (· ≤ ·)] {a b : α} (h : a ≤ a * b) : 1 ≤ b :=
-  le_of_mul_le_mul_left' <| by simpa only [mul_one]
+  le_of_mul_le_mul_left' $ by simpa only [mul_one]
 #align one_le_of_le_mul_right one_le_of_le_mul_right
 
 @[to_additive]
 theorem le_one_of_mul_le_right [ContravariantClass α α (· * ·) (· ≤ ·)] {a b : α} (h : a * b ≤ a) : b ≤ 1 :=
-  le_of_mul_le_mul_left' <| by simpa only [mul_one]
+  le_of_mul_le_mul_left' $ by simpa only [mul_one]
 #align le_one_of_mul_le_right le_one_of_mul_le_right
 
 @[to_additive]
 theorem one_le_of_le_mul_left [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b : α} (h : b ≤ a * b) : 1 ≤ a :=
-  le_of_mul_le_mul_right' <| by simpa only [one_mul]
+  le_of_mul_le_mul_right' $ by simpa only [one_mul]
 #align one_le_of_le_mul_left one_le_of_le_mul_left
 
 @[to_additive]
 theorem le_one_of_mul_le_left [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b : α} (h : a * b ≤ b) : a ≤ 1 :=
-  le_of_mul_le_mul_right' <| by simpa only [one_mul]
+  le_of_mul_le_mul_right' $ by simpa only [one_mul]
 #align le_one_of_mul_le_left le_one_of_mul_le_left
 
 @[simp, to_additive le_add_iff_nonneg_right]
@@ -379,22 +379,22 @@ theorem mul_lt_of_lt_one_left' [CovariantClass α α (swap (· * ·)) (· < ·)]
 
 @[to_additive]
 theorem one_lt_of_lt_mul_right [ContravariantClass α α (· * ·) (· < ·)] {a b : α} (h : a < a * b) : 1 < b :=
-  lt_of_mul_lt_mul_left' <| by simpa only [mul_one]
+  lt_of_mul_lt_mul_left' $ by simpa only [mul_one]
 #align one_lt_of_lt_mul_right one_lt_of_lt_mul_right
 
 @[to_additive]
 theorem lt_one_of_mul_lt_right [ContravariantClass α α (· * ·) (· < ·)] {a b : α} (h : a * b < a) : b < 1 :=
-  lt_of_mul_lt_mul_left' <| by simpa only [mul_one]
+  lt_of_mul_lt_mul_left' $ by simpa only [mul_one]
 #align lt_one_of_mul_lt_right lt_one_of_mul_lt_right
 
 @[to_additive]
 theorem one_lt_of_lt_mul_left [ContravariantClass α α (swap (· * ·)) (· < ·)] {a b : α} (h : b < a * b) : 1 < a :=
-  lt_of_mul_lt_mul_right' <| by simpa only [one_mul]
+  lt_of_mul_lt_mul_right' $ by simpa only [one_mul]
 #align one_lt_of_lt_mul_left one_lt_of_lt_mul_left
 
 @[to_additive]
 theorem lt_one_of_mul_lt_left [ContravariantClass α α (swap (· * ·)) (· < ·)] {a b : α} (h : a * b < b) : a < 1 :=
-  lt_of_mul_lt_mul_right' <| by simpa only [one_mul]
+  lt_of_mul_lt_mul_right' $ by simpa only [one_mul]
 #align lt_one_of_mul_lt_left lt_one_of_mul_lt_left
 
 @[simp, to_additive lt_add_iff_pos_right]
@@ -896,12 +896,12 @@ variable [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
 
 @[to_additive eq_zero_of_add_nonneg_left]
 theorem eq_one_of_one_le_mul_left (ha : a ≤ 1) (hb : b ≤ 1) (hab : 1 ≤ a * b) : a = 1 :=
-  ha.eq_of_not_lt fun h => hab.not_lt <| mul_lt_one_of_lt_of_le h hb
+  ha.eq_of_not_lt $ fun h => hab.not_lt $ mul_lt_one_of_lt_of_le h hb
 #align eq_one_of_one_le_mul_left eq_one_of_one_le_mul_left
 
 @[to_additive]
 theorem eq_one_of_mul_le_one_left (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b ≤ 1) : a = 1 :=
-  ha.eq_of_not_gt fun h => hab.not_lt <| one_lt_mul_of_lt_of_le' h hb
+  ha.eq_of_not_gt $ fun h => hab.not_lt $ one_lt_mul_of_lt_of_le' h hb
 #align eq_one_of_mul_le_one_left eq_one_of_mul_le_one_left
 
 end Left
@@ -912,12 +912,12 @@ variable [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b : α}
 
 @[to_additive eq_zero_of_add_nonneg_right]
 theorem eq_one_of_one_le_mul_right (ha : a ≤ 1) (hb : b ≤ 1) (hab : 1 ≤ a * b) : b = 1 :=
-  hb.eq_of_not_lt fun h => hab.not_lt <| Right.mul_lt_one_of_le_of_lt ha h
+  hb.eq_of_not_lt $ fun h => hab.not_lt $ Right.mul_lt_one_of_le_of_lt ha h
 #align eq_one_of_one_le_mul_right eq_one_of_one_le_mul_right
 
 @[to_additive]
 theorem eq_one_of_mul_le_one_right (ha : 1 ≤ a) (hb : 1 ≤ b) (hab : a * b ≤ 1) : b = 1 :=
-  hb.eq_of_not_gt fun h => hab.not_lt <| Right.one_lt_mul_of_le_of_lt ha h
+  hb.eq_of_not_gt $ fun h => hab.not_lt $ Right.one_lt_mul_of_le_of_lt ha h
 #align eq_one_of_mul_le_one_right eq_one_of_mul_le_one_right
 
 end Right
@@ -1215,13 +1215,13 @@ theorem StrictAntiOn.mul_antitone' (hf : StrictAntiOn f s) (hg : AntitoneOn g s)
 
 @[simp, to_additive cmp_add_left]
 theorem cmp_mul_left' {α : Type _} [Mul α] [LinearOrder α] [CovariantClass α α (· * ·) (· < ·)] (a b c : α) :
-    Cmp (a * b) (a * c) = Cmp b c :=
+    cmp (a * b) (a * c) = cmp b c :=
   (strict_mono_id.const_mul' a).cmp_map_eq b c
 #align cmp_mul_left' cmp_mul_left'
 
 @[simp, to_additive cmp_add_right]
 theorem cmp_mul_right' {α : Type _} [Mul α] [LinearOrder α] [CovariantClass α α (swap (· * ·)) (· < ·)] (a b c : α) :
-    Cmp (a * c) (b * c) = Cmp a b :=
+    cmp (a * c) (b * c) = cmp a b :=
   (strict_mono_id.mul_const' c).cmp_map_eq a b
 #align cmp_mul_right' cmp_mul_right'
 
@@ -1262,7 +1262,7 @@ protected theorem inj [Mul α] [PartialOrder α] {a b c : α} (ha : MulLeCancell
 
 @[to_additive]
 protected theorem injective_left [CommSemigroup α] [PartialOrder α] {a : α} (ha : MulLeCancellable a) :
-    Injective (· * a) := fun b c h => ha.Injective <| by rwa [mul_comm a, mul_comm a]
+    Injective (· * a) := fun b c h => ha.Injective $ by rwa [mul_comm a, mul_comm a]
 #align mul_le_cancellable.injective_left MulLeCancellable.injective_left
 
 @[to_additive]

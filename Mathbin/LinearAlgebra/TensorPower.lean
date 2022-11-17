@@ -45,7 +45,7 @@ protected def TensorPower (R : Type _) (n : ℕ) (M : Type _) [CommSemiring R] [
 variable {R : Type _} {M : Type _} [CommSemiring R] [AddCommMonoid M] [Module R M]
 
 -- mathport name: tensor_power
-localized [TensorProduct] notation:100 "⨂[" R "]^" n:arg => TensorPower R n
+scoped[TensorProduct] notation:100 "⨂[" R "]^" n:arg => TensorPower R n
 
 namespace TensorPower
 

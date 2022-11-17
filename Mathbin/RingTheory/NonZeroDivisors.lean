@@ -28,11 +28,11 @@ def nonZeroDivisors (R : Type _) [MonoidWithZero R] : Submonoid R where
   one_mem' z hz := by rwa [mul_one] at hz
   mul_mem' x₁ x₂ hx₁ hx₂ z hz :=
     have : z * x₁ * x₂ = 0 := by rwa [mul_assoc]
-    hx₁ z <| hx₂ (z * x₁) this
+    hx₁ z $ hx₂ (z * x₁) this
 #align non_zero_divisors nonZeroDivisors
 
 -- mathport name: non_zero_divisors
-localized [nonZeroDivisors] notation:9000 R "⁰" => nonZeroDivisors R
+scoped[nonZeroDivisors] notation:9000 R "⁰" => nonZeroDivisors R
 
 variable {M M' M₁ R R' F : Type _} [MonoidWithZero M] [MonoidWithZero M'] [CommMonoidWithZero M₁] [Ring R] [CommRing R']
 
@@ -77,7 +77,7 @@ theorem mul_cancel_left_coe_non_zero_divisor {x y : R'} {c : R'⁰} : (c : R') *
 #align mul_cancel_left_coe_non_zero_divisor mul_cancel_left_coe_non_zero_divisor
 
 theorem nonZeroDivisors.ne_zero [Nontrivial M] {x} (hx : x ∈ M⁰) : x ≠ 0 := fun h =>
-  one_ne_zero (hx _ <| (one_mul _).trans h)
+  one_ne_zero (hx _ $ (one_mul _).trans h)
 #align non_zero_divisors.ne_zero nonZeroDivisors.ne_zero
 
 theorem nonZeroDivisors.coe_ne_zero [Nontrivial M] (x : M⁰) : (x : M) ≠ 0 :=
@@ -160,7 +160,7 @@ theorem non_zero_divisors_le_comap_non_zero_divisors_of_injective [NoZeroDivisor
   non_zero_divisors_le_comap_non_zero_divisors_of_injective non_zero_divisors_le_comap_non_zero_divisors_of_injective
 
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
-    s.Prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 := by
+    s.Prod = 0 ↔ ∃ (r : M₁) (hr : r ∈ s), r = 0 := by
   constructor
   swap
   · rintro ⟨r, hrs, rfl⟩

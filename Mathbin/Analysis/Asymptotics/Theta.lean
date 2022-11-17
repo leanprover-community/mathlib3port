@@ -121,11 +121,11 @@ alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
 alias is_Theta_norm_right ↔ is_Theta.of_norm_right is_Theta.norm_right
 
 theorem is_Theta_of_norm_eventually_eq (h : (fun x => ∥f x∥) =ᶠ[l] fun x => ∥g x∥) : f =Θ[l] g :=
-  ⟨IsO.of_bound 1 <| by simpa only [one_mul] using h.le, IsO.of_bound 1 <| by simpa only [one_mul] using h.symm.le⟩
+  ⟨IsO.of_bound 1 $ by simpa only [one_mul] using h.le, IsO.of_bound 1 $ by simpa only [one_mul] using h.symm.le⟩
 #align asymptotics.is_Theta_of_norm_eventually_eq Asymptotics.is_Theta_of_norm_eventually_eq
 
 theorem is_Theta_of_norm_eventually_eq' {g : α → ℝ} (h : (fun x => ∥f' x∥) =ᶠ[l] g) : f' =Θ[l] g :=
-  is_Theta_of_norm_eventually_eq <| h.mono fun x hx => by simp only [← hx, norm_norm]
+  is_Theta_of_norm_eventually_eq $ h.mono $ fun x hx => by simp only [← hx, norm_norm]
 #align asymptotics.is_Theta_of_norm_eventually_eq' Asymptotics.is_Theta_of_norm_eventually_eq'
 
 theorem IsTheta.is_o_congr_left (h : f' =Θ[l] g') : f' =o[l] k ↔ g' =o[l] k :=
@@ -158,7 +158,7 @@ theorem is_Theta_sup : f' =Θ[l ⊔ l'] g' ↔ f' =Θ[l] g' ∧ f' =Θ[l'] g' :=
 #align asymptotics.is_Theta_sup Asymptotics.is_Theta_sup
 
 theorem IsTheta.eq_zero_iff (h : f'' =Θ[l] g'') : ∀ᶠ x in l, f'' x = 0 ↔ g'' x = 0 :=
-  h.1.eq_zero_imp.mp <| h.2.eq_zero_imp.mono fun x => Iff.intro
+  h.1.eq_zero_imp.mp $ h.2.eq_zero_imp.mono $ fun x => Iff.intro
 #align asymptotics.is_Theta.eq_zero_iff Asymptotics.IsTheta.eq_zero_iff
 
 theorem IsTheta.tendsto_zero_iff (h : f'' =Θ[l] g'') : Tendsto f'' l (𝓝 0) ↔ Tendsto g'' l (𝓝 0) := by

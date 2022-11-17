@@ -113,13 +113,13 @@ class Rack (α : Type u) extends Shelf α where
 #align rack Rack
 
 -- mathport name: shelf.act
-localized [Quandles] infixr:65 " ◃ " => Shelf.act
+scoped[Quandles] infixr:65 " ◃ " => Shelf.act
 
 -- mathport name: rack.inv_act
-localized [Quandles] infixr:65 " ◃⁻¹ " => Rack.invAct
+scoped[Quandles] infixr:65 " ◃⁻¹ " => Rack.invAct
 
 -- mathport name: shelf_hom
-localized [Quandles] infixr:25 " →◃ " => ShelfHom
+scoped[Quandles] infixr:25 " →◃ " => ShelfHom
 
 open Quandles
 
@@ -203,14 +203,14 @@ theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y 
 instance oppositeRack : Rack Rᵐᵒᵖ where
   act x y := op (invAct (unop x) (unop y))
   self_distrib :=
-    MulOpposite.rec fun x =>
-      MulOpposite.rec fun y =>
-        MulOpposite.rec fun z => by
+    MulOpposite.rec $ fun x =>
+      MulOpposite.rec $ fun y =>
+        MulOpposite.rec $ fun z => by
           simp only [unop_op, op_inj]
           exact self_distrib_inv
   invAct x y := op (Shelf.act (unop x) (unop y))
-  left_inv := MulOpposite.rec fun x => MulOpposite.rec fun y => by simp
-  right_inv := MulOpposite.rec fun x => MulOpposite.rec fun y => by simp
+  left_inv := MulOpposite.rec $ fun x => MulOpposite.rec $ fun y => by simp
+  right_inv := MulOpposite.rec $ fun x => MulOpposite.rec $ fun y => by simp
 #align rack.opposite_rack Rack.oppositeRack
 
 @[simp]
@@ -684,8 +684,8 @@ def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Group G] : (R →◃ Qu
     ext
     rfl
   right_inv F :=
-    MonoidHom.ext fun x =>
-      (Quotient.induction_on x) fun x => by
+    MonoidHom.ext $ fun x =>
+      Quotient.induction_on x $ fun x => by
         induction x
         · exact F.map_one.symm
           

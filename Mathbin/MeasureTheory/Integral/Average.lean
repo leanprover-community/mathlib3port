@@ -107,7 +107,7 @@ theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) : ((μ univ).to
   · rw [hμ, integral_zero_measure, average_zero_measure, smul_zero]
     
   · rw [average_eq, smul_inv_smul₀]
-    refine' (Ennreal.to_real_pos _ <| measure_ne_top _ _).ne'
+    refine' (Ennreal.to_real_pos _ $ measure_ne_top _ _).ne'
     rwa [Ne.def, measure_univ_eq_zero]
     
 #align measure_theory.measure_smul_average MeasureTheory.measure_smul_average

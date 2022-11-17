@@ -117,24 +117,24 @@ variable (f)
 and `edist x (f x) ≠ ∞`. Then `efixed_point` is the unique fixed point of `f`
 in `emetric.ball x ∞`. -/
 noncomputable def efixedPoint (hf : ContractingWith K f) (x : α) (hx : edist x (f x) ≠ ∞) : α :=
-  Classical.choose <| hf.exists_fixed_point x hx
+  Classical.choose $ hf.exists_fixed_point x hx
 #align contracting_with.efixed_point ContractingWith.efixedPoint
 
 variable {f}
 
 theorem efixed_point_is_fixed_pt (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     IsFixedPt f (efixedPoint f hf x hx) :=
-  (Classical.choose_spec <| hf.exists_fixed_point x hx).1
+  (Classical.choose_spec $ hf.exists_fixed_point x hx).1
 #align contracting_with.efixed_point_is_fixed_pt ContractingWith.efixed_point_is_fixed_pt
 
 theorem tendsto_iterate_efixed_point (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
-    Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| efixedPoint f hf x hx) :=
-  (Classical.choose_spec <| hf.exists_fixed_point x hx).2.1
+    Tendsto (fun n => (f^[n]) x) atTop (𝓝 $ efixedPoint f hf x hx) :=
+  (Classical.choose_spec $ hf.exists_fixed_point x hx).2.1
 #align contracting_with.tendsto_iterate_efixed_point ContractingWith.tendsto_iterate_efixed_point
 
 theorem apriori_edist_iterate_efixed_point_le (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) (n : ℕ) :
     edist ((f^[n]) x) (efixedPoint f hf x hx) ≤ edist x (f x) * K ^ n / (1 - K) :=
-  (Classical.choose_spec <| hf.exists_fixed_point x hx).2.2 n
+  (Classical.choose_spec $ hf.exists_fixed_point x hx).2.2 n
 #align contracting_with.apriori_edist_iterate_efixed_point_le ContractingWith.apriori_edist_iterate_efixed_point_le
 
 theorem edist_efixed_point_le (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
@@ -145,7 +145,7 @@ theorem edist_efixed_point_le (hf : ContractingWith K f) {x : α} (hx : edist x 
 
 theorem edist_efixed_point_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint f hf x hx) < ∞ :=
-  (hf.edist_efixed_point_le hx).trans_lt (Ennreal.mul_lt_top hx <| Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
+  (hf.edist_efixed_point_le hx).trans_lt (Ennreal.mul_lt_top hx $ Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
 #align contracting_with.edist_efixed_point_lt_top ContractingWith.edist_efixed_point_lt_top
 
 theorem efixed_point_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) {y : α}
@@ -165,7 +165,7 @@ omit cs
 
 /-- Banach fixed-point theorem for maps contracting on a complete subset. -/
 theorem exists_fixed_point' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
-    (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
+    (hf : ContractingWith K $ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
     ∃ y ∈ s,
       IsFixedPt f y ∧
         Tendsto (fun n => (f^[n]) x) atTop (𝓝 y) ∧ ∀ n : ℕ, edist ((f^[n]) x) y ≤ edist x (f x) * K ^ n / (1 - K) :=
@@ -189,48 +189,48 @@ variable (f)
 and `x ∈ s` satisfies `edist x (f x) ≠ ∞`, then `efixed_point'` is the unique fixed point
 of the restriction of `f` to `s ∩ emetric.ball x ∞`. -/
 noncomputable def efixedPoint' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
-    (hf : ContractingWith K <| hsf.restrict f s s) (x : α) (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) : α :=
-  Classical.choose <| hf.exists_fixed_point' hsc hsf hxs hx
+    (hf : ContractingWith K $ hsf.restrict f s s) (x : α) (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) : α :=
+  Classical.choose $ hf.exists_fixed_point' hsc hsf hxs hx
 #align contracting_with.efixed_point' ContractingWith.efixedPoint'
 
 variable {f}
 
 theorem efixed_point_mem' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
-    (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
+    (hf : ContractingWith K $ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
     efixedPoint' f hsc hsf hf x hxs hx ∈ s :=
-  (Classical.choose_spec <| hf.exists_fixed_point' hsc hsf hxs hx).fst
+  (Classical.choose_spec $ hf.exists_fixed_point' hsc hsf hxs hx).fst
 #align contracting_with.efixed_point_mem' ContractingWith.efixed_point_mem'
 
 theorem efixed_point_is_fixed_pt' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
-    (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
+    (hf : ContractingWith K $ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
     IsFixedPt f (efixedPoint' f hsc hsf hf x hxs hx) :=
-  (Classical.choose_spec <| hf.exists_fixed_point' hsc hsf hxs hx).snd.1
+  (Classical.choose_spec $ hf.exists_fixed_point' hsc hsf hxs hx).snd.1
 #align contracting_with.efixed_point_is_fixed_pt' ContractingWith.efixed_point_is_fixed_pt'
 
 theorem tendsto_iterate_efixed_point' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
-    (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
-    Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| efixedPoint' f hsc hsf hf x hxs hx) :=
-  (Classical.choose_spec <| hf.exists_fixed_point' hsc hsf hxs hx).snd.2.1
+    (hf : ContractingWith K $ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
+    Tendsto (fun n => (f^[n]) x) atTop (𝓝 $ efixedPoint' f hsc hsf hf x hxs hx) :=
+  (Classical.choose_spec $ hf.exists_fixed_point' hsc hsf hxs hx).snd.2.1
 #align contracting_with.tendsto_iterate_efixed_point' ContractingWith.tendsto_iterate_efixed_point'
 
 theorem apriori_edist_iterate_efixed_point_le' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
-    (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) (n : ℕ) :
+    (hf : ContractingWith K $ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) (n : ℕ) :
     edist ((f^[n]) x) (efixedPoint' f hsc hsf hf x hxs hx) ≤ edist x (f x) * K ^ n / (1 - K) :=
-  (Classical.choose_spec <| hf.exists_fixed_point' hsc hsf hxs hx).snd.2.2 n
+  (Classical.choose_spec $ hf.exists_fixed_point' hsc hsf hxs hx).snd.2.2 n
 #align contracting_with.apriori_edist_iterate_efixed_point_le' ContractingWith.apriori_edist_iterate_efixed_point_le'
 
 theorem edist_efixed_point_le' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
-    (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
+    (hf : ContractingWith K $ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint' f hsc hsf hf x hxs hx) ≤ edist x (f x) / (1 - K) := by
   convert hf.apriori_edist_iterate_efixed_point_le' hsc hsf hxs hx 0
   rw [pow_zero, mul_one]
 #align contracting_with.edist_efixed_point_le' ContractingWith.edist_efixed_point_le'
 
 theorem edist_efixed_point_lt_top' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s)
-    (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
+    (hf : ContractingWith K $ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint' f hsc hsf hf x hxs hx) < ∞ :=
   (hf.edist_efixed_point_le' hsc hsf hxs hx).trans_lt
-    (Ennreal.mul_lt_top hx <| Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
+    (Ennreal.mul_lt_top hx $ Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
 #align contracting_with.edist_efixed_point_lt_top' ContractingWith.edist_efixed_point_lt_top'
 
 /-- If a globally contracting map `f` has two complete forward-invariant sets `s`, `t`,
@@ -240,8 +240,8 @@ is the same as the `efixed_point'` constructed by `y`.
 This lemma takes additional arguments stating that `f` contracts on `s` and `t` because this way
 it can be used to prove the desired equality with non-trivial proofs of these facts. -/
 theorem efixed_point_eq_of_edist_lt_top' (hf : ContractingWith K f) {s : Set α} (hsc : IsComplete s)
-    (hsf : MapsTo f s s) (hfs : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞)
-    {t : Set α} (htc : IsComplete t) (htf : MapsTo f t t) (hft : ContractingWith K <| htf.restrict f t t) {y : α}
+    (hsf : MapsTo f s s) (hfs : ContractingWith K $ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞)
+    {t : Set α} (htc : IsComplete t) (htf : MapsTo f t t) (hft : ContractingWith K $ htf.restrict f t t) {y : α}
     (hyt : y ∈ t) (hy : edist y (f y) ≠ ∞) (hxy : edist x y ≠ ∞) :
     efixedPoint' f hsc hsf hfs x hxs hx = efixedPoint' f htc htf hft y hyt hy := by
   refine' (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_lt _ h') <;>
@@ -337,11 +337,11 @@ theorem aposteriori_dist_iterate_fixed_point_le (x n) :
 
 theorem apriori_dist_iterate_fixed_point_le (x n) :
     dist ((f^[n]) x) (fixedPoint f hf) ≤ dist x (f x) * K ^ n / (1 - K) :=
-  le_trans (hf.aposteriori_dist_iterate_fixed_point_le x n) <|
-    (div_le_div_right hf.one_sub_K_pos).2 <| hf.toLipschitzWith.dist_iterate_succ_le_geometric x n
+  le_trans (hf.aposteriori_dist_iterate_fixed_point_le x n) $
+    (div_le_div_right hf.one_sub_K_pos).2 $ hf.toLipschitzWith.dist_iterate_succ_le_geometric x n
 #align contracting_with.apriori_dist_iterate_fixed_point_le ContractingWith.apriori_dist_iterate_fixed_point_le
 
-theorem tendsto_iterate_fixed_point (x) : Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| fixedPoint f hf) := by
+theorem tendsto_iterate_fixed_point (x) : Tendsto (fun n => (f^[n]) x) atTop (𝓝 $ fixedPoint f hf) := by
   convert tendsto_iterate_efixed_point hf (edist_ne_top x _)
   refine' (fixed_point_unique _ _).symm
   apply efixed_point_is_fixed_pt

@@ -64,7 +64,7 @@ theorem ContMdiffWithinAt.mdifferentiableWithinAt (hf : ContMdiffWithinAt I I' n
 #align cont_mdiff_within_at.mdifferentiable_within_at ContMdiffWithinAt.mdifferentiableWithinAt
 
 theorem ContMdiffAt.mdifferentiableAt (hf : ContMdiffAt I I' n f x) (hn : 1 ≤ n) : MdifferentiableAt I I' f x :=
-  mdifferentiable_within_at_univ.1 <| ContMdiffWithinAt.mdifferentiableWithinAt hf hn
+  mdifferentiable_within_at_univ.1 $ ContMdiffWithinAt.mdifferentiableWithinAt hf hn
 #align cont_mdiff_at.mdifferentiable_at ContMdiffAt.mdifferentiableAt
 
 theorem ContMdiffOn.mdifferentiableOn (hf : ContMdiffOn I I' n f s) (hn : 1 ≤ n) : MdifferentiableOn I I' f s :=

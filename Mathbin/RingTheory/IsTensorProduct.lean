@@ -154,7 +154,7 @@ include f
 `f : M →ₗ[R] N` is the base change of `M` to `S` if the map `S × M → N, (s, m) ↦ s • f m` is the
 tensor product. -/
 def IsBaseChange : Prop :=
-  IsTensorProduct (((Algebra.ofId S <| Module.EndCat S (M →ₗ[R] N)).toLinearMap.flip f).restrictScalars R)
+  IsTensorProduct (((Algebra.ofId S $ Module.EndCat S (M →ₗ[R] N)).toLinearMap.flip f).restrictScalars R)
 #align is_base_change IsBaseChange
 
 variable {S f} (h : IsBaseChange S f)
@@ -170,9 +170,9 @@ variable [Module R Q] [IsScalarTower R S Q]
 /-- Suppose `f : M →ₗ[R] N` is the base change of `M` along `R → S`. Then any `R`-linear map from
 `M` to an `S`-module factors thorugh `f`. -/
 noncomputable def IsBaseChange.lift (g : M →ₗ[R] Q) : N →ₗ[S] Q :=
-  { h.lift (((Algebra.ofId S <| Module.EndCat S (M →ₗ[R] Q)).toLinearMap.flip g).restrictScalars R) with
+  { h.lift (((Algebra.ofId S $ Module.EndCat S (M →ₗ[R] Q)).toLinearMap.flip g).restrictScalars R) with
     map_smul' := fun r x => by
-      let F := ((Algebra.ofId S <| Module.EndCat S (M →ₗ[R] Q)).toLinearMap.flip g).restrictScalars R
+      let F := ((Algebra.ofId S $ Module.EndCat S (M →ₗ[R] Q)).toLinearMap.flip g).restrictScalars R
       have hF : ∀ (s : S) (m : M), h.lift F (s • f m) = s • g m := h.lift_eq F
       change h.lift F (r • x) = r • h.lift F x
       apply h.induction_on x
@@ -265,7 +265,7 @@ theorem IsBaseChange.ofLiftUnique
     IsBaseChange S f := by
   delta IsBaseChange IsTensorProduct
   obtain ⟨g, hg, hg'⟩ :=
-    h (ULift.{v₂} <| S ⊗[R] M) (ulift.module_equiv.symm.to_linear_map.comp <| TensorProduct.mk R S M 1)
+    h (ULift.{v₂} $ S ⊗[R] M) (ulift.module_equiv.symm.to_linear_map.comp $ TensorProduct.mk R S M 1)
   let f' : S ⊗[R] M →ₗ[R] N := _
   change Function.Bijective f'
   let f'' : S ⊗[R] M →ₗ[S] N := by
@@ -408,7 +408,7 @@ variable {R S R' S'}
 theorem Algebra.IsPushout.symm (h : Algebra.IsPushout R S R' S') : Algebra.IsPushout R R' S S' := by
   letI := (Algebra.TensorProduct.includeRight : R' →ₐ[R] S ⊗ R').toRingHom.toAlgebra
   let e : R' ⊗[R] S ≃ₗ[R'] S' := by
-    refine' { (TensorProduct.comm R R' S).trans <| h.1.Equiv.restrictScalars R with map_smul' := _ }
+    refine' { (TensorProduct.comm R R' S).trans $ h.1.Equiv.restrictScalars R with map_smul' := _ }
     intro r x
     change h.1.Equiv (TensorProduct.comm R R' S (r • x)) = r • h.1.Equiv (TensorProduct.comm R R' S x)
     apply TensorProduct.induction_on x

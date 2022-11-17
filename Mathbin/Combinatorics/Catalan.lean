@@ -87,7 +87,8 @@ private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
   push_cast
   field_simp
   rw [Nat.succ_sub h]
-  linear_combination(2 : ℚ) * (n - i).centralBinom * (i + 1 - (n - i)) * (n + 1) * (n + 2) * (n - i + 1) * h₁ -
+  linear_combination
+    (2 : ℚ) * (n - i).centralBinom * (i + 1 - (n - i)) * (n + 1) * (n + 2) * (n - i + 1) * h₁ -
       2 * i.central_binom * (n + 1) * (n + 2) * (i - (n - i) - 1) * (i + 1) * h₂
 #align gosper_trick gosper_trick
 

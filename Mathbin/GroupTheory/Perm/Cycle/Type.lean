@@ -50,7 +50,7 @@ theorem cycle_type_def (σ : Perm α) : σ.cycleType = σ.cycleFactorsFinset.1.m
 #align equiv.perm.cycle_type_def Equiv.Perm.cycle_type_def
 
 theorem cycle_type_eq' {σ : Perm α} (s : Finset (Perm α)) (h1 : ∀ f : Perm α, f ∈ s → f.IsCycle)
-    (h2 : (s : Set (Perm α)).Pairwise Disjoint) (h0 : s.noncommProd id (h2.imp fun _ _ => Disjoint.commute) = σ) :
+    (h2 : (s : Set (Perm α)).Pairwise Disjoint) (h0 : s.noncommProd id (h2.imp $ fun _ _ => Disjoint.commute) = σ) :
     σ.cycleType = s.1.map (Finset.card ∘ support) := by
   rw [cycle_type_def]
   congr
@@ -203,7 +203,7 @@ theorem order_of_cycle_of_dvd_order_of (f : Perm α) (x : α) : orderOf (cycleOf
 theorem two_dvd_card_support {σ : Perm α} (hσ : σ ^ 2 = 1) : 2 ∣ σ.support.card :=
   (congr_arg (Dvd.Dvd 2) σ.sum_cycle_type).mp
     (Multiset.dvd_sum fun n hn => by
-      rw [le_antisymm (Nat.le_of_dvd zero_lt_two <| (dvd_of_mem_cycle_type hn).trans <| order_of_dvd_of_pow_eq_one hσ)
+      rw [le_antisymm (Nat.le_of_dvd zero_lt_two $ (dvd_of_mem_cycle_type hn).trans $ order_of_dvd_of_pow_eq_one hσ)
           (two_le_of_mem_cycle_type hn)])
 #align equiv.perm.two_dvd_card_support Equiv.Perm.two_dvd_card_support
 
@@ -308,8 +308,9 @@ theorem cycle_type_of_subtype {p : α → Prop} [DecidablePred p] {g : Perm (Sub
   cycle_type_extend_domain (Equiv.refl (Subtype p))
 #align equiv.perm.cycle_type_of_subtype Equiv.Perm.cycle_type_of_subtype
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c τ) -/
 theorem mem_cycle_type_iff {n : ℕ} {σ : Perm α} :
-    n ∈ cycleType σ ↔ ∃ c τ : Perm α, σ = c * τ ∧ Disjoint c τ ∧ IsCycle c ∧ c.support.card = n := by
+    n ∈ cycleType σ ↔ ∃ (c : Perm α) (τ : Perm α), σ = c * τ ∧ Disjoint c τ ∧ IsCycle c ∧ c.support.card = n := by
   constructor
   · intro h
     obtain ⟨l, rfl, hlc, hld⟩ := trunc_cycle_factors σ
@@ -354,22 +355,29 @@ theorem card_compl_support_modeq [DecidableEq α] {p n : ℕ} [hp : Fact p.Prime
   refine' (congr_arg _ σ.sum_cycle_type).mp (Multiset.dvd_sum fun k hk => _)
   obtain ⟨m, -, hm⟩ := (Nat.dvd_prime_pow hp.out).mp (order_of_dvd_of_pow_eq_one hσ)
   obtain ⟨l, -, rfl⟩ := (Nat.dvd_prime_pow hp.out).mp ((congr_arg _ hm).mp (dvd_of_mem_cycle_type hk))
-  exact dvd_pow_self _ fun h => (one_lt_of_mem_cycle_type hk).Ne <| by rw [h, pow_zero]
+  exact dvd_pow_self _ fun h => (one_lt_of_mem_cycle_type hk).Ne $ by rw [h, pow_zero]
 #align equiv.perm.card_compl_support_modeq Equiv.Perm.card_compl_support_modeq
 
 theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.Prime] (hα : ¬p ∣ Fintype.card α) {σ : Perm α}
-    (hσ : σ ^ p ^ n = 1) : ∃ a : α, σ a = a := by
-  classical contrapose! hα
-    exact
-      nat.modeq_zero_iff_dvd.mp
-        ((congr_arg _ (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
-          (card_compl_support_modeq hσ).symm)
+    (hσ : σ ^ p ^ n = 1) : ∃ a : α, σ a = a := by classical
+  contrapose! hα
+  simp_rw [← mem_support] at hα
+  exact
+    nat.modeq_zero_iff_dvd.mp
+      ((congr_arg _ (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
+        (card_compl_support_modeq hσ).symm)
 #align equiv.perm.exists_fixed_point_of_prime Equiv.Perm.exists_fixed_point_of_prime
 
 theorem exists_fixed_point_of_prime' {p n : ℕ} [hp : Fact p.Prime] (hα : p ∣ Fintype.card α) {σ : Perm α}
-    (hσ : σ ^ p ^ n = 1) {a : α} (ha : σ a = a) : ∃ b : α, σ b = b ∧ b ≠ a := by
-  classical have h : ∀ b : α, b ∈ σ.supportᶜ ↔ σ b = b := fun b => by rw [Finset.mem_compl, mem_support, not_not]
-    exact ⟨b, (h b).mp hb1, hb2⟩
+    (hσ : σ ^ p ^ n = 1) {a : α} (ha : σ a = a) : ∃ b : α, σ b = b ∧ b ≠ a := by classical
+  have h : ∀ b : α, b ∈ σ.supportᶜ ↔ σ b = b := fun b => by rw [Finset.mem_compl, mem_support, not_not]
+  obtain ⟨b, hb1, hb2⟩ :=
+    Finset.exists_ne_of_one_lt_card
+      (lt_of_lt_of_le hp.out.one_lt
+        (Nat.le_of_dvd (finset.card_pos.mpr ⟨a, (h a).mpr ha⟩)
+          (nat.modeq_zero_iff_dvd.mp ((card_compl_support_modeq hσ).trans (nat.modeq_zero_iff_dvd.mpr hα)))))
+      a
+  exact ⟨b, (h b).mp hb1, hb2⟩
 #align equiv.perm.exists_fixed_point_of_prime' Equiv.Perm.exists_fixed_point_of_prime'
 
 theorem is_cycle_of_prime_order' {σ : Perm α} (h1 : (orderOf σ).Prime) (h2 : Fintype.card α < 2 * orderOf σ) :
@@ -379,7 +387,9 @@ theorem is_cycle_of_prime_order' {σ : Perm α} (h1 : (orderOf σ).Prime) (h2 : 
 theorem is_cycle_of_prime_order'' {σ : Perm α} (h1 : (Fintype.card α).Prime) (h2 : orderOf σ = Fintype.card α) :
     σ.IsCycle :=
   is_cycle_of_prime_order' ((congr_arg Nat.Prime h2).mpr h1)
-    (by classical rw [← one_mul (Fintype.card α), ← h2, mul_lt_mul_right (order_of_pos σ)])
+    (by classical
+      rw [← one_mul (Fintype.card α), ← h2, mul_lt_mul_right (order_of_pos σ)]
+      exact one_lt_two)
 #align equiv.perm.is_cycle_of_prime_order'' Equiv.Perm.is_cycle_of_prime_order''
 
 section Cauchy

@@ -70,11 +70,11 @@ algebra. In particular, the character, which may be identified as an algebra hom
 `weak_dual.character_space.equiv_alg_hom`, is given by the composition of the quotient map and
 the Gelfand-Mazur isomorphism `normed_ring.alg_equiv_complex_of_complete`. -/
 noncomputable def Ideal.toCharacterSpace : characterSpace ℂ A :=
-  characterSpace.equivAlgHom.symm <|
+  characterSpace.equivAlgHom.symm $
     ((@NormedRing.algEquivComplexOfComplete (A ⧸ I) _ _
-            (letI := quotient.field I
-            @is_unit_iff_ne_zero (A ⧸ I) _)
-            _).symm :
+              (letI := quotient.field I
+              @is_unit_iff_ne_zero (A ⧸ I) _)
+              _).symm :
           A ⧸ I →ₐ[ℂ] ℂ).comp
       (Quotient.mkₐ ℂ I)
 #align ideal.to_character_space Ideal.toCharacterSpace
@@ -105,7 +105,7 @@ theorem spectrum.gelfand_transform_eq (a : A) : spectrum ℂ (gelfandTransform �
 #align spectrum.gelfand_transform_eq spectrum.gelfand_transform_eq
 
 instance [Nontrivial A] : Nonempty (characterSpace ℂ A) :=
-  ⟨Classical.choose <| WeakDual.characterSpace.exists_apply_eq_zero <| zero_mem_nonunits.2 zero_ne_one⟩
+  ⟨Classical.choose $ WeakDual.characterSpace.exists_apply_eq_zero $ zero_mem_nonunits.2 zero_ne_one⟩
 
 end ComplexBanachAlgebra
 
@@ -116,7 +116,7 @@ variable {A : Type _} [NormedCommRing A] [NormedAlgebra ℂ A] [CompleteSpace A]
 variable [StarRing A] [CstarRing A] [StarModule ℂ A]
 
 theorem gelfand_transform_map_star (a : A) : gelfandTransform ℂ A (star a) = star (gelfandTransform ℂ A a) :=
-  ContinuousMap.ext fun φ => map_star φ a
+  ContinuousMap.ext $ fun φ => map_star φ a
 #align gelfand_transform_map_star gelfand_transform_map_star
 
 variable (A)
@@ -156,13 +156,13 @@ theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A
   · contrapose!
     exact fun h =>
       Subtype.ext
-        (ContinuousLinearMap.ext fun a => h (gelfand_transform ℂ A a) ⟨gelfand_transform ℂ A a, ⟨a, rfl⟩, rfl⟩)
+        (ContinuousLinearMap.ext $ fun a => h (gelfand_transform ℂ A a) ⟨gelfand_transform ℂ A a, ⟨a, rfl⟩, rfl⟩)
     
   /- If `f = gelfand_transform ℂ A a`, then `star f` is also in the range of `gelfand_transform ℂ A`
     using the argument `star a`. The key lemma below may be hard to spot; it's `map_star` coming from
     `weak_dual.star_hom_class`, which is a nontrivial result. -/
   · obtain ⟨f, ⟨a, rfl⟩, rfl⟩ := subalgebra.mem_map.mp hf
-    refine' ⟨star a, ContinuousMap.ext fun ψ => _⟩
+    refine' ⟨star a, ContinuousMap.ext $ fun ψ => _⟩
     simpa only [gelfand_transform_map_star a, AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom]
     
 #align gelfand_transform_bijective gelfand_transform_bijective
@@ -199,7 +199,7 @@ variable [NormedRing C] [NormedAlgebra ℂ C] [CompleteSpace C] [StarRing C]
 noncomputable def compContinuousMap (ψ : A →⋆ₐ[ℂ] B) : C(characterSpace ℂ B, characterSpace ℂ A) where
   toFun φ := equivAlgHom.symm ((equivAlgHom φ).comp ψ.toAlgHom)
   continuous_to_fun :=
-    Continuous.subtype_mk (continuous_of_continuous_eval fun a => map_continuous <| gelfandTransform ℂ B (ψ a)) _
+    Continuous.subtype_mk (continuous_of_continuous_eval $ fun a => map_continuous $ gelfandTransform ℂ B (ψ a)) _
 #align weak_dual.character_space.comp_continuous_map WeakDual.characterSpace.compContinuousMap
 
 variable (A)
@@ -207,7 +207,7 @@ variable (A)
 /-- `weak_dual.character_space.comp_continuous_map` sends the identity to the identity. -/
 @[simp]
 theorem comp_continuous_map_id : compContinuousMap (StarAlgHom.id ℂ A) = ContinuousMap.id (characterSpace ℂ A) :=
-  ContinuousMap.ext fun a => ext fun x => rfl
+  ContinuousMap.ext $ fun a => ext $ fun x => rfl
 #align weak_dual.character_space.comp_continuous_map_id WeakDual.characterSpace.comp_continuous_map_id
 
 variable {A}
@@ -216,7 +216,7 @@ variable {A}
 @[simp]
 theorem comp_continuous_map_comp (ψ₂ : B →⋆ₐ[ℂ] C) (ψ₁ : A →⋆ₐ[ℂ] B) :
     compContinuousMap (ψ₂.comp ψ₁) = (compContinuousMap ψ₁).comp (compContinuousMap ψ₂) :=
-  ContinuousMap.ext fun a => ext fun x => rfl
+  ContinuousMap.ext $ fun a => ext $ fun x => rfl
 #align weak_dual.character_space.comp_continuous_map_comp WeakDual.characterSpace.comp_continuous_map_comp
 
 end CharacterSpace

@@ -98,6 +98,9 @@ theorem mem_divisors {m : ℕ} : n ∈ divisors m ↔ n ∣ m ∧ m ≠ 0 := by
   exact le_of_dvd hm.bot_lt
 #align nat.mem_divisors Nat.mem_divisors
 
+theorem one_mem_divisors : 1 ∈ divisors n ↔ n ≠ 0 := by simp
+#align nat.one_mem_divisors Nat.one_mem_divisors
+
 theorem mem_divisors_self (n : ℕ) (h : n ≠ 0) : n ∈ n.divisors :=
   mem_divisors.2 ⟨dvd_rfl, h⟩
 #align nat.mem_divisors_self Nat.mem_divisors_self
@@ -138,7 +141,7 @@ theorem divisor_le {m : ℕ} : n ∈ divisors m → n ≤ m := by
 #align nat.divisor_le Nat.divisor_le
 
 theorem divisors_subset_of_dvd {m : ℕ} (hzero : n ≠ 0) (h : m ∣ n) : divisors m ⊆ divisors n :=
-  Finset.subset_iff.2 fun x hx => Nat.mem_divisors.mpr ⟨(Nat.mem_divisors.mp hx).1.trans h, hzero⟩
+  Finset.subset_iff.2 $ fun x hx => Nat.mem_divisors.mpr ⟨(Nat.mem_divisors.mp hx).1.trans h, hzero⟩
 #align nat.divisors_subset_of_dvd Nat.divisors_subset_of_dvd
 
 theorem divisors_subset_proper_divisors {m : ℕ} (hzero : n ≠ 0) (h : m ∣ n) (hdiff : m ≠ n) :
@@ -164,7 +167,7 @@ theorem proper_divisors_zero : properDivisors 0 = ∅ := by
 #align nat.proper_divisors_zero Nat.proper_divisors_zero
 
 theorem proper_divisors_subset_divisors : properDivisors n ⊆ divisors n :=
-  filter_subset_filter _ <| Ico_subset_Ico_right n.le_succ
+  filter_subset_filter _ $ Ico_subset_Ico_right n.le_succ
 #align nat.proper_divisors_subset_divisors Nat.proper_divisors_subset_divisors
 
 @[simp]
@@ -307,7 +310,7 @@ theorem perfect_iff_sum_divisors_eq_two_mul (h : 0 < n) : Perfect n ↔ (∑ i i
 #align nat.perfect_iff_sum_divisors_eq_two_mul Nat.perfect_iff_sum_divisors_eq_two_mul
 
 theorem mem_divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) {x : ℕ} :
-    x ∈ divisors (p ^ k) ↔ ∃ (j : ℕ)(H : j ≤ k), x = p ^ j := by
+    x ∈ divisors (p ^ k) ↔ ∃ (j : ℕ) (H : j ≤ k), x = p ^ j := by
   rw [mem_divisors, Nat.dvd_prime_pow pp, and_iff_left (ne_of_gt (pow_pos pp.pos k))]
 #align nat.mem_divisors_prime_pow Nat.mem_divisors_prime_pow
 
@@ -333,12 +336,19 @@ theorem eq_proper_divisors_of_subset_of_sum_eq_sum {s : Finset ℕ} (hsub : s �
   · rw [proper_divisors_zero, subset_empty] at hsub
     simp [hsub]
     
-  classical rw [← sum_sdiff hsub]
-    apply subset.antisymm hsub
-    contrapose h
-    apply ne_of_lt
-    apply add_lt_add_right
-    simp only [sum_const_zero] at hlt
+  classical
+  rw [← sum_sdiff hsub]
+  intro h
+  apply subset.antisymm hsub
+  rw [← sdiff_eq_empty_iff_subset]
+  contrapose h
+  rw [← Ne.def, ← nonempty_iff_ne_empty] at h
+  apply ne_of_lt
+  rw [← zero_add (∑ x in s, x), ← add_assoc, add_zero]
+  apply add_lt_add_right
+  have hlt := sum_lt_sum_of_nonempty h fun x hx => pos_of_mem_proper_divisors (sdiff_subset _ _ hx)
+  simp only [sum_const_zero] at hlt
+  apply hlt
 #align nat.eq_proper_divisors_of_subset_of_sum_eq_sum Nat.eq_proper_divisors_of_subset_of_sum_eq_sum
 
 theorem sum_proper_divisors_dvd (h : (∑ x in n.properDivisors, x) ∣ n) :
@@ -400,7 +410,7 @@ theorem sum_proper_divisors_eq_one_iff_prime : (∑ x in n.properDivisors, x) = 
 #align nat.sum_proper_divisors_eq_one_iff_prime Nat.sum_proper_divisors_eq_one_iff_prime
 
 theorem mem_proper_divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) {x : ℕ} :
-    x ∈ properDivisors (p ^ k) ↔ ∃ (j : ℕ)(H : j < k), x = p ^ j := by
+    x ∈ properDivisors (p ^ k) ↔ ∃ (j : ℕ) (H : j < k), x = p ^ j := by
   rw [mem_proper_divisors, Nat.dvd_prime_pow pp, ← exists_and_right]
   simp only [exists_prop, and_assoc']
   apply exists_congr

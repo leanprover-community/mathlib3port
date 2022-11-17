@@ -187,7 +187,7 @@ theorem coe_sup [HasFaithfulSmul M X] (P Q : { P : M // IsLprojection X P }) : �
   rfl
 #align is_Lprojection.coe_sup IsLprojection.coe_sup
 
-instance [HasFaithfulSmul M X] : Sdiff { P : M // IsLprojection X P } :=
+instance [HasFaithfulSmul M X] : SDiff { P : M // IsLprojection X P } :=
   ⟨fun P Q => ⟨P * (1 - Q), P.prop.mul Q.prop.Lcomplement⟩⟩
 
 @[simp]
@@ -294,7 +294,7 @@ instance [HasFaithfulSmul M X] : BooleanAlgebra { P : M // IsLprojection X P } :
     top_le_sup_compl := fun P =>
       (Subtype.ext
           (by rw [coe_top, coe_sup, coe_compl, add_sub_cancel'_right, ← coe_compl, mul_compl_self, sub_zero])).le,
-    sdiff_eq := fun P Q => Subtype.ext <| by rw [coe_sdiff, ← coe_compl, coe_inf] }
+    sdiff_eq := fun P Q => Subtype.ext $ by rw [coe_sdiff, ← coe_compl, coe_inf] }
 
 end IsLprojection
 

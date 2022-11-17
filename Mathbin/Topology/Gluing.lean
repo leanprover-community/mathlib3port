@@ -111,14 +111,14 @@ theorem is_open_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i
     
 #align Top.glue_data.is_open_iff TopCat.GlueData.is_open_iff
 
-theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _)(y : D.U i), 𝖣.ι i y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i) (y : D.U i), 𝖣.ι i y = x :=
   𝖣.ι_jointly_surjective (forget TopCat) x
 #align Top.glue_data.ι_jointly_surjective TopCat.GlueData.ι_jointly_surjective
 
 /-- An equivalence relation on `Σ i, D.U i` that holds iff `𝖣 .ι i x = 𝖣 .ι j y`.
 See `Top.glue_data.ι_eq_iff_rel`.
 -/
-def Rel (a b : Σi, ((D.U i : TopCat) : Type _)) : Prop :=
+def Rel (a b : Σ i, ((D.U i : TopCat) : Type _)) : Prop :=
   a = b ∨ ∃ x : D.V (a.1, b.1), D.f _ _ x = a.2 ∧ D.f _ _ (D.t _ _ x) = b.2
 #align Top.glue_data.rel TopCat.GlueData.Rel
 
@@ -165,9 +165,9 @@ theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
     (colimit.ι diagram _ ≫ colim.map _ ≫ (colimit.iso_colimit_cocone _).Hom) _ =
       (colimit.ι diagram _ ≫ colim.map _ ≫ (colimit.iso_colimit_cocone _).Hom) _ :=
     (congr_arg
-      (colim.map (diagram_iso_parallel_pair diagram).Hom ≫
-        (colimit.iso_colimit_cocone (types.coequalizer_colimit _ _)).Hom)
-      this :
+        (colim.map (diagram_iso_parallel_pair diagram).Hom ≫
+          (colimit.iso_colimit_cocone (types.coequalizer_colimit _ _)).Hom)
+        this :
       _)
   simp only [eq_to_hom_refl, types_comp_apply, colimit.ι_map_assoc, diagram_iso_parallel_pair_hom_app,
     colimit.iso_colimit_cocone_ι_hom, types_id_apply] at this
@@ -388,8 +388,8 @@ include U
 @[simps to_glue_data_J to_glue_data_U to_glue_data_V to_glue_data_t to_glue_data_f]
 def ofOpenSubsets : TopCat.GlueData.{u} :=
   mk'.{u}
-    { J, U := fun i => (opens.to_Top <| TopCat.of α).obj (U i),
-      V := fun i j => (opens.map <| Opens.inclusion _).obj (U j),
+    { J, U := fun i => (opens.to_Top $ TopCat.of α).obj (U i),
+      V := fun i j => (opens.map $ Opens.inclusion _).obj (U j),
       t := fun i j => ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by continuity⟩,
       V_id := fun i => by
         ext

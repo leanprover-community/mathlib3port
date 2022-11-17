@@ -464,7 +464,7 @@ theorem Lp_meas_subgroup_to_Lp_trim_norm_map [hp : Fact (1 ≤ p)] (hm : m ≤ m
 #align measure_theory.Lp_meas_subgroup_to_Lp_trim_norm_map MeasureTheory.Lp_meas_subgroup_to_Lp_trim_norm_map
 
 theorem isometryLpMeasSubgroupToLpTrim [hp : Fact (1 ≤ p)] (hm : m ≤ m0) : Isometry (lpMeasSubgroupToLpTrim F p μ hm) :=
-  Isometry.ofDistEq fun f g => by
+  Isometry.ofDistEq $ fun f g => by
     rw [dist_eq_norm, ← Lp_meas_subgroup_to_Lp_trim_sub, Lp_meas_subgroup_to_Lp_trim_norm_map, dist_eq_norm]
 #align measure_theory.isometry_Lp_meas_subgroup_to_Lp_trim MeasureTheory.isometryLpMeasSubgroupToLpTrim
 
@@ -928,7 +928,7 @@ theorem integrableOnCondexpL2OfMeasureNeTop (hm : m ≤ m0) (hμs : μ s ≠ ∞
 
 theorem integrableCondexpL2OfIsFiniteMeasure (hm : m ≤ m0) [IsFiniteMeasure μ] {f : α →₂[μ] E} :
     Integrable (condexpL2 𝕜 hm f) μ :=
-  integrable_on_univ.mp <| integrableOnCondexpL2OfMeasureNeTop hm (measure_ne_top _ _) f
+  integrable_on_univ.mp $ integrableOnCondexpL2OfMeasureNeTop hm (measure_ne_top _ _) f
 #align measure_theory.integrable_condexp_L2_of_is_finite_measure MeasureTheory.integrableCondexpL2OfIsFiniteMeasure
 
 theorem norm_condexp_L2_le_one (hm : m ≤ m0) : ∥@condexpL2 α E 𝕜 _ _ _ _ _ μ hm∥ ≤ 1 :=
@@ -1051,7 +1051,9 @@ theorem lintegral_nnnorm_condexp_L2_indicator_le_real (hs : MeasurableSet s) (h�
     refine' lintegral_congr_ae (ae_restrict_of_ae _)
     refine' (@indicator_const_Lp_coe_fn _ _ _ 2 _ _ _ hs hμs (1 : ℝ)).mono fun x hx => _
     rw [hx]
-    classical simp_rw [Set.indicator_apply]
+    classical
+    simp_rw [Set.indicator_apply]
+    split_ifs <;> simp
   rw [h_eq, lintegral_indicator _ hs, lintegral_const, measure.restrict_restrict hs]
   simp only [one_mul, Set.univ_inter, MeasurableSet.univ, measure.restrict_apply]
 #align
@@ -1943,7 +1945,7 @@ irreducible_def condexp (m : MeasurableSpace α) {m0 : MeasurableSpace α} (μ :
 
 -- mathport name: measure_theory.condexp
 -- We define notation `μ[f|m]` for the conditional expectation of `f` with respect to `m`.
-localized [MeasureTheory] notation μ "[" f "|" m "]" => MeasureTheory.condexp m μ f
+scoped notation μ "[" f "|" m "]" => MeasureTheory.condexp m μ f
 
 theorem condexp_of_not_le (hm_not : ¬m ≤ m0) : μ[f|m] = 0 := by rw [condexp, dif_neg hm_not]
 #align measure_theory.condexp_of_not_le MeasureTheory.condexp_of_not_le
@@ -2185,9 +2187,9 @@ theorem condexp_finset_sum {ι : Type _} {s : Finset ι} {f : ι → α → F'} 
     
   · rw [Finset.sum_insert his, Finset.sum_insert his]
     exact
-      (condexp_add (hf i <| Finset.mem_insert_self i s) <|
-            integrable_finset_sum' _ fun j hmem => hf j <| Finset.mem_insert_of_mem hmem).trans
-        ((eventually_eq.refl _ _).add (HEq fun j hmem => hf j <| Finset.mem_insert_of_mem hmem))
+      (condexp_add (hf i $ Finset.mem_insert_self i s) $
+            integrable_finset_sum' _ fun j hmem => hf j $ Finset.mem_insert_of_mem hmem).trans
+        ((eventually_eq.refl _ _).add (HEq $ fun j hmem => hf j $ Finset.mem_insert_of_mem hmem))
     
 #align measure_theory.condexp_finset_sum MeasureTheory.condexp_finset_sum
 

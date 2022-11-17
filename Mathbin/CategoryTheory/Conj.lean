@@ -110,7 +110,7 @@ theorem conj_pow (f : EndCat X) (n : ℕ) : α.conj (f ^ n) = α.conj f ^ n :=
 
 /-- `conj` defines a group isomorphisms between groups of automorphisms -/
 def conjAut : AutCat X ≃* AutCat Y :=
-  (AutCat.unitsEndEquivAut X).symm.trans <| (Units.mapEquiv α.conj).trans <| AutCat.unitsEndEquivAut Y
+  (AutCat.unitsEndEquivAut X).symm.trans $ (Units.mapEquiv α.conj).trans $ AutCat.unitsEndEquivAut Y
 #align category_theory.iso.conj_Aut CategoryTheory.Iso.conjAut
 
 theorem conj_Aut_apply (f : AutCat X) : α.conjAut f = α.symm ≪≫ f ≪≫ α := by cases f <;> cases α <;> ext <;> rfl

@@ -82,7 +82,7 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
     _ = 0 := by rw [sum_pow_lt_card_sub_one _ hi, mul_zero]
     
   intro a
-  let e' : Sum { j // j = i } { j // j ≠ i } ≃ σ := Equiv.sumCompl _
+  let e' : { j // j = i } ⊕ { j // j ≠ i } ≃ σ := Equiv.sumCompl _
   letI : Unique { j // j = i } := { default := ⟨i, rfl⟩, uniq := fun ⟨j, h⟩ => Subtype.val_injective h }
   calc
     (∏ j : σ, (e a : σ → K) j ^ d j) = (e a : σ → K) i ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
@@ -156,7 +156,7 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
   show F.total_degree < (q - 1) * Fintype.card σ
   calc
     F.total_degree ≤ ∑ i in s, (1 - f i ^ (q - 1)).totalDegree := total_degree_finset_prod s _
-    _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree := sum_le_sum fun i hi => _
+    _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree := sum_le_sum $ fun i hi => _
     -- see ↓
         _ =
         (q - 1) * ∑ i in s, (f i).totalDegree :=

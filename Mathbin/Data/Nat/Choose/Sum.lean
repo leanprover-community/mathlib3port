@@ -96,8 +96,8 @@ theorem sum_range_choose (n : ℕ) : (∑ m in range (n + 1), choose n m) = 2 ^ 
 
 theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 * m + 1) i) = 4 ^ m :=
   have : (∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i)) = ∑ i in range (m + 1), choose (2 * m + 1) i :=
-    (sum_congr rfl) fun i hi => choose_symm <| by linarith [mem_range.1 hi]
-  mul_right_injective₀ two_ne_zero <|
+    sum_congr rfl $ fun i hi => choose_symm $ by linarith [mem_range.1 hi]
+  mul_right_injective₀ two_ne_zero $
     calc
       (2 * ∑ i in range (m + 1), choose (2 * m + 1) i) =
           (∑ i in range (m + 1), choose (2 * m + 1) i) + ∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i) :=
@@ -177,9 +177,10 @@ theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset
 #align finset.sum_powerset_neg_one_pow_card Finset.sum_powerset_neg_one_pow_card
 
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
-    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = 0 := by
-  classical rw [sum_powerset_neg_one_pow_card, if_neg]
-    apply h0
+    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = 0 := by classical
+  rw [sum_powerset_neg_one_pow_card, if_neg]
+  rw [← Ne.def, ← nonempty_iff_ne_empty]
+  apply h0
 #align finset.sum_powerset_neg_one_pow_card_of_nonempty Finset.sum_powerset_neg_one_pow_card_of_nonempty
 
 end Finset

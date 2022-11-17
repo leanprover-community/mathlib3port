@@ -22,12 +22,13 @@ Liouville numbers.
 -/
 
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- A Liouville number is a real number `x` such that for every natural number `n`, there exist
 `a, b ∈ ℤ` with `1 < b` such that `0 < |x - a/b| < 1/bⁿ`.
 In the implementation, the condition `x ≠ a/b` replaces the traditional equivalent `0 < |x - a/b|`.
 -/
 def Liouville (x : ℝ) :=
-  ∀ n : ℕ, ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ n
+  ∀ n : ℕ, ∃ (a : ℤ) (b : ℤ), 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ n
 #align liouville Liouville
 
 namespace Liouville
@@ -69,7 +70,7 @@ theorem irrational {x : ℝ} (h : Liouville x) : Irrational x := by
   -- Actually, the absolute value of an integer is a natural number
   lift |a * ↑q - ↑b * p| to ℕ using abs_nonneg (a * ↑q - ↑b * p)
   -- At a1, revert to natural numbers
-  rw [← Int.coe_nat_mul, ← Int.coe_nat_pow, ← Int.coe_nat_mul, Int.coe_nat_lt] at a1
+  rw [← Int.ofNat_mul, ← Int.coe_nat_pow, ← Int.ofNat_mul, Int.coe_nat_lt] at a1
   -- Recall this is by contradiction: we obtained the inequality `b * q ≤ x * q ^ (b + 1)`, so
   -- we are done.
   exact not_le.mpr a1 (Nat.mul_lt_mul_pow_succ (int.coe_nat_pos.mp ap) (int.coe_nat_lt.mp q1)).le
@@ -143,13 +144,13 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
     @exists_closed_ball_inter_eq_singleton_of_discrete _ _ _ discreteOfT1OfFinite _ ar
   -- Since `fR` is continuous, it is bounded on the interval above.
   obtain ⟨xm, -, hM⟩ :
-    ∃ (xm : ℝ)(H : xm ∈ Icc (α - ζ) (α + ζ)),
+    ∃ (xm : ℝ) (H : xm ∈ Icc (α - ζ) (α + ζ)),
       ∀ y : ℝ, y ∈ Icc (α - ζ) (α + ζ) → |fR.derivative.eval y| ≤ |fR.derivative.eval xm| :=
     IsCompact.exists_forall_ge is_compact_Icc ⟨α, (sub_lt_self α z0).le, (lt_add_of_pos_right α z0).le⟩
       (continuous_abs.comp fR.derivative.continuous_aeval).ContinuousOn
   -- Use the key lemma `exists_one_le_pow_mul_dist`: we are left to show that ...
   refine'
-    @exists_one_le_pow_mul_dist ℤ ℕ ℝ _ _ _ (fun y => fR.eval y) α ζ (|fR.derivative.eval xm|) _ z0 (fun y hy => _)
+    @exists_one_le_pow_mul_dist ℤ ℕ ℝ _ _ _ (fun y => fR.eval y) α ζ |fR.derivative.eval xm| _ z0 (fun y hy => _)
       fun z a hq => _
   -- 1: the denominators are positive -- essentially by definition;
   · exact fun a => one_le_pow_of_one_le ((le_add_iff_nonneg_left 1).mpr a.cast_nonneg) _
@@ -183,6 +184,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
     
 #align liouville.exists_pos_real_of_irrational_root Liouville.exists_pos_real_of_irrational_root
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- **Liouville's Theorem** -/
 theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
   -- Proceed by contradiction: if `x` is algebraic, then `x` is the root (`ef0`) of a
@@ -199,7 +201,7 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
   -- Since the real numbers are Archimedean, a power of `2` exceeds `A`: `hn : A < 2 ^ r`.
   rcases pow_unbounded_of_one_lt A (lt_add_one 1) with ⟨r, hn⟩
   -- Use the Liouville property, with exponent `r +  deg f`.
-  obtain ⟨a, b, b1, -, a1⟩ : ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ (r + f.nat_degree) :=
+  obtain ⟨a, b, b1, -, a1⟩ : ∃ (a : ℤ) (b : ℤ), 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ (r + f.nat_degree) :=
     lx (r + f.nat_degree)
   have b0 : (0 : ℝ) < b :=
     zero_lt_one.trans

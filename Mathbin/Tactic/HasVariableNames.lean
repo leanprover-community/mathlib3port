@@ -41,9 +41,6 @@ class HasVariableNames (α : Sort u) : Type where
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- `typical_variable_names t` obtains typical names for variables of type `t`.
 The returned list is guaranteed to be nonempty. Fails if there is no instance
 `has_typical_variable_names t`.
@@ -54,9 +51,9 @@ typical_variable_names `(ℕ) = [`n, `m, `o]
 -/
 unsafe def typical_variable_names (t : expr) : tactic (List Name) :=
   (do
-      let names ← to_expr (pquote.1 (HasVariableNames.names (%%ₓt)))
+      let names ← to_expr ``(HasVariableNames.names $(t))
       eval_expr (List Name) names) <|>
-    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    throwError "typical_variable_names: unable to get typical variable names for type {← t}"
 #align tactic.typical_variable_names tactic.typical_variable_names
 
 end Tactic
@@ -69,7 +66,7 @@ the generated instance for `β` has names `as`, `bs`, ... This can be used to
 create instances for 'containers' such as lists or sets.
 -/
 def makeListlikeInstance (α : Sort u) [HasVariableNames α] {β : Sort v} : HasVariableNames β :=
-  ⟨(names α).map fun n => n.appendSuffix "s", by simp [names_nonempty]⟩
+  ⟨(names α).map $ fun n => n.appendSuffix "s", by simp [names_nonempty]⟩
 #align has_variable_names.make_listlike_instance HasVariableNames.makeListlikeInstance
 
 /-- `@make_inheriting_instance α _ β` creates an instance `has_variable_names β`

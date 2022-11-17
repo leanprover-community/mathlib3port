@@ -95,7 +95,7 @@ section Seq
 
 /-- The monadic sequencing operation for `pmf`. -/
 def seq (q : Pmf (α → β)) (p : Pmf α) : Pmf β :=
-  q.bind fun m => p.bind fun a => pure (m a)
+  q.bind fun m => p.bind $ fun a => pure (m a)
 #align pmf.seq Pmf.seq
 
 variable (q : Pmf (α → β)) (p : Pmf α) (b : β)
@@ -134,14 +134,14 @@ instance : LawfulMonad Pmf where
 
 section OfFinset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » s) -/
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
 def ofFinset (f : α → ℝ≥0) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 #align pmf.of_finset Pmf.ofFinset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » s) -/
 variable {f : α → ℝ≥0} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
@@ -252,7 +252,7 @@ section Filter
 
 /-- Create new `pmf` by filtering on a set with non-zero measure and normalizing -/
 def filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.support) : Pmf α :=
-  Pmf.normalize (s.indicator p) <| Nnreal.tsum_indicator_ne_zero p.2.Summable h
+  Pmf.normalize (s.indicator p) $ Nnreal.tsum_indicator_ne_zero p.2.Summable h
 #align pmf.filter Pmf.filter
 
 variable {p : Pmf α} {s : Set α} (h : ∃ a ∈ s, a ∈ p.support)
@@ -272,7 +272,7 @@ theorem mem_support_filter_iff {a : α} : a ∈ (p.filter s h).support ↔ a ∈
 
 @[simp]
 theorem support_filter : (p.filter s h).support = s ∩ p.support :=
-  Set.ext fun x => mem_support_filter_iff _
+  Set.ext $ fun x => mem_support_filter_iff _
 #align pmf.support_filter Pmf.support_filter
 
 theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ a ∉ s ∨ a ∉ p.support := by
@@ -289,7 +289,7 @@ section Bernoulli
 
 /-- A `pmf` which assigns probability `p` to `tt` and `1 - p` to `ff`. -/
 def bernoulli (p : ℝ≥0) (h : p ≤ 1) : Pmf Bool :=
-  ofFintype (fun b => cond b p (1 - p)) (Nnreal.eq <| by simp [h])
+  ofFintype (fun b => cond b p (1 - p)) (Nnreal.eq $ by simp [h])
 #align pmf.bernoulli Pmf.bernoulli
 
 variable {p : ℝ≥0} (h : p ≤ 1) (b : Bool)

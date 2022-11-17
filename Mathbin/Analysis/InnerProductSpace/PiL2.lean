@@ -152,7 +152,7 @@ theorem finrank_euclidean_space_fin {n : ℕ} : FiniteDimensional.finrank 𝕜 (
 #align finrank_euclidean_space_fin finrank_euclidean_space_fin
 
 theorem EuclideanSpace.inner_eq_star_dot_product (x y : EuclideanSpace 𝕜 ι) :
-    ⟪x, y⟫ = Matrix.dotProduct (star <| PiLp.equiv _ _ x) (PiLp.equiv _ _ y) :=
+    ⟪x, y⟫ = Matrix.dotProduct (star $ PiLp.equiv _ _ x) (PiLp.equiv _ _ y) :=
   rfl
 #align euclidean_space.inner_eq_star_dot_product EuclideanSpace.inner_eq_star_dot_product
 
@@ -179,10 +179,12 @@ def DirectSum.IsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι �
 @[simp]
 theorem DirectSum.IsInternal.isometry_L2_of_orthogonal_family_symm_apply [DecidableEq ι] {V : ι → Submodule 𝕜 E}
     (hV : DirectSum.IsInternal V) (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ)
-    (w : PiLp 2 fun i => V i) : (hV.isometryL2OfOrthogonalFamily hV').symm w = ∑ i, (w i : E) := by
-  classical let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
-    suffices : ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i
-    intro v
+    (w : PiLp 2 fun i => V i) : (hV.isometryL2OfOrthogonalFamily hV').symm w = ∑ i, (w i : E) := by classical
+  let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
+  let e₂ := LinearEquiv.ofBijective (DirectSum.coeLinearMap V) hV.injective hV.surjective
+  suffices ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i by exact this (e₁.symm w)
+  intro v
+  simp [e₂, DirectSum.coeLinearMap, DirectSum.toModule, Dfinsupp.sum_add_hom_apply]
 #align
   direct_sum.is_internal.isometry_L2_of_orthogonal_family_symm_apply DirectSum.IsInternal.isometry_L2_of_orthogonal_family_symm_apply
 
@@ -308,9 +310,7 @@ instance : Inhabited (OrthonormalBasis ι 𝕜 (EuclideanSpace 𝕜 ι)) :=
                  "exact"
                  (Term.app
                   `b.repr.symm
-                  [(Term.app
-                    `EuclideanSpace.single
-                    [`i (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`𝕜])]] ")")])])))]))))))]
+                  [(Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])])))]))))))]
        [])
       []
       []))
@@ -332,9 +332,7 @@ instance : Inhabited (OrthonormalBasis ι 𝕜 (EuclideanSpace 𝕜 ι)) :=
             "exact"
             (Term.app
              `b.repr.symm
-             [(Term.app
-               `EuclideanSpace.single
-               [`i (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`𝕜])]] ")")])])))])))
+             [(Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -344,32 +342,29 @@ instance : Inhabited (OrthonormalBasis ι 𝕜 (EuclideanSpace 𝕜 ι)) :=
         "exact"
         (Term.app
          `b.repr.symm
-         [(Term.app `EuclideanSpace.single [`i (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`𝕜])]] ")")])])))
+         [(Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
        (Term.app
         `b.repr.symm
-        [(Term.app `EuclideanSpace.single [`i (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`𝕜])]] ")")])]))
+        [(Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       `b.repr.symm
-       [(Term.app `EuclideanSpace.single [`i (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`𝕜])]] ")")])])
+      (Term.app `b.repr.symm [(Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `EuclideanSpace.single [`i (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`𝕜])]] ")")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis'
+      (Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`𝕜])]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
+      (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `𝕜
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
@@ -382,7 +377,7 @@ instance : Inhabited (OrthonormalBasis ι 𝕜 (EuclideanSpace 𝕜 ι)) :=
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `EuclideanSpace.single [`i (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`𝕜])]] ")")]) []]
+     (Term.app `EuclideanSpace.single [`i (Term.typeAscription "(" (num "1") ":" [`𝕜] ")")])
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `b.repr.symm
@@ -416,7 +411,9 @@ theorem coe_of_repr [DecidableEq ι] (e : E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 
 
 @[simp]
 protected theorem repr_symm_single [DecidableEq ι] (b : OrthonormalBasis ι 𝕜 E) (i : ι) :
-    b.repr.symm (EuclideanSpace.single i (1 : 𝕜)) = b i := by classical congr
+    b.repr.symm (EuclideanSpace.single i (1 : 𝕜)) = b i := by classical
+  congr
+  simp
 #align orthonormal_basis.repr_symm_single OrthonormalBasis.repr_symm_single
 
 @[simp]
@@ -425,15 +422,17 @@ protected theorem repr_self [DecidableEq ι] (b : OrthonormalBasis ι 𝕜 E) (i
   rw [← b.repr_symm_single i, LinearIsometryEquiv.apply_symm_apply]
 #align orthonormal_basis.repr_self OrthonormalBasis.repr_self
 
-protected theorem repr_apply_apply (b : OrthonormalBasis ι 𝕜 E) (v : E) (i : ι) : b.repr v i = ⟪b i, v⟫ := by
-  classical rw [← b.repr.inner_map_map (b i) v, b.repr_self i, EuclideanSpace.inner_single_left]
+protected theorem repr_apply_apply (b : OrthonormalBasis ι 𝕜 E) (v : E) (i : ι) : b.repr v i = ⟪b i, v⟫ := by classical
+  rw [← b.repr.inner_map_map (b i) v, b.repr_self i, EuclideanSpace.inner_single_left]
+  simp only [one_mul, eq_self_iff_true, map_one]
 #align orthonormal_basis.repr_apply_apply OrthonormalBasis.repr_apply_apply
 
 @[simp]
-protected theorem orthonormal (b : OrthonormalBasis ι 𝕜 E) : Orthonormal 𝕜 b := by
-  classical rw [orthonormal_iff_ite]
-    rw [← b.repr.inner_map_map (b i) (b j), b.repr_self i, b.repr_self j, EuclideanSpace.inner_single_left,
-      EuclideanSpace.single_apply, map_one, one_mul]
+protected theorem orthonormal (b : OrthonormalBasis ι 𝕜 E) : Orthonormal 𝕜 b := by classical
+  rw [orthonormal_iff_ite]
+  intro i j
+  rw [← b.repr.inner_map_map (b i) (b j), b.repr_self i, b.repr_self j, EuclideanSpace.inner_single_left,
+    EuclideanSpace.single_apply, map_one, one_mul]
 #align orthonormal_basis.orthonormal OrthonormalBasis.orthonormal
 
 /-- The `basis ι 𝕜 E` underlying the `orthonormal_basis` --/
@@ -505,7 +504,7 @@ protected theorem to_basis_map {G : Type _} [InnerProductSpace 𝕜 G] (b : Orth
 
 /-- A basis that is orthonormal is an orthonormal basis. -/
 def _root_.basis.to_orthonormal_basis (v : Basis ι 𝕜 E) (hv : Orthonormal 𝕜 v) : OrthonormalBasis ι 𝕜 E :=
-  OrthonormalBasis.of_repr <|
+  OrthonormalBasis.of_repr $
     LinearEquiv.isometryOfInner v.equivFun
       (by
         intro x y
@@ -575,10 +574,15 @@ protected def mk (hon : Orthonormal 𝕜 v) (hsp : ⊤ ≤ Submodule.span 𝕜 (
          "("
          [`hsp]
          [":"
-          («term_≤_» (Order.BoundedOrder.«term⊤» "⊤") "≤" (Term.app `Submodule.span [`𝕜 (Term.app `Set.range [`v])]))]
+          (Init.Core.«term_≤_»
+           (Order.BoundedOrder.«term⊤» "⊤")
+           " ≤ "
+           (Term.app `Submodule.span [`𝕜 (Term.app `Set.range [`v])]))]
          []
          ")")]
-       (Term.typeSpec ":" («term_=_» (Init.Coe.«term⇑_» "⇑" (Term.app `OrthonormalBasis.mk [`hon `hsp])) "=" `v)))
+       (Term.typeSpec
+        ":"
+        (Init.Core.«term_=_» (Init.Coe.«term⇑_» "⇑" (Term.app `OrthonormalBasis.mk [`hon `hsp])) " = " `v)))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -738,9 +742,11 @@ def reindex (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') : OrthonormalBasis
 #align orthonormal_basis.reindex OrthonormalBasis.reindex
 
 protected theorem reindex_apply (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') (i' : ι') :
-    (b.reindex e) i' = b (e.symm i') := by
-  classical dsimp [reindex, OrthonormalBasis.hasCoeToFun]
-    dsimp
+    (b.reindex e) i' = b (e.symm i') := by classical
+  dsimp [reindex, OrthonormalBasis.hasCoeToFun]
+  rw [coe_of_repr]
+  dsimp
+  rw [← b.repr_symm_single, LinearIsometryEquiv.pi_Lp_congr_left_symm, EuclideanSpace.pi_Lp_congr_left_single]
 #align orthonormal_basis.reindex_apply OrthonormalBasis.reindex_apply
 
 @[simp]
@@ -756,8 +762,6 @@ protected theorem reindex_repr (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι')
 
 end OrthonormalBasis
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- `![1, I]` is an orthonormal basis for `ℂ` considered as a real inner product space. -/
 def Complex.orthonormalBasisOneI : OrthonormalBasis (Fin 2) ℝ ℂ :=
   Complex.basisOneI.toOrthonormalBasis
@@ -880,14 +884,14 @@ orthonormal basis for `M`. -/
 noncomputable def DirectSum.IsInternal.collectedOrthonormalBasis
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => A i) _ fun i => (A i).subtypeₗᵢ) [DecidableEq ι]
     (hV_sum : DirectSum.IsInternal fun i => A i) {α : ι → Type _} [∀ i, Fintype (α i)]
-    (v_family : ∀ i, OrthonormalBasis (α i) 𝕜 (A i)) : OrthonormalBasis (Σi, α i) 𝕜 E :=
-  (hV_sum.collectedBasis fun i => (v_family i).toBasis).toOrthonormalBasis <| by
+    (v_family : ∀ i, OrthonormalBasis (α i) 𝕜 (A i)) : OrthonormalBasis (Σ i, α i) 𝕜 E :=
+  (hV_sum.collectedBasis fun i => (v_family i).toBasis).toOrthonormalBasis $ by
     simpa using hV.orthonormal_sigma_orthonormal (show ∀ i, Orthonormal 𝕜 (v_family i).toBasis by simp)
 #align direct_sum.is_internal.collected_orthonormal_basis DirectSum.IsInternal.collectedOrthonormalBasis
 
 theorem DirectSum.IsInternal.collected_orthonormal_basis_mem [DecidableEq ι] (h : DirectSum.IsInternal A)
     {α : ι → Type _} [∀ i, Fintype (α i)] (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => A i) _ fun i => (A i).subtypeₗᵢ)
-    (v : ∀ i, OrthonormalBasis (α i) 𝕜 (A i)) (a : Σi, α i) : h.collectedOrthonormalBasis hV v a ∈ A a.1 := by
+    (v : ∀ i, OrthonormalBasis (α i) 𝕜 (A i)) (a : Σ i, α i) : h.collectedOrthonormalBasis hV v a ∈ A a.1 := by
   simp [DirectSum.IsInternal.collectedOrthonormalBasis]
 #align direct_sum.is_internal.collected_orthonormal_basis_mem DirectSum.IsInternal.collected_orthonormal_basis_mem
 
@@ -896,7 +900,7 @@ variable [FiniteDimensional 𝕜 E]
 /-- In a finite-dimensional `inner_product_space`, any orthonormal subset can be extended to an
 orthonormal basis. -/
 theorem _root_.orthonormal.exists_orthonormal_basis_extension (hv : Orthonormal 𝕜 (coe : v → E)) :
-    ∃ (u : Finset E)(b : OrthonormalBasis u 𝕜 E), v ⊆ u ∧ ⇑b = coe := by
+    ∃ (u : Finset E) (b : OrthonormalBasis u 𝕜 E), v ⊆ u ∧ ⇑b = coe := by
   obtain ⟨u₀, hu₀s, hu₀, hu₀_max⟩ := exists_maximal_orthonormal hv
   rw [maximal_orthonormal_iff_orthogonal_complement_eq_bot hu₀] at hu₀_max
   have hu₀_finite : u₀.finite := hu₀.linear_independent.finite
@@ -939,14 +943,14 @@ theorem _root_.orthonormal.exists_orthonormal_basis_extension_of_card_eq {ι : T
 variable (𝕜 E)
 
 /-- A finite-dimensional inner product space admits an orthonormal basis. -/
-theorem _root_.exists_orthonormal_basis : ∃ (w : Finset E)(b : OrthonormalBasis w 𝕜 E), ⇑b = (coe : w → E) :=
+theorem _root_.exists_orthonormal_basis : ∃ (w : Finset E) (b : OrthonormalBasis w 𝕜 E), ⇑b = (coe : w → E) :=
   let ⟨w, hw, hw', hw''⟩ := (orthonormalEmpty 𝕜 E).exists_orthonormal_basis_extension
   ⟨w, hw, hw''⟩
 #align _root_.exists_orthonormal_basis _root_.exists_orthonormal_basis
 
 /-- A finite-dimensional `inner_product_space` has an orthonormal basis. -/
 def stdOrthonormalBasis : OrthonormalBasis (Fin (finrank 𝕜 E)) 𝕜 E := by
-  let b := Classical.choose (Classical.choose_spec <| exists_orthonormal_basis 𝕜 E)
+  let b := Classical.choose (Classical.choose_spec $ exists_orthonormal_basis 𝕜 E)
   rw [finrank_eq_card_basis b.to_basis]
   exact b.reindex (Fintype.equivFinOfCardEq rfl)
 #align std_orthonormal_basis stdOrthonormalBasis
@@ -962,9 +966,10 @@ variable {n : ℕ} (hn : finrank 𝕜 E = n) [DecidableEq ι] {V : ι → Submod
 /-- Exhibit a bijection between `fin n` and the index set of a certain basis of an `n`-dimensional
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/
 irreducible_def DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
-  (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) : (Σi, Fin (finrank 𝕜 (V i))) ≃ Fin n :=
+  (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
+  (Σ i, Fin (finrank 𝕜 (V i))) ≃ Fin n :=
   let b := hV.collectedOrthonormalBasis hV' fun i => stdOrthonormalBasis 𝕜 (V i)
-  Fintype.equivFinOfCardEq <| (FiniteDimensional.finrank_eq_card_basis b.toBasis).symm.trans hn
+  Fintype.equivFinOfCardEq $ (FiniteDimensional.finrank_eq_card_basis b.toBasis).symm.trans hn
 #align direct_sum.is_internal.sigma_orthonormal_basis_index_equiv DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
@@ -1005,7 +1010,7 @@ space, there exists an isometry from the orthogonal complement of a nonzero sing
 `euclidean_space 𝕜 (fin n)`. -/
 def OrthonormalBasis.fromOrthogonalSpanSingleton (n : ℕ) [Fact (finrank 𝕜 E = n + 1)] {v : E} (hv : v ≠ 0) :
     OrthonormalBasis (Fin n) 𝕜 (𝕜 ∙ v)ᗮ :=
-  (stdOrthonormalBasis _ _).reindex <| finCongr <| finrank_orthogonal_span_singleton hv
+  (stdOrthonormalBasis _ _).reindex $ finCongr $ finrank_orthogonal_span_singleton hv
 #align orthonormal_basis.from_orthogonal_span_singleton OrthonormalBasis.fromOrthogonalSpanSingleton
 
 section LinearIsometry
@@ -1033,7 +1038,7 @@ noncomputable def LinearIsometry.extend (L : S →ₗᵢ[𝕜] V) : V →ₗᵢ[
       _ = finrank 𝕜 V - finrank 𝕜 S := by simp only [LinearMap.finrank_range_of_inj L.injective]
       _ = finrank 𝕜 Sᗮ := by simp only [← S.finrank_add_finrank_orthogonal, add_tsub_cancel_left]
       
-    exact (stdOrthonormalBasis 𝕜 Sᗮ).repr.trans ((stdOrthonormalBasis 𝕜 LSᗮ).reindex <| finCongr dim_LS_perp).repr.symm
+    exact (stdOrthonormalBasis 𝕜 Sᗮ).repr.trans ((stdOrthonormalBasis 𝕜 LSᗮ).reindex $ finCongr dim_LS_perp).repr.symm
   let L3 := LSᗮ.subtypeₗᵢ.comp E.to_linear_isometry
   -- Project onto S and Sᗮ
   haveI : CompleteSpace S := FiniteDimensional.complete 𝕜 S

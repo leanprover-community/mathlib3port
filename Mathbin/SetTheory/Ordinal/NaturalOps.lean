@@ -185,14 +185,14 @@ to normal ordinal addition, it is commutative.
 Natural addition can equivalently be characterized as the ordinal resulting from adding up
 corresponding coefficients in the Cantor normal forms of `a` and `b`. -/
 noncomputable def nadd : Ordinal → Ordinal → Ordinal
-  | a, b => max ((blsub.{u, u} a) fun a' h => nadd a' b) ((blsub.{u, u} b) fun b' h => nadd a b')
+  | a, b => max (blsub.{u, u} a $ fun a' h => nadd a' b) (blsub.{u, u} b $ fun b' h => nadd a b')
 #align ordinal.nadd Ordinal.nadd
 
 -- mathport name: ordinal.nadd
-localized [NaturalOps] infixl:65 " ♯ " => Ordinal.nadd
+scoped[NaturalOps] infixl:65 " ♯ " => Ordinal.nadd
 
 theorem nadd_def (a b : Ordinal) :
-    a ♯ b = max ((blsub.{u, u} a) fun a' h => a' ♯ b) ((blsub.{u, u} b) fun b' h => a ♯ b') := by rw [nadd]
+    a ♯ b = max (blsub.{u, u} a $ fun a' h => a' ♯ b) (blsub.{u, u} b $ fun b' h => a ♯ b') := by rw [nadd]
 #align ordinal.nadd_def Ordinal.nadd_def
 
 theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < c, a ≤ b ♯ c' := by
@@ -239,8 +239,8 @@ theorem nadd_comm : ∀ a b, a ♯ b = b ♯ a
 
 theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}} (hf : ∀ {i j} (hi hj), i ≤ j → f i hi ≤ f j hj) :
     blsub _ f =
-      max (blsub.{u, v} a fun a' ha' => f (a' ♯ b) <| nadd_lt_nadd_right ha' b)
-        (blsub.{u, v} b fun b' hb' => f (a ♯ b') <| nadd_lt_nadd_left hb' a) :=
+      max (blsub.{u, v} a fun a' ha' => f (a' ♯ b) $ nadd_lt_nadd_right ha' b)
+        (blsub.{u, v} b fun b' hb' => f (a ♯ b') $ nadd_lt_nadd_left hb' a) :=
   by
   apply (blsub_le_iff.2 fun i h => _).antisymm (max_le _ _)
   · rcases lt_nadd_iff.1 h with (⟨a', ha', hi⟩ | ⟨b', hb', hi⟩)

@@ -44,6 +44,6 @@ protected theorem Convex.contractible_space (hs : Convex ℝ s) (hne : s.Nonempt
 #align convex.contractible_space Convex.contractible_space
 
 instance (priority := 100) RealTopologicalVectorSpace.contractible_space : ContractibleSpace E :=
-  (Homeomorph.Set.univ E).contractible_space_iff.mp <| convex_univ.ContractibleSpace Set.univ_nonempty
+  (Homeomorph.Set.univ E).contractible_space_iff.mp $ convex_univ.ContractibleSpace Set.univ_nonempty
 #align real_topological_vector_space.contractible_space RealTopologicalVectorSpace.contractible_space
 

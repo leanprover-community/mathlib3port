@@ -57,7 +57,7 @@ theorem ore_eq (r : R) (s : S) : r * oreDenom r s = s * oreNum r s :=
 
 /-- The Ore condition bundled in a sigma type. This is useful in situations where we want to obtain
 both witnesses and the condition for a given fraction. -/
-def oreCondition (r : R) (s : S) : Σ'r' : R, Σ's' : S, r * s' = s * r' :=
+def oreCondition (r : R) (s : S) : Σ' r' : R, Σ' s' : S, r * s' = s * r' :=
   ⟨oreNum r s, oreDenom r s, ore_eq r s⟩
 #align ore_localization.ore_condition OreLocalization.oreCondition
 

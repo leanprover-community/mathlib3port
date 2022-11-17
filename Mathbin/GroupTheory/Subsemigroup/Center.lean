@@ -73,7 +73,7 @@ theorem neg_mem_center [Ring M] {a : M} (ha : a ∈ Set.center M) : -a ∈ Set.c
 #align set.neg_mem_center Set.neg_mem_center
 
 @[to_additive subset_add_center_add_units]
-theorem subset_center_units [Monoid M] : (coe : Mˣ → M) ⁻¹' center M ⊆ Set.center Mˣ := fun a ha b => Units.ext <| ha _
+theorem subset_center_units [Monoid M] : (coe : Mˣ → M) ⁻¹' center M ⊆ Set.center Mˣ := fun a ha b => Units.ext $ ha _
 #align set.subset_center_units Set.subset_center_units
 
 theorem center_units_subset [GroupWithZero M] : Set.center Mˣ ⊆ (coe : Mˣ → M) ⁻¹' center M := fun a ha b => by
@@ -117,7 +117,7 @@ variable (M)
 
 @[simp, to_additive add_center_eq_univ]
 theorem center_eq_univ [CommSemigroup M] : center M = Set.univ :=
-  (Subset.antisymm (subset_univ _)) fun x _ y => mul_comm y x
+  Subset.antisymm (subset_univ _) $ fun x _ y => mul_comm y x
 #align set.center_eq_univ Set.center_eq_univ
 
 end Set
@@ -155,7 +155,7 @@ instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ 
 /-- The center of a semigroup is commutative. -/
 @[to_additive "The center of an additive semigroup is commutative."]
 instance : CommSemigroup (center M) :=
-  { MulMemClass.toSemigroup (center M) with mul_comm := fun a b => Subtype.ext <| b.Prop _ }
+  { MulMemClass.toSemigroup (center M) with mul_comm := fun a b => Subtype.ext $ b.Prop _ }
 
 end
 

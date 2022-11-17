@@ -175,7 +175,7 @@ theorem seq_tendsto_ae_seq_spec (hfg : TendstoInMeasure μ f atTop g) (n k : ℕ
 theorem seq_tendsto_ae_seq_strict_mono (hfg : TendstoInMeasure μ f atTop g) : StrictMono (seqTendstoAeSeq hfg) := by
   refine' strict_mono_nat_of_lt_succ fun n => _
   rw [seq_tendsto_ae_seq_succ]
-  exact lt_of_lt_of_le (lt_add_one <| seq_tendsto_ae_seq hfg n) (le_max_right _ _)
+  exact lt_of_lt_of_le (lt_add_one $ seq_tendsto_ae_seq hfg n) (le_max_right _ _)
 #align
   measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_strict_mono MeasureTheory.ExistsSeqTendstoAe.seq_tendsto_ae_seq_strict_mono
 
@@ -204,7 +204,7 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
   have hμS_le : ∀ k, μ (S k) ≤ 2⁻¹ ^ k := fun k => exists_seq_tendsto_ae.seq_tendsto_ae_seq_spec hfg k (ns k) le_rfl
   set s := filter.at_top.limsup S with hs
   have hμs : μ s = 0 := by
-    refine' measure_limsup_eq_zero (ne_of_lt <| lt_of_le_of_lt (Ennreal.tsum_le_tsum hμS_le) _)
+    refine' measure_limsup_eq_zero (ne_of_lt $ lt_of_le_of_lt (Ennreal.tsum_le_tsum hμS_le) _)
     simp only [Ennreal.tsum_geometric, Ennreal.one_sub_inv_two, inv_inv]
     decide
   have h_tendsto : ∀ x ∈ sᶜ, tendsto (fun i => f (ns i) x) at_top (𝓝 (g x)) := by
@@ -276,7 +276,7 @@ theorem tendstoInMeasureOfTendstoSnormOfStronglyMeasurable (hp_ne_zero : p ≠ 0
   intro ε hε
   replace hfg :=
     Ennreal.Tendsto.const_mul (tendsto.ennrpow_const p.to_real hfg)
-      (Or.inr <| @Ennreal.of_real_ne_top (1 / ε ^ p.to_real))
+      (Or.inr $ @Ennreal.of_real_ne_top (1 / ε ^ p.to_real))
   simp only [mul_zero, Ennreal.zero_rpow_of_pos (Ennreal.to_real_pos hp_ne_zero hp_ne_top)] at hfg
   rw [Ennreal.tendsto_nhds_zero] at hfg⊢
   intro δ hδ

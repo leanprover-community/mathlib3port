@@ -31,11 +31,11 @@ variable {C : Type u} [Category.{v} C] [HasLimits C]
 variable {J : Type v} [Category.{v} J] (F : J ⥤ SheafedSpaceCat C)
 
 theorem is_colimit_exists_rep {c : Cocone F} (hc : IsColimit c) (x : c.x) :
-    ∃ (i : J)(y : F.obj i), (c.ι.app i).base y = x :=
+    ∃ (i : J) (y : F.obj i), (c.ι.app i).base y = x :=
   Concrete.is_colimit_exists_rep (F ⋙ SheafedSpaceCat.forget _) (isColimitOfPreserves (SheafedSpaceCat.forget _) hc) x
 #align algebraic_geometry.SheafedSpace.is_colimit_exists_rep AlgebraicGeometry.SheafedSpaceCat.is_colimit_exists_rep
 
-theorem colimit_exists_rep (x : colimit F) : ∃ (i : J)(y : F.obj i), (colimit.ι F i).base y = x :=
+theorem colimit_exists_rep (x : colimit F) : ∃ (i : J) (y : F.obj i), (colimit.ι F i).base y = x :=
   Concrete.is_colimit_exists_rep (F ⋙ SheafedSpaceCat.forget _)
     (isColimitOfPreserves (SheafedSpaceCat.forget _) (colimit.isColimit F)) x
 #align algebraic_geometry.SheafedSpace.colimit_exists_rep AlgebraicGeometry.SheafedSpaceCat.colimit_exists_rep

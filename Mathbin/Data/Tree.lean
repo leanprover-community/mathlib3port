@@ -58,7 +58,7 @@ is not in the tree, returns none. -/
 def indexOf (lt : α → α → Prop) [DecidableRel lt] (x : α) : Tree α → Option PosNum
   | nil => none
   | node a t₁ t₂ =>
-    match CmpUsing lt x a with
+    match cmpUsing lt x a with
     | Ordering.lt => PosNum.bit0 <$> index_of t₁
     | Ordering.eq => some PosNum.one
     | Ordering.gt => PosNum.bit1 <$> index_of t₂

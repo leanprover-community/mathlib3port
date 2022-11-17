@@ -123,16 +123,16 @@ theorem prod_apply (x) : f.Prod g x = (f x, g x) :=
 
 @[simp]
 theorem fst_comp_prod : (fst S T).comp (f.Prod g) = f :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align non_unital_ring_hom.fst_comp_prod NonUnitalRingHom.fst_comp_prod
 
 @[simp]
 theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align non_unital_ring_hom.snd_comp_prod NonUnitalRingHom.snd_comp_prod
 
 theorem prod_unique (f : R →ₙ+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
-  ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+  ext $ fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 #align non_unital_ring_hom.prod_unique NonUnitalRingHom.prod_unique
 
 end Prod
@@ -210,16 +210,16 @@ theorem prod_apply (x) : f.Prod g x = (f x, g x) :=
 
 @[simp]
 theorem fst_comp_prod : (fst S T).comp (f.Prod g) = f :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align ring_hom.fst_comp_prod RingHom.fst_comp_prod
 
 @[simp]
 theorem snd_comp_prod : (snd S T).comp (f.Prod g) = g :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align ring_hom.snd_comp_prod RingHom.snd_comp_prod
 
 theorem prod_unique (f : R →+* S × T) : ((fst S T).comp f).Prod ((snd S T).comp f) = f :=
-  ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+  ext $ fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 #align ring_hom.prod_unique RingHom.prod_unique
 
 end Prod
@@ -274,12 +274,12 @@ theorem coe_prod_comm_symm : ⇑(prodComm : R × S ≃+* S × R).symm = Prod.swa
 
 @[simp]
 theorem fst_comp_coe_prod_comm : (RingHom.fst S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.snd R S :=
-  RingHom.ext fun _ => rfl
+  RingHom.ext $ fun _ => rfl
 #align ring_equiv.fst_comp_coe_prod_comm RingEquiv.fst_comp_coe_prod_comm
 
 @[simp]
 theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.fst R S :=
-  RingHom.ext fun _ => rfl
+  RingHom.ext $ fun _ => rfl
 #align ring_equiv.snd_comp_coe_prod_comm RingEquiv.snd_comp_coe_prod_comm
 
 variable (R S) [Subsingleton S]

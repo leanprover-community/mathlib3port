@@ -104,7 +104,7 @@ theorem eq_star_iff_eq_star [HasInvolutiveStar R] {r s : R} : r = star s ↔ s =
 #align eq_star_iff_eq_star eq_star_iff_eq_star
 
 theorem star_eq_iff_star_eq [HasInvolutiveStar R] {r s : R} : star r = s ↔ star s = r :=
-  eq_comm.trans <| eq_star_iff_eq_star.trans eq_comm
+  eq_comm.trans $ eq_star_iff_eq_star.trans eq_comm
 #align star_eq_iff_star_eq star_eq_iff_star_eq
 
 /-- Typeclass for a trivial star operation. This is mostly meant for `ℝ`.
@@ -151,24 +151,24 @@ variable (R)
 
 @[simp]
 theorem star_one [Monoid R] [StarSemigroup R] : star (1 : R) = 1 :=
-  op_injective <| (starMulEquiv : R ≃* Rᵐᵒᵖ).map_one.trans (op_one _).symm
+  op_injective $ (starMulEquiv : R ≃* Rᵐᵒᵖ).map_one.trans (op_one _).symm
 #align star_one star_one
 
 variable {R}
 
 @[simp]
 theorem star_pow [Monoid R] [StarSemigroup R] (x : R) (n : ℕ) : star (x ^ n) = star x ^ n :=
-  op_injective <| ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
+  op_injective $ ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
 #align star_pow star_pow
 
 @[simp]
 theorem star_inv [Group R] [StarSemigroup R] (x : R) : star x⁻¹ = (star x)⁻¹ :=
-  op_injective <| ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_inv x).trans (op_inv (star x)).symm
+  op_injective $ ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_inv x).trans (op_inv (star x)).symm
 #align star_inv star_inv
 
 @[simp]
 theorem star_zpow [Group R] [StarSemigroup R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective <| ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
+  op_injective $ ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
 #align star_zpow star_zpow
 
 /-- When multiplication is commutative, `star` preserves division. -/
@@ -304,12 +304,12 @@ theorem star_nat_cast [Semiring R] [StarRing R] (n : ℕ) : star (n : R) = n :=
 
 @[simp, norm_cast]
 theorem star_int_cast [Ring R] [StarRing R] (z : ℤ) : star (z : R) = z :=
-  (congr_arg unop <| map_int_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) z).trans (unop_int_cast _)
+  (congr_arg unop $ map_int_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) z).trans (unop_int_cast _)
 #align star_int_cast star_int_cast
 
 @[simp, norm_cast]
 theorem star_rat_cast [DivisionRing R] [StarRing R] (r : ℚ) : star (r : R) = r :=
-  (congr_arg unop <| map_rat_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) r).trans (unop_rat_cast _)
+  (congr_arg unop $ map_rat_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) r).trans (unop_rat_cast _)
 #align star_rat_cast star_rat_cast
 
 /-- `star` as a ring automorphism, for commutative `R`. -/
@@ -334,7 +334,7 @@ def starRingEnd [CommSemiring R] [StarRing R] : R →+* R :=
 variable {R}
 
 -- mathport name: star_ring_end
-localized [ComplexConjugate] notation "conj" => starRingEnd hole!
+scoped[ComplexConjugate] notation "conj" => starRingEnd hole!
 
 /-- This is not a simp lemma, since we usually want simp to keep `star_ring_end` bundled.
  For example, for complex conjugation, we don't want simp to turn `conj x`
@@ -355,12 +355,12 @@ alias star_ring_end_self_apply ← IsROrC.conj_conj
 
 @[simp]
 theorem star_inv' [DivisionRing R] [StarRing R] (x : R) : star x⁻¹ = (star x)⁻¹ :=
-  op_injective <| (map_inv₀ (starRingEquiv : R ≃+* Rᵐᵒᵖ) x).trans (op_inv (star x)).symm
+  op_injective $ (map_inv₀ (starRingEquiv : R ≃+* Rᵐᵒᵖ) x).trans (op_inv (star x)).symm
 #align star_inv' star_inv'
 
 @[simp]
 theorem star_zpow₀ [DivisionRing R] [StarRing R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective <| (map_zpow₀ (starRingEquiv : R ≃+* Rᵐᵒᵖ) x z).trans (op_zpow (star x) z).symm
+  op_injective $ (map_zpow₀ (starRingEquiv : R ≃+* Rᵐᵒᵖ) x z).trans (op_zpow (star x) z).symm
 #align star_zpow₀ star_zpow₀
 
 /-- When multiplication is commutative, `star` preserves division. -/
@@ -497,8 +497,8 @@ variable [Monoid R] [StarSemigroup R]
 instance : StarSemigroup Rˣ where
   star u :=
     { val := star u, inv := star ↑u⁻¹,
-      val_inv := (star_mul _ _).symm.trans <| (congr_arg star u.inv_val).trans <| star_one _,
-      inv_val := (star_mul _ _).symm.trans <| (congr_arg star u.val_inv).trans <| star_one _ }
+      val_inv := (star_mul _ _).symm.trans $ (congr_arg star u.inv_val).trans $ star_one _,
+      inv_val := (star_mul _ _).symm.trans $ (congr_arg star u.val_inv).trans $ star_one _ }
   star_involutive u := Units.ext (star_involutive _)
   star_mul u v := Units.ext (star_mul _ _)
 

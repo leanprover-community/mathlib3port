@@ -49,7 +49,7 @@ with respect to `f i`.
 Intuitively, the stopping time `τ` describes some stopping rule such that at time
 `i`, we may determine it with the information we have at time `i`. -/
 def IsStoppingTime [Preorder ι] (f : Filtration ι m) (τ : Ω → ι) :=
-  ∀ i : ι, measurable_set[f i] <| { ω | τ ω ≤ i }
+  ∀ i : ι, measurable_set[f i] $ { ω | τ ω ≤ i }
 #align measure_theory.is_stopping_time MeasureTheory.IsStoppingTime
 
 theorem isStoppingTimeConst [Preorder ι] (f : Filtration ι m) (i : ι) : IsStoppingTime f fun ω => i := fun j => by
@@ -80,7 +80,7 @@ theorem IsStoppingTime.measurableSetLtOfPred [PredOrder ι] (hτ : IsStoppingTim
     
   have : { ω : Ω | τ ω < i } = τ ⁻¹' Set.iio i := rfl
   rw [this, ← Iic_pred_of_not_is_min hi_min]
-  exact f.mono (pred_le i) _ (hτ.measurable_set_le <| pred i)
+  exact f.mono (pred_le i) _ (hτ.measurable_set_le $ pred i)
 #align measure_theory.is_stopping_time.measurable_set_lt_of_pred MeasureTheory.IsStoppingTime.measurableSetLtOfPred
 
 end Preorder
@@ -245,12 +245,12 @@ theorem IsStoppingTime.measurableSetEq (hτ : IsStoppingTime f τ) (i : ι) : me
 
 theorem IsStoppingTime.measurableSetEqLe (hτ : IsStoppingTime f τ) {i j : ι} (hle : i ≤ j) :
     measurable_set[f j] { ω | τ ω = i } :=
-  f.mono hle _ <| hτ.measurableSetEq i
+  f.mono hle _ $ hτ.measurableSetEq i
 #align measure_theory.is_stopping_time.measurable_set_eq_le MeasureTheory.IsStoppingTime.measurableSetEqLe
 
 theorem IsStoppingTime.measurableSetLtLe (hτ : IsStoppingTime f τ) {i j : ι} (hle : i ≤ j) :
     measurable_set[f j] { ω | τ ω < i } :=
-  f.mono hle _ <| hτ.measurableSetLt i
+  f.mono hle _ $ hτ.measurableSetLt i
 #align measure_theory.is_stopping_time.measurable_set_lt_le MeasureTheory.IsStoppingTime.measurableSetLtLe
 
 end TopologicalSpace
@@ -1205,7 +1205,7 @@ theorem stopped_value_sub_eq_sum' [AddCommGroup β] (hle : τ ≤ π) {N : ℕ} 
   refine' Finset.sum_congr _ fun _ _ => rfl
   ext i
   simp only [Finset.mem_filter, Set.mem_set_of_eq, Finset.mem_range, Finset.mem_Ico]
-  exact ⟨fun h => ⟨lt_trans h.2 (Nat.lt_succ_iff.2 <| hbdd _), h⟩, fun h => h.2⟩
+  exact ⟨fun h => ⟨lt_trans h.2 (Nat.lt_succ_iff.2 $ hbdd _), h⟩, fun h => h.2⟩
 #align measure_theory.stopped_value_sub_eq_sum' MeasureTheory.stopped_value_sub_eq_sum'
 
 section AddCommMonoid

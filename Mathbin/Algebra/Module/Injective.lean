@@ -115,7 +115,7 @@ theorem ExtensionOf.ext_iff {a b : ExtensionOf i f} :
     a = b ↔
       ∃ domain_eq : a.domain = b.domain,
         ∀ ⦃x : a.domain⦄ ⦃y : b.domain⦄, (x : N) = y → a.toLinearPmap x = b.toLinearPmap y :=
-  ⟨fun r => r ▸ ⟨rfl, fun x y h => congr_arg a.toFun <| by exact_mod_cast h⟩, fun ⟨h1, h2⟩ => ExtensionOf.ext h1 h2⟩
+  ⟨fun r => r ▸ ⟨rfl, fun x y h => congr_arg a.toFun $ by exact_mod_cast h⟩, fun ⟨h1, h2⟩ => ExtensionOf.ext h1 h2⟩
 #align module.Baer.extension_of.ext_iff Module.BaerCat.ExtensionOf.ext_iff
 
 end Ext
@@ -132,19 +132,19 @@ instance :
 
 instance : SemilatticeInf (ExtensionOf i f) :=
   (Function.Injective.semilatticeInf ExtensionOf.toLinearPmap fun X Y h =>
-      (ExtensionOf.ext (by rw [h])) fun x y h' => by
+      ExtensionOf.ext (by rw [h]) $ fun x y h' => by
         induction h
         congr
-        exact_mod_cast h')
+        exact_mod_cast h') $
     fun X Y =>
-    (LinearPmap.ext rfl) fun x y h => by
+    LinearPmap.ext rfl $ fun x y h => by
       congr
       exact_mod_cast h
 
 variable {R i f}
 
 theorem chain_linear_pmap_of_chain_extension_of {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c) :
-    IsChain (· ≤ ·) <| (fun x : ExtensionOf i f => x.toLinearPmap) '' c := by
+    IsChain (· ≤ ·) $ (fun x : ExtensionOf i f => x.toLinearPmap) '' c := by
   rintro _ ⟨a, a_mem, rfl⟩ _ ⟨b, b_mem, rfl⟩ neq
   exact hchain a_mem b_mem (ne_of_apply_ne _ neq)
 #align module.Baer.chain_linear_pmap_of_chain_extension_of Module.BaerCat.chain_linear_pmap_of_chain_extension_of
@@ -152,26 +152,26 @@ theorem chain_linear_pmap_of_chain_extension_of {c : Set (ExtensionOf i f)} (hch
 /-- The maximal element of every nonempty chain of `extension_of i f`. -/
 def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c) (hnonempty : c.Nonempty) :
     ExtensionOf i f :=
-  { LinearPmap.sup _ (IsChain.directed_on <| chain_linear_pmap_of_chain_extension_of hchain) with
+  { LinearPmap.sup _ (IsChain.directed_on $ chain_linear_pmap_of_chain_extension_of hchain) with
     le :=
-      le_trans hnonempty.some.le <|
-        (LinearPmap.le_Sup _ <| (Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩).1,
+      le_trans hnonempty.some.le $
+        (LinearPmap.le_Sup _ $ (Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩).1,
     is_extension := fun m => by
       refine' Eq.trans (hnonempty.some.is_extension m) _
       symm
       generalize_proofs _ h0 h1
       exact
-        LinearPmap.Sup_apply (IsChain.directed_on <| chain_linear_pmap_of_chain_extension_of hchain)
+        LinearPmap.Sup_apply (IsChain.directed_on $ chain_linear_pmap_of_chain_extension_of hchain)
           ((Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩) ⟨i m, h1⟩ }
 #align module.Baer.extension_of.max Module.BaerCat.ExtensionOf.max
 
 theorem ExtensionOf.le_max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c) (hnonempty : c.Nonempty)
     (a : ExtensionOf i f) (ha : a ∈ c) : a ≤ ExtensionOf.max hchain hnonempty :=
-  LinearPmap.le_Sup (IsChain.directed_on <| chain_linear_pmap_of_chain_extension_of hchain) <|
+  LinearPmap.le_Sup (IsChain.directed_on $ chain_linear_pmap_of_chain_extension_of hchain) $
     (Set.mem_image _ _ _).mpr ⟨a, ha, rfl⟩
 #align module.Baer.extension_of.le_max Module.BaerCat.ExtensionOf.le_max
 
-variable (i f) [Fact <| Function.Injective i]
+variable (i f) [Fact $ Function.Injective i]
 
 instance ExtensionOf.inhabited :
     Inhabited
@@ -210,7 +210,7 @@ theorem extension_of_max_is_max : ∀ a : ExtensionOf i f, extensionOfMax i f �
 variable {f}
 
 private theorem extension_of_max_adjoin.aux1 {y : N} (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) :
-    ∃ (a : (extensionOfMax i f).domain)(b : R), x.1 = a.1 + b • y := by
+    ∃ (a : (extensionOfMax i f).domain) (b : R), x.1 = a.1 + b • y := by
   have mem1 : x.1 ∈ (_ : Set _) := x.2
   rw [Submodule.coe_sup] at mem1
   rcases mem1 with ⟨a, b, a_mem, b_mem : b ∈ (Submodule.span R _ : Submodule R N), eq1⟩

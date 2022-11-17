@@ -90,7 +90,7 @@ theorem zero_lt_iff : 0 < a ↔ a ≠ 0 :=
   ⟨ne_of_gt, fun h => lt_of_le_of_ne zero_le' h.symm⟩
 #align zero_lt_iff zero_lt_iff
 
-theorem ne_zero_of_lt (h : b < a) : a ≠ 0 := fun h1 => not_lt_zero' <| show b < 0 from h1 ▸ h
+theorem ne_zero_of_lt (h : b < a) : a ≠ 0 := fun h1 => not_lt_zero' $ show b < 0 from h1 ▸ h
 #align ne_zero_of_lt ne_zero_of_lt
 
 instance : LinearOrderedAddCommMonoidWithTop (Additive αᵒᵈ) :=
@@ -133,11 +133,11 @@ theorem mul_inv_le_of_le_mul (hab : a ≤ b * c) : a * c⁻¹ ≤ b := by
 #align mul_inv_le_of_le_mul mul_inv_le_of_le_mul
 
 theorem inv_le_one₀ (ha : a ≠ 0) : a⁻¹ ≤ 1 ↔ 1 ≤ a :=
-  @inv_le_one' _ _ _ _ <| Units.mk0 a ha
+  @inv_le_one' _ _ _ _ $ Units.mk0 a ha
 #align inv_le_one₀ inv_le_one₀
 
 theorem one_le_inv₀ (ha : a ≠ 0) : 1 ≤ a⁻¹ ↔ a ≤ 1 :=
-  @one_le_inv' _ _ _ _ <| Units.mk0 a ha
+  @one_le_inv' _ _ _ _ $ Units.mk0 a ha
 #align one_le_inv₀ one_le_inv₀
 
 theorem le_mul_inv_iff₀ (hc : c ≠ 0) : a ≤ b * c⁻¹ ↔ a * c ≤ b :=
@@ -161,7 +161,7 @@ theorem div_le_div₀ (a b c d : α) (hb : b ≠ 0) (hd : d ≠ 0) : a * b⁻¹ 
 
 @[simp]
 theorem Units.zero_lt (u : αˣ) : (0 : α) < u :=
-  zero_lt_iff.2 <| u.NeZero
+  zero_lt_iff.2 $ u.NeZero
 #align units.zero_lt Units.zero_lt
 
 theorem mul_lt_mul_of_lt_of_le₀ (hab : a ≤ b) (hb : b ≠ 0) (hcd : c < d) : a * c < b * d :=

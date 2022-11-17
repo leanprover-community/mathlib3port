@@ -27,36 +27,31 @@ variable {n : ℕ} (i : Fin n) {M : Type _} [Zero M] (y : M) (t : Fin (n + 1) �
 
 /-- `tail` for maps `fin (n + 1) →₀ M`. See `fin.tail` for more details. -/
 def tail (s : Fin (n + 1) →₀ M) : Fin n →₀ M :=
-  Finsupp.equivFunOnFintype.invFun (Fin.tail s.toFun)
+  Finsupp.equivFunOnFintype.symm (Fin.tail s)
 #align finsupp.tail Finsupp.tail
 
 /-- `cons` for maps `fin n →₀ M`. See `fin.cons` for more details. -/
 def cons (y : M) (s : Fin n →₀ M) : Fin (n + 1) →₀ M :=
-  Finsupp.equivFunOnFintype.invFun (Fin.cons y s.toFun)
+  Finsupp.equivFunOnFintype.symm (Fin.cons y s : Fin (n + 1) → M)
 #align finsupp.cons Finsupp.cons
 
-theorem tail_apply : tail t i = t i.succ := by
-  simp only [tail, equiv_fun_on_fintype_symm_apply_to_fun, Equiv.inv_fun_as_coe]
+theorem tail_apply : tail t i = t i.succ :=
   rfl
 #align finsupp.tail_apply Finsupp.tail_apply
 
 @[simp]
-theorem cons_zero : cons y s 0 = y := by simp [cons, Finsupp.equivFunOnFintype]
+theorem cons_zero : cons y s 0 = y :=
+  rfl
 #align finsupp.cons_zero Finsupp.cons_zero
 
 @[simp]
-theorem cons_succ : cons y s i.succ = s i := by
-  simp only [Finsupp.cons, Fin.cons, Finsupp.equivFunOnFintype, Fin.cases_succ, Finsupp.coe_mk]
-  rfl
+theorem cons_succ : cons y s i.succ = s i :=
+  Fin.cons_succ _ _ _
 #align finsupp.cons_succ Finsupp.cons_succ
 
 @[simp]
-theorem tail_cons : tail (cons y s) = s := by
-  simp only [Finsupp.cons, Fin.cons, Finsupp.tail, Fin.tail]
-  ext
-  simp only [equiv_fun_on_fintype_symm_apply_to_fun, Equiv.inv_fun_as_coe, Finsupp.coe_mk, Fin.cases_succ,
-    equiv_fun_on_fintype]
-  rfl
+theorem tail_cons : tail (cons y s) = s :=
+  ext $ fun k => by simp only [tail_apply, cons_succ]
 #align finsupp.tail_cons Finsupp.tail_cons
 
 @[simp]

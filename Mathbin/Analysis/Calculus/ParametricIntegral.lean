@@ -77,7 +77,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
   have b_int : integrable b μ := bound_integrable.norm
   have b_nonneg : ∀ a, 0 ≤ b a := fun a => abs_nonneg _
   replace h_lipsch : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ∥F x a - F x₀ a∥ ≤ b a * ∥x - x₀∥
-  exact h_lipsch.mono fun a ha x hx => (ha x hx).trans <| mul_le_mul_of_nonneg_right (le_abs_self _) (norm_nonneg _)
+  exact h_lipsch.mono fun a ha x hx => (ha x hx).trans $ mul_le_mul_of_nonneg_right (le_abs_self _) (norm_nonneg _)
   have hF_int' : ∀ x ∈ ball x₀ ε, integrable (F x) μ := by
     intro x x_in
     have : ∀ᵐ a ∂μ, ∥F x₀ a - F x a∥ ≤ ε * b a := by
@@ -91,7 +91,7 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip' {F : H → α → E} {F'
     haveI : ∀ᵐ a ∂μ, ∥F' a∥ ≤ b a := by
       apply (h_diff.and h_lipsch).mono
       rintro a ⟨ha_diff, ha_lip⟩
-      refine' ha_diff.le_of_lip' (b_nonneg a) (mem_of_superset (ball_mem_nhds _ ε_pos) <| ha_lip)
+      refine' ha_diff.le_of_lip' (b_nonneg a) (mem_of_superset (ball_mem_nhds _ ε_pos) $ ha_lip)
     b_int.mono' hF'_meas this
   refine' ⟨hF'_int, _⟩
   have h_ball : ball x₀ ε ∈ 𝓝 x₀ := ball_mem_nhds x₀ ε_pos
@@ -158,7 +158,7 @@ for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H} {bound : α → ℝ}
     {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
     (hF'_meas : AeStronglyMeasurable F' μ)
-    (h_lip : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
+    (h_lip : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs $ bound a) (fun x => F x a) (ball x₀ ε))
     (bound_integrable : Integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasFderivAt (fun x => F x a) (F' a) x₀) :
     Integrable F' μ ∧ HasFderivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ := by
   obtain ⟨δ, δ_pos, hδ⟩ : ∃ δ > 0, ∀ x ∈ ball x₀ δ, ae_strongly_measurable (F x) μ ∧ x ∈ ball x₀ ε
@@ -201,7 +201,7 @@ ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' : α → E} {x₀ : 𝕜} {ε : ℝ} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
     (hF'_meas : AeStronglyMeasurable F' μ) {bound : α → ℝ}
-    (h_lipsch : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
+    (h_lipsch : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs $ bound a) (fun x => F x a) (ball x₀ ε))
     (bound_integrable : Integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐ a ∂μ, HasDerivAt (fun x => F x a) (F' a) x₀) :
     Integrable F' μ ∧ HasDerivAt (fun x => ∫ a, F x a ∂μ) (∫ a, F' a ∂μ) x₀ := by
   set L : E →L[𝕜] 𝕜 →L[𝕜] E := ContinuousLinearMap.smulRightL 𝕜 𝕜 E 1

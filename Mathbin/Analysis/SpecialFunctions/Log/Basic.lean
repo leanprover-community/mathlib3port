@@ -76,7 +76,7 @@ theorem le_exp_log (x : ℝ) : x ≤ exp (log x) := by
 
 @[simp]
 theorem log_exp (x : ℝ) : log (exp x) = x :=
-  exp_injective <| exp_log (exp_pos x)
+  exp_injective $ exp_log (exp_pos x)
 #align real.log_exp Real.log_exp
 
 theorem surj_on_log : SurjOn log (ioi 0) univ := fun x _ => ⟨exp x, exp_pos x, log_exp x⟩
@@ -97,11 +97,11 @@ theorem log_zero : log 0 = 0 :=
 
 @[simp]
 theorem log_one : log 1 = 0 :=
-  exp_injective <| by rw [exp_log zero_lt_one, exp_zero]
+  exp_injective $ by rw [exp_log zero_lt_one, exp_zero]
 #align real.log_one Real.log_one
 
 @[simp]
-theorem log_abs (x : ℝ) : log (|x|) = log x := by
+theorem log_abs (x : ℝ) : log |x| = log x := by
   by_cases h:x = 0
   · simp [h]
     
@@ -120,15 +120,15 @@ theorem cosh_log {x : ℝ} (hx : 0 < x) : cosh (log x) = (x + x⁻¹) / 2 := by 
 #align real.cosh_log Real.cosh_log
 
 theorem surj_on_log' : SurjOn log (iio 0) univ := fun x _ =>
-  ⟨-exp x, neg_lt_zero.2 <| exp_pos x, by rw [log_neg_eq_log, log_exp]⟩
+  ⟨-exp x, neg_lt_zero.2 $ exp_pos x, by rw [log_neg_eq_log, log_exp]⟩
 #align real.surj_on_log' Real.surj_on_log'
 
 theorem log_mul (hx : x ≠ 0) (hy : y ≠ 0) : log (x * y) = log x + log y :=
-  exp_injective <| by rw [exp_log_eq_abs (mul_ne_zero hx hy), exp_add, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_mul]
+  exp_injective $ by rw [exp_log_eq_abs (mul_ne_zero hx hy), exp_add, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_mul]
 #align real.log_mul Real.log_mul
 
 theorem log_div (hx : x ≠ 0) (hy : y ≠ 0) : log (x / y) = log x - log y :=
-  exp_injective <| by rw [exp_log_eq_abs (div_ne_zero hx hy), exp_sub, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_div]
+  exp_injective $ by rw [exp_log_eq_abs (div_ne_zero hx hy), exp_sub, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_div]
 #align real.log_div Real.log_div
 
 @[simp]
@@ -255,7 +255,7 @@ theorem log_pow (x : ℝ) (n : ℕ) : log (x ^ n) = n * log x := by
 @[simp]
 theorem log_zpow (x : ℝ) (n : ℤ) : log (x ^ n) = n * log x := by
   induction n
-  · rw [Int.of_nat_eq_coe, zpow_coe_nat, log_pow, Int.cast_ofNat]
+  · rw [Int.ofNat_eq_coe, zpow_coe_nat, log_pow, Int.cast_ofNat]
     
   rw [zpow_neg_succ_of_nat, log_inv, log_pow, Int.cast_negSucc, Nat.cast_add_one, neg_mul_eq_neg_mul]
 #align real.log_zpow Real.log_zpow
@@ -289,7 +289,7 @@ theorem abs_log_mul_self_lt (x : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) : |log x * x| 
 
 /-- The real logarithm function tends to `+∞` at `+∞`. -/
 theorem tendsto_log_at_top : Tendsto log atTop atTop :=
-  tendsto_comp_exp_at_top.1 <| by simpa only [log_exp] using tendsto_id
+  tendsto_comp_exp_at_top.1 $ by simpa only [log_exp] using tendsto_id
 #align real.tendsto_log_at_top Real.tendsto_log_at_top
 
 theorem tendsto_log_nhds_within_zero : Tendsto log (𝓝[≠] 0) atBot := by
@@ -306,16 +306,16 @@ theorem continuous_on_log : ContinuousOn log ({0}ᶜ) := by
 
 @[continuity]
 theorem continuous_log : Continuous fun x : { x : ℝ // x ≠ 0 } => log x :=
-  continuous_on_iff_continuous_restrict.1 <| continuous_on_log.mono fun x hx => hx
+  continuous_on_iff_continuous_restrict.1 $ continuous_on_log.mono $ fun x hx => hx
 #align real.continuous_log Real.continuous_log
 
 @[continuity]
 theorem continuous_log' : Continuous fun x : { x : ℝ // 0 < x } => log x :=
-  continuous_on_iff_continuous_restrict.1 <| continuous_on_log.mono fun x hx => ne_of_gt hx
+  continuous_on_iff_continuous_restrict.1 $ continuous_on_log.mono $ fun x hx => ne_of_gt hx
 #align real.continuous_log' Real.continuous_log'
 
 theorem continuous_at_log (hx : x ≠ 0) : ContinuousAt log x :=
-  (continuous_on_log x hx).ContinuousAt <| IsOpen.mem_nhds is_open_compl_singleton hx
+  (continuous_on_log x hx).ContinuousAt $ IsOpen.mem_nhds is_open_compl_singleton hx
 #align real.continuous_at_log Real.continuous_at_log
 
 @[simp]

@@ -45,8 +45,8 @@ unsafe def congr_rule (congr : expr) (cs : List (List expr → old_conv Unit)) :
   let ((), meta_pr) ←
     solve_aux t do
         apply congr
-        focus <|
-            cs fun c => do
+        focus $
+            cs $ fun c => do
               let xs ← intros
               conversion (head_beta >> c xs)
         done
@@ -128,15 +128,15 @@ unsafe structure binder_eq_elim where
 
 -- (B (x : β) (h : x = t), s x) = s t
 unsafe def binder_eq_elim.check_eq (b : binder_eq_elim) (x : expr) : expr → tactic Unit
-  | quote.1 (@Eq (%%ₓβ) (%%ₓl) (%%ₓr)) => guard (l = x ∧ ¬x.occurs r ∨ r = x ∧ ¬x.occurs l)
+  | q(@Eq $(β) $(l) $(r)) => guard (l = x ∧ ¬x.occurs r ∨ r = x ∧ ¬x.occurs l)
   | _ => fail "no match"
 #align binder_eq_elim.check_eq binder_eq_elim.check_eq
 
 unsafe def binder_eq_elim.pull (b : binder_eq_elim) (x : expr) : old_conv Unit := do
   let (β, f) ← lhs >>= lift_tactic ∘ b.match_binder
-  guard ¬x β <|>
+  guard (¬x β) <|>
       b x β <|> do
-        b fun x => binder_eq_elim.pull
+        b $ fun x => binder_eq_elim.pull
         b
 #align binder_eq_elim.pull binder_eq_elim.pull
 
@@ -144,9 +144,9 @@ unsafe def binder_eq_elim.push (b : binder_eq_elim) : old_conv Unit :=
   b.apply_elim_eq <|>
     (do
         b
-        b fun x => binder_eq_elim.push) <|>
+        b $ fun x => binder_eq_elim.push) <|>
       do
-      b <| b
+      b $ b
       binder_eq_elim.push
 #align binder_eq_elim.push binder_eq_elim.push
 
@@ -156,7 +156,7 @@ unsafe def binder_eq_elim.check (b : binder_eq_elim) (x : expr) : expr → tacti
     b x β <|> do
         let lam n bi d bd ← return f
         let x ← mk_local' n bi d
-        binder_eq_elim.check <| bd x
+        binder_eq_elim.check $ bd x
 #align binder_eq_elim.check binder_eq_elim.check
 
 unsafe def binder_eq_elim.old_conv (b : binder_eq_elim) : old_conv Unit := do
@@ -168,7 +168,7 @@ unsafe def binder_eq_elim.old_conv (b : binder_eq_elim) : old_conv Unit := do
 #align binder_eq_elim.old_conv binder_eq_elim.old_conv
 
 theorem exists_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' = a → Prop) :
-    (∃ (a' : α)(h : a' = a), p a' h) ↔ p a rfl :=
+    (∃ (a' : α) (h : a' = a), p a' h) ↔ p a rfl :=
   ⟨fun ⟨a', ⟨h, p_h⟩⟩ =>
     match a', h, p_h with
     | _, rfl, h => h,
@@ -176,7 +176,7 @@ theorem exists_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' =
 #align exists_elim_eq_left exists_elim_eq_left
 
 theorem exists_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a = a' → Prop) :
-    (∃ (a' : α)(h : a = a'), p a' h) ↔ p a rfl :=
+    (∃ (a' : α) (h : a = a'), p a' h) ↔ p a rfl :=
   ⟨fun ⟨a', ⟨h, p_h⟩⟩ =>
     match a', h, p_h with
     | _, rfl, h => h,
@@ -185,7 +185,7 @@ theorem exists_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a =
 
 unsafe def exists_eq_elim : binder_eq_elim where
   match_binder e := do
-    let quote.1 (@Exists (%%ₓβ) (%%ₓf)) ← return e
+    let q(@Exists $(β) $(f)) ← return e
     return (β, f)
   adapt_rel := propext'
   apply_comm := applyc `` exists_comm
@@ -223,7 +223,7 @@ unsafe def forall_eq_elim : binder_eq_elim where
 
 unsafe def supr_eq_elim : binder_eq_elim where
   match_binder e := do
-    let quote.1 (@supr (%%ₓα) (%%ₓcl) (%%ₓβ) (%%ₓf)) ← return e
+    let q(@supr $(α) $(cl) $(β) $(f)) ← return e
     return (β, f)
   adapt_rel c := do
     let r ← current_relation
@@ -236,7 +236,7 @@ unsafe def supr_eq_elim : binder_eq_elim where
 
 unsafe def infi_eq_elim : binder_eq_elim where
   match_binder e := do
-    let quote.1 (@infi (%%ₓα) (%%ₓcl) (%%ₓβ) (%%ₓf)) ← return e
+    let q(@infi $(α) $(cl) $(β) $(f)) ← return e
     return (β, f)
   adapt_rel c := do
     let r ← current_relation

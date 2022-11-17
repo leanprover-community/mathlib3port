@@ -75,7 +75,7 @@ theorem integral_normalization_coeff_ne_nat_degree {f : R[X]} {i : ℕ} (hi : i 
 
 theorem monic_integral_normalization {f : R[X]} (hf : f ≠ 0) : Monic (integralNormalization f) :=
   monic_of_degree_le f.natDegree
-    (Finset.sup_le fun i h => WithBot.coe_le_coe.2 <| le_nat_degree_of_mem_supp i <| integral_normalization_support h)
+    (Finset.sup_le $ fun i h => WithBot.coe_le_coe.2 $ le_nat_degree_of_mem_supp i $ integral_normalization_support h)
     (integral_normalization_coeff_nat_degree hf)
 #align polynomial.monic_integral_normalization Polynomial.monic_integral_normalization
 

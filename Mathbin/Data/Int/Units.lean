@@ -19,7 +19,7 @@ namespace Int
 
 @[simp]
 theorem units_nat_abs (u : ℤˣ) : natAbs u = 1 :=
-  Units.ext_iff.1 <|
+  Units.ext_iff.1 $
     Nat.units_eq_one
       ⟨natAbs u, natAbs ↑u⁻¹, by rw [← nat_abs_mul, Units.mul_inv] <;> rfl, by
         rw [← nat_abs_mul, Units.inv_mul] <;> rfl⟩

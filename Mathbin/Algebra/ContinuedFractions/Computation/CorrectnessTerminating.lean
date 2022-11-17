@@ -101,7 +101,7 @@ corresponds exactly to the one using the recurrence equation in `comp_exact_valu
 theorem comp_exact_value_correctness_of_stream_eq_some :
     ∀ {ifp_n : IntFractPair K},
       IntFractPair.stream v n = some ifp_n →
-        v = compExactValue ((of v).continuantsAux n) ((of v).continuantsAux <| n + 1) ifp_n.fr :=
+        v = compExactValue ((of v).continuantsAux n) ((of v).continuantsAux $ n + 1) ifp_n.fr :=
   by
   let g := of v
   induction' n with n IH

@@ -77,8 +77,8 @@ def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
     (F : (σ₁ → m₁ (α₁ × σ₁)) ≃ (σ₂ → m₂ (α₂ × σ₂))) : StateT σ₁ m₁ α₁ ≃ StateT σ₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
-  left_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.left_inv _
-  right_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.right_inv _
+  left_inv := fun ⟨f⟩ => congr_arg StateT.mk $ F.left_inv _
+  right_inv := fun ⟨f⟩ => congr_arg StateT.mk $ F.right_inv _
 #align state_t.equiv StateTₓ.equiv
 
 /-- reduce the equivalence between two reader monads to the equivalence between
@@ -87,7 +87,7 @@ def ReaderT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
     (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) : ReaderT ρ₁ m₁ α₁ ≃ ReaderT ρ₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
-  left_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.left_inv _
-  right_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.right_inv _
+  left_inv := fun ⟨f⟩ => congr_arg ReaderT.mk $ F.left_inv _
+  right_inv := fun ⟨f⟩ => congr_arg ReaderT.mk $ F.right_inv _
 #align reader_t.equiv ReaderTₓ.equiv
 

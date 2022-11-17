@@ -97,7 +97,7 @@ theorem RightTotal.rel_forall (h : RightTotal R) : ((R ⇒ Implies) ⇒ Implies)
 
 #print Relator.LeftTotal.rel_exists /-
 theorem LeftTotal.rel_exists (h : LeftTotal R) : ((R ⇒ Implies) ⇒ Implies) (fun p => ∃ i, p i) fun q => ∃ i, q i :=
-  fun p q Hrel ⟨a, pa⟩ => (h a).imp fun b Rab => Hrel Rab pa
+  fun p q Hrel ⟨a, pa⟩ => (h a).imp $ fun b Rab => Hrel Rab pa
 #align relator.left_total.rel_exists Relator.LeftTotal.rel_exists
 -/
 
@@ -110,8 +110,8 @@ theorem BiTotal.rel_forall (h : BiTotal R) : ((R ⇒ Iff) ⇒ Iff) (fun p => ∀
 
 #print Relator.BiTotal.rel_exists /-
 theorem BiTotal.rel_exists (h : BiTotal R) : ((R ⇒ Iff) ⇒ Iff) (fun p => ∃ i, p i) fun q => ∃ i, q i := fun p q Hrel =>
-  ⟨fun ⟨a, pa⟩ => (h.left a).imp fun b Rab => (Hrel Rab).1 pa, fun ⟨b, qb⟩ =>
-    (h.right b).imp fun a Rab => (Hrel Rab).2 qb⟩
+  ⟨fun ⟨a, pa⟩ => (h.left a).imp $ fun b Rab => (Hrel Rab).1 pa, fun ⟨b, qb⟩ =>
+    (h.right b).imp $ fun a Rab => (Hrel Rab).2 qb⟩
 #align relator.bi_total.rel_exists Relator.BiTotal.rel_exists
 -/
 
@@ -174,7 +174,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, (Relator.BiUnique.{u_1 u_2} α β r) -> (Relator.LiftFun.{succ u_1 succ u_2 succ u_1 succ u_2} α β (α -> Prop) (β -> Prop) r (Relator.LiftFun.{succ u_1 succ u_2 1 1} α β Prop Prop r (fun (x._@.Mathlib.Logic.Relator._hyg.2028 : Prop) (x._@.Mathlib.Logic.Relator._hyg.2030 : Prop) => Iff x._@.Mathlib.Logic.Relator._hyg.2028 x._@.Mathlib.Logic.Relator._hyg.2030)) (fun (x._@.Mathlib.Logic.Relator._hyg.2043 : α) (x._@.Mathlib.Logic.Relator._hyg.2045 : α) => Eq.{succ u_1} α x._@.Mathlib.Logic.Relator._hyg.2043 x._@.Mathlib.Logic.Relator._hyg.2045) (fun (x._@.Mathlib.Logic.Relator._hyg.2058 : β) (x._@.Mathlib.Logic.Relator._hyg.2060 : β) => Eq.{succ u_2} β x._@.Mathlib.Logic.Relator._hyg.2058 x._@.Mathlib.Logic.Relator._hyg.2060))
 Case conversion may be inaccurate. Consider using '#align relator.rel_eq Relator.rel_eqₓ'. -/
 theorem rel_eq {r : α → β → Prop} (hr : BiUnique r) : (r ⇒ r ⇒ (· ↔ ·)) (· = ·) (· = ·) := fun a b h₁ c d h₂ =>
-  ⟨fun h => hr.right h₁ <| h.symm ▸ h₂, fun h => hr.left h₁ <| h.symm ▸ h₂⟩
+  ⟨fun h => hr.right h₁ $ h.symm ▸ h₂, fun h => hr.left h₁ $ h.symm ▸ h₂⟩
 #align relator.rel_eq Relator.rel_eq
 
 end Relator

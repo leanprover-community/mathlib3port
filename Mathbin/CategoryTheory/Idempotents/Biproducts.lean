@@ -71,15 +71,37 @@ end Biproducts
 
 theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
   { HasBiproductsOfShape := fun J hJ =>
-      { HasBiproduct := fun F => by
-          classical letI := hJ
-            ext1
-            simp only [id_eq, comp_id, biproducts.bicone_X_p, biproduct.ι_map]
-            rotate_left
-            · intro h
-              exfalso
-              simpa only [Finset.mem_univ, not_true] using h
-               } }
+      { HasBiproduct := fun F => by classical
+          letI := hJ
+          apply has_biproduct_of_total (biproducts.bicone F)
+          ext1
+          ext1
+          simp only [id_eq, comp_id, biproducts.bicone_X_p, biproduct.ι_map]
+          rw [sum_hom, comp_sum, Finset.sum_eq_single j]
+          rotate_left
+          · intro j' h1 h2
+            simp only [biproduct.ι_map, biproducts.bicone_ι_f, biproducts.bicone_π_f, assoc, comp, biproduct.map_π]
+            slice_lhs 1 2 => rw [biproduct.ι_π]
+            split_ifs
+            · exfalso
+              exact h2 h.symm
+              
+            · simp only [zero_comp]
+              
+            
+          · intro h
+            exfalso
+            simpa only [Finset.mem_univ, not_true] using h
+            
+          · simp only [biproducts.bicone_π_f, comp, biproduct.ι_map, assoc, biproducts.bicone_ι_f, biproduct.map_π]
+            slice_lhs 1 2 => rw [biproduct.ι_π]
+            split_ifs
+            swap
+            · exfalso
+              exact h rfl
+              
+            simp only [eq_to_hom_refl, id_comp, (F j).idem]
+             } }
 #align
   category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubi_has_finite_biproducts
 

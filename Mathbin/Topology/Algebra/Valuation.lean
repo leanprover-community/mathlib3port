@@ -127,7 +127,7 @@ theorem has_basis_uniformity : (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀�
 #align valued.has_basis_uniformity Valued.has_basis_uniformity
 
 theorem to_uniform_space_eq : to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroupsBasis.topology _ :=
-  uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis <| v.subgroupsBasis.has_basis_nhds_zero.comap _)
+  uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis $ v.subgroupsBasis.has_basis_nhds_zero.comap _)
 #align valued.to_uniform_space_eq Valued.to_uniform_space_eq
 
 variable {R Γ₀}
@@ -153,7 +153,7 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 instance (priority := 100) : TopologicalRing R :=
   (to_uniform_space_eq R Γ₀).symm ▸ v.subgroupsBasis.toRingFilterBasis.isTopologicalRing
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔ F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ := by
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]

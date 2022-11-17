@@ -58,8 +58,8 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (u «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (F «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (u «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
@@ -101,10 +101,10 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   have hη_pos' : (0 : ℝ≥0∞) < η := Ennreal.coe_pos.2 hη_pos
   -- Use the regularity of the measure to `η`-approximate `s` by an open superset and a closed
   -- subset
-  obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ↑η := by
+  obtain ⟨u, su, u_open, μu⟩ : ∃ (u) (_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ↑η := by
     refine' s.exists_is_open_lt_of_lt _ _
     simpa using Ennreal.add_lt_add_left hsμ.ne hη_pos'
-  obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ↑η :=
+  obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F) (_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ↑η :=
     hs.exists_is_closed_lt_add hsμ.ne hη_pos'.ne'
   have : Disjoint (uᶜ) F := (Fs.trans su).disjoint_compl_left
   have h_μ_sdiff : μ (u \ F) ≤ 2 * η := by

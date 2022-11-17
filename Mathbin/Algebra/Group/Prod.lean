@@ -161,8 +161,8 @@ theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).swap = a.swap / b.swap
 
 instance [MulZeroClass M] [MulZeroClass N] : MulZeroClass (M × N) :=
   { Prod.hasZero, Prod.hasMul with
-    zero_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩,
-    mul_zero := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_zero _, mul_zero _⟩ }
+    zero_mul := fun a => Prod.recOn a $ fun a b => mk.inj_iff.mpr ⟨zero_mul _, zero_mul _⟩,
+    mul_zero := fun a => Prod.recOn a $ fun a b => mk.inj_iff.mpr ⟨mul_zero _, mul_zero _⟩ }
 
 @[to_additive]
 instance [Semigroup M] [Semigroup N] : Semigroup (M × N) :=
@@ -177,8 +177,8 @@ instance [SemigroupWithZero M] [SemigroupWithZero N] : SemigroupWithZero (M × N
 
 @[to_additive]
 instance [MulOneClass M] [MulOneClass N] : MulOneClass (M × N) :=
-  { Prod.hasMul, Prod.hasOne with one_mul := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨one_mul _, one_mul _⟩,
-    mul_one := fun a => (Prod.recOn a) fun a b => mk.inj_iff.mpr ⟨mul_one _, mul_one _⟩ }
+  { Prod.hasMul, Prod.hasOne with one_mul := fun a => Prod.recOn a $ fun a b => mk.inj_iff.mpr ⟨one_mul _, one_mul _⟩,
+    mul_one := fun a => Prod.recOn a $ fun a b => mk.inj_iff.mpr ⟨mul_one _, mul_one _⟩ }
 
 @[to_additive]
 instance [Monoid M] [Monoid N] : Monoid (M × N) :=
@@ -199,7 +199,7 @@ instance [DivInvMonoid G] [DivInvMonoid H] : DivInvMonoid (G × H) :=
 instance [DivisionMonoid G] [DivisionMonoid H] : DivisionMonoid (G × H) :=
   { Prod.divInvMonoid, Prod.hasInvolutiveInv with mul_inv_rev := fun a b => ext (mul_inv_rev _ _) (mul_inv_rev _ _),
     inv_eq_of_mul := fun a b h =>
-      ext (inv_eq_of_mul_eq_one_right <| congr_arg fst h) (inv_eq_of_mul_eq_one_right <| congr_arg snd h) }
+      ext (inv_eq_of_mul_eq_one_right $ congr_arg fst h) (inv_eq_of_mul_eq_one_right $ congr_arg snd h) }
 
 @[to_additive SubtractionCommMonoid]
 instance [DivisionCommMonoid G] [DivisionCommMonoid H] : DivisionCommMonoid (G × H) :=
@@ -307,17 +307,17 @@ theorem prod_apply (f : M →ₙ* N) (g : M →ₙ* P) (x) : f.Prod g x = (f x, 
 
 @[simp, to_additive fst_comp_prod]
 theorem fst_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (fst N P).comp (f.Prod g) = f :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align mul_hom.fst_comp_prod MulHom.fst_comp_prod
 
 @[simp, to_additive snd_comp_prod]
 theorem snd_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (snd N P).comp (f.Prod g) = g :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align mul_hom.snd_comp_prod MulHom.snd_comp_prod
 
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →ₙ* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
-  ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+  ext $ fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 #align mul_hom.prod_unique MulHom.prod_unique
 
 end Prod
@@ -369,7 +369,7 @@ theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
 @[to_additive]
 theorem comp_coprod {Q : Type _} [CommSemigroup Q] (h : P →ₙ* Q) (f : M →ₙ* P) (g : N →ₙ* P) :
     h.comp (f.coprod g) = (h.comp f).coprod (h.comp g) :=
-  ext fun x => by simp
+  ext $ fun x => by simp
 #align mul_hom.comp_coprod MulHom.comp_coprod
 
 end Coprod
@@ -472,17 +472,17 @@ theorem prod_apply (f : M →* N) (g : M →* P) (x) : f.Prod g x = (f x, g x) :
 
 @[simp, to_additive fst_comp_prod]
 theorem fst_comp_prod (f : M →* N) (g : M →* P) : (fst N P).comp (f.Prod g) = f :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align monoid_hom.fst_comp_prod MonoidHom.fst_comp_prod
 
 @[simp, to_additive snd_comp_prod]
 theorem snd_comp_prod (f : M →* N) (g : M →* P) : (snd N P).comp (f.Prod g) = g :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align monoid_hom.snd_comp_prod MonoidHom.snd_comp_prod
 
 @[simp, to_additive prod_unique]
 theorem prod_unique (f : M →* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
-  ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+  ext $ fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 #align monoid_hom.prod_unique MonoidHom.prod_unique
 
 end Prod
@@ -533,28 +533,28 @@ theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
 
 @[simp, to_additive]
 theorem coprod_comp_inl : (f.coprod g).comp (inl M N) = f :=
-  ext fun x => by simp [coprod_apply]
+  ext $ fun x => by simp [coprod_apply]
 #align monoid_hom.coprod_comp_inl MonoidHom.coprod_comp_inl
 
 @[simp, to_additive]
 theorem coprod_comp_inr : (f.coprod g).comp (inr M N) = g :=
-  ext fun x => by simp [coprod_apply]
+  ext $ fun x => by simp [coprod_apply]
 #align monoid_hom.coprod_comp_inr MonoidHom.coprod_comp_inr
 
 @[simp, to_additive]
 theorem coprod_unique (f : M × N →* P) : (f.comp (inl M N)).coprod (f.comp (inr M N)) = f :=
-  ext fun x => by simp [coprod_apply, inl_apply, inr_apply, ← map_mul]
+  ext $ fun x => by simp [coprod_apply, inl_apply, inr_apply, ← map_mul]
 #align monoid_hom.coprod_unique MonoidHom.coprod_unique
 
 @[simp, to_additive]
 theorem coprod_inl_inr {M N : Type _} [CommMonoid M] [CommMonoid N] : (inl M N).coprod (inr M N) = id (M × N) :=
-  coprod_unique (id <| M × N)
+  coprod_unique (id $ M × N)
 #align monoid_hom.coprod_inl_inr MonoidHom.coprod_inl_inr
 
 @[to_additive]
 theorem comp_coprod {Q : Type _} [CommMonoid Q] (h : P →* Q) (f : M →* P) (g : N →* P) :
     h.comp (f.coprod g) = (h.comp f).coprod (h.comp g) :=
-  ext fun x => by simp
+  ext $ fun x => by simp
 #align monoid_hom.comp_coprod MonoidHom.comp_coprod
 
 end Coprod
@@ -643,7 +643,7 @@ def embedProduct (α : Type _) [Monoid α] : αˣ →* α × αᵐᵒᵖ where
 
 @[to_additive]
 theorem embed_product_injective (α : Type _) [Monoid α] : Function.Injective (embedProduct α) := fun a₁ a₂ h =>
-  Units.ext <| (congr_arg Prod.fst h : _)
+  Units.ext $ (congr_arg Prod.fst h : _)
 #align units.embed_product_injective Units.embed_product_injective
 
 end Units

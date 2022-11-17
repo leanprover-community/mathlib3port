@@ -52,7 +52,7 @@ section
 /-- `pseudo_epimorphism_class F α β` states that `F` is a type of `⊔`-preserving morphisms.
 
 You should extend this class when you extend `pseudo_epimorphism`. -/
-class PseudoEpimorphismClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β] extends
+class PseudoEpimorphismClass (F : Type _) (α β : outParam $ Type _) [Preorder α] [Preorder β] extends
   RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   exists_map_eq_of_map_le (f : F) ⦃a : α⦄ ⦃b : β⦄ : f a ≤ b → ∃ c, a ≤ c ∧ f c = b
 #align pseudo_epimorphism_class PseudoEpimorphismClass
@@ -60,7 +60,7 @@ class PseudoEpimorphismClass (F : Type _) (α β : outParam <| Type _) [Preorder
 /-- `esakia_hom_class F α β` states that `F` is a type of lattice morphisms.
 
 You should extend this class when you extend `esakia_hom`. -/
-class EsakiaHomClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [Preorder α] [TopologicalSpace β]
+class EsakiaHomClass (F : Type _) (α β : outParam $ Type _) [TopologicalSpace α] [Preorder α] [TopologicalSpace β]
   [Preorder β] extends ContinuousOrderHomClass F α β where
   exists_map_eq_of_map_le (f : F) ⦃a : α⦄ ⦃b : β⦄ : f a ≤ b → ∃ c, a ≤ c ∧ f c = b
 #align esakia_hom_class EsakiaHomClass
@@ -74,7 +74,7 @@ instance (priority := 100) PseudoEpimorphismClass.toTopHomClass [PartialOrder α
     [PseudoEpimorphismClass F α β] : TopHomClass F α β :=
   { ‹PseudoEpimorphismClass F α β› with
     map_top := fun f => by
-      let ⟨b, h⟩ := exists_map_eq_of_map_le f (@le_top _ _ _ <| f ⊤)
+      let ⟨b, h⟩ := exists_map_eq_of_map_le f (@le_top _ _ _ $ f ⊤)
       rw [← top_le_iff.1 h.1, h.2] }
 #align pseudo_epimorphism_class.to_top_hom_class PseudoEpimorphismClass.toTopHomClass
 
@@ -194,22 +194,22 @@ theorem comp_assoc (h : PseudoEpimorphism γ δ) (g : PseudoEpimorphism β γ) (
 
 @[simp]
 theorem comp_id (f : PseudoEpimorphism α β) : f.comp (PseudoEpimorphism.id α) = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align pseudo_epimorphism.comp_id PseudoEpimorphism.comp_id
 
 @[simp]
 theorem id_comp (f : PseudoEpimorphism α β) : (PseudoEpimorphism.id β).comp f = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align pseudo_epimorphism.id_comp PseudoEpimorphism.id_comp
 
 theorem cancel_right {g₁ g₂ : PseudoEpimorphism β γ} {f : PseudoEpimorphism α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
 #align pseudo_epimorphism.cancel_right PseudoEpimorphism.cancel_right
 
 theorem cancel_left {g : PseudoEpimorphism β γ} {f₁ f₂ : PseudoEpimorphism α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align pseudo_epimorphism.cancel_left PseudoEpimorphism.cancel_left
 
 end PseudoEpimorphism
@@ -328,21 +328,21 @@ theorem comp_assoc (h : EsakiaHom γ δ) (g : EsakiaHom β γ) (f : EsakiaHom α
 
 @[simp]
 theorem comp_id (f : EsakiaHom α β) : f.comp (EsakiaHom.id α) = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align esakia_hom.comp_id EsakiaHom.comp_id
 
 @[simp]
 theorem id_comp (f : EsakiaHom α β) : (EsakiaHom.id β).comp f = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align esakia_hom.id_comp EsakiaHom.id_comp
 
 theorem cancel_right {g₁ g₂ : EsakiaHom β γ} {f : EsakiaHom α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
 #align esakia_hom.cancel_right EsakiaHom.cancel_right
 
 theorem cancel_left {g : EsakiaHom β γ} {f₁ f₂ : EsakiaHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align esakia_hom.cancel_left EsakiaHom.cancel_left
 
 end EsakiaHom

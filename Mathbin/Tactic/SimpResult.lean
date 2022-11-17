@@ -67,11 +67,11 @@ unsafe def intercept_result {α} (m : expr → tactic expr) (t : tactic α) : ta
           gs').mmap
       fun ⟨g, g'⟩ => do
       let g' ← instantiate_mvars g'
-      let g'' ← with_local_goals' gs <| m g'
+      let g'' ← with_local_goals' gs $ m g'
       -- and assign to the original goals.
           -- (We have to use `assign` here, as `unify` and `exact` are apparently
           -- unreliable about which way they do the assignment!)
-          unsafe.type_context.run <|
+          unsafe.type_context.run $
           unsafe.type_context.assign g g''
   pure a
 #align tactic.intercept_result tactic.intercept_result
@@ -101,8 +101,7 @@ unsafe def simp_result {α} (t : tactic α) (cfg : SimpConfig := { failIfUnchang
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `dsimp_result { tac }`
 attempts to run a tactic block `tac`,
 intercepts any results the tactic block would have assigned to the goals,

@@ -91,7 +91,7 @@ theorem by_contradiction_trick (p : Prop) (h : ∀ f : Prop, (p → f) → f) : 
 unsafe def preprocess_goal : tactic Unit := do
   repeat (intro1 >> skip)
   let tgt ← target >>= whnf_reducible
-  if ¬is_false tgt then ((mk_mapp `` Classical.by_contradiction [some tgt] >>= apply) >> intro1) >> skip else skip
+  if ¬is_false tgt then mk_mapp `` Classical.by_contradiction [some tgt] >>= apply >> intro1 >> skip else skip
 #align auto.preprocess_goal auto.preprocess_goal
 
 /-!
@@ -157,37 +157,59 @@ def classicalNormalizeLemmaNames : List Name :=
   common_normalize_lemma_names ++ [`` classical.implies_iff_not_or]
 #align auto.classical_normalize_lemma_names Auto.classicalNormalizeLemmaNames
 
-/-- optionally returns an equivalent expression and proof of equivalence -/
-private unsafe def transform_negation_step (cfg : AutoConfig) (e : expr) : tactic (Option (expr × expr)) := do
-  let e ← whnf_reducible e
-  match e with
-    | quote.1 ¬%%ₓNe => do
-      let ne ← whnf_reducible Ne
-      match Ne with
-        | quote.1 ¬%%ₓa => do
-          let pr ← mk_app `` not_not_eq [a]
-          return (some (a, pr))
-        | quote.1 ((%%ₓa) ∧ %%ₓb) => do
-          let pr ← mk_app `` not_and_eq [a, b]
-          return (some (quote.1 ((¬%%ₓa) ∨ ¬%%ₓb), pr))
-        | quote.1 ((%%ₓa) ∨ %%ₓb) => do
-          let pr ← mk_app `` not_or_eq [a, b]
-          return (some (quote.1 ((¬%%ₓa) ∧ ¬%%ₓb), pr))
-        | quote.1 (Exists (%%ₓp)) => do
-          let pr ← mk_app `` not_exists_eq [p]
-          let quote.1 ((%%ₓ_) = %%ₓe') ← infer_type pr
-          return (some (e', pr))
-        | pi n bi d p =>
-          if p then do
-            let pr ← mk_app `` not_forall_eq [lam n bi d (expr.abstract_local p n)]
-            let quote.1 ((%%ₓ_) = %%ₓe') ← infer_type pr
-            return (some (e', pr))
-          else do
-            let pr ← mk_app `` not_implies_eq [d, p]
-            let quote.1 ((%%ₓ_) = %%ₓe') ← infer_type pr
-            return (some (e', pr))
-        | _ => return none
-    | _ => return none
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- optionally returns an equivalent expression and proof of equivalence -/ private unsafe
+  def
+    transform_negation_step
+    ( cfg : AutoConfig ) ( e : expr ) : tactic ( Option ( expr × expr ) )
+    :=
+      do
+        let e ← whnf_reducible e
+          match
+            e
+            with
+            |
+                q( ¬ $ ( Ne ) )
+                =>
+                do
+                  let ne ← whnf_reducible Ne
+                    match
+                      Ne
+                      with
+                      | q( ¬ $ ( a ) ) => do let pr ← mk_app ` ` not_not_eq [ a ] return ( some ( a , pr ) )
+                        |
+                          q( $ ( a ) ∧ $ ( b ) )
+                          =>
+                          do
+                            let pr ← mk_app ` ` not_and_eq [ a , b ] return ( some ( q( ¬ $ ( a ) ∨ ¬ $ ( b ) ) , pr ) )
+                        |
+                          q( $ ( a ) ∨ $ ( b ) )
+                          =>
+                          do let pr ← mk_app ` ` not_or_eq [ a , b ] return ( some ( q( ¬ $ ( a ) ∧ ¬ $ ( b ) ) , pr ) )
+                        |
+                          q( Exists $ ( p ) )
+                          =>
+                          do
+                            let pr ← mk_app ` ` not_exists_eq [ p ]
+                              let q( $ ( _ ) = $ ( e' ) ) ← infer_type pr
+                              return ( some ( e' , pr ) )
+                        |
+                          pi n bi d p
+                          =>
+                          if
+                            p
+                            then
+                            do
+                              let pr ← mk_app ` ` not_forall_eq [ lam n bi d ( expr.abstract_local p n ) ]
+                                let q( $ ( _ ) = $ ( e' ) ) ← infer_type pr
+                                return ( some ( e' , pr ) )
+                            else
+                            do
+                              let pr ← mk_app ` ` not_implies_eq [ d , p ]
+                                let q( $ ( _ ) = $ ( e' ) ) ← infer_type pr
+                                return ( some ( e' , pr ) )
+                        | _ => return none
+              | _ => return none
 #align auto.transform_negation_step auto.transform_negation_step
 
 /-- given an expr `e`, returns a new expression and a proof of equality -/
@@ -240,12 +262,12 @@ unsafe def normalize_hyps (cfg : AutoConfig) : tactic Unit := do
 /-- eliminate an existential quantifier if there is one -/
 unsafe def eelim : tactic Unit := do
   let ctx ← local_context
-  first <|
-      ctx fun h => do
+  first $
+      ctx $ fun h => do
         let t ← infer_type h >>= whnf_reducible
         guard (is_app_of t `` Exists)
         let tgt ← target
-        to_expr (pquote.1 (@Exists.elim _ _ (%%ₓtgt) (%%ₓh))) >>= apply
+        to_expr ``(@Exists.elim _ _ $(tgt) $(h)) >>= apply
         intros
         clear h
 #align auto.eelim auto.eelim
@@ -260,15 +282,24 @@ unsafe def eelims : tactic Unit :=
 -/
 
 
-/-- carries out a subst if there is one, fails otherwise -/
-unsafe def do_subst : tactic Unit := do
-  let ctx ← local_context
-  first <|
-      ctx fun h => do
-        let t ← infer_type h >>= whnf_reducible
-        match t with
-          | quote.1 ((%%ₓa) = %%ₓb) => subst h
-          | _ => failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- carries out a subst if there is one, fails otherwise -/ unsafe
+  def
+    do_subst
+    : tactic Unit
+    :=
+      do
+        let ctx ← local_context
+          first
+            $
+            ctx
+              $
+              fun
+                h
+                  =>
+                  do
+                    let t ← infer_type h >>= whnf_reducible
+                      match t with | q( $ ( a ) = $ ( b ) ) => subst h | _ => failed
 #align auto.do_subst auto.do_subst
 
 unsafe def do_substs : tactic Unit :=
@@ -280,22 +311,36 @@ unsafe def do_substs : tactic Unit :=
 -/
 
 
-/-- Assumes `pr` is a proof of `t`. Adds the consequences of `t` to the context
- and returns `tt` if anything nontrivial has been added. -/
-unsafe def add_conjuncts : expr → expr → tactic Bool := fun pr t =>
-  let assert_consequences e t := condM (add_conjuncts e t) skip (note_anon t e >> skip)
-  do
-  let t' ← whnf_reducible t
-  match t' with
-    | quote.1 ((%%ₓa) ∧ %%ₓb) => do
-      let e₁ ← mk_app `` And.left [pr]
-      assert_consequences e₁ a
-      let e₂ ← mk_app `` And.right [pr]
-      assert_consequences e₂ b
-      return tt
-    | quote.1 True => do
-      return tt
-    | _ => return ff
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Assumes `pr` is a proof of `t`. Adds the consequences of `t` to the context
+       and returns `tt` if anything nontrivial has been added. -/
+    unsafe
+  def
+    add_conjuncts
+    : expr → expr → tactic Bool
+    :=
+      fun
+        pr t
+          =>
+          let
+            assert_consequences e t := condM ( add_conjuncts e t ) skip ( note_anon t e >> skip )
+            do
+              let t' ← whnf_reducible t
+                match
+                  t'
+                  with
+                  |
+                      q( $ ( a ) ∧ $ ( b ) )
+                      =>
+                      do
+                        let e₁ ← mk_app ` ` And.left [ pr ]
+                          assert_consequences e₁ a
+                          let e₂ ← mk_app ` ` And.right [ pr ]
+                          assert_consequences e₂ b
+                          return tt
+                    | q( True ) => do return tt
+                    | _ => return ff
 #align auto.add_conjuncts auto.add_conjuncts
 
 /-- return `tt` if any progress is made -/
@@ -354,7 +399,7 @@ unsafe def mk_hinst_lemmas : List expr → smt_tactic hinst_lemmas
     match t with
       | pi _ _ _ _ => do
         let t' ← infer_type t
-        if t' = quote.1 Prop then
+        if t' = q(Prop) then
             (do
                 let new_lemma ← hinst_lemma.mk h
                 return (hinst_lemmas.add his new_lemma)) <|>
@@ -375,18 +420,18 @@ private unsafe def add_hinst_lemma_from_name (md : Transparency) (lhs_lemma : Bo
       (do
           let h ← hinst_lemma.mk_from_decl_core md n lhs_lemma
           tactic.save_const_type_info n ref
-          return <| hs h) <|>
+          return $ hs h) <|>
         (do
             let hs₁ ← smt_tactic.mk_ematch_eqn_lemmas_for_core md n
             tactic.save_const_type_info n ref
-            return <| hs hs₁) <|>
+            return $ hs hs₁) <|>
           report_invalid_em_lemma n
     | _ =>
       (do
           let e ← to_expr p
           let h ← hinst_lemma.mk_core md e lhs_lemma
           try (tactic.save_type_info e ref)
-          return <| hs h) <|>
+          return $ hs h) <|>
         report_invalid_em_lemma n
 #align auto.add_hinst_lemma_from_name auto.add_hinst_lemma_from_name
 
@@ -397,7 +442,7 @@ private unsafe def add_hinst_lemma_from_pexpr (md : Transparency) (lhs_lemma : B
   | p => do
     let new_e ← to_expr p
     let h ← hinst_lemma.mk_core md new_e lhs_lemma
-    return <| hs h
+    return $ hs h
 #align auto.add_hinst_lemma_from_pexpr auto.add_hinst_lemma_from_pexpr
 
 private unsafe def add_hinst_lemmas_from_pexprs (md : Transparency) (lhs_lemma : Bool) (ps : List pexpr)
@@ -412,7 +457,7 @@ universally quantified assumptions, and the supplied lemmas `ps`) and congruence
 unsafe def done (ps : List pexpr) (cfg : AutoConfig := {  }) : tactic Unit := do
   trace_state_if_enabled `auto.done "entering done"
   contradiction <|>
-      (solve1 <| do
+      (solve1 $ do
         revert_all
         using_smt do
             smt_tactic.intros
@@ -443,23 +488,22 @@ private unsafe def case_cont (s : CaseOption) (cont : CaseOption → tactic Unit
     |
     case_option.at_most_one =>-- if the first one succeeds, commit to it, and try the second
           condM
-          (cont case_option.force >> return tt) (cont case_option.at_most_one) skip <|>
-        (-- otherwise, try the second
+          (cont case_option.force >> return tt) (cont case_option.at_most_one) skip <|>-- otherwise, try the second
             swap >>
-            cont case_option.force) >>
+            cont case_option.force >>
           cont case_option.at_most_one
     | case_option.accept => focus' [cont case_option.accept, cont case_option.accept]
 #align auto.case_cont auto.case_cont
 
--- three possible outcomes:
---   finds something to case, the continuations succeed ==> returns tt
---   finds something to case, the continutations fail ==> fails
---   doesn't find anything to case ==> returns ff
-unsafe def case_hyp (h : expr) (s : CaseOption) (cont : CaseOption → tactic Unit) : tactic Bool := do
-  let t ← infer_type h
-  match t with
-    | quote.1 ((%%ₓa) ∨ %%ₓb) => (cases h >> case_cont s cont) >> return tt
-    | _ => return ff
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+unsafe
+  def
+    case_hyp
+    ( h : expr ) ( s : CaseOption ) ( cont : CaseOption → tactic Unit ) : tactic Bool
+    :=
+      do
+        let t ← infer_type h
+          match t with | q( $ ( a ) ∨ $ ( b ) ) => cases h >> case_cont s cont >> return tt | _ => return ff
 #align auto.case_hyp auto.case_hyp
 
 unsafe def case_some_hyp_aux (s : CaseOption) (cont : CaseOption → tactic Unit) : List expr → tactic Bool
@@ -493,7 +537,7 @@ it will:
 -/
 unsafe def safe_core (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig) : CaseOption → tactic Unit :=
   fun co =>
-  focus1 <| do
+  focus1 $ do
     trace_state_if_enabled `auto.finish "entering safe_core"
     if cfg then do
         trace_if_enabled `auto.finish "simplifying hypotheses"
@@ -544,8 +588,7 @@ namespace Tactic
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `clarify [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,

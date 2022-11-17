@@ -80,7 +80,7 @@ def decidableEqNone {o : Option α} : Decidable (o = none) :=
 #print Option.decidableForallMem /-
 instance decidableForallMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀ a ∈ o, p a)
   | none => isTrue (by simp [false_imp_iff])
-  | some a => if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
+  | some a => if h : p a then is_true $ fun o e => some_inj.1 e ▸ h else is_false $ mt (fun H => H _ rfl) h
 #align option.decidable_forall_mem Option.decidableForallMem
 -/
 
@@ -92,7 +92,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align option.decidable_exists_mem Option.decidableExistsMemₓ'. -/
 instance decidableExistsMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ a ∈ o, p a)
   | none => isFalse fun ⟨a, ⟨h, _⟩⟩ => by cases h
-  | some a => if h : p a then is_true <| ⟨_, rfl, h⟩ else is_false fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
+  | some a => if h : p a then is_true $ ⟨_, rfl, h⟩ else is_false $ fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
 #align option.decidable_exists_mem Option.decidableExistsMem
 
 #print Option.iget /-

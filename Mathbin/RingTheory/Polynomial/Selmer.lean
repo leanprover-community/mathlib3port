@@ -28,7 +28,7 @@ variable {n : ℕ}
 theorem X_pow_sub_X_sub_one_irreducible_aux (z : ℂ) : ¬(z ^ n = z + 1 ∧ z ^ n + z ^ 2 = 0) := by
   rintro ⟨h1, h2⟩
   replace h3 : z ^ 3 = 1
-  · linear_combination(1 - z - z ^ 2 - z ^ n) * h1 + (z ^ n - 2) * h2
+  · linear_combination (1 - z - z ^ 2 - z ^ n) * h1 + (z ^ n - 2) * h2
     
   -- thanks polyrith!
   have key : z ^ n = 1 ∨ z ^ n = z ∨ z ^ n = z ^ 2 := by
@@ -64,7 +64,7 @@ theorem X_pow_sub_X_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X
   replace h2 := mul_eq_zero_of_left h2 z
   rw [add_mul, add_mul, add_zero, mul_assoc (-1 : ℂ), ← pow_succ', Nat.sub_add_cancel hn.le] at h2
   rw [h1] at h2⊢
-  exact ⟨rfl, by linear_combination-h2⟩
+  exact ⟨rfl, by linear_combination -h2⟩
 #align polynomial.X_pow_sub_X_sub_one_irreducible Polynomial.X_pow_sub_X_sub_one_irreducible
 
 theorem X_pow_sub_X_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (X ^ n - X - 1 : ℚ[X]) := by

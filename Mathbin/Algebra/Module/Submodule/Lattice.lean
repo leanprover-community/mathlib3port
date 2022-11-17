@@ -75,7 +75,7 @@ theorem restrict_scalars_eq_bot_iff {p : Submodule R M} : restrictScalars S p = 
 #align submodule.restrict_scalars_eq_bot_iff Submodule.restrict_scalars_eq_bot_iff
 
 instance uniqueBot : Unique (⊥ : Submodule R M) :=
-  ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.Mem⟩
+  ⟨inferInstance, fun x => Subtype.ext $ (mem_bot R).1 x.Mem⟩
 #align submodule.unique_bot Submodule.uniqueBot
 
 instance : OrderBot (Submodule R M) where
@@ -221,10 +221,10 @@ instance : HasInf (Submodule R M) :=
 
 instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
-    le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb,
+    le_sup_left := fun a b => le_Inf' $ fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf' $ fun x ⟨ha, hb⟩ => hb,
     sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := (· ⊓ ·), le_inf := fun a b c => Set.subset_inter,
     inf_le_left := fun a b => Set.inter_subset_left _ _, inf_le_right := fun a b => Set.inter_subset_right _ _,
-    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t }, le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs,
+    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t }, le_Sup := fun s p hs => le_Inf' $ fun q hq => hq _ hs,
     Sup_le := fun s p hs => Inf_le' hs, inf := inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
 
 @[simp]
@@ -300,12 +300,12 @@ open BigOperators
 
 theorem sum_mem_supr {ι : Type _} [Fintype ι] {f : ι → M} {p : ι → Submodule R M} (h : ∀ i, f i ∈ p i) :
     (∑ i, f i) ∈ ⨆ i, p i :=
-  sum_mem fun i hi => mem_supr_of_mem i (h i)
+  sum_mem $ fun i hi => mem_supr_of_mem i (h i)
 #align submodule.sum_mem_supr Submodule.sum_mem_supr
 
 theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M} (h : ∀ i ∈ s, f i ∈ p i) :
     (∑ i in s, f i) ∈ ⨆ i ∈ s, p i :=
-  sum_mem fun i hi => mem_supr_of_mem i <| mem_supr_of_mem hi (h i hi)
+  sum_mem $ fun i hi => mem_supr_of_mem i $ mem_supr_of_mem hi (h i hi)
 #align submodule.sum_mem_bsupr Submodule.sum_mem_bsupr
 
 /-! Note that `submodule.mem_supr` is provided in `linear_algebra/basic.lean`. -/
@@ -316,11 +316,11 @@ theorem mem_Sup_of_mem {S : Set (Submodule R M)} {s : Submodule R M} (hs : s ∈
 #align submodule.mem_Sup_of_mem Submodule.mem_Sup_of_mem
 
 theorem disjoint_def {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x ∈ p, x ∈ p' → x = (0 : M) :=
-  disjoint_iff_inf_le.trans <| show (∀ x, x ∈ p ∧ x ∈ p' → x ∈ ({0} : Set M)) ↔ _ by simp
+  disjoint_iff_inf_le.trans $ show (∀ x, x ∈ p ∧ x ∈ p' → x ∈ ({0} : Set M)) ↔ _ by simp
 #align submodule.disjoint_def Submodule.disjoint_def
 
 theorem disjoint_def' {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x ∈ p, ∀ y ∈ p', x = y → x = (0 : M) :=
-  disjoint_def.trans ⟨fun h x hx y hy hxy => h x hx <| hxy.symm ▸ hy, fun h x hx hx' => h _ hx x hx' rfl⟩
+  disjoint_def.trans ⟨fun h x hx y hy hxy => h x hx $ hxy.symm ▸ hy, fun h x hx hx' => h _ hx x hx' rfl⟩
 #align submodule.disjoint_def' Submodule.disjoint_def'
 
 theorem eq_zero_of_coe_mem_of_disjoint (hpq : Disjoint p q) {a : p} (ha : (a : M) ∈ q) : a = 0 := by

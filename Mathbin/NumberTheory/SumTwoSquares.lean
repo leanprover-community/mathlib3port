@@ -20,9 +20,10 @@ prime p congruent to 3 mod 4, the largest power of p dividing them is even.
 
 open GaussianInt
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- **Fermat's theorem on the sum of two squares**. Every prime congruent to 1 mod 4 is the sum
 of two squares. Also known as **Fermat's Christmas theorem**. -/
-theorem Nat.Prime.sq_add_sq {p : ℕ} [Fact p.Prime] (hp : p % 4 = 1) : ∃ a b : ℕ, a ^ 2 + b ^ 2 = p := by
+theorem Nat.Prime.sq_add_sq {p : ℕ} [Fact p.Prime] (hp : p % 4 = 1) : ∃ (a : ℕ) (b : ℕ), a ^ 2 + b ^ 2 = p := by
   apply sq_add_sq_of_nat_prime_of_not_irreducible p
   rw [PrincipalIdealRing.irreducible_iff_prime, prime_iff_mod_four_eq_three_of_nat_prime p, hp]
   norm_num

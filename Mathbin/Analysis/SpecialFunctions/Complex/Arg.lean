@@ -310,7 +310,7 @@ theorem arg_of_im_nonneg_of_ne_zero {z : ℂ} (h₁ : 0 ≤ z.im) (h₂ : z ≠ 
 #align complex.arg_of_im_nonneg_of_ne_zero Complex.arg_of_im_nonneg_of_ne_zero
 
 theorem arg_of_im_pos {z : ℂ} (hz : 0 < z.im) : arg z = Real.arccos (z.re / abs z) :=
-  arg_of_im_nonneg_of_ne_zero hz.le fun h => hz.ne' <| h.symm ▸ rfl
+  arg_of_im_nonneg_of_ne_zero hz.le fun h => hz.ne' $ h.symm ▸ rfl
 #align complex.arg_of_im_pos Complex.arg_of_im_pos
 
 theorem arg_of_im_neg {z : ℂ} (hz : z.im < 0) : arg z = -Real.arccos (z.re / abs z) := by
@@ -362,7 +362,7 @@ theorem arg_le_pi_div_two_iff {z : ℂ} : arg z ≤ π / 2 ↔ 0 ≤ re z ∨ im
     rw [iff_false_iff, not_le, arg_of_re_neg_of_im_nonneg hre him, ← sub_lt_iff_lt_add, half_sub,
       Real.neg_pi_div_two_lt_arcsin, neg_im, neg_div, neg_lt_neg_iff, div_lt_one, ← _root_.abs_of_nonneg him,
       abs_im_lt_abs]
-    exacts[hre.ne, abs.pos <| ne_of_apply_ne re hre.ne]
+    exacts[hre.ne, abs.pos $ ne_of_apply_ne re hre.ne]
     
   · simp only [him]
     rw [iff_true_iff, arg_of_re_neg_of_im_neg hre him]
@@ -383,7 +383,7 @@ theorem neg_pi_div_two_le_arg_iff {z : ℂ} : -(π / 2) ≤ arg z ↔ 0 ≤ re z
   · simp only [him.not_le]
     rw [iff_false_iff, not_le, arg_of_re_neg_of_im_neg hre him, sub_lt_iff_lt_add', ← sub_eq_add_neg, sub_half,
       Real.arcsin_lt_pi_div_two, div_lt_one, neg_im, ← abs_of_neg him, abs_im_lt_abs]
-    exacts[hre.ne, abs.pos <| ne_of_apply_ne re hre.ne]
+    exacts[hre.ne, abs.pos $ ne_of_apply_ne re hre.ne]
     
 #align complex.neg_pi_div_two_le_arg_iff Complex.neg_pi_div_two_le_arg_iff
 
@@ -538,7 +538,7 @@ section Continuity
 variable {x z : ℂ}
 
 theorem arg_eq_nhds_of_re_pos (hx : 0 < x.re) : arg =ᶠ[𝓝 x] fun x => Real.arcsin (x.im / x.abs) :=
-  ((continuous_re.Tendsto _).Eventually (lt_mem_nhds hx)).mono fun y hy => arg_of_re_nonneg hy.le
+  ((continuous_re.Tendsto _).Eventually (lt_mem_nhds hx)).mono $ fun y hy => arg_of_re_nonneg hy.le
 #align complex.arg_eq_nhds_of_re_pos Complex.arg_eq_nhds_of_re_pos
 
 theorem arg_eq_nhds_of_re_neg_of_im_pos (hx_re : x.re < 0) (hx_im : 0 < x.im) :
@@ -558,11 +558,11 @@ theorem arg_eq_nhds_of_re_neg_of_im_neg (hx_re : x.re < 0) (hx_im : x.im < 0) :
 #align complex.arg_eq_nhds_of_re_neg_of_im_neg Complex.arg_eq_nhds_of_re_neg_of_im_neg
 
 theorem arg_eq_nhds_of_im_pos (hz : 0 < im z) : arg =ᶠ[𝓝 z] fun x => Real.arccos (x.re / abs x) :=
-  ((continuous_im.Tendsto _).Eventually (lt_mem_nhds hz)).mono fun x => arg_of_im_pos
+  ((continuous_im.Tendsto _).Eventually (lt_mem_nhds hz)).mono $ fun x => arg_of_im_pos
 #align complex.arg_eq_nhds_of_im_pos Complex.arg_eq_nhds_of_im_pos
 
 theorem arg_eq_nhds_of_im_neg (hz : im z < 0) : arg =ᶠ[𝓝 z] fun x => -Real.arccos (x.re / abs x) :=
-  ((continuous_im.Tendsto _).Eventually (gt_mem_nhds hz)).mono fun x => arg_of_im_neg
+  ((continuous_im.Tendsto _).Eventually (gt_mem_nhds hz)).mono $ fun x => arg_of_im_neg
 #align complex.arg_eq_nhds_of_im_neg Complex.arg_eq_nhds_of_im_neg
 
 theorem continuous_at_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x := by

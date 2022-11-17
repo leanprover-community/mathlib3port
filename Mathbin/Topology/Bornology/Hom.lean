@@ -38,7 +38,7 @@ section
 /-- `locally_bounded_map_class F α β` states that `F` is a type of bounded maps.
 
 You should extend this class when you extend `locally_bounded_map`. -/
-class LocallyBoundedMapClass (F : Type _) (α β : outParam <| Type _) [Bornology α] [Bornology β] extends
+class LocallyBoundedMapClass (F : Type _) (α β : outParam $ Type _) [Bornology α] [Bornology β] extends
   FunLike F α fun _ => β where
   comap_cobounded_le (f : F) : (cobounded β).comap f ≤ cobounded α
 #align locally_bounded_map_class LocallyBoundedMapClass
@@ -129,7 +129,7 @@ theorem id_apply (a : α) : LocallyBoundedMap.id α a = a :=
 /-- Composition of `locally_bounded_map`s as a `locally_bounded_map`. -/
 def comp (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) : LocallyBoundedMap α γ where
   toFun := f ∘ g
-  comap_cobounded_le' := comap_comap.ge.trans <| (comap_mono f.comap_cobounded_le').trans g.comap_cobounded_le'
+  comap_cobounded_le' := comap_comap.ge.trans $ (comap_mono f.comap_cobounded_le').trans g.comap_cobounded_le'
 #align locally_bounded_map.comp LocallyBoundedMap.comp
 
 @[simp]
@@ -150,22 +150,22 @@ theorem comp_assoc (f : LocallyBoundedMap γ δ) (g : LocallyBoundedMap β γ) (
 
 @[simp]
 theorem comp_id (f : LocallyBoundedMap α β) : f.comp (LocallyBoundedMap.id α) = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align locally_bounded_map.comp_id LocallyBoundedMap.comp_id
 
 @[simp]
 theorem id_comp (f : LocallyBoundedMap α β) : (LocallyBoundedMap.id β).comp f = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align locally_bounded_map.id_comp LocallyBoundedMap.id_comp
 
 theorem cancel_right {g₁ g₂ : LocallyBoundedMap β γ} {f : LocallyBoundedMap α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
 #align locally_bounded_map.cancel_right LocallyBoundedMap.cancel_right
 
 theorem cancel_left {g : LocallyBoundedMap β γ} {f₁ f₂ : LocallyBoundedMap α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align locally_bounded_map.cancel_left LocallyBoundedMap.cancel_left
 
 end LocallyBoundedMap

@@ -32,7 +32,7 @@ open CategoryTheory Function
 namespace ProfiniteCat
 
 instance projective_ultrafilter (X : Type u) :
-    Projective (of <| Ultrafilter X) where factors Y Z f g hg := by
+    Projective (of $ Ultrafilter X) where factors Y Z f g hg := by
     rw [epi_iff_surjective] at hg
     obtain ⟨g', hg'⟩ := hg.has_right_inverse
     let t : X → Y := g' ∘ f ∘ (pure : X → Ultrafilter X)
@@ -47,11 +47,11 @@ instance projective_ultrafilter (X : Type u) :
 
 /-- For any profinite `X`, the natural map `ultrafilter X → X` is a projective presentation. -/
 def projectivePresentation (X : ProfiniteCat.{u}) : ProjectivePresentation X where
-  P := of <| Ultrafilter X
+  P := of $ Ultrafilter X
   f := ⟨_, continuous_ultrafilter_extend id⟩
   Projective := ProfiniteCat.projective_ultrafilter X
   Epi :=
-    (ConcreteCategory.epi_of_surjective _) fun x =>
+    ConcreteCategory.epi_of_surjective _ $ fun x =>
       ⟨(pure x : Ultrafilter X), congr_fun (ultrafilter_extend_extends (𝟙 X)) x⟩
 #align Profinite.projective_presentation ProfiniteCat.projectivePresentation
 

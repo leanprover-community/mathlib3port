@@ -32,7 +32,7 @@ unsafe def linarith_trace {α} [has_to_tactic_format α] (s : α) : tactic Unit 
 when the `trace.linarith` option is set to true.
 -/
 unsafe def linarith_trace_proofs (s : String := "") (l : List expr) : tactic Unit :=
-  tactic.when_tracing `linarith <| do
+  tactic.when_tracing `linarith $ do
     tactic.trace s
     l tactic.infer_type >>= tactic.trace
 #align linarith.linarith_trace_proofs linarith.linarith_trace_proofs
@@ -78,7 +78,7 @@ unsafe def add : Linexp → Linexp → Linexp
 
 /-- `l.scale c` scales the values in `l` by `c` without modifying the order or keys. -/
 def scale (c : ℤ) (l : Linexp) : Linexp :=
-  if c = 0 then [] else if c = 1 then l else l.map fun ⟨n, z⟩ => (n, z * c)
+  if c = 0 then [] else if c = 1 then l else l.map $ fun ⟨n, z⟩ => (n, z * c)
 #align linarith.linexp.scale Linarith.Linexp.scale
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -120,7 +120,7 @@ def cmp : Linexp → Linexp → Ordering
   | _, [] => Ordering.gt
   | (n1, z1)::t1, (n2, z2)::t2 =>
     if n1 < n2 then Ordering.lt
-    else if n2 < n1 then Ordering.gt else if z1 < z2 then Ordering.lt else if z2 < z1 then Ordering.gt else Cmp t1 t2
+    else if n2 < n1 then Ordering.gt else if z1 < z2 then Ordering.lt else if z2 < z1 then Ordering.gt else cmp t1 t2
 #align linarith.linexp.cmp Linarith.Linexp.cmp
 
 end Linexp
@@ -223,10 +223,10 @@ unsafe def comp.add (c1 c2 : Comp) : Comp :=
 /-- `comp` has a lex order. First the `ineq`s are compared, then the `coeff`s. -/
 unsafe def comp.cmp : Comp → Comp → Ordering
   | ⟨str1, coeffs1⟩, ⟨str2, coeffs2⟩ =>
-    match str1.Cmp str2 with
+    match str1.cmp str2 with
     | Ordering.lt => Ordering.lt
     | Ordering.gt => Ordering.gt
-    | Ordering.eq => coeffs1.Cmp coeffs2
+    | Ordering.eq => coeffs1.cmp coeffs2
 #align linarith.comp.cmp linarith.comp.cmp
 
 /-- A `comp` represents a contradiction if its expression has no coefficients and its strength is <,
@@ -313,8 +313,8 @@ tracing the result if `trace.linarith` is on.
 unsafe def global_branching_preprocessor.process (pp : global_branching_preprocessor) (l : List expr) :
     tactic (List branch) := do
   let l ← pp.transform l
-  when (l > 1) <| linarith_trace f! "Preprocessing: {pp} has branched, with branches:"
-  l fun l => tactic.set_goals [l.1] >> linarith_trace_proofs (toString f! "Preprocessing: {pp}") l.2
+  when (l > 1) $ linarith_trace f! "Preprocessing: {pp} has branched, with branches:"
+  l $ fun l => tactic.set_goals [l.1] >> linarith_trace_proofs (toString f! "Preprocessing: {pp}") l.2
   return l
 #align linarith.global_branching_preprocessor.process linarith.global_branching_preprocessor.process
 
@@ -339,7 +339,7 @@ unsafe def certificate_oracle : Type :=
   List Comp → ℕ → tactic (rb_map ℕ ℕ)
 #align linarith.certificate_oracle linarith.certificate_oracle
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linarith`. -/
 unsafe structure linarith_config : Type where
   discharger : tactic Unit := sorry
@@ -353,7 +353,7 @@ unsafe structure linarith_config : Type where
   oracle : Option certificate_oracle := none
 #align linarith.linarith_config linarith.linarith_config
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- `cfg.update_reducibility reduce_semi` will change the transparency setting of `cfg` to
 `semireducible` if `reduce_semi` is true. In this case, it also sets the discharger to `ring!`,
 since this is typically needed when using stronger unification.
@@ -371,51 +371,73 @@ These functions are used by multiple modules, so we put them here for accessibil
 
 open Tactic
 
-/-- `get_rel_sides e` returns the left and right hand sides of `e` if `e` is a comparison,
-and fails otherwise.
-This function is more naturally in the `option` monad, but it is convenient to put in `tactic`
-for compositionality.
- -/
-unsafe def get_rel_sides : expr → tactic (expr × expr)
-  | quote.1 ((%%ₓa) < %%ₓb) => return (a, b)
-  | quote.1 ((%%ₓa) ≤ %%ₓb) => return (a, b)
-  | quote.1 ((%%ₓa) = %%ₓb) => return (a, b)
-  | quote.1 ((%%ₓa) ≥ %%ₓb) => return (a, b)
-  | quote.1 ((%%ₓa) > %%ₓb) => return (a, b)
-  | _ => tactic.failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `get_rel_sides e` returns the left and right hand sides of `e` if `e` is a comparison,
+      and fails otherwise.
+      This function is more naturally in the `option` monad, but it is convenient to put in `tactic`
+      for compositionality.
+       -/
+    unsafe
+  def
+    get_rel_sides
+    : expr → tactic ( expr × expr )
+    | q( $ ( a ) < $ ( b ) ) => return ( a , b )
+      | q( $ ( a ) ≤ $ ( b ) ) => return ( a , b )
+      | q( $ ( a ) = $ ( b ) ) => return ( a , b )
+      | q( $ ( a ) ≥ $ ( b ) ) => return ( a , b )
+      | q( $ ( a ) > $ ( b ) ) => return ( a , b )
+      | _ => tactic.failed
 #align linarith.get_rel_sides linarith.get_rel_sides
 
-/-- `parse_into_comp_and_expr e` checks if `e` is of the form `t < 0`, `t ≤ 0`, or `t = 0`.
-If it is, it returns the comparison along with `t`.
- -/
-unsafe def parse_into_comp_and_expr : expr → Option (ineq × expr)
-  | quote.1 ((%%ₓe) < 0) => (Ineq.lt, e)
-  | quote.1 ((%%ₓe) ≤ 0) => (Ineq.le, e)
-  | quote.1 ((%%ₓe) = 0) => (Ineq.eq, e)
-  | _ => none
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `parse_into_comp_and_expr e` checks if `e` is of the form `t < 0`, `t ≤ 0`, or `t = 0`.
+      If it is, it returns the comparison along with `t`.
+       -/
+    unsafe
+  def
+    parse_into_comp_and_expr
+    : expr → Option ( ineq × expr )
+    | q( $ ( e ) < 0 ) => ( Ineq.lt , e )
+      | q( $ ( e ) ≤ 0 ) => ( Ineq.le , e )
+      | q( $ ( e ) = 0 ) => ( Ineq.eq , e )
+      | _ => none
 #align linarith.parse_into_comp_and_expr linarith.parse_into_comp_and_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/-- `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.
-It produces a pair `(R', h')`, where `h'` is a proof of `c*t R' 0`.
-Typically `R` and `R'` will be the same, except when `c = 0`, in which case `R'` is `=`.
-If `c = 1`, `h'` is the same as `h` -- specifically, it does *not* change the type to `1*t R 0`.
--/
-unsafe def mk_single_comp_zero_pf (c : ℕ) (h : expr) : tactic (ineq × expr) := do
-  let tp ← infer_type h
-  let some (iq, e) ← return <| parse_into_comp_and_expr tp
-  if c = 0 then do
-      let e' ← mk_app `` zero_mul [e]
-      return (ineq.eq, e')
-    else
-      if c = 1 then return (iq, h)
-      else do
-        let tp ← Prod.snd <$> (infer_type h >>= get_rel_sides) >>= infer_type
-        let c ← tp c
-        let cpos ← to_expr (pquote.1 ((%%ₓc) > 0))
-        let (_, ex) ← solve_aux cpos sorry
-        let e' ← mk_app iq [h, ex]
-        return (iq, e')
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.
+      It produces a pair `(R', h')`, where `h'` is a proof of `c*t R' 0`.
+      Typically `R` and `R'` will be the same, except when `c = 0`, in which case `R'` is `=`.
+      If `c = 1`, `h'` is the same as `h` -- specifically, it does *not* change the type to `1*t R 0`.
+      -/
+    unsafe
+  def
+    mk_single_comp_zero_pf
+    ( c : ℕ ) ( h : expr ) : tactic ( ineq × expr )
+    :=
+      do
+        let tp ← infer_type h
+          let some ( iq , e ) ← return $ parse_into_comp_and_expr tp
+          if
+            c = 0
+            then
+            do let e' ← mk_app ` ` zero_mul [ e ] return ( ineq.eq , e' )
+            else
+            if
+              c = 1
+              then
+              return ( iq , h )
+              else
+              do
+                let tp ← Prod.snd <$> ( infer_type h >>= get_rel_sides ) >>= infer_type
+                  let c ← tp c
+                  let cpos ← to_expr ` `( $ ( c ) > 0 )
+                  let ( _ , ex ) ← solve_aux cpos sorry
+                  let e' ← mk_app iq [ h , ex ]
+                  return ( iq , e' )
 #align linarith.mk_single_comp_zero_pf linarith.mk_single_comp_zero_pf
 
 end Linarith

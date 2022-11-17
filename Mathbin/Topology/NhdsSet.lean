@@ -37,7 +37,7 @@ def nhdsSet (s : Set α) : Filter α :=
 #align nhds_set nhdsSet
 
 -- mathport name: nhds_set
-localized [TopologicalSpace] notation "𝓝ˢ" => nhdsSet
+scoped[TopologicalSpace] notation "𝓝ˢ" => nhdsSet
 
 theorem nhds_set_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal α) = ⨆ x, 𝓝 (x, x) := by
   rw [nhdsSet, ← range_diag, ← range_comp]
@@ -49,7 +49,7 @@ theorem mem_nhds_set_iff_forall : s ∈ 𝓝ˢ t ↔ ∀ x : α, x ∈ t → s �
 #align mem_nhds_set_iff_forall mem_nhds_set_iff_forall
 
 theorem bUnion_mem_nhds_set {t : α → Set α} (h : ∀ x ∈ s, t x ∈ 𝓝 x) : (⋃ x ∈ s, t x) ∈ 𝓝ˢ s :=
-  mem_nhds_set_iff_forall.2 fun x hx => mem_of_superset (h x hx) (subset_Union₂ x hx)
+  mem_nhds_set_iff_forall.2 $ fun x hx => mem_of_superset (h x hx) (subset_Union₂ x hx)
 #align bUnion_mem_nhds_set bUnion_mem_nhds_set
 
 theorem subset_interior_iff_mem_nhds_set : s ⊆ interior t ↔ t ∈ 𝓝ˢ s := by
@@ -107,14 +107,14 @@ theorem nhds_set_univ : 𝓝ˢ (univ : Set α) = ⊤ := by rw [is_open_univ.nhds
 
 @[mono]
 theorem nhds_set_mono (h : s ⊆ t) : 𝓝ˢ s ≤ 𝓝ˢ t :=
-  Sup_le_Sup <| image_subset _ h
+  Sup_le_Sup $ image_subset _ h
 #align nhds_set_mono nhds_set_mono
 
 theorem monotone_nhds_set : Monotone (𝓝ˢ : Set α → Filter α) := fun s t => nhds_set_mono
 #align monotone_nhds_set monotone_nhds_set
 
 theorem nhds_le_nhds_set (h : x ∈ s) : 𝓝 x ≤ 𝓝ˢ s :=
-  le_Sup <| mem_image_of_mem _ h
+  le_Sup $ mem_image_of_mem _ h
 #align nhds_le_nhds_set nhds_le_nhds_set
 
 @[simp]
@@ -130,7 +130,7 @@ theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ
 provided that `f` maps `s` to `t`.  -/
 theorem Continuous.tendsto_nhds_set {f : α → β} {t : Set β} (hf : Continuous f) (hst : MapsTo f s t) :
     Tendsto f (𝓝ˢ s) (𝓝ˢ t) :=
-  ((has_basis_nhds_set s).tendsto_iff (has_basis_nhds_set t)).mpr fun U hU =>
+  ((has_basis_nhds_set s).tendsto_iff (has_basis_nhds_set t)).mpr $ fun U hU =>
     ⟨f ⁻¹' U, ⟨hU.1.Preimage hf, hst.mono Subset.rfl hU.2⟩, fun x => id⟩
 #align continuous.tendsto_nhds_set Continuous.tendsto_nhds_set
 

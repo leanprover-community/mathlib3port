@@ -28,9 +28,9 @@ variable {l : Filter β} {f g : β → α}
 
 section continuous_mul
 
-theorem mul_tendsto_nhds_zero_right (x : α) : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 0 ×ᶠ 𝓝 x) <| 𝓝 0 := by
+theorem mul_tendsto_nhds_zero_right (x : α) : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 0 ×ᶠ 𝓝 x) $ 𝓝 0 := by
   have hx : 0 < 2 * (1 + |x|) := by positivity
-  rw [((nhds_basis_zero_abs_sub_lt α).Prod <| nhds_basis_abs_sub_lt x).tendsto_iff (nhds_basis_zero_abs_sub_lt α)]
+  rw [((nhds_basis_zero_abs_sub_lt α).Prod $ nhds_basis_abs_sub_lt x).tendsto_iff (nhds_basis_zero_abs_sub_lt α)]
   refine' fun ε ε_pos => ⟨(ε / (2 * (1 + |x|)), 1), ⟨div_pos ε_pos hx, zero_lt_one⟩, _⟩
   suffices ∀ a b : α, |a| < ε / (2 * (1 + |x|)) → |b - x| < 1 → |a| * |b| < ε by
     simpa only [and_imp, Prod.forall, mem_prod, ← abs_mul]
@@ -44,7 +44,7 @@ theorem mul_tendsto_nhds_zero_right (x : α) : Tendsto (uncurry ((· * ·) : α 
 #align mul_tendsto_nhds_zero_right mul_tendsto_nhds_zero_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mul_tendsto_nhds_zero_left (x : α) : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 x ×ᶠ 𝓝 0) <| 𝓝 0 := by
+theorem mul_tendsto_nhds_zero_left (x : α) : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 x ×ᶠ 𝓝 0) $ 𝓝 0 := by
   intro s hs
   have := mul_tendsto_nhds_zero_right x hs
   rw [Filter.mem_map, mem_prod_iff] at this⊢
@@ -76,7 +76,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x�
       _ = |(x - x₀) / x₀| := congr_arg abs (sub_div x x₀ x₀).symm
       _ = |x - x₀| / |x₀| := abs_div (x - x₀) x₀
       _ < i * |x₀| / |x₀| := div_lt_div_of_lt (abs_pos.2 hx₀) hx
-      _ = i := by rw [← mul_div_assoc', div_self (ne_of_lt <| abs_pos.2 hx₀).symm, mul_one]
+      _ = i := by rw [← mul_div_assoc', div_self (ne_of_lt $ abs_pos.2 hx₀).symm, mul_one]
       
     specialize hit (x / x₀) this
     rwa [mul_div_assoc', mul_div_cancel_left x hx₀] at hit
@@ -87,8 +87,8 @@ theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x
   simp_rw [mul_comm _ x₀, nhds_eq_map_mul_left_nhds_one hx₀]
 #align nhds_eq_map_mul_right_nhds_one nhds_eq_map_mul_right_nhds_one
 
-theorem mul_tendsto_nhds_one_nhds_one : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1 := by
-  rw [((nhds_basis_Ioo_pos (1 : α)).Prod <| nhds_basis_Ioo_pos (1 : α)).tendsto_iff
+theorem mul_tendsto_nhds_one_nhds_one : Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) $ 𝓝 1 := by
+  rw [((nhds_basis_Ioo_pos (1 : α)).Prod $ nhds_basis_Ioo_pos (1 : α)).tendsto_iff
       (nhds_basis_Ioo_pos_of_pos (zero_lt_one : (0 : α) < 1))]
   intro ε hε
   have hε' : 0 ≤ 1 - ε / 4 := by linarith
@@ -111,7 +111,7 @@ theorem mul_tendsto_nhds_one_nhds_one : Tendsto (uncurry ((· * ·) : α → α 
       _ = 1 + ε / 2 + ε * ε / 16 := by ring_nf
       _ ≤ 1 + ε / 2 + ε / 2 :=
         add_le_add_left
-          (div_le_div (le_of_lt hε.1) (le_trans ((mul_le_mul_left hε.1).2 hε.2) (le_of_eq <| mul_one ε)) zero_lt_two
+          (div_le_div (le_of_lt hε.1) (le_trans ((mul_le_mul_left hε.1).2 hε.2) (le_of_eq $ mul_one ε)) zero_lt_two
             (by linarith))
           (1 + ε / 2)
       _ ≤ 1 + ε := by ring_nf
@@ -312,11 +312,11 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing :
       cases hx.symm.lt_or_lt
       · exact this h
         
-      convert (this <| neg_pos.mpr h).neg.comp continuous_neg.continuous_at
+      convert (this $ neg_pos.mpr h).neg.comp continuous_neg.continuous_at
       ext
       simp [neg_inv]
     intro t ht
-    rw [ContinuousAt, (nhds_basis_Ioo_pos t).tendsto_iff <| nhds_basis_Ioo_pos_of_pos <| inv_pos.2 ht]
+    rw [ContinuousAt, (nhds_basis_Ioo_pos t).tendsto_iff $ nhds_basis_Ioo_pos_of_pos $ inv_pos.2 ht]
     rintro ε ⟨hε : ε > 0, hεt : ε ≤ t⁻¹⟩
     refine' ⟨min (t ^ 2 * ε / 2) (t / 2), by positivity, fun x h => _⟩
     have hx : t / 2 < x := by
@@ -326,14 +326,14 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing :
     have aux : 0 < 2 / t ^ 2 := by positivity
     rw [Set.mem_Ioo, ← sub_lt_iff_lt_add', sub_lt_comm, ← abs_sub_lt_iff] at h⊢
     rw [inv_sub_inv ht.ne' hx'.ne', abs_div, div_eq_mul_inv]
-    suffices (|t * x|)⁻¹ < 2 / t ^ 2 by
+    suffices |t * x|⁻¹ < 2 / t ^ 2 by
       rw [← abs_neg, neg_sub]
       refine' (mul_lt_mul'' h this (by positivity) (by positivity)).trans_le _
       rw [mul_comm, mul_min_of_nonneg _ _ aux.le]
       apply min_le_of_left_le
       rw [← mul_div, ← mul_assoc, div_mul_cancel _ (sq_pos_of_pos ht).ne', mul_div_cancel' ε two_ne_zero]
     refine' inv_lt_of_inv_lt aux _
-    rw [inv_div, abs_of_pos <| mul_pos ht hx', sq, ← mul_div_assoc']
+    rw [inv_div, abs_of_pos $ mul_pos ht hx', sq, ← mul_div_assoc']
     exact mul_lt_mul_of_pos_left hx ht
 #align linear_ordered_field.to_topological_division_ring LinearOrderedField.toTopologicalDivisionRing
 

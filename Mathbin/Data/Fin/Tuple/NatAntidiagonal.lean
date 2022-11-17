@@ -61,7 +61,7 @@ and ending with `![n, ..., 0]`.
 def antidiagonalTuple : ∀ k, ℕ → List (Fin k → ℕ)
   | 0, 0 => [![]]
   | 0, n + 1 => []
-  | k + 1, n => (List.Nat.antidiagonal n).bind fun ni => (antidiagonal_tuple k ni.2).map fun x => Fin.cons ni.1 x
+  | k + 1, n => (List.Nat.antidiagonal n).bind $ fun ni => (antidiagonal_tuple k ni.2).map $ fun x => Fin.cons ni.1 x
 #align list.nat.antidiagonal_tuple List.Nat.antidiagonalTuple
 
 @[simp]
@@ -131,7 +131,7 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodup (antidiagonalTuple k n
 #align list.nat.nodup_antidiagonal_tuple List.Nat.nodup_antidiagonal_tuple
 
 theorem antidiagonal_tuple_zero_right : ∀ k, antidiagonalTuple k 0 = [0]
-  | 0 => (congr_arg fun x => [x]) <| Subsingleton.elim _ _
+  | 0 => (congr_arg fun x => [x]) $ Subsingleton.elim _ _
   | k + 1 => by
     rw [antidiagonal_tuple, antidiagonal_zero, List.bind_singleton, antidiagonal_tuple_zero_right k, List.map_singleton]
     exact congr_arg (fun x => [x]) Matrix.cons_zero_zero
@@ -271,7 +271,7 @@ section EquivProd
 
 This is the tuple version of `finset.nat.sigma_antidiagonal_equiv_prod`. -/
 @[simps]
-def sigmaAntidiagonalTupleEquivTuple (k : ℕ) : (Σn, antidiagonalTuple k n) ≃ (Fin k → ℕ) where
+def sigmaAntidiagonalTupleEquivTuple (k : ℕ) : (Σ n, antidiagonalTuple k n) ≃ (Fin k → ℕ) where
   toFun x := x.2
   invFun x := ⟨∑ i, x i, x, mem_antidiagonal_tuple.mpr rfl⟩
   left_inv := fun ⟨n, t, h⟩ => Sigma.subtype_ext (mem_antidiagonal_tuple.mp h) rfl

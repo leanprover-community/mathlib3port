@@ -53,10 +53,10 @@ def primeCounting (n : ℕ) : ℕ :=
 #align nat.prime_counting Nat.primeCounting
 
 -- mathport name: prime_counting
-localized [Nat] notation "π" => Nat.primeCounting
+scoped notation "π" => Nat.primeCounting
 
 -- mathport name: prime_counting'
-localized [Nat] notation "π'" => Nat.primeCounting'
+scoped notation "π'" => Nat.primeCounting'
 
 theorem monotone_prime_counting' : Monotone primeCounting' :=
   count_monotone Prime

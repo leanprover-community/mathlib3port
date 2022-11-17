@@ -40,7 +40,7 @@ theorem exists_subset_Union_ball_radius_lt {r : ι → ℝ} (hs : IsClosed s)
   rcases exists_subset_Union_closed_subset hs (fun i => @is_open_ball _ _ (c i) (r i)) uf us with ⟨v, hsv, hvc, hcv⟩
   have := fun i => exists_lt_subset_ball (hvc i) (hcv i)
   choose r' hlt hsub
-  exact ⟨r', hsv.trans <| Union_mono <| hsub, hlt⟩
+  exact ⟨r', hsv.trans $ Union_mono $ hsub, hlt⟩
 #align exists_subset_Union_ball_radius_lt exists_subset_Union_ball_radius_lt
 
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover
@@ -61,7 +61,7 @@ theorem exists_subset_Union_ball_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 <
   rcases exists_subset_Union_closed_subset hs (fun i => @is_open_ball _ _ (c i) (r i)) uf us with ⟨v, hsv, hvc, hcv⟩
   have := fun i => exists_pos_lt_subset_ball (hr i) (hvc i) (hcv i)
   choose r' hlt hsub
-  exact ⟨r', hsv.trans <| Union_mono hsub, hlt⟩
+  exact ⟨r', hsv.trans $ Union_mono hsub, hlt⟩
 #align exists_subset_Union_ball_radius_pos_lt exists_subset_Union_ball_radius_pos_lt
 
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover
@@ -74,6 +74,7 @@ theorem exists_Union_ball_eq_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 < r i
   ⟨r', univ_subset_iff.1 hU, hv⟩
 #align exists_Union_ball_eq_radius_pos_lt exists_Union_ball_eq_radius_pos_lt
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (r r') -/
 /-- Let `R : α → ℝ` be a (possibly discontinuous) function on a proper metric space.
 Let `s` be a closed set in `α` such that `R` is positive on `s`. Then there exists a collection of
 pairs of balls `metric.ball (c i) (r i)`, `metric.ball (c i) (r' i)` such that
@@ -86,7 +87,7 @@ pairs of balls `metric.ball (c i) (r i)`, `metric.ball (c i) (r' i)` such that
 This is a simple corollary of `refinement_of_locally_compact_sigma_compact_of_nhds_basis_set`
 and `exists_subset_Union_ball_radius_pos_lt`. -/
 theorem exists_locally_finite_subset_Union_ball_radius_lt (hs : IsClosed s) {R : α → ℝ} (hR : ∀ x ∈ s, 0 < R x) :
-    ∃ (ι : Type u)(c : ι → α)(r r' : ι → ℝ),
+    ∃ (ι : Type u) (c : ι → α) (r : ι → ℝ) (r' : ι → ℝ),
       (∀ i, c i ∈ s ∧ 0 < r i ∧ r i < r' i ∧ r' i < R (c i)) ∧
         (LocallyFinite fun i => ball (c i) (r' i)) ∧ s ⊆ ⋃ i, ball (c i) (r i) :=
   by
@@ -98,6 +99,7 @@ theorem exists_locally_finite_subset_Union_ball_radius_lt (hs : IsClosed s) {R :
   exact ⟨ι, c, r, r', fun i => ⟨(hr' i).1, (hlt i).1, (hlt i).2, (hr' i).2.2⟩, hfin, hsub⟩
 #align exists_locally_finite_subset_Union_ball_radius_lt exists_locally_finite_subset_Union_ball_radius_lt
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (r r') -/
 /-- Let `R : α → ℝ` be a (possibly discontinuous) positive function on a proper metric space. Then
 there exists a collection of pairs of balls `metric.ball (c i) (r i)`, `metric.ball (c i) (r' i)`
 such that
@@ -109,7 +111,7 @@ such that
 This is a simple corollary of `refinement_of_locally_compact_sigma_compact_of_nhds_basis`
 and `exists_Union_ball_eq_radius_pos_lt` or `exists_locally_finite_subset_Union_ball_radius_lt`. -/
 theorem exists_locally_finite_Union_eq_ball_radius_lt {R : α → ℝ} (hR : ∀ x, 0 < R x) :
-    ∃ (ι : Type u)(c : ι → α)(r r' : ι → ℝ),
+    ∃ (ι : Type u) (c : ι → α) (r : ι → ℝ) (r' : ι → ℝ),
       (∀ i, 0 < r i ∧ r i < r' i ∧ r' i < R (c i)) ∧
         (LocallyFinite fun i => ball (c i) (r' i)) ∧ (⋃ i, ball (c i) (r i)) = univ :=
   let ⟨ι, c, r, r', hlt, hfin, hsub⟩ := exists_locally_finite_subset_Union_ball_radius_lt isClosedUniv fun x _ => hR x

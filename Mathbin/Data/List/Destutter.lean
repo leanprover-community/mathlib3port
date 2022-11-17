@@ -120,7 +120,7 @@ theorem destutter'_eq_self_iff (a) : l.destutter' R a = a :: l ↔ l.Chain R a :
 #align list.destutter'_eq_self_iff List.destutter'_eq_self_iff
 
 theorem destutter'_ne_nil : l.destutter' R a ≠ [] :=
-  ne_nil_of_mem <| l.mem_destutter' R a
+  ne_nil_of_mem $ l.mem_destutter' R a
 #align list.destutter'_ne_nil List.destutter'_ne_nil
 
 @[simp]
@@ -168,13 +168,13 @@ theorem destutter_eq_self_iff : ∀ l : List α, l.destutter R = l ↔ l.Chain' 
 #align list.destutter_eq_self_iff List.destutter_eq_self_iff
 
 theorem destutter_idem : (l.destutter R).destutter R = l.destutter R :=
-  destutter_of_chain' R _ <| l.destutter_is_chain' R
+  destutter_of_chain' R _ $ l.destutter_is_chain' R
 #align list.destutter_idem List.destutter_idem
 
 @[simp]
 theorem destutter_eq_nil : ∀ {l : List α}, destutter R l = [] ↔ l = []
   | [] => Iff.rfl
-  | a :: l => ⟨fun h => absurd h <| l.destutter'_ne_nil R, fun h => nomatch h⟩
+  | a :: l => ⟨fun h => absurd h $ l.destutter'_ne_nil R, fun h => nomatch h⟩
 #align list.destutter_eq_nil List.destutter_eq_nil
 
 end List

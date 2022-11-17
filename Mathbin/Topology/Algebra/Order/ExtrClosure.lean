@@ -31,7 +31,7 @@ protected theorem IsMinOn.closure (h : IsMinOn f s a) (hc : ContinuousOn f (clos
 #align is_min_on.closure IsMinOn.closure
 
 protected theorem IsExtrOn.closure (h : IsExtrOn f s a) (hc : ContinuousOn f (closure s)) : IsExtrOn f (closure s) a :=
-  h.elim (fun h => Or.inl <| h.closure hc) fun h => Or.inr <| h.closure hc
+  h.elim (fun h => Or.inl $ h.closure hc) fun h => Or.inr $ h.closure hc
 #align is_extr_on.closure IsExtrOn.closure
 
 protected theorem IsLocalMaxOn.closure (h : IsLocalMaxOn f s a) (hc : ContinuousOn f (closure s)) :
@@ -54,6 +54,6 @@ protected theorem IsLocalMinOn.closure (h : IsLocalMinOn f s a) (hc : Continuous
 
 protected theorem IsLocalExtrOn.closure (h : IsLocalExtrOn f s a) (hc : ContinuousOn f (closure s)) :
     IsLocalExtrOn f (closure s) a :=
-  h.elim (fun h => Or.inl <| h.closure hc) fun h => Or.inr <| h.closure hc
+  h.elim (fun h => Or.inl $ h.closure hc) fun h => Or.inr $ h.closure hc
 #align is_local_extr_on.closure IsLocalExtrOn.closure
 

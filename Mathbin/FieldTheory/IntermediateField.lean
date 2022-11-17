@@ -292,7 +292,7 @@ theorem to_intermediate_field_to_subalgebra (S : IntermediateField K L) :
 
 /-- Turn a subalgebra satisfying `is_field` into an intermediate_field -/
 def Subalgebra.toIntermediateField' (S : Subalgebra K L) (hS : IsField S) : IntermediateField K L :=
-  S.toIntermediateField fun x hx => by
+  S.toIntermediateField $ fun x hx => by
     by_cases hx0:x = 0
     · rw [hx0, inv_zero]
       exact S.zero_mem
@@ -331,17 +331,21 @@ instance toField : Field S :=
 #align intermediate_field.to_field IntermediateField.toField
 
 @[simp, norm_cast]
-theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
-  classical induction' Finset.univ using Finset.induction_on with i s hi H
-    · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
-      
+theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by classical
+  induction' Finset.univ using Finset.induction_on with i s hi H
+  · simp
+    
+  · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
+    
 #align intermediate_field.coe_sum IntermediateField.coe_sum
 
 @[simp, norm_cast]
-theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
-  classical induction' Finset.univ using Finset.induction_on with i s hi H
-    · rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]
-      
+theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by classical
+  induction' Finset.univ using Finset.induction_on with i s hi H
+  · simp
+    
+  · rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]
+    
 #align intermediate_field.coe_prod IntermediateField.coe_prod
 
 /-! `intermediate_field`s inherit structure from their `subalgebra` coercions. -/
@@ -409,7 +413,7 @@ theorem coe_map (f : L →ₐ[K] L') : (S.map f : Set L') = f '' S :=
 theorem map_map {K L₁ L₂ L₃ : Type _} [Field K] [Field L₁] [Algebra K L₁] [Field L₂] [Algebra K L₂] [Field L₃]
     [Algebra K L₃] (E : IntermediateField K L₁) (f : L₁ →ₐ[K] L₂) (g : L₂ →ₐ[K] L₃) :
     (E.map f).map g = E.map (g.comp f) :=
-  SetLike.coe_injective <| Set.image_image _ _ _
+  SetLike.coe_injective $ Set.image_image _ _ _
 #align intermediate_field.map_map IntermediateField.map_map
 
 /-- Given an equivalence `e : L ≃ₐ[K] L'` of `K`-field extensions and an intermediate
@@ -611,7 +615,7 @@ theorem mem_restrict_scalars {E : IntermediateField L' L} {x : L} : x ∈ restri
 
 theorem restrict_scalars_injective :
     Function.Injective (restrictScalars K : IntermediateField L' L → IntermediateField K L) := fun U V H =>
-  ext fun x => by rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
+  ext $ fun x => by rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
 #align intermediate_field.restrict_scalars_injective IntermediateField.restrict_scalars_injective
 
 end RestrictScalars
@@ -652,7 +656,7 @@ theorem to_subalgebra_eq_iff : F.toSubalgebra = E.toSubalgebra ↔ F = E := by
 #align intermediate_field.to_subalgebra_eq_iff IntermediateField.to_subalgebra_eq_iff
 
 theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K E ≤ finrank K F) : F = E :=
-  to_subalgebra_injective <| Subalgebra.to_submodule_injective <| eq_of_le_of_finrank_le h_le h_finrank
+  to_subalgebra_injective $ Subalgebra.to_submodule_injective $ eq_of_le_of_finrank_le h_le h_finrank
 #align intermediate_field.eq_of_le_of_finrank_le IntermediateField.eq_of_le_of_finrank_le
 
 theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K F = finrank K E) : F = E :=

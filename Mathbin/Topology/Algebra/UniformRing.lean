@@ -51,7 +51,7 @@ instance : One (Completion α) :=
   ⟨(1 : α)⟩
 
 instance : Mul (Completion α) :=
-  ⟨curry <| (dense_inducing_coe.Prod dense_inducing_coe).extend (coe ∘ uncurry (· * ·))⟩
+  ⟨curry $ (dense_inducing_coe.Prod dense_inducing_coe).extend (coe ∘ uncurry (· * ·))⟩
 
 @[norm_cast]
 theorem coe_one : ((1 : α) : Completion α) = 1 :=
@@ -174,7 +174,7 @@ theorem map_smul_eq_mul_coe (r : R) : Completion.map ((· • ·) r) = (· * ·)
 instance : Algebra R (Completion A) :=
   { (UniformSpace.Completion.coeRingHom : A →+* Completion A).comp (algebraMap R A) with
     commutes' := fun r x =>
-      (Completion.inductionOn x (isClosedEq (continuous_mul_left _) (continuous_mul_right _))) fun a => by
+      Completion.inductionOn x (isClosedEq (continuous_mul_left _) (continuous_mul_right _)) $ fun a => by
         simpa only [coe_mul] using congr_arg (coe : A → completion A) (Algebra.commutes r a),
     smul_def' := fun r x => congr_fun (map_smul_eq_mul_coe A R r) x }
 
@@ -208,7 +208,8 @@ variable {α : Type _}
 
 theorem ring_sep_rel (α) [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     separationSetoid α = Submodule.quotientRel (Ideal.closure ⊥) :=
-  Setoid.ext fun x y => (add_group_separation_rel x y).trans <| Iff.trans (by rfl) (Submodule.quotient_rel_r_def _).symm
+  Setoid.ext $ fun x y =>
+    (add_group_separation_rel x y).trans $ Iff.trans (by rfl) (Submodule.quotient_rel_r_def _).symm
 #align uniform_space.ring_sep_rel UniformSpace.ring_sep_rel
 
 theorem ring_sep_quot (α : Type u) [r : CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
@@ -220,8 +221,8 @@ continuous, get an equivalence between the separated quotient of `α` and the qu
 corresponding to the closure of zero. -/
 def sepQuotEquivRingQuot (α) [r : CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     Quotient (separationSetoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
-  Quotient.congrRight fun x y =>
-    (add_group_separation_rel x y).trans <| Iff.trans (by rfl) (Submodule.quotient_rel_r_def _).symm
+  Quotient.congrRight $ fun x y =>
+    (add_group_separation_rel x y).trans $ Iff.trans (by rfl) (Submodule.quotient_rel_r_def _).symm
 #align uniform_space.sep_quot_equiv_ring_quot UniformSpace.sepQuotEquivRingQuot
 
 -- TODO: use a form of transport a.k.a. lift definition a.k.a. transfer

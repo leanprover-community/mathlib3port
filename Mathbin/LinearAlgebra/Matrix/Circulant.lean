@@ -57,7 +57,7 @@ theorem circulant_injective [AddGroup n] : Injective (circulant : (n → α) →
 #align matrix.circulant_injective Matrix.circulant_injective
 
 theorem Fin.circulant_injective : ∀ n, Injective fun v : Fin n → α => circulant v
-  | 0 => by decide
+  | 0 => dec_trivial
   | n + 1 => circulant_injective
 #align matrix.fin.circulant_injective Matrix.Fin.circulant_injective
 
@@ -79,35 +79,35 @@ theorem conj_transpose_circulant [HasStar α] [AddGroup n] (v : n → α) :
 #align matrix.conj_transpose_circulant Matrix.conj_transpose_circulant
 
 theorem Fin.transpose_circulant : ∀ {n} (v : Fin n → α), (circulant v)ᵀ = circulant fun i => v (-i)
-  | 0 => by decide
+  | 0 => dec_trivial
   | n + 1 => transpose_circulant
 #align matrix.fin.transpose_circulant Matrix.Fin.transpose_circulant
 
 theorem Fin.conj_transpose_circulant [HasStar α] :
     ∀ {n} (v : Fin n → α), (circulant v)ᴴ = circulant (star fun i => v (-i))
-  | 0 => by decide
+  | 0 => dec_trivial
   | n + 1 => conj_transpose_circulant
 #align matrix.fin.conj_transpose_circulant Matrix.Fin.conj_transpose_circulant
 
 theorem map_circulant [Sub n] (v : n → α) (f : α → β) : (circulant v).map f = circulant fun i => f (v i) :=
-  ext fun _ _ => rfl
+  ext $ fun _ _ => rfl
 #align matrix.map_circulant Matrix.map_circulant
 
 theorem circulant_neg [Neg α] [Sub n] (v : n → α) : circulant (-v) = -circulant v :=
-  ext fun _ _ => rfl
+  ext $ fun _ _ => rfl
 #align matrix.circulant_neg Matrix.circulant_neg
 
 @[simp]
 theorem circulant_zero (α n) [Zero α] [Sub n] : circulant 0 = (0 : Matrix n n α) :=
-  ext fun _ _ => rfl
+  ext $ fun _ _ => rfl
 #align matrix.circulant_zero Matrix.circulant_zero
 
 theorem circulant_add [Add α] [Sub n] (v w : n → α) : circulant (v + w) = circulant v + circulant w :=
-  ext fun _ _ => rfl
+  ext $ fun _ _ => rfl
 #align matrix.circulant_add Matrix.circulant_add
 
 theorem circulant_sub [Sub α] [Sub n] (v w : n → α) : circulant (v - w) = circulant v - circulant w :=
-  ext fun _ _ => rfl
+  ext $ fun _ _ => rfl
 #align matrix.circulant_sub Matrix.circulant_sub
 
 /-- The product of two circulant matrices `circulant v` and `circulant w` is
@@ -123,7 +123,7 @@ theorem circulant_mul [Semiring α] [Fintype n] [AddGroup n] (v w : n → α) :
 
 theorem Fin.circulant_mul [Semiring α] :
     ∀ {n} (v w : Fin n → α), circulant v ⬝ circulant w = circulant (mulVec (circulant v) w)
-  | 0 => by decide
+  | 0 => dec_trivial
   | n + 1 => circulant_mul
 #align matrix.fin.circulant_mul Matrix.Fin.circulant_mul
 
@@ -144,7 +144,7 @@ theorem circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] [Fintype n] [Ad
 
 theorem Fin.circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] :
     ∀ {n} (v w : Fin n → α), circulant v ⬝ circulant w = circulant w ⬝ circulant v
-  | 0 => by decide
+  | 0 => dec_trivial
   | n + 1 => circulant_mul_comm
 #align matrix.fin.circulant_mul_comm Matrix.Fin.circulant_mul_comm
 
@@ -170,7 +170,7 @@ theorem circulant_single (n) [Semiring α] [DecidableEq n] [AddGroup n] [Fintype
 /-- Note we use `↑i = 0` instead of `i = 0` as `fin 0` has no `0`.
 This means that we cannot state this with `pi.single` as we did with `matrix.circulant_single`. -/
 theorem Fin.circulant_ite (α) [Zero α] [One α] : ∀ n, circulant (fun i => ite (↑i = 0) 1 0 : Fin n → α) = 1
-  | 0 => by decide
+  | 0 => dec_trivial
   | n + 1 => by
     rw [← circulant_single_one]
     congr with j

@@ -53,10 +53,10 @@ section Type
 
 variable {α : Type u} {β : Type v} {π : α → Type w}
 
-instance [Countable α] [Countable β] : Countable (Sum α β) := by
+instance [Countable α] [Countable β] : Countable (α ⊕ β) := by
   rcases exists_injective_nat α with ⟨f, hf⟩
   rcases exists_injective_nat β with ⟨g, hg⟩
-  exact (equiv.nat_sum_nat_equiv_nat.injective.comp <| hf.sum_map hg).Countable
+  exact (equiv.nat_sum_nat_equiv_nat.injective.comp $ hf.sum_map hg).Countable
 
 instance [Countable α] : Countable (Option α) :=
   Countable.of_equiv _ (Equiv.optionEquivSumPunit α).symm
@@ -64,12 +64,12 @@ instance [Countable α] : Countable (Option α) :=
 instance [Countable α] [Countable β] : Countable (α × β) := by
   rcases exists_injective_nat α with ⟨f, hf⟩
   rcases exists_injective_nat β with ⟨g, hg⟩
-  exact (nat.mkpair_equiv.injective.comp <| hf.prod_map hg).Countable
+  exact (nat.mkpair_equiv.injective.comp $ hf.prod_map hg).Countable
 
 instance [Countable α] [∀ a, Countable (π a)] : Countable (Sigma π) := by
   rcases exists_injective_nat α with ⟨f, hf⟩
   choose g hg using fun a => exists_injective_nat (π a)
-  exact ((Equiv.sigmaEquivProd ℕ ℕ).Injective.comp <| hf.sigma_map hg).Countable
+  exact ((Equiv.sigmaEquivProd ℕ ℕ).Injective.comp $ hf.sigma_map hg).Countable
 
 end Type
 
@@ -87,13 +87,13 @@ instance (priority := 500) SetCoe.countable {α} [Countable α] (s : Set α) : C
 #align set_coe.countable SetCoe.countable
 
 instance [Countable α] [Countable β] : Countable (PSum α β) :=
-  Countable.of_equiv (Sum (PLift α) (PLift β)) (Equiv.plift.sumPsum Equiv.plift)
+  Countable.of_equiv (PLift α ⊕ PLift β) (Equiv.plift.sumPsum Equiv.plift)
 
 instance [Countable α] [Countable β] : Countable (PProd α β) :=
   Countable.of_equiv (PLift α × PLift β) (Equiv.plift.prodPprod Equiv.plift)
 
 instance [Countable α] [∀ a, Countable (π a)] : Countable (PSigma π) :=
-  Countable.of_equiv (Σa : PLift α, PLift (π a.down)) (Equiv.psigmaEquivSigmaPlift π).symm
+  Countable.of_equiv (Σ a : PLift α, PLift (π a.down)) (Equiv.psigmaEquivSigmaPlift π).symm
 
 instance [Finite α] [∀ a, Countable (π a)] : Countable (∀ a, π a) := by
   have : ∀ n, Countable (Fin n → ℕ) := by

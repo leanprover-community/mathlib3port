@@ -95,12 +95,12 @@ def Trivialization.pullback (e : Trivialization F (π E)) (f : K) : Trivializati
     simp_rw [total_space.proj_mk, pullback.lift_mk, e.apply_mk_symm h, Prod.mk.eta]
   open_source := by
     simp_rw [e.source_eq, ← preimage_comp]
-    exact ((map_continuous f).comp <| Pullback.continuous_proj E f).is_open_preimage _ e.open_base_set
+    exact ((map_continuous f).comp $ Pullback.continuous_proj E f).is_open_preimage _ e.open_base_set
   open_target := ((map_continuous f).is_open_preimage _ e.open_base_set).Prod is_open_univ
   open_base_set := (map_continuous f).is_open_preimage _ e.open_base_set
   continuous_to_fun :=
     (Pullback.continuous_proj E f).ContinuousOn.Prod
-      (continuous_snd.comp_continuous_on <| e.ContinuousOn.comp (Pullback.continuous_lift E f).ContinuousOn Subset.rfl)
+      (continuous_snd.comp_continuous_on $ e.ContinuousOn.comp (Pullback.continuous_lift E f).ContinuousOn Subset.rfl)
   continuous_inv_fun := by
     dsimp only
     simp_rw [(inducing_pullback_total_space_embedding E f).continuous_on_iff, Function.comp,
@@ -122,7 +122,7 @@ instance FiberBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E] 
   total_space_mk_inducing x :=
     inducing_of_inducing_compose (Pullback.continuous_total_space_mk F E) (Pullback.continuous_lift E f)
       (total_space_mk_inducing F E (f x))
-  trivializationAtlas := { ef | ∃ (e : Trivialization F (π E))(_ : MemTrivializationAtlas e), ef = e.pullback f }
+  trivializationAtlas := { ef | ∃ (e : Trivialization F (π E)) (_ : MemTrivializationAtlas e), ef = e.pullback f }
   trivializationAt x := (trivializationAt F E (f x)).pullback f
   mem_base_set_trivialization_at x := mem_base_set_trivialization_at F E (f x)
   trivialization_mem_atlas x := ⟨trivializationAt F E (f x), by infer_instance, rfl⟩

@@ -39,9 +39,9 @@ variable (𝕜) [AddCommMonoid E] [AddCommMonoid F] [Module 𝕜 E] [Module 𝕜
 /-- The convex hull of a set `s` is the minimal convex set that includes `s`. -/
 def convexHull : ClosureOperator (Set E) :=
   ClosureOperator.mk₃ (fun s => ⋂ (t : Set E) (hst : s ⊆ t) (ht : Convex 𝕜 t), t) (Convex 𝕜)
-    (fun s => Set.subset_Inter fun t => Set.subset_Inter fun hst => Set.subset_Inter fun ht => hst)
-    (fun s => convex_Inter fun t => convex_Inter fun ht => convex_Inter id) fun s t hst ht =>
-    Set.Inter_subset_of_subset t <| Set.Inter_subset_of_subset hst <| Set.Inter_subset _ ht
+    (fun s => Set.subset_Inter fun t => Set.subset_Inter $ fun hst => Set.subset_Inter $ fun ht => hst)
+    (fun s => convex_Inter $ fun t => convex_Inter $ fun ht => convex_Inter id) fun s t hst ht =>
+    Set.Inter_subset_of_subset t $ Set.Inter_subset_of_subset hst $ Set.Inter_subset _ ht
 #align convex_hull convexHull
 
 variable (s : Set E)
@@ -125,8 +125,8 @@ theorem convex_hull_singleton (x : E) : convexHull 𝕜 ({x} : Set E) = {x} :=
 @[simp]
 theorem convex_hull_pair (x y : E) : convexHull 𝕜 {x, y} = segment 𝕜 x y := by
   refine'
-    (convex_hull_min _ <| convex_segment _ _).antisymm
-      (segment_subset_convex_hull (mem_insert _ _) <| mem_insert_of_mem _ <| mem_singleton _)
+    (convex_hull_min _ $ convex_segment _ _).antisymm
+      (segment_subset_convex_hull (mem_insert _ _) $ mem_insert_of_mem _ $ mem_singleton _)
   rw [insert_subset, singleton_subset_iff]
   exact ⟨left_mem_segment _ _ _, right_mem_segment _ _ _⟩
 #align convex_hull_pair convex_hull_pair
@@ -160,9 +160,9 @@ theorem Convex.convex_remove_iff_not_mem_convex_hull_remove {s : Set E} (hs : Co
 theorem IsLinearMap.convex_hull_image {f : E → F} (hf : IsLinearMap 𝕜 f) (s : Set E) :
     convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
   Set.Subset.antisymm
-    (convex_hull_min (image_subset _ (subset_convex_hull 𝕜 s)) <| (convex_convex_hull 𝕜 s).is_linear_image hf)
-    (image_subset_iff.2 <|
-      convex_hull_min (image_subset_iff.1 <| subset_convex_hull 𝕜 _) ((convex_convex_hull 𝕜 _).is_linear_preimage hf))
+    (convex_hull_min (image_subset _ (subset_convex_hull 𝕜 s)) $ (convex_convex_hull 𝕜 s).is_linear_image hf)
+    (image_subset_iff.2 $
+      convex_hull_min (image_subset_iff.1 $ subset_convex_hull 𝕜 _) ((convex_convex_hull 𝕜 _).is_linear_preimage hf))
 #align is_linear_map.convex_hull_image IsLinearMap.convex_hull_image
 
 theorem LinearMap.convex_hull_image (f : E →ₗ[𝕜] F) (s : Set E) : convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
@@ -215,7 +215,7 @@ theorem affine_span_convex_hull : affineSpan 𝕜 (convexHull 𝕜 s) = affineSp
 
 theorem convex_hull_neg (s : Set E) : convexHull 𝕜 (-s) = -convexHull 𝕜 s := by
   simp_rw [← image_neg]
-  exact (AffineMap.image_convex_hull _ <| -1).symm
+  exact (AffineMap.image_convex_hull _ $ -1).symm
 #align convex_hull_neg convex_hull_neg
 
 end AddCommGroup

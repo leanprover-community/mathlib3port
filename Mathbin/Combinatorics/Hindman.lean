@@ -63,7 +63,7 @@ theorem Ultrafilter.eventually_mul {M} [Mul M] (U V : Ultrafilter M) (p : M → 
 def Ultrafilter.semigroup {M} [Semigroup M] : Semigroup (Ultrafilter M) :=
   { Ultrafilter.hasMul with
     mul_assoc := fun U V W =>
-      Ultrafilter.coe_inj.mp <| Filter.ext' fun p => by simp only [Ultrafilter.eventually_mul, mul_assoc] }
+      Ultrafilter.coe_inj.mp $ Filter.ext' $ fun p => by simp only [Ultrafilter.eventually_mul, mul_assoc] }
 #align ultrafilter.semigroup Ultrafilter.semigroup
 
 attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
@@ -71,8 +71,8 @@ attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 -- We don't prove `continuous_mul_right`, because in general it is false!
 @[to_additive]
 theorem Ultrafilter.continuous_mul_left {M} [Semigroup M] (V : Ultrafilter M) : Continuous (· * V) :=
-  TopologicalSpace.IsTopologicalBasis.continuous ultrafilter_basis_is_basis _ <|
-    Set.forall_range_iff.mpr fun s => ultrafilter_is_open_basic { m : M | ∀ᶠ m' in V, m * m' ∈ s }
+  TopologicalSpace.IsTopologicalBasis.continuous ultrafilter_basis_is_basis _ $
+    Set.forall_range_iff.mpr $ fun s => ultrafilter_is_open_basic { m : M | ∀ᶠ m' in V, m * m' ∈ s }
 #align ultrafilter.continuous_mul_left Ultrafilter.continuous_mul_left
 
 namespace Hindman
@@ -132,7 +132,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream M) :
       exact FP.tail _
       
     · intro n
-      exact ⟨pure _, mem_pure.mpr <| FP.head _⟩
+      exact ⟨pure _, mem_pure.mpr $ FP.head _⟩
       
     · exact (ultrafilterIsClosedBasic _).IsCompact
       
@@ -140,7 +140,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream M) :
       apply ultrafilterIsClosedBasic
       
     
-  · exact IsClosed.is_compact (isClosedInter fun i => ultrafilterIsClosedBasic _)
+  · exact IsClosed.is_compact (isClosedInter $ fun i => ultrafilterIsClosedBasic _)
     
   · intro U hU V hV
     rw [Set.mem_Inter] at *
@@ -166,13 +166,13 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
   infinite sequence. -/
   have exists_elem : ∀ {s : Set M} (hs : s ∈ U), (s ∩ { m | ∀ᶠ m' in U, m * m' ∈ s }).Nonempty := fun s hs =>
     Ultrafilter.nonempty_of_mem
-      (inter_mem hs <| by
+      (inter_mem hs $ by
         rw [← U_idem] at hs
         exact hs)
   let elem : { s // s ∈ U } → M := fun p => (exists_elem p.property).some
   let succ : { s // s ∈ U } → { s // s ∈ U } := fun p =>
     ⟨p.val ∩ { m | elem p * m ∈ p.val },
-      inter_mem p.2 <| show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
+      inter_mem p.2 $ show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
   use Stream.corec elem succ (Subtype.mk s₀ sU)
   suffices ∀ (a : Stream M), ∀ m ∈ FP a, ∀ p, a = Stream.corec elem succ p → m ∈ p.val by
     intro m hm
@@ -200,8 +200,8 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
 contains an FP-set. -/
 @[to_additive FS_partition_regular
       "The strong form of **Hindman's theorem**: in any finite cover of\nan FS-set, one the parts contains an FS-set."]
-theorem FP_partition_regular {M} [Semigroup M] (a : Stream M) (s : Set (Set M)) (sfin : s.Finite) (scov : fP a ⊆ ⋃₀s) :
-    ∃ c ∈ s, ∃ b : Stream M, fP b ⊆ c :=
+theorem FP_partition_regular {M} [Semigroup M] (a : Stream M) (s : Set (Set M)) (sfin : s.Finite) (scov : fP a ⊆ ⋃₀ s) :
+    ∃ (c ∈ s) (b : Stream M), fP b ⊆ c :=
   let ⟨U, idem, aU⟩ := exists_idempotent_ultrafilter_le_FP a
   let ⟨c, cs, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset aU scov)
   ⟨c, cs, exists_FP_of_large U idem c hc⟩
@@ -211,8 +211,8 @@ theorem FP_partition_regular {M} [Semigroup M] (a : Stream M) (s : Set (Set M)) 
 parts contains an FP-set. -/
 @[to_additive exists_FS_of_finite_cover
       "The weak form of **Hindman's theorem**: in any finite cover\nof a nonempty additive semigroup, one of the parts contains an FS-set."]
-theorem exists_FP_of_finite_cover {M} [Semigroup M] [Nonempty M] (s : Set (Set M)) (sfin : s.Finite) (scov : ⊤ ⊆ ⋃₀s) :
-    ∃ c ∈ s, ∃ a : Stream M, fP a ⊆ c :=
+theorem exists_FP_of_finite_cover {M} [Semigroup M] [Nonempty M] (s : Set (Set M)) (sfin : s.Finite) (scov : ⊤ ⊆ ⋃₀ s) :
+    ∃ (c ∈ s) (a : Stream M), fP a ⊆ c :=
   let ⟨U, hU⟩ := exists_idempotent_of_compact_t2_of_continuous_mul_left (@Ultrafilter.continuous_mul_left M _)
   let ⟨c, c_s, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset univ_mem scov)
   ⟨c, c_s, exists_FP_of_large U hU c hc⟩
@@ -261,9 +261,9 @@ theorem fP.finset_prod {M} [CommMonoid M] (a : Stream M) (s : Finset ℕ) (hs : 
     
   · apply FP.cons
     rw [Stream.tail_eq_drop, Stream.drop_drop, add_comm]
-    refine' Set.mem_of_subset_of_mem _ (ih _ (Finset.erase_ssubset <| s.min'_mem hs) h)
+    refine' Set.mem_of_subset_of_mem _ (ih _ (Finset.erase_ssubset $ s.min'_mem hs) h)
     have : s.min' hs + 1 ≤ (s.erase (s.min' hs)).min' h :=
-      Nat.succ_le_of_lt (Finset.min'_lt_of_mem_erase_min' _ _ <| Finset.min'_mem _ _)
+      Nat.succ_le_of_lt (Finset.min'_lt_of_mem_erase_min' _ _ $ Finset.min'_mem _ _)
     cases' le_iff_exists_add.mp this with d hd
     rw [hd, add_comm, ← Stream.drop_drop]
     apply FP_drop_subset_FP

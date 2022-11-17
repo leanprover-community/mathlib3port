@@ -42,7 +42,7 @@ def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
           Finset.sum_congr rfl fun x hx => by simp [hx]
         _ = s.card • (s.card : ℝ≥0)⁻¹ := Finset.sum_const _
         _ = (s.card : ℝ≥0) * (s.card : ℝ≥0)⁻¹ := by rw [nsmul_eq_mul]
-        _ = 1 := div_self (Nat.cast_ne_zero.2 <| Finset.card_ne_zero_of_mem hx)
+        _ = 1 := div_self (Nat.cast_ne_zero.2 $ Finset.card_ne_zero_of_mem hx)
         )
     fun x hx => by simp only [hx, if_false]
 #align pmf.uniform_of_finset Pmf.uniformOfFinset
@@ -82,7 +82,7 @@ theorem to_outer_measure_uniform_of_finset_apply :
     (uniformOfFinset s hs).toOuterMeasure t = ↑(∑' x, if x ∈ t then uniformOfFinset s hs x else 0) :=
       to_outer_measure_apply' (uniformOfFinset s hs) t
     _ = ↑(∑' x, if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0)⁻¹ else 0) := by
-      refine' Ennreal.coe_eq_coe.2 <| tsum_congr fun x => _
+      refine' Ennreal.coe_eq_coe.2 $ tsum_congr fun x => _
       by_cases hxt:x ∈ t
       · by_cases hxs:x ∈ s <;> simp [hxt, hxs]
         
@@ -94,11 +94,11 @@ theorem to_outer_measure_uniform_of_finset_apply :
       simp [this]
     _ = ↑(∑ x in s.filter (· ∈ t), (s.card : ℝ≥0)⁻¹) :=
       Ennreal.coe_eq_coe.2
-        ((Finset.sum_congr rfl) fun x hx => by
+        (Finset.sum_congr rfl $ fun x hx => by
           let this : x ∈ s ∧ x ∈ t := by simpa using hx
           simp [this])
     _ = (s.filter (· ∈ t)).card / s.card := by
-      let this : (s.card : ℝ≥0) ≠ 0 := Nat.cast_ne_zero.2 (hs.recOn fun _ => Finset.card_ne_zero_of_mem)
+      let this : (s.card : ℝ≥0) ≠ 0 := Nat.cast_ne_zero.2 (hs.recOn $ fun _ => Finset.card_ne_zero_of_mem)
       simp [div_eq_mul_inv, Ennreal.coe_inv this]
     
 #align pmf.to_outer_measure_uniform_of_finset_apply Pmf.to_outer_measure_uniform_of_finset_apply
@@ -184,7 +184,7 @@ theorem mem_support_of_multiset_iff (a : α) : a ∈ (ofMultiset s hs).support �
 #align pmf.mem_support_of_multiset_iff Pmf.mem_support_of_multiset_iff
 
 theorem of_multiset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofMultiset s hs a = 0 :=
-  div_eq_zero_iff.2 (Or.inl <| Nat.cast_eq_zero.2 <| Multiset.count_eq_zero_of_not_mem ha)
+  div_eq_zero_iff.2 (Or.inl $ Nat.cast_eq_zero.2 $ Multiset.count_eq_zero_of_not_mem ha)
 #align pmf.of_multiset_apply_of_not_mem Pmf.of_multiset_apply_of_not_mem
 
 section Measure

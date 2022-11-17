@@ -320,8 +320,8 @@ see `lift_equiv'` for the corresponding statement.
 noncomputable def liftEquiv (pb : PowerBasis A S) : (S →ₐ[A] S') ≃ { y : S' // aeval y (minpoly A pb.gen) = 0 } where
   toFun f := ⟨f pb.gen, by rw [aeval_alg_hom_apply, minpoly.aeval, f.map_zero]⟩
   invFun y := pb.lift y y.2
-  left_inv f := pb.alg_hom_ext <| lift_gen _ _ _
-  right_inv y := Subtype.ext <| lift_gen _ _ y.Prop
+  left_inv f := pb.alg_hom_ext $ lift_gen _ _ _
+  right_inv y := Subtype.ext $ lift_gen _ _ y.Prop
 #align power_basis.lift_equiv PowerBasis.liftEquiv
 
 /-- `pb.lift_equiv'` states that elements of the root set of the minimal

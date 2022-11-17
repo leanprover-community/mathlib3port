@@ -174,12 +174,15 @@ protected theorem inj (f : α ≃. β) {a₁ a₂ : α} {b : β} (h₁ : b ∈ f
 /-- If the domain of a `pequiv` is `α` except a point, its forward direction is injective. -/
 theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a₁ : α, a₁ ≠ a₂ → isSome (f a₁)) : Injective f :=
   HasLeftInverse.injective
-    ⟨fun b => Option.recOn b a₂ fun b' => Option.recOn (f.symm b') a₂ id, fun x => by
-      classical cases hfx : f x
-        · simp only [hfx]
-          rw [(eq_some_iff f).2 hfx]
-          rfl
-          ⟩
+    ⟨fun b => Option.recOn b a₂ fun b' => Option.recOn (f.symm b') a₂ id, fun x => by classical
+      cases hfx : f x
+      · have : x = a₂ := not_imp_comm.1 (h x) (hfx.symm ▸ by simp)
+        simp [this]
+        
+      · simp only [hfx]
+        rw [(eq_some_iff f).2 hfx]
+        rfl
+        ⟩
 #align pequiv.injective_of_forall_ne_is_some Pequiv.injective_of_forall_ne_is_some
 
 /-- If the domain of a `pequiv` is all of `α`, its forward direction is injective. -/
@@ -273,7 +276,7 @@ theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).is
 #align pequiv.self_trans_symm Pequiv.self_trans_symm
 
 theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = ofSet { b | (f.symm b).isSome } :=
-  symm_injective <| by simp [symm_trans_rev, self_trans_symm, -symm_symm]
+  symm_injective $ by simp [symm_trans_rev, self_trans_symm, -symm_symm]
 #align pequiv.symm_trans_self Pequiv.symm_trans_self
 
 theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} : f.trans f.symm = Pequiv.refl α ↔ ∀ a, isSome (f a) := by
@@ -348,7 +351,7 @@ theorem single_trans_of_mem (a : α) {b : β} {c : γ} {f : β ≃. γ} (h : c �
 #align pequiv.single_trans_of_mem Pequiv.single_trans_of_mem
 
 theorem trans_single_of_mem {a : α} {b : β} (c : γ) {f : α ≃. β} (h : b ∈ f a) : f.trans (single b c) = single a c :=
-  symm_injective <| single_trans_of_mem _ ((mem_iff_mem f).2 h)
+  symm_injective $ single_trans_of_mem _ ((mem_iff_mem f).2 h)
 #align pequiv.trans_single_of_mem Pequiv.trans_single_of_mem
 
 @[simp]
@@ -373,7 +376,7 @@ theorem trans_single_of_eq_none {b : β} (c : γ) {f : δ ≃. β} (h : f.symm b
 #align pequiv.trans_single_of_eq_none Pequiv.trans_single_of_eq_none
 
 theorem single_trans_of_eq_none (a : α) {b : β} {f : β ≃. δ} (h : f b = none) : (single a b).trans f = ⊥ :=
-  symm_injective <| trans_single_of_eq_none _ h
+  symm_injective $ trans_single_of_eq_none _ h
 #align pequiv.single_trans_of_eq_none Pequiv.single_trans_of_eq_none
 
 theorem single_trans_single_of_ne {b₁ b₂ : β} (h : b₁ ≠ b₂) (a : α) (c : γ) : (single a b₁).trans (single b₂ c) = ⊥ :=
@@ -393,7 +396,7 @@ instance : PartialOrder (α ≃. β) where
       (by
         intro a
         cases' h : g a with b
-        · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b <| h ▸ fg a b hb
+        · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b $ h ▸ fg a b hb
           
         · exact gf _ _ h
           )

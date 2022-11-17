@@ -61,7 +61,7 @@ theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (β i)] {r} (hwf : WellFounded
     ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i :=
   let h' := Pi.lt_def.1 hlt
   let ⟨i, hi, hl⟩ := hwf.has_min _ h'.2
-  ⟨i, fun j hj => ⟨h'.1 j, not_not.1 fun h => hl j (lt_of_le_not_le (h'.1 j) h) hj⟩, hi⟩
+  ⟨i, fun j hj => ⟨h'.1 j, not_not.1 $ fun h => hl j (lt_of_le_not_le (h'.1 j) h) hj⟩, hi⟩
 #align pi.lex_lt_of_lt_of_preorder Pi.lex_lt_of_lt_of_preorder
 
 theorem lex_lt_of_lt [∀ i, PartialOrder (β i)] {r} (hwf : WellFounded r) {x y : ∀ i, β i} (hlt : x < y) :
@@ -84,7 +84,7 @@ theorem is_trichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r
           exact fun h' => wf.not_lt_min _ _ h'
         have hne : a i ≠ b i := wf.min_mem _ hab
         cases' trichotomous_of s (a i) (b i) with hi hi
-        exacts[Or.inl ⟨i, hri, hi⟩, Or.inr <| Or.inr <| ⟨i, fun j hj => (hri j hj).symm, hi.resolve_left hne⟩]
+        exacts[Or.inl ⟨i, hri, hi⟩, Or.inr $ Or.inr $ ⟨i, fun j hj => (hri j hj).symm, hi.resolve_left hne⟩]
          }
 #align pi.is_trichotomous_lex Pi.is_trichotomous_lex
 
@@ -96,7 +96,7 @@ instance Lex.is_strict_order [LinearOrder ι] [∀ a, PartialOrder (β a)] : IsS
   trans := by
     rintro a b c ⟨N₁, lt_N₁, a_lt_b⟩ ⟨N₂, lt_N₂, b_lt_c⟩
     rcases lt_trichotomy N₁ N₂ with (H | rfl | H)
-    exacts[⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ <| hj.trans H), lt_N₂ _ H ▸ a_lt_b⟩,
+    exacts[⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ $ hj.trans H), lt_N₂ _ H ▸ a_lt_b⟩,
       ⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ hj), a_lt_b.trans b_lt_c⟩,
       ⟨N₂, fun j hj => (lt_N₁ _ (hj.trans H)).trans (lt_N₂ _ hj), (lt_N₁ _ H).symm ▸ b_lt_c⟩]
 #align pi.lex.is_strict_order Pi.Lex.is_strict_order
@@ -117,7 +117,7 @@ variable [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ i, PartialOrder (β i)
 open Function
 
 theorem to_lex_monotone : Monotone (@toLex (∀ i, β i)) := fun a b h =>
-  or_iff_not_imp_left.2 fun hne =>
+  or_iff_not_imp_left.2 $ fun hne =>
     let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 hne)
     ⟨i, fun j hj => by
       contrapose! hl
@@ -133,7 +133,7 @@ theorem to_lex_strict_mono : StrictMono (@toLex (∀ i, β i)) := fun a b h =>
 
 @[simp]
 theorem lt_to_lex_update_self_iff : toLex x < toLex (update x i a) ↔ x i < a := by
-  refine' ⟨_, fun h => to_lex_strict_mono <| lt_update_self_iff.2 h⟩
+  refine' ⟨_, fun h => to_lex_strict_mono $ lt_update_self_iff.2 h⟩
   rintro ⟨j, hj, h⟩
   dsimp at h
   obtain rfl : j = i := by
@@ -146,7 +146,7 @@ theorem lt_to_lex_update_self_iff : toLex x < toLex (update x i a) ↔ x i < a :
 
 @[simp]
 theorem to_lex_update_lt_self_iff : toLex (update x i a) < toLex x ↔ a < x i := by
-  refine' ⟨_, fun h => to_lex_strict_mono <| update_lt_self_iff.2 h⟩
+  refine' ⟨_, fun h => to_lex_strict_mono $ update_lt_self_iff.2 h⟩
   rintro ⟨j, hj, h⟩
   dsimp at h
   obtain rfl : j = i := by
@@ -187,12 +187,14 @@ instance [Preorder ι] [∀ i, LT (β i)] [∀ i, DenselyOrdered (β i)] : Dense
   ⟨by
     rintro _ _ ⟨i, h, hi⟩
     obtain ⟨a, ha₁, ha₂⟩ := exists_between hi
-    classical refine' ⟨a₂.update _ a, ⟨i, fun j hj => _, _⟩, i, fun j hj => _, _⟩
-      iterate 2 
-      · rw [a₂.update_noteq hj.ne a]
-        
-      · rwa [a₂.update_same i a]
-        ⟩
+    classical
+    refine' ⟨a₂.update _ a, ⟨i, fun j hj => _, _⟩, i, fun j hj => _, _⟩
+    rw [h j hj]
+    iterate 2 
+    · rw [a₂.update_noteq hj.ne a]
+      
+    · rwa [a₂.update_same i a]
+      ⟩
 
 theorem Lex.no_max_order' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (β i)] : NoMaxOrder (Lex (∀ i, β i)) :=
   ⟨fun a =>

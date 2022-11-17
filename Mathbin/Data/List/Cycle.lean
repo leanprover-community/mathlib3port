@@ -588,14 +588,14 @@ instance : Inhabited (Cycle α) :=
 @[elab_as_elim]
 theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil) (HI : ∀ (a) (l : List α), C ↑l → C ↑(a::l)) :
     C s :=
-  (Quotient.inductionOn' s) fun l => by
+  Quotient.inductionOn' s $ fun l => by
     apply List.recOn l <;> simp
     assumption'
 #align cycle.induction_on Cycle.induction_on
 
 /-- For `x : α`, `s : cycle α`, `x ∈ s` indicates that `x` occurs at least once in `s`. -/
 def Mem (a : α) (s : Cycle α) : Prop :=
-  Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e => propext <| e.mem_iff
+  Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e => propext $ e.mem_iff
 #align cycle.mem Cycle.Mem
 
 instance : Membership α (Cycle α) :=
@@ -687,9 +687,10 @@ theorem Subsingleton.congr {s : Cycle α} (h : Subsingleton s) : ∀ ⦃x⦄ (hx
   rcases h with (rfl | ⟨z, rfl⟩) <;> simp
 #align cycle.subsingleton.congr Cycle.Subsingleton.congr
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /-- A `s : cycle α` that is made up of at least two unique elements. -/
 def Nontrivial (s : Cycle α) : Prop :=
-  ∃ (x y : α)(h : x ≠ y), x ∈ s ∧ y ∈ s
+  ∃ (x : α) (y : α) (h : x ≠ y), x ∈ s ∧ y ∈ s
 #align cycle.nontrivial Cycle.Nontrivial
 
 @[simp]
@@ -726,7 +727,7 @@ theorem length_nontrivial {s : Cycle α} (h : Nontrivial s) : 2 ≤ length s := 
 
 /-- The `s : cycle α` contains no duplicates. -/
 def Nodup (s : Cycle α) : Prop :=
-  Quot.liftOn s Nodup fun l₁ l₂ e => propext <| e.nodup_iff
+  Quot.liftOn s Nodup fun l₁ l₂ e => propext $ e.nodup_iff
 #align cycle.nodup Cycle.Nodup
 
 @[simp]
@@ -789,7 +790,7 @@ theorem to_multiset_eq_nil {s : Cycle α} : s.toMultiset = 0 ↔ s = Cycle.nil :
 
 /-- The lift of `list.map`. -/
 def map {β : Type _} (f : α → β) : Cycle α → Cycle β :=
-  (Quotient.map' (List.map f)) fun l₁ l₂ h => h.map _
+  Quotient.map' (List.map f) $ fun l₁ l₂ h => h.map _
 #align cycle.map Cycle.map
 
 @[simp]
@@ -809,7 +810,7 @@ theorem map_eq_nil {β : Type _} (f : α → β) (s : Cycle α) : map f s = nil 
 
 /-- The `multiset` of lists that can make the cycle. -/
 def lists (s : Cycle α) : Multiset (List α) :=
-  (Quotient.liftOn' s fun l => (l.cyclicPermutations : Multiset (List α))) fun l₁ l₂ h => by
+  (Quotient.liftOn' s fun l => (l.cyclicPermutations : Multiset (List α))) $ fun l₁ l₂ h => by
     simpa using h.cyclic_permutations.perm
 #align cycle.lists Cycle.lists
 
@@ -820,7 +821,7 @@ theorem lists_coe (l : List α) : lists (l : Cycle α) = ↑l.cyclicPermutations
 
 @[simp]
 theorem mem_lists_iff_coe_eq {s : Cycle α} {l : List α} : l ∈ s.lists ↔ (l : Cycle α) = s :=
-  (Quotient.inductionOn' s) fun l => by
+  Quotient.inductionOn' s $ fun l => by
     rw [lists, Quotient.lift_on'_mk']
     simp
 #align cycle.mem_lists_iff_coe_eq Cycle.mem_lists_iff_coe_eq
@@ -962,9 +963,9 @@ def Chain (r : α → α → Prop) (c : Cycle α) : Prop :=
   (Quotient.liftOn' c fun l =>
       match l with
       | [] => True
-      | a::m => Chain r a (m ++ [a]))
+      | a::m => Chain r a (m ++ [a])) $
     fun a b hab =>
-    propext <| by
+    propext $ by
       cases' a with a l <;> cases' b with b m
       · rfl
         
@@ -1016,7 +1017,7 @@ theorem chain_ne_nil (r : α → α → Prop) {l : List α} : ∀ hl : l ≠ [],
 
 theorem chain_map {β : Type _} {r : α → α → Prop} (f : β → α) {s : Cycle β} :
     Chain r (s.map f) ↔ Chain (fun a b => r (f a) (f b)) s :=
-  (Quotient.inductionOn' s) fun l => by
+  Quotient.inductionOn' s $ fun l => by
     cases' l with a l
     rfl
     convert List.chain_map f

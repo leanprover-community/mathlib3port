@@ -85,8 +85,8 @@ instance : Inhabited MonCat :=
   ⟨-- The default instance for `monoid punit` is derived via `punit.comm_ring`,
         -- which breaks to_additive.
         @of
-        PUnit <|
-      @Group.toMonoid _ <| @CommGroup.toGroup _ PUnit.commGroup⟩
+        PUnit $
+      @Group.toMonoid _ $ @CommGroup.toGroup _ PUnit.commGroup⟩
 
 @[to_additive]
 instance (M : MonCat) : Monoid M :=
@@ -136,7 +136,7 @@ instance : Inhabited CommMonCat :=
   ⟨-- The default instance for `comm_monoid punit` is derived via `punit.comm_ring`,
         -- which breaks to_additive.
         @of
-        PUnit <|
+        PUnit $
       @CommGroup.toCommMonoid _ PUnit.commGroup⟩
 
 @[to_additive]

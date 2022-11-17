@@ -147,8 +147,8 @@ def ProfiniteCat.toCompHausEquivalence (X : CompHausCat.{u}) (Y : ProfiniteCat.{
   invFun g :=
     { toFun := Continuous.connectedComponentsLift g.2,
       continuous_to_fun := Continuous.connected_components_lift_continuous g.2 }
-  left_inv f := ContinuousMap.ext <| ConnectedComponents.surjective_coe.forall.2 fun a => rfl
-  right_inv f := ContinuousMap.ext fun x => rfl
+  left_inv f := ContinuousMap.ext $ ConnectedComponents.surjective_coe.forall.2 $ fun a => rfl
+  right_inv f := ContinuousMap.ext $ fun x => rfl
 #align Profinite.to_CompHaus_equivalence ProfiniteCat.toCompHausEquivalence
 
 /-- The connected_components functor from compact Hausdorff spaces to profinite spaces,
@@ -318,11 +318,24 @@ theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fu
       exact hy y' hy'
     have hUy : U ∈ nhds y := hU.mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
-    classical letI : TopologicalSpace (ULift.{u} <| Fin 2) := ⊥
-      let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
-      have H : h = g
-      apply_fun fun e => (e y).down  at H
-      rw [if_pos hyV] at H
+    classical
+    letI : TopologicalSpace (ULift.{u} $ Fin 2) := ⊥
+    let Z := of (ULift.{u} $ Fin 2)
+    let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
+    let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
+    have H : h = g := by
+      rw [← cancel_epi f]
+      ext x
+      dsimp [LocallyConstant.ofClopen]
+      rw [if_neg]
+      · rfl
+        
+      refine' mt (fun α => hVU α) _
+      simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
+    apply_fun fun e => (e y).down  at H
+    dsimp [LocallyConstant.ofClopen] at H
+    rw [if_pos hyV] at H
+    exact top_ne_bot H
     
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget ProfiniteCat).epi_of_epi_map

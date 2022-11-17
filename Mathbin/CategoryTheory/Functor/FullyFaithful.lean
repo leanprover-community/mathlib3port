@@ -64,11 +64,11 @@ namespace Functor
 
 variable {X Y : C}
 
-theorem map_injective (F : C ⥤ D) [Faithful F] : Function.Injective <| @Functor.map _ _ _ _ F X Y :=
+theorem map_injective (F : C ⥤ D) [Faithful F] : Function.Injective $ @Functor.map _ _ _ _ F X Y :=
   Faithful.map_injective F
 #align category_theory.functor.map_injective CategoryTheory.Functor.map_injective
 
-theorem map_iso_injective (F : C ⥤ D) [Faithful F] : Function.Injective <| @Functor.mapIso _ _ _ _ F X Y := fun i j h =>
+theorem map_iso_injective (F : C ⥤ D) [Faithful F] : Function.Injective $ @Functor.mapIso _ _ _ _ F X Y := fun i j h =>
   Iso.ext (map_injective F (congr_arg Iso.hom h : _))
 #align category_theory.functor.map_iso_injective CategoryTheory.Functor.map_iso_injective
 
@@ -251,7 +251,7 @@ instance Faithful.comp [Faithful F] [Faithful G] :
     Faithful (F ⋙ G) where map_injective' _ _ _ _ p := F.map_injective (G.map_injective p)
 #align category_theory.faithful.comp CategoryTheory.Faithful.comp
 
-theorem Faithful.of_comp [faithful <| F ⋙ G] : Faithful F :=
+theorem Faithful.of_comp [faithful $ F ⋙ G] : Faithful F :=
   { map_injective' := fun X Y => (F ⋙ G).map_injective.of_comp }
 #align category_theory.faithful.of_comp CategoryTheory.Faithful.of_comp
 
@@ -292,7 +292,7 @@ variable (F G)
 
 /-- “Divide” a functor by a faithful functor. -/
 protected def Faithful.div (F : C ⥤ E) (G : D ⥤ E) [Faithful G] (obj : C → D) (h_obj : ∀ X, G.obj (obj X) = F.obj X)
-    (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y)) (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq (G.map (map f)) (F.map f)) : C ⥤ D :=
+    (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y)) (h_map : ∀ {X Y} {f : X ⟶ Y}, G.map (map f) == F.map f) : C ⥤ D :=
   { obj, map := @map,
     map_id' := by
       intro X
@@ -317,7 +317,7 @@ protected def Faithful.div (F : C ⥤ E) (G : D ⥤ E) [Faithful G] (obj : C →
 -- category_theory.equivalence → category_theory.fully_faithful
 theorem Faithful.div_comp (F : C ⥤ E) [Faithful F] (G : D ⥤ E) [Faithful G] (obj : C → D)
     (h_obj : ∀ X, G.obj (obj X) = F.obj X) (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y))
-    (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq (G.map (map f)) (F.map f)) : Faithful.div F G obj @h_obj @map @h_map ⋙ G = F := by
+    (h_map : ∀ {X Y} {f : X ⟶ Y}, G.map (map f) == F.map f) : Faithful.div F G obj @h_obj @map @h_map ⋙ G = F := by
   cases' F with F_obj _ _ _
   cases' G with G_obj _ _ _
   unfold faithful.div Functor.Comp
@@ -331,7 +331,7 @@ theorem Faithful.div_comp (F : C ⥤ E) [Faithful F] (G : D ⥤ E) [Faithful G] 
 
 theorem Faithful.div_faithful (F : C ⥤ E) [Faithful F] (G : D ⥤ E) [Faithful G] (obj : C → D)
     (h_obj : ∀ X, G.obj (obj X) = F.obj X) (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y))
-    (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq (G.map (map f)) (F.map f)) : Faithful (Faithful.div F G obj @h_obj @map @h_map) :=
+    (h_map : ∀ {X Y} {f : X ⟶ Y}, G.map (map f) == F.map f) : Faithful (Faithful.div F G obj @h_obj @map @h_map) :=
   (Faithful.div_comp F G _ h_obj _ @h_map).faithful_of_comp
 #align category_theory.faithful.div_faithful CategoryTheory.Faithful.div_faithful
 
@@ -339,7 +339,7 @@ instance Full.comp [Full F] [Full G] : Full (F ⋙ G) where preimage _ _ f := F.
 #align category_theory.full.comp CategoryTheory.Full.comp
 
 /-- If `F ⋙ G` is full and `G` is faithful, then `F` is full. -/
-def Full.ofCompFaithful [full <| F ⋙ G] [Faithful G] : Full F where
+def Full.ofCompFaithful [full $ F ⋙ G] [Faithful G] : Full F where
   preimage X Y f := (F ⋙ G).preimage (G.map f)
   witness' X Y f := G.map_injective ((F ⋙ G).image_preimage _)
 #align category_theory.full.of_comp_faithful CategoryTheory.Full.ofCompFaithful

@@ -47,24 +47,20 @@ theorem Tactic.Group.zpow_trick_sub {G : Type _} [Group G] (a b : G) (n m : ℤ)
 
 namespace Tactic
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic.SimpArgType Interactive Tactic.Group
 
 /-- Auxiliary tactic for the `group` tactic. Calls the simplifier only. -/
 unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
   simp_core { failIfUnchanged := false } skip true
-      [expr (pquote.1 commutator_element_def), expr (pquote.1 mul_one), expr (pquote.1 one_mul),
-        expr (pquote.1 one_pow), expr (pquote.1 one_zpow), expr (pquote.1 sub_self), expr (pquote.1 add_neg_self),
-        expr (pquote.1 neg_add_self), expr (pquote.1 neg_neg), expr (pquote.1 tsub_self),
-        expr (pquote.1 Int.coe_nat_add), expr (pquote.1 Int.coe_nat_mul), expr (pquote.1 Int.coe_nat_zero),
-        expr (pquote.1 Int.coe_nat_one), expr (pquote.1 Int.coe_nat_bit0), expr (pquote.1 Int.coe_nat_bit1),
-        expr (pquote.1 Int.mul_neg_eq_neg_mul_symm), expr (pquote.1 Int.neg_mul_eq_neg_mul_symm),
-        symm_expr (pquote.1 zpow_coe_nat), symm_expr (pquote.1 zpow_neg_one), symm_expr (pquote.1 zpow_mul),
-        symm_expr (pquote.1 zpow_add_one), symm_expr (pquote.1 zpow_one_add), symm_expr (pquote.1 zpow_add),
-        expr (pquote.1 mul_zpow_neg_one), expr (pquote.1 zpow_zero), expr (pquote.1 mul_zpow),
-        symm_expr (pquote.1 mul_assoc), expr (pquote.1 zpow_trick), expr (pquote.1 zpow_trick_one),
-        expr (pquote.1 zpow_trick_one'), expr (pquote.1 zpow_trick_sub), expr (pquote.1 Tactic.Ring.horner)]
+      [expr ``(commutatorElement_def), expr ``(mul_one), expr ``(one_mul), expr ``(one_pow), expr ``(one_zpow),
+        expr ``(sub_self), expr ``(add_neg_self), expr ``(neg_add_self), expr ``(neg_neg), expr ``(tsub_self),
+        expr ``(Int.ofNat_add), expr ``(Int.ofNat_mul), expr ``(Int.ofNat_zero), expr ``(Int.ofNat_one),
+        expr ``(Int.coe_nat_bit0), expr ``(Int.coe_nat_bit1), expr ``(Int.mul_neg_eq_neg_mul_symm),
+        expr ``(Int.neg_mul_eq_neg_mul_symm), symm_expr ``(zpow_coe_nat), symm_expr ``(zpow_neg_one),
+        symm_expr ``(zpow_mul), symm_expr ``(zpow_add_one), symm_expr ``(zpow_one_add), symm_expr ``(zpow_add),
+        expr ``(mul_zpow_neg_one), expr ``(zpow_zero), expr ``(mul_zpow), symm_expr ``(mul_assoc), expr ``(zpow_trick),
+        expr ``(zpow_trick_one), expr ``(zpow_trick_one'), expr ``(zpow_trick_sub), expr ``(Tactic.Ring.horner)]
       [] locat >>
     skip
 #align tactic.aux_group₁ tactic.aux_group₁
@@ -78,11 +74,10 @@ end Tactic
 
 namespace Tactic.Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for normalizing expressions in multiplicative groups, without assuming
 commutativity, using only the group axioms without any information about which group
 is manipulated.
@@ -102,7 +97,7 @@ end
 unsafe def group (locat : parse location) : tactic Unit := do
   when locat sorry
   aux_group₁ locat
-  repeat (andthen (aux_group₂ locat) (aux_group₁ locat))
+  repeat (aux_group₂ locat; aux_group₁ locat)
 #align tactic.interactive.group tactic.interactive.group
 
 end Tactic.Interactive

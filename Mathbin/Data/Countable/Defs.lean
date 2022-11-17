@@ -45,12 +45,12 @@ protected theorem Function.Injective.countable [Countable β] {f : α → β} (h
 #align function.injective.countable Function.Injective.countable
 
 protected theorem Function.Surjective.countable [Countable α] {f : α → β} (hf : Surjective f) : Countable β :=
-  (injective_surj_inv hf).Countable
+  (injective_surjInv hf).Countable
 #align function.surjective.countable Function.Surjective.countable
 
 theorem exists_surjective_nat (α : Sort u) [Nonempty α] [Countable α] : ∃ f : ℕ → α, Surjective f :=
   let ⟨f, hf⟩ := exists_injective_nat α
-  ⟨invFun f, inv_fun_surjective hf⟩
+  ⟨invFun f, invFun_surjective hf⟩
 #align exists_surjective_nat exists_surjective_nat
 
 theorem countable_iff_exists_surjective [Nonempty α] : Countable α ↔ ∃ f : ℕ → α, Surjective f :=

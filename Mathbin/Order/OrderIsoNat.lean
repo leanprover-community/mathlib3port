@@ -32,7 +32,7 @@ variable {r : α → α → Prop} [IsStrictOrder α r]
 
 /-- If `f` is a strictly `r`-increasing sequence, then this returns `f` as an order embedding. -/
 def natLt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n + 1))) : ((· < ·) : ℕ → ℕ → Prop) ↪r r :=
-  ofMonotone f <| Nat.rel_of_forall_rel_succ_of_lt r H
+  ofMonotone f $ Nat.rel_of_forall_rel_succ_of_lt r H
 #align rel_embedding.nat_lt RelEmbedding.natLt
 
 @[simp]
@@ -145,22 +145,51 @@ theorem order_embedding_of_set_range : Set.range (Nat.orderEmbeddingOfSet s) = s
 #align nat.order_embedding_of_set_range Nat.order_embedding_of_set_range
 
 theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
-    ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
-  classical have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t)
-    cases this
+    ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by classical
+  have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t) := by
+    simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
+      Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
+  cases this
+  exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl $ fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
+    ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr $ fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
 #align nat.exists_subseq_of_forall_mem_union Nat.exists_subseq_of_forall_mem_union
 
 end Nat
 
 theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f : ℕ → α) :
-    ∃ g : ℕ ↪o ℕ, (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by
-  classical let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
-    · haveI := hbad
-      refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_right _ fun m n mn => _⟩
-      have h := Set.mem_range_self m
-      rw [Nat.order_embedding_of_set_range bad] at h
-      exact h _ ((OrderEmbedding.lt_iff_lt _).2 mn)
-      
+    ∃ g : ℕ ↪o ℕ, (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by classical
+  let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
+  by_cases hbad:Infinite bad
+  · haveI := hbad
+    refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_right _ fun m n mn => _⟩
+    have h := Set.mem_range_self m
+    rw [Nat.order_embedding_of_set_range bad] at h
+    exact h _ ((OrderEmbedding.lt_iff_lt _).2 mn)
+    
+  · rw [Set.infinite_coe_iff, Set.Infinite, not_not] at hbad
+    obtain ⟨m, hm⟩ : ∃ m, ∀ n, m ≤ n → ¬n ∈ bad := by
+      by_cases he:hbad.to_finset.nonempty
+      · refine'
+          ⟨(hbad.to_finset.max' he).succ, fun n hn nbad =>
+            Nat.not_succ_le_self _ (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩
+        
+      · exact ⟨0, fun n hn nbad => he ⟨n, hbad.mem_to_finset.2 nbad⟩⟩
+        
+    have h : ∀ n : ℕ, ∃ n' : ℕ, n < n' ∧ r (f (n + m)) (f (n' + m)) := by
+      intro n
+      have h := hm _ (le_add_of_nonneg_left n.zero_le)
+      simp only [exists_prop, not_not, Set.mem_set_of_eq, not_forall] at h
+      obtain ⟨n', hn1, hn2⟩ := h
+      obtain ⟨x, hpos, rfl⟩ := exists_pos_add_of_lt hn1
+      refine' ⟨n + x, add_lt_add_left hpos n, _⟩
+      rw [add_assoc, add_comm x m, ← add_assoc]
+      exact hn2
+    let g' : ℕ → ℕ := @Nat.rec (fun _ => ℕ) m fun n gn => Nat.find (h gn)
+    exact
+      ⟨(RelEmbedding.natLt (fun n => g' n + m) fun n =>
+            Nat.add_lt_add_right (Nat.find_spec (h (g' n))).1 m).orderEmbeddingOfLtEmbedding,
+        Or.intro_left _ fun n => (Nat.find_spec (h (g' n))).2⟩
+    
 #align exists_increasing_or_nonincreasing_subseq' exists_increasing_or_nonincreasing_subseq'
 
 /-- This is the infinitary Erdős–Szekeres theorem, and an important lemma in the usual proof of
@@ -198,7 +227,7 @@ theorem WellFounded.monotone_chain_condition' [Preorder α] :
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
 theorem WellFounded.monotone_chain_condition [PartialOrder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
-  WellFounded.monotone_chain_condition'.trans <| by
+  WellFounded.monotone_chain_condition'.trans $ by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
     rw [lt_iff_le_and_ne]

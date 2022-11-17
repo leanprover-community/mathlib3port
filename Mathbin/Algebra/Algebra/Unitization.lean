@@ -116,11 +116,11 @@ theorem snd_coe [Zero R] (a : A) : (a : Unitization R A).snd = a :=
 end
 
 theorem inl_injective [Zero A] : Function.Injective (inl : R → Unitization R A) :=
-  Function.LeftInverse.injective <| fst_inl _
+  Function.LeftInverse.injective $ fst_inl _
 #align unitization.inl_injective Unitization.inl_injective
 
 theorem coe_injective [Zero R] : Function.Injective (coe : A → Unitization R A) :=
-  Function.LeftInverse.injective <| snd_coe _
+  Function.LeftInverse.injective $ snd_coe _
 #align unitization.coe_injective Unitization.coe_injective
 
 end Basic
@@ -368,7 +368,7 @@ theorem inl_one [One R] [Zero A] : (inl 1 : Unitization R A) = 1 :=
 @[simp]
 theorem inl_mul [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r₁ r₂ : R) :
     (inl (r₁ * r₂) : Unitization R A) = inl r₁ * inl r₂ :=
-  ext rfl <| show (0 : A) = r₁ • (0 : A) + r₂ • 0 + 0 * 0 by simp only [smul_zero, add_zero, mul_zero]
+  ext rfl $ show (0 : A) = r₁ • (0 : A) + r₂ • 0 + 0 * 0 by simp only [smul_zero, add_zero, mul_zero]
 #align unitization.inl_mul Unitization.inl_mul
 
 theorem inl_mul_inl [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r₁ r₂ : R) :
@@ -385,41 +385,41 @@ variable (R)
 @[simp]
 theorem coe_mul [Semiring R] [AddCommMonoid A] [Mul A] [SmulWithZero R A] (a₁ a₂ : A) :
     (↑(a₁ * a₂) : Unitization R A) = a₁ * a₂ :=
-  ext (mul_zero _).symm <| show a₁ * a₂ = (0 : R) • a₂ + (0 : R) • a₁ + a₁ * a₂ by simp only [zero_smul, zero_add]
+  ext (mul_zero _).symm $ show a₁ * a₂ = (0 : R) • a₂ + (0 : R) • a₁ + a₁ * a₂ by simp only [zero_smul, zero_add]
 #align unitization.coe_mul Unitization.coe_mul
 
 end
 
 theorem inl_mul_coe [Semiring R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r : R) (a : A) :
     (inl r * a : Unitization R A) = ↑(r • a) :=
-  ext (mul_zero r) <| show r • a + (0 : R) • 0 + 0 * a = r • a by rw [smul_zero, add_zero, zero_mul, add_zero]
+  ext (mul_zero r) $ show r • a + (0 : R) • 0 + 0 * a = r • a by rw [smul_zero, add_zero, zero_mul, add_zero]
 #align unitization.inl_mul_coe Unitization.inl_mul_coe
 
 theorem coe_mul_inl [Semiring R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] (r : R) (a : A) :
     (a * inl r : Unitization R A) = ↑(r • a) :=
-  ext (zero_mul r) <| show (0 : R) • 0 + r • a + a * 0 = r • a by rw [smul_zero, zero_add, mul_zero, add_zero]
+  ext (zero_mul r) $ show (0 : R) • 0 + r • a + a * 0 = r • a by rw [smul_zero, zero_add, mul_zero, add_zero]
 #align unitization.coe_mul_inl Unitization.coe_mul_inl
 
 instance mulOneClass [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] : MulOneClass (Unitization R A) :=
   { Unitization.hasOne, Unitization.hasMul with
     one_mul := fun x =>
-      ext (one_mul x.1) <|
+      ext (one_mul x.1) $
         show (1 : R) • x.2 + x.1 • 0 + 0 * x.2 = x.2 by rw [one_smul, smul_zero, add_zero, zero_mul, add_zero],
     mul_one := fun x =>
-      ext (mul_one x.1) <|
+      ext (mul_one x.1) $
         show (x.1 • 0 : A) + (1 : R) • x.2 + x.2 * 0 = x.2 by rw [smul_zero, zero_add, one_smul, mul_zero, add_zero] }
 #align unitization.mul_one_class Unitization.mulOneClass
 
 instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] : NonAssocSemiring (Unitization R A) :=
   { Unitization.mulOneClass, Unitization.addCommMonoid with
     zero_mul := fun x =>
-      ext (zero_mul x.1) <|
+      ext (zero_mul x.1) $
         show (0 : R) • x.2 + x.1 • 0 + 0 * x.2 = 0 by rw [zero_smul, zero_add, smul_zero, zero_mul, add_zero],
     mul_zero := fun x =>
-      ext (mul_zero x.1) <|
+      ext (mul_zero x.1) $
         show (x.1 • 0 : A) + (0 : R) • x.2 + x.2 * 0 = 0 by rw [smul_zero, zero_add, zero_smul, mul_zero, add_zero],
     left_distrib := fun x₁ x₂ x₃ =>
-      ext (mul_add x₁.1 x₂.1 x₃.1) <|
+      ext (mul_add x₁.1 x₂.1 x₃.1) $
         show
           x₁.1 • (x₂.2 + x₃.2) + (x₂.1 + x₃.1) • x₁.2 + x₁.2 * (x₂.2 + x₃.2) =
             x₁.1 • x₂.2 + x₂.1 • x₁.2 + x₁.2 * x₂.2 + (x₁.1 • x₃.2 + x₃.1 • x₁.2 + x₁.2 * x₃.2)
@@ -427,7 +427,7 @@ instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] : NonAssocSemir
           simp only [smul_add, add_smul, mul_add]
           abel,
     right_distrib := fun x₁ x₂ x₃ =>
-      ext (add_mul x₁.1 x₂.1 x₃.1) <|
+      ext (add_mul x₁.1 x₂.1 x₃.1) $
         show
           (x₁.1 + x₂.1) • x₃.2 + x₃.1 • (x₁.2 + x₂.2) + (x₁.2 + x₂.2) * x₃.2 =
             x₁.1 • x₃.2 + x₃.1 • x₁.2 + x₁.2 * x₃.2 + (x₂.1 • x₃.2 + x₃.1 • x₂.2 + x₂.2 * x₃.2)
@@ -439,7 +439,7 @@ instance [CommMonoid R] [NonUnitalSemiring A] [DistribMulAction R A] [IsScalarTo
     Monoid (Unitization R A) :=
   { Unitization.mulOneClass with
     mul_assoc := fun x y z =>
-      ext (mul_assoc x.1 y.1 z.1) <|
+      ext (mul_assoc x.1 y.1 z.1) $
         show
           (x.1 * y.1) • z.2 + z.1 • (x.1 • y.2 + y.1 • x.2 + x.2 * y.2) + (x.1 • y.2 + y.1 • x.2 + x.2 * y.2) * z.2 =
             x.1 • (y.1 • z.2 + z.1 • y.2 + y.2 * z.2) + (y.1 * z.1) • x.2 + x.2 * (y.1 • z.2 + z.1 • y.2 + y.2 * z.2)
@@ -453,7 +453,7 @@ instance [CommMonoid R] [NonUnitalCommSemiring A] [DistribMulAction R A] [IsScal
     CommMonoid (Unitization R A) :=
   { Unitization.monoid with
     mul_comm := fun x₁ x₂ =>
-      ext (mul_comm x₁.1 x₂.1) <|
+      ext (mul_comm x₁.1 x₂.1) $
         show x₁.1 • x₂.2 + x₂.1 • x₁.2 + x₁.2 * x₂.2 = x₂.1 • x₁.2 + x₁.1 • x₂.2 + x₂.2 * x₁.2 by
           rw [add_comm (x₁.1 • x₂.2), mul_comm] }
 

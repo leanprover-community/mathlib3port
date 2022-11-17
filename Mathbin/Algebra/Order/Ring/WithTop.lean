@@ -29,11 +29,11 @@ variable [Zero α] [Mul α]
 
 instance : MulZeroClass (WithTop α) where
   zero := 0
-  mul m n := if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind fun b => ↑(a * b)
-  zero_mul a := if_pos <| Or.inl rfl
-  mul_zero a := if_pos <| Or.inr rfl
+  mul m n := if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind $ fun b => ↑(a * b)
+  zero_mul a := if_pos $ Or.inl rfl
+  mul_zero a := if_pos $ Or.inr rfl
 
-theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
+theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind $ fun b => ↑(a * b) :=
   rfl
 #align with_top.mul_def WithTop.mul_def
 
@@ -58,8 +58,8 @@ variable [MulZeroClass α]
 
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
-  (Decidable.byCases fun this : a = 0 => by simp [this]) fun ha =>
-    (Decidable.byCases fun this : b = 0 => by simp [this]) fun hb => by
+  (Decidable.byCases fun this : a = 0 => by simp [this]) $ fun ha =>
+    (Decidable.byCases fun this : b = 0 => by simp [this]) $ fun hb => by
       simp [*, mul_def]
       rfl
 #align with_top.coe_mul WithTop.coe_mul
@@ -202,7 +202,7 @@ instance [Nontrivial α] : CommSemiring (WithTop α) :=
       rfl }
 
 instance [Nontrivial α] : CanonicallyOrderedCommSemiring (WithTop α) :=
-  { WithTop.commSemiring, WithTop.canonicallyOrderedAddMonoid, WithTop.no_zero_divisors with }
+  { WithTop.commSemiring, WithTop.canonicallyOrderedAddMonoid, WithTop.noZeroDivisors with }
 
 /-- A version of `with_top.map` for `ring_hom`s. -/
 @[simps (config := { fullyApplied := false })]
@@ -228,7 +228,7 @@ variable [Zero α] [Mul α]
 instance : MulZeroClass (WithBot α) :=
   WithTop.mulZeroClass
 
-theorem mul_def {a b : WithBot α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
+theorem mul_def {a b : WithBot α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind $ fun b => ↑(a * b) :=
   rfl
 #align with_bot.mul_def WithBot.mul_def
 
@@ -255,8 +255,8 @@ variable [MulZeroClass α]
 
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithBot α) = a * b :=
-  (Decidable.byCases fun this : a = 0 => by simp [this]) fun ha =>
-    (Decidable.byCases fun this : b = 0 => by simp [this]) fun hb => by
+  (Decidable.byCases fun this : a = 0 => by simp [this]) $ fun ha =>
+    (Decidable.byCases fun this : b = 0 => by simp [this]) $ fun hb => by
       simp [*, mul_def]
       rfl
 #align with_bot.coe_mul WithBot.coe_mul
@@ -283,7 +283,7 @@ instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithBot α) :=
   WithTop.mulZeroOneClass
 
 instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithBot α) :=
-  WithTop.no_zero_divisors
+  WithTop.noZeroDivisors
 
 instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithBot α) :=
   WithTop.semigroupWithZero

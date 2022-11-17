@@ -102,9 +102,8 @@ end DirectSum
 
 /-- The projection maps of a graded ring -/
 def GradedRing.proj (i : ι) : A →+ A :=
-  (AddSubmonoidClass.subtype (𝒜 i)).comp <|
-    (Dfinsupp.evalAddMonoidHom i).comp <|
-      RingHom.toAddMonoidHom <| RingEquiv.toRingHom <| DirectSum.decomposeRingEquiv 𝒜
+  (AddSubmonoidClass.subtype (𝒜 i)).comp $
+    (Dfinsupp.evalAddMonoidHom i).comp $ RingHom.toAddMonoidHom $ RingEquiv.toRingHom $ DirectSum.decomposeRingEquiv 𝒜
 #align graded_ring.proj GradedRing.proj
 
 @[simp]
@@ -148,12 +147,12 @@ theorem coe_decompose_mul_add_of_right_mem [AddRightCancelMonoid ι] [GradedRing
 
 theorem decompose_mul_add_left [AddLeftCancelMonoid ι] [GradedRing 𝒜] (a : 𝒜 i) {b : A} :
     decompose 𝒜 (↑a * b) (i + j) = @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ a (decompose 𝒜 b j) :=
-  Subtype.ext <| coe_decompose_mul_add_of_left_mem 𝒜 a.2
+  Subtype.ext $ coe_decompose_mul_add_of_left_mem 𝒜 a.2
 #align direct_sum.decompose_mul_add_left DirectSum.decompose_mul_add_left
 
 theorem decompose_mul_add_right [AddRightCancelMonoid ι] [GradedRing 𝒜] {a : A} (b : 𝒜 j) :
     decompose 𝒜 (a * ↑b) (i + j) = @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ (decompose 𝒜 a i) b :=
-  Subtype.ext <| coe_decompose_mul_add_of_right_mem 𝒜 b.2
+  Subtype.ext $ coe_decompose_mul_add_of_right_mem 𝒜 b.2
 #align direct_sum.decompose_mul_add_right DirectSum.decompose_mul_add_right
 
 end DirectSum
@@ -188,7 +187,7 @@ def GradedAlgebra.ofAlgHom [SetLike.GradedMonoid 𝒜] (decompose : A →ₐ[R] 
     suffices : decompose.comp (DirectSum.coeAlgHom 𝒜) = AlgHom.id _ _
     exact AlgHom.congr_fun this
     ext (i x) : 2
-    exact (decompose.congr_arg <| DirectSum.coe_alg_hom_of _ _ _).trans (left_inv i x)
+    exact (decompose.congr_arg $ DirectSum.coe_alg_hom_of _ _ _).trans (left_inv i x)
 #align graded_algebra.of_alg_hom GradedAlgebra.ofAlgHom
 
 variable [GradedAlgebra 𝒜]
@@ -210,7 +209,7 @@ open DirectSum
 
 /-- The projection maps of graded algebra-/
 def GradedAlgebra.proj (𝒜 : ι → Submodule R A) [GradedAlgebra 𝒜] (i : ι) : A →ₗ[R] A :=
-  (𝒜 i).Subtype.comp <| (Dfinsupp.lapply i).comp <| (decomposeAlgEquiv 𝒜).toAlgHom.toLinearMap
+  (𝒜 i).Subtype.comp $ (Dfinsupp.lapply i).comp $ (decomposeAlgEquiv 𝒜).toAlgHom.toLinearMap
 #align graded_algebra.proj GradedAlgebra.proj
 
 @[simp]

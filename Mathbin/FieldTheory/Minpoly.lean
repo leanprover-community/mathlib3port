@@ -294,7 +294,7 @@ theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x
 #align minpoly.degree_le_of_ne_zero minpoly.degree_le_of_ne_zero
 
 theorem ne_zero_of_finite_field_extension (e : B) [FiniteDimensional A B] : minpoly A e ≠ 0 :=
-  minpoly.ne_zero <| isIntegralOfNoetherian (IsNoetherian.iff_fg.2 inferInstance) _
+  minpoly.ne_zero $ isIntegralOfNoetherian (IsNoetherian.iff_fg.2 inferInstance) _
 #align minpoly.ne_zero_of_finite_field_extension minpoly.ne_zero_of_finite_field_extension
 
 /-- The minimal polynomial of an element `x` is uniquely characterized by its defining property:
@@ -356,9 +356,9 @@ variable {A x}
 theorem eq_of_irreducible_of_monic [Nontrivial B] {p : A[X]} (hp1 : Irreducible p) (hp2 : Polynomial.aeval x p = 0)
     (hp3 : p.Monic) : p = minpoly A x :=
   let ⟨q, hq⟩ := dvd A x hp2
-  eq_of_monic_of_associated hp3 (monic ⟨p, ⟨hp3, hp2⟩⟩) <|
-    mul_one (minpoly A x) ▸ hq.symm ▸ Associated.mul_left _ <|
-      associated_one_iff_is_unit.2 <| (hp1.is_unit_or_is_unit hq).resolve_left <| not_is_unit A x
+  eq_of_monic_of_associated hp3 (monic ⟨p, ⟨hp3, hp2⟩⟩) $
+    mul_one (minpoly A x) ▸ hq.symm ▸ Associated.mul_left _ $
+      associated_one_iff_is_unit.2 $ (hp1.is_unit_or_is_unit hq).resolve_left $ not_is_unit A x
 #align minpoly.eq_of_irreducible_of_monic minpoly.eq_of_irreducible_of_monic
 
 theorem eq_of_irreducible [Nontrivial B] {p : A[X]} (hp1 : Irreducible p) (hp2 : Polynomial.aeval x p = 0) :

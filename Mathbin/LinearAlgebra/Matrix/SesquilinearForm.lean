@@ -92,7 +92,7 @@ and an `m`-indexed basis for `M₂`.
 
 This is an auxiliary definition for the equivalence `matrix.to_linear_mapₛₗ₂'`. -/
 def LinearMap.toMatrix₂Aux (b₁ : n → M₁) (b₂ : m → M₂) : (M₁ →ₛₗ[σ₁] M₂ →ₛₗ[σ₂] R) →ₗ[R] Matrix n m R where
-  toFun f := of fun i j => f (b₁ i) (b₂ j)
+  toFun f := of $ fun i j => f (b₁ i) (b₂ j)
   map_add' f g := rfl
   map_smul' f g := rfl
 #align linear_map.to_matrix₂_aux LinearMap.toMatrix₂Aux
@@ -678,13 +678,13 @@ variable (B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁)
 -- Lemmas transferring nondegeneracy between a matrix and its associated bilinear form
 theorem _root_.matrix.nondegenerate.to_linear_map₂' {M : Matrix ι ι R₁} (h : M.Nondegenerate) :
     M.toLinearMap₂'.SeparatingLeft := fun x hx =>
-  h.eq_zero_of_ortho fun y => by simpa only [to_linear_map₂'_apply'] using hx y
+  h.eq_zero_of_ortho $ fun y => by simpa only [to_linear_map₂'_apply'] using hx y
 #align linear_map._root_.matrix.nondegenerate.to_linear_map₂' linear_map._root_.matrix.nondegenerate.to_linear_map₂'
 
 @[simp]
 theorem _root_.matrix.separating_left_to_linear_map₂'_iff {M : Matrix ι ι R₁} :
     M.toLinearMap₂'.SeparatingLeft ↔ M.Nondegenerate :=
-  ⟨fun h v hv => (h v) fun w => (M.to_linear_map₂'_apply' _ _).trans <| hv w, Matrix.Nondegenerate.toLinearMap₂'⟩
+  ⟨fun h v hv => h v $ fun w => (M.to_linear_map₂'_apply' _ _).trans $ hv w, Matrix.Nondegenerate.toLinearMap₂'⟩
 #align
   linear_map._root_.matrix.separating_left_to_linear_map₂'_iff linear_map._root_.matrix.separating_left_to_linear_map₂'_iff
 
@@ -705,7 +705,7 @@ theorem _root_.matrix.separating_left_to_linear_map₂_iff {M : Matrix ι ι R�
 @[simp]
 theorem nondegenerate_to_matrix₂'_iff {B : (ι → R₁) →ₗ[R₁] (ι → R₁) →ₗ[R₁] R₁} :
     B.toMatrix₂'.Nondegenerate ↔ B.SeparatingLeft :=
-  Matrix.separating_left_to_linear_map₂'_iff.symm.trans <| (Matrix.to_linear_map₂'_to_matrix' B).symm ▸ Iff.rfl
+  Matrix.separating_left_to_linear_map₂'_iff.symm.trans $ (Matrix.to_linear_map₂'_to_matrix' B).symm ▸ Iff.rfl
 #align linear_map.nondegenerate_to_matrix₂'_iff LinearMap.nondegenerate_to_matrix₂'_iff
 
 theorem SeparatingLeft.to_matrix₂' {B : (ι → R₁) →ₗ[R₁] (ι → R₁) →ₗ[R₁] R₁} (h : B.SeparatingLeft) :
@@ -716,7 +716,7 @@ theorem SeparatingLeft.to_matrix₂' {B : (ι → R₁) →ₗ[R₁] (ι → R�
 @[simp]
 theorem nondegenerate_to_matrix_iff {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁} (b : Basis ι R₁ M₁) :
     (toMatrix₂ b b B).Nondegenerate ↔ B.SeparatingLeft :=
-  (Matrix.separating_left_to_linear_map₂_iff b).symm.trans <| (Matrix.to_linear_map₂_to_matrix₂ b b B).symm ▸ Iff.rfl
+  (Matrix.separating_left_to_linear_map₂_iff b).symm.trans $ (Matrix.to_linear_map₂_to_matrix₂ b b B).symm ▸ Iff.rfl
 #align linear_map.nondegenerate_to_matrix_iff LinearMap.nondegenerate_to_matrix_iff
 
 theorem SeparatingLeft.to_matrix₂ {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁} (h : B.SeparatingLeft) (b : Basis ι R₁ M₁) :

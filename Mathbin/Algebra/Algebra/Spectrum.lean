@@ -83,7 +83,7 @@ noncomputable def resolvent (a : A) (r : R) : A :=
 
 /-- The unit `1 - r⁻¹ • a` constructed from `r • 1 - a` when the latter is a unit. -/
 @[simps]
-noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r • ↑ₐ s - a) : Aˣ where
+noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit $ r • ↑ₐ s - a) : Aˣ where
   val := ↑ₐ s - r⁻¹ • a
   inv := r • ↑h.Unit⁻¹
   val_inv := by rw [mul_smul_comm, ← smul_mul_assoc, smul_sub, smul_inv_smul, h.mul_coe_inv]
@@ -188,7 +188,7 @@ theorem inv_mem_resolvent_set {r : Rˣ} {a : Aˣ} (h : (r : R) ∈ resolventSet 
 #align spectrum.inv_mem_resolvent_set spectrum.inv_mem_resolvent_set
 
 theorem inv_mem_iff {r : Rˣ} {a : Aˣ} : (r : R) ∈ σ (a : A) ↔ (↑r⁻¹ : R) ∈ σ (↑a⁻¹ : A) :=
-  not_iff_not.2 <| ⟨inv_mem_resolvent_set, inv_mem_resolvent_set⟩
+  not_iff_not.2 $ ⟨inv_mem_resolvent_set, inv_mem_resolvent_set⟩
 #align spectrum.inv_mem_iff spectrum.inv_mem_iff
 
 theorem zero_mem_resolvent_set_of_unit (a : Aˣ) : 0 ∈ resolventSet R (a : A) := by
@@ -244,7 +244,7 @@ theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : Rˣ} : ↑r ∈ σ (a * b) 
 #align spectrum.unit_mem_mul_iff_mem_swap_mul spectrum.unit_mem_mul_iff_mem_swap_mul
 
 theorem preimage_units_mul_eq_swap_mul {a b : A} : (coe : Rˣ → R) ⁻¹' σ (a * b) = coe ⁻¹' σ (b * a) :=
-  Set.ext fun _ => unit_mem_mul_iff_mem_swap_mul
+  Set.ext $ fun _ => unit_mem_mul_iff_mem_swap_mul
 #align spectrum.preimage_units_mul_eq_swap_mul spectrum.preimage_units_mul_eq_swap_mul
 
 section Star
@@ -290,7 +290,7 @@ theorem subset_star_subalgebra [StarRing R] [StarRing A] [StarModule R A] {S : S
 #align spectrum.subset_star_subalgebra spectrum.subset_star_subalgebra
 
 theorem singleton_add_eq (a : A) (r : R) : {r} + σ a = σ (↑ₐ r + a) :=
-  ext fun x => by rw [singleton_add, image_add_left, mem_preimage, add_comm, add_mem_iff, map_neg, neg_neg]
+  ext $ fun x => by rw [singleton_add, image_add_left, mem_preimage, add_comm, add_mem_iff, map_neg, neg_neg]
 #align spectrum.singleton_add_eq spectrum.singleton_add_eq
 
 theorem add_singleton_eq (a : A) (r : R) : σ a + {r} = σ (a + ↑ₐ r) :=
@@ -298,11 +298,11 @@ theorem add_singleton_eq (a : A) (r : R) : σ a + {r} = σ (a + ↑ₐ r) :=
 #align spectrum.add_singleton_eq spectrum.add_singleton_eq
 
 theorem vadd_eq (a : A) (r : R) : r +ᵥ σ a = σ (↑ₐ r + a) :=
-  singleton_add.symm.trans <| singleton_add_eq a r
+  singleton_add.symm.trans $ singleton_add_eq a r
 #align spectrum.vadd_eq spectrum.vadd_eq
 
 theorem neg_eq (a : A) : -σ a = σ (-a) :=
-  Set.ext fun x => by simp only [mem_neg, mem_iff, map_neg, ← neg_add', IsUnit.neg_iff, sub_neg_eq_add]
+  Set.ext $ fun x => by simp only [mem_neg, mem_iff, map_neg, ← neg_add', IsUnit.neg_iff, sub_neg_eq_add]
 #align spectrum.neg_eq spectrum.neg_eq
 
 theorem singleton_sub_eq (a : A) (r : R) : {r} - σ a = σ (↑ₐ r - a) := by

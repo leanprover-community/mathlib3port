@@ -252,16 +252,16 @@ theorem adjointify_η_ε (X : C) : F.map ((adjointifyη η ε).Hom.app X) ≫ ε
   rw [this]
   clear this
   rw [← assoc _ _ (F.map _)]
-  have := ε.hom.naturality (ε.inv.app <| F.obj X)
+  have := ε.hom.naturality (ε.inv.app $ F.obj X)
   dsimp at this
   rw [this]
   clear this
-  have := (ε.app <| F.obj X).hom_inv_id
+  have := (ε.app $ F.obj X).hom_inv_id
   dsimp at this
   rw [this]
   clear this
   rw [id_comp]
-  have := (F.map_iso <| η.app X).hom_inv_id
+  have := (F.map_iso $ η.app X).hom_inv_id
   dsimp at this
   rw [this]
 #align category_theory.equivalence.adjointify_η_ε CategoryTheory.Equivalence.adjointify_η_ε
@@ -708,7 +708,7 @@ See <https://stacks.math.columbia.edu/tag/02C3>.
 instance (priority := 100) fullOfEquivalence (F : C ⥤ D) [IsEquivalence F] : Full F where
   preimage X Y f := F.asEquivalence.Unit.app X ≫ F.inv.map f ≫ F.asEquivalence.unitInv.app Y
   witness' X Y f :=
-    F.inv.map_injective <| by
+    F.inv.map_injective $ by
       simpa only [is_equivalence.inv_fun_map, assoc, iso.inv_hom_id_app_assoc, iso.inv_hom_id_app] using comp_id _
 #align category_theory.equivalence.full_of_equivalence CategoryTheory.Equivalence.fullOfEquivalence
 
@@ -728,7 +728,7 @@ See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
 noncomputable def ofFullyFaithfullyEssSurj (F : C ⥤ D) [Full F] [Faithful F] [EssSurj F] : IsEquivalence F :=
   IsEquivalence.mk (equivalenceInverse F)
-    (NatIso.ofComponents (fun X => (F.preimageIso <| F.objObjPreimageIso <| F.obj X).symm) fun X Y f => by
+    (NatIso.ofComponents (fun X => (F.preimageIso $ F.objObjPreimageIso $ F.obj X).symm) fun X Y f => by
       apply F.map_injective
       obviously)
     (NatIso.ofComponents F.objObjPreimageIso (by tidy))

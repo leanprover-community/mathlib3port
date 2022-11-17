@@ -71,7 +71,7 @@ def conductor (x : S) : Ideal S where
 variable {R} {x : S}
 
 theorem conductor_eq_of_eq {y : S} (h : (R<x> : Set S) = R<y>) : conductor R x = conductor R y :=
-  Ideal.ext fun a => forall_congr' fun b => Set.ext_iff.mp h _
+  Ideal.ext $ fun a => forall_congr' $ fun b => Set.ext_iff.mp h _
 #align conductor_eq_of_eq conductor_eq_of_eq
 
 theorem conductor_subset_adjoin : (conductor R x : Set S) ⊆ R<x> := fun y hy => by simpa only [mul_one] using hy 1
@@ -106,7 +106,7 @@ theorem prod_mem_ideal_map_of_mem_conductor {p : R} {z : S} (hp : p ∈ Ideal.co
   rintro ⟨z, hz, rfl⟩ ⟨y, hy, rfl⟩
   rw [← RingHom.map_add]
   exact ⟨z + y, Ideal.add_mem _ (set_like.mem_coe.mp hz) hy, rfl⟩
-  · refine' ⟨0, set_like.mem_coe.mpr <| Ideal.zero_mem _, RingHom.map_zero _⟩
+  · refine' ⟨0, set_like.mem_coe.mpr $ Ideal.zero_mem _, RingHom.map_zero _⟩
     
   · intro y hy
     exact lem ((Finsupp.mem_supported _ l).mp H hy)
@@ -312,7 +312,7 @@ theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I
   rw [normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map pb hI hI']
   use
     ((normalized_factors_map_equiv_normalized_factors_min_poly_mk pb hI hI').symm
-      ⟨normalize (map I (minpoly R pb.gen)), mem_norm_factors⟩ :
+        ⟨normalize (map I (minpoly R pb.gen)), mem_norm_factors⟩ :
       Ideal S)
   rw [Multiset.map_eq_singleton]
   use ⟨normalize (map I (minpoly R pb.gen)), mem_norm_factors⟩

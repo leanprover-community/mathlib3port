@@ -59,7 +59,7 @@ theorem trace_aux_def (b : Basis ι R M) (f : M →ₗ[R] M) : traceAux R b f = 
 #align linear_map.trace_aux_def LinearMap.trace_aux_def
 
 theorem trace_aux_eq : traceAux R b = traceAux R c :=
-  LinearMap.ext fun f =>
+  LinearMap.ext $ fun f =>
     calc
       Matrix.trace (LinearMap.toMatrix b b f) =
           Matrix.trace (LinearMap.toMatrix b b ((LinearMap.id.comp f).comp LinearMap.id)) :=
@@ -130,14 +130,18 @@ variable {ι : Type _}
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism
  `End(M) ≃ M* ⊗ M`-/
 theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
-    LinearMap.trace R M ∘ₗ dualTensorHom R M M = contractLeft R M := by
-  classical cases nonempty_fintype ι
-    rintro ⟨i, j⟩
-    rw [trace_eq_matrix_trace R b, to_matrix_dual_tensor_hom]
-    · rw [hij]
-      simp
-      
-    simp [Finsupp.single_eq_pi_single, hij]
+    LinearMap.trace R M ∘ₗ dualTensorHom R M M = contractLeft R M := by classical
+  cases nonempty_fintype ι
+  apply Basis.ext (Basis.tensorProduct (Basis.dualBasis b) b)
+  rintro ⟨i, j⟩
+  simp only [Function.comp_apply, Basis.tensor_product_apply, Basis.coe_dual_basis, coe_comp]
+  rw [trace_eq_matrix_trace R b, to_matrix_dual_tensor_hom]
+  by_cases hij:i = j
+  · rw [hij]
+    simp
+    
+  rw [Matrix.stdBasisMatrix.trace_zero j i (1 : R) hij]
+  simp [Finsupp.single_eq_pi_single, hij]
 #align linear_map.trace_eq_contract_of_basis LinearMap.trace_eq_contract_of_basis
 
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism

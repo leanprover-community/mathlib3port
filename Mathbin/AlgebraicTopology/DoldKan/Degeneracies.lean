@@ -49,7 +49,6 @@ theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ}
     
 #align algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1)) (hi : n + 1 ≤ i + q) :
     X.σ i ≫ (p q).f (n + 1) = 0 := by
   induction' q with q hq generalizing i hi
@@ -122,8 +121,6 @@ theorem σ_comp_P_infty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) : X
   simp only [le_add_iff_nonneg_left, zero_le]
 #align algebraic_topology.dold_kan.σ_comp_P_infty AlgebraicTopology.DoldKan.σ_comp_P_infty
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 @[reassoc]
 theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory} (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) :
     X.map θ.op ≫ pInfty.f n = 0 := by

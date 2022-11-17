@@ -345,7 +345,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.covariant_of_
 of a covariant operator. E.g., `∀ (m : ℕ), monotone f → monotone (λ n, f (m + n))`. -/
 theorem Monotone.covariant_of_const [CovariantClass M N μ (· ≤ ·)] (hf : Monotone f) (m : M) :
     Monotone fun n => f (μ m n) :=
-  hf.comp <| Covariant.monotone_of_const m
+  hf.comp $ Covariant.monotone_of_const m
 #align monotone.covariant_of_const Monotone.covariant_of_const
 
 /- warning: monotone.covariant_of_const' -> Monotone.covariant_of_const' is a dubious translation:
@@ -358,7 +358,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.covariant_of_
 the operator.  E.g., `∀ (m : ℕ), monotone f → monotone (λ n, f (n + m))`. -/
 theorem Monotone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (swap μ) (· ≤ ·)] (hf : Monotone f) (m : N) :
     Monotone fun n => f (μ n m) :=
-  hf.comp <| Covariant.monotone_of_const m
+  hf.comp $ Covariant.monotone_of_const m
 #align monotone.covariant_of_const' Monotone.covariant_of_const'
 
 /- warning: antitone.covariant_of_const -> Antitone.covariant_of_const is a dubious translation:
@@ -370,7 +370,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.covariant_of_
 /-- Dual of `monotone.covariant_of_const` -/
 theorem Antitone.covariant_of_const [CovariantClass M N μ (· ≤ ·)] (hf : Antitone f) (m : M) :
     Antitone fun n => f (μ m n) :=
-  hf.comp_monotone <| Covariant.monotone_of_const m
+  hf.comp_monotone $ Covariant.monotone_of_const m
 #align antitone.covariant_of_const Antitone.covariant_of_const
 
 /- warning: antitone.covariant_of_const' -> Antitone.covariant_of_const' is a dubious translation:
@@ -382,7 +382,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.covariant_of_
 /-- Dual of `monotone.covariant_of_const'` -/
 theorem Antitone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (swap μ) (· ≤ ·)] (hf : Antitone f) (m : N) :
     Antitone fun n => f (μ n m) :=
-  hf.comp_monotone <| Covariant.monotone_of_const m
+  hf.comp_monotone $ Covariant.monotone_of_const m
 #align antitone.covariant_of_const' Antitone.covariant_of_const'
 
 end Monotone

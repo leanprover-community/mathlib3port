@@ -131,7 +131,7 @@ theorem closed_complemented_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p 
 #align subspace.closed_complemented_of_closed_compl Subspace.closed_complemented_of_closed_compl
 
 theorem closed_complemented_iff_has_closed_compl :
-    p.ClosedComplemented ↔ IsClosed (p : Set E) ∧ ∃ (q : Subspace 𝕜 E)(hq : IsClosed (q : Set E)), IsCompl p q :=
+    p.ClosedComplemented ↔ IsClosed (p : Set E) ∧ ∃ (q : Subspace 𝕜 E) (hq : IsClosed (q : Set E)), IsCompl p q :=
   ⟨fun h => ⟨h.IsClosed, h.has_closed_complement⟩, fun ⟨hp, ⟨q, hq, hpq⟩⟩ =>
     closed_complemented_of_closed_compl hpq hp hq⟩
 #align subspace.closed_complemented_iff_has_closed_compl Subspace.closed_complemented_iff_has_closed_compl

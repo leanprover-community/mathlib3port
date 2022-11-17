@@ -34,7 +34,7 @@ def Nnrat :=
 #align nnrat Nnrat
 
 -- mathport name: nnrat
-localized [Nnrat] notation "ℚ≥0" => Nnrat
+scoped[Nnrat] notation "ℚ≥0" => Nnrat
 
 namespace Nnrat
 
@@ -147,7 +147,7 @@ protected theorem coe_bit1 (q : ℚ≥0) : ((bit1 q : ℚ≥0) : ℚ) = bit1 q :
 
 @[simp, norm_cast]
 protected theorem coe_sub (h : q ≤ p) : ((p - q : ℚ≥0) : ℚ) = p - q :=
-  max_eq_left <| le_sub_comm.2 <| by simp [show (q : ℚ) ≤ p from h]
+  max_eq_left $ le_sub_comm.2 $ by simp [show (q : ℚ) ≤ p from h]
 #align nnrat.coe_sub Nnrat.coe_sub
 
 @[simp]
@@ -181,12 +181,12 @@ theorem to_nnrat_mono : Monotone toNnrat := fun x y h => max_le_max h le_rfl
 
 @[simp]
 theorem to_nnrat_coe (q : ℚ≥0) : toNnrat q = q :=
-  ext <| max_eq_left q.2
+  ext $ max_eq_left q.2
 #align nnrat.to_nnrat_coe Nnrat.to_nnrat_coe
 
 @[simp]
 theorem to_nnrat_coe_nat (n : ℕ) : toNnrat n = n :=
-  ext <| by simp [Rat.coe_to_nnrat]
+  ext $ by simp [Rat.coe_to_nnrat]
 #align nnrat.to_nnrat_coe_nat Nnrat.to_nnrat_coe_nat
 
 /-- `to_nnrat` and `coe : ℚ≥0 → ℚ` form a Galois insertion. -/
@@ -290,7 +290,7 @@ theorem nsmul_coe (q : ℚ≥0) (n : ℕ) : ↑(n • q) = n • (q : ℚ) :=
 
 theorem bdd_above_coe {s : Set ℚ≥0} : BddAbove (coe '' s : Set ℚ) ↔ BddAbove s :=
   ⟨fun ⟨b, hb⟩ =>
-    ⟨toNnrat b, fun ⟨y, hy⟩ hys => show y ≤ max b 0 from (hb <| Set.mem_image_of_mem _ hys).trans <| le_max_left _ _⟩,
+    ⟨toNnrat b, fun ⟨y, hy⟩ hys => show y ≤ max b 0 from (hb $ Set.mem_image_of_mem _ hys).trans $ le_max_left _ _⟩,
     fun ⟨b, hb⟩ => ⟨b, fun y ⟨x, hx, Eq⟩ => Eq ▸ hb hx⟩⟩
 #align nnrat.bdd_above_coe Nnrat.bdd_above_coe
 
@@ -363,11 +363,11 @@ theorem to_nnrat_lt_to_nnrat_iff_of_nonneg (hq : 0 ≤ q) : toNnrat q < toNnrat 
 
 @[simp]
 theorem to_nnrat_add (hq : 0 ≤ q) (hp : 0 ≤ p) : toNnrat (q + p) = toNnrat q + toNnrat p :=
-  Nnrat.ext <| by simp [to_nnrat, hq, hp, add_nonneg]
+  Nnrat.ext $ by simp [to_nnrat, hq, hp, add_nonneg]
 #align rat.to_nnrat_add Rat.to_nnrat_add
 
 theorem to_nnrat_add_le : toNnrat (q + p) ≤ toNnrat q + toNnrat p :=
-  coe_le_coe.1 <| max_le (add_le_add (le_max_left _ _) (le_max_left _ _)) <| coe_nonneg _
+  coe_le_coe.1 $ max_le (add_le_add (le_max_left _ _) (le_max_left _ _)) $ coe_nonneg _
 #align rat.to_nnrat_add_le Rat.to_nnrat_add_le
 
 theorem to_nnrat_le_iff_le_coe {p : ℚ≥0} : toNnrat q ≤ p ↔ q ≤ ↑p :=
@@ -379,7 +379,7 @@ theorem le_to_nnrat_iff_coe_le {q : ℚ≥0} (hp : 0 ≤ p) : q ≤ toNnrat p �
 #align rat.le_to_nnrat_iff_coe_le Rat.le_to_nnrat_iff_coe_le
 
 theorem le_to_nnrat_iff_coe_le' {q : ℚ≥0} (hq : 0 < q) : q ≤ toNnrat p ↔ ↑q ≤ p :=
-  ((le_or_lt 0 p).elim le_to_nnrat_iff_coe_le) fun hp => by
+  (le_or_lt 0 p).elim le_to_nnrat_iff_coe_le $ fun hp => by
     simp only [(hp.trans_le q.coe_nonneg).not_le, to_nnrat_eq_zero.2 hp.le, hq.not_le]
 #align rat.le_to_nnrat_iff_coe_le' Rat.le_to_nnrat_iff_coe_le'
 
@@ -398,7 +398,7 @@ theorem to_nnrat_bit0 (hq : 0 ≤ q) : toNnrat (bit0 q) = bit0 (toNnrat q) :=
 
 @[simp]
 theorem to_nnrat_bit1 (hq : 0 ≤ q) : toNnrat (bit1 q) = bit1 (toNnrat q) :=
-  (to_nnrat_add (by simp [hq]) zero_le_one).trans <| by simp [to_nnrat_one, bit1, hq]
+  (to_nnrat_add (by simp [hq]) zero_le_one).trans $ by simp [to_nnrat_one, bit1, hq]
 #align rat.to_nnrat_bit1 Rat.to_nnrat_bit1
 
 theorem to_nnrat_mul (hp : 0 ≤ p) : toNnrat (p * q) = toNnrat p * toNnrat q := by
@@ -467,10 +467,9 @@ theorem denom_coe : (q : ℚ).denom = q.denom :=
 #align nnrat.denom_coe Nnrat.denom_coe
 
 theorem ext_num_denom (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
-  ext <|
+  ext $
     Rat.ext
-      ((Int.nat_abs_inj_of_nonneg_of_nonneg (Rat.num_nonneg_iff_zero_le.2 p.2) <| Rat.num_nonneg_iff_zero_le.2 q.2).1
-        hn)
+      ((Int.nat_abs_inj_of_nonneg_of_nonneg (Rat.num_nonneg_iff_zero_le.2 p.2) $ Rat.num_nonneg_iff_zero_le.2 q.2).1 hn)
       hd
 #align nnrat.ext_num_denom Nnrat.ext_num_denom
 
@@ -484,7 +483,7 @@ theorem ext_num_denom_iff : p = q ↔ p.num = q.num ∧ p.denom = q.denom :=
 theorem num_div_denom (q : ℚ≥0) : (q.num : ℚ≥0) / q.denom = q := by
   ext1
   rw [coe_div₀, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_ofNat,
-    Int.nat_abs_of_nonneg (Rat.num_nonneg_iff_zero_le.2 q.prop)]
+    Int.natAbs_of_nonneg (Rat.num_nonneg_iff_zero_le.2 q.prop)]
   exact Rat.num_div_denom q
 #align nnrat.num_div_denom Nnrat.num_div_denom
 

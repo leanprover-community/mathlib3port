@@ -68,7 +68,7 @@ structure MulChar extends MonoidHom R R' where
 #align mul_char MulChar
 
 /-- This is the corresponding extension of `monoid_hom_class`. -/
-class MulCharClass (F : Type _) (R R' : outParam <| Type _) [CommMonoid R] [CommMonoidWithZero R'] extends
+class MulCharClass (F : Type _) (R R' : outParam $ Type _) [CommMonoid R] [CommMonoidWithZero R'] extends
   MonoidHomClass F R R' where
   map_nonunit : ∀ (χ : F) {a : R} (ha : ¬IsUnit a), χ a = 0
 #align mul_char_class MulCharClass
@@ -327,13 +327,13 @@ noncomputable instance hasInv : Inv (MulChar R R') :=
 
 /-- The inverse of a multiplicative character `χ`, applied to `a`, is the inverse of `χ a`. -/
 theorem inv_apply_eq_inv (χ : MulChar R R') (a : R) : χ⁻¹ a = Ring.inverse (χ a) :=
-  Eq.refl <| inv χ a
+  Eq.refl $ inv χ a
 #align mul_char.inv_apply_eq_inv MulChar.inv_apply_eq_inv
 
 /-- The inverse of a multiplicative character `χ`, applied to `a`, is the inverse of `χ a`.
 Variant when the target is a field -/
 theorem inv_apply_eq_inv' {R' : Type v} [Field R'] (χ : MulChar R R') (a : R) : χ⁻¹ a = (χ a)⁻¹ :=
-  (inv_apply_eq_inv χ a).trans <| Ring.inverse_eq_inv (χ a)
+  (inv_apply_eq_inv χ a).trans $ Ring.inverse_eq_inv (χ a)
 #align mul_char.inv_apply_eq_inv' MulChar.inv_apply_eq_inv'
 
 /-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
@@ -356,7 +356,7 @@ theorem inv_apply {R : Type u} [CommMonoidWithZero R] (χ : MulChar R R') (a : R
 /-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
 applied to `a`, is `χ` applied to the inverse of `a`. -/
 theorem inv_apply' {R : Type u} [Field R] (χ : MulChar R R') (a : R) : χ⁻¹ a = χ a⁻¹ :=
-  (inv_apply χ a).trans <| congr_arg _ (Ring.inverse_eq_inv a)
+  (inv_apply χ a).trans $ congr_arg _ (Ring.inverse_eq_inv a)
 #align mul_char.inv_apply' MulChar.inv_apply'
 
 /-- The product of a character with its inverse is the trivial character. -/

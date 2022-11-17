@@ -82,7 +82,7 @@ theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
 #align mv_polynomial.mem_supported MvPolynomial.mem_supported
 
 theorem supported_eq_vars_subset : (supported R s : Set (MvPolynomial σ R)) = { p | ↑p.vars ⊆ s } :=
-  Set.ext fun _ => mem_supported
+  Set.ext $ fun _ => mem_supported
 #align mv_polynomial.supported_eq_vars_subset MvPolynomial.supported_eq_vars_subset
 
 @[simp]
@@ -128,10 +128,12 @@ theorem supported_strict_mono [Nontrivial R] : StrictMono (supported R : Set σ 
 #align mv_polynomial.supported_strict_mono MvPolynomial.supported_strict_mono
 
 theorem exists_restrict_to_vars (R : Type _) [CommRing R] {F : MvPolynomial σ ℤ} (hF : ↑F.vars ⊆ s) :
-    ∃ f : (s → R) → R, ∀ x : σ → R, f (x ∘ coe : s → R) = aeval x F := by
-  classical rw [← mem_supported, supported_eq_range_rename, AlgHom.mem_range] at hF
-    use fun z => aeval z F'
-    simp only [← hF', aeval_rename]
+    ∃ f : (s → R) → R, ∀ x : σ → R, f (x ∘ coe : s → R) = aeval x F := by classical
+  rw [← mem_supported, supported_eq_range_rename, AlgHom.mem_range] at hF
+  cases' hF with F' hF'
+  use fun z => aeval z F'
+  intro x
+  simp only [← hF', aeval_rename]
 #align mv_polynomial.exists_restrict_to_vars MvPolynomial.exists_restrict_to_vars
 
 end CommSemiring

@@ -41,7 +41,7 @@ structure SchemeCat extends
   "./././Mathport/Syntax/Translate/Command.lean:383:11: unsupported: advanced extends in structure" where
   local_affine :
     ∀ x : to_LocallyRingedSpace,
-      ∃ (U : OpenNhds x)(R : CommRingCat),
+      ∃ (U : OpenNhds x) (R : CommRingCat),
         Nonempty (to_LocallyRingedSpace.restrict U.OpenEmbedding ≅ SpecCat.toLocallyRingedSpace.obj (op R))
 #align algebraic_geometry.Scheme AlgebraicGeometry.SchemeCat
 
@@ -145,12 +145,12 @@ instance is_LocallyRingedSpace_iso {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] : @
 theorem inv_val_c_app {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrier) :
     (inv f).val.c.app (op U) =
       X.Presheaf.map
-          (eq_to_hom <| by
-              rw [is_iso.hom_inv_id]
-              ext1
-              rfl :
+          (eq_to_hom $ by
+                rw [is_iso.hom_inv_id]
+                ext1
+                rfl :
               (Opens.map (f ≫ inv f).1.base).obj U ⟶ U).op ≫
-        inv (f.val.c.app (op <| (Opens.map _).obj U)) :=
+        inv (f.val.c.app (op $ (Opens.map _).obj U)) :=
   by
   rw [is_iso.eq_comp_inv]
   erw [← Scheme.comp_val_c_app]
@@ -286,13 +286,13 @@ theorem basic_open_le : X.basicOpen f ≤ U :=
 #align algebraic_geometry.Scheme.basic_open_le AlgebraicGeometry.SchemeCat.basic_open_le
 
 @[simp]
-theorem preimage_basic_open {X Y : SchemeCat} (f : X ⟶ Y) {U : Opens Y.carrier} (r : Y.Presheaf.obj <| op U) :
+theorem preimage_basic_open {X Y : SchemeCat} (f : X ⟶ Y) {U : Opens Y.carrier} (r : Y.Presheaf.obj $ op U) :
     (Opens.map f.1.base).obj (Y.basicOpen r) = @SchemeCat.basicOpen X ((Opens.map f.1.base).obj U) (f.1.c.app _ r) :=
   LocallyRingedSpaceCat.preimage_basic_open f r
 #align algebraic_geometry.Scheme.preimage_basic_open AlgebraicGeometry.SchemeCat.preimage_basic_open
 
 @[simp]
-theorem basic_open_zero (U : Opens X.carrier) : X.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ :=
+theorem basic_open_zero (U : Opens X.carrier) : X.basicOpen (0 : X.Presheaf.obj $ op U) = ⊥ :=
   LocallyRingedSpaceCat.basic_open_zero _ U
 #align algebraic_geometry.Scheme.basic_open_zero AlgebraicGeometry.SchemeCat.basic_open_zero
 
@@ -310,7 +310,7 @@ end BasicOpen
 end SchemeCat
 
 theorem basic_open_eq_of_affine {R : CommRingCat} (f : R) :
-    (SchemeCat.spec.obj <| op R).basicOpen ((specΓIdentity.app R).inv f) = PrimeSpectrum.basicOpen f := by
+    (SchemeCat.spec.obj $ op R).basicOpen ((specΓIdentity.app R).inv f) = PrimeSpectrum.basicOpen f := by
   ext
   erw [Scheme.mem_basic_open_top]
   suffices IsUnit (structure_sheaf.to_stalk R x f) ↔ f ∉ PrimeSpectrum.asIdeal x by exact this
@@ -318,13 +318,13 @@ theorem basic_open_eq_of_affine {R : CommRingCat} (f : R) :
     structure_sheaf.stalk_to_fiber_ring_hom_to_stalk]
   exact
     (IsLocalization.AtPrime.is_unit_to_map_iff (Localization.AtPrime (PrimeSpectrum.asIdeal x))
-      (PrimeSpectrum.asIdeal x) f :
+        (PrimeSpectrum.asIdeal x) f :
       _)
 #align algebraic_geometry.basic_open_eq_of_affine AlgebraicGeometry.basic_open_eq_of_affine
 
 @[simp]
 theorem basic_open_eq_of_affine' {R : CommRingCat} (f : (SpecCat.toSheafedSpace.obj (op R)).Presheaf.obj (op ⊤)) :
-    (SchemeCat.spec.obj <| op R).basicOpen f = PrimeSpectrum.basicOpen ((specΓIdentity.app R).Hom f) := by
+    (SchemeCat.spec.obj $ op R).basicOpen f = PrimeSpectrum.basicOpen ((specΓIdentity.app R).Hom f) := by
   convert basic_open_eq_of_affine ((Spec_Γ_identity.app R).Hom f)
   exact (iso.hom_inv_id_apply _ _).symm
 #align algebraic_geometry.basic_open_eq_of_affine' AlgebraicGeometry.basic_open_eq_of_affine'

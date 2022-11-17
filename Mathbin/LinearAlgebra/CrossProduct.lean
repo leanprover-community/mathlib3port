@@ -60,7 +60,7 @@ def crossProduct : (Fin 3 → R) →ₗ[R] (Fin 3 → R) →ₗ[R] Fin 3 → R :
 #align cross_product crossProduct
 
 -- mathport name: cross_product
-localized [Matrix] infixl:74 " ×₃ " => crossProduct
+scoped[Matrix] infixl:74 " ×₃ " => crossProduct
 
 theorem cross_apply (a b : Fin 3 → R) :
     a ×₃ b = ![a 1 * b 2 - a 2 * b 1, a 2 * b 0 - a 0 * b 2, a 0 * b 1 - a 1 * b 0] :=
@@ -122,7 +122,6 @@ end ProductsProperties
 
 section LeibnizProperties
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The cross product satisfies the Leibniz lie property. -/
 theorem leibniz_cross (u v w : Fin 3 → R) : u ×₃ (v ×₃ w) = u ×₃ v ×₃ w + v ×₃ (u ×₃ w) := by
   dsimp only [cross_apply]

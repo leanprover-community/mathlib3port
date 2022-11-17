@@ -23,18 +23,21 @@ private unsafe def rules_from_exprs (l : List expr) : List (expr × Bool) :=
   (l.map fun e => (e, false)) ++ l.map fun e => (e, true)
 #align tactic.rewrite_search.rules_from_exprs tactic.rewrite_search.rules_from_exprs
 
-/-- Returns true if expression is an equation or iff. -/
-private unsafe def is_acceptable_rewrite : expr → Bool
-  | expr.pi n bi d b => is_acceptable_rewrite b
-  | quote.1 ((%%ₓa) = %%ₓb) => true
-  | quote.1 ((%%ₓa) ↔ %%ₓb) => true
-  | _ => false
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Returns true if expression is an equation or iff. -/ private unsafe
+  def
+    is_acceptable_rewrite
+    : expr → Bool
+    | expr.pi n bi d b => is_acceptable_rewrite b
+      | q( $ ( a ) = $ ( b ) ) => true
+      | q( $ ( a ) ↔ $ ( b ) ) => true
+      | _ => false
 #align tactic.rewrite_search.is_acceptable_rewrite tactic.rewrite_search.is_acceptable_rewrite
 
 /-- Returns true if the expression is an equation or iff and has no metavariables. -/
 private unsafe def is_acceptable_hyp (r : expr) : tactic Bool := do
   let t ← infer_type r >>= whnf
-  return <| is_acceptable_rewrite t ∧ ¬t
+  return $ is_acceptable_rewrite t ∧ ¬t
 #align tactic.rewrite_search.is_acceptable_hyp tactic.rewrite_search.is_acceptable_hyp
 
 /-- Collect all hypotheses in the local context that are usable as rewrite rules. -/
@@ -61,7 +64,7 @@ private unsafe def rules_from_rewrite_attr : tactic (List (expr × Bool)) := do
 unsafe def collect_rules : tactic (List (expr × Bool)) := do
   let from_attr ← rules_from_rewrite_attr
   let from_hyps ← rules_from_hyps
-  return <| from_attr ++ from_hyps
+  return $ from_attr ++ from_hyps
 #align tactic.rewrite_search.collect_rules tactic.rewrite_search.collect_rules
 
 open Tactic.NthRewrite Tactic.NthRewrite.Congr

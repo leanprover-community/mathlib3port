@@ -84,7 +84,7 @@ theorem form_perm_apply_of_not_mem (x : α) (l : List α) (h : x ∉ l) : formPe
 #align list.form_perm_apply_of_not_mem List.form_perm_apply_of_not_mem
 
 theorem mem_of_form_perm_apply_ne (x : α) (l : List α) : l.formPerm x ≠ x → x ∈ l :=
-  not_imp_comm.2 <| List.form_perm_apply_of_not_mem _ _
+  not_imp_comm.2 $ List.form_perm_apply_of_not_mem _ _
 #align list.mem_of_form_perm_apply_ne List.mem_of_form_perm_apply_ne
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -471,7 +471,7 @@ theorem mem_of_form_perm_ne_self (l : List α) (x : α) (h : formPerm l x ≠ x)
 #align list.mem_of_form_perm_ne_self List.mem_of_form_perm_ne_self
 
 theorem form_perm_eq_self_of_not_mem (l : List α) (x : α) (h : x ∉ l) : formPerm l x = x :=
-  by_contra fun H => h <| mem_of_form_perm_ne_self _ _ H
+  by_contra fun H => h $ mem_of_form_perm_ne_self _ _ H
 #align list.form_perm_eq_self_of_not_mem List.form_perm_eq_self_of_not_mem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

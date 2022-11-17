@@ -112,7 +112,7 @@ def adjoint : (E →L[𝕜] F) ≃ₗᵢ⋆[𝕜] F →L[𝕜] E :=
 #align continuous_linear_map.adjoint ContinuousLinearMap.adjoint
 
 -- mathport name: adjoint
-localized [InnerProduct] postfix:1000 "†" => ContinuousLinearMap.adjoint
+scoped[InnerProduct] postfix:1000 "†" => ContinuousLinearMap.adjoint
 
 /-- The fundamental property of the adjoint. -/
 theorem adjoint_inner_left (A : E →L[𝕜] F) (x : E) (y : F) : ⟪(A†) y, x⟫ = ⟪y, A x⟫ :=
@@ -294,7 +294,7 @@ theorem adjoint_conj {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (S : F →L[�
 theorem _root_.continuous_linear_map.is_self_adjoint_iff_is_symmetric {A : E →L[𝕜] E} :
     IsSelfAdjoint A ↔ (A : E →ₗ[𝕜] E).IsSymmetric :=
   ⟨fun hA => hA.IsSymmetric, fun hA =>
-    ext fun x => (ext_inner_right 𝕜) fun y => (A.adjoint_inner_left y x).symm ▸ (hA x y).symm⟩
+    ext $ fun x => ext_inner_right 𝕜 $ fun y => (A.adjoint_inner_left y x).symm ▸ (hA x y).symm⟩
 #align
   is_self_adjoint._root_.continuous_linear_map.is_self_adjoint_iff_is_symmetric is_self_adjoint._root_.continuous_linear_map.is_self_adjoint_iff_is_symmetric
 

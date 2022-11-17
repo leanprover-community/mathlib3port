@@ -79,7 +79,7 @@ alias Ioc_eq_empty_iff ↔ _ Ioc_eq_empty
 
 @[simp]
 theorem Ioo_eq_empty (h : ¬a < b) : ioo a b = ∅ :=
-  eq_empty_iff_forall_not_mem.2 fun x hx => h ((mem_Ioo.1 hx).1.trans (mem_Ioo.1 hx).2)
+  eq_empty_iff_forall_not_mem.2 $ fun x hx => h ((mem_Ioo.1 hx).1.trans (mem_Ioo.1 hx).2)
 #align finset.Ioo_eq_empty Finset.Ioo_eq_empty
 
 @[simp]
@@ -252,17 +252,17 @@ variable (a)
 
 @[simp]
 theorem Ico_self : ico a a = ∅ :=
-  Ico_eq_empty <| lt_irrefl _
+  Ico_eq_empty $ lt_irrefl _
 #align finset.Ico_self Finset.Ico_self
 
 @[simp]
 theorem Ioc_self : ioc a a = ∅ :=
-  Ioc_eq_empty <| lt_irrefl _
+  Ioc_eq_empty $ lt_irrefl _
 #align finset.Ioc_self Finset.Ioc_self
 
 @[simp]
 theorem Ioo_self : ioo a a = ∅ :=
-  Ioo_eq_empty <| lt_irrefl _
+  Ioo_eq_empty $ lt_irrefl _
 #align finset.Ioo_self Finset.Ioo_self
 
 variable {a}
@@ -270,7 +270,7 @@ variable {a}
 /-- A set with upper and lower bounds in a locally finite order is a fintype -/
 def _root_.set.fintype_of_mem_bounds {s : Set α} [DecidablePred (· ∈ s)] (ha : a ∈ lowerBounds s)
     (hb : b ∈ upperBounds s) : Fintype s :=
-  (Set.fintypeSubset (Set.icc a b)) fun x hx => ⟨ha hx, hb hx⟩
+  Set.fintypeSubset (Set.icc a b) $ fun x hx => ⟨ha hx, hb hx⟩
 #align finset._root_.set.fintype_of_mem_bounds finset._root_.set.fintype_of_mem_bounds
 
 theorem _root_.bdd_below.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.Finite := by
@@ -417,7 +417,7 @@ theorem Ioi_subset_Ici_self : ioi a ⊆ ici a := by simpa [← coe_subset] using
 
 theorem _root_.bdd_below.finite {s : Set α} (hs : BddBelow s) : s.Finite :=
   let ⟨a, ha⟩ := hs
-  (ici a).finite_to_set.Subset fun x hx => mem_Ici.2 <| ha hx
+  (ici a).finite_to_set.Subset $ fun x hx => mem_Ici.2 $ ha hx
 #align finset._root_.bdd_below.finite finset._root_.bdd_below.finite
 
 variable [Fintype α]
@@ -462,7 +462,7 @@ end LocallyFiniteOrderBot
 variable [LocallyFiniteOrderTop α] [LocallyFiniteOrderBot α]
 
 theorem disjoint_Ioi_Iio (a : α) : Disjoint (ioi a) (iio a) :=
-  disjoint_left.2 fun b hab hba => (mem_Ioi.1 hab).not_lt <| mem_Iio.1 hba
+  disjoint_left.2 $ fun b hab hba => (mem_Ioi.1 hab).not_lt $ mem_Iio.1 hba
 #align finset.disjoint_Ioi_Iio Finset.disjoint_Ioi_Iio
 
 end Preorder
@@ -481,7 +481,7 @@ theorem Icc_eq_singleton_iff : icc a b = {c} ↔ a = c ∧ b = c := by
 #align finset.Icc_eq_singleton_iff Finset.Icc_eq_singleton_iff
 
 theorem Ico_disjoint_Ico_consecutive (a b c : α) : Disjoint (ico a b) (ico b c) :=
-  disjoint_left.2 fun x hab hbc => (mem_Ico.mp hab).2.not_le (mem_Ico.mp hbc).1
+  disjoint_left.2 $ fun x hab hbc => (mem_Ico.mp hab).2.not_le (mem_Ico.mp hbc).1
 #align finset.Ico_disjoint_Ico_consecutive Finset.Ico_disjoint_Ico_consecutive
 
 section DecidableEq
@@ -571,20 +571,29 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
   exact and_iff_left_of_imp fun h => h.le.trans_lt hab
 #align finset.Ico_filter_le_left Finset.Ico_filter_le_left
 
-theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).card - 1 := by
-  classical by_cases h:a ≤ b
-    · rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, zero_tsub]
-      
+theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).card - 1 := by classical
+  by_cases h:a ≤ b
+  · rw [← Ico_insert_right h, card_insert_of_not_mem right_not_mem_Ico]
+    exact (Nat.add_sub_cancel _ _).symm
+    
+  · rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, zero_tsub]
+    
 #align finset.card_Ico_eq_card_Icc_sub_one Finset.card_Ico_eq_card_Icc_sub_one
 
 theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (ioc a b).card = (icc a b).card - 1 :=
   @card_Ico_eq_card_Icc_sub_one αᵒᵈ _ _ _ _
 #align finset.card_Ioc_eq_card_Icc_sub_one Finset.card_Ioc_eq_card_Icc_sub_one
 
-theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (ioo a b).card = (ico a b).card - 1 := by
-  classical by_cases h:a ≤ b
-    · rw [Ioo_eq_empty fun h' => h h'.le, Ico_eq_empty fun h' => h h'.le, card_empty, zero_tsub]
+theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (ioo a b).card = (ico a b).card - 1 := by classical
+  by_cases h:a ≤ b
+  · obtain rfl | h' := h.eq_or_lt
+    · rw [Ioo_self, Ico_self, card_empty]
       
+    rw [← Ioo_insert_left h', card_insert_of_not_mem left_not_mem_Ioo]
+    exact (Nat.add_sub_cancel _ _).symm
+    
+  · rw [Ioo_eq_empty fun h' => h h'.le, Ico_eq_empty fun h' => h h'.le, card_empty, zero_tsub]
+    
 #align finset.card_Ioo_eq_card_Ico_sub_one Finset.card_Ioo_eq_card_Ico_sub_one
 
 theorem card_Ioo_eq_card_Ioc_sub_one (a b : α) : (ioo a b).card = (ioc a b).card - 1 :=

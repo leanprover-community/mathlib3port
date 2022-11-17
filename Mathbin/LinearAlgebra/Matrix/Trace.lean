@@ -44,7 +44,7 @@ variable (n R)
 
 @[simp]
 theorem trace_zero : trace (0 : Matrix n n R) = 0 :=
-  (Finset.sum_const (0 : R)).trans <| smul_zero _
+  (Finset.sum_const (0 : R)).trans $ smul_zero _
 #align matrix.trace_zero Matrix.trace_zero
 
 variable {n R}

@@ -551,13 +551,12 @@ theorem rotation_symm_apply (θ : Real.Angle) (x : V) :
   rfl
 #align orientation.rotation_symm_apply Orientation.rotation_symm_apply
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem rotation_eq_matrix_to_lin (θ : Real.Angle) {x : V} (hx : x ≠ 0) :
     (o.rotation θ).toLinearMap =
       Matrix.toLin (o.basisRightAngleRotation x hx) (o.basisRightAngleRotation x hx)
-        («expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation") :=
+        («expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") :=
   by
   apply (o.basis_right_angle_rotation x hx).ext
   intro i
@@ -582,7 +581,7 @@ theorem det_rotation (θ : Real.Angle) : (o.rotation θ).toLinearMap.det = 1 := 
 /-- The determinant of `rotation` (as a linear equiv) is equal to `1`. -/
 @[simp]
 theorem linear_equiv_det_rotation (θ : Real.Angle) : (o.rotation θ).toLinearEquiv.det = 1 :=
-  Units.ext <| o.det_rotation θ
+  Units.ext $ o.det_rotation θ
 #align orientation.linear_equiv_det_rotation Orientation.linear_equiv_det_rotation
 
 /-- The inverse of `rotation` is rotation by the negation of the angle. -/
@@ -622,7 +621,7 @@ theorem rotation_rotation (θ₁ θ₂ : Real.Angle) (x : V) : o.rotation θ₁ 
 /-- Rotating twice is equivalent to rotating by the sum of the angles. -/
 @[simp]
 theorem rotation_trans (θ₁ θ₂ : Real.Angle) : (o.rotation θ₁).trans (o.rotation θ₂) = o.rotation (θ₂ + θ₁) :=
-  LinearIsometryEquiv.ext fun _ => by rw [← rotation_rotation, LinearIsometryEquiv.trans_apply]
+  LinearIsometryEquiv.ext $ fun _ => by rw [← rotation_rotation, LinearIsometryEquiv.trans_apply]
 #align orientation.rotation_trans Orientation.rotation_trans
 
 /-- Rotating the first of two vectors by `θ` scales their Kahler form by `cos θ - sin θ * I`. -/
@@ -828,7 +827,6 @@ theorem oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero {x y : V} (θ : Real.Angle
 #align
   orientation.oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero Orientation.oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- Any linear isometric equivalence in `V` with positive determinant is `rotation`. -/
 theorem exists_linear_isometry_equiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V} (hd : 0 < (f.toLinearEquiv : V →ₗ[ℝ] V).det) :
     ∃ θ : Real.Angle, f = o.rotation θ := by
@@ -897,7 +895,7 @@ theorem rotation_map_complex (θ : Real.Angle) (f : V ≃ₗᵢ[ℝ] ℂ)
 
 /-- Negating the orientation negates the angle in `rotation`. -/
 theorem rotation_neg_orientation_eq_neg (θ : Real.Angle) : (-o).rotation θ = o.rotation (-θ) :=
-  LinearIsometryEquiv.ext <| by simp [rotation_apply]
+  LinearIsometryEquiv.ext $ by simp [rotation_apply]
 #align orientation.rotation_neg_orientation_eq_neg Orientation.rotation_neg_orientation_eq_neg
 
 /-- The inner product of two vectors is the product of the norms and the cosine of the oriented
@@ -939,7 +937,7 @@ theorem cos_oangle_eq_cos_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
 /-- The oriented angle between two nonzero vectors is plus or minus the unoriented angle. -/
 theorem oangle_eq_angle_or_eq_neg_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
     o.oangle x y = InnerProductGeometry.angle x y ∨ o.oangle x y = -InnerProductGeometry.angle x y :=
-  Real.Angle.cos_eq_real_cos_iff_eq_or_eq_neg.1 <| o.cos_oangle_eq_cos_angle hx hy
+  Real.Angle.cos_eq_real_cos_iff_eq_or_eq_neg.1 $ o.cos_oangle_eq_cos_angle hx hy
 #align orientation.oangle_eq_angle_or_eq_neg_angle Orientation.oangle_eq_angle_or_eq_neg_angle
 
 /-- The unoriented angle between two nonzero vectors is the absolute value of the oriented angle,
@@ -1127,7 +1125,7 @@ theorem eq_zero_or_oangle_eq_iff_inner_eq_zero {x y : V} :
 /-- If the oriented angle between two vectors is `π / 2`, the inner product of those vectors
 is zero. -/
 theorem inner_eq_zero_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ)) : ⟪x, y⟫ = 0 :=
-  o.eq_zero_or_oangle_eq_iff_inner_eq_zero.1 <| Or.inr <| Or.inr <| Or.inl h
+  o.eq_zero_or_oangle_eq_iff_inner_eq_zero.1 $ Or.inr $ Or.inr $ Or.inl h
 #align orientation.inner_eq_zero_of_oangle_eq_pi_div_two Orientation.inner_eq_zero_of_oangle_eq_pi_div_two
 
 /-- If the oriented angle between two vectors is `π / 2`, the inner product of those vectors
@@ -1139,7 +1137,7 @@ theorem inner_rev_eq_zero_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = 
 /-- If the oriented angle between two vectors is `-π / 2`, the inner product of those vectors
 is zero. -/
 theorem inner_eq_zero_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : ℝ)) : ⟪x, y⟫ = 0 :=
-  o.eq_zero_or_oangle_eq_iff_inner_eq_zero.1 <| Or.inr <| Or.inr <| Or.inr h
+  o.eq_zero_or_oangle_eq_iff_inner_eq_zero.1 $ Or.inr $ Or.inr $ Or.inr h
 #align orientation.inner_eq_zero_of_oangle_eq_neg_pi_div_two Orientation.inner_eq_zero_of_oangle_eq_neg_pi_div_two
 
 /-- If the oriented angle between two vectors is `-π / 2`, the inner product of those vectors

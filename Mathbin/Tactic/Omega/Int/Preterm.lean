@@ -34,13 +34,13 @@ inductive Preterm : Type
 #align omega.int.preterm Omega.Int.Preterm
 
 -- mathport name: preterm.cst
-localized [Omega.Int] notation "&" k => Omega.Int.Preterm.cst k
+scoped notation "&" k => Omega.Int.Preterm.cst k
 
 -- mathport name: preterm.var
-localized [Omega.Int] infixl:300 " ** " => Omega.Int.Preterm.var
+scoped infixl:300 " ** " => Omega.Int.Preterm.var
 
 -- mathport name: preterm.add
-localized [Omega.Int] notation t " +* " s => Omega.Int.Preterm.add t s
+scoped notation t " +* " s => Omega.Int.Preterm.add t s
 
 namespace Preterm
 

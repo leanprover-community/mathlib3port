@@ -96,7 +96,7 @@ unsafe def move_left_or_right :
     List (Bool × expr) → List expr → List Bool → tactic (List expr × List expr × List expr × List Bool)
   | [], l_un, l_m => return ([], [], l_un, l_m)
   | be :: l, l_un, l_m => do
-    let ex :: _ ← l_un.mfilter fun e' => succeeds <| unify be.2 e' |
+    let ex :: _ ← l_un.mfilter $ fun e' => succeeds $ unify be.2 e' |
       move_left_or_right l l_un (l_m.append [true])
     let (l_tt, l_ff, l_un, l_m) ← move_left_or_right l (l_un.erase ex) (l_m.append [false])
     if be.1 then return (ex :: l_tt, l_ff, l_un, l_m) else return (l_tt, ex :: l_ff, l_un, l_m)
@@ -110,7 +110,7 @@ unsafe def move_left_or_right :
 -/
 unsafe def final_sort (lp : List (Bool × pexpr)) (sl : List expr) : tactic (List expr × List Bool) := do
   let lp_exp : List (Bool × expr) ←
-    lp.mmap fun x => do
+    lp.mmap $ fun x => do
         let e ← to_expr x.2 true false
         return (x.1, e)
   let (l1, l2, l3, is_unused) ← move_left_or_right lp_exp sl []
@@ -126,9 +126,6 @@ unsafe def as_given_op (op : pexpr) : expr → tactic expr
   | _ => failed
 #align tactic.move_op.as_given_op tactic.move_op.as_given_op
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- `(e, unused) ← reorder_oper op lp e` converts an expression `e` to a similar looking one.
 The tactic scans the expression `e` looking for subexpressions that begin with the given binary
 operation `op`.  As soon as `reorder_oper` finds one such subexpression,
@@ -169,17 +166,17 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
               pure (e, [lu, is_unused].transpose.map List.band)
         let (recs, list_unused) := sort_all
         let recs_0 :: recs_rest ← pure recs |
-          "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+          throwError"internal error: cannot have 0 operands"
         let summed := recs_rest (fun e f => op [e, f]) recs_0
         return (summed, list_unused List.band)
       | none => do
-        let [(Fn, unused_F), (bn, unused_b)] ← [F, b].mmap <| reorder_oper
-        return <| (expr.app Fn bn, [unused_F, unused_b].transpose.map List.band)
+        let [(Fn, unused_F), (bn, unused_b)] ← [F, b].mmap $ reorder_oper
+        return $ (expr.app Fn bn, [unused_F, unused_b].transpose.map List.band)
   | expr.pi na bi e f => do
-    let [en, fn] ← [e, f].mmap <| reorder_oper
+    let [en, fn] ← [e, f].mmap $ reorder_oper
     return (expr.pi na bi en.1 fn.1, [en.2, fn.2].transpose.map List.band)
   | expr.lam na bi e f => do
-    let [en, fn] ← [e, f].mmap <| reorder_oper
+    let [en, fn] ← [e, f].mmap $ reorder_oper
     return (expr.lam na bi en.1 fn.1, [en.2, fn.2].transpose.map List.band)
   | expr.mvar na pp e => do
     let en
@@ -194,20 +191,20 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
           e
     return (expr.local_const na pp bi en.1, [en.2].transpose.map List.band)
   | expr.elet na e f g => do
-    let [en, fn, gn] ← [e, f, g].mmap <| reorder_oper
+    let [en, fn, gn] ← [e, f, g].mmap $ reorder_oper
     return (expr.elet na en.1 fn.1 gn.1, [en.2, fn.2, gn.2].transpose.map List.band)
   | expr.macro ma le => do
     let len
       ←-- is it really needed to recurse here?
-            le.mmap <|
+            le.mmap $
           reorder_oper
     let (lee, lb) := len.unzip
     return (expr.macro ma lee, lb List.band)
   | e => pure (e, lp.map fun _ => true)
 #align tactic.move_op.reorder_oper tactic.move_op.reorder_oper
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Passes the user input `na` to `reorder_oper` at a single location, that could either be
 `none` (referring to the goal) or `some name` (referring to hypothesis `name`).  Replaces the
 given hypothesis/goal with the rearranged one that `reorder_hyp` receives from `reorder_oper`.
@@ -236,10 +233,10 @@ unsafe def reorder_hyp (op : pexpr) (lp : List (Bool × pexpr)) (na : Option Nam
       let nop ← to_expr op tt ff
       let pre ← pp reordered
       let (_, prf) ←
-        solve_aux neq <|
+        solve_aux neq $
             match nop with
-            | quote.1 Add.add => sorry
-            | quote.1 Mul.mul => sorry
+            | q(Add.add) => sorry
+            | q(Mul.mul) => sorry
             | _ =>
               ac_refl <|>
                 fail
@@ -256,8 +253,7 @@ unsafe def reorder_hyp (op : pexpr) (lp : List (Bool × pexpr)) (na : Option Nam
 
 section ParsingArgumentsForMoveOp
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `move_op_arg` is a single elementary argument that `move_op` takes for the
 variables to be moved.  It is either a `pexpr`, or a `pexpr` preceded by a `←`. -/
 unsafe def move_op_arg (prec : Nat) : parser (Bool × pexpr) :=
@@ -274,8 +270,7 @@ end ParsingArgumentsForMoveOp
 
 end MoveOp
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open MoveOp
 
 /-- `move_op args locat op` is the non-interactive version of the main tactics `move_add` and
@@ -397,13 +392,13 @@ of all-but-the-last variable suffices to determine the permutation.  E.g., with 
 same effect and changes the goal to `b + a = 0`.  These are all valid uses of `move_add`.
 -/
 unsafe def move_add (args : parse move_pexpr_list_or_texpr) (locat : parse location) : tactic Unit :=
-  move_op args locat (pquote.1 (· + ·))
+  move_op args locat ``((· + ·))
 #align tactic.interactive.move_add tactic.interactive.move_add
 
 /-- See the doc-string for `move_add` and mentally
 replace addition with multiplication throughout. ;-) -/
 unsafe def move_mul (args : parse move_pexpr_list_or_texpr) (locat : parse location) : tactic Unit :=
-  move_op args locat (pquote.1 Mul.mul)
+  move_op args locat ``(Mul.mul)
 #align tactic.interactive.move_mul tactic.interactive.move_mul
 
 /-- `move_oper` behaves like `move_add` except that it also takes an associative, commutative,

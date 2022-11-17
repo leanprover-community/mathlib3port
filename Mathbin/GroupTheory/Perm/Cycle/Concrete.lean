@@ -537,7 +537,7 @@ def isoCycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s
 
 -- mathport name: «exprc[ ,]»
 notation3"c["(l", "* => foldr (h t => List.cons h t) List.nil)"]" =>
-  Cycle.formPerm (↑l) (Cycle.nodup_coe_iff.mpr (by decide))
+  Cycle.formPerm (↑l) (Cycle.nodup_coe_iff.mpr dec_trivial)
 
 instance reprPerm [Repr α] : Repr (Perm α) :=
   ⟨fun f =>

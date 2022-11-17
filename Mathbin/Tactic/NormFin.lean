@@ -54,14 +54,14 @@ theorem normalize_fin_iff {n : ℕ} [NeZero n] {a b} : NormalizeFin n a b ↔ a 
 #align tactic.norm_fin.normalize_fin_iff Tactic.NormFin.normalize_fin_iff
 
 theorem NormalizeFinLt.mk {n a b n'} (hn : n = n') (h : NormalizeFin n a b) (h2 : b < n') : NormalizeFinLt n a b :=
-  h.trans <| Nat.mod_eq_of_lt <| by rw [hn] <;> exact h2
+  h.trans $ Nat.mod_eq_of_lt $ by rw [hn] <;> exact h2
 #align tactic.norm_fin.normalize_fin_lt.mk Tactic.NormFin.NormalizeFinLt.mk
 
 theorem NormalizeFinLt.lt {n a b} (h : NormalizeFinLt n a b) : b < n := by rw [← h.coe] <;> exact a.2
 #align tactic.norm_fin.normalize_fin_lt.lt Tactic.NormFin.NormalizeFinLt.lt
 
 theorem NormalizeFinLt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a b :=
-  h.trans <| Eq.symm <| Nat.mod_eq_of_lt h.lt
+  h.trans $ Eq.symm $ Nat.mod_eq_of_lt h.lt
 #align tactic.norm_fin.normalize_fin_lt.of Tactic.NormFin.NormalizeFinLt.of
 
 theorem NormalizeFin.zero (n) : NormalizeFin (n + 1) 0 0 := by
@@ -144,7 +144,7 @@ theorem NormalizeFinLt.reduce {n} {a : Fin n} {n' a' b k nk : ℕ} (hn : n = n')
 #align tactic.norm_fin.normalize_fin_lt.reduce Tactic.NormFin.NormalizeFinLt.reduce
 
 theorem NormalizeFin.eq {n} {a b : Fin n} {c : ℕ} (ha : NormalizeFin n a c) (hb : NormalizeFin n b c) : a = b :=
-  Fin.eq_of_veq <| ha.trans hb.symm
+  Fin.eq_of_veq $ ha.trans hb.symm
 #align tactic.norm_fin.normalize_fin.eq Tactic.NormFin.NormalizeFin.eq
 
 theorem NormalizeFin.lt {n} {a b : Fin n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
@@ -215,7 +215,7 @@ unsafe def eval_fin_m.eval_n (n : expr) : eval_fin_m (ℕ × expr × expr) :=
 /-- Run an `eval_fin_m` action with a new cache and discard the cache after evaluation. -/
 @[inline]
 unsafe def eval_fin_m.run {α} (m : eval_fin_m α) : tactic α := do
-  let ic ← mk_instance_cache (quote.1 ℕ)
+  let ic ← mk_instance_cache q(ℕ)
   let (a, _) ← StateT.run m (ic, none)
   pure a
 #align tactic.norm_fin.eval_fin_m.run tactic.norm_fin.eval_fin_m.run
@@ -262,27 +262,27 @@ open MatchFinResult
 functions are written this way: for example `cast_le : n ≤ m → fin n ↪o fin m` is not actually a
 function but rather an order embedding with a coercion to a function. -/
 unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
-  | quote.1 (@Fin.castLe (%%ₓn) (%%ₓm) (%%ₓh)) => some (cast_le n m h a)
-  | quote.1 (@Fin.cast (%%ₓm) (%%ₓn) (%%ₓh)) => some (cast n m h a)
-  | quote.1 (@Fin.castAdd (%%ₓn) (%%ₓm)) => some (cast_add n m a)
-  | quote.1 (@Fin.castSucc (%%ₓn)) => some (cast_succ n a)
-  | quote.1 (@Fin.addNat (%%ₓn) (%%ₓm)) => some (add_nat n m a)
-  | quote.1 (@Fin.natAdd (%%ₓn) (%%ₓm)) => some (nat_add n m a)
+  | q(@Fin.castLe $(n) $(m) $(h)) => some (cast_le n m h a)
+  | q(@Fin.cast $(m) $(n) $(h)) => some (cast n m h a)
+  | q(@Fin.castAdd $(n) $(m)) => some (cast_add n m a)
+  | q(@Fin.castSucc $(n)) => some (cast_succ n a)
+  | q(@Fin.addNat $(n) $(m)) => some (add_nat n m a)
+  | q(@Fin.natAdd $(n) $(m)) => some (nat_add n m a)
   | _ => none
 #align tactic.norm_fin.match_fin_coe_fn tactic.norm_fin.match_fin_coe_fn
 
 /-- Match a fin expression to a `match_fin_result`, for easier pattern matching in the
 evaluator. -/
 unsafe def match_fin : expr → Option match_fin_result
-  | quote.1 (@Zero.zero _ (@Fin.hasZero (%%ₓn))) => some (zero n)
-  | quote.1 (@One.one _ (@Fin.hasOne (%%ₓn))) => some (one n)
-  | quote.1 (@Add.add (Fin (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (add n a b)
-  | quote.1 (@Mul.mul (Fin (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (mul n a b)
-  | quote.1 (@bit0 (Fin (%%ₓn)) _ (%%ₓa)) => some (bit0 n a)
-  | quote.1 (@bit1 _ (@Fin.hasOne (%%ₓn)) _ (%%ₓa)) => some (bit1 n a)
-  | quote.1 (@Fin.succ (%%ₓn) (%%ₓa)) => some (succ n a)
-  | quote.1 (@Fin.castLt (%%ₓn) (%%ₓm) (%%ₓa) (%%ₓh)) => some (cast_lt n m a h)
-  | expr.app (quote.1 (@coeFn _ _ _ (%%ₓf))) a => match_fin_coe_fn a f
+  | q(@Zero.zero _ (@Fin.hasZero $(n))) => some (zero n)
+  | q(@One.one _ (@Fin.hasOne $(n))) => some (one n)
+  | q(@Add.add (Fin $(n)) _ $(a) $(b)) => some (add n a b)
+  | q(@Mul.mul (Fin $(n)) _ $(a) $(b)) => some (mul n a b)
+  | q(@bit0 (Fin $(n)) _ $(a)) => some (bit0 n a)
+  | q(@bit1 _ (@Fin.hasOne $(n)) _ $(a)) => some (bit1 n a)
+  | q(@Fin.succ $(n) $(a)) => some (succ n a)
+  | q(@Fin.castLt $(n) $(m) $(a) $(h)) => some (cast_lt n m a h)
+  | expr.app q(@coeFn _ _ _ $(f)) a => match_fin_coe_fn a f
   | _ => none
 #align tactic.norm_fin.match_fin tactic.norm_fin.match_fin
 
@@ -300,20 +300,20 @@ unsafe def reduce_fin' : Bool → expr → expr → expr × expr → eval_fin_m 
     if na < nn then
         if lt then do
           let p ← eval_fin_m.lift_ic fun ic => prove_lt_nat ic a' n'
-          pure (a', (quote.1 @NormalizeFinLt.mk).mk_app [n, a, a', n', pn, pa, p])
+          pure (a', q(@NormalizeFinLt.mk).mk_app [n, a, a', n', pn, pa, p])
         else pure (a', pa)
       else
         let nb := na % nn
         let nk := (na - nb) / nn
-        eval_fin_m.lift_ic fun ic => do
+        eval_fin_m.lift_ic $ fun ic => do
           let (ic, k) ← ic nk
           let (ic, b) ← ic nb
           let (ic, nk, pe1) ← prove_mul_nat ic n' k
           let (ic, pe2) ← prove_add_nat ic nk b a'
           if lt then do
               let (ic, p) ← prove_lt_nat ic b n'
-              pure (ic, b, (quote.1 @NormalizeFinLt.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2, p])
-            else pure (ic, b, (quote.1 @NormalizeFin.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2])
+              pure (ic, b, q(@NormalizeFinLt.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2, p])
+            else pure (ic, b, q(@NormalizeFin.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2])
 #align tactic.norm_fin.reduce_fin' tactic.norm_fin.reduce_fin'
 
 /-- `eval_fin_lt' eval_fin n a` expects that `a : fin n`, and produces `(b, p)` where
@@ -326,42 +326,42 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) : expr �
       | match_fin_result.succ n a => do
         let (a', pa) ← (eval_fin_lt' n a).reset
         let (b, pb) ← eval_fin_m.lift_ic fun ic => prove_succ' ic a'
-        pure (b, (quote.1 @NormalizeFinLt.succ).mk_app [n, a, a', b, pa, pb])
+        pure (b, q(@NormalizeFinLt.succ).mk_app [n, a, a', b, pa, pb])
       | match_fin_result.cast_lt _ m a h => do
         let (a', pa) ← (eval_fin_lt' m a).reset
-        pure (a', (quote.1 @NormalizeFinLt.cast_lt).mk_app [n, m, a, h, a', pa])
+        pure (a', q(@NormalizeFinLt.cast_lt).mk_app [n, m, a, h, a', pa])
       | match_fin_result.cast_le _ m nm a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
-        pure (a', (quote.1 @NormalizeFinLt.cast_le).mk_app [n, m, nm, a, a', pa])
+        pure (a', q(@NormalizeFinLt.cast_le).mk_app [n, m, nm, a, a', pa])
       | match_fin_result.cast m _ nm a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
-        pure (a', (quote.1 @NormalizeFinLt.cast).mk_app [n, m, nm, a, a', pa])
+        pure (a', q(@NormalizeFinLt.cast).mk_app [n, m, nm, a, a', pa])
       | match_fin_result.cast_add n m a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
-        pure (a', (quote.1 @NormalizeFinLt.cast_add).mk_app [n, m, a, a', pa])
+        pure (a', q(@NormalizeFinLt.cast_add).mk_app [n, m, a, a', pa])
       | match_fin_result.cast_succ n a => do
         let (a', pa) ← (eval_fin_lt' n a).reset
-        pure (a', (quote.1 @NormalizeFinLt.cast_succ).mk_app [n, a, a', pa])
+        pure (a', q(@NormalizeFinLt.cast_succ).mk_app [n, a, a', pa])
       | match_fin_result.add_nat n m a => do
         let (a', pa) ← (eval_fin_lt' n a).reset
         let (m', pm) ← or_refl_conv norm_num.derive m
         let (b, pb) ← eval_fin_m.lift_ic fun ic => prove_add_nat' ic a' m'
-        pure (b, (quote.1 @NormalizeFinLt.add_nat).mk_app [n, m, m', pm, a, a', b, pa, pb])
+        pure (b, q(@NormalizeFinLt.add_nat).mk_app [n, m, m', pm, a, a', b, pa, pb])
       | match_fin_result.nat_add n m a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
         let (n', pn) ← or_refl_conv norm_num.derive n
         let (b, pb) ← eval_fin_m.lift_ic fun ic => prove_add_nat' ic n' a'
-        pure (b, (quote.1 @NormalizeFinLt.nat_add).mk_app [n, m, n', pn, a, a', b, pa, pb])
+        pure (b, q(@NormalizeFinLt.nat_add).mk_app [n, m, n', pn, a, a', b, pa, pb])
       | _ => do
         let (_, n', pn) ← eval_fin_m.eval_n n
         let (a', pa) ← eval_fin a >>= reduce_fin' tt n a
         let p ← eval_fin_m.lift_ic fun ic => prove_lt_nat ic a' n'
-        pure (a', (quote.1 @NormalizeFinLt.mk).mk_app [n, a, a', n', pn, pa, p])
+        pure (a', q(@NormalizeFinLt.mk).mk_app [n, a, a', n', pn, pa, p])
 #align tactic.norm_fin.eval_fin_lt' tactic.norm_fin.eval_fin_lt'
 
 /-- Get `n` such that `a : fin n`. -/
 unsafe def get_fin_type (a : expr) : tactic expr := do
-  let quote.1 (Fin (%%ₓn)) ← infer_type a
+  let q(Fin $(n)) ← infer_type a
   pure n
 #align tactic.norm_fin.get_fin_type tactic.norm_fin.get_fin_type
 
@@ -372,31 +372,31 @@ unsafe def eval_fin : expr → eval_fin_m (expr × expr)
   | a => do
     let m ← match_fin a
     match m with
-      | match_fin_result.zero n => pure (quote.1 (0 : ℕ), (quote.1 NormalizeFin.zero).mk_app [n])
-      | match_fin_result.one n => pure (quote.1 (1 : ℕ), (quote.1 NormalizeFin.one).mk_app [n])
+      | match_fin_result.zero n => pure (q((0 : ℕ)), q(NormalizeFin.zero).mk_app [n])
+      | match_fin_result.one n => pure (q((1 : ℕ)), q(NormalizeFin.one).mk_app [n])
       | match_fin_result.add n a b => do
         let (a', pa) ← eval_fin a
         let (b', pb) ← eval_fin b
         let (c, pc) ← eval_fin_m.lift_ic fun ic => prove_add_nat' ic a' b'
-        pure (c, (quote.1 @NormalizeFin.add).mk_app [n, a, b, a', b', c, pa, pb, pc])
+        pure (c, q(@NormalizeFin.add).mk_app [n, a, b, a', b', c, pa, pb, pc])
       | match_fin_result.mul n a b => do
         let (a', pa) ← eval_fin a
         let (b', pb) ← eval_fin b
         let (c, pc) ← eval_fin_m.lift_ic fun ic => prove_mul_nat ic a' b'
-        pure (c, (quote.1 @NormalizeFin.mul).mk_app [n, a, b, a', b', c, pa, pb, pc])
+        pure (c, q(@NormalizeFin.mul).mk_app [n, a, b, a', b', c, pa, pb, pc])
       | match_fin_result.bit0 n a => do
         let (a', pa) ← eval_fin a
-        pure ((quote.1 (@bit0 ℕ _)).mk_app [a'], (quote.1 @NormalizeFin.bit0).mk_app [n, a, a', pa])
+        pure (q(@bit0 ℕ _).mk_app [a'], q(@NormalizeFin.bit0).mk_app [n, a, a', pa])
       | match_fin_result.bit1 n a => do
         let (a', pa) ← eval_fin a
-        pure ((quote.1 (@bit1 ℕ _ _)).mk_app [a'], (quote.1 @NormalizeFin.bit1).mk_app [n, a, a', pa])
+        pure (q(@bit1 ℕ _ _).mk_app [a'], q(@NormalizeFin.bit1).mk_app [n, a, a', pa])
       | match_fin_result.cast m n nm a => do
         let (a', pa) ← (eval_fin a).reset
-        pure (a', (quote.1 @NormalizeFin.cast).mk_app [n, m, nm, a, a', pa])
+        pure (a', q(@NormalizeFin.cast).mk_app [n, m, nm, a, a', pa])
       | _ => do
         let n ← get_fin_type a
         let (a', pa) ← eval_fin_lt' eval_fin n a
-        pure (a', (quote.1 @NormalizeFinLt.of).mk_app [n, a, a', pa])
+        pure (a', q(@NormalizeFinLt.of).mk_app [n, a, a', pa])
 #align tactic.norm_fin.eval_fin tactic.norm_fin.eval_fin
 
 /-- `eval_fin_lt n a` expects that `a : fin n`, and produces `(b, p)` where
@@ -420,7 +420,7 @@ unsafe def prove_lt_fin' : expr → expr → expr → expr × expr → expr × e
     let (a', pa) ← reduce_fin' false n a a'
     let (b', pb) ← reduce_fin' true n b b'
     let p ← eval_fin_m.lift_ic fun ic => prove_lt_nat ic a' b'
-    pure ((quote.1 @NormalizeFin.lt).mk_app [n, a, b, a', b', pa, pb, p])
+    pure (q(@NormalizeFin.lt).mk_app [n, a, b, a', b', pa, pb, p])
 #align tactic.norm_fin.prove_lt_fin' tactic.norm_fin.prove_lt_fin'
 
 /-- If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
@@ -430,27 +430,27 @@ unsafe def prove_le_fin' : expr → expr → expr → expr × expr → expr × e
     let (a', pa) ← reduce_fin' false n a a'
     let (b', pb) ← reduce_fin' true n b b'
     let p ← eval_fin_m.lift_ic fun ic => prove_le_nat ic a' b'
-    pure ((quote.1 @NormalizeFin.le).mk_app [n, a, b, a', b', pa, pb, p])
+    pure (q(@NormalizeFin.le).mk_app [n, a, b, a', b', pa, pb, p])
 #align tactic.norm_fin.prove_le_fin' tactic.norm_fin.prove_le_fin'
 
 /-- If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
 then `prove_eq_fin' n a b a' b'` proves `a = b`. -/
 unsafe def prove_eq_fin' : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr
   | n, a, b, (a', pa), (b', pb) =>
-    if a' == b' then do
-      pure ((quote.1 @NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
+    if a' =ₐ b' then do
+      pure (q(@NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
     else do
       let (a', pa) ← reduce_fin' false n a (a', pa)
       let (b', pb) ← reduce_fin' false n b (b', pb)
-      guard (a' == b')
-      pure ((quote.1 @NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
+      guard (a' =ₐ b')
+      pure (q(@NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
 #align tactic.norm_fin.prove_eq_fin' tactic.norm_fin.prove_eq_fin'
 
 /-- Given a function with the type of `prove_eq_fin'`, evaluates it with the given `a` and `b`. -/
 unsafe def eval_prove_fin (f : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr) (a b : expr) :
     tactic expr := do
   let n ← get_fin_type a
-  eval_fin_m.run <| eval_fin a >>= fun a' => eval_fin b >>= f n a b a'
+  eval_fin_m.run $ eval_fin a >>= fun a' => eval_fin b >>= f n a b a'
 #align tactic.norm_fin.eval_prove_fin tactic.norm_fin.eval_prove_fin
 
 /-- If `a b : fin n`, then `prove_eq_fin a b` proves `a = b`. -/
@@ -478,22 +478,16 @@ in the construction of the numeral `b : fin n`. -/
 unsafe def mk_fin_numeral (n m : expr) : expr → Option (expr × expr)
   | a =>
     match match_numeral a with
-    | zero =>
-      some
-        (expr.app (quote.1 (@Zero.zero (Fin (%%ₓn)))) (quote.1 (@Fin.hasZero (%%ₓm))),
-          expr.app (quote.1 NormalizeFin.zero) m)
-    | one =>
-      some
-        (expr.app (quote.1 (@One.one (Fin (%%ₓn)))) (quote.1 (@Fin.hasOne (%%ₓm))),
-          expr.app (quote.1 NormalizeFin.one) m)
+    | zero => some (expr.app q(@Zero.zero (Fin $(n))) q(@Fin.hasZero $(m)), expr.app q(NormalizeFin.zero) m)
+    | one => some (expr.app q(@One.one (Fin $(n))) q(@Fin.hasOne $(m)), expr.app q(NormalizeFin.one) m)
     | bit0 a => do
       let (a', p) ← mk_fin_numeral a
-      some (quote.1 (bit0 (%%ₓa') : Fin (%%ₓn)), (quote.1 @NormalizeFin.bit0).mk_app [n, a', a, p])
+      some (q((bit0 $(a') : Fin $(n))), q(@NormalizeFin.bit0).mk_app [n, a', a, p])
     | bit1 a => do
       let (a', p) ← mk_fin_numeral a
       some
-          ((quote.1 (@bit1 (Fin (%%ₓn)))).mk_app [quote.1 (@Fin.hasOne (%%ₓm)), quote.1 (@Fin.hasAdd (%%ₓn)), a'],
-            (quote.1 @NormalizeFin.bit1).mk_app [m, a', a, p])
+          (q(@bit1 (Fin $(n))).mk_app [q(@Fin.hasOne $(m)), q(@Fin.hasAdd $(n)), a'],
+            q(@NormalizeFin.bit1).mk_app [m, a', a, p])
     | _ => none
 #align tactic.norm_fin.mk_fin_numeral tactic.norm_fin.mk_fin_numeral
 
@@ -504,7 +498,7 @@ end
 `a' % n` and `b' % n` as natural numbers. -/
 unsafe def eval_rel {α} (a b : expr) (f : expr → expr × expr → expr × expr → ℕ → ℕ → eval_fin_m α) : tactic α := do
   let n ← get_fin_type a
-  eval_fin_m.run <| do
+  eval_fin_m.run $ do
       let (nn, n', pn) ← eval_fin_m.eval_n n
       let (a', pa) ← eval_fin a
       let (b', pb) ← eval_fin b
@@ -517,7 +511,7 @@ unsafe def eval_rel {α} (a b : expr) (f : expr → expr × expr → expr × exp
 `(n, ff, p)` where `p : b ≤ a`. -/
 unsafe def prove_lt_ge_fin : expr → expr → tactic (expr × Bool × expr)
   | a, b =>
-    (eval_rel a b) fun n a' b' na nb =>
+    eval_rel a b $ fun n a' b' na nb =>
       if na < nb then Prod.mk n <$> Prod.mk true <$> prove_lt_fin' n a b a' b'
       else Prod.mk n <$> Prod.mk false <$> prove_le_fin' n b a b' a'
 #align tactic.norm_fin.prove_lt_ge_fin tactic.norm_fin.prove_lt_ge_fin
@@ -526,40 +520,57 @@ unsafe def prove_lt_ge_fin : expr → expr → tactic (expr × Bool × expr)
 `(n, ff, p)` where `p : a ≠ b`. -/
 unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
   | a, b =>
-    (eval_rel a b) fun n a' b' na nb =>
+    eval_rel a b $ fun n a' b' na nb =>
       if na = nb then Prod.mk n <$> Prod.mk true <$> prove_eq_fin' n a b a' b'
       else
         if na < nb then do
           let p ← prove_lt_fin' n a b a' b'
-          pure (n, ff, (quote.1 (@ne_of_lt (Fin (%%ₓn)) _)).mk_app [a, b, p])
+          pure (n, ff, q(@ne_of_lt (Fin $(n)) _).mk_app [a, b, p])
         else do
           let p ← prove_lt_fin' n b a b' a'
-          pure (n, ff, (quote.1 (@ne_of_gt (Fin (%%ₓn)) _)).mk_app [a, b, p])
+          pure (n, ff, q(@ne_of_gt (Fin $(n)) _).mk_app [a, b, p])
 #align tactic.norm_fin.prove_eq_ne_fin tactic.norm_fin.prove_eq_ne_fin
 
-/-- A `norm_num` extension that evaluates equalities and inequalities on the type `fin n`.
-
-```
-example : (5 : fin 7) = fin.succ (fin.succ 3) := by norm_num
-```
--/
-@[norm_num]
-unsafe def eval_ineq : expr → tactic (expr × expr)
-  | quote.1 ((%%ₓa) < %%ₓb) => do
-    let (n, lt, p) ← prove_lt_ge_fin a b
-    if lt then true_intro p else false_intro ((quote.1 (@not_lt_of_ge (Fin (%%ₓn)) _)).mk_app [a, b, p])
-  | quote.1 ((%%ₓa) ≤ %%ₓb) => do
-    let (n, lt, p) ← prove_lt_ge_fin b a
-    if lt then false_intro ((quote.1 (@not_le_of_gt (Fin (%%ₓn)) _)).mk_app [a, b, p]) else true_intro p
-  | quote.1 ((%%ₓa) = %%ₓb) => do
-    let (n, Eq, p) ← prove_eq_ne_fin a b
-    if Eq then true_intro p else false_intro p
-  | quote.1 ((%%ₓa) > %%ₓb) => mk_app `` LT.lt [b, a] >>= eval_ineq
-  | quote.1 ((%%ₓa) ≥ %%ₓb) => mk_app `` LE.le [b, a] >>= eval_ineq
-  | quote.1 ((%%ₓa) ≠ %%ₓb) => do
-    let (n, Eq, p) ← prove_eq_ne_fin a b
-    if Eq then false_intro (quote.1 (not_not_intro (%%ₓp : (%%ₓa : Fin (%%ₓn)) = %%ₓb))) else true_intro p
-  | _ => failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      A `norm_num` extension that evaluates equalities and inequalities on the type `fin n`.
+      
+      ```
+      example : (5 : fin 7) = fin.succ (fin.succ 3) := by norm_num
+      ```
+      -/
+    @[ norm_num ]
+    unsafe
+  def
+    eval_ineq
+    : expr → tactic ( expr × expr )
+    |
+        q( $ ( a ) < $ ( b ) )
+        =>
+        do
+          let ( n , lt , p ) ← prove_lt_ge_fin a b
+            if lt then true_intro p else false_intro ( q( @ not_lt_of_ge ( Fin $ ( n ) ) _ ) . mk_app [ a , b , p ] )
+      |
+        q( $ ( a ) ≤ $ ( b ) )
+        =>
+        do
+          let ( n , lt , p ) ← prove_lt_ge_fin b a
+            if lt then false_intro ( q( @ not_le_of_gt ( Fin $ ( n ) ) _ ) . mk_app [ a , b , p ] ) else true_intro p
+      | q( $ ( a ) = $ ( b ) ) => do let ( n , Eq , p ) ← prove_eq_ne_fin a b if Eq then true_intro p else false_intro p
+      | q( $ ( a ) > $ ( b ) ) => mk_app ` ` LT.lt [ b , a ] >>= eval_ineq
+      | q( $ ( a ) ≥ $ ( b ) ) => mk_app ` ` LE.le [ b , a ] >>= eval_ineq
+      |
+        q( $ ( a ) ≠ $ ( b ) )
+        =>
+        do
+          let ( n , Eq , p ) ← prove_eq_ne_fin a b
+            if
+              Eq
+              then
+              false_intro q( not_not_intro ( $ ( p ) : ( $ ( a ) : Fin $ ( n ) ) = $ ( b ) ) )
+              else
+              true_intro p
+      | _ => failed
 #align tactic.norm_fin.eval_ineq tactic.norm_fin.eval_ineq
 
 /-- Evaluates `e : fin n` to a natural number less than `n`. Returns `none` if it is not a natural
@@ -569,14 +580,14 @@ unsafe def as_numeral (n e : expr) : eval_fin_m (Option ℕ) :=
   | none => pure none
   | some Ne => do
     let (nn, _) ← eval_fin_m.eval_n n
-    pure <| if Ne < nn then some Ne else none
+    pure $ if Ne < nn then some Ne else none
 #align tactic.norm_fin.as_numeral tactic.norm_fin.as_numeral
 
 /-- Given `a : fin n`, returns `(b, ⊢ a = b)` where `b` is a normalized fin numeral. Fails if `a`
 is already normalized. -/
 unsafe def eval_fin_num (a : expr) : tactic (expr × expr) := do
   let n ← get_fin_type a
-  eval_fin_m.run <| do
+  eval_fin_m.run $ do
       as_numeral n a >>= fun o => guardb o
       let (a', pa) ← eval_fin a
       let (a', pa) ← reduce_fin' ff n a (a', pa) <|> pure (a', pa)
@@ -585,15 +596,14 @@ unsafe def eval_fin_num (a : expr) : tactic (expr × expr) := do
       let m' ← eval_fin_m.lift_ic fun ic => ic nm
       let n' ← eval_fin_m.lift_ic fun ic => ic (nm + 1)
       let (b, pb) ← mk_fin_numeral n' m' a'
-      pure (b, (quote.1 @NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
+      pure (b, q(@NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
 #align tactic.norm_fin.eval_fin_num tactic.norm_fin.eval_fin_num
 
 end NormFin
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Rewrites occurrences of fin expressions to normal form anywhere in the goal.
 The `norm_num` extension will only rewrite fin expressions if they appear in equalities and
 inequalities. For example if the goal is `P (2 + 2 : fin 3)` then `norm_num` will not do anything

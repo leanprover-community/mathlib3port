@@ -83,7 +83,7 @@ variable {I : LieIdeal R L} {x : L} (hxI : (R ∙ x) ⊔ I = ⊤)
 
 include hxI
 
-theorem exists_smul_add_of_span_sup_eq_top (y : L) : ∃ t : R, ∃ z ∈ I, y = t • x + z := by
+theorem exists_smul_add_of_span_sup_eq_top (y : L) : ∃ (t : R) (z ∈ I), y = t • x + z := by
   have hy : y ∈ (⊤ : Submodule R L) := Submodule.mem_top
   simp only [← hxI, Submodule.mem_sup, Submodule.mem_span_singleton] at hy
   obtain ⟨-, ⟨t, rfl⟩, z, hz, rfl⟩ := hy
@@ -132,7 +132,7 @@ theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ} (hxn : toEndomo
     
 #align lie_submodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top LieSubmodule.lcs_le_lcs_of_is_nilpotent_span_sup_eq_top
 
-theorem is_nilpotent_of_is_nilpotent_span_sup_eq_top (hnp : IsNilpotent <| toEndomorphism R L M x)
+theorem is_nilpotent_of_is_nilpotent_span_sup_eq_top (hnp : IsNilpotent $ toEndomorphism R L M x)
     (hIM : IsNilpotent R I M) : IsNilpotent R L M := by
   obtain ⟨n, hn⟩ := hnp
   obtain ⟨k, hk⟩ := hIM
@@ -197,7 +197,7 @@ theorem LieEquiv.is_engelian_iff (e : L ≃ₗ⁅R⁆ L₂) :
 
 theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubalgebra R L}
     (hK₁ : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K) (hK₂ : K < K.normalizer) :
-    ∃ (K' : LieSubalgebra R L)(hK' : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K'), K < K' := by
+    ∃ (K' : LieSubalgebra R L) (hK' : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K'), K < K' := by
   obtain ⟨x, hx₁, hx₂⟩ := SetLike.exists_of_lt hK₂
   let K' : LieSubalgebra R L :=
     { (R ∙ x) ⊔ (K : Submodule R L) with lie_mem' := fun y z => LieSubalgebra.lie_mem_sup_of_mem_normalizer hx₁ }
@@ -273,7 +273,7 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
 #align lie_algebra.is_engelian_of_is_noetherian LieAlgebra.is_engelian_of_is_noetherian
 
 /-- Engel's theorem. -/
-theorem LieModule.is_nilpotent_iff_forall : LieModule.IsNilpotent R L M ↔ ∀ x, IsNilpotent <| toEndomorphism R L M x :=
+theorem LieModule.is_nilpotent_iff_forall : LieModule.IsNilpotent R L M ↔ ∀ x, IsNilpotent $ toEndomorphism R L M x :=
   ⟨by
     intro h
     obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
@@ -281,7 +281,7 @@ theorem LieModule.is_nilpotent_iff_forall : LieModule.IsNilpotent R L M ↔ ∀ 
 #align lie_module.is_nilpotent_iff_forall LieModule.is_nilpotent_iff_forall
 
 /-- Engel's theorem. -/
-theorem LieAlgebra.is_nilpotent_iff_forall : LieAlgebra.IsNilpotent R L ↔ ∀ x, IsNilpotent <| LieAlgebra.ad R L x :=
+theorem LieAlgebra.is_nilpotent_iff_forall : LieAlgebra.IsNilpotent R L ↔ ∀ x, IsNilpotent $ LieAlgebra.ad R L x :=
   LieModule.is_nilpotent_iff_forall
 #align lie_algebra.is_nilpotent_iff_forall LieAlgebra.is_nilpotent_iff_forall
 

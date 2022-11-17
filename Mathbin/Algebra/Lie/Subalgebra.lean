@@ -480,11 +480,11 @@ instance : HasInf (LieSubalgebra R L) :=
     { (K ⊓ K' : Submodule R L) with
       lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
 instance : HasInf (LieSubalgebra R L) :=
   ⟨fun S =>
     { inf
-        "./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
+        "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy => by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq, forall_apply_eq_imp_iff₂,
           exists_imp] at *
@@ -496,12 +496,12 @@ theorem inf_coe : (↑(K ⊓ K') : Set L) = K ∩ K' :=
   rfl
 #align lie_subalgebra.inf_coe LieSubalgebra.inf_coe
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑(inf S) : Submodule R L) =
       inf
-        "./././Mathport/Syntax/Translate/Expr.lean:368:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
 #align lie_subalgebra.Inf_coe_to_submodule LieSubalgebra.Inf_coe_to_submodule
 
@@ -743,7 +743,7 @@ theorem span_empty : lieSpan R L (∅ : Set L) = ⊥ :=
 
 @[simp]
 theorem span_univ : lieSpan R L (Set.univ : Set L) = ⊤ :=
-  eq_top_iff.2 <| SetLike.le_def.2 <| subset_lie_span
+  eq_top_iff.2 $ SetLike.le_def.2 $ subset_lie_span
 #align lie_subalgebra.span_univ LieSubalgebra.span_univ
 
 variable {L}
@@ -770,7 +770,7 @@ variable [CommRing R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlge
 
 /-- An injective Lie algebra morphism is an equivalence onto its range. -/
 noncomputable def ofInjective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
-  { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) <| by rwa [LieHom.coe_to_linear_map] with
+  { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) $ by rwa [LieHom.coe_to_linear_map] with
     map_lie' := fun x y => by
       apply SetCoe.ext
       simpa }
@@ -808,7 +808,7 @@ def lieSubalgebraMap : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂
   { LinearEquiv.submoduleMap (e : L₁ ≃ₗ[R] L₂) ↑L₁'' with
     map_lie' := fun x y => by
       apply SetCoe.ext
-      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) ↑x ↑y }
+      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) (↑x) ↑y }
 #align lie_equiv.lie_subalgebra_map LieEquiv.lieSubalgebraMap
 
 @[simp]
@@ -825,7 +825,7 @@ def ofSubalgebras (h : L₁'.map ↑e = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
         rfl) with
     map_lie' := fun x y => by
       apply SetCoe.ext
-      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) ↑x ↑y }
+      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) (↑x) ↑y }
 #align lie_equiv.of_subalgebras LieEquiv.ofSubalgebras
 
 @[simp]

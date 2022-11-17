@@ -81,7 +81,7 @@ theorem to_fun_linear_tmul_apply (a : A) (p : R[X]) : toFunLinear R A (a ⊗ₜ[
 
 -- We apparently need to provide the decidable instance here
 -- in order to successfully rewrite by this lemma.
-theorem to_fun_linear_mul_tmul_mul_aux_1 (p : R[X]) (k : ℕ) (h : Decidable ¬p.coeff k = 0) (a : A) :
+theorem to_fun_linear_mul_tmul_mul_aux_1 (p : R[X]) (k : ℕ) (h : Decidable (¬p.coeff k = 0)) (a : A) :
     ite (¬coeff p k = 0) (a * (algebraMap R A) (coeff p k)) 0 = a * (algebraMap R A) (coeff p k) := by
   classical split_ifs <;> simp [*]
 #align poly_equiv_tensor.to_fun_linear_mul_tmul_mul_aux_1 PolyEquivTensor.to_fun_linear_mul_tmul_mul_aux_1
@@ -98,12 +98,16 @@ theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : 
 
 theorem to_fun_linear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     (toFunLinear R A) ((a₁ * a₂) ⊗ₜ[R] (p₁ * p₂)) = (toFunLinear R A) (a₁ ⊗ₜ[R] p₁) * (toFunLinear R A) (a₂ ⊗ₜ[R] p₂) :=
-  by
-  classical simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
-    simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
-    simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite, mul_zero, ite_mul,
-      zero_mul]
-    simp_rw [ite_mul_zero_right (¬coeff p₂ _ = 0) _ (_ * _)]
+  by classical
+  simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
+  ext k
+  simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
+  conv_rhs => rw [coeff_mul]
+  simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite, mul_zero, ite_mul,
+    zero_mul]
+  simp_rw [ite_mul_zero_left (¬coeff p₁ _ = 0) (a₁ * (algebraMap R A) (coeff p₁ _))]
+  simp_rw [ite_mul_zero_right (¬coeff p₂ _ = 0) _ (_ * _)]
+  simp_rw [to_fun_linear_mul_tmul_mul_aux_1, to_fun_linear_mul_tmul_mul_aux_2]
 #align poly_equiv_tensor.to_fun_linear_mul_tmul_mul PolyEquivTensor.to_fun_linear_mul_tmul_mul
 
 theorem to_fun_linear_algebra_map_tmul_one (r : R) :
@@ -230,7 +234,7 @@ noncomputable def matPolyEquiv : Matrix n n R[X] ≃ₐ[R] (Matrix n n R)[X] :=
 open Finset
 
 theorem mat_poly_equiv_coeff_apply_aux_1 (i j : n) (k : ℕ) (x : R) :
-    matPolyEquiv (stdBasisMatrix i j <| monomial k x) = monomial k (stdBasisMatrix i j x) := by
+    matPolyEquiv (stdBasisMatrix i j $ monomial k x) = monomial k (stdBasisMatrix i j x) := by
   simp only [matPolyEquiv, AlgEquiv.trans_apply, matrix_equiv_tensor_apply_std_basis]
   apply (polyEquivTensor R (Matrix n n R)).Injective
   simp only [AlgEquiv.apply_symm_apply]

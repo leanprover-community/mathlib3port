@@ -36,7 +36,7 @@ def UnitDisc : Type :=
 #align complex.unit_disc Complex.UnitDisc
 
 -- mathport name: expr𝔻
-localized [UnitDisc] notation "𝔻" => Complex.UnitDisc
+scoped[UnitDisc] notation "𝔻" => Complex.UnitDisc
 
 namespace UnitDisc
 
@@ -57,11 +57,11 @@ theorem norm_sq_lt_one (z : 𝔻) : normSq z < 1 :=
 #align complex.unit_disc.norm_sq_lt_one Complex.UnitDisc.norm_sq_lt_one
 
 theorem coe_ne_one (z : 𝔻) : (z : ℂ) ≠ 1 :=
-  ne_of_apply_ne abs <| (map_one abs).symm ▸ z.abs_ne_one
+  ne_of_apply_ne abs $ (map_one abs).symm ▸ z.abs_ne_one
 #align complex.unit_disc.coe_ne_one Complex.UnitDisc.coe_ne_one
 
 theorem coe_ne_neg_one (z : 𝔻) : (z : ℂ) ≠ -1 :=
-  ne_of_apply_ne abs <| by
+  ne_of_apply_ne abs $ by
     rw [abs.map_neg, map_one]
     exact z.abs_ne_one
 #align complex.unit_disc.coe_ne_neg_one Complex.UnitDisc.coe_ne_neg_one
@@ -97,8 +97,8 @@ theorem mk_neg (z : ℂ) (hz : abs (-z) < 1) : mk (-z) hz = -mk z (abs.map_neg z
 #align complex.unit_disc.mk_neg Complex.UnitDisc.mk_neg
 
 instance : SemigroupWithZero 𝔻 :=
-  { UnitDisc.commSemigroup with zero := mk 0 <| (map_zero _).trans_lt one_pos,
-    zero_mul := fun z => coe_injective <| zero_mul _, mul_zero := fun z => coe_injective <| mul_zero _ }
+  { UnitDisc.commSemigroup with zero := mk 0 $ (map_zero _).trans_lt one_pos,
+    zero_mul := fun z => coe_injective $ zero_mul _, mul_zero := fun z => coe_injective $ mul_zero _ }
 
 @[simp]
 theorem coe_zero : ((0 : 𝔻) : ℂ) = 0 :=
@@ -152,7 +152,7 @@ instance is_scalar_tower_closed_ball : IsScalarTower (closedBall (0 : ℂ) 1) �
 #align complex.unit_disc.is_scalar_tower_closed_ball Complex.UnitDisc.is_scalar_tower_closed_ball
 
 instance smul_comm_class_closed_ball : SmulCommClass (closedBall (0 : ℂ) 1) 𝔻 𝔻 :=
-  ⟨fun a b c => Subtype.ext <| mul_left_comm _ _ _⟩
+  ⟨fun a b c => Subtype.ext $ mul_left_comm _ _ _⟩
 #align complex.unit_disc.smul_comm_class_closed_ball Complex.UnitDisc.smul_comm_class_closed_ball
 
 instance smul_comm_class_closed_ball' : SmulCommClass 𝔻 (closedBall (0 : ℂ) 1) 𝔻 :=
@@ -204,7 +204,7 @@ theorem im_neg (z : 𝔻) : (-z).im = -z.im :=
 
 /-- Conjugate point of the unit disc. -/
 def conj (z : 𝔻) : 𝔻 :=
-  mk (conj' ↑z) <| (abs_conj z).symm ▸ z.abs_lt_one
+  mk (conj' ↑z) $ (abs_conj z).symm ▸ z.abs_lt_one
 #align complex.unit_disc.conj Complex.UnitDisc.conj
 
 @[simp, norm_cast]
@@ -219,7 +219,7 @@ theorem conj_zero : conj 0 = 0 :=
 
 @[simp]
 theorem conj_conj (z : 𝔻) : conj (conj z) = z :=
-  coe_injective <| Complex.conj_conj z
+  coe_injective $ Complex.conj_conj z
 #align complex.unit_disc.conj_conj Complex.UnitDisc.conj_conj
 
 @[simp]
@@ -239,7 +239,7 @@ theorem im_conj (z : 𝔻) : z.conj.im = -z.im :=
 
 @[simp]
 theorem conj_mul (z w : 𝔻) : (z * w).conj = z.conj * w.conj :=
-  Subtype.ext <| map_mul _ _ _
+  Subtype.ext $ map_mul _ _ _
 #align complex.unit_disc.conj_mul Complex.UnitDisc.conj_mul
 
 end UnitDisc

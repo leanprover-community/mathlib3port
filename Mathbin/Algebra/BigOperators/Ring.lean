@@ -240,7 +240,7 @@ variable {R : Type _} [CommRing R]
 theorem prod_range_cast_nat_sub (n k : ℕ) : (∏ i in range k, (n - i : R)) = (∏ i in range k, n - i : ℕ) := by
   rw [prod_nat_cast]
   cases' le_or_lt k n with hkn hnk
-  · exact prod_congr rfl fun i hi => (Nat.cast_sub <| (mem_range.1 hi).le.trans hkn).symm
+  · exact prod_congr rfl fun i hi => (Nat.cast_sub $ (mem_range.1 hi).le.trans hkn).symm
     
   · rw [← mem_range] at hnk
     rw [prod_eq_zero hnk, prod_eq_zero hnk] <;> simp
@@ -273,10 +273,13 @@ theorem prod_powerset_insert [DecidableEq α] [CommMonoid β] {s : Finset α} {x
 @[to_additive
       "A sum over `powerset s` is equal to the double sum over sets of subsets of `s` with\n`card s = k`, for `k = 1, ..., card s`"]
 theorem prod_powerset [CommMonoid β] (s : Finset α) (f : Finset α → β) :
-    (∏ t in powerset s, f t) = ∏ j in range (card s + 1), ∏ t in powersetLen j s, f t := by
-  classical rw [powerset_card_bUnion, prod_bUnion]
-    rw [Function.onFun, powerset_len_eq_filter, powerset_len_eq_filter, disjoint_filter]
-    apply hij
+    (∏ t in powerset s, f t) = ∏ j in range (card s + 1), ∏ t in powersetLen j s, f t := by classical
+  rw [powerset_card_bUnion, prod_bUnion]
+  intro i hi j hj hij
+  rw [Function.onFun, powerset_len_eq_filter, powerset_len_eq_filter, disjoint_filter]
+  intro x hx hc hnc
+  apply hij
+  rwa [← hc]
 #align finset.prod_powerset Finset.prod_powerset
 
 theorem sum_range_succ_mul_sum_range_succ [NonUnitalNonAssocSemiring β] (n k : ℕ) (f g : ℕ → β) :

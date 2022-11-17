@@ -27,7 +27,7 @@ variable {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
 /-- The kernel cone induced by the concrete kernel. -/
 def kernelCone : KernelFork f :=
-  KernelFork.ofι (asHom f.ker.Subtype) <| by tidy
+  KernelFork.ofι (asHom f.ker.Subtype) $ by tidy
 #align Module.kernel_cone ModuleCat.kernelCone
 
 /-- The kernel of a linear map is a kernel in the categorical sense. -/
@@ -35,23 +35,23 @@ def kernelIsLimit : IsLimit (kernelCone f) :=
   Fork.IsLimit.mk _
     (fun s =>
       LinearMap.codRestrict f.ker (Fork.ι s) fun c =>
-        LinearMap.mem_ker.2 <| by
+        LinearMap.mem_ker.2 $ by
           rw [← @Function.comp_apply _ _ _ f (fork.ι s) c, ← coe_comp, fork.condition,
             has_zero_morphisms.comp_zero (fork.ι s) N]
           rfl)
     (fun s => LinearMap.subtype_comp_cod_restrict _ _ _) fun s m h =>
-    LinearMap.ext fun x => Subtype.ext_iff_val.2 (by simpa [← h] )
+    LinearMap.ext $ fun x => Subtype.ext_iff_val.2 (by simpa [← h] )
 #align Module.kernel_is_limit ModuleCat.kernelIsLimit
 
 /-- The cokernel cocone induced by the projection onto the quotient. -/
 def cokernelCocone : CokernelCofork f :=
-  CokernelCofork.ofπ (asHom f.range.mkq) <| LinearMap.range_mkq_comp _
+  CokernelCofork.ofπ (asHom f.range.mkq) $ LinearMap.range_mkq_comp _
 #align Module.cokernel_cocone ModuleCat.cokernelCocone
 
 /-- The projection onto the quotient is a cokernel in the categorical sense. -/
 def cokernelIsColimit : IsColimit (cokernelCocone f) :=
   Cofork.IsColimit.mk _
-    (fun s => f.range.liftq (Cofork.π s) <| LinearMap.range_le_ker_iff.2 <| CokernelCofork.condition s)
+    (fun s => f.range.liftq (Cofork.π s) $ LinearMap.range_le_ker_iff.2 $ CokernelCofork.condition s)
     (fun s => f.range.liftq_mkq (Cofork.π s) _) fun s m h => by
     haveI : epi (as_hom f.range.mkq) := (epi_iff_range_eq_top _).mpr (Submodule.range_mkq _)
     apply (cancel_epi (as_hom f.range.mkq)).1

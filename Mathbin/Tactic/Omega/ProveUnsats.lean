@@ -18,7 +18,7 @@ open Tactic
 /-- Return expr of proof that given int is negative -/
 unsafe def prove_neg : Int → tactic expr
   | Int.ofNat _ => failed
-  | -[m+1] => return (quote.1 (Int.neg_succ_lt_zero (%%ₓquote.1 m)))
+  | -[1+ m] => return q(Int.negSucc_lt_zero $(q(m)))
 #align omega.prove_neg omega.prove_neg
 
 theorem forall_mem_repeat_zero_eq_zero (m : Nat) : ∀ x ∈ List.repeat (0 : Int) m, x = (0 : Int) := fun x =>
@@ -27,7 +27,7 @@ theorem forall_mem_repeat_zero_eq_zero (m : Nat) : ∀ x ∈ List.repeat (0 : In
 
 /-- Return expr of proof that elements of (repeat 0 is.length) are all 0 -/
 unsafe def prove_forall_mem_eq_zero (is : List Int) : tactic expr :=
-  return (quote.1 (forall_mem_repeat_zero_eq_zero is.length))
+  return q(forall_mem_repeat_zero_eq_zero is.length)
 #align omega.prove_forall_mem_eq_zero omega.prove_forall_mem_eq_zero
 
 /-- Return expr of proof that the combination of linear constraints
@@ -37,7 +37,7 @@ unsafe def prove_unsat_lin_comb (ks : List Nat) (ts : List Term) : tactic expr :
   do
   let x1 ← prove_neg b
   let x2 ← prove_forall_mem_eq_zero as
-  to_expr (pquote.1 (unsat_lin_comb_of (%%ₓquote.1 ks) (%%ₓquote.1 ts) (%%ₓx1) (%%ₓx2)))
+  to_expr ``(unsat_lin_comb_of $(q(ks)) $(q(ts)) $(x1) $(x2))
 #align omega.prove_unsat_lin_comb omega.prove_unsat_lin_comb
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -47,24 +47,24 @@ unsafe def prove_unsat_ef : Clause → tactic expr
   | ([], les) => do
     let ks ← find_scalars les
     let x ← prove_unsat_lin_comb ks les
-    return (quote.1 (unsat_of_unsat_lin_comb (%%ₓquote.1 ks) (%%ₓquote.1 les) (%%ₓx)))
+    return q(unsat_of_unsat_lin_comb $(q(ks)) $(q(les)) $(x))
 #align omega.prove_unsat_ef omega.prove_unsat_ef
 
 /-- Given a (c : clause), return the expr of a term (t : clause.unsat c)  -/
 unsafe def prove_unsat (c : Clause) : tactic expr := do
   let ee ← find_ees c
   let x ← prove_unsat_ef (eqElim ee c)
-  return (quote.1 (unsat_of_unsat_eq_elim (%%ₓquote.1 ee) (%%ₓquote.1 c) (%%ₓx)))
+  return q(unsat_of_unsat_eq_elim $(q(ee)) $(q(c)) $(x))
 #align omega.prove_unsat omega.prove_unsat
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a (cs : list clause), return the expr of a term (t : clauses.unsat cs)  -/
 unsafe def prove_unsats : List Clause → tactic expr
-  | [] => return (quote.1 Clauses.unsat_nil)
+  | [] => return q(Clauses.unsat_nil)
   | p::ps => do
     let x ← prove_unsat p
     let xs ← prove_unsats ps
-    to_expr (pquote.1 (Clauses.unsat_cons (%%ₓquote.1 p) (%%ₓquote.1 ps) (%%ₓx) (%%ₓxs)))
+    to_expr ``(Clauses.unsat_cons $(q(p)) $(q(ps)) $(x) $(xs))
 #align omega.prove_unsats omega.prove_unsats
 
 end Omega

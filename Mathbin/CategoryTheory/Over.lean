@@ -141,7 +141,7 @@ def forgetCocone (X : T) : Limits.Cocone (forget X) :=
 See <https://stacks.math.columbia.edu/tag/001G>.
 -/
 def map {Y : T} (f : X ⟶ Y) : Over X ⥤ Over Y :=
-  Comma.mapRight _ <| Discrete.natTrans fun _ => f
+  Comma.mapRight _ $ Discrete.natTrans fun _ => f
 #align category_theory.over.map CategoryTheory.Over.map
 
 section
@@ -280,7 +280,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 /-- A functor `F : T ⥤ D` induces a functor `over X ⥤ over (F.obj X)` in the obvious way. -/
 @[simps]
 def post (F : T ⥤ D) : Over X ⥤ Over (F.obj X) where
-  obj Y := mk <| F.map Y.Hom
+  obj Y := mk $ F.map Y.Hom
   map Y₁ Y₂ f := { left := F.map f.left, w' := by tidy <;> erw [← F.map_comp, w] }
 #align category_theory.over.post CategoryTheory.Over.post
 
@@ -386,7 +386,7 @@ def forgetCone (X : T) : Limits.Cone (forget X) :=
 
 /-- A morphism `X ⟶ Y` induces a functor `under Y ⥤ under X` in the obvious way. -/
 def map {Y : T} (f : X ⟶ Y) : Under Y ⥤ Under X :=
-  Comma.mapLeft _ <| Discrete.natTrans fun _ => f
+  Comma.mapLeft _ $ Discrete.natTrans fun _ => f
 #align category_theory.under.map CategoryTheory.Under.map
 
 section
@@ -474,7 +474,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 /-- A functor `F : T ⥤ D` induces a functor `under X ⥤ under (F.obj X)` in the obvious way. -/
 @[simps]
 def post {X : T} (F : T ⥤ D) : Under X ⥤ Under (F.obj X) where
-  obj Y := mk <| F.map Y.Hom
+  obj Y := mk $ F.map Y.Hom
   map Y₁ Y₂ f := { right := F.map f.right, w' := by tidy <;> erw [← F.map_comp, w] }
 #align category_theory.under.post CategoryTheory.Under.post
 

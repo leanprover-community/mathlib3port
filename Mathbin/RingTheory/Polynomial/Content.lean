@@ -354,31 +354,56 @@ theorem content_mul_aux {p q : R[X]} :
 #align polynomial.content_mul_aux Polynomial.content_mul_aux
 
 @[simp]
-theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by
-  classical suffices h : ∀ (n : ℕ) (p q : R[X]), (p * q).degree < n → (p * q).content = p.content * q.content
-    intro n
-    · intro p q hpq
-      rw [WithBot.coe_zero, Nat.WithBot.lt_zero_iff, degree_eq_bot, mul_eq_zero] at hpq
-      rcases hpq with (rfl | rfl) <;> simp
+theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by classical
+  suffices h : ∀ (n : ℕ) (p q : R[X]), (p * q).degree < n → (p * q).content = p.content * q.content
+  · apply h
+    apply lt_of_le_of_lt degree_le_nat_degree (WithBot.coe_lt_coe.2 (Nat.lt_succ_self _))
+    
+  intro n
+  induction' n with n ih
+  · intro p q hpq
+    rw [WithBot.coe_zero, Nat.WithBot.lt_zero_iff, degree_eq_bot, mul_eq_zero] at hpq
+    rcases hpq with (rfl | rfl) <;> simp
+    
+  intro p q hpq
+  by_cases p0:p = 0
+  · simp [p0]
+    
+  by_cases q0:q = 0
+  · simp [q0]
+    
+  rw [degree_eq_nat_degree (mul_ne_zero p0 q0), WithBot.coe_lt_coe, Nat.lt_succ_iff_lt_or_eq, ← WithBot.coe_lt_coe, ←
+    degree_eq_nat_degree (mul_ne_zero p0 q0), nat_degree_mul p0 q0] at hpq
+  rcases hpq with (hlt | heq)
+  · apply ih _ _ hlt
+    
+  rw [← p.nat_degree_prim_part, ← q.nat_degree_prim_part, ← WithBot.coe_eq_coe, WithBot.coe_add, ←
+    degree_eq_nat_degree p.prim_part_ne_zero, ← degree_eq_nat_degree q.prim_part_ne_zero] at heq
+  rw [p.eq_C_content_mul_prim_part, q.eq_C_content_mul_prim_part]
+  suffices h : (q.prim_part * p.prim_part).content = 1
+  · rw [mul_assoc, content_C_mul, content_C_mul, mul_comm p.prim_part, mul_assoc, content_C_mul, content_C_mul, h,
+      mul_one, content_prim_part, content_prim_part, mul_one, mul_one]
+    
+  rw [← normalize_content, normalize_eq_one, is_unit_iff_dvd_one, content_eq_gcd_leading_coeff_content_erase_lead,
+    leading_coeff_mul, gcd_comm]
+  apply (gcd_mul_dvd_mul_gcd _ _ _).trans
+  rw [content_mul_aux, ih, content_prim_part, mul_one, gcd_comm, ← content_eq_gcd_leading_coeff_content_erase_lead,
+    content_prim_part, one_mul, mul_comm q.prim_part, content_mul_aux, ih, content_prim_part, mul_one, gcd_comm, ←
+    content_eq_gcd_leading_coeff_content_erase_lead, content_prim_part]
+  · rw [← HEq, degree_mul, WithBot.add_lt_add_iff_right]
+    · apply degree_erase_lt p.prim_part_ne_zero
       
-    by_cases p0:p = 0
-    by_cases q0:q = 0
-    rw [degree_eq_nat_degree (mul_ne_zero p0 q0), WithBot.coe_lt_coe, Nat.lt_succ_iff_lt_or_eq, ← WithBot.coe_lt_coe, ←
-      degree_eq_nat_degree (mul_ne_zero p0 q0), nat_degree_mul p0 q0] at hpq
-    · apply ih _ _ hlt
+    · rw [Ne.def, degree_eq_bot]
+      apply q.prim_part_ne_zero
       
-    rw [p.eq_C_content_mul_prim_part, q.eq_C_content_mul_prim_part]
-    · rw [mul_assoc, content_C_mul, content_C_mul, mul_comm p.prim_part, mul_assoc, content_C_mul, content_C_mul, h,
-        mul_one, content_prim_part, content_prim_part, mul_one, mul_one]
+    
+  · rw [mul_comm, ← HEq, degree_mul, WithBot.add_lt_add_iff_left]
+    · apply degree_erase_lt q.prim_part_ne_zero
       
-    apply (gcd_mul_dvd_mul_gcd _ _ _).trans
-    · rw [← HEq, degree_mul, WithBot.add_lt_add_iff_right]
-      · apply degree_erase_lt p.prim_part_ne_zero
-        
-      · rw [Ne.def, degree_eq_bot]
-        apply q.prim_part_ne_zero
-        
+    · rw [Ne.def, degree_eq_bot]
+      apply p.prim_part_ne_zero
       
+    
 #align polynomial.content_mul Polynomial.content_mul
 
 theorem IsPrimitive.mul {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) : (p * q).IsPrimitive := by
@@ -409,26 +434,44 @@ theorem IsPrimitive.dvd_prim_part_iff_dvd {p q : R[X]} (hp : p.IsPrimitive) (hq 
 #align polynomial.is_primitive.dvd_prim_part_iff_dvd Polynomial.IsPrimitive.dvd_prim_part_iff_dvd
 
 theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
-    ∃ r : R[X], r.IsPrimitive ∧ ∀ s : R[X], p ∣ s ∧ q ∣ s ↔ r ∣ s := by
-  classical have h : ∃ (n : ℕ)(r : R[X]), r.natDegree = n ∧ r.IsPrimitive ∧ p ∣ r ∧ q ∣ r :=
-      ⟨(p * q).natDegree, p * q, rfl, hp.mul hq, dvd_mul_right _ _, dvd_mul_left _ _⟩
-    refine' ⟨r, rprim, fun s => ⟨_, fun rs => ⟨pr.trans rs, qr.trans rs⟩⟩⟩
-    · apply hs s.nat_degree s rfl
-      
-    by_contra' con
-    have s0 : s ≠ 0
-    have hs :=
-      Nat.find_min' h
-        ⟨_, s.nat_degree_prim_part, s.is_primitive_prim_part, (hp.dvd_prim_part_iff_dvd s0).2 ps,
-          (hq.dvd_prim_part_iff_dvd s0).2 qs⟩
-    by_cases sC:s.nat_degree ≤ 0
-    have hcancel := nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree hs (lt_of_not_ge sC)
-    apply Nat.find_min Con hcancel
-    rw [← rprim.dvd_prim_part_iff_dvd s0]
-    have h := dvd_add rcs (Dvd.intro_left _ rfl)
-    rw [Ne.def, ← leading_coeff_eq_zero, ← C_eq_zero] at hC0
-    rcases is_unit_prim_part_C r.leading_coeff with ⟨u, hu⟩
-    rw [prim_part_mul (mul_ne_zero hC0 s0), hu, mul_comm]
+    ∃ r : R[X], r.IsPrimitive ∧ ∀ s : R[X], p ∣ s ∧ q ∣ s ↔ r ∣ s := by classical
+  have h : ∃ (n : ℕ) (r : R[X]), r.natDegree = n ∧ r.IsPrimitive ∧ p ∣ r ∧ q ∣ r :=
+    ⟨(p * q).natDegree, p * q, rfl, hp.mul hq, dvd_mul_right _ _, dvd_mul_left _ _⟩
+  rcases Nat.find_spec h with ⟨r, rdeg, rprim, pr, qr⟩
+  refine' ⟨r, rprim, fun s => ⟨_, fun rs => ⟨pr.trans rs, qr.trans rs⟩⟩⟩
+  suffices hs : ∀ (n : ℕ) (s : R[X]), s.natDegree = n → p ∣ s ∧ q ∣ s → r ∣ s
+  · apply hs s.nat_degree s rfl
+    
+  clear s
+  by_contra' con
+  rcases Nat.find_spec Con with ⟨s, sdeg, ⟨ps, qs⟩, rs⟩
+  have s0 : s ≠ 0 := by
+    contrapose! rs
+    simp [rs]
+  have hs :=
+    Nat.find_min' h
+      ⟨_, s.nat_degree_prim_part, s.is_primitive_prim_part, (hp.dvd_prim_part_iff_dvd s0).2 ps,
+        (hq.dvd_prim_part_iff_dvd s0).2 qs⟩
+  rw [← rdeg] at hs
+  by_cases sC:s.nat_degree ≤ 0
+  · rw [eq_C_of_nat_degree_le_zero (le_trans hs sC), is_primitive_iff_content_eq_one, content_C, normalize_eq_one] at
+      rprim
+    rw [eq_C_of_nat_degree_le_zero (le_trans hs sC), ← dvd_content_iff_C_dvd] at rs
+    apply rs rprim.dvd
+    
+  have hcancel := nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree hs (lt_of_not_ge sC)
+  rw [sdeg] at hcancel
+  apply Nat.find_min Con hcancel
+  refine' ⟨_, rfl, ⟨dvd_cancel_leads_of_dvd_of_dvd pr ps, dvd_cancel_leads_of_dvd_of_dvd qr qs⟩, fun rcs => rs _⟩
+  rw [← rprim.dvd_prim_part_iff_dvd s0]
+  rw [cancel_leads, tsub_eq_zero_iff_le.mpr hs, pow_zero, mul_one] at rcs
+  have h := dvd_add rcs (Dvd.intro_left _ rfl)
+  have hC0 := rprim.ne_zero
+  rw [Ne.def, ← leading_coeff_eq_zero, ← C_eq_zero] at hC0
+  rw [sub_add_cancel, ← rprim.dvd_prim_part_iff_dvd (mul_ne_zero hC0 s0)] at h
+  rcases is_unit_prim_part_C r.leading_coeff with ⟨u, hu⟩
+  apply h.trans (Associated.symm ⟨u, _⟩).Dvd
+  rw [prim_part_mul (mul_ne_zero hC0 s0), hu, mul_comm]
 #align polynomial.exists_primitive_lcm_of_is_primitive Polynomial.exists_primitive_lcm_of_is_primitive
 
 theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : R[X]} (hq : q ≠ 0) :
@@ -445,7 +488,7 @@ theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : R[X]} (hq
   polynomial.dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part Polynomial.dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part
 
 instance (priority := 100) normalizedGcdMonoid : NormalizedGcdMonoid R[X] :=
-  normalizedGcdMonoidOfExistsLcm fun p q => by
+  normalizedGcdMonoidOfExistsLcm $ fun p q => by
     rcases exists_primitive_lcm_of_is_primitive p.is_primitive_prim_part q.is_primitive_prim_part with ⟨r, rprim, hr⟩
     refine' ⟨C (lcm p.content q.content) * r, fun s => _⟩
     by_cases hs:s = 0

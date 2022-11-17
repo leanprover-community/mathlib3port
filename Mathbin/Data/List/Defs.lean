@@ -25,7 +25,7 @@ universe u v w x
 
 variable {α β γ δ ε ζ : Type _}
 
-instance [DecidableEq α] : Sdiff (List α) :=
+instance [DecidableEq α] : SDiff (List α) :=
   ⟨List.diff'⟩
 
 #print List.splitAt /-
@@ -261,12 +261,12 @@ def alternatingProd {G : Type _} [One G] [Mul G] [Inv G] : List G → G
   whilst partitioning the result it into a pair of lists, `list β × list γ`,
   partitioning the `sum.inl _` into the left list, and the `sum.inr _` into the right list.
   `partition_map (id : ℕ ⊕ ℕ → ℕ ⊕ ℕ) [inl 0, inr 1, inl 2] = ([0,2], [1])`    -/
-def partitionMap (f : α → Sum β γ) : List α → List β × List γ
+def partitionMap (f : α → β ⊕ γ) : List α → List β × List γ
   | [] => ([], [])
   | x :: xs =>
     match f x with
-    | Sum.inr r => Prod.map id (cons r) <| partition_map xs
-    | Sum.inl l => Prod.map (cons l) id <| partition_map xs
+    | Sum.inr r => Prod.map id (cons r) $ partition_map xs
+    | Sum.inl l => Prod.map (cons l) id $ partition_map xs
 #align list.partition_map List.partitionMap
 -/
 
@@ -280,7 +280,7 @@ def find (p : α → Prop) [DecidablePred p] : List α → Option α
 /-- `mfind tac l` returns the first element of `l` on which `tac` succeeds, and
 fails otherwise. -/
 def mfind {α} {m : Type u → Type v} [Monad m] [Alternative m] (tac : α → m PUnit) : List α → m α :=
-  List.firstM fun a => tac a $> a
+  List.firstM $ fun a => tac a $> a
 #align list.mfind List.mfind
 
 /-- `mbfind' p l` returns the first element `a` of `l` for which `p a` returns
@@ -505,10 +505,11 @@ def IsSuffix (l₁ : List α) (l₂ : List α) : Prop :=
   ∃ t, t ++ l₁ = l₂
 #align list.is_suffix List.IsSuffix
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (s t) -/
 /-- `is_infix l₁ l₂`, or `l₁ <:+: l₂`, means that `l₁` is a contiguous
   substring of `l₂`, that is, `l₂` has the form `s ++ l₁ ++ t` for some `s, t`. -/
 def IsInfix (l₁ : List α) (l₂ : List α) : Prop :=
-  ∃ s t, s ++ l₁ ++ t = l₂
+  ∃ (s) (t), s ++ l₁ ++ t = l₂
 #align list.is_infix List.IsInfix
 
 -- mathport name: «expr <+: »
@@ -633,7 +634,7 @@ def transpose : List (List α) → List (List α)
   `L₁`, whose second element comes from `L₂`, and so on. -/
 def sections : List (List α) → List (List α)
   | [] => [[]]
-  | l :: L => (bind (sections L)) fun s => map (fun a => a :: s) l
+  | l :: L => bind (sections L) $ fun s => map (fun a => a :: s) l
 #align list.sections List.sections
 -/
 
@@ -655,7 +656,7 @@ def permutationsAux2 (t : α) (ts : List α) (r : List β) : List α → (List �
     (y :: us, f (t :: y :: us) :: zs)
 #align list.permutations_aux2 List.permutationsAux2
 
-private def meas : (Σ'_ : List α, List α) → ℕ × ℕ
+private def meas : (Σ' _ : List α, List α) → ℕ × ℕ
   | ⟨l, i⟩ => (length l + length i, length l)
 #align list.meas list.meas
 
@@ -725,7 +726,7 @@ but are equal up to permutation, as shown by `list.permutations_perm_permutation
 @[simp]
 def permutations' : List α → List (List α)
   | [] => [[]]
-  | t :: ts => (permutations' ts).bind <| permutations'Aux t
+  | t :: ts => (permutations' ts).bind $ permutations'Aux t
 #align list.permutations' List.permutations'
 
 end Permutations
@@ -763,7 +764,7 @@ def revzip (l : List α) : List (α × α) :=
 
      product [1, 2] [5, 6] = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
 def product (l₁ : List α) (l₂ : List β) : List (α × β) :=
-  l₁.bind fun a => l₂.map <| Prod.mk a
+  l₁.bind $ fun a => l₂.map $ Prod.mk a
 #align list.product List.product
 -/
 
@@ -776,8 +777,8 @@ infixr:82
 /-- `sigma l₁ l₂` is the list of dependent pairs `(a, b)` where `a ∈ l₁` and `b ∈ l₂ a`.
 
      sigma [1, 2] (λ_, [(5 : ℕ), 6]) = [(1, 5), (1, 6), (2, 5), (2, 6)] -/
-protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σa, σ a) :=
-  l₁.bind fun a => (l₂ a).map <| Sigma.mk a
+protected def sigma {σ : α → Type _} (l₁ : List α) (l₂ : ∀ a, List (σ a)) : List (Σ a, σ a) :=
+  l₁.bind $ fun a => (l₂ a).map $ Sigma.mk a
 #align list.sigma List.sigma
 -/
 
@@ -1011,7 +1012,7 @@ def chooseX : ∀ l : List α, ∀ hp : ∃ a, a ∈ l ∧ p a, { a // a ∈ l �
   | l :: ls, hp =>
     if pl : p l then ⟨l, ⟨Or.inl rfl, pl⟩⟩
     else
-      let ⟨a, ⟨a_mem_ls, pa⟩⟩ := choose_x ls (hp.imp fun b ⟨o, h₂⟩ => ⟨o.resolve_left fun e => pl <| e ▸ h₂, h₂⟩)
+      let ⟨a, ⟨a_mem_ls, pa⟩⟩ := choose_x ls (hp.imp fun b ⟨o, h₂⟩ => ⟨o.resolve_left fun e => pl $ e ▸ h₂, h₂⟩)
       ⟨a, ⟨Or.inr a_mem_ls, pa⟩⟩
 #align list.choose_x List.chooseX
 
@@ -1036,7 +1037,7 @@ def mmapFilter {m : Type → Type v} [Monad m] {α β} (f : α → m (Option β)
   | h :: t => do
     let b ← f h
     let t' ← t.mmapFilter
-    return <|
+    return $
         match b with
         | none => t'
         | some x => x :: t'
@@ -1061,7 +1062,7 @@ def mmapUpperTriangle {m} [Monad m] {α β : Type u} (f : α → α → m β) : 
     let v ← f h h
     let l ← t.mmap (f h)
     let t ← t.mmapUpperTriangle
-    return <| v :: l ++ t
+    return $ v :: l ++ t
 #align list.mmap_upper_triangle List.mmapUpperTriangle
 
 /- warning: list.mmap'_diag -> List.mmap'Diag is a dubious translation:
@@ -1079,7 +1080,7 @@ Example: suppose `l = [1, 2, 3]`. `mmap'_diag f l` will evaluate, in this order,
 -/
 def mmap'Diag {m} [Monad m] {α} (f : α → α → m Unit) : List α → m Unit
   | [] => return ()
-  | h :: t => (f h h >> t.mmap' (f h)) >> t.mmap'Diag
+  | h :: t => f h h >> t.mmap' (f h) >> t.mmap'Diag
 #align list.mmap'_diag List.mmap'Diag
 
 /- warning: list.traverse -> List.traverse is a dubious translation:
@@ -1431,7 +1432,7 @@ Example: if `f : ℕ → list ℕ → β`, `list.map_with_complement f [1, 2, 3]
 `[f 1 [2, 3], f 2 [1, 3], f 3 [1, 2]]`.
 -/
 def mapWithComplement {α β} (f : α → List α → β) : List α → List β :=
-  map_with_prefix_suffix fun pref a suff => f a (pref ++ suff)
+  map_with_prefix_suffix $ fun pref a suff => f a (pref ++ suff)
 #align list.map_with_complement List.mapWithComplement
 -/
 

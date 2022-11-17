@@ -189,7 +189,7 @@ def bicategoricalComp {f g h i : a ⟶ b} [LiftHom g] [LiftHom h] [Bicategorical
 #align category_theory.bicategory.bicategorical_comp CategoryTheory.Bicategory.bicategoricalComp
 
 -- mathport name: bicategorical_comp
-localized [Bicategory] infixr:80 " ⊗≫ " => CategoryTheory.Bicategory.bicategoricalComp
+scoped[Bicategory] infixr:80 " ⊗≫ " => CategoryTheory.Bicategory.bicategoricalComp
 
 -- type as \ot \gg
 /-- Compose two isomorphisms in a bicategorical category,
@@ -200,7 +200,7 @@ def bicategoricalIsoComp {f g h i : a ⟶ b} [LiftHom g] [LiftHom h] [Bicategori
 #align category_theory.bicategory.bicategorical_iso_comp CategoryTheory.Bicategory.bicategoricalIsoComp
 
 -- mathport name: bicategorical_iso_comp
-localized [Bicategory] infixr:80 " ≪⊗≫ " => CategoryTheory.Bicategory.bicategoricalIsoComp
+scoped[Bicategory] infixr:80 " ≪⊗≫ " => CategoryTheory.Bicategory.bicategoricalIsoComp
 
 -- type as \ot \gg
 example {f' : a ⟶ d} {f : a ⟶ b} {g : b ⟶ c} {h : c ⟶ d} {h' : a ⟶ d} (η : f' ⟶ f ≫ g ≫ h) (θ : (f ≫ g) ≫ h ⟶ h') :
@@ -224,27 +224,36 @@ open CategoryTheory.Bicategory
 
 namespace Tactic
 
-setup_tactic_parser
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/-- Coherence tactic for bicategories. -/
-unsafe def bicategorical_coherence : tactic Unit :=
-  focus1 <| do
-    let o ← get_options
-    set_options <| o `class.instance_max_depth 128
-    try sorry
-    let quote.1 ((%%ₓlhs) = %%ₓrhs) ← target
-    to_expr
-          (pquote.1
-            ((FreeBicategory.lift (Prefunctor.id _)).map₂ (LiftHom₂.lift (%%ₓlhs)) =
-              (FreeBicategory.lift (Prefunctor.id _)).map₂ (LiftHom₂.lift (%%ₓrhs)))) >>=
-        tactic.change
-    congr
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Coherence tactic for bicategories. -/ unsafe
+  def
+    bicategorical_coherence
+    : tactic Unit
+    :=
+      focus1
+        $
+        do
+          let o ← get_options
+            set_options $ o `class.instance_max_depth 128
+            try sorry
+            let q( $ ( lhs ) = $ ( rhs ) ) ← target
+            to_expr
+                `
+                  `(
+                    ( FreeBicategory.lift ( Prefunctor.id _ ) ) . map₂ ( LiftHom₂.lift $ ( lhs ) )
+                      =
+                      ( FreeBicategory.lift ( Prefunctor.id _ ) ) . map₂ ( LiftHom₂.lift $ ( rhs ) )
+                    )
+              >>=
+              tactic.change
+            congr
 #align tactic.bicategorical_coherence tactic.bicategorical_coherence
 
 namespace Bicategory
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Simp lemmas for rewriting a 2-morphism into a normal form. -/
 unsafe def whisker_simps : tactic Unit :=
   sorry

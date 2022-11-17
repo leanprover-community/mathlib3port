@@ -42,7 +42,7 @@ def SimplicialObject :=
 namespace SimplicialObject
 
 -- mathport name: simplicial_object.at
-localized [Simplicial]
+scoped[Simplicial]
   notation:1000 X " _[" n "]" => (X : CategoryTheory.SimplicialObject hole!).obj (Opposite.op (SimplexCategory.mk n))
 
 instance {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] : HasLimitsOfShape J (SimplicialObject C) := by
@@ -369,7 +369,7 @@ def CosimplicialObject :=
 namespace CosimplicialObject
 
 -- mathport name: cosimplicial_object.at
-localized [Simplicial]
+scoped[Simplicial]
   notation:1000 X " _[" n "]" => (X : CategoryTheory.CosimplicialObject hole!).obj (SimplexCategory.mk n)
 
 instance {J : Type v} [SmallCategory J] [HasLimitsOfShape J C] : HasLimitsOfShape J (CosimplicialObject C) := by
@@ -713,7 +713,7 @@ def CosimplicialObject.Augmented.leftOp (X : CosimplicialObject.Augmented Cᵒ�
 object and back is isomorphic to the given object. -/
 @[simps]
 def SimplicialObject.Augmented.rightOpLeftOpIso (X : SimplicialObject.Augmented C) : X.rightOp.leftOp ≅ X :=
-  Comma.isoMk X.left.rightOpLeftOpIso (eq_to_iso <| by simp) (by tidy)
+  Comma.isoMk X.left.rightOpLeftOpIso (eq_to_iso $ by simp) (by tidy)
 #align
   category_theory.simplicial_object.augmented.right_op_left_op_iso CategoryTheory.SimplicialObject.Augmented.rightOpLeftOpIso
 
@@ -721,7 +721,7 @@ def SimplicialObject.Augmented.rightOpLeftOpIso (X : SimplicialObject.Augmented 
 object and back is isomorphic to the given object. -/
 @[simps]
 def CosimplicialObject.Augmented.leftOpRightOpIso (X : CosimplicialObject.Augmented Cᵒᵖ) : X.leftOp.rightOp ≅ X :=
-  Comma.isoMk (eq_to_iso <| by simp) X.right.leftOpRightOpIso (by tidy)
+  Comma.isoMk (eq_to_iso $ by simp) X.right.leftOpRightOpIso (by tidy)
 #align
   category_theory.cosimplicial_object.augmented.left_op_right_op_iso CategoryTheory.CosimplicialObject.Augmented.leftOpRightOpIso
 
@@ -746,7 +746,7 @@ def simplicialToCosimplicialAugmented : (SimplicialObject.Augmented C)ᵒᵖ ⥤
 def cosimplicialToSimplicialAugmented : CosimplicialObject.Augmented Cᵒᵖ ⥤ (SimplicialObject.Augmented C)ᵒᵖ where
   obj X := Opposite.op X.leftOp
   map X Y f :=
-    Quiver.Hom.op <|
+    Quiver.Hom.op $
       { left := f.right.leftOp, right := f.left.unop,
         w' := by
           ext x
@@ -761,13 +761,13 @@ objects and augmented cosimplicial objects in the opposite category. -/
 @[simps Functor inverse]
 def simplicialCosimplicialAugmentedEquiv : (SimplicialObject.Augmented C)ᵒᵖ ≌ CosimplicialObject.Augmented Cᵒᵖ :=
   Equivalence.mk (simplicialToCosimplicialAugmented _) (cosimplicialToSimplicialAugmented _)
-    ((NatIso.ofComponents fun X => X.unop.rightOpLeftOpIso.op) fun X Y f => by
+    ((NatIso.ofComponents fun X => X.unop.rightOpLeftOpIso.op) $ fun X Y f => by
       dsimp
       rw [← f.op_unop]
       simp_rw [← op_comp]
       congr 1
       tidy)
-    ((NatIso.ofComponents fun X => X.leftOpRightOpIso) <| by tidy)
+    ((NatIso.ofComponents fun X => X.leftOpRightOpIso) $ by tidy)
 #align category_theory.simplicial_cosimplicial_augmented_equiv CategoryTheory.simplicialCosimplicialAugmentedEquiv
 
 end CategoryTheory

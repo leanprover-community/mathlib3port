@@ -137,7 +137,7 @@ theorem Int.coe_nat_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ)
 #align lucas_lehmer.int.coe_nat_pow_pred LucasLehmer.Int.coe_nat_pow_pred
 
 theorem Int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p - 1 : ℤ) :=
-  Int.coe_nat_pow_pred 2 p (by decide)
+  Int.coe_nat_pow_pred 2 p dec_trivial
 #align lucas_lehmer.int.coe_nat_two_pow_pred LucasLehmer.Int.coe_nat_two_pow_pred
 
 theorem s_zmod_eq_s_mod (p : ℕ) (i : ℕ) : sZmod p i = (sMod p i : Zmod (2 ^ p - 1)) := by
@@ -319,7 +319,10 @@ instance : CommRing (X q) :=
          []
          (Term.app
           `Fact
-          [(«term_<_» (num "1") "<" (Term.paren "(" [`q [(Term.typeAscription ":" [(termℕ "ℕ")])]] ")"))])
+          [(Init.Core.«term_<_»
+            (num "1")
+            " < "
+            (Term.typeAscription "(" `q ":" [(Init.Data.Nat.Basic.termℕ "ℕ")] ")"))])
          "]")]
        (Term.typeSpec ":" (Term.app `Nontrivial [(Term.app `X [`q])])))
       (Command.declValSimple
@@ -560,7 +563,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
         (calc
           2 ≤ p' + 2 := Nat.le_add_left _ _
           _ < 2 ^ (p' + 2) := Nat.lt_two_pow _
-          _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h'
+          _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) dec_trivial h'
           )
     
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
@@ -590,7 +593,7 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
   rw [mul_comm, coe_mul] at h
   rw [mul_comm _ (k : X (q (p' + 2)))] at h
   replace h := eq_sub_of_add_eq h
-  have : 1 ≤ 2 ^ (p' + 2) := Nat.one_le_pow _ _ (by decide)
+  have : 1 ≤ 2 ^ (p' + 2) := Nat.one_le_pow _ _ dec_trivial
   exact_mod_cast h
 #align lucas_lehmer.ω_pow_formula LucasLehmer.ω_pow_formula
 
@@ -678,7 +681,7 @@ theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : LucasLehmerTest p → (
 
 -- Here we calculate the residue, very inefficiently, using `dec_trivial`. We can do much better.
 example : (mersenne 5).Prime :=
-  lucas_lehmer_sufficiency 5 (by norm_num) (by decide)
+  lucas_lehmer_sufficiency 5 (by norm_num) dec_trivial
 
 -- Next we use `norm_num` to calculate each `s p i`.
 namespace LucasLehmer
@@ -691,27 +694,27 @@ theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b) 
   rw [h1, h2, sq, h3]
 #align lucas_lehmer.s_mod_succ LucasLehmer.s_mod_succ
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/
 unsafe def run_test : tactic Unit := do
-  let quote.1 (LucasLehmerTest (%%ₓp)) ← target
+  let q(LucasLehmerTest $(p)) ← target
   sorry
   sorry
   let p ← eval_expr ℕ p
   let-- Calculate the candidate Mersenne prime
   M : ℤ := 2 ^ p - 1
-  let t ← to_expr (pquote.1 ((2 ^ %%ₓquote.1 p) - 1 = %%ₓquote.1 M))
-  let v ← to_expr (pquote.1 (by norm_num : (2 ^ %%ₓquote.1 p) - 1 = %%ₓquote.1 M))
+  let t ← to_expr ``(2 ^ $(q(p)) - 1 = $(q(M)))
+  let v ← to_expr ``((by norm_num : 2 ^ $(q(p)) - 1 = $(q(M))))
   let w ← assertv `w t v
   let t
     ←-- base case
         to_expr
-        (pquote.1 (sMod (%%ₓquote.1 p) 0 = 4))
-  let v ← to_expr (pquote.1 (by norm_num [LucasLehmer.sMod] : sMod (%%ₓquote.1 p) 0 = 4))
+        ``(sMod $(q(p)) 0 = 4)
+  let v ← to_expr ``((by norm_num [LucasLehmer.sMod] : sMod $(q(p)) 0 = 4))
   let h ← assertv `h t v
   -- step case, repeated p-2 times
       iterate_exactly
@@ -761,7 +764,7 @@ theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1]
   skip
   skip
   rw [← one_mul (k / 2 ^ n)]
-  exact (Nat.modeq_sub <| Nat.succ_le_of_lt <| pow_pos zero_lt_two _).mul_right _
+  exact (Nat.modeq_sub $ Nat.succ_le_of_lt $ pow_pos zero_lt_two _).mul_right _
 #align modeq_mersenne modeq_mersenne
 
 -- It's hard to know what the limiting factor for large Mersenne primes would be.

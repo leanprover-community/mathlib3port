@@ -57,20 +57,32 @@ unsafe def replace_target (rw : tracked_rewrite) : tactic Unit := do
 
 private unsafe def replace_target_side (new_target lam : pexpr) (prf : expr) : tactic Unit := do
   let new_target ← to_expr new_target true false
-  let prf' ← to_expr (pquote.1 (congr_arg (%%ₓlam) (%%ₓprf))) true false
+  let prf' ← to_expr ``(congr_arg $(lam) $(prf)) true false
   tactic.replace_target new_target prf'
 #align tactic.rewrite_all.tracked_rewrite.replace_target_side tactic.rewrite_all.tracked_rewrite.replace_target_side
 
-unsafe def replace_target_lhs (rw : tracked_rewrite) : tactic Unit := do
-  let (new_lhs, prf) ← rw.eval
-  let quote.1 ((%%ₓ_) = %%ₓrhs) ← target
-  replace_target_side (pquote.1 ((%%ₓnew_lhs) = %%ₓrhs)) (pquote.1 fun L => L = %%ₓrhs) prf
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+unsafe
+  def
+    replace_target_lhs
+    ( rw : tracked_rewrite ) : tactic Unit
+    :=
+      do
+        let ( new_lhs , prf ) ← rw . eval
+          let q( $ ( _ ) = $ ( rhs ) ) ← target
+          replace_target_side ` `( $ ( new_lhs ) = $ ( rhs ) ) ` `( fun L => L = $ ( rhs ) ) prf
 #align tactic.rewrite_all.tracked_rewrite.replace_target_lhs tactic.rewrite_all.tracked_rewrite.replace_target_lhs
 
-unsafe def replace_target_rhs (rw : tracked_rewrite) : tactic Unit := do
-  let (new_rhs, prf) ← rw.eval
-  let quote.1 ((%%ₓlhs) = %%ₓ_) ← target
-  replace_target_side (pquote.1 ((%%ₓlhs) = %%ₓnew_rhs)) (pquote.1 fun R => (%%ₓlhs) = R) prf
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+unsafe
+  def
+    replace_target_rhs
+    ( rw : tracked_rewrite ) : tactic Unit
+    :=
+      do
+        let ( new_rhs , prf ) ← rw . eval
+          let q( $ ( lhs ) = $ ( _ ) ) ← target
+          replace_target_side ` `( $ ( lhs ) = $ ( new_rhs ) ) ` `( fun R => $ ( lhs ) = R ) prf
 #align tactic.rewrite_all.tracked_rewrite.replace_target_rhs tactic.rewrite_all.tracked_rewrite.replace_target_rhs
 
 end TrackedRewrite

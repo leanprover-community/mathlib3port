@@ -172,7 +172,7 @@ theorem finrank_eq_zero_of_not_exists_basis (h : ¬∃ s : Finset V, Nonempty (B
   finrank_eq_zero_of_basis_imp_false fun s b => h ⟨s, ⟨b⟩⟩
 #align finrank_eq_zero_of_not_exists_basis finrank_eq_zero_of_not_exists_basis
 
-theorem finrank_eq_zero_of_not_exists_basis_finite (h : ¬∃ (s : Set V)(b : Basis.{v} (s : Set V) K V), s.Finite) :
+theorem finrank_eq_zero_of_not_exists_basis_finite (h : ¬∃ (s : Set V) (b : Basis.{v} (s : Set V) K V), s.Finite) :
     finrank K V = 0 :=
   finrank_eq_zero_of_basis_imp_not_finite fun s b hs => h ⟨s, b, hs⟩
 #align finrank_eq_zero_of_not_exists_basis_finite finrank_eq_zero_of_not_exists_basis_finite
@@ -292,7 +292,7 @@ theorem finrank_span_finset_le_card (s : Finset V) : (s : Set V).finrank K ≤ s
 #align finrank_span_finset_le_card finrank_span_finset_le_card
 
 theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} : (Set.range b).finrank K ≤ Fintype.card ι :=
-  (finrank_span_le_card _).trans <| by
+  (finrank_span_le_card _).trans $ by
     rw [Set.to_finset_range]
     exact Finset.card_image_le
 #align finrank_range_le_card finrank_range_le_card
@@ -343,7 +343,7 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
 theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fintype ι] {b : ι → V}
     (spans : ⊤ ≤ span K (Set.range b)) (card_eq : Fintype.card ι = finrank K V) : LinearIndependent K b :=
-  linear_independent_iff'.mpr fun s g dependent i i_mem_s => by
+  linear_independent_iff'.mpr $ fun s g dependent i i_mem_s => by
     by_contra gx_ne_zero
     -- We'll derive a contradiction by showing `b '' (univ \ {i})` of cardinality `n - 1`
     -- spans a vector space of dimension `n`.

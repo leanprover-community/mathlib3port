@@ -45,9 +45,9 @@ noncomputable def cardPowDegree : AbsoluteValue Fq[X] ℤ :=
       split_ifs
       · rfl
         
-      exact pow_nonneg (Int.coe_zero_le _) _,
+      exact pow_nonneg (Int.ofNat_zero_le _) _,
     eq_zero' := fun p =>
-      ite_eq_left_iff.trans <|
+      ite_eq_left_iff.trans $
         ⟨fun h => by
           contrapose! h
           exact ⟨h, (pow_pos _).ne'⟩, absurd⟩,

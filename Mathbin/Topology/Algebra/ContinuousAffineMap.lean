@@ -66,7 +66,7 @@ theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn := by
 
 @[ext.1]
 theorem ext {f g : P →A[R] Q} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective <| funext h
+  coe_injective $ funext h
 #align continuous_affine_map.ext ContinuousAffineMap.ext
 
 theorem ext_iff {f g : P →A[R] Q} : f = g ↔ ∀ x, f x = g x :=
@@ -159,7 +159,7 @@ theorem coe_const (q : Q) : (const R P q : P → Q) = Function.const P q :=
 #align continuous_affine_map.coe_const ContinuousAffineMap.coe_const
 
 noncomputable instance : Inhabited (P →A[R] Q) :=
-  ⟨const R P <| Nonempty.some (by infer_instance : Nonempty Q)⟩
+  ⟨const R P $ Nonempty.some (by infer_instance : Nonempty Q)⟩
 
 variable {R P} {W₂ Q₂ : Type _}
 
@@ -219,7 +219,7 @@ theorem smul_apply (t : S) (f : P →A[R] W) (x : P) : (t • f) x = t • f x :
 #align continuous_affine_map.smul_apply ContinuousAffineMap.smul_apply
 
 instance [DistribMulAction Sᵐᵒᵖ W] [IsCentralScalar S W] :
-    IsCentralScalar S (P →A[R] W) where op_smul_eq_smul t f := ext fun _ => op_smul_eq_smul _ _
+    IsCentralScalar S (P →A[R] W) where op_smul_eq_smul t f := ext $ fun _ => op_smul_eq_smul _ _
 
 instance : MulAction S (P →A[R] W) :=
   Function.Injective.mulAction _ coe_injective coe_smul

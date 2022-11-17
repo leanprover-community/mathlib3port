@@ -140,8 +140,7 @@ theorem geom_sum₂_self {α : Type _} [CommRing α] (x : α) (n : ℕ) :
     (∑ i in Finset.range n, x ^ i * x ^ (n - 1 - i)) = ∑ i in Finset.range n, x ^ (i + (n - 1 - i)) := by
       simp_rw [← pow_add]
     _ = ∑ i in Finset.range n, x ^ (n - 1) :=
-      Finset.sum_congr rfl fun i hi =>
-        congr_arg _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_lt <| Finset.mem_range.1 hi
+      Finset.sum_congr rfl fun i hi => congr_arg _ $ add_tsub_cancel_of_le $ Nat.le_pred_of_lt $ Finset.mem_range.1 hi
     _ = (Finset.range n).card • x ^ (n - 1) := Finset.sum_const _
     _ = n * x ^ (n - 1) := by rw [Finset.card_range, nsmul_eq_mul]
     
@@ -190,7 +189,7 @@ theorem geom_sum_mul [Ring α] (x : α) (n : ℕ) : (∑ i in range n, x ^ i) * 
 #align geom_sum_mul geom_sum_mul
 
 theorem mul_geom_sum [Ring α] (x : α) (n : ℕ) : ((x - 1) * ∑ i in range n, x ^ i) = x ^ n - 1 :=
-  op_injective <| by simpa using geom_sum_mul (op x) n
+  op_injective $ by simpa using geom_sum_mul (op x) n
 #align mul_geom_sum mul_geom_sum
 
 theorem geom_sum_mul_neg [Ring α] (x : α) (n : ℕ) : (∑ i in range n, x ^ i) * (1 - x) = 1 - x ^ n := by
@@ -200,7 +199,7 @@ theorem geom_sum_mul_neg [Ring α] (x : α) (n : ℕ) : (∑ i in range n, x ^ i
 #align geom_sum_mul_neg geom_sum_mul_neg
 
 theorem mul_neg_geom_sum [Ring α] (x : α) (n : ℕ) : ((1 - x) * ∑ i in range n, x ^ i) = 1 - x ^ n :=
-  op_injective <| by simpa using geom_sum_mul_neg (op x) n
+  op_injective $ by simpa using geom_sum_mul_neg (op x) n
 #align mul_neg_geom_sum mul_neg_geom_sum
 
 protected theorem Commute.geom_sum₂_comm {α : Type u} [Semiring α] {x y : α} (n : ℕ) (h : Commute x y) :
@@ -366,7 +365,7 @@ theorem Nat.pred_mul_geom_sum_le (a b n : ℕ) : ((b - 1) * ∑ i in range n.suc
         (∑ i in range n, a / b ^ (i + 1) * b) + a * b - ((∑ i in range n, a / b ^ i) + a / b ^ n) :=
       by rw [tsub_mul, mul_comm, sum_mul, one_mul, sum_range_succ', sum_range_succ, pow_zero, Nat.div_one]
     _ ≤ (∑ i in range n, a / b ^ i) + a * b - ((∑ i in range n, a / b ^ i) + a / b ^ n) := by
-      refine' tsub_le_tsub_right (add_le_add_right (sum_le_sum fun i _ => _) _) _
+      refine' tsub_le_tsub_right (add_le_add_right (sum_le_sum $ fun i _ => _) _) _
       rw [pow_succ', ← Nat.div_div_eq_div_mul]
       exact Nat.div_mul_le_self _ _
     _ = a * b - a / b ^ n := add_tsub_add_eq_tsub_left _ _ _
@@ -374,7 +373,7 @@ theorem Nat.pred_mul_geom_sum_le (a b n : ℕ) : ((b - 1) * ∑ i in range n.suc
 #align nat.pred_mul_geom_sum_le Nat.pred_mul_geom_sum_le
 
 theorem Nat.geom_sum_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in range n, a / b ^ i) ≤ a * b / (b - 1) := by
-  refine' (Nat.le_div_iff_mul_le <| tsub_pos_of_lt hb).2 _
+  refine' (Nat.le_div_iff_mul_le $ tsub_pos_of_lt hb).2 _
   cases n
   · rw [sum_range_zero, zero_mul]
     exact Nat.zero_le _
@@ -481,7 +480,7 @@ theorem geom_sum_pos' [LinearOrderedRing α] (hx : 0 < x + 1) (hn : n ≠ 0) : 0
 
 theorem Odd.geom_sum_pos [LinearOrderedRing α] (h : Odd n) : 0 < ∑ i in range n, x ^ i := by
   rcases n with (_ | _ | k)
-  · exact ((show ¬Odd 0 by decide) h).elim
+  · exact ((show ¬Odd 0 from dec_trivial) h).elim
     
   · simp only [geom_sum_one, zero_lt_one]
     

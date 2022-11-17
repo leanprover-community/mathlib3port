@@ -30,12 +30,12 @@ Related files are:
 
 namespace Sigma
 
-variable {ι : Type _} {α : ι → Type _} {r r₁ r₂ : ι → ι → Prop} {s s₁ s₂ : ∀ i, α i → α i → Prop} {a b : Σi, α i}
+variable {ι : Type _} {α : ι → Type _} {r r₁ r₂ : ι → ι → Prop} {s s₁ s₂ : ∀ i, α i → α i → Prop} {a b : Σ i, α i}
 
 /-- The lexicographical order on a sigma type. It takes in a relation on the index type and a
 relation for each summand. `a` is related to `b` iff their summands are related or they are in the
 same summand and are related through the summand's relation. -/
-inductive Lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀ a b : Σi, α i, Prop
+inductive Lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀ a b : Σ i, α i, Prop
   | left {i j : ι} (a : α i) (b : α j) : r i j → lex ⟨i, a⟩ ⟨j, b⟩
   | right {i : ι} (a b : α i) : s i a b → lex ⟨i, a⟩ ⟨i, b⟩
 #align sigma.lex Sigma.Lex
@@ -64,8 +64,8 @@ instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Pr
   decidable_of_decidable_of_iff inferInstance lex_iff.symm
 #align sigma.lex.decidable Sigma.Lex.decidable
 
-theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σi, α i} (h : Lex r₁ s₁ a b) :
-    Lex r₂ s₂ a b := by
+theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i}
+    (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨a, b, hij⟩ | ⟨a, b, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
     
@@ -73,11 +73,11 @@ theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a
     
 #align sigma.lex.mono Sigma.Lex.mono
 
-theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σi, α i} (h : Lex r₁ s a b) : Lex r₂ s a b :=
-  (h.mono hr) fun _ _ _ => id
+theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ i, α i} (h : Lex r₁ s a b) : Lex r₂ s a b :=
+  h.mono hr $ fun _ _ _ => id
 #align sigma.lex.mono_left Sigma.Lex.mono_left
 
-theorem Lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σi, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
+theorem Lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 #align sigma.lex.mono_right Sigma.Lex.mono_right
 
@@ -89,7 +89,7 @@ theorem lex_swap : Lex r.swap s a b ↔ Lex r (fun i => (s i).swap) b a := by
 #align sigma.lex_swap Sigma.lex_swap
 
 instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (Lex r s) :=
-  ⟨fun ⟨i, a⟩ => Lex.right _ _ <| refl _⟩
+  ⟨fun ⟨i, a⟩ => Lex.right _ _ $ refl _⟩
 
 instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (Lex r s) :=
   ⟨by
@@ -130,7 +130,7 @@ instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (Lex r s
       
     · exact (irrefl _ hji).elim
       
-    · exact ext rfl (heq_of_eq <| antisymm hab hba)
+    · exact ext rfl (heq_of_eq $ antisymm hab hba)
       ⟩
 
 instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (Lex r s) :=
@@ -159,10 +159,10 @@ instance [IsTrichotomous ι r] [∀ i, IsTrichotomous (α i) (s i)] : IsTrichoto
         
       · exact Or.inr (Or.inl rfl)
         
-      · exact Or.inr (Or.inr <| lex.right _ _ hba)
+      · exact Or.inr (Or.inr $ lex.right _ _ hba)
         
       
-    · exact Or.inr (Or.inr <| lex.left _ _ hji)
+    · exact Or.inr (Or.inr $ lex.left _ _ hji)
       ⟩
 
 end Sigma
@@ -174,7 +174,7 @@ namespace PSigma
 
 variable {ι : Sort _} {α : ι → Sort _} {r r₁ r₂ : ι → ι → Prop} {s s₁ s₂ : ∀ i, α i → α i → Prop}
 
-theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
+theorem lex_iff {a b : Σ' i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
   constructor
   · rintro (⟨a, b, hij⟩ | ⟨i, hab⟩)
     · exact Or.inl hij
@@ -199,7 +199,7 @@ instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Pr
 #align psigma.lex.decidable PSigma.Lex.decidable
 
 theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b)
-    (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ'i, α i} (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
+    (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ' i, α i} (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨a, b, hij⟩ | ⟨i, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
     
@@ -207,13 +207,13 @@ theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → �
     
 #align psigma.lex.mono PSigma.Lex.mono
 
-theorem Lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ'i, α i}
+theorem Lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ' i, α i}
     (h : Lex r₁ s a b) : Lex r₂ s a b :=
-  (h.mono hr) fun _ _ _ => id
+  h.mono hr $ fun _ _ _ => id
 #align psigma.lex.mono_left PSigma.Lex.mono_left
 
 theorem Lex.mono_right {r : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hs : ∀ i a b, s₁ i a b → s₂ i a b)
-    {a b : Σ'i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
+    {a b : Σ' i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 #align psigma.lex.mono_right PSigma.Lex.mono_right
 

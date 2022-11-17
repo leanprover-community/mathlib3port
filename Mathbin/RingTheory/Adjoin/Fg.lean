@@ -108,7 +108,7 @@ theorem fgBot : (⊥ : Subalgebra R A).Fg :=
 
 theorem fgOfFgToSubmodule {S : Subalgebra R A} : S.toSubmodule.Fg → S.Fg := fun ⟨t, ht⟩ =>
   ⟨t,
-    le_antisymm (Algebra.adjoin_le fun x hx => show x ∈ S.toSubmodule from ht ▸ subset_span hx) <|
+    le_antisymm (Algebra.adjoin_le fun x hx => show x ∈ S.toSubmodule from ht ▸ subset_span hx) $
       show S.toSubmodule ≤ (Algebra.adjoin R ↑t).toSubmodule from fun x hx =>
         span_le.mpr (fun x hx => Algebra.subset_adjoin hx)
           (show x ∈ span R ↑t by
@@ -123,7 +123,7 @@ theorem fgOfNoetherian [IsNoetherian R A] (S : Subalgebra R A) : S.Fg :=
 theorem fgOfSubmoduleFg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := h
   ⟨s,
-    to_submodule_injective <| by
+    to_submodule_injective $ by
       rw [Algebra.top_to_submodule, eq_top_iff, ← hs, span_le]
       exact Algebra.subset_adjoin⟩
 #align subalgebra.fg_of_submodule_fg Subalgebra.fgOfSubmoduleFg
@@ -153,8 +153,8 @@ end
 
 theorem fgOfFgMap (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f) (hs : (S.map f).Fg) : S.Fg :=
   let ⟨s, hs⟩ := hs
-  ⟨(s.Preimage f) fun _ _ _ _ h => hf h,
-    map_injective hf <| by
+  ⟨s.Preimage f $ fun _ _ _ _ h => hf h,
+    map_injective hf $ by
       rw [← Algebra.adjoin_image, Finset.coe_preimage, Set.image_preimage_eq_of_subset, hs]
       rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top]
       exact map_mono le_top⟩
@@ -164,17 +164,21 @@ theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
   ⟨fun h => by
     rw [← S.range_val, ← Algebra.map_top]
     exact fg.map _ h, fun h =>
-    fgOfFgMap _ S.val Subtype.val_injective <| by
+    fgOfFgMap _ S.val Subtype.val_injective $ by
       rw [Algebra.map_top, range_val]
       exact h⟩
 #align subalgebra.fg_top Subalgebra.fg_top
 
 theorem inductionOnAdjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
     (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S))) (S : Subalgebra R A) : P S := by
-  classical obtain ⟨t, rfl⟩ := S.fg_of_noetherian
-    · simpa using base
-      
-    rw [Finset.coe_insert]
+  classical
+  obtain ⟨t, rfl⟩ := S.fg_of_noetherian
+  refine' Finset.induction_on t _ _
+  · simpa using base
+    
+  intro x t hxt h
+  rw [Finset.coe_insert]
+  simpa only [Algebra.adjoin_insert_adjoin] using ih _ x h
 #align subalgebra.induction_on_adjoin Subalgebra.inductionOnAdjoin
 
 end Subalgebra

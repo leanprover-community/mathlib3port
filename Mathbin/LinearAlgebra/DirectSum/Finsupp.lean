@@ -82,7 +82,7 @@ theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCom
 theorem finsupp_tensor_finsupp_symm_single (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M]
     [AddCommGroup N] [Module R N] (i : ι × κ) (m : M) (n : N) :
     (finsuppTensorFinsupp R M N ι κ).symm (Finsupp.single i (m ⊗ₜ n)) = Finsupp.single i.1 m ⊗ₜ Finsupp.single i.2 n :=
-  (Prod.casesOn i) fun i k => (LinearEquiv.symm_apply_eq _).2 (finsupp_tensor_finsupp_single _ _ _ _ _ _ _ _ _).symm
+  Prod.casesOn i $ fun i k => (LinearEquiv.symm_apply_eq _).2 (finsupp_tensor_finsupp_single _ _ _ _ _ _ _ _ _).symm
 #align finsupp_tensor_finsupp_symm_single finsupp_tensor_finsupp_symm_single
 
 variable (S : Type _) [CommRing S] (α β : Type _)

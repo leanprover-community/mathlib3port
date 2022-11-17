@@ -275,8 +275,8 @@ protected def _root_.monoid_hom.comp_left_continuous (α : Type _) {β : Type _}
     [TopologicalSpace β] [Monoid β] [HasContinuousMul β] [TopologicalSpace γ] [Monoid γ] [HasContinuousMul γ]
     (g : β →* γ) (hg : Continuous g) : C(α, β) →* C(α, γ) where
   toFun f := (⟨g, hg⟩ : C(β, γ)).comp f
-  map_one' := ext fun x => g.map_one
-  map_mul' f₁ f₂ := ext fun x => g.map_mul _ _
+  map_one' := ext $ fun x => g.map_one
+  map_mul' f₁ f₂ := ext $ fun x => g.map_mul _ _
 #align continuous_map._root_.monoid_hom.comp_left_continuous continuous_map._root_.monoid_hom.comp_left_continuous
 
 /-- Composition on the right as a `monoid_hom`. Similar to `monoid_hom.comp_hom'`. -/
@@ -526,13 +526,13 @@ theorem smul_comp [HasSmul R M] [HasContinuousConstSmul R M] (r : R) (f : C(β, 
 
 @[to_additive]
 instance [HasSmul R M] [HasContinuousConstSmul R M] [HasSmul R₁ M] [HasContinuousConstSmul R₁ M]
-    [SmulCommClass R R₁ M] : SmulCommClass R R₁ C(α, M) where smul_comm _ _ _ := ext fun _ => smul_comm _ _ _
+    [SmulCommClass R R₁ M] : SmulCommClass R R₁ C(α, M) where smul_comm _ _ _ := ext $ fun _ => smul_comm _ _ _
 
 instance [HasSmul R M] [HasContinuousConstSmul R M] [HasSmul R₁ M] [HasContinuousConstSmul R₁ M] [HasSmul R R₁]
-    [IsScalarTower R R₁ M] : IsScalarTower R R₁ C(α, M) where smul_assoc _ _ _ := ext fun _ => smul_assoc _ _ _
+    [IsScalarTower R R₁ M] : IsScalarTower R R₁ C(α, M) where smul_assoc _ _ _ := ext $ fun _ => smul_assoc _ _ _
 
 instance [HasSmul R M] [HasSmul Rᵐᵒᵖ M] [HasContinuousConstSmul R M] [IsCentralScalar R M] :
-    IsCentralScalar R C(α, M) where op_smul_eq_smul _ _ := ext fun _ => op_smul_eq_smul _ _
+    IsCentralScalar R C(α, M) where op_smul_eq_smul _ _ := ext $ fun _ => op_smul_eq_smul _ _
 
 instance [Monoid R] [MulAction R M] [HasContinuousConstSmul R M] : MulAction R C(α, M) :=
   Function.Injective.mulAction _ coe_injective coe_smul
@@ -559,7 +559,7 @@ Similar to `linear_map.comp_left`. -/
 protected def _root_.continuous_linear_map.comp_left_continuous (α : Type _) [TopologicalSpace α] (g : M →L[R] M₂) :
     C(α, M) →ₗ[R] C(α, M₂) :=
   { g.toLinearMap.toAddMonoidHom.compLeftContinuous α g.Continuous with
-    map_smul' := fun c f => ext fun x => g.map_smul' c _ }
+    map_smul' := fun c f => ext $ fun x => g.map_smul' c _ }
 #align
   continuous_map._root_.continuous_linear_map.comp_left_continuous continuous_map._root_.continuous_linear_map.comp_left_continuous
 
@@ -591,7 +591,7 @@ variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiring R] {A : 
 /-- The `R`-subalgebra of continuous maps `α → A`. -/
 def continuousSubalgebra : Subalgebra R (α → A) :=
   { continuousSubsemiring α A with carrier := { f : α → A | Continuous f },
-    algebra_map_mem' := fun r => (continuous_const : Continuous fun x : α => algebraMap R A r) }
+    algebra_map_mem' := fun r => (continuous_const : Continuous $ fun x : α => algebraMap R A r) }
 #align continuous_subalgebra continuousSubalgebra
 
 end Subtype
@@ -629,7 +629,7 @@ variable (R)
 @[simps]
 protected def AlgHom.compLeftContinuous {α : Type _} [TopologicalSpace α] (g : A →ₐ[R] A₂) (hg : Continuous g) :
     C(α, A) →ₐ[R] C(α, A₂) :=
-  { g.toRingHom.compLeftContinuous α hg with commutes' := fun c => ContinuousMap.ext fun _ => g.commutes' _ }
+  { g.toRingHom.compLeftContinuous α hg with commutes' := fun c => ContinuousMap.ext $ fun _ => g.commutes' _ }
 #align alg_hom.comp_left_continuous AlgHom.compLeftContinuous
 
 variable (A)
@@ -885,19 +885,19 @@ theorem star_apply (f : C(α, β)) (x : α) : star f x = star (f x) :=
 end HasStar
 
 instance [HasInvolutiveStar β] [HasContinuousStar β] :
-    HasInvolutiveStar C(α, β) where star_involutive f := ext fun x => star_star _
+    HasInvolutiveStar C(α, β) where star_involutive f := ext $ fun x => star_star _
 
 instance [AddMonoid β] [HasContinuousAdd β] [StarAddMonoid β] [HasContinuousStar β] :
-    StarAddMonoid C(α, β) where star_add f g := ext fun x => star_add _ _
+    StarAddMonoid C(α, β) where star_add f g := ext $ fun x => star_add _ _
 
 instance [Semigroup β] [HasContinuousMul β] [StarSemigroup β] [HasContinuousStar β] :
-    StarSemigroup C(α, β) where star_mul f g := ext fun x => star_mul _ _
+    StarSemigroup C(α, β) where star_mul f g := ext $ fun x => star_mul _ _
 
 instance [NonUnitalSemiring β] [TopologicalSemiring β] [StarRing β] [HasContinuousStar β] : StarRing C(α, β) :=
   { ContinuousMap.starAddMonoid with }
 
 instance [HasStar R] [HasStar β] [HasSmul R β] [StarModule R β] [HasContinuousStar β] [HasContinuousConstSmul R β] :
-    StarModule R C(α, β) where star_smul k f := ext fun x => star_smul _ _
+    StarModule R C(α, β) where star_smul k f := ext $ fun x => star_smul _ _
 
 end StarStructure
 
@@ -928,13 +928,13 @@ def compStarAlgHom' (f : C(X, Y)) : C(Y, A) →⋆ₐ[𝕜] C(X, A) where
 /-- `continuous_map.comp_star_alg_hom'` sends the identity continuous map to the identity
 `star_alg_hom` -/
 theorem comp_star_alg_hom'_id : compStarAlgHom' 𝕜 A (ContinuousMap.id X) = StarAlgHom.id 𝕜 C(X, A) :=
-  StarAlgHom.ext fun _ => ContinuousMap.ext fun _ => rfl
+  StarAlgHom.ext $ fun _ => ContinuousMap.ext $ fun _ => rfl
 #align continuous_map.comp_star_alg_hom'_id ContinuousMap.comp_star_alg_hom'_id
 
 /-- `continuous_map.comp_star_alg_hom` is functorial. -/
 theorem comp_star_alg_hom'_comp (g : C(Y, Z)) (f : C(X, Y)) :
     compStarAlgHom' 𝕜 A (g.comp f) = (compStarAlgHom' 𝕜 A f).comp (compStarAlgHom' 𝕜 A g) :=
-  StarAlgHom.ext fun _ => ContinuousMap.ext fun _ => rfl
+  StarAlgHom.ext $ fun _ => ContinuousMap.ext $ fun _ => rfl
 #align continuous_map.comp_star_alg_hom'_comp ContinuousMap.comp_star_alg_hom'_comp
 
 end ContinuousMap

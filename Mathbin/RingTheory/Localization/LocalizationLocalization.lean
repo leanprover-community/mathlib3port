@@ -53,7 +53,7 @@ variable {M N}
 
 @[simp]
 theorem mem_localization_localization_submodule {x : R} :
-    x ∈ localizationLocalizationSubmodule M N ↔ ∃ (y : N)(z : M), algebraMap R S x = y * algebraMap R S z := by
+    x ∈ localizationLocalizationSubmodule M N ↔ ∃ (y : N) (z : M), algebraMap R S x = y * algebraMap R S z := by
   rw [localization_localization_submodule, Submonoid.mem_comap, Submonoid.mem_sup]
   constructor
   · rintro ⟨y, hy, _, ⟨z, hz, rfl⟩, e⟩

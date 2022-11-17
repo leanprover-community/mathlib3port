@@ -126,7 +126,7 @@ theorem map_subtype_embedding_Ici : (ici a).map Fin.coeEmbedding = icc a (n - 1)
   simp only [exists_prop, embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
   constructor
   · rintro ⟨x, hx, rfl⟩
-    exact ⟨hx, le_tsub_of_add_le_right <| x.2⟩
+    exact ⟨hx, le_tsub_of_add_le_right $ x.2⟩
     
   cases n
   · exact Fin.elim0 a
@@ -141,7 +141,7 @@ theorem map_subtype_embedding_Ioi : (ioi a).map Fin.coeEmbedding = ioc a (n - 1)
   simp only [exists_prop, embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
   constructor
   · rintro ⟨x, hx, rfl⟩
-    exact ⟨hx, le_tsub_of_add_le_right <| x.2⟩
+    exact ⟨hx, le_tsub_of_add_le_right $ x.2⟩
     
   cases n
   · exact Fin.elim0 a

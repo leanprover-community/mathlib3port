@@ -403,7 +403,7 @@ sets in `d₂`.
 -/
 instance : LE ManyOneDegree :=
   ⟨fun d₁ d₂ =>
-    (ManyOneDegree.liftOn₂ d₁ d₂ (· ≤₀ ·)) fun p₁ p₂ q₁ q₂ hp hq => propext (hp.le_congr_left.trans hq.le_congr_right)⟩
+    ManyOneDegree.liftOn₂ d₁ d₂ (· ≤₀ ·) $ fun p₁ p₂ q₁ q₂ hp hq => propext (hp.le_congr_left.trans hq.le_congr_right)⟩
 
 @[simp]
 theorem of_le_of {p : α → Prop} {q : β → Prop} : of p ≤ of q ↔ p ≤₀ q :=

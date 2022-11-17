@@ -34,8 +34,7 @@ end
 
 namespace Tactic.Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def swap_arg_parser : lean.parser (Name × Name) :=
   Prod.mk <$> ident <*> (optional (tk "<->" <|> tk "↔") *> ident)
 #align tactic.interactive.swap_arg_parser tactic.interactive.swap_arg_parser
@@ -60,9 +59,9 @@ unsafe def swap_var (renames : parse swap_args_parser) : tactic Unit := do
   renames fun e => do
       let n ← tactic.get_unused_name
       -- how to call `interactive.tactic.rename` here?
-          propagate_tags <|
-          tactic.rename_many <| native.rb_map.of_list [(e.1, n), (e.2, e.1)]
-      propagate_tags <| tactic.rename_many <| native.rb_map.of_list [(n, e.2)]
+          propagate_tags $
+          tactic.rename_many $ native.rb_map.of_list [(e.1, n), (e.2, e.1)]
+      propagate_tags $ tactic.rename_many $ native.rb_map.of_list [(n, e.2)]
   pure ()
 #align tactic.interactive.swap_var tactic.interactive.swap_var
 

@@ -242,7 +242,7 @@ theorem lookup_erase_ne {a a'} {s : Alist β} (h : a ≠ a') : lookup a (erase a
 #align alist.lookup_erase_ne Alist.lookup_erase_ne
 
 theorem erase_erase (a a' : α) (s : Alist β) : (s.erase a).erase a' = (s.erase a').erase a :=
-  ext <| kerase_kerase
+  ext $ kerase_kerase
 #align alist.erase_erase Alist.erase_erase
 
 /-! ### insert -/
@@ -310,7 +310,7 @@ theorem insert_insert_of_ne {a a'} {b : β a} {b' : β a'} (s : Alist β) (h : a
 
 @[simp]
 theorem insert_singleton_eq {a : α} {b b' : β a} : insert a b (singleton a b') = singleton a b :=
-  ext <| by
+  ext $ by
     simp only [Alist.insert_entries, List.kerase_cons_eq, and_self_iff, Alist.singleton_entries, heq_iff_eq,
       eq_self_iff_true]
 #align alist.insert_singleton_eq Alist.insert_singleton_eq
@@ -364,7 +364,7 @@ theorem empty_union {s : Alist β} : (∅ : Alist β) ∪ s = s :=
 
 @[simp]
 theorem union_empty {s : Alist β} : s ∪ (∅ : Alist β) = s :=
-  ext <| by simp
+  ext $ by simp
 #align alist.union_empty Alist.union_empty
 
 @[simp]

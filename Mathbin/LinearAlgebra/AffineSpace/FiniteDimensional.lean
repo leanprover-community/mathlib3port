@@ -38,7 +38,7 @@ variable [DivisionRing k] [AddCommGroup V] [Module k V] [affine_space V P]
 
 /-- The `vector_span` of a finite set is finite-dimensional. -/
 theorem finiteDimensionalVectorSpanOfFinite {s : Set P} (h : Set.Finite s) : FiniteDimensional k (vectorSpan k s) :=
-  spanOfFinite k <| h.vsub h
+  spanOfFinite k $ h.vsub h
 #align finite_dimensional_vector_span_of_finite finiteDimensionalVectorSpanOfFinite
 
 /-- The `vector_span` of a family indexed by a `fintype` is
@@ -126,7 +126,7 @@ cardinality is one more than that of the finite-dimensional space is
 `⊤`. -/
 theorem AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one [FiniteDimensional k V] [Fintype ι] {p : ι → P}
     (hi : AffineIndependent k p) (hc : Fintype.card ι = finrank k V + 1) : vectorSpan k (Set.range p) = ⊤ :=
-  eq_top_of_finrank_eq <| hi.finrank_vector_span hc
+  eq_top_of_finrank_eq $ hi.finrank_vector_span hc
 #align
   affine_independent.vector_span_eq_top_of_card_eq_finrank_add_one AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one
 
@@ -205,7 +205,7 @@ theorem AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_a
     (hi : AffineIndependent k p) {s : Finset ι} {sm : Submodule k V} [FiniteDimensional k sm]
     (hle : vectorSpan k (s.image p : Set P) ≤ sm) (hc : Finset.card s = finrank k sm + 1) :
     vectorSpan k (s.image p : Set P) = sm :=
-  eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span_image_finset hc
+  eq_of_le_of_finrank_eq hle $ hi.finrank_vector_span_image_finset hc
 #align
   affine_independent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one
 
@@ -215,7 +215,7 @@ cardinality, it equals that submodule. -/
 theorem AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one [Fintype ι] {p : ι → P}
     (hi : AffineIndependent k p) {sm : Submodule k V} [FiniteDimensional k sm] (hle : vectorSpan k (Set.range p) ≤ sm)
     (hc : Fintype.card ι = finrank k sm + 1) : vectorSpan k (Set.range p) = sm :=
-  eq_of_le_of_finrank_eq hle <| hi.finrank_vector_span hc
+  eq_of_le_of_finrank_eq hle $ hi.finrank_vector_span hc
 #align
   affine_independent.vector_span_eq_of_le_of_card_eq_finrank_add_one AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one
 
@@ -393,7 +393,7 @@ theorem collinear_iff_of_mem {s : Set P} {p₀ : P} (h : p₀ ∈ s) :
 expressed as multiples of the same vector, added to the same base
 point. -/
 theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
-    Collinear k s ↔ ∃ (p₀ : P)(v : V), ∀ p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ := by
+    Collinear k s ↔ ∃ (p₀ : P) (v : V), ∀ p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ := by
   rcases Set.eq_empty_or_nonempty s with (rfl | ⟨⟨p₁, hp₁⟩⟩)
   · simp [collinearEmpty]
     

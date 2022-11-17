@@ -354,17 +354,17 @@ def mapCoeffs : Basis ι R' M := by
         dsimp [(· • ·)]
         rw [mul_smul, ← h, f.apply_symm_apply] }
   exact
-    of_repr <|
-      (b.repr.restrict_scalars R').trans <| Finsupp.mapRange.linearEquiv (Module.compHom.toLinearEquiv f.symm).symm
+    of_repr $
+      (b.repr.restrict_scalars R').trans $ Finsupp.mapRange.linearEquiv (Module.compHom.toLinearEquiv f.symm).symm
 #align basis.map_coeffs Basis.mapCoeffs
 
 theorem map_coeffs_apply (i : ι) : b.mapCoeffs f h i = b i :=
-  apply_eq_iff.mpr <| by simp [f.to_add_equiv_eq_coe]
+  apply_eq_iff.mpr $ by simp [f.to_add_equiv_eq_coe]
 #align basis.map_coeffs_apply Basis.map_coeffs_apply
 
 @[simp]
 theorem coe_map_coeffs : (b.mapCoeffs f h : ι → M) = b :=
-  funext <| b.map_coeffs_apply f h
+  funext $ b.map_coeffs_apply f h
 #align basis.coe_map_coeffs Basis.coe_map_coeffs
 
 end MapCoeffs
@@ -392,7 +392,7 @@ theorem coe_reindex : (b.reindex e : ι' → M) = b ∘ e.symm :=
 
 @[simp]
 theorem coe_reindex_repr : ((b.reindex e).repr x : ι' → R) = b.repr x ∘ e.symm :=
-  funext fun i' => show (Finsupp.domLcongr e : _ ≃ₗ[R] _) (b.repr x) i' = _ by simp
+  funext $ fun i' => show (Finsupp.domLcongr e : _ ≃ₗ[R] _) (b.repr x) i' = _ by simp
 #align basis.coe_reindex_repr Basis.coe_reindex_repr
 
 @[simp]
@@ -401,7 +401,7 @@ theorem reindex_repr (i' : ι') : (b.reindex e).repr x i' = b.repr x (e.symm i')
 
 @[simp]
 theorem reindex_refl : b.reindex (Equiv.refl ι) = b :=
-  eq_of_apply_eq fun i => by simp
+  eq_of_apply_eq $ fun i => by simp
 #align basis.reindex_refl Basis.reindex_refl
 
 /-- `simp` normal form version of `range_reindex` -/
@@ -514,7 +514,7 @@ end Fintype
 end Reindex
 
 protected theorem linear_independent : LinearIndependent R b :=
-  linear_independent_iff.mpr fun l hl =>
+  linear_independent_iff.mpr $ fun l hl =>
     calc
       l = b.repr (Finsupp.total _ _ _ b l) := (b.repr_total l).symm
       _ = 0 := by rw [hl, LinearEquiv.map_zero]
@@ -531,11 +531,12 @@ protected theorem mem_span (x : M) : x ∈ span R (range b) := by
 #align basis.mem_span Basis.mem_span
 
 protected theorem span_eq : span R (range b) = ⊤ :=
-  eq_top_iff.mpr fun x _ => b.mem_span x
+  eq_top_iff.mpr $ fun x _ => b.mem_span x
 #align basis.span_eq Basis.span_eq
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 theorem index_nonempty (b : Basis ι R M) [Nontrivial M] : Nonempty ι := by
-  obtain ⟨x, y, ne⟩ : ∃ x y : M, x ≠ y := Nontrivial.exists_pair_ne
+  obtain ⟨x, y, ne⟩ : ∃ (x : M) (y : M), x ≠ y := Nontrivial.exists_pair_ne
   obtain ⟨i, _⟩ := not_forall.mp (mt b.ext_elem Ne)
   exact ⟨i⟩
 #align basis.index_nonempty Basis.index_nonempty
@@ -564,7 +565,7 @@ you can recover an `add_equiv` by setting `S := ℕ`.
 See library note [bundled maps over different rings].
 -/
 def constr : (ι → M') ≃ₗ[S] M →ₗ[R] M' where
-  toFun f := (Finsupp.total M' M' R id).comp <| Finsupp.lmapDomain R R f ∘ₗ ↑b.repr
+  toFun f := (Finsupp.total M' M' R id).comp $ Finsupp.lmapDomain R R f ∘ₗ ↑b.repr
   invFun f i := f (b i)
   left_inv f := by
     ext
@@ -595,11 +596,11 @@ theorem constr_basis (f : ι → M') (i : ι) : (b.constr S f : M → M') (b i) 
 #align basis.constr_basis Basis.constr_basis
 
 theorem constr_eq {g : ι → M'} {f : M →ₗ[R] M'} (h : ∀ i, g i = f (b i)) : b.constr S g = f :=
-  b.ext fun i => (b.constr_basis S g i).trans (h i)
+  b.ext $ fun i => (b.constr_basis S g i).trans (h i)
 #align basis.constr_eq Basis.constr_eq
 
 theorem constr_self (f : M →ₗ[R] M') : (b.constr S fun i => f (b i)) = f :=
-  (b.constr_eq S) fun x => rfl
+  b.constr_eq S $ fun x => rfl
 #align basis.constr_self Basis.constr_self
 
 theorem constr_range [Nonempty ι] {f : ι → M'} : (b.constr S f).range = span R (range f) := by
@@ -637,7 +638,7 @@ theorem equiv_refl : b.Equiv b (Equiv.refl ι) = LinearEquiv.refl R M :=
 
 @[simp]
 theorem equiv_symm : (b.Equiv b' e).symm = b'.Equiv b e.symm :=
-  b'.ext' fun i => (b.Equiv b' e).Injective (by simp)
+  b'.ext' $ fun i => (b.Equiv b' e).Injective (by simp)
 #align basis.equiv_symm Basis.equiv_symm
 
 @[simp]
@@ -661,7 +662,7 @@ variable (b' : Basis ι' R M')
 /-- `basis.prod` maps a `ι`-indexed basis for `M` and a `ι'`-indexed basis for `M'`
 to a `ι ⊕ ι'`-index basis for `M × M'`.
 For the specific case of `R × R`, see also `basis.fin_two_prod`. -/
-protected def prod : Basis (Sum ι ι') R (M × M') :=
+protected def prod : Basis (ι ⊕ ι') R (M × M') :=
   of_repr ((b.repr.Prod b'.repr).trans (Finsupp.sumFinsuppLequivProdFinsupp R).symm)
 #align basis.prod Basis.prod
 
@@ -676,7 +677,7 @@ theorem prod_repr_inr (x) (i) : (b.Prod b').repr x (Sum.inr i) = b'.repr x.2 i :
 #align basis.prod_repr_inr Basis.prod_repr_inr
 
 theorem prod_apply_inl_fst (i) : (b.Prod b' (Sum.inl i)).1 = b i :=
-  b.repr.Injective <| by
+  b.repr.Injective $ by
     ext j
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self, Equiv.to_fun_as_coe,
@@ -685,7 +686,7 @@ theorem prod_apply_inl_fst (i) : (b.Prod b' (Sum.inl i)).1 = b i :=
 #align basis.prod_apply_inl_fst Basis.prod_apply_inl_fst
 
 theorem prod_apply_inr_fst (i) : (b.Prod b' (Sum.inr i)).1 = 0 :=
-  b.repr.Injective <| by
+  b.repr.Injective $ by
     ext i
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self, Equiv.to_fun_as_coe,
@@ -694,7 +695,7 @@ theorem prod_apply_inr_fst (i) : (b.Prod b' (Sum.inr i)).1 = 0 :=
 #align basis.prod_apply_inr_fst Basis.prod_apply_inr_fst
 
 theorem prod_apply_inl_snd (i) : (b.Prod b' (Sum.inl i)).2 = 0 :=
-  b'.repr.Injective <| by
+  b'.repr.Injective $ by
     ext j
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b'.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self, Equiv.to_fun_as_coe,
@@ -703,7 +704,7 @@ theorem prod_apply_inl_snd (i) : (b.Prod b' (Sum.inl i)).2 = 0 :=
 #align basis.prod_apply_inl_snd Basis.prod_apply_inl_snd
 
 theorem prod_apply_inr_snd (i) : (b.Prod b' (Sum.inr i)).2 = b' i :=
-  b'.repr.Injective <| by
+  b'.repr.Injective $ by
     ext i
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b'.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self, Equiv.to_fun_as_coe,
@@ -773,10 +774,10 @@ theorem singleton_repr (ι R : Type _) [Unique ι] [Semiring R] (x i) : (Basis.s
   simp [Basis.singleton, Unique.eq_default i]
 #align basis.singleton_repr Basis.singleton_repr
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 theorem basis_singleton_iff {R M : Type _} [Ring R] [Nontrivial R] [AddCommGroup M] [Module R M]
     [NoZeroSmulDivisors R M] (ι : Type _) [Unique ι] :
-    Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y := by
+    Nonempty (Basis ι R M) ↔ ∃ (x) (_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y := by
   fconstructor
   · rintro ⟨b⟩
     refine' ⟨b default, b.linear_independent.ne_zero _, _⟩
@@ -784,7 +785,7 @@ theorem basis_singleton_iff {R M : Type _} [Ring R] [Nontrivial R] [AddCommGroup
     
   · rintro ⟨x, nz, w⟩
     refine'
-      ⟨of_repr <|
+      ⟨of_repr $
           LinearEquiv.symm
             { toFun := fun f => f default • x, invFun := fun y => Finsupp.single default (w y).some,
               left_inv := fun f => Finsupp.unique_ext _, right_inv := fun y => _, map_add' := fun y z => _,
@@ -817,7 +818,7 @@ protected def empty [Subsingleton M] [IsEmpty ι] : Basis ι R M :=
 
 instance emptyUnique [Subsingleton M] [IsEmpty ι] : Unique (Basis ι R M) where
   default := Basis.empty M
-  uniq := fun ⟨x⟩ => congr_arg of_repr <| Subsingleton.elim _ _
+  uniq := fun ⟨x⟩ => congr_arg of_repr $ Subsingleton.elim _ _
 #align basis.empty_unique Basis.emptyUnique
 
 end Empty
@@ -899,7 +900,7 @@ theorem Basis.repr_sum_self (c : ι → R) : ⇑(b.repr (∑ i, c i • b i)) = 
 /-- Define a basis by mapping each vector `x : M` to its coordinates `e x : ι → R`,
 as long as `ι` is finite. -/
 def Basis.ofEquivFun (e : M ≃ₗ[R] ι → R) : Basis ι R M :=
-  Basis.of_repr <| e.trans <| LinearEquiv.symm <| Finsupp.linearEquivFunOnFintype R R ι
+  Basis.of_repr $ e.trans $ LinearEquiv.symm $ Finsupp.linearEquivFunOnFintype R R ι
 #align basis.of_equiv_fun Basis.ofEquivFun
 
 @[simp]
@@ -910,8 +911,8 @@ theorem Basis.of_equiv_fun_repr_apply (e : M ≃ₗ[R] ι → R) (x : M) (i : ι
 @[simp]
 theorem Basis.coe_of_equiv_fun (e : M ≃ₗ[R] ι → R) :
     (Basis.ofEquivFun e : ι → M) = fun i => e.symm (Function.update 0 i 1) :=
-  funext fun i =>
-    e.Injective <| funext fun j => by simp [Basis.ofEquivFun, ← Finsupp.single_eq_pi_single, Finsupp.single_eq_update]
+  funext $ fun i =>
+    e.Injective $ funext $ fun j => by simp [Basis.ofEquivFun, ← Finsupp.single_eq_pi_single, Finsupp.single_eq_update]
 #align basis.coe_of_equiv_fun Basis.coe_of_equiv_fun
 
 @[simp]
@@ -935,8 +936,8 @@ theorem Basis.constr_apply_fintype (f : ι → M') (x : M) : (b.constr S f : M �
 `x ∈ P` iff it is a linear combination of basis vectors. -/
 theorem Basis.mem_submodule_iff' {P : Submodule R M} (b : Basis ι R P) {x : M} :
     x ∈ P ↔ ∃ c : ι → R, x = ∑ i, c i • b i :=
-  b.mem_submodule_iff.trans <|
-    Finsupp.equivFunOnFintype.exists_congr_left.trans <| exists_congr fun c => by simp [Finsupp.sum_fintype]
+  b.mem_submodule_iff.trans $
+    Finsupp.equivFunOnFintype.exists_congr_left.trans $ exists_congr $ fun c => by simp [Finsupp.sum_fintype]
 #align basis.mem_submodule_iff' Basis.mem_submodule_iff'
 
 end Fintype
@@ -962,14 +963,14 @@ def equiv' (f : M → M') (g : M' → M) (hf : ∀ i, f (b i) ∈ range b') (hg 
   { b.constr R (f ∘ b) with invFun := b'.constr R (g ∘ b'),
     left_inv :=
       have : (b'.constr R (g ∘ b')).comp (b.constr R (f ∘ b)) = LinearMap.id :=
-        b.ext fun i =>
+        b.ext $ fun i =>
           Exists.elim (hf i) fun i' hi' => by
             rw [LinearMap.comp_apply, b.constr_basis, Function.comp_apply, ← hi', b'.constr_basis, Function.comp_apply,
               hi', hgf, LinearMap.id_apply]
       fun x => congr_arg (fun h : M →ₗ[R] M => h x) this,
     right_inv :=
       have : (b.constr R (f ∘ b)).comp (b'.constr R (g ∘ b')) = LinearMap.id :=
-        b'.ext fun i =>
+        b'.ext $ fun i =>
           Exists.elim (hg i) fun i' hi' => by
             rw [LinearMap.comp_apply, b'.constr_basis, Function.comp_apply, ← hi', b.constr_basis, Function.comp_apply,
               hi', hfg, LinearMap.id_apply]
@@ -1098,7 +1099,7 @@ variable (hli : LinearIndependent R v)
 
 /-- A linear independent family of vectors is a basis for their span. -/
 protected noncomputable def span : Basis ι R (span R (range v)) :=
-  Basis.mk (linear_independent_span hli) <| by
+  Basis.mk (linear_independent_span hli) $ by
     intro x _
     have h₁ : ((coe : span R (range v) → M) '' Set.range fun i => Subtype.mk (v i) _) = range v := by
       rw [← Set.range_comp]
@@ -1118,7 +1119,7 @@ protected noncomputable def span : Basis ι R (span R (range v)) :=
 #align basis.span Basis.span
 
 protected theorem span_apply (i : ι) : (Basis.span hli i : M) = v i :=
-  congr_arg (coe : span R (range v) → M) <| Basis.mk_apply (linear_independent_span hli) _ i
+  congr_arg (coe : span R (range v) → M) $ Basis.mk_apply (linear_independent_span hli) _ i
 #align basis.span_apply Basis.span_apply
 
 end Span
@@ -1207,7 +1208,7 @@ noncomputable def mkFinCons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (Fi
   have span_b : Submodule.span R (Set.range (N.Subtype ∘ b)) = N := by
     rw [Set.range_comp, Submodule.span_image, b.span_eq, Submodule.map_subtype_top]
   @Basis.mk _ _ _ (Fin.cons y (N.Subtype ∘ b) : Fin (n + 1) → M) _ _ _
-    ((b.LinearIndependent.map' N.Subtype (Submodule.ker_subtype _)).fin_cons' _ _ <| by
+    ((b.LinearIndependent.map' N.Subtype (Submodule.ker_subtype _)).fin_cons' _ _ $ by
       rintro c ⟨x, hx⟩ hc
       rw [span_b] at hx
       exact hli c x hx hc)
@@ -1322,7 +1323,7 @@ section ExistsBasis
 /-- If `s` is a linear independent set of vectors, we can extend it to a basis. -/
 noncomputable def extend (hs : LinearIndependent K (coe : s → V)) : Basis _ K V :=
   Basis.mk (@LinearIndependent.restrict_of_comp_subtype _ _ _ id _ _ _ _ (hs.linear_independent_extend _))
-    (SetLike.coe_subset_coe.mp <| by simpa using hs.subset_span_extend (subset_univ s))
+    (SetLike.coe_subset_coe.mp $ by simpa using hs.subset_span_extend (subset_univ s))
 #align basis.extend Basis.extend
 
 theorem extend_apply_self (hs : LinearIndependent K (coe : s → V)) (x : hs.extend _) : Basis.extend hs x = x :=
@@ -1339,14 +1340,14 @@ theorem range_extend (hs : LinearIndependent K (coe : s → V)) : range (Basis.e
 #align basis.range_extend Basis.range_extend
 
 /-- If `v` is a linear independent family of vectors, extend it to a basis indexed by a sum type. -/
-noncomputable def sumExtend (hs : LinearIndependent K v) : Basis (Sum ι _) K V :=
+noncomputable def sumExtend (hs : LinearIndependent K v) : Basis (ι ⊕ _) K V :=
   let s := Set.range v
   let e : ι ≃ s := Equiv.ofInjective v hs.Injective
   let b := hs.to_subtype_range.extend (subset_univ (Set.range v))
-  (Basis.extend hs.to_subtype_range).reindex <|
-    Equiv.symm <|
+  (Basis.extend hs.to_subtype_range).reindex $
+    Equiv.symm $
       calc
-        Sum ι (b \ s : Set V) ≃ Sum s (b \ s : Set V) := Equiv.sumCongr e (Equiv.refl _)
+        ι ⊕ (b \ s : Set V) ≃ s ⊕ (b \ s : Set V) := Equiv.sumCongr e (Equiv.refl _)
         _ ≃ b := Equiv.Set.sumDiffSubset (hs.to_subtype_range.subset_extend _)
         
 #align basis.sum_extend Basis.sumExtend
@@ -1436,7 +1437,7 @@ theorem nonzero_span_atom (v : V) (hv : v ≠ 0) : IsAtom (span K {v} : Submodul
 
 /-- The atoms of the lattice of submodules of a module over a division ring are the
 submodules equal to the span of a nonzero element of the module. -/
-theorem atom_iff_nonzero_span (W : Submodule K V) : IsAtom W ↔ ∃ (v : V)(hv : v ≠ 0), W = span K {v} := by
+theorem atom_iff_nonzero_span (W : Submodule K V) : IsAtom W ↔ ∃ (v : V) (hv : v ≠ 0), W = span K {v} := by
   refine' ⟨fun h => _, fun h => _⟩
   · cases' h with hbot h
     rcases(Submodule.ne_bot_iff W).1 hbot with ⟨v, ⟨hW, hv⟩⟩
@@ -1455,7 +1456,7 @@ theorem atom_iff_nonzero_span (W : Submodule K V) : IsAtom W ↔ ∃ (v : V)(hv 
 instance :
     IsAtomistic (Submodule K V) where eq_Sup_atoms := by
     intro W
-    use { T : Submodule K V | ∃ (v : V)(hv : v ∈ W)(hz : v ≠ 0), T = span K {v} }
+    use { T : Submodule K V | ∃ (v : V) (hv : v ∈ W) (hz : v ≠ 0), T = span K {v} }
     refine' ⟨submodule_eq_Sup_le_nonzero_spans W, _⟩
     rintro _ ⟨w, ⟨_, ⟨hw, rfl⟩⟩⟩
     exact nonzero_span_atom w hw
@@ -1495,7 +1496,7 @@ theorem LinearMap.exists_left_inverse_of_injective (f : V →ₗ[K] V') (hf_inj 
 
 theorem Submodule.exists_is_compl (p : Submodule K V) : ∃ q : Submodule K V, IsCompl p q :=
   let ⟨f, hf⟩ := p.Subtype.exists_left_inverse_of_injective p.ker_subtype
-  ⟨f.ker, LinearMap.is_compl_of_proj <| LinearMap.ext_iff.1 hf⟩
+  ⟨f.ker, LinearMap.is_compl_of_proj $ LinearMap.ext_iff.1 hf⟩
 #align submodule.exists_is_compl Submodule.exists_is_compl
 
 instance Module.Submodule.complementedLattice : ComplementedLattice (Submodule K V) :=
@@ -1522,11 +1523,11 @@ theorem LinearMap.exists_extend {p : Submodule K V} (f : p →ₗ[K] V') : ∃ g
 
 open Submodule LinearMap
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (f «expr ≠ » (0 : «expr →ₗ[ ] »(V, K, K))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (f «expr ≠ » (0 : «expr →ₗ[ ] »(V, K, K))) -/
 /-- If `p < ⊤` is a subspace of a vector space `V`, then there exists a nonzero linear map
 `f : V →ₗ[K] K` such that `p ≤ ker f`. -/
 theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
-    ∃ (f : _)(_ : f ≠ (0 : V →ₗ[K] K)), p ≤ ker f := by
+    ∃ (f) (_ : f ≠ (0 : V →ₗ[K] K)), p ≤ ker f := by
   rcases SetLike.exists_of_lt hp with ⟨v, -, hpv⟩
   clear hp
   rcases(LinearPmap.supSpanSingleton ⟨p, 0⟩ v (1 : K) hpv).toFun.exists_extend with ⟨f, hf⟩
@@ -1544,7 +1545,7 @@ theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
 
 theorem quotient_prod_linear_equiv (p : Submodule K V) : Nonempty (((V ⧸ p) × p) ≃ₗ[K] V) :=
   let ⟨q, hq⟩ := p.exists_is_compl
-  Nonempty.intro <| ((quotientEquivOfIsCompl p q hq).Prod (LinearEquiv.refl _ _)).trans (prodEquivOfIsCompl q p hq.symm)
+  Nonempty.intro $ ((quotientEquivOfIsCompl p q hq).Prod (LinearEquiv.refl _ _)).trans (prodEquivOfIsCompl q p hq.symm)
 #align quotient_prod_linear_equiv quotient_prod_linear_equiv
 
 end Field

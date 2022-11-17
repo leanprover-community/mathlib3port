@@ -323,7 +323,7 @@ theorem lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder {α : Type _
 variable (E) [∀ n, TopologicalSpace (E n)] [∀ n, DiscreteTopology (E n)]
 
 theorem is_topological_basis_cylinders :
-    IsTopologicalBasis { s : Set (∀ n, E n) | ∃ (x : ∀ n, E n)(n : ℕ), s = cylinder x n } := by
+    IsTopologicalBasis { s : Set (∀ n, E n) | ∃ (x : ∀ n, E n) (n : ℕ), s = cylinder x n } := by
   apply is_topological_basis_of_open_of_nhds
   · rintro u ⟨x, n, rfl⟩
     rw [cylinder_eq_pi]
@@ -331,10 +331,10 @@ theorem is_topological_basis_cylinders :
     
   · intro x u hx u_open
     obtain ⟨v, ⟨U, F, hUF, rfl⟩, xU, Uu⟩ :
-      ∃ (v : Set (∀ i : ℕ, E i))(H :
+      ∃ (v : Set (∀ i : ℕ, E i)) (H :
         v ∈
           { S : Set (∀ i : ℕ, E i) |
-            ∃ (U : ∀ i : ℕ, Set (E i))(F : Finset ℕ),
+            ∃ (U : ∀ i : ℕ, Set (E i)) (F : Finset ℕ),
               (∀ i : ℕ, i ∈ F → U i ∈ { s : Set (E i) | IsOpen s }) ∧ S = (F : Set ℕ).pi U }),
         x ∈ v ∧ v ⊆ u :=
       (is_topological_basis_pi fun n : ℕ => is_topological_basis_opens).exists_subset_of_mem_open hx u_open
@@ -356,7 +356,7 @@ theorem is_open_iff_dist (s : Set (∀ n, E n)) : IsOpen s ↔ ∀ x ∈ s, ∃ 
   constructor
   · intro hs x hx
     obtain ⟨v, ⟨y, n, rfl⟩, h'x, h's⟩ :
-      ∃ (v : Set (∀ n : ℕ, E n))(H : v ∈ { s | ∃ (x : ∀ n : ℕ, E n)(n : ℕ), s = cylinder x n }), x ∈ v ∧ v ⊆ s :=
+      ∃ (v : Set (∀ n : ℕ, E n)) (H : v ∈ { s | ∃ (x : ∀ n : ℕ, E n) (n : ℕ), s = cylinder x n }), x ∈ v ∧ v ⊆ s :=
       (is_topological_basis_cylinders E).exists_subset_of_mem_open hx hs
     rw [← mem_cylinder_iff_eq.1 h'x] at h's
     exact ⟨(1 / 2 : ℝ) ^ n, by simp, fun y hy => h's fun i hi => (apply_eq_of_dist_lt hy hi.le).symm⟩
@@ -893,7 +893,7 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
       obtain ⟨K, hK⟩ : ∃ K : Finset ι, (∑' i : { j // j ∉ K }, (1 / 2 : ℝ) ^ encode (i : ι)) < ε / 2 :=
         ((tendsto_order.1 (tendsto_tsum_compl_at_top_zero fun i : ι => (1 / 2 : ℝ) ^ encode i)).2 _
             (half_pos εpos)).exists
-      obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ)(δpos : 0 < δ), (K.card : ℝ) * δ ≤ ε / 2 := by
+      obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ) (δpos : 0 < δ), (K.card : ℝ) * δ ≤ ε / 2 := by
         rcases Nat.eq_zero_or_pos K.card with (hK | hK)
         · exact ⟨1, zero_lt_one, by simpa only [hK, Nat.cast_zero, zero_mul] using (half_pos εpos).le⟩
           

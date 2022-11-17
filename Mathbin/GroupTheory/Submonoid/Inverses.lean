@@ -92,7 +92,7 @@ theorem mul_from_left_inv (x : S.left_inv) : (x : M) * S.fromLeftInv x = 1 :=
 
 @[simp, to_additive]
 theorem from_left_inv_one : S.fromLeftInv 1 = 1 :=
-  (one_mul _).symm.trans (Subtype.eq <| S.mul_from_left_inv 1)
+  (one_mul _).symm.trans (Subtype.eq $ S.mul_from_left_inv 1)
 #align submonoid.from_left_inv_one Submonoid.from_left_inv_one
 
 end Monoid
@@ -121,7 +121,7 @@ noncomputable def fromCommLeftInv : S.left_inv →* S where
   toFun := S.fromLeftInv
   map_one' := S.from_left_inv_one
   map_mul' x y :=
-    Subtype.ext <| by
+    Subtype.ext $ by
       rw [from_left_inv_eq_iff, mul_comm x, Submonoid.coe_mul, Submonoid.coe_mul, mul_assoc, ← mul_assoc (x : M),
         mul_from_left_inv, one_mul, mul_from_left_inv]
 #align submonoid.from_comm_left_inv Submonoid.fromCommLeftInv
@@ -138,7 +138,7 @@ noncomputable def leftInvEquiv : S.left_inv ≃* S :=
       choose x' hx using hS x.prop
       exact ⟨x'.inv, x, hx ▸ x'.inv_val⟩,
     left_inv := fun x =>
-      Subtype.eq <| by
+      Subtype.eq $ by
         dsimp
         generalize_proofs h
         rw [← h.some.mul_left_inj]
@@ -191,7 +191,7 @@ open Pointwise
 
 @[to_additive]
 theorem left_inv_eq_inv : S.left_inv = S⁻¹ :=
-  Submonoid.ext fun x =>
+  Submonoid.ext $ fun x =>
     ⟨fun h => Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_one_right h.some_spec).symm ▸ h.some.Prop), fun h =>
       ⟨⟨_, h⟩, mul_right_inv _⟩⟩
 #align submonoid.left_inv_eq_inv Submonoid.left_inv_eq_inv

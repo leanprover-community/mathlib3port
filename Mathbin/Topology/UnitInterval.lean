@@ -34,7 +34,7 @@ abbrev unitInterval : Set ℝ :=
 #align unit_interval unitInterval
 
 -- mathport name: unit_interval
-localized [unitInterval] notation "I" => unitInterval
+scoped[unitInterval] notation "I" => unitInterval
 
 namespace unitInterval
 
@@ -47,7 +47,7 @@ theorem one_mem : (1 : ℝ) ∈ I :=
 #align unit_interval.one_mem unitInterval.one_mem
 
 theorem mul_mem {x y : ℝ} (hx : x ∈ I) (hy : y ∈ I) : x * y ∈ I :=
-  ⟨mul_nonneg hx.1 hy.1, (mul_le_mul hx.2 hy.2 hy.1 zero_le_one).trans_eq <| one_mul 1⟩
+  ⟨mul_nonneg hx.1 hy.1, (mul_le_mul hx.2 hy.2 hy.1 zero_le_one).trans_eq $ one_mul 1⟩
 #align unit_interval.mul_mem unitInterval.mul_mem
 
 theorem div_mem {x y : ℝ} (hx : 0 ≤ x) (hy : 0 ≤ y) (hxy : x ≤ y) : x / y ∈ I :=
@@ -87,11 +87,11 @@ instance : Mul I :=
 
 -- todo: we could set up a `linear_ordered_comm_monoid_with_zero I` instance
 theorem mul_le_left {x y : I} : x * y ≤ x :=
-  Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_left y.2.2 x.2.1).trans_eq <| mul_one x
+  Subtype.coe_le_coe.mp $ (mul_le_mul_of_nonneg_left y.2.2 x.2.1).trans_eq $ mul_one x
 #align unit_interval.mul_le_left unitInterval.mul_le_left
 
 theorem mul_le_right {x y : I} : x * y ≤ y :=
-  Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_right x.2.2 y.2.1).trans_eq <| one_mul y
+  Subtype.coe_le_coe.mp $ (mul_le_mul_of_nonneg_right x.2.2 y.2.1).trans_eq $ one_mul y
 #align unit_interval.mul_le_right unitInterval.mul_le_right
 
 /-- Unit interval central symmetry. -/
@@ -99,21 +99,21 @@ def symm : I → I := fun t => ⟨1 - t, mem_iff_one_sub_mem.mp t.Prop⟩
 #align unit_interval.symm unitInterval.symm
 
 -- mathport name: unit_interval.symm
-localized [unitInterval] notation "σ" => unitInterval.symm
+scoped notation "σ" => unitInterval.symm
 
 @[simp]
 theorem symm_zero : σ 0 = 1 :=
-  Subtype.ext <| by simp [symm]
+  Subtype.ext $ by simp [symm]
 #align unit_interval.symm_zero unitInterval.symm_zero
 
 @[simp]
 theorem symm_one : σ 1 = 0 :=
-  Subtype.ext <| by simp [symm]
+  Subtype.ext $ by simp [symm]
 #align unit_interval.symm_one unitInterval.symm_one
 
 @[simp]
 theorem symm_symm (x : I) : σ (σ x) = x :=
-  Subtype.ext <| by simp [symm]
+  Subtype.ext $ by simp [symm]
 #align unit_interval.symm_symm unitInterval.symm_symm
 
 @[simp]
@@ -146,7 +146,7 @@ theorem one_minus_le_one (x : I) : 1 - (x : ℝ) ≤ 1 := by simpa using x.2.1
 #align unit_interval.one_minus_le_one unitInterval.one_minus_le_one
 
 theorem add_pos {t : I} {x : ℝ} (hx : 0 < x) : 0 < (x + t : ℝ) :=
-  add_pos_of_pos_of_nonneg hx <| nonneg _
+  add_pos_of_pos_of_nonneg hx $ nonneg _
 #align unit_interval.add_pos unitInterval.add_pos
 
 /-- like `unit_interval.nonneg`, but with the inequality in `I`. -/
@@ -189,10 +189,10 @@ theorem proj_Icc_eq_one {x : ℝ} : projIcc (0 : ℝ) 1 zero_le_one x = 1 ↔ 1 
 
 namespace Tactic.Interactive
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`. -/
 unsafe def unit_interval : tactic Unit :=
   sorry <|> sorry <|> sorry <|> sorry

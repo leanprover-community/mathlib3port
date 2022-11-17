@@ -51,7 +51,7 @@ namespace IsLocallyConstant
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Term.app `IsLocallyConstant [`f])
             ","
@@ -66,7 +66,7 @@ namespace IsLocallyConstant
               " in "
               (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`x])
               ", "
-              («term_=_» (Term.app `f [`x']) "=" (Term.app `f [`x]))))
+              (Init.Core.«term_=_» (Term.app `f [`x']) " = " (Term.app `f [`x]))))
             ","
             (Term.forall
              "∀"
@@ -79,7 +79,7 @@ namespace IsLocallyConstant
                 "{"
                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `x') [])
                 "|"
-                («term_=_» (Term.app `f [`x']) "=" (Term.app `f [`x]))
+                (Init.Core.«term_=_» (Term.app `f [`x']) " = " (Term.app `f [`x]))
                 "}")]))
             ","
             (Term.forall
@@ -94,19 +94,29 @@ namespace IsLocallyConstant
              [`x]
              []
              ","
-             («term∃_,_»
+             (Init.Logic.«term∃_,_»
               "∃"
-              (Lean.explicitBinders
-               [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `U)] ":" (Term.app `Set [`X]) ")")
-                (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `hU)] ":" (Term.app `IsOpen [`U]) ")")
-                (Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `hx)] ":" («term_∈_» `x "∈" `U) ")")])
-              ","
+              (Std.ExtendedBinder.extBinders
+               (Std.ExtendedBinder.extBinderCollection
+                [(Std.ExtendedBinder.extBinderParenthesized
+                  "("
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `U) [(group ":" (Term.app `Set [`X]))])
+                  ")")
+                 (Std.ExtendedBinder.extBinderParenthesized
+                  "("
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `hU) [(group ":" (Term.app `IsOpen [`U]))])
+                  ")")
+                 (Std.ExtendedBinder.extBinderParenthesized
+                  "("
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `hx) [(group ":" (Init.Core.«term_∈_» `x " ∈ " `U))])
+                  ")")]))
+              ", "
               (Std.ExtendedBinder.«term∀__,_»
                "∀"
                (Lean.binderIdent `x')
                («binderTerm∈_» "∈" `U)
                ","
-               («term_=_» (Term.app `f [`x']) "=" (Term.app `f [`x])))))]
+               (Init.Core.«term_=_» (Term.app `f [`x']) " = " (Term.app `f [`x])))))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -216,10 +226,10 @@ namespace IsLocallyConstant
                    [`x' `hx']
                    []
                    "=>"
-                   («term_<|_»
+                   (Init.Core.«term_$_»
                     (Term.proj `mem_preimage "." (fieldIdx "2"))
-                    "<|"
-                    (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
+                    " $ "
+                    (Init.Core.«term_▸_» (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) " ▸ " `hx))))
                  ","
                  `hU
                  ","
@@ -340,10 +350,10 @@ namespace IsLocallyConstant
                   [`x' `hx']
                   []
                   "=>"
-                  («term_<|_»
+                  (Init.Core.«term_$_»
                    (Term.proj `mem_preimage "." (fieldIdx "2"))
-                   "<|"
-                   (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
+                   " $ "
+                   (Init.Core.«term_▸_» (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) " ▸ " `hx))))
                 ","
                 `hU
                 ","
@@ -407,10 +417,10 @@ namespace IsLocallyConstant
               [`x' `hx']
               []
               "=>"
-              («term_<|_»
+              (Init.Core.«term_$_»
                (Term.proj `mem_preimage "." (fieldIdx "2"))
-               "<|"
-               (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
+               " $ "
+               (Init.Core.«term_▸_» (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) " ▸ " `hx))))
             ","
             `hU
             ","
@@ -430,10 +440,10 @@ namespace IsLocallyConstant
            [`x' `hx']
            []
            "=>"
-           («term_<|_»
+           (Init.Core.«term_$_»
             (Term.proj `mem_preimage "." (fieldIdx "2"))
-            "<|"
-            (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
+            " $ "
+            (Init.Core.«term_▸_» (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) " ▸ " `hx))))
          ","
          `hU
          ","
@@ -450,10 +460,10 @@ namespace IsLocallyConstant
           [`x' `hx']
           []
           "=>"
-          («term_<|_»
+          (Init.Core.«term_$_»
            (Term.proj `mem_preimage "." (fieldIdx "2"))
-           "<|"
-           (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
+           " $ "
+           (Init.Core.«term_▸_» (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) " ▸ " `hx))))
         ","
         `hU
         ","
@@ -472,17 +482,17 @@ namespace IsLocallyConstant
         [`x' `hx']
         []
         "=>"
-        («term_<|_»
+        (Init.Core.«term_$_»
          (Term.proj `mem_preimage "." (fieldIdx "2"))
-         "<|"
-         (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))))
+         " $ "
+         (Init.Core.«term_▸_» (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) " ▸ " `hx))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_»
+      (Init.Core.«term_$_»
        (Term.proj `mem_preimage "." (fieldIdx "2"))
-       "<|"
-       (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx]))
+       " $ "
+       (Init.Core.«term_▸_» (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) " ▸ " `hx))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.subst (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) "▸" [`hx])
+      (Init.Core.«term_▸_» (Term.proj (Term.app `Eq [`x' `hx']) "." `symm) " ▸ " `hx)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hx
 [PrettyPrinter.parenthesize] ...precedences are 75 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -504,16 +514,16 @@ namespace IsLocallyConstant
       `Eq
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Eq [`x' `hx']) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 75, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 75, (some 75, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Eq [`x' `hx']) ")")
+[PrettyPrinter.parenthesize] ...precedences are 76 >? 1024, (none, [anonymous]) <=? (some 75, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 75, (some 75, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj `mem_preimage "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `mem_preimage
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -660,7 +670,7 @@ protected
             intro h s
               refine' is_open_iff_forall_mem_open . 2 fun x hx => _
               rcases h x with ⟨ U , hU , hxU , eq ⟩
-              exact ⟨ U , fun x' hx' => mem_preimage . 2 <| Eq x' hx' . symm ▸ hx , hU , hxU ⟩
+              exact ⟨ U , fun x' hx' => mem_preimage . 2 $ Eq x' hx' . symm ▸ hx , hU , hxU ⟩
           tfae_finish
 #align is_locally_constant.tfae IsLocallyConstant.tfae
 
@@ -681,7 +691,7 @@ theorem is_clopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClo
 #align is_locally_constant.is_clopen_fiber IsLocallyConstant.is_clopen_fiber
 
 theorem iff_exists_open (f : X → Y) :
-    IsLocallyConstant f ↔ ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' ∈ U, f x' = f x :=
+    IsLocallyConstant f ↔ ∀ x, ∃ (U : Set X) (hU : IsOpen U) (hx : x ∈ U), ∀ x' ∈ U, f x' = f x :=
   (IsLocallyConstant.tfae f).out 0 4
 #align is_locally_constant.iff_exists_open IsLocallyConstant.iff_exists_open
 
@@ -690,7 +700,7 @@ theorem iff_eventually_eq (f : X → Y) : IsLocallyConstant f ↔ ∀ x, ∀ᶠ 
 #align is_locally_constant.iff_eventually_eq IsLocallyConstant.iff_eventually_eq
 
 theorem exists_open {f : X → Y} (hf : IsLocallyConstant f) (x : X) :
-    ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' ∈ U, f x' = f x :=
+    ∃ (U : Set X) (hU : IsOpen U) (hx : x ∈ U), ∀ x' ∈ U, f x' = f x :=
   (iff_exists_open f).1 hf x
 #align is_locally_constant.exists_open IsLocallyConstant.exists_open
 
@@ -711,11 +721,11 @@ theorem iff_continuous_bot (f : X → Y) : IsLocallyConstant f ↔ @Continuous X
 #align is_locally_constant.iff_continuous_bot IsLocallyConstant.iff_continuous_bot
 
 theorem of_constant (f : X → Y) (h : ∀ x y, f x = f y) : IsLocallyConstant f :=
-  (iff_eventually_eq f).2 fun x => eventually_of_forall fun x' => h _ _
+  (iff_eventually_eq f).2 $ fun x => eventually_of_forall $ fun x' => h _ _
 #align is_locally_constant.of_constant IsLocallyConstant.of_constant
 
 theorem const (y : Y) : IsLocallyConstant (Function.const X y) :=
-  (of_constant _) fun _ _ => rfl
+  of_constant _ $ fun _ _ => rfl
 #align is_locally_constant.const IsLocallyConstant.const
 
 theorem comp {f : X → Y} (hf : IsLocallyConstant f) (g : Y → Z) : IsLocallyConstant (g ∘ f) := fun s => by
@@ -725,7 +735,8 @@ theorem comp {f : X → Y} (hf : IsLocallyConstant f) (g : Y → Z) : IsLocallyC
 
 theorem prod_mk {Y'} {f : X → Y} {f' : X → Y'} (hf : IsLocallyConstant f) (hf' : IsLocallyConstant f') :
     IsLocallyConstant fun x => (f x, f' x) :=
-  (iff_eventually_eq _).2 fun x => (hf.EventuallyEq x).mp <| (hf'.EventuallyEq x).mono fun x' hf' hf => Prod.ext hf hf'
+  (iff_eventually_eq _).2 $ fun x =>
+    (hf.EventuallyEq x).mp $ (hf'.EventuallyEq x).mono $ fun x' hf' hf => Prod.ext hf hf'
 #align is_locally_constant.prod_mk IsLocallyConstant.prod_mk
 
 theorem comp₂ {Y₁ Y₂ Z : Type _} {f : X → Y₁} {g : X → Y₂} (hf : IsLocallyConstant f) (hg : IsLocallyConstant g)
@@ -759,13 +770,13 @@ theorem apply_eq_of_preconnected_space [PreconnectedSpace X] {f : X → Y} (hf :
 #align is_locally_constant.apply_eq_of_preconnected_space IsLocallyConstant.apply_eq_of_preconnected_space
 
 theorem eq_const [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f) (x : X) : f = Function.const X (f x) :=
-  funext fun y => hf.apply_eq_of_preconnected_space y x
+  funext $ fun y => hf.apply_eq_of_preconnected_space y x
 #align is_locally_constant.eq_const IsLocallyConstant.eq_const
 
 theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] {f : X → Y} (hf : IsLocallyConstant f) :
     ∃ y, f = Function.const X y := by
   cases isEmpty_or_nonempty X
-  · exact ⟨Classical.arbitrary Y, funext <| h.elim⟩
+  · exact ⟨Classical.arbitrary Y, funext $ h.elim⟩
     
   · exact ⟨f (Classical.arbitrary X), hf.eq_const _⟩
     
@@ -927,7 +938,6 @@ theorem coe_const (y : Y) : (const X y : X → Y) = Function.const X y :=
   rfl
 #align locally_constant.coe_const LocallyConstant.coe_const
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The locally constant function to `fin 2` associated to a clopen set. -/
 def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
     LocallyConstant X (Fin 2) where
@@ -986,14 +996,14 @@ theorem apply_eq_of_preconnected_space [PreconnectedSpace X] (f : LocallyConstan
 #align locally_constant.apply_eq_of_preconnected_space LocallyConstant.apply_eq_of_preconnected_space
 
 theorem eq_const [PreconnectedSpace X] (f : LocallyConstant X Y) (x : X) : f = const X (f x) :=
-  ext fun y => apply_eq_of_preconnected_space f _ _
+  ext $ fun y => apply_eq_of_preconnected_space f _ _
 #align locally_constant.eq_const LocallyConstant.eq_const
 
 theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] (f : LocallyConstant X Y) : ∃ y, f = const X y := by
   rcases Classical.em (Nonempty X) with (⟨⟨x⟩⟩ | hX)
   · exact ⟨f x, f.eq_const x⟩
     
-  · exact ⟨Classical.arbitrary Y, ext fun x => (hX ⟨x⟩).elim⟩
+  · exact ⟨Classical.arbitrary Y, ext $ fun x => (hX ⟨x⟩).elim⟩
     
 #align locally_constant.exists_eq_const LocallyConstant.exists_eq_const
 
@@ -1072,7 +1082,7 @@ noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant 
   else by
     by_cases H:Nonempty X
     · intro g
-      exact const X (g <| f <| Classical.arbitrary X)
+      exact const X (g $ f $ Classical.arbitrary X)
       
     · intro g
       refine' ⟨fun x => (H ⟨x⟩).elim, _⟩

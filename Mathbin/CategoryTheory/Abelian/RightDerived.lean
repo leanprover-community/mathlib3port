@@ -190,7 +190,7 @@ variable [Abelian C] [Abelian D] [Additive F]
 `exact f g`. -/
 theorem preserves_exact_of_preserves_finite_limits_of_mono [PreservesFiniteLimits F] [Mono f] (ex : Exact f g) :
     Exact (F.map f) (F.map g) :=
-  Abelian.exact_of_is_kernel _ _ (by simp [← functor.map_comp, ex.w]) <|
+  Abelian.exact_of_is_kernel _ _ (by simp [← functor.map_comp, ex.w]) $
     Limits.isLimitForkMapOfIsLimit' _ ex.w (Abelian.isLimitOfExactOfMono _ _ ex)
 #align
   category_theory.abelian.functor.preserves_exact_of_preserves_finite_limits_of_mono CategoryTheory.Abelian.Functor.preserves_exact_of_preserves_finite_limits_of_mono
@@ -295,7 +295,7 @@ theorem right_derived_zero_to_self_natural [EnoughInjectives C] {X : C} {Y : C} 
 
 /-- Given `preserves_finite_limits F`, the natural isomorphism `(F.right_derived 0) ≅ F`. -/
 def rightDerivedZeroIsoSelf [EnoughInjectives C] [PreservesFiniteLimits F] : F.rightDerived 0 ≅ F :=
-  iso.symm <|
+  iso.symm $
     NatIso.ofComponents (fun X => (right_derived_zero_to_self_app_iso _ (InjectiveResolutionCat.of X)).symm)
       fun X Y f => right_derived_zero_to_self_natural _ _ _ _
 #align

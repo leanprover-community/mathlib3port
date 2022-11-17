@@ -330,7 +330,7 @@ noncomputable instance AddSubgroup.seminormedAddCommGroupQuotient (S : AddSubgro
 -- This is a sanity check left here on purpose to ensure that potential refactors won't destroy
 -- this important property.
 example (S : AddSubgroup M) :
-    (Quotient.topologicalSpace : TopologicalSpace <| M ⧸ S) =
+    (Quotient.topologicalSpace : TopologicalSpace $ M ⧸ S) =
       S.seminormedAddCommGroupQuotient.toUniformSpace.toTopologicalSpace :=
   rfl
 
@@ -584,7 +584,7 @@ instance Submodule.Quotient.normedSpace (𝕜 : Type _) [NormedField 𝕜] [Norm
     [IsScalarTower 𝕜 R M] : NormedSpace 𝕜 (M ⧸ S) :=
   { Submodule.Quotient.module' S with
     norm_smul_le := fun k x =>
-      le_of_forall_pos_le_add fun ε hε => by
+      le_of_forall_pos_le_add $ fun ε hε => by
         have :=
           (nhds_basis_ball.tendsto_iff nhds_basis_ball).mp
             ((@Real.uniform_continuous_const_mul ∥k∥).Continuous.Tendsto ∥x∥) ε hε
@@ -616,7 +616,7 @@ theorem Ideal.Quotient.norm_mk_le (r : R) : ∥Ideal.Quotient.mk I r∥ ≤ ∥r
 instance Ideal.Quotient.semiNormedCommRing : SemiNormedCommRing (R ⧸ I) :=
   { Submodule.Quotient.seminormedAddCommGroup I with mul_comm := mul_comm,
     norm_mul := fun x y =>
-      le_of_forall_pos_le_add fun ε hε => by
+      le_of_forall_pos_le_add $ fun ε hε => by
         have :=
           ((nhds_basis_ball.prod_nhds nhds_basis_ball).tendsto_iff nhds_basis_ball).mp
             (real.continuous_mul.tendsto (∥x∥, ∥y∥)) ε hε

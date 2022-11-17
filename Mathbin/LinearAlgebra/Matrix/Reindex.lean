@@ -58,7 +58,7 @@ theorem reindex_linear_equiv_symm (eₘ : m ≃ m') (eₙ : n ≃ n') :
 
 @[simp]
 theorem reindex_linear_equiv_refl_refl : reindexLinearEquiv R A (Equiv.refl m) (Equiv.refl n) = LinearEquiv.refl R _ :=
-  LinearEquiv.ext fun _ => rfl
+  LinearEquiv.ext $ fun _ => rfl
 #align matrix.reindex_linear_equiv_refl_refl Matrix.reindex_linear_equiv_refl_refl
 
 theorem reindex_linear_equiv_trans (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : m' ≃ m'') (e₂' : n' ≃ n'') :
@@ -134,7 +134,7 @@ theorem reindex_alg_equiv_symm (e : m ≃ n) : (reindexAlgEquiv R e).symm = rein
 
 @[simp]
 theorem reindex_alg_equiv_refl : reindexAlgEquiv R (Equiv.refl m) = AlgEquiv.refl :=
-  AlgEquiv.ext fun _ => rfl
+  AlgEquiv.ext $ fun _ => rfl
 #align matrix.reindex_alg_equiv_refl Matrix.reindex_alg_equiv_refl
 
 theorem reindex_alg_equiv_mul (e : m ≃ n) (M : Matrix m m R) (N : Matrix m m R) :

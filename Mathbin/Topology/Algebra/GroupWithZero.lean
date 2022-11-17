@@ -125,7 +125,7 @@ theorem ContinuousAt.inv₀ (hf : ContinuousAt f a) (ha : f a ≠ 0) : Continuou
 
 @[continuity]
 theorem Continuous.inv₀ (hf : Continuous f) (h0 : ∀ x, f x ≠ 0) : Continuous fun x => (f x)⁻¹ :=
-  continuous_iff_continuous_at.2 fun x => (hf.Tendsto x).inv₀ (h0 x)
+  continuous_iff_continuous_at.2 $ fun x => (hf.Tendsto x).inv₀ (h0 x)
 #align continuous.inv₀ Continuous.inv₀
 
 theorem ContinuousOn.inv₀ (hf : ContinuousOn f s) (h0 : ∀ x ∈ s, f x ≠ 0) : ContinuousOn (fun x => (f x)⁻¹) s :=
@@ -173,7 +173,7 @@ theorem Continuous.div (hf : Continuous f) (hg : Continuous g) (h₀ : ∀ x, g 
 #align continuous.div Continuous.div
 
 theorem continuous_on_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
-  (continuous_on_fst.div continuous_on_snd) fun _ => id
+  continuous_on_fst.div continuous_on_snd $ fun _ => id
 #align continuous_on_div continuous_on_div
 
 /-- The function `f x / g x` is discontinuous when `g x = 0`.
@@ -200,7 +200,7 @@ theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β)
 theorem Continuous.comp_div_cases {f g : α → G₀} (h : α → G₀ → β) (hf : Continuous f) (hg : Continuous g)
     (hh : ∀ a, g a ≠ 0 → ContinuousAt (↿h) (a, f a / g a)) (h2h : ∀ a, g a = 0 → Tendsto (↿h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) :
     Continuous fun x => h x (f x / g x) :=
-  continuous_iff_continuous_at.mpr fun a => hf.ContinuousAt.comp_div_cases _ hg.ContinuousAt (hh a) (h2h a)
+  continuous_iff_continuous_at.mpr $ fun a => hf.ContinuousAt.comp_div_cases _ hg.ContinuousAt (hh a) (h2h a)
 #align continuous.comp_div_cases Continuous.comp_div_cases
 
 end Div
@@ -287,7 +287,7 @@ theorem ContinuousOn.zpow₀ (hf : ContinuousOn f s) (m : ℤ) (h : ∀ a ∈ s,
 
 @[continuity]
 theorem Continuous.zpow₀ (hf : Continuous f) (m : ℤ) (h0 : ∀ a, f a ≠ 0 ∨ 0 ≤ m) : Continuous fun x => f x ^ m :=
-  continuous_iff_continuous_at.2 fun x => (hf.Tendsto x).zpow₀ m (h0 x)
+  continuous_iff_continuous_at.2 $ fun x => (hf.Tendsto x).zpow₀ m (h0 x)
 #align continuous.zpow₀ Continuous.zpow₀
 
 end Zpow

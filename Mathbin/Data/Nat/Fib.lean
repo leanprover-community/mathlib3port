@@ -81,12 +81,12 @@ theorem fib_le_fib_succ {n : ℕ} : fib n ≤ fib (n + 1) := by cases n <;> simp
 
 @[mono]
 theorem fib_mono : Monotone fib :=
-  monotone_nat_of_le_succ fun _ => fib_le_fib_succ
+  monotone_nat_of_le_succ $ fun _ => fib_le_fib_succ
 #align nat.fib_mono Nat.fib_mono
 
 theorem fib_pos {n : ℕ} (n_pos : 0 < n) : 0 < fib n :=
   calc
-    0 < fib 1 := by decide
+    0 < fib 1 := dec_trivial
     _ ≤ fib n := fib_mono n_pos
     
 #align nat.fib_pos Nat.fib_pos
@@ -117,7 +117,7 @@ theorem le_fib_self {n : ℕ} (five_le_n : 5 ≤ n) : n ≤ fib n := by
     rw [succ_le_iff]
     calc
       n ≤ fib n := IH
-      _ < fib (n + 1) := fib_lt_fib_succ (le_trans (by decide) five_le_n)
+      _ < fib (n + 1) := fib_lt_fib_succ (le_trans dec_trivial five_le_n)
       
     
 #align nat.le_fib_self Nat.le_fib_self
@@ -339,18 +339,18 @@ theorem is_fib_aux_bit1_done {n a b a2 b2 a' : ℕ} (H : IsFibAux n a b) (h1 : a
 unsafe def prove_fib_aux (ic : instance_cache) : expr → tactic (instance_cache × expr × expr × expr)
   | e =>
     match match_numeral e with
-    | match_numeral_result.one => pure (ic, quote.1 (1 : ℕ), quote.1 (1 : ℕ), quote.1 is_fib_aux_one)
+    | match_numeral_result.one => pure (ic, q((1 : ℕ)), q((1 : ℕ)), q(is_fib_aux_one))
     | match_numeral_result.bit0 e => do
       let (ic, a, b, H) ← prove_fib_aux e
       let na ← a.toNat
       let nb ← b.toNat
       let (ic, c) ← ic.ofNat (2 * nb - na)
-      let (ic, h1) ← prove_add_nat ic a c ((quote.1 (bit0 : ℕ → ℕ)).mk_app [b])
+      let (ic, h1) ← prove_add_nat ic a c (q((bit0 : ℕ → ℕ)).mk_app [b])
       let (ic, a', h2) ← prove_mul_nat ic a c
       let (ic, a2, h3) ← prove_mul_nat ic a a
       let (ic, b2, h4) ← prove_mul_nat ic b b
       let (ic, b', h5) ← prove_add_nat' ic a2 b2
-      pure (ic, a', b', (quote.1 @is_fib_aux_bit0).mk_app [e, a, b, c, a2, b2, a', b', H, h1, h2, h3, h4, h5])
+      pure (ic, a', b', q(@is_fib_aux_bit0).mk_app [e, a, b, c, a2, b2, a', b', H, h1, h2, h3, h4, h5])
     | match_numeral_result.bit1 e => do
       let (ic, a, b, H) ← prove_fib_aux e
       let na ← a.toNat
@@ -359,9 +359,9 @@ unsafe def prove_fib_aux (ic : instance_cache) : expr → tactic (instance_cache
       let (ic, a2, h1) ← prove_mul_nat ic a a
       let (ic, b2, h2) ← prove_mul_nat ic b b
       let (ic, a', h3) ← prove_add_nat' ic a2 b2
-      let (ic, h4) ← prove_add_nat ic ((quote.1 (bit0 : ℕ → ℕ)).mk_app [a]) b c
+      let (ic, h4) ← prove_add_nat ic (q((bit0 : ℕ → ℕ)).mk_app [a]) b c
       let (ic, b', h5) ← prove_mul_nat ic b c
-      pure (ic, a', b', (quote.1 @is_fib_aux_bit1).mk_app [e, a, b, c, a2, b2, a', b', H, h1, h2, h3, h4, h5])
+      pure (ic, a', b', q(@is_fib_aux_bit1).mk_app [e, a, b, c, a2, b2, a', b', H, h1, h2, h3, h4, h5])
     | _ => failed
 #align norm_num.prove_fib_aux norm_num.prove_fib_aux
 
@@ -369,22 +369,22 @@ unsafe def prove_fib_aux (ic : instance_cache) : expr → tactic (instance_cache
 Uses the binary representation of `n` like `nat.fast_fib`. -/
 unsafe def prove_fib (ic : instance_cache) (e : expr) : tactic (instance_cache × expr × expr) :=
   match match_numeral e with
-  | match_numeral_result.zero => pure (ic, quote.1 (0 : ℕ), quote.1 fib_zero)
-  | match_numeral_result.one => pure (ic, quote.1 (1 : ℕ), quote.1 fib_one)
+  | match_numeral_result.zero => pure (ic, q((0 : ℕ)), q(fib_zero))
+  | match_numeral_result.one => pure (ic, q((1 : ℕ)), q(fib_one))
   | match_numeral_result.bit0 e => do
     let (ic, a, b, H) ← prove_fib_aux ic e
     let na ← a.toNat
     let nb ← b.toNat
     let (ic, c) ← ic.ofNat (2 * nb - na)
-    let (ic, h1) ← prove_add_nat ic a c ((quote.1 (bit0 : ℕ → ℕ)).mk_app [b])
+    let (ic, h1) ← prove_add_nat ic a c (q((bit0 : ℕ → ℕ)).mk_app [b])
     let (ic, a', h2) ← prove_mul_nat ic a c
-    pure (ic, a', (quote.1 @is_fib_aux_bit0_done).mk_app [e, a, b, c, a', H, h1, h2])
+    pure (ic, a', q(@is_fib_aux_bit0_done).mk_app [e, a, b, c, a', H, h1, h2])
   | match_numeral_result.bit1 e => do
     let (ic, a, b, H) ← prove_fib_aux ic e
     let (ic, a2, h1) ← prove_mul_nat ic a a
     let (ic, b2, h2) ← prove_mul_nat ic b b
     let (ic, a', h3) ← prove_add_nat' ic a2 b2
-    pure (ic, a', (quote.1 @is_fib_aux_bit1_done).mk_app [e, a, b, a2, b2, a', H, h1, h2, h3])
+    pure (ic, a', q(@is_fib_aux_bit1_done).mk_app [e, a, b, a2, b2, a', H, h1, h2, h3])
   | _ => failed
 #align norm_num.prove_fib norm_num.prove_fib
 
@@ -392,14 +392,14 @@ unsafe def prove_fib (ic : instance_cache) (e : expr) : tactic (instance_cache �
 Uses the binary representation of `n` like `nat.fast_fib`. -/
 @[norm_num]
 unsafe def eval_fib : expr → tactic (expr × expr)
-  | quote.1 (fib (%%ₓen)) => do
+  | q(fib $(en)) => do
     let n ← en.toNat
     match n with
-      | 0 => pure (quote.1 (0 : ℕ), quote.1 fib_zero)
-      | 1 => pure (quote.1 (1 : ℕ), quote.1 fib_one)
-      | 2 => pure (quote.1 (1 : ℕ), quote.1 fib_two)
+      | 0 => pure (q((0 : ℕ)), q(fib_zero))
+      | 1 => pure (q((1 : ℕ)), q(fib_one))
+      | 2 => pure (q((1 : ℕ)), q(fib_two))
       | _ => do
-        let c ← mk_instance_cache (quote.1 ℕ)
+        let c ← mk_instance_cache q(ℕ)
         Prod.snd <$> prove_fib c en
   | _ => failed
 #align norm_num.eval_fib norm_num.eval_fib

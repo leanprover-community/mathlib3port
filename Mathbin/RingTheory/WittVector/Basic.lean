@@ -71,11 +71,11 @@ def mapFun (f : α → β) : 𝕎 α → 𝕎 β := fun x => mk _ (f ∘ x.coeff
 namespace MapFun
 
 theorem injective (f : α → β) (hf : Injective f) : Injective (mapFun f : 𝕎 α → 𝕎 β) := fun x y h =>
-  ext fun n => hf (congr_arg (fun x => coeff x n) h : _)
+  ext $ fun n => hf (congr_arg (fun x => coeff x n) h : _)
 #align witt_vector.map_fun.injective WittVector.mapFun.injective
 
 theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 𝕎 α → 𝕎 β) := fun x =>
-  ⟨mk _ fun n => Classical.choose <| hf <| x.coeff n, by
+  ⟨mk _ fun n => Classical.choose $ hf $ x.coeff n, by
     ext n
     dsimp [map_fun]
     rw [Classical.choose_spec (hf (x.coeff n))]⟩
@@ -83,7 +83,7 @@ theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 
 
 variable (f : R →+* S) (x y : 𝕎 R)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Auxiliary tactic for showing that `map_fun` respects the ring operations. -/
 unsafe def map_fun_tac : tactic Unit :=
   sorry
@@ -160,21 +160,19 @@ end WittVector
 
 section Tactic
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- An auxiliary tactic for proving that `ghost_fun` respects the ring operations. -/
 unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tactic Unit := do
-  let fn ← to_expr (ppquote.1 (%%ₓfn : Fin _ → ℕ → R))
-  let quote.1 (Fin (%%ₓk) → _ → _) ← infer_type fn
+  let fn ← to_expr `(($(fn) : Fin _ → ℕ → R))
+  let q(Fin $(k) → _ → _) ← infer_type fn
   sorry
   sorry
-  to_expr (ppquote.1 (congr_fun (congr_arg (@peval R _ (%%ₓk)) (witt_structure_int_prop p (%%ₓφ) n)) (%%ₓfn))) >>=
-      note `this none
+  to_expr `(congr_fun (congr_arg (@peval R _ $(k)) (witt_structure_int_prop p $(φ) n)) $(fn)) >>= note `this none
   sorry
 #align tactic.interactive.ghost_fun_tac tactic.interactive.ghost_fun_tac
 
@@ -254,7 +252,7 @@ variable (p) (R)
 In `witt_vector.ghost_equiv` we upgrade this to an isomorphism of rings. -/
 private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R) where
   toFun := ghostFun
-  invFun x := (mk p) fun n => aeval x (xInTermsOfW p R n)
+  invFun x := mk p $ fun n => aeval x (xInTermsOfW p R n)
   left_inv := by
     intro x
     ext n
@@ -281,7 +279,7 @@ private def comm_ring_aux₁ : CommRing (𝕎 (MvPolynomial R ℚ)) :=
 
 @[local instance]
 private def comm_ring_aux₂ : CommRing (𝕎 (MvPolynomial R ℤ)) :=
-  (mapFun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _ (mapFun.zero _) (mapFun.one _)
+  (mapFun.injective _ $ map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _ (mapFun.zero _) (mapFun.one _)
     (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _) (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _)
     (mapFun.nat_cast _) (mapFun.int_cast _)
 #align witt_vector.comm_ring_aux₂ witt_vector.comm_ring_aux₂
@@ -290,9 +288,9 @@ attribute [reducible] comm_ring_aux₂
 
 /-- The commutative ring structure on `𝕎 R`. -/
 instance : CommRing (𝕎 R) :=
-  (mapFun.surjective _ <| counit_surjective _).CommRing (map_fun <| MvPolynomial.counit _) (mapFun.zero _)
-    (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _) (mapFun.nsmul _) (mapFun.zsmul _)
-    (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
+  (mapFun.surjective _ $ counit_surjective _).CommRing (map_fun $ MvPolynomial.counit _) (mapFun.zero _) (mapFun.one _)
+    (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _) (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _)
+    (mapFun.nat_cast _) (mapFun.int_cast _)
 
 variable {p R}
 

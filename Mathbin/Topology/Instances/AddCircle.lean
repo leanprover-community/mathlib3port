@@ -68,7 +68,7 @@ protected theorem continuous_mk' : Continuous (QuotientAddGroup.mk' (zmultiples 
 
 /-- An auxiliary definition used only for constructing `add_circle.equiv_add_circle`. -/
 private def equiv_add_circle_aux (hp : p ≠ 0) : AddCircle p →+ AddCircle q :=
-  QuotientAddGroup.lift _ ((QuotientAddGroup.mk' (zmultiples q)).comp <| AddMonoidHom.mulRight (p⁻¹ * q)) fun x h => by
+  QuotientAddGroup.lift _ ((QuotientAddGroup.mk' (zmultiples q)).comp $ AddMonoidHom.mulRight (p⁻¹ * q)) fun x h => by
     obtain ⟨z, rfl⟩ := mem_zmultiples_iff.1 h <;> simp [hp, mul_assoc (z : 𝕜), ← mul_assoc p]
 #align add_circle.equiv_add_circle_aux add_circle.equiv_add_circle_aux
 
@@ -106,7 +106,7 @@ include hp
 /-- The natural equivalence between `add_circle p` and the half-open interval `[0, p)`. -/
 def equivIco : AddCircle p ≃ ico 0 p where
   invFun := QuotientAddGroup.mk' _ ∘ coe
-  toFun x := ⟨(to_Ico_mod_periodic 0 hp.out).lift x, Quot.induction_on x <| to_Ico_mod_mem_Ico' hp.out⟩
+  toFun x := ⟨(to_Ico_mod_periodic 0 hp.out).lift x, Quot.induction_on x $ to_Ico_mod_mem_Ico' hp.out⟩
   right_inv := by
     rintro ⟨x, hx⟩
     ext
@@ -119,7 +119,7 @@ def equivIco : AddCircle p ≃ ico 0 p where
 #align add_circle.equiv_Ico AddCircle.equivIco
 
 @[simp]
-theorem coe_equiv_Ico_mk_apply (x : 𝕜) : (equivIco p <| QuotientAddGroup.mk x : 𝕜) = fract (x / p) * p :=
+theorem coe_equiv_Ico_mk_apply (x : 𝕜) : (equivIco p $ QuotientAddGroup.mk x : 𝕜) = fract (x / p) * p :=
   to_Ico_mod_eq_fract_mul _ x
 #align add_circle.coe_equiv_Ico_mk_apply AddCircle.coe_equiv_Ico_mk_apply
 
@@ -154,7 +154,7 @@ end LinearOrderedField
 variable (p : ℝ)
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is compact. -/
-instance compact_space [Fact (0 < p)] : CompactSpace <| AddCircle p := by
+instance compact_space [Fact (0 < p)] : CompactSpace $ AddCircle p := by
   rw [← is_compact_univ_iff, ← coe_image_Icc_eq p]
   exact is_compact_Icc.image (AddCircle.continuous_mk' p)
 #align add_circle.compact_space AddCircle.compact_space

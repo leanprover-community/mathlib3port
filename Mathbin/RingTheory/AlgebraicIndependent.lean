@@ -183,7 +183,7 @@ theorem algebraic_independent_equiv' (e : ι ≃ ι') {f : ι' → A} {g : ι �
 
 theorem algebraic_independent_subtype_range {ι} {f : ι → A} (hf : Injective f) :
     AlgebraicIndependent R (coe : range f → A) ↔ AlgebraicIndependent R f :=
-  Iff.symm <| algebraic_independent_equiv' (Equiv.ofInjective f hf) rfl
+  Iff.symm $ algebraic_independent_equiv' (Equiv.ofInjective f hf) rfl
 #align algebraic_independent_subtype_range algebraic_independent_subtype_range
 
 alias algebraic_independent_subtype_range ↔ AlgebraicIndependent.ofSubtypeRange _
@@ -292,11 +292,11 @@ theorem algebraic_independent_subtype {s : Set A} :
   by apply @algebraic_independent_comp_subtype _ _ _ id
 #align algebraic_independent_subtype algebraic_independent_subtype
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem algebraicIndependentOfFinite (s : Set A)
     (H : ∀ (t) (_ : t ⊆ s), t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=
-  algebraic_independent_subtype.2 fun p hp =>
+  algebraic_independent_subtype.2 $ fun p hp =>
     algebraic_independent_subtype.1 (H _ (mem_supported.1 hp) (Finset.finite_to_set _)) _ (by simp)
 #align algebraic_independent_of_finite algebraicIndependentOfFinite
 
@@ -317,12 +317,12 @@ theorem algebraicIndependentUnionOfDirected {η : Type _} [Nonempty η] {s : η 
   refine' algebraicIndependentOfFinite (⋃ i, s i) fun t ht ft => _
   rcases finite_subset_Union ft ht with ⟨I, fi, hI⟩
   rcases hs.finset_le fi.to_finset with ⟨i, hi⟩
-  exact (h i).mono (subset.trans hI <| Union₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
+  exact (h i).mono (subset.trans hI $ Union₂_subset $ fun j hj => hi j (fi.mem_to_finset.2 hj))
 #align algebraic_independent_Union_of_directed algebraicIndependentUnionOfDirected
 
 theorem algebraicIndependentSUnionOfDirected {s : Set (Set A)} (hsn : s.Nonempty) (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
-    AlgebraicIndependent R (fun x => x : ⋃₀s → A) := by
+    AlgebraicIndependent R (fun x => x : ⋃₀ s → A) := by
   letI : Nonempty s := nonempty.to_subtype hsn <;>
     rw [sUnion_eq_Union] <;> exact algebraicIndependentUnionOfDirected hs.directed_coe (by simpa using h)
 #align algebraic_independent_sUnion_of_directed algebraicIndependentSUnionOfDirected
@@ -334,7 +334,7 @@ theorem exists_maximal_algebraic_independent (s t : Set A) (hst : s ⊆ t) (hs :
   by
   rcases zorn_subset_nonempty { u : Set A | AlgebraicIndependent R (coe : u → A) ∧ s ⊆ u ∧ u ⊆ t }
       (fun c hc chainc hcn =>
-        ⟨⋃₀c, by
+        ⟨⋃₀ c, by
           refine' ⟨⟨algebraicIndependentSUnionOfDirected hcn chainc.directed_on fun a ha => (hc ha).1, _, _⟩, _⟩
           · cases' hcn with x hx
             exact subset_sUnion_of_subset _ x (hc hx).2.1 hx
@@ -397,7 +397,7 @@ theorem AlgebraicIndependent.aeval_repr (p) : aeval x (hx.repr p) = p :=
 #align algebraic_independent.aeval_repr AlgebraicIndependent.aeval_repr
 
 theorem AlgebraicIndependent.aeval_comp_repr : (aeval x).comp hx.repr = Subalgebra.val _ :=
-  AlgHom.ext <| hx.aeval_repr
+  AlgHom.ext $ hx.aeval_repr
 #align algebraic_independent.aeval_comp_repr AlgebraicIndependent.aeval_comp_repr
 
 theorem AlgebraicIndependent.repr_ker : (hx.repr : adjoin R (range x) →+* MvPolynomial ι R).ker = ⊥ :=

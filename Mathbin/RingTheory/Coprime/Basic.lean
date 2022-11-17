@@ -27,12 +27,13 @@ section CommSemiring
 
 variable {R : Type u} [CommSemiring R] (x y z : R)
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- The proposition that `x` and `y` are coprime, defined to be the existence of `a` and `b` such
 that `a * x + b * y = 1`. Note that elements with no common divisors are not necessarily coprime,
 e.g., the multivariate polynomials `x₁` and `x₂` are not coprime. -/
 @[simp]
 def IsCoprime : Prop :=
-  ∃ a b, a * x + b * y = 1
+  ∃ (a) (b), a * x + b * y = 1
 #align is_coprime IsCoprime
 
 variable {x y z}
@@ -47,13 +48,13 @@ theorem is_coprime_comm : IsCoprime x y ↔ IsCoprime y x :=
 #align is_coprime_comm is_coprime_comm
 
 theorem is_coprime_self : IsCoprime x x ↔ IsUnit x :=
-  ⟨fun ⟨a, b, h⟩ => is_unit_of_mul_eq_one x (a + b) <| by rwa [mul_comm, add_mul], fun h =>
+  ⟨fun ⟨a, b, h⟩ => is_unit_of_mul_eq_one x (a + b) $ by rwa [mul_comm, add_mul], fun h =>
     let ⟨b, hb⟩ := is_unit_iff_exists_inv'.1 h
     ⟨b, 0, by rwa [zero_mul, add_zero]⟩⟩
 #align is_coprime_self is_coprime_self
 
 theorem is_coprime_zero_left : IsCoprime 0 x ↔ IsUnit x :=
-  ⟨fun ⟨a, b, H⟩ => is_unit_of_mul_eq_one x b <| by rwa [mul_zero, zero_add, mul_comm] at H, fun H =>
+  ⟨fun ⟨a, b, H⟩ => is_unit_of_mul_eq_one x b $ by rwa [mul_zero, zero_add, mul_comm] at H, fun H =>
     let ⟨b, hb⟩ := is_unit_iff_exists_inv'.1 H
     ⟨1, b, by rwa [one_mul, zero_add]⟩⟩
 #align is_coprime_zero_left is_coprime_zero_left
@@ -158,7 +159,7 @@ theorem IsCoprime.of_coprime_of_dvd_right (h : IsCoprime z y) (hdvd : x ∣ y) :
 
 theorem IsCoprime.is_unit_of_dvd (H : IsCoprime x y) (d : x ∣ y) : IsUnit x :=
   let ⟨k, hk⟩ := d
-  is_coprime_self.1 <| IsCoprime.of_mul_right_left <| show IsCoprime x (x * k) from hk ▸ H
+  is_coprime_self.1 $ IsCoprime.of_mul_right_left $ show IsCoprime x (x * k) from hk ▸ H
 #align is_coprime.is_unit_of_dvd IsCoprime.is_unit_of_dvd
 
 theorem IsCoprime.is_unit_of_dvd' {a b x : R} (h : IsCoprime a b) (ha : x ∣ a) (hb : x ∣ b) : IsUnit x :=
@@ -226,7 +227,7 @@ theorem is_coprime_group_smul_left : IsCoprime (x • y) z ↔ IsCoprime y z :=
 #align is_coprime_group_smul_left is_coprime_group_smul_left
 
 theorem is_coprime_group_smul_right : IsCoprime y (x • z) ↔ IsCoprime y z :=
-  is_coprime_comm.trans <| (is_coprime_group_smul_left x z y).trans is_coprime_comm
+  is_coprime_comm.trans $ (is_coprime_group_smul_left x z y).trans is_coprime_comm
 #align is_coprime_group_smul_right is_coprime_group_smul_right
 
 theorem is_coprime_group_smul : IsCoprime (x • y) (x • z) ↔ IsCoprime y z :=
@@ -274,7 +275,7 @@ section CommRing
 variable {R : Type u} [CommRing R]
 
 theorem add_mul_left_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + y * z) y :=
-  @of_add_mul_left_left R _ _ _ (-z) <| by simpa only [mul_neg, add_neg_cancel_right] using h
+  @of_add_mul_left_left R _ _ _ (-z) $ by simpa only [mul_neg, add_neg_cancel_right] using h
 #align is_coprime.add_mul_left_left IsCoprime.add_mul_left_left
 
 theorem add_mul_right_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x + z * y) y := by

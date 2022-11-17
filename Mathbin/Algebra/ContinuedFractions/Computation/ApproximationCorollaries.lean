@@ -134,7 +134,7 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
     exact (mul_le_mul_left ε_pos).elimRight this
     show (n : K) ≤ B * nB
     calc
-      (n : K) ≤ fib n := by exact_mod_cast le_fib_self <| le_trans (le_max_right N' 5) n_ge_N
+      (n : K) ≤ fib n := by exact_mod_cast le_fib_self $ le_trans (le_max_right N' 5) n_ge_N
       _ ≤ fib (n + 1) := by exact_mod_cast fib_le_fib_succ
       _ ≤ fib (n + 1) * fib (n + 1) := by exact_mod_cast (fib (n + 1)).le_mul_self
       _ ≤ fib (n + 1) * fib (n + 2) :=
@@ -146,7 +146,7 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
 
 attribute [local instance] Preorder.topology
 
-theorem of_convergence [OrderTopology K] : Filter.Tendsto (of v).convergents Filter.atTop <| nhds v := by
+theorem of_convergence [OrderTopology K] : Filter.Tendsto (of v).convergents Filter.atTop $ nhds v := by
   simpa [LinearOrderedAddCommGroup.tendsto_nhds, abs_sub_comm] using of_convergence_epsilon v
 #align generalized_continued_fraction.of_convergence GeneralizedContinuedFraction.of_convergence
 

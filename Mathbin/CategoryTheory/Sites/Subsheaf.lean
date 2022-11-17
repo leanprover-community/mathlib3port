@@ -85,7 +85,7 @@ def Subpresheaf.ι : G.toPresheaf ⟶ F where app U x := x
 #align category_theory.grothendieck_topology.subpresheaf.ι CategoryTheory.GrothendieckTopology.Subpresheaf.ι
 
 instance : Mono G.ι :=
-  ⟨fun H f₁ f₂ e => NatTrans.ext f₁ f₂ <| funext fun U => funext fun x => Subtype.ext <| congr_fun (congr_app e U) x⟩
+  ⟨fun H f₁ f₂ e => NatTrans.ext f₁ f₂ $ funext $ fun U => funext $ fun x => Subtype.ext $ congr_fun (congr_app e U) x⟩
 
 /-- The inclusion of a subpresheaf to a larger subpresheaf -/
 @[simps]
@@ -96,8 +96,8 @@ def Subpresheaf.homOfLe {G G' : Subpresheaf F} (h : G ≤ G') :
 
 instance {G G' : Subpresheaf F} (h : G ≤ G') : Mono (Subpresheaf.homOfLe h) :=
   ⟨fun H f₁ f₂ e =>
-    NatTrans.ext f₁ f₂ <|
-      funext fun U => funext fun x => Subtype.ext <| (congr_arg Subtype.val <| (congr_fun (congr_app e U) x : _) : _)⟩
+    NatTrans.ext f₁ f₂ $
+      funext $ fun U => funext $ fun x => Subtype.ext $ (congr_arg Subtype.val $ (congr_fun (congr_app e U) x : _) : _)⟩
 
 @[simp, reassoc]
 theorem Subpresheaf.hom_of_le_ι {G G' : Subpresheaf F} (h : G ≤ G') : Subpresheaf.homOfLe h ≫ G'.ι = G.ι := by
@@ -271,7 +271,7 @@ theorem Subpresheaf.is_sheaf_iff (h : Presieve.IsSheaf J F) :
   category_theory.grothendieck_topology.subpresheaf.is_sheaf_iff CategoryTheory.GrothendieckTopology.Subpresheaf.is_sheaf_iff
 
 theorem Subpresheaf.sheafify_sheafify (h : Presieve.IsSheaf J F) : (G.sheafify J).sheafify J = G.sheafify J :=
-  ((Subpresheaf.eq_sheafify_iff _ h).mpr <| G.sheafifyIsSheaf h).symm
+  ((Subpresheaf.eq_sheafify_iff _ h).mpr $ G.sheafifyIsSheaf h).symm
 #align
   category_theory.grothendieck_topology.subpresheaf.sheafify_sheafify CategoryTheory.GrothendieckTopology.Subpresheaf.sheafify_sheafify
 
@@ -317,7 +317,7 @@ theorem Subpresheaf.to_sheafify_lift_unique (h : Presieve.IsSheaf J F') (l₁ l�
   rintro V i hi
   dsimp at hi
   erw [← functor_to_types.naturality, ← functor_to_types.naturality]
-  exact (congr_fun (congr_app e <| op V) ⟨_, hi⟩ : _)
+  exact (congr_fun (congr_app e $ op V) ⟨_, hi⟩ : _)
 #align
   category_theory.grothendieck_topology.subpresheaf.to_sheafify_lift_unique CategoryTheory.GrothendieckTopology.Subpresheaf.to_sheafify_lift_unique
 
@@ -471,7 +471,7 @@ noncomputable def imageFactorization {F F' : SheafCat J (Type max v u)} (f : F �
         · rw [← is_sheaf_iff_is_sheaf_of_type]
           exact F'.2
           
-        · apply presieve.is_sheaf_iso J (as_iso <| to_image_presheaf I.m.1)
+        · apply presieve.is_sheaf_iso J (as_iso $ to_image_presheaf I.m.1)
           rw [← is_sheaf_iff_is_sheaf_of_type]
           exact I.I.2
           ,

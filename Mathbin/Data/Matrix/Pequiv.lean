@@ -102,7 +102,7 @@ theorem to_pequiv_mul_matrix [Fintype m] [DecidableEq m] [Semiring α] (f : m �
 
 theorem mul_to_pequiv_to_matrix {m n α : Type _} [Fintype n] [DecidableEq n] [Semiring α] (f : n ≃ n)
     (M : Matrix m n α) : M ⬝ f.toPequiv.toMatrix = M.submatrix id f.symm :=
-  Matrix.ext fun i j => by
+  Matrix.ext $ fun i j => by
     rw [Pequiv.matrix_mul_apply, ← Equiv.to_pequiv_symm, Equiv.to_pequiv_apply, Matrix.submatrix_apply, id.def]
 #align pequiv.mul_to_pequiv_to_matrix Pequiv.mul_to_pequiv_to_matrix
 
@@ -120,17 +120,23 @@ theorem to_matrix_bot [DecidableEq n] [Zero α] [One α] : ((⊥ : Pequiv m n).t
 #align pequiv.to_matrix_bot Pequiv.to_matrix_bot
 
 theorem to_matrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] :
-    Function.Injective (@toMatrix m n α _ _ _) := by
-  classical intro f g
-    simp only [matrix.ext_iff.symm, to_matrix, Pequiv.ext_iff, not_forall, exists_imp]
-    use i
-    · cases' hg : g i with gi
-      · cc
-        
-      · use gi
-        simp
-        
+    Function.Injective (@toMatrix m n α _ _ _) := by classical
+  intro f g
+  refine' not_imp_not.1 _
+  simp only [matrix.ext_iff.symm, to_matrix, Pequiv.ext_iff, not_forall, exists_imp]
+  intro i hi
+  use i
+  cases' hf : f i with fi
+  · cases' hg : g i with gi
+    · cc
       
+    · use gi
+      simp
+      
+    
+  · use fi
+    simp [hf.symm, Ne.symm hi]
+    
 #align pequiv.to_matrix_injective Pequiv.to_matrix_injective
 
 theorem to_matrix_swap [DecidableEq n] [Ring α] (i j : n) :

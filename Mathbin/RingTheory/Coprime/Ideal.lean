@@ -91,9 +91,9 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
     obtain ⟨μ, hμ⟩ := ih.mpr hs
     obtain ⟨u, hu, v, hv, huv⟩ :=
       submodule.mem_sup.mp
-        ((eq_top_iff_one _).mp <|
-          sup_infi_eq_top fun b hb =>
-            Hb b hb <| by
+        ((eq_top_iff_one _).mp $
+          sup_infi_eq_top $ fun b hb =>
+            Hb b hb $ by
               rintro rfl
               exact hat hb)
     refine' ⟨fun i => if hi : i = a then ⟨v, _⟩ else ⟨u * μ i, _⟩, _⟩

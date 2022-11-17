@@ -153,7 +153,7 @@ theorem card_eq_zero_of_surjective {f : α → β} (hf : Function.Surjective f) 
 /-- NB: `nat.card` is defined to be `0` for infinite types. -/
 theorem card_eq_zero_of_injective [Nonempty α] {f : α → β} (hf : Function.Injective f) (h : Nat.card α = 0) :
     Nat.card β = 0 :=
-  card_eq_zero_of_surjective (Function.inv_fun_surjective hf) h
+  card_eq_zero_of_surjective (Function.invFun_surjective hf) h
 #align finite.card_eq_zero_of_injective Finite.card_eq_zero_of_injective
 
 /-- NB: `nat.card` is defined to be `0` for infinite types. -/
@@ -161,7 +161,7 @@ theorem card_eq_zero_of_embedding [Nonempty α] (f : α ↪ β) (h : Nat.card α
   card_eq_zero_of_injective f.2 h
 #align finite.card_eq_zero_of_embedding Finite.card_eq_zero_of_embedding
 
-theorem card_sum [Finite α] [Finite β] : Nat.card (Sum α β) = Nat.card α + Nat.card β := by
+theorem card_sum [Finite α] [Finite β] : Nat.card (α ⊕ β) = Nat.card α + Nat.card β := by
   haveI := Fintype.ofFinite α
   haveI := Fintype.ofFinite β
   simp

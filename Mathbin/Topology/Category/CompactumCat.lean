@@ -206,7 +206,7 @@ private theorem basic_inter {X : CompactumCat} (A B : Set X) : basic (A ∩ B) =
 private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ cl A := fun a ha => ⟨X.incl a, ha, by simp⟩
 #align Compactum.subset_cl Compactum.subset_cl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
 private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
@@ -275,7 +275,7 @@ theorem isClosedCl {X : CompactumCat} (A : Set X) : IsClosed (cl A) := by
   exact cl_cl _ ⟨F, hF, rfl⟩
 #align Compactum.is_closed_cl CompactumCat.isClosedCl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
 theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x := by
   -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))
@@ -355,7 +355,7 @@ theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F 
 #align Compactum.str_eq_of_le_nhds CompactumCat.str_eq_of_le_nhds
 
 theorem le_nhds_of_str_eq {X : CompactumCat} (F : Ultrafilter X) (x : X) : X.str F = x → ↑F ≤ 𝓝 x := fun h =>
-  le_nhds_iff.mpr fun s hx hs => hs _ <| by rwa [h]
+  le_nhds_iff.mpr fun s hx hs => hs _ $ by rwa [h]
 #align Compactum.le_nhds_of_str_eq CompactumCat.le_nhds_of_str_eq
 
 -- All the hard work above boils down to this t2_space instance.
@@ -456,13 +456,13 @@ def isoOfTopologicalSpace {D : CompHausCat} : compactumToCompHaus.obj (Compactum
   Hom :=
     { toFun := id,
       continuous_to_fun :=
-        continuous_def.2 fun _ h => by
+        continuous_def.2 $ fun _ h => by
           rw [is_open_iff_ultrafilter'] at h
           exact h }
   inv :=
     { toFun := id,
       continuous_to_fun :=
-        continuous_def.2 fun _ h1 => by
+        continuous_def.2 $ fun _ h1 => by
           rw [is_open_iff_ultrafilter']
           intro _ h2
           exact h1 _ h2 }
@@ -486,7 +486,7 @@ end compactumToCompHaus
 /-- The forgetful functors of `Compactum` and `CompHaus` are compatible via
 `Compactum_to_CompHaus`. -/
 def compactumToCompHausCompForget : compactumToCompHaus ⋙ CategoryTheory.forget CompHausCat ≅ CompactumCat.forget :=
-  (NatIso.ofComponents fun X => eqToIso rfl) <| by
+  (NatIso.ofComponents fun X => eqToIso rfl) $ by
     intro X Y f
     dsimp
     simpa

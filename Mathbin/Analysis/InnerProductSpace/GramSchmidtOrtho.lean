@@ -141,38 +141,38 @@ theorem mem_span_gram_schmidt (f : ι → E) {i j : ι} (hij : i ≤ j) : f i �
   rw [gram_schmidt_def' 𝕜 f i]
   simp_rw [orthogonal_projection_singleton]
   exact
-    Submodule.add_mem _ (subset_span <| mem_image_of_mem _ hij)
-      ((Submodule.sum_mem _) fun k hk =>
-        smul_mem (span 𝕜 (gramSchmidt 𝕜 f '' Iic j)) _ <|
-          subset_span <| mem_image_of_mem (gramSchmidt 𝕜 f) <| (Finset.mem_Iio.1 hk).le.trans hij)
+    Submodule.add_mem _ (subset_span $ mem_image_of_mem _ hij)
+      (Submodule.sum_mem _ $ fun k hk =>
+        smul_mem (span 𝕜 (gramSchmidt 𝕜 f '' Iic j)) _ $
+          subset_span $ mem_image_of_mem (gramSchmidt 𝕜 f) $ (Finset.mem_Iio.1 hk).le.trans hij)
 #align mem_span_gram_schmidt mem_span_gram_schmidt
 
 theorem gram_schmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmidt 𝕜 f i ∈ span 𝕜 (f '' iic j)
   | j => fun i hij => by
     rw [gram_schmidt_def 𝕜 f i]
     simp_rw [orthogonal_projection_singleton]
-    refine' Submodule.sub_mem _ (subset_span (mem_image_of_mem _ hij)) ((Submodule.sum_mem _) fun k hk => _)
+    refine' Submodule.sub_mem _ (subset_span (mem_image_of_mem _ hij)) (Submodule.sum_mem _ $ fun k hk => _)
     let hkj : k < j := (Finset.mem_Iio.1 hk).trans_le hij
-    exact smul_mem _ _ (span_mono (image_subset f <| Iic_subset_Iic.2 hkj.le) <| gram_schmidt_mem_span le_rfl)
+    exact smul_mem _ _ (span_mono (image_subset f $ Iic_subset_Iic.2 hkj.le) $ gram_schmidt_mem_span le_rfl)
 #align gram_schmidt_mem_span gram_schmidt_mem_span
 
 theorem span_gram_schmidt_Iic (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' iic c) = span 𝕜 (f '' iic c) :=
-  span_eq_span (Set.image_subset_iff.2 fun i => gram_schmidt_mem_span _ _) <|
-    Set.image_subset_iff.2 fun i => mem_span_gram_schmidt _ _
+  span_eq_span (Set.image_subset_iff.2 $ fun i => gram_schmidt_mem_span _ _) $
+    Set.image_subset_iff.2 $ fun i => mem_span_gram_schmidt _ _
 #align span_gram_schmidt_Iic span_gram_schmidt_Iic
 
 theorem span_gram_schmidt_Iio (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' iio c) = span 𝕜 (f '' iio c) :=
   span_eq_span
-      (Set.image_subset_iff.2 fun i hi =>
-        span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| gram_schmidt_mem_span _ _ le_rfl) <|
-    Set.image_subset_iff.2 fun i hi =>
-      span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| mem_span_gram_schmidt _ _ le_rfl
+      (Set.image_subset_iff.2 $ fun i hi =>
+        span_mono (image_subset _ $ Iic_subset_Iio.2 hi) $ gram_schmidt_mem_span _ _ le_rfl) $
+    Set.image_subset_iff.2 $ fun i hi =>
+      span_mono (image_subset _ $ Iic_subset_Iio.2 hi) $ mem_span_gram_schmidt _ _ le_rfl
 #align span_gram_schmidt_Iio span_gram_schmidt_Iio
 
 /-- `gram_schmidt` preserves span of vectors. -/
 theorem span_gram_schmidt (f : ι → E) : span 𝕜 (range (gramSchmidt 𝕜 f)) = span 𝕜 (range f) :=
-  span_eq_span (range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| gram_schmidt_mem_span _ _ le_rfl) <|
-    range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| mem_span_gram_schmidt _ _ le_rfl
+  span_eq_span (range_subset_iff.2 $ fun i => span_mono (image_subset_range _ _) $ gram_schmidt_mem_span _ _ le_rfl) $
+    range_subset_iff.2 $ fun i => span_mono (image_subset_range _ _) $ mem_span_gram_schmidt _ _ le_rfl
 #align span_gram_schmidt span_gram_schmidt
 
 theorem gram_schmidt_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f i, f j⟫ = 0) : gramSchmidt 𝕜 f = f := by
@@ -309,8 +309,8 @@ theorem gramSchmidtOrthonormal' (f : ι → E) :
 theorem span_gram_schmidt_normed (f : ι → E) (s : Set ι) :
     span 𝕜 (gramSchmidtNormed 𝕜 f '' s) = span 𝕜 (gramSchmidt 𝕜 f '' s) := by
   refine'
-    span_eq_span (Set.image_subset_iff.2 fun i hi => smul_mem _ _ <| subset_span <| mem_image_of_mem _ hi)
-      (Set.image_subset_iff.2 fun i hi => span_mono (image_subset _ <| singleton_subset_set_iff.2 hi) _)
+    span_eq_span (Set.image_subset_iff.2 $ fun i hi => smul_mem _ _ $ subset_span $ mem_image_of_mem _ hi)
+      (Set.image_subset_iff.2 $ fun i hi => span_mono (image_subset _ $ singleton_subset_set_iff.2 hi) _)
   simp only [coe_singleton, Set.image_singleton]
   by_cases h:gramSchmidt 𝕜 f i = 0
   · simp [h]

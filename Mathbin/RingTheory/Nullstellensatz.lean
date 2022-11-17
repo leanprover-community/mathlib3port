@@ -46,7 +46,7 @@ theorem mem_zero_locus_iff {I : Ideal (MvPolynomial σ k)} {x : σ → k} : x �
 #align mv_polynomial.mem_zero_locus_iff MvPolynomial.mem_zero_locus_iff
 
 theorem zero_locus_anti_mono {I J : Ideal (MvPolynomial σ k)} (h : I ≤ J) : zeroLocus J ≤ zeroLocus I :=
-  fun x hx p hp => hx p <| h hp
+  fun x hx p hp => hx p $ h hp
 #align mv_polynomial.zero_locus_anti_mono MvPolynomial.zero_locus_anti_mono
 
 theorem zero_locus_bot : zeroLocus (⊥ : Ideal (MvPolynomial σ k)) = ⊤ :=
@@ -54,7 +54,7 @@ theorem zero_locus_bot : zeroLocus (⊥ : Ideal (MvPolynomial σ k)) = ⊤ :=
 #align mv_polynomial.zero_locus_bot MvPolynomial.zero_locus_bot
 
 theorem zero_locus_top : zeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
-  eq_bot_iff.2 fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
+  eq_bot_iff.2 $ fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
 #align mv_polynomial.zero_locus_top MvPolynomial.zero_locus_top
 
 /-- Ideal of polynomials with common zeroes at all elements of a set -/
@@ -72,7 +72,7 @@ theorem mem_vanishing_ideal_iff {V : Set (σ → k)} {p : MvPolynomial σ k} :
 #align mv_polynomial.mem_vanishing_ideal_iff MvPolynomial.mem_vanishing_ideal_iff
 
 theorem vanishing_ideal_anti_mono {A B : Set (σ → k)} (h : A ≤ B) : vanishingIdeal B ≤ vanishingIdeal A :=
-  fun p hp x hx => hp x <| h hx
+  fun p hp x hx => hp x $ h hx
 #align mv_polynomial.vanishing_ideal_anti_mono MvPolynomial.vanishing_ideal_anti_mono
 
 theorem vanishing_ideal_empty : vanishingIdeal (∅ : Set (σ → k)) = ⊤ :=
@@ -163,7 +163,7 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
     ⟨quotient_mk_comp_C_injective _ _ I hI.ne_top,
       IsAlgClosed.algebra_map_surjective_of_is_integral' ϕ
         (mv_polynomial.comp_C_integral_of_surjective_of_jacobson _ quotient.mk_surjective)⟩
-  obtain ⟨φ, hφ⟩ := Function.Surjective.has_right_inverse hϕ.2
+  obtain ⟨φ, hφ⟩ := Function.Surjective.hasRightInverse hϕ.2
   let x : σ → k := fun s => φ ((Ideal.Quotient.mk I) (X s))
   have hx : ∀ s : σ, ϕ (x s) = (Ideal.Quotient.mk I) (X s) := fun s => hφ ((Ideal.Quotient.mk I) (X s))
   refine' ⟨x, (is_maximal.eq_of_le (by infer_instance) hI.ne_top _).symm⟩

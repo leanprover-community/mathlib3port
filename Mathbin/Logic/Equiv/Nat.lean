@@ -35,7 +35,7 @@ def boolProdNatEquivNat : Bool × ℕ ≃ ℕ where
 `2 * x + 1`.
 -/
 @[simps symmApply]
-def natSumNatEquivNat : Sum ℕ ℕ ≃ ℕ :=
+def natSumNatEquivNat : ℕ ⊕ ℕ ≃ ℕ :=
   (boolProdEquivSum ℕ).symm.trans boolProdNatEquivNat
 #align equiv.nat_sum_nat_equiv_nat Equiv.natSumNatEquivNat
 

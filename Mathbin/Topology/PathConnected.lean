@@ -186,7 +186,7 @@ instance : TopologicalSpace (Path x y) :=
   TopologicalSpace.induced (coe : _ → C(I, X)) ContinuousMap.compactOpen
 
 theorem continuous_eval : Continuous fun p : Path x y × I => p.1 p.2 :=
-  continuous_eval'.comp <| continuous_induced_dom.prod_map continuous_id
+  continuous_eval'.comp $ continuous_induced_dom.prod_map continuous_id
 #align path.continuous_eval Path.continuous_eval
 
 @[continuity]
@@ -196,7 +196,7 @@ theorem _root_.continuous.path_eval {Y} [TopologicalSpace Y] {f : Y → Path x y
 #align path._root_.continuous.path_eval path._root_.continuous.path_eval
 
 theorem continuous_uncurry_iff {Y} [TopologicalSpace Y] {g : Y → Path x y} : Continuous ↿g ↔ Continuous g :=
-  Iff.symm <|
+  Iff.symm $
     continuous_induced_rng.trans ⟨fun h => continuous_uncurry_of_continuous ⟨_, h⟩, continuous_of_continuous_uncurry ↑g⟩
 #align path.continuous_uncurry_iff Path.continuous_uncurry_iff
 
@@ -457,7 +457,7 @@ theorem symm_continuous_family {X ι : Type _} [TopologicalSpace X] [Topological
 
 @[continuity]
 theorem continuous_symm : Continuous (symm : Path x y → Path y x) :=
-  continuous_uncurry_iff.mp <| symm_continuous_family _ (continuous_fst.path_eval continuous_snd)
+  continuous_uncurry_iff.mp $ symm_continuous_family _ (continuous_fst.path_eval continuous_snd)
 #align path.continuous_symm Path.continuous_symm
 
 @[continuity]
@@ -475,10 +475,10 @@ theorem trans_continuous_family {X ι : Type _} [TopologicalSpace X] [Topologica
   simp only [has_uncurry.uncurry, CoeFun.coe, coeFn, Path.trans, (· ∘ ·)]
   refine' Continuous.if_le _ _ (continuous_subtype_coe.comp continuous_snd) continuous_const _
   · change Continuous ((fun p : ι × ℝ => (γ₁ p.1).extend p.2) ∘ Prod.map id (fun x => 2 * x : I → ℝ))
-    exact h₁'.comp (continuous_id.prod_map <| continuous_const.mul continuous_subtype_coe)
+    exact h₁'.comp (continuous_id.prod_map $ continuous_const.mul continuous_subtype_coe)
     
   · change Continuous ((fun p : ι × ℝ => (γ₂ p.1).extend p.2) ∘ Prod.map id (fun x => 2 * x - 1 : I → ℝ))
-    exact h₂'.comp (continuous_id.prod_map <| (continuous_const.mul continuous_subtype_coe).sub continuous_const)
+    exact h₂'.comp (continuous_id.prod_map $ (continuous_const.mul continuous_subtype_coe).sub continuous_const)
     
   · rintro st hst
     simp [hst, mul_inv_cancel (@two_ne_zero ℝ _ _)]
@@ -577,7 +577,7 @@ protected theorem mul_apply [Mul X] [HasContinuousMul X] {a₁ b₁ a₂ b₂ : 
 /-- `γ.truncate t₀ t₁` is the path which follows the path `γ` on the
   time interval `[t₀, t₁]` and stays still otherwise. -/
 def truncate {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t₀ t₁ : ℝ) :
-    Path (γ.extend <| min t₀ t₁) (γ.extend t₁) where
+    Path (γ.extend $ min t₀ t₁) (γ.extend t₁) where
   toFun s := γ.extend (min (max s t₀) t₁)
   continuous_to_fun := γ.continuous_extend.comp ((continuous_subtype_coe.max continuous_const).min continuous_const)
   source' := by
@@ -648,7 +648,7 @@ theorem truncate_const_continuous_family {X : Type _} [TopologicalSpace X] {a b 
 
 @[simp]
 theorem truncate_self {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t : ℝ) :
-    γ.truncate t t = (Path.refl <| γ.extend t).cast (by rw [min_self]) rfl := by
+    γ.truncate t t = (Path.refl $ γ.extend t).cast (by rw [min_self]) rfl := by
   ext x
   rw [cast_coe]
   simp only [truncate, CoeFun.coe, coeFn, refl, min_def, max_def]
@@ -815,7 +815,7 @@ theorem JoinedIn.joined_subtype (h : JoinedIn F x y) : Joined (⟨x, h.source_me
 
 theorem JoinedIn.of_line {f : ℝ → X} (hf : ContinuousOn f I) (h₀ : f 0 = x) (h₁ : f 1 = y) (hF : f '' I ⊆ F) :
     JoinedIn F x y :=
-  ⟨Path.ofLine hf h₀ h₁, fun t => hF <| Path.of_line_mem hf h₀ h₁ t⟩
+  ⟨Path.ofLine hf h₀ h₁, fun t => hF $ Path.of_line_mem hf h₀ h₁ t⟩
 #align joined_in.of_line JoinedIn.of_line
 
 theorem JoinedIn.joined (h : JoinedIn F x y) : Joined x y :=
@@ -927,14 +927,14 @@ theorem is_path_connected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, pathCompon
     
 #align is_path_connected_iff_eq is_path_connected_iff_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 theorem IsPathConnected.joined_in (h : IsPathConnected F) : ∀ (x y) (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   fun x x_in x y_in =>
   let ⟨b, b_in, hb⟩ := h
   (hb x_in).symm.trans (hb y_in)
 #align is_path_connected.joined_in IsPathConnected.joined_in
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » F) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » F) -/
 theorem is_path_connected_iff : IsPathConnected F ↔ F.Nonempty ∧ ∀ (x y) (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   ⟨fun h =>
     ⟨let ⟨b, b_in, hb⟩ := h
@@ -1004,9 +1004,9 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
           
         
       
-    · rcases hn fun i hi => hp' i <| Nat.le_succ_of_le hi with ⟨γ₀, hγ₀⟩
-      rcases h.joined_in (p' n) (hp' n n.le_succ) (p' <| n + 1) (hp' (n + 1) <| le_rfl) with ⟨γ₁, hγ₁⟩
-      let γ : Path (p' 0) (p' <| n + 1) := γ₀.trans γ₁
+    · rcases hn fun i hi => hp' i $ Nat.le_succ_of_le hi with ⟨γ₀, hγ₀⟩
+      rcases h.joined_in (p' n) (hp' n n.le_succ) (p' $ n + 1) (hp' (n + 1) $ le_rfl) with ⟨γ₁, hγ₁⟩
+      let γ : Path (p' 0) (p' $ n + 1) := γ₀.trans γ₁
       use γ
       have range_eq : range γ = range γ₀ ∪ range γ₁ := γ₀.trans_range γ₁
       constructor
@@ -1050,7 +1050,7 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
 
 theorem IsPathConnected.exists_path_through_family' {X : Type _} [TopologicalSpace X] {n : ℕ} {s : Set X}
     (h : IsPathConnected s) (p : Fin (n + 1) → X) (hp : ∀ i, p i ∈ s) :
-    ∃ (γ : Path (p 0) (p n))(t : Fin (n + 1) → I), (∀ t, γ t ∈ s) ∧ ∀ i, γ (t i) = p i := by
+    ∃ (γ : Path (p 0) (p n)) (t : Fin (n + 1) → I), (∀ t, γ t ∈ s) ∧ ∀ i, γ (t i) = p i := by
   rcases h.exists_path_through_family p hp with ⟨γ, hγ⟩
   rcases hγ with ⟨h₁, h₂⟩
   simp only [range, mem_set_of_eq] at h₂
@@ -1081,7 +1081,7 @@ theorem path_connected_space_iff_zeroth_homotopy :
   · unfold ZerothHomotopy
     rintro ⟨h, h'⟩
     skip
-    exact ⟨(nonempty_quotient_iff _).mp h, fun x y => Quotient.exact <| Subsingleton.elim ⟦x⟧ ⟦y⟧⟩
+    exact ⟨(nonempty_quotient_iff _).mp h, fun x y => Quotient.exact $ Subsingleton.elim ⟦x⟧ ⟦y⟧⟩
     
 #align path_connected_space_iff_zeroth_homotopy path_connected_space_iff_zeroth_homotopy
 
@@ -1157,7 +1157,7 @@ theorem exists_path_through_family {n : ℕ} (p : Fin (n + 1) → X) : ∃ γ : 
 #align path_connected_space.exists_path_through_family PathConnectedSpace.exists_path_through_family
 
 theorem exists_path_through_family' {n : ℕ} (p : Fin (n + 1) → X) :
-    ∃ (γ : Path (p 0) (p n))(t : Fin (n + 1) → I), ∀ i, γ (t i) = p i := by
+    ∃ (γ : Path (p 0) (p n)) (t : Fin (n + 1) → I), ∀ i, γ (t i) = p i := by
   have : IsPathConnected (univ : Set X) := path_connected_space_iff_univ.mp (by infer_instance)
   rcases this.exists_path_through_family' p fun i => True.intro with ⟨γ, t, -, h⟩
   exact ⟨γ, t, h⟩
@@ -1211,7 +1211,7 @@ theorem path_connected_space_iff_connected_space [LocPathConnectedSpace X] : Pat
       intro y H
       rcases(path_connected_basis y).ex_mem with ⟨U, ⟨U_in, hU⟩⟩
       rcases H U U_in with ⟨z, hz, hz'⟩
-      exact (hU.joined_in z hz y <| mem_of_mem_nhds U_in).Joined.mem_path_component hz'
+      exact (hU.joined_in z hz y $ mem_of_mem_nhds U_in).Joined.mem_path_component hz'
       
     
 #align path_connected_space_iff_connected_space path_connected_space_iff_connected_space

@@ -149,7 +149,7 @@ theorem coe_mk (e e' h₁ h₂ h₃ h₄) : ⇑(⟨e, e', h₁, h₂, h₃, h₄
 
 @[simp]
 theorem mk_coe (e : R ≃+* S) (e' h₁ h₂ h₃ h₄) : (⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
-  ext fun _ => rfl
+  ext $ fun _ => rfl
 #align ring_equiv.mk_coe RingEquiv.mk_coe
 
 protected theorem congr_arg {f : R ≃+* S} {x x' : R} : x = x' → f x = f x' :=
@@ -191,7 +191,7 @@ def ringEquivOfUnique {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N
 
 instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : Unique (M ≃+* N) where
   default := ringEquivOfUnique
-  uniq _ := ext fun x => Subsingleton.elim _ _
+  uniq _ := ext $ fun x => Subsingleton.elim _ _
 
 variable (R)
 
@@ -241,7 +241,7 @@ theorem inv_fun_eq_symm (f : R ≃+* S) : f.invFun = f.symm :=
 
 @[simp]
 theorem symm_symm (e : R ≃+* S) : e.symm.symm = e :=
-  ext fun x => rfl
+  ext $ fun x => rfl
 #align ring_equiv.symm_symm RingEquiv.symm_symm
 
 @[simp]
@@ -255,7 +255,7 @@ theorem symm_bijective : Function.Bijective (RingEquiv.symm : R ≃+* S → S �
 
 @[simp]
 theorem mk_coe' (e : R ≃+* S) (f h₁ h₂ h₃ h₄) : (RingEquiv.mk f (⇑e) h₁ h₂ h₃ h₄ : S ≃+* R) = e.symm :=
-  symm_bijective.Injective <| ext fun x => rfl
+  symm_bijective.Injective $ ext $ fun x => rfl
 #align ring_equiv.mk_coe' RingEquiv.mk_coe'
 
 @[simp]
@@ -430,14 +430,14 @@ theorem Pi_congr_right_refl {ι : Type _} {R : ι → Type _} [∀ i, NonUnitalN
 @[simp]
 theorem Pi_congr_right_symm {ι : Type _} {R S : ι → Type _} [∀ i, NonUnitalNonAssocSemiring (R i)]
     [∀ i, NonUnitalNonAssocSemiring (S i)] (e : ∀ i, R i ≃+* S i) :
-    (piCongrRight e).symm = Pi_congr_right fun i => (e i).symm :=
+    (piCongrRight e).symm = (Pi_congr_right $ fun i => (e i).symm) :=
   rfl
 #align ring_equiv.Pi_congr_right_symm RingEquiv.Pi_congr_right_symm
 
 @[simp]
 theorem Pi_congr_right_trans {ι : Type _} {R S T : ι → Type _} [∀ i, NonUnitalNonAssocSemiring (R i)]
     [∀ i, NonUnitalNonAssocSemiring (S i)] [∀ i, NonUnitalNonAssocSemiring (T i)] (e : ∀ i, R i ≃+* S i)
-    (f : ∀ i, S i ≃+* T i) : (piCongrRight e).trans (piCongrRight f) = Pi_congr_right fun i => (e i).trans (f i) :=
+    (f : ∀ i, S i ≃+* T i) : (piCongrRight e).trans (piCongrRight f) = (Pi_congr_right $ fun i => (e i).trans (f i)) :=
   rfl
 #align ring_equiv.Pi_congr_right_trans RingEquiv.Pi_congr_right_trans
 
@@ -569,7 +569,7 @@ theorem coe_to_non_unital_ring_hom (f : R ≃+* S) : ⇑(f : R →ₙ+* S) = f :
 
 theorem coe_non_unital_ring_hom_inj_iff {R S : Type _} [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S]
     (f g : R ≃+* S) : f = g ↔ (f : R →ₙ+* S) = g :=
-  ⟨congr_arg _, fun h => ext <| NonUnitalRingHom.ext_iff.mp h⟩
+  ⟨congr_arg _, fun h => ext $ NonUnitalRingHom.ext_iff.mp h⟩
 #align ring_equiv.coe_non_unital_ring_hom_inj_iff RingEquiv.coe_non_unital_ring_hom_inj_iff
 
 @[simp]
@@ -643,7 +643,7 @@ theorem coe_to_ring_hom (f : R ≃+* S) : ⇑(f : R →+* S) = f :=
 
 theorem coe_ring_hom_inj_iff {R S : Type _} [NonAssocSemiring R] [NonAssocSemiring S] (f g : R ≃+* S) :
     f = g ↔ (f : R →+* S) = g :=
-  ⟨congr_arg _, fun h => ext <| RingHom.ext_iff.mp h⟩
+  ⟨congr_arg _, fun h => ext $ RingHom.ext_iff.mp h⟩
 #align ring_equiv.coe_ring_hom_inj_iff RingEquiv.coe_ring_hom_inj_iff
 
 /-- The two paths coercion can take to a `non_unital_ring_hom` are equivalent -/

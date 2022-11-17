@@ -83,7 +83,7 @@ theorem mod_part_lt_p : modPart p r < p := by
 #align padic_int.mod_part_lt_p PadicInt.mod_part_lt_p
 
 theorem mod_part_nonneg : 0 ≤ modPart p r :=
-  Int.mod_nonneg _ <| by exact_mod_cast hp_prime.1.NeZero
+  Int.mod_nonneg _ $ by exact_mod_cast hp_prime.1.NeZero
 #align padic_int.mod_part_nonneg PadicInt.mod_part_nonneg
 
 theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.denom : ℤ_[p]) := by
@@ -401,7 +401,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
       apply to_zmod_spec
     obtain ⟨c, rfl⟩ : IsUnit c := by
       -- TODO: write a can_lift instance for units
-      rw [Int.nat_abs_eq_zero] at hc0
+      rw [Int.natAbs_eq_zero] at hc0
       rw [is_unit_iff, norm_eq_pow_val hc', hc0, neg_zero, zpow_zero]
     rw [DiscreteValuationRing.unit_mul_pow_congr_unit _ _ _ _ _ hc]
     exact irreducible_p
@@ -624,15 +624,15 @@ theorem lim_nth_hom_zero : limNthHom f_compat 0 = 0 := by simp [lim_nth_hom] <;>
 #align padic_int.lim_nth_hom_zero PadicInt.lim_nth_hom_zero
 
 theorem lim_nth_hom_one : limNthHom f_compat 1 = 1 :=
-  Subtype.ext <| Quot.sound <| nth_hom_seq_one _
+  Subtype.ext $ Quot.sound $ nth_hom_seq_one _
 #align padic_int.lim_nth_hom_one PadicInt.lim_nth_hom_one
 
 theorem lim_nth_hom_add (r s : R) : limNthHom f_compat (r + s) = limNthHom f_compat r + limNthHom f_compat s :=
-  Subtype.ext <| Quot.sound <| nth_hom_seq_add _ _ _
+  Subtype.ext $ Quot.sound $ nth_hom_seq_add _ _ _
 #align padic_int.lim_nth_hom_add PadicInt.lim_nth_hom_add
 
 theorem lim_nth_hom_mul (r s : R) : limNthHom f_compat (r * s) = limNthHom f_compat r * limNthHom f_compat s :=
-  Subtype.ext <| Quot.sound <| nth_hom_seq_mul _ _ _
+  Subtype.ext $ Quot.sound $ nth_hom_seq_mul _ _ _
 #align padic_int.lim_nth_hom_mul PadicInt.lim_nth_hom_mul
 
 -- TODO: generalize this to arbitrary complete discrete valuation rings
@@ -668,7 +668,7 @@ See also `padic_int.lift_unique`.
 -/
 theorem lift_spec (n : ℕ) : (toZmodPow n).comp (lift f_compat) = f n := by
   ext r
-  rw [RingHom.comp_apply, ← Zmod.nat_cast_zmod_val (f n r), ← map_nat_cast <| to_zmod_pow n, ← sub_eq_zero, ←
+  rw [RingHom.comp_apply, ← Zmod.nat_cast_zmod_val (f n r), ← map_nat_cast $ to_zmod_pow n, ← sub_eq_zero, ←
     RingHom.map_sub, ← RingHom.mem_ker, ker_to_zmod_pow]
   apply lift_sub_val_mem_span
 #align padic_int.lift_spec PadicInt.lift_spec

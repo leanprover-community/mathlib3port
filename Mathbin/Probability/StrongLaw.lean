@@ -127,12 +127,12 @@ theorem truncation_eq_of_nonneg {f : α → ℝ} {A : ℝ} (h : ∀ x, 0 ≤ f x
 #align probability_theory.truncation_eq_of_nonneg ProbabilityTheory.truncation_eq_of_nonneg
 
 theorem truncation_nonneg {f : α → ℝ} (A : ℝ) {x : α} (h : 0 ≤ f x) : 0 ≤ truncation f A x :=
-  Set.indicator_apply_nonneg fun _ => h
+  Set.indicator_apply_nonneg $ fun _ => h
 #align probability_theory.truncation_nonneg ProbabilityTheory.truncation_nonneg
 
 theorem _root_.measure_theory.ae_strongly_measurable.mem_ℒp_truncation [IsFiniteMeasure μ]
     (hf : AeStronglyMeasurable f μ) {A : ℝ} {p : ℝ≥0∞} : Memℒp (truncation f A) p μ :=
-  Memℒp.ofBound hf.truncation (|A|) (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
+  Memℒp.ofBound hf.truncation |A| (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
 #align
   probability_theory._root_.measure_theory.ae_strongly_measurable.mem_ℒp_truncation probability_theory._root_.measure_theory.ae_strongly_measurable.mem_ℒp_truncation
 
@@ -262,8 +262,8 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
       _ = ∑ i in range N, ∑ j in range (min (i + 1) K), ∫ x in i..(i + 1 : ℕ), (1 : ℝ) ∂ρ := by
         simp_rw [sum_sigma']
         refine'
-          sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
-            (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
+          sum_bij' (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ (fun a ha => rfl)
+            (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ _ _
         · rintro ⟨i, j⟩ hij
           simp only [mem_sigma, mem_range, mem_Ico] at hij
           simp only [hij, Nat.lt_succ_iff.2 hij.2.1, mem_sigma, mem_range, lt_min_iff, and_self_iff]
@@ -397,8 +397,8 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
     _ = ∑ k in range K, (∑ j in Ioo k K, ((j : ℝ) ^ 2)⁻¹) * ∫ x in k..(k + 1 : ℕ), x ^ 2 ∂ρ := by
       simp_rw [mul_sum, sum_mul, sum_sigma']
       refine'
-        sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
-          (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
+        sum_bij' (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ (fun a ha => rfl)
+          (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ _ _
       · rintro ⟨i, j⟩ hij
         simp only [mem_sigma, mem_range, mem_filter] at hij
         simp [hij, mem_sigma, mem_range, and_self_iff, hij.2.trans hij.1]
@@ -523,8 +523,8 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
       _ = ∑ j in range (u (N - 1)), (∑ i in (range N).filter fun i => j < u i, ((u i : ℝ) ^ 2)⁻¹) * Var[Y j] := by
         simp_rw [mul_sum, sum_mul, sum_sigma']
         refine'
-          sum_bij' (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ (fun a ha => rfl)
-            (fun (p : Σi : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σi : ℕ, ℕ)) _ _ _
+          sum_bij' (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ (fun a ha => rfl)
+            (fun (p : Σ i : ℕ, ℕ) hp => (⟨p.2, p.1⟩ : Σ i : ℕ, ℕ)) _ _ _
         · rintro ⟨i, j⟩ hij
           simp only [mem_sigma, mem_range] at hij
           simp only [hij.1, hij.2, mem_sigma, mem_range, mem_filter, and_true_iff]
@@ -776,7 +776,7 @@ theorem strong_law_Lp {p : ℝ≥0∞} (hp : 1 ≤ p) (hp' : p ≠ ∞) (X : ℕ
     tendsto_Lp_of_tendsto_in_measure _ hp hp' havg (mem_ℒp_const _) _
       (tendsto_in_measure_of_tendsto_ae havg (strong_law_ae _ hint hindep hident))
   rw [(_ : (fun n ω => (∑ i in range n, X i ω) / ↑n) = fun n => (∑ i in range n, X i) / ↑n)]
-  · exact (uniform_integrable_average hp <| mem_ℒp.uniform_integrable_of_ident_distrib hp hp' hℒp hident).2.1
+  · exact (uniform_integrable_average hp $ mem_ℒp.uniform_integrable_of_ident_distrib hp hp' hℒp hident).2.1
     
   · ext (n ω)
     simp only [Pi.coe_nat, Pi.div_apply, sum_apply]

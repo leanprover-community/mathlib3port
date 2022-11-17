@@ -71,7 +71,7 @@ protected def symmₗ (e : Pretrivialization F (π E)) [e.is_linear R] (b : B) :
   by_cases hb:b ∈ e.base_set
   · exact
       (((e.linear R hb).mk' _).inverse (e.symm b) (e.symm_apply_apply_mk hb) fun v =>
-          congr_arg Prod.snd <| e.apply_mk_symm hb v).is_linear
+          congr_arg Prod.snd $ e.apply_mk_symm hb v).is_linear
     
   · rw [e.coe_symm_of_not_mem hb]
     exact (0 : F →ₗ[R] E b).is_linear
@@ -829,7 +829,7 @@ open TopologicalSpace
 
 open VectorBundle
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas) -/
 /-- This structure permits to define a vector bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space or the fibers.
 The total space is hence given a topology in such a way that there is a fiber bundle structure for

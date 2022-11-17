@@ -129,7 +129,7 @@ theorem factor_thru_kernel_subobject_comp_arrow {W : C} (h : W ⟶ X) (w : h ≫
 @[simp]
 theorem factor_thru_kernel_subobject_comp_kernel_subobject_iso {W : C} (h : W ⟶ X) (w : h ≫ f = 0) :
     factorThruKernelSubobject f h w ≫ (kernelSubobjectIso f).Hom = kernel.lift f h w :=
-  (cancel_mono (kernel.ι f)).1 <| by simp
+  (cancel_mono (kernel.ι f)).1 $ by simp
 #align
   category_theory.limits.factor_thru_kernel_subobject_comp_kernel_subobject_iso CategoryTheory.Limits.factor_thru_kernel_subobject_comp_kernel_subobject_iso
 
@@ -242,7 +242,7 @@ def cokernelOrderHom [HasCokernels C] (X : C) : Subobject X →o (Subobject (op 
             colimit.comp_cocone_point_unique_up_to_iso_hom, cofork.of_π_ι_app, coequalizer.cofork_π]
           )
   monotone' :=
-    Subobject.ind₂ _ <| by
+    Subobject.ind₂ _ $ by
       intro A B f g hf hg h
       dsimp only [subobject.lift_mk]
       refine' subobject.mk_le_mk_of_comm (cokernel.desc f (cokernel.π g) _).op _
@@ -269,7 +269,7 @@ def kernelOrderHom [HasKernels C] (X : C) : (Subobject (op X))ᵒᵈ →o Subobj
           simp only [← iso.eq_inv_comp, limit.cone_point_unique_up_to_iso_inv_comp, fork.of_ι_π_app]
           )
   monotone' :=
-    Subobject.ind₂ _ <| by
+    Subobject.ind₂ _ $ by
       intro A B f g hf hg h
       dsimp only [subobject.lift_mk]
       refine' subobject.mk_le_mk_of_comm (kernel.lift g.unop (kernel.ι f.unop) _) _
@@ -322,7 +322,7 @@ theorem image_subobject_arrow_comp : factorThruImageSubobject f ≫ (imageSubobj
 
 theorem image_subobject_arrow_comp_eq_zero [HasZeroMorphisms C] {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [HasImage f]
     [Epi (factorThruImageSubobject f)] (h : f ≫ g = 0) : (imageSubobject f).arrow ≫ g = 0 :=
-  zero_of_epi_comp (factorThruImageSubobject f) <| by simp [h]
+  zero_of_epi_comp (factorThruImageSubobject f) $ by simp [h]
 #align
   category_theory.limits.image_subobject_arrow_comp_eq_zero CategoryTheory.Limits.image_subobject_arrow_comp_eq_zero
 

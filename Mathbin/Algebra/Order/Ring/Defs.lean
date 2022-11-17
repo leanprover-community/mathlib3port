@@ -239,9 +239,9 @@ instance (priority := 100) OrderedSemiring.zeroLeOneClass : ZeroLeOneClass α :=
 #align ordered_semiring.zero_le_one_class OrderedSemiring.zeroLeOneClass
 
 -- see Note [lower instance priority]
-instance (priority := 200) OrderedSemiring.to_pos_mul_mono : PosMulMono α :=
+instance (priority := 200) OrderedSemiring.toPosMulMono : PosMulMono α :=
   ⟨fun x a b h => OrderedSemiring.mul_le_mul_of_nonneg_left _ _ _ h x.2⟩
-#align ordered_semiring.to_pos_mul_mono OrderedSemiring.to_pos_mul_mono
+#align ordered_semiring.to_pos_mul_mono OrderedSemiring.toPosMulMono
 
 -- see Note [lower instance priority]
 instance (priority := 200) OrderedSemiring.to_mul_pos_mono : MulPosMono α :=
@@ -251,6 +251,12 @@ instance (priority := 200) OrderedSemiring.to_mul_pos_mono : MulPosMono α :=
 theorem bit1_mono : Monotone (bit1 : α → α) := fun a b h => add_le_add_right (bit0_mono h) _
 #align bit1_mono bit1_mono
 
+/- warning: pow_nonneg -> pow_nonneg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} [_inst_1 : OrderedSemiring.{u} α] {a : α}, (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u 0 u} α Nat α (instHPow.{u 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547 : OrderedSemiring.{u_1} α] {a : α}, (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))))) a) -> (forall (n : Nat), LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))))) (HPow.hPow.{u_1 0 u_1} α Nat α (instHPow.{u_1 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))))) a n))
+Case conversion may be inaccurate. Consider using '#align pow_nonneg pow_nonnegₓ'. -/
 @[simp]
 theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
   | 0 => by
@@ -263,14 +269,13 @@ theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
 
 theorem add_le_mul_two_add (a2 : 2 ≤ a) (b0 : 0 ≤ b) : a + (2 + b) ≤ a * (2 + b) :=
   calc
-    a + (2 + b) ≤ a + (a + a * b) :=
-      add_le_add_left (add_le_add a2 <| le_mul_of_one_le_left b0 <| one_le_two.trans a2) a
+    a + (2 + b) ≤ a + (a + a * b) := add_le_add_left (add_le_add a2 $ le_mul_of_one_le_left b0 $ one_le_two.trans a2) a
     _ ≤ a * (2 + b) := by rw [mul_add, mul_two, add_assoc]
     
 #align add_le_mul_two_add add_le_mul_two_add
 
 theorem one_le_mul_of_one_le_of_one_le (ha : 1 ≤ a) (hb : 1 ≤ b) : (1 : α) ≤ a * b :=
-  Left.one_le_mul_of_le_of_le ha hb <| zero_le_one.trans ha
+  Left.one_le_mul_of_le_of_le ha hb $ zero_le_one.trans ha
 #align one_le_mul_of_one_le_of_one_le one_le_mul_of_one_le_of_one_le
 
 section Monotone
@@ -326,13 +331,13 @@ theorem zero_lt_two : (0 : α) < 2 :=
 /-- See `zero_lt_three'` for a version with the type explicit. -/
 @[simp]
 theorem zero_lt_three : (0 : α) < 3 :=
-  zero_lt_one.trans_le <| bit1_zero.symm.trans_le <| bit1_mono zero_le_one
+  zero_lt_one.trans_le $ bit1_zero.symm.trans_le $ bit1_mono zero_le_one
 #align zero_lt_three zero_lt_three
 
 /-- See `zero_lt_four'` for a version with the type explicit. -/
 @[simp]
 theorem zero_lt_four : (0 : α) < 4 :=
-  zero_lt_two.trans_le <| bit0_mono one_le_two
+  zero_lt_two.trans_le $ bit0_mono one_le_two
 #align zero_lt_four zero_lt_four
 
 @[field_simps]
@@ -359,7 +364,7 @@ alias zero_lt_three ← three_pos
 alias zero_lt_four ← four_pos
 
 theorem bit1_pos (h : 0 ≤ a) : 0 < bit1 a :=
-  zero_lt_one.trans_le <| bit1_zero.symm.trans_le <| bit1_mono h
+  zero_lt_one.trans_le $ bit1_zero.symm.trans_le $ bit1_mono h
 #align bit1_pos bit1_pos
 
 variable (α)
@@ -396,11 +401,11 @@ theorem mul_le_one (ha : a ≤ 1) (hb' : 0 ≤ b) (hb : b ≤ 1) : a * b ≤ 1 :
 #align mul_le_one mul_le_one
 
 theorem one_lt_mul_of_le_of_lt (ha : 1 ≤ a) (hb : 1 < b) : 1 < a * b :=
-  hb.trans_le <| le_mul_of_one_le_left (zero_le_one.trans hb.le) ha
+  hb.trans_le $ le_mul_of_one_le_left (zero_le_one.trans hb.le) ha
 #align one_lt_mul_of_le_of_lt one_lt_mul_of_le_of_lt
 
 theorem one_lt_mul_of_lt_of_le (ha : 1 < a) (hb : 1 ≤ b) : 1 < a * b :=
-  ha.trans_le <| le_mul_of_one_le_right (zero_le_one.trans ha.le) hb
+  ha.trans_le $ le_mul_of_one_le_right (zero_le_one.trans ha.le) hb
 #align one_lt_mul_of_lt_of_le one_lt_mul_of_lt_of_le
 
 alias one_lt_mul_of_le_of_lt ← one_lt_mul
@@ -441,27 +446,27 @@ theorem mul_nonneg_of_nonpos_of_nonpos (ha : a ≤ 0) (hb : b ≤ 0) : 0 ≤ a *
 #align mul_nonneg_of_nonpos_of_nonpos mul_nonneg_of_nonpos_of_nonpos
 
 theorem mul_le_mul_of_nonneg_of_nonpos (hca : c ≤ a) (hbd : b ≤ d) (hc : 0 ≤ c) (hb : b ≤ 0) : a * b ≤ c * d :=
-  (mul_le_mul_of_nonpos_right hca hb).trans <| mul_le_mul_of_nonneg_left hbd hc
+  (mul_le_mul_of_nonpos_right hca hb).trans $ mul_le_mul_of_nonneg_left hbd hc
 #align mul_le_mul_of_nonneg_of_nonpos mul_le_mul_of_nonneg_of_nonpos
 
 theorem mul_le_mul_of_nonneg_of_nonpos' (hca : c ≤ a) (hbd : b ≤ d) (ha : 0 ≤ a) (hd : d ≤ 0) : a * b ≤ c * d :=
-  (mul_le_mul_of_nonneg_left hbd ha).trans <| mul_le_mul_of_nonpos_right hca hd
+  (mul_le_mul_of_nonneg_left hbd ha).trans $ mul_le_mul_of_nonpos_right hca hd
 #align mul_le_mul_of_nonneg_of_nonpos' mul_le_mul_of_nonneg_of_nonpos'
 
 theorem mul_le_mul_of_nonpos_of_nonneg (hac : a ≤ c) (hdb : d ≤ b) (hc : c ≤ 0) (hb : 0 ≤ b) : a * b ≤ c * d :=
-  (mul_le_mul_of_nonneg_right hac hb).trans <| mul_le_mul_of_nonpos_left hdb hc
+  (mul_le_mul_of_nonneg_right hac hb).trans $ mul_le_mul_of_nonpos_left hdb hc
 #align mul_le_mul_of_nonpos_of_nonneg mul_le_mul_of_nonpos_of_nonneg
 
 theorem mul_le_mul_of_nonpos_of_nonneg' (hca : c ≤ a) (hbd : b ≤ d) (ha : 0 ≤ a) (hd : d ≤ 0) : a * b ≤ c * d :=
-  (mul_le_mul_of_nonneg_left hbd ha).trans <| mul_le_mul_of_nonpos_right hca hd
+  (mul_le_mul_of_nonneg_left hbd ha).trans $ mul_le_mul_of_nonpos_right hca hd
 #align mul_le_mul_of_nonpos_of_nonneg' mul_le_mul_of_nonpos_of_nonneg'
 
 theorem mul_le_mul_of_nonpos_of_nonpos (hca : c ≤ a) (hdb : d ≤ b) (hc : c ≤ 0) (hb : b ≤ 0) : a * b ≤ c * d :=
-  (mul_le_mul_of_nonpos_right hca hb).trans <| mul_le_mul_of_nonpos_left hdb hc
+  (mul_le_mul_of_nonpos_right hca hb).trans $ mul_le_mul_of_nonpos_left hdb hc
 #align mul_le_mul_of_nonpos_of_nonpos mul_le_mul_of_nonpos_of_nonpos
 
 theorem mul_le_mul_of_nonpos_of_nonpos' (hca : c ≤ a) (hdb : d ≤ b) (ha : a ≤ 0) (hd : d ≤ 0) : a * b ≤ c * d :=
-  (mul_le_mul_of_nonpos_left hdb ha).trans <| mul_le_mul_of_nonpos_right hca hd
+  (mul_le_mul_of_nonpos_left hdb ha).trans $ mul_le_mul_of_nonpos_right hca hd
 #align mul_le_mul_of_nonpos_of_nonpos' mul_le_mul_of_nonpos_of_nonpos'
 
 section Monotone
@@ -530,9 +535,9 @@ section StrictOrderedSemiring
 variable [StrictOrderedSemiring α] {a b c d : α}
 
 -- see Note [lower instance priority]
-instance (priority := 200) StrictOrderedSemiring.to_pos_mul_strict_mono : PosMulStrictMono α :=
+instance (priority := 200) StrictOrderedSemiring.toPosMulStrictMono : PosMulStrictMono α :=
   ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_left _ _ _ h x.Prop⟩
-#align strict_ordered_semiring.to_pos_mul_strict_mono StrictOrderedSemiring.to_pos_mul_strict_mono
+#align strict_ordered_semiring.to_pos_mul_strict_mono StrictOrderedSemiring.toPosMulStrictMono
 
 -- see Note [lower instance priority]
 instance (priority := 200) StrictOrderedSemiring.to_mul_pos_strict_mono : MulPosStrictMono α :=
@@ -577,13 +582,19 @@ instance (priority := 100) StrictOrderedSemiring.toOrderedSemiring : OrderedSemi
 #align strict_ordered_semiring.to_ordered_semiring StrictOrderedSemiring.toOrderedSemiring
 
 theorem mul_lt_mul (hac : a < c) (hbd : b ≤ d) (hb : 0 < b) (hc : 0 ≤ c) : a * b < c * d :=
-  (mul_lt_mul_of_pos_right hac hb).trans_le <| mul_le_mul_of_nonneg_left hbd hc
+  (mul_lt_mul_of_pos_right hac hb).trans_le $ mul_le_mul_of_nonneg_left hbd hc
 #align mul_lt_mul mul_lt_mul
 
 theorem mul_lt_mul' (hac : a ≤ c) (hbd : b < d) (hb : 0 ≤ b) (hc : 0 < c) : a * b < c * d :=
-  (mul_le_mul_of_nonneg_right hac hb).trans_lt <| mul_lt_mul_of_pos_left hbd hc
+  (mul_le_mul_of_nonneg_right hac hb).trans_lt $ mul_lt_mul_of_pos_left hbd hc
 #align mul_lt_mul' mul_lt_mul'
 
+/- warning: pow_pos -> pow_pos is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} [_inst_1 : StrictOrderedSemiring.{u} α] {a : α}, (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u 0 u} α Nat α (instHPow.{u 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520 : StrictOrderedSemiring.{u_1} α] {a : α}, (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))))) a) -> (forall (n : Nat), LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))))) (HPow.hPow.{u_1 0 u_1} α Nat α (instHPow.{u_1 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))))) a n))
+Case conversion may be inaccurate. Consider using '#align pow_pos pow_posₓ'. -/
 @[simp]
 theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
   | 0 => by
@@ -596,7 +607,7 @@ theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
 #align pow_pos pow_pos
 
 theorem mul_self_lt_mul_self (h1 : 0 ≤ a) (h2 : a < b) : a * a < b * b :=
-  mul_lt_mul' h2.le h2 h1 <| h1.trans_lt h2
+  mul_lt_mul' h2.le h2 h1 $ h1.trans_lt h2
 #align mul_self_lt_mul_self mul_self_lt_mul_self
 
 -- In the next lemma, we used to write `set.Ici 0` instead of `{x | 0 ≤ x}`.
@@ -610,7 +621,7 @@ theorem strict_mono_on_mul_self : StrictMonoOn (fun x : α => x * x) { x | 0 ≤
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a < c) (h2 : b < d) (h3 : 0 ≤ a) (h4 : 0 ≤ b) :
     a * b < c * d :=
-  h4.lt_or_eq_dec.elim (fun b0 => mul_lt_mul h1 h2.le b0 <| h3.trans h1.le) fun b0 => by
+  h4.lt_or_eq_dec.elim (fun b0 => mul_lt_mul h1 h2.le b0 $ h3.trans h1.le) fun b0 => by
     rw [← b0, mul_zero] <;> exact mul_pos (h3.trans_lt h1) (h4.trans_lt h2)
 #align decidable.mul_lt_mul'' Decidable.mul_lt_mul''
 
@@ -625,18 +636,18 @@ protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a 
        (Term.typeSpec
         ":"
         (Term.arrow
-         («term_<_» `a "<" `c)
+         (Init.Core.«term_<_» `a " < " `c)
          "→"
          (Term.arrow
-          («term_<_» `b "<" `d)
+          (Init.Core.«term_<_» `b " < " `d)
           "→"
           (Term.arrow
-           («term_≤_» (num "0") "≤" `a)
+           (Init.Core.«term_≤_» (num "0") " ≤ " `a)
            "→"
            (Term.arrow
-            («term_≤_» (num "0") "≤" `b)
+            (Init.Core.«term_≤_» (num "0") " ≤ " `b)
             "→"
-            («term_<_» («term_*_» `a "*" `b) "<" («term_*_» `c "*" `d))))))))
+            (Init.Core.«term_<_» (Init.Core.«term_*_» `a " * " `b) " < " (Init.Core.«term_*_» `c " * " `d))))))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -919,19 +930,19 @@ theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b
 #align nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg
 
 theorem nonneg_of_mul_nonneg_left (h : 0 ≤ a * b) (hb : 0 < b) : 0 ≤ a :=
-  le_of_not_gt fun ha => (mul_neg_of_neg_of_pos ha hb).not_le h
+  le_of_not_gt $ fun ha => (mul_neg_of_neg_of_pos ha hb).not_le h
 #align nonneg_of_mul_nonneg_left nonneg_of_mul_nonneg_left
 
 theorem nonneg_of_mul_nonneg_right (h : 0 ≤ a * b) (ha : 0 < a) : 0 ≤ b :=
-  le_of_not_gt fun hb => (mul_neg_of_pos_of_neg ha hb).not_le h
+  le_of_not_gt $ fun hb => (mul_neg_of_pos_of_neg ha hb).not_le h
 #align nonneg_of_mul_nonneg_right nonneg_of_mul_nonneg_right
 
 theorem neg_of_mul_neg_left (h : a * b < 0) (hb : 0 ≤ b) : a < 0 :=
-  lt_of_not_ge fun ha => (mul_nonneg ha hb).not_lt h
+  lt_of_not_ge $ fun ha => (mul_nonneg ha hb).not_lt h
 #align neg_of_mul_neg_left neg_of_mul_neg_left
 
 theorem neg_of_mul_neg_right (h : a * b < 0) (ha : 0 ≤ a) : b < 0 :=
-  lt_of_not_ge fun hb => (mul_nonneg ha hb).not_lt h
+  lt_of_not_ge $ fun hb => (mul_nonneg ha hb).not_lt h
 #align neg_of_mul_neg_right neg_of_mul_neg_right
 
 theorem nonpos_of_mul_nonpos_left (h : a * b ≤ 0) (hb : 0 < b) : a ≤ 0 :=
@@ -1050,7 +1061,7 @@ theorem nonpos_of_mul_nonneg_right (h : 0 ≤ a * b) (ha : a < 0) : b ≤ 0 :=
 
 @[simp]
 theorem Units.inv_pos {u : αˣ} : (0 : α) < ↑u⁻¹ ↔ (0 : α) < u :=
-  have : ∀ {u : αˣ}, (0 : α) < u → (0 : α) < ↑u⁻¹ := fun u h => (zero_lt_mul_left h).mp <| u.mul_inv.symm ▸ zero_lt_one
+  have : ∀ {u : αˣ}, (0 : α) < u → (0 : α) < ↑u⁻¹ := fun u h => (zero_lt_mul_left h).mp $ u.mul_inv.symm ▸ zero_lt_one
   ⟨this, this⟩
 #align units.inv_pos Units.inv_pos
 
@@ -1061,11 +1072,11 @@ theorem Units.inv_neg {u : αˣ} : ↑u⁻¹ < (0 : α) ↔ ↑u < (0 : α) :=
   ⟨this, this⟩
 #align units.inv_neg Units.inv_neg
 
-theorem cmp_mul_pos_left (ha : 0 < a) (b c : α) : Cmp (a * b) (a * c) = Cmp b c :=
+theorem cmp_mul_pos_left (ha : 0 < a) (b c : α) : cmp (a * b) (a * c) = cmp b c :=
   (strict_mono_mul_left_of_pos ha).cmp_map_eq b c
 #align cmp_mul_pos_left cmp_mul_pos_left
 
-theorem cmp_mul_pos_right (ha : 0 < a) (b c : α) : Cmp (b * a) (c * a) = Cmp b c :=
+theorem cmp_mul_pos_right (ha : 0 < a) (b c : α) : cmp (b * a) (c * a) = cmp b c :=
   (strict_mono_mul_right_of_pos ha).cmp_map_eq b c
 #align cmp_mul_pos_right cmp_mul_pos_right
 
@@ -1086,11 +1097,11 @@ theorem min_mul_of_nonneg (a b : α) (hc : 0 ≤ c) : min a b * c = min (a * c) 
 #align min_mul_of_nonneg min_mul_of_nonneg
 
 theorem le_of_mul_le_of_one_le {a b c : α} (h : a * c ≤ b) (hb : 0 ≤ b) (hc : 1 ≤ c) : a ≤ b :=
-  le_of_mul_le_mul_right (h.trans <| le_mul_of_one_le_right hb hc) <| zero_lt_one.trans_le hc
+  le_of_mul_le_mul_right (h.trans $ le_mul_of_one_le_right hb hc) $ zero_lt_one.trans_le hc
 #align le_of_mul_le_of_one_le le_of_mul_le_of_one_le
 
 theorem nonneg_le_nonneg_of_sq_le_sq {a b : α} (hb : 0 ≤ b) (h : a * a ≤ b * b) : a ≤ b :=
-  le_of_not_gt fun hab => (mul_self_lt_mul_self hb hab).not_le h
+  le_of_not_gt $ fun hab => (mul_self_lt_mul_self hb hab).not_le h
 #align nonneg_le_nonneg_of_sq_le_sq nonneg_le_nonneg_of_sq_le_sq
 
 theorem mul_self_le_mul_self_iff {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a ≤ b ↔ a * a ≤ b * b :=
@@ -1221,18 +1232,18 @@ theorem mul_lt_mul_right_of_neg {a b c : α} (h : c < 0) : a * c < b * c ↔ b <
 #align mul_lt_mul_right_of_neg mul_lt_mul_right_of_neg
 
 theorem lt_of_mul_lt_mul_of_nonpos_left (h : c * a < c * b) (hc : c ≤ 0) : b < a :=
-  lt_of_mul_lt_mul_left (by rwa [neg_mul, neg_mul, neg_lt_neg_iff]) <| neg_nonneg.2 hc
+  lt_of_mul_lt_mul_left (by rwa [neg_mul, neg_mul, neg_lt_neg_iff]) $ neg_nonneg.2 hc
 #align lt_of_mul_lt_mul_of_nonpos_left lt_of_mul_lt_mul_of_nonpos_left
 
 theorem lt_of_mul_lt_mul_of_nonpos_right (h : a * c < b * c) (hc : c ≤ 0) : b < a :=
-  lt_of_mul_lt_mul_right (by rwa [mul_neg, mul_neg, neg_lt_neg_iff]) <| neg_nonneg.2 hc
+  lt_of_mul_lt_mul_right (by rwa [mul_neg, mul_neg, neg_lt_neg_iff]) $ neg_nonneg.2 hc
 #align lt_of_mul_lt_mul_of_nonpos_right lt_of_mul_lt_mul_of_nonpos_right
 
-theorem cmp_mul_neg_left {a : α} (ha : a < 0) (b c : α) : Cmp (a * b) (a * c) = Cmp c b :=
+theorem cmp_mul_neg_left {a : α} (ha : a < 0) (b c : α) : cmp (a * b) (a * c) = cmp c b :=
   (strict_anti_mul_left ha).cmp_map_eq b c
 #align cmp_mul_neg_left cmp_mul_neg_left
 
-theorem cmp_mul_neg_right {a : α} (ha : a < 0) (b c : α) : Cmp (b * a) (c * a) = Cmp c b :=
+theorem cmp_mul_neg_right {a : α} (ha : a < 0) (b c : α) : cmp (b * a) (c * a) = cmp c b :=
   (strict_anti_mul_right ha).cmp_map_eq b c
 #align cmp_mul_neg_right cmp_mul_neg_right
 

@@ -64,7 +64,7 @@ theorem IntermediateField.map_mono {K L M : Type _} [Field K] [Field L] [Field M
 /-- Mapping intermediate fields along the identity does not change them -/
 theorem IntermediateField.map_id {K L : Type _} [Field K] [Field L] [Algebra K L] (E : IntermediateField K L) :
     E.map (AlgHom.id K L) = E :=
-  SetLike.coe_injective <| Set.image_id _
+  SetLike.coe_injective $ Set.image_id _
 #align intermediate_field.map_id IntermediateField.map_id
 
 /-- Mapping a finite dimensional intermediate field along an algebra equivalence gives

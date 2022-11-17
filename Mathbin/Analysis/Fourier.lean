@@ -97,7 +97,7 @@ continuous maps from `circle` to `ℂ`. -/
 @[simps]
 def fourier (n : ℤ) : C(circle, ℂ) where
   toFun z := z ^ n
-  continuous_to_fun := (continuous_subtype_coe.zpow₀ n) fun z => Or.inl (ne_zero_of_mem_circle z)
+  continuous_to_fun := continuous_subtype_coe.zpow₀ n $ fun z => Or.inl (ne_zero_of_mem_circle z)
 #align fourier fourier
 
 @[simp]

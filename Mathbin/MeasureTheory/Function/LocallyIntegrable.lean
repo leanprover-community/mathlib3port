@@ -45,7 +45,7 @@ theorem Integrable.locallyIntegrable (hf : Integrable f μ) : LocallyIntegrable 
 theorem LocallyIntegrable.aeStronglyMeasurable [SigmaCompactSpace X] (hf : LocallyIntegrable f μ) :
     AeStronglyMeasurable f μ := by
   rw [← @restrict_univ _ _ μ, ← Union_compact_covering, ae_strongly_measurable_Union_iff]
-  exact fun i => (hf <| is_compact_compact_covering X i).AeStronglyMeasurable
+  exact fun i => (hf $ is_compact_compact_covering X i).AeStronglyMeasurable
 #align measure_theory.locally_integrable.ae_strongly_measurable MeasureTheory.LocallyIntegrable.aeStronglyMeasurable
 
 theorem locally_integrable_iff [LocallyCompactSpace X] :
@@ -156,8 +156,7 @@ theorem Continuous.integrableOnIntervalOc [LinearOrder X] [CompactIccSpace X] (h
 
 /-- A continuous function with compact support is integrable on the whole space. -/
 theorem Continuous.integrableOfHasCompactSupport (hf : Continuous f) (hcf : HasCompactSupport f) : Integrable f μ :=
-  (integrable_on_iff_integable_of_support_subset (subset_tsupport f) measurableSetClosure).mp <|
-    hf.LocallyIntegrable hcf
+  (integrable_on_iff_integable_of_support_subset (subset_tsupport f) measurableSetClosure).mp $ hf.LocallyIntegrable hcf
 #align continuous.integrable_of_has_compact_support Continuous.integrableOfHasCompactSupport
 
 end borel
@@ -181,7 +180,7 @@ theorem MonotoneOn.integrableOnCompact (hs : IsCompact s) (hmono : MonotoneOn f 
   refine'
     integrable.mono' (continuous_const.locally_integrable hs)
       (aeMeasurableRestrictOfMonotoneOn hs.measurable_set hmono).AeStronglyMeasurable
-      ((ae_restrict_iff' hs.measurable_set).mpr <| (ae_of_all _) fun y hy => hC (f y) (mem_image_of_mem f hy))
+      ((ae_restrict_iff' hs.measurable_set).mpr $ ae_of_all _ $ fun y hy => hC (f y) (mem_image_of_mem f hy))
 #align monotone_on.integrable_on_compact MonotoneOn.integrableOnCompact
 
 theorem AntitoneOn.integrableOnCompact (hs : IsCompact s) (hanti : AntitoneOn f s) : IntegrableOn f s μ :=

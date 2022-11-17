@@ -43,7 +43,7 @@ theorem lex_def {r : α → α → Prop} {s : N → N → Prop} {a b : α →₀
 #align finsupp.lex_def Finsupp.lex_def
 
 theorem lex_eq_inv_image_dfinsupp_lex (r : α → α → Prop) (s : N → N → Prop) :
-    Finsupp.Lex r s = InvImage ((Dfinsupp.Lex r) fun a => s) toDfinsupp :=
+    Finsupp.Lex r s = InvImage (Dfinsupp.Lex r $ fun a => s) toDfinsupp :=
   rfl
 #align finsupp.lex_eq_inv_image_dfinsupp_lex Finsupp.lex_eq_inv_image_dfinsupp_lex
 
@@ -62,8 +62,8 @@ theorem lex_lt_of_lt [PartialOrder N] (r) [IsStrictOrder α r] {x y : α →₀ 
 
 instance Lex.is_strict_order [LinearOrder α] [PartialOrder N] : IsStrictOrder (Lex (α →₀ N)) (· < ·) :=
   let i : IsStrictOrder (Lex (α → N)) (· < ·) := Pi.Lex.is_strict_order
-  { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_is_irrefl a,
-    trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_is_trans a b c }
+  { irrefl := toLex.Surjective.forall.2 $ fun a => @irrefl _ _ i.to_is_irrefl a,
+    trans := toLex.Surjective.forall₃.2 $ fun a b c => @trans _ _ i.to_is_trans a b c }
 #align finsupp.lex.is_strict_order Finsupp.Lex.is_strict_order
 
 variable [LinearOrder α]

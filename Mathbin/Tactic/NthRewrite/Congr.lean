@@ -16,7 +16,7 @@ open NthRewrite
 metavariables in the tactic state, and without creating any metavariables which cannot be
 discharged by `cfg.discharger` in the process. -/
 unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cfg := {  }) : tactic (expr × expr) :=
-  lock_tactic_state <|-- This makes sure that we forget everything in between rewrites;
+  lock_tactic_state $-- This makes sure that we forget everything in between rewrites;
   -- otherwise we don't correctly find everything!
   do
     let (new_t, prf, metas) ← rewrite_core r e { cfg.to_rewrite_cfg with md := semireducible }
@@ -35,9 +35,9 @@ unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cf
 This is a bit of a hack: we manually inspect the proof that `rewrite_core` produced, and deduce from
 that whether or not the entire expression was rewritten.-/
 unsafe def rewrite_is_of_entire : expr → Bool
-  | quote.1 (@Eq.ndrec _ (%%ₓterm) (%%ₓC) (%%ₓp) _ _) =>
+  | q(@Eq.ndrec _ $(term) $(C) $(p) _ _) =>
     match C with
-    | quote.1 fun p => _ = p => true
+    | q(fun p => _ = p) => true
     | _ => false
   | _ => false
 #align tactic.nth_rewrite.congr.rewrite_is_of_entire tactic.nth_rewrite.congr.rewrite_is_of_entire

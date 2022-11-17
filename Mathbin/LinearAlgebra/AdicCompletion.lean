@@ -111,8 +111,8 @@ variable {M}
 
 protected theorem subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleton M :=
   ⟨fun x y =>
-    eq_of_sub_eq_zero <|
-      (h.haus (x - y)) fun n => by
+    eq_of_sub_eq_zero $
+      h.haus (x - y) $ fun n => by
         rw [Ideal.top_pow, top_smul]
         exact Smodeq.top⟩
 #align is_Hausdorff.subsingleton IsHausdorff.subsingleton
@@ -126,8 +126,8 @@ instance (priority := 100) ofSubsingleton [Subsingleton M] : IsHausdorff I M :=
 variable {I M}
 
 theorem infi_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) = ⊥ :=
-  eq_bot_iff.2 fun x hx =>
-    (mem_bot _).2 <| (h.haus x) fun n => Smodeq.zero.2 <| (mem_infi fun n : ℕ => I ^ n • ⊤).1 hx n
+  eq_bot_iff.2 $ fun x hx =>
+    (mem_bot _).2 $ h.haus x $ fun n => Smodeq.zero.2 $ (mem_infi $ fun n : ℕ => I ^ n • ⊤).1 hx n
 #align is_Hausdorff.infi_pow_smul IsHausdorff.infi_pow_smul
 
 end IsHausdorff
@@ -151,9 +151,9 @@ variable (I M)
 
 instance : IsHausdorff I (HausdorffificationCat I M) :=
   ⟨fun x =>
-    (Quotient.inductionOn' x) fun x hx =>
-      (Quotient.mk_eq_zero _).2 <|
-        (mem_infi _).2 fun n => by
+    Quotient.inductionOn' x $ fun x hx =>
+      (Quotient.mk_eq_zero _).2 $
+        (mem_infi _).2 $ fun n => by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
           simp only [sup_of_le_right (infi_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
           rw [← this, map_smul'', mem_comap, map_top, range_mkq, ← Smodeq.zero]
@@ -166,11 +166,11 @@ include h
 /-- universal property of Hausdorffification: any linear map to a Hausdorff module extends to a
 unique map from the Hausdorffification. -/
 def lift (f : M →ₗ[R] N) : HausdorffificationCat I M →ₗ[R] N :=
-  liftq _ f <|
-    map_le_iff_le_comap.1 <|
+  liftq _ f $
+    map_le_iff_le_comap.1 $
       h.infi_pow_smul ▸
         le_infi fun n =>
-          le_trans (map_mono <| infi_le _ n) <| by
+          le_trans (map_mono $ infi_le _ n) $ by
             rw [map_smul'']
             exact smul_mono le_rfl le_top
 #align Hausdorffification.lift HausdorffificationCat.lift
@@ -180,12 +180,12 @@ theorem lift_of (f : M →ₗ[R] N) (x : M) : lift I f (of I M x) = f x :=
 #align Hausdorffification.lift_of HausdorffificationCat.lift_of
 
 theorem lift_comp_of (f : M →ₗ[R] N) : (lift I f).comp (of I M) = f :=
-  LinearMap.ext fun _ => rfl
+  LinearMap.ext $ fun _ => rfl
 #align Hausdorffification.lift_comp_of HausdorffificationCat.lift_comp_of
 
 /-- Uniqueness of lift. -/
 theorem lift_eq (f : M →ₗ[R] N) (g : HausdorffificationCat I M →ₗ[R] N) (hg : g.comp (of I M) = f) : g = lift I f :=
-  LinearMap.ext fun x => (induction_on x) fun x => by rw [lift_of, ← hg, LinearMap.comp_apply]
+  LinearMap.ext $ fun x => induction_on x $ fun x => by rw [lift_of, ← hg, LinearMap.comp_apply]
 #align Hausdorffification.lift_eq HausdorffificationCat.lift_eq
 
 end HausdorffificationCat
@@ -257,25 +257,25 @@ theorem eval_comp_of (n : ℕ) : (eval I M n).comp (of I M) = mkq _ :=
 
 @[simp]
 theorem range_eval (n : ℕ) : (eval I M n).range = ⊤ :=
-  LinearMap.range_eq_top.2 fun x => (Quotient.inductionOn' x) fun x => ⟨of I M x, rfl⟩
+  LinearMap.range_eq_top.2 $ fun x => Quotient.inductionOn' x $ fun x => ⟨of I M x, rfl⟩
 #align adic_completion.range_eval adicCompletion.range_eval
 
 variable {I M}
 
 @[ext.1]
 theorem ext {x y : adicCompletion I M} (h : ∀ n, eval I M n x = eval I M n y) : x = y :=
-  Subtype.eq <| funext h
+  Subtype.eq $ funext h
 #align adic_completion.ext adicCompletion.ext
 
 variable (I M)
 
 instance : IsHausdorff I (adicCompletion I M) :=
   ⟨fun x hx =>
-    ext fun n =>
-      smul_induction_on (Smodeq.zero.1 <| hx n)
+    ext $ fun n =>
+      smul_induction_on (Smodeq.zero.1 $ hx n)
         (fun r hr x _ =>
           ((eval I M n).map_smul r x).symm ▸
-            Quotient.inductionOn' (eval I M n x) fun x => Smodeq.zero.2 <| smul_mem_smul hr mem_top)
+            Quotient.inductionOn' (eval I M n x) fun x => Smodeq.zero.2 $ smul_mem_smul hr mem_top)
         fun _ _ ih1 ih2 => by rw [LinearMap.map_add, ih1, ih2, LinearMap.map_zero, add_zero]⟩
 
 end adicCompletion

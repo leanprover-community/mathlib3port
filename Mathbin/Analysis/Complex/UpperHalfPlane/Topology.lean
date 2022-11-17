@@ -30,7 +30,7 @@ instance : TopologicalSpace ℍ :=
   Subtype.topologicalSpace
 
 theorem open_embedding_coe : OpenEmbedding (coe : ℍ → ℂ) :=
-  IsOpen.open_embedding_subtype_coe <| is_open_lt continuous_const Complex.continuous_im
+  IsOpen.open_embedding_subtype_coe $ is_open_lt continuous_const Complex.continuous_im
 #align upper_half_plane.open_embedding_coe UpperHalfPlane.open_embedding_coe
 
 theorem embedding_coe : Embedding (coe : ℍ → ℂ) :=
@@ -62,7 +62,7 @@ instance : ContractibleSpace ℍ :=
   (convex_halfspace_im_gt 0).ContractibleSpace ⟨i, one_pos.trans_eq I_im.symm⟩
 
 instance : LocPathConnectedSpace ℍ :=
-  loc_path_connected_of_is_open <| is_open_lt continuous_const Complex.continuous_im
+  loc_path_connected_of_is_open $ is_open_lt continuous_const Complex.continuous_im
 
 instance : NoncompactSpace ℍ := by
   refine' ⟨fun h => _⟩

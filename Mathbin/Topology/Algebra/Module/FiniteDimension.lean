@@ -56,11 +56,15 @@ variable {ι 𝕜 F : Type _} [Finite ι] [Semiring 𝕜] [TopologicalSpace 𝕜
 /-- A linear map on `ι → 𝕜` (where `ι` is finite) is continuous -/
 theorem LinearMap.continuous_on_pi (f : (ι → 𝕜) →ₗ[𝕜] F) : Continuous f := by
   cases nonempty_fintype ι
-  classical-- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
-    -- function.
-    have : (f : (ι → 𝕜) → F) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0
-    rw [this]
-    exact (continuous_apply i).smul continuous_const
+  classical
+  -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
+  -- function.
+  have : (f : (ι → 𝕜) → F) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 := by
+    ext x
+    exact f.pi_apply_eq_sum_univ x
+  rw [this]
+  refine' continuous_finset_sum _ fun i hi => _
+  exact (continuous_apply i).smul continuous_const
 #align linear_map.continuous_on_pi LinearMap.continuous_on_pi
 
 end Semiring
@@ -101,7 +105,7 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
     intro ε hε
     rcases NormedField.exists_norm_lt 𝕜 hε with ⟨ξ₀, hξ₀, hξ₀ε⟩
     -- Since `ξ₀ ≠ 0` and `𝓣` is T2, we know that `{ξ₀}ᶜ` is a `𝓣`-neighborhood of 0.
-    have : {ξ₀}ᶜ ∈ @nhds 𝕜 t 0 := IsOpen.mem_nhds is_open_compl_singleton (Ne.symm <| norm_ne_zero_iff.mp hξ₀.ne.symm)
+    have : {ξ₀}ᶜ ∈ @nhds 𝕜 t 0 := IsOpen.mem_nhds is_open_compl_singleton (Ne.symm $ norm_ne_zero_iff.mp hξ₀.ne.symm)
     -- Thus, its balanced core `𝓑` is too. Let's show that the closed ball of radius `ε` contains
     -- `𝓑`, which will imply that the closed ball is indeed a `𝓣`-neighborhood of 0.
     have : balancedCore 𝕜 ({ξ₀}ᶜ) ∈ @nhds 𝕜 t 0 := balanced_core_mem_nhds_zero this
@@ -196,7 +200,7 @@ theorem LinearMap.continuous_iff_is_closed_ker (l : E →ₗ[𝕜] 𝕜) : Conti
     automatically continuous. -/
 theorem LinearMap.continuous_of_nonzero_on_open (l : E →ₗ[𝕜] 𝕜) (s : Set E) (hs₁ : IsOpen s) (hs₂ : s.Nonempty)
     (hs₃ : ∀ x ∈ s, l x ≠ 0) : Continuous l := by
-  refine' l.continuous_of_is_closed_ker (l.is_closed_or_dense_ker.resolve_right fun hl => _)
+  refine' l.continuous_of_is_closed_ker (l.is_closed_or_dense_ker.resolve_right $ fun hl => _)
   rcases hs₂ with ⟨x, hx⟩
   have : x ∈ interior ((l.ker : Set E)ᶜ) := by
     rw [mem_interior_iff_mem_nhds]
@@ -338,8 +342,7 @@ theorem is_open_map_of_finite_dimensional (f : F →ₗ[𝕜] E) (hf : Function.
   rcases f.exists_right_inverse_of_surjective (LinearMap.range_eq_top.2 hf) with ⟨g, hg⟩
   refine' IsOpenMap.of_sections fun x => ⟨fun y => g (y - f x) + x, _, _, fun y => _⟩
   · exact
-      ((g.continuous_of_finite_dimensional.comp <| continuous_id.sub continuous_const).add
-          continuous_const).ContinuousAt
+      ((g.continuous_of_finite_dimensional.comp $ continuous_id.sub continuous_const).add continuous_const).ContinuousAt
     
   · rw [sub_self, map_zero, zero_add]
     
@@ -425,14 +428,14 @@ theorem to_continuous_linear_equiv_of_det_ne_zero_apply (f : E →L[𝕜] E) (hf
   continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply ContinuousLinearMap.to_continuous_linear_equiv_of_det_ne_zero_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem _root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map (a b c d : 𝕜) :
     (Matrix.toLin (Basis.finTwoProd 𝕜) (Basis.finTwoProd 𝕜)
           («expr!![ »
-            "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")).toContinuousLinearMap =
+            "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")).toContinuousLinearMap =
       (a • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + b • ContinuousLinearMap.snd 𝕜 𝕜 𝕜).Prod
         (c • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + d • ContinuousLinearMap.snd 𝕜 𝕜 𝕜) :=
-  ContinuousLinearMap.ext <| Matrix.to_lin_fin_two_prod_apply _ _ _ _
+  ContinuousLinearMap.ext $ Matrix.to_lin_fin_two_prod_apply _ _ _ _
 #align
   continuous_linear_map._root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map continuous_linear_map._root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map
 

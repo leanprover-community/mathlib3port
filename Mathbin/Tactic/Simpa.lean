@@ -30,33 +30,33 @@ local postfix:1024 "?" => optional
 * `simpa [rules, ...]` will simplify the goal and the type of a
   hypothesis `this` if present in the context, then try to close the goal using
   the `assumption` tactic. -/
-unsafe def simpa (use_iota_eqn : parse <| (tk "!")?) (trace_lemmas : parse <| (tk "?")?) (no_dflt : parse only_flag)
+unsafe def simpa (use_iota_eqn : parse $ (tk "!")?) (trace_lemmas : parse $ (tk "?")?) (no_dflt : parse only_flag)
     (hs : parse simp_arg_list) (attr_names : parse with_ident_list) (tgt : parse (tk "using" *> texpr)?)
     (cfg : simp_config_ext := {  }) : tactic Unit :=
   let simp_at (lc) (close_tac : tactic Unit) :=
-    focus1 <|
+    focus1 $
       simp use_iota_eqn trace_lemmas no_dflt hs attr_names (Loc.ns lc) { cfg with failIfUnchanged := false } >>
         ((close_tac <|> trivial) >> done <|> fail "simpa failed")
   match tgt with
   | none => get_local `this >> simp_at [some `this, none] assumption <|> simp_at [none] assumption
   | some e =>
-    focus1 <| do
+    focus1 $ do
       let e ←
         i_to_expr e <|> do
             let ty ← target
             let e
               ←-- for positional error messages, we don't care about the result
                   i_to_expr_strict
-                  (pquote.1 (%%ₓe : %%ₓty))
+                  ``(($(e) : $(ty)))
             let pty ← pp ty
             let ptgt ← pp e
             -- Fail deliberately, to advise regarding `simp; exact` usage
                 fail
                 ("simpa failed, 'using' expression type not directly " ++
-                        "inferrable. Try:\n\nsimpa ... using\nshow " ++
-                      to_fmt pty ++
-                    ",\nfrom " ++
-                  ptgt :
+                          "inferrable. Try:\n\nsimpa ... using\nshow " ++
+                        to_fmt pty ++
+                      ",\nfrom " ++
+                    ptgt :
                   format)
       match e with
         | local_const _ lc _ _ => simp_at [some lc, none] (get_local lc >>= tactic.exact)

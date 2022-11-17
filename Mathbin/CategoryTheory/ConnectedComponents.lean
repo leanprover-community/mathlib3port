@@ -98,7 +98,7 @@ category structure.
 This category is equivalent to `J`.
 -/
 abbrev Decomposed (J : Type u₁) [Category.{v₁} J] :=
-  Σj : ConnectedComponents J, Component j
+  Σ j : ConnectedComponents J, Component j
 #align category_theory.decomposed CategoryTheory.Decomposed
 
 -- This name may cause clashes further down the road, and so might need to be changed.

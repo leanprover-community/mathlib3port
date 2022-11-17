@@ -134,7 +134,7 @@ theorem open_embedding {X : TopCat.{u}} (U : Opens X) : OpenEmbedding (inclusion
 -/
 def inclusionTopIso (X : TopCat.{u}) : (toTop X).obj ⊤ ≅ X where
   Hom := inclusion ⊤
-  inv := ⟨fun x => ⟨x, trivial⟩, continuous_def.2 fun U ⟨S, hS, hSU⟩ => hSU ▸ hS⟩
+  inv := ⟨fun x => ⟨x, trivial⟩, continuous_def.2 $ fun U ⟨S, hS, hSU⟩ => hSU ▸ hS⟩
 #align topological_space.opens.inclusion_top_iso TopologicalSpace.Opens.inclusionTopIso
 
 /-- `opens.map f` gives the functor from open sets in Y to open set in X,
@@ -317,8 +317,8 @@ def IsOpenMap.functor {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) : Opens X 
 def IsOpenMap.adjunction {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) :
     Adjunction hf.Functor (TopologicalSpace.Opens.map f) :=
   Adjunction.mkOfUnitCounit
-    { Unit := { app := fun U => hom_of_le fun x hxU => ⟨x, hxU, rfl⟩ },
-      counit := { app := fun V => hom_of_le fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
+    { Unit := { app := fun U => hom_of_le $ fun x hxU => ⟨x, hxU, rfl⟩ },
+      counit := { app := fun V => hom_of_le $ fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 #align is_open_map.adjunction IsOpenMap.adjunction
 
 instance IsOpenMap.functorFullOfMono {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) [H : Mono f] :
@@ -386,13 +386,13 @@ theorem functor_map_eq_inf {X : TopCat} (U V : Opens X) :
 #align topological_space.opens.functor_map_eq_inf TopologicalSpace.Opens.functor_map_eq_inf
 
 theorem map_functor_eq' {X U : TopCat} (f : U ⟶ X) (hf : OpenEmbedding f) (V) :
-    ((Opens.map f).obj <| hf.IsOpenMap.Functor.obj V) = V :=
-  opens.ext <| Set.preimage_image_eq _ hf.inj
+    ((Opens.map f).obj $ hf.IsOpenMap.Functor.obj V) = V :=
+  opens.ext $ Set.preimage_image_eq _ hf.inj
 #align topological_space.opens.map_functor_eq' TopologicalSpace.Opens.map_functor_eq'
 
 @[simp]
 theorem map_functor_eq {X : TopCat} {U : Opens X} (V : Opens U) :
-    ((Opens.map U.inclusion).obj <| U.OpenEmbedding.IsOpenMap.Functor.obj V) = V :=
+    ((Opens.map U.inclusion).obj $ U.OpenEmbedding.IsOpenMap.Functor.obj V) = V :=
   TopologicalSpace.Opens.map_functor_eq' _ U.OpenEmbedding V
 #align topological_space.opens.map_functor_eq TopologicalSpace.Opens.map_functor_eq
 

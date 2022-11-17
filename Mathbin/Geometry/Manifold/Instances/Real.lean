@@ -85,7 +85,7 @@ theorem range_quadrant (n : ℕ) : (range fun x : EuclideanQuadrant n => x.val) 
 
 end
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
@@ -107,7 +107,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
       UniqueDiffOn.pi (Fin n) (fun _ => ℝ) _ _ fun i (_ : i ∈ ({0} : Set (Fin n))) => uniqueDiffOnIci 0
     simpa only [singleton_pi] using this
   continuous_to_fun := continuous_subtype_val
-  continuous_inv_fun := (continuous_id.update 0 <| (continuous_apply 0).max continuous_const).subtype_mk _
+  continuous_inv_fun := (continuous_id.update 0 $ (continuous_apply 0).max continuous_const).subtype_mk _
 #align model_with_corners_euclidean_half_space modelWithCornersEuclideanHalfSpace
 
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_quadrant n)`, used as a
@@ -132,17 +132,17 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
     simpa only [pi_univ_Ici] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
-    Continuous.subtype_mk (continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
+    Continuous.subtype_mk (continuous_pi $ fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
 #align model_with_corners_euclidean_quadrant modelWithCornersEuclideanQuadrant
 
 -- mathport name: model_with_corners_self.euclidean
-localized [Manifold]
+scoped[Manifold]
   notation "𝓡 " n =>
     (modelWithCornersSelf ℝ (EuclideanSpace ℝ (Fin n)) :
       ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n)))
 
 -- mathport name: model_with_corners_euclidean_half_space.euclidean
-localized [Manifold]
+scoped[Manifold]
   notation "𝓡∂ " n =>
     (modelWithCornersEuclideanHalfSpace n : ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n)) (EuclideanHalfSpace n))
 
@@ -185,7 +185,7 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (Euclide
     apply Continuous.continuous_on
     apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Fin 1) => z - x :=
-      Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
+      Continuous.sub (continuous_pi $ fun i => continuous_id) continuous_const
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
     apply Continuous.continuous_on

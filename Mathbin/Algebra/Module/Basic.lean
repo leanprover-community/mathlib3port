@@ -104,8 +104,8 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.module [AddCommMonoid M₂] [HasSmul R M₂] (f : M₂ →+ M) (hf : Injective f)
     (smul : ∀ (c : R) (x), f (c • x) = c • f x) : Module R M₂ :=
   { hf.DistribMulAction f smul with smul := (· • ·),
-    add_smul := fun c₁ c₂ x => hf <| by simp only [smul, f.map_add, add_smul],
-    zero_smul := fun x => hf <| by simp only [smul, zero_smul, f.map_zero] }
+    add_smul := fun c₁ c₂ x => hf $ by simp only [smul, f.map_add, add_smul],
+    zero_smul := fun x => hf $ by simp only [smul, zero_smul, f.map_zero] }
 #align function.injective.module Function.Injective.module
 
 /-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
@@ -150,8 +150,8 @@ variable (R) (M)
 This is a stronger version of `distrib_mul_action.to_add_monoid_End` -/
 @[simps apply_apply]
 def Module.toAddMonoidEnd : R →+* AddMonoid.EndCat M :=
-  { DistribMulAction.toAddMonoidEnd R M with map_zero' := AddMonoidHom.ext fun r => by simp,
-    map_add' := fun x y => AddMonoidHom.ext fun r => by simp [add_smul] }
+  { DistribMulAction.toAddMonoidEnd R M with map_zero' := AddMonoidHom.ext $ fun r => by simp,
+    map_add' := fun x y => AddMonoidHom.ext $ fun r => by simp [add_smul] }
 #align module.to_add_monoid_End Module.toAddMonoidEnd
 
 /-- A convenience alias for `module.to_add_monoid_End` as an `add_monoid_hom`, usually to allow the
@@ -275,7 +275,7 @@ variable [Ring R] [AddCommGroup M] [Module R M] (r s : R) (x y : M)
 
 @[simp]
 theorem neg_smul : -r • x = -(r • x) :=
-  eq_neg_of_add_eq_zero_left <| by rw [← add_smul, add_left_neg, zero_smul]
+  eq_neg_of_add_eq_zero_left $ by rw [← add_smul, add_left_neg, zero_smul]
 #align neg_smul neg_smul
 
 @[simp]
@@ -309,7 +309,7 @@ protected theorem Module.subsingleton (R M : Type _) [Semiring R] [Subsingleton 
 /-- A semiring is `nontrivial` provided that there exists a nontrivial module over this semiring. -/
 protected theorem Module.nontrivial (R M : Type _) [Semiring R] [Nontrivial M] [AddCommMonoid M] [Module R M] :
     Nontrivial R :=
-  (subsingleton_or_nontrivial R).resolve_left fun hR => not_subsingleton M <| Module.subsingleton R M
+  (subsingleton_or_nontrivial R).resolve_left $ fun hR => not_subsingleton M $ Module.subsingleton R M
 #align module.nontrivial Module.nontrivial
 
 -- see Note [lower instance priority]
@@ -336,7 +336,7 @@ def RingHom.toModule [Semiring R] [Semiring S] (f : R →+* S) : Module R S :=
 
 This generalizes `function.End.apply_mul_action`. -/
 instance RingHom.applyDistribMulAction [Semiring R] : DistribMulAction (R →+* R) R where
-  smul := (· <| ·)
+  smul := (· $ ·)
   smul_zero := RingHom.map_zero
   smul_add := RingHom.map_add
   one_smul _ := rfl
@@ -383,7 +383,7 @@ theorem nat_smul_eq_nsmul (h : Module ℕ M) (n : ℕ) (x : M) : @HasSmul.smul �
 should normally have exactly one `ℕ`-module structure by design. -/
 def AddCommMonoid.natModule.unique : Unique (Module ℕ M) where
   default := by infer_instance
-  uniq P := (Module.ext' P _) fun n => nat_smul_eq_nsmul P n
+  uniq P := Module.ext' P _ $ fun n => nat_smul_eq_nsmul P n
 #align add_comm_monoid.nat_module.unique AddCommMonoid.natModule.unique
 
 instance AddCommMonoid.nat_is_scalar_tower :
@@ -422,7 +422,7 @@ theorem int_smul_eq_zsmul (h : Module ℤ M) (n : ℤ) (x : M) : @HasSmul.smul �
 should normally have exactly one `ℤ`-module structure by design. -/
 def AddCommGroup.intModule.unique : Unique (Module ℤ M) where
   default := by infer_instance
-  uniq P := (Module.ext' P _) fun n => int_smul_eq_zsmul P n
+  uniq P := Module.ext' P _ $ fun n => int_smul_eq_zsmul P n
 #align add_comm_group.int_module.unique AddCommGroup.intModule.unique
 
 end AddCommGroup
@@ -477,7 +477,7 @@ theorem map_rat_smul [AddCommGroup M] [AddCommGroup M₂] [Module ℚ M] [Module
 
 /-- There can be at most one `module ℚ E` structure on an additive commutative group. -/
 instance subsingleton_rat_module (E : Type _) [AddCommGroup E] : Subsingleton (Module ℚ E) :=
-  ⟨fun P Q => (Module.ext' P Q) fun r x => @map_rat_smul _ _ _ _ P Q _ _ (AddMonoidHom.id E) r x⟩
+  ⟨fun P Q => Module.ext' P Q $ fun r x => @map_rat_smul _ _ _ _ P Q _ _ (AddMonoidHom.id E) r x⟩
 #align subsingleton_rat_module subsingleton_rat_module
 
 /-- If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
@@ -559,7 +559,7 @@ export NoZeroSmulDivisors (eq_zero_or_eq_zero_of_smul_eq_zero)
 theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [Zero R] [Zero M] [Zero N] [HasSmul R M] [HasSmul R N]
     [NoZeroSmulDivisors R N] (f : M → N) (hf : Function.Injective f) (h0 : f 0 = 0)
     (hs : ∀ (c : R) (x : M), f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
-  ⟨fun c m h => Or.imp_right (@hf _ _) <| h0.symm ▸ eq_zero_or_eq_zero_of_smul_eq_zero (by rw [← hs, h, h0])⟩
+  ⟨fun c m h => Or.imp_right (@hf _ _) $ h0.symm ▸ eq_zero_or_eq_zero_of_smul_eq_zero (by rw [← hs, h, h0])⟩
 #align function.injective.no_zero_smul_divisors Function.Injective.no_zero_smul_divisors
 
 -- See note [lower instance priority]
@@ -632,7 +632,7 @@ section SmulInjective
 variable (M)
 
 theorem smul_right_injective [NoZeroSmulDivisors R M] {c : R} (hc : c ≠ 0) : Function.Injective ((· • ·) c : M → M) :=
-  (injective_iff_map_eq_zero (smulAddHom R M c)).2 fun a ha => (smul_eq_zero.mp ha).resolve_left hc
+  (injective_iff_map_eq_zero (smulAddHom R M c)).2 $ fun a ha => (smul_eq_zero.mp ha).resolve_left hc
 #align smul_right_injective smul_right_injective
 
 variable {M}
@@ -696,7 +696,7 @@ variable [GroupWithZero R] [AddMonoid M] [DistribMulAction R M]
 -- see note [lower instance priority]
 /-- This instance applies to `division_semiring`s, in particular `nnreal` and `nnrat`. -/
 instance (priority := 100) GroupWithZero.to_no_zero_smul_divisors : NoZeroSmulDivisors R M :=
-  ⟨fun c x h => or_iff_not_imp_left.2 fun hc => (smul_eq_zero_iff_eq' hc).1 h⟩
+  ⟨fun c x h => or_iff_not_imp_left.2 $ fun hc => (smul_eq_zero_iff_eq' hc).1 h⟩
 #align group_with_zero.to_no_zero_smul_divisors GroupWithZero.to_no_zero_smul_divisors
 
 end GroupWithZero

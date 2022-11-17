@@ -65,7 +65,7 @@ instance [Inv α] : Inv (WithOne α) :=
 @[to_additive]
 instance [HasInvolutiveInv α] : HasInvolutiveInv (WithOne α) :=
   { WithOne.hasInv with
-    inv_inv := fun a => (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv := fun a => (Option.map_map _ _ _).trans $ by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 @[to_additive]
 instance [Inv α] : InvOneClass (WithOne α) :=
@@ -183,19 +183,19 @@ def lift : (α →ₙ* β) ≃ (WithOne α →* β) where
   toFun f :=
     { toFun := fun x => Option.casesOn x 1 f, map_one' := rfl,
       map_mul' := fun x y =>
-        (WithOne.cases_on x
+        WithOne.cases_on x
             (by
               rw [one_mul]
-              exact (one_mul _).symm))
+              exact (one_mul _).symm) $
           fun x =>
-          (WithOne.cases_on y
+          WithOne.cases_on y
               (by
                 rw [mul_one]
-                exact (mul_one _).symm))
+                exact (mul_one _).symm) $
             fun y => f.map_mul x y }
   invFun F := F.toMulHom.comp coeMulHom
-  left_inv f := MulHom.ext fun x => rfl
-  right_inv F := MonoidHom.ext fun x => (WithOne.cases_on x F.map_one.symm) fun x => rfl
+  left_inv f := MulHom.ext $ fun x => rfl
+  right_inv F := MonoidHom.ext $ fun x => WithOne.cases_on x F.map_one.symm $ fun x => rfl
 #align with_one.lift WithOne.lift
 
 variable (f : α →ₙ* β)
@@ -247,7 +247,7 @@ theorem map_map (f : α →ₙ* β) (g : β →ₙ* γ) (x) : map g (map f x) = 
 
 @[simp, to_additive]
 theorem map_comp (f : α →ₙ* β) (g : β →ₙ* γ) : map (g.comp f) = (map g).comp (map f) :=
-  MonoidHom.ext fun x => (map_map f g x).symm
+  MonoidHom.ext $ fun x => (map_map f g x).symm
 #align with_one.map_comp WithOne.map_comp
 
 /-- A version of `equiv.option_congr` for `with_one`. -/
@@ -255,12 +255,12 @@ theorem map_comp (f : α →ₙ* β) (g : β →ₙ* γ) : map (g.comp f) = (map
 def _root_.mul_equiv.with_one_congr (e : α ≃* β) : WithOne α ≃* WithOne β :=
   { map e.toMulHom with toFun := map e.toMulHom, invFun := map e.symm.toMulHom,
     left_inv := fun x =>
-      (map_map _ _ _).trans <| by
+      (map_map _ _ _).trans $ by
         induction x using WithOne.cases_on <;>
           · simp
             ,
     right_inv := fun x =>
-      (map_map _ _ _).trans <| by
+      (map_map _ _ _).trans $ by
         induction x using WithOne.cases_on <;>
           · simp
              }
@@ -351,11 +351,11 @@ instance [MulOneClass α] : MulZeroOneClass (WithZero α) :=
     one_mul := fun a =>
       match a with
       | none => rfl
-      | some a => congr_arg some <| one_mul _,
+      | some a => congr_arg some $ one_mul _,
     mul_one := fun a =>
       match a with
       | none => rfl
-      | some a => congr_arg some <| mul_one _ }
+      | some a => congr_arg some $ mul_one _ }
 
 instance [One α] [Pow α ℕ] : Pow (WithZero α) ℕ :=
   ⟨fun x n =>
@@ -374,11 +374,11 @@ instance [Monoid α] : MonoidWithZero (WithZero α) :=
     npow_zero' := fun x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| pow_zero _,
+      | some x => congr_arg some $ pow_zero _,
     npow_succ' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| pow_succ _ _ }
+      | some x => congr_arg some $ pow_succ _ _ }
 
 instance [CommMonoid α] : CommMonoidWithZero (WithZero α) :=
   { WithZero.monoidWithZero, WithZero.commSemigroup with }
@@ -400,7 +400,7 @@ theorem inv_zero [Inv α] : (0 : WithZero α)⁻¹ = 0 :=
 
 instance [HasInvolutiveInv α] : HasInvolutiveInv (WithZero α) :=
   { WithZero.hasInv with
-    inv_inv := fun a => (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv := fun a => (Option.map_map _ _ _).trans $ by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 instance [InvOneClass α] : InvOneClass (WithZero α) :=
   { WithZero.hasOne, WithZero.hasInv with inv_one := show ((1⁻¹ : α) : WithZero α) = 1 by simp }
@@ -437,15 +437,15 @@ instance [DivInvMonoid α] : DivInvMonoid (WithZero α) :=
     zpow_zero' := fun x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| zpow_zero _,
+      | some x => congr_arg some $ zpow_zero _,
     zpow_succ' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| DivInvMonoid.zpow_succ' _ _,
+      | some x => congr_arg some $ DivInvMonoid.zpow_succ' _ _,
     zpow_neg' := fun n x =>
       match x with
       | none => rfl
-      | some x => congr_arg some <| DivInvMonoid.zpow_neg' _ _ }
+      | some x => congr_arg some $ DivInvMonoid.zpow_neg' _ _ }
 
 instance [DivInvOneMonoid α] : DivInvOneMonoid (WithZero α) :=
   { WithZero.divInvMonoid, WithZero.invOneClass with }
@@ -457,13 +457,13 @@ instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
       | none, none => rfl
       | none, some b => rfl
       | some a, none => rfl
-      | some a, some b => congr_arg some <| mul_inv_rev _ _,
+      | some a, some b => congr_arg some $ mul_inv_rev _ _,
     inv_eq_of_mul := fun a b =>
       match a, b with
       | none, none => fun _ => rfl
       | none, some b => by contradiction
       | some a, none => by contradiction
-      | some a, some b => fun h => congr_arg some <| inv_eq_of_mul_eq_one_right <| Option.some_injective _ h }
+      | some a, some b => fun h => congr_arg some $ inv_eq_of_mul_eq_one_right $ Option.some_injective _ h }
 
 instance [DivisionCommMonoid α] : DivisionCommMonoid (WithZero α) :=
   { WithZero.divisionMonoid, WithZero.commSemigroup with }
@@ -517,9 +517,9 @@ instance [Semiring α] : Semiring (WithZero α) :=
 def unitsWithZeroEquiv [Group α] : (WithZero α)ˣ ≃* α where
   toFun a := unzero a.NeZero
   invFun a := Units.mk0 a coe_ne_zero
-  left_inv _ := Units.ext <| by simpa only [coe_unzero]
+  left_inv _ := Units.ext $ by simpa only [coe_unzero]
   right_inv _ := rfl
-  map_mul' _ _ := coe_inj.mp <| by simpa only [coe_unzero, coe_mul]
+  map_mul' _ _ := coe_inj.mp $ by simpa only [coe_unzero, coe_mul]
 #align with_zero.units_with_zero_equiv WithZero.unitsWithZeroEquiv
 
 end WithZero

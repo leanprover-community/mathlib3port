@@ -135,12 +135,12 @@ theorem nsmul_eq_iff {ψ θ : Angle} {n : ℕ} (hz : n ≠ 0) :
 #align real.angle.nsmul_eq_iff Real.Angle.nsmul_eq_iff
 
 theorem two_zsmul_eq_iff {ψ θ : Angle} : (2 : ℤ) • ψ = (2 : ℤ) • θ ↔ ψ = θ ∨ ψ = θ + π := by
-  rw [zsmul_eq_iff two_ne_zero, Int.nat_abs_bit0, Int.nat_abs_one, Fin.exists_fin_two, Fin.coe_zero, Fin.coe_one,
+  rw [zsmul_eq_iff two_ne_zero, Int.nat_abs_bit0, Int.natAbs_one, Fin.exists_fin_two, Fin.coe_zero, Fin.coe_one,
     zero_smul, add_zero, one_smul, Int.cast_two, mul_div_cancel_left (_ : ℝ) two_ne_zero]
 #align real.angle.two_zsmul_eq_iff Real.Angle.two_zsmul_eq_iff
 
 theorem two_nsmul_eq_iff {ψ θ : Angle} : (2 : ℕ) • ψ = (2 : ℕ) • θ ↔ ψ = θ ∨ ψ = θ + π := by
-  simp_rw [← coe_nat_zsmul, Int.coe_nat_bit0, Int.coe_nat_one, two_zsmul_eq_iff]
+  simp_rw [← coe_nat_zsmul, Int.coe_nat_bit0, Int.ofNat_one, two_zsmul_eq_iff]
 #align real.angle.two_nsmul_eq_iff Real.Angle.two_nsmul_eq_iff
 
 theorem two_nsmul_eq_zero_iff {θ : Angle} : (2 : ℕ) • θ = 0 ↔ θ = 0 ∨ θ = π := by convert two_nsmul_eq_iff <;> simp
@@ -527,7 +527,7 @@ theorem pi_ne_zero : (π : Angle) ≠ 0 := by
 
 @[simp]
 theorem to_real_pi_div_two : ((π / 2 : ℝ) : Angle).toReal = π / 2 :=
-  to_real_coe_eq_self_iff.2 <| by constructor <;> linarith [pi_pos]
+  to_real_coe_eq_self_iff.2 $ by constructor <;> linarith [pi_pos]
 #align real.angle.to_real_pi_div_two Real.Angle.to_real_pi_div_two
 
 @[simp]
@@ -537,7 +537,7 @@ theorem to_real_eq_pi_div_two_iff {θ : Angle} : θ.toReal = π / 2 ↔ θ = (π
 
 @[simp]
 theorem to_real_neg_pi_div_two : ((-π / 2 : ℝ) : Angle).toReal = -π / 2 :=
-  to_real_coe_eq_self_iff.2 <| by constructor <;> linarith [pi_pos]
+  to_real_coe_eq_self_iff.2 $ by constructor <;> linarith [pi_pos]
 #align real.angle.to_real_neg_pi_div_two Real.Angle.to_real_neg_pi_div_two
 
 @[simp]
@@ -722,7 +722,7 @@ theorem to_real_nonneg_iff_sign_nonneg {θ : Angle} : 0 ≤ θ.toReal ↔ 0 ≤ 
   rcases lt_trichotomy θ.to_real 0 with (h | h | h)
   · refine' ⟨fun hn => False.elim (h.not_le hn), fun hn => _⟩
     rw [to_real_neg_iff_sign_neg.1 h] at hn
-    exact False.elim (hn.not_lt (by decide))
+    exact False.elim (hn.not_lt dec_trivial)
     
   · simp [h, sign, ← sin_to_real]
     
@@ -744,11 +744,11 @@ theorem sign_to_real {θ : Angle} (h : θ ≠ π) : sign θ.toReal = θ.sign := 
     
 #align real.angle.sign_to_real Real.Angle.sign_to_real
 
-theorem coe_abs_to_real_of_sign_nonneg {θ : Angle} (h : 0 ≤ θ.sign) : ↑(|θ.toReal|) = θ := by
+theorem coe_abs_to_real_of_sign_nonneg {θ : Angle} (h : 0 ≤ θ.sign) : ↑|θ.toReal| = θ := by
   rw [abs_eq_self.2 (to_real_nonneg_iff_sign_nonneg.2 h), coe_to_real]
 #align real.angle.coe_abs_to_real_of_sign_nonneg Real.Angle.coe_abs_to_real_of_sign_nonneg
 
-theorem neg_coe_abs_to_real_of_sign_nonpos {θ : Angle} (h : θ.sign ≤ 0) : -↑(|θ.toReal|) = θ := by
+theorem neg_coe_abs_to_real_of_sign_nonpos {θ : Angle} (h : θ.sign ≤ 0) : -↑|θ.toReal| = θ := by
   rw [SignType.nonpos_iff] at h
   rcases h with (h | h)
   · rw [abs_of_neg (to_real_neg_iff_sign_neg.2 h), coe_neg, neg_neg, coe_to_real]

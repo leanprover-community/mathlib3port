@@ -48,7 +48,7 @@ namespace Splitting
 
 /-- The index set which appears in the definition of split simplicial objects. -/
 def IndexSet (Δ : SimplexCategoryᵒᵖ) :=
-  ΣΔ' : SimplexCategoryᵒᵖ, { α : Δ.unop ⟶ Δ'.unop // Epi α }
+  Σ Δ' : SimplexCategoryᵒᵖ, { α : Δ.unop ⟶ Δ'.unop // Epi α }
 #align simplicial_object.splitting.index_set SimplicialObject.Splitting.IndexSet
 
 namespace IndexSet

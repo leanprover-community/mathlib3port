@@ -188,7 +188,7 @@ theorem nontrivial_of_invariant_basis_number : Nontrivial R := by
   by_contra h
   refine' zero_ne_one (eq_of_fin_equiv R _)
   haveI := not_nontrivial_iff_subsingleton.1 h
-  haveI : Subsingleton (Fin 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elim _ _⟩
+  haveI : Subsingleton (Fin 1 → R) := ⟨fun a b => funext $ fun x => Subsingleton.elim _ _⟩
   refine' { .. } <;>
     first
       |· intros
@@ -216,7 +216,7 @@ instance (priority := 100) noetherianRingStrongRankCondition : StrongRankConditi
   by_contra h
   rw [not_le, ← Nat.add_one_le_iff, le_iff_exists_add] at h
   obtain ⟨m, rfl⟩ := h
-  let e : Fin (n + 1 + m) ≃ Sum (Fin n) (Fin (1 + m)) := (finCongr (add_assoc _ _ _)).trans fin_sum_fin_equiv.symm
+  let e : Fin (n + 1 + m) ≃ Fin n ⊕ Fin (1 + m) := (finCongr (add_assoc _ _ _)).trans fin_sum_fin_equiv.symm
   let f' :=
     f.comp ((LinearEquiv.sumArrowLequivProdArrow _ _ R R).symm.trans (LinearEquiv.funCongrLeft R R e)).toLinearMap
   have i' : injective f' := i.comp (LinearEquiv.injective _)

@@ -81,7 +81,7 @@ theorem _root_.list.periodic_prod [Add α] [CommMonoid β] (l : List (α → β)
 @[to_additive]
 theorem _root_.multiset.periodic_prod [Add α] [CommMonoid β] (s : Multiset (α → β)) (hs : ∀ f ∈ s, Periodic f c) :
     Periodic s.Prod c :=
-  (s.prod_to_list ▸ s.toList.periodic_prod) fun f hf => hs f <| Multiset.mem_to_list.mp hf
+  s.prod_to_list ▸ s.toList.periodic_prod $ fun f hf => hs f $ Multiset.mem_to_list.mp hf
 #align function._root_.multiset.periodic_prod function._root_.multiset.periodic_prod
 
 @[to_additive]
@@ -124,7 +124,7 @@ theorem Periodic.const_inv_mul [DivisionRing α] (h : Periodic f c) (a : α) : P
 #align function.periodic.const_inv_mul Function.Periodic.const_inv_mul
 
 theorem Periodic.mul_const [DivisionRing α] (h : Periodic f c) (a : α) : Periodic (fun x => f (x * a)) (c * a⁻¹) :=
-  h.const_smul₀ <| MulOpposite.op a
+  h.const_smul₀ $ MulOpposite.op a
 #align function.periodic.mul_const Function.Periodic.mul_const
 
 theorem Periodic.mul_const' [DivisionRing α] (h : Periodic f c) (a : α) : Periodic (fun x => f (x * a)) (c / a) := by
@@ -132,7 +132,7 @@ theorem Periodic.mul_const' [DivisionRing α] (h : Periodic f c) (a : α) : Peri
 #align function.periodic.mul_const' Function.Periodic.mul_const'
 
 theorem Periodic.mul_const_inv [DivisionRing α] (h : Periodic f c) (a : α) : Periodic (fun x => f (x * a⁻¹)) (c * a) :=
-  h.const_inv_smul₀ <| MulOpposite.op a
+  h.const_inv_smul₀ $ MulOpposite.op a
 #align function.periodic.mul_const_inv Function.Periodic.mul_const_inv
 
 theorem Periodic.div_const [DivisionRing α] (h : Periodic f c) (a : α) : Periodic (fun x => f (x / a)) (c * a) := by
@@ -213,7 +213,7 @@ theorem Periodic.nat_mul_sub_eq [Ring α] (h : Periodic f c) (n : ℕ) : f (n * 
 
 theorem Periodic.zsmul [AddGroup α] (h : Periodic f c) (n : ℤ) : Periodic f (n • c) := by
   cases n
-  · simpa only [Int.of_nat_eq_coe, coe_nat_zsmul] using h.nsmul n
+  · simpa only [Int.ofNat_eq_coe, coe_nat_zsmul] using h.nsmul n
     
   · simpa only [zsmul_neg_succ_of_nat] using (h.nsmul n.succ).neg
     
@@ -288,8 +288,8 @@ theorem Periodic.exists_mem_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] 
 
 theorem Periodic.image_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : Periodic f c) (hc : 0 < c) (a : α) :
     f '' Set.ioc a (a + c) = Set.range f :=
-  (Set.image_subset_range _ _).antisymm <|
-    Set.range_subset_iff.2 fun x =>
+  (Set.image_subset_range _ _).antisymm $
+    Set.range_subset_iff.2 $ fun x =>
       let ⟨y, hy, hyx⟩ := h.exists_mem_Ioc hc x a
       ⟨y, hy, hyx.symm⟩
 #align function.periodic.image_Ioc Function.Periodic.image_Ioc
@@ -311,7 +311,7 @@ theorem Periodic.map_vadd_multiples [AddCommMonoid α] (hf : Periodic f c) (a : 
 
 /-- Lift a periodic function to a function from the quotient group. -/
 def Periodic.lift [AddGroup α] (h : Periodic f c) (x : α ⧸ AddSubgroup.zmultiples c) : β :=
-  (Quotient.liftOn' x f) fun a b h' => by
+  Quotient.liftOn' x f $ fun a b h' => by
     rw [QuotientAddGroup.left_rel_apply] at h'
     obtain ⟨k, hk⟩ := h'
     exact (h.zsmul k _).symm.trans (congr_arg f (add_eq_of_eq_neg_add hk))
@@ -459,7 +459,7 @@ theorem Antiperiodic.const_inv_mul [DivisionRing α] [Neg β] (h : Antiperiodic 
 
 theorem Antiperiodic.mul_const [DivisionRing α] [Neg β] (h : Antiperiodic f c) {a : α} (ha : a ≠ 0) :
     Antiperiodic (fun x => f (x * a)) (c * a⁻¹) :=
-  h.const_smul₀ <| (MulOpposite.op_ne_zero_iff a).mpr ha
+  h.const_smul₀ $ (MulOpposite.op_ne_zero_iff a).mpr ha
 #align function.antiperiodic.mul_const Function.Antiperiodic.mul_const
 
 theorem Antiperiodic.mul_const' [DivisionRing α] [Neg β] (h : Antiperiodic f c) {a : α} (ha : a ≠ 0) :
@@ -468,7 +468,7 @@ theorem Antiperiodic.mul_const' [DivisionRing α] [Neg β] (h : Antiperiodic f c
 
 theorem Antiperiodic.mul_const_inv [DivisionRing α] [Neg β] (h : Antiperiodic f c) {a : α} (ha : a ≠ 0) :
     Antiperiodic (fun x => f (x * a⁻¹)) (c * a) :=
-  h.const_inv_smul₀ <| (MulOpposite.op_ne_zero_iff a).mpr ha
+  h.const_inv_smul₀ $ (MulOpposite.op_ne_zero_iff a).mpr ha
 #align function.antiperiodic.mul_const_inv Function.Antiperiodic.mul_const_inv
 
 theorem Antiperiodic.div_inv [DivisionRing α] [Neg β] (h : Antiperiodic f c) {a : α} (ha : a ≠ 0) :

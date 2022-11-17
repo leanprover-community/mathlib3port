@@ -90,7 +90,7 @@ theorem ext {X Y : PresheafedSpaceCat C} (α β : Hom X Y) (w : α.base = β.bas
 #align algebraic_geometry.PresheafedSpace.ext AlgebraicGeometry.PresheafedSpaceCat.ext
 
 -- TODO including `injections` would make tidy work earlier.
-theorem hext {X Y : PresheafedSpaceCat C} (α β : Hom X Y) (w : α.base = β.base) (h : HEq α.c β.c) : α = β := by
+theorem hext {X Y : PresheafedSpaceCat C} (α β : Hom X Y) (w : α.base = β.base) (h : α.c == β.c) : α = β := by
   cases α
   cases β
   congr
@@ -415,13 +415,13 @@ def restrictTopIso (X : PresheafedSpaceCat C) : X.restrict (Opens.open_embedding
   Hom := X.ofRestrict _
   inv := X.toRestrictTop
   hom_inv_id' :=
-    ext _ _ ((ConcreteCategory.hom_ext _ _) fun ⟨x, _⟩ => rfl) <| by
+    ext _ _ (ConcreteCategory.hom_ext _ _ $ fun ⟨x, _⟩ => rfl) $ by
       erw [comp_c]
       rw [X.of_restrict_top_c]
       ext
       simp
   inv_hom_id' :=
-    ext _ _ rfl <| by
+    ext _ _ rfl $ by
       erw [comp_c]
       rw [X.of_restrict_top_c]
       ext

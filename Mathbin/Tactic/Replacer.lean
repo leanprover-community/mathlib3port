@@ -41,7 +41,7 @@ unsafe def replacer (ntac : Name) {α : Type} [reflected _ α] (F : Type → Typ
 unsafe def mk_replacer₁ : expr → Nat → expr × expr
   | expr.pi n bi d b, i =>
     let (e₁, e₂) := mk_replacer₁ b (i + 1)
-    (expr.pi n bi d e₁, (quote.1 (expr.pi n bi d) : expr) e₂)
+    (expr.pi n bi d e₁, (q(expr.pi n bi d) : expr) e₂)
   | _, i => (expr.var i, expr.var 0)
 #align tactic.mk_replacer₁ tactic.mk_replacer₁
 
@@ -49,14 +49,14 @@ unsafe def mk_replacer₂ (ntac : Name) (v : expr × expr) : expr → Nat → Op
   | expr.pi n bi d b, i => do
     let b' ← mk_replacer₂ b (i + 1)
     some (expr.lam n bi d b')
-  | quote.1 (tactic (%%ₓβ)), i =>
-    some <|
+  | q(tactic $(β)), i =>
+    some $
       (expr.const `` replacer []).mk_app
-        [reflect ntac, β, reflect β, expr.lam `γ BinderInfo.default (quote.1 Type) v.1,
-          expr.lam `γ BinderInfo.default (quote.1 Type) <|
-            expr.lam `eγ BinderInfo.inst_implicit ((quote.1 (reflected Type) : expr) β) v.2,
-          expr.lam `γ BinderInfo.default (quote.1 Type) <|
-            expr.lam `f BinderInfo.default v.1 <| (List.range i).foldr (fun i e' => e' (expr.var (i + 2))) (expr.var 0)]
+        [reflect ntac, β, reflect β, expr.lam `γ BinderInfo.default q(Type) v.1,
+          expr.lam `γ BinderInfo.default q(Type) $
+            expr.lam `eγ BinderInfo.inst_implicit ((q(reflected Type) : expr) β) v.2,
+          expr.lam `γ BinderInfo.default q(Type) $
+            expr.lam `f BinderInfo.default v.1 $ (List.range i).foldr (fun i e' => e' (expr.var (i + 2))) (expr.var 0)]
   | _, i => none
 #align tactic.mk_replacer₂ tactic.mk_replacer₂
 
@@ -66,9 +66,8 @@ unsafe def mk_replacer (ntac : Name) (e : expr) : tactic expr :=
 
 unsafe def valid_types : expr → List expr
   | expr.pi n bi d b => expr.pi n bi d <$> valid_types b
-  | quote.1 (tactic (%%ₓβ)) =>
-    [quote.1 (tactic.{0} (%%ₓβ)), quote.1 (tactic.{0} (%%ₓβ) → tactic.{0} (%%ₓβ)),
-      quote.1 (Option (tactic.{0} (%%ₓβ)) → tactic.{0} (%%ₓβ))]
+  | q(tactic $(β)) =>
+    [q(tactic.{0} $(β)), q(tactic.{0} $(β) → tactic.{0} $(β)), q(Option (tactic.{0} $(β)) → tactic.{0} $(β))]
   | _ => []
 #align tactic.valid_types tactic.valid_types
 
@@ -83,21 +82,21 @@ unsafe def replacer_attr (ntac : Name) : user_attribute where
         "can optionally have an argument of type `tactic unit` or " ++
       "`option (tactic unit)` which refers to the previous definition, if any."
   after_set :=
-    some fun n _ _ => do
+    some $ fun n _ _ => do
       let d ← get_decl n
       let base ← get_decl ntac
-      guardb ((valid_types base).any (· == d)) <|> fail f! "incorrect type for @[{ntac}]"
+      guardb ((valid_types base).any (· =ₐ d)) <|> fail f! "incorrect type for @[{ntac}]"
 #align tactic.replacer_attr tactic.replacer_attr
 
 /-- Define a new replaceable tactic. -/
 unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
-  let nattr := .str ntac "attr"
+  let nattr := ntac <.> "attr"
   do
-  add_meta_definition nattr [] (quote.1 user_attribute) (quote.1 (replacer_attr (%%ₓreflect ntac)))
+  add_meta_definition nattr [] q(user_attribute) q(replacer_attr $(reflect ntac))
   set_basic_attribute `user_attribute nattr tt
   let v ← mk_replacer ntac ty
   add_meta_definition ntac [] ty v
-  add_doc_string ntac <|
+  add_doc_string ntac $
       "The `" ++ toString ntac ++ "` tactic is a \"replaceable\" " ++
                 "tactic, which means that its meaning is defined by tactics that " ++
               "are defined later with the `@[" ++
@@ -106,8 +105,7 @@ unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
         "It is intended for use with `auto_param`s for structure fields."
 #align tactic.def_replacer tactic.def_replacer
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `def_replacer foo` sets up a stub definition `foo : tactic unit`, which can
 effectively be defined and re-defined later, by tagging definitions with `@[foo]`.
 
@@ -123,14 +121,14 @@ same type, or the type `α → β → tactic γ → tactic γ` or
 `α → β → option (tactic γ) → tactic γ` analogously to the previous cases.
  -/
 @[user_command]
-unsafe def def_replacer_cmd (_ : parse <| tk "def_replacer") : lean.parser Unit := do
+unsafe def def_replacer_cmd (_ : parse $ tk "def_replacer") : lean.parser Unit := do
   let ntac ← ident
   let ty ← optional (tk ":" *> types.texpr)
   match ty with
     | some p => do
       let t ← to_expr p
       def_replacer ntac t
-    | none => def_replacer ntac (quote.1 (tactic Unit))
+    | none => def_replacer ntac q(tactic Unit)
 #align tactic.def_replacer_cmd tactic.def_replacer_cmd
 
 add_tactic_doc
@@ -149,7 +147,7 @@ unsafe def replaceable_attr : user_attribute where
   Name := `replaceable
   descr := "make definition replaceable in dependent modules"
   after_set :=
-    some fun n' _ _ => do
+    some $ fun n' _ _ => do
       let n ← unprime n'
       let d ← get_decl n'
       def_replacer n d

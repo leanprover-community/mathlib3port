@@ -62,7 +62,7 @@ theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
   | (n : ℕ), h => by
     rw [zpow_coe_nat, zero_pow']
     simpa using h
-  | -[n+1], h => by simp
+  | -[1+ n], h => by simp
 #align zero_zpow zero_zpow
 
 theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
@@ -74,11 +74,11 @@ theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
 #align zero_zpow_eq zero_zpow_eq
 
 theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
-  | (n : ℕ) => by simp only [← Int.coe_nat_succ, zpow_coe_nat, pow_succ']
-  | -[0+1] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, inv_mul_cancel ha]
-  | -[n + 1+1] => by
-    rw [Int.neg_succ_of_nat_eq, zpow_neg, neg_add, neg_add_cancel_right, zpow_neg, ← Int.coe_nat_succ, zpow_coe_nat,
-      zpow_coe_nat, pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha, mul_one]
+  | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_coe_nat, pow_succ']
+  | -[1+ 0] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, inv_mul_cancel ha]
+  | -[1+ n + 1] => by
+    rw [Int.negSucc_eq, zpow_neg, neg_add, neg_add_cancel_right, zpow_neg, ← Int.ofNat_succ, zpow_coe_nat, zpow_coe_nat,
+      pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha, mul_one]
 #align zpow_add_one₀ zpow_add_one₀
 
 theorem zpow_sub_one₀ {a : G₀} (ha : a ≠ 0) (n : ℤ) : a ^ (n - 1) = a ^ n * a⁻¹ :=
@@ -118,7 +118,7 @@ theorem zpow_one_add₀ {a : G₀} (h : a ≠ 0) (i : ℤ) : a ^ (1 + i) = a * a
 
 theorem SemiconjBy.zpow_right₀ {a x y : G₀} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
   | (n : ℕ) => by simp [h.pow_right n]
-  | -[n+1] => by simp [(h.pow_right (n + 1)).inv_right₀]
+  | -[1+ n] => by simp [(h.pow_right (n + 1)).inv_right₀]
 #align semiconj_by.zpow_right₀ SemiconjBy.zpow_right₀
 
 theorem Commute.zpow_right₀ {a b : G₀} (h : Commute a b) : ∀ m : ℤ, Commute a (b ^ m) :=
@@ -156,7 +156,7 @@ theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z �
   | (n : ℕ) => by
     rw [zpow_coe_nat]
     exact pow_ne_zero _ ha
-  | -[n+1] => by
+  | -[1+ n] => by
     rw [zpow_neg_succ_of_nat]
     exact inv_ne_zero (pow_ne_zero _ ha)
 #align zpow_ne_zero_of_ne_zero zpow_ne_zero_of_ne_zero
@@ -169,7 +169,7 @@ theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by rw 
 #align zpow_bit1' zpow_bit1'
 
 theorem zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=
-  Classical.by_contradiction fun hx => zpow_ne_zero_of_ne_zero hx n h
+  Classical.by_contradiction $ fun hx => zpow_ne_zero_of_ne_zero hx n h
 #align zpow_eq_zero zpow_eq_zero
 
 theorem zpow_eq_zero_iff {a : G₀} {n : ℤ} (hn : n ≠ 0) : a ^ n = 0 ↔ a = 0 :=

@@ -50,13 +50,13 @@ def omegaLimit [TopologicalSpace β] (f : Filter τ) (ϕ : τ → α → β) (s 
 #align omega_limit omegaLimit
 
 -- mathport name: omega_limit
-localized [omegaLimit] notation "ω" => omegaLimit
+scoped[omegaLimit] notation "ω" => omegaLimit
 
 -- mathport name: omega_limit.at_top
-localized [omegaLimit] notation "ω⁺" => omegaLimit Filter.atTop
+scoped[omegaLimit] notation "ω⁺" => omegaLimit Filter.atTop
 
 -- mathport name: omega_limit.at_bot
-localized [omegaLimit] notation "ω⁻" => omegaLimit Filter.atBot
+scoped[omegaLimit] notation "ω⁻" => omegaLimit Filter.atBot
 
 variable [TopologicalSpace β]
 
@@ -83,11 +83,11 @@ theorem omega_limit_mono_left {f₁ f₂ : Filter τ} (hf : f₁ ≤ f₂) : ω 
 #align omega_limit_mono_left omega_limit_mono_left
 
 theorem omega_limit_mono_right {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) : ω f ϕ s₁ ⊆ ω f ϕ s₂ :=
-  Inter₂_mono fun u hu => closure_mono (image2_subset Subset.rfl hs)
+  Inter₂_mono $ fun u hu => closure_mono (image2_subset Subset.rfl hs)
 #align omega_limit_mono_right omega_limit_mono_right
 
 theorem isClosedOmegaLimit : IsClosed (ω f ϕ s) :=
-  isClosedInter fun u => isClosedInter fun hu => isClosedClosure
+  isClosedInter $ fun u => isClosedInter $ fun hu => isClosedClosure
 #align is_closed_omega_limit isClosedOmegaLimit
 
 theorem maps_to_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filter τ} {ϕ : τ → α → β} {ϕ' : τ → α' → β'}
@@ -95,7 +95,7 @@ theorem maps_to_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filt
     (hgc : Continuous gb) : MapsTo gb (ω f ϕ s) (ω f ϕ' s') := by
   simp only [omega_limit_def, mem_Inter, maps_to]
   intro y hy u hu
-  refine' map_mem_closure hgc (hy _ (inter_mem hu hg)) (forall_image2_iff.2 fun t ht x hx => _)
+  refine' map_mem_closure hgc (hy _ (inter_mem hu hg)) (forall_image2_iff.2 $ fun t ht x hx => _)
   calc
     gb (ϕ t x) = ϕ' t (ga x) := ht.2 hx
     _ ∈ image2 ϕ' u s' := mem_image2_of_mem ht.1 (hs hx)
@@ -105,7 +105,7 @@ theorem maps_to_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filt
 theorem maps_to_omega_limit {α' β' : Type _} [TopologicalSpace β'] {f : Filter τ} {ϕ : τ → α → β} {ϕ' : τ → α' → β'}
     {ga : α → α'} {s' : Set α'} (hs : MapsTo ga s s') {gb : β → β'} (hg : ∀ t x, gb (ϕ t x) = ϕ' t (ga x))
     (hgc : Continuous gb) : MapsTo gb (ω f ϕ s) (ω f ϕ' s') :=
-  maps_to_omega_limit' _ hs (eventually_of_forall fun t x hx => hg t x) hgc
+  maps_to_omega_limit' _ hs (eventually_of_forall $ fun t x hx => hg t x) hgc
 #align maps_to_omega_limit maps_to_omega_limit
 
 theorem omega_limit_image_eq {α' : Type _} (ϕ : τ → α' → β) (f : Filter τ) (g : α → α') :
@@ -167,7 +167,7 @@ theorem omega_limit_inter : ω f ϕ (s₁ ∩ s₂) ⊆ ω f ϕ s₁ ∩ ω f ϕ
 #align omega_limit_inter omega_limit_inter
 
 theorem omega_limit_Inter (p : ι → Set α) : ω f ϕ (⋂ i, p i) ⊆ ⋂ i, ω f ϕ (p i) :=
-  subset_Inter fun i => omega_limit_mono_right _ _ (Inter_subset _ _)
+  subset_Inter $ fun i => omega_limit_mono_right _ _ (Inter_subset _ _)
 #align omega_limit_Inter omega_limit_Inter
 
 theorem omega_limit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s₂ := by
@@ -178,9 +178,9 @@ theorem omega_limit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s
     contrapose!
     simp only [not_frequently, not_nonempty_iff_eq_empty, ← subset_empty_iff]
     rintro ⟨⟨n₁, hn₁, h₁⟩, ⟨n₂, hn₂, h₂⟩⟩
-    refine' ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono fun t => _, h₂.mono fun t => _⟩
-    exacts[subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_left _ _,
-      subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_right _ _]
+    refine' ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono $ fun t => _, h₂.mono $ fun t => _⟩
+    exacts[subset.trans $ inter_subset_inter_right _ $ preimage_mono $ inter_subset_left _ _,
+      subset.trans $ inter_subset_inter_right _ $ preimage_mono $ inter_subset_right _ _]
     
   · rintro (hy | hy)
     exacts[omega_limit_mono_right _ _ (subset_union_left _ _) hy,
@@ -205,8 +205,8 @@ theorem omega_limit_eq_Inter : ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 ϕ
 #align omega_limit_eq_Inter omega_limit_eq_Inter
 
 theorem omega_limit_eq_bInter_inter {v : Set τ} (hv : v ∈ f) : ω f ϕ s = ⋂ u ∈ f, closure (image2 ϕ (u ∩ v) s) :=
-  Subset.antisymm (Inter₂_mono' fun u hu => ⟨u ∩ v, inter_mem hu hv, Subset.rfl⟩)
-    (Inter₂_mono fun u hu => closure_mono <| image2_subset (inter_subset_left _ _) Subset.rfl)
+  Subset.antisymm (Inter₂_mono' $ fun u hu => ⟨u ∩ v, inter_mem hu hv, Subset.rfl⟩)
+    (Inter₂_mono $ fun u hu => closure_mono $ image2_subset (inter_subset_left _ _) Subset.rfl)
 #align omega_limit_eq_bInter_inter omega_limit_eq_bInter_inter
 
 theorem omega_limit_eq_Inter_inter {v : Set τ} (hv : v ∈ f) : ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 ϕ (u ∩ v) s) :=
@@ -287,7 +287,7 @@ theorem eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_sub
   rcases eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset f ϕ s hc₁ hc₂ hn₁ hn₂ with
     ⟨u, hu_mem, hu⟩
   refine' mem_of_superset hu_mem fun t ht x hx => _
-  exact hu (subset_closure <| mem_image2_of_mem ht hx)
+  exact hu (subset_closure $ mem_image2_of_mem ht hx)
 #align
   eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_subset eventually_maps_to_of_is_compact_absorbing_of_is_open_of_omega_limit_subset
 
@@ -302,7 +302,7 @@ theorem eventually_maps_to_of_is_open_of_omega_limit_subset [CompactSpace β] {v
     (hv₂ : ω f ϕ s ⊆ v) : ∀ᶠ t in f, MapsTo (ϕ t) s v := by
   rcases eventually_closure_subset_of_is_open_of_omega_limit_subset f ϕ s hv₁ hv₂ with ⟨u, hu_mem, hu⟩
   refine' mem_of_superset hu_mem fun t ht x hx => _
-  exact hu (subset_closure <| mem_image2_of_mem ht hx)
+  exact hu (subset_closure $ mem_image2_of_mem ht hx)
 #align eventually_maps_to_of_is_open_of_omega_limit_subset eventually_maps_to_of_is_open_of_omega_limit_subset
 
 /-- The ω-limit of a nonempty set w.r.t. a nontrivial filter is nonempty. -/
@@ -377,7 +377,7 @@ open omegaLimit
 /-- the ω-limit of a forward image of `s` is the same as the ω-limit of `s`. -/
 @[simp]
 theorem omega_limit_image_eq (hf : ∀ t, Tendsto (· + t) f f) (t : τ) : ω f ϕ (ϕ t '' s) = ω f ϕ s :=
-  Subset.antisymm (omega_limit_image_subset _ _ _ _ (hf t)) <|
+  Subset.antisymm (omega_limit_image_subset _ _ _ _ (hf t)) $
     calc
       ω f ϕ s = ω f ϕ (ϕ (-t) '' (ϕ t '' s)) := by simp [image_image, ← map_add]
       _ ⊆ ω f ϕ (ϕ t '' s) := omega_limit_image_subset _ _ _ _ (hf _)

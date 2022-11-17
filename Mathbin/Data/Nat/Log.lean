@@ -125,7 +125,7 @@ theorem lt_pow_iff_log_lt {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : 0 < y) : y < 
 #align nat.lt_pow_iff_log_lt Nat.lt_pow_iff_log_lt
 
 theorem log_pow {b : ℕ} (hb : 1 < b) (x : ℕ) : log b (b ^ x) = x :=
-  eq_of_forall_le_iff fun z => by
+  eq_of_forall_le_iff $ fun z => by
     rw [← pow_le_iff_le_log hb (pow_pos (zero_lt_one.trans hb) _)]
     exact (pow_right_strict_mono hb).le_iff_le
 #align nat.log_pow Nat.log_pow
@@ -135,7 +135,7 @@ theorem log_pos {b n : ℕ} (hb : 1 < b) (hn : b ≤ n) : 0 < log b n := by
 #align nat.log_pos Nat.log_pos
 
 theorem log_mul_base (b n : ℕ) (hb : 1 < b) (hn : 0 < n) : log b (n * b) = log b n + 1 :=
-  eq_of_forall_le_iff fun z => by
+  eq_of_forall_le_iff $ fun z => by
     cases z
     · simp
       
@@ -320,7 +320,7 @@ theorem le_pow_iff_clog_le {b : ℕ} (hb : 1 < b) {x y : ℕ} : x ≤ b ^ y ↔ 
       Nat.div_le_iff_le_mul_add_pred b_pos, ← pow_succ, add_tsub_assoc_of_le (Nat.succ_le_of_lt b_pos),
       add_le_add_iff_right]
     
-  · exact iff_of_true ((not_lt.1 (not_and.1 h hb)).trans <| succ_le_of_lt <| pow_pos b_pos _) (zero_le _)
+  · exact iff_of_true ((not_lt.1 (not_and.1 h hb)).trans $ succ_le_of_lt $ pow_pos b_pos _) (zero_le _)
     
 #align nat.le_pow_iff_clog_le Nat.le_pow_iff_clog_le
 
@@ -329,7 +329,7 @@ theorem pow_lt_iff_lt_clog {b : ℕ} (hb : 1 < b) {x y : ℕ} : b ^ y < x ↔ y 
 #align nat.pow_lt_iff_lt_clog Nat.pow_lt_iff_lt_clog
 
 theorem clog_pow (b x : ℕ) (hb : 1 < b) : clog b (b ^ x) = x :=
-  eq_of_forall_ge_iff fun z => by
+  eq_of_forall_ge_iff $ fun z => by
     rw [← le_pow_iff_clog_le hb]
     exact (pow_right_strict_mono hb).le_iff_le
 #align nat.clog_pow Nat.clog_pow
@@ -379,7 +379,7 @@ theorem log_le_clog (b n : ℕ) : log b n ≤ clog b n := by
   · rw [log_zero_right]
     exact zero_le _
     
-  exact (pow_right_strict_mono hb).le_iff_le.1 ((pow_log_le_self hb <| succ_pos _).trans <| le_pow_clog hb _)
+  exact (pow_right_strict_mono hb).le_iff_le.1 ((pow_log_le_self hb $ succ_pos _).trans $ le_pow_clog hb _)
 #align nat.log_le_clog Nat.log_le_clog
 
 end Nat

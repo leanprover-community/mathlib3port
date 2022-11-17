@@ -273,7 +273,7 @@ theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Hor
     (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e := by
   simp [add_const]
   cases k <;> simp! [*]
-  simp [show Znum.pos k ≠ 0 by decide]
+  simp [show Znum.pos k ≠ 0 from dec_trivial]
   induction' e with n a x n b A B <;> simp [*]
   · rcases cs with ⟨n, rfl⟩
     refine' ⟨⟨n + Num.pos k, by simp [add_comm] <;> rfl⟩, _⟩
@@ -334,7 +334,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
         simp at this
         have := sub_eq_zero.1 this
         rw [← Num.to_nat_to_int, ← Num.to_nat_to_int] at this
-        exact Num.to_nat_inj.1 (Int.coe_nat_inj this)
+        exact Num.to_nat_inj.1 (Int.ofNat.inj this)
       subst n₂
       rcases cseval_horner' _ _ _ _ _ _ _ with ⟨csh, h⟩
       · refine' ⟨csh, h.trans (Eq.symm _)⟩
@@ -349,7 +349,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       rw [show id = add 0 from rfl, h]
       apply Tactic.Ring.horner_add_horner_gt
       · change (_ + k : ℕ) = _
-        rw [← Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ← sub_eq_iff_eq_add']
+        rw [← Int.coe_nat_inj', Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add']
         simpa using congr_arg (coe : Znum → ℤ) e
         
       · rfl
@@ -362,7 +362,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       symm
       apply Tactic.Ring.horner_add_horner_lt
       · change (_ + k : ℕ) = _
-        rw [← Int.coe_nat_inj', Int.coe_nat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
+        rw [← Int.coe_nat_inj', Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
         simpa using congr_arg (coe : Znum → ℤ) e
         
       all_goals rfl
@@ -502,35 +502,39 @@ theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr
   repeat' rw [← (horner_expr.cseval_of_csexpr t _).2] <;> rw [H]
 #align tactic.ring2.correctness Tactic.Ring2.correctness
 
-/-- Reflects a csring expression into a `csring_expr`, together
-with a dlist of atoms, i.e. opaque variables over which the
-expression is a polynomial. -/
-unsafe def reflect_expr : expr → csring_expr × Dlist expr
-  | quote.1 ((%%ₓe₁) + %%ₓe₂) =>
-    let (r₁, l₁) := reflect_expr e₁
-    let (r₂, l₂) := reflect_expr e₂
-    (r₁.add r₂, l₁ ++ l₂)
-  |/-| `(%%e₁ - %%e₂) :=
-        let (r₁, l₁) := reflect_expr e₁, (r₂, l₂) := reflect_expr e₂ in
-        (r₁.add r₂.neg, l₁ ++ l₂)
-      | `(- %%e) := let (r, l) := reflect_expr e in (r.neg, l)-/
-      quote.1
-      ((%%ₓe₁) * %%ₓe₂) =>
-    let (r₁, l₁) := reflect_expr e₁
-    let (r₂, l₂) := reflect_expr e₂
-    (r₁.mul r₂, l₁ ++ l₂)
-  |/-| `(has_inv.inv %%e) := let (r, l) := reflect_expr e in (r.neg, l)
-      | `(%%e₁ / %%e₂) :=
-        let (r₁, l₁) := reflect_expr e₁, (r₂, l₂) := reflect_expr e₂ in
-        (r₁.mul r₂.inv, l₁ ++ l₂)-/
-      e@(quote.1 ((%%ₓe₁) ^ %%ₓe₂)) =>
-    match reflect_expr e₁, expr.to_nat e₂ with
-    | (r₁, l₁), some n₂ => (r₁.pow (Num.ofNat' n₂), l₁)
-    | (r₁, l₁), none => (CsringExpr.atom 1, Dlist.singleton e)
-  | e =>
-    match expr.to_nat e with
-    | some n => (CsringExpr.const (Num.ofNat' n), Dlist.empty)
-    | none => (CsringExpr.atom 1, Dlist.singleton e)
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Reflects a csring expression into a `csring_expr`, together
+      with a dlist of atoms, i.e. opaque variables over which the
+      expression is a polynomial. -/
+    unsafe
+  def
+    reflect_expr
+    : expr → csring_expr × Dlist expr
+    |
+        q( $ ( e₁ ) + $ ( e₂ ) )
+        =>
+        let ( r₁ , l₁ ) := reflect_expr e₁ let ( r₂ , l₂ ) := reflect_expr e₂ ( r₁ . add r₂ , l₁ ++ l₂ )
+      |
+        q( $ ( e₁ ) * $ ( e₂ ) )
+        =>
+        let ( r₁ , l₁ ) := reflect_expr e₁ let ( r₂ , l₂ ) := reflect_expr e₂ ( r₁ . mul r₂ , l₁ ++ l₂ )
+      |
+        e @ q( $ ( e₁ ) ^ $ ( e₂ ) )
+        =>
+        match
+          reflect_expr e₁ , expr.to_nat e₂
+          with
+          | ( r₁ , l₁ ) , some n₂ => ( r₁ . pow ( Num.ofNat' n₂ ) , l₁ )
+            | ( r₁ , l₁ ) , none => ( CsringExpr.atom 1 , Dlist.singleton e )
+      |
+        e
+        =>
+        match
+          expr.to_nat e
+          with
+          | some n => ( CsringExpr.const ( Num.ofNat' n ) , Dlist.empty )
+            | none => ( CsringExpr.atom 1 , Dlist.singleton e )
 #align tactic.ring2.reflect_expr tactic.ring2.reflect_expr
 
 /-- In the output of `reflect_expr`, `atom`s are initialized with incorrect indices.
@@ -565,36 +569,48 @@ open Tactic.Ring2
 -- mathport name: parser.optional
 local postfix:1024 "?" => optional
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/-- `ring2` solves equations in the language of rings.
-
-It supports only the commutative semiring operations, i.e. it does not normalize subtraction or
-division.
-
-  This variant on the `ring` tactic uses kernel computation instead
-  of proof generation. In general, you should use `ring` instead of `ring2`. -/
-unsafe def ring2 : tactic Unit := do
-  sorry
-  let quote.1 ((%%ₓe₁) = %%ₓe₂) ← target |
-    fail "ring2 tactic failed: the goal is not an equality"
-  let α ← infer_type e₁
-  let expr.sort (level.succ u) ← infer_type α
-  let (r₁, l₁) := reflect_expr e₁
-  let (r₂, l₂) := reflect_expr e₂
-  let L := (l₁ ++ l₂).toList
-  let s := Tree.ofRbnode (rbtreeOf L).1
-  let (r₁, L) ← (StateT.run (r₁.replace s) L : Option _)
-  let (r₂, _) ← (StateT.run (r₂.replace s) L : Option _)
-  let se : expr := s.reflect' u α
-  let er₁ : expr := reflect r₁
-  let er₂ : expr := reflect r₂
-  let cs ← mk_app `` CommSemiring [α] >>= mk_instance
-  let e ←
-    to_expr (pquote.1 (correctness (%%ₓse) (%%ₓer₁) (%%ₓer₂) rfl)) <|>
-        fail
-          ("ring2 tactic failed, cannot show equality:\n" ++ toString (HornerExpr.ofCsexpr r₁) ++ "\n  =?=\n" ++
-            toString (HornerExpr.ofCsexpr r₂))
-  tactic.exact e
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `ring2` solves equations in the language of rings.
+      
+      It supports only the commutative semiring operations, i.e. it does not normalize subtraction or
+      division.
+      
+        This variant on the `ring` tactic uses kernel computation instead
+        of proof generation. In general, you should use `ring` instead of `ring2`. -/
+    unsafe
+  def
+    ring2
+    : tactic Unit
+    :=
+      do
+        sorry
+          let q( $ ( e₁ ) = $ ( e₂ ) ) ← target | fail "ring2 tactic failed: the goal is not an equality"
+          let α ← infer_type e₁
+          let expr.sort ( level.succ u ) ← infer_type α
+          let ( r₁ , l₁ ) := reflect_expr e₁
+          let ( r₂ , l₂ ) := reflect_expr e₂
+          let L := ( l₁ ++ l₂ ) . toList
+          let s := Tree.ofRbnode ( rbtreeOf L ) . 1
+          let ( r₁ , L ) ← ( StateT.run ( r₁ . replace s ) L : Option _ )
+          let ( r₂ , _ ) ← ( StateT.run ( r₂ . replace s ) L : Option _ )
+          let se : expr := s . reflect' u α
+          let er₁ : expr := reflect r₁
+          let er₂ : expr := reflect r₂
+          let cs ← mk_app ` ` CommSemiring [ α ] >>= mk_instance
+          let
+            e
+              ←
+              to_expr ` `( correctness $ ( se ) $ ( er₁ ) $ ( er₂ ) rfl )
+                <|>
+                fail
+                  (
+                    "ring2 tactic failed, cannot show equality:\n" ++ toString ( HornerExpr.ofCsexpr r₁ ) ++ "\n  =?=\n"
+                      ++
+                      toString ( HornerExpr.ofCsexpr r₂ )
+                    )
+          tactic.exact e
 #align tactic.interactive.ring2 tactic.interactive.ring2
 
 add_tactic_doc

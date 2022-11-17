@@ -73,7 +73,7 @@ theorem coe_fn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun 
 end Preorder
 
 instance [∀ i, PartialOrder (α i)] : PartialOrder (Π₀ i, α i) :=
-  { Dfinsupp.preorder α with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
+  { Dfinsupp.preorder α with le_antisymm := fun f g hfg hgf => ext $ fun i => (hfg i).antisymm (hgf i) }
 
 instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
   { Dfinsupp.partialOrder α with inf := zipWith (fun _ => (· ⊓ ·)) fun _ => inf_idem,
@@ -166,7 +166,7 @@ theorem le_iff' (hf : f.support ⊆ s) : f ≤ g ↔ ∀ i ∈ s, f i ≤ g i :=
 #align dfinsupp.le_iff' Dfinsupp.le_iff'
 
 theorem le_iff : f ≤ g ↔ ∀ i ∈ f.support, f i ≤ g i :=
-  le_iff' <| Subset.refl _
+  le_iff' $ Subset.refl _
 #align dfinsupp.le_iff Dfinsupp.le_iff
 
 variable (α)
@@ -179,7 +179,7 @@ variable {α}
 
 @[simp]
 theorem single_le_iff {i : ι} {a : α i} : single i a ≤ f ↔ a ≤ f i :=
-  (le_iff' support_single_subset).trans <| by simp
+  (le_iff' support_single_subset).trans $ by simp
 #align dfinsupp.single_le_iff Dfinsupp.single_le_iff
 
 end Le
@@ -208,7 +208,7 @@ variable (α)
 
 instance : HasOrderedSub (Π₀ i, α i) :=
   ⟨fun n m k =>
-    forall_congr' fun i => by
+    forall_congr' $ fun i => by
       rw [add_apply, tsub_apply]
       exact tsub_le_iff_right⟩
 
@@ -218,7 +218,7 @@ instance : CanonicallyOrderedAddMonoid (Π₀ i, α i) :=
       ⟨g - f, by
         ext i
         rw [add_apply, tsub_apply]
-        exact (add_tsub_cancel_of_le <| h i).symm⟩,
+        exact (add_tsub_cancel_of_le $ h i).symm⟩,
     le_self_add := fun f g i => by
       rw [add_apply]
       exact le_self_add }

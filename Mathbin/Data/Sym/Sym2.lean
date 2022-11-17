@@ -102,7 +102,7 @@ namespace Sym2
 
 @[elab_as_elim]
 protected theorem ind {f : Sym2 α → Prop} (h : ∀ x y, f ⟦(x, y)⟧) : ∀ i, f i :=
-  Quotient.ind <| Prod.rec <| h
+  Quotient.ind $ Prod.rec $ h
 #align sym2.ind Sym2.ind
 
 @[elab_as_elim]
@@ -113,12 +113,13 @@ protected theorem induction_on {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x 
 @[elab_as_elim]
 protected theorem induction_on₂ {f : Sym2 α → Sym2 β → Prop} (i : Sym2 α) (j : Sym2 β)
     (hf : ∀ a₁ a₂ b₁ b₂, f ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧) : f i j :=
-  Quotient.induction_on₂ i j <| by
+  Quotient.induction_on₂ i j $ by
     rintro ⟨a₁, a₂⟩ ⟨b₁, b₂⟩
     exact hf _ _ _ _
 #align sym2.induction_on₂ Sym2.induction_on₂
 
-protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f ⟦(x, y)⟧ :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
+protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ (x) (y), f ⟦(x, y)⟧ :=
   (surjective_quotient_mk _).exists.trans Prod.exists
 #align sym2.exists Sym2.exists
 
@@ -167,12 +168,12 @@ functions from `sym2`. Note that when `β` is `Prop`, it can sometimes be more c
 `sym2.from_rel` instead. -/
 def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } ≃ (Sym2 α → β) where
   toFun f :=
-    Quotient.lift (uncurry ↑f) <| by
+    Quotient.lift (uncurry ↑f) $ by
       rintro _ _ ⟨⟩
       exacts[rfl, f.prop _ _]
   invFun F := ⟨curry (F ∘ Quotient.mk''), fun a₁ a₂ => congr_arg F eq_swap⟩
   left_inv f := Subtype.ext rfl
-  right_inv F := funext <| Sym2.ind fun x y => rfl
+  right_inv F := funext $ Sym2.ind $ fun x y => rfl
 #align sym2.lift Sym2.lift
 
 @[simp]
@@ -200,7 +201,7 @@ def lift₂ :
       constructor
       exacts[congr_arg₂ F eq_swap rfl, congr_arg₂ F rfl eq_swap]⟩
   left_inv f := Subtype.ext rfl
-  right_inv F := funext₂ fun a b => (Sym2.induction_on₂ a b) fun _ _ _ _ => rfl
+  right_inv F := funext₂ $ fun a b => Sym2.induction_on₂ a b $ fun _ _ _ _ => rfl
 #align sym2.lift₂ Sym2.lift₂
 
 @[simp]
@@ -277,7 +278,7 @@ theorem mem_mk_left (x y : α) : x ∈ ⟦(x, y)⟧ :=
 #align sym2.mem_mk_left Sym2.mem_mk_left
 
 theorem mem_mk_right (x y : α) : y ∈ ⟦(x, y)⟧ :=
-  eq_swap.subst <| mem_mk_left y x
+  eq_swap.subst $ mem_mk_left y x
 #align sym2.mem_mk_right Sym2.mem_mk_right
 
 @[simp]
@@ -302,7 +303,7 @@ theorem out_snd_mem (e : Sym2 α) : e.out.2 ∈ e :=
 #align sym2.out_snd_mem Sym2.out_snd_mem
 
 theorem ball {p : α → Prop} {a b : α} : (∀ c ∈ ⟦(a, b)⟧, p c) ↔ p a ∧ p b := by
-  refine' ⟨fun h => ⟨h _ <| mem_mk_left _ _, h _ <| mem_mk_right _ _⟩, fun h c hc => _⟩
+  refine' ⟨fun h => ⟨h _ $ mem_mk_left _ _, h _ $ mem_mk_right _ _⟩, fun h c hc => _⟩
   obtain rfl | rfl := Sym2.mem_iff.1 hc
   · exact h.1
     
@@ -417,7 +418,7 @@ theorem mk_is_diag_iff {x y : α} : IsDiag ⟦(x, y)⟧ ↔ x = y :=
 
 @[simp]
 theorem is_diag_iff_proj_eq (z : α × α) : IsDiag ⟦z⟧ ↔ z.1 = z.2 :=
-  (Prod.recOn z) fun _ _ => mk_is_diag_iff
+  Prod.recOn z $ fun _ _ => mk_is_diag_iff
 #align sym2.is_diag_iff_proj_eq Sym2.is_diag_iff_proj_eq
 
 @[simp]
@@ -487,7 +488,7 @@ theorem from_rel_top : fromRel (fun (x y : α) z => z : Symmetric ⊤) = Set.uni
 
 theorem from_rel_irreflexive {sym : Symmetric r} : Irreflexive r ↔ ∀ {z}, z ∈ fromRel Sym → ¬IsDiag z :=
   { mp := fun h =>
-      Sym2.ind <| by
+      Sym2.ind $ by
         rintro a b hr (rfl : a = b)
         exact h _ hr,
     mpr := fun h x hr => h (from_rel_prop.mpr hr) rfl }
@@ -745,9 +746,10 @@ theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb 
   rfl
 #align sym2.other_invol' Sym2.other_invol'
 
-theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) : hb.other = a := by
-  classical rw [other_eq_other'] at hb⊢
-    rw [other_eq_other']
+theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) : hb.other = a := by classical
+  rw [other_eq_other'] at hb⊢
+  convert other_invol' ha hb
+  rw [other_eq_other']
 #align sym2.other_invol Sym2.other_invol
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

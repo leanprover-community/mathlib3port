@@ -96,7 +96,7 @@ unsafe def apply_congr (q : parse texpr ?) : conv Unit := do
         (-- and then call `intros` on each resulting goal, and require that afterwards it's an equation.
           tactic.intros >>
           do
-          let quote.1 (_ = _) ← target
+          let q(_ = _) ← target
           tactic.skip)
 #align conv.interactive.apply_congr conv.interactive.apply_congr
 

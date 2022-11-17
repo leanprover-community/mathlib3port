@@ -88,7 +88,7 @@ theorem HasLimit.mk {F : J ⥤ C} (d : LimitCone F) : HasLimit F :=
 
 /-- Use the axiom of choice to extract explicit `limit_cone F` from `has_limit F`. -/
 def getLimitCone (F : J ⥤ C) [HasLimit F] : LimitCone F :=
-  Classical.choice <| has_limit.exists_limit
+  Classical.choice $ has_limit.exists_limit
 #align category_theory.limits.get_limit_cone CategoryTheory.Limits.getLimitCone
 
 variable (J C)
@@ -557,12 +557,12 @@ def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ lim where
   homEquiv c g :=
     { toFun := fun f => limit.lift _ ⟨c, f⟩,
       invFun := fun f => { app := fun j => f ≫ limit.π _ _, naturality' := by tidy },
-      left_inv := fun _ => NatTrans.ext _ _ <| funext fun j => limit.lift_π _ _,
-      right_inv := fun α => limit.hom_ext fun j => limit.lift_π _ _ }
+      left_inv := fun _ => NatTrans.ext _ _ $ funext $ fun j => limit.lift_π _ _,
+      right_inv := fun α => limit.hom_ext $ fun j => limit.lift_π _ _ }
   Unit := { app := fun c => limit.lift _ ⟨_, 𝟙 _⟩, naturality' := fun _ _ _ => by tidy }
   counit := { app := fun g => { app := limit.π _, naturality' := by tidy }, naturality' := fun _ _ _ => by tidy }
-  hom_equiv_unit' c g f := limit.hom_ext fun j => by simp
-  hom_equiv_counit' c g f := NatTrans.ext _ _ <| funext fun j => rfl
+  hom_equiv_unit' c g f := limit.hom_ext $ fun j => by simp
+  hom_equiv_counit' c g f := NatTrans.ext _ _ $ funext $ fun j => rfl
 #align category_theory.limits.const_lim_adj CategoryTheory.Limits.constLimAdj
 
 instance : IsRightAdjoint (lim : (J ⥤ C) ⥤ C) :=
@@ -575,7 +575,7 @@ instance lim_map_mono' {F G : J ⥤ C} [HasLimitsOfShape J C] (α : F ⟶ G) [Mo
 #align category_theory.limits.lim_map_mono' CategoryTheory.Limits.lim_map_mono'
 
 instance lim_map_mono {F G : J ⥤ C} [HasLimit F] [HasLimit G] (α : F ⟶ G) [∀ j, Mono (α.app j)] : Mono (limMap α) :=
-  ⟨fun Z u v h => limit.hom_ext fun j => (cancel_mono (α.app j)).1 <| by simpa using h =≫ limit.π _ j⟩
+  ⟨fun Z u v h => limit.hom_ext $ fun j => (cancel_mono (α.app j)).1 $ by simpa using h =≫ limit.π _ j⟩
 #align category_theory.limits.lim_map_mono CategoryTheory.Limits.lim_map_mono
 
 /-- We can transport limits of shape `J` along an equivalence `J ≌ J'`.
@@ -625,7 +625,7 @@ theorem HasColimit.mk {F : J ⥤ C} (d : ColimitCocone F) : HasColimit F :=
 
 /-- Use the axiom of choice to extract explicit `colimit_cocone F` from `has_colimit F`. -/
 def getColimitCocone (F : J ⥤ C) [HasColimit F] : ColimitCocone F :=
-  Classical.choice <| has_colimit.exists_colimit
+  Classical.choice $ has_colimit.exists_colimit
 #align category_theory.limits.get_colimit_cocone CategoryTheory.Limits.getColimitCocone
 
 variable (J C)
@@ -1128,12 +1128,12 @@ def colimCoyoneda : colim.op ⋙ coyoneda ⋙ (whiskeringRight _ _ _).obj uliftF
 def colimConstAdj : (colim : (J ⥤ C) ⥤ C) ⊣ const J where
   homEquiv f c :=
     { toFun := fun g => { app := fun _ => colimit.ι _ _ ≫ g, naturality' := by tidy },
-      invFun := fun g => colimit.desc _ ⟨_, g⟩, left_inv := fun _ => colimit.hom_ext fun j => colimit.ι_desc _ _,
-      right_inv := fun _ => NatTrans.ext _ _ <| funext fun j => colimit.ι_desc _ _ }
+      invFun := fun g => colimit.desc _ ⟨_, g⟩, left_inv := fun _ => colimit.hom_ext $ fun j => colimit.ι_desc _ _,
+      right_inv := fun _ => NatTrans.ext _ _ $ funext $ fun j => colimit.ι_desc _ _ }
   Unit := { app := fun g => { app := colimit.ι _, naturality' := by tidy }, naturality' := by tidy }
   counit := { app := fun c => colimit.desc _ ⟨_, 𝟙 _⟩, naturality' := by tidy }
-  hom_equiv_unit' _ _ _ := NatTrans.ext _ _ <| funext fun _ => rfl
-  hom_equiv_counit' _ _ _ := colimit.hom_ext fun _ => by simp
+  hom_equiv_unit' _ _ _ := NatTrans.ext _ _ $ funext $ fun _ => rfl
+  hom_equiv_counit' _ _ _ := colimit.hom_ext $ fun _ => by simp
 #align category_theory.limits.colim_const_adj CategoryTheory.Limits.colimConstAdj
 
 instance : IsLeftAdjoint (colim : (J ⥤ C) ⥤ C) :=
@@ -1147,7 +1147,7 @@ instance colim_map_epi' {F G : J ⥤ C} [HasColimitsOfShape J C] (α : F ⟶ G) 
 
 instance colim_map_epi {F G : J ⥤ C} [HasColimit F] [HasColimit G] (α : F ⟶ G) [∀ j, Epi (α.app j)] :
     Epi (colimMap α) :=
-  ⟨fun Z u v h => colimit.hom_ext fun j => (cancel_epi (α.app j)).1 <| by simpa using colimit.ι _ j ≫= h⟩
+  ⟨fun Z u v h => colimit.hom_ext $ fun j => (cancel_epi (α.app j)).1 $ by simpa using colimit.ι _ j ≫= h⟩
 #align category_theory.limits.colim_map_epi CategoryTheory.Limits.colim_map_epi
 
 /-- We can transport colimits of shape `J` along an equivalence `J ≌ J'`.

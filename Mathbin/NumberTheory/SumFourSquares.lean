@@ -32,7 +32,7 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
   have : Even (x ^ 2 + y ^ 2) := by simp [h.symm, even_mul]
   have hxaddy : Even (x + y) := by simpa [sq, parity_simps]
   have hxsuby : Even (x - y) := by simpa [sq, parity_simps]
-  (mul_right_inj' (show (2 * 2 : ℤ) ≠ 0 by decide)).1 <|
+  (mul_right_inj' (show (2 * 2 : ℤ) ≠ 0 from dec_trivial)).1 $
     calc
       2 * 2 * m = (x - y) ^ 2 + (x + y) ^ 2 := by rw [mul_assoc, h] <;> ring
       _ = (2 * ((x - y) / 2)) ^ 2 + (2 * ((x + y) / 2)) ^ 2 := by
@@ -43,23 +43,24 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
       
 #align int.sq_add_sq_of_two_mul_sq_add_sq Int.sq_add_sq_of_two_mul_sq_add_sq
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
-    ∃ (a b : ℤ)(k : ℕ), a ^ 2 + b ^ 2 + 1 = k * p ∧ k < p :=
-  (hp.1.eq_two_or_odd.elim fun hp2 => hp2.symm ▸ ⟨1, 0, 1, rfl, by decide⟩) fun hp1 =>
+    ∃ (a : ℤ) (b : ℤ) (k : ℕ), a ^ 2 + b ^ 2 + 1 = k * p ∧ k < p :=
+  (hp.1.eq_two_or_odd.elim fun hp2 => hp2.symm ▸ ⟨1, 0, 1, rfl, dec_trivial⟩) $ fun hp1 =>
     let ⟨a, b, hab⟩ := Zmod.sq_add_sq p (-1)
     have hab' : (p : ℤ) ∣ a.valMinAbs ^ 2 + b.valMinAbs ^ 2 + 1 :=
-      (CharP.int_cast_eq_zero_iff (Zmod p) p _).1 <| by simpa [eq_neg_iff_add_eq_zero] using hab
+      (CharP.int_cast_eq_zero_iff (Zmod p) p _).1 $ by simpa [eq_neg_iff_add_eq_zero] using hab
     let ⟨k, hk⟩ := hab'
     have hk0 : 0 ≤ k :=
       nonneg_of_mul_nonneg_right
         (by rw [← hk] <;> exact add_nonneg (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_le_one)
         (Int.coe_nat_pos.2 hp.1.Pos)
-    ⟨a.valMinAbs, b.valMinAbs, k.natAbs, by rw [hk, Int.nat_abs_of_nonneg hk0, mul_comm],
+    ⟨a.valMinAbs, b.valMinAbs, k.natAbs, by rw [hk, Int.natAbs_of_nonneg hk0, mul_comm],
       lt_of_mul_lt_mul_left
         (calc
           p * k.natAbs = a.valMinAbs.natAbs ^ 2 + b.valMinAbs.natAbs ^ 2 + 1 := by
-            rw [← Int.coe_nat_inj', Int.coe_nat_add, Int.coe_nat_add, Int.coe_nat_pow, Int.coe_nat_pow, Int.nat_abs_sq,
-              Int.nat_abs_sq, Int.coe_nat_one, hk, Int.coe_nat_mul, Int.nat_abs_of_nonneg hk0]
+            rw [← Int.coe_nat_inj', Int.ofNat_add, Int.ofNat_add, Int.coe_nat_pow, Int.coe_nat_pow, Int.nat_abs_sq,
+              Int.nat_abs_sq, Int.ofNat_one, hk, Int.ofNat_mul, Int.natAbs_of_nonneg hk0]
           _ ≤ (p / 2) ^ 2 + (p / 2) ^ 2 + 1 :=
             add_le_add
               (add_le_add (Nat.pow_le_pow_of_le_left (Zmod.nat_abs_val_min_abs_le _) _)
@@ -69,7 +70,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
             rw [hp1, one_pow, mul_one] <;>
               exact
                 (lt_add_iff_pos_right _).2
-                  (add_pos_of_nonneg_of_pos (Nat.zero_le _) (mul_pos (by decide) (Nat.div_pos hp.1.two_le (by decide))))
+                  (add_pos_of_nonneg_of_pos (Nat.zero_le _) (mul_pos dec_trivial (Nat.div_pos hp.1.two_le dec_trivial)))
           _ = p * p := by
             conv_rhs => rw [← Nat.mod_add_div p 2]
             ring
@@ -85,13 +86,15 @@ open Int
 
 open Classical
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (w x y z) -/
 private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
-    (h : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 2 * m) : ∃ w x y z : ℤ, w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = m :=
+    (h : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 2 * m) :
+    ∃ (w : ℤ) (x : ℤ) (y : ℤ) (z : ℤ), w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = m :=
   have :
     ∀ f : Fin 4 → Zmod 2,
       f 0 ^ 2 + f 1 ^ 2 + f 2 ^ 2 + f 3 ^ 2 = 0 →
         ∃ i : Fin 4, f i ^ 2 + f (swap i 0 1) ^ 2 = 0 ∧ f (swap i 0 2) ^ 2 + f (swap i 0 3) ^ 2 = 0 :=
-    by decide
+    dec_trivial
   let f : Fin 4 → ℤ := Vector.nth (a ::ᵥ b ::ᵥ c ::ᵥ d ::ᵥ Vector.nil)
   let ⟨i, hσ⟩ :=
     this (coe ∘ f)
@@ -99,24 +102,27 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
         rw [← @zero_mul (Zmod 2) _ m, ← show ((2 : ℤ) : Zmod 2) = 0 from rfl, ← Int.cast_mul, ← h] <;>
           simp only [Int.cast_add, Int.cast_pow] <;> rfl)
   let σ := swap i 0
-  have h01 : 2 ∣ f (σ 0) ^ 2 + f (σ 1) ^ 2 := (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 <| by simpa [σ] using hσ.1
-  have h23 : 2 ∣ f (σ 2) ^ 2 + f (σ 3) ^ 2 := (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 <| by simpa using hσ.2
+  have h01 : 2 ∣ f (σ 0) ^ 2 + f (σ 1) ^ 2 := (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 $ by simpa [σ] using hσ.1
+  have h23 : 2 ∣ f (σ 2) ^ 2 + f (σ 3) ^ 2 := (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1 $ by simpa using hσ.2
   let ⟨x, hx⟩ := h01
   let ⟨y, hy⟩ := h23
   ⟨(f (σ 0) - f (σ 1)) / 2, (f (σ 0) + f (σ 1)) / 2, (f (σ 2) - f (σ 3)) / 2, (f (σ 2) + f (σ 3)) / 2, by
     rw [← Int.sq_add_sq_of_two_mul_sq_add_sq hx.symm, add_assoc, ← Int.sq_add_sq_of_two_mul_sq_add_sq hy.symm, ←
-      mul_right_inj' (show (2 : ℤ) ≠ 0 by decide), ← h, mul_add, ← hx, ← hy]
+      mul_right_inj' (show (2 : ℤ) ≠ 0 from dec_trivial), ← h, mul_add, ← hx, ← hy]
     have : (∑ x, f (σ x) ^ 2) = ∑ x, f x ^ 2 := by conv_rhs => rw [← Equiv.sum_comp σ]
-    have fin4univ : (univ : Finset (Fin 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 := by decide
+    have fin4univ : (univ : Finset (Fin 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 := dec_trivial
     simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assoc] ⟩
 #align nat.sum_four_squares_of_two_mul_sum_four_squares nat.sum_four_squares_of_two_mul_sum_four_squares
 
-private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = p :=
-  have hm : ∃ m < p, 0 < m ∧ ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c d) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c d) -/
+private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
+    ∃ (a : ℤ) (b : ℤ) (c : ℤ) (d : ℤ), a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = p :=
+  have hm : ∃ m < p, 0 < m ∧ ∃ (a : ℤ) (b : ℤ) (c : ℤ) (d : ℤ), a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p :=
     let ⟨a, b, k, hk⟩ := exists_sq_add_sq_add_one_eq_k p
     ⟨k, hk.2,
-      Nat.pos_of_ne_zero fun hk0 => by
-        rw [hk0, Int.coe_nat_zero, zero_mul] at hk
+      Nat.pos_of_ne_zero $ fun hk0 => by
+        rw [hk0, Int.ofNat_zero, zero_mul] at hk
         exact
           ne_of_gt
             (show a ^ 2 + b ^ 2 + 1 > 0 from
@@ -130,19 +136,19 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
   m.mod_two_eq_zero_or_one.elim
     (fun hm2 : m % 2 = 0 =>
       let ⟨k, hk⟩ := Nat.dvd_iff_mod_eq_zero.2 hm2
-      have hk0 : 0 < k := Nat.pos_of_ne_zero fun _ => by simp_all [lt_irrefl]
+      have hk0 : 0 < k := Nat.pos_of_ne_zero $ fun _ => by simp_all [lt_irrefl]
       have hkm : k < m := by
         rw [hk, two_mul]
         exact (lt_add_iff_pos_left _).2 hk0
-      False.elim <|
+      False.elim $
         Nat.find_min hm hkm
           ⟨lt_trans hkm hmp, hk0,
             sum_four_squares_of_two_mul_sum_four_squares
               (show a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 2 * (k * p) by
-                rw [habcd, hk, Int.coe_nat_mul, mul_assoc]
+                rw [habcd, hk, Int.ofNat_mul, mul_assoc]
                 norm_num)⟩)
     fun hm2 : m % 2 = 1 =>
-    if hm1 : m = 1 then ⟨a, b, c, d, by simp only [hm1, habcd, Int.coe_nat_one, one_mul]⟩
+    if hm1 : m = 1 then ⟨a, b, c, d, by simp only [hm1, habcd, Int.ofNat_one, one_mul]⟩
     else
       let w := (a : Zmod m).valMinAbs
       let x := (b : Zmod m).valMinAbs
@@ -154,7 +160,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
         calc
           w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) := hnat_abs
           _ ≤ ((m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 + (m / 2) ^ 2 : ℕ) :=
-            Int.coe_nat_le.2 <|
+            Int.coe_nat_le.2 $
               add_le_add
                 (add_le_add
                   (add_le_add (Nat.pow_le_pow_of_le_left (Zmod.nat_abs_val_min_abs_le _) _)
@@ -165,7 +171,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
           _ < 4 * (m / 2 : ℕ) ^ 2 + ((4 * (m / 2) : ℕ) * (m % 2 : ℕ) + (m % 2 : ℕ) ^ 2) :=
             (lt_add_iff_pos_right _).2
               (by
-                rw [hm2, Int.coe_nat_one, one_pow, mul_one]
+                rw [hm2, Int.ofNat_one, one_pow, mul_one]
                 exact add_pos_of_nonneg_of_pos (Int.coe_nat_nonneg _) zero_lt_one)
           _ = m ^ 2 := by
             conv_rhs => rw [← Nat.mod_add_div m 2]
@@ -179,7 +185,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
         rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, Zmod.nat_cast_self, zero_mul]
       let ⟨n, hn⟩ := (CharP.int_cast_eq_zero_iff _ m _).1 hwxyz0
       have hn0 : 0 < n.natAbs :=
-        Int.nat_abs_pos_of_ne_zero fun hn0 =>
+        Int.natAbs_pos_of_ne_zero fun hn0 =>
           have hwxyz0 : (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) = 0 := by
             rw [← Int.coe_nat_eq_zero, ← hnat_abs]
             rwa [hn0, mul_zero] at hn
@@ -193,25 +199,25 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
           have hmdvdp : m ∣ p :=
             Int.coe_nat_dvd.1
               ⟨ma ^ 2 + mb ^ 2 + mc ^ 2 + md ^ 2,
-                (mul_right_inj' (show (m : ℤ) ≠ 0 from Int.coe_nat_ne_zero.2 hm0.1)).1 <| by
+                (mul_right_inj' (show (m : ℤ) ≠ 0 from Int.coe_nat_ne_zero.2 hm0.1)).1 $ by
                   rw [← habcd, hma, hmb, hmc, hmd]
                   ring⟩
           (hp.1.eq_one_or_self_of_dvd _ hmdvdp).elim hm1 fun hmeqp => by simpa [lt_irrefl, hmeqp] using hmp
       have hawbxcydz : ((m : ℕ) : ℤ) ∣ a * w + b * x + c * y + d * z :=
-        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 <| by
+        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 $ by
           rw [← hwxyz0]
           simp
           ring
       have haxbwczdy : ((m : ℕ) : ℤ) ∣ a * x - b * w - c * z + d * y :=
-        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 <| by
+        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 $ by
           simp [sub_eq_add_neg]
           ring
       have haybzcwdx : ((m : ℕ) : ℤ) ∣ a * y + b * z - c * w - d * x :=
-        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 <| by
+        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 $ by
           simp [sub_eq_add_neg]
           ring
       have hazbycxdw : ((m : ℕ) : ℤ) ∣ a * z - b * y + c * x - d * w :=
-        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 <| by
+        (CharP.int_cast_eq_zero_iff (Zmod m) m _).1 $ by
           simp [sub_eq_add_neg]
           ring
       let ⟨s, hs⟩ := hawbxcydz
@@ -225,16 +231,16 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
             repeat'
             try refine' add_nonneg _ _
             try exact sq_nonneg _)
-          (Int.coe_nat_pos.2 <| NeZero.pos m)
+          (Int.coe_nat_pos.2 $ NeZero.pos m)
       have hnm : n.natAbs < m :=
         Int.coe_nat_lt.1
           (lt_of_mul_lt_mul_left
             (by
-              rw [Int.nat_abs_of_nonneg hn_nonneg, ← hn, ← sq]
+              rw [Int.natAbs_of_nonneg hn_nonneg, ← hn, ← sq]
               exact hwxyzlt)
             (Int.coe_nat_nonneg m))
       have hstuv : s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2 = n.natAbs * p :=
-        (mul_right_inj' (show (m ^ 2 : ℤ) ≠ 0 from pow_ne_zero 2 (Int.coe_nat_ne_zero.2 hm0.1))).1 <|
+        (mul_right_inj' (show (m ^ 2 : ℤ) ≠ 0 from pow_ne_zero 2 (Int.coe_nat_ne_zero.2 hm0.1))).1 $
           calc
             (m : ℤ) ^ 2 * (s ^ 2 + t ^ 2 + u ^ 2 + v ^ 2) =
                 ((m : ℕ) * s) ^ 2 + ((m : ℕ) * t) ^ 2 + ((m : ℕ) * u) ^ 2 + ((m : ℕ) * v) ^ 2 :=
@@ -245,26 +251,29 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
               simp only [hs.symm, ht.symm, hu.symm, hv.symm]
               ring
             _ = _ := by
-              rw [hn, habcd, Int.nat_abs_of_nonneg hn_nonneg]
+              rw [hn, habcd, Int.natAbs_of_nonneg hn_nonneg]
               dsimp [m]
               ring
             
-      False.elim <| Nat.find_min hm hnm ⟨lt_trans hnm hmp, hn0, s, t, u, v, hstuv⟩
+      False.elim $ Nat.find_min hm hnm ⟨lt_trans hnm hmp, hn0, s, t, u, v, hstuv⟩
 #align nat.prime_sum_four_squares nat.prime_sum_four_squares
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c d) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c d) -/
 /-- **Four squares theorem** -/
-theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = n
+theorem sum_four_squares : ∀ n : ℕ, ∃ (a : ℕ) (b : ℕ) (c : ℕ) (d : ℕ), a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = n
   | 0 => ⟨0, 0, 0, 0, rfl⟩
   | 1 => ⟨1, 0, 0, 0, rfl⟩
   | n@(k + 2) =>
-    have hm : Fact (minFac (k + 2)).Prime := ⟨min_fac_prime (by decide)⟩
+    have hm : Fact (minFac (k + 2)).Prime := ⟨min_fac_prime dec_trivial⟩
     have : n / minFac n < n := factors_lemma
     let ⟨a, b, c, d, h₁⟩ :=
-      show ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = minFac n from prime_sum_four_squares (min_fac (k + 2))
+      show ∃ (a : ℤ) (b : ℤ) (c : ℤ) (d : ℤ), a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = minFac n from
+        prime_sum_four_squares (min_fac (k + 2))
     let ⟨w, x, y, z, h₂⟩ := sum_four_squares (n / minFac n)
     ⟨(a * w - b * x - c * y - d * z).natAbs, (a * x + b * w + c * z - d * y).natAbs,
       (a * y - b * z + c * w + d * x).natAbs, (a * z + b * y - c * x + d * w).natAbs, by
-      rw [← Int.coe_nat_inj', ← Nat.mul_div_cancel' (min_fac_dvd (k + 2)), Int.coe_nat_mul, ← h₁, ← h₂]
+      rw [← Int.coe_nat_inj', ← Nat.mul_div_cancel' (min_fac_dvd (k + 2)), Int.ofNat_mul, ← h₁, ← h₂]
       simp [sum_four_sq_mul_sum_four_sq]⟩
 #align nat.sum_four_squares Nat.sum_four_squares
 

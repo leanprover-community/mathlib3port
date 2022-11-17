@@ -61,7 +61,7 @@ instance : Subsingleton (Decomposition ℳ) :=
     cases' x with x xl xr
     cases' y with y yl yr
     congr
-    exact Function.LeftInverse.eq_right_inverse xr yl⟩
+    exact Function.LeftInverse.eq_rightInverse xr yl⟩
 
 variable [Decomposition ℳ]
 

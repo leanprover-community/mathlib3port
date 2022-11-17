@@ -24,12 +24,12 @@ Preferentially, the homomorphism is written as a coercion.
 
 universe u
 
-attribute [simp] Int.of_nat_eq_coe
+attribute [simp] Int.ofNat_eq_coe
 
 /-- Default value for `add_group_with_one.int_cast`. -/
 protected def Int.castDef {R : Type u} [HasNatCast R] [Neg R] : ℤ → R
   | (n : ℕ) => n
-  | -[n+1] => -(n + 1 : ℕ)
+  | -[1+ n] => -(n + 1 : ℕ)
 #align int.cast_def Int.castDef
 
 /-- Type class for the canonical homomorphism `ℤ → R`.

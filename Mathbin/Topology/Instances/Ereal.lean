@@ -50,7 +50,7 @@ instance : SecondCountableTopology Ereal :=
       ⟨⋃ q : ℚ, {{ a : Ereal | a < (q : ℝ) }, { a : Ereal | ((q : ℝ) : Ereal) < a }},
         countable_Union fun a => (countable_singleton _).insert _, _⟩
     refine'
-      le_antisymm (le_generate_from <| by simp (config := { contextual := true }) [or_imp, is_open_lt', is_open_gt']) _
+      le_antisymm (le_generate_from $ by simp (config := { contextual := true }) [or_imp, is_open_lt', is_open_gt']) _
     apply le_generate_from fun s h => _
     rcases h with ⟨a, hs | hs⟩ <;>
         [rw [show s = ⋃ q ∈ { q : ℚ | a < (q : ℝ) }, { b | ((q : ℝ) : Ereal) < b } by
@@ -236,9 +236,9 @@ theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} : (Continuous fun a =
 /-! ### Neighborhoods of infinity -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
 theorem nhds_top : 𝓝 (⊤ : Ereal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (ioi a) :=
-  nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
+  nhds_top_order.trans $ by simp [lt_top_iff_ne_top, Ioi]
 #align ereal.nhds_top Ereal.nhds_top
 
 theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (ioi a) := by
@@ -269,9 +269,9 @@ theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → Ereal} {f : Filter �
   simp only [nhds_top', mem_Ioi, tendsto_infi, tendsto_principal]
 #align ereal.tendsto_nhds_top_iff_real Ereal.tendsto_nhds_top_iff_real
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
 theorem nhds_bot : 𝓝 (⊥ : Ereal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (iio a) :=
-  nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
+  nhds_bot_order.trans $ by simp [bot_lt_iff_ne_bot]
 #align ereal.nhds_bot Ereal.nhds_bot
 
 theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (iio a) := by

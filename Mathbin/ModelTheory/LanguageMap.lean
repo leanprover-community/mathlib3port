@@ -427,7 +427,7 @@ def withConstants : Language.{max u w', v} :=
 #align first_order.language.with_constants FirstOrder.Language.withConstants
 
 -- mathport name: language.with_constants
-localized [FirstOrder] notation:95 L "[[" α "]]" => L.withConstants α
+scoped[FirstOrder] notation:95 L "[[" α "]]" => L.withConstants α
 
 @[simp]
 theorem card_with_constants : L[[α]].card = Cardinal.lift.{w'} L.card + Cardinal.lift.{max u v} (#α) := by

@@ -31,9 +31,9 @@ variable [EuclideanDomain R]
 local infixl:50 " ≺ " => EuclideanDomain.R
 
 theorem mul_div_cancel_left {a : R} (b) (a0 : a ≠ 0) : a * b / a = b :=
-  Eq.symm <|
-    eq_of_sub_eq_zero <|
-      Classical.by_contradiction fun h => by
+  Eq.symm $
+    eq_of_sub_eq_zero $
+      Classical.by_contradiction $ fun h => by
         have := mul_left_not_lt a h
         rw [mul_sub, sub_eq_iff_eq_add'.2 (div_add_mod (a * b) a).symm] at this
         exact this (mod_lt _ a0)
@@ -94,9 +94,13 @@ theorem eq_div_of_mul_eq_right {a b c : R} (ha : a ≠ 0) (h : a * b = c) : b = 
   rw [← h, mul_div_cancel_left _ ha]
 #align euclidean_domain.eq_div_of_mul_eq_right EuclideanDomain.eq_div_of_mul_eq_right
 
-theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) := by
-  classical by_cases hz:z = 0
-    rcases h with ⟨p, rfl⟩
+theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) := by classical
+  by_cases hz:z = 0
+  · subst hz
+    rw [div_zero, div_zero, mul_zero]
+    
+  rcases h with ⟨p, rfl⟩
+  rw [mul_div_cancel_left _ hz, mul_left_comm, mul_div_cancel_left _ hz]
 #align euclidean_domain.mul_div_assoc EuclideanDomain.mul_div_assoc
 
 -- This generalizes `int.div_one`, see note [simp-normal form]
@@ -206,10 +210,10 @@ private def P (a b : R) : R × R × R → Prop
 
 theorem xgcdAuxP (a b : R) {r r' : R} :
     ∀ {s t s' t'}, P a b (r, s, t) → P a b (r', s', t') → P a b (xgcdAux r s t r' s' t') :=
-  (Gcd.induction r r'
+  Gcd.induction r r'
       (by
         intros
-        simpa only [xgcd_zero_left] ))
+        simpa only [xgcd_zero_left] ) $
     fun x y h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]
     refine' IH _ p
@@ -230,7 +234,7 @@ instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : IsDomain R :=
   haveI := Classical.decEq R
   { e with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h =>
-      or_iff_not_and_not.2 fun h0 => h0.1 <| by rw [← mul_div_cancel a h0.2, h, zero_div] }
+      or_iff_not_and_not.2 $ fun h0 => h0.1 $ by rw [← mul_div_cancel a h0.2, h, zero_div] }
 
 end Gcd
 
@@ -245,7 +249,7 @@ theorem dvd_lcm_left (x y : R) : x ∣ lcm x y :=
       exact dvd_zero _)
     fun hxy =>
     let ⟨z, hz⟩ := (gcd_dvd x y).2
-    ⟨z, Eq.symm <| eq_div_of_mul_eq_left hxy <| by rw [mul_right_comm, mul_assoc, ← hz]⟩
+    ⟨z, Eq.symm $ eq_div_of_mul_eq_left hxy $ by rw [mul_right_comm, mul_assoc, ← hz]⟩
 #align euclidean_domain.dvd_lcm_left EuclideanDomain.dvd_lcm_left
 
 theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
@@ -255,7 +259,7 @@ theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
       exact dvd_zero _)
     fun hxy =>
     let ⟨z, hz⟩ := (gcd_dvd x y).1
-    ⟨z, Eq.symm <| eq_div_of_mul_eq_right hxy <| by rw [← mul_assoc, mul_right_comm, ← hz]⟩
+    ⟨z, Eq.symm $ eq_div_of_mul_eq_right hxy $ by rw [← mul_assoc, mul_right_comm, ← hz]⟩
 #align euclidean_domain.dvd_lcm_right EuclideanDomain.dvd_lcm_right
 
 theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z := by

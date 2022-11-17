@@ -77,7 +77,7 @@ variable (n)
 /-- If `B` is a `n`-th cyclotomic extension of `A`, then `zeta n A B` is a primitive root of
 unity in `B`. -/
 noncomputable def zeta : B :=
-  (exists_prim_root A <| Set.mem_singleton n : ∃ r : B, IsPrimitiveRoot r n).some
+  (exists_prim_root A $ Set.mem_singleton n : ∃ r : B, IsPrimitiveRoot r n).some
 #align is_cyclotomic_extension.zeta IsCyclotomicExtension.zeta
 
 /-- `zeta n A B` is a primitive `n`-th root of unity. -/
@@ -116,7 +116,7 @@ variable {C}
 /-- The `power_basis` given by a primitive root `η`. -/
 @[simps]
 protected noncomputable def powerBasis : PowerBasis K L :=
-  PowerBasis.map (Algebra.adjoin.powerBasis <| integral {n} K L ζ) <|
+  PowerBasis.map (Algebra.adjoin.powerBasis $ integral {n} K L ζ) $
     (Subalgebra.equivOfEq _ _ (IsCyclotomicExtension.adjoin_primitive_root_eq_top hζ)).trans Subalgebra.topEquiv
 #align is_primitive_root.power_basis IsPrimitiveRoot.powerBasis
 
@@ -214,7 +214,7 @@ theorem norm_eq_one [IsDomain L] [IsCyclotomicExtension {n} K L] (hn : n ≠ 2) 
     rw [← hζ.power_basis_gen K, power_basis.norm_gen_eq_coeff_zero_minpoly, hζ.power_basis_gen K, ←
       hζ.minpoly_eq_cyclotomic_of_irreducible hirr, cyclotomic_coeff_zero _ h1, mul_one, hζ.power_basis_dim K, ←
       hζ.minpoly_eq_cyclotomic_of_irreducible hirr, nat_degree_cyclotomic]
-    exact (totient_even <| h1.lt_of_ne hn.symm).neg_one_pow
+    exact (totient_even $ h1.lt_of_ne hn.symm).neg_one_pow
     
 #align is_primitive_root.norm_eq_one IsPrimitiveRoot.norm_eq_one
 
@@ -287,8 +287,8 @@ theorem sub_one_norm_is_prime_pow (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExten
   nth_rw 0 [← IsPrimePow.min_fac_pow_factorization_eq hn]
   obtain ⟨k, hk⟩ : ∃ k, (n : ℕ).factorization (n : ℕ).minFac = k + 1 :=
     exists_eq_succ_of_ne_zero
-      (((n : ℕ).factorization.mem_support_to_fun (n : ℕ).minFac).1 <|
-        factor_iff_mem_factorization.2 <| (mem_factors (IsPrimePow.ne_zero hn)).2 ⟨hprime.out, min_fac_dvd _⟩)
+      (((n : ℕ).factorization.mem_support_to_fun (n : ℕ).minFac).1 $
+        factor_iff_mem_factorization.2 $ (mem_factors (IsPrimePow.ne_zero hn)).2 ⟨hprime.out, min_fac_dvd _⟩)
   simp [hk, sub_one_norm_eq_eval_cyclotomic hζ this hirr]
 #align is_primitive_root.sub_one_norm_is_prime_pow IsPrimitiveRoot.sub_one_norm_is_prime_pow
 

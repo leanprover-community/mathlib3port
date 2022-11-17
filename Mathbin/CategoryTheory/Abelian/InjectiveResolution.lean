@@ -76,7 +76,7 @@ theorem desc_f_one_zero_comm {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat
 def descFSucc {Y Z : C} (I : InjectiveResolutionCat Y) (J : InjectiveResolutionCat Z) (n : ℕ)
     (g : J.cocomplex.x n ⟶ I.cocomplex.x n) (g' : J.cocomplex.x (n + 1) ⟶ I.cocomplex.x (n + 1))
     (w : J.cocomplex.d n (n + 1) ≫ g' = g ≫ I.cocomplex.d n (n + 1)) :
-    Σ'g'' : J.cocomplex.x (n + 2) ⟶ I.cocomplex.x (n + 2),
+    Σ' g'' : J.cocomplex.x (n + 2) ⟶ I.cocomplex.x (n + 2),
       J.cocomplex.d (n + 1) (n + 2) ≫ g'' = g' ≫ I.cocomplex.d (n + 1) (n + 2) :=
   ⟨@Exact.desc C _ _ _ _ _ _ _ _ _ (g' ≫ I.cocomplex.d (n + 1) (n + 2)) (J.cocomplex.d n (n + 1))
       (J.cocomplex.d (n + 1) (n + 2)) (Abelian.Exact.op _ _ (J.exact _)) (by simp [← category.assoc, w]),
@@ -167,9 +167,9 @@ def homotopyEquiv {X : C} (I J : InjectiveResolutionCat X) : HomotopyEquiv I.coc
   Hom := desc (𝟙 X) J I
   inv := desc (𝟙 X) I J
   homotopyHomInvId :=
-    (descCompHomotopy (𝟙 X) (𝟙 X) I J I).symm.trans <| by simpa [category.id_comp] using desc_id_homotopy _ _
+    (descCompHomotopy (𝟙 X) (𝟙 X) I J I).symm.trans $ by simpa [category.id_comp] using desc_id_homotopy _ _
   homotopyInvHomId :=
-    (descCompHomotopy (𝟙 X) (𝟙 X) J I J).symm.trans <| by simpa [category.id_comp] using desc_id_homotopy _ _
+    (descCompHomotopy (𝟙 X) (𝟙 X) J I J).symm.trans $ by simpa [category.id_comp] using desc_id_homotopy _ _
 #align category_theory.InjectiveResolution.homotopy_equiv CategoryTheory.InjectiveResolutionCat.homotopyEquiv
 
 @[simp, reassoc]
@@ -237,7 +237,7 @@ section
 variable [Abelian C] [EnoughInjectives C]
 
 theorem exact_f_d {X Y : C} (f : X ⟶ Y) : Exact f (d f) :=
-  (Abelian.exact_iff _ _).2 <| ⟨by simp, zero_of_comp_mono (ι _) <| by rw [category.assoc, kernel.condition]⟩
+  (Abelian.exact_iff _ _).2 $ ⟨by simp, zero_of_comp_mono (ι _) $ by rw [category.assoc, kernel.condition]⟩
 #align category_theory.exact_f_d CategoryTheory.exact_f_d
 
 end

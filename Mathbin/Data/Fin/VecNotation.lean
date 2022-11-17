@@ -141,7 +141,7 @@ theorem cons_head_tail (u : Fin m.succ → α) : vecCons (vecHead u) (vecTail u)
 
 @[simp]
 theorem range_cons (x : α) (u : Fin n → α) : Set.range (vecCons x u) = {x} ∪ Set.range u :=
-  Set.ext fun y => by simp [Fin.exists_fin_succ, eq_comm]
+  Set.ext $ fun y => by simp [Fin.exists_fin_succ, eq_comm]
 #align matrix.range_cons Matrix.range_cons
 
 @[simp]
@@ -151,11 +151,11 @@ theorem range_empty (u : Fin 0 → α) : Set.range u = ∅ :=
 
 @[simp]
 theorem vec_cons_const (a : α) : (vecCons a fun k : Fin n => a) = fun _ => a :=
-  funext <| Fin.forall_fin_succ.2 ⟨rfl, cons_val_succ _ _⟩
+  funext $ Fin.forall_fin_succ.2 ⟨rfl, cons_val_succ _ _⟩
 #align matrix.vec_cons_const Matrix.vec_cons_const
 
 theorem vec_single_eq_const (a : α) : ![a] = fun _ => a :=
-  funext <| Unique.forall_iff.2 rfl
+  funext $ Unique.forall_iff.2 rfl
 #align matrix.vec_single_eq_const Matrix.vec_single_eq_const
 
 /-- `![a, b, ...] 1` is equal to `b`.
@@ -187,18 +187,18 @@ unsafe instance _root_.pi_fin.reflect [reflected_univ.{u}] [reflected _ α] [has
     (Subsingleton.elim vecEmpty v).rec
       ((by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
             reflected _ @vecEmpty.{u}).subst
-        (quote.1 α))
+        q(α))
   | n + 1, v =>
-    (cons_head_tail v).rec <|
+    (cons_head_tail v).rec $
       (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
             reflected _ @vecCons.{u}).subst₄
-        (quote.1 α) (quote.1 n) (quote.1 _) (_root_.pi_fin.reflect _)
+        q(α) q(n) q(_) (_root_.pi_fin.reflect _)
 #align matrix._root_.pi_fin.reflect matrix._root_.pi_fin.reflect
 
 /-- Convert a vector of pexprs to the pexpr constructing that vector.-/
 unsafe def _root_.pi_fin.to_pexpr : ∀ {n}, (Fin n → pexpr) → pexpr
-  | 0, v => pquote.1 ![]
-  | n + 1, v => pquote.1 (vecCons (%%ₓv 0) (%%ₓ_root_.pi_fin.to_pexpr <| vecTail v))
+  | 0, v => ``(![])
+  | n + 1, v => ``(vecCons $(v 0) $(_root_.pi_fin.to_pexpr $ vecTail v))
 #align matrix._root_.pi_fin.to_pexpr matrix._root_.pi_fin.to_pexpr
 
 /-! ### Numeral (`bit0` and `bit1`) indices

@@ -205,7 +205,7 @@ private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n 
       F.derivative.eval z * -z1 = F.derivative.eval z * -⟨↑(F.eval z) / ↑(F.derivative.eval z), h1⟩ := by rw [hzeq]
       _ = -(F.derivative.eval z * ⟨↑(F.eval z) / ↑(F.derivative.eval z), h1⟩) := mul_neg _ _
       _ = -⟨↑(F.derivative.eval z) * (↑(F.eval z) / ↑(F.derivative.eval z)), this⟩ :=
-        Subtype.ext <| by simp only [PadicInt.coe_neg, PadicInt.coe_mul, Subtype.coe_mk]
+        Subtype.ext $ by simp only [PadicInt.coe_neg, PadicInt.coe_mul, Subtype.coe_mk]
       _ = -F.eval z := by simp only [mul_div_cancel' _ hdzne', Subtype.coe_eta]
       
   exact ⟨q, by simpa only [sub_eq_add_neg, this, hz', add_right_neg, neg_sq, zero_add] using hq⟩
@@ -327,7 +327,7 @@ private theorem newton_seq_dist_aux (n : ℕ) :
       _ ≤ max (∥F.derivative.eval a∥ * T ^ 2 ^ (n + k)) (∥F.derivative.eval a∥ * T ^ 2 ^ n) :=
         max_le_max (newton_seq_succ_dist _) (newton_seq_dist_aux _)
       _ = ∥F.derivative.eval a∥ * T ^ 2 ^ n :=
-        max_eq_right <|
+        max_eq_right $
           mul_le_mul_of_nonneg_left (pow_le_pow_of_le_one (norm_nonneg _) (le_of_lt T_lt_one) this) (norm_nonneg _)
       
 #align newton_seq_dist_aux newton_seq_dist_aux
@@ -420,7 +420,7 @@ private theorem newton_seq_norm_tendsto_zero : Tendsto (fun i => ∥F.eval (newt
 
 private theorem newton_seq_dist_tendsto :
     Tendsto (fun n => ∥newton_cau_seq n - a∥) atTop (𝓝 (∥F.eval a∥ / ∥F.derivative.eval a∥)) :=
-  tendsto_const_nhds.congr' <| eventually_at_top.2 ⟨1, fun _ hx => (newton_seq_dist_to_a _ hx).symm⟩
+  tendsto_const_nhds.congr' $ eventually_at_top.2 ⟨1, fun _ hx => (newton_seq_dist_to_a _ hx).symm⟩
 #align newton_seq_dist_tendsto newton_seq_dist_tendsto
 
 private theorem newton_seq_dist_tendsto' : Tendsto (fun n => ∥newton_cau_seq n - a∥) atTop (𝓝 ∥soln - a∥) :=
@@ -461,7 +461,7 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0) (hnlt : ∥z - a�
         _ = (F.derivative.eval soln + q * h) * h := by rw [sq, right_distrib, mul_assoc]
         )
   have : h = 0 :=
-    by_contradiction fun hne =>
+    by_contradiction $ fun hne =>
       have : F.derivative.eval soln + q * h = 0 := (eq_zero_or_eq_zero_of_mul_eq_zero this).resolve_right hne
       have : F.derivative.eval soln = -q * h := by simpa using eq_neg_of_add_eq_zero_left this
       lt_irrefl ∥F.derivative.eval soln∥
@@ -492,7 +492,7 @@ private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eva
         _ = (F.derivative.eval a + q * h) * h := by rw [sq, right_distrib, mul_assoc]
         )
   have : h = 0 :=
-    by_contradiction fun hne =>
+    by_contradiction $ fun hne =>
       have : F.derivative.eval a + q * h = 0 := (eq_zero_or_eq_zero_of_mul_eq_zero this).resolve_right hne
       have : F.derivative.eval a = -q * h := by simpa using eq_neg_of_add_eq_zero_left this
       lt_irrefl ∥F.derivative.eval a∥

@@ -102,7 +102,7 @@ def toPerm : MulAut M →* Equiv.Perm M := by refine_struct { toFun := MulEquiv.
 
 This generalizes `function.End.apply_mul_action`. -/
 instance applyMulDistribMulAction {M} [Monoid M] : MulDistribMulAction (MulAut M) M where
-  smul := (· <| ·)
+  smul := (· $ ·)
   one_smul _ := rfl
   mul_smul _ _ _ := rfl
   smul_one := MulEquiv.map_one
@@ -217,7 +217,7 @@ def toPerm : AddAut A →* Equiv.Perm A := by refine_struct { toFun := AddEquiv.
 
 This generalizes `function.End.apply_mul_action`. -/
 instance applyDistribMulAction {A} [AddMonoid A] : DistribMulAction (AddAut A) A where
-  smul := (· <| ·)
+  smul := (· $ ·)
   smul_zero := AddEquiv.map_zero
   smul_add := AddEquiv.map_add
   one_smul _ := rfl

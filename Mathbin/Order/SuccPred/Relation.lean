@@ -29,7 +29,7 @@ theorem refl_trans_gen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : �
     exact refl_trans_gen.refl
     
   · intro m hnm ih h
-    have : refl_trans_gen r n m := ih fun i hi => h i ⟨hi.1, hi.2.trans_le <| le_succ m⟩
+    have : refl_trans_gen r n m := ih fun i hi => h i ⟨hi.1, hi.2.trans_le $ le_succ m⟩
     cases' (le_succ m).eq_or_lt with hm hm
     · rwa [← hm]
       
@@ -49,14 +49,14 @@ theorem refl_trans_gen_of_succ_of_ge (r : α → α → Prop) {n m : α} (h : �
   for all `i` between `n` and `m`. -/
 theorem trans_gen_of_succ_of_lt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ ico n m, r i (succ i)) (hnm : n < m) :
     TransGen r n m :=
-  (refl_trans_gen_iff_eq_or_trans_gen.mp <| refl_trans_gen_of_succ_of_le r h hnm.le).resolve_left hnm.ne'
+  (reflTransGen_iff_eq_or_transGen.mp $ refl_trans_gen_of_succ_of_le r h hnm.le).resolve_left hnm.ne'
 #align trans_gen_of_succ_of_lt trans_gen_of_succ_of_lt
 
 /-- For `m < n`, `(n, m)` is in the transitive closure of a relation `~` if `succ i ~ i`
   for all `i` between `n` and `m`. -/
 theorem trans_gen_of_succ_of_gt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ ico m n, r (succ i) i) (hmn : m < n) :
     TransGen r n m :=
-  (refl_trans_gen_iff_eq_or_trans_gen.mp <| refl_trans_gen_of_succ_of_ge r h hmn.le).resolve_left hmn.Ne
+  (reflTransGen_iff_eq_or_transGen.mp $ refl_trans_gen_of_succ_of_ge r h hmn.le).resolve_left hmn.Ne
 #align trans_gen_of_succ_of_gt trans_gen_of_succ_of_gt
 
 end PartialSucc
@@ -69,14 +69,14 @@ variable {α : Type _} [LinearOrder α] [SuccOrder α] [IsSuccArchimedean α]
   for all `i` between `n` and `m`. -/
 theorem refl_trans_gen_of_succ (r : α → α → Prop) {n m : α} (h1 : ∀ i ∈ ico n m, r i (succ i))
     (h2 : ∀ i ∈ ico m n, r (succ i) i) : ReflTransGen r n m :=
-  (le_total n m).elim (refl_trans_gen_of_succ_of_le r h1) <| refl_trans_gen_of_succ_of_ge r h2
+  (le_total n m).elim (refl_trans_gen_of_succ_of_le r h1) $ refl_trans_gen_of_succ_of_ge r h2
 #align refl_trans_gen_of_succ refl_trans_gen_of_succ
 
 /-- For `n ≠ m`,`(n, m)` is in the transitive closure of a relation `~` if `i ~ succ i` and
   `succ i ~ i` for all `i` between `n` and `m`. -/
 theorem trans_gen_of_succ_of_ne (r : α → α → Prop) {n m : α} (h1 : ∀ i ∈ ico n m, r i (succ i))
     (h2 : ∀ i ∈ ico m n, r (succ i) i) (hnm : n ≠ m) : TransGen r n m :=
-  (refl_trans_gen_iff_eq_or_trans_gen.mp (refl_trans_gen_of_succ r h1 h2)).resolve_left hnm.symm
+  (reflTransGen_iff_eq_or_transGen.mp (refl_trans_gen_of_succ r h1 h2)).resolve_left hnm.symm
 #align trans_gen_of_succ_of_ne trans_gen_of_succ_of_ne
 
 /-- `(n, m)` is in the transitive closure of a reflexive relation `~` if `i ~ succ i` and

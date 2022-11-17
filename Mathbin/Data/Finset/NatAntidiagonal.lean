@@ -74,7 +74,7 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
       cons (0, n + 2)
         (cons (n + 2, 0)
             ((antidiagonal n).map
-              (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ ⟨Nat.succ, Nat.succ_injective⟩)) <|
+              (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ ⟨Nat.succ, Nat.succ_injective⟩)) $
           by simp)
         (by simp) :=
   by
@@ -84,7 +84,7 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
 
 theorem map_swap_antidiagonal {n : ℕ} :
     (antidiagonal n).map ⟨Prod.swap, Prod.swap_rightInverse.Injective⟩ = antidiagonal n :=
-  eq_of_veq <| by simp [antidiagonal, Multiset.Nat.map_swap_antidiagonal]
+  eq_of_veq $ by simp [antidiagonal, Multiset.Nat.map_swap_antidiagonal]
 #align finset.nat.map_swap_antidiagonal Finset.Nat.map_swap_antidiagonal
 
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
@@ -134,7 +134,7 @@ section EquivProd
 /-- The disjoint union of antidiagonals `Σ (n : ℕ), antidiagonal n` is equivalent to the product
     `ℕ × ℕ`. This is such an equivalence, obtained by mapping `(n, (k, l))` to `(k, l)`. -/
 @[simps]
-def sigmaAntidiagonalEquivProd : (Σn : ℕ, antidiagonal n) ≃ ℕ × ℕ where
+def sigmaAntidiagonalEquivProd : (Σ n : ℕ, antidiagonal n) ≃ ℕ × ℕ where
   toFun x := x.2
   invFun x := ⟨x.1 + x.2, x, mem_antidiagonal.mpr rfl⟩
   left_inv := by

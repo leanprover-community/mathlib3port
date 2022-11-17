@@ -279,7 +279,7 @@ protected theorem exists_not_mem_row (μ : YoungDiagram) (i : ℕ) : ∃ j, (i, 
 
 /-- Length of a row of a Young diagram -/
 def rowLen (μ : YoungDiagram) (i : ℕ) : ℕ :=
-  Nat.find <| μ.exists_not_mem_row i
+  Nat.find $ μ.exists_not_mem_row i
 #align young_diagram.row_len YoungDiagram.rowLen
 
 theorem mem_iff_lt_row_len {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ ↔ j < μ.rowLen i := by
@@ -335,7 +335,7 @@ protected theorem exists_not_mem_col (μ : YoungDiagram) (j : ℕ) : ∃ i, (i, 
 
 /-- Length of a column of a Young diagram -/
 def colLen (μ : YoungDiagram) (j : ℕ) : ℕ :=
-  Nat.find <| μ.exists_not_mem_col j
+  Nat.find $ μ.exists_not_mem_col j
 #align young_diagram.col_len YoungDiagram.colLen
 
 @[simp]
@@ -383,7 +383,7 @@ This section defines `μ.row_lens : list ℕ`, the list of row lengths of a Youn
 
 /-- List of row lengths of a Young diagram -/
 def rowLens (μ : YoungDiagram) : List ℕ :=
-  (List.range <| μ.colLen 0).map μ.rowLen
+  (List.range $ μ.colLen 0).map μ.rowLen
 #align young_diagram.row_lens YoungDiagram.rowLens
 
 @[simp]

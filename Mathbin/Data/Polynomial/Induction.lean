@@ -93,7 +93,7 @@ theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coe
 #align polynomial.mem_span_C_coeff Polynomial.mem_span_C_coeff
 
 theorem exists_C_coeff_not_mem : f ∉ I → ∃ i : ℕ, c (coeff f i) ∉ I :=
-  Not.imp_symm fun cf => span_le_of_C_coeff_mem (not_exists_not.mp cf) mem_span_C_coeff
+  Not.imp_symm $ fun cf => span_le_of_C_coeff_mem (not_exists_not.mp cf) mem_span_C_coeff
 #align polynomial.exists_C_coeff_not_mem Polynomial.exists_C_coeff_not_mem
 
 end Semiring

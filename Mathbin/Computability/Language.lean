@@ -104,7 +104,8 @@ theorem mem_add (l m : Language α) (x : List α) : x ∈ l + m ↔ x ∈ l ∨ 
   Iff.rfl
 #align language.mem_add Language.mem_add
 
-theorem mem_mul : x ∈ l * m ↔ ∃ a b, a ∈ l ∧ b ∈ m ∧ a ++ b = x :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+theorem mem_mul : x ∈ l * m ↔ ∃ (a) (b), a ∈ l ∧ b ∈ m ∧ a ++ b = x :=
   mem_image2
 #align language.mem_mul Language.mem_mul
 
@@ -155,7 +156,7 @@ def map (f : α → β) : Language α →+* Language β where
   map_zero' := image_empty _
   map_one' := image_singleton
   map_add' := image_union _
-  map_mul' _ _ := image_image2_distrib <| map_append _
+  map_mul' _ _ := image_image2_distrib $ map_append _
 #align language.map Language.map
 
 @[simp]

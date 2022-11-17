@@ -35,7 +35,7 @@ protected def hasStar [HasStar α] : HasStar (Set α) :=
   ⟨preimage HasStar.star⟩
 #align set.has_star Set.hasStar
 
-localized [Pointwise] attribute [instance] Set.hasStar
+scoped[Pointwise] attribute [instance] Set.hasStar
 
 @[simp]
 theorem star_empty [HasStar α] : (∅ : Set α)⋆ = ∅ :=
@@ -114,7 +114,7 @@ theorem star_subset [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t ↔ s ⊆
 #align set.star_subset Set.star_subset
 
 theorem Finite.star [HasInvolutiveStar α] {s : Set α} (hs : s.Finite) : s⋆.Finite :=
-  hs.Preimage <| star_injective.InjOn _
+  hs.Preimage $ star_injective.InjOn _
 #align set.finite.star Set.Finite.star
 
 theorem star_singleton {β : Type _} [HasInvolutiveStar β] (x : β) : ({x} : Set β)⋆ = {x⋆} := by

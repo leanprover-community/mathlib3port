@@ -63,7 +63,7 @@ noncomputable def vonMangoldt : ArithmeticFunction ℝ :=
 #align nat.arithmetic_function.von_mangoldt Nat.ArithmeticFunction.vonMangoldt
 
 -- mathport name: von_mangoldt
-localized [ArithmeticFunction] notation "Λ" => Nat.ArithmeticFunction.vonMangoldt
+scoped[ArithmeticFunction] notation "Λ" => Nat.ArithmeticFunction.vonMangoldt
 
 theorem von_mangoldt_apply {n : ℕ} : Λ n = if IsPrimePow n then Real.log (minFac n) else 0 :=
   rfl

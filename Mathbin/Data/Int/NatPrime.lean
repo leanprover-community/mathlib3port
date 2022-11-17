@@ -16,16 +16,16 @@ namespace Int
 
 theorem not_prime_of_int_mul {a b : ℤ} {c : ℕ} (ha : 1 < a.natAbs) (hb : 1 < b.natAbs) (hc : a * b = (c : ℤ)) :
     ¬Nat.Prime c :=
-  not_prime_mul' (nat_abs_mul_nat_abs_eq hc) ha hb
+  not_prime_mul' (natAbs_mul_natAbs_eq hc) ha hb
 #align int.not_prime_of_int_mul Int.not_prime_of_int_mul
 
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime p) {m n : ℤ} {k l : ℕ}
     (hpm : ↑(p ^ k) ∣ m) (hpn : ↑(p ^ l) ∣ n) (hpmn : ↑(p ^ (k + l + 1)) ∣ m * n) :
     ↑(p ^ (k + 1)) ∣ m ∨ ↑(p ^ (l + 1)) ∣ n :=
-  have hpm' : p ^ k ∣ m.natAbs := Int.coe_nat_dvd.1 <| Int.dvd_nat_abs.2 hpm
-  have hpn' : p ^ l ∣ n.natAbs := Int.coe_nat_dvd.1 <| Int.dvd_nat_abs.2 hpn
+  have hpm' : p ^ k ∣ m.natAbs := Int.coe_nat_dvd.1 $ Int.dvd_nat_abs.2 hpm
+  have hpn' : p ^ l ∣ n.natAbs := Int.coe_nat_dvd.1 $ Int.dvd_nat_abs.2 hpn
   have hpmn' : p ^ (k + l + 1) ∣ m.natAbs * n.natAbs := by
-    rw [← Int.nat_abs_mul] <;> apply Int.coe_nat_dvd.1 <| Int.dvd_nat_abs.2 hpmn
+    rw [← Int.natAbs_mul] <;> apply Int.coe_nat_dvd.1 $ Int.dvd_nat_abs.2 hpmn
   let hsd := Nat.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul p_prime hpm' hpn' hpmn'
   hsd.elim
     (fun hsd1 =>

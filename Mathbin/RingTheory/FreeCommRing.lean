@@ -58,7 +58,7 @@ variable (α : Type u)
 
 /-- `free_comm_ring α` is the free commutative ring on the type `α`. -/
 def FreeCommRing (α : Type u) : Type u :=
-  FreeAbelianGroup <| Multiplicative <| Multiset α deriving CommRing, Inhabited
+  FreeAbelianGroup $ Multiplicative $ Multiset α deriving CommRing, Inhabited
 #align free_comm_ring FreeCommRing
 
 namespace FreeCommRing
@@ -67,7 +67,7 @@ variable {α}
 
 /-- The canonical map from `α` to the free commutative ring on `α`. -/
 def of (x : α) : FreeCommRing α :=
-  FreeAbelianGroup.of <| Multiplicative.ofAdd ({x} : Multiset α)
+  FreeAbelianGroup.of $ Multiplicative.ofAdd ({x} : Multiset α)
 #align free_comm_ring.of FreeCommRing.of
 
 theorem of_injective : Function.Injective (of : α → FreeCommRing α) :=
@@ -80,7 +80,7 @@ protected theorem induction_on {C : FreeCommRing α → Prop} (z : FreeCommRing 
   have hn : ∀ x, C x → C (-x) := fun x ih => neg_one_mul x ▸ hm _ _ hn1 ih
   have h1 : C 1 := neg_neg (1 : FreeCommRing α) ▸ hn _ hn1
   FreeAbelianGroup.induction_on z (add_left_neg (1 : FreeCommRing α) ▸ ha _ _ hn1 h1)
-    (fun m => (Multiset.induction_on m h1) fun a m ih => hm _ _ (hb a) ih) (fun m ih => hn _ ih) ha
+    (fun m => Multiset.induction_on m h1 $ fun a m ih => hm _ _ (hb a) ih) (fun m ih => hn _ ih) ha
 #align free_comm_ring.induction_on FreeCommRing.induction_on
 
 section lift
@@ -101,9 +101,9 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
           ,
       map_one' := rfl }
   invFun F x := F (Multiplicative.ofAdd ({x} : Multiset α))
-  left_inv f := funext fun x => show (Multiset.map f {x}).Prod = _ by simp
+  left_inv f := funext $ fun x => show (Multiset.map f {x}).Prod = _ by simp
   right_inv F :=
-    MonoidHom.ext fun x =>
+    MonoidHom.ext $ fun x =>
       let F' := F.toAdditive''
       let x' := x.toAdd
       show (Multiset.map (fun a => F' {a}) x').Sum = F' x' by
@@ -119,12 +119,12 @@ def lift : (α → R) ≃ (FreeCommRing α →+* R) :=
 
 @[simp]
 theorem lift_of (x : α) : lift f (of x) = f x :=
-  (FreeAbelianGroup.lift.of _ _).trans <| mul_one _
+  (FreeAbelianGroup.lift.of _ _).trans $ mul_one _
 #align free_comm_ring.lift_of FreeCommRing.lift_of
 
 @[simp]
 theorem lift_comp_of (f : FreeCommRing α →+* R) : lift (f ∘ of) = f :=
-  RingHom.ext fun x =>
+  RingHom.ext $ fun x =>
     FreeCommRing.induction_on x (by rw [RingHom.map_neg, RingHom.map_one, f.map_neg, f.map_one]) (lift_of _)
       (fun x y ihx ihy => by rw [RingHom.map_add, f.map_add, ihx, ihy]) fun x y ihx ihy => by
       rw [RingHom.map_mul, f.map_mul, ihx, ihy]
@@ -141,7 +141,7 @@ variable {β : Type v} (f : α → β)
 
 /-- A map `f : α → β` produces a ring homomorphism `free_comm_ring α →+* free_comm_ring β`. -/
 def map : FreeCommRing α →+* FreeCommRing β :=
-  lift <| of ∘ f
+  lift $ of ∘ f
 #align free_comm_ring.map FreeCommRing.map
 
 @[simp]
@@ -267,15 +267,15 @@ theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)] 
 
 theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite s ∧ IsSupported x s :=
   FreeCommRing.induction_on x ⟨∅, Set.finite_empty, is_supported_neg is_supported_one⟩
-    (fun p => ⟨{p}, Set.finite_singleton p, is_supported_of.2 <| Set.mem_singleton _⟩)
+    (fun p => ⟨{p}, Set.finite_singleton p, is_supported_of.2 $ Set.mem_singleton _⟩)
     (fun x y ⟨s, hfs, hxs⟩ ⟨t, hft, hxt⟩ =>
       ⟨s ∪ t, hfs.union hft,
-        is_supported_add (is_supported_upwards hxs <| Set.subset_union_left s t)
-          (is_supported_upwards hxt <| Set.subset_union_right s t)⟩)
+        is_supported_add (is_supported_upwards hxs $ Set.subset_union_left s t)
+          (is_supported_upwards hxt $ Set.subset_union_right s t)⟩)
     fun x y ⟨s, hfs, hxs⟩ ⟨t, hft, hxt⟩ =>
     ⟨s ∪ t, hfs.union hft,
-      is_supported_mul (is_supported_upwards hxs <| Set.subset_union_left s t)
-        (is_supported_upwards hxt <| Set.subset_union_right s t)⟩
+      is_supported_mul (is_supported_upwards hxs $ Set.subset_union_left s t)
+        (is_supported_upwards hxt $ Set.subset_union_right s t)⟩
 #align free_comm_ring.exists_finite_support FreeCommRing.exists_finite_support
 
 theorem exists_finset_support (x : FreeCommRing α) : ∃ s : Finset α, IsSupported x ↑s :=
@@ -365,8 +365,8 @@ protected theorem coe_surjective : Surjective (coe : FreeRing α → FreeCommRin
 
 theorem coe_eq :
     (coe : FreeRing α → FreeCommRing α) = @Functor.map FreeAbelianGroup _ _ _ fun l : List α => (l : Multiset α) :=
-  funext fun x =>
-    (FreeAbelianGroup.lift.unique _ _) fun L => by
+  funext $ fun x =>
+    FreeAbelianGroup.lift.unique _ _ $ fun L => by
       simp_rw [FreeAbelianGroup.lift.of, (· ∘ ·)]
       exact
         FreeMonoid.recOn L rfl fun hd tl ih => by
@@ -399,7 +399,7 @@ end FreeRing
 /-- The free commutative ring on `α` is isomorphic to the polynomial ring over ℤ with
     variables in `α` -/
 def freeCommRingEquivMvPolynomialInt : FreeCommRing α ≃+* MvPolynomial α ℤ :=
-  RingEquiv.ofHomInv (FreeCommRing.lift <| (fun a => MvPolynomial.x a : α → MvPolynomial α ℤ))
+  RingEquiv.ofHomInv (FreeCommRing.lift $ (fun a => MvPolynomial.x a : α → MvPolynomial α ℤ))
     (MvPolynomial.eval₂Hom (Int.castRingHom (FreeCommRing α)) FreeCommRing.of)
     (by
       ext

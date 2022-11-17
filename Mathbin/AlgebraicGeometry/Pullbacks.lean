@@ -553,7 +553,7 @@ theorem affine_affine_has_pullback {B C : CommRingCat} {X : SchemeCat} (f : X �
 instance base_affine_has_pullback {C : CommRingCat} {X Y : SchemeCat} (f : X ⟶ spec.obj (Opposite.op C))
     (g : Y ⟶ spec.obj (Opposite.op C)) : HasPullback f g :=
   @has_pullback_symmetry _ _ _
-    (@has_pullback_of_cover Y.affineCover g f fun i => @has_pullback_symmetry _ _ _ <| affine_affine_has_pullback _ _)
+    (@has_pullback_of_cover Y.affineCover g f fun i => @has_pullback_symmetry _ _ _ $ affine_affine_has_pullback _ _)
 #align
   algebraic_geometry.Scheme.pullback.base_affine_has_pullback AlgebraicGeometry.SchemeCat.Pullback.base_affine_has_pullback
 
@@ -565,8 +565,7 @@ instance left_affine_comp_pullback_has_pullback {X Y Z : SchemeCat} (f : X ⟶ Z
   have :=
     big_square_is_pullback (pullback.fst : W ⟶ _) (pullback.fst : Yᵢ ⟶ _) (pullback.snd : Xᵢ ⟶ _) (Z.affine_cover.map i)
       pullback.snd pullback.snd g pullback.condition.symm pullback.condition.symm
-      (pullback_cone.flip_is_limit <| pullback_is_pullback _ _)
-      (pullback_cone.flip_is_limit <| pullback_is_pullback _ _)
+      (pullback_cone.flip_is_limit $ pullback_is_pullback _ _) (pullback_cone.flip_is_limit $ pullback_is_pullback _ _)
   have : has_pullback (pullback.snd ≫ Z.affine_cover.map i : Xᵢ ⟶ _) g := ⟨⟨⟨_, this⟩⟩⟩
   rw [← pullback.condition] at this
   exact this
@@ -642,8 +641,7 @@ def openCoverOfBase' (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCove
   have :=
     big_square_is_pullback (pullback.fst : W ⟶ _) (pullback.fst : Yᵢ ⟶ _) (pullback.snd : Xᵢ ⟶ _) (𝒰.map i) pullback.snd
       pullback.snd g pullback.condition.symm pullback.condition.symm
-      (pullback_cone.flip_is_limit <| pullback_is_pullback _ _)
-      (pullback_cone.flip_is_limit <| pullback_is_pullback _ _)
+      (pullback_cone.flip_is_limit $ pullback_is_pullback _ _) (pullback_cone.flip_is_limit $ pullback_is_pullback _ _)
   refine'
     open_cover_of_is_iso
       ((pullback_symmetry _ _).Hom ≫ (limit.iso_limit_cone ⟨_, this⟩).inv ≫ pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) _ _)

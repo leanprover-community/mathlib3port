@@ -28,8 +28,7 @@ Other tactics in this file:
 
 open Tactic
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 namespace Tactic
 
 /-- Apply the constant `iff_of_eq` to the goal. -/
@@ -44,17 +43,19 @@ unsafe def congr_core' : tactic Unit := do
   apply_eq_congr_core tgt <|> apply_heq_congr_core <|> apply_iff_congr_core <|> fail "congr tactic failed"
 #align tactic.congr_core' tactic.congr_core'
 
-/-- The main function in `convert_to`. Changes the goal to `r` and a proof obligation that the goal
-  is equal to `r`. -/
-unsafe def convert_to_core (r : pexpr) : tactic Unit := do
-  let tgt ← target
-  let h ← to_expr (pquote.1 (_ : (%%ₓtgt) = %%ₓr))
-  rewrite_target h
-  swap
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      The main function in `convert_to`. Changes the goal to `r` and a proof obligation that the goal
+        is equal to `r`. -/
+    unsafe
+  def
+    convert_to_core
+    ( r : pexpr ) : tactic Unit
+    := do let tgt ← target let h ← to_expr ` `( ( _ : $ ( tgt ) = $ ( r ) ) ) rewrite_target h swap
 #align tactic.convert_to_core tactic.convert_to_core
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Attempts to prove the goal by proof irrelevance, but avoids unifying universe metavariables
 to do so. -/
 unsafe def by_proof_irrel : tactic Unit := do
@@ -72,11 +73,11 @@ the depth of recursive applications.
 -/
 unsafe def congr' : Option ℕ → tactic Unit
   | o =>
-    focus1 <|
+    focus1 $
       assumption <|>
         reflexivity Transparency.none <|>
           by_proof_irrel <|>
-            (guard (o ≠ some 0) >> congr_core') >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity
+            guard (o ≠ some 0) >> congr_core' >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity
 #align tactic.congr' tactic.congr'
 
 namespace Interactive
@@ -140,7 +141,7 @@ unsafe def rcongr : parse (List.join <$> parser.many rintro_patt_parse_hi) → t
           (tactic.congr' none >>
             (done <|> do
               let s ← target
-              guard <| ¬s == t)) |
+              guard $ ¬s =ₐ t)) |
       skip
     done <|> rcongr (qs ps)
 #align tactic.interactive.rcongr tactic.interactive.rcongr
@@ -152,69 +153,81 @@ add_tactic_doc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
-/-- The `exact e` and `refine e` tactics require a term `e` whose type is
-definitionally equal to the goal. `convert e` is similar to `refine e`,
-but the type of `e` is not required to exactly match the
-goal. Instead, new goals are created for differences between the type
-of `e` and the goal. For example, in the proof state
-
-```lean
-n : ℕ,
-e : prime (2 * n + 1)
-⊢ prime (n + n + 1)
-```
-
-the tactic `convert e` will change the goal to
-
-```lean
-⊢ n + n = 2 * n
-```
-
-In this example, the new goal can be solved using `ring`.
-
-The `convert` tactic applies congruence lemmas eagerly before reducing,
-therefore it can fail in cases where `exact` succeeds:
-```lean
-def p (n : ℕ) := true
-example (h : p 0) : p 1 := by exact h -- succeeds
-example (h : p 0) : p 1 := by convert h -- fails, with leftover goal `1 = 0`
-```
-
-If `x y : t`, and an instance `subsingleton t` is in scope, then any goals of the form
-`x = y` are solved automatically.
-
-The syntax `convert ← e` will reverse the direction of the new goals
-(producing `⊢ 2 * n = n + n` in this example).
-
-Internally, `convert e` works by creating a new goal asserting that
-the goal equals the type of `e`, then simplifying it using
-`congr'`. The syntax `convert e using n` can be used to control the
-depth of matching (like `congr' n`). In the example, `convert e using
-1` would produce a new goal `⊢ n + n + 1 = 2 * n + 1`.
--/
-unsafe def convert (sym : parse (with_desc "←" (parser.optional (tk "<-")))) (r : parse texpr)
-    (n : parse (parser.optional (tk "using" *> small_nat))) : tactic Unit := do
-  let tgt ← target
-  let u ← infer_type tgt
-  let r ← i_to_expr (pquote.1 (%%ₓr : (_ : %%ₓu)))
-  let src ← infer_type r
-  let src ← simp_lemmas.mk.dsimplify [] src { failIfUnchanged := false }
-  let v ←
-    to_expr (if sym.isSome then pquote.1 ((%%ₓsrc) = %%ₓtgt) else pquote.1 ((%%ₓtgt) = %%ₓsrc)) true false >>=
-        mk_meta_var
-  (if sym then mk_eq_mp v r else mk_eq_mpr v r) >>= tactic.exact
-  let gs ← get_goals
-  set_goals [v]
-  try (tactic.congr' n)
-  let gs' ← get_goals
-  set_goals <| gs' ++ gs
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      The `exact e` and `refine e` tactics require a term `e` whose type is
+      definitionally equal to the goal. `convert e` is similar to `refine e`,
+      but the type of `e` is not required to exactly match the
+      goal. Instead, new goals are created for differences between the type
+      of `e` and the goal. For example, in the proof state
+      
+      ```lean
+      n : ℕ,
+      e : prime (2 * n + 1)
+      ⊢ prime (n + n + 1)
+      ```
+      
+      the tactic `convert e` will change the goal to
+      
+      ```lean
+      ⊢ n + n = 2 * n
+      ```
+      
+      In this example, the new goal can be solved using `ring`.
+      
+      The `convert` tactic applies congruence lemmas eagerly before reducing,
+      therefore it can fail in cases where `exact` succeeds:
+      ```lean
+      def p (n : ℕ) := true
+      example (h : p 0) : p 1 := by exact h -- succeeds
+      example (h : p 0) : p 1 := by convert h -- fails, with leftover goal `1 = 0`
+      ```
+      
+      If `x y : t`, and an instance `subsingleton t` is in scope, then any goals of the form
+      `x = y` are solved automatically.
+      
+      The syntax `convert ← e` will reverse the direction of the new goals
+      (producing `⊢ 2 * n = n + n` in this example).
+      
+      Internally, `convert e` works by creating a new goal asserting that
+      the goal equals the type of `e`, then simplifying it using
+      `congr'`. The syntax `convert e using n` can be used to control the
+      depth of matching (like `congr' n`). In the example, `convert e using
+      1` would produce a new goal `⊢ n + n + 1 = 2 * n + 1`.
+      -/
+    unsafe
+  def
+    convert
+    ( sym : parse ( with_desc "←" ( parser.optional ( tk "<-" ) ) ) )
+        ( r : parse texpr )
+        ( n : parse ( parser.optional ( tk "using" *> small_nat ) ) )
+      : tactic Unit
+    :=
+      do
+        let tgt ← target
+          let u ← infer_type tgt
+          let r ← i_to_expr ` `( ( $ ( r ) : ( _ : $ ( u ) ) ) )
+          let src ← infer_type r
+          let src ← simp_lemmas.mk . dsimplify [ ] src { failIfUnchanged := false }
+          let
+            v
+              ←
+              to_expr ( if sym . isSome then ` `( $ ( src ) = $ ( tgt ) ) else ` `( $ ( tgt ) = $ ( src ) ) ) true false
+                >>=
+                mk_meta_var
+          ( if sym then mk_eq_mp v r else mk_eq_mpr v r ) >>= tactic.exact
+          let gs ← get_goals
+          set_goals [ v ]
+          try ( tactic.congr' n )
+          let gs' ← get_goals
+          set_goals $ gs' ++ gs
 #align tactic.interactive.convert tactic.interactive.convert
 
 add_tactic_doc
   { Name := "convert", category := DocCategory.tactic, declNames := [`tactic.interactive.convert],
     tags := ["congruence"] }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `convert_to g using n` attempts to change the current goal to `g`, but unlike `change`,
 it will generate equality proof obligations using `congr' n` to resolve discrepancies.
@@ -243,7 +256,7 @@ end
 ```
 -/
 unsafe def ac_change (r : parse texpr) (n : parse (parser.optional (tk "using" *> small_nat))) : tactic Unit :=
-  andthen (convert_to r n) (try ac_refl)
+  convert_to r n; try ac_refl
 #align tactic.interactive.ac_change tactic.interactive.ac_change
 
 add_tactic_doc

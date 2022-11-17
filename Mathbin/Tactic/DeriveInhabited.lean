@@ -17,7 +17,7 @@ instances for types in the core library.
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tries to derive an `inhabited` instance for inductives and structures.
 
 For example:
@@ -36,13 +36,13 @@ argument `inhabited α`, even if it is not used.  (This is due to the implementa
 -/
 @[derive_handler]
 unsafe def inhabited_instance : derive_handler :=
-  instance_derive_handler `` Inhabited <| do
+  instance_derive_handler `` Inhabited $ do
     applyc `` Inhabited.mk
     sorry <|> constructor >> skip
-    all_goals' <| do
+    all_goals' $ do
         applyc `` default <|> do
             let s ← read
-            fail <| to_fmt "could not find inhabited instance for:\n" ++ to_fmt s
+            fail $ to_fmt "could not find inhabited instance for:\n" ++ to_fmt s
 #align tactic.inhabited_instance tactic.inhabited_instance
 
 end Tactic

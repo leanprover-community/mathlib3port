@@ -50,7 +50,7 @@ theorem left_minus_right {α} [h : AddGroup α] {x y : α} (h1 : x = y) : x - y 
   sub_eq_zero.mpr h1
 #align linear_combo.left_minus_right LinearCombo.left_minus_right
 
-theorem all_on_left_equiv {α} [h : AddGroup α] (x y : α) : (x = y) = (x - y = 0) :=
+theorem all_on_left_equiv {α} [h : AddGroup α] (x y : α) : x = y = (x - y = 0) :=
   propext ⟨left_minus_right, sub_eq_zero.mp⟩
 #align linear_combo.all_on_left_equiv LinearCombo.all_on_left_equiv
 
@@ -64,7 +64,7 @@ theorem eq_zero_of_sub_eq_zero {α} [AddGroup α] {x y : α} (h : y = 0) (h2 : x
 /-! ### Configuration -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linear_combination`.
 
 `normalize` describes whether or not the normalization step should be used.
@@ -80,26 +80,29 @@ unsafe structure linear_combination_config : Type where
 /-! ### Part 1: Multiplying Equations by Constants and Adding Them Together -/
 
 
-/-- Given that `lhs = rhs`, this tactic returns an `expr` proving that
-  `coeff * lhs = coeff * rhs`.
-
-* Input:
-  * `h_equality` : an `expr`, whose type should be an equality between terms of
-      type `α`, where there is an instance of `has_mul α`
-  * `coeff` : a `pexpr`, which should be a value of type `α`
-
-* Output: an `expr`, which proves that the result of multiplying both sides
-    of `h_equality` by the `coeff` holds
--/
-unsafe def mul_equality_expr (h_equality : expr) (coeff : pexpr) : tactic expr := do
-  let quote.1 ((%%ₓlhs) = %%ₓrhs) ← infer_type h_equality
-  let left_type
-    ←-- Mark the coefficient as having the same type as the sides of `h_equality` -
-        --   this is necessary in order to use the left_mul_both_sides lemma
-        infer_type
-        lhs
-  let coeff_expr ← to_expr (pquote.1 (%%ₓcoeff : %%ₓleft_type))
-  mk_app `` left_mul_both_sides [coeff_expr, h_equality]
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Given that `lhs = rhs`, this tactic returns an `expr` proving that
+        `coeff * lhs = coeff * rhs`.
+      
+      * Input:
+        * `h_equality` : an `expr`, whose type should be an equality between terms of
+            type `α`, where there is an instance of `has_mul α`
+        * `coeff` : a `pexpr`, which should be a value of type `α`
+      
+      * Output: an `expr`, which proves that the result of multiplying both sides
+          of `h_equality` by the `coeff` holds
+      -/
+    unsafe
+  def
+    mul_equality_expr
+    ( h_equality : expr ) ( coeff : pexpr ) : tactic expr
+    :=
+      do
+        let q( $ ( lhs ) = $ ( rhs ) ) ← infer_type h_equality
+          let left_type ← infer_type lhs
+          let coeff_expr ← to_expr ` `( ( $ ( coeff ) : $ ( left_type ) ) )
+          mk_app ` ` left_mul_both_sides [ coeff_expr , h_equality ]
 #align linear_combo.mul_equality_expr linear_combo.mul_equality_expr
 
 /-- Given two hypotheses that `a = b` and `c = d`, this tactic returns an `expr` proving
@@ -138,12 +141,6 @@ unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_f
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given that `l_sum1 = r_sum1`, `l_h1 = r_h1`, ..., `l_hn = r_hn`, and given
@@ -163,18 +160,20 @@ unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_f
     equalities added to the base equation holds
 -/
 unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) → List expr → List pexpr → tactic expr
-  | none, [], [] => to_expr (pquote.1 (rfl : (0 : %%ₓexpected_tp) = 0))
+  | none, [], [] => to_expr ``((rfl : (0 : $(expected_tp)) = 0))
   | some tactic_hcombo, [], [] => do
     tactic_hcombo
   | none, h_equality::h_eqs_names, coeff::coeffs => do
     let-- This is the first equality, and we do not have anything to add to it
-        -- h_equality ← get_local h_equality_nam,
-        quote.1
-        (@Eq (%%ₓeqtp) _ _)
+      -- h_equality ← get_local h_equality_nam,
+      q(@Eq $(eqtp) _ _)
       ← infer_type h_equality |
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+      throwError "{← h_equality} is expected to be a proof of an equality"
     is_def_eq eqtp expected_tp <|>
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+        throwError
+          "{(←
+            h_equality)} is an equality between terms of type {(←
+            eqtp)}, but is expected to be between terms of type {← expected_tp}"
     make_sum_of_hyps_helper (some (mul_equality_expr h_equality coeff)) h_eqs_names coeffs
   | some tactic_hcombo, h_equality::h_eqs_names, coeff::coeffs => do
     let hcombo
@@ -227,26 +226,31 @@ unsafe def move_to_left_side (h_equality : expr) : tactic expr :=
   mk_app `` left_minus_right [h_equality]
 #align linear_combo.move_to_left_side linear_combo.move_to_left_side
 
-/-- This tactic replaces the target with the result of moving all the terms in the
-  target to the left side of the equals sign by subtracting the right side of
-  the equation from the left side.  In other words, when the target is
-  lhs = rhs, this tactic proves that `lhs - rhs = 0` and replaces the target
-  with this new equality.
-Note: The target must be an equality when this tactic is called, and the
-  equality must have some type `α` on each side, where there is an instance of
-  `add_group α`.
-
-* Input: N/A
-
-* Output: N/A
--/
-unsafe def move_target_to_left_side : tactic Unit := do
-  let target
-    ←-- Move all the terms in the target equality to the left side
-      target
-  let (targ_lhs, targ_rhs) ← match_eq target
-  let target_left_eq ← to_expr (pquote.1 (((%%ₓtarg_lhs) - %%ₓtarg_rhs) = 0))
-  mk_app `` all_on_left_equiv [targ_lhs, targ_rhs] >>= replace_target target_left_eq
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      This tactic replaces the target with the result of moving all the terms in the
+        target to the left side of the equals sign by subtracting the right side of
+        the equation from the left side.  In other words, when the target is
+        lhs = rhs, this tactic proves that `lhs - rhs = 0` and replaces the target
+        with this new equality.
+      Note: The target must be an equality when this tactic is called, and the
+        equality must have some type `α` on each side, where there is an instance of
+        `add_group α`.
+      
+      * Input: N/A
+      
+      * Output: N/A
+      -/
+    unsafe
+  def
+    move_target_to_left_side
+    : tactic Unit
+    :=
+      do
+        let target ← target
+          let ( targ_lhs , targ_rhs ) ← match_eq target
+          let target_left_eq ← to_expr ` `( $ ( targ_lhs ) - $ ( targ_rhs ) = 0 )
+          mk_app ` ` all_on_left_equiv [ targ_lhs , targ_rhs ] >>= replace_target target_left_eq
 #align linear_combo.move_target_to_left_side linear_combo.move_target_to_left_side
 
 /-! ### Part 3: Matching the Linear Combination to the Target -/
@@ -267,7 +271,7 @@ This tactic only should be used when the target's type is an equality whose
 * Output: N/A
 -/
 unsafe def set_goal_to_hleft_sub_tleft (hsum_on_left : expr) : tactic Unit := do
-  to_expr (pquote.1 (eq_zero_of_sub_eq_zero (%%ₓhsum_on_left))) >>= apply
+  to_expr ``(eq_zero_of_sub_eq_zero $(hsum_on_left)) >>= apply
   skip
 #align linear_combo.set_goal_to_hleft_sub_tleft linear_combo.set_goal_to_hleft_sub_tleft
 
@@ -311,7 +315,7 @@ Note: The left and right sides of all the equalities should have the same
 -/
 unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
     (config : linear_combination_config := {  }) : tactic Unit := do
-  let quote.1 (@Eq (%%ₓext) _ _) ← target |
+  let q(@Eq $(ext) _ _) ← target |
     fail "linear_combination can only be used to prove equality goals"
   let h_eqs ← h_eqs_names.mmap to_expr
   let hsum ← make_sum_of_hyps ext h_eqs coeffs
@@ -322,39 +326,44 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
 #align linear_combo.linear_combination linear_combo.linear_combination
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- `mk_mul [p₀, p₁, ..., pₙ]` produces the pexpr `p₀ * p₁ * ... * pₙ`. -/
-unsafe def mk_mul : List pexpr → pexpr
-  | [] => pquote.1 1
-  | [e] => e
-  | e::es => pquote.1 ((%%ₓe) * %%ₓmk_mul es)
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- `mk_mul [p₀, p₁, ..., pₙ]` produces the pexpr `p₀ * p₁ * ... * pₙ`. -/ unsafe
+  def mk_mul : List pexpr → pexpr | [ ] => ` `( 1 ) | [ e ] => e | e :: es => ` `( $ ( e ) * $ ( mk_mul es ) )
 #align linear_combo.mk_mul linear_combo.mk_mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- `as_linear_combo neg ms e` is used to parse the argument to `linear_combination`.
-This argument is a sequence of literals `x`, `-x`, or `c*x` combined with `+` or `-`,
-given by the pexpr `e`.
-The `neg` and `ms` arguments are used recursively; called at the top level, its usage should be
-`as_linear_combo ff [] e`.
--/
-unsafe def as_linear_combo : Bool → List pexpr → pexpr → List (pexpr × pexpr)
-  | neg, ms, e =>
-    let (head, args) := pexpr.get_app_fn_args e
-    match head.get_frozen_name, args with
-    | `` Add.add, [e1, e2] => as_linear_combo neg ms e1 ++ as_linear_combo neg ms e2
-    | `` Sub.sub, [e1, e2] => as_linear_combo neg ms e1 ++ as_linear_combo (not neg) ms e2
-    | `` Mul.mul, [e1, e2] => as_linear_combo neg (e1::ms) e2
-    | `` Div.div, [e1, e2] => as_linear_combo neg (pquote.1 (%%ₓe2)⁻¹::ms) e1
-    | `` Neg.neg, [e1] => as_linear_combo (not neg) ms e1
-    | _, _ =>
-      let m := mk_mul ms
-      [(e, if neg then pquote.1 (-%%ₓm) else m)]
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `as_linear_combo neg ms e` is used to parse the argument to `linear_combination`.
+      This argument is a sequence of literals `x`, `-x`, or `c*x` combined with `+` or `-`,
+      given by the pexpr `e`.
+      The `neg` and `ms` arguments are used recursively; called at the top level, its usage should be
+      `as_linear_combo ff [] e`.
+      -/
+    unsafe
+  def
+    as_linear_combo
+    : Bool → List pexpr → pexpr → List ( pexpr × pexpr )
+    |
+      neg , ms , e
+      =>
+      let
+        ( head , args ) := pexpr.get_app_fn_args e
+        match
+          head . get_frozen_name , args
+          with
+          | ` ` Add.add , [ e1 , e2 ] => as_linear_combo neg ms e1 ++ as_linear_combo neg ms e2
+            | ` ` Sub.sub , [ e1 , e2 ] => as_linear_combo neg ms e1 ++ as_linear_combo ( not neg ) ms e2
+            | ` ` Mul.mul , [ e1 , e2 ] => as_linear_combo neg ( e1 :: ms ) e2
+            | ` ` Div.div , [ e1 , e2 ] => as_linear_combo neg ( ` `( $ ( e2 ) ⁻¹ ) :: ms ) e1
+            | ` ` Neg.neg , [ e1 ] => as_linear_combo ( not neg ) ms e1
+            | _ , _ => let m := mk_mul ms [ ( e , if neg then ` `( - $ ( m ) ) else m ) ]
 #align linear_combo.as_linear_combo linear_combo.as_linear_combo
 
 section InteractiveMode
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `linear_combination` attempts to simplify the target by creating a linear combination
   of a list of equalities and subtracting it from the target.
   The tactic will create a linear

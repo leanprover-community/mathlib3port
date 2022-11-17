@@ -58,7 +58,7 @@ def set (a : α) : List α → ℕ → List α
 #align list.func.set List.Func.set
 
 -- mathport name: list.func.set
-localized [List.Func] notation as " {" m " ↦ " a "}" => List.Func.set a as m
+scoped notation as " {" m " ↦ " a "}" => List.Func.set a as m
 
 /-- Get element of a list by index. If the index is out of range, return the default element -/
 @[simp]

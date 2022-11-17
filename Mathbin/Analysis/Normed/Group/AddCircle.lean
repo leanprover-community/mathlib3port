@@ -54,7 +54,7 @@ theorem norm_coe_mul (x : ℝ) (t : ℝ) : ∥(↑(t * x) : AddCircle (t * p))�
   congr 1
   ext z
   rw [mem_smul_set_iff_inv_smul_mem₀ ht']
-  show (∃ y, y - t * x ∈ zmultiples (t * p) ∧ |y| = z) ↔ ∃ w, w - x ∈ zmultiples p ∧ |w| = (|t|)⁻¹ * z
+  show (∃ y, y - t * x ∈ zmultiples (t * p) ∧ |y| = z) ↔ ∃ w, w - x ∈ zmultiples p ∧ |w| = |t|⁻¹ * z
   constructor
   · rintro ⟨y, hy, rfl⟩
     refine' ⟨t⁻¹ * y, _, by rw [abs_mul, abs_inv]⟩
@@ -173,7 +173,7 @@ open Metric
 
 theorem closed_ball_eq_univ_of_half_period_le (hp : p ≠ 0) (x : AddCircle p) {ε : ℝ} (hε : |p| / 2 ≤ ε) :
     closedBall x ε = univ :=
-  eq_univ_iff_forall.mpr fun x => by
+  eq_univ_iff_forall.mpr $ fun x => by
     simpa only [mem_closed_ball, dist_eq_norm] using (norm_le_half_period p hp).trans hε
 #align add_circle.closed_ball_eq_univ_of_half_period_le AddCircle.closed_ball_eq_univ_of_half_period_le
 
@@ -193,7 +193,7 @@ theorem coe_real_preimage_closed_ball_eq_Union (x ε : ℝ) :
     QuotientAddGroup.coe_sub, norm_eq, ← sub_sub]
   refine' ⟨fun h => ⟨round (p⁻¹ * (y - x)), h⟩, _⟩
   rintro ⟨n, hn⟩
-  rw [← mul_le_mul_left (abs_pos.mpr <| inv_ne_zero hp), ← abs_mul, mul_sub, mul_comm _ p, inv_mul_cancel_left₀ hp] at
+  rw [← mul_le_mul_left (abs_pos.mpr $ inv_ne_zero hp), ← abs_mul, mul_sub, mul_comm _ p, inv_mul_cancel_left₀ hp] at
     hn⊢
   exact (round_le (p⁻¹ * (y - x)) n).trans hn
 #align add_circle.coe_real_preimage_closed_ball_eq_Union AddCircle.coe_real_preimage_closed_ball_eq_Union
@@ -205,7 +205,7 @@ theorem coe_real_preimage_closed_ball_inter_eq {x ε : ℝ} (s : Set ℝ) (hs : 
     · simp only [abs_zero, zero_div] at hε
       simp only [not_lt.mpr hε, coe_real_preimage_closed_ball_period_zero, abs_zero, zero_div, if_false,
         inter_eq_right_iff_subset]
-      exact hs.trans (closed_ball_subset_closed_ball <| by simp [hε])
+      exact hs.trans (closed_ball_subset_closed_ball $ by simp [hε])
       
     simp [closed_ball_eq_univ_of_half_period_le p hp (↑x) hε, not_lt.mpr hε]
     

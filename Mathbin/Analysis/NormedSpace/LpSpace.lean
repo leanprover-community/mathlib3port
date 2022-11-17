@@ -173,7 +173,7 @@ theorem neg_iff {f : ∀ i, E i} : Memℓp (-f) p ↔ Memℓp f p :=
   ⟨fun h => neg_neg f ▸ h.neg, Memℓp.neg⟩
 #align mem_ℓp.neg_iff Memℓp.neg_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset) -/
 theorem ofExponentGe {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hpq : q ≤ p) : Memℓp f p := by
   rcases Ennreal.trichotomy₂ hpq with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, hp⟩ | ⟨rfl, rfl⟩ | ⟨hq, rfl⟩ | ⟨hq, hp, hpq'⟩)
   · exact hfq
@@ -383,9 +383,12 @@ theorem coe_fn_add (f g : lp E p) : ⇑(f + g) = f + g :=
 #align lp.coe_fn_add lp.coe_fn_add
 
 @[simp]
-theorem coe_fn_sum {ι : Type _} (f : ι → lp E p) (s : Finset ι) : ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by
-  classical refine' Finset.induction _ _ s
-    intro i s his
+theorem coe_fn_sum {ι : Type _} (f : ι → lp E p) (s : Finset ι) : ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by classical
+  refine' Finset.induction _ _ s
+  · simp
+    
+  intro i s his
+  simp [Finset.sum_insert his]
 #align lp.coe_fn_sum lp.coe_fn_sum
 
 @[simp]
@@ -467,26 +470,35 @@ theorem norm_zero : ∥(0 : lp E p)∥ = 0 := by
     
 #align lp.norm_zero lp.norm_zero
 
-theorem norm_eq_zero_iff {f : lp E p} : ∥f∥ = 0 ↔ f = 0 := by
-  classical refine'
-      ⟨fun h => _, by
-        rintro rfl
-        exact norm_zero⟩
-    · ext i
-      have : { i : α | ¬f i = 0 } = ∅ := by simpa [lp.norm_eq_card_dsupport f] using h
-      have : (¬f i = 0) = False := congr_fun this i
-      tauto
+theorem norm_eq_zero_iff {f : lp E p} : ∥f∥ = 0 ↔ f = 0 := by classical
+  refine'
+    ⟨fun h => _, by
+      rintro rfl
+      exact norm_zero⟩
+  rcases p.trichotomy with (rfl | rfl | hp)
+  · ext i
+    have : { i : α | ¬f i = 0 } = ∅ := by simpa [lp.norm_eq_card_dsupport f] using h
+    have : (¬f i = 0) = False := congr_fun this i
+    tauto
+    
+  · cases' isEmpty_or_nonempty α with _i _i <;> skip
+    · simp
       
-    · have hf : HasSum (fun i : α => ∥f i∥ ^ p.to_real) 0 := by
-        have := lp.has_sum_norm hp f
-        rwa [h, Real.zero_rpow hp.ne'] at this
-      have : ∀ i, 0 ≤ ∥f i∥ ^ p.to_real := fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
-      rw [has_sum_zero_iff_of_nonneg this] at hf
-      ext i
-      have : f i = 0 ∧ p.to_real ≠ 0 := by
-        simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_fun hf i
-      exact this.1
-      
+    have H : IsLub (Set.range fun i => ∥f i∥) 0 := by simpa [h] using lp.is_lub_norm f
+    ext i
+    have : ∥f i∥ = 0 := le_antisymm (H.1 ⟨i, rfl⟩) (norm_nonneg _)
+    simpa using this
+    
+  · have hf : HasSum (fun i : α => ∥f i∥ ^ p.to_real) 0 := by
+      have := lp.has_sum_norm hp f
+      rwa [h, Real.zero_rpow hp.ne'] at this
+    have : ∀ i, 0 ≤ ∥f i∥ ^ p.to_real := fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+    rw [has_sum_zero_iff_of_nonneg this] at hf
+    ext i
+    have : f i = 0 ∧ p.to_real ≠ 0 := by
+      simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_fun hf i
+    exact this.1
+    
 #align lp.norm_eq_zero_iff lp.norm_eq_zero_iff
 
 theorem eq_zero_iff_coe_fn_eq_zero {f : lp E p} : f = 0 ↔ ⇑f = 0 := by rw [lp.ext_iff, coe_fn_zero]
@@ -727,7 +739,7 @@ instance :
     ext
     simp
 
-instance : StarAddMonoid (lp E p) where star_add f g := ext <| star_add _ _
+instance : StarAddMonoid (lp E p) where star_add f g := ext $ star_add _ _
 
 instance [hp : Fact (1 ≤ p)] :
     NormedStarGroup (lp E p) where norm_star f := by
@@ -745,7 +757,7 @@ variable {𝕜 : Type _} [HasStar 𝕜] [NormedField 𝕜]
 
 variable [∀ i, NormedSpace 𝕜 (E i)] [∀ i, StarModule 𝕜 (E i)]
 
-instance : StarModule 𝕜 (lp E p) where star_smul r f := ext <| star_smul _ _
+instance : StarModule 𝕜 (lp E p) where star_smul r f := ext $ star_smul _ _
 
 end NormedStarGroup
 
@@ -789,12 +801,12 @@ instance : NonUnitalNormedRing (lp B ∞) :=
 -- we also want a `non_unital_normed_comm_ring` instance, but this has to wait for #13719
 instance infty_is_scalar_tower {𝕜} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (B i)] [∀ i, IsScalarTower 𝕜 (B i) (B i)] :
     IsScalarTower 𝕜 (lp B ∞) (lp B ∞) :=
-  ⟨fun r f g => lp.ext <| smul_assoc r (⇑f) ⇑g⟩
+  ⟨fun r f g => lp.ext $ smul_assoc r (⇑f) ⇑g⟩
 #align lp.infty_is_scalar_tower lp.infty_is_scalar_tower
 
 instance infty_smul_comm_class {𝕜} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (B i)] [∀ i, SmulCommClass 𝕜 (B i) (B i)] :
     SmulCommClass 𝕜 (lp B ∞) (lp B ∞) :=
-  ⟨fun r f g => lp.ext <| smul_comm r (⇑f) ⇑g⟩
+  ⟨fun r f g => lp.ext $ smul_comm r (⇑f) ⇑g⟩
 #align lp.infty_smul_comm_class lp.infty_smul_comm_class
 
 section StarRing
@@ -805,7 +817,7 @@ instance inftyStarRing : StarRing (lp B ∞) :=
   { show StarAddMonoid (lp B ∞) by
       letI : ∀ i, StarAddMonoid (B i) := fun i => inferInstance
       infer_instance with
-    star_mul := fun f g => ext <| star_mul (_ : ∀ i, B i) _ }
+    star_mul := fun f g => ext $ star_mul (_ : ∀ i, B i) _ }
 #align lp.infty_star_ring lp.inftyStarRing
 
 instance inftyCstarRing [∀ i, CstarRing (B i)] :
@@ -925,7 +937,7 @@ variable [NormedField 𝕜] [∀ i, NormedRing (B i)] [∀ i, NormedAlgebra 𝕜
 
 /-- A variant of `pi.algebra` that lean can't find otherwise. -/
 instance _root_.pi.algebra_of_normed_algebra : Algebra 𝕜 (∀ i, B i) :=
-  (@Pi.algebra I 𝕜 B _ _) fun i => NormedAlgebra.toAlgebra
+  @Pi.algebra I 𝕜 B _ _ $ fun i => NormedAlgebra.toAlgebra
 #align lp._root_.pi.algebra_of_normed_algebra lp._root_.pi.algebra_of_normed_algebra
 
 instance _root_.pre_lp.algebra : Algebra 𝕜 (PreLp B) :=
@@ -1007,7 +1019,7 @@ protected theorem single_smul (p) (i : α) (a : E i) (c : 𝕜) : lp.single p i 
     
 #align lp.single_smul lp.single_smul
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr ∉ » s) -/
 protected theorem norm_sum_single (hp : 0 < p.toReal) (f : ∀ i, E i) (s : Finset α) :
     ∥∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' (has_sum_norm hp (∑ i in s, lp.single p i (f i))).unique _
@@ -1026,7 +1038,7 @@ protected theorem norm_single (hp : 0 < p.toReal) (f : ∀ i, E i) (i : α) : �
   simpa using lp.norm_sum_single hp f {i}
 #align lp.norm_single lp.norm_single
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr ∉ » s) -/
 protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     ∥f∥ ^ p.toReal - ∥f - ∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' ((has_sum_norm hp f).sub (has_sum_norm hp (f - ∑ i in s, lp.single p i (f i)))).unique _

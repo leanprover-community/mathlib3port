@@ -298,22 +298,22 @@ theorem mem_Ioo : x ∈ ioo a b ↔ a < x ∧ x < b :=
 
 @[simp, norm_cast]
 theorem coe_Icc (a b : α) : (icc a b : Set α) = Set.icc a b :=
-  Set.ext fun _ => mem_Icc
+  Set.ext $ fun _ => mem_Icc
 #align finset.coe_Icc Finset.coe_Icc
 
 @[simp, norm_cast]
 theorem coe_Ico (a b : α) : (ico a b : Set α) = Set.ico a b :=
-  Set.ext fun _ => mem_Ico
+  Set.ext $ fun _ => mem_Ico
 #align finset.coe_Ico Finset.coe_Ico
 
 @[simp, norm_cast]
 theorem coe_Ioc (a b : α) : (ioc a b : Set α) = Set.ioc a b :=
-  Set.ext fun _ => mem_Ioc
+  Set.ext $ fun _ => mem_Ioc
 #align finset.coe_Ioc Finset.coe_Ioc
 
 @[simp, norm_cast]
 theorem coe_Ioo (a b : α) : (ioo a b : Set α) = Set.ioo a b :=
-  Set.ext fun _ => mem_Ioo
+  Set.ext $ fun _ => mem_Ioo
 #align finset.coe_Ioo Finset.coe_Ioo
 
 end LocallyFiniteOrder
@@ -344,12 +344,12 @@ theorem mem_Ioi : x ∈ ioi a ↔ a < x :=
 
 @[simp, norm_cast]
 theorem coe_Ici (a : α) : (ici a : Set α) = Set.ici a :=
-  Set.ext fun _ => mem_Ici
+  Set.ext $ fun _ => mem_Ici
 #align finset.coe_Ici Finset.coe_Ici
 
 @[simp, norm_cast]
 theorem coe_Ioi (a : α) : (ioi a : Set α) = Set.ioi a :=
-  Set.ext fun _ => mem_Ioi
+  Set.ext $ fun _ => mem_Ioi
 #align finset.coe_Ioi Finset.coe_Ioi
 
 end LocallyFiniteOrderTop
@@ -380,12 +380,12 @@ theorem mem_Iio : x ∈ iio a ↔ x < a :=
 
 @[simp, norm_cast]
 theorem coe_Iic (a : α) : (iic a : Set α) = Set.iic a :=
-  Set.ext fun _ => mem_Iic
+  Set.ext $ fun _ => mem_Iic
 #align finset.coe_Iic Finset.coe_Iic
 
 @[simp, norm_cast]
 theorem coe_Iio (a : α) : (iio a : Set α) = Set.iio a :=
-  Set.ext fun _ => mem_Iio
+  Set.ext $ fun _ => mem_Iio
 #align finset.coe_Iio Finset.coe_Iio
 
 end LocallyFiniteOrderBot
@@ -681,7 +681,7 @@ instance : Subsingleton (LocallyFiniteOrder α) :=
     simp_rw [hIcc, hIco, hIoc, hIoo]
 
 instance : Subsingleton (LocallyFiniteOrderTop α) :=
-  Subsingleton.intro fun h₀ h₁ => by
+  Subsingleton.intro $ fun h₀ h₁ => by
     cases h₀
     cases h₁
     have hIci : h₀_finset_Ici = h₁_finset_Ici := by
@@ -693,7 +693,7 @@ instance : Subsingleton (LocallyFiniteOrderTop α) :=
     simp_rw [hIci, hIoi]
 
 instance : Subsingleton (LocallyFiniteOrderBot α) :=
-  Subsingleton.intro fun h₀ h₁ => by
+  Subsingleton.intro $ fun h₀ h₁ => by
     cases h₀
     cases h₁
     have hIic : h₀_finset_Iic = h₁_finset_Iic := by
@@ -952,29 +952,29 @@ instance : LocallyFiniteOrder (WithTop α) where
     | (a : α), (b : α) => (ioo a b).map Embedding.coeOption
   finset_mem_Icc a b x :=
     match a, b, x with
-    | ⊤, ⊤, x => mem_singleton.trans (le_antisymm_iff.trans <| and_comm' _ _)
-    | ⊤, (b : α), x => iff_of_false (not_mem_empty _) fun h => (h.1.trans h.2).not_lt <| coe_lt_top _
+    | ⊤, ⊤, x => mem_singleton.trans (le_antisymm_iff.trans $ and_comm' _ _)
+    | ⊤, (b : α), x => iff_of_false (not_mem_empty _) fun h => (h.1.trans h.2).not_lt $ coe_lt_top _
     | (a : α), ⊤, ⊤ => by simp [WithTop.LocallyFiniteOrder._match1]
     | (a : α), ⊤, (x : α) => by simp [WithTop.LocallyFiniteOrder._match1, coe_eq_coe]
     | (a : α), (b : α), ⊤ => by simp [WithTop.LocallyFiniteOrder._match1]
     | (a : α), (b : α), (x : α) => by simp [WithTop.LocallyFiniteOrder._match1, coe_eq_coe]
   finset_mem_Ico a b x :=
     match a, b, x with
-    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans_lt h.2
+    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt $ h.1.trans_lt h.2
     | (a : α), ⊤, ⊤ => by simp [WithTop.LocallyFiniteOrder._match2]
     | (a : α), ⊤, (x : α) => by simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_top]
     | (a : α), (b : α), ⊤ => by simp [WithTop.LocallyFiniteOrder._match2]
     | (a : α), (b : α), (x : α) => by simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_coe]
   finset_mem_Ioc a b x :=
     match a, b, x with
-    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans_le h.2
+    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt $ h.1.trans_le h.2
     | (a : α), ⊤, ⊤ => by simp [WithTop.LocallyFiniteOrder._match3, coe_lt_top]
     | (a : α), ⊤, (x : α) => by simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe]
     | (a : α), (b : α), ⊤ => by simp [WithTop.LocallyFiniteOrder._match3]
     | (a : α), (b : α), (x : α) => by simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe]
   finset_mem_Ioo a b x :=
     match a, b, x with
-    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans h.2
+    | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt $ h.1.trans h.2
     | (a : α), ⊤, ⊤ => by simp [WithTop.LocallyFiniteOrder._match4, coe_lt_top]
     | (a : α), ⊤, (x : α) => by simp [WithTop.LocallyFiniteOrder._match4, coe_eq_coe, coe_lt_coe, coe_lt_top]
     | (a : α), (b : α), ⊤ => by simp [WithTop.LocallyFiniteOrder._match4]

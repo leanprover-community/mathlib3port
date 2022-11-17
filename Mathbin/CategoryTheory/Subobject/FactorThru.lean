@@ -81,7 +81,7 @@ theorem mk_factors_self (f : X ⟶ Y) [Mono f] : (mk f).Factors f :=
 #align category_theory.subobject.mk_factors_self CategoryTheory.Subobject.mk_factors_self
 
 theorem factors_iff {X Y : C} (P : Subobject Y) (f : X ⟶ Y) : P.Factors f ↔ (representative.obj P).Factors f :=
-  (Quot.induction_on P) fun a => MonoOver.factors_congr _ (representativeIso _).symm
+  Quot.induction_on P $ fun a => MonoOver.factors_congr _ (representativeIso _).symm
 #align category_theory.subobject.factors_iff CategoryTheory.Subobject.factors_iff
 
 theorem factors_self {X : C} (P : Subobject X) : P.Factors P.arrow :=

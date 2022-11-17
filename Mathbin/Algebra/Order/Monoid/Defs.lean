@@ -45,23 +45,11 @@ attribute [to_additive] OrderedCommMonoid
 
 section OrderedInstances
 
-/- warning: ordered_comm_monoid.to_covariant_class_left -> OrderedCommMonoid.to_covariant_class_left is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u_1}) [_inst_1 : OrderedCommMonoid.{u_1} M], CovariantClass.{u_1 u_1} M M (HMul.hMul.{u_1 u_1 u_1} M M M (instHMul.{u_1} M (MulOneClass.toHasMul.{u_1} M (Monoid.toMulOneClass.{u_1} M (CommMonoid.toMonoid.{u_1} M (OrderedCommMonoid.toCommMonoid.{u_1} M _inst_1)))))) (LE.le.{u_1} M (Preorder.toLE.{u_1} M (PartialOrder.toPreorder.{u_1} M (OrderedCommMonoid.toPartialOrder.{u_1} M _inst_1))))
-but is expected to have type
-  forall (M : Type.{u_1}) [inst._@.Mathlib.Algebra.Order.Monoid._hyg.77 : OrderedCommMonoid.{u_1} M], CovariantClass.{u_1 u_1} M M (fun (x._@.Mathlib.Algebra.Order.Monoid._hyg.86 : M) (x._@.Mathlib.Algebra.Order.Monoid._hyg.88 : M) => HMul.hMul.{u_1 u_1 u_1} M M M (instHMul.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M (CommMonoid.toMonoid.{u_1} M (OrderedCommMonoid.toCommMonoid.{u_1} M inst._@.Mathlib.Algebra.Order.Monoid._hyg.77))))) x._@.Mathlib.Algebra.Order.Monoid._hyg.86 x._@.Mathlib.Algebra.Order.Monoid._hyg.88) (fun (x._@.Mathlib.Algebra.Order.Monoid._hyg.101 : M) (x._@.Mathlib.Algebra.Order.Monoid._hyg.103 : M) => LE.le.{u_1} M (Preorder.toLE.{u_1} M (PartialOrder.toPreorder.{u_1} M (OrderedCommMonoid.toPartialOrder.{u_1} M inst._@.Mathlib.Algebra.Order.Monoid._hyg.77))) x._@.Mathlib.Algebra.Order.Monoid._hyg.101 x._@.Mathlib.Algebra.Order.Monoid._hyg.103)
-Case conversion may be inaccurate. Consider using '#align ordered_comm_monoid.to_covariant_class_left OrderedCommMonoid.to_covariant_class_leftₓ'. -/
 @[to_additive]
 instance OrderedCommMonoid.to_covariant_class_left (M : Type _) [OrderedCommMonoid M] :
     CovariantClass M M (· * ·) (· ≤ ·) where elim a b c bc := OrderedCommMonoid.mul_le_mul_left _ _ bc a
 #align ordered_comm_monoid.to_covariant_class_left OrderedCommMonoid.to_covariant_class_left
 
-/- warning: ordered_comm_monoid.to_covariant_class_right -> OrderedCommMonoid.to_covariant_class_right is a dubious translation:
-lean 3 declaration is
-  forall (M : Type.{u_1}) [_inst_1 : OrderedCommMonoid.{u_1} M], CovariantClass.{u_1 u_1} M M (Function.swap.{succ u_1 succ u_1 succ u_1} M M (fun (ᾰ : M) (ᾰ : M) => M) (HMul.hMul.{u_1 u_1 u_1} M M M (instHMul.{u_1} M (MulOneClass.toHasMul.{u_1} M (Monoid.toMulOneClass.{u_1} M (CommMonoid.toMonoid.{u_1} M (OrderedCommMonoid.toCommMonoid.{u_1} M _inst_1))))))) (LE.le.{u_1} M (Preorder.toLE.{u_1} M (PartialOrder.toPreorder.{u_1} M (OrderedCommMonoid.toPartialOrder.{u_1} M _inst_1))))
-but is expected to have type
-  forall (M : Type.{u_1}) [inst._@.Mathlib.Algebra.Order.Monoid._hyg.137 : OrderedCommMonoid.{u_1} M], CovariantClass.{u_1 u_1} M M (Function.swap.{succ u_1 succ u_1 succ u_1} M M (fun (a._@.Mathlib.Algebra.CovariantAndContravariant._hyg.110 : M) (a._@.Mathlib.Algebra.CovariantAndContravariant._hyg.108 : M) => M) (fun (x._@.Mathlib.Algebra.Order.Monoid._hyg.149 : M) (x._@.Mathlib.Algebra.Order.Monoid._hyg.151 : M) => HMul.hMul.{u_1 u_1 u_1} M M M (instHMul.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M (CommMonoid.toMonoid.{u_1} M (OrderedCommMonoid.toCommMonoid.{u_1} M inst._@.Mathlib.Algebra.Order.Monoid._hyg.137))))) x._@.Mathlib.Algebra.Order.Monoid._hyg.149 x._@.Mathlib.Algebra.Order.Monoid._hyg.151)) (fun (x._@.Mathlib.Algebra.Order.Monoid._hyg.164 : M) (x._@.Mathlib.Algebra.Order.Monoid._hyg.166 : M) => LE.le.{u_1} M (Preorder.toLE.{u_1} M (PartialOrder.toPreorder.{u_1} M (OrderedCommMonoid.toPartialOrder.{u_1} M inst._@.Mathlib.Algebra.Order.Monoid._hyg.137))) x._@.Mathlib.Algebra.Order.Monoid._hyg.164 x._@.Mathlib.Algebra.Order.Monoid._hyg.166)
-Case conversion may be inaccurate. Consider using '#align ordered_comm_monoid.to_covariant_class_right OrderedCommMonoid.to_covariant_class_rightₓ'. -/
 /- This instance can be proven with `by apply_instance`.  However, `with_bot ℕ` does not
 pick up a `covariant_class M M (function.swap (*)) (≤)` instance without it (see PR #7940). -/
 @[to_additive]
@@ -70,7 +58,6 @@ instance OrderedCommMonoid.to_covariant_class_right (M : Type _) [OrderedCommMon
   covariant_swap_mul_le_of_covariant_mul_le M
 #align ordered_comm_monoid.to_covariant_class_right OrderedCommMonoid.to_covariant_class_right
 
-#print Mul.to_covariant_class_left /-
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
 `left_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (*) (≤)` implies
 `covariant_class M M (*) (<)`, see `left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le`. -/
@@ -79,9 +66,7 @@ theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [PartialOrder M] [Covar
     CovariantClass M M (· * ·) (· ≤ ·) :=
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 #align has_mul.to_covariant_class_left Mul.to_covariant_class_left
--/
 
-#print Mul.to_covariant_class_right /-
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
 `right_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (swap (*)) (<)`
 implies `covariant_class M M (swap (*)) (≤)`, see
@@ -91,7 +76,6 @@ theorem Mul.to_covariant_class_right (M : Type _) [Mul M] [PartialOrder M] [Cova
     CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 #align has_mul.to_covariant_class_right Mul.to_covariant_class_right
--/
 
 end OrderedInstances
 

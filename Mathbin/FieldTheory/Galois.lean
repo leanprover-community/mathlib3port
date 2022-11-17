@@ -244,9 +244,17 @@ def fixingSubgroupEquiv : fixingSubgroup K ≃* E ≃ₐ[K] E where
 
 theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixingSubgroup (fixedField H) = H := by
   have H_le : H ≤ fixingSubgroup (fixed_field H) := (le_iff_le _ _).mp le_rfl
-  classical suffices : Fintype.card H = Fintype.card (fixingSubgroup (fixed_field H))
-    apply Fintype.card_congr
-    refine' (algEquivEquivAlgHom (fixed_field H) E).toEquiv.symm.trans _
+  classical
+  suffices Fintype.card H = Fintype.card (fixingSubgroup (fixed_field H)) by
+    exact
+      SetLike.coe_injective
+        (Set.eq_of_inclusion_surjective
+            ((Fintype.bijective_iff_injective_and_card (Set.inclusion H_le)).mpr
+                ⟨Set.inclusion_injective H_le, this⟩).2).symm
+  apply Fintype.card_congr
+  refine' (FixedPoints.toAlgHomEquiv H E).trans _
+  refine' (algEquivEquivAlgHom (fixed_field H) E).toEquiv.symm.trans _
+  exact (fixing_subgroup_equiv (fixed_field H)).toEquiv.symm
 #align intermediate_field.fixing_subgroup_fixed_field IntermediateField.fixing_subgroup_fixed_field
 
 instance fixedField.algebra : Algebra K (fixedField (fixingSubgroup K)) where
@@ -275,8 +283,10 @@ theorem fixed_field_fixing_subgroup [FiniteDimensional F E] [h : IsGalois F E] :
     (IntermediateField.le_iff_le _ _).mpr le_rfl
   suffices finrank K E = finrank (IntermediateField.fixedField (IntermediateField.fixingSubgroup K)) E by
     exact (IntermediateField.eq_of_le_of_finrank_eq' K_le this).symm
-  classical rw [IntermediateField.finrank_fixed_field_eq_card,
-      Fintype.card_congr (IntermediateField.fixingSubgroupEquiv K).toEquiv]
+  classical
+  rw [IntermediateField.finrank_fixed_field_eq_card,
+    Fintype.card_congr (IntermediateField.fixingSubgroupEquiv K).toEquiv]
+  exact (card_aut_eq_finrank K E).symm
 #align is_galois.fixed_field_fixing_subgroup IsGalois.fixed_field_fixing_subgroup
 
 theorem card_fixing_subgroup_eq_finrank [DecidablePred (· ∈ IntermediateField.fixingSubgroup K)] [FiniteDimensional F E]
@@ -354,13 +364,15 @@ theorem ofFixedFieldEqBot [FiniteDimensional F E] (h : IntermediateField.fixedFi
 theorem ofCardAutEqFinrank [FiniteDimensional F E] (h : Fintype.card (E ≃ₐ[F] E) = finrank F E) : IsGalois F E := by
   apply of_fixed_field_eq_bot
   have p : 0 < finrank (IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E))) E := finrank_pos
-  classical rw [← IntermediateField.finrank_eq_one_iff, ← mul_left_inj' (ne_of_lt p).symm, finrank_mul_finrank, ← h,
-      one_mul, IntermediateField.finrank_fixed_field_eq_card]
-    exact
-      { toFun := fun g => ⟨g, Subgroup.mem_top g⟩, invFun := coe, left_inv := fun g => rfl,
-        right_inv := fun _ => by
-          ext
-          rfl }
+  classical
+  rw [← IntermediateField.finrank_eq_one_iff, ← mul_left_inj' (ne_of_lt p).symm, finrank_mul_finrank, ← h, one_mul,
+    IntermediateField.finrank_fixed_field_eq_card]
+  apply Fintype.card_congr
+  exact
+    { toFun := fun g => ⟨g, Subgroup.mem_top g⟩, invFun := coe, left_inv := fun g => rfl,
+      right_inv := fun _ => by
+        ext
+        rfl }
 #align is_galois.of_card_aut_eq_finrank IsGalois.ofCardAutEqFinrank
 
 variable {F} {E} {p : F[X]}
@@ -385,8 +397,8 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
     apply minpoly.dvd
     rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← Polynomial.eval_map, ← IsScalarTower.algebra_map_eq]
     exact (Polynomial.mem_roots (Polynomial.map_ne_zero h1)).mp hx
-  let key_equiv : (K⟮⟯.restrictScalars F →ₐ[F] E) ≃ Σf : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) := by
-    change (K⟮⟯ →ₐ[F] E) ≃ Σf : K →ₐ[F] E, _
+  let key_equiv : (K⟮⟯.restrictScalars F →ₐ[F] E) ≃ Σ f : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) := by
+    change (K⟮⟯ →ₐ[F] E) ≃ Σ f : K →ₐ[F] E, _
     exact algHomEquivSigma
   haveI : ∀ f : K →ₐ[F] E, Fintype (@AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f)) := fun f => by
     apply Fintype.ofInjective (Sigma.mk f) fun _ _ H => eq_of_heq (Sigma.mk.inj H).2
@@ -457,36 +469,38 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Term.app `IsGalois [`F `E])
             ","
-            («term_=_»
+            (Init.Core.«term_=_»
              (Term.app
               `IntermediateField.fixedField
-              [(Term.paren
+              [(Term.typeAscription
                 "("
-                [(Order.BoundedOrder.«term⊤» "⊤")
-                 [(Term.typeAscription
-                   ":"
-                   [(Term.app `Subgroup [(Algebra.Algebra.Basic.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])])]]
+                (Order.BoundedOrder.«term⊤» "⊤")
+                ":"
+                [(Term.app `Subgroup [(Algebra.Algebra.Basic.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])]
                 ")")])
-             "="
+             " = "
              (Order.BoundedOrder.«term⊥» "⊥"))
             ","
-            («term_=_»
+            (Init.Core.«term_=_»
              (Term.app `Fintype.card [(Algebra.Algebra.Basic.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])
-             "="
+             " = "
              (Term.app `finrank [`F `E]))
             ","
-            («term∃_,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.explicitBinders
-              (Lean.unbracketedExplicitBinders
-               [(Lean.binderIdent `p)]
-               [":" (Polynomial.Data.Polynomial.Basic.polynomial `F "[X]")]))
-             ","
-             («term_∧_» (Term.proj `p "." `Separable) "∧" (Term.app (Term.proj `p "." `IsSplittingField) [`F `E])))]
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `p)
+               [(group ":" (Polynomial.Data.Polynomial.Basic.polynomial `F "[X]"))]))
+             ", "
+             (Init.Logic.«term_∧_»
+              (Term.proj `p "." `Separable)
+              " ∧ "
+              (Term.app (Term.proj `p "." `IsSplittingField) [`F `E])))]
            "]")])))
       (Command.declValSimple
        ":="

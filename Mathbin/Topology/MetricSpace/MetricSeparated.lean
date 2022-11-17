@@ -20,11 +20,11 @@ open Emetric Set
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (r «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (r «expr ≠ » 0) -/
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
-  ∃ (r : _)(_ : r ≠ 0), ∀ x ∈ s, ∀ y ∈ t, r ≤ edist x y
+  ∃ (r) (_ : r ≠ 0), ∀ x ∈ s, ∀ y ∈ t, r ≤ edist x y
 #align is_metric_separated IsMetricSeparated
 
 namespace IsMetricSeparated
@@ -53,7 +53,7 @@ theorem emptyRight (s : Set X) : IsMetricSeparated s ∅ :=
 
 protected theorem disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
   let ⟨r, r0, hr⟩ := h
-  Set.disjoint_left.mpr fun x hx1 hx2 => r0 <| by simpa using hr x hx1 x hx2
+  Set.disjoint_left.mpr $ fun x hx1 hx2 => r0 $ by simpa using hr x hx1 x hx2
 #align is_metric_separated.disjoint IsMetricSeparated.disjoint
 
 theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ := fun x hs ht => h.Disjoint.le_bot ⟨hs, ht⟩
@@ -95,7 +95,7 @@ theorem unionRight {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t'
 
 @[simp]
 theorem union_right_iff {t'} : IsMetricSeparated s (t ∪ t') ↔ IsMetricSeparated s t ∧ IsMetricSeparated s t' :=
-  comm.trans <| union_left_iff.trans <| and_congr comm comm
+  comm.trans $ union_left_iff.trans $ and_congr comm comm
 #align is_metric_separated.union_right_iff IsMetricSeparated.union_right_iff
 
 theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : ι → Set X} {t : Set X} :

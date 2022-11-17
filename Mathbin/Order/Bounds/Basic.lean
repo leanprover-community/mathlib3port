@@ -105,12 +105,12 @@ theorem top_mem_upper_bounds [OrderTop α] (s : Set α) : ⊤ ∈ upperBounds s 
 
 @[simp]
 theorem is_least_bot_iff [OrderBot α] : IsLeast s ⊥ ↔ ⊥ ∈ s :=
-  and_iff_left <| bot_mem_lower_bounds _
+  and_iff_left $ bot_mem_lower_bounds _
 #align is_least_bot_iff is_least_bot_iff
 
 @[simp]
 theorem is_greatest_top_iff [OrderTop α] : IsGreatest s ⊤ ↔ ⊤ ∈ s :=
-  and_iff_left <| top_mem_upper_bounds _
+  and_iff_left $ top_mem_upper_bounds _
 #align is_greatest_top_iff is_greatest_top_iff
 
 /-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` such that `x`
@@ -181,10 +181,10 @@ def IsGreatest.orderTop (h : IsGreatest s a) : OrderTop s where
 -/
 
 
-theorem upper_bounds_mono_set ⦃s t : Set α⦄ (hst : s ⊆ t) : upperBounds t ⊆ upperBounds s := fun b hb x h => hb <| hst h
+theorem upper_bounds_mono_set ⦃s t : Set α⦄ (hst : s ⊆ t) : upperBounds t ⊆ upperBounds s := fun b hb x h => hb $ hst h
 #align upper_bounds_mono_set upper_bounds_mono_set
 
-theorem lower_bounds_mono_set ⦃s t : Set α⦄ (hst : s ⊆ t) : lowerBounds t ⊆ lowerBounds s := fun b hb x h => hb <| hst h
+theorem lower_bounds_mono_set ⦃s t : Set α⦄ (hst : s ⊆ t) : lowerBounds t ⊆ lowerBounds s := fun b hb x h => hb $ hst h
 #align lower_bounds_mono_set lower_bounds_mono_set
 
 theorem upper_bounds_mono_mem ⦃a b⦄ (hab : a ≤ b) : a ∈ upperBounds s → b ∈ upperBounds s := fun ha x h =>
@@ -196,21 +196,21 @@ theorem lower_bounds_mono_mem ⦃a b⦄ (hab : a ≤ b) : b ∈ lowerBounds s �
 #align lower_bounds_mono_mem lower_bounds_mono_mem
 
 theorem upper_bounds_mono ⦃s t : Set α⦄ (hst : s ⊆ t) ⦃a b⦄ (hab : a ≤ b) : a ∈ upperBounds t → b ∈ upperBounds s :=
-  fun ha => upper_bounds_mono_set hst <| upper_bounds_mono_mem hab ha
+  fun ha => upper_bounds_mono_set hst $ upper_bounds_mono_mem hab ha
 #align upper_bounds_mono upper_bounds_mono
 
 theorem lower_bounds_mono ⦃s t : Set α⦄ (hst : s ⊆ t) ⦃a b⦄ (hab : a ≤ b) : b ∈ lowerBounds t → a ∈ lowerBounds s :=
-  fun hb => lower_bounds_mono_set hst <| lower_bounds_mono_mem hab hb
+  fun hb => lower_bounds_mono_set hst $ lower_bounds_mono_mem hab hb
 #align lower_bounds_mono lower_bounds_mono
 
 /-- If `s ⊆ t` and `t` is bounded above, then so is `s`. -/
 theorem BddAbove.mono ⦃s t : Set α⦄ (h : s ⊆ t) : BddAbove t → BddAbove s :=
-  nonempty.mono <| upper_bounds_mono_set h
+  nonempty.mono $ upper_bounds_mono_set h
 #align bdd_above.mono BddAbove.mono
 
 /-- If `s ⊆ t` and `t` is bounded below, then so is `s`. -/
 theorem BddBelow.mono ⦃s t : Set α⦄ (h : s ⊆ t) : BddBelow t → BddBelow s :=
-  nonempty.mono <| lower_bounds_mono_set h
+  nonempty.mono $ lower_bounds_mono_set h
 #align bdd_below.mono BddBelow.mono
 
 /-- If `a` is a least upper bound for sets `s` and `p`, then it is a least upper bound for any
@@ -236,11 +236,11 @@ theorem IsGreatest.mono (ha : IsGreatest s a) (hb : IsGreatest t b) (hst : s ⊆
 #align is_greatest.mono IsGreatest.mono
 
 theorem IsLub.mono (ha : IsLub s a) (hb : IsLub t b) (hst : s ⊆ t) : a ≤ b :=
-  hb.mono ha <| upper_bounds_mono_set hst
+  hb.mono ha $ upper_bounds_mono_set hst
 #align is_lub.mono IsLub.mono
 
 theorem IsGlb.mono (ha : IsGlb s a) (hb : IsGlb t b) (hst : s ⊆ t) : b ≤ a :=
-  hb.mono ha <| lower_bounds_mono_set hst
+  hb.mono ha $ lower_bounds_mono_set hst
 #align is_glb.mono IsGlb.mono
 
 theorem subset_lower_bounds_upper_bounds (s : Set α) : s ⊆ lowerBounds (upperBounds s) := fun x hx y hy => hy hx
@@ -271,7 +271,7 @@ theorem IsGreatest.is_lub (h : IsGreatest s a) : IsLub s a :=
 #align is_greatest.is_lub IsGreatest.is_lub
 
 theorem IsLub.upper_bounds_eq (h : IsLub s a) : upperBounds s = ici a :=
-  Set.ext fun b => ⟨fun hb => h.2 hb, fun hb => upper_bounds_mono_mem hb h.1⟩
+  Set.ext $ fun b => ⟨fun hb => h.2 hb, fun hb => upper_bounds_mono_mem hb h.1⟩
 #align is_lub.upper_bounds_eq IsLub.upper_bounds_eq
 
 theorem IsGlb.lower_bounds_eq (h : IsGlb s a) : lowerBounds s = iic a :=
@@ -349,7 +349,7 @@ theorem lower_bounds_union : lowerBounds (s ∪ t) = lowerBounds s ∩ lowerBoun
 #align lower_bounds_union lower_bounds_union
 
 theorem union_upper_bounds_subset_upper_bounds_inter : upperBounds s ∪ upperBounds t ⊆ upperBounds (s ∩ t) :=
-  union_subset (upper_bounds_mono_set <| inter_subset_left _ _) (upper_bounds_mono_set <| inter_subset_right _ _)
+  union_subset (upper_bounds_mono_set $ inter_subset_left _ _) (upper_bounds_mono_set $ inter_subset_right _ _)
 #align union_upper_bounds_subset_upper_bounds_inter union_upper_bounds_subset_upper_bounds_inter
 
 theorem union_lower_bounds_subset_lower_bounds_inter : lowerBounds s ∪ lowerBounds t ⊆ lowerBounds (s ∩ t) :=
@@ -368,22 +368,22 @@ theorem is_greatest_union_iff :
 
 /-- If `s` is bounded, then so is `s ∩ t` -/
 theorem BddAbove.inter_of_left (h : BddAbove s) : BddAbove (s ∩ t) :=
-  h.mono <| inter_subset_left s t
+  h.mono $ inter_subset_left s t
 #align bdd_above.inter_of_left BddAbove.inter_of_left
 
 /-- If `t` is bounded, then so is `s ∩ t` -/
 theorem BddAbove.inter_of_right (h : BddAbove t) : BddAbove (s ∩ t) :=
-  h.mono <| inter_subset_right s t
+  h.mono $ inter_subset_right s t
 #align bdd_above.inter_of_right BddAbove.inter_of_right
 
 /-- If `s` is bounded, then so is `s ∩ t` -/
 theorem BddBelow.inter_of_left (h : BddBelow s) : BddBelow (s ∩ t) :=
-  h.mono <| inter_subset_left s t
+  h.mono $ inter_subset_left s t
 #align bdd_below.inter_of_left BddBelow.inter_of_left
 
 /-- If `t` is bounded, then so is `s ∩ t` -/
 theorem BddBelow.inter_of_right (h : BddBelow t) : BddBelow (s ∩ t) :=
-  h.mono <| inter_subset_right s t
+  h.mono $ inter_subset_right s t
 #align bdd_below.inter_of_right BddBelow.inter_of_right
 
 /-- If `s` and `t` are bounded above sets in a `semilattice_sup`, then so is `s ∪ t`. -/
@@ -396,7 +396,7 @@ theorem BddAbove.union [SemilatticeSup γ] {s t : Set γ} : BddAbove s → BddAb
 
 /-- The union of two sets is bounded above if and only if each of the sets is. -/
 theorem bdd_above_union [SemilatticeSup γ] {s t : Set γ} : BddAbove (s ∪ t) ↔ BddAbove s ∧ BddAbove t :=
-  ⟨fun h => ⟨h.mono <| subset_union_left s t, h.mono <| subset_union_right s t⟩, fun h => h.1.union h.2⟩
+  ⟨fun h => ⟨h.mono $ subset_union_left s t, h.mono $ subset_union_right s t⟩, fun h => h.1.union h.2⟩
 #align bdd_above_union bdd_above_union
 
 theorem BddBelow.union [SemilatticeInf γ] {s t : Set γ} : BddBelow s → BddBelow t → BddBelow (s ∪ t) :=
@@ -412,8 +412,8 @@ theorem bdd_below_union [SemilatticeInf γ] {s t : Set γ} : BddBelow (s ∪ t) 
 then `a ⊔ b` is the least upper bound of `s ∪ t`. -/
 theorem IsLub.union [SemilatticeSup γ] {a b : γ} {s t : Set γ} (hs : IsLub s a) (ht : IsLub t b) :
     IsLub (s ∪ t) (a ⊔ b) :=
-  ⟨fun c h => h.casesOn (fun h => le_sup_of_le_left <| hs.left h) fun h => le_sup_of_le_right <| ht.left h, fun c hc =>
-    sup_le (hs.right fun d hd => hc <| Or.inl hd) (ht.right fun d hd => hc <| Or.inr hd)⟩
+  ⟨fun c h => h.casesOn (fun h => le_sup_of_le_left $ hs.left h) fun h => le_sup_of_le_right $ ht.left h, fun c hc =>
+    sup_le (hs.right $ fun d hd => hc $ Or.inl hd) (ht.right $ fun d hd => hc $ Or.inr hd)⟩
 #align is_lub.union IsLub.union
 
 /-- If `a` is the greatest lower bound of `s` and `b` is the greatest lower bound of `t`,
@@ -441,7 +441,7 @@ theorem IsLub.inter_Ici_of_mem [LinearOrder γ] {s : Set γ} {a b : γ} (ha : Is
     IsLub (s ∩ ici b) a :=
   ⟨fun x hx => ha.1 hx.1, fun c hc =>
     have hbc : b ≤ c := hc ⟨hb, le_rfl⟩
-    ha.2 fun x hx => ((le_total x b).elim fun hxb => hxb.trans hbc) fun hbx => hc ⟨hx, hbx⟩⟩
+    ha.2 $ fun x hx => ((le_total x b).elim fun hxb => hxb.trans hbc) $ fun hbx => hc ⟨hx, hbx⟩⟩
 #align is_lub.inter_Ici_of_mem IsLub.inter_Ici_of_mem
 
 theorem IsGlb.inter_Iic_of_mem [LinearOrder γ] {s : Set γ} {a b : γ} (ha : IsGlb s a) (hb : b ∈ s) :
@@ -515,7 +515,7 @@ theorem bdd_below_Ioi : BddBelow (ioi a) :=
 #align bdd_below_Ioi bdd_below_Ioi
 
 theorem lub_Iio_le (a : α) (hb : IsLub (Set.iio a) b) : b ≤ a :=
-  (is_lub_le_iff hb).mpr fun k hk => le_of_lt hk
+  (is_lub_le_iff hb).mpr $ fun k hk => le_of_lt hk
 #align lub_Iio_le lub_Iio_le
 
 theorem le_glb_Ioi (a : α) (hb : IsGlb (Set.ioi a) b) : a ≤ b :=
@@ -585,7 +585,7 @@ end
 
 
 theorem is_greatest_singleton : IsGreatest {a} a :=
-  ⟨mem_singleton a, fun x hx => le_of_eq <| eq_of_mem_singleton hx⟩
+  ⟨mem_singleton a, fun x hx => le_of_eq $ eq_of_mem_singleton hx⟩
 #align is_greatest_singleton is_greatest_singleton
 
 theorem is_least_singleton : IsLeast {a} a :=
@@ -760,7 +760,8 @@ theorem bdd_above_iff_subset_Iic : BddAbove s ↔ ∃ a, s ⊆ iic a :=
   Iff.rfl
 #align bdd_above_iff_subset_Iic bdd_above_iff_subset_Iic
 
-theorem bdd_below_bdd_above_iff_subset_Icc : BddBelow s ∧ BddAbove s ↔ ∃ a b, s ⊆ icc a b := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+theorem bdd_below_bdd_above_iff_subset_Icc : BddBelow s ∧ BddAbove s ↔ ∃ (a) (b), s ⊆ icc a b := by
   simp only [Ici_inter_Iic.symm, subset_inter_iff, bdd_below_iff_subset_Ici, bdd_above_iff_subset_Iic, exists_and_left,
     exists_and_right]
 #align bdd_below_bdd_above_iff_subset_Icc bdd_below_bdd_above_iff_subset_Icc
@@ -798,7 +799,7 @@ theorem is_glb_univ [Preorder γ] [OrderBot γ] : IsGlb (univ : Set γ) ⊥ :=
 
 @[simp]
 theorem NoMaxOrder.upper_bounds_univ [NoMaxOrder α] : upperBounds (univ : Set α) = ∅ :=
-  eq_empty_of_subset_empty fun b hb =>
+  eq_empty_of_subset_empty $ fun b hb =>
     let ⟨x, hx⟩ := exists_gt b
     not_le_of_lt hx (hb trivial)
 #align no_max_order.upper_bounds_univ NoMaxOrder.upper_bounds_univ
@@ -852,7 +853,7 @@ theorem is_lub_empty [Preorder γ] [OrderBot γ] : IsLub ∅ (⊥ : γ) :=
 
 theorem IsLub.nonempty [NoMinOrder α] (hs : IsLub s a) : s.Nonempty :=
   let ⟨a', ha'⟩ := exists_lt a
-  ne_empty_iff_nonempty.1 fun h => not_le_of_lt ha' <| hs.right <| by simp only [h, upper_bounds_empty]
+  ne_empty_iff_nonempty.1 $ fun h => not_le_of_lt ha' $ hs.right $ by simp only [h, upper_bounds_empty]
 #align is_lub.nonempty IsLub.nonempty
 
 theorem IsGlb.nonempty [NoMaxOrder α] (hs : IsGlb s a) : s.Nonempty :=
@@ -860,7 +861,7 @@ theorem IsGlb.nonempty [NoMaxOrder α] (hs : IsGlb s a) : s.Nonempty :=
 #align is_glb.nonempty IsGlb.nonempty
 
 theorem nonempty_of_not_bdd_above [ha : Nonempty α] (h : ¬BddAbove s) : s.Nonempty :=
-  (Nonempty.elim ha) fun x => (not_bdd_above_iff'.1 h x).imp fun a ha => ha.fst
+  Nonempty.elim ha $ fun x => (not_bdd_above_iff'.1 h x).imp $ fun a ha => ha.fst
 #align nonempty_of_not_bdd_above nonempty_of_not_bdd_above
 
 theorem nonempty_of_not_bdd_below [ha : Nonempty α] (h : ¬BddBelow s) : s.Nonempty :=
@@ -963,7 +964,7 @@ theorem is_greatest_pair [LinearOrder γ] {a b : γ} : IsGreatest {a, b} (max a 
 
 @[simp]
 theorem is_lub_lower_bounds : IsLub (lowerBounds s) a ↔ IsGlb s a :=
-  ⟨fun H => ⟨fun x hx => H.2 <| subset_upper_bounds_lower_bounds s hx, H.1⟩, IsGreatest.is_lub⟩
+  ⟨fun H => ⟨fun x hx => H.2 $ subset_upper_bounds_lower_bounds s hx, H.1⟩, IsGreatest.is_lub⟩
 #align is_lub_lower_bounds is_lub_lower_bounds
 
 @[simp]
@@ -1045,7 +1046,7 @@ theorem is_glb_lt_is_lub_of_ne (Ha : IsGlb s a) (Hb : IsLub s b) {x y} (Hx : x �
     a < b :=
   lt_iff_le_not_le.2
     ⟨lower_bounds_le_upper_bounds Ha.1 Hb.1 ⟨x, Hx⟩, fun hab =>
-      Hxy <| Set.subsingleton_of_is_lub_le_is_glb Ha Hb hab Hx Hy⟩
+      Hxy $ Set.subsingleton_of_is_lub_le_is_glb Ha Hb hab Hx Hy⟩
 #align is_glb_lt_is_lub_of_ne is_glb_lt_is_lub_of_ne
 
 end PartialOrder
@@ -1069,7 +1070,7 @@ theorem IsLub.exists_between (h : IsLub s a) (hb : b < a) : ∃ c ∈ s, b < c �
 
 theorem IsLub.exists_between' (h : IsLub s a) (h' : a ∉ s) (hb : b < a) : ∃ c ∈ s, b < c ∧ c < a :=
   let ⟨c, hcs, hbc, hca⟩ := h.exists_between hb
-  ⟨c, hcs, hbc, hca.lt_of_ne fun hac => h' <| hac ▸ hcs⟩
+  ⟨c, hcs, hbc, hca.lt_of_ne $ fun hac => h' $ hac ▸ hcs⟩
 #align is_lub.exists_between' IsLub.exists_between'
 
 theorem IsGlb.exists_between (h : IsGlb s a) (hb : a < b) : ∃ c ∈ s, a ≤ c ∧ c < b :=
@@ -1079,7 +1080,7 @@ theorem IsGlb.exists_between (h : IsGlb s a) (hb : a < b) : ∃ c ∈ s, a ≤ c
 
 theorem IsGlb.exists_between' (h : IsGlb s a) (h' : a ∉ s) (hb : a < b) : ∃ c ∈ s, a < c ∧ c < b :=
   let ⟨c, hcs, hac, hcb⟩ := h.exists_between hb
-  ⟨c, hcs, hac.lt_of_ne fun hac => h' <| hac.symm ▸ hcs, hcb⟩
+  ⟨c, hcs, hac.lt_of_ne $ fun hac => h' $ hac.symm ▸ hcs, hcb⟩
 #align is_glb.exists_between' IsGlb.exists_between'
 
 end LinearOrder
@@ -1298,12 +1299,12 @@ include h₀ h₁
 
 theorem mem_upper_bounds_image2 (ha : a ∈ upperBounds s) (hb : b ∈ upperBounds t) :
     f a b ∈ upperBounds (image2 f s t) :=
-  forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
+  forall_image2_iff.2 $ fun x hx y hy => (h₀ _ $ ha hx).trans $ h₁ _ $ hb hy
 #align mem_upper_bounds_image2 mem_upper_bounds_image2
 
 theorem mem_lower_bounds_image2 (ha : a ∈ lowerBounds s) (hb : b ∈ lowerBounds t) :
     f a b ∈ lowerBounds (image2 f s t) :=
-  forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
+  forall_image2_iff.2 $ fun x hx y hy => (h₀ _ $ ha hx).trans $ h₁ _ $ hb hy
 #align mem_lower_bounds_image2 mem_lower_bounds_image2
 
 theorem image2_upper_bounds_upper_bounds_subset :
@@ -1348,13 +1349,13 @@ include h₀ h₁
 
 theorem mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_lower_bounds (ha : a ∈ upperBounds s)
     (hb : b ∈ lowerBounds t) : f a b ∈ upperBounds (image2 f s t) :=
-  forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
+  forall_image2_iff.2 $ fun x hx y hy => (h₀ _ $ ha hx).trans $ h₁ _ $ hb hy
 #align
   mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_lower_bounds mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_lower_bounds
 
 theorem mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_upper_bounds (ha : a ∈ lowerBounds s)
     (hb : b ∈ upperBounds t) : f a b ∈ lowerBounds (image2 f s t) :=
-  forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
+  forall_image2_iff.2 $ fun x hx y hy => (h₀ _ $ ha hx).trans $ h₁ _ $ hb hy
 #align
   mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_upper_bounds mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_upper_bounds
 
@@ -1402,12 +1403,12 @@ include h₀ h₁
 
 theorem mem_upper_bounds_image2_of_mem_lower_bounds (ha : a ∈ lowerBounds s) (hb : b ∈ lowerBounds t) :
     f a b ∈ upperBounds (image2 f s t) :=
-  forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
+  forall_image2_iff.2 $ fun x hx y hy => (h₀ _ $ ha hx).trans $ h₁ _ $ hb hy
 #align mem_upper_bounds_image2_of_mem_lower_bounds mem_upper_bounds_image2_of_mem_lower_bounds
 
 theorem mem_lower_bounds_image2_of_mem_upper_bounds (ha : a ∈ upperBounds s) (hb : b ∈ upperBounds t) :
     f a b ∈ lowerBounds (image2 f s t) :=
-  forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
+  forall_image2_iff.2 $ fun x hx y hy => (h₀ _ $ ha hx).trans $ h₁ _ $ hb hy
 #align mem_lower_bounds_image2_of_mem_upper_bounds mem_lower_bounds_image2_of_mem_upper_bounds
 
 theorem image2_upper_bounds_upper_bounds_subset_upper_bounds_image2 :
@@ -1452,13 +1453,13 @@ include h₀ h₁
 
 theorem mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_upper_bounds (ha : a ∈ lowerBounds s)
     (hb : b ∈ upperBounds t) : f a b ∈ upperBounds (image2 f s t) :=
-  forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
+  forall_image2_iff.2 $ fun x hx y hy => (h₀ _ $ ha hx).trans $ h₁ _ $ hb hy
 #align
   mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_upper_bounds mem_upper_bounds_image2_of_mem_upper_bounds_of_mem_upper_bounds
 
 theorem mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_lower_bounds (ha : a ∈ upperBounds s)
     (hb : b ∈ lowerBounds t) : f a b ∈ lowerBounds (image2 f s t) :=
-  forall_image2_iff.2 fun x hx y hy => (h₀ _ <| ha hx).trans <| h₁ _ <| hb hy
+  forall_image2_iff.2 $ fun x hx y hy => (h₀ _ $ ha hx).trans $ h₁ _ $ hb hy
 #align
   mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_lower_bounds mem_lower_bounds_image2_of_mem_lower_bounds_of_mem_lower_bounds
 
@@ -1502,8 +1503,8 @@ end Image2
 
 theorem IsGlb.of_image [Preorder α] [Preorder β] {f : α → β} (hf : ∀ {x y}, f x ≤ f y ↔ x ≤ y) {s : Set α} {x : α}
     (hx : IsGlb (f '' s) (f x)) : IsGlb s x :=
-  ⟨fun y hy => hf.1 <| hx.1 <| mem_image_of_mem _ hy, fun y hy =>
-    hf.1 <| hx.2 <| Monotone.mem_lower_bounds_image (fun x y => hf.2) hy⟩
+  ⟨fun y hy => hf.1 $ hx.1 $ mem_image_of_mem _ hy, fun y hy =>
+    hf.1 $ hx.2 $ Monotone.mem_lower_bounds_image (fun x y => hf.2) hy⟩
 #align is_glb.of_image IsGlb.of_image
 
 theorem IsLub.of_image [Preorder α] [Preorder β] {f : α → β} (hf : ∀ {x y}, f x ≤ f y ↔ x ≤ y) {s : Set α} {x : α}
@@ -1512,10 +1513,16 @@ theorem IsLub.of_image [Preorder α] [Preorder β] {f : α → β} (hf : ∀ {x 
 #align is_lub.of_image IsLub.of_image
 
 theorem is_lub_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
-    IsLub s f ↔ ∀ a, IsLub (Function.eval a '' s) (f a) := by
-  classical refine' ⟨fun H a => ⟨(Function.monotone_eval a).mem_upper_bounds_image H.1, fun b hb => _⟩, fun H => ⟨_, _⟩⟩
-    · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
-      
+    IsLub s f ↔ ∀ a, IsLub (Function.eval a '' s) (f a) := by classical
+  refine' ⟨fun H a => ⟨(Function.monotone_eval a).mem_upper_bounds_image H.1, fun b hb => _⟩, fun H => ⟨_, _⟩⟩
+  · suffices : Function.update f a b ∈ upperBounds s
+    exact Function.update_same a b f ▸ H.2 this a
+    refine' fun g hg => le_update_iff.2 ⟨hb $ mem_image_of_mem _ hg, fun i hi => H.1 hg i⟩
+    
+  · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
+    
+  · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upper_bounds_image hg)
+    
 #align is_lub_pi is_lub_pi
 
 theorem is_glb_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
@@ -1532,15 +1539,15 @@ theorem is_lub_prod [Preorder α] [Preorder β] {s : Set (α × β)} (p : α × 
       fun H => ⟨_, _⟩⟩
   · suffices : (a, p.2) ∈ upperBounds s
     exact (H.2 this).1
-    exact fun q hq => ⟨ha <| mem_image_of_mem _ hq, (H.1 hq).2⟩
+    exact fun q hq => ⟨ha $ mem_image_of_mem _ hq, (H.1 hq).2⟩
     
   · suffices : (p.1, a) ∈ upperBounds s
     exact (H.2 this).2
-    exact fun q hq => ⟨(H.1 hq).1, ha <| mem_image_of_mem _ hq⟩
+    exact fun q hq => ⟨(H.1 hq).1, ha $ mem_image_of_mem _ hq⟩
     
-  · exact fun q hq => ⟨H.1.1 <| mem_image_of_mem _ hq, H.2.1 <| mem_image_of_mem _ hq⟩
+  · exact fun q hq => ⟨H.1.1 $ mem_image_of_mem _ hq, H.2.1 $ mem_image_of_mem _ hq⟩
     
-  · exact fun q hq => ⟨H.1.2 <| monotone_fst.mem_upper_bounds_image hq, H.2.2 <| monotone_snd.mem_upper_bounds_image hq⟩
+  · exact fun q hq => ⟨H.1.2 $ monotone_fst.mem_upper_bounds_image hq, H.2.2 $ monotone_snd.mem_upper_bounds_image hq⟩
     
 #align is_lub_prod is_lub_prod
 

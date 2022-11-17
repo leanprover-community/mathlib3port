@@ -19,8 +19,8 @@ namespace Nat
 
 /-- Infinitely many natural numbers are equal to `d` mod `n`. -/
 theorem frequently_modeq {n : ℕ} (h : n ≠ 0) (d : ℕ) : ∃ᶠ m in at_top, m ≡ d [MOD n] :=
-  ((tendsto_add_at_top_nat d).comp (tendsto_id.nsmul_at_top h.bot_lt)).Frequently <|
-    frequently_of_forall fun m => by simp [Nat.modeq_iff_dvd, ← sub_sub]
+  ((tendsto_add_at_top_nat d).comp (tendsto_id.nsmul_at_top h.bot_lt)).Frequently $
+    frequently_of_forall $ fun m => by simp [Nat.modeq_iff_dvd, ← sub_sub]
 #align nat.frequently_modeq Nat.frequently_modeq
 
 theorem frequently_mod_eq {d n : ℕ} (h : d < n) : ∃ᶠ m in at_top, m % n = d := by

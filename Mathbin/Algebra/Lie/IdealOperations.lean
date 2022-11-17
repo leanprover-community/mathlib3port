@@ -51,19 +51,19 @@ section LieIdealOperations
 /-- Given a Lie module `M` over a Lie algebra `L`, the set of Lie ideals of `L` acts on the set
 of submodules of `M`. -/
 instance hasBracket : Bracket (LieIdeal R L) (LieSubmodule R L M) :=
-  ⟨fun I N => lieSpan R L { m | ∃ (x : I)(n : N), ⁅(x : L), (n : M)⁆ = m }⟩
+  ⟨fun I N => lieSpan R L { m | ∃ (x : I) (n : N), ⁅(x : L), (n : M)⁆ = m }⟩
 #align lie_submodule.has_bracket LieSubmodule.hasBracket
 
-theorem lie_ideal_oper_eq_span : ⁅I, N⁆ = lieSpan R L { m | ∃ (x : I)(n : N), ⁅(x : L), (n : M)⁆ = m } :=
+theorem lie_ideal_oper_eq_span : ⁅I, N⁆ = lieSpan R L { m | ∃ (x : I) (n : N), ⁅(x : L), (n : M)⁆ = m } :=
   rfl
 #align lie_submodule.lie_ideal_oper_eq_span LieSubmodule.lie_ideal_oper_eq_span
 
 /-- See also `lie_submodule.lie_ideal_oper_eq_linear_span'` and
 `lie_submodule.lie_ideal_oper_eq_tensor_map_range`. -/
 theorem lie_ideal_oper_eq_linear_span :
-    (↑⁅I, N⁆ : Submodule R M) = Submodule.span R { m | ∃ (x : I)(n : N), ⁅(x : L), (n : M)⁆ = m } := by
+    (↑⁅I, N⁆ : Submodule R M) = Submodule.span R { m | ∃ (x : I) (n : N), ⁅(x : L), (n : M)⁆ = m } := by
   apply le_antisymm
-  · let s := { m : M | ∃ (x : ↥I)(n : ↥N), ⁅(x : L), (n : M)⁆ = m }
+  · let s := { m : M | ∃ (x : ↥I) (n : ↥N), ⁅(x : L), (n : M)⁆ = m }
     have aux : ∀ (y : L), ∀ m' ∈ Submodule.span R s, ⁅y, m'⁆ ∈ Submodule.span R s := by
       intro y m' hm'
       apply Submodule.span_induction hm'
@@ -97,7 +97,7 @@ theorem lie_ideal_oper_eq_linear_span :
 #align lie_submodule.lie_ideal_oper_eq_linear_span LieSubmodule.lie_ideal_oper_eq_linear_span
 
 theorem lie_ideal_oper_eq_linear_span' :
-    (↑⁅I, N⁆ : Submodule R M) = Submodule.span R { m | ∃ x ∈ I, ∃ n ∈ N, ⁅x, n⁆ = m } := by
+    (↑⁅I, N⁆ : Submodule R M) = Submodule.span R { m | ∃ (x ∈ I) (n ∈ N), ⁅x, n⁆ = m } := by
   rw [lie_ideal_oper_eq_linear_span]
   congr
   ext m

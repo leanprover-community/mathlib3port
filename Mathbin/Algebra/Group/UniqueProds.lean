@@ -53,8 +53,7 @@ theorem mt {G} [Mul G] {A B : Finset G} {a0 b0 : G} (h : UniqueMul A B a0 b0) :
 theorem subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
     Subsingleton { ab : G × G // ab.1 ∈ A ∧ ab.2 ∈ B ∧ ab.1 * ab.2 = a0 * b0 } :=
   ⟨fun ⟨⟨a, b⟩, ha, hb, ab⟩ ⟨⟨a', b'⟩, ha', hb', ab'⟩ =>
-    Subtype.ext <|
-      Prod.ext ((h ha hb ab).1.trans (h ha' hb' ab').1.symm) <| (h ha hb ab).2.trans (h ha' hb' ab').2.symm⟩
+    Subtype.ext $ Prod.ext ((h ha hb ab).1.trans (h ha' hb' ab').1.symm) $ (h ha hb ab).2.trans (h ha' hb' ab').2.symm⟩
 #align unique_mul.subsingleton UniqueMul.subsingleton
 
 @[to_additive]
@@ -66,11 +65,9 @@ theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) 
   rfl
 #align unique_mul.set_subsingleton UniqueMul.set_subsingleton
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
-theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
-    UniqueMul A B a0 b0 ↔ ∃! (ab : _)(_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = a0 * b0 :=
+theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) : UniqueMul A B a0 b0 ↔ ∃! ab ∈ A ×ˢ B, ab.1 * ab.2 = a0 * b0 :=
   ⟨fun _ => ⟨(a0, b0), ⟨Finset.mem_product.mpr ⟨aA, bB⟩, rfl, by simp⟩, by simpa⟩, fun h =>
     h.elim2
       (by
@@ -79,11 +76,11 @@ theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
         exact prod.mk.inj_iff.mp (J (x, y) (Finset.mk_mem_product hx hy) l))⟩
 #align unique_mul.iff_exists_unique UniqueMul.iff_exists_unique
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a0 b0) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
 theorem exists_iff_exists_exists_unique :
-    (∃ a0 b0 : G, a0 ∈ A ∧ b0 ∈ B ∧ UniqueMul A B a0 b0) ↔ ∃ g : G, ∃! (ab : _)(_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = g :=
+    (∃ (a0 : G) (b0 : G), a0 ∈ A ∧ b0 ∈ B ∧ UniqueMul A B a0 b0) ↔ ∃ g : G, ∃! ab ∈ A ×ˢ B, ab.1 * ab.2 = g :=
   ⟨fun ⟨a0, b0, hA, hB, h⟩ => ⟨_, (iff_exists_unique hA hB).mp h⟩, fun ⟨g, h⟩ => by
     have h' := h
     rcases h' with ⟨⟨a, b⟩, ⟨hab, rfl, -⟩, -⟩
@@ -144,7 +141,7 @@ finite subsets of `A` have the `unique_add` property, with respect to some eleme
 sum `A + B`. -/
 class UniqueSums (G) [Add G] : Prop where
   unique_add_of_nonempty :
-    ∀ {A B : Finset G} (hA : A.Nonempty) (hB : B.Nonempty), ∃ a0 ∈ A, ∃ b0 ∈ B, UniqueAdd A B a0 b0
+    ∀ {A B : Finset G} (hA : A.Nonempty) (hB : B.Nonempty), ∃ (a0 ∈ A) (b0 ∈ B), UniqueAdd A B a0 b0
 #align unique_sums UniqueSums
 
 /-- Let `G` be a Type with multiplication.  `unique_prods G` asserts that any two non-empty
@@ -152,7 +149,7 @@ finite subsets of `G` have the `unique_mul` property, with respect to some eleme
 product `A * B`. -/
 class UniqueProds (G) [Mul G] : Prop where
   unique_mul_of_nonempty :
-    ∀ {A B : Finset G} (hA : A.Nonempty) (hB : B.Nonempty), ∃ a0 ∈ A, ∃ b0 ∈ B, UniqueMul A B a0 b0
+    ∀ {A B : Finset G} (hA : A.Nonempty) (hB : B.Nonempty), ∃ (a0 ∈ A) (b0 ∈ B), UniqueMul A B a0 b0
 #align unique_prods UniqueProds
 
 attribute [to_additive] UniqueProds

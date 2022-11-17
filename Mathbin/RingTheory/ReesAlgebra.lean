@@ -115,14 +115,17 @@ theorem adjoin_monomial_eq_rees_algebra :
 
 variable {I}
 
-theorem reesAlgebra.fg (hI : I.Fg) : (reesAlgebra I).Fg := by
-  classical obtain ⟨s, hs⟩ := hI
-    use s.image (monomial 1)
-    change _ = Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
+theorem reesAlgebra.fg (hI : I.Fg) : (reesAlgebra I).Fg := by classical
+  obtain ⟨s, hs⟩ := hI
+  rw [← adjoin_monomial_eq_rees_algebra, ← hs]
+  use s.image (monomial 1)
+  rw [Finset.coe_image]
+  change _ = Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
+  rw [Submodule.map_span, Algebra.adjoin_span]
 #align rees_algebra.fg reesAlgebra.fg
 
 instance [IsNoetherianRing R] : Algebra.FiniteType R (reesAlgebra I) :=
-  ⟨(reesAlgebra I).fg_top.mpr (reesAlgebra.fg <| IsNoetherian.noetherian I)⟩
+  ⟨(reesAlgebra I).fg_top.mpr (reesAlgebra.fg $ IsNoetherian.noetherian I)⟩
 
 instance [IsNoetherianRing R] : IsNoetherianRing (reesAlgebra I) :=
   Algebra.FiniteType.is_noetherian_ring R _

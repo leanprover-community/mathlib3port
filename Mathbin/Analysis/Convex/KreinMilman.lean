@@ -79,7 +79,7 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
   · exact ⟨s, ⟨hsnemp, hscomp.is_closed, IsExtreme.rfl⟩, fun _ => False.elim⟩
     
   refine'
-    ⟨⋂₀ F, ⟨_, isClosedSInter fun t ht => (hFS ht).2.1, (is_extreme_sInter hFnemp) fun t ht => (hFS ht).2.2⟩,
+    ⟨⋂₀ F, ⟨_, isClosedSInter $ fun t ht => (hFS ht).2.1, is_extreme_sInter hFnemp $ fun t ht => (hFS ht).2.2⟩,
       fun t ht => sInter_subset_of_mem ht⟩
   haveI : Nonempty ↥F := hFnemp.to_subtype
   rw [sInter_eq_Inter]
@@ -93,7 +93,7 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
 /-- **Krein-Milman theorem**: In a LCTVS, any compact convex set is the closure of the convex hull
     of its extreme points. -/
 theorem closure_convex_hull_extreme_points (hscomp : IsCompact s) (hAconv : Convex ℝ s) :
-    closure (convexHull ℝ <| s.extremePoints ℝ) = s := by
+    closure (convexHull ℝ $ s.extremePoints ℝ) = s := by
   apply (closure_minimal (convex_hull_min extreme_points_subset hAconv) hscomp.is_closed).antisymm
   by_contra hs
   obtain ⟨x, hxA, hxt⟩ := not_subset.1 hs
@@ -101,7 +101,7 @@ theorem closure_convex_hull_extreme_points (hscomp : IsCompact s) (hAconv : Conv
   have h : IsExposed ℝ s ({ y ∈ s | ∀ z ∈ s, l z ≤ l y }) := fun _ => ⟨l, rfl⟩
   obtain ⟨z, hzA, hz⟩ := hscomp.exists_forall_ge ⟨x, hxA⟩ l.continuous.continuous_on
   obtain ⟨y, hy⟩ := (h.is_compact hscomp).has_extreme_point ⟨z, hzA, hz⟩
-  linarith [hlr _ (subset_closure <| subset_convex_hull _ _ <| h.is_extreme.extreme_points_subset_extreme_points hy),
+  linarith [hlr _ (subset_closure $ subset_convex_hull _ _ $ h.is_extreme.extreme_points_subset_extreme_points hy),
     hy.1.2 x hxA]
 #align closure_convex_hull_extreme_points closure_convex_hull_extreme_points
 

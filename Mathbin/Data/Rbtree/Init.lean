@@ -101,12 +101,12 @@ variable (lt : α → α → Prop) [DecidableRel lt]
 def ins : Rbnode α → α → Rbnode α
   | leaf, x => red_node leaf x leaf
   | red_node a y b, x =>
-    match CmpUsing lt x y with
+    match cmpUsing lt x y with
     | Ordering.lt => red_node (ins a x) y b
     | Ordering.eq => red_node a x b
     | Ordering.gt => red_node a y (ins b x)
   | black_node a y b, x =>
-    match CmpUsing lt x y with
+    match cmpUsing lt x y with
     | Ordering.lt => if a.getColor = red then balance1Node (ins a x) y b else black_node (ins a x) y b
     | Ordering.eq => black_node a x b
     | Ordering.gt => if b.getColor = red then balance2Node (ins b x) y a else black_node a y (ins b x)
@@ -144,12 +144,12 @@ variable [DecidableRel lt]
 def find : Rbnode α → α → Option α
   | leaf, x => none
   | red_node a y b, x =>
-    match CmpUsing lt x y with
+    match cmpUsing lt x y with
     | Ordering.lt => find a x
     | Ordering.eq => some y
     | Ordering.gt => find b x
   | black_node a y b, x =>
-    match CmpUsing lt x y with
+    match cmpUsing lt x y with
     | Ordering.lt => find a x
     | Ordering.eq => some y
     | Ordering.gt => find b x

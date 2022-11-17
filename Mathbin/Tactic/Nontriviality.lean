@@ -19,23 +19,23 @@ attempting to discharge the subsingleton branch using lemmas with `@[nontriviali
 including `subsingleton.le` and `eq_iff_true_of_subsingleton`.
 -/
 unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_list) : tactic Unit := do
-  let alternative ← to_expr (pquote.1 (subsingleton_or_nontrivial (%%ₓα)))
+  let alternative ← to_expr ``(subsingleton_or_nontrivial $(α))
   let n ← get_unused_name "_inst"
   tactic.cases Alternative [n, n]
-  (solve1 <| do
+  (solve1 $ do
         reset_instance_cache
         apply_instance <|> interactive.simp none none ff lems [`nontriviality] (Interactive.Loc.ns [none])) <|>
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 #align tactic.nontriviality_by_elim tactic.nontriviality_by_elim
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/
 unsafe def nontriviality_by_assumption (α : expr) : tactic Unit := do
   let n ← get_unused_name "_inst"
-  to_expr (pquote.1 (Nontrivial (%%ₓα))) >>= assert n
+  to_expr ``(Nontrivial $(α)) >>= assert n
   apply_instance <|> sorry
   reset_instance_cache
 #align tactic.nontriviality_by_assumption tactic.nontriviality_by_assumption
@@ -46,8 +46,7 @@ namespace Tactic.Interactive
 
 open Tactic
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Attempts to generate a `nontrivial α` hypothesis.
 
 The tactic first looks for an instance using `apply_instance`.
@@ -106,22 +105,22 @@ unsafe def nontriviality (t : parse texpr ?) (lems : parse (tk "using" *> simp_a
       | none =>
         (do
             let t ← mk_mvar
-            let e ← to_expr (pquote.1 (@Eq (%%ₓt) _ _))
+            let e ← to_expr ``(@Eq $(t) _ _)
             target >>= unify e
             return t) <|>
           (do
               let t ← mk_mvar
-              let e ← to_expr (pquote.1 (@LE.le (%%ₓt) _ _ _))
+              let e ← to_expr ``(@LE.le $(t) _ _ _)
               target >>= unify e
               return t) <|>
             (do
                 let t ← mk_mvar
-                let e ← to_expr (pquote.1 (@Ne (%%ₓt) _ _))
+                let e ← to_expr ``(@Ne $(t) _ _)
                 target >>= unify e
                 return t) <|>
               (do
                   let t ← mk_mvar
-                  let e ← to_expr (pquote.1 (@LT.lt (%%ₓt) _ _ _))
+                  let e ← to_expr ``(@LT.lt $(t) _ _ _)
                   target >>= unify e
                   return t) <|>
                 fail

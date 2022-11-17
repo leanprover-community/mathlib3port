@@ -42,7 +42,7 @@ attribute [measurability]
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp` when appropriate.
 
 Applying `measurable.comp` is not always a good idea, so we have some
@@ -63,7 +63,7 @@ unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 #align tactic.apply_measurable.comp tactic.apply_measurable.comp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
 Applying `measurable.comp_ae_measurable` is not always a good idea, so we have some
@@ -90,19 +90,19 @@ or `measurable_set s`. This tactic tests the target to see if it matches that fo
 unsafe def goal_is_not_measurable : tactic Unit := do
   let t ← tactic.target
   match t with
-    | quote.1 (Measurable (%%ₓl)) => failed
-    | quote.1 (AeMeasurable (%%ₓl) (%%ₓr)) => failed
-    | quote.1 (MeasurableSet (%%ₓl)) => failed
+    | q(Measurable $(l)) => failed
+    | q(AeMeasurable $(l) $(r)) => failed
+    | q(MeasurableSet $(l)) => failed
     | _ => skip
 #align tactic.goal_is_not_measurable tactic.goal_is_not_measurable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- List of tactics used by `measurability` internally. The option `use_exfalso := ff` is passed to
 the tactic `apply_assumption` in order to avoid loops in the presence of negated hypotheses in
 the context. -/
 unsafe def measurability_tactics (md : Transparency := semireducible) : List (tactic String) :=
-  [(propositional_goal >> tactic.interactive.apply_assumption none { use_exfalso := false }) >>
+  [propositional_goal >> tactic.interactive.apply_assumption none { use_exfalso := false } >>
       pure "apply_assumption {use_exfalso := ff}",
     goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.toString),
     apply_rules [] [`` measurability] 50 { md } >> pure "apply_rules with measurability",
@@ -113,12 +113,11 @@ unsafe def measurability_tactics (md : Transparency := semireducible) : List (ta
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Solve goals of the form `measurable f`, `ae_measurable f μ`, `ae_strongly_measurable f μ` or
 `measurable_set s`. `measurability?` reports back the proof term it found.
 -/
-unsafe def measurability (bang : parse <| optional (tk "!")) (trace : parse <| optional (tk "?"))
+unsafe def measurability (bang : parse $ optional (tk "!")) (trace : parse $ optional (tk "?"))
     (cfg : tidy.cfg := {  }) : tactic Unit :=
   let md := if bang.isSome then semireducible else reducible
   let measurability_core := tactic.tidy { cfg with tactics := measurability_tactics md }

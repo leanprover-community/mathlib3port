@@ -334,7 +334,7 @@ Suppose we are given `f : X ≅ Y` with `X Y : Type u`.
 Without the lower priority, typeclass inference cannot deduce `is_iso f.hom`
 because `f.hom` is defeq to `(λ x, x) ≫ f.hom`, triggering a loop. -/
 instance (priority := 900) comp_is_iso [IsIso f] [IsIso h] : IsIso (f ≫ h) :=
-  is_iso.of_iso <| asIso f ≪≫ asIso h
+  is_iso.of_iso $ asIso f ≪≫ asIso h
 #align category_theory.is_iso.comp_is_iso CategoryTheory.IsIso.comp_is_iso
 
 @[simp]
@@ -544,11 +544,11 @@ theorem map_iso_trans (F : C ⥤ D) {X Y Z : C} (i : X ≅ Y) (j : Y ≅ Z) : F.
 
 @[simp]
 theorem map_iso_refl (F : C ⥤ D) (X : C) : F.mapIso (Iso.refl X) = Iso.refl (F.obj X) :=
-  iso.ext <| F.map_id X
+  iso.ext $ F.map_id X
 #align category_theory.functor.map_iso_refl CategoryTheory.Functor.map_iso_refl
 
 instance map_is_iso (F : C ⥤ D) (f : X ⟶ Y) [IsIso f] : IsIso (F.map f) :=
-  is_iso.of_iso <| F.mapIso (asIso f)
+  is_iso.of_iso $ F.mapIso (asIso f)
 #align category_theory.functor.map_is_iso CategoryTheory.Functor.map_is_iso
 
 @[simp]

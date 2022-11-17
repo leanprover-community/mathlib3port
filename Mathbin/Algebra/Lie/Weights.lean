@@ -253,7 +253,7 @@ theorem is_weight_zero_of_nilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] 
 /-- A (nilpotent) Lie algebra acts nilpotently on the zero weight space of a Noetherian Lie
 module. -/
 theorem is_nilpotent_to_endomorphism_weight_space_zero [LieAlgebra.IsNilpotent R L] [IsNoetherian R M] (x : L) :
-    _root_.is_nilpotent <| toEndomorphism R L (weightSpace M (0 : L → R)) x := by
+    _root_.is_nilpotent $ toEndomorphism R L (weightSpace M (0 : L → R)) x := by
   obtain ⟨k, hk⟩ := exists_pre_weight_space_zero_le_ker_of_is_noetherian R M x
   use k
   ext ⟨m, hm⟩
@@ -268,7 +268,7 @@ theorem is_nilpotent_to_endomorphism_weight_space_zero [LieAlgebra.IsNilpotent R
 Lie module is nilpotent. -/
 instance [LieAlgebra.IsNilpotent R L] [IsNoetherian R L] [IsNoetherian R M] :
     IsNilpotent R L (weightSpace M (0 : L → R)) :=
-  is_nilpotent_iff_forall.mpr <| is_nilpotent_to_endomorphism_weight_space_zero M
+  is_nilpotent_iff_forall.mpr $ is_nilpotent_to_endomorphism_weight_space_zero M
 
 end LieModule
 

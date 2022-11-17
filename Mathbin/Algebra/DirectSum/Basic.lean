@@ -40,7 +40,7 @@ instance [∀ i, AddCommMonoid (β i)] : CoeFun (DirectSum ι β) fun _ => ∀ i
   Dfinsupp.hasCoeToFun
 
 -- mathport name: direct_sum
-localized [DirectSum] notation3"⨁ "(...)", "r:(scoped f => DirectSum _ f) => r
+scoped[DirectSum] notation3"⨁ "(...)", "r:(scoped f => DirectSum _ f) => r
 
 namespace DirectSum
 
@@ -152,7 +152,7 @@ See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem add_hom_ext' {γ : Type _} [AddMonoid γ] ⦃f g : (⨁ i, β i) →+ γ⦄
     (H : ∀ i : ι, f.comp (of _ i) = g.comp (of _ i)) : f = g :=
-  add_hom_ext fun i => AddMonoidHom.congr_fun <| H i
+  add_hom_ext $ fun i => AddMonoidHom.congr_fun $ H i
 #align direct_sum.add_hom_ext' DirectSum.add_hom_ext'
 
 variable {γ : Type u₁} [AddCommMonoid γ]
@@ -187,7 +187,7 @@ induced by a family `φ` of homomorphisms `γ → β i`.
 
 Note that this is not an isomorphism. Not every homomorphism `γ →+ ⨁ i, β i` arises in this way. -/
 def fromAddMonoid : (⨁ i, γ →+ β i) →+ γ →+ ⨁ i, β i :=
-  to_add_monoid fun i => AddMonoidHom.compHom (of β i)
+  to_add_monoid $ fun i => AddMonoidHom.compHom (of β i)
 #align direct_sum.from_add_monoid DirectSum.fromAddMonoid
 
 @[simp]
@@ -208,7 +208,7 @@ variable (β)
 /-- `set_to_set β S T h` is the natural homomorphism `⨁ (i : S), β i → ⨁ (i : T), β i`,
 where `h : S ⊆ T`. -/
 def setToSet (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, β i) →+ ⨁ i : T, β i :=
-  to_add_monoid fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.Prop⟩
+  to_add_monoid $ fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.Prop⟩
 #align direct_sum.set_to_set DirectSum.setToSet
 
 variable {β}
@@ -271,21 +271,21 @@ variable {α : ι → Type u} {δ : ∀ i, α i → Type w} [∀ i j, AddCommMon
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
-noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j where
+noncomputable def sigmaCurry : (⨁ i : Σ i, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j where
   toFun := @Dfinsupp.sigmaCurry _ _ δ _
   map_zero' := Dfinsupp.sigma_curry_zero
   map_add' f g := @Dfinsupp.sigma_curry_add _ _ δ _ f g
 #align direct_sum.sigma_curry DirectSum.sigmaCurry
 
 @[simp]
-theorem sigma_curry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaCurry f i j = f ⟨i, j⟩ :=
+theorem sigma_curry_apply (f : ⨁ i : Σ i, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaCurry f i j = f ⟨i, j⟩ :=
   @Dfinsupp.sigma_curry_apply _ _ δ _ f i j
 #align direct_sum.sigma_curry_apply DirectSum.sigma_curry_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
-noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i.1 i.2 where
+noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σ i, _, δ i.1 i.2 where
   toFun := Dfinsupp.sigmaUncurry
   map_zero' := Dfinsupp.sigma_uncurry_zero
   map_add' := Dfinsupp.sigma_uncurry_add
@@ -299,7 +299,7 @@ theorem sigma_uncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sigm
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
-noncomputable def sigmaCurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃+ ⨁ (i) (j), δ i j :=
+noncomputable def sigmaCurryEquiv : (⨁ i : Σ i, _, δ i.1 i.2) ≃+ ⨁ (i) (j), δ i j :=
   { sigmaCurry, Dfinsupp.sigmaCurryEquiv with }
 #align direct_sum.sigma_curry_equiv DirectSum.sigmaCurryEquiv
 

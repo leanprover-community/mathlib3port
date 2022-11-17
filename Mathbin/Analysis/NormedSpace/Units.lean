@@ -59,7 +59,7 @@ def add (x : Rˣ) (t : R) (h : ∥t∥ < ∥(↑x⁻¹ : R)∥⁻¹) : Rˣ :=
           have hpos : 0 < ∥(↑x⁻¹ : R)∥ := Units.norm_pos x⁻¹
           calc
             ∥-(↑x⁻¹ * t)∥ = ∥↑x⁻¹ * t∥ := by rw [norm_neg]
-            _ ≤ ∥(↑x⁻¹ : R)∥ * ∥t∥ := norm_mul_le ↑x⁻¹ _
+            _ ≤ ∥(↑x⁻¹ : R)∥ * ∥t∥ := norm_mul_le (↑x⁻¹) _
             _ < ∥(↑x⁻¹ : R)∥ * ∥(↑x⁻¹ : R)∥⁻¹ := by nlinarith only [h, hpos]
             _ = 1 := mul_inv_cancel (ne_of_gt hpos)
             ))
@@ -95,7 +95,7 @@ namespace nonunits
 /-- The `nonunits` in a complete normed ring are contained in the complement of the ball of radius
 `1` centered at `1 : R`. -/
 theorem subset_compl_ball : nonunits R ⊆ Metric.ball (1 : R) 1ᶜ :=
-  Set.subset_compl_comm.mp fun x hx => by
+  Set.subset_compl_comm.mp $ fun x hx => by
     simpa [sub_sub_self, Units.coe_one_sub] using
       (Units.oneSub (1 - x) (by rwa [Metric.mem_ball, dist_eq_norm, norm_sub_rev] at hx)).IsUnit
 #align nonunits.subset_compl_ball nonunits.subset_compl_ball
@@ -270,7 +270,7 @@ theorem inverse_add_norm_diff_second_order (x : Rˣ) :
 /-- The function `inverse` is continuous at each unit of `R`. -/
 theorem inverse_continuous_at (x : Rˣ) : ContinuousAt inverse (x : R) := by
   have h_is_o : (fun t : R => inverse (↑x + t) - ↑x⁻¹) =o[𝓝 0] (fun _ => 1 : R → ℝ) :=
-    (inverse_add_norm_diff_first_order x).trans_is_o (is_o.norm_left <| is_o_id_const one_ne_zero)
+    (inverse_add_norm_diff_first_order x).trans_is_o (is_o.norm_left $ is_o_id_const one_ne_zero)
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) := by
     refine' tendsto_zero_iff_norm_tendsto_zero.mpr _
     exact tendsto_iff_norm_tendsto_zero.mp tendsto_id
@@ -318,7 +318,7 @@ namespace Ideal
 /-- An ideal which contains an element within `1` of `1 : R` is the unit ideal. -/
 theorem eq_top_of_norm_lt_one (I : Ideal R) {x : R} (hxI : x ∈ I) (hx : ∥1 - x∥ < 1) : I = ⊤ :=
   let u := Units.oneSub (1 - x) hx
-  I.eq_top_iff_one.mpr <| by simpa only [show u.inv * x = 1 by simp] using I.mul_mem_left u.inv hxI
+  I.eq_top_iff_one.mpr $ by simpa only [show u.inv * x = 1 by simp] using I.mul_mem_left u.inv hxI
 #align ideal.eq_top_of_norm_lt_one Ideal.eq_top_of_norm_lt_one
 
 /-- The `ideal.closure` of a proper ideal in a complete normed ring is proper. -/
@@ -334,7 +334,7 @@ theorem IsMaximal.closure_eq {I : Ideal R} (hI : I.IsMaximal) : I.closure = I :=
 
 /-- Maximal ideals in complete normed rings are closed. -/
 instance IsMaximal.isClosed {I : Ideal R} [hI : I.IsMaximal] : IsClosed (I : Set R) :=
-  isClosedOfClosureSubset <| Eq.subset <| congr_arg (coe : Ideal R → Set R) hI.closure_eq
+  isClosedOfClosureSubset $ Eq.subset $ congr_arg (coe : Ideal R → Set R) hI.closure_eq
 #align ideal.is_maximal.is_closed Ideal.IsMaximal.isClosed
 
 end Ideal

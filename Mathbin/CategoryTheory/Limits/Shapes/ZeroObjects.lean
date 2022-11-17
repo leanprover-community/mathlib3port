@@ -51,7 +51,7 @@ variable {X Y : C}
 
 /-- If `h : is_zero X`, then `h.to Y` is a choice of unique morphism `X → Y`. -/
 protected def to (h : IsZero X) (Y : C) : X ⟶ Y :=
-  @default (X ⟶ Y) <| @Unique.inhabited _ <| (h.unique_to Y).some
+  @default (X ⟶ Y) $ @Unique.inhabited _ $ (h.unique_to Y).some
 #align category_theory.limits.is_zero.to CategoryTheory.Limits.IsZero.to
 
 theorem eq_to (h : IsZero X) (f : X ⟶ Y) : f = h.to Y :=
@@ -64,7 +64,7 @@ theorem to_eq (h : IsZero X) (f : X ⟶ Y) : h.to Y = f :=
 
 /-- If `h : is_zero X`, then `h.from Y` is a choice of unique morphism `Y → X`. -/
 protected def from (h : IsZero X) (Y : C) : Y ⟶ X :=
-  @default (Y ⟶ X) <| @Unique.inhabited _ <| (h.unique_from Y).some
+  @default (Y ⟶ X) $ @Unique.inhabited _ $ (h.unique_from Y).some
 #align category_theory.limits.is_zero.from CategoryTheory.Limits.IsZero.from
 
 theorem eq_from (h : IsZero X) (f : Y ⟶ X) : f = h.from Y :=
@@ -93,12 +93,12 @@ def iso (hX : IsZero X) (hY : IsZero Y) : X ≅ Y where
 
 /-- A zero object is in particular initial. -/
 protected def isInitial (hX : IsZero X) : IsInitial X :=
-  (@IsInitial.ofUnique _ _ X) fun Y => (hX.unique_to Y).some
+  @IsInitial.ofUnique _ _ X $ fun Y => (hX.unique_to Y).some
 #align category_theory.limits.is_zero.is_initial CategoryTheory.Limits.IsZero.isInitial
 
 /-- A zero object is in particular terminal. -/
 protected def isTerminal (hX : IsZero X) : IsTerminal X :=
-  (@IsTerminal.ofUnique _ _ X) fun Y => (hX.unique_from Y).some
+  @IsTerminal.ofUnique _ _ X $ fun Y => (hX.unique_from Y).some
 #align category_theory.limits.is_zero.is_terminal CategoryTheory.Limits.IsZero.isTerminal
 
 /-- The (unique) isomorphism between any initial object and the zero object. -/
@@ -173,7 +173,7 @@ This can not be a global instance as it will trigger for every `has_zero C` type
 protected def HasZeroObject.hasZero : Zero C where zero := HasZeroObject.zero.some
 #align category_theory.limits.has_zero_object.has_zero CategoryTheory.Limits.HasZeroObject.hasZero
 
-localized [ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.hasZero
+scoped[ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.hasZero
 
 theorem is_zero_zero : IsZero (0 : C) :=
   HasZeroObject.zero.some_spec
@@ -215,9 +215,9 @@ protected def uniqueFrom (X : C) : Unique (X ⟶ 0) :=
   ((is_zero_zero C).unique_from X).some
 #align category_theory.limits.has_zero_object.unique_from CategoryTheory.Limits.HasZeroObject.uniqueFrom
 
-localized [ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.uniqueTo
+scoped[ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.uniqueTo
 
-localized [ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.uniqueFrom
+scoped[ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.uniqueFrom
 
 @[ext.1]
 theorem to_zero_ext {X : C} (f g : X ⟶ 0) : f = g :=

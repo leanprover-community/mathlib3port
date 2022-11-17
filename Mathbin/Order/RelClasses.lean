@@ -119,12 +119,12 @@ protected theorem IsAsymm.is_irrefl [IsAsymm α r] : IsIrrefl α r :=
 #align is_asymm.is_irrefl IsAsymm.is_irrefl
 
 protected theorem IsTotal.is_trichotomous (r) [IsTotal α r] : IsTrichotomous α r :=
-  ⟨fun a b => or_left_comm.1 (Or.inr <| total_of r a b)⟩
+  ⟨fun a b => or_left_comm.1 (Or.inr $ total_of r a b)⟩
 #align is_total.is_trichotomous IsTotal.is_trichotomous
 
 -- see Note [lower instance priority]
 instance (priority := 100) IsTotal.to_is_refl (r) [IsTotal α r] : IsRefl α r :=
-  ⟨fun a => (or_self_iff _).1 <| total_of r a a⟩
+  ⟨fun a => (or_self_iff _).1 $ total_of r a a⟩
 #align is_total.to_is_refl IsTotal.to_is_refl
 
 theorem ne_of_irrefl {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → x ≠ y
@@ -149,7 +149,7 @@ theorem empty_relation_apply (a b : α) : EmptyRelation a b ↔ False :=
 #align empty_relation_apply empty_relation_apply
 
 theorem eq_empty_relation (r) [IsIrrefl α r] [Subsingleton α] : r = EmptyRelation :=
-  funext₂ <| by simpa using not_rel_of_subsingleton r
+  funext₂ $ by simpa using not_rel_of_subsingleton r
 #align eq_empty_relation eq_empty_relation
 
 instance : IsIrrefl α EmptyRelation :=
@@ -181,7 +181,7 @@ theorem transitive_of_trans (r : α → α → Prop) [IsTrans α r] : Transitive
 /-- In a trichotomous irreflexive order, every element is determined by the set of predecessors. -/
 theorem extensional_of_trichotomous_of_irrefl (r : α → α → Prop) [IsTrichotomous α r] [IsIrrefl α r] {a b : α}
     (H : ∀ x, r x a ↔ r x b) : a = b :=
-  ((@trichotomous _ r _ a b).resolve_left <| mt (H _).2 <| irrefl a).resolve_right <| mt (H _).1 <| irrefl b
+  ((@trichotomous _ r _ a b).resolve_left $ mt (H _).2 $ irrefl a).resolve_right $ mt (H _).1 $ irrefl b
 #align extensional_of_trichotomous_of_irrefl extensional_of_trichotomous_of_irrefl
 
 /-- Construct a partial order from a `is_strict_order` relation.
@@ -204,14 +204,14 @@ def partialOrderOfSO (r) [IsStrictOrder α r] : PartialOrder α where
     | _, Or.inr h₁, Or.inr h₂ => (asymm h₁ h₂).elim
   lt_iff_le_not_le x y :=
     ⟨fun h => ⟨Or.inr h, not_or_of_not (fun e => by rw [e] at h <;> exact irrefl _ h) (asymm h)⟩, fun ⟨h₁, h₂⟩ =>
-      h₁.resolve_left fun e => h₂ <| e ▸ Or.inl rfl⟩
+      h₁.resolve_left fun e => h₂ $ e ▸ Or.inl rfl⟩
 #align partial_order_of_SO partialOrderOfSO
 
 /-- Construct a linear order from an `is_strict_total_order` relation.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def linearOrderOfSTO (r) [IsStrictTotalOrder α r] [∀ x y, Decidable ¬r x y] : LinearOrder α :=
+def linearOrderOfSTO (r) [IsStrictTotalOrder α r] [∀ x y, Decidable (¬r x y)] : LinearOrder α :=
   { partialOrderOfSO r with
     le_total := fun x y =>
       match y, trichotomous_of r x y with
@@ -241,7 +241,7 @@ class IsOrderConnected (α : Type u) (lt : α → α → Prop) : Prop where
 
 theorem IsOrderConnected.neg_trans {r : α → α → Prop} [IsOrderConnected α r] {a b c} (h₁ : ¬r a b) (h₂ : ¬r b c) :
     ¬r a c :=
-  mt (IsOrderConnected.conn a b c) <| by simp [h₁, h₂]
+  mt (IsOrderConnected.conn a b c) $ by simp [h₁, h₂]
 #align is_order_connected.neg_trans IsOrderConnected.neg_trans
 
 theorem is_strict_weak_order_of_is_order_connected [IsAsymm α r] [IsOrderConnected α r] : IsStrictWeakOrder α r :=
@@ -445,7 +445,7 @@ end WellFoundedGt
 
 /-- Construct a decidable linear order from a well-founded linear order. -/
 noncomputable def IsWellOrder.linearOrder (r : α → α → Prop) [IsWellOrder α r] : LinearOrder α :=
-  letI := fun x y => Classical.dec ¬r x y
+  letI := fun x y => Classical.dec (¬r x y)
   linearOrderOfSTO r
 #align is_well_order.linear_order IsWellOrder.linearOrder
 
@@ -457,7 +457,7 @@ def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] : HasW
 
 -- This isn't made into an instance as it loops with `is_irrefl α r`.
 theorem Subsingleton.is_well_order [Subsingleton α] (r : α → α → Prop) [hr : IsIrrefl α r] : IsWellOrder α r :=
-  { hr with trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elim a b,
+  { hr with trichotomous := fun a b => Or.inr $ Or.inl $ Subsingleton.elim a b,
     trans := fun a b c h => (not_rel_of_subsingleton r a b h).elim,
     wf := ⟨fun a => ⟨_, fun y h => (not_rel_of_subsingleton r y a h).elim⟩⟩ }
 #align subsingleton.is_well_order Subsingleton.is_well_order
@@ -479,14 +479,14 @@ instance Prod.Lex.is_well_founded [IsWellFounded α r] [IsWellFounded β s] : Is
 instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (α × β) (Prod.Lex r s) where
   trichotomous := fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ =>
     match @trichotomous _ r _ a₁ b₁ with
-    | Or.inl h₁ => Or.inl <| Prod.Lex.left _ _ h₁
-    | Or.inr (Or.inr h₁) => Or.inr <| Or.inr <| Prod.Lex.left _ _ h₁
+    | Or.inl h₁ => Or.inl $ Prod.Lex.left _ _ h₁
+    | Or.inr (Or.inr h₁) => Or.inr $ Or.inr $ Prod.Lex.left _ _ h₁
     | Or.inr (Or.inl e) =>
       e ▸
         match @trichotomous _ s _ a₂ b₂ with
-        | Or.inl h => Or.inl <| Prod.Lex.right _ h
-        | Or.inr (Or.inr h) => Or.inr <| Or.inr <| Prod.Lex.right _ h
-        | Or.inr (Or.inl e) => e ▸ Or.inr <| Or.inl rfl
+        | Or.inl h => Or.inl $ Prod.Lex.right _ h
+        | Or.inr (Or.inr h) => Or.inr $ Or.inr $ Prod.Lex.right _ h
+        | Or.inr (Or.inl e) => e ▸ Or.inr $ Or.inl rfl
   trans a b c h₁ h₂ := by
     cases' h₁ with a₁ a₂ b₁ b₂ ab a₁ b₁ b₂ ab <;> cases' h₂ with _ _ c₁ c₂ bc _ _ c₂ bc
     · exact Prod.Lex.left _ _ (trans ab bc)
@@ -728,15 +728,15 @@ alias not_ssubset_of_subset ← HasSubset.Subset.not_ssubset
 alias ssubset_of_subset_not_subset ← HasSubset.Subset.ssubset_of_not_subset
 
 theorem ssubset_of_subset_of_ssubset [IsTrans α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : b ⊂ c) : a ⊂ c :=
-  (h₁.trans h₂.Subset).ssubset_of_not_subset fun h => h₂.not_subset <| h.trans h₁
+  (h₁.trans h₂.Subset).ssubset_of_not_subset $ fun h => h₂.not_subset $ h.trans h₁
 #align ssubset_of_subset_of_ssubset ssubset_of_subset_of_ssubset
 
 theorem ssubset_of_ssubset_of_subset [IsTrans α (· ⊆ ·)] (h₁ : a ⊂ b) (h₂ : b ⊆ c) : a ⊂ c :=
-  (h₁.Subset.trans h₂).ssubset_of_not_subset fun h => h₁.not_subset <| h₂.trans h
+  (h₁.Subset.trans h₂).ssubset_of_not_subset $ fun h => h₁.not_subset $ h₂.trans h
 #align ssubset_of_ssubset_of_subset ssubset_of_ssubset_of_subset
 
 theorem ssubset_of_subset_of_ne [IsAntisymm α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : a ≠ b) : a ⊂ b :=
-  h₁.ssubset_of_not_subset <| mt h₁.antisymm h₂
+  h₁.ssubset_of_not_subset $ mt h₁.antisymm h₂
 #align ssubset_of_subset_of_ne ssubset_of_subset_of_ne
 
 theorem ssubset_of_ne_of_subset [IsAntisymm α (· ⊆ ·)] (h₁ : a ≠ b) (h₂ : a ⊆ b) : a ⊂ b :=

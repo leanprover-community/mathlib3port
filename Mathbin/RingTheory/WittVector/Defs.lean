@@ -174,7 +174,7 @@ ring operations on `𝕎 R`. For example, `witt_vector.witt_add` is such a `φ` 
 evaluating this at `(x₀, x₁)` gives us the sum of two Witt vectors `x₀ + x₁`.
 -/
 def eval {k : ℕ} (φ : ℕ → MvPolynomial (Fin k × ℕ) ℤ) (x : Fin k → 𝕎 R) : 𝕎 R :=
-  (mk p) fun n => (peval (φ n)) fun i => (x i).coeff
+  mk p $ fun n => peval (φ n) $ fun i => (x i).coeff
 #align witt_vector.eval WittVector.eval
 
 variable (R) [Fact p.Prime]
@@ -350,7 +350,6 @@ variable {p R}
 
 omit hp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 @[simp]
 theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Fin 2) : (![x, y] i).coeff = ![x.coeff, y.coeff] i := by
   fin_cases i <;> simp

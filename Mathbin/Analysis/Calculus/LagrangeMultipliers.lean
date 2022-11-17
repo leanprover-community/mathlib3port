@@ -54,9 +54,9 @@ a complete space, then there exist `Λ : dual ℝ F` and `Λ₀ : ℝ` such that
 `Λ (f' x) + Λ₀ • φ' x = 0` for all `x`. -/
 theorem IsLocalExtrOn.exists_linear_map_of_has_strict_fderiv_at (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀)
     (hf' : HasStrictFderivAt f f' x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
-    ∃ (Λ : Module.Dual ℝ F)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ ∀ x, Λ (f' x) + Λ₀ • φ' x = 0 := by
+    ∃ (Λ : Module.Dual ℝ F) (Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ ∀ x, Λ (f' x) + Λ₀ • φ' x = 0 := by
   rcases Submodule.exists_le_ker_of_lt_top _
-      (lt_top_iff_ne_top.2 <| hextr.range_ne_top_of_has_strict_fderiv_at hf' hφ') with
+      (lt_top_iff_ne_top.2 $ hextr.range_ne_top_of_has_strict_fderiv_at hf' hφ') with
     ⟨Λ', h0, hΛ'⟩
   set e : ((F →ₗ[ℝ] ℝ) × ℝ) ≃ₗ[ℝ] F × ℝ →ₗ[ℝ] ℝ :=
     ((LinearEquiv.refl ℝ (F →ₗ[ℝ] ℝ)).Prod (LinearMap.ringLmapEquivSelf ℝ ℝ ℝ).symm).trans (LinearMap.coprodEquiv ℝ)
@@ -71,12 +71,13 @@ theorem IsLocalExtrOn.exists_linear_map_of_has_strict_fderiv_at (hextr : IsLocal
 #align
   is_local_extr_on.exists_linear_map_of_has_strict_fderiv_at IsLocalExtrOn.exists_linear_map_of_has_strict_fderiv_at
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, and both `f : E → ℝ` and `φ` are strictly differentiable at `x₀`, then there exist
 `a b : ℝ` such that `(a, b) ≠ 0` and `a • f' + b • φ' = 0`. -/
 theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d {f : E → ℝ} {f' : E →L[ℝ] ℝ}
     (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFderivAt f f' x₀)
-    (hφ' : HasStrictFderivAt φ φ' x₀) : ∃ a b : ℝ, (a, b) ≠ 0 ∧ a • f' + b • φ' = 0 := by
+    (hφ' : HasStrictFderivAt φ φ' x₀) : ∃ (a : ℝ) (b : ℝ), (a, b) ≠ 0 ∧ a • f' + b • φ' = 0 := by
   obtain ⟨Λ, Λ₀, hΛ, hfΛ⟩ := hextr.exists_linear_map_of_has_strict_fderiv_at hf' hφ'
   refine' ⟨Λ 1, Λ₀, _, _⟩
   · contrapose! hΛ
@@ -103,7 +104,7 @@ states `¬linear_independent ℝ _` instead of existence of `Λ` and `Λ₀`. -/
 theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [Fintype ι] {f : ι → E → ℝ}
     {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
     (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
-    ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 := by
+    ∃ (Λ : ι → ℝ) (Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 := by
   letI := Classical.decEq ι
   replace hextr : IsLocalExtrOn φ { x | (fun i => f i x) = fun i => f i x₀ } x₀
   · simpa only [Function.funext_iff] using hextr

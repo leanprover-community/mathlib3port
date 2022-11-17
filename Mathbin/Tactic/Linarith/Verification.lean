@@ -26,18 +26,22 @@ open Ineq Tactic Native
 /-! ### Auxiliary functions for assembling proofs -/
 
 
-/-- `mul_expr n e` creates a `pexpr` representing `n*e`.
-When elaborated, the coefficient will be a native numeral of the same type as `e`.
--/
-unsafe def mul_expr (n : ℕ) (e : expr) : pexpr :=
-  if n = 1 then pquote.1 (%%ₓe) else pquote.1 ((%%ₓnat.to_pexpr n) * %%ₓe)
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `mul_expr n e` creates a `pexpr` representing `n*e`.
+      When elaborated, the coefficient will be a native numeral of the same type as `e`.
+      -/
+    unsafe
+  def mul_expr ( n : ℕ ) ( e : expr ) : pexpr := if n = 1 then ` `( $ ( e ) ) else ` `( $ ( nat.to_pexpr n ) * $ ( e ) )
 #align linarith.mul_expr linarith.mul_expr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-private unsafe def add_exprs_aux : pexpr → List pexpr → pexpr
-  | p, [] => p
-  | p, [a] => pquote.1 ((%%ₓp) + %%ₓa)
-  | p, h::t => add_exprs_aux (pquote.1 ((%%ₓp) + %%ₓh)) t
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+private unsafe
+  def
+    add_exprs_aux
+    : pexpr → List pexpr → pexpr
+    | p , [ ] => p | p , [ a ] => ` `( $ ( p ) + $ ( a ) ) | p , h :: t => add_exprs_aux ` `( $ ( p ) + $ ( h ) ) t
 #align linarith.add_exprs_aux linarith.add_exprs_aux
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -45,7 +49,7 @@ private unsafe def add_exprs_aux : pexpr → List pexpr → pexpr
 If `l` is empty, it will be the `pexpr` 0. Otherwise, it does not include 0 in the sum.
 -/
 unsafe def add_exprs : List pexpr → pexpr
-  | [] => pquote.1 0
+  | [] => ``(0)
   | h::t => add_exprs_aux h t
 #align linarith.add_exprs linarith.add_exprs
 
@@ -109,14 +113,18 @@ unsafe def mk_neg_one_lt_zero_pf (tp : expr) : tactic expr := do
 /-- If `e` is a proof that `t = 0`, `mk_neg_eq_zero_pf e` returns a proof that `-t = 0`.
 -/
 unsafe def mk_neg_eq_zero_pf (e : expr) : tactic expr :=
-  to_expr (pquote.1 (neg_eq_zero.mpr (%%ₓe)))
+  to_expr ``(neg_eq_zero.mpr $(e))
 #align linarith.mk_neg_eq_zero_pf linarith.mk_neg_eq_zero_pf
 
-/-- `prove_eq_zero_using tac e` tries to use `tac` to construct a proof of `e = 0`.
--/
-unsafe def prove_eq_zero_using (tac : tactic Unit) (e : expr) : tactic expr := do
-  let tgt ← to_expr (pquote.1 ((%%ₓe) = 0))
-  Prod.snd <$> solve_aux tgt (tac >> done)
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `prove_eq_zero_using tac e` tries to use `tac` to construct a proof of `e = 0`.
+      -/
+    unsafe
+  def
+    prove_eq_zero_using
+    ( tac : tactic Unit ) ( e : expr ) : tactic expr
+    := do let tgt ← to_expr ` `( $ ( e ) = 0 ) Prod.snd <$> solve_aux tgt ( tac >> done )
 #align linarith.prove_eq_zero_using linarith.prove_eq_zero_using
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -133,7 +141,7 @@ unsafe def add_neg_eq_pfs : List expr → tactic (List expr)
       | ineq.eq => do
         let nep ← mk_neg_eq_zero_pf h
         let tl ← add_neg_eq_pfs t
-        return <| h::nep::tl
+        return $ h::nep::tl
       | _ => List.cons h <$> add_neg_eq_pfs t
 #align linarith.add_neg_eq_pfs linarith.add_neg_eq_pfs
 
@@ -184,14 +192,14 @@ unsafe def prove_false_by_linarith (cfg : linarith_config) : List expr → tacti
     linarith_trace "linarith has found a contradiction"
     let enum_inputs := inputs.enum
     let-- construct a list pairing nonzero coeffs with the proof of their corresponding comparison
-    zip := enum_inputs.filterMap fun ⟨n, e⟩ => Prod.mk e <$> certificate.find n
+    zip := enum_inputs.filterMap $ fun ⟨n, e⟩ => Prod.mk e <$> certificate.find n
     let mls ←
       zip.mmap fun ⟨e, n⟩ => do
           let e ← term_of_ineq_prf e
           return (mul_expr n e)
     let sm
       ←-- `sm` is the sum of input terms, scaled to cancel out all variables.
-          to_expr <|
+          to_expr $
           add_exprs mls
     (f!"The expression
             {← sm}

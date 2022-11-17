@@ -70,7 +70,7 @@ theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (ball c R₁)
   replace hd : DiffContOnCl ℂ (dslope f c) (ball c r)
   · refine' DifferentiableOn.diffContOnCl _
     rw [closure_ball c hr₀.ne']
-    exact ((differentiable_on_dslope <| ball_mem_nhds _ hR₁).mpr hd).mono (closed_ball_subset_ball hr.2)
+    exact ((differentiable_on_dslope $ ball_mem_nhds _ hR₁).mpr hd).mono (closed_ball_subset_ball hr.2)
     
   refine' norm_le_of_forall_mem_frontier_norm_le bounded_ball hd _ _
   · rw [frontier_ball c hr₀.ne']

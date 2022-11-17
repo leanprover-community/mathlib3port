@@ -377,9 +377,8 @@ Transferred version of `continuous_linear_map.comp_left_continuous_bounded`,
 upgraded version of `continuous_linear_map.comp_left_continuous`,
 similar to `linear_map.comp_left`. -/
 protected def ContinuousLinearMap.compLeftContinuousCompact (g : β →L[𝕜] γ) : C(X, β) →L[𝕜] C(X, γ) :=
-  (linearIsometryBoundedOfCompact X γ 𝕜).symm.toLinearIsometry.toContinuousLinearMap.comp <|
-    (g.compLeftContinuousBounded X).comp <|
-      (linearIsometryBoundedOfCompact X β 𝕜).toLinearIsometry.toContinuousLinearMap
+  (linearIsometryBoundedOfCompact X γ 𝕜).symm.toLinearIsometry.toContinuousLinearMap.comp $
+    (g.compLeftContinuousBounded X).comp $ (linearIsometryBoundedOfCompact X β 𝕜).toLinearIsometry.toContinuousLinearMap
 #align continuous_linear_map.comp_left_continuous_compact ContinuousLinearMap.compLeftContinuousCompact
 
 @[simp]
@@ -441,8 +440,8 @@ def compRightHomeomorph {X Y : Type _} (T : Type _) [TopologicalSpace X] [Compac
     [CompactSpace Y] [MetricSpace T] (f : X ≃ₜ Y) : C(Y, T) ≃ₜ C(X, T) where
   toFun := compRightContinuousMap T f.toContinuousMap
   invFun := compRightContinuousMap T f.symm.toContinuousMap
-  left_inv g := ext fun _ => congr_arg g (f.apply_symm_apply _)
-  right_inv g := ext fun _ => congr_arg g (f.symm_apply_apply _)
+  left_inv g := ext $ fun _ => congr_arg g (f.apply_symm_apply _)
+  right_inv g := ext $ fun _ => congr_arg g (f.symm_apply_apply _)
 #align continuous_map.comp_right_homeomorph ContinuousMap.compRightHomeomorph
 
 theorem comp_right_alg_hom_continuous {X Y : Type _} (R A : Type _) [TopologicalSpace X] [CompactSpace X]

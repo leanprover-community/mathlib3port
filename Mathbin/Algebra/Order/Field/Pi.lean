@@ -24,7 +24,6 @@ theorem Pi.exists_forall_pos_add_lt [HasExistsAddOfLe α] [Finite ι] {x y : ι 
   choose ε hε hxε using fun i => exists_pos_add_of_lt' (h i)
   obtain rfl : x + ε = y := funext hxε
   have hε : 0 < finset.univ.inf' Finset.univ_nonempty ε := (Finset.lt_inf'_iff _).2 fun i _ => hε _
-  exact
-    ⟨_, half_pos hε, fun i => add_lt_add_left ((half_lt_self hε).trans_le <| Finset.inf'_le _ <| Finset.mem_univ _) _⟩
+  exact ⟨_, half_pos hε, fun i => add_lt_add_left ((half_lt_self hε).trans_le $ Finset.inf'_le _ $ Finset.mem_univ _) _⟩
 #align pi.exists_forall_pos_add_lt Pi.exists_forall_pos_add_lt
 

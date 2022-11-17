@@ -30,7 +30,7 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as := by
     case cons a l ih =>
     suffices List.cons <$> pure a <*> pure l ≤ List.cons <$> 𝓝 a <*> traverse 𝓝 l by
       simpa only [functor_norm] using this
-    exact Filter.seq_mono (Filter.map_mono <| pure_le_nhds a) ih
+    exact Filter.seq_mono (Filter.map_mono $ pure_le_nhds a) ih
     
   · intro l s hs
     rcases(mem_traverse_iff _ _).1 hs with ⟨u, hu, hus⟩
@@ -56,7 +56,7 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as := by
         simp only [List.forall₂_and_left, flip] at hv⊢
         exact ⟨hv.1, hu.flip⟩
       refine' mem_of_superset _ hvs
-      exact mem_traverse _ _ (this.imp fun a s ⟨hs, ha⟩ => IsOpen.mem_nhds hs ha)
+      exact mem_traverse _ _ (this.imp $ fun a s ⟨hs, ha⟩ => IsOpen.mem_nhds hs ha)
       
     
 #align nhds_list nhds_list
@@ -98,7 +98,7 @@ theorem tendsto_cons_iff {β : Type _} {f : List α → β} {b : Filter β} {a :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem continuous_cons : Continuous fun x : α × List α => (x.1::x.2 : List α) :=
-  continuous_iff_continuous_at.mpr fun ⟨x, y⟩ => continuous_at_fst.cons continuous_at_snd
+  continuous_iff_continuous_at.mpr $ fun ⟨x, y⟩ => continuous_at_fst.cons continuous_at_snd
 #align list.continuous_cons List.continuous_cons
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -137,7 +137,7 @@ theorem tendsto_insert_nth' {a : α} :
     rw [this, tendsto_map'_iff]
     exact
       (tendsto_fst.comp tendsto_snd).cons
-        ((@tendsto_insert_nth' n l).comp <| tendsto_fst.prod_mk <| tendsto_snd.comp tendsto_snd)
+        ((@tendsto_insert_nth' n l).comp $ tendsto_fst.prod_mk $ tendsto_snd.comp tendsto_snd)
 #align list.tendsto_insert_nth' List.tendsto_insert_nth'
 
 theorem tendsto_insert_nth {β} {n : ℕ} {a : α} {l : List α} {f : β → α} {g : β → List α} {b : Filter β}
@@ -147,7 +147,7 @@ theorem tendsto_insert_nth {β} {n : ℕ} {a : α} {l : List α} {f : β → α}
 #align list.tendsto_insert_nth List.tendsto_insert_nth
 
 theorem continuous_insert_nth {n : ℕ} : Continuous fun p : α × List α => insertNth n p.1 p.2 :=
-  continuous_iff_continuous_at.mpr fun ⟨a, l⟩ => by rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insert_nth'
+  continuous_iff_continuous_at.mpr $ fun ⟨a, l⟩ => by rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insert_nth'
 #align list.continuous_insert_nth List.continuous_insert_nth
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -162,7 +162,7 @@ theorem tendsto_remove_nth : ∀ {n : ℕ} {l : List α}, Tendsto (fun l => remo
 #align list.tendsto_remove_nth List.tendsto_remove_nth
 
 theorem continuous_remove_nth {n : ℕ} : Continuous fun l : List α => removeNth l n :=
-  continuous_iff_continuous_at.mpr fun a => tendsto_remove_nth
+  continuous_iff_continuous_at.mpr $ fun a => tendsto_remove_nth
 #align list.continuous_remove_nth List.continuous_remove_nth
 
 @[to_additive]
@@ -178,7 +178,7 @@ theorem tendsto_prod [Monoid α] [HasContinuousMul α] {l : List α} : Tendsto L
 
 @[to_additive]
 theorem continuous_prod [Monoid α] [HasContinuousMul α] : Continuous (prod : List α → α) :=
-  continuous_iff_continuous_at.mpr fun l => tendsto_prod
+  continuous_iff_continuous_at.mpr $ fun l => tendsto_prod
 #align list.continuous_prod List.continuous_prod
 
 end List
@@ -204,7 +204,7 @@ theorem tendsto_insert_nth {n : ℕ} {i : Fin (n + 1)} {a : α} :
 #align vector.tendsto_insert_nth Vector.tendsto_insert_nth
 
 theorem continuous_insert_nth' {n : ℕ} {i : Fin (n + 1)} : Continuous fun p : α × Vector α n => insertNth p.1 i p.2 :=
-  continuous_iff_continuous_at.mpr fun ⟨a, l⟩ => by rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insert_nth
+  continuous_iff_continuous_at.mpr $ fun ⟨a, l⟩ => by rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insert_nth
 #align vector.continuous_insert_nth' Vector.continuous_insert_nth'
 
 theorem continuous_insert_nth {n : ℕ} {i : Fin (n + 1)} {f : β → α} {g : β → Vector α n} (hf : Continuous f)
@@ -222,7 +222,7 @@ theorem continuous_at_remove_nth {n : ℕ} {i : Fin (n + 1)} : ∀ {l : Vector �
 #align vector.continuous_at_remove_nth Vector.continuous_at_remove_nth
 
 theorem continuous_remove_nth {n : ℕ} {i : Fin (n + 1)} : Continuous (removeNth i : Vector α (n + 1) → Vector α n) :=
-  continuous_iff_continuous_at.mpr fun ⟨a, l⟩ => continuous_at_remove_nth
+  continuous_iff_continuous_at.mpr $ fun ⟨a, l⟩ => continuous_at_remove_nth
 #align vector.continuous_remove_nth Vector.continuous_remove_nth
 
 end Vector

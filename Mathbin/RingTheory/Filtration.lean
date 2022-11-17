@@ -88,7 +88,7 @@ def _root_.ideal.trivial_filtration (I : Ideal R) (N : Submodule R M) : I.Filtra
 instance : HasSup (I.Filtration M) :=
   ⟨fun F F' =>
     ⟨F.n ⊔ F'.n, fun i => sup_le_sup (F.mono i) (F'.mono i), fun i =>
-      (le_of_eq (Submodule.smul_sup _ _ _)).trans <| sup_le_sup (F.smul_le i) (F'.smul_le i)⟩⟩
+      (le_of_eq (Submodule.smul_sup _ _ _)).trans $ sup_le_sup (F.smul_le i) (F'.smul_le i)⟩⟩
 
 /-- The `Sup` of a family of `I.filtration`s is an `I.filtration`. -/
 instance : HasSup (I.Filtration M) :=
@@ -108,7 +108,7 @@ instance : HasSup (I.Filtration M) :=
 instance : HasInf (I.Filtration M) :=
   ⟨fun F F' =>
     ⟨F.n ⊓ F'.n, fun i => inf_le_inf (F.mono i) (F'.mono i), fun i =>
-      (Submodule.smul_inf_le _ _ _).trans <| inf_le_inf (F.smul_le i) (F'.smul_le i)⟩⟩
+      (Submodule.smul_inf_le _ _ _).trans $ inf_le_inf (F.smul_le i) (F'.smul_le i)⟩⟩
 
 /-- The `Inf` of a family of `I.filtration`s is an `I.filtration`. -/
 instance : HasInf (I.Filtration M) :=
@@ -310,7 +310,7 @@ theorem submodule_closure_single :
     rw [← f.sum_single]
     apply AddSubmonoid.sum_mem _ _
     rintro c -
-    exact AddSubmonoid.subset_closure (Set.subset_Union _ c <| Set.mem_image_of_mem _ (hf c))
+    exact AddSubmonoid.subset_closure (Set.subset_Union _ c $ Set.mem_image_of_mem _ (hf c))
     
 #align ideal.filtration.submodule_closure_single Ideal.Filtration.submodule_closure_single
 
@@ -341,7 +341,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     have e : n' ≤ n := by linarith
     have := F.pow_smul_le_pow_smul (n - n') n' 1
     rw [tsub_add_cancel_of_le e, pow_one, add_comm _ 1, ← add_tsub_assoc_of_le e, add_comm] at this
-    exact this (Submodule.smul_mem_smul ((l _).2 <| n + 1 - n') hm)
+    exact this (Submodule.smul_mem_smul ((l _).2 $ n + 1 - n') hm)
     
   · let F' := Submodule.span (reesAlgebra I) (⋃ i ≤ n₀, single R i '' (F.N i : Set M))
     intro hF i
@@ -359,7 +359,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     apply Submodule.smul_induction_on hm
     · intro r hr m' hm'
       rw [add_comm, ← monomial_smul_single]
-      exact F'.smul_mem ⟨_, rees_algebra.monomial_mem.mpr (by rwa [pow_one])⟩ (hj <| Set.mem_image_of_mem _ hm')
+      exact F'.smul_mem ⟨_, rees_algebra.monomial_mem.mpr (by rwa [pow_one])⟩ (hj $ Set.mem_image_of_mem _ hm')
       
     · intro x y hx hy
       rw [map_add]
@@ -370,24 +370,47 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
 
 /-- If the components of a filtration are finitely generated, then the filtration is stable iff
 its associated submodule of is finitely generated.  -/
-theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.Submodule.Fg ↔ F.Stable := by
-  classical delta Ideal.Filtration.Stable
-    constructor
-    · rintro ⟨n, hn⟩
-      rw [hn]
-      simp_rw [Submodule.span_Union₂, ← Finset.mem_range_succ_iff, supr_subtype']
-      apply Submodule.fg_supr
-      rintro ⟨i, hi⟩
-      obtain ⟨s, hs⟩ := hF' i
-      have :
-        Submodule.span (reesAlgebra I) (s.image (lsingle R i) : Set (PolynomialModule R M)) =
-          Submodule.span _ (single R i '' (F.N i : Set M)) :=
-        by
-        rw [Finset.coe_image, ← Submodule.span_span_of_tower R, ← Submodule.map_span, hs]
-        rfl
-      rw [Subtype.coe_mk, ← this]
-      exact ⟨_, rfl⟩
+theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.Submodule.Fg ↔ F.Stable := by classical
+  delta Ideal.Filtration.Stable
+  simp_rw [← F.submodule_eq_span_le_iff_stable_ge]
+  constructor
+  · rintro H
+    apply H.stablizes_of_supr_eq ⟨fun n₀ => Submodule.span _ (⋃ (i : ℕ) (H : i ≤ n₀), single R i '' ↑(F.N i)), _⟩
+    · dsimp
+      rw [← Submodule.span_Union, ← submodule_span_single]
+      congr 1
+      ext
+      simp only [Set.mem_Union, Set.mem_image, SetLike.mem_coe, exists_prop]
+      constructor
+      · rintro ⟨-, i, -, e⟩
+        exact ⟨i, e⟩
+        
+      · rintro ⟨i, e⟩
+        exact ⟨i, i, le_refl i, e⟩
+        
       
+    · intro n m e
+      rw [Submodule.span_le, Set.Union₂_subset_iff]
+      intro i hi
+      refine' (Set.Subset.trans _ (Set.subset_Union₂ i (hi.trans e : _))).trans Submodule.subset_span
+      rfl
+      
+    
+  · rintro ⟨n, hn⟩
+    rw [hn]
+    simp_rw [Submodule.span_Union₂, ← Finset.mem_range_succ_iff, supr_subtype']
+    apply Submodule.fg_supr
+    rintro ⟨i, hi⟩
+    obtain ⟨s, hs⟩ := hF' i
+    have :
+      Submodule.span (reesAlgebra I) (s.image (lsingle R i) : Set (PolynomialModule R M)) =
+        Submodule.span _ (single R i '' (F.N i : Set M)) :=
+      by
+      rw [Finset.coe_image, ← Submodule.span_span_of_tower R, ← Submodule.map_span, hs]
+      rfl
+    rw [Subtype.coe_mk, ← this]
+    exact ⟨_, rfl⟩
+    
 #align ideal.filtration.submodule_fg_iff_stable Ideal.Filtration.submodule_fg_iff_stable
 
 variable {F}
@@ -427,7 +450,7 @@ theorem Ideal.mem_infi_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Fin
   let N := (⨅ i : ℕ, I ^ i • ⊤ : Submodule R M)
   have hN : ∀ k, (I.stable_filtration ⊤ ⊓ I.trivial_filtration N).n k = N := by
     intro k
-    exact inf_eq_right.mpr ((infi_le _ k).trans <| le_of_eq <| by simp)
+    exact inf_eq_right.mpr ((infi_le _ k).trans $ le_of_eq $ by simp)
   constructor
   · haveI := is_noetherian_of_fg_of_noetherian' hM.out
     obtain ⟨r, hr₁, hr₂⟩ := Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I N (IsNoetherian.noetherian N) _

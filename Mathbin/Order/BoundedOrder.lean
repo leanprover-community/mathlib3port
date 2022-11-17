@@ -164,7 +164,7 @@ theorem eq_top_iff : a = ⊤ ↔ ⊤ ≤ a :=
 #align eq_top_iff eq_top_iff
 
 theorem eq_top_mono (h : a ≤ b) (h₂ : a = ⊤) : b = ⊤ :=
-  top_unique <| h₂ ▸ h
+  top_unique $ h₂ ▸ h
 #align eq_top_mono eq_top_mono
 
 theorem lt_top_iff_ne_top : a < ⊤ ↔ a ≠ ⊤ :=
@@ -193,18 +193,18 @@ theorem ne_top_of_le_ne_top (hb : b ≠ ⊤) (hab : a ≤ b) : a ≠ ⊤ :=
 #align ne_top_of_le_ne_top ne_top_of_le_ne_top
 
 theorem StrictMono.apply_eq_top_iff (hf : StrictMono f) : f a = f ⊤ ↔ a = ⊤ :=
-  ⟨fun h => not_lt_top_iff.1 fun ha => (hf ha).Ne h, congr_arg _⟩
+  ⟨fun h => not_lt_top_iff.1 $ fun ha => (hf ha).Ne h, congr_arg _⟩
 #align strict_mono.apply_eq_top_iff StrictMono.apply_eq_top_iff
 
 theorem StrictAnti.apply_eq_top_iff (hf : StrictAnti f) : f a = f ⊤ ↔ a = ⊤ :=
-  ⟨fun h => not_lt_top_iff.1 fun ha => (hf ha).ne' h, congr_arg _⟩
+  ⟨fun h => not_lt_top_iff.1 $ fun ha => (hf ha).ne' h, congr_arg _⟩
 #align strict_anti.apply_eq_top_iff StrictAnti.apply_eq_top_iff
 
 variable [Nontrivial α]
 
 theorem not_is_min_top : ¬IsMin (⊤ : α) := fun h =>
   let ⟨a, ha⟩ := exists_ne (⊤ : α)
-  ha <| top_le_iff.1 <| h le_top
+  ha $ top_le_iff.1 $ h le_top
 #align not_is_min_top not_is_min_top
 
 end OrderTop
@@ -225,10 +225,10 @@ theorem OrderTop.ext_top {α} {hA : PartialOrder α} (A : OrderTop α) {hB : Par
           x ≤ y) ↔
           x ≤ y) :
     (haveI := A
-      ⊤ :
+        ⊤ :
         α) =
       ⊤ :=
-  top_unique <| by rw [← H] <;> apply le_top
+  top_unique $ by rw [← H] <;> apply le_top
 #align order_top.ext_top OrderTop.ext_top
 
 theorem OrderTop.ext {α} [PartialOrder α] {A B : OrderTop α} : A = B := by
@@ -371,7 +371,7 @@ theorem eq_bot_iff : a = ⊥ ↔ a ≤ ⊥ :=
 #align eq_bot_iff eq_bot_iff
 
 theorem eq_bot_mono (h : a ≤ b) (h₂ : b = ⊥) : a = ⊥ :=
-  bot_unique <| h₂ ▸ h
+  bot_unique $ h₂ ▸ h
 #align eq_bot_mono eq_bot_mono
 
 theorem bot_lt_iff_ne_bot : ⊥ < a ↔ a ≠ ⊥ :=
@@ -435,10 +435,10 @@ theorem OrderBot.ext_bot {α} {hA : PartialOrder α} (A : OrderBot α) {hB : Par
           x ≤ y) ↔
           x ≤ y) :
     (haveI := A
-      ⊥ :
+        ⊥ :
         α) =
       ⊥ :=
-  bot_unique <| by rw [← H] <;> apply bot_le
+  bot_unique $ by rw [← H] <;> apply bot_le
 #align order_bot.ext_bot OrderBot.ext_bot
 
 theorem OrderBot.ext {α} [PartialOrder α] {A B : OrderBot α} : A = B := by
@@ -584,7 +584,7 @@ instance PropCat.le_is_total : IsTotal Prop (· ≤ ·) :=
       "instance"
       []
       [(Command.declId `PropCat.linearOrder [])]
-      (Command.declSig [] (Term.typeSpec ":" (Term.app `LinearOrder [(Term.prop "Prop")])))
+      (Command.declSig [] (Term.typeSpec ":" (Term.app `LinearOrder [(Init.Core.termProp "Prop")])))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -594,7 +594,7 @@ instance PropCat.le_is_total : IsTotal Prop (· ≤ ·) :=
           [(Tactic.«tactic_<;>_»
             (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
             "<;>"
-            (Tactic.exact "exact" (Term.app `Lattice.toLinearOrder [(Term.prop "Prop")])))])))
+            (Tactic.exact "exact" (Term.app `Lattice.toLinearOrder [(Init.Core.termProp "Prop")])))])))
        [])
       []
       []))
@@ -610,21 +610,21 @@ instance PropCat.le_is_total : IsTotal Prop (· ≤ ·) :=
          [(Tactic.«tactic_<;>_»
            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
            "<;>"
-           (Tactic.exact "exact" (Term.app `Lattice.toLinearOrder [(Term.prop "Prop")])))])))
+           (Tactic.exact "exact" (Term.app `Lattice.toLinearOrder [(Init.Core.termProp "Prop")])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
        (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
        "<;>"
-       (Tactic.exact "exact" (Term.app `Lattice.toLinearOrder [(Term.prop "Prop")])))
+       (Tactic.exact "exact" (Term.app `Lattice.toLinearOrder [(Init.Core.termProp "Prop")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact "exact" (Term.app `Lattice.toLinearOrder [(Term.prop "Prop")]))
+      (Tactic.exact "exact" (Term.app `Lattice.toLinearOrder [(Init.Core.termProp "Prop")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `Lattice.toLinearOrder [(Term.prop "Prop")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.prop', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.prop', expected 'Lean.Parser.Term.ellipsis'
+      (Term.app `Lattice.toLinearOrder [(Init.Core.termProp "Prop")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.termProp', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.termProp', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.prop "Prop")
+      (Init.Core.termProp "Prop")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Lattice.toLinearOrder
@@ -687,7 +687,7 @@ theorem antitone_lt {x : α} : Antitone (· < x) := fun y z h' h => h'.trans_lt 
 #align antitone_lt antitone_lt
 
 theorem Monotone.forall {P : β → α → Prop} (hP : ∀ x, Monotone (P x)) : Monotone fun y => ∀ x, P x y :=
-  fun y y' hy h x => hP x hy <| h x
+  fun y y' hy h x => hP x hy $ h x
 #align monotone.forall Monotone.forall
 
 theorem Antitone.forall {P : β → α → Prop} (hP : ∀ x, Antitone (P x)) : Antitone fun y => ∀ x, P x y :=
@@ -709,7 +709,7 @@ section SemilatticeSup
 variable [SemilatticeSup α]
 
 theorem exists_ge_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Monotone P) : (∃ x, x₀ ≤ x ∧ P x) ↔ ∃ x, P x :=
-  ⟨fun h => h.imp fun x h => h.2, fun ⟨x, hx⟩ => ⟨x ⊔ x₀, le_sup_right, hP le_sup_left hx⟩⟩
+  ⟨fun h => h.imp $ fun x h => h.2, fun ⟨x, hx⟩ => ⟨x ⊔ x₀, le_sup_right, hP le_sup_left hx⟩⟩
 #align exists_ge_and_iff_exists exists_ge_and_iff_exists
 
 end SemilatticeSup
@@ -781,7 +781,7 @@ theorem eq_top_of_bot_eq_top (hα : (⊥ : α) = ⊤) (x : α) : x = (⊤ : α) 
 #align eq_top_of_bot_eq_top eq_top_of_bot_eq_top
 
 theorem subsingleton_of_top_le_bot (h : (⊤ : α) ≤ (⊥ : α)) : Subsingleton α :=
-  ⟨fun a b => le_antisymm (le_trans le_top <| le_trans h bot_le) (le_trans le_top <| le_trans h bot_le)⟩
+  ⟨fun a b => le_antisymm (le_trans le_top $ le_trans h bot_le) (le_trans le_top $ le_trans h bot_le)⟩
 #align subsingleton_of_top_le_bot subsingleton_of_top_le_bot
 
 theorem subsingleton_of_bot_eq_top (hα : (⊥ : α) = (⊤ : α)) : Subsingleton α :=
@@ -802,7 +802,7 @@ section lift
 def OrderTop.lift [LE α] [HasTop α] [LE β] [OrderTop β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
     (map_top : f ⊤ = ⊤) : OrderTop α :=
   ⟨⊤, fun a =>
-    map_le _ _ <| by
+    map_le _ _ $ by
       rw [map_top]
       exact le_top⟩
 #align order_top.lift OrderTop.lift
@@ -813,7 +813,7 @@ def OrderTop.lift [LE α] [HasTop α] [LE β] [OrderTop β] (f : α → β) (map
 def OrderBot.lift [LE α] [HasBot α] [LE β] [OrderBot β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
     (map_bot : f ⊥ = ⊥) : OrderBot α :=
   ⟨⊥, fun a =>
-    map_le _ _ <| by
+    map_le _ _ $ by
       rw [map_bot]
       exact bot_le⟩
 #align order_bot.lift OrderBot.lift
@@ -859,8 +859,8 @@ instance : HasBot (WithBot α) :=
   ⟨none⟩
 
 unsafe instance {α : Type} [reflected _ α] [has_reflect α] : has_reflect (WithBot α)
-  | ⊥ => quote.1 ⊥
-  | (a : α) => (quote.1 (coe : α → WithBot α)).subst (quote.1 a)
+  | ⊥ => q(⊥)
+  | (a : α) => q((coe : α → WithBot α)).subst q(a)
 
 instance : Inhabited (WithBot α) :=
   ⟨⊥⟩
@@ -1023,7 +1023,7 @@ theorem coe_le : ∀ {o : Option α}, b ∈ o → ((a : WithBot α) ≤ o ↔ a 
 
 theorem coe_le_iff : ∀ {x : WithBot α}, ↑a ≤ x ↔ ∃ b : α, x = b ∧ a ≤ b
   | some a => by simp [some_eq_coe, coe_eq_coe]
-  | none => iff_of_false (not_coe_le_bot _) <| by simp [none_eq_bot]
+  | none => iff_of_false (not_coe_le_bot _) $ by simp [none_eq_bot]
 #align with_bot.coe_le_iff WithBot.coe_le_iff
 
 theorem le_coe_iff : ∀ {x : WithBot α}, x ≤ b ↔ ∀ a, x = ↑a → a ≤ b
@@ -1033,7 +1033,7 @@ theorem le_coe_iff : ∀ {x : WithBot α}, x ≤ b ↔ ∀ a, x = ↑a → a ≤
 
 protected theorem _root_.is_max.with_bot (h : IsMax a) : IsMax (a : WithBot α)
   | none, _ => bot_le
-  | some b, hb => some_le_some.2 <| h <| some_le_some.1 hb
+  | some b, hb => some_le_some.2 $ h $ some_le_some.1 hb
 #align with_bot._root_.is_max.with_bot with_bot._root_.is_max.with_bot
 
 end LE
@@ -1069,7 +1069,7 @@ theorem not_lt_none (a : WithBot α) : ¬@LT.lt (WithBot α) _ a none := fun ⟨
 
 theorem lt_iff_exists_coe : ∀ {a b : WithBot α}, a < b ↔ ∃ p : α, b = p ∧ a < p
   | a, some b => by simp [some_eq_coe, coe_eq_coe]
-  | a, none => iff_of_false (not_lt_none _) <| by simp [none_eq_bot]
+  | a, none => iff_of_false (not_lt_none _) $ by simp [none_eq_bot]
 #align with_bot.lt_iff_exists_coe WithBot.lt_iff_exists_coe
 
 theorem lt_coe_iff : ∀ {x : WithBot α}, x < b ↔ ∀ a, x = ↑a → a < b
@@ -1121,7 +1121,7 @@ theorem monotone_iff [Preorder α] [Preorder β] {f : WithBot α → β} :
 
 @[simp]
 theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} : Monotone (WithBot.map f) ↔ Monotone f :=
-  monotone_iff.trans <| by simp [Monotone]
+  monotone_iff.trans $ by simp [Monotone]
 #align with_bot.monotone_map_iff WithBot.monotone_map_iff
 
 alias monotone_map_iff ↔ _ _root_.monotone.with_bot_map
@@ -1136,7 +1136,7 @@ theorem strict_mono_iff [Preorder α] [Preorder β] {f : WithBot α → β} :
 
 @[simp]
 theorem strict_mono_map_iff [Preorder α] [Preorder β] {f : α → β} : StrictMono (WithBot.map f) ↔ StrictMono f :=
-  strict_mono_iff.trans <| by simp [StrictMono, bot_lt_coe]
+  strict_mono_iff.trans $ by simp [StrictMono, bot_lt_coe]
 #align with_bot.strict_mono_map_iff WithBot.strict_mono_map_iff
 
 alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_bot_map
@@ -1218,15 +1218,15 @@ instance [DistribLattice α] : DistribLattice (WithBot α) :=
       | (a₁ : α), (a₂ : α), (a₃ : α) => coe_le_coe.mpr le_sup_inf }
 
 instance decidableLe [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithBot α) (· ≤ ·)
-  | none, x => is_true fun a h => Option.noConfusion h
-  | some x, some y => if h : x ≤ y then isTrue (some_le_some.2 h) else is_false <| by simp [*]
-  | some x, none => is_false fun h => by rcases h x rfl with ⟨y, ⟨_⟩, _⟩
+  | none, x => is_true $ fun a h => Option.noConfusion h
+  | some x, some y => if h : x ≤ y then isTrue (some_le_some.2 h) else is_false $ by simp [*]
+  | some x, none => is_false $ fun h => by rcases h x rfl with ⟨y, ⟨_⟩, _⟩
 #align with_bot.decidable_le WithBot.decidableLe
 
 instance decidableLt [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithBot α) (· < ·)
-  | none, some x => is_true <| by exists x, rfl <;> rintro _ ⟨⟩
-  | some x, some y => if h : x < y then is_true <| by simp [*] else is_false <| by simp [*]
-  | x, none => is_false <| by rintro ⟨a, ⟨⟨⟩⟩⟩
+  | none, some x => is_true $ by exists x, rfl <;> rintro _ ⟨⟩
+  | some x, some y => if h : x < y then is_true $ by simp [*] else is_false $ by simp [*]
+  | x, none => is_false $ by rintro ⟨a, ⟨⟨⟩⟩⟩
 #align with_bot.decidable_lt WithBot.decidableLt
 
 instance is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithBot α) (· ≤ ·) :=
@@ -1340,8 +1340,8 @@ instance : HasTop (WithTop α) :=
   ⟨none⟩
 
 unsafe instance {α : Type} [reflected _ α] [has_reflect α] : has_reflect (WithTop α)
-  | ⊤ => quote.1 ⊤
-  | (a : α) => (quote.1 (coe : α → WithTop α)).subst (quote.1 a)
+  | ⊤ => q(⊤)
+  | (a : α) => q((coe : α → WithTop α)).subst q(a)
 
 instance : Inhabited (WithTop α) :=
   ⟨⊤⟩
@@ -1837,7 +1837,7 @@ theorem monotone_iff [Preorder α] [Preorder β] {f : WithTop α → β} :
 
 @[simp]
 theorem monotone_map_iff [Preorder α] [Preorder β] {f : α → β} : Monotone (WithTop.map f) ↔ Monotone f :=
-  monotone_iff.trans <| by simp [Monotone]
+  monotone_iff.trans $ by simp [Monotone]
 #align with_top.monotone_map_iff WithTop.monotone_map_iff
 
 alias monotone_map_iff ↔ _ _root_.monotone.with_top_map
@@ -1852,7 +1852,7 @@ theorem strict_mono_iff [Preorder α] [Preorder β] {f : WithTop α → β} :
 
 @[simp]
 theorem strict_mono_map_iff [Preorder α] [Preorder β] {f : α → β} : StrictMono (WithTop.map f) ↔ StrictMono f :=
-  strict_mono_iff.trans <| by simp [StrictMono, coe_lt_top]
+  strict_mono_iff.trans $ by simp [StrictMono, coe_lt_top]
 #align with_top.strict_mono_map_iff WithTop.strict_mono_map_iff
 
 alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_top_map
@@ -2072,12 +2072,12 @@ variable [PartialOrder α]
 
 @[simp]
 theorem mk_bot [OrderBot α] [OrderBot (Subtype p)] (hbot : p ⊥) : mk ⊥ hbot = ⊥ :=
-  le_bot_iff.1 <| coe_le_coe.1 bot_le
+  le_bot_iff.1 $ coe_le_coe.1 bot_le
 #align subtype.mk_bot Subtype.mk_bot
 
 @[simp]
 theorem mk_top [OrderTop α] [OrderTop (Subtype p)] (htop : p ⊤) : mk ⊤ htop = ⊤ :=
-  top_le_iff.1 <| coe_le_coe.1 le_top
+  top_le_iff.1 $ coe_le_coe.1 le_top
 #align subtype.mk_top Subtype.mk_top
 
 theorem coe_bot [OrderBot α] [OrderBot (Subtype p)] (hbot : p ⊥) : ((⊥ : Subtype p) : α) = ⊥ :=
@@ -2212,7 +2212,7 @@ def Disjoint (a b : α) : Prop :=
 #align disjoint Disjoint
 
 theorem Disjoint.comm : Disjoint a b ↔ Disjoint b a :=
-  forall_congr' fun _ => forall_swap
+  forall_congr' $ fun _ => forall_swap
 #align disjoint.comm Disjoint.comm
 
 @[symm]
@@ -2246,18 +2246,18 @@ theorem Disjoint.mono_right : b ≤ c → Disjoint a c → Disjoint a b :=
 
 @[simp]
 theorem disjoint_self : Disjoint a a ↔ a = ⊥ :=
-  ⟨fun hd => bot_unique <| hd le_rfl le_rfl, fun h x ha hb => ha.trans_eq h⟩
+  ⟨fun hd => bot_unique $ hd le_rfl le_rfl, fun h x ha hb => ha.trans_eq h⟩
 #align disjoint_self disjoint_self
 
 /- TODO: Rename `disjoint.eq_bot` to `disjoint.inf_eq` and `disjoint.eq_bot_of_self` to
 `disjoint.eq_bot` -/
 alias disjoint_self ↔ Disjoint.eq_bot_of_self _
 
-theorem Disjoint.ne (ha : a ≠ ⊥) (hab : Disjoint a b) : a ≠ b := fun h => ha <| disjoint_self.1 <| by rwa [← h] at hab
+theorem Disjoint.ne (ha : a ≠ ⊥) (hab : Disjoint a b) : a ≠ b := fun h => ha $ disjoint_self.1 $ by rwa [← h] at hab
 #align disjoint.ne Disjoint.ne
 
 theorem Disjoint.eq_bot_of_le (hab : Disjoint a b) (h : a ≤ b) : a = ⊥ :=
-  eq_bot_iff.2 <| hab le_rfl h
+  eq_bot_iff.2 $ hab le_rfl h
 #align disjoint.eq_bot_of_le Disjoint.eq_bot_of_le
 
 theorem Disjoint.eq_bot_of_ge (hab : Disjoint a b) : b ≤ a → b = ⊥ :=
@@ -2272,12 +2272,12 @@ variable [PartialOrder α] [BoundedOrder α] {a : α}
 
 @[simp]
 theorem disjoint_top : Disjoint a ⊤ ↔ a = ⊥ :=
-  ⟨fun h => bot_unique <| h le_rfl le_top, fun h x ha htop => ha.trans_eq h⟩
+  ⟨fun h => bot_unique $ h le_rfl le_top, fun h x ha htop => ha.trans_eq h⟩
 #align disjoint_top disjoint_top
 
 @[simp]
 theorem top_disjoint : Disjoint ⊤ a ↔ a = ⊥ :=
-  ⟨fun h => bot_unique <| h le_top le_rfl, fun h x htop ha => ha.trans_eq h⟩
+  ⟨fun h => bot_unique $ h le_top le_rfl, fun h x htop ha => ha.trans_eq h⟩
 #align top_disjoint top_disjoint
 
 end PartialBoundedOrder
@@ -2334,11 +2334,11 @@ theorem Disjoint.inf_right' (h : Disjoint a b) : Disjoint a (c ⊓ b) :=
 variable {c}
 
 theorem Disjoint.of_disjoint_inf_of_le (h : Disjoint (a ⊓ b) c) (hle : a ≤ c) : Disjoint a b :=
-  disjoint_iff.2 <| h.eq_bot_of_le <| inf_le_of_left_le hle
+  disjoint_iff.2 $ h.eq_bot_of_le $ inf_le_of_left_le hle
 #align disjoint.of_disjoint_inf_of_le Disjoint.of_disjoint_inf_of_le
 
 theorem Disjoint.of_disjoint_inf_of_le' (h : Disjoint (a ⊓ b) c) (hle : b ≤ c) : Disjoint a b :=
-  disjoint_iff.2 <| h.eq_bot_of_le <| inf_le_of_right_le hle
+  disjoint_iff.2 $ h.eq_bot_of_le $ inf_le_of_right_le hle
 #align disjoint.of_disjoint_inf_of_le' Disjoint.of_disjoint_inf_of_le'
 
 end SemilatticeInfBot
@@ -2366,11 +2366,11 @@ theorem Disjoint.sup_right (hb : Disjoint a b) (hc : Disjoint a c) : Disjoint a 
 #align disjoint.sup_right Disjoint.sup_right
 
 theorem Disjoint.left_le_of_le_sup_right (h : a ≤ b ⊔ c) (hd : Disjoint a c) : a ≤ b :=
-  le_of_inf_le_sup_le (le_trans hd.le_bot bot_le) <| sup_le h le_sup_right
+  le_of_inf_le_sup_le (le_trans hd.le_bot bot_le) $ sup_le h le_sup_right
 #align disjoint.left_le_of_le_sup_right Disjoint.left_le_of_le_sup_right
 
 theorem Disjoint.left_le_of_le_sup_left (h : a ≤ c ⊔ b) (hd : Disjoint a c) : a ≤ b :=
-  hd.left_le_of_le_sup_right <| by rwa [sup_comm]
+  hd.left_le_of_le_sup_right $ by rwa [sup_comm]
 #align disjoint.left_le_of_le_sup_left Disjoint.left_le_of_le_sup_left
 
 end DistribLatticeBot
@@ -2393,7 +2393,7 @@ def Codisjoint (a b : α) : Prop :=
 #align codisjoint Codisjoint
 
 theorem Codisjoint.comm : Codisjoint a b ↔ Codisjoint b a :=
-  forall_congr' fun _ => forall_swap
+  forall_congr' $ fun _ => forall_swap
 #align codisjoint.comm Codisjoint.comm
 
 @[symm]
@@ -2427,7 +2427,7 @@ theorem Codisjoint.mono_right : b ≤ c → Codisjoint a b → Codisjoint a c :=
 
 @[simp]
 theorem codisjoint_self : Codisjoint a a ↔ a = ⊤ :=
-  ⟨fun hd => top_unique <| hd le_rfl le_rfl, fun h x ha hb => h.symm.trans_le ha⟩
+  ⟨fun hd => top_unique $ hd le_rfl le_rfl, fun h x ha hb => h.symm.trans_le ha⟩
 #align codisjoint_self codisjoint_self
 
 /- TODO: Rename `codisjoint.eq_top` to `codisjoint.sup_eq` and `codisjoint.eq_top_of_self` to
@@ -2435,11 +2435,11 @@ theorem codisjoint_self : Codisjoint a a ↔ a = ⊤ :=
 alias codisjoint_self ↔ Codisjoint.eq_top_of_self _
 
 theorem Codisjoint.ne (ha : a ≠ ⊤) (hab : Codisjoint a b) : a ≠ b := fun h =>
-  ha <| codisjoint_self.1 <| by rwa [← h] at hab
+  ha $ codisjoint_self.1 $ by rwa [← h] at hab
 #align codisjoint.ne Codisjoint.ne
 
 theorem Codisjoint.eq_top_of_le (hab : Codisjoint a b) (h : b ≤ a) : a = ⊤ :=
-  eq_top_iff.2 <| hab le_rfl h
+  eq_top_iff.2 $ hab le_rfl h
 #align codisjoint.eq_top_of_le Codisjoint.eq_top_of_le
 
 theorem Codisjoint.eq_top_of_ge (hab : Codisjoint a b) : a ≤ b → b = ⊤ :=
@@ -2454,12 +2454,12 @@ variable [PartialOrder α] [BoundedOrder α] {a : α}
 
 @[simp]
 theorem codisjoint_bot : Codisjoint a ⊥ ↔ a = ⊤ :=
-  ⟨fun h => top_unique <| h le_rfl bot_le, fun h x ha htop => h.symm.trans_le ha⟩
+  ⟨fun h => top_unique $ h le_rfl bot_le, fun h x ha htop => h.symm.trans_le ha⟩
 #align codisjoint_bot codisjoint_bot
 
 @[simp]
 theorem bot_codisjoint : Codisjoint ⊥ a ↔ a = ⊤ :=
-  ⟨fun h => top_unique <| h bot_le le_rfl, fun h x htop ha => h.symm.trans_le ha⟩
+  ⟨fun h => top_unique $ h bot_le le_rfl, fun h x htop ha => h.symm.trans_le ha⟩
 #align bot_codisjoint bot_codisjoint
 
 end PartialBoundedOrder
@@ -2553,7 +2553,7 @@ theorem Codisjoint.left_le_of_le_inf_right (h : a ⊓ b ≤ c) (hd : Codisjoint 
 #align codisjoint.left_le_of_le_inf_right Codisjoint.left_le_of_le_inf_right
 
 theorem Codisjoint.left_le_of_le_inf_left (h : b ⊓ a ≤ c) (hd : Codisjoint b c) : a ≤ c :=
-  hd.left_le_of_le_inf_right <| by rwa [inf_comm]
+  hd.left_le_of_le_inf_right $ by rwa [inf_comm]
 #align codisjoint.left_le_of_le_inf_left Codisjoint.left_le_of_le_inf_left
 
 end DistribLatticeTop
@@ -2708,11 +2708,11 @@ theorem right_le_iff (h : IsCompl x y) : y ≤ z ↔ Codisjoint z x :=
 #align is_compl.right_le_iff IsCompl.right_le_iff
 
 protected theorem antitone {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') (hx : x ≤ x') : y' ≤ y :=
-  h'.right_le_iff.2 <| h.symm.Codisjoint.mono_right hx
+  h'.right_le_iff.2 $ h.symm.Codisjoint.mono_right hx
 #align is_compl.antitone IsCompl.antitone
 
 theorem right_unique (hxy : IsCompl x y) (hxz : IsCompl x z) : y = z :=
-  le_antisymm (hxz.Antitone hxy <| le_refl x) (hxy.Antitone hxz <| le_refl x)
+  le_antisymm (hxz.Antitone hxy $ le_refl x) (hxy.Antitone hxz $ le_refl x)
 #align is_compl.right_unique IsCompl.right_unique
 
 theorem left_unique (hxz : IsCompl x z) (hyz : IsCompl y z) : x = y :=
@@ -2799,7 +2799,7 @@ section Nontrivial
 variable [PartialOrder α] [BoundedOrder α] [Nontrivial α]
 
 @[simp]
-theorem bot_ne_top : (⊥ : α) ≠ ⊤ := fun h => not_subsingleton _ <| subsingleton_of_bot_eq_top h
+theorem bot_ne_top : (⊥ : α) ≠ ⊤ := fun h => not_subsingleton _ $ subsingleton_of_bot_eq_top h
 #align bot_ne_top bot_ne_top
 
 @[simp]

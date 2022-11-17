@@ -111,7 +111,7 @@ theorem IsEulerian.mem_edges_iff {u v : V} {p : G.Walk u v} (h : p.IsEulerian) {
 
 /-- The edge set of an Eulerian graph is finite. -/
 def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : Fintype G.edgeSet :=
-  (Fintype.ofFinset h.IsTrail.edgesFinset) fun e => by simp only [Finset.mem_mk, Multiset.mem_coe, h.mem_edges_iff]
+  Fintype.ofFinset h.IsTrail.edgesFinset $ fun e => by simp only [Finset.mem_mk, Multiset.mem_coe, h.mem_edges_iff]
 #align simple_graph.walk.is_eulerian.fintype_edge_set SimpleGraph.Walk.IsEulerian.fintypeEdgeSet
 
 theorem IsTrail.is_eulerian_of_forall_mem {u v : V} {p : G.Walk u v} (h : p.IsTrail)

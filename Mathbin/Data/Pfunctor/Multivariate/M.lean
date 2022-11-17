@@ -67,7 +67,7 @@ inductive M.Path : P.last.M → Fin2 n → Type u
 
 instance M.Path.inhabited (x : P.last.M) {i} [Inhabited (P.drop.B x.head i)] : Inhabited (M.Path P x i) :=
   ⟨M.Path.root _ (Pfunctor.M.head x) (Pfunctor.M.children x)
-      (Pfunctor.M.casesOn' x <| by intros <;> simp [Pfunctor.M.dest_mk] <;> ext <;> rw [Pfunctor.M.children_mk] <;> rfl)
+      (Pfunctor.M.casesOn' x $ by intros <;> simp [Pfunctor.M.dest_mk] <;> ext <;> rw [Pfunctor.M.children_mk] <;> rfl)
       _ default⟩
 #align mvpfunctor.M.path.inhabited Mvpfunctor.M.Path.inhabited
 
@@ -158,7 +158,7 @@ def M.dest' {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Destructor for M-types -/
 def M.dest {α : Typevec n} (x : P.M α) : P.Obj (α ::: P.M α) :=
-  M.dest' P (Sigma.eta <| Pfunctor.M.dest x.fst).symm x.snd
+  M.dest' P (Sigma.eta $ Pfunctor.M.dest x.fst).symm x.snd
 #align mvpfunctor.M.dest Mvpfunctor.M.dest
 
 /-- Constructor for M-types -/
@@ -198,7 +198,7 @@ theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.append
 
 theorem M.bisim_lemma {α : Typevec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ ⟹ α} {a' : P.A} {f' : (P.B a').drop ⟹ α}
     {f₁' : (P.B a').last → M P α} (e₁ : M.dest P ⟨a₁, f₁⟩ = ⟨a', splitFun f' f₁'⟩) :
-    ∃ (g₁' : _)(e₁' : Pfunctor.M.dest a₁ = ⟨a', g₁'⟩),
+    ∃ (g₁') (e₁' : Pfunctor.M.dest a₁ = ⟨a', g₁'⟩),
       f' = M.pathDestLeft P e₁' f₁ ∧ f₁' = fun x : (last P).B a' => ⟨g₁' x, M.pathDestRight P e₁' f₁ x⟩ :=
   by
   generalize ef : @split_fun n _ (append1 α (M P α)) f' f₁' = ff at e₁
@@ -208,16 +208,20 @@ theorem M.bisim_lemma {α : Typevec n} {a₁ : (mp P).A} {f₁ : (mp P).B a₁ �
   exact ⟨_, e₁', split_fun_inj ef⟩
 #align mvpfunctor.M.bisim_lemma Mvpfunctor.M.bisim_lemma
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f f₁ f₂) -/
 theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
     (h :
       ∀ x y,
-        R x y → ∃ a f f₁ f₂, M.dest P x = ⟨a, splitFun f f₁⟩ ∧ M.dest P y = ⟨a, splitFun f f₂⟩ ∧ ∀ i, R (f₁ i) (f₂ i))
+        R x y →
+          ∃ (a) (f) (f₁) (f₂), M.dest P x = ⟨a, splitFun f f₁⟩ ∧ M.dest P y = ⟨a, splitFun f f₂⟩ ∧ ∀ i, R (f₁ i) (f₂ i))
     (x y) (r : R x y) : x = y := by
   cases' x with a₁ f₁
   cases' y with a₂ f₂
   dsimp [Mp] at *
   have : a₁ = a₂ := by
-    refine' Pfunctor.M.bisim (fun a₁ a₂ => ∃ x y, R x y ∧ x.1 = a₁ ∧ y.1 = a₂) _ _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
+    refine'
+      Pfunctor.M.bisim (fun a₁ a₂ => ∃ (x) (y), R x y ∧ x.1 = a₁ ∧ y.1 = a₂) _ _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
     rintro _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
     rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h'⟩
     rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩

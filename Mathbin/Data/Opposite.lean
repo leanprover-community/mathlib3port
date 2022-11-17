@@ -139,7 +139,7 @@ namespace OpInduction
 /-- Test if `e : expr` is of type `opposite α` for some `α`. -/
 unsafe def is_opposite (e : expr) : tactic Bool := do
   let t ← infer_type e
-  let quote.1 (Opposite _) ← whnf t |
+  let q(Opposite _) ← whnf t |
     return false
   return tt
 #align tactic.op_induction.is_opposite tactic.op_induction.is_opposite
@@ -148,7 +148,7 @@ unsafe def is_opposite (e : expr) : tactic Bool := do
 context. -/
 unsafe def find_opposite_hyp : tactic Name := do
   let lc ← local_context
-  let h :: _ ← lc.mfilter <| is_opposite |
+  let h :: _ ← lc.mfilter $ is_opposite |
     fail "No hypotheses of the form Xᵒᵖ"
   return h
 #align tactic.op_induction.find_opposite_hyp tactic.op_induction.find_opposite_hyp

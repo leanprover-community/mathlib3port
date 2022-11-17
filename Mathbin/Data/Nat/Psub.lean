@@ -44,7 +44,7 @@ theorem pred_eq_ppred (n : ℕ) : pred n = (ppred n).getOrElse 0 := by cases n <
 
 theorem sub_eq_psub (m : ℕ) : ∀ n, m - n = (psub m n).getOrElse 0
   | 0 => rfl
-  | n + 1 => (pred_eq_ppred (m - n)).trans <| by rw [sub_eq_psub, psub] <;> cases psub m n <;> rfl
+  | n + 1 => (pred_eq_ppred (m - n)).trans $ by rw [sub_eq_psub, psub] <;> cases psub m n <;> rfl
 #align nat.sub_eq_psub Nat.sub_eq_psub
 
 @[simp]
@@ -72,7 +72,7 @@ theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n := by
   · show m < n
     refine' lt_of_not_ge fun h => _
     cases' le.dest h with k e
-    injection s.symm.trans (psub_eq_some.2 <| (add_comm _ _).trans e)
+    injection s.symm.trans (psub_eq_some.2 $ (add_comm _ _).trans e)
     
   · show n ≤ m
     rw [← psub_eq_some.1 s]
@@ -81,11 +81,11 @@ theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n := by
 #align nat.psub_eq_none Nat.psub_eq_none
 
 theorem ppred_eq_pred {n} (h : 0 < n) : ppred n = some (pred n) :=
-  ppred_eq_some.2 <| succ_pred_eq_of_pos h
+  ppred_eq_some.2 $ succ_pred_eq_of_pos h
 #align nat.ppred_eq_pred Nat.ppred_eq_pred
 
 theorem psub_eq_sub {m n} (h : n ≤ m) : psub m n = some (m - n) :=
-  psub_eq_some.2 <| Nat.sub_add_cancel h
+  psub_eq_some.2 $ Nat.sub_add_cancel h
 #align nat.psub_eq_sub Nat.psub_eq_sub
 
 theorem psub_add (m n k) :

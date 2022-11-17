@@ -276,17 +276,27 @@ theorem IsPGroup.sylow_mem_fixed_points_iff {P : Subgroup G} (hP : IsPGroup p P)
 /-- A generalization of **Sylow's second theorem**.
   If the number of Sylow `p`-subgroups is finite, then all Sylow `p`-subgroups are conjugate. -/
 instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G) :=
-  ⟨fun P Q => by
-    classical cases nonempty_fintype (Sylow p G)
-      suffices : Set.Nonempty (fixed_points Q (orbit G P))
-      apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card
+  ⟨fun P Q => by classical
+    cases nonempty_fintype (Sylow p G)
+    have H := fun {R : Sylow p G} {S : orbit G P} =>
       calc
-        1 = card (fixed_points P (orbit G P)) := _
-        _ ≡ card (orbit G P) [MOD p] := (P.2.card_modeq_card_fixed_points (orbit G P)).symm
-        _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
+        S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) := forall_congr' fun a => Subtype.ext_iff
+        _ ↔ R.1 ≤ S := R.2.sylow_mem_fixed_points_iff
+        _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
         
-      refine' card_congr' (congr_arg _ (Eq.symm _))
-      exact ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
+    suffices Set.Nonempty (fixed_points Q (orbit G P)) by
+      exact Exists.elim this fun R hR => (congr_arg _ (Sylow.ext (H.mp hR))).mp R.2
+    apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card
+    refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
+    calc
+      1 = card (fixed_points P (orbit G P)) := _
+      _ ≡ card (orbit G P) [MOD p] := (P.2.card_modeq_card_fixed_points (orbit G P)).symm
+      _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
+      
+    rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
+    refine' card_congr' (congr_arg _ (Eq.symm _))
+    rw [Set.eq_singleton_iff_unique_mem]
+    exact ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
 
 variable (p) (G)
 
@@ -407,7 +417,7 @@ theorem not_dvd_index_sylow' [hp : Fact p.Prime] (P : Sylow p G) [(P : Subgroup 
 #align not_dvd_index_sylow' not_dvd_index_sylow'
 
 theorem not_dvd_index_sylow [hp : Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
-    (hP : relindex ↑P (P : Subgroup G).normalizer ≠ 0) : ¬p ∣ (P : Subgroup G).index := by
+    (hP : relindex (↑P) (P : Subgroup G).normalizer ≠ 0) : ¬p ∣ (P : Subgroup G).index := by
   cases nonempty_fintype (Sylow p G)
   rw [← relindex_mul_index le_normalizer, ← card_sylow_eq_index_normalizer]
   haveI : (P.subtype le_normalizer : Subgroup (P : Subgroup G).normalizer).Normal := Subgroup.normal_in_normalizer
@@ -468,14 +478,14 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
           convert this
           rw [inv_inv]),
     fun hx : ∀ n : G, n ∈ H ↔ x * n * x⁻¹ ∈ H =>
-    (mem_fixed_points' _).2 fun y =>
-      (Quotient.inductionOn' y) fun y hy =>
+    (mem_fixed_points' _).2 $ fun y =>
+      Quotient.inductionOn' y $ fun y hy =>
         QuotientGroup.eq.2
           (let ⟨⟨b, hb₁⟩, hb₂⟩ := hy
           have hb₂ : (b * x)⁻¹ * y ∈ H := QuotientGroup.eq.1 hb₂
-          inv_mem_iff.1 <|
-            (hx _).2 <|
-              (mul_mem_cancel_left (inv_mem hb₁)).1 <| by rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
+          inv_mem_iff.1 $
+            (hx _).2 $
+              (mul_mem_cancel_left (inv_mem hb₁)).1 $ by rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
 #align
   sylow.mem_fixed_points_mul_left_cosets_iff_mem_normalizer Sylow.mem_fixed_points_mul_left_cosets_iff_mem_normalizer
 
@@ -698,7 +708,7 @@ theorem normal_of_all_max_subgroups_normal [Finite G] (hnc : ∀ H : Subgroup G,
 
 theorem normal_of_normalizer_condition (hnc : NormalizerCondition G) {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)]
     (P : Sylow p G) : (↑P : Subgroup G).Normal :=
-  normalizer_eq_top.mp <| normalizer_condition_iff_only_full_group_self_normalizing.mp hnc _ <| normalizer_normalizer _
+  normalizer_eq_top.mp $ normalizer_condition_iff_only_full_group_self_normalizing.mp hnc _ $ normalizer_normalizer _
 #align sylow.normal_of_normalizer_condition Sylow.normal_of_normalizer_condition
 
 open BigOperators

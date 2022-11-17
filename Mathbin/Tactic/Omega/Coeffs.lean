@@ -181,8 +181,8 @@ def valExcept (k : Nat) (v : Nat → Int) (as) :=
   valBetween v as 0 k + valBetween v as (k + 1) (as.length - (k + 1))
 #align omega.coeffs.val_except Omega.Coeffs.valExcept
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ≠ » k) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ≠ » k) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » k) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » k) -/
 theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
     (∀ (x) (_ : x ≠ k), v x = w x) → (∀ (x) (_ : x ≠ k), get x is = get x js) → valExcept k v is = valExcept k w js :=
   by

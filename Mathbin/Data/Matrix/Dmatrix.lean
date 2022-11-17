@@ -31,7 +31,7 @@ section Ext
 variable {M N : Dmatrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
-  ⟨fun h => funext fun i => funext <| h i, fun h => by simp [h]⟩
+  ⟨fun h => funext $ fun i => funext $ h i, fun h => by simp [h]⟩
 #align dmatrix.ext_iff Dmatrix.ext_iff
 
 @[ext.1]
@@ -70,7 +70,7 @@ def transpose (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
 #align dmatrix.transpose Dmatrix.transpose
 
 -- mathport name: dmatrix.transpose
-localized [Dmatrix] postfix:1024 "ᵀ" => Dmatrix.transpose
+scoped postfix:1024 "ᵀ" => Dmatrix.transpose
 
 /- warning: dmatrix.col -> Dmatrix.col is a dubious translation:
 lean 3 declaration is

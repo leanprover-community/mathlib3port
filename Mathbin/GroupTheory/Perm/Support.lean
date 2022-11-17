@@ -54,7 +54,7 @@ theorem disjoint_comm : Disjoint f g ↔ Disjoint g f :=
 #align equiv.perm.disjoint_comm Equiv.Perm.disjoint_comm
 
 theorem Disjoint.commute (h : Disjoint f g) : Commute f g :=
-  Equiv.ext fun x =>
+  Equiv.ext $ fun x =>
     (h x).elim
       (fun hf =>
         (h (g x)).elim (fun hg => by simp [mul_apply, hf, hg]) fun hg => by simp [mul_apply, hf, g.injective hg])
@@ -121,7 +121,7 @@ theorem disjoint_prod_right (l : List (Perm α)) (h : ∀ g ∈ l, Disjoint f g)
 #align equiv.perm.disjoint_prod_right Equiv.Perm.disjoint_prod_right
 
 theorem disjoint_prod_perm {l₁ l₂ : List (Perm α)} (hl : l₁.Pairwise Disjoint) (hp : l₁ ~ l₂) : l₁.Prod = l₂.Prod :=
-  hp.prod_eq' <| hl.imp fun f g => Disjoint.commute
+  hp.prod_eq' $ hl.imp $ fun f g => Disjoint.commute
 #align equiv.perm.disjoint_prod_perm Equiv.Perm.disjoint_prod_perm
 
 theorem nodup_of_pairwise_disjoint {l : List (Perm α)} (h1 : (1 : Perm α) ∉ l) (h2 : l.Pairwise Disjoint) : l.Nodup :=
@@ -141,7 +141,7 @@ theorem pow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : �
 
 theorem zpow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : ℤ, (f ^ n) x = x
   | (n : ℕ) => pow_apply_eq_self_of_apply_eq_self hfx n
-  | -[n+1] => by rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, pow_apply_eq_self_of_apply_eq_self hfx]
+  | -[1+ n] => by rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, pow_apply_eq_self_of_apply_eq_self hfx]
 #align equiv.perm.zpow_apply_eq_self_of_apply_eq_self Equiv.Perm.zpow_apply_eq_self_of_apply_eq_self
 
 theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ n : ℕ, (f ^ n) x = x ∨ (f ^ n) x = f x
@@ -153,7 +153,7 @@ theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ 
 
 theorem zpow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ i : ℤ, (f ^ i) x = x ∨ (f ^ i) x = f x
   | (n : ℕ) => pow_apply_eq_of_apply_apply_eq_self hffx n
-  | -[n+1] => by
+  | -[1+ n] => by
     rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, ← f.injective.eq_iff, ← mul_apply, ← pow_succ, eq_comm, inv_eq_iff_eq, ←
       mul_apply, ← pow_succ', @eq_comm _ x, or_comm]
     exact pow_apply_eq_of_apply_apply_eq_self hffx _
@@ -186,15 +186,16 @@ section IsSwap
 
 variable [DecidableEq α]
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /-- `f.is_swap` indicates that the permutation `f` is a transposition of two elements. -/
 def IsSwap (f : Perm α) : Prop :=
-  ∃ x y, x ≠ y ∧ f = swap x y
+  ∃ (x) (y), x ≠ y ∧ f = swap x y
 #align equiv.perm.is_swap Equiv.Perm.IsSwap
 
 @[simp]
 theorem of_subtype_swap_eq {p : α → Prop} [DecidablePred p] (x y : Subtype p) :
-    (Equiv.swap x y).ofSubtype = Equiv.swap ↑x ↑y :=
-  Equiv.ext fun z => by
+    (Equiv.swap x y).ofSubtype = Equiv.swap (↑x) ↑y :=
+  Equiv.ext $ fun z => by
     by_cases hz:p z
     · rw [swap_apply_def, of_subtype_apply_of_mem _ hz]
       split_ifs with hzx hzy
@@ -363,7 +364,7 @@ theorem pow_apply_mem_support {n : ℕ} {x : α} : (f ^ n) x ∈ f.support ↔ x
 @[simp]
 theorem zpow_apply_mem_support {n : ℤ} {x : α} : (f ^ n) x ∈ f.support ↔ x ∈ f.support := by
   cases n
-  · rw [Int.of_nat_eq_coe, zpow_coe_nat, pow_apply_mem_support]
+  · rw [Int.ofNat_eq_coe, zpow_coe_nat, pow_apply_mem_support]
     
   · rw [zpow_neg_succ_of_nat, ← support_inv, ← inv_pow, pow_apply_mem_support]
     
@@ -610,7 +611,7 @@ theorem card_support_swap_mul {f : Perm α} {x : α} (hx : f x ≠ x) : (swap x 
 
 theorem card_support_swap {x y : α} (hxy : x ≠ y) : (swap x y).support.card = 2 :=
   show (swap x y).support.card = Finset.card ⟨x ::ₘ y ::ₘ 0, by simp [hxy]⟩ from
-    congr_arg card <| by simp [support_swap hxy, *, Finset.ext_iff]
+    congr_arg card $ by simp [support_swap hxy, *, Finset.ext_iff]
 #align equiv.perm.card_support_swap Equiv.Perm.card_support_swap
 
 @[simp]

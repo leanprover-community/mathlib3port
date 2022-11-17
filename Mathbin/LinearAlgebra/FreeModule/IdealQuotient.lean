@@ -78,7 +78,9 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
   refine' (Submodule.Quotient.equiv (I.restrict_scalars R) I' b'.equiv_fun this).trans _
   any_goals apply RingHom.id
   any_goals infer_instance
-  classical let this := Submodule.quotientPi (show ∀ i, Submodule R R from fun i => Ideal.span ({a i} : Set R))
+  classical
+  let this := Submodule.quotientPi (show ∀ i, Submodule R R from fun i => Ideal.span ({a i} : Set R))
+  exact this
 #align ideal.quotient_equiv_pi_span Ideal.quotientEquivPiSpan
 
 /-- Ideal quotients over a free finite extension of `ℤ` are isomorphic to a direct product of
@@ -102,7 +104,7 @@ noncomputable def Ideal.fintypeQuotientOfFreeOfNeBot [Module.Free ℤ S] [Module
   let b := Module.Free.chooseBasis ℤ S
   let a := I.smithCoeffs b hI
   let e := I.quotientEquivPiZmod b hI
-  haveI : ∀ i, NeZero (a i).natAbs := fun i => ⟨Int.nat_abs_ne_zero_of_ne_zero (Ideal.smith_coeffs_ne_zero b I hI i)⟩
+  haveI : ∀ i, NeZero (a i).natAbs := fun i => ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smith_coeffs_ne_zero b I hI i)⟩
   Fintype.ofEquiv (∀ i, Zmod (a i).natAbs) e.symm
 #align ideal.fintype_quotient_of_free_of_ne_bot Ideal.fintypeQuotientOfFreeOfNeBot
 

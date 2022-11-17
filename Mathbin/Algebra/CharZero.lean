@@ -62,7 +62,7 @@ variable {M}
 
 @[field_simps]
 theorem two_ne_zero' : (2 : M) ≠ 0 := by
-  have : ((2 : ℕ) : M) ≠ 0 := Nat.cast_ne_zero.2 (by decide)
+  have : ((2 : ℕ) : M) ≠ 0 := Nat.cast_ne_zero.2 dec_trivial
   rwa [Nat.cast_two] at this
 #align two_ne_zero' two_ne_zero'
 

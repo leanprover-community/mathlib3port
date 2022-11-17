@@ -218,6 +218,7 @@ theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈
   exact ⟨U, hU, rfl.subset⟩
 #align group_filter_basis.mem_nhds_one GroupFilterBasis.mem_nhds_one
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (V W) -/
 -- See note [lower instance priority]
 /-- If a group is endowed with a topological structure coming from a group filter basis then it's a
 topological group. -/
@@ -229,7 +230,7 @@ instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @Topo
   have basis' := basis.prod basis
   refine' TopologicalGroup.of_nhds_one _ _ _ _
   · rw [basis'.tendsto_iff basis]
-    suffices ∀ U ∈ B, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
+    suffices ∀ U ∈ B, ∃ (V) (W), (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
     intro U U_in
     rcases mul U_in with ⟨V, V_in, hV⟩
     use V, V, V_in, V_in
@@ -288,6 +289,7 @@ def topology : TopologicalSpace R :=
   B.toAddGroupFilterBasis.topology
 #align ring_filter_basis.topology RingFilterBasis.topology
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (V W) -/
 /-- If a ring is endowed with a topological structure coming from
 a ring filter basis then it's a topological ring. -/
 instance (priority := 100) isTopologicalRing {R : Type u} [Ring R] (B : RingFilterBasis R) :
@@ -299,7 +301,7 @@ instance (priority := 100) isTopologicalRing {R : Type u} [Ring R] (B : RingFilt
   haveI := B'.is_topological_add_group
   apply TopologicalRing.ofAddGroupOfNhdsZero
   · rw [basis'.tendsto_iff basis]
-    suffices ∀ U ∈ B', ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
+    suffices ∀ U ∈ B', ∃ (V) (W), (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
     intro U U_in
     rcases B.mul U_in with ⟨V, V_in, hV⟩
     use V, V, V_in, V_in
@@ -326,7 +328,7 @@ end RingFilterBasis
   compatible with the module structure on `M`.  -/
 structure ModuleFilterBasis (R M : Type _) [CommRing R] [TopologicalSpace R] [AddCommGroup M] [Module R M] extends
   AddGroupFilterBasis M where
-  smul' : ∀ {U}, U ∈ sets → ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ sets, V • W ⊆ U
+  smul' : ∀ {U}, U ∈ sets → ∃ (V ∈ 𝓝 (0 : R)) (W ∈ sets), V • W ⊆ U
   smul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ • x) ⁻¹' U
   smul_right' : ∀ (m₀ : M) {U}, U ∈ sets → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U
 #align module_filter_basis ModuleFilterBasis
@@ -339,7 +341,7 @@ instance GroupFilterBasis.hasMem : Membership (Set M) (ModuleFilterBasis R M) :=
   ⟨fun s B => s ∈ B.sets⟩
 #align module_filter_basis.group_filter_basis.has_mem ModuleFilterBasis.GroupFilterBasis.hasMem
 
-theorem smul {U : Set M} (hU : U ∈ B) : ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ B, V • W ⊆ U :=
+theorem smul {U : Set M} (hU : U ∈ B) : ∃ (V ∈ 𝓝 (0 : R)) (W ∈ B), V • W ⊆ U :=
   B.smul' hU
 #align module_filter_basis.smul ModuleFilterBasis.smul
 
@@ -396,14 +398,14 @@ But it turns out it's just easier to get it as a biproduct of the proof, so this
 quality-of-life improvement. -/
 theorem _root_.has_continuous_smul.of_basis_zero {ι : Type _} [TopologicalRing R] [TopologicalSpace M]
     [TopologicalAddGroup M] {p : ι → Prop} {b : ι → Set M} (h : HasBasis (𝓝 0) p b)
-    (hsmul : ∀ {i}, p i → ∃ V ∈ 𝓝 (0 : R), ∃ (j : _)(hj : p j), V • b j ⊆ b i)
-    (hsmul_left : ∀ (x₀ : R) {i}, p i → ∃ (j : _)(hj : p j), b j ⊆ (fun x => x₀ • x) ⁻¹' b i)
+    (hsmul : ∀ {i}, p i → ∃ (V ∈ 𝓝 (0 : R)) (j) (hj : p j), V • b j ⊆ b i)
+    (hsmul_left : ∀ (x₀ : R) {i}, p i → ∃ (j) (hj : p j), b j ⊆ (fun x => x₀ • x) ⁻¹' b i)
     (hsmul_right : ∀ (m₀ : M) {i}, p i → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ b i) : HasContinuousSmul R M := by
   apply HasContinuousSmul.of_nhds_zero
   · rw [h.tendsto_right_iff]
     intro i hi
     rcases hsmul hi with ⟨V, V_in, j, hj, hVj⟩
-    apply mem_of_superset (prod_mem_prod V_in <| h.mem_of_mem hj)
+    apply mem_of_superset (prod_mem_prod V_in $ h.mem_of_mem hj)
     rintro ⟨v, w⟩ ⟨v_in : v ∈ V, w_in : w ∈ b j⟩
     exact hVj (Set.smul_mem_smul v_in w_in)
     
@@ -432,7 +434,7 @@ instance (priority := 100) has_continuous_smul [TopologicalRing R] : @HasContinu
 
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def ofBases {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (BR : RingFilterBasis R)
-    (BM : AddGroupFilterBasis M) (smul : ∀ {U}, U ∈ BM → ∃ V ∈ BR, ∃ W ∈ BM, V • W ⊆ U)
+    (BM : AddGroupFilterBasis M) (smul : ∀ {U}, U ∈ BM → ∃ (V ∈ BR) (W ∈ BM), V • W ⊆ U)
     (smul_left : ∀ (x₀ : R) {U}, U ∈ BM → ∃ V ∈ BM, V ⊆ (fun x => x₀ • x) ⁻¹' U)
     (smul_right : ∀ (m₀ : M) {U}, U ∈ BM → ∃ V ∈ BR, V ⊆ (fun x => x • m₀) ⁻¹' U) :
     @ModuleFilterBasis R M _ BR.topology _ _ :=

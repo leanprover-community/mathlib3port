@@ -185,7 +185,7 @@ theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
   refine' or_congr _ _ <;>
     refine' exists_congr fun x_1 => _ <;>
       refine' and_congr _ _ <;>
-        refine' forall_congr' fun i => lf_iff_lt _ _ <;>
+        refine' forall_congr' $ fun i => lf_iff_lt _ _ <;>
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr numeric.move_left, \",\", expr numeric.move_right, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align pgame.lt_def Pgame.lt_def
@@ -195,7 +195,7 @@ theorem not_fuzzy {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : ¬Fuzzy x y 
 #align pgame.not_fuzzy Pgame.not_fuzzy
 
 theorem lt_or_equiv_or_gt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < y ∨ (x ≈ y) ∨ y < x :=
-  ((lf_or_equiv_or_gf x y).imp fun h => h.lt ox oy) <| Or.imp_right fun h => h.lt oy ox
+  ((lf_or_equiv_or_gf x y).imp fun h => h.lt ox oy) $ Or.imp_right $ fun h => h.lt oy ox
 #align pgame.lt_or_equiv_or_gt Pgame.lt_or_equiv_or_gt
 
 theorem numeric_of_is_empty (x : Pgame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : Numeric x :=
@@ -216,7 +216,7 @@ theorem numeric_zero : Numeric 0 :=
 #align pgame.numeric_zero Pgame.numeric_zero
 
 theorem numeric_one : Numeric 1 :=
-  (numeric_of_is_empty_right_moves 1) fun _ => numeric_zero
+  numeric_of_is_empty_right_moves 1 $ fun _ => numeric_zero
 #align pgame.numeric_one Pgame.numeric_one
 
 theorem Numeric.neg : ∀ {x : Pgame} (o : Numeric x), Numeric (-x)
@@ -332,7 +332,7 @@ def lift₂ {α} (f : ∀ x y, Numeric x → Numeric y → α)
         x₁.Equiv x₂ → y₁.Equiv y₂ → f x₁ y₁ ox₁ oy₁ = f x₂ y₂ ox₂ oy₂) :
     Surreal → Surreal → α :=
   lift (fun x ox => lift (fun y oy => f x y ox oy) fun y₁ y₂ oy₁ oy₂ => H _ _ _ _ equiv_rfl) fun x₁ x₂ ox₁ ox₂ h =>
-    funext <| Quotient.ind fun ⟨y, oy⟩ => H _ _ _ _ h equiv_rfl
+    funext $ Quotient.ind $ fun ⟨y, oy⟩ => H _ _ _ _ h equiv_rfl
 #align surreal.lift₂ Surreal.lift₂
 
 instance : LE Surreal :=
@@ -761,7 +761,7 @@ instance : OrderedAddCommGroup Surreal where
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app (Term.proj `Pgame.not_le "." (fieldIdx "1")) [`h]) []]
+     (Term.app (Term.proj `Pgame.not_le "." (fieldIdx "1")) [`h])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])

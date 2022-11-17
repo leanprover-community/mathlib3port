@@ -183,12 +183,12 @@ theorem comp_assoc {I : Type u → Type t} [Applicative I] [LawfulApplicative I]
 
 @[simp]
 theorem comp_id (η : ApplicativeTransformation F G) : η.comp idTransformation = η :=
-  ext fun α x => rfl
+  ext $ fun α x => rfl
 #align applicative_transformation.comp_id ApplicativeTransformation.comp_id
 
 @[simp]
 theorem id_comp (η : ApplicativeTransformation F G) : idTransformation.comp η = η :=
-  ext fun α x => rfl
+  ext $ fun α x => rfl
 #align applicative_transformation.id_comp ApplicativeTransformation.id_comp
 
 end ApplicativeTransformation
@@ -275,7 +275,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.traverse Sum.traverseₓ'. -/
 /-- Defines a `traverse` function on the second component of a sum type.
 This is used to give a `traversable` instance for the functor `σ ⊕ -`. -/
-protected def traverse {α β} (f : α → F β) : Sum σ α → F (Sum σ β)
+protected def traverse {α β} (f : α → F β) : σ ⊕ α → F (σ ⊕ β)
   | Sum.inl x => pure (Sum.inl x)
   | Sum.inr x => Sum.inr <$> f x
 #align sum.traverse Sum.traverse

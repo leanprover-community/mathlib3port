@@ -357,9 +357,9 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
         (Term.explicitBinder "(" [`y] [":" `F] [] ")")]
        (Term.typeSpec
         ":"
-        («term_=_»
+        (Init.Core.«term_=_»
          (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-         "="
+         " = "
          (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))))
       (Command.declValSimple
        ":="
@@ -373,9 +373,9 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
             (calcTactic
              "calc"
              (calcStep
-              («term_=_»
+              (Init.Core.«term_=_»
                (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-               "="
+               " = "
                (BigOperators.Algebra.BigOperators.Basic.finset.sum
                 "∑"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
@@ -392,16 +392,16 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
                  " • "
                  `z)))
               ":="
-              («term_<|_»
+              (Init.Core.«term_$_»
                `integral_eq_sum_of_subset
-               "<|"
+               " $ "
                (Term.app
                 (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
                 [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])])))
              [(calcStep
-               («term_=_»
+               (Init.Core.«term_=_»
                 (Term.hole "_")
-                "="
+                " = "
                 (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))
                ":="
                (Term.byTactic
@@ -423,9 +423,9 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
            (calcTactic
             "calc"
             (calcStep
-             («term_=_»
+             (Init.Core.«term_=_»
               (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-              "="
+              " = "
               (BigOperators.Algebra.BigOperators.Basic.finset.sum
                "∑"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
@@ -442,16 +442,16 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
                 " • "
                 `z)))
              ":="
-             («term_<|_»
+             (Init.Core.«term_$_»
               `integral_eq_sum_of_subset
-              "<|"
+              " $ "
               (Term.app
                (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
                [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])])))
             [(calcStep
-              («term_=_»
+              (Init.Core.«term_=_»
                (Term.hole "_")
-               "="
+               " = "
                (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))
               ":="
               (Term.byTactic
@@ -465,9 +465,9 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
        (calcTactic
         "calc"
         (calcStep
-         («term_=_»
+         (Init.Core.«term_=_»
           (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-          "="
+          " = "
           (BigOperators.Algebra.BigOperators.Basic.finset.sum
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
@@ -482,16 +482,16 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
             " • "
             `z)))
          ":="
-         («term_<|_»
+         (Init.Core.«term_$_»
           `integral_eq_sum_of_subset
-          "<|"
+          " $ "
           (Term.app
            (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
            [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])])))
         [(calcStep
-          («term_=_»
+          (Init.Core.«term_=_»
            (Term.hole "_")
-           "="
+           " = "
            (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))
           ":="
           (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))]))
@@ -499,9 +499,9 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
       (calcTactic
        "calc"
        (calcStep
-        («term_=_»
+        (Init.Core.«term_=_»
          (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-         "="
+         " = "
          (BigOperators.Algebra.BigOperators.Basic.finset.sum
           "∑"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
@@ -516,16 +516,16 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
            " • "
            `z)))
         ":="
-        («term_<|_»
+        (Init.Core.«term_$_»
          `integral_eq_sum_of_subset
-         "<|"
+         " $ "
          (Term.app
           (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
           [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])])))
        [(calcStep
-         («term_=_»
+         (Init.Core.«term_=_»
           (Term.hole "_")
-          "="
+          " = "
           (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))
          ":="
          (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))])
@@ -537,9 +537,9 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.hole "_")
-       "="
+       " = "
        (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Algebra.Group.Defs.«term_•_» (Term.proj (Term.app `μ [`univ]) "." `toReal) " • " `y)
@@ -559,17 +559,17 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
       `μ
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `μ [`univ]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `μ [`univ]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 73, (some 73, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
-      («term_<|_»
+      (Init.Core.«term_$_»
        `integral_eq_sum_of_subset
-       "<|"
+       " $ "
        (Term.app
         (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
         [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])]))
@@ -597,7 +597,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")]) []]
+     (Term.app `range_const_subset [(Term.hole "_") (Term.hole "_")])
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) "." `trans)
@@ -619,18 +619,18 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) []]
+     (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `integral_eq_sum_of_subset
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.app (Term.proj (Term.app `const [`α `y]) "." `integral) [`μ])
-       "="
+       " = "
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) []))
@@ -705,7 +705,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 81, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Set.Data.Set.Basic.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}")) []]
+     (Set.Data.Set.Basic.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `μ
@@ -713,13 +713,12 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app
-       `μ
-       [(Term.paren
-         "("
-         [(Set.Data.Set.Basic.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}")) []]
-         ")")])
-      []]
+     (Term.app
+      `μ
+      [(Term.paren
+        "("
+        (Set.Data.Set.Basic.«term_⁻¹'_» (Term.app `const [`α `y]) " ⁻¹' " («term{_}» "{" [`z] "}"))
+        ")")])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 73, (some 73, term) <=? (none, [anonymous])
@@ -755,9 +754,9 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
       `const
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `const [`α `y]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `const [`α `y]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
@@ -783,20 +782,23 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
           calc
             const α y . integral μ = ∑ z in { y } , μ const α y ⁻¹' { z } . toReal • z
               :=
-              integral_eq_sum_of_subset <| filter_subset _ _ . trans range_const_subset _ _
+              integral_eq_sum_of_subset $ filter_subset _ _ . trans range_const_subset _ _
             _ = μ univ . toReal • y := by simp
 #align measure_theory.simple_func.integral_const MeasureTheory.SimpleFunc.integral_const
 
 @[simp]
 theorem integral_piecewise_zero {m : MeasurableSpace α} (f : α →ₛ F) (μ : Measure α) {s : Set α}
-    (hs : MeasurableSet s) : (piecewise s hs f 0).integral μ = f.integral (μ.restrict s) := by
-  classical refine'
-      (integral_eq_sum_of_subset _).trans (((sum_congr rfl) fun y hy => _).trans (integral_eq_sum_filter _ _).symm)
-    · dsimp
-      rw [Set.piecewise_eq_indicator, indicator_preimage_of_not_mem,
-        measure.restrict_apply (f.measurable_set_preimage _)]
-      exact fun h₀ => (mem_filter.1 hy).2 (Eq.symm h₀)
-      
+    (hs : MeasurableSet s) : (piecewise s hs f 0).integral μ = f.integral (μ.restrict s) := by classical
+  refine' (integral_eq_sum_of_subset _).trans ((sum_congr rfl $ fun y hy => _).trans (integral_eq_sum_filter _ _).symm)
+  · intro y hy
+    simp only [mem_filter, mem_range, coe_piecewise, coe_zero, piecewise_eq_indicator, mem_range_indicator] at *
+    rcases hy with ⟨⟨rfl, -⟩ | ⟨x, hxs, rfl⟩, h₀⟩
+    exacts[(h₀ rfl).elim, ⟨Set.mem_range_self _, h₀⟩]
+    
+  · dsimp
+    rw [Set.piecewise_eq_indicator, indicator_preimage_of_not_mem, measure.restrict_apply (f.measurable_set_preimage _)]
+    exact fun h₀ => (mem_filter.1 hy).2 (Eq.symm h₀)
+    
 #align measure_theory.simple_func.integral_piecewise_zero MeasureTheory.SimpleFunc.integral_piecewise_zero
 
 /-- Calculate the integral of `g ∘ f : α →ₛ F`, where `f` is an integrable function from `α` to `E`
@@ -993,7 +995,7 @@ variable (α E μ 𝕜)
 /-- The Bochner integral over simple functions in L1 space as a continuous linear map. -/
 def integralClm' : (α →₁ₛ[μ] E) →L[𝕜] E :=
   LinearMap.mkContinuous ⟨integral, integral_add, integral_smul⟩ 1 fun f =>
-    le_trans (norm_integral_le_norm _) <| by rw [one_mul]
+    le_trans (norm_integral_le_norm _) $ by rw [one_mul]
 #align measure_theory.L1.simple_func.integral_clm' MeasureTheory.L1Cat.SimpleFunc.integralClm'
 
 /-- The Bochner integral over simple functions in L1 space as a continuous linear map over ℝ. -/
@@ -1163,7 +1165,7 @@ theorem norm_integral_le (f : α →₁[μ] E) : ∥integral f∥ ≤ ∥f∥ :=
   calc
     ∥integral f∥ = ∥Integral f∥ := rfl
     _ ≤ ∥Integral∥ * ∥f∥ := le_op_norm _ _
-    _ ≤ 1 * ∥f∥ := mul_le_mul_of_nonneg_right norm_Integral_le_one <| norm_nonneg _
+    _ ≤ 1 * ∥f∥ := mul_le_mul_of_nonneg_right norm_Integral_le_one $ norm_nonneg _
     _ = ∥f∥ := one_mul _
     
 #align measure_theory.L1.norm_integral_le MeasureTheory.L1Cat.norm_integral_le
@@ -1262,7 +1264,7 @@ theorem integral_undef (h : ¬Integrable f μ) : (∫ a, f a ∂μ) = 0 :=
 #align measure_theory.integral_undef MeasureTheory.integral_undef
 
 theorem integral_non_ae_strongly_measurable (h : ¬AeStronglyMeasurable f μ) : (∫ a, f a ∂μ) = 0 :=
-  integral_undef <| not_and_of_not_left _ h
+  integral_undef $ not_and_of_not_left _ h
 #align measure_theory.integral_non_ae_strongly_measurable MeasureTheory.integral_non_ae_strongly_measurable
 
 variable (α E)
@@ -1381,7 +1383,7 @@ theorem Integrable.tendsto_set_integral_nhds_zero {ι} {f : α → E} (hf : Inte
 /-- If `F i → f` in `L1`, then `∫ x, F i x ∂μ → ∫ x, f x ∂μ`. -/
 theorem tendsto_integral_of_L1 {ι} (f : α → E) (hfi : Integrable f μ) {F : ι → α → E} {l : Filter ι}
     (hFi : ∀ᶠ i in l, Integrable (F i) μ) (hF : Tendsto (fun i => ∫⁻ x, ∥F i x - f x∥₊ ∂μ) l (𝓝 0)) :
-    Tendsto (fun i => ∫ x, F i x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) :=
+    Tendsto (fun i => ∫ x, F i x ∂μ) l (𝓝 $ ∫ x, f x ∂μ) :=
   tendsto_set_to_fun_of_L1 (dominatedFinMeasAdditiveWeightedSmul μ) f hfi hFi hF
 #align measure_theory.tendsto_integral_of_L1 MeasureTheory.tendsto_integral_of_L1
 
@@ -1393,7 +1395,7 @@ theorem tendsto_integral_of_L1 {ι} (f : α → E) (hfi : Integrable f μ) {F : 
 theorem tendsto_integral_of_dominated_convergence {F : ℕ → α → E} {f : α → E} (bound : α → ℝ)
     (F_measurable : ∀ n, AeStronglyMeasurable (F n) μ) (bound_integrable : Integrable bound μ)
     (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound a) (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) atTop (𝓝 (f a))) :
-    Tendsto (fun n => ∫ a, F n a ∂μ) atTop (𝓝 <| ∫ a, f a ∂μ) :=
+    Tendsto (fun n => ∫ a, F n a ∂μ) atTop (𝓝 $ ∫ a, f a ∂μ) :=
   tendsto_set_to_fun_of_dominated_convergence (dominatedFinMeasAdditiveWeightedSmul μ) bound F_measurable
     bound_integrable h_bound h_lim
 #align measure_theory.tendsto_integral_of_dominated_convergence MeasureTheory.tendsto_integral_of_dominated_convergence
@@ -1402,7 +1404,7 @@ theorem tendsto_integral_of_dominated_convergence {F : ℕ → α → E} {f : α
 theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l.IsCountablyGenerated] {F : ι → α → E}
     {f : α → E} (bound : α → ℝ) (hF_meas : ∀ᶠ n in l, AeStronglyMeasurable (F n) μ)
     (h_bound : ∀ᶠ n in l, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound a) (bound_integrable : Integrable bound μ)
-    (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) l (𝓝 (f a))) : Tendsto (fun n => ∫ a, F n a ∂μ) l (𝓝 <| ∫ a, f a ∂μ) :=
+    (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) l (𝓝 (f a))) : Tendsto (fun n => ∫ a, F n a ∂μ) l (𝓝 $ ∫ a, f a ∂μ) :=
   tendsto_set_to_fun_filter_of_dominated_convergence (dominatedFinMeasAdditiveWeightedSmul μ) bound hF_meas h_bound
     bound_integrable h_lim
 #align
@@ -1414,7 +1416,7 @@ theorem has_sum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι �
     (bound_summable : ∀ᵐ a ∂μ, Summable fun n => bound n a) (bound_integrable : Integrable (fun a => ∑' n, bound n a) μ)
     (h_lim : ∀ᵐ a ∂μ, HasSum (fun n => F n a) (f a)) : HasSum (fun n => ∫ a, F n a ∂μ) (∫ a, f a ∂μ) := by
   have hb_nonneg : ∀ᵐ a ∂μ, ∀ n, 0 ≤ bound n a :=
-    eventually_countable_forall.2 fun n => (h_bound n).mono fun a => (norm_nonneg _).trans
+    eventually_countable_forall.2 fun n => (h_bound n).mono $ fun a => (norm_nonneg _).trans
   have hb_le_tsum : ∀ n, bound n ≤ᵐ[μ] fun a => ∑' n, bound n a := by
     intro n
     filter_upwards [hb_nonneg, bound_summable] with _ ha0 ha_sum using le_tsum ha_sum _ fun i _ => ha0 i
@@ -1423,7 +1425,7 @@ theorem has_sum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι �
     exact eventually_le.trans (h_bound n) (hb_le_tsum n)
   simp only [HasSum, ← integral_finset_sum _ fun n _ => hF_integrable n]
   refine' tendsto_integral_filter_of_dominated_convergence (fun a => ∑' n, bound n a) _ _ bound_integrable h_lim
-  · exact eventually_of_forall fun s => s.aeStronglyMeasurableSum fun n hn => hF_meas n
+  · exact eventually_of_forall fun s => s.aeStronglyMeasurableSum $ fun n hn => hF_meas n
     
   · refine' eventually_of_forall fun s => _
     filter_upwards [eventually_countable_forall.2 h_bound, hb_nonneg, bound_summable] with a hFa ha0 has
@@ -1452,12 +1454,11 @@ theorem continuous_of_dominated {F : X → α → E} {bound : α → ℝ} (hF_me
 /-- The Bochner integral of a real-valued function `f : α → ℝ` is the difference between the
   integral of the positive part of `f` and the integral of the negative part of `f`.  -/
 theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (hf : Integrable f μ) :
-    (∫ a, f a ∂μ) =
-      Ennreal.toReal (∫⁻ a, Ennreal.ofReal <| f a ∂μ) - Ennreal.toReal (∫⁻ a, Ennreal.ofReal <| -f a ∂μ) :=
+    (∫ a, f a ∂μ) = Ennreal.toReal (∫⁻ a, Ennreal.ofReal $ f a ∂μ) - Ennreal.toReal (∫⁻ a, Ennreal.ofReal $ -f a ∂μ) :=
   by
   let f₁ := hf.toL1 f
   -- Go to the `L¹` space
-  have eq₁ : Ennreal.toReal (∫⁻ a, Ennreal.ofReal <| f a ∂μ) = ∥lp.posPart f₁∥ := by
+  have eq₁ : Ennreal.toReal (∫⁻ a, Ennreal.ofReal $ f a ∂μ) = ∥lp.posPart f₁∥ := by
     rw [L1.norm_def]
     congr 1
     apply lintegral_congr_ae
@@ -1468,7 +1469,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
     rw [Real.nnnorm_of_nonneg (le_max_right _ _)]
     simp only [Real.coe_to_nnreal', Subtype.coe_mk]
   -- Go to the `L¹` space
-  have eq₂ : Ennreal.toReal (∫⁻ a, Ennreal.ofReal <| -f a ∂μ) = ∥lp.negPart f₁∥ := by
+  have eq₂ : Ennreal.toReal (∫⁻ a, Ennreal.ofReal $ -f a ∂μ) = ∥lp.negPart f₁∥ := by
     rw [L1.norm_def]
     congr 1
     apply lintegral_congr_ae
@@ -1484,7 +1485,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
   measure_theory.integral_eq_lintegral_pos_part_sub_lintegral_neg_part MeasureTheory.integral_eq_lintegral_pos_part_sub_lintegral_neg_part
 
 theorem integral_eq_lintegral_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f) (hfm : AeStronglyMeasurable f μ) :
-    (∫ a, f a ∂μ) = Ennreal.toReal (∫⁻ a, Ennreal.ofReal <| f a ∂μ) := by
+    (∫ a, f a ∂μ) = Ennreal.toReal (∫⁻ a, Ennreal.ofReal $ f a ∂μ) := by
   by_cases hfi:integrable f μ
   · rw [integral_eq_lintegral_pos_part_sub_lintegral_neg_part hfi]
     have h_min : (∫⁻ a, Ennreal.ofReal (-f a) ∂μ) = 0 := by
@@ -1501,7 +1502,7 @@ theorem integral_eq_lintegral_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f
   · rw [integral_undef hfi]
     simp_rw [integrable, hfm, has_finite_integral_iff_norm, lt_top_iff_ne_top, Ne.def, true_and_iff, not_not] at hfi
     have : (∫⁻ a : α, Ennreal.ofReal (f a) ∂μ) = ∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ := by
-      refine' lintegral_congr_ae (hf.mono fun a h => _)
+      refine' lintegral_congr_ae (hf.mono $ fun a h => _)
       rw [Real.norm_eq_abs, abs_of_nonneg h]
     rw [this, hfi]
     rfl
@@ -1570,7 +1571,7 @@ theorem integral_to_real {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) (hf :
     rw [lt_top_iff_ne_top] at hx
     simp [hx]
     
-  · exact eventually_of_forall fun x => Ennreal.to_real_nonneg
+  · exact eventually_of_forall $ fun x => Ennreal.to_real_nonneg
     
 #align measure_theory.integral_to_real MeasureTheory.integral_to_real
 
@@ -1590,7 +1591,7 @@ theorem integral_coe_le_of_lintegral_coe_le {f : α → ℝ≥0} {b : ℝ≥0} (
 #align measure_theory.integral_coe_le_of_lintegral_coe_le MeasureTheory.integral_coe_le_of_lintegral_coe_le
 
 theorem integral_nonneg {f : α → ℝ} (hf : 0 ≤ f) : 0 ≤ ∫ a, f a ∂μ :=
-  integral_nonneg_of_ae <| eventually_of_forall hf
+  integral_nonneg_of_ae $ eventually_of_forall hf
 #align measure_theory.integral_nonneg MeasureTheory.integral_nonneg
 
 theorem integral_nonpos_of_ae {f : α → ℝ} (hf : f ≤ᵐ[μ] 0) : (∫ a, f a ∂μ) ≤ 0 := by
@@ -1600,7 +1601,7 @@ theorem integral_nonpos_of_ae {f : α → ℝ} (hf : f ≤ᵐ[μ] 0) : (∫ a, f
 #align measure_theory.integral_nonpos_of_ae MeasureTheory.integral_nonpos_of_ae
 
 theorem integral_nonpos {f : α → ℝ} (hf : f ≤ 0) : (∫ a, f a ∂μ) ≤ 0 :=
-  integral_nonpos_of_ae <| eventually_of_forall hf
+  integral_nonpos_of_ae $ eventually_of_forall hf
 #align measure_theory.integral_nonpos MeasureTheory.integral_nonpos
 
 theorem integral_eq_zero_iff_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f) (hfi : Integrable f μ) :
@@ -1673,14 +1674,14 @@ theorem integral_mono_ae {f g : α → ℝ} (hf : Integrable f μ) (hg : Integra
 @[mono]
 theorem integral_mono {f g : α → ℝ} (hf : Integrable f μ) (hg : Integrable g μ) (h : f ≤ g) :
     (∫ a, f a ∂μ) ≤ ∫ a, g a ∂μ :=
-  integral_mono_ae hf hg <| eventually_of_forall h
+  integral_mono_ae hf hg $ eventually_of_forall h
 #align measure_theory.integral_mono MeasureTheory.integral_mono
 
 theorem integral_mono_of_nonneg {f g : α → ℝ} (hf : 0 ≤ᵐ[μ] f) (hgi : Integrable g μ) (h : f ≤ᵐ[μ] g) :
     (∫ a, f a ∂μ) ≤ ∫ a, g a ∂μ := by
   by_cases hfm:ae_strongly_measurable f μ
   · refine' integral_mono_ae ⟨hfm, _⟩ hgi h
-    refine' hgi.has_finite_integral.mono <| h.mp <| hf.mono fun x hf hfg => _
+    refine' hgi.has_finite_integral.mono $ h.mp $ hf.mono $ fun x hf hfg => _
     simpa [abs_of_nonneg hf, abs_of_nonneg (le_trans hf hfg)]
     
   · rw [integral_non_ae_strongly_measurable hfm]
@@ -1704,7 +1705,7 @@ theorem norm_integral_le_integral_norm (f : α → E) : ∥∫ a, f a ∂μ∥ �
     (fun h : AeStronglyMeasurable f μ =>
       calc
         ∥∫ a, f a ∂μ∥ ≤ Ennreal.toReal (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) := norm_integral_le_lintegral_norm _
-        _ = ∫ a, ∥f a∥ ∂μ := (integral_eq_lintegral_of_nonneg_ae le_ae <| h.norm).symm
+        _ = ∫ a, ∥f a∥ ∂μ := (integral_eq_lintegral_of_nonneg_ae le_ae $ h.norm).symm
         )
     fun h : ¬AeStronglyMeasurable f μ => by
     rw [integral_non_ae_strongly_measurable h, norm_zero]
@@ -1715,7 +1716,7 @@ theorem norm_integral_le_of_norm_le {f : α → E} {g : α → ℝ} (hg : Integr
     ∥∫ x, f x ∂μ∥ ≤ ∫ x, g x ∂μ :=
   calc
     ∥∫ x, f x ∂μ∥ ≤ ∫ x, ∥f x∥ ∂μ := norm_integral_le_integral_norm f
-    _ ≤ ∫ x, g x ∂μ := integral_mono_of_nonneg (eventually_of_forall fun x => norm_nonneg _) hg h
+    _ ≤ ∫ x, g x ∂μ := integral_mono_of_nonneg (eventually_of_forall $ fun x => norm_nonneg _) hg h
     
 #align measure_theory.norm_integral_le_of_norm_le MeasureTheory.norm_integral_le_of_norm_le
 
@@ -1759,7 +1760,7 @@ theorem norm_integral_le_of_norm_le_const [IsFiniteMeasure μ] {f : α → E} {C
 theorem tendsto_integral_approx_on_of_measurable [MeasurableSpace E] [BorelSpace E] {f : α → E} {s : Set E}
     [SeparableSpace s] (hfi : Integrable f μ) (hfm : Measurable f) (hs : ∀ᵐ x ∂μ, f x ∈ closure s) {y₀ : E}
     (h₀ : y₀ ∈ s) (h₀i : Integrable (fun x => y₀) μ) :
-    Tendsto (fun n => (SimpleFunc.approxOn f hfm s y₀ h₀ n).integral μ) atTop (𝓝 <| ∫ x, f x ∂μ) := by
+    Tendsto (fun n => (SimpleFunc.approxOn f hfm s y₀ h₀ n).integral μ) atTop (𝓝 $ ∫ x, f x ∂μ) := by
   have hfi' := simple_func.integrable_approx_on hfm hfi h₀ h₀i
   simp only [simple_func.integral_eq_integral _ (hfi' _)]
   exact tendsto_set_to_fun_approx_on_of_measurable (dominated_fin_meas_additive_weighted_smul μ) hfi hfm hs h₀ h₀i
@@ -1767,7 +1768,7 @@ theorem tendsto_integral_approx_on_of_measurable [MeasurableSpace E] [BorelSpace
 
 theorem tendsto_integral_approx_on_of_measurable_of_range_subset [MeasurableSpace E] [BorelSpace E] {f : α → E}
     (fmeas : Measurable f) (hf : Integrable f μ) (s : Set E) [SeparableSpace s] (hs : range f ∪ {0} ⊆ s) :
-    Tendsto (fun n => (SimpleFunc.approxOn f fmeas s 0 (hs <| by simp) n).integral μ) atTop (𝓝 <| ∫ x, f x ∂μ) := by
+    Tendsto (fun n => (SimpleFunc.approxOn f fmeas s 0 (hs $ by simp) n).integral μ) atTop (𝓝 $ ∫ x, f x ∂μ) := by
   apply tendsto_integral_approx_on_of_measurable hf fmeas _ _ (integrable_zero _ _ _)
   exact eventually_of_forall fun x => subset_closure (hs (Set.mem_union_left _ (mem_range_self _)))
 #align
@@ -1797,12 +1798,15 @@ theorem integral_zero_measure {m : MeasurableSpace α} (f : α → E) : (∫ x, 
 #align measure_theory.integral_zero_measure MeasureTheory.integral_zero_measure
 
 theorem integral_finset_sum_measure {ι} {m : MeasurableSpace α} {f : α → E} {μ : ι → Measure α} {s : Finset ι}
-    (hf : ∀ i ∈ s, Integrable f (μ i)) : (∫ a, f a ∂∑ i in s, μ i) = ∑ i in s, ∫ a, f a ∂μ i := by
-  classical refine' Finset.induction_on' s _ _
-    · intro i t hi ht hit iht
-      simp only [Finset.sum_insert hit, ← iht]
-      exact integral_add_measure (hf _ hi) (integrable_finset_sum_measure.2 fun j hj => hf j (ht hj))
-      
+    (hf : ∀ i ∈ s, Integrable f (μ i)) : (∫ a, f a ∂∑ i in s, μ i) = ∑ i in s, ∫ a, f a ∂μ i := by classical
+  refine' Finset.induction_on' s _ _
+  -- `induction s using finset.induction_on'` fails
+  · simp
+    
+  · intro i t hi ht hit iht
+    simp only [Finset.sum_insert hit, ← iht]
+    exact integral_add_measure (hf _ hi) (integrable_finset_sum_measure.2 $ fun j hj => hf j (ht hj))
+    
 #align measure_theory.integral_finset_sum_measure MeasureTheory.integral_finset_sum_measure
 
 theorem nndist_integral_add_measure_le_lintegral (h₁ : Integrable f μ) (h₂ : Integrable f ν) :
@@ -1819,7 +1823,7 @@ theorem has_sum_integral_measure {ι} {m : MeasurableSpace α} {f : α → E} {�
   lift ε to ℝ≥0 using ε0.le
   have hf_lt : (∫⁻ x, ∥f x∥₊ ∂measure.sum μ) < ∞ := hf.2
   have hmem : ∀ᶠ y in 𝓝 (∫⁻ x, ∥f x∥₊ ∂measure.sum μ), (∫⁻ x, ∥f x∥₊ ∂measure.sum μ) < y + ε := by
-    refine' tendsto_id.add tendsto_const_nhds (lt_mem_nhds <| Ennreal.lt_add_right _ _)
+    refine' tendsto_id.add tendsto_const_nhds (lt_mem_nhds $ Ennreal.lt_add_right _ _)
     exacts[hf_lt.ne, Ennreal.coe_ne_zero.2 (Nnreal.coe_ne_zero.1 ε0.ne')]
   refine' ((has_sum_lintegral_measure (fun x => ∥f x∥₊) μ).Eventually hmem).mono fun s hs => _
   obtain ⟨ν, hν⟩ : ∃ ν, (∑ i in s, μ i) + ν = measure.sum μ := by
@@ -1887,7 +1891,7 @@ theorem integral_map {β} [MeasurableSpace β] {φ : α → β} (hφ : AeMeasura
       exact measure.map_congr hφ.ae_eq_mk
     _ = ∫ x, g (hφ.mk φ x) ∂μ := integral_map_of_strongly_measurable hφ.measurableMk hfm.stronglyMeasurableMk
     _ = ∫ x, g (φ x) ∂μ := integral_congr_ae (hφ.ae_eq_mk.symm.fun_comp _)
-    _ = ∫ x, f (φ x) ∂μ := integral_congr_ae <| ae_eq_comp hφ hfm.ae_eq_mk.symm
+    _ = ∫ x, f (φ x) ∂μ := integral_congr_ae $ ae_eq_comp hφ hfm.ae_eq_mk.symm
     
 #align measure_theory.integral_map MeasureTheory.integral_map
 
@@ -1928,7 +1932,7 @@ theorem integral_dirac' [MeasurableSpace α] (f : α → E) (a : α) (hfm : Stro
     (∫ x, f x ∂Measure.dirac a) = f a := by
   borelize E
   calc
-    (∫ x, f x ∂measure.dirac a) = ∫ x, f a ∂measure.dirac a := integral_congr_ae <| ae_eq_dirac' hfm.measurable
+    (∫ x, f x ∂measure.dirac a) = ∫ x, f a ∂measure.dirac a := integral_congr_ae $ ae_eq_dirac' hfm.measurable
     _ = f a := by simp [measure.dirac_apply_of_mem]
     
 #align measure_theory.integral_dirac' MeasureTheory.integral_dirac'
@@ -1937,7 +1941,7 @@ theorem integral_dirac' [MeasurableSpace α] (f : α → E) (a : α) (hfm : Stro
 theorem integral_dirac [MeasurableSpace α] [MeasurableSingletonClass α] (f : α → E) (a : α) :
     (∫ x, f x ∂Measure.dirac a) = f a :=
   calc
-    (∫ x, f x ∂Measure.dirac a) = ∫ x, f a ∂Measure.dirac a := integral_congr_ae <| ae_eq_dirac f
+    (∫ x, f x ∂Measure.dirac a) = ∫ x, f a ∂Measure.dirac a := integral_congr_ae $ ae_eq_dirac f
     _ = f a := by simp [measure.dirac_apply_of_mem]
     
 #align measure_theory.integral_dirac MeasureTheory.integral_dirac
@@ -2186,7 +2190,7 @@ theorem snorm_one_le_of_le {r : ℝ≥0} {f : α → ℝ} (hfint : Integrable f 
   swap
   · have : μ Set.univ = ∞ := by
       by_contra hμ'
-      exact hμ (is_finite_measure.mk <| lt_top_iff_ne_top.2 hμ')
+      exact hμ (is_finite_measure.mk $ lt_top_iff_ne_top.2 hμ')
     rw [this, Ennreal.mul_top, if_neg, Ennreal.top_mul, if_neg]
     · exact le_top
       
@@ -2203,7 +2207,7 @@ theorem snorm_one_le_of_le {r : ℝ≥0} {f : α → ℝ} (hfint : Integrable f 
     filter_upwards [hf] with ω hω using Real.to_nnreal_le_iff_le_coe.2 hω
   rw [mem_ℒp.snorm_eq_integral_rpow_norm one_ne_zero Ennreal.one_ne_top (mem_ℒp_one_iff_integrable.2 hfint),
     Ennreal.of_real_le_iff_le_to_real
-      (Ennreal.mul_ne_top (Ennreal.mul_ne_top Ennreal.two_ne_top <| @measure_ne_top _ _ _ hμ _) Ennreal.coe_ne_top)]
+      (Ennreal.mul_ne_top (Ennreal.mul_ne_top Ennreal.two_ne_top $ @measure_ne_top _ _ _ hμ _) Ennreal.coe_ne_top)]
   simp_rw [Ennreal.one_to_real, _root_.inv_one, Real.rpow_one, Real.norm_eq_abs, ←
     max_zero_add_max_neg_zero_eq_abs_self, ← Real.coe_to_nnreal']
   rw [integral_add hfint.real_to_nnreal]

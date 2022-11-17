@@ -22,7 +22,7 @@ noncomputable instance Finsupp.fintype {ι π : Sort _} [DecidableEq ι] [Zero �
 
 instance Finsupp.infinite_of_left {ι π : Sort _} [Nontrivial π] [Zero π] [Infinite ι] : Infinite (ι →₀ π) :=
   let ⟨m, hm⟩ := exists_ne (0 : π)
-  Infinite.of_injective _ <| Finsupp.single_left_injective hm
+  Infinite.of_injective _ $ Finsupp.single_left_injective hm
 #align finsupp.infinite_of_left Finsupp.infinite_of_left
 
 instance Finsupp.infinite_of_right {ι π : Sort _} [Infinite π] [Zero π] [Nonempty ι] : Infinite (ι →₀ π) :=

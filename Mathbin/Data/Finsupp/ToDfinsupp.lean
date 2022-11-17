@@ -182,25 +182,25 @@ theorem to_finsupp_zero [Zero M] [∀ m : M, Decidable (m ≠ 0)] : toFinsupp 0 
 @[simp]
 theorem to_finsupp_add [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
     (toFinsupp (f + g) : ι →₀ M) = toFinsupp f + toFinsupp g :=
-  Finsupp.coe_fn_injective <| Dfinsupp.coe_add _ _
+  Finsupp.coe_fn_injective $ Dfinsupp.coe_add _ _
 #align dfinsupp.to_finsupp_add Dfinsupp.to_finsupp_add
 
 @[simp]
 theorem to_finsupp_neg [AddGroup M] [∀ m : M, Decidable (m ≠ 0)] (f : Π₀ i : ι, M) :
     (toFinsupp (-f) : ι →₀ M) = -toFinsupp f :=
-  Finsupp.coe_fn_injective <| Dfinsupp.coe_neg _
+  Finsupp.coe_fn_injective $ Dfinsupp.coe_neg _
 #align dfinsupp.to_finsupp_neg Dfinsupp.to_finsupp_neg
 
 @[simp]
 theorem to_finsupp_sub [AddGroup M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
     (toFinsupp (f - g) : ι →₀ M) = toFinsupp f - toFinsupp g :=
-  Finsupp.coe_fn_injective <| Dfinsupp.coe_sub _ _
+  Finsupp.coe_fn_injective $ Dfinsupp.coe_sub _ _
 #align dfinsupp.to_finsupp_sub Dfinsupp.to_finsupp_sub
 
 @[simp]
 theorem to_finsupp_smul [Monoid R] [AddMonoid M] [DistribMulAction R M] [∀ m : M, Decidable (m ≠ 0)] (r : R)
     (f : Π₀ i : ι, M) : (toFinsupp (r • f) : ι →₀ M) = r • toFinsupp f :=
-  Finsupp.coe_fn_injective <| Dfinsupp.coe_smul _ _
+  Finsupp.coe_fn_injective $ Dfinsupp.coe_smul _ _
 #align dfinsupp.to_finsupp_smul Dfinsupp.to_finsupp_smul
 
 end Dfinsupp
@@ -252,7 +252,7 @@ variable {η : ι → Type _} {N : Type _} [Semiring R]
 open Finsupp
 
 /-- `finsupp.split` is an equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
-def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η i →₀ N where
+def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σ i, η i) →₀ N) ≃ Π₀ i, η i →₀ N where
   toFun f :=
     ⟨split f,
       Trunc.mk
@@ -276,19 +276,19 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
 #align sigma_finsupp_equiv_dfinsupp sigmaFinsuppEquivDfinsupp
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_apply [Zero N] (f : (Σi, η i) →₀ N) :
+theorem sigma_finsupp_equiv_dfinsupp_apply [Zero N] (f : (Σ i, η i) →₀ N) :
     (sigmaFinsuppEquivDfinsupp f : ∀ i, η i →₀ N) = Finsupp.split f :=
   rfl
 #align sigma_finsupp_equiv_dfinsupp_apply sigma_finsupp_equiv_dfinsupp_apply
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_symm_apply [Zero N] (f : Π₀ i, η i →₀ N) (s : Σi, η i) :
-    (sigmaFinsuppEquivDfinsupp.symm f : (Σi, η i) →₀ N) s = f s.1 s.2 :=
+theorem sigma_finsupp_equiv_dfinsupp_symm_apply [Zero N] (f : Π₀ i, η i →₀ N) (s : Σ i, η i) :
+    (sigmaFinsuppEquivDfinsupp.symm f : (Σ i, η i) →₀ N) s = f s.1 s.2 :=
   rfl
 #align sigma_finsupp_equiv_dfinsupp_symm_apply sigma_finsupp_equiv_dfinsupp_symm_apply
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_support [Zero N] (f : (Σi, η i) →₀ N) :
+theorem sigma_finsupp_equiv_dfinsupp_support [Zero N] (f : (Σ i, η i) →₀ N) :
     (sigmaFinsuppEquivDfinsupp f).support = Finsupp.splitSupport f := by
   ext
   rw [Dfinsupp.mem_support_to_fun]
@@ -296,7 +296,7 @@ theorem sigma_finsupp_equiv_dfinsupp_support [Zero N] (f : (Σi, η i) →₀ N)
 #align sigma_finsupp_equiv_dfinsupp_support sigma_finsupp_equiv_dfinsupp_support
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
+theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σ i, η i) (n : N) :
     sigmaFinsuppEquivDfinsupp (Finsupp.single a n) =
       @Dfinsupp.single _ (fun i => η i →₀ N) _ _ a.1 (Finsupp.single a.2 n) :=
   by
@@ -306,8 +306,8 @@ theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
   · subst h
     simp [split_apply, Finsupp.single_apply]
     
-  suffices Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
-  have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩ := by simp [h]
+  suffices Finsupp.single (⟨i, a⟩ : Σ i, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
+  have H : (⟨i, a⟩ : Σ i, η i) ≠ ⟨j, b⟩ := by simp [h]
   rw [Finsupp.single_apply, if_neg H]
 #align sigma_finsupp_equiv_dfinsupp_single sigma_finsupp_equiv_dfinsupp_single
 
@@ -315,7 +315,7 @@ theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
 attribute [-instance] Finsupp.hasZero
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →₀ N) :
+theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClass N] (f g : (Σ i, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (f + g) =
       (sigmaFinsuppEquivDfinsupp f + sigmaFinsuppEquivDfinsupp g : Π₀ i : ι, η i →₀ N) :=
   by
@@ -325,7 +325,7 @@ theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →
 
 /-- `finsupp.split` is an additive equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 @[simps]
-def sigmaFinsuppAddEquivDfinsupp [AddZeroClass N] : ((Σi, η i) →₀ N) ≃+ Π₀ i, η i →₀ N :=
+def sigmaFinsuppAddEquivDfinsupp [AddZeroClass N] : ((Σ i, η i) →₀ N) ≃+ Π₀ i, η i →₀ N :=
   { sigmaFinsuppEquivDfinsupp with toFun := sigmaFinsuppEquivDfinsupp, invFun := sigmaFinsuppEquivDfinsupp.symm,
     map_add' := sigma_finsupp_equiv_dfinsupp_add }
 #align sigma_finsupp_add_equiv_dfinsupp sigmaFinsuppAddEquivDfinsupp
@@ -335,7 +335,7 @@ attribute [-instance] Finsupp.addZeroClass
 --tofix: r • (sigma_finsupp_equiv_dfinsupp f) doesn't work.
 @[simp]
 theorem sigma_finsupp_equiv_dfinsupp_smul {R} [Monoid R] [AddMonoid N] [DistribMulAction R N] (r : R)
-    (f : (Σi, η i) →₀ N) :
+    (f : (Σ i, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (r • f) =
       @HasSmul.smul R (Π₀ i, η i →₀ N) MulAction.toHasSmul r (sigmaFinsuppEquivDfinsupp f) :=
   by
@@ -347,7 +347,7 @@ attribute [-instance] Finsupp.addMonoid
 
 /-- `finsupp.split` is a linear equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 @[simps]
-def sigmaFinsuppLequivDfinsupp [AddCommMonoid N] [Module R N] : ((Σi, η i) →₀ N) ≃ₗ[R] Π₀ i, η i →₀ N :=
+def sigmaFinsuppLequivDfinsupp [AddCommMonoid N] [Module R N] : ((Σ i, η i) →₀ N) ≃ₗ[R] Π₀ i, η i →₀ N :=
   { sigmaFinsuppAddEquivDfinsupp with map_smul' := sigma_finsupp_equiv_dfinsupp_smul }
 #align sigma_finsupp_lequiv_dfinsupp sigmaFinsuppLequivDfinsupp
 

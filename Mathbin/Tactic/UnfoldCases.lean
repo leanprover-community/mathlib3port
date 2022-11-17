@@ -92,20 +92,26 @@ open Expr
 
 namespace UnfoldCases
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
-/-- Given an equation `f x = y`, this tactic tries to infer an expression that can be
-  used to do distinction by cases on to make progress.
-
-  Pre-condition: assumes that the outer-most application cannot be beta-reduced
-  (e.g. `whnf` or `dsimp`).
--/
-unsafe def find_splitting_expr : expr → tactic expr
-  | quote.1 (@ite _ (%%ₓcond) (%%ₓdec_inst) _ _ = _) => pure (quote.1 (@Decidable.em (%%ₓcond) (%%ₓdec_inst)))
-  | quote.1 ((%%ₓapp x y) = _) => pure y
-  | e =>
-    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Given an equation `f x = y`, this tactic tries to infer an expression that can be
+        used to do distinction by cases on to make progress.
+      
+        Pre-condition: assumes that the outer-most application cannot be beta-reduced
+        (e.g. `whnf` or `dsimp`).
+      -/
+    unsafe
+  def
+    find_splitting_expr
+    : expr → tactic expr
+    | q( @ ite _ $ ( cond ) $ ( dec_inst ) _ _ = _ ) => pure q( @ Decidable.em $ ( cond ) $ ( dec_inst ) )
+      | q( $ ( app x y ) = _ ) => pure y
+      |
+        e
+        =>
+        throwError
+          "expected an expression of the form: f x = y. Got:
+            { ← e }"
 #align tactic.unfold_cases.find_splitting_expr tactic.unfold_cases.find_splitting_expr
 
 /-- Tries to finish the current goal using the `inner` tactic. If the tactic
@@ -126,28 +132,39 @@ unsafe def unfold_cases_core (inner : interactive.itactic) : tactic Unit :=
       do
       let tgt ← target
       let e ← find_splitting_expr tgt
-      focus1 <| do
+      focus1 $ do
           cases e
-          all_goals <| dsimp_target >> unfold_cases_core <|> skip
+          all_goals $ dsimp_target >> unfold_cases_core <|> skip
           skip
 #align tactic.unfold_cases.unfold_cases_core tactic.unfold_cases.unfold_cases_core
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
-/-- Given a target of the form `⊢ f x₁ ... xₙ = y`, unfolds `f` using a delta reduction.
--/
-unsafe def unfold_tgt : expr → tactic Unit
-  | quote.1 ((%%ₓl@(app _ _)) = %%ₓr) =>
-    match l.get_app_fn with
-    | const n ls => delta_target [n]
-    | e =>
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
-  | e =>
-    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Given a target of the form `⊢ f x₁ ... xₙ = y`, unfolds `f` using a delta reduction.
+      -/
+    unsafe
+  def
+    unfold_tgt
+    : expr → tactic Unit
+    |
+        q( $ ( l @ app _ _ ) = $ ( r ) )
+        =>
+        match
+          l . get_app_fn
+          with
+          | const n ls => delta_target [ n ]
+            |
+              e
+              =>
+              throwError
+                "couldn't unfold:
+                  { ← e }"
+      |
+        e
+        =>
+        throwError
+          "expected an expression of the form: f x = y. Got:
+            { ← e }"
 #align tactic.unfold_cases.unfold_tgt tactic.unfold_cases.unfold_tgt
 
 end UnfoldCases
@@ -199,7 +216,7 @@ open UnfoldCases
   Further examples can be found in `test/unfold_cases.lean`.
 -/
 unsafe def unfold_cases (inner : itactic) : tactic Unit :=
-  focus1 <| do
+  focus1 $ do
     tactic.intros
     let tgt ← target
     unfold_tgt tgt

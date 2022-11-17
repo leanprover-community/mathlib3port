@@ -99,7 +99,7 @@ theorem _root_.is_open.analytic_set_image {β : Type _} [TopologicalSpace β] [P
 /-- A set is analytic if and only if it is the continuous image of some Polish space. -/
 theorem analytic_set_iff_exists_polish_space_range {s : Set α} :
     AnalyticSet s ↔
-      ∃ (β : Type)(h : TopologicalSpace β)(h' : @PolishSpace β h)(f : β → α), @Continuous _ _ h _ f ∧ range f = s :=
+      ∃ (β : Type) (h : TopologicalSpace β) (h' : @PolishSpace β h) (f : β → α), @Continuous _ _ h _ f ∧ range f = s :=
   by
   constructor
   · intro h
@@ -188,7 +188,7 @@ theorem AnalyticSet.Union [Countable ι] {s : ι → Set α} (hs : ∀ n, Analyt
     coincides with `f n` on `β n` sends it to `⋃ n, s n`. -/
   choose β hβ h'β f f_cont f_range using fun n => analytic_set_iff_exists_polish_space_range.1 (hs n)
   skip
-  let γ := Σn, β n
+  let γ := Σ n, β n
   let F : γ → α := by
     rintro ⟨n, x⟩
     exact f n x
@@ -281,6 +281,8 @@ theorem MeasurablySeparable.union [Countable ι] {α : Type _} [MeasurableSpace 
     
 #align measure_theory.measurably_separable.Union MeasureTheory.MeasurablySeparable.union
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x' y') -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (u v) -/
 /-- The hard part of the Lusin separation theorem saying that two disjoint analytic sets are
 contained in disjoint Borel sets (see the full statement in `analytic_set.measurably_separable`).
 Here, we prove this when our analytic sets are the ranges of functions from `ℕ → ℕ`.
@@ -300,7 +302,7 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
   have I :
     ∀ n x y,
       ¬measurably_separable (f '' cylinder x n) (g '' cylinder y n) →
-        ∃ x' y',
+        ∃ (x') (y'),
           x' ∈ cylinder x n ∧
             y' ∈ cylinder y n ∧ ¬measurably_separable (f '' cylinder x' (n + 1)) (g '' cylinder y' (n + 1)) :=
     by
@@ -372,15 +374,15 @@ theorem measurablySeparableRangeOfDisjoint [T2Space α] [MeasurableSpace α] [Bo
       exact (Iy i n hi).symm
       
   -- consider two open sets separating `f x` and `g y`.
-  obtain ⟨u, v, u_open, v_open, xu, yv, huv⟩ : ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ f x ∈ u ∧ g y ∈ v ∧ Disjoint u v :=
-    by
+  obtain ⟨u, v, u_open, v_open, xu, yv, huv⟩ :
+    ∃ (u : Set α) (v : Set α), IsOpen u ∧ IsOpen v ∧ f x ∈ u ∧ g y ∈ v ∧ Disjoint u v := by
     apply t2_separation
     exact disjoint_iff_forall_ne.1 h _ (mem_range_self _) _ (mem_range_self _)
   letI : MetricSpace (ℕ → ℕ) := metric_space_nat_nat
-  obtain ⟨εx, εxpos, hεx⟩ : ∃ (εx : ℝ)(H : εx > 0), Metric.ball x εx ⊆ f ⁻¹' u := by
+  obtain ⟨εx, εxpos, hεx⟩ : ∃ (εx : ℝ) (H : εx > 0), Metric.ball x εx ⊆ f ⁻¹' u := by
     apply Metric.mem_nhds_iff.1
     exact hf.continuous_at.preimage_mem_nhds (u_open.mem_nhds xu)
-  obtain ⟨εy, εypos, hεy⟩ : ∃ (εy : ℝ)(H : εy > 0), Metric.ball y εy ⊆ g ⁻¹' v := by
+  obtain ⟨εy, εypos, hεy⟩ : ∃ (εy : ℝ) (H : εy > 0), Metric.ball y εy ⊆ g ⁻¹' v := by
     apply Metric.mem_nhds_iff.1
     exact hg.continuous_at.preimage_mem_nhds (v_open.mem_nhds yv)
   obtain ⟨n, hn⟩ : ∃ n : ℕ, (1 / 2 : ℝ) ^ n < min εx εy := exists_pow_lt_of_lt_one (lt_min εxpos εypos) (by norm_num)
@@ -487,7 +489,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
   -- we start with the easy inclusion `range f ⊆ ⋂ F n`. One just needs to unfold the definitions.
   · rintro x ⟨y, rfl⟩
     apply mem_Inter.2 fun n => _
-    obtain ⟨s, sb, ys, hs⟩ : ∃ (s : Set γ)(H : s ∈ b), y ∈ s ∧ s ⊆ ball y (u n / 2) := by
+    obtain ⟨s, sb, ys, hs⟩ : ∃ (s : Set γ) (H : s ∈ b), y ∈ s ∧ s ⊆ ball y (u n / 2) := by
       apply hb.mem_nhds_iff.1
       exact ball_mem_nhds _ (half_pos (u_pos n))
     have diam_s : diam s ≤ u n := by
@@ -508,7 +510,7 @@ theorem measurableSetRangeOfContinuousInjective {β : Type _} [TopologicalSpace 
   -- Now, let us prove the harder inclusion `⋂ F n ⊆ range f`.
   · intro x hx
     -- pick for each `n` a good set `s n` of small diameter for which `x ∈ E (s n)`.
-    have C1 : ∀ n, ∃ (s : b)(hs : bounded s.1 ∧ diam s.1 ≤ u n), x ∈ E s := fun n => by
+    have C1 : ∀ n, ∃ (s : b) (hs : bounded s.1 ∧ diam s.1 ≤ u n), x ∈ E s := fun n => by
       simpa only [mem_Union] using mem_Inter.1 hx n
     choose s hs hxs using C1
     have C2 : ∀ n, (s n).1.Nonempty := by

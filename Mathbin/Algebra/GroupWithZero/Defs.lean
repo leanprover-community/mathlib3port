@@ -52,6 +52,12 @@ theorem mul_zero (a : M₀) : a * 0 = 0 :=
 
 end MulZeroClass
 
+/- warning: no_zero_divisors -> NoZeroDivisors is a dubious translation:
+lean 3 declaration is
+  forall (M₀ : Type.{u_4}) [_inst_1 : Mul.{u_4} M₀] [_inst_2 : Zero.{u_4} M₀], Prop
+but is expected to have type
+  forall (α : Type.{u}) [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.341 : MonoidWithZero.{u} α], Prop
+Case conversion may be inaccurate. Consider using '#align no_zero_divisors NoZeroDivisorsₓ'. -/
 /-- Predicate typeclass for expressing that `a * b = 0` implies `a = 0` or `b = 0`
 for all `a` and `b` of type `G₀`. -/
 class NoZeroDivisors (M₀ : Type _) [Mul M₀] [Zero M₀] : Prop where
@@ -209,7 +215,7 @@ theorem ne_zero_of_eq_one {a : M₀} (h : a = 1) : a ≠ 0 :=
 /-- Pullback a `nontrivial` instance along a function sending `0` to `0` and `1` to `1`. -/
 theorem pullback_nonzero [Zero M₀'] [One M₀'] (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) : Nontrivial M₀' :=
   ⟨⟨0, 1,
-      mt (congr_arg f) <| by
+      mt (congr_arg f) $ by
         rw [zero, one]
         exact zero_ne_one⟩⟩
 #align pullback_nonzero pullback_nonzero
@@ -252,7 +258,7 @@ theorem mul_ne_zero_iff : a * b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` equals zero iff so is
 `b * a`. -/
 theorem mul_eq_zero_comm : a * b = 0 ↔ b * a = 0 :=
-  mul_eq_zero.trans <| (or_comm' _ _).trans mul_eq_zero.symm
+  mul_eq_zero.trans $ (or_comm' _ _).trans mul_eq_zero.symm
 #align mul_eq_zero_comm mul_eq_zero_comm
 
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` is nonzero iff so is

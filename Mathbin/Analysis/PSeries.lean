@@ -74,8 +74,8 @@ theorem sum_condensed_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
     exact add_le_add ihn this
     exacts[add_le_add_right n.one_le_two_pow _, add_le_add_right (Nat.pow_le_pow_of_le_right zero_lt_two n.le_succ) _]
   have : ∀ k ∈ Ico (2 ^ n + 1) (2 ^ (n + 1) + 1), f (2 ^ (n + 1)) ≤ f k := fun k hk =>
-    hf (n.one_le_two_pow.trans_lt <| (Nat.lt_succ_of_le le_rfl).trans_le (mem_Ico.mp hk).1)
-      (Nat.le_of_lt_succ <| (mem_Ico.mp hk).2)
+    hf (n.one_le_two_pow.trans_lt $ (Nat.lt_succ_of_le le_rfl).trans_le (mem_Ico.mp hk).1)
+      (Nat.le_of_lt_succ $ (mem_Ico.mp hk).2)
   convert sum_le_sum this
   simp [pow_succ, two_mul]
 #align finset.sum_condensed_le' Finset.sum_condensed_le'
@@ -105,7 +105,7 @@ theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
   rw [Ennreal.tsum_eq_supr_nat' (tendsto_at_top_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
   refine'
     supr_le fun n =>
-      le_trans _ (add_le_add_left (nsmul_le_nsmul_of_le_right (Ennreal.sum_le_tsum <| Finset.ico 2 (2 ^ n + 1)) _) _)
+      le_trans _ (add_le_add_left (nsmul_le_nsmul_of_le_right (Ennreal.sum_le_tsum $ Finset.ico 2 (2 ^ n + 1)) _) _)
   simpa using Finset.sum_condensed_le hf n
 #align ennreal.tsum_condensed_le Ennreal.tsum_condensed_le
 

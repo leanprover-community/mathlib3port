@@ -167,7 +167,7 @@ theorem comp_val_c {X Y Z : LocallyRingedSpaceCat.{u}} (f : X ⟶ Y) (g : Y ⟶ 
 #align algebraic_geometry.LocallyRingedSpace.comp_val_c AlgebraicGeometry.LocallyRingedSpaceCat.comp_val_c
 
 theorem comp_val_c_app {X Y Z : LocallyRingedSpaceCat} (f : X ⟶ Y) (g : Y ⟶ Z) (U : (Opens Z)ᵒᵖ) :
-    (f ≫ g).val.c.app U = g.val.c.app U ≫ f.val.c.app (op <| (Opens.map g.val.base).obj U.unop) :=
+    (f ≫ g).val.c.app U = g.val.c.app U ≫ f.val.c.app (op $ (Opens.map g.val.base).obj U.unop) :=
   rfl
 #align algebraic_geometry.LocallyRingedSpace.comp_val_c_app AlgebraicGeometry.LocallyRingedSpaceCat.comp_val_c_app
 
@@ -179,7 +179,7 @@ See also `iso_of_SheafedSpace_iso`.
 @[simps]
 def homOfSheafedSpaceHomOfIsIso {X Y : LocallyRingedSpaceCat} (f : X.toSheafedSpace ⟶ Y.toSheafedSpace) [IsIso f] :
     X ⟶ Y :=
-  (Hom.mk f) fun x =>
+  Hom.mk f $ fun x =>
     -- Here we need to see that the stalk maps are really local ring homomorphisms.
     -- This can be solved by type class inference, because stalk maps of isomorphisms are isomorphisms
     -- and isomorphisms are local ring homomorphisms.
@@ -290,7 +290,7 @@ theorem preimage_basic_open {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) {U : Ope
 -- This actually holds for all ringed spaces with nontrivial stalks.
 @[simp]
 theorem basic_open_zero (X : LocallyRingedSpaceCat) (U : Opens X.carrier) :
-    X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ := by
+    X.toRingedSpace.basicOpen (0 : X.Presheaf.obj $ op U) = ⊥ := by
   ext
   simp only [Set.mem_empty_iff_false, TopologicalSpace.Opens.mem_coe, opens.coe_bot, iff_false_iff,
     RingedSpace.basic_open, is_unit_zero_iff, Set.mem_set_of_eq, map_zero]
@@ -299,7 +299,7 @@ theorem basic_open_zero (X : LocallyRingedSpaceCat) (U : Opens X.carrier) :
 #align algebraic_geometry.LocallyRingedSpace.basic_open_zero AlgebraicGeometry.LocallyRingedSpaceCat.basic_open_zero
 
 instance component_nontrivial (X : LocallyRingedSpaceCat) (U : Opens X.carrier) [hU : Nonempty U] :
-    Nontrivial (X.Presheaf.obj <| op U) :=
+    Nontrivial (X.Presheaf.obj $ op U) :=
   (X.toPresheafedSpace.Presheaf.germ hU.some).domain_nontrivial
 #align
   algebraic_geometry.LocallyRingedSpace.component_nontrivial AlgebraicGeometry.LocallyRingedSpaceCat.component_nontrivial

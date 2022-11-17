@@ -38,20 +38,20 @@ inductive Preterm : Type
 #align omega.nat.preterm Omega.Nat.Preterm
 
 -- mathport name: preterm.cst
-localized [Omega.Nat] notation "&" k => Omega.Nat.Preterm.cst k
+scoped notation "&" k => Omega.Nat.Preterm.cst k
 
 -- mathport name: preterm.var
-localized [Omega.Nat] infixl:300 " ** " => Omega.Nat.Preterm.var
+scoped infixl:300 " ** " => Omega.Nat.Preterm.var
 
 -- mathport name: preterm.add
-localized [Omega.Nat] notation t " +* " s => Omega.Nat.Preterm.add t s
+scoped notation t " +* " s => Omega.Nat.Preterm.add t s
 
 -- mathport name: preterm.sub
-localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
+scoped notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
@@ -154,9 +154,9 @@ def canonize : Preterm → Term
 @[simp]
 theorem val_canonize {v : Nat → Nat} : ∀ {t : Preterm}, t.SubFree → ((canonize t).val fun x => ↑(v x)) = t.val v
   | &i, h1 => by simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zero]
-  | i ** n, h1 => by simp only [preterm.val_var, coeffs.val_set, term.val, zero_add, Int.coe_nat_mul, canonize]
+  | i ** n, h1 => by simp only [preterm.val_var, coeffs.val_set, term.val, zero_add, Int.ofNat_mul, canonize]
   | t +* s, h1 => by
-    simp only [val_canonize h1.left, val_canonize h1.right, Int.coe_nat_add, canonize, term.val_add, preterm.val_add]
+    simp only [val_canonize h1.left, val_canonize h1.right, Int.ofNat_add, canonize, term.val_add, preterm.val_add]
 #align omega.nat.val_canonize Omega.Nat.val_canonize
 
 end Nat

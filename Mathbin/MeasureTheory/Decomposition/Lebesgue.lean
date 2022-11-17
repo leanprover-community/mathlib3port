@@ -120,7 +120,7 @@ instance haveLebesgueDecompositionSmul (μ ν : Measure α) [HaveLebesgueDecompo
 #align measure_theory.measure.have_lebesgue_decomposition_smul MeasureTheory.Measure.haveLebesgueDecompositionSmul
 
 @[measurability]
-theorem measurableRnDeriv (μ ν : Measure α) : Measurable <| μ.rnDeriv ν := by
+theorem measurableRnDeriv (μ ν : Measure α) : Measurable $ μ.rnDeriv ν := by
   by_cases h:have_lebesgue_decomposition μ ν
   · exact (have_lebesgue_decomposition_spec μ ν).1
     
@@ -161,22 +161,22 @@ theorem with_density_rn_deriv_le (μ ν : Measure α) : ν.withDensity (μ.rnDer
 #align measure_theory.measure.with_density_rn_deriv_le MeasureTheory.Measure.with_density_rn_deriv_le
 
 instance [IsFiniteMeasure μ] : IsFiniteMeasure (μ.singularPart ν) :=
-  isFiniteMeasureOfLe μ <| singular_part_le μ ν
+  isFiniteMeasureOfLe μ $ singular_part_le μ ν
 
 instance [SigmaFinite μ] : SigmaFinite (μ.singularPart ν) :=
-  sigmaFiniteOfLe μ <| singular_part_le μ ν
+  sigmaFiniteOfLe μ $ singular_part_le μ ν
 
 instance [TopologicalSpace α] [IsLocallyFiniteMeasure μ] : IsLocallyFiniteMeasure (μ.singularPart ν) :=
-  is_locally_finite_measure_of_le <| singular_part_le μ ν
+  is_locally_finite_measure_of_le $ singular_part_le μ ν
 
-instance [IsFiniteMeasure μ] : IsFiniteMeasure (ν.withDensity <| μ.rnDeriv ν) :=
-  isFiniteMeasureOfLe μ <| with_density_rn_deriv_le μ ν
+instance [IsFiniteMeasure μ] : IsFiniteMeasure (ν.withDensity $ μ.rnDeriv ν) :=
+  isFiniteMeasureOfLe μ $ with_density_rn_deriv_le μ ν
 
-instance [SigmaFinite μ] : SigmaFinite (ν.withDensity <| μ.rnDeriv ν) :=
-  sigmaFiniteOfLe μ <| with_density_rn_deriv_le μ ν
+instance [SigmaFinite μ] : SigmaFinite (ν.withDensity $ μ.rnDeriv ν) :=
+  sigmaFiniteOfLe μ $ with_density_rn_deriv_le μ ν
 
-instance [TopologicalSpace α] [IsLocallyFiniteMeasure μ] : IsLocallyFiniteMeasure (ν.withDensity <| μ.rnDeriv ν) :=
-  is_locally_finite_measure_of_le <| with_density_rn_deriv_le μ ν
+instance [TopologicalSpace α] [IsLocallyFiniteMeasure μ] : IsLocallyFiniteMeasure (ν.withDensity $ μ.rnDeriv ν) :=
+  is_locally_finite_measure_of_le $ with_density_rn_deriv_le μ ν
 
 theorem lintegral_rn_deriv_lt_top_of_measure_ne_top {μ : Measure α} (ν : Measure α) {s : Set α} (hs : μ s ≠ ∞) :
     (∫⁻ x in s, μ.rnDeriv ν x ∂ν) < ∞ := by
@@ -506,7 +506,7 @@ theorem supr_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : α)
     · exact h ▸ le_sup_left
       
     
-  · refine' sup_le _ (bsupr_mono fun n hn => hn.trans m.le_succ)
+  · refine' sup_le _ (bsupr_mono $ fun n hn => hn.trans m.le_succ)
     convert @le_supr₂ _ _ (fun i => i ≤ m + 1) _ _ m.succ le_rfl
     rfl
     
@@ -546,7 +546,7 @@ section SuprLemmas
 omit m
 
 theorem supr_monotone {α : Type _} (f : ℕ → α → ℝ≥0∞) : Monotone fun n x => ⨆ (k) (hk : k ≤ n), f k x :=
-  fun n m hnm x => bsupr_mono fun i => ge_trans hnm
+  fun n m hnm x => bsupr_mono $ fun i => ge_trans hnm
 #align
   measure_theory.measure.lebesgue_decomposition.supr_monotone MeasureTheory.Measure.LebesgueDecomposition.supr_monotone
 
@@ -701,7 +701,7 @@ theorem haveLebesgueDecompositionOfFiniteMeasure [IsFiniteMeasure μ] [IsFiniteM
 attribute [local instance] have_lebesgue_decomposition_of_finite_measure
 
 instance {S : μ.FiniteSpanningSetsIn { s : Set α | MeasurableSet s }} (n : ℕ) :
-    IsFiniteMeasure (μ.restrict <| S.Set n) :=
+    IsFiniteMeasure (μ.restrict $ S.Set n) :=
   ⟨by
     rw [restrict_apply MeasurableSet.univ, univ_inter]
     exact S.finite _⟩

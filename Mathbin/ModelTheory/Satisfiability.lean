@@ -88,9 +88,10 @@ theorem is_satisfiable_of_is_satisfiable_on_Theory {L' : Language.{w, w'}} (φ :
   first_order.language.Theory.is_satisfiable_of_is_satisfiable_on_Theory FirstOrder.Language.TheoryCat.is_satisfiable_of_is_satisfiable_on_Theory
 
 theorem is_satisfiable_on_Theory_iff {L' : Language.{w, w'}} {φ : L →ᴸ L'} (h : φ.Injective) :
-    (φ.onTheory T).IsSatisfiable ↔ T.IsSatisfiable := by
-  classical refine' ⟨is_satisfiable_of_is_satisfiable_on_Theory φ, fun h' => _⟩
-    exact model.is_satisfiable (h'.some.default_expansion h)
+    (φ.onTheory T).IsSatisfiable ↔ T.IsSatisfiable := by classical
+  refine' ⟨is_satisfiable_of_is_satisfiable_on_Theory φ, fun h' => _⟩
+  haveI : Inhabited h'.some := Classical.inhabitedOfNonempty'
+  exact model.is_satisfiable (h'.some.default_expansion h)
 #align
   first_order.language.Theory.is_satisfiable_on_Theory_iff FirstOrder.Language.TheoryCat.is_satisfiable_on_Theory_iff
 
@@ -105,7 +106,19 @@ theorem is_satisfiable_iff_is_finitely_satisfiable {T : L.TheoryCat} : T.IsSatis
   ⟨TheoryCat.IsSatisfiable.is_finitely_satisfiable, fun h => by classical
     set M : ∀ T0 : Finset T, Type max u v := fun T0 =>
       (h (T0.map (Function.Embedding.subtype fun x => x ∈ T)) T0.map_subtype_subset).some with hM
-    have h' : M' ⊨ T := ⟨Model.of T M'⟩⟩
+    let M' := Filter.Product (↑(Ultrafilter.of (Filter.atTop : Filter (Finset T)))) M
+    have h' : M' ⊨ T := by
+      refine' ⟨fun φ hφ => _⟩
+      rw [ultraproduct.sentence_realize]
+      refine'
+        Filter.Eventually.filter_mono (Ultrafilter.of_le _)
+          (Filter.eventually_at_top.2
+            ⟨{⟨φ, hφ⟩}, fun s h' =>
+              Theory.realize_sentence_of_mem (s.map (Function.Embedding.subtype fun x => x ∈ T)) _⟩)
+      simp only [Finset.coe_map, Function.Embedding.coe_subtype, Set.mem_image, Finset.mem_coe, Subtype.exists,
+        Subtype.coe_mk, exists_and_right, exists_eq_right]
+      exact ⟨hφ, h' (Finset.mem_singleton_self _)⟩
+    exact ⟨Model.of T M'⟩⟩
 #align
   first_order.language.Theory.is_satisfiable_iff_is_finitely_satisfiable FirstOrder.Language.TheoryCat.is_satisfiable_iff_is_finitely_satisfiable
 
@@ -143,12 +156,16 @@ theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.TheoryC
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.TheoryCat) (s : Set α) (M : Type w')
     [L.StructureCat M] [M ⊨ T] [Infinite M] :
-    ((L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s).IsSatisfiable := by
-  classical rw [distinct_constants_theory_eq_Union, Set.union_Union, is_satisfiable_directed_union_iff]
-    · refine' (monotone_const.union (monotone_distinct_constants_theory.comp _)).directed_le
-      simp only [Finset.coe_map, Function.Embedding.coe_subtype]
-      exact set.monotone_image.comp fun _ _ => Finset.coe_subset.2
-      
+    ((L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s).IsSatisfiable := by classical
+  rw [distinct_constants_theory_eq_Union, Set.union_Union, is_satisfiable_directed_union_iff]
+  · exact fun t =>
+      is_satisfiable_union_distinct_constants_theory_of_card_le T _ M
+        ((lift_le_aleph_0.2 (finset_card_lt_aleph_0 _).le).trans (aleph_0_le_lift.2 (aleph_0_le_mk M)))
+    
+  · refine' (monotone_const.union (monotone_distinct_constants_theory.comp _)).directed_le
+    simp only [Finset.coe_map, Function.Embedding.coe_subtype]
+    exact set.monotone_image.comp fun _ _ => Finset.coe_subset.2
+    
 #align
   first_order.language.Theory.is_satisfiable_union_distinct_constants_theory_of_infinite FirstOrder.Language.TheoryCat.is_satisfiable_union_distinct_constants_theory_of_infinite
 
@@ -169,12 +186,16 @@ theorem exists_large_model_of_infinite_model (T : L.TheoryCat) (κ : Cardinal.{w
   first_order.language.Theory.exists_large_model_of_infinite_model FirstOrder.Language.TheoryCat.exists_large_model_of_infinite_model
 
 theorem is_satisfiable_Union_iff_is_satisfiable_Union_finset {ι : Type _} (T : ι → L.TheoryCat) :
-    IsSatisfiable (⋃ i, T i) ↔ ∀ s : Finset ι, IsSatisfiable (⋃ i ∈ s, T i) := by
-  classical refine' ⟨fun h s => h.mono (Set.Union_mono fun _ => Set.Union_subset_iff.2 fun _ => refl _), fun h => _⟩
-    intro s hs
-    obtain ⟨t, ht⟩ := Directed.exists_mem_subset_of_finset_subset_bUnion _ hs
-    · exact Monotone.directed_le fun t1 t2 h => Set.Union_mono fun _ => Set.Union_mono' fun h1 => ⟨h h1, refl _⟩
-      
+    IsSatisfiable (⋃ i, T i) ↔ ∀ s : Finset ι, IsSatisfiable (⋃ i ∈ s, T i) := by classical
+  refine' ⟨fun h s => h.mono (Set.Union_mono fun _ => Set.Union_subset_iff.2 fun _ => refl _), fun h => _⟩
+  rw [is_satisfiable_iff_is_finitely_satisfiable]
+  intro s hs
+  rw [Set.Union_eq_Union_finset] at hs
+  obtain ⟨t, ht⟩ := Directed.exists_mem_subset_of_finset_subset_bUnion _ hs
+  · exact (h t).mono ht
+    
+  · exact Monotone.directed_le fun t1 t2 h => Set.Union_mono fun _ => Set.Union_mono' fun h1 => ⟨h h1, refl _⟩
+    
 #align
   first_order.language.Theory.is_satisfiable_Union_iff_is_satisfiable_Union_finset FirstOrder.Language.TheoryCat.is_satisfiable_Union_iff_is_satisfiable_Union_finset
 

@@ -69,7 +69,7 @@ theorem prob_eq_zero_or_one [IsProbabilityMeasure μ] (hf : PreErgodic f μ) (hs
 #align pre_ergodic.prob_eq_zero_or_one PreErgodic.prob_eq_zero_or_one
 
 theorem ofIterate (n : ℕ) (hf : PreErgodic (f^[n]) μ) : PreErgodic f μ :=
-  ⟨fun s hs hs' => hf.ae_empty_or_univ hs <| IsFixedPt.preimage_iterate hs' n⟩
+  ⟨fun s hs hs' => hf.ae_empty_or_univ hs $ IsFixedPt.preimage_iterate hs' n⟩
 #align pre_ergodic.of_iterate PreErgodic.ofIterate
 
 end PreErgodic

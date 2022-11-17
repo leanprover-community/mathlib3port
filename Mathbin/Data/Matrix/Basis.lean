@@ -134,7 +134,7 @@ variable (i j : n) (c : α) (i' j' : n)
 
 @[simp]
 theorem diag_zero (h : j ≠ i) : diag (stdBasisMatrix i j c) = 0 :=
-  funext fun k => if_neg fun ⟨e₁, e₂⟩ => h (e₂.trans e₁.symm)
+  funext $ fun k => if_neg $ fun ⟨e₁, e₂⟩ => h (e₂.trans e₁.symm)
 #align matrix.std_basis_matrix.diag_zero Matrix.stdBasisMatrix.diag_zero
 
 @[simp]

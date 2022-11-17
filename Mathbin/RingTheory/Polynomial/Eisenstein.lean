@@ -182,7 +182,7 @@ theorem dvd_pow_nat_degree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Inj
   rw [← nat_degree_scale_roots p x, ← Ideal.mem_span_singleton]
   refine'
     (scale_roots.is_weakly_eisenstein_at _
-          (ideal.mem_span_singleton.mpr <| dvd_refl x)).pow_nat_degree_le_of_root_of_monic_mem
+          (ideal.mem_span_singleton.mpr $ dvd_refl x)).pow_nat_degree_le_of_root_of_monic_mem
       _ ((monic_scale_roots_iff x).mpr hp) _ le_rfl
   rw [injective_iff_map_eq_zero'] at hf
   have := scale_roots_eval₂_eq_zero f h
@@ -261,15 +261,15 @@ open Polynomial
 theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] : ((cyclotomic p ℤ).comp (X + 1)).IsEisensteinAt 𝓟 := by
   refine'
     monic.is_eisenstein_at_of_mem_of_not_mem _
-      (Ideal.IsPrime.ne_top <|
-        (Ideal.span_singleton_prime (by exact_mod_cast hp.out.ne_zero)).2 <| Nat.prime_iff_prime_int.1 hp.out)
+      (Ideal.IsPrime.ne_top $
+        (Ideal.span_singleton_prime (by exact_mod_cast hp.out.ne_zero)).2 $ Nat.prime_iff_prime_int.1 hp.out)
       (fun i hi => _) _
   · rw [show (X + 1 : ℤ[X]) = X + C 1 by simp]
     refine' (cyclotomic.monic p ℤ).comp (monic_X_add_C 1) fun h => _
     rw [nat_degree_X_add_C] at h
     exact zero_ne_one h.symm
     
-  · rw [cyclotomic_eq_geom_sum hp.out, geom_sum_X_comp_X_add_one_eq_sum, ← lcoeff_apply, LinearMap.map_sum]
+  · rw [cyclotomic_prime, geom_sum_X_comp_X_add_one_eq_sum, ← lcoeff_apply, LinearMap.map_sum]
     conv =>
     congr
     congr
@@ -282,8 +282,8 @@ theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] : ((cyclotomic p
       Ideal.mem_span_singleton]
     exact Int.coe_nat_dvd.2 (Nat.Prime.dvd_choose_self (Nat.succ_pos i) (lt_tsub_iff_right.1 hi) hp.out)
     
-  · rw [coeff_zero_eq_eval_zero, eval_comp, cyclotomic_eq_geom_sum hp.out, eval_add, eval_X, eval_one, zero_add,
-      eval_geom_sum, one_geom_sum, Ideal.submodule_span_eq, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
+  · rw [coeff_zero_eq_eval_zero, eval_comp, cyclotomic_prime, eval_add, eval_X, eval_one, zero_add, eval_geom_sum,
+      one_geom_sum, Ideal.submodule_span_eq, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
     intro h
     obtain ⟨k, hk⟩ := Int.coe_nat_dvd.1 h
     rw [← mul_assoc, mul_one, mul_assoc] at hk
@@ -297,8 +297,8 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
     ((cyclotomic (p ^ (n + 1)) ℤ).comp (X + 1)).IsEisensteinAt 𝓟 := by
   refine'
     monic.is_eisenstein_at_of_mem_of_not_mem _
-      (Ideal.IsPrime.ne_top <|
-        (Ideal.span_singleton_prime (by exact_mod_cast hp.out.ne_zero)).2 <| Nat.prime_iff_prime_int.1 hp.out)
+      (Ideal.IsPrime.ne_top $
+        (Ideal.span_singleton_prime (by exact_mod_cast hp.out.ne_zero)).2 $ Nat.prime_iff_prime_int.1 hp.out)
       _ _
   · rw [show (X + 1 : ℤ[X]) = X + C 1 by simp]
     refine' (cyclotomic.monic _ ℤ).comp (monic_X_add_C 1) fun h => _
@@ -562,7 +562,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
     -- we didn't know were multiples of `p`, and we take the norm on both sides.
     replace hQ := congr_arg (fun x => x * B.gen ^ (P.nat_degree - (j + 2))) hQ
     simp_rw [sum_map, add_left_embedding_apply, add_mul, sum_mul, mul_assoc] at hQ
-    rw [← insert_erase (mem_range.2 (tsub_pos_iff_lt.2 <| Nat.lt_of_succ_lt_succ <| mem_range.1 hj)),
+    rw [← insert_erase (mem_range.2 (tsub_pos_iff_lt.2 $ Nat.lt_of_succ_lt_succ $ mem_range.1 hj)),
       sum_insert (not_mem_erase 0 _), add_zero, sum_congr rfl hf₁, ← mul_sum, ← mul_sum, add_assoc, ← mul_add,
       smul_mul_assoc, ← pow_add, Algebra.smul_def] at hQ
     replace hQ := congr_arg (norm K) (eq_sub_of_add_eq hQ)

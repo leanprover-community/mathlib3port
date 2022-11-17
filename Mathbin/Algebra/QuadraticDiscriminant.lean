@@ -52,12 +52,12 @@ theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) 
   dsimp [discrim] at *
   constructor
   · intro h
-    linear_combination-4 * a * h
+    linear_combination -4 * a * h
     
   · intro h
     have ha : 2 * 2 * a ≠ 0 := mul_ne_zero (mul_ne_zero h2 h2) ha
     apply mul_left_cancel₀ ha
-    linear_combination-h
+    linear_combination -h
     
 #align quadratic_eq_zero_iff_discrim_eq_sq quadratic_eq_zero_iff_discrim_eq_sq
 
@@ -83,7 +83,7 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
   have ne : 2 * a ≠ 0 := mul_ne_zero h2 ha
   field_simp
   apply or_congr
-  · constructor <;> intro h' <;> linear_combination-h'
+  · constructor <;> intro h' <;> linear_combination -h'
     
   · constructor <;> intro h' <;> linear_combination h'
     
@@ -119,7 +119,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
       tendsto_at_bot_add_const_right _ c
         ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).at_bot_mul_at_top tendsto_id)
     rcases(this.eventually (eventually_lt_at_bot 0)).exists with ⟨x, hx⟩
-    exact False.elim ((h x).not_lt <| by rwa [← add_mul])
+    exact False.elim ((h x).not_lt $ by rwa [← add_mul])
     
   -- if a = 0
   · rcases em (b = 0) with (rfl | hb)

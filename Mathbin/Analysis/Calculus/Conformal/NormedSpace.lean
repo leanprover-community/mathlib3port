@@ -106,7 +106,7 @@ theorem comp {f : X → Y} {g : Y → Z} (x : X) (hg : ConformalAt g (f x)) (hf 
 #align conformal_at.comp ConformalAt.comp
 
 theorem constSmul {f : X → Y} {x : X} {c : ℝ} (hc : c ≠ 0) (hf : ConformalAt f x) : ConformalAt (c • f) x :=
-  (conformalAtConstSmul hc <| f x).comp x hf
+  (conformalAtConstSmul hc $ f x).comp x hf
 #align conformal_at.const_smul ConformalAt.constSmul
 
 end ConformalAt
@@ -136,7 +136,7 @@ theorem differentiable {f : X → Y} (h : Conformal f) : Differentiable ℝ f :=
 #align conformal.differentiable Conformal.differentiable
 
 theorem comp {f : X → Y} {g : Y → Z} (hf : Conformal f) (hg : Conformal g) : Conformal (g ∘ f) := fun x =>
-  (hg <| f x).comp x (hf x)
+  (hg $ f x).comp x (hf x)
 #align conformal.comp Conformal.comp
 
 theorem constSmul {f : X → Y} (hf : Conformal f) {c : ℝ} (hc : c ≠ 0) : Conformal (c • f) := fun x =>

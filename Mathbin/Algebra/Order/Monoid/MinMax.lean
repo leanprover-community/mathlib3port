@@ -92,13 +92,13 @@ variable [MulOneClass α]
 
 @[to_additive]
 theorem min_le_mul_of_one_le_right [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} (hb : 1 ≤ b) : min a b ≤ a * b :=
-  min_le_iff.2 <| Or.inl <| le_mul_of_one_le_right' hb
+  min_le_iff.2 $ Or.inl $ le_mul_of_one_le_right' hb
 #align min_le_mul_of_one_le_right min_le_mul_of_one_le_right
 
 @[to_additive]
 theorem min_le_mul_of_one_le_left [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a b : α} (ha : 1 ≤ a) :
     min a b ≤ a * b :=
-  min_le_iff.2 <| Or.inr <| le_mul_of_one_le_left' ha
+  min_le_iff.2 $ Or.inr $ le_mul_of_one_le_left' ha
 #align min_le_mul_of_one_le_left min_le_mul_of_one_le_left
 
 @[to_additive]

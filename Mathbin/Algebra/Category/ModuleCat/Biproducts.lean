@@ -158,9 +158,9 @@ open ModuleCat
 of modules.-/
 noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function.Injective j) (exac : j.range = g.ker)
     (h : g.comp f = LinearMap.id) : (A × B) ≃ₗ[R] M :=
-  (({ RightSplit := ⟨asHom f, h⟩, mono := (ModuleCat.mono_iff_injective <| asHom j).mpr hj,
-                exact := (exact_iff _ _).mpr exac } :
-                RightSplit _ _).Splitting.Iso.trans <|
+  (({ RightSplit := ⟨asHom f, h⟩, mono := (ModuleCat.mono_iff_injective $ asHom j).mpr hj,
+                  exact := (exact_iff _ _).mpr exac } :
+                RightSplit _ _).Splitting.Iso.trans $
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_right_split_exact lequivProdOfRightSplitExact
 
@@ -168,9 +168,9 @@ noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function
 of modules.-/
 noncomputable def lequivProdOfLeftSplitExact {f : M →ₗ[R] A} (hg : Function.Surjective g) (exac : j.range = g.ker)
     (h : f.comp j = LinearMap.id) : (A × B) ≃ₗ[R] M :=
-  (({ LeftSplit := ⟨asHom f, h⟩, Epi := (ModuleCat.epi_iff_surjective <| asHom g).mpr hg,
-                exact := (exact_iff _ _).mpr exac } :
-                LeftSplit _ _).Splitting.Iso.trans <|
+  (({ LeftSplit := ⟨asHom f, h⟩, Epi := (ModuleCat.epi_iff_surjective $ asHom g).mpr hg,
+                  exact := (exact_iff _ _).mpr exac } :
+                LeftSplit _ _).Splitting.Iso.trans $
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_left_split_exact lequivProdOfLeftSplitExact
 

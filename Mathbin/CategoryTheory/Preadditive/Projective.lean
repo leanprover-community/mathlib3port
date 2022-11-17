@@ -143,7 +143,7 @@ theorem projective_iff_preserves_epimorphisms_coyoneda_obj (P : C) :
     Projective P ↔ (coyoneda.obj (op P)).PreservesEpimorphisms :=
   ⟨fun hP =>
     ⟨fun X Y f hf =>
-      (epi_iff_surjective _).2 fun g =>
+      (epi_iff_surjective _).2 $ fun g =>
         have : Projective (unop (op P)) := hP
         ⟨factor_thru g f, factor_thru_comp _ _⟩⟩,
     fun h => ⟨fun E X f e he => (epi_iff_surjective _).1 (inferInstance : epi ((coyoneda.obj (op P)).map e)) f⟩⟩

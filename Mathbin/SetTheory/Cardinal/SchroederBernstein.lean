@@ -50,7 +50,7 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
   set F : Set α →o Set α :=
     { toFun := fun s => (g '' (f '' s)ᶜ)ᶜ,
       monotone' := fun s t hst =>
-        compl_subset_compl.mpr <| image_subset _ <| compl_subset_compl.mpr <| image_subset _ hst }
+        compl_subset_compl.mpr $ image_subset _ $ compl_subset_compl.mpr $ image_subset _ hst }
   set s : Set α := F.lfp
   have hs : (g '' (f '' s)ᶜ)ᶜ = s := F.map_lfp
   have hns : g '' (f '' s)ᶜ = sᶜ := compl_injective (by simp [hs])
@@ -101,12 +101,12 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
   let ⟨s, hs, ms⟩ :=
     show ∃ s ∈ sets, ∀ a ∈ sets, s ⊆ a → a = s from
       zorn_subset sets fun c hc hcc =>
-        ⟨⋃₀c, fun x ⟨p, hpc, hxp⟩ y ⟨q, hqc, hyq⟩ i hi =>
+        ⟨⋃₀ c, fun x ⟨p, hpc, hxp⟩ y ⟨q, hqc, hyq⟩ i hi =>
           (hcc.Total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h => hc hpc x hxp y (h hyq) i hi, fun _ =>
           subset_sUnion_of_mem⟩
   let ⟨i, e⟩ :=
     show ∃ i, ∀ y, ∃ x ∈ s, (x : ∀ i, β i) i = y from
-      Classical.by_contradiction fun h =>
+      Classical.by_contradiction $ fun h =>
         have h : ∀ i, ∃ y, ∀ x ∈ s, (x : ∀ i, β i) i ≠ y := by simpa only [not_exists, not_forall] using h
         let ⟨f, hf⟩ := Classical.axiom_of_choice h
         have : f ∈ s :=

@@ -129,7 +129,7 @@ instance : Inhabited Language :=
 
 /-- The sum of two languages consists of the disjoint union of their symbols. -/
 protected def sum (L : Language.{u, v}) (L' : Language.{u', v'}) : Language :=
-  ⟨fun n => Sum (L.Functions n) (L'.Functions n), fun n => Sum (L.Relations n) (L'.Relations n)⟩
+  ⟨fun n => L.Functions n ⊕ L'.Functions n, fun n => L.Relations n ⊕ L'.Relations n⟩
 #align first_order.language.sum FirstOrder.Language.sum
 
 variable (L : Language.{u, v})
@@ -148,7 +148,7 @@ theorem constants_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) : (Language.
 /-- The type of symbols in a given language. -/
 @[nolint has_nonempty_instance]
 def Symbols :=
-  Sum (Σl, L.Functions l) (Σl, L.Relations l)
+  (Σ l, L.Functions l) ⊕ Σ l, L.Relations l
 #align first_order.language.symbols FirstOrder.Language.Symbols
 
 /-- The cardinality of a language is the cardinality of its type of symbols. -/
@@ -236,7 +236,7 @@ instance is_empty_empty : IsEmpty Language.empty.Symbols := by
   exact ⟨fun _ => inferInstance, fun _ => inferInstance⟩
 #align first_order.language.is_empty_empty FirstOrder.Language.is_empty_empty
 
-instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σl, L.Functions l) :=
+instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σ l, L.Functions l) :=
   @Function.Injective.countable _ _ h _ Sum.inl_injective
 #align first_order.language.countable.countable_functions FirstOrder.Language.Countable.countable_functions
 
@@ -300,7 +300,7 @@ structure Hom where
 #align first_order.language.hom FirstOrder.Language.Hom
 
 -- mathport name: language.hom
-localized [FirstOrder] notation:25 A " →[" L "] " B => FirstOrder.Language.Hom L A B
+scoped[FirstOrder] notation:25 A " →[" L "] " B => FirstOrder.Language.Hom L A B
 
 /-- An embedding of first-order structures is an embedding that commutes with the
   interpretations of functions and relations. -/
@@ -310,7 +310,7 @@ structure Embedding extends M ↪ N where
 #align first_order.language.embedding FirstOrder.Language.Embedding
 
 -- mathport name: language.embedding
-localized [FirstOrder] notation:25 A " ↪[" L "] " B => FirstOrder.Language.Embedding L A B
+scoped[FirstOrder] notation:25 A " ↪[" L "] " B => FirstOrder.Language.Embedding L A B
 
 /-- An equivalence of first-order structures is an equivalence that commutes with the
   interpretations of functions and relations. -/
@@ -320,7 +320,7 @@ structure Equiv extends M ≃ N where
 #align first_order.language.equiv FirstOrder.Language.Equiv
 
 -- mathport name: language.equiv
-localized [FirstOrder] notation:25 A " ≃[" L "] " B => FirstOrder.Language.Equiv L A B
+scoped[FirstOrder] notation:25 A " ≃[" L "] " B => FirstOrder.Language.Equiv L A B
 
 variable {L M N} {P : Type _} [L.StructureCat P] {Q : Type _} [L.StructureCat Q]
 
@@ -403,7 +403,7 @@ end StructureCat
 
 /-- `hom_class L F M N` states that `F` is a type of `L`-homomorphisms. You should extend this
   typeclass when you extend `first_order.language.hom`. -/
-class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [FunLike F M fun _ => N]
+class HomClass (L : outParam Language) (F : Type _) (M N : outParam $ Type _) [FunLike F M fun _ => N]
   [L.StructureCat M] [L.StructureCat N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r x → RelMap r (φ ∘ x)
@@ -411,7 +411,7 @@ class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [
 
 /-- `strong_hom_class L F M N` states that `F` is a type of `L`-homomorphisms which preserve
   relations in both directions. -/
-class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [FunLike F M fun _ => N]
+class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam $ Type _) [FunLike F M fun _ => N]
   [L.StructureCat M] [L.StructureCat N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r (φ ∘ x) ↔ RelMap r x

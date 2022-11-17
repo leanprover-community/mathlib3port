@@ -88,14 +88,15 @@ theorem StrictConvexSpace.ofStrictConvexClosedUnitBall [LinearMap.CompatibleSmul
   ⟨fun r hr => by simpa only [smul_closed_unit_ball_of_nonneg hr.le] using h.smul r⟩
 #align strict_convex_space.of_strict_convex_closed_unit_ball StrictConvexSpace.ofStrictConvexClosedUnitBall
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- Strict convexity is equivalent to `∥a • x + b • y∥ < 1` for all `x` and `y` of norm at most `1`
 and all strictly positive `a` and `b` such that `a + b = 1`. This lemma shows that it suffices to
 check this for points of norm one and some `a`, `b` such that `a + b = 1`. -/
 theorem StrictConvexSpace.ofNormComboLtOne
-    (h : ∀ x y : E, ∥x∥ = 1 → ∥y∥ = 1 → x ≠ y → ∃ a b : ℝ, a + b = 1 ∧ ∥a • x + b • y∥ < 1) : StrictConvexSpace ℝ E :=
-  by
+    (h : ∀ x y : E, ∥x∥ = 1 → ∥y∥ = 1 → x ≠ y → ∃ (a : ℝ) (b : ℝ), a + b = 1 ∧ ∥a • x + b • y∥ < 1) :
+    StrictConvexSpace ℝ E := by
   refine'
-    StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ ((convex_closed_ball _ _).strict_convex' fun x hx y hy hne => _)
+    StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ ((convex_closed_ball _ _).strict_convex' $ fun x hx y hy hne => _)
   rw [interior_closed_ball (0 : E) one_ne_zero, closed_ball_diff_ball, mem_sphere_zero_iff_norm] at hx hy
   rcases h x y hx hy hne with ⟨a, b, hab, hlt⟩
   use b
@@ -103,8 +104,9 @@ theorem StrictConvexSpace.ofNormComboLtOne
     sub_eq_iff_eq_add.2 hab.symm]
 #align strict_convex_space.of_norm_combo_lt_one StrictConvexSpace.ofNormComboLtOne
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem StrictConvexSpace.ofNormComboNeOne
-    (h : ∀ x y : E, ∥x∥ = 1 → ∥y∥ = 1 → x ≠ y → ∃ a b : ℝ, 0 ≤ a ∧ 0 ≤ b ∧ a + b = 1 ∧ ∥a • x + b • y∥ ≠ 1) :
+    (h : ∀ x y : E, ∥x∥ = 1 → ∥y∥ = 1 → x ≠ y → ∃ (a : ℝ) (b : ℝ), 0 ≤ a ∧ 0 ≤ b ∧ a + b = 1 ∧ ∥a • x + b • y∥ ≠ 1) :
     StrictConvexSpace ℝ E := by
   refine' StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ ((convex_closed_ball _ _).StrictConvex _)
   simp only [interior_closed_ball _ one_ne_zero, closed_ball_diff_ball, Set.Pairwise,
@@ -124,16 +126,16 @@ theorem StrictConvexSpace.ofNormAddNeTwo (h : ∀ ⦃x y : E⦄, ∥x∥ = 1 →
   exact h hx hy hne
 #align strict_convex_space.of_norm_add_ne_two StrictConvexSpace.ofNormAddNeTwo
 
-theorem StrictConvexSpace.ofPairwiseSphereNormNeTwo (h : (sphere (0 : E) 1).Pairwise fun x y => ∥x + y∥ ≠ 2) :
+theorem StrictConvexSpace.ofPairwiseSphereNormNeTwo (h : (sphere (0 : E) 1).Pairwise $ fun x y => ∥x + y∥ ≠ 2) :
     StrictConvexSpace ℝ E :=
-  StrictConvexSpace.ofNormAddNeTwo fun x y hx hy => h (mem_sphere_zero_iff_norm.2 hx) (mem_sphere_zero_iff_norm.2 hy)
+  StrictConvexSpace.ofNormAddNeTwo $ fun x y hx hy => h (mem_sphere_zero_iff_norm.2 hx) (mem_sphere_zero_iff_norm.2 hy)
 #align strict_convex_space.of_pairwise_sphere_norm_ne_two StrictConvexSpace.ofPairwiseSphereNormNeTwo
 
 /-- If `∥x + y∥ = ∥x∥ + ∥y∥` implies that `x y : E` are in the same ray, then `E` is a strictly
 convex space. See also a more -/
 theorem StrictConvexSpace.ofNormAdd (h : ∀ x y : E, ∥x∥ = 1 → ∥y∥ = 1 → ∥x + y∥ = 2 → SameRay ℝ x y) :
     StrictConvexSpace ℝ E := by
-  refine' StrictConvexSpace.ofPairwiseSphereNormNeTwo fun x hx y hy => mt fun h₂ => _
+  refine' StrictConvexSpace.ofPairwiseSphereNormNeTwo fun x hx y hy => mt $ fun h₂ => _
   rw [mem_sphere_zero_iff_norm] at hx hy
   exact (same_ray_iff_of_norm_eq (hx.trans hy.symm)).1 (h x y hx hy h₂)
 #align strict_convex_space.of_norm_add StrictConvexSpace.ofNormAdd
@@ -157,7 +159,7 @@ theorem combo_mem_ball_of_ne (hx : x ∈ closedBall z r) (hy : y ∈ closedBall 
 included in the corresponding open ball. -/
 theorem open_segment_subset_ball_of_ne (hx : x ∈ closedBall z r) (hy : y ∈ closedBall z r) (hne : x ≠ y) :
     openSegment ℝ x y ⊆ ball z r :=
-  (open_segment_subset_iff _).2 fun a b => combo_mem_ball_of_ne hx hy hne
+  (open_segment_subset_iff _).2 $ fun a b => combo_mem_ball_of_ne hx hy hne
 #align open_segment_subset_ball_of_ne open_segment_subset_ball_of_ne
 
 /-- If `x` and `y` are two distinct vectors of norm at most `r`, then a convex combination of `x`
@@ -185,7 +187,7 @@ theorem norm_add_lt_of_not_same_ray (h : ¬SameRay ℝ x y) : ∥x + y∥ < ∥x
 
 theorem lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : ∥x∥ - ∥y∥ < ∥x - y∥ := by
   nth_rw 0 [← sub_add_cancel x y]  at h⊢
-  exact sub_lt_iff_lt_add.2 (norm_add_lt_of_not_same_ray fun H' => h <| H'.add_left SameRay.rfl)
+  exact sub_lt_iff_lt_add.2 (norm_add_lt_of_not_same_ray $ fun H' => h $ H'.add_left SameRay.rfl)
 #align lt_norm_sub_of_not_same_ray lt_norm_sub_of_not_same_ray
 
 theorem abs_lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : |∥x∥ - ∥y∥| < ∥x - y∥ := by
@@ -197,7 +199,7 @@ theorem abs_lt_norm_sub_of_not_same_ray (h : ¬SameRay ℝ x y) : |∥x∥ - ∥
 /-- In a strictly convex space, two vectors `x`, `y` are in the same ray if and only if the triangle
 inequality for `x` and `y` becomes an equality. -/
 theorem same_ray_iff_norm_add : SameRay ℝ x y ↔ ∥x + y∥ = ∥x∥ + ∥y∥ :=
-  ⟨SameRay.norm_add, fun h => not_not.1 fun h' => (norm_add_lt_of_not_same_ray h').Ne h⟩
+  ⟨SameRay.norm_add, fun h => not_not.1 $ fun h' => (norm_add_lt_of_not_same_ray h').Ne h⟩
 #align same_ray_iff_norm_add same_ray_iff_norm_add
 
 /-- If `x` and `y` are two vectors in a strictly convex space have the same norm and the norm of
@@ -213,11 +215,11 @@ theorem not_same_ray_iff_norm_add_lt : ¬SameRay ℝ x y ↔ ∥x + y∥ < ∥x�
 #align not_same_ray_iff_norm_add_lt not_same_ray_iff_norm_add_lt
 
 theorem same_ray_iff_norm_sub : SameRay ℝ x y ↔ ∥x - y∥ = |∥x∥ - ∥y∥| :=
-  ⟨SameRay.norm_sub, fun h => not_not.1 fun h' => (abs_lt_norm_sub_of_not_same_ray h').ne' h⟩
+  ⟨SameRay.norm_sub, fun h => not_not.1 $ fun h' => (abs_lt_norm_sub_of_not_same_ray h').ne' h⟩
 #align same_ray_iff_norm_sub same_ray_iff_norm_sub
 
 theorem not_same_ray_iff_abs_lt_norm_sub : ¬SameRay ℝ x y ↔ |∥x∥ - ∥y∥| < ∥x - y∥ :=
-  same_ray_iff_norm_sub.Not.trans <| ne_comm.trans (abs_norm_sub_norm_le _ _).lt_iff_ne.symm
+  same_ray_iff_norm_sub.Not.trans $ ne_comm.trans (abs_norm_sub_norm_le _ _).lt_iff_ne.symm
 #align not_same_ray_iff_abs_lt_norm_sub not_same_ray_iff_abs_lt_norm_sub
 
 /-- In a strictly convex space, the triangle inequality turns into an equality if and only if the

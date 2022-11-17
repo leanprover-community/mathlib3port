@@ -209,7 +209,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
 less cumbersome to use than `is_cyclotomic_extension.discr_prime_pow`. -/
 theorem discr_prime_pow_eq_unit_mul_pow [IsCyclotomicExtension {p ^ k} K L] [hp : Fact (p : ℕ).Prime]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) (hirr : Irreducible (cyclotomic (↑(p ^ k) : ℕ) K)) :
-    ∃ (u : ℤˣ)(n : ℕ), discr K (hζ.PowerBasis K).Basis = u * p ^ n := by
+    ∃ (u : ℤˣ) (n : ℕ), discr K (hζ.PowerBasis K).Basis = u * p ^ n := by
   rw [discr_prime_pow hζ hirr]
   by_cases heven:Even ((p ^ k : ℕ).totient / 2)
   · refine' ⟨1, (p : ℕ) ^ (k - 1) * ((p - 1) * k - 1), by simp [heven.neg_one_pow]⟩

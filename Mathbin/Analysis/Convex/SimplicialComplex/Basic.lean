@@ -84,13 +84,13 @@ theorem convex_hull_subset_space (hs : s ∈ K.faces) : convexHull 𝕜 ↑s ⊆
 #align geometry.simplicial_complex.convex_hull_subset_space Geometry.SimplicialComplex.convex_hull_subset_space
 
 protected theorem subset_space (hs : s ∈ K.faces) : (s : Set E) ⊆ K.Space :=
-  (subset_convex_hull 𝕜 _).trans <| convex_hull_subset_space hs
+  (subset_convex_hull 𝕜 _).trans $ convex_hull_subset_space hs
 #align geometry.simplicial_complex.subset_space Geometry.SimplicialComplex.subset_space
 
 theorem convex_hull_inter_convex_hull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t = convexHull 𝕜 (s ∩ t : Set E) :=
-  (K.inter_subset_convex_hull hs ht).antisymm <|
-    subset_inter (convex_hull_mono <| Set.inter_subset_left _ _) <| convex_hull_mono <| Set.inter_subset_right _ _
+  (K.inter_subset_convex_hull hs ht).antisymm $
+    subset_inter (convex_hull_mono $ Set.inter_subset_left _ _) $ convex_hull_mono $ Set.inter_subset_right _ _
 #align
   geometry.simplicial_complex.convex_hull_inter_convex_hull Geometry.SimplicialComplex.convex_hull_inter_convex_hull
 
@@ -100,16 +100,23 @@ on `𝕜` means the only choice of `u` is `s ∩ t` (but it's hard to prove). -/
 theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     Disjoint (convexHull 𝕜 (s : Set E)) (convexHull 𝕜 ↑t) ∨
       ∃ u ∈ K.faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u :=
-  by
-  classical by_contra' h
-    · rw [← coe_inter, hst, coe_empty, convex_hull_empty]
-      rfl
-      
+  by classical
+  by_contra' h
+  refine'
+    h.2 (s ∩ t)
+      (K.down_closed hs (inter_subset_left _ _) $ fun hst =>
+        h.1 $ disjoint_iff_inf_le.mpr $ (K.inter_subset_convex_hull hs ht).trans _)
+      _
+  · rw [← coe_inter, hst, coe_empty, convex_hull_empty]
+    rfl
+    
+  · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
+    
 #align
   geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convex_hull
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (s t «expr ∈ » faces) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (s t «expr ∈ » faces) -/
 /-- Construct a simplicial complex by removing the empty face for you. -/
 @[simps]
 def ofErase (faces : Set (Finset E)) (indep : ∀ s ∈ faces, AffineIndependent 𝕜 (coe : (s : Set E) → E))
@@ -147,27 +154,29 @@ theorem mem_vertices : x ∈ K.vertices ↔ {x} ∈ K.faces :=
 
 theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) := by
   ext x
-  refine' ⟨fun h => mem_bUnion h <| mem_coe.2 <| mem_singleton_self x, fun h => _⟩
+  refine' ⟨fun h => mem_bUnion h $ mem_coe.2 $ mem_singleton_self x, fun h => _⟩
   obtain ⟨s, hs, hx⟩ := mem_Union₂.1 h
-  exact K.down_closed hs (Finset.singleton_subset_iff.2 <| mem_coe.1 hx) (singleton_ne_empty _)
+  exact K.down_closed hs (Finset.singleton_subset_iff.2 $ mem_coe.1 hx) (singleton_ne_empty _)
 #align geometry.simplicial_complex.vertices_eq Geometry.SimplicialComplex.vertices_eq
 
 theorem vertices_subset_space : K.vertices ⊆ K.Space :=
-  vertices_eq.Subset.trans <| Union₂_mono fun x hx => subset_convex_hull 𝕜 x
+  vertices_eq.Subset.trans $ Union₂_mono $ fun x hx => subset_convex_hull 𝕜 x
 #align geometry.simplicial_complex.vertices_subset_space Geometry.SimplicialComplex.vertices_subset_space
 
 theorem vertex_mem_convex_hull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) : x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s := by
   refine' ⟨fun h => _, fun h => subset_convex_hull _ _ h⟩
-  classical have h := K.inter_subset_convex_hull hx hs ⟨by simp, h⟩
-    rwa [← coe_inter, Finset.disjoint_iff_inter_eq_empty.1 (Finset.disjoint_singleton_right.2 H).symm, coe_empty,
-      convex_hull_empty] at h
+  classical
+  have h := K.inter_subset_convex_hull hx hs ⟨by simp, h⟩
+  by_contra H
+  rwa [← coe_inter, Finset.disjoint_iff_inter_eq_empty.1 (Finset.disjoint_singleton_right.2 H).symm, coe_empty,
+    convex_hull_empty] at h
 #align geometry.simplicial_complex.vertex_mem_convex_hull_iff Geometry.SimplicialComplex.vertex_mem_convex_hull_iff
 
 /-- A face is a subset of another one iff its vertices are.  -/
 theorem face_subset_face_iff (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     convexHull 𝕜 (s : Set E) ⊆ convexHull 𝕜 ↑t ↔ s ⊆ t :=
   ⟨fun h x hxs =>
-    (vertex_mem_convex_hull_iff (K.down_closed hs (Finset.singleton_subset_iff.2 hxs) <| singleton_ne_empty _) ht).1
+    (vertex_mem_convex_hull_iff (K.down_closed hs (Finset.singleton_subset_iff.2 hxs) $ singleton_ne_empty _) ht).1
       (h (subset_convex_hull 𝕜 (↑s) hxs)),
     convex_hull_mono⟩
 #align geometry.simplicial_complex.face_subset_face_iff Geometry.SimplicialComplex.face_subset_face_iff
@@ -219,7 +228,7 @@ instance : HasInf (SimplicialComplex 𝕜 E) :=
       inter_subset_convex_hull := fun s t hs ht => K.inter_subset_convex_hull hs.1 ht.1 }⟩
 
 instance : SemilatticeInf (SimplicialComplex 𝕜 E) :=
-  { (PartialOrder.lift faces) fun x y => ext _ _ with inf := (· ⊓ ·), inf_le_left := fun K L s hs => hs.1,
+  { PartialOrder.lift faces $ fun x y => ext _ _ with inf := (· ⊓ ·), inf_le_left := fun K L s hs => hs.1,
     inf_le_right := fun K L s hs => hs.2, le_inf := fun K L M hKL hKM s hs => ⟨hKL hs, hKM hs⟩ }
 
 instance : HasBot (SimplicialComplex 𝕜 E) :=

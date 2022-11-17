@@ -77,15 +77,14 @@ variable [LinearOrderedField 𝕜] [AddCommGroup E] [LinearOrderedAddCommGroup �
   [OrderedSmul 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E} {x : E}
 
 theorem le_sup_of_mem_convex_hull {s : Finset E} (hf : ConvexOn 𝕜 (convexHull 𝕜 (s : Set E)) f)
-    (hx : x ∈ convexHull 𝕜 (s : Set E)) : f x ≤ s.sup' (coe_nonempty.1 <| convex_hull_nonempty_iff.1 ⟨x, hx⟩) f := by
+    (hx : x ∈ convexHull 𝕜 (s : Set E)) : f x ≤ s.sup' (coe_nonempty.1 $ convex_hull_nonempty_iff.1 ⟨x, hx⟩) f := by
   obtain ⟨w, hw₀, hw₁, rfl⟩ := mem_convex_hull.1 hx
   exact
-    (hf.map_center_mass_le hw₀ (by positivity) <| subset_convex_hull _ _).trans
-      (center_mass_le_sup hw₀ <| by positivity)
+    (hf.map_center_mass_le hw₀ (by positivity) $ subset_convex_hull _ _).trans (center_mass_le_sup hw₀ $ by positivity)
 #align le_sup_of_mem_convex_hull le_sup_of_mem_convex_hull
 
 theorem inf_le_of_mem_convex_hull {s : Finset E} (hf : ConcaveOn 𝕜 (convexHull 𝕜 (s : Set E)) f)
-    (hx : x ∈ convexHull 𝕜 (s : Set E)) : s.inf' (coe_nonempty.1 <| convex_hull_nonempty_iff.1 ⟨x, hx⟩) f ≤ f x :=
+    (hx : x ∈ convexHull 𝕜 (s : Set E)) : s.inf' (coe_nonempty.1 $ convex_hull_nonempty_iff.1 ⟨x, hx⟩) f ≤ f x :=
   le_sup_of_mem_convex_hull hf.dual hx
 #align inf_le_of_mem_convex_hull inf_le_of_mem_convex_hull
 
@@ -96,7 +95,7 @@ theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i
   set y := t.center_mass w p
   rsuffices ⟨i, hi, hfi⟩ : ∃ i ∈ t.filter fun i => w i ≠ 0, w i • f y ≤ w i • (f ∘ p) i
   · rw [mem_filter] at hi
-    exact ⟨i, hi.1, (smul_le_smul_iff_of_pos <| (hw₀ i hi.1).lt_of_ne hi.2.symm).1 hfi⟩
+    exact ⟨i, hi.1, (smul_le_smul_iff_of_pos $ (hw₀ i hi.1).lt_of_ne hi.2.symm).1 hfi⟩
     
   have hw' : (0 : 𝕜) < ∑ i in filter (fun i => w i ≠ 0) t, w i := by rwa [sum_filter_ne_zero]
   refine' exists_le_of_sum_le (nonempty_of_sum_ne_zero hw'.ne') _

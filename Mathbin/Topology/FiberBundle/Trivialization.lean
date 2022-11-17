@@ -132,7 +132,7 @@ theorem proj_symm_apply' {b : B} {x : F} (hx : b ∈ e.baseSet) : proj (e.toLoca
 
 theorem proj_surj_on_base_set [Nonempty F] : Set.SurjOn proj e.source e.baseSet := fun b hb =>
   let ⟨y⟩ := ‹Nonempty F›
-  ⟨e.toLocalEquiv.symm (b, y), e.toLocalEquiv.map_target <| e.mem_target.2 hb, e.proj_symm_apply' hb⟩
+  ⟨e.toLocalEquiv.symm (b, y), e.toLocalEquiv.map_target $ e.mem_target.2 hb, e.proj_symm_apply' hb⟩
 #align pretrivialization.proj_surj_on_base_set Pretrivialization.proj_surj_on_base_set
 
 theorem apply_symm_apply {x : B × F} (hx : x ∈ e.target) : e (e.toLocalEquiv.symm x) = x :=
@@ -241,7 +241,7 @@ theorem symm_apply_of_not_mem (e : Pretrivialization F (π E)) {b : B} (hb : b �
 #align pretrivialization.symm_apply_of_not_mem Pretrivialization.symm_apply_of_not_mem
 
 theorem coe_symm_of_not_mem (e : Pretrivialization F (π E)) {b : B} (hb : b ∉ e.baseSet) : (e.symm b : F → E b) = 0 :=
-  funext fun y => dif_neg hb
+  funext $ fun y => dif_neg hb
 #align pretrivialization.coe_symm_of_not_mem Pretrivialization.coe_symm_of_not_mem
 
 theorem mk_symm (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
@@ -603,7 +603,7 @@ end Zero
 that sends `p : Z` to `((e p).1, h (e p).2)`. -/
 def transFiberHomeomorph {F' : Type _} [TopologicalSpace F'] (e : Trivialization F proj) (h : F ≃ₜ F') :
     Trivialization F' proj where
-  toLocalHomeomorph := e.toLocalHomeomorph.transHomeomorph <| (Homeomorph.refl _).prodCongr h
+  toLocalHomeomorph := e.toLocalHomeomorph.transHomeomorph $ (Homeomorph.refl _).prodCongr h
   baseSet := e.baseSet
   open_base_set := e.open_base_set
   source_eq := e.source_eq
@@ -620,7 +620,7 @@ theorem trans_fiber_homeomorph_apply {F' : Type _} [TopologicalSpace F'] (e : Tr
 /-- Coordinate transformation in the fiber induced by a pair of bundle trivializations. See also
 `trivialization.coord_change_homeomorph` for a version bundled as `F ≃ₜ F`. -/
 def coordChange (e₁ e₂ : Trivialization F proj) (b : B) (x : F) : F :=
-  (e₂ <| e₁.toLocalHomeomorph.symm (b, x)).2
+  (e₂ $ e₁.toLocalHomeomorph.symm (b, x)).2
 #align trivialization.coord_change Trivialization.coordChange
 
 theorem mk_coord_change (e₁ e₂ : Trivialization F proj) {b : B} (h₁ : b ∈ e₁.baseSet) (h₂ : b ∈ e₂.baseSet) (x : F) :
@@ -643,7 +643,7 @@ theorem coord_change_same_apply (e : Trivialization F proj) {b : B} (h : b ∈ e
 #align trivialization.coord_change_same_apply Trivialization.coord_change_same_apply
 
 theorem coord_change_same (e : Trivialization F proj) {b : B} (h : b ∈ e.baseSet) : e.coordChange e b = id :=
-  funext <| e.coord_change_same_apply h
+  funext $ e.coord_change_same_apply h
 #align trivialization.coord_change_same Trivialization.coord_change_same
 
 theorem coord_change_coord_change (e₁ e₂ e₃ : Trivialization F proj) {b : B} (h₁ : b ∈ e₁.baseSet) (h₂ : b ∈ e₂.baseSet)
@@ -706,12 +706,12 @@ protected noncomputable def comap (e : Trivialization F proj) (f : B' → B) (hf
     have hx : x ∈ e.source := e.mem_source.2 (hbx ▸ hb)
     ext <;> simp [*]
   right_inv' p (hp : f p.1 ∈ e.baseSet) := by simp [*, e.apply_symm_apply']
-  open_source := e.open_base_set.Preimage (hf.comp <| continuous_fst.comp continuous_subtype_coe)
+  open_source := e.open_base_set.Preimage (hf.comp $ continuous_fst.comp continuous_subtype_coe)
   open_target := e.open_base_set.Preimage (hf.comp continuous_fst)
   continuous_to_fun :=
-    (continuous_fst.comp continuous_subtype_coe).ContinuousOn.Prod <|
-      continuous_snd.comp_continuous_on <|
-        e.continuous_to_fun.comp (continuous_snd.comp continuous_subtype_coe).ContinuousOn <| by
+    (continuous_fst.comp continuous_subtype_coe).ContinuousOn.Prod $
+      continuous_snd.comp_continuous_on $
+        e.continuous_to_fun.comp (continuous_snd.comp continuous_subtype_coe).ContinuousOn $ by
           rintro ⟨⟨b, x⟩, hbx : f b = proj x⟩ (hb : f b ∈ e.base_set)
           rw [hbx] at hb
           exact e.mem_source.2 hb
@@ -769,7 +769,7 @@ the base sets of `e` and `e'` intersect `frontier s` on the same set and `e p = 
 `set.ite s e.base_set e'.base_set` that is equal to `e` on `proj ⁻¹ s` and is equal to `e'`
 otherwise. -/
 noncomputable def piecewise (e e' : Trivialization F proj) (s : Set B)
-    (Hs : e.baseSet ∩ frontier s = e'.baseSet ∩ frontier s) (Heq : EqOn e e' <| proj ⁻¹' (e.baseSet ∩ frontier s)) :
+    (Hs : e.baseSet ∩ frontier s = e'.baseSet ∩ frontier s) (Heq : EqOn e e' $ proj ⁻¹' (e.baseSet ∩ frontier s)) :
     Trivialization F proj where
   toLocalHomeomorph :=
     e.toLocalHomeomorph.piecewise e'.toLocalHomeomorph (proj ⁻¹' s) (s ×ˢ univ) (e.is_image_preimage_prod s)
@@ -790,8 +790,9 @@ such that `proj p ≤ a` and is equal to `e'` otherwise. -/
 noncomputable def piecewiseLeOfEq [LinearOrder B] [OrderTopology B] (e e' : Trivialization F proj) (a : B)
     (He : a ∈ e.baseSet) (He' : a ∈ e'.baseSet) (Heq : ∀ p, proj p = a → e p = e' p) : Trivialization F proj :=
   e.piecewise e' (iic a)
-    (Set.ext fun x => and_congr_left_iff.2 fun hx => by simp [He, He', mem_singleton_iff.1 (frontier_Iic_subset _ hx)])
-    fun p hp => Heq p <| frontier_Iic_subset _ hp.2
+    (Set.ext $ fun x =>
+      and_congr_left_iff.2 $ fun hx => by simp [He, He', mem_singleton_iff.1 (frontier_Iic_subset _ hx)])
+    fun p hp => Heq p $ frontier_Iic_subset _ hp.2
 #align trivialization.piecewise_le_of_eq Trivialization.piecewiseLeOfEq
 
 /-- Given two bundle trivializations `e`, `e'` of a topological fiber bundle `proj : Z → B` over a
@@ -802,7 +803,7 @@ points `p` such that `proj p ≤ a` and is equal to `((e' p).1, h (e' p).2)` oth
 `h (e' p).2 = (e p).2` whenever `e p = a`. -/
 noncomputable def piecewiseLe [LinearOrder B] [OrderTopology B] (e e' : Trivialization F proj) (a : B)
     (He : a ∈ e.baseSet) (He' : a ∈ e'.baseSet) : Trivialization F proj :=
-  e.piecewiseLeOfEq (e'.transFiberHomeomorph (e'.coordChangeHomeomorph e He' He)) a He He' <| by
+  e.piecewiseLeOfEq (e'.transFiberHomeomorph (e'.coordChangeHomeomorph e He' He)) a He He' $ by
     rintro p rfl
     ext1
     · simp [e.coe_fst', e'.coe_fst', *]

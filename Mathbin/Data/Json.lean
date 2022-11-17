@@ -113,7 +113,7 @@ unsafe instance {α} [json_serializable α] : non_null_json_serializable (List �
     l (of_json α)
 
 unsafe instance {α} [json_serializable α] : non_null_json_serializable (Rbmap String α) where
-  to_json m := json.object (m.toList.map fun x => (x.1, to_json x.2))
+  to_json m := json.object (m.toList.map $ fun x => (x.1, to_json x.2))
   of_json j := do
     let json.object l ← success j |
       exception fun _ => f! "object expected, got {j.typename}"
@@ -191,9 +191,6 @@ unsafe def json_serializable.field_terminator (l : List (String × json)) : exce
   pure ()
 #align json_serializable.field_terminator json_serializable.field_terminator
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- ``((c_name, c_fun), [(p_name, p_fun), ...]) ← get_constructor_and_projections `(struct n)``
 gets the names and partial invocations of the constructor and projections of a structure -/
 unsafe def get_constructor_and_projections (t : expr) : tactic (Name × (Name × expr) × List (Name × expr)) := do
@@ -203,17 +200,17 @@ unsafe def get_constructor_and_projections (t : expr) : tactic (Name × (Name ×
   let ctor ←
     do
       let d ← get_decl ctor
-      let a := @expr.const true ctor <| d.univ_params.map level.param
+      let a := @expr.const true ctor $ d.univ_params.map level.param
       pure (ctor, a args)
   let ctor_type ← infer_type ctor.2
   let tt ← pure ctor_type.is_pi |
     pure (I, ctor, [])
   let some fields ← pure (env.structure_fields I) |
-    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    throwError"Not a structure"
   let projs ←
-    fields.mmap fun f => do
+    fields.mmap $ fun f => do
         let d ← get_decl (I ++ f)
-        let a := @expr.const true (I ++ f) <| d.univ_params.map level.param
+        let a := @expr.const true (I ++ f) $ d.univ_params.map level.param
         pure (f, a args)
   pure (I, ctor, projs)
 #align get_constructor_and_projections get_constructor_and_projections
@@ -228,7 +225,7 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
   | vars, [] => do
     let-- allow this partial constructor if `to_expr` allows it
     struct := pexpr.mk_structure_instance ⟨some struct_name, vars.map Prod.fst, vars.map Prod.snd, []⟩
-    to_expr (pquote.1 (pure (%%ₓstruct) : exceptional (%%ₓt)))
+    to_expr ``((pure $(struct) : exceptional $(t)))
   | vars, (fname, some fj) :: js => do
     let u
       ←-- data fields
@@ -239,10 +236,8 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
     let with_field ← of_json_helper new_vars js >>= tactic.lambdas [f_binder]
     let without_field ←
       of_json_helper vars js <|>
-          to_expr (pquote.1 (exception fun o => f!"field {%%ₓquote.1 fname} is required" : exceptional (%%ₓt)))
-    to_expr
-        (pquote.1
-          (Option.mapM (of_json _) (%%ₓfj) >>= Option.elim' (%%ₓwithout_field) (%%ₓwith_field) : exceptional (%%ₓt)))
+          to_expr ``((exception $ fun o => f!"field {$(q(fname))} is required" : exceptional $(t)))
+    to_expr ``((Option.mapM (of_json _) $(fj) >>= Option.elim' $(without_field) $(with_field) : exceptional $(t)))
   | vars,
     (fname, none) :: js =>-- try a default value
         of_json_helper
@@ -255,12 +250,9 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
       let f_binder ← mk_local' fname BinderInfo.default ft
       let new_vars := vars.concat (fname, to_pexpr f_binder)
       let with_field ← of_json_helper new_vars js >>= tactic.lambdas [f_binder]
-      to_expr (pquote.1 (dite _ (%%ₓwith_field) fun _ => exception fun _ => f!"condition does not hold"))
+      to_expr ``(dite _ $(with_field) fun _ => exception $ fun _ => f!"condition does not hold")
 #align of_json_helper of_json_helper
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- A derive handler to serialize structures by their fields.
 
 For the following structure:
@@ -291,14 +283,13 @@ do
 -/
 @[derive_handler]
 unsafe def non_null_json_serializable_handler : derive_handler :=
-  instance_derive_handler `` non_null_json_serializable <| do
+  instance_derive_handler `` non_null_json_serializable $ do
     intros
-    let quote.1 (non_null_json_serializable (%%ₓe)) ← target >>= whnf
+    let q(non_null_json_serializable $(e)) ← target >>= whnf
     let (struct_name, (ctor_name, ctor), fields) ← get_constructor_and_projections e
     refine
-        (pquote.1
-          (@non_null_json_serializable.mk (%%ₓe)
-            ⟨fun x => json.object _, fun j => json_serializable.field_starter j >>= _⟩))
+        ``(@non_null_json_serializable.mk $(e)
+            ⟨fun x => json.object _, fun j => json_serializable.field_starter j >>= _⟩)
     let x
       ←-- the forward direction
           get_local
@@ -311,10 +302,10 @@ unsafe def non_null_json_serializable_handler : derive_handler :=
           let expr.sort (level.succ u) ← pure s |
             pure (none : Option expr)
           let level.zero ← pure u |
-            "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+            throwError"Only Type 0 is supported"
           let j ← tactic.mk_app `json_serializable.to_json [x_e]
-          pure (some (quote.1 ((%%ₓquote.1 f.toString, %%ₓj) : String × json)))
-    tactic.exact (projs (quote.1 (String × json)) level.zero)
+          pure (some q((($(q(f.toString)), $(j)) : String × json)))
+    tactic.exact (projs q(String × json) level.zero)
     -- the reverse direction
           get_local
           `j >>=
@@ -329,12 +320,12 @@ unsafe def non_null_json_serializable_handler : derive_handler :=
             pure (f, none)
           -- do nothing for prop fields
               refine
-              (pquote.1 fun p => json_serializable.field_get p (%%ₓquote.1 f.toString) >>= _)
+              ``(fun p => json_serializable.field_get p $(q(f.toString)) >>= _)
           tactic.applyc `prod.rec
           get_local `p >>= tactic.clear
           let jf ← tactic.intro (`field ++ f)
           pure (f, some jf)
-    refine (pquote.1 fun p => json_serializable.field_terminator p >> _)
+    refine ``(fun p => json_serializable.field_terminator p >> _)
     get_local `p >>= tactic.clear
     let ctor ← of_json_helper struct_name e [] json_fields
     exact ctor

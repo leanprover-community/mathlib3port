@@ -62,14 +62,14 @@ variable [LinearOrder α] [DenselyOrdered α] [Monoid α] [HasExistsMulOfLe α] 
 
 @[to_additive]
 theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b * ε) : a ≤ b :=
-  le_of_forall_le_of_dense fun x hxb => by
+  le_of_forall_le_of_dense $ fun x hxb => by
     obtain ⟨ε, rfl⟩ := exists_mul_of_le hxb.le
     exact h _ ((lt_mul_iff_one_lt_right' b).1 hxb)
 #align le_of_forall_one_lt_le_mul le_of_forall_one_lt_le_mul
 
 @[to_additive]
 theorem le_of_forall_one_lt_lt_mul' (h : ∀ ε : α, 1 < ε → a < b * ε) : a ≤ b :=
-  le_of_forall_one_lt_le_mul fun ε hε => (h _ hε).le
+  le_of_forall_one_lt_le_mul $ fun ε hε => (h _ hε).le
 #align le_of_forall_one_lt_lt_mul' le_of_forall_one_lt_lt_mul'
 
 @[to_additive]
@@ -79,6 +79,7 @@ theorem le_iff_forall_one_lt_lt_mul' : a ≤ b ↔ ∀ ε, 1 < ε → a < b * ε
 
 end HasExistsMulOfLe
 
+#print CanonicallyOrderedAddMonoid /-
 /-- A canonically ordered additive monoid is an ordered commutative additive monoid
   in which the ordering coincides with the subtractibility relation,
   which is to say, `a ≤ b` iff there exists `c` with `b = a + c`.
@@ -90,6 +91,7 @@ class CanonicallyOrderedAddMonoid (α : Type _) extends OrderedAddCommMonoid α,
   exists_add_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a + c
   le_self_add : ∀ a b : α, a ≤ a + b
 #align canonically_ordered_add_monoid CanonicallyOrderedAddMonoid
+-/
 
 -- see Note [lower instance priority]
 instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u) [h : CanonicallyOrderedAddMonoid α] :
@@ -209,7 +211,7 @@ theorem one_lt_mul_iff : 1 < a * b ↔ 1 < a ∨ 1 < b := by
 #align one_lt_mul_iff one_lt_mul_iff
 
 @[to_additive]
-theorem exists_one_lt_mul_of_lt (h : a < b) : ∃ (c : _)(hc : 1 < c), a * c = b := by
+theorem exists_one_lt_mul_of_lt (h : a < b) : ∃ (c) (hc : 1 < c), a * c = b := by
   obtain ⟨c, hc⟩ := le_iff_exists_mul.1 h.le
   refine' ⟨c, one_lt_iff_ne_one.2 _, hc.symm⟩
   rintro rfl
@@ -264,22 +266,22 @@ instance (priority := 100) CanonicallyOrderedAddMonoid.zeroLeOneClass {M : Type 
 namespace NeZero
 
 theorem pos {M} (a : M) [CanonicallyOrderedAddMonoid M] [NeZero a] : 0 < a :=
-  (zero_le a).lt_of_ne <| NeZero.out.symm
+  (zero_le a).lt_of_ne $ NeZero.out.symm
 #align ne_zero.pos NeZero.pos
 
 theorem of_gt {M} [CanonicallyOrderedAddMonoid M] {x y : M} (h : x < y) : NeZero y :=
-  of_pos <| pos_of_gt h
+  of_pos $ pos_of_gt h
 #align ne_zero.of_gt NeZero.of_gt
 
 -- 1 < p is still an often-used `fact`, due to `nat.prime` implying it, and it implying `nontrivial`
 -- on `zmod`'s ring structure. We cannot just set this to be any `x < y`, else that becomes a
 -- metavariable and it will hugely slow down typeclass inference.
 instance (priority := 10) of_gt' {M} [CanonicallyOrderedAddMonoid M] [One M] {y : M} [Fact (1 < y)] : NeZero y :=
-  of_gt <| Fact.out <| 1 < y
+  of_gt $ Fact.out $ 1 < y
 #align ne_zero.of_gt' NeZero.of_gt'
 
 instance bit0 {M} [CanonicallyOrderedAddMonoid M] {x : M} [NeZero x] : NeZero (bit0 x) :=
-  of_pos <| bit0_pos <| NeZero.pos x
+  of_pos $ bit0_pos $ NeZero.pos x
 #align ne_zero.bit0 NeZero.bit0
 
 end NeZero

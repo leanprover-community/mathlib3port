@@ -144,7 +144,7 @@ theorem one_def : (1 : QuaternionGroup n) = a 0 :=
   rfl
 #align quaternion_group.one_def QuaternionGroup.one_def
 
-private def fintype_helper : Sum (Zmod (2 * n)) (Zmod (2 * n)) ≃ QuaternionGroup n where
+private def fintype_helper : Zmod (2 * n) ⊕ Zmod (2 * n) ≃ QuaternionGroup n where
   invFun i :=
     match i with
     | a j => Sum.inl j
@@ -181,7 +181,7 @@ instance [NeZero n] : Fintype (QuaternionGroup n) :=
   Fintype.ofEquiv _ fintypeHelper
 
 instance : Nontrivial (QuaternionGroup n) :=
-  ⟨⟨a 0, xa 0, by decide⟩⟩
+  ⟨⟨a 0, xa 0, dec_trivial⟩⟩
 
 /-- If `0 < n`, then `quaternion_group n` has `4n` elements.
 -/

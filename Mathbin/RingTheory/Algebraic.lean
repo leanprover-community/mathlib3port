@@ -39,7 +39,7 @@ def Transcendental (x : A) : Prop :=
 #align transcendental Transcendental
 
 theorem isTranscendentalOfSubsingleton [Subsingleton R] (x : A) : Transcendental R x := fun ⟨p, h, _⟩ =>
-  h <| Subsingleton.elim p 0
+  h $ Subsingleton.elim p 0
 #align is_transcendental_of_subsingleton isTranscendentalOfSubsingleton
 
 variable {R}
@@ -171,7 +171,7 @@ theorem isAlgebraicOfPow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (r ^
 #align is_algebraic_of_pow isAlgebraicOfPow
 
 theorem Transcendental.pow {r : A} (ht : Transcendental R r) {n : ℕ} (hn : 0 < n) : Transcendental R (r ^ n) :=
-  fun ht' => ht <| isAlgebraicOfPow hn ht'
+  fun ht' => ht $ isAlgebraicOfPow hn ht'
 #align transcendental.pow Transcendental.pow
 
 end zero_ne_one
@@ -256,7 +256,7 @@ theorem IsAlgebraic.alg_hom_bijective (ha : Algebra.IsAlgebraic K L) (f : L →�
   obtain ⟨p, hp, he⟩ := ha b
   let f' : p.root_set L → p.root_set L := Set.MapsTo.restrict f _ _ (root_set_maps_to (map_ne_zero hp) f)
   have : Function.Surjective f' :=
-    Finite.injective_iff_surjective.1 fun _ _ h => Subtype.eq <| f.to_ring_hom.injective <| Subtype.ext_iff.1 h
+    Finite.injective_iff_surjective.1 fun _ _ h => Subtype.eq $ f.to_ring_hom.injective $ Subtype.ext_iff.1 h
   obtain ⟨a, ha⟩ := this ⟨b, (mem_root_set_iff hp b).2 he⟩
   exact ⟨a, Subtype.ext_iff.1 ha⟩
 #align algebra.is_algebraic.alg_hom_bijective Algebra.IsAlgebraic.alg_hom_bijective
@@ -291,10 +291,10 @@ end Algebra
 
 variable {R S : Type _} [CommRing R] [IsDomain R] [CommRing S]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ≠ » (0 : R)) -/
 theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     (inj : ∀ x, algebraMap R S x = 0 → x = 0) :
-    ∃ (x : integralClosure R S)(y : _)(_ : y ≠ (0 : R)), z * algebraMap R S y = x := by
+    ∃ (x : integralClosure R S) (y) (_ : y ≠ (0 : R)), z * algebraMap R S y = x := by
   rcases hz with ⟨p, p_ne_zero, px⟩
   set a := p.leading_coeff with a_def
   have a_ne_zero : a ≠ 0 := mt polynomial.leading_coeff_eq_zero.mp p_ne_zero
@@ -304,13 +304,13 @@ theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
   exact ⟨⟨_, x_integral⟩, a, a_ne_zero, rfl⟩
 #align exists_integral_multiple exists_integral_multiple
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (d «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (d «expr ≠ » (0 : R)) -/
 /-- A fraction `(a : S) / (b : S)` can be reduced to `(c : S) / (d : R)`,
 if `S` is the integral closure of `R` in an algebraic extension `L` of `R`. -/
 theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S] [Algebra S L] [Algebra R L]
     [IsScalarTower R S L] [IsIntegralClosure S R L] (h : Algebra.IsAlgebraic R L)
     (inj : Function.Injective (algebraMap R L)) (a : S) {b : S} (hb : b ≠ 0) :
-    ∃ (c : S)(d : _)(_ : d ≠ (0 : R)), d • a = b * c := by
+    ∃ (c : S) (d) (_ : d ≠ (0 : R)), d • a = b * c := by
   obtain ⟨c, d, d_ne, hx⟩ :=
     exists_integral_multiple (h (algebraMap _ L a / algebraMap _ L b)) ((injective_iff_map_eq_zero _).mp inj)
   refine' ⟨IsIntegralClosure.mk' S (c : L) c.2, d, d_ne, IsIntegralClosure.algebra_map_injective S R L _⟩
@@ -425,13 +425,13 @@ variable [CommSemiring R'] [CommSemiring S'] [CommSemiring T'] [Algebra R' S'] [
 /-- This is not an instance for the same reasons as `polynomial.has_smul_pi'`. -/
 noncomputable def Polynomial.algebraPi : Algebra R'[X] (S' → T') :=
   { Polynomial.hasSmulPi' R' S' T' with toFun := fun p z => algebraMap S' T' (aeval z p),
-    map_one' := funext fun z => by simp only [Polynomial.aeval_one, Pi.one_apply, map_one],
-    map_mul' := fun f g => funext fun z => by simp only [Pi.mul_apply, map_mul],
-    map_zero' := funext fun z => by simp only [Polynomial.aeval_zero, Pi.zero_apply, map_zero],
-    map_add' := fun f g => funext fun z => by simp only [Polynomial.aeval_add, Pi.add_apply, map_add],
-    commutes' := fun p f => funext fun z => mul_comm _ _,
+    map_one' := funext $ fun z => by simp only [Polynomial.aeval_one, Pi.one_apply, map_one],
+    map_mul' := fun f g => funext $ fun z => by simp only [Pi.mul_apply, map_mul],
+    map_zero' := funext $ fun z => by simp only [Polynomial.aeval_zero, Pi.zero_apply, map_zero],
+    map_add' := fun f g => funext $ fun z => by simp only [Polynomial.aeval_add, Pi.add_apply, map_add],
+    commutes' := fun p f => funext $ fun z => mul_comm _ _,
     smul_def' := fun p f =>
-      funext fun z => by
+      funext $ fun z => by
         simp only [Algebra.algebra_map_eq_smul_one, polynomial_smul_apply', one_mul, Pi.mul_apply,
           Algebra.smul_mul_assoc] }
 #align polynomial.algebra_pi Polynomial.algebraPi

@@ -72,7 +72,7 @@ structure SchwartzMap where
 #align schwartz_map SchwartzMap
 
 -- mathport name: «expr𝓢( , )»
-localized [SchwartzSpace] notation "𝓢(" E ", " F ")" => SchwartzMap E F
+scoped[SchwartzSpace] notation "𝓢(" E ", " F ")" => SchwartzMap E F
 
 variable {E F}
 
@@ -91,7 +91,7 @@ instance : CoeFun 𝓢(E, F) fun _ => E → F :=
   ⟨fun p => p.toFun⟩
 
 /-- All derivatives of a Schwartz function are rapidly decaying. -/
-theorem decay (f : 𝓢(E, F)) (k n : ℕ) : ∃ (C : ℝ)(hC : 0 < C), ∀ x, ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ C := by
+theorem decay (f : 𝓢(E, F)) (k n : ℕ) : ∃ (C : ℝ) (hC : 0 < C), ∀ x, ∥x∥ ^ k * ∥iteratedFderiv ℝ n f x∥ ≤ C := by
   rcases f.decay' k n with ⟨C, hC⟩
   exact ⟨max C 1, by positivity, fun x => (hC x).trans (le_max_left _ _)⟩
 #align schwartz_map.decay SchwartzMap.decay
@@ -210,10 +210,10 @@ theorem smul_apply {f : 𝓢(E, F)} {c : 𝕜} {x : E} : (c • f) x = c • f x
 #align schwartz_map.smul_apply SchwartzMap.smul_apply
 
 instance [HasSmul 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' F] : IsScalarTower 𝕜 𝕜' 𝓢(E, F) :=
-  ⟨fun a b f => ext fun x => smul_assoc a b (f x)⟩
+  ⟨fun a b f => ext $ fun x => smul_assoc a b (f x)⟩
 
 instance [SmulCommClass 𝕜 𝕜' F] : SmulCommClass 𝕜 𝕜' 𝓢(E, F) :=
-  ⟨fun a b f => ext fun x => smul_comm a b (f x)⟩
+  ⟨fun a b f => ext $ fun x => smul_comm a b (f x)⟩
 
 theorem seminorm_aux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) : (c • f).seminormAux k n ≤ ∥c∥ * f.seminormAux k n := by
   refine'
@@ -299,8 +299,8 @@ theorem add_apply {f g : 𝓢(E, F)} {x : E} : (f + g) x = f x + g x :=
 
 theorem seminorm_aux_add_le (k n : ℕ) (f g : 𝓢(E, F)) :
     (f + g).seminormAux k n ≤ f.seminormAux k n + g.seminormAux k n :=
-  ((f + g).seminorm_aux_le_bound k n (add_nonneg (seminorm_aux_nonneg _ _ _) (seminorm_aux_nonneg _ _ _))) fun x =>
-    (decay_add_le_aux k n f g x).trans <| add_le_add (f.le_seminorm_aux k n x) (g.le_seminorm_aux k n x)
+  (f + g).seminorm_aux_le_bound k n (add_nonneg (seminorm_aux_nonneg _ _ _) (seminorm_aux_nonneg _ _ _)) $ fun x =>
+    (decay_add_le_aux k n f g x).trans $ add_le_add (f.le_seminorm_aux k n x) (g.le_seminorm_aux k n x)
 #align schwartz_map.seminorm_aux_add_le SchwartzMap.seminorm_aux_add_le
 
 end Add
@@ -503,8 +503,8 @@ variable [IsROrC 𝕜] [NormedSpace 𝕜 F] [SmulCommClass ℝ 𝕜 F]
 /-- The derivative on Schwartz space as a linear map. -/
 def fderivLm : 𝓢(E, F) →ₗ[𝕜] 𝓢(E, E →L[ℝ] F) where
   toFun := SchwartzMap.fderiv
-  map_add' f g := ext fun _ => fderiv_add f.Differentiable.DifferentiableAt g.Differentiable.DifferentiableAt
-  map_smul' a f := ext fun _ => fderiv_const_smul f.Differentiable.DifferentiableAt a
+  map_add' f g := ext $ fun _ => fderiv_add f.Differentiable.DifferentiableAt g.Differentiable.DifferentiableAt
+  map_smul' a f := ext $ fun _ => fderiv_const_smul f.Differentiable.DifferentiableAt a
 #align schwartz_map.fderiv_lm SchwartzMap.fderivLm
 
 @[simp, norm_cast]

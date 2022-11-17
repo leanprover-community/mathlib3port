@@ -200,7 +200,7 @@ def enlarge (v : VitaliFamily μ) (δ : ℝ) (δpos : 0 < δ) : VitaliFamily μ 
   covering := by
     intro s f fset ffine
     let g : α → Set (Set α) := fun x => f x ∩ v.sets_at x
-    have : ∀ x ∈ s, ∀ ε : ℝ, ε > 0 → ∃ (a : Set α)(H : a ∈ g x), a ⊆ closed_ball x ε := by
+    have : ∀ x ∈ s, ∀ ε : ℝ, ε > 0 → ∃ (a : Set α) (H : a ∈ g x), a ⊆ closed_ball x ε := by
       intro x hx ε εpos
       obtain ⟨a, af, ha⟩ : ∃ a ∈ f x, a ⊆ closed_ball x (min ε δ)
       exact ffine x hx (min ε δ) (lt_min εpos δpos)
@@ -270,8 +270,8 @@ theorem tendsto_filter_at_iff {ι : Type _} {l : Filter ι} {f : ι → Set α} 
     Tendsto f l (v.filterAt x) ↔ (∀ᶠ i in l, f i ∈ v.setsAt x) ∧ ∀ ε > (0 : ℝ), ∀ᶠ i in l, f i ⊆ closedBall x ε := by
   refine'
     ⟨fun H =>
-      ⟨H.Eventually <| v.eventually_filter_at_mem_sets x, fun ε hε =>
-        H.Eventually <| v.eventually_filter_at_subset_closed_ball x hε⟩,
+      ⟨H.Eventually $ v.eventually_filter_at_mem_sets x, fun ε hε =>
+        H.Eventually $ v.eventually_filter_at_subset_closed_ball x hε⟩,
       fun H s hs => (_ : ∀ᶠ i in l, f i ∈ s)⟩
   obtain ⟨ε, εpos, hε⟩ := v.mem_filter_at_iff.mp hs
   filter_upwards [H.1, H.2 ε εpos] with i hi hiε using hε _ hi hiε
@@ -295,7 +295,7 @@ theorem eventually_filter_at_subset_of_nhds {x : α} {o : Set α} (hx : o ∈ �
 theorem fineSubfamilyOnOfFrequently (v : VitaliFamily μ) (f : α → Set (Set α)) (s : Set α)
     (h : ∀ x ∈ s, ∃ᶠ a in v.filterAt x, a ∈ f x) : v.FineSubfamilyOn f s := by
   intro x hx ε εpos
-  obtain ⟨a, av, ha, af⟩ : ∃ (a : Set α)(H : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ a ∈ f x :=
+  obtain ⟨a, av, ha, af⟩ : ∃ (a : Set α) (H : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ a ∈ f x :=
     v.frequently_filter_at_iff.1 (h x hx) ε εpos
   exact ⟨a, ⟨av, af⟩, ha⟩
 #align vitali_family.fine_subfamily_on_of_frequently VitaliFamily.fineSubfamilyOnOfFrequently

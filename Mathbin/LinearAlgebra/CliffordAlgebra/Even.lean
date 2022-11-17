@@ -74,8 +74,8 @@ variable {A Q}
 @[simps]
 def EvenHom.compr₂ (g : EvenHom Q A) (f : A →ₐ[R] B) : EvenHom Q B where
   bilin := g.bilin.compr₂ f.toLinearMap
-  contract m := (f.congr_arg <| g.contract _).trans <| f.commutes _
-  contract_mid m₁ m₂ m₃ := (f.map_mul _ _).symm.trans <| (f.congr_arg <| g.contract_mid _ _ _).trans <| f.map_smul _ _
+  contract m := (f.congr_arg $ g.contract _).trans $ f.commutes _
+  contract_mid m₁ m₂ m₃ := (f.map_mul _ _).symm.trans $ (f.congr_arg $ g.contract_mid _ _ _).trans $ f.map_smul _ _
 #align clifford_algebra.even_hom.compr₂ CliffordAlgebra.EvenHom.compr₂
 
 variable (Q)
@@ -97,9 +97,9 @@ def even.ι : EvenHom Q (even Q) where
       fun _ _ _ => by
       simp only [LinearMap.map_smul, mul_smul_comm]
       rfl
-  contract m := Subtype.ext <| ι_sq_scalar Q m
+  contract m := Subtype.ext $ ι_sq_scalar Q m
   contract_mid m₁ m₂ m₃ :=
-    Subtype.ext <|
+    Subtype.ext $
       calc
         ι Q m₁ * ι Q m₂ * (ι Q m₂ * ι Q m₃) = ι Q m₁ * (ι Q m₂ * ι Q m₂ * ι Q m₃) := by simp only [mul_assoc]
         _ = Q m₂ • (ι Q m₁ * ι Q m₃) := by rw [Algebra.smul_def, ι_sq_scalar, Algebra.left_comm]
@@ -124,11 +124,11 @@ theorem even.alg_hom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr�
     
   · intro x y hx hy ihx ihy
     have := congr_arg₂ (· + ·) ihx ihy
-    exact (f.map_add _ _).trans (this.trans <| (g.map_add _ _).symm)
+    exact (f.map_add _ _).trans (this.trans $ (g.map_add _ _).symm)
     
   · intro m₁ m₂ x hx ih
     have := congr_arg₂ (· * ·) (LinearMap.congr_fun (LinearMap.congr_fun h m₁) m₂) ih
-    exact (f.map_mul _ _).trans (this.trans <| (g.map_mul _ _).symm)
+    exact (f.map_mul _ _).trans (this.trans $ (g.map_mul _ _).symm)
     
 #align clifford_algebra.even.alg_hom_ext CliffordAlgebra.even.alg_hom_ext
 
@@ -136,10 +136,11 @@ variable {Q}
 
 namespace Even.Lift
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x m₂) -/
 /-- An auxiliary submodule used to store the half-applied values of `f`.
 This is the span of elements `f'` such that `∃ x m₂, ∀ m₁, f' m₁ = f m₁ m₂ * x`.  -/
 private def S : Submodule R (M →ₗ[R] A) :=
-  Submodule.span R { f' | ∃ x m₂, f' = LinearMap.lcomp R _ (f.bilin.flip m₂) (LinearMap.mulRight R x) }
+  Submodule.span R { f' | ∃ (x) (m₂), f' = LinearMap.lcomp R _ (f.bilin.flip m₂) (LinearMap.mulRight R x) }
 #align clifford_algebra.even.lift.S clifford_algebra.even.lift.S
 
 /-- An auxiliary bilinear map that is later passed into `clifford_algebra.fold`. Our desired result
@@ -155,19 +156,19 @@ private def f_fold : M →ₗ[R] A × s f →ₗ[R] A × s f :=
           (linear_map.llcomp R M A A).flip.comp f.flip : M →ₗ[R] A →ₗ[R] M →ₗ[R] A)
         ```
         -/
-      (Acc.2 m, ⟨(LinearMap.mulRight R Acc.1).comp (f.bilin.flip m), Submodule.subset_span <| ⟨_, _, rfl⟩⟩))
+      (Acc.2 m, ⟨(LinearMap.mulRight R Acc.1).comp (f.bilin.flip m), Submodule.subset_span $ ⟨_, _, rfl⟩⟩))
     (fun m₁ m₂ a =>
       Prod.ext (LinearMap.map_add _ m₁ m₂)
-        (Subtype.ext <|
-          LinearMap.ext fun m₃ =>
+        (Subtype.ext $
+          LinearMap.ext $ fun m₃ =>
             show f.bilin m₃ (m₁ + m₂) * a.1 = f.bilin m₃ m₁ * a.1 + f.bilin m₃ m₂ * a.1 by rw [map_add, add_mul]))
     (fun c m a =>
       Prod.ext (LinearMap.map_smul _ c m)
-        (Subtype.ext <|
-          LinearMap.ext fun m₃ =>
+        (Subtype.ext $
+          LinearMap.ext $ fun m₃ =>
             show f.bilin m₃ (c • m) * a.1 = c • (f.bilin m₃ m * a.1) by rw [LinearMap.map_smul, smul_mul_assoc]))
-    (fun m a₁ a₂ => Prod.ext rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_add _ _ _)) fun c m a =>
-    Prod.ext rfl (Subtype.ext <| LinearMap.ext fun m₃ => mul_smul_comm _ _ _)
+    (fun m a₁ a₂ => Prod.ext rfl (Subtype.ext $ LinearMap.ext $ fun m₃ => mul_add _ _ _)) fun c m a =>
+    Prod.ext rfl (Subtype.ext $ LinearMap.ext $ fun m₃ => mul_smul_comm _ _ _)
 #align clifford_algebra.even.lift.f_fold clifford_algebra.even.lift.f_fold
 
 @[simp]
@@ -267,8 +268,8 @@ multiplication. -/
 def even.lift : EvenHom Q A ≃ (CliffordAlgebra.even Q →ₐ[R] A) where
   toFun f := AlgHom.ofLinearMap (aux f) (aux_one f) (aux_mul f)
   invFun F := (even.ι Q).compr₂ F
-  left_inv f := EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι f
-  right_inv F := even.alg_hom_ext Q <| EvenHom.ext _ _ <| LinearMap.ext₂ <| even.Lift.aux_ι _
+  left_inv f := EvenHom.ext _ _ $ LinearMap.ext₂ $ even.Lift.aux_ι f
+  right_inv F := even.alg_hom_ext Q $ EvenHom.ext _ _ $ LinearMap.ext₂ $ even.Lift.aux_ι _
 #align clifford_algebra.even.lift CliffordAlgebra.even.lift
 
 @[simp]

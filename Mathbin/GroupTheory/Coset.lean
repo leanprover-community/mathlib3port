@@ -57,16 +57,16 @@ def rightCoset [Mul α] (s : Set α) (a : α) : Set α :=
 #align right_coset rightCoset
 
 -- mathport name: left_coset
-localized [Coset] infixl:70 " *l " => leftCoset
+scoped[Coset] infixl:70 " *l " => leftCoset
 
 -- mathport name: left_add_coset
-localized [Coset] infixl:70 " +l " => leftAddCoset
+scoped[Coset] infixl:70 " +l " => leftAddCoset
 
 -- mathport name: right_coset
-localized [Coset] infixl:70 " *r " => rightCoset
+scoped[Coset] infixl:70 " *r " => rightCoset
 
 -- mathport name: right_add_coset
-localized [Coset] infixl:70 " +r " => rightAddCoset
+scoped[Coset] infixl:70 " +r " => rightAddCoset
 
 section CosetMul
 
@@ -133,12 +133,12 @@ variable [Monoid α] (s : Set α)
 
 @[simp, to_additive zero_left_add_coset]
 theorem one_left_coset : 1 *l s = s :=
-  Set.ext <| by simp [leftCoset]
+  Set.ext $ by simp [leftCoset]
 #align one_left_coset one_left_coset
 
 @[simp, to_additive right_add_coset_zero]
 theorem right_coset_one : s *r 1 = s :=
-  Set.ext <| by simp [rightCoset]
+  Set.ext $ by simp [rightCoset]
 #align right_coset_one right_coset_one
 
 end CosetMonoid
@@ -197,12 +197,12 @@ variable [Group α] (s : Subgroup α)
 
 @[to_additive left_add_coset_mem_left_add_coset]
 theorem left_coset_mem_left_coset {a : α} (ha : a ∈ s) : a *l s = s :=
-  Set.ext <| by simp [mem_left_coset_iff, mul_mem_cancel_left (s.inv_mem ha)]
+  Set.ext $ by simp [mem_left_coset_iff, mul_mem_cancel_left (s.inv_mem ha)]
 #align left_coset_mem_left_coset left_coset_mem_left_coset
 
 @[to_additive right_add_coset_mem_right_add_coset]
 theorem right_coset_mem_right_coset {a : α} (ha : a ∈ s) : (s : Set α) *r a = s :=
-  Set.ext fun b => by simp [mem_right_coset_iff, mul_mem_cancel_right (s.inv_mem ha)]
+  Set.ext $ fun b => by simp [mem_right_coset_iff, mul_mem_cancel_right (s.inv_mem ha)]
 #align right_coset_mem_right_coset right_coset_mem_right_coset
 
 @[to_additive]
@@ -222,7 +222,7 @@ theorem orbit_subgroup_one_eq_self : MulAction.orbit s (1 : α) = s :=
 
 @[to_additive eq_add_cosets_of_normal]
 theorem eq_cosets_of_normal (N : s.Normal) (g : α) : g *l s = s *r g :=
-  Set.ext fun a => by simp [mem_left_coset_iff, mem_right_coset_iff] <;> rw [N.mem_comm_iff]
+  Set.ext $ fun a => by simp [mem_left_coset_iff, mem_right_coset_iff] <;> rw [N.mem_comm_iff]
 #align eq_cosets_of_normal eq_cosets_of_normal
 
 @[to_additive normal_of_eq_add_cosets]
@@ -300,7 +300,7 @@ variable (s)
 
 @[to_additive]
 theorem left_rel_eq : @Setoid.r _ (leftRel s) = fun x y => x⁻¹ * y ∈ s :=
-  funext₂ <| by
+  funext₂ $ by
     simp only [eq_iff_iff]
     apply left_rel_apply
 #align quotient_group.left_rel_eq QuotientGroup.left_rel_eq
@@ -345,7 +345,7 @@ variable (s)
 
 @[to_additive]
 theorem right_rel_eq : @Setoid.r _ (rightRel s) = fun x y => y * x⁻¹ ∈ s :=
-  funext₂ <| by
+  funext₂ $ by
     simp only [eq_iff_iff]
     apply right_rel_apply
 #align quotient_group.right_rel_eq QuotientGroup.right_rel_eq
@@ -416,7 +416,7 @@ abbrev mk (a : α) : α ⧸ s :=
 #align quotient_group.mk QuotientGroup.mk
 
 @[to_additive]
-theorem mk_surjective : Function.Surjective <| @mk _ _ s :=
+theorem mk_surjective : Function.Surjective $ @mk _ _ s :=
   Quotient.surjective_Quotient_mk''
 #align quotient_group.mk_surjective QuotientGroup.mk_surjective
 
@@ -491,7 +491,7 @@ theorem mk_mul_of_mem (g₁ g₂ : α) (hg₂ : g₂ ∈ s) : (mk (g₁ * g₂) 
 
 @[to_additive]
 theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x : α | (x : α ⧸ s) = g } = leftCoset g s :=
-  Set.ext fun z => by rw [mem_left_coset_iff, Set.mem_set_of_eq, eq_comm, QuotientGroup.eq, SetLike.mem_coe]
+  Set.ext $ fun z => by rw [mem_left_coset_iff, Set.mem_set_of_eq, eq_comm, QuotientGroup.eq, SetLike.mem_coe]
 #align quotient_group.eq_class_eq_left_coset QuotientGroup.eq_class_eq_left_coset
 
 @[to_additive]
@@ -515,28 +515,28 @@ variable [Group α] {s : Subgroup α}
 @[to_additive "The natural bijection between the cosets `g + s` and `s`."]
 def leftCosetEquivSubgroup (g : α) : leftCoset g s ≃ s :=
   ⟨fun x => ⟨g⁻¹ * x.1, (mem_left_coset_iff _).1 x.2⟩, fun x => ⟨g * x.1, x.1, x.2, rfl⟩, fun ⟨x, hx⟩ =>
-    Subtype.eq <| by simp, fun ⟨g, hg⟩ => Subtype.eq <| by simp⟩
+    Subtype.eq $ by simp, fun ⟨g, hg⟩ => Subtype.eq $ by simp⟩
 #align subgroup.left_coset_equiv_subgroup Subgroup.leftCosetEquivSubgroup
 
 /-- The natural bijection between a right coset `s * g` and `s`. -/
 @[to_additive "The natural bijection between the cosets `s + g` and `s`."]
 def rightCosetEquivSubgroup (g : α) : rightCoset (↑s) g ≃ s :=
   ⟨fun x => ⟨x.1 * g⁻¹, (mem_right_coset_iff _).1 x.2⟩, fun x => ⟨x.1 * g, x.1, x.2, rfl⟩, fun ⟨x, hx⟩ =>
-    Subtype.eq <| by simp, fun ⟨g, hg⟩ => Subtype.eq <| by simp⟩
+    Subtype.eq $ by simp, fun ⟨g, hg⟩ => Subtype.eq $ by simp⟩
 #align subgroup.right_coset_equiv_subgroup Subgroup.rightCosetEquivSubgroup
 
 /-- A (non-canonical) bijection between a group `α` and the product `(α/s) × s` -/
 @[to_additive "A (non-canonical) bijection between an add_group `α` and the product `(α/s) × s`"]
 noncomputable def groupEquivQuotientTimesSubgroup : α ≃ (α ⧸ s) × s :=
   calc
-    α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equiv.sigmaFiberEquiv QuotientGroup.mk).symm
-    _ ≃ ΣL : α ⧸ s, leftCoset (Quotient.out' L) s :=
+    α ≃ Σ L : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equiv.sigmaFiberEquiv QuotientGroup.mk).symm
+    _ ≃ Σ L : α ⧸ s, leftCoset (Quotient.out' L) s :=
       Equiv.sigmaCongrRight fun L => by
         rw [← eq_class_eq_left_coset]
         show
           (_root_.subtype fun x : α => Quotient.mk' x = L) ≃ _root_.subtype fun x : α => Quotient.mk' x = Quotient.mk' _
         simp [-Quotient.eq']
-    _ ≃ ΣL : α ⧸ s, s := Equiv.sigmaCongrRight fun L => leftCosetEquivSubgroup _
+    _ ≃ Σ L : α ⧸ s, s := Equiv.sigmaCongrRight fun L => leftCosetEquivSubgroup _
     _ ≃ (α ⧸ s) × s := Equiv.sigmaEquivProd _ _
     
 #align subgroup.group_equiv_quotient_times_subgroup Subgroup.groupEquivQuotientTimesSubgroup
@@ -604,7 +604,7 @@ def quotientSubgroupOfEmbeddingOfLe (H : Subgroup α) (h : s ≤ t) : s ⧸ H.su
       simp_rw [left_rel_eq]
       exact id
   inj' :=
-    Quotient.ind₂' <| by
+    Quotient.ind₂' $ by
       intro a b h
       simpa only [Quotient.map'_mk', eq'] using h
 #align subgroup.quotient_subgroup_of_embedding_of_le Subgroup.quotientSubgroupOfEmbeddingOfLe
@@ -618,7 +618,7 @@ theorem quotient_subgroup_of_embedding_of_le_apply_mk (H : Subgroup α) (h : s �
 /-- If `s ≤ t`, then there is a map `H ⧸ s.subgroup_of H → H ⧸ t.subgroup_of H`. -/
 @[to_additive "If `s ≤ t`, then there is an map\n  `H ⧸ s.add_subgroup_of H → H ⧸ t.add_subgroup_of H`."]
 def quotientSubgroupOfMapOfLe (H : Subgroup α) (h : s ≤ t) : H ⧸ s.subgroupOf H → H ⧸ t.subgroupOf H :=
-  (Quotient.map' id) fun a b => by
+  Quotient.map' id $ fun a b => by
     simp_rw [left_rel_eq]
     apply h
 #align subgroup.quotient_subgroup_of_map_of_le Subgroup.quotientSubgroupOfMapOfLe
@@ -632,7 +632,7 @@ theorem quotient_subgroup_of_map_of_le_apply_mk (H : Subgroup α) (h : s ≤ t) 
 /-- If `s ≤ t`, then there is a map `α ⧸ s → α ⧸ t`. -/
 @[to_additive "If `s ≤ t`, then there is an map `α ⧸ s → α ⧸ t`."]
 def quotientMapOfLe (h : s ≤ t) : α ⧸ s → α ⧸ t :=
-  (Quotient.map' id) fun a b => by
+  Quotient.map' id $ fun a b => by
     simp_rw [left_rel_eq]
     apply h
 #align subgroup.quotient_map_of_le Subgroup.quotientMapOfLe
@@ -648,7 +648,7 @@ def quotientInfiSubgroupOfEmbedding {ι : Type _} (f : ι → Subgroup α) (H : 
     H ⧸ (⨅ i, f i).subgroupOf H ↪ ∀ i, H ⧸ (f i).subgroupOf H where
   toFun q i := quotientSubgroupOfMapOfLe H (infi_le f i) q
   inj' :=
-    Quotient.ind₂' <| by
+    Quotient.ind₂' $ by
       simp_rw [funext_iff, quotient_subgroup_of_map_of_le_apply_mk, eq', mem_subgroup_of, mem_infi, imp_self,
         forall_const]
 #align subgroup.quotient_infi_subgroup_of_embedding Subgroup.quotientInfiSubgroupOfEmbedding
@@ -663,7 +663,7 @@ theorem quotient_infi_subgroup_of_embedding_apply_mk {ι : Type _} (f : ι → S
 @[to_additive "The natural embedding `α ⧸ (⨅ i, f i) ↪ Π i, α ⧸ f i`.", simps]
 def quotientInfiEmbedding {ι : Type _} (f : ι → Subgroup α) : (α ⧸ ⨅ i, f i) ↪ ∀ i, α ⧸ f i where
   toFun q i := quotientMapOfLe (infi_le f i) q
-  inj' := Quotient.ind₂' <| by simp_rw [funext_iff, quotient_map_of_le_apply_mk, eq', mem_infi, imp_self, forall_const]
+  inj' := Quotient.ind₂' $ by simp_rw [funext_iff, quotient_map_of_le_apply_mk, eq', mem_infi, imp_self, forall_const]
 #align subgroup.quotient_infi_embedding Subgroup.quotientInfiEmbedding
 
 @[simp, to_additive]
@@ -696,7 +696,7 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
        [(Term.instBinder "[" [] (Term.app `Fintype [`α]) "]")
         (Term.explicitBinder "(" [`s] [":" (Term.app `Subgroup [`α])] [] ")")
         (Term.instBinder "[" [] (Term.app `Fintype [`s]) "]")]
-       (Term.typeSpec ":" («term_∣_» (Term.app `Fintype.card [`s]) "∣" (Term.app `Fintype.card [`α]))))
+       (Term.typeSpec ":" (Init.Core.«term_∣_» (Term.app `Fintype.card [`s]) " ∣ " (Term.app `Fintype.card [`α]))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -714,7 +714,7 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
              ["["
               [(Tactic.simpLemma [] [] (Term.app `card_eq_card_quotient_mul_card_subgroup [`s]))
                ","
-               (Tactic.simpLemma [] [] (Term.app (Term.explicit "@" `dvd_mul_left) [(termℕ "ℕ")]))]
+               (Tactic.simpLemma [] [] (Term.app (Term.explicit "@" `dvd_mul_left) [(Init.Data.Nat.Basic.termℕ "ℕ")]))]
               "]"]
              []))])))
        [])
@@ -738,7 +738,7 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
             ["["
              [(Tactic.simpLemma [] [] (Term.app `card_eq_card_quotient_mul_card_subgroup [`s]))
               ","
-              (Tactic.simpLemma [] [] (Term.app (Term.explicit "@" `dvd_mul_left) [(termℕ "ℕ")]))]
+              (Tactic.simpLemma [] [] (Term.app (Term.explicit "@" `dvd_mul_left) [(Init.Data.Nat.Basic.termℕ "ℕ")]))]
              "]"]
             []))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -754,7 +754,7 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
         ["["
          [(Tactic.simpLemma [] [] (Term.app `card_eq_card_quotient_mul_card_subgroup [`s]))
           ","
-          (Tactic.simpLemma [] [] (Term.app (Term.explicit "@" `dvd_mul_left) [(termℕ "ℕ")]))]
+          (Tactic.simpLemma [] [] (Term.app (Term.explicit "@" `dvd_mul_left) [(Init.Data.Nat.Basic.termℕ "ℕ")]))]
          "]"]
         []))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -766,17 +766,17 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
        ["["
         [(Tactic.simpLemma [] [] (Term.app `card_eq_card_quotient_mul_card_subgroup [`s]))
          ","
-         (Tactic.simpLemma [] [] (Term.app (Term.explicit "@" `dvd_mul_left) [(termℕ "ℕ")]))]
+         (Tactic.simpLemma [] [] (Term.app (Term.explicit "@" `dvd_mul_left) [(Init.Data.Nat.Basic.termℕ "ℕ")]))]
         "]"]
        [])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app (Term.explicit "@" `dvd_mul_left) [(termℕ "ℕ")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'termℕ', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'termℕ', expected 'Lean.Parser.Term.ellipsis'
+      (Term.app (Term.explicit "@" `dvd_mul_left) [(Init.Data.Nat.Basic.termℕ "ℕ")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Nat.Basic.termℕ', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Data.Nat.Basic.termℕ', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (termℕ "ℕ")
+      (Init.Data.Nat.Basic.termℕ "ℕ")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.explicit "@" `dvd_mul_left)
@@ -844,7 +844,7 @@ variable {H : Type _} [Group H]
         (Term.instBinder "[" [] (Term.app `Fintype [`H]) "]")
         (Term.explicitBinder "(" [`f] [":" (Algebra.Hom.Group.«term_→*_» `α " →* " `H)] [] ")")
         (Term.explicitBinder "(" [`hf] [":" (Term.app `Function.Injective [`f])] [] ")")]
-       (Term.typeSpec ":" («term_∣_» (Term.app `card [`α]) "∣" (Term.app `card [`H]))))
+       (Term.typeSpec ":" (Init.Core.«term_∣_» (Term.app `card [`α]) " ∣ " (Term.app `card [`H]))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -857,16 +857,14 @@ variable {H : Type _} [Group H]
             (calcTactic
              "calc"
              (calcStep
-              («term_=_»
+              (Init.Core.«term_=_»
                (Term.app `card [`α])
-               "="
-               (Term.app
-                `card
-                [(Term.paren "(" [`f.range [(Term.typeAscription ":" [(Term.app `Subgroup [`H])])]] ")")]))
+               " = "
+               (Term.app `card [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")]))
               ":="
               (Term.app `card_congr [(Term.app `Equiv.ofInjective [`f `hf])]))
              [(calcStep
-               («term_∣_» (Term.hole "_") "∣" (Term.app `card [`H]))
+               (Init.Core.«term_∣_» (Term.hole "_") " ∣ " (Term.app `card [`H]))
                ":="
                (Term.app `card_subgroup_dvd_card [(Term.hole "_")]))]))])))
        [])
@@ -885,16 +883,14 @@ variable {H : Type _} [Group H]
            (calcTactic
             "calc"
             (calcStep
-             («term_=_»
+             (Init.Core.«term_=_»
               (Term.app `card [`α])
-              "="
-              (Term.app
-               `card
-               [(Term.paren "(" [`f.range [(Term.typeAscription ":" [(Term.app `Subgroup [`H])])]] ")")]))
+              " = "
+              (Term.app `card [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")]))
              ":="
              (Term.app `card_congr [(Term.app `Equiv.ofInjective [`f `hf])]))
             [(calcStep
-              («term_∣_» (Term.hole "_") "∣" (Term.app `card [`H]))
+              (Init.Core.«term_∣_» (Term.hole "_") " ∣ " (Term.app `card [`H]))
               ":="
               (Term.app `card_subgroup_dvd_card [(Term.hole "_")]))]))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -905,28 +901,28 @@ variable {H : Type _} [Group H]
        (calcTactic
         "calc"
         (calcStep
-         («term_=_»
+         (Init.Core.«term_=_»
           (Term.app `card [`α])
-          "="
-          (Term.app `card [(Term.paren "(" [`f.range [(Term.typeAscription ":" [(Term.app `Subgroup [`H])])]] ")")]))
+          " = "
+          (Term.app `card [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")]))
          ":="
          (Term.app `card_congr [(Term.app `Equiv.ofInjective [`f `hf])]))
         [(calcStep
-          («term_∣_» (Term.hole "_") "∣" (Term.app `card [`H]))
+          (Init.Core.«term_∣_» (Term.hole "_") " ∣ " (Term.app `card [`H]))
           ":="
           (Term.app `card_subgroup_dvd_card [(Term.hole "_")]))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calcTactic
        "calc"
        (calcStep
-        («term_=_»
+        (Init.Core.«term_=_»
          (Term.app `card [`α])
-         "="
-         (Term.app `card [(Term.paren "(" [`f.range [(Term.typeAscription ":" [(Term.app `Subgroup [`H])])]] ")")]))
+         " = "
+         (Term.app `card [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")]))
         ":="
         (Term.app `card_congr [(Term.app `Equiv.ofInjective [`f `hf])]))
        [(calcStep
-         («term_∣_» (Term.hole "_") "∣" (Term.app `card [`H]))
+         (Init.Core.«term_∣_» (Term.hole "_") " ∣ " (Term.app `card [`H]))
          ":="
          (Term.app `card_subgroup_dvd_card [(Term.hole "_")]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -941,7 +937,7 @@ variable {H : Type _} [Group H]
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∣_» (Term.hole "_") "∣" (Term.app `card [`H]))
+      (Init.Core.«term_∣_» (Term.hole "_") " ∣ " (Term.app `card [`H]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `card [`H])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -955,7 +951,7 @@ variable {H : Type _} [Group H]
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.app `card_congr [(Term.app `Equiv.ofInjective [`f `hf])])
@@ -977,23 +973,22 @@ variable {H : Type _} [Group H]
       `Equiv.ofInjective
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Equiv.ofInjective [`f `hf]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Equiv.ofInjective [`f `hf]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card_congr
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.app `card [`α])
-       "="
-       (Term.app `card [(Term.paren "(" [`f.range [(Term.typeAscription ":" [(Term.app `Subgroup [`H])])]] ")")]))
+       " = "
+       (Term.app `card [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `card [(Term.paren "(" [`f.range [(Term.typeAscription ":" [(Term.app `Subgroup [`H])])]] ")")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis'
+      (Term.app `card [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.paren "(" [`f.range [(Term.typeAscription ":" [(Term.app `Subgroup [`H])])]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
+      (Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Subgroup [`H])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -1005,9 +1000,9 @@ variable {H : Type _} [Group H]
       `Subgroup
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f.range
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card
@@ -1023,7 +1018,7 @@ variable {H : Type _} [Group H]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
@@ -1082,14 +1077,13 @@ noncomputable def preimageMkEquivSubgroupTimesSet (s : Subgroup α) (t : Set (α
     ∀ {x : α ⧸ s} {a : α},
       x ∈ t → a ∈ s → (Quotient.mk' (Quotient.out' x * a) : α ⧸ s) = Quotient.mk' (Quotient.out' x) :=
     fun x a hx ha =>
-    Quotient.sound' <| by
-      rwa [left_rel_apply, ← s.inv_mem_iff, mul_inv_rev, inv_inv, ← mul_assoc, inv_mul_self, one_mul]
+    Quotient.sound' $ by rwa [left_rel_apply, ← s.inv_mem_iff, mul_inv_rev, inv_inv, ← mul_assoc, inv_mul_self, one_mul]
   { toFun := fun ⟨a, ha⟩ =>
       ⟨⟨(Quotient.out' (Quotient.mk' a))⁻¹ * a,
-          left_rel_apply.mp (@Quotient.exact' _ (leftRel s) _ _ <| Quotient.out_eq' _)⟩,
+          left_rel_apply.mp (@Quotient.exact' _ (leftRel s) _ _ $ Quotient.out_eq' _)⟩,
         ⟨Quotient.mk' a, ha⟩⟩,
     invFun := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ => ⟨Quotient.out' x * a, show Quotient.mk' _ ∈ t by simp [h hx ha, hx]⟩,
-    left_inv := fun ⟨a, ha⟩ => Subtype.eq <| show _ * _ = a by simp,
+    left_inv := fun ⟨a, ha⟩ => Subtype.eq $ show _ * _ = a by simp,
     right_inv := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ => show (_, _) = _ by simp [h hx ha] }
 #align quotient_group.preimage_mk_equiv_subgroup_times_set QuotientGroup.preimageMkEquivSubgroupTimesSet
 

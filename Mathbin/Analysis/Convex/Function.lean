@@ -317,7 +317,7 @@ section OrderedSmul
 variable [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x < r }) :=
-  convex_iff_pairwise_pos.2 fun x hx y hy hxy a b ha hb hab =>
+  convex_iff_pairwise_pos.2 $ fun x hx y hy hxy a b ha hb hab =>
     ⟨hf.1 hx.1 hy.1 ha.le hb.le hab,
       calc
         f (a • x + b • y) < a • f x + b • f y := hf.2 hx.1 hy.1 hxy ha hb hab
@@ -472,7 +472,7 @@ section Module
 variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x < r }) :=
-  convex_iff_forall_pos.2 fun x hx y hy a b ha hb hab =>
+  convex_iff_forall_pos.2 $ fun x hx y hy a b ha hb hab =>
     ⟨hf.1 hx.1 hy.1 ha.le hb.le hab,
       calc
         f (a • x + b • y) ≤ a • f x + b • f y := hf.2 hx.1 hy.1 ha.le hb.le hab
@@ -501,7 +501,7 @@ theorem ConcaveOn.open_segment_subset_strict_hypograph (hf : ConcaveOn 𝕜 s f)
 #align concave_on.open_segment_subset_strict_hypograph ConcaveOn.open_segment_subset_strict_hypograph
 
 theorem ConvexOn.convex_strict_epigraph (hf : ConvexOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } :=
-  convex_iff_open_segment_subset.mpr fun p hp q hq => hf.open_segment_subset_strict_epigraph p q hp ⟨hq.1, hq.2.le⟩
+  convex_iff_open_segment_subset.mpr $ fun p hp q hq => hf.open_segment_subset_strict_epigraph p q hp ⟨hq.1, hq.2.le⟩
 #align convex_on.convex_strict_epigraph ConvexOn.convex_strict_epigraph
 
 theorem ConcaveOn.convex_strict_hypograph (hf : ConcaveOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
@@ -635,8 +635,8 @@ variable [HasSmul 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f 
 
 theorem ConvexOn.le_left_of_right_le' (hf : ConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s) {a b : 𝕜} (ha : 0 < a)
     (hb : 0 ≤ b) (hab : a + b = 1) (hfy : f y ≤ f (a • x + b • y)) : f (a • x + b • y) ≤ f x :=
-  le_of_not_lt fun h =>
-    lt_irrefl (f (a • x + b • y)) <|
+  le_of_not_lt $ fun h =>
+    lt_irrefl (f (a • x + b • y)) $
       calc
         f (a • x + b • y) ≤ a • f x + b • f y := hf.2 hx hy ha.le hb hab
         _ < a • f (a • x + b • y) + b • f (a • x + b • y) :=
@@ -693,8 +693,8 @@ variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g
 the writing, we decided the resulting lemmas wouldn't be useful. Feel free to reintroduce them. -/
 theorem StrictConvexOn.lt_left_of_right_lt' (hf : StrictConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s) {a b : 𝕜}
     (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) (hfy : f y < f (a • x + b • y)) : f (a • x + b • y) < f x :=
-  not_le.1 fun h =>
-    lt_irrefl (f (a • x + b • y)) <|
+  not_le.1 $ fun h =>
+    lt_irrefl (f (a • x + b • y)) $
       calc
         f (a • x + b • y) < a • f x + b • f y :=
           hf.2 hx hy

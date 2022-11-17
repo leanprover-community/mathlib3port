@@ -55,7 +55,7 @@ theorem algebra_map_mem (r : R) : algebraMap R A r ∈ (1 : SubMulAction R A) :=
 #align sub_mul_action.algebra_map_mem SubMulAction.algebra_map_mem
 
 theorem mem_one' {x : A} : x ∈ (1 : SubMulAction R A) ↔ ∃ y, algebraMap R A y = x :=
-  exists_congr fun r => by rw [algebra_map_eq_smul_one]
+  exists_congr $ fun r => by rw [algebra_map_eq_smul_one]
 #align sub_mul_action.mem_one' SubMulAction.mem_one'
 
 end SubMulAction
@@ -96,7 +96,7 @@ theorem mem_one {x : A} : x ∈ (1 : Submodule R A) ↔ ∃ y, algebraMap R A y 
 
 @[simp]
 theorem to_sub_mul_action_one : (1 : Submodule R A).toSubMulAction = 1 :=
-  SetLike.ext fun x => mem_one.trans SubMulAction.mem_one'.symm
+  SetLike.ext $ fun x => mem_one.trans SubMulAction.mem_one'.symm
 #align submodule.to_sub_mul_action_one Submodule.to_sub_mul_action_one
 
 theorem one_eq_span : (1 : Submodule R A) = R ∙ 1 := by
@@ -144,7 +144,7 @@ theorem comap_unop_one : comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).sy
 /-- Multiplication of sub-R-modules of an R-algebra A. The submodule `M * N` is the
 smallest R-submodule of `A` containing the elements `m * n` for `m ∈ M` and `n ∈ N`. -/
 instance : Mul (Submodule R A) :=
-  ⟨Submodule.map₂ <| LinearMap.mul R A⟩
+  ⟨Submodule.map₂ $ LinearMap.mul R A⟩
 
 theorem mul_mem_mul (hm : m ∈ M) (hn : n ∈ N) : m * n ∈ M * N :=
   apply_mem_map₂ _ hm hn
@@ -273,7 +273,7 @@ theorem map_op_mul :
     show op n * op m ∈ _
     exact mul_mem_mul hn hm
     
-  · refine' mul_le.2 (MulOpposite.rec fun m hm => MulOpposite.rec fun n hn => _)
+  · refine' mul_le.2 (MulOpposite.rec $ fun m hm => MulOpposite.rec $ fun n hn => _)
     rw [Submodule.mem_map_equiv] at hm hn⊢
     exact mul_mem_mul hn hm
     
@@ -291,7 +291,7 @@ theorem map_unop_mul (M N : Submodule R Aᵐᵒᵖ) :
       map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) N *
         map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) M :=
   have : Function.Injective (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) := LinearEquiv.injective _
-  map_injective_of_injective this <| by
+  map_injective_of_injective this $ by
     rw [← map_comp, map_op_mul, ← map_comp, ← map_comp, LinearEquiv.comp_coe, LinearEquiv.symm_trans_self,
       LinearEquiv.refl_to_linear_map, map_id, map_id, map_id]
 #align submodule.map_unop_mul Submodule.map_unop_mul
@@ -314,7 +314,7 @@ protected def hasDistribPointwiseNeg {A} [Ring A] [Algebra R A] : HasDistribNeg 
   to_add_submonoid_injective.HasDistribNeg _ neg_to_add_submonoid mul_to_add_submonoid
 #align submodule.has_distrib_pointwise_neg Submodule.hasDistribPointwiseNeg
 
-localized [Pointwise] attribute [instance] Submodule.hasDistribPointwiseNeg
+scoped[Pointwise] attribute [instance] Submodule.hasDistribPointwiseNeg
 
 end
 
@@ -322,9 +322,10 @@ section DecidableEq
 
 open Classical
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (T T') -/
 theorem mem_span_mul_finite_of_mem_span_mul {R A} [Semiring R] [AddCommMonoid A] [Mul A] [Module R A] {S : Set A}
     {S' : Set A} {x : A} (hx : x ∈ span R (S * S')) :
-    ∃ T T' : Finset A, ↑T ⊆ S ∧ ↑T' ⊆ S' ∧ x ∈ span R (T * T' : Set A) := by
+    ∃ (T : Finset A) (T' : Finset A), ↑T ⊆ S ∧ ↑T' ⊆ S' ∧ x ∈ span R (T * T' : Set A) := by
   obtain ⟨U, h, hU⟩ := mem_span_finite_of_mem_span hx
   obtain ⟨T, T', hS, hS', h⟩ := Finset.subset_mul h
   use T, T', hS, hS'
@@ -347,8 +348,9 @@ theorem mul_supr (t : Submodule R A) (s : ι → Submodule R A) : (t * ⨆ i, s 
   map₂_supr_right _ t s
 #align submodule.mul_supr Submodule.mul_supr
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (T T') -/
 theorem mem_span_mul_finite_of_mem_mul {P Q : Submodule R A} {x : A} (hx : x ∈ P * Q) :
-    ∃ T T' : Finset A, (T : Set A) ⊆ P ∧ (T' : Set A) ⊆ Q ∧ x ∈ span R (T * T' : Set A) :=
+    ∃ (T : Finset A) (T' : Finset A), (T : Set A) ⊆ P ∧ (T' : Set A) ⊆ Q ∧ x ∈ span R (T * T' : Set A) :=
   Submodule.mem_span_mul_finite_of_mem_span_mul
     (by rwa [← Submodule.span_eq P, ← Submodule.span_eq Q, Submodule.span_mul_span] at hx)
 #align submodule.mem_span_mul_finite_of_mem_mul Submodule.mem_span_mul_finite_of_mem_mul
@@ -377,7 +379,7 @@ theorem pow_subset_pow {n : ℕ} : (↑M : Set A) ^ n ⊆ ↑(M ^ n : Submodule 
 #align submodule.pow_subset_pow Submodule.pow_subset_pow
 
 theorem pow_mem_pow {x : A} (hx : x ∈ M) (n : ℕ) : x ^ n ∈ M ^ n :=
-  pow_subset_pow _ <| Set.pow_mem_pow hx _
+  pow_subset_pow _ $ Set.pow_mem_pow hx _
 #align submodule.pow_mem_pow Submodule.pow_mem_pow
 
 theorem pow_to_add_submonoid {n : ℕ} (h : n ≠ 0) : (M ^ n).toAddSubmonoid = M.toAddSubmonoid ^ n := by
@@ -470,12 +472,12 @@ def mapHom {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A') : Submodule R 
 submodules. -/
 @[simps apply symmApply]
 def equivOpposite : Submodule R Aᵐᵒᵖ ≃+* (Submodule R A)ᵐᵒᵖ where
-  toFun p := op <| p.comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ)
+  toFun p := op $ p.comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ)
   invFun p := p.unop.comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A)
-  left_inv p := SetLike.coe_injective <| rfl
-  right_inv p := unop_injective <| SetLike.coe_injective rfl
+  left_inv p := SetLike.coe_injective $ rfl
+  right_inv p := unop_injective $ SetLike.coe_injective rfl
   map_add' p q := by simp [comap_equiv_eq_map_symm, ← op_add]
-  map_mul' p q := congr_arg op <| comap_op_mul _ _
+  map_mul' p q := congr_arg op $ comap_op_mul _ _
 #align submodule.equiv_opposite Submodule.equivOpposite
 
 protected theorem map_pow {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A') (n : ℕ) :
@@ -492,7 +494,7 @@ theorem comap_unop_pow (n : ℕ) :
 theorem comap_op_pow (n : ℕ) (M : Submodule R Aᵐᵒᵖ) :
     comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (M ^ n) =
       comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) M ^ n :=
-  op_injective <| (equivOpposite : Submodule R Aᵐᵒᵖ ≃+* _).map_pow M n
+  op_injective $ (equivOpposite : Submodule R Aᵐᵒᵖ ≃+* _).map_pow M n
 #align submodule.comap_op_pow Submodule.comap_op_pow
 
 theorem map_op_pow (n : ℕ) :
@@ -528,11 +530,11 @@ This is available as an instance in the `pointwise` locale.
 This is a stronger version of `submodule.pointwise_distrib_mul_action`. -/
 protected def pointwiseMulSemiringAction : MulSemiringAction α (Submodule R A) :=
   { Submodule.pointwiseDistribMulAction with
-    smul_mul := fun r x y => Submodule.map_mul x y <| MulSemiringAction.toAlgHom R A r,
-    smul_one := fun r => Submodule.map_one <| MulSemiringAction.toAlgHom R A r }
+    smul_mul := fun r x y => Submodule.map_mul x y $ MulSemiringAction.toAlgHom R A r,
+    smul_one := fun r => Submodule.map_one $ MulSemiringAction.toAlgHom R A r }
 #align submodule.pointwise_mul_semiring_action Submodule.pointwiseMulSemiringAction
 
-localized [Pointwise] attribute [instance] Submodule.pointwiseMulSemiringAction
+scoped[Pointwise] attribute [instance] Submodule.pointwiseMulSemiringAction
 
 end
 
@@ -551,8 +553,8 @@ theorem mul_mem_mul_rev (hm : m ∈ M) (hn : n ∈ N) : n * m ∈ M * N :=
 variable (M N)
 
 protected theorem mul_comm : M * N = N * M :=
-  le_antisymm (mul_le.2 fun r hrm s hsn => mul_mem_mul_rev hsn hrm)
-    (mul_le.2 fun r hrn s hsm => mul_mem_mul_rev hsm hrn)
+  le_antisymm (mul_le.2 $ fun r hrm s hsn => mul_mem_mul_rev hsn hrm)
+    (mul_le.2 $ fun r hrn s hsm => mul_mem_mul_rev hsm hrn)
 #align submodule.mul_comm Submodule.mul_comm
 
 /-- Sub-R-modules of an R-algebra A form a semiring. -/

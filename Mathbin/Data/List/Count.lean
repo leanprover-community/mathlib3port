@@ -125,7 +125,7 @@ theorem countp_mono_left (h : ∀ x ∈ l, p x → q x) : countp p l ≤ countp 
 #align list.countp_mono_left List.countp_mono_left
 
 theorem countp_congr (h : ∀ x ∈ l, p x ↔ q x) : countp p l = countp q l :=
-  le_antisymm (countp_mono_left fun x hx => (h x hx).1) (countp_mono_left fun x hx => (h x hx).2)
+  le_antisymm (countp_mono_left $ fun x hx => (h x hx).1) (countp_mono_left $ fun x hx => (h x hx).2)
 #align list.countp_congr List.countp_congr
 
 end Countp
@@ -212,7 +212,7 @@ theorem one_le_count_iff_mem {a : α} {l : List α} : 1 ≤ count a l ↔ a ∈ 
 
 @[simp]
 theorem count_eq_zero_of_not_mem {a : α} {l : List α} (h : a ∉ l) : count a l = 0 :=
-  Decidable.by_contradiction fun h' => h <| count_pos.1 (Nat.pos_of_ne_zero h')
+  Decidable.by_contradiction $ fun h' => h $ count_pos.1 (Nat.pos_of_ne_zero h')
 #align list.count_eq_zero_of_not_mem List.count_eq_zero_of_not_mem
 
 theorem not_mem_of_count_eq_zero {a : α} {l : List α} (h : count a l = 0) : a ∉ l := fun h' => (count_pos.2 h').ne' h
@@ -235,7 +235,7 @@ theorem count_repeat (a : α) (n : ℕ) : count a (repeat a n) = n := by
 
 theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} : n ≤ count a l ↔ repeat a n <+ l :=
   ⟨fun h =>
-    ((repeat_sublist_repeat a).2 h).trans <| by
+    ((repeat_sublist_repeat a).2 h).trans $ by
       have : filter' (Eq a) l = repeat a (count a l) :=
         eq_repeat.2 ⟨by simp only [count, countp_eq_length_filter], fun b m => (of_mem_filter m).symm⟩
       rw [← this] <;> apply filter_sublist,
@@ -243,7 +243,7 @@ theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} : n ≤ cou
 #align list.le_count_iff_repeat_sublist List.le_count_iff_repeat_sublist
 
 theorem repeat_count_eq_of_count_eq_length {a : α} {l : List α} (h : count a l = length l) : repeat a (count a l) = l :=
-  (le_count_iff_repeat_sublist.mp le_rfl).eq_of_length <| (length_repeat a (count a l)).trans h
+  (le_count_iff_repeat_sublist.mp le_rfl).eq_of_length $ (length_repeat a (count a l)).trans h
 #align list.repeat_count_eq_of_count_eq_length List.repeat_count_eq_of_count_eq_length
 
 @[simp]
@@ -296,7 +296,7 @@ theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.e
   rw [count_erase, if_neg ab, tsub_zero]
 #align list.count_erase_of_ne List.count_erase_of_ne
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β)
     (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).Prod = f a ^ l.count a := by
@@ -313,7 +313,7 @@ theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β
     
 #align list.prod_map_eq_pow_single List.prod_map_eq_pow_single
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_eq_pow_single [Monoid α] {l : List α} (a : α) (h : ∀ (a') (_ : a' ≠ a), a' ∈ l → a' = 1) :
     l.Prod = a ^ l.count a :=

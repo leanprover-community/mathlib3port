@@ -65,7 +65,7 @@ variable (A : Type _) [CommRing A] [Algebra ℚ A]
 the $n$-th Bernoulli number $B_n$ is defined recursively via
 $$B_n = 1 - \sum_{k < n} \binom{n}{k}\frac{B_k}{n+1-k}$$ -/
 def bernoulli' : ℕ → ℚ :=
-  (WellFounded.fix lt_wf) fun n bernoulli' => 1 - ∑ k : Fin n, n.choose k / (n - k + 1) * bernoulli' k k.2
+  WellFounded.fix lt_wf $ fun n bernoulli' => 1 - ∑ k : Fin n, n.choose k / (n - k + 1) * bernoulli' k k.2
 #align bernoulli' bernoulli'
 
 theorem bernoulli'_def' (n : ℕ) : bernoulli' n = 1 - ∑ k : Fin n, n.choose k / (n - k + 1) * bernoulli' k :=
@@ -121,7 +121,7 @@ theorem bernoulli'_three : bernoulli' 3 = 0 := by
 
 @[simp]
 theorem bernoulli'_four : bernoulli' 4 = -1 / 30 := by
-  have : Nat.choose 4 2 = 6 := by decide
+  have : Nat.choose 4 2 = 6 := dec_trivial
   -- shrug
   rw [bernoulli'_def]
   norm_num [sum_range_succ, this]
@@ -150,7 +150,7 @@ theorem sum_bernoulli' (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * berno
 
 /-- The exponential generating function for the Bernoulli numbers `bernoulli' n`. -/
 def bernoulli'PowerSeries :=
-  mk fun n => algebraMap ℚ A (bernoulli' n / n !)
+  mk $ fun n => algebraMap ℚ A (bernoulli' n / n !)
 #align bernoulli'_power_series bernoulli'PowerSeries
 
 theorem bernoulli'_power_series_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A - 1) = X * exp A := by
@@ -275,7 +275,7 @@ theorem bernoulli_spec' (n : ℕ) :
 
 /-- The exponential generating function for the Bernoulli numbers `bernoulli n`. -/
 def bernoulliPowerSeries :=
-  mk fun n => algebraMap ℚ A (bernoulli n / n !)
+  mk $ fun n => algebraMap ℚ A (bernoulli n / n !)
 #align bernoulli_power_series bernoulliPowerSeries
 
 theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X := by
@@ -295,7 +295,7 @@ theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A
   have hfact : ∀ m, (m ! : ℚ) ≠ 0 := fun m => by exact_mod_cast factorial_ne_zero m
   have hite2 : ite (n.succ = 0) 1 0 = (0 : ℚ) := if_neg n.succ_ne_zero
   rw [← map_zero (algebraMap ℚ A), ← zero_div (n.succ ! : ℚ), ← hite2, ← bernoulli_spec', sum_div]
-  refine' congr_arg (algebraMap ℚ A) ((sum_congr rfl) fun x h => eq_div_of_mul_eq (hfact n.succ) _)
+  refine' congr_arg (algebraMap ℚ A) (sum_congr rfl $ fun x h => eq_div_of_mul_eq (hfact n.succ) _)
   rw [mem_antidiagonal] at h
   have hj : (x.2 + 1 : ℚ) ≠ 0 := by exact_mod_cast succ_ne_zero _
   field_simp [← h, mul_ne_zero hj (hfact x.2), hfact x.1, mul_comm _ (bernoulli x.1), mul_assoc, add_choose,

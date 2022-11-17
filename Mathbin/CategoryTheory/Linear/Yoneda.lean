@@ -35,23 +35,23 @@ with value on `Y : Cᵒᵖ` given by `Module.of R (unop Y ⟶ X)`. -/
 def linearYoneda : C ⥤ Cᵒᵖ ⥤ ModuleCat R where
   obj X :=
     { obj := fun Y => ModuleCat.of R (unop Y ⟶ X), map := fun Y Y' f => Linear.leftComp R _ f.unop,
-      map_comp' := fun _ _ _ f g => LinearMap.ext fun _ => Category.assoc _ _ _,
-      map_id' := fun Y => LinearMap.ext fun _ => Category.id_comp _ }
+      map_comp' := fun _ _ _ f g => LinearMap.ext $ fun _ => Category.assoc _ _ _,
+      map_id' := fun Y => LinearMap.ext $ fun _ => Category.id_comp _ }
   map X X' f :=
     { app := fun Y => Linear.rightComp R _ f,
       naturality' := fun X Y f =>
-        LinearMap.ext fun x => by
+        LinearMap.ext $ fun x => by
           simp only [category.assoc, ModuleCat.coe_comp, Function.comp_apply, linear.left_comp_apply,
             linear.right_comp_apply] }
   map_id' X :=
-    NatTrans.ext _ _ <|
-      funext fun _ =>
-        LinearMap.ext fun _ => by
+    NatTrans.ext _ _ $
+      funext $ fun _ =>
+        LinearMap.ext $ fun _ => by
           simp only [linear.right_comp_apply, category.comp_id, nat_trans.id_app, ModuleCat.id_apply]
   map_comp' _ _ _ f g :=
-    NatTrans.ext _ _ <|
-      funext fun _ =>
-        LinearMap.ext fun _ => by
+    NatTrans.ext _ _ $
+      funext $ fun _ =>
+        LinearMap.ext $ fun _ => by
           simp only [category.assoc, linear.right_comp_apply, nat_trans.comp_app, ModuleCat.coe_comp,
             Function.comp_apply]
 #align category_theory.linear_yoneda CategoryTheory.linearYoneda
@@ -63,23 +63,23 @@ with value on `X : C` given by `Module.of R (unop Y ⟶ X)`. -/
 def linearCoyoneda : Cᵒᵖ ⥤ C ⥤ ModuleCat R where
   obj Y :=
     { obj := fun X => ModuleCat.of R (unop Y ⟶ X), map := fun Y Y' => Linear.rightComp _ _,
-      map_id' := fun Y => LinearMap.ext fun _ => Category.comp_id _,
-      map_comp' := fun _ _ _ f g => LinearMap.ext fun _ => Eq.symm (Category.assoc _ _ _) }
+      map_id' := fun Y => LinearMap.ext $ fun _ => Category.comp_id _,
+      map_comp' := fun _ _ _ f g => LinearMap.ext $ fun _ => Eq.symm (Category.assoc _ _ _) }
   map Y Y' f :=
     { app := fun X => Linear.leftComp _ _ f.unop,
       naturality' := fun X Y f =>
-        LinearMap.ext fun x => by
+        LinearMap.ext $ fun x => by
           simp only [category.assoc, ModuleCat.coe_comp, Function.comp_apply, linear.right_comp_apply,
             linear.left_comp_apply] }
   map_id' X :=
-    NatTrans.ext _ _ <|
-      funext fun _ =>
-        LinearMap.ext fun _ => by
+    NatTrans.ext _ _ $
+      funext $ fun _ =>
+        LinearMap.ext $ fun _ => by
           simp only [linear.left_comp_apply, unop_id, category.id_comp, nat_trans.id_app, ModuleCat.id_apply]
   map_comp' _ _ _ f g :=
-    NatTrans.ext _ _ <|
-      funext fun _ =>
-        LinearMap.ext fun _ => by
+    NatTrans.ext _ _ $
+      funext $ fun _ =>
+        LinearMap.ext $ fun _ => by
           simp only [category.assoc, ModuleCat.coe_comp, Function.comp_apply, linear.left_comp_apply, unop_comp,
             nat_trans.comp_app]
 #align category_theory.linear_coyoneda CategoryTheory.linearCoyoneda

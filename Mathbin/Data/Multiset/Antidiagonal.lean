@@ -40,7 +40,7 @@ theorem antidiagonal_coe' (l : List α) : @antidiagonal α l = revzip (powersetA
     if and only if `t₁ + t₂ = s`. -/
 @[simp]
 theorem mem_antidiagonal {s : Multiset α} {x : Multiset α × Multiset α} : x ∈ antidiagonal s ↔ x.1 + x.2 = s :=
-  (Quotient.induction_on s) fun l => by
+  Quotient.induction_on s $ fun l => by
     simp [antidiagonal_coe]
     refine' ⟨fun h => revzip_powerset_aux h, fun h => _⟩
     haveI := Classical.decEq α
@@ -52,12 +52,12 @@ theorem mem_antidiagonal {s : Multiset α} {x : Multiset α × Multiset α} : x 
 
 @[simp]
 theorem antidiagonal_map_fst (s : Multiset α) : (antidiagonal s).map Prod.fst = powerset s :=
-  (Quotient.induction_on s) fun l => by simp [powerset_aux']
+  Quotient.induction_on s $ fun l => by simp [powerset_aux']
 #align multiset.antidiagonal_map_fst Multiset.antidiagonal_map_fst
 
 @[simp]
 theorem antidiagonal_map_snd (s : Multiset α) : (antidiagonal s).map Prod.snd = powerset s :=
-  (Quotient.induction_on s) fun l => by simp [powerset_aux']
+  Quotient.induction_on s $ fun l => by simp [powerset_aux']
 #align multiset.antidiagonal_map_snd Multiset.antidiagonal_map_snd
 
 @[simp]
@@ -69,7 +69,7 @@ theorem antidiagonal_zero : @antidiagonal α 0 = {(0, 0)} :=
 theorem antidiagonal_cons (a : α) (s) :
     antidiagonal (a ::ₘ s) =
       map (Prod.map id (cons a)) (antidiagonal s) + map (Prod.map (cons a) id) (antidiagonal s) :=
-  (Quotient.induction_on s) fun l => by
+  Quotient.induction_on s $ fun l => by
     simp only [revzip, reverse_append, quot_mk_to_coe, coe_eq_coe, powerset_aux'_cons, cons_coe, coe_map,
       antidiagonal_coe', coe_add]
     rw [← zip_map, ← zip_map, zip_append, (_ : _ ++ _ = _)]

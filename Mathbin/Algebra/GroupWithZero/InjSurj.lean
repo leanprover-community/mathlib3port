@@ -27,8 +27,8 @@ protected def Function.Injective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M₀
     (mul : ∀ a b, f (a * b) = f a * f b) : MulZeroClass M₀' where
   mul := (· * ·)
   zero := 0
-  zero_mul a := hf <| by simp only [mul, zero, zero_mul]
-  mul_zero a := hf <| by simp only [mul, zero, mul_zero]
+  zero_mul a := hf $ by simp only [mul, zero, zero_mul]
+  mul_zero a := hf $ by simp only [mul, zero, mul_zero]
 #align function.injective.mul_zero_class Function.Injective.mulZeroClass
 
 /-- Pushforward a `mul_zero_class` instance along an surjective function.
@@ -38,8 +38,8 @@ protected def Function.Surjective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M�
     (mul : ∀ a b, f (a * b) = f a * f b) : MulZeroClass M₀' where
   mul := (· * ·)
   zero := 0
-  mul_zero := hf.forall.2 fun x => by simp only [← zero, ← mul, mul_zero]
-  zero_mul := hf.forall.2 fun x => by simp only [← zero, ← mul, zero_mul]
+  mul_zero := hf.forall.2 $ fun x => by simp only [← zero, ← mul, mul_zero]
+  zero_mul := hf.forall.2 $ fun x => by simp only [← zero, ← mul, zero_mul]
 #align function.surjective.mul_zero_class Function.Surjective.mulZeroClass
 
 end MulZeroClass
@@ -47,12 +47,12 @@ end MulZeroClass
 section NoZeroDivisors
 
 /-- Pushforward a `no_zero_divisors` instance along an injective function. -/
-protected theorem Function.Injective.no_zero_divisors [Mul M₀] [Zero M₀] [Mul M₀'] [Zero M₀'] [NoZeroDivisors M₀']
+protected theorem Function.Injective.noZeroDivisors [Mul M₀] [Zero M₀] [Mul M₀'] [Zero M₀'] [NoZeroDivisors M₀']
     (f : M₀ → M₀') (hf : Injective f) (zero : f 0 = 0) (mul : ∀ x y, f (x * y) = f x * f y) : NoZeroDivisors M₀ :=
   { eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H =>
       have : f x * f y = 0 := by rw [← mul, H, zero]
-      (eq_zero_or_eq_zero_of_mul_eq_zero this).imp (fun H => hf <| by rwa [zero]) fun H => hf <| by rwa [zero] }
-#align function.injective.no_zero_divisors Function.Injective.no_zero_divisors
+      (eq_zero_or_eq_zero_of_mul_eq_zero this).imp (fun H => hf $ by rwa [zero]) fun H => hf $ by rwa [zero] }
+#align function.injective.no_zero_divisors Function.Injective.noZeroDivisors
 
 end NoZeroDivisors
 
@@ -150,9 +150,9 @@ protected def Function.Injective.cancelMonoidWithZero [Zero M₀'] [Mul M₀'] [
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : CancelMonoidWithZero M₀' :=
   { hf.Monoid f one mul npow, hf.MulZeroClass f zero mul with
     mul_left_cancel_of_ne_zero := fun x y z hx H =>
-      hf <| mul_left_cancel₀ ((hf.ne_iff' zero).2 hx) <| by erw [← mul, ← mul, H] <;> rfl,
+      hf $ mul_left_cancel₀ ((hf.ne_iff' zero).2 hx) $ by erw [← mul, ← mul, H] <;> rfl,
     mul_right_cancel_of_ne_zero := fun x y z hx H =>
-      hf <| mul_right_cancel₀ ((hf.ne_iff' zero).2 hx) <| by erw [← mul, ← mul, H] <;> rfl }
+      hf $ mul_right_cancel₀ ((hf.ne_iff' zero).2 hx) $ by erw [← mul, ← mul, H] <;> rfl }
 #align function.injective.cancel_monoid_with_zero Function.Injective.cancelMonoidWithZero
 
 end CancelMonoidWithZero
@@ -184,8 +184,8 @@ protected def Function.Injective.groupWithZero [Zero G₀'] [Mul G₀'] [One G�
     (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : GroupWithZero G₀' :=
   { hf.MonoidWithZero f zero one mul npow, hf.DivInvMonoid f one mul inv div npow zpow, pullback_nonzero f zero one with
-    inv_zero := hf <| by erw [inv, zero, inv_zero],
-    mul_inv_cancel := fun x hx => hf <| by erw [one, mul, inv, mul_inv_cancel ((hf.ne_iff' zero).2 hx)] }
+    inv_zero := hf $ by erw [inv, zero, inv_zero],
+    mul_inv_cancel := fun x hx => hf $ by erw [one, mul, inv, mul_inv_cancel ((hf.ne_iff' zero).2 hx)] }
 #align function.injective.group_with_zero Function.Injective.groupWithZero
 
 /-- Pushforward a `group_with_zero` class along an surjective function.
@@ -198,8 +198,8 @@ protected def Function.Surjective.groupWithZero [Zero G₀'] [Mul G₀'] [One G�
   { hf.MonoidWithZero f zero one mul npow, hf.DivInvMonoid f one mul inv div npow zpow with
     inv_zero := by erw [← zero, ← inv, inv_zero],
     mul_inv_cancel :=
-      hf.forall.2 fun x hx => by
-        erw [← inv, ← mul, mul_inv_cancel (mt (congr_arg f) <| trans_rel_left Ne hx zero.symm)] <;> exact one,
+      hf.forall.2 $ fun x hx => by
+        erw [← inv, ← mul, mul_inv_cancel (mt (congr_arg f) $ trans_rel_left Ne hx zero.symm)] <;> exact one,
     exists_pair_ne := ⟨0, 1, h01⟩ }
 #align function.surjective.group_with_zero Function.Surjective.groupWithZero
 

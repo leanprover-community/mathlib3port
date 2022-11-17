@@ -19,12 +19,12 @@ lift, tactic
 
 /-- A class specifying that you can lift elements from `α` to `β` assuming `cond` is true.
   Used by the tactic `lift`. -/
-class CanLift (α β : Sort _) (coe : outParam <| β → α) (cond : outParam <| α → Prop) where
+class CanLift (α β : Sort _) (coe : outParam $ β → α) (cond : outParam $ α → Prop) where
   prf : ∀ x : α, cond x → ∃ y : β, coe y = x
 #align can_lift CanLift
 
 instance : CanLift ℤ ℕ coe ((· ≤ ·) 0) :=
-  ⟨fun n hn => ⟨n.natAbs, Int.nat_abs_of_nonneg hn⟩⟩
+  ⟨fun n hn => ⟨n.natAbs, Int.natAbs_of_nonneg hn⟩⟩
 
 /-- Enable automatic handling of pi types in `can_lift`. -/
 instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i → α i) (P : ∀ i, α i → Prop)
@@ -35,13 +35,14 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
           (f
             i) where prf f hf :=
     ⟨fun i => Classical.choose (CanLift.prf (f i) (hf i)),
-      funext fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
+      funext $ fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
 #align pi.can_lift Pi.canLift
 
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)] {p : ι → Prop}
-    (f : ∀ i : Subtype p, α i) : ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
-  classical refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
-    exact dif_pos hi
+    (f : ∀ i : Subtype p, α i) : ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by classical
+  refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
+  rintro ⟨i, hi⟩
+  exact dif_pos hi
 #align subtype.exists_pi_extension Subtype.exists_pi_extension
 
 instance PiSubtype.canLift (ι : Sort _) (α : ι → Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
@@ -77,7 +78,7 @@ unsafe def get_lift_prf (h : Option pexpr) (e P : expr) : tactic (expr × Bool) 
   let expected_prf_ty ← simp_lemmas.mk.dsimplify [] expected_prf_ty { failIfUnchanged := false }
   match h with
     | some h => do
-      let e ← decorate_error "lift tactic failed." (i_to_expr (pquote.1 (%%ₓh : %%ₓexpected_prf_ty)))
+      let e ← decorate_error "lift tactic failed." (i_to_expr ``(($(h) : $(expected_prf_ty))))
       return (e, tt)
     | none => do
       let prf_nm ← get_unused_name
@@ -86,66 +87,84 @@ unsafe def get_lift_prf (h : Option pexpr) (e P : expr) : tactic (expr × Bool) 
       return (prf, ff)
 #align tactic.get_lift_prf tactic.get_lift_prf
 
-/-- Lift the expression `p` to the type `t`, with proof obligation given by `h`.
-  The list `n` is used for the two newly generated names, and to specify whether `h` should
-  remain in the local context. See the doc string of `tactic.interactive.lift` for more information.
-  -/
-unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tactic Unit := do
-  propositional_goal <|> fail "lift tactic failed. Tactic is only applicable when the target is a proposition."
-  let e ← i_to_expr p
-  let old_tp ← infer_type e
-  let new_tp ← i_to_expr (pquote.1 (%%ₓt : Sort _))
-  let coe ← i_to_expr (pquote.1 ((%%ₓnew_tp) → %%ₓold_tp)) >>= mk_meta_var
-  let P ← i_to_expr (pquote.1 ((%%ₓold_tp) → Prop)) >>= mk_meta_var
-  let inst_type ← mk_app `` CanLift [old_tp, new_tp, coe, P]
-  let inst ←
-    mk_instance inst_type <|>
-        (f!"Failed to find a lift from {(← old_tp)} to {(← new_tp)}. Provide an instance of
-              {← inst_type}") >>=
-          fail
-  let inst ← instantiate_mvars inst
-  let coe ← instantiate_mvars coe
-  let P ← instantiate_mvars P
-  let (prf_cond, b) ← get_lift_prf h e P
-  let prf_nm := if prf_cond.is_local_constant then some prf_cond.local_pp_name else none
-  let prf_ex0
-    ←/- We use mk_mapp to apply `can_lift.prf` to all but one argument, and then just use expr.app
-          for the last argument. For some reason we get an error when applying mk_mapp it to all
-          arguments. -/
-        mk_mapp
-        `can_lift.prf [old_tp, new_tp, coe, P, inst, e]
-  let prf_ex := prf_ex0 prf_cond
-  let new_nm
-    ←-- Find the name of the new variable
-        if n ≠ [] then return n.head
-      else if e.is_local_constant then return e.local_pp_name else get_unused_name
-  let eq_nm
-    ←-- Find the name of the proof of the equation
-        if hn : 1 < n.length then return (n.nthLe 1 hn)
-      else if e.is_local_constant then return `rfl else get_unused_name `h
-  let temp_nm
-    ←-- We add the proof of the existential statement to the context
-      get_unused_name
-  let temp_e ← note temp_nm none prf_ex
-  dsimp_hyp temp_e none [] { failIfUnchanged := ff }
-  -- We case on the existential. We use `rcases` because `eq_nm` could be `rfl`.
-        rcases
-        none (pexpr.of_expr temp_e) <|
-      rcases_patt.tuple ([new_nm, eq_nm].map rcases_patt.one)
-  /- If the lifted variable is not a local constant,
-          try to rewrite it away using the new equality. -/
-      when
-      (¬e)
-      (get_local eq_nm >>= fun e => interactive.rw ⟨[⟨⟨0, 0⟩, tt, pexpr.of_expr e⟩], none⟩ Interactive.Loc.wildcard)
-  /- If the proof `prf_cond` is a local constant, remove it from the context,
-          unless `n` specifies to keep it. -/
-      if h_prf_nm : prf_nm ∧ n 2 ≠ prf_nm then get_local (Option.get h_prf_nm.1) >>= clear
-    else skip
-  if b then skip else swap
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Lift the expression `p` to the type `t`, with proof obligation given by `h`.
+        The list `n` is used for the two newly generated names, and to specify whether `h` should
+        remain in the local context. See the doc string of `tactic.interactive.lift` for more information.
+        -/
+    unsafe
+  def
+    lift
+    ( p : pexpr ) ( t : pexpr ) ( h : Option pexpr ) ( n : List Name ) : tactic Unit
+    :=
+      do
+        propositional_goal <|> fail "lift tactic failed. Tactic is only applicable when the target is a proposition."
+          let e ← i_to_expr p
+          let old_tp ← infer_type e
+          let new_tp ← i_to_expr ` `( ( $ ( t ) : Sort _ ) )
+          let coe ← i_to_expr ` `( $ ( new_tp ) → $ ( old_tp ) ) >>= mk_meta_var
+          let P ← i_to_expr ` `( $ ( old_tp ) → Prop ) >>= mk_meta_var
+          let inst_type ← mk_app ` ` CanLift [ old_tp , new_tp , coe , P ]
+          let
+            inst
+              ←
+              mk_instance inst_type
+                <|>
+                (
+                    f!
+                      "Failed to find a lift from {
+                        ( ← old_tp )
+                        } to {
+                        ( ← new_tp )
+                        }. Provide an instance of
+                          { ← inst_type }"
+                    )
+                  >>=
+                  fail
+          let inst ← instantiate_mvars inst
+          let coe ← instantiate_mvars coe
+          let P ← instantiate_mvars P
+          let ( prf_cond , b ) ← get_lift_prf h e P
+          let prf_nm := if prf_cond . is_local_constant then some prf_cond . local_pp_name else none
+          let prf_ex0 ← mk_mapp `can_lift.prf [ old_tp , new_tp , coe , P , inst , e ]
+          let prf_ex := prf_ex0 prf_cond
+          let
+            new_nm
+              ←
+              if
+                n ≠ [ ]
+                then
+                return n . head
+                else
+                if e . is_local_constant then return e . local_pp_name else get_unused_name
+          let
+            eq_nm
+              ←
+              if
+                hn
+                :
+                1 < n . length
+                then
+                return ( n . nthLe 1 hn )
+                else
+                if e . is_local_constant then return `rfl else get_unused_name `h
+          let temp_nm ← get_unused_name
+          let temp_e ← note temp_nm none prf_ex
+          dsimp_hyp temp_e none [ ] { failIfUnchanged := ff }
+          rcases none ( pexpr.of_expr temp_e ) $ rcases_patt.tuple ( [ new_nm , eq_nm ] . map rcases_patt.one )
+          when
+            ( ¬ e )
+              (
+                get_local eq_nm
+                  >>=
+                  fun e => interactive.rw ⟨ [ ⟨ ⟨ 0 , 0 ⟩ , tt , pexpr.of_expr e ⟩ ] , none ⟩ Interactive.Loc.wildcard
+                )
+          if h_prf_nm : prf_nm ∧ n 2 ≠ prf_nm then get_local ( Option.get h_prf_nm . 1 ) >>= clear else skip
+          if b then skip else swap
 #align tactic.lift tactic.lift
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=

@@ -73,13 +73,13 @@ theorem IsTransitive.sUnion' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀ x).IsTr
 theorem is_transitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
   ⟨fun h y hy => by
     rcases mem_sUnion.1 hy with ⟨z, hz, hz'⟩
-    exact h.mem_trans hz' hz, fun H y hy z hz => H <| mem_sUnion_of_mem hz hy⟩
+    exact h.mem_trans hz' hz, fun H y hy z hz => H $ mem_sUnion_of_mem hz hy⟩
 #align Set.is_transitive_iff_sUnion_subset SetCat.is_transitive_iff_sUnion_subset
 
 alias is_transitive_iff_sUnion_subset ↔ is_transitive.sUnion_subset _
 
 theorem is_transitive_iff_subset_powerset : x.IsTransitive ↔ x ⊆ powerset x :=
-  ⟨fun h y hy => mem_powerset.2 <| h.subset_of_mem hy, fun H y hy z hz => mem_powerset.1 (H hy) hz⟩
+  ⟨fun h y hy => mem_powerset.2 $ h.subset_of_mem hy, fun H y hy z hz => mem_powerset.1 (H hy) hz⟩
 #align Set.is_transitive_iff_subset_powerset SetCat.is_transitive_iff_subset_powerset
 
 alias is_transitive_iff_subset_powerset ↔ is_transitive.subset_powerset _

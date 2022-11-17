@@ -128,7 +128,7 @@ def random : RandG g α :=
 /-- generate an infinite series of random values of type `α` -/
 def randomSeries : RandG g (Stream α) := do
   let gen ← Uliftable.up (split g)
-  pure <| Stream.corecState (Random.random α g) gen
+  pure $ Stream.corecState (Random.random α g) gen
 #align rand.random_series Rand.randomSeries
 
 end Random
@@ -143,7 +143,7 @@ def randomR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g 
 /-- generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
 def randomSeriesR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g (Stream (x .. y)) := do
   let gen ← Uliftable.up (split g)
-  pure <| corec_state (BoundedRandom.randomR g x y h) gen
+  pure $ corec_state (BoundedRandom.randomR g x y h) gen
 #align rand.random_series_r Rand.randomSeriesR
 
 end Rand
@@ -157,7 +157,7 @@ private def accum_char (w : ℕ) (c : Char) : ℕ :=
 /-- create and seed a random number generator -/
 def mkGenerator : Io StdGen := do
   let seed ← Io.rand 0 shift31Left
-  return <| mkStdGen seed
+  return $ mkStdGen seed
 #align io.mk_generator Io.mkGenerator
 
 variable {α : Type}
@@ -165,12 +165,12 @@ variable {α : Type}
 /-- Run `cmd` using a randomly seeded random number generator -/
 def runRand (cmd : Rand α) : Io α := do
   let g ← Io.mkGenerator
-  return <| (cmd ⟨g⟩).1
+  return $ (cmd ⟨g⟩).1
 #align io.run_rand Io.runRand
 
 /-- Run `cmd` using the provided seed. -/
 def runRandWith (seed : ℕ) (cmd : Rand α) : Io α :=
-  return <| (cmd.run ⟨mkStdGen seed⟩).1
+  return $ (cmd.run ⟨mkStdGen seed⟩).1
 #align io.run_rand_with Io.runRandWith
 
 section Random
@@ -199,7 +199,7 @@ def randomR (x y : α) (p : x ≤ y) : Io (x .. y) :=
 #align io.random_r Io.randomR
 
 /-- randomly generate an infinite series of value of type α between `x` and `y` -/
-def randomSeriesR (x y : α) (h : x ≤ y) : Io (Stream <| x .. y) :=
+def randomSeriesR (x y : α) (h : x ≤ y) : Io (Stream $ x .. y) :=
   Io.runRand (Rand.randomSeriesR x y h)
 #align io.random_series_r Io.randomSeriesR
 
@@ -233,7 +233,7 @@ unsafe def random_r (x y : α) (h : x ≤ y) : tactic (x .. y) :=
 #align tactic.random_r tactic.random_r
 
 /-- Generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
-unsafe def random_series_r (x y : α) (h : x ≤ y) : tactic (Stream <| x .. y) :=
+unsafe def random_series_r (x y : α) (h : x ≤ y) : tactic (Stream $ x .. y) :=
   run_rand (Rand.randomSeriesR x y h)
 #align tactic.random_series_r tactic.random_series_r
 
@@ -269,7 +269,7 @@ variable {n : ℕ} [NeZero n]
 
 /-- generate a `fin` randomly -/
 protected def random : RandG g (Fin n) :=
-  ⟨fun ⟨g⟩ => Prod.map ofNat' up <| randNat g 0 n⟩
+  ⟨fun ⟨g⟩ => Prod.map ofNat' up $ randNat g 0 n⟩
 #align fin.random Fin.random
 
 end Fin
@@ -278,7 +278,7 @@ open Nat
 
 instance natBoundedRandom :
     BoundedRandom ℕ where randomR g inst x y hxy := do
-    let z ← @Fin.random g inst (succ <| y - x) _
+    let z ← @Fin.random g inst (succ $ y - x) _
     pure ⟨z + x, Nat.le_add_left _ _, by rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
 #align nat_bounded_random natBoundedRandom
 
@@ -287,12 +287,12 @@ instance natBoundedRandom :
 shifting the result appropriately. -/
 instance intBoundedRandom :
     BoundedRandom ℤ where randomR g inst x y hxy := do
-    let ⟨z, h₀, h₁⟩ ← @BoundedRandom.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x) (by decide)
+    let ⟨z, h₀, h₁⟩ ← @BoundedRandom.randomR ℕ _ _ g inst 0 (Int.natAbs $ y - x) dec_trivial
     pure
         ⟨z + x, Int.le_add_of_nonneg_left (Int.coe_nat_nonneg _),
-          Int.add_le_of_le_sub_right <|
-            le_trans (Int.coe_nat_le_coe_nat_of_le h₁)
-              (le_of_eq <| Int.of_nat_nat_abs_eq_of_nonneg (Int.sub_nonneg_of_le hxy))⟩
+          Int.add_le_of_le_sub_right $
+            le_trans (Int.ofNat_le_ofNat_of_le h₁)
+              (le_of_eq $ Int.of_nat_nat_abs_eq_of_nonneg (Int.sub_nonneg_of_le hxy))⟩
 #align int_bounded_random intBoundedRandom
 
 instance finRandom (n : ℕ) [NeZero n] : Random (Fin n) where Random g inst := @Fin.random g inst _ _
@@ -331,7 +331,7 @@ instance :
 
 /-- generate a random bit vector of length `n` -/
 def Bitvec.random (n : ℕ) : RandG g (Bitvec n) :=
-  Bitvec.ofFin <$> Rand.random (Fin <| 2 ^ n)
+  Bitvec.ofFin <$> Rand.random (Fin $ 2 ^ n)
 #align bitvec.random Bitvec.random
 
 /-- generate a random bit vector of length `n` -/

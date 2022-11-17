@@ -21,7 +21,7 @@ open Wseq
 variable {α : Type u} {β : Type v}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-def Parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
+def Parallel.aux2 : List (Computation α) → α ⊕ List (Computation α) :=
   List.foldr
     (fun c o =>
       match o with
@@ -31,7 +31,7 @@ def Parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
 #align computation.parallel.aux2 Computation.Parallel.aux2
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-def Parallel.aux1 : List (Computation α) × Wseq (Computation α) → Sum α (List (Computation α) × Wseq (Computation α))
+def Parallel.aux1 : List (Computation α) × Wseq (Computation α) → α ⊕ List (Computation α) × Wseq (Computation α)
   | (l, S) =>
     rmap
       (fun l' =>
@@ -207,7 +207,7 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
     from
     let ⟨c, h1, h2⟩ := this _ h [] S rfl
     ⟨c, h1.resolve_left id, h2⟩
-  let F : List (Computation α) → Sum α (List (Computation α)) → Prop := by
+  let F : List (Computation α) → α ⊕ List (Computation α) → Prop := by
     intro l a
     cases' a with a l'
     exact ∃ c ∈ l, a ∈ c
@@ -290,11 +290,12 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
     
 #align computation.exists_of_mem_parallel Computation.exists_of_mem_parallel
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (l S) -/
 theorem map_parallel (f : α → β) (S) : map f (parallel S) = parallel (S.map (map f)) := by
   refine'
     eq_of_bisim
       (fun c1 c2 =>
-        ∃ l S, c1 = map f (corec parallel.aux1 (l, S)) ∧ c2 = corec parallel.aux1 (l.map (map f), S.map (map f)))
+        ∃ (l) (S), c1 = map f (corec parallel.aux1 (l, S)) ∧ c2 = corec parallel.aux1 (l.map (map f), S.map (map f)))
       _ ⟨[], S, rfl, rfl⟩
   intro c1 c2 h
   exact
@@ -314,7 +315,7 @@ theorem map_parallel (f : α → β) (S) : map f (parallel S) = parallel (S.map 
 #align computation.map_parallel Computation.map_parallel
 
 theorem parallel_empty (S : Wseq (Computation α)) (h : S.head ~> none) : parallel S = empty _ :=
-  eq_empty_of_not_terminates fun ⟨⟨a, m⟩⟩ => by
+  eq_empty_of_not_terminates $ fun ⟨⟨a, m⟩⟩ => by
     let ⟨c, cs, ac⟩ := exists_of_mem_parallel m
     let ⟨n, nm⟩ := exists_nth_of_mem cs
     let ⟨c', h'⟩ := head_some_of_nth_some nm

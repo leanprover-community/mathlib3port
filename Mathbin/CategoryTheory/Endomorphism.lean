@@ -86,7 +86,7 @@ open Opposite
 instance mulActionRight {X Y : C} : MulAction (EndCat Y) (X ⟶ Y) where
   smul r f := f ≫ r
   one_smul := Category.comp_id
-  mul_smul r s f := Eq.symm <| Category.assoc _ _ _
+  mul_smul r s f := Eq.symm $ Category.assoc _ _ _
 #align category_theory.End.mul_action_right CategoryTheory.EndCat.mulActionRight
 
 instance mulActionLeft {X : Cᵒᵖ} {Y : C} : MulAction (EndCat X) (unop X ⟶ Y) where

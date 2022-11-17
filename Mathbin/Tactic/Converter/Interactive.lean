@@ -32,8 +32,7 @@ unsafe def execute (c : old_conv Unit) : tactic Unit :=
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 unsafe def itactic : Type :=
   old_conv Unit
 #align old_conv.interactive.itactic old_conv.interactive.itactic
@@ -103,8 +102,7 @@ unsafe def discharge_eq_lhs (tac : tactic Unit) : conv Unit := do
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic.Interactive (rw_rules)
 
 /-- The `conv` tactic provides a `conv` within a `conv`. It allows the user to return to a
@@ -125,12 +123,16 @@ unsafe def erw (q : parse rw_rules) (cfg : RewriteCfg := { md := semireducible }
 
 open Interactive.Types
 
-/-- `guard_target t` fails if the target of the conv goal is not `t`.
-We use this tactic for writing tests.
--/
-unsafe def guard_target (p : parse texpr) : conv Unit := do
-  let quote.1 ((%%ₓt) = _) ← target
-  tactic.interactive.guard_expr_eq t p
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `guard_target t` fails if the target of the conv goal is not `t`.
+      We use this tactic for writing tests.
+      -/
+    unsafe
+  def
+    guard_target
+    ( p : parse texpr ) : conv Unit
+    := do let q( $ ( t ) = _ ) ← target tactic.interactive.guard_expr_eq t p
 #align conv.interactive.guard_target conv.interactive.guard_target
 
 end Interactive
@@ -141,8 +143,7 @@ namespace Tactic
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
   let t ← target
   let (new_t, pr) ← c.to_tactic `eq t
@@ -150,7 +151,7 @@ unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
 #align tactic.interactive.old_conv tactic.interactive.old_conv
 
 unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic) : tactic Unit :=
-  old_conv <| old_conv.interactive.find p c
+  old_conv $ old_conv.interactive.find p c
 #align tactic.interactive.find tactic.interactive.find
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/

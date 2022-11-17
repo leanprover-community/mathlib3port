@@ -43,7 +43,7 @@ acted on by an `add_group G` with a transitive and free action given
 by the `+ᵥ` operation and a corresponding subtraction given by the
 `-ᵥ` operation. In the case of a vector space, it is an affine
 space. -/
-class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam <| AddGroup G] extends AddAction G P, HasVsub G P where
+class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam $ AddGroup G] extends AddAction G P, HasVsub G P where
   [Nonempty : Nonempty P]
   vsub_vadd' : ∀ p1 p2 : P, (p1 -ᵥ p2 : G) +ᵥ p2 = p1
   vadd_vsub' : ∀ (g : G) (p : P), g +ᵥ p -ᵥ p = g
@@ -317,12 +317,12 @@ open AddAction AddTorsor
 /-- A product of `add_torsor`s is an `add_torsor`. -/
 instance [T : ∀ i, AddTorsor (fg i) (fp i)] : AddTorsor (∀ i, fg i) (∀ i, fp i) where
   vadd g p i := g i +ᵥ p i
-  zero_vadd p := funext fun i => zero_vadd (fg i) (p i)
-  add_vadd g₁ g₂ p := funext fun i => add_vadd (g₁ i) (g₂ i) (p i)
+  zero_vadd p := funext $ fun i => zero_vadd (fg i) (p i)
+  add_vadd g₁ g₂ p := funext $ fun i => add_vadd (g₁ i) (g₂ i) (p i)
   vsub p₁ p₂ i := p₁ i -ᵥ p₂ i
   Nonempty := ⟨fun i => Classical.choice (T i).Nonempty⟩
-  vsub_vadd' p₁ p₂ := funext fun i => vsub_vadd (p₁ i) (p₂ i)
-  vadd_vsub' g p := funext fun i => vadd_vsub (g i) (p i)
+  vsub_vadd' p₁ p₂ := funext $ fun i => vsub_vadd (p₁ i) (p₂ i)
+  vadd_vsub' g p := funext $ fun i => vadd_vsub (g i) (p i)
 
 end Pi
 
@@ -387,14 +387,14 @@ variable (G)
 
 @[simp]
 theorem const_vadd_zero : constVadd P (0 : G) = 1 :=
-  ext <| zero_vadd G
+  ext $ zero_vadd G
 #align equiv.const_vadd_zero Equiv.const_vadd_zero
 
 variable {G}
 
 @[simp]
 theorem const_vadd_add (v₁ v₂ : G) : constVadd P (v₁ + v₂) = constVadd P v₁ * constVadd P v₂ :=
-  ext <| add_vadd v₁ v₂
+  ext $ add_vadd v₁ v₂
 #align equiv.const_vadd_add Equiv.const_vadd_add
 
 /-- `equiv.const_vadd` as a homomorphism from `multiplicative G` to `equiv.perm P` -/
@@ -419,7 +419,7 @@ theorem point_reflection_apply (x y : P) : pointReflection x y = x -ᵥ y +ᵥ x
 
 @[simp]
 theorem point_reflection_symm (x : P) : (pointReflection x).symm = pointReflection x :=
-  ext <| by simp [point_reflection]
+  ext $ by simp [point_reflection]
 #align equiv.point_reflection_symm Equiv.point_reflection_symm
 
 @[simp]
@@ -428,7 +428,7 @@ theorem point_reflection_self (x : P) : pointReflection x x = x :=
 #align equiv.point_reflection_self Equiv.point_reflection_self
 
 theorem point_reflection_involutive (x : P) : Involutive (pointReflection x : P → P) := fun y =>
-  (Equiv.apply_eq_iff_eq_symm_apply _).2 <| by rw [point_reflection_symm]
+  (Equiv.apply_eq_iff_eq_symm_apply _).2 $ by rw [point_reflection_symm]
 #align equiv.point_reflection_involutive Equiv.point_reflection_involutive
 
 /-- `x` is the only fixed point of `point_reflection x`. This lemma requires

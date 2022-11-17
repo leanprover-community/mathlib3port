@@ -28,8 +28,8 @@ namespace Real
 variable {x : ℝ}
 
 theorem hasStrictDerivAtLogOfPos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x := by
-  have : HasStrictDerivAt log (exp <| log x)⁻¹ x :=
-    (has_strict_deriv_at_exp <| log x).ofLocalLeftInverse (continuous_at_log hx.ne') (ne_of_gt <| exp_pos _) <|
+  have : HasStrictDerivAt log (exp $ log x)⁻¹ x :=
+    (has_strict_deriv_at_exp $ log x).ofLocalLeftInverse (continuous_at_log hx.ne') (ne_of_gt $ exp_pos _) $
       Eventually.mono (lt_mem_nhds hx) @exp_log
   rwa [exp_log hx] at this
 #align real.has_strict_deriv_at_log_of_pos Real.hasStrictDerivAtLogOfPos
@@ -84,7 +84,7 @@ theorem contDiffOnLog {n : ℕ∞} : ContDiffOn ℝ n log ({0}ᶜ) := by
 
 theorem cont_diff_at_log {n : ℕ∞} : ContDiffAt ℝ n log x ↔ x ≠ 0 :=
   ⟨fun h => continuous_at_log_iff.1 h.ContinuousAt, fun hx =>
-    (contDiffOnLog x hx).ContDiffAt <| IsOpen.mem_nhds is_open_compl_singleton hx⟩
+    (contDiffOnLog x hx).ContDiffAt $ IsOpen.mem_nhds is_open_compl_singleton hx⟩
 #align real.cont_diff_at_log Real.cont_diff_at_log
 
 end Real
@@ -168,7 +168,7 @@ theorem ContDiffOn.log {n} (hf : ContDiffOn ℝ n f s) (hs : ∀ x ∈ s, f x �
 #align cont_diff_on.log ContDiffOn.log
 
 theorem ContDiff.log {n} (hf : ContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : ContDiff ℝ n fun x => log (f x) :=
-  cont_diff_iff_cont_diff_at.2 fun x => hf.ContDiffAt.log (h x)
+  cont_diff_iff_cont_diff_at.2 $ fun x => hf.ContDiffAt.log (h x)
 #align cont_diff.log ContDiff.log
 
 theorem DifferentiableOn.log (hf : DifferentiableOn ℝ f s) (hx : ∀ x ∈ s, f x ≠ 0) :
@@ -229,7 +229,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
       sub_ne_zero_of_ne (ne_of_lt hy.2)]
     ring
   -- second step: show that the derivative of `F` is small
-  have B : ∀ y ∈ Icc (-|x|) (|x|), |deriv F y| ≤ |x| ^ n / (1 - |x|) := by
+  have B : ∀ y ∈ Icc (-|x|) |x|, |deriv F y| ≤ |x| ^ n / (1 - |x|) := by
     intro y hy
     have : y ∈ Ioo (-(1 : ℝ)) 1 := ⟨lt_of_lt_of_le (neg_lt_neg h) hy.1, lt_of_le_of_lt hy.2 h⟩
     calc
@@ -244,7 +244,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
       
   -- third step: apply the mean value inequality
   have C : ∥F x - F 0∥ ≤ |x| ^ n / (1 - |x|) * ∥x - 0∥ := by
-    have : ∀ y ∈ Icc (-|x|) (|x|), DifferentiableAt ℝ F y := by
+    have : ∀ y ∈ Icc (-|x|) |x|, DifferentiableAt ℝ F y := by
       intro y hy
       have : 1 - y ≠ 0 := sub_ne_zero_of_ne (ne_of_gt (lt_of_le_of_lt hy.2 h))
       simp [F, this]

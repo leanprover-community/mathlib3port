@@ -47,13 +47,13 @@ instance : MeasurableSpace (Measure α) :=
   ⨆ (s : Set α) (hs : MeasurableSet s), (borel ℝ≥0∞).comap fun μ => μ s
 
 theorem measurableCoe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ : Measure α => μ s :=
-  Measurable.ofComapLe <| le_supr_of_le s <| le_supr_of_le hs <| le_rfl
+  Measurable.ofComapLe $ le_supr_of_le s $ le_supr_of_le hs $ le_rfl
 #align measure_theory.measure.measurable_coe MeasureTheory.Measure.measurableCoe
 
 theorem measurableOfMeasurableCoe (f : β → Measure α)
     (h : ∀ (s : Set α) (hs : MeasurableSet s), Measurable fun b => f b s) : Measurable f :=
-  Measurable.ofLeMap <|
-    supr₂_le fun s hs => MeasurableSpace.comap_le_iff_le_map.2 <| by rw [MeasurableSpace.map_comp] <;> exact h s hs
+  Measurable.ofLeMap $
+    supr₂_le $ fun s hs => MeasurableSpace.comap_le_iff_le_map.2 $ by rw [MeasurableSpace.map_comp] <;> exact h s hs
 #align measure_theory.measure.measurable_of_measurable_coe MeasureTheory.Measure.measurableOfMeasurableCoe
 
 theorem measurable_measure {μ : α → Measure β} :
@@ -104,7 +104,7 @@ theorem join_zero : (0 : Measure (Measure α)).join = 0 := by
 #align measure_theory.measure.join_zero MeasureTheory.Measure.join_zero
 
 theorem measurableJoin : Measurable (join : Measure (Measure α) → Measure α) :=
-  (measurableOfMeasurableCoe _) fun s hs => by
+  measurableOfMeasurableCoe _ $ fun s hs => by
     simp only [join_apply hs] <;> exact measurable_lintegral (measurable_coe hs)
 #align measure_theory.measure.measurable_join MeasureTheory.Measure.measurableJoin
 

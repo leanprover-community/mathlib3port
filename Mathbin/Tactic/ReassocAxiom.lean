@@ -54,7 +54,7 @@ open CategoryTheory
 
 /-- From an expression `f ≫ g`, extract the expression representing the category instance. -/
 unsafe def get_cat_inst : expr → tactic expr
-  | quote.1 (@CategoryStruct.comp _ (%%ₓstruct_inst) _ _ _ _ _) => pure struct_inst
+  | q(@CategoryStruct.comp _ $(struct_inst) _ _ _ _ _) => pure struct_inst
   | _ => failed
 #align tactic.get_cat_inst tactic.get_cat_inst
 
@@ -66,18 +66,17 @@ unsafe def prove_reassoc (h : expr) : tactic (expr × expr) := do
   let (vs, t) ← infer_type h >>= open_pis
   let (lhs, rhs) ← match_eq t
   let struct_inst ← get_cat_inst lhs <|> get_cat_inst rhs <|> fail "no composition found in statement"
-  let quote.1 (@Quiver.Hom _ (%%ₓhom_inst) (%%ₓX) (%%ₓY)) ← infer_type lhs
+  let q(@Quiver.Hom _ $(hom_inst) $(X) $(Y)) ← infer_type lhs
   let C ← infer_type X
   let X' ← mk_local' `X' BinderInfo.implicit C
-  let ft ← to_expr (pquote.1 (@Quiver.Hom _ (%%ₓhom_inst) (%%ₓY) (%%ₓX')))
+  let ft ← to_expr ``(@Quiver.Hom _ $(hom_inst) $(Y) $(X'))
   let f' ← mk_local_def `f' ft
   let t' ←
     to_expr
-        (pquote.1
-          (@CategoryStruct.comp _ (%%ₓstruct_inst) _ _ _ (%%ₓlhs) (%%ₓf') =
-            @CategoryStruct.comp _ (%%ₓstruct_inst) _ _ _ (%%ₓrhs) (%%ₓf')))
+        ``(@CategoryStruct.comp _ $(struct_inst) _ _ _ $(lhs) $(f') =
+            @CategoryStruct.comp _ $(struct_inst) _ _ _ $(rhs) $(f'))
   let c' := h.mk_app vs
-  let (_, pr) ← solve_aux t' (andthen (rewrite_target c') reflexivity)
+  let (_, pr) ← solve_aux t' (rewrite_target c'; reflexivity)
   let pr ← instantiate_mvars pr
   let s := simp_lemmas.mk
   let s ← s.add_simp `` category.assoc
@@ -99,12 +98,11 @@ unsafe def reassoc_axiom (n : Name) (n' : Name := n.appendSuffix "_assoc") : tac
   let ls := d.univ_params.map level.param
   let c := @expr.const true n ls
   let (t'', pr') ← prove_reassoc c
-  add_decl <| declaration.thm n' d t'' (pure pr')
+  add_decl $ declaration.thm n' d t'' (pure pr')
   copy_attribute `simp n n'
 #align tactic.reassoc_axiom tactic.reassoc_axiom
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- The `reassoc` attribute can be applied to a lemma
 
 ```lean
@@ -130,7 +128,7 @@ unsafe def reassoc_attr : user_attribute Unit (Option Name) where
     some fun n _ _ => do
       let some n' ← reassoc_attr.get_param n |
         reassoc_axiom n (n.appendSuffix "_assoc")
-      reassoc_axiom n <| n ++ n'
+      reassoc_axiom n $ n ++ n'
 #align tactic.reassoc_attr tactic.reassoc_attr
 
 add_tactic_doc
@@ -162,9 +160,9 @@ attribute [simp, reassoc] some_class.bar
 ```
 -/
 @[user_command]
-unsafe def reassoc_cmd (_ : parse <| tk "reassoc_axiom") : lean.parser Unit := do
+unsafe def reassoc_cmd (_ : parse $ tk "reassoc_axiom") : lean.parser Unit := do
   let n ← ident
-  of_tactic <| do
+  of_tactic $ do
       let n ← resolve_constant n
       reassoc_axiom n
 #align tactic.reassoc_cmd tactic.reassoc_cmd
@@ -196,7 +194,7 @@ def CalculatedProp {α} (β : Prop) (hh : α) :=
 #align tactic.calculated_Prop Tactic.CalculatedProp
 
 unsafe def derive_reassoc_proof : tactic Unit := do
-  let quote.1 (CalculatedProp (%%ₓv) (%%ₓh)) ← target
+  let q(CalculatedProp $(v) $(h)) ← target
   let (t, pr) ← prove_reassoc h
   unify v t
   exact pr

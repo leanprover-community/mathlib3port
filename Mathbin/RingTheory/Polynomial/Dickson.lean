@@ -191,7 +191,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
   -- Since `X ^ p` also satisfies this property in characteristic `p`,
   -- we can use a variant on `polynomial.funext` to conclude that these polynomials are equal.
   -- For this argument, we need an arbitrary infinite field of characteristic `p`.
-  obtain ⟨K, _, _, H⟩ : ∃ (K : Type)(_ : Field K), ∃ _ : CharP K p, Infinite K := by
+  obtain ⟨K, _, _, H⟩ : ∃ (K : Type) (_ : Field K), ∃ _ : CharP K p, Infinite K := by
     let K := FractionRing (Polynomial (Zmod p))
     let f : Zmod p →+* K := (algebraMap _ (FractionRing _)).comp C
     have : CharP K p := by
@@ -230,13 +230,18 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
         intro H
         have : φ.eval 0 = 0 := by rw [H, eval_zero]
         simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq, zero_add, one_ne_zero]
-      classical convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
-        simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
-          eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one, Multiset.mem_singleton]
-        · simp only [hy, eq_self_iff_true, or_true_iff]
-          
-        rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
-        ring
+      classical
+      convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
+      ext1 y
+      simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
+        eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one, Multiset.mem_singleton]
+      by_cases hy:y = 0
+      · simp only [hy, eq_self_iff_true, or_true_iff]
+        
+      apply or_congr _ Iff.rfl
+      rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
+      apply eq_iff_eq_cancel_right.mpr
+      ring
     -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     · apply (Set.eq_univ_of_forall _).symm
       intro x

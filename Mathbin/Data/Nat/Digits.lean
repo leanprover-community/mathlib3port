@@ -98,7 +98,7 @@ theorem digits_zero_succ (n : ℕ) : digits 0 n.succ = [n + 1] :=
 #align nat.digits_zero_succ Nat.digits_zero_succ
 
 theorem digits_zero_succ' : ∀ {n : ℕ} (w : 0 < n), digits 0 n = [n]
-  | 0, h => absurd h (by decide)
+  | 0, h => absurd h dec_trivial
   | n + 1, _ => rfl
 #align nat.digits_zero_succ' Nat.digits_zero_succ'
 
@@ -123,8 +123,8 @@ theorem digits_add_two_add_one (b n : ℕ) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem digits_def' : ∀ {b : ℕ} (h : 2 ≤ b) {n : ℕ} (w : 0 < n), digits b n = (n % b)::digits b (n / b)
-  | 0, h => absurd h (by decide)
-  | 1, h => absurd h (by decide)
+  | 0, h => absurd h dec_trivial
+  | 1, h => absurd h dec_trivial
   | b + 2, h => digits_aux_def _ _
 #align nat.digits_def' Nat.digits_def'
 
@@ -451,10 +451,10 @@ theorem last_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) : (digits b m).las
   · simp_rw [digits_of_lt b.succ.succ n hnpos hnb]
     exact pos_iff_ne_zero.mp hnpos
     
-  · rw [digits_last n (show 2 ≤ b + 2 by decide)]
-    refine' IH _ (Nat.div_lt_self hnpos (by decide)) _
+  · rw [digits_last n (show 2 ≤ b + 2 from dec_trivial)]
+    refine' IH _ (Nat.div_lt_self hnpos dec_trivial) _
     · rw [← pos_iff_ne_zero]
-      exact Nat.div_pos (le_of_not_lt hnb) (by decide)
+      exact Nat.div_pos (le_of_not_lt hnb) dec_trivial
       
     
 #align nat.last_digit_ne_zero Nat.last_digit_ne_zero
@@ -491,7 +491,7 @@ theorem of_digits_lt_base_pow_length' {b : ℕ} {l : List ℕ} (hl : ∀ x ∈ l
     
   · rw [of_digits, List.length_cons, pow_succ]
     have : (of_digits (b + 2) tl + 1) * (b + 2) ≤ (b + 2) ^ tl.length * (b + 2) :=
-      mul_le_mul (IH fun x hx => hl _ (List.mem_cons_of_mem _ hx)) (by rfl) (by decide) (Nat.zero_le _)
+      mul_le_mul (IH fun x hx => hl _ (List.mem_cons_of_mem _ hx)) (by rfl) dec_trivial (Nat.zero_le _)
     suffices ↑hd < b + 2 by linarith
     norm_cast
     exact hl hd (List.mem_cons_self _ _)
@@ -754,23 +754,38 @@ theorem digits_one (b n) (n0 : 0 < n) (nb : n < b) : Nat.digits b n = [n] ∧ 2 
 
 open Tactic
 
-/-- Helper function for the `norm_digits` tactic. -/
-unsafe def eval_aux (eb : expr) (b : ℕ) : expr → ℕ → instance_cache → tactic (instance_cache × expr × expr)
-  | en, n, ic => do
-    let m := n / b
-    let r := n % b
-    let (ic, er) ← ic.ofNat r
-    let (ic, pr) ← norm_num.prove_lt_nat ic er eb
-    if m = 0 then do
-        let (_, pn0) ← norm_num.prove_pos ic en
-        return (ic, quote.1 ([%%ₓen] : List Nat), quote.1 (digits_one (%%ₓeb) (%%ₓen) (%%ₓpn0) (%%ₓpr)))
-      else do
-        let em ← expr.of_nat (quote.1 ℕ) m
-        let (_, pe) ← norm_num.derive (quote.1 ((%%ₓer) + (%%ₓeb) * %%ₓem : ℕ))
-        let (ic, el, p) ← eval_aux em m ic
-        return
-            (ic, quote.1 (@List.cons ℕ (%%ₓer) (%%ₓel)),
-              quote.1 (digits_succ (%%ₓeb) (%%ₓen) (%%ₓem) (%%ₓer) (%%ₓel) (%%ₓpe) (%%ₓpr) (%%ₓp)))
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Helper function for the `norm_digits` tactic. -/ unsafe
+  def
+    eval_aux
+    ( eb : expr ) ( b : ℕ ) : expr → ℕ → instance_cache → tactic ( instance_cache × expr × expr )
+    |
+      en , n , ic
+      =>
+      do
+        let m := n / b
+          let r := n % b
+          let ( ic , er ) ← ic . ofNat r
+          let ( ic , pr ) ← norm_num.prove_lt_nat ic er eb
+          if
+            m = 0
+            then
+            do
+              let ( _ , pn0 ) ← norm_num.prove_pos ic en
+                return ( ic , q( ( [ $ ( en ) ] : List Nat ) ) , q( digits_one $ ( eb ) $ ( en ) $ ( pn0 ) $ ( pr ) ) )
+            else
+            do
+              let em ← expr.of_nat q( ℕ ) m
+                let ( _ , pe ) ← norm_num.derive q( ( $ ( er ) + $ ( eb ) * $ ( em ) : ℕ ) )
+                let ( ic , el , p ) ← eval_aux em m ic
+                return
+                  (
+                    ic
+                      ,
+                      q( @ List.cons ℕ $ ( er ) $ ( el ) )
+                        ,
+                        q( digits_succ $ ( eb ) $ ( en ) $ ( em ) $ ( er ) $ ( el ) $ ( pe ) $ ( pr ) $ ( p ) )
+                    )
 #align nat.norm_digits.eval_aux nat.norm_digits.eval_aux
 
 /-- A tactic for normalizing expressions of the form `nat.digits a b = l` where
@@ -782,25 +797,25 @@ example : nat.digits 10 123 = [3,2,1] := by norm_num
 -/
 @[norm_num]
 unsafe def eval : expr → tactic (expr × expr)
-  | quote.1 (Nat.digits (%%ₓeb) (%%ₓen)) => do
+  | q(Nat.digits $(eb) $(en)) => do
     let b ← expr.to_nat eb
     let n ← expr.to_nat en
-    if n = 0 then return (quote.1 ([] : List ℕ), quote.1 (Nat.digits_zero (%%ₓeb)))
+    if n = 0 then return (q(([] : List ℕ)), q(Nat.digits_zero $(eb)))
       else
         if b = 0 then do
-          let ic ← mk_instance_cache (quote.1 ℕ)
+          let ic ← mk_instance_cache q(ℕ)
           let (_, pn0) ← norm_num.prove_pos ic en
-          return (quote.1 ([%%ₓen] : List ℕ), quote.1 (@Nat.digits_zero_succ' (%%ₓen) (%%ₓpn0)))
+          return (q(([$(en)] : List ℕ)), q(@Nat.digits_zero_succ' $(en) $(pn0)))
         else
           if b = 1 then do
-            let ic ← mk_instance_cache (quote.1 ℕ)
+            let ic ← mk_instance_cache q(ℕ)
             let (_, pn0) ← norm_num.prove_pos ic en
             let s ← simp_lemmas.add_simp simp_lemmas.mk `list.repeat
-            let (rhs, p2, _) ← simplify s [] (quote.1 (List.repeat 1 (%%ₓen)))
-            let p ← mk_eq_trans (quote.1 (Nat.digits_one (%%ₓen))) p2
+            let (rhs, p2, _) ← simplify s [] q(List.repeat 1 $(en))
+            let p ← mk_eq_trans q(Nat.digits_one $(en)) p2
             return (rhs, p)
           else do
-            let ic ← mk_instance_cache (quote.1 ℕ)
+            let ic ← mk_instance_cache q(ℕ)
             let (_, l, p) ← eval_aux eb b en n ic
             let p ← mk_app `` And.left [p]
             return (l, p)

@@ -38,7 +38,7 @@ theorem powerset_aux_eq_map_coe {l : List α} : powersetAux l = (sublists l).map
 
 @[simp]
 theorem mem_powerset_aux {l : List α} {s} : s ∈ powersetAux l ↔ s ≤ ↑l :=
-  Quotient.induction_on s <| by simp [powerset_aux_eq_map_coe, subperm, and_comm]
+  Quotient.induction_on s $ by simp [powerset_aux_eq_map_coe, subperm, and_comm]
 #align multiset.mem_powerset_aux Multiset.mem_powerset_aux
 
 /-- Helper function for the powerset of a multiset. Given a list `l`, returns a list
@@ -78,7 +78,7 @@ theorem powerset_aux'_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : powersetAux
 #align multiset.powerset_aux'_perm Multiset.powerset_aux'_perm
 
 theorem powerset_aux_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : powersetAux l₁ ~ powersetAux l₂ :=
-  powerset_aux_perm_powerset_aux'.trans <| (powerset_aux'_perm p).trans powerset_aux_perm_powerset_aux'.symm
+  powerset_aux_perm_powerset_aux'.trans $ (powerset_aux'_perm p).trans powerset_aux_perm_powerset_aux'.symm
 #align multiset.powerset_aux_perm Multiset.powerset_aux_perm
 
 /-- The power set of a multiset. -/
@@ -102,16 +102,16 @@ theorem powerset_zero : @powerset α 0 = {0} :=
 
 @[simp]
 theorem powerset_cons (a : α) (s) : powerset (a ::ₘ s) = powerset s + map (cons a) (powerset s) :=
-  (Quotient.induction_on s) fun l => by simp <;> rfl
+  Quotient.induction_on s $ fun l => by simp <;> rfl
 #align multiset.powerset_cons Multiset.powerset_cons
 
 @[simp]
 theorem mem_powerset {s t : Multiset α} : s ∈ powerset t ↔ s ≤ t :=
-  Quotient.induction_on₂ s t <| by simp [subperm, and_comm]
+  Quotient.induction_on₂ s t $ by simp [subperm, and_comm]
 #align multiset.mem_powerset Multiset.mem_powerset
 
 theorem map_single_le_powerset (s : Multiset α) : s.map singleton ≤ powerset s :=
-  (Quotient.induction_on s) fun l => by
+  Quotient.induction_on s $ fun l => by
     simp only [powerset_coe, quot_mk_to_coe, coe_le, coe_map]
     show l.map (coe ∘ List.ret) <+~ (sublists l).map coe
     rw [← List.map_map]
@@ -120,7 +120,7 @@ theorem map_single_le_powerset (s : Multiset α) : s.map singleton ≤ powerset 
 
 @[simp]
 theorem card_powerset (s : Multiset α) : card (powerset s) = 2 ^ card s :=
-  Quotient.induction_on s <| by simp
+  Quotient.induction_on s $ by simp
 #align multiset.card_powerset Multiset.card_powerset
 
 theorem revzip_powerset_aux {l : List α} ⦃x⦄ (h : x ∈ revzip (powersetAux l)) : x.1 + x.2 = ↑l := by
@@ -179,7 +179,7 @@ theorem powerset_len_aux_eq_map_coe {n} {l : List α} : powersetLenAux n l = (su
 
 @[simp]
 theorem mem_powerset_len_aux {n} {l : List α} {s} : s ∈ powersetLenAux n l ↔ s ≤ ↑l ∧ card s = n :=
-  Quotient.induction_on s <| by
+  Quotient.induction_on s $ by
     simp [powerset_len_aux_eq_map_coe, subperm] <;>
       exact fun l₁ =>
         ⟨fun ⟨l₂, ⟨s, e⟩, p⟩ => ⟨⟨_, p, s⟩, p.symm.length_eq.trans e⟩, fun ⟨⟨l₂, p, s⟩, e⟩ =>
@@ -241,7 +241,7 @@ theorem powerset_len_coe (n) (l : List α) : @powersetLen α n l = ((sublistsLen
 
 @[simp]
 theorem powerset_len_zero_left (s : Multiset α) : powersetLen 0 s = {0} :=
-  (Quotient.induction_on s) fun l => by simp [powerset_len_coe'] <;> rfl
+  Quotient.induction_on s $ fun l => by simp [powerset_len_coe'] <;> rfl
 #align multiset.powerset_len_zero_left Multiset.powerset_len_zero_left
 
 theorem powerset_len_zero_right (n : ℕ) : @powersetLen α (n + 1) 0 = 0 :=
@@ -251,26 +251,26 @@ theorem powerset_len_zero_right (n : ℕ) : @powersetLen α (n + 1) 0 = 0 :=
 @[simp]
 theorem powerset_len_cons (n : ℕ) (a : α) (s) :
     powersetLen (n + 1) (a ::ₘ s) = powersetLen (n + 1) s + map (cons a) (powersetLen n s) :=
-  (Quotient.induction_on s) fun l => by simp [powerset_len_coe'] <;> rfl
+  Quotient.induction_on s $ fun l => by simp [powerset_len_coe'] <;> rfl
 #align multiset.powerset_len_cons Multiset.powerset_len_cons
 
 @[simp]
 theorem mem_powerset_len {n : ℕ} {s t : Multiset α} : s ∈ powersetLen n t ↔ s ≤ t ∧ card s = n :=
-  (Quotient.induction_on t) fun l => by simp [powerset_len_coe']
+  Quotient.induction_on t $ fun l => by simp [powerset_len_coe']
 #align multiset.mem_powerset_len Multiset.mem_powerset_len
 
 @[simp]
 theorem card_powerset_len (n : ℕ) (s : Multiset α) : card (powersetLen n s) = Nat.choose (card s) n :=
-  Quotient.induction_on s <| by simp [powerset_len_coe]
+  Quotient.induction_on s $ by simp [powerset_len_coe]
 #align multiset.card_powerset_len Multiset.card_powerset_len
 
 theorem powerset_len_le_powerset (n : ℕ) (s : Multiset α) : powersetLen n s ≤ powerset s :=
-  (Quotient.induction_on s) fun l => by
+  Quotient.induction_on s $ fun l => by
     simp [powerset_len_coe] <;> exact ((sublists_len_sublist_sublists' _ _).map _).Subperm
 #align multiset.powerset_len_le_powerset Multiset.powerset_len_le_powerset
 
 theorem powerset_len_mono (n : ℕ) {s t : Multiset α} (h : s ≤ t) : powersetLen n s ≤ powersetLen n t :=
-  (le_induction_on h) fun l₁ l₂ h => by
+  le_induction_on h $ fun l₁ l₂ h => by
     simp [powerset_len_coe] <;> exact ((sublists_len_sublist_of_sublist _ h).map _).Subperm
 #align multiset.powerset_len_mono Multiset.powerset_len_mono
 

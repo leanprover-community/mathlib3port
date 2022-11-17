@@ -71,7 +71,7 @@ theorem comp_right {a b c : C} (g : b ⟶ c) :
 
 /-- Hom-sets of the quotient category. -/
 def Hom (s t : Quotient r) :=
-  Quot <| @CompClosure C _ r s.as t.as
+  Quot $ @CompClosure C _ r s.as t.as
 #align category_theory.quotient.hom CategoryTheory.Quotient.Hom
 
 instance (a : Quotient r) : Inhabited (Hom r a a) :=
@@ -80,8 +80,8 @@ instance (a : Quotient r) : Inhabited (Hom r a a) :=
 /-- Composition in the quotient category. -/
 def comp ⦃a b c : Quotient r⦄ : Hom r a b → Hom r b c → Hom r a c := fun hf hg =>
   Quot.liftOn hf
-    (fun f => Quot.liftOn hg (fun g => Quot.mk _ (f ≫ g)) fun g₁ g₂ h => Quot.sound <| comp_left r f g₁ g₂ h)
-    fun f₁ f₂ h => (Quot.induction_on hg) fun g => Quot.sound <| comp_right r g f₁ f₂ h
+    (fun f => Quot.liftOn hg (fun g => Quot.mk _ (f ≫ g)) fun g₁ g₂ h => Quot.sound $ comp_left r f g₁ g₂ h)
+    fun f₁ f₂ h => Quot.induction_on hg $ fun g => Quot.sound $ comp_right r g f₁ f₂ h
 #align category_theory.quotient.comp CategoryTheory.Quotient.comp
 
 @[simp]

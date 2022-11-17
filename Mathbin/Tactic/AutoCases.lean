@@ -28,36 +28,33 @@ unsafe def tac_induction : auto_cases_tac :=
 
 /-- Find an `auto_cases_tac` which matches the given `type : expr`. -/
 unsafe def find_tac : expr → Option auto_cases_tac
-  | quote.1 Empty => tac_cases
-  | quote.1 PEmpty => tac_cases
-  | quote.1 False => tac_cases
-  | quote.1 Unit => tac_cases
-  | quote.1 PUnit => tac_cases
-  | quote.1 (ULift _) => tac_cases
-  | quote.1 (PLift _) => tac_cases
-  | quote.1 (Prod _ _) => tac_cases
-  | quote.1 (And _ _) => tac_cases
-  | quote.1 (Sigma _) => tac_cases
-  | quote.1 (PSigma _) => tac_cases
-  | quote.1 (Subtype _) => tac_cases
-  | quote.1 (Exists _) => tac_cases
-  | quote.1 (Fin 0) => tac_cases
-  | quote.1 (Sum _ _) => tac_cases
+  | q(Empty) => tac_cases
+  | q(PEmpty) => tac_cases
+  | q(False) => tac_cases
+  | q(Unit) => tac_cases
+  | q(PUnit) => tac_cases
+  | q(ULift _) => tac_cases
+  | q(PLift _) => tac_cases
+  | q(Prod _ _) => tac_cases
+  | q(And _ _) => tac_cases
+  | q(Sigma _) => tac_cases
+  | q(PSigma _) => tac_cases
+  | q(Subtype _) => tac_cases
+  | q(Exists _) => tac_cases
+  | q(Fin 0) => tac_cases
+  | q(Sum _ _) => tac_cases
   |-- This is perhaps dangerous!
-      quote.1
-      (Or _ _) =>
+    q(Or _ _) =>
     tac_cases
   |-- This is perhaps dangerous!
-      quote.1
-      (Iff _ _) =>
+    q(Iff _ _) =>
     tac_cases
   |-- This is perhaps dangerous!
-      /- `cases` can be dangerous on `eq` and `quot`, producing mysterious errors during type checking.
-         instead we attempt `induction`. -/
-      quote.1
-      (Eq _ _) =>
+    /- `cases` can be dangerous on `eq` and `quot`, producing mysterious errors during type checking.
+       instead we attempt `induction`. -/
+    q(Eq _ _) =>
     tac_induction
-  | quote.1 (Quot _) => tac_induction
+  | q(Quot _) => tac_induction
   | _ => none
 #align tactic.auto_cases.find_tac tactic.auto_cases.find_tac
 
@@ -79,8 +76,8 @@ unsafe def auto_cases_at (hyp : expr) : tactic String := do
 @[hint_tactic]
 unsafe def auto_cases : tactic String := do
   let l ← local_context
-  let results ← successes <| l.reverse.map auto_cases_at
-  when (results results.empty) <| fail "`auto_cases` did not find any hypotheses to apply `cases` or `induction` to"
+  let results ← successes $ l.reverse.map auto_cases_at
+  when (results results.empty) $ fail "`auto_cases` did not find any hypotheses to apply `cases` or `induction` to"
   return (String.intercalate ", " results)
 #align tactic.auto_cases tactic.auto_cases
 

@@ -154,7 +154,7 @@ theorem quadratic_char_zero : quadraticChar F 0 = 0 := by simp only [quadratic_c
 
 /-- For nonzero `a : F`, `quadratic_char F a = 1 ↔ is_square a`. -/
 theorem quadratic_char_one_iff_is_square {a : F} (ha : a ≠ 0) : quadraticChar F a = 1 ↔ IsSquare a := by
-  simp only [quadratic_char_apply, quadraticCharFun, ha, (by decide : (-1 : ℤ) ≠ 1), if_false, ite_eq_left_iff,
+  simp only [quadratic_char_apply, quadraticCharFun, ha, (dec_trivial : (-1 : ℤ) ≠ 1), if_false, ite_eq_left_iff,
     imp_false, not_not]
 #align quadratic_char_one_iff_is_square quadratic_char_one_iff_is_square
 
@@ -171,7 +171,7 @@ theorem quadratic_char_sq_one {a : F} (ha : a ≠ 0) : quadraticChar F a ^ 2 = 1
 
 /-- The quadratic character is `1` or `-1` on nonzero arguments. -/
 theorem quadratic_char_dichotomy {a : F} (ha : a ≠ 0) : quadraticChar F a = 1 ∨ quadraticChar F a = -1 :=
-  sq_eq_one_iff.1 <| quadratic_char_sq_one ha
+  sq_eq_one_iff.1 $ quadratic_char_sq_one ha
 #align quadratic_char_dichotomy quadratic_char_dichotomy
 
 /-- The quadratic character is `1` or `-1` on nonzero arguments. -/
@@ -193,7 +193,7 @@ theorem quadratic_char_neg_one_iff_not_is_square {a : F} : quadraticChar F a = -
 
 /-- If `F` has odd characteristic, then `quadratic_char F` takes the value `-1`. -/
 theorem quadratic_char_exists_neg_one (hF : ringChar F ≠ 2) : ∃ a, quadraticChar F a = -1 :=
-  (FiniteField.exists_nonsquare hF).imp fun b h₁ => quadratic_char_neg_one_iff_not_is_square.mpr h₁
+  (FiniteField.exists_nonsquare hF).imp $ fun b h₁ => quadratic_char_neg_one_iff_not_is_square.mpr h₁
 #align quadratic_char_exists_neg_one quadratic_char_exists_neg_one
 
 /-- If `ring_char F = 2`, then `quadratic_char F` takes the value `1` on nonzero elements. -/
@@ -260,7 +260,7 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
     ↑{ x : F | x ^ 2 = a }.toFinset.card = quadraticChar F a + 1 := by
   -- we consider the cases `a = 0`, `a` is a nonzero square and `a` is a nonsquare in turn
   by_cases h₀:a = 0
-  · simp only [h₀, pow_eq_zero_iff, Nat.succ_pos', Int.coe_nat_succ, Int.coe_nat_zero, MulChar.map_zero,
+  · simp only [h₀, pow_eq_zero_iff, Nat.succ_pos', Int.ofNat_succ, Int.ofNat_zero, MulChar.map_zero,
       Set.set_of_eq_eq_singleton, Set.to_finset_card, Set.card_singleton]
     
   · set s := { x : F | x ^ 2 = a }.toFinset with hs
@@ -331,15 +331,18 @@ theorem quadratic_char_neg_one [DecidableEq F] (hF : ringChar F ≠ 2) : quadrat
 #align quadratic_char_neg_one quadratic_char_neg_one
 
 /-- `-1` is a square in `F` iff `#F` is not congruent to `3` mod `4`. -/
-theorem FiniteField.is_square_neg_one_iff : IsSquare (-1 : F) ↔ Fintype.card F % 4 ≠ 3 := by
-  classical-- suggested by the linter (instead of `[decidable_eq F]`)
-    by_cases hF:ringChar F = 2
-    · have h₁ := FiniteField.odd_card_of_char_ne_two hF
-      rw [← quadratic_char_one_iff_is_square (neg_ne_zero.mpr (@one_ne_zero F _ _)), quadratic_char_neg_one hF,
-        χ₄_nat_eq_if_mod_four, h₁]
-      simp only [Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def, (by decide : (-1 : ℤ) ≠ 1), imp_false, not_not]
-      exact ⟨fun h => ne_of_eq_of_ne h (by decide : 1 ≠ 3), Or.resolve_right (nat.odd_mod_four_iff.mp h₁)⟩
-      
+theorem FiniteField.is_square_neg_one_iff : IsSquare (-1 : F) ↔ Fintype.card F % 4 ≠ 3 := by classical
+  -- suggested by the linter (instead of `[decidable_eq F]`)
+  by_cases hF:ringChar F = 2
+  · simp only [FiniteField.is_square_of_char_two hF, Ne.def, true_iff_iff]
+    exact fun hf => one_ne_zero $ (Nat.odd_of_mod_four_eq_three hf).symm.trans $ FiniteField.even_card_of_char_two hF
+    
+  · have h₁ := FiniteField.odd_card_of_char_ne_two hF
+    rw [← quadratic_char_one_iff_is_square (neg_ne_zero.mpr (@one_ne_zero F _ _)), quadratic_char_neg_one hF,
+      χ₄_nat_eq_if_mod_four, h₁]
+    simp only [Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def, (dec_trivial : (-1 : ℤ) ≠ 1), imp_false, not_not]
+    exact ⟨fun h => ne_of_eq_of_ne h (dec_trivial : 1 ≠ 3), Or.resolve_right (nat.odd_mod_four_iff.mp h₁)⟩
+    
 #align finite_field.is_square_neg_one_iff FiniteField.is_square_neg_one_iff
 
 /-- The value of the quadratic character at `2` -/
@@ -350,14 +353,22 @@ theorem quadratic_char_two [DecidableEq F] (hF : ringChar F ≠ 2) : quadraticCh
 
 /-- `2` is a square in `F` iff `#F` is not congruent to `3` or `5` mod `8`. -/
 theorem FiniteField.is_square_two_iff : IsSquare (2 : F) ↔ Fintype.card F % 8 ≠ 3 ∧ Fintype.card F % 8 ≠ 5 := by
-  classical by_cases hF:ringChar F = 2
-    rotate_left
-    all_goals
-    rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h
-    have h₁ := Nat.mod_lt (Fintype.card F) (by decide : 0 < 8)
-    revert h₁ h
-    generalize Fintype.card F % 8 = n
-    decide!
+  classical
+  by_cases hF:ringChar F = 2
+  focus
+  have h := FiniteField.even_card_of_char_two hF
+  simp only [FiniteField.is_square_of_char_two hF, true_iff_iff]
+  rotate_left
+  focus
+  have h := FiniteField.odd_card_of_char_ne_two hF
+  rw [← quadratic_char_one_iff_is_square (Ring.two_ne_zero hF), quadratic_char_two hF, χ₈_nat_eq_if_mod_eight]
+  simp only [h, Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def, (dec_trivial : (-1 : ℤ) ≠ 1), imp_false, not_not]
+  all_goals
+  rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h
+  have h₁ := Nat.mod_lt (Fintype.card F) (dec_trivial : 0 < 8)
+  revert h₁ h
+  generalize Fintype.card F % 8 = n
+  decide!
 #align finite_field.is_square_two_iff FiniteField.is_square_two_iff
 
 /-- The value of the quadratic character at `-2` -/
@@ -368,14 +379,23 @@ theorem quadratic_char_neg_two [DecidableEq F] (hF : ringChar F ≠ 2) : quadrat
 
 /-- `-2` is a square in `F` iff `#F` is not congruent to `5` or `7` mod `8`. -/
 theorem FiniteField.is_square_neg_two_iff : IsSquare (-2 : F) ↔ Fintype.card F % 8 ≠ 5 ∧ Fintype.card F % 8 ≠ 7 := by
-  classical by_cases hF:ringChar F = 2
-    rotate_left
-    all_goals
-    rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h
-    have h₁ := Nat.mod_lt (Fintype.card F) (by decide : 0 < 8)
-    revert h₁ h
-    generalize Fintype.card F % 8 = n
-    decide!
+  classical
+  by_cases hF:ringChar F = 2
+  focus
+  have h := FiniteField.even_card_of_char_two hF
+  simp only [FiniteField.is_square_of_char_two hF, true_iff_iff]
+  rotate_left
+  focus
+  have h := FiniteField.odd_card_of_char_ne_two hF
+  rw [← quadratic_char_one_iff_is_square (neg_ne_zero.mpr (Ring.two_ne_zero hF)), quadratic_char_neg_two hF,
+    χ₈'_nat_eq_if_mod_eight]
+  simp only [h, Nat.one_ne_zero, if_false, ite_eq_left_iff, Ne.def, (dec_trivial : (-1 : ℤ) ≠ 1), imp_false, not_not]
+  all_goals
+  rw [← Nat.mod_mod_of_dvd _ (by norm_num : 2 ∣ 8)] at h
+  have h₁ := Nat.mod_lt (Fintype.card F) (dec_trivial : 0 < 8)
+  revert h₁ h
+  generalize Fintype.card F % 8 = n
+  decide!
 #align finite_field.is_square_neg_two_iff FiniteField.is_square_neg_two_iff
 
 /-- The relation between the values of the quadratic character of one field `F` at the
@@ -412,11 +432,27 @@ theorem quadratic_char_odd_prime [DecidableEq F] (hF : ringChar F ≠ 2) {p : �
 /-- An odd prime `p` is a square in `F` iff the quadratic character of `zmod p` does not
 take the value `-1` on `χ₄(#F) * #F`. -/
 theorem FiniteField.is_square_odd_prime_iff (hF : ringChar F ≠ 2) {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) :
-    IsSquare (p : F) ↔ quadraticChar (Zmod p) (χ₄ (Fintype.card F) * Fintype.card F) ≠ -1 := by
-  classical by_cases hFp:ringChar F = p
-    · rw [← Iff.not_left (@quadratic_char_neg_one_iff_not_is_square F _ _ _ _), quadratic_char_odd_prime hF hp]
-      exact hFp
-      
+    IsSquare (p : F) ↔ quadraticChar (Zmod p) (χ₄ (Fintype.card F) * Fintype.card F) ≠ -1 := by classical
+  by_cases hFp:ringChar F = p
+  · rw [show (p : F) = 0 by
+        rw [← hFp]
+        exact ringChar.Nat.cast_ring_char]
+    simp only [is_square_zero, Ne.def, true_iff_iff, map_mul]
+    obtain ⟨n, _, hc⟩ := FiniteField.card F (ringChar F)
+    have hchar : ringChar F = ringChar (Zmod p) := by
+      rw [hFp]
+      exact (ring_char_zmod_n p).symm
+    conv =>
+    congr
+    lhs
+    congr
+    skip
+    rw [hc, Nat.cast_pow, map_pow, hchar, map_ring_char]
+    simp only [zero_pow n.pos, mul_zero, zero_eq_neg, one_ne_zero, not_false_iff]
+    
+  · rw [← Iff.not_left (@quadratic_char_neg_one_iff_not_is_square F _ _ _ _), quadratic_char_odd_prime hF hp]
+    exact hFp
+    
 #align finite_field.is_square_odd_prime_iff FiniteField.is_square_odd_prime_iff
 
 end SpecialValues

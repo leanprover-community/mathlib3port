@@ -77,7 +77,7 @@ theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) 
 #align rat.uniform_space_eq Rat.uniform_space_eq
 
 /-- Cauchy reals packaged as a completion of ℚ using the absolute value route. -/
-def rationalCauSeqPkg : @AbstractCompletion ℚ <| IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) where
+def rationalCauSeqPkg : @AbstractCompletion ℚ $ IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) where
   Space := ℝ
   coe := (coe : ℚ → ℝ)
   uniformStruct := by infer_instance

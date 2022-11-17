@@ -128,7 +128,7 @@ theorem int_valuation_lt_one_iff_dvd (r : R) : v.intValuationDef r < 1 ↔ v.asI
   split_ifs with hr
   · simpa [hr] using WithZero.zero_lt_coe _
     
-  · rw [← WithZero.coe_one, ← of_add_zero, WithZero.coe_lt_coe, of_add_lt, neg_lt_zero, ← Int.coe_nat_zero,
+  · rw [← WithZero.coe_one, ← of_add_zero, WithZero.coe_lt_coe, of_add_lt, neg_lt_zero, ← Int.ofNat_zero,
       Int.coe_nat_lt, zero_lt_iff]
     have h : (Ideal.span {r} : Ideal R) ≠ 0 := by
       rw [Ne.def, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
@@ -163,7 +163,7 @@ theorem IntValuation.map_zero' : v.intValuationDef 0 = 0 :=
 theorem IntValuation.map_one' : v.intValuationDef 1 = 1 := by
   rw [v.int_valuation_def_if_neg (zero_ne_one.symm : (1 : R) ≠ 0), Ideal.span_singleton_one, ← Ideal.one_eq_top,
     Associates.mk_one, Associates.factors_one, Associates.count_zero (by apply v.associates_irreducible),
-    Int.coe_nat_zero, neg_zero, of_add_zero, WithZero.coe_one]
+    Int.ofNat_zero, neg_zero, of_add_zero, WithZero.coe_one]
 #align
   is_dedekind_domain.height_one_spectrum.int_valuation.map_one' IsDedekindDomain.HeightOneSpectrum.IntValuation.map_one'
 
@@ -260,7 +260,7 @@ theorem int_valuation_exists_uniformizer : ∃ π : R, v.intValuationDef π = Mu
   use π
   rw [int_valuation_def, if_neg (associates.mk_ne_zero'.mp hπ), WithZero.coe_inj]
   apply congr_arg
-  rw [neg_inj, ← Int.coe_nat_one, Int.coe_nat_inj']
+  rw [neg_inj, ← Int.ofNat_one, Int.coe_nat_inj']
   rw [← Ideal.dvd_span_singleton, ← Associates.mk_le_mk_iff_dvd_iff] at mem nmem
   rw [← pow_one (Associates.mk v.as_ideal), Associates.prime_pow_dvd_iff_le hπ hv] at mem
   rw [Associates.mk_pow, Associates.prime_pow_dvd_iff_le hπ hv, not_le] at nmem
@@ -274,7 +274,7 @@ theorem int_valuation_exists_uniformizer : ∃ π : R, v.intValuationDef π = Mu
 /-- The `v`-adic valuation of `x ∈ K` is the valuation of `r` divided by the valuation of `s`,
 where `r` and `s` are chosen so that `x = r/s`. -/
 def valuation (v : HeightOneSpectrum R) : Valuation K ℤₘ₀ :=
-  v.intValuation.extendToLocalization (fun r hr => Set.mem_compl <| v.int_valuation_ne_zero' ⟨r, hr⟩) K
+  v.intValuation.extendToLocalization (fun r hr => Set.mem_compl $ v.int_valuation_ne_zero' ⟨r, hr⟩) K
 #align is_dedekind_domain.height_one_spectrum.valuation IsDedekindDomain.HeightOneSpectrum.valuation
 
 theorem valuation_def (x : K) :

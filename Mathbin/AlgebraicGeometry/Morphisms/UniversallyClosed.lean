@@ -77,7 +77,7 @@ instance universally_closed_snd {X Y Z : SchemeCat} (f : X ⟶ Z) (g : Y ⟶ Z) 
 
 theorem morphism_restrict_base {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carrier) :
     ⇑(f ∣_ U).1.base = U.1.restrictPreimage f.1 :=
-  funext fun x => Subtype.ext <| morphism_restrict_base_coe f U x
+  funext fun x => Subtype.ext $ morphism_restrict_base_coe f U x
 #align algebraic_geometry.morphism_restrict_base AlgebraicGeometry.morphism_restrict_base
 
 theorem universallyClosedIsLocalAtTarget : PropertyIsLocalAtTarget @UniversallyClosed := by

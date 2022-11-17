@@ -46,10 +46,15 @@ instance [LT ι] [∀ i, LT (α i)] : LT (Lex (Π₀ i, α i)) :=
 theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (α i)] (r) [IsStrictOrder ι r] {x y : Π₀ i, α i} (hlt : x < y) :
     ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i := by
   obtain ⟨hle, j, hlt⟩ := Pi.lt_def.1 hlt
-  classical obtain ⟨i, hi, hl⟩ :=
-      (x.ne_locus y).finite_to_set.WellFoundedOn.has_min { i | x i < y i } ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
-    · assumption
-      
+  classical
+  obtain ⟨i, hi, hl⟩ :=
+    (x.ne_locus y).finite_to_set.WellFoundedOn.has_min { i | x i < y i } ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
+  pick_goal 3
+  · assumption
+    
+  exact
+    ⟨i, fun k hk =>
+      ⟨hle k, not_not.1 $ fun h => hl ⟨k, mem_ne_locus.2 (ne_of_not_le h).symm⟩ ((hle k).lt_of_not_le h) hk⟩, hi⟩
 #align dfinsupp.lex_lt_of_lt_of_preorder Dfinsupp.lex_lt_of_lt_of_preorder
 
 theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y : Π₀ i, α i} (hlt : x < y) :
@@ -60,8 +65,8 @@ theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y 
 
 instance Lex.is_strict_order [LinearOrder ι] [∀ i, PartialOrder (α i)] : IsStrictOrder (Lex (Π₀ i, α i)) (· < ·) :=
   let i : IsStrictOrder (Lex (∀ i, α i)) (· < ·) := Pi.Lex.is_strict_order
-  { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_is_irrefl a,
-    trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_is_trans a b c }
+  { irrefl := toLex.Surjective.forall.2 $ fun a => @irrefl _ _ i.to_is_irrefl a,
+    trans := toLex.Surjective.forall₃.2 $ fun a b c => @trans _ _ i.to_is_trans a b c }
 #align dfinsupp.lex.is_strict_order Dfinsupp.Lex.is_strict_order
 
 variable [LinearOrder ι]
@@ -82,20 +87,20 @@ private def lt_trichotomy_rec {P : Lex (Π₀ i, α i) → Lex (Π₀ i, α i) �
     (h_lt : ∀ {f g}, toLex f < toLex g → P (toLex f) (toLex g))
     (h_eq : ∀ {f g}, toLex f = toLex g → P (toLex f) (toLex g))
     (h_gt : ∀ {f g}, toLex g < toLex f → P (toLex f) (toLex g)) : ∀ f g, P f g :=
-  Lex.rec fun f =>
-    Lex.rec fun g =>
+  Lex.rec $ fun f =>
+    Lex.rec $ fun g =>
       match (motive := ∀ y, (f.neLocus g).min = y → _) _, rfl with
-      | ⊤, h => h_eq (ne_locus_eq_empty.mp <| Finset.min_eq_top.mp h)
+      | ⊤, h => h_eq (ne_locus_eq_empty.mp $ Finset.min_eq_top.mp h)
       | (wit : ι), h =>
-        (mem_ne_locus.mp <| Finset.mem_of_min h).lt_or_lt.byCases
+        (mem_ne_locus.mp $ Finset.mem_of_min h).lt_or_lt.byCases
           (fun hwit => h_lt ⟨wit, fun j hj => not_mem_ne_locus.mp (Finset.not_mem_of_lt_min hj h), hwit⟩) fun hwit =>
-          h_gt ⟨wit, fun j hj => not_mem_ne_locus.mp (Finset.not_mem_of_lt_min hj <| by rwa [ne_locus_comm]), hwit⟩
+          h_gt ⟨wit, fun j hj => not_mem_ne_locus.mp (Finset.not_mem_of_lt_min hj $ by rwa [ne_locus_comm]), hwit⟩
 #align dfinsupp.lt_trichotomy_rec dfinsupp.lt_trichotomy_rec
 
 /- ./././Mathport/Syntax/Translate/Command.lean:294:38: unsupported irreducible non-definition -/
 irreducible_def Lex.decidableLe : @DecidableRel (Lex (Π₀ i, α i)) (· ≤ ·) :=
-  ltTrichotomyRec (fun f g h => is_true <| Or.inr h) (fun f g h => is_true <| Or.inl <| congr_arg _ h) fun f g h =>
-    is_false fun h' => (lt_irrefl _ (h.trans_le h')).elim
+  ltTrichotomyRec (fun f g h => is_true $ Or.inr h) (fun f g h => is_true $ Or.inl $ congr_arg _ h) fun f g h =>
+    is_false $ fun h' => (lt_irrefl _ (h.trans_le h')).elim
 #align dfinsupp.lex.decidable_le Dfinsupp.Lex.decidableLe
 
 /- ./././Mathport/Syntax/Translate/Command.lean:294:38: unsupported irreducible non-definition -/
@@ -141,75 +146,13 @@ variable [∀ i, PartialOrder (α i)]
          [`a `b `h]
          []
          "=>"
-         («term_<|_»
+         (Init.Core.«term_$_»
           `le_of_lt_or_eq
-          "<|"
-          (Term.app
+          " $ "
+          (Init.Core.«term_$_»
            (Term.proj `or_iff_not_imp_right "." (fieldIdx "2"))
-           [(Term.fun
-             "fun"
-             (Term.basicFun
-              [`hne]
-              []
-              "=>"
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(Tactic.«tactic_<;>_»
-                   (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-                   "<;>"
-                   (Tactic.exact
-                    "exact"
-                    (Term.anonymousCtor
-                     "⟨"
-                     [(Term.app
-                       `Finset.min'
-                       [(Term.hole "_") (Term.app (Term.proj `nonempty_ne_locus_iff "." (fieldIdx "2")) [`hne])])
-                      ","
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`j `hj]
-                        []
-                        "=>"
-                        (Term.app
-                         (Term.proj `not_mem_ne_locus "." (fieldIdx "1"))
-                         [(Term.fun
-                           "fun"
-                           (Term.basicFun
-                            [`h]
-                            []
-                            "=>"
-                            (Term.app
-                             (Term.proj (Term.app `Finset.min'_le [(Term.hole "_") (Term.hole "_") `h]) "." `not_lt)
-                             [`hj])))])))
-                      ","
-                      (Term.app
-                       (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-                       [(«term_<|_»
-                         (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-                         "<|"
-                         (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
-                     "⟩")))])))))]))))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [`a `b `h]
-        []
-        "=>"
-        («term_<|_»
-         `le_of_lt_or_eq
-         "<|"
-         (Term.app
-          (Term.proj `or_iff_not_imp_right "." (fieldIdx "2"))
-          [(Term.fun
+           " $ "
+           (Term.fun
             "fun"
             (Term.basicFun
              [`hne]
@@ -250,67 +193,83 @@ variable [∀ i, PartialOrder (α i)]
                      ","
                      (Term.app
                       (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-                      [(«term_<|_»
+                      [(Init.Core.«term_$_»
                         (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-                        "<|"
+                        " $ "
                         (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
-                    "⟩")))])))))]))))
+                    "⟩")))])))))))))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_»
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`a `b `h]
+        []
+        "=>"
+        (Init.Core.«term_$_»
+         `le_of_lt_or_eq
+         " $ "
+         (Init.Core.«term_$_»
+          (Term.proj `or_iff_not_imp_right "." (fieldIdx "2"))
+          " $ "
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`hne]
+            []
+            "=>"
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.«tactic_<;>_»
+                 (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+                 "<;>"
+                 (Tactic.exact
+                  "exact"
+                  (Term.anonymousCtor
+                   "⟨"
+                   [(Term.app
+                     `Finset.min'
+                     [(Term.hole "_") (Term.app (Term.proj `nonempty_ne_locus_iff "." (fieldIdx "2")) [`hne])])
+                    ","
+                    (Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`j `hj]
+                      []
+                      "=>"
+                      (Term.app
+                       (Term.proj `not_mem_ne_locus "." (fieldIdx "1"))
+                       [(Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`h]
+                          []
+                          "=>"
+                          (Term.app
+                           (Term.proj (Term.app `Finset.min'_le [(Term.hole "_") (Term.hole "_") `h]) "." `not_lt)
+                           [`hj])))])))
+                    ","
+                    (Term.app
+                     (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
+                     [(Init.Core.«term_$_»
+                       (Term.proj `mem_ne_locus "." (fieldIdx "1"))
+                       " $ "
+                       (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
+                   "⟩")))])))))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Init.Core.«term_$_»
        `le_of_lt_or_eq
-       "<|"
-       (Term.app
+       " $ "
+       (Init.Core.«term_$_»
         (Term.proj `or_iff_not_imp_right "." (fieldIdx "2"))
-        [(Term.fun
-          "fun"
-          (Term.basicFun
-           [`hne]
-           []
-           "=>"
-           (Term.byTactic
-            "by"
-            (Tactic.tacticSeq
-             (Tactic.tacticSeq1Indented
-              [(Tactic.«tactic_<;>_»
-                (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-                "<;>"
-                (Tactic.exact
-                 "exact"
-                 (Term.anonymousCtor
-                  "⟨"
-                  [(Term.app
-                    `Finset.min'
-                    [(Term.hole "_") (Term.app (Term.proj `nonempty_ne_locus_iff "." (fieldIdx "2")) [`hne])])
-                   ","
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`j `hj]
-                     []
-                     "=>"
-                     (Term.app
-                      (Term.proj `not_mem_ne_locus "." (fieldIdx "1"))
-                      [(Term.fun
-                        "fun"
-                        (Term.basicFun
-                         [`h]
-                         []
-                         "=>"
-                         (Term.app
-                          (Term.proj (Term.app `Finset.min'_le [(Term.hole "_") (Term.hole "_") `h]) "." `not_lt)
-                          [`hj])))])))
-                   ","
-                   (Term.app
-                    (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-                    [(«term_<|_»
-                      (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-                      "<|"
-                      (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
-                  "⟩")))])))))]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       (Term.proj `or_iff_not_imp_right "." (fieldIdx "2"))
-       [(Term.fun
+        " $ "
+        (Term.fun
          "fun"
          (Term.basicFun
           [`hne]
@@ -351,13 +310,61 @@ variable [∀ i, PartialOrder (α i)]
                   ","
                   (Term.app
                    (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-                   [(«term_<|_»
+                   [(Init.Core.«term_$_»
                      (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-                     "<|"
+                     " $ "
                      (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
-                 "⟩")))])))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+                 "⟩")))])))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Init.Core.«term_$_»
+       (Term.proj `or_iff_not_imp_right "." (fieldIdx "2"))
+       " $ "
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [`hne]
+         []
+         "=>"
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.«tactic_<;>_»
+              (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+              "<;>"
+              (Tactic.exact
+               "exact"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.app
+                  `Finset.min'
+                  [(Term.hole "_") (Term.app (Term.proj `nonempty_ne_locus_iff "." (fieldIdx "2")) [`hne])])
+                 ","
+                 (Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`j `hj]
+                   []
+                   "=>"
+                   (Term.app
+                    (Term.proj `not_mem_ne_locus "." (fieldIdx "1"))
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`h]
+                       []
+                       "=>"
+                       (Term.app
+                        (Term.proj (Term.app `Finset.min'_le [(Term.hole "_") (Term.hole "_") `h]) "." `not_lt)
+                        [`hj])))])))
+                 ","
+                 (Term.app
+                  (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
+                  [(Init.Core.«term_$_»
+                    (Term.proj `mem_ne_locus "." (fieldIdx "1"))
+                    " $ "
+                    (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
+                "⟩")))]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -400,9 +407,9 @@ variable [∀ i, PartialOrder (α i)]
                 ","
                 (Term.app
                  (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-                 [(«term_<|_»
+                 [(Init.Core.«term_$_»
                    (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-                   "<|"
+                   " $ "
                    (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
                "⟩")))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -441,9 +448,9 @@ variable [∀ i, PartialOrder (α i)]
               ","
               (Term.app
                (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-               [(«term_<|_»
+               [(Init.Core.«term_$_»
                  (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-                 "<|"
+                 " $ "
                  (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
              "⟩")))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -479,9 +486,9 @@ variable [∀ i, PartialOrder (α i)]
           ","
           (Term.app
            (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-           [(«term_<|_»
+           [(Init.Core.«term_$_»
              (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-             "<|"
+             " $ "
              (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
          "⟩")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -513,9 +520,9 @@ variable [∀ i, PartialOrder (α i)]
          ","
          (Term.app
           (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-          [(«term_<|_»
+          [(Init.Core.«term_$_»
             (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-            "<|"
+            " $ "
             (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
         "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -545,24 +552,24 @@ variable [∀ i, PartialOrder (α i)]
         ","
         (Term.app
          (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-         [(«term_<|_»
+         [(Init.Core.«term_$_»
            (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-           "<|"
+           " $ "
            (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
-       [(«term_<|_»
+       [(Init.Core.«term_$_»
          (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-         "<|"
+         " $ "
          (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_»
+      (Init.Core.«term_$_»
        (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-       "<|"
+       " $ "
        (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")])
@@ -579,21 +586,20 @@ variable [∀ i, PartialOrder (α i)]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Finset.min'_mem
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj `mem_ne_locus "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `mem_ne_locus
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(«term_<|_»
-       (Term.proj `mem_ne_locus "." (fieldIdx "1"))
-       "<|"
-       (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))
-      []]
+     (Init.Core.«term_$_»
+      (Term.proj `mem_ne_locus "." (fieldIdx "1"))
+      " $ "
+      (Term.app `Finset.min'_mem [(Term.hole "_") (Term.hole "_")]))
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `h [(Term.hole "_")]) "." `lt_of_ne)
@@ -608,7 +614,7 @@ variable [∀ i, PartialOrder (α i)]
       `h
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `h [(Term.hole "_")]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `h [(Term.hole "_")]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -681,7 +687,7 @@ variable [∀ i, PartialOrder (α i)]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `Finset.min'_le [(Term.hole "_") (Term.hole "_") `h]) []]
+     (Term.app `Finset.min'_le [(Term.hole "_") (Term.hole "_") `h])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
@@ -732,7 +738,7 @@ variable [∀ i, PartialOrder (α i)]
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app (Term.proj `nonempty_ne_locus_iff "." (fieldIdx "2")) [`hne]) []]
+     (Term.app (Term.proj `nonempty_ne_locus_iff "." (fieldIdx "2")) [`hne])
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
@@ -767,8 +773,9 @@ theorem
       a b h
         =>
         le_of_lt_or_eq
-          <|
+          $
           or_iff_not_imp_right . 2
+            $
             fun
               hne
                 =>
@@ -781,7 +788,7 @@ theorem
                           ,
                           fun j hj => not_mem_ne_locus . 1 fun h => Finset.min'_le _ _ h . not_lt hj
                           ,
-                          h _ . lt_of_ne mem_ne_locus . 1 <| Finset.min'_mem _ _
+                          h _ . lt_of_ne mem_ne_locus . 1 $ Finset.min'_mem _ _
                         ⟩
 #align dfinsupp.to_lex_monotone Dfinsupp.to_lex_monotone
 

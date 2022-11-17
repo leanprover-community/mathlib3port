@@ -36,14 +36,14 @@ theorem tendsto_coe_nat_at_top_at_top [StrictOrderedSemiring R] [Archimedean R] 
 
 @[simp]
 theorem Int.comap_coe_at_top [StrictOrderedRing R] [Archimedean R] : comap (coe : ℤ → R) atTop = at_top :=
-  (comap_embedding_at_top fun _ _ => Int.cast_le) fun r =>
+  (comap_embedding_at_top fun _ _ => Int.cast_le) $ fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by exact_mod_cast hn⟩
 #align int.comap_coe_at_top Int.comap_coe_at_top
 
 @[simp]
 theorem Int.comap_coe_at_bot [StrictOrderedRing R] [Archimedean R] : comap (coe : ℤ → R) atBot = at_bot :=
-  (comap_embedding_at_bot fun _ _ => Int.cast_le) fun r =>
+  (comap_embedding_at_bot fun _ _ => Int.cast_le) $ fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by simpa [neg_le] using hn⟩
 #align int.comap_coe_at_bot Int.comap_coe_at_bot
@@ -57,21 +57,21 @@ theorem tendsto_coe_int_at_bot_iff [StrictOrderedRing R] [Archimedean R] {f : α
 #align tendsto_coe_int_at_bot_iff tendsto_coe_int_at_bot_iff
 
 theorem tendsto_coe_int_at_top_at_top [StrictOrderedRing R] [Archimedean R] : Tendsto (coe : ℤ → R) atTop atTop :=
-  Int.cast_mono.tendsto_at_top_at_top fun b =>
+  Int.cast_mono.tendsto_at_top_at_top $ fun b =>
     let ⟨n, hn⟩ := exists_nat_ge b
     ⟨n, by exact_mod_cast hn⟩
 #align tendsto_coe_int_at_top_at_top tendsto_coe_int_at_top_at_top
 
 @[simp]
 theorem Rat.comap_coe_at_top [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) atTop = at_top :=
-  (comap_embedding_at_top fun _ _ => Rat.cast_le) fun r =>
+  (comap_embedding_at_top fun _ _ => Rat.cast_le) $ fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by simpa⟩
 #align rat.comap_coe_at_top Rat.comap_coe_at_top
 
 @[simp]
 theorem Rat.comap_coe_at_bot [LinearOrderedField R] [Archimedean R] : comap (coe : ℚ → R) atBot = at_bot :=
-  (comap_embedding_at_bot fun _ _ => Rat.cast_le) fun r =>
+  (comap_embedding_at_bot fun _ _ => Rat.cast_le) $ fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by simpa [neg_le] ⟩
 #align rat.comap_coe_at_bot Rat.comap_coe_at_bot

@@ -112,7 +112,7 @@ Case conversion may be inaccurate. Consider using '#align semiconj_by.one_left S
 /-- One semiconjugates any element to itself. -/
 @[simp, to_additive "Zero additively semiconjugates any element to itself."]
 theorem one_left (x : M) : SemiconjBy 1 x x :=
-  Eq.symm <| one_right x
+  Eq.symm $ one_right x
 #align semiconj_by.one_left SemiconjBy.one_left
 
 /-- The relation “there exists an element that semiconjugates `a` to `b`” on a monoid (or, more
@@ -131,7 +131,7 @@ variable {M : Type u} [Monoid M]
 /-- If `a` semiconjugates a unit `x` to a unit `y`, then it semiconjugates `x⁻¹` to `y⁻¹`. -/
 @[to_additive
       "If `a` semiconjugates an additive unit `x` to an additive unit `y`, then it\nsemiconjugates `-x` to `-y`."]
-theorem units_inv_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) : SemiconjBy a ↑x⁻¹ ↑y⁻¹ :=
+theorem units_inv_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) : SemiconjBy a (↑x⁻¹) ↑y⁻¹ :=
   calc
     a * ↑x⁻¹ = ↑y⁻¹ * (y * a) * ↑x⁻¹ := by rw [Units.inv_mul_cancel_left]
     _ = ↑y⁻¹ * a := by rw [← h.eq, mul_assoc, Units.mul_inv_cancel_right]
@@ -139,7 +139,7 @@ theorem units_inv_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) : SemiconjBy 
 #align semiconj_by.units_inv_right SemiconjBy.units_inv_right
 
 @[simp, to_additive]
-theorem units_inv_right_iff {a : M} {x y : Mˣ} : SemiconjBy a ↑x⁻¹ ↑y⁻¹ ↔ SemiconjBy a x y :=
+theorem units_inv_right_iff {a : M} {x y : Mˣ} : SemiconjBy a (↑x⁻¹) ↑y⁻¹ ↔ SemiconjBy a x y :=
   ⟨units_inv_right, units_inv_right⟩
 #align semiconj_by.units_inv_right_iff SemiconjBy.units_inv_right_iff
 
@@ -197,7 +197,7 @@ variable [DivisionMonoid G] {a x y : G}
 
 @[simp, to_additive]
 theorem inv_inv_symm_iff : SemiconjBy a⁻¹ x⁻¹ y⁻¹ ↔ SemiconjBy a y x :=
-  inv_involutive.Injective.eq_iff.symm.trans <| by simp_rw [mul_inv_rev, inv_inv, eq_comm, SemiconjBy]
+  inv_involutive.Injective.eq_iff.symm.trans $ by simp_rw [mul_inv_rev, inv_inv, eq_comm, SemiconjBy]
 #align semiconj_by.inv_inv_symm_iff SemiconjBy.inv_inv_symm_iff
 
 @[to_additive]

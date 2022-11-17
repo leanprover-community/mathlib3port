@@ -187,13 +187,13 @@ we can transport an `x : Z j₀` to a point in `Z j` for any `j`.
 theorem is_preconnected_induction [IsPreconnected J] (Z : J → Sort _) (h₁ : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), Z j₁ → Z j₂)
     (h₂ : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), Z j₂ → Z j₁) {j₀ : J} (x : Z j₀) (j : J) : Nonempty (Z j) :=
   (induct_on_objects { j | Nonempty (Z j) } ⟨x⟩
-    (fun j₁ j₂ f =>
-      ⟨by
-        rintro ⟨y⟩
-        exact ⟨h₁ f y⟩, by
-        rintro ⟨y⟩
-        exact ⟨h₂ f y⟩⟩)
-    j :
+      (fun j₁ j₂ f =>
+        ⟨by
+          rintro ⟨y⟩
+          exact ⟨h₁ f y⟩, by
+          rintro ⟨y⟩
+          exact ⟨h₂ f y⟩⟩)
+      j :
     _)
 #align category_theory.is_preconnected_induction CategoryTheory.is_preconnected_induction
 
@@ -266,7 +266,7 @@ theorem zigzag_symmetric : Symmetric (@Zigzag J _) :=
 #align category_theory.zigzag_symmetric CategoryTheory.zigzag_symmetric
 
 theorem zigzag_equivalence : Equivalence (@Zigzag J _) :=
-  Equivalence.mk _ Relation.reflexive_refl_trans_gen zigzag_symmetric Relation.transitive_refl_trans_gen
+  Equivalence.mk _ Relation.reflexive_reflTransGen zigzag_symmetric Relation.transitive_reflTransGen
 #align category_theory.zigzag_equivalence CategoryTheory.zigzag_equivalence
 
 /-- The setoid given by the equivalence relation `zigzag`. A quotient for this
@@ -281,7 +281,7 @@ def Zigzag.setoid (J : Type u₂) [Category.{v₁} J] : Setoid J where
 `F j₂` as long as `F` is a functor.
 -/
 theorem zigzag_obj_of_zigzag (F : J ⥤ K) {j₁ j₂ : J} (h : Zigzag j₁ j₂) : Zigzag (F.obj j₁) (F.obj j₂) :=
-  (h.lift _) fun j k => Or.imp (Nonempty.map fun f => F.map f) (Nonempty.map fun f => F.map f)
+  h.lift _ $ fun j k => Or.imp (Nonempty.map fun f => F.map f) (Nonempty.map fun f => F.map f)
 #align category_theory.zigzag_obj_of_zigzag CategoryTheory.zigzag_obj_of_zigzag
 
 -- TODO: figure out the right way to generalise this to `zigzag`.

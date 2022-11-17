@@ -56,9 +56,9 @@ theorem derivative_root_multiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hp
   set q := p /ₘ (X - C t) ^ (n + 1) with hq
   convert_to root_multiplicity t ((X - C t) ^ n * (derivative q * (X - C t) + q * ↑(n + 1))) = n
   · congr
-    rw [mul_add, mul_left_comm <| (X - C t) ^ n, ← pow_succ']
+    rw [mul_add, mul_left_comm $ (X - C t) ^ n, ← pow_succ']
     congr 1
-    rw [mul_left_comm <| (X - C t) ^ n, mul_comm <| (X - C t) ^ n]
+    rw [mul_left_comm $ (X - C t) ^ n, mul_comm $ (X - C t) ^ n]
     
   have h : (derivative q * (X - C t) + q * ↑(n + 1)).eval t ≠ 0 := by
     suffices eval t q * ↑(n + 1) ≠ 0 by simpa
@@ -66,7 +66,7 @@ theorem derivative_root_multiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hp
     convert eval_div_by_monic_pow_root_multiplicity_ne_zero t hp
     exact hn ▸ hq
   rw [root_multiplicity_mul, root_multiplicity_X_sub_C_pow, root_multiplicity_eq_zero h, add_zero]
-  refine' mul_ne_zero (pow_ne_zero n <| X_sub_C_ne_zero t) _
+  refine' mul_ne_zero (pow_ne_zero n $ X_sub_C_ne_zero t) _
   contrapose! h
   rw [h, eval_zero]
 #align polynomial.derivative_root_multiplicity_of_root Polynomial.derivative_root_multiplicity_of_root
@@ -173,8 +173,8 @@ theorem is_unit_iff_degree_eq_zero : IsUnit p ↔ degree p = 0 :=
 theorem irreducible_of_monic {p : R[X]} (hp1 : p.Monic) (hp2 : p ≠ 1) :
     Irreducible p ↔ ∀ f g : R[X], f.Monic → g.Monic → f * g = p → f = 1 ∨ g = 1 :=
   ⟨fun hp3 f g hf hg hfg =>
-    Or.cases_on (hp3.is_unit_or_is_unit hfg.symm) (fun huf : IsUnit f => Or.inl <| eq_one_of_is_unit_of_monic hf huf)
-      fun hug : IsUnit g => Or.inr <| eq_one_of_is_unit_of_monic hg hug,
+    Or.cases_on (hp3.is_unit_or_is_unit hfg.symm) (fun huf : IsUnit f => Or.inl $ eq_one_of_is_unit_of_monic hf huf)
+      fun hug : IsUnit g => Or.inr $ eq_one_of_is_unit_of_monic hg hug,
     fun hp3 =>
     ⟨mt (eq_one_of_is_unit_of_monic hp1) hp2, fun f g hp =>
       have hf : f ≠ 0 := fun hf => by
@@ -183,9 +183,9 @@ theorem irreducible_of_monic {p : R[X]} (hp1 : p.Monic) (hp2 : p ≠ 1) :
       have hg : g ≠ 0 := fun hg => by
         rw [hp, hg, mul_zero] at hp1
         exact not_monic_zero hp1
-      (Or.imp (fun hf => is_unit_of_mul_eq_one _ _ hf) fun hg => is_unit_of_mul_eq_one _ _ hg) <|
+      (Or.imp (fun hf => is_unit_of_mul_eq_one _ _ hf) fun hg => is_unit_of_mul_eq_one _ _ hg) $
         hp3 (f * c f.leadingCoeff⁻¹) (g * c g.leadingCoeff⁻¹) (monic_mul_leading_coeff_inv hf)
-            (monic_mul_leading_coeff_inv hg) <|
+            (monic_mul_leading_coeff_inv hg) $
           by
           rw [mul_assoc, mul_left_comm _ g, ← mul_assoc, ← C_mul, ← mul_inv, ← leading_coeff_mul, ← hp, monic.def.1 hp1,
             inv_one, C_1, mul_one]⟩⟩
@@ -254,7 +254,7 @@ instance : EuclideanDomain R[X] :=
 
 theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=
   ⟨fun h => h ▸ EuclideanDomain.modLt _ hq0, fun h => by
-    have : ¬degree (q * c (leadingCoeff q)⁻¹) ≤ degree p := not_le_of_gt <| by rwa [degree_mul_leading_coeff_inv q hq0]
+    have : ¬degree (q * c (leadingCoeff q)⁻¹) ≤ degree p := not_le_of_gt $ by rwa [degree_mul_leading_coeff_inv q hq0]
     rw [mod_def, mod_by_monic, dif_pos (monic_mul_leading_coeff_inv hq0)]
     unfold div_mod_by_monic_aux
     simp only [this, false_and_iff, if_false]⟩
@@ -332,7 +332,7 @@ section
 open EuclideanDomain
 
 theorem gcd_map [Field k] (f : R →+* k) : gcd (p.map f) (q.map f) = (gcd p q).map f :=
-  (Gcd.induction p q fun x => by simp_rw [Polynomial.map_zero, EuclideanDomain.gcd_zero_left]) fun x y hx ih => by
+  (Gcd.induction p q fun x => by simp_rw [Polynomial.map_zero, EuclideanDomain.gcd_zero_left]) $ fun x y hx ih => by
     rw [gcd_val, ← map_mod, ih, ← gcd_val]
 #align polynomial.gcd_map Polynomial.gcd_map
 
@@ -492,7 +492,7 @@ theorem degree_normalize : degree (normalize p) = degree p := by simp
 theorem primeOfDegreeEqOne (hp1 : degree p = 1) : Prime p :=
   have : Prime (normalize p) :=
     Monic.primeOfDegreeEqOne (hp1 ▸ degree_normalize)
-      (monic_normalize fun hp0 => absurd hp1 (hp0.symm ▸ by simp <;> exact by decide))
+      (monic_normalize fun hp0 => absurd hp1 (hp0.symm ▸ by simp <;> exact dec_trivial))
   (normalize_associated _).Prime this
 #align polynomial.prime_of_degree_eq_one Polynomial.primeOfDegreeEqOne
 
@@ -504,13 +504,13 @@ theorem not_irreducible_C (x : R) : ¬Irreducible (c x) :=
   if H : x = 0 then by
     rw [H, C_0]
     exact not_irreducible_zero
-  else fun hx => Irreducible.not_unit hx <| is_unit_C.2 <| is_unit_iff_ne_zero.2 H
+  else fun hx => Irreducible.not_unit hx $ is_unit_C.2 $ is_unit_iff_ne_zero.2 H
 #align polynomial.not_irreducible_C Polynomial.not_irreducible_C
 
 theorem degree_pos_of_irreducible (hp : Irreducible p) : 0 < p.degree :=
-  lt_of_not_ge fun hp0 =>
+  lt_of_not_ge $ fun hp0 =>
     have := eq_C_of_degree_le_zero hp0
-    not_irreducible_C (p.coeff 0) <| this ▸ hp
+    not_irreducible_C (p.coeff 0) $ this ▸ hp
 #align polynomial.degree_pos_of_irreducible Polynomial.degree_pos_of_irreducible
 
 /-- If `f` is a polynomial over a field, and `a : K` satisfies `f' a ≠ 0`,

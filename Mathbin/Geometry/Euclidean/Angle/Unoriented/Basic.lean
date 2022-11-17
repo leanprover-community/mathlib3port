@@ -40,7 +40,7 @@ def angle (x y : V) : ℝ :=
 
 theorem continuous_at_angle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
     ContinuousAt (fun y : V × V => angle y.1 y.2) x :=
-  Real.continuous_arccos.ContinuousAt.comp <|
+  Real.continuous_arccos.ContinuousAt.comp $
     continuous_inner.ContinuousAt.div
       ((continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd)).ContinuousAt
       (by simp [hx1, hx2])
@@ -230,7 +230,7 @@ theorem angle_add_angle_eq_pi_of_angle_eq_pi {x y : V} (z : V) (h : angle x y = 
 /-- Two vectors have inner product 0 if and only if the angle between
 them is π/2. -/
 theorem inner_eq_zero_iff_angle_eq_pi_div_two (x y : V) : ⟪x, y⟫ = 0 ↔ angle x y = π / 2 :=
-  Iff.symm <| by simp (config := { contextual := true }) [angle, or_imp]
+  Iff.symm $ by simp (config := { contextual := true }) [angle, or_imp]
 #align
   inner_product_geometry.inner_eq_zero_iff_angle_eq_pi_div_two InnerProductGeometry.inner_eq_zero_iff_angle_eq_pi_div_two
 

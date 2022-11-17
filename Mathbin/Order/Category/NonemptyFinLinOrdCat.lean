@@ -103,8 +103,8 @@ def dual : NonemptyFinLinOrdCat ⥤ NonemptyFinLinOrdCat where
 /-- The equivalence between `FinPartialOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : NonemptyFinLinOrdCat ≌ NonemptyFinLinOrdCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
 #align NonemptyFinLinOrd.dual_equiv NonemptyFinLinOrdCat.dualEquiv
 
 theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) : Mono f ↔ Function.Injective f := by

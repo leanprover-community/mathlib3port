@@ -91,8 +91,8 @@ instance : NonUnitalNonAssocSemiring (SetSemiring α) :=
 
 instance : NoZeroDivisors (SetSemiring α) :=
   ⟨fun a b ab =>
-    a.eq_empty_or_nonempty.imp_right fun ha =>
-      b.eq_empty_or_nonempty.resolve_right fun hb => Nonempty.ne_empty ⟨_, mul_mem_mul ha.some_mem hb.some_mem⟩ ab⟩
+    a.eq_empty_or_nonempty.imp_right $ fun ha =>
+      b.eq_empty_or_nonempty.resolve_right $ fun hb => Nonempty.ne_empty ⟨_, mul_mem_mul ha.some_mem hb.some_mem⟩ ab⟩
 
 instance covariant_class_mul_left : CovariantClass (SetSemiring α) (SetSemiring α) (· * ·) (· ≤ ·) :=
   ⟨fun a b c => mul_subset_mul_left⟩
@@ -118,7 +118,7 @@ instance [CommSemigroup α] : NonUnitalCommSemiring (SetSemiring α) :=
 
 instance [CommMonoid α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
   { SetSemiring.semiring, Set.commMonoid, SetSemiring.partialOrder _, SetSemiring.orderBot _,
-    SetSemiring.no_zero_divisors with add_le_add_left := fun a b => add_le_add_left,
+    SetSemiring.noZeroDivisors with add_le_add_left := fun a b => add_le_add_left,
     exists_add_of_le := fun a b ab => ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩, le_self_add := subset_union_left }
 
 /-- The image of a set under a multiplicative homomorphism is a ring homomorphism

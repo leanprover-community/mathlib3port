@@ -49,7 +49,7 @@ theorem mem_circle_iff_abs {z : ℂ} : z ∈ circle ↔ abs z = 1 :=
 #align mem_circle_iff_abs mem_circle_iff_abs
 
 theorem circle_def : ↑circle = { z : ℂ | abs z = 1 } :=
-  Set.ext fun z => mem_circle_iff_abs
+  Set.ext $ fun z => mem_circle_iff_abs
 #align circle_def circle_def
 
 @[simp]
@@ -105,7 +105,7 @@ instance : TopologicalGroup circle :=
 /-- If `z` is a nonzero complex number, then `conj z / z` belongs to the unit circle. -/
 @[simps]
 def circle.ofConjDivSelf (z : ℂ) (hz : z ≠ 0) : circle :=
-  ⟨conj z / z, mem_circle_iff_abs.2 <| by rw [map_div₀, abs_conj, div_self (complex.abs.ne_zero hz)]⟩
+  ⟨conj z / z, mem_circle_iff_abs.2 $ by rw [map_div₀, abs_conj, div_self (complex.abs.ne_zero hz)]⟩
 #align circle.of_conj_div_self circle.ofConjDivSelf
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
@@ -119,12 +119,12 @@ theorem exp_map_circle_apply (t : ℝ) : ↑(expMapCircle t) = Complex.exp (t * 
 
 @[simp]
 theorem exp_map_circle_zero : expMapCircle 0 = 1 :=
-  Subtype.ext <| by rw [exp_map_circle_apply, of_real_zero, zero_mul, exp_zero, Submonoid.coe_one]
+  Subtype.ext $ by rw [exp_map_circle_apply, of_real_zero, zero_mul, exp_zero, Submonoid.coe_one]
 #align exp_map_circle_zero exp_map_circle_zero
 
 @[simp]
 theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x * expMapCircle y :=
-  Subtype.ext <| by simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mul, Complex.exp_add]
+  Subtype.ext $ by simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mul, Complex.exp_add]
 #align exp_map_circle_add exp_map_circle_add
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of

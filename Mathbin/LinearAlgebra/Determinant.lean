@@ -137,7 +137,7 @@ or avoid mentioning a basis at all using `linear_map.det`.
 -/
 def detAux : Trunc (Basis ι A M) → (M →ₗ[A] M) →* A :=
   Trunc.lift (fun b : Basis ι A M => detMonoidHom.comp (toMatrixAlgEquiv b : (M →ₗ[A] M) →* Matrix ι ι A)) fun b c =>
-    MonoidHom.ext <| det_to_matrix_eq_det_to_matrix b c
+    MonoidHom.ext $ det_to_matrix_eq_det_to_matrix b c
 #align linear_map.det_aux LinearMap.detAux
 
 /-- Unfold lemma for `det_aux`.
@@ -150,7 +150,7 @@ theorem det_aux_def (b : Basis ι A M) (f : M →ₗ[A] M) :
 #align linear_map.det_aux_def LinearMap.det_aux_def
 
 -- Discourage the elaborator from unfolding `det_aux` and producing a huge term.
-theorem det_aux_def' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (tb : Trunc <| Basis ι A M) (b' : Basis ι' A M)
+theorem det_aux_def' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (tb : Trunc $ Basis ι A M) (b' : Basis ι' A M)
     (f : M →ₗ[A] M) : LinearMap.detAux tb f = Matrix.det (LinearMap.toMatrix b' b' f) := by
   apply Trunc.induction_on tb
   intro b
@@ -158,12 +158,12 @@ theorem det_aux_def' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (tb : Trunc 
 #align linear_map.det_aux_def' LinearMap.det_aux_def'
 
 @[simp]
-theorem det_aux_id (b : Trunc <| Basis ι A M) : LinearMap.detAux b LinearMap.id = 1 :=
+theorem det_aux_id (b : Trunc $ Basis ι A M) : LinearMap.detAux b LinearMap.id = 1 :=
   (LinearMap.detAux b).map_one
 #align linear_map.det_aux_id LinearMap.det_aux_id
 
 @[simp]
-theorem det_aux_comp (b : Trunc <| Basis ι A M) (f g : M →ₗ[A] M) :
+theorem det_aux_comp (b : Trunc $ Basis ι A M) (f g : M →ₗ[A] M) :
     LinearMap.detAux b (f.comp g) = LinearMap.detAux b f * LinearMap.detAux b g :=
   (LinearMap.detAux b).map_mul f g
 #align linear_map.det_aux_comp LinearMap.det_aux_comp
@@ -254,7 +254,9 @@ theorem det_smul {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroup M] [Mod
       exact FiniteDimensional.ofFintypeBasis hs
     simp only [← det_to_matrix (FiniteDimensional.finBasis 𝕜 M), LinearEquiv.map_smul, Fintype.card_fin, det_smul]
     
-  · classical have : FiniteDimensional.finrank 𝕜 M = 0 := finrank_eq_zero_of_not_exists_basis H
+  · classical
+    have : FiniteDimensional.finrank 𝕜 M = 0 := finrank_eq_zero_of_not_exists_basis H
+    simp [coe_det, H, this]
     
 #align linear_map.det_smul LinearMap.det_smul
 
@@ -282,20 +284,32 @@ theorem det_eq_one_of_subsingleton [Subsingleton M] (f : M →ₗ[R] M) : (f : M
 theorem det_eq_one_of_finrank_eq_zero {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroup M] [Module 𝕜 M]
     (h : FiniteDimensional.finrank 𝕜 M = 0) (f : M →ₗ[𝕜] M) : (f : M →ₗ[𝕜] M).det = 1 := by classical
   refine' @LinearMap.detCases M _ 𝕜 _ _ _ (fun t => t = 1) f _ rfl
-  have : IsEmpty s := Matrix.det_is_empty
+  intro s b
+  have : IsEmpty s := by
+    rw [← Fintype.card_eq_zero_iff]
+    exact (FiniteDimensional.finrank_eq_card_basis b).symm.trans h
+  exact Matrix.det_is_empty
 #align linear_map.det_eq_one_of_finrank_eq_zero LinearMap.det_eq_one_of_finrank_eq_zero
 
 /-- Conjugating a linear map by a linear equiv does not change its determinant. -/
 @[simp]
 theorem det_conj {N : Type _} [AddCommGroup N] [Module A N] (f : M →ₗ[A] M) (e : M ≃ₗ[A] N) :
-    LinearMap.det ((e : M →ₗ[A] N) ∘ₗ f ∘ₗ (e.symm : N →ₗ[A] M)) = LinearMap.det f := by
-  classical by_cases H:∃ s : Finset M, Nonempty (Basis s A M)
-    · have H' : ¬∃ t : Finset N, Nonempty (Basis t A N) := by
-        contrapose! H
-        rcases H with ⟨s, ⟨b⟩⟩
-        exact ⟨_, ⟨(b.map e.symm).reindexFinsetRange⟩⟩
-      simp only [coe_det, H, H', Pi.one_apply, dif_neg, not_false_iff]
+    LinearMap.det ((e : M →ₗ[A] N) ∘ₗ f ∘ₗ (e.symm : N →ₗ[A] M)) = LinearMap.det f := by classical
+  by_cases H:∃ s : Finset M, Nonempty (Basis s A M)
+  · rcases H with ⟨s, ⟨b⟩⟩
+    rw [← det_to_matrix b f, ← det_to_matrix (b.map e), to_matrix_comp (b.map e) b (b.map e),
+      to_matrix_comp (b.map e) b b, ← Matrix.mul_assoc, Matrix.det_conj_of_mul_eq_one]
+    · rw [← to_matrix_comp, LinearEquiv.comp_coe, e.symm_trans_self, LinearEquiv.refl_to_linear_map, to_matrix_id]
       
+    · rw [← to_matrix_comp, LinearEquiv.comp_coe, e.self_trans_symm, LinearEquiv.refl_to_linear_map, to_matrix_id]
+      
+    
+  · have H' : ¬∃ t : Finset N, Nonempty (Basis t A N) := by
+      contrapose! H
+      rcases H with ⟨s, ⟨b⟩⟩
+      exact ⟨_, ⟨(b.map e.symm).reindexFinsetRange⟩⟩
+    simp only [coe_det, H, H', Pi.one_apply, dif_neg, not_false_iff]
+    
 #align linear_map.det_conj LinearMap.det_conj
 
 /-- If a linear map is invertible, so is its determinant. -/
@@ -312,7 +326,9 @@ theorem finiteDimensionalOfDetNeOne {𝕜 : Type _} [Field 𝕜] [Module 𝕜 M]
   · rcases H with ⟨s, ⟨hs⟩⟩
     exact FiniteDimensional.ofFintypeBasis hs
     
-  · classical simp [LinearMap.coe_det, H] at hf
+  · classical
+    simp [LinearMap.coe_det, H] at hf
+    exact hf.elim
     
 #align linear_map.finite_dimensional_of_det_ne_one LinearMap.finiteDimensionalOfDetNeOne
 
@@ -355,7 +371,7 @@ theorem coe_inv_det (f : M ≃ₗ[R] M) : ↑f.det⁻¹ = LinearMap.det (f.symm 
 
 @[simp]
 theorem det_refl : (LinearEquiv.refl R M).det = 1 :=
-  Units.ext <| LinearMap.det_id
+  Units.ext $ LinearMap.det_id
 #align linear_equiv.det_refl LinearEquiv.det_refl
 
 @[simp]
@@ -542,7 +558,7 @@ theorem AlternatingMap.map_basis_eq_zero_iff {ι : Type _} [DecidableEq ι] [Fin
 
 theorem AlternatingMap.map_basis_ne_zero_iff {ι : Type _} [DecidableEq ι] [Finite ι] (e : Basis ι R M)
     (f : AlternatingMap R M R ι) : f e ≠ 0 ↔ f ≠ 0 :=
-  not_congr <| f.map_basis_eq_zero_iff e
+  not_congr $ f.map_basis_eq_zero_iff e
 #align alternating_map.map_basis_ne_zero_iff AlternatingMap.map_basis_ne_zero_iff
 
 variable {A : Type _} [CommRing A] [Module A M]
@@ -569,7 +585,7 @@ theorem Basis.det_map (b : Basis ι R M) (f : M ≃ₗ[R] M') (v : ι → M') : 
 #align basis.det_map Basis.det_map
 
 theorem Basis.det_map' (b : Basis ι R M) (f : M ≃ₗ[R] M') : (b.map f).det = b.det.compLinearMap f.symm :=
-  AlternatingMap.ext <| b.det_map f
+  AlternatingMap.ext $ b.det_map f
 #align basis.det_map' Basis.det_map'
 
 @[simp]

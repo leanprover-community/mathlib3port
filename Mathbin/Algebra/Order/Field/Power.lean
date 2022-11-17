@@ -34,11 +34,11 @@ theorem zpow_le_of_le (ha : 1 ≤ a) (h : m ≤ n) : a ^ m ≤ a ^ n := by
 #align zpow_le_of_le zpow_le_of_le
 
 theorem zpow_le_one_of_nonpos (ha : 1 ≤ a) (hn : n ≤ 0) : a ^ n ≤ 1 :=
-  (zpow_le_of_le ha hn).trans_eq <| zpow_zero _
+  (zpow_le_of_le ha hn).trans_eq $ zpow_zero _
 #align zpow_le_one_of_nonpos zpow_le_one_of_nonpos
 
 theorem one_le_zpow_of_nonneg (ha : 1 ≤ a) (hn : 0 ≤ n) : 1 ≤ a ^ n :=
-  (zpow_zero _).symm.trans_le <| zpow_le_of_le ha hn
+  (zpow_zero _).symm.trans_le $ zpow_le_of_le ha hn
 #align one_le_zpow_of_nonneg one_le_zpow_of_nonneg
 
 protected theorem Nat.zpow_pos_of_pos {a : ℕ} (h : 0 < a) (n : ℤ) : 0 < (a : α) ^ n := by
@@ -51,12 +51,12 @@ theorem Nat.zpow_ne_zero_of_pos {a : ℕ} (h : 0 < a) (n : ℤ) : (a : α) ^ n �
 #align nat.zpow_ne_zero_of_pos Nat.zpow_ne_zero_of_pos
 
 theorem one_lt_zpow (ha : 1 < a) : ∀ n : ℤ, 0 < n → 1 < a ^ n
-  | (n : ℕ), h => (zpow_coe_nat _ _).symm.subst (one_lt_pow ha <| Int.coe_nat_ne_zero.mp h.ne')
-  | -[n+1], h => ((Int.neg_succ_not_pos _).mp h).elim
+  | (n : ℕ), h => (zpow_coe_nat _ _).symm.subst (one_lt_pow ha $ Int.coe_nat_ne_zero.mp h.ne')
+  | -[1+ n], h => ((Int.negSucc_not_pos _).mp h).elim
 #align one_lt_zpow one_lt_zpow
 
 theorem zpow_strict_mono (hx : 1 < a) : StrictMono ((· ^ ·) a : ℤ → α) :=
-  strict_mono_int_of_lt_succ fun n =>
+  strict_mono_int_of_lt_succ $ fun n =>
     have xpos : 0 < a := zero_lt_one.trans hx
     calc
       a ^ n < a ^ n * a := lt_mul_of_one_lt_right (zpow_pos_of_pos xpos _) hx
@@ -65,10 +65,10 @@ theorem zpow_strict_mono (hx : 1 < a) : StrictMono ((· ^ ·) a : ℤ → α) :=
 #align zpow_strict_mono zpow_strict_mono
 
 theorem zpow_strict_anti (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti ((· ^ ·) a : ℤ → α) :=
-  strict_anti_int_of_succ_lt fun n =>
+  strict_anti_int_of_succ_lt $ fun n =>
     calc
       a ^ (n + 1) = a ^ n * a := zpow_add_one₀ h₀.ne' _
-      _ < a ^ n * 1 := (mul_lt_mul_left <| zpow_pos_of_pos h₀ _).2 h₁
+      _ < a ^ n * 1 := (mul_lt_mul_left $ zpow_pos_of_pos h₀ _).2 h₁
       _ = a ^ n := mul_one _
       
 #align zpow_strict_anti zpow_strict_anti
@@ -85,7 +85,7 @@ theorem zpow_le_iff_le (hx : 1 < a) : a ^ m ≤ a ^ n ↔ m ≤ n :=
 
 @[simp]
 theorem div_pow_le (ha : 0 ≤ a) (hb : 1 ≤ b) (k : ℕ) : a / b ^ k ≤ a :=
-  div_le_self ha <| one_le_pow_of_one_le hb _
+  div_le_self ha $ one_le_pow_of_one_le hb _
 #align div_pow_le div_pow_le
 
 theorem zpow_injective (h₀ : 0 < a) (h₁ : a ≠ 1) : Injective ((· ^ ·) a : ℤ → α) := by
@@ -121,7 +121,7 @@ variable [LinearOrderedField α] {a b c d : α} {n : ℤ}
 
 
 theorem zpow_bit0_nonneg (a : α) (n : ℤ) : 0 ≤ a ^ bit0 n :=
-  (mul_self_nonneg _).trans_eq <| (zpow_bit0 _ _).symm
+  (mul_self_nonneg _).trans_eq $ (zpow_bit0 _ _).symm
 #align zpow_bit0_nonneg zpow_bit0_nonneg
 
 theorem zpow_two_nonneg (a : α) : 0 ≤ a ^ (2 : ℤ) :=
@@ -146,7 +146,7 @@ theorem zpow_bit0_pos_iff (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a ≠ 0 :=
 
 @[simp]
 theorem zpow_bit1_neg_iff : a ^ bit1 n < 0 ↔ a < 0 :=
-  ⟨fun h => not_le.1 fun h' => not_le.2 h <| zpow_nonneg h' _, fun h => by
+  ⟨fun h => not_le.1 $ fun h' => not_le.2 h $ zpow_nonneg h' _, fun h => by
     rw [bit1, zpow_add_one₀ h.ne] <;> exact mul_neg_of_pos_of_neg (zpow_bit0_pos h.ne _) h⟩
 #align zpow_bit1_neg_iff zpow_bit1_neg_iff
 
@@ -209,14 +209,13 @@ theorem zpow_bit0_abs (a : α) (p : ℤ) : |a| ^ bit0 p = a ^ bit0 p :=
 
 /-- Bernoulli's inequality reformulated to estimate `(n : α)`. -/
 theorem Nat.cast_le_pow_sub_div_sub (H : 1 < a) (n : ℕ) : (n : α) ≤ (a ^ n - 1) / (a - 1) :=
-  (le_div_iff (sub_pos.2 H)).2 <|
-    le_sub_left_of_add_le <| one_add_mul_sub_le_pow ((neg_le_self zero_le_one).trans H.le) _
+  (le_div_iff (sub_pos.2 H)).2 $ le_sub_left_of_add_le $ one_add_mul_sub_le_pow ((neg_le_self zero_le_one).trans H.le) _
 #align nat.cast_le_pow_sub_div_sub Nat.cast_le_pow_sub_div_sub
 
 /-- For any `a > 1` and a natural `n` we have `n ≤ a ^ n / (a - 1)`. See also
 `nat.cast_le_pow_sub_div_sub` for a stronger inequality with `a ^ n - 1` in the numerator. -/
 theorem Nat.cast_le_pow_div_sub (H : 1 < a) (n : ℕ) : (n : α) ≤ a ^ n / (a - 1) :=
-  (n.cast_le_pow_sub_div_sub H).trans <| div_le_div_of_le (sub_nonneg.2 H.le) (sub_le_self _ zero_le_one)
+  (n.cast_le_pow_sub_div_sub H).trans $ div_le_div_of_le (sub_nonneg.2 H.le) (sub_le_self _ zero_le_one)
 #align nat.cast_le_pow_div_sub Nat.cast_le_pow_div_sub
 
 end LinearOrderedField

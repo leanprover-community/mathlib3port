@@ -123,7 +123,7 @@ theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : testBit n i = ff) (hm : testB
   by_cases hi:i = 0
   · subst hi
     simp only [test_bit_zero] at hn hm
-    have : n = m := eq_of_test_bit_eq fun i => by convert hnm (i + 1) (by decide) using 1 <;> rw [test_bit_succ]
+    have : n = m := eq_of_test_bit_eq fun i => by convert hnm (i + 1) dec_trivial using 1 <;> rw [test_bit_succ]
     rw [hn, hm, this, bit_ff, bit_tt, bit0_val, bit1_val]
     exact lt_add_one _
     
@@ -145,7 +145,7 @@ theorem test_bit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : testBit (2 ^ n) m = 
   · rw [Nat.div_eq_zero, bodd_zero]
     exact Nat.pow_lt_pow_of_lt_right one_lt_two hm
     
-  · rw [pow_div hm.le zero_lt_two, ← tsub_add_cancel_of_le (succ_le_of_lt <| tsub_pos_of_lt hm)]
+  · rw [pow_div hm.le zero_lt_two, ← tsub_add_cancel_of_le (succ_le_of_lt $ tsub_pos_of_lt hm)]
     simp [pow_succ]
     
 #align nat.test_bit_two_pow_of_ne Nat.test_bit_two_pow_of_ne
@@ -166,7 +166,7 @@ theorem bitwise_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' 
     bitwise f n m = bitwise f m n :=
   suffices bitwise f = swap (bitwise f) by conv_lhs => rw [this]
   calc
-    bitwise f = bitwise (swap f) := congr_arg _ <| funext fun _ => funext <| hf _
+    bitwise f = bitwise (swap f) := congr_arg _ $ funext $ fun _ => funext $ hf _
     _ = swap (bitwise f) := bitwise_swap hf'
     
 #align nat.bitwise_comm Nat.bitwise_comm
@@ -207,7 +207,7 @@ theorem zero_lor (n : ℕ) : lor 0 n = n := by simp [lor]
 theorem lor_zero (n : ℕ) : lor n 0 = n := by simp [lor]
 #align nat.lor_zero Nat.lor_zero
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=
@@ -234,7 +234,7 @@ theorem lor_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
 
 @[simp]
 theorem lxor_self (n : ℕ) : lxor n n = 0 :=
-  zero_of_test_bit_eq_ff fun i => by simp
+  zero_of_test_bit_eq_ff $ fun i => by simp
 #align nat.lxor_self Nat.lxor_self
 
 -- These lemmas match `mul_inv_cancel_right` and `mul_inv_cancel_left`.
@@ -311,7 +311,7 @@ theorem lxor_trichotomy {a b c : ℕ} (h : a ≠ lxor b c) : lxor b c < a ∨ lx
 #align nat.lxor_trichotomy Nat.lxor_trichotomy
 
 theorem lt_lxor_cases {a b c : ℕ} (h : a < lxor b c) : lxor a c < b ∨ lxor a b < c :=
-  (or_iff_right fun h' => (h.asymm h').elim).1 <| lxor_trichotomy h.Ne
+  (or_iff_right $ fun h' => (h.asymm h').elim).1 $ lxor_trichotomy h.Ne
 #align nat.lt_lxor_cases Nat.lt_lxor_cases
 
 end Nat

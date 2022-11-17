@@ -347,7 +347,7 @@ def eqElim : List Ee → Clause → Clause
 open Tactic
 
 theorem sat_empty : Clause.Sat ([], []) :=
-  ⟨fun _ => 0, ⟨by decide, by decide⟩⟩
+  ⟨fun _ => 0, ⟨dec_trivial, dec_trivial⟩⟩
 #align omega.sat_empty Omega.sat_empty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

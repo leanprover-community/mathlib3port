@@ -123,7 +123,7 @@ theorem mem_fixed_points_iff {α : Type _} {f : α → α} {x : α} : x ∈ fixe
 
 @[simp]
 theorem fixed_points_id : fixedPoints (@id α) = Set.univ :=
-  Set.ext fun _ => by simpa using is_fixed_pt_id _
+  Set.ext $ fun _ => by simpa using is_fixed_pt_id _
 #align function.fixed_points_id Function.fixed_points_id
 
 theorem fixed_points_subset_range : fixedPoints f ⊆ Set.range f := fun x hx => ⟨x, hx⟩
@@ -137,39 +137,38 @@ theorem Semiconj.maps_to_fixed_pts {g : α → β} (h : Semiconj g fa fb) :
 
 /-- Any two maps `f : α → β` and `g : β → α` are inverse of each other on the sets of fixed points
 of `f ∘ g` and `g ∘ f`, respectively. -/
-theorem inv_on_fixed_pts_comp (f : α → β) (g : β → α) : Set.InvOn f g (fixed_points <| f ∘ g) (fixed_points <| g ∘ f) :=
+theorem inv_on_fixed_pts_comp (f : α → β) (g : β → α) : Set.InvOn f g (fixed_points $ f ∘ g) (fixed_points $ g ∘ f) :=
   ⟨fun x => id, fun x => id⟩
 #align function.inv_on_fixed_pts_comp Function.inv_on_fixed_pts_comp
 
 /-- Any map `f` sends fixed points of `g ∘ f` to fixed points of `f ∘ g`. -/
-theorem maps_to_fixed_pts_comp (f : α → β) (g : β → α) : Set.MapsTo f (fixed_points <| g ∘ f) (fixed_points <| f ∘ g) :=
-  fun x hx => hx.map fun x => rfl
+theorem maps_to_fixed_pts_comp (f : α → β) (g : β → α) : Set.MapsTo f (fixed_points $ g ∘ f) (fixed_points $ f ∘ g) :=
+  fun x hx => hx.map $ fun x => rfl
 #align function.maps_to_fixed_pts_comp Function.maps_to_fixed_pts_comp
 
 /-- Given two maps `f : α → β` and `g : β → α`, `g` is a bijective map between the fixed points
 of `f ∘ g` and the fixed points of `g ∘ f`. The inverse map is `f`, see `inv_on_fixed_pts_comp`. -/
-theorem bij_on_fixed_pts_comp (f : α → β) (g : β → α) : Set.BijOn g (fixed_points <| f ∘ g) (fixed_points <| g ∘ f) :=
+theorem bij_on_fixed_pts_comp (f : α → β) (g : β → α) : Set.BijOn g (fixed_points $ f ∘ g) (fixed_points $ g ∘ f) :=
   (inv_on_fixed_pts_comp f g).BijOn (maps_to_fixed_pts_comp g f) (maps_to_fixed_pts_comp f g)
 #align function.bij_on_fixed_pts_comp Function.bij_on_fixed_pts_comp
 
 /-- If self-maps `f` and `g` commute, then they are inverse of each other on the set of fixed points
 of `f ∘ g`. This is a particular case of `function.inv_on_fixed_pts_comp`. -/
-theorem Commute.inv_on_fixed_pts_comp (h : Commute f g) :
-    Set.InvOn f g (fixed_points <| f ∘ g) (fixed_points <| f ∘ g) := by
-  simpa only [h.comp_eq] using inv_on_fixed_pts_comp f g
+theorem Commute.inv_on_fixed_pts_comp (h : Commute f g) : Set.InvOn f g (fixed_points $ f ∘ g) (fixed_points $ f ∘ g) :=
+  by simpa only [h.comp_eq] using inv_on_fixed_pts_comp f g
 #align function.commute.inv_on_fixed_pts_comp Function.Commute.inv_on_fixed_pts_comp
 
 /-- If self-maps `f` and `g` commute, then `f` is bijective on the set of fixed points of `f ∘ g`.
 This is a particular case of `function.bij_on_fixed_pts_comp`. -/
 theorem Commute.left_bij_on_fixed_pts_comp (h : Commute f g) :
-    Set.BijOn f (fixed_points <| f ∘ g) (fixed_points <| f ∘ g) := by
+    Set.BijOn f (fixed_points $ f ∘ g) (fixed_points $ f ∘ g) := by
   simpa only [h.comp_eq] using bij_on_fixed_pts_comp g f
 #align function.commute.left_bij_on_fixed_pts_comp Function.Commute.left_bij_on_fixed_pts_comp
 
 /-- If self-maps `f` and `g` commute, then `g` is bijective on the set of fixed points of `f ∘ g`.
 This is a particular case of `function.bij_on_fixed_pts_comp`. -/
 theorem Commute.right_bij_on_fixed_pts_comp (h : Commute f g) :
-    Set.BijOn g (fixed_points <| f ∘ g) (fixed_points <| f ∘ g) := by
+    Set.BijOn g (fixed_points $ f ∘ g) (fixed_points $ f ∘ g) := by
   simpa only [h.comp_eq] using bij_on_fixed_pts_comp f g
 #align function.commute.right_bij_on_fixed_pts_comp Function.Commute.right_bij_on_fixed_pts_comp
 
@@ -183,7 +182,7 @@ protected theorem symm (h : Function.IsFixedPt e x) : Function.IsFixedPt e.symm 
 
 protected theorem zpow (h : Function.IsFixedPt e x) (n : ℤ) : Function.IsFixedPt (⇑(e ^ n)) x := by
   cases n
-  · rw [Int.of_nat_eq_coe, zpow_coe_nat, ← Equiv.Perm.iterate_eq_pow]
+  · rw [Int.ofNat_eq_coe, zpow_coe_nat, ← Equiv.Perm.iterate_eq_pow]
     exact h.iterate n
     
   · change Function.IsFixedPt (⇑(e ^ (-(↑(n + 1) : ℤ)))) x

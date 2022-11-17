@@ -143,14 +143,18 @@ theorem affine_independent_min_card_finset_of_mem_convex_hull :
   let k := (min_card_finset_of_mem_convex_hull hx).card - 1
   have hk : (min_card_finset_of_mem_convex_hull hx).card = k + 1 :=
     (Nat.succ_pred_eq_of_pos (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm
-  classical by_contra
-    have contra :=
-      min_card_finset_of_mem_convex_hull_card_le_card hx
-        (Set.Subset.trans (Finset.erase_subset (↑p) (min_card_finset_of_mem_convex_hull hx))
-          (min_card_finset_of_mem_convex_hull_subseteq hx))
-        hp
-    apply contra
-    exact lt_add_one _
+  classical
+  by_contra
+  obtain ⟨p, hp⟩ := mem_convex_hull_erase h (mem_min_card_finset_of_mem_convex_hull hx)
+  have contra :=
+    min_card_finset_of_mem_convex_hull_card_le_card hx
+      (Set.Subset.trans (Finset.erase_subset (↑p) (min_card_finset_of_mem_convex_hull hx))
+        (min_card_finset_of_mem_convex_hull_subseteq hx))
+      hp
+  rw [← not_lt] at contra
+  apply contra
+  erw [card_erase_of_mem p.2, hk]
+  exact lt_add_one _
 #align
   caratheodory.affine_independent_min_card_finset_of_mem_convex_hull Caratheodory.affine_independent_min_card_finset_of_mem_convex_hull
 
@@ -178,8 +182,8 @@ theorem convex_hull_eq_union :
 
 /-- A more explicit version of `convex_hull_eq_union`. -/
 theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull 𝕜 s) :
-    ∃ (ι : Sort (u + 1))(_ : Fintype ι),
-      ∃ (z : ι → E)(w : ι → 𝕜)(hss : Set.range z ⊆ s)(hai : AffineIndependent 𝕜 z)(hw : ∀ i, 0 < w i),
+    ∃ (ι : Sort (u + 1)) (_ : Fintype ι),
+      ∃ (z : ι → E) (w : ι → 𝕜) (hss : Set.range z ⊆ s) (hai : AffineIndependent 𝕜 z) (hw : ∀ i, 0 < w i),
         (∑ i, w i) = 1 ∧ (∑ i, w i • z i) = x :=
   by
   rw [convex_hull_eq_union] at hx

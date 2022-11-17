@@ -101,12 +101,11 @@ namespace Tactic
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- A macro for a common simplification when rewriting with ghost component equations. -/
 unsafe def ghost_simp (lems : parse simp_arg_list) : tactic Unit := do
   tactic.try tactic.intro1
-  simp none none tt (lems ++ [simp_arg_type.symm_expr (pquote.1 sub_eq_add_neg)]) [`ghost_simps] (loc.ns [none])
+  simp none none tt (lems ++ [simp_arg_type.symm_expr ``(sub_eq_add_neg)]) [`ghost_simps] (loc.ns [none])
 #align tactic.interactive.ghost_simp tactic.interactive.ghost_simp
 
 /-- `ghost_calc` is a tactic for proving identities between polynomial functions.
@@ -134,11 +133,11 @@ This is subtle and Lean's elaborator doesn't like it because of the HO unificati
 so it is easier (and prettier) to put it in a tactic script.
 -/
 unsafe def ghost_calc (ids' : parse ident_*) : tactic Unit := do
-  let ids ← ids'.mmap fun n => get_local n <|> tactic.intro n
-  let quote.1 (@Eq (WittVector _ (%%ₓR)) _ _) ← target
+  let ids ← ids'.mmap $ fun n => get_local n <|> tactic.intro n
+  let q(@Eq (WittVector _ $(R)) _ _) ← target
   match ids with
-    | [x] => refine (ppquote.1 (is_poly.ext _ _ _ _ (%%ₓx)))
-    | [x, y] => refine (ppquote.1 (is_poly₂.ext _ _ _ _ (%%ₓx) (%%ₓy)))
+    | [x] => refine `(is_poly.ext _ _ _ _ $(x))
+    | [x, y] => refine `(is_poly₂.ext _ _ _ _ $(x) $(y))
     | _ => fail "ghost_calc takes one or two arguments"
   let nm ←
     match R with
@@ -146,7 +145,7 @@ unsafe def ghost_calc (ids' : parse ident_*) : tactic Unit := do
       | _ => get_unused_name `R
   iterate_exactly 2 apply_instance
   unfreezingI (tactic.clear' tt [R])
-  introsI <| [nm, .str nm "_inst"] ++ ids'
+  introsI $ [nm, nm <.> "_inst"] ++ ids'
   skip
 #align tactic.interactive.ghost_calc tactic.interactive.ghost_calc
 
@@ -250,7 +249,7 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   apply MvPolynomial.funext
   intro x
   simp only [hom_bind₁]
-  specialize h (ULift ℤ) ((mk p) fun i => ⟨x i⟩) k
+  specialize h (ULift ℤ) (mk p $ fun i => ⟨x i⟩) k
   simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
@@ -297,7 +296,6 @@ class IsPoly₂ (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R → �
 
 variable {p}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The composition of polynomial functions is polynomial. -/
 theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPoly p g) :
     IsPoly₂ p fun R _Rcr x y => h (f x) (g y) := by
@@ -306,7 +304,7 @@ theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPo
   obtain ⟨χ, hh⟩ := hh
   refine'
     ⟨⟨fun n =>
-        bind₁ (uncurry <| ![fun k => rename (Prod.mk (0 : Fin 2)) (φ k), fun k => rename (Prod.mk (1 : Fin 2)) (ψ k)])
+        bind₁ (uncurry $ ![fun k => rename (Prod.mk (0 : Fin 2)) (φ k), fun k => rename (Prod.mk (1 : Fin 2)) (ψ k)])
           (χ n),
         _⟩⟩
   intros
@@ -328,7 +326,6 @@ theorem IsPoly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) : IsPoly₂ 
   simp only [peval, aeval_bind₁, Function.comp, hg, hf]
 #align witt_vector.is_poly.comp₂ WittVector.IsPoly.comp₂
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
 theorem IsPoly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x := by
   obtain ⟨φ, hf⟩ := hf
@@ -360,20 +357,18 @@ for `is_poly` and `is_poly₂` declarations.
 unsafe def mk_poly_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic Unit := do
   let c ← mk_const n
   let appd := vars.foldl expr.app c
-  let tgt_bod ←
-    to_expr (pquote.1 fun f [hf : IsPoly (%%ₓp) f] => IsPoly.comp (%%ₓappd) hf) >>= replace_univ_metas_with_univ_params
+  let tgt_bod ← to_expr ``(fun f [hf : IsPoly $(p) f] => IsPoly.comp $(appd) hf) >>= replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
-  let nm := .str n "comp_i"
-  add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
+  let nm := n <.> "comp_i"
+  add_decl $ mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
-    to_expr (pquote.1 fun f [hf : IsPoly₂ (%%ₓp) f] => IsPoly.comp₂ (%%ₓappd) hf) >>=
-        replace_univ_metas_with_univ_params
+    to_expr ``(fun f [hf : IsPoly₂ $(p) f] => IsPoly.comp₂ $(appd) hf) >>= replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
-  let nm := .str n "comp₂_i"
-  add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
+  let nm := n <.> "comp₂_i"
+  add_decl $ mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
 #align witt_vector.tactic.mk_poly_comp_lemmas witt_vector.tactic.mk_poly_comp_lemmas
 
@@ -385,21 +380,20 @@ unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tac
   let c ← mk_const n
   let appd := vars.foldl expr.app c
   let tgt_bod ←
-    to_expr (pquote.1 fun {f g} [hf : IsPoly (%%ₓp) f] [hg : IsPoly (%%ₓp) g] => IsPoly₂.comp (%%ₓappd) hf hg) >>=
+    to_expr ``(fun {f g} [hf : IsPoly $(p) f] [hg : IsPoly $(p) g] => IsPoly₂.comp $(appd) hf hg) >>=
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
-  let nm := .str n "comp₂_i"
-  add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
+  let nm := n <.> "comp₂_i"
+  add_decl $ mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
-    to_expr
-          (pquote.1 fun {f g} [hf : IsPoly (%%ₓp) f] [hg : IsPoly (%%ₓp) g] => (IsPoly₂.comp (%%ₓappd) hf hg).diag) >>=
+    to_expr ``(fun {f g} [hf : IsPoly $(p) f] [hg : IsPoly $(p) g] => (IsPoly₂.comp $(appd) hf hg).diag) >>=
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
-  let nm := .str n "comp_diag"
-  add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
+  let nm := n <.> "comp_diag"
+  add_decl $ mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
 #align witt_vector.tactic.mk_poly₂_comp_lemmas witt_vector.tactic.mk_poly₂_comp_lemmas
 
@@ -409,8 +403,8 @@ unsafe def mk_comp_lemmas (n : Name) : tactic Unit := do
   let d ← get_decl n
   let (vars, tp) ← open_pis d.type
   match tp with
-    | quote.1 (IsPoly (%%ₓp) _) => mk_poly_comp_lemmas n vars p
-    | quote.1 (IsPoly₂ (%%ₓp) _) => mk_poly₂_comp_lemmas n vars p
+    | q(IsPoly $(p) _) => mk_poly_comp_lemmas n vars p
+    | q(IsPoly₂ $(p) _) => mk_poly₂_comp_lemmas n vars p
     | _ => fail "@[is_poly] should only be applied to terms of type `is_poly _ _` or `is_poly₂ _ _`"
 #align witt_vector.tactic.mk_comp_lemmas witt_vector.tactic.mk_comp_lemmas
 
@@ -440,7 +434,7 @@ The user-written lemmas are not instances. Users should be able to assemble `is_
 unsafe def is_poly_attr : user_attribute where
   Name := `is_poly
   descr := "Lemmas with this attribute describe the polynomial structure of functions"
-  after_set := some fun n _ _ => mk_comp_lemmas n
+  after_set := some $ fun n _ _ => mk_comp_lemmas n
 #align witt_vector.tactic.is_poly_attr witt_vector.tactic.is_poly_attr
 
 end Tactic
@@ -456,7 +450,6 @@ Users are expected to use the non-instance versions manually.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The additive negation is a polynomial function on Witt vectors. -/
 @[is_poly]
 theorem negIsPoly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
@@ -581,7 +574,6 @@ theorem comp_right {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) : IsPoly₂ p fu
 
 include hp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
     (h :
       ∀ (R : Type u) [_Rcr : CommRing R] (x y : 𝕎 R) (n : ℕ), ghost_component n (f x y) = ghost_component n (g x y)) :
@@ -596,7 +588,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   apply MvPolynomial.funext
   intro x
   simp only [hom_bind₁]
-  specialize h (ULift ℤ) ((mk p) fun i => ⟨x (0, i)⟩) ((mk p) fun i => ⟨x (1, i)⟩) k
+  specialize h (ULift ℤ) (mk p $ fun i => ⟨x (0, i)⟩) (mk p $ fun i => ⟨x (1, i)⟩) k
   simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
@@ -611,7 +603,6 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
 #align witt_vector.is_poly₂.ext WittVector.IsPoly₂.ext
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
 theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) : map g (f x y) = f (map g x) (map g y) := by
   -- this could be turned into a tactic “macro” (taking `hf` as parameter)

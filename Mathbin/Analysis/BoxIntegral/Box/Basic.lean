@@ -91,7 +91,7 @@ theorem lower_ne_upper (i) : I.lower i ≠ I.upper i :=
 instance : Membership (ι → ℝ) (Box ι) :=
   ⟨fun x I => ∀ i, x i ∈ ioc (I.lower i) (I.upper i)⟩
 
-instance : CoeTC (Box ι) (Set <| ι → ℝ) :=
+instance : CoeTC (Box ι) (Set $ ι → ℝ) :=
   ⟨fun I => { x | x ∈ I }⟩
 
 @[simp]
@@ -113,11 +113,11 @@ theorem mem_univ_Ioc {I : Box ι} : (x ∈ pi univ fun i => ioc (I.lower i) (I.u
 #align box_integral.box.mem_univ_Ioc BoxIntegral.Box.mem_univ_Ioc
 
 theorem coe_eq_pi : (I : Set (ι → ℝ)) = pi univ fun i => ioc (I.lower i) (I.upper i) :=
-  Set.ext fun x => mem_univ_Ioc.symm
+  Set.ext $ fun x => mem_univ_Ioc.symm
 #align box_integral.box.coe_eq_pi BoxIntegral.Box.coe_eq_pi
 
 @[simp]
-theorem upper_mem : I.upper ∈ I := fun i => right_mem_Ioc.2 <| I.lower_lt_upper i
+theorem upper_mem : I.upper ∈ I := fun i => right_mem_Ioc.2 $ I.lower_lt_upper i
 #align box_integral.box.upper_mem BoxIntegral.Box.upper_mem
 
 theorem exists_mem : ∃ x, x ∈ I :=
@@ -157,27 +157,24 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
-           [(«term_≤_» `I "≤" `J)
+           [(Init.Core.«term_≤_» `I " ≤ " `J)
             ","
-            («term_⊆_»
-             (Term.paren
-              "("
-              [`I [(Term.typeAscription ":" [(Term.app `Set [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))])])]]
-              ")")
-             "⊆"
+            (Init.Core.«term_⊆_»
+             (Term.typeAscription "(" `I ":" [(Term.app `Set [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))])] ")")
+             " ⊆ "
              `J)
             ","
-            («term_⊆_»
+            (Init.Core.«term_⊆_»
              (Term.app `icc [(Term.proj `I "." `lower) (Term.proj `I "." `upper)])
-             "⊆"
+             " ⊆ "
              (Term.app `icc [(Term.proj `J "." `lower) (Term.proj `J "." `upper)]))
             ","
-            («term_∧_»
-             («term_≤_» (Term.proj `J "." `lower) "≤" (Term.proj `I "." `lower))
-             "∧"
-             («term_≤_» (Term.proj `I "." `upper) "≤" (Term.proj `J "." `upper)))]
+            (Init.Logic.«term_∧_»
+             (Init.Core.«term_≤_» (Term.proj `J "." `lower) " ≤ " (Term.proj `I "." `lower))
+             " ∧ "
+             (Init.Core.«term_≤_» (Term.proj `I "." `upper) " ≤ " (Term.proj `J "." `upper)))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -344,7 +341,7 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
       `hx
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `hx [`i]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `hx [`i]) ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -361,7 +358,7 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app (Term.proj `h "." (fieldIdx "2")) [`i]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app (Term.proj `h "." (fieldIdx "2")) [`i]) ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -378,7 +375,7 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app (Term.proj `h "." (fieldIdx "1")) [`i]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app (Term.proj `h "." (fieldIdx "1")) [`i]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Ioc_subset_Ioc
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -474,11 +471,11 @@ theorem coe_inj : (I : Set (ι → ℝ)) = J ↔ I = J :=
 
 @[ext.1]
 theorem ext (H : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
-  injective_coe <| Set.ext H
+  injective_coe $ Set.ext H
 #align box_integral.box.ext BoxIntegral.Box.ext
 
 theorem ne_of_disjoint_coe (h : Disjoint (I : Set (ι → ℝ)) J) : I ≠ J :=
-  mt coe_inj.2 <| h.Ne I.coe_ne_empty
+  mt coe_inj.2 $ h.Ne I.coe_ne_empty
 #align box_integral.box.ne_of_disjoint_coe BoxIntegral.Box.ne_of_disjoint_coe
 
 instance : PartialOrder (Box ι) :=
@@ -534,7 +531,7 @@ theorem coe_subset_Icc : ↑I ⊆ I.icc := fun x hx => ⟨fun i => (hx i).1.le, 
 instance : HasSup (Box ι) :=
   ⟨fun I J =>
     ⟨I.lower ⊓ J.lower, I.upper ⊔ J.upper, fun i =>
-      (min_le_left _ _).trans_lt <| (I.lower_lt_upper i).trans_le (le_max_left _ _)⟩⟩
+      (min_le_left _ _).trans_lt $ (I.lower_lt_upper i).trans_le (le_max_left _ _)⟩⟩
 
 instance : SemilatticeSup (Box ι) :=
   { Box.partialOrder, Box.hasSup with le_sup_left := fun I J => le_iff_bounds.2 ⟨inf_le_left, le_sup_left⟩,
@@ -726,7 +723,7 @@ theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) �
 /-- The interior of a box. -/
 protected def ioo : Box ι →o Set (ι → ℝ) where
   toFun I := pi univ fun i => ioo (I.lower i) (I.upper i)
-  monotone' I J h := pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
+  monotone' I J h := pi_mono $ fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
 #align box_integral.box.Ioo BoxIntegral.Box.ioo
 
 theorem Ioo_subset_coe (I : Box ι) : I.ioo ⊆ I := fun x hx i => Ioo_subset_Ioc_self (hx i trivial)
@@ -774,7 +771,7 @@ variable [Fintype ι]
 It is defined as the maximum of the ratios
 `nndist I.lower I.upper / nndist (I.lower i) (I.upper i)`. -/
 def distortion (I : Box ι) : ℝ≥0 :=
-  Finset.univ.sup fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
+  Finset.univ.sup $ fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
 #align box_integral.box.distortion BoxIntegral.Box.distortion
 
 theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
@@ -783,9 +780,9 @@ theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
   congr 1 with i
   have : 0 < r := by
     by_contra hr
-    have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_lt.1 hr)
+    have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 $ J.lower_le_upper i) (not_lt.1 hr)
     rw [← h] at this
-    exact this.not_lt (sub_pos.2 <| I.lower_lt_upper i)
+    exact this.not_lt (sub_pos.2 $ I.lower_lt_upper i)
   simp_rw [Nnreal.finset_sup_div, div_div_div_cancel_right _ ((map_ne_zero Real.nnabs).2 this.ne')]
 #align box_integral.box.distortion_eq_of_sub_eq_div BoxIntegral.Box.distortion_eq_of_sub_eq_div
 
@@ -793,8 +790,8 @@ theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
     nndist I.lower I.upper ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
   calc
     nndist I.lower I.upper = nndist I.lower I.upper / nndist (I.lower i) (I.upper i) * nndist (I.lower i) (I.upper i) :=
-      (div_mul_cancel _ <| mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
-    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finset.le_sup <| Finset.mem_univ i) _
+      (div_mul_cancel _ $ mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
+    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finset.le_sup $ Finset.mem_univ i) _
     
 #align box_integral.box.nndist_le_distortion_mul BoxIntegral.Box.nndist_le_distortion_mul
 
@@ -806,8 +803,8 @@ theorem dist_le_distortion_mul (I : Box ι) (i : ι) : dist I.lower I.upper ≤ 
 
 theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0} (h : I.distortion ≤ c) :
     diam I.icc ≤ c * (I.upper i - I.lower i) :=
-  have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) := mul_nonneg c.coe_nonneg (sub_nonneg.2 <| I.lower_le_upper _)
-  (diam_le_of_forall_dist_le this) fun x hx y hy =>
+  have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) := mul_nonneg c.coe_nonneg (sub_nonneg.2 $ I.lower_le_upper _)
+  diam_le_of_forall_dist_le this $ fun x hx y hy =>
     calc
       dist x y ≤ dist I.lower I.upper := Real.dist_le_of_mem_pi_Icc hx hy
       _ ≤ I.distortion * (I.upper i - I.lower i) := I.dist_le_distortion_mul i

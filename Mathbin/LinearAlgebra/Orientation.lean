@@ -63,7 +63,7 @@ variable {R M}
 
 /-- An equivalence between modules implies an equivalence between orientations. -/
 def Orientation.map (e : M ≃ₗ[R] N) : Orientation R M ι ≃ Orientation R N ι :=
-  Module.Ray.map <| AlternatingMap.domLcongr R R ι R e
+  Module.Ray.map $ AlternatingMap.domLcongr R R ι R e
 #align orientation.map Orientation.map
 
 @[simp]
@@ -74,7 +74,7 @@ theorem Orientation.map_apply (e : M ≃ₗ[R] N) (v : AlternatingMap R M R ι) 
 #align orientation.map_apply Orientation.map_apply
 
 @[simp]
-theorem Orientation.map_refl : (Orientation.map ι <| LinearEquiv.refl R M) = Equiv.refl _ := by
+theorem Orientation.map_refl : (Orientation.map ι $ LinearEquiv.refl R M) = Equiv.refl _ := by
   rw [Orientation.map, AlternatingMap.dom_lcongr_refl, Module.Ray.map_refl]
 #align orientation.map_refl Orientation.map_refl
 
@@ -87,7 +87,7 @@ theorem Orientation.map_symm (e : M ≃ₗ[R] N) : (Orientation.map ι e).symm =
 instance (priority := 100) IsEmpty.oriented [Nontrivial R] [IsEmpty ι] :
     Module.Oriented R M
       ι where positiveOrientation :=
-    rayOfNeZero R (AlternatingMap.constLinearEquivOfIsEmpty 1) <|
+    rayOfNeZero R (AlternatingMap.constLinearEquivOfIsEmpty 1) $
       AlternatingMap.constLinearEquivOfIsEmpty.Injective.Ne (by simp)
 #align is_empty.oriented IsEmpty.oriented
 
@@ -182,7 +182,6 @@ variable {ι : Type _} [DecidableEq ι]
 
 namespace Orientation
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- A module `M` over a linearly ordered commutative ring has precisely two "orientations" with
 respect to an empty index type. (Note that these are only orientations of `M` of in the conventional
 mathematical sense if `M` is zero-dimensional.) -/

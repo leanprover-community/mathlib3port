@@ -94,7 +94,7 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
   intro m
   rw [measure_preimage_add_right]
   clear m
-  refine' (measure_bUnion_null_iff <| to_countable _).2 fun n (hn : 1 ≤ n) => _
+  refine' (measure_bUnion_null_iff $ to_countable _).2 fun n (hn : 1 ≤ n) => _
   generalize hr : (2 + 1 / n : ℝ) = r
   replace hr : 2 < r
   · simp [← hr, zero_lt_one.trans_le hn]
@@ -113,7 +113,7 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
       volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
         measure_bUnion_finset_le _ _
       _ = ((b + 1) * (2 / b ^ r) : ℝ≥0) := by
-        simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.coe_nat_succ, Int.to_nat_coe_nat, ←
+        simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ, Int.toNat_coe_nat, ←
           Nat.cast_succ, Ennreal.coe_mul, Ennreal.coe_nat]
       _ = _ := _
       
@@ -129,7 +129,7 @@ theorem ae_not_liouville_with : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x
 #align ae_not_liouville_with ae_not_liouville_with
 
 theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
-  ae_not_liouville_with.mono fun x h₁ h₂ => h₁ 3 (by norm_num) (h₂.LiouvilleWith 3)
+  ae_not_liouville_with.mono $ fun x h₁ h₂ => h₁ 3 (by norm_num) (h₂.LiouvilleWith 3)
 #align ae_not_liouville ae_not_liouville
 
 /-- The set of Liouville numbers has Lebesgue measure zero. -/

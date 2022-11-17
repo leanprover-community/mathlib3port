@@ -162,7 +162,7 @@ def esymm (n : ℕ) : MvPolynomial σ R :=
 /-- The `n`th elementary symmetric `mv_polynomial σ R` is obtained by evaluating the
 `n`th elementary symmetric at the `multiset` of the monomials -/
 theorem esymm_eq_multiset_esymm : esymm σ R = (Finset.univ.val.map x).esymm :=
-  funext fun n => (Finset.univ.esymm_map_val x n).symm
+  funext $ fun n => (Finset.univ.esymm_map_val x n).symm
 #align mv_polynomial.esymm_eq_multiset_esymm MvPolynomial.esymm_eq_multiset_esymm
 
 theorem aeval_esymm_eq_multiset_esymm [Algebra R S] (f : σ → S) (n : ℕ) :
@@ -242,13 +242,20 @@ theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 #align mv_polynomial.support_esymm MvPolynomial.support_esymm
 
 theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
-    (esymm σ R n).degrees = (univ : Finset σ).val := by
-  classical have : (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val
-    rw [degrees, support_esymm, sup_finset_image, this, ← comp_sup_eq_sup_comp]
-    · intros
-      simp only [union_val, sup_eq_union]
-      congr
-      
+    (esymm σ R n).degrees = (univ : Finset σ).val := by classical
+  have : (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val := by
+    funext
+    simp [Finsupp.to_multiset_sum_single]
+  rw [degrees, support_esymm, sup_finset_image, this, ← comp_sup_eq_sup_comp]
+  · obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne'
+    simpa using powerset_len_sup _ _ (Nat.lt_of_succ_le hn)
+    
+  · intros
+    simp only [union_val, sup_eq_union]
+    congr
+    
+  · rfl
+    
 #align mv_polynomial.degrees_esymm MvPolynomial.degrees_esymm
 
 end ElementarySymmetric

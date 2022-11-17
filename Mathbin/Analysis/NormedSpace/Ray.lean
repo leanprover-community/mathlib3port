@@ -67,8 +67,8 @@ theorem norm_inj_on_ray_right (hy : y ≠ 0) : { x | SameRay ℝ x y }.InjOn nor
 
 theorem same_ray_iff_norm_smul_eq : SameRay ℝ x y ↔ ∥x∥ • y = ∥y∥ • x :=
   ⟨SameRay.norm_smul_eq, fun h =>
-    or_iff_not_imp_left.2 fun hx =>
-      or_iff_not_imp_left.2 fun hy => ⟨∥y∥, ∥x∥, norm_pos_iff.2 hy, norm_pos_iff.2 hx, h.symm⟩⟩
+    or_iff_not_imp_left.2 $ fun hx =>
+      or_iff_not_imp_left.2 $ fun hy => ⟨∥y∥, ∥x∥, norm_pos_iff.2 hy, norm_pos_iff.2 hx, h.symm⟩⟩
 #align same_ray_iff_norm_smul_eq same_ray_iff_norm_smul_eq
 
 /-- Two nonzero vectors `x y` in a real normed space are on the same ray if and only if the unit

@@ -152,14 +152,14 @@ instance (priority := 100) HasMeasurableMul₂.toHasMeasurableMul [HasMeasurable
 @[to_additive]
 instance Pi.hasMeasurableMul {ι : Type _} {α : ι → Type _} [∀ i, Mul (α i)] [∀ i, MeasurableSpace (α i)]
     [∀ i, HasMeasurableMul (α i)] : HasMeasurableMul (∀ i, α i) :=
-  ⟨fun g => measurable_pi_iff.mpr fun i => (measurablePiApply i).const_mul _, fun g =>
-    measurable_pi_iff.mpr fun i => (measurablePiApply i).mul_const _⟩
+  ⟨fun g => measurable_pi_iff.mpr $ fun i => (measurablePiApply i).const_mul _, fun g =>
+    measurable_pi_iff.mpr $ fun i => (measurablePiApply i).mul_const _⟩
 #align pi.has_measurable_mul Pi.hasMeasurableMul
 
 @[to_additive Pi.hasMeasurableAdd₂]
 instance Pi.hasMeasurableMul₂ {ι : Type _} {α : ι → Type _} [∀ i, Mul (α i)] [∀ i, MeasurableSpace (α i)]
     [∀ i, HasMeasurableMul₂ (α i)] : HasMeasurableMul₂ (∀ i, α i) :=
-  ⟨measurable_pi_iff.mpr fun i => measurableFst.eval.mul measurableSnd.eval⟩
+  ⟨measurable_pi_iff.mpr $ fun i => measurableFst.eval.mul measurableSnd.eval⟩
 #align pi.has_measurable_mul₂ Pi.hasMeasurableMul₂
 
 attribute [measurability]
@@ -185,7 +185,7 @@ export HasMeasurablePow (measurablePow)
 /-- `monoid.has_pow` is measurable. -/
 instance Monoid.hasMeasurablePow (M : Type _) [Monoid M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
     HasMeasurablePow M ℕ :=
-  ⟨measurableFromProdCountable fun n => by
+  ⟨measurableFromProdCountable $ fun n => by
       induction' n with n ih
       · simp only [pow_zero, ← Pi.one_def, measurableOne]
         
@@ -334,14 +334,14 @@ instance (priority := 100) HasMeasurableDiv₂.toHasMeasurableDiv [HasMeasurable
 @[to_additive]
 instance Pi.hasMeasurableDiv {ι : Type _} {α : ι → Type _} [∀ i, Div (α i)] [∀ i, MeasurableSpace (α i)]
     [∀ i, HasMeasurableDiv (α i)] : HasMeasurableDiv (∀ i, α i) :=
-  ⟨fun g => measurable_pi_iff.mpr fun i => (measurablePiApply i).const_div _, fun g =>
-    measurable_pi_iff.mpr fun i => (measurablePiApply i).div_const _⟩
+  ⟨fun g => measurable_pi_iff.mpr $ fun i => (measurablePiApply i).const_div _, fun g =>
+    measurable_pi_iff.mpr $ fun i => (measurablePiApply i).div_const _⟩
 #align pi.has_measurable_div Pi.hasMeasurableDiv
 
 @[to_additive Pi.hasMeasurableSub₂]
 instance Pi.hasMeasurableDiv₂ {ι : Type _} {α : ι → Type _} [∀ i, Div (α i)] [∀ i, MeasurableSpace (α i)]
     [∀ i, HasMeasurableDiv₂ (α i)] : HasMeasurableDiv₂ (∀ i, α i) :=
-  ⟨measurable_pi_iff.mpr fun i => measurableFst.eval.div measurableSnd.eval⟩
+  ⟨measurable_pi_iff.mpr $ fun i => measurableFst.eval.div measurableSnd.eval⟩
 #align pi.has_measurable_div₂ Pi.hasMeasurableDiv₂
 
 @[measurability]
@@ -453,7 +453,7 @@ omit m
 @[to_additive]
 instance Pi.hasMeasurableInv {ι : Type _} {α : ι → Type _} [∀ i, Inv (α i)] [∀ i, MeasurableSpace (α i)]
     [∀ i, HasMeasurableInv (α i)] : HasMeasurableInv (∀ i, α i) :=
-  ⟨measurable_pi_iff.mpr fun i => (measurablePiApply i).inv⟩
+  ⟨measurable_pi_iff.mpr $ fun i => (measurablePiApply i).inv⟩
 #align pi.has_measurable_inv Pi.hasMeasurableInv
 
 @[to_additive]
@@ -466,7 +466,7 @@ end Inv
 /-- `div_inv_monoid.has_pow` is measurable. -/
 instance DivInvMonoid.hasMeasurableZpow (G : Type u) [DivInvMonoid G] [MeasurableSpace G] [HasMeasurableMul₂ G]
     [HasMeasurableInv G] : HasMeasurablePow G ℤ :=
-  ⟨measurableFromProdCountable fun n => by
+  ⟨measurableFromProdCountable $ fun n => by
       cases' n with n n
       · simp_rw [zpow_of_nat]
         exact measurable_id.pow_const _
@@ -609,8 +609,8 @@ omit m
 @[to_additive]
 instance Pi.hasMeasurableSmul {ι : Type _} {α : ι → Type _} [∀ i, HasSmul M (α i)] [∀ i, MeasurableSpace (α i)]
     [∀ i, HasMeasurableSmul M (α i)] : HasMeasurableSmul M (∀ i, α i) :=
-  ⟨fun g => measurable_pi_iff.mpr fun i => (measurablePiApply i).const_smul _, fun g =>
-    measurable_pi_iff.mpr fun i => measurableSmulConst _⟩
+  ⟨fun g => measurable_pi_iff.mpr $ fun i => (measurablePiApply i).const_smul _, fun g =>
+    measurable_pi_iff.mpr $ fun i => measurableSmulConst _⟩
 #align pi.has_measurable_smul Pi.hasMeasurableSmul
 
 /-- `add_monoid.has_smul_nat` is measurable. -/
@@ -729,7 +729,7 @@ instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasM
 /-- If a scalar is central, then its right action is measurable when its left action is. -/
 instance HasMeasurableSmul.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasSmul M α] [HasSmul Mᵐᵒᵖ α]
     [IsCentralScalar M α] [HasMeasurableSmul M α] : HasMeasurableSmul Mᵐᵒᵖ α :=
-  ⟨MulOpposite.rec fun c =>
+  ⟨MulOpposite.rec $ fun c =>
       show Measurable fun x => op c • x by simpa only [op_smul_eq_smul] using measurable_const_smul c,
     fun x =>
     show Measurable fun c => op (unop c) • x by
@@ -848,7 +848,7 @@ theorem Finset.measurableProd (s : Finset ι) (hf : ∀ i ∈ s, Measurable (f i
 
 @[measurability, to_additive]
 theorem Finset.aeMeasurableProd' (s : Finset ι) (hf : ∀ i ∈ s, AeMeasurable (f i) μ) : AeMeasurable (∏ i in s, f i) μ :=
-  (Multiset.aeMeasurableProd' _) fun g hg =>
+  Multiset.aeMeasurableProd' _ $ fun g hg =>
     let ⟨i, hi, hg⟩ := Multiset.mem_map.1 hg
     hg ▸ hf _ hi
 #align finset.ae_measurable_prod' Finset.aeMeasurableProd'

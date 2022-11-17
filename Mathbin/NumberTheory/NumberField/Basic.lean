@@ -43,7 +43,7 @@ open Classical BigOperators
 
 /-- `ℤ` with its usual ring structure is not a field. -/
 theorem Int.not_is_field : ¬IsField ℤ := fun h =>
-  Int.not_even_one <| (h.mul_inv_cancel two_ne_zero).imp fun a => by rw [← two_mul] <;> exact Eq.symm
+  Int.not_even_one $ (h.mul_inv_cancel two_ne_zero).imp $ fun a => by rw [← two_mul] <;> exact Eq.symm
 #align int.not_is_field Int.not_is_field
 
 namespace NumberField
@@ -68,7 +68,7 @@ def ringOfIntegers :=
 #align number_field.ring_of_integers NumberField.ringOfIntegers
 
 -- mathport name: ring_of_integers
-localized [NumberField] notation "𝓞" => NumberField.ringOfIntegers
+scoped notation "𝓞" => NumberField.ringOfIntegers
 
 theorem mem_ring_of_integers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
   Iff.rfl
@@ -89,10 +89,10 @@ will likely change in Lean 4. -/
 def ringOfIntegersAlgebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
   RingHom.toAlgebra
     { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebraMap k.2⟩,
-      map_zero' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_zero, map_zero],
-      map_one' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_one, map_one],
-      map_add' := fun x y => Subtype.ext <| by simp only [map_add, Subalgebra.coe_add, Subtype.coe_mk],
-      map_mul' := fun x y => Subtype.ext <| by simp only [Subalgebra.coe_mul, map_mul, Subtype.coe_mk] }
+      map_zero' := Subtype.ext $ by simp only [Subtype.coe_mk, Subalgebra.coe_zero, map_zero],
+      map_one' := Subtype.ext $ by simp only [Subtype.coe_mk, Subalgebra.coe_one, map_one],
+      map_add' := fun x y => Subtype.ext $ by simp only [map_add, Subalgebra.coe_add, Subtype.coe_mk],
+      map_mul' := fun x y => Subtype.ext $ by simp only [Subalgebra.coe_mul, map_mul, Subtype.coe_mk] }
 #align number_field.ring_of_integers_algebra NumberField.ringOfIntegersAlgebra
 
 namespace RingOfIntegers
@@ -114,7 +114,7 @@ theorem isIntegralCoe (x : 𝓞 K) : IsIntegral ℤ (x : K) :=
 
 theorem map_mem {F L : Type _} [Field L] [CharZero K] [CharZero L] [AlgHomClass F ℚ K L] (f : F) (x : 𝓞 K) :
     f x ∈ 𝓞 L :=
-  (mem_ring_of_integers _ _).2 <| mapIsIntegralInt f <| ringOfIntegers.isIntegralCoe x
+  (mem_ring_of_integers _ _).2 $ mapIsIntegralInt f $ ringOfIntegers.isIntegralCoe x
 #align number_field.ring_of_integers.map_mem NumberField.ringOfIntegers.map_mem
 
 /-- The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/

@@ -26,8 +26,7 @@ The `_` in the `_checked` prefix should hide them from doc-gen.
 
 section
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
 /-- `assert_exists n` is a user command that asserts that a declaration named `n` exists
@@ -36,7 +35,7 @@ in the current import scope.
 Be careful to use names (e.g. `rat`) rather than notations (e.g. `ℚ`).
 -/
 @[user_command]
-unsafe def assert_exists (_ : parse <| tk "assert_exists") : lean.parser Unit := do
+unsafe def assert_exists (_ : parse $ tk "assert_exists") : lean.parser Unit := do
   let decl ← ident
   let d ← get_decl decl
   return ()
@@ -58,13 +57,13 @@ In this case, you should refactor your work
 You should *not* delete the `assert_not_exists` statement without careful discussion ahead of time.
 -/
 @[user_command]
-unsafe def assert_not_exists (_ : parse <| tk "assert_not_exists") : lean.parser Unit := do
+unsafe def assert_not_exists (_ : parse $ tk "assert_not_exists") : lean.parser Unit := do
   let decl ← ident
   let ff ← succeeds (get_decl decl) |
     fail f! "Declaration {decl} is not allowed to exist in this file."
   let n ← tactic.mk_fresh_name
   let marker := `assert_not_exists._checked.append n
-  add_decl (declaration.defn marker [] (quote.1 Name) (quote.1 decl) default tt)
+  add_decl (declaration.defn marker [] q(Name) q(decl) default tt)
   pure ()
 #align assert_not_exists assert_not_exists
 
@@ -74,7 +73,7 @@ unsafe def assert_not_exists.linter : linter where
     let n := d.to_name
     let tt ← pure (`assert_not_exists._checked.isPrefixOf n) |
       pure none
-    let declaration.defn _ _ (quote.1 Name) val _ _ ← pure d
+    let declaration.defn _ _ q(Name) val _ _ ← pure d
     let n ← tactic.eval_expr Name val
     let tt ← succeeds (get_decl n) |
       pure (some (f! "`{n}` does not ever exist").toString)
@@ -94,16 +93,13 @@ assert_instance semiring ℕ
 ```
 -/
 @[user_command]
-unsafe def assert_instance (_ : parse <| tk "assert_instance") : lean.parser Unit := do
+unsafe def assert_instance (_ : parse $ tk "assert_instance") : lean.parser Unit := do
   let q ← texpr
   let e ← i_to_expr q
   mk_instance e
   return ()
 #align assert_instance assert_instance
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- `assert_no_instance e` is a user command that asserts that an instance `e` *is not available*
 in the current import scope.
 
@@ -123,7 +119,7 @@ assert_no_instance linear_ordered_field ℚ
 ```
 -/
 @[user_command]
-unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.parser Unit := do
+unsafe def assert_no_instance (_ : parse $ tk "assert_no_instance") : lean.parser Unit := do
   let q ← texpr
   let e ← i_to_expr q
   let i ← try_core (mk_instance e)
@@ -135,9 +131,7 @@ unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.pars
       let tt ← succeeds (get_decl marker) |
         add_decl (declaration.defn marker [] et e default tt)
       pure ()
-    | some i =>
-      ("./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg" :
-        tactic Unit)
+    | some i => (throwError "Instance `{(← i)} : {← e}` is not allowed to be found in this file." : tactic Unit)
 #align assert_no_instance assert_no_instance
 
 /-- A linter for checking that the declarations marked `assert_no_instance` eventually exist. -/

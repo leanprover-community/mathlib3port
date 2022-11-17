@@ -48,10 +48,10 @@ def DualNumber.eps [Zero R] [One R] : DualNumber R :=
 #align dual_number.eps DualNumber.eps
 
 -- mathport name: dual_number.eps
-localized [DualNumber] notation "ε" => DualNumber.eps
+scoped[DualNumber] notation "ε" => DualNumber.eps
 
 -- mathport name: dual_number
-localized [DualNumber] postfix:1024 "[ε]" => DualNumber
+scoped[DualNumber] postfix:1024 "[ε]" => DualNumber
 
 open DualNumber
 
@@ -88,7 +88,7 @@ theorem inr_eq_smul_eps [MulZeroOneClass R] (r : R) : inr r = (r • ε : R[ε])
 /-- For two algebra morphisms out of `R[ε]` to agree, it suffices for them to agree on `ε`. -/
 @[ext.1]
 theorem alg_hom_ext {A} [CommSemiring R] [Semiring A] [Algebra R A] ⦃f g : R[ε] →ₐ[R] A⦄ (h : f ε = g ε) : f = g :=
-  alg_hom_ext' <| LinearMap.ext_ring <| h
+  alg_hom_ext' $ LinearMap.ext_ring $ h
 #align dual_number.alg_hom_ext DualNumber.alg_hom_ext
 
 variable {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
@@ -101,7 +101,7 @@ This isomorphism is named to match the very similar `complex.lift`. -/
 def lift : { e : A // e * e = 0 } ≃ (R[ε] →ₐ[R] A) :=
   Equiv.trans
     (show { e : A // e * e = 0 } ≃ { f : R →ₗ[R] A // ∀ x y, f x * f y = 0 } from
-      (LinearMap.ringLmapEquivSelf R ℕ A).symm.toEquiv.subtypeEquiv fun a => by
+      (LinearMap.ringLmapEquivSelf R ℕ A).symm.toEquiv.subtypeEquiv $ fun a => by
         dsimp
         simp_rw [smul_mul_smul]
         refine' ⟨fun h x y => h.symm ▸ smul_zero _, fun h => by simpa using h 1 1⟩)
@@ -111,13 +111,13 @@ def lift : { e : A // e * e = 0 } ≃ (R[ε] →ₐ[R] A) :=
 -- When applied to `ε`, `dual_number.lift` produces the element of `A` that squares to 0.
 @[simp]
 theorem lift_apply_eps (e : { e : A // e * e = 0 }) : lift e (ε : R[ε]) = e :=
-  (TrivSqZeroExt.lift_aux_apply_inr _ _ _).trans <| one_smul _ _
+  (TrivSqZeroExt.lift_aux_apply_inr _ _ _).trans $ one_smul _ _
 #align dual_number.lift_apply_eps DualNumber.lift_apply_eps
 
 -- Lifting `dual_number.eps` itself gives the identity.
 @[simp]
 theorem lift_eps : lift ⟨ε, eps_mul_eps⟩ = AlgHom.id R R[ε] :=
-  alg_hom_ext <| lift_apply_eps _
+  alg_hom_ext $ lift_apply_eps _
 #align dual_number.lift_eps DualNumber.lift_eps
 
 end DualNumber

@@ -98,8 +98,7 @@ variable [SemiNormedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
 /-- If a topology `t'` is coarser than `t`, then any set `s` that is bounded with respect to
 `t` is bounded with respect to `t'`. -/
 theorem IsVonNBounded.ofTopologicalSpaceLe {t t' : TopologicalSpace E} (h : t ≤ t') {s : Set E}
-    (hs : @IsVonNBounded 𝕜 E _ _ _ t s) : @IsVonNBounded 𝕜 E _ _ _ t' s := fun V hV =>
-  hs <| (le_iff_nhds t t').mp h 0 hV
+    (hs : @IsVonNBounded 𝕜 E _ _ _ t s) : @IsVonNBounded 𝕜 E _ _ _ t' s := fun V hV => hs $ (le_iff_nhds t t').mp h 0 hV
 #align bornology.is_vonN_bounded.of_topological_space_le Bornology.IsVonNBounded.ofTopologicalSpaceLe
 
 end MultipleTopologies
@@ -142,7 +141,7 @@ theorem isVonNBoundedSingleton (x : E) : IsVonNBounded 𝕜 ({x} : Set E) := fun
 #align bornology.is_vonN_bounded_singleton Bornology.isVonNBoundedSingleton
 
 /-- The union of all bounded set is the whole space. -/
-theorem is_vonN_bounded_covers : ⋃₀setOf (IsVonNBounded 𝕜) = (Set.univ : Set E) :=
+theorem is_vonN_bounded_covers : ⋃₀ setOf (IsVonNBounded 𝕜) = (Set.univ : Set E) :=
   Set.eq_univ_iff_forall.mpr fun x => Set.mem_sUnion.mpr ⟨{x}, isVonNBoundedSingleton _, Set.mem_singleton _⟩
 #align bornology.is_vonN_bounded_covers Bornology.is_vonN_bounded_covers
 
@@ -212,7 +211,7 @@ theorem isVonNBoundedBall (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.ball 
 #align normed_space.is_vonN_bounded_ball NormedSpace.isVonNBoundedBall
 
 theorem isVonNBoundedClosedBall (r : ℝ) : Bornology.IsVonNBounded 𝕜 (Metric.closedBall (0 : E) r) :=
-  (isVonNBoundedBall 𝕜 E (r + 1)).Subset (Metric.closed_ball_subset_ball <| by linarith)
+  (isVonNBoundedBall 𝕜 E (r + 1)).Subset (Metric.closed_ball_subset_ball $ by linarith)
 #align normed_space.is_vonN_bounded_closed_ball NormedSpace.isVonNBoundedClosedBall
 
 theorem is_vonN_bounded_iff (s : Set E) : Bornology.IsVonNBounded 𝕜 s ↔ Bornology.IsBounded s := by
@@ -266,7 +265,7 @@ theorem is_bounded_iff_subset_smul_closed_ball {s : Set E} :
     Bornology.IsBounded s ↔ ∃ a : 𝕜, s ⊆ a • Metric.closedBall 0 1 := by
   constructor
   · rw [is_bounded_iff_subset_smul_ball 𝕜]
-    exact Exists.imp fun a ha => ha.trans <| Set.smul_set_mono <| Metric.ball_subset_closed_ball
+    exact Exists.imp fun a ha => ha.trans $ Set.smul_set_mono $ Metric.ball_subset_closed_ball
     
   · rw [← is_vonN_bounded_iff 𝕜]
     rintro ⟨a, ha⟩

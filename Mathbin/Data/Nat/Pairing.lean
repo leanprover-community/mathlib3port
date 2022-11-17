@@ -51,7 +51,7 @@ theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n := by
   · simp [mkpair, h, sm]
     
   · have hl : n - s * s - s ≤ s :=
-      tsub_le_iff_left.mpr (tsub_le_iff_left.mpr <| by rw [← add_assoc] <;> apply sqrt_le_add)
+      tsub_le_iff_left.mpr (tsub_le_iff_left.mpr $ by rw [← add_assoc] <;> apply sqrt_le_add)
     simp [mkpair, hl.not_lt, add_assoc, add_tsub_cancel_of_le (le_of_not_gt h), sm]
     
 #align nat.mkpair_unpair Nat.mkpair_unpair
@@ -176,7 +176,7 @@ theorem max_sq_add_min_le_mkpair (m n : ℕ) : max m n ^ 2 + min m n ≤ mkpair 
 #align nat.max_sq_add_min_le_mkpair Nat.max_sq_add_min_le_mkpair
 
 theorem add_le_mkpair (m n : ℕ) : m + n ≤ mkpair m n :=
-  (max_sq_add_min_le_mkpair _ _).trans' <| by
+  (max_sq_add_min_le_mkpair _ _).trans' $ by
     rw [sq, ← min_add_max, add_comm, add_le_add_iff_right]
     exact le_mul_self _
 #align nat.add_le_mkpair Nat.add_le_mkpair

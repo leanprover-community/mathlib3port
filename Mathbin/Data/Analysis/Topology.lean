@@ -82,12 +82,12 @@ theorem to_topsp_is_topological_basis (F : Ctop α σ) :
     @TopologicalSpace.IsTopologicalBasis _ F.toTopsp (Set.range F.f) :=
   letI := F.to_topsp
   ⟨fun u ⟨a, e₁⟩ v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
-    eq_univ_iff_forall.2 fun x => ⟨_, ⟨_, rfl⟩, F.top_mem x⟩, rfl⟩
+    eq_univ_iff_forall.2 $ fun x => ⟨_, ⟨_, rfl⟩, F.top_mem x⟩, rfl⟩
 #align ctop.to_topsp_is_topological_basis Ctop.to_topsp_is_topological_basis
 
 @[simp]
 theorem mem_nhds_to_topsp (F : Ctop α σ) {s : Set α} {a : α} : s ∈ @nhds _ F.toTopsp a ↔ ∃ b, a ∈ F b ∧ F b ⊆ s :=
-  (@TopologicalSpace.IsTopologicalBasis.mem_nhds_iff _ F.toTopsp _ _ _ F.to_topsp_is_topological_basis).trans <|
+  (@TopologicalSpace.IsTopologicalBasis.mem_nhds_iff _ F.toTopsp _ _ _ F.to_topsp_is_topological_basis).trans $
     ⟨fun ⟨_, ⟨x, rfl⟩, h⟩ => ⟨x, h⟩, fun ⟨x, h⟩ => ⟨_, ⟨x, rfl⟩, h⟩⟩
 #align ctop.mem_nhds_to_topsp Ctop.mem_nhds_to_topsp
 
@@ -124,14 +124,14 @@ protected theorem mem_nhds [T : TopologicalSpace α] (F : Realizer α) {s : Set 
 
 theorem is_open_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
     IsOpen s ↔ ∀ a ∈ s, ∃ b, a ∈ F.f b ∧ F.f b ⊆ s :=
-  is_open_iff_mem_nhds.trans <| ball_congr fun a h => F.mem_nhds
+  is_open_iff_mem_nhds.trans $ ball_congr $ fun a h => F.mem_nhds
 #align ctop.realizer.is_open_iff Ctop.Realizer.is_open_iff
 
 theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
     IsClosed s ↔ ∀ a, (∀ b, a ∈ F.f b → ∃ z, z ∈ F.f b ∩ s) → a ∈ s :=
-  is_open_compl_iff.symm.trans <|
-    F.is_open_iff.trans <|
-      forall_congr' fun a =>
+  is_open_compl_iff.symm.trans $
+    F.is_open_iff.trans $
+      forall_congr' $ fun a =>
         show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀ z ∈ F.f b, z ∉ s) ↔ _ by
           haveI := Classical.propDecidable <;> rw [not_imp_comm] <;> simp [not_exists, not_and, not_forall, and_comm']
 #align ctop.realizer.is_closed_iff Ctop.Realizer.is_closed_iff
@@ -142,7 +142,7 @@ theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a
 #align ctop.realizer.mem_interior_iff Ctop.Realizer.mem_interior_iff
 
 protected theorem is_open [TopologicalSpace α] (F : Realizer α) (s : F.σ) : IsOpen (F.f s) :=
-  is_open_iff_nhds.2 fun a m => by simpa using F.mem_nhds.2 ⟨s, m, subset.refl _⟩
+  is_open_iff_nhds.2 $ fun a m => by simpa using F.mem_nhds.2 ⟨s, m, subset.refl _⟩
 #align ctop.realizer.is_open Ctop.Realizer.is_open
 
 theorem ext' [T : TopologicalSpace α] {σ : Type _} {F : Ctop α σ} (H : ∀ a s, s ∈ 𝓝 a ↔ ∃ b, a ∈ F b ∧ F b ⊆ s) :
@@ -154,7 +154,7 @@ theorem ext' [T : TopologicalSpace α] {σ : Type _} {F : Ctop α σ} (H : ∀ a
 
 theorem ext [T : TopologicalSpace α] {σ : Type _} {F : Ctop α σ} (H₁ : ∀ a, IsOpen (F a))
     (H₂ : ∀ a s, s ∈ 𝓝 a → ∃ b, a ∈ F b ∧ F b ⊆ s) : F.toTopsp = T :=
-  ext' fun a s => ⟨H₂ a s, fun ⟨b, h₁, h₂⟩ => mem_nhds_iff.2 ⟨_, h₂, H₁ _, h₁⟩⟩
+  ext' $ fun a s => ⟨H₂ a s, fun ⟨b, h₁, h₂⟩ => mem_nhds_iff.2 ⟨_, h₂, H₁ _, h₁⟩⟩
 #align ctop.realizer.ext Ctop.Realizer.ext
 
 variable [TopologicalSpace α]
@@ -165,7 +165,7 @@ protected def id : Realizer α :=
     { f := Subtype.val, top := fun _ => ⟨univ, is_open_univ⟩, top_mem := mem_univ,
       inter := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => ⟨_, h₁.inter h₂⟩, inter_mem := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a => id,
       inter_sub := fun ⟨x, h₁⟩ ⟨y, h₂⟩ a h₃ => Subset.refl _ },
-    (ext Subtype.property) fun x s h =>
+    ext Subtype.property $ fun x s h =>
       let ⟨t, h, o, m⟩ := mem_nhds_iff.1 h
       ⟨⟨t, o⟩, m, h⟩⟩
 #align ctop.realizer.id Ctop.Realizer.id
@@ -174,7 +174,7 @@ protected def id : Realizer α :=
 def ofEquiv (F : Realizer α) (E : F.σ ≃ τ) : Realizer α :=
   ⟨τ, F.f.of_equiv E,
     ext' fun a s =>
-      F.mem_nhds.trans <| ⟨fun ⟨s, h⟩ => ⟨E s, by simpa using h⟩, fun ⟨t, h⟩ => ⟨E.symm t, by simpa using h⟩⟩⟩
+      F.mem_nhds.trans $ ⟨fun ⟨s, h⟩ => ⟨E s, by simpa using h⟩, fun ⟨t, h⟩ => ⟨E.symm t, by simpa using h⟩⟩⟩
 #align ctop.realizer.of_equiv Ctop.Realizer.ofEquiv
 
 @[simp]
@@ -193,8 +193,8 @@ protected def nhds (F : Realizer α) (a : α) : (𝓝 a).Realizer :=
     { f := fun s => F.f s.1, pt := ⟨_, F.f.top_mem a⟩, inf := fun ⟨x, h₁⟩ ⟨y, h₂⟩ => ⟨_, F.f.inter_mem x y a ⟨h₁, h₂⟩⟩,
       inf_le_left := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).1,
       inf_le_right := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).2 },
-    filter_eq <|
-      Set.ext fun x =>
+    filter_eq $
+      Set.ext $ fun x =>
         ⟨fun ⟨⟨s, as⟩, h⟩ => mem_nhds_iff.2 ⟨_, h, F.IsOpen _, as⟩, fun h =>
           let ⟨s, h, as⟩ := F.mem_nhds.1 h
           ⟨⟨s, h⟩, as⟩⟩⟩
@@ -240,14 +240,14 @@ theorem locally_finite_iff_exists_realizer [TopologicalSpace α] (F : Realizer �
           let ⟨h, h'⟩ := h₁ x
           F.mem_nhds.1 h
     ⟨⟨fun x => ⟨g₂ x, (h₂ x).1⟩, fun x =>
-        finite.fintype <|
+        finite.fintype $
           let ⟨h, h'⟩ := h₁ x
-          h'.Subset fun i hi => hi.mono (inter_subset_inter_right _ (h₂ x).2)⟩⟩,
+          h'.Subset $ fun i hi => hi.mono (inter_subset_inter_right _ (h₂ x).2)⟩⟩,
     fun ⟨R⟩ => R.to_locally_finite⟩
 #align locally_finite_iff_exists_realizer locally_finite_iff_exists_realizer
 
 instance [TopologicalSpace α] [Finite β] (F : Realizer α) (f : β → Set α) : Nonempty (LocallyFinite.Realizer F f) :=
-  (locally_finite_iff_exists_realizer _).1 <| locally_finite_of_finite _
+  (locally_finite_iff_exists_realizer _).1 $ locally_finite_of_finite _
 
 /-- A `compact.realizer s` is a realization that `s` is compact, namely it is a
 choice of finite open covers for each set family covering `s`.  -/

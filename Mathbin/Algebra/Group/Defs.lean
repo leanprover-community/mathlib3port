@@ -509,7 +509,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -737,7 +737,7 @@ class CancelCommMonoid (M : Type u) extends LeftCancelMonoid M, CommMonoid M
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelCommMonoid M] : CancelMonoid M :=
-  { ‹CancelCommMonoid M› with mul_right_cancel := fun a b c h => mul_left_cancel <| by rw [mul_comm, h, mul_comm] }
+  { ‹CancelCommMonoid M› with mul_right_cancel := fun a b c h => mul_left_cancel $ by rw [mul_comm, h, mul_comm] }
 #align cancel_comm_monoid.to_cancel_monoid CancelCommMonoid.toCancelMonoid
 -/
 
@@ -748,7 +748,7 @@ end CancelMonoid
 Use instead `a ^ n`,  which has better definitional behavior. -/
 def zpowRec {M : Type _} [One M] [Mul M] [Inv M] : ℤ → M → M
   | Int.ofNat n, a => npowRec n a
-  | -[n+1], a => (npowRec n.succ a)⁻¹
+  | -[1+ n], a => (npowRec n.succ a)⁻¹
 #align zpow_rec zpowRec
 -/
 
@@ -757,7 +757,7 @@ def zpowRec {M : Type _} [One M] [Mul M] [Inv M] : ℤ → M → M
 times, for integer `n`. Use instead `n • a`, which has better definitional behavior. -/
 def zsmulRec {M : Type _} [Zero M] [Add M] [Neg M] : ℤ → M → M
   | Int.ofNat n, a => nsmulRec n a
-  | -[n+1], a => -nsmulRec n.succ a
+  | -[1+ n], a => -nsmulRec n.succ a
 #align zsmul_rec zsmulRec
 -/
 
@@ -864,7 +864,7 @@ class DivInvMonoid (G : Type u) extends Monoid G, Inv G, Div G where
   zpow_succ' : ∀ (n : ℕ) (a : G), zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by
     intros
     rfl
-  zpow_neg' : ∀ (n : ℕ) (a : G), zpow -[n+1] a = (zpow n.succ a)⁻¹ := by
+  zpow_neg' : ∀ (n : ℕ) (a : G), zpow -[1+ n] a = (zpow n.succ a)⁻¹ := by
     intros
     rfl
 #align div_inv_monoid DivInvMonoid
@@ -901,7 +901,7 @@ class SubNegMonoid (G : Type u) extends AddMonoid G, Neg G, Sub G where
   zsmul_succ' : ∀ (n : ℕ) (a : G), zsmul (Int.ofNat n.succ) a = a + zsmul (Int.ofNat n) a := by
     intros
     rfl
-  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul -[n+1] a = -zsmul n.succ a := by
+  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul -[1+ n] a = -zsmul n.succ a := by
     intros
     rfl
 #align sub_neg_monoid SubNegMonoid
@@ -964,7 +964,7 @@ theorem zpow_of_nat (a : G) (n : ℕ) : a ^ Int.ofNat n = a ^ n :=
 #align zpow_of_nat zpow_of_nat
 
 @[simp, to_additive]
-theorem zpow_neg_succ_of_nat (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ := by
+theorem zpow_neg_succ_of_nat (a : G) (n : ℕ) : a ^ -[1+ n] = (a ^ (n + 1))⁻¹ := by
   rw [← zpow_coe_nat]
   exact DivInvMonoid.zpow_neg' n a
 #align zpow_neg_succ_of_nat zpow_neg_succ_of_nat
@@ -1249,7 +1249,7 @@ theorem inv_mul_cancel_right (a b : G) : a * b⁻¹ * b = a := by rw [mul_assoc,
 @[to_additive AddGroup.toSubtractionMonoid]
 instance (priority := 100) Group.toDivisionMonoid : DivisionMonoid G :=
   { ‹Group G› with inv_inv := fun a => inv_eq_of_mul (mul_left_inv a),
-    mul_inv_rev := fun a b => inv_eq_of_mul <| by rw [mul_assoc, mul_inv_cancel_left, mul_right_inv],
+    mul_inv_rev := fun a b => inv_eq_of_mul $ by rw [mul_assoc, mul_inv_cancel_left, mul_right_inv],
     inv_eq_of_mul := fun _ _ => inv_eq_of_mul }
 #align group.to_division_monoid Group.toDivisionMonoid
 -/

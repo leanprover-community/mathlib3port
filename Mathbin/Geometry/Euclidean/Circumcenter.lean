@@ -133,7 +133,7 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
   · rintro ⟨cc₃, cr₃⟩ ⟨hcc₃, hcr₃⟩
     simp only at hcc₃ hcr₃
     obtain ⟨t₃, cc₃', hcc₃', hcc₃''⟩ :
-      ∃ (r : ℝ)(p0 : P)(hp0 : p0 ∈ s), cc₃ = r • (p -ᵥ ↑((orthogonalProjection s) p)) +ᵥ p0 := by
+      ∃ (r : ℝ) (p0 : P) (hp0 : p0 ∈ s), cc₃ = r • (p -ᵥ ↑((orthogonalProjection s) p)) +ᵥ p0 := by
       rwa [mem_affine_span_insert_iff (orthogonal_projection_mem p)] at hcc₃
     have hcr₃' : ∃ r, ∀ p1 ∈ ps, dist p1 cc₃ = r :=
       ⟨cr₃, fun p1 hp1 => dist_of_mem_subset_mk_sphere (Set.mem_insert_of_mem _ hp1) hcr₃⟩
@@ -154,7 +154,7 @@ theorem exists_unique_dist_eq_of_insert {s : AffineSubspace ℝ P} [CompleteSpac
         dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq _ (hps hp0),
         orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hcc₃', h', dist_of_mem_subset_mk_sphere hp0 hcr,
         dist_eq_norm_vsub V _ cc₃', vadd_vsub, norm_smul, ← dist_eq_norm_vsub V p, Real.norm_eq_abs, ← mul_assoc,
-        mul_comm _ (|t₃|), ← mul_assoc, abs_mul_abs_self]
+        mul_comm _ |t₃|, ← mul_assoc, abs_mul_abs_self]
       ring
     replace hcr₃ := dist_of_mem_subset_mk_sphere (Set.mem_insert _ _) hcr₃
     rw [hpo, hcc₃'', hcr₃val, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
@@ -347,7 +347,7 @@ theorem circumradius_pos {n : ℕ} (s : Simplex ℝ P (n + 1)) : 0 < s.circumrad
   intro h
   have hr := s.dist_circumcenter_eq_circumradius
   simp_rw [← h, dist_eq_zero] at hr
-  have h01 := s.independent.injective.ne (by decide : (0 : Fin (n + 2)) ≠ 1)
+  have h01 := s.independent.injective.ne (dec_trivial : (0 : Fin (n + 2)) ≠ 1)
   simpa [hr] using h01
 #align affine.simplex.circumradius_pos Affine.Simplex.circumradius_pos
 
@@ -359,8 +359,6 @@ theorem circumcenter_eq_point (s : Simplex ℝ P 0) (i : Fin 1) : s.circumcenter
   congr
 #align affine.simplex.circumcenter_eq_point Affine.Simplex.circumcenter_eq_point
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The circumcenter of a 1-simplex equals its centroid. -/
 theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) : s.circumcenter = Finset.univ.centroid ℝ s.points := by
   have hr :
@@ -726,7 +724,7 @@ include V
 that contains a set of points, those points are cospherical if and
 only if they are equidistant from some point in that subspace. -/
 theorem cospherical_iff_exists_mem_of_complete {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s]
-    [CompleteSpace s.direction] : Cospherical ps ↔ ∃ center ∈ s, ∃ radius : ℝ, ∀ p ∈ ps, dist p center = radius := by
+    [CompleteSpace s.direction] : Cospherical ps ↔ ∃ (center ∈ s) (radius : ℝ), ∀ p ∈ ps, dist p center = radius := by
   constructor
   · rintro ⟨c, hcr⟩
     rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq h c] at hcr
@@ -742,7 +740,8 @@ finite-dimensional, that contains a set of points, those points are
 cospherical if and only if they are equidistant from some point in
 that subspace. -/
 theorem cospherical_iff_exists_mem_of_finite_dimensional {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s]
-    [FiniteDimensional ℝ s.direction] : Cospherical ps ↔ ∃ center ∈ s, ∃ radius : ℝ, ∀ p ∈ ps, dist p center = radius :=
+    [FiniteDimensional ℝ s.direction] :
+    Cospherical ps ↔ ∃ (center ∈ s) (radius : ℝ), ∀ p ∈ ps, dist p center = radius :=
   cospherical_iff_exists_mem_of_complete h
 #align
   euclidean_geometry.cospherical_iff_exists_mem_of_finite_dimensional EuclideanGeometry.cospherical_iff_exists_mem_of_finite_dimensional

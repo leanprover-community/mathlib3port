@@ -58,17 +58,17 @@ variable (α) (β)
 @[simps]
 def MulAction.toPermHom : α →* Equiv.Perm β where
   toFun := MulAction.toPerm
-  map_one' := Equiv.ext <| one_smul α
-  map_mul' u₁ u₂ := Equiv.ext <| mul_smul (u₁ : α) u₂
+  map_one' := Equiv.ext $ one_smul α
+  map_mul' u₁ u₂ := Equiv.ext $ mul_smul (u₁ : α) u₂
 #align mul_action.to_perm_hom MulAction.toPermHom
 
 /-- Given an action of a additive group `α` on a set `β`, each `g : α` defines a permutation of
 `β`. -/
 @[simps]
 def AddAction.toPermHom (α : Type _) [AddGroup α] [AddAction α β] : α →+ Additive (Equiv.Perm β) where
-  toFun a := Additive.ofMul <| AddAction.toPerm a
-  map_zero' := Equiv.ext <| zero_vadd α
-  map_add' a₁ a₂ := Equiv.ext <| add_vadd a₁ a₂
+  toFun a := Additive.ofMul $ AddAction.toPerm a
+  map_zero' := Equiv.ext $ zero_vadd α
+  map_add' a₁ a₂ := Equiv.ext $ add_vadd a₁ a₂
 #align add_action.to_perm_hom AddAction.toPermHom
 
 /-- The tautological action by `equiv.perm α` on `α`.
@@ -226,7 +226,7 @@ theorem smul_eq_zero_iff_eq (a : α) {x : β} : a • x = 0 ↔ x = 0 :=
 #align smul_eq_zero_iff_eq smul_eq_zero_iff_eq
 
 theorem smul_ne_zero_iff_ne (a : α) {x : β} : a • x ≠ 0 ↔ x ≠ 0 :=
-  not_congr <| smul_eq_zero_iff_eq a
+  not_congr $ smul_eq_zero_iff_eq a
 #align smul_ne_zero_iff_ne smul_ne_zero_iff_ne
 
 end Group
@@ -330,7 +330,7 @@ variable [Monoid α] [AddMonoid β] [DistribMulAction α β]
 
 @[simp]
 theorem smul_eq_zero {u : α} (hu : IsUnit u) {x : β} : u • x = 0 ↔ x = 0 :=
-  (Exists.elim hu) fun u hu => hu ▸ show u • x = 0 ↔ x = 0 from smul_eq_zero_iff_eq u
+  Exists.elim hu $ fun u hu => hu ▸ show u • x = 0 ↔ x = 0 from smul_eq_zero_iff_eq u
 #align is_unit.smul_eq_zero IsUnit.smul_eq_zero
 
 end DistribMulAction

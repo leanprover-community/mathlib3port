@@ -67,11 +67,12 @@ namespace ProjectiveSpectrum.StructureSheaf
 
 variable {𝒜}
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (r s) -/
 /-- The predicate saying that a dependent function on an open `U` is realised as a fixed fraction
 `r / s` of *same grading* in each of the stalks (which are localizations at various prime ideals).
 -/
 def IsFraction {U : Opens (ProjectiveSpectrum.top 𝒜)} (f : ∀ x : U, at x.1) : Prop :=
-  ∃ (i : ℕ)(r s : 𝒜 i), ∀ x : U, ∃ s_nin : s.1 ∉ x.1.asHomogeneousIdeal, f x = Quotient.mk' ⟨i, r, s, s_nin⟩
+  ∃ (i : ℕ) (r : 𝒜 i) (s : 𝒜 i), ∀ x : U, ∃ s_nin : s.1 ∉ x.1.asHomogeneousIdeal, f x = Quotient.mk' ⟨i, r, s, s_nin⟩
 #align
   algebraic_geometry.projective_spectrum.structure_sheaf.is_fraction AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.IsFraction
 
@@ -359,10 +360,10 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
             y ∈
               ProjectiveSpectrum.basicOpen 𝒜 b1 ⊓ ProjectiveSpectrum.basicOpen 𝒜 b2 ⊓ ProjectiveSpectrum.basicOpen 𝒜 c),
           (Localization.mk a1
-              ⟨b1,
-                show b1 ∉ y.asHomogeneousIdeal by
-                  rw [← ProjectiveSpectrum.mem_basic_open] <;>
-                    exact le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_left _ _) hy⟩ :
+                ⟨b1,
+                  show b1 ∉ y.asHomogeneousIdeal by
+                    rw [← ProjectiveSpectrum.mem_basic_open] <;>
+                      exact le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_left _ _) hy⟩ :
               Localization.AtPrime y.1.toIdeal) =
             Localization.mk a2
               ⟨b2,
@@ -399,7 +400,7 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
               le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_left _ _ ≫ opens.inf_le_left _ _ ≫ opens.inf_le_right _ _)
                 y.2⟩,
             le_of_hom (opens.inf_le_left _ _ ≫ opens.inf_le_left _ _ ≫ opens.inf_le_right _ _) y.2⟩,
-      Function.surjective_iff_has_right_inverse.mpr
+      Function.surjective_iff_hasRightInverse.mpr
         ⟨homogeneousLocalizationToStalk 𝒜 x, fun f => by
           rw [homogeneous_localization_to_stalk]
           erw [stalk_to_fiber_ring_hom_germ 𝒜 (ProjectiveSpectrum.basicOpen 𝒜 f.denom) ⟨x, _⟩

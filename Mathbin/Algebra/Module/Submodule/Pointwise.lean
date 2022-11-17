@@ -52,10 +52,10 @@ protected def hasPointwiseNeg :
       (Submodule R
         M) where neg p :=
     { -p.toAddSubmonoid with carrier := -(p : Set M),
-      smul_mem' := fun r m hm => Set.mem_neg.2 <| smul_neg r m ▸ p.smul_mem r <| Set.mem_neg.1 hm }
+      smul_mem' := fun r m hm => Set.mem_neg.2 $ smul_neg r m ▸ p.smul_mem r $ Set.mem_neg.1 hm }
 #align submodule.has_pointwise_neg Submodule.hasPointwiseNeg
 
-localized [Pointwise] attribute [instance] Submodule.hasPointwiseNeg
+scoped[Pointwise] attribute [instance] Submodule.hasPointwiseNeg
 
 open Pointwise
 
@@ -79,10 +79,10 @@ theorem mem_neg {g : M} {S : Submodule R M} : g ∈ -S ↔ -g ∈ S :=
 This is available as an instance in the `pointwise` locale. -/
 protected def hasInvolutivePointwiseNeg : HasInvolutiveNeg (Submodule R M) where
   neg := Neg.neg
-  neg_neg S := SetLike.coe_injective <| neg_neg _
+  neg_neg S := SetLike.coe_injective $ neg_neg _
 #align submodule.has_involutive_pointwise_neg Submodule.hasInvolutivePointwiseNeg
 
-localized [Pointwise] attribute [instance] Submodule.hasInvolutivePointwiseNeg
+scoped[Pointwise] attribute [instance] Submodule.hasInvolutivePointwiseNeg
 
 @[simp]
 theorem neg_le_neg (S T : Submodule R M) : -S ≤ -T ↔ S ≤ T :=
@@ -121,12 +121,12 @@ theorem neg_sup (S T : Submodule R M) : -(S ⊔ T) = -S ⊔ -T :=
 
 @[simp]
 theorem neg_bot : -(⊥ : Submodule R M) = ⊥ :=
-  SetLike.coe_injective <| (Set.neg_singleton 0).trans <| congr_arg _ neg_zero
+  SetLike.coe_injective $ (Set.neg_singleton 0).trans $ congr_arg _ neg_zero
 #align submodule.neg_bot Submodule.neg_bot
 
 @[simp]
 theorem neg_top : -(⊤ : Submodule R M) = ⊤ :=
-  SetLike.coe_injective <| Set.neg_univ
+  SetLike.coe_injective $ Set.neg_univ
 #align submodule.neg_top Submodule.neg_top
 
 @[simp]
@@ -145,7 +145,7 @@ open Pointwise
 
 @[simp]
 theorem neg_eq_self [Ring R] [AddCommGroup M] [Module R M] (p : Submodule R M) : -p = p :=
-  ext fun _ => p.neg_mem_iff
+  ext $ fun _ => p.neg_mem_iff
 #align submodule.neg_eq_self Submodule.neg_eq_self
 
 end Neg
@@ -185,14 +185,14 @@ variable [Monoid α] [DistribMulAction α M] [SmulCommClass α R M]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseDistribMulAction : DistribMulAction α (Submodule R M) where
   smul a S := S.map (DistribMulAction.toLinearMap R M a : M →ₗ[R] M)
-  one_smul S := (congr_arg (fun f : Module.EndCat R M => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id
+  one_smul S := (congr_arg (fun f : Module.EndCat R M => S.map f) (LinearMap.ext $ one_smul α)).trans S.map_id
   mul_smul a₁ a₂ S :=
-    (congr_arg (fun f : Module.EndCat R M => S.map f) (LinearMap.ext <| mul_smul _ _)).trans (S.map_comp _ _)
+    (congr_arg (fun f : Module.EndCat R M => S.map f) (LinearMap.ext $ mul_smul _ _)).trans (S.map_comp _ _)
   smul_zero a := map_bot _
   smul_add a S₁ S₂ := map_sup _ _ _
 #align submodule.pointwise_distrib_mul_action Submodule.pointwiseDistribMulAction
 
-localized [Pointwise] attribute [instance] Submodule.pointwiseDistribMulAction
+scoped[Pointwise] attribute [instance] Submodule.pointwiseDistribMulAction
 
 open Pointwise
 
@@ -218,7 +218,7 @@ theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submodule R M) : m ∈ S �
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ M] [SmulCommClass αᵐᵒᵖ R M] [IsCentralScalar α M] :
     IsCentralScalar α (Submodule R M) :=
-  ⟨fun a S => (congr_arg fun f : Module.EndCat R M => S.map f) <| LinearMap.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f : Module.EndCat R M => S.map f) $ LinearMap.ext $ op_smul_eq_smul _⟩
 #align submodule.pointwise_central_scalar Submodule.pointwise_central_scalar
 
 @[simp]
@@ -242,10 +242,10 @@ This is a stronger version of `submodule.pointwise_distrib_mul_action`. Note tha
 not hold so this cannot be stated as a `module`. -/
 protected def pointwiseMulActionWithZero : MulActionWithZero α (Submodule R M) :=
   { Submodule.pointwiseDistribMulAction with
-    zero_smul := fun S => (congr_arg (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext <| zero_smul α)).trans S.map_zero }
+    zero_smul := fun S => (congr_arg (fun f : M →ₗ[R] M => S.map f) (LinearMap.ext $ zero_smul α)).trans S.map_zero }
 #align submodule.pointwise_mul_action_with_zero Submodule.pointwiseMulActionWithZero
 
-localized [Pointwise] attribute [instance] Submodule.pointwiseMulActionWithZero
+scoped[Pointwise] attribute [instance] Submodule.pointwiseMulActionWithZero
 
 end
 

@@ -60,7 +60,7 @@ theorem dist_line_map_line_map (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
 #align dist_line_map_line_map dist_line_map_line_map
 
 theorem lipschitzWithLineMap (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
-  LipschitzWith.ofDistLeMul fun c₁ c₂ => ((dist_line_map_line_map p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
+  LipschitzWith.ofDistLeMul $ fun c₁ c₂ => ((dist_line_map_line_map p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
 #align lipschitz_with_line_map lipschitzWithLineMap
 
 @[simp]
@@ -132,7 +132,7 @@ include W
 
 theorem antilipschitzWithLineMap {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
     AntilipschitzWith (nndist p₁ p₂)⁻¹ (lineMap p₁ p₂ : 𝕜 → Q) :=
-  AntilipschitzWith.ofLeMulDist fun c₁ c₂ => by
+  AntilipschitzWith.ofLeMulDist $ fun c₁ c₂ => by
     rw [dist_line_map_line_map, Nnreal.coe_inv, ← dist_nndist, mul_left_comm, inv_mul_cancel (dist_ne_zero.2 h),
       mul_one]
 #align antilipschitz_with_line_map antilipschitzWithLineMap
@@ -183,9 +183,9 @@ def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = m
     P →ᵃ[ℝ] Q :=
   AffineMap.mk' f
     (↑((AddMonoidHom.ofMapMidpoint ℝ ℝ
-            ((AffineEquiv.vaddConst ℝ (f <| Classical.arbitrary P)).symm ∘
+            ((AffineEquiv.vaddConst ℝ (f $ Classical.arbitrary P)).symm ∘
               f ∘ AffineEquiv.vaddConst ℝ (Classical.arbitrary P))
-            (by simp) fun x y => by simp [h]).toRealLinearMap <|
+            (by simp) fun x y => by simp [h]).toRealLinearMap $
         by
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous.vadd, \",\", expr continuous.vsub, \",\", expr continuous_const, \",\", expr hfc.comp, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"))

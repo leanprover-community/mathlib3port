@@ -124,7 +124,7 @@ variable [DecidableEq α] (k : ℕ) (𝒜 : Finset (Finset α))
 
 /-- `falling k 𝒜` is all the finsets of cardinality `k` which are a subset of something in `𝒜`. -/
 def falling : Finset (Finset α) :=
-  𝒜.sup <| powersetLen k
+  𝒜.sup $ powersetLen k
 #align finset.falling Finset.falling
 
 variable {𝒜 k} {s : Finset α}
@@ -139,11 +139,11 @@ theorem sized_falling : (falling k 𝒜 : Set (Finset α)).Sized k := fun s hs =
 #align finset.sized_falling Finset.sized_falling
 
 theorem slice_subset_falling : 𝒜 # k ⊆ falling k 𝒜 := fun s hs =>
-  mem_falling.2 <| (mem_slice.1 hs).imp_left fun h => ⟨s, h, Subset.refl _⟩
+  mem_falling.2 $ (mem_slice.1 hs).imp_left $ fun h => ⟨s, h, Subset.refl _⟩
 #align finset.slice_subset_falling Finset.slice_subset_falling
 
 theorem falling_zero_subset : falling 0 𝒜 ⊆ {∅} :=
-  subset_singleton_iff'.2 fun t ht => card_eq_zero.1 <| sized_falling _ _ ht
+  subset_singleton_iff'.2 $ fun t ht => card_eq_zero.1 $ sized_falling _ _ ht
 #align finset.falling_zero_subset Finset.falling_zero_subset
 
 theorem slice_union_shadow_falling_succ : 𝒜 # k ∪ (∂ ) (falling (k + 1) 𝒜) = falling k 𝒜 := by
@@ -173,7 +173,7 @@ variable {𝒜 k}
 antichain property. -/
 theorem _root_.is_antichain.disjoint_slice_shadow_falling {m n : ℕ} (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
     Disjoint (𝒜 # m) ((∂ ) (falling n 𝒜)) :=
-  disjoint_right.2 fun s h₁ h₂ => by
+  disjoint_right.2 $ fun s h₁ h₂ => by
     simp_rw [mem_shadow_iff, exists_prop, mem_falling] at h₁
     obtain ⟨s, ⟨⟨t, ht, hst⟩, hs⟩, a, ha, rfl⟩ := h₁
     refine' h𝒜 (slice_subset h₂) ht _ ((erase_subset _ _).trans hst)
@@ -197,8 +197,8 @@ theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
   rw [← tsub_tsub, tsub_add_cancel_of_le (le_tsub_of_add_le_left hk)]
   exact
     add_le_add_left
-      ((ih <| le_of_succ_le hk).trans <|
-        card_div_choose_le_card_shadow_div_choose (tsub_pos_iff_lt.2 <| Nat.succ_le_iff.1 hk).ne' <| sized_falling _ _)
+      ((ih $ le_of_succ_le hk).trans $
+        card_div_choose_le_card_shadow_div_choose (tsub_pos_iff_lt.2 $ Nat.succ_le_iff.1 hk).ne' $ sized_falling _ _)
       _
 #align finset.le_card_falling_div_choose Finset.le_card_falling_div_choose
 
@@ -209,12 +209,15 @@ variable {𝒜 : Finset (Finset α)} {s : Finset α} {k : ℕ}
 /-- The **Lubell-Yamamoto-Meshalkin inequality**. If `𝒜` is an antichain, then the sum of the
 proportion of elements it takes from each layer is less than `1`. -/
 theorem sum_card_slice_div_choose_le_one [Fintype α] (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
-    (∑ r in range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r) ≤ 1 := by
-  classical rw [← sum_flip]
-    rw [div_le_iff] <;> norm_cast
-    · rw [tsub_self, choose_zero_right]
-      exact zero_lt_one
-      
+    (∑ r in range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r) ≤ 1 := by classical
+  rw [← sum_flip]
+  refine' (le_card_falling_div_choose le_rfl h𝒜).trans _
+  rw [div_le_iff] <;> norm_cast
+  · simpa only [Nat.sub_self, one_mul, Nat.choose_zero_right, falling] using (sized_falling 0 𝒜).card_le
+    
+  · rw [tsub_self, choose_zero_right]
+    exact zero_lt_one
+    
 #align finset.sum_card_slice_div_choose_le_one Finset.sum_card_slice_div_choose_le_one
 
 end Lym
@@ -226,14 +229,21 @@ end Lym
 maximal layer in `finset α`. This precisely means that `finset α` is a Sperner order. -/
 theorem _root_.is_antichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) : 𝒜.card ≤ (Fintype.card α).choose (Fintype.card α / 2) := by
-  classical suffices :
-      (∑ r in Iic (Fintype.card α), ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤ 1
-    rw [Iic_eq_Icc, ← Ico_succ_right, bot_eq_zero, Ico_zero_eq_range]
-    rw [mem_range] at hr
-    · exact Nat.zero_le _
-      
-    · exact choose_le_middle _ _
-      
+  classical
+  suffices (∑ r in Iic (Fintype.card α), ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤ 1 by
+    rwa [← sum_div, ← Nat.cast_sum, div_le_one, cast_le, sum_card_slice] at this
+    norm_cast
+    exact choose_pos (Nat.div_le_self _ _)
+  rw [Iic_eq_Icc, ← Ico_succ_right, bot_eq_zero, Ico_zero_eq_range]
+  refine' (sum_le_sum $ fun r hr => _).trans (sum_card_slice_div_choose_le_one h𝒜)
+  rw [mem_range] at hr
+  refine' div_le_div_of_le_left _ _ _ <;> norm_cast
+  · exact Nat.zero_le _
+    
+  · exact choose_pos (lt_succ_iff.1 hr)
+    
+  · exact choose_le_middle _ _
+    
 #align finset._root_.is_antichain.sperner finset._root_.is_antichain.sperner
 
 end Finset

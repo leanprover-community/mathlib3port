@@ -51,18 +51,18 @@ namespace Finite
 open _Root_.Submodule Set
 
 theorem iff_add_monoid_fg {M : Type _} [AddCommMonoid M] : Module.Finite ℕ M ↔ AddMonoid.Fg M :=
-  ⟨fun h => AddMonoid.fg_def.2 <| (fg_iff_add_submonoid_fg ⊤).1 (finite_def.1 h), fun h =>
-    finite_def.2 <| (fg_iff_add_submonoid_fg ⊤).2 (AddMonoid.fg_def.1 h)⟩
+  ⟨fun h => AddMonoid.fg_def.2 $ (fg_iff_add_submonoid_fg ⊤).1 (finite_def.1 h), fun h =>
+    finite_def.2 $ (fg_iff_add_submonoid_fg ⊤).2 (AddMonoid.fg_def.1 h)⟩
 #align module.finite.iff_add_monoid_fg Module.Finite.iff_add_monoid_fg
 
 theorem iff_add_group_fg {G : Type _} [AddCommGroup G] : Module.Finite ℤ G ↔ AddGroup.Fg G :=
-  ⟨fun h => AddGroup.fg_def.2 <| (fg_iff_add_subgroup_fg ⊤).1 (finite_def.1 h), fun h =>
-    finite_def.2 <| (fg_iff_add_subgroup_fg ⊤).2 (AddGroup.fg_def.1 h)⟩
+  ⟨fun h => AddGroup.fg_def.2 $ (fg_iff_add_subgroup_fg ⊤).1 (finite_def.1 h), fun h =>
+    finite_def.2 $ (fg_iff_add_subgroup_fg ⊤).2 (AddGroup.fg_def.1 h)⟩
 #align module.finite.iff_add_group_fg Module.Finite.iff_add_group_fg
 
 variable {R M N}
 
-theorem exists_fin [Finite R M] : ∃ (n : ℕ)(s : Fin n → M), span R (range s) = ⊤ :=
+theorem exists_fin [Finite R M] : ∃ (n : ℕ) (s : Fin n → M), span R (range s) = ⊤ :=
   Submodule.fg_iff_exists_fin_generating_family.mp out
 #align module.finite.exists_fin Module.Finite.exists_fin
 
@@ -130,16 +130,21 @@ end Finite
 end Module
 
 instance Module.Finite.base_change [CommSemiring R] [Semiring A] [Algebra R A] [AddCommMonoid M] [Module R M]
-    [h : Module.Finite R M] : Module.Finite A (TensorProduct R A M) := by
-  classical obtain ⟨s, hs⟩ := h.out
-    apply TensorProduct.induction_on x
-    · intro x y
-      rw [Finset.coe_image, ← Submodule.span_span_of_tower R, Submodule.span_image, hs, Submodule.map_top,
-        LinearMap.range_coe]
-      change _ ∈ Submodule.span A (Set.range <| TensorProduct.mk R A M 1)
-      rw [← mul_one x, ← smul_eq_mul, ← TensorProduct.smul_tmul']
-      exact Submodule.smul_mem _ x (Submodule.subset_span <| Set.mem_range_self y)
-      
+    [h : Module.Finite R M] : Module.Finite A (TensorProduct R A M) := by classical
+  obtain ⟨s, hs⟩ := h.out
+  refine' ⟨⟨s.image (TensorProduct.mk R A M 1), eq_top_iff.mpr $ fun x _ => _⟩⟩
+  apply TensorProduct.induction_on x
+  · exact zero_mem _
+    
+  · intro x y
+    rw [Finset.coe_image, ← Submodule.span_span_of_tower R, Submodule.span_image, hs, Submodule.map_top,
+      LinearMap.range_coe]
+    change _ ∈ Submodule.span A (Set.range $ TensorProduct.mk R A M 1)
+    rw [← mul_one x, ← smul_eq_mul, ← TensorProduct.smul_tmul']
+    exact Submodule.smul_mem _ x (Submodule.subset_span $ Set.mem_range_self y)
+    
+  · exact fun _ _ => Submodule.add_mem _
+    
 #align module.finite.base_change Module.Finite.base_change
 
 instance Module.Finite.tensor_product [CommSemiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N]

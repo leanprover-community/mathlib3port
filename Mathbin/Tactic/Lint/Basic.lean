@@ -22,8 +22,7 @@ metadata is stored in the `linter` structure. We define two attributes:
 
 open Tactic
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 section
 
 attribute [local semireducible] reflected
@@ -33,7 +32,7 @@ attribute [local semireducible] reflected
 See Note [user attribute parameters]
 -/
 private unsafe def reflect_name_list : has_reflect (List Name)
-  | ns => quote.1 (id (%%ₓexpr.mk_app (quote.1 Prop) <| ns.map (flip expr.const [])) : List Name)
+  | ns => q((id $(expr.mk_app q(Prop) $ ns.map flip expr.const []) : List Name))
 #align reflect_name_list reflect_name_list
 
 private unsafe def parse_name_list (e : expr) : List Name :=
@@ -49,7 +48,7 @@ unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where
   Name := "nolint"
   descr := "Do not report this declaration in any of the tests of `#lint`"
   after_set :=
-    some fun n _ _ => do
+    some $ fun n _ _ => do
       let ls@(_ :: _) ← parse_name_list <$> nolint_attr.get_param_untyped n |
         fail "you need to specify at least one linter to disable"
       skip
@@ -70,7 +69,7 @@ add_tactic_doc { Name := "nolint", category := DocCategory.attr, declNames := [`
 using `linter`, i.e., if there is no `nolint` attribute. -/
 unsafe def should_be_linted (linter : Name) (decl : Name) : tactic Bool := do
   let c ← nolint_attr.get_cache
-  pure <| linter ∉ (c decl).getOrElse []
+  pure $ linter ∉ (c decl).getOrElse []
 #align should_be_linted should_be_linted
 
 /-- A linting test for the `#lint` command.
@@ -108,7 +107,7 @@ when used in `#lint`.
 unsafe def linter_attr : user_attribute Unit Unit where
   Name := "linter"
   descr := "Use this declaration as a linting test in #lint"
-  after_set := some fun nm _ _ => mk_const nm >>= infer_type >>= unify (quote.1 linter)
+  after_set := some $ fun nm _ _ => mk_const nm >>= infer_type >>= unify q(linter)
 #align linter_attr linter_attr
 
 add_tactic_doc { Name := "linter", category := DocCategory.attr, declNames := [`linter_attr], tags := ["linting"] }

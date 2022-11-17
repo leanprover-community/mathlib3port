@@ -109,12 +109,12 @@ theorem refl (Q : QuadraticForm R M) : Q.Equivalent Q :=
 
 @[symm]
 theorem symm (h : Q₁.Equivalent Q₂) : Q₂.Equivalent Q₁ :=
-  h.elim fun f => ⟨f.symm⟩
+  h.elim $ fun f => ⟨f.symm⟩
 #align quadratic_form.equivalent.symm QuadraticForm.Equivalent.symm
 
 @[trans]
 theorem trans (h : Q₁.Equivalent Q₂) (h' : Q₂.Equivalent Q₃) : Q₁.Equivalent Q₃ :=
-  h'.elim <| h.elim fun f g => ⟨f.trans g⟩
+  h'.elim $ h.elim $ fun f g => ⟨f.trans g⟩
 #align quadratic_form.equivalent.trans QuadraticForm.Equivalent.trans
 
 end Equivalent

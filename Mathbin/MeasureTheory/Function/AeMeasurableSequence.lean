@@ -88,7 +88,7 @@ theorem aeSeqSetMeasurableSet {hf : ∀ i, AeMeasurable (f i) μ} : MeasurableSe
 #align ae_seq.ae_seq_set_measurable_set aeSeq.aeSeqSetMeasurableSet
 
 theorem measurable (hf : ∀ i, AeMeasurable (f i) μ) (p : α → (ι → β) → Prop) (i : ι) : Measurable (aeSeq hf p i) :=
-  Measurable.ite aeSeqSetMeasurableSet (hf i).measurableMk <| measurableConst' fun x y => rfl
+  Measurable.ite aeSeqSetMeasurableSet (hf i).measurableMk $ measurableConst' $ fun x y => rfl
 #align ae_seq.measurable aeSeq.measurable
 
 theorem measure_compl_ae_seq_set_eq_zero [Countable ι] (hf : ∀ i, AeMeasurable (f i) μ)

@@ -34,14 +34,14 @@ section
 /-- The composition of `C.d i i' ≫ f i' i` if there is some `i'` coming after `i`,
 and `0` otherwise. -/
 def dNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x i ⟶ D.x i) :=
-  (AddMonoidHom.mk' fun f => C.d i (c.next i) ≫ f (c.next i) i) fun f g => Preadditive.comp_add _ _ _ _ _ _
+  (AddMonoidHom.mk' fun f => C.d i (c.next i) ≫ f (c.next i) i) $ fun f g => Preadditive.comp_add _ _ _ _ _ _
 #align d_next dNext
 
 /-- `f i' i` if `i'` comes after `i`, and 0 if there's no such `i'`.
 Hopefully there won't be much need for this, except in `d_next_eq_d_from_from_next`
 to see that `d_next` factors through `C.d_from i`. -/
 def fromNext (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.xNext i ⟶ D.x i) :=
-  (AddMonoidHom.mk' fun f => f (c.next i) i) fun f g => rfl
+  (AddMonoidHom.mk' fun f => f (c.next i) i) $ fun f g => rfl
 #align from_next fromNext
 
 @[simp]
@@ -69,14 +69,14 @@ theorem d_next_comp_right (f : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) (i : ι) 
 /-- The composition of `f j j' ≫ D.d j' j` if there is some `j'` coming before `j`,
 and `0` otherwise. -/
 def prevD (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.x j) :=
-  (AddMonoidHom.mk' fun f => f j (c.prev j) ≫ D.d (c.prev j) j) fun f g => Preadditive.add_comp _ _ _ _ _ _
+  (AddMonoidHom.mk' fun f => f j (c.prev j) ≫ D.d (c.prev j) j) $ fun f g => Preadditive.add_comp _ _ _ _ _ _
 #align prev_d prevD
 
 /-- `f j j'` if `j'` comes after `j`, and 0 if there's no such `j'`.
 Hopefully there won't be much need for this, except in `d_next_eq_d_from_from_next`
 to see that `d_next` factors through `C.d_from i`. -/
 def toPrev (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j ⟶ D.xPrev j) :=
-  (AddMonoidHom.mk' fun f => f j (c.prev j)) fun f g => rfl
+  (AddMonoidHom.mk' fun f => f j (c.prev j)) $ fun f g => rfl
 #align to_prev toPrev
 
 @[simp]
@@ -228,13 +228,13 @@ def comp {C₁ C₂ C₃ : HomologicalComplex V c} {f₁ g₁ : C₁ ⟶ C₂} {
 /-- a variant of `homotopy.comp_right` useful for dealing with homotopy equivalences. -/
 @[simps]
 def compRightId {f : C ⟶ C} (h : Homotopy f (𝟙 C)) (g : C ⟶ D) : Homotopy (f ≫ g) g :=
-  (h.compRight g).trans (of_eq <| Category.id_comp _)
+  (h.compRight g).trans (of_eq $ Category.id_comp _)
 #align homotopy.comp_right_id Homotopy.compRightId
 
 /-- a variant of `homotopy.comp_left` useful for dealing with homotopy equivalences. -/
 @[simps]
 def compLeftId {f : D ⟶ D} (h : Homotopy f (𝟙 D)) (g : C ⟶ D) : Homotopy (g ≫ f) g :=
-  (h.compLeft g).trans (of_eq <| Category.comp_id _)
+  (h.compLeft g).trans (of_eq $ Category.comp_id _)
 #align homotopy.comp_left_id Homotopy.compLeftId
 
 /-!
@@ -420,7 +420,6 @@ theorem null_homotopic_map'_f_of_not_rel_right {k₁ k₀ : ι} (r₁₀ : c.Rel
   rfl
 #align homotopy.null_homotopic_map'_f_of_not_rel_right Homotopy.null_homotopic_map'_f_of_not_rel_right
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:62:9: parse error -/
 @[simp]
 theorem null_homotopic_map_f_eq_zero {k₀ : ι} (hk₀ : ∀ l : ι, ¬c.Rel k₀ l) (hk₀' : ∀ l : ι, ¬c.Rel l k₀)
     (hom : ∀ i j, C.x i ⟶ D.x j) : (nullHomotopicMap hom).f k₀ = 0 := by
@@ -482,9 +481,9 @@ variable (e : P ⟶ Q) (zero : P.x 0 ⟶ Q.x 1) (comm_zero : e.f 0 = zero ≫ Q.
   (succ :
     ∀ (n : ℕ)
       (p :
-        Σ'(f : P.x n ⟶ Q.x (n + 1))(f' : P.x (n + 1) ⟶ Q.x (n + 2)),
+        Σ' (f : P.x n ⟶ Q.x (n + 1)) (f' : P.x (n + 1) ⟶ Q.x (n + 2)),
           e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1)),
-      Σ'f'' : P.x (n + 2) ⟶ Q.x (n + 3), e.f (n + 2) = P.d (n + 2) (n + 1) ≫ p.2.1 + f'' ≫ Q.d (n + 3) (n + 2))
+      Σ' f'' : P.x (n + 2) ⟶ Q.x (n + 3), e.f (n + 2) = P.d (n + 2) (n + 1) ≫ p.2.1 + f'' ≫ Q.d (n + 3) (n + 2))
 
 include comm_one comm_zero
 
@@ -508,7 +507,7 @@ which we do in `mk_inductive_aux₂`.
 @[simp, nolint unused_arguments]
 def mkInductiveAux₁ :
     ∀ n,
-      Σ'(f : P.x n ⟶ Q.x (n + 1))(f' : P.x (n + 1) ⟶ Q.x (n + 2)),
+      Σ' (f : P.x n ⟶ Q.x (n + 1)) (f' : P.x (n + 1) ⟶ Q.x (n + 2)),
         e.f (n + 1) = P.d (n + 1) n ≫ f + f' ≫ Q.d (n + 2) (n + 1)
   | 0 => ⟨zero, one, comm_one⟩
   | 1 => ⟨one, (succ 0 ⟨zero, one, comm_one⟩).1, (succ 0 ⟨zero, one, comm_one⟩).2⟩
@@ -528,7 +527,7 @@ Case conversion may be inaccurate. Consider using '#align homotopy.mk_inductive_
 /-- An auxiliary construction for `mk_inductive`.
 -/
 @[simp]
-def mkInductiveAux₂ : ∀ n, Σ'(f : P.xNext n ⟶ Q.x n)(f' : P.x n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
+def mkInductiveAux₂ : ∀ n, Σ' (f : P.xNext n ⟶ Q.x n) (f' : P.x n ⟶ Q.xPrev n), e.f n = P.dFrom n ≫ f + f' ≫ Q.dTo n
   | 0 => ⟨0, zero ≫ (Q.xPrevIso rfl).inv, by simpa using comm_zero⟩
   | n + 1 =>
     let I := mkInductiveAux₁ e zero comm_zero one comm_one succ n
@@ -634,9 +633,9 @@ variable (e : P ⟶ Q) (zero : P.x 1 ⟶ Q.x 0) (comm_zero : e.f 0 = P.d 0 1 ≫
   (succ :
     ∀ (n : ℕ)
       (p :
-        Σ'(f : P.x (n + 1) ⟶ Q.x n)(f' : P.x (n + 2) ⟶ Q.x (n + 1)),
+        Σ' (f : P.x (n + 1) ⟶ Q.x n) (f' : P.x (n + 2) ⟶ Q.x (n + 1)),
           e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f'),
-      Σ'f'' : P.x (n + 3) ⟶ Q.x (n + 2), e.f (n + 2) = p.2.1 ≫ Q.d (n + 1) (n + 2) + P.d (n + 2) (n + 3) ≫ f'')
+      Σ' f'' : P.x (n + 3) ⟶ Q.x (n + 2), e.f (n + 2) = p.2.1 ≫ Q.d (n + 1) (n + 2) + P.d (n + 2) (n + 3) ≫ f'')
 
 include comm_one comm_zero succ
 
@@ -660,7 +659,7 @@ which we do in `mk_inductive_aux₂`.
 @[simp, nolint unused_arguments]
 def mkCoinductiveAux₁ :
     ∀ n,
-      Σ'(f : P.x (n + 1) ⟶ Q.x n)(f' : P.x (n + 2) ⟶ Q.x (n + 1)),
+      Σ' (f : P.x (n + 1) ⟶ Q.x n) (f' : P.x (n + 2) ⟶ Q.x (n + 1)),
         e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f'
   | 0 => ⟨zero, one, comm_one⟩
   | 1 => ⟨one, (succ 0 ⟨zero, one, comm_one⟩).1, (succ 0 ⟨zero, one, comm_one⟩).2⟩
@@ -680,7 +679,7 @@ Case conversion may be inaccurate. Consider using '#align homotopy.mk_coinductiv
 /-- An auxiliary construction for `mk_inductive`.
 -/
 @[simp]
-def mkCoinductiveAux₂ : ∀ n, Σ'(f : P.x n ⟶ Q.xPrev n)(f' : P.xNext n ⟶ Q.x n), e.f n = f ≫ Q.dTo n + P.dFrom n ≫ f'
+def mkCoinductiveAux₂ : ∀ n, Σ' (f : P.x n ⟶ Q.xPrev n) (f' : P.xNext n ⟶ Q.x n), e.f n = f ≫ Q.dTo n + P.dFrom n ≫ f'
   | 0 => ⟨0, (P.xNextIso rfl).Hom ≫ zero, by simpa using comm_zero⟩
   | n + 1 =>
     let I := mkCoinductiveAux₁ e zero comm_zero one comm_one succ n

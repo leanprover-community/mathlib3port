@@ -90,7 +90,7 @@ unsafe def poly.mk_string : Poly → String
   | poly.add p q => "(" ++ poly.mk_string p ++ " + " ++ poly.mk_string q ++ ")"
   | poly.sub p q => "(" ++ poly.mk_string p ++ " - " ++ poly.mk_string q ++ ")"
   | poly.mul p q => "(" ++ poly.mk_string p ++ " * " ++ poly.mk_string q ++ ")"
-  | poly.pow p n => toString <| f!"({(poly.mk_string p)} ^ {n})"
+  | poly.pow p n => toString $ f!"({(poly.mk_string p)} ^ {n})"
   | poly.neg p => "-" ++ poly.mk_string p
 #align polyrith.poly.mk_string polyrith.poly.mk_string
 
@@ -135,7 +135,7 @@ unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) 
     vars.mfoldlWithIndex
         (fun n last e' =>
           match last with
-          | none => tactic.try_core <| tactic.is_def_eq e e' red >> return n
+          | none => tactic.try_core $ tactic.is_def_eq e e' red >> return n
           | some k => return k)
         none
   return
@@ -144,41 +144,52 @@ unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) 
       | none => (vars e, poly.var vars))
 #align polyrith.poly_form_of_atom polyrith.poly_form_of_atom
 
-/-- `poly_form_of_expr red map e` computes the polynomial form of `e`.
-
-`map` is a lookup map from atomic expressions to variable numbers.
-If a new atomic expression is encountered, it is added to the map with a new number.
-It matches atomic expressions up to reducibility given by `red`.
-
-Because it matches up to definitional equality, this function must be in the `tactic` monad,
-and forces some functions that call it into `tactic` as well.
--/
-unsafe def poly_form_of_expr (red : Transparency) : List expr → expr → tactic (List expr × poly)
-  | m, quote.1 ((%%ₓe1) * %%ₓe2) => do
-    let (m', comp1) ← poly_form_of_expr m e1
-    let (m', comp2) ← poly_form_of_expr m' e2
-    return (m', comp1 * comp2)
-  | m, quote.1 ((%%ₓe1) + %%ₓe2) => do
-    let (m', comp1) ← poly_form_of_expr m e1
-    let (m', comp2) ← poly_form_of_expr m' e2
-    return (m', comp1 + comp2)
-  | m, quote.1 ((%%ₓe1) - %%ₓe2) => do
-    let (m', comp1) ← poly_form_of_expr m e1
-    let (m', comp2) ← poly_form_of_expr m' e2
-    return (m', comp1 - comp2)
-  | m, quote.1 (-%%ₓe) => do
-    let (m', comp) ← poly_form_of_expr m e
-    return (m', -comp)
-  | m, p@(quote.1 (@Pow.pow _ ℕ _ (%%ₓe) (%%ₓn))) =>
-    match n.toNat with
-    | some k => do
-      let (m', comp) ← poly_form_of_expr m e
-      return (m', comp ^ k)
-    | none => poly_form_of_atom red m p
-  | m, e =>
-    match e.to_rat with
-    | some z => return ⟨m, Poly.const z⟩
-    | none => poly_form_of_atom red m e
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `poly_form_of_expr red map e` computes the polynomial form of `e`.
+      
+      `map` is a lookup map from atomic expressions to variable numbers.
+      If a new atomic expression is encountered, it is added to the map with a new number.
+      It matches atomic expressions up to reducibility given by `red`.
+      
+      Because it matches up to definitional equality, this function must be in the `tactic` monad,
+      and forces some functions that call it into `tactic` as well.
+      -/
+    unsafe
+  def
+    poly_form_of_expr
+    ( red : Transparency ) : List expr → expr → tactic ( List expr × poly )
+    |
+        m , q( $ ( e1 ) * $ ( e2 ) )
+        =>
+        do
+          let ( m' , comp1 ) ← poly_form_of_expr m e1
+            let ( m' , comp2 ) ← poly_form_of_expr m' e2
+            return ( m' , comp1 * comp2 )
+      |
+        m , q( $ ( e1 ) + $ ( e2 ) )
+        =>
+        do
+          let ( m' , comp1 ) ← poly_form_of_expr m e1
+            let ( m' , comp2 ) ← poly_form_of_expr m' e2
+            return ( m' , comp1 + comp2 )
+      |
+        m , q( $ ( e1 ) - $ ( e2 ) )
+        =>
+        do
+          let ( m' , comp1 ) ← poly_form_of_expr m e1
+            let ( m' , comp2 ) ← poly_form_of_expr m' e2
+            return ( m' , comp1 - comp2 )
+      | m , q( - $ ( e ) ) => do let ( m' , comp ) ← poly_form_of_expr m e return ( m' , - comp )
+      |
+        m , p @ q( @ Pow.pow _ ℕ _ $ ( e ) $ ( n ) )
+        =>
+        match
+          n . toNat
+          with
+          | some k => do let ( m' , comp ) ← poly_form_of_expr m e return ( m' , comp ^ k )
+            | none => poly_form_of_atom red m p
+      | m , e => match e . to_rat with | some z => return ⟨ m , Poly.const z ⟩ | none => poly_form_of_atom red m e
 #align polyrith.poly_form_of_expr polyrith.poly_form_of_expr
 
 /-!
@@ -188,43 +199,44 @@ The following section contains code that can convert an a `poly` object into a `
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `n -/
-/-- This can convert a `poly` into a `pexpr` that would evaluate to a polynomial.
-To do so, it uses a list `m` of expressions, the atomic expressions that appear in the `poly`.
-The index of an expression in this list corresponds to its `poly.var` argument: that is,
-if `e` is the `k`th element of `m`, then it is represented as `poly.var k`.
-
-`poly` objects only contain coefficients from `ℚ`. However, the `poly` object might
-be referring to a polynomial over some other field. As such, the resulting `pexpr` contains
-no typing information.
--/
-unsafe def poly.to_pexpr : List expr → Poly → tactic pexpr
-  | _, poly.const z => return z.to_pexpr
-  | m, poly.var n => do
-    let some e ← return <| m.nth n |
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
-    return (pquote.1 (%%ₓe))
-  | m, poly.add p q => do
-    let p_pexpr ← poly.to_pexpr m p
-    let q_pexpr ← poly.to_pexpr m q
-    return (pquote.1 ((%%ₓp_pexpr) + %%ₓq_pexpr))
-  | m, poly.sub p q => do
-    let p_pexpr ← poly.to_pexpr m p
-    let q_pexpr ← poly.to_pexpr m q
-    if p_pexpr = pquote.1 0 then return (pquote.1 (-%%ₓq_pexpr)) else return (pquote.1 ((%%ₓp_pexpr) - %%ₓq_pexpr))
-  | m, poly.mul p q => do
-    let p_pexpr ← poly.to_pexpr m p
-    let q_pexpr ← poly.to_pexpr m q
-    return (pquote.1 ((%%ₓp_pexpr) * %%ₓq_pexpr))
-  | m, poly.pow p n => do
-    let p_pexpr ← poly.to_pexpr m p
-    return (pquote.1 ((%%ₓp_pexpr) ^ n (%%ₓn.to_pexpr)))
-  | m, poly.neg p => do
-    let p_pexpr ← poly.to_pexpr m p
-    return (pquote.1 (-%%ₓp_pexpr))
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      This can convert a `poly` into a `pexpr` that would evaluate to a polynomial.
+      To do so, it uses a list `m` of expressions, the atomic expressions that appear in the `poly`.
+      The index of an expression in this list corresponds to its `poly.var` argument: that is,
+      if `e` is the `k`th element of `m`, then it is represented as `poly.var k`.
+      
+      `poly` objects only contain coefficients from `ℚ`. However, the `poly` object might
+      be referring to a polynomial over some other field. As such, the resulting `pexpr` contains
+      no typing information.
+      -/
+    unsafe
+  def
+    poly.to_pexpr
+    : List expr → Poly → tactic pexpr
+    | _ , poly.const z => return z . to_pexpr
+      |
+        m , poly.var n
+        =>
+        do let some e ← return $ m . nth n | throwError "unknown variable poly.var { ← n }" return ` `( $ ( e ) )
+      |
+        m , poly.add p q
+        =>
+        do let p_pexpr ← poly.to_pexpr m p let q_pexpr ← poly.to_pexpr m q return ` `( $ ( p_pexpr ) + $ ( q_pexpr ) )
+      |
+        m , poly.sub p q
+        =>
+        do
+          let p_pexpr ← poly.to_pexpr m p
+            let q_pexpr ← poly.to_pexpr m q
+            if p_pexpr = ` `( 0 ) then return ` `( - $ ( q_pexpr ) ) else return ` `( $ ( p_pexpr ) - $ ( q_pexpr ) )
+      |
+        m , poly.mul p q
+        =>
+        do let p_pexpr ← poly.to_pexpr m p let q_pexpr ← poly.to_pexpr m q return ` `( $ ( p_pexpr ) * $ ( q_pexpr ) )
+      | m , poly.pow p n => do let p_pexpr ← poly.to_pexpr m p return ` `( $ ( p_pexpr ) ^ n $ ( n.to_pexpr ) )
+      | m , poly.neg p => do let p_pexpr ← poly.to_pexpr m p return ` `( - $ ( p_pexpr ) )
 #align polyrith.poly.to_pexpr polyrith.poly.to_pexpr
 
 /-!
@@ -335,21 +347,17 @@ structure SageJsonFailure where
   deriving non_null_json_serializable, Inhabited
 #align polyrith.sage_json_failure Polyrith.SageJsonFailure
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Parse the json output from `scripts/polyrith.py` into either an error message, a list of `poly`
 objects, or `none` if only trace output was requested. -/
 unsafe def convert_sage_output (j : json) : tactic (Option (List Poly)) := do
-  let r : Sum sage_json_success sage_json_failure ←
+  let r : sage_json_success ⊕ sage_json_failure ←
     decorate_ex "internal json error: "
         (-- try the error format first, so that if both fail we get the message from the success parser
             Sum.inr <$>
             of_json SageJsonFailure j <|>
           Sum.inl <$> of_json SageJsonSuccess j)
   match r with
-    | Sum.inr f =>
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    | Sum.inr f => throwError "polyrith failed to retrieve a solution from Sage! {(← f)}: {← f}"
     | Sum.inl s => do
       s trace
       pure s
@@ -364,17 +372,19 @@ and converts them into `poly` objects.
 -/
 
 
-/-- Convert an expression of the form `lhs = rhs` into the form `lhs - rhs` -/
-unsafe def equality_to_left_side : expr → tactic expr
-  | quote.1 ((%%ₓlhs) = %%ₓrhs) => to_expr (pquote.1 ((%%ₓlhs) - %%ₓrhs))
-  | e => fail "expression is not an equality"
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Convert an expression of the form `lhs = rhs` into the form `lhs - rhs` -/ unsafe
+  def
+    equality_to_left_side
+    : expr → tactic expr
+    | q( $ ( lhs ) = $ ( rhs ) ) => to_expr ` `( $ ( lhs ) - $ ( rhs ) ) | e => fail "expression is not an equality"
 #align polyrith.equality_to_left_side polyrith.equality_to_left_side
 
 /-- `(vars, poly, typ) ← parse_target_to_poly` interprets the current target (an equality over
 some field) into a `poly`. The result is a list of the atomic expressions in the target,
 the `poly` itself, and an `expr` representing the type of the field. -/
 unsafe def parse_target_to_poly : tactic (List expr × poly × expr) := do
-  let e@(quote.1 (@Eq (%%ₓR) _ _)) ← target
+  let e@q(@Eq $(R) _ _) ← target
   let left_side ← equality_to_left_side e
   let (m, p) ← poly_form_of_expr Transparency.reducible [] left_side
   return (m, p, R)
@@ -382,9 +392,9 @@ unsafe def parse_target_to_poly : tactic (List expr × poly × expr) := do
 
 /-- Filter `l` to the elements which are equalities of type `expt`. -/
 unsafe def get_equalities_of_type (expt : expr) (l : List expr) : tactic (List expr) :=
-  l.mfilter fun h_eq =>
-    succeeds <| do
-      let quote.1 (@Eq (%%ₓR) _ _) ← infer_type h_eq
+  l.mfilter $ fun h_eq =>
+    succeeds $ do
+      let q(@Eq $(R) _ _) ← infer_type h_eq
       unify expt R
 #align polyrith.get_equalities_of_type polyrith.get_equalities_of_type
 
@@ -434,9 +444,6 @@ The following section contains code that allows lean to communicate with a pytho
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- This tactic calls python from the command line with the args in `arg_list`.
 The output printed to the console is returned as a `string`.
 It assumes that `python3` is available on the path.
@@ -444,9 +451,9 @@ It assumes that `python3` is available on the path.
 unsafe def sage_output (arg_list : List String := []) : tactic json := do
   let path ← get_mathlib_dir
   let args := [path ++ "../scripts/polyrith_sage.py"] ++ arg_list
-  let s ← unsafe_run_io <| Io.cmd { cmd := "python3", args }
+  let s ← unsafe_run_io $ Io.cmd { cmd := "python3", args }
   let some j ← pure (json.parse s) |
-    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+    throwError "Invalid json: {← s}"
   pure j
 #align polyrith.sage_output polyrith.sage_output
 
@@ -454,8 +461,8 @@ unsafe def sage_output (arg_list : List String := []) : tactic json := do
 precedence 65.
 -/
 unsafe def add_parens : expr → tactic format
-  | e@(quote.1 (_ + _)) => f!"({← e})"
-  | e@(quote.1 (_ - _)) => f!"({← e})"
+  | e@q(_ + _) => f!"({← e})"
+  | e@q(_ - _) => f!"({← e})"
   | e => f!"{← e}"
 #align polyrith.add_parens polyrith.add_parens
 
@@ -471,11 +478,11 @@ because it may appear as a negation (if this is the first component)
 or a subtraction.
 -/
 unsafe def component_to_lc_format : expr × expr → tactic (Bool × format)
-  | (ex, quote.1 (@One.one _ _)) => Prod.mk false <$> f!"{← ex}"
-  | (ex, quote.1 (@One.one _ _ / %%ₓcf)) => do
+  | (ex, q(@One.one _ _)) => Prod.mk false <$> f!"{← ex}"
+  | (ex, q(@One.one _ _ / $(cf))) => do
     let f ← add_parens cf
     Prod.mk ff <$> f!"{(← ex)} / {← f}"
-  | (ex, quote.1 (-%%ₓcf)) => do
+  | (ex, q(-$(cf))) => do
     let (neg, fmt) ← component_to_lc_format (ex, cf)
     return (!neg, fmt)
   | (ex, cf) => do
@@ -524,49 +531,44 @@ unsafe def create_args (only_on : Bool) (hyps : List pexpr) : tactic (List expr 
   let (m, p, R) ← parse_target_to_poly
   let (eq_names, m, polys) ← parse_ctx_to_polys R m only_on hyps
   let args := [toString R, toString m.length, (polys.map poly.mk_string).toString, p.mk_string]
-  return <| (eq_names, m, R, toString (is_trace_enabled_for `polyrith)::args)
+  return $ (eq_names, m, R, toString (is_trace_enabled_for `polyrith)::args)
 #align polyrith.create_args polyrith.create_args
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- The second half of `tactic.polyrith` processes the output from Sage into
 a call to `linear_combination`.
 -/
 unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sage_out : json) : tactic format :=
-  focus1 <| do
+  focus1 $ do
     let some coeffs_as_poly ← convert_sage_output sage_out |
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+      throwError"internal error: No output available"
     let coeffs_as_pexpr ← coeffs_as_poly.mmap (poly.to_pexpr m)
     let eq_names_pexpr := eq_names.map to_pexpr
-    let coeffs_as_expr ← coeffs_as_pexpr.mmap fun e => to_expr (pquote.1 (%%ₓe : %%ₓR))
+    let coeffs_as_expr ← coeffs_as_pexpr.mmap $ fun e => to_expr ``(($(e) : $(R)))
     linear_combo.linear_combination eq_names_pexpr coeffs_as_pexpr
-    let components := (eq_names.zip coeffs_as_expr).filter fun pr => not <| pr.2.is_app_of `has_zero.zero
+    let components := (eq_names.zip coeffs_as_expr).filter $ fun pr => not $ pr.2.is_app_of `has_zero.zero
     let expr_string ← components_to_lc_format components
     let lc_fmt : format := "linear_combination " ++ format.nest 2 (format.group expr_string)
     done <|>
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
-    return <| "linear_combination " ++ format.nest 2 (format.group expr_string)
+        throwError "polyrith found the following certificate, but it failed to close the goal:
+          {← lc_fmt}"
+    return $ "linear_combination " ++ format.nest 2 (format.group expr_string)
 #align polyrith.process_output polyrith.process_output
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when no hypotheses are available. -/
 unsafe def no_hypotheses_case : tactic (Option format) :=
   (do
       sorry
-      return <| some "ring") <|>
+      return $ some "ring") <|>
     fail "polyrith did not find any relevant hypotheses and the goal is not provable by ring"
 #align polyrith.no_hypotheses_case polyrith.no_hypotheses_case
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when there are no variables. -/
 unsafe def no_variables_case : tactic (Option format) :=
   (do
       sorry
-      return <| some "ring") <|>
+      return $ some "ring") <|>
     fail "polyrith did not find any variables and the goal is not provable by ring"
 #align polyrith.no_variables_case polyrith.no_variables_case
 
@@ -612,8 +614,7 @@ unsafe def _root_.tactic.polyrith (only_on : Bool) (hyps : List pexpr) : tactic 
 /-! # Interactivity -/
 
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Attempts to prove polynomial equality goals through polynomial arithmetic
 on the hypotheses (and additional proof terms if the user specifies them).
 It proves the goal by generating an appropriate call to the tactic

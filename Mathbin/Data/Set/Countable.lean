@@ -98,7 +98,7 @@ natural numbers onto the subtype induced by the set.
 -/
 protected theorem countable_iff_exists_surjective {s : Set α} (hs : s.Nonempty) :
     s.Countable ↔ ∃ f : ℕ → s, Surjective f :=
-  countable_coe_iff.symm.trans <| @countable_iff_exists_surjective s hs.to_subtype
+  countable_coe_iff.symm.trans $ @countable_iff_exists_surjective s hs.to_subtype
 #align set.countable_iff_exists_surjective Set.countable_iff_exists_surjective
 
 alias Set.countable_iff_exists_surjective ↔ countable.exists_surjective _
@@ -170,7 +170,7 @@ theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Pr
 
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
     (∃ s : ℕ → Set α, (∀ n, p (s n)) ∧ (⋃ n, s n) = univ) ↔
-      ∃ S : Set (Set α), S.Countable ∧ (∀ s ∈ S, p s) ∧ ⋃₀S = univ :=
+      ∃ S : Set (Set α), S.Countable ∧ (∀ s ∈ S, p s) ∧ ⋃₀ S = univ :=
   exists_seq_supr_eq_top_iff_countable h
 #align set.exists_seq_cover_iff_countable Set.exists_seq_cover_iff_countable
 
@@ -188,7 +188,7 @@ theorem countable_Union {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Co
 
 @[simp]
 theorem countable_Union_iff [Countable ι] {t : ι → Set α} : (⋃ i, t i).Countable ↔ ∀ i, (t i).Countable :=
-  ⟨fun h i => h.mono <| subset_Union _ _, countable_Union⟩
+  ⟨fun h i => h.mono $ subset_Union _ _, countable_Union⟩
 #align set.countable_Union_iff Set.countable_Union_iff
 
 theorem Countable.bUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Countable) :
@@ -197,7 +197,7 @@ theorem Countable.bUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Coun
   rw [bUnion_eq_Union, countable_Union_iff, SetCoe.forall']
 #align set.countable.bUnion_iff Set.Countable.bUnion_iff
 
-theorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) : (⋃₀s).Countable ↔ ∀ a ∈ s, (a : _).Countable := by
+theorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) : (⋃₀ s).Countable ↔ ∀ a ∈ s, (a : _).Countable := by
   rw [sUnion_eq_bUnion, hs.bUnion_iff]
 #align set.countable.sUnion_iff Set.Countable.sUnion_iff
 
@@ -251,7 +251,7 @@ theorem countable_set_of_finite_subset {s : Set α} : s.Countable → { t | Set.
     refine' countable.mono _ (countable_range fun t : Finset s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
     rintro t ⟨⟨ht⟩, ts⟩
     skip
-    refine' ⟨finset.univ.map (embedding_of_subset _ _ ts), Set.ext fun a => _⟩
+    refine' ⟨finset.univ.map (embedding_of_subset _ _ ts), Set.ext $ fun a => _⟩
     simpa using @ts a
 #align set.countable_set_of_finite_subset Set.countable_set_of_finite_subset
 
@@ -270,7 +270,7 @@ protected theorem Countable.prod {s : Set α} {t : Set β} (hs : s.Countable) (h
     Set.Countable (s ×ˢ t) := by
   haveI : Countable s := hs.to_subtype
   haveI : Countable t := ht.to_subtype
-  exact (Countable.of_equiv _ <| (Equiv.Set.prod _ _).symm).to_set
+  exact (Countable.of_equiv _ $ (Equiv.Set.prod _ _).symm).to_set
 #align set.countable.prod Set.Countable.prod
 
 theorem Countable.image2 {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) (f : α → β → γ) :

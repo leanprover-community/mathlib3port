@@ -171,22 +171,22 @@ instance (priority := 100) IsSplitEpi.epi {X Y : C} (f : X ⟶ Y) [hf : IsSplitE
 #align category_theory.is_split_epi.epi CategoryTheory.IsSplitEpi.epi
 
 /-- Every split mono whose retraction is mono is an iso. -/
-theorem IsIso.of_mono_retraction' {X Y : C} {f : X ⟶ Y} (hf : SplitMono f) [mono <| hf.retraction] : IsIso f :=
-  ⟨⟨hf.retraction, ⟨by simp, (cancel_mono_id <| hf.retraction).mp (by simp)⟩⟩⟩
+theorem IsIso.of_mono_retraction' {X Y : C} {f : X ⟶ Y} (hf : SplitMono f) [mono $ hf.retraction] : IsIso f :=
+  ⟨⟨hf.retraction, ⟨by simp, (cancel_mono_id $ hf.retraction).mp (by simp)⟩⟩⟩
 #align category_theory.is_iso.of_mono_retraction' CategoryTheory.IsIso.of_mono_retraction'
 
 /-- Every split mono whose retraction is mono is an iso. -/
-theorem IsIso.of_mono_retraction {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] [hf' : mono <| retraction f] : IsIso f :=
+theorem IsIso.of_mono_retraction {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] [hf' : mono $ retraction f] : IsIso f :=
   @IsIso.of_mono_retraction' _ _ _ _ _ hf.exists_split_mono.some hf'
 #align category_theory.is_iso.of_mono_retraction CategoryTheory.IsIso.of_mono_retraction
 
 /-- Every split epi whose section is epi is an iso. -/
-theorem IsIso.of_epi_section' {X Y : C} {f : X ⟶ Y} (hf : SplitEpi f) [epi <| hf.section_] : IsIso f :=
-  ⟨⟨hf.section_, ⟨(cancel_epi_id <| hf.section_).mp (by simp), by simp⟩⟩⟩
+theorem IsIso.of_epi_section' {X Y : C} {f : X ⟶ Y} (hf : SplitEpi f) [epi $ hf.section_] : IsIso f :=
+  ⟨⟨hf.section_, ⟨(cancel_epi_id $ hf.section_).mp (by simp), by simp⟩⟩⟩
 #align category_theory.is_iso.of_epi_section' CategoryTheory.IsIso.of_epi_section'
 
 /-- Every split epi whose section is epi is an iso. -/
-theorem IsIso.of_epi_section {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] [hf' : epi <| section_ f] : IsIso f :=
+theorem IsIso.of_epi_section {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] [hf' : epi $ section_ f] : IsIso f :=
   @IsIso.of_epi_section' _ _ _ _ _ hf.exists_split_epi.some hf'
 #align category_theory.is_iso.of_epi_section CategoryTheory.IsIso.of_epi_section
 

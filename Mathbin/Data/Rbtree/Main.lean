@@ -29,7 +29,8 @@ theorem is_searchable_of_well_formed {t : Rbnode α} [IsStrictWeakOrder α lt] :
 
 open Color
 
-theorem is_red_black_of_well_formed {t : Rbnode α} : t.WellFormed lt → ∃ c n, IsRedBlack t c n := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c n) -/
+theorem is_red_black_of_well_formed {t : Rbnode α} : t.WellFormed lt → ∃ (c) (n), IsRedBlack t c n := by
   intro h
   induction h
   · exists black
@@ -157,7 +158,7 @@ theorem find_insert_of_ne [IsStrictTotalOrder α lt] {x y : α} (t : Rbtree α l
 #align rbtree.find_insert_of_ne Rbtree.find_insert_of_ne
 
 theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} : t.find a = none → a ∉ t := fun h =>
-  Iff.mpr (not_congr (find_correct a t)) <| by
+  Iff.mpr (not_congr (find_correct a t)) $ by
     intro h
     cases' h with _ h
     cases' h with h₁ h₂
@@ -271,9 +272,11 @@ theorem eq_leaf_of_max_eq_none {t : Rbtree α lt} : t.max = none → t = mkRbtre
 #align rbtree.eq_leaf_of_max_eq_none Rbtree.eq_leaf_of_max_eq_none
 
 theorem min_is_minimal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :
-    t.min = some a → ∀ {b}, b ∈ t → a ≈[lt]b ∨ lt a b := by
-  classical cases t
-    apply Rbnode.is_searchable_of_well_formed
+    t.min = some a → ∀ {b}, b ∈ t → a ≈[lt]b ∨ lt a b := by classical
+  cases t
+  apply Rbnode.min_is_minimal
+  apply Rbnode.is_searchable_of_well_formed
+  assumption
 #align rbtree.min_is_minimal Rbtree.min_is_minimal
 
 theorem max_is_maximal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :

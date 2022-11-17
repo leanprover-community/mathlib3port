@@ -75,7 +75,7 @@ but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.424 : Semiring.{u_1} α] (n : Nat) (x : α), Commute.{u_1} α (NonUnitalNonAssocSemiring.toMul.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α inst._@.Mathlib.Algebra.Ring.Basic._hyg.424))) (Nat.cast.{u_1} α (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α inst._@.Mathlib.Algebra.Ring.Basic._hyg.424))) n) x
 Case conversion may be inaccurate. Consider using '#align nat.cast_commute Nat.cast_commuteₓ'. -/
 theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x :=
-  (Nat.recOn n (by rw [cast_zero] <;> exact Commute.zero_left x)) fun n ihn => by
+  Nat.recOn n (by rw [cast_zero] <;> exact Commute.zero_left x) $ fun n ihn => by
     rw [cast_succ] <;> exact ihn.add_left (Commute.one_left x)
 #align nat.cast_commute Nat.cast_commute
 
@@ -93,7 +93,7 @@ variable [OrderedSemiring α]
 
 @[mono]
 theorem mono_cast : Monotone (coe : ℕ → α) :=
-  monotone_nat_of_le_succ fun n => by rw [Nat.cast_succ] <;> exact le_add_of_nonneg_right zero_le_one
+  monotone_nat_of_le_succ $ fun n => by rw [Nat.cast_succ] <;> exact le_add_of_nonneg_right zero_le_one
 #align nat.mono_cast Nat.mono_cast
 
 @[simp]
@@ -106,7 +106,7 @@ section Nontrivial
 variable [Nontrivial α]
 
 theorem cast_add_one_pos (n : ℕ) : 0 < (n : α) + 1 :=
-  zero_lt_one.trans_le <| le_add_of_nonneg_left n.cast_nonneg
+  zero_lt_one.trans_le $ le_add_of_nonneg_left n.cast_nonneg
 #align nat.cast_add_one_pos Nat.cast_add_one_pos
 
 @[simp]
@@ -197,7 +197,7 @@ section AddMonoidHomClass
 variable {A B F : Type _} [AddMonoidWithOne B]
 
 theorem ext_nat' [AddMonoid A] [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
-  FunLike.ext f g <| by
+  FunLike.ext f g $ by
     apply Nat.rec
     · simp only [Nat.zero_eq, map_zero]
       
@@ -250,21 +250,21 @@ variable {R S F : Type _} [NonAssocSemiring R] [NonAssocSemiring S]
 
 @[simp]
 theorem eq_nat_cast [RingHomClass F ℕ R] (f : F) : ∀ n, f n = n :=
-  eq_nat_cast' f <| map_one f
+  eq_nat_cast' f $ map_one f
 #align eq_nat_cast eq_nat_cast
 
 @[simp]
 theorem map_nat_cast [RingHomClass F R S] (f : F) : ∀ n : ℕ, f (n : R) = n :=
-  map_nat_cast' f <| map_one f
+  map_nat_cast' f $ map_one f
 #align map_nat_cast map_nat_cast
 
 theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
-  ext_nat' f g <| by simp only [map_one]
+  ext_nat' f g $ by simp only [map_one]
 #align ext_nat ext_nat
 
 theorem NeZero.nat_of_injective {n : ℕ} [h : NeZero (n : R)] [RingHomClass F R S] {f : F} (hf : Function.Injective f) :
     NeZero (n : S) :=
-  ⟨fun h => NeZero.ne' n R <| hf <| by simpa only [map_nat_cast, map_zero] ⟩
+  ⟨fun h => NeZero.ne' n R $ hf $ by simpa only [map_nat_cast, map_zero] ⟩
 #align ne_zero.nat_of_injective NeZero.nat_of_injective
 
 theorem NeZero.nat_of_ne_zero {R S} [Semiring R] [Semiring S] {F} [RingHomClass F R S] (f : F) {n : ℕ}
@@ -279,7 +279,7 @@ namespace RingHom
 
 /-- This is primed to match `eq_int_cast'`. -/
 theorem eq_nat_cast' {R} [NonAssocSemiring R] (f : ℕ →+* R) : f = Nat.castRingHom R :=
-  RingHom.ext <| eq_nat_cast f
+  RingHom.ext $ eq_nat_cast f
 #align ring_hom.eq_nat_cast' RingHom.eq_nat_cast'
 
 end RingHom

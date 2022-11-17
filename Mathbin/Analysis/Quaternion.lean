@@ -28,7 +28,7 @@ quaternion, normed ring, normed space, normed algebra
 
 
 -- mathport name: quaternion.real
-localized [Quaternion] notation "ℍ" => Quaternion ℝ
+scoped[Quaternion] notation "ℍ" => Quaternion ℝ
 
 open RealInnerProductSpace
 
@@ -67,7 +67,7 @@ theorem norm_coe (a : ℝ) : ∥(a : ℍ)∥ = ∥a∥ := by
 
 @[simp, norm_cast]
 theorem nnnorm_coe (a : ℝ) : ∥(a : ℍ)∥₊ = ∥a∥₊ :=
-  Subtype.ext <| norm_coe a
+  Subtype.ext $ norm_coe a
 #align quaternion.nnnorm_coe Quaternion.nnnorm_coe
 
 noncomputable instance : NormedDivisionRing ℍ where

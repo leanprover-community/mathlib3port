@@ -46,12 +46,6 @@ class OrderedCommGroup (α : Type u) extends CommGroup α, PartialOrder α where
 
 attribute [to_additive] OrderedCommGroup
 
-/- warning: ordered_comm_group.to_covariant_class_left_le -> OrderedCommGroup.to_covariant_class_left_le is a dubious translation:
-lean 3 declaration is
-  forall (α : Type.{u}) [_inst_1 : OrderedCommGroup.{u} α], CovariantClass.{u u} α α (HMul.hMul.{u u u} α α α (instHMul.{u} α (MulOneClass.toHasMul.{u} α (Monoid.toMulOneClass.{u} α (DivInvMonoid.toMonoid.{u} α (Group.toDivInvMonoid.{u} α (CommGroup.toGroup.{u} α (OrderedCommGroup.toCommGroup.{u} α _inst_1)))))))) (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedCommGroup.toPartialOrder.{u} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Order.Group._hyg.78 : OrderedCommGroup.{u_1} α], CovariantClass.{u_1 u_1} α α (fun (x._@.Mathlib.Algebra.Order.Group._hyg.87 : α) (x._@.Mathlib.Algebra.Order.Group._hyg.89 : α) => HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (MulOneClass.toMul.{u_1} α (Monoid.toMulOneClass.{u_1} α (DivInvMonoid.toMonoid.{u_1} α (Group.toDivInvMonoid.{u_1} α (CommGroup.toGroup.{u_1} α (OrderedCommGroup.toCommGroup.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.78))))))) x._@.Mathlib.Algebra.Order.Group._hyg.87 x._@.Mathlib.Algebra.Order.Group._hyg.89) (fun (x._@.Mathlib.Algebra.Order.Group._hyg.102 : α) (x._@.Mathlib.Algebra.Order.Group._hyg.104 : α) => LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedCommGroup.toPartialOrder.{u_1} α inst._@.Mathlib.Algebra.Order.Group._hyg.78))) x._@.Mathlib.Algebra.Order.Group._hyg.102 x._@.Mathlib.Algebra.Order.Group._hyg.104)
-Case conversion may be inaccurate. Consider using '#align ordered_comm_group.to_covariant_class_left_le OrderedCommGroup.to_covariant_class_left_leₓ'. -/
 @[to_additive]
 instance OrderedCommGroup.to_covariant_class_left_le (α : Type u) [OrderedCommGroup α] :
     CovariantClass α α (· * ·) (· ≤ ·) where elim a b c bc := OrderedCommGroup.mul_le_mul_left b c bc a
@@ -94,12 +88,12 @@ theorem inv_mul_le_iff_le_mul : b⁻¹ * a ≤ c ↔ a ≤ b * c := by rw [← m
 
 @[to_additive neg_le_iff_add_nonneg']
 theorem inv_le_iff_one_le_mul' : a⁻¹ ≤ b ↔ 1 ≤ a * b :=
-  (mul_le_mul_iff_left a).symm.trans <| by rw [mul_inv_self]
+  (mul_le_mul_iff_left a).symm.trans $ by rw [mul_inv_self]
 #align inv_le_iff_one_le_mul' inv_le_iff_one_le_mul'
 
 @[to_additive]
 theorem le_inv_iff_mul_le_one_left : a ≤ b⁻¹ ↔ b * a ≤ 1 :=
-  (mul_le_mul_iff_left b).symm.trans <| by rw [mul_inv_self]
+  (mul_le_mul_iff_left b).symm.trans $ by rw [mul_inv_self]
 #align le_inv_iff_mul_le_one_left le_inv_iff_mul_le_one_left
 
 @[to_additive]
@@ -108,7 +102,7 @@ theorem le_inv_mul_iff_le : 1 ≤ b⁻¹ * a ↔ b ≤ a := by rw [← mul_le_mu
 
 @[to_additive]
 theorem inv_mul_le_one_iff : a⁻¹ * b ≤ 1 ↔ b ≤ a :=
-  trans inv_mul_le_iff_le_mul <| by rw [mul_one]
+  trans inv_mul_le_iff_le_mul $ by rw [mul_one]
 #align inv_mul_le_one_iff inv_mul_le_one_iff
 
 end TypeclassesLeftLe
@@ -145,12 +139,12 @@ theorem inv_mul_lt_iff_lt_mul : b⁻¹ * a < c ↔ a < b * c := by rw [← mul_l
 
 @[to_additive]
 theorem inv_lt_iff_one_lt_mul' : a⁻¹ < b ↔ 1 < a * b :=
-  (mul_lt_mul_iff_left a).symm.trans <| by rw [mul_inv_self]
+  (mul_lt_mul_iff_left a).symm.trans $ by rw [mul_inv_self]
 #align inv_lt_iff_one_lt_mul' inv_lt_iff_one_lt_mul'
 
 @[to_additive]
 theorem lt_inv_iff_mul_lt_one' : a < b⁻¹ ↔ b * a < 1 :=
-  (mul_lt_mul_iff_left b).symm.trans <| by rw [mul_inv_self]
+  (mul_lt_mul_iff_left b).symm.trans $ by rw [mul_inv_self]
 #align lt_inv_iff_mul_lt_one' lt_inv_iff_mul_lt_one'
 
 @[to_additive]
@@ -159,7 +153,7 @@ theorem lt_inv_mul_iff_lt : 1 < b⁻¹ * a ↔ b < a := by rw [← mul_lt_mul_if
 
 @[to_additive]
 theorem inv_mul_lt_one_iff : a⁻¹ * b < 1 ↔ b < a :=
-  trans inv_mul_lt_iff_lt_mul <| by rw [mul_one]
+  trans inv_mul_lt_iff_lt_mul $ by rw [mul_one]
 #align inv_mul_lt_one_iff inv_mul_lt_one_iff
 
 end TypeclassesLeftLt
@@ -184,27 +178,27 @@ theorem Right.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 := by
 
 @[to_additive neg_le_iff_add_nonneg]
 theorem inv_le_iff_one_le_mul : a⁻¹ ≤ b ↔ 1 ≤ b * a :=
-  (mul_le_mul_iff_right a).symm.trans <| by rw [inv_mul_self]
+  (mul_le_mul_iff_right a).symm.trans $ by rw [inv_mul_self]
 #align inv_le_iff_one_le_mul inv_le_iff_one_le_mul
 
 @[to_additive]
 theorem le_inv_iff_mul_le_one_right : a ≤ b⁻¹ ↔ a * b ≤ 1 :=
-  (mul_le_mul_iff_right b).symm.trans <| by rw [inv_mul_self]
+  (mul_le_mul_iff_right b).symm.trans $ by rw [inv_mul_self]
 #align le_inv_iff_mul_le_one_right le_inv_iff_mul_le_one_right
 
 @[simp, to_additive]
 theorem mul_inv_le_iff_le_mul : a * b⁻¹ ≤ c ↔ a ≤ c * b :=
-  (mul_le_mul_iff_right b).symm.trans <| by rw [inv_mul_cancel_right]
+  (mul_le_mul_iff_right b).symm.trans $ by rw [inv_mul_cancel_right]
 #align mul_inv_le_iff_le_mul mul_inv_le_iff_le_mul
 
 @[simp, to_additive]
 theorem le_mul_inv_iff_mul_le : c ≤ a * b⁻¹ ↔ c * b ≤ a :=
-  (mul_le_mul_iff_right b).symm.trans <| by rw [inv_mul_cancel_right]
+  (mul_le_mul_iff_right b).symm.trans $ by rw [inv_mul_cancel_right]
 #align le_mul_inv_iff_mul_le le_mul_inv_iff_mul_le
 
 @[simp, to_additive]
 theorem mul_inv_le_one_iff_le : a * b⁻¹ ≤ 1 ↔ a ≤ b :=
-  mul_inv_le_iff_le_mul.trans <| by rw [one_mul]
+  mul_inv_le_iff_le_mul.trans $ by rw [one_mul]
 #align mul_inv_le_one_iff_le mul_inv_le_one_iff_le
 
 @[to_additive]
@@ -213,7 +207,7 @@ theorem le_mul_inv_iff_le : 1 ≤ a * b⁻¹ ↔ b ≤ a := by rw [← mul_le_mu
 
 @[to_additive]
 theorem mul_inv_le_one_iff : b * a⁻¹ ≤ 1 ↔ b ≤ a :=
-  trans mul_inv_le_iff_le_mul <| by rw [one_mul]
+  trans mul_inv_le_iff_le_mul $ by rw [one_mul]
 #align mul_inv_le_one_iff mul_inv_le_one_iff
 
 end TypeclassesRightLe
@@ -234,12 +228,12 @@ theorem Right.one_lt_inv_iff : 1 < a⁻¹ ↔ a < 1 := by rw [← mul_lt_mul_iff
 
 @[to_additive]
 theorem inv_lt_iff_one_lt_mul : a⁻¹ < b ↔ 1 < b * a :=
-  (mul_lt_mul_iff_right a).symm.trans <| by rw [inv_mul_self]
+  (mul_lt_mul_iff_right a).symm.trans $ by rw [inv_mul_self]
 #align inv_lt_iff_one_lt_mul inv_lt_iff_one_lt_mul
 
 @[to_additive]
 theorem lt_inv_iff_mul_lt_one : a < b⁻¹ ↔ a * b < 1 :=
-  (mul_lt_mul_iff_right b).symm.trans <| by rw [inv_mul_self]
+  (mul_lt_mul_iff_right b).symm.trans $ by rw [inv_mul_self]
 #align lt_inv_iff_mul_lt_one lt_inv_iff_mul_lt_one
 
 @[simp, to_additive]
@@ -248,7 +242,7 @@ theorem mul_inv_lt_iff_lt_mul : a * b⁻¹ < c ↔ a < c * b := by rw [← mul_l
 
 @[simp, to_additive]
 theorem lt_mul_inv_iff_mul_lt : c < a * b⁻¹ ↔ c * b < a :=
-  (mul_lt_mul_iff_right b).symm.trans <| by rw [inv_mul_cancel_right]
+  (mul_lt_mul_iff_right b).symm.trans $ by rw [inv_mul_cancel_right]
 #align lt_mul_inv_iff_mul_lt lt_mul_inv_iff_mul_lt
 
 @[simp, to_additive]
@@ -261,7 +255,7 @@ theorem lt_mul_inv_iff_lt : 1 < a * b⁻¹ ↔ b < a := by rw [← mul_lt_mul_if
 
 @[to_additive]
 theorem mul_inv_lt_one_iff : b * a⁻¹ < 1 ↔ b < a :=
-  trans mul_inv_lt_iff_lt_mul <| by rw [one_mul]
+  trans mul_inv_lt_iff_lt_mul $ by rw [one_mul]
 #align mul_inv_lt_one_iff mul_inv_lt_one_iff
 
 end TypeclassesRightLt
@@ -877,7 +871,7 @@ section LinearOrder
 variable [Group α] [LinearOrder α]
 
 @[simp, to_additive cmp_sub_zero]
-theorem cmp_div_one' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (a b : α) : Cmp (a / b) 1 = Cmp a b := by
+theorem cmp_div_one' [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (a b : α) : cmp (a / b) 1 = cmp a b := by
   rw [← cmp_mul_right' _ _ b, one_mul, div_mul_cancel']
 #align cmp_div_one' cmp_div_one'
 
@@ -1038,7 +1032,7 @@ def mkOfPositiveCone {α : Type _} [AddCommGroup α] (C : PositiveCone α) : Ord
     lt_iff_le_not_le := fun a b => by simp <;> rw [C.pos_iff] <;> simp, le_refl := fun a => by simp [C.zero_nonneg],
     le_trans := fun a b c nab nbc => by
       simp [-sub_eq_add_neg] <;> rw [← sub_add_sub_cancel] <;> exact C.add_nonneg nbc nab,
-    le_antisymm := fun a b nab nba => eq_of_sub_eq_zero <| C.nonneg_antisymm nba (by rw [neg_sub] <;> exact nab),
+    le_antisymm := fun a b nab nba => eq_of_sub_eq_zero $ C.nonneg_antisymm nba (by rw [neg_sub] <;> exact nab),
     add_le_add_left := fun a b nab c => by simpa [(· ≤ ·), Preorder.Le] using nab }
 #align ordered_add_comm_group.mk_of_positive_cone OrderedAddCommGroup.mkOfPositiveCone
 

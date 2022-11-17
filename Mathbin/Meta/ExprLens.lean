@@ -91,7 +91,7 @@ unsafe def mk_congr_arg_using_dsimp (G W : expr) (u : List Name) : tactic expr :
   let s ← simp_lemmas.mk_default
   let t ← infer_type G
   let t' ← s.dsimplify u t { failIfUnchanged := false }
-  to_expr (ppquote.1 (congr_arg (show %%ₓt' from %%ₓG) (%%ₓW)))
+  to_expr `(congr_arg (show $(t') from $(G)) $(W))
 #align expr_lens.mk_congr_arg_using_dsimp expr_lens.mk_congr_arg_using_dsimp
 
 private unsafe def trace_congr_error (f : expr) (x_eq : expr) : tactic Unit := do
@@ -111,7 +111,7 @@ unsafe def congr : expr_lens → expr → tactic expr
   | entire, e_eq => pure e_eq
   | app_fun l f, x_eq => do
     let fx_eq ←
-      try_core <| do
+      try_core $ do
           mk_congr_arg f x_eq <|> mk_congr_arg_using_dsimp f x_eq [`has_coe_to_fun.F]
     match fx_eq with
       | some fx_eq => l fx_eq
@@ -141,7 +141,7 @@ private unsafe def app_map_aux {α} (F : expr_lens → expr → tactic (List α)
     Option (expr_lens × expr) → tactic (List α)
   | some (l, e) =>
     List.join <$>
-        Monad.sequence [F l e, app_map_aux <| l.zoom [ExprLens.Dir.F] e, app_map_aux <| l.zoom [ExprLens.Dir.A] e] <|>
+        Monad.sequence [F l e, app_map_aux $ l.zoom [ExprLens.Dir.F] e, app_map_aux $ l.zoom [ExprLens.Dir.A] e] <|>
       pure []
   | none => pure []
 #align expr.app_map_aux expr.app_map_aux

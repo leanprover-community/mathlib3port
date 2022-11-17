@@ -40,7 +40,7 @@ theorem ioo.infinite : Infinite (ioo a b) :=
 #align set.Ioo.infinite Set.ioo.infinite
 
 theorem Ioo_infinite : (ioo a b).Infinite :=
-  infinite_coe_iff.1 <| ioo.infinite h
+  infinite_coe_iff.1 $ ioo.infinite h
 #align set.Ioo_infinite Set.Ioo_infinite
 
 theorem Ico_infinite : (ico a b).Infinite :=
@@ -48,7 +48,7 @@ theorem Ico_infinite : (ico a b).Infinite :=
 #align set.Ico_infinite Set.Ico_infinite
 
 theorem ico.infinite : Infinite (ico a b) :=
-  infinite_coe_iff.2 <| Ico_infinite h
+  infinite_coe_iff.2 $ Ico_infinite h
 #align set.Ico.infinite Set.ico.infinite
 
 theorem Ioc_infinite : (ioc a b).Infinite :=
@@ -56,7 +56,7 @@ theorem Ioc_infinite : (ioc a b).Infinite :=
 #align set.Ioc_infinite Set.Ioc_infinite
 
 theorem ioc.infinite : Infinite (ioc a b) :=
-  infinite_coe_iff.2 <| Ioc_infinite h
+  infinite_coe_iff.2 $ Ioc_infinite h
 #align set.Ioc.infinite Set.ioc.infinite
 
 theorem Icc_infinite : (icc a b).Infinite :=
@@ -64,7 +64,7 @@ theorem Icc_infinite : (icc a b).Infinite :=
 #align set.Icc_infinite Set.Icc_infinite
 
 theorem icc.infinite : Infinite (icc a b) :=
-  infinite_coe_iff.2 <| Icc_infinite h
+  infinite_coe_iff.2 $ Icc_infinite h
 #align set.Icc.infinite Set.icc.infinite
 
 end DenselyOrdered

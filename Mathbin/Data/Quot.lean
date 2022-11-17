@@ -27,7 +27,7 @@ namespace Setoid
 #print Setoid.ext /-
 theorem ext {α : Sort _} : ∀ {s t : Setoid α}, (∀ a b, @Setoid.r α s a b ↔ @Setoid.r α t a b) → s = t
   | ⟨r, _⟩, ⟨p, _⟩, Eq => by
-    have : r = p := funext fun a => funext fun b => propext <| Eq a b
+    have : r = p := funext $ fun a => funext $ fun b => propext $ Eq a b
     subst this
 #align setoid.ext Setoid.ext
 -/
@@ -50,14 +50,13 @@ instance [Subsingleton α] : Subsingleton (Quot ra) :=
 #print Quot.hrecOn₂ /-
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
-    (ca : ∀ {b a₁ a₂}, ra a₁ a₂ → HEq (f a₁ b) (f a₂ b)) (cb : ∀ {a b₁ b₂}, rb b₁ b₂ → HEq (f a b₁) (f a b₂)) :
-    φ qa qb :=
-  (Quot.hrecOn qa fun a => Quot.hrecOn qb (f a) fun b₁ b₂ pb => cb pb) fun a₁ a₂ pa =>
-    (Quot.induction_on qb) fun b =>
+    (ca : ∀ {b a₁ a₂}, ra a₁ a₂ → f a₁ b == f a₂ b) (cb : ∀ {a b₁ b₂}, rb b₁ b₂ → f a b₁ == f a b₂) : φ qa qb :=
+  (Quot.hrecOn qa fun a => Quot.hrecOn qb (f a) fun b₁ b₂ pb => cb pb) $ fun a₁ a₂ pa =>
+    Quot.induction_on qb $ fun b =>
       calc
-        HEq (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₁) (@cb _)) (f a₁ b) := by simp [heq_self_iff_true]
-        HEq _ (f a₂ b) := ca pa
-        HEq _ (@Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₂) (@cb _)) := by simp [heq_self_iff_true]
+        @Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₁) (@cb _) == f a₁ b := by simp [heq_self_iff_true]
+        _ == f a₂ b := ca pa
+        _ == @Quot.hrecOn _ _ (φ _) ⟦b⟧ (f a₂) (@cb _) := by simp [heq_self_iff_true]
         
 #align quot.hrec_on₂ Quot.hrecOn₂
 -/
@@ -66,7 +65,7 @@ protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ �
 /-- Map a function `f : α → β` such that `ra x y` implies `rb (f x) (f y)`
 to a map `quot ra → quot rb`. -/
 protected def map (f : α → β) (h : (ra ⇒ rb) f f) : Quot ra → Quot rb :=
-  (Quot.lift fun x => ⟦f x⟧) fun x y (h₁ : ra x y) => Quot.sound <| h h₁
+  (Quot.lift fun x => ⟦f x⟧) $ fun x y (h₁ : ra x y) => Quot.sound $ h h₁
 #align quot.map Quot.map
 -/
 
@@ -159,7 +158,7 @@ variable {t : γ → γ → Prop}
 `γ`. -/
 protected def map₂ (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → t (f a b₁) (f a b₂))
     (hs : ∀ a₁ a₂ b, r a₁ a₂ → t (f a₁ b) (f a₂ b)) (q₁ : Quot r) (q₂ : Quot s) : Quot t :=
-  Quot.lift₂ (fun a b => Quot.mk t <| f a b) (fun a b₁ b₂ hb => Quot.sound (hr a b₁ b₂ hb))
+  Quot.lift₂ (fun a b => Quot.mk t $ f a b) (fun a b₁ b₂ hb => Quot.sound (hr a b₁ b₂ hb))
     (fun a₁ a₂ b ha => Quot.sound (hs a₁ a₂ b ha)) q₁ q₂
 #align quot.map₂ Quot.map₂
 -/
@@ -182,8 +181,8 @@ theorem map₂_mk (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → 
 @[reducible, elab_as_elim]
 protected def recOnSubsingleton₂ {φ : Quot r → Quot s → Sort _} [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)] (q₁ : Quot r)
     (q₂ : Quot s) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧) : φ q₁ q₂ :=
-  (@Quot.recOnSubsingleton _ r (fun q => φ q q₂) (fun a => Quot.ind (h a) q₂) q₁) fun a =>
-    (Quot.recOnSubsingleton q₂) fun b => f a b
+  @Quot.recOnSubsingleton _ r (fun q => φ q q₂) (fun a => Quot.ind (h a) q₂) q₁ $ fun a =>
+    Quot.recOnSubsingleton q₂ $ fun b => f a b
 #align quot.rec_on_subsingleton₂ Quot.recOnSubsingleton₂
 -/
 
@@ -250,7 +249,7 @@ instance {α : Type _} [Setoid α] : IsEquiv α (· ≈ ·) where
 #print Quotient.hrecOn₂ /-
 /-- Induction on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂ (qa : Quotient sa) (qb : Quotient sb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
-    (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) : φ qa qb :=
+    (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → f a₁ b₁ == f a₂ b₂) : φ qa qb :=
   Quot.hrecOn₂ qa qb f (fun _ _ _ p => c _ _ _ _ p (Setoid.refl _)) fun _ _ _ p => c _ _ _ _ (Setoid.refl _) p
 #align quotient.hrec_on₂ Quotient.hrecOn₂
 -/
@@ -282,7 +281,7 @@ variable {γ : Sort _} [sc : Setoid γ]
 to a function `f : quotient sa → quotient sb → quotient sc`.
 Useful to define binary operations on quotients. -/
 protected def map₂ (f : α → β → γ) (h : ((· ≈ ·) ⇒ (· ≈ ·) ⇒ (· ≈ ·)) f f) : Quotient sa → Quotient sb → Quotient sc :=
-  Quotient.lift₂ (fun x y => ⟦f x y⟧) fun x₁ y₁ x₂ y₂ h₁ h₂ => Quot.sound <| h h₁ h₂
+  Quotient.lift₂ (fun x y => ⟦f x y⟧) fun x₁ y₁ x₂ y₂ h₁ h₂ => Quot.sound $ h h₁ h₂
 #align quotient.map₂ Quotient.map₂
 -/
 
@@ -485,7 +484,7 @@ theorem Quotient.out_equiv_out {s : Setoid α} {x y : Quotient s} : x.out ≈ y.
 
 #print Quotient.out_injective /-
 theorem Quotient.out_injective {s : Setoid α} : Function.Injective (@Quotient.out α s) := fun a b h =>
-  Quotient.out_equiv_out.1 <| h ▸ Setoid.refl _
+  Quotient.out_equiv_out.1 $ h ▸ Setoid.refl _
 #align quotient.out_injective Quotient.out_injective
 -/
 
@@ -523,7 +522,7 @@ Case conversion may be inaccurate. Consider using '#align quotient.choice_eq Quo
 @[simp]
 theorem Quotient.choice_eq {ι : Type _} {α : ι → Type _} [∀ i, Setoid (α i)] (f : ∀ i, α i) :
     (Quotient.choice fun i => ⟦f i⟧) = ⟦f⟧ :=
-  Quotient.sound fun i => Quotient.mk_out _
+  Quotient.sound $ fun i => Quotient.mk_out _
 #align quotient.choice_eq Quotient.choice_eq
 
 /- warning: quotient.induction_on_pi -> Quotient.induction_on_pi is a dubious translation:
@@ -628,7 +627,7 @@ Case conversion may be inaccurate. Consider using '#align trunc.induction_on₂ 
 @[elab_as_elim]
 protected theorem induction_on₂ {C : Trunc α → Trunc β → Prop} (q₁ : Trunc α) (q₂ : Trunc β)
     (h : ∀ a b, C (mk a) (mk b)) : C q₁ q₂ :=
-  (Trunc.induction_on q₁) fun a₁ => Trunc.induction_on q₂ (h a₁)
+  Trunc.induction_on q₁ $ fun a₁ => Trunc.induction_on q₂ (h a₁)
 #align trunc.induction_on₂ Trunc.induction_on₂
 
 #print Trunc.eq /-
@@ -854,13 +853,13 @@ protected def recOnSubsingleton₂' {φ : Quotient s₁ → Quotient s₂ → So
 #print Quotient.hrecOn' /-
 /-- Recursion on a `quotient` argument `a`, result type depends on `⟦a⟧`. -/
 protected def hrecOn' {φ : Quotient s₁ → Sort _} (qa : Quotient s₁) (f : ∀ a, φ (Quotient.mk' a))
-    (c : ∀ a₁ a₂, a₁ ≈ a₂ → HEq (f a₁) (f a₂)) : φ qa :=
+    (c : ∀ a₁ a₂, a₁ ≈ a₂ → f a₁ == f a₂) : φ qa :=
   Quot.hrecOn qa f c
 #align quotient.hrec_on' Quotient.hrecOn'
 -/
 
 @[simp]
-theorem hrec_on'_mk' {φ : Quotient s₁ → Sort _} (f : ∀ a, φ (Quotient.mk' a)) (c : ∀ a₁ a₂, a₁ ≈ a₂ → HEq (f a₁) (f a₂))
+theorem hrec_on'_mk' {φ : Quotient s₁ → Sort _} (f : ∀ a, φ (Quotient.mk' a)) (c : ∀ a₁ a₂, a₁ ≈ a₂ → f a₁ == f a₂)
     (x : α) : (Quotient.mk' x).hrecOn' f c = f x :=
   rfl
 #align quotient.hrec_on'_mk' Quotient.hrec_on'_mk'
@@ -868,7 +867,7 @@ theorem hrec_on'_mk' {φ : Quotient s₁ → Sort _} (f : ∀ a, φ (Quotient.mk
 #print Quotient.hrecOn₂' /-
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂' {φ : Quotient s₁ → Quotient s₂ → Sort _} (qa : Quotient s₁) (qb : Quotient s₂)
-    (f : ∀ a b, φ (Quotient.mk' a) (Quotient.mk' b)) (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) :
+    (f : ∀ a b, φ (Quotient.mk' a) (Quotient.mk' b)) (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → f a₁ b₁ == f a₂ b₂) :
     φ qa qb :=
   Quotient.hrecOn₂ qa qb f c
 #align quotient.hrec_on₂' Quotient.hrecOn₂'
@@ -876,7 +875,7 @@ protected def hrecOn₂' {φ : Quotient s₁ → Quotient s₂ → Sort _} (qa :
 
 @[simp]
 theorem hrec_on₂'_mk' {φ : Quotient s₁ → Quotient s₂ → Sort _} (f : ∀ a b, φ (Quotient.mk' a) (Quotient.mk' b))
-    (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) (x : α) (qb : Quotient s₂) :
+    (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → f a₁ b₁ == f a₂ b₂) (x : α) (qb : Quotient s₂) :
     (Quotient.mk' x).hrecOn₂' qb f c = qb.hrecOn' (f x) fun b₁ b₂ => c _ _ _ _ (Setoid.refl _) :=
   rfl
 #align quotient.hrec_on₂'_mk' Quotient.hrec_on₂'_mk'

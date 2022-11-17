@@ -139,7 +139,7 @@ theorem cramer_one : cramer (1 : Matrix n n α) = 1 := by
 #align matrix.cramer_one Matrix.cramer_one
 
 theorem cramer_smul (r : α) (A : Matrix n n α) : cramer (r • A) = r ^ (Fintype.card n - 1) • cramer A :=
-  LinearMap.ext fun b => funext fun _ => det_update_column_smul' _ _ _ _
+  LinearMap.ext $ fun b => funext $ fun _ => det_update_column_smul' _ _ _ _
 #align matrix.cramer_smul Matrix.cramer_smul
 
 @[simp]
@@ -370,13 +370,11 @@ theorem adjugate_fin_one (A : Matrix (Fin 1) (Fin 1) α) : adjugate A = 1 :=
   adjugate_subsingleton A
 #align matrix.adjugate_fin_one Matrix.adjugate_fin_one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem adjugate_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
     adjugate A =
-      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   rw [adjugate_apply, det_fin_two]
@@ -388,14 +386,14 @@ theorem adjugate_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
 #align matrix.adjugate_fin_two Matrix.adjugate_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 @[simp]
 theorem adjugate_fin_two_of (a b c d : α) :
     adjugate
-        («expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation") =
-      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        («expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") =
+      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   adjugate_fin_two _
 #align matrix.adjugate_fin_two_of Matrix.adjugate_fin_two_of
 
@@ -497,7 +495,7 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
 /-- A weaker version of `matrix.adjugate_adjugate` that uses `nontrivial`. -/
 theorem adjugate_adjugate' (A : Matrix n n α) [Nontrivial n] :
     adjugate (adjugate A) = det A ^ (Fintype.card n - 2) • A :=
-  adjugate_adjugate _ <| Fintype.one_lt_card.ne'
+  adjugate_adjugate _ $ Fintype.one_lt_card.ne'
 #align matrix.adjugate_adjugate' Matrix.adjugate_adjugate'
 
 end Adjugate

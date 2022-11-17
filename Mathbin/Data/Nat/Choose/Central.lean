@@ -93,7 +93,7 @@ theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * 
   obtain ⟨n, rfl⟩ : ∃ m, n = m + 1 := Nat.exists_eq_succ_of_ne_zero (zero_lt_four.trans hn).ne'
   calc
     4 ^ (n + 1) < 4 * (n * central_binom n) :=
-      (mul_lt_mul_left <| zero_lt_four' ℕ).mpr (IH n n.lt_succ_self (Nat.le_of_lt_succ hn))
+      (mul_lt_mul_left $ zero_lt_four' ℕ).mpr (IH n n.lt_succ_self (Nat.le_of_lt_succ hn))
     _ ≤ 2 * (2 * n + 1) * central_binom n := by
       rw [← mul_assoc]
       linarith

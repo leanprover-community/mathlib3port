@@ -749,7 +749,7 @@ def IsSheaf (P : Cᵒᵖ ⥤ Type w) : Prop :=
 
 theorem IsSheaf.is_sheaf_for {P : Cᵒᵖ ⥤ Type w} (hp : IsSheaf J P) (R : Presieve X) (hr : generate R ∈ J X) :
     IsSheafFor P R :=
-  (is_sheaf_for_iff_generate R).2 <| hp _ hr
+  (is_sheaf_for_iff_generate R).2 $ hp _ hr
 #align category_theory.presieve.is_sheaf.is_sheaf_for CategoryTheory.Presieve.IsSheaf.is_sheaf_for
 
 theorem isSheafOfLe (P : Cᵒᵖ ⥤ Type w) {J₁ J₂ : GrothendieckTopology C} : J₁ ≤ J₂ → IsSheaf J₂ P → IsSheaf J₁ P :=
@@ -806,13 +806,13 @@ noncomputable section
 of <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 def FirstObj : Type max v₁ u₁ :=
-  ∏ fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)
+  ∏ fun f : Σ Y, { f : Y ⟶ X // R f } => P.obj (op f.1)
 #align category_theory.equalizer.first_obj CategoryTheory.Equalizer.FirstObj
 
 /-- Show that `first_obj` is isomorphic to `family_of_elements`. -/
 @[simps]
 def firstObjEqFamily : FirstObj P R ≅ R.FamilyOfElements P where
-  Hom t Y f hf := Pi.π (fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
+  Hom t Y f hf := Pi.π (fun f : Σ Y, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
   inv := Pi.lift fun f x => x _ f.2.2
   hom_inv_id' := by
     ext (⟨Y, f, hf⟩p)
@@ -840,16 +840,17 @@ the definition of `is_sheaf_for`.
 
 namespace Sieve
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (Y Z) -/
 /-- The rightmost object of the fork diagram of Equation (3) [MM92], which contains the data used
 to check a family is compatible.
 -/
 def SecondObj : Type max v₁ u₁ :=
-  ∏ fun f : Σ(Y Z : _)(g : Z ⟶ Y), { f' : Y ⟶ X // S f' } => P.obj (op f.2.1)
+  ∏ fun f : Σ (Y) (Z) (g : Z ⟶ Y), { f' : Y ⟶ X // S f' } => P.obj (op f.2.1)
 #align category_theory.equalizer.sieve.second_obj CategoryTheory.Equalizer.Sieve.SecondObj
 
 /-- The map `p` of Equations (3,4) [MM92]. -/
 def firstMap : FirstObj P S ⟶ SecondObj P S :=
-  Pi.lift fun fg => Pi.π _ (⟨_, _, S.downward_closed fg.2.2.2.2 fg.2.2.1⟩ : ΣY, { f : Y ⟶ X // S f })
+  Pi.lift fun fg => Pi.π _ (⟨_, _, S.downward_closed fg.2.2.2.2 fg.2.2.1⟩ : Σ Y, { f : Y ⟶ X // S f })
 #align category_theory.equalizer.sieve.first_map CategoryTheory.Equalizer.Sieve.firstMap
 
 instance : Inhabited (SecondObj P (⊥ : Sieve X)) :=
@@ -922,7 +923,7 @@ variable [HasPullbacks C]
 contains the data used to check a family of elements for a presieve is compatible.
 -/
 def SecondObj : Type max v₁ u₁ :=
-  ∏ fun fg : (ΣY, { f : Y ⟶ X // R f }) × ΣZ, { g : Z ⟶ X // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
+  ∏ fun fg : (Σ Y, { f : Y ⟶ X // R f }) × Σ Z, { g : Z ⟶ X // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
 #align category_theory.equalizer.presieve.second_obj CategoryTheory.Equalizer.Presieve.SecondObj
 
 /-- The map `pr₀*` of <https://stacks.math.columbia.edu/tag/00VL>. -/
@@ -1016,9 +1017,9 @@ instance : Category (SheafOfTypesCat J) where
   Hom := Hom
   id X := ⟨𝟙 _⟩
   comp X Y Z f g := ⟨f.val ≫ g.val⟩
-  id_comp' X Y f := Hom.ext _ _ <| id_comp _
-  comp_id' X Y f := Hom.ext _ _ <| comp_id _
-  assoc' X Y Z W f g h := Hom.ext _ _ <| assoc _ _ _
+  id_comp' X Y f := Hom.ext _ _ $ id_comp _
+  comp_id' X Y f := Hom.ext _ _ $ comp_id _
+  assoc' X Y Z W f g h := Hom.ext _ _ $ assoc _ _ _
 
 -- Let's make the inhabited linter happy...
 instance (X : SheafOfTypesCat J) : Inhabited (Hom X X) :=

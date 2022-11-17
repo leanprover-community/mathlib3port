@@ -376,8 +376,8 @@ See <https://stacks.math.columbia.edu/tag/0DV0>.
 -/
 def comp (adj₁ : F ⊣ G) (adj₂ : H ⊣ I) : F ⋙ H ⊣ I ⋙ G where
   homEquiv X Z := Equiv.trans (adj₂.homEquiv _ _) (adj₁.homEquiv _ _)
-  Unit := adj₁.Unit ≫ (whiskerLeft F <| whiskerRight adj₂.Unit G) ≫ (Functor.associator _ _ _).inv
-  counit := (Functor.associator _ _ _).Hom ≫ (whiskerLeft I <| whiskerRight adj₁.counit H) ≫ adj₂.counit
+  Unit := adj₁.Unit ≫ (whiskerLeft F $ whiskerRight adj₂.Unit G) ≫ (Functor.associator _ _ _).inv
+  counit := (Functor.associator _ _ _).Hom ≫ (whiskerLeft I $ whiskerRight adj₁.counit H) ≫ adj₂.counit
 #align category_theory.adjunction.comp CategoryTheory.Adjunction.comp
 
 /-- If `F` and `G` are left adjoints then `F ⋙ G` is a left adjoint too. -/

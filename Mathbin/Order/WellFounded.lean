@@ -41,8 +41,8 @@ instance {α : Sort _} [HasWellFounded α] : IsIrrefl α HasWellFounded.R :=
 with respect to `r`. -/
 theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) : s.Nonempty → ∃ a ∈ s, ∀ x ∈ s, ¬r x a
   | ⟨a, ha⟩ =>
-    ((Acc.recOn (H.apply a)) fun x _ IH =>
-        not_imp_not.1 fun hne hx => hne <| ⟨x, hx, fun y hy hyx => hne <| IH y hyx hy⟩)
+    (Acc.recOn (H.apply a) $ fun x _ IH =>
+        not_imp_not.1 $ fun hne hx => hne $ ⟨x, hx, fun y hy hyx => hne $ IH y hyx hy⟩)
       ha
 #align well_founded.has_min WellFounded.has_min
 
@@ -154,7 +154,7 @@ section LinearOrder
 variable {β : Type _} [LinearOrder β] (h : WellFounded ((· < ·) : β → β → Prop)) {γ : Type _} [PartialOrder γ]
 
 theorem min_le {x : β} {s : Set β} (hx : x ∈ s) (hne : s.Nonempty := ⟨x, hx⟩) : h.min s hne ≤ x :=
-  not_lt.1 <| h.not_lt_min _ _ hx
+  not_lt.1 $ h.not_lt_min _ _ hx
 #align well_founded.min_le WellFounded.min_le
 
 private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g)
@@ -239,13 +239,13 @@ variable [LinearOrder β] (h : WellFounded ((· < ·) : β → β → Prop))
 
 @[simp]
 theorem argmin_le (a : α) [Nonempty α] : f (argmin f h) ≤ f a :=
-  not_lt.mp <| not_lt_argmin f h a
+  not_lt.mp $ not_lt_argmin f h a
 #align function.argmin_le Function.argmin_le
 
 @[simp]
 theorem argmin_on_le (s : Set α) {a : α} (ha : a ∈ s) (hs : s.Nonempty := Set.nonempty_of_mem ha) :
     f (argminOn f h s hs) ≤ f a :=
-  not_lt.mp <| not_lt_argmin_on f h s ha hs
+  not_lt.mp $ not_lt_argmin_on f h s ha hs
 #align function.argmin_on_le Function.argmin_on_le
 
 end LinearOrder
@@ -261,7 +261,7 @@ let `bot : α`. This induction principle shows that `C (f bot)` holds, given tha
   satisfying `r c b` and `C (f c)`. -/
 theorem Acc.induction_bot' {α β} {r : α → α → Prop} {a bot : α} (ha : Acc r a) {C : β → Prop} {f : α → β}
     (ih : ∀ b, f b ≠ f bot → C (f b) → ∃ c, r c b ∧ C (f c)) : C (f a) → C (f bot) :=
-  (@Acc.recOn _ _ (fun x => C (f x) → C (f bot)) _ ha) fun x ac ih' hC =>
+  @Acc.recOn _ _ (fun x => C (f x) → C (f bot)) _ ha $ fun x ac ih' hC =>
     (eq_or_ne (f x) (f bot)).elim (fun h => h ▸ hC) fun h =>
       let ⟨y, hy₁, hy₂⟩ := ih x h hC
       ih' y hy₁ hy₂

@@ -32,19 +32,19 @@ inductive Preform
 #align omega.nat.preform Omega.Nat.Preform
 
 -- mathport name: preform.eq
-localized [Omega.Nat] notation x " =* " y => Omega.Nat.Preform.eq x y
+scoped notation x " =* " y => Omega.Nat.Preform.eq x y
 
 -- mathport name: preform.le
-localized [Omega.Nat] notation x " ≤* " y => Omega.Nat.Preform.le x y
+scoped notation x " ≤* " y => Omega.Nat.Preform.le x y
 
 -- mathport name: preform.not
-localized [Omega.Nat] notation "¬* " p => Omega.Nat.Preform.not p
+scoped notation "¬* " p => Omega.Nat.Preform.not p
 
 -- mathport name: preform.or
-localized [Omega.Nat] notation p " ∨* " q => Omega.Nat.Preform.or p q
+scoped notation p " ∨* " q => Omega.Nat.Preform.or p q
 
 -- mathport name: preform.and
-localized [Omega.Nat] notation p " ∧* " q => Omega.Nat.Preform.and p q
+scoped notation p " ∧* " q => Omega.Nat.Preform.and p q
 
 namespace Preform
 
@@ -191,7 +191,7 @@ theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
   assumption
 #align omega.nat.valid_of_unsat_not Omega.Nat.valid_of_unsat_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

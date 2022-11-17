@@ -103,10 +103,10 @@ noncomputable irreducible_def finprod (f : α → M) : M :=
 end
 
 -- mathport name: finsum
-localized [BigOperators] notation3"∑ᶠ "(...)", "r:(scoped f => finsum f) => r
+scoped[BigOperators] notation3"∑ᶠ "(...)", "r:(scoped f => finsum f) => r
 
 -- mathport name: finprod
-localized [BigOperators] notation3"∏ᶠ "(...)", "r:(scoped f => finprod f) => r
+scoped[BigOperators] notation3"∏ᶠ "(...)", "r:(scoped f => finprod f) => r
 
 @[to_additive]
 theorem finprod_eq_prod_plift_of_mul_support_to_finset_subset {f : α → M} (hf : (mulSupport (f ∘ PLift.down)).Finite)
@@ -119,7 +119,7 @@ theorem finprod_eq_prod_plift_of_mul_support_to_finset_subset {f : α → M} (hf
 @[to_additive]
 theorem finprod_eq_prod_plift_of_mul_support_subset {f : α → M} {s : Finset (PLift α)}
     (hs : mulSupport (f ∘ PLift.down) ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i.down :=
-  (finprod_eq_prod_plift_of_mul_support_to_finset_subset (s.finite_to_set.Subset hs)) fun x hx => by
+  finprod_eq_prod_plift_of_mul_support_to_finset_subset (s.finite_to_set.Subset hs) $ fun x hx => by
     rw [finite.mem_to_finset] at hx
     exact hs hx
 #align finprod_eq_prod_plift_of_mul_support_subset finprod_eq_prod_plift_of_mul_support_subset
@@ -141,7 +141,7 @@ theorem finprod_false (f : False → M) : (∏ᶠ i, f i) = 1 :=
   finprod_of_is_empty _
 #align finprod_false finprod_false
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » a) -/
 @[to_additive]
 theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f x = 1) : (∏ᶠ x, f x) = f a := by
   have : mul_support (f ∘ PLift.down) ⊆ ({PLift.up a} : Finset (PLift α)) := by
@@ -153,7 +153,7 @@ theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f
 
 @[to_additive]
 theorem finprod_unique [Unique α] (f : α → M) : (∏ᶠ i, f i) = f default :=
-  (finprod_eq_single f default) fun x hx => (hx <| Unique.eq_default _).elim
+  finprod_eq_single f default $ fun x hx => (hx $ Unique.eq_default _).elim
 #align finprod_unique finprod_unique
 
 @[simp, to_additive]
@@ -179,7 +179,7 @@ theorem finprod_eq_if {p : Prop} [Decidable p] {x : M} : (∏ᶠ i : p, x) = if 
 
 @[to_additive]
 theorem finprod_congr {f g : α → M} (h : ∀ x, f x = g x) : finprod f = finprod g :=
-  congr_arg _ <| funext h
+  congr_arg _ $ funext h
 #align finprod_congr finprod_congr
 
 @[congr, to_additive]
@@ -212,7 +212,7 @@ theorem one_le_finprod' {M : Type _} [OrderedCommMonoid M] {f : α → M} (hf : 
 #align one_le_finprod' one_le_finprod'
 
 @[to_additive]
-theorem MonoidHom.map_finprod_plift (f : M →* N) (g : α → M) (h : (mul_support <| g ∘ PLift.down).Finite) :
+theorem MonoidHom.map_finprod_plift (f : M →* N) (g : α → M) (h : (mul_support $ g ∘ PLift.down).Finite) :
     f (∏ᶠ x, g x) = ∏ᶠ x, f (g x) := by
   rw [finprod_eq_prod_plift_of_mul_support_subset h.coe_to_finset.ge, finprod_eq_prod_plift_of_mul_support_subset,
     f.map_prod]
@@ -228,7 +228,7 @@ theorem MonoidHom.map_finprod_Prop {p : Prop} (f : M →* N) (g : p → M) : f (
 @[to_additive]
 theorem MonoidHom.map_finprod_of_preimage_one (f : M →* N) (hf : ∀ x, f x = 1 → x = 1) (g : α → M) :
     f (∏ᶠ i, g i) = ∏ᶠ i, f (g i) := by
-  by_cases hg:(mul_support <| g ∘ PLift.down).Finite
+  by_cases hg:(mul_support $ g ∘ PLift.down).Finite
   · exact f.map_finprod_plift g hg
     
   rw [finprod, dif_neg, f.map_one, finprod, dif_neg]
@@ -287,7 +287,7 @@ theorem finprod_mem_mul_support (f : α → M) (a : α) : (∏ᶠ h : f a ≠ 1,
 
 @[to_additive]
 theorem finprod_mem_def (s : Set α) (f : α → M) : (∏ᶠ a ∈ s, f a) = ∏ᶠ a, mulIndicator s f a :=
-  finprod_congr <| finprod_eq_mul_indicator_apply s f
+  finprod_congr $ finprod_eq_mul_indicator_apply s f
 #align finprod_mem_def finprod_mem_def
 
 @[to_additive]
@@ -306,7 +306,7 @@ theorem finprod_eq_prod_of_mul_support_subset (f : α → M) {s : Finset α} (h 
 @[to_additive]
 theorem finprod_eq_prod_of_mul_support_to_finset_subset (f : α → M) (hf : (mulSupport f).Finite) {s : Finset α}
     (h : hf.toFinset ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i :=
-  (finprod_eq_prod_of_mul_support_subset _) fun x hx => h <| hf.mem_to_finset.2 hx
+  finprod_eq_prod_of_mul_support_subset _ $ fun x hx => h $ hf.mem_to_finset.2 hx
 #align finprod_eq_prod_of_mul_support_to_finset_subset finprod_eq_prod_of_mul_support_to_finset_subset
 
 @[to_additive]
@@ -340,7 +340,7 @@ theorem finprod_eq_prod (f : α → M) (hf : (mulSupport f).Finite) : (∏ᶠ i 
 
 @[to_additive]
 theorem finprod_eq_prod_of_fintype [Fintype α] (f : α → M) : (∏ᶠ i : α, f i) = ∏ i, f i :=
-  finprod_eq_prod_of_mul_support_to_finset_subset _ (Set.to_finite _) <| Finset.subset_univ _
+  finprod_eq_prod_of_mul_support_to_finset_subset _ (Set.to_finite _) $ Finset.subset_univ _
 #align finprod_eq_prod_of_fintype finprod_eq_prod_of_fintype
 
 @[to_additive]
@@ -352,12 +352,12 @@ theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : F
     intro x hx
     exact (h hx.2).1 hx.1
   erw [finprod_mem_def, finprod_eq_prod_of_mul_support_subset _ this]
-  refine' Finset.prod_congr rfl fun x hx => mul_indicator_apply_eq_self.2 fun hxs => _
+  refine' Finset.prod_congr rfl fun x hx => mul_indicator_apply_eq_self.2 $ fun hxs => _
   contrapose! hxs
   exact (h hxs).2 hx
 #align finprod_cond_eq_prod_of_cond_iff finprod_cond_eq_prod_of_cond_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr ≠ » a) -/
 @[to_additive]
 theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : (mulSupport f).Finite) :
     (∏ᶠ (i) (_ : i ≠ a), f i) = ∏ i in hf.toFinset.erase a, f i := by
@@ -370,36 +370,36 @@ theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : (mulSuppo
 @[to_additive]
 theorem finprod_mem_eq_prod_of_inter_mul_support_eq (f : α → M) {s : Set α} {t : Finset α}
     (h : s ∩ mulSupport f = t ∩ mulSupport f) : (∏ᶠ i ∈ s, f i) = ∏ i in t, f i :=
-  finprod_cond_eq_prod_of_cond_iff _ <| by simpa [Set.ext_iff] using h
+  finprod_cond_eq_prod_of_cond_iff _ $ by simpa [Set.ext_iff] using h
 #align finprod_mem_eq_prod_of_inter_mul_support_eq finprod_mem_eq_prod_of_inter_mul_support_eq
 
 @[to_additive]
 theorem finprod_mem_eq_prod_of_subset (f : α → M) {s : Set α} {t : Finset α} (h₁ : s ∩ mulSupport f ⊆ t) (h₂ : ↑t ⊆ s) :
     (∏ᶠ i ∈ s, f i) = ∏ i in t, f i :=
-  (finprod_cond_eq_prod_of_cond_iff _) fun x hx => ⟨fun h => h₁ ⟨h, hx⟩, fun h => h₂ h⟩
+  finprod_cond_eq_prod_of_cond_iff _ $ fun x hx => ⟨fun h => h₁ ⟨h, hx⟩, fun h => h₂ h⟩
 #align finprod_mem_eq_prod_of_subset finprod_mem_eq_prod_of_subset
 
 @[to_additive]
 theorem finprod_mem_eq_prod (f : α → M) {s : Set α} (hf : (s ∩ mulSupport f).Finite) :
     (∏ᶠ i ∈ s, f i) = ∏ i in hf.toFinset, f i :=
-  finprod_mem_eq_prod_of_inter_mul_support_eq _ <| by simp [inter_assoc]
+  finprod_mem_eq_prod_of_inter_mul_support_eq _ $ by simp [inter_assoc]
 #align finprod_mem_eq_prod finprod_mem_eq_prod
 
 @[to_additive]
 theorem finprod_mem_eq_prod_filter (f : α → M) (s : Set α) [DecidablePred (· ∈ s)] (hf : (mulSupport f).Finite) :
     (∏ᶠ i ∈ s, f i) = ∏ i in Finset.filter (· ∈ s) hf.toFinset, f i :=
-  finprod_mem_eq_prod_of_inter_mul_support_eq _ <| by simp [inter_comm, inter_left_comm]
+  finprod_mem_eq_prod_of_inter_mul_support_eq _ $ by simp [inter_comm, inter_left_comm]
 #align finprod_mem_eq_prod_filter finprod_mem_eq_prod_filter
 
 @[to_additive]
 theorem finprod_mem_eq_to_finset_prod (f : α → M) (s : Set α) [Fintype s] : (∏ᶠ i ∈ s, f i) = ∏ i in s.toFinset, f i :=
-  finprod_mem_eq_prod_of_inter_mul_support_eq _ <| by rw [coe_to_finset]
+  finprod_mem_eq_prod_of_inter_mul_support_eq _ $ by rw [coe_to_finset]
 #align finprod_mem_eq_to_finset_prod finprod_mem_eq_to_finset_prod
 
 @[to_additive]
 theorem finprod_mem_eq_finite_to_finset_prod (f : α → M) {s : Set α} (hs : s.Finite) :
     (∏ᶠ i ∈ s, f i) = ∏ i in hs.toFinset, f i :=
-  finprod_mem_eq_prod_of_inter_mul_support_eq _ <| by rw [hs.coe_to_finset]
+  finprod_mem_eq_prod_of_inter_mul_support_eq _ $ by rw [hs.coe_to_finset]
 #align finprod_mem_eq_finite_to_finset_prod finprod_mem_eq_finite_to_finset_prod
 
 @[to_additive]
@@ -445,14 +445,14 @@ theorem finprod_mem_inter_mul_support_eq' (f : α → M) (s t : Set α) (h : ∀
 
 @[to_additive]
 theorem finprod_mem_univ (f : α → M) : (∏ᶠ i ∈ @Set.univ α, f i) = ∏ᶠ i : α, f i :=
-  finprod_congr fun i => finprod_true _
+  finprod_congr $ fun i => finprod_true _
 #align finprod_mem_univ finprod_mem_univ
 
 variable {f g : α → M} {a b : α} {s t : Set α}
 
 @[to_additive]
 theorem finprod_mem_congr (h₀ : s = t) (h₁ : ∀ x ∈ t, f x = g x) : (∏ᶠ i ∈ s, f i) = ∏ᶠ i ∈ t, g i :=
-  h₀.symm ▸ finprod_congr fun i => finprod_congr_Prop rfl (h₁ i)
+  h₀.symm ▸ (finprod_congr $ fun i => finprod_congr_Prop rfl (h₁ i))
 #align finprod_mem_congr finprod_mem_congr
 
 @[to_additive]
@@ -470,10 +470,11 @@ the product of `f i` multiplied by the product of `g i`. -/
 @[to_additive
       "If the additive supports of `f` and `g` are finite, then the sum of `f i + g i`\nequals the sum of `f i` plus the sum of `g i`."]
 theorem finprod_mul_distrib (hf : (mulSupport f).Finite) (hg : (mulSupport g).Finite) :
-    (∏ᶠ i, f i * g i) = (∏ᶠ i, f i) * ∏ᶠ i, g i := by
-  classical rw [finprod_eq_prod_of_mul_support_to_finset_subset _ hf (Finset.subset_union_left _ _),
-      finprod_eq_prod_of_mul_support_to_finset_subset _ hg (Finset.subset_union_right _ _), ← Finset.prod_mul_distrib]
-    simp [mul_support_mul]
+    (∏ᶠ i, f i * g i) = (∏ᶠ i, f i) * ∏ᶠ i, g i := by classical
+  rw [finprod_eq_prod_of_mul_support_to_finset_subset _ hf (Finset.subset_union_left _ _),
+    finprod_eq_prod_of_mul_support_to_finset_subset _ hg (Finset.subset_union_right _ _), ← Finset.prod_mul_distrib]
+  refine' finprod_eq_prod_of_mul_support_subset _ _
+  simp [mul_support_mul]
 #align finprod_mul_distrib finprod_mul_distrib
 
 /-- If the multiplicative supports of `f` and `g` are finite, then the product of `f i / g i`
@@ -526,7 +527,7 @@ theorem finprod_mem_mul_distrib (hs : s.Finite) : (∏ᶠ i ∈ s, f i * g i) = 
 
 @[to_additive]
 theorem MonoidHom.map_finprod {f : α → M} (g : M →* N) (hf : (mulSupport f).Finite) : g (∏ᶠ i, f i) = ∏ᶠ i, g (f i) :=
-  g.map_finprod_plift f <| hf.Preimage <| Equiv.plift.Injective.InjOn _
+  g.map_finprod_plift f $ hf.Preimage $ Equiv.plift.Injective.InjOn _
 #align monoid_hom.map_finprod MonoidHom.map_finprod
 
 @[to_additive]
@@ -589,7 +590,7 @@ theorem finprod_mem_empty : (∏ᶠ i ∈ (∅ : Set α), f i) = 1 := by simp
 /-- A set `s` is nonempty if the product of some function over `s` is not equal to `1`. -/
 @[to_additive "A set `s` is nonempty if the sum of some function over `s` is not equal to `0`."]
 theorem nonempty_of_finprod_mem_ne_one (h : (∏ᶠ i ∈ s, f i) ≠ 1) : s.Nonempty :=
-  ne_empty_iff_nonempty.1 fun h' => h <| h'.symm ▸ finprod_mem_empty
+  ne_empty_iff_nonempty.1 $ fun h' => h $ h'.symm ▸ finprod_mem_empty
 #align nonempty_of_finprod_mem_ne_one nonempty_of_finprod_mem_ne_one
 
 /-- Given finite sets `s` and `t`, the product of `f i` over `i ∈ s ∪ t` times the product of
@@ -601,7 +602,9 @@ theorem finprod_mem_union_inter (hs : s.Finite) (ht : t.Finite) :
     ((∏ᶠ i ∈ s ∪ t, f i) * ∏ᶠ i ∈ s ∩ t, f i) = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i := by
   lift s to Finset α using hs
   lift t to Finset α using ht
-  classical rw [← Finset.coe_union, ← Finset.coe_inter]
+  classical
+  rw [← Finset.coe_union, ← Finset.coe_inter]
+  simp only [finprod_mem_coe_finset, Finset.prod_union_inter]
 #align finprod_mem_union_inter finprod_mem_union_inter
 
 /-- A more general version of `finprod_mem_union_inter` that requires `s ∩ mul_support f` and
@@ -650,7 +653,7 @@ theorem finprod_mem_singleton : (∏ᶠ i ∈ ({a} : Set α), f i) = f a := by
   rw [← Finset.coe_singleton, finprod_mem_coe_finset, Finset.prod_singleton]
 #align finprod_mem_singleton finprod_mem_singleton
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (i «expr = » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr = » a) -/
 @[simp, to_additive]
 theorem finprod_cond_eq_left : (∏ᶠ (i) (_ : i = a), f i) = f a :=
   finprod_mem_singleton
@@ -678,7 +681,7 @@ theorem finprod_mem_insert' (f : α → M) (h : a ∉ s) (hs : (s ∩ mulSupport
 @[to_additive
       "Given a finite set `s` and an element `a ∉ s`, the sum of `f i` over `i ∈ insert a s`\nequals `f a` plus the sum of `f i` over `i ∈ s`."]
 theorem finprod_mem_insert (f : α → M) (h : a ∉ s) (hs : s.Finite) : (∏ᶠ i ∈ insert a s, f i) = f a * ∏ᶠ i ∈ s, f i :=
-  finprod_mem_insert' f h <| hs.inter_of_left _
+  finprod_mem_insert' f h $ hs.inter_of_left _
 #align finprod_mem_insert finprod_mem_insert
 
 /-- If `f a = 1` when `a ∉ s`, then the product of `f i` over `i ∈ insert a s` equals the product of
@@ -722,11 +725,16 @@ provided that `g` is injective on `s ∩ mul_support (f ∘ g)`. -/
 @[to_additive
       "The sum of `f y` over `y ∈ g '' s` equals the sum of `f (g i)` over `s` provided that\n`g` is injective on `s ∩ support (f ∘ g)`."]
 theorem finprod_mem_image' {s : Set β} {g : β → α} (hg : (s ∩ mulSupport (f ∘ g)).InjOn g) :
-    (∏ᶠ i ∈ g '' s, f i) = ∏ᶠ j ∈ s, f (g j) := by
-  classical by_cases hs:(s ∩ mul_support (f ∘ g)).Finite
-    · rw [finprod_mem_eq_one_of_infinite hs, finprod_mem_eq_one_of_infinite]
-      rwa [image_inter_mul_support_eq, infinite_image_iff hg]
-      
+    (∏ᶠ i ∈ g '' s, f i) = ∏ᶠ j ∈ s, f (g j) := by classical
+  by_cases hs:(s ∩ mul_support (f ∘ g)).Finite
+  · have hg : ∀ x ∈ hs.to_finset, ∀ y ∈ hs.to_finset, g x = g y → x = y := by simpa only [hs.mem_to_finset]
+    rw [finprod_mem_eq_prod _ hs, ← Finset.prod_image hg]
+    refine' finprod_mem_eq_prod_of_inter_mul_support_eq f _
+    rw [Finset.coe_image, hs.coe_to_finset, ← image_inter_mul_support_eq, inter_assoc, inter_self]
+    
+  · rw [finprod_mem_eq_one_of_infinite hs, finprod_mem_eq_one_of_infinite]
+    rwa [image_inter_mul_support_eq, infinite_image_iff hg]
+    
 #align finprod_mem_image' finprod_mem_image'
 
 /-- The product of `f y` over `y ∈ g '' s` equals the product of `f (g i)` over `s` provided that
@@ -734,7 +742,7 @@ theorem finprod_mem_image' {s : Set β} {g : β → α} (hg : (s ∩ mulSupport 
 @[to_additive
       "The sum of `f y` over `y ∈ g '' s` equals the sum of `f (g i)` over `s` provided that\n`g` is injective on `s`."]
 theorem finprod_mem_image {s : Set β} {g : β → α} (hg : s.InjOn g) : (∏ᶠ i ∈ g '' s, f i) = ∏ᶠ j ∈ s, f (g j) :=
-  finprod_mem_image' <| hg.mono <| inter_subset_left _ _
+  finprod_mem_image' $ hg.mono $ inter_subset_left _ _
 #align finprod_mem_image finprod_mem_image
 
 /-- The product of `f y` over `y ∈ set.range g` equals the product of `f (g i)` over all `i`
@@ -803,7 +811,7 @@ theorem finprod_mem_inter_mul_diff' (t : Set α) (h : (s ∩ mulSupport f).Finit
 @[to_additive]
 theorem finprod_mem_inter_mul_diff (t : Set α) (h : s.Finite) :
     ((∏ᶠ i ∈ s ∩ t, f i) * ∏ᶠ i ∈ s \ t, f i) = ∏ᶠ i ∈ s, f i :=
-  finprod_mem_inter_mul_diff' _ <| h.inter_of_left _
+  finprod_mem_inter_mul_diff' _ $ h.inter_of_left _
 #align finprod_mem_inter_mul_diff finprod_mem_inter_mul_diff
 
 /-- A more general version of `finprod_mem_mul_diff` that requires `t ∩ mul_support f` rather than
@@ -832,9 +840,12 @@ theorem finprod_mem_Union [Finite ι] {t : ι → Set α} (h : Pairwise (Disjoin
     (∏ᶠ a ∈ ⋃ i : ι, t i, f a) = ∏ᶠ i, ∏ᶠ a ∈ t i, f a := by
   cases nonempty_fintype ι
   lift t to ι → Finset α using ht
-  classical rw [← bUnion_univ, ← Finset.coe_univ, ← Finset.coe_bUnion, finprod_mem_coe_finset, Finset.prod_bUnion]
-    · exact fun x _ y _ hxy => Finset.disjoint_coe.1 (h hxy)
-      
+  classical
+  rw [← bUnion_univ, ← Finset.coe_univ, ← Finset.coe_bUnion, finprod_mem_coe_finset, Finset.prod_bUnion]
+  · simp only [finprod_mem_coe_finset, finprod_eq_prod_of_fintype]
+    
+  · exact fun x _ y _ hxy => Finset.disjoint_coe.1 (h hxy)
+    
 #align finprod_mem_Union finprod_mem_Union
 
 /-- Given a family of sets `t : ι → set α`, a finite set `I` in the index type such that all sets
@@ -855,24 +866,28 @@ over `a ∈ ⋃₀ t` is the product over `s ∈ t` of the products of `f a` ove
 @[to_additive
       "If `t` is a finite set of pairwise disjoint finite sets, then the sum of `f a` over\n`a ∈ ⋃₀ t` is the sum over `s ∈ t` of the sums of `f a` over `a ∈ s`."]
 theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀ : t.Finite)
-    (ht₁ : ∀ x ∈ t, Set.Finite x) : (∏ᶠ a ∈ ⋃₀t, f a) = ∏ᶠ s ∈ t, ∏ᶠ a ∈ s, f a := by
+    (ht₁ : ∀ x ∈ t, Set.Finite x) : (∏ᶠ a ∈ ⋃₀ t, f a) = ∏ᶠ s ∈ t, ∏ᶠ a ∈ s, f a := by
   rw [Set.sUnion_eq_bUnion]
   exact finprod_mem_bUnion h ht₀ ht₁
 #align finprod_mem_sUnion finprod_mem_sUnion
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (i «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr ≠ » a) -/
 @[to_additive]
 theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) : (f a * ∏ᶠ (i) (_ : i ≠ a), f i) = ∏ᶠ i, f i := by
-  classical rw [finprod_eq_prod _ hf]
-    · intro x hx
-      rw [Finset.mem_sdiff, Finset.mem_singleton, finite.mem_to_finset, mem_mul_support]
-      exact ⟨fun h => And.intro hx h, fun h => h.2⟩
-      
-    by_cases ha:a ∈ mul_support f
-    · rw [mem_mul_support, not_not] at ha
-      rw [ha, one_mul]
-      apply Finset.prod_erase _ ha
-      
+  classical
+  rw [finprod_eq_prod _ hf]
+  have h : ∀ x : α, f x ≠ 1 → (x ≠ a ↔ x ∈ hf.to_finset \ {a}) := by
+    intro x hx
+    rw [Finset.mem_sdiff, Finset.mem_singleton, finite.mem_to_finset, mem_mul_support]
+    exact ⟨fun h => And.intro hx h, fun h => h.2⟩
+  rw [finprod_cond_eq_prod_of_cond_iff f h, Finset.sdiff_singleton_eq_erase]
+  by_cases ha:a ∈ mul_support f
+  · apply Finset.mul_prod_erase _ _ ((finite.mem_to_finset _).mpr ha)
+    
+  · rw [mem_mul_support, not_not] at ha
+    rw [ha, one_mul]
+    apply Finset.prod_erase _ ha
+    
 #align mul_finprod_cond_ne mul_finprod_cond_ne
 
 /-- If `s : set α` and `t : set β` are finite sets, then taking the product over `s` commutes with
@@ -890,14 +905,14 @@ theorem finprod_mem_comm {s : Set α} {t : Set β} (f : α → β → M) (hs : s
 multiplicative and holds on factors. -/
 @[to_additive
       "To prove a property of a finite sum, it suffices to prove that the property is\nadditive and holds on summands."]
-theorem finprod_mem_induction (p : M → Prop) (hp₀ : p 1) (hp₁ : ∀ x y, p x → p y → p (x * y))
-    (hp₂ : ∀ x ∈ s, p <| f x) : p (∏ᶠ i ∈ s, f i) :=
-  (finprod_induction _ hp₀ hp₁) fun x => finprod_induction _ hp₀ hp₁ <| hp₂ x
+theorem finprod_mem_induction (p : M → Prop) (hp₀ : p 1) (hp₁ : ∀ x y, p x → p y → p (x * y)) (hp₂ : ∀ x ∈ s, p $ f x) :
+    p (∏ᶠ i ∈ s, f i) :=
+  finprod_induction _ hp₀ hp₁ $ fun x => finprod_induction _ hp₀ hp₁ $ hp₂ x
 #align finprod_mem_induction finprod_mem_induction
 
 theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Prop} {f : α → R} (hf : ∀ x, p x → 0 ≤ f x) :
     0 ≤ ∏ᶠ (x) (h : p x), f x :=
-  finprod_nonneg fun x => finprod_nonneg <| hf x
+  finprod_nonneg $ fun x => finprod_nonneg $ hf x
 #align finprod_cond_nonneg finprod_cond_nonneg
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -921,14 +936,14 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
         (Term.explicitBinder
          "("
          [`h]
-         [":" (Term.forall "∀" [`j] [] "," («term_≤_» (num "1") "≤" (Term.app `f [`j])))]
+         [":" (Term.forall "∀" [`j] [] "," (Init.Core.«term_≤_» (num "1") " ≤ " (Term.app `f [`j])))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        («term_≤_»
+        (Init.Core.«term_≤_»
          (Term.app `f [`i])
-         "≤"
+         " ≤ "
          (BigOperators.Algebra.BigOperators.Finprod.finprod
           "∏ᶠ"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -946,9 +961,9 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
             (calcTactic
              "calc"
              (calcStep
-              («term_≤_»
+              (Init.Core.«term_≤_»
                (Term.app `f [`i])
-               "≤"
+               " ≤ "
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -962,9 +977,9 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
                [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
                 (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])]))
              [(calcStep
-               («term_=_»
+               (Init.Core.«term_=_»
                 (Term.hole "_")
-                "="
+                " = "
                 (BigOperators.Algebra.BigOperators.Finprod.finprod
                  "∏ᶠ"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -993,9 +1008,9 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
            (calcTactic
             "calc"
             (calcStep
-             («term_≤_»
+             (Init.Core.«term_≤_»
               (Term.app `f [`i])
-              "≤"
+              " ≤ "
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -1009,9 +1024,9 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
               [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
                (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])]))
             [(calcStep
-              («term_=_»
+              (Init.Core.«term_=_»
                (Term.hole "_")
-               "="
+               " = "
                (BigOperators.Algebra.BigOperators.Finprod.finprod
                 "∏ᶠ"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -1032,9 +1047,9 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
        (calcTactic
         "calc"
         (calcStep
-         («term_≤_»
+         (Init.Core.«term_≤_»
           (Term.app `f [`i])
-          "≤"
+          " ≤ "
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -1048,9 +1063,9 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
           [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
            (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])]))
         [(calcStep
-          («term_=_»
+          (Init.Core.«term_=_»
            (Term.hole "_")
-           "="
+           " = "
            (BigOperators.Algebra.BigOperators.Finprod.finprod
             "∏ᶠ"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -1067,9 +1082,9 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
       (calcTactic
        "calc"
        (calcStep
-        («term_≤_»
+        (Init.Core.«term_≤_»
          (Term.app `f [`i])
-         "≤"
+         " ≤ "
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -1083,9 +1098,9 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
          [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
           (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])]))
        [(calcStep
-         («term_=_»
+         (Init.Core.«term_=_»
           (Term.hole "_")
-          "="
+          " = "
           (BigOperators.Algebra.BigOperators.Finprod.finprod
            "∏ᶠ"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -1129,7 +1144,7 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")]) []]
+     (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")])
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
@@ -1147,18 +1162,15 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app
-       `finprod_eq_prod_of_mul_support_to_finset_subset
-       [(Term.hole "_")
-        `hf
-        (Term.paren "(" [(Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")]) []] ")")])
-      []]
+     (Term.app
+      `finprod_eq_prod_of_mul_support_to_finset_subset
+      [(Term.hole "_") `hf (Term.paren "(" (Term.app `Finset.subset_insert [(Term.hole "_") (Term.hole "_")]) ")")])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.hole "_")
-       "="
+       " = "
        (BigOperators.Algebra.BigOperators.Finprod.finprod
         "∏ᶠ"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -1184,7 +1196,7 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.app
@@ -1211,7 +1223,7 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")]) []]
+     (Term.app `Finset.mem_insert_self [(Term.hole "_") (Term.hole "_")])
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
@@ -1243,16 +1255,16 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j]))) []]
+     (Term.fun "fun" (Term.basicFun [`j `hj] [] "=>" (Term.app `h [`j])))
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Finset.single_le_prod'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_≤_»
+      (Init.Core.«term_≤_»
        (Term.app `f [`i])
-       "≤"
+       " ≤ "
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -1306,7 +1318,7 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
@@ -1423,16 +1435,18 @@ theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finse
 /-- See also `finprod_mem_finset_product'`. -/
 @[to_additive "See also `finsum_mem_finset_product'`."]
 theorem finprod_mem_finset_product (s : Finset (α × β)) (f : α × β → M) :
-    (∏ᶠ (ab) (h : ab ∈ s), f ab) = ∏ᶠ (a) (b) (h : (a, b) ∈ s), f (a, b) := by
-  classical rw [finprod_mem_finset_product']
+    (∏ᶠ (ab) (h : ab ∈ s), f ab) = ∏ᶠ (a) (b) (h : (a, b) ∈ s), f (a, b) := by classical
+  rw [finprod_mem_finset_product']
+  simp
 #align finprod_mem_finset_product finprod_mem_finset_product
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
 @[to_additive]
 theorem finprod_mem_finset_product₃ {γ : Type _} (s : Finset (α × β × γ)) (f : α × β × γ → M) :
-    (∏ᶠ (abc) (h : abc ∈ s), f abc) = ∏ᶠ (a) (b) (c) (h : (a, b, c) ∈ s), f (a, b, c) := by
-  classical rw [finprod_mem_finset_product']
-    simp
+    (∏ᶠ (abc) (h : abc ∈ s), f abc) = ∏ᶠ (a) (b) (c) (h : (a, b, c) ∈ s), f (a, b, c) := by classical
+  rw [finprod_mem_finset_product']
+  simp_rw [finprod_mem_finset_product']
+  simp
 #align finprod_mem_finset_product₃ finprod_mem_finset_product₃
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/

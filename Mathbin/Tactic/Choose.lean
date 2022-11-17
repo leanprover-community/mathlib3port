@@ -28,7 +28,7 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr ×
     let (val, spec) ← mk_sometimes ctxt (val, spec)
     let t ← infer_type e
     let b ← is_prop t
-    pure <|
+    pure $
         if b then
           let val' := expr.bind_lambda val e
           (expr.const `` Function.sometimes [level.zero, u] t α nonemp val',
@@ -36,64 +36,105 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr ×
         else (val, spec)
 #align tactic.mk_sometimes tactic.mk_sometimes
 
-/-- Changes `(h : ∀xs, ∃a:α, p a) ⊢ g` to `(d : ∀xs, a) (s : ∀xs, p (d xs)) ⊢ g` and
-`(h : ∀xs, p xs ∧ q xs) ⊢ g` to `(d : ∀xs, p xs) (s : ∀xs, q xs) ⊢ g`.
-`choose1` returns a pair of the second local constant it introduces,
-and the error result (see below).
-
-If `nondep` is true and `α` is inhabited, then it will remove the dependency of `d` on
-all propositional assumptions in `xs`. For example if `ys` are propositions then
-`(h : ∀xs ys, ∃a:α, p a) ⊢ g` becomes `(d : ∀xs, a) (s : ∀xs ys, p (d xs)) ⊢ g`.
-
-The second value returned by `choose1` is the result of nondep elimination:
-* `none`: nondep elimination was not attempted or was not applicable
-* `some none`: nondep elimination was successful
-* ``some (some `(nonempty α))``: nondep elimination was unsuccessful
-  because we could not find a `nonempty α` instance
--/
-unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tactic (expr × Option (Option expr)) := do
-  let t ← infer_type h
-  let (ctxt, t) ← whnf t >>= open_pis
-  let t ← whnf t Transparency.all
-  match t with
-    | quote.1 (@Exists (%%ₓα) (%%ₓp)) => do
-      let α_t ← infer_type α
-      let expr.sort u ← whnf α_t transparency.all
-      let (ne_fail, nonemp) ←
-        if nondep then do
-            let ne := expr.const `` Nonempty [u] α
-            let nonemp ←
-              try_core
-                  (mk_instance Ne <|>
-                    retrieve' do
-                      let m ← mk_meta_var Ne
-                      set_goals [m]
-                      ctxt fun e => do
-                          let b ← is_proof e
-                          Monad.unlessb b <| (mk_app `` Nonempty.intro [e] >>= note_anon none) $> ()
-                      reset_instance_cache
-                      apply_instance
-                      instantiate_mvars m)
-            pure (some (Option.guard (fun _ => nonemp) Ne), nonemp)
-          else pure (none, none)
-      let ctxt' ← if nonemp then ctxt fun e => not <$> is_proof e else pure ctxt
-      let value ← mk_local_def data (α ctxt')
-      let t' ← head_beta (p (value ctxt'))
-      let spec ← mk_local_def spec (t' ctxt)
-      let (value_proof, spec_proof) ←
-        nonemp pure (fun nonemp => mk_sometimes u α nonemp p ctxt)
-            (expr.const `` Classical.choose [u] α p (h ctxt), expr.const `` Classical.choose_spec [u] α p (h ctxt))
-      dependent_pose_core [(value, value_proof ctxt'), (spec, spec_proof ctxt)]
-      try (tactic.clear h)
-      intro1
-      let e ← intro1
-      pure (e, ne_fail)
-    | quote.1 ((%%ₓp) ∧ %%ₓq) => do
-      mk_app `` And.left [h ctxt] >>= lambdas ctxt >>= note data none
-      let hq ← mk_app `` And.right [h ctxt] >>= lambdas ctxt >>= note spec none
-      try (tactic.clear h)
-      pure (hq, none)
-    | _ => fail "expected a term of the shape `∀xs, ∃a, p xs a` or `∀xs, p xs ∧ q xs`"
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Changes `(h : ∀xs, ∃a:α, p a) ⊢ g` to `(d : ∀xs, a) (s : ∀xs, p (d xs)) ⊢ g` and
+      `(h : ∀xs, p xs ∧ q xs) ⊢ g` to `(d : ∀xs, p xs) (s : ∀xs, q xs) ⊢ g`.
+      `choose1` returns a pair of the second local constant it introduces,
+      and the error result (see below).
+      
+      If `nondep` is true and `α` is inhabited, then it will remove the dependency of `d` on
+      all propositional assumptions in `xs`. For example if `ys` are propositions then
+      `(h : ∀xs ys, ∃a:α, p a) ⊢ g` becomes `(d : ∀xs, a) (s : ∀xs ys, p (d xs)) ⊢ g`.
+      
+      The second value returned by `choose1` is the result of nondep elimination:
+      * `none`: nondep elimination was not attempted or was not applicable
+      * `some none`: nondep elimination was successful
+      * ``some (some `(nonempty α))``: nondep elimination was unsuccessful
+        because we could not find a `nonempty α` instance
+      -/
+    unsafe
+  def
+    choose1
+    ( nondep : Bool ) ( h : expr ) ( data : Name ) ( spec : Name ) : tactic ( expr × Option ( Option expr ) )
+    :=
+      do
+        let t ← infer_type h
+          let ( ctxt , t ) ← whnf t >>= open_pis
+          let t ← whnf t Transparency.all
+          match
+            t
+            with
+            |
+                q( @ Exists $ ( α ) $ ( p ) )
+                =>
+                do
+                  let α_t ← infer_type α
+                    let expr.sort u ← whnf α_t transparency.all
+                    let
+                      ( ne_fail , nonemp )
+                        ←
+                        if
+                          nondep
+                          then
+                          do
+                            let ne := expr.const ` ` Nonempty [ u ] α
+                              let
+                                nonemp
+                                  ←
+                                  try_core
+                                    (
+                                      mk_instance Ne
+                                        <|>
+                                        retrieve'
+                                          do
+                                            let m ← mk_meta_var Ne
+                                              set_goals [ m ]
+                                              ctxt
+                                                fun
+                                                  e
+                                                    =>
+                                                    do
+                                                      let b ← is_proof e
+                                                        Monad.unlessb b
+                                                          $
+                                                          ( mk_app ` ` Nonempty.intro [ e ] >>= note_anon none ) $> ( )
+                                              reset_instance_cache
+                                              apply_instance
+                                              instantiate_mvars m
+                                      )
+                              pure ( some ( Option.guard ( fun _ => nonemp ) Ne ) , nonemp )
+                          else
+                          pure ( none , none )
+                    let ctxt' ← if nonemp then ctxt fun e => not <$> is_proof e else pure ctxt
+                    let value ← mk_local_def data ( α ctxt' )
+                    let t' ← head_beta ( p ( value ctxt' ) )
+                    let spec ← mk_local_def spec ( t' ctxt )
+                    let
+                      ( value_proof , spec_proof )
+                        ←
+                        nonemp
+                          pure
+                            ( fun nonemp => mk_sometimes u α nonemp p ctxt )
+                            (
+                              expr.const ` ` Classical.choose [ u ] α p ( h ctxt )
+                                ,
+                                expr.const ` ` Classical.choose_spec [ u ] α p ( h ctxt )
+                              )
+                    dependent_pose_core [ ( value , value_proof ctxt' ) , ( spec , spec_proof ctxt ) ]
+                    try ( tactic.clear h )
+                    intro1
+                    let e ← intro1
+                    pure ( e , ne_fail )
+              |
+                q( $ ( p ) ∧ $ ( q ) )
+                =>
+                do
+                  mk_app ` ` And.left [ h ctxt ] >>= lambdas ctxt >>= note data none
+                    let hq ← mk_app ` ` And.right [ h ctxt ] >>= lambdas ctxt >>= note spec none
+                    try ( tactic.clear h )
+                    pure ( hq , none )
+              | _ => fail "expected a term of the shape `∀xs, ∃a, p xs a` or `∀xs, p xs ∧ q xs`"
 #align tactic.choose1 tactic.choose1
 
 /-- Changes `(h : ∀xs, ∃as, p as ∧ q as) ⊢ g` to a list of functions `as`,
@@ -120,7 +161,7 @@ unsafe def choose (nondep : Bool) : expr → List Name → optParam (Option (Opt
     return ()
   | h, n :: ns, ne_fail₁ => do
     let (v, ne_fail₂) ← get_unused_name >>= choose1 nondep h n
-    choose v ns <|
+    choose v ns $
         match ne_fail₁, ne_fail₂ with
         | none, _ => ne_fail₂
         | some none, _ => some none
@@ -130,15 +171,14 @@ unsafe def choose (nondep : Bool) : expr → List Name → optParam (Option (Opt
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `choose a b h h' using hyp` takes an hypothesis `hyp` of the form
 `∀ (x : X) (y : Y), ∃ (a : A) (b : B), P x y a b ∧ Q x y a b`
 for some `P Q : X → Y → A → B → Prop` and outputs
-into context a function `a : X → Y → A`, `b : X → Y → B` and two assumptions:
+into context two functions `a : X → Y → A`, `b : X → Y → B` and two assumptions:
 `h : ∀ (x : X) (y : Y), P x y (a x y) (b x y)` and
 `h' : ∀ (x : X) (y : Y), Q x y (a x y) (b x y)`. It also works with dependent versions.
 
@@ -180,7 +220,7 @@ unsafe def choose (nondep : parse (parser.optional (tk "!"))) (first : parse ide
       | none => get_local `this
       | some e => tactic.i_to_expr_strict e
   tactic.choose nondep tgt (first :: names)
-  try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns <| some <$> names))
+  try (interactive.simp none none tt [simp_arg_type.expr ``(exists_prop)] [] (loc.ns $ some <$> names))
   try (tactic.clear tgt)
 #align tactic.interactive.choose tactic.interactive.choose
 

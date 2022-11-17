@@ -42,7 +42,7 @@ theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
       (fun c hc x => by simp only [norm_smul c x, Real.norm_eq_abs, abs_of_pos hc, mul_left_comm]) (fun x y => _)
       fun x => le_trans (le_abs_self _) (f.le_op_norm _) with
     ⟨g, g_eq, g_le⟩
-  set g' := g.mk_continuous ∥f∥ fun x => abs_le.2 ⟨neg_le.1 <| g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
+  set g' := g.mk_continuous ∥f∥ fun x => abs_le.2 ⟨neg_le.1 $ g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
   · refine' ⟨g', g_eq, _⟩
     · apply le_antisymm (g.mk_continuous_norm_le (norm_nonneg f) _)
       refine' f.op_norm_le_bound (norm_nonneg _) fun x => _

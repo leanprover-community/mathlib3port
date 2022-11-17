@@ -51,7 +51,7 @@ theorem nmem_mul_support {f : α → M} {x : α} : x ∉ mulSupport f ↔ f x = 
 
 @[to_additive]
 theorem compl_mul_support {f : α → M} : mulSupport fᶜ = { x | f x = 1 } :=
-  ext fun x => nmem_mul_support
+  ext $ fun x => nmem_mul_support
 #align function.compl_mul_support Function.compl_mul_support
 
 @[simp, to_additive]
@@ -64,10 +64,10 @@ theorem mul_support_subset_iff {f : α → M} {s : Set α} : mulSupport f ⊆ s 
   Iff.rfl
 #align function.mul_support_subset_iff Function.mul_support_subset_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ∉ » s) -/
 @[to_additive]
 theorem mul_support_subset_iff' {f : α → M} {s : Set α} : mulSupport f ⊆ s ↔ ∀ (x) (_ : x ∉ s), f x = 1 :=
-  forall_congr' fun x => not_imp_comm
+  forall_congr' $ fun x => not_imp_comm
 #align function.mul_support_subset_iff' Function.mul_support_subset_iff'
 
 @[to_additive]
@@ -137,7 +137,7 @@ theorem mul_support_const {c : M} (hc : c ≠ 1) : (mulSupport fun x : α => c) 
 @[to_additive]
 theorem mul_support_binop_subset (op : M → N → P) (op1 : op 1 1 = 1) (f : α → M) (g : α → N) :
     (mulSupport fun x => op (f x) (g x)) ⊆ mulSupport f ∪ mulSupport g := fun x hx =>
-  Classical.by_cases (fun hf : f x = 1 => Or.inr fun hg => hx <| by simp only [hf, hg, op1]) Or.inl
+  Classical.by_cases (fun hf : f x = 1 => Or.inr $ fun hg => hx $ by simp only [hf, hg, op1]) Or.inl
 #align function.mul_support_binop_subset Function.mul_support_binop_subset
 
 @[to_additive]
@@ -181,7 +181,7 @@ theorem mul_support_infi [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι 
 
 @[to_additive]
 theorem mul_support_comp_subset {g : M → N} (hg : g 1 = 1) (f : α → M) : mulSupport (g ∘ f) ⊆ mulSupport f := fun x =>
-  mt fun h => by simp only [(· ∘ ·), *]
+  mt $ fun h => by simp only [(· ∘ ·), *]
 #align function.mul_support_comp_subset Function.mul_support_comp_subset
 
 @[to_additive]
@@ -191,7 +191,7 @@ theorem mul_support_subset_comp {g : M → N} (hg : ∀ {x}, g x = 1 → x = 1) 
 
 @[to_additive]
 theorem mul_support_comp_eq (g : M → N) (hg : ∀ {x}, g x = 1 ↔ x = 1) (f : α → M) : mulSupport (g ∘ f) = mulSupport f :=
-  Set.ext fun x => not_congr hg
+  Set.ext $ fun x => not_congr hg
 #align function.mul_support_comp_eq Function.mul_support_comp_eq
 
 @[to_additive]
@@ -201,7 +201,7 @@ theorem mul_support_comp_eq_preimage (g : β → M) (f : α → β) : mulSupport
 
 @[to_additive support_prod_mk]
 theorem mul_support_prod_mk (f : α → M) (g : α → N) : (mulSupport fun x => (f x, g x)) = mulSupport f ∪ mulSupport g :=
-  Set.ext fun x => by simp only [mul_support, not_and_or, mem_union, mem_set_of_eq, Prod.mk_eq_one, Ne.def]
+  Set.ext $ fun x => by simp only [mul_support, not_and_or, mem_union, mem_set_of_eq, Prod.mk_eq_one, Ne.def]
 #align function.mul_support_prod_mk Function.mul_support_prod_mk
 
 @[to_additive support_prod_mk']
@@ -243,7 +243,7 @@ variable [DivisionMonoid G] (f g : α → G)
 
 @[simp, to_additive]
 theorem mul_support_inv : (mulSupport fun x => (f x)⁻¹) = mulSupport f :=
-  ext fun _ => inv_ne_one
+  ext $ fun _ => inv_ne_one
 #align function.mul_support_inv Function.mul_support_inv
 
 @[simp, to_additive]
@@ -265,7 +265,7 @@ end DivisionMonoid
 
 theorem support_smul [Zero R] [Zero M] [SmulWithZero R M] [NoZeroSmulDivisors R M] (f : α → R) (g : α → M) :
     support (f • g) = support f ∩ support g :=
-  ext fun x => smul_ne_zero_iff
+  ext $ fun x => smul_ne_zero_iff
 #align function.support_smul Function.support_smul
 
 @[simp]
@@ -276,30 +276,30 @@ theorem support_mul [MulZeroClass R] [NoZeroDivisors R] (f g : α → R) :
 
 @[simp]
 theorem support_mul_subset_left [MulZeroClass R] (f g : α → R) : (support fun x => f x * g x) ⊆ support f :=
-  fun x hfg hf => hfg <| by simp only [hf, zero_mul]
+  fun x hfg hf => hfg $ by simp only [hf, zero_mul]
 #align function.support_mul_subset_left Function.support_mul_subset_left
 
 @[simp]
 theorem support_mul_subset_right [MulZeroClass R] (f g : α → R) : (support fun x => f x * g x) ⊆ support g :=
-  fun x hfg hg => hfg <| by simp only [hg, mul_zero]
+  fun x hfg hg => hfg $ by simp only [hg, mul_zero]
 #align function.support_mul_subset_right Function.support_mul_subset_right
 
 theorem support_smul_subset_right [AddMonoid A] [Monoid B] [DistribMulAction B A] (b : B) (f : α → A) :
-    support (b • f) ⊆ support f := fun x hbf hf => hbf <| by rw [Pi.smul_apply, hf, smul_zero]
+    support (b • f) ⊆ support f := fun x hbf hf => hbf $ by rw [Pi.smul_apply, hf, smul_zero]
 #align function.support_smul_subset_right Function.support_smul_subset_right
 
 theorem support_smul_subset_left [Zero M] [Zero β] [SmulWithZero M β] (f : α → M) (g : α → β) :
-    support (f • g) ⊆ support f := fun x hfg hf => hfg <| by rw [Pi.smul_apply', hf, zero_smul]
+    support (f • g) ⊆ support f := fun x hfg hf => hfg $ by rw [Pi.smul_apply', hf, zero_smul]
 #align function.support_smul_subset_left Function.support_smul_subset_left
 
 theorem support_const_smul_of_ne_zero [Semiring R] [AddCommMonoid M] [Module R M] [NoZeroSmulDivisors R M] (c : R)
     (g : α → M) (hc : c ≠ 0) : support (c • g) = support g :=
-  ext fun x => by simp only [hc, mem_support, Pi.smul_apply, Ne.def, smul_eq_zero, false_or_iff]
+  ext $ fun x => by simp only [hc, mem_support, Pi.smul_apply, Ne.def, smul_eq_zero, false_or_iff]
 #align function.support_const_smul_of_ne_zero Function.support_const_smul_of_ne_zero
 
 @[simp]
 theorem support_inv [GroupWithZero G₀] (f : α → G₀) : (support fun x => (f x)⁻¹) = support f :=
-  Set.ext fun x => not_congr inv_eq_zero
+  Set.ext $ fun x => not_congr inv_eq_zero
 #align function.support_inv Function.support_inv
 
 @[simp]
@@ -317,16 +317,16 @@ theorem mul_support_prod [CommMonoid M] (s : Finset α) (f : α → β → M) :
 
 theorem support_prod_subset [CommMonoidWithZero A] (s : Finset α) (f : α → β → A) :
     (support fun x => ∏ i in s, f i x) ⊆ ⋂ i ∈ s, support (f i) := fun x hx =>
-  mem_Inter₂.2 fun i hi H => hx <| Finset.prod_eq_zero hi H
+  mem_Inter₂.2 $ fun i hi H => hx $ Finset.prod_eq_zero hi H
 #align function.support_prod_subset Function.support_prod_subset
 
 theorem support_prod [CommMonoidWithZero A] [NoZeroDivisors A] [Nontrivial A] (s : Finset α) (f : α → β → A) :
     (support fun x => ∏ i in s, f i x) = ⋂ i ∈ s, support (f i) :=
-  Set.ext fun x => by simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_set_of_eq, Set.mem_Inter, not_exists]
+  Set.ext $ fun x => by simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_set_of_eq, Set.mem_Inter, not_exists]
 #align function.support_prod Function.support_prod
 
 theorem mul_support_one_add [One R] [AddLeftCancelMonoid R] (f : α → R) : (mulSupport fun x => 1 + f x) = support f :=
-  Set.ext fun x => not_congr add_right_eq_self
+  Set.ext $ fun x => not_congr add_right_eq_self
 #align function.mul_support_one_add Function.mul_support_one_add
 
 theorem mul_support_one_add' [One R] [AddLeftCancelMonoid R] (f : α → R) : mulSupport (1 + f) = support f :=
@@ -334,7 +334,7 @@ theorem mul_support_one_add' [One R] [AddLeftCancelMonoid R] (f : α → R) : mu
 #align function.mul_support_one_add' Function.mul_support_one_add'
 
 theorem mul_support_add_one [One R] [AddRightCancelMonoid R] (f : α → R) : (mulSupport fun x => f x + 1) = support f :=
-  Set.ext fun x => not_congr add_left_eq_self
+  Set.ext $ fun x => not_congr add_left_eq_self
 #align function.mul_support_add_one Function.mul_support_add_one
 
 theorem mul_support_add_one' [One R] [AddRightCancelMonoid R] (f : α → R) : mulSupport (f + 1) = support f :=
@@ -389,7 +389,9 @@ theorem support_single [DecidableEq B] : Function.support (Pi.single a b) = if b
   split_ifs with h <;> simp [h]
 #align pi.support_single Pi.support_single
 
-theorem support_single_subset : Function.support (Pi.single a b) ⊆ {a} := by classical rw [support_single]
+theorem support_single_subset : Function.support (Pi.single a b) ⊆ {a} := by classical
+  rw [support_single]
+  split_ifs <;> simp
 #align pi.support_single_subset Pi.support_single_subset
 
 theorem support_single_disjoint {b' : B} (hb : b ≠ 0) (hb' : b' ≠ 0) {i j : A} :

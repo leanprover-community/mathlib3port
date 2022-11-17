@@ -166,14 +166,17 @@ protected theorem Preconnected.box_prod (hG : G.Preconnected) (hH : H.Preconnect
   exact ⟨(w₁.box_prod_left _ _).append (w₂.box_prod_right _ _)⟩
 #align simple_graph.preconnected.box_prod SimpleGraph.Preconnected.box_prod
 
-protected theorem Preconnected.of_box_prod_left [Nonempty β] (h : (G □ H).Preconnected) : G.Preconnected := by
-  classical rintro a₁ a₂
-    exact ⟨w.of_box_prod_left⟩
+protected theorem Preconnected.of_box_prod_left [Nonempty β] (h : (G □ H).Preconnected) : G.Preconnected := by classical
+  rintro a₁ a₂
+  obtain ⟨w⟩ := h (a₁, Classical.arbitrary _) (a₂, Classical.arbitrary _)
+  exact ⟨w.of_box_prod_left⟩
 #align simple_graph.preconnected.of_box_prod_left SimpleGraph.Preconnected.of_box_prod_left
 
 protected theorem Preconnected.of_box_prod_right [Nonempty α] (h : (G □ H).Preconnected) : H.Preconnected := by
-  classical rintro b₁ b₂
-    exact ⟨w.of_box_prod_right⟩
+  classical
+  rintro b₁ b₂
+  obtain ⟨w⟩ := h (Classical.arbitrary _, b₁) (Classical.arbitrary _, b₂)
+  exact ⟨w.of_box_prod_right⟩
 #align simple_graph.preconnected.of_box_prod_right SimpleGraph.Preconnected.of_box_prod_right
 
 protected theorem Connected.box_prod (hG : G.Connected) (hH : H.Connected) : (G □ H).Connected := by
@@ -204,9 +207,9 @@ theorem box_prod_connected : (G □ H).Connected ↔ G.Connected ∧ H.Connected
 instance boxProdFintypeNeighborSet (x : α × β) [Fintype (G.neighborSet x.1)] [Fintype (H.neighborSet x.2)] :
     Fintype ((G □ H).neighborSet x) :=
   Fintype.ofEquiv
-    ((G.neighborFinset x.1 ×ˢ {x.2}).disjUnion ({x.1} ×ˢ H.neighborFinset x.2) <|
-      Finset.disjoint_product.mpr <| Or.inl <| neighbor_finset_disjoint_singleton _ _)
-    ((Equiv.refl _).subtypeEquiv fun y => by
+    ((G.neighborFinset x.1 ×ˢ {x.2}).disjUnion ({x.1} ×ˢ H.neighborFinset x.2) $
+      Finset.disjoint_product.mpr $ Or.inl $ neighbor_finset_disjoint_singleton _ _)
+    ((Equiv.refl _).subtypeEquiv $ fun y => by
       simp_rw [Finset.mem_disj_union, Finset.mem_product, Finset.mem_singleton, mem_neighbor_finset, mem_neighbor_set,
         Equiv.refl_apply, box_prod_adj]
       simp only [eq_comm, and_comm'])
@@ -218,7 +221,7 @@ theorem box_prod_neighbor_finset (x : α × β) [Fintype (G.neighborSet x.1)] [F
     [Fintype ((G □ H).neighborSet x)] :
     (G □ H).neighborFinset x =
       (G.neighborFinset x.1 ×ˢ {x.2}).disjUnion ({x.1} ×ˢ H.neighborFinset x.2)
-        (Finset.disjoint_product.mpr <| Or.inl <| neighbor_finset_disjoint_singleton _ _) :=
+        (Finset.disjoint_product.mpr $ Or.inl $ neighbor_finset_disjoint_singleton _ _) :=
   by
   -- swap out the fintype instance for the canonical one
   letI : Fintype ((G □ H).neighborSet x) := SimpleGraph.boxProdFintypeNeighborSet _

@@ -45,7 +45,7 @@ theorem card_eq_zero_of_infinite [Infinite α] : Nat.card α = 0 :=
 #align nat.card_eq_zero_of_infinite Nat.card_eq_zero_of_infinite
 
 theorem finite_of_card_ne_zero (h : Nat.card α ≠ 0) : Finite α :=
-  not_infinite_iff_finite.mp <| h ∘ @Nat.card_eq_zero_of_infinite α
+  not_infinite_iff_finite.mp $ h ∘ @Nat.card_eq_zero_of_infinite α
 #align nat.finite_of_card_ne_zero Nat.finite_of_card_ne_zero
 
 theorem card_congr (f : α ≃ β) : Nat.card α = Nat.card β :=
@@ -83,12 +83,13 @@ theorem card_eq_one_iff_unique : Nat.card α = 1 ↔ Subsingleton α ∧ Nonempt
   Cardinal.to_nat_eq_one_iff_unique
 #align nat.card_eq_one_iff_unique Nat.card_eq_one_iff_unique
 
-theorem card_eq_two_iff : Nat.card α = 2 ↔ ∃ x y : α, x ≠ y ∧ {x, y} = @Set.univ α :=
-  (to_nat_eq_iff two_ne_zero).trans <| Iff.trans (by rw [Nat.cast_two]) mk_eq_two_iff
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
+theorem card_eq_two_iff : Nat.card α = 2 ↔ ∃ (x : α) (y : α), x ≠ y ∧ {x, y} = @Set.univ α :=
+  (to_nat_eq_iff two_ne_zero).trans $ Iff.trans (by rw [Nat.cast_two]) mk_eq_two_iff
 #align nat.card_eq_two_iff Nat.card_eq_two_iff
 
 theorem card_eq_two_iff' (x : α) : Nat.card α = 2 ↔ ∃! y, y ≠ x :=
-  (to_nat_eq_iff two_ne_zero).trans <| Iff.trans (by rw [Nat.cast_two]) (mk_eq_two_iff' x)
+  (to_nat_eq_iff two_ne_zero).trans $ Iff.trans (by rw [Nat.cast_two]) (mk_eq_two_iff' x)
 #align nat.card_eq_two_iff' Nat.card_eq_two_iff'
 
 theorem card_of_is_empty [IsEmpty α] : Nat.card α = 0 := by simp

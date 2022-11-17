@@ -190,7 +190,7 @@ theorem right_hom_inr (g : G) : rightHom (inr g : N ⋊[φ] G) = g := by simp [r
 #align semidirect_product.right_hom_inr SemidirectProduct.right_hom_inr
 
 theorem right_hom_surjective : Function.Surjective (rightHom : N ⋊[φ] G → G) :=
-  Function.surjective_iff_has_right_inverse.2 ⟨inr, right_hom_inr⟩
+  Function.surjective_iff_hasRightInverse.2 ⟨inr, right_hom_inr⟩
 #align semidirect_product.right_hom_surjective SemidirectProduct.right_hom_surjective
 
 theorem range_inl_eq_ker_right_hom : (inl : N →* N ⋊[φ] G).range = rightHom.ker :=

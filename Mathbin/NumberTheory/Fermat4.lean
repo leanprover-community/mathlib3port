@@ -71,8 +71,9 @@ def Minimal (a b c : ℤ) : Prop :=
   Fermat42 a b c ∧ ∀ a1 b1 c1 : ℤ, Fermat42 a1 b1 c1 → Int.natAbs c ≤ Int.natAbs c1
 #align fermat_42.minimal Fermat42.Minimal
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a0 b0 c0) -/
 /-- if we have a solution to `a ^ 4 + b ^ 4 = c ^ 2` then there must be a minimal one. -/
-theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 := by
+theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ (a0) (b0) (c0), Minimal a0 b0 c0 := by
   let S : Set ℕ := { n | ∃ s : ℤ × ℤ × ℤ, Fermat42 s.1 s.2.1 s.2.2 ∧ n = Int.natAbs s.2.2 }
   have S_nonempty : S.nonempty := by
     use Int.natAbs c
@@ -104,10 +105,10 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b := 
   obtain ⟨c1, rfl⟩ := hpc
   have hf : Fermat42 a1 b1 c1 := (Fermat42.mul (int.coe_nat_ne_zero.mpr (Nat.Prime.ne_zero hp))).mpr h.1
   apply Nat.le_lt_antisymm (h.2 _ _ _ hf)
-  rw [Int.nat_abs_mul, lt_mul_iff_one_lt_left, Int.nat_abs_pow, Int.nat_abs_of_nat]
+  rw [Int.natAbs_mul, lt_mul_iff_one_lt_left, Int.nat_abs_pow, Int.natAbs_ofNat]
   · exact Nat.one_lt_pow _ _ zero_lt_two (Nat.Prime.one_lt hp)
     
-  · exact Nat.pos_of_ne_zero (Int.nat_abs_ne_zero_of_ne_zero (NeZero hf))
+  · exact Nat.pos_of_ne_zero (Int.natAbs_ne_zero_of_ne_zero (NeZero hf))
     
 #align fermat_42.coprime_of_minimal Fermat42.coprime_of_minimal
 
@@ -123,11 +124,12 @@ theorem neg_of_minimal {a b c : ℤ} : Minimal a b c → Minimal a b (-c) := by
     rw [HEq]
     exact (neg_sq c).symm
     
-  rwa [Int.nat_abs_neg c]
+  rwa [Int.natAbs_neg c]
 #align fermat_42.neg_of_minimal Fermat42.neg_of_minimal
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a0 b0 c0) -/
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has `a` odd. -/
-theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 := by
+theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ (a0) (b0) (c0), Minimal a0 b0 c0 ∧ a0 % 2 = 1 := by
   obtain ⟨a0, b0, c0, hf⟩ := exists_minimal h
   cases' Int.mod_two_eq_zero_or_one a0 with hap hap
   · cases' Int.mod_two_eq_zero_or_one b0 with hbp hbp
@@ -143,10 +145,11 @@ theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Mi
   exact ⟨a0, ⟨b0, ⟨c0, hf, hap⟩⟩⟩
 #align fermat_42.exists_odd_minimal Fermat42.exists_odd_minimal
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a0 b0 c0) -/
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has
 `a` odd and `c` positive. -/
-theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 ∧ 0 < c0 :=
-  by
+theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
+    ∃ (a0) (b0) (c0), Minimal a0 b0 c0 ∧ a0 % 2 = 1 ∧ 0 < c0 := by
   obtain ⟨a0, b0, c0, hf, hc⟩ := exists_odd_minimal h
   rcases lt_trichotomy 0 c0 with (h1 | rfl | h1)
   · use a0, b0, c0
@@ -227,7 +230,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   cases' hb2 with b' hb2'
   have hs : b' ^ 2 = m * (r * s) := by
     apply (mul_right_inj' (by norm_num : (4 : ℤ) ≠ 0)).mp
-    linear_combination(-b - 2 * b') * hb2' + ht2 + 2 * m * htt2
+    linear_combination (-b - 2 * b') * hb2' + ht2 + 2 * m * htt2
   have hrsz : r * s ≠ 0 := by
     -- because b ^ 2 is not zero and (b / 2) ^ 2 = m * (r * s)
     by_contra hrsz
@@ -301,7 +304,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- and it has a smaller c: from c = m ^ 2 + n ^ 2 we see that m is smaller than c, and i ^ 2 = m.
   have hic : Int.natAbs i < Int.natAbs c := by
     apply int.coe_nat_lt.mp
-    rw [← Int.eq_nat_abs_of_zero_le (le_of_lt hc)]
+    rw [← Int.eq_natAbs_of_zero_le (le_of_lt hc)]
     apply gt_of_gt_of_ge _ (Int.abs_le_self_sq i)
     rw [← hi, ht3]
     apply gt_of_gt_of_ge _ (Int.le_self_sq m)

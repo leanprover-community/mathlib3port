@@ -43,13 +43,13 @@ unsafe def tactic.clear' (clear_dependent : Bool) (hyps : List expr) : tactic Un
       hyps
       fun h => do
       let dep ← kdepends_on tgt h
-      when dep <| fail <| f! "Cannot clear hypothesis {h} since the target depends on it."
+      when dep $ fail $ f! "Cannot clear hypothesis {h} since the target depends on it."
   let n ← revert_lst hyps
   -- If revert_lst reverted more hypotheses than we wanted to clear, there must
         -- have been other hypotheses dependent on some of the hyps.
         when
-        (!clear_dependent && n ≠ hyps) <|
-      fail <|
+        (!clear_dependent && (n ≠ hyps)) $
+      fail $
         format.join
           ["Some of the following hypotheses cannot be cleared because other ",
             "hypotheses depend on (some of) them:\n", format.intercalate ", " (hyps to_fmt)]
@@ -57,7 +57,7 @@ unsafe def tactic.clear' (clear_dependent : Bool) (hyps : List expr) : tactic Un
   intron n
   exact v
   let gs ← get_goals
-  set_goals <| v :: gs
+  set_goals $ v :: gs
 #align tactic.clear' tactic.clear'
 
 namespace Tactic.Interactive

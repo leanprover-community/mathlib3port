@@ -144,7 +144,7 @@ theorem has_sum_of_disjoint_Union [Countable β] {f : β → Set α} (hf₁ : �
     (hf₂ : Pairwise (Disjoint on f)) : HasSum (fun i => v (f i)) (v (⋃ i, f i)) := by
   cases nonempty_encodable β
   set g := fun i : ℕ => ⋃ (b : β) (H : b ∈ Encodable.decode₂ β i), f b with hg
-  have hg₁ : ∀ i, MeasurableSet (g i) := fun _ => MeasurableSet.union fun b => MeasurableSet.union fun _ => hf₁ b
+  have hg₁ : ∀ i, MeasurableSet (g i) := fun _ => MeasurableSet.union fun b => MeasurableSet.union $ fun _ => hf₁ b
   have hg₂ : Pairwise (Disjoint on g) := Encodable.Union_decode₂_disjoint_on hf₂
   have := v.of_disjoint_Union_nat hg₁ hg₂
   rw [hg, Encodable.Union_decode₂] at this
@@ -358,7 +358,7 @@ def neg (v : VectorMeasure α M) : VectorMeasure α M where
   measureOf' := -v
   empty' := by simp
   not_measurable' _ hi := by simp [v.not_measurable hi]
-  m_Union' f hf₁ hf₂ := HasSum.neg <| v.m_Union hf₁ hf₂
+  m_Union' f hf₁ hf₂ := HasSum.neg $ v.m_Union hf₁ hf₂
 #align measure_theory.vector_measure.neg MeasureTheory.VectorMeasure.neg
 
 instance : Neg (VectorMeasure α M) :=
@@ -713,7 +713,7 @@ def restrict (v : VectorMeasure α M) (i : Set α) : VectorMeasure α M :=
       not_measurable' := fun i hi => if_neg hi,
       m_Union' := by
         intro f hf₁ hf₂
-        convert v.m_Union (fun n => (hf₁ n).inter hi) (hf₂.mono fun i j => Disjoint.mono inf_le_left inf_le_left)
+        convert v.m_Union (fun n => (hf₁ n).inter hi) (hf₂.mono $ fun i j => Disjoint.mono inf_le_left inf_le_left)
         · ext n
           rw [if_pos (hf₁ n)]
           
@@ -898,7 +898,7 @@ theorem le_iff' : v ≤ w ↔ ∀ i, v i ≤ w i := by
 end
 
 -- mathport name: vector_measure.restrict
-localized [MeasureTheory]
+scoped[MeasureTheory]
   notation:50 v " ≤[" i:50 "] " w:50 =>
     MeasureTheory.VectorMeasure.restrict v i ≤ MeasureTheory.VectorMeasure.restrict w i
 
@@ -1152,7 +1152,7 @@ def AbsolutelyContinuous (v : VectorMeasure α M) (w : VectorMeasure α N) :=
 #align measure_theory.vector_measure.absolutely_continuous MeasureTheory.VectorMeasure.AbsolutelyContinuous
 
 -- mathport name: vector_measure.absolutely_continuous
-localized [MeasureTheory] infixl:50 " ≪ᵥ " => MeasureTheory.VectorMeasure.AbsolutelyContinuous
+scoped[MeasureTheory] infixl:50 " ≪ᵥ " => MeasureTheory.VectorMeasure.AbsolutelyContinuous
 
 open MeasureTheory
 
@@ -1179,7 +1179,7 @@ theorem refl (v : VectorMeasure α M) : v ≪ᵥ v :=
 
 @[trans]
 theorem trans {u : VectorMeasure α L} {v : VectorMeasure α M} {w : VectorMeasure α N} (huv : u ≪ᵥ v) (hvw : v ≪ᵥ w) :
-    u ≪ᵥ w := fun _ hs => huv <| hvw hs
+    u ≪ᵥ w := fun _ hs => huv $ hvw hs
 #align measure_theory.vector_measure.absolutely_continuous.trans MeasureTheory.VectorMeasure.AbsolutelyContinuous.trans
 
 theorem zero (v : VectorMeasure α N) : (0 : VectorMeasure α M) ≪ᵥ v := fun s _ => VectorMeasure.zero_apply s
@@ -1242,8 +1242,8 @@ theorem ennreal_to_measure {μ : VectorMeasure α ℝ≥0∞} : (∀ ⦃s : Set 
 
 end AbsolutelyContinuous
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s)) -/
 /-- Two vector measures `v` and `w` are said to be mutually singular if there exists a measurable
 set `s`, such that for all `t ⊆ s`, `v t = 0` and for all `t ⊆ sᶜ`, `w t = 0`.
 
@@ -1256,14 +1256,14 @@ def MutuallySingular (v : VectorMeasure α M) (w : VectorMeasure α N) : Prop :=
 #align measure_theory.vector_measure.mutually_singular MeasureTheory.VectorMeasure.MutuallySingular
 
 -- mathport name: vector_measure.mutually_singular
-localized [MeasureTheory] infixl:60 " ⊥ᵥ " => MeasureTheory.VectorMeasure.MutuallySingular
+scoped[MeasureTheory] infixl:60 " ⊥ᵥ " => MeasureTheory.VectorMeasure.MutuallySingular
 
 namespace MutuallySingular
 
 variable {v v₁ v₂ : VectorMeasure α M} {w w₁ w₂ : VectorMeasure α N}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s)) -/
 theorem mk (s : Set α) (hs : MeasurableSet s) (h₁ : ∀ (t) (_ : t ⊆ s), MeasurableSet t → v t = 0)
     (h₂ : ∀ (t) (_ : t ⊆ sᶜ), MeasurableSet t → w t = 0) : v ⊥ᵥ w := by
   refine' ⟨s, hs, fun t hst => _, fun t hst => _⟩ <;> by_cases ht:MeasurableSet t
@@ -1466,7 +1466,7 @@ theorem to_measure_of_zero_le_apply (hi : 0 ≤[i] s) (hi₁ : MeasurableSet i) 
 /-- Given a signed measure `s` and a negative measurable set `i`, `to_measure_of_le_zero`
 provides the measure, mapping measurable sets `j` to `-s (i ∩ j)`. -/
 def toMeasureOfLeZero (s : SignedMeasure α) (i : Set α) (hi₁ : MeasurableSet i) (hi₂ : s ≤[i] 0) : Measure α :=
-  toMeasureOfZeroLe (-s) i hi₁ <| @neg_zero (VectorMeasure α ℝ) _ ▸ neg_le_neg _ _ hi₁ hi₂
+  toMeasureOfZeroLe (-s) i hi₁ $ @neg_zero (VectorMeasure α ℝ) _ ▸ neg_le_neg _ _ hi₁ hi₂
 #align measure_theory.signed_measure.to_measure_of_le_zero MeasureTheory.SignedMeasure.toMeasureOfLeZero
 
 theorem to_measure_of_le_zero_apply (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) (hj₁ : MeasurableSet j) :

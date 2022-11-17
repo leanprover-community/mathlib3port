@@ -80,7 +80,7 @@ theorem std_basis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) := by
 #align linear_map.std_basis_eq_pi_diag LinearMap.std_basis_eq_pi_diag
 
 theorem ker_std_basis (i : ι) : ker (stdBasis R φ i) = ⊥ :=
-  ker_eq_bot_of_injective <| Pi.single_injective _ _
+  ker_eq_bot_of_injective $ Pi.single_injective _ _
 #align linear_map.ker_std_basis LinearMap.ker_std_basis
 
 theorem proj_comp_std_basis (i j : ι) : (proj i).comp (stdBasis R φ j) = diag j i := by
@@ -88,16 +88,16 @@ theorem proj_comp_std_basis (i j : ι) : (proj i).comp (stdBasis R φ j) = diag 
 #align linear_map.proj_comp_std_basis LinearMap.proj_comp_std_basis
 
 theorem proj_std_basis_same (i : ι) : (proj i).comp (stdBasis R φ i) = id :=
-  LinearMap.ext <| std_basis_same R φ i
+  LinearMap.ext $ std_basis_same R φ i
 #align linear_map.proj_std_basis_same LinearMap.proj_std_basis_same
 
 theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (stdBasis R φ j) = 0 :=
-  LinearMap.ext <| std_basis_ne R φ _ _ h
+  LinearMap.ext $ std_basis_ne R φ _ _ h
 #align linear_map.proj_std_basis_ne LinearMap.proj_std_basis_ne
 
 theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) :
     (⨆ i ∈ I, range (stdBasis R φ i)) ≤ ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) := by
-  refine' supr_le fun i => supr_le fun hi => range_le_iff_comap.2 _
+  refine' supr_le $ fun i => supr_le $ fun hi => range_le_iff_comap.2 _
   simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
   rintro b - j hj
   rw [proj_std_basis_ne R φ j i, zero_apply]
@@ -126,15 +126,15 @@ theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J)
     (hI : Set.Finite I) : (⨆ i ∈ I, range (stdBasis R φ i)) = ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) := by
   refine' le_antisymm (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _
   have : Set.univ ⊆ ↑hI.to_finset ∪ J := by rwa [hI.coe_to_finset]
-  refine' le_trans (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_mono fun i => _)
+  refine' le_trans (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_mono $ fun i => _)
   rw [Set.Finite.mem_to_finset]
   exact le_rfl
 #align linear_map.supr_range_std_basis_eq_infi_ker_proj LinearMap.supr_range_std_basis_eq_infi_ker_proj
 
 theorem supr_range_std_basis [Finite ι] : (⨆ i, range (stdBasis R φ i)) = ⊤ := by
   cases nonempty_fintype ι
-  convert top_unique (infi_emptyset.ge.trans <| infi_ker_proj_le_supr_range_std_basis R φ _)
-  · exact funext fun i => ((@supr_pos _ _ _ fun h => range <| std_basis R φ i) <| Finset.mem_univ i).symm
+  convert top_unique (infi_emptyset.ge.trans $ infi_ker_proj_le_supr_range_std_basis R φ _)
+  · exact funext fun i => ((@supr_pos _ _ _ fun h => range $ std_basis R φ i) $ Finset.mem_univ i).symm
     
   · rw [Finset.coe_univ, Set.union_empty]
     
@@ -143,18 +143,25 @@ theorem supr_range_std_basis [Finite ι] : (⨆ i, range (stdBasis R φ i)) = �
 theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
     Disjoint (⨆ i ∈ I, range (stdBasis R φ i)) (⨆ i ∈ J, range (stdBasis R φ i)) := by
   refine'
-    Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right)
-      (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right) _
+    Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _ $ disjoint_compl_right)
+      (supr_range_std_basis_le_infi_ker_proj _ _ _ _ $ disjoint_compl_right) _
   simp only [disjoint_iff_inf_le, SetLike.le_def, mem_infi, mem_inf, mem_ker, mem_bot, proj_apply, funext_iff]
   rintro b ⟨hI, hJ⟩ i
-  classical by_cases hiI:i ∈ I
-    · exact hI i hiI
+  classical
+  by_cases hiI:i ∈ I
+  · by_cases hiJ:i ∈ J
+    · exact (h.le_bot ⟨hiI, hiJ⟩).elim
       
+    · exact hJ i hiJ
+      
+    
+  · exact hI i hiI
+    
 #align linear_map.disjoint_std_basis_std_basis LinearMap.disjoint_std_basis_std_basis
 
 theorem std_basis_eq_single {a : R} :
     (fun i : ι => (stdBasis R (fun _ : ι => R) i) a) = fun i : ι => Finsupp.single i a :=
-  funext fun i => (Finsupp.single_eq_pi_single i a).symm
+  funext $ fun i => (Finsupp.single_eq_pi_single i a).symm
 #align linear_map.std_basis_eq_single LinearMap.std_basis_eq_single
 
 end LinearMap
@@ -173,7 +180,7 @@ variable {η : Type _} {ιs : η → Type _} {Ms : η → Type _}
 
 theorem linear_independent_std_basis [Ring R] [∀ i, AddCommGroup (Ms i)] [∀ i, Module R (Ms i)] [DecidableEq η]
     (v : ∀ j, ιs j → Ms j) (hs : ∀ i, LinearIndependent R (v i)) :
-    LinearIndependent R fun ji : Σj, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) := by
+    LinearIndependent R fun ji : Σ j, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) := by
   have hs' : ∀ j : η, LinearIndependent R fun i : ιs j => std_basis R Ms j (v j i) := by
     intro j
     exact (hs j).map' _ (ker_std_basis _ _ _)
@@ -209,7 +216,7 @@ given by `s j` on each component.
 
 For the standard basis over `R` on the finite-dimensional space `η → R` see `pi.basis_fun`.
 -/
-protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (Σj, ιs j) R (∀ j, Ms j) := by
+protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (Σ j, ιs j) R (∀ j, Ms j) := by
   -- The `add_comm_monoid (Π j, Ms j)` instance was hard to find.
   -- Defining this in tactic mode seems to shake up instance search enough that it works by itself.
   refine' Basis.of_repr (_ ≪≫ₗ (Finsupp.sigmaFinsuppLequivPiFinsupp R).symm)
@@ -225,7 +232,8 @@ theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)
     simp only [Pi.basis, LinearEquiv.trans_apply, Basis.repr_self, std_basis_same, LinearEquiv.Pi_congr_right_apply,
       Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply]
     symm
-    exact Finsupp.single_apply_left (fun i i' (h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩) => eq_of_heq (Sigma.mk.inj h).2) _ _ _
+    exact
+      Finsupp.single_apply_left (fun i i' (h : (⟨j, i⟩ : Σ j, ιs j) = ⟨j, i'⟩) => eq_of_heq (Sigma.mk.inj h).2) _ _ _
     
   simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply,
     LinearEquiv.Pi_congr_right_apply]

@@ -37,7 +37,7 @@ variable [Semiring R] [AddCommMonoid M] [Module R M]
 /- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where
-  exists_basis : Nonempty (ΣI : Type v, Basis I R M)
+  exists_basis : Nonempty (Σ I : Type v, Basis I R M)
 #align module.free Module.Free
 
 /- If `M` fits in universe `w`, then freeness is equivalent to existence of a basis in that
@@ -48,7 +48,7 @@ Note that if `M` does not fit in `w`, the reverse direction of this implication 
 theorem Module.free_def [Small.{w} M] : Module.Free R M ↔ ∃ I : Type w, Nonempty (Basis I R M) :=
   ⟨fun h =>
     ⟨Shrink (Set.range h.exists_basis.some.2), ⟨(Basis.reindexRange h.exists_basis.some.2).reindex (equivShrink _)⟩⟩,
-    fun h => ⟨(nonempty_sigma.2 h).map fun ⟨i, b⟩ => ⟨Set.range b, b.reindexRange⟩⟩⟩
+    fun h => ⟨(nonempty_sigma.2 h).map $ fun ⟨i, b⟩ => ⟨Set.range b, b.reindexRange⟩⟩⟩
 #align module.free_def Module.free_def
 
 theorem Module.free_iff_set : Module.Free R M ↔ ∃ S : Set M, Nonempty (Basis S R M) :=
@@ -111,7 +111,7 @@ instance (priority := 100) no_zero_smul_divisors [NoZeroDivisors R] : NoZeroSmul
 variable {R M N}
 
 theorem ofEquiv (e : M ≃ₗ[R] N) : Module.Free R N :=
-  of_basis <| (chooseBasis R M).map e
+  of_basis $ (chooseBasis R M).map e
 #align module.free.of_equiv Module.Free.ofEquiv
 
 /-- A variation of `of_equiv`: the assumption `module.free R P` here is explicit rather than an
@@ -128,14 +128,14 @@ instance self : Module.Free R R :=
 #align module.free.self Module.Free.self
 
 instance prod [Module.Free R N] : Module.Free R (M × N) :=
-  of_basis <| (chooseBasis R M).Prod (chooseBasis R N)
+  of_basis $ (chooseBasis R M).Prod (chooseBasis R N)
 #align module.free.prod Module.Free.prod
 
 /-- The product of finitely many free modules is free. -/
 instance pi (M : ι → Type _) [Finite ι] [∀ i : ι, AddCommMonoid (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (∀ i, M i) :=
   let ⟨_⟩ := nonempty_fintype ι
-  of_basis <| Pi.basis fun i => choose_basis R (M i)
+  of_basis $ Pi.basis $ fun i => choose_basis R (M i)
 #align module.free.pi Module.Free.pi
 
 /-- The module of finite matrices is free. -/
@@ -152,7 +152,7 @@ instance function [Finite ι] : Module.Free R (ι → M) :=
 #align module.free.function Module.Free.function
 
 instance finsupp : Module.Free R (ι →₀ M) :=
-  ofBasis (Finsupp.basis fun i => chooseBasis R M)
+  ofBasis (Finsupp.basis $ fun i => chooseBasis R M)
 #align module.free.finsupp Module.Free.finsupp
 
 variable {ι}
@@ -168,7 +168,7 @@ instance (priority := 100) ofSubsingleton' [Subsingleton R] : Module.Free R N :=
 
 instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
-  of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)
+  of_basis $ Dfinsupp.basis $ fun i => chooseBasis R (M i)
 #align module.free.dfinsupp Module.Free.dfinsupp
 
 instance directSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)] [∀ i : ι, Module R (M i)]

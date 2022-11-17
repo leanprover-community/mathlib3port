@@ -74,7 +74,7 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
         A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) +
           nth_remainder p n (truncate_fun (n + 1) A) fun i : Fin (n + 1) => inverse_coeff a A i
       have H := Units.mul_inv (a ^ p ^ (n + 1))
-      linear_combination (config := { normalize := false })-H_coeff * H
+      linear_combination (norm := skip) -H_coeff * H
       have ha : (a : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1)) := by norm_cast
       have ha_inv : (↑a⁻¹ : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1))⁻¹ := by exact_mod_cast inv_pow _ _
       simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, Fin.val_eq_coe, one_coeff_eq_of_pos,
@@ -133,7 +133,7 @@ section PerfectRing
 
 variable {k : Type _} [CommRing k] [CharP k p] [PerfectRing k p]
 
-theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b := by
+theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ) (b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b := by
   obtain ⟨m, c, hc, hcm⟩ := WittVector.verschiebung_nonzero ha
   obtain ⟨b, rfl⟩ := (frobenius_bijective p k).Surjective.iterate m c
   rw [WittVector.iterate_frobenius_coeff] at hc
@@ -158,7 +158,7 @@ section PerfectField
 
 variable {k : Type _} [Field k] [CharP k p] [PerfectRing k p]
 
-theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Units (𝕎 k)), a = p ^ m * b := by
+theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ) (b : Units (𝕎 k)), a = p ^ m * b := by
   obtain ⟨m, b, h₁, h₂⟩ := exists_eq_pow_p_mul a ha
   let b₀ := Units.mk0 (b.coeff 0) h₁
   have hb₀ : b.coeff 0 = b₀ := rfl

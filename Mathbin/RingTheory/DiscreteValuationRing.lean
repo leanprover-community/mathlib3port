@@ -93,7 +93,7 @@ theorem irreducible_of_span_eq_maximal_ideal {R : Type _} [CommRing R] [LocalRin
   maximal ideal of R -/
 theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R = Ideal.span {ϖ} :=
   ⟨fun hϖ => (eq_maximal_ideal (is_maximal_of_irreducible hϖ)).symm, fun h =>
-    irreducible_of_span_eq_maximal_ideal ϖ (fun e => not_a_field R <| by rwa [h, span_singleton_eq_bot]) h⟩
+    irreducible_of_span_eq_maximal_ideal ϖ (fun e => not_a_field R $ by rwa [h, span_singleton_eq_bot]) h⟩
 #align discrete_valuation_ring.irreducible_iff_uniformizer DiscreteValuationRing.irreducible_iff_uniformizer
 
 theorem _root_.irreducible.maximal_ideal_eq {ϖ : R} (h : Irreducible ϖ) : maximalIdeal R = Ideal.span {ϖ} :=
@@ -106,7 +106,7 @@ variable (R)
 /-- Uniformisers exist in a DVR -/
 theorem exists_irreducible : ∃ ϖ : R, Irreducible ϖ := by
   simp_rw [irreducible_iff_uniformizer]
-  exact (IsPrincipalIdealRing.principal <| maximal_ideal R).principal
+  exact (IsPrincipalIdealRing.principal $ maximal_ideal R).principal
 #align discrete_valuation_ring.exists_irreducible DiscreteValuationRing.exists_irreducible
 
 /-- Uniformisers exist in a DVR -/
@@ -187,7 +187,7 @@ theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible 
   · obtain rfl : n = 0 := by
       clear hn this
       revert H n
-      exact by decide
+      exact dec_trivial
     simpa only [not_irreducible_one, pow_zero] using this
     
   · simpa only [pow_one] using hn.symm
@@ -212,7 +212,7 @@ See `discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization`. -/
 theorem toUniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
   let p := Classical.choose hR
   let spec := Classical.choose_spec hR
-  UniqueFactorizationMonoid.ofExistsPrimeFactors fun x hx => by
+  UniqueFactorizationMonoid.ofExistsPrimeFactors $ fun x hx => by
     use Multiset.repeat p (Classical.choose (spec.2 hx))
     constructor
     · intro q hq
@@ -367,7 +367,7 @@ theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irred
 #align discrete_valuation_ring.associated_pow_irreducible DiscreteValuationRing.associated_pow_irreducible
 
 theorem eq_unit_mul_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irreducible ϖ) :
-    ∃ (n : ℕ)(u : Rˣ), x = u * ϖ ^ n := by
+    ∃ (n : ℕ) (u : Rˣ), x = u * ϖ ^ n := by
   obtain ⟨n, hn⟩ := associated_pow_irreducible hx hirr
   obtain ⟨u, rfl⟩ := hn.symm
   use n, u

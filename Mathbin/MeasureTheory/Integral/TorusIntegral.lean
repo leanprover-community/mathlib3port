@@ -216,12 +216,13 @@ theorem norm_torus_integral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ∥f (to
     ∥∯ x in T(c, R), f x∥ ≤ ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C :=
   calc
     ∥∯ x in T(c, R), f x∥ ≤ (∏ i, |R i|) * C * (volume (icc (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
-      (norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurableSetIcc) fun θ hθ =>
+      norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurableSetIcc $ fun θ hθ =>
         calc
           ∥(∏ i : Fin n, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)∥ =
               (∏ i : Fin n, |R i|) * ∥f (torusMap c R θ)∥ :=
             by simp [norm_smul]
-          _ ≤ (∏ i : Fin n, |R i|) * C := mul_le_mul_of_nonneg_left (hf _) (Finset.prod_nonneg fun _ _ => abs_nonneg _)
+          _ ≤ (∏ i : Fin n, |R i|) * C :=
+            mul_le_mul_of_nonneg_left (hf _) (Finset.prod_nonneg $ fun _ _ => abs_nonneg _)
           
     _ = ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C := by
       simp only [Pi.zero_def, Real.volume_Icc_pi_to_real fun _ => real.two_pi_pos.le, sub_zero, Fin.prod_const,

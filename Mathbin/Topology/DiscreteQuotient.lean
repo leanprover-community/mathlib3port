@@ -140,7 +140,7 @@ theorem proj_is_locally_constant : IsLocallyConstant S.proj := by
 #align discrete_quotient.proj_is_locally_constant DiscreteQuotient.proj_is_locally_constant
 
 theorem proj_continuous : Continuous S.proj :=
-  IsLocallyConstant.continuous <| proj_is_locally_constant _
+  IsLocallyConstant.continuous $ proj_is_locally_constant _
 #align discrete_quotient.proj_continuous DiscreteQuotient.proj_continuous
 
 theorem fiberClosed (A : Set S) : IsClosed (S.proj ⁻¹' A) :=
@@ -293,7 +293,7 @@ theorem le_comap_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} {cont' : C
 #align discrete_quotient.le_comap_comp DiscreteQuotient.le_comap_comp
 
 theorem le_comap_trans {C : DiscreteQuotient X} : LeComap cont A B → B ≤ C → LeComap cont A C := fun h1 h2 =>
-  le_trans h1 <| comap_mono _ h2
+  le_trans h1 $ comap_mono _ h2
 #align discrete_quotient.le_comap_trans DiscreteQuotient.le_comap_trans
 
 /-- Map a discrete quotient along a continuous map. -/

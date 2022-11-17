@@ -40,7 +40,7 @@ def PointedSmoothMap (x : M) :=
 #align pointed_smooth_map PointedSmoothMap
 
 -- mathport name: pointed_smooth_map
-localized [Derivation] notation "C^" n "⟮" I ", " M "; " 𝕜 "⟯⟨" x "⟩" => PointedSmoothMap 𝕜 I M n x
+scoped[Derivation] notation "C^" n "⟮" I ", " M "; " 𝕜 "⟯⟨" x "⟩" => PointedSmoothMap 𝕜 I M n x
 
 variable {𝕜 M}
 
@@ -147,11 +147,11 @@ def fdifferential (f : C^∞⟮I, M; I', M'⟯) (x : M) : PointDerivation I x �
 
 -- mathport name: fdifferential
 -- Standard notation for the differential. The abbreviation is `MId`.
-localized [Manifold] notation "𝒅" => fdifferential
+scoped[Manifold] notation "𝒅" => fdifferential
 
 -- mathport name: hfdifferential
 -- Standard notation for the differential. The abbreviation is `MId`.
-localized [Manifold] notation "𝒅ₕ" => hfdifferential
+scoped[Manifold] notation "𝒅ₕ" => hfdifferential
 
 @[simp]
 theorem apply_fdifferential (f : C^∞⟮I, M; I', M'⟯) {x : M} (v : PointDerivation I x) (g : C^∞⟮I', M'; 𝕜⟯) :

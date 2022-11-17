@@ -167,10 +167,10 @@ def cmp : PosNum → PosNum → Ordering
   | 1, 1 => Eq
   | _, 1 => GT.gt
   | 1, _ => lt
-  | bit0 a, bit0 b => Cmp a b
-  | bit0 a, bit1 b => Ordering.casesOn (Cmp a b) lt lt GT.gt
-  | bit1 a, bit0 b => Ordering.casesOn (Cmp a b) lt GT.gt GT.gt
-  | bit1 a, bit1 b => Cmp a b
+  | bit0 a, bit0 b => cmp a b
+  | bit0 a, bit1 b => Ordering.casesOn (cmp a b) lt lt GT.gt
+  | bit1 a, bit0 b => Ordering.casesOn (cmp a b) lt GT.gt GT.gt
+  | bit1 a, bit1 b => cmp a b
 #align pos_num.cmp PosNum.cmp
 
 instance : LT PosNum :=
@@ -413,7 +413,7 @@ protected def bitm1 : Znum → Znum
   -/
 def ofInt' : ℤ → Znum
   | (n : ℕ) => Num.toZnum (Num.ofNat' n)
-  | -[n+1] => Num.toZnumNeg (Num.ofNat' (n + 1))
+  | -[1+ n] => Num.toZnumNeg (Num.ofNat' (n + 1))
 #align znum.of_int' Znum.ofInt'
 
 end Znum

@@ -120,9 +120,11 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
   rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_C_content_mul_prim_part,
     (integer_normalization R⁰ b).eq_C_content_mul_prim_part, mul_assoc, mul_comm _ (C _ * _), ← mul_assoc, ← mul_assoc,
     ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assoc, mul_assoc, ← mul_assoc (C ↑u)] at h1
-  have h0 : a ≠ 0 ∧ b ≠ 0 := by
-    classical rw [Ne.def, Ne.def, ← Decidable.not_or_iff_and_not, ← mul_eq_zero, ← hab]
-      apply hp.ne_zero (map_injective (algebraMap R K) (IsFractionRing.injective _ _) _)
+  have h0 : a ≠ 0 ∧ b ≠ 0 := by classical
+    rw [Ne.def, Ne.def, ← Decidable.not_or_iff_and_not, ← mul_eq_zero, ← hab]
+    intro con
+    apply hp.ne_zero (map_injective (algebraMap R K) (IsFractionRing.injective _ _) _)
+    simp [Con]
   rcases hi.is_unit_or_is_unit (mul_left_cancel₀ hcd0 h1).symm with (h | h)
   · right
     apply is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part h0.2 (is_unit_of_mul_is_unit_right h)

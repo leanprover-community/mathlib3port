@@ -67,7 +67,7 @@ def NormedAddGroupHom.completion (f : NormedAddGroupHom G H) : NormedAddGroupHom
       intro y
       apply completion.induction_on y
       · exact
-          isClosedLe (continuous_norm.comp <| f.to_add_monoid_hom.continuous_completion f.continuous)
+          isClosedLe (continuous_norm.comp $ f.to_add_monoid_hom.continuous_completion f.continuous)
             (continuous_const.mul continuous_norm)
         
       · intro x
@@ -188,7 +188,7 @@ theorem NormedAddGroupHom.norm_completion (f : NormedAddGroupHom G H) : ∥f.Com
 #align normed_add_group_hom.norm_completion NormedAddGroupHom.norm_completion
 
 theorem NormedAddGroupHom.ker_le_ker_completion (f : NormedAddGroupHom G H) :
-    (toCompl.comp <| incl f.ker).range ≤ f.Completion.ker := by
+    (toCompl.comp $ incl f.ker).range ≤ f.Completion.ker := by
   intro a h
   replace h : ∃ y : f.ker, to_compl (y : G) = a
   · simpa using h
@@ -200,7 +200,7 @@ theorem NormedAddGroupHom.ker_le_ker_completion (f : NormedAddGroupHom G H) :
 #align normed_add_group_hom.ker_le_ker_completion NormedAddGroupHom.ker_le_ker_completion
 
 theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ} (h : f.SurjectiveOnWith f.range C) :
-    (f.Completion.ker : Set <| Completion G) = closure (toCompl.comp <| incl f.ker).range := by
+    (f.Completion.ker : Set $ Completion G) = closure (toCompl.comp $ incl f.ker).range := by
   rcases h.exists_pos with ⟨C', C'_pos, hC'⟩
   apply le_antisymm
   · intro hatg hatg_in

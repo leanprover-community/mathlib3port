@@ -85,7 +85,7 @@ theorem smul_to_inv_submonoid (m : M) : m • (toInvSubmonoid M S m : S) = 1 := 
 
 variable {S}
 
-theorem surj' (z : S) : ∃ (r : R)(m : M), z = r • toInvSubmonoid M S m := by
+theorem surj' (z : S) : ∃ (r : R) (m : M), z = r • toInvSubmonoid M S m := by
   rcases IsLocalization.surj M z with ⟨⟨r, m⟩, e : z * _ = algebraMap R S r⟩
   refine' ⟨r, m, _⟩
   rw [Algebra.smul_def, ← e, mul_assoc]

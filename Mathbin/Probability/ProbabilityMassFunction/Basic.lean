@@ -46,7 +46,7 @@ instance : CoeFun (Pmf α) fun p => α → ℝ≥0 :=
 
 @[ext.1]
 protected theorem ext : ∀ {p q : Pmf α}, (∀ a, p a = q a) → p = q
-  | ⟨f, hf⟩, ⟨g, hg⟩, Eq => Subtype.eq <| funext Eq
+  | ⟨f, hf⟩, ⟨g, hg⟩, Eq => Subtype.eq $ funext Eq
 #align pmf.ext Pmf.ext
 
 theorem has_sum_coe_one (p : Pmf α) : HasSum p 1 :=
@@ -114,10 +114,10 @@ theorem to_outer_measure_apply_finset (s : Finset α) : p.toOuterMeasure s = ∑
 #align pmf.to_outer_measure_apply_finset Pmf.to_outer_measure_apply_finset
 
 theorem to_outer_measure_apply_singleton (a : α) : p.toOuterMeasure {a} = p a := by
-  refine' (p.to_outer_measure_apply {a}).trans (((tsum_eq_single a) fun b hb => _).trans _)
-  · exact ite_eq_right_iff.2 fun hb' => False.elim <| hb hb'
+  refine' (p.to_outer_measure_apply {a}).trans ((tsum_eq_single a $ fun b hb => _).trans _)
+  · exact ite_eq_right_iff.2 fun hb' => False.elim $ hb hb'
     
-  · exact ite_eq_left_iff.2 fun ha' => False.elim <| ha' rfl
+  · exact ite_eq_left_iff.2 fun ha' => False.elim $ ha' rfl
     
 #align pmf.to_outer_measure_apply_singleton Pmf.to_outer_measure_apply_singleton
 
@@ -133,13 +133,13 @@ theorem to_outer_measure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.support
     have := fun hpa => ne_of_lt (Nnreal.tsum_lt_tsum hsp hpa p.summable_coe) (h.trans p.tsum_coe.symm)
     exact
       not_not.1 fun has =>
-        ha <|
-          Set.indicator_apply_eq_self.1 (le_antisymm (Set.indicator_apply_le fun _ => le_rfl) <| le_of_not_lt <| this)
+        ha $
+          Set.indicator_apply_eq_self.1 (le_antisymm (Set.indicator_apply_le $ fun _ => le_rfl) $ le_of_not_lt $ this)
             has
     
   · suffices : ∀ x, x ∉ s → p x = 0
-    exact trans (tsum_congr fun a => (Set.indicator_apply s p a).trans (ite_eq_left_iff.2 <| symm ∘ this a)) p.tsum_coe
-    exact fun a ha => (p.apply_eq_zero_iff a).2 <| Set.not_mem_subset h ha
+    exact trans (tsum_congr $ fun a => (Set.indicator_apply s p a).trans (ite_eq_left_iff.2 $ symm ∘ this a)) p.tsum_coe
+    exact fun a ha => (p.apply_eq_zero_iff a).2 $ Set.not_mem_subset h ha
     
 #align pmf.to_outer_measure_apply_eq_one_iff Pmf.to_outer_measure_apply_eq_one_iff
 
@@ -161,12 +161,12 @@ theorem to_outer_measure_apply_eq_of_inter_support_eq {s t : Set α} (h : s ∩ 
 
 @[simp]
 theorem to_outer_measure_apply_fintype [Fintype α] : p.toOuterMeasure s = ↑(∑ x, s.indicator p x) :=
-  (p.to_outer_measure_apply' s).trans (Ennreal.coe_eq_coe.2 <| tsum_eq_sum fun x h => absurd (Finset.mem_univ x) h)
+  (p.to_outer_measure_apply' s).trans (Ennreal.coe_eq_coe.2 $ tsum_eq_sum fun x h => absurd (Finset.mem_univ x) h)
 #align pmf.to_outer_measure_apply_fintype Pmf.to_outer_measure_apply_fintype
 
 @[simp]
 theorem to_outer_measure_caratheodory (p : Pmf α) : (toOuterMeasure p).caratheodory = ⊤ := by
-  refine' eq_top_iff.2 <| le_trans (le_Inf fun x hx => _) (le_sum_caratheodory _)
+  refine' eq_top_iff.2 $ le_trans (le_Inf $ fun x hx => _) (le_sum_caratheodory _)
   obtain ⟨y, hy⟩ := hx
   exact ((le_of_eq (dirac_caratheodory y).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eq hy)
 #align pmf.to_outer_measure_caratheodory Pmf.to_outer_measure_caratheodory
@@ -262,7 +262,7 @@ end Measure
 
 theorem apply_eq_one_iff (p : Pmf α) (a : α) : p a = 1 ↔ p.support = {a} := by
   refine' ⟨fun h => _, fun h => _⟩
-  · have : {a} ⊆ p.support := fun x hx => (p.mem_support_iff x).2 (ne_zero_of_eq_one <| hx.symm ▸ h)
+  · have : {a} ⊆ p.support := fun x hx => (p.mem_support_iff x).2 (ne_zero_of_eq_one $ hx.symm ▸ h)
     refine' antisymm ((p.to_outer_measure_apply_eq_one_iff {a}).1 _) this
     simpa only [to_outer_measure_apply_singleton, Ennreal.coe_eq_one] using h
     

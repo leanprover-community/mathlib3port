@@ -80,10 +80,12 @@ open Finset
 variable {ι : Type _} {v : ι → R} (s : Finset ι)
 
 theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card)
-    (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by
-  classical rw [← card_image_of_inj_on hvs] at degree_f_lt
-    intro x hx
-    exact eval_f _ hj
+    (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by classical
+  rw [← card_image_of_inj_on hvs] at degree_f_lt
+  refine' eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_f_lt _
+  intro x hx
+  rcases mem_image.mp hx with ⟨_, hj, rfl⟩
+  exact eval_f _ hj
 #align polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero Polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero
 
 theorem eq_of_degree_sub_lt_of_eval_index_eq (hvs : Set.InjOn v s) (degree_fg_lt : (f - g).degree < s.card)
@@ -350,7 +352,7 @@ theorem interpolate_eq_iff_values_eq_on (hvs : Set.InjOn v s) :
 
 theorem eq_interpolate {f : F[X]} (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card) :
     f = interpolate s v fun i => f.eval (v i) :=
-  (eq_of_degrees_lt_of_eval_index_eq _ hvs degree_f_lt (degree_interpolate_lt _ hvs)) fun i hi =>
+  eq_of_degrees_lt_of_eval_index_eq _ hvs degree_f_lt (degree_interpolate_lt _ hvs) $ fun i hi =>
     (eval_interpolate_at_node _ hvs hi).symm
 #align lagrange.eq_interpolate Lagrange.eq_interpolate
 
@@ -377,10 +379,10 @@ theorem eq_interpolate_iff {f : F[X]} (hvs : Set.InjOn v s) :
 and polynomials of degree less than `fintype.card ι`.-/
 def funEquivDegreeLt (hvs : Set.InjOn v s) : degreeLt F s.card ≃ₗ[F] s → F where
   toFun f i := f.1.eval (v i)
-  map_add' f g := funext fun v => eval_add
-  map_smul' c f := funext <| by simp
+  map_add' f g := funext $ fun v => eval_add
+  map_smul' c f := funext $ by simp
   invFun r :=
-    ⟨interpolate s v fun x => if hx : x ∈ s then r ⟨x, hx⟩ else 0, mem_degree_lt.2 <| degree_interpolate_lt _ hvs⟩
+    ⟨interpolate s v fun x => if hx : x ∈ s then r ⟨x, hx⟩ else 0, mem_degree_lt.2 $ degree_interpolate_lt _ hvs⟩
   left_inv := by
     rintro ⟨f, hf⟩
     simp only [Subtype.mk_eq_mk, Subtype.coe_mk, dite_eq_ite]
@@ -578,7 +580,7 @@ theorem eval_interpolate_not_at_node (hx : ∀ i ∈ s, x ≠ v i) :
 
 theorem sum_nodal_weight_mul_inv_sub_ne_zero (hvs : Set.InjOn v s) (hx : ∀ i ∈ s, x ≠ v i) (hs : s.Nonempty) :
     (∑ i in s, nodalWeight s v i * (x - v i)⁻¹) ≠ 0 :=
-  @right_ne_zero_of_mul_eq_one _ _ _ (eval x (nodal s v)) _ <| by
+  @right_ne_zero_of_mul_eq_one _ _ _ (eval x (nodal s v)) _ $ by
     simpa only [Pi.one_apply, interpolate_one hvs hs, eval_one, mul_one] using (eval_interpolate_not_at_node 1 hx).symm
 #align lagrange.sum_nodal_weight_mul_inv_sub_ne_zero Lagrange.sum_nodal_weight_mul_inv_sub_ne_zero
 

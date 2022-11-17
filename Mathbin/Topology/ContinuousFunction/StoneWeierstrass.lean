@@ -158,8 +158,8 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open TopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (f g «expr ∈ » L) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (f g «expr ∈ » L) -/
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊓ g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊔ g ∈ L)
@@ -364,7 +364,7 @@ theorem Subalgebra.SeparatesPoints.isROrCToReal {A : Subalgebra 𝕜 C(X, 𝕜)}
   let F : C(X, 𝕜) := f - const _ (f x₂)
   -- Subtract the constant `f x₂` from `f`; this is still an element of the subalgebra
   have hFA : F ∈ A := by
-    refine' A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ _ <| A.smul_mem A.one_mem <| f x₂)
+    refine' A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ _ $ A.smul_mem A.one_mem $ f x₂)
     ext1
     simp only [ContinuousMap.coe_smul, ContinuousMap.coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul,
       mul_one, const_apply]

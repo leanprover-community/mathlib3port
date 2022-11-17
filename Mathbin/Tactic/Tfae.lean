@@ -27,10 +27,14 @@ inductive Arrow : Type
   deriving has_reflect, Inhabited
 #align tactic.tfae.arrow Tactic.Tfae.Arrow
 
-unsafe def mk_implication : ∀ (re : Arrow) (e₁ e₂ : expr), pexpr
-  | arrow.right, e₁, e₂ => pquote.1 ((%%ₓe₁) → %%ₓe₂)
-  | arrow.left_right, e₁, e₂ => pquote.1 ((%%ₓe₁) ↔ %%ₓe₂)
-  | arrow.left, e₁, e₂ => pquote.1 ((%%ₓe₂) → %%ₓe₁)
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+unsafe
+  def
+    mk_implication
+    : ∀ ( re : Arrow ) ( e₁ e₂ : expr ) , pexpr
+    | arrow.right , e₁ , e₂ => ` `( $ ( e₁ ) → $ ( e₂ ) )
+      | arrow.left_right , e₁ , e₂ => ` `( $ ( e₁ ) ↔ $ ( e₂ ) )
+      | arrow.left , e₁ , e₂ => ` `( $ ( e₂ ) → $ ( e₁ ) )
 #align tactic.tfae.mk_implication tactic.tfae.mk_implication
 
 unsafe def mk_name : ∀ (re : Arrow) (i₁ i₂ : Nat), Name
@@ -43,14 +47,15 @@ end Tfae
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic.Tfae List
 
-unsafe def parse_list : expr → Option (List expr)
-  | quote.1 [] => pure []
-  | quote.1 ((%%ₓe) :: %%ₓes) => (· :: ·) e <$> parse_list es
-  | _ => none
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+unsafe
+  def
+    parse_list
+    : expr → Option ( List expr )
+    | q( [ ] ) => pure [ ] | q( $ ( e ) :: $ ( es ) ) => ( · :: · ) e <$> parse_list es | _ => none
 #align tactic.interactive.parse_list tactic.interactive.parse_list
 
 /-- In a goal of the form `tfae [a₀, a₁, a₂]`,
@@ -58,13 +63,13 @@ unsafe def parse_list : expr → Option (List expr)
 notations are `tfae_have : i ← j` and `tfae_have : i ↔ j`. The user can
 also provide a label for the assertion, as with `have`: `tfae_have h : i ↔ j`.
 -/
-unsafe def tfae_have (h : parse <| optional ident <* tk ":") (i₁ : parse (with_desc "i" small_nat))
+unsafe def tfae_have (h : parse $ optional ident <* tk ":") (i₁ : parse (with_desc "i" small_nat))
     (re :
       parse
         ((tk "→" <|> tk "->") *> return Arrow.right <|>
           (tk "↔" <|> tk "<->") *> return Arrow.left_right <|> (tk "←" <|> tk "<-") *> return Arrow.left))
     (i₂ : parse (with_desc "j" small_nat)) : tactic Unit := do
-  let quote.1 (Tfae (%%ₓl)) ← target
+  let q(Tfae $(l)) ← target
   let l ← parse_list l
   let e₁ ← List.nth l (i₁ - 1) <|> fail f! "index {i₁ } is not between 1 and {l.length}"
   let e₂ ← List.nth l (i₂ - 1) <|> fail f! "index {i₂ } is not between 1 and {l.length}"
@@ -81,10 +86,10 @@ unsafe def tfae_finish : tactic Unit :=
   applyc `` tfae_nil <|>
     closure.with_new_closure fun cl => do
       impl_graph.mk_scc cl
-      let quote.1 (Tfae (%%ₓl)) ← target
+      let q(Tfae $(l)) ← target
       let l ← parse_list l
       let (_, r, _) ← cl.root l.head
-      refine (pquote.1 (tfae_of_forall (%%ₓr) _ _))
+      refine ``(tfae_of_forall $(r) _ _)
       let thm ← mk_const `` forall_mem_cons
       l fun e => do
           rewrite_target thm

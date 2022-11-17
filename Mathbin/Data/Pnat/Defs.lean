@@ -78,7 +78,7 @@ theorem nat_pred_succ_pnat (n : ℕ) : n.succPnat.natPred = n :=
 
 @[simp]
 theorem _root_.pnat.succ_pnat_nat_pred (n : ℕ+) : n.natPred.succPnat = n :=
-  Subtype.eq <| succ_pred_eq_of_pos n.2
+  Subtype.eq $ succ_pred_eq_of_pos n.2
 #align nat._root_.pnat.succ_pnat_nat_pred nat._root_.pnat.succ_pnat_nat_pred
 
 /-- Convert a natural number to a pnat. `n+1` is mapped to itself,
@@ -272,7 +272,7 @@ instance Nat.canLiftPnat : CanLift ℕ ℕ+ coe ((· < ·) 0) :=
 instance Int.canLiftPnat : CanLift ℤ ℕ+ coe ((· < ·) 0) :=
   ⟨fun n hn =>
     ⟨Nat.toPnat' (Int.natAbs n), by
-      rw [coe_coe, Nat.to_pnat'_coe, if_pos (Int.nat_abs_pos_of_ne_zero hn.ne'), Int.nat_abs_of_nonneg hn.le]⟩⟩
+      rw [coe_coe, Nat.to_pnat'_coe, if_pos (Int.natAbs_pos_of_ne_zero hn.ne'), Int.natAbs_of_nonneg hn.le]⟩⟩
 #align int.can_lift_pnat Int.canLiftPnat
 
 end CanLift

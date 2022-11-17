@@ -416,11 +416,13 @@ theorem coe_ennreal_eq_top_iff : ∀ {x : ℝ≥0∞}, (x : Ereal) = ⊤ ↔ x =
     decide
 #align ereal.coe_ennreal_eq_top_iff Ereal.coe_ennreal_eq_top_iff
 
-theorem coe_nnreal_ne_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) ≠ ⊤ := by decide
+theorem coe_nnreal_ne_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) ≠ ⊤ :=
+  dec_trivial
 #align ereal.coe_nnreal_ne_top Ereal.coe_nnreal_ne_top
 
 @[simp]
-theorem coe_nnreal_lt_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) < ⊤ := by decide
+theorem coe_nnreal_lt_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) < ⊤ :=
+  dec_trivial
 #align ereal.coe_nnreal_lt_top Ereal.coe_nnreal_lt_top
 
 theorem coe_ennreal_strict_mono : StrictMono (coe : ℝ≥0∞ → Ereal)
@@ -563,7 +565,7 @@ def neTopBotEquivReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ ℝ where
   toFun x := Ereal.toReal x
   invFun x := ⟨x, by simp⟩
   left_inv := fun ⟨x, hx⟩ =>
-    Subtype.eq <| by
+    Subtype.eq $ by
       lift x to ℝ
       · simpa [not_or, and_comm'] using hx
         
@@ -891,14 +893,12 @@ theorem bot_mul_bot : (⊥ : Ereal) * ⊥ = ⊥ :=
 
 @[simp]
 theorem bot_mul_coe (x : ℝ) (h : x ≠ 0) : (⊥ : Ereal) * x = ⊥ :=
-  WithTop.coe_mul.symm.trans <|
-    WithBot.coe_eq_coe.mpr <| WithBot.bot_mul <| Function.Injective.ne (@Option.some.inj _) h
+  WithTop.coe_mul.symm.trans $ WithBot.coe_eq_coe.mpr $ WithBot.bot_mul $ Function.Injective.ne (@Option.some.inj _) h
 #align ereal.bot_mul_coe Ereal.bot_mul_coe
 
 @[simp]
 theorem coe_mul_bot (x : ℝ) (h : x ≠ 0) : (x : Ereal) * ⊥ = ⊥ :=
-  WithTop.coe_mul.symm.trans <|
-    WithBot.coe_eq_coe.mpr <| WithBot.mul_bot <| Function.Injective.ne (@Option.some.inj _) h
+  WithTop.coe_mul.symm.trans $ WithBot.coe_eq_coe.mpr $ WithBot.mul_bot $ Function.Injective.ne (@Option.some.inj _) h
 #align ereal.coe_mul_bot Ereal.coe_mul_bot
 
 @[simp]
@@ -940,8 +940,8 @@ private theorem ereal_coe_ennreal_pos {r : ℝ≥0∞} : 0 < r → 0 < (r : Erea
 /-- Extension for the `positivity` tactic: cast from `ℝ` to `ereal`. -/
 @[positivity]
 unsafe def positivity_coe_real_ereal : expr → tactic strictness
-  | quote.1 (@coe _ _ (%%ₓinst) (%%ₓa)) => do
-    unify inst (quote.1 (@coeToLift _ _ <| @coeBase _ _ Ereal.hasCoe))
+  | q(@coe _ _ $(inst) $(a)) => do
+    unify inst q(@coeToLift _ _ $ @coeBase _ _ Ereal.hasCoe)
     let strictness_a ← core a
     match strictness_a with
       | positive p => positive <$> mk_app `` ereal_coe_pos [p]
@@ -953,8 +953,8 @@ unsafe def positivity_coe_real_ereal : expr → tactic strictness
 /-- Extension for the `positivity` tactic: cast from `ℝ≥0∞` to `ereal`. -/
 @[positivity]
 unsafe def positivity_coe_ennreal_ereal : expr → tactic strictness
-  | quote.1 (@coe _ _ (%%ₓinst) (%%ₓa)) => do
-    unify inst (quote.1 (@coeToLift _ _ <| @coeBase _ _ Ereal.hasCoeEnnreal))
+  | q(@coe _ _ $(inst) $(a)) => do
+    unify inst q(@coeToLift _ _ $ @coeBase _ _ Ereal.hasCoeEnnreal)
     let strictness_a ← core a
     match strictness_a with
       | positive p => positive <$> mk_app `` ereal_coe_ennreal_pos [p]

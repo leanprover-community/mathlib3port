@@ -111,8 +111,7 @@ variable (I : Ideal R) (M : Type _) [AddCommGroup M] [Module R M]
 theorem adicModuleBasis : I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
   { inter := fun i j =>
       ⟨max i j,
-        le_inf_iff.mpr
-          ⟨smul_mono_left <| pow_le_pow (le_max_left i j), smul_mono_left <| pow_le_pow (le_max_right i j)⟩⟩,
+        le_inf_iff.mpr ⟨smul_mono_left $ pow_le_pow (le_max_left i j), smul_mono_left $ pow_le_pow (le_max_right i j)⟩⟩,
     smul := fun m i =>
       ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩, fun a a_in => by
         replace a_in : a ∈ I ^ i := by simpa [(I ^ i).mul_top] using a_in

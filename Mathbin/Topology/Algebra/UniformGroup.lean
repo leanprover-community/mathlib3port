@@ -122,7 +122,7 @@ theorem UniformContinuous.zpow_const [UniformSpace β] {f : β → α} (hf : Uni
   | (n : ℕ) => by
     simp_rw [zpow_coe_nat]
     exact hf.pow_const _
-  | -[n+1] => by
+  | -[1+ n] => by
     simp_rw [zpow_neg_succ_of_nat]
     exact (hf.pow_const _).inv
 #align uniform_continuous.zpow_const UniformContinuous.zpow_const
@@ -170,7 +170,7 @@ namespace MulOpposite
 @[to_additive]
 instance : UniformGroup αᵐᵒᵖ :=
   ⟨uniform_continuous_op.comp
-      ((uniform_continuous_unop.comp uniform_continuous_snd).inv.mul <|
+      ((uniform_continuous_unop.comp uniform_continuous_snd).inv.mul $
         uniform_continuous_unop.comp uniform_continuous_fst)⟩
 
 end MulOpposite
@@ -180,7 +180,7 @@ namespace Subgroup
 @[to_additive]
 instance (S : Subgroup α) : UniformGroup S :=
   ⟨uniform_continuous_comap'
-      (uniform_continuous_div.comp <| uniform_continuous_subtype_val.prod_map uniform_continuous_subtype_val)⟩
+      (uniform_continuous_div.comp $ uniform_continuous_subtype_val.prod_map uniform_continuous_subtype_val)⟩
 
 end Subgroup
 
@@ -371,7 +371,7 @@ theorem UniformGroup.uniform_continuous_iff_open_ker {hom : Type _} [UniformSpac
 @[to_additive]
 theorem uniform_continuous_monoid_hom_of_continuous {hom : Type _} [UniformSpace β] [Group β] [UniformGroup β]
     [MonoidHomClass hom α β] {f : hom} (h : Continuous f) : UniformContinuous f :=
-  uniform_continuous_of_tendsto_one <|
+  uniform_continuous_of_tendsto_one $
     suffices Tendsto f (𝓝 1) (𝓝 (f 1)) by rwa [map_one] at this
     h.Tendsto 1
 #align uniform_continuous_monoid_hom_of_continuous uniform_continuous_monoid_hom_of_continuous
@@ -402,7 +402,7 @@ theorem CauchySeq.inv {ι : Type _} [SemilatticeSup ι] {u : ι → α} (h : Cau
 @[to_additive]
 theorem totally_bounded_iff_subset_finite_Union_nhds_one {s : Set α} :
     TotallyBounded s ↔ ∀ U ∈ 𝓝 (1 : α), ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, y • U :=
-  (𝓝 (1 : α)).basis_sets.uniformity_of_nhds_one_inv_mul_swapped.totally_bounded_iff.trans <| by
+  (𝓝 (1 : α)).basis_sets.uniformity_of_nhds_one_inv_mul_swapped.totally_bounded_iff.trans $ by
     simp [← preimage_smul_inv, preimage]
 #align totally_bounded_iff_subset_finite_Union_nhds_one totally_bounded_iff_subset_finite_Union_nhds_one
 
@@ -541,7 +541,7 @@ variable {G}
 
 @[to_additive]
 instance Subgroup.isClosedOfDiscrete [T2Space G] {H : Subgroup G} [DiscreteTopology H] : IsClosed (H : Set G) := by
-  obtain ⟨V, V_in, VH⟩ : ∃ (V : Set G)(hV : V ∈ 𝓝 (1 : G)), V ∩ (H : Set G) = {1}
+  obtain ⟨V, V_in, VH⟩ : ∃ (V : Set G) (hV : V ∈ 𝓝 (1 : G)), V ∩ (H : Set G) = {1}
   exact nhds_inter_eq_singleton_of_mem_discrete H.one_mem
   haveI : SeparatedSpace G := separated_iff_t2.mpr ‹_›
   have : (fun p : G × G => p.2 / p.1) ⁻¹' V ∈ 𝓤 G := preimage_mem_comap V_in
@@ -684,7 +684,7 @@ include de
 
 @[to_additive]
 theorem tendsto_div_comap_self (x₀ : α) :
-    Tendsto (fun t : β × β => t.2 / t.1) ((comap fun p : β × β => (e p.1, e p.2)) <| 𝓝 (x₀, x₀)) (𝓝 1) := by
+    Tendsto (fun t : β × β => t.2 / t.1) ((comap fun p : β × β => (e p.1, e p.2)) $ 𝓝 (x₀, x₀)) (𝓝 1) := by
   have comm : ((fun x : α × α => x.2 / x.1) ∘ fun t : β × β => (e t.1, e t.2)) = e ∘ fun t : β × β => t.2 / t.1 := by
     ext t
     change e t.2 / e t.1 = e (t.2 / t.1)
@@ -731,7 +731,7 @@ variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x x' «expr ∈ » U₂) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x x' «expr ∈ » U₂) -/
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     ∃ U₂ ∈ comap e (𝓝 x₀), ∀ (x x') (_ : x ∈ U₂) (_ : x' ∈ U₂), Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
@@ -739,7 +739,7 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   have lim1 : tendsto (fun a : β × β => (a.2 - a.1, y₁)) (comap e Nx ×ᶠ comap e Nx) (𝓝 (0, y₁)) := by
     have :=
       tendsto.prod_mk (tendsto_sub_comap_self de x₀)
-        (tendsto_const_nhds : tendsto (fun p : β × β => y₁) (comap ee <| 𝓝 (x₀, x₀)) (𝓝 y₁))
+        (tendsto_const_nhds : tendsto (fun p : β × β => y₁) (comap ee $ 𝓝 (x₀, x₀)) (𝓝 y₁))
     rw [nhds_prod_eq, prod_comap_comap_eq, ← nhds_prod_eq]
     exact (this : _)
   have lim2 : tendsto Φ (𝓝 (0, y₁)) (𝓝 0) := by simpa using hφ.tendsto (0, y₁)
@@ -749,10 +749,10 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   exact lim W' W'_nhd
 #align dense_inducing.extend_Z_bilin_aux dense_inducing.extend_Z_bilin_aux
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y y' «expr ∈ » V₁) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (y y' «expr ∈ » V) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x x' «expr ∈ » U₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y y' «expr ∈ » V₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y y' «expr ∈ » V) -/
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
       ∃ V ∈ comap f (𝓝 y₀),
@@ -766,7 +766,7 @@ private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
   have lim_φ : Filter.Tendsto Φ (𝓝 (0, 0)) (𝓝 0) := by simpa using hφ.tendsto (0, 0)
   have lim_φ_sub_sub :
     tendsto (fun p : (β × β) × δ × δ => Φ (p.1.2 - p.1.1, p.2.2 - p.2.1))
-      ((comap ee <| 𝓝 (x₀, x₀)) ×ᶠ (comap ff <| 𝓝 (y₀, y₀))) (𝓝 0) :=
+      ((comap ee $ 𝓝 (x₀, x₀)) ×ᶠ (comap ff $ 𝓝 (y₀, y₀))) (𝓝 0) :=
     by
     have lim_sub_sub :
       tendsto (fun p : (β × β) × δ × δ => (p.1.2 - p.1.1, p.2.2 - p.2.1))
@@ -912,7 +912,7 @@ instance QuotientGroup.complete_space' (G : Type u) [Group G] [TopologicalSpace 
     rw [QuotientGroup.coe_mul, QuotientGroup.coe_inv, hy, hg, inv_div, div_mul_cancel']
   /- Inductively construct a subsequence `φ : ℕ → ℕ` using `key₀` so that if `a b : ℕ` exceed
     `φ (n + 1)`, then we may find lifts whose quotients lie within `u n`. -/
-  set φ : ℕ → ℕ := fun n => Nat.recOn n (some <| key₀ 0 0) fun k yk => some <| key₀ (k + 1) yk
+  set φ : ℕ → ℕ := fun n => Nat.recOn n (some $ key₀ 0 0) fun k yk => some $ key₀ (k + 1) yk
   have hφ :
     ∀ n : ℕ,
       φ n < φ (n + 1) ∧
@@ -924,10 +924,10 @@ instance QuotientGroup.complete_space' (G : Type u) [Group G] [TopologicalSpace 
   set x' : ∀ n, PSigma fun g : G => x (φ (n + 1)) = g := fun n =>
     Nat.recOn n ⟨some (QuotientGroup.mk_surjective (x (φ 1))), (some_spec (QuotientGroup.mk_surjective (x (φ 1)))).symm⟩
       fun k hk =>
-      ⟨some <| (hφ k).2 _ _ (hφ (k + 1)).1.le le_rfl hk.fst hk.snd,
-        (some_spec <| (hφ k).2 _ _ (hφ (k + 1)).1.le le_rfl hk.fst hk.snd).2⟩
+      ⟨some $ (hφ k).2 _ _ (hφ (k + 1)).1.le le_rfl hk.fst hk.snd,
+        (some_spec $ (hφ k).2 _ _ (hφ (k + 1)).1.le le_rfl hk.fst hk.snd).2⟩
   have hx' : ∀ n : ℕ, (x' n).fst / (x' (n + 1)).fst ∈ u (n + 1) := fun n =>
-    (some_spec <| (hφ n).2 _ _ (hφ (n + 1)).1.le le_rfl (x' n).fst (x' n).snd).1
+    (some_spec $ (hφ n).2 _ _ (hφ (n + 1)).1.le le_rfl (x' n).fst (x' n).snd).1
   /- The sequence `x'` is Cauchy. This is where we exploit the condition on `u`. The key idea
     is to show by decreasing induction that `x' m / x' n ∈ u m` if `m ≤ n`. -/
   have x'_cauchy : CauchySeq fun n => (x' n).fst := by
@@ -943,7 +943,8 @@ instance QuotientGroup.complete_space' (G : Type u) [Group G] [TopologicalSpace 
     since `x` is Cauchy, this implies it converges. -/
   rcases cauchy_seq_tendsto_of_complete x'_cauchy with ⟨x₀, hx₀⟩
   refine'
-    ⟨↑x₀, tendsto_nhds_of_cauchy_seq_of_subseq hx (strict_mono_nat_of_lt_succ fun n => (hφ (n + 1)).1).tendsto_at_top _⟩
+    ⟨↑x₀,
+      tendsto_nhds_of_cauchy_seq_of_subseq hx (strict_mono_nat_of_lt_succ $ fun n => (hφ (n + 1)).1).tendsto_at_top _⟩
   convert ((continuous_coinduced_rng : Continuous (coe : G → G ⧸ N)).Tendsto x₀).comp hx₀
   exact funext fun n => (x' n).snd
 #align quotient_group.complete_space' QuotientGroup.complete_space'

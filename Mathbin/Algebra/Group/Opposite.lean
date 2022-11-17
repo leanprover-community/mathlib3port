@@ -76,32 +76,30 @@ We also generate additive structures on `αᵃᵒᵖ` using `to_additive`
 @[to_additive]
 instance [Semigroup α] : Semigroup αᵐᵒᵖ :=
   { MulOpposite.hasMul α with
-    mul_assoc := fun x y z => unop_injective <| Eq.symm <| mul_assoc (unop z) (unop y) (unop x) }
+    mul_assoc := fun x y z => unop_injective $ Eq.symm $ mul_assoc (unop z) (unop y) (unop x) }
 
 @[to_additive]
 instance [RightCancelSemigroup α] : LeftCancelSemigroup αᵐᵒᵖ :=
-  { MulOpposite.semigroup α with
-    mul_left_cancel := fun x y z H => unop_injective <| mul_right_cancel <| op_injective H }
+  { MulOpposite.semigroup α with mul_left_cancel := fun x y z H => unop_injective $ mul_right_cancel $ op_injective H }
 
 @[to_additive]
 instance [LeftCancelSemigroup α] : RightCancelSemigroup αᵐᵒᵖ :=
-  { MulOpposite.semigroup α with
-    mul_right_cancel := fun x y z H => unop_injective <| mul_left_cancel <| op_injective H }
+  { MulOpposite.semigroup α with mul_right_cancel := fun x y z H => unop_injective $ mul_left_cancel $ op_injective H }
 
 @[to_additive]
 instance [CommSemigroup α] : CommSemigroup αᵐᵒᵖ :=
-  { MulOpposite.semigroup α with mul_comm := fun x y => unop_injective <| mul_comm (unop y) (unop x) }
+  { MulOpposite.semigroup α with mul_comm := fun x y => unop_injective $ mul_comm (unop y) (unop x) }
 
 @[to_additive]
 instance [MulOneClass α] : MulOneClass αᵐᵒᵖ :=
-  { MulOpposite.hasMul α, MulOpposite.hasOne α with one_mul := fun x => unop_injective <| mul_one <| unop x,
-    mul_one := fun x => unop_injective <| one_mul <| unop x }
+  { MulOpposite.hasMul α, MulOpposite.hasOne α with one_mul := fun x => unop_injective $ mul_one $ unop x,
+    mul_one := fun x => unop_injective $ one_mul $ unop x }
 
 @[to_additive]
 instance [Monoid α] : Monoid αᵐᵒᵖ :=
-  { MulOpposite.semigroup α, MulOpposite.mulOneClass α with npow := fun n x => op <| x.unop ^ n,
-    npow_zero' := fun x => unop_injective <| Monoid.npow_zero' x.unop,
-    npow_succ' := fun n x => unop_injective <| pow_succ' x.unop n }
+  { MulOpposite.semigroup α, MulOpposite.mulOneClass α with npow := fun n x => op $ x.unop ^ n,
+    npow_zero' := fun x => unop_injective $ Monoid.npow_zero' x.unop,
+    npow_succ' := fun n x => unop_injective $ pow_succ' x.unop n }
 
 @[to_additive]
 instance [RightCancelMonoid α] : LeftCancelMonoid αᵐᵒᵖ :=
@@ -125,16 +123,16 @@ instance [CancelCommMonoid α] : CancelCommMonoid αᵐᵒᵖ :=
 
 @[to_additive AddOpposite.subNegMonoid]
 instance [DivInvMonoid α] : DivInvMonoid αᵐᵒᵖ :=
-  { MulOpposite.monoid α, MulOpposite.hasInv α with zpow := fun n x => op <| x.unop ^ n,
-    zpow_zero' := fun x => unop_injective <| DivInvMonoid.zpow_zero' x.unop,
-    zpow_succ' := fun n x => unop_injective <| by rw [unop_op, zpow_of_nat, zpow_of_nat, pow_succ', unop_mul, unop_op],
-    zpow_neg' := fun z x => unop_injective <| DivInvMonoid.zpow_neg' z x.unop }
+  { MulOpposite.monoid α, MulOpposite.hasInv α with zpow := fun n x => op $ x.unop ^ n,
+    zpow_zero' := fun x => unop_injective $ DivInvMonoid.zpow_zero' x.unop,
+    zpow_succ' := fun n x => unop_injective $ by rw [unop_op, zpow_of_nat, zpow_of_nat, pow_succ', unop_mul, unop_op],
+    zpow_neg' := fun z x => unop_injective $ DivInvMonoid.zpow_neg' z x.unop }
 
 @[to_additive AddOpposite.subtractionMonoid]
 instance [DivisionMonoid α] : DivisionMonoid αᵐᵒᵖ :=
   { MulOpposite.divInvMonoid α, MulOpposite.hasInvolutiveInv α with
-    mul_inv_rev := fun a b => unop_injective <| mul_inv_rev _ _,
-    inv_eq_of_mul := fun a b h => unop_injective <| inv_eq_of_mul_eq_one_left <| congr_arg unop h }
+    mul_inv_rev := fun a b => unop_injective $ mul_inv_rev _ _,
+    inv_eq_of_mul := fun a b h => unop_injective $ inv_eq_of_mul_eq_one_left $ congr_arg unop h }
 
 @[to_additive AddOpposite.subtractionCommMonoid]
 instance [DivisionCommMonoid α] : DivisionCommMonoid αᵐᵒᵖ :=
@@ -142,7 +140,7 @@ instance [DivisionCommMonoid α] : DivisionCommMonoid αᵐᵒᵖ :=
 
 @[to_additive]
 instance [Group α] : Group αᵐᵒᵖ :=
-  { MulOpposite.divInvMonoid α with mul_left_inv := fun x => unop_injective <| mul_inv_self <| unop x }
+  { MulOpposite.divInvMonoid α with mul_left_inv := fun x => unop_injective $ mul_inv_self $ unop x }
 
 @[to_additive]
 instance [CommGroup α] : CommGroup αᵐᵒᵖ :=
@@ -284,7 +282,7 @@ open MulOpposite
       "Negation on an additive group is an `add_equiv` to the opposite group. When `G`\nis commutative, there is `add_equiv.inv`.",
   simps (config := { fullyApplied := false, simpRhs := true })]
 def MulEquiv.inv' (G : Type _) [DivisionMonoid G] : G ≃* Gᵐᵒᵖ :=
-  { (Equiv.inv G).trans opEquiv with map_mul' := fun x y => unop_injective <| mul_inv_rev x y }
+  { (Equiv.inv G).trans opEquiv with map_mul' := fun x y => unop_injective $ mul_inv_rev x y }
 #align mul_equiv.inv' MulEquiv.inv'
 
 /-- A semigroup homomorphism `f : M →ₙ* N` such that `f x` commutes with `f y` for all `x, y`
@@ -337,10 +335,10 @@ def MonoidHom.fromOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M
       "The additive units of the additive opposites are equivalent to the additive opposites\nof the additive units."]
 def Units.opEquiv {M} [Monoid M] : Mᵐᵒᵖˣ ≃* Mˣᵐᵒᵖ where
   toFun u := op ⟨unop u, unop ↑u⁻¹, op_injective u.4, op_injective u.3⟩
-  invFun := MulOpposite.rec fun u => ⟨op ↑u, op ↑u⁻¹, unop_injective <| u.4, unop_injective u.3⟩
-  map_mul' x y := unop_injective <| Units.ext <| rfl
-  left_inv x := Units.ext <| by simp
-  right_inv x := unop_injective <| Units.ext <| rfl
+  invFun := MulOpposite.rec $ fun u => ⟨op ↑u, op ↑u⁻¹, unop_injective $ u.4, unop_injective u.3⟩
+  map_mul' x y := unop_injective $ Units.ext $ rfl
+  left_inv x := Units.ext $ by simp
+  right_inv x := unop_injective $ Units.ext $ rfl
 #align units.op_equiv Units.opEquiv
 
 @[simp, to_additive]
@@ -501,7 +499,7 @@ to an equality of `α →+ β` such as `finsupp.add_hom_ext'`. -/
 @[ext.1]
 theorem AddMonoidHom.mul_op_ext {α β} [AddZeroClass α] [AddZeroClass β] (f g : αᵐᵒᵖ →+ β)
     (h : f.comp (opAddEquiv : α ≃+ αᵐᵒᵖ).toAddMonoidHom = g.comp (opAddEquiv : α ≃+ αᵐᵒᵖ).toAddMonoidHom) : f = g :=
-  AddMonoidHom.ext <| MulOpposite.rec fun x => (AddMonoidHom.congr_fun h : _) x
+  AddMonoidHom.ext $ MulOpposite.rec $ fun x => (AddMonoidHom.congr_fun h : _) x
 #align add_monoid_hom.mul_op_ext AddMonoidHom.mul_op_ext
 
 end Ext

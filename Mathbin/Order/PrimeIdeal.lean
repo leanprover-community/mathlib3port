@@ -194,7 +194,7 @@ instance (priority := 100) IsPrime.is_maximal [IsPrime I] : IsMaximal I := by
   suffices ass : x ⊓ y ⊔ x ⊓ yᶜ ∈ J
   · rwa [sup_inf_inf_compl] at ass
     
-  exact sup_mem (J.lower inf_le_right hyJ) (hIJ.le <| I.lower inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)
+  exact sup_mem (J.lower inf_le_right hyJ) (hIJ.le $ I.lower inf_le_right $ is_prime.mem_compl_of_not_mem ‹_› hyI)
 #align order.ideal.is_prime.is_maximal Order.Ideal.IsPrime.is_maximal
 
 end BooleanAlgebra

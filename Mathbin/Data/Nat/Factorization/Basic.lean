@@ -236,10 +236,15 @@ theorem prod_factorization_eq_prod_factors {n : ℕ} {β : Type _} [CommMonoid �
 the power of `p` in `S.prod g` equals the sum over `x ∈ S` of the powers of `p` in `g x`.
 Generalises `factorization_mul`, which is the special case where `S.card = 2` and `g = id`. -/
 theorem factorization_prod {α : Type _} {S : Finset α} {g : α → ℕ} (hS : ∀ x ∈ S, g x ≠ 0) :
-    (S.Prod g).factorization = S.Sum fun x => (g x).factorization := by
-  classical ext p
-    · simp
-      
+    (S.Prod g).factorization = S.Sum fun x => (g x).factorization := by classical
+  ext p
+  apply Finset.induction_on' S
+  · simp
+    
+  · intro x T hxS hTS hxT IH
+    have hT : T.prod g ≠ 0 := prod_ne_zero_iff.mpr fun x hx => hS x (hTS hx)
+    simp [prod_insert hxT, sum_insert hxT, ← IH, factorization_mul (hS x hxS) hT]
+    
 #align nat.factorization_prod Nat.factorization_prod
 
 /-- For any `p`, the power of `p` in `n^k` is `k` times the power in `n` -/
@@ -307,8 +312,8 @@ theorem eq_factorization_iff {n : ℕ} {f : ℕ →₀ ℕ} (hn : n ≠ 0) (hf :
 def factorizationEquiv : ℕ+ ≃ { f : ℕ →₀ ℕ | ∀ p ∈ f.support, Prime p } where
   toFun := fun ⟨n, hn⟩ => ⟨n.factorization, fun _ => prime_of_mem_factorization⟩
   invFun := fun ⟨f, hf⟩ => ⟨f.Prod pow, prod_pow_pos_of_zero_not_mem_support fun H => not_prime_zero (hf 0 H)⟩
-  left_inv := fun ⟨x, hx⟩ => Subtype.ext <| factorization_prod_pow_eq_self hx.Ne.symm
-  right_inv := fun ⟨f, hf⟩ => Subtype.ext <| prod_pow_factorization_eq_self hf
+  left_inv := fun ⟨x, hx⟩ => Subtype.ext $ factorization_prod_pow_eq_self hx.Ne.symm
+  right_inv := fun ⟨f, hf⟩ => Subtype.ext $ prod_pow_factorization_eq_self hf
 #align nat.factorization_equiv Nat.factorizationEquiv
 
 theorem factorization_equiv_apply (n : ℕ+) : (factorizationEquiv n).1 = n.1.factorization := by
@@ -462,7 +467,7 @@ theorem factorization_le_factorization_mul_left {a b : ℕ} (hb : b ≠ 0) : a.f
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp
     
-  rw [factorization_le_iff_dvd ha <| mul_ne_zero ha hb]
+  rw [factorization_le_iff_dvd ha $ mul_ne_zero ha hb]
   exact Dvd.intro b rfl
 #align nat.factorization_le_factorization_mul_left Nat.factorization_le_factorization_mul_left
 
@@ -502,7 +507,7 @@ theorem factorization_div {d n : ℕ} (h : d ∣ n) : (n / d).factorization = n.
     
   apply add_left_injective d.factorization
   simp only
-  rw [tsub_add_cancel_of_le <| (Nat.factorization_le_iff_dvd hd hn).mpr h, ←
+  rw [tsub_add_cancel_of_le $ (Nat.factorization_le_iff_dvd hd hn).mpr h, ←
     Nat.factorization_mul (Nat.div_pos (Nat.le_of_dvd hn.bot_lt h) hd.bot_lt).ne' hd, Nat.div_mul_cancel h]
 #align nat.factorization_div Nat.factorization_div
 
@@ -517,7 +522,7 @@ theorem not_dvd_ord_compl {n p : ℕ} (hp : Prime p) (hn : n ≠ 0) : ¬p ∣ or
 #align nat.not_dvd_ord_compl Nat.not_dvd_ord_compl
 
 theorem coprime_ord_compl {n p : ℕ} (hp : Prime p) (hn : n ≠ 0) : Coprime p (ord_compl[p] n) :=
-  (or_iff_left (not_dvd_ord_compl hp hn)).mp <| coprime_or_dvd_of_prime hp _
+  (or_iff_left (not_dvd_ord_compl hp hn)).mp $ coprime_or_dvd_of_prime hp _
 #align nat.coprime_ord_compl Nat.coprime_ord_compl
 
 theorem factorization_ord_compl (n p : ℕ) : (ord_compl[p] n).factorization = n.factorization.erase p := by
@@ -556,10 +561,11 @@ theorem dvd_ord_compl_of_dvd_not_dvd {p d n : ℕ} (hdn : d ∣ n) (hpd : ¬p �
     
 #align nat.dvd_ord_compl_of_dvd_not_dvd Nat.dvd_ord_compl_of_dvd_not_dvd
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (e n') -/
 /-- If `n` is a nonzero natural number and `p ≠ 1`, then there are natural numbers `e`
 and `n'` such that `n'` is not divisible by `p` and `n = p^e * n'`. -/
 theorem exists_eq_pow_mul_and_not_dvd {n : ℕ} (hn : n ≠ 0) (p : ℕ) (hp : p ≠ 1) :
-    ∃ e n' : ℕ, ¬p ∣ n' ∧ n = p ^ e * n' :=
+    ∃ (e : ℕ) (n' : ℕ), ¬p ∣ n' ∧ n = p ^ e * n' :=
   let ⟨a', h₁, h₂⟩ :=
     multiplicity.exists_eq_pow_mul_and_not_dvd (multiplicity.finite_nat_iff.mpr ⟨hp, Nat.pos_of_ne_zero hn⟩)
   ⟨_, a', h₂, h₁⟩
@@ -802,7 +808,7 @@ we can define `P` for all natural numbers. -/
 @[elab_as_elim]
 def recOnPrimePow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1)
     (h : ∀ a p n : ℕ, p.Prime → ¬p ∣ a → 0 < n → P a → P (p ^ n * a)) : ∀ a : ℕ, P a := fun a =>
-  (Nat.strongRecOn a) fun n =>
+  Nat.strongRecOn a $ fun n =>
     match n with
     | 0 => fun _ => h0
     | 1 => fun _ => h1
@@ -838,7 +844,7 @@ def recOnPrimePow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1)
 @[elab_as_elim]
 def recOnPosPrimePosCoprime {P : ℕ → Sort _} (hp : ∀ p n : ℕ, Prime p → 0 < n → P (p ^ n)) (h0 : P 0) (h1 : P 1)
     (h : ∀ a b, 1 < a → 1 < b → Coprime a b → P a → P b → P (a * b)) : ∀ a, P a :=
-  recOnPrimePow h0 h1 <| by
+  recOnPrimePow h0 h1 $ by
     intro a p n hp' hpa hn hPa
     by_cases ha1:a = 1
     · rw [ha1, mul_one]
@@ -868,7 +874,7 @@ def recOnMul {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1) (hp : ∀ p, Prime p →
     match n with
     | 0 => h1
     | n + 1 => h _ _ (hp p hp') (_match _)
-  (recOnPrimeCoprime h0 hp) fun a b _ _ _ => h a b
+  recOnPrimeCoprime h0 hp $ fun a b _ _ _ => h a b
 #align nat.rec_on_mul Nat.recOnMul
 
 /-- For any multiplicative function `f` with `f 1 = 1` and any `n ≠ 0`,

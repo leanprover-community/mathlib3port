@@ -15,8 +15,8 @@ variable {α : Type _}
 
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedSemiring.to_char_zero [StrictOrderedSemiring α] : CharZero α :=
-  ⟨StrictMono.injective <|
-      strict_mono_nat_of_lt_succ fun n => by
+  ⟨StrictMono.injective $
+      strict_mono_nat_of_lt_succ $ fun n => by
         rw [Nat.cast_succ]
         apply lt_add_one⟩
 #align strict_ordered_semiring.to_char_zero StrictOrderedSemiring.to_char_zero

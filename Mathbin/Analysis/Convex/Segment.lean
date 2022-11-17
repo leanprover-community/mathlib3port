@@ -42,19 +42,21 @@ section HasSmul
 
 variable (𝕜) [HasSmul 𝕜 E] {s : Set E} {x y : E}
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- Segments in a vector space. -/
 def segment (x y : E) : Set E :=
-  { z : E | ∃ (a b : 𝕜)(ha : 0 ≤ a)(hb : 0 ≤ b)(hab : a + b = 1), a • x + b • y = z }
+  { z : E | ∃ (a : 𝕜) (b : 𝕜) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1), a • x + b • y = z }
 #align segment segment
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- Open segment in a vector space. Note that `open_segment 𝕜 x x = {x}` instead of being `∅` when
 the base semiring has some element between `0` and `1`. -/
 def openSegment (x y : E) : Set E :=
-  { z : E | ∃ (a b : 𝕜)(ha : 0 < a)(hb : 0 < b)(hab : a + b = 1), a • x + b • y = z }
+  { z : E | ∃ (a : 𝕜) (b : 𝕜) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1), a • x + b • y = z }
 #align open_segment openSegment
 
 -- mathport name: segment
-localized [Convex] notation "[" x " -[" 𝕜 "] " y "]" => segment 𝕜 x y
+scoped[Convex] notation "[" x " -[" 𝕜 "] " y "]" => segment 𝕜 x y
 
 theorem segment_eq_image₂ (x y : E) :
     [x -[𝕜] y] = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ p.1 + p.2 = 1 } := by
@@ -67,13 +69,13 @@ theorem open_segment_eq_image₂ (x y : E) :
 #align open_segment_eq_image₂ open_segment_eq_image₂
 
 theorem segment_symm (x y : E) : [x -[𝕜] y] = [y -[𝕜] x] :=
-  Set.ext fun z =>
+  Set.ext $ fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, H⟩ => ⟨b, a, hb, ha, (add_comm _ _).trans hab, (add_comm _ _).trans H⟩,
       fun ⟨a, b, ha, hb, hab, H⟩ => ⟨b, a, hb, ha, (add_comm _ _).trans hab, (add_comm _ _).trans H⟩⟩
 #align segment_symm segment_symm
 
 theorem open_segment_symm (x y : E) : openSegment 𝕜 x y = openSegment 𝕜 y x :=
-  Set.ext fun z =>
+  Set.ext $ fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, H⟩ => ⟨b, a, hb, ha, (add_comm _ _).trans hab, (add_comm _ _).trans H⟩,
       fun ⟨a, b, ha, hb, hab, H⟩ => ⟨b, a, hb, ha, (add_comm _ _).trans hab, (add_comm _ _).trans H⟩⟩
 #align open_segment_symm open_segment_symm
@@ -114,7 +116,7 @@ variable (𝕜) [Module 𝕜 E] {s : Set E} {x y z : E}
 
 @[simp]
 theorem segment_same (x : E) : [x -[𝕜] x] = {x} :=
-  Set.ext fun z =>
+  Set.ext $ fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => by
       simpa only [(add_smul _ _ _).symm, mem_singleton_iff, hab, one_smul, eq_comm] using hz, fun h =>
       mem_singleton_iff.1 h ▸ left_mem_segment 𝕜 z z⟩
@@ -124,7 +126,7 @@ theorem insert_endpoints_open_segment (x y : E) : insert x (insert y (openSegmen
   simp only [subset_antisymm_iff, insert_subset, left_mem_segment, right_mem_segment, open_segment_subset_segment,
     true_and_iff]
   rintro z ⟨a, b, ha, hb, hab, rfl⟩
-  refine' hb.eq_or_gt.imp _ fun hb' => (ha.eq_or_gt.imp _) fun ha' => _
+  refine' hb.eq_or_gt.imp _ fun hb' => ha.eq_or_gt.imp _ $ fun ha' => _
   · rintro rfl
     rw [← add_zero a, hab, one_smul, zero_smul, add_zero]
     
@@ -162,7 +164,7 @@ variable [Nontrivial 𝕜] [DenselyOrdered 𝕜]
 
 @[simp]
 theorem open_segment_same (x : E) : openSegment 𝕜 x x = {x} :=
-  Set.ext fun z =>
+  Set.ext $ fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => by simpa only [← add_smul, mem_singleton_iff, hab, one_smul, eq_comm] using hz,
       fun h : z = x => by
       obtain ⟨a, ha₀, ha₁⟩ := DenselyOrdered.dense (0 : 𝕜) 1 zero_lt_one
@@ -173,13 +175,13 @@ theorem open_segment_same (x : E) : openSegment 𝕜 x x = {x} :=
 end DenselyOrdered
 
 theorem segment_eq_image (x y : E) : [x -[𝕜] y] = (fun θ : 𝕜 => (1 - θ) • x + θ • y) '' icc (0 : 𝕜) 1 :=
-  Set.ext fun z =>
+  Set.ext $ fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => ⟨b, ⟨hb, hab ▸ le_add_of_nonneg_left ha⟩, hab ▸ hz ▸ by simp only [add_sub_cancel]⟩,
       fun ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩ => ⟨1 - θ, θ, sub_nonneg.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩
 #align segment_eq_image segment_eq_image
 
 theorem open_segment_eq_image (x y : E) : openSegment 𝕜 x y = (fun θ : 𝕜 => (1 - θ) • x + θ • y) '' ioo (0 : 𝕜) 1 :=
-  Set.ext fun z =>
+  Set.ext $ fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => ⟨b, ⟨hb, hab ▸ lt_add_of_pos_left _ ha⟩, hab ▸ hz ▸ by simp only [add_sub_cancel]⟩,
       fun ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩ => ⟨1 - θ, θ, sub_pos.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩
 #align open_segment_eq_image open_segment_eq_image
@@ -234,21 +236,21 @@ theorem mem_open_segment_translate (a : E) {x b c : E} :
 #align mem_open_segment_translate mem_open_segment_translate
 
 theorem segment_translate_preimage (a b c : E) : (fun x => a + x) ⁻¹' [a + b -[𝕜] a + c] = [b -[𝕜] c] :=
-  Set.ext fun x => mem_segment_translate 𝕜 a
+  Set.ext $ fun x => mem_segment_translate 𝕜 a
 #align segment_translate_preimage segment_translate_preimage
 
 theorem open_segment_translate_preimage (a b c : E) :
     (fun x => a + x) ⁻¹' openSegment 𝕜 (a + b) (a + c) = openSegment 𝕜 b c :=
-  Set.ext fun x => mem_open_segment_translate 𝕜 a
+  Set.ext $ fun x => mem_open_segment_translate 𝕜 a
 #align open_segment_translate_preimage open_segment_translate_preimage
 
 theorem segment_translate_image (a b c : E) : (fun x => a + x) '' [b -[𝕜] c] = [a + b -[𝕜] a + c] :=
-  segment_translate_preimage 𝕜 a b c ▸ image_preimage_eq _ <| add_left_surjective a
+  segment_translate_preimage 𝕜 a b c ▸ image_preimage_eq _ $ add_left_surjective a
 #align segment_translate_image segment_translate_image
 
 theorem open_segment_translate_image (a b c : E) :
     (fun x => a + x) '' openSegment 𝕜 b c = openSegment 𝕜 (a + b) (a + c) :=
-  open_segment_translate_preimage 𝕜 a b c ▸ image_preimage_eq _ <| add_left_surjective a
+  open_segment_translate_preimage 𝕜 a b c ▸ image_preimage_eq _ $ add_left_surjective a
 #align open_segment_translate_image open_segment_translate_image
 
 end OrderedRing
@@ -304,8 +306,9 @@ section LinearOrderedSemifield
 
 variable [LinearOrderedSemifield 𝕜] [AddCommGroup E] [Module 𝕜 E] {x y z : E}
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem mem_segment_iff_div :
-    x ∈ [y -[𝕜] z] ↔ ∃ a b : 𝕜, 0 ≤ a ∧ 0 ≤ b ∧ 0 < a + b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
+    x ∈ [y -[𝕜] z] ↔ ∃ (a : 𝕜) (b : 𝕜), 0 ≤ a ∧ 0 ≤ b ∧ 0 < a + b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
   constructor
   · rintro ⟨a, b, ha, hb, hab, rfl⟩
     use a, b, ha, hb
@@ -317,8 +320,9 @@ theorem mem_segment_iff_div :
     
 #align mem_segment_iff_div mem_segment_iff_div
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem mem_open_segment_iff_div :
-    x ∈ openSegment 𝕜 y z ↔ ∃ a b : 𝕜, 0 < a ∧ 0 < b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
+    x ∈ openSegment 𝕜 y z ↔ ∃ (a : 𝕜) (b : 𝕜), 0 < a ∧ 0 < b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
   constructor
   · rintro ⟨a, b, ha, hb, hab, rfl⟩
     use a, b, ha, hb
@@ -370,7 +374,7 @@ theorem open_segment_subset_union (x y : E) {z : E} (hz : z ∈ range (lineMap x
     right
     have hc : 0 < 1 - c := sub_pos.2 (hca.trans h₁)
     simp only [← line_map_apply_one_sub y]
-    refine' ⟨(a - c) / (1 - c), ⟨div_pos (sub_pos.2 hca) hc, (div_lt_one hc).2 <| sub_lt_sub_right h₁ _⟩, _⟩
+    refine' ⟨(a - c) / (1 - c), ⟨div_pos (sub_pos.2 hca) hc, (div_lt_one hc).2 $ sub_lt_sub_right h₁ _⟩, _⟩
     simp only [← homothety_eq_line_map, ← homothety_mul_apply, sub_mul, one_mul, div_mul_cancel _ hc.ne',
       sub_sub_sub_cancel_right]
     
@@ -479,7 +483,7 @@ theorem segment_eq_Icc (h : x ≤ y) : [x -[𝕜] y] = icc x y :=
 #align segment_eq_Icc segment_eq_Icc
 
 theorem Ioo_subset_open_segment : ioo x y ⊆ openSegment 𝕜 x y := fun z hz =>
-  mem_open_segment_of_ne_left_right hz.1.Ne hz.2.ne' <| Icc_subset_segment <| Ioo_subset_Icc_self hz
+  mem_open_segment_of_ne_left_right hz.1.Ne hz.2.ne' $ Icc_subset_segment $ Ioo_subset_Icc_self hz
 #align Ioo_subset_open_segment Ioo_subset_open_segment
 
 @[simp]
@@ -507,24 +511,27 @@ theorem segment_eq_interval (x y : 𝕜) : [x -[𝕜] y] = interval x y :=
   segment_eq_Icc' _ _
 #align segment_eq_interval segment_eq_interval
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- A point is in an `Icc` iff it can be expressed as a convex combination of the endpoints. -/
-theorem Convex.mem_Icc (h : x ≤ y) : z ∈ icc x y ↔ ∃ a b, 0 ≤ a ∧ 0 ≤ b ∧ a + b = 1 ∧ a * x + b * y = z := by
+theorem Convex.mem_Icc (h : x ≤ y) : z ∈ icc x y ↔ ∃ (a) (b), 0 ≤ a ∧ 0 ≤ b ∧ a + b = 1 ∧ a * x + b * y = z := by
   rw [← segment_eq_Icc h]
   simp_rw [← exists_prop]
   rfl
 #align convex.mem_Icc Convex.mem_Icc
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- A point is in an `Ioo` iff it can be expressed as a strict convex combination of the endpoints.
 -/
-theorem Convex.mem_Ioo (h : x < y) : z ∈ ioo x y ↔ ∃ a b, 0 < a ∧ 0 < b ∧ a + b = 1 ∧ a * x + b * y = z := by
+theorem Convex.mem_Ioo (h : x < y) : z ∈ ioo x y ↔ ∃ (a) (b), 0 < a ∧ 0 < b ∧ a + b = 1 ∧ a * x + b * y = z := by
   rw [← open_segment_eq_Ioo h]
   simp_rw [← exists_prop]
   rfl
 #align convex.mem_Ioo Convex.mem_Ioo
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- A point is in an `Ioc` iff it can be expressed as a semistrict convex combination of the
 endpoints. -/
-theorem Convex.mem_Ioc (h : x < y) : z ∈ ioc x y ↔ ∃ a b, 0 ≤ a ∧ 0 < b ∧ a + b = 1 ∧ a * x + b * y = z := by
+theorem Convex.mem_Ioc (h : x < y) : z ∈ ioc x y ↔ ∃ (a) (b), 0 ≤ a ∧ 0 < b ∧ a + b = 1 ∧ a * x + b * y = z := by
   refine' ⟨fun hz => _, _⟩
   · obtain ⟨a, b, ha, hb, hab, rfl⟩ := (Convex.mem_Icc h.le).1 (Ioc_subset_Icc_self hz)
     obtain rfl | hb' := hb.eq_or_lt
@@ -545,9 +552,10 @@ theorem Convex.mem_Ioc (h : x < y) : z ∈ ioc x y ↔ ∃ a b, 0 ≤ a ∧ 0 < 
     
 #align convex.mem_Ioc Convex.mem_Ioc
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- A point is in an `Ico` iff it can be expressed as a semistrict convex combination of the
 endpoints. -/
-theorem Convex.mem_Ico (h : x < y) : z ∈ ico x y ↔ ∃ a b, 0 < a ∧ 0 ≤ b ∧ a + b = 1 ∧ a * x + b * y = z := by
+theorem Convex.mem_Ico (h : x < y) : z ∈ ico x y ↔ ∃ (a) (b), 0 < a ∧ 0 ≤ b ∧ a + b = 1 ∧ a * x + b * y = z := by
   refine' ⟨fun hz => _, _⟩
   · obtain ⟨a, b, ha, hb, hab, rfl⟩ := (Convex.mem_Icc h.le).1 (Ico_subset_Icc_self hz)
     obtain rfl | ha' := ha.eq_or_lt

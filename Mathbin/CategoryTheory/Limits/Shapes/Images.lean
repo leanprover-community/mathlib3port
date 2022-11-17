@@ -182,7 +182,7 @@ namespace IsImage
 
 @[simp, reassoc]
 theorem fac_lift {F : MonoFactorisation f} (hF : IsImage F) (F' : MonoFactorisation f) : F.e ≫ hF.lift F' = F'.e :=
-  (cancel_mono F'.m).1 <| by simp
+  (cancel_mono F'.m).1 $ by simp
 #align category_theory.limits.is_image.fac_lift CategoryTheory.Limits.IsImage.fac_lift
 
 variable (f)
@@ -618,7 +618,7 @@ attribute [simp, reassoc] image_map.map_ι
 @[simp, reassoc]
 theorem ImageMap.factor_map {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g) (m : ImageMap sq) :
     factorThruImage f.Hom ≫ m.map = sq.left ≫ factorThruImage g.Hom :=
-  (cancel_mono (image.ι g.Hom)).1 <| by simp
+  (cancel_mono (image.ι g.Hom)).1 $ by simp
 #align category_theory.limits.image_map.factor_map CategoryTheory.Limits.ImageMap.factor_map
 
 /-- To give an image map for a commutative square with `f` at the top and `g` at the bottom, it
@@ -644,13 +644,13 @@ theorem HasImageMap.mk {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] {sq : f
 theorem HasImageMap.transport {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g)
     (F : MonoFactorisation f.Hom) {F' : MonoFactorisation g.Hom} (hF' : IsImage F') (map : F.i ⟶ F'.i)
     (map_ι : map ≫ F'.m = F.m ≫ sq.right) : HasImageMap sq :=
-  has_image_map.mk <| ImageMap.transport sq F hF' map_ι
+  has_image_map.mk $ ImageMap.transport sq F hF' map_ι
 #align category_theory.limits.has_image_map.transport CategoryTheory.Limits.HasImageMap.transport
 
 /-- Obtain an `image_map` from a `has_image_map` instance. -/
 def HasImageMap.imageMap {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g) [HasImageMap sq] :
     ImageMap sq :=
-  Classical.choice <| @HasImageMap.has_image_map _ _ _ _ _ _ sq _
+  Classical.choice $ @HasImageMap.has_image_map _ _ _ _ _ _ sq _
 #align category_theory.limits.has_image_map.image_map CategoryTheory.Limits.HasImageMap.imageMap
 
 -- see Note [lower instance priority]
@@ -677,7 +677,7 @@ section
 attribute [local ext.1] image_map
 
 instance : Subsingleton (ImageMap sq) :=
-  Subsingleton.intro fun a b => ImageMap.ext a b <| (cancel_mono (image.ι g.Hom)).1 <| by simp only [image_map.map_ι]
+  Subsingleton.intro $ fun a b => ImageMap.ext a b $ (cancel_mono (image.ι g.Hom)).1 $ by simp only [image_map.map_ι]
 
 end
 
@@ -799,7 +799,7 @@ variable {C}
 
 theorem HasStrongEpiMonoFactorisations.mk (d : ∀ {X Y : C} (f : X ⟶ Y), StrongEpiMonoFactorisation f) :
     HasStrongEpiMonoFactorisations C :=
-  ⟨fun X Y f => Nonempty.intro <| d f⟩
+  ⟨fun X Y f => Nonempty.intro $ d f⟩
 #align
   category_theory.limits.has_strong_epi_mono_factorisations.mk CategoryTheory.Limits.HasStrongEpiMonoFactorisations.mk
 
@@ -839,7 +839,7 @@ theorem strong_epi_of_strong_epi_mono_factorisation {X Y : C} {f : X ⟶ Y} (F :
 
 theorem strong_epi_factor_thru_image_of_strong_epi_mono_factorisation {X Y : C} {f : X ⟶ Y} [HasImage f]
     (F : StrongEpiMonoFactorisation f) : StrongEpi (factorThruImage f) :=
-  strong_epi_of_strong_epi_mono_factorisation F <| Image.isImage f
+  strong_epi_of_strong_epi_mono_factorisation F $ Image.isImage f
 #align
   category_theory.limits.strong_epi_factor_thru_image_of_strong_epi_mono_factorisation CategoryTheory.Limits.strong_epi_factor_thru_image_of_strong_epi_mono_factorisation
 
@@ -849,8 +849,8 @@ instance (priority := 100) has_strong_epi_images_of_has_strong_epi_mono_factoris
     [HasStrongEpiMonoFactorisations C] :
     HasStrongEpiImages
       C where strong_factor_thru_image X Y f :=
-    strong_epi_factor_thru_image_of_strong_epi_mono_factorisation <|
-      Classical.choice <| HasStrongEpiMonoFactorisations.has_fac f
+    strong_epi_factor_thru_image_of_strong_epi_mono_factorisation $
+      Classical.choice $ HasStrongEpiMonoFactorisations.has_fac f
 #align
   category_theory.limits.has_strong_epi_images_of_has_strong_epi_mono_factorisations CategoryTheory.Limits.has_strong_epi_images_of_has_strong_epi_mono_factorisations
 
@@ -903,7 +903,7 @@ factorisation.
 -/
 def image.isoStrongEpiMono {I' : C} (e : X ⟶ I') (m : I' ⟶ Y) (comm : e ≫ m = f) [StrongEpi e] [Mono m] :
     I' ≅ image f :=
-  IsImage.isoExt { i := I', m, e }.toMonoIsImage <| Image.isImage f
+  IsImage.isoExt { i := I', m, e }.toMonoIsImage $ Image.isImage f
 #align category_theory.limits.image.iso_strong_epi_mono CategoryTheory.Limits.image.isoStrongEpiMono
 
 @[simp]

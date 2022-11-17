@@ -245,9 +245,9 @@ theorem cauchy_map_of_uniform_cauchy_seq_on_fderiv {s : Set E} (hs : IsOpen s) (
   suffices H : closure t ∩ s ⊆ t
   exact h's.subset_of_closure_inter_subset open_t st_nonempty H
   rintro x ⟨xt, xs⟩
-  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), Metric.ball x ε ⊆ s
+  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ) (H : ε > 0), Metric.ball x ε ⊆ s
   exact Metric.is_open_iff.1 hs x xs
-  obtain ⟨y, yt, hxy⟩ : ∃ (y : E)(yt : y ∈ t), dist x y < ε / 2
+  obtain ⟨y, yt, hxy⟩ : ∃ (y : E) (yt : y ∈ t), dist x y < ε / 2
   exact Metric.mem_closure_iff.1 xt _ (half_pos εpos)
   have B : Metric.ball y (ε / 2) ⊆ Metric.ball x ε := by
     apply Metric.ball_subset_ball'

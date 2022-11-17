@@ -53,7 +53,7 @@ variable [SeminormedAddCommGroup E] [StarAddMonoid E] [NormedStarGroup E]
 
 @[simp]
 theorem nnnorm_star (x : E) : ∥star x∥₊ = ∥x∥₊ :=
-  Subtype.ext <| norm_star _
+  Subtype.ext $ norm_star _
 #align nnnorm_star nnnorm_star
 
 /-- The `star` map in a normed star group is a normed group homomorphism. -/
@@ -328,11 +328,11 @@ theorem op_nnnorm_mul : ∥mul 𝕜 E a∥₊ = ∥a∥₊ := by
   · exact (metric.nonempty_closed_ball.mpr zero_le_one).image _
     
   · rintro - ⟨x, hx, rfl⟩
-    exact ((mul 𝕜 E a).unit_le_op_norm x <| mem_closed_ball_zero_iff.mp hx).trans (op_norm_mul_apply_le 𝕜 E a)
+    exact ((mul 𝕜 E a).unit_le_op_norm x $ mem_closed_ball_zero_iff.mp hx).trans (op_norm_mul_apply_le 𝕜 E a)
     
   · have ha : 0 < ∥a∥₊ := zero_le'.trans_lt hr
     rw [← inv_inv ∥a∥₊, Nnreal.lt_inv_iff_mul_lt (inv_ne_zero ha.ne')] at hr
-    obtain ⟨k, hk₁, hk₂⟩ := NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr <| Nnreal.inv_pos.2 ha)
+    obtain ⟨k, hk₁, hk₂⟩ := NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr $ Nnreal.inv_pos.2 ha)
     refine' ⟨_, ⟨k • star a, _, rfl⟩, _⟩
     · simpa only [mem_closed_ball_zero_iff, norm_smul, one_mul, norm_star] using
         (Nnreal.le_inv_iff_mul_le ha.ne').1 (one_mul ∥a∥₊⁻¹ ▸ hk₂.le : ∥k∥₊ ≤ ∥a∥₊⁻¹)
@@ -363,13 +363,13 @@ variable (E)
 /-- In a C⋆-algebra `E`, either unital or non-unital, the left regular representation is an
 isometry. -/
 theorem mulIsometry : Isometry (mul 𝕜 E) :=
-  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe <| op_nnnorm_mul 𝕜 a
+  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe $ op_nnnorm_mul 𝕜 a
 #align mul_isometry mulIsometry
 
 /-- In a C⋆-algebra `E`, either unital or non-unital, the right regular anti-representation is an
 isometry. -/
 theorem mulFlipIsometry : Isometry (mul 𝕜 E).flip :=
-  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe <| op_nnnorm_mul_flip 𝕜 a
+  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe $ op_nnnorm_mul_flip 𝕜 a
 #align mul_flip_isometry mulFlipIsometry
 
 end Mul

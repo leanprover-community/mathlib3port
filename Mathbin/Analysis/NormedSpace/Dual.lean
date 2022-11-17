@@ -117,15 +117,18 @@ variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedAddCommGroup E] [Norm
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
 theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ∥f x∥ ≤ M * ∥f∥) : ∥x∥ ≤ M := by
-  classical by_cases h:x = 0
-    · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ∥f∥ = 1 ∧ f x = ∥x∥ := exists_dual_vector 𝕜 x h
-      calc
-        ∥x∥ = ∥(∥x∥ : 𝕜)∥ := is_R_or_C.norm_coe_norm.symm
-        _ = ∥f x∥ := by rw [hfx]
-        _ ≤ M * ∥f∥ := hM f
-        _ = M := by rw [hf₁, mul_one]
-        
+  classical
+  by_cases h:x = 0
+  · simp only [h, hMp, norm_zero]
+    
+  · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ∥f∥ = 1 ∧ f x = ∥x∥ := exists_dual_vector 𝕜 x h
+    calc
+      ∥x∥ = ∥(∥x∥ : 𝕜)∥ := is_R_or_C.norm_coe_norm.symm
+      _ = ∥f x∥ := by rw [hfx]
+      _ ≤ M * ∥f∥ := hM f
+      _ = M := by rw [hf₁, mul_one]
       
+    
 #align normed_space.norm_le_dual_bound NormedSpace.norm_le_dual_bound
 
 theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : Dual 𝕜 E, f x = (0 : 𝕜)) : x = 0 :=
@@ -192,9 +195,9 @@ theorem isClosedPolar (s : Set E) : IsClosed (polar 𝕜 s) := by
 
 @[simp]
 theorem polar_closure (s : Set E) : polar 𝕜 (closure s) = polar 𝕜 s :=
-  ((dualPairing 𝕜 E).flip.polar_antitone subset_closure).antisymm <|
-    (dualPairing 𝕜 E).flip.polar_gc.l_le <|
-      closure_minimal ((dualPairing 𝕜 E).flip.polar_gc.le_u_l s) <| by
+  ((dualPairing 𝕜 E).flip.polar_antitone subset_closure).antisymm $
+    (dualPairing 𝕜 E).flip.polar_gc.l_le $
+      closure_minimal ((dualPairing 𝕜 E).flip.polar_gc.le_u_l s) $ by
         simpa [LinearMap.flip_flip] using (is_closed_polar _ _).Preimage (inclusion_in_double_dual 𝕜 E).Continuous
 #align normed_space.polar_closure NormedSpace.polar_closure
 
@@ -258,10 +261,10 @@ theorem polar_closed_ball {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E]
 of all elements of the polar `polar 𝕜 s` are bounded by a constant. -/
 theorem boundedPolarOfMemNhdsZero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : Bounded (polar 𝕜 s) := by
   obtain ⟨a, ha⟩ : ∃ a : 𝕜, 1 < ∥a∥ := NormedField.exists_one_lt_norm 𝕜
-  obtain ⟨r, r_pos, r_ball⟩ : ∃ (r : ℝ)(hr : 0 < r), ball 0 r ⊆ s := Metric.mem_nhds_iff.1 s_nhd
+  obtain ⟨r, r_pos, r_ball⟩ : ∃ (r : ℝ) (hr : 0 < r), ball 0 r ⊆ s := Metric.mem_nhds_iff.1 s_nhd
   exact
     bounded_closed_ball.mono
-      (((dual_pairing 𝕜 E).flip.polar_antitone r_ball).trans <| polar_ball_subset_closed_ball_div ha r_pos)
+      (((dual_pairing 𝕜 E).flip.polar_antitone r_ball).trans $ polar_ball_subset_closed_ball_div ha r_pos)
 #align normed_space.bounded_polar_of_mem_nhds_zero NormedSpace.boundedPolarOfMemNhdsZero
 
 end PolarSets

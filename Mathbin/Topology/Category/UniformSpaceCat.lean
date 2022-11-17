@@ -226,7 +226,7 @@ open CategoryTheory.Limits
 
 -- TODO Once someone defines `has_limits UniformSpace`, turn this into an instance.
 example [HasLimits.{u} UniformSpaceCat.{u}] : HasLimits.{u} CpltSepUniformSpaceCat.{u} :=
-  has_limits_of_reflective <| forget₂ CpltSepUniformSpaceCat UniformSpaceCat.{u}
+  has_limits_of_reflective $ forget₂ CpltSepUniformSpaceCat UniformSpaceCat.{u}
 
 end UniformSpaceCat
 

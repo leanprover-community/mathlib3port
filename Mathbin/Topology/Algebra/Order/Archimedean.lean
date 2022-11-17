@@ -19,6 +19,6 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [Orde
 
 /-- Rational numbers are dense in a linear ordered archimedean field. -/
 theorem Rat.dense_range_cast : DenseRange (coe : ℚ → 𝕜) :=
-  dense_of_exists_between fun a b h => Set.exists_range_iff.2 <| exists_rat_btwn h
+  dense_of_exists_between $ fun a b h => Set.exists_range_iff.2 $ exists_rat_btwn h
 #align rat.dense_range_cast Rat.dense_range_cast
 

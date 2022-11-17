@@ -159,11 +159,11 @@ theorem to_maximal_ideal [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {S :
   is_maximal_iff.2
     ⟨(ne_top_iff_one S).1 hpi.1, by
       intro T x hST hxS hxT
-      cases' (mem_iff_generator_dvd _).1 (hST <| generator_mem S) with z hz
+      cases' (mem_iff_generator_dvd _).1 (hST $ generator_mem S) with z hz
       cases hpi.mem_or_mem (show generator T * z ∈ S from hz ▸ generator_mem S)
       · have hTS : T ≤ S
         rwa [← T.span_singleton_generator, Ideal.span_le, singleton_subset_iff]
-        exact (hxS <| hTS hxT).elim
+        exact (hxS $ hTS hxT).elim
         
       cases' (mem_iff_generator_dvd _).1 h with y hy
       have : generator S ≠ 0 := mt (eq_bot_iff_generator_eq_zero _).2 hS
@@ -194,11 +194,11 @@ instance (priority := 100) EuclideanDomain.toPrincipalIdealDomain :
           WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ∈ S ∧ WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ≠ 0 :=
           WellFounded.min_mem wf { x : R | x ∈ S ∧ x ≠ 0 } h
         ⟨WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h,
-          Submodule.ext fun x =>
+          Submodule.ext $ fun x =>
             ⟨fun hx =>
               div_add_mod x (WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h) ▸
-                (Ideal.mem_span_singleton.2 <|
-                  dvd_add (dvd_mul_right _ _) <| by
+                (Ideal.mem_span_singleton.2 $
+                  dvd_add (dvd_mul_right _ _) $ by
                     have : x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ∉ { x : R | x ∈ S ∧ x ≠ 0 } := fun h₁ =>
                       WellFounded.not_lt_min wf _ h h₁ (mod_lt x hmin.2)
                     have : x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h = 0 := by
@@ -212,9 +212,9 @@ instance (priority := 100) EuclideanDomain.toPrincipalIdealDomain :
               hy.symm ▸ S.mul_mem_right _ hmin.1⟩⟩
       else
         ⟨0,
-          Submodule.ext fun a => by
+          Submodule.ext $ fun a => by
             rw [← @Submodule.bot_coe R R _ _ _, span_eq, Submodule.mem_bot] <;>
-              exact ⟨fun haS => by_contradiction fun ha0 => h ⟨a, ⟨haS, ha0⟩⟩, fun h₁ => h₁.symm ▸ S.zero_mem⟩⟩⟩
+              exact ⟨fun haS => by_contradiction $ fun ha0 => h ⟨a, ⟨haS, ha0⟩⟩, fun h₁ => h₁.symm ▸ S.zero_mem⟩⟩⟩
 #align euclidean_domain.to_principal_ideal_domain EuclideanDomain.toPrincipalIdealDomain
 
 end
@@ -249,7 +249,7 @@ theorem is_maximal_of_irreducible [CommRing R] [IsPrincipalIdealRing R] {p : R} 
 variable [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
 
 theorem irreducible_iff_prime {p : R} : Irreducible p ↔ Prime p :=
-  ⟨fun hp => (Ideal.span_singleton_prime hp.NeZero).1 <| (is_maximal_of_irreducible hp).IsPrime, Prime.irreducible⟩
+  ⟨fun hp => (Ideal.span_singleton_prime hp.NeZero).1 $ (is_maximal_of_irreducible hp).IsPrime, Prime.irreducible⟩
 #align principal_ideal_ring.irreducible_iff_prime PrincipalIdealRing.irreducible_iff_prime
 
 theorem associates_irreducible_iff_prime : ∀ {p : Associates R}, Irreducible p ↔ Prime p :=
@@ -340,6 +340,7 @@ open Ideal
 
 variable [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] [GcdMonoid R]
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (r s) -/
 theorem span_gcd (x y : R) : span ({gcd x y} : Set R) = span ({x, y} : Set R) := by
   obtain ⟨d, hd⟩ := IsPrincipalIdealRing.principal (span ({x, y} : Set R))
   rw [submodule_span_eq] at hd
@@ -358,18 +359,20 @@ theorem span_gcd (x y : R) : span ({gcd x y} : Set R) = span ({x, y} : Set R) :=
       rw [one_mul, zero_mul, zero_add]
       
     
-  · obtain ⟨r, s, rfl⟩ : ∃ r s, r * x + s * y = d := by rw [← mem_span_pair, hd, Ideal.mem_span_singleton]
+  · obtain ⟨r, s, rfl⟩ : ∃ (r) (s), r * x + s * y = d := by rw [← mem_span_pair, hd, Ideal.mem_span_singleton]
     apply dvd_add <;> apply dvd_mul_of_dvd_right
     exacts[gcd_dvd_left x y, gcd_dvd_right x y]
     
 #align span_gcd span_gcd
 
-theorem gcd_dvd_iff_exists (a b : R) {z} : gcd a b ∣ z ↔ ∃ x y, z = a * x + b * y := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
+theorem gcd_dvd_iff_exists (a b : R) {z} : gcd a b ∣ z ↔ ∃ (x) (y), z = a * x + b * y := by
   simp_rw [mul_comm a, mul_comm b, @eq_comm _ z, ← mem_span_pair, ← span_gcd, Ideal.mem_span_singleton]
 #align gcd_dvd_iff_exists gcd_dvd_iff_exists
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /-- **Bézout's lemma** -/
-theorem exists_gcd_eq_mul_add_mul (a b : R) : ∃ x y, gcd a b = a * x + b * y := by rw [← gcd_dvd_iff_exists]
+theorem exists_gcd_eq_mul_add_mul (a b : R) : ∃ (x) (y), gcd a b = a * x + b * y := by rw [← gcd_dvd_iff_exists]
 #align exists_gcd_eq_mul_add_mul exists_gcd_eq_mul_add_mul
 
 theorem gcd_is_unit_iff (x y : R) : IsUnit (gcd x y) ↔ IsCoprime x y := by
@@ -394,7 +397,7 @@ theorem dvd_or_coprime (x y : R) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y
     
   · rintro z nu nz ⟨w, rfl⟩ dy
     refine' h' (dvd_trans _ dy)
-    simpa using mul_dvd_mul_left z (is_unit_iff_dvd_one.1 <| (of_irreducible_mul h).resolve_left nu)
+    simpa using mul_dvd_mul_left z (is_unit_iff_dvd_one.1 $ (of_irreducible_mul h).resolve_left nu)
     
 #align dvd_or_coprime dvd_or_coprime
 
@@ -411,7 +414,7 @@ theorem is_coprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
 
 theorem is_coprime_of_prime_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0)) (H : ∀ z : R, Prime z → z ∣ x → ¬z ∣ y) :
     IsCoprime x y :=
-  (is_coprime_of_irreducible_dvd nonzero) fun z zi => H z <| GcdMonoid.primeOfIrreducible zi
+  is_coprime_of_irreducible_dvd nonzero $ fun z zi => H z $ GcdMonoid.primeOfIrreducible zi
 #align is_coprime_of_prime_dvd is_coprime_of_prime_dvd
 
 theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCoprime p n ↔ ¬p ∣ n := by

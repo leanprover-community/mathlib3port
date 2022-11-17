@@ -105,8 +105,8 @@ def dual : BoundedDistribLatticeCat ⥤ BoundedDistribLatticeCat where
 /-- The equivalence between `BoundedDistribLattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : BoundedDistribLatticeCat ≌ BoundedDistribLatticeCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
 #align BoundedDistribLattice.dual_equiv BoundedDistribLatticeCat.dualEquiv
 
 end BoundedDistribLatticeCat

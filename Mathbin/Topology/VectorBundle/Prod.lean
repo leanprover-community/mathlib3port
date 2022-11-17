@@ -239,7 +239,7 @@ instance _root_.bundle.prod.fiber_bundle : FiberBundle (F₁' × F₂') (E₁ ×
     exact (total_space_mk_inducing F₁' E₁ b).prod_mk (total_space_mk_inducing F₂' E₂ b)
   trivializationAtlas :=
     { e |
-      ∃ (e₁ : Trivialization F₁' (π E₁))(e₂ : Trivialization F₂' (π E₂))(_ : MemTrivializationAtlas e₁)(_ :
+      ∃ (e₁ : Trivialization F₁' (π E₁)) (e₂ : Trivialization F₂' (π E₂)) (_ : MemTrivializationAtlas e₁) (_ :
         MemTrivializationAtlas e₂), e = Trivialization.prod e₁ e₂ }
   trivializationAt b := (trivializationAt F₁' E₁ b).Prod (trivializationAt F₂' E₂ b)
   mem_base_set_trivialization_at b := ⟨mem_base_set_trivialization_at F₁' E₁ b, mem_base_set_trivialization_at F₂' E₂ b⟩

@@ -333,7 +333,7 @@ theorem topCovers (S : Sieve X) (f : Y ⟶ X) : (⊤ : GrothendieckTopology C).C
 See https://ncatlab.org/nlab/show/dense+topology, or [MM92] Chapter III, Section 2, example (e).
 -/
 def dense : GrothendieckTopology C where
-  sieves X S := ∀ {Y : C} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f)
+  sieves X S := ∀ {Y : C} (f : Y ⟶ X), ∃ (Z) (g : Z ⟶ Y), S (g ≫ f)
   top_mem' X Y f := ⟨Y, 𝟙 Y, ⟨⟩⟩
   pullback_stable' := by
     intro X Y S h H Z f
@@ -346,7 +346,7 @@ def dense : GrothendieckTopology C where
     exact ⟨W, h ≫ g, by simpa using H₄⟩
 #align category_theory.grothendieck_topology.dense CategoryTheory.GrothendieckTopology.dense
 
-theorem dense_covering : S ∈ dense X ↔ ∀ {Y} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f) :=
+theorem dense_covering : S ∈ dense X ↔ ∀ {Y} (f : Y ⟶ X), ∃ (Z) (g : Z ⟶ Y), S (g ≫ f) :=
   Iff.rfl
 #align category_theory.grothendieck_topology.dense_covering CategoryTheory.GrothendieckTopology.dense_covering
 
@@ -355,7 +355,7 @@ NB. Any category with pullbacks obviously satisfies the right Ore condition, see
 `right_ore_of_pullbacks`.
 -/
 def RightOreCondition (C : Type u) [Category.{v} C] : Prop :=
-  ∀ {X Y Z : C} (yx : Y ⟶ X) (zx : Z ⟶ X), ∃ (W : _)(wy : W ⟶ Y)(wz : W ⟶ Z), wy ≫ yx = wz ≫ zx
+  ∀ {X Y Z : C} (yx : Y ⟶ X) (zx : Z ⟶ X), ∃ (W) (wy : W ⟶ Y) (wz : W ⟶ Z), wy ≫ yx = wz ≫ zx
 #align category_theory.grothendieck_topology.right_ore_condition CategoryTheory.GrothendieckTopology.RightOreCondition
 
 theorem right_ore_of_pullbacks [Limits.HasPullbacks C] : RightOreCondition C := fun X Y Z yx zx =>
@@ -369,7 +369,7 @@ For the pullback stability condition, we need the right Ore condition to hold.
 See https://ncatlab.org/nlab/show/atomic+site, or [MM92] Chapter III, Section 2, example (f).
 -/
 def atomic (hro : RightOreCondition C) : GrothendieckTopology C where
-  sieves X S := ∃ (Y : _)(f : Y ⟶ X), S f
+  sieves X S := ∃ (Y) (f : Y ⟶ X), S f
   top_mem' X := ⟨_, 𝟙 _, ⟨⟩⟩
   pullback_stable' := by
     rintro X Y S h ⟨Z, f, hf⟩
@@ -409,7 +409,7 @@ theorem condition (S : J.cover X) : (S : Sieve X) ∈ J X :=
 
 @[ext.1]
 theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ (f : Y ⟶ X), S f ↔ T f) : S = T :=
-  Subtype.ext <| Sieve.ext h
+  Subtype.ext $ Sieve.ext h
 #align category_theory.grothendieck_topology.cover.ext CategoryTheory.GrothendieckTopology.Cover.ext
 
 instance : OrderTop (J.cover X) :=
@@ -417,7 +417,7 @@ instance : OrderTop (J.cover X) :=
 
 instance : SemilatticeInf (J.cover X) :=
   { (inferInstance : Preorder _) with inf := fun S T => ⟨S ⊓ T, J.intersection_covering S.condition T.condition⟩,
-    le_antisymm := fun S T h1 h2 => (ext _ _) fun Y f => ⟨h1 _, h2 _⟩, inf_le_left := fun S T Y f hf => hf.1,
+    le_antisymm := fun S T h1 h2 => ext _ _ $ fun Y f => ⟨h1 _, h2 _⟩, inf_le_left := fun S T Y f hf => hf.1,
     inf_le_right := fun S T Y f hf => hf.2, le_inf := fun S T W h1 h2 Y f h => ⟨h1 _ h, h2 _ h⟩ }
 
 instance : Inhabited (J.cover X) :=
@@ -518,12 +518,12 @@ theorem coe_pullback {Z : C} (f : Y ⟶ X) (g : Z ⟶ Y) (S : J.cover X) : (S.pu
 
 /-- The isomorphism between `S` and the pullback of `S` w.r.t. the identity. -/
 def pullbackId (S : J.cover X) : S.pullback (𝟙 X) ≅ S :=
-  eq_to_iso <| (Cover.ext _ _) fun Y f => by simp
+  eq_to_iso $ Cover.ext _ _ $ fun Y f => by simp
 #align category_theory.grothendieck_topology.cover.pullback_id CategoryTheory.GrothendieckTopology.Cover.pullbackId
 
 /-- Pulling back with respect to a composition is the composition of the pullbacks. -/
 def pullbackComp {X Y Z : C} (S : J.cover X) (f : Z ⟶ Y) (g : Y ⟶ X) : S.pullback (f ≫ g) ≅ (S.pullback g).pullback f :=
-  eq_to_iso <| (Cover.ext _ _) fun Y f => by simp
+  eq_to_iso $ Cover.ext _ _ $ fun Y f => by simp
 #align category_theory.grothendieck_topology.cover.pullback_comp CategoryTheory.GrothendieckTopology.Cover.pullbackComp
 
 /-- Combine a family of covers over a cover. -/
@@ -533,7 +533,7 @@ def bind {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : J.cover X 
 
 /-- The canonical moprhism from `S.bind T` to `T`. -/
 def bindToBase {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : S.bind T ⟶ S :=
-  hom_of_le <| by
+  hom_of_le $ by
     rintro Y f ⟨Z, e1, e2, h1, h2, h3⟩
     rw [← h3]
     apply sieve.downward_closed
@@ -647,13 +647,13 @@ def pullback (f : Y ⟶ X) : J.cover X ⥤ J.cover Y where
 
 /-- Pulling back along the identity is naturally isomorphic to the identity functor. -/
 def pullbackId (X : C) : J.pullback (𝟙 X) ≅ 𝟭 _ :=
-  (NatIso.ofComponents fun S => S.pullback_id) <| by tidy
+  (NatIso.ofComponents fun S => S.pullback_id) $ by tidy
 #align category_theory.grothendieck_topology.pullback_id CategoryTheory.GrothendieckTopology.pullbackId
 
 /-- Pulling back along a composition is naturally isomorphic to
 the composition of the pullbacks. -/
 def pullbackComp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : J.pullback (f ≫ g) ≅ J.pullback g ⋙ J.pullback f :=
-  (NatIso.ofComponents fun S => S.pullback_comp f g) <| by tidy
+  (NatIso.ofComponents fun S => S.pullback_comp f g) $ by tidy
 #align category_theory.grothendieck_topology.pullback_comp CategoryTheory.GrothendieckTopology.pullbackComp
 
 end GrothendieckTopology

@@ -229,7 +229,7 @@ theorem exposed_points_empty : (∅ : Set E).exposedPoints 𝕜 = ∅ :=
 theorem mem_exposed_points_iff_exposed_singleton : x ∈ A.exposedPoints 𝕜 ↔ IsExposed 𝕜 A {x} := by
   use fun ⟨hxA, l, hl⟩ h =>
     ⟨l,
-      Eq.symm <| eq_singleton_iff_unique_mem.2 ⟨⟨hxA, fun y hy => (hl y hy).1⟩, fun z hz => (hl z hz.1).2 (hz.2 x hxA)⟩⟩
+      Eq.symm $ eq_singleton_iff_unique_mem.2 ⟨⟨hxA, fun y hy => (hl y hy).1⟩, fun z hz => (hl z hz.1).2 (hz.2 x hxA)⟩⟩
   rintro h
   obtain ⟨l, hl⟩ := h ⟨x, mem_singleton _⟩
   rw [eq_comm, eq_singleton_iff_unique_mem] at hl

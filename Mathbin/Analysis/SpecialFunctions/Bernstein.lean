@@ -291,7 +291,7 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
         rw [variance npos]
         ring
       _ ≤ 2 * ∥f∥ * δ ^ (-2 : ℤ) / n :=
-        (div_le_div_right npos).mpr <| by
+        (div_le_div_right npos).mpr $ by
           refine' mul_le_of_le_of_le_one' (mul_le_of_le_one_right w₂ _) _ _ w₂ <;> unit_interval
       _ < ε / 2 := nh
       

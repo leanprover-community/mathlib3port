@@ -184,14 +184,14 @@ def preservesBinaryBiproductOfPreservesBiproduct (F : C ⥤ D) [PreservesZeroMor
     { IsLimit :=
         IsLimit.ofIsoLimit
             ((IsLimit.postcomposeHomEquiv (diagram_iso_pair _) _).symm
-              (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsLimit) <|
+              (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsLimit) $
           Cones.ext (Iso.refl _) fun j => by
             rcases j with ⟨⟨⟩⟩
             tidy,
       IsColimit :=
         IsColimit.ofIsoColimit
             ((IsColimit.precomposeInvEquiv (diagram_iso_pair _) _).symm
-              (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsColimit) <|
+              (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsColimit) $
           Cocones.ext (Iso.refl _) fun j => by
             rcases j with ⟨⟨⟩⟩
             tidy }
@@ -249,7 +249,9 @@ variable [PreservesZeroMorphisms F]
     the biproduct, see `preserves_biproduct_of_mono_biproduct_comparison`.  -/
 @[simp, reassoc]
 theorem biproduct_comparison'_comp_biproduct_comparison :
-    biproductComparison' F f ≫ biproductComparison F f = 𝟙 (⨁ F.obj ∘ f) := by classical ext
+    biproductComparison' F f ≫ biproductComparison F f = 𝟙 (⨁ F.obj ∘ f) := by classical
+  ext
+  simp [biproduct.ι_π, ← functor.map_comp, eq_to_hom_map]
 #align
   category_theory.functor.biproduct_comparison'_comp_biproduct_comparison CategoryTheory.Functor.biproduct_comparison'_comp_biproduct_comparison
 

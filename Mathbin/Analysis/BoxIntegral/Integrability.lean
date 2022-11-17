@@ -29,8 +29,8 @@ open MeasureTheory Metric Set Finset Filter BoxIntegral
 
 namespace BoxIntegral
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (F «expr ⊆ » «expr ∩ »(s, I.Icc)) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (F «expr ⊆ » «expr ∩ »(s, I.Icc)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc)) -/
 /-- The indicator function of a measurable set is McShane integrable with respect to any
 locally-finite measure. -/
 theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = ff) {s : Set (ι → ℝ)}
@@ -41,19 +41,19 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = ff)
   rw [Nnreal.coe_pos] at ε0
   /- First we choose a closed set `F ⊆ s ∩ I.Icc` and an open set `U ⊇ s` such that
     both `(s ∩ I.Icc) \ F` and `U \ s` have measuer less than `ε`. -/
-  have A : μ (s ∩ I.Icc) ≠ ∞ := ((measure_mono <| Set.inter_subset_right _ _).trans_lt (I.measure_Icc_lt_top μ)).Ne
-  have B : μ (s ∩ I) ≠ ∞ := ((measure_mono <| Set.inter_subset_right _ _).trans_lt (I.measure_coe_lt_top μ)).Ne
-  obtain ⟨F, hFs, hFc, hμF⟩ : ∃ (F : _)(_ : F ⊆ s ∩ I.Icc), IsClosed F ∧ μ ((s ∩ I.Icc) \ F) < ε
+  have A : μ (s ∩ I.Icc) ≠ ∞ := ((measure_mono $ Set.inter_subset_right _ _).trans_lt (I.measure_Icc_lt_top μ)).Ne
+  have B : μ (s ∩ I) ≠ ∞ := ((measure_mono $ Set.inter_subset_right _ _).trans_lt (I.measure_coe_lt_top μ)).Ne
+  obtain ⟨F, hFs, hFc, hμF⟩ : ∃ (F) (_ : F ⊆ s ∩ I.Icc), IsClosed F ∧ μ (s ∩ I.Icc \ F) < ε
   exact (hs.inter I.measurable_set_Icc).exists_is_closed_diff_lt A (Ennreal.coe_pos.2 ε0).ne'
-  obtain ⟨U, hsU, hUo, hUt, hμU⟩ : ∃ (U : _)(_ : U ⊇ s ∩ I.Icc), IsOpen U ∧ μ U < ∞ ∧ μ (U \ (s ∩ I.Icc)) < ε
+  obtain ⟨U, hsU, hUo, hUt, hμU⟩ : ∃ (U) (_ : U ⊇ s ∩ I.Icc), IsOpen U ∧ μ U < ∞ ∧ μ (U \ (s ∩ I.Icc)) < ε
   exact (hs.inter I.measurable_set_Icc).exists_is_open_diff_lt A (Ennreal.coe_pos.2 ε0).ne'
   /- Then we choose `r` so that `closed_ball x (r x) ⊆ U` whenever `x ∈ s ∩ I.Icc` and
     `closed_ball x (r x)` is disjoint with `F` otherwise. -/
   have : ∀ x ∈ s ∩ I.Icc, ∃ r : Ioi (0 : ℝ), closed_ball x r ⊆ U := fun x hx =>
-    Subtype.exists'.1 (nhds_basis_closed_ball.mem_iff.1 (hUo.mem_nhds <| hsU hx))
+    Subtype.exists'.1 (nhds_basis_closed_ball.mem_iff.1 (hUo.mem_nhds $ hsU hx))
   choose! rs hrsU
   have : ∀ x ∈ I.Icc \ s, ∃ r : Ioi (0 : ℝ), closed_ball x r ⊆ Fᶜ := fun x hx =>
-    Subtype.exists'.1 (nhds_basis_closed_ball.mem_iff.1 (hFc.is_open_compl.mem_nhds fun hx' => hx.2 (hFs hx').1))
+    Subtype.exists'.1 (nhds_basis_closed_ball.mem_iff.1 (hFc.is_open_compl.mem_nhds $ fun hx' => hx.2 (hFs hx').1))
   choose! rs' hrs'F
   set r : (ι → ℝ) → Ioi (0 : ℝ) := s.piecewise rs rs'
   refine' ⟨fun c => r, fun c => l.r_cond_of_bRiemann_eq_ff hl, fun c π hπ hπp => _⟩
@@ -73,7 +73,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = ff)
   refine' abs_sub_le_iff.2 ⟨_, _⟩
   · refine' (Ennreal.le_to_real_sub B).trans (Ennreal.to_real_le_coe_of_le_coe _)
     refine' (tsub_le_tsub (measure_mono htU) le_rfl).trans (le_measure_diff.trans _)
-    refine' (measure_mono fun x hx => _).trans hμU.le
+    refine' (measure_mono $ fun x hx => _).trans hμU.le
     exact ⟨hx.1.1, fun hx' => hx.2 ⟨hx'.1, hx.1.2⟩⟩
     
   · have hμt : μ t ≠ ∞ := ((measure_mono (htU.trans (inter_subset_left _ _))).trans_lt hUt).Ne
@@ -90,7 +90,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = ff)
     
 #align box_integral.has_integral_indicator_const BoxIntegral.hasIntegralIndicatorConst
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n})) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n})) -/
 /-- If `f` is a.e. equal to zero on a rectangular box, then it has McShane integral zero on this
 box. -/
 theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)}
@@ -108,13 +108,13 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
   have N0 : ∀ {x}, N x = 0 ↔ f x = 0 := by
     intro x
     simp [N]
-  have : ∀ n, ∃ (U : _)(_ : U ⊇ N ⁻¹' {n}), IsOpen U ∧ μ.restrict I U < δ n / n := by
+  have : ∀ n, ∃ (U) (_ : U ⊇ N ⁻¹' {n}), IsOpen U ∧ μ.restrict I U < δ n / n := by
     refine' fun n => (N ⁻¹' {n}).exists_is_open_lt_of_lt _ _
     cases n
     · simpa [Ennreal.div_zero (Ennreal.coe_pos.2 (δ0 _)).ne'] using measure_lt_top (μ.restrict I) _
       
     · refine' (measure_mono_null _ hf).le.trans_lt _
-      · exact fun x hxN hxf => n.succ_ne_zero ((Eq.symm hxN).trans <| N0.2 hxf)
+      · exact fun x hxN hxf => n.succ_ne_zero ((Eq.symm hxN).trans $ N0.2 hxf)
         
       · simp [(δ0 _).ne']
         
@@ -175,7 +175,8 @@ theorem hasBoxIntegral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ
   · borelize E
     haveI := Fact.mk (I.measure_coe_lt_top μ)
     rw [integral_add]
-    exacts[hfi.add hgi, integrable_iff.2 fun _ _ => measure_lt_top _ _, integrable_iff.2 fun _ _ => measure_lt_top _ _]
+    exacts[hfi.add hgi, integrable_iff.2 $ fun _ _ => measure_lt_top _ _,
+      integrable_iff.2 $ fun _ _ => measure_lt_top _ _]
     
 #align measure_theory.simple_func.has_box_integral MeasureTheory.SimpleFunc.hasBoxIntegral
 
@@ -210,7 +211,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
   set f : ℕ → simple_func (ι → ℝ) E := simple_func.approx_on g hg.measurable (range g ∪ {0}) 0 (by simp)
   have hfi : ∀ n, integrable_on (f n) I μ := simple_func.integrable_approx_on_range hg.measurable hgi
   have hfi' := fun n => ((f n).hasBoxIntegral μ I l hl).Integrable
-  have hfgi : tendsto (fun n => (f n).integral (μ.restrict I)) at_top (𝓝 <| ∫ x in I, g x ∂μ) :=
+  have hfgi : tendsto (fun n => (f n).integral (μ.restrict I)) at_top (𝓝 $ ∫ x in I, g x ∂μ) :=
     tendsto_integral_approx_on_of_measurable_of_range_subset hg.measurable hgi _ subset.rfl
   have hfg_mono : ∀ (x) {m n}, m ≤ n → ∥f n x - g x∥ ≤ ∥f m x - g x∥ := by
     intro x m n hmn
@@ -232,9 +233,9 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
   -- For each `x`, we choose `Nx x ≥ N₀` such that `dist (f Nx x) (g x) ≤ ε`.
   have : ∀ x, ∃ N₁, N₀ ≤ N₁ ∧ dist (f N₁ x) (g x) ≤ ε := by
     intro x
-    have : tendsto (fun n => f n x) at_top (𝓝 <| g x) :=
+    have : tendsto (fun n => f n x) at_top (𝓝 $ g x) :=
       simple_func.tendsto_approx_on hg.measurable _ (subset_closure (by simp))
-    exact ((eventually_ge_at_top N₀).And <| this <| closed_ball_mem_nhds _ ε0).exists
+    exact ((eventually_ge_at_top N₀).And $ this $ closed_ball_mem_nhds _ ε0).exists
   choose Nx hNx hNxε
   -- We also choose a convergent series with `∑' i : ℕ, δ i < ε`.
   rcases Nnreal.exists_pos_sum_of_countable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
@@ -242,15 +243,15 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     the integral sum of `f` over any tagged prepartition is `δᵢ`-close to the sum of integrals
     of `fᵢ` over the boxes of this prepartition. For each `x`, we choose `r (Nx x)` as the radius
     at `x`. -/
-  set r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) := fun c x => (hfi' <| Nx x).convergenceR (δ <| Nx x) c x
+  set r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) := fun c x => (hfi' $ Nx x).convergenceR (δ $ Nx x) c x
   refine' ⟨r, fun c => l.r_cond_of_bRiemann_eq_ff hl, fun c π hπ hπp => _⟩
   /- Now we prove the estimate in 3 "jumps": first we replace `g x` in the formula for the
     integral sum by `f (Nx x)`; then we replace each `μ J • f (Nx (π.tag J)) (π.tag J)`
     by the Bochner integral of `f (Nx (π.tag J)) x` over `J`, then we jump to the Bochner
     integral of `g`. -/
   refine'
-    (dist_triangle4 _ (∑ J in π.boxes, (μ J).toReal • f (Nx <| π.tag J) (π.tag J))
-          (∑ J in π.boxes, ∫ x in J, f (Nx <| π.tag J) x ∂μ) _).trans
+    (dist_triangle4 _ (∑ J in π.boxes, (μ J).toReal • f (Nx $ π.tag J) (π.tag J))
+          (∑ J in π.boxes, ∫ x in J, f (Nx $ π.tag J) x ∂μ) _).trans
       _
   rw [add_mul, add_mul, one_mul]
   refine' add_le_add_three _ _ _
@@ -302,7 +303,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
       integral_finset_bUnion π.boxes (fun J hJ => J.measurableSetCoe) π.pairwise_disjoint (hfgi _)]
     refine' dist_sum_sum_le_of_le _ fun J hJ => _
     rw [dist_eq_norm, ← integral_sub (hfi _ J hJ) (hgi J hJ)]
-    refine' norm_integral_le_of_norm_le (hfgi _ J hJ) (eventually_of_forall fun x => _)
+    refine' norm_integral_le_of_norm_le (hfgi _ J hJ) (eventually_of_forall $ fun x => _)
     exact hfg_mono x (hNx (π.tag J))
     
 #align measure_theory.integrable_on.has_box_integral MeasureTheory.IntegrableOn.hasBoxIntegral

@@ -34,8 +34,8 @@ def finOneEquiv : Fin 1 ≃ Unit :=
 def finTwoEquiv : Fin 2 ≃ Bool where
   toFun := ![false, true]
   invFun b := cond b 1 0
-  left_inv := Fin.forall_fin_two.2 <| by simp
-  right_inv := Bool.forall_bool.2 <| by simp
+  left_inv := Fin.forall_fin_two.2 $ by simp
+  right_inv := Bool.forall_bool.2 $ by simp
 #align fin_two_equiv finTwoEquiv
 
 /-- `Π i : fin 2, α i` is equivalent to `α 0 × α 1`. See also `fin_two_arrow_equiv` for a
@@ -43,14 +43,14 @@ non-dependent version and `prod_equiv_pi_fin_two` for a version with inputs `α 
 @[simps (config := { fullyApplied := false })]
 def piFinTwoEquiv (α : Fin 2 → Type u) : (∀ i, α i) ≃ α 0 × α 1 where
   toFun f := (f 0, f 1)
-  invFun p := Fin.cons p.1 <| Fin.cons p.2 finZeroElim
-  left_inv f := funext <| Fin.forall_fin_two.2 ⟨rfl, rfl⟩
+  invFun p := Fin.cons p.1 $ Fin.cons p.2 finZeroElim
+  left_inv f := funext $ Fin.forall_fin_two.2 ⟨rfl, rfl⟩
   right_inv := fun ⟨x, y⟩ => rfl
 #align pi_fin_two_equiv piFinTwoEquiv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Fin.preimage_apply_01_prod {α : Fin 2 → Type u} (s : Set (α 0)) (t : Set (α 1)) :
-    (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.pi Set.univ (Fin.cons s <| Fin.cons t Fin.elim0) := by
+    (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' s ×ˢ t = Set.pi Set.univ (Fin.cons s $ Fin.cons t Fin.elim0) := by
   ext f
   have : (Fin.cons s (Fin.cons t Fin.elim0) : ∀ i, Set (α i)) 1 = t := rfl
   simp [Fin.forall_fin_two, this]
@@ -330,9 +330,9 @@ def Equiv.piFinSucc (n : ℕ) (β : Type u) : (Fin (n + 1) → β) ≃ β × (Fi
 #align equiv.pi_fin_succ Equiv.piFinSucc
 
 /-- Equivalence between `fin m ⊕ fin n` and `fin (m + n)` -/
-def finSumFinEquiv : Sum (Fin m) (Fin n) ≃ Fin (m + n) where
+def finSumFinEquiv : Fin m ⊕ Fin n ≃ Fin (m + n) where
   toFun := Sum.elim (Fin.castAdd n) (Fin.natAdd m)
-  invFun i := @Fin.addCases m n (fun _ => Sum (Fin m) (Fin n)) Sum.inl Sum.inr i
+  invFun i := @Fin.addCases m n (fun _ => Fin m ⊕ Fin n) Sum.inl Sum.inr i
   left_inv x := by cases' x with y y <;> dsimp <;> simp
   right_inv x := by refine' Fin.addCases (fun i => _) (fun i => _) x <;> simp
 #align fin_sum_fin_equiv finSumFinEquiv
@@ -385,7 +385,7 @@ theorem fin_add_flip_apply_mk_left {k : ℕ} (h : k < m) (hk : k < m + n := Nat.
 
 @[simp]
 theorem fin_add_flip_apply_mk_right {k : ℕ} (h₁ : m ≤ k) (h₂ : k < m + n) :
-    finAddFlip (⟨k, h₂⟩ : Fin (m + n)) = ⟨k - m, tsub_le_self.trans_lt <| add_comm m n ▸ h₂⟩ := by
+    finAddFlip (⟨k, h₂⟩ : Fin (m + n)) = ⟨k - m, tsub_le_self.trans_lt $ add_comm m n ▸ h₂⟩ := by
   convert fin_add_flip_apply_nat_add ⟨k - m, (tsub_lt_iff_right h₁).2 _⟩ m
   · simp [add_tsub_cancel_of_le h₁]
     
@@ -477,25 +477,25 @@ def finProdFinEquiv : Fin m × Fin n ≃ Fin (m * n) where
       calc
         x.2.1 + n * x.1.1 + 1 = x.1.1 * n + x.2.1 + 1 := by ac_rfl
         _ ≤ x.1.1 * n + n := Nat.add_le_add_left x.2.2 _
-        _ = (x.1.1 + 1) * n := Eq.symm <| Nat.succ_mul _ _
+        _ = (x.1.1 + 1) * n := Eq.symm $ Nat.succ_mul _ _
         _ ≤ m * n := Nat.mul_le_mul_right _ x.1.2
         ⟩
   invFun x := (x.divNat, x.modNat)
   left_inv := fun ⟨x, y⟩ =>
-    have H : 0 < n := Nat.pos_of_ne_zero fun H => Nat.not_lt_zero y.1 <| H ▸ y.2
+    have H : 0 < n := Nat.pos_of_ne_zero $ fun H => Nat.not_lt_zero y.1 $ H ▸ y.2
     Prod.ext
-      (Fin.eq_of_veq <|
+      (Fin.eq_of_veq $
         calc
           (y.1 + n * x.1) / n = y.1 / n + x.1 := Nat.add_mul_div_left _ _ H
           _ = 0 + x.1 := by rw [Nat.div_eq_of_lt y.2]
           _ = x.1 := Nat.zero_add x.1
           )
-      (Fin.eq_of_veq <|
+      (Fin.eq_of_veq $
         calc
           (y.1 + n * x.1) % n = y.1 % n := Nat.add_mul_mod_self_left _ _ _
           _ = y.1 := Nat.mod_eq_of_lt y.2
           )
-  right_inv x := Fin.eq_of_veq <| Nat.mod_add_div _ _
+  right_inv x := Fin.eq_of_veq $ Nat.mod_add_div _ _
 #align fin_prod_fin_equiv finProdFinEquiv
 
 /-- Promote a `fin n` into a larger `fin m`, as a subtype where the underlying

@@ -87,9 +87,9 @@ theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGrou
 #align AddCommGroup.injective_as_module_of_injective_as_Ab AddCommGroupCat.injective_as_module_of_injective_as_Ab
 
 instance injective_of_divisible [DivisibleBy A ℤ] : CategoryTheory.Injective (⟨A⟩ : AddCommGroupCat) :=
-  @injective_of_injective_as_module A _ <|
-    @Module.injective_object_of_injective_module ℤ _ A _ _ <|
-      Module.BaerCat.injective fun I g => by
+  @injective_of_injective_as_module A _ $
+    @Module.injective_object_of_injective_module ℤ _ A _ _ $
+      Module.BaerCat.injective $ fun I g => by
         rcases IsPrincipalIdealRing.principal I with ⟨m, rfl⟩
         by_cases m_eq_zero:m = 0
         · subst m_eq_zero

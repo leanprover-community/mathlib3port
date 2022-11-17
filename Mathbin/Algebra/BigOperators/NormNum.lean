@@ -53,7 +53,7 @@ unsafe def decide_eq (l r : expr) : tactic (Bool × expr) := do
   let n₂ ← r'.to_rat
   let c ← infer_type l' >>= mk_instance_cache
   if n₁ = n₂ then do
-      let pf ← i_to_expr (pquote.1 (Eq.trans (%%ₓl'_pf) <| Eq.symm (%%ₓr'_pf)))
+      let pf ← i_to_expr ``(Eq.trans $(l'_pf) $ Eq.symm $(r'_pf))
       pure (tt, pf)
     else do
       let (_, p) ← norm_num.prove_ne c l' r' n₁ n₂
@@ -74,20 +74,20 @@ This procedure is partial iff its parameter `decide_eq` is partial.
 -/
 unsafe def list.decide_mem (decide_eq : expr → expr → tactic (Bool × expr)) : expr → List expr → tactic (Bool × expr)
   | x, [] => do
-    let pf ← i_to_expr (pquote.1 (List.not_mem_nil (%%ₓx)))
+    let pf ← i_to_expr ``(List.not_mem_nil $(x))
     pure (ff, pf)
   | x, y::ys => do
     let (is_head, head_pf) ← decide_eq x y
     if is_head then do
-        let pf ← i_to_expr (pquote.1 ((List.mem_cons_iff (%%ₓx) (%%ₓy) _).mpr (Or.inl (%%ₓhead_pf))))
+        let pf ← i_to_expr ``((List.mem_cons_iff $(x) $(y) _).mpr (Or.inl $(head_pf)))
         pure (tt, pf)
       else do
         let (mem_tail, tail_pf) ← list.decide_mem x ys
         if mem_tail then do
-            let pf ← i_to_expr (pquote.1 ((List.mem_cons_iff (%%ₓx) (%%ₓy) _).mpr (Or.inr (%%ₓtail_pf))))
+            let pf ← i_to_expr ``((List.mem_cons_iff $(x) $(y) _).mpr (Or.inr $(tail_pf)))
             pure (tt, pf)
           else do
-            let pf ← i_to_expr (pquote.1 (List.not_mem_cons (%%ₓhead_pf) (%%ₓtail_pf)))
+            let pf ← i_to_expr ``(List.not_mem_cons $(head_pf) $(tail_pf))
             pure (ff, pf)
 #align tactic.norm_num.list.decide_mem tactic.norm_num.list.decide_mem
 
@@ -102,12 +102,12 @@ theorem List.map_cons_congr {α β : Type _} (f : α → β) {x : α} {xs : List
 /-- Apply `ef : α → β` to all elements of the list, constructing an equality proof. -/
 unsafe def eval_list_map (ef : expr) : List expr → tactic (List expr × expr)
   | [] => do
-    let eq ← i_to_expr (pquote.1 (List.map_nil (%%ₓef)))
+    let eq ← i_to_expr ``(List.map_nil $(ef))
     pure ([], Eq)
   | x::xs => do
     let (fx, fx_eq) ← or_refl_conv norm_num.derive (expr.app ef x)
     let (fxs, fxs_eq) ← eval_list_map xs
-    let eq ← i_to_expr (pquote.1 (List.map_cons_congr (%%ₓef) (%%ₓfx_eq) (%%ₓfxs_eq)))
+    let eq ← i_to_expr ``(List.map_cons_congr $(ef) $(fx_eq) $(fxs_eq))
     pure (fx::fxs, Eq)
 #align tactic.norm_num.eval_list_map tactic.norm_num.eval_list_map
 
@@ -124,26 +124,26 @@ theorem List.map_congr {α β : Type _} (f : α → β) {xs xs' : List α} {ys :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Convert an expression denoting a list to a list of elements. -/
 unsafe def eval_list : expr → tactic (List expr × expr)
-  | e@(quote.1 List.nil) => do
+  | e@q(List.nil) => do
     let eq ← mk_eq_refl e
     pure ([], Eq)
-  | e@(quote.1 (List.cons (%%ₓx) (%%ₓxs))) => do
+  | e@q(List.cons $(x) $(xs)) => do
     let (xs, xs_eq) ← eval_list xs
-    let eq ← i_to_expr (pquote.1 (List.cons_congr (%%ₓx) (%%ₓxs_eq)))
+    let eq ← i_to_expr ``(List.cons_congr $(x) $(xs_eq))
     pure (x::xs, Eq)
-  | e@(quote.1 (List.range (%%ₓen))) => do
+  | e@q(List.range $(en)) => do
     let n ← expr.to_nat en
-    let eis ← (List.range n).mmap fun i => expr.of_nat (quote.1 ℕ) i
+    let eis ← (List.range n).mmap fun i => expr.of_nat q(ℕ) i
     let eq ← mk_eq_refl e
     pure (eis, Eq)
-  | quote.1 (@List.map (%%ₓα) (%%ₓβ) (%%ₓef) (%%ₓexs)) => do
+  | q(@List.map $(α) $(β) $(ef) $(exs)) => do
     let (xs, xs_eq) ← eval_list exs
     let (ys, ys_eq) ← eval_list_map ef xs
-    let eq ← i_to_expr (pquote.1 (List.map_congr (%%ₓef) (%%ₓxs_eq) (%%ₓys_eq)))
+    let eq ← i_to_expr ``(List.map_congr $(ef) $(xs_eq) $(ys_eq))
     pure (ys, Eq)
-  | e@(quote.1 (@List.finRange (%%ₓen))) => do
+  | e@q(@List.finRange $(en)) => do
     let n ← expr.to_nat en
-    let eis ← (List.finRange n).mmap fun i => expr.of_nat (quote.1 (Fin (%%ₓen))) i
+    let eis ← (List.finRange n).mmap fun i => expr.of_nat q(Fin $(en)) i
     let eq ← mk_eq_refl e
     pure (eis, Eq)
   | e => fail (to_fmt "Unknown list expression" ++ format.line ++ to_fmt e)
@@ -167,36 +167,36 @@ We return a list rather than a finset, so we can more easily iterate over it
 which is in general not true).
 -/
 unsafe def eval_multiset : expr → tactic (List expr × expr)
-  | e@(quote.1 (@Zero.zero (Multiset _) _)) => do
+  | e@q(@Zero.zero (Multiset _) _) => do
     let eq ← mk_eq_refl e
     pure ([], Eq)
-  | e@(quote.1 EmptyCollection.emptyCollection) => do
+  | e@q(EmptyCollection.emptyCollection) => do
     let eq ← mk_eq_refl e
     pure ([], Eq)
-  | e@(quote.1 (Singleton.singleton (%%ₓx))) => do
+  | e@q(Singleton.singleton $(x)) => do
     let eq ← mk_eq_refl e
     pure ([x], Eq)
-  | e@(quote.1 (Multiset.cons (%%ₓx) (%%ₓxs))) => do
+  | e@q(Multiset.cons $(x) $(xs)) => do
     let (xs, xs_eq) ← eval_multiset xs
-    let eq ← i_to_expr (pquote.1 (Multiset.cons_congr (%%ₓx) (%%ₓxs_eq)))
+    let eq ← i_to_expr ``(Multiset.cons_congr $(x) $(xs_eq))
     pure (x::xs, Eq)
-  | e@(quote.1 (@Insert.insert Multiset.hasInsert (%%ₓx) (%%ₓxs))) => do
+  | e@q(@Insert.insert Multiset.hasInsert $(x) $(xs)) => do
     let (xs, xs_eq) ← eval_multiset xs
-    let eq ← i_to_expr (pquote.1 (Multiset.cons_congr (%%ₓx) (%%ₓxs_eq)))
+    let eq ← i_to_expr ``(Multiset.cons_congr $(x) $(xs_eq))
     pure (x::xs, Eq)
-  | e@(quote.1 (Multiset.range (%%ₓen))) => do
+  | e@q(Multiset.range $(en)) => do
     let n ← expr.to_nat en
-    let eis ← (List.range n).mmap fun i => expr.of_nat (quote.1 ℕ) i
+    let eis ← (List.range n).mmap fun i => expr.of_nat q(ℕ) i
     let eq ← mk_eq_refl e
     pure (eis, Eq)
-  | quote.1 (@coe (@coeToLift (@coeBase Multiset.hasCoe)) (%%ₓexs)) => do
+  | q(@coe (@coeToLift (@coeBase Multiset.hasCoe)) $(exs)) => do
     let (xs, xs_eq) ← eval_list exs
-    let eq ← i_to_expr (pquote.1 (congr_arg coe (%%ₓxs_eq)))
+    let eq ← i_to_expr ``(congr_arg coe $(xs_eq))
     pure (xs, Eq)
-  | quote.1 (@Multiset.map (%%ₓα) (%%ₓβ) (%%ₓef) (%%ₓexs)) => do
+  | q(@Multiset.map $(α) $(β) $(ef) $(exs)) => do
     let (xs, xs_eq) ← eval_multiset exs
     let (ys, ys_eq) ← eval_list_map ef xs
-    let eq ← i_to_expr (pquote.1 (Multiset.map_congr (%%ₓef) (%%ₓxs_eq) (%%ₓys_eq)))
+    let eq ← i_to_expr ``(Multiset.map_congr $(ef) $(xs_eq) $(ys_eq))
     pure (ys, Eq)
   | e => fail (to_fmt "Unknown multiset expression" ++ format.line ++ to_fmt e)
 #align tactic.norm_num.eval_multiset tactic.norm_num.eval_multiset
@@ -224,33 +224,33 @@ theorem Finset.insert_eq_coe_list_cons {α : Type _} [DecidableEq α] (x : α) (
 
 /-- For now this only works on types that are contiguous subsets of the integers -/
 unsafe def eval_finset_interval : expr → tactic (Option (List expr × expr × expr))
-  | e@(quote.1 (@Finset.icc (%%ₓα) (%%ₓinst_1) (%%ₓinst_2) (%%ₓea) (%%ₓeb))) => do
+  | e@q(@Finset.icc $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
     let eis ← (Finset.icc a b).val.unquot.mmap fun i => expr.of_int α i
     let eq ← mk_eq_refl e
-    let nd ← i_to_expr (pquote.1 (Finset.nodup (%%ₓe)))
+    let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
-  | e@(quote.1 (@Finset.ico (%%ₓα) (%%ₓinst_1) (%%ₓinst_2) (%%ₓea) (%%ₓeb))) => do
+  | e@q(@Finset.ico $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
     let eis ← (Finset.ico a b).val.unquot.mmap fun i => expr.of_int α i
     let eq ← mk_eq_refl e
-    let nd ← i_to_expr (pquote.1 (Finset.nodup (%%ₓe)))
+    let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
-  | e@(quote.1 (@Finset.ioc (%%ₓα) (%%ₓinst_1) (%%ₓinst_2) (%%ₓea) (%%ₓeb))) => do
+  | e@q(@Finset.ioc $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
     let eis ← (Finset.ioc a b).val.unquot.mmap fun i => expr.of_int α i
     let eq ← mk_eq_refl e
-    let nd ← i_to_expr (pquote.1 (Finset.nodup (%%ₓe)))
+    let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
-  | e@(quote.1 (@Finset.ioo (%%ₓα) (%%ₓinst_1) (%%ₓinst_2) (%%ₓea) (%%ₓeb))) => do
+  | e@q(@Finset.ioo $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
     let eis ← (Finset.ioo a b).val.unquot.mmap fun i => expr.of_int α i
     let eq ← mk_eq_refl e
-    let nd ← i_to_expr (pquote.1 (Finset.nodup (%%ₓe)))
+    let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
   | _ => pure none
 #align tactic.norm_num.eval_finset_interval tactic.norm_num.eval_finset_interval
@@ -268,31 +268,29 @@ which is in general not true).
 elements of the finset are equal, for example to parse `{2, 1, 2}` into `[2, 1]`.
 -/
 unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) : expr → tactic (List expr × expr × expr)
-  | e@(quote.1 (Finset.mk (%%ₓval) (%%ₓnd))) => do
+  | e@q(Finset.mk $(val) $(nd)) => do
     let (val', Eq) ← eval_multiset val
-    let eq' ← i_to_expr (pquote.1 (Finset.mk_congr (%%ₓEq) _ _))
+    let eq' ← i_to_expr ``(Finset.mk_congr $(Eq) _ _)
     pure (val', eq', nd)
-  | e@(quote.1 EmptyCollection.emptyCollection) => do
+  | e@q(EmptyCollection.emptyCollection) => do
     let eq ← mk_eq_refl e
-    let nd ← i_to_expr (pquote.1 List.nodup_nil)
+    let nd ← i_to_expr ``(List.nodup_nil)
     pure ([], Eq, nd)
-  | e@(quote.1 (Singleton.singleton (%%ₓx))) => do
+  | e@q(Singleton.singleton $(x)) => do
     let eq ← mk_eq_refl e
-    let nd ← i_to_expr (pquote.1 (List.nodup_singleton (%%ₓx)))
+    let nd ← i_to_expr ``(List.nodup_singleton $(x))
     pure ([x], Eq, nd)
-  | quote.1 (@Insert.insert (@Finset.hasInsert (%%ₓdec)) (%%ₓx) (%%ₓxs)) => do
+  | q(@Insert.insert (@Finset.hasInsert $(dec)) $(x) $(xs)) => do
     let (exs, xs_eq, xs_nd) ← eval_finset xs
     let (is_mem, mem_pf) ← list.decide_mem decide_eq x exs
     if is_mem then do
-        let pf ←
-          i_to_expr (pquote.1 (Finset.insert_eq_coe_list_of_mem (%%ₓx) (%%ₓxs) (%%ₓmem_pf) (%%ₓxs_nd) (%%ₓxs_eq)))
+        let pf ← i_to_expr ``(Finset.insert_eq_coe_list_of_mem $(x) $(xs) $(mem_pf) $(xs_nd) $(xs_eq))
         pure (exs, pf, xs_nd)
       else do
-        let nd ← i_to_expr (pquote.1 (List.nodup_cons.mpr ⟨%%ₓmem_pf, %%ₓxs_nd⟩))
-        let pf ←
-          i_to_expr (pquote.1 (Finset.insert_eq_coe_list_cons (%%ₓx) (%%ₓxs) (%%ₓmem_pf) (%%ₓxs_nd) (%%ₓnd) (%%ₓxs_eq)))
+        let nd ← i_to_expr ``(List.nodup_cons.mpr ⟨$(mem_pf), $(xs_nd)⟩)
+        let pf ← i_to_expr ``(Finset.insert_eq_coe_list_cons $(x) $(xs) $(mem_pf) $(xs_nd) $(nd) $(xs_eq))
         pure (x::exs, pf, nd)
-  | quote.1 (@Finset.univ (%%ₓft)) => do
+  | q(@Finset.univ $(ft)) => do
     let-- Convert the fintype instance expression `ft` to a list of its elements.
       -- Unfold it to the `fintype.mk` constructor and a list of arguments.
       `fintype.mk
@@ -301,11 +299,11 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) : e
     let [_, args, _] ← get_app_args_whnf ft |
       fail (to_fmt "Expected 3 arguments to `fintype.mk`")
     eval_finset args
-  | e@(quote.1 (Finset.range (%%ₓen))) => do
+  | e@q(Finset.range $(en)) => do
     let n ← expr.to_nat en
-    let eis ← (List.range n).mmap fun i => expr.of_nat (quote.1 ℕ) i
+    let eis ← (List.range n).mmap fun i => expr.of_nat q(ℕ) i
     let eq ← mk_eq_refl e
-    let nd ← i_to_expr (pquote.1 (List.nodup_range (%%ₓen)))
+    let nd ← i_to_expr ``(List.nodup_range $(en))
     pure (eis, Eq, nd)
   | e => do
     let-- try some other parsers
@@ -323,42 +321,69 @@ theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : �
 #align tactic.norm_num.list.prod_cons_congr Tactic.NormNum.List.prod_cons_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- Evaluate `list.prod %%xs`,
-producing the evaluated expression and an equality proof. -/
-unsafe def list.prove_prod (α : expr) : List expr → tactic (expr × expr)
-  | [] => do
-    let result ← expr.of_nat α 1
-    let proof ← i_to_expr (pquote.1 (@List.prod_nil (%%ₓα) _))
-    pure (result, proof)
-  | x::xs => do
-    let eval_xs ← list.prove_prod xs
-    let xxs ← i_to_expr (pquote.1 ((%%ₓx) * %%ₓeval_xs.1))
-    let eval_xxs ← or_refl_conv norm_num.derive xxs
-    let exs ← expr.of_list α xs
-    let proof ←
-      i_to_expr
-          (pquote.1
-            (List.prod_cons_congr (%%ₓexs) (%%ₓx) (%%ₓeval_xs.1) (%%ₓeval_xxs.1) (%%ₓeval_xs.2) (%%ₓeval_xxs.2)))
-    pure (eval_xxs.1, proof)
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Evaluate `list.prod %%xs`,
+      producing the evaluated expression and an equality proof. -/
+    unsafe
+  def
+    list.prove_prod
+    ( α : expr ) : List expr → tactic ( expr × expr )
+    |
+        [ ]
+        =>
+        do let result ← expr.of_nat α 1 let proof ← i_to_expr ` `( @ List.prod_nil $ ( α ) _ ) pure ( result , proof )
+      |
+        x :: xs
+        =>
+        do
+          let eval_xs ← list.prove_prod xs
+            let xxs ← i_to_expr ` `( $ ( x ) * $ ( eval_xs . 1 ) )
+            let eval_xxs ← or_refl_conv norm_num.derive xxs
+            let exs ← expr.of_list α xs
+            let
+              proof
+                ←
+                i_to_expr
+                  `
+                    `(
+                      List.prod_cons_congr
+                        $ ( exs ) $ ( x ) $ ( eval_xs . 1 ) $ ( eval_xxs . 1 ) $ ( eval_xs . 2 ) $ ( eval_xxs . 2 )
+                      )
+            pure ( eval_xxs . 1 , proof )
 #align tactic.norm_num.list.prove_prod tactic.norm_num.list.prove_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- Evaluate `list.sum %%xs`,
-sumucing the evaluated expression and an equality proof. -/
-unsafe def list.prove_sum (α : expr) : List expr → tactic (expr × expr)
-  | [] => do
-    let result ← expr.of_nat α 0
-    let proof ← i_to_expr (pquote.1 (@List.sum_nil (%%ₓα) _))
-    pure (result, proof)
-  | x::xs => do
-    let eval_xs ← list.prove_sum xs
-    let xxs ← i_to_expr (pquote.1 ((%%ₓx) + %%ₓeval_xs.1))
-    let eval_xxs ← or_refl_conv norm_num.derive xxs
-    let exs ← expr.of_list α xs
-    let proof ←
-      i_to_expr
-          (pquote.1 (List.sum_cons_congr (%%ₓexs) (%%ₓx) (%%ₓeval_xs.1) (%%ₓeval_xxs.1) (%%ₓeval_xs.2) (%%ₓeval_xxs.2)))
-    pure (eval_xxs.1, proof)
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Evaluate `list.sum %%xs`,
+      sumucing the evaluated expression and an equality proof. -/
+    unsafe
+  def
+    list.prove_sum
+    ( α : expr ) : List expr → tactic ( expr × expr )
+    |
+        [ ]
+        =>
+        do let result ← expr.of_nat α 0 let proof ← i_to_expr ` `( @ List.sum_nil $ ( α ) _ ) pure ( result , proof )
+      |
+        x :: xs
+        =>
+        do
+          let eval_xs ← list.prove_sum xs
+            let xxs ← i_to_expr ` `( $ ( x ) + $ ( eval_xs . 1 ) )
+            let eval_xxs ← or_refl_conv norm_num.derive xxs
+            let exs ← expr.of_list α xs
+            let
+              proof
+                ←
+                i_to_expr
+                  `
+                    `(
+                      List.sum_cons_congr
+                        $ ( exs ) $ ( x ) $ ( eval_xs . 1 ) $ ( eval_xxs . 1 ) $ ( eval_xs . 2 ) $ ( eval_xxs . 2 )
+                      )
+            pure ( eval_xxs . 1 , proof )
 #align tactic.norm_num.list.prove_sum tactic.norm_num.list.prove_sum
 
 @[to_additive]
@@ -376,7 +401,7 @@ producing the evaluated expression and an equality proof. -/
 unsafe def list.prove_prod_map (β ef : expr) (xs : List expr) : tactic (expr × expr) := do
   let (fxs, fxs_eq) ← eval_list_map ef xs
   let (Prod, prod_eq) ← list.prove_prod β fxs
-  let eq ← i_to_expr (pquote.1 (List.prod_congr (%%ₓfxs_eq) (%%ₓprod_eq)))
+  let eq ← i_to_expr ``(List.prod_congr $(fxs_eq) $(prod_eq))
   pure (Prod, Eq)
 #align tactic.norm_num.list.prove_prod_map tactic.norm_num.list.prove_prod_map
 
@@ -385,7 +410,7 @@ producing the evaluated expression and an equality proof. -/
 unsafe def list.prove_sum_map (β ef : expr) (xs : List expr) : tactic (expr × expr) := do
   let (fxs, fxs_eq) ← eval_list_map ef xs
   let (Sum, sum_eq) ← list.prove_sum β fxs
-  let eq ← i_to_expr (pquote.1 (List.sum_congr (%%ₓfxs_eq) (%%ₓsum_eq)))
+  let eq ← i_to_expr ``(List.sum_congr $(fxs_eq) $(sum_eq))
   pure (Sum, Eq)
 #align tactic.norm_num.list.prove_sum_map tactic.norm_num.list.prove_sum_map
 
@@ -405,41 +430,41 @@ theorem Finset.eval_prod_of_list {β α : Type _} [CommMonoid β] (s : Finset α
 -/
 @[norm_num]
 unsafe def eval_big_operators : expr → tactic (expr × expr)
-  | quote.1 (@List.prod (%%ₓα) (%%ₓinst1) (%%ₓinst2) (%%ₓexs)) =>
-    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" <| do
+  | q(@List.prod $(α) $(inst1) $(inst2) $(exs)) =>
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" $ do
       let (xs, list_eq) ← eval_list exs
       let (result, sum_eq) ← list.prove_prod α xs
-      let pf ← i_to_expr (pquote.1 (List.prod_congr (%%ₓlist_eq) (%%ₓsum_eq)))
+      let pf ← i_to_expr ``(List.prod_congr $(list_eq) $(sum_eq))
       pure (result, pf)
-  | quote.1 (@List.sum (%%ₓα) (%%ₓinst1) (%%ₓinst2) (%%ₓexs)) =>
-    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" <| do
+  | q(@List.sum $(α) $(inst1) $(inst2) $(exs)) =>
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" $ do
       let (xs, list_eq) ← eval_list exs
       let (result, sum_eq) ← list.prove_sum α xs
-      let pf ← i_to_expr (pquote.1 (List.sum_congr (%%ₓlist_eq) (%%ₓsum_eq)))
+      let pf ← i_to_expr ``(List.sum_congr $(list_eq) $(sum_eq))
       pure (result, pf)
-  | quote.1 (@Multiset.prod (%%ₓα) (%%ₓinst) (%%ₓexs)) =>
-    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" <| do
+  | q(@Multiset.prod $(α) $(inst) $(exs)) =>
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" $ do
       let (xs, list_eq) ← eval_multiset exs
       let (result, sum_eq) ← list.prove_prod α xs
-      let pf ← i_to_expr (pquote.1 (Multiset.prod_congr (%%ₓlist_eq) (%%ₓsum_eq)))
+      let pf ← i_to_expr ``(Multiset.prod_congr $(list_eq) $(sum_eq))
       pure (result, pf)
-  | quote.1 (@Multiset.sum (%%ₓα) (%%ₓinst) (%%ₓexs)) =>
-    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" <| do
+  | q(@Multiset.sum $(α) $(inst) $(exs)) =>
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" $ do
       let (xs, list_eq) ← eval_multiset exs
       let (result, sum_eq) ← list.prove_sum α xs
-      let pf ← i_to_expr (pquote.1 (Multiset.sum_congr (%%ₓlist_eq) (%%ₓsum_eq)))
+      let pf ← i_to_expr ``(Multiset.sum_congr $(list_eq) $(sum_eq))
       pure (result, pf)
-  | quote.1 (@Finset.prod (%%ₓβ) (%%ₓα) (%%ₓinst) (%%ₓes) (%%ₓef)) =>
-    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" <| do
+  | q(@Finset.prod $(β) $(α) $(inst) $(es) $(ef)) =>
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" $ do
       let (xs, list_eq, nodup) ← eval_finset decide_eq es
       let (result, sum_eq) ← list.prove_prod_map β ef xs
-      let pf ← i_to_expr (pquote.1 (Finset.eval_prod_of_list (%%ₓes) (%%ₓef) (%%ₓnodup) (%%ₓlist_eq) (%%ₓsum_eq)))
+      let pf ← i_to_expr ``(Finset.eval_prod_of_list $(es) $(ef) $(nodup) $(list_eq) $(sum_eq))
       pure (result, pf)
-  | quote.1 (@Finset.sum (%%ₓβ) (%%ₓα) (%%ₓinst) (%%ₓes) (%%ₓef)) =>
-    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" <| do
+  | q(@Finset.sum $(β) $(α) $(inst) $(es) $(ef)) =>
+    tactic.trace_error "Internal error in `tactic.norm_num.eval_big_operators`:" $ do
       let (xs, list_eq, nodup) ← eval_finset decide_eq es
       let (result, sum_eq) ← list.prove_sum_map β ef xs
-      let pf ← i_to_expr (pquote.1 (Finset.eval_sum_of_list (%%ₓes) (%%ₓef) (%%ₓnodup) (%%ₓlist_eq) (%%ₓsum_eq)))
+      let pf ← i_to_expr ``(Finset.eval_sum_of_list $(es) $(ef) $(nodup) $(list_eq) $(sum_eq))
       pure (result, pf)
   | _ => failed
 #align tactic.norm_num.eval_big_operators tactic.norm_num.eval_big_operators

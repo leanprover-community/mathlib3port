@@ -87,38 +87,40 @@ infixl:300 " ⤳ " => Specializes
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Topology.Inseparable.«term_⤳_» `x " ⤳ " `y)
             ","
-            («term_≤_» (Term.app `pure [`x]) "≤" (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`y]))
+            (Init.Core.«term_≤_» (Term.app `pure [`x]) " ≤ " (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`y]))
             ","
             (Term.forall
              "∀"
              [`s]
              [(Term.typeSpec ":" (Term.app `Set [`X]))]
              ","
-             (Term.arrow (Term.app `IsOpen [`s]) "→" (Term.arrow («term_∈_» `y "∈" `s) "→" («term_∈_» `x "∈" `s))))
+             (Term.arrow
+              (Term.app `IsOpen [`s])
+              "→"
+              (Term.arrow (Init.Core.«term_∈_» `y " ∈ " `s) "→" (Init.Core.«term_∈_» `x " ∈ " `s))))
             ","
             (Term.forall
              "∀"
              [`s]
              [(Term.typeSpec ":" (Term.app `Set [`X]))]
              ","
-             (Term.arrow (Term.app `IsClosed [`s]) "→" (Term.arrow («term_∈_» `x "∈" `s) "→" («term_∈_» `y "∈" `s))))
+             (Term.arrow
+              (Term.app `IsClosed [`s])
+              "→"
+              (Term.arrow (Init.Core.«term_∈_» `x " ∈ " `s) "→" (Init.Core.«term_∈_» `y " ∈ " `s))))
             ","
-            («term_∈_»
+            (Init.Core.«term_∈_»
              `y
-             "∈"
-             (Term.app
-              `closure
-              [(Term.paren "(" [(«term{_}» "{" [`x] "}") [(Term.typeAscription ":" [(Term.app `Set [`X])])]] ")")]))
+             " ∈ "
+             (Term.app `closure [(Term.typeAscription "(" («term{_}» "{" [`x] "}") ":" [(Term.app `Set [`X])] ")")]))
             ","
-            («term_⊆_»
-             (Term.app
-              `closure
-              [(Term.paren "(" [(«term{_}» "{" [`y] "}") [(Term.typeAscription ":" [(Term.app `Set [`X])])]] ")")])
-             "⊆"
+            (Init.Core.«term_⊆_»
+             (Term.app `closure [(Term.typeAscription "(" («term{_}» "{" [`y] "}") ":" [(Term.app `Set [`X])] ")")])
+             " ⊆ "
              (Term.app `closure [(«term{_}» "{" [`x] "}")]))
             ","
             (Term.app `ClusterPt [`y (Term.app `pure [`x])])]
@@ -151,15 +153,16 @@ infixl:300 " ⤳ " => Specializes
               [`h `s `hsc `hx]
               []
               "=>"
-              (Term.app
+              (Init.Core.«term_$_»
                `of_not_not
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`hy]
-                  []
-                  "=>"
-                  (Term.app `h [(Order.Basic.«term_ᶜ» `s "ᶜ") (Term.proj `hsc "." `is_open_compl) `hy `hx])))]))))
+               " $ "
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`hy]
+                 []
+                 "=>"
+                 (Term.app `h [(Order.Basic.«term_ᶜ» `s "ᶜ") (Term.proj `hsc "." `is_open_compl) `hy `hx])))))))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
            []
@@ -175,7 +178,7 @@ infixl:300 " ⤳ " => Specializes
                `h
                [(Term.hole "_")
                 `isClosedClosure
-                («term_<|_» `subset_closure "<|" (Term.app `mem_singleton [(Term.hole "_")]))]))))
+                (Init.Core.«term_$_» `subset_closure " $ " (Term.app `mem_singleton [(Term.hole "_")]))]))))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "6") "↔" (num "5"))
            []
@@ -249,7 +252,7 @@ infixl:300 " ⤳ " => Specializes
                      ","
                      (Std.Tactic.RCases.rcasesPatLo
                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                      [":" («term_=_» `z "=" `x)])]
+                      [":" (Init.Core.«term_=_» `z " = " `x)])]
                     "⟩")])
                  [])])
               [])
@@ -288,15 +291,16 @@ infixl:300 " ⤳ " => Specializes
              [`h `s `hsc `hx]
              []
              "=>"
-             (Term.app
+             (Init.Core.«term_$_»
               `of_not_not
-              [(Term.fun
-                "fun"
-                (Term.basicFun
-                 [`hy]
-                 []
-                 "=>"
-                 (Term.app `h [(Order.Basic.«term_ᶜ» `s "ᶜ") (Term.proj `hsc "." `is_open_compl) `hy `hx])))]))))
+              " $ "
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`hy]
+                []
+                "=>"
+                (Term.app `h [(Order.Basic.«term_ᶜ» `s "ᶜ") (Term.proj `hsc "." `is_open_compl) `hy `hx])))))))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
           []
@@ -312,7 +316,7 @@ infixl:300 " ⤳ " => Specializes
               `h
               [(Term.hole "_")
                `isClosedClosure
-               («term_<|_» `subset_closure "<|" (Term.app `mem_singleton [(Term.hole "_")]))]))))
+               (Init.Core.«term_$_» `subset_closure " $ " (Term.app `mem_singleton [(Term.hole "_")]))]))))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "6") "↔" (num "5"))
           []
@@ -386,7 +390,7 @@ infixl:300 " ⤳ " => Specializes
                     ","
                     (Std.Tactic.RCases.rcasesPatLo
                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                     [":" («term_=_» `z "=" `x)])]
+                     [":" (Init.Core.«term_=_» `z " = " `x)])]
                    "⟩")])
                 [])])
              [])
@@ -449,7 +453,7 @@ infixl:300 " ⤳ " => Specializes
                 ","
                 (Std.Tactic.RCases.rcasesPatLo
                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                 [":" («term_=_» `z "=" `x)])]
+                 [":" (Init.Core.«term_=_» `z " = " `x)])]
                "⟩")])
             [])])
          [])
@@ -485,17 +489,17 @@ infixl:300 " ⤳ " => Specializes
              ","
              (Std.Tactic.RCases.rcasesPatLo
               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-              [":" («term_=_» `z "=" `x)])]
+              [":" (Init.Core.«term_=_» `z " = " `x)])]
             "⟩")])
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» `z "=" `x)
+      (Init.Core.«term_=_» `z " = " `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `z
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app (Term.proj `mem_closure_iff "." (fieldIdx "1")) [`h `s `ho `hy])
@@ -586,7 +590,7 @@ infixl:300 " ⤳ " => Specializes
       `nhds_basis_opens
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `nhds_basis_opens [(Term.hole "_")]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `nhds_basis_opens [(Term.hole "_")]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
@@ -643,9 +647,9 @@ infixl:300 " ⤳ " => Specializes
           tfae_have 2 → 3
           exact fun h s hso hy => h hso . mem_nhds hy
           tfae_have 3 → 4
-          exact fun h s hsc hx => of_not_not fun hy => h s ᶜ hsc . is_open_compl hy hx
+          exact fun h s hsc hx => of_not_not $ fun hy => h s ᶜ hsc . is_open_compl hy hx
           tfae_have 4 → 5
-          exact fun h => h _ isClosedClosure subset_closure <| mem_singleton _
+          exact fun h => h _ isClosedClosure subset_closure $ mem_singleton _
           tfae_have 6 ↔ 5
           exact is_closed_closure.closure_subset_iff.trans singleton_subset_iff
           tfae_have 5 ↔ 7
@@ -679,7 +683,7 @@ theorem Specializes.mem_open (h : x ⤳ y) (hs : IsOpen s) (hy : y ∈ s) : x �
   specializes_iff_forall_open.1 h s hs hy
 #align specializes.mem_open Specializes.mem_open
 
-theorem IsOpen.not_specializes (hs : IsOpen s) (hx : x ∉ s) (hy : y ∈ s) : ¬x ⤳ y := fun h => hx <| h.mem_open hs hy
+theorem IsOpen.not_specializes (hs : IsOpen s) (hx : x ∉ s) (hy : y ∈ s) : ¬x ⤳ y := fun h => hx $ h.mem_open hs hy
 #align is_open.not_specializes IsOpen.not_specializes
 
 theorem specializes_iff_forall_closed : x ⤳ y ↔ ∀ s : Set X, IsClosed s → x ∈ s → y ∈ s :=
@@ -691,7 +695,7 @@ theorem Specializes.mem_closed (h : x ⤳ y) (hs : IsClosed s) (hx : x ∈ s) : 
 #align specializes.mem_closed Specializes.mem_closed
 
 theorem IsClosed.not_specializes (hs : IsClosed s) (hx : x ∈ s) (hy : y ∉ s) : ¬x ⤳ y := fun h =>
-  hy <| h.mem_closed hs hx
+  hy $ h.mem_closed hs hx
 #align is_closed.not_specializes IsClosed.not_specializes
 
 theorem specializes_iff_mem_closure : x ⤳ y ↔ y ∈ closure ({x} : Set X) :=
@@ -726,7 +730,7 @@ theorem Specializes.trans : x ⤳ y → y ⤳ z → x ⤳ z :=
 #align specializes.trans Specializes.trans
 
 theorem specializes_of_nhds_within (h₁ : 𝓝[s] x ≤ 𝓝[s] y) (h₂ : x ∈ s) : x ⤳ y :=
-  specializes_iff_pure.2 <|
+  specializes_iff_pure.2 $
     calc
       pure x ≤ 𝓝[s] x := le_inf (pure_le_nhds _) (le_principal_iff.2 h₂)
       _ ≤ 𝓝[s] y := h₁
@@ -735,7 +739,7 @@ theorem specializes_of_nhds_within (h₁ : 𝓝[s] x ≤ 𝓝[s] y) (h₂ : x �
 #align specializes_of_nhds_within specializes_of_nhds_within
 
 theorem Specializes.map_of_continuous_at (h : x ⤳ y) (hy : ContinuousAt f y) : f x ⤳ f y :=
-  specializes_iff_pure.2 fun s hs => mem_pure.2 <| mem_preimage.1 <| mem_of_mem_nhds <| hy.mono_left h hs
+  specializes_iff_pure.2 $ fun s hs => mem_pure.2 $ mem_preimage.1 $ mem_of_mem_nhds $ hy.mono_left h hs
 #align specializes.map_of_continuous_at Specializes.map_of_continuous_at
 
 theorem Specializes.map (h : x ⤳ y) (hf : Continuous f) : f x ⤳ f y :=
@@ -844,7 +848,7 @@ theorem inseparable_iff_forall_closed : (x ~ y) ↔ ∀ s : Set X, IsClosed s �
 #align inseparable_iff_forall_closed inseparable_iff_forall_closed
 
 theorem inseparable_iff_mem_closure : (x ~ y) ↔ x ∈ closure ({y} : Set X) ∧ y ∈ closure ({x} : Set X) :=
-  inseparable_iff_specializes_and.trans <| by simp only [specializes_iff_mem_closure, and_comm']
+  inseparable_iff_specializes_and.trans $ by simp only [specializes_iff_mem_closure, and_comm']
 #align inseparable_iff_mem_closure inseparable_iff_mem_closure
 
 theorem inseparable_iff_closure_eq : (x ~ y) ↔ closure ({x} : Set X) = closure {y} := by
@@ -921,11 +925,11 @@ theorem map (h : x ~ y) (hf : Continuous f) : f x ~ f y :=
 end Inseparable
 
 theorem IsClosed.not_inseparable (hs : IsClosed s) (hx : x ∈ s) (hy : y ∉ s) : ¬(x ~ y) := fun h =>
-  hy <| (h.mem_closed_iff hs).1 hx
+  hy $ (h.mem_closed_iff hs).1 hx
 #align is_closed.not_inseparable IsClosed.not_inseparable
 
 theorem IsOpen.not_inseparable (hs : IsOpen s) (hx : x ∈ s) (hy : y ∉ s) : ¬(x ~ y) := fun h =>
-  hy <| (h.mem_open_iff hs).1 hx
+  hy $ (h.mem_open_iff hs).1 hx
 #align is_open.not_inseparable IsOpen.not_inseparable
 
 /-!
@@ -995,7 +999,7 @@ theorem preimage_image_mk_open (hs : IsOpen s) : mk ⁻¹' (mk '' s) = s := by
 #align separation_quotient.preimage_image_mk_open SeparationQuotient.preimage_image_mk_open
 
 theorem is_open_map_mk : IsOpenMap (mk : X → SeparationQuotient X) := fun s hs =>
-  quotient_map_mk.is_open_preimage.1 <| by rwa [preimage_image_mk_open hs]
+  quotient_map_mk.is_open_preimage.1 $ by rwa [preimage_image_mk_open hs]
 #align separation_quotient.is_open_map_mk SeparationQuotient.is_open_map_mk
 
 theorem preimage_image_mk_closed (hs : IsClosed s) : mk ⁻¹' (mk '' s) = s := by
@@ -1010,7 +1014,7 @@ theorem inducing_mk : Inducing (mk : X → SeparationQuotient X) :=
 #align separation_quotient.inducing_mk SeparationQuotient.inducing_mk
 
 theorem is_closed_map_mk : IsClosedMap (mk : X → SeparationQuotient X) :=
-  inducing_mk.IsClosedMap <| by
+  inducing_mk.IsClosedMap $ by
     rw [range_mk]
     exact isClosedUniv
 #align separation_quotient.is_closed_map_mk SeparationQuotient.is_closed_map_mk
@@ -1049,7 +1053,7 @@ theorem preimage_mk_frontier : mk ⁻¹' frontier t = frontier (mk ⁻¹' t) :=
 #align separation_quotient.preimage_mk_frontier SeparationQuotient.preimage_mk_frontier
 
 theorem image_mk_closure : mk '' closure s = closure (mk '' s) :=
-  (image_closure_subset_closure_image continuous_mk).antisymm <| is_closed_map_mk.closure_image_subset _
+  (image_closure_subset_closure_image continuous_mk).antisymm $ is_closed_map_mk.closure_image_subset _
 #align separation_quotient.image_mk_closure SeparationQuotient.image_mk_closure
 
 theorem map_prod_map_mk_nhds (x : X) (y : Y) : map (Prod.map mk mk) (𝓝 (x, y)) = 𝓝 (mk x, mk y) := by
@@ -1077,8 +1081,7 @@ theorem lift_comp_mk {f : X → α} (hf : ∀ x y, (x ~ y) → f x = f y) : lift
 
 @[simp]
 theorem tendsto_lift_nhds_mk {f : X → α} {hf : ∀ x y, (x ~ y) → f x = f y} {x : X} {l : Filter α} :
-    Tendsto (lift f hf) (𝓝 <| mk x) l ↔ Tendsto f (𝓝 x) l := by
-  simp only [← map_mk_nhds, tendsto_map'_iff, lift_comp_mk]
+    Tendsto (lift f hf) (𝓝 $ mk x) l ↔ Tendsto f (𝓝 x) l := by simp only [← map_mk_nhds, tendsto_map'_iff, lift_comp_mk]
 #align separation_quotient.tendsto_lift_nhds_mk SeparationQuotient.tendsto_lift_nhds_mk
 
 @[simp]
@@ -1124,7 +1127,7 @@ theorem lift₂_mk {f : X → Y → α} (hf : ∀ a b c d, (a ~ c) → (b ~ d) �
 
 @[simp]
 theorem tendsto_lift₂_nhds {f : X → Y → α} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d} {x : X} {y : Y}
-    {l : Filter α} : Tendsto (uncurry <| lift₂ f hf) (𝓝 (mk x, mk y)) l ↔ Tendsto (uncurry f) (𝓝 (x, y)) l := by
+    {l : Filter α} : Tendsto (uncurry $ lift₂ f hf) (𝓝 (mk x, mk y)) l ↔ Tendsto (uncurry f) (𝓝 (x, y)) l := by
   rw [← map_prod_map_mk_nhds, tendsto_map'_iff]
   rfl
 #align separation_quotient.tendsto_lift₂_nhds SeparationQuotient.tendsto_lift₂_nhds
@@ -1132,21 +1135,21 @@ theorem tendsto_lift₂_nhds {f : X → Y → α} {hf : ∀ a b c d, (a ~ c) →
 @[simp]
 theorem tendsto_lift₂_nhds_within {f : X → Y → α} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d} {x : X} {y : Y}
     {s : Set (SeparationQuotient X × SeparationQuotient Y)} {l : Filter α} :
-    Tendsto (uncurry <| lift₂ f hf) (𝓝[s] (mk x, mk y)) l ↔ Tendsto (uncurry f) (𝓝[Prod.map mk mk ⁻¹' s] (x, y)) l := by
+    Tendsto (uncurry $ lift₂ f hf) (𝓝[s] (mk x, mk y)) l ↔ Tendsto (uncurry f) (𝓝[Prod.map mk mk ⁻¹' s] (x, y)) l := by
   rw [nhdsWithin, ← map_prod_map_mk_nhds, ← Filter.push_pull, comap_principal]
   rfl
 #align separation_quotient.tendsto_lift₂_nhds_within SeparationQuotient.tendsto_lift₂_nhds_within
 
 @[simp]
 theorem continuous_at_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d} {x : X} {y : Y} :
-    ContinuousAt (uncurry <| lift₂ f hf) (mk x, mk y) ↔ ContinuousAt (uncurry f) (x, y) :=
+    ContinuousAt (uncurry $ lift₂ f hf) (mk x, mk y) ↔ ContinuousAt (uncurry f) (x, y) :=
   tendsto_lift₂_nhds
 #align separation_quotient.continuous_at_lift₂ SeparationQuotient.continuous_at_lift₂
 
 @[simp]
 theorem continuous_within_at_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d}
     {s : Set (SeparationQuotient X × SeparationQuotient Y)} {x : X} {y : Y} :
-    ContinuousWithinAt (uncurry <| lift₂ f hf) s (mk x, mk y) ↔
+    ContinuousWithinAt (uncurry $ lift₂ f hf) s (mk x, mk y) ↔
       ContinuousWithinAt (uncurry f) (Prod.map mk mk ⁻¹' s) (x, y) :=
   tendsto_lift₂_nhds_within
 #align separation_quotient.continuous_within_at_lift₂ SeparationQuotient.continuous_within_at_lift₂
@@ -1154,7 +1157,7 @@ theorem continuous_within_at_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~
 @[simp]
 theorem continuous_on_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d}
     {s : Set (SeparationQuotient X × SeparationQuotient Y)} :
-    ContinuousOn (uncurry <| lift₂ f hf) s ↔ ContinuousOn (uncurry f) (Prod.map mk mk ⁻¹' s) := by
+    ContinuousOn (uncurry $ lift₂ f hf) s ↔ ContinuousOn (uncurry f) (Prod.map mk mk ⁻¹' s) := by
   simp_rw [ContinuousOn, (surjective_mk.prod_map surjective_mk).forall, Prod.forall, Prod.map,
     continuous_within_at_lift₂]
   rfl
@@ -1162,7 +1165,7 @@ theorem continuous_on_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) →
 
 @[simp]
 theorem continuous_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d} :
-    Continuous (uncurry <| lift₂ f hf) ↔ Continuous (uncurry f) := by
+    Continuous (uncurry $ lift₂ f hf) ↔ Continuous (uncurry f) := by
   simp only [continuous_iff_continuous_on_univ, continuous_on_lift₂, preimage_univ]
 #align separation_quotient.continuous_lift₂ SeparationQuotient.continuous_lift₂
 

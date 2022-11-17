@@ -54,7 +54,7 @@ where `f g : X ⟶ Y` for some objects `X Y : V` with `[S : category V]`,
 extract the expression for `S`.
 -/
 unsafe def extract_category : expr → tactic expr
-  | quote.1 (@Eq (@Quiver.Hom _ (@CategoryStruct.toQuiver _ (@Category.toCategoryStruct _ (%%ₓS))) _ _) _ _) => pure S
+  | q(@Eq (@Quiver.Hom _ (@CategoryStruct.toQuiver _ (@Category.toCategoryStruct _ $(S))) _ _) _ _) => pure S
   | _ => failed
 #align tactic.extract_category tactic.extract_category
 
@@ -74,9 +74,9 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
   let (vs, t) ← infer_type h >>= open_pis
   let (f, g) ← match_eq t
   let S ← extract_category t <|> fail "no morphism equation found in statement"
-  let quote.1 (@Quiver.Hom _ (%%ₓH) (%%ₓX) (%%ₓY)) ← infer_type f
+  let q(@Quiver.Hom _ $(H) $(X) $(Y)) ← infer_type f
   let C ← infer_type X
-  let CC_type ← to_expr (pquote.1 (@ConcreteCategory (%%ₓC) (%%ₓS)))
+  let CC_type ← to_expr ``(@ConcreteCategory $(C) $(S))
   let (CC, CC_found) ←
     (do
           let CC ← mk_instance CC_type
@@ -88,18 +88,16 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
     ←-- This is need to fill in universe levels fixed by `mk_instance`:
         instantiate_mvars
         CC_type
-  let x_type ←
-    to_expr (pquote.1 (@coeSort (%%ₓC) _ (@CategoryTheory.ConcreteCategory.hasCoeToSort (%%ₓC) (%%ₓS) (%%ₓCC)) (%%ₓX)))
+  let x_type ← to_expr ``(@coeSort $(C) _ (@CategoryTheory.ConcreteCategory.hasCoeToSort $(C) $(S) $(CC)) $(X))
   let x ← mk_local_def `x x_type
   let t' ←
     to_expr
-        (pquote.1
-          (@coeFn (@Quiver.Hom (%%ₓC) (%%ₓH) (%%ₓX) (%%ₓY)) _
-              (@CategoryTheory.ConcreteCategory.hasCoeToFun (%%ₓC) (%%ₓS) (%%ₓCC) (%%ₓX) (%%ₓY)) (%%ₓf) (%%ₓx) =
-            @coeFn (@Quiver.Hom (%%ₓC) (%%ₓH) (%%ₓX) (%%ₓY)) _
-              (@CategoryTheory.ConcreteCategory.hasCoeToFun (%%ₓC) (%%ₓS) (%%ₓCC) (%%ₓX) (%%ₓY)) (%%ₓg) (%%ₓx)))
+        ``(@coeFn (@Quiver.Hom $(C) $(H) $(X) $(Y)) _
+              (@CategoryTheory.ConcreteCategory.hasCoeToFun $(C) $(S) $(CC) $(X) $(Y)) $(f) $(x) =
+            @coeFn (@Quiver.Hom $(C) $(H) $(X) $(Y)) _
+              (@CategoryTheory.ConcreteCategory.hasCoeToFun $(C) $(S) $(CC) $(X) $(Y)) $(g) $(x))
   let c' := h.mk_app vs
-  let (_, pr) ← solve_aux t' (andthen (rewrite_target c') reflexivity)
+  let (_, pr) ← solve_aux t' (rewrite_target c'; reflexivity)
   let-- The codomain of forget lives in a new universe, which may be now a universe metavariable
     -- if we didn't synthesize an instance:
     [w, _, _]
@@ -141,7 +139,7 @@ unsafe def elementwise_lemma (n : Name) (n' : Name := n.appendSuffix "_apply") :
   let c := @expr.const true n d.univ_levels
   let (t'', pr', l') ← prove_elementwise c
   let params := l'.toList ++ d.univ_params
-  add_decl <| declaration.thm n' params t'' (pure pr')
+  add_decl $ declaration.thm n' params t'' (pure pr')
   copy_attribute `simp n n'
 #align tactic.elementwise_lemma tactic.elementwise_lemma
 
@@ -180,7 +178,7 @@ unsafe def elementwise_attr : user_attribute Unit (Option Name) where
     some fun n _ _ => do
       let some n' ← elementwise_attr.get_param n |
         elementwise_lemma n (n.appendSuffix "_apply")
-      elementwise_lemma n <| n ++ n'
+      elementwise_lemma n $ n ++ n'
 #align tactic.elementwise_attr tactic.elementwise_attr
 
 add_tactic_doc
@@ -189,8 +187,7 @@ add_tactic_doc
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- `elementwise h`, for assumption `w : ∀ ..., f ≫ g = h`, creates a new assumption
 `w : ∀ ... (x : X), g (f x) = h x`.
 
@@ -210,7 +207,7 @@ end Interactive
 
 /-- Auxiliary definition for `category_theory.elementwise_of`. -/
 unsafe def derive_elementwise_proof : tactic Unit := do
-  let quote.1 (CalculatedProp (%%ₓv) (%%ₓh)) ← target
+  let q(CalculatedProp $(v) $(h)) ← target
   let (t, pr, n) ← prove_elementwise h
   unify v t
   exact pr

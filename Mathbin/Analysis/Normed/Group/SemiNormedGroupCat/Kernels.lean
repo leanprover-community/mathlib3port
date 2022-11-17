@@ -84,7 +84,7 @@ section EqualizersAndKernels
 
 /-- The equalizer cone for a parallel pair of morphisms of seminormed groups. -/
 def fork {V W : SemiNormedGroupCat.{u}} (f g : V ⟶ W) : Fork f g :=
-  @Fork.ofι _ _ _ _ _ _ (of (f - g).ker) (NormedAddGroupHom.incl (f - g).ker) <| by
+  @Fork.ofι _ _ _ _ _ _ (of (f - g).ker) (NormedAddGroupHom.incl (f - g).ker) $ by
     ext v
     have : v.1 ∈ (f - g).ker := v.2
     simpa only [NormedAddGroupHom.incl_apply, Pi.zero_apply, coe_comp, NormedAddGroupHom.coe_zero, Subtype.val_eq_coe,
@@ -100,7 +100,7 @@ instance has_limit_parallel_pair {V W : SemiNormedGroupCat.{u}} (f g : V ⟶ W) 
         IsLimit :=
           Fork.IsLimit.mk _
             (fun c =>
-              NormedAddGroupHom.ker.lift (Fork.ι c) _ <|
+              NormedAddGroupHom.ker.lift (Fork.ι c) _ $
                 show NormedAddGroupHom.compHom (f - g) c.ι = 0 by
                   rw [AddMonoidHom.map_sub, AddMonoidHom.sub_apply, sub_eq_zero]
                   exact c.condition)
@@ -112,7 +112,7 @@ instance has_limit_parallel_pair {V W : SemiNormedGroupCat.{u}} (f g : V ⟶ W) 
 #align SemiNormedGroup.has_limit_parallel_pair SemiNormedGroupCat.has_limit_parallel_pair
 
 instance : Limits.HasEqualizers.{u, u + 1} SemiNormedGroupCat :=
-  (@has_equalizers_of_has_limit_parallel_pair SemiNormedGroupCat _) fun V W f g =>
+  @has_equalizers_of_has_limit_parallel_pair SemiNormedGroupCat _ $ fun V W f g =>
     SemiNormedGroupCat.has_limit_parallel_pair f g
 
 end EqualizersAndKernels
@@ -231,7 +231,7 @@ theorem explicit_cokernel_desc_comp_eq_desc {X Y Z W : SemiNormedGroupCat.{u}} {
 @[simp]
 theorem explicit_cokernel_desc_zero {X Y Z : SemiNormedGroupCat.{u}} {f : X ⟶ Y} :
     explicitCokernelDesc (show f ≫ (0 : Y ⟶ Z) = 0 from CategoryTheory.Limits.comp_zero) = 0 :=
-  Eq.symm <| explicit_cokernel_desc_unique _ _ CategoryTheory.Limits.comp_zero
+  Eq.symm $ explicit_cokernel_desc_unique _ _ CategoryTheory.Limits.comp_zero
 #align SemiNormedGroup.explicit_cokernel_desc_zero SemiNormedGroupCat.explicit_cokernel_desc_zero
 
 @[ext.1]
@@ -318,7 +318,7 @@ theorem explicit_cokernel_iso_hom_desc {X Y Z : SemiNormedGroupCat.{u}} {f : X �
 /-- A special case of `category_theory.limits.cokernel.map` adapted to `explicit_cokernel`. -/
 noncomputable def explicitCokernel.map {A B C D : SemiNormedGroupCat.{u}} {fab : A ⟶ B} {fbd : B ⟶ D} {fac : A ⟶ C}
     {fcd : C ⟶ D} (h : fab ≫ fbd = fac ≫ fcd) : explicitCokernel fab ⟶ explicitCokernel fcd :=
-  @explicitCokernelDesc _ _ _ fab (fbd ≫ explicitCokernelπ _) <| by simp [reassoc_of h]
+  @explicitCokernelDesc _ _ _ fab (fbd ≫ explicitCokernelπ _) $ by simp [reassoc_of h]
 #align SemiNormedGroup.explicit_cokernel.map SemiNormedGroupCat.explicitCokernel.map
 
 /-- A special case of `category_theory.limits.cokernel.map_desc` adapted to `explicit_cokernel`. -/

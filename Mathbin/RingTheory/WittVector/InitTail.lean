@@ -44,21 +44,19 @@ namespace Tactic
 
 namespace Interactive
 
-setup_tactic_parser
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/-- `init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
--/
-unsafe def init_ring (assert : parse (tk "using" *> parser.pexpr)?) : tactic Unit := do
-  sorry
-  match assert with
-    | none => skip
-    | some e => do
-      sorry
-      tactic.replace `h (ppquote.1 ((%%ₓe) p _ h))
-      sorry
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
+      -/
+    unsafe
+  def
+    init_ring
+    ( assert : parse ( tk "using" *> parser.pexpr ) ? ) : tactic Unit
+    := do sorry match assert with | none => skip | some e => do sorry tactic.replace `h `( $ ( e ) p _ h ) sorry
 #align tactic.interactive.init_ring tactic.interactive.init_ring
 
 end Interactive

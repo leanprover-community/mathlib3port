@@ -115,13 +115,13 @@ theorem zero_is_radical_iff [MonoidWithZero R] : IsRadical (0 : R) ↔ IsReduced
 
 theorem is_radical_iff_span_singleton [CommSemiring R] : IsRadical y ↔ (Ideal.span ({y} : Set R)).IsRadical := by
   simp_rw [IsRadical, ← Ideal.mem_span_singleton]
-  exact forall_swap.trans (forall_congr' fun r => exists_imp_distrib.symm)
+  exact forall_swap.trans (forall_congr' $ fun r => exists_imp_distrib.symm)
 #align is_radical_iff_span_singleton is_radical_iff_span_singleton
 
 theorem is_radical_iff_pow_one_lt [MonoidWithZero R] (k : ℕ) (hk : 1 < k) : IsRadical y ↔ ∀ x, y ∣ x ^ k → y ∣ x :=
   ⟨fun h x => h k x, fun h =>
-    k.cauchy_induction_mul (fun n h x hd => h x <| (pow_succ' x n).symm ▸ hd.mulRight x) 0 hk
-      (fun x hd => pow_one x ▸ hd) fun n _ hn x hd => h x <| hn _ <| (pow_mul x k n).subst hd⟩
+    k.cauchy_induction_mul (fun n h x hd => h x $ (pow_succ' x n).symm ▸ hd.mulRight x) 0 hk
+      (fun x hd => pow_one x ▸ hd) fun n _ hn x hd => h x $ hn _ $ (pow_mul x k n).subst hd⟩
 #align is_radical_iff_pow_one_lt is_radical_iff_pow_one_lt
 
 theorem is_reduced_iff_pow_one_lt [MonoidWithZero R] (k : ℕ) (hk : 1 < k) : IsReduced R ↔ ∀ x : R, x ^ k = 0 → x = 0 :=
@@ -195,7 +195,7 @@ theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
 #align mem_nilradical mem_nilradical
 
 theorem nilradical_eq_Inf (R : Type _) [CommSemiring R] : nilradical R = inf { J : Ideal R | J.IsPrime } :=
-  (Ideal.radical_eq_Inf ⊥).trans <| by simp_rw [and_iff_right bot_le]
+  (Ideal.radical_eq_Inf ⊥).trans $ by simp_rw [and_iff_right bot_le]
 #align nilradical_eq_Inf nilradical_eq_Inf
 
 theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.IsPrime → x ∈ J := by
@@ -209,7 +209,7 @@ theorem nilradical_le_prime (J : Ideal R) [H : J.IsPrime] : nilradical R ≤ J :
 
 @[simp]
 theorem nilradical_eq_zero (R : Type _) [CommSemiring R] [IsReduced R] : nilradical R = 0 :=
-  Ideal.ext fun _ => is_nilpotent_iff_eq_zero
+  Ideal.ext $ fun _ => is_nilpotent_iff_eq_zero
 #align nilradical_eq_zero nilradical_eq_zero
 
 end CommSemiring

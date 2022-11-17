@@ -30,7 +30,7 @@ variable [Preorder α] {a b c : α}
 
 @[simp]
 theorem Iic_disjoint_Ioi (h : a ≤ b) : Disjoint (iic a) (ioi b) :=
-  disjoint_left.mpr fun x ha hb => (h.trans_lt hb).not_le ha
+  disjoint_left.mpr $ fun x ha hb => (h.trans_lt hb).not_le ha
 #align set.Iic_disjoint_Ioi Set.Iic_disjoint_Ioi
 
 @[simp]
@@ -45,7 +45,7 @@ theorem Ioc_disjoint_Ioc_same {a b c : α} : Disjoint (ioc a b) (ioc b c) :=
 
 @[simp]
 theorem Ico_disjoint_Ico_same {a b c : α} : Disjoint (ico a b) (ico b c) :=
-  disjoint_left.mpr fun x hab hbc => hab.2.not_le hbc.1
+  disjoint_left.mpr $ fun x hab hbc => hab.2.not_le hbc.1
 #align set.Ico_disjoint_Ico_same Set.Ico_disjoint_Ico_same
 
 @[simp]
@@ -60,12 +60,12 @@ theorem Iic_disjoint_Ici : Disjoint (iic a) (ici b) ↔ ¬b ≤ a :=
 
 @[simp]
 theorem Union_Iic : (⋃ a : α, iic a) = univ :=
-  Union_eq_univ_iff.2 fun x => ⟨x, right_mem_Iic⟩
+  Union_eq_univ_iff.2 $ fun x => ⟨x, right_mem_Iic⟩
 #align set.Union_Iic Set.Union_Iic
 
 @[simp]
 theorem Union_Ici : (⋃ a : α, ici a) = univ :=
-  Union_eq_univ_iff.2 fun x => ⟨x, left_mem_Ici⟩
+  Union_eq_univ_iff.2 $ fun x => ⟨x, left_mem_Ici⟩
 #align set.Union_Ici Set.Union_Ici
 
 @[simp]
@@ -154,15 +154,17 @@ theorem Union_Ioc_eq_Ioi_self_iff {f : ι → α} {a : α} : (⋃ i, ioc a (f i)
   simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
 #align set.Union_Ioc_eq_Ioi_self_iff Set.Union_Ioc_eq_Ioi_self_iff
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 @[simp]
 theorem bUnion_Ico_eq_Iio_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
-    (⋃ (i) (hi : p i), ico (f i hi) a) = iio a ↔ ∀ x < a, ∃ i hi, f i hi ≤ x := by
+    (⋃ (i) (hi : p i), ico (f i hi) a) = iio a ↔ ∀ x < a, ∃ (i) (hi), f i hi ≤ x := by
   simp [← Ici_inter_Iio, ← Union_inter, subset_def]
 #align set.bUnion_Ico_eq_Iio_self_iff Set.bUnion_Ico_eq_Iio_self_iff
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 @[simp]
 theorem bUnion_Ioc_eq_Ioi_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
-    (⋃ (i) (hi : p i), ioc a (f i hi)) = ioi a ↔ ∀ x, a < x → ∃ i hi, x ≤ f i hi := by
+    (⋃ (i) (hi : p i), ioc a (f i hi)) = ioi a ↔ ∀ x, a < x → ∃ (i) (hi), x ≤ f i hi := by
   simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
 #align set.bUnion_Ioc_eq_Ioi_self_iff Set.bUnion_Ioc_eq_Ioi_self_iff
 
@@ -175,7 +177,7 @@ section UnionIxx
 variable [LinearOrder α] {s : Set α} {a : α} {f : ι → α}
 
 theorem IsGlb.bUnion_Ioi_eq (h : IsGlb s a) : (⋃ x ∈ s, ioi x) = ioi a := by
-  refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
+  refine' (Union₂_subset $ fun x hx => _).antisymm fun x hx => _
   · exact Ioi_subset_Ioi (h.1 hx)
     
   · rcases h.exists_between hx with ⟨y, hys, hay, hyx⟩

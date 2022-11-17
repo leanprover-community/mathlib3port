@@ -41,14 +41,14 @@ theorem summable_of_absolute_convergence_real {f : ℕ → ℝ} :
 
 
 theorem tendsto_norm_zero' {𝕜 : Type _} [NormedAddCommGroup 𝕜] : Tendsto (norm : 𝕜 → ℝ) (𝓝[≠] 0) (𝓝[>] 0) :=
-  tendsto_norm_zero.inf <| tendsto_principal_principal.2 fun x hx => norm_pos_iff.2 hx
+  tendsto_norm_zero.inf $ tendsto_principal_principal.2 $ fun x hx => norm_pos_iff.2 hx
 #align tendsto_norm_zero' tendsto_norm_zero'
 
 namespace NormedField
 
 theorem tendsto_norm_inverse_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜] :
     Tendsto (fun x : 𝕜 => ∥x⁻¹∥) (𝓝[≠] 0) atTop :=
-  (tendsto_inv_zero_at_top.comp tendsto_norm_zero').congr fun x => (norm_inv x).symm
+  (tendsto_inv_zero_at_top.comp tendsto_norm_zero').congr $ fun x => (norm_inv x).symm
 #align normed_field.tendsto_norm_inverse_nhds_within_0_at_top NormedField.tendsto_norm_inverse_nhds_within_0_at_top
 
 theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜] {m : ℤ} (hm : m < 0) :
@@ -91,7 +91,7 @@ end NormedField
 theorem is_o_pow_pow_of_lt_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ < r₂) :
     (fun n : ℕ => r₁ ^ n) =o[at_top] fun n => r₂ ^ n :=
   have H : 0 < r₂ := h₁.trans_lt h₂
-  (is_o_of_tendsto fun n hn => False.elim <| H.ne' <| pow_eq_zero hn) <|
+  (is_o_of_tendsto fun n hn => False.elim $ H.ne' $ pow_eq_zero hn) $
     (tendsto_pow_at_top_nhds_0_of_lt_1 (div_nonneg h₁ (h₁.trans h₂.le)) ((div_lt_one H).2 h₂)).congr fun n =>
       div_pow _ _ _
 #align is_o_pow_pow_of_lt_left is_o_pow_pow_of_lt_left
@@ -122,113 +122,149 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
       "theorem"
       (Command.declId `tfae_exists_lt_is_o_pow [])
       (Command.declSig
-       [(Term.explicitBinder "(" [`f] [":" (Term.arrow (termℕ "ℕ") "→" (Data.Real.Basic.termℝ "ℝ"))] [] ")")
+       [(Term.explicitBinder
+         "("
+         [`f]
+         [":" (Term.arrow (Init.Data.Nat.Basic.termℕ "ℕ") "→" (Data.Real.Basic.termℝ "ℝ"))]
+         []
+         ")")
         (Term.explicitBinder "(" [`R] [":" (Data.Real.Basic.termℝ "ℝ")] [] ")")]
        (Term.typeSpec
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
-           [(Std.ExtendedBinder.«term∃__,_»
+           [(Init.Logic.«term∃_,_»
              "∃"
-             (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(«term-_» "-" `R) `R]))
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `a)
+               [(«binderTerm∈_» "∈" (Term.app `ioo [(Init.Core.«term-_» "-" `R) `R]))]))
+             ", "
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=o[_]_» `f " =o[" `at_top "] " (Term.app `pow [`a])))
             ","
-            (Std.ExtendedBinder.«term∃__,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `a)
+               [(«binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))]))
+             ", "
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=o[_]_» `f " =o[" `at_top "] " (Term.app `pow [`a])))
             ","
-            (Std.ExtendedBinder.«term∃__,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(«term-_» "-" `R) `R]))
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `a)
+               [(«binderTerm∈_» "∈" (Term.app `ioo [(Init.Core.«term-_» "-" `R) `R]))]))
+             ", "
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=O[_]_» `f " =O[" `at_top "] " (Term.app `pow [`a])))
             ","
-            (Std.ExtendedBinder.«term∃__,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `a)
+               [(«binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))]))
+             ", "
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=O[_]_» `f " =O[" `at_top "] " (Term.app `pow [`a])))
             ","
-            (Std.ExtendedBinder.«term∃__,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.binderIdent `a)
-             (Std.ExtendedBinder.«binderTerm<_» "<" `R)
-             ","
-             («term∃_,_»
-              "∃"
-              (Lean.explicitBinders
-               [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `C)] ":" (Term.hole "_") ")")
-                (Lean.bracketedExplicitBinders
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinderCollection
+               [(Std.ExtendedBinder.extBinderParenthesized
                  "("
-                 [(Lean.binderIdent `h₀)]
-                 ":"
-                 («term_∨_» («term_<_» (num "0") "<" `C) "∨" («term_<_» (num "0") "<" `R))
-                 ")")])
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) [(Std.ExtendedBinder.«binderTerm<_» "<" `R)])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `C) [])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `h₀)
+                  [(group
+                    ":"
+                    (Init.Logic.«term_∨_»
+                     (Init.Core.«term_<_» (num "0") " < " `C)
+                     " ∨ "
+                     (Init.Core.«term_<_» (num "0") " < " `R)))])
+                 ")")]))
+             ", "
+             (Term.forall
+              "∀"
+              [`n]
+              []
               ","
-              (Term.forall
-               "∀"
-               [`n]
-               []
-               ","
-               («term_≤_»
-                («term|___|» (group "|") (Term.app `f [`n]) (group) "|")
-                "≤"
-                («term_*_» `C "*" («term_^_» `a "^" `n))))))
+              (Init.Core.«term_≤_»
+               (Algebra.Abs.«term|_|» "|" (Term.app `f [`n]) "|")
+               " ≤ "
+               (Init.Core.«term_*_» `C " * " (Init.Core.«term_^_» `a " ^ " `n)))))
             ","
-            (Std.ExtendedBinder.«term∃__,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
-             ","
-             (Std.ExtendedBinder.«term∃__,_»
-              "∃"
-              (Lean.binderIdent `C)
-              (Std.ExtendedBinder.«binderTerm>_» ">" (num "0"))
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinderCollection
+               [(Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `a)
+                  [(«binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `C)
+                  [(Std.ExtendedBinder.«binderTerm>_» ">" (num "0"))])
+                 ")")]))
+             ", "
+             (Term.forall
+              "∀"
+              [`n]
+              []
               ","
-              (Term.forall
-               "∀"
-               [`n]
-               []
-               ","
-               («term_≤_»
-                («term|___|» (group "|") (Term.app `f [`n]) (group) "|")
-                "≤"
-                («term_*_» `C "*" («term_^_» `a "^" `n))))))
+              (Init.Core.«term_≤_»
+               (Algebra.Abs.«term|_|» "|" (Term.app `f [`n]) "|")
+               " ≤ "
+               (Init.Core.«term_*_» `C " * " (Init.Core.«term_^_» `a " ^ " `n)))))
             ","
-            (Std.ExtendedBinder.«term∃__,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.binderIdent `a)
-             (Std.ExtendedBinder.«binderTerm<_» "<" `R)
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) [(Std.ExtendedBinder.«binderTerm<_» "<" `R)]))
+             ", "
              (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
               "∀ᶠ"
               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) []))
               " in "
               `at_top
               ", "
-              («term_≤_» («term|___|» (group "|") (Term.app `f [`n]) (group) "|") "≤" («term_^_» `a "^" `n))))
+              (Init.Core.«term_≤_»
+               (Algebra.Abs.«term|_|» "|" (Term.app `f [`n]) "|")
+               " ≤ "
+               (Init.Core.«term_^_» `a " ^ " `n))))
             ","
-            (Std.ExtendedBinder.«term∃__,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.binderIdent `a)
-             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `a)
+               [(«binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))]))
+             ", "
              (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
               "∀ᶠ"
               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) []))
               " in "
               `at_top
               ", "
-              («term_≤_» («term|___|» (group "|") (Term.app `f [`n]) (group) "|") "≤" («term_^_» `a "^" `n))))]
+              (Init.Core.«term_≤_»
+               (Algebra.Abs.«term|_|» "|" (Term.app `f [`n]) "|")
+               " ≤ "
+               (Init.Core.«term_^_» `a " ^ " `n))))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -243,7 +279,10 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
               [`A []]
               [(Term.typeSpec
                 ":"
-                («term_⊆_» (Term.app `Ico [(num "0") `R]) "⊆" (Term.app `Ioo [(«term-_» "-" `R) `R])))]
+                (Init.Core.«term_⊆_»
+                 (Term.app `Ico [(num "0") `R])
+                 " ⊆ "
+                 (Term.app `Ioo [(Init.Core.«term-_» "-" `R) `R])))]
               ":="
               (Term.fun
                "fun"
@@ -274,7 +313,10 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
               [`B []]
               [(Term.typeSpec
                 ":"
-                («term_⊆_» (Term.app `Ioo [(num "0") `R]) "⊆" (Term.app `Ioo [(«term-_» "-" `R) `R])))]
+                (Init.Core.«term_⊆_»
+                 (Term.app `Ioo [(num "0") `R])
+                 " ⊆ "
+                 (Term.app `Ioo [(Init.Core.«term-_» "-" `R) `R])))]
               ":="
               (Term.app `subset.trans [`Ioo_subset_Ico_self `A]))))
            []
@@ -567,7 +609,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                  (Std.Tactic.obtain
                   "obtain"
                   [(Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                  [":" («term_=_» `f "=" (num "0"))]
+                  [":" (Init.Core.«term_=_» `f " = " (num "0"))]
                   [":="
                    [(Term.byTactic
                      "by"
@@ -624,9 +666,9 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                      [`n]
                      []
                      "=>"
-                     («term_<|_»
+                     (Init.Core.«term_$_»
                       (Term.proj (Term.app `H [`n]) "." `trans)
-                      "<|"
+                      " $ "
                       (Term.app `mul_le_mul_of_nonneg_left [(Term.app `le_abs_self [(Term.hole "_")]) `hC₀.le]))))])]
                 "⟩"))
               [])])
@@ -729,19 +771,16 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                (Term.haveDecl
                 (Term.haveIdDecl
                  []
-                 [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
+                 [(Term.typeSpec ":" (Init.Core.«term_≤_» (num "0") " ≤ " `a))]
                  ":="
                  (Term.app
                   `nonneg_of_eventually_pow_nonneg
-                  [(Term.app
+                  [(Init.Core.«term_$_»
                     `H.mono
-                    [(Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`n]
-                       []
-                       "=>"
-                       (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
+                    " $ "
+                    (Term.fun
+                     "fun"
+                     (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))]))))
               [])
              (group
               (Tactic.refine'
@@ -793,7 +832,12 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
            (Term.haveDecl
             (Term.haveIdDecl
              [`A []]
-             [(Term.typeSpec ":" («term_⊆_» (Term.app `Ico [(num "0") `R]) "⊆" (Term.app `Ioo [(«term-_» "-" `R) `R])))]
+             [(Term.typeSpec
+               ":"
+               (Init.Core.«term_⊆_»
+                (Term.app `Ico [(num "0") `R])
+                " ⊆ "
+                (Term.app `Ioo [(Init.Core.«term-_» "-" `R) `R])))]
              ":="
              (Term.fun
               "fun"
@@ -822,7 +866,12 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
            (Term.haveDecl
             (Term.haveIdDecl
              [`B []]
-             [(Term.typeSpec ":" («term_⊆_» (Term.app `Ioo [(num "0") `R]) "⊆" (Term.app `Ioo [(«term-_» "-" `R) `R])))]
+             [(Term.typeSpec
+               ":"
+               (Init.Core.«term_⊆_»
+                (Term.app `Ioo [(num "0") `R])
+                " ⊆ "
+                (Term.app `Ioo [(Init.Core.«term-_» "-" `R) `R])))]
              ":="
              (Term.app `subset.trans [`Ioo_subset_Ico_self `A]))))
           []
@@ -1113,7 +1162,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                 (Std.Tactic.obtain
                  "obtain"
                  [(Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                 [":" («term_=_» `f "=" (num "0"))]
+                 [":" (Init.Core.«term_=_» `f " = " (num "0"))]
                  [":="
                   [(Term.byTactic
                     "by"
@@ -1170,9 +1219,9 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                     [`n]
                     []
                     "=>"
-                    («term_<|_»
+                    (Init.Core.«term_$_»
                      (Term.proj (Term.app `H [`n]) "." `trans)
-                     "<|"
+                     " $ "
                      (Term.app `mul_le_mul_of_nonneg_left [(Term.app `le_abs_self [(Term.hole "_")]) `hC₀.le]))))])]
                "⟩"))
              [])])
@@ -1275,19 +1324,16 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
               (Term.haveDecl
                (Term.haveIdDecl
                 []
-                [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
+                [(Term.typeSpec ":" (Init.Core.«term_≤_» (num "0") " ≤ " `a))]
                 ":="
                 (Term.app
                  `nonneg_of_eventually_pow_nonneg
-                 [(Term.app
+                 [(Init.Core.«term_$_»
                    `H.mono
-                   [(Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`n]
-                      []
-                      "=>"
-                      (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
+                   " $ "
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))]))))
              [])
             (group
              (Tactic.refine'
@@ -1355,15 +1401,16 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
           (Term.haveDecl
            (Term.haveIdDecl
             []
-            [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
+            [(Term.typeSpec ":" (Init.Core.«term_≤_» (num "0") " ≤ " `a))]
             ":="
             (Term.app
              `nonneg_of_eventually_pow_nonneg
-             [(Term.app
+             [(Init.Core.«term_$_»
                `H.mono
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
+               " $ "
+               (Term.fun
+                "fun"
+                (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))]))))
          [])
         (group
          (Tactic.refine'
@@ -1511,31 +1558,32 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
        (Term.haveDecl
         (Term.haveIdDecl
          []
-         [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
+         [(Term.typeSpec ":" (Init.Core.«term_≤_» (num "0") " ≤ " `a))]
          ":="
          (Term.app
           `nonneg_of_eventually_pow_nonneg
-          [(Term.app
+          [(Init.Core.«term_$_»
             `H.mono
-            [(Term.fun
-              "fun"
-              (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
+            " $ "
+            (Term.fun
+             "fun"
+             (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `nonneg_of_eventually_pow_nonneg
-       [(Term.app
+       [(Init.Core.«term_$_»
          `H.mono
-         [(Term.fun
-           "fun"
-           (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+         " $ "
+         (Term.fun
+          "fun"
+          (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
+      (Init.Core.«term_$_»
        `H.mono
-       [(Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+       " $ "
+       (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1551,7 +1599,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
       `abs_nonneg
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `abs_nonneg [(Term.hole "_")]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `abs_nonneg [(Term.hole "_")]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
@@ -1559,36 +1607,36 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `H.mono
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app
-       `H.mono
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [`n]
-          []
-          "=>"
-          (Term.proj (Term.paren "(" [(Term.app `abs_nonneg [(Term.hole "_")]) []] ")") "." `trans)))])
-      []]
+     (Init.Core.«term_$_»
+      `H.mono
+      " $ "
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`n]
+        []
+        "=>"
+        (Term.proj (Term.paren "(" (Term.app `abs_nonneg [(Term.hole "_")]) ")") "." `trans))))
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `nonneg_of_eventually_pow_nonneg
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_≤_» (num "0") "≤" `a)
+      (Init.Core.«term_≤_» (num "0") " ≤ " `a)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -1649,9 +1697,9 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
               ,
               ∃ a ∈ ioo 0 R , f =O[ at_top ] pow a
               ,
-              ∃ a < R , ∃ ( C : _ ) ( h₀ : 0 < C ∨ 0 < R ) , ∀ n , | f n | ≤ C * a ^ n
+              ∃ ( a < R ) ( C ) ( h₀ : 0 < C ∨ 0 < R ) , ∀ n , | f n | ≤ C * a ^ n
               ,
-              ∃ a ∈ ioo 0 R , ∃ C > 0 , ∀ n , | f n | ≤ C * a ^ n
+              ∃ ( a ∈ ioo 0 R ) ( C > 0 ) , ∀ n , | f n | ≤ C * a ^ n
               ,
               ∃ a < R , ∀ᶠ n in at_top , | f n | ≤ a ^ n
               ,
@@ -1707,7 +1755,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                     ,
                     A ⟨ ha₀ , ha ⟩
                     ,
-                    is_O_of_le' _ fun n => H n . trans <| mul_le_mul_of_nonneg_left le_abs_self _ hC₀.le
+                    is_O_of_le' _ fun n => H n . trans $ mul_le_mul_of_nonneg_left le_abs_self _ hC₀.le
                   ⟩
           tfae_have 2 → 8
           ·
@@ -1719,7 +1767,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
           tfae_have 7 → 3
           ·
             rintro ⟨ a , ha , H ⟩
-              have : 0 ≤ a := nonneg_of_eventually_pow_nonneg H.mono fun n => abs_nonneg _ . trans
+              have : 0 ≤ a := nonneg_of_eventually_pow_nonneg H.mono $ fun n => abs_nonneg _ . trans
               refine' ⟨ a , A ⟨ this , ha ⟩ , is_O.of_bound 1 _ ⟩
               simpa only [ Real.norm_eq_abs , one_mul , abs_pow , abs_of_nonneg this ]
           tfae_finish
@@ -1753,7 +1801,7 @@ theorem is_o_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr :
 theorem is_o_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRing R] (k : ℕ) {r₁ : R} {r₂ : ℝ}
     (h : ∥r₁∥ < r₂) : (fun n => n ^ k * r₁ ^ n : ℕ → R) =o[at_top] fun n => r₂ ^ n := by
   by_cases h0:r₁ = 0
-  · refine' (is_o_zero _ _).congr' (mem_at_top_sets.2 <| ⟨1, fun n hn => _⟩) eventually_eq.rfl
+  · refine' (is_o_zero _ _).congr' (mem_at_top_sets.2 $ ⟨1, fun n hn => _⟩) eventually_eq.rfl
     simp [zero_pow (zero_lt_one.trans_le hn), h0]
     
   rw [← Ne.def, ← norm_pos_iff] at h0
@@ -1775,7 +1823,7 @@ theorem tendsto_pow_const_mul_const_pow_of_abs_lt_one (k : ℕ) {r : ℝ} (hr : 
   by_cases h0:r = 0
   · exact tendsto_const_nhds.congr' (mem_at_top_sets.2 ⟨1, fun n hn => by simp [zero_lt_one.trans_le hn, h0]⟩)
     
-  have hr' : 1 < (|r|)⁻¹ := one_lt_inv (abs_pos.2 h0) hr
+  have hr' : 1 < |r|⁻¹ := one_lt_inv (abs_pos.2 h0) hr
   rw [tendsto_zero_iff_norm_tendsto_zero]
   simpa [div_eq_mul_inv] using tendsto_pow_const_div_const_pow_of_one_lt k hr'
 #align tendsto_pow_const_mul_const_pow_of_abs_lt_one tendsto_pow_const_mul_const_pow_of_abs_lt_one
@@ -1877,7 +1925,7 @@ theorem summable_norm_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R]
 
 theorem summable_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] [CompleteSpace R] (k : ℕ) {r : R}
     (hr : ∥r∥ < 1) : Summable (fun n => n ^ k * r ^ n : ℕ → R) :=
-  summable_of_summable_norm <| summable_norm_pow_mul_geometric_of_norm_lt_1 _ hr
+  summable_of_summable_norm $ summable_norm_pow_mul_geometric_of_norm_lt_1 _ hr
 #align summable_pow_mul_geometric_of_norm_lt_1 summable_pow_mul_geometric_of_norm_lt_1
 
 /-- If `∥r∥ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`, `has_sum` version. -/
@@ -1956,13 +2004,13 @@ theorem cauchySeriesOfLeGeometric {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r <
 
 theorem NormedAddCommGroup.cauchySeriesOfLeGeometric' {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
     (h : ∀ n, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k :=
-  (cauchySeriesOfLeGeometric hr h).compTendsto <| tendsto_add_at_top_nat 1
+  (cauchySeriesOfLeGeometric hr h).compTendsto $ tendsto_add_at_top_nat 1
 #align normed_add_comm_group.cauchy_series_of_le_geometric' NormedAddCommGroup.cauchySeriesOfLeGeometric'
 
 theorem NormedAddCommGroup.cauchySeriesOfLeGeometric'' {C : ℝ} {u : ℕ → α} {N : ℕ} {r : ℝ} (hr₀ : 0 < r) (hr₁ : r < 1)
     (h : ∀ n ≥ N, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k := by
   set v : ℕ → α := fun n => if n < N then 0 else u n
-  have hC : 0 ≤ C := (zero_le_mul_right <| pow_pos hr₀ N).mp ((norm_nonneg _).trans <| h N <| le_refl N)
+  have hC : 0 ≤ C := (zero_le_mul_right $ pow_pos hr₀ N).mp ((norm_nonneg _).trans $ h N $ le_refl N)
   have : ∀ n ≥ N, u n = v n := by
     intro n hn
     simp [v, hn, if_neg (not_lt.mpr hn)]
@@ -2043,7 +2091,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
     rcases h with ⟨N, hN⟩
     rw [← @summable_nat_add_iff α _ _ _ _ N]
     refine'
-      summable_of_norm_bounded (fun n => ∥f N∥ * r ^ n) (Summable.mul_left _ <| summable_geometric_of_lt_1 hr₀ hr₁)
+      summable_of_norm_bounded (fun n => ∥f N∥ * r ^ n) (Summable.mul_left _ $ summable_geometric_of_lt_1 hr₀ hr₁)
         fun n => _
     conv_rhs => rw [mul_comm, ← zero_add N]
     refine' le_geom hr₀ n fun i _ => _
@@ -2055,7 +2103,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
     rw [Nat.cofinite_eq_at_top]
     filter_upwards [h] with _ hn
     by_contra' h
-    exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_lt hn <| mul_neg_of_neg_of_pos hr₀ h)
+    exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_lt hn $ mul_neg_of_neg_of_pos hr₀ h)
     
 #align summable_of_ratio_norm_eventually_le summable_of_ratio_norm_eventually_le
 
@@ -2117,7 +2165,7 @@ theorem Monotone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Monotone f) (hf
   simp_rw [Finset.sum_range_by_parts _ _ (Nat.succ _), sub_eq_add_neg, Nat.succ_sub_succ_eq_sub, tsub_zero]
   apply
     (NormedField.tendsto_zero_smul_of_tendsto_zero_of_bounded hf0
-          ⟨b, eventually_map.mpr <| eventually_of_forall fun n => hgb <| n + 1⟩).CauchySeq.add
+          ⟨b, eventually_map.mpr $ eventually_of_forall $ fun n => hgb $ n + 1⟩).CauchySeq.add
   refine' (cauchySeqRangeOfNormBounded _ _ (fun n => _ : ∀ n, _ ≤ b * |f (n + 1) - f n|)).neg
   · simp_rw [abs_of_nonneg (sub_nonneg_of_le (hfa (Nat.le_succ _))), ← mul_sum]
     apply real.uniform_continuous_const_mul.comp_cauchy_seq
@@ -2132,7 +2180,7 @@ theorem Monotone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Monotone f) (hf
 /-- **Dirichlet's test** for antitone sequences. -/
 theorem Antitone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Antitone f) (hf0 : Tendsto f atTop (𝓝 0))
     (hzb : ∀ n, ∥∑ i in range n, z i∥ ≤ b) : CauchySeq fun n => ∑ i in range (n + 1), f i • z i := by
-  have hfa' : Monotone fun n => -f n := fun _ _ hab => neg_le_neg <| hfa hab
+  have hfa' : Monotone fun n => -f n := fun _ _ hab => neg_le_neg $ hfa hab
   have hf0' : tendsto (fun n => -f n) at_top (𝓝 0) := by
     convert hf0.neg
     norm_num
@@ -2157,7 +2205,7 @@ theorem Monotone.cauchySeqAlternatingSeriesOfTendstoZero (hfa : Monotone f) (hf0
 /-- The **alternating series test** for monotone sequences. -/
 theorem Monotone.tendsto_alternating_series_of_tendsto_zero (hfa : Monotone f) (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
-  cauchy_seq_tendsto_of_complete <| hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
+  cauchy_seq_tendsto_of_complete $ hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
 #align monotone.tendsto_alternating_series_of_tendsto_zero Monotone.tendsto_alternating_series_of_tendsto_zero
 
 /-- The **alternating series test** for antitone sequences.
@@ -2171,7 +2219,7 @@ theorem Antitone.cauchySeqAlternatingSeriesOfTendstoZero (hfa : Antitone f) (hf0
 /-- The **alternating series test** for antitone sequences. -/
 theorem Antitone.tendsto_alternating_series_of_tendsto_zero (hfa : Antitone f) (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
-  cauchy_seq_tendsto_of_complete <| hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
+  cauchy_seq_tendsto_of_complete $ hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
 #align antitone.tendsto_alternating_series_of_tendsto_zero Antitone.tendsto_alternating_series_of_tendsto_zero
 
 end

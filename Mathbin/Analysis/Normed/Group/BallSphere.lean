@@ -20,8 +20,8 @@ variable {E : Type _} [SeminormedAddCommGroup E] {r : ℝ}
 /-- We equip the sphere, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
 instance : HasInvolutiveNeg (sphere (0 : E) r) where
-  neg := (Subtype.map Neg.neg) fun w => by simp
-  neg_neg x := Subtype.ext <| neg_neg x
+  neg := Subtype.map Neg.neg $ fun w => by simp
+  neg_neg x := Subtype.ext $ neg_neg x
 
 @[simp]
 theorem coe_neg_sphere {r : ℝ} (v : sphere (0 : E) r) : ↑(-v) = (-v : E) :=
@@ -34,8 +34,8 @@ instance : HasContinuousNeg (sphere (0 : E) r) :=
 /-- We equip the ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
 instance {r : ℝ} : HasInvolutiveNeg (ball (0 : E) r) where
-  neg := (Subtype.map Neg.neg) fun w => by simp
-  neg_neg x := Subtype.ext <| neg_neg x
+  neg := Subtype.map Neg.neg $ fun w => by simp
+  neg_neg x := Subtype.ext $ neg_neg x
 
 @[simp]
 theorem coe_neg_ball {r : ℝ} (v : ball (0 : E) r) : ↑(-v) = (-v : E) :=
@@ -48,8 +48,8 @@ instance : HasContinuousNeg (ball (0 : E) r) :=
 /-- We equip the closed ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
 instance {r : ℝ} : HasInvolutiveNeg (closedBall (0 : E) r) where
-  neg := (Subtype.map Neg.neg) fun w => by simp
-  neg_neg x := Subtype.ext <| neg_neg x
+  neg := Subtype.map Neg.neg $ fun w => by simp
+  neg_neg x := Subtype.ext $ neg_neg x
 
 @[simp]
 theorem coe_neg_closed_ball {r : ℝ} (v : closedBall (0 : E) r) : ↑(-v) = (-v : E) :=

@@ -51,7 +51,7 @@ theorem antidiagonal_zero : antidiagonal 0 = {(0, 0)} :=
 /-- The antidiagonal of `n` does not contain duplicate entries. -/
 @[simp]
 theorem nodup_antidiagonal (n : ℕ) : Nodup (antidiagonal n) :=
-  coe_nodup.2 <| List.Nat.nodup_antidiagonal n
+  coe_nodup.2 $ List.Nat.nodup_antidiagonal n
 #align multiset.nat.nodup_antidiagonal Multiset.Nat.nodup_antidiagonal
 
 @[simp]

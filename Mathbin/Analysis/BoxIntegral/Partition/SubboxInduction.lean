@@ -88,7 +88,7 @@ theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J �
           ∀ J ≤ I,
             ∀ (m : ℕ), z ∈ J.icc → J.icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I := by
-  refine' subbox_induction_on' I (fun J hle hs => (H_ind J hle) fun J' h' => _) H_nhds
+  refine' subbox_induction_on' I (fun J hle hs => H_ind J hle $ fun J' h' => _) H_nhds
   rcases mem_split_center.1 h' with ⟨s, rfl⟩
   exact hs s
 #align box_integral.box.subbox_induction_on BoxIntegral.Box.subbox_induction_on

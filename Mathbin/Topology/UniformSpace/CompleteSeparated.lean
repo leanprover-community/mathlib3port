@@ -22,7 +22,7 @@ variable {α : Type _}
 
 --In a separated space, a complete set is closed
 theorem IsComplete.isClosed [UniformSpace α] [SeparatedSpace α] {s : Set α} (h : IsComplete s) : IsClosed s :=
-  is_closed_iff_cluster_pt.2 fun a ha => by
+  is_closed_iff_cluster_pt.2 $ fun a ha => by
     let f := 𝓝[s] a
     have : Cauchy f := cauchy_nhds.mono' ha inf_le_left
     rcases h f this inf_le_right with ⟨y, ys, fy⟩
@@ -38,8 +38,8 @@ variable [TopologicalSpace α] {β : Type _} [TopologicalSpace β]
 variable {γ : Type _} [UniformSpace γ] [CompleteSpace γ] [SeparatedSpace γ]
 
 theorem continuous_extend_of_cauchy {e : α → β} {f : α → γ} (de : DenseInducing e)
-    (h : ∀ b : β, Cauchy (map f (comap e <| 𝓝 b))) : Continuous (de.extend f) :=
-  de.continuous_extend fun b => CompleteSpace.complete (h b)
+    (h : ∀ b : β, Cauchy (map f (comap e $ 𝓝 b))) : Continuous (de.extend f) :=
+  de.continuous_extend $ fun b => CompleteSpace.complete (h b)
 #align dense_inducing.continuous_extend_of_cauchy DenseInducing.continuous_extend_of_cauchy
 
 end DenseInducing

@@ -67,8 +67,8 @@ theorem pi_quotient_lift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submod
 /-- Lift a family of maps to a quotient of direct sums. -/
 def quotientPiLift (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i) (hf : ∀ i, p i ≤ ker (f i)) :
     (∀ i, Ms i) ⧸ pi Set.univ p →ₗ[R] ∀ i, Ns i :=
-  ((pi Set.univ p).liftq (LinearMap.pi fun i => (f i).comp (proj i))) fun x hx =>
-    mem_ker.mpr <| by
+  (pi Set.univ p).liftq (LinearMap.pi fun i => (f i).comp (proj i)) $ fun x hx =>
+    mem_ker.mpr $ by
       ext i
       simpa using hf i (mem_pi.mp hx i (Set.mem_univ i))
 #align submodule.quotient_pi_lift Submodule.quotientPiLift
@@ -90,8 +90,8 @@ def quotientPi [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) :
       Quotient.inductionOn' x fun x' => by
         simp_rw [Quotient.mk'_eq_mk, quotient_pi_lift_mk, mkq_apply, pi_quotient_lift_mk, lsum_single, id_apply],
     right_inv := by
-      rw [Function.right_inverse_iff_comp, ← coe_comp, ← @id_coe R]
-      refine' congr_arg _ (pi_ext fun i x => Quotient.inductionOn' x fun x' => funext fun j => _)
+      rw [Function.rightInverse_iff_comp, ← coe_comp, ← @id_coe R]
+      refine' congr_arg _ (pi_ext fun i x => Quotient.inductionOn' x fun x' => funext $ fun j => _)
       rw [comp_apply, pi_quotient_lift_single, Quotient.mk'_eq_mk, mapq_apply, quotient_pi_lift_mk, id_apply]
       by_cases hij:i = j <;> simp only [mkq_apply, coe_single]
       · subst hij

@@ -51,7 +51,7 @@ theorem rprod_le_trans_gen_game_add : Prod.Rprod rα rβ ≤ Relation.TransGen (
   h.rec
     (by
       intro _ _ _ _ hα hβ
-      exact Relation.TransGen.tail (Relation.TransGen.single <| game_add.fst hα) (game_add.snd hβ))
+      exact Relation.TransGen.tail (Relation.TransGen.single $ game_add.fst hα) (game_add.snd hβ))
 #align prod.rprod_le_trans_gen_game_add Prod.rprod_le_trans_gen_game_add
 
 end Prod

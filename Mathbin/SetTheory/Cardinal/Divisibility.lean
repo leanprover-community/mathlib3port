@@ -59,7 +59,7 @@ theorem is_unit_iff : IsUnit a ↔ a = 1 := by
 
 instance : Unique Cardinal.{u}ˣ where
   default := 1
-  uniq a := Units.coe_eq_one.mp <| is_unit_iff.mp a.IsUnit
+  uniq a := Units.coe_eq_one.mp $ is_unit_iff.mp a.IsUnit
 
 theorem le_of_dvd : ∀ {a b : Cardinal}, b ≠ 0 → a ∣ b → a ≤ b
   | a, _, b0, ⟨b, rfl⟩ => by
@@ -83,7 +83,7 @@ theorem primeOfAleph0Le (ha : ℵ₀ ≤ a) : Prime a := by
   wlog h : c ≤ b
   left
   have habc := le_of_dvd hz hbc
-  rwa [mul_eq_max' <| ha.trans <| habc, max_def', if_pos h] at hbc
+  rwa [mul_eq_max' $ ha.trans $ habc, max_def', if_pos h] at hbc
 #align cardinal.prime_of_aleph_0_le Cardinal.primeOfAleph0Le
 
 theorem not_irreducible_of_aleph_0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a := by

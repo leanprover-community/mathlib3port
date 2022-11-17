@@ -72,10 +72,13 @@ def hallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
 /-- When the Hall condition is satisfied, the set of matchings on a finite set is nonempty.
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
 theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
-    (h : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (ι' : Finset ι) : Nonempty (hallMatchingsOn t ι') := by
-  classical refine' ⟨Classical.indefiniteDescription _ _⟩
-    intro s'
-    simp only [card_image_of_injective s' Subtype.coe_injective]
+    (h : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (ι' : Finset ι) : Nonempty (hallMatchingsOn t ι') := by classical
+  refine' ⟨Classical.indefiniteDescription _ _⟩
+  apply (all_card_le_bUnion_card_iff_exists_injective' fun i : ι' => t i).mp
+  intro s'
+  convert h (s'.image coe) using 1
+  simp only [card_image_of_injective s' Subtype.coe_injective]
+  rw [image_bUnion]
 #align hall_matchings_on.nonempty hallMatchingsOn.nonempty
 
 -- TODO: This takes a long time to elaborate for an unknown reason.
@@ -87,15 +90,18 @@ def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : (F
 #align hall_matchings_functor hallMatchingsFunctor
 
 noncomputable instance hallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :
-    Fintype (hallMatchingsOn t ι') := by
-  classical rw [hallMatchingsOn]
-    · rintro f i
-      refine' ⟨f.val i, _⟩
-      rw [mem_bUnion]
-      exact ⟨i, i.property, f.property.2 i⟩
-      
-    intro f f' h
-    ext a
+    Fintype (hallMatchingsOn t ι') := by classical
+  rw [hallMatchingsOn]
+  let g : hallMatchingsOn t ι' → ι' → ι'.bUnion t := by
+    rintro f i
+    refine' ⟨f.val i, _⟩
+    rw [mem_bUnion]
+    exact ⟨i, i.property, f.property.2 i⟩
+  apply Fintype.ofInjective g
+  intro f f' h
+  simp only [g, Function.funext_iff, Subtype.val_eq_coe] at h
+  ext a
+  exact h a
 #align hall_matchings_on.fintype hallMatchingsOn.fintype
 
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
@@ -116,21 +122,31 @@ theorem Finset.all_card_le_bUnion_card_iff_exists_injective {ι : Type u} {α : 
     -- Set up the functor
     haveI : ∀ ι' : (Finset ι)ᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
       hallMatchingsOn.nonempty t h ι'.unop
-    classical haveI : ∀ ι' : (Finset ι)ᵒᵖ, Fintype ((hallMatchingsFunctor t).obj ι') := by
-        intro ι'
-        rw [hallMatchingsFunctor]
-        infer_instance
-      -- Interpret the resulting section of the inverse limit
-      refine' ⟨_, _, _⟩
-      · -- Show that it is injective
-        intro i i'
-        have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
-        have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
-        have le : ∀ {s t : Finset ι}, s ⊆ t → s ≤ t := fun _ _ h => h
-        rw [← hu (CategoryTheory.homOfLe (le subi)).op, ← hu (CategoryTheory.homOfLe (le subi')).op]
-        let uii' := u (Opposite.op ({i, i'} : Finset ι))
-        exact fun h => subtype.mk_eq_mk.mp (uii'.property.1 h)
-        
+    classical
+    haveI : ∀ ι' : (Finset ι)ᵒᵖ, Fintype ((hallMatchingsFunctor t).obj ι') := by
+      intro ι'
+      rw [hallMatchingsFunctor]
+      infer_instance
+    -- Apply the compactness argument
+    obtain ⟨u, hu⟩ := nonempty_sections_of_fintype_inverse_system (hallMatchingsFunctor t)
+    -- Interpret the resulting section of the inverse limit
+    refine' ⟨_, _, _⟩
+    · -- Build the matching function from the section
+      exact fun i => (u (Opposite.op ({i} : Finset ι))).val ⟨i, by simp only [Opposite.unop_op, mem_singleton]⟩
+      
+    · -- Show that it is injective
+      intro i i'
+      have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
+      have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
+      have le : ∀ {s t : Finset ι}, s ⊆ t → s ≤ t := fun _ _ h => h
+      rw [← hu (CategoryTheory.homOfLe (le subi)).op, ← hu (CategoryTheory.homOfLe (le subi')).op]
+      let uii' := u (Opposite.op ({i, i'} : Finset ι))
+      exact fun h => subtype.mk_eq_mk.mp (uii'.property.1 h)
+      
+    · -- Show that it maps each index to the corresponding finite set
+      intro i
+      apply (u (Opposite.op ({i} : Finset ι))).property.2
+      
     
   · -- The reverse direction is a straightforward cardinality argument
     rintro ⟨f, hf₁, hf₂⟩ s

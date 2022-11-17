@@ -123,7 +123,7 @@ theorem char_fn_eq_zero [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x
 #align locally_constant.char_fn_eq_zero LocallyConstant.char_fn_eq_zero
 
 theorem char_fn_inj [Nontrivial Y] (hU : IsClopen U) (hV : IsClopen V) (h : charFn Y hU = charFn Y hV) : U = V :=
-  Set.indicator_one_inj Y <| coe_inj.mpr h
+  Set.indicator_one_inj Y $ coe_inj.mpr h
 #align locally_constant.char_fn_inj LocallyConstant.char_fn_inj
 
 end CharFn
@@ -271,7 +271,7 @@ section Algebra
 variable [CommSemiring R] [Semiring Y] [Algebra R Y]
 
 instance : Algebra R (LocallyConstant X Y) where
-  toRingHom := constRingHom.comp <| algebraMap R Y
+  toRingHom := constRingHom.comp $ algebraMap R Y
   commutes' := by
     intros
     ext

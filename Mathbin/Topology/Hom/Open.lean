@@ -40,7 +40,7 @@ section
 /-- `continuous_open_map_class F α β` states that `F` is a type of continuous open maps.
 
 You should extend this class when you extend `continuous_open_map`. -/
-class ContinuousOpenMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
+class ContinuousOpenMapClass (F : Type _) (α β : outParam $ Type _) [TopologicalSpace α] [TopologicalSpace β] extends
   ContinuousMapClass F α β where
   map_open (f : F) : IsOpenMap f
 #align continuous_open_map_class ContinuousOpenMapClass
@@ -86,7 +86,7 @@ theorem ext {f g : α →CO β} (h : ∀ a, f a = g a) : f = g :=
 /-- Copy of a `continuous_open_map` with a new `continuous_map` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (f : α →CO β) (f' : α → β) (h : f' = f) : α →CO β :=
-  ⟨f.toContinuousMap.copy f' <| h, h.symm.subst f.map_open'⟩
+  ⟨f.toContinuousMap.copy f' $ h, h.symm.subst f.map_open'⟩
 #align continuous_open_map.copy ContinuousOpenMap.copy
 
 variable (α)
@@ -133,20 +133,20 @@ theorem comp_assoc (f : γ →CO δ) (g : β →CO γ) (h : α →CO β) : (f.co
 
 @[simp]
 theorem comp_id (f : α →CO β) : f.comp (ContinuousOpenMap.id α) = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align continuous_open_map.comp_id ContinuousOpenMap.comp_id
 
 @[simp]
 theorem id_comp (f : α →CO β) : (ContinuousOpenMap.id β).comp f = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align continuous_open_map.id_comp ContinuousOpenMap.id_comp
 
 theorem cancel_right {g₁ g₂ : β →CO γ} {f : α →CO β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
 #align continuous_open_map.cancel_right ContinuousOpenMap.cancel_right
 
 theorem cancel_left {g : β →CO γ} {f₁ f₂ : α →CO β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align continuous_open_map.cancel_left ContinuousOpenMap.cancel_left
 
 end ContinuousOpenMap

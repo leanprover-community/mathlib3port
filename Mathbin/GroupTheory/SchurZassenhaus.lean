@@ -91,8 +91,8 @@ theorem smul_diff' (h : H) : diff (MonoidHom.id H) α (op (h : G) • β) = diff
 
 theorem eq_one_of_smul_eq_one (hH : Nat.Coprime (Nat.card H) H.index) (α : H.QuotientDiff) (h : H) :
     h • α = α → h = 1 :=
-  (Quotient.inductionOn' α) fun α hα =>
-    (powCoprime hH).Injective <|
+  Quotient.inductionOn' α $ fun α hα =>
+    (powCoprime hH).Injective $
       calc
         h ^ H.index = diff (MonoidHom.id H) (op ((h⁻¹ : H) : G) • α) α := by
           rw [← diff_inv, smul_diff', diff_self, one_mul, inv_pow, inv_inv]

@@ -110,7 +110,7 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
     by_cases hac:a = c
     · simp [hac]
       
-    · rw [div_self (sub_ne_zero.2 <| Ne.symm hac), one_smul]
+    · rw [div_self (sub_ne_zero.2 $ Ne.symm hac), one_smul]
       
     
   by_cases hbc:b = c
@@ -118,8 +118,8 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
     simp [sub_ne_zero.2 (Ne.symm hab)]
     
   rw [add_comm]
-  simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add, smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hab),
-    smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hbc), vsub_add_vsub_cancel]
+  simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add, smul_inv_smul₀ (sub_ne_zero.2 $ Ne.symm hab),
+    smul_inv_smul₀ (sub_ne_zero.2 $ Ne.symm hbc), vsub_add_vsub_cancel]
 #align sub_div_sub_smul_slope_add_sub_div_sub_smul_slope sub_div_sub_smul_slope_add_sub_div_sub_smul_slope
 
 /-- `slope f a c` is an affine combination of `slope f a b` and `slope f b c`. This version uses

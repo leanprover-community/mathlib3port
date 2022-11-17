@@ -149,18 +149,18 @@ instance : MulOneClass αˣ where
     ⟨u₁.val * u₂.val, u₂.inv * u₁.inv, by rw [mul_assoc, ← mul_assoc u₂.val, val_inv, one_mul, val_inv], by
       rw [mul_assoc, ← mul_assoc u₁.inv, inv_val, one_mul, inv_val]⟩
   one := ⟨1, 1, one_mul 1, one_mul 1⟩
-  one_mul u := ext <| one_mul u
-  mul_one u := ext <| mul_one u
+  one_mul u := ext $ one_mul u
+  mul_one u := ext $ mul_one u
 
 /-- Units of a monoid form a group. -/
 @[to_additive "Additive units of an additive monoid form an additive group."]
 instance : Group αˣ :=
-  { Units.mulOneClass with mul := (· * ·), one := 1, mul_assoc := fun u₁ u₂ u₃ => ext <| mul_assoc u₁ u₂ u₃,
+  { Units.mulOneClass with mul := (· * ·), one := 1, mul_assoc := fun u₁ u₂ u₃ => ext $ mul_assoc u₁ u₂ u₃,
     inv := Inv.inv, mul_left_inv := fun u => ext u.inv_val }
 
 @[to_additive]
 instance {α} [CommMonoid α] : CommGroup αˣ :=
-  { Units.group with mul_comm := fun u₁ u₂ => ext <| mul_comm _ _ }
+  { Units.group with mul_comm := fun u₁ u₂ => ext $ mul_comm _ _ }
 
 @[to_additive]
 instance : Inhabited αˣ :=
@@ -311,12 +311,12 @@ theorem mul_eq_one_iff_inv_eq {a : α} : ↑u * a = 1 ↔ ↑u⁻¹ = a := by rw
 
 @[to_additive]
 theorem inv_unique {u₁ u₂ : αˣ} (h : (↑u₁ : α) = ↑u₂) : (↑u₁⁻¹ : α) = ↑u₂⁻¹ :=
-  Units.inv_eq_of_mul_eq_one_right <| by rw [h, u₂.mul_inv]
+  Units.inv_eq_of_mul_eq_one_right $ by rw [h, u₂.mul_inv]
 #align units.inv_unique Units.inv_unique
 
 @[simp, to_additive]
 theorem coe_inv {M : Type _} [DivisionMonoid M] (u : Units M) : ↑u⁻¹ = (u⁻¹ : M) :=
-  Eq.symm <| inv_eq_of_mul_eq_one_right u.mul_inv
+  Eq.symm $ inv_eq_of_mul_eq_one_right u.mul_inv
 #align units.coe_inv Units.coe_inv
 
 end Units
@@ -373,12 +373,12 @@ theorem divp_inv (u : αˣ) : a /ₚ u⁻¹ = a * u :=
 
 @[simp]
 theorem divp_mul_cancel (a : α) (u : αˣ) : a /ₚ u * u = a :=
-  (mul_assoc _ _ _).trans <| by rw [Units.inv_mul, mul_one]
+  (mul_assoc _ _ _).trans $ by rw [Units.inv_mul, mul_one]
 #align divp_mul_cancel divp_mul_cancel
 
 @[simp]
 theorem mul_divp_cancel (a : α) (u : αˣ) : a * u /ₚ u = a :=
-  (mul_assoc _ _ _).trans <| by rw [Units.mul_inv, mul_one]
+  (mul_assoc _ _ _).trans $ by rw [Units.mul_inv, mul_one]
 #align mul_divp_cancel mul_divp_cancel
 
 @[simp]
@@ -393,7 +393,7 @@ theorem divp_divp_eq_divp_mul (x : α) (u₁ u₂ : αˣ) : x /ₚ u₁ /ₚ u�
 
 @[field_simps]
 theorem divp_eq_iff_mul_eq {x : α} {u : αˣ} {y : α} : x /ₚ u = y ↔ y * u = x :=
-  u.mul_left_inj.symm.trans <| by rw [divp_mul_cancel] <;> exact ⟨Eq.symm, Eq.symm⟩
+  u.mul_left_inj.symm.trans $ by rw [divp_mul_cancel] <;> exact ⟨Eq.symm, Eq.symm⟩
 #align divp_eq_iff_mul_eq divp_eq_iff_mul_eq
 
 @[field_simps]
@@ -401,7 +401,7 @@ theorem eq_divp_iff_mul_eq {x : α} {u : αˣ} {y : α} : x = y /ₚ u ↔ x * u
 #align eq_divp_iff_mul_eq eq_divp_iff_mul_eq
 
 theorem divp_eq_one_iff_eq {a : α} {u : αˣ} : a /ₚ u = 1 ↔ a = u :=
-  (Units.mul_left_inj u).symm.trans <| by rw [divp_mul_cancel, one_mul]
+  (Units.mul_left_inj u).symm.trans $ by rw [divp_mul_cancel, one_mul]
 #align divp_eq_one_iff_eq divp_eq_one_iff_eq
 
 @[simp]
@@ -489,7 +489,7 @@ instance [Monoid M] : CanLift M Mˣ coe IsUnit where prf _ := id
 @[to_additive]
 instance [Monoid M] [Subsingleton M] : Unique Mˣ where
   default := 1
-  uniq a := Units.coe_eq_one.mp <| Subsingleton.elim (a : M) 1
+  uniq a := Units.coe_eq_one.mp $ Subsingleton.elim (a : M) 1
 
 @[simp, to_additive is_add_unit_add_unit]
 protected theorem Units.is_unit [Monoid M] (u : Mˣ) : IsUnit (u : M) :=
@@ -562,7 +562,7 @@ theorem is_unit_of_mul_is_unit_left [CommMonoid M] {x y : M} (hu : IsUnit (x * y
 
 @[to_additive]
 theorem is_unit_of_mul_is_unit_right [CommMonoid M] {x y : M} (hu : IsUnit (x * y)) : IsUnit y :=
-  @is_unit_of_mul_is_unit_left _ _ y x <| by rwa [mul_comm]
+  @is_unit_of_mul_is_unit_left _ _ y x $ by rwa [mul_comm]
 #align is_unit_of_mul_is_unit_right is_unit_of_mul_is_unit_right
 
 namespace IsUnit
@@ -586,7 +586,7 @@ protected noncomputable def unit (h : IsUnit a) : Mˣ :=
 
 @[simp, to_additive]
 theorem unit_of_coe_units {a : Mˣ} (h : IsUnit (a : M)) : h.Unit = a :=
-  Units.ext <| rfl
+  Units.ext $ rfl
 #align is_unit.unit_of_coe_units IsUnit.unit_of_coe_units
 
 @[simp, to_additive]

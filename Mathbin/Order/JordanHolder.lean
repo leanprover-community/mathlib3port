@@ -213,7 +213,7 @@ theorem to_list_ne_nil (s : CompositionSeries X) : s.toList ≠ [] := by
 theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _) :=
   fun s₁ s₂ (h : List.ofFn s₁ = List.ofFn s₂) => by
   have h₁ : s₁.length = s₂.length :=
-    Nat.succ_injective ((List.length_of_fn s₁).symm.trans <| (congr_arg List.length h).trans <| List.length_of_fn s₂)
+    Nat.succ_injective ((List.length_of_fn s₁).symm.trans $ (congr_arg List.length h).trans $ List.length_of_fn s₂)
   have h₂ : ∀ i : Fin s₁.length.succ, s₁ i = s₂ (Fin.cast (congr_arg Nat.succ h₁) i) := by
     intro i
     rw [← List.nth_le_of_fn s₁ i, ← List.nth_le_of_fn s₂]
@@ -285,7 +285,7 @@ theorem of_list_to_list' (s : CompositionSeries X) : ofList s.toList s.to_list_n
 @[simp]
 theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) : toList (ofList l hl hc) = l := by
   refine' List.ext_le _ _
-  · rw [length_to_list, length_of_list, tsub_add_cancel_of_le (Nat.succ_le_of_lt <| List.length_pos_of_ne_nil hl)]
+  · rw [length_to_list, length_of_list, tsub_add_cancel_of_le (Nat.succ_le_of_lt $ List.length_pos_of_ne_nil hl)]
     
   · intro i hi hi'
     dsimp [of_list, to_list]
@@ -316,15 +316,21 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
         (Term.explicitBinder
          "("
          [`h]
-         [":" (Term.forall "∀" [`x] [] "," («term_↔_» («term_∈_» `x "∈" `s₁) "↔" («term_∈_» `x "∈" `s₂)))]
+         [":"
+          (Term.forall
+           "∀"
+           [`x]
+           []
+           ","
+           (Init.Logic.«term_↔_» (Init.Core.«term_∈_» `x " ∈ " `s₁) " ↔ " (Init.Core.«term_∈_» `x " ∈ " `s₂)))]
          []
          ")")]
-       (Term.typeSpec ":" («term_=_» `s₁ "=" `s₂)))
+       (Term.typeSpec ":" (Init.Core.«term_=_» `s₁ " = " `s₂)))
       (Command.declValSimple
        ":="
-       («term_<|_»
+       (Init.Core.«term_$_»
         `to_list_injective
-        "<|"
+        " $ "
         (Term.app
          `List.eq_of_perm_of_sorted
          [(Term.byTactic
@@ -340,9 +346,9 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
                  `List.perm_of_nodup_nodup_to_finset_eq
                  [`s₁.to_list_nodup
                   `s₂.to_list_nodup
-                  («term_<|_»
+                  (Init.Core.«term_$_»
                    `Finset.ext
-                   "<|"
+                   " $ "
                    (Term.byTactic
                     "by"
                     (Tactic.tacticSeq
@@ -356,9 +362,9 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_»
+      (Init.Core.«term_$_»
        `to_list_injective
-       "<|"
+       " $ "
        (Term.app
         `List.eq_of_perm_of_sorted
         [(Term.byTactic
@@ -374,9 +380,9 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
                 `List.perm_of_nodup_nodup_to_finset_eq
                 [`s₁.to_list_nodup
                  `s₂.to_list_nodup
-                 («term_<|_»
+                 (Init.Core.«term_$_»
                   `Finset.ext
-                  "<|"
+                  " $ "
                   (Term.byTactic
                    "by"
                    (Tactic.tacticSeq
@@ -400,9 +406,9 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
                `List.perm_of_nodup_nodup_to_finset_eq
                [`s₁.to_list_nodup
                 `s₂.to_list_nodup
-                («term_<|_»
+                (Init.Core.«term_$_»
                  `Finset.ext
-                 "<|"
+                 " $ "
                  (Term.byTactic
                   "by"
                   (Tactic.tacticSeq
@@ -442,9 +448,9 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
              `List.perm_of_nodup_nodup_to_finset_eq
              [`s₁.to_list_nodup
               `s₂.to_list_nodup
-              («term_<|_»
+              (Init.Core.«term_$_»
                `Finset.ext
-               "<|"
+               " $ "
                (Term.byTactic
                 "by"
                 (Tactic.tacticSeq
@@ -461,9 +467,9 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
          `List.perm_of_nodup_nodup_to_finset_eq
          [`s₁.to_list_nodup
           `s₂.to_list_nodup
-          («term_<|_»
+          (Init.Core.«term_$_»
            `Finset.ext
-           "<|"
+           " $ "
            (Term.byTactic
             "by"
             (Tactic.tacticSeq
@@ -475,9 +481,9 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
         `List.perm_of_nodup_nodup_to_finset_eq
         [`s₁.to_list_nodup
          `s₂.to_list_nodup
-         («term_<|_»
+         (Init.Core.«term_$_»
           `Finset.ext
-          "<|"
+          " $ "
           (Term.byTactic
            "by"
            (Tactic.tacticSeq
@@ -487,19 +493,19 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
        `List.perm_of_nodup_nodup_to_finset_eq
        [`s₁.to_list_nodup
         `s₂.to_list_nodup
-        («term_<|_»
+        (Init.Core.«term_$_»
          `Finset.ext
-         "<|"
+         " $ "
          (Term.byTactic
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_»
+      (Init.Core.«term_$_»
        `Finset.ext
-       "<|"
+       " $ "
        (Term.byTactic
         "by"
         (Tactic.tacticSeq
@@ -513,21 +519,20 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `Finset.ext
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(«term_<|_»
-       `Finset.ext
-       "<|"
-       (Term.byTactic
-        "by"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))
-      []]
+     (Init.Core.«term_$_»
+      `Finset.ext
+      " $ "
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpStar "*")] "]"] [])]))))
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
@@ -562,13 +567,12 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
     { s₁ s₂ : CompositionSeries X } ( h : ∀ x , x ∈ s₁ ↔ x ∈ s₂ ) : s₁ = s₂
     :=
       to_list_injective
-        <|
+        $
         List.eq_of_perm_of_sorted
           by
               skip
                 <;>
-                exact
-                  List.perm_of_nodup_nodup_to_finset_eq s₁.to_list_nodup s₂.to_list_nodup Finset.ext <| by simp [ * ]
+                exact List.perm_of_nodup_nodup_to_finset_eq s₁.to_list_nodup s₂.to_list_nodup Finset.ext $ by simp [ * ]
             s₁ . to_list_sorted
             s₂ . to_list_sorted
 #align composition_series.ext CompositionSeries.ext
@@ -615,7 +619,7 @@ theorem length_pos_of_mem_ne {s : CompositionSeries X} {x y : X} (hx : x ∈ s) 
     0 < s.length :=
   let ⟨i, hi⟩ := hx
   let ⟨j, hj⟩ := hy
-  have hij : i ≠ j := (mt s.inj.2) fun h => hxy (hi ▸ hj ▸ h)
+  have hij : i ≠ j := mt s.inj.2 $ fun h => hxy (hi ▸ hj ▸ h)
   hij.lt_or_lt.elim (fun hij => lt_of_le_of_lt (zero_le i) (lt_of_lt_of_le hij (Nat.le_of_lt_succ j.2))) fun hji =>
     lt_of_le_of_lt (zero_le j) (lt_of_lt_of_le hji (Nat.le_of_lt_succ i.2))
 #align composition_series.length_pos_of_mem_ne CompositionSeries.length_pos_of_mem_ne
@@ -878,8 +882,8 @@ theorem append {s₁ s₂ t₁ t₂ : CompositionSeries X} (hs : s₁.top = s₂
     (h₂ : Equivalent s₂ t₂) : Equivalent (append s₁ s₂ hs) (append t₁ t₂ ht) :=
   let e : Fin (s₁.length + s₂.length) ≃ Fin (t₁.length + t₂.length) :=
     calc
-      Fin (s₁.length + s₂.length) ≃ Sum (Fin s₁.length) (Fin s₂.length) := finSumFinEquiv.symm
-      _ ≃ Sum (Fin t₁.length) (Fin t₂.length) := Equiv.sumCongr h₁.some h₂.some
+      Fin (s₁.length + s₂.length) ≃ Fin s₁.length ⊕ Fin s₂.length := finSumFinEquiv.symm
+      _ ≃ Fin t₁.length ⊕ Fin t₂.length := Equiv.sumCongr h₁.some h₂.some
       _ ≃ Fin (t₁.length + t₂.length) := finSumFinEquiv
       
   ⟨e, by

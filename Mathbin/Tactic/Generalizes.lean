@@ -68,14 +68,11 @@ unsafe def step1 (md : Transparency) (unify : Bool) (e : expr) (to_generalize : 
     let J ← infer_type j
     let k ← mk_local' n BinderInfo.default J
     let e ← kreplace e j k md unify
-    let ks ← ks.mmap fun k' => kreplace k' j k md unify
+    let ks ← ks.mmap $ fun k' => kreplace k' j k md unify
     pure (e, k :: ks)
   to_generalize go (e, [])
 #align tactic.generalizes.step1 tactic.generalizes.step1
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Input: for each equation that should be generated: the equation name, the
 argument `jᵢ` and the corresponding local constant `kᵢ` from step 1.
 
@@ -87,12 +84,12 @@ to the type of `kᵢ` (and thus whether to generate a homogeneous or heterogeneo
 equation).
 -/
 unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr)) : tactic (List (expr × expr)) :=
-  to_generalize.mmap fun ⟨n, j, k⟩ => do
+  to_generalize.mmap $ fun ⟨n, j, k⟩ => do
     let J ← infer_type j
     let K ← infer_type k
     let sort u ← infer_type K |
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
-    let homogeneous ← succeeds <| is_def_eq J K md
+      throwError "generalizes'/step2: expected the type of {← K} to be a sort"
+    let homogeneous ← succeeds $ is_def_eq J K md
     let ⟨eq_type, eq_proof⟩ :=
       if homogeneous then ((const `eq [u]) K k j, (const `eq.refl [u]) J j)
       else ((const `heq [u]) K k J j, (const `heq.refl [u]) J j)
@@ -100,9 +97,6 @@ unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr
     pure (Eq, eq_proof)
 #align tactic.generalizes.step2 tactic.generalizes.step2
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- Input: The `jᵢ`; the local constants `kᵢ` from step 1; the equations and their
 proofs from step 2.
 
@@ -111,14 +105,16 @@ overall). It asserts the generalized goal, then derives the current goal from
 it. This leaves us with the generalized goal.
 -/
 unsafe def step3 (e : expr) (js ks eqs eq_proofs : List expr) : tactic Unit :=
-  focus1 <| do
+  focus1 $ do
     let new_target_type := (e.pis eqs).pis ks
     type_check new_target_type <|>
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+        throwError
+          "generalizes': unable to generalize the target because the generalized target type does not type check:
+          {← new_target_type}"
     let n ← mk_fresh_name
     let new_target ← assert n new_target_type
     swap
-    let target_proof := new_target.mk_app <| js ++ eq_proofs
+    let target_proof := new_target.mk_app $ js ++ eq_proofs
     exact target_proof
 #align tactic.generalizes.step3 tactic.generalizes.step3
 
@@ -149,10 +145,10 @@ After generalizing the `args`, the target type may no longer type check.
 unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semireducible) (unify := true) : tactic Unit :=
   do
   let tgt ← target
-  let stage1_args := args.map fun ⟨n, _, j⟩ => (n, j)
+  let stage1_args := args.map $ fun ⟨n, _, j⟩ => (n, j)
   let ⟨e, ks⟩ ← step1 md unify tgt stage1_args
   let stage2_args : List (Option (Name × expr × expr)) :=
-    args.map₂ (fun ⟨_, eq_name, j⟩ k => eq_name.map fun eq_name => (eq_name, j, k)) ks
+    args.map₂ (fun ⟨_, eq_name, j⟩ k => eq_name.map $ fun eq_name => (eq_name, j, k)) ks
   let stage2_args := stage2_args.reduceOption
   let eqs_and_proofs ← step2 md stage2_args
   let eqs := eqs_and_proofs.map Prod.fst
@@ -168,14 +164,13 @@ unsafe def generalizes_intro (args : List (Name × Option Name × expr)) (md := 
     tactic (List expr × List expr) := do
   generalizes' args md unify
   let ks ← intron' args.length
-  let eqs ← intron' <| args.countp fun x => x.snd.fst.isSome
+  let eqs ← intron' $ args.countp $ fun x => x.snd.fst.isSome
   pure (ks, eqs)
 #align tactic.generalizes_intro tactic.generalizes_intro
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def generalizes_arg_parser_eq : pexpr → lean.parser (pexpr × Name)
   | app (app (macro _ [const `eq _]) e) (local_const x _ _ _) => pure (e, x)
   | app (app (macro _ [const `heq _]) e) (local_const x _ _ _) => pure (e, x)
@@ -183,7 +178,7 @@ private unsafe def generalizes_arg_parser_eq : pexpr → lean.parser (pexpr × N
 #align tactic.interactive.generalizes_arg_parser_eq tactic.interactive.generalizes_arg_parser_eq
 
 private unsafe def generalizes_arg_parser : lean.parser (Name × Option Name × pexpr) :=
-  with_desc "(id :)? expr = id" <| do
+  with_desc "(id :)? expr = id" $ do
     let lhs ← lean.parser.pexpr 0
     (tk ":" >>
           match lhs with
@@ -197,7 +192,7 @@ private unsafe def generalizes_arg_parser : lean.parser (Name × Option Name × 
 #align tactic.interactive.generalizes_arg_parser tactic.interactive.generalizes_arg_parser
 
 private unsafe def generalizes_args_parser : lean.parser (List (Name × Option Name × pexpr)) :=
-  with_desc "[(id :)? expr = id, ...]" <| tk "[" *> sep_by (tk ",") generalizes_arg_parser <* tk "]"
+  with_desc "[(id :)? expr = id, ...]" $ tk "[" *> sep_by (tk ",") generalizes_arg_parser <* tk "]"
 #align tactic.interactive.generalizes_args_parser tactic.interactive.generalizes_args_parser
 
 /-- Generalizes the target over multiple expressions. For example, given the goal
@@ -237,9 +232,9 @@ After generalization, the target type may no longer type check. `generalizes`
 will then raise an error.
 -/
 unsafe def generalizes (args : parse generalizes_args_parser) : tactic Unit :=
-  propagate_tags <| do
+  propagate_tags $ do
     let args ←
-      args.mmap fun ⟨arg_name, hyp_name, arg⟩ => do
+      args.mmap $ fun ⟨arg_name, hyp_name, arg⟩ => do
           let arg ← to_expr arg
           pure (arg_name, hyp_name, arg)
     generalizes_intro args

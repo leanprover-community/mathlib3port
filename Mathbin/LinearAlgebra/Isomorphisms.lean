@@ -37,9 +37,9 @@ section IsomorphismLaws
 /-- The first isomorphism law for modules. The quotient of `M` by the kernel of `f` is linearly
 equivalent to the range of `f`. -/
 noncomputable def quotKerEquivRange : (M ⧸ f.ker) ≃ₗ[R] f.range :=
-  (LinearEquiv.ofInjective (f.ker.liftq f <| le_rfl) <|
-        ker_eq_bot.mp <| Submodule.ker_liftq_eq_bot _ _ _ (le_refl f.ker)).trans
-    (LinearEquiv.ofEq _ _ <| Submodule.range_liftq _ _ _)
+  (LinearEquiv.ofInjective (f.ker.liftq f $ le_rfl) $
+        ker_eq_bot.mp $ Submodule.ker_liftq_eq_bot _ _ _ (le_refl f.ker)).trans
+    (LinearEquiv.ofEq _ _ $ Submodule.range_liftq _ _ _)
 #align linear_map.quot_ker_equiv_range LinearMap.quotKerEquivRange
 
 /-- The first isomorphism theorem for surjective linear maps. -/
@@ -103,14 +103,14 @@ theorem quotient_inf_equiv_sup_quotient_apply_mk (p p' : Submodule R M) (x : p) 
 
 theorem quotient_inf_equiv_sup_quotient_symm_apply_left (p p' : Submodule R M) (x : p ⊔ p') (hx : (x : M) ∈ p) :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = Submodule.Quotient.mk ⟨x, hx⟩ :=
-  (LinearEquiv.symm_apply_eq _).2 <| by simp [of_le_apply]
+  (LinearEquiv.symm_apply_eq _).2 $ by simp [of_le_apply]
 #align
   linear_map.quotient_inf_equiv_sup_quotient_symm_apply_left LinearMap.quotient_inf_equiv_sup_quotient_symm_apply_left
 
 @[simp]
 theorem quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff {p p' : Submodule R M} {x : p ⊔ p'} :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 ↔ (x : M) ∈ p' :=
-  (LinearEquiv.symm_apply_eq _).trans <| by simp [of_le_apply]
+  (LinearEquiv.symm_apply_eq _).trans $ by simp [of_le_apply]
 #align
   linear_map.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff LinearMap.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff
 
@@ -156,8 +156,8 @@ theorem quotient_quotient_equiv_quotient_aux_mk_mk (x : M) :
 def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M ⧸ T :=
   { quotientQuotientEquivQuotientAux S T h with toFun := quotientQuotientEquivQuotientAux S T h,
     invFun := mapq _ _ (mkq S) (le_comap_map _ _),
-    left_inv := fun x => (Quotient.inductionOn' x) fun x => (Quotient.inductionOn' x) fun x => by simp,
-    right_inv := fun x => (Quotient.inductionOn' x) fun x => by simp }
+    left_inv := fun x => Quotient.inductionOn' x $ fun x => Quotient.inductionOn' x $ fun x => by simp,
+    right_inv := fun x => Quotient.inductionOn' x $ fun x => by simp }
 #align submodule.quotient_quotient_equiv_quotient Submodule.quotientQuotientEquivQuotient
 
 /-- Corollary of the third isomorphism theorem: `[S : T] [M : S] = [M : T]` -/

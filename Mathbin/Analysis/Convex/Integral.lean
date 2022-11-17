@@ -66,9 +66,9 @@ theorem Convex.integral_mem [IsProbabilityMeasure μ] (hs : Convex ℝ s) (hsc :
     apply subset_closure
     exact ⟨mem_range_self _, hx⟩
   set G : ℕ → simple_func α E := simple_func.approx_on _ hgm.measurable (range g ∩ s) y₀ h₀
-  have : tendsto (fun n => (G n).integral μ) at_top (𝓝 <| ∫ x, g x ∂μ) :=
+  have : tendsto (fun n => (G n).integral μ) at_top (𝓝 $ ∫ x, g x ∂μ) :=
     tendsto_integral_approx_on_of_measurable hfi _ hg _ (integrable_const _)
-  refine' hsc.mem_of_tendsto this (eventually_of_forall fun n => hs.sum_mem _ _ _)
+  refine' hsc.mem_of_tendsto this (eventually_of_forall $ fun n => hs.sum_mem _ _ _)
   · exact fun _ _ => Ennreal.to_real_nonneg
     
   · rw [← Ennreal.to_real_sum, (G n).sum_range_measure_preimage_singleton, measure_univ, Ennreal.one_to_real]
@@ -106,7 +106,7 @@ function sending `μ`-a.e. points to `s`, then the average value of `f` belongs 
 `⨍ x, f x ∂μ ∈ s`. See also `convex.center_mass_mem` for a finite sum version of this lemma. -/
 theorem Convex.set_average_mem_closure (hs : Convex ℝ s) (h0 : μ t ≠ 0) (ht : μ t ≠ ∞)
     (hfs : ∀ᵐ x ∂μ.restrict t, f x ∈ s) (hfi : IntegrableOn f t μ) : (⨍ x in t, f x ∂μ) ∈ closure s :=
-  hs.closure.set_average_mem isClosedClosure h0 ht (hfs.mono fun x hx => subset_closure hx) hfi
+  hs.closure.set_average_mem isClosedClosure h0 ht (hfs.mono $ fun x hx => subset_closure hx) hfi
 #align convex.set_average_mem_closure Convex.set_average_mem_closure
 
 theorem ConvexOn.average_mem_epigraph [IsFiniteMeasure μ] (hg : ConvexOn ℝ s g) (hgc : ContinuousOn g s)

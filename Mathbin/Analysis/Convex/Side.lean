@@ -40,10 +40,10 @@ variable [AddCommGroup V'] [Module R V'] [AddTorsor V' P']
 
 include V
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p₁ p₂) -/
 /-- The points `x` and `y` are weakly on the same side of `s`. -/
 def WSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
-  ∃ (p₁ p₂ : _)(_ : p₁ ∈ s)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (y -ᵥ p₂)
+  ∃ (p₁ ∈ s) (p₂ ∈ s), SameRay R (x -ᵥ p₁) (y -ᵥ p₂)
 #align affine_subspace.w_same_side AffineSubspace.WSameSide
 
 /-- The points `x` and `y` are strictly on the same side of `s`. -/
@@ -51,10 +51,10 @@ def SSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
   s.WSameSide x y ∧ x ∉ s ∧ y ∉ s
 #align affine_subspace.s_same_side AffineSubspace.SSameSide
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p₁ p₂) -/
 /-- The points `x` and `y` are weakly on opposite sides of `s`. -/
 def WOppSide (s : AffineSubspace R P) (x y : P) : Prop :=
-  ∃ (p₁ p₂ : _)(_ : p₁ ∈ s)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (p₂ -ᵥ y)
+  ∃ (p₁ ∈ s) (p₂ ∈ s), SameRay R (x -ᵥ p₁) (p₂ -ᵥ y)
 #align affine_subspace.w_opp_side AffineSubspace.WOppSide
 
 /-- The points `x` and `y` are strictly on opposite sides of `s`. -/

@@ -209,7 +209,7 @@ def homologyOfZeroRight [HasCokernel (imageToKernel f (0 : B ⟶ C) comp_zero)] 
 /-- The kernel of the map `Im 0 ⟶ Ker f` is isomorphic to the kernel of `f.` -/
 def homologyOfZeroLeft [HasZeroObject V] [HasKernels V] [HasImage (0 : A ⟶ B)]
     [HasCokernel (imageToKernel (0 : A ⟶ B) g zero_comp)] : homology (0 : A ⟶ B) g zero_comp ≅ kernel g :=
-  ((cokernel_iso_of_eq <| image_to_kernel_zero_left _).trans cokernelZeroIsoTarget).trans (kernelSubobjectIso _)
+  ((cokernel_iso_of_eq $ image_to_kernel_zero_left _).trans cokernelZeroIsoTarget).trans (kernelSubobjectIso _)
 #align homology_of_zero_left homologyOfZeroLeft
 
 /-- `homology 0 0 _` is just the middle object. -/
@@ -324,7 +324,7 @@ section
 variable {A B C : V} {f : A ⟶ B} {g : B ⟶ C} (w : f ≫ g = 0) {f' : A ⟶ B} {g' : B ⟶ C} (w' : f' ≫ g' = 0) [HasKernels V]
   [HasCokernels V] [HasImages V] [HasImageMaps V]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Custom tactic to golf and speedup boring proofs in `homology.congr`. -/
 private unsafe def aux_tac : tactic Unit :=
   sorry

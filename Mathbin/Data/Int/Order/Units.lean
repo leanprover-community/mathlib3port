@@ -15,7 +15,7 @@ import Mathbin.Algebra.GroupPower.Order
 namespace Int
 
 theorem is_unit_iff_abs_eq {x : ℤ} : IsUnit x ↔ abs x = 1 := by
-  rw [is_unit_iff_nat_abs_eq, abs_eq_nat_abs, ← Int.coe_nat_one, coe_nat_inj']
+  rw [is_unit_iff_nat_abs_eq, abs_eq_nat_abs, ← Int.ofNat_one, coe_nat_inj']
 #align int.is_unit_iff_abs_eq Int.is_unit_iff_abs_eq
 
 theorem is_unit_sq {a : ℤ} (ha : IsUnit a) : a ^ 2 = 1 := by rw [sq, is_unit_mul_self ha]

@@ -170,12 +170,12 @@ instance is_iso_right [IsIso sq] :
 
 @[simp]
 theorem inv_left [IsIso sq] : (inv sq).left = inv sq.left :=
-  is_iso.eq_inv_of_hom_inv_id <| by rw [← comma.comp_left, is_iso.hom_inv_id, id_left]
+  is_iso.eq_inv_of_hom_inv_id $ by rw [← comma.comp_left, is_iso.hom_inv_id, id_left]
 #align category_theory.arrow.inv_left CategoryTheory.Arrow.inv_left
 
 @[simp]
 theorem inv_right [IsIso sq] : (inv sq).right = inv sq.right :=
-  is_iso.eq_inv_of_hom_inv_id <| by rw [← comma.comp_right, is_iso.hom_inv_id, id_right]
+  is_iso.eq_inv_of_hom_inv_id $ by rw [← comma.comp_right, is_iso.hom_inv_id, id_right]
 #align category_theory.arrow.inv_right CategoryTheory.Arrow.inv_right
 
 @[simp]

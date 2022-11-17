@@ -57,7 +57,7 @@ def mk (n : ℕ) : SimplexCategory :=
 #align simplex_category.mk SimplexCategory.mk
 
 -- mathport name: simplex_category.mk
-localized [Simplicial] notation "[" n "]" => SimplexCategory.mk n
+scoped[Simplicial] notation "[" n "]" => SimplexCategory.mk n
 
 -- TODO: Make `len` irreducible.
 /-- The length of an object of `simplex_category`. -/
@@ -134,7 +134,7 @@ def id (a : SimplexCategory) : SimplexCategory.Hom a a :=
 @[simp]
 def comp {a b c : SimplexCategory} (f : SimplexCategory.Hom b c) (g : SimplexCategory.Hom a b) :
     SimplexCategory.Hom a c :=
-  mk <| f.toOrderHom.comp g.toOrderHom
+  mk $ f.toOrderHom.comp g.toOrderHom
 #align simplex_category.hom.comp SimplexCategory.Hom.comp
 
 end Hom
@@ -148,7 +148,7 @@ instance smallCategory : SmallCategory.{0} SimplexCategory where
 
 /-- The constant morphism from [0]. -/
 def const (x : SimplexCategory) (i : Fin (x.len + 1)) : [0] ⟶ x :=
-  hom.mk <| ⟨fun _ => i, by tauto⟩
+  hom.mk $ ⟨fun _ => i, by tauto⟩
 #align simplex_category.const SimplexCategory.const
 
 @[simp]
@@ -434,7 +434,7 @@ section Skeleton
 of `NonemptyFinLinOrd` -/
 @[simps obj map]
 def skeletalFunctor : SimplexCategory ⥤ NonemptyFinLinOrdCat.{v} where
-  obj a := NonemptyFinLinOrdCat.of <| ULift (Fin (a.len + 1))
+  obj a := NonemptyFinLinOrdCat.of $ ULift (Fin (a.len + 1))
   map a b f := ⟨fun i => ULift.up (f.toOrderHom i.down), fun i j h => f.toOrderHom.Monotone h⟩
   map_id' a := by
     ext
@@ -486,7 +486,7 @@ instance :
     ⟨mk (Fintype.card X - 1 : ℕ),
       ⟨by
         have aux : Fintype.card X = Fintype.card X - 1 + 1 :=
-          (Nat.succ_pred_eq_of_pos <| fintype.card_pos_iff.mpr ⟨⊥⟩).symm
+          (Nat.succ_pred_eq_of_pos $ fintype.card_pos_iff.mpr ⟨⊥⟩).symm
         let f := monoEquivOfFin X aux
         have hf := (finset.univ.order_emb_of_fin aux).StrictMono
         refine' { Hom := ⟨fun i => f i.down, _⟩, inv := ⟨fun i => ⟨f.symm i⟩, _⟩, hom_inv_id' := _, inv_hom_id' := _ }
@@ -731,12 +731,13 @@ theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk 
     
 #align simplex_category.eq_σ_comp_of_not_injective' SimplexCategory.eq_σ_comp_of_not_injective'
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 theorem eq_σ_comp_of_not_injective {n : ℕ} {Δ' : SimplexCategory} (θ : mk (n + 1) ⟶ Δ')
-    (hθ : ¬Function.Injective θ.toOrderHom) : ∃ (i : Fin (n + 1))(θ' : mk n ⟶ Δ'), θ = σ i ≫ θ' := by
+    (hθ : ¬Function.Injective θ.toOrderHom) : ∃ (i : Fin (n + 1)) (θ' : mk n ⟶ Δ'), θ = σ i ≫ θ' := by
   simp only [Function.Injective, exists_prop, not_forall] at hθ
   -- as θ is not injective, there exists `x<y` such that `θ x = θ y`
   -- and then, `θ x = θ (x+1)`
-  have hθ₂ : ∃ x y : Fin (n + 2), (hom.to_order_hom θ) x = (hom.to_order_hom θ) y ∧ x < y := by
+  have hθ₂ : ∃ (x : Fin (n + 2)) (y : Fin (n + 2)), (hom.to_order_hom θ) x = (hom.to_order_hom θ) y ∧ x < y := by
     rcases hθ with ⟨x, y, ⟨h₁, h₂⟩⟩
     by_cases x < y
     · exact ⟨x, y, ⟨h₁, h⟩⟩
@@ -802,7 +803,7 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
 #align simplex_category.eq_comp_δ_of_not_surjective' SimplexCategory.eq_comp_δ_of_not_surjective'
 
 theorem eq_comp_δ_of_not_surjective {n : ℕ} {Δ : SimplexCategory} (θ : Δ ⟶ mk (n + 1))
-    (hθ : ¬Function.Surjective θ.toOrderHom) : ∃ (i : Fin (n + 2))(θ' : Δ ⟶ mk n), θ = θ' ≫ δ i := by
+    (hθ : ¬Function.Surjective θ.toOrderHom) : ∃ (i : Fin (n + 2)) (θ' : Δ ⟶ mk n), θ = θ' ≫ δ i := by
   cases' not_forall.mp hθ with i hi
   use i
   exact eq_comp_δ_of_not_surjective' θ i (not_exists.mp hi)

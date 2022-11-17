@@ -16,8 +16,8 @@ Lemmas about the type of natural numbers with a bottom element adjoined.
 namespace Nat
 
 theorem WithBot.add_eq_zero_iff : ∀ {n m : WithBot ℕ}, n + m = 0 ↔ n = 0 ∧ m = 0
-  | none, m => iff_of_false (by decide) fun h => absurd h.1 (by decide)
-  | n, none => iff_of_false (by cases n <;> exact by decide) fun h => absurd h.2 (by decide)
+  | none, m => iff_of_false dec_trivial fun h => absurd h.1 dec_trivial
+  | n, none => iff_of_false (by cases n <;> exact dec_trivial) fun h => absurd h.2 dec_trivial
   | some n, some m =>
     show (n + m : WithBot ℕ) = (0 : ℕ) ↔ (n : WithBot ℕ) = (0 : ℕ) ∧ (m : WithBot ℕ) = (0 : ℕ) by
       rw [← WithBot.coe_add, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe,
@@ -25,10 +25,10 @@ theorem WithBot.add_eq_zero_iff : ∀ {n m : WithBot ℕ}, n + m = 0 ↔ n = 0 �
 #align nat.with_bot.add_eq_zero_iff Nat.WithBot.add_eq_zero_iff
 
 theorem WithBot.add_eq_one_iff : ∀ {n m : WithBot ℕ}, n + m = 1 ↔ n = 0 ∧ m = 1 ∨ n = 1 ∧ m = 0
-  | none, none => by decide
-  | none, some m => by decide
+  | none, none => dec_trivial
+  | none, some m => dec_trivial
   | some n, none =>
-    iff_of_false (by decide) fun h => h.elim (fun h => absurd h.2 (by decide)) fun h => absurd h.2 (by decide)
+    iff_of_false dec_trivial fun h => h.elim (fun h => absurd h.2 dec_trivial) fun h => absurd h.2 dec_trivial
   | some n, some 0 => by erw [WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe] <;> simp
   | some n, some (m + 1) => by
     erw [WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe] <;>
@@ -42,7 +42,7 @@ theorem WithBot.coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) := by
 
 @[simp]
 theorem WithBot.lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
-  Option.casesOn n (by decide) fun n => iff_of_false (by simp [WithBot.some_eq_coe]) fun h => Option.noConfusion h
+  Option.casesOn n dec_trivial fun n => iff_of_false (by simp [WithBot.some_eq_coe]) fun h => Option.noConfusion h
 #align nat.with_bot.lt_zero_iff Nat.WithBot.lt_zero_iff
 
 theorem WithBot.one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by

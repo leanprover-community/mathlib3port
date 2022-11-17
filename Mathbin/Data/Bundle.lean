@@ -36,7 +36,7 @@ variable {B : Type _} (E : B → Type _)
 This type synonym is used to avoid conflicts with general sigma types.
 -/
 def TotalSpace :=
-  Σx, E x
+  Σ x, E x
 #align bundle.total_space Bundle.TotalSpace
 
 instance [Inhabited B] [Inhabited (E default)] : Inhabited (TotalSpace E) :=
@@ -53,7 +53,7 @@ def TotalSpace.proj : TotalSpace E → B :=
 
 -- mathport name: exprπ
 -- this notation won't be used in the pretty-printer
-localized [Bundle] notation "π" => @Bundle.TotalSpace.proj _
+scoped notation "π" => @Bundle.TotalSpace.proj _
 
 /-- Constructor for the total space of a bundle. -/
 @[simp, reducible]

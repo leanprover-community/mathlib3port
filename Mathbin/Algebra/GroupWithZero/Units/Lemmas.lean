@@ -201,7 +201,7 @@ variable [GroupWithZero G₀] [Nontrivial M₀] [MonoidWithZero M₀'] [MonoidWi
 include M₀
 
 theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
-  ⟨fun hfa ha => hfa <| ha.symm ▸ map_zero f, fun ha => ((IsUnit.mk0 a ha).map f).NeZero⟩
+  ⟨fun hfa ha => hfa $ ha.symm ▸ map_zero f, fun ha => ((IsUnit.mk0 a ha).map f).NeZero⟩
 #align map_ne_zero map_ne_zero
 
 @[simp]

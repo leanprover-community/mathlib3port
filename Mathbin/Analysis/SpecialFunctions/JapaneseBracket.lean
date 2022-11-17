@@ -120,7 +120,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
     ext x
     simp only [mem_set_of_eq, mem_closed_ball_zero_iff]
     exact le_rpow_one_add_norm_iff_norm_le hr (mem_Ioi.mp ht) x
-  rw [set_lintegral_congr_fun measurableSetIoi (ae_of_all volume <| h_int)]
+  rw [set_lintegral_congr_fun measurableSetIoi (ae_of_all volume $ h_int)]
   have hIoi_eq : Ioi (0 : ℝ) = Ioc (0 : ℝ) 1 ∪ Ioi 1 := (Set.Ioc_union_Ioi_eq_Ioi zero_le_one).symm
   have hdisjoint : Disjoint (Ioc (0 : ℝ) 1) (Ioi 1) := by simp [disjoint_iff]
   rw [hIoi_eq, lintegral_union measurableSetIoi hdisjoint, Ennreal.add_lt_top]
@@ -136,7 +136,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
   have h_meas' : Measurable fun a : ℝ => Ennreal.ofReal ((a ^ (-r⁻¹) - 1) ^ finrank ℝ E) := by measurability
   constructor
   -- The integral from 0 to 1:
-  · rw [set_lintegral_congr_fun measurableSetIoc (ae_of_all volume <| h_int'), lintegral_mul_const _ h_meas',
+  · rw [set_lintegral_congr_fun measurableSetIoc (ae_of_all volume $ h_int'), lintegral_mul_const _ h_meas',
       Ennreal.mul_lt_top_iff]
     left
     -- We calculate the integral
@@ -147,7 +147,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
     ∀ (t : ℝ) (ht : t ∈ Ioi (1 : ℝ)), (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) = 0 := fun t ht =>
     by rw [closed_ball_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
   -- The integral over the constant zero function is finite:
-  rw [set_lintegral_congr_fun measurableSetIoi (ae_of_all volume <| h_int''), lintegral_const 0, zero_mul]
+  rw [set_lintegral_congr_fun measurableSetIoi (ae_of_all volume $ h_int''), lintegral_const 0, zero_mul]
   exact WithTop.zero_lt_top
 #align finite_integral_one_add_norm finite_integral_one_add_norm
 
@@ -165,7 +165,7 @@ theorem integrableRpowNegOneAddNormSq [MeasureSpace E] [BorelSpace E] [(@volume 
     (hnr : (finrank ℝ E : ℝ) < r) : Integrable fun x : E => (1 + ∥x∥ ^ 2) ^ (-r / 2) := by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   refine'
-    ((integrableOneAddNorm hnr).const_mul <| 2 ^ (r / 2)).mono (by measurability) (eventually_of_forall fun x => _)
+    ((integrableOneAddNorm hnr).const_mul $ 2 ^ (r / 2)).mono (by measurability) (eventually_of_forall $ fun x => _)
   have h1 : 0 ≤ (1 + ∥x∥ ^ 2) ^ (-r / 2) := by positivity
   have h2 : 0 ≤ (1 + ∥x∥) ^ (-r) := by positivity
   have h3 : 0 ≤ (2 : ℝ) ^ (r / 2) := by positivity

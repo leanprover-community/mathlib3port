@@ -22,7 +22,7 @@ namespace Array'
 instance {n α} [Inhabited α] : Inhabited (Array' n α) :=
   DArray.inhabited
 
-theorem to_list_of_heq {n₁ n₂ α} {a₁ : Array' n₁ α} {a₂ : Array' n₂ α} (hn : n₁ = n₂) (ha : HEq a₁ a₂) :
+theorem to_list_of_heq {n₁ n₂ α} {a₁ : Array' n₁ α} {a₂ : Array' n₂ α} (hn : n₁ = n₂) (ha : a₁ == a₂) :
     a₁.toList = a₂.toList := by congr <;> assumption
 #align array.to_list_of_heq Array'.to_list_of_heq
 
@@ -64,7 +64,7 @@ theorem mem_rev_list_aux :
   | i + 1, h =>
     let IH := mem_rev_list_aux (le_of_lt h)
     ⟨fun ⟨j, ji1, e⟩ =>
-      Or.elim (lt_or_eq_of_le <| Nat.le_of_succ_le_succ ji1) (fun ji => List.mem_cons_of_mem _ <| IH.1 ⟨j, ji, e⟩)
+      Or.elim (lt_or_eq_of_le $ Nat.le_of_succ_le_succ ji1) (fun ji => List.mem_cons_of_mem _ $ IH.1 ⟨j, ji, e⟩)
         fun je => by
         simp [DArray.iterateAux] <;>
           apply Or.inl <;> unfold read at e <;> have H : j = ⟨i, h⟩ := Fin.eq_of_veq je <;> rwa [← H, e],
@@ -79,8 +79,8 @@ theorem mem_rev_list_aux :
 
 @[simp]
 theorem mem_rev_list : v ∈ a.revList ↔ v ∈ a :=
-  Iff.symm <|
-    Iff.trans (exists_congr fun j => Iff.symm <| show j.1 < n ∧ read a j = v ↔ read a j = v from and_iff_right j.2)
+  Iff.symm $
+    Iff.trans (exists_congr $ fun j => Iff.symm $ show j.1 < n ∧ read a j = v ↔ read a j = v from and_iff_right j.2)
       (mem_rev_list_aux _)
 #align array.mem_rev_list Array'.mem_rev_list
 
@@ -149,9 +149,9 @@ theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
     ∀ (j) {jh t h'},
       (∀ k tl, j + k = i → List.nthLe t k tl = a.read ⟨i, ih⟩) →
         (a.revIterateAux (fun _ => (· :: ·)) j jh t).nthLe i h' = a.read ⟨i, ih⟩
-  | 0, _, _, _, al => al i _ <| zero_add _
+  | 0, _, _, _, al => al i _ $ zero_add _
   | j + 1, jh, t, h', al =>
-    (to_list_nth_le_aux j) fun k tl hjk =>
+    to_list_nth_le_aux j $ fun k tl hjk =>
       show List.nthLe (a.read ⟨j, jh⟩ :: t) k tl = a.read ⟨i, ih⟩ from
         match k, hjk, tl with
         | 0, e, tl =>
@@ -180,7 +180,7 @@ theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i,
 #align array.to_list_nth Array'.to_list_nth
 
 theorem write_to_list {i v} : (a.write i v).toList = a.toList.updateNth i v :=
-  (List.ext_le (by simp)) fun j h₁ h₂ => by
+  List.ext_le (by simp) $ fun j h₁ h₂ => by
     have h₃ : j < n := by simpa using h₁
     rw [to_list_nth_le _ h₃]
     refine'
@@ -215,19 +215,19 @@ section ToArray
 variable {n : ℕ} {α : Type u}
 
 @[simp]
-theorem to_list_to_array (a : Array' n α) : HEq a.toList.toArray a :=
+theorem to_list_to_array (a : Array' n α) : a.toList.toArray == a :=
   heq_of_heq_of_eq
       (@Eq.drecOn
         (fun m (e : a.toList.length = m) =>
-          HEq (DArray.mk fun v => a.toList.nthLe v.1 v.2)
-            ((@DArray.mk m fun _ => α) fun v => a.toList.nthLe v.1 <| e.symm ▸ v.2))
-        a.to_list_length HEq.rfl) <|
-    DArray.ext fun ⟨i, h⟩ => to_list_nth_le i h _
+          (DArray.mk fun v => a.toList.nthLe v.1 v.2) ==
+            ((@DArray.mk m fun _ => α) $ fun v => a.toList.nthLe v.1 $ e.symm ▸ v.2))
+        a.to_list_length HEq.rfl) $
+    DArray.ext $ fun ⟨i, h⟩ => to_list_nth_le i h _
 #align array.to_list_to_array Array'.to_list_to_array
 
 @[simp]
 theorem to_array_to_list (l : List α) : l.toArray.toList = l :=
-  (List.ext_le (to_list_length _)) fun n h1 h2 => to_list_nth_le _ h2 _
+  List.ext_le (to_list_length _) $ fun n h1 h2 => to_list_nth_le _ h2 _
 #align array.to_array_to_list Array'.to_array_to_list
 
 end ToArray

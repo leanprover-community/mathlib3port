@@ -114,7 +114,7 @@ For convenience, one often writes `[h; (a₀, b₀), (a₁, b₁), (a₂, b₂),
 -/
 structure GeneralizedContinuedFraction where
   h : α
-  s : Seq <| Pair α
+  s : Seq $ Pair α
 #align generalized_continued_fraction GeneralizedContinuedFraction
 
 variable {α}
@@ -165,14 +165,14 @@ variable {β : Type _} [Coe α β]
 
 /-- Coerce a gcf by elementwise coercion. -/
 instance hasCoeToGeneralizedContinuedFraction : Coe (GeneralizedContinuedFraction α) (GeneralizedContinuedFraction β) :=
-  ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩⟩
+  ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seq $ Pair β)⟩⟩
 #align
   generalized_continued_fraction.has_coe_to_generalized_continued_fraction GeneralizedContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
 @[simp, norm_cast]
 theorem coe_to_generalized_continued_fraction {g : GeneralizedContinuedFraction α} :
     (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
-      ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩ :=
+      ⟨(g.h : β), (g.s.map coe : Seq $ Pair β)⟩ :=
   rfl
 #align
   generalized_continued_fraction.coe_to_generalized_continued_fraction GeneralizedContinuedFraction.coe_to_generalized_continued_fraction
@@ -363,7 +363,7 @@ def continuantsAux (g : GeneralizedContinuedFraction K) : Stream (Pair K)
   | n + 2 =>
     match g.s.nth n with
     | none => continuants_aux (n + 1)
-    | some gp => nextContinuants gp.a gp.b (continuants_aux n) (continuants_aux <| n + 1)
+    | some gp => nextContinuants gp.a gp.b (continuants_aux n) (continuants_aux $ n + 1)
 #align generalized_continued_fraction.continuants_aux GeneralizedContinuedFraction.continuantsAux
 
 /-- Returns the continuants `⟨Aₙ, Bₙ⟩` of `g`. -/

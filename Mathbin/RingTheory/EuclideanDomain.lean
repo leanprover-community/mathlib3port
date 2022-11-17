@@ -32,11 +32,11 @@ section GcdMonoid
 variable {R : Type _} [EuclideanDomain R] [GcdMonoid R]
 
 theorem gcd_ne_zero_of_left (p q : R) (hp : p ≠ 0) : GcdMonoid.gcd p q ≠ 0 := fun h =>
-  hp <| eq_zero_of_zero_dvd (h ▸ gcd_dvd_left p q)
+  hp $ eq_zero_of_zero_dvd (h ▸ gcd_dvd_left p q)
 #align gcd_ne_zero_of_left gcd_ne_zero_of_left
 
 theorem gcd_ne_zero_of_right (p q : R) (hp : q ≠ 0) : GcdMonoid.gcd p q ≠ 0 := fun h =>
-  hp <| eq_zero_of_zero_dvd (h ▸ gcd_dvd_right p q)
+  hp $ eq_zero_of_zero_dvd (h ▸ gcd_dvd_right p q)
 #align gcd_ne_zero_of_right gcd_ne_zero_of_right
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:130:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/

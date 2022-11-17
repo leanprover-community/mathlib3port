@@ -185,7 +185,7 @@ theorem succ_succ_ne_one (n : ℕ) : n.succ.succ ≠ 1 :=
 
 @[simp]
 theorem one_lt_succ_succ (n : ℕ) : 1 < n.succ.succ :=
-  succ_lt_succ <| succ_pos n
+  succ_lt_succ $ succ_pos n
 #align nat.one_lt_succ_succ Nat.one_lt_succ_succ
 
 #print Nat.succ_le_succ_iff /-
@@ -256,7 +256,7 @@ theorem two_lt_of_ne : ∀ {n}, n ≠ 0 → n ≠ 1 → n ≠ 2 → 2 < n
   | 0, h, _, _ => (h rfl).elim
   | 1, _, h, _ => (h rfl).elim
   | 2, _, _, h => (h rfl).elim
-  | n + 3, _, _, _ => by decide
+  | n + 3, _, _, _ => dec_trivial
 #align nat.two_lt_of_ne Nat.two_lt_of_ne
 
 theorem forall_lt_succ {P : ℕ → Prop} {n : ℕ} : (∀ m < n + 1, P m) ↔ (∀ m < n, P m) ∧ P n := by
@@ -294,7 +294,7 @@ theorem exists_eq_add_of_le : ∀ {m n : ℕ}, m ≤ n → ∃ k : ℕ, n = m + 
 #align nat.exists_eq_add_of_le Nat.exists_eq_add_of_le
 
 theorem exists_eq_add_of_lt : ∀ {m n : ℕ}, m < n → ∃ k : ℕ, n = m + k + 1
-  | 0, 0, h => False.elim <| lt_irrefl _ h
+  | 0, 0, h => False.elim $ lt_irrefl _ h
   | 0, n + 1, h => ⟨n, by simp⟩
   | m + 1, n + 1, h =>
     let ⟨k, hk⟩ := exists_eq_add_of_le (Nat.le_of_succ_le_succ h)
@@ -401,7 +401,7 @@ when `k ≥ n`, see `le_rec_on'`. -/
 def leRecOn {C : ℕ → Sort u} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ {k}, C k → C (k + 1)) → C n → C m
   | 0, H, next, x => Eq.recOn (Nat.eq_zero_of_le_zero H) x
   | m + 1, H, next, x =>
-    Or.by_cases (of_le_succ H) (fun h : n ≤ m => next <| le_rec_on h (@next) x) fun h : n = m + 1 => Eq.recOn h x
+    Or.by_cases (of_le_succ H) (fun h : n ≤ m => next $ le_rec_on h (@next) x) fun h : n = m + 1 => Eq.recOn h x
 #align nat.le_rec_on Nat.leRecOn
 
 theorem le_rec_on_self {C : ℕ → Sort u} {n} {h : n ≤ n} {next} (x : C n) : (leRecOn h next x : C n) = x := by
@@ -485,7 +485,7 @@ Also works for functions to `Sort*`. For a version assuming only the assumption 
 `decreasing_induction'`. -/
 @[elab_as_elim]
 def decreasingInduction {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m n : ℕ} (mn : m ≤ n) (hP : P n) : P m :=
-  leRecOn mn (fun k ih hsk => ih <| h k hsk) (fun h => h) hP
+  leRecOn mn (fun k ih hsk => ih $ h k hsk) (fun h => h) hP
 #align nat.decreasing_induction Nat.decreasingInduction
 
 @[simp]
@@ -602,7 +602,7 @@ there is a map from `C n` to each `C m`, `n ≤ m`. -/
 def leRecOn' {C : ℕ → Sort _} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ ⦃k⦄, n ≤ k → C k → C (k + 1)) → C n → C m
   | 0, H, next, x => Eq.recOn (Nat.eq_zero_of_le_zero H) x
   | m + 1, H, next, x =>
-    Or.by_cases (of_le_succ H) (fun h : n ≤ m => next h <| le_rec_on' h next x) fun h : n = m + 1 => Eq.recOn h x
+    Or.by_cases (of_le_succ H) (fun h : n ≤ m => next h $ le_rec_on' h next x) fun h : n = m + 1 => Eq.recOn h x
 #align nat.le_rec_on' Nat.leRecOn'
 
 /-- Decreasing induction: if `P (k+1)` implies `P k` for all `m ≤ k < n`, then `P n` implies `P m`.
@@ -640,23 +640,23 @@ theorem le_div_iff_mul_le' {x y : ℕ} {k : ℕ} (k0 : 0 < k) : x ≤ y / k ↔ 
 #align nat.le_div_iff_mul_le' Nat.le_div_iff_mul_le'
 
 theorem div_lt_iff_lt_mul' {x y : ℕ} {k : ℕ} (k0 : 0 < k) : x / k < y ↔ x < y * k :=
-  lt_iff_lt_of_le_iff_le <| le_div_iff_mul_le' k0
+  lt_iff_lt_of_le_iff_le $ le_div_iff_mul_le' k0
 #align nat.div_lt_iff_lt_mul' Nat.div_lt_iff_lt_mul'
 
 theorem one_le_div_iff {a b : ℕ} (hb : 0 < b) : 1 ≤ a / b ↔ b ≤ a := by rw [le_div_iff_mul_le hb, one_mul]
 #align nat.one_le_div_iff Nat.one_le_div_iff
 
 theorem div_lt_one_iff {a b : ℕ} (hb : 0 < b) : a / b < 1 ↔ a < b :=
-  lt_iff_lt_of_le_iff_le <| one_le_div_iff hb
+  lt_iff_lt_of_le_iff_le $ one_le_div_iff hb
 #align nat.div_lt_one_iff Nat.div_lt_one_iff
 
 protected theorem div_le_div_right {n m : ℕ} (h : n ≤ m) {k : ℕ} : n / k ≤ m / k :=
-  ((Nat.eq_zero_or_pos k).elim fun k0 => by simp [k0]) fun hk =>
-    (le_div_iff_mul_le' hk).2 <| le_trans (Nat.div_mul_le_self _ _) h
+  ((Nat.eq_zero_or_pos k).elim fun k0 => by simp [k0]) $ fun hk =>
+    (le_div_iff_mul_le' hk).2 $ le_trans (Nat.div_mul_le_self _ _) h
 #align nat.div_le_div_right Nat.div_le_div_right
 
 theorem lt_of_div_lt_div {m n k : ℕ} : m / k < n / k → m < n :=
-  lt_imp_lt_of_le_imp_le fun h => Nat.div_le_div_right h
+  lt_imp_lt_of_le_imp_le $ fun h => Nat.div_le_div_right h
 #align nat.lt_of_div_lt_div Nat.lt_of_div_lt_div
 
 protected theorem div_pos {a b : ℕ} (hba : b ≤ a) (hb : 0 < b) : 0 < a / b :=
@@ -670,7 +670,7 @@ protected theorem div_pos {a b : ℕ} (hba : b ≤ a) (hb : 0 < b) : 0 < a / b :
 #align nat.div_pos Nat.div_pos
 
 theorem lt_mul_of_div_lt {a b c : ℕ} (h : a / c < b) (w : 0 < c) : a < b * c :=
-  lt_of_not_ge <| not_le_of_gt h ∘ (Nat.le_div_iff_mul_le w).2
+  lt_of_not_ge $ not_le_of_gt h ∘ (Nat.le_div_iff_mul_le w).2
 #align nat.lt_mul_of_div_lt Nat.lt_mul_of_div_lt
 
 theorem mul_div_le_mul_div_assoc (a b c : ℕ) : a * (b / c) ≤ a * b / c :=
@@ -765,11 +765,11 @@ protected theorem dvd_add_right {k m n : ℕ} (h : k ∣ m) : k ∣ m + n ↔ k 
 #align nat.dvd_add_right Nat.dvd_add_right
 
 protected theorem mul_dvd_mul_iff_left {a b c : ℕ} (ha : 0 < a) : a * b ∣ a * c ↔ b ∣ c :=
-  exists_congr fun d => by rw [mul_assoc, mul_right_inj' ha.ne']
+  exists_congr $ fun d => by rw [mul_assoc, mul_right_inj' ha.ne']
 #align nat.mul_dvd_mul_iff_left Nat.mul_dvd_mul_iff_left
 
 protected theorem mul_dvd_mul_iff_right {a b c : ℕ} (hc : 0 < c) : a * c ∣ b * c ↔ a ∣ b :=
-  exists_congr fun d => by rw [mul_right_comm, mul_left_inj' hc.ne']
+  exists_congr $ fun d => by rw [mul_right_comm, mul_left_inj' hc.ne']
 #align nat.mul_dvd_mul_iff_right Nat.mul_dvd_mul_iff_right
 
 @[simp]
@@ -840,7 +840,7 @@ theorem eq_zero_of_dvd_of_div_eq_zero {a b : ℕ} (w : a ∣ b) (h : b / a = 0) 
 #align nat.eq_zero_of_dvd_of_div_eq_zero Nat.eq_zero_of_dvd_of_div_eq_zero
 
 theorem div_le_div_left {a b c : ℕ} (h₁ : c ≤ b) (h₂ : 0 < c) : a / b ≤ a / c :=
-  (Nat.le_div_iff_mul_le h₂).2 <| le_trans (Nat.mul_le_mul_left _ h₁) (div_mul_le_self _ _)
+  (Nat.le_div_iff_mul_le h₂).2 $ le_trans (Nat.mul_le_mul_left _ h₁) (div_mul_le_self _ _)
 #align nat.div_le_div_left Nat.div_le_div_left
 
 theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
@@ -885,7 +885,7 @@ theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.find h = m ↔ p m ∧ ∀ n < 
     exact ⟨Nat.find_spec h, fun _ => Nat.find_min h⟩
     
   · rintro ⟨hm, hlt⟩
-    exact le_antisymm (Nat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| Nat.find_spec h)
+    exact le_antisymm (Nat.find_min' h hm) (not_lt.1 $ imp_not_comm.1 (hlt _) $ Nat.find_spec h)
     
 #align nat.find_eq_iff Nat.find_eq_iff
 
@@ -1053,7 +1053,7 @@ theorem pos_of_bit0_pos {n : ℕ} (h : 0 < bit0 n) : 0 < n := by
 @[simp]
 theorem bit_cases_on_bit {C : ℕ → Sort u} (H : ∀ b n, C (bit b n)) (b : Bool) (n : ℕ) :
     bitCasesOn (bit b n) H = H b n :=
-  eq_of_heq <| (eq_rec_heq _ _).trans <| by rw [bodd_bit, div2_bit]
+  eq_of_heq $ (eq_rec_heq _ _).trans $ by rw [bodd_bit, div2_bit]
 #align nat.bit_cases_on_bit Nat.bit_cases_on_bit
 
 @[simp]
@@ -1085,7 +1085,7 @@ theorem bit_cases_on_inj {C : ℕ → Sort u} (H₁ H₂ : ∀ b n, C (bit b n))
 instance decidableBallLt (n : Nat) (P : ∀ k < n, Prop) : ∀ [H : ∀ n h, Decidable (P n h)], Decidable (∀ n h, P n h) :=
   by
   induction' n with n IH <;> intro <;> skip
-  · exact is_true fun n => by decide
+  · exact is_true fun n => dec_trivial
     
   cases' IH fun k h => P k (lt_succ_of_lt h) with h
   · refine' is_false (mt _ h)

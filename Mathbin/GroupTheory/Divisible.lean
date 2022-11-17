@@ -143,14 +143,15 @@ theorem pow_left_surj_of_rootable_by [RootableBy A α] {n : α} (hn : n ≠ 0) :
            []
            ","
            (Term.arrow
-            («term_≠_» `n "≠" (num "0"))
+            (Init.Logic.«term_≠_» `n " ≠ " (num "0"))
             "→"
             (Term.app
              `Function.Surjective
-             [(Term.paren
+             [(Term.typeAscription
                "("
-               [(Term.fun "fun" (Term.basicFun [`a] [] "=>" («term_^_» `a "^" `n)))
-                [(Term.typeAscription ":" [(Term.arrow `A "→" `A)])]]
+               (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Init.Core.«term_^_» `a " ^ " `n)))
+               ":"
+               [(Term.arrow `A "→" `A)]
                ")")])))]
          []
          ")")]
@@ -167,15 +168,9 @@ theorem pow_left_surj_of_rootable_by [RootableBy A α] {n : α} (hn : n ≠ 0) :
            (Term.app
             (Term.explicit "@" `dite)
             [(Term.hole "_")
-             («term_=_» `n "=" (num "0"))
+             (Init.Core.«term_=_» `n " = " (num "0"))
              (Term.app `Classical.dec [(Term.hole "_")])
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [(Term.hole "_")]
-               []
-               "=>"
-               (Term.paren "(" [(num "1") [(Term.typeAscription ":" [`A])]] ")")))
+             (Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Term.typeAscription "(" (num "1") ":" [`A] ")")))
              (Term.fun "fun" (Term.basicFun [`hn] [] "=>" (Term.proj (Term.app `H [`hn `a]) "." `some)))]))))
         []
         (Command.whereStructField
@@ -251,7 +246,7 @@ theorem pow_left_surj_of_rootable_by [RootableBy A α] {n : α} (hn : n ≠ 0) :
       `H
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `H [`hn `a]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `H [`hn `a]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
@@ -340,8 +335,8 @@ variable [Zero β] [∀ i : ι, Monoid (B i)] [∀ i, RootableBy (B i) β]
 @[to_additive]
 instance Pi.rootableBy : RootableBy (∀ i, B i) β where
   root x n i := RootableBy.root (x i) n
-  root_zero x := funext fun i => RootableBy.root_zero _
-  root_cancel n x hn := funext fun i => RootableBy.root_cancel _ hn
+  root_zero x := funext $ fun i => RootableBy.root_zero _
+  root_cancel n x hn := funext $ fun i => RootableBy.root_cancel _ hn
 #align pi.rootable_by Pi.rootableBy
 
 end Pi
@@ -368,7 +363,7 @@ namespace AddCommGroup
 variable (A : Type _) [AddCommGroup A]
 
 theorem smul_top_eq_top_of_divisible_by_int [DivisibleBy A ℤ] {n : ℤ} (hn : n ≠ 0) : n • (⊤ : AddSubgroup A) = ⊤ :=
-  (AddSubgroup.map_top_of_surjective _) fun a => ⟨DivisibleBy.div a n, DivisibleBy.div_cancel _ hn⟩
+  AddSubgroup.map_top_of_surjective _ $ fun a => ⟨DivisibleBy.div a n, DivisibleBy.div_cancel _ hn⟩
 #align add_comm_group.smul_top_eq_top_of_divisible_by_int AddCommGroup.smul_top_eq_top_of_divisible_by_int
 
 /-- If for all `n ≠ 0 ∈ ℤ`, `n • A = A`, then `A` is divisible.
@@ -402,14 +397,14 @@ def rootableByIntOfRootableByNat [RootableBy A ℕ] : RootableBy A ℤ where
   root a z :=
     match z with
     | (n : ℕ) => RootableBy.root a n
-    | -[n+1] => (RootableBy.root a (n + 1))⁻¹
+    | -[1+ n] => (RootableBy.root a (n + 1))⁻¹
   root_zero a := RootableBy.root_zero a
   root_cancel n a hn := by
     induction n
     · change RootableBy.root a _ ^ _ = a
       norm_num
       rw [RootableBy.root_cancel]
-      rw [Int.of_nat_eq_coe] at hn
+      rw [Int.ofNat_eq_coe] at hn
       exact_mod_cast hn
       
     · change (RootableBy.root a _)⁻¹ ^ _ = a
@@ -446,9 +441,9 @@ variable (f : A → B)
 @[to_additive "If `f : A → B` is a surjective homomorphism and\n`A` is `α`-divisible, then `B` is also `α`-divisible."]
 noncomputable def Function.Surjective.rootableBy (hf : Function.Surjective f)
     (hpow : ∀ (a : A) (n : α), f (a ^ n) = f a ^ n) : RootableBy B α :=
-  (rootableByOfPowLeftSurj _ _) fun n hn x =>
+  rootableByOfPowLeftSurj _ _ $ fun n hn x =>
     let ⟨y, hy⟩ := hf x
-    ⟨f <| RootableBy.root y n, (by rw [← hpow (RootableBy.root y n) n, RootableBy.root_cancel _ hn, hy] : _ ^ _ = x)⟩
+    ⟨f $ RootableBy.root y n, (by rw [← hpow (RootableBy.root y n) n, RootableBy.root_cancel _ hn, hy] : _ ^ _ = x)⟩
 #align function.surjective.rootable_by Function.Surjective.rootableBy
 
 @[to_additive DivisibleBy.surjective_smul]
@@ -465,7 +460,7 @@ variable (α : Type _) {A : Type _} [CommGroup A] (B : Subgroup A)
 /-- Any quotient group of a rootable group is rootable. -/
 @[to_additive QuotientAddGroup.divisibleBy "Any quotient group of a divisible group is divisible"]
 noncomputable instance QuotientGroup.rootableBy [RootableBy A ℕ] : RootableBy (A ⧸ B) ℕ :=
-  (QuotientGroup.mk_surjective.RootableBy _) fun _ _ => rfl
+  QuotientGroup.mk_surjective.RootableBy _ $ fun _ _ => rfl
 #align quotient_group.rootable_by QuotientGroup.rootableBy
 
 end Quotient

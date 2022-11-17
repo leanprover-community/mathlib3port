@@ -58,7 +58,7 @@ theorem abs_sub_eq_iff : (x - y).abs = |x.abs - y.abs| ↔ x = 0 ∨ y = 0 ∨ x
 #align complex.abs_sub_eq_iff Complex.abs_sub_eq_iff
 
 theorem same_ray_of_arg_eq (h : x.arg = y.arg) : SameRay ℝ x y :=
-  same_ray_iff.mpr <| Or.inr <| Or.inr h
+  same_ray_iff.mpr $ Or.inr $ Or.inr h
 #align complex.same_ray_of_arg_eq Complex.same_ray_of_arg_eq
 
 theorem abs_add_eq (h : x.arg = y.arg) : (x + y).abs = x.abs + y.abs :=

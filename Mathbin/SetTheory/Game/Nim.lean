@@ -68,12 +68,12 @@ theorem right_moves_nim (o : Ordinal) : (nim o).RightMoves = o.out.α := by
   rfl
 #align pgame.right_moves_nim Pgame.right_moves_nim
 
-theorem move_left_nim_heq (o : Ordinal) : HEq (nim o).moveLeft fun i : o.out.α => nim (typein (· < ·) i) := by
+theorem move_left_nim_heq (o : Ordinal) : (nim o).moveLeft == fun i : o.out.α => nim (typein (· < ·) i) := by
   rw [nim_def]
   rfl
 #align pgame.move_left_nim_heq Pgame.move_left_nim_heq
 
-theorem move_right_nim_heq (o : Ordinal) : HEq (nim o).moveRight fun i : o.out.α => nim (typein (· < ·) i) := by
+theorem move_right_nim_heq (o : Ordinal) : (nim o).moveRight == fun i : o.out.α => nim (typein (· < ·) i) := by
   rw [nim_def]
   rfl
 #align pgame.move_right_nim_heq Pgame.move_right_nim_heq
@@ -117,7 +117,7 @@ theorem move_right_nim {o : Ordinal} (i) : (nim o).moveRight (toRightMovesNim i)
 /-- A recursion principle for left moves of a nim game. -/
 @[elab_as_elim]
 def leftMovesNimRecOn {o : Ordinal} {P : (nim o).LeftMoves → Sort _} (i : (nim o).LeftMoves)
-    (H : ∀ a < o, P <| toLeftMovesNim ⟨a, H⟩) : P i := by
+    (H : ∀ a < o, P $ toLeftMovesNim ⟨a, H⟩) : P i := by
   rw [← to_left_moves_nim.apply_symm_apply i]
   apply H
 #align pgame.left_moves_nim_rec_on Pgame.leftMovesNimRecOn
@@ -125,7 +125,7 @@ def leftMovesNimRecOn {o : Ordinal} {P : (nim o).LeftMoves → Sort _} (i : (nim
 /-- A recursion principle for right moves of a nim game. -/
 @[elab_as_elim]
 def rightMovesNimRecOn {o : Ordinal} {P : (nim o).RightMoves → Sort _} (i : (nim o).RightMoves)
-    (H : ∀ a < o, P <| toRightMovesNim ⟨a, H⟩) : P i := by
+    (H : ∀ a < o, P $ toRightMovesNim ⟨a, H⟩) : P i := by
   rw [← to_right_moves_nim.apply_symm_apply i]
   apply H
 #align pgame.right_moves_nim_rec_on Pgame.rightMovesNimRecOn
@@ -150,11 +150,11 @@ theorem nim_zero_equiv : nim 0 ≈ 0 :=
 #align pgame.nim_zero_equiv Pgame.nim_zero_equiv
 
 noncomputable instance uniqueNimOneLeftMoves : Unique (nim 1).LeftMoves :=
-  (Equiv.cast <| left_moves_nim 1).unique
+  (Equiv.cast $ left_moves_nim 1).unique
 #align pgame.unique_nim_one_left_moves Pgame.uniqueNimOneLeftMoves
 
 noncomputable instance uniqueNimOneRightMoves : Unique (nim 1).RightMoves :=
-  (Equiv.cast <| right_moves_nim 1).unique
+  (Equiv.cast $ right_moves_nim 1).unique
 #align pgame.unique_nim_one_right_moves Pgame.uniqueNimOneRightMoves
 
 @[simp]

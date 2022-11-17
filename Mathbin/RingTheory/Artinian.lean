@@ -170,11 +170,11 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
 /-- A module is Artinian iff every nonempty set of submodules has a minimal submodule among them.
 -/
 theorem set_has_minimal_iff_artinian :
-    (∀ a : Set <| Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, I ≤ M' → I = M') ↔ IsArtinian R M := by
+    (∀ a : Set $ Submodule R M, a.Nonempty → ∃ M' ∈ a, ∀ I ∈ a, I ≤ M' → I = M') ↔ IsArtinian R M := by
   rw [is_artinian_iff_well_founded, WellFounded.well_founded_iff_has_min']
 #align set_has_minimal_iff_artinian set_has_minimal_iff_artinian
 
-theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set <| Submodule R M) (ha : a.Nonempty) :
+theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set $ Submodule R M) (ha : a.Nonempty) :
     ∃ M' ∈ a, ∀ I ∈ a, I ≤ M' → I = M' :=
   set_has_minimal_iff_artinian.mpr ‹_› a ha
 #align is_artinian.set_has_minimal IsArtinian.set_has_minimal
@@ -256,7 +256,7 @@ theorem disjoint_partial_infs_eventually_top (f : ℕ → Submodule R M)
     
   obtain ⟨n, w⟩ := monotone_stabilizes (partialSups (OrderDual.toDual ∘ f))
   refine' ⟨n, fun m p => _⟩
-  exact (h m).eq_bot_of_ge (sup_eq_left.1 <| (w (m + 1) <| le_add_right p).symm.trans <| w m p)
+  exact (h m).eq_bot_of_ge (sup_eq_left.1 $ (w (m + 1) $ le_add_right p).symm.trans $ w m p)
 #align is_artinian.disjoint_partial_infs_eventually_top IsArtinian.disjoint_partial_infs_eventually_top
 
 end IsArtinian
@@ -280,7 +280,7 @@ theorem range_smul_pow_stabilizes (r : R) :
 
 variable {M}
 
-theorem exists_pow_succ_smul_dvd (r : R) (x : M) : ∃ (n : ℕ)(y : M), r ^ n.succ • y = r ^ n • x := by
+theorem exists_pow_succ_smul_dvd (r : R) (x : M) : ∃ (n : ℕ) (y : M), r ^ n.succ • y = r ^ n • x := by
   obtain ⟨n, hn⟩ := IsArtinian.range_smul_pow_stabilizes M r
   simp_rw [SetLike.ext_iff] at hn
   exact ⟨n, by simpa using hn n.succ n.le_succ (r ^ n • x)⟩
@@ -351,7 +351,7 @@ theorem is_artinian_of_fg_of_artinian {R M} [Ring R] [AddCommGroup M] [Module R 
   have : ∀ x ∈ s, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
   refine' @is_artinian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_artinian_pi
   · fapply LinearMap.mk
-    · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
+    · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ $ this _ c.2⟩
       
     · intro f g
       apply Subtype.eq
@@ -429,10 +429,11 @@ theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R))
       
   have : J ⊔ Jac • Ideal.span {x} ≤ J ⊔ Ideal.span {x} :=
     sup_le_sup_left (smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _
-  have : Jac * Ideal.span {x} ≤ J := by
-    classical--Need version 4 of Nakayamas lemma on Stacks
-      by_contra H
-      exact lt_of_le_of_ne le_sup_left fun h => H <| h.symm ▸ le_sup_right
+  have : Jac * Ideal.span {x} ≤ J := by classical
+    --Need version 4 of Nakayamas lemma on Stacks
+    by_contra H
+    refine' H (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl (hJ' _ _ this).ge)
+    exact lt_of_le_of_ne le_sup_left fun h => H $ h.symm ▸ le_sup_right
   have : Ideal.span {x} * Jac ^ (n + 1) ≤ ⊥
   calc
     Ideal.span {x} * Jac ^ (n + 1) = Ideal.span {x} * Jac * Jac ^ n := by rw [pow_succ, ← mul_assoc]

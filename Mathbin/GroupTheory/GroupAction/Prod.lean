@@ -121,14 +121,14 @@ instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] 
 instance has_faithful_smul_left [HasFaithfulSmul M α] [Nonempty β] : HasFaithfulSmul M (α × β) :=
   ⟨fun x y h =>
     let ⟨b⟩ := ‹Nonempty β›
-    eq_of_smul_eq_smul fun a : α => by injection h (a, b)⟩
+    eq_of_smul_eq_smul $ fun a : α => by injection h (a, b)⟩
 #align prod.has_faithful_smul_left Prod.has_faithful_smul_left
 
 @[to_additive]
 instance has_faithful_smul_right [Nonempty α] [HasFaithfulSmul M β] : HasFaithfulSmul M (α × β) :=
   ⟨fun x y h =>
     let ⟨a⟩ := ‹Nonempty α›
-    eq_of_smul_eq_smul fun b : β => by injection h (a, b)⟩
+    eq_of_smul_eq_smul $ fun b : β => by injection h (a, b)⟩
 #align prod.has_faithful_smul_right Prod.has_faithful_smul_right
 
 end

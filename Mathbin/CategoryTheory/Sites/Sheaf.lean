@@ -233,7 +233,7 @@ variable {J}
 def IsSheaf.amalgamate {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X : C} {P : Cᵒᵖ ⥤ A} (hP : Presheaf.IsSheaf J P)
     (S : J.cover X) (x : ∀ I : S.arrow, E ⟶ P.obj (op I.y))
     (hx : ∀ I : S.Relation, x I.fst ≫ P.map I.g₁.op = x I.snd ≫ P.map I.g₂.op) : E ⟶ P.obj (op X) :=
-  ((hP _ _ S.condition).amalgamate fun Y f hf => x ⟨Y, f, hf⟩) fun Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ w =>
+  ((hP _ _ S.condition).amalgamate fun Y f hf => x ⟨Y, f, hf⟩) $ fun Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ w =>
     hx ⟨Y₁, Y₂, Z, g₁, g₂, f₁, f₂, h₁, h₂, w⟩
 #align category_theory.presheaf.is_sheaf.amalgamate CategoryTheory.Presheaf.IsSheaf.amalgamate
 
@@ -254,7 +254,8 @@ theorem IsSheaf.hom_ext {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X 
 #align category_theory.presheaf.is_sheaf.hom_ext CategoryTheory.Presheaf.IsSheaf.hom_ext
 
 theorem is_sheaf_of_iso_iff {P P' : Cᵒᵖ ⥤ A} (e : P ≅ P') : IsSheaf J P ↔ IsSheaf J P' :=
-  forall_congr' fun a => ⟨Presieve.isSheafIso J (isoWhiskerRight e _), Presieve.isSheafIso J (isoWhiskerRight e.symm _)⟩
+  forall_congr' $ fun a =>
+    ⟨Presieve.isSheafIso J (isoWhiskerRight e _), Presieve.isSheafIso J (isoWhiskerRight e.symm _)⟩
 #align category_theory.presheaf.is_sheaf_of_iso_iff CategoryTheory.Presheaf.is_sheaf_of_iso_iff
 
 variable (J)
@@ -292,9 +293,9 @@ instance : Category (SheafCat J A) where
   Hom := Hom
   id X := ⟨𝟙 _⟩
   comp X Y Z f g := ⟨f.val ≫ g.val⟩
-  id_comp' X Y f := Hom.ext _ _ <| id_comp _
-  comp_id' X Y f := Hom.ext _ _ <| comp_id _
-  assoc' X Y Z W f g h := Hom.ext _ _ <| assoc _ _ _
+  id_comp' X Y f := Hom.ext _ _ $ id_comp _
+  comp_id' X Y f := Hom.ext _ _ $ comp_id _
+  assoc' X Y Z W f g h := Hom.ext _ _ $ assoc _ _ _
 
 -- Let's make the inhabited linter happy...
 instance (X : SheafCat J A) : Inhabited (Hom X X) :=
@@ -400,9 +401,9 @@ instance sheafHomHasZsmul :
              }
 #align category_theory.Sheaf_hom_has_zsmul CategoryTheory.sheafHomHasZsmul
 
-instance : Sub (P ⟶ Q) where sub f g := Sheaf.hom.mk <| f.1 - g.1
+instance : Sub (P ⟶ Q) where sub f g := Sheaf.hom.mk $ f.1 - g.1
 
-instance : Neg (P ⟶ Q) where neg f := Sheaf.hom.mk <| -f.1
+instance : Neg (P ⟶ Q) where neg f := Sheaf.hom.mk $ -f.1
 
 instance sheafHomHasNsmul :
     HasSmul ℕ (P ⟶ Q) where smul n f :=
@@ -418,7 +419,7 @@ instance sheafHomHasNsmul :
 
 instance : Zero (P ⟶ Q) where zero := SheafCat.Hom.mk 0
 
-instance : Add (P ⟶ Q) where add f g := Sheaf.hom.mk <| f.1 + g.1
+instance : Add (P ⟶ Q) where add f g := Sheaf.hom.mk $ f.1 + g.1
 
 @[simp]
 theorem SheafCat.Hom.add_app (f g : P ⟶ Q) (U) : (f + g).1.app U = f.1.app U + g.1.app U :=
@@ -546,7 +547,7 @@ variable [HasProducts.{max u₁ v₁} A]
 of <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 def firstObj : A :=
-  ∏ fun f : ΣV, { f : V ⟶ U // R f } => P.obj (op f.1)
+  ∏ fun f : Σ V, { f : V ⟶ U // R f } => P.obj (op f.1)
 #align category_theory.presheaf.first_obj CategoryTheory.Presheaf.firstObj
 
 /-- The left morphism of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
@@ -562,7 +563,7 @@ variable [HasPullbacks C]
 contains the data used to check a family of elements for a presieve is compatible.
 -/
 def secondObj : A :=
-  ∏ fun fg : (ΣV, { f : V ⟶ U // R f }) × ΣW, { g : W ⟶ U // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
+  ∏ fun fg : (Σ V, { f : V ⟶ U // R f }) × Σ W, { g : W ⟶ U // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
 #align category_theory.presheaf.second_obj CategoryTheory.Presheaf.secondObj
 
 /-- The map `pr₀*` of <https://stacks.math.columbia.edu/tag/00VM>. -/

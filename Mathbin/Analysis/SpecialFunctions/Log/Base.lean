@@ -53,7 +53,7 @@ theorem logb_one : logb b 1 = 0 := by simp [logb]
 #align real.logb_one Real.logb_one
 
 @[simp]
-theorem logb_abs (x : ℝ) : logb b (|x|) = logb b x := by rw [logb, logb, log_abs]
+theorem logb_abs (x : ℝ) : logb b |x| = logb b x := by rw [logb, logb, log_abs]
 #align real.logb_abs Real.logb_abs
 
 @[simp]
@@ -404,9 +404,12 @@ theorem logb_eq_zero : logb b x = 0 ↔ b = 0 ∨ b = 1 ∨ b = -1 ∨ x = 0 ∨
 open BigOperators
 
 theorem logb_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ s, f x ≠ 0) :
-    logb b (∏ i in s, f i) = ∑ i in s, logb b (f i) := by
-  classical induction' s using Finset.induction_on with a s ha ih
-    simp only [Finset.mem_insert, forall_eq_or_imp] at hf
+    logb b (∏ i in s, f i) = ∑ i in s, logb b (f i) := by classical
+  induction' s using Finset.induction_on with a s ha ih
+  · simp
+    
+  simp only [Finset.mem_insert, forall_eq_or_imp] at hf
+  simp [ha, ih hf.2, logb_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 #align real.logb_prod Real.logb_prod
 
 end Real

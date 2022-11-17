@@ -40,7 +40,7 @@ In fact this bracket is fully `A`-bilinear but without a significant upgrade to 
 support in the tensor product library, it is far easier to bootstrap like this, starting with the
 definition below. -/
 private def bracket' : A ⊗[R] L →ₗ[R] A ⊗[R] L →ₗ[R] A ⊗[R] L :=
-  TensorProduct.curry <|
+  TensorProduct.curry $
     TensorProduct.map (LinearMap.mul' R _) (LieModule.toModuleHom R L L : L ⊗[R] L →ₗ[R] L) ∘ₗ
       ↑(TensorProduct.tensorTensorTensorComm R A L A L)
 #align lie_algebra.extend_scalars.bracket' lie_algebra.extend_scalars.bracket'

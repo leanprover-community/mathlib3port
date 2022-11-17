@@ -79,7 +79,7 @@ without the zeros.
 -/
 def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n where
   parts := l.filter (· ≠ 0)
-  parts_pos i hi := Nat.pos_of_ne_zero <| by apply of_mem_filter hi
+  parts_pos i hi := Nat.pos_of_ne_zero $ by apply of_mem_filter hi
   parts_sum := by
     have lt : l.filter (· = 0) + l.filter (· ≠ 0) = l := filter_add_not _ l
     apply_fun Multiset.sum  at lt

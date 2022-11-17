@@ -215,9 +215,9 @@ open Limits.WalkingCospan
               [`eq₁ []]
               [(Term.typeSpec
                 ":"
-                («term_=_»
+                (Init.Core.«term_=_»
                  `f₁
-                 "="
+                 " = "
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                   (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                    `c'.X.hom
@@ -253,9 +253,9 @@ open Limits.WalkingCospan
               [`eq₂ []]
               [(Term.typeSpec
                 ":"
-                («term_=_»
+                (Init.Core.«term_=_»
                  `f₂
-                 "="
+                 " = "
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                   (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                    `c'.X.hom
@@ -405,9 +405,9 @@ open Limits.WalkingCospan
              [`eq₁ []]
              [(Term.typeSpec
                ":"
-               («term_=_»
+               (Init.Core.«term_=_»
                 `f₁
-                "="
+                " = "
                 (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                   `c'.X.hom
@@ -443,9 +443,9 @@ open Limits.WalkingCospan
              [`eq₂ []]
              [(Term.typeSpec
                ":"
-               («term_=_»
+               (Init.Core.«term_=_»
                 `f₂
-                "="
+                " = "
                 (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                   `c'.X.hom
@@ -557,7 +557,7 @@ open Limits.WalkingCospan
       `e₁.symm.trans
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `e₁.symm.trans [`e₂]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `e₁.symm.trans [`e₂]) ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -583,7 +583,7 @@ open Limits.WalkingCospan
       `c'.π.app
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `c'.π.app [`right]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `c'.π.app [`right]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
@@ -600,7 +600,7 @@ open Limits.WalkingCospan
       `c'.π.app
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `c'.π.app [`left]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `c'.π.app [`left]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hx
@@ -660,13 +660,13 @@ theorem
 #align category_theory.compatible_preserving_of_flat CategoryTheory.compatiblePreservingOfFlat
 
 theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F]
-    (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σc', F.obj c' ≅ d) : CompatiblePreserving K F := by
+    (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σ c', F.obj c' ≅ d) : CompatiblePreserving K F := by
   constructor
   introv hx he
   obtain ⟨X', e⟩ := hF f₁
   apply (ℱ.1.mapIso e.op).toEquiv.Injective
   simp only [iso.op_hom, iso.to_equiv_fun, ℱ.1.map_iso_hom, ← functor_to_types.map_comp_apply]
-  simpa using hx (F.preimage <| e.hom ≫ f₁) (F.preimage <| e.hom ≫ f₂) hg₁ hg₂ (F.map_injective <| by simpa using he)
+  simpa using hx (F.preimage $ e.hom ≫ f₁) (F.preimage $ e.hom ≫ f₂) hg₁ hg₂ (F.map_injective $ by simpa using he)
 #align category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
 
 /-- If `G` is cover-preserving and compatible-preserving,

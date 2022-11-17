@@ -128,13 +128,13 @@ theorem Inf_inv (s : Set α) : inf s⁻¹ = (sup s)⁻¹ := by
 
 @[to_additive]
 theorem Sup_mul : sup (s * t) = sup s * sup t :=
-  (Sup_image2_eq_Sup_Sup fun _ => (OrderIso.mulRight _).to_galois_connection) fun _ =>
+  (Sup_image2_eq_Sup_Sup fun _ => (OrderIso.mulRight _).to_galois_connection) $ fun _ =>
     (OrderIso.mulLeft _).to_galois_connection
 #align Sup_mul Sup_mul
 
 @[to_additive]
 theorem Inf_mul : inf (s * t) = inf s * inf t :=
-  (Inf_image2_eq_Inf_Inf fun _ => (OrderIso.mulRight _).symm.to_galois_connection) fun _ =>
+  (Inf_image2_eq_Inf_Inf fun _ => (OrderIso.mulRight _).symm.to_galois_connection) $ fun _ =>
     (OrderIso.mulLeft _).symm.to_galois_connection
 #align Inf_mul Inf_mul
 

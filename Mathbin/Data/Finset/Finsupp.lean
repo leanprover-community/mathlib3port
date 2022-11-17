@@ -51,7 +51,7 @@ theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.support
     
   · refine' fun h => ⟨fun i _ => f i, mem_pi.2 h.2, _⟩
     ext i
-    exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
+    exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 $ fun H => hi $ h.1 H).symm
     
 #align finset.mem_finsupp_iff Finset.mem_finsupp_iff
 
@@ -61,13 +61,13 @@ theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.supp
   by
   refine'
     mem_finsupp_iff.trans
-      (forall_and_distrib.symm.trans <|
-        forall_congr' fun i =>
-          ⟨fun h => _, fun h => ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
+      (forall_and_distrib.symm.trans $
+        forall_congr' $ fun i =>
+          ⟨fun h => _, fun h => ⟨fun hi => ht $ mem_support_iff.2 $ fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
   · by_cases hi:i ∈ s
     · exact h.2 hi
       
-    · rw [not_mem_support_iff.1 (mt h.1 hi), not_mem_support_iff.1 fun H => hi <| ht H]
+    · rw [not_mem_support_iff.1 (mt h.1 hi), not_mem_support_iff.1 fun H => hi $ ht H]
       exact zero_mem_zero
       
     
@@ -77,7 +77,7 @@ theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.supp
 
 @[simp]
 theorem card_finsupp (s : Finset ι) (t : ι → Finset α) : (s.Finsupp t).card = ∏ i in s, (t i).card :=
-  (card_map _).trans <| card_pi _ _
+  (card_map _).trans $ card_pi _ _
 #align finset.card_finsupp Finset.card_finsupp
 
 end Finset
@@ -94,7 +94,7 @@ def pi (f : ι →₀ Finset α) : Finset (ι →₀ α) :=
 
 @[simp]
 theorem mem_pi {f : ι →₀ Finset α} {g : ι →₀ α} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
-  mem_finsupp_iff_of_support_subset <| Subset.refl _
+  mem_finsupp_iff_of_support_subset $ Subset.refl _
 #align finsupp.mem_pi Finsupp.mem_pi
 
 @[simp]

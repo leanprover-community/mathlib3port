@@ -241,17 +241,17 @@ theorem Pi.default_apply {β : α → Sort v} [∀ a, Inhabited (β a)] (a : α)
 lean 3 declaration is
   forall {α : Sort.{u}} {β : α -> Sort.{v}} [_inst_1 : forall (a : α), Unique.{v} (β a)], Unique.{(imax u v)} (forall (a : α), β a)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : α -> Sort.{v}} [inst._@.Mathlib.Logic.Unique._hyg.987 : forall (a : α), Unique.{v} (β a)], Unique.{(imax u_1 v)} (forall (a : α), β a)
+  forall {α : Sort.{u_1}} {β : α -> Sort.{v}} [inst._@.Mathlib.Logic.Unique._hyg.978 : forall (a : α), Unique.{v} (β a)], Unique.{(imax u_1 v)} (forall (a : α), β a)
 Case conversion may be inaccurate. Consider using '#align pi.unique Pi.uniqueₓ'. -/
 instance Pi.unique {β : α → Sort v} [∀ a, Unique (β a)] : Unique (∀ a, β a) :=
-  { Pi.inhabited α with uniq := fun f => funext fun x => Unique.eq_default _ }
+  { Pi.inhabited α with uniq := fun f => funext $ fun x => Unique.eq_default _ }
 #align pi.unique Pi.unique
 
 /- warning: pi.unique_of_is_empty -> Pi.uniqueOfIsEmpty is a dubious translation:
 lean 3 declaration is
   forall {α : Sort.{u}} [_inst_1 : IsEmpty.{u} α] (β : α -> Sort.{v}), Unique.{(imax u v)} (forall (a : α), β a)
 but is expected to have type
-  forall {α : Sort.{u_1}} [inst._@.Mathlib.Logic.Unique._hyg.1026 : IsEmpty.{u_1} α] (β : α -> Sort.{v}), Unique.{(imax u_1 v)} (forall (a : α), β a)
+  forall {α : Sort.{u_1}} [inst._@.Mathlib.Logic.Unique._hyg.1017 : IsEmpty.{u_1} α] (β : α -> Sort.{v}), Unique.{(imax u_1 v)} (forall (a : α), β a)
 Case conversion may be inaccurate. Consider using '#align pi.unique_of_is_empty Pi.uniqueOfIsEmptyₓ'. -/
 /-- There is a unique function on an empty domain. -/
 instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) : Unique (∀ a, β a) where
@@ -263,7 +263,7 @@ instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) : Unique (∀ a, �
 lean 3 declaration is
   forall {α : Sort.{u}} {β : Sort.{v}} [_inst_1 : Unique.{u} α] (f : α -> β), Eq.{(imax u v)} (α -> β) f (Function.const.{v u} β α (f (Inhabited.default.{u} α (Unique.inhabited.{u} α _inst_1))))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Unique._hyg.1063 : Unique.{u_1} α] (f : α -> β), Eq.{(imax u_1 u_2)} (α -> β) f (Function.const.{u_2 u_1} β α (f (Inhabited.default.{u_1} α (Unique.instInhabited.{u_1} α inst._@.Mathlib.Logic.Unique._hyg.1063))))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Logic.Unique._hyg.1054 : Unique.{u_1} α] (f : α -> β), Eq.{(imax u_1 u_2)} (α -> β) f (Function.const.{u_2 u_1} β α (f (Inhabited.default.{u_1} α (Unique.instInhabited.{u_1} α inst._@.Mathlib.Logic.Unique._hyg.1054))))
 Case conversion may be inaccurate. Consider using '#align eq_const_of_unique eq_const_of_uniqueₓ'. -/
 theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) := by
   ext x
@@ -271,8 +271,8 @@ theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (
 #align eq_const_of_unique eq_const_of_unique
 
 #print heq_const_of_unique /-
-theorem heq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) : HEq f (Function.const α (f default)) :=
-  (Function.hfunext rfl) fun i _ _ => by rw [Subsingleton.elim i default]
+theorem heq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) : f == Function.const α (f default) :=
+  Function.hfunext rfl $ fun i _ _ => by rw [Subsingleton.elim i default]
 #align heq_const_of_unique heq_const_of_unique
 -/
 
@@ -284,31 +284,31 @@ variable {f : α → β}
 lean 3 declaration is
   forall {α : Sort.{u}} {β : Sort.{v}} {f : α -> β}, (Function.Injective.{u v} α β f) -> (forall [_inst_1 : Subsingleton.{v} β], Subsingleton.{u} α)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β}, (Function.Injective.{u_1 u_2} α β f) -> (forall [inst._@.Mathlib.Logic.Unique._hyg.1219 : Subsingleton.{u_2} β], Subsingleton.{u_1} α)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β}, (Function.Injective.{u_1 u_2} α β f) -> (forall [inst._@.Mathlib.Logic.Unique._hyg.1210 : Subsingleton.{u_2} β], Subsingleton.{u_1} α)
 Case conversion may be inaccurate. Consider using '#align function.injective.subsingleton Function.Injective.subsingletonₓ'. -/
 /-- If the codomain of an injective function is a subsingleton, then the domain
 is a subsingleton as well. -/
 protected theorem Injective.subsingleton (hf : Injective f) [Subsingleton β] : Subsingleton α :=
-  ⟨fun x y => hf <| Subsingleton.elim _ _⟩
+  ⟨fun x y => hf $ Subsingleton.elim _ _⟩
 #align function.injective.subsingleton Function.Injective.subsingleton
 
 /- warning: function.surjective.subsingleton -> Function.Surjective.subsingleton is a dubious translation:
 lean 3 declaration is
   forall {α : Sort.{u}} {β : Sort.{v}} {f : α -> β} [_inst_1 : Subsingleton.{u} α], (Function.Surjective.{u v} α β f) -> (Subsingleton.{v} β)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} [inst._@.Mathlib.Logic.Unique._hyg.1251 : Subsingleton.{u_1} α], (Function.Surjective.{u_1 u_2} α β f) -> (Subsingleton.{u_2} β)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} [inst._@.Mathlib.Logic.Unique._hyg.1242 : Subsingleton.{u_1} α], (Function.Surjective.{u_1 u_2} α β f) -> (Subsingleton.{u_2} β)
 Case conversion may be inaccurate. Consider using '#align function.surjective.subsingleton Function.Surjective.subsingletonₓ'. -/
 /-- If the domain of a surjective function is a subsingleton, then the codomain is a subsingleton as
 well. -/
 protected theorem Surjective.subsingleton [Subsingleton α] (hf : Surjective f) : Subsingleton β :=
-  ⟨hf.Forall₂.2 fun x y => congr_arg f <| Subsingleton.elim x y⟩
+  ⟨hf.Forall₂.2 $ fun x y => congr_arg f $ Subsingleton.elim x y⟩
 #align function.surjective.subsingleton Function.Surjective.subsingleton
 
 /- warning: function.surjective.unique -> Function.Surjective.unique is a dubious translation:
 lean 3 declaration is
   forall {α : Sort.{u}} {β : Sort.{v}} {f : α -> β}, (Function.Surjective.{u v} α β f) -> (forall [_inst_1 : Unique.{u} α], Unique.{v} β)
 but is expected to have type
-  forall {α : Prop} {β : Sort.{u_1}} {f : α -> β}, (Function.Surjective.{0 u_1} α β f) -> (forall [inst._@.Mathlib.Logic.Unique._hyg.1287 : Unique.{0} α], Unique.{u_1} β)
+  forall {α : Prop} {β : Sort.{u_1}} {f : α -> β}, (Function.Surjective.{0 u_1} α β f) -> (forall [inst._@.Mathlib.Logic.Unique._hyg.1278 : Unique.{0} α], Unique.{u_1} β)
 Case conversion may be inaccurate. Consider using '#align function.surjective.unique Function.Surjective.uniqueₓ'. -/
 /-- If the domain of a surjective function is a singleton,
 then the codomain is a singleton as well. -/
@@ -327,7 +327,7 @@ protected def Injective.unique [Inhabited α] [Subsingleton β] (hf : Injective 
 /-- If a constant function is surjective, then the codomain is a singleton. -/
 def Surjective.uniqueOfSurjectiveConst (α : Type _) {β : Type _} (b : β)
     (h : Function.Surjective (Function.const α b)) : Unique β :=
-  @uniqueOfSubsingleton _ (subsingleton_of_forall_eq b <| h.forall.mpr fun _ => rfl) b
+  @uniqueOfSubsingleton _ (subsingleton_of_forall_eq b $ h.forall.mpr fun _ => rfl) b
 #align function.surjective.unique_of_surjective_const Function.Surjective.uniqueOfSurjectiveConst
 -/
 
@@ -337,7 +337,7 @@ end Function
 lean 3 declaration is
   forall {A : Sort.{u_1}} {B : Sort.{u_2}} [_inst_1 : Unique.{u_1} A] [_inst_2 : Unique.{u_2} B] {f : A -> B}, Function.Bijective.{u_1 u_2} A B f
 but is expected to have type
-  forall {A : Sort.{u_1}} {B : Sort.{u_2}} [inst._@.Mathlib.Logic.Unique._hyg.1384 : Unique.{u_1} A] [inst._@.Mathlib.Logic.Unique._hyg.1387 : Unique.{u_2} B] {f : A -> B}, Function.Bijective.{u_1 u_2} A B f
+  forall {A : Sort.{u_1}} {B : Sort.{u_2}} [inst._@.Mathlib.Logic.Unique._hyg.1375 : Unique.{u_1} A] [inst._@.Mathlib.Logic.Unique._hyg.1378 : Unique.{u_2} B] {f : A -> B}, Function.Bijective.{u_1 u_2} A B f
 Case conversion may be inaccurate. Consider using '#align unique.bijective Unique.bijectiveₓ'. -/
 theorem Unique.bijective {A B} [Unique A] [Unique B] {f : A → B} : Function.Bijective f := by
   rw [Function.bijective_iff_has_inverse]
@@ -349,7 +349,7 @@ namespace Option
 #print Option.subsingleton_iff_isEmpty /-
 /-- `option α` is a `subsingleton` if and only if `α` is empty. -/
 theorem subsingleton_iff_isEmpty {α} : Subsingleton (Option α) ↔ IsEmpty α :=
-  ⟨fun h => ⟨fun x => Option.noConfusion <| @Subsingleton.elim _ h x none⟩, fun h =>
+  ⟨fun h => ⟨fun x => Option.noConfusion $ @Subsingleton.elim _ h x none⟩, fun h =>
     ⟨fun x y => Option.casesOn x (Option.casesOn y rfl fun x => h.elim x) fun x => h.elim x⟩⟩
 #align option.subsingleton_iff_is_empty Option.subsingleton_iff_isEmpty
 -/

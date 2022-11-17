@@ -17,16 +17,16 @@ namespace Pnat
 
 variable {p q : ℕ+ → Prop} [DecidablePred p] [DecidablePred q] (h : ∃ n, p n)
 
-instance decidablePredExistsNat : DecidablePred fun n' : ℕ => ∃ (n : ℕ+)(hn : n' = n), p n := fun n' =>
-  decidable_of_iff' (∃ h : 0 < n', p ⟨n', h⟩) <|
-    Subtype.exists.trans <| by simp_rw [Subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_prop, exists_eq_left']
+instance decidablePredExistsNat : DecidablePred fun n' : ℕ => ∃ (n : ℕ+) (hn : n' = n), p n := fun n' =>
+  decidable_of_iff' (∃ h : 0 < n', p ⟨n', h⟩) $
+    Subtype.exists.trans $ by simp_rw [Subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_prop, exists_eq_left']
 #align pnat.decidable_pred_exists_nat Pnat.decidablePredExistsNat
 
 include h
 
 /-- The `pnat` version of `nat.find_x` -/
 protected def findX : { n // p n ∧ ∀ m : ℕ+, m < n → ¬p m } := by
-  have : ∃ (n' : ℕ)(n : ℕ+)(hn' : n' = n), p n := Exists.elim h fun n hn => ⟨n, n, rfl, hn⟩
+  have : ∃ (n' : ℕ) (n : ℕ+) (hn' : n' = n), p n := Exists.elim h fun n hn => ⟨n, n, rfl, hn⟩
   have n := Nat.findX this
   refine' ⟨⟨n, _⟩, _, fun m hm pm => _⟩
   · obtain ⟨n', hn', -⟩ := n.prop.1
@@ -75,7 +75,7 @@ theorem find_eq_iff : Pnat.find h = m ↔ p m ∧ ∀ n < m, ¬p n := by
     exact ⟨Pnat.find_spec h, fun _ => Pnat.find_min h⟩
     
   · rintro ⟨hm, hlt⟩
-    exact le_antisymm (Pnat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| Pnat.find_spec h)
+    exact le_antisymm (Pnat.find_min' h hm) (not_lt.1 $ imp_not_comm.1 (hlt _) $ Pnat.find_spec h)
     
 #align pnat.find_eq_iff Pnat.find_eq_iff
 
@@ -104,7 +104,7 @@ theorem find_eq_one : Pnat.find h = 1 ↔ p 1 := by simp [find_eq_iff]
 
 @[simp]
 theorem one_le_find : 1 < Pnat.find h ↔ ¬p 1 :=
-  not_iff_not.mp <| by simp
+  not_iff_not.mp $ by simp
 #align pnat.one_le_find Pnat.one_le_find
 
 theorem find_mono (h : ∀ n, q n → p n) {hp : ∃ n, p n} {hq : ∃ n, q n} : Pnat.find hp ≤ Pnat.find hq :=

@@ -44,11 +44,11 @@ theorem sub_le_of_le_add {d} (h : μ ≤ d + ν) : μ - ν ≤ d :=
 #align measure_theory.measure.sub_le_of_le_add MeasureTheory.Measure.sub_le_of_le_add
 
 theorem sub_eq_zero_of_le (h : μ ≤ ν) : μ - ν = 0 :=
-  nonpos_iff_eq_zero'.1 <| sub_le_of_le_add <| by rwa [zero_add]
+  nonpos_iff_eq_zero'.1 $ sub_le_of_le_add $ by rwa [zero_add]
 #align measure_theory.measure.sub_eq_zero_of_le MeasureTheory.Measure.sub_eq_zero_of_le
 
 theorem sub_le : μ - ν ≤ μ :=
-  sub_le_of_le_add <| Measure.le_add_right le_rfl
+  sub_le_of_le_add $ Measure.le_add_right le_rfl
 #align measure_theory.measure.sub_le MeasureTheory.Measure.sub_le
 
 @[simp]

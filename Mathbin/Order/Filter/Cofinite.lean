@@ -33,7 +33,7 @@ namespace Filter
 def cofinite : Filter α where
   sets := { s | sᶜ.Finite }
   univ_sets := by simp only [compl_univ, finite_empty, mem_set_of_eq]
-  sets_of_superset s t (hs : sᶜ.Finite) (st : s ⊆ t) := hs.Subset <| compl_subset_compl.2 st
+  sets_of_superset s t (hs : sᶜ.Finite) (st : s ⊆ t) := hs.Subset $ compl_subset_compl.2 st
   inter_sets s t (hs : sᶜ.Finite) (ht : tᶜ.Finite) := by simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq]
 #align filter.cofinite Filter.cofinite
 
@@ -48,11 +48,11 @@ theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ 
 #align filter.eventually_cofinite Filter.eventually_cofinite
 
 theorem has_basis_cofinite : HasBasis cofinite (fun s : Set α => s.Finite) compl :=
-  ⟨fun s => ⟨fun h => ⟨sᶜ, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ => htf.Subset <| compl_subset_comm.2 hts⟩⟩
+  ⟨fun s => ⟨fun h => ⟨sᶜ, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ => htf.Subset $ compl_subset_comm.2 hts⟩⟩
 #align filter.has_basis_cofinite Filter.has_basis_cofinite
 
 instance cofiniteNeBot [Infinite α] : NeBot (@cofinite α) :=
-  has_basis_cofinite.ne_bot_iff.2 fun s hs => hs.infinite_compl.Nonempty
+  has_basis_cofinite.ne_bot_iff.2 $ fun s hs => hs.infinite_compl.Nonempty
 #align filter.cofinite_ne_bot Filter.cofiniteNeBot
 
 theorem frequently_cofinite_iff_infinite {p : α → Prop} : (∃ᶠ x in cofinite, p x) ↔ Set.Infinite { x | p x } := by
@@ -60,7 +60,7 @@ theorem frequently_cofinite_iff_infinite {p : α → Prop} : (∃ᶠ x in cofini
 #align filter.frequently_cofinite_iff_infinite Filter.frequently_cofinite_iff_infinite
 
 theorem _root_.set.finite.compl_mem_cofinite {s : Set α} (hs : s.Finite) : sᶜ ∈ @cofinite α :=
-  mem_cofinite.2 <| (compl_compl s).symm ▸ hs
+  mem_cofinite.2 $ (compl_compl s).symm ▸ hs
 #align filter._root_.set.finite.compl_mem_cofinite filter._root_.set.finite.compl_mem_cofinite
 
 theorem _root_.set.finite.eventually_cofinite_nmem {s : Set α} (hs : s.Finite) : ∀ᶠ x in cofinite, x ∉ s :=
@@ -95,18 +95,18 @@ theorem at_top_le_cofinite [Preorder α] [NoMaxOrder α] : (atTop : Filter α) �
 #align filter.at_top_le_cofinite Filter.at_top_le_cofinite
 
 theorem comap_cofinite_le (f : α → β) : comap f cofinite ≤ cofinite :=
-  le_cofinite_iff_eventually_ne.mpr fun x =>
+  le_cofinite_iff_eventually_ne.mpr $ fun x =>
     mem_comap.2 ⟨{f x}ᶜ, (finite_singleton _).compl_mem_cofinite, fun y => ne_of_apply_ne f⟩
 #align filter.comap_cofinite_le Filter.comap_cofinite_le
 
 /-- The coproduct of the cofinite filters on two types is the cofinite filter on their product. -/
 theorem coprod_cofinite : (cofinite : Filter α).coprod (cofinite : Filter β) = cofinite :=
-  Filter.coext fun s => by simp only [compl_mem_coprod, mem_cofinite, compl_compl, finite_image_fst_and_snd_iff]
+  Filter.coext $ fun s => by simp only [compl_mem_coprod, mem_cofinite, compl_compl, finite_image_fst_and_snd_iff]
 #align filter.coprod_cofinite Filter.coprod_cofinite
 
 /-- Finite product of finite sets is finite -/
 theorem Coprod_cofinite {α : ι → Type _} [Finite ι] : (Filter.coprod fun i => (cofinite : Filter (α i))) = cofinite :=
-  Filter.coext fun s => by simp only [compl_mem_Coprod, mem_cofinite, compl_compl, forall_finite_image_eval_iff]
+  Filter.coext $ fun s => by simp only [compl_mem_Coprod, mem_cofinite, compl_compl, forall_finite_image_eval_iff]
 #align filter.Coprod_cofinite Filter.Coprod_cofinite
 
 @[simp]

@@ -122,7 +122,7 @@ def typeToPointedForgetAdjunction : typeToPointed ⊣ forget PointedCat :=
             cases x
             exact f.map_point.symm
             rfl,
-          right_inv := fun f => funext fun _ => rfl },
+          right_inv := fun f => funext $ fun _ => rfl },
       hom_equiv_naturality_left_symm' := fun X' X Y f g => by
         ext
         cases x <;> rfl }

@@ -30,15 +30,15 @@ def Pairwise (r : α → α → Prop) :=
   ∀ ⦃i j⦄, i ≠ j → r i j
 #align pairwise Pairwise
 
-theorem Pairwise.mono (hr : Pairwise r) (h : ∀ ⦃i j⦄, r i j → p i j) : Pairwise p := fun i j hij => h <| hr hij
+theorem Pairwise.mono (hr : Pairwise r) (h : ∀ ⦃i j⦄, r i j → p i j) : Pairwise p := fun i j hij => h $ hr hij
 #align pairwise.mono Pairwise.mono
 
 protected theorem Pairwise.eq (h : Pairwise r) : ¬r a b → a = b :=
-  not_imp_comm.1 <| @h _ _
+  not_imp_comm.1 $ @h _ _
 #align pairwise.eq Pairwise.eq
 
 theorem Function.injective_iff_pairwise_ne : Injective f ↔ Pairwise ((· ≠ ·) on f) :=
-  forall₂_congr fun i j => not_imp_not.symm
+  forall₂_congr $ fun i j => not_imp_not.symm
 #align function.injective_iff_pairwise_ne Function.injective_iff_pairwise_ne
 
 alias Function.injective_iff_pairwise_ne ↔ Function.Injective.pairwise_ne _
@@ -54,19 +54,19 @@ theorem pairwise_of_forall (s : Set α) (r : α → α → Prop) (h : ∀ a b, r
 #align set.pairwise_of_forall Set.pairwise_of_forall
 
 theorem Pairwise.imp_on (h : s.Pairwise r) (hrp : s.Pairwise fun ⦃a b : α⦄ => r a b → p a b) : s.Pairwise p :=
-  fun a ha b hb hab => hrp ha hb hab <| h ha hb hab
+  fun a ha b hb hab => hrp ha hb hab $ h ha hb hab
 #align set.pairwise.imp_on Set.Pairwise.imp_on
 
 theorem Pairwise.imp (h : s.Pairwise r) (hpq : ∀ ⦃a b : α⦄, r a b → p a b) : s.Pairwise p :=
-  h.imp_on <| pairwise_of_forall s _ hpq
+  h.imp_on $ pairwise_of_forall s _ hpq
 #align set.pairwise.imp Set.Pairwise.imp
 
 protected theorem Pairwise.eq (hs : s.Pairwise r) (ha : a ∈ s) (hb : b ∈ s) (h : ¬r a b) : a = b :=
-  of_not_not fun hab => h <| hs ha hb hab
+  of_not_not $ fun hab => h $ hs ha hb hab
 #align set.pairwise.eq Set.Pairwise.eq
 
 theorem _root_.reflexive.set_pairwise_iff (hr : Reflexive r) : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
-  forall₄_congr fun a _ b _ => or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp <| Eq.ndrec <| hr a
+  forall₄_congr $ fun a _ b _ => or_iff_not_imp_left.symm.trans $ or_iff_right_of_imp $ Eq.ndrec $ hr a
 #align set._root_.reflexive.set_pairwise_iff set._root_.reflexive.set_pairwise_iff
 
 theorem Pairwise.on_injective (hs : s.Pairwise r) (hf : Function.Injective f) (hfs : ∀ x, f x ∈ s) :

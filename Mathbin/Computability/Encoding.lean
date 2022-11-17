@@ -114,7 +114,7 @@ def decodePosNum : List Bool → PosNum
 #align computability.decode_pos_num Computability.decodePosNum
 
 /-- A decoding function from `list bool` to the binary numbers. -/
-def decodeNum : List Bool → Num := fun l => ite (l = []) Num.zero <| decodePosNum l
+def decodeNum : List Bool → Num := fun l => ite (l = []) Num.zero $ decodePosNum l
 #align computability.decode_num Computability.decodeNum
 
 /-- A decoding function from `list bool` to ℕ. -/
@@ -171,7 +171,7 @@ def encodingNatΓ' : Encoding ℕ where
   Γ := Γ'
   encode x := List.map inclusionBoolΓ' (encodeNat x)
   decode x := some (decodeNat (List.map sectionΓ'Bool x))
-  decode_encode x := congr_arg _ <| by rw [List.map_map, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
+  decode_encode x := congr_arg _ $ by rw [List.map_map, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
 #align computability.encoding_nat_Γ' Computability.encodingNatΓ'
 
 /-- A binary fin_encoding of ℕ in Γ'. -/

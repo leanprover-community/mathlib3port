@@ -27,8 +27,8 @@ section Zero
 variable [Zero M] {s t : Set α} {f g : α → M} {a : α} {l : Filter α}
 
 theorem indicator_eventually_eq (hf : f =ᶠ[l ⊓ 𝓟 s] g) (hs : s =ᶠ[l] t) : indicator s f =ᶠ[l] indicator t g :=
-  (eventually_inf_principal.1 hf).mp <|
-    hs.mem_iff.mono fun x hst hfg =>
+  (eventually_inf_principal.1 hf).mp $
+    hs.mem_iff.mono $ fun x hst hfg =>
       by_cases (fun hxs : x ∈ s => by simp only [*, hst.1 hxs, indicator_of_mem]) fun hxs => by
         simp only [indicator_of_not_mem hxs, indicator_of_not_mem (mt hst.2 hxs)]
 #align indicator_eventually_eq indicator_eventually_eq
@@ -41,7 +41,7 @@ variable [AddMonoid M] {s t : Set α} {f g : α → M} {a : α} {l : Filter α}
 
 theorem indicator_union_eventually_eq (h : ∀ᶠ a in l, a ∉ s ∩ t) :
     indicator (s ∪ t) f =ᶠ[l] indicator s f + indicator t f :=
-  h.mono fun a ha => indicator_union_of_not_mem_inter ha _
+  h.mono $ fun a ha => indicator_union_of_not_mem_inter ha _
 #align indicator_union_eventually_eq indicator_union_eventually_eq
 
 end AddMonoid
@@ -51,16 +51,16 @@ section Order
 variable [Zero β] [Preorder β] {s t : Set α} {f g : α → β} {a : α} {l : Filter α}
 
 theorem indicator_eventually_le_indicator (h : f ≤ᶠ[l ⊓ 𝓟 s] g) : indicator s f ≤ᶠ[l] indicator s g :=
-  (eventually_inf_principal.1 h).mono fun a h => indicator_rel_indicator le_rfl h
+  (eventually_inf_principal.1 h).mono $ fun a h => indicator_rel_indicator le_rfl h
 #align indicator_eventually_le_indicator indicator_eventually_le_indicator
 
 end Order
 
 theorem Monotone.tendsto_indicator {ι} [Preorder ι] [Zero β] (s : ι → Set α) (hs : Monotone s) (f : α → β) (a : α) :
-    Tendsto (fun i => indicator (s i) f a) atTop (pure <| indicator (⋃ i, s i) f a) := by
+    Tendsto (fun i => indicator (s i) f a) atTop (pure $ indicator (⋃ i, s i) f a) := by
   by_cases h:∃ i, a ∈ s i
   · rcases h with ⟨i, hi⟩
-    refine' tendsto_pure.2 ((eventually_ge_at_top i).mono fun n hn => _)
+    refine' tendsto_pure.2 ((eventually_ge_at_top i).mono $ fun n hn => _)
     rw [indicator_of_mem (hs hn hi) _, indicator_of_mem ((subset_Union _ _) hi) _]
     
   · rw [not_exists] at h
@@ -72,10 +72,10 @@ theorem Monotone.tendsto_indicator {ι} [Preorder ι] [Zero β] (s : ι → Set 
 #align monotone.tendsto_indicator Monotone.tendsto_indicator
 
 theorem Antitone.tendsto_indicator {ι} [Preorder ι] [Zero β] (s : ι → Set α) (hs : Antitone s) (f : α → β) (a : α) :
-    Tendsto (fun i => indicator (s i) f a) atTop (pure <| indicator (⋂ i, s i) f a) := by
+    Tendsto (fun i => indicator (s i) f a) atTop (pure $ indicator (⋂ i, s i) f a) := by
   by_cases h:∃ i, a ∉ s i
   · rcases h with ⟨i, hi⟩
-    refine' tendsto_pure.2 ((eventually_ge_at_top i).mono fun n hn => _)
+    refine' tendsto_pure.2 ((eventually_ge_at_top i).mono $ fun n hn => _)
     rw [indicator_of_not_mem _ _, indicator_of_not_mem _ _]
     · simp only [mem_Inter, not_forall]
       exact ⟨i, hi⟩
@@ -91,7 +91,7 @@ theorem Antitone.tendsto_indicator {ι} [Preorder ι] [Zero β] (s : ι → Set 
 #align antitone.tendsto_indicator Antitone.tendsto_indicator
 
 theorem tendsto_indicator_bUnion_finset {ι} [Zero β] (s : ι → Set α) (f : α → β) (a : α) :
-    Tendsto (fun n : Finset ι => indicator (⋃ i ∈ n, s i) f a) atTop (pure <| indicator (union s) f a) := by
+    Tendsto (fun n : Finset ι => indicator (⋃ i ∈ n, s i) f a) atTop (pure $ indicator (union s) f a) := by
   rw [Union_eq_Union_finset s]
   refine' Monotone.tendsto_indicator (fun n : Finset ι => ⋃ i ∈ n, s i) _ f a
   exact fun t₁ t₂ => bUnion_subset_bUnion_left

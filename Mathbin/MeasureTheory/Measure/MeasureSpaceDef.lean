@@ -132,7 +132,7 @@ theorem to_outer_measure_injective : Injective (toOuterMeasure : Measure α → 
 
 @[ext.1]
 theorem ext (h : ∀ s, MeasurableSet s → μ₁ s = μ₂ s) : μ₁ = μ₂ :=
-  to_outer_measure_injective <| by rw [← trimmed, outer_measure.trim_congr h, trimmed]
+  to_outer_measure_injective $ by rw [← trimmed, outer_measure.trim_congr h, trimmed]
 #align measure_theory.measure.ext MeasureTheory.Measure.ext
 
 theorem ext_iff : μ₁ = μ₂ ↔ ∀ s, MeasurableSet s → μ₁ s = μ₂ s :=
@@ -185,7 +185,7 @@ theorem measure_empty : μ ∅ = 0 :=
 #align measure_theory.measure_empty MeasureTheory.measure_empty
 
 theorem nonempty_of_measure_ne_zero (h : μ s ≠ 0) : s.Nonempty :=
-  ne_empty_iff_nonempty.1 fun h' => h <| h'.symm ▸ measure_empty
+  ne_empty_iff_nonempty.1 $ fun h' => h $ h'.symm ▸ measure_empty
 #align measure_theory.nonempty_of_measure_ne_zero MeasureTheory.nonempty_of_measure_ne_zero
 
 theorem measure_mono (h : s₁ ⊆ s₂) : μ s₁ ≤ μ s₂ :=
@@ -193,11 +193,11 @@ theorem measure_mono (h : s₁ ⊆ s₂) : μ s₁ ≤ μ s₂ :=
 #align measure_theory.measure_mono MeasureTheory.measure_mono
 
 theorem measure_mono_null (h : s₁ ⊆ s₂) (h₂ : μ s₂ = 0) : μ s₁ = 0 :=
-  nonpos_iff_eq_zero.1 <| h₂ ▸ measure_mono h
+  nonpos_iff_eq_zero.1 $ h₂ ▸ measure_mono h
 #align measure_theory.measure_mono_null MeasureTheory.measure_mono_null
 
 theorem measure_mono_top (h : s₁ ⊆ s₂) (h₁ : μ s₁ = ∞) : μ s₂ = ∞ :=
-  top_unique <| h₁ ▸ measure_mono h
+  top_unique $ h₁ ▸ measure_mono h
 #align measure_theory.measure_mono_top MeasureTheory.measure_mono_top
 
 /-- For every set there exists a measurable superset of the same measure. -/
@@ -279,7 +279,7 @@ theorem measure_bUnion_null_iff {s : Set ι} (hs : s.Countable) {t : ι → Set 
   μ.toOuterMeasure.bUnion_null_iff hs
 #align measure_theory.measure_bUnion_null_iff MeasureTheory.measure_bUnion_null_iff
 
-theorem measure_sUnion_null_iff {S : Set (Set α)} (hS : S.Countable) : μ (⋃₀S) = 0 ↔ ∀ s ∈ S, μ s = 0 :=
+theorem measure_sUnion_null_iff {S : Set (Set α)} (hS : S.Countable) : μ (⋃₀ S) = 0 ↔ ∀ s ∈ S, μ s = 0 :=
   μ.toOuterMeasure.sUnion_null_iff hS
 #align measure_theory.measure_sUnion_null_iff MeasureTheory.measure_sUnion_null_iff
 
@@ -316,7 +316,7 @@ theorem measure_union_ne_top (hs : μ s ≠ ∞) (ht : μ t ≠ ∞) : μ (s ∪
 
 @[simp]
 theorem measure_union_eq_top_iff : μ (s ∪ t) = ∞ ↔ μ s = ∞ ∨ μ t = ∞ :=
-  not_iff_not.1 <| by simp only [← lt_top_iff_ne_top, ← Ne.def, not_or, measure_union_lt_top_iff]
+  not_iff_not.1 $ by simp only [← lt_top_iff_ne_top, ← Ne.def, not_or, measure_union_lt_top_iff]
 #align measure_theory.measure_union_eq_top_iff MeasureTheory.measure_union_eq_top_iff
 
 theorem exists_measure_pos_of_not_measure_Union_null [Countable β] {s : β → Set α} (hs : μ (⋃ n, s n) ≠ 0) :
@@ -431,7 +431,7 @@ theorem ae_le_of_ae_lt {f g : α → ℝ≥0∞} (h : ∀ᵐ x ∂μ, f x < g x)
 
 @[simp]
 theorem ae_eq_empty : s =ᵐ[μ] (∅ : Set α) ↔ μ s = 0 :=
-  eventually_eq_empty.trans <| by simp only [ae_iff, not_not, set_of_mem_eq]
+  eventually_eq_empty.trans $ by simp only [ae_iff, not_not, set_of_mem_eq]
 #align measure_theory.ae_eq_empty MeasureTheory.ae_eq_empty
 
 @[simp]
@@ -492,7 +492,7 @@ theorem _root_.set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {
 @[mono]
 theorem measure_mono_ae (H : s ≤ᵐ[μ] t) : μ s ≤ μ t :=
   calc
-    μ s ≤ μ (s ∪ t) := measure_mono <| subset_union_left s t
+    μ s ≤ μ (s ∪ t) := measure_mono $ subset_union_left s t
     _ = μ (t ∪ s \ t) := by rw [union_diff_self, Set.union_comm]
     _ ≤ μ t + μ (s \ t) := measure_union_le _ _
     _ = μ t := by rw [ae_le_set.1 H, add_zero]
@@ -509,11 +509,11 @@ theorem measure_congr (H : s =ᵐ[μ] t) : μ s = μ t :=
 alias measure_congr ← _root_.filter.eventually_eq.measure_eq
 
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
-  nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
+  nonpos_iff_eq_zero.1 $ ht ▸ H.measure_le
 #align measure_theory.measure_mono_null_ae MeasureTheory.measure_mono_null_ae
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊇ » s) -/
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisfies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u` if `μ s ≠ ∞`, see `measure_to_measurable_inter`.
 (This property holds without the assumption `μ s ≠ ∞` when the space is sigma-finite,
@@ -522,9 +522,9 @@ If `s` is a null measurable set, then
 we also have `t =ᵐ[μ] s`, see `null_measurable_set.to_measurable_ae_eq`.
 This notion is sometimes called a "measurable hull" in the literature. -/
 irreducible_def toMeasurable (μ : Measure α) (s : Set α) : Set α :=
-  if h : ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s then h.some
+  if h : ∃ (t) (_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s then h.some
   else
-    if h' : ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ ∀ u, MeasurableSet u → μ (t ∩ u) = μ (s ∩ u) then h'.some
+    if h' : ∃ (t) (_ : t ⊇ s), MeasurableSet t ∧ ∀ u, MeasurableSet u → μ (t ∩ u) = μ (s ∩ u) then h'.some
     else (exists_measurable_superset μ s).some
 #align measure_theory.to_measurable MeasureTheory.toMeasurable
 
@@ -578,7 +578,7 @@ notation3"∀ᵐ "(...)", "r:(scoped P => Filter.Eventually P MeasureTheory.Meas
 notation3"∃ᵐ "(...)", "r:(scoped P => Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) =>
   r
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/
 unsafe def volume_tac : tactic Unit :=
   sorry

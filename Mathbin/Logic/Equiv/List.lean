@@ -83,7 +83,7 @@ theorem decode_list_succ (v : ℕ) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem length_le_encode : ∀ l : List α, length l ≤ encode l
   | [] => zero_le _
-  | a::l => succ_le_succ <| (length_le_encode l).trans (right_le_mkpair _ _)
+  | a::l => succ_le_succ $ (length_le_encode l).trans (right_le_mkpair _ _)
 #align encodable.length_le_encode Encodable.length_le_encode
 
 end List
@@ -136,7 +136,7 @@ def encodableOfList [DecidableEq α] (l : List α) (H : ∀ x, x ∈ l) : Encoda
 preserve computability. -/
 def _root_.fintype.trunc_encodable (α : Type _) [DecidableEq α] [Fintype α] : Trunc (Encodable α) :=
   @Quot.recOnSubsingleton _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finset.univ.1
-    (fun l H => Trunc.mk <| encodableOfList l H) Finset.mem_univ
+    (fun l H => Trunc.mk $ encodableOfList l H) Finset.mem_univ
 #align encodable._root_.fintype.trunc_encodable encodable._root_.fintype.trunc_encodable
 
 /-- A noncomputable way to arbitrarily choose an ordering on a finite type.
@@ -191,17 +191,17 @@ instance _root_.finset.countable [Countable α] : Countable (Finset α) :=
 /-- When `α` is finite and `β` is encodable, `α → β` is encodable too. Because the encoding is not
 unique, we wrap it in `trunc` to preserve computability. -/
 def fintypeArrow (α : Type _) (β : Type _) [DecidableEq α] [Fintype α] [Encodable β] : Trunc (Encodable (α → β)) :=
-  (Fintype.truncEquivFin α).map fun f =>
-    Encodable.ofEquiv (Fin (Fintype.card α) → β) <| Equiv.arrowCongr f (Equiv.refl _)
+  (Fintype.truncEquivFin α).map $ fun f =>
+    Encodable.ofEquiv (Fin (Fintype.card α) → β) $ Equiv.arrowCongr f (Equiv.refl _)
 #align encodable.fintype_arrow Encodable.fintypeArrow
 
 /-- When `α` is finite and all `π a` are encodable, `Π a, π a` is encodable too. Because the
 encoding is not unique, we wrap it in `trunc` to preserve computability. -/
 def fintypePi (α : Type _) (π : α → Type _) [DecidableEq α] [Fintype α] [∀ a, Encodable (π a)] :
     Trunc (Encodable (∀ a, π a)) :=
-  (Fintype.truncEncodable α).bind fun a =>
-    (@fintypeArrow α (Σa, π a) _ _ (@Sigma.encodable _ _ a _)).bind fun f =>
-      Trunc.mk <| @Encodable.ofEquiv _ _ (@Subtype.encodable _ _ f _) (Equiv.piEquivSubtypeSigma α π)
+  (Fintype.truncEncodable α).bind $ fun a =>
+    (@fintypeArrow α (Σ a, π a) _ _ (@Sigma.encodable _ _ a _)).bind $ fun f =>
+      Trunc.mk $ @Encodable.ofEquiv _ _ (@Subtype.encodable _ _ f _) (Equiv.piEquivSubtypeSigma α π)
 #align encodable.fintype_pi Encodable.fintypePi
 
 /-- The elements of a `fintype` as a sorted list. -/
@@ -240,7 +240,7 @@ def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Fin (Fintype.card 
 
 /-- If `α` and `β` are encodable and `α` is a fintype, then `α → β` is encodable as well. -/
 instance fintypeArrowOfEncodable {α β : Type _} [Encodable α] [Fintype α] [Encodable β] : Encodable (α → β) :=
-  ofEquiv (Fin (Fintype.card α) → β) <| Equiv.arrowCongr fintypeEquivFin (Equiv.refl _)
+  ofEquiv (Fin (Fintype.card α) → β) $ Equiv.arrowCongr fintypeEquivFin (Equiv.refl _)
 #align encodable.fintype_arrow_of_encodable Encodable.fintypeArrowOfEncodable
 
 end Encodable
@@ -280,7 +280,7 @@ theorem list_of_nat_zero : ofNat (List α) 0 = [] := by rw [← @encode_list_nil
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem list_of_nat_succ (v : ℕ) : ofNat (List α) (succ v) = ofNat α v.unpair.1::ofNat (List α) v.unpair.2 :=
-  of_nat_of_decode <|
+  of_nat_of_decode $
     show decodeList (succ v) = _ by
       cases' e : unpair v with v₁ v₂
       simp [decode_list, e]
@@ -341,7 +341,7 @@ theorem raise_sorted : ∀ l n, List.Sorted (· ≤ ·) (raise l n)
 in `multiset.encodable`. -/
 instance multiset : Denumerable (Multiset α) :=
   mk'
-    ⟨fun s : Multiset α => encode <| lower ((s.map encode).sort (· ≤ ·)) 0, fun n =>
+    ⟨fun s : Multiset α => encode $ lower ((s.map encode).sort (· ≤ ·)) 0, fun n =>
       Multiset.map (ofNat α) (raise (ofNat (List ℕ) n) 0), fun s => by
       have := raise_lower (List.sorted_cons.2 ⟨fun n _ => zero_le n, (s.map encode).sort_sorted _⟩) <;>
         simp [-Multiset.coe_map, this],
@@ -408,9 +408,9 @@ def raise'Finset (l : List ℕ) (n : ℕ) : Finset ℕ :=
 in `finset.encodable`. -/
 instance finset : Denumerable (Finset α) :=
   mk'
-    ⟨fun s : Finset α => encode <| lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0, fun n =>
+    ⟨fun s : Finset α => encode $ lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0, fun n =>
       Finset.map (eqv α).symm.toEmbedding (raise'Finset (ofNat (List ℕ) n) 0), fun s =>
-      Finset.eq_of_veq <| by
+      Finset.eq_of_veq $ by
         simp [-Multiset.coe_map, raise'_finset, raise_lower' (fun n _ => zero_le n) (Finset.sort_sorted_lt _)],
       fun n => by
       simp [-Multiset.coe_map, Finset.map, raise'_finset, Finset.sort,

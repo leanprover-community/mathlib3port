@@ -31,19 +31,21 @@ variable (f f₁ g₁ : α₁ → β₁ → Finset γ₁) (g f₂ g₂ : α₂ �
 `α₁ ⊕ α₂ → β₁ ⊕ β₂ → finset (γ₁ ⊕ γ₂)`. Could be generalized to `alternative` functors if we can
 make sure to keep computability and universe polymorphism. -/
 @[simp]
-def sumLift₂ : ∀ (a : Sum α₁ α₂) (b : Sum β₁ β₂), Finset (Sum γ₁ γ₂)
+def sumLift₂ : ∀ (a : α₁ ⊕ α₂) (b : β₁ ⊕ β₂), Finset (γ₁ ⊕ γ₂)
   | inl a, inl b => (f a b).map Embedding.inl
   | inl a, inr b => ∅
   | inr a, inl b => ∅
   | inr a, inr b => (g a b).map Embedding.inr
 #align finset.sum_lift₂ Finset.sumLift₂
 
-variable {f f₁ g₁ g f₂ g₂} {a : Sum α₁ α₂} {b : Sum β₁ β₂} {c : Sum γ₁ γ₂}
+variable {f f₁ g₁ g f₂ g₂} {a : α₁ ⊕ α₂} {b : β₁ ⊕ β₂} {c : γ₁ ⊕ γ₂}
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a₁ b₁ c₁) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a₂ b₂ c₂) -/
 theorem mem_sum_lift₂ :
     c ∈ sumLift₂ f g a b ↔
-      (∃ a₁ b₁ c₁, a = inl a₁ ∧ b = inl b₁ ∧ c = inl c₁ ∧ c₁ ∈ f a₁ b₁) ∨
-        ∃ a₂ b₂ c₂, a = inr a₂ ∧ b = inr b₂ ∧ c = inr c₂ ∧ c₂ ∈ g a₂ b₂ :=
+      (∃ (a₁) (b₁) (c₁), a = inl a₁ ∧ b = inl b₁ ∧ c = inl c₁ ∧ c₁ ∈ f a₁ b₁) ∨
+        ∃ (a₂) (b₂) (c₂), a = inr a₂ ∧ b = inr b₂ ∧ c = inr c₂ ∧ c₂ ∈ g a₂ b₂ :=
   by
   constructor
   · cases a <;> cases b
@@ -64,14 +66,18 @@ theorem mem_sum_lift₂ :
     
 #align finset.mem_sum_lift₂ Finset.mem_sum_lift₂
 
-theorem inl_mem_sum_lift₂ {c₁ : γ₁} : inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a₁ b₁) -/
+theorem inl_mem_sum_lift₂ {c₁ : γ₁} : inl c₁ ∈ sumLift₂ f g a b ↔ ∃ (a₁) (b₁), a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ :=
+  by
   rw [mem_sum_lift₂, or_iff_left]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inl_ne_inr h
 #align finset.inl_mem_sum_lift₂ Finset.inl_mem_sum_lift₂
 
-theorem inr_mem_sum_lift₂ {c₂ : γ₂} : inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a₂ b₂) -/
+theorem inr_mem_sum_lift₂ {c₂ : γ₂} : inr c₂ ∈ sumLift₂ f g a b ↔ ∃ (a₂) (b₂), a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ :=
+  by
   rw [mem_sum_lift₂, or_iff_right]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
@@ -99,9 +105,12 @@ theorem sum_lift₂_eq_empty :
     
 #align finset.sum_lift₂_eq_empty Finset.sum_lift₂_eq_empty
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a₁ b₁) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a₂ b₂) -/
 theorem sum_lift₂_nonempty :
     (sumLift₂ f g a b).Nonempty ↔
-      (∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ (f a₁ b₁).Nonempty) ∨ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ (g a₂ b₂).Nonempty :=
+      (∃ (a₁) (b₁), a = inl a₁ ∧ b = inl b₁ ∧ (f a₁ b₁).Nonempty) ∨
+        ∃ (a₂) (b₂), a = inr a₂ ∧ b = inr b₂ ∧ (g a₂ b₂).Nonempty :=
   by simp [nonempty_iff_ne_empty, sum_lift₂_eq_empty, not_and_or]
 #align finset.sum_lift₂_nonempty Finset.sum_lift₂_nonempty
 
@@ -130,7 +139,7 @@ section Disjoint
 
 variable [Preorder α] [Preorder β] [LocallyFiniteOrder α] [LocallyFiniteOrder β]
 
-instance : LocallyFiniteOrder (Sum α β) where
+instance : LocallyFiniteOrder (α ⊕ β) where
   finsetIcc := sumLift₂ icc icc
   finsetIco := sumLift₂ ico ico
   finsetIoc := sumLift₂ ioc ioc
@@ -140,21 +149,21 @@ instance : LocallyFiniteOrder (Sum α β) where
   finset_mem_Ioc := by rintro (a | a) (b | b) (x | x) <;> simp
   finset_mem_Ioo := by rintro (a | a) (b | b) (x | x) <;> simp
 
-variable (a₁ a₂ : α) (b₁ b₂ : β) (a b : Sum α β)
+variable (a₁ a₂ : α) (b₁ b₂ : β) (a b : α ⊕ β)
 
-theorem Icc_inl_inl : icc (inl a₁ : Sum α β) (inl a₂) = (icc a₁ a₂).map Embedding.inl :=
+theorem Icc_inl_inl : icc (inl a₁ : α ⊕ β) (inl a₂) = (icc a₁ a₂).map Embedding.inl :=
   rfl
 #align sum.Icc_inl_inl Sum.Icc_inl_inl
 
-theorem Ico_inl_inl : ico (inl a₁ : Sum α β) (inl a₂) = (ico a₁ a₂).map Embedding.inl :=
+theorem Ico_inl_inl : ico (inl a₁ : α ⊕ β) (inl a₂) = (ico a₁ a₂).map Embedding.inl :=
   rfl
 #align sum.Ico_inl_inl Sum.Ico_inl_inl
 
-theorem Ioc_inl_inl : ioc (inl a₁ : Sum α β) (inl a₂) = (ioc a₁ a₂).map Embedding.inl :=
+theorem Ioc_inl_inl : ioc (inl a₁ : α ⊕ β) (inl a₂) = (ioc a₁ a₂).map Embedding.inl :=
   rfl
 #align sum.Ioc_inl_inl Sum.Ioc_inl_inl
 
-theorem Ioo_inl_inl : ioo (inl a₁ : Sum α β) (inl a₂) = (ioo a₁ a₂).map Embedding.inl :=
+theorem Ioo_inl_inl : ioo (inl a₁ : α ⊕ β) (inl a₂) = (ioo a₁ a₂).map Embedding.inl :=
   rfl
 #align sum.Ioo_inl_inl Sum.Ioo_inl_inl
 
@@ -198,19 +207,19 @@ theorem Ioo_inr_inl : ioo (inr b₁) (inl a₂) = ∅ :=
   rfl
 #align sum.Ioo_inr_inl Sum.Ioo_inr_inl
 
-theorem Icc_inr_inr : icc (inr b₁ : Sum α β) (inr b₂) = (icc b₁ b₂).map Embedding.inr :=
+theorem Icc_inr_inr : icc (inr b₁ : α ⊕ β) (inr b₂) = (icc b₁ b₂).map Embedding.inr :=
   rfl
 #align sum.Icc_inr_inr Sum.Icc_inr_inr
 
-theorem Ico_inr_inr : ico (inr b₁ : Sum α β) (inr b₂) = (ico b₁ b₂).map Embedding.inr :=
+theorem Ico_inr_inr : ico (inr b₁ : α ⊕ β) (inr b₂) = (ico b₁ b₂).map Embedding.inr :=
   rfl
 #align sum.Ico_inr_inr Sum.Ico_inr_inr
 
-theorem Ioc_inr_inr : ioc (inr b₁ : Sum α β) (inr b₂) = (ioc b₁ b₂).map Embedding.inr :=
+theorem Ioc_inr_inr : ioc (inr b₁ : α ⊕ β) (inr b₂) = (ioc b₁ b₂).map Embedding.inr :=
   rfl
 #align sum.Ioc_inr_inr Sum.Ioc_inr_inr
 
-theorem Ioo_inr_inr : ioo (inr b₁ : Sum α β) (inr b₂) = (ioo b₁ b₂).map Embedding.inr :=
+theorem Ioo_inr_inr : ioo (inr b₁ : α ⊕ β) (inr b₂) = (ioo b₁ b₂).map Embedding.inr :=
   rfl
 #align sum.Ioo_inr_inr Sum.Ioo_inr_inr
 

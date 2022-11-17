@@ -57,7 +57,7 @@ def Quot1 (α : Typevec n) :=
   Quot (@R α)
 #align mvqpf.quot1 Mvqpf.Quot1
 
-instance Quot1.inhabited {α : Typevec n} [Inhabited <| F α] : Inhabited (Quot1 R α) :=
+instance Quot1.inhabited {α : Typevec n} [Inhabited $ F α] : Inhabited (Quot1 R α) :=
   ⟨Quot.mk _ default⟩
 #align mvqpf.quot1.inhabited Mvqpf.Quot1.inhabited
 
@@ -67,7 +67,7 @@ variable (Hfunc : ∀ ⦃α β⦄ (a b : F α) (f : α ⟹ β), R a b → R (f <
 
 /-- `map` of the `quot1` functor -/
 def Quot1.map ⦃α β⦄ (f : α ⟹ β) : Quot1.{u} R α → Quot1.{u} R β :=
-  (Quot.lift fun x : F α => Quot.mk _ (f <$$> x : F β)) fun a b h => Quot.sound <| Hfunc a b _ h
+  (Quot.lift fun x : F α => Quot.mk _ (f <$$> x : F β)) $ fun a b h => Quot.sound $ Hfunc a b _ h
 #align mvqpf.quot1.map Mvqpf.Quot1.map
 
 /-- `mvfunctor` instance for `quot1` with well-behaved `R` -/

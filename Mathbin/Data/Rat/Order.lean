@@ -52,33 +52,33 @@ theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a 
     
   · apply nonneg_of_mul_nonneg_left _ h
     rw [← this]
-    exact mul_nonneg h₂ (Int.coe_zero_le _)
+    exact mul_nonneg h₂ (Int.ofNat_zero_le _)
     
 #align rat.mk_nonneg Rat.mk_nonneg
 
 protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a + b) :=
-  (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
+  numDenomCasesOn' a $ fun n₁ d₁ h₁ =>
+    numDenomCasesOn' b $ fun n₂ d₂ h₂ => by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
       simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
       intro n₁0 n₂0
       apply add_nonneg <;>
         apply mul_nonneg <;>
-          · first |assumption|apply Int.coe_zero_le
+          · first |assumption|apply Int.ofNat_zero_le
             
 #align rat.nonneg_add Rat.nonneg_add
 
 protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a * b) :=
-  (numDenomCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenomCasesOn' b) fun n₂ d₂ h₂ => by
+  numDenomCasesOn' a $ fun n₁ d₁ h₁ =>
+    numDenomCasesOn' b $ fun n₂ d₂ h₂ => by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
       simp (config := { contextual := true }) [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0, mul_nonneg]
 #align rat.nonneg_mul Rat.nonneg_mul
 
 protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a = 0 :=
-  (numDenomCasesOn' a) fun n d h => by
+  numDenomCasesOn' a $ fun n d h => by
     have d0 : 0 < (d : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h)
     simp [d0, h]
     exact fun h₁ h₂ => le_antisymm h₂ h₁
@@ -118,7 +118,7 @@ protected theorem le_total : a ≤ b ∨ b ≤ a := by have := Rat.nonneg_total 
 #align rat.le_total Rat.le_total
 
 protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b := by
-  have := eq_neg_of_add_eq_zero_left (Rat.nonneg_antisymm hba <| by rwa [← sub_eq_add_neg, neg_sub])
+  have := eq_neg_of_add_eq_zero_left (Rat.nonneg_antisymm hba $ by rwa [← sub_eq_add_neg, neg_sub])
   rwa [neg_neg] at this
 #align rat.le_antisymm Rat.le_antisymm
 
@@ -190,7 +190,7 @@ protected theorem mul_nonneg {a b : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a
 #align rat.mul_nonneg Rat.mul_nonneg
 
 instance : LinearOrderedField ℚ :=
-  { Rat.field, Rat.linearOrder, Rat.semiring with zero_le_one := by decide,
+  { Rat.field, Rat.linearOrder, Rat.semiring with zero_le_one := dec_trivial,
     add_le_add_left := fun a b ab c => Rat.add_le_add_left.2 ab,
     mul_pos := fun a b ha hb =>
       lt_of_le_of_ne (Rat.mul_nonneg (le_of_lt ha) (le_of_lt hb))
@@ -216,7 +216,7 @@ instance : OrderedCancelAddCommMonoid ℚ := by infer_instance
 instance : OrderedAddCommMonoid ℚ := by infer_instance
 
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
-  lt_iff_lt_of_le_iff_le <| by simpa [(by cases a <;> rfl : (-a).num = -a.num)] using @num_nonneg_iff_zero_le (-a)
+  lt_iff_lt_of_le_iff_le $ by simpa [(by cases a <;> rfl : (-a).num = -a.num)] using @num_nonneg_iff_zero_le (-a)
 #align rat.num_pos_iff_pos Rat.num_pos_iff_pos
 
 theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d) : (a : ℚ) / b < c / d ↔ a * d < c * b :=
@@ -237,20 +237,20 @@ theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.denom := by
   cases' le_total q 0 with hq hq
   · rw [abs_of_nonpos hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one, zero_mul] at hq
-    rw [Int.of_nat_nat_abs_of_nonpos hq, ← neg_def, num_denom]
+    rw [Int.ofNat_natAbs_of_nonpos hq, ← neg_def, num_denom]
     
   · rw [abs_of_nonneg hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def zero_lt_one (Int.coe_nat_pos.2 q.pos), mul_one, zero_mul] at hq
-    rw [Int.nat_abs_of_nonneg hq, num_denom]
+    rw [Int.natAbs_of_nonneg hq, num_denom]
     
 #align rat.abs_def Rat.abs_def
 
 end Rat
 
-/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
-/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_not_exists -/
 -- We make some assertions here about declarations that do not need to be in the import dependencies
 -- for this file, but have been in the past.
 -- These are less significant, but should not be relaxed until at least after port to Lean 4.

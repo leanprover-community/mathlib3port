@@ -26,7 +26,7 @@ instance : Bornology (α × β) where
 
 instance : Bornology (∀ i, π i) where
   cobounded := Filter.coprod fun i => cobounded (π i)
-  le_cofinite := @Coprod_cofinite ι π _ ▸ Filter.Coprod_mono fun i => Bornology.le_cofinite _
+  le_cofinite := @Coprod_cofinite ι π _ ▸ (Filter.Coprod_mono $ fun i => Bornology.le_cofinite _)
 
 /-- Inverse image of a bornology. -/
 @[reducible]
@@ -68,7 +68,7 @@ theorem IsBounded.snd_of_prod (h : IsBounded (s ×ˢ t)) (hs : s.Nonempty) : IsB
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsBounded.prod (hs : IsBounded s) (ht : IsBounded t) : IsBounded (s ×ˢ t) :=
-  is_bounded_image_fst_and_snd.1 ⟨hs.Subset <| fst_image_prod_subset _ _, ht.Subset <| snd_image_prod_subset _ _⟩
+  is_bounded_image_fst_and_snd.1 ⟨hs.Subset $ fst_image_prod_subset _ _, ht.Subset $ snd_image_prod_subset _ _⟩
 #align bornology.is_bounded.prod Bornology.IsBounded.prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -110,7 +110,7 @@ theorem forall_is_bounded_image_eval_iff {s : Set (∀ i, π i)} : (∀ i, IsBou
 #align bornology.forall_is_bounded_image_eval_iff Bornology.forall_is_bounded_image_eval_iff
 
 theorem IsBounded.pi (h : ∀ i, IsBounded (S i)) : IsBounded (pi univ S) :=
-  forall_is_bounded_image_eval_iff.1 fun i => (h i).Subset eval_image_univ_pi_subset
+  forall_is_bounded_image_eval_iff.1 $ fun i => (h i).Subset eval_image_univ_pi_subset
 #align bornology.is_bounded.pi Bornology.IsBounded.pi
 
 theorem is_bounded_pi_of_nonempty (hne : (pi univ S).Nonempty) : IsBounded (pi univ S) ↔ ∀ i, IsBounded (S i) :=

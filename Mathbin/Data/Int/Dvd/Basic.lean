@@ -21,8 +21,8 @@ theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
     m.eq_zero_or_pos.elim (fun m0 => by simp [m0] at ae <;> simp [ae, m0]) fun m0l => by
       cases' eq_coe_of_zero_le (@nonneg_of_mul_nonneg_right ℤ _ m a (by simp [ae.symm]) (by simpa using m0l)) with k e
       subst a
-      exact ⟨k, Int.coe_nat_inj ae⟩,
-    fun ⟨k, e⟩ => Dvd.intro k <| by rw [e, Int.coe_nat_mul]⟩
+      exact ⟨k, Int.ofNat.inj ae⟩,
+    fun ⟨k, e⟩ => Dvd.intro k $ by rw [e, Int.ofNat_mul]⟩
 #align int.coe_nat_dvd Int.coe_nat_dvd
 
 theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.natAbs := by
@@ -41,8 +41,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.le_of_dvd Int.le_of_dvdₓ'. -/
 theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
   match a, b, eq_succ_of_zero_lt bpos, H with
-  | (m : ℕ), _, ⟨n, rfl⟩, H => coe_nat_le_coe_nat_of_le <| Nat.le_of_dvd n.succ_pos <| coe_nat_dvd.1 H
-  | -[m+1], _, ⟨n, rfl⟩, _ => le_trans (le_of_lt <| neg_succ_lt_zero _) (coe_zero_le _)
+  | (m : ℕ), _, ⟨n, rfl⟩, H => coe_nat_le_coe_nat_of_le $ Nat.le_of_dvd n.succ_pos $ coe_nat_dvd.1 H
+  | -[1+ m], _, ⟨n, rfl⟩, _ => le_trans (le_of_lt $ negSucc_lt_zero _) (ofNat_zero_le _)
 #align int.le_of_dvd Int.le_of_dvd
 
 /- warning: int.eq_one_of_dvd_one -> Int.eq_one_of_dvd_one is a dubious translation:
@@ -52,8 +52,8 @@ but is expected to have type
   forall {a : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (Dvd.dvd.{0} Int Int.instDvdInt a (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) -> (Eq.{1} Int a (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align int.eq_one_of_dvd_one Int.eq_one_of_dvd_oneₓ'. -/
 theorem eq_one_of_dvd_one {a : ℤ} (H : 0 ≤ a) (H' : a ∣ 1) : a = 1 :=
-  match a, eq_coe_of_zero_le H, H' with
-  | _, ⟨n, rfl⟩, H' => congr_arg coe <| Nat.eq_one_of_dvd_one <| coe_nat_dvd.1 H'
+  match a, eq_ofNat_of_zero_le H, H' with
+  | _, ⟨n, rfl⟩, H' => congr_arg coe $ Nat.eq_one_of_dvd_one $ coe_nat_dvd.1 H'
 #align int.eq_one_of_dvd_one Int.eq_one_of_dvd_one
 
 #print Int.eq_one_of_mul_eq_one_right /-
@@ -70,7 +70,7 @@ theorem eq_one_of_mul_eq_one_left {a b : ℤ} (H : 0 ≤ b) (H' : a * b = 1) : b
 
 theorem of_nat_dvd_of_dvd_nat_abs {a : ℕ} : ∀ {z : ℤ} (haz : a ∣ z.natAbs), ↑a ∣ z
   | Int.ofNat _, haz => Int.coe_nat_dvd.2 haz
-  | -[k+1], haz => by
+  | -[1+ k], haz => by
     change ↑a ∣ -(k + 1 : ℤ)
     apply dvd_neg_of_dvd
     apply Int.coe_nat_dvd.2
@@ -79,7 +79,7 @@ theorem of_nat_dvd_of_dvd_nat_abs {a : ℕ} : ∀ {z : ℤ} (haz : a ∣ z.natAb
 
 theorem dvd_nat_abs_of_of_nat_dvd {a : ℕ} : ∀ {z : ℤ} (haz : ↑a ∣ z), a ∣ z.natAbs
   | Int.ofNat _, haz => Int.coe_nat_dvd.1 (Int.dvd_nat_abs.2 haz)
-  | -[k+1], haz =>
+  | -[1+ k], haz =>
     have haz' : (↑a : ℤ) ∣ (↑(k + 1) : ℤ) := dvd_of_dvd_neg haz
     Int.coe_nat_dvd.1 haz'
 #align int.dvd_nat_abs_of_of_nat_dvd Int.dvd_nat_abs_of_of_nat_dvd

@@ -86,9 +86,10 @@ def accepts : Language α := fun x => M.eval x ∈ M.accept
 theorem mem_accepts (x : List α) : x ∈ M.accepts ↔ M.evalFrom M.start x ∈ M.accept := by rfl
 #align DFA.mem_accepts DFA.mem_accepts
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (q a b c) -/
 theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.card σ ≤ x.length)
     (hx : M.evalFrom s x = t) :
-    ∃ q a b c,
+    ∃ (q) (a) (b) (c),
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ M.evalFrom s a = q ∧ M.evalFrom q b = q ∧ M.evalFrom q c = t :=
   by
@@ -140,8 +141,9 @@ theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy 
     
 #align DFA.eval_from_of_pow DFA.eval_from_of_pow
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card σ ≤ List.length x) :
-    ∃ a b c,
+    ∃ (a) (b) (c),
       x = a ++ b ++ c ∧ a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
   by
   obtain ⟨_, a, b, c, hx, hlen, hnil, rfl, hb, hc⟩ := M.eval_from_split hlen rfl

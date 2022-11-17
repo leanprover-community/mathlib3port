@@ -137,7 +137,7 @@ theorem norm_sup_le_add (x y : α) : ∥x ⊔ y∥ ≤ ∥x∥ + ∥y∥ := by
 /-- Let `α` be a normed lattice ordered group. Then the infimum is jointly continuous.
 -/
 instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : HasContinuousInf α := by
-  refine' ⟨continuous_iff_continuous_at.2 fun q => tendsto_iff_norm_tendsto_zero.2 <| _⟩
+  refine' ⟨continuous_iff_continuous_at.2 $ fun q => tendsto_iff_norm_tendsto_zero.2 $ _⟩
   have : ∀ p : α × α, ∥p.1 ⊓ p.2 - q.1 ⊓ q.2∥ ≤ ∥p.1 - q.1∥ + ∥p.2 - q.2∥ := fun _ =>
     norm_inf_sub_inf_le_add_norm _ _ _ _
   refine' squeeze_zero (fun e => norm_nonneg _) this _
@@ -173,7 +173,7 @@ theorem norm_inf_sub_inf_le_norm (x y z : α) : ∥x ⊓ z - y ⊓ z∥ ≤ ∥x
 #align norm_inf_sub_inf_le_norm norm_inf_sub_inf_le_norm
 
 theorem lipschitzWithSupRight (z : α) : LipschitzWith 1 fun x => x ⊔ z :=
-  LipschitzWith.ofDistLeMul fun x y => by
+  LipschitzWith.ofDistLeMul $ fun x y => by
     rw [Nonneg.coe_one, one_mul, dist_eq_norm, dist_eq_norm]
     exact norm_sup_sub_sup_le_norm x y z
 #align lipschitz_with_sup_right lipschitzWithSupRight

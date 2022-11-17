@@ -480,7 +480,7 @@ Vᵢⱼ ⟶ Uᵢ
  Uⱼ ⟶ X
 -/
 def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
-  (PullbackCone.isLimitAux' _) fun s => by
+  PullbackCone.isLimitAux' _ $ fun s => by
     refine' ⟨_, _, _, _⟩
     · refine' PresheafedSpace.is_open_immersion.lift (D.f i j) s.fst _
       erw [← D.to_Top_glue_data.preimage_range j i]
@@ -508,7 +508,7 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
 #align
   algebraic_geometry.PresheafedSpace.glue_data.V_pullback_cone_is_limit AlgebraicGeometry.PresheafedSpaceCat.GlueData.vPullbackConeIsLimit
 
-theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J) (y : D.U i), (𝖣.ι i).base y = x :=
   𝖣.ι_jointly_surjective (PresheafedSpaceCat.forget _ ⋙ CategoryTheory.forget TopCat) x
 #align
   algebraic_geometry.PresheafedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_jointly_surjective
@@ -579,7 +579,7 @@ instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
 #align
   algebraic_geometry.SheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.SheafedSpaceCat.GlueData.ι_is_open_immersion
 
-theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).base y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J) (y : D.U i), (𝖣.ι i).base y = x :=
   𝖣.ι_jointly_surjective (SheafedSpaceCat.forget _ ⋙ CategoryTheory.forget TopCat) x
 #align
   algebraic_geometry.SheafedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.SheafedSpaceCat.GlueData.ι_jointly_surjective
@@ -662,7 +662,7 @@ instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
 instance (i j k : D.J) : PreservesLimit (cospan (𝖣.f i j) (𝖣.f i k)) forgetToSheafedSpace :=
   inferInstance
 
-theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).1.base y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J) (y : D.U i), (𝖣.ι i).1.base y = x :=
   𝖣.ι_jointly_surjective ((LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpaceCat.forget _) ⋙ forget TopCat) x
 #align
   algebraic_geometry.LocallyRingedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.LocallyRingedSpaceCat.GlueData.ι_jointly_surjective

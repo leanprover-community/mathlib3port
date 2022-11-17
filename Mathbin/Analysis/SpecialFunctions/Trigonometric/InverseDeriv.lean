@@ -121,9 +121,9 @@ theorem contDiffOnArcsin {n : ℕ∞} : ContDiffOn ℝ n arcsin ({-1, 1}ᶜ) := 
 
 theorem cont_diff_at_arcsin_iff {x : ℝ} {n : ℕ∞} : ContDiffAt ℝ n arcsin x ↔ n = 0 ∨ x ≠ -1 ∧ x ≠ 1 :=
   ⟨fun h =>
-    or_iff_not_imp_left.2 fun hn => differentiable_at_arcsin.1 <| h.DifferentiableAt <| Enat.one_le_iff_ne_zero.2 hn,
+    or_iff_not_imp_left.2 $ fun hn => differentiable_at_arcsin.1 $ h.DifferentiableAt $ Enat.one_le_iff_ne_zero.2 hn,
     fun h =>
-    (h.elim fun hn => hn.symm ▸ (cont_diff_zero.2 continuous_arcsin).ContDiffAt) fun hx => contDiffAtArcsin hx.1 hx.2⟩
+    (h.elim fun hn => hn.symm ▸ (cont_diff_zero.2 continuous_arcsin).ContDiffAt) $ fun hx => contDiffAtArcsin hx.1 hx.2⟩
 #align real.cont_diff_at_arcsin_iff Real.cont_diff_at_arcsin_iff
 
 end Arcsin
@@ -165,7 +165,7 @@ theorem differentiable_at_arccos {x : ℝ} : DifferentiableAt ℝ arccos x ↔ x
 
 @[simp]
 theorem deriv_arccos : deriv arccos = fun x => -(1 / sqrt (1 - x ^ 2)) :=
-  funext fun x => (deriv_const_sub _).trans <| by simp only [deriv_arcsin]
+  funext $ fun x => (deriv_const_sub _).trans $ by simp only [deriv_arcsin]
 #align real.deriv_arccos Real.deriv_arccos
 
 theorem differentiableOnArccos : DifferentiableOn ℝ arccos ({-1, 1}ᶜ) :=

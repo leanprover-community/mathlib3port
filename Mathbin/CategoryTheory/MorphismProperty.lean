@@ -593,7 +593,7 @@ theorem StableUnderComposition.universally [HasPullbacks C] {P : MorphismPropert
   intro X Y Z f g hf hg X' Z' i₁ i₂ f' H
   have := pullback.lift_fst _ _ (H.w.trans (category.assoc _ _ _).symm)
   rw [← this] at H⊢
-  apply hP _ _ _ (hg _ _ _ <| is_pullback.of_has_pullback _ _)
+  apply hP _ _ _ (hg _ _ _ $ is_pullback.of_has_pullback _ _)
   exact hf _ _ _ (H.of_right (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback i₂ g))
 #align
   category_theory.morphism_property.stable_under_composition.universally CategoryTheory.MorphismProperty.StableUnderComposition.universally
@@ -605,7 +605,7 @@ theorem universally_le (P : MorphismProperty C) : P.universally ≤ P := by
 
 theorem StableUnderBaseChange.universally_eq {P : MorphismProperty C} (hP : P.StableUnderBaseChange) :
     P.universally = P :=
-  P.universally_le.antisymm fun X Y f hf X' Y' i₁ i₂ f' H => hP H.flip hf
+  P.universally_le.antisymm $ fun X Y f hf X' Y' i₁ i₂ f' H => hP H.flip hf
 #align
   category_theory.morphism_property.stable_under_base_change.universally_eq CategoryTheory.MorphismProperty.StableUnderBaseChange.universally_eq
 

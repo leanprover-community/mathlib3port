@@ -121,7 +121,7 @@ theorem forall_measure_preimage_mul_iff (μ : Measure G) :
     (∀ (g : G) (A : Set G), MeasurableSet A → μ ((fun h => g * h) ⁻¹' A) = μ A) ↔ IsMulLeftInvariant μ := by
   trans ∀ g, map ((· * ·) g) μ = μ
   · simp_rw [measure.ext_iff]
-    refine' forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => _
+    refine' forall_congr' fun g => forall_congr' $ fun A => forall_congr' $ fun hA => _
     rw [map_apply (measurable_const_mul g) hA]
     
   exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
@@ -133,7 +133,7 @@ theorem forall_measure_preimage_mul_right_iff (μ : Measure G) :
     (∀ (g : G) (A : Set G), MeasurableSet A → μ ((fun h => h * g) ⁻¹' A) = μ A) ↔ IsMulRightInvariant μ := by
   trans ∀ g, map (· * g) μ = μ
   · simp_rw [measure.ext_iff]
-    refine' forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => _
+    refine' forall_congr' fun g => forall_congr' $ fun A => forall_congr' $ fun hA => _
     rw [map_apply (measurable_mul_const g) hA]
     
   exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
@@ -226,17 +226,17 @@ theorem measure_preimage_mul_right (μ : Measure G) [IsMulRightInvariant μ] (g 
 
 @[to_additive]
 theorem map_mul_left_ae (μ : Measure G) [IsMulLeftInvariant μ] (x : G) : Filter.map (fun h => x * h) μ.ae = μ.ae :=
-  ((MeasurableEquiv.mulLeft x).map_ae μ).trans <| congr_arg ae <| map_mul_left_eq_self μ x
+  ((MeasurableEquiv.mulLeft x).map_ae μ).trans $ congr_arg ae $ map_mul_left_eq_self μ x
 #align measure_theory.map_mul_left_ae MeasureTheory.map_mul_left_ae
 
 @[to_additive]
 theorem map_mul_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) : Filter.map (fun h => h * x) μ.ae = μ.ae :=
-  ((MeasurableEquiv.mulRight x).map_ae μ).trans <| congr_arg ae <| map_mul_right_eq_self μ x
+  ((MeasurableEquiv.mulRight x).map_ae μ).trans $ congr_arg ae $ map_mul_right_eq_self μ x
 #align measure_theory.map_mul_right_ae MeasureTheory.map_mul_right_ae
 
 @[to_additive]
 theorem map_div_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) : Filter.map (fun t => t / x) μ.ae = μ.ae :=
-  ((MeasurableEquiv.divRight x).map_ae μ).trans <| congr_arg ae <| map_div_right_eq_self μ x
+  ((MeasurableEquiv.divRight x).map_ae μ).trans $ congr_arg ae $ map_div_right_eq_self μ x
 #align measure_theory.map_div_right_ae MeasureTheory.map_div_right_ae
 
 @[to_additive]
@@ -371,7 +371,7 @@ theorem map_div_left_eq_self (μ : Measure G) [IsInvInvariant μ] [IsMulLeftInva
 @[to_additive]
 theorem measurePreservingMulRightInv (μ : Measure G) [IsInvInvariant μ] [IsMulLeftInvariant μ] (g : G) :
     MeasurePreserving (fun t => (g * t)⁻¹) μ μ :=
-  (measurePreservingInv μ).comp <| measurePreservingMulLeft μ g
+  (measurePreservingInv μ).comp $ measurePreservingMulLeft μ g
 #align measure_theory.measure.measure_preserving_mul_right_inv MeasureTheory.Measure.measurePreservingMulRightInv
 
 @[to_additive]
@@ -383,7 +383,7 @@ theorem map_mul_right_inv_eq_self (μ : Measure G) [IsInvInvariant μ] [IsMulLef
 @[to_additive]
 theorem map_div_left_ae (μ : Measure G) [IsMulLeftInvariant μ] [IsInvInvariant μ] (x : G) :
     Filter.map (fun t => x / t) μ.ae = μ.ae :=
-  ((MeasurableEquiv.divLeft x).map_ae μ).trans <| congr_arg ae <| map_div_left_eq_self μ x
+  ((MeasurableEquiv.divLeft x).map_ae μ).trans $ congr_arg ae $ map_div_left_eq_self μ x
 #align measure_theory.measure.map_div_left_ae MeasureTheory.Measure.map_div_left_ae
 
 end mul_inv
@@ -462,7 +462,7 @@ theorem measure_ne_zero_iff_nonempty_of_is_mul_left_invariant [Regular μ] (hμ 
 @[to_additive]
 theorem measure_pos_iff_nonempty_of_is_mul_left_invariant [Regular μ] (h3μ : μ ≠ 0) {s : Set G} (hs : IsOpen s) :
     0 < μ s ↔ s.Nonempty :=
-  pos_iff_ne_zero.trans <| measure_ne_zero_iff_nonempty_of_is_mul_left_invariant h3μ hs
+  pos_iff_ne_zero.trans $ measure_ne_zero_iff_nonempty_of_is_mul_left_invariant h3μ hs
 #align
   measure_theory.measure_pos_iff_nonempty_of_is_mul_left_invariant MeasureTheory.measure_pos_iff_nonempty_of_is_mul_left_invariant
 
@@ -603,7 +603,7 @@ See Note [lower instance priority] -/
 @[to_additive "A Haar measure on a σ-compact space is σ-finite.\n\nSee Note [lower instance priority]"]
 instance (priority := 100) IsHaarMeasure.sigmaFinite [SigmaCompactSpace G] : SigmaFinite μ :=
   ⟨⟨{ Set := compactCovering G, set_mem := fun n => mem_univ _,
-        Finite := fun n => IsCompact.measure_lt_top <| is_compact_compact_covering G n,
+        Finite := fun n => IsCompact.measure_lt_top $ is_compact_compact_covering G n,
         spanning := Union_compact_covering G }⟩⟩
 #align measure_theory.measure.is_haar_measure.sigma_finite MeasureTheory.Measure.IsHaarMeasure.sigmaFinite
 

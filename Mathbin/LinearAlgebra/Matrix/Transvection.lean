@@ -248,7 +248,7 @@ open Sum
 
 /-- Given a `transvection_struct` on `n`, define the corresponding `transvection_struct` on `n ⊕ p`
 using the identity on `p`. -/
-def sumInl (t : TransvectionStruct n R) : TransvectionStruct (Sum n p) R where
+def sumInl (t : TransvectionStruct n R) : TransvectionStruct (n ⊕ p) R where
   i := inl t.i
   j := inl t.j
   hij := by simp [t.hij]
@@ -348,24 +348,24 @@ of the matrices, through a suitable reindexing to identify any fintype with `fin
 
 namespace Pivot
 
-variable {R} {r : ℕ} (M : Matrix (Sum (Fin r) Unit) (Sum (Fin r) Unit) 𝕜)
+variable {R} {r : ℕ} (M : Matrix (Fin r ⊕ Unit) (Fin r ⊕ Unit) 𝕜)
 
 open Sum Unit Fin TransvectionStruct
 
 /-- A list of transvections such that multiplying on the left with these transvections will replace
 the last column with zeroes. -/
-def listTransvecCol : List (Matrix (Sum (Fin r) Unit) (Sum (Fin r) Unit) 𝕜) :=
-  List.ofFn fun i : Fin r => transvection (inl i) (inr unit) <| -M (inl i) (inr unit) / M (inr unit) (inr unit)
+def listTransvecCol : List (Matrix (Fin r ⊕ Unit) (Fin r ⊕ Unit) 𝕜) :=
+  List.ofFn $ fun i : Fin r => transvection (inl i) (inr unit) $ -M (inl i) (inr unit) / M (inr unit) (inr unit)
 #align matrix.pivot.list_transvec_col Matrix.Pivot.listTransvecCol
 
 /-- A list of transvections such that multiplying on the right with these transvections will replace
 the last row with zeroes. -/
-def listTransvecRow : List (Matrix (Sum (Fin r) Unit) (Sum (Fin r) Unit) 𝕜) :=
-  List.ofFn fun i : Fin r => transvection (inr unit) (inl i) <| -M (inr unit) (inl i) / M (inr unit) (inr unit)
+def listTransvecRow : List (Matrix (Fin r ⊕ Unit) (Fin r ⊕ Unit) 𝕜) :=
+  List.ofFn $ fun i : Fin r => transvection (inr unit) (inl i) $ -M (inr unit) (inl i) / M (inr unit) (inr unit)
 #align matrix.pivot.list_transvec_row Matrix.Pivot.listTransvecRow
 
 /-- Multiplying by some of the matrices in `list_transvec_col M` does not change the last row. -/
-theorem list_transvec_col_mul_last_row_drop (i : Sum (Fin r) Unit) {k : ℕ} (hk : k ≤ r) :
+theorem list_transvec_col_mul_last_row_drop (i : Fin r ⊕ Unit) {k : ℕ} (hk : k ≤ r) :
     (((listTransvecCol M).drop k).Prod ⬝ M) (inr unit) i = M (inr unit) i := by
   apply Nat.decreasingInduction' _ hk
   · simp only [list_transvec_col, List.length_of_fn, Matrix.one_mul, List.drop_eq_nil_of_le, List.prod_nil]
@@ -378,7 +378,7 @@ theorem list_transvec_col_mul_last_row_drop (i : Sum (Fin r) Unit) {k : ℕ} (hk
 #align matrix.pivot.list_transvec_col_mul_last_row_drop Matrix.Pivot.list_transvec_col_mul_last_row_drop
 
 /-- Multiplying by all the matrices in `list_transvec_col M` does not change the last row. -/
-theorem list_transvec_col_mul_last_row (i : Sum (Fin r) Unit) :
+theorem list_transvec_col_mul_last_row (i : Fin r ⊕ Unit) :
     ((listTransvecCol M).Prod ⬝ M) (inr unit) i = M (inr unit) i := by
   simpa using list_transvec_col_mul_last_row_drop M i (zero_le _)
 #align matrix.pivot.list_transvec_col_mul_last_row Matrix.Pivot.list_transvec_col_mul_last_row
@@ -435,7 +435,7 @@ theorem list_transvec_col_mul_last_col (hM : M (inr unit) (inr unit) ≠ 0) (i :
 #align matrix.pivot.list_transvec_col_mul_last_col Matrix.Pivot.list_transvec_col_mul_last_col
 
 /-- Multiplying by some of the matrices in `list_transvec_row M` does not change the last column. -/
-theorem mul_list_transvec_row_last_col_take (i : Sum (Fin r) Unit) {k : ℕ} (hk : k ≤ r) :
+theorem mul_list_transvec_row_last_col_take (i : Fin r ⊕ Unit) {k : ℕ} (hk : k ≤ r) :
     (M ⬝ ((listTransvecRow M).take k).Prod) i (inr unit) = M i (inr unit) := by
   induction' k with k IH
   · simp only [Matrix.mul_one, List.take_zero, List.prod_nil]
@@ -456,7 +456,7 @@ theorem mul_list_transvec_row_last_col_take (i : Sum (Fin r) Unit) {k : ℕ} (hk
 #align matrix.pivot.mul_list_transvec_row_last_col_take Matrix.Pivot.mul_list_transvec_row_last_col_take
 
 /-- Multiplying by all the matrices in `list_transvec_row M` does not change the last column. -/
-theorem mul_list_transvec_row_last_col (i : Sum (Fin r) Unit) :
+theorem mul_list_transvec_row_last_col (i : Fin r ⊕ Unit) :
     (M ⬝ (listTransvecRow M).Prod) i (inr unit) = M i (inr unit) := by
   have A : (list_transvec_row M).length = r := by simp [list_transvec_row]
   rw [← List.take_length (list_transvec_row M), A]
@@ -557,15 +557,16 @@ theorem is_two_block_diagonal_list_transvec_col_mul_mul_list_transvec_row (hM : 
 #align
   matrix.pivot.is_two_block_diagonal_list_transvec_col_mul_mul_list_transvec_row Matrix.Pivot.is_two_block_diagonal_list_transvec_col_mul_mul_list_transvec_row
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (L L') -/
 /-- There exist two lists of `transvection_struct` such that multiplying by them on the left and
 on the right makes a matrix block-diagonal, when the last coefficient is nonzero. -/
 theorem exists_is_two_block_diagonal_of_ne_zero (hM : M (inr unit) (inr unit) ≠ 0) :
-    ∃ L L' : List (TransvectionStruct (Sum (Fin r) Unit) 𝕜),
+    ∃ (L : List (TransvectionStruct (Fin r ⊕ Unit) 𝕜)) (L' : List (TransvectionStruct (Fin r ⊕ Unit) 𝕜)),
       IsTwoBlockDiagonal ((L.map toMatrix).Prod ⬝ M ⬝ (L'.map toMatrix).Prod) :=
   by
-  let L : List (transvection_struct (Sum (Fin r) Unit) 𝕜) :=
+  let L : List (transvection_struct (Fin r ⊕ Unit) 𝕜) :=
     List.ofFn fun i : Fin r => ⟨inl i, inr star, by simp, -M (inl i) (inr star) / M (inr star) (inr star)⟩
-  let L' : List (transvection_struct (Sum (Fin r) Unit) 𝕜) :=
+  let L' : List (transvection_struct (Fin r ⊕ Unit) 𝕜) :=
     List.ofFn fun i : Fin r => ⟨inr star, inl i, by simp, -M (inr star) (inl i) / M (inr star) (inr star)⟩
   refine' ⟨L, L', _⟩
   have A : L.map to_matrix = list_transvec_col M := by simp [L, list_transvec_col, (· ∘ ·)]
@@ -575,11 +576,11 @@ theorem exists_is_two_block_diagonal_of_ne_zero (hM : M (inr unit) (inr unit) �
 #align matrix.pivot.exists_is_two_block_diagonal_of_ne_zero Matrix.Pivot.exists_is_two_block_diagonal_of_ne_zero
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (L L') -/
 /-- There exist two lists of `transvection_struct` such that multiplying by them on the left and
 on the right makes a matrix block-diagonal. -/
-theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
-    (M : Matrix (Sum (Fin r) Unit) (Sum (Fin r) Unit) 𝕜) :
-    ∃ L L' : List (TransvectionStruct (Sum (Fin r) Unit) 𝕜),
+theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec (M : Matrix (Fin r ⊕ Unit) (Fin r ⊕ Unit) 𝕜) :
+    ∃ (L : List (TransvectionStruct (Fin r ⊕ Unit) 𝕜)) (L' : List (TransvectionStruct (Fin r ⊕ Unit) 𝕜)),
       IsTwoBlockDiagonal ((L.map toMatrix).Prod ⬝ M ⬝ (L'.map toMatrix).Prod) :=
   by
   by_cases H:is_two_block_diagonal M
@@ -625,16 +626,18 @@ theorem exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
 #align
   matrix.pivot.exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec Matrix.Pivot.exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (L₀ L₀') -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (L L') -/
 /-- Inductive step for the reduction: if one knows that any size `r` matrix can be reduced to
 diagonal form by elementary operations, then one deduces it for matrices over `fin r ⊕ unit`. -/
 theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction
     (IH :
       ∀ M : Matrix (Fin r) (Fin r) 𝕜,
-        ∃ (L₀ L₀' : List (TransvectionStruct (Fin r) 𝕜))(D₀ : Fin r → 𝕜),
+        ∃ (L₀ : List (TransvectionStruct (Fin r) 𝕜)) (L₀' : List (TransvectionStruct (Fin r) 𝕜)) (D₀ : Fin r → 𝕜),
           (L₀.map toMatrix).Prod ⬝ M ⬝ (L₀'.map toMatrix).Prod = diagonal D₀)
-    (M : Matrix (Sum (Fin r) Unit) (Sum (Fin r) Unit) 𝕜) :
-    ∃ (L L' : List (TransvectionStruct (Sum (Fin r) Unit) 𝕜))(D : Sum (Fin r) Unit → 𝕜),
-      (L.map toMatrix).Prod ⬝ M ⬝ (L'.map toMatrix).Prod = diagonal D :=
+    (M : Matrix (Fin r ⊕ Unit) (Fin r ⊕ Unit) 𝕜) :
+    ∃ (L : List (TransvectionStruct (Fin r ⊕ Unit) 𝕜)) (L' : List (TransvectionStruct (Fin r ⊕ Unit) 𝕜)) (D :
+      Fin r ⊕ Unit → 𝕜), (L.map toMatrix).Prod ⬝ M ⬝ (L'.map toMatrix).Prod = diagonal D :=
   by
   rcases exists_is_two_block_diagonal_list_transvec_mul_mul_list_transvec M with ⟨L₁, L₁', hM⟩
   let M' := (L₁.map to_matrix).Prod ⬝ M ⬝ (L₁'.map to_matrix).Prod
@@ -664,12 +667,14 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_induction
 
 variable {n p} [Fintype n] [Fintype p]
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (L L') -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (L L') -/
 /-- Reduction to diagonal form by elementary operations is invariant under reindexing. -/
 theorem reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal (M : Matrix p p 𝕜) (e : p ≃ n)
     (H :
-      ∃ (L L' : List (TransvectionStruct n 𝕜))(D : n → 𝕜),
+      ∃ (L : List (TransvectionStruct n 𝕜)) (L' : List (TransvectionStruct n 𝕜)) (D : n → 𝕜),
         (L.map toMatrix).Prod ⬝ Matrix.reindexAlgEquiv 𝕜 e M ⬝ (L'.map toMatrix).Prod = diagonal D) :
-    ∃ (L L' : List (TransvectionStruct p 𝕜))(D : p → 𝕜),
+    ∃ (L : List (TransvectionStruct p 𝕜)) (L' : List (TransvectionStruct p 𝕜)) (D : p → 𝕜),
       (L.map toMatrix).Prod ⬝ M ⬝ (L'.map toMatrix).Prod = diagonal D :=
   by
   rcases H with ⟨L₀, L₀', D₀, h₀⟩
@@ -684,13 +689,14 @@ theorem reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal (M : Matr
 #align
   matrix.pivot.reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal Matrix.Pivot.reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (L L') -/
 /-- Any matrix can be reduced to diagonal form by elementary operations. Formulated here on `Type 0`
 because we will make an induction using `fin r`.
 See `exists_list_transvec_mul_mul_list_transvec_eq_diagonal` for the general version (which follows
 from this one and reindexing). -/
 theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux (n : Type) [Fintype n] [DecidableEq n]
     (M : Matrix n n 𝕜) :
-    ∃ (L L' : List (TransvectionStruct n 𝕜))(D : n → 𝕜),
+    ∃ (L : List (TransvectionStruct n 𝕜)) (L' : List (TransvectionStruct n 𝕜)) (D : n → 𝕜),
       (L.map toMatrix).Prod ⬝ M ⬝ (L'.map toMatrix).Prod = diagonal D :=
   by
   induction' hn : Fintype.card n with r IH generalizing n M
@@ -699,7 +705,7 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux (n : Type) [F
     rw [Fintype.card_eq_zero_iff] at hn
     exact hn.elim' i
     
-  · have e : n ≃ Sum (Fin r) Unit := by
+  · have e : n ≃ Fin r ⊕ Unit := by
       refine' Fintype.equivOfCardEq _
       rw [hn]
       convert (@Fintype.card_sum (Fin r) Unit _ _).symm
@@ -710,9 +716,10 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux (n : Type) [F
 #align
   matrix.pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux Matrix.Pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (L L') -/
 /-- Any matrix can be reduced to diagonal form by elementary operations. -/
 theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal (M : Matrix n n 𝕜) :
-    ∃ (L L' : List (TransvectionStruct n 𝕜))(D : n → 𝕜),
+    ∃ (L : List (TransvectionStruct n 𝕜)) (L' : List (TransvectionStruct n 𝕜)) (D : n → 𝕜),
       (L.map toMatrix).Prod ⬝ M ⬝ (L'.map toMatrix).Prod = diagonal D :=
   by
   have e : n ≃ Fin (Fintype.card n) := Fintype.equivOfCardEq (by simp)
@@ -721,10 +728,11 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal (M : Matrix n n �
 #align
   matrix.pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal Matrix.Pivot.exists_list_transvec_mul_mul_list_transvec_eq_diagonal
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (L L') -/
 /-- Any matrix can be written as the product of transvections, a diagonal matrix, and
 transvections.-/
 theorem exists_list_transvec_mul_diagonal_mul_list_transvec (M : Matrix n n 𝕜) :
-    ∃ (L L' : List (TransvectionStruct n 𝕜))(D : n → 𝕜),
+    ∃ (L : List (TransvectionStruct n 𝕜)) (L' : List (TransvectionStruct n 𝕜)) (D : n → 𝕜),
       M = (L.map toMatrix).Prod ⬝ diagonal D ⬝ (L'.map toMatrix).Prod :=
   by
   rcases exists_list_transvec_mul_mul_list_transvec_eq_diagonal M with ⟨L, L', D, h⟩

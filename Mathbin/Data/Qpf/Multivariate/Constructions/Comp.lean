@@ -21,12 +21,12 @@ namespace Mvqpf
 open Mvfunctor
 
 variable {n m : ℕ} (F : Typevec.{u} n → Type _) [fF : Mvfunctor F] [q : Mvqpf F] (G : Fin2 n → Typevec.{u} m → Type u)
-  [fG : ∀ i, Mvfunctor <| G i] [q' : ∀ i, Mvqpf <| G i]
+  [fG : ∀ i, Mvfunctor $ G i] [q' : ∀ i, Mvqpf $ G i]
 
 /-- Composition of an `n`-ary functor with `n` `m`-ary
 functors gives us one `m`-ary functor -/
 def Comp (v : Typevec.{u} m) : Type _ :=
-  F fun i : Fin2 n => G i v
+  F $ fun i : Fin2 n => G i v
 #align mvqpf.comp Mvqpf.Comp
 
 namespace Comp
@@ -35,16 +35,16 @@ open Mvfunctor Mvpfunctor
 
 variable {F G} {α β : Typevec.{u} m} (f : α ⟹ β)
 
-instance [I : Inhabited (F fun i : Fin2 n => G i α)] : Inhabited (Comp F G α) :=
+instance [I : Inhabited (F $ fun i : Fin2 n => G i α)] : Inhabited (Comp F G α) :=
   I
 
 /-- Constructor for functor composition -/
-protected def mk (x : F fun i => G i α) : (Comp F G) α :=
+protected def mk (x : F $ fun i => G i α) : (Comp F G) α :=
   x
 #align mvqpf.comp.mk Mvqpf.Comp.mk
 
 /-- Destructor for functor composition -/
-protected def get (x : (Comp F G) α) : F fun i => G i α :=
+protected def get (x : (Comp F G) α) : F $ fun i => G i α :=
   x
 #align mvqpf.comp.get Mvqpf.Comp.get
 
@@ -54,7 +54,7 @@ protected theorem mk_get (x : (Comp F G) α) : Comp.mk (Comp.get x) = x :=
 #align mvqpf.comp.mk_get Mvqpf.Comp.mk_get
 
 @[simp]
-protected theorem get_mk (x : F fun i => G i α) : Comp.get (Comp.mk x) = x :=
+protected theorem get_mk (x : F $ fun i => G i α) : Comp.get (Comp.mk x) = x :=
   rfl
 #align mvqpf.comp.get_mk Mvqpf.Comp.get_mk
 
@@ -73,7 +73,7 @@ protected def map : (Comp F G) α → (Comp F G) β :=
 
 instance : Mvfunctor (Comp F G) where map α β := Comp.map
 
-theorem map_mk (x : F fun i => G i α) : f <$$> Comp.mk x = Comp.mk ((fun i (x : G i α) => f <$$> x) <$$> x) :=
+theorem map_mk (x : F $ fun i => G i α) : f <$$> Comp.mk x = Comp.mk ((fun i (x : G i α) => f <$$> x) <$$> x) :=
   rfl
 #align mvqpf.comp.map_mk Mvqpf.Comp.map_mk
 
@@ -84,7 +84,7 @@ theorem get_map (x : Comp F G α) : Comp.get (f <$$> x) = (fun i (x : G i α) =>
 include q q'
 
 instance : Mvqpf (Comp F G) where
-  p := Mvpfunctor.comp (p F) fun i => P <| G i
+  p := Mvpfunctor.comp (p F) fun i => P $ G i
   abs α := comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get
   repr α := Mvpfunctor.comp.mk ∘ repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
   abs_repr := by

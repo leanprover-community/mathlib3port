@@ -80,16 +80,18 @@ theorem discr_reindex (b : Basis ι A B) (f : ι ≃ ι') : discr A (b ∘ ⇑f.
 
 /-- If `b` is not linear independent, then `algebra.discr A b = 0`. -/
 theorem discr_zero_of_not_linear_independent [IsDomain A] {b : ι → B} (hli : ¬LinearIndependent A b) : discr A b = 0 :=
-  by
-  classical obtain ⟨g, hg, i, hi⟩ := Fintype.not_linear_independent_iff.1 hli
-    · ext i
-      have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) := by
-        intro j
-        simp [mul_comm]
-      simp only [mul_vec, dot_product, trace_matrix, Pi.zero_apply, trace_form_apply, fun j => this j, ←
-        LinearMap.map_sum, ← sum_mul, hg, zero_mul, LinearMap.map_zero]
-      
-    rw [discr_def] at h
+  by classical
+  obtain ⟨g, hg, i, hi⟩ := Fintype.not_linear_independent_iff.1 hli
+  have : (trace_matrix A b).mulVec g = 0 := by
+    ext i
+    have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) := by
+      intro j
+      simp [mul_comm]
+    simp only [mul_vec, dot_product, trace_matrix, Pi.zero_apply, trace_form_apply, fun j => this j, ←
+      LinearMap.map_sum, ← sum_mul, hg, zero_mul, LinearMap.map_zero]
+  by_contra h
+  rw [discr_def] at h
+  simpa [Matrix.eq_zero_of_mul_vec_eq_zero h this] using hi
 #align algebra.discr_zero_of_not_linear_independent Algebra.discr_zero_of_not_linear_independent
 
 variable {A}
@@ -243,7 +245,7 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
       
     · simp only [true_and_iff, mem_univ, Ne.def, mem_sigma, mem_compl, mem_singleton] at hi
       rw [← PowerBasis.lift_equiv_apply_coe, ← PowerBasis.lift_equiv_apply_coe] at h
-      exact hi (e.injective <| pb.lift_equiv.injective <| Subtype.eq h.symm)
+      exact hi (e.injective $ pb.lift_equiv.injective $ Subtype.eq h.symm)
       
     
   · simp only [Equiv.apply_eq_iff_eq, heq_iff_eq] at hij
@@ -278,8 +280,9 @@ local notation "is_integral" => IsIntegral
 
 /-- If `K` and `L` are fields and `is_scalar_tower R K L`, and `b : ι → L` satisfies
 ` ∀ i, is_integral R (b i)`, then `is_integral R (discr K b)`. -/
-theorem discrIsIntegral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_integral R (discr K b) := by
-  classical rw [discr_def]
+theorem discrIsIntegral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_integral R (discr K b) := by classical
+  rw [discr_def]
+  exact IsIntegral.det fun i j => is_integral_trace (isIntegralMul (h i) (h j))
 #align algebra.discr_is_integral Algebra.discrIsIntegral
 
 /-- If `b` and `b'` are `ℚ`-bases of a number field `K` such that
@@ -293,13 +296,26 @@ theorem discr_eq_discr_of_to_matrix_coeff_is_integral [NumberField K] {b : Basis
     convert h' i ((b.index_equiv b').symm j)
     simpa
     
-  classical rw [← (b.reindex (b.index_equiv b')).to_matrix_map_vec_mul b', discr_of_matrix_vec_mul, ←
-      one_mul (discr ℚ b), Basis.coe_reindex, discr_reindex]
-    have hint : is_integral ℤ ((b.reindex (b.index_equiv b')).toMatrix b').det := IsIntegral.det fun i j => h _ _
-    have hunit : IsUnit r
-    rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
-    · simp [hp]
-      
+  classical
+  rw [← (b.reindex (b.index_equiv b')).to_matrix_map_vec_mul b', discr_of_matrix_vec_mul, ← one_mul (discr ℚ b),
+    Basis.coe_reindex, discr_reindex]
+  congr
+  have hint : is_integral ℤ ((b.reindex (b.index_equiv b')).toMatrix b').det := IsIntegral.det fun i j => h _ _
+  obtain ⟨r, hr⟩ := IsIntegrallyClosed.is_integral_iff.1 hint
+  have hunit : IsUnit r := by
+    have : is_integral ℤ (b'.to_matrix (b.reindex (b.index_equiv b'))).det := IsIntegral.det fun i j => h' _ _
+    obtain ⟨r', hr'⟩ := IsIntegrallyClosed.is_integral_iff.1 this
+    refine' is_unit_iff_exists_inv.2 ⟨r', _⟩
+    suffices algebraMap ℤ ℚ (r * r') = 1 by
+      rw [← RingHom.map_one (algebraMap ℤ ℚ)] at this
+      exact (IsFractionRing.injective ℤ ℚ) this
+    rw [RingHom.map_mul, hr, hr', ← det_mul, Basis.to_matrix_mul_to_matrix_flip, det_one]
+  rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
+  cases' Int.is_unit_iff.1 hunit with hp hm
+  · simp [hp]
+    
+  · simp [hm]
+    
 #align algebra.discr_eq_discr_of_to_matrix_coeff_is_integral Algebra.discr_eq_discr_of_to_matrix_coeff_is_integral
 
 /-- Let `K` be the fraction field of an integrally closed domain `R` and let `L` be a finite
@@ -338,13 +354,13 @@ theorem discr_mul_is_integral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsInteg
   by_cases hji:j = i
   · simp only [update_column_apply, hji, eq_self_iff_true, PowerBasis.coe_basis]
     exact
-      mem_bot.2 (IsIntegrallyClosed.is_integral_iff.1 <| is_integral_trace <| isIntegralMul hz <| IsIntegral.pow hint _)
+      mem_bot.2 (IsIntegrallyClosed.is_integral_iff.1 $ is_integral_trace $ isIntegralMul hz $ IsIntegral.pow hint _)
     
   · simp only [update_column_apply, hji, PowerBasis.coe_basis]
     exact
       mem_bot.2
-        (IsIntegrallyClosed.is_integral_iff.1 <|
-          is_integral_trace <| isIntegralMul (IsIntegral.pow hint _) (IsIntegral.pow hint _))
+        (IsIntegrallyClosed.is_integral_iff.1 $
+          is_integral_trace $ isIntegralMul (IsIntegral.pow hint _) (IsIntegral.pow hint _))
     
 #align algebra.discr_mul_is_integral_mem_adjoin Algebra.discr_mul_is_integral_mem_adjoin
 

@@ -118,30 +118,39 @@ theorem inc_matrix_mul_transpose_diag [DecidableEq α] [DecidableRel G.Adj] :
   simp [Matrix.mul_apply, inc_matrix_apply', ← ite_and_mul_zero]
 #align simple_graph.inc_matrix_mul_transpose_diag SimpleGraph.inc_matrix_mul_transpose_diag
 
-theorem sum_inc_matrix_apply_of_mem_edge_set : e ∈ G.edgeSet → (∑ a, G.incMatrix R a e) = 2 := by
-  classical refine' e.ind _
-    rw [mem_edge_set] at h
-    simp only [inc_matrix_apply', sum_boole, mk_mem_incidence_set_iff, h, true_and_iff]
-    ext e
+theorem sum_inc_matrix_apply_of_mem_edge_set : e ∈ G.edgeSet → (∑ a, G.incMatrix R a e) = 2 := by classical
+  refine' e.ind _
+  intro a b h
+  rw [mem_edge_set] at h
+  rw [← Nat.cast_two, ← card_doubleton h.ne]
+  simp only [inc_matrix_apply', sum_boole, mk_mem_incidence_set_iff, h, true_and_iff]
+  congr 2
+  ext e
+  simp only [mem_filter, mem_univ, true_and_iff, mem_insert, mem_singleton]
 #align simple_graph.sum_inc_matrix_apply_of_mem_edge_set SimpleGraph.sum_inc_matrix_apply_of_mem_edge_set
 
 theorem sum_inc_matrix_apply_of_not_mem_edge_set (h : e ∉ G.edgeSet) : (∑ a, G.incMatrix R a e) = 0 :=
-  sum_eq_zero fun a _ => G.inc_matrix_of_not_mem_incidence_set fun he => h he.1
+  sum_eq_zero $ fun a _ => G.inc_matrix_of_not_mem_incidence_set $ fun he => h he.1
 #align simple_graph.sum_inc_matrix_apply_of_not_mem_edge_set SimpleGraph.sum_inc_matrix_apply_of_not_mem_edge_set
 
 theorem inc_matrix_transpose_mul_diag [DecidableRel G.Adj] :
-    ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.edgeSet then 2 else 0 := by
-  classical simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_and_mul_zero, one_mul, sum_boole,
-      and_self_iff]
-    · revert h
-      refine' e.ind _
-      intro v w h
-      rw [← Nat.cast_two, ← card_doubleton (G.ne_of_adj h)]
-      simp [mk_mem_incidence_set_iff, G.mem_edge_set.mp h]
-      congr 2
-      ext u
-      simp
-      
+    ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.edgeSet then 2 else 0 := by classical
+  simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_and_mul_zero, one_mul, sum_boole, and_self_iff]
+  split_ifs with h
+  · revert h
+    refine' e.ind _
+    intro v w h
+    rw [← Nat.cast_two, ← card_doubleton (G.ne_of_adj h)]
+    simp [mk_mem_incidence_set_iff, G.mem_edge_set.mp h]
+    congr 2
+    ext u
+    simp
+    
+  · revert h
+    refine' e.ind _
+    intro v w h
+    simp [mk_mem_incidence_set_iff, G.mem_edge_set.not.mp h]
+    
 #align simple_graph.inc_matrix_transpose_mul_diag SimpleGraph.inc_matrix_transpose_mul_diag
 
 end NonAssocSemiring
@@ -151,10 +160,13 @@ section Semiring
 variable [Fintype (Sym2 α)] [Semiring R] {a b : α} {e : Sym2 α}
 
 theorem inc_matrix_mul_transpose_apply_of_adj (h : G.Adj a b) : (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a b = (1 : R) := by
-  classical simp_rw [Matrix.mul_apply, Matrix.transpose_apply, inc_matrix_apply_mul_inc_matrix_apply,
-      Set.indicator_apply, Pi.one_apply, sum_boole]
-    convert card_singleton ⟦(a, b)⟧
-    exact G.incidence_set_inter_incidence_set_of_adj h
+  classical
+  simp_rw [Matrix.mul_apply, Matrix.transpose_apply, inc_matrix_apply_mul_inc_matrix_apply, Set.indicator_apply,
+    Pi.one_apply, sum_boole]
+  convert Nat.cast_one
+  convert card_singleton ⟦(a, b)⟧
+  rw [← coe_eq_singleton, coe_filter_univ]
+  exact G.incidence_set_inter_incidence_set_of_adj h
 #align simple_graph.inc_matrix_mul_transpose_apply_of_adj SimpleGraph.inc_matrix_mul_transpose_apply_of_adj
 
 theorem inc_matrix_mul_transpose [Fintype α] [DecidableEq α] [DecidableRel G.Adj] :

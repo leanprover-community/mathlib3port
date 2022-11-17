@@ -19,8 +19,7 @@ before it tries `exact dec_trivial`.
 
 open Tactic.Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `dec_trivial` tries to use decidability to prove a goal
 (i.e., using `exact dec_trivial`).
@@ -34,7 +33,7 @@ by dec_trivial!
 ```
 -/
 unsafe def tactic.interactive.dec_trivial (revert_deps : parse (parser.optional (tk "!"))) : tactic Unit :=
-  if revert_deps.isSome then andthen revert_target_deps tactic.exact_dec_trivial else tactic.exact_dec_trivial
+  if revert_deps.isSome then revert_target_deps; tactic.exact_dec_trivial else tactic.exact_dec_trivial
 #align tactic.interactive.dec_trivial tactic.interactive.dec_trivial
 
 add_tactic_doc

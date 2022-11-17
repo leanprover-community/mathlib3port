@@ -93,7 +93,7 @@ def toNonUnitalAlgHom (f : L →ₗ⁅R⁆ L₂) : CommutatorRing L →ₙₐ[R]
 
 theorem to_non_unital_alg_hom_injective :
     Function.Injective (toNonUnitalAlgHom : _ → CommutatorRing L →ₙₐ[R] CommutatorRing L₂) := fun f g h =>
-  ext <| NonUnitalAlgHom.congr_fun h
+  ext $ NonUnitalAlgHom.congr_fun h
 #align lie_hom.to_non_unital_alg_hom_injective LieHom.to_non_unital_alg_hom_injective
 
 end LieHom

@@ -62,7 +62,7 @@ theorem Metric.Bounded.smul {s : Set E} (hs : Bounded s) (c : 𝕜) : Bounded (c
 fixed neighborhood of `x`. -/
 theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s) {u : Set E} (hu : u ∈ 𝓝 x) :
     ∀ᶠ r in 𝓝 (0 : 𝕜), {x} + r • s ⊆ u := by
-  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : _)(hε : 0 < ε), closed_ball x ε ⊆ u := nhds_basis_closed_ball.mem_iff.1 hu
+  obtain ⟨ε, εpos, hε⟩ : ∃ (ε) (hε : 0 < ε), closed_ball x ε ⊆ u := nhds_basis_closed_ball.mem_iff.1 hu
   obtain ⟨R, Rpos, hR⟩ : ∃ R : ℝ, 0 < R ∧ s ⊆ closed_ball 0 R := hs.subset_ball_lt 0 0
   have : Metric.closedBall (0 : 𝕜) (ε / R) ∈ 𝓝 (0 : 𝕜) := closed_ball_mem_nhds _ (div_pos εpos Rpos)
   filter_upwards [this] with r hr
@@ -105,7 +105,7 @@ theorem exists_dist_le_le (hδ : 0 ≤ δ) (hε : 0 ≤ ε) (h : dist x z ≤ ε
     
   have hεδ := add_pos_of_pos_of_nonneg hε' hδ
   refine'
-    (exists_dist_eq x z (div_nonneg hε <| add_nonneg hε hδ) (div_nonneg hδ <| add_nonneg hε hδ) <| by
+    (exists_dist_eq x z (div_nonneg hε $ add_nonneg hε hδ) (div_nonneg hδ $ add_nonneg hε hδ) $ by
           rw [← add_div, div_self hεδ.ne']).imp
       fun y hy => _
   rw [hy.1, hy.2, div_mul_comm, div_mul_comm ε]
@@ -116,7 +116,7 @@ theorem exists_dist_le_le (hδ : 0 ≤ δ) (hε : 0 ≤ ε) (h : dist x z ≤ ε
 -- This is also true for `ℚ`-normed spaces
 theorem exists_dist_le_lt (hδ : 0 ≤ δ) (hε : 0 < ε) (h : dist x z < ε + δ) : ∃ y, dist x y ≤ δ ∧ dist y z < ε := by
   refine'
-    (exists_dist_eq x z (div_nonneg hε.le <| add_nonneg hε.le hδ) (div_nonneg hδ <| add_nonneg hε.le hδ) <| by
+    (exists_dist_eq x z (div_nonneg hε.le $ add_nonneg hε.le hδ) (div_nonneg hδ $ add_nonneg hε.le hδ) $ by
           rw [← add_div, div_self (add_pos_of_pos_of_nonneg hε hδ).ne']).imp
       fun y hy => _
   rw [hy.1, hy.2, div_mul_comm, div_mul_comm ε]
@@ -133,7 +133,7 @@ theorem exists_dist_lt_le (hδ : 0 < δ) (hε : 0 ≤ ε) (h : dist x z < ε + �
 -- This is also true for `ℚ`-normed spaces
 theorem exists_dist_lt_lt (hδ : 0 < δ) (hε : 0 < ε) (h : dist x z < ε + δ) : ∃ y, dist x y < δ ∧ dist y z < ε := by
   refine'
-    (exists_dist_eq x z (div_nonneg hε.le <| add_nonneg hε.le hδ.le) (div_nonneg hδ.le <| add_nonneg hε.le hδ.le) <| by
+    (exists_dist_eq x z (div_nonneg hε.le $ add_nonneg hε.le hδ.le) (div_nonneg hδ.le $ add_nonneg hε.le hδ.le) $ by
           rw [← add_div, div_self (add_pos hε hδ).ne']).imp
       fun y hy => _
   rw [hy.1, hy.2, div_mul_comm, div_mul_comm ε]
@@ -143,7 +143,7 @@ theorem exists_dist_lt_lt (hδ : 0 < δ) (hε : 0 < ε) (h : dist x z < ε + δ)
 
 -- This is also true for `ℚ`-normed spaces
 theorem disjoint_ball_ball_iff (hδ : 0 < δ) (hε : 0 < ε) : Disjoint (ball x δ) (ball y ε) ↔ δ + ε ≤ dist x y := by
-  refine' ⟨fun h => le_of_not_lt fun hxy => _, ball_disjoint_ball⟩
+  refine' ⟨fun h => le_of_not_lt $ fun hxy => _, ball_disjoint_ball⟩
   rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_lt_lt hδ hε hxy
   rw [dist_comm] at hxz
@@ -153,7 +153,7 @@ theorem disjoint_ball_ball_iff (hδ : 0 < δ) (hε : 0 < ε) : Disjoint (ball x 
 -- This is also true for `ℚ`-normed spaces
 theorem disjoint_ball_closed_ball_iff (hδ : 0 < δ) (hε : 0 ≤ ε) :
     Disjoint (ball x δ) (closedBall y ε) ↔ δ + ε ≤ dist x y := by
-  refine' ⟨fun h => le_of_not_lt fun hxy => _, ball_disjoint_closed_ball⟩
+  refine' ⟨fun h => le_of_not_lt $ fun hxy => _, ball_disjoint_closed_ball⟩
   rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_lt_le hδ hε hxy
   rw [dist_comm] at hxz
@@ -168,7 +168,7 @@ theorem disjoint_closed_ball_ball_iff (hδ : 0 ≤ δ) (hε : 0 < ε) :
 
 theorem disjoint_closed_ball_closed_ball_iff (hδ : 0 ≤ δ) (hε : 0 ≤ ε) :
     Disjoint (closedBall x δ) (closedBall y ε) ↔ δ + ε < dist x y := by
-  refine' ⟨fun h => lt_of_not_ge fun hxy => _, closed_ball_disjoint_closed_ball⟩
+  refine' ⟨fun h => lt_of_not_ge $ fun hxy => _, closed_ball_disjoint_closed_ball⟩
   rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_le_le hδ hε hxy
   rw [dist_comm] at hxz
@@ -186,9 +186,9 @@ theorem inf_edist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
     
   refine' (tsub_le_iff_right.2 inf_edist_le_inf_edist_thickening_add).antisymm' _
   refine' le_sub_of_add_le_right of_real_ne_top _
-  refine' le_inf_edist.2 fun z hz => le_of_forall_lt' fun r h => _
+  refine' le_inf_edist.2 fun z hz => le_of_forall_lt' $ fun r h => _
   cases r
-  · exact add_lt_top.2 ⟨lt_top_iff_ne_top.2 <| inf_edist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩, of_real_lt_top⟩
+  · exact add_lt_top.2 ⟨lt_top_iff_ne_top.2 $ inf_edist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩, of_real_lt_top⟩
     
   have hr : 0 < ↑r - δ := by
     refine' sub_pos_of_lt _
@@ -198,7 +198,7 @@ theorem inf_edist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
   rw [some_eq_coe, edist_lt_coe, ← dist_lt_coe, ← add_sub_cancel'_right δ ↑r] at h
   obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hr hδ h
   refine'
-    (Ennreal.add_lt_add_right of_real_ne_top <|
+    (Ennreal.add_lt_add_right of_real_ne_top $
           inf_edist_lt_iff.2 ⟨_, mem_thickening_iff.2 ⟨_, hz, hyz⟩, edist_lt_of_real.2 hxy⟩).trans_le
       _
   rw [← of_real_add hr.le hδ.le, sub_add_cancel, of_real_coe_nnreal]
@@ -208,7 +208,7 @@ theorem inf_edist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
 @[simp]
 theorem thickening_thickening (hε : 0 < ε) (hδ : 0 < δ) (s : Set E) :
     thickening ε (thickening δ s) = thickening (ε + δ) s :=
-  (thickening_thickening_subset _ _ _).antisymm fun x => by
+  (thickening_thickening_subset _ _ _).antisymm $ fun x => by
     simp_rw [mem_thickening_iff]
     rintro ⟨z, hz, hxz⟩
     rw [add_comm] at hxz
@@ -219,7 +219,7 @@ theorem thickening_thickening (hε : 0 < ε) (hδ : 0 < δ) (s : Set E) :
 @[simp]
 theorem cthickening_thickening (hε : 0 ≤ ε) (hδ : 0 < δ) (s : Set E) :
     cthickening ε (thickening δ s) = cthickening (ε + δ) s :=
-  (cthickening_thickening_subset hε _ _).antisymm fun x => by
+  (cthickening_thickening_subset hε _ _).antisymm $ fun x => by
     simp_rw [mem_cthickening_iff, Ennreal.of_real_add hε hδ.le, inf_edist_thickening hδ]
     exact tsub_le_iff_right.2
 #align cthickening_thickening cthickening_thickening
@@ -254,7 +254,7 @@ theorem thickening_cthickening (hε : 0 < ε) (hδ : 0 ≤ δ) (s : Set E) :
 @[simp]
 theorem cthickening_cthickening (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (s : Set E) :
     cthickening ε (cthickening δ s) = cthickening (ε + δ) s :=
-  (cthickening_cthickening_subset hε hδ _).antisymm fun x => by
+  (cthickening_cthickening_subset hε hδ _).antisymm $ fun x => by
     simp_rw [mem_cthickening_iff, Ennreal.of_real_add hε hδ, inf_edist_cthickening]
     exact tsub_le_iff_right.2
 #align cthickening_cthickening cthickening_cthickening

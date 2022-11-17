@@ -58,7 +58,7 @@ unsafe def restrict_attr : user_attribute (tactic Unit → tactic Unit) Unit whe
   descr := "tag lemmas to use in `Top.presheaf.restrict_tac`"
   cache_cfg :=
     { mk_cache := fun ns =>
-        pure fun t => do
+        pure $ fun t => do
           let ctx ← tactic.local_context
           ctx (tactic.focus1 ∘ (tactic.apply' >=> fun _ => tactic.done) >=> fun _ => t) <|>
               ns
@@ -67,7 +67,7 @@ unsafe def restrict_attr : user_attribute (tactic Unit → tactic Unit) Unit whe
       dependencies := [] }
 #align Top.presheaf.restrict_attr Top.presheaf.restrict_attr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic to discharge goals of type `U ≤ V` for `Top.presheaf.restrict_open` -/
 unsafe def restrict_tac : ∀ n : ℕ, tactic Unit
   | 0 => tactic.fail "`restrict_tac` failed"
@@ -97,10 +97,10 @@ def restrict {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C] {F : X.
 #align Top.presheaf.restrict TopCat.Presheaf.restrict
 
 -- mathport name: «expr |_ₕ »
-localized [AlgebraicGeometry] infixl:80 " |_ₕ " => TopCat.Presheaf.restrict
+scoped[AlgebraicGeometry] infixl:80 " |_ₕ " => TopCat.Presheaf.restrict
 
 -- mathport name: «expr |_ₗ ⟪ ⟫»
-localized [AlgebraicGeometry]
+scoped[AlgebraicGeometry]
   notation:80 x " |_ₗ " U " ⟪" e "⟫ " => @TopCat.Presheaf.restrict _ _ _ _ _ _ x U (@homOfLe (Opens _) _ U _ e)
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic Top.presheaf.restrict_tac' -/
@@ -117,7 +117,7 @@ abbrev restrictOpen {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C] 
 #align Top.presheaf.restrict_open TopCat.Presheaf.restrictOpen
 
 -- mathport name: «expr |_ »
-localized [AlgebraicGeometry] infixl:80 " |_ " => TopCat.Presheaf.restrictOpen
+scoped[AlgebraicGeometry] infixl:80 " |_ " => TopCat.Presheaf.restrictOpen
 
 @[simp]
 theorem restrict_restrict {X : TopCat} {C : Type _} [Category C] [ConcreteCategory C] {F : X.Presheaf C}
@@ -351,7 +351,7 @@ def pushforward {X Y : TopCat.{w}} (f : X ⟶ Y) : X.Presheaf C ⥤ Y.Presheaf C
 
 @[simp]
 theorem pushforward_map_app' {X Y : TopCat.{w}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) {U : (Opens Y)ᵒᵖ} :
-    ((pushforward C f).map α).app U = α.app (op <| (Opens.map f).obj U.unop) :=
+    ((pushforward C f).map α).app U = α.app (op $ (Opens.map f).obj U.unop) :=
   rfl
 #align Top.presheaf.pushforward_map_app' TopCat.Presheaf.pushforward_map_app'
 

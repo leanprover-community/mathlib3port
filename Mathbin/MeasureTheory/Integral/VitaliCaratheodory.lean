@@ -84,7 +84,7 @@ local infixr:25 " →ₛ " => SimpleFunc
 /-! ### Lower semicontinuous upper bound for nonnegative functions -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (u «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (u «expr ⊇ » s) -/
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists a lower semicontinuous
 function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -115,7 +115,7 @@ theorem SimpleFunc.exists_le_lower_semicontinuous_lintegral_ge (f : α →ₛ �
         simple_func.const_zero, or_false_iff, lintegral_indicator, Ennreal.coe_eq_zero, Ne.def, not_false_iff,
         simple_func.coe_zero, Set.piecewise_eq_indicator, simple_func.coe_piecewise, false_and_iff,
         restrict_apply] using h
-    obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ε / c := s.exists_is_open_lt_of_lt _ this
+    obtain ⟨u, su, u_open, μu⟩ : ∃ (u) (_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ε / c := s.exists_is_open_lt_of_lt _ this
     refine' ⟨Set.indicator u fun x => c, fun x => _, u_open.lower_semicontinuous_indicator (zero_le _), _⟩
     · simp only [simple_func.coe_const, simple_func.const_zero, simple_func.coe_zero, Set.piecewise_eq_indicator,
         simple_func.coe_piecewise]
@@ -323,7 +323,7 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
 /-! ### Upper semicontinuous lower bound for nonnegative functions -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (F «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -349,7 +349,7 @@ theorem SimpleFunc.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ �
         Ne.def, not_false_iff, simple_func.coe_zero, Set.piecewise_eq_indicator, simple_func.coe_piecewise,
         false_and_iff] using int_f
     have : (0 : ℝ≥0∞) < ε / c := Ennreal.div_pos_iff.2 ⟨ε0, Ennreal.coe_ne_top⟩
-    obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ε / c :=
+    obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F) (_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ε / c :=
       hs.exists_is_closed_lt_add μs_lt_top.ne this.ne'
     refine' ⟨Set.indicator F fun x => c, fun x => _, F_closed.upper_semicontinuous_indicator (zero_le _), _⟩
     · simp only [simple_func.coe_const, simple_func.const_zero, simple_func.coe_zero, Set.piecewise_eq_indicator,

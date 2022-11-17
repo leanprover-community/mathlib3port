@@ -170,21 +170,21 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
     
   rw [List.forall_mem_cons] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
-  · exact ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩, Or.inl <| by rw [List.prod_cons, List.prod_cons, HP]⟩
+  · exact ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩, Or.inl $ by rw [List.prod_cons, List.prod_cons, HP]⟩
     
-  · exact ⟨L, HL', Or.inr <| by rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
+  · exact ⟨L, HL', Or.inr $ by rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
     
   · exact
       ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
-        Or.inr <| by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
+        Or.inr $ by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
     
-  · exact ⟨L, HL', Or.inl <| by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_neg]⟩
+  · exact ⟨L, HL', Or.inl $ by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_neg]⟩
     
 #align ring.in_closure.rec_on Ring.InClosure.rec_on
 
 theorem closure.isSubring : IsSubring (closure s) :=
   { AddGroup.closure.is_add_subgroup _ with
-    one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.is_submonoid _,
+    one_mem := AddGroup.mem_closure $ IsSubmonoid.one_mem $ Monoid.closure.is_submonoid _,
     mul_mem := fun a b ha hb =>
       AddGroup.InClosure.rec_on hb
         (fun c hc =>
@@ -215,7 +215,7 @@ theorem closure_subset_iff {s t : Set R} (ht : IsSubring t) : closure s ⊆ t �
 #align ring.closure_subset_iff Ring.closure_subset_iff
 
 theorem closure_mono {s t : Set R} (H : s ⊆ t) : closure s ⊆ closure t :=
-  closure_subset closure.isSubring <| Set.Subset.trans H subset_closure
+  closure_subset closure.isSubring $ Set.Subset.trans H subset_closure
 #align ring.closure_mono Ring.closure_mono
 
 theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) : f '' closure s = closure (f '' s) :=
@@ -237,7 +237,7 @@ theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) : f '' c
         apply closure.is_subring.to_is_add_submonoid.add_mem
         assumption'
         )
-    (closure_subset (RingHom.isSubringImage _ closure.isSubring) <| Set.image_subset _ subset_closure)
+    (closure_subset (RingHom.isSubringImage _ closure.isSubring) $ Set.image_subset _ subset_closure)
 #align ring.image_closure Ring.image_closure
 
 end Ring

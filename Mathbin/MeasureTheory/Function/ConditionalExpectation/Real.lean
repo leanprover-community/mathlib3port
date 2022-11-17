@@ -151,14 +151,14 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
     refine' integral_congr_ae _
     have : (fun x => |(μ[s.indicator f|m]) x|) =ᵐ[μ] fun x => |s.indicator (μ[f|m]) x| :=
       eventually_eq.fun_comp (condexp_indicator hfint hs) _
-    refine' eventually_eq.trans (eventually_of_forall fun x => _) this.symm
+    refine' eventually_eq.trans (eventually_of_forall $ fun x => _) this.symm
     rw [← Real.norm_eq_abs, norm_indicator_eq_indicator_norm]
     rfl
   rw [this, ← integral_indicator]
   swap
   · exact hnm _ hs
     
-  refine' (integral_abs_condexp_le _).trans (le_of_eq <| integral_congr_ae <| eventually_of_forall fun x => _)
+  refine' (integral_abs_condexp_le _).trans (le_of_eq $ integral_congr_ae $ eventually_of_forall $ fun x => _)
   rw [← Real.norm_eq_abs, norm_indicator_eq_indicator_norm]
   rfl
 #align measure_theory.set_integral_abs_condexp_le MeasureTheory.set_integral_abs_condexp_le
@@ -224,7 +224,7 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
   · rw [snorm_eq_zero_iff hg.1 one_ne_zero] at hne
     refine'
       ⟨0, fun n =>
-        (le_of_eq <|
+        (le_of_eq $
               (snorm_eq_zero_iff ((strongly_measurable_condexp.mono (hℱ n)).AeStronglyMeasurable.indicator (hmeas n 0))
                     one_ne_zero).2
                 _).trans

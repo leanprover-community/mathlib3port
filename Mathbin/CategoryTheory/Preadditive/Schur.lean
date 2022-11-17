@@ -87,11 +87,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
              "exact"
              (Term.structInst
               "{"
-              [[(Term.paren
-                 "("
-                 [`inferInstance [(Term.typeAscription ":" [(Term.app `Ring [(Term.app `End [`X])])])]]
-                 ")")]
-               "with"]
+              [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
               [(Term.structInstField
                 (Term.structInstLVal `inv [])
                 ":="
@@ -105,7 +101,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                    "if"
                    (Lean.binderIdent `h)
                    ":"
-                   («term_=_» `f "=" (num "0"))
+                   (Init.Core.«term_=_» `f " = " (num "0"))
                    "then"
                    (num "0")
                    "else"
@@ -171,11 +167,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
             "exact"
             (Term.structInst
              "{"
-             [[(Term.paren
-                "("
-                [`inferInstance [(Term.typeAscription ":" [(Term.app `Ring [(Term.app `End [`X])])])]]
-                ")")]
-              "with"]
+             [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
              [(Term.structInstField
                (Term.structInstLVal `inv [])
                ":="
@@ -189,7 +181,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                   "if"
                   (Lean.binderIdent `h)
                   ":"
-                  («term_=_» `f "=" (num "0"))
+                  (Init.Core.«term_=_» `f " = " (num "0"))
                   "then"
                   (num "0")
                   "else"
@@ -245,8 +237,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
         "exact"
         (Term.structInst
          "{"
-         [[(Term.paren "(" [`inferInstance [(Term.typeAscription ":" [(Term.app `Ring [(Term.app `End [`X])])])]] ")")]
-          "with"]
+         [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
          [(Term.structInstField
            (Term.structInstLVal `inv [])
            ":="
@@ -260,7 +251,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
               "if"
               (Lean.binderIdent `h)
               ":"
-              («term_=_» `f "=" (num "0"))
+              (Init.Core.«term_=_» `f " = " (num "0"))
               "then"
               (num "0")
               "else"
@@ -312,8 +303,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
        "exact"
        (Term.structInst
         "{"
-        [[(Term.paren "(" [`inferInstance [(Term.typeAscription ":" [(Term.app `Ring [(Term.app `End [`X])])])]] ")")]
-         "with"]
+        [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
         [(Term.structInstField
           (Term.structInstLVal `inv [])
           ":="
@@ -327,7 +317,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
              "if"
              (Lean.binderIdent `h)
              ":"
-             («term_=_» `f "=" (num "0"))
+             (Init.Core.«term_=_» `f " = " (num "0"))
              "then"
              (num "0")
              "else"
@@ -377,8 +367,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.structInst
        "{"
-       [[(Term.paren "(" [`inferInstance [(Term.typeAscription ":" [(Term.app `Ring [(Term.app `End [`X])])])]] ")")]
-        "with"]
+       [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
        [(Term.structInstField
          (Term.structInstLVal `inv [])
          ":="
@@ -392,7 +381,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
             "if"
             (Lean.binderIdent `h)
             ":"
-            («term_=_» `f "=" (num "0"))
+            (Init.Core.«term_=_» `f " = " (num "0"))
             "then"
             (num "0")
             "else"
@@ -589,7 +578,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
          "if"
          (Lean.binderIdent `h)
          ":"
-         («term_=_» `f "=" (num "0"))
+         (Init.Core.«term_=_» `f " = " (num "0"))
          "then"
          (num "0")
          "else"
@@ -603,7 +592,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
        "if"
        (Lean.binderIdent `h)
        ":"
-       («term_=_» `f "=" (num "0"))
+       (Init.Core.«term_=_» `f " = " (num "0"))
        "then"
        (num "0")
        "else"
@@ -645,13 +634,13 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» `f "=" (num "0"))
+      (Init.Core.«term_=_» `f " = " (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -662,8 +651,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.paren "(" [`inferInstance [(Term.typeAscription ":" [(Term.app `Ring [(Term.app `End [`X])])])]] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
+      (Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Ring [(Term.app `End [`X])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -679,14 +667,14 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
       `End
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `End [`X]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `End [`X]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Ring
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `inferInstance
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -838,10 +826,7 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
              "exact"
              (Term.structInst
               "{"
-              [[(Term.paren
-                 "("
-                 [`inferInstance [(Term.typeAscription ":" [(Term.app `DivisionRing [(Term.app `End [`X])])])]]
-                 ")")]
+              [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")]
                "with"]
               [(Term.structInstField
                 (Term.structInstLVal `mul_comm [])
@@ -919,10 +904,7 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
             "exact"
             (Term.structInst
              "{"
-             [[(Term.paren
-                "("
-                [`inferInstance [(Term.typeAscription ":" [(Term.app `DivisionRing [(Term.app `End [`X])])])]]
-                ")")]
+             [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")]
               "with"]
              [(Term.structInstField
                (Term.structInstLVal `mul_comm [])
@@ -992,11 +974,7 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
         "exact"
         (Term.structInst
          "{"
-         [[(Term.paren
-            "("
-            [`inferInstance [(Term.typeAscription ":" [(Term.app `DivisionRing [(Term.app `End [`X])])])]]
-            ")")]
-          "with"]
+         [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")] "with"]
          [(Term.structInstField
            (Term.structInstLVal `mul_comm [])
            ":="
@@ -1061,11 +1039,7 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
        "exact"
        (Term.structInst
         "{"
-        [[(Term.paren
-           "("
-           [`inferInstance [(Term.typeAscription ":" [(Term.app `DivisionRing [(Term.app `End [`X])])])]]
-           ")")]
-         "with"]
+        [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")] "with"]
         [(Term.structInstField
           (Term.structInstLVal `mul_comm [])
           ":="
@@ -1128,11 +1102,7 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.structInst
        "{"
-       [[(Term.paren
-          "("
-          [`inferInstance [(Term.typeAscription ":" [(Term.app `DivisionRing [(Term.app `End [`X])])])]]
-          ")")]
-        "with"]
+       [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")] "with"]
        [(Term.structInstField
          (Term.structInstLVal `mul_comm [])
          ":="
@@ -1409,11 +1379,7 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.paren
-       "("
-       [`inferInstance [(Term.typeAscription ":" [(Term.app `DivisionRing [(Term.app `End [`X])])])]]
-       ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.tupleTail'
+      (Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `DivisionRing [(Term.app `End [`X])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -1429,14 +1395,14 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
       `End
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `End [`X]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `End [`X]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `DivisionRing
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `inferInstance
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022

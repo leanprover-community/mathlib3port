@@ -134,11 +134,11 @@ and the proposition that they test. -/
 unsafe def summarize_instance : expr → tactic instance_tree
   | lam n bi d b => do
     let v ← mk_local' n bi d
-    summarize_instance <| b v
+    summarize_instance $ b v
   | e@(app f x) => do
-    let quote.1 (Testable (%%ₓp)) ← infer_type e
+    let q(Testable $(p)) ← infer_type e
     let xs ← e.get_app_args.mmapFilter (try_core ∘ summarize_instance)
-    pure <| instance_tree.node e p xs
+    pure $ instance_tree.node e p xs
   | e => do
     failed
 #align tactic.interactive.summarize_instance tactic.interactive.summarize_instance
@@ -146,7 +146,7 @@ unsafe def summarize_instance : expr → tactic instance_tree
 /-- format a `instance_tree` -/
 unsafe def instance_tree.to_format : instance_tree → tactic format
   | instance_tree.node n p xs => do
-    let xs ← format.join <$> xs.mmap fun t => flip format.indent 2 <$> instance_tree.to_format t
+    let xs ← format.join <$> (xs.mmap $ fun t => flip format.indent 2 <$> instance_tree.to_format t)
     let ys ← f!"testable ({← p})"
     f!"+ {(← n)} :{(← format.indent ys 2)}
         {← xs}"
@@ -156,9 +156,6 @@ unsafe instance instance_tree.has_to_tactic_format : has_to_tactic_format instan
   ⟨instance_tree.to_format⟩
 #align tactic.interactive.instance_tree.has_to_tactic_format tactic.interactive.instance_tree.has_to_tactic_format
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- `slim_check` considers a proof goal and tries to generate examples
 that would contradict the statement.
 
@@ -212,7 +209,7 @@ Options:
 * `set_option trace.slim_check.success true`: print the tested samples that satisfy a property
 -/
 unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
-  let tgt ← retrieve <| tactic.revert_all >> target
+  let tgt ← retrieve $ tactic.revert_all >> target
   let tgt' := tactic.add_decorations tgt
   let cfg :=
     { cfg with traceDiscarded := cfg.traceDiscarded || is_trace_enabled_for `slim_check.discarded,
@@ -221,13 +218,28 @@ unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
       traceSuccess := cfg.traceSuccess || is_trace_enabled_for `slim_check.success }
   let inst ←
     mk_app `` testable [tgt'] >>= mk_instance <|>
-        "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
-  let e ← mk_mapp `` testable.check [tgt, quote.1 cfg, tgt', inst]
+        throwError "Failed to create a `testable` instance for `{(← tgt)}`.
+          What to do:
+          1. make sure that the types you are using have `slim_check.sampleable` instances
+             (you can use `#sample my_type` if you are unsure);
+          2. make sure that the relations and predicates that your proposition use are decidable;
+          3. make sure that instances of `slim_check.testable` exist that, when combined,
+             apply to your decorated proposition:
+          ```
+          {(← tgt')}
+          ```
+          
+          Use `set_option trace.class_instances true` to understand what instances are missing.
+          
+          Try this:
+          set_option trace.class_instances true
+          #check (by apply_instance : slim_check.testable ({← tgt'}))"
+  let e ← mk_mapp `` testable.check [tgt, q(cfg), tgt', inst]
   when_tracing `slim_check.decoration
       (← do
         dbg_trace "[testable decoration]
             {← tgt'}")
-  when_tracing `slim_check.instance <| do
+  when_tracing `slim_check.instance $ do
       let inst ← summarize_instance inst >>= pp
       ← do
           dbg_trace "

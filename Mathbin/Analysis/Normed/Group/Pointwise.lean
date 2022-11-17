@@ -41,7 +41,7 @@ theorem Metric.Bounded.inv : Bounded s → Bounded s⁻¹ := by
 
 @[to_additive]
 theorem Metric.Bounded.div (hs : Bounded s) (ht : Bounded t) : Bounded (s / t) :=
-  (div_eq_mul_inv _ _).symm.subst <| hs.mul ht.inv
+  (div_eq_mul_inv _ _).symm.subst $ hs.mul ht.inv
 #align metric.bounded.div Metric.Bounded.div
 
 end SeminormedGroup
@@ -56,7 +56,7 @@ open Emetric
 
 @[to_additive]
 theorem inf_edist_inv (x : E) (s : Set E) : infEdist x⁻¹ s = infEdist x s⁻¹ :=
-  eq_of_forall_le_iff fun r => by simp_rw [le_inf_edist, ← image_inv, ball_image_iff, edist_inv]
+  eq_of_forall_le_iff $ fun r => by simp_rw [le_inf_edist, ← image_inv, ball_image_iff, edist_inv]
 #align inf_edist_inv inf_edist_inv
 
 @[simp, to_additive]

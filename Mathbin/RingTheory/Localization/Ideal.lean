@@ -67,7 +67,7 @@ theorem mem_map_algebra_map_iff {I : Ideal R} {z} :
 #align is_localization.mem_map_algebra_map_iff IsLocalization.mem_map_algebra_map_iff
 
 theorem map_comap (J : Ideal S) : Ideal.map (algebraMap R S) (Ideal.comap (algebraMap R S) J) = J :=
-  (le_antisymm (Ideal.map_le_iff_le_comap.2 le_rfl)) fun x hJ => by
+  le_antisymm (Ideal.map_le_iff_le_comap.2 le_rfl) $ fun x hJ => by
     obtain ⟨r, s, hx⟩ := mk'_surjective M x
     rw [← hx] at hJ⊢
     exact
@@ -105,7 +105,7 @@ theorem is_prime_iff_is_prime_disjoint (J : Ideal S) :
   constructor
   · refine' fun h =>
       ⟨⟨_, _⟩,
-        set.disjoint_left.mpr fun m hm1 hm2 => h.ne_top (Ideal.eq_top_of_is_unit_mem _ hm2 (map_units S ⟨m, hm1⟩))⟩
+        set.disjoint_left.mpr $ fun m hm1 hm2 => h.ne_top (Ideal.eq_top_of_is_unit_mem _ hm2 (map_units S ⟨m, hm1⟩))⟩
     · refine' fun hJ => h.ne_top _
       rw [eq_top_iff, ← (OrderEmbedding M S).le_iff_le]
       exact le_of_eq hJ.symm

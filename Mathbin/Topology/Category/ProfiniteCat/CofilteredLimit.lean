@@ -39,7 +39,7 @@ include hC
 a clopen set in one of the terms in the limit.
 -/
 theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
-    ∃ (j : J)(V : Set (F.obj j))(hV : IsClopen V), U = C.π.app j ⁻¹' V := by
+    ∃ (j : J) (V : Set (F.obj j)) (hV : IsClopen V), U = C.π.app j ⁻¹' V := by
   -- First, we have the topological basis of the cofiltered limit obtained by pulling back
   -- clopen sets from the factors in the limit. By continuity, all such sets are again clopen.
   have hB :=
@@ -115,7 +115,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
 #align Profinite.exists_clopen_of_cofiltered ProfiniteCat.exists_clopen_of_cofiltered
 
 theorem exists_locally_constant_fin_two (f : LocallyConstant C.x (Fin 2)) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) := by
+    ∃ (j : J) (g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) := by
   let U := f ⁻¹' {0}
   have hU : IsClopen U := f.is_locally_constant.is_clopen_fiber _
   obtain ⟨j, V, hV, h⟩ := exists_clopen_of_cofiltered C hC hU
@@ -127,7 +127,7 @@ theorem exists_locally_constant_fin_two (f : LocallyConstant C.x (Fin 2)) :
 #align Profinite.exists_locally_constant_fin_two ProfiniteCat.exists_locally_constant_fin_two
 
 theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : LocallyConstant C.x α) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) (α → Fin 2)),
+    ∃ (j : J) (g : LocallyConstant (F.obj j) (α → Fin 2)),
       (f.map fun a b => if a = b then (0 : Fin 2) else 1) = g.comap (C.π.app _) :=
   by
   cases nonempty_fintype α
@@ -169,7 +169,7 @@ theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : Locall
 #align Profinite.exists_locally_constant_finite_aux ProfiniteCat.exists_locally_constant_finite_aux
 
 theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonempty α] (f : LocallyConstant C.x α) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
+    ∃ (j : J) (g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
   inhabit α
   obtain ⟨j, gg, h⟩ := exists_locally_constant_finite_aux _ hC f
   let ι : α → α → Fin 2 := fun a b => if a = b then 0 else 1
@@ -202,7 +202,7 @@ theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonem
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/
 theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
+    ∃ (j : J) (g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
   let S := f.discrete_quotient
   let ff : S → α := f.lift
   cases isEmpty_or_nonempty S

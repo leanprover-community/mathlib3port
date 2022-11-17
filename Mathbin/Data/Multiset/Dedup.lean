@@ -36,25 +36,25 @@ theorem dedup_zero : @dedup α _ 0 = 0 :=
 
 @[simp]
 theorem mem_dedup {a : α} {s : Multiset α} : a ∈ dedup s ↔ a ∈ s :=
-  (Quot.induction_on s) fun l => mem_dedup
+  Quot.induction_on s $ fun l => mem_dedup
 #align multiset.mem_dedup Multiset.mem_dedup
 
 @[simp]
 theorem dedup_cons_of_mem {a : α} {s : Multiset α} : a ∈ s → dedup (a ::ₘ s) = dedup s :=
-  (Quot.induction_on s) fun l m => @congr_arg _ _ _ _ coe <| dedup_cons_of_mem m
+  Quot.induction_on s $ fun l m => @congr_arg _ _ _ _ coe $ dedup_cons_of_mem m
 #align multiset.dedup_cons_of_mem Multiset.dedup_cons_of_mem
 
 @[simp]
 theorem dedup_cons_of_not_mem {a : α} {s : Multiset α} : a ∉ s → dedup (a ::ₘ s) = a ::ₘ dedup s :=
-  (Quot.induction_on s) fun l m => congr_arg coe <| dedup_cons_of_not_mem m
+  Quot.induction_on s $ fun l m => congr_arg coe $ dedup_cons_of_not_mem m
 #align multiset.dedup_cons_of_not_mem Multiset.dedup_cons_of_not_mem
 
 theorem dedup_le (s : Multiset α) : dedup s ≤ s :=
-  (Quot.induction_on s) fun l => (dedup_sublist _).Subperm
+  Quot.induction_on s $ fun l => (dedup_sublist _).Subperm
 #align multiset.dedup_le Multiset.dedup_le
 
 theorem dedup_subset (s : Multiset α) : dedup s ⊆ s :=
-  subset_of_le <| dedup_le _
+  subset_of_le $ dedup_le _
 #align multiset.dedup_subset Multiset.dedup_subset
 
 theorem subset_dedup (s : Multiset α) : s ⊆ dedup s := fun a => mem_dedup.2
@@ -76,18 +76,18 @@ theorem nodup_dedup (s : Multiset α) : Nodup (dedup s) :=
 #align multiset.nodup_dedup Multiset.nodup_dedup
 
 theorem dedup_eq_self {s : Multiset α} : dedup s = s ↔ Nodup s :=
-  ⟨fun e => e ▸ nodup_dedup s, (Quot.induction_on s) fun l h => congr_arg coe h.dedup⟩
+  ⟨fun e => e ▸ nodup_dedup s, Quot.induction_on s $ fun l h => congr_arg coe h.dedup⟩
 #align multiset.dedup_eq_self Multiset.dedup_eq_self
 
 alias dedup_eq_self ↔ _ nodup.dedup
 
 theorem count_dedup (m : Multiset α) (a : α) : m.dedup.count a = if a ∈ m then 1 else 0 :=
-  (Quot.induction_on m) fun l => count_dedup _ _
+  Quot.induction_on m $ fun l => count_dedup _ _
 #align multiset.count_dedup Multiset.count_dedup
 
 @[simp]
 theorem dedup_idempotent {m : Multiset α} : m.dedup.dedup = m.dedup :=
-  (Quot.induction_on m) fun l => @congr_arg _ _ _ _ coe dedup_idempotent
+  Quot.induction_on m $ fun l => @congr_arg _ _ _ _ coe dedup_idempotent
 #align multiset.dedup_idempotent Multiset.dedup_idempotent
 
 @[simp]
@@ -98,7 +98,7 @@ theorem dedup_bind_dedup [DecidableEq β] (m : Multiset α) (f : α → Multiset
 #align multiset.dedup_bind_dedup Multiset.dedup_bind_dedup
 
 theorem dedup_eq_zero {s : Multiset α} : dedup s = 0 ↔ s = 0 :=
-  ⟨fun h => eq_zero_of_subset_zero <| h ▸ subset_dedup _, fun h => h.symm ▸ dedup_zero⟩
+  ⟨fun h => eq_zero_of_subset_zero $ h ▸ subset_dedup _, fun h => h.symm ▸ dedup_zero⟩
 #align multiset.dedup_eq_zero Multiset.dedup_eq_zero
 
 @[simp]
@@ -108,7 +108,7 @@ theorem dedup_singleton {a : α} : dedup ({a} : Multiset α) = {a} :=
 
 theorem le_dedup {s t : Multiset α} : s ≤ dedup t ↔ s ≤ t ∧ Nodup s :=
   ⟨fun h => ⟨le_trans h (dedup_le _), nodup_of_le h (nodup_dedup _)⟩, fun ⟨l, d⟩ =>
-    (le_iff_subset d).2 <| Subset.trans (subset_of_le l) (subset_dedup _)⟩
+    (le_iff_subset d).2 $ Subset.trans (subset_of_le l) (subset_dedup _)⟩
 #align multiset.le_dedup Multiset.le_dedup
 
 theorem le_dedup_self {s : Multiset α} : s ≤ dedup s ↔ Nodup s := by rw [le_dedup, and_iff_right le_rfl]
@@ -133,6 +133,8 @@ theorem Nodup.le_dedup_iff_le {s t : Multiset α} (hno : s.Nodup) : s ≤ t.dedu
 end Multiset
 
 theorem Multiset.Nodup.le_nsmul_iff_le {α : Type _} {s t : Multiset α} {n : ℕ} (h : s.Nodup) (hn : n ≠ 0) :
-    s ≤ n • t ↔ s ≤ t := by classical rw [← h.le_dedup_iff_le, Iff.comm, ← h.le_dedup_iff_le]
+    s ≤ n • t ↔ s ≤ t := by classical
+  rw [← h.le_dedup_iff_le, Iff.comm, ← h.le_dedup_iff_le]
+  simp [hn]
 #align multiset.nodup.le_nsmul_iff_le Multiset.Nodup.le_nsmul_iff_le
 

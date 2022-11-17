@@ -83,7 +83,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
       ⟨y, ⟨hyab, hyf⟩, hy⟩
     refine' mem_of_superset (f.diff_mem_iff.2 ⟨hcf, hyf⟩) (subset.trans _ hxU)
     rw [diff_subset_iff]
-    exact subset.trans Icc_subset_Icc_union_Ioc (union_subset_union subset.rfl <| Ioc_subset_Ioc_left hy.1.le)
+    exact subset.trans Icc_subset_Icc_union_Ioc (union_subset_union subset.rfl $ Ioc_subset_Ioc_left hy.1.le)
   cases' hc.2.eq_or_lt with heq hlt
   · rw [← HEq]
     exact hcs.2
@@ -105,7 +105,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.to_compact_Icc_space
 
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, CompactIccSpace (α i)] : CompactIccSpace (∀ i, α i) :=
-  ⟨fun a b => (pi_univ_Icc a b ▸ is_compact_univ_pi) fun i => is_compact_Icc⟩
+  ⟨fun a b => pi_univ_Icc a b ▸ is_compact_univ_pi $ fun i => is_compact_Icc⟩
 
 instance Pi.compact_Icc_space' {α β : Type _} [Preorder β] [TopologicalSpace β] [CompactIccSpace β] :
     CompactIccSpace (α → β) :=
@@ -194,7 +194,7 @@ theorem IsCompact.exists_is_lub {s : Set α} (hs : IsCompact s) (ne_s : s.Nonemp
 theorem IsCompact.exists_Inf_image_eq_and_le {s : Set β} (hs : IsCompact s) (ne_s : s.Nonempty) {f : β → α}
     (hf : ContinuousOn f s) : ∃ x ∈ s, inf (f '' s) = f x ∧ ∀ y ∈ s, f x ≤ f y :=
   let ⟨x, hxs, hx⟩ := (hs.image_of_continuous_on hf).Inf_mem (ne_s.image f)
-  ⟨x, hxs, hx.symm, fun y hy => hx.trans_le <| cInf_le (hs.image_of_continuous_on hf).BddBelow <| mem_image_of_mem f hy⟩
+  ⟨x, hxs, hx.symm, fun y hy => hx.trans_le $ cInf_le (hs.image_of_continuous_on hf).BddBelow $ mem_image_of_mem f hy⟩
 #align is_compact.exists_Inf_image_eq_and_le IsCompact.exists_Inf_image_eq_and_le
 
 theorem IsCompact.exists_Sup_image_eq_and_ge {s : Set β} (hs : IsCompact s) (ne_s : s.Nonempty) {f : β → α}
@@ -275,7 +275,7 @@ sets, then it has a global minimum. -/
 theorem _root_.continuous.exists_forall_le [Nonempty β] {f : β → α} (hf : Continuous f)
     (hlim : Tendsto f (cocompact β) atTop) : ∃ x, ∀ y, f x ≤ f y := by
   inhabit β
-  exact hf.exists_forall_le' default (hlim.eventually <| eventually_ge_at_top _)
+  exact hf.exists_forall_le' default (hlim.eventually $ eventually_ge_at_top _)
 #align _root_.continuous.exists_forall_le _root_.continuous.exists_forall_le
 
 /-- The **extreme value theorem**: if a continuous function `f` tends to negative infinity away from
@@ -287,7 +287,7 @@ theorem Continuous.exists_forall_ge [Nonempty β] {f : β → α} (hf : Continuo
 
 theorem IsCompact.Sup_lt_iff_of_continuous {f : β → α} {K : Set β} (hK : IsCompact K) (h0K : K.Nonempty)
     (hf : ContinuousOn f K) (y : α) : sup (f '' K) < y ↔ ∀ x ∈ K, f x < y := by
-  refine' ⟨fun h x hx => (le_cSup (hK.bdd_above_image hf) <| mem_image_of_mem f hx).trans_lt h, fun h => _⟩
+  refine' ⟨fun h x hx => (le_cSup (hK.bdd_above_image hf) $ mem_image_of_mem f hx).trans_lt h, fun h => _⟩
   obtain ⟨x, hx, h2x⟩ := hK.exists_forall_ge h0K hf
   refine' (cSup_le (h0K.image f) _).trans_lt (h x hx)
   rintro _ ⟨x', hx', rfl⟩
@@ -326,13 +326,13 @@ theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCom
   rw [continuous_iff_continuous_at]
   intro x
   obtain ⟨y, hyK, h2y, hy⟩ :=
-    hK.exists_Sup_image_eq_and_ge h0K (show Continuous fun y => f x y from hf.comp <| Continuous.Prod.mk x).ContinuousOn
+    hK.exists_Sup_image_eq_and_ge h0K (show Continuous fun y => f x y from hf.comp $ Continuous.Prod.mk x).ContinuousOn
   rw [ContinuousAt, h2y, tendsto_order]
   have :=
-    tendsto_order.mp ((show Continuous fun x => f x y from hf.comp <| continuous_id.prod_mk continuous_const).Tendsto x)
+    tendsto_order.mp ((show Continuous fun x => f x y from hf.comp $ continuous_id.prod_mk continuous_const).Tendsto x)
   refine' ⟨fun z hz => _, fun z hz => _⟩
-  · refine' (this.1 z hz).mono fun x' hx' => hx'.trans_le <| le_cSup _ <| mem_image_of_mem (f x') hyK
-    exact hK.bdd_above_image (hf.comp <| Continuous.Prod.mk x').ContinuousOn
+  · refine' (this.1 z hz).mono fun x' hx' => hx'.trans_le $ le_cSup _ $ mem_image_of_mem (f x') hyK
+    exact hK.bdd_above_image (hf.comp $ Continuous.Prod.mk x').ContinuousOn
     
   · have h : ({x} : Set γ) ×ˢ K ⊆ ↿f ⁻¹' Iio z := by
       rintro ⟨x', y'⟩ ⟨hx', hy'⟩
@@ -340,7 +340,7 @@ theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCom
       exact (hy y' hy').trans_lt hz
     obtain ⟨u, v, hu, hv, hxu, hKv, huv⟩ := generalized_tube_lemma is_compact_singleton hK (is_open_Iio.preimage hf) h
     refine' eventually_of_mem (hu.mem_nhds (singleton_subset_iff.mp hxu)) fun x' hx' => _
-    rw [hK.Sup_lt_iff_of_continuous h0K (show Continuous (f x') from hf.comp <| Continuous.Prod.mk x').ContinuousOn]
+    rw [hK.Sup_lt_iff_of_continuous h0K (show Continuous (f x') from hf.comp $ Continuous.Prod.mk x').ContinuousOn]
     exact fun y' hy' => huv (mk_mem_prod hx' (hKv hy'))
     
 #align is_compact.continuous_Sup IsCompact.continuous_Sup
@@ -361,13 +361,13 @@ variable [DenselyOrdered α] [ConditionallyCompleteLinearOrder β] [OrderTopolog
 
 open Interval
 
-theorem image_Icc (hab : a ≤ b) (h : ContinuousOn f <| icc a b) :
-    f '' icc a b = icc (Inf <| f '' icc a b) (Sup <| f '' icc a b) :=
+theorem image_Icc (hab : a ≤ b) (h : ContinuousOn f $ icc a b) :
+    f '' icc a b = icc (Inf $ f '' icc a b) (Sup $ f '' icc a b) :=
   eq_Icc_of_connected_compact ⟨(nonempty_Icc.2 hab).image f, is_preconnected_Icc.image f h⟩
     (is_compact_Icc.image_of_continuous_on h)
 #align continuous_on.image_Icc ContinuousOn.image_Icc
 
-theorem image_interval_eq_Icc (h : ContinuousOn f <| [a, b]) :
+theorem image_interval_eq_Icc (h : ContinuousOn f $ [a, b]) :
     f '' [a, b] = icc (inf (f '' [a, b])) (sup (f '' [a, b])) := by
   cases' le_total a b with h2 h2
   · simp_rw [interval_of_le h2] at h⊢
@@ -378,13 +378,13 @@ theorem image_interval_eq_Icc (h : ContinuousOn f <| [a, b]) :
     
 #align continuous_on.image_interval_eq_Icc ContinuousOn.image_interval_eq_Icc
 
-theorem image_interval (h : ContinuousOn f <| [a, b]) : f '' [a, b] = [inf (f '' [a, b]), sup (f '' [a, b])] := by
+theorem image_interval (h : ContinuousOn f $ [a, b]) : f '' [a, b] = [inf (f '' [a, b]), sup (f '' [a, b])] := by
   refine' h.image_interval_eq_Icc.trans (interval_of_le _).symm
   refine' cInf_le_cSup _ _ (nonempty_interval.image _) <;> rw [h.image_interval_eq_Icc]
   exacts[bdd_below_Icc, bdd_above_Icc]
 #align continuous_on.image_interval ContinuousOn.image_interval
 
-theorem Inf_image_Icc_le (h : ContinuousOn f <| icc a b) (hc : c ∈ icc a b) : inf (f '' icc a b) ≤ f c := by
+theorem Inf_image_Icc_le (h : ContinuousOn f $ icc a b) (hc : c ∈ icc a b) : inf (f '' icc a b) ≤ f c := by
   rw [h.image_Icc (nonempty_Icc.mp (Set.nonempty_of_mem hc))]
   exact
     cInf_le bdd_below_Icc
@@ -393,7 +393,7 @@ theorem Inf_image_Icc_le (h : ContinuousOn f <| icc a b) (hc : c ∈ icc a b) : 
           le_cSup (is_compact_Icc.bdd_above_image h) ⟨c, hc, rfl⟩⟩)
 #align continuous_on.Inf_image_Icc_le ContinuousOn.Inf_image_Icc_le
 
-theorem le_Sup_image_Icc (h : ContinuousOn f <| icc a b) (hc : c ∈ icc a b) : f c ≤ sup (f '' icc a b) := by
+theorem le_Sup_image_Icc (h : ContinuousOn f $ icc a b) (hc : c ∈ icc a b) : f c ≤ sup (f '' icc a b) := by
   rw [h.image_Icc (nonempty_Icc.mp (Set.nonempty_of_mem hc))]
   exact
     le_cSup bdd_above_Icc

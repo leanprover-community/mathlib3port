@@ -80,7 +80,7 @@ theorem bind₁_frobenius_poly_rat_witt_polynomial (n : ℕ) :
 /-- An auxiliary definition, to avoid an excessive amount of finiteness proofs
 for `multiplicity p n`. -/
 private def pnat_multiplicity (n : ℕ+) : ℕ :=
-  (multiplicity p n).get <| multiplicity.finite_nat_iff.mpr <| ⟨ne_of_gt hp.1.one_lt, n.2⟩
+  (multiplicity p n).get $ multiplicity.finite_nat_iff.mpr $ ⟨ne_of_gt hp.1.one_lt, n.2⟩
 #align witt_vector.pnat_multiplicity witt_vector.pnat_multiplicity
 
 -- mathport name: exprv
@@ -99,7 +99,7 @@ noncomputable def frobeniusPolyAux : ℕ → MvPolynomial ℕ ℤ
           (x i ^ p) ^ (p ^ (n - i) - (j + 1)) * frobenius_poly_aux i ^ (j + 1) *
             c
               ↑((p ^ (n - i)).choose (j + 1) / p ^ (n - i - v p ⟨j + 1, Nat.succ_pos j⟩) *
-                  ↑p ^ (j - v p ⟨j + 1, Nat.succ_pos j⟩) :
+                    ↑p ^ (j - v p ⟨j + 1, Nat.succ_pos j⟩) :
                   ℕ)
 #align witt_vector.frobenius_poly_aux WittVector.frobeniusPolyAux
 
@@ -111,7 +111,7 @@ theorem frobenius_poly_aux_eq (n : ℕ) :
             (x i ^ p) ^ (p ^ (n - i) - (j + 1)) * frobeniusPolyAux p i ^ (j + 1) *
               c
                 ↑((p ^ (n - i)).choose (j + 1) / p ^ (n - i - v p ⟨j + 1, Nat.succ_pos j⟩) *
-                    ↑p ^ (j - v p ⟨j + 1, Nat.succ_pos j⟩) :
+                      ↑p ^ (j - v p ⟨j + 1, Nat.succ_pos j⟩) :
                     ℕ) :=
   by rw [frobenius_poly_aux, ← Fin.sum_univ_eq_sum_range]
 #align witt_vector.frobenius_poly_aux_eq WittVector.frobenius_poly_aux_eq
@@ -243,7 +243,7 @@ variable {p}
 /-- `frobenius_fun` is the function underlying the ring endomorphism
 `frobenius : 𝕎 R →+* frobenius 𝕎 R`. -/
 def frobeniusFun (x : 𝕎 R) : 𝕎 R :=
-  (mk p) fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
+  mk p $ fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
 #align witt_vector.frobenius_fun WittVector.frobeniusFun
 
 theorem coeff_frobenius_fun (x : 𝕎 R) (n : ℕ) :
@@ -353,11 +353,11 @@ def frobeniusEquiv [PerfectRing R p] : WittVector p R ≃+* WittVector p R :=
   { (WittVector.frobenius : WittVector p R →+* WittVector p R) with toFun := WittVector.frobenius,
     invFun := map (pthRoot R p),
     left_inv := fun f =>
-      ext fun n => by
+      ext $ fun n => by
         rw [frobenius_eq_map_frobenius]
         exact pth_root_frobenius _,
     right_inv := fun f =>
-      ext fun n => by
+      ext $ fun n => by
         rw [frobenius_eq_map_frobenius]
         exact frobenius_pth_root _ }
 #align witt_vector.frobenius_equiv WittVector.frobeniusEquiv

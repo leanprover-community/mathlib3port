@@ -234,8 +234,8 @@ theorem monotone_size_up_to : Monotone c.sizeUpTo :=
 a virtual point at the right of the last block, to make for a nice equiv with
 `composition_as_set n`. -/
 def boundary : Fin (c.length + 1) ↪o Fin (n + 1) :=
-  (OrderEmbedding.ofStrictMono fun i => ⟨c.sizeUpTo i, Nat.lt_succ_of_le (c.size_up_to_le i)⟩) <|
-    Fin.strict_mono_iff_lt_succ.2 fun ⟨i, hi⟩ => c.size_up_to_strict_mono hi
+  (OrderEmbedding.ofStrictMono fun i => ⟨c.sizeUpTo i, Nat.lt_succ_of_le (c.size_up_to_le i)⟩) $
+    Fin.strict_mono_iff_lt_succ.2 $ fun ⟨i, hi⟩ => c.size_up_to_strict_mono hi
 #align composition.boundary Composition.boundary
 
 @[simp]
@@ -278,8 +278,8 @@ theorem order_emb_of_fin_boundaries : c.boundaries.orderEmbOfFin c.card_boundari
 /-- Embedding the `i`-th block of a composition (identified with `fin (c.blocks_fun i)`) into
 `fin n` at the relevant position. -/
 def embedding (i : Fin c.length) : Fin (c.blocksFun i) ↪o Fin n :=
-  (Fin.natAdd <| c.sizeUpTo i).trans <|
-    Fin.castLe <|
+  (Fin.natAdd $ c.sizeUpTo i).trans $
+    Fin.castLe $
       calc
         c.sizeUpTo i + c.blocksFun i = c.sizeUpTo (i + 1) := (c.size_up_to_succ _).symm
         _ ≤ c.sizeUpTo c.length := monotone_sum_take _ i.2
@@ -377,17 +377,21 @@ theorem mem_range_embedding_iff {j : Fin n} {i : Fin c.length} :
 
 /-- The embeddings of different blocks of a composition are disjoint. -/
 theorem disjoint_range {i₁ i₂ : Fin c.length} (h : i₁ ≠ i₂) :
-    Disjoint (Set.range (c.Embedding i₁)) (Set.range (c.Embedding i₂)) := by
-  classical wlog h' : i₁ ≤ i₂ using i₁ i₂
-    exact (this h.symm).symm
-    obtain ⟨x, hx₁, hx₂⟩ : ∃ x : Fin n, x ∈ Set.range (c.embedding i₁) ∧ x ∈ Set.range (c.embedding i₂) :=
-      Set.not_disjoint_iff.1 d
-    have A : (i₁ : ℕ).succ ≤ i₂ := Nat.succ_le_of_lt this
-    calc
-      (x : ℕ) < c.size_up_to (i₁ : ℕ).succ := (c.mem_range_embedding_iff.1 hx₁).2
-      _ ≤ c.size_up_to (i₂ : ℕ) := monotone_sum_take _ A
-      _ ≤ x := (c.mem_range_embedding_iff.1 hx₂).1
-      
+    Disjoint (Set.range (c.Embedding i₁)) (Set.range (c.Embedding i₂)) := by classical
+  wlog h' : i₁ ≤ i₂ using i₁ i₂
+  swap
+  exact (this h.symm).symm
+  by_contra d
+  obtain ⟨x, hx₁, hx₂⟩ : ∃ x : Fin n, x ∈ Set.range (c.embedding i₁) ∧ x ∈ Set.range (c.embedding i₂) :=
+    Set.not_disjoint_iff.1 d
+  have : i₁ < i₂ := lt_of_le_of_ne h' h
+  have A : (i₁ : ℕ).succ ≤ i₂ := Nat.succ_le_of_lt this
+  apply lt_irrefl (x : ℕ)
+  calc
+    (x : ℕ) < c.size_up_to (i₁ : ℕ).succ := (c.mem_range_embedding_iff.1 hx₁).2
+    _ ≤ c.size_up_to (i₂ : ℕ) := monotone_sum_take _ A
+    _ ≤ x := (c.mem_range_embedding_iff.1 hx₂).1
+    
 #align composition.disjoint_range Composition.disjoint_range
 
 theorem mem_range_embedding (j : Fin n) : j ∈ Set.range (c.Embedding (c.index j)) := by
@@ -419,7 +423,7 @@ theorem inv_embedding_comp (i : Fin c.length) (j : Fin (c.blocksFun i)) : (c.inv
 
 /-- Equivalence between the disjoint union of the blocks (each of them seen as
 `fin (c.blocks_fun i)`) with `fin n`. -/
-def blocksFinEquiv : (Σi : Fin c.length, Fin (c.blocksFun i)) ≃ Fin n where
+def blocksFinEquiv : (Σ i : Fin c.length, Fin (c.blocksFun i)) ≃ Fin n where
   toFun x := c.Embedding x.1 x.2
   invFun j := ⟨c.index j, c.invEmbedding j⟩
   left_inv x := by
@@ -448,7 +452,7 @@ theorem blocks_fun_congr {n₁ n₂ : ℕ} (c₁ : Composition n₁) (c₂ : Com
 
 /-- Two compositions (possibly of different integers) coincide if and only if they have the
 same sequence of blocks. -/
-theorem sigma_eq_iff_blocks_eq {c : Σn, Composition n} {c' : Σn, Composition n} : c = c' ↔ c.2.blocks = c'.2.blocks :=
+theorem sigma_eq_iff_blocks_eq {c : Σ n, Composition n} {c' : Σ n, Composition n} : c = c' ↔ c.2.blocks = c'.2.blocks :=
   by
   refine' ⟨fun H => by rw [H], fun H => _⟩
   rcases c with ⟨n, c⟩
@@ -755,14 +759,14 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Fin (n - 1)
   toFun c :=
     { i : Fin (n - 1) |
         (⟨1 + (i : ℕ), by
-            apply (add_lt_add_left i.is_lt 1).trans_le
-            rw [Nat.succ_eq_add_one, add_comm]
-            exact add_le_add (Nat.sub_le n 1) (le_refl 1)⟩ :
+              apply (add_lt_add_left i.is_lt 1).trans_le
+              rw [Nat.succ_eq_add_one, add_comm]
+              exact add_le_add (Nat.sub_le n 1) (le_refl 1)⟩ :
             Fin n.succ) ∈
           c.boundaries }.toFinset
   invFun s :=
     { boundaries :=
-        { i : Fin n.succ | i = 0 ∨ i = Fin.last n ∨ ∃ (j : Fin (n - 1))(hj : j ∈ s), (i : ℕ) = j + 1 }.toFinset,
+        { i : Fin n.succ | i = 0 ∨ i = Fin.last n ∨ ∃ (j : Fin (n - 1)) (hj : j ∈ s), (i : ℕ) = j + 1 }.toFinset,
       zero_mem := by simp, last_mem := by simp }
   left_inv := by
     intro c

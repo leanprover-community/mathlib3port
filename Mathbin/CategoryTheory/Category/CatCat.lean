@@ -107,7 +107,7 @@ attribute [local simp] eq_to_hom_map
 def equivOfIso {C D : CatCat} (γ : C ≅ D) : C ≌ D where
   Functor := γ.Hom
   inverse := γ.inv
-  unitIso := eq_to_iso <| Eq.symm γ.hom_inv_id
+  unitIso := eq_to_iso $ Eq.symm γ.hom_inv_id
   counitIso := eqToIso γ.inv_hom_id
 #align category_theory.Cat.equiv_of_iso CategoryTheory.CatCat.equivOfIso
 

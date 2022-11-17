@@ -120,9 +120,9 @@ instance : SmallCategory Skeleton.{u} where
   comp _ _ _ f g := g ∘ f
 
 theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
-  ext _ _ <|
-    Fin.equiv_iff_eq.mp <|
-      Nonempty.intro <|
+  ext _ _ $
+    Fin.equiv_iff_eq.mp $
+      Nonempty.intro $
         { toFun := fun x => (h.Hom ⟨x⟩).down, invFun := fun x => (h.inv ⟨x⟩).down,
           left_inv := by
             intro a
@@ -149,7 +149,7 @@ instance : Full incl where preimage _ _ f := f
 instance : Faithful incl where
 
 instance : EssSurj incl :=
-  ess_surj.mk fun X =>
+  ess_surj.mk $ fun X =>
     let F := Fintype.equivFin X
     ⟨mk (Fintype.card X), Nonempty.intro { Hom := F.symm ∘ ULift.down, inv := ULift.up ∘ F }⟩
 

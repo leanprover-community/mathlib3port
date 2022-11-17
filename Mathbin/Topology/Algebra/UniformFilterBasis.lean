@@ -37,8 +37,8 @@ protected theorem uniform_add_group : @UniformAddGroup G B.UniformSpace _ :=
   @topological_add_comm_group_is_uniform G _ B.topology B.is_topological_add_group
 #align add_group_filter_basis.uniform_add_group AddGroupFilterBasis.uniform_add_group
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » M) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔ F.ne_bot ∧ ∀ U ∈ B, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), y - x ∈ U := by
   letI := B.uniform_space

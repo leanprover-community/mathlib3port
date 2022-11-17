@@ -58,7 +58,7 @@ variable (α) [Nonempty α]
 @[reducible]
 def toOrderBot [SemilatticeInf α] : OrderBot α where
   bot := univ.inf' univ_nonempty id
-  bot_le a := inf'_le _ <| mem_univ a
+  bot_le a := inf'_le _ $ mem_univ a
 #align fintype.to_order_bot Fintype.toOrderBot
 
 -- See note [reducible non-instances]
@@ -66,7 +66,7 @@ def toOrderBot [SemilatticeInf α] : OrderBot α where
 @[reducible]
 def toOrderTop [SemilatticeSup α] : OrderTop α where
   top := univ.sup' univ_nonempty id
-  le_top a := le_sup' _ <| mem_univ a
+  le_top a := le_sup' _ $ mem_univ a
 #align fintype.to_order_top Fintype.toOrderTop
 
 -- See note [reducible non-instances]
@@ -90,9 +90,9 @@ open Classical
 noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLattice α :=
   { ‹Lattice α›, ‹BoundedOrder α› with sup := fun s => s.toFinset.sup id, inf := fun s => s.toFinset.inf id,
     le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_to_finset.mpr ha),
-    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_to_finset.mp hb,
+    Sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ $ Set.mem_to_finset.mp hb,
     Inf_le := fun _ _ ha => Finset.inf_le (Set.mem_to_finset.mpr ha),
-    le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_to_finset.mp hb }
+    le_Inf := fun s _ ha => Finset.le_inf fun b hb => ha _ $ Set.mem_to_finset.mp hb }
 #align fintype.to_complete_lattice Fintype.toCompleteLattice
 
 -- See note [reducible non-instances]
@@ -137,7 +137,7 @@ variable (α) [Nonempty α]
 `fintype.to_complete_lattice` instead, as this gives definitional equality for `⊥` and `⊤`. -/
 @[reducible]
 noncomputable def toCompleteLatticeOfNonempty [Lattice α] : CompleteLattice α :=
-  @toCompleteLattice _ _ _ <| @toBoundedOrder α _ ⟨Classical.arbitrary α⟩ _
+  @toCompleteLattice _ _ _ $ @toBoundedOrder α _ ⟨Classical.arbitrary α⟩ _
 #align fintype.to_complete_lattice_of_nonempty Fintype.toCompleteLatticeOfNonempty
 
 -- See note [reducible non-instances]
@@ -171,8 +171,9 @@ noncomputable instance : CompleteBooleanAlgebra Bool :=
 variable {α : Type _}
 
 theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α} [Fintype β]
-    (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
-  classical obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
+    (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by classical
+  obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
+  exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
 #align directed.fintype_le Directed.fintype_le
 
 theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β] (f : β → α) :

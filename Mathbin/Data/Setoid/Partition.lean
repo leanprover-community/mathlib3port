@@ -39,24 +39,22 @@ namespace Setoid
 
 variable {α : Type _}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- If x ∈ α is in 2 elements of a set of sets partitioning α, those 2 sets are equal. -/
-theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x b b'} (hc : b ∈ c) (hb : x ∈ b)
+theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! b ∈ c, a ∈ b) {x b b'} (hc : b ∈ c) (hb : x ∈ b)
     (hc' : b' ∈ c) (hb' : x ∈ b') : b = b' :=
   (H x).unique2 hc hb hc' hb'
 #align setoid.eq_of_mem_eqv_class Setoid.eq_of_mem_eqv_class
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- Makes an equivalence relation from a set of sets partitioning α. -/
-def mkClasses (c : Set (Set α)) (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) : Setoid α :=
+def mkClasses (c : Set (Set α)) (H : ∀ a, ∃! b ∈ c, a ∈ b) : Setoid α :=
   ⟨fun x y => ∀ s ∈ c, x ∈ s → y ∈ s,
     ⟨fun _ _ _ hx => hx, fun x y h s hs hy =>
-      (H x).elim2 fun t ht hx _ =>
+      (H x).elim2 $ fun t ht hx _ =>
         have : s = t := eq_of_mem_eqv_class H hs hy ht (h t ht hx)
         this.symm ▸ hx,
       fun x y z h1 h2 s hs hx =>
-      (H y).elim2 fun t ht hy _ =>
-        (H z).elim2 fun t' ht' hz _ =>
+      (H y).elim2 $ fun t ht hy _ =>
+        (H z).elim2 $ fun t' ht' hz _ =>
           have hst : s = t := eq_of_mem_eqv_class H hs (h1 _ hs hx) ht hy
           have htt' : t = t' := eq_of_mem_eqv_class H ht (h2 _ ht hy) ht' hz
           (hst.trans htt').symm ▸ hz⟩⟩
@@ -79,7 +77,7 @@ theorem classes_ker_subset_fiber_set {β : Type _} (f : α → β) :
 #align setoid.classes_ker_subset_fiber_set Setoid.classes_ker_subset_fiber_set
 
 theorem finite_classes_ker {α β : Type _} [Finite β] (f : α → β) : (Setoid.ker f).classes.Finite :=
-  (Set.finite_range _).Subset <| classes_ker_subset_fiber_set f
+  (Set.finite_range _).Subset $ classes_ker_subset_fiber_set f
 #align setoid.finite_classes_ker Setoid.finite_classes_ker
 
 theorem card_classes_ker_le {α β : Type _} [Fintype β] (f : α → β) [Fintype (Setoid.ker f).classes] :
@@ -89,7 +87,7 @@ theorem card_classes_ker_le {α β : Type _} [Fintype β] (f : α → β) [Finty
 
 /-- Two equivalence relations are equal iff all their equivalence classes are equal. -/
 theorem eq_iff_classes_eq {r₁ r₂ : Setoid α} : r₁ = r₂ ↔ ∀ x, { y | r₁.Rel x y } = { y | r₂.Rel x y } :=
-  ⟨fun h x => h ▸ rfl, fun h => ext' fun x => Set.ext_iff.1 <| h x⟩
+  ⟨fun h x => h ▸ rfl, fun h => ext' $ fun x => Set.ext_iff.1 $ h x⟩
 #align setoid.eq_iff_classes_eq Setoid.eq_iff_classes_eq
 
 theorem rel_iff_exists_classes (r : Setoid α) {x y} : r.Rel x y ↔ ∃ c ∈ r.classes, x ∈ c ∧ y ∈ c :=
@@ -100,18 +98,16 @@ theorem rel_iff_exists_classes (r : Setoid α) {x y} : r.Rel x y ↔ ∃ c ∈ r
 
 /-- Two equivalence relations are equal iff their equivalence classes are equal. -/
 theorem classes_inj {r₁ r₂ : Setoid α} : r₁ = r₂ ↔ r₁.classes = r₂.classes :=
-  ⟨fun h => h ▸ rfl, fun h => ext' fun a b => by simp only [rel_iff_exists_classes, exists_prop, h]⟩
+  ⟨fun h => h ▸ rfl, fun h => ext' $ fun a b => by simp only [rel_iff_exists_classes, exists_prop, h]⟩
 #align setoid.classes_inj Setoid.classes_inj
 
 /-- The empty set is not an equivalence class. -/
-theorem empty_not_mem_classes {r : Setoid α} : ∅ ∉ r.classes := fun ⟨y, hy⟩ =>
-  Set.not_mem_empty y <| hy.symm ▸ r.refl' y
+theorem empty_not_mem_classes {r : Setoid α} : ∅ ∉ r.classes := fun ⟨y, hy⟩ => Set.not_mem_empty y $ hy.symm ▸ r.refl' y
 #align setoid.empty_not_mem_classes Setoid.empty_not_mem_classes
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ∈ » r.classes) -/
 /-- Equivalence classes partition the type. -/
-theorem classes_eqv_classes {r : Setoid α} (a) : ∃! (b : _)(_ : b ∈ r.classes), a ∈ b :=
-  ExistsUnique.intro₂ { x | r.Rel x a } (r.mem_classes a) (r.refl' _) <| by
+theorem classes_eqv_classes {r : Setoid α} (a) : ∃! b ∈ r.classes, a ∈ b :=
+  ExistsUnique.intro₂ { x | r.Rel x a } (r.mem_classes a) (r.refl' _) $ by
     rintro _ ⟨y, rfl⟩ ha
     ext x
     exact ⟨fun hx => r.trans' hx (r.symm' ha), fun hx => r.trans' hx ha⟩
@@ -123,77 +119,69 @@ theorem eq_of_mem_classes {r : Setoid α} {x b} (hc : b ∈ r.classes) (hb : x �
   eq_of_mem_eqv_class classes_eqv_classes hc hb hc' hb'
 #align setoid.eq_of_mem_classes Setoid.eq_of_mem_classes
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- The elements of a set of sets partitioning α are the equivalence classes of the
     equivalence relation defined by the set of sets. -/
-theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {s y} (hs : s ∈ c) (hy : y ∈ s) :
+theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! b ∈ c, a ∈ b) {s y} (hs : s ∈ c) (hy : y ∈ s) :
     s = { x | (mkClasses c H).Rel x y } :=
-  Set.ext fun x =>
-    ⟨fun hs' => (symm' (mkClasses c H)) fun b' hb' h' => eq_of_mem_eqv_class H hs hy hb' h' ▸ hs', fun hx =>
-      (H x).elim2 fun b' hc' hb' h' => (eq_of_mem_eqv_class H hs hy hc' <| hx b' hc' hb').symm ▸ hb'⟩
+  Set.ext $ fun x =>
+    ⟨fun hs' => symm' (mkClasses c H) $ fun b' hb' h' => eq_of_mem_eqv_class H hs hy hb' h' ▸ hs', fun hx =>
+      (H x).elim2 $ fun b' hc' hb' h' => (eq_of_mem_eqv_class H hs hy hc' $ hx b' hc' hb').symm ▸ hb'⟩
 #align setoid.eq_eqv_class_of_mem Setoid.eq_eqv_class_of_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- The equivalence classes of the equivalence relation defined by a set of sets
     partitioning α are elements of the set of sets. -/
-theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {y} :
-    { x | (mkClasses c H).Rel x y } ∈ c :=
-  (H y).elim2 fun b hc hy hb => eq_eqv_class_of_mem H hc hy ▸ hc
+theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃! b ∈ c, a ∈ b) {y} : { x | (mkClasses c H).Rel x y } ∈ c :=
+  (H y).elim2 $ fun b hc hy hb => eq_eqv_class_of_mem H hc hy ▸ hc
 #align setoid.eqv_class_mem Setoid.eqv_class_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ∈ » c) -/
-theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x} :
-    { y : α | (mkClasses c H).Rel x y } ∈ c := by
+theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! b ∈ c, a ∈ b) {x} : { y : α | (mkClasses c H).Rel x y } ∈ c := by
   convert Setoid.eqv_class_mem H
   ext
   rw [Setoid.comm']
 #align setoid.eqv_class_mem' Setoid.eqv_class_mem'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- Distinct elements of a set of sets partitioning α are disjoint. -/
-theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) : c.PairwiseDisjoint id :=
+theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! b ∈ c, a ∈ b) : c.PairwiseDisjoint id :=
   fun b₁ h₁ b₂ h₂ h =>
-  Set.disjoint_left.2 fun x hx1 hx2 => (H x).elim2 fun b hc hx hb => h <| eq_of_mem_eqv_class H h₁ hx1 h₂ hx2
+  Set.disjoint_left.2 $ fun x hx1 hx2 => (H x).elim2 $ fun b hc hx hb => h $ eq_of_mem_eqv_class H h₁ hx1 h₂ hx2
 #align setoid.eqv_classes_disjoint Setoid.eqv_classes_disjoint
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- A set of disjoint sets covering α partition α (classical). -/
 theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.sUnion c = @Set.univ α) (H : c.PairwiseDisjoint id)
-    (a) : ∃! (b : _)(_ : b ∈ c), a ∈ b :=
-  let ⟨b, hc, ha⟩ := Set.mem_sUnion.1 <| show a ∈ _ by rw [hu] <;> exact Set.mem_univ a
-  (ExistsUnique.intro₂ b hc ha) fun b' hc' ha' => H.elim_set hc' hc a ha' ha
+    (a) : ∃! b ∈ c, a ∈ b :=
+  let ⟨b, hc, ha⟩ := Set.mem_sUnion.1 $ show a ∈ _ by rw [hu] <;> exact Set.mem_univ a
+  ExistsUnique.intro₂ b hc ha $ fun b' hc' ha' => H.elim_set hc' hc a ha' ha
 #align setoid.eqv_classes_of_disjoint_union Setoid.eqv_classes_of_disjoint_union
 
 /-- Makes an equivalence relation from a set of disjoints sets covering α. -/
 def setoidOfDisjointUnion {c : Set (Set α)} (hu : Set.sUnion c = @Set.univ α) (H : c.PairwiseDisjoint id) : Setoid α :=
-  Setoid.mkClasses c <| eqv_classes_of_disjoint_union hu H
+  Setoid.mkClasses c $ eqv_classes_of_disjoint_union hu H
 #align setoid.setoid_of_disjoint_union Setoid.setoidOfDisjointUnion
 
 /-- The equivalence relation made from the equivalence classes of an equivalence
     relation r equals r. -/
 theorem mk_classes_classes (r : Setoid α) : mkClasses r.classes classes_eqv_classes = r :=
-  ext' fun x y =>
-    ⟨fun h => r.symm' (h { z | r.Rel z x } (r.mem_classes x) <| r.refl' x), fun h b hb hx =>
+  ext' $ fun x y =>
+    ⟨fun h => r.symm' (h { z | r.Rel z x } (r.mem_classes x) $ r.refl' x), fun h b hb hx =>
       eq_of_mem_classes (r.mem_classes x) (r.refl' x) hb hx ▸ r.symm' h⟩
 #align setoid.mk_classes_classes Setoid.mk_classes_classes
 
 @[simp]
-theorem sUnion_classes (r : Setoid α) : ⋃₀r.classes = Set.univ :=
-  Set.eq_univ_of_forall fun x => Set.mem_sUnion.2 ⟨{ y | r.Rel y x }, ⟨x, rfl⟩, Setoid.refl _⟩
+theorem sUnion_classes (r : Setoid α) : ⋃₀ r.classes = Set.univ :=
+  Set.eq_univ_of_forall $ fun x => Set.mem_sUnion.2 ⟨{ y | r.Rel y x }, ⟨x, rfl⟩, Setoid.refl _⟩
 #align setoid.sUnion_classes Setoid.sUnion_classes
 
 section Partition
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- A collection `c : set (set α)` of sets is a partition of `α` into pairwise
 disjoint sets if `∅ ∉ c` and each element `a : α` belongs to a unique set `b ∈ c`. -/
 def IsPartition (c : Set (Set α)) :=
-  ∅ ∉ c ∧ ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b
+  ∅ ∉ c ∧ ∀ a, ∃! b ∈ c, a ∈ b
 #align setoid.is_partition Setoid.IsPartition
 
 /-- A partition of `α` does not contain the empty set. -/
 theorem nonempty_of_mem_partition {c : Set (Set α)} (hc : IsPartition c) {s} (h : s ∈ c) : s.Nonempty :=
-  Set.ne_empty_iff_nonempty.1 fun hs0 => hc.1 <| hs0 ▸ h
+  Set.ne_empty_iff_nonempty.1 $ fun hs0 => hc.1 $ hs0 ▸ h
 #align setoid.nonempty_of_mem_partition Setoid.nonempty_of_mem_partition
 
 theorem is_partition_classes (r : Setoid α) : IsPartition r.classes :=
@@ -204,9 +192,9 @@ theorem IsPartition.pairwise_disjoint {c : Set (Set α)} (hc : IsPartition c) : 
   eqv_classes_disjoint hc.2
 #align setoid.is_partition.pairwise_disjoint Setoid.IsPartition.pairwise_disjoint
 
-theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀c = Set.univ :=
-  Set.eq_univ_of_forall fun x =>
-    Set.mem_sUnion.2 <|
+theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀ c = Set.univ :=
+  Set.eq_univ_of_forall $ fun x =>
+    Set.mem_sUnion.2 $
       let ⟨t, ht⟩ := hc.2 x
       ⟨t, by
         simp only [exists_unique_iff_exists] at ht
@@ -223,9 +211,9 @@ theorem exists_of_mem_partition {c : Set (Set α)} (hc : IsPartition c) {s} (hs 
 /-- The equivalence classes of the equivalence relation defined by a partition of α equal
     the original partition. -/
 theorem classes_mk_classes (c : Set (Set α)) (hc : IsPartition c) : (mkClasses c hc.2).classes = c :=
-  Set.ext fun s =>
+  Set.ext $ fun s =>
     ⟨fun ⟨y, hs⟩ =>
-      (hc.2 y).elim2 fun b hm hb hy => by
+      (hc.2 y).elim2 $ fun b hm hb hy => by
         rwa [show s = b from
             hs.symm ▸
               Set.ext fun x =>
@@ -271,8 +259,8 @@ variable {α}
 /-- A complete lattice instance for partitions; there is more infrastructure for the
     equivalent complete lattice on equivalence relations. -/
 instance Partition.completeLattice : CompleteLattice (Subtype (@IsPartition α)) :=
-  GaloisInsertion.liftCompleteLattice <|
-    @OrderIso.toGaloisInsertion _ (Subtype (@IsPartition α)) _ (PartialOrder.toPreorder _) <| Partition.orderIso α
+  GaloisInsertion.liftCompleteLattice $
+    @OrderIso.toGaloisInsertion _ (Subtype (@IsPartition α)) _ (PartialOrder.toPreorder _) $ Partition.orderIso α
 #align setoid.partition.complete_lattice Setoid.Partition.completeLattice
 
 end Partition
@@ -282,7 +270,7 @@ end Partition
 def IsPartition.finpartition {c : Finset (Set α)} (hc : Setoid.IsPartition (c : Set (Set α))) :
     Finpartition (Set.univ : Set α) where
   parts := c
-  SupIndep := Finset.sup_indep_iff_pairwise_disjoint.mpr <| eqv_classes_disjoint hc.2
+  SupIndep := Finset.sup_indep_iff_pairwise_disjoint.mpr $ eqv_classes_disjoint hc.2
   sup_parts := c.sup_id_set_eq_sUnion.trans hc.sUnion_eq_univ
   not_bot_mem := hc.left
 #align setoid.is_partition.finpartition Setoid.IsPartition.finpartition
@@ -316,7 +304,7 @@ structure IndexedPartition {ι α : Type _} (s : ι → Set α) where
 /-- The non-constructive constructor for `indexed_partition`. -/
 noncomputable def IndexedPartition.mk' {ι α : Type _} (s : ι → Set α) (dis : ∀ i j, i ≠ j → Disjoint (s i) (s j))
     (nonempty : ∀ i, (s i).Nonempty) (ex : ∀ x, ∃ i, x ∈ s i) : IndexedPartition s where
-  eq_of_mem x i j hxi hxj := Classical.by_contradiction fun h => (dis _ _ h).le_bot ⟨hxi, hxj⟩
+  eq_of_mem x i j hxi hxj := Classical.by_contradiction $ fun h => (dis _ _ h).le_bot ⟨hxi, hxj⟩
   some i := (Nonempty i).some
   some_mem i := (Nonempty i).some_spec
   index x := (ex x).some
@@ -348,7 +336,7 @@ theorem Union : (⋃ i, s i) = univ := by
 #align indexed_partition.Union IndexedPartition.Union
 
 theorem disjoint : ∀ {i j}, i ≠ j → Disjoint (s i) (s j) := fun i j h =>
-  disjoint_left.mpr fun x hxi hxj => h (hs.eq_of_mem hxi hxj)
+  disjoint_left.mpr $ fun x hxi hxj => h (hs.eq_of_mem hxi hxj)
 #align indexed_partition.disjoint IndexedPartition.disjoint
 
 theorem mem_iff_index_eq {x i} : x ∈ s i ↔ hs.index x = i :=
@@ -356,7 +344,7 @@ theorem mem_iff_index_eq {x i} : x ∈ s i ↔ hs.index x = i :=
 #align indexed_partition.mem_iff_index_eq IndexedPartition.mem_iff_index_eq
 
 theorem eq (i) : s i = { x | hs.index x = i } :=
-  Set.ext fun _ => hs.mem_iff_index_eq
+  Set.ext $ fun _ => hs.mem_iff_index_eq
 #align indexed_partition.eq IndexedPartition.eq
 
 /-- The equivalence relation associated to an indexed partition. Two
@@ -367,7 +355,7 @@ protected abbrev setoid (hs : IndexedPartition s) : Setoid α :=
 
 @[simp]
 theorem index_some (i : ι) : hs.index (hs.some i) = i :=
-  (mem_iff_index_eq _).1 <| hs.some_mem i
+  (mem_iff_index_eq _).1 $ hs.some_mem i
 #align indexed_partition.index_some IndexedPartition.index_some
 
 theorem some_index (x : α) : hs.Setoid.Rel (hs.some (hs.index x)) x :=
@@ -399,7 +387,7 @@ theorem proj_some_index (x : α) : hs.proj (hs.some (hs.index x)) = hs.proj x :=
 /-- The obvious equivalence between the quotient associated to an indexed partition and
 the indexing type. -/
 def equivQuotient : ι ≃ hs.Quotient :=
-  (Setoid.quotientKerEquivOfRightInverse hs.index hs.some <| hs.index_some).symm
+  (Setoid.quotientKerEquivOfRightInverse hs.index hs.some $ hs.index_some).symm
 #align indexed_partition.equiv_quotient IndexedPartition.equivQuotient
 
 @[simp]
@@ -430,21 +418,21 @@ theorem out_proj (x : α) : hs.out (hs.proj x) = hs.some (hs.index x) :=
 
 /-- The indices of `quotient.out'` and `indexed_partition.out` are equal. -/
 theorem index_out' (x : hs.Quotient) : hs.index x.out' = hs.index (hs.out x) :=
-  (Quotient.inductionOn' x) fun x => (Setoid.ker_apply_mk_out' x).trans (hs.index_some _).symm
+  Quotient.inductionOn' x $ fun x => (Setoid.ker_apply_mk_out' x).trans (hs.index_some _).symm
 #align indexed_partition.index_out' IndexedPartition.index_out'
 
 /-- This lemma is analogous to `quotient.out_eq'`. -/
 @[simp]
 theorem proj_out (x : hs.Quotient) : hs.proj (hs.out x) = x :=
-  (Quotient.inductionOn' x) fun x => Quotient.sound' <| hs.some_index x
+  Quotient.inductionOn' x $ fun x => Quotient.sound' $ hs.some_index x
 #align indexed_partition.proj_out IndexedPartition.proj_out
 
 theorem class_of {x : α} : setOf (hs.Setoid.Rel x) = s (hs.index x) :=
-  Set.ext fun y => eq_comm.trans hs.mem_iff_index_eq.symm
+  Set.ext $ fun y => eq_comm.trans hs.mem_iff_index_eq.symm
 #align indexed_partition.class_of IndexedPartition.class_of
 
 theorem proj_fiber (x : hs.Quotient) : hs.proj ⁻¹' {x} = s (hs.equivQuotient.symm x) :=
-  (Quotient.inductionOn' x) fun x => by
+  Quotient.inductionOn' x $ fun x => by
     ext y
     simp only [Set.mem_preimage, Set.mem_singleton_iff, hs.mem_iff_index_eq]
     exact Quotient.eq'

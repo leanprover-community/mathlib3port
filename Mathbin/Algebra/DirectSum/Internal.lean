@@ -54,7 +54,7 @@ instance AddCommGroup.ofSubgroupOnRing [Ring R] [SetLike σ R] [AddSubgroupClass
 theorem SetLike.algebra_map_mem_graded [Zero ι] [CommSemiring S] [Semiring R] [Algebra S R] (A : ι → Submodule S R)
     [SetLike.HasGradedOne A] (s : S) : algebraMap S R s ∈ A 0 := by
   rw [Algebra.algebra_map_eq_smul_one]
-  exact (A 0).smul_mem s <| SetLike.one_mem_graded _
+  exact (A 0).smul_mem s $ SetLike.one_mem_graded _
 #align set_like.algebra_map_mem_graded SetLike.algebra_map_mem_graded
 
 theorem SetLike.nat_cast_mem_graded [Zero ι] [AddMonoidWithOne R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
@@ -115,8 +115,8 @@ instance gcommSemiring [AddCommMonoid ι] [CommSemiring R] [SetLike σ R] [AddSu
 instance gring [AddMonoid ι] [Ring R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ) [SetLike.GradedMonoid A] :
     DirectSum.Gring fun i => A i :=
   { SetLike.gsemiring A with intCast := fun z => ⟨z, SetLike.int_cast_mem_graded _ _⟩,
-    int_cast_of_nat := fun n => Subtype.ext <| Int.cast_of_nat _,
-    int_cast_neg_succ_of_nat := fun n => Subtype.ext <| Int.cast_negSucc n }
+    int_cast_of_nat := fun n => Subtype.ext $ Int.cast_of_nat _,
+    int_cast_neg_succ_of_nat := fun n => Subtype.ext $ Int.cast_negSucc n }
 #align set_like.gring SetLike.gring
 
 /-- Build a `gcomm_semiring` instance for a collection of additive submonoids. -/
@@ -174,19 +174,31 @@ theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoid ι] [SetLike.GradedMonoid A] [�
 #align direct_sum.coe_mul_apply_eq_dfinsupp_sum DirectSum.coe_mul_apply_eq_dfinsupp_sum
 
 theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r : A i) (r' : ⨁ i, A i) {j n : ι}
-    (H : ∀ x : ι, i + x = n ↔ x = j) : ((of _ i r * r') n : R) = r * r' j := by
-  classical rw [coe_mul_apply_eq_dfinsupp_sum]
-    swap
-    simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
-    rfl
+    (H : ∀ x : ι, i + x = n ↔ x = j) : ((of _ i r * r') n : R) = r * r' j := by classical
+  rw [coe_mul_apply_eq_dfinsupp_sum]
+  apply (Dfinsupp.sum_single_index _).trans
+  swap
+  · simp_rw [ZeroMemClass.coe_zero, zero_mul, if_t_t]
+    exact Dfinsupp.sum_zero
+    
+  simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
+  split_ifs
+  rfl
+  rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, mul_zero]
 #align direct_sum.coe_of_mul_apply_aux DirectSum.coe_of_mul_apply_aux
 
 theorem coe_mul_of_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] (r : ⨁ i, A i) {i : ι} (r' : A i) {j n : ι}
-    (H : ∀ x : ι, x + i = n ↔ x = j) : ((r * of _ i r') n : R) = r j * r' := by
-  classical rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
-    swap
-    simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
-    rfl
+    (H : ∀ x : ι, x + i = n ↔ x = j) : ((r * of _ i r') n : R) = r j * r' := by classical
+  rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
+  apply (Dfinsupp.sum_single_index _).trans
+  swap
+  · simp_rw [ZeroMemClass.coe_zero, mul_zero, if_t_t]
+    exact Dfinsupp.sum_zero
+    
+  simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
+  split_ifs
+  rfl
+  rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, zero_mul]
 #align direct_sum.coe_mul_of_apply_aux DirectSum.coe_mul_of_apply_aux
 
 theorem coe_of_mul_apply_add [AddLeftCancelMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r : A i) (r' : ⨁ i, A i)
@@ -208,21 +220,29 @@ variable [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
 variable [CanonicallyOrderedAddMonoid ι] [SetLike.GradedMonoid A]
 
 theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) (h : ¬i ≤ n) :
-    ((of _ i r * r') n : R) = 0 := by
-  classical rw [coe_mul_apply_eq_dfinsupp_sum]
-    swap
-    · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
-      exact h ((self_le_add_right i x).trans_eq H)
-      
+    ((of _ i r * r') n : R) = 0 := by classical
+  rw [coe_mul_apply_eq_dfinsupp_sum]
+  apply (Dfinsupp.sum_single_index _).trans
+  swap
+  · simp_rw [ZeroMemClass.coe_zero, zero_mul, if_t_t]
+    exact Dfinsupp.sum_zero
+    
+  · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
+    exact h ((self_le_add_right i x).trans_eq H)
+    
 #align direct_sum.coe_of_mul_apply_of_not_le DirectSum.coe_of_mul_apply_of_not_le
 
 theorem coe_mul_of_apply_of_not_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) (h : ¬i ≤ n) :
-    ((r * of _ i r') n : R) = 0 := by
-  classical rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
-    swap
-    · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
-      exact h ((self_le_add_left i x).trans_eq H)
-      
+    ((r * of _ i r') n : R) = 0 := by classical
+  rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
+  apply (Dfinsupp.sum_single_index _).trans
+  swap
+  · simp_rw [ZeroMemClass.coe_zero, mul_zero, if_t_t]
+    exact Dfinsupp.sum_zero
+    
+  · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
+    exact h ((self_le_add_left i x).trans_eq H)
+    
 #align direct_sum.coe_mul_of_apply_of_not_le DirectSum.coe_mul_of_apply_of_not_le
 
 variable [Sub ι] [HasOrderedSub ι] [ContravariantClass ι ι (· + ·) (· ≤ ·)]
@@ -263,11 +283,11 @@ namespace Submodule
 /-- Build a `galgebra` instance for a collection of `submodule`s. -/
 instance galgebra [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R] (A : ι → Submodule S R)
     [SetLike.GradedMonoid A] : DirectSum.Galgebra S fun i => A i where
-  toFun := ((Algebra.linearMap S R).codRestrict (A 0) <| SetLike.algebra_map_mem_graded A).toAddMonoidHom
-  map_one := Subtype.ext <| (algebraMap S R).map_one
-  map_mul x y := Sigma.subtype_ext (add_zero 0).symm <| (algebraMap S R).map_mul _ _
-  commutes := fun r ⟨i, xi⟩ => Sigma.subtype_ext ((zero_add i).trans (add_zero i).symm) <| Algebra.commutes _ _
-  smul_def := fun r ⟨i, xi⟩ => Sigma.subtype_ext (zero_add i).symm <| Algebra.smul_def _ _
+  toFun := ((Algebra.linearMap S R).codRestrict (A 0) $ SetLike.algebra_map_mem_graded A).toAddMonoidHom
+  map_one := Subtype.ext $ (algebraMap S R).map_one
+  map_mul x y := Sigma.subtype_ext (add_zero 0).symm $ (algebraMap S R).map_mul _ _
+  commutes := fun r ⟨i, xi⟩ => Sigma.subtype_ext ((zero_add i).trans (add_zero i).symm) $ Algebra.commutes _ _
+  smul_def := fun r ⟨i, xi⟩ => Sigma.subtype_ext (zero_add i).symm $ Algebra.smul_def _ _
 #align submodule.galgebra Submodule.galgebra
 
 @[simp]
@@ -300,7 +320,7 @@ def DirectSum.coeAlgHom [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S 
 `direct_sum.coe_alg_hom`. -/
 theorem Submodule.supr_eq_to_submodule_range [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R]
     (A : ι → Submodule S R) [SetLike.GradedMonoid A] : (⨆ i, A i) = (DirectSum.coeAlgHom A).range.toSubmodule :=
-  (Submodule.supr_eq_range_dfinsupp_lsum A).trans <| SetLike.coe_injective rfl
+  (Submodule.supr_eq_range_dfinsupp_lsum A).trans $ SetLike.coe_injective rfl
 #align submodule.supr_eq_to_submodule_range Submodule.supr_eq_to_submodule_range
 
 @[simp]

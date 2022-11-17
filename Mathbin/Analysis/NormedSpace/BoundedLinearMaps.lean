@@ -72,7 +72,7 @@ theorem IsLinearMap.withBound {f : E → F} (hf : IsLinearMap 𝕜 f) (M : ℝ) 
   ⟨hf,
     Classical.by_cases
       (fun this : M ≤ 0 =>
-        ⟨1, zero_lt_one, fun x => (h x).trans <| mul_le_mul_of_nonneg_right (this.trans zero_le_one) (norm_nonneg x)⟩)
+        ⟨1, zero_lt_one, fun x => (h x).trans $ mul_le_mul_of_nonneg_right (this.trans zero_le_one) (norm_nonneg x)⟩)
       fun this : ¬M ≤ 0 => ⟨M, lt_of_not_ge this, h⟩⟩
 #align is_linear_map.with_bound IsLinearMap.withBound
 
@@ -97,11 +97,11 @@ def toContinuousLinearMap {f : E → F} (hf : IsBoundedLinearMap 𝕜 f) : E →
 #align is_bounded_linear_map.to_continuous_linear_map IsBoundedLinearMap.toContinuousLinearMap
 
 theorem zero : IsBoundedLinearMap 𝕜 fun x : E => (0 : F) :=
-  (0 : E →ₗ[𝕜] F).is_linear.withBound 0 <| by simp [le_refl]
+  (0 : E →ₗ[𝕜] F).is_linear.withBound 0 $ by simp [le_refl]
 #align is_bounded_linear_map.zero IsBoundedLinearMap.zero
 
 theorem id : IsBoundedLinearMap 𝕜 fun x : E => x :=
-  LinearMap.id.is_linear.withBound 1 <| by simp [le_refl]
+  LinearMap.id.is_linear.withBound 1 $ by simp [le_refl]
 #align is_bounded_linear_map.id IsBoundedLinearMap.id
 
 theorem fst : IsBoundedLinearMap 𝕜 fun x : E × F => x.1 := by
@@ -120,7 +120,7 @@ variable {f g : E → F}
 
 theorem smul (c : 𝕜) (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 (c • f) :=
   let ⟨hlf, M, hMp, hM⟩ := hf
-  ((c • hlf.mk' f).is_linear.withBound (∥c∥ * M)) fun x =>
+  (c • hlf.mk' f).is_linear.withBound (∥c∥ * M) $ fun x =>
     calc
       ∥c • f x∥ = ∥c∥ * ∥f x∥ := norm_smul c (f x)
       _ ≤ ∥c∥ * (M * ∥x∥) := mul_le_mul_of_nonneg_left (hM _) (norm_nonneg _)
@@ -138,7 +138,7 @@ theorem neg (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 fun e => 
 theorem add (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) : IsBoundedLinearMap 𝕜 fun e => f e + g e :=
   let ⟨hlf, Mf, hMfp, hMf⟩ := hf
   let ⟨hlg, Mg, hMgp, hMg⟩ := hg
-  ((hlf.mk' _ + hlg.mk' _).is_linear.withBound (Mf + Mg)) fun x =>
+  (hlf.mk' _ + hlg.mk' _).is_linear.withBound (Mf + Mg) $ fun x =>
     calc
       ∥f x + g x∥ ≤ Mf * ∥x∥ + Mg * ∥x∥ := norm_add_le_of_le (hMf x) (hMg x)
       _ ≤ (Mf + Mg) * ∥x∥ := by rw [add_mul]
@@ -155,7 +155,7 @@ theorem comp {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) (hf : IsBoundedLinea
 
 protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (𝓝 x) (𝓝 (f x)) :=
   let ⟨hf, M, hMp, hM⟩ := hf
-  tendsto_iff_norm_tendsto_zero.2 <|
+  tendsto_iff_norm_tendsto_zero.2 $
     squeeze_zero (fun e => norm_nonneg _)
       (fun e =>
         calc
@@ -167,7 +167,7 @@ protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (
 #align is_bounded_linear_map.tendsto IsBoundedLinearMap.tendsto
 
 theorem continuous (hf : IsBoundedLinearMap 𝕜 f) : Continuous f :=
-  continuous_iff_continuous_at.2 fun _ => hf.Tendsto _
+  continuous_iff_continuous_at.2 $ fun _ => hf.Tendsto _
 #align is_bounded_linear_map.continuous IsBoundedLinearMap.continuous
 
 theorem lim_zero_bounded_linear_map (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (𝓝 0) (𝓝 0) :=
@@ -344,14 +344,14 @@ theorem ContinuousLinearMap.isBoundedBilinearMap (f : E →L[𝕜] F →L[𝕜] 
     smul_right := fun c x => (f x).map_smul c,
     bound :=
       ⟨max ∥f∥ 1, zero_lt_one.trans_le (le_max_right _ _), fun x y =>
-        (f.le_op_norm₂ x y).trans <| by
+        (f.le_op_norm₂ x y).trans $ by
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr norm_nonneg, \",\", expr le_max_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"⟩ }
 #align continuous_linear_map.is_bounded_bilinear_map ContinuousLinearMap.isBoundedBilinearMap
 
 protected theorem IsBoundedBilinearMap.is_O (h : IsBoundedBilinearMap 𝕜 f) : f =O[⊤] fun p : E × F => ∥p.1∥ * ∥p.2∥ :=
   let ⟨C, Cpos, hC⟩ := h.bound
-  Asymptotics.IsO.of_bound _ <| Filter.eventually_of_forall fun ⟨x, y⟩ => by simpa [mul_assoc] using hC x y
+  Asymptotics.IsO.of_bound _ $ Filter.eventually_of_forall $ fun ⟨x, y⟩ => by simpa [mul_assoc] using hC x y
 #align is_bounded_bilinear_map.is_O IsBoundedBilinearMap.is_O
 
 theorem IsBoundedBilinearMap.is_O_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E} {h : α → F}
@@ -360,7 +360,7 @@ theorem IsBoundedBilinearMap.is_O_comp {α : Type _} (H : IsBoundedBilinearMap �
 #align is_bounded_bilinear_map.is_O_comp IsBoundedBilinearMap.is_O_comp
 
 protected theorem IsBoundedBilinearMap.is_O' (h : IsBoundedBilinearMap 𝕜 f) : f =O[⊤] fun p : E × F => ∥p∥ * ∥p∥ :=
-  h.IsO.trans <|
+  h.IsO.trans $
     (@Asymptotics.is_O_fst_prod' _ E F _ _ _ _).norm_norm.mul (@Asymptotics.is_O_snd_prod' _ E F _ _ _ _).norm_norm
 #align is_bounded_bilinear_map.is_O' IsBoundedBilinearMap.is_O'
 
@@ -530,7 +530,7 @@ def IsBoundedBilinearMap.linearDeriv (h : IsBoundedBilinearMap 𝕜 f) (p : E ×
 from `E × F` to `G`. The statement that this is indeed the derivative of `f` is
 `is_bounded_bilinear_map.has_fderiv_at` in `analysis.calculus.fderiv`. -/
 def IsBoundedBilinearMap.deriv (h : IsBoundedBilinearMap 𝕜 f) (p : E × F) : E × F →L[𝕜] G :=
-  (h.linearDeriv p).mkContinuousOfExistsBound <| by
+  (h.linearDeriv p).mkContinuousOfExistsBound $ by
     rcases h.bound with ⟨C, Cpos, hC⟩
     refine' ⟨C * ∥p.1∥ + C * ∥p.2∥, fun q => _⟩
     calc

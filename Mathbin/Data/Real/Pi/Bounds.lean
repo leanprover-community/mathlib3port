@@ -113,22 +113,21 @@ theorem sqrt_two_add_series_step_up (c d : ℕ) {a b n : ℕ} {z : ℝ} (hz : sq
   exact_mod_cast h
 #align real.sqrt_two_add_series_step_up Real.sqrt_two_add_series_step_up
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Create a proof of `a < π` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
 `sqrt (2 + r i) ≤ r(i+1)`, where `r 0 = 0` and `sqrt (2 - r n) ≥ a/2^(n+1)`. -/
 unsafe def pi_lower_bound (l : List ℚ) : tactic Unit := do
   let n := l.length
-  tactic.apply (quote.1 (@pi_lower_bound_start (%%ₓreflect n)))
+  tactic.apply q(@pi_lower_bound_start $(reflect n))
   l fun r => do
       let a := r
       let b := r
-      andthen (() <$ tactic.apply (quote.1 (@sqrt_two_add_series_step_up (%%ₓreflect a) (%%ₓreflect b))))
-          [tactic.skip, sorry, sorry, sorry]
+      () <$ tactic.apply q(@sqrt_two_add_series_step_up $(reflect a) $(reflect b)); [tactic.skip, sorry, sorry, sorry]
   sorry
   sorry
 #align real.pi_lower_bound real.pi_lower_bound
@@ -161,23 +160,22 @@ theorem sqrt_two_add_series_step_down (a b : ℕ) {c d n : ℕ} {z : ℝ} (hz : 
   exact_mod_cast h
 #align real.sqrt_two_add_series_step_down Real.sqrt_two_add_series_step_down
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Create a proof of `π < a` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
 `sqrt (2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `sqrt (2 - r n) ≥ (a - 1/4^n) / 2^(n+1)`. -/
 unsafe def pi_upper_bound (l : List ℚ) : tactic Unit := do
   let n := l.length
-  andthen (() <$ tactic.apply (quote.1 (@pi_upper_bound_start (%%ₓreflect n)))) [pure (), sorry]
+  () <$ tactic.apply q(@pi_upper_bound_start $(reflect n)); [pure (), sorry]
   l fun r => do
       let a := r
       let b := r
-      andthen (() <$ tactic.apply (quote.1 (@sqrt_two_add_series_step_down (%%ₓreflect a) (%%ₓreflect b))))
-          [pure (), sorry, sorry, sorry]
+      () <$ tactic.apply q(@sqrt_two_add_series_step_down $(reflect a) $(reflect b)); [pure (), sorry, sorry, sorry]
   sorry
   sorry
 #align real.pi_upper_bound real.pi_upper_bound

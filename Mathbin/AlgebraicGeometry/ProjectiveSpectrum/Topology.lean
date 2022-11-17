@@ -229,9 +229,9 @@ theorem vanishing_ideal_univ : vanishingIdeal (∅ : Set (ProjectiveSpectrum �
 #align projective_spectrum.vanishing_ideal_univ ProjectiveSpectrum.vanishing_ideal_univ
 
 theorem zero_locus_empty_of_one_mem {s : Set A} (h : (1 : A) ∈ s) : zeroLocus 𝒜 s = ∅ :=
-  Set.eq_empty_iff_forall_not_mem.mpr fun x hx =>
-    (inferInstance : x.asHomogeneousIdeal.toIdeal.IsPrime).ne_top <|
-      x.asHomogeneousIdeal.toIdeal.eq_top_iff_one.mpr <| hx h
+  Set.eq_empty_iff_forall_not_mem.mpr $ fun x hx =>
+    (inferInstance : x.asHomogeneousIdeal.toIdeal.IsPrime).ne_top $
+      x.asHomogeneousIdeal.toIdeal.eq_top_iff_one.mpr $ hx h
 #align projective_spectrum.zero_locus_empty_of_one_mem ProjectiveSpectrum.zero_locus_empty_of_one_mem
 
 @[simp]
@@ -282,11 +282,11 @@ theorem zero_locus_bUnion (s : Set (Set A)) : zeroLocus 𝒜 (⋃ s' ∈ s, s' :
 
 theorem vanishing_ideal_Union {γ : Sort _} (t : γ → Set (ProjectiveSpectrum 𝒜)) :
     vanishingIdeal (⋃ i, t i) = ⨅ i, vanishingIdeal (t i) :=
-  HomogeneousIdeal.to_ideal_injective <| by convert (gc_ideal 𝒜).u_infi <;> exact HomogeneousIdeal.to_ideal_infi _
+  HomogeneousIdeal.to_ideal_injective $ by convert (gc_ideal 𝒜).u_infi <;> exact HomogeneousIdeal.to_ideal_infi _
 #align projective_spectrum.vanishing_ideal_Union ProjectiveSpectrum.vanishing_ideal_Union
 
 theorem zero_locus_inf (I J : Ideal A) : zeroLocus 𝒜 ((I ⊓ J : Ideal A) : Set A) = zeroLocus 𝒜 I ∪ zeroLocus 𝒜 J :=
-  Set.ext fun x => x.2.1.inf_le
+  Set.ext $ fun x => x.2.1.inf_le
 #align projective_spectrum.zero_locus_inf ProjectiveSpectrum.zero_locus_inf
 
 theorem union_zero_locus (s s' : Set A) :
@@ -297,21 +297,21 @@ theorem union_zero_locus (s s' : Set A) :
 
 theorem zero_locus_mul_ideal (I J : Ideal A) :
     zeroLocus 𝒜 ((I * J : Ideal A) : Set A) = zeroLocus 𝒜 I ∪ zeroLocus 𝒜 J :=
-  Set.ext fun x => x.2.1.mul_le
+  Set.ext $ fun x => x.2.1.mul_le
 #align projective_spectrum.zero_locus_mul_ideal ProjectiveSpectrum.zero_locus_mul_ideal
 
 theorem zero_locus_mul_homogeneous_ideal (I J : HomogeneousIdeal 𝒜) :
     zeroLocus 𝒜 ((I * J : HomogeneousIdeal 𝒜) : Set A) = zeroLocus 𝒜 I ∪ zeroLocus 𝒜 J :=
-  Set.ext fun x => x.2.1.mul_le
+  Set.ext $ fun x => x.2.1.mul_le
 #align projective_spectrum.zero_locus_mul_homogeneous_ideal ProjectiveSpectrum.zero_locus_mul_homogeneous_ideal
 
 theorem zero_locus_singleton_mul (f g : A) : zeroLocus 𝒜 ({f * g} : Set A) = zeroLocus 𝒜 {f} ∪ zeroLocus 𝒜 {g} :=
-  Set.ext fun x => by simpa using x.2.1.mul_mem_iff_mem_or_mem
+  Set.ext $ fun x => by simpa using x.2.1.mul_mem_iff_mem_or_mem
 #align projective_spectrum.zero_locus_singleton_mul ProjectiveSpectrum.zero_locus_singleton_mul
 
 @[simp]
 theorem zero_locus_singleton_pow (f : A) (n : ℕ) (hn : 0 < n) : zeroLocus 𝒜 ({f ^ n} : Set A) = zeroLocus 𝒜 {f} :=
-  Set.ext fun x => by simpa using x.2.1.pow_mem_iff_mem n hn
+  Set.ext $ fun x => by simpa using x.2.1.pow_mem_iff_mem n hn
 #align projective_spectrum.zero_locus_singleton_pow ProjectiveSpectrum.zero_locus_singleton_pow
 
 theorem sup_vanishing_ideal_le (t t' : Set (ProjectiveSpectrum 𝒜)) :
@@ -391,7 +391,7 @@ section BasicOpen
 /-- `basic_open r` is the open subset containing all prime ideals not containing `r`. -/
 def basicOpen (r : A) : TopologicalSpace.Opens (ProjectiveSpectrum 𝒜) where
   val := { x | r ∉ x.asHomogeneousIdeal }
-  property := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| not_not.symm⟩
+  property := ⟨{r}, Set.ext $ fun x => Set.singleton_subset_iff.trans $ not_not.symm⟩
 #align projective_spectrum.basic_open ProjectiveSpectrum.basicOpen
 
 @[simp]
@@ -410,21 +410,21 @@ theorem is_open_basic_open {a : A} : IsOpen (basicOpen 𝒜 a : Set (ProjectiveS
 
 @[simp]
 theorem basic_open_eq_zero_locus_compl (r : A) : (basicOpen 𝒜 r : Set (ProjectiveSpectrum 𝒜)) = zeroLocus 𝒜 {r}ᶜ :=
-  Set.ext fun x => by simpa only [Set.mem_compl_iff, mem_zero_locus, Set.singleton_subset_iff]
+  Set.ext $ fun x => by simpa only [Set.mem_compl_iff, mem_zero_locus, Set.singleton_subset_iff]
 #align projective_spectrum.basic_open_eq_zero_locus_compl ProjectiveSpectrum.basic_open_eq_zero_locus_compl
 
 @[simp]
 theorem basic_open_one : basicOpen 𝒜 (1 : A) = ⊤ :=
-  TopologicalSpace.Opens.ext <| by simp
+  TopologicalSpace.Opens.ext $ by simp
 #align projective_spectrum.basic_open_one ProjectiveSpectrum.basic_open_one
 
 @[simp]
 theorem basic_open_zero : basicOpen 𝒜 (0 : A) = ⊥ :=
-  TopologicalSpace.Opens.ext <| by simp
+  TopologicalSpace.Opens.ext $ by simp
 #align projective_spectrum.basic_open_zero ProjectiveSpectrum.basic_open_zero
 
 theorem basic_open_mul (f g : A) : basicOpen 𝒜 (f * g) = basicOpen 𝒜 f ⊓ basicOpen 𝒜 g :=
-  TopologicalSpace.Opens.ext <| by simp [zero_locus_singleton_mul]
+  TopologicalSpace.Opens.ext $ by simp [zero_locus_singleton_mul]
 #align projective_spectrum.basic_open_mul ProjectiveSpectrum.basic_open_mul
 
 theorem basic_open_mul_le_left (f g : A) : basicOpen 𝒜 (f * g) ≤ basicOpen 𝒜 f := by
@@ -439,17 +439,19 @@ theorem basic_open_mul_le_right (f g : A) : basicOpen 𝒜 (f * g) ≤ basicOpen
 
 @[simp]
 theorem basic_open_pow (f : A) (n : ℕ) (hn : 0 < n) : basicOpen 𝒜 (f ^ n) = basicOpen 𝒜 f :=
-  TopologicalSpace.Opens.ext <| by simpa using zero_locus_singleton_pow 𝒜 f n hn
+  TopologicalSpace.Opens.ext $ by simpa using zero_locus_singleton_pow 𝒜 f n hn
 #align projective_spectrum.basic_open_pow ProjectiveSpectrum.basic_open_pow
 
 theorem basic_open_eq_union_of_projection (f : A) : basicOpen 𝒜 f = ⨆ i : ℕ, basicOpen 𝒜 (GradedAlgebra.proj 𝒜 i f) :=
-  TopologicalSpace.Opens.ext <|
-    Set.ext fun z => by
+  TopologicalSpace.Opens.ext $
+    Set.ext $ fun z => by
       erw [mem_coe_basic_open, TopologicalSpace.Opens.mem_Sup]
       constructor <;> intro hz
       · rcases show ∃ i, GradedAlgebra.proj 𝒜 i f ∉ z.as_homogeneous_ideal by
             contrapose! hz with H
-            classical rw [← DirectSum.sum_support_decompose 𝒜 f] with
+            classical
+            rw [← DirectSum.sum_support_decompose 𝒜 f]
+            apply Ideal.sum_mem _ fun i hi => H i with
           ⟨i, hi⟩
         exact ⟨basic_open 𝒜 (GradedAlgebra.proj 𝒜 i f), ⟨i, rfl⟩, by rwa [mem_basic_open]⟩
         

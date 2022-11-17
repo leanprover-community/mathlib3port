@@ -65,13 +65,12 @@ theorem cardinal_mk_lift_le_mul :
 
 theorem cardinal_mk_lift_le_max :
     Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ max (Cardinal.lift.{v, u} (#R)) ℵ₀ :=
-  (cardinal_mk_lift_le_mul R A).trans <|
-    (mul_le_mul_right' (lift_le.2 cardinal_mk_le_max) _).trans <| by simp [le_total]
+  (cardinal_mk_lift_le_mul R A).trans $ (mul_le_mul_right' (lift_le.2 cardinal_mk_le_max) _).trans $ by simp [le_total]
 #align algebraic.cardinal_mk_lift_le_max Algebraic.cardinal_mk_lift_le_max
 
 theorem cardinal_mk_lift_le_of_infinite [Infinite R] :
     Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (#R) :=
-  (cardinal_mk_lift_le_max R A).trans <| by simp
+  (cardinal_mk_lift_le_max R A).trans $ by simp
 #align algebraic.cardinal_mk_lift_le_of_infinite Algebraic.cardinal_mk_lift_le_of_infinite
 
 variable [Encodable R]
@@ -105,7 +104,7 @@ theorem cardinal_mk_le_max : (#{ x : A // IsAlgebraic R x }) ≤ max (#R) ℵ₀
 #align algebraic.cardinal_mk_le_max Algebraic.cardinal_mk_le_max
 
 theorem cardinal_mk_le_of_infinite [Infinite R] : (#{ x : A // IsAlgebraic R x }) ≤ (#R) :=
-  (cardinal_mk_le_max R A).trans <| by simp
+  (cardinal_mk_le_max R A).trans $ by simp
 #align algebraic.cardinal_mk_le_of_infinite Algebraic.cardinal_mk_le_of_infinite
 
 end NonLift

@@ -164,7 +164,7 @@ instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Fra
 
 -- see Note [lower instance priority]
 instance (priority := 100) Frame.toDistribLattice : DistribLattice α :=
-  DistribLattice.ofInfSupLe fun a b c => by rw [← Sup_pair, ← Sup_pair, inf_Sup_eq, ← Sup_image, image_pair]
+  DistribLattice.ofInfSupLe $ fun a b c => by rw [← Sup_pair, ← Sup_pair, inf_Sup_eq, ← Sup_image, image_pair]
 #align frame.to_distrib_lattice Frame.toDistribLattice
 
 end Frame
@@ -270,9 +270,9 @@ instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _} [∀ i, Co
 instance PropCat.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
   { PropCat.booleanAlgebra, PropCat.completeLattice with
     infi_sup_le_sup_Inf := fun p s =>
-      Iff.mp <| by simp only [forall_or_left, CompleteLattice.inf, infi_Prop_eq, sup_Prop_eq],
+      Iff.mp $ by simp only [forall_or_left, CompleteLattice.inf, infi_Prop_eq, sup_Prop_eq],
     inf_Sup_le_supr_inf := fun p s =>
-      Iff.mp <| by simp only [CompleteLattice.sup, exists_and_left, inf_Prop_eq, supr_Prop_eq] }
+      Iff.mp $ by simp only [CompleteLattice.sup, exists_and_left, inf_Prop_eq, supr_Prop_eq] }
 #align Prop.complete_boolean_algebra PropCat.completeBooleanAlgebra
 
 section CompleteBooleanAlgebra
@@ -280,8 +280,8 @@ section CompleteBooleanAlgebra
 variable [CompleteBooleanAlgebra α] {a b : α} {s : Set α} {f : ι → α}
 
 theorem compl_infi : infi fᶜ = ⨆ i, f iᶜ :=
-  le_antisymm (compl_le_of_compl_le <| le_infi fun i => compl_le_of_compl_le <| le_supr (compl ∘ f) i)
-    (supr_le fun i => compl_le_compl <| infi_le _ _)
+  le_antisymm (compl_le_of_compl_le $ le_infi $ fun i => compl_le_of_compl_le $ le_supr (compl ∘ f) i)
+    (supr_le $ fun i => compl_le_compl $ infi_le _ _)
 #align compl_infi compl_infi
 
 theorem compl_supr : supr fᶜ = ⨅ i, f iᶜ :=
@@ -352,7 +352,7 @@ protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] 
 /-- Pullback a `complete_boolean_algebra` along an injection. -/
 @[reducible]
 protected def Function.Injective.completeBooleanAlgebra [HasSup α] [HasInf α] [HasSup α] [HasInf α] [HasTop α]
-    [HasBot α] [HasCompl α] [Sdiff α] [CompleteBooleanAlgebra β] (f : α → β) (hf : Function.Injective f)
+    [HasBot α] [HasCompl α] [SDiff α] [CompleteBooleanAlgebra β] (f : α → β) (hf : Function.Injective f)
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤)
     (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :

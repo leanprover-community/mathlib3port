@@ -41,7 +41,7 @@ end Category
 -/
 def isomorphismClasses : Cat.{v, u} ⥤ Type u where
   obj C := Quotient (isIsomorphicSetoid C.α)
-  map C D F := (Quot.map F.obj) fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
+  map C D F := Quot.map F.obj $ fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
 #align category_theory.isomorphism_classes CategoryTheory.isomorphismClasses
 
 theorem Groupoid.is_isomorphic_iff_nonempty_hom {C : Type u} [Groupoid.{v} C] {X Y : C} :

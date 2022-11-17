@@ -17,7 +17,7 @@ This is kept separate from `data.rat.defs` in order to minimize imports.
 namespace Rat
 
 instance : Encodable ℚ :=
-  Encodable.ofEquiv (Σn : ℤ, { d : ℕ // 0 < d ∧ n.natAbs.Coprime d })
+  Encodable.ofEquiv (Σ n : ℤ, { d : ℕ // 0 < d ∧ n.natAbs.Coprime d })
     ⟨fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => rfl, fun ⟨a, b, c, d⟩ =>
       rfl⟩
 

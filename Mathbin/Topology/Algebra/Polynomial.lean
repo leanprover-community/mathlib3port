@@ -116,7 +116,7 @@ theorem tendsto_abv_eval₂_at_top {R S k α : Type _} [Semiring R] [Ring S] [Li
 theorem tendsto_abv_at_top {R k α : Type _} [Ring R] [LinearOrderedField k] (abv : R → k) [IsAbsoluteValue abv]
     (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : α → R} (hz : Tendsto (abv ∘ z) l atTop) :
     Tendsto (fun x => abv (p.eval (z x))) l atTop :=
-  tendsto_abv_eval₂_at_top _ _ _ h (mt leading_coeff_eq_zero.1 <| ne_zero_of_degree_gt h) hz
+  tendsto_abv_eval₂_at_top _ _ _ h (mt leading_coeff_eq_zero.1 $ ne_zero_of_degree_gt h) hz
 #align polynomial.tendsto_abv_at_top Polynomial.tendsto_abv_at_top
 
 theorem tendsto_abv_aeval_at_top {R A k α : Type _} [CommSemiring R] [Ring A] [Algebra R A] [LinearOrderedField k]
@@ -134,7 +134,7 @@ theorem tendsto_norm_at_top (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : �
 
 theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ∥p.eval x∥ ≤ ∥p.eval y∥ :=
   if hp0 : 0 < degree p then
-    p.Continuous.norm.exists_forall_le <| p.tendsto_norm_at_top hp0 tendsto_norm_cocompact_at_top
+    p.Continuous.norm.exists_forall_le $ p.tendsto_norm_at_top hp0 tendsto_norm_cocompact_at_top
   else ⟨p.coeff 0, by rw [eq_C_of_degree_le_zero (le_of_not_gt hp0)] <;> simp⟩
 #align polynomial.exists_forall_norm_le Polynomial.exists_forall_norm_le
 
@@ -169,7 +169,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
     
   rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff, one_mul, norm_mul,
     norm_pow, norm_neg, norm_one, one_pow, one_mul]
-  apply ((norm_multiset_sum_le _).trans <| (sum_le_card_nsmul _ _) fun r hr => _).trans
+  apply ((norm_multiset_sum_le _).trans $ sum_le_card_nsmul _ _ $ fun r hr => _).trans
   · rw [Multiset.map_map, card_map, card_powerset_len, ← nat_degree_eq_card_roots' h2, Nat.choose_symm hi, mul_comm,
       nsmul_eq_mul]
     
@@ -179,7 +179,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
   lift B to ℝ≥0 using hB
   rw [← coe_nnnorm, ← Nnreal.coe_pow, Nnreal.coe_le_coe, ← nnnorm_hom_apply, ← MonoidHom.coe_coe,
     MonoidHom.map_multiset_prod]
-  refine' ((prod_le_pow_card _ B) fun x hx => _).trans_eq (by rw [card_map, hs.2])
+  refine' (prod_le_pow_card _ B $ fun x hx => _).trans_eq (by rw [card_map, hs.2])
   obtain ⟨z, hz, rfl⟩ := Multiset.mem_map.1 hx
   exact h3 z (mem_of_le hs.1 hz)
 #align polynomial.coeff_le_of_roots_le Polynomial.coeff_le_of_roots_le

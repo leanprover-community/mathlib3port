@@ -62,7 +62,7 @@ theorem locally_lipschitz_exp {r : ℝ} (hr_nonneg : 0 ≤ r) (hr_le : r ≤ 1) 
 
 @[continuity]
 theorem continuous_exp : Continuous exp :=
-  continuous_iff_continuous_at.mpr fun x =>
+  continuous_iff_continuous_at.mpr $ fun x =>
     continuous_at_of_locally_lipschitz zero_lt_one (2 * ∥exp x∥) (locally_lipschitz_exp zero_le_one le_rfl x)
 #align complex.continuous_exp Complex.continuous_exp
 
@@ -97,7 +97,7 @@ theorem ContinuousOn.cexp (h : ContinuousOn f s) : ContinuousOn (fun y => exp (f
 #align continuous_on.cexp ContinuousOn.cexp
 
 theorem Continuous.cexp (h : Continuous f) : Continuous fun y => exp (f y) :=
-  continuous_iff_continuous_at.2 fun x => h.ContinuousAt.cexp
+  continuous_iff_continuous_at.2 $ fun x => h.ContinuousAt.cexp
 #align continuous.cexp Continuous.cexp
 
 end ComplexContinuousExpComp
@@ -140,7 +140,7 @@ theorem ContinuousOn.exp (h : ContinuousOn f s) : ContinuousOn (fun y => exp (f 
 #align continuous_on.exp ContinuousOn.exp
 
 theorem Continuous.exp (h : Continuous f) : Continuous fun y => exp (f y) :=
-  continuous_iff_continuous_at.2 fun x => h.ContinuousAt.exp
+  continuous_iff_continuous_at.2 $ fun x => h.ContinuousAt.exp
 #align continuous.exp Continuous.exp
 
 end RealContinuousExpComp
@@ -173,11 +173,11 @@ theorem tendsto_exp_nhds_0_nhds_1 : Tendsto exp (𝓝 0) (𝓝 1) := by
 #align real.tendsto_exp_nhds_0_nhds_1 Real.tendsto_exp_nhds_0_nhds_1
 
 theorem tendsto_exp_at_bot : Tendsto exp atBot (𝓝 0) :=
-  (tendsto_exp_neg_at_top_nhds_0.comp tendsto_neg_at_bot_at_top).congr fun x => congr_arg exp <| neg_neg x
+  (tendsto_exp_neg_at_top_nhds_0.comp tendsto_neg_at_bot_at_top).congr $ fun x => congr_arg exp $ neg_neg x
 #align real.tendsto_exp_at_bot Real.tendsto_exp_at_bot
 
 theorem tendsto_exp_at_bot_nhds_within : Tendsto exp atBot (𝓝[>] 0) :=
-  tendsto_inf.2 ⟨tendsto_exp_at_bot, tendsto_principal.2 <| eventually_of_forall exp_pos⟩
+  tendsto_inf.2 ⟨tendsto_exp_at_bot, tendsto_principal.2 $ eventually_of_forall exp_pos⟩
 #align real.tendsto_exp_at_bot_nhds_within Real.tendsto_exp_at_bot_nhds_within
 
 @[simp]
@@ -208,14 +208,14 @@ theorem tendsto_exp_div_pow_at_top (n : ℕ) : Tendsto (fun x => exp x / x ^ n) 
     x ^ n ≤ ⌈x⌉₊ ^ n := pow_le_pow_of_le_left hx₀.le (Nat.le_ceil _) _
     _ ≤ exp ⌈x⌉₊ / (exp 1 * C) := (hN _ (Nat.lt_ceil.2 hx).le).le
     _ ≤ exp (x + 1) / (exp 1 * C) :=
-      div_le_div_of_le (mul_pos (exp_pos _) hC₀).le (exp_le_exp.2 <| (Nat.ceil_lt_add_one hx₀.le).le)
+      div_le_div_of_le (mul_pos (exp_pos _) hC₀).le (exp_le_exp.2 $ (Nat.ceil_lt_add_one hx₀.le).le)
     _ = exp x / C := by rw [add_comm, exp_add, mul_div_mul_left _ _ (exp_pos _).ne']
     
 #align real.tendsto_exp_div_pow_at_top Real.tendsto_exp_div_pow_at_top
 
 /-- The function `x^n * exp(-x)` tends to `0` at `+∞`, for any natural number `n`. -/
 theorem tendsto_pow_mul_exp_neg_at_top_nhds_0 (n : ℕ) : Tendsto (fun x => x ^ n * exp (-x)) atTop (𝓝 0) :=
-  (tendsto_inv_at_top_zero.comp (tendsto_exp_div_pow_at_top n)).congr fun x => by
+  (tendsto_inv_at_top_zero.comp (tendsto_exp_div_pow_at_top n)).congr $ fun x => by
     rw [comp_app, inv_eq_one_div, div_div_eq_mul_div, one_mul, div_eq_mul_inv, exp_neg]
 #align real.tendsto_pow_mul_exp_neg_at_top_nhds_0 Real.tendsto_pow_mul_exp_neg_at_top_nhds_0
 
@@ -257,7 +257,7 @@ theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) 
 
 /-- `real.exp` as an order isomorphism between `ℝ` and `(0, +∞)`. -/
 def expOrderIso : ℝ ≃o ioi (0 : ℝ) :=
-  StrictMono.orderIsoOfSurjective _ (exp_strict_mono.codRestrict exp_pos) <|
+  StrictMono.orderIsoOfSurjective _ (exp_strict_mono.codRestrict exp_pos) $
     (continuous_exp.subtype_mk _).Surjective (by simp only [tendsto_Ioi_at_top, Subtype.coe_mk, tendsto_exp_at_top])
       (by simp [tendsto_exp_at_bot_nhds_within])
 #align real.exp_order_iso Real.expOrderIso
@@ -311,7 +311,7 @@ theorem tendsto_comp_exp_at_bot {f : ℝ → α} : Tendsto (fun x => f (exp x)) 
 
 @[simp]
 theorem comap_exp_nhds_zero : comap exp (𝓝 0) = at_bot :=
-  (comap_nhds_within_range exp 0).symm.trans <| by simp
+  (comap_nhds_within_range exp 0).symm.trans $ by simp
 #align real.comap_exp_nhds_zero Real.comap_exp_nhds_zero
 
 @[simp]
@@ -327,7 +327,7 @@ theorem is_o_pow_exp_at_top {n : ℕ} : (fun x => x ^ n) =o[at_top] Real.exp := 
 @[simp]
 theorem is_O_exp_comp_exp_comp {f g : α → ℝ} :
     ((fun x => exp (f x)) =O[l] fun x => exp (g x)) ↔ IsBoundedUnder (· ≤ ·) l (f - g) :=
-  Iff.trans (is_O_iff_is_bounded_under_le_div <| eventually_of_forall fun x => exp_ne_zero _) <| by
+  Iff.trans (is_O_iff_is_bounded_under_le_div $ eventually_of_forall $ fun x => exp_ne_zero _) $ by
     simp only [norm_eq_abs, abs_exp, ← exp_sub, is_bounded_under_le_exp_comp, Pi.sub_def]
 #align real.is_O_exp_comp_exp_comp Real.is_O_exp_comp_exp_comp
 

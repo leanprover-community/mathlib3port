@@ -125,14 +125,14 @@ theorem zpow_mul (a : α) : ∀ m n : ℤ, a ^ (m * n) = (a ^ m) ^ n
   | (m : ℕ), (n : ℕ) => by
     rw [zpow_coe_nat, zpow_coe_nat, ← pow_mul, ← zpow_coe_nat]
     rfl
-  | (m : ℕ), -[n+1] => by
+  | (m : ℕ), -[1+ n] => by
     rw [zpow_coe_nat, zpow_neg_succ_of_nat, ← pow_mul, coe_nat_mul_neg_succ, zpow_neg, inv_inj, ← zpow_coe_nat]
     rfl
-  | -[m+1], (n : ℕ) => by
+  | -[1+ m], (n : ℕ) => by
     rw [zpow_coe_nat, zpow_neg_succ_of_nat, ← inv_pow, ← pow_mul, neg_succ_mul_coe_nat, zpow_neg, inv_pow, inv_inj, ←
       zpow_coe_nat]
     rfl
-  | -[m+1], -[n+1] => by
+  | -[1+ m], -[1+ n] => by
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, neg_succ_mul_neg_succ, inv_pow, inv_inv, ← pow_mul, ← zpow_coe_nat]
     rfl
 #align zpow_mul zpow_mul
@@ -144,7 +144,7 @@ theorem zpow_mul' (a : α) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by rw [mul
 @[to_additive bit0_zsmul]
 theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
   | (n : ℕ) => by simp only [zpow_coe_nat, ← Int.coe_nat_bit0, pow_bit0]
-  | -[n+1] => by
+  | -[1+ n] => by
     simp [← mul_inv_rev, ← pow_bit0]
     rw [neg_succ_of_nat_eq, bit0_neg, zpow_neg]
     norm_cast
@@ -168,11 +168,11 @@ variable [Group G]
 
 @[to_additive add_one_zsmul]
 theorem zpow_add_one (a : G) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
-  | (n : ℕ) => by simp only [← Int.coe_nat_succ, zpow_coe_nat, pow_succ']
-  | -[0+1] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, mul_left_inv]
-  | -[n + 1+1] => by
+  | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_coe_nat, pow_succ']
+  | -[1+ 0] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, mul_left_inv]
+  | -[1+ n + 1] => by
     rw [zpow_neg_succ_of_nat, pow_succ, mul_inv_rev, inv_mul_cancel_right]
-    rw [Int.neg_succ_of_nat_eq, neg_add, add_assoc, neg_add_self, add_zero]
+    rw [Int.negSucc_eq, neg_add, add_assoc, neg_add_self, add_zero]
     exact zpow_neg_succ_of_nat _ _
 #align zpow_add_one zpow_add_one
 
@@ -253,7 +253,7 @@ theorem one_lt_zpow' (ha : 1 < a) {k : ℤ} (hk : (0 : ℤ) < k) : 1 < a ^ k := 
 theorem zpow_strict_mono_right (ha : 1 < a) : StrictMono fun n : ℤ => a ^ n := fun m n h =>
   calc
     a ^ m = a ^ m * 1 := (mul_one _).symm
-    _ < a ^ m * a ^ (n - m) := mul_lt_mul_left' (one_lt_zpow' ha <| sub_pos_of_lt h) _
+    _ < a ^ m * a ^ (n - m) := mul_lt_mul_left' (one_lt_zpow' ha $ sub_pos_of_lt h) _
     _ = a ^ n := by
       rw [← zpow_add]
       simp
@@ -264,7 +264,7 @@ theorem zpow_strict_mono_right (ha : 1 < a) : StrictMono fun n : ℤ => a ^ n :=
 theorem zpow_mono_right (ha : 1 ≤ a) : Monotone fun n : ℤ => a ^ n := fun m n h =>
   calc
     a ^ m = a ^ m * 1 := (mul_one _).symm
-    _ ≤ a ^ m * a ^ (n - m) := mul_le_mul_left' (one_le_zpow ha <| sub_nonneg_of_le h) _
+    _ ≤ a ^ m * a ^ (n - m) := mul_le_mul_left' (one_le_zpow ha $ sub_nonneg_of_le h) _
     _ = a ^ n := by
       rw [← zpow_add]
       simp
@@ -389,10 +389,10 @@ theorem abs_add_eq_add_abs_le (hle : a ≤ b) : |a + b| = |a| + |b| ↔ 0 ≤ a 
   obtain a0 | a0 := le_or_lt 0 a <;> obtain b0 | b0 := le_or_lt 0 b
   · simp [a0, b0, abs_of_nonneg, add_nonneg a0 b0]
     
-  · exact (lt_irrefl (0 : α) <| a0.trans_lt <| hle.trans_lt b0).elim
+  · exact (lt_irrefl (0 : α) $ a0.trans_lt $ hle.trans_lt b0).elim
     
   any_goals simp [a0.le, b0.le, abs_of_nonpos, add_nonpos, add_comm]
-  have : (|a + b| = -a + b ↔ b ≤ 0) ↔ (|a + b| = |a| + |b| ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0) := by
+  have : |a + b| = -a + b ↔ b ≤ 0 ↔ (|a + b| = |a| + |b| ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0) := by
     simp [a0, a0.le, a0.not_le, b0, abs_of_neg, abs_of_nonneg]
   refine' this.mp ⟨fun h => _, fun h => by simp only [le_antisymm h b0, abs_of_neg a0, add_zero]⟩
   obtain ab | ab := le_or_lt (a + b) 0
@@ -476,11 +476,11 @@ theorem Nat.cast_pow [Semiring R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m := b
 
 @[norm_cast]
 theorem Int.coe_nat_pow (n m : ℕ) : ((n ^ m : ℕ) : ℤ) = n ^ m := by
-  induction' m with m ih <;> [exact Int.coe_nat_one, rw [pow_succ', pow_succ', Int.coe_nat_mul, ih]]
+  induction' m with m ih <;> [exact Int.ofNat_one, rw [pow_succ', pow_succ', Int.ofNat_mul, ih]]
 #align int.coe_nat_pow Int.coe_nat_pow
 
 theorem Int.nat_abs_pow (n : ℤ) (k : ℕ) : Int.natAbs (n ^ k) = Int.natAbs n ^ k := by
-  induction' k with k ih <;> [rfl, rw [pow_succ', Int.nat_abs_mul, pow_succ', ih]]
+  induction' k with k ih <;> [rfl, rw [pow_succ', Int.natAbs_mul, pow_succ', ih]]
 #align int.nat_abs_pow Int.nat_abs_pow
 
 -- The next four lemmas allow us to replace multiplication by a numeral with a `zsmul` expression.
@@ -508,7 +508,7 @@ theorem mul_bit1 [NonAssocRing R] {n r : R} : r * bit1 n = (2 : ℤ) • (r * n)
 @[simp]
 theorem zsmul_eq_mul [Ring R] (a : R) : ∀ n : ℤ, n • a = n * a
   | (n : ℕ) => by rw [coe_nat_zsmul, nsmul_eq_mul, Int.cast_ofNat]
-  | -[n+1] => by simp [Nat.cast_succ, neg_add_rev, Int.cast_negSucc, add_mul]
+  | -[1+ n] => by simp [Nat.cast_succ, neg_add_rev, Int.cast_negSucc, add_mul]
 #align zsmul_eq_mul zsmul_eq_mul
 
 theorem zsmul_eq_mul' [Ring R] (a : R) (n : ℤ) : n • a = a * n := by rw [zsmul_eq_mul, (n.cast_commute a).Eq]
@@ -519,7 +519,7 @@ instance NonUnitalNonAssocRing.int_smul_comm_class [NonUnitalNonAssocRing R] : S
   ⟨fun n x y =>
     match n with
     | (n : ℕ) => by simp_rw [coe_nat_zsmul, smul_comm]
-    | -[n+1] => by simp_rw [zsmul_neg_succ_of_nat, smul_eq_mul, mul_neg, mul_smul_comm]⟩
+    | -[1+ n] => by simp_rw [zsmul_neg_succ_of_nat, smul_eq_mul, mul_neg, mul_smul_comm]⟩
 #align non_unital_non_assoc_ring.int_smul_comm_class NonUnitalNonAssocRing.int_smul_comm_class
 
 /-- Note that `add_comm_group.int_is_scalar_tower` requires stronger assumptions on `R`. -/
@@ -527,7 +527,7 @@ instance NonUnitalNonAssocRing.int_is_scalar_tower [NonUnitalNonAssocRing R] : I
   ⟨fun n x y =>
     match n with
     | (n : ℕ) => by simp_rw [coe_nat_zsmul, smul_assoc]
-    | -[n+1] => by simp_rw [zsmul_neg_succ_of_nat, smul_eq_mul, neg_mul, smul_mul_assoc]⟩
+    | -[1+ n] => by simp_rw [zsmul_neg_succ_of_nat, smul_eq_mul, neg_mul, smul_mul_assoc]⟩
 #align non_unital_non_assoc_ring.int_is_scalar_tower NonUnitalNonAssocRing.int_is_scalar_tower
 
 theorem zsmul_int_int (a b : ℤ) : a • b = a * b := by simp
@@ -623,7 +623,7 @@ theorem abs_pow (a : R) (n : ℕ) : |a ^ n| = |a| ^ n :=
 
 @[simp]
 theorem pow_bit1_neg_iff : a ^ bit1 n < 0 ↔ a < 0 :=
-  ⟨fun h => not_le.1 fun h' => not_le.2 h <| pow_nonneg h' _, fun ha => pow_bit1_neg ha n⟩
+  ⟨fun h => not_le.1 $ fun h' => not_le.2 h $ pow_nonneg h' _, fun ha => pow_bit1_neg ha n⟩
 #align pow_bit1_neg_iff pow_bit1_neg_iff
 
 @[simp]
@@ -671,7 +671,7 @@ end LinearOrderedRing
 namespace Int
 
 @[simp]
-theorem nat_abs_sq (x : ℤ) : (x.natAbs ^ 2 : ℤ) = x ^ 2 := by rw [sq, Int.nat_abs_mul_self', sq]
+theorem nat_abs_sq (x : ℤ) : (x.natAbs ^ 2 : ℤ) = x ^ 2 := by rw [sq, Int.natAbs_mul_self', sq]
 #align int.nat_abs_sq Int.nat_abs_sq
 
 alias nat_abs_sq ← nat_abs_pow_two
@@ -685,7 +685,7 @@ theorem abs_le_self_sq (a : ℤ) : (Int.natAbs a : ℤ) ≤ a ^ 2 := by
 alias abs_le_self_sq ← abs_le_self_pow_two
 
 theorem le_self_sq (b : ℤ) : b ≤ b ^ 2 :=
-  le_trans le_nat_abs (abs_le_self_sq _)
+  le_trans le_natAbs (abs_le_self_sq _)
 #align int.le_self_sq Int.le_self_sq
 
 alias le_self_sq ← le_self_pow_two
@@ -710,7 +710,7 @@ def powersHom [Monoid M] : M ≃ (Multiplicative ℕ →* M) where
       exact to_add_one, fun m n => pow_add x m n⟩
   invFun f := f (Multiplicative.ofAdd 1)
   left_inv := pow_one
-  right_inv f := MonoidHom.ext fun n => by simp [← f.map_pow, ← of_add_nsmul]
+  right_inv f := MonoidHom.ext $ fun n => by simp [← f.map_pow, ← of_add_nsmul]
 #align powers_hom powersHom
 
 /-- Monoid homomorphisms from `multiplicative ℤ` are defined by the image
@@ -719,7 +719,7 @@ def zpowersHom [Group G] : G ≃ (Multiplicative ℤ →* G) where
   toFun x := ⟨fun n => x ^ n.toAdd, zpow_zero x, fun m n => zpow_add x m n⟩
   invFun f := f (Multiplicative.ofAdd 1)
   left_inv := zpow_one
-  right_inv f := MonoidHom.ext fun n => by simp [← f.map_zpow, ← of_add_zsmul]
+  right_inv f := MonoidHom.ext $ fun n => by simp [← f.map_zpow, ← of_add_zsmul]
 #align zpowers_hom zpowersHom
 
 /-- Additive homomorphisms from `ℕ` are defined by the image of `1`. -/
@@ -727,7 +727,7 @@ def multiplesHom [AddMonoid A] : A ≃ (ℕ →+ A) where
   toFun x := ⟨fun n => n • x, zero_nsmul x, fun m n => add_nsmul _ _ _⟩
   invFun f := f 1
   left_inv := one_nsmul
-  right_inv f := AddMonoidHom.ext_nat <| one_nsmul (f 1)
+  right_inv f := AddMonoidHom.ext_nat $ one_nsmul (f 1)
 #align multiples_hom multiplesHom
 
 /-- Additive homomorphisms from `ℤ` are defined by the image of `1`. -/
@@ -735,7 +735,7 @@ def zmultiplesHom [AddGroup A] : A ≃ (ℤ →+ A) where
   toFun x := ⟨fun n => n • x, zero_zsmul x, fun m n => add_zsmul _ _ _⟩
   invFun f := f 1
   left_inv := one_zsmul
-  right_inv f := AddMonoidHom.ext_int <| one_zsmul (f 1)
+  right_inv f := AddMonoidHom.ext_int $ one_zsmul (f 1)
 #align zmultiples_hom zmultiplesHom
 
 attribute [to_additive multiplesHom] powersHom
@@ -803,7 +803,7 @@ theorem MonoidHom.apply_mnat [Monoid M] (f : Multiplicative ℕ →* M) (n : Mul
 @[ext.1]
 theorem MonoidHom.ext_mnat [Monoid M] ⦃f g : Multiplicative ℕ →* M⦄
     (h : f (Multiplicative.ofAdd 1) = g (Multiplicative.ofAdd 1)) : f = g :=
-  MonoidHom.ext fun n => by rw [f.apply_mnat, g.apply_mnat, h]
+  MonoidHom.ext $ fun n => by rw [f.apply_mnat, g.apply_mnat, h]
 #align monoid_hom.ext_mnat MonoidHom.ext_mnat
 
 theorem MonoidHom.apply_mint [Group M] (f : Multiplicative ℤ →* M) (n : Multiplicative ℤ) :
@@ -832,22 +832,22 @@ variable (M G A)
 
 /-- If `M` is commutative, `powers_hom` is a multiplicative equivalence. -/
 def powersMulHom [CommMonoid M] : M ≃* (Multiplicative ℕ →* M) :=
-  { powersHom M with map_mul' := fun a b => MonoidHom.ext <| by simp [mul_pow] }
+  { powersHom M with map_mul' := fun a b => MonoidHom.ext $ by simp [mul_pow] }
 #align powers_mul_hom powersMulHom
 
 /-- If `M` is commutative, `zpowers_hom` is a multiplicative equivalence. -/
 def zpowersMulHom [CommGroup G] : G ≃* (Multiplicative ℤ →* G) :=
-  { zpowersHom G with map_mul' := fun a b => MonoidHom.ext <| by simp [mul_zpow] }
+  { zpowersHom G with map_mul' := fun a b => MonoidHom.ext $ by simp [mul_zpow] }
 #align zpowers_mul_hom zpowersMulHom
 
 /-- If `M` is commutative, `multiples_hom` is an additive equivalence. -/
 def multiplesAddHom [AddCommMonoid A] : A ≃+ (ℕ →+ A) :=
-  { multiplesHom A with map_add' := fun a b => AddMonoidHom.ext <| by simp [nsmul_add] }
+  { multiplesHom A with map_add' := fun a b => AddMonoidHom.ext $ by simp [nsmul_add] }
 #align multiples_add_hom multiplesAddHom
 
 /-- If `M` is commutative, `zmultiples_hom` is an additive equivalence. -/
 def zmultiplesAddHom [AddCommGroup A] : A ≃+ (ℤ →+ A) :=
-  { zmultiplesHom A with map_add' := fun a b => AddMonoidHom.ext <| by simp [zsmul_add] }
+  { zmultiplesHom A with map_add' := fun a b => AddMonoidHom.ext $ by simp [zsmul_add] }
 #align zmultiples_add_hom zmultiplesAddHom
 
 variable {M G A}
@@ -928,9 +928,9 @@ end
 variable [Monoid M] [Group G] [Ring R]
 
 @[simp, to_additive]
-theorem units_zpow_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a ↑(x ^ m) ↑(y ^ m)
+theorem units_zpow_right {a : M} {x y : Mˣ} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (↑(x ^ m)) ↑(y ^ m)
   | (n : ℕ) => by simp only [zpow_coe_nat, Units.coe_pow, h, pow_right]
-  | -[n+1] => by simp only [zpow_neg_succ_of_nat, Units.coe_pow, units_inv_right, h, pow_right]
+  | -[1+ n] => by simp only [zpow_neg_succ_of_nat, Units.coe_pow, units_inv_right, h, pow_right]
 #align semiconj_by.units_zpow_right SemiconjBy.units_zpow_right
 
 variable {a b x y x' y' : R}

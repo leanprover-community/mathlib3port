@@ -139,7 +139,7 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₁` to
   `p.symm.trans p`. -/
 def reflSymmTrans (p : Path x₀ x₁) : Homotopy (Path.refl x₁) (p.symm.trans p) :=
-  (reflTransSymm p.symm).cast rfl <| congr_arg _ Path.symm_symm
+  (reflTransSymm p.symm).cast rfl $ congr_arg _ Path.symm_symm
 #align path.homotopy.refl_symm_trans Path.Homotopy.reflSymmTrans
 
 end
@@ -335,7 +335,7 @@ def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.GroupoidCat where
   map X Y f :=
     { obj := f, map := fun x y p => p.mapFn f, map_id' := fun X => rfl,
       map_comp' := fun x y z p q =>
-        (Quotient.induction_on₂ p q) fun a b => by
+        Quotient.induction_on₂ p q $ fun a b => by
           simp [comp_eq, ← Path.Homotopic.map_lift, ← Path.Homotopic.comp_lift] }
   map_id' := by
     intro X
@@ -356,13 +356,13 @@ def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.GroupoidCat where
 #align fundamental_groupoid.fundamental_groupoid_functor FundamentalGroupoid.fundamentalGroupoidFunctor
 
 -- mathport name: fundamental_groupoid_functor
-localized [FundamentalGroupoid] notation "π" => FundamentalGroupoid.fundamentalGroupoidFunctor
+scoped notation "π" => FundamentalGroupoid.fundamentalGroupoidFunctor
 
 -- mathport name: fundamental_groupoid_functor.obj
-localized [FundamentalGroupoid] notation "πₓ" => FundamentalGroupoid.fundamentalGroupoidFunctor.obj
+scoped notation "πₓ" => FundamentalGroupoid.fundamentalGroupoidFunctor.obj
 
 -- mathport name: fundamental_groupoid_functor.map
-localized [FundamentalGroupoid] notation "πₘ" => FundamentalGroupoid.fundamentalGroupoidFunctor.map
+scoped notation "πₘ" => FundamentalGroupoid.fundamentalGroupoidFunctor.map
 
 theorem map_eq {X Y : TopCat} {x₀ x₁ : X} (f : C(X, Y)) (p : Path.Homotopic.Quotient x₀ x₁) :
     (πₘ f).map p = p.mapFn f :=

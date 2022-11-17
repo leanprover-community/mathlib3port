@@ -54,7 +54,7 @@ theorem IsOpen.inter (s t : Set α) : IsOpen α s → IsOpen α t → IsOpen α 
   CompleteLattice.inf_continuous'
 #align Scott.is_open.inter ScottCat.IsOpen.inter
 
-theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀s) := by
+theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀ s) := by
   simp only [IsOpen] at hs⊢
   convert CompleteLattice.Sup_continuous' (setOf ⁻¹' s) _
   · ext1 x
@@ -123,7 +123,7 @@ theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : Isω
     
 #align is_ωSup_ωSup is_ωSup_ωSup
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:560:11: unsupported: specialize non-hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:563:11: unsupported: specialize non-hyp -/
 theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
     (f : ScottCat α → ScottCat β) (hf : Continuous f) : OmegaCompletePartialOrder.Continuous' f := by
   simp only [continuous_def, (· ⁻¹' ·)] at hf
@@ -139,7 +139,7 @@ theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α] [O
   intro c
   apply eq_of_forall_ge_iff
   intro z
-  specialize «./././Mathport/Syntax/Translate/Tactic/Lean3.lean:560:11: unsupported: specialize non-hyp»
+  specialize «./././Mathport/Syntax/Translate/Tactic/Lean3.lean:563:11: unsupported: specialize non-hyp»
   cases hf
   specialize hf_h c
   simp only [notBelow, OrderHom.coe_fun_mk, eq_iff_iff, mem_set_of_eq] at hf_h

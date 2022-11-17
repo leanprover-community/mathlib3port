@@ -29,11 +29,12 @@ open AbsoluteValue Real
 
 variable {Fq : Type _} [Fintype Fq]
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₀ i₁) -/
 /-- If `A` is a family of enough low-degree polynomials over a finite semiring, there is a
 pair of equal elements in `A`. -/
 theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
     (hb : natDegree b ≤ d) (A : Fin m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
-    ∃ i₀ i₁, i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
+    ∃ (i₀) (i₁), i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
   -- Since there are > q^d elements of A, and only q^d choices for the highest `d` coefficients,
   -- there must be two elements of A with the same coefficients at
   -- `0`, ... `degree b - 1` ≤ `d - 1`.
@@ -54,12 +55,13 @@ theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.car
   exact lt_of_lt_of_le (coe_lt_degree.mp hbj) hb
 #align polynomial.exists_eq_polynomial Polynomial.exists_eq_polynomial
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₀ i₁) -/
 /-- If `A` is a family of enough low-degree polynomials over a finite ring,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that their difference has small degree. -/
 theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
     (A : Fin m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
-    ∃ i₀ i₁, i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < ↑(natDegree b - d) := by
+    ∃ (i₀) (i₁), i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < ↑(natDegree b - d) := by
   have hb : b ≠ 0 := by
     rintro rfl
     specialize hA 0
@@ -98,12 +100,13 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
 
 variable [Field Fq]
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₀ i₁) -/
 /-- If `A` is a family of enough low-degree polynomials over a finite field,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that the difference of their remainders is close together. -/
 theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 < ε)
     (A : Fin (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊).succ → Fq[X]) :
-    ∃ i₀ i₁, i₀ ≠ i₁ ∧ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε := by
+    ∃ (i₀) (i₁), i₀ ≠ i₁ ∧ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε := by
   have hbε : 0 < card_pow_degree b • ε := by
     rw [Algebra.smul_def, eq_int_cast]
     exact mul_pos (int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε

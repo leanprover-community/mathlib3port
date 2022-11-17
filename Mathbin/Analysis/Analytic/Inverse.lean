@@ -507,6 +507,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1) (p 
 #align
   formal_multilinear_series.radius_right_inv_pos_of_radius_pos_aux2 FormalMultilinearSeries.radius_right_inv_pos_of_radius_pos_aux2
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (C r) -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr le_refl, ",", expr mul_le_mul_of_nonneg_left, ",", expr mul_nonneg, ",", expr norm_nonneg, ",", expr Cpos.le, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr le_refl, ",", expr mul_le_mul_of_nonneg_left, ",", expr mul_nonneg, ",", expr norm_nonneg, ",", expr Cpos.le, ",", expr zero_le_two, ",", expr pow_le_pow_of_le_left, ",", expr rpos.le, "]"],
@@ -518,13 +519,13 @@ theorem radius_right_inv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1) (p 
 also has a positive radius of convergence. -/
 theorem radius_right_inv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) (hp : 0 < p.radius) :
     0 < (p.right_inv i).radius := by
-  obtain ⟨C, r, Cpos, rpos, ple⟩ : ∃ (C r : _)(hC : 0 < C)(hr : 0 < r), ∀ n : ℕ, ∥p n∥ ≤ C * r ^ n :=
+  obtain ⟨C, r, Cpos, rpos, ple⟩ : ∃ (C) (r) (hC : 0 < C) (hr : 0 < r), ∀ n : ℕ, ∥p n∥ ≤ C * r ^ n :=
     le_mul_pow_of_radius_pos p hp
   let I := ∥(i.symm : F →L[𝕜] E)∥
   -- choose `a` small enough to make sure that `∑_{k ≤ n} aᵏ Qₖ` will be controllable by
   -- induction
   obtain ⟨a, apos, ha1, ha2⟩ :
-    ∃ (a : _)(apos : 0 < a), 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a ≤ 1 ∧ r * (I + 1) * a ≤ 1 / 2 := by
+    ∃ (a) (apos : 0 < a), 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a ≤ 1 ∧ r * (I + 1) * a ≤ 1 / 2 := by
     have : tendsto (fun a => 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) (𝓝 0) (𝓝 (2 * I * C * r ^ 2 * (I + 1) ^ 2 * 0)) :=
       tendsto_const_nhds.mul tendsto_id
     have A : ∀ᶠ a in 𝓝 0, 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a < 1 := by

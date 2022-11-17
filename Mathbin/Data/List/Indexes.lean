@@ -94,7 +94,7 @@ section FoldrWithIndex
 
 /-- Specification of `foldr_with_index_aux`. -/
 def foldrWithIndexAuxSpec (f : ℕ → α → β → β) (start : ℕ) (b : β) (as : List α) : β :=
-  foldr (uncurry f) b <| enumFrom start as
+  foldr (uncurry f) b $ enumFrom start as
 #align list.foldr_with_index_aux_spec List.foldrWithIndexAuxSpec
 
 theorem foldr_with_index_aux_spec_cons (f : ℕ → α → β → β) (start b a as) :
@@ -132,7 +132,7 @@ section FoldlWithIndex
 
 /-- Specification of `foldl_with_index_aux`. -/
 def foldlWithIndexAuxSpec (f : ℕ → α → β → α) (start : ℕ) (a : α) (bs : List β) : α :=
-  foldl (fun a (p : ℕ × β) => f p.fst a p.snd) a <| enumFrom start bs
+  foldl (fun a (p : ℕ × β) => f p.fst a p.snd) a $ enumFrom start bs
 #align list.foldl_with_index_aux_spec List.foldlWithIndexAuxSpec
 
 theorem foldl_with_index_aux_spec_cons (f : ℕ → α → β → α) (start a b bs) :
@@ -178,7 +178,7 @@ variable {m : Type u → Type v} [Applicative m]
 
 /-- Specification of `mmap_with_index_aux`. -/
 def mmapWithIndexAuxSpec {α β} (f : ℕ → α → m β) (start : ℕ) (as : List α) : m (List β) :=
-  List.traverse (uncurry f) <| enumFrom start as
+  List.traverse (uncurry f) $ enumFrom start as
 #align list.mmap_with_index_aux_spec List.mmapWithIndexAuxSpec
 
 -- Note: `traverse` the class method would require a less universe-polymorphic

@@ -63,7 +63,7 @@ theorem to_matrix_apply : e.toMatrix v i j = e.repr (v j) i :=
 #align basis.to_matrix_apply Basis.to_matrix_apply
 
 theorem to_matrix_transpose_apply : (e.toMatrix v)ᵀ j = e.repr (v j) :=
-  funext fun _ => rfl
+  funext $ fun _ => rfl
 #align basis.to_matrix_transpose_apply Basis.to_matrix_transpose_apply
 
 theorem to_matrix_eq_to_matrix_constr [Fintype ι] [DecidableEq ι] (v : ι → M) :
@@ -122,7 +122,7 @@ theorem sum_to_matrix_smul_self [Fintype ι] : (∑ i : ι, e.toMatrix v i j •
 #align basis.sum_to_matrix_smul_self Basis.sum_to_matrix_smul_self
 
 theorem to_matrix_map_vec_mul {S : Type _} [Ring S] [Algebra R S] [Fintype ι] (b : Basis ι R S) (v : ι' → S) :
-    ((b.toMatrix v).map <| algebraMap R S).vecMul b = v := by
+    ((b.toMatrix v).map $ algebraMap R S).vecMul b = v := by
   ext i
   simp_rw [vec_mul, dot_product, Matrix.map_apply, ← Algebra.commutes, ← Algebra.smul_def, sum_to_matrix_smul_self]
 #align basis.to_matrix_map_vec_mul Basis.to_matrix_map_vec_mul
@@ -211,10 +211,11 @@ theorem mul_basis_to_matrix [DecidableEq ι] [DecidableEq ι'] (b₁ : Basis ι 
 #align mul_basis_to_matrix mul_basis_to_matrix
 
 theorem basis_to_matrix_basis_fun_mul (b : Basis ι R (ι → R)) (A : Matrix ι ι R) :
-    b.toMatrix (Pi.basisFun R ι) ⬝ A = of fun i j => b.repr (Aᵀ j) i := by
-  classical simp only [basis_to_matrix_mul _ _ (Pi.basisFun R ι), Matrix.to_lin_eq_to_lin']
-    rw [LinearMap.to_matrix_apply, Matrix.to_lin'_apply, Pi.basis_fun_apply, Matrix.mul_vec_std_basis_apply,
-      Matrix.of_apply]
+    b.toMatrix (Pi.basisFun R ι) ⬝ A = of fun i j => b.repr (Aᵀ j) i := by classical
+  simp only [basis_to_matrix_mul _ _ (Pi.basisFun R ι), Matrix.to_lin_eq_to_lin']
+  ext (i j)
+  rw [LinearMap.to_matrix_apply, Matrix.to_lin'_apply, Pi.basis_fun_apply, Matrix.mul_vec_std_basis_apply,
+    Matrix.of_apply]
 #align basis_to_matrix_basis_fun_mul basis_to_matrix_basis_fun_mul
 
 /-- A generalization of `linear_map.to_matrix_id`. -/

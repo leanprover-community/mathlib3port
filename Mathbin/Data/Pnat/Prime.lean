@@ -165,7 +165,7 @@ def Coprime (m n : ℕ+) : Prop :=
 #align pnat.coprime Pnat.Coprime
 
 @[simp, norm_cast]
-theorem coprime_coe {m n : ℕ+} : Nat.Coprime ↑m ↑n ↔ m.Coprime n := by
+theorem coprime_coe {m n : ℕ+} : Nat.Coprime (↑m) ↑n ↔ m.Coprime n := by
   unfold coprime
   unfold Nat.Coprime
   rw [← coe_inj]

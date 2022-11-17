@@ -48,7 +48,7 @@ variable (R : Type _) [Monoid R] (S : Submonoid R) [OreSet S]
 
 /-- The setoid on `R × S` used for the Ore localization. -/
 def oreEqv : Setoid (R × S) where
-  R rs rs' := ∃ (u : S)(v : R), rs'.1 * u = rs.1 * v ∧ (rs'.2 : R) * u = rs.2 * v
+  R rs rs' := ∃ (u : S) (v : R), rs'.1 * u = rs.1 * v ∧ (rs'.2 : R) * u = rs.2 * v
   iseqv := by
     refine' ⟨_, _, _⟩
     · rintro ⟨r, s⟩
@@ -124,7 +124,7 @@ protected theorem ind {β : R[S⁻¹] → Prop} (c : ∀ (r : R) (s : S), β (r 
 #align ore_localization.ind OreLocalization.ind
 
 theorem ore_div_eq_iff {r₁ r₂ : R} {s₁ s₂ : S} :
-    r₁ /ₒ s₁ = r₂ /ₒ s₂ ↔ ∃ (u : S)(v : R), r₂ * u = r₁ * v ∧ (s₂ : R) * u = s₁ * v :=
+    r₁ /ₒ s₁ = r₂ /ₒ s₂ ↔ ∃ (u : S) (v : R), r₂ * u = r₁ * v ∧ (s₂ : R) * u = s₁ * v :=
   Quotient.eq'
 #align ore_localization.ore_div_eq_iff OreLocalization.ore_div_eq_iff
 
@@ -161,7 +161,7 @@ protected theorem eq_of_num_factor_eq {r r' r₁ r₂ : R} {s t : S} (h : r * t 
 under expansion on the right. -/
 def liftExpand {C : Sort _} (P : R → S → C)
     (hP : ∀ (r t : R) (s : S) (ht : (s : R) * t ∈ S), P r s = P (r * t) ⟨s * t, ht⟩) : R[S⁻¹] → C :=
-  (Quotient.lift fun p : R × S => P p.1 p.2) fun p q pq => by
+  (Quotient.lift fun p : R × S => P p.1 p.2) $ fun p q pq => by
     cases' p with r₁ s₁
     cases' q with r₂ s₂
     rcases pq with ⟨u, v, hr₂, hs₂⟩
@@ -197,7 +197,7 @@ def lift₂Expand {C : Sort _} (P : R → S → R → S → C)
       ∀ (r₁ t₁ : R) (s₁ : S) (ht₁ : (s₁ : R) * t₁ ∈ S) (r₂ t₂ : R) (s₂ : S) (ht₂ : (s₂ : R) * t₂ ∈ S),
         P r₁ s₁ r₂ s₂ = P (r₁ * t₁) ⟨s₁ * t₁, ht₁⟩ (r₂ * t₂) ⟨s₂ * t₂, ht₂⟩) :
     R[S⁻¹] → R[S⁻¹] → C :=
-  (liftExpand fun r₁ s₁ => (liftExpand (P r₁ s₁)) fun r₂ t₂ s₂ ht₂ => by simp [hP r₁ 1 s₁ (by simp) r₂ t₂ s₂ ht₂])
+  (liftExpand fun r₁ s₁ => liftExpand (P r₁ s₁) $ fun r₂ t₂ s₂ ht₂ => by simp [hP r₁ 1 s₁ (by simp) r₂ t₂ s₂ ht₂]) $
     fun r₁ t₁ s₁ ht₁ => by
     ext x
     induction' x using OreLocalization.ind with r₂ s₂
@@ -248,7 +248,7 @@ private theorem mul'_char (r₁ r₂ : R) (s₁ s₂ : S) (u : S) (v : R) (huv :
 
 /-- The multiplication on the Ore localization of monoids. -/
 protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
-  (lift₂Expand mul') fun r₂ p s₂ hp r₁ r s₁ hr => by
+  lift₂Expand mul' $ fun r₂ p s₂ hp r₁ r s₁ hr => by
     have h₁ := ore_eq r₁ s₂
     set r₁' := ore_num r₁ s₂
     set s₂' := ore_denom r₁ s₂
@@ -295,7 +295,7 @@ theorem ore_div_mul_char (r₁ r₂ : R) (s₁ s₂ : S) (r' : R) (s' : S) (huv 
 /-- Another characterization lemma for the multiplication on the Ore localizaion delivering
 Ore witnesses and conditions bundled in a sigma type. -/
 def oreDivMulChar' (r₁ r₂ : R) (s₁ s₂ : S) :
-    Σ'r' : R, Σ's' : S, r₂ * (s' : R) = s₁ * r' ∧ r₁ /ₒ s₁ * (r₂ /ₒ s₂) = r₁ * r' /ₒ (s₂ * s') :=
+    Σ' r' : R, Σ' s' : S, r₂ * (s' : R) = s₁ * r' ∧ r₁ /ₒ s₁ * (r₂ /ₒ s₂) = r₁ * r' /ₒ (s₂ * s') :=
   ⟨oreNum r₂ s₁, oreDenom r₂ s₁, ore_eq r₂ s₁, ore_div_mul_ore_div⟩
 #align ore_localization.ore_div_mul_char' OreLocalization.oreDivMulChar'
 
@@ -418,7 +418,7 @@ include f fS hf
 to a morphism `R[S⁻¹] →* T`. -/
 def universalMulHom : R[S⁻¹] →* T where
   toFun x :=
-    (x.liftExpand fun r s => f r * ((fS s)⁻¹ : Units T)) fun r t s ht => by
+    (x.liftExpand fun r s => f r * ((fS s)⁻¹ : Units T)) $ fun r t s ht => by
       have : (fS ⟨s * t, ht⟩ : T) = fS s * f t := by simp only [← hf, SetLike.coe_mk, MonoidHom.map_mul]
       conv_rhs =>
       rw [MonoidHom.map_mul, ← mul_one (f r), ← Units.coe_one, ← mul_left_inv (fS s)]
@@ -565,7 +565,7 @@ attribute [local instance] OreLocalization.oreEqv
 private def add' (r₂ : R) (s₂ : S) : R[S⁻¹] → R[S⁻¹] :=
   (--plus tilde
       Quotient.lift
-      fun r₁s₁ : R × S => add'' r₁s₁.1 r₁s₁.2 r₂ s₂) <|
+      fun r₁s₁ : R × S => add'' r₁s₁.1 r₁s₁.2 r₂ s₂) $
     by
     rintro ⟨r₁', s₁'⟩ ⟨r₁, s₁⟩ ⟨sb, rb, hb, hb'⟩
     -- s*, r*
@@ -661,7 +661,7 @@ theorem ore_div_add_char {r r' : R} (s s' : S) (rb : R) (sb : S) (h : (s : R) * 
 /-- Another characterization of the addition on the Ore localization, bundling up all witnesses
 and conditions into a sigma type. -/
 def oreDivAddChar' (r r' : R) (s s' : S) :
-    Σ'r'' : R, Σ's'' : S, (s : R) * s'' = s' * r'' ∧ r /ₒ s + r' /ₒ s' = (r * s'' + r' * r'') /ₒ (s * s'') :=
+    Σ' r'' : R, Σ' s'' : S, (s : R) * s'' = s' * r'' ∧ r /ₒ s + r' /ₒ s' = (r * s'' + r' * r'') /ₒ (s * s'') :=
   ⟨oreNum s s', oreDenom s s', ore_eq s s', ore_div_add_ore_div⟩
 #align ore_localization.ore_div_add_char' OreLocalization.oreDivAddChar'
 
@@ -869,7 +869,7 @@ theorem universal_hom_commutes {r : R} : universalHom f fS hf (numeratorHom r) =
 
 theorem universal_hom_unique (φ : R[S⁻¹] →+* T) (huniv : ∀ r : R, φ (numeratorHom r) = f r) :
     φ = universalHom f fS hf :=
-  RingHom.coe_monoid_hom_injective <| universal_mul_hom_unique (RingHom.toMonoidHom f) fS hf (↑φ) huniv
+  RingHom.coe_monoid_hom_injective $ universal_mul_hom_unique (RingHom.toMonoidHom f) fS hf (↑φ) huniv
 #align ore_localization.universal_hom_unique OreLocalization.universal_hom_unique
 
 end UMP
@@ -882,7 +882,7 @@ variable {R : Type _} [Ring R] {S : Submonoid R} [OreSet S]
 
 /-- Negation on the Ore localization is defined via negation on the numerator. -/
 protected def neg : R[S⁻¹] → R[S⁻¹] :=
-  (liftExpand fun (r : R) (s : S) => -r /ₒ s) fun r t s ht => by rw [neg_mul_eq_neg_mul, ← OreLocalization.expand]
+  (liftExpand fun (r : R) (s : S) => -r /ₒ s) $ fun r t s ht => by rw [neg_mul_eq_neg_mul, ← OreLocalization.expand]
 #align ore_localization.neg OreLocalization.neg
 
 instance : Neg R[S⁻¹] :=

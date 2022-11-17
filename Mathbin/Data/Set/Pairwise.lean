@@ -90,7 +90,7 @@ theorem pairwise_singleton (a : α) (r : α → α → Prop) : Set.Pairwise {a} 
 #align set.pairwise_singleton Set.pairwise_singleton
 
 theorem pairwise_iff_of_refl [IsRefl α r] : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
-  forall₄_congr fun a _ b _ => or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp of_eq
+  forall₄_congr $ fun a _ b _ => or_iff_not_imp_left.symm.trans $ or_iff_right_of_imp of_eq
 #align set.pairwise_iff_of_refl Set.pairwise_iff_of_refl
 
 alias pairwise_iff_of_refl ↔ pairwise.of_refl _
@@ -107,7 +107,7 @@ theorem Nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.
       
     
   · rintro ⟨z, hz⟩ x hx y hy hne
-    exact @IsTrans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _ <| hz _ hy)
+    exact @IsTrans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _ $ hz _ hy)
     
 #align set.nonempty.pairwise_iff_exists_forall Set.Nonempty.pairwise_iff_exists_forall
 
@@ -148,7 +148,7 @@ theorem pairwise_union : (s ∪ t).Pairwise r ↔ s.Pairwise r ∧ t.Pairwise r 
 
 theorem pairwise_union_of_symmetric (hr : Symmetric r) :
     (s ∪ t).Pairwise r ↔ s.Pairwise r ∧ t.Pairwise r ∧ ∀ a ∈ s, ∀ b ∈ t, a ≠ b → r a b :=
-  pairwise_union.trans <| by simp only [hr.iff, and_self_iff]
+  pairwise_union.trans $ by simp only [hr.iff, and_self_iff]
 #align set.pairwise_union_of_symmetric Set.pairwise_union_of_symmetric
 
 theorem pairwise_insert : (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀ b ∈ s, a ≠ b → r a b ∧ r b a := by
@@ -205,7 +205,7 @@ theorem pairwise_Union {f : ι → Set α} (h : Directed (· ⊆ ·) f) : (⋃ n
 #align set.pairwise_Union Set.pairwise_Union
 
 theorem pairwise_sUnion {r : α → α → Prop} {s : Set (Set α)} (h : DirectedOn (· ⊆ ·) s) :
-    (⋃₀s).Pairwise r ↔ ∀ a ∈ s, Set.Pairwise a r := by
+    (⋃₀ s).Pairwise r ↔ ∀ a ∈ s, Set.Pairwise a r := by
   rw [sUnion_eq_Union, pairwise_Union h.directed_coe, SetCoe.forall]
   rfl
 #align set.pairwise_sUnion Set.pairwise_sUnion
@@ -261,7 +261,7 @@ theorem pairwise_disjoint_singleton (i : ι) (f : ι → α) : PairwiseDisjoint 
 
 theorem pairwise_disjoint_insert {i : ι} :
     (insert i s).PairwiseDisjoint f ↔ s.PairwiseDisjoint f ∧ ∀ j ∈ s, i ≠ j → Disjoint (f i) (f j) :=
-  Set.pairwise_insert_of_symmetric <| symmetric_disjoint.comap f
+  Set.pairwise_insert_of_symmetric $ symmetric_disjoint.comap f
 #align set.pairwise_disjoint_insert Set.pairwise_disjoint_insert
 
 theorem PairwiseDisjoint.insert (hs : s.PairwiseDisjoint f) {i : ι} (h : ∀ j ∈ s, i ≠ j → Disjoint (f i) (f j)) :
@@ -272,7 +272,7 @@ theorem PairwiseDisjoint.insert (hs : s.PairwiseDisjoint f) {i : ι} (h : ∀ j 
 theorem PairwiseDisjoint.image_of_le (hs : s.PairwiseDisjoint f) {g : ι → ι} (hg : f ∘ g ≤ f) :
     (g '' s).PairwiseDisjoint f := by
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ h
-  exact (hs ha hb <| ne_of_apply_ne _ h).mono (hg a) (hg b)
+  exact (hs ha hb $ ne_of_apply_ne _ h).mono (hg a) (hg b)
 #align set.pairwise_disjoint.image_of_le Set.PairwiseDisjoint.image_of_le
 
 theorem InjOn.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.InjOn g) :
@@ -283,13 +283,13 @@ theorem InjOn.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.InjO
 theorem PairwiseDisjoint.range (g : s → ι) (hg : ∀ i : s, f (g i) ≤ f i) (ht : s.PairwiseDisjoint f) :
     (range g).PairwiseDisjoint f := by
   rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
-  exact ((ht x.2 y.2) fun h => hxy <| congr_arg g <| Subtype.ext h).mono (hg x) (hg y)
+  exact (ht x.2 y.2 $ fun h => hxy $ congr_arg g $ Subtype.ext h).mono (hg x) (hg y)
 #align set.pairwise_disjoint.range Set.PairwiseDisjoint.range
 
 theorem pairwise_disjoint_union :
     (s ∪ t).PairwiseDisjoint f ↔
       s.PairwiseDisjoint f ∧ t.PairwiseDisjoint f ∧ ∀ ⦃i⦄, i ∈ s → ∀ ⦃j⦄, j ∈ t → i ≠ j → Disjoint (f i) (f j) :=
-  pairwise_union_of_symmetric <| symmetric_disjoint.comap f
+  pairwise_union_of_symmetric $ symmetric_disjoint.comap f
 #align set.pairwise_disjoint_union Set.pairwise_disjoint_union
 
 theorem PairwiseDisjoint.union (hs : s.PairwiseDisjoint f) (ht : t.PairwiseDisjoint f)
@@ -303,7 +303,7 @@ theorem pairwise_disjoint_Union {g : ι' → Set ι} (h : Directed (· ⊆ ·) g
 #align set.pairwise_disjoint_Union Set.pairwise_disjoint_Union
 
 theorem pairwise_disjoint_sUnion {s : Set (Set ι)} (h : DirectedOn (· ⊆ ·) s) :
-    (⋃₀s).PairwiseDisjoint f ↔ ∀ ⦃a⦄, a ∈ s → Set.PairwiseDisjoint a f :=
+    (⋃₀ s).PairwiseDisjoint f ↔ ∀ ⦃a⦄, a ∈ s → Set.PairwiseDisjoint a f :=
   pairwise_sUnion h
 #align set.pairwise_disjoint_sUnion Set.pairwise_disjoint_sUnion
 
@@ -322,12 +322,12 @@ variable [SemilatticeInf α] [OrderBot α] {s t : Set ι} {f g : ι → α}
 -- classical
 theorem PairwiseDisjoint.elim' (hs : s.PairwiseDisjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (h : f i ⊓ f j ≠ ⊥) :
     i = j :=
-  (hs.elim hi hj) fun hij => h hij.eq_bot
+  hs.elim hi hj $ fun hij => h hij.eq_bot
 #align set.pairwise_disjoint.elim' Set.PairwiseDisjoint.elim'
 
 theorem PairwiseDisjoint.eq_of_le (hs : s.PairwiseDisjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (hf : f i ≠ ⊥)
     (hij : f i ≤ f j) : i = j :=
-  (hs.elim' hi hj) fun h => hf <| (inf_of_le_left hij).symm.trans h
+  hs.elim' hi hj $ fun h => hf $ (inf_of_le_left hij).symm.trans h
 #align set.pairwise_disjoint.eq_of_le Set.PairwiseDisjoint.eq_of_le
 
 end SemilatticeInfBot
@@ -348,7 +348,7 @@ theorem PairwiseDisjoint.bUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → �
   obtain hcd | hcd := eq_or_ne (g c) (g d)
   · exact hg d hd (hcd.subst ha) hb hab
     
-  · exact (hs hc hd <| ne_of_apply_ne _ hcd).mono (le_supr₂ a ha) (le_supr₂ b hb)
+  · exact (hs hc hd $ ne_of_apply_ne _ hcd).mono (le_supr₂ a ha) (le_supr₂ b hb)
     
 #align set.pairwise_disjoint.bUnion Set.PairwiseDisjoint.bUnion
 
@@ -363,19 +363,19 @@ theorem pairwise_disjoint_range_singleton : (Set.range (singleton : ι → Set �
 #align set.pairwise_disjoint_range_singleton Set.pairwise_disjoint_range_singleton
 
 theorem pairwise_disjoint_fiber (f : ι → α) (s : Set α) : s.PairwiseDisjoint fun a => f ⁻¹' {a} := fun a _ b _ h =>
-  disjoint_iff_inf_le.mpr fun i ⟨hia, hib⟩ => h <| (Eq.symm hia).trans hib
+  disjoint_iff_inf_le.mpr $ fun i ⟨hia, hib⟩ => h $ (Eq.symm hia).trans hib
 #align set.pairwise_disjoint_fiber Set.pairwise_disjoint_fiber
 
 -- classical
 theorem PairwiseDisjoint.elim_set {s : Set ι} {f : ι → Set α} (hs : s.PairwiseDisjoint f) {i j : ι} (hi : i ∈ s)
     (hj : j ∈ s) (a : α) (hai : a ∈ f i) (haj : a ∈ f j) : i = j :=
-  hs.elim hi hj <| not_disjoint_iff.2 ⟨a, hai, haj⟩
+  hs.elim hi hj $ not_disjoint_iff.2 ⟨a, hai, haj⟩
 #align set.pairwise_disjoint.elim_set Set.PairwiseDisjoint.elim_set
 
 theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).PairwiseDisjoint f) :
     ((⋃ i ∈ s, f i) \ ⋃ i ∈ t, f i) = ⋃ i ∈ s \ t, f i := by
   refine'
-    (bUnion_diff_bUnion_subset f s t).antisymm (Union₂_subset fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
+    (bUnion_diff_bUnion_subset f s t).antisymm (Union₂_subset $ fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
   rw [mem_Union₂]
   rintro ⟨j, hj, haj⟩
   exact (h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm).le_bot ⟨ha, haj⟩
@@ -383,9 +383,9 @@ theorem bUnion_diff_bUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).
 
 /-- Equivalence between a disjoint bounded union and a dependent sum. -/
 noncomputable def bUnionEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : s.PairwiseDisjoint f) :
-    (⋃ i ∈ s, f i) ≃ Σi : s, f i :=
-  (Equiv.setCongr (bUnion_eq_Union _ _)).trans <|
-    Union_eq_sigma_of_disjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => (h hi hj) fun eq => Ne <| Subtype.eq Eq
+    (⋃ i ∈ s, f i) ≃ Σ i : s, f i :=
+  (Equiv.setCongr (bUnion_eq_Union _ _)).trans $
+    Union_eq_sigma_of_disjoint $ fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj $ fun eq => Ne $ Subtype.eq Eq
 #align set.bUnion_eq_sigma_of_disjoint Set.bUnionEqSigmaOfDisjoint
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -394,14 +394,14 @@ disjoint iff `f` is injective . -/
 theorem pairwise_disjoint_image_right_iff {f : α → β → γ} {s : Set α} {t : Set β} (hf : ∀ a ∈ s, Injective (f a)) :
     (s.PairwiseDisjoint fun a => f a '' t) ↔ (s ×ˢ t).InjOn fun p => f p.1 p.2 := by
   refine' ⟨fun hs x hx y hy (h : f _ _ = _) => _, fun hs x hx y hy h => _⟩
-  · suffices x.1 = y.1 by exact Prod.ext this (hf _ hx.1 <| h.trans <| by rw [this])
+  · suffices x.1 = y.1 by exact Prod.ext this (hf _ hx.1 $ h.trans $ by rw [this])
     refine' hs.elim hx.1 hy.1 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.2, _⟩)
     rw [h]
     exact mem_image_of_mem _ hy.2
     
   · refine' disjoint_iff_inf_le.mpr _
     rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
-    exact h (congr_arg Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
+    exact h (congr_arg Prod.fst $ hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
     
 #align set.pairwise_disjoint_image_right_iff Set.pairwise_disjoint_image_right_iff
 
@@ -412,21 +412,21 @@ theorem pairwise_disjoint_image_left_iff {f : α → β → γ} {s : Set α} {t 
     (hf : ∀ b ∈ t, Injective fun a => f a b) :
     (t.PairwiseDisjoint fun b => (fun a => f a b) '' s) ↔ (s ×ˢ t).InjOn fun p => f p.1 p.2 := by
   refine' ⟨fun ht x hx y hy (h : f _ _ = _) => _, fun ht x hx y hy h => _⟩
-  · suffices x.2 = y.2 by exact Prod.ext (hf _ hx.2 <| h.trans <| by rw [this]) this
+  · suffices x.2 = y.2 by exact Prod.ext (hf _ hx.2 $ h.trans $ by rw [this]) this
     refine' ht.elim hx.2 hy.2 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.1, _⟩)
     rw [h]
     exact mem_image_of_mem _ hy.1
     
   · refine' disjoint_iff_inf_le.mpr _
     rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
-    exact h (congr_arg Prod.snd <| ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
+    exact h (congr_arg Prod.snd $ ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
     
 #align set.pairwise_disjoint_image_left_iff Set.pairwise_disjoint_image_left_iff
 
 end Set
 
 theorem pairwise_disjoint_fiber (f : ι → α) : Pairwise (Disjoint on fun a : α => f ⁻¹' {a}) :=
-  Set.pairwise_univ.1 <| Set.pairwise_disjoint_fiber f univ
+  Set.pairwise_univ.1 $ Set.pairwise_disjoint_fiber f univ
 #align pairwise_disjoint_fiber pairwise_disjoint_fiber
 
 section
@@ -437,7 +437,7 @@ theorem Set.PairwiseDisjoint.subset_of_bUnion_subset_bUnion (h₀ : (s ∪ t).Pa
     (h₁ : ∀ i ∈ s, (f i).Nonempty) (h : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, f i) : s ⊆ t := by
   rintro i hi
   obtain ⟨a, hai⟩ := h₁ i hi
-  obtain ⟨j, hj, haj⟩ := mem_Union₂.1 (h <| mem_Union₂_of_mem hi hai)
+  obtain ⟨j, hj, haj⟩ := mem_Union₂.1 (h $ mem_Union₂_of_mem hi hai)
   rwa [h₀.eq (subset_union_left _ _ hi) (subset_union_right _ _ hj) (not_disjoint_iff.2 ⟨a, hai, haj⟩)]
 #align set.pairwise_disjoint.subset_of_bUnion_subset_bUnion Set.PairwiseDisjoint.subset_of_bUnion_subset_bUnion
 
@@ -448,8 +448,8 @@ theorem Pairwise.subset_of_bUnion_subset_bUnion (h₀ : Pairwise (Disjoint on f)
 
 theorem Pairwise.bUnion_injective (h₀ : Pairwise (Disjoint on f)) (h₁ : ∀ i, (f i).Nonempty) :
     Injective fun s : Set ι => ⋃ i ∈ s, f i := fun s t h =>
-  ((h₀.subset_of_bUnion_subset_bUnion fun _ _ => h₁ _) <| h.Subset).antisymm <|
-    (h₀.subset_of_bUnion_subset_bUnion fun _ _ => h₁ _) <| h.Superset
+  ((h₀.subset_of_bUnion_subset_bUnion fun _ _ => h₁ _) $ h.Subset).antisymm $
+    (h₀.subset_of_bUnion_subset_bUnion fun _ _ => h₁ _) $ h.Superset
 #align pairwise.bUnion_injective Pairwise.bUnion_injective
 
 end

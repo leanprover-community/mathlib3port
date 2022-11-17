@@ -142,7 +142,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
                       "if"
                       (Lean.binderIdent `h)
                       ":"
-                      («term_∈_» `z "∈" (Term.app `Set.range [`f]))
+                      (Init.Core.«term_∈_» `z " ∈ " (Term.app `Set.range [`f]))
                       "then"
                       (Term.app `g [(Term.app `Classical.choose [`h])])
                       "else"
@@ -159,7 +159,10 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
                  []
                  (Tactic.change
                   "change"
-                  («term_=_» (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
+                  (Init.Core.«term_=_»
+                   (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                   " = "
+                   (Term.hole "_"))
                   [])
                  []
                  (Mathlib.Tactic.splitIfs "split_ifs" [] [])
@@ -223,7 +226,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
                  "if"
                  (Lean.binderIdent `h)
                  ":"
-                 («term_∈_» `z "∈" (Term.app `Set.range [`f]))
+                 (Init.Core.«term_∈_» `z " ∈ " (Term.app `Set.range [`f]))
                  "then"
                  (Term.app `g [(Term.app `Classical.choose [`h])])
                  "else"
@@ -240,7 +243,10 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
             []
             (Tactic.change
              "change"
-             («term_=_» (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
+             (Init.Core.«term_=_»
+              (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+              " = "
+              (Term.hole "_"))
              [])
             []
             (Mathlib.Tactic.splitIfs "split_ifs" [] [])
@@ -285,7 +291,10 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
           []
           (Tactic.change
            "change"
-           («term_=_» (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
+           (Init.Core.«term_=_»
+            (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+            " = "
+            (Term.hole "_"))
            [])
           []
           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
@@ -344,7 +353,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")]) []]
+     (Term.app `h [(Term.anonymousCtor "⟨" [`y "," `rfl] "⟩")])
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `False.elim
@@ -390,7 +399,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
       `Classical.choose_spec
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Classical.choose_spec [`h]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Classical.choose_spec [`h]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `mono
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -417,10 +426,10 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.change
        "change"
-       («term_=_» (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
+       (Init.Core.«term_=_» (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) " = " (Term.hole "_"))
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
+      (Init.Core.«term_=_» (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) " = " (Term.hole "_"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -444,7 +453,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `dite
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -474,7 +483,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
                "if"
                (Lean.binderIdent `h)
                ":"
-               («term_∈_» `z "∈" (Term.app `Set.range [`f]))
+               (Init.Core.«term_∈_» `z " ∈ " (Term.app `Set.range [`f]))
                "then"
                (Term.app `g [(Term.app `Classical.choose [`h])])
                "else"
@@ -493,7 +502,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
              "if"
              (Lean.binderIdent `h)
              ":"
-             («term_∈_» `z "∈" (Term.app `Set.range [`f]))
+             (Init.Core.«term_∈_» `z " ∈ " (Term.app `Set.range [`f]))
              "then"
              (Term.app `g [(Term.app `Classical.choose [`h])])
              "else"
@@ -509,7 +518,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
          "if"
          (Lean.binderIdent `h)
          ":"
-         («term_∈_» `z "∈" (Term.app `Set.range [`f]))
+         (Init.Core.«term_∈_» `z " ∈ " (Term.app `Set.range [`f]))
          "then"
          (Term.app `g [(Term.app `Classical.choose [`h])])
          "else"
@@ -521,7 +530,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
         "if"
         (Lean.binderIdent `h)
         ":"
-        («term_∈_» `z "∈" (Term.app `Set.range [`f]))
+        (Init.Core.«term_∈_» `z " ∈ " (Term.app `Set.range [`f]))
         "then"
         (Term.app `g [(Term.app `Classical.choose [`h])])
         "else"
@@ -531,7 +540,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
        "if"
        (Lean.binderIdent `h)
        ":"
-       («term_∈_» `z "∈" (Term.app `Set.range [`f]))
+       (Init.Core.«term_∈_» `z " ∈ " (Term.app `Set.range [`f]))
        "then"
        (Term.app `g [(Term.app `Classical.choose [`h])])
        "else"
@@ -562,13 +571,13 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
       `Classical.choose
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Classical.choose [`h]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Classical.choose [`h]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» `z "∈" (Term.app `Set.range [`f]))
+      (Init.Core.«term_∈_» `z " ∈ " (Term.app `Set.range [`f]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Set.range [`f])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -582,7 +591,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `z
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -704,7 +713,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable {L : C ⥤ D} {R : D ⥤ C} [PreservesMonomorphisms L]
 
-theorem injective_of_adjoint (adj : L ⊣ R) (J : D) [Injective J] : injective <| R.obj J :=
+theorem injective_of_adjoint (adj : L ⊣ R) (J : D) [Injective J] : injective $ R.obj J :=
   ⟨fun A A' g f im =>
     ⟨adj.hom_equiv _ _ (factor_thru ((adj.hom_equiv A J).symm g) (L.map f)),
       (adj.hom_equiv _ _).symm.Injective (by simp)⟩⟩

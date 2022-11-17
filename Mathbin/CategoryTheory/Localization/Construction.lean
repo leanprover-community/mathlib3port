@@ -55,7 +55,7 @@ structure LocQuiver (W : MorphismProperty C) where
   obj : C
 #align category_theory.localization.construction.loc_quiver CategoryTheory.Localization.Construction.LocQuiver
 
-instance : Quiver (LocQuiver W) where Hom A B := Sum (A.obj ⟶ B.obj) { f : B.obj ⟶ A.obj // W f }
+instance : Quiver (LocQuiver W) where Hom A B := (A.obj ⟶ B.obj) ⊕ { f : B.obj ⟶ A.obj // W f }
 
 /-- The object in the path category of `loc_quiver W` attached to an object in
 the category `C` -/

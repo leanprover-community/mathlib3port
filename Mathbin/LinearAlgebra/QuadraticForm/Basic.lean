@@ -246,7 +246,7 @@ theorem polar_zero_left (y : M) : polar Q 0 y = 0 := by
 
 @[simp]
 theorem polar_add_left (x x' y : M) : polar Q (x + x') y = polar Q x y + polar Q x' y :=
-  polar_add_left_iff.mpr <| Q.map_add_add_add_map x x' y
+  polar_add_left_iff.mpr $ Q.map_add_add_add_map x x' y
 #align quadratic_form.polar_add_left QuadraticForm.polar_add_left
 
 @[simp]
@@ -332,7 +332,7 @@ def ofPolar (to_fun : M → R) (to_fun_smul : ∀ (a : R) (x : M), to_fun (a •
 
 /-- In a ring the companion bilinear form is unique and equal to `quadratic_form.polar`. -/
 theorem some_exists_companion : Q.exists_companion.some = polarBilin Q :=
-  BilinForm.ext fun x y => by rw [polar_bilin_apply, polar, Q.exists_companion.some_spec, sub_sub, add_sub_cancel']
+  BilinForm.ext $ fun x y => by rw [polar_bilin_apply, polar, Q.exists_companion.some_spec, sub_sub, add_sub_cancel']
 #align quadratic_form.some_exists_companion QuadraticForm.some_exists_companion
 
 end Ring
@@ -759,12 +759,12 @@ theorem associated_to_quadratic_form (B : BilinForm R M) (x y : M) :
 #align quadratic_form.associated_to_quadratic_form QuadraticForm.associated_to_quadratic_form
 
 theorem associated_left_inverse (h : B₁.IsSymm) : associatedHom S B₁.toQuadraticForm = B₁ :=
-  BilinForm.ext fun x y => by
+  BilinForm.ext $ fun x y => by
     rw [associated_to_quadratic_form, is_symm.eq h x y, ← two_mul, ← mul_assoc, inv_of_mul_self, one_mul]
 #align quadratic_form.associated_left_inverse QuadraticForm.associated_left_inverse
 
 theorem to_quadratic_form_associated : (associatedHom S Q).toQuadraticForm = Q :=
-  QuadraticForm.ext fun x =>
+  QuadraticForm.ext $ fun x =>
     calc
       (associatedHom S Q).toQuadraticForm x = ⅟ 2 * (Q x + Q x) := by
         simp only [add_assoc, add_sub_cancel', one_mul, to_quadratic_form_apply, add_mul, associated_apply,
@@ -848,8 +848,8 @@ def Anisotropic (Q : QuadraticForm R M) : Prop :=
   ∀ x, Q x = 0 → x = 0
 #align quadratic_form.anisotropic QuadraticForm.Anisotropic
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ≠ » 0) -/
-theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) : ¬Anisotropic Q ↔ ∃ (x : _)(_ : x ≠ 0), Q x = 0 := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+theorem not_anisotropic_iff_exists (Q : QuadraticForm R M) : ¬Anisotropic Q ↔ ∃ (x) (_ : x ≠ 0), Q x = 0 := by
   simp only [anisotropic, not_forall, exists_prop, and_comm']
 #align quadratic_form.not_anisotropic_iff_exists QuadraticForm.not_anisotropic_iff_exists
 
@@ -882,7 +882,7 @@ variable {R₂ : Type u} [OrderedRing R₂] [AddCommMonoid M] [Module R₂ M]
 
 variable {Q₂ : QuadraticForm R₂ M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def PosDef (Q₂ : QuadraticForm R₂ M) : Prop :=
   ∀ (x) (_ : x ≠ 0), 0 < Q₂ x
@@ -899,15 +899,15 @@ theorem PosDef.nonneg {Q : QuadraticForm R₂ M} (hQ : PosDef Q) (x : M) : 0 ≤
 #align quadratic_form.pos_def.nonneg QuadraticForm.PosDef.nonneg
 
 theorem PosDef.anisotropic {Q : QuadraticForm R₂ M} (hQ : Q.PosDef) : Q.Anisotropic := fun x hQx =>
-  Classical.by_contradiction fun hx =>
-    lt_irrefl (0 : R₂) <| by
+  Classical.by_contradiction $ fun hx =>
+    lt_irrefl (0 : R₂) $ by
       have := hQ _ hx
       rw [hQx] at this
       exact this
 #align quadratic_form.pos_def.anisotropic QuadraticForm.PosDef.anisotropic
 
 theorem pos_def_of_nonneg {Q : QuadraticForm R₂ M} (h : ∀ x, 0 ≤ Q x) (h0 : Q.Anisotropic) : PosDef Q := fun x hx =>
-  lt_of_le_of_ne (h x) (Ne.symm fun hQx => hx <| h0 _ hQx)
+  lt_of_le_of_ne (h x) (Ne.symm $ fun hQx => hx $ h0 _ hQx)
 #align quadratic_form.pos_def_of_nonneg QuadraticForm.pos_def_of_nonneg
 
 theorem pos_def_iff_nonneg {Q : QuadraticForm R₂ M} : PosDef Q ↔ (∀ x, 0 ≤ Q x) ∧ Q.Anisotropic :=
@@ -919,7 +919,7 @@ theorem PosDef.add (Q Q' : QuadraticForm R₂ M) (hQ : PosDef Q) (hQ' : PosDef Q
 #align quadratic_form.pos_def.add QuadraticForm.PosDef.add
 
 theorem lin_mul_lin_self_pos_def {R} [LinearOrderedCommRing R] [Module R M] (f : M →ₗ[R] R) (hf : LinearMap.ker f = ⊥) :
-    PosDef (linMulLin f f) := fun x hx => mul_self_pos.2 fun h => hx <| LinearMap.ker_eq_bot'.mp hf _ h
+    PosDef (linMulLin f f) := fun x hx => mul_self_pos.2 fun h => hx $ LinearMap.ker_eq_bot'.mp hf _ h
 #align quadratic_form.lin_mul_lin_self_pos_def QuadraticForm.lin_mul_lin_self_pos_def
 
 end PosDef
@@ -1057,7 +1057,7 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
   obtain ⟨x, hx⟩ := exists_bilin_form_self_ne_zero hB₁ hB₂
   rw [← Submodule.finrank_add_eq_of_is_compl (is_compl_span_singleton_orthogonal hx).symm,
     finrank_span_singleton (ne_zero_of_not_is_ortho_self x hx)] at hd
-  let B' := B.restrict (B.orthogonal <| K ∙ x)
+  let B' := B.restrict (B.orthogonal $ K ∙ x)
   obtain ⟨v', hv₁⟩ := ih (B.restrict_symm hB₂ _ : B'.is_symm) (Nat.succ.inj hd)
   -- concatenate `x` with the basis obtained by induction
   let b :=
@@ -1068,8 +1068,8 @@ theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (h
         rw [← hc, Submodule.neg_mem_iff] at hy
         have := (is_compl_span_singleton_orthogonal hx).Disjoint
         rw [Submodule.disjoint_def] at this
-        have := this (c • x) (Submodule.smul_mem _ _ <| Submodule.mem_span_singleton_self _) hy
-        exact (smul_eq_zero.1 this).resolve_right fun h => hx <| h.symm ▸ zero_left _)
+        have := this (c • x) (Submodule.smul_mem _ _ $ Submodule.mem_span_singleton_self _) hy
+        exact (smul_eq_zero.1 this).resolve_right fun h => hx $ h.symm ▸ zero_left _)
       (by
         intro y
         refine' ⟨-B x y / B x x, fun z hz => _⟩

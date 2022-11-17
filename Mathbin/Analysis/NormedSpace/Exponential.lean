@@ -104,7 +104,7 @@ theorem exp_eq_tsum : exp 𝕂 = fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂)
   funext exp_series_sum_eq
 #align exp_eq_tsum exp_eq_tsum
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ())) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ())) -/
 @[simp]
 theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 := by
   suffices (fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n) 0 = ∑' n : ℕ, if n = 0 then 1 else 0 by
@@ -253,7 +253,7 @@ theorem exp_add_of_commute_of_mem_ball [CharZero 𝕂] {x y : 𝔸} (hxy : Commu
   congr
   ext
   rw [hxy.add_pow' _, Finset.smul_sum]
-  refine' tsum_congr fun n => (Finset.sum_congr rfl) fun kl hkl => _
+  refine' tsum_congr fun n => Finset.sum_congr rfl $ fun kl hkl => _
   rw [nsmul_eq_smul_cast 𝕂, smul_smul, smul_mul_smul, ← finset.nat.mem_antidiagonal.mp hkl, Nat.cast_add_choose,
     finset.nat.mem_antidiagonal.mp hkl]
   congr 1
@@ -269,12 +269,12 @@ noncomputable def invertibleExpOfMemBall [CharZero 𝕂] {x : 𝔸} (hx : x ∈ 
     have hnx : -x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius := by
       rw [Emetric.mem_ball, ← neg_zero, edist_neg_neg]
       exact hx
-    rw [← exp_add_of_commute_of_mem_ball (Commute.neg_left <| Commute.refl x) hnx hx, neg_add_self, exp_zero]
+    rw [← exp_add_of_commute_of_mem_ball (Commute.neg_left $ Commute.refl x) hnx hx, neg_add_self, exp_zero]
   mul_inv_of_self := by
     have hnx : -x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius := by
       rw [Emetric.mem_ball, ← neg_zero, edist_neg_neg]
       exact hx
-    rw [← exp_add_of_commute_of_mem_ball (Commute.neg_right <| Commute.refl x) hx hnx, add_neg_self, exp_zero]
+    rw [← exp_add_of_commute_of_mem_ball (Commute.neg_right $ Commute.refl x) hx hnx, add_neg_self, exp_zero]
 #align invertible_exp_of_mem_ball invertibleExpOfMemBall
 
 theorem is_unit_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸} (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
@@ -438,15 +438,15 @@ variable (𝕂)
 
 /-- `exp 𝕂 x` has explicit two-sided inverse `exp 𝕂 (-x)`. -/
 noncomputable def invertibleExp (x : 𝔸) : Invertible (exp 𝕂 x) :=
-  invertibleExpOfMemBall <| (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+  invertibleExpOfMemBall $ (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
 #align invertible_exp invertibleExp
 
 theorem is_unit_exp (x : 𝔸) : IsUnit (exp 𝕂 x) :=
-  is_unit_exp_of_mem_ball <| (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+  is_unit_exp_of_mem_ball $ (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
 #align is_unit_exp is_unit_exp
 
 theorem inv_of_exp (x : 𝔸) [Invertible (exp 𝕂 x)] : ⅟ (exp 𝕂 x) = exp 𝕂 (-x) :=
-  inv_of_exp_of_mem_ball <| (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+  inv_of_exp_of_mem_ball $ (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
 #align inv_of_exp inv_of_exp
 
 theorem Ring.inverse_exp (x : 𝔸) : Ring.inverse (exp 𝕂 x) = exp 𝕂 (-x) :=
@@ -458,12 +458,16 @@ end
 
 /-- In a Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`, if a family of elements `f i` mutually
 commute then `exp 𝕂 (∑ i, f i) = ∏ i, exp 𝕂 (f i)`. -/
-theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → 𝔸) (h : (s : Set ι).Pairwise fun i j => Commute (f i) (f j)) :
+theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → 𝔸) (h : (s : Set ι).Pairwise $ fun i j => Commute (f i) (f j)) :
     exp 𝕂 (∑ i in s, f i) = s.noncommProd (fun i => exp 𝕂 (f i)) fun i hi j hj _ => (h.of_refl hi hj).exp 𝕂 := by
-  classical induction' s using Finset.induction_on with a s ha ih
-    rw [Finset.noncomm_prod_insert_of_not_mem _ _ _ _ ha, Finset.sum_insert ha, exp_add_of_commute,
-      ih (h.mono <| Finset.subset_insert _ _)]
-    exact h.of_refl (Finset.mem_insert_self _ _) (Finset.mem_insert_of_mem hi)
+  classical
+  induction' s using Finset.induction_on with a s ha ih
+  · simp
+    
+  rw [Finset.noncomm_prod_insert_of_not_mem _ _ _ _ ha, Finset.sum_insert ha, exp_add_of_commute,
+    ih (h.mono $ Finset.subset_insert _ _)]
+  refine' Commute.sum_right _ _ _ fun i hi => _
+  exact h.of_refl (Finset.mem_insert_self _ _) (Finset.mem_insert_of_mem hi)
 #align exp_sum_of_commute exp_sum_of_commute
 
 theorem exp_nsmul (n : ℕ) (x : 𝔸) : exp 𝕂 (n • x) = exp 𝕂 x ^ n := by
@@ -478,7 +482,7 @@ variable (𝕂)
 
 /-- Any continuous ring homomorphism commutes with `exp`. -/
 theorem map_exp {F} [RingHomClass F 𝔸 𝔹] (f : F) (hf : Continuous f) (x : 𝔸) : f (exp 𝕂 x) = exp 𝕂 (f x) :=
-  map_exp_of_mem_ball f hf x <| (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+  map_exp_of_mem_ball f hf x $ (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
 #align map_exp map_exp
 
 theorem exp_smul {G} [Monoid G] [MulSemiringAction G 𝔸] [HasContinuousConstSmul G 𝔸] (g : G) (x : 𝔸) :
@@ -514,7 +518,7 @@ theorem Pi.exp_apply {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [∀ i, N
 
 theorem Pi.exp_def {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [∀ i, NormedRing (𝔸 i)] [∀ i, NormedAlgebra 𝕂 (𝔸 i)]
     [∀ i, CompleteSpace (𝔸 i)] (x : ∀ i, 𝔸 i) : exp 𝕂 x = fun i => exp 𝕂 (x i) :=
-  funext <| Pi.exp_apply 𝕂 x
+  funext $ Pi.exp_apply 𝕂 x
 #align pi.exp_def Pi.exp_def
 
 theorem Function.update_exp {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [DecidableEq ι] [∀ i, NormedRing (𝔸 i)]
@@ -528,7 +532,7 @@ theorem Function.update_exp {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [D
 end CompleteAlgebra
 
 theorem algebra_map_exp_comm (x : 𝕂) : algebraMap 𝕂 𝔸 (exp 𝕂 x) = exp 𝕂 (algebraMap 𝕂 𝔸 x) :=
-  algebra_map_exp_comm_of_mem_ball x <| (exp_series_radius_eq_top 𝕂 𝕂).symm ▸ edist_lt_top _ _
+  algebra_map_exp_comm_of_mem_ball x $ (exp_series_radius_eq_top 𝕂 𝕂).symm ▸ edist_lt_top _ _
 #align algebra_map_exp_comm algebra_map_exp_comm
 
 end AnyAlgebra
@@ -556,7 +560,7 @@ theorem exp_series_div_has_sum_exp (x : 𝔸) : HasSum (fun n => x ^ n / n !) (e
 variable {𝕂}
 
 theorem exp_neg (x : 𝔸) : exp 𝕂 (-x) = (exp 𝕂 x)⁻¹ :=
-  exp_neg_of_mem_ball <| (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
+  exp_neg_of_mem_ball $ (exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
 #align exp_neg exp_neg
 
 theorem exp_zsmul (z : ℤ) (x : 𝔸) : exp 𝕂 (z • x) = exp 𝕂 x ^ z := by

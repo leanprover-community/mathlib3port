@@ -41,7 +41,7 @@ unsafe def rat.mk_numeral (type has_zero has_one has_add has_neg has_div : expr)
     if denom = 1 then nume
     else
       let dene := denom.mk_numeral type Zero One Add
-      quote.1 (@Div.div.{0} (%%ₓtype) (%%ₓDiv) (%%ₓnume) (%%ₓdene))
+      q(@Div.div.{0} $(type) $(Div) $(nume) $(dene))
 #align rat.mk_numeral rat.mk_numeral
 
 section
@@ -53,58 +53,75 @@ attribute [local semireducible] reflected
 
 /-- `rat.reflect q` represents the rational number `q` as a numeral expression of type `ℚ`. -/
 unsafe instance rat.reflect : has_reflect ℚ :=
-  rat.mk_numeral (quote.1 ℚ) (quote.1 (by infer_instance : Zero ℚ)) (quote.1 (by infer_instance : One ℚ))
-    (quote.1 (by infer_instance : Add ℚ)) (quote.1 (by infer_instance : Neg ℚ)) (quote.1 (by infer_instance : Div ℚ))
+  rat.mk_numeral q(ℚ) q((by infer_instance : Zero ℚ)) q((by infer_instance : One ℚ)) q((by infer_instance : Add ℚ))
+    q((by infer_instance : Neg ℚ)) q((by infer_instance : Div ℚ))
 #align rat.reflect rat.reflect
 
 end
 
-/-- `rat.to_pexpr q` creates a `pexpr` that will evaluate to `q`.
-The `pexpr` does not hold any typing information:
-`to_expr ``((%%(rat.to_pexpr (3/4)) : K))` will create a native `K` numeral `(3/4 : K)`.
--/
-unsafe def rat.to_pexpr (q : ℚ) : pexpr :=
-  let n := q.num
-  let d := q.denom
-  if d = 1 then n.to_pexpr else pquote.1 ((%%ₓn.to_pexpr) / %%ₓd.to_pexpr)
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `rat.to_pexpr q` creates a `pexpr` that will evaluate to `q`.
+      The `pexpr` does not hold any typing information:
+      `to_expr ``((%%(rat.to_pexpr (3/4)) : K))` will create a native `K` numeral `(3/4 : K)`.
+      -/
+    unsafe
+  def
+    rat.to_pexpr
+    ( q : ℚ ) : pexpr
+    :=
+      let n := q . num let d := q . denom if d = 1 then n . to_pexpr else ` `( $ ( n . to_pexpr ) / $ ( d . to_pexpr ) )
 #align rat.to_pexpr rat.to_pexpr
 
-/-- Evaluates an expression as a rational number,
-if that expression represents a numeral or the quotient of two numerals. -/
-protected unsafe def expr.to_nonneg_rat : expr → Option ℚ
-  | quote.1 ((%%ₓe₁) / %%ₓe₂) => do
-    let m ← e₁.toNat
-    let n ← e₂.toNat
-    if c : m n then if h : 1 < n then return ⟨m, n, lt_trans zero_lt_one h, c⟩ else none else none
-  | e => do
-    let n ← e.toNat
-    return n
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Evaluates an expression as a rational number,
+      if that expression represents a numeral or the quotient of two numerals. -/
+    protected
+    unsafe
+  def
+    expr.to_nonneg_rat
+    : expr → Option ℚ
+    |
+        q( $ ( e₁ ) / $ ( e₂ ) )
+        =>
+        do
+          let m ← e₁ . toNat
+            let n ← e₂ . toNat
+            if c : m n then if h : 1 < n then return ⟨ m , n , lt_trans zero_lt_one h , c ⟩ else none else none
+      | e => do let n ← e . toNat return n
 #align expr.to_nonneg_rat expr.to_nonneg_rat
 
 /-- Evaluates an expression as a rational number,
 if that expression represents a numeral, the quotient of two numerals,
 the negation of a numeral, or the negation of the quotient of two numerals. -/
 protected unsafe def expr.to_rat : expr → Option ℚ
-  | quote.1 (Neg.neg (%%ₓe)) => do
+  | q(Neg.neg $(e)) => do
     let q ← e.to_nonneg_rat
     some (-q)
   | e => e.to_nonneg_rat
 #align expr.to_rat expr.to_rat
 
-/-- Evaluates an expression into a rational number, if that expression is built up from
-  numerals, +, -, *, /, ⁻¹  -/
-protected unsafe def expr.eval_rat : expr → Option ℚ
-  | quote.1 Zero.zero => some 0
-  | quote.1 One.one => some 1
-  | quote.1 (bit0 (%%ₓq)) => (· * ·) 2 <$> q.eval_rat
-  | quote.1 (bit1 (%%ₓq)) => (· + ·) 1 <$> (· * ·) 2 <$> q.eval_rat
-  | quote.1 ((%%ₓa) + %%ₓb) => (· + ·) <$> a.eval_rat <*> b.eval_rat
-  | quote.1 ((%%ₓa) - %%ₓb) => Sub.sub <$> a.eval_rat <*> b.eval_rat
-  | quote.1 ((%%ₓa) * %%ₓb) => (· * ·) <$> a.eval_rat <*> b.eval_rat
-  | quote.1 ((%%ₓa) / %%ₓb) => (· / ·) <$> a.eval_rat <*> b.eval_rat
-  | quote.1 (-%%ₓa) => Neg.neg <$> a.eval_rat
-  | quote.1 (%%ₓa)⁻¹ => Inv.inv <$> a.eval_rat
-  | _ => none
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Evaluates an expression into a rational number, if that expression is built up from
+        numerals, +, -, *, /, ⁻¹  -/
+    protected
+    unsafe
+  def
+    expr.eval_rat
+    : expr → Option ℚ
+    | q( Zero.zero ) => some 0
+      | q( One.one ) => some 1
+      | q( bit0 $ ( q ) ) => ( · * · ) 2 <$> q . eval_rat
+      | q( bit1 $ ( q ) ) => ( · + · ) 1 <$> ( · * · ) 2 <$> q . eval_rat
+      | q( $ ( a ) + $ ( b ) ) => ( · + · ) <$> a . eval_rat <*> b . eval_rat
+      | q( $ ( a ) - $ ( b ) ) => Sub.sub <$> a . eval_rat <*> b . eval_rat
+      | q( $ ( a ) * $ ( b ) ) => ( · * · ) <$> a . eval_rat <*> b . eval_rat
+      | q( $ ( a ) / $ ( b ) ) => ( · / · ) <$> a . eval_rat <*> b . eval_rat
+      | q( - $ ( a ) ) => Neg.neg <$> a . eval_rat
+      | q( $ ( a ) ⁻¹ ) => Inv.inv <$> a . eval_rat
+      | _ => none
 #align expr.eval_rat expr.eval_rat
 
 /-- `expr.of_rat α q` embeds `q` as a numeral expression inside the type `α`.
@@ -118,7 +135,7 @@ protected unsafe def expr.of_rat (α : expr) : ℚ → tactic expr
       else do
         let e₂ ← expr.of_nat α d
         tactic.mk_app `` Div.div [e₁, e₂]
-  | ⟨-[n+1], d, h, c⟩ => do
+  | ⟨-[1+ n], d, h, c⟩ => do
     let e₁ ← expr.of_nat α (n + 1)
     let e ←
       if d = 1 then return e₁
@@ -143,7 +160,7 @@ protected unsafe def of_rat (c : instance_cache) : ℚ → tactic (instance_cach
       let (c, e₁) ← c.ofNat n
       let (c, e₂) ← c.ofNat d
       c `` Div.div [e₁, e₂]
-  | ⟨-[n+1], d, _, _⟩ => do
+  | ⟨-[1+ n], d, _, _⟩ => do
     let (c, e) ←
       if d = 1 then c.ofNat (n + 1)
         else do

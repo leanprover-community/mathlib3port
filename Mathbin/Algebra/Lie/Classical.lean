@@ -93,7 +93,7 @@ namespace SpecialLinear
 /-- The special linear Lie algebra: square matrices of trace zero. -/
 def sl [Fintype n] : LieSubalgebra R (Matrix n n R) :=
   { LinearMap.ker (Matrix.traceLinearMap n R R) with
-    lie_mem' := fun X Y _ _ => LinearMap.mem_ker.2 <| matrix_trace_commutator_zero _ _ _ _ }
+    lie_mem' := fun X Y _ _ => LinearMap.mem_ker.2 $ matrix_trace_commutator_zero _ _ _ _ }
 #align lie_algebra.special_linear.sl LieAlgebra.SpecialLinear.sl
 
 theorem sl_bracket [Fintype n] (A B : sl n R) : ⁅A, B⁆.val = A.val ⬝ B.val - B.val ⬝ A.val :=
@@ -136,7 +136,7 @@ namespace Symplectic
 
 /-- The symplectic Lie algebra: skew-adjoint matrices with respect to the canonical skew-symmetric
 bilinear form. -/
-def sp [Fintype l] : LieSubalgebra R (Matrix (Sum l l) (Sum l l) R) :=
+def sp [Fintype l] : LieSubalgebra R (Matrix (l ⊕ l) (l ⊕ l) R) :=
   skewAdjointMatricesLieSubalgebra (Matrix.j l R)
 #align lie_algebra.symplectic.sp LieAlgebra.Symplectic.sp
 
@@ -157,20 +157,20 @@ theorem mem_so [Fintype n] (A : Matrix n n R) : A ∈ so n R ↔ Aᵀ = -A := by
 #align lie_algebra.orthogonal.mem_so LieAlgebra.Orthogonal.mem_so
 
 /-- The indefinite diagonal matrix with `p` 1s and `q` -1s. -/
-def indefiniteDiagonal : Matrix (Sum p q) (Sum p q) R :=
-  Matrix.diagonal <| Sum.elim (fun _ => 1) fun _ => -1
+def indefiniteDiagonal : Matrix (p ⊕ q) (p ⊕ q) R :=
+  Matrix.diagonal $ Sum.elim (fun _ => 1) fun _ => -1
 #align lie_algebra.orthogonal.indefinite_diagonal LieAlgebra.Orthogonal.indefiniteDiagonal
 
 /-- The indefinite orthogonal Lie subalgebra: skew-adjoint matrices with respect to the symmetric
 bilinear form defined by the indefinite diagonal matrix. -/
-def so' [Fintype p] [Fintype q] : LieSubalgebra R (Matrix (Sum p q) (Sum p q) R) :=
-  skewAdjointMatricesLieSubalgebra <| indefiniteDiagonal p q R
+def so' [Fintype p] [Fintype q] : LieSubalgebra R (Matrix (p ⊕ q) (p ⊕ q) R) :=
+  skewAdjointMatricesLieSubalgebra $ indefiniteDiagonal p q R
 #align lie_algebra.orthogonal.so' LieAlgebra.Orthogonal.so'
 
 /-- A matrix for transforming the indefinite diagonal bilinear form into the definite one, provided
 the parameter `i` is a square root of -1. -/
-def pso (i : R) : Matrix (Sum p q) (Sum p q) R :=
-  Matrix.diagonal <| Sum.elim (fun _ => 1) fun _ => i
+def pso (i : R) : Matrix (p ⊕ q) (p ⊕ q) R :=
+  Matrix.diagonal $ Sum.elim (fun _ => 1) fun _ => i
 #align lie_algebra.orthogonal.Pso LieAlgebra.Orthogonal.pso
 
 variable [Fintype p] [Fintype q]
@@ -221,7 +221,7 @@ theorem indefinite_diagonal_transform {i : R} (hi : i * i = -1) :
 
 /-- An equivalence between the indefinite and definite orthogonal Lie algebras, over a ring
 containing a square root of -1. -/
-def soIndefiniteEquiv {i : R} (hi : i * i = -1) : so' p q R ≃ₗ⁅R⁆ so (Sum p q) R := by
+def soIndefiniteEquiv {i : R} (hi : i * i = -1) : so' p q R ≃ₗ⁅R⁆ so (p ⊕ q) R := by
   apply
     (skewAdjointMatricesLieSubalgebraEquiv (indefinite_diagonal p q R) (Pso p q R i) (invertible_Pso p q R hi)).trans
   apply LieEquiv.ofEq
@@ -231,8 +231,8 @@ def soIndefiniteEquiv {i : R} (hi : i * i = -1) : so' p q R ≃ₗ⁅R⁆ so (Su
 #align lie_algebra.orthogonal.so_indefinite_equiv LieAlgebra.Orthogonal.soIndefiniteEquiv
 
 theorem so_indefinite_equiv_apply {i : R} (hi : i * i = -1) (A : so' p q R) :
-    (soIndefiniteEquiv p q R hi A : Matrix (Sum p q) (Sum p q) R) =
-      (pso p q R i)⁻¹ ⬝ (A : Matrix (Sum p q) (Sum p q) R) ⬝ pso p q R i :=
+    (soIndefiniteEquiv p q R hi A : Matrix (p ⊕ q) (p ⊕ q) R) =
+      (pso p q R i)⁻¹ ⬝ (A : Matrix (p ⊕ q) (p ⊕ q) R) ⬝ pso p q R i :=
   by erw [LieEquiv.trans_apply, LieEquiv.of_eq_apply, skew_adjoint_matrices_lie_subalgebra_equiv_apply]
 #align lie_algebra.orthogonal.so_indefinite_equiv_apply LieAlgebra.Orthogonal.so_indefinite_equiv_apply
 
@@ -243,7 +243,7 @@ It looks like this as a `2l x 2l` matrix of `l x l` blocks:
    [ 0 1 ]
    [ 1 0 ]
 -/
-def jD : Matrix (Sum l l) (Sum l l) R :=
+def jD : Matrix (l ⊕ l) (l ⊕ l) R :=
   Matrix.fromBlocks 0 1 1 0
 #align lie_algebra.orthogonal.JD LieAlgebra.Orthogonal.jD
 
@@ -261,7 +261,7 @@ It looks like this as a `2l x 2l` matrix of `l x l` blocks:
    [ 1 -1 ]
    [ 1  1 ]
 -/
-def pD : Matrix (Sum l l) (Sum l l) R :=
+def pD : Matrix (l ⊕ l) (l ⊕ l) R :=
   Matrix.fromBlocks 1 (-1) 1 1
 #align lie_algebra.orthogonal.PD LieAlgebra.Orthogonal.pD
 
@@ -362,7 +362,7 @@ theorem JB_transform : (pB l R)ᵀ ⬝ jB l R ⬝ pB l R = (2 : R) • Matrix.fr
 #align lie_algebra.orthogonal.JB_transform LieAlgebra.Orthogonal.JB_transform
 
 theorem indefinite_diagonal_assoc :
-    indefiniteDiagonal (Sum Unit l) l R =
+    indefiniteDiagonal (Unit ⊕ l) l R =
       Matrix.reindexLieEquiv (Equiv.sumAssoc Unit l l).symm (Matrix.fromBlocks 1 0 0 (indefiniteDiagonal l l R)) :=
   by
   ext (i j)
@@ -377,11 +377,11 @@ theorem indefinite_diagonal_assoc :
 #align lie_algebra.orthogonal.indefinite_diagonal_assoc LieAlgebra.Orthogonal.indefinite_diagonal_assoc
 
 /-- An equivalence between two possible definitions of the classical Lie algebra of type B. -/
-def typeBEquivSo' [Invertible (2 : R)] : typeB l R ≃ₗ⁅R⁆ so' (Sum Unit l) l R := by
+def typeBEquivSo' [Invertible (2 : R)] : typeB l R ≃ₗ⁅R⁆ so' (Unit ⊕ l) l R := by
   apply (skewAdjointMatricesLieSubalgebraEquiv (JB l R) (PB l R) (by infer_instance)).trans
   symm
   apply
-    (skewAdjointMatricesLieSubalgebraEquivTranspose (indefinite_diagonal (Sum Unit l) l R)
+    (skewAdjointMatricesLieSubalgebraEquivTranspose (indefinite_diagonal (Unit ⊕ l) l R)
         (Matrix.reindexAlgEquiv _ (Equiv.sumAssoc PUnit l l)) (Matrix.transpose_reindex _ _)).trans
   apply LieEquiv.ofEq
   ext A

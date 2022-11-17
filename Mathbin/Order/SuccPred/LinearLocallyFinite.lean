@@ -123,6 +123,8 @@ noncomputable instance (priority := 100) [LocallyFiniteOrder ι] : PredOrder ι 
 
 end LinearLocallyFiniteOrder
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n m) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n m) -/
 instance (priority := 100) LinearLocallyFiniteOrder.is_succ_archimedean [LocallyFiniteOrder ι] :
     IsSuccArchimedean ι where exists_succ_iterate_of_le i j hij := by
     rw [le_iff_lt_or_eq] at hij
@@ -143,9 +145,9 @@ instance (priority := 100) LinearLocallyFiniteOrder.is_succ_archimedean [Locally
         exact succ_le_of_lt hn
         
     have h_mem : ∀ n, (succ^[n]) i ∈ Finset.icc i j := fun n => finset.mem_Icc.mpr ⟨le_succ_iterate n i, (h_lt n).le⟩
-    obtain ⟨n, m, hnm, h_eq⟩ : ∃ n m, n < m ∧ (succ^[n]) i = (succ^[m]) i := by
+    obtain ⟨n, m, hnm, h_eq⟩ : ∃ (n) (m), n < m ∧ (succ^[n]) i = (succ^[m]) i := by
       let f : ℕ → Finset.icc i j := fun n => ⟨(succ^[n]) i, h_mem n⟩
-      obtain ⟨n, m, hnm_ne, hfnm⟩ : ∃ n m, n ≠ m ∧ f n = f m
+      obtain ⟨n, m, hnm_ne, hfnm⟩ : ∃ (n) (m), n ≠ m ∧ f n = f m
       exact Finite.exists_ne_map_eq_of_infinite f
       have hnm_eq : (succ^[n]) i = (succ^[m]) i := by simpa only [Subtype.mk_eq_mk] using hfnm
       cases' le_total n m with h_le h_le
@@ -211,12 +213,12 @@ theorem to_Z_of_eq : toZ i0 i0 = 0 := by
 #align to_Z_of_eq to_Z_of_eq
 
 theorem iterate_succ_to_Z (i : ι) (hi : i0 ≤ i) : (succ^[(toZ i0 i).toNat]) i0 = i := by
-  rw [to_Z_of_ge hi, Int.to_nat_coe_nat]
+  rw [to_Z_of_ge hi, Int.toNat_coe_nat]
   exact Nat.find_spec (exists_succ_iterate_of_le hi)
 #align iterate_succ_to_Z iterate_succ_to_Z
 
 theorem iterate_pred_to_Z (i : ι) (hi : i < i0) : (pred^[(-toZ i0 i).toNat]) i0 = i := by
-  rw [to_Z_of_lt hi, neg_neg, Int.to_nat_coe_nat]
+  rw [to_Z_of_lt hi, neg_neg, Int.toNat_coe_nat]
   exact Nat.find_spec (exists_pred_iterate_of_le hi.le)
 #align iterate_pred_to_Z iterate_pred_to_Z
 
@@ -233,7 +235,7 @@ theorem to_Z_neg (hi : i < i0) : toZ i0 i < 0 := by
   · by_contra
     have h_eq := iterate_pred_to_Z i hi
     rw [← h_eq, h] at hi
-    simpa only [neg_zero, Int.to_nat_zero, Function.iterate_zero, id.def, lt_self_iff_false] using hi
+    simpa only [neg_zero, Int.toNat_zero, Function.iterate_zero, id.def, lt_self_iff_false] using hi
     
 #align to_Z_neg to_Z_neg
 
@@ -261,7 +263,7 @@ theorem to_Z_iterate_succ_of_not_is_max (n : ℕ) (hn : ¬IsMax ((succ^[n]) i0))
   by_cases hmn:m = n
   · nth_rw 1 [← hmn]
     simp_rw [m]
-    rw [Int.to_nat_eq_max, to_Z_of_ge (le_succ_iterate _ _), max_eq_left]
+    rw [Int.toNat_eq_max, to_Z_of_ge (le_succ_iterate _ _), max_eq_left]
     exact Nat.cast_nonneg _
     
   suffices : IsMax ((succ^[n]) i0)
@@ -282,7 +284,7 @@ theorem to_Z_iterate_pred_of_not_is_min (n : ℕ) (hn : ¬IsMin ((pred^[n]) i0))
   by_cases hmn:m = n.succ
   · nth_rw 1 [← hmn]
     simp_rw [m]
-    rw [Int.to_nat_eq_max, to_Z_of_lt this, max_eq_left, neg_neg]
+    rw [Int.toNat_eq_max, to_Z_of_lt this, max_eq_left, neg_neg]
     rw [neg_neg]
     exact Nat.cast_nonneg _
     
@@ -426,11 +428,11 @@ noncomputable def orderIsoIntOfLinearSuccPredArch [NoMaxOrder ι] [NoMinOrder ι
     cases' le_or_lt 0 n with hn hn
     · simp_rw [if_pos hn]
       rw [to_Z_iterate_succ]
-      exact Int.to_nat_of_nonneg hn
+      exact Int.toNat_of_nonneg hn
       
     · simp_rw [if_neg (not_le.mpr hn)]
       rw [to_Z_iterate_pred]
-      simp only [hn.le, Int.to_nat_of_nonneg, Right.nonneg_neg_iff, neg_neg]
+      simp only [hn.le, Int.toNat_of_nonneg, Right.nonneg_neg_iff, neg_neg]
       
   map_rel_iff' := to_Z_le_iff
 #align order_iso_int_of_linear_succ_pred_arch orderIsoIntOfLinearSuccPredArch
@@ -445,10 +447,10 @@ def orderIsoNatOfLinearSuccPredArch [NoMaxOrder ι] [OrderBot ι] : ι ≃o ℕ 
   right_inv n := by
     simp_rw [if_pos bot_le]
     rw [to_Z_iterate_succ]
-    exact Int.to_nat_coe_nat n
+    exact Int.toNat_coe_nat n
   map_rel_iff' i j := by
     simp only [Equiv.coe_fn_mk, Int.to_nat_le]
-    rw [← @to_Z_le_iff ι _ _ _ _ ⊥, Int.to_nat_of_nonneg (to_Z_nonneg bot_le)]
+    rw [← @to_Z_le_iff ι _ _ _ _ ⊥, Int.toNat_of_nonneg (to_Z_nonneg bot_le)]
 #align order_iso_nat_of_linear_succ_pred_arch orderIsoNatOfLinearSuccPredArch
 
 /-- If the order has both a bot and a top, `to_Z` gives an `order_iso` between `ι` and
@@ -470,11 +472,11 @@ def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] : ι ≃o Fins
       exact nat.lt_succ_iff.mp (finset.mem_range.mp n.prop)
       
     · rw [to_Z_iterate_succ_of_not_is_max _ hn_max]
-      simp only [Int.to_nat_coe_nat]
+      simp only [Int.toNat_coe_nat]
       
   map_rel_iff' i j := by
     simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, Int.to_nat_le]
-    rw [← @to_Z_le_iff ι _ _ _ _ ⊥, Int.to_nat_of_nonneg (to_Z_nonneg bot_le)]
+    rw [← @to_Z_le_iff ι _ _ _ _ ⊥, Int.toNat_of_nonneg (to_Z_nonneg bot_le)]
 #align order_iso_range_of_linear_succ_pred_arch orderIsoRangeOfLinearSuccPredArch
 
 end OrderIso

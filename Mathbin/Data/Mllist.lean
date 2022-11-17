@@ -34,7 +34,7 @@ variable {α β : Type u} {m : Type u → Type u}
 
 /-- Construct an `mllist` recursively. -/
 unsafe def fix [Alternative m] (f : α → m α) : α → mllist m α
-  | x => cons <| (fun a => (some x, fix a)) <$> f x <|> pure (some x, nil)
+  | x => cons $ (fun a => (some x, fix a)) <$> f x <|> pure (some x, nil)
 #align tactic.mllist.fix tactic.mllist.fix
 
 variable [Monad m]
@@ -44,9 +44,9 @@ accumulating the elements of the resulting `list β` as a single monadic lazy li
 
 (This variant allows starting with a specified `list β` of elements, as well. )-/
 unsafe def fixl_with [Alternative m] (f : α → m (α × List β)) : α → List β → mllist m β
-  | s, b :: rest => cons <| pure (some b, fixl_with s rest)
+  | s, b :: rest => cons $ pure (some b, fixl_with s rest)
   | s, [] =>
-    cons <|
+    cons $
       (do
           let (s', l) ← f s
           match l with
@@ -114,7 +114,7 @@ unsafe def take {α} : mllist m α → ℕ → m (List α)
 unsafe def map {α β : Type u} (f : α → β) : mllist m α → mllist m β
   | nil => nil
   | cons l =>
-    cons <| do
+    cons $ do
       let (x, xs) ← l
       pure (f <$> x, map xs)
 #align tactic.mllist.map tactic.mllist.map
@@ -123,7 +123,7 @@ unsafe def map {α β : Type u} (f : α → β) : mllist m α → mllist m β
 unsafe def mmap {α β : Type u} (f : α → m β) : mllist m α → mllist m β
   | nil => nil
   | cons l =>
-    cons <| do
+    cons $ do
       let (x, xs) ← l
       let b ← x.traverse f
       return (b, mmap xs)
@@ -133,7 +133,7 @@ unsafe def mmap {α β : Type u} (f : α → m β) : mllist m α → mllist m β
 unsafe def filter {α : Type u} (p : α → Prop) [DecidablePred p] : mllist m α → mllist m α
   | nil => nil
   | cons l =>
-    cons <| do
+    cons $ do
       let (a, r) ← l
       let some a ← return a |
         return (none, filter r)
@@ -145,7 +145,7 @@ Whenever the function "succeeds", we accept the element, and reject otherwise. -
 unsafe def mfilter [Alternative m] {α β : Type u} (p : α → m β) : mllist m α → mllist m α
   | nil => nil
   | cons l =>
-    cons <| do
+    cons $ do
       let (a, r) ← l
       let some a ← return a |
         return (none, mfilter r)
@@ -156,7 +156,7 @@ unsafe def mfilter [Alternative m] {α β : Type u} (p : α → m β) : mllist m
 unsafe def filter_map {α β : Type u} (f : α → Option β) : mllist m α → mllist m β
   | nil => nil
   | cons l =>
-    cons <| do
+    cons $ do
       let (a, r) ← l
       let some a ← return a |
         return (none, filter_map r)
@@ -170,7 +170,7 @@ We discard elements where the function fails. -/
 unsafe def mfilter_map [Alternative m] {α β : Type u} (f : α → m β) : mllist m α → mllist m β
   | nil => nil
   | cons l =>
-    cons <| do
+    cons $ do
       let (a, r) ← l
       let some a ← return a |
         return (none, mfilter_map r)
@@ -181,7 +181,7 @@ unsafe def mfilter_map [Alternative m] {α β : Type u} (f : α → m β) : mlli
 unsafe def append {α : Type u} : mllist m α → mllist m α → mllist m α
   | nil, ys => ys
   | cons xs, ys =>
-    cons <| do
+    cons $ do
       let (x, xs) ← xs
       return (x, append xs ys)
 #align tactic.mllist.append tactic.mllist.append
@@ -190,7 +190,7 @@ unsafe def append {α : Type u} : mllist m α → mllist m α → mllist m α
 unsafe def join {α : Type u} : mllist m (mllist m α) → mllist m α
   | nil => nil
   | cons l =>
-    cons <| do
+    cons $ do
       let (xs, r) ← l
       let some xs ← return xs |
         return (none, join r)
@@ -198,7 +198,7 @@ unsafe def join {α : Type u} : mllist m (mllist m α) → mllist m α
         | nil => return (none, join r)
         | cons m => do
           let (a, n) ← m
-          return (a, join (cons <| return (n, r)))
+          return (a, join (cons $ return (n, r)))
 #align tactic.mllist.join tactic.mllist.join
 
 /-- Lift a monadic lazy list inside the monad to a monadic lazy list. -/
@@ -210,7 +210,7 @@ unsafe def squash {α} (t : m (mllist m α)) : mllist m α :=
 unsafe def enum_from {α : Type u} : ℕ → mllist m α → mllist m (ℕ × α)
   | _, nil => nil
   | n, cons l =>
-    cons <| do
+    cons $ do
       let (a, r) ← l
       let some a ← return a |
         return (none, enum_from n r)
@@ -237,7 +237,7 @@ joining the results. -/
 unsafe def bind_ {α β : Type u} : mllist m α → (α → mllist m β) → mllist m β
   | nil, f => nil
   | cons ll, f =>
-    cons <| do
+    cons $ do
       let (x, xs) ← ll
       let some x ← return x |
         return (none, bind_ xs f)
@@ -246,7 +246,7 @@ unsafe def bind_ {α β : Type u} : mllist m α → (α → mllist m β) → mll
 
 /-- Convert any value in the monad to the singleton monadic lazy list. -/
 unsafe def monad_lift {α} (x : m α) : mllist m α :=
-  cons <| (flip Prod.mk nil ∘ some) <$> x
+  cons $ (flip Prod.mk nil ∘ some) <$> x
 #align tactic.mllist.monad_lift tactic.mllist.monad_lift
 
 /-- Return the head of a monadic lazy list, as a value in the monad. -/

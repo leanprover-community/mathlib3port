@@ -34,7 +34,7 @@ namespace Nat
 def xgcdAux : ℕ → ℤ → ℤ → ℕ → ℤ → ℤ → ℕ × ℤ × ℤ
   | 0, s, t, r', s', t' => (r', s', t')
   | r@(succ _), s, t, r', s', t' =>
-    have : r' % r < r := mod_lt _ <| succ_pos _
+    have : r' % r < r := mod_lt _ $ succ_pos _
     let q := r' / r
     xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t
 #align nat.xgcd_aux Nat.xgcdAux
@@ -120,7 +120,7 @@ private def P : ℕ × ℤ × ℤ → Prop
 #align nat.P nat.P
 
 theorem xgcd_aux_P {r r'} : ∀ {s t s' t'}, P (r, s, t) → P (r', s', t') → P (xgcdAux r s t r' s' t') :=
-  (gcd.induction r r' (by simp)) fun a b h IH s t s' t' p p' => by
+  gcd.induction r r' (by simp) $ fun a b h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]
     refine' IH _ p
     dsimp [P] at *
@@ -143,10 +143,10 @@ theorem exists_mul_mod_eq_gcd {k n : ℕ} (hk : gcd n k < k) : ∃ m, n * m % k 
   have hk' := int.coe_nat_ne_zero.mpr (ne_of_gt (lt_of_le_of_lt (zero_le (gcd n k)) hk))
   have key := congr_arg (fun m => Int.natMod m k) (gcd_eq_gcd_ab n k)
   simp_rw [Int.natMod] at key
-  rw [Int.add_mul_mod_self_left, ← Int.coe_nat_mod, Int.to_nat_coe_nat, mod_eq_of_lt hk] at key
-  refine' ⟨(n.gcd_a k % k).toNat, Eq.trans (Int.coe_nat_inj _) key.symm⟩
-  rw [Int.coe_nat_mod, Int.coe_nat_mul, Int.to_nat_of_nonneg (Int.mod_nonneg _ hk'),
-    Int.to_nat_of_nonneg (Int.mod_nonneg _ hk'), Int.mul_mod, Int.mod_mod, ← Int.mul_mod]
+  rw [Int.add_mul_mod_self_left, ← Int.coe_nat_mod, Int.toNat_coe_nat, mod_eq_of_lt hk] at key
+  refine' ⟨(n.gcd_a k % k).toNat, Eq.trans (Int.ofNat.inj _) key.symm⟩
+  rw [Int.coe_nat_mod, Int.ofNat_mul, Int.toNat_of_nonneg (Int.mod_nonneg _ hk'),
+    Int.toNat_of_nonneg (Int.mod_nonneg _ hk'), Int.mul_mod, Int.mod_mod, ← Int.mul_mod]
 #align nat.exists_mul_mod_eq_gcd Nat.exists_mul_mod_eq_gcd
 
 theorem exists_mul_mod_eq_one_of_coprime {k n : ℕ} (hkn : Coprime n k) (hk : 1 < k) : ∃ m, n * m % k = 1 :=
@@ -160,28 +160,28 @@ end Nat
 
 namespace Int
 
-protected theorem coe_nat_gcd (m n : ℕ) : Int.gcd ↑m ↑n = Nat.gcd m n :=
+protected theorem coe_nat_gcd (m n : ℕ) : Int.gcd (↑m) ↑n = Nat.gcd m n :=
   rfl
 #align int.coe_nat_gcd Int.coe_nat_gcd
 
 /-- The extended GCD `a` value in the equation `gcd x y = x * a + y * b`. -/
 def gcdA : ℤ → ℤ → ℤ
   | of_nat m, n => m.gcdA n.natAbs
-  | -[m+1], n => -m.succ.gcdA n.natAbs
+  | -[1+ m], n => -m.succ.gcdA n.natAbs
 #align int.gcd_a Int.gcdA
 
 /-- The extended GCD `b` value in the equation `gcd x y = x * a + y * b`. -/
 def gcdB : ℤ → ℤ → ℤ
   | m, of_nat n => m.natAbs.gcdB n
-  | m, -[n+1] => -m.natAbs.gcdB n.succ
+  | m, -[1+ n] => -m.natAbs.gcdB n.succ
 #align int.gcd_b Int.gcdB
 
 /-- **Bézout's lemma** -/
 theorem gcd_eq_gcd_ab : ∀ x y : ℤ, (gcd x y : ℤ) = x * gcdA x y + y * gcdB x y
   | (m : ℕ), (n : ℕ) => Nat.gcd_eq_gcd_ab _ _
-  | (m : ℕ), -[n+1] => show (_ : ℤ) = _ + -(n + 1) * -_ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
-  | -[m+1], (n : ℕ) => show (_ : ℤ) = -(m + 1) * -_ + _ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
-  | -[m+1], -[n+1] =>
+  | (m : ℕ), -[1+ n] => show (_ : ℤ) = _ + -(n + 1) * -_ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
+  | -[1+ m], (n : ℕ) => show (_ : ℤ) = -(m + 1) * -_ + _ by rw [neg_mul_neg] <;> apply Nat.gcd_eq_gcd_ab
+  | -[1+ m], -[1+ n] =>
     show (_ : ℤ) = -(m + 1) * -_ + -(n + 1) * -_ by
       rw [neg_mul_neg, neg_mul_neg]
       apply Nat.gcd_eq_gcd_ab
@@ -218,20 +218,20 @@ theorem lcm_def (i j : ℤ) : lcm i j = Nat.lcm (natAbs i) (natAbs j) :=
   rfl
 #align int.lcm_def Int.lcm_def
 
-protected theorem coe_nat_lcm (m n : ℕ) : Int.lcm ↑m ↑n = Nat.lcm m n :=
+protected theorem coe_nat_lcm (m n : ℕ) : Int.lcm (↑m) ↑n = Nat.lcm m n :=
   rfl
 #align int.coe_nat_lcm Int.coe_nat_lcm
 
 theorem gcd_dvd_left (i j : ℤ) : (gcd i j : ℤ) ∣ i :=
-  dvd_nat_abs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_left _ _
+  dvd_nat_abs.mp $ coe_nat_dvd.mpr $ Nat.gcd_dvd_left _ _
 #align int.gcd_dvd_left Int.gcd_dvd_left
 
 theorem gcd_dvd_right (i j : ℤ) : (gcd i j : ℤ) ∣ j :=
-  dvd_nat_abs.mp <| coe_nat_dvd.mpr <| Nat.gcd_dvd_right _ _
+  dvd_nat_abs.mp $ coe_nat_dvd.mpr $ Nat.gcd_dvd_right _ _
 #align int.gcd_dvd_right Int.gcd_dvd_right
 
 theorem dvd_gcd {i j k : ℤ} (h1 : k ∣ i) (h2 : k ∣ j) : k ∣ gcd i j :=
-  nat_abs_dvd.1 <| coe_nat_dvd.2 <| Nat.dvd_gcd (nat_abs_dvd_iff_dvd.2 h1) (nat_abs_dvd_iff_dvd.2 h2)
+  nat_abs_dvd.1 $ coe_nat_dvd.2 $ Nat.dvd_gcd (nat_abs_dvd_iff_dvd.2 h1) (nat_abs_dvd_iff_dvd.2 h2)
 #align int.dvd_gcd Int.dvd_gcd
 
 theorem gcd_mul_lcm (i j : ℤ) : gcd i j * lcm i j = natAbs (i * j) := by
@@ -287,11 +287,11 @@ theorem gcd_mul_right (i j k : ℤ) : gcd (i * j) (k * j) = gcd i k * natAbs j :
 #align int.gcd_mul_right Int.gcd_mul_right
 
 theorem gcd_pos_of_non_zero_left {i : ℤ} (j : ℤ) (i_non_zero : i ≠ 0) : 0 < gcd i j :=
-  Nat.gcd_pos_of_pos_left (natAbs j) (nat_abs_pos_of_ne_zero i_non_zero)
+  Nat.gcd_pos_of_pos_left (natAbs j) (natAbs_pos_of_ne_zero i_non_zero)
 #align int.gcd_pos_of_non_zero_left Int.gcd_pos_of_non_zero_left
 
 theorem gcd_pos_of_non_zero_right (i : ℤ) {j : ℤ} (j_non_zero : j ≠ 0) : 0 < gcd i j :=
-  Nat.gcd_pos_of_pos_right (natAbs i) (nat_abs_pos_of_ne_zero j_non_zero)
+  Nat.gcd_pos_of_pos_right (natAbs i) (natAbs_pos_of_ne_zero j_non_zero)
 #align int.gcd_pos_of_non_zero_right Int.gcd_pos_of_non_zero_right
 
 theorem gcd_eq_zero_iff {i j : ℤ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 := by
@@ -308,7 +308,7 @@ theorem gcd_eq_zero_iff {i j : ℤ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 := by
 #align int.gcd_eq_zero_iff Int.gcd_eq_zero_iff
 
 theorem gcd_pos_iff {i j : ℤ} : 0 < gcd i j ↔ i ≠ 0 ∨ j ≠ 0 :=
-  pos_iff_ne_zero.trans <| gcd_eq_zero_iff.Not.trans not_and_or
+  pos_iff_ne_zero.trans $ gcd_eq_zero_iff.Not.trans not_and_or
 #align int.gcd_pos_iff Int.gcd_pos_iff
 
 theorem gcd_div {i j k : ℤ} (H1 : k ∣ i) (H2 : k ∣ j) : gcd (i / k) (j / k) = gcd i j / natAbs k := by
@@ -322,11 +322,11 @@ theorem gcd_div_gcd_div_gcd {i j : ℤ} (H : 0 < gcd i j) : gcd (i / gcd i j) (j
 #align int.gcd_div_gcd_div_gcd Int.gcd_div_gcd_div_gcd
 
 theorem gcd_dvd_gcd_of_dvd_left {i k : ℤ} (j : ℤ) (H : i ∣ k) : gcd i j ∣ gcd k j :=
-  Int.coe_nat_dvd.1 <| dvd_gcd ((gcd_dvd_left i j).trans H) (gcd_dvd_right i j)
+  Int.coe_nat_dvd.1 $ dvd_gcd ((gcd_dvd_left i j).trans H) (gcd_dvd_right i j)
 #align int.gcd_dvd_gcd_of_dvd_left Int.gcd_dvd_gcd_of_dvd_left
 
 theorem gcd_dvd_gcd_of_dvd_right {i k : ℤ} (j : ℤ) (H : i ∣ k) : gcd j i ∣ gcd j k :=
-  Int.coe_nat_dvd.1 <| dvd_gcd (gcd_dvd_left j i) ((gcd_dvd_right j i).trans H)
+  Int.coe_nat_dvd.1 $ dvd_gcd (gcd_dvd_left j i) ((gcd_dvd_right j i).trans H)
 #align int.gcd_dvd_gcd_of_dvd_right Int.gcd_dvd_gcd_of_dvd_right
 
 theorem gcd_dvd_gcd_mul_left (i j k : ℤ) : gcd i j ∣ gcd (k * i) j :=
@@ -358,13 +358,16 @@ theorem ne_zero_of_gcd {x y : ℤ} (hc : gcd x y ≠ 0) : x ≠ 0 ∨ y ≠ 0 :=
   rw [hc.left, hc.right, gcd_zero_right, nat_abs_zero]
 #align int.ne_zero_of_gcd Int.ne_zero_of_gcd
 
-theorem exists_gcd_one {m n : ℤ} (H : 0 < gcd m n) : ∃ m' n' : ℤ, gcd m' n' = 1 ∧ m = m' * gcd m n ∧ n = n' * gcd m n :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m' n') -/
+theorem exists_gcd_one {m n : ℤ} (H : 0 < gcd m n) :
+    ∃ (m' : ℤ) (n' : ℤ), gcd m' n' = 1 ∧ m = m' * gcd m n ∧ n = n' * gcd m n :=
   ⟨_, _, gcd_div_gcd_div_gcd H, (Int.div_mul_cancel (gcd_dvd_left m n)).symm,
     (Int.div_mul_cancel (gcd_dvd_right m n)).symm⟩
 #align int.exists_gcd_one Int.exists_gcd_one
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m' n') -/
 theorem exists_gcd_one' {m n : ℤ} (H : 0 < gcd m n) :
-    ∃ (g : ℕ)(m' n' : ℤ), 0 < g ∧ gcd m' n' = 1 ∧ m = m' * g ∧ n = n' * g :=
+    ∃ (g : ℕ) (m' : ℤ) (n' : ℤ), 0 < g ∧ gcd m' n' = 1 ∧ m = m' * g ∧ n = n' * g :=
   let ⟨m', n', h⟩ := exists_gcd_one H
   ⟨_, m', n', H, h⟩
 #align int.exists_gcd_one' Int.exists_gcd_one'
@@ -377,10 +380,11 @@ theorem pow_dvd_pow_iff {m n : ℤ} {k : ℕ} (k0 : 0 < k) : m ^ k ∣ n ^ k ↔
   exact int.nat_abs_dvd_iff_dvd.mpr h
 #align int.pow_dvd_pow_iff Int.pow_dvd_pow_iff
 
-theorem gcd_dvd_iff {a b : ℤ} {n : ℕ} : gcd a b ∣ n ↔ ∃ x y : ℤ, ↑n = a * x + b * y := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
+theorem gcd_dvd_iff {a b : ℤ} {n : ℕ} : gcd a b ∣ n ↔ ∃ (x : ℤ) (y : ℤ), ↑n = a * x + b * y := by
   constructor
   · intro h
-    rw [← Nat.mul_div_cancel' h, Int.coe_nat_mul, gcd_eq_gcd_ab, add_mul, mul_assoc, mul_assoc]
+    rw [← Nat.mul_div_cancel' h, Int.ofNat_mul, gcd_eq_gcd_ab, add_mul, mul_assoc, mul_assoc]
     refine' ⟨_, _, rfl⟩
     
   · rintro ⟨x, y, h⟩
@@ -391,7 +395,7 @@ theorem gcd_dvd_iff {a b : ℤ} {n : ℕ} : gcd a b ∣ n ↔ ∃ x y : ℤ, ↑
 
 theorem gcd_greatest {a b d : ℤ} (hd_pos : 0 ≤ d) (hda : d ∣ a) (hdb : d ∣ b) (hd : ∀ e : ℤ, e ∣ a → e ∣ b → e ∣ d) :
     d = gcd a b :=
-  dvd_antisymm hd_pos (coe_zero_le (gcd a b)) (dvd_gcd hda hdb) (hd _ (gcd_dvd_left a b) (gcd_dvd_right a b))
+  dvd_antisymm hd_pos (ofNat_zero_le (gcd a b)) (dvd_gcd hda hdb) (hd _ (gcd_dvd_left a b) (gcd_dvd_right a b))
 #align int.gcd_greatest Int.gcd_greatest
 
 /-- Euclid's lemma: if `a ∣ b * c` and `gcd a c = 1` then `a ∣ b`.
@@ -399,7 +403,7 @@ Compare with `is_coprime.dvd_of_dvd_mul_left` and
 `unique_factorization_monoid.dvd_of_dvd_mul_left_of_no_prime_factors` -/
 theorem dvd_of_dvd_mul_left_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab : gcd a c = 1) : a ∣ b := by
   have := gcd_eq_gcd_ab a c
-  simp only [hab, Int.coe_nat_zero, Int.coe_nat_succ, zero_add] at this
+  simp only [hab, Int.ofNat_zero, Int.ofNat_succ, zero_add] at this
   have : b * a * gcd_a a c + b * c * gcd_b a c = b := by simp [mul_assoc, ← mul_add, ← this]
   rw [← this]
   exact dvd_add (dvd_mul_of_dvd_left (dvd_mul_left a b) _) (dvd_mul_of_dvd_left habc _)
@@ -413,10 +417,11 @@ theorem dvd_of_dvd_mul_right_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab 
   exact dvd_of_dvd_mul_left_of_gcd_one habc hab
 #align int.dvd_of_dvd_mul_right_of_gcd_one Int.dvd_of_dvd_mul_right_of_gcd_one
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /-- For nonzero integers `a` and `b`, `gcd a b` is the smallest positive natural number that can be
 written in the form `a * x + b * y` for some pair of integers `x` and `y` -/
-theorem gcd_least_linear {a b : ℤ} (ha : a ≠ 0) : IsLeast { n : ℕ | 0 < n ∧ ∃ x y : ℤ, ↑n = a * x + b * y } (a.gcd b) :=
-  by
+theorem gcd_least_linear {a b : ℤ} (ha : a ≠ 0) :
+    IsLeast { n : ℕ | 0 < n ∧ ∃ (x : ℤ) (y : ℤ), ↑n = a * x + b * y } (a.gcd b) := by
   simp_rw [← gcd_dvd_iff]
   constructor
   · simpa [and_true_iff, dvd_refl, Set.mem_set_of_eq] using gcd_pos_of_non_zero_left b ha
@@ -547,20 +552,20 @@ theorem nat_gcd_helper_2 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * 
 
 theorem nat_gcd_helper_1 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * v = y) (hx : x * a = tx) (hy : y * b = ty)
     (h : tx + d = ty) : Nat.gcd x y = d :=
-  (Nat.gcd_comm _ _).trans <| nat_gcd_helper_2 _ _ _ _ _ _ _ _ _ hv hu hy hx h
+  (Nat.gcd_comm _ _).trans $ nat_gcd_helper_2 _ _ _ _ _ _ _ _ _ hv hu hy hx h
 #align tactic.norm_num.nat_gcd_helper_1 Tactic.NormNum.nat_gcd_helper_1
 
 theorem nat_lcm_helper (x y d m n : ℕ) (hd : Nat.gcd x y = d) (d0 : 0 < d) (xy : x * y = n) (dm : d * m = n) :
     Nat.lcm x y = m :=
-  mul_right_injective₀ d0.ne' <| by rw [dm, ← xy, ← hd, Nat.gcd_mul_lcm]
+  mul_right_injective₀ d0.ne' $ by rw [dm, ← xy, ← hd, Nat.gcd_mul_lcm]
 #align tactic.norm_num.nat_lcm_helper Tactic.NormNum.nat_lcm_helper
 
 theorem nat_coprime_helper_zero_left (x : ℕ) (h : 1 < x) : ¬Nat.Coprime 0 x :=
-  mt (Nat.coprime_zero_left _).1 <| ne_of_gt h
+  mt (Nat.coprime_zero_left _).1 $ ne_of_gt h
 #align tactic.norm_num.nat_coprime_helper_zero_left Tactic.NormNum.nat_coprime_helper_zero_left
 
 theorem nat_coprime_helper_zero_right (x : ℕ) (h : 1 < x) : ¬Nat.Coprime x 0 :=
-  mt (Nat.coprime_zero_right _).1 <| ne_of_gt h
+  mt (Nat.coprime_zero_right _).1 $ ne_of_gt h
 #align tactic.norm_num.nat_coprime_helper_zero_right Tactic.NormNum.nat_coprime_helper_zero_right
 
 theorem nat_coprime_helper_1 (x y a b tx ty : ℕ) (hx : x * a = tx) (hy : y * b = ty) (h : tx + 1 = ty) :
@@ -582,11 +587,11 @@ theorem int_gcd_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (
 #align tactic.norm_num.int_gcd_helper Tactic.NormNum.int_gcd_helper
 
 theorem int_gcd_helper_neg_left (x y : ℤ) (d : ℕ) (h : Int.gcd x y = d) : Int.gcd (-x) y = d := by
-  rw [Int.gcd] at h⊢ <;> rwa [Int.nat_abs_neg]
+  rw [Int.gcd] at h⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_gcd_helper_neg_left Tactic.NormNum.int_gcd_helper_neg_left
 
 theorem int_gcd_helper_neg_right (x y : ℤ) (d : ℕ) (h : Int.gcd x y = d) : Int.gcd x (-y) = d := by
-  rw [Int.gcd] at h⊢ <;> rwa [Int.nat_abs_neg]
+  rw [Int.gcd] at h⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_gcd_helper_neg_right Tactic.NormNum.int_gcd_helper_neg_right
 
 theorem int_lcm_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (ny : ℤ) = y) (h : Nat.lcm nx ny = d) :
@@ -594,11 +599,11 @@ theorem int_lcm_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (
 #align tactic.norm_num.int_lcm_helper Tactic.NormNum.int_lcm_helper
 
 theorem int_lcm_helper_neg_left (x y : ℤ) (d : ℕ) (h : Int.lcm x y = d) : Int.lcm (-x) y = d := by
-  rw [Int.lcm] at h⊢ <;> rwa [Int.nat_abs_neg]
+  rw [Int.lcm] at h⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_lcm_helper_neg_left Tactic.NormNum.int_lcm_helper_neg_left
 
 theorem int_lcm_helper_neg_right (x y : ℤ) (d : ℕ) (h : Int.lcm x y = d) : Int.lcm x (-y) = d := by
-  rw [Int.lcm] at h⊢ <;> rwa [Int.nat_abs_neg]
+  rw [Int.lcm] at h⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_lcm_helper_neg_right Tactic.NormNum.int_lcm_helper_neg_right
 
 /-- Evaluates the `nat.gcd` function. -/
@@ -606,21 +611,21 @@ unsafe def prove_gcd_nat (c : instance_cache) (ex ey : expr) : tactic (instance_
   let x ← ex.toNat
   let y ← ey.toNat
   match x, y with
-    | 0, _ => pure (c, ey, (quote.1 Nat.gcd_zero_left).mk_app [ey])
-    | _, 0 => pure (c, ex, (quote.1 Nat.gcd_zero_right).mk_app [ex])
-    | 1, _ => pure (c, quote.1 (1 : ℕ), (quote.1 Nat.gcd_one_left).mk_app [ey])
-    | _, 1 => pure (c, quote.1 (1 : ℕ), (quote.1 Nat.gcd_one_right).mk_app [ex])
+    | 0, _ => pure (c, ey, q(Nat.gcd_zero_left).mk_app [ey])
+    | _, 0 => pure (c, ex, q(Nat.gcd_zero_right).mk_app [ex])
+    | 1, _ => pure (c, q((1 : ℕ)), q(Nat.gcd_one_left).mk_app [ey])
+    | _, 1 => pure (c, q((1 : ℕ)), q(Nat.gcd_one_right).mk_app [ex])
     | _, _ => do
       let (d, a, b) := Nat.xgcdAux x 1 0 y 0 1
       if d = x then do
           let (c, ea) ← c (y / x)
           let (c, _, p) ← prove_mul_nat c ex ea
-          pure (c, ex, (quote.1 nat_gcd_helper_dvd_left).mk_app [ex, ey, ea, p])
+          pure (c, ex, q(nat_gcd_helper_dvd_left).mk_app [ex, ey, ea, p])
         else
           if d = y then do
             let (c, ea) ← c (x / y)
             let (c, _, p) ← prove_mul_nat c ey ea
-            pure (c, ey, (quote.1 nat_gcd_helper_dvd_right).mk_app [ex, ey, ea, p])
+            pure (c, ey, q(nat_gcd_helper_dvd_right).mk_app [ex, ey, ea, p])
           else do
             let (c, ed) ← c d
             let (c, ea) ← c a
@@ -632,7 +637,7 @@ unsafe def prove_gcd_nat (c : instance_cache) (ex ey : expr) : tactic (instance_
             let (c, etx, px) ← prove_mul_nat c ex ea
             let (c, ety, py) ← prove_mul_nat c ey eb
             let (c, p) ← if a ≥ 0 then prove_add_nat c ety ed etx else prove_add_nat c etx ed ety
-            let pf : expr := if a ≥ 0 then quote.1 nat_gcd_helper_2 else quote.1 nat_gcd_helper_1
+            let pf : expr := if a ≥ 0 then q(nat_gcd_helper_2) else q(nat_gcd_helper_1)
             pure (c, ed, pf [ed, ex, ey, ea, eb, eu, ev, etx, ety, pu, pv, px, py, p])
 #align tactic.norm_num.prove_gcd_nat tactic.norm_num.prove_gcd_nat
 
@@ -641,10 +646,10 @@ unsafe def prove_lcm_nat (c : instance_cache) (ex ey : expr) : tactic (instance_
   let x ← ex.toNat
   let y ← ey.toNat
   match x, y with
-    | 0, _ => pure (c, quote.1 (0 : ℕ), (quote.1 Nat.lcm_zero_left).mk_app [ey])
-    | _, 0 => pure (c, quote.1 (0 : ℕ), (quote.1 Nat.lcm_zero_right).mk_app [ex])
-    | 1, _ => pure (c, ey, (quote.1 Nat.lcm_one_left).mk_app [ey])
-    | _, 1 => pure (c, ex, (quote.1 Nat.lcm_one_right).mk_app [ex])
+    | 0, _ => pure (c, q((0 : ℕ)), q(Nat.lcm_zero_left).mk_app [ey])
+    | _, 0 => pure (c, q((0 : ℕ)), q(Nat.lcm_zero_right).mk_app [ex])
+    | 1, _ => pure (c, ey, q(Nat.lcm_one_left).mk_app [ey])
+    | _, 1 => pure (c, ex, q(Nat.lcm_one_right).mk_app [ex])
     | _, _ => do
       let (c, ed, pd) ← prove_gcd_nat c ex ey
       let (c, p0) ← prove_pos c ed
@@ -652,7 +657,7 @@ unsafe def prove_lcm_nat (c : instance_cache) (ex ey : expr) : tactic (instance_
       let d ← ed
       let (c, em) ← c (x * y / d)
       let (c, _, dm) ← prove_mul_nat c ed em
-      pure (c, em, (quote.1 nat_lcm_helper).mk_app [ex, ey, ed, em, en, pd, p0, xy, dm])
+      pure (c, em, q(nat_lcm_helper).mk_app [ex, ey, ed, em, en, pd, p0, xy, dm])
 #align tactic.norm_num.prove_lcm_nat tactic.norm_num.prove_lcm_nat
 
 /-- Evaluates the `int.gcd` function. -/
@@ -661,17 +666,17 @@ unsafe def prove_gcd_int (zc nc : instance_cache) : expr → expr → tactic (in
     match match_neg x with
     | some x => do
       let (zc, nc, d, p) ← prove_gcd_int x y
-      pure (zc, nc, d, (quote.1 int_gcd_helper_neg_left).mk_app [x, y, d, p])
+      pure (zc, nc, d, q(int_gcd_helper_neg_left).mk_app [x, y, d, p])
     | none =>
       match match_neg y with
       | some y => do
         let (zc, nc, d, p) ← prove_gcd_int x y
-        pure (zc, nc, d, (quote.1 int_gcd_helper_neg_right).mk_app [x, y, d, p])
+        pure (zc, nc, d, q(int_gcd_helper_neg_right).mk_app [x, y, d, p])
       | none => do
         let (zc, nc, nx, px) ← prove_nat_uncast zc nc x
         let (zc, nc, ny, py) ← prove_nat_uncast zc nc y
         let (nc, d, p) ← prove_gcd_nat nc nx ny
-        pure (zc, nc, d, (quote.1 int_gcd_helper).mk_app [x, y, nx, ny, d, px, py, p])
+        pure (zc, nc, d, q(int_gcd_helper).mk_app [x, y, nx, ny, d, px, py, p])
 #align tactic.norm_num.prove_gcd_int tactic.norm_num.prove_gcd_int
 
 /-- Evaluates the `int.lcm` function. -/
@@ -680,75 +685,75 @@ unsafe def prove_lcm_int (zc nc : instance_cache) : expr → expr → tactic (in
     match match_neg x with
     | some x => do
       let (zc, nc, d, p) ← prove_lcm_int x y
-      pure (zc, nc, d, (quote.1 int_lcm_helper_neg_left).mk_app [x, y, d, p])
+      pure (zc, nc, d, q(int_lcm_helper_neg_left).mk_app [x, y, d, p])
     | none =>
       match match_neg y with
       | some y => do
         let (zc, nc, d, p) ← prove_lcm_int x y
-        pure (zc, nc, d, (quote.1 int_lcm_helper_neg_right).mk_app [x, y, d, p])
+        pure (zc, nc, d, q(int_lcm_helper_neg_right).mk_app [x, y, d, p])
       | none => do
         let (zc, nc, nx, px) ← prove_nat_uncast zc nc x
         let (zc, nc, ny, py) ← prove_nat_uncast zc nc y
         let (nc, d, p) ← prove_lcm_nat nc nx ny
-        pure (zc, nc, d, (quote.1 int_lcm_helper).mk_app [x, y, nx, ny, d, px, py, p])
+        pure (zc, nc, d, q(int_lcm_helper).mk_app [x, y, nx, ny, d, px, py, p])
 #align tactic.norm_num.prove_lcm_int tactic.norm_num.prove_lcm_int
 
 /-- Evaluates the `nat.coprime` function. -/
-unsafe def prove_coprime_nat (c : instance_cache) (ex ey : expr) : tactic (instance_cache × Sum expr expr) := do
+unsafe def prove_coprime_nat (c : instance_cache) (ex ey : expr) : tactic (instance_cache × (expr ⊕ expr)) := do
   let x ← ex.toNat
   let y ← ey.toNat
   match x, y with
-    | 1, _ => pure (c, Sum.inl <| (quote.1 Nat.coprime_one_left).mk_app [ey])
-    | _, 1 => pure (c, Sum.inl <| (quote.1 Nat.coprime_one_right).mk_app [ex])
-    | 0, 0 => pure (c, Sum.inr (quote.1 Nat.not_coprime_zero_zero))
+    | 1, _ => pure (c, Sum.inl $ q(Nat.coprime_one_left).mk_app [ey])
+    | _, 1 => pure (c, Sum.inl $ q(Nat.coprime_one_right).mk_app [ex])
+    | 0, 0 => pure (c, Sum.inr q(Nat.not_coprime_zero_zero))
     | 0, _ => do
-      let c ← mk_instance_cache (quote.1 ℕ)
-      let (c, p) ← prove_lt_nat c (quote.1 1) ey
-      pure (c, Sum.inr <| (quote.1 nat_coprime_helper_zero_left).mk_app [ey, p])
+      let c ← mk_instance_cache q(ℕ)
+      let (c, p) ← prove_lt_nat c q(1) ey
+      pure (c, Sum.inr $ q(nat_coprime_helper_zero_left).mk_app [ey, p])
     | _, 0 => do
-      let c ← mk_instance_cache (quote.1 ℕ)
-      let (c, p) ← prove_lt_nat c (quote.1 1) ex
-      pure (c, Sum.inr <| (quote.1 nat_coprime_helper_zero_right).mk_app [ex, p])
+      let c ← mk_instance_cache q(ℕ)
+      let (c, p) ← prove_lt_nat c q(1) ex
+      pure (c, Sum.inr $ q(nat_coprime_helper_zero_right).mk_app [ex, p])
     | _, _ => do
-      let c ← mk_instance_cache (quote.1 ℕ)
+      let c ← mk_instance_cache q(ℕ)
       let (d, a, b) := Nat.xgcdAux x 1 0 y 0 1
       if d = 1 then do
           let (c, ea) ← c a
           let (c, eb) ← c b
           let (c, etx, px) ← prove_mul_nat c ex ea
           let (c, ety, py) ← prove_mul_nat c ey eb
-          let (c, p) ← if a ≥ 0 then prove_add_nat c ety (quote.1 1) etx else prove_add_nat c etx (quote.1 1) ety
-          let pf : expr := if a ≥ 0 then quote.1 nat_coprime_helper_2 else quote.1 nat_coprime_helper_1
-          pure (c, Sum.inl <| pf [ex, ey, ea, eb, etx, ety, px, py, p])
+          let (c, p) ← if a ≥ 0 then prove_add_nat c ety q(1) etx else prove_add_nat c etx q(1) ety
+          let pf : expr := if a ≥ 0 then q(nat_coprime_helper_2) else q(nat_coprime_helper_1)
+          pure (c, Sum.inl $ pf [ex, ey, ea, eb, etx, ety, px, py, p])
         else do
           let (c, ed) ← c d
           let (c, eu) ← c (x / d)
           let (c, ev) ← c (y / d)
           let (c, _, pu) ← prove_mul_nat c ed eu
           let (c, _, pv) ← prove_mul_nat c ed ev
-          let (c, p) ← prove_lt_nat c (quote.1 1) ed
-          pure (c, Sum.inr <| (quote.1 nat_not_coprime_helper).mk_app [ed, ex, ey, eu, ev, pu, pv, p])
+          let (c, p) ← prove_lt_nat c q(1) ed
+          pure (c, Sum.inr $ q(nat_not_coprime_helper).mk_app [ed, ex, ey, eu, ev, pu, pv, p])
 #align tactic.norm_num.prove_coprime_nat tactic.norm_num.prove_coprime_nat
 
 /-- Evaluates the `gcd`, `lcm`, and `coprime` functions. -/
 @[norm_num]
 unsafe def eval_gcd : expr → tactic (expr × expr)
-  | quote.1 (Nat.gcd (%%ₓex) (%%ₓey)) => do
-    let c ← mk_instance_cache (quote.1 ℕ)
+  | q(Nat.gcd $(ex) $(ey)) => do
+    let c ← mk_instance_cache q(ℕ)
     Prod.snd <$> prove_gcd_nat c ex ey
-  | quote.1 (Nat.lcm (%%ₓex) (%%ₓey)) => do
-    let c ← mk_instance_cache (quote.1 ℕ)
+  | q(Nat.lcm $(ex) $(ey)) => do
+    let c ← mk_instance_cache q(ℕ)
     Prod.snd <$> prove_lcm_nat c ex ey
-  | quote.1 (Nat.Coprime (%%ₓex) (%%ₓey)) => do
-    let c ← mk_instance_cache (quote.1 ℕ)
+  | q(Nat.Coprime $(ex) $(ey)) => do
+    let c ← mk_instance_cache q(ℕ)
     prove_coprime_nat c ex ey >>= Sum.elim true_intro false_intro ∘ Prod.snd
-  | quote.1 (Int.gcd (%%ₓex) (%%ₓey)) => do
-    let zc ← mk_instance_cache (quote.1 ℤ)
-    let nc ← mk_instance_cache (quote.1 ℕ)
+  | q(Int.gcd $(ex) $(ey)) => do
+    let zc ← mk_instance_cache q(ℤ)
+    let nc ← mk_instance_cache q(ℕ)
     (Prod.snd ∘ Prod.snd) <$> prove_gcd_int zc nc ex ey
-  | quote.1 (Int.lcm (%%ₓex) (%%ₓey)) => do
-    let zc ← mk_instance_cache (quote.1 ℤ)
-    let nc ← mk_instance_cache (quote.1 ℕ)
+  | q(Int.lcm $(ex) $(ey)) => do
+    let zc ← mk_instance_cache q(ℤ)
+    let nc ← mk_instance_cache q(ℕ)
     (Prod.snd ∘ Prod.snd) <$> prove_lcm_int zc nc ex ey
   | _ => failed
 #align tactic.norm_num.eval_gcd tactic.norm_num.eval_gcd

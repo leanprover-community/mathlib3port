@@ -290,7 +290,7 @@ protected def addGroupWithOne [AddGroupWithOne β] : AddGroupWithOne α :=
   { e.AddMonoidWithOne, e.AddGroup with intCast := fun n => e.symm n,
     int_cast_of_nat := fun n => by rw [Int.cast_ofNat] <;> rfl,
     int_cast_neg_succ_of_nat := fun n =>
-      congr_arg e.symm <| (Int.cast_negSucc _).trans <| congr_arg _ (e.apply_symm_apply _).symm }
+      congr_arg e.symm $ (Int.cast_negSucc _).trans $ congr_arg _ (e.apply_symm_apply _).symm }
 #align equiv.add_group_with_one Equiv.addGroupWithOne
 
 /-- Transfer `non_assoc_semiring` across an `equiv` -/
@@ -468,7 +468,7 @@ protected def distribMulAction (e : α ≃ β) [AddCommMonoid β] :
   letI := Equiv.addCommMonoid e
   exact
     ({ Equiv.mulAction R e with smul_zero := by simp [zero_def, smul_def],
-      smul_add := by simp [add_def, smul_def, smul_add] } :
+        smul_add := by simp [add_def, smul_def, smul_add] } :
       DistribMulAction R α)
 #align equiv.distrib_mul_action Equiv.distribMulAction
 
@@ -487,7 +487,7 @@ protected def module (e : α ≃ β) [AddCommMonoid β] :
   intros
   exact
     ({ Equiv.distribMulAction R e with zero_smul := by simp [zero_def, smul_def],
-      add_smul := by simp [add_def, smul_def, add_smul] } :
+        add_smul := by simp [add_def, smul_def, add_smul] } :
       Module R α)
 #align equiv.module Equiv.module
 

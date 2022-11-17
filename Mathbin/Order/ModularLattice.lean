@@ -212,7 +212,7 @@ theorem IsModularLattice.sup_inf_sup_assoc : (x ⊔ z) ⊓ (y ⊔ z) = (x ⊔ z)
 #align is_modular_lattice.sup_inf_sup_assoc IsModularLattice.sup_inf_sup_assoc
 
 theorem eq_of_le_of_inf_le_of_sup_le (hxy : x ≤ y) (hinf : y ⊓ z ≤ x ⊓ z) (hsup : y ⊔ z ≤ x ⊔ z) : x = y :=
-  le_antisymm hxy <|
+  le_antisymm hxy $
     have h : y ≤ x ⊔ z :=
       calc
         y ≤ y ⊔ z := le_sup_left
@@ -228,7 +228,7 @@ theorem eq_of_le_of_inf_le_of_sup_le (hxy : x ≤ y) (hinf : y ⊓ z ≤ x ⊓ z
 
 theorem sup_lt_sup_of_lt_of_inf_le_inf (hxy : x < y) (hinf : y ⊓ z ≤ x ⊓ z) : x ⊔ z < y ⊔ z :=
   lt_of_le_of_ne (sup_le_sup_right (le_of_lt hxy) _) fun hsup =>
-    ne_of_lt hxy <| eq_of_le_of_inf_le_of_sup_le (le_of_lt hxy) hinf (le_of_eq hsup.symm)
+    ne_of_lt hxy $ eq_of_le_of_inf_le_of_sup_le (le_of_lt hxy) hinf (le_of_eq hsup.symm)
 #align sup_lt_sup_of_lt_of_inf_le_inf sup_lt_sup_of_lt_of_inf_le_inf
 
 theorem inf_lt_inf_of_lt_of_sup_le_sup (hxy : x < y) (hinf : y ⊔ z ≤ x ⊔ z) : x ⊓ z < y ⊓ z :=
@@ -294,7 +294,7 @@ variable [Lattice α] [BoundedOrder α] [IsModularLattice α]
 
 /-- The diamond isomorphism between the intervals `set.Iic a` and `set.Ici b`. -/
 def iicOrderIsoIci {a b : α} (h : IsCompl a b) : Set.iic a ≃o Set.ici b :=
-  (OrderIso.setCongr (Set.iic a) (Set.icc (a ⊓ b) a) (h.inf_eq_bot.symm ▸ Set.Icc_bot.symm)).trans <|
+  (OrderIso.setCongr (Set.iic a) (Set.icc (a ⊓ b) a) (h.inf_eq_bot.symm ▸ Set.Icc_bot.symm)).trans $
     (infIccOrderIsoIccSup a b).trans
       (OrderIso.setCongr (Set.icc b (a ⊔ b)) (Set.ici b) (h.sup_eq_top.symm ▸ Set.Icc_top))
 #align is_compl.Iic_order_iso_Ici IsCompl.iicOrderIsoIci

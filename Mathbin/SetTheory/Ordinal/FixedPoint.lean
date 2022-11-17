@@ -73,7 +73,7 @@ theorem nfp_family_le {a b} : (∀ l, List.foldr f a l ≤ b) → nfpFamily f a 
 #align ordinal.nfp_family_le Ordinal.nfp_family_le
 
 theorem nfp_family_monotone (hf : ∀ i, Monotone (f i)) : Monotone (nfpFamily f) := fun a b h =>
-  sup_le fun l => (List.foldr_monotone hf l h).trans (le_sup _ l)
+  sup_le $ fun l => (List.foldr_monotone hf l h).trans (le_sup _ l)
 #align ordinal.nfp_family_monotone Ordinal.nfp_family_monotone
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -85,7 +85,7 @@ theorem apply_lt_nfp_family (H : ∀ i, IsNormal (f i)) {a b} (hb : b < nfpFamil
 theorem apply_lt_nfp_family_iff [Nonempty ι] (H : ∀ i, IsNormal (f i)) {a b} :
     (∀ i, f i b < nfpFamily f a) ↔ b < nfpFamily f a :=
   ⟨fun h =>
-    lt_nfp_family.2 <|
+    lt_nfp_family.2 $
       let ⟨l, hl⟩ := lt_sup.1 (h (Classical.arbitrary ι))
       ⟨l, ((H _).self_le b).trans_lt hl⟩,
     apply_lt_nfp_family H⟩
@@ -99,7 +99,7 @@ theorem nfp_family_le_apply [Nonempty ι] (H : ∀ i, IsNormal (f i)) {a b} :
 #align ordinal.nfp_family_le_apply Ordinal.nfp_family_le_apply
 
 theorem nfp_family_le_fp (H : ∀ i, Monotone (f i)) {a b} (ab : a ≤ b) (h : ∀ i, f i b ≤ b) : nfpFamily f a ≤ b :=
-  sup_le fun l => by
+  sup_le $ fun l => by
     by_cases hι:IsEmpty ι
     · skip
       rwa [Unique.eq_default l]
@@ -286,8 +286,9 @@ theorem apply_lt_nfp_bfamily (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a
   apply h
 #align ordinal.apply_lt_nfp_bfamily Ordinal.apply_lt_nfp_bfamily
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 theorem nfp_bfamily_le_apply (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a b} :
-    (∃ i hi, nfpBfamily o f a ≤ f i hi b) ↔ nfpBfamily o f a ≤ b := by
+    (∃ (i) (hi), nfpBfamily o f a ≤ f i hi b) ↔ nfpBfamily o f a ≤ b := by
   rw [← not_iff_not]
   push_neg
   convert apply_lt_nfp_bfamily ho H

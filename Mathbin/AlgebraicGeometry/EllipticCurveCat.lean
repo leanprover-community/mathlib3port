@@ -161,8 +161,8 @@ theorem twoTorsionPolynomial.disc_eq : (twoTorsionPolynomial E A).disc = 16 * al
 
 theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 : K)] (E : EllipticCurveCat K)
     (A : Type v) [CommRing A] [Nontrivial A] [Algebra K A] : (twoTorsionPolynomial E A).disc ≠ 0 := fun hdisc =>
-  E.Δ.NeZero <|
-    mul_left_cancel₀ (pow_ne_zero 4 <| nonzero_of_invertible (2 : K)) <|
+  E.Δ.NeZero $
+    mul_left_cancel₀ (pow_ne_zero 4 $ nonzero_of_invertible (2 : K)) $
       (algebraMap K A).Injective
         (by
           simp only [map_mul, map_pow, map_bit0, map_one, map_zero]
@@ -269,7 +269,7 @@ theorem Δ_eq : (E.changeOfVariable u r s t).Δ = u⁻¹ ^ 12 * E.Δ :=
 theorem j_eq : (E.changeOfVariable u r s t).j = E.j := by
   simp only [j, c₄, Δ_eq, inv_pow, mul_inv_rev, inv_inv, Units.coe_mul, Units.coe_pow, c₄_eq, b₂, b₄]
   have hu : (u * ↑u⁻¹ : R) ^ 12 = 1 := by rw [u.mul_inv, one_pow]
-  linear_combination↑E.Δ⁻¹ * ((E.a₁ ^ 2 + 4 * E.a₂) ^ 2 - 24 * (2 * E.a₄ + E.a₁ * E.a₃)) ^ 3 * hu
+  linear_combination ↑E.Δ⁻¹ * ((E.a₁ ^ 2 + 4 * E.a₂) ^ 2 - 24 * (2 * E.a₄ + E.a₁ * E.a₃)) ^ 3 * hu
 #align EllipticCurve.change_of_variable.j_eq EllipticCurveCat.changeOfVariable.j_eq
 
 end ChangeOfVariable

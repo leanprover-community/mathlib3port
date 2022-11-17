@@ -156,7 +156,7 @@ protected def finOrthonormalBasis (hn : 0 < n) (h : finrank ℝ E = n) (x : Orie
     OrthonormalBasis (Fin n) ℝ E := by
   haveI := Fin.pos_iff_nonempty.1 hn
   haveI := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
-  exact ((stdOrthonormalBasis _ _).reindex <| finCongr h).adjustToOrientation x
+  exact ((stdOrthonormalBasis _ _).reindex $ finCongr h).adjustToOrientation x
 #align orientation.fin_orthonormal_basis Orientation.finOrthonormalBasis
 
 /-- `orientation.fin_orthonormal_basis` gives a basis with the required orientation. -/
@@ -165,7 +165,7 @@ theorem fin_orthonormal_basis_orientation (hn : 0 < n) (h : finrank ℝ E = n) (
     (x.finOrthonormalBasis hn h).toBasis.Orientation = x := by
   haveI := Fin.pos_iff_nonempty.1 hn
   haveI := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
-  exact ((stdOrthonormalBasis _ _).reindex <| finCongr h).orientation_adjust_to_orientation x
+  exact ((stdOrthonormalBasis _ _).reindex $ finCongr h).orientation_adjust_to_orientation x
 #align orientation.fin_orthonormal_basis_orientation Orientation.fin_orthonormal_basis_orientation
 
 section VolumeForm
@@ -177,10 +177,13 @@ include _i o
 /-- The volume form on an oriented real inner product space, a nonvanishing top-dimensional
 alternating form uniquely defined by compatibility with the orientation and inner product structure.
 -/
-irreducible_def volumeForm : AlternatingMap ℝ E ℝ (Fin n) := by
-  classical cases n
-    · exact (o.fin_orthonormal_basis n.succ_pos _i.out).toBasis.det
-      
+irreducible_def volumeForm : AlternatingMap ℝ E ℝ (Fin n) := by classical
+  cases n
+  · let opos : AlternatingMap ℝ E ℝ (Fin 0) := AlternatingMap.constOfIsEmpty ℝ E (1 : ℝ)
+    exact o.eq_or_eq_neg_of_is_empty.by_cases (fun _ => opos) fun _ => -opos
+    
+  · exact (o.fin_orthonormal_basis n.succ_pos _i.out).toBasis.det
+    
 #align orientation.volume_form Orientation.volumeForm
 
 omit _i o

@@ -58,7 +58,7 @@ variable {α : Type _}
 theorem sup_sdiff_inj_on [GeneralizedBooleanAlgebra α] (u v : α) :
     { x | Disjoint u x ∧ v ≤ x }.InjOn fun x => (x ⊔ u) \ v := by
   rintro a ha b hb hab
-  have h : ((a ⊔ u) \ v) \ u ⊔ v = ((b ⊔ u) \ v) \ u ⊔ v := by
+  have h : (a ⊔ u) \ v \ u ⊔ v = (b ⊔ u) \ v \ u ⊔ v := by
     dsimp at hab
     rw [hab]
   rwa [sdiff_sdiff_comm, ha.1.symm.sup_sdiff_cancel_right, sdiff_sdiff_comm, hb.1.symm.sup_sdiff_cancel_right,
@@ -87,11 +87,11 @@ def compress (u v a : α) : α :=
 /-- To UV-compress a set family, we compress each of its elements, except that we don't want to
 reduce the cardinality, so we keep all elements whose compression is already present. -/
 def compression (u v : α) (s : Finset α) :=
-  (s.filter fun a => compress u v a ∈ s) ∪ (s.image <| compress u v).filter fun a => a ∉ s
+  (s.filter fun a => compress u v a ∈ s) ∪ (s.image $ compress u v).filter fun a => a ∉ s
 #align uv.compression Uv.compression
 
 -- mathport name: uv.compression
-localized [FinsetFamily] notation "𝓒 " => Uv.compression
+scoped[FinsetFamily] notation "𝓒 " => Uv.compression
 
 /-- `is_compressed u v s` expresses that `s` is UV-compressed. -/
 def IsCompressed (u v : α) (s : Finset α) :=
@@ -138,8 +138,8 @@ theorem isCompressedSelf (u : α) (s : Finset α) : IsCompressed u u s :=
 #align uv.is_compressed_self Uv.isCompressedSelf
 
 theorem compress_disjoint (u v : α) :
-    Disjoint (s.filter fun a => compress u v a ∈ s) ((s.image <| compress u v).filter fun a => a ∉ s) :=
-  disjoint_left.2 fun a ha₁ ha₂ => (mem_filter.1 ha₂).2 (mem_filter.1 ha₁).1
+    Disjoint (s.filter fun a => compress u v a ∈ s) ((s.image $ compress u v).filter fun a => a ∉ s) :=
+  disjoint_left.2 $ fun a ha₁ ha₂ => (mem_filter.1 ha₂).2 (mem_filter.1 ha₁).1
 #align uv.compress_disjoint Uv.compress_disjoint
 
 /-- Compressing an element is idempotent. -/
@@ -180,7 +180,7 @@ theorem compress_mem_compression_of_mem_compression (ha : a ∈ 𝓒 u v s) : co
 @[simp]
 theorem compression_idem (u v : α) (s : Finset α) : 𝓒 u v (𝓒 u v s) = 𝓒 u v s := by
   have h : filter (fun a => compress u v a ∉ 𝓒 u v s) (𝓒 u v s) = ∅ :=
-    filter_false_of_mem fun a ha h => h <| compress_mem_compression_of_mem_compression ha
+    filter_false_of_mem fun a ha h => h $ compress_mem_compression_of_mem_compression ha
   rw [compression, image_filter, h, image_empty, ← h]
   exact filter_union_filter_neg_eq _ (compression u v s)
 #align uv.compression_idem Uv.compression_idem

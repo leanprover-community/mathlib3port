@@ -60,6 +60,9 @@ class NegPart (α : Type _) where
 #align has_neg_part NegPart
 -/
 
+-- mathport name: «expr| |»
+notation "|" a "|" => abs a
+
 -- mathport name: «expr ⁺»
 postfix:1000 "⁺" => PosPart.pos
 

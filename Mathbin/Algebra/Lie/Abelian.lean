@@ -56,7 +56,7 @@ theorem Function.Injective.is_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : T
     [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] {f : L₁ →ₗ⁅R⁆ L₂} (h₁ : Function.Injective f)
     (h₂ : IsLieAbelian L₂) : IsLieAbelian L₁ :=
   { trivial := fun x y =>
-      h₁ <|
+      h₁ $
         calc
           f ⁅x, y⁆ = ⁅f x, f y⁆ := LieHom.map_lie f x y
           _ = 0 := trivial_lie_zero _ _ _ _
@@ -173,7 +173,7 @@ variable {R L M N}
 def maxTrivHom (f : M →ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M →ₗ⁅R,L⁆ maxTrivSubmodule R L N where
   toFun m :=
     ⟨f m, fun x =>
-      (LieModuleHom.map_lie _ _ _).symm.trans <| (congr_arg f (m.property x)).trans (LieModuleHom.map_zero _)⟩
+      (LieModuleHom.map_lie _ _ _).symm.trans $ (congr_arg f (m.property x)).trans (LieModuleHom.map_zero _)⟩
   map_add' m n := by simpa
   map_smul' t m := by simpa
   map_lie' x m := by simp

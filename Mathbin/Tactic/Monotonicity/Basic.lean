@@ -58,11 +58,12 @@ def lastTwo {α : Type _} (l : List α) : Option (α × α) :=
   | _ => none
 #align tactic.interactive.last_two Tactic.Interactive.lastTwo
 
-unsafe def match_imp : expr → tactic (expr × expr)
-  | quote.1 ((%%ₓe₀) → %%ₓe₁) => do
-    guard ¬e₁
-    return (e₀, e₁)
-  | _ => failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+unsafe
+  def
+    match_imp
+    : expr → tactic ( expr × expr )
+    | q( $ ( e₀ ) → $ ( e₁ ) ) => do guard ( ¬ e₁ ) return ( e₀ , e₁ ) | _ => failed
 #align tactic.interactive.match_imp tactic.interactive.match_imp
 
 open Expr
@@ -77,7 +78,7 @@ unsafe def same_operator : expr → expr → Bool
 #align tactic.interactive.same_operator tactic.interactive.same_operator
 
 unsafe def get_operator (e : expr) : Option Name :=
-  (guard ¬e.is_pi) >> pure e.get_app_fn.const_name
+  guard (¬e.is_pi) >> pure e.get_app_fn.const_name
 #align tactic.interactive.get_operator tactic.interactive.get_operator
 
 unsafe def monotonicity.check_rel (l r : expr) : tactic (Option Name) := do
@@ -96,12 +97,8 @@ unsafe instance mono_key.has_lt : LT MonoKey where lt := Prod.Lex (· < ·) (· 
 
 open Nat
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 unsafe def mono_head_candidates : ℕ → List expr → expr → tactic MonoKey
-  | 0, _, h =>
-    "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+  | 0, _, h => throwError "Cannot find relation in {← h}"
   | succ n, xs, h =>
     (do
         let (rel, l, r) ←
@@ -138,14 +135,14 @@ unsafe instance : has_to_format MonoSelection :=
     | mono_selection.both => "both"⟩
 
 unsafe def side : lean.parser MonoSelection :=
-  with_desc "expecting 'left', 'right' or 'both' (default)" <| do
+  with_desc "expecting 'left', 'right' or 'both' (default)" $ do
     let some n ← optional ident |
       pure MonoSelection.both
-    if n = `left then pure <| mono_selection.left
+    if n = `left then pure $ mono_selection.left
       else
-        if n = `right then pure <| mono_selection.right
+        if n = `right then pure $ mono_selection.right
         else
-          if n = `both then pure <| mono_selection.both
+          if n = `both then pure $ mono_selection.both
           else fail f! "invalid argument: {n}, expecting 'left', 'right' or 'both' (default)"
 #align tactic.interactive.side tactic.interactive.side
 
@@ -160,9 +157,9 @@ unsafe def monotonicity.attr : user_attribute (native.rb_lmap MonoKey Name) (Opt
       mk_cache := fun ls => do
         let ps ← ls.mmap monotonicity.attr.get_param
         let ps := ps.filterMap Prod.fst
-        pure <| (ps ls).foldl (flip <| uncurry fun k n m => m k n) (native.rb_lmap.mk mono_key _) }
+        pure $ (ps ls).foldl (flip $ uncurry fun k n m => m k n) (native.rb_lmap.mk mono_key _) }
   after_set :=
-    some fun n prio p => do
+    some $ fun n prio p => do
       let (none, v) ← monotonicity.attr.get_param n |
         pure ()
       let k ← monotonicity.check n
@@ -171,9 +168,9 @@ unsafe def monotonicity.attr : user_attribute (native.rb_lmap MonoKey Name) (Opt
 #align tactic.interactive.monotonicity.attr tactic.interactive.monotonicity.attr
 
 unsafe def filter_instances (e : MonoSelection) (ns : List Name) : tactic (List Name) :=
-  ns.mfilter fun n => do
+  ns.mfilter $ fun n => do
     let d ← user_attribute.get_param_untyped monotonicity.attr n
-    let (_, d) ← to_expr (pquote.1 (id (%%ₓd))) >>= eval_expr (Option MonoKey × mono_selection)
+    let (_, d) ← to_expr ``(id $(d)) >>= eval_expr (Option MonoKey × mono_selection)
     return (e = d : Bool)
 #align tactic.interactive.filter_instances tactic.interactive.filter_instances
 

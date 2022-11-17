@@ -112,10 +112,10 @@ unsafe structure equiv_rw_cfg where
 #align tactic.equiv_rw_cfg tactic.equiv_rw_cfg
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Implementation of `equiv_rw_type`, using `solve_by_elim`.
 Expects a goal of the form `t ≃ _`,
 and tries to solve it using `eq : α ≃ β` and congruence lemmas.
@@ -140,7 +140,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
           tt,-- If solve_by_elim gets stuck, make sure it isn't because there's a later `≃` or `↔` goal
         -- that we should still attempt.
         discharger :=
-          (sorry >> sorry) >> (sorry <|> sorry) <|>
+          sorry >> sorry >> (sorry <|> sorry) <|>
             trace_if_enabled `equiv_rw_type "Failed, no congruence lemma applied!" >>
               failed,-- We use the `accept` tactic in `solve_by_elim` to provide tracing.
         accept := fun goals =>
@@ -154,43 +154,35 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
                   trace f! "Attempting to adapt to {gs}" }
 #align tactic.equiv_rw_type_core tactic.equiv_rw_type_core
 
-/-- `equiv_rw_type e t` rewrites the type `t` using the equivalence `e : α ≃ β`,
-returning a new equivalence `t ≃ t'`.
--/
-unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic expr := do
-  when_tracing `equiv_rw_type do
-      let ty_pp ← pp ty
-      let eqv_pp ← pp eqv
-      let eqv_ty_pp ← infer_type eqv >>= pp
-      trace f! "Attempting to rewrite the type `{ty_pp }` using `{eqv_pp } : {eqv_ty_pp}`."
-  let quote.1 (_ ≃ _) ← infer_type eqv |
-    fail f! "{eqv} must be an `equiv`"
-  let equiv_ty
-    ←-- We prepare a synthetic goal of type `(%%ty ≃ _)`, for some placeholder right hand side.
-        to_expr
-        (pquote.1 ((%%ₓty) ≃ _))
-  let new_eqv
-    ←-- Now call `equiv_rw_type_core`.
-        Prod.snd <$>
-        (solve_aux equiv_ty <| equiv_rw_type_core eqv cfg)
-  let new_eqv
-    ←-- Check that we actually used the equivalence `eq`
-        -- (`equiv_rw_type_core` will always find `equiv.refl`,
-        -- but hopefully only after all other possibilities)
-        instantiate_mvars
-        new_eqv
-  -- We previously had `guard (eqv.occurs new_eqv)` here, but `kdepends_on` is more reliable.
-          kdepends_on
-          new_eqv eqv >>=
-        guardb <|>
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `equiv_rw_type e t` rewrites the type `t` using the equivalence `e : α ≃ β`,
+      returning a new equivalence `t ≃ t'`.
+      -/
+    unsafe
+  def
+    equiv_rw_type
+    ( eqv : expr ) ( ty : expr ) ( cfg : equiv_rw_cfg ) : tactic expr
+    :=
       do
-      let eqv_pp ← pp eqv
-      let ty_pp ← pp ty
-      fail f! "Could not construct an equivalence from {eqv_pp } of the form: {ty_pp} ≃ _"
-  -- Finally we simplify the resulting equivalence,
-      -- to compress away some `map_equiv equiv.refl` subexpressions.
-      Prod.fst <$>
-      new_eqv { failIfUnchanged := ff }
+        when_tracing
+            `equiv_rw_type
+              do
+                let ty_pp ← pp ty
+                  let eqv_pp ← pp eqv
+                  let eqv_ty_pp ← infer_type eqv >>= pp
+                  trace f! "Attempting to rewrite the type `{ ty_pp }` using `{ eqv_pp } : { eqv_ty_pp }`."
+          let q( _ ≃ _ ) ← infer_type eqv | fail f! "{ eqv } must be an `equiv`"
+          let equiv_ty ← to_expr ` `( $ ( ty ) ≃ _ )
+          let new_eqv ← Prod.snd <$> ( solve_aux equiv_ty $ equiv_rw_type_core eqv cfg )
+          let new_eqv ← instantiate_mvars new_eqv
+          kdepends_on new_eqv eqv >>= guardb
+            <|>
+            do
+              let eqv_pp ← pp eqv
+                let ty_pp ← pp ty
+                fail f! "Could not construct an equivalence from { eqv_pp } of the form: { ty_pp } ≃ _"
+          Prod.fst <$> new_eqv { failIfUnchanged := ff }
 #align tactic.equiv_rw_type tactic.equiv_rw_type
 
 /- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
@@ -208,50 +200,44 @@ unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic 
 
 attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_apply_apply
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/-- Attempt to replace the hypothesis with name `x`
-by transporting it along the equivalence in `e : α ≃ β`.
--/
-unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit :=
-  -- We call `dsimp_result` to perform the beta redex introduced by `revert`
-    dsimp_result
-    (do
-      let x' ← get_local x
-      let x_ty ← infer_type x'
-      let e
-        ←-- Adapt `e` to an equivalence with left-hand-side `x_ty`.
-            equiv_rw_type
-            e x_ty cfg
-      let eq ← to_expr (pquote.1 ((%%ₓx') = Equiv.symm (%%ₓe) (Equiv.toFun (%%ₓe) (%%ₓx'))))
-      let prf ← to_expr (pquote.1 (Equiv.symm_apply_apply (%%ₓe) (%%ₓx')).symm)
-      let h ← note_anon Eq prf
-      -- Revert the new hypothesis, so it is also part of the goal.
-          revert
-          h
-      let ex ← to_expr (pquote.1 (Equiv.toFun (%%ₓe) (%%ₓx')))
-      -- Now call `generalize`,
-          -- attempting to replace all occurrences of `e x`,
-          -- calling it for now `j : β`, with `k : x = e.symm j`.
-          generalize
-          ex (by infer_opt_param) transparency.none
-      -- Reintroduce `x` (now of type `b`), and the hypothesis `h`.
-          intro
-          x
-      let h ← intro1
-      let b
-        ←-- Finally, if we're working on properties, substitute along `h`, then do some cleanup,
-            -- and if we're working on data, just throw out the old `x`.
-            target >>=
-            is_prop
-      if b then do
-          subst h
-          sorry
-        else-- We may need to unfreeze `x` before we can `clear` it.
-              unfreezing_hyp
-              x' (clear' tt [x']) <|>
-            fail f! "equiv_rw expected to be able to clear the original hypothesis {x}, but couldn't."
-      skip)
-    { failIfUnchanged := false } true
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Attempt to replace the hypothesis with name `x`
+      by transporting it along the equivalence in `e : α ≃ β`.
+      -/
+    unsafe
+  def
+    equiv_rw_hyp
+    ( x : Name ) ( e : expr ) ( cfg : equiv_rw_cfg := { } ) : tactic Unit
+    :=
+      dsimp_result
+        (
+            do
+              let x' ← get_local x
+                let x_ty ← infer_type x'
+                let e ← equiv_rw_type e x_ty cfg
+                let eq ← to_expr ` `( $ ( x' ) = Equiv.symm $ ( e ) ( Equiv.toFun $ ( e ) $ ( x' ) ) )
+                let prf ← to_expr ` `( ( Equiv.symm_apply_apply $ ( e ) $ ( x' ) ) . symm )
+                let h ← note_anon Eq prf
+                revert h
+                let ex ← to_expr ` `( Equiv.toFun $ ( e ) $ ( x' ) )
+                generalize ex ( by infer_opt_param ) transparency.none
+                intro x
+                let h ← intro1
+                let b ← target >>= is_prop
+                if
+                  b
+                  then
+                  do subst h sorry
+                  else
+                  unfreezing_hyp x' ( clear' tt [ x' ] )
+                    <|>
+                    fail f! "equiv_rw expected to be able to clear the original hypothesis { x }, but couldn't."
+                skip
+            )
+          { failIfUnchanged := false }
+          true
 #align tactic.equiv_rw_hyp tactic.equiv_rw_hyp
 
 -- call `dsimp_result` with `no_defaults := tt`.
@@ -259,7 +245,7 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
 unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit := do
   let t ← target
   let e ← equiv_rw_type e t cfg
-  let s ← to_expr (pquote.1 (Equiv.invFun (%%ₓe)))
+  let s ← to_expr ``(Equiv.invFun $(e))
   tactic.eapply s
   skip
 #align tactic.equiv_rw_target tactic.equiv_rw_target
@@ -270,8 +256,7 @@ namespace Tactic.Interactive
 
 open Tactic
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary function to call `equiv_rw_hyp` on a `list pexpr` recursively. -/
 unsafe def equiv_rw_hyp_aux (hyp : Name) (cfg : equiv_rw_cfg) (permissive : Bool := false) : List expr → itactic
@@ -334,20 +319,26 @@ add_tactic_doc
   { Name := "equiv_rw", category := DocCategory.tactic, declNames := [`tactic.interactive.equiv_rw],
     tags := ["rewriting", "equiv", "transport"] }
 
-/-- Solve a goal of the form `t ≃ _`,
-by constructing an equivalence from `e : α ≃ β`.
-This is the same equivalence that `equiv_rw` would use to rewrite a term of type `t`.
-
-A typical usage might be:
-```
-have e' : option α ≃ option β := by equiv_rw_type e
-```
--/
-unsafe def equiv_rw_type (e : parse texpr) (cfg : equiv_rw_cfg := {  }) : itactic := do
-  let quote.1 ((%%ₓt) ≃ _) ← target |
-    fail "`equiv_rw_type` solves goals of the form `t ≃ _`."
-  let e ← to_expr e
-  tactic.equiv_rw_type e t cfg >>= tactic.exact
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Solve a goal of the form `t ≃ _`,
+      by constructing an equivalence from `e : α ≃ β`.
+      This is the same equivalence that `equiv_rw` would use to rewrite a term of type `t`.
+      
+      A typical usage might be:
+      ```
+      have e' : option α ≃ option β := by equiv_rw_type e
+      ```
+      -/
+    unsafe
+  def
+    equiv_rw_type
+    ( e : parse texpr ) ( cfg : equiv_rw_cfg := { } ) : itactic
+    :=
+      do
+        let q( $ ( t ) ≃ _ ) ← target | fail "`equiv_rw_type` solves goals of the form `t ≃ _`."
+          let e ← to_expr e
+          tactic.equiv_rw_type e t cfg >>= tactic.exact
 #align tactic.interactive.equiv_rw_type tactic.interactive.equiv_rw_type
 
 add_tactic_doc

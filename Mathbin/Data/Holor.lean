@@ -68,7 +68,7 @@ def assocLeft : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++ 
 #align holor_index.assoc_left HolorIndex.assocLeft
 
 theorem take_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.take = t.take.take
-  | ⟨is, h⟩ => Subtype.eq <| by simp [assoc_right, take, cast_type, List.take_take, Nat.le_add_right, min_eq_left]
+  | ⟨is, h⟩ => Subtype.eq $ by simp [assoc_right, take, cast_type, List.take_take, Nat.le_add_right, min_eq_left]
 #align holor_index.take_take HolorIndex.take_take
 
 theorem drop_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.drop.take = t.take.drop
@@ -162,7 +162,7 @@ theorem mul_assoc0 [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z :
 #align holor.mul_assoc0 Holor.mul_assoc0
 
 theorem mul_assoc [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
-    HEq (mul (mul x y) z) (mul x (mul y z)) := by simp [cast_heq, mul_assoc0, assoc_left]
+    mul (mul x y) z == mul x (mul y z) := by simp [cast_heq, mul_assoc0, assoc_left]
 #align holor.mul_assoc Holor.mul_assoc
 
 theorem mul_left_distrib [Distrib α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₂) :
@@ -172,7 +172,7 @@ theorem mul_left_distrib [Distrib α] (x : Holor α ds₁) (y : Holor α ds₂) 
 
 theorem mul_right_distrib [Distrib α] (x : Holor α ds₁) (y : Holor α ds₁) (z : Holor α ds₂) :
     (x + y) ⊗ z = x ⊗ z + y ⊗ z :=
-  funext fun t => add_mul (x (HolorIndex.take t)) (y (HolorIndex.take t)) (z (HolorIndex.drop t))
+  funext $ fun t => add_mul (x (HolorIndex.take t)) (y (HolorIndex.take t)) (z (HolorIndex.drop t))
 #align holor.mul_right_distrib Holor.mul_right_distrib
 
 @[simp]
@@ -228,8 +228,8 @@ theorem holor_index_cons_decomp (p : HolorIndex (d::ds) → Prop) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Two holors are equal if all their slices are equal. -/
 theorem slice_eq (x : Holor α (d::ds)) (y : Holor α (d::ds)) (h : slice x = slice y) : x = y :=
-  funext fun t : HolorIndex (d::ds) =>
-    (holor_index_cons_decomp (fun t => x t = y t) t) fun i is hiis =>
+  funext $ fun t : HolorIndex (d::ds) =>
+    holor_index_cons_decomp (fun t => x t = y t) t $ fun i is hiis =>
       have hiisdds : Forall₂ (· < ·) (i::is) (d::ds) := by
         rw [← hiis]
         exact t.2
@@ -244,7 +244,7 @@ theorem slice_eq (x : Holor α (d::ds)) (y : Holor α (d::ds)) (h : slice x = sl
 
 theorem slice_unit_vec_mul [Ring α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :
     slice (unitVec d j ⊗ x) i hid = if i = j then x else 0 :=
-  funext fun t : HolorIndex ds =>
+  funext $ fun t : HolorIndex ds =>
     if h : i = j then by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h]
     else by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h] <;> rfl
 #align holor.slice_unit_vec_mul Holor.slice_unit_vec_mul
@@ -283,7 +283,7 @@ theorem sum_unit_vec_mul_slice [Ring α] (x : Holor α (d::ds)) :
   ext (i hid)
   rw [← slice_sum]
   simp only [slice_unit_vec_mul hid]
-  rw [Finset.sum_eq_single (Subtype.mk i <| Finset.mem_range.2 hid)]
+  rw [Finset.sum_eq_single (Subtype.mk i $ Finset.mem_range.2 hid)]
   · simp
     
   · intro (b : { x // x ∈ Finset.range d })(hb : b ∈ (Finset.range d).attach)(hbi : b ≠ ⟨i, _⟩)

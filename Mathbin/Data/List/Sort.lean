@@ -73,7 +73,7 @@ theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ ~
   · have : a ∈ l₂ := p.subset (mem_cons_self _ _)
     rcases mem_split this with ⟨u₂, v₂, rfl⟩
     have p' := (perm_cons a).1 (p.trans perm_middle)
-    obtain rfl := IH p' (s₂.sublist <| by simp)
+    obtain rfl := IH p' (s₂.sublist $ by simp)
     change a :: u₂ ++ v₂ = u₂ ++ ([a] ++ v₂)
     rw [← append_assoc]
     congr
@@ -128,7 +128,7 @@ variable {n : ℕ} {α : Type uu} [Preorder α] {f : Fin n → α}
 /-- A tuple is monotone if and only if the list obtained from it is sorted. -/
 theorem monotone_iff_of_fn_sorted : Monotone f ↔ (ofFn f).Sorted (· ≤ ·) := by
   simp_rw [sorted, pairwise_iff_nth_le, length_of_fn, nth_le_of_fn', monotone_iff_forall_lt]
-  exact ⟨fun h i j hj hij => h <| fin.mk_lt_mk.mpr hij, fun h ⟨i, _⟩ ⟨j, hj⟩ hij => h i j hj hij⟩
+  exact ⟨fun h i j hj hij => h $ fin.mk_lt_mk.mpr hij, fun h ⟨i, _⟩ ⟨j, hj⟩ hij => h i j hj hij⟩
 #align list.monotone_iff_of_fn_sorted List.monotone_iff_of_fn_sorted
 
 /-- The list obtained from a monotone tuple is sorted. -/

@@ -68,7 +68,7 @@ theorem append_reverse (l : List α) : Palindrome (l ++ reverse l) := by
 #align list.palindrome.append_reverse List.Palindrome.append_reverse
 
 protected theorem map (f : α → β) (p : Palindrome l) : Palindrome (map f l) :=
-  of_reverse_eq <| by rw [← map_reverse, p.reverse_eq]
+  of_reverse_eq $ by rw [← map_reverse, p.reverse_eq]
 #align list.palindrome.map List.Palindrome.map
 
 instance [DecidableEq α] (l : List α) : Decidable (Palindrome l) :=

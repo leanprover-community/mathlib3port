@@ -146,7 +146,7 @@ theorem nth_mem_of_infinite_aux (hp : (setOf p).Infinite) (n : ℕ) : nth p n �
   · ext i
     simp
     
-  refine' (hp.diff <| (Set.finite_lt_nat _).bUnion _).Nonempty
+  refine' (hp.diff $ (Set.finite_lt_nat _).bUnion _).Nonempty
   exact fun k h => Set.finite_le_nat _
 #align nat.nth_mem_of_infinite_aux Nat.nth_mem_of_infinite_aux
 
@@ -252,7 +252,7 @@ theorem filter_range_nth_eq_insert_of_infinite (hp : (setOf p).Infinite) (k : �
   constructor
   · rintro ⟨ha, hpa⟩
     rw [nth] at ha
-    refine' or_iff_not_imp_left.mpr fun hne => ⟨(le_of_not_lt fun h => _).lt_of_ne hne, hpa⟩
+    refine' or_iff_not_imp_left.mpr fun hne => ⟨(le_of_not_lt $ fun h => _).lt_of_ne hne, hpa⟩
     exact ha.not_le (Nat.Inf_le ⟨hpa, fun b hb => (nth_monotone p hp (le_of_lt_succ hb)).trans_lt h⟩)
     
   · rintro (rfl | ⟨ha, hpa⟩)
@@ -348,7 +348,7 @@ theorem count_le_iff_le_nth (hp : (setOf p).Infinite) {a b : ℕ} : count p a �
 #align nat.count_le_iff_le_nth Nat.count_le_iff_le_nth
 
 theorem lt_nth_iff_count_lt (hp : (setOf p).Infinite) {a b : ℕ} : a < count p b ↔ nth p a < b :=
-  lt_iff_lt_of_le_iff_le <| count_le_iff_le_nth p hp
+  lt_iff_lt_of_le_iff_le $ count_le_iff_le_nth p hp
 #align nat.lt_nth_iff_count_lt Nat.lt_nth_iff_count_lt
 
 theorem nth_lt_of_lt_count (n k : ℕ) (h : k < count p n) : nth p k < n := by
@@ -377,17 +377,62 @@ theorem nth_zero_of_nth_zero (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nt
   cases ha
   · exact (h₀ ha.1).elim
     
-  · refine' Or.inr (Set.eq_empty_of_subset_empty fun x hx => _)
+  · refine' Or.inr (Set.eq_empty_of_subset_empty $ fun x hx => _)
     rw [← ha]
-    exact ⟨hx.1, fun k hk => hx.2 k <| hk.trans_le hab⟩
+    exact ⟨hx.1, fun k hk => hx.2 k $ hk.trans_le hab⟩
     
 #align nat.nth_zero_of_nth_zero Nat.nth_zero_of_nth_zero
 
 /-- When `p` is true infinitely often, `nth` agrees with `nat.subtype.order_iso_of_nat`. -/
 theorem nth_eq_order_iso_of_nat (i : Infinite (setOf p)) (n : ℕ) : nth p n = Nat.Subtype.orderIsoOfNat (setOf p) n := by
-  classical have hi := set.infinite_coe_iff.mp i
-    · rw [Nat.Subtype.coe_bot, nth_zero_of_exists]
+  classical
+  have hi := set.infinite_coe_iff.mp i
+  induction' n with k hk <;> simp only [subtype.order_iso_of_nat_apply, subtype.of_nat, nat_zero_eq_zero]
+  · rw [Nat.Subtype.coe_bot, nth_zero_of_exists]
+    
+  · simp only [Nat.Subtype.succ, Set.mem_set_of_eq, Subtype.coe_mk, Subtype.val_eq_coe]
+    rw [subtype.order_iso_of_nat_apply] at hk
+    set b := nth p k.succ - nth p k - 1 with hb
+    replace hb : p (↑(subtype.of_nat (setOf p) k) + b + 1)
+    · rw [hb, ← hk, tsub_right_comm]
+      have hn11 : nth p k.succ - 1 + 1 = nth p k.succ := by
+        rw [tsub_add_cancel_iff_le]
+        exact succ_le_of_lt (pos_of_gt (nth_strict_mono p hi (lt_add_one k)))
+      rw [add_tsub_cancel_of_le]
+      · rw [hn11]
+        apply nth_mem_of_infinite p hi
+        
+      · rw [← lt_succ_iff, ← Nat.add_one, hn11]
+        apply nth_strict_mono p hi
+        exact lt_add_one k
+        
       
+    have H : ∃ n : ℕ, p (↑(subtype.of_nat (setOf p) k) + n + 1) := ⟨b, hb⟩
+    set t := Nat.find H with ht
+    obtain ⟨hp, hmin⟩ := (Nat.find_eq_iff _).mp ht
+    rw [← ht, ← hk] at hp hmin⊢
+    rw [nth, Inf_def ⟨_, nth_mem_of_infinite_aux p hi k.succ⟩, Nat.find_eq_iff]
+    refine' ⟨⟨by convert hp, fun r hr => _⟩, fun n hn => _⟩
+    · rw [lt_succ_iff] at hr⊢
+      exact (nth_monotone p hi hr).trans (by simp)
+      
+    simp only [exists_prop, not_and, not_lt, Set.mem_set_of_eq, not_forall]
+    refine' fun hpn => ⟨k, lt_add_one k, _⟩
+    by_contra' hlt
+    replace hn : n - nth p k - 1 < t
+    · rw [tsub_lt_iff_left]
+      · rw [tsub_lt_iff_left hlt.le]
+        convert hn using 1
+        ac_rfl
+        
+      exact le_tsub_of_add_le_left (succ_le_of_lt hlt)
+      
+    refine' hmin (n - nth p k - 1) hn _
+    convert hpn
+    have hn11 : n - 1 + 1 = n := Nat.sub_add_cancel (pos_of_gt hlt)
+    rwa [tsub_right_comm, add_tsub_cancel_of_le]
+    rwa [← hn11, lt_succ_iff] at hlt
+    
 #align nat.nth_eq_order_iso_of_nat Nat.nth_eq_order_iso_of_nat
 
 end Nat

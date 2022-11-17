@@ -75,7 +75,7 @@ instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.
 induced by lifting `X.as_limit_cone`.
 -/
 def isoAsLimitConeLift : X ≅ (limitCone X.diagram).x :=
-  as_iso <| (limitConeIsLimit _).lift X.asLimitCone
+  as_iso $ (limitConeIsLimit _).lift X.asLimitCone
 #align Profinite.iso_as_limit_cone_lift ProfiniteCat.isoAsLimitConeLift
 
 /-- The isomorphism of cones `X.as_limit_cone` and `Profinite.limit_cone X.diagram`.

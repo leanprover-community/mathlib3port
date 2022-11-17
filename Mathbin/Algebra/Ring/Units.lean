@@ -98,7 +98,7 @@ theorem IsUnit.neg_iff [Monoid α] [HasDistribNeg α] (a : α) : IsUnit (-a) ↔
 #align is_unit.neg_iff IsUnit.neg_iff
 
 theorem IsUnit.sub_iff [Ring α] {x y : α} : IsUnit (x - y) ↔ IsUnit (y - x) :=
-  (IsUnit.neg_iff _).symm.trans <| neg_sub x y ▸ Iff.rfl
+  (IsUnit.neg_iff _).symm.trans $ neg_sub x y ▸ Iff.rfl
 #align is_unit.sub_iff IsUnit.sub_iff
 
 namespace Units

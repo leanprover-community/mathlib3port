@@ -169,13 +169,13 @@ theorem quasi_separated_respects_iso : MorphismProperty.RespectsIso @QuasiSepara
 theorem QuasiSeparated.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     Tfae
       [QuasiSeparated f,
-        ∃ (𝒰 : SchemeCat.OpenCover.{u} Y)(_ : ∀ i, IsAffine (𝒰.obj i)),
+        ∃ (𝒰 : SchemeCat.OpenCover.{u} Y) (_ : ∀ i, IsAffine (𝒰.obj i)),
           ∀ i : 𝒰.J, QuasiSeparatedSpace (pullback f (𝒰.map i)).carrier,
         ∀ (𝒰 : SchemeCat.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)] (i : 𝒰.J),
           QuasiSeparatedSpace (pullback f (𝒰.map i)).carrier,
         ∀ {U : SchemeCat} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g], QuasiSeparatedSpace (pullback f g).carrier,
-        ∃ (𝒰 : SchemeCat.OpenCover.{u} Y)(_ : ∀ i, IsAffine (𝒰.obj i))(𝒰' :
-          ∀ i : 𝒰.J, SchemeCat.OpenCover.{u} (pullback f (𝒰.map i)))(_ : ∀ i j, IsAffine ((𝒰' i).obj j)),
+        ∃ (𝒰 : SchemeCat.OpenCover.{u} Y) (_ : ∀ i, IsAffine (𝒰.obj i)) (𝒰' :
+          ∀ i : 𝒰.J, SchemeCat.OpenCover.{u} (pullback f (𝒰.map i))) (_ : ∀ i j, IsAffine ((𝒰' i).obj j)),
           ∀ (i : 𝒰.J) (j k : (𝒰' i).J), CompactSpace (pullback ((𝒰' i).map j) ((𝒰' i).map k)).carrier] :=
   by
   have := quasi_compact.affine_property_is_local.diagonal_affine_open_cover_tfae f
@@ -197,7 +197,7 @@ theorem QuasiSeparated.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
           QuasiSeparated (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i),
         ∀ U : Opens Y.carrier, QuasiSeparated (f ∣_ U),
         ∀ {U : SchemeCat} (g : U ⟶ Y) [IsOpenImmersion g], QuasiSeparated (pullback.snd : pullback f g ⟶ _),
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supr U = ⊤), ∀ i, QuasiSeparated (f ∣_ U i)] :=
+        ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : supr U = ⊤), ∀ i, QuasiSeparated (f ∣_ U i)] :=
   QuasiSeparated.isLocalAtTarget.open_cover_tfae f
 #align algebraic_geometry.quasi_separated.open_cover_tfae AlgebraicGeometry.QuasiSeparated.open_cover_tfae
 

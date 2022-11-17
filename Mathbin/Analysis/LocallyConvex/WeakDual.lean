@@ -109,8 +109,8 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
     by_cases hU₃:U.fst.nonempty
     · have hU₃' : U'.nonempty := hU₁.nonempty_to_finset.mpr hU₃
       refine'
-        ⟨(U'.sup p).ball 0 <| U'.inf' hU₃' U.snd,
-          p.basis_sets_mem _ <| (Finset.lt_inf'_iff _).2 fun y hy => hU₂ y <| hU₁.mem_to_finset.mp hy, fun x hx y hy =>
+        ⟨(U'.sup p).ball 0 $ U'.inf' hU₃' U.snd,
+          p.basis_sets_mem _ $ (Finset.lt_inf'_iff _).2 $ fun y hy => hU₂ y $ hU₁.mem_to_finset.mp hy, fun x hx y hy =>
           _⟩
       simp only [Set.mem_preimage, Set.mem_pi, mem_ball_zero_iff]
       rw [Seminorm.mem_ball_zero] at hx

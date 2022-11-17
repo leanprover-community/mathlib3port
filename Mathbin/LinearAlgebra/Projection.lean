@@ -46,7 +46,7 @@ theorem ker_id_sub_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : ke
 #align linear_map.ker_id_sub_eq_of_proj LinearMap.ker_id_sub_eq_of_proj
 
 theorem range_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : range f = ⊤ :=
-  range_eq_top.2 fun x => ⟨x, hf x⟩
+  range_eq_top.2 $ fun x => ⟨x, hf x⟩
 #align linear_map.range_eq_of_proj LinearMap.range_eq_of_proj
 
 theorem is_compl_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : IsCompl p f.ker := by
@@ -72,7 +72,7 @@ open LinearMap
 
 /-- If `q` is a complement of `p`, then `M/p ≃ q`. -/
 def quotientEquivOfIsCompl (h : IsCompl p q) : (E ⧸ p) ≃ₗ[R] q :=
-  LinearEquiv.symm <|
+  LinearEquiv.symm $
     LinearEquiv.ofBijective (p.mkq.comp q.Subtype)
       (by rw [← ker_eq_bot, ker_comp, ker_mkq, disjoint_iff_comap_eq_bot.1 h.symm.disjoint])
       (by rw [← range_eq_top, range_comp, range_subtype, map_mkq_eq_top, h.sup_eq_top])
@@ -121,13 +121,13 @@ theorem coe_prod_equiv_of_is_compl' (h : IsCompl p q) (x : p × q) : prodEquivOf
 
 @[simp]
 theorem prod_equiv_of_is_compl_symm_apply_left (h : IsCompl p q) (x : p) : (prodEquivOfIsCompl p q h).symm x = (x, 0) :=
-  (prodEquivOfIsCompl p q h).symm_apply_eq.2 <| by simp
+  (prodEquivOfIsCompl p q h).symm_apply_eq.2 $ by simp
 #align submodule.prod_equiv_of_is_compl_symm_apply_left Submodule.prod_equiv_of_is_compl_symm_apply_left
 
 @[simp]
 theorem prod_equiv_of_is_compl_symm_apply_right (h : IsCompl p q) (x : q) :
     (prodEquivOfIsCompl p q h).symm x = (0, x) :=
-  (prodEquivOfIsCompl p q h).symm_apply_eq.2 <| by simp
+  (prodEquivOfIsCompl p q h).symm_apply_eq.2 $ by simp
 #align submodule.prod_equiv_of_is_compl_symm_apply_right Submodule.prod_equiv_of_is_compl_symm_apply_right
 
 @[simp]
@@ -149,7 +149,7 @@ theorem prod_equiv_of_is_compl_symm_apply_snd_eq_zero (h : IsCompl p q) {x : E} 
 @[simp]
 theorem prod_comm_trans_prod_equiv_of_is_compl (h : IsCompl p q) :
     LinearEquiv.prodComm R q p ≪≫ₗ prodEquivOfIsCompl p q h = prodEquivOfIsCompl q p h.symm :=
-  LinearEquiv.ext fun _ => add_comm _ _
+  LinearEquiv.ext $ fun _ => add_comm _ _
 #align submodule.prod_comm_trans_prod_equiv_of_is_compl Submodule.prod_comm_trans_prod_equiv_of_is_compl
 
 /-- Projection to a submodule along its complement. -/
@@ -185,11 +185,11 @@ theorem linear_proj_of_is_compl_apply_right (h : IsCompl p q) (x : q) : linearPr
 
 @[simp]
 theorem linear_proj_of_is_compl_ker (h : IsCompl p q) : (linearProjOfIsCompl p q h).ker = q :=
-  ext fun x => mem_ker.trans (linear_proj_of_is_compl_apply_eq_zero_iff h)
+  ext $ fun x => mem_ker.trans (linear_proj_of_is_compl_apply_eq_zero_iff h)
 #align submodule.linear_proj_of_is_compl_ker Submodule.linear_proj_of_is_compl_ker
 
 theorem linear_proj_of_is_compl_comp_subtype (h : IsCompl p q) : (linearProjOfIsCompl p q h).comp p.Subtype = id :=
-  LinearMap.ext <| linear_proj_of_is_compl_apply_left h
+  LinearMap.ext $ linear_proj_of_is_compl_apply_left h
 #align submodule.linear_proj_of_is_compl_comp_subtype Submodule.linear_proj_of_is_compl_comp_subtype
 
 theorem linear_proj_of_is_compl_idempotent (h : IsCompl p q) (x : E) :
@@ -202,7 +202,7 @@ theorem exists_unique_add_of_is_compl_prod (hc : IsCompl p q) (x : E) : ∃! u :
 #align submodule.exists_unique_add_of_is_compl_prod Submodule.exists_unique_add_of_is_compl_prod
 
 theorem exists_unique_add_of_is_compl (hc : IsCompl p q) (x : E) :
-    ∃ (u : p)(v : q), (u : E) + v = x ∧ ∀ (r : p) (s : q), (r : E) + s = x → r = u ∧ s = v :=
+    ∃ (u : p) (v : q), (u : E) + v = x ∧ ∀ (r : p) (s : q), (r : E) + s = x → r = u ∧ s = v :=
   let ⟨u, hu₁, hu₂⟩ := exists_unique_add_of_is_compl_prod hc x
   ⟨u.1, u.2, hu₁, fun r s hrs => Prod.eq_iff_fst_eq_snd_eq.1 (hu₂ ⟨r, s⟩ hrs)⟩
 #align submodule.exists_unique_add_of_is_compl Submodule.exists_unique_add_of_is_compl
@@ -354,7 +354,7 @@ def isComplEquivProj : { q // IsCompl p q } ≃ { f : E →ₗ[R] p // ∀ x : p
   toFun q := ⟨linearProjOfIsCompl p q q.2, linear_proj_of_is_compl_apply_left q.2⟩
   invFun f := ⟨(f : E →ₗ[R] p).ker, is_compl_of_proj f.2⟩
   left_inv := fun ⟨q, hq⟩ => by simp only [linear_proj_of_is_compl_ker, Subtype.coe_mk]
-  right_inv := fun ⟨f, hf⟩ => Subtype.eq <| f.linear_proj_of_is_compl_of_proj hf
+  right_inv := fun ⟨f, hf⟩ => Subtype.eq $ f.linear_proj_of_is_compl_of_proj hf
 #align submodule.is_compl_equiv_proj Submodule.isComplEquivProj
 
 @[simp]

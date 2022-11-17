@@ -132,10 +132,10 @@ theorem is_unit_iff_forall_dvd {x : α} : IsUnit x ↔ ∀ y, x ∣ y :=
 #align is_unit_iff_forall_dvd is_unit_iff_forall_dvd
 
 theorem is_unit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
-  is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
+  is_unit_iff_dvd_one.2 $ xy.trans $ is_unit_iff_dvd_one.1 hu
 #align is_unit_of_dvd_unit is_unit_of_dvd_unit
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (a «expr ∣ » 1) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∣ » 1) -/
 theorem is_unit_of_dvd_one : ∀ (a) (_ : a ∣ 1), IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 #align is_unit_of_dvd_one is_unit_of_dvd_one

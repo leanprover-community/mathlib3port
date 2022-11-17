@@ -87,7 +87,7 @@ theorem hasse_deriv_zero' : hasseDeriv 0 f = f := by
 
 @[simp]
 theorem hasse_deriv_zero : @hasseDeriv R _ 0 = LinearMap.id :=
-  LinearMap.ext <| hasse_deriv_zero'
+  LinearMap.ext $ hasse_deriv_zero'
 #align polynomial.hasse_deriv_zero Polynomial.hasse_deriv_zero
 
 theorem hasse_deriv_eq_zero_of_lt_nat_degree (p : R[X]) (n : ℕ) (h : p.natDegree < n) : hasseDeriv n p = 0 := by
@@ -102,7 +102,7 @@ theorem hasse_deriv_one' : hasseDeriv 1 f = derivative f := by
 
 @[simp]
 theorem hasse_deriv_one : @hasseDeriv R _ 1 = derivative :=
-  LinearMap.ext <| hasse_deriv_one'
+  LinearMap.ext $ hasse_deriv_one'
 #align polynomial.hasse_deriv_one Polynomial.hasse_deriv_one
 
 @[simp]
@@ -200,18 +200,22 @@ theorem hasse_deriv_comp (k l : ℕ) : (@hasseDeriv R _ k).comp (hasseDeriv l) =
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr H, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align polynomial.hasse_deriv_comp Polynomial.hasse_deriv_comp
 
-theorem nat_degree_hasse_deriv_le (p : R[X]) (n : ℕ) : natDegree (hasseDeriv n p) ≤ natDegree p - n := by
-  classical rw [hasse_deriv_apply, sum_def]
-    simp_rw [Function.comp, nat_degree_monomial]
-    · simp only [if_t_t, max_eq_right, zero_le', Finset.fold_max_le, true_and_iff, and_imp, tsub_le_iff_right,
-        mem_support_iff, Ne.def, Finset.mem_filter]
-      intro x hx hx'
-      have hxp : x ≤ p.nat_degree := le_nat_degree_of_ne_zero hx
-      have hxn : n ≤ x := by
-        contrapose! hx'
-        simp [Nat.choose_eq_zero_of_lt hx']
-      rwa [tsub_add_cancel_of_le (hxn.trans hxp)]
-      
+theorem nat_degree_hasse_deriv_le (p : R[X]) (n : ℕ) : natDegree (hasseDeriv n p) ≤ natDegree p - n := by classical
+  rw [hasse_deriv_apply, sum_def]
+  refine' (nat_degree_sum_le _ _).trans _
+  simp_rw [Function.comp, nat_degree_monomial]
+  rw [Finset.fold_ite, Finset.fold_const]
+  · simp only [if_t_t, max_eq_right, zero_le', Finset.fold_max_le, true_and_iff, and_imp, tsub_le_iff_right,
+      mem_support_iff, Ne.def, Finset.mem_filter]
+    intro x hx hx'
+    have hxp : x ≤ p.nat_degree := le_nat_degree_of_ne_zero hx
+    have hxn : n ≤ x := by
+      contrapose! hx'
+      simp [Nat.choose_eq_zero_of_lt hx']
+    rwa [tsub_add_cancel_of_le (hxn.trans hxp)]
+    
+  · simp
+    
 #align polynomial.nat_degree_hasse_deriv_le Polynomial.nat_degree_hasse_deriv_le
 
 theorem nat_degree_hasse_deriv [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :
@@ -222,9 +226,12 @@ theorem nat_degree_hasse_deriv [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :
   · refine' map_nat_degree_eq_sub _ _
     · exact fun h => hasse_deriv_eq_zero_of_lt_nat_degree _ _
       
-    · classical simp only [ite_eq_right_iff, Ne.def, nat_degree_monomial, hasse_deriv_monomial]
-        -- this is where we use the `smul_eq_zero` from `no_zero_smul_divisors`
-        rw [← nsmul_eq_mul, smul_eq_zero, Nat.choose_eq_zero_iff] at hh
+    · classical
+      simp only [ite_eq_right_iff, Ne.def, nat_degree_monomial, hasse_deriv_monomial]
+      intro k c c0 hh
+      -- this is where we use the `smul_eq_zero` from `no_zero_smul_divisors`
+      rw [← nsmul_eq_mul, smul_eq_zero, Nat.choose_eq_zero_iff] at hh
+      exact (tsub_eq_zero_of_le (Or.resolve_right hh c0).le).symm
       
     
 #align polynomial.nat_degree_hasse_deriv Polynomial.nat_degree_hasse_deriv

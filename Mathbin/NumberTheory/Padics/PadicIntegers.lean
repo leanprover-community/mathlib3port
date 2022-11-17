@@ -83,8 +83,8 @@ def subring : Subring ℚ_[p] where
   carrier := { x : ℚ_[p] | ∥x∥ ≤ 1 }
   zero_mem' := by norm_num
   one_mem' := by norm_num
-  add_mem' x y hx hy := (padicNormE.nonarchimedean _ _).trans <| max_le_iff.2 ⟨hx, hy⟩
-  mul_mem' x y hx hy := (padicNormE.mul _ _).trans_le <| mul_le_one hx (norm_nonneg _) hy
+  add_mem' x y hx hy := (padicNormE.nonarchimedean _ _).trans $ max_le_iff.2 ⟨hx, hy⟩
+  mul_mem' x y hx hy := (padicNormE.mul _ _).trans_le $ mul_le_one hx (norm_nonneg _) hy
   neg_mem' x hx := (norm_neg _).trans_le hx
 #align padic_int.subring PadicInt.subring
 
@@ -209,7 +209,7 @@ def inv : ℤ_[p] → ℤ_[p]
 
 instance :
     CharZero ℤ_[p] where cast_injective m n h :=
-    Nat.cast_injective <|
+    Nat.cast_injective $
       show (m : ℚ_[p]) = n by
         rw [Subtype.ext_iff] at h
         norm_cast  at h
@@ -322,11 +322,11 @@ theorem norm_add_eq_max_of_ne {q r : ℤ_[p]} : ∥q∥ ≠ ∥r∥ → ∥q + r
 #align padic_int.norm_add_eq_max_of_ne PadicInt.norm_add_eq_max_of_ne
 
 theorem norm_eq_of_norm_add_lt_right {z1 z2 : ℤ_[p]} (h : ∥z1 + z2∥ < ∥z2∥) : ∥z1∥ = ∥z2∥ :=
-  by_contradiction fun hne => not_lt_of_ge (by rw [norm_add_eq_max_of_ne hne] <;> apply le_max_right) h
+  by_contradiction $ fun hne => not_lt_of_ge (by rw [norm_add_eq_max_of_ne hne] <;> apply le_max_right) h
 #align padic_int.norm_eq_of_norm_add_lt_right PadicInt.norm_eq_of_norm_add_lt_right
 
 theorem norm_eq_of_norm_add_lt_left {z1 z2 : ℤ_[p]} (h : ∥z1 + z2∥ < ∥z1∥) : ∥z1∥ = ∥z2∥ :=
-  by_contradiction fun hne => not_lt_of_ge (by rw [norm_add_eq_max_of_ne hne] <;> apply le_max_left) h
+  by_contradiction $ fun hne => not_lt_of_ge (by rw [norm_add_eq_max_of_ne hne] <;> apply le_max_left) h
 #align padic_int.norm_eq_of_norm_add_lt_left PadicInt.norm_eq_of_norm_add_lt_left
 
 @[simp]
@@ -522,7 +522,7 @@ theorem mk_units_eq {u : ℚ_[p]} (h : ∥u∥ = 1) : ((mkUnits h : ℤ_[p]) : �
 
 @[simp]
 theorem norm_units (u : ℤ_[p]ˣ) : ∥(u : ℤ_[p])∥ = 1 :=
-  is_unit_iff.mp <| by simp
+  is_unit_iff.mp $ by simp
 #align padic_int.norm_units PadicInt.norm_units
 
 /-- `unit_coeff hx` is the unit `u` in the unique representation `x = u * p ^ n`.
@@ -550,7 +550,7 @@ theorem unit_coeff_spec {x : ℤ_[p]} (hx : x ≠ 0) : x = (unitCoeff hx : ℤ_[
     · exact_mod_cast hp.1.NeZero
       
   convert repr using 2
-  rw [← zpow_coe_nat, Int.nat_abs_of_nonneg (valuation_nonneg x)]
+  rw [← zpow_coe_nat, Int.natAbs_of_nonneg (valuation_nonneg x)]
 #align padic_int.unit_coeff_spec PadicInt.unit_coeff_spec
 
 end Units
@@ -587,7 +587,7 @@ theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     
   · rw [unit_coeff_spec hx]
     lift x.valuation to ℕ using x.valuation_nonneg with k hk
-    simp only [Int.nat_abs_of_nat, Units.is_unit, IsUnit.dvd_mul_left, Int.coe_nat_le]
+    simp only [Int.natAbs_ofNat, Units.is_unit, IsUnit.dvd_mul_left, Int.coe_nat_le]
     intro H
     obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le H
     simp only [pow_add, dvd_mul_right]
@@ -617,7 +617,7 @@ theorem norm_lt_one_iff_dvd (x : ℤ_[p]) : ∥x∥ < 1 ↔ ↑p ∣ x := by
   have := norm_le_pow_iff_mem_span_pow x 1
   rw [Ideal.mem_span_singleton, pow_one] at this
   rw [← this, norm_le_pow_iff_norm_lt_pow_add_one]
-  simp only [zpow_zero, Int.coe_nat_zero, Int.coe_nat_succ, add_left_neg, zero_add]
+  simp only [zpow_zero, Int.ofNat_zero, Int.ofNat_succ, add_left_neg, zero_add]
 #align padic_int.norm_lt_one_iff_dvd PadicInt.norm_lt_one_iff_dvd
 
 @[simp]
@@ -633,10 +633,10 @@ section Dvr
 
 
 instance : LocalRing ℤ_[p] :=
-  LocalRing.ofNonunitsAdd <| by simp only [mem_nonunits] <;> exact fun x y => norm_lt_one_add
+  LocalRing.ofNonunitsAdd $ by simp only [mem_nonunits] <;> exact fun x y => norm_lt_one_add
 
 theorem p_nonnunit : (p : ℤ_[p]) ∈ nonunits ℤ_[p] := by
-  have : (p : ℝ)⁻¹ < 1 := inv_lt_one <| by exact_mod_cast hp.1.one_lt
+  have : (p : ℝ)⁻¹ < 1 := inv_lt_one $ by exact_mod_cast hp.1.one_lt
   simp [this]
 #align padic_int.p_nonnunit PadicInt.p_nonnunit
 
@@ -728,7 +728,7 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p] where
       
     · set n := Int.toNat (-x.valuation) with hn
       have hn_coe : (n : ℤ) = -x.valuation := by
-        rw [hn, Int.to_nat_of_nonneg]
+        rw [hn, Int.toNat_of_nonneg]
         rw [Right.nonneg_neg_iff]
         rw [Padic.norm_le_one_iff_val_nonneg] at hx
         exact le_of_lt (not_le.mp hx)

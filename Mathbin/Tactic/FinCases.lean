@@ -27,9 +27,8 @@ open Conv.Interactive
 unsafe def guard_mem_fin (e : expr) : tactic expr := do
   let t ← infer_type e
   let α ← mk_mvar
-  to_expr (pquote.1 (_ ∈ (_ : Finset (%%ₓα)))) tt ff >>= unify t <|>
-      to_expr (pquote.1 (_ ∈ (_ : Multiset (%%ₓα)))) tt ff >>= unify t <|>
-        to_expr (pquote.1 (_ ∈ (_ : List (%%ₓα)))) tt ff >>= unify t
+  to_expr ``(_ ∈ (_ : Finset $(α))) tt ff >>= unify t <|>
+      to_expr ``(_ ∈ (_ : Multiset $(α))) tt ff >>= unify t <|> to_expr ``(_ ∈ (_ : List $(α))) tt ff >>= unify t
   instantiate_mvars α
 #align tactic.guard_mem_fin tactic.guard_mem_fin
 
@@ -39,12 +38,12 @@ to a list of `expr`s each with type `α`.
 TODO: this should be moved, and possibly duplicates an existing definition.
 -/
 unsafe def expr_list_to_list_expr : ∀ e : expr, tactic (List expr)
-  | quote.1 (List.cons (%%ₓh) (%%ₓt)) => List.cons h <$> expr_list_to_list_expr t
-  | quote.1 [] => return []
+  | q(List.cons $(h) $(t)) => List.cons h <$> expr_list_to_list_expr t
+  | q([]) => return []
   | _ => failed
 #align tactic.expr_list_to_list_expr tactic.expr_list_to_list_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), tactic Unit
   | with_list, e => do
     let result ← cases_core e
@@ -63,11 +62,9 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
           |-- Otherwise, call `norm_num`. We let `norm_num` unfold `max` and `min`
             -- because it's helpful for the `interval_cases` tactic.
             _ =>
-            try <|
-              tactic.interactive.conv (some sn) none <|
-                to_rhs >>
-                  conv.interactive.norm_num
-                    [simp_arg_type.expr (pquote.1 max_def'), simp_arg_type.expr (pquote.1 min_def)]
+            try $
+              tactic.interactive.conv (some sn) none $
+                to_rhs >> conv.interactive.norm_num [simp_arg_type.expr ``(max_def'), simp_arg_type.expr ``(min_def)]
         let s ← get_local sn
         try sorry
         let ng' ← num_goals
@@ -79,39 +76,58 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
       | _ => failed
 #align tactic.fin_cases_at_aux tactic.fin_cases_at_aux
 
-/-- `fin_cases_at with_list e` performs case analysis on `e : α`, where `α` is a fintype.
-The optional list of expressions `with_list` provides descriptions for the cases of `e`,
-for example, to display nats as `n.succ` instead of `n+1`.
-These should be defeq to and in the same order as the terms in the enumeration of `α`.
--/
-unsafe def fin_cases_at (nm : Option Name) : ∀ (with_list : Option pexpr) (e : expr), tactic Unit
-  | with_list, e =>
-    focus1 <| do
-      let ty ← try_core <| guard_mem_fin e
-      match ty with
-        | none =>-- Deal with `x : A`, where `[fintype A]` is available:
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `fin_cases_at with_list e` performs case analysis on `e : α`, where `α` is a fintype.
+      The optional list of expressions `with_list` provides descriptions for the cases of `e`,
+      for example, to display nats as `n.succ` instead of `n+1`.
+      These should be defeq to and in the same order as the terms in the enumeration of `α`.
+      -/
+    unsafe
+  def
+    fin_cases_at
+    ( nm : Option Name ) : ∀ ( with_list : Option pexpr ) ( e : expr ) , tactic Unit
+    |
+      with_list , e
+      =>
+      focus1
+        $
         do
-          let ty ← infer_type e
-          let i ← to_expr (pquote.1 (Fintype (%%ₓty))) >>= mk_instance <|> fail "Failed to find `fintype` instance."
-          let t ← to_expr (pquote.1 ((%%ₓe) ∈ @Fintype.elems (%%ₓty) (%%ₓi)))
-          let v ← to_expr (pquote.1 (@Fintype.complete (%%ₓty) (%%ₓi) (%%ₓe)))
-          let h ← assertv (nm `this) t v
-          fin_cases_at with_list h
-        | some ty =>-- Deal with `x ∈ A` hypotheses:
-        do
-          let with_list ←
-            match with_list with
-              | some e => do
-                let e ← to_expr (pquote.1 (%%ₓe : List (%%ₓty)))
-                expr_list_to_list_expr e
-              | none => return []
-          fin_cases_at_aux with_list e
+          let ty ← try_core $ guard_mem_fin e
+            match
+              ty
+              with
+              |
+                  none
+                  =>
+                  do
+                    let ty ← infer_type e
+                      let
+                        i
+                          ←
+                          to_expr ` `( Fintype $ ( ty ) ) >>= mk_instance <|> fail "Failed to find `fintype` instance."
+                      let t ← to_expr ` `( $ ( e ) ∈ @ Fintype.elems $ ( ty ) $ ( i ) )
+                      let v ← to_expr ` `( @ Fintype.complete $ ( ty ) $ ( i ) $ ( e ) )
+                      let h ← assertv ( nm `this ) t v
+                      fin_cases_at with_list h
+                |
+                  some ty
+                  =>
+                  do
+                    let
+                        with_list
+                          ←
+                          match
+                            with_list
+                            with
+                            | some e => do let e ← to_expr ` `( ( $ ( e ) : List $ ( ty ) ) ) expr_list_to_list_expr e
+                              | none => return [ ]
+                      fin_cases_at_aux with_list e
 #align tactic.fin_cases_at tactic.fin_cases_at
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def hyp :=
   tk "*" *> return none <|> some <$> ident
 #align tactic.interactive.hyp tactic.interactive.hyp

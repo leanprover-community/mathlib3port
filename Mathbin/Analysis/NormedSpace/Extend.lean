@@ -82,26 +82,45 @@ theorem LinearMap.extend_to_𝕜'_apply [Module ℝ F] [IsScalarTower ℝ 𝕜 F
 theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
     ∥(fr.toLinearMap.extendTo𝕜' x : 𝕜)∥ ≤ ∥fr∥ * ∥x∥ := by
   let lm : F →ₗ[𝕜] 𝕜 := fr.to_linear_map.extend_to_𝕜'
-  classical-- We aim to find a `t : 𝕜` such that
-    -- * `lm (t • x) = fr (t • x)` (so `lm (t • x) = t * lm x ∈ ℝ`)
-    -- * `∥lm x∥ = ∥lm (t • x)∥` (so `t.abs` must be 1)
-    -- If `lm x ≠ 0`, `(lm x)⁻¹` satisfies the first requirement, and after normalizing, it
-    -- satisfies the second.
-    -- (If `lm x = 0`, the goal is trivial.)
-    by_cases h:lm x = 0
-    let fx := (lm x)⁻¹
-    have ht : abs𝕜 t = 1
-    have h1 : (fr (t • x) : 𝕜) = lm (t • x)
-    calc
-      ∥lm x∥ = abs𝕜 t * ∥lm x∥ := by rw [ht, one_mul]
-      _ = ∥t * lm x∥ := by rw [← norm_eq_abs, norm_mul]
-      _ = ∥lm (t • x)∥ := by rw [← smul_eq_mul, lm.map_smul]
-      _ = ∥(fr (t • x) : 𝕜)∥ := by rw [h1]
-      _ = ∥fr (t • x)∥ := by rw [norm_eq_abs, abs_of_real, norm_eq_abs, abs_to_real]
-      _ ≤ ∥fr∥ * ∥t • x∥ := ContinuousLinearMap.le_op_norm _ _
-      _ = ∥fr∥ * (∥t∥ * ∥x∥) := by rw [norm_smul]
-      _ ≤ ∥fr∥ * ∥x∥ := by rw [norm_eq_abs, ht, one_mul]
+  classical
+  -- We aim to find a `t : 𝕜` such that
+  -- * `lm (t • x) = fr (t • x)` (so `lm (t • x) = t * lm x ∈ ℝ`)
+  -- * `∥lm x∥ = ∥lm (t • x)∥` (so `t.abs` must be 1)
+  -- If `lm x ≠ 0`, `(lm x)⁻¹` satisfies the first requirement, and after normalizing, it
+  -- satisfies the second.
+  -- (If `lm x = 0`, the goal is trivial.)
+  by_cases h:lm x = 0
+  · rw [h, norm_zero]
+    apply mul_nonneg <;> exact norm_nonneg _
+    
+  let fx := (lm x)⁻¹
+  let t := fx / (abs𝕜 fx : 𝕜)
+  have ht : abs𝕜 t = 1 := by field_simp [abs_of_real, of_real_inv, IsROrC.abs_inv, IsROrC.abs_div, IsROrC.abs_abs, h]
+  have h1 : (fr (t • x) : 𝕜) = lm (t • x) := by
+    apply ext
+    · simp only [lm, of_real_re, LinearMap.extend_to_𝕜'_apply, mul_re, I_re, of_real_im, zero_mul, AddMonoidHom.map_sub,
+        sub_zero, mul_zero]
+      rfl
       
+    · symm
+      calc
+        im (lm (t • x)) = im (t * lm x) := by rw [lm.map_smul, smul_eq_mul]
+        _ = im ((lm x)⁻¹ / abs𝕜 (lm x)⁻¹ * lm x) := rfl
+        _ = im (1 / (abs𝕜 (lm x)⁻¹ : 𝕜)) := by rw [div_mul_eq_mul_div, inv_mul_cancel h]
+        _ = 0 := by rw [← of_real_one, ← of_real_div, of_real_im]
+        _ = im (fr (t • x) : 𝕜) := by rw [of_real_im]
+        
+      
+  calc
+    ∥lm x∥ = abs𝕜 t * ∥lm x∥ := by rw [ht, one_mul]
+    _ = ∥t * lm x∥ := by rw [← norm_eq_abs, norm_mul]
+    _ = ∥lm (t • x)∥ := by rw [← smul_eq_mul, lm.map_smul]
+    _ = ∥(fr (t • x) : 𝕜)∥ := by rw [h1]
+    _ = ∥fr (t • x)∥ := by rw [norm_eq_abs, abs_of_real, norm_eq_abs, abs_to_real]
+    _ ≤ ∥fr∥ * ∥t • x∥ := ContinuousLinearMap.le_op_norm _ _
+    _ = ∥fr∥ * (∥t∥ * ∥x∥) := by rw [norm_smul]
+    _ ≤ ∥fr∥ * ∥x∥ := by rw [norm_eq_abs, ht, one_mul]
+    
 #align norm_bound norm_bound
 
 /-- Extend `fr : F →L[ℝ] ℝ` to `F →L[𝕜] 𝕜`. -/

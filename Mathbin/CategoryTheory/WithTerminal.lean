@@ -121,7 +121,7 @@ instance : Faithful (incl : C ⥤ _) where
 def map {D : Type _} [Category D] (F : C ⥤ D) : WithTerminal C ⥤ WithTerminal D where
   obj X :=
     match X with
-    | of x => of <| F.obj x
+    | of x => of $ F.obj x
     | star => star
   map X Y f :=
     match X, Y, f with
@@ -304,7 +304,7 @@ instance : Faithful (incl : C ⥤ _) where
 def map {D : Type _} [Category D] (F : C ⥤ D) : WithInitial C ⥤ WithInitial D where
   obj X :=
     match X with
-    | of x => of <| F.obj x
+    | of x => of $ F.obj x
     | star => star
   map X Y f :=
     match X, Y, f with

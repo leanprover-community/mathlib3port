@@ -129,17 +129,17 @@ implication, along with the type of `a` and `b`.
 For example, if `e` is `(a : ℕ) < b`, returns ``(`lt_of_not_ge, ℕ)``.
 -/
 unsafe def get_contr_lemma_name_and_type : expr → Option (Name × expr)
-  | quote.1 (@LT.lt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
-  | quote.1 (@LE.le (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
-  | quote.1 (@Eq (%%ₓtp) _ _) => return (`` eq_of_not_lt_of_not_gt, tp)
-  | quote.1 (@Ne (%%ₓtp) _ _) => return (`not.intro, tp)
-  | quote.1 (@GE.ge (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
-  | quote.1 (@GT.gt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
-  | quote.1 ¬@LT.lt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
-  | quote.1 ¬@LE.le (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
-  | quote.1 ¬@Eq (%%ₓtp) _ _ => return (`` Not.intro, tp)
-  | quote.1 ¬@GE.ge (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
-  | quote.1 ¬@GT.gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+  | q(@LT.lt $(tp) $(_) _ _) => return (`lt_of_not_ge, tp)
+  | q(@LE.le $(tp) $(_) _ _) => return (`le_of_not_gt, tp)
+  | q(@Eq $(tp) _ _) => return (`` eq_of_not_lt_of_not_gt, tp)
+  | q(@Ne $(tp) _ _) => return (`not.intro, tp)
+  | q(@GE.ge $(tp) $(_) _ _) => return (`le_of_not_gt, tp)
+  | q(@GT.gt $(tp) $(_) _ _) => return (`lt_of_not_ge, tp)
+  | q(¬@LT.lt $(tp) $(_) _ _) => return (`not.intro, tp)
+  | q(¬@LE.le $(tp) $(_) _ _) => return (`not.intro, tp)
+  | q(¬@Eq $(tp) _ _) => return (`` Not.intro, tp)
+  | q(¬@GE.ge $(tp) $(_) _ _) => return (`not.intro, tp)
+  | q(¬@GT.gt $(tp) $(_) _ _) => return (`not.intro, tp)
   | _ => none
 #align linarith.get_contr_lemma_name_and_type linarith.get_contr_lemma_name_and_type
 
@@ -156,7 +156,7 @@ unsafe def apply_contr_lemma : tactic (Option (expr × expr)) := do
     | some (nm, tp) => do
       refine ((expr.const nm []) pexpr.mk_placeholder)
       let v ← intro1
-      return <| some (tp, v)
+      return $ some (tp, v)
     | none => return none
 #align linarith.apply_contr_lemma linarith.apply_contr_lemma
 
@@ -168,7 +168,7 @@ unsafe def partition_by_type (l : List expr) : tactic (rb_lmap expr expr) :=
   l.mfoldl
     (fun m h => do
       let tp ← ineq_prf_tp h
-      return <| m tp h)
+      return $ m tp h)
     mk_rb_map
 #align linarith.partition_by_type linarith.partition_by_type
 
@@ -177,7 +177,7 @@ prove `false` by calling `linarith` on each list in succession. It will stop at 
 `false`, and fail if no contradiction is found with any list.
 -/
 unsafe def try_linarith_on_lists (cfg : linarith_config) (ls : List (List expr)) : tactic expr :=
-  (first <| ls.map <| prove_false_by_linarith cfg) <|> fail "linarith failed to find a contradiction"
+  (first $ ls.map $ prove_false_by_linarith cfg) <|> fail "linarith failed to find a contradiction"
 #align linarith.try_linarith_on_lists linarith.try_linarith_on_lists
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -202,7 +202,7 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_
   let preprocessors := if cfg.split_ne then linarith.remove_ne::preprocessors else preprocessors
   do
   let hyps ← preprocess preprocessors hyps
-  hyps fun hs => do
+  hyps $ fun hs => do
       set_goals [hs.1]
       single_process hs.2 >>= exact
 #align linarith.run_linarith_on_pfs linarith.run_linarith_on_pfs
@@ -211,17 +211,17 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_
 to only those that are comparisons over the type `restr_type`.
 -/
 unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (List expr) :=
-  hyps.mfilter fun h => do
+  hyps.mfilter $ fun h => do
     let ht ← infer_type h
     match get_contr_lemma_name_and_type ht with
-      | some (_, htype) => succeeds <| unify htype restr_type
+      | some (_, htype) => succeeds $ unify htype restr_type
       | none => return ff
 #align linarith.filter_hyps_to_type linarith.filter_hyps_to_type
 
 /-- A hack to allow users to write `{restr_type := ℚ}` in configuration structures. -/
 unsafe def get_restrict_type (e : expr) : tactic expr := do
   let m ← mk_mvar
-  unify (quote.1 (some (%%ₓm) : Option Type)) e
+  unify q((some $(m) : Option Type)) e
   instantiate_mvars m
 #align linarith.get_restrict_type linarith.get_restrict_type
 
@@ -243,13 +243,13 @@ expressions.
 -/
 unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pexpr) (cfg : linarith_config := {  }) :
     tactic Unit :=
-  focus1 <| do
+  focus1 $ do
     let t ← target
     -- if the target is an equality, we run `linarith` twice, to prove ≤ and ≥.
         if t then
         linarith_trace "target is an equality: splitting" >> seq' (applyc `` eq_of_not_lt_of_not_gt) tactic.linarith
       else do
-        let hyps ← hyps fun e => i_to_expr e >>= note_anon none
+        let hyps ← hyps $ fun e => i_to_expr e >>= note_anon none
         when cfg (linarith_trace "trying to split hypotheses" >> try auto.split_hyps)
         let pref_type_and_new_var_from_tgt
           ←/- If we are proving a comparison goal (and not just `false`), we consider the type of the
@@ -259,7 +259,7 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
                Otherwise, there is no preferred type and no new variable; we simply change the goal to `false`.
             -/
             apply_contr_lemma
-        when pref_type_and_new_var_from_tgt <|
+        when pref_type_and_new_var_from_tgt $
             if cfg then linarith_trace "using exfalso" >> exfalso
             else fail "linarith failed: target is not a valid comparison"
         let cfg := cfg reduce_semi
@@ -277,8 +277,7 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
         run_linarith_on_pfs cfg hyps pref_type
 #align tactic.linarith tactic.linarith
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Tries to prove a goal of `false` by linear arithmetic on hypotheses.
 If the goal is a linear (in)equality, tries to prove it by contradiction.
 If the goal is not `false` or an inequality, applies `exfalso` and tries linarith on the
@@ -372,7 +371,7 @@ in `linarith`. The preprocessing is as follows:
 unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse pexpr_list ?)
     (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse [])
-    { cfg with preprocessors := some <| cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
+    { cfg with preprocessors := some $ cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
 #align tactic.interactive.nlinarith tactic.interactive.nlinarith
 
 add_hint_tactic nlinarith

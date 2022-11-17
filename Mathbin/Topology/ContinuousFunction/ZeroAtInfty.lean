@@ -43,10 +43,10 @@ structure ZeroAtInftyContinuousMap (α : Type u) (β : Type v) [TopologicalSpace
 #align zero_at_infty_continuous_map ZeroAtInftyContinuousMap
 
 -- mathport name: zero_at_infty_continuous_map
-localized [ZeroAtInfty] notation (priority := 2000) "C₀(" α ", " β ")" => ZeroAtInftyContinuousMap α β
+scoped[ZeroAtInfty] notation (priority := 2000) "C₀(" α ", " β ")" => ZeroAtInftyContinuousMap α β
 
 -- mathport name: zero_at_infty_continuous_map.arrow
-localized [ZeroAtInfty] notation α " →C₀ " β => ZeroAtInftyContinuousMap α β
+scoped[ZeroAtInfty] notation α " →C₀ " β => ZeroAtInftyContinuousMap α β
 
 section
 
@@ -54,7 +54,7 @@ section
 vanish at infinity.
 
 You should also extend this typeclass when you extend `zero_at_infty_continuous_map`. -/
-class ZeroAtInftyContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [Zero β]
+class ZeroAtInftyContinuousMapClass (F : Type _) (α β : outParam $ Type _) [TopologicalSpace α] [Zero β]
   [TopologicalSpace β] extends ContinuousMapClass F α β where
   zero_at_infty (f : F) : Tendsto f (cocompact α) (𝓝 0)
 #align zero_at_infty_continuous_map_class ZeroAtInftyContinuousMapClass
@@ -109,7 +109,7 @@ protected def copy (f : C₀(α, β)) (f' : α → β) (h : f' = f) : C₀(α, �
 #align zero_at_infty_continuous_map.copy ZeroAtInftyContinuousMap.copy
 
 theorem eq_of_empty [IsEmpty α] (f g : C₀(α, β)) : f = g :=
-  ext <| IsEmpty.elim ‹_›
+  ext $ IsEmpty.elim ‹_›
 #align zero_at_infty_continuous_map.eq_of_empty ZeroAtInftyContinuousMap.eq_of_empty
 
 /-- A continuous function on a compact space is automatically a continuous function vanishing at
@@ -253,8 +253,8 @@ theorem sub_apply : (f - g) x = f x - g x :=
 
 @[simp]
 theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
-  | Int.ofNat n => by rw [zsmulRec, Int.of_nat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
-  | -[n+1] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
+  | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
+  | -[1+ n] => by rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
 #align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_zsmul_rec
 
 instance hasIntScalar : HasSmul ℤ C₀(α, β) :=
@@ -285,7 +285,7 @@ theorem smul_apply [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasConti
 
 instance [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [SmulWithZero Rᵐᵒᵖ β] [HasContinuousConstSmul R β]
     [IsCentralScalar R β] : IsCentralScalar R C₀(α, β) :=
-  ⟨fun r f => ext fun x => op_smul_eq_smul _ _⟩
+  ⟨fun r f => ext $ fun x => op_smul_eq_smul _ _⟩
 
 instance [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β] : SmulWithZero R C₀(α, β) :=
   Function.Injective.smulWithZero ⟨_, coe_zero⟩ FunLike.coe_injective coe_smul
@@ -355,11 +355,11 @@ protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x
   have : ∀ x, f x ∈ closed_ball (0 : β) (max C 1) := by
     intro x
     by_cases hx:x ∈ K
-    · exact (mem_closed_ball.mp <| hC ⟨x, hx, rfl⟩).trans (le_max_left _ _)
+    · exact (mem_closed_ball.mp $ hC ⟨x, hx, rfl⟩).trans (le_max_left _ _)
       
-    · exact (mem_closed_ball.mp <| mem_preimage.mp (hK₂ hx)).trans (le_max_right _ _)
+    · exact (mem_closed_ball.mp $ mem_preimage.mp (hK₂ hx)).trans (le_max_right _ _)
       
-  exact (dist_triangle (f x) 0 (f y)).trans (add_le_add (mem_closed_ball.mp <| this x) (mem_closed_ball'.mp <| this y))
+  exact (dist_triangle (f x) 0 (f y)).trans (add_le_add (mem_closed_ball.mp $ this x) (mem_closed_ball'.mp $ this y))
 #align zero_at_infty_continuous_map.bounded ZeroAtInftyContinuousMap.bounded
 
 theorem boundedRange (f : C₀(α, β)) : Bounded (range f) :=
@@ -367,7 +367,7 @@ theorem boundedRange (f : C₀(α, β)) : Bounded (range f) :=
 #align zero_at_infty_continuous_map.bounded_range ZeroAtInftyContinuousMap.boundedRange
 
 theorem boundedImage (f : C₀(α, β)) (s : Set α) : Bounded (f '' s) :=
-  f.boundedRange.mono <| image_subset_range _ _
+  f.boundedRange.mono $ image_subset_range _ _
 #align zero_at_infty_continuous_map.bounded_image ZeroAtInftyContinuousMap.boundedImage
 
 instance (priority := 100) : BoundedContinuousMapClass F α β :=
@@ -419,8 +419,8 @@ theorem closedRangeToBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ �
   rw [cluster_pt_principal_iff] at hf
   have : tendsto f (cocompact α) (𝓝 0) := by
     refine' metric.tendsto_nhds.mpr fun ε hε => _
-    obtain ⟨_, hg, g, rfl⟩ := hf (ball f (ε / 2)) (ball_mem_nhds f <| half_pos hε)
-    refine' (metric.tendsto_nhds.mp (zero_at_infty g) (ε / 2) (half_pos hε)).mp (eventually_of_forall fun x hx => _)
+    obtain ⟨_, hg, g, rfl⟩ := hf (ball f (ε / 2)) (ball_mem_nhds f $ half_pos hε)
+    refine' (metric.tendsto_nhds.mp (zero_at_infty g) (ε / 2) (half_pos hε)).mp (eventually_of_forall $ fun x hx => _)
     calc
       dist (f x) 0 ≤ dist (g.to_bcf x) (f x) + dist (g x) 0 := dist_triangle_left _ _ _
       _ < dist g.to_bcf f + ε / 2 := add_lt_add_of_le_of_lt (dist_coe_le_dist x) hx
@@ -510,8 +510,8 @@ theorem star_apply (f : C₀(α, β)) (x : α) : (star f) x = star (f x) :=
 #align zero_at_infty_continuous_map.star_apply ZeroAtInftyContinuousMap.star_apply
 
 instance [HasContinuousAdd β] : StarAddMonoid C₀(α, β) where
-  star_involutive f := ext fun x => star_star (f x)
-  star_add f g := ext fun x => star_add (f x) (g x)
+  star_involutive f := ext $ fun x => star_star (f x)
+  star_add f g := ext $ fun x => star_add (f x) (g x)
 
 end Star
 
@@ -528,7 +528,7 @@ section StarModule
 variable {𝕜 : Type _} [Zero 𝕜] [HasStar 𝕜] [AddMonoid β] [StarAddMonoid β] [TopologicalSpace β] [HasContinuousStar β]
   [SmulWithZero 𝕜 β] [HasContinuousConstSmul 𝕜 β] [StarModule 𝕜 β]
 
-instance : StarModule 𝕜 C₀(α, β) where star_smul k f := ext fun x => star_smul k (f x)
+instance : StarModule 𝕜 C₀(α, β) where star_smul k f := ext $ fun x => star_smul k (f x)
 
 end StarModule
 
@@ -537,7 +537,7 @@ section StarRing
 variable [NonUnitalSemiring β] [StarRing β] [TopologicalSpace β] [HasContinuousStar β] [TopologicalSemiring β]
 
 instance : StarRing C₀(α, β) :=
-  { ZeroAtInftyContinuousMap.starAddMonoid with star_mul := fun f g => ext fun x => star_mul (f x) (g x) }
+  { ZeroAtInftyContinuousMap.starAddMonoid with star_mul := fun f g => ext $ fun x => star_mul (f x) (g x) }
 
 end StarRing
 

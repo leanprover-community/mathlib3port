@@ -82,9 +82,15 @@ theorem eq_zero_of_mul_self_eq_zero (h : a * a = 0) : a = 0 :=
   (eq_zero_or_eq_zero_of_mul_eq_zero h).elim id id
 #align eq_zero_of_mul_self_eq_zero eq_zero_of_mul_self_eq_zero
 
+/- warning: mul_ne_zero -> mul_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_2}} [_inst_1 : Mul.{u_2} M₀] [_inst_2 : Zero.{u_2} M₀] [_inst_3 : NoZeroDivisors.{u_2} M₀ _inst_1 _inst_2] {a : M₀} {b : M₀}, (Ne.{succ u_2} M₀ a (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2)))) -> (Ne.{succ u_2} M₀ b (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2)))) -> (Ne.{succ u_2} M₀ (HMul.hMul.{u_2 u_2 u_2} M₀ M₀ M₀ (instHMul.{u_2} M₀ _inst_1) a b) (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2))))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625 : OrderedSemiring.{u_1} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.628 : NoZeroDivisors.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625))] {a : α} {b : α}, (Ne.{succ u_1} α a (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625)))))) -> (Ne.{succ u_1} α b (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625)))))) -> (Ne.{succ u_1} α (HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (NonUnitalNonAssocSemiring.toMul.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625))))) a b) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625))))))
+Case conversion may be inaccurate. Consider using '#align mul_ne_zero mul_ne_zeroₓ'. -/
 @[field_simps]
 theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
-  mt eq_zero_or_eq_zero_of_mul_eq_zero <| not_or.mpr ⟨ha, hb⟩
+  mt eq_zero_or_eq_zero_of_mul_eq_zero $ not_or.mpr ⟨ha, hb⟩
 #align mul_ne_zero mul_ne_zero
 
 end Mul
@@ -140,11 +146,11 @@ section
 variable [MulZeroOneClass M₀] [Nontrivial M₀] {a b : M₀}
 
 theorem left_ne_zero_of_mul_eq_one (h : a * b = 1) : a ≠ 0 :=
-  left_ne_zero_of_mul <| ne_zero_of_eq_one h
+  left_ne_zero_of_mul $ ne_zero_of_eq_one h
 #align left_ne_zero_of_mul_eq_one left_ne_zero_of_mul_eq_one
 
 theorem right_ne_zero_of_mul_eq_one (h : a * b = 1) : b ≠ 0 :=
-  right_ne_zero_of_mul <| ne_zero_of_eq_one h
+  right_ne_zero_of_mul $ ne_zero_of_eq_one h
 #align right_ne_zero_of_mul_eq_one right_ne_zero_of_mul_eq_one
 
 end
@@ -154,7 +160,7 @@ section CancelMonoidWithZero
 variable [CancelMonoidWithZero M₀] {a b c : M₀}
 
 -- see Note [lower instance priority]
-instance (priority := 10) CancelMonoidWithZero.to_no_zero_divisors : NoZeroDivisors M₀ :=
+instance (priority := 10) CancelMonoidWithZero.toNoZeroDivisors : NoZeroDivisors M₀ :=
   ⟨fun a b ab0 => by
     by_cases a = 0
     · left
@@ -163,7 +169,7 @@ instance (priority := 10) CancelMonoidWithZero.to_no_zero_divisors : NoZeroDivis
     right
     apply CancelMonoidWithZero.mul_left_cancel_of_ne_zero h
     rw [ab0, mul_zero]⟩
-#align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.to_no_zero_divisors
+#align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.toNoZeroDivisors
 
 theorem mul_left_inj' (hc : c ≠ 0) : a * c = b * c ↔ a = b :=
   (mul_left_injective₀ hc).eq_iff
@@ -200,13 +206,13 @@ theorem mul_left_eq_self₀ : a * b = b ↔ a = 1 ∨ b = 0 :=
 /-- An element of a `cancel_monoid_with_zero` fixed by right multiplication by an element other
 than one must be zero. -/
 theorem eq_zero_of_mul_eq_self_right (h₁ : b ≠ 1) (h₂ : a * b = a) : a = 0 :=
-  Classical.by_contradiction fun ha => h₁ <| mul_left_cancel₀ ha <| h₂.symm ▸ (mul_one a).symm
+  Classical.by_contradiction $ fun ha => h₁ $ mul_left_cancel₀ ha $ h₂.symm ▸ (mul_one a).symm
 #align eq_zero_of_mul_eq_self_right eq_zero_of_mul_eq_self_right
 
 /-- An element of a `cancel_monoid_with_zero` fixed by left multiplication by an element other
 than one must be zero. -/
 theorem eq_zero_of_mul_eq_self_left (h₁ : b ≠ 1) (h₂ : b * a = a) : a = 0 :=
-  Classical.by_contradiction fun ha => h₁ <| mul_right_cancel₀ ha <| h₂.symm ▸ (one_mul a).symm
+  Classical.by_contradiction $ fun ha => h₁ $ mul_right_cancel₀ ha $ h₂.symm ▸ (one_mul a).symm
 #align eq_zero_of_mul_eq_self_left eq_zero_of_mul_eq_self_left
 
 end CancelMonoidWithZero
@@ -278,7 +284,7 @@ instance (priority := 100) GroupWithZero.toDivisionMonoid : DivisionMonoid G₀ 
       by_cases h:a = 0
       · simp [h]
         
-      · exact left_inv_eq_right_inv (inv_mul_cancel <| inv_ne_zero h) (inv_mul_cancel h)
+      · exact left_inv_eq_right_inv (inv_mul_cancel $ inv_ne_zero h) (inv_mul_cancel h)
         ,
     mul_inv_rev := fun a b => by
       by_cases ha:a = 0
@@ -370,7 +376,7 @@ theorem inv_eq_zero {a : G₀} : a⁻¹ = 0 ↔ a = 0 := by rw [inv_eq_iff_inv_e
 
 @[simp]
 theorem zero_eq_inv {a : G₀} : 0 = a⁻¹ ↔ 0 = a :=
-  eq_comm.trans <| inv_eq_zero.trans eq_comm
+  eq_comm.trans $ inv_eq_zero.trans eq_comm
 #align zero_eq_inv zero_eq_inv
 
 /-- Dividing `a` by the result of dividing `a` by itself results in

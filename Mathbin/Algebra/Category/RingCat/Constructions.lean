@@ -170,7 +170,7 @@ variable (A B : CommRingCat.{u})
 /-- The product in `CommRing` is the cartesian product. This is the binary fan. -/
 @[simps x]
 def prodFan : BinaryFan A B :=
-  BinaryFan.mk (CommRingCat.ofHom <| RingHom.fst A B) (CommRingCat.ofHom <| RingHom.snd A B)
+  BinaryFan.mk (CommRingCat.ofHom $ RingHom.fst A B) (CommRingCat.ofHom $ RingHom.snd A B)
 #align CommRing.prod_fan CommRingCat.prodFan
 
 /-- The product in `CommRing` is the cartesian product. -/
@@ -247,7 +247,7 @@ instance equalizerιIsLocalRingHom' (F : walking_parallel_pairᵒᵖ ⥤ CommRin
     IsLocalRingHom (limit.π F (Opposite.op WalkingParallelPair.one)) := by
   have : _ = limit.π F (walking_parallel_pair_op_equiv.functor.obj _) :=
     (limit.iso_limit_cone_inv_π ⟨_, is_limit.whisker_equivalence (limit.is_limit F) walking_parallel_pair_op_equiv⟩
-      walking_parallel_pair.zero :
+        walking_parallel_pair.zero :
       _)
   erw [← this]
   infer_instance
@@ -262,9 +262,9 @@ the two maps `A × B ⟶ C`. This is the constructed pullback cone.
 -/
 def pullbackCone {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) : PullbackCone f g :=
   PullbackCone.mk
-    (CommRingCat.ofHom <|
+    (CommRingCat.ofHom $
       (RingHom.fst A B).comp (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
-    (CommRingCat.ofHom <|
+    (CommRingCat.ofHom $
       (RingHom.snd A B).comp (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
     (by
       ext ⟨x, e⟩

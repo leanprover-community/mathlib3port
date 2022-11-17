@@ -59,7 +59,7 @@ structure QuaternionAlgebra (R : Type _) (a b : R) where mk ::
 #align quaternion_algebra QuaternionAlgebra
 
 -- mathport name: quaternion_algebra
-localized [Quaternion] notation "ℍ[" R "," a "," b "]" => QuaternionAlgebra R a b
+scoped[Quaternion] notation "ℍ[" R "," a "," b "]" => QuaternionAlgebra R a b
 
 namespace QuaternionAlgebra
 
@@ -324,9 +324,9 @@ theorem smul_coe : x • (y : ℍ[R,c₁,c₂]) = ↑(x * y) := by rw [coe_mul, 
 
 /-- Quaternion conjugate. -/
 def conj : ℍ[R,c₁,c₂] ≃ₗ[R] ℍ[R,c₁,c₂] :=
-  (LinearEquiv.ofInvolutive
+  LinearEquiv.ofInvolutive
       { toFun := fun a => ⟨a.1, -a.2, -a.3, -a.4⟩, map_add' := fun a b => by ext <;> simp [neg_add],
-        map_smul' := fun r a => by ext <;> simp })
+        map_smul' := fun r a => by ext <;> simp } $
     fun a => by simp
 #align quaternion_algebra.conj QuaternionAlgebra.conj
 
@@ -486,7 +486,7 @@ def Quaternion (R : Type _) [One R] [Neg R] :=
 #align quaternion Quaternion
 
 -- mathport name: quaternion
-localized [Quaternion] notation "ℍ[" R "]" => Quaternion R
+scoped[Quaternion] notation "ℍ[" R "]" => Quaternion R
 
 /-- The equivalence between the quaternions over R and R × R × R × R. -/
 def Quaternion.equivProd (R : Type _) [One R] [Neg R] : ℍ[R] ≃ R × R × R × R :=
@@ -670,22 +670,22 @@ theorem coe_sub : ((x - y : R) : ℍ[R]) = x - y :=
 
 @[simp]
 theorem mul_re : (a * b).re = a.re * b.re - a.imI * b.imI - a.imJ * b.imJ - a.imK * b.imK :=
-  (QuaternionAlgebra.has_mul_mul_re a b).trans <| by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
+  (QuaternionAlgebra.has_mul_mul_re a b).trans $ by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
 #align quaternion.mul_re Quaternion.mul_re
 
 @[simp]
 theorem mul_im_i : (a * b).imI = a.re * b.imI + a.imI * b.re + a.imJ * b.imK - a.imK * b.imJ :=
-  (QuaternionAlgebra.has_mul_mul_im_i a b).trans <| by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
+  (QuaternionAlgebra.has_mul_mul_im_i a b).trans $ by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
 #align quaternion.mul_im_i Quaternion.mul_im_i
 
 @[simp]
 theorem mul_im_j : (a * b).imJ = a.re * b.imJ - a.imI * b.imK + a.imJ * b.re + a.imK * b.imI :=
-  (QuaternionAlgebra.has_mul_mul_im_j a b).trans <| by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
+  (QuaternionAlgebra.has_mul_mul_im_j a b).trans $ by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
 #align quaternion.mul_im_j Quaternion.mul_im_j
 
 @[simp]
 theorem mul_im_k : (a * b).imK = a.re * b.imK + a.imI * b.imJ - a.imJ * b.imI + a.imK * b.re :=
-  (QuaternionAlgebra.has_mul_mul_im_k a b).trans <| by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
+  (QuaternionAlgebra.has_mul_mul_im_k a b).trans $ by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
 #align quaternion.mul_im_k Quaternion.mul_im_k
 
 @[simp, norm_cast]
@@ -898,7 +898,7 @@ def normSq : ℍ[R] →*₀ R where
   map_zero' := by rw [conj_zero, zero_mul, zero_re]
   map_one' := by rw [conj_one, one_mul, one_re]
   map_mul' x y :=
-    coe_injective <| by
+    coe_injective $ by
       conv_lhs =>
         rw [← mul_conj_eq_coe, conj_mul, mul_assoc, ← mul_assoc y, y.mul_conj_eq_coe, coe_commutes, ← mul_assoc,
           x.mul_conj_eq_coe, ← coe_mul]
@@ -1013,7 +1013,7 @@ section QuaternionAlgebra
 variable {R : Type _} (c₁ c₂ : R)
 
 private theorem pow_four [Infinite R] : (#R) ^ 4 = (#R) :=
-  power_nat_eq (aleph_0_le_mk R) <| by simp
+  power_nat_eq (aleph_0_le_mk R) $ by simp
 #align cardinal.pow_four cardinal.pow_four
 
 /-- The cardinality of a quaternion algebra, as a type. -/

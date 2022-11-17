@@ -122,9 +122,10 @@ theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
 
 @[simp]
 theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} : (↑(s.sup f) : Set α) = s.sup fun i => f i :=
-  by
-  classical refine' Finset.induction_on s rfl fun a s _ h => _
-    congr
+  by classical
+  refine' Finset.induction_on s rfl fun a s _ h => _
+  simp_rw [Finset.sup_insert, coe_sup, sup_eq_union]
+  congr
 #align topological_space.compacts.coe_finset_sup TopologicalSpace.Compacts.coe_finset_sup
 
 /-- The image of a compact set under a continuous function. -/
@@ -216,7 +217,7 @@ theorem carrier_eq_coe (s : NonemptyCompacts α) : s.carrier = s :=
 #align topological_space.nonempty_compacts.carrier_eq_coe TopologicalSpace.NonemptyCompacts.carrier_eq_coe
 
 instance : HasSup (NonemptyCompacts α) :=
-  ⟨fun s t => ⟨s.toCompacts ⊔ t.toCompacts, s.Nonempty.mono <| subset_union_left _ _⟩⟩
+  ⟨fun s t => ⟨s.toCompacts ⊔ t.toCompacts, s.Nonempty.mono $ subset_union_left _ _⟩⟩
 
 instance [CompactSpace α] [Nonempty α] : HasTop (NonemptyCompacts α) :=
   ⟨⟨⊤, univ_nonempty⟩⟩
@@ -314,7 +315,7 @@ theorem carrier_eq_coe (s : PositiveCompacts α) : s.carrier = s :=
 #align topological_space.positive_compacts.carrier_eq_coe TopologicalSpace.PositiveCompacts.carrier_eq_coe
 
 instance : HasSup (PositiveCompacts α) :=
-  ⟨fun s t => ⟨s.toCompacts ⊔ t.toCompacts, s.interior_nonempty.mono <| interior_mono <| subset_union_left _ _⟩⟩
+  ⟨fun s t => ⟨s.toCompacts ⊔ t.toCompacts, s.interior_nonempty.mono $ interior_mono $ subset_union_left _ _⟩⟩
 
 instance [CompactSpace α] [Nonempty α] : HasTop (PositiveCompacts α) :=
   ⟨⟨⊤, interior_univ.symm.subst univ_nonempty⟩⟩
@@ -348,7 +349,7 @@ instance [CompactSpace α] [Nonempty α] : Inhabited (PositiveCompacts α) :=
 
 /-- In a nonempty locally compact space, there exists a compact set with nonempty interior. -/
 instance nonempty' [LocallyCompactSpace α] [Nonempty α] : Nonempty (PositiveCompacts α) :=
-  nonempty_of_exists <| exists_positive_compacts_subset is_open_univ univ_nonempty
+  nonempty_of_exists $ exists_positive_compacts_subset is_open_univ univ_nonempty
 #align topological_space.positive_compacts.nonempty' TopologicalSpace.PositiveCompacts.nonempty'
 
 /-- The product of two `positive_compacts`, as a `positive_compacts` in the product space. -/
@@ -431,7 +432,7 @@ instance [CompactSpace α] : HasTop (CompactOpens α) :=
 instance : HasBot (CompactOpens α) :=
   ⟨⟨⊥, is_open_empty⟩⟩
 
-instance [T2Space α] : Sdiff (CompactOpens α) :=
+instance [T2Space α] : SDiff (CompactOpens α) :=
   ⟨fun s t => ⟨⟨s \ t, s.IsCompact.diff t.IsOpen⟩, s.IsOpen.sdiff t.IsCompact.IsClosed⟩⟩
 
 instance [T2Space α] [CompactSpace α] : HasCompl (CompactOpens α) :=

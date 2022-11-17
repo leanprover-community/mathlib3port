@@ -101,7 +101,7 @@ noncomputable instance stalkFunctionFieldAlgebra [IrreducibleSpace X.carrier] (x
 #align algebraic_geometry.stalk_function_field_algebra AlgebraicGeometry.stalkFunctionFieldAlgebra
 
 instance function_field_is_scalar_tower [IrreducibleSpace X.carrier] (U : Opens X.carrier) (x : U) [Nonempty U] :
-    IsScalarTower (X.Presheaf.obj <| op U) (X.Presheaf.stalk x) X.functionField := by
+    IsScalarTower (X.Presheaf.obj $ op U) (X.Presheaf.stalk x) X.functionField := by
   apply IsScalarTower.of_algebra_map_eq'
   simp_rw [RingHom.algebra_map_to_algebra]
   change _ = X.presheaf.germ x ≫ _
@@ -109,20 +109,20 @@ instance function_field_is_scalar_tower [IrreducibleSpace X.carrier] (U : Opens 
   rfl
 #align algebraic_geometry.function_field_is_scalar_tower AlgebraicGeometry.function_field_is_scalar_tower
 
-noncomputable instance (R : CommRingCat) [IsDomain R] : Algebra R (SchemeCat.spec.obj <| op R).functionField :=
-  RingHom.toAlgebra <| by
+noncomputable instance (R : CommRingCat) [IsDomain R] : Algebra R (SchemeCat.spec.obj $ op R).functionField :=
+  RingHom.toAlgebra $ by
     change CommRingCat.of R ⟶ _
     apply structure_sheaf.to_stalk
 
 @[simp]
 theorem generic_point_eq_bot_of_affine (R : CommRingCat) [IsDomain R] :
-    genericPoint (SchemeCat.spec.obj <| op R).carrier = (⟨0, Ideal.bot_prime⟩ : PrimeSpectrum R) := by
-  apply (generic_point_spec (Scheme.Spec.obj <| op R).carrier).Eq
+    genericPoint (SchemeCat.spec.obj $ op R).carrier = (⟨0, Ideal.bot_prime⟩ : PrimeSpectrum R) := by
+  apply (generic_point_spec (Scheme.Spec.obj $ op R).carrier).Eq
   simp [is_generic_point_def, ← PrimeSpectrum.zero_locus_vanishing_ideal_eq_closure]
 #align algebraic_geometry.generic_point_eq_bot_of_affine AlgebraicGeometry.generic_point_eq_bot_of_affine
 
 instance functionFieldIsFractionRingOfAffine (R : CommRingCat.{u}) [IsDomain R] :
-    IsFractionRing R (SchemeCat.spec.obj <| op R).functionField := by
+    IsFractionRing R (SchemeCat.spec.obj $ op R).functionField := by
   convert structure_sheaf.is_localization.to_stalk R _
   delta IsFractionRing IsLocalization.AtPrime
   congr 1
@@ -141,7 +141,7 @@ theorem IsAffineOpen.prime_ideal_of_generic_point {X : SchemeCat} [IsIntegral X]
     (hU : IsAffineOpen U) [h : Nonempty U] :
     hU.primeIdealOf
         ⟨genericPoint X.carrier, ((generic_point_spec X.carrier).mem_open_set_iff U.Prop).mpr (by simpa using h)⟩ =
-      genericPoint (SchemeCat.spec.obj <| op <| X.Presheaf.obj <| op U).carrier :=
+      genericPoint (SchemeCat.spec.obj $ op $ X.Presheaf.obj $ op U).carrier :=
   by
   haveI : is_affine _ := hU
   have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by
@@ -158,7 +158,7 @@ theorem IsAffineOpen.prime_ideal_of_generic_point {X : SchemeCat} [IsIntegral X]
   algebraic_geometry.is_affine_open.prime_ideal_of_generic_point AlgebraicGeometry.IsAffineOpen.prime_ideal_of_generic_point
 
 theorem functionFieldIsFractionRingOfIsAffineOpen [IsIntegral X] (U : Opens X.carrier) (hU : IsAffineOpen U)
-    [hU' : Nonempty U] : IsFractionRing (X.Presheaf.obj <| op U) X.functionField := by
+    [hU' : Nonempty U] : IsFractionRing (X.Presheaf.obj $ op U) X.functionField := by
   haveI : is_affine _ := hU
   haveI : Nonempty (X.restrict U.open_embedding).carrier := hU'
   haveI : IsIntegral (X.restrict U.open_embedding) :=

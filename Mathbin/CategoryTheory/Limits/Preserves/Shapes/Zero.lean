@@ -51,7 +51,7 @@ protected theorem map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] (X Y : C) : 
 
 theorem zero_of_map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} (f : X ⟶ Y) (h : F.map f = 0) :
     f = 0 :=
-  F.map_injective <| h.trans <| Eq.symm <| F.map_zero _ _
+  F.map_injective $ h.trans $ Eq.symm $ F.map_zero _ _
 #align category_theory.functor.zero_of_map_zero CategoryTheory.Functor.zero_of_map_zero
 
 theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} {f : X ⟶ Y} :
@@ -137,14 +137,14 @@ theorem preserves_zero_morphisms_of_map_zero_object (i : F.obj 0 ≅ 0) : Preser
 
 instance (priority := 100) preserves_zero_morphisms_of_preserves_initial_object
     [PreservesColimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
-  preserves_zero_morphisms_of_map_zero_object <|
+  preserves_zero_morphisms_of_map_zero_object $
     F.mapIso HasZeroObject.zeroIsoInitial ≪≫ PreservesInitial.iso F ≪≫ HasZeroObject.zeroIsoInitial.symm
 #align
   category_theory.functor.preserves_zero_morphisms_of_preserves_initial_object CategoryTheory.Functor.preserves_zero_morphisms_of_preserves_initial_object
 
 instance (priority := 100) preserves_zero_morphisms_of_preserves_terminal_object
     [PreservesLimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
-  preserves_zero_morphisms_of_map_zero_object <|
+  preserves_zero_morphisms_of_map_zero_object $
     F.mapIso HasZeroObject.zeroIsoTerminal ≪≫ PreservesTerminal.iso F ≪≫ HasZeroObject.zeroIsoTerminal.symm
 #align
   category_theory.functor.preserves_zero_morphisms_of_preserves_terminal_object CategoryTheory.Functor.preserves_zero_morphisms_of_preserves_terminal_object
@@ -153,14 +153,14 @@ variable (F)
 
 /-- Preserving zero morphisms implies preserving terminal objects. -/
 def preservesTerminalObjectOfPreservesZeroMorphisms [PreservesZeroMorphisms F] : PreservesLimit (Functor.empty C) F :=
-  preservesTerminalOfIso F <|
+  preservesTerminalOfIso F $
     F.mapIso HasZeroObject.zeroIsoTerminal.symm ≪≫ mapZeroObject F ≪≫ has_zero_object.zero_iso_terminal
 #align
   category_theory.functor.preserves_terminal_object_of_preserves_zero_morphisms CategoryTheory.Functor.preservesTerminalObjectOfPreservesZeroMorphisms
 
 /-- Preserving zero morphisms implies preserving terminal objects. -/
 def preservesInitialObjectOfPreservesZeroMorphisms [PreservesZeroMorphisms F] : PreservesColimit (Functor.empty C) F :=
-  preservesInitialOfIso F <|
+  preservesInitialOfIso F $
     HasZeroObject.zeroIsoInitial.symm ≪≫ (mapZeroObject F).symm ≪≫ (F.mapIso HasZeroObject.zeroIsoInitial.symm).symm
 #align
   category_theory.functor.preserves_initial_object_of_preserves_zero_morphisms CategoryTheory.Functor.preservesInitialObjectOfPreservesZeroMorphisms

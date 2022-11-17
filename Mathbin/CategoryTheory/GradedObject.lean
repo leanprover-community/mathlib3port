@@ -137,7 +137,7 @@ end
 
 instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
-    { f := fun n => (comap fun _ => C) fun b : β => b + n • s,
+    { f := fun n => (comap fun _ => C) $ fun b : β => b + n • s,
       ε :=
         (comapId β fun _ => C).symm ≪≫
           comapEq C
@@ -232,10 +232,12 @@ To prove this, we need to know that the coprojections into the coproduct are mon
 which follows from the fact we have zero morphisms and decidable equality for the grading.
 -/
 instance :
-    Faithful (total β C) where map_injective' X Y f g w := by
-    classical ext i
-      erw [colimit.ι_map, colimit.ι_map] at w
-      exact mono.right_cancellation _ _ w
+    Faithful (total β C) where map_injective' X Y f g w := by classical
+    ext i
+    replace w := sigma.ι (fun i : β => X i) i ≫= w
+    erw [colimit.ι_map, colimit.ι_map] at w
+    simp at *
+    exact mono.right_cancellation _ _ w
 
 end GradedObject
 

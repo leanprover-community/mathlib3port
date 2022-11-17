@@ -39,8 +39,8 @@ variable (R L : Type u) [CommRing R] [CommRing L] [IsDomain L] [Algebra R L]
 
 variable [NoZeroSmulDivisors R L] (halg : Algebra.IsAlgebraic R L)
 
-theorem cardinal_mk_le_sigma_polynomial : (#L) ≤ (#Σp : R[X], { x : L // x ∈ (p.map (algebraMap R L)).roots }) :=
-  @mk_le_of_injective L (Σp : R[X], { x : L | x ∈ (p.map (algebraMap R L)).roots })
+theorem cardinal_mk_le_sigma_polynomial : (#L) ≤ (#Σ p : R[X], { x : L // x ∈ (p.map (algebraMap R L)).roots }) :=
+  @mk_le_of_injective L (Σ p : R[X], { x : L | x ∈ (p.map (algebraMap R L)).roots })
     (fun x : L =>
       let p := Classical.indefiniteDescription _ (halg x)
       ⟨p.1, x, by
@@ -62,9 +62,9 @@ theorem cardinal_mk_le_sigma_polynomial : (#L) ≤ (#Σp : R[X], { x : L // x �
 of the base ring or `ℵ₀` -/
 theorem cardinal_mk_le_max : (#L) ≤ max (#R) ℵ₀ :=
   calc
-    (#L) ≤ (#Σp : R[X], { x : L // x ∈ (p.map (algebraMap R L)).roots }) := cardinal_mk_le_sigma_polynomial R L halg
+    (#L) ≤ (#Σ p : R[X], { x : L // x ∈ (p.map (algebraMap R L)).roots }) := cardinal_mk_le_sigma_polynomial R L halg
     _ = Cardinal.sum fun p : R[X] => #{ x : L | x ∈ (p.map (algebraMap R L)).roots } := by rw [← mk_sigma] <;> rfl
-    _ ≤ Cardinal.sum.{u, u} fun p : R[X] => ℵ₀ := (sum_le_sum _ _) fun p => (Multiset.finite_to_set _).lt_aleph_0.le
+    _ ≤ Cardinal.sum.{u, u} fun p : R[X] => ℵ₀ := sum_le_sum _ _ $ fun p => (Multiset.finite_to_set _).lt_aleph_0.le
     _ = (#R[X]) * ℵ₀ := sum_const' _ _
     _ ≤ max (max (#R[X]) ℵ₀) ℵ₀ := mul_le_max _ _
     _ ≤ max (max (max (#R) ℵ₀) ℵ₀) ℵ₀ := max_le_max (max_le_max Polynomial.cardinal_mk_le_max le_rfl) le_rfl
@@ -152,7 +152,7 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt [Nontrivial R] (h
     (hR : (#R) ≤ ℵ₀) (hK : ℵ₀ < (#K)) : (#K) = (#ι) :=
   have : ℵ₀ ≤ (#ι) :=
     le_of_not_lt fun h =>
-      not_le_of_gt hK <|
+      not_le_of_gt hK $
         calc
           (#K) ≤ max (max (#R) (#ι)) ℵ₀ := cardinal_le_max_transcendence_basis v hv
           _ ≤ _ := max_le (max_le hR (le_of_lt h)) le_rfl

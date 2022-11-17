@@ -37,7 +37,7 @@ variable (P : Pfunctor) {α β : Type u}
 
 /-- Applying `P` to an object of `Type` -/
 def Obj (α : Type _) :=
-  Σx : P.A, P.B x → α
+  Σ x : P.A, P.B x → α
 #align pfunctor.obj Pfunctor.Obj
 
 /-- Applying `P` to a morphism of `Type` -/
@@ -113,7 +113,7 @@ variable (P)
 For `F : pfunctor`, `x : F.obj α` and `i : F.Idx`, `i` can designate
 one part of `x` or is invalid, if `i.1 ≠ x.1` -/
 def IdxCat :=
-  Σx : P.A, P.B x
+  Σ x : P.A, P.B x
 #align pfunctor.Idx Pfunctor.IdxCat
 
 instance IdxCat.inhabited [Inhabited P.A] [Inhabited (P.B default)] : Inhabited P.IdxCat :=
@@ -149,7 +149,7 @@ namespace Pfunctor
 
 /-- functor composition for polynomial functors -/
 def comp (P₂ P₁ : Pfunctor.{u}) : Pfunctor.{u} :=
-  ⟨Σa₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σu : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
+  ⟨Σ a₂ : P₂.1, P₂.2 a₂ → P₁.1, fun a₂a₁ => Σ u : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u)⟩
 #align pfunctor.comp Pfunctor.comp
 
 /-- constructor for composition -/
@@ -173,7 +173,8 @@ variable {P : Pfunctor.{u}}
 
 open Functor
 
-theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) : Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i, p (f i) := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f) -/
+theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) : Liftp p x ↔ ∃ (a) (f), x = ⟨a, f⟩ ∧ ∀ i, p (f i) := by
   constructor
   · rintro ⟨y, hy⟩
     cases' h : y with a f
@@ -196,8 +197,9 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) 
   repeat' first |constructor|assumption
 #align pfunctor.liftp_iff' Pfunctor.liftp_iff'
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f₀ f₁) -/
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.Obj α) :
-    Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by
+    Liftr r x y ↔ ∃ (a) (f₀) (f₁), x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by
   constructor
   · rintro ⟨u, xeq, yeq⟩
     cases' h : u with a f

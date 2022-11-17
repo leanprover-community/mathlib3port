@@ -97,7 +97,7 @@ theorem cons_update : cons x (update p i y) = update (cons x p) i.succ y := by
 
 /-- As a binary function, `fin.cons` is injective. -/
 theorem cons_injective2 : Function.Injective2 (@cons n α) := fun x₀ y₀ x y h =>
-  ⟨congr_fun h 0, funext fun i => by simpa using congr_fun h (Fin.succ i)⟩
+  ⟨congr_fun h 0, funext $ fun i => by simpa using congr_fun h (Fin.succ i)⟩
 #align fin.cons_injective2 Fin.cons_injective2
 
 @[simp]
@@ -146,7 +146,7 @@ theorem cons_self_tail : cons (q 0) (tail q) = q := by
 @[elab_as_elim]
 def consInduction {P : (∀ i : Fin n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Fin.cons x₀ x)) (x : ∀ i : Fin n.succ, α i) :
     P x :=
-  cast (by rw [cons_self_tail]) <| h (x 0) (tail x)
+  cast (by rw [cons_self_tail]) $ h (x 0) (tail x)
 #align fin.cons_induction Fin.consInduction
 
 @[simp]
@@ -171,7 +171,8 @@ theorem forall_fin_succ_pi {P : (∀ i, α i) → Prop} : (∀ x, P x) ↔ ∀ a
   ⟨fun h a v => h (Fin.cons a v), consInduction⟩
 #align fin.forall_fin_succ_pi Fin.forall_fin_succ_pi
 
-theorem exists_fin_succ_pi {P : (∀ i, α i) → Prop} : (∃ x, P x) ↔ ∃ a v, P (Fin.cons a v) :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a v) -/
+theorem exists_fin_succ_pi {P : (∀ i, α i) → Prop} : (∃ x, P x) ↔ ∃ (a) (v), P (Fin.cons a v) :=
   ⟨fun ⟨x, h⟩ => ⟨x 0, tail x, (cons_self_tail x).symm ▸ h⟩, fun ⟨a, v, h⟩ => ⟨_, h⟩⟩
 #align fin.exists_fin_succ_pi Fin.exists_fin_succ_pi
 
@@ -214,7 +215,7 @@ theorem comp_tail {α : Type _} {β : Type _} (g : α → β) (q : Fin n.succ �
 
 theorem le_cons [∀ i, Preorder (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Fin n, α i.succ} :
     q ≤ cons x p ↔ q 0 ≤ x ∧ tail q ≤ p :=
-  forall_fin_succ.trans <| and_congr Iff.rfl <| forall_congr' fun j => by simp [tail]
+  forall_fin_succ.trans $ and_congr Iff.rfl $ forall_congr' $ fun j => by simp [tail]
 #align fin.le_cons Fin.le_cons
 
 theorem cons_le [∀ i, Preorder (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Fin n, α i.succ} :
@@ -224,7 +225,7 @@ theorem cons_le [∀ i, Preorder (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i
 
 theorem cons_le_cons [∀ i, Preorder (α i)] {x₀ y₀ : α 0} {x y : ∀ i : Fin n, α i.succ} :
     cons x₀ x ≤ cons y₀ y ↔ x₀ ≤ y₀ ∧ x ≤ y :=
-  forall_fin_succ.trans <| and_congr_right' <| by simp only [cons_succ, Pi.le_def]
+  forall_fin_succ.trans $ and_congr_right' $ by simp only [cons_succ, Pi.le_def]
 #align fin.cons_le_cons Fin.cons_le_cons
 
 theorem pi_lex_lt_cons_cons {x₀ y₀ : α 0} {x y : ∀ i : Fin n, α i.succ} (s : ∀ {i : Fin n.succ}, α i → α i → Prop) :
@@ -236,7 +237,7 @@ theorem pi_lex_lt_cons_cons {x₀ y₀ : α 0} {x y : ∀ i : Fin n, α i.succ} 
 #align fin.pi_lex_lt_cons_cons Fin.pi_lex_lt_cons_cons
 
 theorem range_fin_succ {α} (f : Fin (n + 1) → α) : Set.range f = insert (f 0) (Set.range (Fin.tail f)) :=
-  Set.ext fun y => exists_fin_succ.trans <| eq_comm.Or Iff.rfl
+  Set.ext $ fun y => exists_fin_succ.trans $ eq_comm.Or Iff.rfl
 #align fin.range_fin_succ Fin.range_fin_succ
 
 @[simp]
@@ -487,7 +488,7 @@ def succAboveCases {α : Fin (n + 1) → Sort u} (i : Fin (n + 1)) (x : α i) (p
   if hj : j = i then Eq.ndrec x hj.symm
   else
     if hlt : j < i then Eq.recOn (succ_above_cast_lt hlt) (p _)
-    else Eq.recOn (succ_above_pred <| (Ne.lt_or_lt hj).resolve_left hlt) (p _)
+    else Eq.recOn (succ_above_pred $ (Ne.lt_or_lt hj).resolve_left hlt) (p _)
 #align fin.succ_above_cases Fin.succAboveCases
 
 theorem forall_iff_succ_above {p : Fin (n + 1) → Prop} (i : Fin (n + 1)) : (∀ j, p j) ↔ p i ∧ ∀ j, p (i.succAbove j) :=
@@ -528,7 +529,7 @@ theorem succ_above_cases_eq_insert_nth : @succAboveCases.{u + 1} = @insertNth.{u
 
 @[simp]
 theorem insert_nth_comp_succ_above (i : Fin (n + 1)) (x : β) (p : Fin n → β) : insertNth i x p ∘ i.succAbove = p :=
-  funext <| insert_nth_apply_succ_above i x p
+  funext $ insert_nth_apply_succ_above i x p
 #align fin.insert_nth_comp_succ_above Fin.insert_nth_comp_succ_above
 
 theorem insert_nth_eq_iff {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
@@ -542,12 +543,12 @@ theorem eq_insert_nth_iff {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbo
 #align fin.eq_insert_nth_iff Fin.eq_insert_nth_iff
 
 theorem insert_nth_apply_below {i j : Fin (n + 1)} (h : j < i) (x : α i) (p : ∀ k, α (i.succAbove k)) :
-    i.insertNth x p j = Eq.recOn (succ_above_cast_lt h) (p <| j.castLt _) := by
+    i.insertNth x p j = Eq.recOn (succ_above_cast_lt h) (p $ j.castLt _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne, dif_pos h]
 #align fin.insert_nth_apply_below Fin.insert_nth_apply_below
 
 theorem insert_nth_apply_above {i j : Fin (n + 1)} (h : i < j) (x : α i) (p : ∀ k, α (i.succAbove k)) :
-    i.insertNth x p j = Eq.recOn (succ_above_pred h) (p <| j.pred _) := by
+    i.insertNth x p j = Eq.recOn (succ_above_pred h) (p $ j.pred _) := by
   rw [insert_nth, succ_above_cases, dif_neg h.ne', dif_neg h.not_lt]
 #align fin.insert_nth_apply_above Fin.insert_nth_apply_above
 
@@ -584,12 +585,12 @@ theorem insert_nth_last' (x : β) (p : Fin n → β) : @insertNth _ (fun _ => β
 
 @[simp]
 theorem insert_nth_zero_right [∀ j, Zero (α j)] (i : Fin (n + 1)) (x : α i) : i.insertNth x 0 = Pi.single i x :=
-  insert_nth_eq_iff.2 <| by simp [succ_above_ne, Pi.zero_def]
+  insert_nth_eq_iff.2 $ by simp [succ_above_ne, Pi.zero_def]
 #align fin.insert_nth_zero_right Fin.insert_nth_zero_right
 
 theorem insert_nth_binop (op : ∀ j, α j → α j → α j) (i : Fin (n + 1)) (x y : α i) (p q : ∀ j, α (i.succAbove j)) :
     (i.insertNth (op i x y) fun j => op _ (p j) (q j)) = fun j => op j (i.insertNth x p j) (i.insertNth y q j) :=
-  insert_nth_eq_iff.2 <| by simp
+  insert_nth_eq_iff.2 $ by simp
 #align fin.insert_nth_binop Fin.insert_nth_binop
 
 @[simp]
@@ -642,12 +643,12 @@ theorem insert_nth_mem_Icc {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAb
 
 theorem preimage_insert_nth_Icc_of_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j} (hx : x ∈ icc (q₁ i) (q₂ i)) :
     i.insertNth x ⁻¹' icc q₁ q₂ = icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
-  Set.ext fun p => by simp only [mem_preimage, insert_nth_mem_Icc, hx, true_and_iff]
+  Set.ext $ fun p => by simp only [mem_preimage, insert_nth_mem_Icc, hx, true_and_iff]
 #align fin.preimage_insert_nth_Icc_of_mem Fin.preimage_insert_nth_Icc_of_mem
 
 theorem preimage_insert_nth_Icc_of_not_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j} (hx : x ∉ icc (q₁ i) (q₂ i)) :
     i.insertNth x ⁻¹' icc q₁ q₂ = ∅ :=
-  Set.ext fun p => by simp only [mem_preimage, insert_nth_mem_Icc, hx, false_and_iff, mem_empty_iff_false]
+  Set.ext $ fun p => by simp only [mem_preimage, insert_nth_mem_Icc, hx, false_and_iff, mem_empty_iff_false]
 #align fin.preimage_insert_nth_Icc_of_not_mem Fin.preimage_insert_nth_Icc_of_not_mem
 
 end InsertNth
@@ -779,7 +780,7 @@ theorem find_eq_some_iff {p : Fin n → Prop} [DecidablePred p] {i : Fin n} :
 
 theorem mem_find_of_unique {p : Fin n → Prop} [DecidablePred p] (h : ∀ i j, p i → p j → i = j) {i : Fin n} (hi : p i) :
     i ∈ Fin.find p :=
-  mem_find_iff.2 ⟨hi, fun j hj => le_of_eq <| h i j hi hj⟩
+  mem_find_iff.2 ⟨hi, fun j hj => le_of_eq $ h i j hi hj⟩
 #align fin.mem_find_of_unique Fin.mem_find_of_unique
 
 end Find
@@ -787,7 +788,7 @@ end Find
 /-- To show two sigma pairs of tuples agree, it to show the second elements are related via
 `fin.cast`. -/
 theorem sigma_eq_of_eq_comp_cast {α : Type _} :
-    ∀ {a b : Σii, Fin ii → α} (h : a.fst = b.fst), a.snd = b.snd ∘ Fin.cast h → a = b
+    ∀ {a b : Σ ii, Fin ii → α} (h : a.fst = b.fst), a.snd = b.snd ∘ Fin.cast h → a = b
   | ⟨ai, a⟩, ⟨bi, b⟩, hi, h => by
     dsimp only at hi
     subst hi
@@ -795,9 +796,9 @@ theorem sigma_eq_of_eq_comp_cast {α : Type _} :
 #align fin.sigma_eq_of_eq_comp_cast Fin.sigma_eq_of_eq_comp_cast
 
 /-- `fin.sigma_eq_of_eq_comp_cast` as an `iff`. -/
-theorem sigma_eq_iff_eq_comp_cast {α : Type _} {a b : Σii, Fin ii → α} :
+theorem sigma_eq_iff_eq_comp_cast {α : Type _} {a b : Σ ii, Fin ii → α} :
     a = b ↔ ∃ h : a.fst = b.fst, a.snd = b.snd ∘ Fin.cast h :=
-  ⟨fun h => h ▸ ⟨rfl, funext <| Fin.rec fun i hi => rfl⟩, fun ⟨h, h'⟩ => sigma_eq_of_eq_comp_cast _ h'⟩
+  ⟨fun h => h ▸ ⟨rfl, funext $ Fin.rec $ fun i hi => rfl⟩, fun ⟨h, h'⟩ => sigma_eq_of_eq_comp_cast _ h'⟩
 #align fin.sigma_eq_iff_eq_comp_cast Fin.sigma_eq_iff_eq_comp_cast
 
 end Fin

@@ -69,7 +69,7 @@ open IsNoetherian
 theorem trans [FiniteDimensional F K] [FiniteDimensional K A] : FiniteDimensional F A :=
   let b := Basis.ofVectorSpace F K
   let c := Basis.ofVectorSpace K A
-  of_fintype_basis <| b.smul c
+  of_fintype_basis $ b.smul c
 #align finite_dimensional.trans FiniteDimensional.trans
 
 /-- In a tower of field extensions `L / K / F`, if `L / F` is finite, so is `K / F`.
@@ -86,7 +86,7 @@ theorem left (L : Type _) [Ring L] [Nontrivial L] [Algebra F L] [Algebra K L] [I
 theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
   let ⟨⟨b, hb⟩⟩ := hf
   ⟨⟨b,
-      Submodule.restrict_scalars_injective F _ _ <| by
+      Submodule.restrict_scalars_injective F _ _ $ by
         rw [Submodule.restrict_scalars_top, eq_top_iff, ← hb, Submodule.span_le]
         exact Submodule.subset_span⟩⟩
 #align finite_dimensional.right FiniteDimensional.right
@@ -132,7 +132,7 @@ instance linearMap' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [
 theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Field K] [Algebra F K]
     [FiniteDimensional F K] [AddCommGroup V] [Module F V] [FiniteDimensional F V] :
     finrank K (V →ₗ[F] K) = finrank F V :=
-  mul_right_injective₀ finrank_pos.ne' <|
+  mul_right_injective₀ finrank_pos.ne' $
     calc
       finrank F K * finrank K (V →ₗ[F] K) = finrank F (V →ₗ[F] K) := finrank_mul_finrank _ _ _
       _ = finrank F V * finrank F K := finrank_linear_map F V K

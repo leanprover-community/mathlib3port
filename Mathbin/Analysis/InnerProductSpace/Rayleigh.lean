@@ -120,9 +120,10 @@ variable [CompleteSpace F] {T : F →L[ℝ] F}
 -- mathport name: exprrayleigh_quotient
 local notation "rayleigh_quotient" => fun x : F => T.reApplyInnerSelf x / ∥(x : F)∥ ^ 2
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem linearly_dependent_of_is_local_extr_on (hT : IsSelfAdjoint T) {x₀ : F}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (sphere (0 : F) ∥x₀∥) x₀) :
-    ∃ a b : ℝ, (a, b) ≠ 0 ∧ a • x₀ + b • T x₀ = 0 := by
+    ∃ (a : ℝ) (b : ℝ), (a, b) ≠ 0 ∧ a • x₀ + b • T x₀ = 0 := by
   have H : IsLocalExtrOn T.re_apply_inner_self { x : F | ∥x∥ ^ 2 = ∥x₀∥ ^ 2 } x₀ := by
     convert hextr
     ext x

@@ -40,7 +40,7 @@ variable (r : α → β → Prop) [∀ a, DecidablePred (r a)] {s s₁ s₂ : Fi
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Finset of edges of a relation between two finsets of vertices. -/
 def interedges (s : Finset α) (t : Finset β) : Finset (α × β) :=
-  (s ×ˢ t).filter fun e => r e.1 e.2
+  (s ×ˢ t).filter $ fun e => r e.1 e.2
 #align rel.interedges Rel.interedges
 
 /-- Edge density of a relation between two finsets of vertices. -/
@@ -71,8 +71,9 @@ theorem interedges_mono (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) : interedges r
 variable (r)
 
 theorem card_interedges_add_card_interedges_compl (s : Finset α) (t : Finset β) :
-    (interedges r s t).card + (interedges (fun x y => ¬r x y) s t).card = s.card * t.card := by
-  classical rw [← card_product, interedges, interedges, ← card_union_eq, filter_union_filter_neg_eq]
+    (interedges r s t).card + (interedges (fun x y => ¬r x y) s t).card = s.card * t.card := by classical
+  rw [← card_product, interedges, interedges, ← card_union_eq, filter_union_filter_neg_eq]
+  convert disjoint_filter.2 fun x _ => not_not.2
 #align rel.card_interedges_add_card_interedges_compl Rel.card_interedges_add_card_interedges_compl
 
 theorem interedges_disjoint_left {s s' : Finset α} (hs : Disjoint s s') (t : Finset β) :
@@ -97,12 +98,12 @@ variable [DecidableEq α] [DecidableEq β]
 
 theorem interedges_bUnion_left (s : Finset ι) (t : Finset β) (f : ι → Finset α) :
     interedges r (s.bUnion f) t = s.bUnion fun a => interedges r (f a) t :=
-  ext fun a => by simp only [mem_bUnion, mem_interedges_iff, exists_and_right]
+  ext $ fun a => by simp only [mem_bUnion, mem_interedges_iff, exists_and_right]
 #align rel.interedges_bUnion_left Rel.interedges_bUnion_left
 
 theorem interedges_bUnion_right (s : Finset α) (t : Finset ι) (f : ι → Finset β) :
     interedges r s (t.bUnion f) = t.bUnion fun b => interedges r s (f b) :=
-  ext fun a => by simp only [mem_interedges_iff, mem_bUnion, ← exists_and_left, ← exists_and_right]
+  ext $ fun a => by simp only [mem_interedges_iff, mem_bUnion, ← exists_and_left, ← exists_and_right]
 #align rel.interedges_bUnion_right Rel.interedges_bUnion_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -122,7 +123,7 @@ theorem edge_density_nonneg (s : Finset α) (t : Finset β) : 0 ≤ edgeDensity 
 #align rel.edge_density_nonneg Rel.edge_density_nonneg
 
 theorem edge_density_le_one (s : Finset α) (t : Finset β) : edgeDensity r s t ≤ 1 :=
-  div_le_one_of_le (by exact_mod_cast card_interedges_le_mul _ _ _) <| by exact_mod_cast Nat.zero_le _
+  div_le_one_of_le (by exact_mod_cast card_interedges_le_mul _ _ _) $ by exact_mod_cast Nat.zero_le _
 #align rel.edge_density_le_one Rel.edge_density_le_one
 
 theorem edge_density_add_edge_density_compl (hs : s.Nonempty) (ht : t.Nonempty) :
@@ -145,15 +146,17 @@ theorem edge_density_empty_right (s : Finset α) : edgeDensity r s ∅ = 0 := by
 #align rel.edge_density_empty_right Rel.edge_density_empty_right
 
 theorem card_interedges_finpartition_left [DecidableEq α] (P : Finpartition s) (t : Finset β) :
-    (interedges r s t).card = ∑ a in P.parts, (interedges r a t).card := by
-  classical simp_rw [← P.bUnion_parts, interedges_bUnion_left, id.def]
-    exact fun x hx y hy h => interedges_disjoint_left r (P.disjoint hx hy h) _
+    (interedges r s t).card = ∑ a in P.parts, (interedges r a t).card := by classical
+  simp_rw [← P.bUnion_parts, interedges_bUnion_left, id.def]
+  rw [card_bUnion]
+  exact fun x hx y hy h => interedges_disjoint_left r (P.disjoint hx hy h) _
 #align rel.card_interedges_finpartition_left Rel.card_interedges_finpartition_left
 
 theorem card_interedges_finpartition_right [DecidableEq β] (s : Finset α) (P : Finpartition t) :
-    (interedges r s t).card = ∑ b in P.parts, (interedges r s b).card := by
-  classical simp_rw [← P.bUnion_parts, interedges_bUnion_right, id]
-    exact fun x hx y hy h => interedges_disjoint_right r _ (P.disjoint hx hy h)
+    (interedges r s t).card = ∑ b in P.parts, (interedges r s b).card := by classical
+  simp_rw [← P.bUnion_parts, interedges_bUnion_right, id]
+  rw [card_bUnion]
+  exact fun x hx y hy h => interedges_disjoint_right r _ (P.disjoint hx hy h)
 #align rel.card_interedges_finpartition_right Rel.card_interedges_finpartition_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -229,7 +232,7 @@ theorem abs_edge_density_sub_edge_density_le_two_mul (hs : s₂ ⊆ s₁) (ht : 
   cases lt_or_le δ 1
   · exact
       (abs_edge_density_sub_edge_density_le_two_mul_sub_sq r hs ht hδ h hscard htcard).trans
-        ((sub_le_self_iff _).2 <| sq_nonneg δ)
+        ((sub_le_self_iff _).2 $ sq_nonneg δ)
     
   rw [two_mul]
   refine' (abs_sub _ _).trans (add_le_add (le_trans _ h) (le_trans _ h)) <;>
@@ -422,9 +425,8 @@ open Positivity
 always nonnegative. -/
 @[positivity]
 unsafe def positivity_edge_density : expr → tactic strictness
-  | quote.1 (Rel.edgeDensity (%%ₓr) (%%ₓs) (%%ₓt)) =>
-    nonnegative <$> mk_mapp `` Rel.edge_density_nonneg [none, none, r, none, s, t]
-  | quote.1 (SimpleGraph.edgeDensity (%%ₓG) (%%ₓs) (%%ₓt)) =>
+  | q(Rel.edgeDensity $(r) $(s) $(t)) => nonnegative <$> mk_mapp `` Rel.edge_density_nonneg [none, none, r, none, s, t]
+  | q(SimpleGraph.edgeDensity $(G) $(s) $(t)) =>
     nonnegative <$> mk_mapp `` SimpleGraph.edge_density_nonneg [none, G, none, s, t]
   | e =>
     pp e >>=

@@ -48,8 +48,9 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {p : (Prod.{u_1 u_2} α β) -> Prop}, Iff (Exists.{(max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (fun (x : Prod.{u_1 u_2} α β) => p x)) (Exists.{succ u_1} α (fun (a : α) => Exists.{succ u_2} β (fun (b : β) => p (Prod.mk.{u_1 u_2} α β a b))))
 Case conversion may be inaccurate. Consider using '#align prod.exists Prod.existsₓ'. -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 @[simp]
-theorem exists {p : α × β → Prop} : (∃ x, p x) ↔ ∃ a b, p (a, b) :=
+theorem exists {p : α × β → Prop} : (∃ x, p x) ↔ ∃ (a) (b), p (a, b) :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 #align prod.exists Prod.exists
 
@@ -69,7 +70,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {p : α -> β -> Prop}, Iff (Exists.{(max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (fun (x : Prod.{u_1 u_2} α β) => p (Prod.fst.{u_1 u_2} α β x) (Prod.snd.{u_1 u_2} α β x))) (Exists.{succ u_1} α (fun (a : α) => Exists.{succ u_2} β (fun (b : β) => p a b)))
 Case conversion may be inaccurate. Consider using '#align prod.exists' Prod.exists'ₓ'. -/
-theorem exists' {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃ a b, p a b :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+theorem exists' {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃ (a) (b), p a b :=
   Prod.exists
 #align prod.exists' Prod.exists'
 
@@ -129,7 +131,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_3}} {δ : Type.{u_4}} (f : α -> γ) (g : β -> δ), Eq.{(max (max (succ u_1) (succ u_2)) (succ u_3))} ((Prod.{u_1 u_2} α β) -> γ) (Function.comp.{(max (succ u_2) (succ u_1)) (max (succ u_4) (succ u_3)) succ u_3} (Prod.{u_1 u_2} α β) (Prod.{u_3 u_4} γ δ) γ (Prod.fst.{u_3 u_4} γ δ) (Prod.map.{u_1 u_3 u_2 u_4} α γ β δ f g)) (Function.comp.{(max (succ u_2) (succ u_1)) succ u_1 succ u_3} (Prod.{u_1 u_2} α β) α γ f (Prod.fst.{u_1 u_2} α β))
 Case conversion may be inaccurate. Consider using '#align prod.map_fst' Prod.map_fst'ₓ'. -/
 theorem map_fst' (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ Prod.fst :=
-  funext <| map_fst f g
+  funext $ map_fst f g
 #align prod.map_fst' Prod.map_fst'
 
 /- warning: prod.map_snd' -> Prod.map_snd' is a dubious translation:
@@ -139,7 +141,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {γ : Type.{u_4}} {δ : Type.{u_3}} (f : α -> γ) (g : β -> δ), Eq.{(max (max (succ u_1) (succ u_2)) (succ u_3))} ((Prod.{u_1 u_2} α β) -> δ) (Function.comp.{(max (succ u_2) (succ u_1)) (max (succ u_3) (succ u_4)) succ u_3} (Prod.{u_1 u_2} α β) (Prod.{u_4 u_3} γ δ) δ (Prod.snd.{u_4 u_3} γ δ) (Prod.map.{u_1 u_4 u_2 u_3} α γ β δ f g)) (Function.comp.{(max (succ u_2) (succ u_1)) succ u_2 succ u_3} (Prod.{u_1 u_2} α β) β δ g (Prod.snd.{u_1 u_2} α β))
 Case conversion may be inaccurate. Consider using '#align prod.map_snd' Prod.map_snd'ₓ'. -/
 theorem map_snd' (f : α → γ) (g : β → δ) : Prod.snd ∘ map f g = g ∘ Prod.snd :=
-  funext <| map_snd f g
+  funext $ map_snd f g
 #align prod.map_snd' Prod.map_snd'
 
 /- warning: prod.map_comp_map -> Prod.map_comp_map is a dubious translation:
@@ -235,7 +237,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Eq.{(max (succ u_1) (succ u_2))} ((Prod.{u_1 u_2} α β) -> (Prod.{u_1 u_2} α β)) (fun (p : Prod.{u_1 u_2} α β) => Prod.mk.{u_1 u_2} α β (Prod.fst.{u_1 u_2} α β p) (Prod.snd.{u_1 u_2} α β p)) (id.{(max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β))
 Case conversion may be inaccurate. Consider using '#align prod.id_prod Prod.id_prodₓ'. -/
 theorem id_prod : (fun p : α × β => (p.1, p.2)) = id :=
-  funext fun ⟨a, b⟩ => rfl
+  funext $ fun ⟨a, b⟩ => rfl
 #align prod.id_prod Prod.id_prod
 
 /- warning: prod.map_id -> Prod.map_id is a dubious translation:
@@ -249,7 +251,7 @@ theorem map_id : Prod.map (@id α) (@id β) = id :=
 #align prod.map_id Prod.map_id
 
 #print Prod.fst_surjective /-
-theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim fun y => ⟨⟨x, y⟩, rfl⟩
+theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim $ fun y => ⟨⟨x, y⟩, rfl⟩
 #align prod.fst_surjective Prod.fst_surjective
 -/
 
@@ -259,7 +261,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} [h : Nonempty.{succ u_1} α], Function.Surjective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
 Case conversion may be inaccurate. Consider using '#align prod.snd_surjective Prod.snd_surjectiveₓ'. -/
-theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim fun x => ⟨⟨x, y⟩, rfl⟩
+theorem snd_surjective [h : Nonempty α] : Function.Surjective (@snd α β) := fun y => h.elim $ fun x => ⟨⟨x, y⟩, rfl⟩
 #align prod.snd_surjective Prod.snd_surjective
 
 #print Prod.fst_injective /-
@@ -448,7 +450,7 @@ instance Lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β 
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} (r : α -> α -> Prop) (s : β -> β -> Prop) [_inst_1 : IsRefl.{u_1} α r] (x : Prod.{u_1 u_2} α β), Prod.Lex.{u_1 u_2} α β r s x x
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (r : α -> α -> Prop) (s : β -> β -> Prop) [inst._@.Mathlib.Data.Prod.Basic._hyg.1864 : IsRefl.{u_1} α r] (x : Prod.{u_1 u_2} α β), Prod.Lex.{u_1 u_2} α β r s x x
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (r : α -> α -> Prop) (s : β -> β -> Prop) [inst._@.Mathlib.Data.Prod.Basic._hyg.1855 : IsRefl.{u_1} α r] (x : Prod.{u_1 u_2} α β), Prod.Lex.{u_1 u_2} α β r s x x
 Case conversion may be inaccurate. Consider using '#align prod.lex.refl_left Prod.Lex.refl_leftₓ'. -/
 @[refl]
 theorem Lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] : ∀ x, Prod.Lex r s x x
@@ -474,7 +476,7 @@ instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrans.{u_1} α r] [_inst_2 : IsTrans.{u_2} β s] {x : Prod.{u_1 u_2} α β} {y : Prod.{u_1 u_2} α β} {z : Prod.{u_1 u_2} α β}, (Prod.Lex.{u_1 u_2} α β r s x y) -> (Prod.Lex.{u_1 u_2} α β r s y z) -> (Prod.Lex.{u_1 u_2} α β r s x z)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [inst._@.Mathlib.Data.Prod.Basic._hyg.2069 : IsTrans.{u_1} α r] [inst._@.Mathlib.Data.Prod.Basic._hyg.2073 : IsTrans.{u_2} β s] {x : Prod.{u_1 u_2} α β} {y : Prod.{u_1 u_2} α β} {z : Prod.{u_1 u_2} α β}, (Prod.Lex.{u_1 u_2} α β r s x y) -> (Prod.Lex.{u_1 u_2} α β r s y z) -> (Prod.Lex.{u_1 u_2} α β r s x z)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [inst._@.Mathlib.Data.Prod.Basic._hyg.2060 : IsTrans.{u_1} α r] [inst._@.Mathlib.Data.Prod.Basic._hyg.2064 : IsTrans.{u_2} β s] {x : Prod.{u_1 u_2} α β} {y : Prod.{u_1 u_2} α β} {z : Prod.{u_1 u_2} α β}, (Prod.Lex.{u_1 u_2} α β r s x y) -> (Prod.Lex.{u_1 u_2} α β r s y z) -> (Prod.Lex.{u_1 u_2} α β r s x z)
 Case conversion may be inaccurate. Consider using '#align prod.lex.trans Prod.Lex.transₓ'. -/
 @[trans]
 theorem Lex.trans {r : α → α → Prop} {s : β → β → Prop} [IsTrans α r] [IsTrans β s] :
@@ -531,7 +533,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_3}} {γ : Type.{u_2}} {δ : Type.{u_4}} {f : α -> γ} {g : β -> δ}, (Function.Injective.{succ u_1 succ u_2} α γ f) -> (Function.Injective.{succ u_3 succ u_4} β δ g) -> (Function.Injective.{(max (succ u_3) (succ u_1)) (max (succ u_4) (succ u_2))} (Prod.{u_1 u_3} α β) (Prod.{u_2 u_4} γ δ) (Prod.map.{u_1 u_2 u_3 u_4} α γ β δ f g))
 Case conversion may be inaccurate. Consider using '#align function.injective.prod_map Function.Injective.Prod_mapₓ'. -/
 theorem Injective.Prod_map (hf : Injective f) (hg : Injective g) : Injective (map f g) := fun x y h =>
-  ext (hf (ext_iff.1 h).1) (hg <| (ext_iff.1 h).2)
+  ext (hf (ext_iff.1 h).1) (hg $ (ext_iff.1 h).2)
 #align function.injective.prod_map Function.Injective.Prod_map
 
 /- warning: function.surjective.prod_map -> Function.Surjective.Prod_map is a dubious translation:

@@ -107,17 +107,18 @@ of the elements of `pqr`, as rational number.
 
 The intended argument is a multiset `{p,q,r}` of cardinality `3`. -/
 def sumInv (pqr : Multiset ℕ+) : ℚ :=
-  Multiset.sum <| pqr.map fun x => x⁻¹
+  Multiset.sum $ pqr.map $ fun x => x⁻¹
 #align ADE_inequality.sum_inv ADEInequality.sumInv
 
 theorem sum_inv_pqr (p q r : ℕ+) : sumInv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹ := by
   simp only [sum_inv, coe_coe, add_zero, insert_eq_cons, add_assoc, map_cons, sum_cons, map_singleton, sum_singleton]
 #align ADE_inequality.sum_inv_pqr ADEInequality.sum_inv_pqr
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (q r) -/
 /-- A multiset `pqr` of positive natural numbers is `admissible`
 if it is equal to `A' q r`, or `D' r`, or one of `E6`, `E7`, or `E8`. -/
 def Admissible (pqr : Multiset ℕ+) : Prop :=
-  (∃ q r, a' q r = pqr) ∨ (∃ r, d' r = pqr) ∨ e' 3 = pqr ∨ e' 4 = pqr ∨ e' 5 = pqr
+  (∃ (q) (r), a' q r = pqr) ∨ (∃ r, d' r = pqr) ∨ e' 3 = pqr ∨ e' 4 = pqr ∨ e' 5 = pqr
 #align ADE_inequality.admissible ADEInequality.Admissible
 
 theorem admissible_A' (q r : ℕ+) : Admissible (a' q r) :=
@@ -125,19 +126,19 @@ theorem admissible_A' (q r : ℕ+) : Admissible (a' q r) :=
 #align ADE_inequality.admissible_A' ADEInequality.admissible_A'
 
 theorem admissible_D' (n : ℕ+) : Admissible (d' n) :=
-  Or.inr <| Or.inl ⟨n, rfl⟩
+  Or.inr $ Or.inl ⟨n, rfl⟩
 #align ADE_inequality.admissible_D' ADEInequality.admissible_D'
 
 theorem admissible_E'3 : Admissible (e' 3) :=
-  Or.inr <| Or.inr <| Or.inl rfl
+  Or.inr $ Or.inr $ Or.inl rfl
 #align ADE_inequality.admissible_E'3 ADEInequality.admissible_E'3
 
 theorem admissible_E'4 : Admissible (e' 4) :=
-  Or.inr <| Or.inr <| Or.inr <| Or.inl rfl
+  Or.inr $ Or.inr $ Or.inr $ Or.inl rfl
 #align ADE_inequality.admissible_E'4 ADEInequality.admissible_E'4
 
 theorem admissible_E'5 : Admissible (e' 5) :=
-  Or.inr <| Or.inr <| Or.inr <| Or.inr rfl
+  Or.inr $ Or.inr $ Or.inr $ Or.inr rfl
 #align ADE_inequality.admissible_E'5 ADEInequality.admissible_E'5
 
 theorem admissible_E6 : Admissible e6 :=

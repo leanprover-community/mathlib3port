@@ -53,11 +53,11 @@ theorem le_pi {g : Filter (∀ i, α i)} : g ≤ pi f ↔ ∀ i, Tendsto (eval i
 
 @[mono]
 theorem pi_mono (h : ∀ i, f₁ i ≤ f₂ i) : pi f₁ ≤ pi f₂ :=
-  infi_mono fun i => comap_mono <| h i
+  infi_mono $ fun i => comap_mono $ h i
 #align filter.pi_mono Filter.pi_mono
 
 theorem mem_pi_of_mem (i : ι) {s : Set (α i)} (hs : s ∈ f i) : eval i ⁻¹' s ∈ pi f :=
-  mem_infi_of_mem i <| preimage_mem_comap hs
+  mem_infi_of_mem i $ preimage_mem_comap hs
 #align filter.mem_pi_of_mem Filter.mem_pi_of_mem
 
 theorem pi_mem_pi {I : Set ι} (hI : I.Finite) (h : ∀ i ∈ I, s i ∈ f i) : I.pi s ∈ pi f := by
@@ -75,7 +75,7 @@ theorem mem_pi {s : Set (∀ i, α i)} :
     exact ⟨I, If, t, htf, Inter₂_mono fun i _ => htV i⟩
     
   · rintro ⟨I, If, t, htf, hts⟩
-    exact mem_of_superset ((pi_mem_pi If) fun i _ => htf i) hts
+    exact mem_of_superset (pi_mem_pi If $ fun i _ => htf i) hts
     
 #align filter.mem_pi Filter.mem_pi
 
@@ -103,7 +103,7 @@ theorem pi_mem_pi_iff [∀ i, NeBot (f i)] {I : Set ι} (hI : I.Finite) : I.pi s
 theorem has_basis_pi {ι' : ι → Type} {s : ∀ i, ι' i → Set (α i)} {p : ∀ i, ι' i → Prop}
     (h : ∀ i, (f i).HasBasis (p i) (s i)) :
     (pi f).HasBasis (fun If : Set ι × ∀ i, ι' i => If.1.Finite ∧ ∀ i ∈ If.1, p i (If.2 i)) fun If : Set ι × ∀ i, ι' i =>
-      If.1.pi fun i => s i <| If.2 i :=
+      If.1.pi fun i => s i $ If.2 i :=
   by
   have : (pi f).HasBasis _ _ := has_basis_infi' fun i => (h i).comap (eval i : (∀ j, α j) → α i)
   convert this
@@ -146,7 +146,7 @@ theorem pi_inf_principal_pi_ne_bot [∀ i, NeBot (f i)] {I : Set ι} :
 #align filter.pi_inf_principal_pi_ne_bot Filter.pi_inf_principal_pi_ne_bot
 
 instance PiInfPrincipalPi.neBot [h : ∀ i, NeBot (f i ⊓ 𝓟 (s i))] {I : Set ι} : NeBot (pi f ⊓ 𝓟 (I.pi s)) :=
-  (pi_inf_principal_univ_pi_ne_bot.2 ‹_›).mono <| inf_le_inf_left _ <| principal_mono.2 fun x hx i hi => hx i trivial
+  (pi_inf_principal_univ_pi_ne_bot.2 ‹_›).mono $ inf_le_inf_left _ $ principal_mono.2 $ fun x hx i hi => hx i trivial
 #align filter.pi_inf_principal_pi.ne_bot Filter.PiInfPrincipalPi.neBot
 
 @[simp]
@@ -249,7 +249,7 @@ theorem coprodNeBot [∀ i, Nonempty (α i)] [Nonempty ι] (f : ∀ i, Filter (�
 
 @[mono]
 theorem Coprod_mono (hf : ∀ i, f₁ i ≤ f₂ i) : Filter.coprod f₁ ≤ Filter.coprod f₂ :=
-  supr_mono fun i => comap_mono (hf i)
+  supr_mono $ fun i => comap_mono (hf i)
 #align filter.Coprod_mono Filter.Coprod_mono
 
 variable {β : ι → Type _} {m : ∀ i, α i → β i}

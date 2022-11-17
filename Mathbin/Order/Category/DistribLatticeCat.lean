@@ -79,8 +79,8 @@ def dual : DistribLatticeCat ⥤ DistribLatticeCat where
 /-- The equivalence between `DistribLattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : DistribLatticeCat ≌ DistribLatticeCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
 #align DistribLattice.dual_equiv DistribLatticeCat.dualEquiv
 
 end DistribLatticeCat

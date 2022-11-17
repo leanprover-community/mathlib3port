@@ -71,12 +71,12 @@ section IsOrdered
 variable [IsOrdered L]
 
 /-- Joins two terms `t₁, t₂` in a formula representing `t₁ ≤ t₂`. -/
-def Term.le (t₁ t₂ : L.term (Sum α (Fin n))) : L.BoundedFormula α n :=
+def Term.le (t₁ t₂ : L.term (α ⊕ Fin n)) : L.BoundedFormula α n :=
   leSymb.boundedFormula₂ t₁ t₂
 #align first_order.language.term.le FirstOrder.Language.Term.le
 
 /-- Joins two terms `t₁, t₂` in a formula representing `t₁ < t₂`. -/
-def Term.lt (t₁ t₂ : L.term (Sum α (Fin n))) : L.BoundedFormula α n :=
+def Term.lt (t₁ t₂ : L.term (α ⊕ Fin n)) : L.BoundedFormula α n :=
   t₁.le t₂ ⊓ ∼(t₂.le t₁)
 #align first_order.language.term.lt FirstOrder.Language.Term.lt
 
@@ -199,12 +199,12 @@ theorem rel_map_le_symb [LE M] [L.IsOrderedStructure M] {a b : M} : RelMap (leSy
 #align first_order.language.rel_map_le_symb FirstOrder.Language.rel_map_le_symb
 
 @[simp]
-theorem Term.realize_le [LE M] [L.IsOrderedStructure M] {t₁ t₂ : L.term (Sum α (Fin n))} {v : α → M} {xs : Fin n → M} :
+theorem Term.realize_le [LE M] [L.IsOrderedStructure M] {t₁ t₂ : L.term (α ⊕ Fin n)} {v : α → M} {xs : Fin n → M} :
     (t₁.le t₂).realize v xs ↔ t₁.realize (Sum.elim v xs) ≤ t₂.realize (Sum.elim v xs) := by simp [term.le]
 #align first_order.language.term.realize_le FirstOrder.Language.Term.realize_le
 
 @[simp]
-theorem Term.realize_lt [Preorder M] [L.IsOrderedStructure M] {t₁ t₂ : L.term (Sum α (Fin n))} {v : α → M}
+theorem Term.realize_lt [Preorder M] [L.IsOrderedStructure M] {t₁ t₂ : L.term (α ⊕ Fin n)} {v : α → M}
     {xs : Fin n → M} : (t₁.lt t₂).realize v xs ↔ t₁.realize (Sum.elim v xs) < t₂.realize (Sum.elim v xs) := by
   simp [term.lt, lt_iff_le_not_le]
 #align first_order.language.term.realize_lt FirstOrder.Language.Term.realize_lt

@@ -77,8 +77,8 @@ def toDualProdHom : NonemptyInterval α ↪o αᵒᵈ × α where
 def dual : NonemptyInterval α ≃ NonemptyInterval αᵒᵈ where
   toFun s := ⟨s.toProd.swap, s.fst_le_snd⟩
   invFun s := ⟨s.toProd.swap, s.fst_le_snd⟩
-  left_inv s := ext _ _ <| Prod.swap_swap _
-  right_inv s := ext _ _ <| Prod.swap_swap _
+  left_inv s := ext _ _ $ Prod.swap_swap _
+  right_inv s := ext _ _ $ Prod.swap_swap _
 #align nonempty_interval.dual NonemptyInterval.dual
 
 @[simp]
@@ -106,7 +106,7 @@ def pure (a : α) : NonemptyInterval α :=
   ⟨⟨a, a⟩, le_rfl⟩
 #align nonempty_interval.pure NonemptyInterval.pure
 
-theorem pure_injective : Injective (pure : α → NonemptyInterval α) := fun s t => congr_arg <| Prod.fst ∘ to_prod
+theorem pure_injective : Injective (pure : α → NonemptyInterval α) := fun s t => congr_arg $ Prod.fst ∘ to_prod
 #align nonempty_interval.pure_injective NonemptyInterval.pure_injective
 
 @[simp]
@@ -224,10 +224,10 @@ section Lattice
 variable [Lattice α]
 
 instance : HasSup (NonemptyInterval α) :=
-  ⟨fun s t => ⟨⟨s.fst ⊓ t.fst, s.snd ⊔ t.snd⟩, inf_le_left.trans <| s.fst_le_snd.trans le_sup_left⟩⟩
+  ⟨fun s t => ⟨⟨s.fst ⊓ t.fst, s.snd ⊔ t.snd⟩, inf_le_left.trans $ s.fst_le_snd.trans le_sup_left⟩⟩
 
 instance : SemilatticeSup (NonemptyInterval α) :=
-  (to_dual_prod_injective.SemilatticeSup _) fun _ _ => rfl
+  to_dual_prod_injective.SemilatticeSup _ $ fun _ _ => rfl
 
 @[simp]
 theorem fst_sup (s t : NonemptyInterval α) : (s ⊔ t).fst = s.fst ⊓ t.fst :=
@@ -376,7 +376,7 @@ def coeHom : Interval α ↪o Set α :=
     fun s t =>
     match s, t with
     | ⊥, t => iff_of_true bot_le bot_le
-    | some s, ⊥ => iff_of_false (fun h => s.coe_nonempty.ne_empty <| le_bot_iff.1 h) (WithBot.not_coe_le_bot _)
+    | some s, ⊥ => iff_of_false (fun h => s.coe_nonempty.ne_empty $ le_bot_iff.1 h) (WithBot.not_coe_le_bot _)
     | some s, some t => (@NonemptyInterval.coeHom α _).le_iff_le.trans WithBot.some_le_some.symm
 #align interval.coe_hom Interval.coeHom
 
@@ -443,7 +443,7 @@ instance : Lattice (Interval α) :=
       | s, ⊥ => ⊥
       | some s, some t =>
         if h : s.fst ≤ t.snd ∧ t.fst ≤ s.snd then
-          some ⟨⟨s.fst ⊔ t.fst, s.snd ⊓ t.snd⟩, sup_le (le_inf s.fst_le_snd h.1) <| le_inf h.2 t.fst_le_snd⟩
+          some ⟨⟨s.fst ⊔ t.fst, s.snd ⊓ t.snd⟩, sup_le (le_inf s.fst_le_snd h.1) $ le_inf h.2 t.fst_le_snd⟩
         else ⊥,
     inf_le_left := fun s t =>
       match s, t with
@@ -479,7 +479,7 @@ instance : Lattice (Interval α) :=
         simp only [WithBot.some_eq_coe, WithBot.coe_le_coe] at hb hc⊢
         rw [dif_pos, WithBot.coe_le_coe]
         exact ⟨sup_le hb.1 hc.1, le_inf hb.2 hc.2⟩
-        exact ⟨hb.1.trans <| s.fst_le_snd.trans hc.2, hc.1.trans <| s.fst_le_snd.trans hb.2⟩ }
+        exact ⟨hb.1.trans $ s.fst_le_snd.trans hc.2, hc.1.trans $ s.fst_le_snd.trans hb.2⟩ }
 
 @[simp, norm_cast]
 theorem coe_inf (s t : Interval α) : (↑(s ⊓ t) : Set α) = s ∩ t := by
@@ -496,16 +496,17 @@ theorem coe_inf (s t : Interval α) : (↑(s ⊓ t) : Set α) = s ∩ t := by
   · rfl
     
   · exact
-      (Icc_eq_empty fun H =>
-          h ⟨le_sup_left.trans <| H.trans inf_le_right, le_sup_right.trans <| H.trans inf_le_left⟩).symm
+      (Icc_eq_empty $ fun H =>
+          h ⟨le_sup_left.trans $ H.trans inf_le_right, le_sup_right.trans $ H.trans inf_le_left⟩).symm
     
 #align interval.coe_inf Interval.coe_inf
 
 end Decidable
 
 @[simp, norm_cast]
-theorem disjoint_coe (s t : Interval α) : Disjoint (s : Set α) t ↔ Disjoint s t := by
-  classical rw [disjoint_iff_inf_le, disjoint_iff_inf_le, le_eq_subset, ← coe_subset_coe, coe_inf]
+theorem disjoint_coe (s t : Interval α) : Disjoint (s : Set α) t ↔ Disjoint s t := by classical
+  rw [disjoint_iff_inf_le, disjoint_iff_inf_le, le_eq_subset, ← coe_subset_coe, coe_inf]
+  rfl
 #align interval.disjoint_coe Interval.disjoint_coe
 
 end Lattice
@@ -562,7 +563,7 @@ variable [CompleteLattice α]
          []
          (Term.app
           (Term.explicit "@" `DecidableRel)
-          [`α (Term.paren "(" [(«term_≤_» (Term.cdot "·") "≤" (Term.cdot "·")) []] ")")])
+          [`α (Term.paren "(" (Init.Core.«term_≤_» (Term.cdot "·") " ≤ " (Term.cdot "·")) ")")])
          "]")]
        (Term.typeSpec ":" (Term.app `CompleteLattice [(Term.app `Interval [`α])])))
       (Command.declValSimple
@@ -592,7 +593,7 @@ variable [CompleteLattice α]
                    "if"
                    (Lean.binderIdent `h)
                    ":"
-                   («term_⊆_» `S "⊆" («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
+                   (Init.Core.«term_⊆_» `S " ⊆ " («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
                    "then"
                    (Order.BoundedOrder.«term⊥» "⊥")
                    "else"
@@ -616,7 +617,7 @@ variable [CompleteLattice α]
                               "("
                               (Std.ExtendedBinder.extBinder
                                (Lean.binderIdent `h)
-                               [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                               [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                               ")")]))
                           ", "
                           (Term.proj `s "." `fst))
@@ -635,7 +636,7 @@ variable [CompleteLattice α]
                               "("
                               (Std.ExtendedBinder.extBinder
                                (Lean.binderIdent `h)
-                               [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                               [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                               ")")]))
                           ", "
                           (Term.proj `s "." `snd))]
@@ -765,37 +766,39 @@ variable [CompleteLattice α]
                         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
                         [(Term.anonymousCtor
                           "⟨"
-                          [(Term.app
+                          [(Init.Core.«term_$_»
                             `le_infi₂
-                            [(Term.fun
-                              "fun"
-                              (Term.basicFun
-                               [`c `hc]
-                               []
-                               "=>"
-                               (Term.proj
-                                («term_<|_»
-                                 (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                 "<|"
-                                 (Term.app `ha [(Term.hole "_") `hc]))
-                                "."
-                                (fieldIdx "1"))))])
+                            " $ "
+                            (Term.fun
+                             "fun"
+                             (Term.basicFun
+                              [`c `hc]
+                              []
+                              "=>"
+                              (Term.proj
+                               (Init.Core.«term_$_»
+                                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                " $ "
+                                (Term.app `ha [(Term.hole "_") `hc]))
+                               "."
+                               (fieldIdx "1")))))
                            ","
-                           (Term.app
+                           (Init.Core.«term_$_»
                             `supr₂_le
-                            [(Term.fun
-                              "fun"
-                              (Term.basicFun
-                               [`c `hc]
-                               []
-                               "=>"
-                               (Term.proj
-                                («term_<|_»
-                                 (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                 "<|"
-                                 (Term.app `ha [(Term.hole "_") `hc]))
-                                "."
-                                (fieldIdx "2"))))])]
+                            " $ "
+                            (Term.fun
+                             "fun"
+                             (Term.basicFun
+                              [`c `hc]
+                              []
+                              "=>"
+                              (Term.proj
+                               (Init.Core.«term_$_»
+                                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                " $ "
+                                (Term.app `ha [(Term.hole "_") `hc]))
+                               "."
+                               (fieldIdx "2")))))]
                           "⟩")]))]))))))
                ","
                (Term.structInstField
@@ -811,16 +814,16 @@ variable [CompleteLattice α]
                    "if"
                    (Lean.binderIdent `h)
                    ":"
-                   («term_∧_»
-                    («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
-                    "∧"
+                   (Init.Logic.«term_∧_»
+                    (Init.Core.«term_∉_» (Order.BoundedOrder.«term⊥» "⊥") " ∉ " `S)
+                    " ∧ "
                     (Term.forall
                      "∀"
                      [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
                      []
                      ","
                      (Term.arrow
-                      («term_∈_» (coeNotation "↑" `s) "∈" `S)
+                      (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
                       "→"
                       (Term.forall
                        "∀"
@@ -828,9 +831,9 @@ variable [CompleteLattice α]
                        []
                        ","
                        (Term.arrow
-                        («term_∈_» (coeNotation "↑" `t) "∈" `S)
+                        (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
                         "→"
-                        («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))))))
+                        (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))))))
                    "then"
                    (Term.app
                     `some
@@ -852,7 +855,7 @@ variable [CompleteLattice α]
                               "("
                               (Std.ExtendedBinder.extBinder
                                (Lean.binderIdent `h)
-                               [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                               [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                               ")")]))
                           ", "
                           (Term.proj `s "." `fst))
@@ -871,21 +874,22 @@ variable [CompleteLattice α]
                               "("
                               (Std.ExtendedBinder.extBinder
                                (Lean.binderIdent `h)
-                               [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                               [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                               ")")]))
                           ", "
                           (Term.proj `s "." `snd))]
                         "⟩")
                        ","
-                       (Term.app
+                       (Init.Core.«term_$_»
                         `supr₂_le
-                        [(Term.fun
-                          "fun"
-                          (Term.basicFun
-                           [`s `hs]
-                           []
-                           "=>"
-                           («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                        " $ "
+                        (Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`s `hs]
+                          []
+                          "=>"
+                          (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))]
                       "⟩")])
                    "else"
                    (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -961,37 +965,39 @@ variable [CompleteLattice α]
                            (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
                            [(Term.anonymousCtor
                              "⟨"
-                             [(Term.app
+                             [(Init.Core.«term_$_»
                                `supr₂_le
-                               [(Term.fun
-                                 "fun"
-                                 (Term.basicFun
-                                  [`t `hb]
-                                  []
-                                  "=>"
-                                  (Term.proj
-                                   («term_<|_»
-                                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                    "<|"
-                                    (Term.app `ha [(Term.hole "_") `hb]))
-                                   "."
-                                   (fieldIdx "1"))))])
+                               " $ "
+                               (Term.fun
+                                "fun"
+                                (Term.basicFun
+                                 [`t `hb]
+                                 []
+                                 "=>"
+                                 (Term.proj
+                                  (Init.Core.«term_$_»
+                                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                   " $ "
+                                   (Term.app `ha [(Term.hole "_") `hb]))
+                                  "."
+                                  (fieldIdx "1")))))
                               ","
-                              (Term.app
+                              (Init.Core.«term_$_»
                                `le_infi₂
-                               [(Term.fun
-                                 "fun"
-                                 (Term.basicFun
-                                  [`t `hb]
-                                  []
-                                  "=>"
-                                  (Term.proj
-                                   («term_<|_»
-                                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                    "<|"
-                                    (Term.app `ha [(Term.hole "_") `hb]))
-                                   "."
-                                   (fieldIdx "2"))))])]
+                               " $ "
+                               (Term.fun
+                                "fun"
+                                (Term.basicFun
+                                 [`t `hb]
+                                 []
+                                 "=>"
+                                 (Term.proj
+                                  (Init.Core.«term_$_»
+                                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                   " $ "
+                                   (Term.app `ha [(Term.hole "_") `hb]))
+                                  "."
+                                  (fieldIdx "2")))))]
                              "⟩")]))
                          [])])
                       []
@@ -1019,24 +1025,24 @@ variable [CompleteLattice α]
                              [`t `hb `c `hc]
                              []
                              "=>"
-                             («term_<|_»
+                             (Init.Core.«term_$_»
                               (Term.proj
                                (Term.proj
-                                («term_<|_»
+                                (Init.Core.«term_$_»
                                  (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                 "<|"
+                                 " $ "
                                  (Term.app `ha [(Term.hole "_") `hb]))
                                 "."
                                 (fieldIdx "1"))
                                "."
                                `trans)
-                              "<|"
+                              " $ "
                               (Term.app
                                `s.fst_le_snd.trans
                                [(Term.proj
-                                 («term_<|_»
+                                 (Init.Core.«term_$_»
                                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                  "<|"
+                                  " $ "
                                   (Term.app `ha [(Term.hole "_") `hc]))
                                  "."
                                  (fieldIdx "2"))]))))]))]
@@ -1078,7 +1084,7 @@ variable [CompleteLattice α]
                   "if"
                   (Lean.binderIdent `h)
                   ":"
-                  («term_⊆_» `S "⊆" («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
+                  (Init.Core.«term_⊆_» `S " ⊆ " («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
                   "then"
                   (Order.BoundedOrder.«term⊥» "⊥")
                   "else"
@@ -1102,7 +1108,7 @@ variable [CompleteLattice α]
                              "("
                              (Std.ExtendedBinder.extBinder
                               (Lean.binderIdent `h)
-                              [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                              [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                              ")")]))
                          ", "
                          (Term.proj `s "." `fst))
@@ -1121,7 +1127,7 @@ variable [CompleteLattice α]
                              "("
                              (Std.ExtendedBinder.extBinder
                               (Lean.binderIdent `h)
-                              [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                              [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                              ")")]))
                          ", "
                          (Term.proj `s "." `snd))]
@@ -1251,37 +1257,39 @@ variable [CompleteLattice α]
                        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
                        [(Term.anonymousCtor
                          "⟨"
-                         [(Term.app
+                         [(Init.Core.«term_$_»
                            `le_infi₂
-                           [(Term.fun
-                             "fun"
-                             (Term.basicFun
-                              [`c `hc]
-                              []
-                              "=>"
-                              (Term.proj
-                               («term_<|_»
-                                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                "<|"
-                                (Term.app `ha [(Term.hole "_") `hc]))
-                               "."
-                               (fieldIdx "1"))))])
+                           " $ "
+                           (Term.fun
+                            "fun"
+                            (Term.basicFun
+                             [`c `hc]
+                             []
+                             "=>"
+                             (Term.proj
+                              (Init.Core.«term_$_»
+                               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                               " $ "
+                               (Term.app `ha [(Term.hole "_") `hc]))
+                              "."
+                              (fieldIdx "1")))))
                           ","
-                          (Term.app
+                          (Init.Core.«term_$_»
                            `supr₂_le
-                           [(Term.fun
-                             "fun"
-                             (Term.basicFun
-                              [`c `hc]
-                              []
-                              "=>"
-                              (Term.proj
-                               («term_<|_»
-                                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                "<|"
-                                (Term.app `ha [(Term.hole "_") `hc]))
-                               "."
-                               (fieldIdx "2"))))])]
+                           " $ "
+                           (Term.fun
+                            "fun"
+                            (Term.basicFun
+                             [`c `hc]
+                             []
+                             "=>"
+                             (Term.proj
+                              (Init.Core.«term_$_»
+                               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                               " $ "
+                               (Term.app `ha [(Term.hole "_") `hc]))
+                              "."
+                              (fieldIdx "2")))))]
                          "⟩")]))]))))))
               ","
               (Term.structInstField
@@ -1297,16 +1305,16 @@ variable [CompleteLattice α]
                   "if"
                   (Lean.binderIdent `h)
                   ":"
-                  («term_∧_»
-                   («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
-                   "∧"
+                  (Init.Logic.«term_∧_»
+                   (Init.Core.«term_∉_» (Order.BoundedOrder.«term⊥» "⊥") " ∉ " `S)
+                   " ∧ "
                    (Term.forall
                     "∀"
                     [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
                     []
                     ","
                     (Term.arrow
-                     («term_∈_» (coeNotation "↑" `s) "∈" `S)
+                     (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
                      "→"
                      (Term.forall
                       "∀"
@@ -1314,9 +1322,9 @@ variable [CompleteLattice α]
                       []
                       ","
                       (Term.arrow
-                       («term_∈_» (coeNotation "↑" `t) "∈" `S)
+                       (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
                        "→"
-                       («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))))))
+                       (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))))))
                   "then"
                   (Term.app
                    `some
@@ -1338,7 +1346,7 @@ variable [CompleteLattice α]
                              "("
                              (Std.ExtendedBinder.extBinder
                               (Lean.binderIdent `h)
-                              [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                              [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                              ")")]))
                          ", "
                          (Term.proj `s "." `fst))
@@ -1357,21 +1365,22 @@ variable [CompleteLattice α]
                              "("
                              (Std.ExtendedBinder.extBinder
                               (Lean.binderIdent `h)
-                              [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                              [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                              ")")]))
                          ", "
                          (Term.proj `s "." `snd))]
                        "⟩")
                       ","
-                      (Term.app
+                      (Init.Core.«term_$_»
                        `supr₂_le
-                       [(Term.fun
-                         "fun"
-                         (Term.basicFun
-                          [`s `hs]
-                          []
-                          "=>"
-                          («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                       " $ "
+                       (Term.fun
+                        "fun"
+                        (Term.basicFun
+                         [`s `hs]
+                         []
+                         "=>"
+                         (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))]
                      "⟩")])
                   "else"
                   (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -1447,37 +1456,39 @@ variable [CompleteLattice α]
                           (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
                           [(Term.anonymousCtor
                             "⟨"
-                            [(Term.app
+                            [(Init.Core.«term_$_»
                               `supr₂_le
-                              [(Term.fun
-                                "fun"
-                                (Term.basicFun
-                                 [`t `hb]
-                                 []
-                                 "=>"
-                                 (Term.proj
-                                  («term_<|_»
-                                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                   "<|"
-                                   (Term.app `ha [(Term.hole "_") `hb]))
-                                  "."
-                                  (fieldIdx "1"))))])
+                              " $ "
+                              (Term.fun
+                               "fun"
+                               (Term.basicFun
+                                [`t `hb]
+                                []
+                                "=>"
+                                (Term.proj
+                                 (Init.Core.«term_$_»
+                                  (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                  " $ "
+                                  (Term.app `ha [(Term.hole "_") `hb]))
+                                 "."
+                                 (fieldIdx "1")))))
                              ","
-                             (Term.app
+                             (Init.Core.«term_$_»
                               `le_infi₂
-                              [(Term.fun
-                                "fun"
-                                (Term.basicFun
-                                 [`t `hb]
-                                 []
-                                 "=>"
-                                 (Term.proj
-                                  («term_<|_»
-                                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                   "<|"
-                                   (Term.app `ha [(Term.hole "_") `hb]))
-                                  "."
-                                  (fieldIdx "2"))))])]
+                              " $ "
+                              (Term.fun
+                               "fun"
+                               (Term.basicFun
+                                [`t `hb]
+                                []
+                                "=>"
+                                (Term.proj
+                                 (Init.Core.«term_$_»
+                                  (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                                  " $ "
+                                  (Term.app `ha [(Term.hole "_") `hb]))
+                                 "."
+                                 (fieldIdx "2")))))]
                             "⟩")]))
                         [])])
                      []
@@ -1505,24 +1516,24 @@ variable [CompleteLattice α]
                             [`t `hb `c `hc]
                             []
                             "=>"
-                            («term_<|_»
+                            (Init.Core.«term_$_»
                              (Term.proj
                               (Term.proj
-                               («term_<|_»
+                               (Init.Core.«term_$_»
                                 (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                "<|"
+                                " $ "
                                 (Term.app `ha [(Term.hole "_") `hb]))
                                "."
                                (fieldIdx "1"))
                               "."
                               `trans)
-                             "<|"
+                             " $ "
                              (Term.app
                               `s.fst_le_snd.trans
                               [(Term.proj
-                                («term_<|_»
+                                (Init.Core.«term_$_»
                                  (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                                 "<|"
+                                 " $ "
                                  (Term.app `ha [(Term.hole "_") `hc]))
                                 "."
                                 (fieldIdx "2"))]))))]))]
@@ -1554,7 +1565,7 @@ variable [CompleteLattice α]
               "if"
               (Lean.binderIdent `h)
               ":"
-              («term_⊆_» `S "⊆" («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
+              (Init.Core.«term_⊆_» `S " ⊆ " («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
               "then"
               (Order.BoundedOrder.«term⊥» "⊥")
               "else"
@@ -1578,7 +1589,7 @@ variable [CompleteLattice α]
                          "("
                          (Std.ExtendedBinder.extBinder
                           (Lean.binderIdent `h)
-                          [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                          [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                          ")")]))
                      ", "
                      (Term.proj `s "." `fst))
@@ -1597,7 +1608,7 @@ variable [CompleteLattice α]
                          "("
                          (Std.ExtendedBinder.extBinder
                           (Lean.binderIdent `h)
-                          [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                          [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                          ")")]))
                      ", "
                      (Term.proj `s "." `snd))]
@@ -1723,37 +1734,39 @@ variable [CompleteLattice α]
                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
                    [(Term.anonymousCtor
                      "⟨"
-                     [(Term.app
+                     [(Init.Core.«term_$_»
                        `le_infi₂
-                       [(Term.fun
-                         "fun"
-                         (Term.basicFun
-                          [`c `hc]
-                          []
-                          "=>"
-                          (Term.proj
-                           («term_<|_»
-                            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                            "<|"
-                            (Term.app `ha [(Term.hole "_") `hc]))
-                           "."
-                           (fieldIdx "1"))))])
+                       " $ "
+                       (Term.fun
+                        "fun"
+                        (Term.basicFun
+                         [`c `hc]
+                         []
+                         "=>"
+                         (Term.proj
+                          (Init.Core.«term_$_»
+                           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                           " $ "
+                           (Term.app `ha [(Term.hole "_") `hc]))
+                          "."
+                          (fieldIdx "1")))))
                       ","
-                      (Term.app
+                      (Init.Core.«term_$_»
                        `supr₂_le
-                       [(Term.fun
-                         "fun"
-                         (Term.basicFun
-                          [`c `hc]
-                          []
-                          "=>"
-                          (Term.proj
-                           («term_<|_»
-                            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                            "<|"
-                            (Term.app `ha [(Term.hole "_") `hc]))
-                           "."
-                           (fieldIdx "2"))))])]
+                       " $ "
+                       (Term.fun
+                        "fun"
+                        (Term.basicFun
+                         [`c `hc]
+                         []
+                         "=>"
+                         (Term.proj
+                          (Init.Core.«term_$_»
+                           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                           " $ "
+                           (Term.app `ha [(Term.hole "_") `hc]))
+                          "."
+                          (fieldIdx "2")))))]
                      "⟩")]))]))))))
           ","
           (Term.structInstField
@@ -1769,16 +1782,16 @@ variable [CompleteLattice α]
               "if"
               (Lean.binderIdent `h)
               ":"
-              («term_∧_»
-               («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
-               "∧"
+              (Init.Logic.«term_∧_»
+               (Init.Core.«term_∉_» (Order.BoundedOrder.«term⊥» "⊥") " ∉ " `S)
+               " ∧ "
                (Term.forall
                 "∀"
                 [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
                 []
                 ","
                 (Term.arrow
-                 («term_∈_» (coeNotation "↑" `s) "∈" `S)
+                 (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
                  "→"
                  (Term.forall
                   "∀"
@@ -1786,9 +1799,9 @@ variable [CompleteLattice α]
                   []
                   ","
                   (Term.arrow
-                   («term_∈_» (coeNotation "↑" `t) "∈" `S)
+                   (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
                    "→"
-                   («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))))))
+                   (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))))))
               "then"
               (Term.app
                `some
@@ -1810,7 +1823,7 @@ variable [CompleteLattice α]
                          "("
                          (Std.ExtendedBinder.extBinder
                           (Lean.binderIdent `h)
-                          [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                          [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                          ")")]))
                      ", "
                      (Term.proj `s "." `fst))
@@ -1829,21 +1842,22 @@ variable [CompleteLattice α]
                          "("
                          (Std.ExtendedBinder.extBinder
                           (Lean.binderIdent `h)
-                          [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                          [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                          ")")]))
                      ", "
                      (Term.proj `s "." `snd))]
                    "⟩")
                   ","
-                  (Term.app
+                  (Init.Core.«term_$_»
                    `supr₂_le
-                   [(Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`s `hs]
-                      []
-                      "=>"
-                      («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                   " $ "
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`s `hs]
+                     []
+                     "=>"
+                     (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))]
                  "⟩")])
               "else"
               (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -1914,37 +1928,39 @@ variable [CompleteLattice α]
                       (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
                       [(Term.anonymousCtor
                         "⟨"
-                        [(Term.app
+                        [(Init.Core.«term_$_»
                           `supr₂_le
-                          [(Term.fun
-                            "fun"
-                            (Term.basicFun
-                             [`t `hb]
-                             []
-                             "=>"
-                             (Term.proj
-                              («term_<|_»
-                               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                               "<|"
-                               (Term.app `ha [(Term.hole "_") `hb]))
-                              "."
-                              (fieldIdx "1"))))])
+                          " $ "
+                          (Term.fun
+                           "fun"
+                           (Term.basicFun
+                            [`t `hb]
+                            []
+                            "=>"
+                            (Term.proj
+                             (Init.Core.«term_$_»
+                              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                              " $ "
+                              (Term.app `ha [(Term.hole "_") `hb]))
+                             "."
+                             (fieldIdx "1")))))
                          ","
-                         (Term.app
+                         (Init.Core.«term_$_»
                           `le_infi₂
-                          [(Term.fun
-                            "fun"
-                            (Term.basicFun
-                             [`t `hb]
-                             []
-                             "=>"
-                             (Term.proj
-                              («term_<|_»
-                               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                               "<|"
-                               (Term.app `ha [(Term.hole "_") `hb]))
-                              "."
-                              (fieldIdx "2"))))])]
+                          " $ "
+                          (Term.fun
+                           "fun"
+                           (Term.basicFun
+                            [`t `hb]
+                            []
+                            "=>"
+                            (Term.proj
+                             (Init.Core.«term_$_»
+                              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                              " $ "
+                              (Term.app `ha [(Term.hole "_") `hb]))
+                             "."
+                             (fieldIdx "2")))))]
                         "⟩")]))
                     [])])
                  []
@@ -1972,24 +1988,24 @@ variable [CompleteLattice α]
                         [`t `hb `c `hc]
                         []
                         "=>"
-                        («term_<|_»
+                        (Init.Core.«term_$_»
                          (Term.proj
                           (Term.proj
-                           («term_<|_»
+                           (Init.Core.«term_$_»
                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                            "<|"
+                            " $ "
                             (Term.app `ha [(Term.hole "_") `hb]))
                            "."
                            (fieldIdx "1"))
                           "."
                           `trans)
-                         "<|"
+                         " $ "
                          (Term.app
                           `s.fst_le_snd.trans
                           [(Term.proj
-                            («term_<|_»
+                            (Init.Core.«term_$_»
                              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                             "<|"
+                             " $ "
                              (Term.app `ha [(Term.hole "_") `hc]))
                             "."
                             (fieldIdx "2"))]))))]))]
@@ -2017,7 +2033,7 @@ variable [CompleteLattice α]
              "if"
              (Lean.binderIdent `h)
              ":"
-             («term_⊆_» `S "⊆" («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
+             (Init.Core.«term_⊆_» `S " ⊆ " («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
              "then"
              (Order.BoundedOrder.«term⊥» "⊥")
              "else"
@@ -2041,7 +2057,7 @@ variable [CompleteLattice α]
                         "("
                         (Std.ExtendedBinder.extBinder
                          (Lean.binderIdent `h)
-                         [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                         [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                         ")")]))
                     ", "
                     (Term.proj `s "." `fst))
@@ -2060,7 +2076,7 @@ variable [CompleteLattice α]
                         "("
                         (Std.ExtendedBinder.extBinder
                          (Lean.binderIdent `h)
-                         [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                         [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                         ")")]))
                     ", "
                     (Term.proj `s "." `snd))]
@@ -2186,37 +2202,39 @@ variable [CompleteLattice α]
                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
                   [(Term.anonymousCtor
                     "⟨"
-                    [(Term.app
+                    [(Init.Core.«term_$_»
                       `le_infi₂
-                      [(Term.fun
-                        "fun"
-                        (Term.basicFun
-                         [`c `hc]
-                         []
-                         "=>"
-                         (Term.proj
-                          («term_<|_»
-                           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                           "<|"
-                           (Term.app `ha [(Term.hole "_") `hc]))
-                          "."
-                          (fieldIdx "1"))))])
+                      " $ "
+                      (Term.fun
+                       "fun"
+                       (Term.basicFun
+                        [`c `hc]
+                        []
+                        "=>"
+                        (Term.proj
+                         (Init.Core.«term_$_»
+                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                          " $ "
+                          (Term.app `ha [(Term.hole "_") `hc]))
+                         "."
+                         (fieldIdx "1")))))
                      ","
-                     (Term.app
+                     (Init.Core.«term_$_»
                       `supr₂_le
-                      [(Term.fun
-                        "fun"
-                        (Term.basicFun
-                         [`c `hc]
-                         []
-                         "=>"
-                         (Term.proj
-                          («term_<|_»
-                           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                           "<|"
-                           (Term.app `ha [(Term.hole "_") `hc]))
-                          "."
-                          (fieldIdx "2"))))])]
+                      " $ "
+                      (Term.fun
+                       "fun"
+                       (Term.basicFun
+                        [`c `hc]
+                        []
+                        "=>"
+                        (Term.proj
+                         (Init.Core.«term_$_»
+                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                          " $ "
+                          (Term.app `ha [(Term.hole "_") `hc]))
+                         "."
+                         (fieldIdx "2")))))]
                     "⟩")]))]))))))
          ","
          (Term.structInstField
@@ -2232,16 +2250,16 @@ variable [CompleteLattice α]
              "if"
              (Lean.binderIdent `h)
              ":"
-             («term_∧_»
-              («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
-              "∧"
+             (Init.Logic.«term_∧_»
+              (Init.Core.«term_∉_» (Order.BoundedOrder.«term⊥» "⊥") " ∉ " `S)
+              " ∧ "
               (Term.forall
                "∀"
                [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
                []
                ","
                (Term.arrow
-                («term_∈_» (coeNotation "↑" `s) "∈" `S)
+                (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
                 "→"
                 (Term.forall
                  "∀"
@@ -2249,9 +2267,9 @@ variable [CompleteLattice α]
                  []
                  ","
                  (Term.arrow
-                  («term_∈_» (coeNotation "↑" `t) "∈" `S)
+                  (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
                   "→"
-                  («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))))))
+                  (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))))))
              "then"
              (Term.app
               `some
@@ -2273,7 +2291,7 @@ variable [CompleteLattice α]
                         "("
                         (Std.ExtendedBinder.extBinder
                          (Lean.binderIdent `h)
-                         [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                         [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                         ")")]))
                     ", "
                     (Term.proj `s "." `fst))
@@ -2292,21 +2310,22 @@ variable [CompleteLattice α]
                         "("
                         (Std.ExtendedBinder.extBinder
                          (Lean.binderIdent `h)
-                         [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                         [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                         ")")]))
                     ", "
                     (Term.proj `s "." `snd))]
                   "⟩")
                  ","
-                 (Term.app
+                 (Init.Core.«term_$_»
                   `supr₂_le
-                  [(Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`s `hs]
-                     []
-                     "=>"
-                     («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                  " $ "
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`s `hs]
+                    []
+                    "=>"
+                    (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))]
                 "⟩")])
              "else"
              (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -2377,37 +2396,39 @@ variable [CompleteLattice α]
                      (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
                      [(Term.anonymousCtor
                        "⟨"
-                       [(Term.app
+                       [(Init.Core.«term_$_»
                          `supr₂_le
-                         [(Term.fun
-                           "fun"
-                           (Term.basicFun
-                            [`t `hb]
-                            []
-                            "=>"
-                            (Term.proj
-                             («term_<|_»
-                              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                              "<|"
-                              (Term.app `ha [(Term.hole "_") `hb]))
-                             "."
-                             (fieldIdx "1"))))])
+                         " $ "
+                         (Term.fun
+                          "fun"
+                          (Term.basicFun
+                           [`t `hb]
+                           []
+                           "=>"
+                           (Term.proj
+                            (Init.Core.«term_$_»
+                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                             " $ "
+                             (Term.app `ha [(Term.hole "_") `hb]))
+                            "."
+                            (fieldIdx "1")))))
                         ","
-                        (Term.app
+                        (Init.Core.«term_$_»
                          `le_infi₂
-                         [(Term.fun
-                           "fun"
-                           (Term.basicFun
-                            [`t `hb]
-                            []
-                            "=>"
-                            (Term.proj
-                             («term_<|_»
-                              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                              "<|"
-                              (Term.app `ha [(Term.hole "_") `hb]))
-                             "."
-                             (fieldIdx "2"))))])]
+                         " $ "
+                         (Term.fun
+                          "fun"
+                          (Term.basicFun
+                           [`t `hb]
+                           []
+                           "=>"
+                           (Term.proj
+                            (Init.Core.«term_$_»
+                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                             " $ "
+                             (Term.app `ha [(Term.hole "_") `hb]))
+                            "."
+                            (fieldIdx "2")))))]
                        "⟩")]))
                    [])])
                 []
@@ -2435,24 +2456,24 @@ variable [CompleteLattice α]
                        [`t `hb `c `hc]
                        []
                        "=>"
-                       («term_<|_»
+                       (Init.Core.«term_$_»
                         (Term.proj
                          (Term.proj
-                          («term_<|_»
+                          (Init.Core.«term_$_»
                            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                           "<|"
+                           " $ "
                            (Term.app `ha [(Term.hole "_") `hb]))
                           "."
                           (fieldIdx "1"))
                          "."
                          `trans)
-                        "<|"
+                        " $ "
                         (Term.app
                          `s.fst_le_snd.trans
                          [(Term.proj
-                           («term_<|_»
+                           (Init.Core.«term_$_»
                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                            "<|"
+                            " $ "
                             (Term.app `ha [(Term.hole "_") `hc]))
                            "."
                            (fieldIdx "2"))]))))]))]
@@ -2478,7 +2499,7 @@ variable [CompleteLattice α]
             "if"
             (Lean.binderIdent `h)
             ":"
-            («term_⊆_» `S "⊆" («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
+            (Init.Core.«term_⊆_» `S " ⊆ " («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
             "then"
             (Order.BoundedOrder.«term⊥» "⊥")
             "else"
@@ -2502,7 +2523,7 @@ variable [CompleteLattice α]
                        "("
                        (Std.ExtendedBinder.extBinder
                         (Lean.binderIdent `h)
-                        [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                        [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                        ")")]))
                    ", "
                    (Term.proj `s "." `fst))
@@ -2521,7 +2542,7 @@ variable [CompleteLattice α]
                        "("
                        (Std.ExtendedBinder.extBinder
                         (Lean.binderIdent `h)
-                        [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                        [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                        ")")]))
                    ", "
                    (Term.proj `s "." `snd))]
@@ -2647,37 +2668,39 @@ variable [CompleteLattice α]
                  (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
                  [(Term.anonymousCtor
                    "⟨"
-                   [(Term.app
+                   [(Init.Core.«term_$_»
                      `le_infi₂
-                     [(Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`c `hc]
-                        []
-                        "=>"
-                        (Term.proj
-                         («term_<|_»
-                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                          "<|"
-                          (Term.app `ha [(Term.hole "_") `hc]))
-                         "."
-                         (fieldIdx "1"))))])
+                     " $ "
+                     (Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`c `hc]
+                       []
+                       "=>"
+                       (Term.proj
+                        (Init.Core.«term_$_»
+                         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                         " $ "
+                         (Term.app `ha [(Term.hole "_") `hc]))
+                        "."
+                        (fieldIdx "1")))))
                     ","
-                    (Term.app
+                    (Init.Core.«term_$_»
                      `supr₂_le
-                     [(Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`c `hc]
-                        []
-                        "=>"
-                        (Term.proj
-                         («term_<|_»
-                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                          "<|"
-                          (Term.app `ha [(Term.hole "_") `hc]))
-                         "."
-                         (fieldIdx "2"))))])]
+                     " $ "
+                     (Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`c `hc]
+                       []
+                       "=>"
+                       (Term.proj
+                        (Init.Core.«term_$_»
+                         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                         " $ "
+                         (Term.app `ha [(Term.hole "_") `hc]))
+                        "."
+                        (fieldIdx "2")))))]
                    "⟩")]))]))))))
         ","
         (Term.structInstField
@@ -2693,16 +2716,16 @@ variable [CompleteLattice α]
             "if"
             (Lean.binderIdent `h)
             ":"
-            («term_∧_»
-             («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
-             "∧"
+            (Init.Logic.«term_∧_»
+             (Init.Core.«term_∉_» (Order.BoundedOrder.«term⊥» "⊥") " ∉ " `S)
+             " ∧ "
              (Term.forall
               "∀"
               [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
               []
               ","
               (Term.arrow
-               («term_∈_» (coeNotation "↑" `s) "∈" `S)
+               (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
                "→"
                (Term.forall
                 "∀"
@@ -2710,9 +2733,9 @@ variable [CompleteLattice α]
                 []
                 ","
                 (Term.arrow
-                 («term_∈_» (coeNotation "↑" `t) "∈" `S)
+                 (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
                  "→"
-                 («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))))))
+                 (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))))))
             "then"
             (Term.app
              `some
@@ -2734,7 +2757,7 @@ variable [CompleteLattice α]
                        "("
                        (Std.ExtendedBinder.extBinder
                         (Lean.binderIdent `h)
-                        [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                        [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                        ")")]))
                    ", "
                    (Term.proj `s "." `fst))
@@ -2753,21 +2776,22 @@ variable [CompleteLattice α]
                        "("
                        (Std.ExtendedBinder.extBinder
                         (Lean.binderIdent `h)
-                        [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                        [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                        ")")]))
                    ", "
                    (Term.proj `s "." `snd))]
                  "⟩")
                 ","
-                (Term.app
+                (Init.Core.«term_$_»
                  `supr₂_le
-                 [(Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`s `hs]
-                    []
-                    "=>"
-                    («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                 " $ "
+                 (Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`s `hs]
+                   []
+                   "=>"
+                   (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))]
                "⟩")])
             "else"
             (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -2838,37 +2862,39 @@ variable [CompleteLattice α]
                     (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
                     [(Term.anonymousCtor
                       "⟨"
-                      [(Term.app
+                      [(Init.Core.«term_$_»
                         `supr₂_le
-                        [(Term.fun
-                          "fun"
-                          (Term.basicFun
-                           [`t `hb]
-                           []
-                           "=>"
-                           (Term.proj
-                            («term_<|_»
-                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                             "<|"
-                             (Term.app `ha [(Term.hole "_") `hb]))
-                            "."
-                            (fieldIdx "1"))))])
+                        " $ "
+                        (Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`t `hb]
+                          []
+                          "=>"
+                          (Term.proj
+                           (Init.Core.«term_$_»
+                            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                            " $ "
+                            (Term.app `ha [(Term.hole "_") `hb]))
+                           "."
+                           (fieldIdx "1")))))
                        ","
-                       (Term.app
+                       (Init.Core.«term_$_»
                         `le_infi₂
-                        [(Term.fun
-                          "fun"
-                          (Term.basicFun
-                           [`t `hb]
-                           []
-                           "=>"
-                           (Term.proj
-                            («term_<|_»
-                             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                             "<|"
-                             (Term.app `ha [(Term.hole "_") `hb]))
-                            "."
-                            (fieldIdx "2"))))])]
+                        " $ "
+                        (Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`t `hb]
+                          []
+                          "=>"
+                          (Term.proj
+                           (Init.Core.«term_$_»
+                            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                            " $ "
+                            (Term.app `ha [(Term.hole "_") `hb]))
+                           "."
+                           (fieldIdx "2")))))]
                       "⟩")]))
                   [])])
                []
@@ -2896,24 +2922,24 @@ variable [CompleteLattice α]
                       [`t `hb `c `hc]
                       []
                       "=>"
-                      («term_<|_»
+                      (Init.Core.«term_$_»
                        (Term.proj
                         (Term.proj
-                         («term_<|_»
+                         (Init.Core.«term_$_»
                           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                          "<|"
+                          " $ "
                           (Term.app `ha [(Term.hole "_") `hb]))
                          "."
                          (fieldIdx "1"))
                         "."
                         `trans)
-                       "<|"
+                       " $ "
                        (Term.app
                         `s.fst_le_snd.trans
                         [(Term.proj
-                          («term_<|_»
+                          (Init.Core.«term_$_»
                            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                           "<|"
+                           " $ "
                            (Term.app `ha [(Term.hole "_") `hc]))
                           "."
                           (fieldIdx "2"))]))))]))]
@@ -2949,37 +2975,39 @@ variable [CompleteLattice α]
                  (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
                  [(Term.anonymousCtor
                    "⟨"
-                   [(Term.app
+                   [(Init.Core.«term_$_»
                      `supr₂_le
-                     [(Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`t `hb]
-                        []
-                        "=>"
-                        (Term.proj
-                         («term_<|_»
-                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                          "<|"
-                          (Term.app `ha [(Term.hole "_") `hb]))
-                         "."
-                         (fieldIdx "1"))))])
+                     " $ "
+                     (Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`t `hb]
+                       []
+                       "=>"
+                       (Term.proj
+                        (Init.Core.«term_$_»
+                         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                         " $ "
+                         (Term.app `ha [(Term.hole "_") `hb]))
+                        "."
+                        (fieldIdx "1")))))
                     ","
-                    (Term.app
+                    (Init.Core.«term_$_»
                      `le_infi₂
-                     [(Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`t `hb]
-                        []
-                        "=>"
-                        (Term.proj
-                         («term_<|_»
-                          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                          "<|"
-                          (Term.app `ha [(Term.hole "_") `hb]))
-                         "."
-                         (fieldIdx "2"))))])]
+                     " $ "
+                     (Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`t `hb]
+                       []
+                       "=>"
+                       (Term.proj
+                        (Init.Core.«term_$_»
+                         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                         " $ "
+                         (Term.app `ha [(Term.hole "_") `hb]))
+                        "."
+                        (fieldIdx "2")))))]
                    "⟩")]))
                [])])
             []
@@ -3007,24 +3035,24 @@ variable [CompleteLattice α]
                    [`t `hb `c `hc]
                    []
                    "=>"
-                   («term_<|_»
+                   (Init.Core.«term_$_»
                     (Term.proj
                      (Term.proj
-                      («term_<|_»
+                      (Init.Core.«term_$_»
                        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                       "<|"
+                       " $ "
                        (Term.app `ha [(Term.hole "_") `hb]))
                       "."
                       (fieldIdx "1"))
                      "."
                      `trans)
-                    "<|"
+                    " $ "
                     (Term.app
                      `s.fst_le_snd.trans
                      [(Term.proj
-                       («term_<|_»
+                       (Init.Core.«term_$_»
                         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                        "<|"
+                        " $ "
                         (Term.app `ha [(Term.hole "_") `hc]))
                        "."
                        (fieldIdx "2"))]))))]))]
@@ -3050,37 +3078,39 @@ variable [CompleteLattice α]
                (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
                [(Term.anonymousCtor
                  "⟨"
-                 [(Term.app
+                 [(Init.Core.«term_$_»
                    `supr₂_le
-                   [(Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`t `hb]
-                      []
-                      "=>"
-                      (Term.proj
-                       («term_<|_»
-                        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                        "<|"
-                        (Term.app `ha [(Term.hole "_") `hb]))
-                       "."
-                       (fieldIdx "1"))))])
+                   " $ "
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`t `hb]
+                     []
+                     "=>"
+                     (Term.proj
+                      (Init.Core.«term_$_»
+                       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                       " $ "
+                       (Term.app `ha [(Term.hole "_") `hb]))
+                      "."
+                      (fieldIdx "1")))))
                   ","
-                  (Term.app
+                  (Init.Core.«term_$_»
                    `le_infi₂
-                   [(Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`t `hb]
-                      []
-                      "=>"
-                      (Term.proj
-                       («term_<|_»
-                        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                        "<|"
-                        (Term.app `ha [(Term.hole "_") `hb]))
-                       "."
-                       (fieldIdx "2"))))])]
+                   " $ "
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`t `hb]
+                     []
+                     "=>"
+                     (Term.proj
+                      (Init.Core.«term_$_»
+                       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                       " $ "
+                       (Term.app `ha [(Term.hole "_") `hb]))
+                      "."
+                      (fieldIdx "2")))))]
                  "⟩")]))
              [])])
           []
@@ -3108,24 +3138,24 @@ variable [CompleteLattice α]
                  [`t `hb `c `hc]
                  []
                  "=>"
-                 («term_<|_»
+                 (Init.Core.«term_$_»
                   (Term.proj
                    (Term.proj
-                    («term_<|_»
+                    (Init.Core.«term_$_»
                      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                     "<|"
+                     " $ "
                      (Term.app `ha [(Term.hole "_") `hb]))
                     "."
                     (fieldIdx "1"))
                    "."
                    `trans)
-                  "<|"
+                  " $ "
                   (Term.app
                    `s.fst_le_snd.trans
                    [(Term.proj
-                     («term_<|_»
+                     (Init.Core.«term_$_»
                       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                      "<|"
+                      " $ "
                       (Term.app `ha [(Term.hole "_") `hc]))
                      "."
                      (fieldIdx "2"))]))))]))]
@@ -3145,24 +3175,24 @@ variable [CompleteLattice α]
              [`t `hb `c `hc]
              []
              "=>"
-             («term_<|_»
+             (Init.Core.«term_$_»
               (Term.proj
                (Term.proj
-                («term_<|_»
+                (Init.Core.«term_$_»
                  (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                 "<|"
+                 " $ "
                  (Term.app `ha [(Term.hole "_") `hb]))
                 "."
                 (fieldIdx "1"))
                "."
                `trans)
-              "<|"
+              " $ "
               (Term.app
                `s.fst_le_snd.trans
                [(Term.proj
-                 («term_<|_»
+                 (Init.Core.«term_$_»
                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                  "<|"
+                  " $ "
                   (Term.app `ha [(Term.hole "_") `hc]))
                  "."
                  (fieldIdx "2"))]))))]))]
@@ -3177,19 +3207,25 @@ variable [CompleteLattice α]
           [`t `hb `c `hc]
           []
           "=>"
-          («term_<|_»
+          (Init.Core.«term_$_»
            (Term.proj
             (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+             (Init.Core.«term_$_»
+              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+              " $ "
+              (Term.app `ha [(Term.hole "_") `hb]))
              "."
              (fieldIdx "1"))
             "."
             `trans)
-           "<|"
+           " $ "
            (Term.app
             `s.fst_le_snd.trans
             [(Term.proj
-              («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+              (Init.Core.«term_$_»
+               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+               " $ "
+               (Term.app `ha [(Term.hole "_") `hc]))
               "."
               (fieldIdx "2"))]))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
@@ -3201,53 +3237,74 @@ variable [CompleteLattice α]
         [`t `hb `c `hc]
         []
         "=>"
-        («term_<|_»
+        (Init.Core.«term_$_»
          (Term.proj
           (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+           (Init.Core.«term_$_»
+            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+            " $ "
+            (Term.app `ha [(Term.hole "_") `hb]))
            "."
            (fieldIdx "1"))
           "."
           `trans)
-         "<|"
+         " $ "
          (Term.app
           `s.fst_le_snd.trans
           [(Term.proj
-            («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+            (Init.Core.«term_$_»
+             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+             " $ "
+             (Term.app `ha [(Term.hole "_") `hc]))
             "."
             (fieldIdx "2"))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_»
+      (Init.Core.«term_$_»
        (Term.proj
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+         (Init.Core.«term_$_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          " $ "
+          (Term.app `ha [(Term.hole "_") `hb]))
          "."
          (fieldIdx "1"))
         "."
         `trans)
-       "<|"
+       " $ "
        (Term.app
         `s.fst_le_snd.trans
         [(Term.proj
-          («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+          (Init.Core.«term_$_»
+           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+           " $ "
+           (Term.app `ha [(Term.hole "_") `hc]))
           "."
           (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `s.fst_le_snd.trans
        [(Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+         (Init.Core.«term_$_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          " $ "
+          (Term.app `ha [(Term.hole "_") `hc]))
          "."
          (fieldIdx "2"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+       (Init.Core.«term_$_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        " $ "
+        (Term.app `ha [(Term.hole "_") `hc]))
        "."
        (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+      (Init.Core.«term_$_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       " $ "
+       (Term.app `ha [(Term.hole "_") `hc]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hc])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -3263,38 +3320,47 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.coe_le_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(«term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc])) []]
+     (Init.Core.«term_$_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) " $ " (Term.app `ha [(Term.hole "_") `hc]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `s.fst_le_snd.trans
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj
        (Term.proj
-        («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+        (Init.Core.«term_$_»
+         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+         " $ "
+         (Term.app `ha [(Term.hole "_") `hb]))
         "."
         (fieldIdx "1"))
        "."
        `trans)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+       (Init.Core.«term_$_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        " $ "
+        (Term.app `ha [(Term.hole "_") `hb]))
        "."
        (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+      (Init.Core.«term_$_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       " $ "
+       (Term.app `ha [(Term.hole "_") `hb]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hb])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -3310,21 +3376,21 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.coe_le_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(«term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb])) []]
+     (Init.Core.«term_$_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) " $ " (Term.app `ha [(Term.hole "_") `hb]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -3412,37 +3478,39 @@ variable [CompleteLattice α]
            (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
            [(Term.anonymousCtor
              "⟨"
-             [(Term.app
+             [(Init.Core.«term_$_»
                `supr₂_le
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`t `hb]
-                  []
-                  "=>"
-                  (Term.proj
-                   («term_<|_»
-                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                    "<|"
-                    (Term.app `ha [(Term.hole "_") `hb]))
-                   "."
-                   (fieldIdx "1"))))])
+               " $ "
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`t `hb]
+                 []
+                 "=>"
+                 (Term.proj
+                  (Init.Core.«term_$_»
+                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                   " $ "
+                   (Term.app `ha [(Term.hole "_") `hb]))
+                  "."
+                  (fieldIdx "1")))))
               ","
-              (Term.app
+              (Init.Core.«term_$_»
                `le_infi₂
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`t `hb]
-                  []
-                  "=>"
-                  (Term.proj
-                   («term_<|_»
-                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                    "<|"
-                    (Term.app `ha [(Term.hole "_") `hb]))
-                   "."
-                   (fieldIdx "2"))))])]
+               " $ "
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`t `hb]
+                 []
+                 "=>"
+                 (Term.proj
+                  (Init.Core.«term_$_»
+                   (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                   " $ "
+                   (Term.app `ha [(Term.hole "_") `hb]))
+                  "."
+                  (fieldIdx "2")))))]
              "⟩")]))
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3452,115 +3520,135 @@ variable [CompleteLattice α]
         (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
         [(Term.anonymousCtor
           "⟨"
-          [(Term.app
+          [(Init.Core.«term_$_»
             `supr₂_le
-            [(Term.fun
-              "fun"
-              (Term.basicFun
-               [`t `hb]
-               []
-               "=>"
-               (Term.proj
-                («term_<|_»
-                 (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                 "<|"
-                 (Term.app `ha [(Term.hole "_") `hb]))
-                "."
-                (fieldIdx "1"))))])
+            " $ "
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`t `hb]
+              []
+              "=>"
+              (Term.proj
+               (Init.Core.«term_$_»
+                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                " $ "
+                (Term.app `ha [(Term.hole "_") `hb]))
+               "."
+               (fieldIdx "1")))))
            ","
-           (Term.app
+           (Init.Core.«term_$_»
             `le_infi₂
-            [(Term.fun
-              "fun"
-              (Term.basicFun
-               [`t `hb]
-               []
-               "=>"
-               (Term.proj
-                («term_<|_»
-                 (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                 "<|"
-                 (Term.app `ha [(Term.hole "_") `hb]))
-                "."
-                (fieldIdx "2"))))])]
+            " $ "
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`t `hb]
+              []
+              "=>"
+              (Term.proj
+               (Init.Core.«term_$_»
+                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                " $ "
+                (Term.app `ha [(Term.hole "_") `hb]))
+               "."
+               (fieldIdx "2")))))]
           "⟩")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
        [(Term.anonymousCtor
          "⟨"
-         [(Term.app
+         [(Init.Core.«term_$_»
            `supr₂_le
-           [(Term.fun
-             "fun"
-             (Term.basicFun
-              [`t `hb]
-              []
-              "=>"
-              (Term.proj
-               («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
-               "."
-               (fieldIdx "1"))))])
+           " $ "
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`t `hb]
+             []
+             "=>"
+             (Term.proj
+              (Init.Core.«term_$_»
+               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+               " $ "
+               (Term.app `ha [(Term.hole "_") `hb]))
+              "."
+              (fieldIdx "1")))))
           ","
-          (Term.app
+          (Init.Core.«term_$_»
            `le_infi₂
-           [(Term.fun
-             "fun"
-             (Term.basicFun
-              [`t `hb]
-              []
-              "=>"
-              (Term.proj
-               («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
-               "."
-               (fieldIdx "2"))))])]
+           " $ "
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`t `hb]
+             []
+             "=>"
+             (Term.proj
+              (Init.Core.«term_$_»
+               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+               " $ "
+               (Term.app `ha [(Term.hole "_") `hb]))
+              "."
+              (fieldIdx "2")))))]
          "⟩")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
        "⟨"
-       [(Term.app
+       [(Init.Core.«term_$_»
          `supr₂_le
-         [(Term.fun
-           "fun"
-           (Term.basicFun
-            [`t `hb]
-            []
-            "=>"
-            (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
-             "."
-             (fieldIdx "1"))))])
+         " $ "
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`t `hb]
+           []
+           "=>"
+           (Term.proj
+            (Init.Core.«term_$_»
+             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+             " $ "
+             (Term.app `ha [(Term.hole "_") `hb]))
+            "."
+            (fieldIdx "1")))))
         ","
-        (Term.app
+        (Init.Core.«term_$_»
          `le_infi₂
-         [(Term.fun
-           "fun"
-           (Term.basicFun
-            [`t `hb]
-            []
-            "=>"
-            (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
-             "."
-             (fieldIdx "2"))))])]
+         " $ "
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`t `hb]
+           []
+           "=>"
+           (Term.proj
+            (Init.Core.«term_$_»
+             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+             " $ "
+             (Term.app `ha [(Term.hole "_") `hb]))
+            "."
+            (fieldIdx "2")))))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
+      (Init.Core.«term_$_»
        `le_infi₂
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [`t `hb]
-          []
-          "=>"
-          (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
-           "."
-           (fieldIdx "2"))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+       " $ "
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [`t `hb]
+         []
+         "=>"
+         (Term.proj
+          (Init.Core.«term_$_»
+           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+           " $ "
+           (Term.app `ha [(Term.hole "_") `hb]))
+          "."
+          (fieldIdx "2")))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -3569,16 +3657,25 @@ variable [CompleteLattice α]
         []
         "=>"
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+         (Init.Core.«term_$_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          " $ "
+          (Term.app `ha [(Term.hole "_") `hb]))
          "."
          (fieldIdx "2"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+       (Init.Core.«term_$_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        " $ "
+        (Term.app `ha [(Term.hole "_") `hb]))
        "."
        (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+      (Init.Core.«term_$_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       " $ "
+       (Term.app `ha [(Term.hole "_") `hb]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hb])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -3594,17 +3691,17 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.coe_le_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(«term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb])) []]
+     (Init.Core.«term_$_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) " $ " (Term.app `ha [(Term.hole "_") `hb]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -3619,26 +3716,28 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `t
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `le_infi₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
+      (Init.Core.«term_$_»
        `supr₂_le
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [`t `hb]
-          []
-          "=>"
-          (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
-           "."
-           (fieldIdx "1"))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+       " $ "
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [`t `hb]
+         []
+         "=>"
+         (Term.proj
+          (Init.Core.«term_$_»
+           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+           " $ "
+           (Term.app `ha [(Term.hole "_") `hb]))
+          "."
+          (fieldIdx "1")))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -3647,16 +3746,25 @@ variable [CompleteLattice α]
         []
         "=>"
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+         (Init.Core.«term_$_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          " $ "
+          (Term.app `ha [(Term.hole "_") `hb]))
          "."
          (fieldIdx "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+       (Init.Core.«term_$_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        " $ "
+        (Term.app `ha [(Term.hole "_") `hb]))
        "."
        (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+      (Init.Core.«term_$_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       " $ "
+       (Term.app `ha [(Term.hole "_") `hb]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hb])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -3672,17 +3780,17 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.coe_le_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(«term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb])) []]
+     (Init.Core.«term_$_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) " $ " (Term.app `ha [(Term.hole "_") `hb]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -3697,11 +3805,11 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `t
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `supr₂_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
@@ -3973,16 +4081,16 @@ variable [CompleteLattice α]
          "if"
          (Lean.binderIdent `h)
          ":"
-         («term_∧_»
-          («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
-          "∧"
+         (Init.Logic.«term_∧_»
+          (Init.Core.«term_∉_» (Order.BoundedOrder.«term⊥» "⊥") " ∉ " `S)
+          " ∧ "
           (Term.forall
            "∀"
            [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
            []
            ","
            (Term.arrow
-            («term_∈_» (coeNotation "↑" `s) "∈" `S)
+            (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
             "→"
             (Term.forall
              "∀"
@@ -3990,9 +4098,9 @@ variable [CompleteLattice α]
              []
              ","
              (Term.arrow
-              («term_∈_» (coeNotation "↑" `t) "∈" `S)
+              (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
               "→"
-              («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))))))
+              (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))))))
          "then"
          (Term.app
           `some
@@ -4012,7 +4120,7 @@ variable [CompleteLattice α]
                     "("
                     (Std.ExtendedBinder.extBinder
                      (Lean.binderIdent `h)
-                     [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                     [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                     ")")]))
                 ", "
                 (Term.proj `s "." `fst))
@@ -4029,21 +4137,22 @@ variable [CompleteLattice α]
                     "("
                     (Std.ExtendedBinder.extBinder
                      (Lean.binderIdent `h)
-                     [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                     [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                     ")")]))
                 ", "
                 (Term.proj `s "." `snd))]
               "⟩")
              ","
-             (Term.app
+             (Init.Core.«term_$_»
               `supr₂_le
-              [(Term.fun
-                "fun"
-                (Term.basicFun
-                 [`s `hs]
-                 []
-                 "=>"
-                 («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+              " $ "
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`s `hs]
+                []
+                "=>"
+                (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))]
             "⟩")])
          "else"
          (Order.BoundedOrder.«term⊥» "⊥"))))
@@ -4052,16 +4161,16 @@ variable [CompleteLattice α]
        "if"
        (Lean.binderIdent `h)
        ":"
-       («term_∧_»
-        («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
-        "∧"
+       (Init.Logic.«term_∧_»
+        (Init.Core.«term_∉_» (Order.BoundedOrder.«term⊥» "⊥") " ∉ " `S)
+        " ∧ "
         (Term.forall
          "∀"
          [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
          []
          ","
          (Term.arrow
-          («term_∈_» (coeNotation "↑" `s) "∈" `S)
+          (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
           "→"
           (Term.forall
            "∀"
@@ -4069,9 +4178,9 @@ variable [CompleteLattice α]
            []
            ","
            (Term.arrow
-            («term_∈_» (coeNotation "↑" `t) "∈" `S)
+            (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
             "→"
-            («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))))))
+            (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))))))
        "then"
        (Term.app
         `some
@@ -4091,7 +4200,7 @@ variable [CompleteLattice α]
                   "("
                   (Std.ExtendedBinder.extBinder
                    (Lean.binderIdent `h)
-                   [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                   [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                   ")")]))
               ", "
               (Term.proj `s "." `fst))
@@ -4108,21 +4217,22 @@ variable [CompleteLattice α]
                   "("
                   (Std.ExtendedBinder.extBinder
                    (Lean.binderIdent `h)
-                   [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                   [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                   ")")]))
               ", "
               (Term.proj `s "." `snd))]
             "⟩")
            ","
-           (Term.app
+           (Init.Core.«term_$_»
             `supr₂_le
-            [(Term.fun
-              "fun"
-              (Term.basicFun
-               [`s `hs]
-               []
-               "=>"
-               («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+            " $ "
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`s `hs]
+              []
+              "=>"
+              (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))]
           "⟩")])
        "else"
        (Order.BoundedOrder.«term⊥» "⊥"))
@@ -4148,7 +4258,7 @@ variable [CompleteLattice α]
                  "("
                  (Std.ExtendedBinder.extBinder
                   (Lean.binderIdent `h)
-                  [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                  [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                  ")")]))
              ", "
              (Term.proj `s "." `fst))
@@ -4165,21 +4275,22 @@ variable [CompleteLattice α]
                  "("
                  (Std.ExtendedBinder.extBinder
                   (Lean.binderIdent `h)
-                  [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                  [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                  ")")]))
              ", "
              (Term.proj `s "." `snd))]
            "⟩")
           ","
-          (Term.app
+          (Init.Core.«term_$_»
            `supr₂_le
-           [(Term.fun
-             "fun"
-             (Term.basicFun
-              [`s `hs]
-              []
-              "=>"
-              («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+           " $ "
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`s `hs]
+             []
+             "=>"
+             (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))]
          "⟩")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
@@ -4200,7 +4311,7 @@ variable [CompleteLattice α]
                "("
                (Std.ExtendedBinder.extBinder
                 (Lean.binderIdent `h)
-                [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                ")")]))
            ", "
            (Term.proj `s "." `fst))
@@ -4217,40 +4328,44 @@ variable [CompleteLattice α]
                "("
                (Std.ExtendedBinder.extBinder
                 (Lean.binderIdent `h)
-                [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                ")")]))
            ", "
            (Term.proj `s "." `snd))]
          "⟩")
         ","
-        (Term.app
+        (Init.Core.«term_$_»
          `supr₂_le
-         [(Term.fun
-           "fun"
-           (Term.basicFun
-            [`s `hs]
-            []
-            "=>"
-            («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+         " $ "
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`s `hs]
+           []
+           "=>"
+           (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
+      (Init.Core.«term_$_»
        `supr₂_le
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [`s `hs]
-          []
-          "=>"
-          («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+       " $ "
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [`s `hs]
+         []
+         "=>"
+         (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
-       (Term.basicFun [`s `hs] [] "=>" («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))
+       (Term.basicFun
+        [`s `hs]
+        []
+        "=>"
+        (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))
+      (Init.Core.«term_$_» `le_infi₂ " $ " (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -4264,11 +4379,11 @@ variable [CompleteLattice α]
       `h
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `le_infi₂
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -4281,11 +4396,11 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `supr₂_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
        "⟨"
@@ -4299,7 +4414,9 @@ variable [CompleteLattice α]
              ")")
             (Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `h)
+              [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
              ")")]))
          ", "
          (Term.proj `s "." `fst))
@@ -4314,7 +4431,9 @@ variable [CompleteLattice α]
              ")")
             (Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `h)
+              [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
              ")")]))
          ", "
          (Term.proj `s "." `snd))]
@@ -4330,7 +4449,9 @@ variable [CompleteLattice α]
            ")")
           (Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `h)
+            [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
            ")")]))
        ", "
        (Term.proj `s "." `snd))
@@ -4342,16 +4463,16 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Std.ExtendedBinder.extBinderCollection', expected 'Std.ExtendedBinder.extBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» (coeNotation "↑" `s) "∈" `S)
+      (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (coeNotation "↑" `s)
+      (Init.Coe.«term↑_» "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1023, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `NonemptyInterval [`α])
@@ -4376,7 +4497,9 @@ variable [CompleteLattice α]
            ")")
           (Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `h)
+            [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
            ")")]))
        ", "
        (Term.proj `s "." `fst))
@@ -4388,16 +4511,16 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Std.ExtendedBinder.extBinderCollection', expected 'Std.ExtendedBinder.extBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» (coeNotation "↑" `s) "∈" `S)
+      (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (coeNotation "↑" `s)
+      (Init.Coe.«term↑_» "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1023, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `NonemptyInterval [`α])
@@ -4418,16 +4541,16 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∧_»
-       («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
-       "∧"
+      (Init.Logic.«term_∧_»
+       (Init.Core.«term_∉_» (Order.BoundedOrder.«term⊥» "⊥") " ∉ " `S)
+       " ∧ "
        (Term.forall
         "∀"
         [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
         []
         ","
         (Term.arrow
-         («term_∈_» (coeNotation "↑" `s) "∈" `S)
+         (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
          "→"
          (Term.forall
           "∀"
@@ -4435,9 +4558,9 @@ variable [CompleteLattice α]
           []
           ","
           (Term.arrow
-           («term_∈_» (coeNotation "↑" `t) "∈" `S)
+           (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
            "→"
-           («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))))))
+           (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.forall
        "∀"
@@ -4445,7 +4568,7 @@ variable [CompleteLattice α]
        []
        ","
        (Term.arrow
-        («term_∈_» (coeNotation "↑" `s) "∈" `S)
+        (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
         "→"
         (Term.forall
          "∀"
@@ -4453,12 +4576,12 @@ variable [CompleteLattice α]
          []
          ","
          (Term.arrow
-          («term_∈_» (coeNotation "↑" `t) "∈" `S)
+          (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
           "→"
-          («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd))))))
+          (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.arrow
-       («term_∈_» (coeNotation "↑" `s) "∈" `S)
+       (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
        "→"
        (Term.forall
         "∀"
@@ -4466,9 +4589,9 @@ variable [CompleteLattice α]
         []
         ","
         (Term.arrow
-         («term_∈_» (coeNotation "↑" `t) "∈" `S)
+         (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
          "→"
-         («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))))
+         (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.forall
        "∀"
@@ -4476,16 +4599,16 @@ variable [CompleteLattice α]
        []
        ","
        (Term.arrow
-        («term_∈_» (coeNotation "↑" `t) "∈" `S)
+        (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
         "→"
-        («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd))))
+        (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.arrow
-       («term_∈_» (coeNotation "↑" `t) "∈" `S)
+       (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
        "→"
-       («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd)))
+       (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_≤_» (Term.proj `s "." `fst) "≤" (Term.proj `t "." `snd))
+      (Init.Core.«term_≤_» (Term.proj `s "." `fst) " ≤ " (Term.proj `t "." `snd))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `t "." `snd)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -4497,19 +4620,19 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 25 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-      («term_∈_» (coeNotation "↑" `t) "∈" `S)
+      (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `t) " ∈ " `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (coeNotation "↑" `t)
+      (Init.Coe.«term↑_» "↑" `t)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1023, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (some 25, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'ident'
@@ -4530,16 +4653,16 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«⦃»', expected 'group'
 [PrettyPrinter.parenthesize] ...precedences are 25 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-      («term_∈_» (coeNotation "↑" `s) "∈" `S)
+      (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (coeNotation "↑" `s)
+      (Init.Coe.«term↑_» "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1023, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (some 25, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.strictImplicitBinder', expected 'ident'
@@ -4560,13 +4683,13 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«⦃»', expected 'group'
 [PrettyPrinter.parenthesize] ...precedences are 35 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 35, term))
-      («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
+      (Init.Core.«term_∉_» (Order.BoundedOrder.«term⊥» "⊥") " ∉ " `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
 [PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Order.BoundedOrder.«term⊥» "⊥")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 36 >? 50, (some 50, term) <=? (some 35, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 35, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -4627,37 +4750,39 @@ variable [CompleteLattice α]
               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
               [(Term.anonymousCtor
                 "⟨"
-                [(Term.app
+                [(Init.Core.«term_$_»
                   `le_infi₂
-                  [(Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`c `hc]
-                     []
-                     "=>"
-                     (Term.proj
-                      («term_<|_»
-                       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                       "<|"
-                       (Term.app `ha [(Term.hole "_") `hc]))
-                      "."
-                      (fieldIdx "1"))))])
+                  " $ "
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`c `hc]
+                    []
+                    "=>"
+                    (Term.proj
+                     (Init.Core.«term_$_»
+                      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                      " $ "
+                      (Term.app `ha [(Term.hole "_") `hc]))
+                     "."
+                     (fieldIdx "1")))))
                  ","
-                 (Term.app
+                 (Init.Core.«term_$_»
                   `supr₂_le
-                  [(Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`c `hc]
-                     []
-                     "=>"
-                     (Term.proj
-                      («term_<|_»
-                       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                       "<|"
-                       (Term.app `ha [(Term.hole "_") `hc]))
-                      "."
-                      (fieldIdx "2"))))])]
+                  " $ "
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`c `hc]
+                    []
+                    "=>"
+                    (Term.proj
+                     (Init.Core.«term_$_»
+                      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                      " $ "
+                      (Term.app `ha [(Term.hole "_") `hc]))
+                     "."
+                     (fieldIdx "2")))))]
                 "⟩")]))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
@@ -4702,37 +4827,39 @@ variable [CompleteLattice α]
             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
             [(Term.anonymousCtor
               "⟨"
-              [(Term.app
+              [(Init.Core.«term_$_»
                 `le_infi₂
-                [(Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`c `hc]
-                   []
-                   "=>"
-                   (Term.proj
-                    («term_<|_»
-                     (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                     "<|"
-                     (Term.app `ha [(Term.hole "_") `hc]))
-                    "."
-                    (fieldIdx "1"))))])
+                " $ "
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`c `hc]
+                  []
+                  "=>"
+                  (Term.proj
+                   (Init.Core.«term_$_»
+                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                    " $ "
+                    (Term.app `ha [(Term.hole "_") `hc]))
+                   "."
+                   (fieldIdx "1")))))
                ","
-               (Term.app
+               (Init.Core.«term_$_»
                 `supr₂_le
-                [(Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`c `hc]
-                   []
-                   "=>"
-                   (Term.proj
-                    («term_<|_»
-                     (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                     "<|"
-                     (Term.app `ha [(Term.hole "_") `hc]))
-                    "."
-                    (fieldIdx "2"))))])]
+                " $ "
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`c `hc]
+                  []
+                  "=>"
+                  (Term.proj
+                   (Init.Core.«term_$_»
+                    (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                    " $ "
+                    (Term.app `ha [(Term.hole "_") `hc]))
+                   "."
+                   (fieldIdx "2")))))]
               "⟩")]))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4742,115 +4869,135 @@ variable [CompleteLattice α]
         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
         [(Term.anonymousCtor
           "⟨"
-          [(Term.app
+          [(Init.Core.«term_$_»
             `le_infi₂
-            [(Term.fun
-              "fun"
-              (Term.basicFun
-               [`c `hc]
-               []
-               "=>"
-               (Term.proj
-                («term_<|_»
-                 (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                 "<|"
-                 (Term.app `ha [(Term.hole "_") `hc]))
-                "."
-                (fieldIdx "1"))))])
+            " $ "
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`c `hc]
+              []
+              "=>"
+              (Term.proj
+               (Init.Core.«term_$_»
+                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                " $ "
+                (Term.app `ha [(Term.hole "_") `hc]))
+               "."
+               (fieldIdx "1")))))
            ","
-           (Term.app
+           (Init.Core.«term_$_»
             `supr₂_le
-            [(Term.fun
-              "fun"
-              (Term.basicFun
-               [`c `hc]
-               []
-               "=>"
-               (Term.proj
-                («term_<|_»
-                 (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
-                 "<|"
-                 (Term.app `ha [(Term.hole "_") `hc]))
-                "."
-                (fieldIdx "2"))))])]
+            " $ "
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`c `hc]
+              []
+              "=>"
+              (Term.proj
+               (Init.Core.«term_$_»
+                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                " $ "
+                (Term.app `ha [(Term.hole "_") `hc]))
+               "."
+               (fieldIdx "2")))))]
           "⟩")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
        [(Term.anonymousCtor
          "⟨"
-         [(Term.app
+         [(Init.Core.«term_$_»
            `le_infi₂
-           [(Term.fun
-             "fun"
-             (Term.basicFun
-              [`c `hc]
-              []
-              "=>"
-              (Term.proj
-               («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
-               "."
-               (fieldIdx "1"))))])
+           " $ "
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`c `hc]
+             []
+             "=>"
+             (Term.proj
+              (Init.Core.«term_$_»
+               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+               " $ "
+               (Term.app `ha [(Term.hole "_") `hc]))
+              "."
+              (fieldIdx "1")))))
           ","
-          (Term.app
+          (Init.Core.«term_$_»
            `supr₂_le
-           [(Term.fun
-             "fun"
-             (Term.basicFun
-              [`c `hc]
-              []
-              "=>"
-              (Term.proj
-               («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
-               "."
-               (fieldIdx "2"))))])]
+           " $ "
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`c `hc]
+             []
+             "=>"
+             (Term.proj
+              (Init.Core.«term_$_»
+               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+               " $ "
+               (Term.app `ha [(Term.hole "_") `hc]))
+              "."
+              (fieldIdx "2")))))]
          "⟩")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
        "⟨"
-       [(Term.app
+       [(Init.Core.«term_$_»
          `le_infi₂
-         [(Term.fun
-           "fun"
-           (Term.basicFun
-            [`c `hc]
-            []
-            "=>"
-            (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
-             "."
-             (fieldIdx "1"))))])
+         " $ "
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`c `hc]
+           []
+           "=>"
+           (Term.proj
+            (Init.Core.«term_$_»
+             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+             " $ "
+             (Term.app `ha [(Term.hole "_") `hc]))
+            "."
+            (fieldIdx "1")))))
         ","
-        (Term.app
+        (Init.Core.«term_$_»
          `supr₂_le
-         [(Term.fun
-           "fun"
-           (Term.basicFun
-            [`c `hc]
-            []
-            "=>"
-            (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
-             "."
-             (fieldIdx "2"))))])]
+         " $ "
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`c `hc]
+           []
+           "=>"
+           (Term.proj
+            (Init.Core.«term_$_»
+             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+             " $ "
+             (Term.app `ha [(Term.hole "_") `hc]))
+            "."
+            (fieldIdx "2")))))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
+      (Init.Core.«term_$_»
        `supr₂_le
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [`c `hc]
-          []
-          "=>"
-          (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
-           "."
-           (fieldIdx "2"))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+       " $ "
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [`c `hc]
+         []
+         "=>"
+         (Term.proj
+          (Init.Core.«term_$_»
+           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+           " $ "
+           (Term.app `ha [(Term.hole "_") `hc]))
+          "."
+          (fieldIdx "2")))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -4859,16 +5006,25 @@ variable [CompleteLattice α]
         []
         "=>"
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+         (Init.Core.«term_$_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          " $ "
+          (Term.app `ha [(Term.hole "_") `hc]))
          "."
          (fieldIdx "2"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+       (Init.Core.«term_$_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        " $ "
+        (Term.app `ha [(Term.hole "_") `hc]))
        "."
        (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+      (Init.Core.«term_$_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       " $ "
+       (Term.app `ha [(Term.hole "_") `hc]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hc])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -4884,17 +5040,17 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.coe_le_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(«term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc])) []]
+     (Init.Core.«term_$_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) " $ " (Term.app `ha [(Term.hole "_") `hc]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -4909,26 +5065,28 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `supr₂_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
+      (Init.Core.«term_$_»
        `le_infi₂
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [`c `hc]
-          []
-          "=>"
-          (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
-           "."
-           (fieldIdx "1"))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+       " $ "
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [`c `hc]
+         []
+         "=>"
+         (Term.proj
+          (Init.Core.«term_$_»
+           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+           " $ "
+           (Term.app `ha [(Term.hole "_") `hc]))
+          "."
+          (fieldIdx "1")))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -4937,16 +5095,25 @@ variable [CompleteLattice α]
         []
         "=>"
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+         (Init.Core.«term_$_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          " $ "
+          (Term.app `ha [(Term.hole "_") `hc]))
          "."
          (fieldIdx "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+       (Init.Core.«term_$_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        " $ "
+        (Term.app `ha [(Term.hole "_") `hc]))
        "."
        (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+      (Init.Core.«term_$_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       " $ "
+       (Term.app `ha [(Term.hole "_") `hc]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hc])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -4962,17 +5129,17 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.coe_le_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(«term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc])) []]
+     (Init.Core.«term_$_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) " $ " (Term.app `ha [(Term.hole "_") `hc]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -4987,11 +5154,11 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `le_infi₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
@@ -5029,7 +5196,7 @@ variable [CompleteLattice α]
       `ha
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `ha [(Term.hole "_") `hs]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `ha [(Term.hole "_") `hs]) ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -5298,7 +5465,7 @@ variable [CompleteLattice α]
       `h
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `h [`ha]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `h [`ha]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -5337,7 +5504,7 @@ variable [CompleteLattice α]
          "if"
          (Lean.binderIdent `h)
          ":"
-         («term_⊆_» `S "⊆" («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
+         (Init.Core.«term_⊆_» `S " ⊆ " («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
          "then"
          (Order.BoundedOrder.«term⊥» "⊥")
          "else"
@@ -5359,7 +5526,7 @@ variable [CompleteLattice α]
                     "("
                     (Std.ExtendedBinder.extBinder
                      (Lean.binderIdent `h)
-                     [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                     [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                     ")")]))
                 ", "
                 (Term.proj `s "." `fst))
@@ -5376,7 +5543,7 @@ variable [CompleteLattice α]
                     "("
                     (Std.ExtendedBinder.extBinder
                      (Lean.binderIdent `h)
-                     [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                     [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                     ")")]))
                 ", "
                 (Term.proj `s "." `snd))]
@@ -5417,7 +5584,7 @@ variable [CompleteLattice α]
        "if"
        (Lean.binderIdent `h)
        ":"
-       («term_⊆_» `S "⊆" («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
+       (Init.Core.«term_⊆_» `S " ⊆ " («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
        "then"
        (Order.BoundedOrder.«term⊥» "⊥")
        "else"
@@ -5439,7 +5606,7 @@ variable [CompleteLattice α]
                   "("
                   (Std.ExtendedBinder.extBinder
                    (Lean.binderIdent `h)
-                   [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                   [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                   ")")]))
               ", "
               (Term.proj `s "." `fst))
@@ -5456,7 +5623,7 @@ variable [CompleteLattice α]
                   "("
                   (Std.ExtendedBinder.extBinder
                    (Lean.binderIdent `h)
-                   [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                   [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                   ")")]))
               ", "
               (Term.proj `s "." `snd))]
@@ -5511,7 +5678,7 @@ variable [CompleteLattice α]
                  "("
                  (Std.ExtendedBinder.extBinder
                   (Lean.binderIdent `h)
-                  [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                  [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                  ")")]))
              ", "
              (Term.proj `s "." `fst))
@@ -5528,7 +5695,7 @@ variable [CompleteLattice α]
                  "("
                  (Std.ExtendedBinder.extBinder
                   (Lean.binderIdent `h)
-                  [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                  [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                  ")")]))
              ", "
              (Term.proj `s "." `snd))]
@@ -5583,7 +5750,7 @@ variable [CompleteLattice α]
                "("
                (Std.ExtendedBinder.extBinder
                 (Lean.binderIdent `h)
-                [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                ")")]))
            ", "
            (Term.proj `s "." `fst))
@@ -5600,7 +5767,7 @@ variable [CompleteLattice α]
                "("
                (Std.ExtendedBinder.extBinder
                 (Lean.binderIdent `h)
-                [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+                [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
                ")")]))
            ", "
            (Term.proj `s "." `snd))]
@@ -5694,7 +5861,7 @@ variable [CompleteLattice α]
       `le_supr₂_of_le
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd]) ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -5773,7 +5940,9 @@ variable [CompleteLattice α]
              ")")
             (Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `h)
+              [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
              ")")]))
          ", "
          (Term.proj `s "." `fst))
@@ -5788,7 +5957,9 @@ variable [CompleteLattice α]
              ")")
             (Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `h)
+              [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
              ")")]))
          ", "
          (Term.proj `s "." `snd))]
@@ -5804,7 +5975,9 @@ variable [CompleteLattice α]
            ")")
           (Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `h)
+            [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
            ")")]))
        ", "
        (Term.proj `s "." `snd))
@@ -5816,16 +5989,16 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Std.ExtendedBinder.extBinderCollection', expected 'Std.ExtendedBinder.extBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» (coeNotation "↑" `s) "∈" `S)
+      (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (coeNotation "↑" `s)
+      (Init.Coe.«term↑_» "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1023, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `NonemptyInterval [`α])
@@ -5850,7 +6023,9 @@ variable [CompleteLattice α]
            ")")
           (Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `h)
+            [(group ":" (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S))])
            ")")]))
        ", "
        (Term.proj `s "." `fst))
@@ -5862,16 +6037,16 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Std.ExtendedBinder.extBinderCollection', expected 'Std.ExtendedBinder.extBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» (coeNotation "↑" `s) "∈" `S)
+      (Init.Core.«term_∈_» (Init.Coe.«term↑_» "↑" `s) " ∈ " `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (coeNotation "↑" `s)
+      (Init.Coe.«term↑_» "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1023, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `NonemptyInterval [`α])
@@ -5895,7 +6070,7 @@ variable [CompleteLattice α]
       (Order.BoundedOrder.«term⊥» "⊥")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_⊆_» `S "⊆" («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
+      (Init.Core.«term_⊆_» `S " ⊆ " («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5904,7 +6079,7 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -5993,9 +6168,9 @@ noncomputable
                           exact
                             WithBot.coe_le_coe . 2
                               ⟨
-                                le_infi₂ fun c hc => WithBot.coe_le_coe . 1 <| ha _ hc . 1
+                                le_infi₂ $ fun c hc => WithBot.coe_le_coe . 1 $ ha _ hc . 1
                                   ,
-                                  supr₂_le fun c hc => WithBot.coe_le_coe . 1 <| ha _ hc . 2
+                                  supr₂_le $ fun c hc => WithBot.coe_le_coe . 1 $ ha _ hc . 2
                                 ⟩
                 ,
                 inf
@@ -6021,7 +6196,7 @@ noncomputable
                                   ⨅ ( s : NonemptyInterval α ) ( h : ↑ s ∈ S ) , s . snd
                                 ⟩
                               ,
-                              supr₂_le fun s hs => le_infi₂ <| h . 2 hs
+                              supr₂_le $ fun s hs => le_infi₂ $ h . 2 hs
                             ⟩
                         else
                         ⊥
@@ -6051,9 +6226,9 @@ noncomputable
                             exact
                               WithBot.some_le_some . 2
                                 ⟨
-                                  supr₂_le fun t hb => WithBot.coe_le_coe . 1 <| ha _ hb . 1
+                                  supr₂_le $ fun t hb => WithBot.coe_le_coe . 1 $ ha _ hb . 1
                                     ,
-                                    le_infi₂ fun t hb => WithBot.coe_le_coe . 1 <| ha _ hb . 2
+                                    le_infi₂ $ fun t hb => WithBot.coe_le_coe . 1 $ ha _ hb . 2
                                   ⟩
                           rw [ not_and_or , not_not ] at h
                           cases h
@@ -6063,9 +6238,9 @@ noncomputable
                               fun
                                 t hb c hc
                                   =>
-                                  WithBot.coe_le_coe . 1 <| ha _ hb . 1 . trans
-                                    <|
-                                    s.fst_le_snd.trans WithBot.coe_le_coe . 1 <| ha _ hc . 2
+                                  WithBot.coe_le_coe . 1 $ ha _ hb . 1 . trans
+                                    $
+                                    s.fst_le_snd.trans WithBot.coe_le_coe . 1 $ ha _ hc . 2
               }
 
 @[simp, norm_cast]

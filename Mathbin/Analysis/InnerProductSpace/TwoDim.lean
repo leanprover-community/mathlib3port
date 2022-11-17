@@ -107,7 +107,6 @@ theorem area_form_apply_self (x : E) : ω x x = 0 := by
     
 #align orientation.area_form_apply_self Orientation.area_form_apply_self
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem area_form_swap (x y : E) : ω x y = -ω y x := by
   simp only [area_form_to_volume_form]
   convert o.volume_form.map_swap ![y, x] (_ : (0 : Fin 2) ≠ 1)
@@ -142,8 +141,6 @@ theorem area_form_le (x y : E) : ω x y ≤ ∥x∥ * ∥y∥ := by
   simpa [area_form_to_volume_form, Fin.prod_univ_succ] using o.volume_form_apply_le ![x, y]
 #align orientation.area_form_le Orientation.area_form_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem abs_area_form_of_orthogonal {x y : E} (h : ⟪x, y⟫ = 0) : |ω x y| = ∥x∥ * ∥y∥ := by
   rw [o.area_form_to_volume_form, o.abs_volume_form_apply_of_pairwise_orthogonal]
   · simp [Fin.prod_univ_succ]
@@ -160,7 +157,6 @@ theorem abs_area_form_of_orthogonal {x y : E} (h : ⟪x, y⟫ = 0) : |ω x y| = 
     
 #align orientation.abs_area_form_of_orthogonal Orientation.abs_area_form_of_orthogonal
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem area_form_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F) (x y : F) :
     (Orientation.map (Fin 2) φ.toLinearEquiv o).areaForm x y = o.areaForm (φ.symm x) (φ.symm y) := by
   have : φ.symm ∘ ![x, y] = ![φ.symm x, φ.symm y] := by
@@ -333,7 +329,7 @@ theorem right_angle_rotation_neg_orientation (x : E) : (-o).rightAngleRotation x
 @[simp]
 theorem right_angle_rotation_trans_neg_orientation :
     (-o).rightAngleRotation = o.rightAngleRotation.trans (LinearIsometryEquiv.neg ℝ) :=
-  LinearIsometryEquiv.ext <| o.right_angle_rotation_neg_orientation
+  LinearIsometryEquiv.ext $ o.right_angle_rotation_neg_orientation
 #align orientation.right_angle_rotation_trans_neg_orientation Orientation.right_angle_rotation_trans_neg_orientation
 
 theorem right_angle_rotation_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F)
@@ -367,19 +363,16 @@ theorem linear_isometry_equiv_comp_right_angle_rotation (φ : E ≃ₗᵢ[ℝ] E
 
 theorem right_angle_rotation_map' {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F) :
     (Orientation.map (Fin 2) φ.toLinearEquiv o).rightAngleRotation = (φ.symm.trans o.rightAngleRotation).trans φ :=
-  LinearIsometryEquiv.ext <| o.right_angle_rotation_map φ
+  LinearIsometryEquiv.ext $ o.right_angle_rotation_map φ
 #align orientation.right_angle_rotation_map' Orientation.right_angle_rotation_map'
 
 /-- `J` commutes with any positively-oriented isometric automorphism. -/
 theorem linear_isometry_equiv_comp_right_angle_rotation' (φ : E ≃ₗᵢ[ℝ] E) (hφ : 0 < (φ.toLinearEquiv : E →ₗ[ℝ] E).det) :
     LinearIsometryEquiv.trans J φ = φ.trans J :=
-  LinearIsometryEquiv.ext <| o.linear_isometry_equiv_comp_right_angle_rotation φ hφ
+  LinearIsometryEquiv.ext $ o.linear_isometry_equiv_comp_right_angle_rotation φ hφ
 #align
   orientation.linear_isometry_equiv_comp_right_angle_rotation' Orientation.linear_isometry_equiv_comp_right_angle_rotation'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- For a nonzero vector `x` in an oriented two-dimensional real inner product space `E`,
 `![x, J x]` forms an (orthogonal) basis for `E`. -/
 def basisRightAngleRotation (x : E) (hx : x ≠ 0) : Basis (Fin 2) ℝ E :=
@@ -404,7 +397,6 @@ theorem coe_basis_right_angle_rotation (x : E) (hx : x ≠ 0) : ⇑(o.basisRight
   coe_basis_of_linear_independent_of_card_eq_finrank _ _
 #align orientation.coe_basis_right_angle_rotation Orientation.coe_basis_right_angle_rotation
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ∥a∥ ^ 2 * ⟪x, y⟫`. (See
 `orientation.inner_mul_inner_add_area_form_mul_area_form` for the "applied" form.)-/
 theorem inner_mul_inner_add_area_form_mul_area_form' (a x : E) :
@@ -437,7 +429,6 @@ theorem inner_sq_add_area_form_sq (a b : E) : ⟪a, b⟫ ^ 2 + ω a b ^ 2 = ∥a
   simpa [sq, real_inner_self_eq_norm_sq] using o.inner_mul_inner_add_area_form_mul_area_form a b b
 #align orientation.inner_sq_add_area_form_sq Orientation.inner_sq_add_area_form_sq
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ω a y - ω a x * ⟪a, y⟫ = ∥a∥ ^ 2 * ω x y`. (See
 `orientation.inner_mul_area_form_sub` for the "applied" form.) -/
 theorem inner_mul_area_form_sub' (a x : E) : ⟪a, x⟫ • ω a - ω a x • @innerₛₗ ℝ _ _ _ a = ∥a∥ ^ 2 • ω x := by
@@ -531,13 +522,13 @@ theorem kahler_right_angle_rotation_left (x y : E) : o.kahler (J x) y = -Complex
 theorem kahler_right_angle_rotation_right (x y : E) : o.kahler x (J y) = Complex.i * o.kahler x y := by
   simp only [o.area_form_right_angle_rotation_right, o.inner_right_angle_rotation_right, o.kahler_apply_apply,
     Complex.of_real_neg, Complex.real_smul]
-  linear_combination-ω x y * Complex.I_sq
+  linear_combination -ω x y * Complex.I_sq
 #align orientation.kahler_right_angle_rotation_right Orientation.kahler_right_angle_rotation_right
 
 @[simp]
 theorem kahler_comp_right_angle_rotation (x y : E) : o.kahler (J x) (J y) = o.kahler x y := by
   simp only [kahler_right_angle_rotation_left, kahler_right_angle_rotation_right]
-  linear_combination-o.kahler x y * Complex.I_sq
+  linear_combination -o.kahler x y * Complex.I_sq
 #align orientation.kahler_comp_right_angle_rotation Orientation.kahler_comp_right_angle_rotation
 
 @[simp]

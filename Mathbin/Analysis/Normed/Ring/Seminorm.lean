@@ -63,14 +63,14 @@ attribute [nolint doc_blame]
 /-- `ring_seminorm_class F α` states that `F` is a type of seminorms on the ring `α`.
 
 You should extend this class when you extend `ring_seminorm`. -/
-class RingSeminormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends
+class RingSeminormClass (F : Type _) (α : outParam $ Type _) [NonUnitalNonAssocRing α] extends
   AddGroupSeminormClass F α, SubmultiplicativeHomClass F α ℝ
 #align ring_seminorm_class RingSeminormClass
 
 /-- `ring_norm_class F α` states that `F` is a type of norms on the ring `α`.
 
 You should extend this class when you extend `ring_norm`. -/
-class RingNormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends RingSeminormClass F α,
+class RingNormClass (F : Type _) (α : outParam $ Type _) [NonUnitalNonAssocRing α] extends RingSeminormClass F α,
   AddGroupNormClass F α
 #align ring_norm_class RingNormClass
 
@@ -78,14 +78,14 @@ class RingNormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRin
 `α`.
 
 You should extend this class when you extend `mul_ring_seminorm`. -/
-class MulRingSeminormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends AddGroupSeminormClass F α,
+class MulRingSeminormClass (F : Type _) (α : outParam $ Type _) [NonAssocRing α] extends AddGroupSeminormClass F α,
   MonoidWithZeroHomClass F α ℝ
 #align mul_ring_seminorm_class MulRingSeminormClass
 
 /-- `mul_ring_norm_class F α` states that `F` is a type of multiplicative norms on the ring `α`.
 
 You should extend this class when you extend `mul_ring_norm`. -/
-class MulRingNormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends MulRingSeminormClass F α,
+class MulRingNormClass (F : Type _) (α : outParam $ Type _) [NonAssocRing α] extends MulRingSeminormClass F α,
   AddGroupNormClass F α
 #align mul_ring_norm_class MulRingNormClass
 
@@ -179,7 +179,7 @@ theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :
           exact one_ne_zero⟩,
       fun h => _⟩
   obtain hp0 | hp0 := (map_nonneg p (1 : R)).eq_or_gt
-  · cases h (ext fun x => (map_nonneg _ _).antisymm' _)
+  · cases h (ext $ fun x => (map_nonneg _ _).antisymm' _)
     simpa only [hp0, mul_one, mul_zero] using map_mul_le_mul p x 1
     
   · refine' hp.antisymm ((le_mul_iff_one_le_left hp0).1 _)

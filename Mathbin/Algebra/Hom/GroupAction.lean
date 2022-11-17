@@ -81,7 +81,7 @@ notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
 scalar multiplication by `M`.
 
 You should extend this class when you extend `mul_action_hom`. -/
-class SmulHomClass (F : Type _) (M X Y : outParam <| Type _) [HasSmul M X] [HasSmul M Y] extends
+class SmulHomClass (F : Type _) (M X Y : outParam $ Type _) [HasSmul M X] [HasSmul M Y] extends
   FunLike F X fun _ => Y where
   map_smul : ∀ (f : F) (c : M) (x : X), f (c • x) = c • f x
 #align smul_hom_class SmulHomClass
@@ -152,12 +152,12 @@ theorem comp_apply (g : Y →[M'] Z) (f : X →[M'] Y) (x : X) : g.comp f x = g 
 
 @[simp]
 theorem id_comp (f : X →[M'] Y) : (MulActionHom.id M').comp f = f :=
-  ext fun x => by rw [comp_apply, id_apply]
+  ext $ fun x => by rw [comp_apply, id_apply]
 #align mul_action_hom.id_comp MulActionHom.id_comp
 
 @[simp]
 theorem comp_id (f : X →[M'] Y) : f.comp (MulActionHom.id M') = f :=
-  ext fun x => by rw [comp_apply, id_apply]
+  ext $ fun x => by rw [comp_apply, id_apply]
 #align mul_action_hom.comp_id MulActionHom.comp_id
 
 variable {A B}
@@ -193,7 +193,7 @@ notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 the additive monoid structure and scalar multiplication by `M`.
 
 You should extend this class when you extend `distrib_mul_action_hom`. -/
-class DistribMulActionHomClass (F : Type _) (M A B : outParam <| Type _) [Monoid M] [AddMonoid A] [AddMonoid B]
+class DistribMulActionHomClass (F : Type _) (M A B : outParam $ Type _) [Monoid M] [AddMonoid A] [AddMonoid B]
   [DistribMulAction M A] [DistribMulAction M B] extends SmulHomClass F M A B, AddMonoidHomClass F A B
 #align distrib_mul_action_hom_class DistribMulActionHomClass
 
@@ -333,12 +333,12 @@ theorem comp_apply (g : B →+[M] C) (f : A →+[M] B) (x : A) : g.comp f x = g 
 
 @[simp]
 theorem id_comp (f : A →+[M] B) : (DistribMulActionHom.id M).comp f = f :=
-  ext fun x => by rw [comp_apply, id_apply]
+  ext $ fun x => by rw [comp_apply, id_apply]
 #align distrib_mul_action_hom.id_comp DistribMulActionHom.id_comp
 
 @[simp]
 theorem comp_id (f : A →+[M] B) : f.comp (DistribMulActionHom.id M) = f :=
-  ext fun x => by rw [comp_apply, id_apply]
+  ext $ fun x => by rw [comp_apply, id_apply]
 #align distrib_mul_action_hom.comp_id DistribMulActionHom.comp_id
 
 /-- The inverse of a bijective `distrib_mul_action_hom` is a `distrib_mul_action_hom`. -/
@@ -383,7 +383,7 @@ notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 the ring structure and scalar multiplication by `M`.
 
 You should extend this class when you extend `mul_semiring_action_hom`. -/
-class MulSemiringActionHomClass (F : Type _) (M R S : outParam <| Type _) [Monoid M] [Semiring R] [Semiring S]
+class MulSemiringActionHomClass (F : Type _) (M R S : outParam $ Type _) [Monoid M] [Semiring R] [Semiring S]
   [DistribMulAction M R] [DistribMulAction M S] extends DistribMulActionHomClass F M R S, RingHomClass F R S
 #align mul_semiring_action_hom_class MulSemiringActionHomClass
 
@@ -487,12 +487,12 @@ theorem comp_apply (g : S →+*[M] T) (f : R →+*[M] S) (x : R) : g.comp f x = 
 
 @[simp]
 theorem id_comp (f : R →+*[M] S) : (MulSemiringActionHom.id M).comp f = f :=
-  ext fun x => by rw [comp_apply, id_apply]
+  ext $ fun x => by rw [comp_apply, id_apply]
 #align mul_semiring_action_hom.id_comp MulSemiringActionHom.id_comp
 
 @[simp]
 theorem comp_id (f : R →+*[M] S) : f.comp (MulSemiringActionHom.id M) = f :=
-  ext fun x => by rw [comp_apply, id_apply]
+  ext $ fun x => by rw [comp_apply, id_apply]
 #align mul_semiring_action_hom.comp_id MulSemiringActionHom.comp_id
 
 end MulSemiringActionHom

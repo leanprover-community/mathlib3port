@@ -44,7 +44,7 @@ namespace Filter
 `s : set α`. A set `s : set (filter α)` is open if and only if it is a union of a family of these
 basic open sets, see `filter.is_open_iff`. -/
 instance : TopologicalSpace (Filter α) :=
-  generate_from <| range <| Iic ∘ 𝓟
+  generate_from $ range $ Iic ∘ 𝓟
 
 theorem is_open_Iic_principal {s : Set α} : IsOpen (iic (𝓟 s)) :=
   GenerateOpen.basic _ (mem_range_self _)
@@ -58,16 +58,16 @@ theorem is_topological_basis_Iic_principal : IsTopologicalBasis (range (Iic ∘ 
   { exists_subset_inter := by
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ l hl
       exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩,
-    sUnion_eq := sUnion_eq_univ_iff.2 fun l => ⟨iic ⊤, ⟨univ, congr_arg iic principal_univ⟩, le_top⟩,
+    sUnion_eq := sUnion_eq_univ_iff.2 $ fun l => ⟨iic ⊤, ⟨univ, congr_arg iic principal_univ⟩, le_top⟩,
     eq_generate_from := rfl }
 #align filter.is_topological_basis_Iic_principal Filter.is_topological_basis_Iic_principal
 
 theorem is_open_iff {s : Set (Filter α)} : IsOpen s ↔ ∃ T : Set (Set α), s = ⋃ t ∈ T, iic (𝓟 t) :=
-  is_topological_basis_Iic_principal.open_iff_eq_sUnion.trans <| by simp only [exists_subset_range_iff, sUnion_image]
+  is_topological_basis_Iic_principal.open_iff_eq_sUnion.trans $ by simp only [exists_subset_range_iff, sUnion_image]
 #align filter.is_open_iff Filter.is_open_iff
 
 theorem nhds_eq (l : Filter α) : 𝓝 l = l.lift' (Iic ∘ 𝓟) :=
-  nhds_generate_from.trans <| by
+  nhds_generate_from.trans $ by
     simp only [mem_set_of_eq, and_comm' (l ∈ _), infi_and, infi_range, Filter.lift', Filter.lift, (· ∘ ·), mem_Iic,
       le_principal_iff]
 #align filter.nhds_eq Filter.nhds_eq
@@ -89,7 +89,7 @@ theorem HasBasis.nhds {l : Filter α} {p : ι → Prop} {s : ι → Set α} (h :
 /-- Neighborhoods of a countably generated filter is a countably generated filter. -/
 instance {l : Filter α} [IsCountablyGenerated l] : IsCountablyGenerated (𝓝 l) :=
   let ⟨b, hb⟩ := l.exists_antitone_basis
-  has_countable_basis.is_countably_generated <| ⟨hb.nhds, Set.to_countable _⟩
+  has_countable_basis.is_countably_generated $ ⟨hb.nhds, Set.to_countable _⟩
 
 theorem HasBasis.nhds' {l : Filter α} {p : ι → Prop} {s : ι → Set α} (h : HasBasis l p s) :
     HasBasis (𝓝 l) p fun i => { l' | s i ∈ l' } := by simpa only [Iic_principal] using h.nhds
@@ -195,8 +195,8 @@ theorem nhds_nhds (x : X) : 𝓝 (𝓝 x) = ⨅ (s : Set X) (hs : IsOpen s) (hx 
 #align filter.nhds_nhds Filter.nhds_nhds
 
 theorem inducing_nhds : Inducing (𝓝 : X → Filter X) :=
-  inducing_iff_nhds.2 fun x =>
-    (nhds_def' _).trans <| by
+  inducing_iff_nhds.2 $ fun x =>
+    (nhds_def' _).trans $ by
       simp (config := { contextual := true }) only [nhds_nhds, comap_infi, comap_principal, Iic_principal,
         preimage_set_of_eq, ← mem_interior_iff_mem_nhds, set_of_mem_eq, IsOpen.interior_eq]
 #align filter.inducing_nhds Filter.inducing_nhds

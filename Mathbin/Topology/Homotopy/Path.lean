@@ -305,7 +305,7 @@ protected def Quotient (x₀ x₁ : X) :=
 attribute [local instance] homotopic.setoid
 
 instance : Inhabited (Homotopic.Quotient () ()) :=
-  ⟨Quotient.mk'' <| Path.refl ()⟩
+  ⟨Quotient.mk'' $ Path.refl ()⟩
 
 /-- The composition of path homotopy classes. This is `path.trans` descended to the quotient. -/
 def Quotient.comp (P₀ : Path.Homotopic.Quotient x₀ x₁) (P₁ : Path.Homotopic.Quotient x₁ x₂) :
@@ -327,7 +327,7 @@ theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.Continuou
   rfl
 #align path.homotopic.map_lift Path.Homotopic.map_lift
 
-theorem hpath_hext {p₁ : Path x₀ x₁} {p₂ : Path x₂ x₃} (hp : ∀ t, p₁ t = p₂ t) : HEq ⟦p₁⟧ ⟦p₂⟧ := by
+theorem hpath_hext {p₁ : Path x₀ x₁} {p₂ : Path x₂ x₃} (hp : ∀ t, p₁ t = p₂ t) : ⟦p₁⟧ == ⟦p₂⟧ := by
   obtain rfl : x₀ = x₂ := by convert hp 0 <;> simp
   obtain rfl : x₁ = x₃ := by convert hp 1 <;> simp
   rw [heq_iff_eq]

@@ -53,11 +53,11 @@ divides `n`. This set is expressed by filtering `Ico 1 b` where `b` is any bound
 theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (hb : log m n < b) :
     multiplicity m n = ↑((Finset.ico 1 b).filter fun i => m ^ i ∣ n).card :=
   calc
-    multiplicity m n = ↑(ico 1 <| (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩) + 1).card := by simp
+    multiplicity m n = ↑(ico 1 $ (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩) + 1).card := by simp
     _ = ↑((Finset.ico 1 b).filter fun i => m ^ i ∣ n).card :=
-      congr_arg coe <|
-        congr_arg card <|
-          Finset.ext fun i => by
+      congr_arg coe $
+        congr_arg card $
+          Finset.ext $ fun i => by
             rw [mem_filter, mem_Ico, mem_Ico, lt_succ_iff, ← @PartEnat.coe_le_coe i, PartEnat.coe_get, ←
               pow_dvd_iff_le_multiplicity, and_right_comm]
             refine' (and_iff_left_of_imp fun h => _).symm
@@ -68,7 +68,7 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
                 
               
             exact
-              ((pow_le_iff_le_log (succ_lt_succ <| Nat.pos_of_ne_zero <| succ_ne_succ.1 hm) hn).1 <|
+              ((pow_le_iff_le_log (succ_lt_succ $ Nat.pos_of_ne_zero $ succ_ne_succ.1 hm) hn).1 $
                     le_of_dvd hn h.2).trans_lt
                 hb
     
@@ -81,11 +81,11 @@ theorem multiplicity_one {p : ℕ} (hp : p.Prime) : multiplicity p 1 = 0 :=
 #align nat.prime.multiplicity_one Nat.Prime.multiplicity_one
 
 theorem multiplicity_mul {p m n : ℕ} (hp : p.Prime) : multiplicity p (m * n) = multiplicity p m + multiplicity p n :=
-  multiplicity.mul <| prime_iff.mp hp
+  multiplicity.mul $ prime_iff.mp hp
 #align nat.prime.multiplicity_mul Nat.Prime.multiplicity_mul
 
 theorem multiplicity_pow {p m n : ℕ} (hp : p.Prime) : multiplicity p (m ^ n) = n • multiplicity p m :=
-  multiplicity.pow <| prime_iff.mp hp
+  multiplicity.pow $ prime_iff.mp hp
 #align nat.prime.multiplicity_pow Nat.Prime.multiplicity_pow
 
 theorem multiplicity_self {p : ℕ} (hp : p.Prime) : multiplicity p p = 1 :=
@@ -108,13 +108,12 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
       multiplicity p (n + 1)! = multiplicity p n ! + multiplicity p (n + 1) := by
         rw [factorial_succ, hp.multiplicity_mul, add_comm]
       _ = (∑ i in ico 1 b, n / p ^ i : ℕ) + ((Finset.ico 1 b).filter fun i => p ^ i ∣ n + 1).card := by
-        rw [multiplicity_factorial ((log_mono_right <| le_succ _).trans_lt hb), ←
+        rw [multiplicity_factorial ((log_mono_right $ le_succ _).trans_lt hb), ←
           multiplicity_eq_card_pow_dvd hp.ne_one (succ_pos _) hb]
       _ = (∑ i in ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) := by
         rw [sum_add_distrib, sum_boole]
         simp
-      _ = (∑ i in ico 1 b, (n + 1) / p ^ i : ℕ) :=
-        congr_arg coe <| (Finset.sum_congr rfl) fun _ _ => (succ_div _ _).symm
+      _ = (∑ i in ico 1 b, (n + 1) / p ^ i : ℕ) := congr_arg coe $ Finset.sum_congr rfl $ fun _ _ => (succ_div _ _).symm
       
 #align nat.prime.multiplicity_factorial Nat.Prime.multiplicity_factorial
 
@@ -196,7 +195,7 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.Prime) (hkn : k ≤ n) (hnb 
       hp.multiplicity_factorial (lt_of_le_of_lt (log_mono_right tsub_le_self) hnb), multiplicity_choose_aux hp hkn]
     simp [add_comm]
   (PartEnat.add_right_cancel_iff
-        (PartEnat.ne_top_iff_dom.2 <|
+        (PartEnat.ne_top_iff_dom.2 $
           finite_nat_iff.2 ⟨ne_of_gt hp.one_lt, mul_pos (factorial_pos k) (factorial_pos (n - k))⟩)).1
     h₁
 #align nat.prime.multiplicity_choose Nat.Prime.multiplicity_choose

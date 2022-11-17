@@ -165,7 +165,7 @@ also known as the indiscrete, coarse, or chaotic topology.
 See <https://stacks.math.columbia.edu/tag/07GE>
 -/
 def trivial : Pretopology C where
-  coverings X S := ∃ (Y : _)(f : Y ⟶ X)(h : IsIso f), S = Presieve.singleton f
+  coverings X S := ∃ (Y) (f : Y ⟶ X) (h : IsIso f), S = Presieve.singleton f
   has_isos X Y f i := ⟨_, _, i, rfl⟩
   pullbacks X Y f S := by
     rintro ⟨Z, g, i, rfl⟩

@@ -162,7 +162,7 @@ theorem InftyValuation.map_zero' : inftyValuationDef Fq 0 = 0 :=
 #align function_field.infty_valuation.map_zero' FunctionField.InftyValuation.map_zero'
 
 theorem InftyValuation.map_one' : inftyValuationDef Fq 1 = 1 :=
-  (if_neg one_ne_zero).trans <| by rw [Ratfunc.int_degree_one, of_add_zero, WithZero.coe_one]
+  (if_neg one_ne_zero).trans $ by rw [Ratfunc.int_degree_one, of_add_zero, WithZero.coe_one]
 #align function_field.infty_valuation.map_one' FunctionField.InftyValuation.map_one'
 
 theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
@@ -248,7 +248,7 @@ theorem inftyValuation.polynomial {p : Fq[X]} (hp : p ≠ 0) :
 
 /-- The valued field `Fq(t)` with the valuation at infinity. -/
 def inftyValuedFqt : Valued (Ratfunc Fq) ℤₘ₀ :=
-  Valued.mk' <| inftyValuation Fq
+  Valued.mk' $ inftyValuation Fq
 #align function_field.infty_valued_Fqt FunctionField.inftyValuedFqt
 
 theorem inftyValuedFqt.def {x : Ratfunc Fq} :
@@ -258,7 +258,7 @@ theorem inftyValuedFqt.def {x : Ratfunc Fq} :
 
 /-- The completion `Fq((t⁻¹))`  of `Fq(t)` with respect to the valuation at infinity. -/
 def FqtInfty :=
-  @UniformSpace.Completion (Ratfunc Fq) <| (inftyValuedFqt Fq).toUniformSpace
+  @UniformSpace.Completion (Ratfunc Fq) $ (inftyValuedFqt Fq).toUniformSpace
 #align function_field.Fqt_infty FunctionField.FqtInfty
 
 instance : Field (FqtInfty Fq) :=

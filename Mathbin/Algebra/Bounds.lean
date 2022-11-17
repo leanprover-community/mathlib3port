@@ -83,12 +83,12 @@ variable {M : Type _} [Mul M] [Preorder M] [CovariantClass M M (· * ·) (· ≤
 @[to_additive]
 theorem mul_mem_upper_bounds_mul {s t : Set M} {a b : M} (ha : a ∈ upperBounds s) (hb : b ∈ upperBounds t) :
     a * b ∈ upperBounds (s * t) :=
-  forall_image2_iff.2 fun x hx y hy => mul_le_mul' (ha hx) (hb hy)
+  forall_image2_iff.2 $ fun x hx y hy => mul_le_mul' (ha hx) (hb hy)
 #align mul_mem_upper_bounds_mul mul_mem_upper_bounds_mul
 
 @[to_additive]
 theorem subset_upper_bounds_mul (s t : Set M) : upperBounds s * upperBounds t ⊆ upperBounds (s * t) :=
-  image2_subset_iff.2 fun x hx y hy => mul_mem_upper_bounds_mul hx hy
+  image2_subset_iff.2 $ fun x hx y hy => mul_mem_upper_bounds_mul hx hy
 #align subset_upper_bounds_mul subset_upper_bounds_mul
 
 @[to_additive]

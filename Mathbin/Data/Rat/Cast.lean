@@ -41,7 +41,7 @@ variable [DivisionRing α]
 
 @[simp, norm_cast]
 theorem cast_coe_int (n : ℤ) : ((n : ℚ) : α) = n :=
-  (cast_def _).trans <| show (n / (1 : ℕ) : α) = n by rw [Nat.cast_one, div_one]
+  (cast_def _).trans $ show (n / (1 : ℕ) : α) = n by rw [Nat.cast_one, div_one]
 #align rat.cast_coe_int Rat.cast_coe_int
 
 @[simp, norm_cast]
@@ -84,7 +84,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
     rw [d0, zero_mul] at this
     contradiction
   rw [num_denom'] at e
-  have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gt <| Int.coe_nat_pos.2 h).1 e)
+  have := congr_arg (coe : ℤ → α) ((mk_eq b0' $ ne_of_gt $ Int.coe_nat_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_ofNat] at this
   symm
   rw [cast_def, div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc, this, mul_assoc,
@@ -200,17 +200,17 @@ theorem cast_ne_zero [CharZero α] {n : ℚ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
 
 @[norm_cast]
 theorem cast_add [CharZero α] (m n) : ((m + n : ℚ) : α) = m + n :=
-  cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
+  cast_add_of_ne_zero (Nat.cast_ne_zero.2 $ ne_of_gt m.Pos) (Nat.cast_ne_zero.2 $ ne_of_gt n.Pos)
 #align rat.cast_add Rat.cast_add
 
 @[norm_cast]
 theorem cast_sub [CharZero α] (m n) : ((m - n : ℚ) : α) = m - n :=
-  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
+  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 $ ne_of_gt m.Pos) (Nat.cast_ne_zero.2 $ ne_of_gt n.Pos)
 #align rat.cast_sub Rat.cast_sub
 
 @[norm_cast]
 theorem cast_mul [CharZero α] (m n) : ((m * n : ℚ) : α) = m * n :=
-  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
+  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 $ ne_of_gt m.Pos) (Nat.cast_ne_zero.2 $ ne_of_gt n.Pos)
 #align rat.cast_mul Rat.cast_mul
 
 @[norm_cast]
@@ -311,7 +311,7 @@ variable {K : Type _} [LinearOrderedField K]
 
 theorem cast_pos_of_pos {r : ℚ} (hr : 0 < r) : (0 : K) < r := by
   rw [Rat.cast_def]
-  exact div_pos (Int.cast_pos.2 <| num_pos_iff_pos.2 hr) (Nat.cast_pos.2 r.pos)
+  exact div_pos (Int.cast_pos.2 $ num_pos_iff_pos.2 hr) (Nat.cast_pos.2 r.pos)
 #align rat.cast_pos_of_pos Rat.cast_pos_of_pos
 
 @[mono]
@@ -458,7 +458,7 @@ include M₀
 
 /-- If `f` and `g` agree on the integers then they are equal `φ`. -/
 theorem ext_rat' (h : ∀ m : ℤ, f m = g m) : f = g :=
-  (FunLike.ext f g) fun r => by
+  FunLike.ext f g $ fun r => by
     rw [← r.num_div_denom, div_eq_mul_inv, map_mul, map_mul, h, ← Int.cast_ofNat, eq_on_inv₀ f g (h _)]
 #align monoid_with_zero_hom.ext_rat' MonoidWithZeroHom.ext_rat'
 
@@ -467,13 +467,13 @@ theorem ext_rat' (h : ∀ m : ℤ, f m = g m) : f = g :=
 See note [partially-applied ext lemmas] for why `comp` is used here. -/
 @[ext.1]
 theorem ext_rat {f g : ℚ →*₀ M₀} (h : f.comp (Int.castRingHom ℚ : ℤ →*₀ ℚ) = g.comp (Int.castRingHom ℚ)) : f = g :=
-  ext_rat' <| congr_fun h
+  ext_rat' $ congr_fun h
 #align monoid_with_zero_hom.ext_rat MonoidWithZeroHom.ext_rat
 
 /-- Positive integer values of a morphism `φ` and its value on `-1` completely determine `φ`. -/
 theorem ext_rat_on_pnat (same_on_neg_one : f (-1) = g (-1)) (same_on_pnat : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
-  ext_rat' <|
-    FunLike.congr_fun <|
+  ext_rat' $
+    FunLike.congr_fun $
       show (f : ℚ →*₀ M₀).comp (Int.castRingHom ℚ : ℤ →*₀ ℚ) = (g : ℚ →*₀ M₀).comp (Int.castRingHom ℚ : ℤ →*₀ ℚ) from
         ext_int' (by simpa) (by simpa)
 #align monoid_with_zero_hom.ext_rat_on_pnat MonoidWithZeroHom.ext_rat_on_pnat
@@ -483,8 +483,8 @@ end MonoidWithZeroHom
 /-- Any two ring homomorphisms from `ℚ` to a semiring are equal. If the codomain is a division ring,
 then this lemma follows from `eq_rat_cast`. -/
 theorem RingHom.ext_rat {R : Type _} [Semiring R] [RingHomClass F ℚ R] (f g : F) : f = g :=
-  MonoidWithZeroHom.ext_rat' <|
-    RingHom.congr_fun <| ((f : ℚ →+* R).comp (Int.castRingHom ℚ)).ext_int ((g : ℚ →+* R).comp (Int.castRingHom ℚ))
+  MonoidWithZeroHom.ext_rat' $
+    RingHom.congr_fun $ ((f : ℚ →+* R).comp (Int.castRingHom ℚ)).ext_int ((g : ℚ →+* R).comp (Int.castRingHom ℚ))
 #align ring_hom.ext_rat RingHom.ext_rat
 
 instance Rat.subsingleton_ring_hom {R : Type _} [Semiring R] : Subsingleton (ℚ →+* R) :=

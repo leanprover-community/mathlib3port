@@ -79,8 +79,8 @@ def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = 
     (H2 : ∀ (c : R) (m n), f (c • m) n = ρ₁₂ c • f m n) (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
     (H4 : ∀ (c : S) (m n), f m (c • n) = σ₁₂ c • f m n) : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P where
   toFun m := { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m }
-  map_add' m₁ m₂ := LinearMap.ext <| H1 m₁ m₂
-  map_smul' c m := LinearMap.ext <| H2 c m
+  map_add' m₁ m₂ := LinearMap.ext $ H1 m₁ m₂
+  map_smul' c m := LinearMap.ext $ H2 c m
 #align linear_map.mk₂'ₛₗ LinearMap.mk₂'ₛₗ
 
 variable {ρ₁₂ σ₁₂}
@@ -110,7 +110,7 @@ theorem mk₂'_apply (f : M → N → Pₗ) {H1 H2 H3 H4} (m : M) (n : N) :
 #align linear_map.mk₂'_apply LinearMap.mk₂'_apply
 
 theorem ext₂ {f g : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (H : ∀ m n, f m n = g m n) : f = g :=
-  LinearMap.ext fun m => LinearMap.ext fun n => H m n
+  LinearMap.ext fun m => LinearMap.ext $ fun n => H m n
 #align linear_map.ext₂ LinearMap.ext₂
 
 theorem congr_fun₂ {f g : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (h : f = g) (x y) : f x y = g x y :=
@@ -145,7 +145,7 @@ open BigOperators
 variable {R}
 
 theorem flip_inj {f g : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (H : flip f = flip g) : f = g :=
-  ext₂ fun m n => show flip f n m = flip g n m by rw [H]
+  ext₂ $ fun m n => show flip f n m = flip g n m by rw [H]
 #align linear_map.flip_inj LinearMap.flip_inj
 
 theorem map_zero₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (y) : f 0 y = 0 :=
@@ -180,8 +180,8 @@ theorem map_sum₂ {ι : Type _} (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂
 /-- Restricting a bilinear map in the second entry -/
 def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) : M →ₛₗ[ρ₁₂] q →ₛₗ[σ₁₂] P where
   toFun m := (f m).domRestrict q
-  map_add' m₁ m₂ := LinearMap.ext fun _ => by simp only [map_add, dom_restrict_apply, add_apply]
-  map_smul' c m := LinearMap.ext fun _ => by simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
+  map_add' m₁ m₂ := LinearMap.ext $ fun _ => by simp only [map_add, dom_restrict_apply, add_apply]
+  map_smul' c m := LinearMap.ext $ fun _ => by simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
 #align linear_map.dom_restrict₂ LinearMap.domRestrict₂
 
 theorem dom_restrict₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) (x : M) (y : q) :
@@ -267,7 +267,7 @@ variable (R Pₗ)
 
 /-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
 def lcomp (f : M →ₗ[R] Nₗ) : (Nₗ →ₗ[R] Pₗ) →ₗ[R] M →ₗ[R] Pₗ :=
-  flip <| LinearMap.comp (flip id) f
+  flip $ LinearMap.comp (flip id) f
 #align linear_map.lcomp LinearMap.lcomp
 
 variable {R Pₗ}
@@ -286,7 +286,7 @@ variable (P σ₂₃)
 /-- Composing a semilinear map `M → N` and a semilinear map `N → P` to form a semilinear map
 `M → P` is itself a linear map. -/
 def lcompₛₗ (f : M →ₛₗ[σ₁₂] N) : (N →ₛₗ[σ₂₃] P) →ₗ[R₃] M →ₛₗ[σ₁₃] P :=
-  flip <| LinearMap.comp (flip id) f
+  flip $ LinearMap.comp (flip id) f
 #align linear_map.lcompₛₗ LinearMap.lcompₛₗ
 
 variable {P σ₂₃}
@@ -305,8 +305,8 @@ variable (R M Nₗ Pₗ)
 /-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
 def llcomp : (Nₗ →ₗ[R] Pₗ) →ₗ[R] (M →ₗ[R] Nₗ) →ₗ[R] M →ₗ[R] Pₗ :=
   flip
-    { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂ fun g x => g.map_add _ _,
-      map_smul' := fun (c : R) f => ext₂ fun g x => g.map_smul _ _ }
+    { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂ $ fun g x => g.map_add _ _,
+      map_smul' := fun (c : R) f => ext₂ $ fun g x => g.map_smul _ _ }
 #align linear_map.llcomp LinearMap.llcomp
 
 variable {R M Nₗ Pₗ}
@@ -433,7 +433,7 @@ variable (b₁ : Basis ι₁ R M) (b₂ : Basis ι₂ S N) (b₁' : Basis ι₁ 
 
 /-- Two bilinear maps are equal when they are equal on all basis vectors. -/
 theorem ext_basis {B B' : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (h : ∀ i j, B (b₁ i) (b₂ j) = B' (b₁ i) (b₂ j)) : B = B' :=
-  b₁.ext fun i => b₂.ext fun j => h i j
+  b₁.ext $ fun i => b₂.ext $ fun j => h i j
 #align linear_map.ext_basis LinearMap.ext_basis
 
 /-- Write out `B x y` as a sum over `B (b i) (b j)` if `b` is a basis.

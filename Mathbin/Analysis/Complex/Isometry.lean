@@ -41,8 +41,8 @@ def rotation : circle →* ℂ ≃ₗᵢ[ℝ] ℂ where
   toFun a :=
     { DistribMulAction.toLinearEquiv ℝ ℂ a with
       norm_map' := fun x => show |a * x| = |x| by rw [map_mul, abs_coe_circle, one_mul] }
-  map_one' := LinearIsometryEquiv.ext <| one_smul _
-  map_mul' _ _ := LinearIsometryEquiv.ext <| mul_smul _ _
+  map_one' := LinearIsometryEquiv.ext $ one_smul _
+  map_mul' _ _ := LinearIsometryEquiv.ext $ mul_smul _ _
 #align rotation rotation
 
 @[simp]
@@ -52,7 +52,7 @@ theorem rotation_apply (a : circle) (z : ℂ) : rotation a z = a * z :=
 
 @[simp]
 theorem rotation_symm (a : circle) : (rotation a).symm = rotation a⁻¹ :=
-  LinearIsometryEquiv.ext fun x => rfl
+  LinearIsometryEquiv.ext $ fun x => rfl
 #align rotation_symm rotation_symm
 
 @[simp]
@@ -79,7 +79,7 @@ def rotationOf (e : ℂ ≃ₗᵢ[ℝ] ℂ) : circle :=
 
 @[simp]
 theorem rotation_of_rotation (a : circle) : rotationOf (rotation a) = a :=
-  Subtype.ext <| by simp
+  Subtype.ext $ by simp
 #align rotation_of_rotation rotation_of_rotation
 
 theorem rotation_injective : Function.Injective rotation :=
@@ -120,7 +120,6 @@ theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
   apply LinearIsometry.im_apply_eq_im h
 #align linear_isometry.re_apply_eq_re LinearIsometry.re_apply_eq_re
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) : f = LinearIsometryEquiv.refl ℝ ℂ ∨ f = conj_lie :=
   by
   have h0 : f I = I ∨ f I = -I := by
@@ -153,8 +152,6 @@ theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) : ∃ a : circle, f
     
 #align linear_isometry_complex linear_isometry_complex
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- The matrix representation of `rotation a` is equal to the conformal matrix
 `!![re a, -im a; im a, re a]`. -/
 theorem to_matrix_rotation (a : circle) :

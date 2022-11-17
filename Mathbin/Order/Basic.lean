@@ -111,13 +111,17 @@ theorem lt_of_le_of_ne' : a ≤ b → b ≠ a → a < b := fun h₁ h₂ => lt_o
 #align lt_of_le_of_ne' lt_of_le_of_ne'
 -/
 
+#print Ne.lt_of_le /-
 theorem Ne.lt_of_le : a ≠ b → a ≤ b → a < b :=
   flip lt_of_le_of_ne
 #align ne.lt_of_le Ne.lt_of_le
+-/
 
+#print Ne.lt_of_le' /-
 theorem Ne.lt_of_le' : b ≠ a → a ≤ b → a < b :=
   flip lt_of_le_of_ne'
 #align ne.lt_of_le' Ne.lt_of_le'
+-/
 
 end PartialOrder
 
@@ -298,19 +302,19 @@ theorem le_iff_eq [PartialOrder α] {x y : α} (h : x ≤ y) : y ≤ x ↔ y = x
 
 #print LE.le.lt_or_le /-
 theorem lt_or_le [LinearOrder α] {a b : α} (h : a ≤ b) (c : α) : a < c ∨ c ≤ b :=
-  ((lt_or_ge a c).imp id) fun hc => le_trans hc h
+  (lt_or_ge a c).imp id $ fun hc => le_trans hc h
 #align has_le.le.lt_or_le LE.le.lt_or_le
 -/
 
 #print LE.le.le_or_lt /-
 theorem le_or_lt [LinearOrder α] {a b : α} (h : a ≤ b) (c : α) : a ≤ c ∨ c < b :=
-  ((le_or_gt a c).imp id) fun hc => lt_of_lt_of_le hc h
+  (le_or_gt a c).imp id $ fun hc => lt_of_lt_of_le hc h
 #align has_le.le.le_or_lt LE.le.le_or_lt
 -/
 
 #print LE.le.le_or_le /-
 theorem le_or_le [LinearOrder α] {a b : α} (h : a ≤ b) (c : α) : a ≤ c ∨ c ≤ b :=
-  (h.le_or_lt c).elim Or.inl fun h => Or.inr <| le_of_lt h
+  (h.le_or_lt c).elim Or.inl fun h => Or.inr $ le_of_lt h
 #align has_le.le.le_or_le LE.le.le_or_le
 -/
 
@@ -340,7 +344,7 @@ theorem ne' [Preorder α] {x y : α} (h : x < y) : y ≠ x :=
 
 #print LT.lt.lt_or_lt /-
 theorem lt_or_lt [LinearOrder α] {x y : α} (h : x < y) (z : α) : x < z ∨ z < y :=
-  (lt_or_ge z y).elim Or.inr fun hz => Or.inl <| h.trans_le hz
+  (lt_or_ge z y).elim Or.inr fun hz => Or.inl $ h.trans_le hz
 #align has_lt.lt.lt_or_lt LT.lt.lt_or_lt
 -/
 
@@ -366,29 +370,21 @@ theorem ge_of_eq [Preorder α] {a b : α} (h : a = b) : a ≥ b :=
 #align ge_of_eq ge_of_eq
 -/
 
-/- warning: ge_iff_le -> ge_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : LE.{u} α] {a : α} {b : α}, Iff (GE.ge.{u} α _inst_1 a b) (LE.le.{u} α _inst_1 b a)
-but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Basic._hyg.1350 : Preorder.{u} α] {a : α} {b : α}, Iff (GE.ge.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.1350) a b) (LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.1350) b a)
-Case conversion may be inaccurate. Consider using '#align ge_iff_le ge_iff_leₓ'. -/
+#print ge_iff_le /-
 -- see Note [nolint_ge]
 @[simp, nolint ge_or_gt]
 theorem ge_iff_le [LE α] {a b : α} : a ≥ b ↔ b ≤ a :=
   Iff.rfl
 #align ge_iff_le ge_iff_le
+-/
 
-/- warning: gt_iff_lt -> gt_iff_lt is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : LT.{u} α] {a : α} {b : α}, Iff (GT.gt.{u} α _inst_1 a b) (LT.lt.{u} α _inst_1 b a)
-but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Basic._hyg.1380 : Preorder.{u} α] {a : α} {b : α}, Iff (GT.gt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.1380) a b) (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.1380) b a)
-Case conversion may be inaccurate. Consider using '#align gt_iff_lt gt_iff_ltₓ'. -/
+#print gt_iff_lt /-
 -- see Note [nolint_ge]
 @[simp, nolint ge_or_gt]
 theorem gt_iff_lt [LT α] {a b : α} : a > b ↔ b < a :=
   Iff.rfl
 #align gt_iff_lt gt_iff_lt
+-/
 
 #print not_le_of_lt /-
 theorem not_le_of_lt [Preorder α] {a b : α} (h : a < b) : ¬b ≤ a :=
@@ -405,8 +401,10 @@ theorem not_lt_of_le [Preorder α] {a b : α} (h : a ≤ b) : ¬b < a := fun hba
 
 alias not_lt_of_le ← LE.le.not_lt
 
+#print ne_of_not_le /-
 theorem ne_of_not_le [Preorder α] {a b : α} (h : ¬a ≤ b) : a ≠ b := fun hab => h (le_of_eq hab)
 #align ne_of_not_le ne_of_not_le
+-/
 
 #print Decidable.le_iff_eq_or_lt /-
 -- See Note [decidable namespace]
@@ -433,7 +431,7 @@ theorem lt_iff_le_and_ne [PartialOrder α] {a b : α} : a < b ↔ a ≤ b ∧ a 
 protected theorem Decidable.eq_iff_le_not_lt [PartialOrder α] [@DecidableRel α (· ≤ ·)] {a b : α} :
     a = b ↔ a ≤ b ∧ ¬a < b :=
   ⟨fun h => ⟨h.le, h ▸ lt_irrefl _⟩, fun ⟨h₁, h₂⟩ =>
-    h₁.antisymm <| Decidable.by_contradiction fun h₃ => h₂ (h₁.lt_of_not_le h₃)⟩
+    h₁.antisymm $ Decidable.by_contradiction $ fun h₃ => h₂ (h₁.lt_of_not_le h₃)⟩
 #align decidable.eq_iff_le_not_lt Decidable.eq_iff_le_not_lt
 -/
 
@@ -450,9 +448,11 @@ theorem eq_or_lt_of_le [PartialOrder α] {a b : α} (h : a ≤ b) : a = b ∨ a 
 #align eq_or_lt_of_le eq_or_lt_of_le
 -/
 
+#print eq_or_gt_of_le /-
 theorem eq_or_gt_of_le [PartialOrder α] {a b : α} (h : a ≤ b) : b = a ∨ a < b :=
   h.lt_or_eq.symm.imp Eq.symm id
 #align eq_or_gt_of_le eq_or_gt_of_le
+-/
 
 alias Decidable.eq_or_lt_of_le ← LE.le.eq_or_lt_dec
 
@@ -462,45 +462,55 @@ alias eq_or_gt_of_le ← LE.le.eq_or_gt
 
 attribute [nolint decidable_classical] LE.le.eq_or_lt_dec
 
+#print eq_of_le_of_not_lt /-
 theorem eq_of_le_of_not_lt [PartialOrder α] {a b : α} (hab : a ≤ b) (hba : ¬a < b) : a = b :=
   hab.eq_or_lt.resolve_right hba
 #align eq_of_le_of_not_lt eq_of_le_of_not_lt
+-/
 
+#print eq_of_ge_of_not_gt /-
 theorem eq_of_ge_of_not_gt [PartialOrder α] {a b : α} (hab : a ≤ b) (hba : ¬a < b) : b = a :=
   (hab.eq_or_lt.resolve_right hba).symm
 #align eq_of_ge_of_not_gt eq_of_ge_of_not_gt
+-/
 
 alias eq_of_le_of_not_lt ← LE.le.eq_of_not_lt
 
 alias eq_of_ge_of_not_gt ← LE.le.eq_of_not_gt
 
+#print Ne.le_iff_lt /-
 theorem Ne.le_iff_lt [PartialOrder α] {a b : α} (h : a ≠ b) : a ≤ b ↔ a < b :=
   ⟨fun h' => lt_of_le_of_ne h' h, fun h => h.le⟩
 #align ne.le_iff_lt Ne.le_iff_lt
+-/
 
+#print Ne.not_le_or_not_le /-
 theorem Ne.not_le_or_not_le [PartialOrder α] {a b : α} (h : a ≠ b) : ¬a ≤ b ∨ ¬b ≤ a :=
-  not_and_or.1 <| le_antisymm_iff.Not.1 h
+  not_and_or.1 $ le_antisymm_iff.Not.1 h
 #align ne.not_le_or_not_le Ne.not_le_or_not_le
+-/
 
-/- warning: decidable.ne_iff_lt_iff_le -> Decidable.ne_iff_lt_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : PartialOrder.{u} α] [_inst_2 : DecidableEq.{succ u} α] {a : α} {b : α}, Iff (Iff (Ne.{succ u} α a b) (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α _inst_1)) a b)) (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α _inst_1)) a b)
-but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Basic._hyg.1901 : PartialOrder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.1904 : DecidableRel.{succ u} α (fun (x._@.Mathlib.Order.Basic._hyg.1910 : α) (x._@.Mathlib.Order.Basic._hyg.1912 : α) => LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Basic._hyg.1901)) x._@.Mathlib.Order.Basic._hyg.1910 x._@.Mathlib.Order.Basic._hyg.1912)] {a : α} {b : α}, Iff (Iff (Ne.{succ u} α a b) (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Basic._hyg.1901)) a b)) (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Basic._hyg.1901)) a b)
-Case conversion may be inaccurate. Consider using '#align decidable.ne_iff_lt_iff_le Decidable.ne_iff_lt_iff_leₓ'. -/
+#print Decidable.ne_iff_lt_iff_le /-
 -- See Note [decidable namespace]
-protected theorem Decidable.ne_iff_lt_iff_le [PartialOrder α] [DecidableEq α] {a b : α} : (a ≠ b ↔ a < b) ↔ a ≤ b :=
+protected theorem Decidable.ne_iff_lt_iff_le [PartialOrder α] [DecidableEq α] {a b : α} : a ≠ b ↔ a < b ↔ a ≤ b :=
   ⟨fun h => Decidable.byCases le_of_eq (le_of_lt ∘ h.mp), fun h => ⟨lt_of_le_of_ne h, ne_of_lt⟩⟩
 #align decidable.ne_iff_lt_iff_le Decidable.ne_iff_lt_iff_le
+-/
 
 #print ne_iff_lt_iff_le /-
 @[simp]
-theorem ne_iff_lt_iff_le [PartialOrder α] {a b : α} : (a ≠ b ↔ a < b) ↔ a ≤ b :=
+theorem ne_iff_lt_iff_le [PartialOrder α] {a b : α} : a ≠ b ↔ a < b ↔ a ≤ b :=
   haveI := Classical.dec
   Decidable.ne_iff_lt_iff_le
 #align ne_iff_lt_iff_le ne_iff_lt_iff_le
 -/
 
+/- warning: min_def' -> min_def' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] (a : α) (b : α), Eq.{succ u} α (LinearOrder.min.{u} α _inst_1 a b) (ite.{succ u} α (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) b a) (LE.le.decidable.{u} α _inst_1 b a) b a)
+but is expected to have type
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Basic._hyg.7962 : LinearOrder.{u} α] (x : α) (y : α), Eq.{succ u} α (Min.min.{u} α (LinearOrder.toMin.{u} α inst._@.Mathlib.Order.Basic._hyg.7962) x y) (ite.{succ u} α (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.7962))) x y) (instDecidableLtToLTToPreorderToPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.7962 x y) x y)
+Case conversion may be inaccurate. Consider using '#align min_def' min_def'ₓ'. -/
 -- Variant of `min_def` with the branches reversed.
 theorem min_def' [LinearOrder α] (a b : α) : min a b = if b ≤ a then b else a := by
   rw [min_def]
@@ -513,6 +523,12 @@ theorem min_def' [LinearOrder α] (a b : α) : min a b = if b ≤ a then b else 
     
 #align min_def' min_def'
 
+/- warning: max_def' -> max_def' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] (a : α) (b : α), Eq.{succ u} α (LinearOrder.max.{u} α _inst_1 a b) (ite.{succ u} α (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) b a) (LE.le.decidable.{u} α _inst_1 b a) a b)
+but is expected to have type
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Basic._hyg.8036 : LinearOrder.{u} α] (x : α) (y : α), Eq.{succ u} α (Max.max.{u} α (LinearOrder.toMax.{u} α inst._@.Mathlib.Order.Basic._hyg.8036) x y) (ite.{succ u} α (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.8036))) y x) (instDecidableLtToLTToPreorderToPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.8036 y x) x y)
+Case conversion may be inaccurate. Consider using '#align max_def' max_def'ₓ'. -/
 -- Variant of `min_def` with the branches reversed.
 -- This is sometimes useful as it used to be the default.
 theorem max_def' [LinearOrder α] (a b : α) : max a b = if b ≤ a then a else b := by
@@ -526,27 +542,35 @@ theorem max_def' [LinearOrder α] (a b : α) : max a b = if b ≤ a then a else 
     
 #align max_def' max_def'
 
+#print lt_of_not_le /-
 theorem lt_of_not_le [LinearOrder α] {a b : α} (h : ¬b ≤ a) : a < b :=
   ((le_total _ _).resolve_right h).lt_of_not_le h
 #align lt_of_not_le lt_of_not_le
+-/
 
+#print lt_iff_not_le /-
 theorem lt_iff_not_le [LinearOrder α] {x y : α} : x < y ↔ ¬y ≤ x :=
   ⟨not_le_of_lt, lt_of_not_le⟩
 #align lt_iff_not_le lt_iff_not_le
+-/
 
+#print Ne.lt_or_lt /-
 theorem Ne.lt_or_lt [LinearOrder α] {x y : α} (h : x ≠ y) : x < y ∨ y < x :=
   lt_or_gt_of_ne h
 #align ne.lt_or_lt Ne.lt_or_lt
+-/
 
+#print lt_or_lt_iff_ne /-
 /-- A version of `ne_iff_lt_or_gt` with LHS and RHS reversed. -/
 @[simp]
 theorem lt_or_lt_iff_ne [LinearOrder α] {x y : α} : x < y ∨ y < x ↔ x ≠ y :=
   ne_iff_lt_or_gt.symm
 #align lt_or_lt_iff_ne lt_or_lt_iff_ne
+-/
 
 #print not_lt_iff_eq_or_lt /-
 theorem not_lt_iff_eq_or_lt [LinearOrder α] {a b : α} : ¬a < b ↔ a = b ∨ b < a :=
-  not_lt.trans <| Decidable.le_iff_eq_or_lt.trans <| or_congr eq_comm Iff.rfl
+  not_lt.trans $ Decidable.le_iff_eq_or_lt.trans $ or_congr eq_comm Iff.rfl
 #align not_lt_iff_eq_or_lt not_lt_iff_eq_or_lt
 -/
 
@@ -562,18 +586,18 @@ theorem exists_ge_of_linear [LinearOrder α] (a b : α) : ∃ c, a ≤ c ∧ b �
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{u_1}} [_inst_1 : LinearOrder.{u} α] [_inst_2 : Preorder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) a b) -> (LE.le.{u_1} β (Preorder.toLE.{u_1} β _inst_2) c d)) -> (LT.lt.{u_1} β (Preorder.toLT.{u_1} β _inst_2) d c) -> (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) b a)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2267 : LinearOrder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2270 : Preorder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2267))) a b) -> (LE.le.{u_1} β (Preorder.toLE.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2270) c d)) -> (LT.lt.{u_1} β (Preorder.toLT.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2270) d c) -> (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2267))) b a)
+  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2368 : LinearOrder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2371 : Preorder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2368))) a b) -> (LE.le.{u_1} β (Preorder.toLE.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2371) c d)) -> (LT.lt.{u_1} β (Preorder.toLT.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2371) d c) -> (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2368))) b a)
 Case conversion may be inaccurate. Consider using '#align lt_imp_lt_of_le_imp_le lt_imp_lt_of_le_imp_leₓ'. -/
 theorem lt_imp_lt_of_le_imp_le {β} [LinearOrder α] [Preorder β] {a b : α} {c d : β} (H : a ≤ b → c ≤ d) (h : d < c) :
     b < a :=
-  lt_of_not_le fun h' => (H h').not_lt h
+  lt_of_not_le $ fun h' => (H h').not_lt h
 #align lt_imp_lt_of_le_imp_le lt_imp_lt_of_le_imp_le
 
 /- warning: le_imp_le_iff_lt_imp_lt -> le_imp_le_iff_lt_imp_lt is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{u_1}} [_inst_1 : LinearOrder.{u} α] [_inst_2 : LinearOrder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, Iff ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) a b) -> (LE.le.{u_1} β (Preorder.toLE.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β _inst_2))) c d)) ((LT.lt.{u_1} β (Preorder.toLT.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β _inst_2))) d c) -> (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) b a))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2322 : LinearOrder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2325 : LinearOrder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, Iff ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2322))) a b) -> (LE.le.{u_1} β (Preorder.toLE.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2325))) c d)) ((LT.lt.{u_1} β (Preorder.toLT.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2325))) d c) -> (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2322))) b a))
+  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2419 : LinearOrder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2422 : LinearOrder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, Iff ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2419))) a b) -> (LE.le.{u_1} β (Preorder.toLE.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2422))) c d)) ((LT.lt.{u_1} β (Preorder.toLT.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2422))) d c) -> (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2419))) b a))
 Case conversion may be inaccurate. Consider using '#align le_imp_le_iff_lt_imp_lt le_imp_le_iff_lt_imp_ltₓ'. -/
 theorem le_imp_le_iff_lt_imp_lt {β} [LinearOrder α] [LinearOrder β] {a b : α} {c d : β} :
     a ≤ b → c ≤ d ↔ d < c → b < a :=
@@ -584,33 +608,33 @@ theorem le_imp_le_iff_lt_imp_lt {β} [LinearOrder α] [LinearOrder β] {a b : α
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{u_1}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, (Iff (LE.le.{u} α (Preorder.toLE.{u} α _inst_1) a b) (LE.le.{u_1} β (Preorder.toLE.{u_1} β _inst_2) c d)) -> (Iff (LE.le.{u} α (Preorder.toLE.{u} α _inst_1) b a) (LE.le.{u_1} β (Preorder.toLE.{u_1} β _inst_2) d c)) -> (Iff (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) b a) (LT.lt.{u_1} β (Preorder.toLT.{u_1} β _inst_2) d c))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2377 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2380 : Preorder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, (Iff (LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.2377) a b) (LE.le.{u_1} β (Preorder.toLE.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2380) c d)) -> (Iff (LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.2377) b a) (LE.le.{u_1} β (Preorder.toLE.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2380) d c)) -> (Iff (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.2377) b a) (LT.lt.{u_1} β (Preorder.toLT.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2380) d c))
+  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2468 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2471 : Preorder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, (Iff (LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.2468) a b) (LE.le.{u_1} β (Preorder.toLE.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2471) c d)) -> (Iff (LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.2468) b a) (LE.le.{u_1} β (Preorder.toLE.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2471) d c)) -> (Iff (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.2468) b a) (LT.lt.{u_1} β (Preorder.toLT.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2471) d c))
 Case conversion may be inaccurate. Consider using '#align lt_iff_lt_of_le_iff_le' lt_iff_lt_of_le_iff_le'ₓ'. -/
 theorem lt_iff_lt_of_le_iff_le' {β} [Preorder α] [Preorder β] {a b : α} {c d : β} (H : a ≤ b ↔ c ≤ d)
     (H' : b ≤ a ↔ d ≤ c) : b < a ↔ d < c :=
-  lt_iff_le_not_le.trans <| (and_congr H' (not_congr H)).trans lt_iff_le_not_le.symm
+  lt_iff_le_not_le.trans $ (and_congr H' (not_congr H)).trans lt_iff_le_not_le.symm
 #align lt_iff_lt_of_le_iff_le' lt_iff_lt_of_le_iff_le'
 
 /- warning: lt_iff_lt_of_le_iff_le -> lt_iff_lt_of_le_iff_le is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{u_1}} [_inst_1 : LinearOrder.{u} α] [_inst_2 : LinearOrder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, (Iff (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) a b) (LE.le.{u_1} β (Preorder.toLE.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β _inst_2))) c d)) -> (Iff (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) b a) (LT.lt.{u_1} β (Preorder.toLT.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β _inst_2))) d c))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2451 : LinearOrder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2454 : LinearOrder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, (Iff (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2451))) a b) (LE.le.{u_1} β (Preorder.toLE.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2454))) c d)) -> (Iff (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2451))) b a) (LT.lt.{u_1} β (Preorder.toLT.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2454))) d c))
+  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2540 : LinearOrder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2543 : LinearOrder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, (Iff (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2540))) a b) (LE.le.{u_1} β (Preorder.toLE.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2543))) c d)) -> (Iff (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2540))) b a) (LT.lt.{u_1} β (Preorder.toLT.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2543))) d c))
 Case conversion may be inaccurate. Consider using '#align lt_iff_lt_of_le_iff_le lt_iff_lt_of_le_iff_leₓ'. -/
 theorem lt_iff_lt_of_le_iff_le {β} [LinearOrder α] [LinearOrder β] {a b : α} {c d : β} (H : a ≤ b ↔ c ≤ d) :
     b < a ↔ d < c :=
-  not_le.symm.trans <| (not_congr H).trans <| not_le
+  not_le.symm.trans $ (not_congr H).trans $ not_le
 #align lt_iff_lt_of_le_iff_le lt_iff_lt_of_le_iff_le
 
 /- warning: le_iff_le_iff_lt_iff_lt -> le_iff_le_iff_lt_iff_lt is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{u_1}} [_inst_1 : LinearOrder.{u} α] [_inst_2 : LinearOrder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, Iff (Iff (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) a b) (LE.le.{u_1} β (Preorder.toLE.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β _inst_2))) c d)) (Iff (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) b a) (LT.lt.{u_1} β (Preorder.toLT.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β _inst_2))) d c))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2510 : LinearOrder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2513 : LinearOrder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, Iff (Iff (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2510))) a b) (LE.le.{u_1} β (Preorder.toLE.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2513))) c d)) (Iff (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2510))) b a) (LT.lt.{u_1} β (Preorder.toLT.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2513))) d c))
+  forall {α : Type.{u}} {β : Type.{u_1}} [inst._@.Mathlib.Order.Basic._hyg.2597 : LinearOrder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.2600 : LinearOrder.{u_1} β] {a : α} {b : α} {c : β} {d : β}, Iff (Iff (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2597))) a b) (LE.le.{u_1} β (Preorder.toLE.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2600))) c d)) (Iff (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.2597))) b a) (LT.lt.{u_1} β (Preorder.toLT.{u_1} β (PartialOrder.toPreorder.{u_1} β (LinearOrder.toPartialOrder.{u_1} β inst._@.Mathlib.Order.Basic._hyg.2600))) d c))
 Case conversion may be inaccurate. Consider using '#align le_iff_le_iff_lt_iff_lt le_iff_le_iff_lt_iff_ltₓ'. -/
 theorem le_iff_le_iff_lt_iff_lt {β} [LinearOrder α] [LinearOrder β] {a b : α} {c d : β} :
-    (a ≤ b ↔ c ≤ d) ↔ (b < a ↔ d < c) :=
-  ⟨lt_iff_lt_of_le_iff_le, fun H => not_lt.symm.trans <| (not_congr H).trans <| not_lt⟩
+    a ≤ b ↔ c ≤ d ↔ (b < a ↔ d < c) :=
+  ⟨lt_iff_lt_of_le_iff_le, fun H => not_lt.symm.trans $ (not_congr H).trans $ not_lt⟩
 #align le_iff_le_iff_lt_iff_lt le_iff_le_iff_lt_iff_lt
 
 #print eq_of_forall_le_iff /-
@@ -633,7 +657,7 @@ theorem le_of_forall_le' [Preorder α] {a b : α} (H : ∀ c, a ≤ c → b ≤ 
 
 #print le_of_forall_lt /-
 theorem le_of_forall_lt [LinearOrder α] {a b : α} (H : ∀ c, c < a → c < b) : a ≤ b :=
-  le_of_not_lt fun h => lt_irrefl _ (H _ h)
+  le_of_not_lt $ fun h => lt_irrefl _ (H _ h)
 #align le_of_forall_lt le_of_forall_lt
 -/
 
@@ -645,7 +669,7 @@ theorem forall_lt_iff_le [LinearOrder α] {a b : α} : (∀ ⦃c⦄, c < a → c
 
 #print le_of_forall_lt' /-
 theorem le_of_forall_lt' [LinearOrder α] {a b : α} (H : ∀ c, a < c → b < c) : b ≤ a :=
-  le_of_not_lt fun h => lt_irrefl _ (H _ h)
+  le_of_not_lt $ fun h => lt_irrefl _ (H _ h)
 #align le_of_forall_lt' le_of_forall_lt'
 -/
 
@@ -661,19 +685,25 @@ theorem eq_of_forall_ge_iff [PartialOrder α] {a b : α} (H : ∀ c, a ≤ c ↔
 #align eq_of_forall_ge_iff eq_of_forall_ge_iff
 -/
 
+#print eq_of_forall_lt_iff /-
 theorem eq_of_forall_lt_iff [LinearOrder α] {a b : α} (h : ∀ c, c < a ↔ c < b) : a = b :=
-  (le_of_forall_lt fun _ => (h _).1).antisymm <| le_of_forall_lt fun _ => (h _).2
+  (le_of_forall_lt $ fun _ => (h _).1).antisymm $ le_of_forall_lt $ fun _ => (h _).2
 #align eq_of_forall_lt_iff eq_of_forall_lt_iff
+-/
 
+#print eq_of_forall_gt_iff /-
 theorem eq_of_forall_gt_iff [LinearOrder α] {a b : α} (h : ∀ c, a < c ↔ b < c) : a = b :=
-  (le_of_forall_lt' fun _ => (h _).2).antisymm <| le_of_forall_lt' fun _ => (h _).1
+  (le_of_forall_lt' $ fun _ => (h _).2).antisymm $ le_of_forall_lt' $ fun _ => (h _).1
 #align eq_of_forall_gt_iff eq_of_forall_gt_iff
+-/
 
+#print rel_imp_eq_of_rel_imp_le /-
 /-- A symmetric relation implies two values are equal, when it implies they're less-equal.  -/
 theorem rel_imp_eq_of_rel_imp_le [PartialOrder β] (r : α → α → Prop) [IsSymm α r] {f : α → β}
     (h : ∀ a b, r a b → f a ≤ f b) {a b : α} : r a b → f a = f b := fun hab =>
-  le_antisymm (h a b hab) (h b a <| symm hab)
+  le_antisymm (h a b hab) (h b a $ symm hab)
 #align rel_imp_eq_of_rel_imp_le rel_imp_eq_of_rel_imp_le
+-/
 
 #print le_implies_le_of_le_of_le /-
 /-- monotonicity of `≤` with respect to `→` -/
@@ -682,8 +712,9 @@ theorem le_implies_le_of_le_of_le {a b c d : α} [Preorder α] (hca : c ≤ a) (
 #align le_implies_le_of_le_of_le le_implies_le_of_le_of_le
 -/
 
+#print Preorder.toLE_injective /-
 @[ext.1]
-theorem Preorder.to_has_le_injective {α : Type _} : Function.Injective (@Preorder.toLE α) := fun A B h => by
+theorem Preorder.toLE_injective {α : Type _} : Function.Injective (@Preorder.toLE α) := fun A B h => by
   cases A
   cases B
   injection h with h_le
@@ -692,22 +723,23 @@ theorem Preorder.to_has_le_injective {α : Type _} : Function.Injective (@Preord
     dsimp [(· ≤ ·)] at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
     simp [A_lt_iff_le_not_le, B_lt_iff_le_not_le, h_le]
   congr
-#align preorder.to_has_le_injective Preorder.to_has_le_injective
+#align preorder.to_has_le_injective Preorder.toLE_injective
+-/
 
-#print PartialOrder.to_preorder_injective /-
+#print PartialOrder.toPreorder_injective /-
 @[ext.1]
-theorem PartialOrder.to_preorder_injective {α : Type _} : Function.Injective (@PartialOrder.toPreorder α) :=
-  fun A B h => by
+theorem PartialOrder.toPreorder_injective {α : Type _} : Function.Injective (@PartialOrder.toPreorder α) := fun A B h =>
+  by
   cases A
   cases B
   injection h
   congr
-#align partial_order.to_preorder_injective PartialOrder.to_preorder_injective
+#align partial_order.to_preorder_injective PartialOrder.toPreorder_injective
 -/
 
-#print LinearOrder.to_partial_order_injective /-
+#print LinearOrder.toPartialOrder_injective /-
 @[ext.1]
-theorem LinearOrder.to_partial_order_injective {α : Type _} : Function.Injective (@LinearOrder.toPartialOrder α) := by
+theorem LinearOrder.toPartialOrder_injective {α : Type _} : Function.Injective (@LinearOrder.toPartialOrder α) := by
   intro A B h
   cases A
   cases B
@@ -718,7 +750,7 @@ theorem LinearOrder.to_partial_order_injective {α : Type _} : Function.Injectiv
   obtain rfl : A_max = B_max := A_max_def.trans B_max_def.symm
   obtain rfl : A_min = B_min := A_min_def.trans B_min_def.symm
   congr
-#align linear_order.to_partial_order_injective LinearOrder.to_partial_order_injective
+#align linear_order.to_partial_order_injective LinearOrder.toPartialOrder_injective
 -/
 
 #print Preorder.ext /-
@@ -760,6 +792,7 @@ theorem LinearOrder.ext {α} {A B : LinearOrder α}
 #align linear_order.ext LinearOrder.ext
 -/
 
+#print Order.Preimage /-
 /-- Given a relation `R` on `β` and a function `f : α → β`, the preimage relation on `α` is defined
 by `x ≤ y ↔ f x ≤ f y`. It is the unique relation on `α` making `f` a `rel_embedding` (assuming `f`
 is injective). -/
@@ -767,23 +800,28 @@ is injective). -/
 def Order.Preimage {α β} (f : α → β) (s : β → β → Prop) (x y : α) : Prop :=
   s (f x) (f y)
 #align order.preimage Order.Preimage
+-/
 
 -- mathport name: «expr ⁻¹'o »
 infixl:80 " ⁻¹'o " => Order.Preimage
 
+#print Order.Preimage.decidable /-
 /-- The preimage of a decidable order is decidable. -/
 instance Order.Preimage.decidable {α β} (f : α → β) (s : β → β → Prop) [H : DecidableRel s] : DecidableRel (f ⁻¹'o s) :=
   fun x y => H _ _
 #align order.preimage.decidable Order.Preimage.decidable
+-/
 
 /-! ### Order dual -/
 
 
+#print OrderDual /-
 /-- Type synonym to equip a type with the dual order: `≤` means `≥` and `<` means `>`. `αᵒᵈ` is
 notation for `order_dual α`. -/
 def OrderDual (α : Type _) : Type _ :=
   α
 #align order_dual OrderDual
+-/
 
 -- mathport name: «expr ᵒᵈ»
 notation:max α "ᵒᵈ" => OrderDual α
@@ -813,21 +851,33 @@ instance (α : Type _) [LinearOrder α] : LinearOrder αᵒᵈ :=
   { OrderDual.partialOrder α with le_total := fun a b : α => le_total b a,
     decidableLe := (inferInstance : DecidableRel fun a b : α => b ≤ a),
     decidableLt := (inferInstance : DecidableRel fun a b : α => b < a), min := @max α _, max := @min α _,
-    min_def := funext₂ <| @max_def' α _, max_def := funext₂ <| @min_def' α _ }
+    min_def := funext₂ $ @max_def' α _, max_def := funext₂ $ @min_def' α _ }
 
 instance : ∀ [Inhabited α], Inhabited αᵒᵈ :=
   id
 
 theorem preorder.dual_dual (α : Type _) [H : Preorder α] : OrderDual.preorder αᵒᵈ = H :=
-  Preorder.ext fun _ _ => Iff.rfl
+  Preorder.ext $ fun _ _ => Iff.rfl
 #align order_dual.preorder.dual_dual OrderDual.preorder.dual_dual
 
+/- warning: order_dual.partial_order.dual_dual -> OrderDual.partialOrder.dual_dual is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u_1}) [H : PartialOrder.{u_1} α], Eq.{succ u_1} (PartialOrder.{u_1} (OrderDual.{u_1} (OrderDual.{u_1} α))) (OrderDual.partialOrder.{u_1} (OrderDual.{u_1} α) (OrderDual.partialOrder.{u_1} α H)) H
+but is expected to have type
+  forall (α : Type.{u_1}) [H : PartialOrder.{u_1} α], Eq.{succ u_1} (PartialOrder.{u_1} (OrderDual.{u_1} (OrderDual.{u_1} α))) (OrderDual.instPartialOrderOrderDual.{u_1} (OrderDual.{u_1} α) (OrderDual.instPartialOrderOrderDual.{u_1} α H)) H
+Case conversion may be inaccurate. Consider using '#align order_dual.partial_order.dual_dual OrderDual.partialOrder.dual_dualₓ'. -/
 theorem partialOrder.dual_dual (α : Type _) [H : PartialOrder α] : OrderDual.partialOrder αᵒᵈ = H :=
-  PartialOrder.ext fun _ _ => Iff.rfl
+  PartialOrder.ext $ fun _ _ => Iff.rfl
 #align order_dual.partial_order.dual_dual OrderDual.partialOrder.dual_dual
 
+/- warning: order_dual.linear_order.dual_dual -> OrderDual.linearOrder.dual_dual is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u_1}) [H : LinearOrder.{u_1} α], Eq.{succ u_1} (LinearOrder.{u_1} (OrderDual.{u_1} (OrderDual.{u_1} α))) (OrderDual.linearOrder.{u_1} (OrderDual.{u_1} α) (OrderDual.linearOrder.{u_1} α H)) H
+but is expected to have type
+  forall (α : Type.{u_1}) [H : LinearOrder.{u_1} α], Eq.{succ u_1} (LinearOrder.{u_1} (OrderDual.{u_1} (OrderDual.{u_1} α))) (OrderDual.instLinearOrderOrderDual.{u_1} (OrderDual.{u_1} α) (OrderDual.instLinearOrderOrderDual.{u_1} α H)) H
+Case conversion may be inaccurate. Consider using '#align order_dual.linear_order.dual_dual OrderDual.linearOrder.dual_dualₓ'. -/
 theorem linearOrder.dual_dual (α : Type _) [H : LinearOrder α] : OrderDual.linearOrder αᵒᵈ = H :=
-  LinearOrder.ext fun _ _ => Iff.rfl
+  LinearOrder.ext $ fun _ _ => Iff.rfl
 #align order_dual.linear_order.dual_dual OrderDual.linearOrder.dual_dual
 
 end OrderDual
@@ -835,11 +885,13 @@ end OrderDual
 /-! ### `has_compl` -/
 
 
+#print HasCompl /-
 /-- Set / lattice complement -/
 @[notation_class]
 class HasCompl (α : Type _) where
   compl : α → α
 #align has_compl HasCompl
+-/
 
 export HasCompl (compl)
 
@@ -855,26 +907,18 @@ instance Pi.hasCompl {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)]
   ⟨fun x i => x iᶜ⟩
 #align pi.has_compl Pi.hasCompl
 
-/- warning: pi.compl_def -> Pi.compl_def is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u}} {α : ι -> Type.{v}} [_inst_1 : forall (i : ι), HasCompl.{v} (α i)] (x : forall (i : ι), α i), Eq.{succ (max u v)} (forall (i : ι), α i) (HasCompl.compl.{(max u v)} (forall (i : ι), α i) (Pi.hasCompl.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) x) (fun (i : ι) => HasCompl.compl.{v} (α i) (_inst_1 i) (x i))
-but is expected to have type
-  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.6364 : forall (i : ι), Complement.{v} (α i)] (x : forall (i : ι), α i), Eq.{(max (succ u) (succ v))} (forall (i : ι), α i) (Complement.complement.{(max u v)} (forall (i : ι), α i) (Pi.complement.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => inst._@.Mathlib.Order.Basic._hyg.6364 i)) x) (fun (i : ι) => Complement.complement.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6364 i) (x i))
-Case conversion may be inaccurate. Consider using '#align pi.compl_def Pi.compl_defₓ'. -/
+#print Pi.compl_def /-
 theorem Pi.compl_def {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] (x : ∀ i, α i) : xᶜ = fun i => x iᶜ :=
   rfl
 #align pi.compl_def Pi.compl_def
+-/
 
-/- warning: pi.compl_apply -> Pi.compl_apply is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u}} {α : ι -> Type.{v}} [_inst_1 : forall (i : ι), HasCompl.{v} (α i)] (x : forall (i : ι), α i) (i : ι), Eq.{succ v} (α i) (HasCompl.compl.{(max u v)} (forall (i : ι), α i) (Pi.hasCompl.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) x i) (HasCompl.compl.{v} (α i) (_inst_1 i) (x i))
-but is expected to have type
-  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.6417 : forall (i : ι), Complement.{v} (α i)] (x : forall (i : ι), α i) (i : ι), Eq.{succ v} (α i) (Complement.complement.{(max u v)} (forall (i : ι), α i) (Pi.complement.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => inst._@.Mathlib.Order.Basic._hyg.6417 i)) x i) (Complement.complement.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6417 i) (x i))
-Case conversion may be inaccurate. Consider using '#align pi.compl_apply Pi.compl_applyₓ'. -/
+#print Pi.compl_apply /-
 @[simp]
 theorem Pi.compl_apply {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] (x : ∀ i, α i) (i : ι) : (xᶜ) i = x iᶜ :=
   rfl
 #align pi.compl_apply Pi.compl_apply
+-/
 
 instance IsIrrefl.compl (r) [IsIrrefl α r] : IsRefl α (rᶜ) :=
   ⟨@irrefl α r _⟩
@@ -887,10 +931,8 @@ instance IsRefl.compl (r) [IsRefl α r] : IsIrrefl α (rᶜ) :=
 /-! ### Order instances on the function space -/
 
 
-#print Pi.hasLe /-
 instance Pi.hasLe {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] : LE (∀ i, α i) where le x y := ∀ i, x i ≤ y i
 #align pi.has_le Pi.hasLe
--/
 
 #print Pi.le_def /-
 theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] {x y : ∀ i, α i} : x ≤ y ↔ ∀ i, x i ≤ y i :=
@@ -898,20 +940,22 @@ theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] {x y : �
 #align pi.le_def Pi.le_def
 -/
 
-#print Pi.preorder /-
 instance Pi.preorder {ι : Type u} {α : ι → Type v} [∀ i, Preorder (α i)] : Preorder (∀ i, α i) :=
   { Pi.hasLe with le_refl := fun a i => le_refl (a i), le_trans := fun a b c h₁ h₂ i => le_trans (h₁ i) (h₂ i) }
 #align pi.preorder Pi.preorder
--/
 
-#print Pi.lt_def /-
+/- warning: pi.lt_def -> Pi.lt_def is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u}} {α : ι -> Type.{v}} [_inst_1 : forall (i : ι), Preorder.{v} (α i)] {x : forall (i : ι), α i} {y : forall (i : ι), α i}, Iff (LT.lt.{(max u v)} (forall (i : ι), α i) (Preorder.toLT.{(max u v)} (forall (i : ι), α i) (Pi.preorder.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) x y) (And (LE.le.{(max u v)} (forall (i : ι), α i) (Pi.hasLe.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLE.{v} (α i) (_inst_1 i))) x y) (Exists.{succ u} ι (fun (i : ι) => LT.lt.{v} (α i) (Preorder.toLT.{v} (α i) (_inst_1 i)) (x i) (y i))))
+but is expected to have type
+  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.6985 : forall (i : ι), Preorder.{v} (α i)] {x : forall (i : ι), α i} {y : forall (i : ι), α i}, Iff (LT.lt.{(max u v)} (forall (i : ι), α i) (Preorder.toLT.{(max u v)} (forall (i : ι), α i) (instPreorderForAll.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => inst._@.Mathlib.Order.Basic._hyg.6985 i))) x y) (And (LE.le.{(max u v)} (forall (i : ι), α i) (instLEForAll.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6985 i))) x y) (Exists.{succ u} ι (fun (i : ι) => LT.lt.{v} (α i) (Preorder.toLT.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6985 i)) (x i) (y i))))
+Case conversion may be inaccurate. Consider using '#align pi.lt_def Pi.lt_defₓ'. -/
 theorem Pi.lt_def {ι : Type u} {α : ι → Type v} [∀ i, Preorder (α i)] {x y : ∀ i, α i} :
     x < y ↔ x ≤ y ∧ ∃ i, x i < y i := by simp (config := { contextual := true }) [lt_iff_le_not_le, Pi.le_def]
 #align pi.lt_def Pi.lt_def
--/
 
 instance Pi.partialOrder [∀ i, PartialOrder (π i)] : PartialOrder (∀ i, π i) :=
-  { Pi.preorder with le_antisymm := fun f g h1 h2 => funext fun b => (h1 b).antisymm (h2 b) }
+  { Pi.preorder with le_antisymm := fun f g h1 h2 => funext $ fun b => (h1 b).antisymm (h2 b) }
 #align pi.partial_order Pi.partialOrder
 
 section Pi
@@ -934,10 +978,10 @@ theorem lt_of_strong_lt [Nonempty ι] (h : a ≺ b) : a < b := by
   exact Pi.lt_def.2 ⟨le_of_strong_lt h, default, h _⟩
 #align lt_of_strong_lt lt_of_strong_lt
 
-theorem strong_lt_of_strong_lt_of_le (hab : a ≺ b) (hbc : b ≤ c) : a ≺ c := fun i => (hab _).trans_le <| hbc _
+theorem strong_lt_of_strong_lt_of_le (hab : a ≺ b) (hbc : b ≤ c) : a ≺ c := fun i => (hab _).trans_le $ hbc _
 #align strong_lt_of_strong_lt_of_le strong_lt_of_strong_lt_of_le
 
-theorem strong_lt_of_le_of_strong_lt (hab : a ≤ b) (hbc : b ≺ c) : a ≺ c := fun i => (hab _).trans_lt <| hbc _
+theorem strong_lt_of_le_of_strong_lt (hab : a ≤ b) (hbc : b ≺ c) : a ≺ c := fun i => (hab _).trans_lt $ hbc _
 #align strong_lt_of_le_of_strong_lt strong_lt_of_le_of_strong_lt
 
 alias le_of_strong_lt ← StrongLt.le
@@ -958,9 +1002,9 @@ variable [DecidableEq ι] [∀ i, Preorder (π i)] {x y : ∀ i, π i} {i : ι} 
 lean 3 declaration is
   forall {ι : Type.{u_1}} {π : ι -> Type.{u_2}} [_inst_1 : DecidableEq.{succ u_1} ι] [_inst_2 : forall (i : ι), Preorder.{u_2} (π i)] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i}, Iff (LE.le.{(max u_1 u_2)} (forall (i : ι), π i) (Pi.hasLe.{u_1 u_2} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u_2} (π i) (_inst_2 i))) x (Function.update.{succ u_1 succ u_2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) y i a)) (And (LE.le.{u_2} (π i) (Preorder.toLE.{u_2} (π i) (_inst_2 i)) (x i) a) (forall (j : ι), (Ne.{succ u_1} ι j i) -> (LE.le.{u_2} (π j) (Preorder.toLE.{u_2} (π j) (_inst_2 j)) (x j) (y j))))
 but is expected to have type
-  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.6740 : forall (i : ι), Preorder.{v} (α i)] [inst._@.Mathlib.Order.Basic._hyg.6749 : DecidableEq.{succ u} ι] {x : forall (i : ι), α i} {y : forall (i : ι), α i} {i : ι} {a : α i}, Iff (LE.le.{(max u v)} (forall (i : ι), α i) (Pi.hasLe.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6740 i))) x (Function.update.{succ u succ v} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Order.Basic._hyg.6749 a b) y i a)) (And (LE.le.{v} (α i) (Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6740 i)) (x i) a) (forall (j : ι), (Ne.{succ u} ι j i) -> (LE.le.{v} (α j) (Preorder.toLE.{v} (α j) (inst._@.Mathlib.Order.Basic._hyg.6740 j)) (x j) (y j))))
+  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.7072 : forall (i : ι), Preorder.{v} (α i)] [inst._@.Mathlib.Order.Basic._hyg.7081 : DecidableEq.{succ u} ι] {x : forall (i : ι), α i} {y : forall (i : ι), α i} {i : ι} {a : α i}, Iff (LE.le.{(max u v)} (forall (i : ι), α i) (instLEForAll.{u v} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.7072 i))) x (Function.update.{succ u succ v} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Order.Basic._hyg.7081 a b) y i a)) (And (LE.le.{v} (α i) (Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.7072 i)) (x i) a) (forall (j : ι), (Ne.{succ u} ι j i) -> (LE.le.{v} (α j) (Preorder.toLE.{v} (α j) (inst._@.Mathlib.Order.Basic._hyg.7072 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align le_update_iff le_update_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem le_update_iff : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 #align le_update_iff le_update_iff
@@ -969,9 +1013,9 @@ theorem le_update_iff : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ (j) (_
 lean 3 declaration is
   forall {ι : Type.{u_1}} {π : ι -> Type.{u_2}} [_inst_1 : DecidableEq.{succ u_1} ι] [_inst_2 : forall (i : ι), Preorder.{u_2} (π i)] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i}, Iff (LE.le.{(max u_1 u_2)} (forall (a : ι), π a) (Pi.hasLe.{u_1 u_2} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u_2} (π i) (_inst_2 i))) (Function.update.{succ u_1 succ u_2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) y) (And (LE.le.{u_2} (π i) (Preorder.toLE.{u_2} (π i) (_inst_2 i)) a (y i)) (forall (j : ι), (Ne.{succ u_1} ι j i) -> (LE.le.{u_2} (π j) (Preorder.toLE.{u_2} (π j) (_inst_2 j)) (x j) (y j))))
 but is expected to have type
-  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.6830 : forall (i : ι), Preorder.{v} (α i)] [inst._@.Mathlib.Order.Basic._hyg.6839 : DecidableEq.{succ u} ι] {x : forall (i : ι), α i} {y : forall (i : ι), α i} {i : ι} {a : α i}, Iff (LE.le.{(max u v)} (forall (a : ι), α a) (Pi.hasLe.{u v} ι (fun (a : ι) => α a) (fun (i : ι) => Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6830 i))) (Function.update.{succ u succ v} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Order.Basic._hyg.6839 a b) x i a) y) (And (LE.le.{v} (α i) (Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6830 i)) a (y i)) (forall (j : ι), (Ne.{succ u} ι j i) -> (LE.le.{v} (α j) (Preorder.toLE.{v} (α j) (inst._@.Mathlib.Order.Basic._hyg.6830 j)) (x j) (y j))))
+  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.7158 : forall (i : ι), Preorder.{v} (α i)] [inst._@.Mathlib.Order.Basic._hyg.7167 : DecidableEq.{succ u} ι] {x : forall (i : ι), α i} {y : forall (i : ι), α i} {i : ι} {a : α i}, Iff (LE.le.{(max u v)} (forall (a : ι), α a) (instLEForAll.{u v} ι (fun (a : ι) => α a) (fun (i : ι) => Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.7158 i))) (Function.update.{succ u succ v} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Order.Basic._hyg.7167 a b) x i a) y) (And (LE.le.{v} (α i) (Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.7158 i)) a (y i)) (forall (j : ι), (Ne.{succ u} ι j i) -> (LE.le.{v} (α j) (Preorder.toLE.{v} (α j) (inst._@.Mathlib.Order.Basic._hyg.7158 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align update_le_iff update_le_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_le_iff : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 #align update_le_iff update_le_iff
@@ -980,9 +1024,9 @@ theorem update_le_iff : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ (j) (_
 lean 3 declaration is
   forall {ι : Type.{u_1}} {π : ι -> Type.{u_2}} [_inst_1 : DecidableEq.{succ u_1} ι] [_inst_2 : forall (i : ι), Preorder.{u_2} (π i)] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i} {b : π i}, Iff (LE.le.{(max u_1 u_2)} (forall (a : ι), π a) (Pi.hasLe.{u_1 u_2} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u_2} (π i) (_inst_2 i))) (Function.update.{succ u_1 succ u_2} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) (Function.update.{succ u_1 succ u_2} ι (fun (a : ι) => π a) (fun (a : ι) (b : ι) => _inst_1 a b) y i b)) (And (LE.le.{u_2} (π i) (Preorder.toLE.{u_2} (π i) (_inst_2 i)) a b) (forall (j : ι), (Ne.{succ u_1} ι j i) -> (LE.le.{u_2} (π j) (Preorder.toLE.{u_2} (π j) (_inst_2 j)) (x j) (y j))))
 but is expected to have type
-  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.6920 : forall (i : ι), Preorder.{v} (α i)] [inst._@.Mathlib.Order.Basic._hyg.6929 : DecidableEq.{succ u} ι] {x : forall (i : ι), α i} {y : forall (i : ι), α i} {i : ι} {a : α i} {b : α i}, Iff (LE.le.{(max u v)} (forall (a : ι), α a) (Pi.hasLe.{u v} ι (fun (a : ι) => α a) (fun (i : ι) => Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6920 i))) (Function.update.{succ u succ v} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Order.Basic._hyg.6929 a b) x i a) (Function.update.{succ u succ v} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Order.Basic._hyg.6929 a b) y i b)) (And (LE.le.{v} (α i) (Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.6920 i)) a b) (forall (j : ι), (Ne.{succ u} ι j i) -> (LE.le.{v} (α j) (Preorder.toLE.{v} (α j) (inst._@.Mathlib.Order.Basic._hyg.6920 j)) (x j) (y j))))
+  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.7244 : forall (i : ι), Preorder.{v} (α i)] [inst._@.Mathlib.Order.Basic._hyg.7253 : DecidableEq.{succ u} ι] {x : forall (i : ι), α i} {y : forall (i : ι), α i} {i : ι} {a : α i} {b : α i}, Iff (LE.le.{(max u v)} (forall (a : ι), α a) (instLEForAll.{u v} ι (fun (a : ι) => α a) (fun (i : ι) => Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.7244 i))) (Function.update.{succ u succ v} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Order.Basic._hyg.7253 a b) x i a) (Function.update.{succ u succ v} ι (fun (a : ι) => α a) (fun (a : ι) (b : ι) => inst._@.Mathlib.Order.Basic._hyg.7253 a b) y i b)) (And (LE.le.{v} (α i) (Preorder.toLE.{v} (α i) (inst._@.Mathlib.Order.Basic._hyg.7244 i)) a b) (forall (j : ι), (Ne.{succ u} ι j i) -> (LE.le.{v} (α j) (Preorder.toLE.{v} (α j) (inst._@.Mathlib.Order.Basic._hyg.7244 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align update_le_update_iff update_le_update_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_le_update_iff : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   by simp (config := { contextual := true }) [update_le_iff]
 #align update_le_update_iff update_le_update_iff
@@ -1005,28 +1049,40 @@ theorem update_lt_self_iff : update x i a < x ↔ a < x i := by simp [lt_iff_le_
 
 end Function
 
-instance Pi.hasSdiff {ι : Type u} {α : ι → Type v} [∀ i, Sdiff (α i)] : Sdiff (∀ i, α i) :=
+instance Pi.hasSdiff {ι : Type u} {α : ι → Type v} [∀ i, SDiff (α i)] : SDiff (∀ i, α i) :=
   ⟨fun x y i => x i \ y i⟩
 #align pi.has_sdiff Pi.hasSdiff
 
-theorem Pi.sdiff_def {ι : Type u} {α : ι → Type v} [∀ i, Sdiff (α i)] (x y : ∀ i, α i) : x \ y = fun i => x i \ y i :=
+#print Pi.sdiff_def /-
+theorem Pi.sdiff_def {ι : Type u} {α : ι → Type v} [∀ i, SDiff (α i)] (x y : ∀ i, α i) : x \ y = fun i => x i \ y i :=
   rfl
 #align pi.sdiff_def Pi.sdiff_def
+-/
 
+#print Pi.sdiff_apply /-
 @[simp]
-theorem Pi.sdiff_apply {ι : Type u} {α : ι → Type v} [∀ i, Sdiff (α i)] (x y : ∀ i, α i) (i : ι) :
+theorem Pi.sdiff_apply {ι : Type u} {α : ι → Type v} [∀ i, SDiff (α i)] (x y : ∀ i, α i) (i : ι) :
     (x \ y) i = x i \ y i :=
   rfl
 #align pi.sdiff_apply Pi.sdiff_apply
+-/
 
 namespace Function
 
 variable [Preorder α] [Nonempty β] {a b : α}
 
+#print Function.const_le_const /-
 @[simp]
 theorem const_le_const : const β a ≤ const β b ↔ a ≤ b := by simp [Pi.le_def]
 #align function.const_le_const Function.const_le_const
+-/
 
+/- warning: function.const_lt_const -> Function.const_lt_const is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ v} β] {a : α} {b : α}, Iff (LT.lt.{(max v u)} (β -> α) (Preorder.toLT.{(max v u)} (β -> α) (Pi.preorder.{v u} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1))) (Function.const.{succ u succ v} α β a) (Function.const.{succ u succ v} α β b)) (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.7666 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.7669 : Nonempty.{succ v} β] {a : α} {b : α}, Iff (LT.lt.{(max u v)} (β -> α) (Preorder.toLT.{(max u v)} (β -> α) (instPreorderForAll.{v u} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => inst._@.Mathlib.Order.Basic._hyg.7666))) (Function.const.{succ u succ v} α β a) (Function.const.{succ u succ v} α β b)) (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.7666) a b)
+Case conversion may be inaccurate. Consider using '#align function.const_lt_const Function.const_lt_constₓ'. -/
 @[simp]
 theorem const_lt_const : const β a < const β b ↔ a < b := by simpa [Pi.lt_def] using le_of_lt
 #align function.const_lt_const Function.const_lt_const
@@ -1040,18 +1096,42 @@ section MinMaxRec
 
 variable [LinearOrder α] {p : α → Prop} {x y : α}
 
+/- warning: min_rec -> min_rec is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] {p : α -> Prop} {x : α} {y : α}, ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) x y) -> (p x)) -> ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) y x) -> (p y)) -> (p (LinearOrder.min.{u} α _inst_1 x y))
+but is expected to have type
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Basic._hyg.7755 : LinearOrder.{u} α] {p : α -> Prop} {x : α} {y : α}, ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.7755))) x y) -> (p x)) -> ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.7755))) y x) -> (p y)) -> (p (Min.min.{u} α (LinearOrder.toMin.{u} α inst._@.Mathlib.Order.Basic._hyg.7755) x y))
+Case conversion may be inaccurate. Consider using '#align min_rec min_recₓ'. -/
 theorem min_rec (hx : x ≤ y → p x) (hy : y ≤ x → p y) : p (min x y) :=
   (le_total x y).rec (fun h => (min_eq_left h).symm.subst (hx h)) fun h => (min_eq_right h).symm.subst (hy h)
 #align min_rec min_rec
 
+/- warning: max_rec -> max_rec is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] {p : α -> Prop} {x : α} {y : α}, ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) y x) -> (p x)) -> ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α _inst_1))) x y) -> (p y)) -> (p (LinearOrder.max.{u} α _inst_1 x y))
+but is expected to have type
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Basic._hyg.7827 : LinearOrder.{u} α] {p : α -> Prop} {x : α} {y : α}, ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.7827))) y x) -> (p x)) -> ((LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (LinearOrder.toPartialOrder.{u} α inst._@.Mathlib.Order.Basic._hyg.7827))) x y) -> (p y)) -> (p (Max.max.{u} α (LinearOrder.toMax.{u} α inst._@.Mathlib.Order.Basic._hyg.7827) x y))
+Case conversion may be inaccurate. Consider using '#align max_rec max_recₓ'. -/
 theorem max_rec (hx : y ≤ x → p x) (hy : x ≤ y → p y) : p (max x y) :=
   @min_rec αᵒᵈ _ _ _ _ hx hy
 #align max_rec max_rec
 
+/- warning: min_rec' -> min_rec' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] {x : α} {y : α} (p : α -> Prop), (p x) -> (p y) -> (p (LinearOrder.min.{u} α _inst_1 x y))
+but is expected to have type
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Basic._hyg.7876 : LinearOrder.{u} α] {x : α} {y : α} (p : α -> Prop), (p x) -> (p y) -> (p (Min.min.{u} α (LinearOrder.toMin.{u} α inst._@.Mathlib.Order.Basic._hyg.7876) x y))
+Case conversion may be inaccurate. Consider using '#align min_rec' min_rec'ₓ'. -/
 theorem min_rec' (p : α → Prop) (hx : p x) (hy : p y) : p (min x y) :=
   min_rec (fun _ => hx) fun _ => hy
 #align min_rec' min_rec'
 
+/- warning: max_rec' -> max_rec' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] {x : α} {y : α} (p : α -> Prop), (p x) -> (p y) -> (p (LinearOrder.max.{u} α _inst_1 x y))
+but is expected to have type
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Basic._hyg.7919 : LinearOrder.{u} α] {x : α} {y : α} (p : α -> Prop), (p x) -> (p y) -> (p (Max.max.{u} α (LinearOrder.toMax.{u} α inst._@.Mathlib.Order.Basic._hyg.7919) x y))
+Case conversion may be inaccurate. Consider using '#align max_rec' max_rec'ₓ'. -/
 theorem max_rec' (p : α → Prop) (hx : p x) (hy : p y) : p (max x y) :=
   max_rec (fun _ => hx) fun _ => hy
 #align max_rec' max_rec'
@@ -1071,17 +1151,21 @@ end MinMaxRec
 /-! ### `has_sup` and `has_inf` -/
 
 
+#print HasSup /-
 /-- Typeclass for the `⊔` (`\lub`) notation -/
 @[notation_class]
 class HasSup (α : Type u) where
   sup : α → α → α
 #align has_sup HasSup
+-/
 
+#print HasInf /-
 /-- Typeclass for the `⊓` (`\glb`) notation -/
 @[notation_class]
 class HasInf (α : Type u) where
   inf : α → α → α
 #align has_inf HasInf
+-/
 
 -- mathport name: «expr ⊔ »
 infixl:68 " ⊔ " => HasSup.sup
@@ -1118,7 +1202,7 @@ def PartialOrder.lift {α β} [PartialOrder β] (f : α → β) (inj : Injective
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : LinearOrder.{u_2} β] [_inst_2 : HasSup.{u_1} α] [_inst_3 : HasInf.{u_1} α] (f : α -> β), (Function.Injective.{succ u_1 succ u_2} α β f) -> (forall (x : α) (y : α), Eq.{succ u_2} β (f (HasSup.sup.{u_1} α _inst_2 x y)) (LinearOrder.max.{u_2} β _inst_1 (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u_2} β (f (HasInf.inf.{u_1} α _inst_3 x y)) (LinearOrder.min.{u_2} β _inst_1 (f x) (f y))) -> (LinearOrder.{u_1} α)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Basic._hyg.8527 : LinearOrder.{u_2} β] (f : α -> β), (Function.Injective.{succ u_1 succ u_2} α β f) -> (LinearOrder.{u_1} α)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Basic._hyg.9551 : LinearOrder.{u_2} β] [inst._@.Mathlib.Order.Basic._hyg.9554 : HasSup.{u_1} α] [inst._@.Mathlib.Order.Basic._hyg.9557 : HasInf.{u_1} α] (f : α -> β), (Function.Injective.{succ u_1 succ u_2} α β f) -> (forall (x : α) (y : α), Eq.{succ u_2} β (f (HasSup.sup.{u_1} α inst._@.Mathlib.Order.Basic._hyg.9554 x y)) (Max.max.{u_2} β (LinearOrder.toMax.{u_2} β inst._@.Mathlib.Order.Basic._hyg.9551) (f x) (f y))) -> (forall (x : α) (y : α), Eq.{succ u_2} β (f (HasInf.inf.{u_1} α inst._@.Mathlib.Order.Basic._hyg.9557 x y)) (Min.min.{u_2} β (LinearOrder.toMin.{u_2} β inst._@.Mathlib.Order.Basic._hyg.9551) (f x) (f y))) -> (LinearOrder.{u_1} α)
 Case conversion may be inaccurate. Consider using '#align linear_order.lift LinearOrder.liftₓ'. -/
 /-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
 function `f : α → β`. This version takes `[has_sup α]` and `[has_inf α]` as arguments, then uses
@@ -1143,6 +1227,7 @@ def LinearOrder.lift {α β} [LinearOrder β] [HasSup α] [HasInf α] (f : α �
       rfl }
 #align linear_order.lift LinearOrder.lift
 
+#print LinearOrder.lift' /-
 /-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
 function `f : α → β`. This version autogenerates `min` and `max` fields. See `linear_order.lift`
 for a version that takes `[has_sup α]` and `[has_inf α]`, then uses them as `max` and `min`.
@@ -1152,6 +1237,7 @@ def LinearOrder.lift' {α β} [LinearOrder β] (f : α → β) (inj : Injective 
   @LinearOrder.lift α β _ ⟨fun x y => if f x ≤ f y then y else x⟩ ⟨fun x y => if f x ≤ f y then x else y⟩ f inj
     (fun x y => (apply_ite f _ _ _).trans (max_def _ _).symm) fun x y => (apply_ite f _ _ _).trans (min_def _ _).symm
 #align linear_order.lift' LinearOrder.lift'
+-/
 
 /-! ### Subtype of an order -/
 
@@ -1229,26 +1315,18 @@ namespace Prod
 instance (α : Type u) (β : Type v) [LE α] [LE β] : LE (α × β) :=
   ⟨fun p q => p.1 ≤ q.1 ∧ p.2 ≤ q.2⟩
 
-/- warning: prod.le_def -> Prod.le_def is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : LE.{u} α] [_inst_2 : LE.{v} β] {x : Prod.{u v} α β} {y : Prod.{u v} α β}, Iff (LE.le.{(max u v)} (Prod.{u v} α β) (Prod.hasLe.{u v} α β _inst_1 _inst_2) x y) (And (LE.le.{u} α _inst_1 (Prod.fst.{u v} α β x) (Prod.fst.{u v} α β y)) (LE.le.{v} β _inst_2 (Prod.snd.{u v} α β x) (Prod.snd.{u v} α β y)))
-but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Basic._hyg.9135 : LE.{u_1} α] [inst._@.Mathlib.Order.Basic._hyg.9138 : LE.{u_2} β] {x : Prod.{u_1 u_2} α β} {y : Prod.{u_1 u_2} α β}, Iff (LE.le.{(max u_1 u_2)} (Prod.{u_1 u_2} α β) (Prod.has_le.{u_1 u_2} α β inst._@.Mathlib.Order.Basic._hyg.9135 inst._@.Mathlib.Order.Basic._hyg.9138) x y) (And (LE.le.{u_1} α inst._@.Mathlib.Order.Basic._hyg.9135 (Prod.fst.{u_1 u_2} α β x) (Prod.fst.{u_1 u_2} α β y)) (LE.le.{u_2} β inst._@.Mathlib.Order.Basic._hyg.9138 (Prod.snd.{u_1 u_2} α β x) (Prod.snd.{u_1 u_2} α β y)))
-Case conversion may be inaccurate. Consider using '#align prod.le_def Prod.le_defₓ'. -/
+#print Prod.le_def /-
 theorem le_def [LE α] [LE β] {x y : α × β} : x ≤ y ↔ x.1 ≤ y.1 ∧ x.2 ≤ y.2 :=
   Iff.rfl
 #align prod.le_def Prod.le_def
+-/
 
-/- warning: prod.mk_le_mk -> Prod.mk_le_mk is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : LE.{u} α] [_inst_2 : LE.{v} β] {x₁ : α} {x₂ : α} {y₁ : β} {y₂ : β}, Iff (LE.le.{(max u v)} (Prod.{u v} α β) (Prod.hasLe.{u v} α β _inst_1 _inst_2) (Prod.mk.{u v} α β x₁ y₁) (Prod.mk.{u v} α β x₂ y₂)) (And (LE.le.{u} α _inst_1 x₁ x₂) (LE.le.{v} β _inst_2 y₁ y₂))
-but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Basic._hyg.9186 : LE.{u_1} α] [inst._@.Mathlib.Order.Basic._hyg.9189 : LE.{u_2} β] {x₁ : α} {x₂ : α} {y₁ : β} {y₂ : β}, Iff (LE.le.{(max u_1 u_2)} (Prod.{u_1 u_2} α β) (Prod.has_le.{u_1 u_2} α β inst._@.Mathlib.Order.Basic._hyg.9186 inst._@.Mathlib.Order.Basic._hyg.9189) (Prod.mk.{u_1 u_2} α β x₁ y₁) (Prod.mk.{u_1 u_2} α β x₂ y₂)) (And (LE.le.{u_1} α inst._@.Mathlib.Order.Basic._hyg.9186 x₁ x₂) (LE.le.{u_2} β inst._@.Mathlib.Order.Basic._hyg.9189 y₁ y₂))
-Case conversion may be inaccurate. Consider using '#align prod.mk_le_mk Prod.mk_le_mkₓ'. -/
+#print Prod.mk_le_mk /-
 @[simp]
 theorem mk_le_mk [LE α] [LE β] {x₁ x₂ : α} {y₁ y₂ : β} : (x₁, y₁) ≤ (x₂, y₂) ↔ x₁ ≤ x₂ ∧ y₁ ≤ y₂ :=
   Iff.rfl
 #align prod.mk_le_mk Prod.mk_le_mk
+-/
 
 #print Prod.swap_le_swap /-
 @[simp]
@@ -1269,7 +1347,7 @@ instance (α : Type u) (β : Type v) [Preorder α] [Preorder β] : Preorder (α 
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β] {x : Prod.{u v} α β} {y : Prod.{u v} α β}, Iff (LT.lt.{(max v u)} (Prod.{v u} β α) (Preorder.toLT.{(max v u)} (Prod.{v u} β α) (Prod.preorder.{v u} β α _inst_2 _inst_1)) (Prod.swap.{u v} α β x) (Prod.swap.{u v} α β y)) (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.preorder.{u v} α β _inst_1 _inst_2)) x y)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.9547 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.9550 : Preorder.{v} β] {x : Prod.{u v} α β} {y : Prod.{u v} α β}, Iff (LT.lt.{(max u v)} (Prod.{v u} β α) (Preorder.toLT.{(max u v)} (Prod.{v u} β α) (Prod.instPreorderProd.{v u} β α inst._@.Mathlib.Order.Basic._hyg.9550 inst._@.Mathlib.Order.Basic._hyg.9547)) (Prod.swap.{u v} α β x) (Prod.swap.{u v} α β y)) (LT.lt.{(max v u)} (Prod.{u v} α β) (Preorder.toLT.{(max v u)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.9547 inst._@.Mathlib.Order.Basic._hyg.9550)) x y)
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.10914 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.10917 : Preorder.{v} β] {x : Prod.{u v} α β} {y : Prod.{u v} α β}, Iff (LT.lt.{(max u v)} (Prod.{v u} β α) (Preorder.toLT.{(max u v)} (Prod.{v u} β α) (Prod.instPreorderProd.{v u} β α inst._@.Mathlib.Order.Basic._hyg.10917 inst._@.Mathlib.Order.Basic._hyg.10914)) (Prod.swap.{u v} α β x) (Prod.swap.{u v} α β y)) (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.10914 inst._@.Mathlib.Order.Basic._hyg.10917)) x y)
 Case conversion may be inaccurate. Consider using '#align prod.swap_lt_swap Prod.swap_lt_swapₓ'. -/
 @[simp]
 theorem swap_lt_swap : x.swap < y.swap ↔ x < y :=
@@ -1292,7 +1370,7 @@ theorem mk_le_mk_iff_right : (a, b₁) ≤ (a, b₂) ↔ b₁ ≤ b₂ :=
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β] {a₁ : α} {a₂ : α} {b : β}, Iff (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.preorder.{u v} α β _inst_1 _inst_2)) (Prod.mk.{u v} α β a₁ b) (Prod.mk.{u v} α β a₂ b)) (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) a₁ a₂)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.9721 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.9724 : Preorder.{v} β] {a₁ : α} {a₂ : α} {b : β}, Iff (LT.lt.{(max v u)} (Prod.{u v} α β) (Preorder.toLT.{(max v u)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.9721 inst._@.Mathlib.Order.Basic._hyg.9724)) (Prod.mk.{u v} α β a₁ b) (Prod.mk.{u v} α β a₂ b)) (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.9721) a₁ a₂)
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.11076 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.11079 : Preorder.{v} β] {a₁ : α} {a₂ : α} {b : β}, Iff (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.11076 inst._@.Mathlib.Order.Basic._hyg.11079)) (Prod.mk.{u v} α β a₁ b) (Prod.mk.{u v} α β a₂ b)) (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.11076) a₁ a₂)
 Case conversion may be inaccurate. Consider using '#align prod.mk_lt_mk_iff_left Prod.mk_lt_mk_iff_leftₓ'. -/
 theorem mk_lt_mk_iff_left : (a₁, b) < (a₂, b) ↔ a₁ < a₂ :=
   lt_iff_lt_of_le_iff_le' mk_le_mk_iff_left mk_le_mk_iff_left
@@ -1302,7 +1380,7 @@ theorem mk_lt_mk_iff_left : (a₁, b) < (a₂, b) ↔ a₁ < a₂ :=
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β] {a : α} {b₁ : β} {b₂ : β}, Iff (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.preorder.{u v} α β _inst_1 _inst_2)) (Prod.mk.{u v} α β a b₁) (Prod.mk.{u v} α β a b₂)) (LT.lt.{v} β (Preorder.toLT.{v} β _inst_2) b₁ b₂)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.9781 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.9784 : Preorder.{v} β] {a : α} {b₁ : β} {b₂ : β}, Iff (LT.lt.{(max v u)} (Prod.{u v} α β) (Preorder.toLT.{(max v u)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.9781 inst._@.Mathlib.Order.Basic._hyg.9784)) (Prod.mk.{u v} α β a b₁) (Prod.mk.{u v} α β a b₂)) (LT.lt.{v} β (Preorder.toLT.{v} β inst._@.Mathlib.Order.Basic._hyg.9784) b₁ b₂)
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.11133 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.11136 : Preorder.{v} β] {a : α} {b₁ : β} {b₂ : β}, Iff (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.11133 inst._@.Mathlib.Order.Basic._hyg.11136)) (Prod.mk.{u v} α β a b₁) (Prod.mk.{u v} α β a b₂)) (LT.lt.{v} β (Preorder.toLT.{v} β inst._@.Mathlib.Order.Basic._hyg.11136) b₁ b₂)
 Case conversion may be inaccurate. Consider using '#align prod.mk_lt_mk_iff_right Prod.mk_lt_mk_iff_rightₓ'. -/
 theorem mk_lt_mk_iff_right : (a, b₁) < (a, b₂) ↔ b₁ < b₂ :=
   lt_iff_lt_of_le_iff_le' mk_le_mk_iff_right mk_le_mk_iff_right
@@ -1312,12 +1390,12 @@ theorem mk_lt_mk_iff_right : (a, b₁) < (a, b₂) ↔ b₁ < b₂ :=
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β] {x : Prod.{u v} α β} {y : Prod.{u v} α β}, Iff (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.preorder.{u v} α β _inst_1 _inst_2)) x y) (Or (And (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (Prod.fst.{u v} α β x) (Prod.fst.{u v} α β y)) (LE.le.{v} β (Preorder.toLE.{v} β _inst_2) (Prod.snd.{u v} α β x) (Prod.snd.{u v} α β y))) (And (LE.le.{u} α (Preorder.toLE.{u} α _inst_1) (Prod.fst.{u v} α β x) (Prod.fst.{u v} α β y)) (LT.lt.{v} β (Preorder.toLT.{v} β _inst_2) (Prod.snd.{u v} α β x) (Prod.snd.{u v} α β y))))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.9841 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.9844 : Preorder.{v} β] {x : Prod.{u v} α β} {y : Prod.{u v} α β}, Iff (LT.lt.{(max v u)} (Prod.{u v} α β) (Preorder.toLT.{(max v u)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.9841 inst._@.Mathlib.Order.Basic._hyg.9844)) x y) (Or (And (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.9841) (Prod.fst.{u v} α β x) (Prod.fst.{u v} α β y)) (LE.le.{v} β (Preorder.toLE.{v} β inst._@.Mathlib.Order.Basic._hyg.9844) (Prod.snd.{u v} α β x) (Prod.snd.{u v} α β y))) (And (LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.9841) (Prod.fst.{u v} α β x) (Prod.fst.{u v} α β y)) (LT.lt.{v} β (Preorder.toLT.{v} β inst._@.Mathlib.Order.Basic._hyg.9844) (Prod.snd.{u v} α β x) (Prod.snd.{u v} α β y))))
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.11190 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.11193 : Preorder.{v} β] {x : Prod.{u v} α β} {y : Prod.{u v} α β}, Iff (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.11190 inst._@.Mathlib.Order.Basic._hyg.11193)) x y) (Or (And (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.11190) (Prod.fst.{u v} α β x) (Prod.fst.{u v} α β y)) (LE.le.{v} β (Preorder.toLE.{v} β inst._@.Mathlib.Order.Basic._hyg.11193) (Prod.snd.{u v} α β x) (Prod.snd.{u v} α β y))) (And (LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.11190) (Prod.fst.{u v} α β x) (Prod.fst.{u v} α β y)) (LT.lt.{v} β (Preorder.toLT.{v} β inst._@.Mathlib.Order.Basic._hyg.11193) (Prod.snd.{u v} α β x) (Prod.snd.{u v} α β y))))
 Case conversion may be inaccurate. Consider using '#align prod.lt_iff Prod.lt_iffₓ'. -/
 theorem lt_iff : x < y ↔ x.1 < y.1 ∧ x.2 ≤ y.2 ∨ x.1 ≤ y.1 ∧ x.2 < y.2 := by
   refine' ⟨fun h => _, _⟩
   · by_cases h₁:y.1 ≤ x.1
-    · exact Or.inr ⟨h.1.1, h.1.2.lt_of_not_le fun h₂ => h.2 ⟨h₁, h₂⟩⟩
+    · exact Or.inr ⟨h.1.1, h.1.2.lt_of_not_le $ fun h₂ => h.2 ⟨h₁, h₂⟩⟩
       
     · exact Or.inl ⟨h.1.1.lt_of_not_le h₁, h.1.2⟩
       
@@ -1334,7 +1412,7 @@ theorem lt_iff : x < y ↔ x.1 < y.1 ∧ x.2 ≤ y.2 ∨ x.1 ≤ y.1 ∧ x.2 < y
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β] {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.preorder.{u v} α β _inst_1 _inst_2)) (Prod.mk.{u v} α β a₁ b₁) (Prod.mk.{u v} α β a₂ b₂)) (Or (And (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) a₁ a₂) (LE.le.{v} β (Preorder.toLE.{v} β _inst_2) b₁ b₂)) (And (LE.le.{u} α (Preorder.toLE.{u} α _inst_1) a₁ a₂) (LT.lt.{v} β (Preorder.toLT.{v} β _inst_2) b₁ b₂)))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.10004 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.10007 : Preorder.{v} β] {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (LT.lt.{(max v u)} (Prod.{u v} α β) (Preorder.toLT.{(max v u)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.10004 inst._@.Mathlib.Order.Basic._hyg.10007)) (Prod.mk.{u v} α β a₁ b₁) (Prod.mk.{u v} α β a₂ b₂)) (Or (And (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.10004) a₁ a₂) (LE.le.{v} β (Preorder.toLE.{v} β inst._@.Mathlib.Order.Basic._hyg.10007) b₁ b₂)) (And (LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.10004) a₁ a₂) (LT.lt.{v} β (Preorder.toLT.{v} β inst._@.Mathlib.Order.Basic._hyg.10007) b₁ b₂)))
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Basic._hyg.11372 : Preorder.{u} α] [inst._@.Mathlib.Order.Basic._hyg.11375 : Preorder.{v} β] {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (LT.lt.{(max u v)} (Prod.{u v} α β) (Preorder.toLT.{(max u v)} (Prod.{u v} α β) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Basic._hyg.11372 inst._@.Mathlib.Order.Basic._hyg.11375)) (Prod.mk.{u v} α β a₁ b₁) (Prod.mk.{u v} α β a₂ b₂)) (Or (And (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Basic._hyg.11372) a₁ a₂) (LE.le.{v} β (Preorder.toLE.{v} β inst._@.Mathlib.Order.Basic._hyg.11375) b₁ b₂)) (And (LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Basic._hyg.11372) a₁ a₂) (LT.lt.{v} β (Preorder.toLT.{v} β inst._@.Mathlib.Order.Basic._hyg.11375) b₁ b₂)))
 Case conversion may be inaccurate. Consider using '#align prod.mk_lt_mk Prod.mk_lt_mkₓ'. -/
 @[simp]
 theorem mk_lt_mk : (a₁, b₁) < (a₂, b₂) ↔ a₁ < a₂ ∧ b₁ ≤ b₂ ∨ a₁ ≤ a₂ ∧ b₁ < b₂ :=
@@ -1369,7 +1447,7 @@ theorem exists_between [LT α] [DenselyOrdered α] : ∀ {a₁ a₂ : α}, a₁ 
 -/
 
 instance OrderDual.densely_ordered (α : Type u) [LT α] [DenselyOrdered α] : DenselyOrdered αᵒᵈ :=
-  ⟨fun a₁ a₂ ha => (@exists_between α _ _ _ _ ha).imp fun a => And.symm⟩
+  ⟨fun a₁ a₂ ha => (@exists_between α _ _ _ _ ha).imp $ fun a => And.symm⟩
 #align order_dual.densely_ordered OrderDual.densely_ordered
 
 @[simp]
@@ -1392,15 +1470,19 @@ instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] : D
       ⟩
 
 instance {α : ι → Type _} [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)] : DenselyOrdered (∀ i, α i) :=
-  ⟨fun a b => by
-    classical simp_rw [Pi.lt_def]
-      obtain ⟨c, ha, hb⟩ := exists_between hi⟩
+  ⟨fun a b => by classical
+    simp_rw [Pi.lt_def]
+    rintro ⟨hab, i, hi⟩
+    obtain ⟨c, ha, hb⟩ := exists_between hi
+    exact
+      ⟨a.update i c, ⟨le_update_iff.2 ⟨ha.le, fun _ _ => le_rfl⟩, i, by rwa [update_same]⟩,
+        update_le_iff.2 ⟨hb.le, fun _ _ => hab _⟩, i, by rwa [update_same]⟩⟩
 
 #print le_of_forall_le_of_dense /-
 theorem le_of_forall_le_of_dense [LinearOrder α] [DenselyOrdered α] {a₁ a₂ : α} (h : ∀ a, a₂ < a → a₁ ≤ a) : a₁ ≤ a₂ :=
-  le_of_not_gt fun ha =>
+  le_of_not_gt $ fun ha =>
     let ⟨a, ha₁, ha₂⟩ := exists_between ha
-    lt_irrefl a <| lt_of_lt_of_le ‹a < a₁› (h _ ‹a₂ < a›)
+    lt_irrefl a $ lt_of_lt_of_le ‹a < a₁› (h _ ‹a₂ < a›)
 #align le_of_forall_le_of_dense le_of_forall_le_of_dense
 -/
 
@@ -1413,9 +1495,9 @@ theorem eq_of_le_of_forall_le_of_dense [LinearOrder α] [DenselyOrdered α] {a�
 
 #print le_of_forall_ge_of_dense /-
 theorem le_of_forall_ge_of_dense [LinearOrder α] [DenselyOrdered α] {a₁ a₂ : α} (h : ∀ a₃ < a₁, a₃ ≤ a₂) : a₁ ≤ a₂ :=
-  le_of_not_gt fun ha =>
+  le_of_not_gt $ fun ha =>
     let ⟨a, ha₁, ha₂⟩ := exists_between ha
-    lt_irrefl a <| lt_of_le_of_lt (h _ ‹a < a₁›) ‹a₂ < a›
+    lt_irrefl a $ lt_of_le_of_lt (h _ ‹a < a₁›) ‹a₂ < a›
 #align le_of_forall_ge_of_dense le_of_forall_ge_of_dense
 -/
 
@@ -1429,8 +1511,8 @@ theorem eq_of_le_of_forall_ge_of_dense [LinearOrder α] [DenselyOrdered α] {a�
 #print dense_or_discrete /-
 theorem dense_or_discrete [LinearOrder α] (a₁ a₂ : α) :
     (∃ a, a₁ < a ∧ a < a₂) ∨ (∀ a, a₁ < a → a₂ ≤ a) ∧ ∀ a < a₂, a ≤ a₁ :=
-  or_iff_not_imp_left.2 fun h =>
-    ⟨fun a ha₁ => le_of_not_gt fun ha₂ => h ⟨a, ha₁, ha₂⟩, fun a ha₂ => le_of_not_gt fun ha₁ => h ⟨a, ha₁, ha₂⟩⟩
+  or_iff_not_imp_left.2 $ fun h =>
+    ⟨fun a ha₁ => le_of_not_gt $ fun ha₂ => h ⟨a, ha₁, ha₂⟩, fun a ha₂ => le_of_not_gt $ fun ha₁ => h ⟨a, ha₁, ha₂⟩⟩
 #align dense_or_discrete dense_or_discrete
 -/
 
@@ -1445,19 +1527,43 @@ instance : LinearOrder PUnit := by
         decidableLt := fun _ _ => Decidable.false } <;>
     intros <;> first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]|exact Or.inl trivial
 
+/- warning: punit.max_eq -> PUnit.max_eq is a dubious translation:
+lean 3 declaration is
+  forall (a : PUnit.{succ u}) (b : PUnit.{succ u}), Eq.{succ u} PUnit.{succ u} (LinearOrder.max.{u} PUnit.{succ u} PUnit.linearOrder.{u} a b) PUnit.unit.{succ u}
+but is expected to have type
+  forall (a : PUnit.{succ u}) (b : PUnit.{succ u}) {star : PUnit.{succ u}}, Eq.{succ u} PUnit.{succ u} (Max.max.{u} PUnit.{succ u} (LinearOrder.toMax.{u} PUnit.{succ u} PUnit.instLinearOrderPUnit.{u}) a b) star
+Case conversion may be inaccurate. Consider using '#align punit.max_eq PUnit.max_eqₓ'. -/
 theorem max_eq : max a b = star :=
   rfl
 #align punit.max_eq PUnit.max_eq
 
+/- warning: punit.min_eq -> PUnit.min_eq is a dubious translation:
+lean 3 declaration is
+  forall (a : PUnit.{succ u}) (b : PUnit.{succ u}), Eq.{succ u} PUnit.{succ u} (LinearOrder.min.{u} PUnit.{succ u} PUnit.linearOrder.{u} a b) PUnit.unit.{succ u}
+but is expected to have type
+  forall (a : PUnit.{succ u}) (b : PUnit.{succ u}) {star : PUnit.{succ u}}, Eq.{succ u} PUnit.{succ u} (Min.min.{u} PUnit.{succ u} (LinearOrder.toMin.{u} PUnit.{succ u} PUnit.instLinearOrderPUnit.{u}) a b) star
+Case conversion may be inaccurate. Consider using '#align punit.min_eq PUnit.min_eqₓ'. -/
 theorem min_eq : min a b = star :=
   rfl
 #align punit.min_eq PUnit.min_eq
 
+/- warning: punit.le -> PUnit.le is a dubious translation:
+lean 3 declaration is
+  forall (a : PUnit.{succ u}) (b : PUnit.{succ u}), LE.le.{u} PUnit.{succ u} (Preorder.toLE.{u} PUnit.{succ u} (PartialOrder.toPreorder.{u} PUnit.{succ u} (LinearOrder.toPartialOrder.{u} PUnit.{succ u} PUnit.linearOrder.{u}))) a b
+but is expected to have type
+  forall (a : PUnit.{succ u}) (b : PUnit.{succ u}), LE.le.{u} PUnit.{succ u} (Preorder.toLE.{u} PUnit.{succ u} (PartialOrder.toPreorder.{u} PUnit.{succ u} (LinearOrder.toPartialOrder.{u} PUnit.{succ u} PUnit.instLinearOrderPUnit.{u}))) a b
+Case conversion may be inaccurate. Consider using '#align punit.le PUnit.leₓ'. -/
 @[simp]
 protected theorem le : a ≤ b :=
   trivial
 #align punit.le PUnit.le
 
+/- warning: punit.not_lt -> PUnit.not_lt is a dubious translation:
+lean 3 declaration is
+  forall (a : PUnit.{succ u}) (b : PUnit.{succ u}), Not (LT.lt.{u} PUnit.{succ u} (Preorder.toLT.{u} PUnit.{succ u} (PartialOrder.toPreorder.{u} PUnit.{succ u} (LinearOrder.toPartialOrder.{u} PUnit.{succ u} PUnit.linearOrder.{u}))) a b)
+but is expected to have type
+  forall (a : PUnit.{succ u}) (b : PUnit.{succ u}), Not (LT.lt.{u} PUnit.{succ u} (Preorder.toLT.{u} PUnit.{succ u} (PartialOrder.toPreorder.{u} PUnit.{succ u} (LinearOrder.toPartialOrder.{u} PUnit.{succ u} PUnit.instLinearOrderPUnit.{u}))) a b)
+Case conversion may be inaccurate. Consider using '#align punit.not_lt PUnit.not_ltₓ'. -/
 @[simp]
 theorem not_lt : ¬a < b :=
   not_false
@@ -1477,19 +1583,25 @@ instance PropCat.hasLe : LE Prop :=
 #align Prop.has_le PropCat.hasLe
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->» -/
+#print le_Prop_eq /-
 @[simp]
 theorem le_Prop_eq : ((· ≤ ·) : Prop → Prop → Prop) = («->» · ·) :=
   rfl
 #align le_Prop_eq le_Prop_eq
+-/
 
+#print subrelation_iff_le /-
 theorem subrelation_iff_le {r s : α → α → Prop} : Subrelation r s ↔ r ≤ s :=
   Iff.rfl
 #align subrelation_iff_le subrelation_iff_le
+-/
 
+#print PropCat.partialOrder /-
 instance PropCat.partialOrder : PartialOrder Prop :=
   { PropCat.hasLe with le_refl := fun _ => id, le_trans := fun a b c f g => g ∘ f,
     le_antisymm := fun a b Hab Hba => propext ⟨Hab, Hba⟩ }
 #align Prop.partial_order PropCat.partialOrder
+-/
 
 end Prop
 
@@ -1498,11 +1610,13 @@ variable {s : β → β → Prop} {t : γ → γ → Prop}
 /-! ### Linear order from a total partial order -/
 
 
+#print AsLinearOrder /-
 /-- Type synonym to create an instance of `linear_order` from a `partial_order` and
 `is_total α (≤)` -/
 def AsLinearOrder (α : Type u) :=
   α
 #align as_linear_order AsLinearOrder
+-/
 
 instance {α} [Inhabited α] : Inhabited (AsLinearOrder α) :=
   ⟨(default : α)⟩

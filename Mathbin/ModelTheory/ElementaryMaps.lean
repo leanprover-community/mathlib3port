@@ -47,7 +47,7 @@ structure ElementaryEmbedding where
 #align first_order.language.elementary_embedding FirstOrder.Language.ElementaryEmbedding
 
 -- mathport name: elementary_embedding
-localized [FirstOrder] notation:25 A " ↪ₑ[" L "] " B => FirstOrder.Language.ElementaryEmbedding L A B
+scoped[FirstOrder] notation:25 A " ↪ₑ[" L "] " B => FirstOrder.Language.ElementaryEmbedding L A B
 
 variable {L} {M} {N}
 
@@ -68,12 +68,22 @@ instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
 
 @[simp]
 theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.BoundedFormula α n) (v : α → M) (xs : Fin n → M) :
-    φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by
-  classical rw [← bounded_formula.realize_restrict_free_var Set.Subset.rfl, Set.inclusion_eq_id, iff_eq_eq]
-    · infer_instance
-      
-    simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h
-    refine' h.trans _
+    φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by classical
+  rw [← bounded_formula.realize_restrict_free_var Set.Subset.rfl, Set.inclusion_eq_id, iff_eq_eq]
+  swap
+  · infer_instance
+    
+  have h :=
+    f.map_formula' ((φ.restrict_free_var id).toFormula.relabel (Fintype.equivFin _))
+      (Sum.elim (v ∘ coe) xs ∘ (Fintype.equivFin _).symm)
+  simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h
+  rw [← Function.comp.assoc _ _ (Fintype.equivFin _).symm,
+    Function.comp.assoc _ (Fintype.equivFin _).symm (Fintype.equivFin _), Equiv.symm_comp_self, Function.comp.right_id,
+    Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr, Sum.elim_comp_inr, ←
+    Function.comp.assoc] at h
+  refine' h.trans _
+  rw [Function.comp.assoc _ _ (Fintype.equivFin _), Equiv.symm_comp_self, Function.comp.right_id, Sum.elim_comp_inl,
+    Sum.elim_comp_inr, ← Set.inclusion_eq_id, bounded_formula.realize_restrict_free_var Set.Subset.rfl]
 #align
   first_order.language.elementary_embedding.map_bounded_formula FirstOrder.Language.ElementaryEmbedding.map_bounded_formula
 

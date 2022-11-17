@@ -104,7 +104,6 @@ lean 3 declaration is
 but is expected to have type
   PUnit.{succ (succ u)}
 Case conversion may be inaccurate. Consider using '#align polynomial.pow_sub_pow_factor Polynomial.powSubPowFactorₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
 /-- `x^n - y^n` can be expressed as `z * (x - y)` for some `z` in the ring.
 -/
 def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x - y) }
@@ -113,7 +112,7 @@ def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x -
   | k + 2 => by
     cases' @pow_sub_pow_factor (k + 1) with z hz
     exists z * x + y ^ (k + 1)
-    linear_combination (config := { normalization_tactic := sorry })x * hz
+    linear_combination (norm := ring) x * hz
 #align polynomial.pow_sub_pow_factor Polynomial.powSubPowFactor
 
 /-- For any polynomial `f`, `f.eval x - f.eval y` can be expressed as `z * (x - y)`

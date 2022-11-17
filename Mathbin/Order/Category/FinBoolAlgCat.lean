@@ -118,8 +118,8 @@ def dual : FinBoolAlgCat ⥤ FinBoolAlgCat where
 /-- The equivalence between `FinBoolAlg` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : FinBoolAlgCat ≌ FinBoolAlgCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
 #align FinBoolAlg.dual_equiv FinBoolAlgCat.dualEquiv
 
 end FinBoolAlgCat
@@ -127,7 +127,7 @@ end FinBoolAlgCat
 /-- The powerset functor. `set` as a functor. -/
 @[simps]
 def fintypeToFinBoolAlgOp : FintypeCat ⥤ FinBoolAlgCatᵒᵖ where
-  obj X := op <| FinBoolAlgCat.of (Set X)
-  map X Y f := Quiver.Hom.op <| (CompleteLatticeHom.setPreimage f : BoundedLatticeHom (Set Y) (Set X))
+  obj X := op $ FinBoolAlgCat.of (Set X)
+  map X Y f := Quiver.Hom.op $ (CompleteLatticeHom.setPreimage f : BoundedLatticeHom (Set Y) (Set X))
 #align Fintype_to_FinBoolAlg_op fintypeToFinBoolAlgOp
 

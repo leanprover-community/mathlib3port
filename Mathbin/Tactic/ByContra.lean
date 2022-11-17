@@ -18,8 +18,7 @@ namespace Tactic
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- If the target of the main goal is a proposition `p`,
@@ -65,7 +64,7 @@ unsafe def by_contra' (h : parse (parser.optional ident)) (t : parse (parser.opt
   match t with
     | none => () <$ replace_hyp h₁ e' pr'
     | some t => do
-      let t ← to_expr (pquote.1 (%%ₓt : Prop))
+      let t ← to_expr ``(($(t) : Prop))
       let-- negation-normalize `t` to the expression `e` and get a proof `pr` of `t = e`
         (e, pr)
         ← push_neg.normalize_negations t <|> refl_conv t

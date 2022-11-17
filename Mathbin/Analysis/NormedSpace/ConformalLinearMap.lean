@@ -47,7 +47,7 @@ open Function LinearIsometry ContinuousLinearMap
     a nonzero multiple of a linear isometry. -/
 def IsConformalMap {R : Type _} {X Y : Type _} [NormedField R] [SeminormedAddCommGroup X] [SeminormedAddCommGroup Y]
     [NormedSpace R X] [NormedSpace R Y] (f' : X →L[R] Y) :=
-  ∃ (c : R)(hc : c ≠ 0)(li : X →ₗᵢ[R] Y), f' = c • li.toContinuousLinearMap
+  ∃ (c : R) (hc : c ≠ 0) (li : X →ₗᵢ[R] Y), f' = c • li.toContinuousLinearMap
 #align is_conformal_map IsConformalMap
 
 variable {R M N G M' : Type _} [NormedField R] [SeminormedAddCommGroup M] [SeminormedAddCommGroup N]

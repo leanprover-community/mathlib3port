@@ -35,14 +35,14 @@ variable {C}
 /-- Any two functors to `discrete punit` are isomorphic. -/
 @[simps]
 def punitExt (F G : C ⥤ Discrete PUnit) : F ≅ G :=
-  NatIso.ofComponents (fun _ => eqToIso (by decide)) fun _ _ _ => by decide
+  NatIso.ofComponents (fun _ => eqToIso dec_trivial) fun _ _ _ => dec_trivial
 #align category_theory.functor.punit_ext CategoryTheory.Functor.punitExt
 
 /-- Any two functors to `discrete punit` are *equal*.
 You probably want to use `punit_ext` instead of this.
 -/
 theorem punit_ext' (F G : C ⥤ Discrete PUnit) : F = G :=
-  Functor.ext (fun _ => by decide) fun _ _ _ => by decide
+  Functor.ext (fun _ => dec_trivial) fun _ _ _ => dec_trivial
 #align category_theory.functor.punit_ext' CategoryTheory.Functor.punit_ext'
 
 /-- The functor from `discrete punit` sending everything to the given object. -/
@@ -76,8 +76,7 @@ end Functor
 
 /-- A category being equivalent to `punit` is equivalent to it having a unique morphism between
   any two objects. (In fact, such a category is also a groupoid; see `groupoid.of_hom_unique`) -/
-theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C ∧ ∀ x y : C, Nonempty <| Unique (x ⟶ y) :=
-  by
+theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C ∧ ∀ x y : C, Nonempty $ Unique (x ⟶ y) := by
   constructor
   · rintro ⟨h⟩
     refine' ⟨⟨h.inverse.obj ⟨⟨⟩⟩⟩, fun x y => Nonempty.intro _⟩

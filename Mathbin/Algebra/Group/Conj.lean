@@ -345,7 +345,7 @@ section Fintype
 variable [Fintype α] [DecidableRel (IsConj : α → α → Prop)]
 
 instance {x : ConjClasses α} : Fintype (carrier x) :=
-  (Quotient.recOnSubsingleton x) fun a => conjugatesOf.fintype
+  Quotient.recOnSubsingleton x $ fun a => conjugatesOf.fintype
 
 end Fintype
 

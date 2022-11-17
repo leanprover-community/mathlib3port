@@ -39,5 +39,5 @@ Some key definitions are not yet present.
 
 
 -- mathport name: add_torsor
-localized [Affine] notation "affine_space" => AddTorsor
+scoped[Affine] notation "affine_space" => AddTorsor
 

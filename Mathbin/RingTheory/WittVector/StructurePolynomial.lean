@@ -240,7 +240,7 @@ theorem C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum (Φ : MvPolynomial id
         ∑ i in range n, c (↑p ^ i) * wittStructureInt p Φ i ^ p ^ (n - i) :=
   by
   cases n
-  · simp only [is_unit_one, Int.coe_nat_zero, Int.coe_nat_succ, zero_add, pow_zero, C_1, IsUnit.dvd]
+  · simp only [is_unit_one, Int.ofNat_zero, Int.ofNat_succ, zero_add, pow_zero, C_1, IsUnit.dvd]
     
   -- prepare a useful equation for rewriting
   have key := bind₁_rename_expand_witt_polynomial Φ n IH

@@ -86,55 +86,91 @@ unsafe def whnf_reducible (e : expr) : tactic expr :=
   whnf e reducible
 #align push_neg.whnf_reducible push_neg.whnf_reducible
 
-private unsafe def transform_negation_step (e : expr) : tactic (Option (expr × expr)) := do
-  let e ← whnf_reducible e
-  match e with
-    | quote.1 ¬%%ₓNe => do
-      let ne ← whnf_reducible Ne
-      match Ne with
-        | quote.1 ¬%%ₓa => do
-          let pr ← mk_app `` not_not_eq [a]
-          return (some (a, pr))
-        | quote.1 ((%%ₓa) ∧ %%ₓb) => do
-          let distrib ← get_bool_option `trace.push_neg.use_distrib ff
-          if distrib then do
-              let pr ← mk_app `` not_and_distrib_eq [a, b]
-              return (some (quote.1 (¬(%%ₓa : Prop) ∨ ¬%%ₓb), pr))
-            else do
-              let pr ← mk_app `` not_and_eq [a, b]
-              return (some (quote.1 ((%%ₓa : Prop) → ¬%%ₓb), pr))
-        | quote.1 ((%%ₓa) ∨ %%ₓb) => do
-          let pr ← mk_app `` not_or_eq [a, b]
-          return (some (quote.1 ((¬%%ₓa) ∧ ¬%%ₓb), pr))
-        | quote.1 ((%%ₓa) ≤ %%ₓb) => do
-          let e ← to_expr (pquote.1 ((%%ₓb) < %%ₓa))
-          let pr ← mk_app `` not_le_eq [a, b]
-          return (some (e, pr))
-        | quote.1 ((%%ₓa) < %%ₓb) => do
-          let e ← to_expr (pquote.1 ((%%ₓb) ≤ %%ₓa))
-          let pr ← mk_app `` not_lt_eq [a, b]
-          return (some (e, pr))
-        | quote.1 (Exists (%%ₓp)) => do
-          let pr ← mk_app `` not_exists_eq [p]
-          let e ←
-            match p with
-              | lam n bi typ bo => do
-                let body ← mk_app `` Not [bo]
-                return (pi n bi typ body)
-              | _ => tactic.fail "Unexpected failure negating ∃"
-          return (some (e, pr))
-        | pi n bi d p =>
-          if p then do
-            let pr ← mk_app `` not_forall_eq [lam n bi d p]
-            let body ← mk_app `` Not [p]
-            let e ← mk_app `` Exists [lam n bi d body]
-            return (some (e, pr))
-          else do
-            let pr ← mk_app `` not_implies_eq [d, p]
-            let quote.1 ((%%ₓ_) = %%ₓe') ← infer_type pr
-            return (some (e', pr))
-        | _ => return none
-    | _ => return none
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+private unsafe
+  def
+    transform_negation_step
+    ( e : expr ) : tactic ( Option ( expr × expr ) )
+    :=
+      do
+        let e ← whnf_reducible e
+          match
+            e
+            with
+            |
+                q( ¬ $ ( Ne ) )
+                =>
+                do
+                  let ne ← whnf_reducible Ne
+                    match
+                      Ne
+                      with
+                      | q( ¬ $ ( a ) ) => do let pr ← mk_app ` ` not_not_eq [ a ] return ( some ( a , pr ) )
+                        |
+                          q( $ ( a ) ∧ $ ( b ) )
+                          =>
+                          do
+                            let distrib ← get_bool_option `trace.push_neg.use_distrib ff
+                              if
+                                distrib
+                                then
+                                do
+                                  let pr ← mk_app ` ` not_and_distrib_eq [ a , b ]
+                                    return ( some ( q( ¬ ( $ ( a ) : Prop ) ∨ ¬ $ ( b ) ) , pr ) )
+                                else
+                                do
+                                  let pr ← mk_app ` ` not_and_eq [ a , b ]
+                                    return ( some ( q( ( $ ( a ) : Prop ) → ¬ $ ( b ) ) , pr ) )
+                        |
+                          q( $ ( a ) ∨ $ ( b ) )
+                          =>
+                          do let pr ← mk_app ` ` not_or_eq [ a , b ] return ( some ( q( ¬ $ ( a ) ∧ ¬ $ ( b ) ) , pr ) )
+                        |
+                          q( $ ( a ) ≤ $ ( b ) )
+                          =>
+                          do
+                            let e ← to_expr ` `( $ ( b ) < $ ( a ) )
+                              let pr ← mk_app ` ` not_le_eq [ a , b ]
+                              return ( some ( e , pr ) )
+                        |
+                          q( $ ( a ) < $ ( b ) )
+                          =>
+                          do
+                            let e ← to_expr ` `( $ ( b ) ≤ $ ( a ) )
+                              let pr ← mk_app ` ` not_lt_eq [ a , b ]
+                              return ( some ( e , pr ) )
+                        |
+                          q( Exists $ ( p ) )
+                          =>
+                          do
+                            let pr ← mk_app ` ` not_exists_eq [ p ]
+                              let
+                                e
+                                  ←
+                                  match
+                                    p
+                                    with
+                                    | lam n bi typ bo => do let body ← mk_app ` ` Not [ bo ] return ( pi n bi typ body )
+                                      | _ => tactic.fail "Unexpected failure negating ∃"
+                              return ( some ( e , pr ) )
+                        |
+                          pi n bi d p
+                          =>
+                          if
+                            p
+                            then
+                            do
+                              let pr ← mk_app ` ` not_forall_eq [ lam n bi d p ]
+                                let body ← mk_app ` ` Not [ p ]
+                                let e ← mk_app ` ` Exists [ lam n bi d body ]
+                                return ( some ( e , pr ) )
+                            else
+                            do
+                              let pr ← mk_app ` ` not_implies_eq [ d , p ]
+                                let q( $ ( _ ) = $ ( e' ) ) ← infer_type pr
+                                return ( some ( e' , pr ) )
+                        | _ => return none
+              | _ => return none
 #align push_neg.transform_negation_step push_neg.transform_negation_step
 
 private unsafe def transform_negation : expr → tactic (Option (expr × expr))
@@ -193,8 +229,8 @@ local postfix:1024 "*" => many
 
 open PushNeg
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Push negations in the goal of some assumption.
 
 For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg at h` into
@@ -222,8 +258,8 @@ unsafe def tactic.interactive.push_neg : parse location → tactic Unit
       match l with
       | some h => do
         push_neg_at_hyp h
-        try <|
-            interactive.simp_core { eta := ff } failed tt [simp_arg_type.expr (pquote.1 PushNeg.not_eq)] []
+        try $
+            interactive.simp_core { eta := ff } failed tt [simp_arg_type.expr ``(PushNeg.not_eq)] []
               (Interactive.Loc.ns [some h])
       | none => do
         push_neg_at_goal
@@ -245,24 +281,42 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
   Prod.mk <$> ident <*> (some <$> (tk "with" *> ident) <|> return none)
 #align name_with_opt name_with_opt
 
-/-- Transforms the goal into its contrapositive.
-
-* `contrapose`     turns a goal `P → Q` into `¬ Q → ¬ P`
-* `contrapose!`    turns a goal `P → Q` into `¬ Q → ¬ P` and pushes negations inside `P` and `Q`
-  using `push_neg`
-* `contrapose h`   first reverts the local assumption `h`, and then uses `contrapose` and `intro h`
-* `contrapose! h`  first reverts the local assumption `h`, and then uses `contrapose!` and `intro h`
-* `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis
--/
-unsafe def tactic.interactive.contrapose (push : parse (tk "!")?) : parse name_with_opt ? → tactic Unit
-  | some (h, h') => (((get_local h >>= revert) >> tactic.interactive.contrapose none) >> intro (h'.getOrElse h)) >> skip
-  | none => do
-    let quote.1 ((%%ₓP) → %%ₓQ) ← target |
-      fail "The goal is not an implication, and you didn't specify an assumption"
-    let cp ←
-      mk_mapp `` imp_of_not_imp_not [P, Q] <|> fail "contrapose only applies to nondependent arrows between props"
-    apply cp
-    when push <| try (tactic.interactive.push_neg (loc.ns [none]))
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Transforms the goal into its contrapositive.
+      
+      * `contrapose`     turns a goal `P → Q` into `¬ Q → ¬ P`
+      * `contrapose!`    turns a goal `P → Q` into `¬ Q → ¬ P` and pushes negations inside `P` and `Q`
+        using `push_neg`
+      * `contrapose h`   first reverts the local assumption `h`, and then uses `contrapose` and `intro h`
+      * `contrapose! h`  first reverts the local assumption `h`, and then uses `contrapose!` and `intro h`
+      * `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis
+      -/
+    unsafe
+  def
+    tactic.interactive.contrapose
+    ( push : parse ( tk "!" ) ? ) : parse name_with_opt ? → tactic Unit
+    |
+        some ( h , h' )
+        =>
+        get_local h >>= revert >> tactic.interactive.contrapose none >> intro ( h' . getOrElse h ) >> skip
+      |
+        none
+        =>
+        do
+          let
+              q( $ ( P ) → $ ( Q ) )
+                ←
+                target
+                | fail "The goal is not an implication, and you didn't specify an assumption"
+            let
+              cp
+                ←
+                mk_mapp ` ` imp_of_not_imp_not [ P , Q ]
+                  <|>
+                  fail "contrapose only applies to nondependent arrows between props"
+            apply cp
+            when push $ try ( tactic.interactive.push_neg ( loc.ns [ none ] ) )
 #align tactic.interactive.contrapose tactic.interactive.contrapose
 
 add_tactic_doc
@@ -281,8 +335,7 @@ open Lean.Parser
 
 open Interactive.Types
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- The syntax is `#push_neg e`, where `e` is an expression,
 which will print the `push_neg` form of `e`.
 
@@ -290,7 +343,7 @@ which will print the `push_neg` form of `e`.
 introduce parameters.
 -/
 @[user_command]
-unsafe def push_neg_cmd (_ : parse <| tk "#push_neg") : lean.parser Unit := do
+unsafe def push_neg_cmd (_ : parse $ tk "#push_neg") : lean.parser Unit := do
   let e ← texpr
   let/- Synthesize a `tactic_state` including local variables as hypotheses under which
          `normalize_negations` may be safely called with expected behaviour given the `variables` in the
@@ -299,7 +352,7 @@ unsafe def push_neg_cmd (_ : parse <| tk "#push_neg") : lean.parser Unit := do
     ← synthesize_tactic_state_with_variables_as_hyps [e]
   let result
     ←-- Enter the `tactic` monad, *critically* using the synthesized tactic state `ts`.
-        lean.parser.of_tactic
+        lean.parser.of_tactic $
         fun _ =>
         (/- Resolve the local variables added by the parser to `e` (when it was parsed) against the local
                  hypotheses added to the `ts : tactic_state` which we are using. -/
@@ -311,7 +364,7 @@ unsafe def push_neg_cmd (_ : parse <| tk "#push_neg") : lean.parser Unit := do
             /- Run a `simp` to change any `¬ a = b` to `a ≠ b`; report the result, or, if the `simp` fails
                       (because no `¬ a = b` appear in the expression), return what `push_neg` gave. -/
                   Prod.fst <$>
-                  e_neg { eta := ff } failed tt [] [simp_arg_type.expr (pquote.1 PushNeg.not_eq)] <|>
+                  e_neg { eta := ff } failed tt [] [simp_arg_type.expr ``(PushNeg.not_eq)] <|>
                 pure e_neg)
           ts
   -- Trace the result.

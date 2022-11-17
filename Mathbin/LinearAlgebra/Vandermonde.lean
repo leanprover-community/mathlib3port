@@ -78,14 +78,14 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) : det (vandermonde v) = ∏ 
   · exact det_eq_one_of_card_eq_zero (Fintype.card_fin 0)
     
   calc
-    det (of fun i j : Fin n.succ => v i ^ (j : ℕ)) =
+    det (of $ fun i j : Fin n.succ => v i ^ (j : ℕ)) =
         det
-          (of fun i j : Fin n.succ =>
+          (of $ fun i j : Fin n.succ =>
             Matrix.vecCons (v 0 ^ (j : ℕ)) (fun i => v (Fin.succ i) ^ (j : ℕ) - v 0 ^ (j : ℕ)) i) :=
       det_eq_of_forall_row_eq_smul_add_const (Matrix.vecCons 0 1) 0 (Fin.cons_zero _ _) _
     _ =
         det
-          (of fun i j : Fin n =>
+          (of $ fun i j : Fin n =>
             Matrix.vecCons (v 0 ^ (j.succ : ℕ)) (fun i : Fin n => v (Fin.succ i) ^ (j.succ : ℕ) - v 0 ^ (j.succ : ℕ))
               (Fin.succAbove 0 i)) :=
       by
@@ -94,8 +94,8 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) : det (vandermonde v) = ∏ 
         add_zero]
     _ =
         det
-          (of fun i j : Fin n =>
-            (v (Fin.succ i) - v 0) * ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
+          (of $ fun i j : Fin n =>
+              (v (Fin.succ i) - v 0) * ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
             Matrix _ _ R) :=
       by
       congr
@@ -137,14 +137,15 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) : det (vandermonde v) = ∏ 
     
 #align matrix.det_vandermonde Matrix.det_vandermonde
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem det_vandermonde_eq_zero_iff [IsDomain R] {n : ℕ} {v : Fin n → R} :
-    det (vandermonde v) = 0 ↔ ∃ i j : Fin n, v i = v j ∧ i ≠ j := by
+    det (vandermonde v) = 0 ↔ ∃ (i : Fin n) (j : Fin n), v i = v j ∧ i ≠ j := by
   constructor
   · simp only [det_vandermonde v, Finset.prod_eq_zero_iff, sub_eq_zero, forall_exists_index]
     exact fun i _ j h₁ h₂ => ⟨j, i, h₂, (mem_Ioi.mp h₁).ne'⟩
     
   · simp only [Ne.def, forall_exists_index, and_imp]
-    refine' fun i j h₁ h₂ => Matrix.det_zero_of_row_eq h₂ (funext fun k => _)
+    refine' fun i j h₁ h₂ => Matrix.det_zero_of_row_eq h₂ (funext $ fun k => _)
     rw [vandermonde_apply, vandermonde_apply, h₁]
     
 #align matrix.det_vandermonde_eq_zero_iff Matrix.det_vandermonde_eq_zero_iff

@@ -33,7 +33,7 @@ universe u'' u' u v w
 variable {G : Type u''} {S : Type u'} {R : Type u} {M : Type v} {ι : Type w}
 
 /-- `submodule_class S R M` says `S` is a type of submodules `s ≤ M`. -/
-class SubmoduleClass (S : Type _) (R M : outParam <| Type _) [AddZeroClass M] [HasSmul R M] [SetLike S M]
+class SubmoduleClass (S : Type _) (R M : outParam $ Type _) [AddZeroClass M] [HasSmul R M] [SetLike S M]
   [AddSubmonoidClass S M] extends SmulMemClass S R M
 #align submodule_class SubmoduleClass
 
@@ -392,7 +392,7 @@ theorem restrict_scalars_self (V : Submodule R M) : V.restrictScalars R = V :=
 variable (R S M)
 
 theorem restrict_scalars_injective : Function.Injective (restrictScalars S : Submodule R M → Submodule S M) :=
-  fun V₁ V₂ h => ext <| Set.ext_iff.1 (SetLike.ext'_iff.1 h : _)
+  fun V₁ V₂ h => ext $ Set.ext_iff.1 (SetLike.ext'_iff.1 h : _)
 #align submodule.restrict_scalars_injective Submodule.restrict_scalars_injective
 
 @[simp]
@@ -406,7 +406,7 @@ instance restrictScalars.origModule (p : Submodule R M) : Module R (p.restrictSc
 #align submodule.restrict_scalars.orig_module Submodule.restrictScalars.origModule
 
 instance (p : Submodule R M) :
-    IsScalarTower S R (p.restrictScalars S) where smul_assoc r s x := Subtype.ext <| smul_assoc r s (x : M)
+    IsScalarTower S R (p.restrictScalars S) where smul_assoc r s x := Subtype.ext $ smul_assoc r s (x : M)
 
 /-- `restrict_scalars S` is an embedding of the lattice of `R`-submodules into
 the lattice of `S`-submodules. -/

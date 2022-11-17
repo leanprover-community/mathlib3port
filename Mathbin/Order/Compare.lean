@@ -35,8 +35,8 @@ theorem cmp_le_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· 
 #align cmp_le_swap cmp_le_swap
 
 theorem cmp_le_eq_cmp {α} [Preorder α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)]
-    (x y : α) : cmpLe x y = Cmp x y := by
-  by_cases xy:x ≤ y <;> by_cases yx:y ≤ x <;> simp [cmpLe, lt_iff_le_not_le, *, Cmp, CmpUsing]
+    (x y : α) : cmpLe x y = cmp x y := by
+  by_cases xy:x ≤ y <;> by_cases yx:y ≤ x <;> simp [cmpLe, lt_iff_le_not_le, *, cmp, cmpUsing]
   cases not_or_of_not xy yx (total_of _ _ _)
 #align cmp_le_eq_cmp cmp_le_eq_cmp
 
@@ -133,7 +133,7 @@ theorem swap_or_else (o₁ o₂) : (orElse o₁ o₂).swap = orElse o₁.swap o�
 #align ordering.swap_or_else Ordering.swap_or_else
 
 theorem or_else_eq_lt (o₁ o₂) : orElse o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ = Eq ∧ o₂ = lt := by
-  cases o₁ <;> cases o₂ <;> exact by decide
+  cases o₁ <;> cases o₂ <;> exact dec_trivial
 #align ordering.or_else_eq_lt Ordering.or_else_eq_lt
 
 end Ordering
@@ -154,17 +154,17 @@ theorem of_dual_compares_of_dual [LT α] {a b : αᵒᵈ} {o : Ordering} :
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 #align of_dual_compares_of_dual of_dual_compares_of_dual
 
-theorem cmp_compares [LinearOrder α] (a b : α) : (Cmp a b).Compares a b := by
-  obtain h | h | h := lt_trichotomy a b <;> simp [Cmp, CmpUsing, h, h.not_lt]
+theorem cmp_compares [LinearOrder α] (a b : α) : (cmp a b).Compares a b := by
+  obtain h | h | h := lt_trichotomy a b <;> simp [cmp, cmpUsing, h, h.not_lt]
 #align cmp_compares cmp_compares
 
-theorem Ordering.Compares.cmp_eq [LinearOrder α] {a b : α} {o : Ordering} (h : o.Compares a b) : Cmp a b = o :=
+theorem Ordering.Compares.cmp_eq [LinearOrder α] {a b : α} {o : Ordering} (h : o.Compares a b) : cmp a b = o :=
   (cmp_compares a b).inj h
 #align ordering.compares.cmp_eq Ordering.Compares.cmp_eq
 
 @[simp]
-theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (Cmp a b).swap = Cmp b a := by
-  unfold Cmp CmpUsing
+theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).swap = cmp b a := by
+  unfold cmp cmpUsing
   by_cases a < b <;> by_cases h₂:b < a <;> simp [h, h₂, Ordering.swap]
   exact lt_asymm h h₂
 #align cmp_swap cmp_swap
@@ -180,17 +180,17 @@ theorem cmp_le_of_dual [LE α] [@DecidableRel α (· ≤ ·)] (x y : αᵒᵈ) :
 #align cmp_le_of_dual cmp_le_of_dual
 
 @[simp]
-theorem cmp_to_dual [LT α] [@DecidableRel α (· < ·)] (x y : α) : Cmp (toDual x) (toDual y) = Cmp y x :=
+theorem cmp_to_dual [LT α] [@DecidableRel α (· < ·)] (x y : α) : cmp (toDual x) (toDual y) = cmp y x :=
   rfl
 #align cmp_to_dual cmp_to_dual
 
 @[simp]
-theorem cmp_of_dual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) : Cmp (ofDual x) (ofDual y) = Cmp y x :=
+theorem cmp_of_dual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) : cmp (ofDual x) (ofDual y) = cmp y x :=
   rfl
 #align cmp_of_dual cmp_of_dual
 
 /-- Generate a linear order structure from a preorder and `cmp` function. -/
-def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering) (h : ∀ a b, (Cmp a b).Compares a b) : LinearOrder α :=
+def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering) (h : ∀ a b, (cmp a b).Compares a b) : LinearOrder α :=
   { ‹Preorder α› with le_antisymm := fun a b => (h a b).le_antisymm, le_total := fun a b => (h a b).le_total,
     decidableLe := fun a b => decidable_of_iff _ (h a b).ne_gt,
     decidableLt := fun a b => decidable_of_iff _ (h a b).eq_lt,
@@ -200,58 +200,58 @@ def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering) (h : ∀ 
 variable [LinearOrder α] (x y : α)
 
 @[simp]
-theorem cmp_eq_lt_iff : Cmp x y = Ordering.lt ↔ x < y :=
+theorem cmp_eq_lt_iff : cmp x y = Ordering.lt ↔ x < y :=
   Ordering.Compares.eq_lt (cmp_compares x y)
 #align cmp_eq_lt_iff cmp_eq_lt_iff
 
 @[simp]
-theorem cmp_eq_eq_iff : Cmp x y = Ordering.eq ↔ x = y :=
+theorem cmp_eq_eq_iff : cmp x y = Ordering.eq ↔ x = y :=
   Ordering.Compares.eq_eq (cmp_compares x y)
 #align cmp_eq_eq_iff cmp_eq_eq_iff
 
 @[simp]
-theorem cmp_eq_gt_iff : Cmp x y = Ordering.gt ↔ y < x :=
+theorem cmp_eq_gt_iff : cmp x y = Ordering.gt ↔ y < x :=
   Ordering.Compares.eq_gt (cmp_compares x y)
 #align cmp_eq_gt_iff cmp_eq_gt_iff
 
 @[simp]
-theorem cmp_self_eq_eq : Cmp x x = Ordering.eq := by rw [cmp_eq_eq_iff]
+theorem cmp_self_eq_eq : cmp x x = Ordering.eq := by rw [cmp_eq_eq_iff]
 #align cmp_self_eq_eq cmp_self_eq_eq
 
 variable {x y} {β : Type _} [LinearOrder β] {x' y' : β}
 
-theorem cmp_eq_cmp_symm : Cmp x y = Cmp x' y' ↔ Cmp y x = Cmp y' x' :=
+theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' :=
   ⟨fun h => by rwa [← cmp_swap x', ← cmp_swap, swap_inj], fun h => by rwa [← cmp_swap y', ← cmp_swap, swap_inj]⟩
 #align cmp_eq_cmp_symm cmp_eq_cmp_symm
 
-theorem lt_iff_lt_of_cmp_eq_cmp (h : Cmp x y = Cmp x' y') : x < y ↔ x' < y' := by
+theorem lt_iff_lt_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x < y ↔ x' < y' := by
   rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff, h]
 #align lt_iff_lt_of_cmp_eq_cmp lt_iff_lt_of_cmp_eq_cmp
 
-theorem le_iff_le_of_cmp_eq_cmp (h : Cmp x y = Cmp x' y') : x ≤ y ↔ x' ≤ y' := by
+theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y' := by
   rw [← not_lt, ← not_lt]
   apply not_congr
   apply lt_iff_lt_of_cmp_eq_cmp
   rwa [cmp_eq_cmp_symm]
 #align le_iff_le_of_cmp_eq_cmp le_iff_le_of_cmp_eq_cmp
 
-theorem eq_iff_eq_of_cmp_eq_cmp (h : Cmp x y = Cmp x' y') : x = y ↔ x' = y' := by
+theorem eq_iff_eq_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x = y ↔ x' = y' := by
   rw [le_antisymm_iff, le_antisymm_iff, le_iff_le_of_cmp_eq_cmp h, le_iff_le_of_cmp_eq_cmp (cmp_eq_cmp_symm.1 h)]
 #align eq_iff_eq_of_cmp_eq_cmp eq_iff_eq_of_cmp_eq_cmp
 
-theorem LT.lt.cmp_eq_lt (h : x < y) : Cmp x y = Ordering.lt :=
+theorem LT.lt.cmp_eq_lt (h : x < y) : cmp x y = Ordering.lt :=
   (cmp_eq_lt_iff _ _).2 h
 #align has_lt.lt.cmp_eq_lt LT.lt.cmp_eq_lt
 
-theorem LT.lt.cmp_eq_gt (h : x < y) : Cmp y x = Ordering.gt :=
+theorem LT.lt.cmp_eq_gt (h : x < y) : cmp y x = Ordering.gt :=
   (cmp_eq_gt_iff _ _).2 h
 #align has_lt.lt.cmp_eq_gt LT.lt.cmp_eq_gt
 
-theorem Eq.cmp_eq_eq (h : x = y) : Cmp x y = Ordering.eq :=
+theorem Eq.cmp_eq_eq (h : x = y) : cmp x y = Ordering.eq :=
   (cmp_eq_eq_iff _ _).2 h
 #align eq.cmp_eq_eq Eq.cmp_eq_eq
 
-theorem Eq.cmp_eq_eq' (h : x = y) : Cmp y x = Ordering.eq :=
+theorem Eq.cmp_eq_eq' (h : x = y) : cmp y x = Ordering.eq :=
   h.symm.cmp_eq_eq
 #align eq.cmp_eq_eq' Eq.cmp_eq_eq'
 

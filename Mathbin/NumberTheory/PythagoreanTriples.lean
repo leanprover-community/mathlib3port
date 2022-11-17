@@ -27,7 +27,6 @@ the bulk of the proof below.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem sq_ne_two_fin_zmod_four (z : Zmod 4) : z * z ≠ 2 := by
   change Fin 4 at z
   fin_cases z <;> norm_num [Fin.ext_iff, Fin.coe_bit0, Fin.coe_bit1]
@@ -97,16 +96,18 @@ theorem mul_iff (k : ℤ) (hk : k ≠ 0) : PythagoreanTriple (k * x) (k * y) (k 
 
 include h
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k m n) -/
 /-- A Pythagorean triple `x, y, z` is “classified” if there exist integers `k, m, n` such that
 either
  * `x = k * (m ^ 2 - n ^ 2)` and `y = k * (2 * m * n)`, or
  * `x = k * (2 * m * n)` and `y = k * (m ^ 2 - n ^ 2)`. -/
 @[nolint unused_arguments]
 def IsClassified :=
-  ∃ k m n : ℤ,
+  ∃ (k : ℤ) (m : ℤ) (n : ℤ),
     (x = k * (m ^ 2 - n ^ 2) ∧ y = k * (2 * m * n) ∨ x = k * (2 * m * n) ∧ y = k * (m ^ 2 - n ^ 2)) ∧ Int.gcd m n = 1
 #align pythagorean_triple.is_classified PythagoreanTriple.IsClassified
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 /-- A primitive pythogorean triple `x, y, z` is a pythagorean triple with `x` and `y` coprime.
  Such a triple is “primitively classified” if there exist coprime integers `m, n` such that either
  * `x = m ^ 2 - n ^ 2` and `y = 2 * m * n`, or
@@ -114,7 +115,7 @@ def IsClassified :=
 -/
 @[nolint unused_arguments]
 def IsPrimitiveClassified :=
-  ∃ m n : ℤ,
+  ∃ (m : ℤ) (n : ℤ),
     (x = m ^ 2 - n ^ 2 ∧ y = 2 * m * n ∨ x = 2 * m * n ∧ y = m ^ 2 - n ^ 2) ∧
       Int.gcd m n = 1 ∧ (m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0)
 #align pythagorean_triple.is_primitive_classified PythagoreanTriple.IsPrimitiveClassified
@@ -133,11 +134,12 @@ theorem mul_is_classified (k : ℤ) (hc : h.IsClassified) : (h.mul k).IsClassifi
     
 #align pythagorean_triple.mul_is_classified PythagoreanTriple.mul_is_classified
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x0 y0) -/
 theorem even_odd_of_coprime (hc : Int.gcd x y = 1) : x % 2 = 0 ∧ y % 2 = 1 ∨ x % 2 = 1 ∧ y % 2 = 0 := by
   cases' Int.mod_two_eq_zero_or_one x with hx hx <;> cases' Int.mod_two_eq_zero_or_one y with hy hy
   · -- x even, y even
     exfalso
-    apply Nat.not_coprime_of_dvd_of_dvd (by decide : 1 < 2) _ _ hc
+    apply Nat.not_coprime_of_dvd_of_dvd (dec_trivial : 1 < 2) _ _ hc
     · apply Int.dvd_nat_abs_of_of_nat_dvd
       apply Int.dvd_of_mod_eq_zero hx
       
@@ -155,7 +157,7 @@ theorem even_odd_of_coprime (hc : Int.gcd x y = 1) : x % 2 = 0 ∧ y % 2 = 1 ∨
   -- x odd, y even
   · -- x odd, y odd
     exfalso
-    obtain ⟨x0, y0, rfl, rfl⟩ : ∃ x0 y0, x = x0 * 2 + 1 ∧ y = y0 * 2 + 1 := by
+    obtain ⟨x0, y0, rfl, rfl⟩ : ∃ (x0) (y0), x = x0 * 2 + 1 ∧ y = y0 * 2 + 1 := by
       cases' exists_eq_mul_left_of_dvd (Int.dvd_sub_of_mod_eq hx) with x0 hx2
       cases' exists_eq_mul_left_of_dvd (Int.dvd_sub_of_mod_eq hy) with y0 hy2
       rw [sub_eq_iff_eq_add] at hx2 hy2
@@ -168,6 +170,7 @@ theorem even_odd_of_coprime (hc : Int.gcd x y = 1) : x % 2 = 0 ∧ y % 2 = 1 ∨
     
 #align pythagorean_triple.even_odd_of_coprime PythagoreanTriple.even_odd_of_coprime
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x0 y0) -/
 theorem gcd_dvd : (Int.gcd x y : ℤ) ∣ z := by
   by_cases h0:Int.gcd x y = 0
   · have hx : x = 0 := by
@@ -179,14 +182,15 @@ theorem gcd_dvd : (Int.gcd x y : ℤ) ∣ z := by
     have hz : z = 0 := by simpa only [PythagoreanTriple, hx, hy, add_zero, zero_eq_mul, mul_zero, or_self_iff] using h
     simp only [hz, dvd_zero]
     
-  obtain ⟨k, x0, y0, k0, h2, rfl, rfl⟩ : ∃ (k : ℕ)(x0 y0 : _), 0 < k ∧ Int.gcd x0 y0 = 1 ∧ x = x0 * k ∧ y = y0 * k :=
+  obtain ⟨k, x0, y0, k0, h2, rfl, rfl⟩ : ∃ (k : ℕ) (x0) (y0), 0 < k ∧ Int.gcd x0 y0 = 1 ∧ x = x0 * k ∧ y = y0 * k :=
     Int.exists_gcd_one' (Nat.pos_of_ne_zero h0)
-  rw [Int.gcd_mul_right, h2, Int.nat_abs_of_nat, one_mul]
+  rw [Int.gcd_mul_right, h2, Int.natAbs_ofNat, one_mul]
   rw [← Int.pow_dvd_pow_iff zero_lt_two, sq z, ← h.eq]
   rw [(by ring : x0 * k * (x0 * k) + y0 * k * (y0 * k) = k ^ 2 * (x0 * x0 + y0 * y0))]
   exact dvd_mul_right _ _
 #align pythagorean_triple.gcd_dvd PythagoreanTriple.gcd_dvd
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x0 y0) -/
 theorem normalize : PythagoreanTriple (x / Int.gcd x y) (y / Int.gcd x y) (z / Int.gcd x y) := by
   by_cases h0:Int.gcd x y = 0
   · have hx : x = 0 := by
@@ -200,12 +204,12 @@ theorem normalize : PythagoreanTriple (x / Int.gcd x y) (y / Int.gcd x y) (z / I
     exact zero
     
   rcases h.gcd_dvd with ⟨z0, rfl⟩
-  obtain ⟨k, x0, y0, k0, h2, rfl, rfl⟩ : ∃ (k : ℕ)(x0 y0 : _), 0 < k ∧ Int.gcd x0 y0 = 1 ∧ x = x0 * k ∧ y = y0 * k :=
+  obtain ⟨k, x0, y0, k0, h2, rfl, rfl⟩ : ∃ (k : ℕ) (x0) (y0), 0 < k ∧ Int.gcd x0 y0 = 1 ∧ x = x0 * k ∧ y = y0 * k :=
     Int.exists_gcd_one' (Nat.pos_of_ne_zero h0)
   have hk : (k : ℤ) ≠ 0 := by
     norm_cast
     rwa [pos_iff_ne_zero] at k0
-  rw [Int.gcd_mul_right, h2, Int.nat_abs_of_nat, one_mul] at h⊢
+  rw [Int.gcd_mul_right, h2, Int.natAbs_ofNat, one_mul] at h⊢
   rw [mul_comm x0, mul_comm y0, mul_iff k hk] at h
   rwa [Int.mul_div_cancel _ hk, Int.mul_div_cancel _ hk, Int.mul_div_cancel_left _ hk]
 #align pythagorean_triple.normalize PythagoreanTriple.normalize
@@ -252,7 +256,7 @@ theorem is_primitive_classified_of_coprime_of_zero_left (hc : Int.gcd x y = 1) (
   subst x
   change Nat.gcd 0 (Int.natAbs y) = 1 at hc
   rw [Nat.gcd_zero_left (Int.natAbs y)] at hc
-  cases' Int.nat_abs_eq y with hy hy
+  cases' Int.natAbs_eq y with hy hy
   · use 1, 0
     rw [hy, hc, Int.gcd_zero_right]
     norm_num
@@ -368,7 +372,7 @@ private theorem coprime_sq_sub_sq_add_of_even_odd {m n : ℤ} (h : Int.gcd m n =
 
 private theorem coprime_sq_sub_sq_add_of_odd_even {m n : ℤ} (h : Int.gcd m n = 1) (hm : m % 2 = 1) (hn : n % 2 = 0) :
     Int.gcd (m ^ 2 - n ^ 2) (m ^ 2 + n ^ 2) = 1 := by
-  rw [Int.gcd, ← Int.nat_abs_neg (m ^ 2 - n ^ 2)]
+  rw [Int.gcd, ← Int.natAbs_neg (m ^ 2 - n ^ 2)]
   rw [(by ring : -(m ^ 2 - n ^ 2) = n ^ 2 - m ^ 2), add_comm]
   apply coprime_sq_sub_sq_add_of_even_odd _ hn hm
   rwa [Int.gcd_comm]
@@ -384,7 +388,7 @@ private theorem coprime_sq_sub_mul_of_even_odd {m n : ℤ} (h : Int.gcd m n = 1)
     norm_cast
     exact mt nat.dvd_one.mp (Nat.Prime.ne_one hp)
   cases' Int.Prime.dvd_mul hp hp2 with hp2m hpn
-  · rw [Int.nat_abs_mul] at hp2m
+  · rw [Int.natAbs_mul] at hp2m
     cases' (Nat.Prime.dvd_mul hp).mp hp2m with hp2 hpm
     · have hp2' : p = 2 := (Nat.le_of_dvd zero_lt_two hp2).antisymm hp.two_le
       revert hp1
@@ -410,7 +414,7 @@ private theorem coprime_sq_sub_mul_of_even_odd {m n : ℤ} (h : Int.gcd m n = 1)
 
 private theorem coprime_sq_sub_mul_of_odd_even {m n : ℤ} (h : Int.gcd m n = 1) (hm : m % 2 = 1) (hn : n % 2 = 0) :
     Int.gcd (m ^ 2 - n ^ 2) (2 * m * n) = 1 := by
-  rw [Int.gcd, ← Int.nat_abs_neg (m ^ 2 - n ^ 2)]
+  rw [Int.gcd, ← Int.natAbs_neg (m ^ 2 - n ^ 2)]
   rw [(by ring : 2 * m * n = 2 * n * m), (by ring : -(m ^ 2 - n ^ 2) = n ^ 2 - m ^ 2)]
   apply coprime_sq_sub_mul_of_even_odd _ hn hm
   rwa [Int.gcd_comm]
@@ -438,9 +442,9 @@ private theorem coprime_sq_sub_sq_sum_of_odd_odd {m n : ℤ} (h : Int.gcd m n = 
   have h2 : (m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2 = 2 * (2 * (m0 ^ 2 - n0 ^ 2 + m0 - n0)) := by ring
   have h3 : ((m0 * 2 + 1) ^ 2 - (n0 * 2 + 1) ^ 2) / 2 % 2 = 0 := by
     rw [h2, Int.mul_div_cancel_left, Int.mul_mod_right]
-    exact by decide
+    exact dec_trivial
   refine' ⟨⟨_, h1⟩, ⟨_, h2⟩, h3, _⟩
-  have h20 : (2 : ℤ) ≠ 0 := by decide
+  have h20 : (2 : ℤ) ≠ 0 := dec_trivial
   rw [h1, h2, Int.mul_div_cancel_left _ h20, Int.mul_div_cancel_left _ h20]
   by_contra h4
   obtain ⟨p, hp, hp1, hp2⟩ := nat.prime.not_coprime_iff_dvd.mp h4
@@ -626,9 +630,10 @@ theorem classified : h.IsClassified := by
 
 omit h
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 theorem coprime_classification :
     PythagoreanTriple x y z ∧ Int.gcd x y = 1 ↔
-      ∃ m n,
+      ∃ (m) (n),
         (x = m ^ 2 - n ^ 2 ∧ y = 2 * m * n ∨ x = 2 * m * n ∧ y = m ^ 2 - n ^ 2) ∧
           (z = m ^ 2 + n ^ 2 ∨ z = -(m ^ 2 + n ^ 2)) ∧
             Int.gcd m n = 1 ∧ (m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0) :=
@@ -667,11 +672,12 @@ theorem coprime_classification :
     
 #align pythagorean_triple.coprime_classification PythagoreanTriple.coprime_classification
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 /-- by assuming `x` is odd and `z` is positive we get a slightly more precise classification of
 the pythagorean triple `x ^ 2 + y ^ 2 = z ^ 2`-/
 theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_coprime : Int.gcd x y = 1)
     (h_parity : x % 2 = 1) (h_pos : 0 < z) :
-    ∃ m n,
+    ∃ (m) (n),
       x = m ^ 2 - n ^ 2 ∧
         y = 2 * m * n ∧ z = m ^ 2 + n ^ 2 ∧ Int.gcd m n = 1 ∧ (m % 2 = 0 ∧ n % 2 = 1 ∨ m % 2 = 1 ∧ n % 2 = 0) ∧ 0 ≤ m :=
   by
@@ -708,7 +714,7 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_c
       · apply And.intro h_pos
         constructor
         · delta Int.gcd
-          rw [Int.nat_abs_neg, Int.nat_abs_neg]
+          rw [Int.natAbs_neg, Int.natAbs_neg]
           exact ht3
           
         · rw [Int.neg_mod_two, Int.neg_mod_two]
@@ -729,10 +735,11 @@ theorem coprime_classification' {x y z : ℤ} (h : PythagoreanTriple x y z) (h_c
     
 #align pythagorean_triple.coprime_classification' PythagoreanTriple.coprime_classification'
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k m n) -/
 /-- **Formula for Pythagorean Triples** -/
 theorem classification :
     PythagoreanTriple x y z ↔
-      ∃ k m n,
+      ∃ (k) (m) (n),
         (x = k * (m ^ 2 - n ^ 2) ∧ y = k * (2 * m * n) ∨ x = k * (2 * m * n) ∧ y = k * (m ^ 2 - n ^ 2)) ∧
           (z = k * (m ^ 2 + n ^ 2) ∨ z = -k * (m ^ 2 + n ^ 2)) :=
   by

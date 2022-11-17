@@ -91,15 +91,15 @@ theorem dist_smul [NormedSpace α β] (s : α) (x y : β) : dist (s • x) (s �
 #align dist_smul dist_smul
 
 theorem nnnorm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥₊ = ∥s∥₊ * ∥x∥₊ :=
-  Nnreal.eq <| norm_smul s x
+  Nnreal.eq $ norm_smul s x
 #align nnnorm_smul nnnorm_smul
 
 theorem nndist_smul [NormedSpace α β] (s : α) (x y : β) : nndist (s • x) (s • y) = ∥s∥₊ * nndist x y :=
-  Nnreal.eq <| dist_smul s x y
+  Nnreal.eq $ dist_smul s x y
 #align nndist_smul nndist_smul
 
 theorem lipschitzWithSmul [NormedSpace α β] (s : α) : LipschitzWith ∥s∥₊ ((· • ·) s : β → β) :=
-  lipschitz_with_iff_dist_le_mul.2 fun x y => by rw [dist_smul, coe_nnnorm]
+  lipschitz_with_iff_dist_le_mul.2 $ fun x y => by rw [dist_smul, coe_nnnorm]
 #align lipschitz_with_smul lipschitzWithSmul
 
 theorem norm_smul_of_nonneg [NormedSpace ℝ β] {t : ℝ} (ht : 0 ≤ t) (x : β) : ∥t • x∥ = t * ∥x∥ := by
@@ -156,13 +156,13 @@ theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
     
   refine' subset.antisymm _ ball_subset_interior_closed_ball
   intro y hy
-  rcases(mem_closed_ball.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
+  rcases(mem_closed_ball.1 $ interior_subset hy).lt_or_eq with (hr | rfl)
   · exact hr
     
   set f : ℝ → E := fun c : ℝ => c • (y - x) + x
   suffices f ⁻¹' closed_ball x (dist y x) ⊆ Icc (-1) 1 by
     have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const
-    have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closed_ball x <| dist y x) := by simpa [f]
+    have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closed_ball x $ dist y x) := by simpa [f]
     have h1 : (1 : ℝ) ∈ interior (Icc (-1 : ℝ) 1) :=
       interior_mono this (preimage_interior_subset_interior_preimage hfc hf1)
     contrapose h1
@@ -176,7 +176,7 @@ theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
   by rw [frontier, closure_closed_ball, interior_closed_ball x hr, closed_ball_diff_ball]
 #align frontier_closed_ball frontier_closed_ball
 
-instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) : DiscreteTopology <| AddSubgroup.zmultiples e :=
+instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) : DiscreteTopology $ AddSubgroup.zmultiples e :=
   by
   rcases eq_or_ne e 0 with (rfl | he)
   · rw [AddSubgroup.zmultiples_zero_eq_bot]
@@ -206,7 +206,7 @@ def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1 where
     ⟨(1 + ∥x∥ ^ 2).sqrt⁻¹ • x, by
       have : 0 < 1 + ∥x∥ ^ 2 := by positivity
       rw [mem_ball_zero_iff, norm_smul, Real.norm_eq_abs, abs_inv, ← div_eq_inv_mul,
-        div_lt_one (abs_pos.mpr <| real.sqrt_ne_zero'.mpr this), ← abs_norm_eq_norm x, ← sq_lt_sq, abs_norm_eq_norm,
+        div_lt_one (abs_pos.mpr $ real.sqrt_ne_zero'.mpr this), ← abs_norm_eq_norm x, ← sq_lt_sq, abs_norm_eq_norm,
         Real.sq_sqrt this.le]
       exact lt_one_add _⟩
   invFun y := (1 - ∥(y : E)∥ ^ 2).sqrt⁻¹ • (y : E)
@@ -241,7 +241,7 @@ instance : NormedSpace α (ULift E) :=
 /-- The product of two normed spaces is a normed space, with the sup norm. -/
 instance Prod.normedSpace : NormedSpace α (E × F) :=
   { Prod.normedAddCommGroup, Prod.module with
-    norm_smul_le := fun s x => le_of_eq <| by simp [Prod.norm_def, norm_smul, mul_max_of_nonneg] }
+    norm_smul_le := fun s x => le_of_eq $ by simp [Prod.norm_def, norm_smul, mul_max_of_nonneg] }
 #align prod.normed_space Prod.normedSpace
 
 /-- The product of finitely many normed spaces is a normed space, with the sup norm. -/
@@ -250,7 +250,7 @@ instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SeminormedAddCo
       (∀ i,
         E
           i) where norm_smul_le a f :=
-    le_of_eq <|
+    le_of_eq $
       show
         (↑(Finset.sup Finset.univ fun b : ι => ∥a • f b∥₊) : ℝ) = ∥a∥₊ * ↑(Finset.sup Finset.univ fun b : ι => ∥f b∥₊)
         by simp only [(Nnreal.coe_mul _ _).symm, Nnreal.mul_finset_sup, nnnorm_smul]
@@ -259,7 +259,7 @@ instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SeminormedAddCo
 /-- A subspace of a normed space is also a normed space, with the restriction of the norm. -/
 instance Submodule.normedSpace {𝕜 R : Type _} [HasSmul 𝕜 R] [NormedField 𝕜] [Ring R] {E : Type _}
     [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] [Module R E] [IsScalarTower 𝕜 R E] (s : Submodule R E) :
-    NormedSpace 𝕜 s where norm_smul_le c x := le_of_eq <| norm_smul c (x : E)
+    NormedSpace 𝕜 s where norm_smul_le c x := le_of_eq $ norm_smul c (x : E)
 #align submodule.normed_space Submodule.normedSpace
 
 /-- If there is a scalar `c` with `∥c∥>1`, then any element with nonzero norm can be
@@ -353,7 +353,7 @@ theorem range_norm : range (norm : E → ℝ) = ici 0 :=
 #align range_norm range_norm
 
 theorem nnnorm_surjective : Surjective (nnnorm : E → ℝ≥0) := fun c =>
-  (exists_norm_eq E c.coe_nonneg).imp fun x h => Nnreal.eq h
+  (exists_norm_eq E c.coe_nonneg).imp $ fun x h => Nnreal.eq h
 #align nnnorm_surjective nnnorm_surjective
 
 @[simp]
@@ -473,7 +473,7 @@ theorem norm_algebra_map (x : 𝕜) : ∥algebraMap 𝕜 𝕜' x∥ = ∥x∥ * 
 #align norm_algebra_map norm_algebra_map
 
 theorem nnnorm_algebra_map (x : 𝕜) : ∥algebraMap 𝕜 𝕜' x∥₊ = ∥x∥₊ * ∥(1 : 𝕜')∥₊ :=
-  Subtype.ext <| norm_algebra_map 𝕜' x
+  Subtype.ext $ norm_algebra_map 𝕜' x
 #align nnnorm_algebra_map nnnorm_algebra_map
 
 @[simp]
@@ -483,7 +483,7 @@ theorem norm_algebra_map' [NormOneClass 𝕜'] (x : 𝕜) : ∥algebraMap 𝕜 �
 
 @[simp]
 theorem nnnorm_algebra_map' [NormOneClass 𝕜'] (x : 𝕜) : ∥algebraMap 𝕜 𝕜' x∥₊ = ∥x∥₊ :=
-  Subtype.ext <| norm_algebra_map' _ _
+  Subtype.ext $ norm_algebra_map' _ _
 #align nnnorm_algebra_map' nnnorm_algebra_map'
 
 section Nnreal
@@ -497,7 +497,7 @@ theorem norm_algebra_map_nnreal (x : ℝ≥0) : ∥algebraMap ℝ≥0 𝕜' x∥
 
 @[simp]
 theorem nnnorm_algebra_map_nnreal (x : ℝ≥0) : ∥algebraMap ℝ≥0 𝕜' x∥₊ = x :=
-  Subtype.ext <| norm_algebra_map_nnreal 𝕜' x
+  Subtype.ext $ norm_algebra_map_nnreal 𝕜' x
 #align nnnorm_algebra_map_nnreal nnnorm_algebra_map_nnreal
 
 end Nnreal
@@ -580,7 +580,7 @@ instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : NormedAddCommGroup E
 instance : NormedSpace 𝕜 (RestrictScalars 𝕜 𝕜' E) :=
   { RestrictScalars.module 𝕜 𝕜' E with
     norm_smul_le := fun c x =>
-      (NormedSpace.norm_smul_le (algebraMap 𝕜 𝕜' c) (_ : E)).trans_eq <| by rw [norm_algebra_map'] }
+      (NormedSpace.norm_smul_le (algebraMap 𝕜 𝕜' c) (_ : E)).trans_eq $ by rw [norm_algebra_map'] }
 
 -- If you think you need this, consider instead reproducing `restrict_scalars.lsmul`
 -- appropriately modified here.

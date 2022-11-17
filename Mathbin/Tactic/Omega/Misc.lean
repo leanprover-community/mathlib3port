@@ -31,7 +31,7 @@ def update (m : Nat) (a : α) (v : Nat → α) : Nat → α
 #align omega.update Omega.update
 
 -- mathport name: omega.update
-localized [Omega] notation v " ⟨" m " ↦ " a "⟩" => Omega.update m a v
+scoped notation v " ⟨" m " ↦ " a "⟩" => Omega.update m a v
 
 theorem update_eq (m : Nat) (a : α) (v : Nat → α) : (v ⟨m ↦ a⟩) m = a := by simp only [update, if_pos rfl]
 #align omega.update_eq Omega.update_eq
@@ -60,7 +60,7 @@ unsafe def intro_fresh : tactic Unit := do
 
 /-- Revert an expr if it passes the given test -/
 unsafe def revert_cond (t : expr → tactic Unit) (x : expr) : tactic Unit :=
-  (t x >> revert x) >> skip <|> skip
+  t x >> revert x >> skip <|> skip
 #align omega.revert_cond omega.revert_cond
 
 /-- Revert all exprs in the context that pass the given test -/

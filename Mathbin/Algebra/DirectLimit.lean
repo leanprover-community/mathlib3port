@@ -73,10 +73,11 @@ variable (G)
 
 include dec_ι
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The direct limit of a directed system is the modules glued together along the maps. -/
 def DirectLimit : Type max v w :=
   DirectSum ι G ⧸
-    (span R <| { a | ∃ (i j : _)(H : i ≤ j)(x : _), DirectSum.lof R ι G i x - DirectSum.lof R ι G j (f i j H x) = a })
+    (span R $ { a | ∃ (i) (j) (H : i ≤ j) (x), DirectSum.lof R ι G i x - DirectSum.lof R ι G j (f i j H x) = a })
 #align module.direct_limit Module.DirectLimit
 
 namespace DirectLimit
@@ -94,21 +95,22 @@ variable (R ι)
 
 /-- The canonical map from a component to the direct limit. -/
 def of (i) : G i →ₗ[R] DirectLimit G f :=
-  (mkq _).comp <| DirectSum.lof R ι G i
+  (mkq _).comp $ DirectSum.lof R ι G i
 #align module.direct_limit.of Module.DirectLimit.of
 
 variable {R ι G f}
 
 @[simp]
 theorem of_f {i j hij x} : of R ι G f j (f i j hij x) = of R ι G f i x :=
-  Eq.symm <| (Submodule.Quotient.eq _).2 <| subset_span ⟨i, j, hij, x, rfl⟩
+  Eq.symm $ (Submodule.Quotient.eq _).2 $ subset_span ⟨i, j, hij, x, rfl⟩
 #align module.direct_limit.of_f Module.DirectLimit.of_f
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i x) -/
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
-theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) : ∃ i x, of R ι G f i x = z :=
-  (Nonempty.elim (by infer_instance)) fun ind : ι =>
-    (Quotient.inductionOn' z) fun z =>
+theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) : ∃ (i) (x), of R ι G f i x = z :=
+  Nonempty.elim (by infer_instance) $ fun ind : ι =>
+    Quotient.inductionOn' z $ fun z =>
       DirectSum.induction_on z ⟨ind, 0, LinearMap.map_zero _⟩ (fun i x => ⟨i, x, rfl⟩)
         fun p q ⟨i, x, ihx⟩ ⟨j, y, ihy⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
@@ -135,7 +137,7 @@ that respect the directed system structure (i.e. make some diagram commute) give
 to a unique map out of the direct limit. -/
 def lift : DirectLimit G f →ₗ[R] P :=
   liftq _ (DirectSum.toModule R ι P g)
-    (span_le.2 fun a ⟨i, j, hij, x, hx⟩ => by
+    (span_le.2 $ fun a ⟨i, j, hij, x, hx⟩ => by
       rw [← hx, SetLike.mem_coe, LinearMap.sub_mem_ker_iff, DirectSum.to_module_lof, DirectSum.to_module_lof, Hg])
 #align module.direct_limit.lift Module.DirectLimit.lift
 
@@ -149,8 +151,8 @@ theorem lift_of {i} (x) : lift R ι G f g Hg (of R ι G f i x) = g i x :=
 
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →ₗ[R] P) (x) :
     F x =
-      lift R ι G f (fun i => F.comp <| of R ι G f i) (fun i j hij x => by rw [LinearMap.comp_apply, of_f] <;> rfl) x :=
-  (DirectLimit.inductionOn x) fun i x => by rw [lift_of] <;> rfl
+      lift R ι G f (fun i => F.comp $ of R ι G f i) (fun i j hij x => by rw [LinearMap.comp_apply, of_f] <;> rfl) x :=
+  DirectLimit.inductionOn x $ fun i x => by rw [lift_of] <;> rfl
 #align module.direct_limit.lift_unique Module.DirectLimit.lift_unique
 
 section Totalize
@@ -199,7 +201,7 @@ theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
 theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectSum ι G}
     (H : Submodule.Quotient.mk x = (0 : DirectLimit G f)) :
     ∃ j, (∀ k ∈ x.support, k ≤ j) ∧ DirectSum.toModule R ι (G j) (fun i => totalize G f i j) x = (0 : G j) :=
-  (Nonempty.elim (by infer_instance)) fun ind : ι =>
+  Nonempty.elim (by infer_instance) $ fun ind : ι =>
     span_induction ((Quotient.mk_eq_zero _).1 H)
       (fun x ⟨i, j, hij, y, hxy⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
@@ -233,14 +235,15 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
       fun a x ⟨i, hi, hxi⟩ => ⟨i, fun k hk => hi k (DirectSum.support_smul _ _ hk), by simp [LinearMap.map_smul, hxi]⟩
 #align module.direct_limit.of.zero_exact_aux Module.DirectLimit.of.zero_exact_aux
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (j hij) -/
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
-theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (H : of R ι G f i x = 0) : ∃ j hij, f i j hij x = (0 : G j) :=
+theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (H : of R ι G f i x = 0) : ∃ (j) (hij), f i j hij x = (0 : G j) :=
   haveI : Nonempty ι := ⟨i⟩
   let ⟨j, hj, hxj⟩ := of.zero_exact_aux H
   if hx0 : x = 0 then ⟨i, le_rfl, by simp [hx0]⟩
   else
-    have hij : i ≤ j := hj _ <| by simp [DirectSum.apply_eq_component, hx0]
+    have hij : i ≤ j := hj _ $ by simp [DirectSum.apply_eq_component, hx0]
     ⟨j, hij, by simpa [totalize_of_le hij] using hxj⟩
 #align module.direct_limit.of.zero_exact Module.DirectLimit.of.zero_exact
 
@@ -298,10 +301,11 @@ protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : Di
   Module.DirectLimit.inductionOn z ih
 #align add_comm_group.direct_limit.induction_on AddCommGroup.DirectLimit.induction_on
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (j hij) -/
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
 theorem of.zero_exact [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => f i j h] (i x) (h : of G f i x = 0) :
-    ∃ j hij, f i j hij x = 0 :=
+    ∃ (j) (hij), f i j hij x = 0 :=
   Module.DirectLimit.of.zero_exact h
 #align add_comm_group.direct_limit.of.zero_exact AddCommGroup.DirectLimit.of.zero_exact
 
@@ -329,7 +333,7 @@ theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
 
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+ P) (x) :
     F x = lift G f P (fun i => F.comp (of G f i).toAddMonoidHom) (fun i j hij x => by simp) x :=
-  (DirectLimit.induction_on x) fun i x => by simp
+  DirectLimit.induction_on x $ fun i x => by simp
 #align add_comm_group.direct_limit.lift_unique AddCommGroup.DirectLimit.lift_unique
 
 end DirectLimit
@@ -346,15 +350,18 @@ variable (f : ∀ i j, i ≤ j → G i → G j)
 
 open FreeCommRing
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j H x) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i x y) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i x y) -/
 /-- The direct limit of a directed system is the rings glued together along the maps. -/
 def DirectLimit : Type max v w :=
-  FreeCommRing (Σi, G i) ⧸
+  FreeCommRing (Σ i, G i) ⧸
     Ideal.span
       { a |
-        (∃ i j H x, of (⟨j, f i j H x⟩ : Σi, G i) - of ⟨i, x⟩ = a) ∨
-          (∃ i, of (⟨i, 1⟩ : Σi, G i) - 1 = a) ∨
-            (∃ i x y, of (⟨i, x + y⟩ : Σi, G i) - (of ⟨i, x⟩ + of ⟨i, y⟩) = a) ∨
-              ∃ i x y, of (⟨i, x * y⟩ : Σi, G i) - of ⟨i, x⟩ * of ⟨i, y⟩ = a }
+        (∃ (i) (j) (H) (x), of (⟨j, f i j H x⟩ : Σ i, G i) - of ⟨i, x⟩ = a) ∨
+          (∃ i, of (⟨i, 1⟩ : Σ i, G i) - 1 = a) ∨
+            (∃ (i) (x) (y), of (⟨i, x + y⟩ : Σ i, G i) - (of ⟨i, x⟩ + of ⟨i, y⟩) = a) ∨
+              ∃ (i) (x) (y), of (⟨i, x * y⟩ : Σ i, G i) - of ⟨i, x⟩ * of ⟨i, y⟩ = a }
 #align ring.direct_limit Ring.DirectLimit
 
 namespace DirectLimit
@@ -371,24 +378,25 @@ instance : Inhabited (DirectLimit G f) :=
 /-- The canonical map from a component to the direct limit. -/
 def of (i) : G i →+* DirectLimit G f :=
   RingHom.mk'
-    { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σi, G i)),
-      map_one' := Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inl ⟨i, rfl⟩,
-      map_mul' := fun x y => Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inr <| Or.inr ⟨i, x, y, rfl⟩ }
-    fun x y => Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inr <| Or.inl ⟨i, x, y, rfl⟩
+    { toFun := fun x => Ideal.Quotient.mk _ (of (⟨i, x⟩ : Σ i, G i)),
+      map_one' := Ideal.Quotient.eq.2 $ subset_span $ Or.inr $ Or.inl ⟨i, rfl⟩,
+      map_mul' := fun x y => Ideal.Quotient.eq.2 $ subset_span $ Or.inr $ Or.inr $ Or.inr ⟨i, x, y, rfl⟩ }
+    fun x y => Ideal.Quotient.eq.2 $ subset_span $ Or.inr $ Or.inr $ Or.inl ⟨i, x, y, rfl⟩
 #align ring.direct_limit.of Ring.DirectLimit.of
 
 variable {G f}
 
 @[simp]
 theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
-  Ideal.Quotient.eq.2 <| subset_span <| Or.inl ⟨i, j, hij, x, rfl⟩
+  Ideal.Quotient.eq.2 $ subset_span $ Or.inl ⟨i, j, hij, x, rfl⟩
 #align ring.direct_limit.of_f Ring.DirectLimit.of_f
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i x) -/
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
-theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) : ∃ i x, of G f i x = z :=
-  (Nonempty.elim (by infer_instance)) fun ind : ι =>
-    (Quotient.inductionOn' z) fun x =>
+theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f) : ∃ (i) (x), of G f i x = z :=
+  Nonempty.elim (by infer_instance) $ fun ind : ι =>
+    Quotient.inductionOn' z $ fun x =>
       FreeAbelianGroup.induction_on x ⟨ind, 0, (of _ _ ind).map_zero⟩
         (fun s =>
           Multiset.induction_on s ⟨ind, 1, (of _ _ ind).map_one⟩ fun a s ih =>
@@ -409,9 +417,10 @@ open Polynomial
 
 variable {f' : ∀ i j, i ≤ j → G i →+* G j}
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i p) -/
 theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
     (q : Polynomial (DirectLimit G fun i j h => f' i j h)) :
-    ∃ i p, Polynomial.map (of G (fun i j h => f' i j h) i) p = q :=
+    ∃ (i) (p), Polynomial.map (of G (fun i j h => f' i j h) i) p = q :=
   Polynomial.induction_on q
     (fun z =>
       let ⟨i, x, h⟩ := exists_of z
@@ -445,8 +454,8 @@ variable [DirectedSystem G fun i j h => f' i j h]
 
 variable (G f)
 
-theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupported x s) {j k}
-    (hj : ∀ z : Σi, G i, z ∈ s → z.1 ≤ j) (hk : ∀ z : Σi, G i, z ∈ t → z.1 ≤ k) (hjk : j ≤ k) (hst : s ⊆ t) :
+theorem of.zero_exact_aux2 {x : FreeCommRing (Σ i, G i)} {s t} (hxs : IsSupported x s) {j k}
+    (hj : ∀ z : Σ i, G i, z ∈ s → z.1 ≤ j) (hk : ∀ z : Σ i, G i, z ∈ t → z.1 ≤ k) (hjk : j ≤ k) (hst : s ⊆ t) :
     f' j k hjk (lift (fun ix : s => f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)) =
       lift (fun ix : t => f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x) :=
   by
@@ -475,17 +484,18 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupporte
 
 variable {G f f'}
 
-theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCommRing (Σi, G i)}
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (j s) -/
+theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCommRing (Σ i, G i)}
     (H : Ideal.Quotient.mk _ x = (0 : DirectLimit G fun i j h => f' i j h)) :
-    ∃ j s,
-      ∃ H : ∀ k : Σi, G i, k ∈ s → k.1 ≤ j,
+    ∃ (j) (s),
+      ∃ H : ∀ k : Σ i, G i, k ∈ s → k.1 ≤ j,
         IsSupported x s ∧ lift (fun ix : s => f' ix.1.1 j (H ix ix.2) ix.1.2) (restriction s x) = (0 : G j) :=
   by
   refine' span_induction (Ideal.Quotient.eq_zero_iff_mem.1 H) _ _ _ _
   · rintro x (⟨i, j, hij, x, rfl⟩ | ⟨i, rfl⟩ | ⟨i, x, y, rfl⟩ | ⟨i, x, y, rfl⟩)
     · refine'
         ⟨j, {⟨i, x⟩, ⟨j, f' i j hij x⟩}, _,
-          is_supported_sub (is_supported_of.2 <| Or.inr rfl) (is_supported_of.2 <| Or.inl rfl), _⟩
+          is_supported_sub (is_supported_of.2 $ Or.inr rfl) (is_supported_of.2 $ Or.inl rfl), _⟩
       · rintro k (rfl | ⟨rfl | _⟩)
         exact hij
         rfl
@@ -514,8 +524,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       
     · refine'
         ⟨i, {⟨i, x + y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
-          is_supported_sub (is_supported_of.2 <| Or.inl rfl)
-            (is_supported_add (is_supported_of.2 <| Or.inr <| Or.inl rfl) (is_supported_of.2 <| Or.inr <| Or.inr rfl)),
+          is_supported_sub (is_supported_of.2 $ Or.inl rfl)
+            (is_supported_add (is_supported_of.2 $ Or.inr $ Or.inl rfl) (is_supported_of.2 $ Or.inr $ Or.inr rfl)),
           _⟩
       · rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
         
@@ -529,8 +539,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       
     · refine'
         ⟨i, {⟨i, x * y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
-          is_supported_sub (is_supported_of.2 <| Or.inl rfl)
-            (is_supported_mul (is_supported_of.2 <| Or.inr <| Or.inl rfl) (is_supported_of.2 <| Or.inr <| Or.inr rfl)),
+          is_supported_sub (is_supported_of.2 $ Or.inl rfl)
+            (is_supported_mul (is_supported_of.2 $ Or.inr $ Or.inl rfl) (is_supported_of.2 $ Or.inr $ Or.inr rfl)),
           _⟩
       · rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
         
@@ -548,14 +558,14 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     
   · rintro x y ⟨i, s, hi, hxs, ihs⟩ ⟨j, t, hj, hyt, iht⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
-    have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k := by
+    have : ∀ z : Σ i, G i, z ∈ s ∪ t → z.1 ≤ k := by
       rintro z (hz | hz)
       exact le_trans (hi z hz) hik
       exact le_trans (hj z hz) hjk
     refine'
       ⟨k, s ∪ t, this,
-        is_supported_add (is_supported_upwards hxs <| Set.subset_union_left s t)
-          (is_supported_upwards hyt <| Set.subset_union_right s t),
+        is_supported_add (is_supported_upwards hxs $ Set.subset_union_left s t)
+          (is_supported_upwards hyt $ Set.subset_union_right s t),
         _⟩
     · rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, ←
         of.zero_exact_aux2 G f' hxs hi this hik (Set.subset_union_left s t), ←
@@ -568,13 +578,13 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     rcases exists_finset_support x with ⟨s, hxs⟩
     rcases(s.image Sigma.fst).exists_le with ⟨i, hi⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
-    have : ∀ z : Σi, G i, z ∈ ↑s ∪ t → z.1 ≤ k := by
+    have : ∀ z : Σ i, G i, z ∈ ↑s ∪ t → z.1 ≤ k := by
       rintro z (hz | hz)
-      exacts[(hi z.1 <| Finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
+      exacts[(hi z.1 $ Finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
     refine'
       ⟨k, ↑s ∪ t, this,
-        is_supported_mul (is_supported_upwards hxs <| Set.subset_union_left (↑s) t)
-          (is_supported_upwards hyt <| Set.subset_union_right (↑s) t),
+        is_supported_mul (is_supported_upwards hxs $ Set.subset_union_left (↑s) t)
+          (is_supported_upwards hyt $ Set.subset_union_right (↑s) t),
         _⟩
     rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul, ←
       of.zero_exact_aux2 G f' hyt hj this hjk (Set.subset_union_right (↑s) t), iht, (f' j k hjk).map_zero, mul_zero]
@@ -584,10 +594,10 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
 theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (hix : of G (fun i j h => f' i j h) i x = 0) :
-    ∃ (j : _)(hij : i ≤ j), f' i j hij x = 0 :=
+    ∃ (j) (hij : i ≤ j), f' i j hij x = 0 :=
   haveI : Nonempty ι := ⟨i⟩
   let ⟨j, s, H, hxs, hx⟩ := of.zero_exact_aux hix
-  have hixs : (⟨i, x⟩ : Σi, G i) ∈ s := is_supported_of.1 hxs
+  have hixs : (⟨i, x⟩ : Σ i, G i) ∈ s := is_supported_of.1 hxs
   ⟨j, H ⟨i, x⟩ hixs, by rw [restriction_of, dif_pos hixs, lift_of] at hx <;> exact hx⟩
 #align ring.direct_limit.of.zero_exact Ring.DirectLimit.of.zero_exact
 
@@ -627,9 +637,9 @@ that respect the directed system structure (i.e. make some diagram commute) give
 to a unique map out of the direct limit.
 -/
 def lift : DirectLimit G f →+* P :=
-  Ideal.Quotient.lift _ (FreeCommRing.lift fun x : Σi, G i => g x.1 x.2)
+  Ideal.Quotient.lift _ (FreeCommRing.lift $ fun x : Σ i, G i => g x.1 x.2)
     (by
-      suffices Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σi : ι, G i => g x.fst x.snd) ⊥ by
+      suffices Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σ i : ι, G i => g x.fst x.snd) ⊥ by
         intro x hx
         exact (mem_bot P).1 (this hx)
       rw [Ideal.span_le]
@@ -650,8 +660,8 @@ theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
 #align ring.direct_limit.lift_of Ring.DirectLimit.lift_of
 
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+* P) (x) :
-    F x = lift G f P (fun i => F.comp <| of G f i) (fun i j hij x => by simp) x :=
-  (DirectLimit.induction_on x) fun i x => by simp
+    F x = lift G f P (fun i => F.comp $ of G f i) (fun i j hij x => by simp) x :=
+  DirectLimit.induction_on x $ fun i x => by simp
 #align ring.direct_limit.lift_unique Ring.DirectLimit.lift_unique
 
 end DirectLimit
@@ -672,7 +682,7 @@ namespace DirectLimit
 
 instance nontrivial [DirectedSystem G fun i j h => f' i j h] : Nontrivial (Ring.DirectLimit G fun i j h => f' i j h) :=
   ⟨⟨0, 1,
-      (Nonempty.elim (by infer_instance)) fun i : ι => by
+      Nonempty.elim (by infer_instance) $ fun i : ι => by
         change (0 : Ring.DirectLimit G fun i j h => f' i j h) ≠ 1
         rw [← (Ring.DirectLimit.of _ _ _).map_one]
         intro H
@@ -682,10 +692,10 @@ instance nontrivial [DirectedSystem G fun i j h => f' i j h] : Nontrivial (Ring.
 #align field.direct_limit.nontrivial Field.DirectLimit.nontrivial
 
 theorem exists_inv {p : Ring.DirectLimit G f} : p ≠ 0 → ∃ y, p * y = 1 :=
-  (Ring.DirectLimit.induction_on p) fun i x H =>
+  Ring.DirectLimit.induction_on p $ fun i x H =>
     ⟨Ring.DirectLimit.of G f i x⁻¹, by
       erw [← (Ring.DirectLimit.of _ _ _).map_mul,
-        mul_inv_cancel fun h : x = 0 => H <| by rw [h, (Ring.DirectLimit.of _ _ _).map_zero],
+        mul_inv_cancel fun h : x = 0 => H $ by rw [h, (Ring.DirectLimit.of _ _ _).map_zero],
         (Ring.DirectLimit.of _ _ _).map_one]⟩
 #align field.direct_limit.exists_inv Field.DirectLimit.exists_inv
 

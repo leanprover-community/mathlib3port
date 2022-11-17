@@ -113,7 +113,7 @@ variable {M} (S)
 
 @[simp, to_additive add_centralizer_eq_univ]
 theorem centralizer_eq_univ [CommSemigroup M] : centralizer S = univ :=
-  (Subset.antisymm (subset_univ _)) fun x hx y hy => mul_comm y x
+  Subset.antisymm (subset_univ _) $ fun x hx y hy => mul_comm y x
 #align set.centralizer_eq_univ Set.centralizer_eq_univ
 
 end Set

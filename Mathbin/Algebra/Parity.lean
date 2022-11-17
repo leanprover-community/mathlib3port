@@ -165,7 +165,7 @@ theorem Even.neg_one_zpow (h : Even n) : (-1 : α) ^ n = 1 := by rw [h.neg_zpow,
 
 end DivisionMonoid
 
-theorem even_abs [SubtractionMonoid α] [LinearOrder α] {a : α} : Even (|a|) ↔ Even a := by
+theorem even_abs [SubtractionMonoid α] [LinearOrder α] {a : α} : Even |a| ↔ Even a := by
   cases abs_choice a <;> simp only [h, even_neg]
 #align even_abs even_abs
 
@@ -255,7 +255,7 @@ def Odd (a : α) : Prop :=
 #align odd Odd
 
 theorem odd_iff_exists_bit1 {a : α} : Odd a ↔ ∃ b, a = bit1 b :=
-  exists_congr fun b => by
+  exists_congr $ fun b => by
     rw [two_mul]
     rfl
 #align odd_iff_exists_bit1 odd_iff_exists_bit1
@@ -418,19 +418,19 @@ theorem Odd.pow_neg (hn : Odd n) (ha : a < 0) : a ^ n < 0 := by
 #align odd.pow_neg Odd.pow_neg
 
 theorem Odd.pow_nonneg_iff (hn : Odd n) : 0 ≤ a ^ n ↔ 0 ≤ a :=
-  ⟨fun h => le_of_not_lt fun ha => h.not_lt <| hn.pow_neg ha, fun ha => pow_nonneg ha n⟩
+  ⟨fun h => le_of_not_lt fun ha => h.not_lt $ hn.pow_neg ha, fun ha => pow_nonneg ha n⟩
 #align odd.pow_nonneg_iff Odd.pow_nonneg_iff
 
 theorem Odd.pow_nonpos_iff (hn : Odd n) : a ^ n ≤ 0 ↔ a ≤ 0 :=
-  ⟨fun h => le_of_not_lt fun ha => h.not_lt <| pow_pos ha _, hn.pow_nonpos⟩
+  ⟨fun h => le_of_not_lt fun ha => h.not_lt $ pow_pos ha _, hn.pow_nonpos⟩
 #align odd.pow_nonpos_iff Odd.pow_nonpos_iff
 
 theorem Odd.pow_pos_iff (hn : Odd n) : 0 < a ^ n ↔ 0 < a :=
-  ⟨fun h => lt_of_not_le fun ha => h.not_le <| hn.pow_nonpos ha, fun ha => pow_pos ha n⟩
+  ⟨fun h => lt_of_not_le fun ha => h.not_le $ hn.pow_nonpos ha, fun ha => pow_pos ha n⟩
 #align odd.pow_pos_iff Odd.pow_pos_iff
 
 theorem Odd.pow_neg_iff (hn : Odd n) : a ^ n < 0 ↔ a < 0 :=
-  ⟨fun h => lt_of_not_le fun ha => h.not_le <| pow_nonneg ha _, hn.pow_neg⟩
+  ⟨fun h => lt_of_not_le fun ha => h.not_le $ pow_nonneg ha _, hn.pow_neg⟩
 #align odd.pow_neg_iff Odd.pow_neg_iff
 
 theorem Even.pow_pos_iff (hn : Even n) (h₀ : 0 < n) : 0 < a ^ n ↔ a ≠ 0 :=

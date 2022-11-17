@@ -33,7 +33,7 @@ variable {f : α → E} {l : Filter α} {s : Set α} {c : α} {y : E}
 along `l` at `c`. -/
 theorem IsMaxFilter.norm_add_same_ray (h : IsMaxFilter (norm ∘ f) l c) (hy : SameRay ℝ (f c) y) :
     IsMaxFilter (fun x => ∥f x + y∥) l c :=
-  h.mono fun x hx =>
+  h.mono $ fun x hx =>
     calc
       ∥f x + y∥ ≤ ∥f x∥ + ∥y∥ := norm_add_le _ _
       _ ≤ ∥f c∥ + ∥y∥ := add_le_add_right hx _

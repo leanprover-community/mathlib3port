@@ -158,7 +158,7 @@ instance [TopologicalSpace F] [TopologicalAddGroup F] : TopologicalAddGroup (E �
 instance [RingHomSurjective σ] [RingHomIsometric σ] [TopologicalSpace F] [TopologicalAddGroup F]
     [HasContinuousSmul 𝕜₂ F] : HasContinuousSmul 𝕜₂ (E →SL[σ] F) :=
   strongTopology.has_continuous_smul σ F { S | Bornology.IsVonNBounded 𝕜₁ S } ⟨∅, Bornology.isVonNBoundedEmpty 𝕜₁ E⟩
-    (directed_on_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) fun s hs => hs
+    (directed_on_of_sup_mem $ fun _ _ => Bornology.IsVonNBounded.union) fun s hs => hs
 
 instance [UniformSpace F] [UniformAddGroup F] : UniformSpace (E →SL[σ] F) :=
   strongUniformity σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
@@ -171,7 +171,7 @@ protected theorem has_basis_nhds_zero_of_basis [TopologicalSpace F] [Topological
     (𝓝 (0 : E →SL[σ] F)).HasBasis (fun Si : Set E × ι => Bornology.IsVonNBounded 𝕜₁ Si.1 ∧ p Si.2) fun Si =>
       { f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
   strongTopology.has_basis_nhds_zero_of_basis σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
-    ⟨∅, Bornology.isVonNBoundedEmpty 𝕜₁ E⟩ (directed_on_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) h
+    ⟨∅, Bornology.isVonNBoundedEmpty 𝕜₁ E⟩ (directed_on_of_sup_mem $ fun _ _ => Bornology.IsVonNBounded.union) h
 #align continuous_linear_map.has_basis_nhds_zero_of_basis ContinuousLinearMap.has_basis_nhds_zero_of_basis
 
 protected theorem has_basis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F] :

@@ -42,7 +42,7 @@ theorem range_ι_le_even_odd_one : (ι Q).range ≤ evenOdd Q 1 := by
 #align clifford_algebra.range_ι_le_even_odd_one CliffordAlgebra.range_ι_le_even_odd_one
 
 theorem ι_mem_even_odd_one (m : M) : ι Q m ∈ evenOdd Q 1 :=
-  range_ι_le_even_odd_one Q <| LinearMap.mem_range_self _ m
+  range_ι_le_even_odd_one Q $ LinearMap.mem_range_self _ m
 #align clifford_algebra.ι_mem_even_odd_one CliffordAlgebra.ι_mem_even_odd_one
 
 theorem ι_mul_ι_mem_even_odd_zero (m₁ m₂ : M) : ι Q m₁ * ι Q m₂ ∈ evenOdd Q 0 :=
@@ -82,7 +82,7 @@ theorem GradedAlgebra.ι_apply (m : M) :
 
 theorem GradedAlgebra.ι_sq_scalar (m : M) : GradedAlgebra.ι Q m * GradedAlgebra.ι Q m = algebraMap R _ (Q m) := by
   rw [graded_algebra.ι_apply Q, DirectSum.of_mul_of, DirectSum.algebra_map_apply]
-  refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext rfl <| ι_sq_scalar _ _)
+  refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext rfl $ ι_sq_scalar _ _)
 #align clifford_algebra.graded_algebra.ι_sq_scalar CliffordAlgebra.GradedAlgebra.ι_sq_scalar
 
 theorem GradedAlgebra.lift_ι_eq (i' : Zmod 2) (x' : evenOdd Q i') :
@@ -138,7 +138,7 @@ theorem supr_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ := by
   rw [← (DirectSum.Decomposition.is_internal (even_odd Q)).submodule_supr_eq_top, eq_comm]
   calc
     (⨆ (i : Zmod 2) (j : { n // ↑n = i }), (ι Q).range ^ ↑j) =
-        ⨆ i : Σi : Zmod 2, { n : ℕ // ↑n = i }, (ι Q).range ^ (i.2 : ℕ) :=
+        ⨆ i : Σ i : Zmod 2, { n : ℕ // ↑n = i }, (ι Q).range ^ (i.2 : ℕ) :=
       by rw [supr_sigma]
     _ = ⨆ i : ℕ, (ι Q).range ^ i :=
       Function.Surjective.supr_congr (fun i => i.2) (fun i => ⟨⟨_, i, rfl⟩, rfl⟩) fun _ => rfl
@@ -146,7 +146,7 @@ theorem supr_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ := by
 #align clifford_algebra.supr_ι_range_eq_top CliffordAlgebra.supr_ι_range_eq_top
 
 theorem even_odd_is_compl : IsCompl (evenOdd Q 0) (evenOdd Q 1) :=
-  (DirectSum.Decomposition.is_internal (evenOdd Q)).IsCompl zero_ne_one <| by
+  (DirectSum.Decomposition.is_internal (evenOdd Q)).IsCompl zero_ne_one $ by
     have : (Finset.univ : Finset (Zmod 2)) = {0, 1} := rfl
     simpa using congr_arg (coe : Finset (Zmod 2) → Set (Zmod 2)) this
 #align clifford_algebra.even_odd_is_compl CliffordAlgebra.even_odd_is_compl

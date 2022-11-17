@@ -61,8 +61,8 @@ current target, and generates a string explanation for it.
 
 Takes an optional list of rewrite rules specified in the same way as the `rw` tactic accepts.
 -/
-unsafe def rewrite_search (explain : parse <| optional (tk "?"))
-    (rs : parse <| optional (list_of (rw_rule_p <| lean.parser.pexpr 0))) (cfg : config := {  }) : tactic Unit := do
+unsafe def rewrite_search (explain : parse $ optional (tk "?"))
+    (rs : parse $ optional (list_of (rw_rule_p $ lean.parser.pexpr 0))) (cfg : config := {  }) : tactic Unit := do
   let t ← tactic.target
   if t then tactic.fail "rewrite_search is not suitable for goals containing metavariables" else tactic.skip
   let implicit_rules ← collect_rules

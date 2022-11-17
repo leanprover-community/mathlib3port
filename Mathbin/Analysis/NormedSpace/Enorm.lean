@@ -59,7 +59,7 @@ theorem coe_fn_injective : Function.Injective (coeFn : Enorm 𝕜 V → V → �
 
 @[ext.1]
 theorem ext {e₁ e₂ : Enorm 𝕜 V} (h : ∀ x, e₁ x = e₂ x) : e₁ = e₂ :=
-  coe_fn_injective <| funext h
+  coe_fn_injective $ funext h
 #align enorm.ext Enorm.ext
 
 theorem ext_iff {e₁ e₂ : Enorm 𝕜 V} : e₁ = e₂ ↔ ∀ x, e₁ x = e₂ x :=
@@ -73,7 +73,7 @@ theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ �
 
 @[simp]
 theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ∥c∥₊ * e x :=
-  le_antisymm (e.map_smul_le' c x) <| by
+  le_antisymm (e.map_smul_le' c x) $ by
     by_cases hc:c = 0
     · simp [hc]
       
@@ -126,7 +126,7 @@ instance : PartialOrder (Enorm 𝕜 V) where
   le e₁ e₂ := ∀ x, e₁ x ≤ e₂ x
   le_refl e x := le_rfl
   le_trans e₁ e₂ e₃ h₁₂ h₂₃ x := le_trans (h₁₂ x) (h₂₃ x)
-  le_antisymm e₁ e₂ h₁₂ h₂₁ := ext fun x => le_antisymm (h₁₂ x) (h₂₁ x)
+  le_antisymm e₁ e₂ h₁₂ h₂₁ := ext $ fun x => le_antisymm (h₁₂ x) (h₂₁ x)
 
 /-- The `enorm` sending each non-zero vector to infinity. -/
 noncomputable instance : HasTop (Enorm 𝕜 V) :=
@@ -162,9 +162,9 @@ noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
     sup := fun e₁ e₂ =>
       { toFun := fun x => max (e₁ x) (e₂ x), eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1,
         map_add_le' := fun x y =>
-          max_le (le_trans (e₁.map_add_le _ _) <| add_le_add (le_max_left _ _) (le_max_left _ _))
-            (le_trans (e₂.map_add_le _ _) <| add_le_add (le_max_right _ _) (le_max_right _ _)),
-        map_smul_le' := fun c x => le_of_eq <| by simp only [map_smul, Ennreal.mul_max] },
+          max_le (le_trans (e₁.map_add_le _ _) $ add_le_add (le_max_left _ _) (le_max_left _ _))
+            (le_trans (e₂.map_add_le _ _) $ add_le_add (le_max_right _ _) (le_max_right _ _)),
+        map_smul_le' := fun c x => le_of_eq $ by simp only [map_smul, Ennreal.mul_max] },
     le_sup_left := fun e₁ e₂ x => le_max_left _ _, le_sup_right := fun e₁ e₂ x => le_max_right _ _,
     sup_le := fun e₁ e₂ e₃ h₁ h₂ x => max_le (h₁ x) (h₂ x) }
 
@@ -231,7 +231,7 @@ theorem finite_norm_eq (x : e.finiteSubspace) : ∥x∥ = (e x).toReal :=
 
 /-- Normed space instance on `e.finite_subspace`. -/
 instance :
-    NormedSpace 𝕜 e.finiteSubspace where norm_smul_le c x := le_of_eq <| by simp [finite_norm_eq, Ennreal.to_real_mul]
+    NormedSpace 𝕜 e.finiteSubspace where norm_smul_le c x := le_of_eq $ by simp [finite_norm_eq, Ennreal.to_real_mul]
 
 end Enorm
 

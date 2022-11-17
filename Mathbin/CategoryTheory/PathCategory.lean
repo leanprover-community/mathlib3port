@@ -60,7 +60,7 @@ attribute [local ext.1] Functor.ext
 def lift {C} [Category C] (φ : Prefunctor V C) : Paths V ⥤ C where
   obj := φ.obj
   map X Y f :=
-    @Quiver.Path.rec V _ X (fun Y f => φ.obj X ⟶ φ.obj Y) (𝟙 <| φ.obj X) (fun Y Z p f ihp => ihp ≫ φ.map f) Y f
+    @Quiver.Path.rec V _ X (fun Y f => φ.obj X ⟶ φ.obj Y) (𝟙 $ φ.obj X) (fun Y Z p f ihp => ihp ≫ φ.map f) Y f
   map_id' X := by rfl
   map_comp' X Y Z f g := by
     induction' g with _ _ g' p ih _ _ _

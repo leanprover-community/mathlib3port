@@ -124,9 +124,10 @@ theorem Coloring.color_classes_independent (c : α) : IsAntichain G.Adj (C.color
 #align simple_graph.coloring.color_classes_independent SimpleGraph.Coloring.color_classes_independent
 
 -- TODO make this computable
-noncomputable instance [Fintype V] [Fintype α] : Fintype (Coloring G α) := by
-  classical change Fintype (RelHom G.adj (⊤ : SimpleGraph α).Adj)
-    infer_instance
+noncomputable instance [Fintype V] [Fintype α] : Fintype (Coloring G α) := by classical
+  change Fintype (RelHom G.adj (⊤ : SimpleGraph α).Adj)
+  apply Fintype.ofInjective _ RelHom.coe_fn_injective
+  infer_instance
 
 variable (G)
 
@@ -192,7 +193,7 @@ def recolorOfEquiv {α β : Type _} (f : α ≃ β) : G.Coloring α ≃ G.Colori
 `β` has at least as large a cardinality as `α`. -/
 noncomputable def recolorOfCardLe {α β : Type _} [Fintype α] [Fintype β] (hn : Fintype.card α ≤ Fintype.card β) :
     G.Coloring α ↪ G.Coloring β :=
-  G.recolorOfEmbedding <| (Function.Embedding.nonempty_of_card_le hn).some
+  G.recolorOfEmbedding $ (Function.Embedding.nonempty_of_card_le hn).some
 #align simple_graph.recolor_of_card_le SimpleGraph.recolorOfCardLe
 
 variable {G}

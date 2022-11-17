@@ -90,13 +90,13 @@ abbrev AddSubmonoid.toSubmonoid' : AddSubmonoid (Additive M) ≃o Submonoid M :=
 
 theorem Submonoid.to_add_submonoid_closure (S : Set M) :
     (Submonoid.closure S).toAddSubmonoid = AddSubmonoid.closure (Additive.toMul ⁻¹' S) :=
-  le_antisymm (Submonoid.toAddSubmonoid.le_symm_apply.1 <| Submonoid.closure_le.2 AddSubmonoid.subset_closure)
+  le_antisymm (Submonoid.toAddSubmonoid.le_symm_apply.1 $ Submonoid.closure_le.2 AddSubmonoid.subset_closure)
     (AddSubmonoid.closure_le.2 Submonoid.subset_closure)
 #align submonoid.to_add_submonoid_closure Submonoid.to_add_submonoid_closure
 
 theorem AddSubmonoid.to_submonoid'_closure (S : Set (Additive M)) :
     (AddSubmonoid.closure S).toSubmonoid' = Submonoid.closure (Multiplicative.ofAdd ⁻¹' S) :=
-  le_antisymm (AddSubmonoid.toSubmonoid'.le_symm_apply.1 <| AddSubmonoid.closure_le.2 Submonoid.subset_closure)
+  le_antisymm (AddSubmonoid.toSubmonoid'.le_symm_apply.1 $ AddSubmonoid.closure_le.2 Submonoid.subset_closure)
     (Submonoid.closure_le.2 AddSubmonoid.subset_closure)
 #align add_submonoid.to_submonoid'_closure AddSubmonoid.to_submonoid'_closure
 
@@ -124,14 +124,13 @@ abbrev Submonoid.toAddSubmonoid' : Submonoid (Multiplicative A) ≃o AddSubmonoi
 
 theorem AddSubmonoid.to_submonoid_closure (S : Set A) :
     (AddSubmonoid.closure S).toSubmonoid = Submonoid.closure (Multiplicative.toAdd ⁻¹' S) :=
-  le_antisymm (AddSubmonoid.toSubmonoid.to_galois_connection.l_le <| AddSubmonoid.closure_le.2 Submonoid.subset_closure)
+  le_antisymm (AddSubmonoid.toSubmonoid.to_galois_connection.l_le $ AddSubmonoid.closure_le.2 Submonoid.subset_closure)
     (Submonoid.closure_le.2 AddSubmonoid.subset_closure)
 #align add_submonoid.to_submonoid_closure AddSubmonoid.to_submonoid_closure
 
 theorem Submonoid.to_add_submonoid'_closure (S : Set (Multiplicative A)) :
     (Submonoid.closure S).toAddSubmonoid' = AddSubmonoid.closure (Additive.ofMul ⁻¹' S) :=
-  le_antisymm
-    (Submonoid.toAddSubmonoid'.to_galois_connection.l_le <| Submonoid.closure_le.2 AddSubmonoid.subset_closure)
+  le_antisymm (Submonoid.toAddSubmonoid'.to_galois_connection.l_le $ Submonoid.closure_le.2 AddSubmonoid.subset_closure)
     (AddSubmonoid.closure_le.2 Submonoid.subset_closure)
 #align submonoid.to_add_submonoid'_closure Submonoid.to_add_submonoid'_closure
 
@@ -216,7 +215,7 @@ omit mc
 
 @[to_additive]
 theorem map_map (g : N →* P) (f : M →* N) : (S.map f).map g = S.map (g.comp f) :=
-  SetLike.coe_injective <| image_image _ _ _
+  SetLike.coe_injective $ image_image _ _ _
 #align submonoid.map_map Submonoid.map_map
 
 include mc
@@ -716,8 +715,8 @@ theorem coe_equiv_map_of_injective_apply (f : M →* N) (hf : Function.Injective
 
 @[simp, to_additive]
 theorem closure_closure_coe_preimage {s : Set M} : closure ((coe : closure s → M) ⁻¹' s) = ⊤ :=
-  eq_top_iff.2 fun x =>
-    (Subtype.recOn x) fun x hx _ => by
+  eq_top_iff.2 $ fun x =>
+    Subtype.recOn x $ fun x hx _ => by
       refine' closure_induction' _ (fun g hg => _) _ (fun g₁ g₂ hg₁ hg₂ => _) hx
       · exact subset_closure hg
         
@@ -756,49 +755,49 @@ theorem prod_mono {s₁ s₂ : Submonoid M} {t₁ t₂ : Submonoid N} (hs : s₁
 
 @[to_additive prod_top]
 theorem prod_top (s : Submonoid M) : s.Prod (⊤ : Submonoid N) = s.comap (MonoidHom.fst M N) :=
-  ext fun x => by simp [mem_prod, MonoidHom.coe_fst]
+  ext $ fun x => by simp [mem_prod, MonoidHom.coe_fst]
 #align submonoid.prod_top Submonoid.prod_top
 
 @[to_additive top_prod]
 theorem top_prod (s : Submonoid N) : (⊤ : Submonoid M).Prod s = s.comap (MonoidHom.snd M N) :=
-  ext fun x => by simp [mem_prod, MonoidHom.coe_snd]
+  ext $ fun x => by simp [mem_prod, MonoidHom.coe_snd]
 #align submonoid.top_prod Submonoid.top_prod
 
 @[simp, to_additive top_prod_top]
 theorem top_prod_top : (⊤ : Submonoid M).Prod (⊤ : Submonoid N) = ⊤ :=
-  (top_prod _).trans <| comap_top _
+  (top_prod _).trans $ comap_top _
 #align submonoid.top_prod_top Submonoid.top_prod_top
 
 @[to_additive]
 theorem bot_prod_bot : (⊥ : Submonoid M).Prod (⊥ : Submonoid N) = ⊥ :=
-  SetLike.coe_injective <| by simp [coe_prod, Prod.one_eq_mk]
+  SetLike.coe_injective $ by simp [coe_prod, Prod.one_eq_mk]
 #align submonoid.bot_prod_bot Submonoid.bot_prod_bot
 
 /-- The product of submonoids is isomorphic to their product as monoids. -/
 @[to_additive prod_equiv "The product of additive submonoids is isomorphic to their product\nas additive monoids"]
 def prodEquiv (s : Submonoid M) (t : Submonoid N) : s.Prod t ≃* s × t :=
-  { Equiv.Set.prod ↑s ↑t with map_mul' := fun x y => rfl }
+  { Equiv.Set.prod (↑s) ↑t with map_mul' := fun x y => rfl }
 #align submonoid.prod_equiv Submonoid.prodEquiv
 
 open MonoidHom
 
 @[to_additive]
 theorem map_inl (s : Submonoid M) : s.map (inl M N) = s.Prod ⊥ :=
-  ext fun p =>
+  ext $ fun p =>
     ⟨fun ⟨x, hx, hp⟩ => hp ▸ ⟨hx, Set.mem_singleton 1⟩, fun ⟨hps, hp1⟩ =>
-      ⟨p.1, hps, Prod.ext rfl <| (Set.eq_of_mem_singleton hp1).symm⟩⟩
+      ⟨p.1, hps, Prod.ext rfl $ (Set.eq_of_mem_singleton hp1).symm⟩⟩
 #align submonoid.map_inl Submonoid.map_inl
 
 @[to_additive]
 theorem map_inr (s : Submonoid N) : s.map (inr M N) = prod ⊥ s :=
-  ext fun p =>
+  ext $ fun p =>
     ⟨fun ⟨x, hx, hp⟩ => hp ▸ ⟨Set.mem_singleton 1, hx⟩, fun ⟨hp1, hps⟩ =>
       ⟨p.2, hps, Prod.ext (Set.eq_of_mem_singleton hp1).symm rfl⟩⟩
 #align submonoid.map_inr Submonoid.map_inr
 
 @[simp, to_additive prod_bot_sup_bot_prod]
 theorem prod_bot_sup_bot_prod (s : Submonoid M) (t : Submonoid N) : s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
-  (le_antisymm (sup_le (prod_mono (le_refl s) bot_le) (prod_mono bot_le (le_refl t)))) fun p hp =>
+  le_antisymm (sup_le (prod_mono (le_refl s) bot_le) (prod_mono bot_le (le_refl t))) $ fun p hp =>
     Prod.fst_mul_snd p ▸
       mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, Set.mem_singleton 1⟩)
         ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨Set.mem_singleton 1, hp.2⟩)
@@ -821,7 +820,7 @@ theorem comap_equiv_eq_map_symm (f : N ≃* M) (K : Submonoid M) : K.comap f.toM
 
 @[simp, to_additive]
 theorem map_equiv_top (f : M ≃* N) : (⊤ : Submonoid M).map f.toMonoidHom = ⊤ :=
-  SetLike.coe_injective <| Set.image_univ.trans f.Surjective.range_eq
+  SetLike.coe_injective $ Set.image_univ.trans f.Surjective.range_eq
 #align submonoid.map_equiv_top Submonoid.map_equiv_top
 
 @[to_additive le_prod_iff]
@@ -942,7 +941,7 @@ include mc
 
 @[to_additive]
 theorem mrange_top_iff_surjective {f : F} : mrange f = (⊤ : Submonoid N) ↔ Function.Surjective f :=
-  SetLike.ext'_iff.trans <| Iff.trans (by rw [coe_mrange, coe_top]) Set.range_iff_surjective
+  SetLike.ext'_iff.trans $ Iff.trans (by rw [coe_mrange, coe_top]) Set.range_iff_surjective
 #align monoid_hom.mrange_top_iff_surjective MonoidHom.mrange_top_iff_surjective
 
 /-- The range of a surjective monoid hom is the whole of the codomain. -/
@@ -953,7 +952,7 @@ theorem mrange_top_of_surjective (f : F) (hf : Function.Surjective f) : mrange f
 
 @[to_additive]
 theorem mclosure_preimage_le (f : F) (s : Set N) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
-  closure_le.2 fun x hx => SetLike.mem_coe.2 <| mem_comap.2 <| subset_closure hx
+  closure_le.2 $ fun x hx => SetLike.mem_coe.2 $ mem_comap.2 $ subset_closure hx
 #align monoid_hom.mclosure_preimage_le MonoidHom.mclosure_preimage_le
 
 /-- The image under a monoid hom of the submonoid generated by a set equals the submonoid generated
@@ -962,8 +961,8 @@ theorem mclosure_preimage_le (f : F) (s : Set N) : closure (f ⁻¹' s) ≤ (clo
       "The image under an `add_monoid` hom of the `add_submonoid` generated by a set equals\nthe `add_submonoid` generated by the image of the set."]
 theorem map_mclosure (f : F) (s : Set M) : (closure s).map f = closure (f '' s) :=
   le_antisymm
-    (map_le_iff_le_comap.2 <| le_trans (closure_mono <| Set.subset_preimage_image _ _) (mclosure_preimage_le _ _))
-    (closure_le.2 <| Set.image_subset _ subset_closure)
+    (map_le_iff_le_comap.2 $ le_trans (closure_mono $ Set.subset_preimage_image _ _) (mclosure_preimage_le _ _))
+    (closure_le.2 $ Set.image_subset _ subset_closure)
 #align monoid_hom.map_mclosure MonoidHom.map_mclosure
 
 omit mc
@@ -997,7 +996,7 @@ def codRestrict {S} [SetLike S N] [SubmonoidClass S N] (f : M →* N) (s : S) (h
 /-- Restriction of a monoid hom to its range interpreted as a submonoid. -/
 @[to_additive "Restriction of an `add_monoid` hom to its range interpreted as a submonoid."]
 def mrangeRestrict {N} [MulOneClass N] (f : M →* N) : M →* f.mrange :=
-  (f.codRestrict f.mrange) fun x => ⟨x, rfl⟩
+  f.codRestrict f.mrange $ fun x => ⟨x, rfl⟩
 #align monoid_hom.mrange_restrict MonoidHom.mrangeRestrict
 
 @[simp, to_additive]
@@ -1071,7 +1070,7 @@ theorem mker_one : (1 : M →* N).mker = ⊤ := by
 @[to_additive]
 theorem prod_map_comap_prod' {M' : Type _} {N' : Type _} [MulOneClass M'] [MulOneClass N'] (f : M →* N) (g : M' →* N')
     (S : Submonoid N) (S' : Submonoid N') : (S.Prod S').comap (prodMap f g) = (S.comap f).Prod (S'.comap g) :=
-  SetLike.coe_injective <| Set.preimage_prod_map_prod f g _ _
+  SetLike.coe_injective $ Set.preimage_prod_map_prod f g _ _
 #align monoid_hom.prod_map_comap_prod' MonoidHom.prod_map_comap_prod'
 
 @[to_additive]
@@ -1107,8 +1106,8 @@ See `mul_equiv.submonoid_map` for a variant for `mul_equiv`s. -/
   simps]
 def submonoidMap (f : M →* N) (M' : Submonoid M) : M' →* M'.map f where
   toFun x := ⟨f x, ⟨x, x.Prop, rfl⟩⟩
-  map_one' := Subtype.eq <| f.map_one
-  map_mul' x y := Subtype.eq <| f.map_mul x y
+  map_one' := Subtype.eq $ f.map_one
+  map_mul' x y := Subtype.eq $ f.map_mul x y
 #align monoid_hom.submonoid_map MonoidHom.submonoidMap
 
 @[to_additive]
@@ -1143,12 +1142,12 @@ theorem mrange_inr' : (inr M N).mrange = comap (fst M N) ⊥ :=
 
 @[simp, to_additive]
 theorem mrange_fst : (fst M N).mrange = ⊤ :=
-  mrange_top_of_surjective (fst M N) <| @Prod.fst_surjective _ _ ⟨1⟩
+  mrange_top_of_surjective (fst M N) $ @Prod.fst_surjective _ _ ⟨1⟩
 #align submonoid.mrange_fst Submonoid.mrange_fst
 
 @[simp, to_additive]
 theorem mrange_snd : (snd M N).mrange = ⊤ :=
-  mrange_top_of_surjective (snd M N) <| @Prod.snd_surjective _ _ ⟨1⟩
+  mrange_top_of_surjective (snd M N) $ @Prod.snd_surjective _ _ ⟨1⟩
 #align submonoid.mrange_snd Submonoid.mrange_snd
 
 @[to_additive]
@@ -1174,24 +1173,24 @@ def inclusion {S T : Submonoid M} (h : S ≤ T) : S →* T :=
 
 @[simp, to_additive]
 theorem range_subtype (s : Submonoid M) : s.Subtype.mrange = s :=
-  SetLike.coe_injective <| (coe_mrange _).trans <| Subtype.range_coe
+  SetLike.coe_injective $ (coe_mrange _).trans $ Subtype.range_coe
 #align submonoid.range_subtype Submonoid.range_subtype
 
 @[to_additive]
 theorem eq_top_iff' : S = ⊤ ↔ ∀ x : M, x ∈ S :=
-  eq_top_iff.trans ⟨fun h m => h <| mem_top m, fun h m _ => h m⟩
+  eq_top_iff.trans ⟨fun h m => h $ mem_top m, fun h m _ => h m⟩
 #align submonoid.eq_top_iff' Submonoid.eq_top_iff'
 
 @[to_additive]
 theorem eq_bot_iff_forall : S = ⊥ ↔ ∀ x ∈ S, x = (1 : M) :=
-  SetLike.ext_iff.trans <| by simp (config := { contextual := true }) [iff_def, S.one_mem]
+  SetLike.ext_iff.trans $ by simp (config := { contextual := true }) [iff_def, S.one_mem]
 #align submonoid.eq_bot_iff_forall Submonoid.eq_bot_iff_forall
 
 @[to_additive]
 theorem nontrivial_iff_exists_ne_one (S : Submonoid M) : Nontrivial S ↔ ∃ x ∈ S, x ≠ (1 : M) :=
   calc
     Nontrivial S ↔ ∃ x : S, x ≠ 1 := nontrivial_iff_exists_ne 1
-    _ ↔ ∃ (x : _)(hx : x ∈ S), (⟨x, hx⟩ : S) ≠ ⟨1, S.one_mem⟩ := Subtype.exists
+    _ ↔ ∃ (x) (hx : x ∈ S), (⟨x, hx⟩ : S) ≠ ⟨1, S.one_mem⟩ := Subtype.exists
     _ ↔ ∃ x ∈ S, x ≠ (1 : M) := by simp only [Ne.def]
     
 #align submonoid.nontrivial_iff_exists_ne_one Submonoid.nontrivial_iff_exists_ne_one
@@ -1218,7 +1217,7 @@ variable {S} {T : Submonoid M}
     monoid are equal. -/
 @[to_additive "Makes the identity additive isomorphism from a proof two\nsubmonoids of an additive monoid are equal."]
 def submonoidCongr (h : S = T) : S ≃* T :=
-  { Equiv.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
+  { Equiv.setCongr $ congr_arg _ h with map_mul' := fun _ _ => rfl }
 #align mul_equiv.submonoid_congr MulEquiv.submonoidCongr
 
 -- this name is primed so that the version to `f.range` instead of `f.mrange` can be unprimed.
@@ -1232,7 +1231,7 @@ This is a bidirectional version of `monoid_hom.mrange_restrict`. -/
 def ofLeftInverse' (f : M →* N) {g : N → M} (h : Function.LeftInverse g f) : M ≃* f.mrange :=
   { f.mrangeRestrict with toFun := f.mrangeRestrict, invFun := g ∘ f.mrange.Subtype, left_inv := h,
     right_inv := fun x =>
-      Subtype.ext <|
+      Subtype.ext $
         let ⟨x', hx'⟩ := MonoidHom.mem_mrange.mp x.Prop
         show f (g x) = x by rw [← hx', h x'] }
 #align mul_equiv.of_left_inverse' MulEquiv.ofLeftInverse'
@@ -1298,7 +1297,7 @@ theorem smul_def [HasSmul M' α] {S : Submonoid M'} (g : S) (m : α) : g • m =
 #align submonoid.smul_def Submonoid.smul_def
 
 instance [HasSmul M' α] [HasFaithfulSmul M' α] (S : Submonoid M') : HasFaithfulSmul S α :=
-  ⟨fun x y h => Subtype.ext <| eq_of_smul_eq_smul h⟩
+  ⟨fun x y h => Subtype.ext $ eq_of_smul_eq_smul h⟩
 
 end MulOneClass
 

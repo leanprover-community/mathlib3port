@@ -559,7 +559,7 @@ theorem det_trace_matrix_ne_zero' [IsSeparable K L] : det (traceMatrix K pb.Basi
   refine' mt mul_self_eq_zero.mp _
   · simp only [det_vandermonde, Finset.prod_eq_zero_iff, not_exists, sub_eq_zero]
     intro i _ j hij h
-    exact (finset.mem_Ioi.mp hij).ne' (e.injective <| pb.alg_hom_ext h)
+    exact (finset.mem_Ioi.mp hij).ne' (e.injective $ pb.alg_hom_ext h)
     
   · rw [AlgHom.card, pb.finrank]
     

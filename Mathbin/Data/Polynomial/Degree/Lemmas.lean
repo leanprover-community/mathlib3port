@@ -36,7 +36,7 @@ section Degree
 theorem nat_degree_comp_le : natDegree (p.comp q) ≤ natDegree p * natDegree q :=
   if h0 : p.comp q = 0 then by rw [h0, nat_degree_zero] <;> exact Nat.zero_le _
   else
-    WithBot.coe_le_coe.1 <|
+    WithBot.coe_le_coe.1 $
       calc
         ↑(natDegree (p.comp q)) = degree (p.comp q) := (degree_eq_nat_degree h0).symm
         _ = _ := congr_arg degree comp_eq_sum_left
@@ -51,14 +51,14 @@ theorem nat_degree_comp_le : natDegree (p.comp q) ≤ natDegree p * natDegree q 
               _ = (n * natDegree q : ℕ) := by
                 rw [nat_degree_C, WithBot.coe_zero, zero_add, ← WithBot.coe_nsmul, nsmul_eq_mul] <;> simp
               _ ≤ (natDegree p * natDegree q : ℕ) :=
-                WithBot.coe_le_coe.2 <|
+                WithBot.coe_le_coe.2 $
                   mul_le_mul_of_nonneg_right (le_nat_degree_of_ne_zero (mem_support_iff.1 hn)) (Nat.zero_le _)
               
         
 #align polynomial.nat_degree_comp_le Polynomial.nat_degree_comp_le
 
 theorem degree_pos_of_root {p : R[X]} (hp : p ≠ 0) (h : IsRoot p a) : 0 < degree p :=
-  lt_of_not_ge fun hlt => by
+  lt_of_not_ge $ fun hlt => by
     have := eq_C_of_degree_le_zero hlt
     rw [is_root, this, eval_C] at h
     simp only [h, RingHom.map_zero] at this
@@ -175,7 +175,7 @@ theorem coeff_pow_of_nat_degree_le (pn : p.natDegree ≤ n) : (p ^ m).coeff (n *
 #align polynomial.coeff_pow_of_nat_degree_le Polynomial.coeff_pow_of_nat_degree_le
 
 theorem coeff_add_eq_left_of_lt (qn : q.natDegree < n) : (p + q).coeff n = p.coeff n :=
-  (coeff_add _ _ _).trans <| (congr_arg _ <| coeff_eq_zero_of_nat_degree_lt <| qn).trans <| add_zero _
+  (coeff_add _ _ _).trans $ (congr_arg _ $ coeff_eq_zero_of_nat_degree_lt $ qn).trans $ add_zero _
 #align polynomial.coeff_add_eq_left_of_lt Polynomial.coeff_add_eq_left_of_lt
 
 theorem coeff_add_eq_right_of_lt (pn : p.natDegree < n) : (p + q).coeff n = q.coeff n := by
@@ -268,7 +268,7 @@ variable [Semiring S]
 
 theorem nat_degree_pos_of_eval₂_root {p : R[X]} (hp : p ≠ 0) (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
     (inj : ∀ x : R, f x = 0 → x = 0) : 0 < natDegree p :=
-  lt_of_not_ge fun hlt => by
+  lt_of_not_ge $ fun hlt => by
     have A : p = C (p.coeff 0) := eq_C_of_nat_degree_le_zero hlt
     rw [A, eval₂_C] at hz
     simp only [inj (p.coeff 0) hz, RingHom.map_zero] at A

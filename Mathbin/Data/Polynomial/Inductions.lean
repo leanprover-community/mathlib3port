@@ -44,12 +44,12 @@ theorem coeff_div_X : (divX p).coeff n = p.coeff (n + 1) := by
 #align polynomial.coeff_div_X Polynomial.coeff_div_X
 
 theorem div_X_mul_X_add (p : R[X]) : divX p * X + c (p.coeff 0) = p :=
-  ext <| by rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
+  ext $ by rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
 #align polynomial.div_X_mul_X_add Polynomial.div_X_mul_X_add
 
 @[simp]
 theorem div_X_C (a : R) : divX (c a) = 0 :=
-  ext fun n => by simp [div_X, coeff_C] <;> simp [coeff]
+  ext $ fun n => by simp [div_X, coeff_C] <;> simp [coeff]
 #align polynomial.div_X_C Polynomial.div_X_C
 
 theorem div_X_eq_zero_iff : divX p = 0 ↔ p = c (p.coeff 0) :=
@@ -57,7 +57,7 @@ theorem div_X_eq_zero_iff : divX p = 0 ↔ p = c (p.coeff 0) :=
 #align polynomial.div_X_eq_zero_iff Polynomial.div_X_eq_zero_iff
 
 theorem div_X_add : divX (p + q) = divX p + divX q :=
-  ext <| by simp
+  ext $ by simp
 #align polynomial.div_X_add Polynomial.div_X_add
 
 theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
@@ -67,14 +67,14 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
         if h : degree p ≤ 0 then by
           have h' : C (p.coeff 0) ≠ 0 := by rwa [← eq_C_of_degree_le_zero h]
           rw [eq_C_of_degree_le_zero h, div_X_C, degree_zero, zero_mul, zero_add]
-          exact lt_of_le_of_ne bot_le (Ne.symm (mt degree_eq_bot.1 <| by simp [h']))
+          exact lt_of_le_of_ne bot_le (Ne.symm (mt degree_eq_bot.1 $ by simp [h']))
         else by
           have hXp0 : div_X p ≠ 0 := by simpa [div_X_eq_zero_iff, -not_le, degree_le_zero_iff] using h
           have : leading_coeff (div_X p) * leading_coeff X ≠ 0 := by simpa
           have : degree (C (p.coeff 0)) < degree (div_X p * X) :=
             calc
               degree (C (p.coeff 0)) ≤ 0 := degree_C_le
-              _ < 1 := by decide
+              _ < 1 := dec_trivial
               _ = degree (X : R[X]) := degree_X.symm
               _ ≤ degree (div_X p * X) := by
                 rw [← zero_add (degree X), degree_mul' this] <;>
@@ -127,10 +127,10 @@ See `nat_degree_ne_zero_induction_on` for a similar statement involving no expli
 @[elab_as_elim]
 theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree p) (hC : ∀ {a}, a ≠ 0 → P (c a * X))
     (hX : ∀ {p}, 0 < degree p → P p → P (p * X)) (hadd : ∀ {p} {a}, 0 < degree p → P p → P (p + c a)) : P p :=
-  recOnHorner p (fun h => by rw [degree_zero] at h <;> exact absurd h (by decide))
+  recOnHorner p (fun h => by rw [degree_zero] at h <;> exact absurd h dec_trivial)
     (fun p a _ _ ih h0 =>
       have : 0 < degree p :=
-        lt_of_not_ge fun h => not_lt_of_ge degree_C_le <| by rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
+        lt_of_not_ge fun h => not_lt_of_ge degree_C_le $ by rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
       hadd this (ih this))
     (fun p _ ih h0' =>
       if h0 : 0 < degree p then hX h0 (ih h0)

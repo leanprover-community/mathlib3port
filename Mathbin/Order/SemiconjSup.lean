@@ -56,11 +56,11 @@ namespace IsOrderRightAdjoint
 
 protected theorem unique [PartialOrder α] [Preorder β] {f : α → β} {g₁ g₂ : β → α} (h₁ : IsOrderRightAdjoint f g₁)
     (h₂ : IsOrderRightAdjoint f g₂) : g₁ = g₂ :=
-  funext fun y => (h₁ y).unique (h₂ y)
+  funext $ fun y => (h₁ y).unique (h₂ y)
 #align is_order_right_adjoint.unique IsOrderRightAdjoint.unique
 
 theorem right_mono [Preorder α] [Preorder β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) : Monotone g :=
-  fun y₁ y₂ hy => ((h y₁).mono (h y₂)) fun x hx => le_trans hx hy
+  fun y₁ y₂ hy => (h y₁).mono (h y₂) $ fun x hx => le_trans hx hy
 #align is_order_right_adjoint.right_mono IsOrderRightAdjoint.right_mono
 
 theorem order_iso_comp [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
@@ -119,7 +119,7 @@ Then the map `x ↦ Sup s(x)` semiconjugates each `f₁ g'` to `f₂ g'`.
 This is a version of Proposition 5.4 from [Étienne Ghys, Groupes d'homeomorphismes du cercle et
 cohomologie bornee][ghys87:groupes]. -/
 theorem cSup_div_semiconj [ConditionallyCompleteLattice α] [Group G] (f₁ f₂ : G →* α ≃o α)
-    (hbdd : ∀ x, BddAbove (range fun g => (f₁ g)⁻¹ (f₂ g x))) (g : G) :
+    (hbdd : ∀ x, BddAbove (range $ fun g => (f₁ g)⁻¹ (f₂ g x))) (g : G) :
     Function.Semiconj (fun x => ⨆ g' : G, (f₁ g')⁻¹ (f₂ g' x)) (f₂ g) (f₁ g) :=
   semiconj_of_is_lub f₁ f₂ (fun x => is_lub_cSup (range_nonempty _) (hbdd x)) _
 #align function.cSup_div_semiconj Function.cSup_div_semiconj

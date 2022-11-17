@@ -29,7 +29,7 @@ def continuum : Cardinal.{u} :=
 #align cardinal.continuum Cardinal.continuum
 
 -- mathport name: cardinal.continuum
-localized [Cardinal] notation "𝔠" => Cardinal.continuum
+scoped notation "𝔠" => Cardinal.continuum
 
 @[simp]
 theorem two_power_aleph_0 : 2 ^ aleph_0.{u} = continuum.{u} :=

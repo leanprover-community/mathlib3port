@@ -45,7 +45,7 @@ def oangle (p₁ p₂ p₃ : P) : Real.Angle :=
 #align euclidean_geometry.oangle EuclideanGeometry.oangle
 
 -- mathport name: oangle
-localized [EuclideanGeometry] notation "∡" => EuclideanGeometry.oangle
+scoped notation "∡" => EuclideanGeometry.oangle
 
 /-- Oriented angles are continuous when neither end point equals the middle point. -/
 theorem continuous_at_oangle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
@@ -97,7 +97,6 @@ theorem oangle_eq_pi_iff_oangle_rev_eq_pi {p₁ p₂ p₃ : P} : ∡ p₁ p₂ p
   o.oangle_eq_pi_iff_oangle_rev_eq_pi
 #align euclidean_geometry.oangle_eq_pi_iff_oangle_rev_eq_pi EuclideanGeometry.oangle_eq_pi_iff_oangle_rev_eq_pi
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 /-- An oriented angle is not zero or `π` if and only if the three points are affinely
 independent. -/
 theorem oangle_ne_zero_and_ne_pi_iff_affine_independent {p₁ p₂ p₃ : P} :

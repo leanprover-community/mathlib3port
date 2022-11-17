@@ -224,7 +224,7 @@ theorem types_π_surjective (D : GlueData (Type _)) : Function.Surjective D.π :
   (epi_iff_surjective _).mp inferInstance
 #align category_theory.glue_data.types_π_surjective CategoryTheory.GlueData.types_π_surjective
 
-theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) : ∃ (i : _)(y : D.U i), D.ι i y = x := by
+theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) : ∃ (i) (y : D.U i), D.ι i y = x := by
   delta CategoryTheory.GlueData.ι
   simp_rw [← multicoequalizer.ι_sigma_π D.diagram]
   rcases D.types_π_surjective x with ⟨x', rfl⟩
@@ -387,7 +387,7 @@ omit H
 be jointly surjective. -/
 theorem ι_jointly_surjective (F : C ⥤ Type v) [PreservesColimit D.diagram.multispan F]
     [∀ i j k : D.J, PreservesLimit (cospan (D.f i j) (D.f i k)) F] (x : F.obj D.glued) :
-    ∃ (i : _)(y : F.obj (D.U i)), F.map (D.ι i) y = x := by
+    ∃ (i) (y : F.obj (D.U i)), F.map (D.ι i) y = x := by
   let e := D.glued_iso F
   obtain ⟨i, y, eq⟩ := (D.map_glue_data F).types_ι_jointly_surjective (e.hom x)
   replace eq := congr_arg e.inv Eq

@@ -36,8 +36,8 @@ theorem mem_ord_connected_component : y ∈ ordConnectedComponent s x ↔ [x, y]
 
 theorem dual_ord_connected_component :
     ordConnectedComponent (of_dual ⁻¹' s) (toDual x) = of_dual ⁻¹' ordConnectedComponent s x :=
-  ext <|
-    toDual.Surjective.forall.2 fun x => by
+  ext $
+    toDual.Surjective.forall.2 $ fun x => by
       rw [mem_ord_connected_component, dual_interval]
       rfl
 #align set.dual_ord_connected_component Set.dual_ord_connected_component
@@ -56,7 +56,7 @@ theorem self_mem_ord_connected_component : x ∈ ordConnectedComponent s x ↔ x
 
 @[simp]
 theorem nonempty_ord_connected_component : (ordConnectedComponent s x).Nonempty ↔ x ∈ s :=
-  ⟨fun ⟨y, hy⟩ => hy <| left_mem_interval, fun h => ⟨x, self_mem_ord_connected_component.2 h⟩⟩
+  ⟨fun ⟨y, hy⟩ => hy $ left_mem_interval, fun h => ⟨x, self_mem_ord_connected_component.2 h⟩⟩
 #align set.nonempty_ord_connected_component Set.nonempty_ord_connected_component
 
 @[simp]
@@ -91,12 +91,12 @@ theorem mem_ord_connected_component_trans (hxy : y ∈ ordConnectedComponent s x
 #align set.mem_ord_connected_component_trans Set.mem_ord_connected_component_trans
 
 theorem ord_connected_component_eq (h : [x, y] ⊆ s) : ordConnectedComponent s x = ordConnectedComponent s y :=
-  ext fun z =>
+  ext $ fun z =>
     ⟨mem_ord_connected_component_trans (mem_ord_connected_component_comm.2 h), mem_ord_connected_component_trans h⟩
 #align set.ord_connected_component_eq Set.ord_connected_component_eq
 
 instance : OrdConnected (ordConnectedComponent s x) :=
-  ord_connected_of_interval_subset_left fun y hy z hz => (interval_subset_interval_left hz).trans hy
+  ord_connected_of_interval_subset_left $ fun y hy z hz => (interval_subset_interval_left hz).trans hy
 
 /-- Projection from `s : set α` to `α` sending each order connected component of `s` to a single
 point of this component. -/
@@ -110,13 +110,13 @@ theorem ord_connected_proj_mem_ord_connected_component (s : Set α) (x : s) :
 
 theorem mem_ord_connected_component_ord_connected_proj (s : Set α) (x : s) :
     ↑x ∈ ordConnectedComponent s (ordConnectedProj s x) :=
-  mem_ord_connected_component_comm.2 <| ord_connected_proj_mem_ord_connected_component s x
+  mem_ord_connected_component_comm.2 $ ord_connected_proj_mem_ord_connected_component s x
 #align set.mem_ord_connected_component_ord_connected_proj Set.mem_ord_connected_component_ord_connected_proj
 
 @[simp]
 theorem ord_connected_component_ord_connected_proj (s : Set α) (x : s) :
     ordConnectedComponent s (ordConnectedProj s x) = ordConnectedComponent s x :=
-  ord_connected_component_eq <| mem_ord_connected_component_ord_connected_proj _ _
+  ord_connected_component_eq $ mem_ord_connected_component_ord_connected_proj _ _
 #align set.ord_connected_component_ord_connected_proj Set.ord_connected_component_ord_connected_proj
 
 @[simp]
@@ -135,7 +135,7 @@ theorem ord_connected_proj_eq {x y : s} : ordConnectedProj s x = ordConnectedPro
 /-- A set that intersects each order connected component of a set by a single point. Defined as the
 range of `set.ord_connected_proj s`. -/
 def ordConnectedSection (s : Set α) : Set α :=
-  range <| ordConnectedProj s
+  range $ ordConnectedProj s
 #align set.ord_connected_section Set.ordConnectedSection
 
 theorem dual_ord_connected_section (s : Set α) :
@@ -148,7 +148,7 @@ theorem dual_ord_connected_section (s : Set α) :
 #align set.dual_ord_connected_section Set.dual_ord_connected_section
 
 theorem ord_connected_section_subset : ordConnectedSection s ⊆ s :=
-  range_subset_iff.2 fun x => ord_connected_component_subset <| Nonempty.some_mem _
+  range_subset_iff.2 $ fun x => ord_connected_component_subset $ Nonempty.some_mem _
 #align set.ord_connected_section_subset Set.ord_connected_section_subset
 
 theorem eq_of_mem_ord_connected_section_of_interval_subset (hx : x ∈ ordConnectedSection s)
@@ -175,8 +175,8 @@ theorem ord_separating_set_comm (s t : Set α) : ordSeparatingSet s t = ordSepar
 #align set.ord_separating_set_comm Set.ord_separating_set_comm
 
 theorem disjoint_left_ord_separating_set : Disjoint s (ordSeparatingSet s t) :=
-  Disjoint.inter_right' _ <|
-    disjoint_Union₂_right.2 fun x hx => disjoint_compl_right.mono_right <| ord_connected_component_subset
+  Disjoint.inter_right' _ $
+    disjoint_Union₂_right.2 $ fun x hx => disjoint_compl_right.mono_right $ ord_connected_component_subset
 #align set.disjoint_left_ord_separating_set Set.disjoint_left_ord_separating_set
 
 theorem disjoint_right_ord_separating_set : Disjoint t (ordSeparatingSet s t) :=
@@ -191,7 +191,7 @@ theorem dual_ord_separating_set : ordSeparatingSet (of_dual ⁻¹' s) (of_dual �
 
 /-- An auxiliary neighborhood that will be used in the proof of `order_topology.t5_space`. -/
 def ordT5Nhd (s t : Set α) : Set α :=
-  ⋃ x ∈ s, ordConnectedComponent (tᶜ ∩ (ord_connected_section <| ordSeparatingSet s t)ᶜ) x
+  ⋃ x ∈ s, ordConnectedComponent (tᶜ ∩ (ord_connected_section $ ordSeparatingSet s t)ᶜ) x
 #align set.ord_t5_nhd Set.ordT5Nhd
 
 theorem disjoint_ord_t5_nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) := by
@@ -223,12 +223,12 @@ theorem disjoint_ord_t5_nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) := by
   have : x ∈ ord_separating_set s t := ⟨mem_Union₂.2 ⟨a, has, ha⟩, mem_Union₂.2 ⟨b, hbt, hb⟩⟩
   lift x to ord_separating_set s t using this
   suffices : ord_connected_component (ord_separating_set s t) x ⊆ [a, b]
-  exact hsub (this <| ord_connected_proj_mem_ord_connected_component _ _) (mem_range_self _)
+  exact hsub (this $ ord_connected_proj_mem_ord_connected_component _ _) (mem_range_self _)
   rintro y (hy : [↑x, y] ⊆ ord_separating_set s t)
   rw [interval_of_le hab, mem_Icc, ← not_lt, ← not_lt]
   exact
-    ⟨fun hya => disjoint_left.1 disjoint_left_ord_separating_set has (hy <| Icc_subset_interval' ⟨hya.le, hax⟩),
-      fun hyb => disjoint_left.1 disjoint_right_ord_separating_set hbt (hy <| Icc_subset_interval ⟨hxb, hyb.le⟩)⟩
+    ⟨fun hya => disjoint_left.1 disjoint_left_ord_separating_set has (hy $ Icc_subset_interval' ⟨hya.le, hax⟩),
+      fun hyb => disjoint_left.1 disjoint_right_ord_separating_set hbt (hy $ Icc_subset_interval ⟨hxb, hyb.le⟩)⟩
 #align set.disjoint_ord_t5_nhd Set.disjoint_ord_t5_nhd
 
 end Set

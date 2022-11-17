@@ -432,7 +432,7 @@ instance [AddSemigroup R] : Semigroup (Tropical R) where
 instance [AddCommSemigroup R] : CommSemigroup (Tropical R) :=
   { Tropical.semigroup with mul_comm := fun _ _ => untrop_injective (add_comm _ _) }
 
-instance {α : Type _} [HasSmul α R] : Pow (Tropical R) α where pow x n := trop <| n • untrop x
+instance {α : Type _} [HasSmul α R] : Pow (Tropical R) α where pow x n := trop $ n • untrop x
 
 @[simp]
 theorem untrop_pow {α : Type _} [HasSmul α R] (x : Tropical R) (n : α) : untrop (x ^ n) = n • untrop x :=
@@ -447,13 +447,13 @@ theorem trop_smul {α : Type _} [HasSmul α R] (x : R) (n : α) : trop (n • x)
 instance [AddZeroClass R] : MulOneClass (Tropical R) where
   one := 1
   mul := (· * ·)
-  one_mul _ := untrop_injective <| zero_add _
-  mul_one _ := untrop_injective <| add_zero _
+  one_mul _ := untrop_injective $ zero_add _
+  mul_one _ := untrop_injective $ add_zero _
 
 instance [AddMonoid R] : Monoid (Tropical R) :=
   { Tropical.mulOneClass, Tropical.semigroup with npow := fun n x => x ^ n,
-    npow_zero' := fun _ => untrop_injective <| zero_smul _ _,
-    npow_succ' := fun _ _ => untrop_injective <| succ_nsmul _ _ }
+    npow_zero' := fun _ => untrop_injective $ zero_smul _ _,
+    npow_succ' := fun _ _ => untrop_injective $ succ_nsmul _ _ }
 
 @[simp]
 theorem trop_nsmul [AddMonoid R] (x : R) (n : ℕ) : trop (n • x) = trop x ^ n :=
@@ -464,10 +464,10 @@ instance [AddCommMonoid R] : CommMonoid (Tropical R) :=
   { Tropical.monoid, Tropical.commSemigroup with }
 
 instance [AddGroup R] : Group (Tropical R) :=
-  { Tropical.monoid with inv := Inv.inv, mul_left_inv := fun _ => untrop_injective <| add_left_neg _,
-    zpow := fun n x => trop <| n • untrop x, zpow_zero' := fun _ => untrop_injective <| zero_zsmul _,
-    zpow_succ' := fun _ _ => untrop_injective <| AddGroup.zsmul_succ' _ _,
-    zpow_neg' := fun _ _ => untrop_injective <| AddGroup.zsmul_neg' _ _ }
+  { Tropical.monoid with inv := Inv.inv, mul_left_inv := fun _ => untrop_injective $ add_left_neg _,
+    zpow := fun n x => trop $ n • untrop x, zpow_zero' := fun _ => untrop_injective $ zero_zsmul _,
+    zpow_succ' := fun _ _ => untrop_injective $ AddGroup.zsmul_succ' _ _,
+    zpow_neg' := fun _ _ => untrop_injective $ AddGroup.zsmul_neg' _ _ }
 
 instance [AddCommGroup R] : CommGroup (Tropical R) :=
   { Tropical.group with mul_comm := fun _ _ => untrop_injective (add_comm _ _) }

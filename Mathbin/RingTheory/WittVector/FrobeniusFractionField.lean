@@ -107,7 +107,7 @@ variable {k : Type _} [Field k] [CharP k p] [IsAlgClosed k]
 
 theorem root_exists (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :
     ∃ b : k, (succNthDefiningPoly p n a₁ a₂ bs).IsRoot b :=
-  IsAlgClosed.exists_root _ <| by
+  IsAlgClosed.exists_root _ $ by
     simp only [succ_nth_defining_poly_degree p n a₁ a₂ bs ha₁ ha₂, hp.out.ne_zero, WithTop.coe_eq_zero, Ne.def,
       not_false_iff]
 #align witt_vector.recursion_main.root_exists WittVector.RecursionMain.root_exists
@@ -148,16 +148,16 @@ include hp
 variable {k : Type _} [Field k] [IsAlgClosed k]
 
 theorem solution_pow (a₁ a₂ : 𝕎 k) : ∃ x : k, x ^ (p - 1) = a₂.coeff 0 / a₁.coeff 0 :=
-  IsAlgClosed.exists_pow_nat_eq _ <| by linarith [hp.out.one_lt, le_of_lt hp.out.one_lt]
+  IsAlgClosed.exists_pow_nat_eq _ $ by linarith [hp.out.one_lt, le_of_lt hp.out.one_lt]
 #align witt_vector.recursion_base.solution_pow WittVector.RecursionBase.solution_pow
 
 /-- The base case (0th coefficient) of our solution vector. -/
 def solution (a₁ a₂ : 𝕎 k) : k :=
-  Classical.choose <| solution_pow p a₁ a₂
+  Classical.choose $ solution_pow p a₁ a₂
 #align witt_vector.recursion_base.solution WittVector.RecursionBase.solution
 
 theorem solution_spec (a₁ a₂ : 𝕎 k) : solution p a₁ a₂ ^ (p - 1) = a₂.coeff 0 / a₁.coeff 0 :=
-  Classical.choose_spec <| solution_pow p a₁ a₂
+  Classical.choose_spec $ solution_pow p a₁ a₂
 #align witt_vector.recursion_base.solution_spec WittVector.RecursionBase.solution_spec
 
 theorem solution_nonzero {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) : solution p a₁ a₂ ≠ 0 := by
@@ -268,7 +268,7 @@ theorem exists_frobenius_solution_fraction_ring_aux (m n : ℕ) (r' q' : 𝕎 k)
 #align witt_vector.exists_frobenius_solution_fraction_ring_aux WittVector.exists_frobenius_solution_fraction_ring_aux
 
 theorem exists_frobenius_solution_fraction_ring {a : FractionRing (𝕎 k)} (ha : a ≠ 0) :
-    ∃ (b : FractionRing (𝕎 k))(hb : b ≠ 0)(m : ℤ), φ b * a = p ^ m * b := by
+    ∃ (b : FractionRing (𝕎 k)) (hb : b ≠ 0) (m : ℤ), φ b * a = p ^ m * b := by
   revert ha
   refine' Localization.induction_on a _
   rintro ⟨r, q, hq⟩ hrq

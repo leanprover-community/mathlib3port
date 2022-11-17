@@ -79,10 +79,12 @@ theorem ne_zero_pow {a : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≠ 0 → a ≠ 0 :
   exact zero_pow' n hn
 #align ne_zero_pow ne_zero_pow
 
+#print pow_ne_zero /-
 @[field_simps]
 theorem pow_ne_zero [NoZeroDivisors M] {a : M} (n : ℕ) (h : a ≠ 0) : a ^ n ≠ 0 :=
   mt pow_eq_zero h
 #align pow_ne_zero pow_ne_zero
+-/
 
 instance NeZero.pow [NoZeroDivisors M] {x : M} [NeZero x] {n : ℕ} : NeZero (x ^ n) :=
   ⟨pow_ne_zero n NeZero.out⟩

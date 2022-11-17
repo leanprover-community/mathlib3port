@@ -164,7 +164,7 @@ theorem cons_copy {u v w v' w'} (h : G.Adj u v) (p : G.Walk v' w') (hv : v' = v)
 #align simple_graph.walk.cons_copy SimpleGraph.Walk.cons_copy
 
 theorem exists_eq_cons_of_ne :
-    ∀ {u v : V} (hne : u ≠ v) (p : G.Walk u v), ∃ (w : V)(h : G.Adj u w)(p' : G.Walk w v), p = cons h p'
+    ∀ {u v : V} (hne : u ≠ v) (p : G.Walk u v), ∃ (w : V) (h : G.Adj u w) (p' : G.Walk w v), p = cons h p'
   | _, _, hne, nil => (hne rfl).elim
   | _, _, _, cons h p' => ⟨_, h, p', rfl⟩
 #align simple_graph.walk.exists_eq_cons_of_ne SimpleGraph.Walk.exists_eq_cons_of_ne
@@ -858,7 +858,7 @@ variable [DecidableEq V]
 def takeUntil : ∀ {v w : V} (p : G.Walk v w) (u : V) (h : u ∈ p.support), G.Walk v u
   | v, w, nil, u, h => by rw [mem_support_nil_iff.mp h]
   | v, w, cons r p, u, h =>
-    if hx : v = u then by subst u else cons r (take_until p _ <| h.casesOn (fun h' => (hx h'.symm).elim) id)
+    if hx : v = u then by subst u else cons r (take_until p _ $ h.casesOn (fun h' => (hx h'.symm).elim) id)
 #align simple_graph.walk.take_until SimpleGraph.Walk.takeUntil
 
 /-- Given a vertex in the support of a path, give the path from (and including) that vertex to
@@ -870,7 +870,7 @@ def dropUntil : ∀ {v w : V} (p : G.Walk v w) (u : V) (h : u ∈ p.support), G.
     if hx : v = u then by
       subst u
       exact cons r p
-    else drop_until p _ <| h.casesOn (fun h' => (hx h'.symm).elim) id
+    else drop_until p _ $ h.casesOn (fun h' => (hx h'.symm).elim) id
 #align simple_graph.walk.drop_until SimpleGraph.Walk.dropUntil
 
 /-- The `take_until` and `drop_until` functions split a walk into two pieces.
@@ -893,11 +893,13 @@ theorem take_spec {u v w : V} (p : G.Walk v w) (h : u ∈ p.support) : (p.takeUn
 #align simple_graph.walk.take_spec SimpleGraph.Walk.take_spec
 
 theorem mem_support_iff_exists_append {V : Type u} {G : SimpleGraph V} {u v w : V} {p : G.Walk u v} :
-    w ∈ p.support ↔ ∃ (q : G.Walk u w)(r : G.Walk w v), p = q.append r := by
-  classical constructor
-    · rintro ⟨q, r, rfl⟩
-      simp only [mem_support_append_iff, end_mem_support, start_mem_support, or_self_iff]
-      
+    w ∈ p.support ↔ ∃ (q : G.Walk u w) (r : G.Walk w v), p = q.append r := by classical
+  constructor
+  · exact fun h => ⟨_, _, (p.take_spec h).symm⟩
+    
+  · rintro ⟨q, r, rfl⟩
+    simp only [mem_support_append_iff, end_mem_support, start_mem_support, or_self_iff]
+    
 #align simple_graph.walk.mem_support_iff_exists_append SimpleGraph.Walk.mem_support_iff_exists_append
 
 @[simp]
@@ -1731,7 +1733,7 @@ def Preconnected : Prop :=
 
 theorem Preconnected.map {G : SimpleGraph V} {H : SimpleGraph V'} (f : G →g H) (hf : Surjective f)
     (hG : G.Preconnected) : H.Preconnected :=
-  hf.forall₂.2 fun a b => Nonempty.map (Walk.map _) <| hG _ _
+  hf.forall₂.2 $ fun a b => Nonempty.map (Walk.map _) $ hG _ _
 #align simple_graph.preconnected.map SimpleGraph.Preconnected.map
 
 theorem Iso.preconnected_iff {G : SimpleGraph V} {H : SimpleGraph V'} (e : G ≃g H) : G.Preconnected ↔ H.Preconnected :=
@@ -1968,7 +1970,7 @@ theorem Walk.mem_finset_walk_length_iff_length_eq {n : ℕ} {u v : V} (p : G.Wal
 variable (G)
 
 instance fintypeSetWalkLength (u v : V) (n : ℕ) : Fintype { p : G.Walk u v | p.length = n } :=
-  (Fintype.ofFinset (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
+  Fintype.ofFinset (G.finsetWalkLength n u v) $ fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 #align simple_graph.fintype_set_walk_length SimpleGraph.fintypeSetWalkLength
 
 theorem set_walk_length_to_finset_eq (n : ℕ) (u v : V) :
@@ -1981,11 +1983,11 @@ theorem set_walk_length_to_finset_eq (n : ℕ) (u v : V) :
 power of the adjacency matrix. -/
 theorem card_set_walk_length_eq (u v : V) (n : ℕ) :
     Fintype.card { p : G.Walk u v | p.length = n } = (G.finsetWalkLength n u v).card :=
-  (Fintype.card_of_finset (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
+  Fintype.card_of_finset (G.finsetWalkLength n u v) $ fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 #align simple_graph.card_set_walk_length_eq SimpleGraph.card_set_walk_length_eq
 
 instance fintypeSetPathLength (u v : V) (n : ℕ) : Fintype { p : G.Walk u v | p.IsPath ∧ p.length = n } :=
-  Fintype.ofFinset ((G.finsetWalkLength n u v).filter Walk.IsPath) <| by
+  Fintype.ofFinset ((G.finsetWalkLength n u v).filter Walk.IsPath) $ by
     simp [walk.mem_finset_walk_length_iff_length_eq, and_comm']
 #align simple_graph.fintype_set_path_length SimpleGraph.fintypeSetPathLength
 
@@ -2089,18 +2091,41 @@ theorem ReachableDeleteEdgesIffExistsCycle.aux [DecidableEq V] {u v w : V} (hb :
 #align simple_graph.reachable_delete_edges_iff_exists_cycle.aux SimpleGraph.ReachableDeleteEdgesIffExistsCycle.aux
 
 theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
-    G.Adj v w ∧ (G.deleteEdges {⟦(v, w)⟧}).Reachable v w ↔ ∃ (u : V)(p : G.Walk u u), p.IsCycle ∧ ⟦(v, w)⟧ ∈ p.edges :=
-  by
-  classical rw [reachable_delete_edges_iff_exists_walk]
-    · rintro ⟨h, p, hp⟩
-      refine' ⟨w, walk.cons h.symm p.to_path, _, _⟩
-      · apply path.cons_is_cycle
-        rw [Sym2.eq_swap]
-        intro h
-        exact absurd (walk.edges_to_path_subset p h) hp
-        
-      simp only [Sym2.eq_swap, walk.edges_cons, List.mem_cons_iff, eq_self_iff_true, true_or_iff]
+    G.Adj v w ∧ (G.deleteEdges {⟦(v, w)⟧}).Reachable v w ↔ ∃ (u : V) (p : G.Walk u u), p.IsCycle ∧ ⟦(v, w)⟧ ∈ p.edges :=
+  by classical
+  rw [reachable_delete_edges_iff_exists_walk]
+  constructor
+  · rintro ⟨h, p, hp⟩
+    refine' ⟨w, walk.cons h.symm p.to_path, _, _⟩
+    · apply path.cons_is_cycle
+      rw [Sym2.eq_swap]
+      intro h
+      exact absurd (walk.edges_to_path_subset p h) hp
       
+    simp only [Sym2.eq_swap, walk.edges_cons, List.mem_cons_iff, eq_self_iff_true, true_or_iff]
+    
+  · rintro ⟨u, c, hc, he⟩
+    have hvc : v ∈ c.support := walk.fst_mem_support_of_mem_edges c he
+    have hwc : w ∈ c.support := walk.snd_mem_support_of_mem_edges c he
+    let puv := c.take_until v hvc
+    let pvu := c.drop_until v hvc
+    obtain hw | hw' : w ∈ puv.support ∨ w ∈ pvu.support := by rwa [← walk.mem_support_append_iff, walk.take_spec]
+    · by_contra' h
+      specialize h (c.adj_of_mem_edges he)
+      exact reachable_delete_edges_iff_exists_cycle.aux h c hc.to_trail he hw
+      
+    · by_contra' hb
+      specialize hb (c.adj_of_mem_edges he)
+      have hb' : ∀ p : G.walk w v, ⟦(w, v)⟧ ∈ p.edges := by
+        intro p
+        simpa [Sym2.eq_swap] using hb p.reverse
+      apply
+        reachable_delete_edges_iff_exists_cycle.aux hb' (pvu.append puv) (hc.to_trail.rotate hvc) _
+          (walk.start_mem_support _)
+      rwa [walk.edges_append, List.mem_append, or_comm', ← List.mem_append, ← walk.edges_append, walk.take_spec,
+        Sym2.eq_swap]
+      
+    
 #align
   simple_graph.adj_and_reachable_delete_edges_iff_exists_cycle SimpleGraph.adj_and_reachable_delete_edges_iff_exists_cycle
 

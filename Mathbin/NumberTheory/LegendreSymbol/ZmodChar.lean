@@ -39,8 +39,8 @@ It corresponds to the extension `ℚ(√-1)/ℚ`. -/
 def χ₄ : MulChar (Zmod 4) ℤ where
   toFun := (![0, 1, 0, -1] : Zmod 4 → ℤ)
   map_one' := rfl
-  map_mul' := by decide
-  map_nonunit' := by decide
+  map_mul' := dec_trivial
+  map_nonunit' := dec_trivial
 #align zmod.χ₄ Zmod.χ₄
 
 /-- `χ₄` takes values in `{0, 1, -1}` -/
@@ -61,7 +61,7 @@ theorem χ₄_int_mod_four (n : ℤ) : χ₄ n = χ₄ (n % 4 : ℤ) := by
 
 /-- An explicit description of `χ₄` on integers / naturals -/
 theorem χ₄_int_eq_if_mod_four (n : ℤ) : χ₄ n = if n % 2 = 0 then 0 else if n % 4 = 1 then 1 else -1 := by
-  have help : ∀ m : ℤ, 0 ≤ m → m < 4 → χ₄ m = if m % 2 = 0 then 0 else if m = 1 then 1 else -1 := by decide
+  have help : ∀ m : ℤ, 0 ≤ m → m < 4 → χ₄ m = if m % 2 = 0 then 0 else if m = 1 then 1 else -1 := dec_trivial
   rw [← Int.mod_mod_of_dvd n (by norm_num : (2 : ℤ) ∣ 4), ← Zmod.int_cast_mod n 4]
   exact help (n % 4) (Int.mod_nonneg n (by norm_num)) (Int.mod_lt n (by norm_num))
 #align zmod.χ₄_int_eq_if_mod_four Zmod.χ₄_int_eq_if_mod_four
@@ -78,7 +78,7 @@ theorem χ₄_eq_neg_one_pow {n : ℕ} (hn : n % 2 = 1) : χ₄ n = (-1) ^ (n / 
   nth_rw 0 [(by norm_num : 4 = 2 * 2)]
   rw [mul_assoc, add_comm, Nat.add_mul_div_left _ _ (by norm_num : 0 < 2), pow_add, pow_mul, neg_one_sq, one_pow,
     mul_one]
-  have help : ∀ m : ℕ, m < 4 → m % 2 = 1 → ite (m = 1) (1 : ℤ) (-1) = (-1) ^ (m / 2) := by decide
+  have help : ∀ m : ℕ, m < 4 → m % 2 = 1 → ite (m = 1) (1 : ℤ) (-1) = (-1) ^ (m / 2) := dec_trivial
   exact help (n % 4) (Nat.mod_lt n (by norm_num)) ((Nat.mod_mod_of_dvd n (by norm_num : 2 ∣ 4)).trans hn)
 #align zmod.χ₄_eq_neg_one_pow Zmod.χ₄_eq_neg_one_pow
 
@@ -124,8 +124,8 @@ It corresponds to the extension `ℚ(√2)/ℚ`. -/
 def χ₈ : MulChar (Zmod 8) ℤ where
   toFun := (![0, 1, 0, -1, 0, -1, 0, 1] : Zmod 8 → ℤ)
   map_one' := rfl
-  map_mul' := by decide
-  map_nonunit' := by decide
+  map_mul' := dec_trivial
+  map_nonunit' := dec_trivial
 #align zmod.χ₈ Zmod.χ₈
 
 /-- `χ₈` takes values in `{0, 1, -1}` -/
@@ -146,7 +146,7 @@ theorem χ₈_int_mod_eight (n : ℤ) : χ₈ n = χ₈ (n % 8 : ℤ) := by
 
 /-- An explicit description of `χ₈` on integers / naturals -/
 theorem χ₈_int_eq_if_mod_eight (n : ℤ) : χ₈ n = if n % 2 = 0 then 0 else if n % 8 = 1 ∨ n % 8 = 7 then 1 else -1 := by
-  have help : ∀ m : ℤ, 0 ≤ m → m < 8 → χ₈ m = if m % 2 = 0 then 0 else if m = 1 ∨ m = 7 then 1 else -1 := by decide
+  have help : ∀ m : ℤ, 0 ≤ m → m < 8 → χ₈ m = if m % 2 = 0 then 0 else if m = 1 ∨ m = 7 then 1 else -1 := dec_trivial
   rw [← Int.mod_mod_of_dvd n (by norm_num : (2 : ℤ) ∣ 8), ← Zmod.int_cast_mod n 8]
   exact help (n % 8) (Int.mod_nonneg n (by norm_num)) (Int.mod_lt n (by norm_num))
 #align zmod.χ₈_int_eq_if_mod_eight Zmod.χ₈_int_eq_if_mod_eight
@@ -161,8 +161,8 @@ It corresponds to the extension `ℚ(√-2)/ℚ`. -/
 def χ₈' : MulChar (Zmod 8) ℤ where
   toFun := (![0, 1, 0, 1, 0, -1, 0, -1] : Zmod 8 → ℤ)
   map_one' := rfl
-  map_mul' := by decide
-  map_nonunit' := by decide
+  map_mul' := dec_trivial
+  map_nonunit' := dec_trivial
 #align zmod.χ₈' Zmod.χ₈'
 
 /-- `χ₈'` takes values in `{0, 1, -1}` -/
@@ -173,7 +173,7 @@ theorem isQuadraticχ₈' : χ₈'.IsQuadratic := by
 
 /-- An explicit description of `χ₈'` on integers / naturals -/
 theorem χ₈'_int_eq_if_mod_eight (n : ℤ) : χ₈' n = if n % 2 = 0 then 0 else if n % 8 = 1 ∨ n % 8 = 3 then 1 else -1 := by
-  have help : ∀ m : ℤ, 0 ≤ m → m < 8 → χ₈' m = if m % 2 = 0 then 0 else if m = 1 ∨ m = 3 then 1 else -1 := by decide
+  have help : ∀ m : ℤ, 0 ≤ m → m < 8 → χ₈' m = if m % 2 = 0 then 0 else if m = 1 ∨ m = 3 then 1 else -1 := dec_trivial
   rw [← Int.mod_mod_of_dvd n (by norm_num : (2 : ℤ) ∣ 8), ← Zmod.int_cast_mod n 8]
   exact help (n % 8) (Int.mod_nonneg n (by norm_num)) (Int.mod_lt n (by norm_num))
 #align zmod.χ₈'_int_eq_if_mod_eight Zmod.χ₈'_int_eq_if_mod_eight

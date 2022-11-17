@@ -15,23 +15,28 @@ Tactic to clear denominators in algebraic expressions, based on `simp` with a sp
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/-- Try to prove a goal of the form `x ≠ 0` by calling `assumption`, or `norm_num1` if `x` is
-a numeral. -/
-unsafe def field_simp.ne_zero : tactic Unit := do
-  let goal ← tactic.target
-  match goal with
-    | quote.1 ((%%ₓe) ≠ 0) =>
-      assumption <|> do
-        let n ← e
-        sorry
-    | _ => tactic.fail "goal should be of the form `x ≠ 0`"
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Try to prove a goal of the form `x ≠ 0` by calling `assumption`, or `norm_num1` if `x` is
+      a numeral. -/
+    unsafe
+  def
+    field_simp.ne_zero
+    : tactic Unit
+    :=
+      do
+        let goal ← tactic.target
+          match
+            goal
+            with
+            | q( $ ( e ) ≠ 0 ) => assumption <|> do let n ← e sorry
+              | _ => tactic.fail "goal should be of the form `x ≠ 0`"
 #align tactic.field_simp.ne_zero tactic.field_simp.ne_zero
 
 namespace Interactive
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

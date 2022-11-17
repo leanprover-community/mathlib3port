@@ -126,8 +126,7 @@ theorem quasiconvex_on_iff_le_max :
         ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → f (a • x + b • y) ≤ max (f x) (f y) :=
   ⟨fun hf =>
     ⟨hf.Convex, fun x hx y hy a b ha hb hab => (hf _ ⟨hx, le_max_left _ _⟩ ⟨hy, le_max_right _ _⟩ ha hb hab).2⟩,
-    fun hf r x hx y hy a b ha hb hab =>
-    ⟨hf.1 hx.1 hy.1 ha hb hab, (hf.2 hx.1 hy.1 ha hb hab).trans <| max_le hx.2 hy.2⟩⟩
+    fun hf r x hx y hy a b ha hb hab => ⟨hf.1 hx.1 hy.1 ha hb hab, (hf.2 hx.1 hy.1 ha hb hab).trans $ max_le hx.2 hy.2⟩⟩
 #align quasiconvex_on_iff_le_max quasiconvex_on_iff_le_max
 
 theorem quasiconcave_on_iff_min_le :
@@ -151,7 +150,7 @@ theorem quasilinear_on_iff_mem_interval :
 theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x < r }) := by
   refine' fun x hx y hy a b ha hb hab => _
   have h := hf _ ⟨hx.1, le_max_left _ _⟩ ⟨hy.1, le_max_right _ _⟩ ha hb hab
-  exact ⟨h.1, h.2.trans_lt <| max_lt hx.2 hy.2⟩
+  exact ⟨h.1, h.2.trans_lt $ max_lt hx.2 hy.2⟩
 #align quasiconvex_on.convex_lt QuasiconvexOn.convex_lt
 
 theorem QuasiconcaveOn.convex_gt (hf : QuasiconcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | r < f x }) :=

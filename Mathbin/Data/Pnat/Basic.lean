@@ -24,7 +24,7 @@ namespace Pnat
 
 @[simp]
 theorem one_add_nat_pred (n : ℕ+) : 1 + n.natPred = n := by
-  rw [nat_pred, add_tsub_cancel_iff_le.mpr <| show 1 ≤ (n : ℕ) from n.2]
+  rw [nat_pred, add_tsub_cancel_iff_le.mpr $ show 1 ≤ (n : ℕ) from n.2]
 #align pnat.one_add_nat_pred Pnat.one_add_nat_pred
 
 @[simp]
@@ -267,14 +267,14 @@ theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ
 #align pnat.sub_coe Pnat.sub_coe
 
 theorem add_sub_of_lt {a b : ℕ+} : a < b → a + (b - a) = b := fun h =>
-  Eq <| by
+  Eq $ by
     rw [add_coe, sub_coe, if_pos h]
     exact add_tsub_cancel_of_le h.le
 #align pnat.add_sub_of_lt Pnat.add_sub_of_lt
 
 /-- If `n : ℕ+` is different from `1`, then it is the successor of some `k : ℕ+`. -/
 theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} (h1 : n ≠ 1), ∃ k : ℕ+, n = k + 1
-  | ⟨1, _⟩, h1 => False.elim <| h1 rfl
+  | ⟨1, _⟩, h1 => False.elim $ h1 rfl
   | ⟨n + 2, _⟩, _ => ⟨⟨n + 1, by simp⟩, rfl⟩
 #align pnat.exists_eq_succ_of_ne_one Pnat.exists_eq_succ_of_ne_one
 
@@ -297,7 +297,7 @@ not only to `Prop`. -/
 def recOn (n : ℕ+) {p : ℕ+ → Sort _} (p1 : p 1) (hp : ∀ n, p n → p (n + 1)) : p n := by
   rcases n with ⟨n, h⟩
   induction' n with n IH
-  · exact absurd h (by decide)
+  · exact absurd h dec_trivial
     
   · cases' n with n
     · exact p1
@@ -316,7 +316,7 @@ theorem rec_on_one {p} (p1 hp) : @Pnat.recOn 1 p p1 hp = p1 :=
 theorem rec_on_succ (n : ℕ+) {p : ℕ+ → Sort _} (p1 hp) : @Pnat.recOn (n + 1) p p1 hp = hp n (@Pnat.recOn n p p1 hp) :=
   by
   cases' n with n h
-  cases n <;> [exact absurd h (by decide), rfl]
+  cases n <;> [exact absurd h dec_trivial, rfl]
 #align pnat.rec_on_succ Pnat.rec_on_succ
 
 theorem mod_div_aux_spec :

@@ -228,7 +228,7 @@ def factorMultiset (n : ℕ+) : PrimeMultiset :=
 
 /-- The product of the factors is the original number -/
 theorem prod_factor_multiset (n : ℕ+) : (factorMultiset n).Prod = n :=
-  Eq <| by
+  Eq $ by
     dsimp [factor_multiset]
     rw [PrimeMultiset.prod_of_nat_list]
     exact Nat.prod_factors n.ne_zero

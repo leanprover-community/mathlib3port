@@ -44,7 +44,7 @@ def interval (a b : α) :=
 #align set.interval Set.interval
 
 -- mathport name: set.interval
-localized [Interval] notation "[" a ", " b "]" => Set.interval a b
+scoped[Interval] notation "[" a ", " b "]" => Set.interval a b
 
 @[simp]
 theorem dual_interval (a b : α) : [toDual a, toDual b] = of_dual ⁻¹' [a, b] :=
@@ -86,7 +86,7 @@ theorem mem_interval : a ∈ [b, c] ↔ b ≤ a ∧ a ≤ c ∨ c ≤ a ∧ a �
 
 @[simp]
 theorem interval_self : [a, a] = {a} :=
-  Set.ext <| by simp [le_antisymm_iff, and_comm']
+  Set.ext $ by simp [le_antisymm_iff, and_comm']
 #align set.interval_self Set.interval_self
 
 @[simp]
@@ -123,11 +123,11 @@ theorem mem_interval_of_ge (hb : b ≤ x) (ha : x ≤ a) : x ∈ [a, b] :=
 #align set.mem_interval_of_ge Set.mem_interval_of_ge
 
 theorem not_mem_interval_of_lt (ha : c < a) (hb : c < b) : c ∉ [a, b] :=
-  not_mem_Icc_of_lt <| lt_min_iff.mpr ⟨ha, hb⟩
+  not_mem_Icc_of_lt $ lt_min_iff.mpr ⟨ha, hb⟩
 #align set.not_mem_interval_of_lt Set.not_mem_interval_of_lt
 
 theorem not_mem_interval_of_gt (ha : a < c) (hb : b < c) : c ∉ [a, b] :=
-  not_mem_Icc_of_gt <| max_lt_iff.mpr ⟨ha, hb⟩
+  not_mem_Icc_of_gt $ max_lt_iff.mpr ⟨ha, hb⟩
 #align set.not_mem_interval_of_gt Set.not_mem_interval_of_gt
 
 theorem interval_subset_interval (h₁ : a₁ ∈ [a₂, b₂]) (h₂ : b₁ ∈ [a₂, b₂]) : [a₁, b₁] ⊆ [a₂, b₂] :=
@@ -182,7 +182,8 @@ theorem interval_injective_left (a : α) : Injective (interval a) := by
   simpa only [interval_swap] using interval_injective_right a
 #align set.interval_injective_left Set.interval_injective_left
 
-theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) : BddBelow s ∧ BddAbove s ↔ ∃ a b, s ⊆ [a, b] := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) : BddBelow s ∧ BddAbove s ↔ ∃ (a) (b), s ⊆ [a, b] := by
   rw [bdd_below_bdd_above_iff_subset_Icc]
   constructor
   · rintro ⟨a, b, h⟩
@@ -199,7 +200,7 @@ def intervalOc : α → α → Set α := fun a b => ioc (min a b) (max a b)
 
 -- mathport name: exprΙ
 -- Below is a capital iota
-localized [Interval] notation "Ι" => Set.intervalOc
+scoped[Interval] notation "Ι" => Set.intervalOc
 
 @[simp]
 theorem interval_oc_of_le (h : a ≤ b) : Ι a b = ioc a b := by simp [interval_oc, h]
@@ -277,8 +278,8 @@ theorem interval_oc_injective_right (a : α) : Injective fun b => Ι b a := by
     simpa [ha, and_iff_right hc, ← @not_le _ _ _ a, -not_le] using h c
     
   · refine'
-      eq_of_mem_interval_oc_of_mem_interval_oc ((h _).1 <| left_mem_interval_oc.2 ha)
-        ((h _).2 <| left_mem_interval_oc.2 <| ha.trans_le _)
+      eq_of_mem_interval_oc_of_mem_interval_oc ((h _).1 $ left_mem_interval_oc.2 ha)
+        ((h _).2 $ left_mem_interval_oc.2 $ ha.trans_le _)
     simpa [ha, ha.not_le, mem_interval_oc] using h b
     
 #align set.interval_oc_injective_right Set.interval_oc_injective_right

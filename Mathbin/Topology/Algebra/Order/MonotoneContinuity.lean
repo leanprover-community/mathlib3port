@@ -67,7 +67,7 @@ theorem continuous_at_right_of_monotone_on_of_exists_between {f : α → β} {s 
   · filter_upwards [hs, self_mem_nhds_within] with _ hxs hxa using hb.trans_le (h_mono has hxs hxa)
     
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
-    have : a < c := not_le.1 fun h => hac.not_le <| h_mono hcs has h
+    have : a < c := not_le.1 fun h => hac.not_le $ h_mono hcs has h
     filter_upwards [hs, Ico_mem_nhds_within_Ici (left_mem_Ico.2 this)]
     rintro x hx ⟨hax, hxc⟩
     exact (h_mono hx hcs hxc.le).trans_lt hcb
@@ -93,7 +93,7 @@ the image of this neighborhood under `f` is a right neighborhood of `f a`, then 
 `a` from the right. -/
 theorem continuous_at_right_of_monotone_on_of_image_mem_nhds_within [DenselyOrdered β] {f : α → β} {s : Set α} {a : α}
     (h_mono : MonotoneOn f s) (hs : s ∈ 𝓝[≥] a) (hfs : f '' s ∈ 𝓝[≥] f a) : ContinuousWithinAt f (ici a) a :=
-  continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within h_mono hs <| mem_of_superset hfs subset_closure
+  continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within h_mono hs $ mem_of_superset hfs subset_closure
 #align
   continuous_at_right_of_monotone_on_of_image_mem_nhds_within continuous_at_right_of_monotone_on_of_image_mem_nhds_within
 
@@ -121,7 +121,7 @@ theorem StrictMonoOn.continuous_at_right_of_image_mem_nhds_within [DenselyOrdere
 neighborhood under `f` includes `Ioi (f a)`, then `f` is continuous at `a` from the right. -/
 theorem StrictMonoOn.continuous_at_right_of_surj_on {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
     (hs : s ∈ 𝓝[≥] a) (hfs : SurjOn f s (ioi (f a))) : ContinuousWithinAt f (ici a) a :=
-  (h_mono.continuous_at_right_of_exists_between hs) fun b hb =>
+  h_mono.continuous_at_right_of_exists_between hs $ fun b hb =>
     let ⟨c, hcs, hcb⟩ := hfs hb
     ⟨c, hcs, hcb.symm ▸ hb, hcb.le⟩
 #align strict_mono_on.continuous_at_right_of_surj_on StrictMonoOn.continuous_at_right_of_surj_on
@@ -135,7 +135,7 @@ function `f : ℝ → ℝ` given by `f x = if x < 0 then x else x + 1` would be 
 `a = 0`. -/
 theorem StrictMonoOn.continuous_at_left_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
     (hs : s ∈ 𝓝[≤] a) (hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ ico b (f a)) : ContinuousWithinAt f (iic a) a :=
-  (h_mono.dual.continuous_at_right_of_exists_between hs) fun b hb =>
+  h_mono.dual.continuous_at_right_of_exists_between hs $ fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
 #align strict_mono_on.continuous_at_left_of_exists_between StrictMonoOn.continuous_at_left_of_exists_between
@@ -148,7 +148,7 @@ assumption `hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)` we use for stri
 because otherwise the function `floor : ℝ → ℤ` would be a counter-example at `a = 0`. -/
 theorem continuous_at_left_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α} (hf : MonotoneOn f s)
     (hs : s ∈ 𝓝[≤] a) (hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ ioo b (f a)) : ContinuousWithinAt f (iic a) a :=
-  (@continuous_at_right_of_monotone_on_of_exists_between αᵒᵈ βᵒᵈ _ _ _ _ _ _ f s a hf.dual hs) fun b hb =>
+  @continuous_at_right_of_monotone_on_of_exists_between αᵒᵈ βᵒᵈ _ _ _ _ _ _ f s a hf.dual hs $ fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
 #align continuous_at_left_of_monotone_on_of_exists_between continuous_at_left_of_monotone_on_of_exists_between
@@ -261,8 +261,8 @@ theorem continuous_at_of_monotone_on_of_image_mem_nhds [DenselyOrdered β] {f : 
 /-- A monotone function with densely ordered codomain and a dense range is continuous. -/
 theorem Monotone.continuous_of_dense_range [DenselyOrdered β] {f : α → β} (h_mono : Monotone f)
     (h_dense : DenseRange f) : Continuous f :=
-  continuous_iff_continuous_at.mpr fun a =>
-    continuous_at_of_monotone_on_of_closure_image_mem_nhds (fun x hx y hy hxy => h_mono hxy) univ_mem <| by
+  continuous_iff_continuous_at.mpr $ fun a =>
+    continuous_at_of_monotone_on_of_closure_image_mem_nhds (fun x hx y hy hxy => h_mono hxy) univ_mem $ by
       simp only [image_univ, h_dense.closure_eq, univ_mem]
 #align monotone.continuous_of_dense_range Monotone.continuous_of_dense_range
 

@@ -92,7 +92,7 @@ theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).le
   let l := s.sort (· ≤ ·)
   apply le_antisymm
   · have : s.min' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.min'_mem H)
-    obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.min' H := List.mem_iff_nth_le.1 this
+    obtain ⟨i, i_lt, hi⟩ : ∃ (i) (hi : i < l.length), l.nth_le i hi = s.min' H := List.mem_iff_nth_le.1 this
     rw [← hi]
     exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.zero_le i)
     
@@ -102,7 +102,7 @@ theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).le
 #align finset.sorted_zero_eq_min'_aux Finset.sorted_zero_eq_min'_aux
 
 theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length} :
-    (s.sort (· ≤ ·)).nthLe 0 h = s.min' (card_pos.1 <| by rwa [length_sort] at h) :=
+    (s.sort (· ≤ ·)).nthLe 0 h = s.min' (card_pos.1 $ by rwa [length_sort] at h) :=
   sorted_zero_eq_min'_aux _ _ _
 #align finset.sorted_zero_eq_min' Finset.sorted_zero_eq_min'
 
@@ -123,7 +123,7 @@ theorem sorted_last_eq_max'_aux (s : Finset α) (h : (s.sort (· ≤ ·)).length
     exact s.le_max' _ this
     
   · have : s.max' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.max'_mem H)
-    obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.max' H := List.mem_iff_nth_le.1 this
+    obtain ⟨i, i_lt, hi⟩ : ∃ (i) (hi : i < l.length), l.nth_le i hi = s.max' H := List.mem_iff_nth_le.1 this
     rw [← hi]
     have : i ≤ l.length - 1 := Nat.le_pred_of_lt i_lt
     exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.le_pred_of_lt i_lt)
@@ -150,8 +150,8 @@ is the increasing bijection between `fin k` and `s` as an `order_iso`. Here, `h`
 the cardinality of `s` is `k`. We use this instead of an iso `fin s.card ≃o s` to avoid
 casting issues in further uses of this function. -/
 def orderIsoOfFin (s : Finset α) {k : ℕ} (h : s.card = k) : Fin k ≃o s :=
-  OrderIso.trans (Fin.cast ((length_sort (· ≤ ·)).trans h).symm) <|
-    (s.sort_sorted_lt.nthLeIso _).trans <| OrderIso.setCongr _ _ <| Set.ext fun x => mem_sort _
+  OrderIso.trans (Fin.cast ((length_sort (· ≤ ·)).trans h).symm) $
+    (s.sort_sorted_lt.nthLeIso _).trans $ OrderIso.setCongr _ _ $ Set.ext $ fun x => mem_sort _
 #align finset.order_iso_of_fin Finset.orderIsoOfFin
 
 /-- Given a finset `s` of cardinality `k` in a linear order `α`, the map `order_emb_of_fin s h` is
@@ -230,7 +230,7 @@ theorem order_emb_of_fin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : 
 the increasing bijection `order_emb_of_fin s h`. -/
 theorem order_emb_of_fin_unique' {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin k ↪o α} (hfs : ∀ x, f x ∈ s) :
     f = s.orderEmbOfFin h :=
-  RelEmbedding.ext <| Function.funext_iff.1 <| order_emb_of_fin_unique h hfs f.StrictMono
+  RelEmbedding.ext $ Function.funext_iff.1 $ order_emb_of_fin_unique h hfs f.StrictMono
 #align finset.order_emb_of_fin_unique' Finset.order_emb_of_fin_unique'
 
 /-- Two parametrizations `order_emb_of_fin` of the same set take the same value on `i` and `j` if

@@ -125,7 +125,7 @@ variable (G)
 
 /-- An auxiliary type-theoretic definition defining both the upper central series of
 a group, and a proof that it is normal, all in one go. -/
-def upperCentralSeriesAux : ℕ → Σ'H : Subgroup G, Normal H
+def upperCentralSeriesAux : ℕ → Σ' H : Subgroup G, Normal H
   | 0 => ⟨⊥, inferInstance⟩
   | n + 1 =>
     let un := upperCentralSeriesAux n
@@ -296,13 +296,13 @@ theorem lower_central_series_one : lowerCentralSeries G 1 = commutator G :=
 
 theorem mem_lower_central_series_succ_iff (n : ℕ) (q : G) :
     q ∈ lowerCentralSeries G (n + 1) ↔
-      q ∈ closure { x | ∃ p ∈ lowerCentralSeries G n, ∃ q ∈ (⊤ : Subgroup G), p * q * p⁻¹ * q⁻¹ = x } :=
+      q ∈ closure { x | ∃ (p ∈ lowerCentralSeries G n) (q ∈ (⊤ : Subgroup G)), p * q * p⁻¹ * q⁻¹ = x } :=
   Iff.rfl
 #align mem_lower_central_series_succ_iff mem_lower_central_series_succ_iff
 
 theorem lower_central_series_succ (n : ℕ) :
     lowerCentralSeries G (n + 1) =
-      closure { x | ∃ p ∈ lowerCentralSeries G n, ∃ q ∈ (⊤ : Subgroup G), p * q * p⁻¹ * q⁻¹ = x } :=
+      closure { x | ∃ (p ∈ lowerCentralSeries G n) (q ∈ (⊤ : Subgroup G)), p * q * p⁻¹ * q⁻¹ = x } :=
   rfl
 #align lower_central_series_succ lower_central_series_succ
 
@@ -518,7 +518,7 @@ theorem lowerCentralSeries.map {H : Type _} [Group H] (f : G →* H) (n : ℕ) :
         simp [f.map_inv, Subgroup.inv_mem _ hy]
     rintro a ⟨y, hy, z, ⟨-, rfl⟩⟩
     apply mem_closure.mpr
-    exact fun K hK => hK ⟨f y, hd (mem_map_of_mem f hy), by simp [commutator_element_def]⟩
+    exact fun K hK => hK ⟨f y, hd (mem_map_of_mem f hy), by simp [commutatorElement_def]⟩
     
 #align lower_central_series.map lowerCentralSeries.map
 
@@ -713,7 +713,7 @@ theorem CommGroup.nilpotency_class_le_one {G : Type _} [CommGroup G] : Group.nil
 
 /-- Groups with nilpotency class at most one are abelian -/
 def commGroupOfNilpotencyClass [IsNilpotent G] (h : Group.nilpotencyClass G ≤ 1) : CommGroup G :=
-  Group.commGroupOfCenterEqTop <| by
+  Group.commGroupOfCenterEqTop $ by
     rw [← upper_central_series_one]
     exact upper_central_series_eq_top_iff_nilpotency_class_le.mpr h
 #align comm_group_of_nilpotency_class commGroupOfNilpotencyClass
@@ -878,6 +878,8 @@ theorem IsPGroup.is_nilpotent [Finite G] {p : ℕ} [hp : Fact (Nat.Prime p)] (h 
   classical
   revert hG
   induction' val using Fintype.induction_subsingleton_or_nontrivial with G hG hS G hG hN ih
+  · infer_instance
+    
   · intro
     intro h
     have hcq : Fintype.card (G ⧸ center G) < Fintype.card G := by
@@ -895,11 +897,13 @@ variable [Fintype G]
 /-- If a finite group is the direct product of its Sylow groups, it is nilpotent -/
 theorem is_nilpotent_of_product_of_sylow_group
     (e : (∀ p : (Fintype.card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G) : IsNilpotent G := by
-  classical let ps := (Fintype.card G).factorization.support
-    · intro p P
-      haveI : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_factorization (Finset.coe_mem p))
-      exact P.is_p_group'.is_nilpotent
-      
+  classical
+  let ps := (Fintype.card G).factorization.support
+  have : ∀ (p : ps) (P : Sylow p G), IsNilpotent (↑P : Subgroup G) := by
+    intro p P
+    haveI : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_factorization (Finset.coe_mem p))
+    exact P.is_p_group'.is_nilpotent
+  exact nilpotent_of_mul_equiv e
 #align is_nilpotent_of_product_of_sylow_group is_nilpotent_of_product_of_sylow_group
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -922,7 +926,7 @@ theorem is_nilpotent_of_product_of_sylow_group
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Term.app `IsNilpotent [`G])
             ","
@@ -937,13 +941,13 @@ theorem is_nilpotent_of_product_of_sylow_group
             ","
             (Term.forall
              "∀"
-             [(Term.explicitBinder "(" [`p] [":" (termℕ "ℕ")] [] ")")
+             [(Term.explicitBinder "(" [`p] [":" (Init.Data.Nat.Basic.termℕ "ℕ")] [] ")")
               (Term.explicitBinder "(" [`hp] [":" (Term.app `Fact [(Term.proj `p "." `Prime)])] [] ")")
               (Term.explicitBinder "(" [`P] [":" (Term.app `Sylow [`p `G])] [] ")")]
              []
              ","
              (Term.proj
-              (Term.paren "(" [(coeNotation "↑" `P) [(Term.typeAscription ":" [(Term.app `Subgroup [`G])])]] ")")
+              (Term.typeAscription "(" (Init.Coe.«term↑_» "↑" `P) ":" [(Term.app `Subgroup [`G])] ")")
               "."
               `Normal))
             ","
@@ -960,7 +964,7 @@ theorem is_nilpotent_of_product_of_sylow_group
                  [`P]
                  [(Term.typeSpec ":" (Term.app `Sylow [`p `G]))]
                  ","
-                 (Term.paren "(" [(coeNotation "↑" `P) [(Term.typeAscription ":" [(Term.app `Subgroup [`G])])]] ")")))
+                 (Term.typeAscription "(" (Init.Coe.«term↑_» "↑" `P) ":" [(Term.app `Subgroup [`G])] ")")))
                " ≃* "
                `G)])]
            "]")])))

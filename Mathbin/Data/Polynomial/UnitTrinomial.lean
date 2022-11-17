@@ -124,9 +124,12 @@ end Semiring
 
 variable (p q : ℤ[X])
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k m n) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (u v w) -/
 /-- A unit trinomial is a trinomial with unit coefficients. -/
 def IsUnitTrinomial :=
-  ∃ (k m n : ℕ)(hkm : k < m)(hmn : m < n)(u v w : Units ℤ), p = trinomial k m n u v w
+  ∃ (k : ℕ) (m : ℕ) (n : ℕ) (hkm : k < m) (hmn : m < n) (u : Units ℤ) (v : Units ℤ) (w : Units ℤ),
+    p = trinomial k m n u v w
 #align polynomial.is_unit_trinomial Polynomial.IsUnitTrinomial
 
 variable {p q}
@@ -229,7 +232,7 @@ theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Unit
     Finsupp.filter_single_of_neg, Finsupp.filter_single_of_neg, Finsupp.filter_single_of_pos,
     Finsupp.filter_single_of_neg, Finsupp.filter_single_of_pos, Finsupp.filter_single_of_neg]
   · simp only [add_zero, zero_add, of_finsupp_add, of_finsupp_single]
-    rw [C_mul_monomial, C_mul_monomial, mul_comm ↑v ↑w, add_comm (n - m + k) n]
+    rw [C_mul_monomial, C_mul_monomial, mul_comm (↑v) ↑w, add_comm (n - m + k) n]
     
   · exact fun h => h.2.Ne rfl
     

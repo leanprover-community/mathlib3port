@@ -13,16 +13,16 @@ variable {α : Type u}
 
 @[elab_without_expected_type]
 theorem find.induction {p : Rbnode α → Prop} (lt) [DecidableRel lt] (t x) (h₁ : p leaf)
-    (h₂ : ∀ (l y r) (h : CmpUsing lt x y = Ordering.lt) (ih : p l), p (red_node l y r))
-    (h₃ : ∀ (l y r) (h : CmpUsing lt x y = Ordering.eq), p (red_node l y r))
-    (h₄ : ∀ (l y r) (h : CmpUsing lt x y = Ordering.gt) (ih : p r), p (red_node l y r))
-    (h₅ : ∀ (l y r) (h : CmpUsing lt x y = Ordering.lt) (ih : p l), p (black_node l y r))
-    (h₆ : ∀ (l y r) (h : CmpUsing lt x y = Ordering.eq), p (black_node l y r))
-    (h₇ : ∀ (l y r) (h : CmpUsing lt x y = Ordering.gt) (ih : p r), p (black_node l y r)) : p t := by
+    (h₂ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.lt) (ih : p l), p (red_node l y r))
+    (h₃ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.eq), p (red_node l y r))
+    (h₄ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.gt) (ih : p r), p (red_node l y r))
+    (h₅ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.lt) (ih : p l), p (black_node l y r))
+    (h₆ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.eq), p (black_node l y r))
+    (h₇ : ∀ (l y r) (h : cmpUsing lt x y = Ordering.gt) (ih : p r), p (black_node l y r)) : p t := by
   induction t
   case leaf => assumption
   case red_node l y r =>
-  cases h : CmpUsing lt x y
+  cases h : cmpUsing lt x y
   case lt =>
   apply h₂
   assumption
@@ -35,7 +35,7 @@ theorem find.induction {p : Rbnode α → Prop} (lt) [DecidableRel lt] (t x) (h�
   assumption
   assumption
   case black_node l y r =>
-  cases h : CmpUsing lt x y
+  cases h : cmpUsing lt x y
   case lt =>
   apply h₅
   assumption
@@ -69,7 +69,7 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
       · have hyx : lift lt (some y) (some x) := (range hs_hs₂ hm).1
         simp [lift] at hyx
         have hxy : lt x y := by
-          simp [CmpUsing] at h
+          simp [cmpUsing] at h
           assumption
         exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
         
@@ -89,7 +89,7 @@ theorem find_correct {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWeakOrder
       · have hxy : lift lt (some x) (some y) := (range hs_hs₁ hm).2
         simp [lift] at hxy
         have hyx : lt y x := by
-          simp [CmpUsing] at h
+          simp [cmpUsing] at h
           exact h.2
         exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
         
@@ -134,7 +134,7 @@ theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWea
       · have hyx : lift lt (some y) (some x) := (range hs_hs₂ (mem_of_mem_exact hm)).1
         simp [lift] at hyx
         have hxy : lt x y := by
-          simp [CmpUsing] at h
+          simp [cmpUsing] at h
           assumption
         exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
         
@@ -171,7 +171,7 @@ theorem find_correct_exact {t : Rbnode α} {lt x} [DecidableRel lt] [IsStrictWea
       · have hxy : lift lt (some x) (some y) := (range hs_hs₁ (mem_of_mem_exact hm)).2
         simp [lift] at hxy
         have hyx : lt y x := by
-          simp [CmpUsing] at h
+          simp [cmpUsing] at h
           exact h.2
         exact absurd (trans_of lt hxy hyx) (irrefl_of lt x)
         
@@ -211,16 +211,16 @@ theorem find_eq_find_of_eqv {lt a b} [DecidableRel lt] [IsStrictWeakOrder α lt]
   apply find.induction lt t a <;> intros <;> simp_all [mem, find, StrictWeakOrder.Equiv, true_imp_iff]
   iterate 2 
   · have : lt b y := lt_of_incomp_of_lt heqv.swap h
-    simp [CmpUsing, find, *]
+    simp [cmpUsing, find, *]
     cases hs
     apply ih hs_hs₁
     
   · have := incomp_trans_of lt heqv.swap h
-    simp [CmpUsing, find, *]
+    simp [cmpUsing, find, *]
     
   · have := lt_of_lt_of_incomp h heqv
     have := not_lt_of_lt this
-    simp [CmpUsing, find, *]
+    simp [cmpUsing, find, *]
     cases hs
     apply ih hs_hs₂
     

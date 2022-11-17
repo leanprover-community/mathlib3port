@@ -124,7 +124,7 @@ instance {S : Type _} [Monoid S] [DistribMulAction S R] [IsScalarTower S R R] :
 instance {S : Type _} [Monoid S] [DistribMulAction S R] [DistribMulAction Sᵐᵒᵖ R] [IsScalarTower S R R]
     [IsCentralScalar S R] :
     IsCentralScalar S
-      (FreeLieAlgebra R X) where op_smul_eq_smul t := Quot.ind fun a => congr_arg (Quot.mk _) (op_smul_eq_smul t a)
+      (FreeLieAlgebra R X) where op_smul_eq_smul t := Quot.ind $ fun a => congr_arg (Quot.mk _) (op_smul_eq_smul t a)
 
 instance : Zero (FreeLieAlgebra R X) where zero := Quot.mk _ 0
 
@@ -288,8 +288,8 @@ variable (R X)
 algebra. -/
 @[simps]
 def universalEnvelopingEquivFreeAlgebra : UniversalEnvelopingAlgebra R (FreeLieAlgebra R X) ≃ₐ[R] FreeAlgebra R X :=
-  AlgEquiv.ofAlgHom (UniversalEnvelopingAlgebra.lift R <| FreeLieAlgebra.lift R <| FreeAlgebra.ι R)
-    (FreeAlgebra.lift R <| UniversalEnvelopingAlgebra.ι R ∘ FreeLieAlgebra.of R)
+  AlgEquiv.ofAlgHom (UniversalEnvelopingAlgebra.lift R $ FreeLieAlgebra.lift R $ FreeAlgebra.ι R)
+    (FreeAlgebra.lift R $ UniversalEnvelopingAlgebra.ι R ∘ FreeLieAlgebra.of R)
     (by
       ext
       simp)

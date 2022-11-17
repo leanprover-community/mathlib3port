@@ -29,7 +29,7 @@ unsafe def localized_attr : user_attribute (rb_lmap Name String) Unit where
   cache_cfg :=
     ⟨fun ns => do
       let dcls ← ns.mmap fun n => mk_const n >>= eval_expr (Name × String)
-      return <| rb_lmap.of_list dcls, []⟩
+      return $ rb_lmap.of_list dcls, []⟩
 #align localized_attr localized_attr
 
 /-- Get all commands in the given locale and return them as a list of strings -/
@@ -39,13 +39,13 @@ unsafe def get_localized (ns : List Name) : tactic (List String) := do
       (fun l nm =>
         match m nm with
         | [] => fail f! "locale {nm} does not exist"
-        | new_l => return <| l new_l)
+        | new_l => return $ l new_l)
       []
 #align get_localized get_localized
 
 /-- Execute all commands in the given locale -/
 @[user_command]
-unsafe def open_locale_cmd (_ : parse <| tk "open_locale") : parser Unit := do
+unsafe def open_locale_cmd (_ : parse $ tk "open_locale") : parser Unit := do
   let ns ← many ident
   let cmds ← get_localized ns
   cmds emit_code_here
@@ -55,7 +55,7 @@ unsafe def open_locale_cmd (_ : parse <| tk "open_locale") : parser Unit := do
   The new command is added as a declaration to the environment with name `_localized_decl.<number>`.
   This declaration has attribute `_localized` and as value a name-string pair. -/
 @[user_command]
-unsafe def localized_cmd (_ : parse <| tk "localized") : parser Unit := do
+unsafe def localized_cmd (_ : parse $ tk "localized") : parser Unit := do
   let cmd ← parser.pexpr
   let cmd ← i_to_expr cmd
   let cmd ← eval_expr String cmd
@@ -66,7 +66,7 @@ unsafe def localized_cmd (_ : parse <| tk "localized") : parser Unit := do
   let env ← get_env
   let dummy_decl_name := mkNumName `_localized_decl ((String.hash (cmd ++ nm.toString) + env.fingerprint) % unsignedSz)
   add_decl
-      (declaration.defn dummy_decl_name [] (quote.1 (Name × String)) (reflect (⟨nm, cmd⟩ : Name × String))
+      (declaration.defn dummy_decl_name [] q(Name × String) (reflect (⟨nm, cmd⟩ : Name × String))
         (ReducibilityHints.regular 1 tt) ff)
   localized_attr dummy_decl_name Unit.unit tt
 #align localized_cmd localized_cmd
@@ -143,16 +143,16 @@ notation
   -- because otherwise `open_locale` will fail if some of the notations are already available.
   _
 
-localized [-- you can run `open_locale classical` to get the decidability of all propositions, and downgrade
+scoped[-- you can run `open_locale classical` to get the decidability of all propositions, and downgrade
 -- the priority of decidability instances that make Lean run through all the algebraic hierarchy
 -- whenever it wants to solve a decidability question
 Classical] attribute [instance] Classical.propDecidable
 
-localized [Classical] attribute [instance] Eq.decidable
+scoped[Classical] attribute [instance] Eq.decidable
 
 -- mathport name: parser.optional
-localized [Parser] postfix:1024 "?" => optional
+scoped[Parser] postfix:1024 "?" => optional
 
 -- mathport name: parser.many
-localized [Parser] postfix:1024 "*" => lean.parser.many
+scoped[Parser] postfix:1024 "*" => lean.parser.many
 

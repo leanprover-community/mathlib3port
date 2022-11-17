@@ -38,7 +38,7 @@ instance : Fintype (derangements α) := by delta_instance derangements
 
 theorem card_derangements_invariant {α β : Type _} [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β]
     (h : card α = card β) : card (derangements α) = card (derangements β) :=
-  Fintype.card_congr (Equiv.derangementsCongr <| equivOfCardEq h)
+  Fintype.card_congr (Equiv.derangementsCongr $ equivOfCardEq h)
 #align card_derangements_invariant card_derangements_invariant
 
 theorem card_derangements_fin_add_two (n : ℕ) :
@@ -87,7 +87,7 @@ theorem num_derangements_succ (n : ℕ) : (numDerangements (n + 1) : ℤ) = (n +
   induction' n with n hn
   · rfl
     
-  · simp only [num_derangements_add_two, hn, pow_succ, Int.coe_nat_mul, Int.coe_nat_add, Int.coe_nat_succ]
+  · simp only [num_derangements_add_two, hn, pow_succ, Int.ofNat_mul, Int.ofNat_add, Int.ofNat_succ]
     ring
     
 #align num_derangements_succ num_derangements_succ
@@ -118,11 +118,11 @@ theorem num_derangements_sum (n : ℕ) :
   · rfl
     
   rw [Finset.sum_range_succ, num_derangements_succ, hn, Finset.mul_sum, tsub_self, Nat.asc_factorial_zero,
-    Int.coe_nat_one, mul_one, pow_succ, neg_one_mul, sub_eq_add_neg, add_left_inj, Finset.sum_congr rfl]
+    Int.ofNat_one, mul_one, pow_succ, neg_one_mul, sub_eq_add_neg, add_left_inj, Finset.sum_congr rfl]
   -- show that (n + 1) * (-1)^x * asc_fac x (n - x) = (-1)^x * asc_fac x (n.succ - x)
   intro x hx
   have h_le : x ≤ n := finset.mem_range_succ_iff.mp hx
-  rw [Nat.succ_sub h_le, Nat.asc_factorial_succ, add_tsub_cancel_of_le h_le, Int.coe_nat_mul, Int.coe_nat_succ,
+  rw [Nat.succ_sub h_le, Nat.asc_factorial_succ, add_tsub_cancel_of_le h_le, Int.ofNat_mul, Int.ofNat_succ,
     mul_left_comm]
 #align num_derangements_sum num_derangements_sum
 

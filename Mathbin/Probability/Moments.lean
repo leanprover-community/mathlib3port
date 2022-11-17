@@ -261,14 +261,17 @@ theorem aeStronglyMeasurableExpMulAdd {X Y : Ω → ℝ} (h_int_X : AeStronglyMe
 
 theorem aeStronglyMeasurableExpMulSum {X : ι → Ω → ℝ} {s : Finset ι}
     (h_int : ∀ i ∈ s, AeStronglyMeasurable (fun ω => exp (t * X i ω)) μ) :
-    AeStronglyMeasurable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
-  classical induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
-    · have : ∀ i : ι, i ∈ s → ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>
-        h_int i (mem_insert_of_mem hi)
-      specialize h_rec this
-      rw [sum_insert hi_notin_s]
-      apply ae_strongly_measurable_exp_mul_add (h_int i (mem_insert_self _ _)) h_rec
-      
+    AeStronglyMeasurable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by classical
+  induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
+  · simp only [Pi.zero_apply, sum_apply, sum_empty, mul_zero, exp_zero]
+    exact ae_strongly_measurable_const
+    
+  · have : ∀ i : ι, i ∈ s → ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi =>
+      h_int i (mem_insert_of_mem hi)
+    specialize h_rec this
+    rw [sum_insert hi_notin_s]
+    apply ae_strongly_measurable_exp_mul_add (h_int i (mem_insert_self _ _)) h_rec
+    
 #align probability_theory.ae_strongly_measurable_exp_mul_sum ProbabilityTheory.aeStronglyMeasurableExpMulSum
 
 theorem IndepFun.integrableExpMulAdd {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ)
@@ -281,26 +284,31 @@ theorem IndepFun.integrableExpMulAdd {X Y : Ω → ℝ} (h_indep : IndepFun X Y 
 theorem IndepFun.integrableExpMulSum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ}
     (h_indep : IndepFun (fun i => inferInstance) X μ) (h_meas : ∀ i, Measurable (X i)) {s : Finset ι}
     (h_int : ∀ i ∈ s, Integrable (fun ω => exp (t * X i ω)) μ) : Integrable (fun ω => exp (t * (∑ i in s, X i) ω)) μ :=
-  by
-  classical induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
-    · have : ∀ i : ι, i ∈ s → integrable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi => h_int i (mem_insert_of_mem hi)
-      specialize h_rec this
-      rw [sum_insert hi_notin_s]
-      refine' indep_fun.integrable_exp_mul_add _ (h_int i (mem_insert_self _ _)) h_rec
-      exact (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm
-      
+  by classical
+  induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
+  · simp only [Pi.zero_apply, sum_apply, sum_empty, mul_zero, exp_zero]
+    exact integrable_const _
+    
+  · have : ∀ i : ι, i ∈ s → integrable (fun ω : Ω => exp (t * X i ω)) μ := fun i hi => h_int i (mem_insert_of_mem hi)
+    specialize h_rec this
+    rw [sum_insert hi_notin_s]
+    refine' indep_fun.integrable_exp_mul_add _ (h_int i (mem_insert_self _ _)) h_rec
+    exact (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm
+    
 #align probability_theory.Indep_fun.integrable_exp_mul_sum ProbabilityTheory.IndepFun.integrableExpMulSum
 
 theorem IndepFun.mgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ} (h_indep : IndepFun (fun i => inferInstance) X μ)
-    (h_meas : ∀ i, Measurable (X i)) (s : Finset ι) : mgf (∑ i in s, X i) μ t = ∏ i in s, mgf (X i) μ t := by
-  classical induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
-    · have h_int' : ∀ i : ι, ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i =>
-        ((h_meas i).const_mul t).exp.AeStronglyMeasurable
-      rw [sum_insert hi_notin_s,
-        indep_fun.mgf_add (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm (h_int' i)
-          (ae_strongly_measurable_exp_mul_sum fun i hi => h_int' i),
-        h_rec, prod_insert hi_notin_s]
-      
+    (h_meas : ∀ i, Measurable (X i)) (s : Finset ι) : mgf (∑ i in s, X i) μ t = ∏ i in s, mgf (X i) μ t := by classical
+  induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
+  · simp only [sum_empty, mgf_zero_fun, measure_univ, Ennreal.one_to_real, prod_empty]
+    
+  · have h_int' : ∀ i : ι, ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i =>
+      ((h_meas i).const_mul t).exp.AeStronglyMeasurable
+    rw [sum_insert hi_notin_s,
+      indep_fun.mgf_add (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm (h_int' i)
+        (ae_strongly_measurable_exp_mul_sum fun i hi => h_int' i),
+      h_rec, prod_insert hi_notin_s]
+    
 #align probability_theory.Indep_fun.mgf_sum ProbabilityTheory.IndepFun.mgf_sum
 
 theorem IndepFun.cgf_sum [IsProbabilityMeasure μ] {X : ι → Ω → ℝ} (h_indep : IndepFun (fun i => inferInstance) X μ)

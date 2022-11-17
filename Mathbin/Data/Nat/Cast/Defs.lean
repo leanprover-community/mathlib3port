@@ -204,7 +204,7 @@ theorem cast_bit1 [AddMonoidWithOne R] (n : ℕ) : ((bit1 n : ℕ) : R) = bit1 n
 theorem cast_two [AddMonoidWithOne R] : ((2 : ℕ) : R) = 2 := by rw [cast_add_one, Nat.cast_one, bit0]
 #align nat.cast_two Nat.cast_two
 
-attribute [simp, norm_cast] Int.nat_abs_of_nat
+attribute [simp, norm_cast] Int.natAbs_ofNat
 
 end Nat
 

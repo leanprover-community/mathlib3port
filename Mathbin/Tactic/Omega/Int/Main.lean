@@ -23,7 +23,7 @@ run_cmd
 attribute [sugar]
   Ne not_le not_lt Int.lt_iff_add_one_le or_false_iff false_or_iff and_true_iff true_and_iff GE.ge GT.gt mul_add add_mul one_mul mul_one mul_comm sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=
   sorry
 #align omega.int.desugar omega.int.desugar
@@ -39,54 +39,37 @@ theorem univ_close_of_unsat_clausify (m : Nat) (p : Preform) : Clauses.Unsat (dn
 /-- Given a (p : preform), return the expr of a (t : univ_close m p) -/
 unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
   let x ← prove_unsats (dnf (¬* p))
-  return (quote.1 (univ_close_of_unsat_clausify (%%ₓquote.1 m) (%%ₓquote.1 p) (%%ₓx)))
+  return q(univ_close_of_unsat_clausify $(q(m)) $(q(p)) $(x))
 #align omega.int.prove_univ_close omega.int.prove_univ_close
 
-/-- Reification to imtermediate shadow syntax that retains exprs -/
-unsafe def to_exprterm : expr → tactic exprterm
-  | quote.1 (-%%ₓx) =>
-    (--return (exprterm.exp (-1 : int) x)
-      do
-        let z ← eval_expr' Int x
-        return (exprterm.cst (-z : Int))) <|>
-      (return <| exprterm.exp (-1 : Int) x)
-  | quote.1 ((%%ₓmx) * %%ₓzx) => do
-    let z ← eval_expr' Int zx
-    return (exprterm.exp z mx)
-  | quote.1 ((%%ₓt1x) + %%ₓt2x) => do
-    let t1 ← to_exprterm t1x
-    let t2 ← to_exprterm t2x
-    return (exprterm.add t1 t2)
-  | x =>
-    (do
-        let z ← eval_expr' Int x
-        return (exprterm.cst z)) <|>
-      (return <| exprterm.exp 1 x)
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Reification to imtermediate shadow syntax that retains exprs -/ unsafe
+  def
+    to_exprterm
+    : expr → tactic exprterm
+    |
+        q( - $ ( x ) )
+        =>
+        ( do let z ← eval_expr' Int x return ( exprterm.cst ( - z : Int ) ) )
+          <|>
+          ( return $ exprterm.exp ( - 1 : Int ) x )
+      | q( $ ( mx ) * $ ( zx ) ) => do let z ← eval_expr' Int zx return ( exprterm.exp z mx )
+      | q( $ ( t1x ) + $ ( t2x ) ) => do let t1 ← to_exprterm t1x let t2 ← to_exprterm t2x return ( exprterm.add t1 t2 )
+      | x => ( do let z ← eval_expr' Int x return ( exprterm.cst z ) ) <|> ( return $ exprterm.exp 1 x )
 #align omega.int.to_exprterm omega.int.to_exprterm
 
-/-- Reification to imtermediate shadow syntax that retains exprs -/
-unsafe def to_exprform : expr → tactic exprform
-  | quote.1 ((%%ₓtx1) = %%ₓtx2) => do
-    let t1 ← to_exprterm tx1
-    let t2 ← to_exprterm tx2
-    return (exprform.eq t1 t2)
-  | quote.1 ((%%ₓtx1) ≤ %%ₓtx2) => do
-    let t1 ← to_exprterm tx1
-    let t2 ← to_exprterm tx2
-    return (exprform.le t1 t2)
-  | quote.1 ¬%%ₓpx => do
-    let p ← to_exprform px
-    return (exprform.not p)
-  | quote.1 ((%%ₓpx) ∨ %%ₓqx) => do
-    let p ← to_exprform px
-    let q ← to_exprform qx
-    return (exprform.or p q)
-  | quote.1 ((%%ₓpx) ∧ %%ₓqx) => do
-    let p ← to_exprform px
-    let q ← to_exprform qx
-    return (exprform.and p q)
-  | quote.1 (_ → %%ₓpx) => to_exprform px
-  | x => (trace "Cannot reify expr : " >> trace x) >> failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Reification to imtermediate shadow syntax that retains exprs -/ unsafe
+  def
+    to_exprform
+    : expr → tactic exprform
+    | q( $ ( tx1 ) = $ ( tx2 ) ) => do let t1 ← to_exprterm tx1 let t2 ← to_exprterm tx2 return ( exprform.eq t1 t2 )
+      | q( $ ( tx1 ) ≤ $ ( tx2 ) ) => do let t1 ← to_exprterm tx1 let t2 ← to_exprterm tx2 return ( exprform.le t1 t2 )
+      | q( ¬ $ ( px ) ) => do let p ← to_exprform px return ( exprform.not p )
+      | q( $ ( px ) ∨ $ ( qx ) ) => do let p ← to_exprform px let q ← to_exprform qx return ( exprform.or p q )
+      | q( $ ( px ) ∧ $ ( qx ) ) => do let p ← to_exprform px let q ← to_exprform qx return ( exprform.and p q )
+      | q( _ → $ ( px ) ) => to_exprform px
+      | x => trace "Cannot reify expr : " >> trace x >> failed
 #align omega.int.to_exprform omega.int.to_exprform
 
 /-- List of all unreified exprs -/
@@ -160,26 +143,31 @@ unsafe def prove : tactic expr := do
 
 /-- Succeed iff argument is the expr of ℤ -/
 unsafe def eq_int (x : expr) : tactic Unit :=
-  if x = quote.1 Int then skip else failed
+  if x = q(Int) then skip else failed
 #align omega.int.eq_int omega.int.eq_int
 
-/-- Check whether argument is expr of a well-formed formula of LIA-/
-unsafe def wff : expr → tactic Unit
-  | quote.1 ¬%%ₓpx => wff px
-  | quote.1 ((%%ₓpx) ∨ %%ₓqx) => wff px >> wff qx
-  | quote.1 ((%%ₓpx) ∧ %%ₓqx) => wff px >> wff qx
-  | quote.1 ((%%ₓpx) ↔ %%ₓqx) => wff px >> wff qx
-  | quote.1 (%%ₓexpr.pi _ _ px qx) =>
-    Monad.cond (if expr.has_var px then return true else is_prop px) (wff px >> wff qx) (eq_int px >> wff qx)
-  | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
-  | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => eq_int dx
-  | quote.1 (@Eq (%%ₓdx) _ _) => eq_int dx
-  | quote.1 (@GE.ge (%%ₓdx) (%%ₓh) _ _) => eq_int dx
-  | quote.1 (@GT.gt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
-  | quote.1 (@Ne (%%ₓdx) _ _) => eq_int dx
-  | quote.1 True => skip
-  | quote.1 False => skip
-  | _ => failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Check whether argument is expr of a well-formed formula of LIA-/ unsafe
+  def
+    wff
+    : expr → tactic Unit
+    | q( ¬ $ ( px ) ) => wff px
+      | q( $ ( px ) ∨ $ ( qx ) ) => wff px >> wff qx
+      | q( $ ( px ) ∧ $ ( qx ) ) => wff px >> wff qx
+      | q( $ ( px ) ↔ $ ( qx ) ) => wff px >> wff qx
+      |
+        q( $ ( expr.pi _ _ px qx ) )
+        =>
+        Monad.cond ( if expr.has_var px then return true else is_prop px ) ( wff px >> wff qx ) ( eq_int px >> wff qx )
+      | q( @ LT.lt $ ( dx ) $ ( h ) _ _ ) => eq_int dx
+      | q( @ LE.le $ ( dx ) $ ( h ) _ _ ) => eq_int dx
+      | q( @ Eq $ ( dx ) _ _ ) => eq_int dx
+      | q( @ GE.ge $ ( dx ) $ ( h ) _ _ ) => eq_int dx
+      | q( @ GT.gt $ ( dx ) $ ( h ) _ _ ) => eq_int dx
+      | q( @ Ne $ ( dx ) _ _ ) => eq_int dx
+      | q( True ) => skip
+      | q( False ) => skip
+      | _ => failed
 #align omega.int.wff omega.int.wff
 
 /-- Succeed iff argument is expr of term whose type is wff -/
@@ -191,12 +179,12 @@ unsafe def wfx (x : expr) : tactic Unit :=
 unsafe def intro_ints_core : tactic Unit := do
   let x ← target
   match x with
-    | expr.pi _ _ (quote.1 Int) _ => intro_fresh >> intro_ints_core
+    | expr.pi _ _ q(Int) _ => intro_fresh >> intro_ints_core
     | _ => skip
 #align omega.int.intro_ints_core omega.int.intro_ints_core
 
 unsafe def intro_ints : tactic Unit := do
-  let expr.pi _ _ (quote.1 Int) _ ← target
+  let expr.pi _ _ q(Int) _ ← target
   intro_ints_core
 #align omega.int.intro_ints omega.int.intro_ints
 
@@ -214,6 +202,6 @@ open Omega.Int
 
 /-- The core omega tactic for integers. -/
 unsafe def omega_int (is_manual : Bool) : tactic Unit :=
-  andthen (andthen desugar (if is_manual then skip else preprocess)) ((prove >>= apply) >> skip)
+  (desugar; if is_manual then skip else preprocess); prove >>= apply >> skip
 #align omega_int omega_int
 

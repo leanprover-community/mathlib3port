@@ -44,7 +44,7 @@ def angle (p1 p2 p3 : P) : ℝ :=
 #align euclidean_geometry.angle EuclideanGeometry.angle
 
 -- mathport name: angle
-localized [EuclideanGeometry] notation "∠" => EuclideanGeometry.angle
+scoped notation "∠" => EuclideanGeometry.angle
 
 theorem continuous_at_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.2 ≠ x.2.1) :
     ContinuousAt (fun y : P × P × P => ∠ y.1 y.2.1 y.2.2) x := by
@@ -159,7 +159,7 @@ theorem left_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) 
 
 /-- If ∠ABC = π then dist C B ≠ 0. -/
 theorem right_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p3 p2 ≠ 0 :=
-  left_dist_ne_zero_of_angle_eq_pi <| (angle_comm _ _ _).trans h
+  left_dist_ne_zero_of_angle_eq_pi $ (angle_comm _ _ _).trans h
 #align euclidean_geometry.right_dist_ne_zero_of_angle_eq_pi EuclideanGeometry.right_dist_ne_zero_of_angle_eq_pi
 
 /-- If ∠ABC = π, then (dist A C) = (dist A B) + (dist B C). -/

@@ -95,7 +95,7 @@ theorem chain_of_chain_map {S : β → β → Prop} (f : α → β) (H : ∀ a b
 
 theorem chain_map_of_chain {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b)) {a : α} {l : List α}
     (p : Chain R a l) : Chain S (f a) (map f l) :=
-  (chain_map f).2 <| p.imp H
+  (chain_map f).2 $ p.imp H
 #align list.chain_map_of_chain List.chain_map_of_chain
 
 theorem chain_pmap_of_chain {S : β → β → Prop} {p : α → Prop} {f : ∀ a, p a → β}
@@ -215,7 +215,7 @@ theorem Chain'.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {l : 
 theorem Chain'.iff_mem : ∀ {l : List α}, Chain' R l ↔ Chain' (fun x y => x ∈ l ∧ y ∈ l ∧ R x y) l
   | [] => Iff.rfl
   | x :: l =>
-    ⟨fun h => (Chain.iff_mem.1 h).imp fun a b ⟨h₁, h₂, h₃⟩ => ⟨h₁, Or.inr h₂, h₃⟩, chain'.imp fun a b h => h.2.2⟩
+    ⟨fun h => (Chain.iff_mem.1 h).imp $ fun a b ⟨h₁, h₂, h₃⟩ => ⟨h₁, Or.inr h₂, h₃⟩, chain'.imp $ fun a b h => h.2.2⟩
 #align list.chain'.iff_mem List.Chain'.iff_mem
 
 @[simp]
@@ -237,7 +237,7 @@ theorem chain'_is_infix : ∀ l : List α, Chain' (fun x y => [x, y] <:+: l) l
   | [] => chain'_nil
   | [a] => chain'_singleton _
   | a :: b :: l =>
-    chain'_cons.2 ⟨⟨[], l, by simp⟩, (chain'_is_infix (b :: l)).imp fun x y h => h.trans ⟨[a], [], by simp⟩⟩
+    chain'_cons.2 ⟨⟨[], l, by simp⟩, (chain'_is_infix (b :: l)).imp $ fun x y h => h.trans ⟨[a], [], by simp⟩⟩
 #align list.chain'_is_infix List.chain'_is_infix
 
 theorem chain'_split {a : α} : ∀ {l₁ l₂ : List α}, Chain' R (l₁ ++ a :: l₂) ↔ Chain' R (l₁ ++ [a]) ∧ Chain' R (a :: l₂)
@@ -262,7 +262,7 @@ theorem chain'_of_chain'_map {S : β → β → Prop} (f : α → β) (H : ∀ a
 
 theorem chain'_map_of_chain' {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b)) {l : List α}
     (p : Chain' R l) : Chain' S (map f l) :=
-  (chain'_map f).2 <| p.imp H
+  (chain'_map f).2 $ p.imp H
 #align list.chain'_map_of_chain' List.chain'_map_of_chain'
 
 theorem Pairwise.chain' : ∀ {l : List α}, Pairwise R l → Chain' R l
@@ -301,7 +301,7 @@ theorem Chain'.rel_head' {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head'
 
 theorem Chain'.cons' {x} : ∀ {l : List α}, Chain' R l → (∀ y ∈ l.head', R x y) → Chain' R (x :: l)
   | [], _, _ => chain'_singleton x
-  | a :: l, hl, H => hl.cons <| H _ rfl
+  | a :: l, hl, H => hl.cons $ H _ rfl
 #align list.chain'.cons' List.Chain'.cons'
 
 theorem chain'_cons' {x l} : Chain' R (x :: l) ↔ (∀ y ∈ head' l, R x y) ∧ Chain' R l :=
@@ -358,7 +358,7 @@ theorem chain'_pair {x y} : Chain' R [x, y] ↔ R x y := by simp only [chain'_si
 #align list.chain'_pair List.chain'_pair
 
 theorem Chain'.imp_head {x y} (h : ∀ {z}, R x z → R y z) {l} (hl : Chain' R (x :: l)) : Chain' R (y :: l) :=
-  hl.tail.cons' fun z hz => h <| hl.rel_head' hz
+  hl.tail.cons' $ fun z hz => h $ hl.rel_head' hz
 #align list.chain'.imp_head List.Chain'.imp_head
 
 theorem chain'_reverse : ∀ {l}, Chain' R (reverse l) ↔ Chain' (flip R) l
@@ -385,7 +385,7 @@ theorem chain'_iff_nth_le {R} :
   `chain' R`, then so does `l₁ ++ l₂ ++ l₃` provided `l₂ ≠ []` -/
 theorem Chain'.append_overlap {l₁ l₂ l₃ : List α} (h₁ : Chain' R (l₁ ++ l₂)) (h₂ : Chain' R (l₂ ++ l₃)) (hn : l₂ ≠ []) :
     Chain' R (l₁ ++ l₂ ++ l₃) :=
-  h₁.append h₂.right_of_append <| by simpa only [last'_append_of_ne_nil _ hn] using (chain'_append.1 h₂).2.2
+  h₁.append h₂.right_of_append $ by simpa only [last'_append_of_ne_nil _ hn] using (chain'_append.1 h₂).2.2
 #align list.chain'.append_overlap List.Chain'.append_overlap
 
 /-- If `a` and `b` are related by the reflexive transitive closure of `r`, then there is a `r`-chain

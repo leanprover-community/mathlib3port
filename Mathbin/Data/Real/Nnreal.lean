@@ -60,7 +60,7 @@ def Nnreal :=
 #align nnreal Nnreal
 
 -- mathport name: nnreal
-localized [Nnreal] notation "ℝ≥0" => Nnreal
+scoped[Nnreal] notation "ℝ≥0" => Nnreal
 
 namespace Nnreal
 
@@ -86,14 +86,14 @@ protected theorem eq_iff {n m : ℝ≥0} : (n : ℝ) = (m : ℝ) ↔ n = m :=
 #align nnreal.eq_iff Nnreal.eq_iff
 
 theorem ne_iff {x y : ℝ≥0} : (x : ℝ) ≠ (y : ℝ) ↔ x ≠ y :=
-  not_congr <| Nnreal.eq_iff
+  not_congr $ Nnreal.eq_iff
 #align nnreal.ne_iff Nnreal.ne_iff
 
 protected theorem forall {p : ℝ≥0 → Prop} : (∀ x : ℝ≥0, p x) ↔ ∀ (x : ℝ) (hx : 0 ≤ x), p ⟨x, hx⟩ :=
   Subtype.forall
 #align nnreal.forall Nnreal.forall
 
-protected theorem exists {p : ℝ≥0 → Prop} : (∃ x : ℝ≥0, p x) ↔ ∃ (x : ℝ)(hx : 0 ≤ x), p ⟨x, hx⟩ :=
+protected theorem exists {p : ℝ≥0 → Prop} : (∃ x : ℝ≥0, p x) ↔ ∃ (x : ℝ) (hx : 0 ≤ x), p ⟨x, hx⟩ :=
   Subtype.exists
 #align nnreal.exists Nnreal.exists
 
@@ -194,7 +194,7 @@ protected theorem coe_two : ((2 : ℝ≥0) : ℝ) = 2 :=
 
 @[simp, norm_cast]
 protected theorem coe_sub {r₁ r₂ : ℝ≥0} (h : r₂ ≤ r₁) : ((r₁ - r₂ : ℝ≥0) : ℝ) = r₁ - r₂ :=
-  max_eq_left <| le_sub_comm.2 <| by simp [show (r₂ : ℝ) ≤ r₁ from h]
+  max_eq_left $ le_sub_comm.2 $ by simp [show (r₂ : ℝ) ≤ r₁ from h]
 #align nnreal.coe_sub Nnreal.coe_sub
 
 @[simp, norm_cast]
@@ -359,7 +359,7 @@ protected theorem _root_.real.to_nnreal_mono : Monotone Real.toNnreal := fun x y
 
 @[simp]
 theorem _root_.real.to_nnreal_coe {r : ℝ≥0} : Real.toNnreal r = r :=
-  Nnreal.eq <| max_eq_left r.2
+  Nnreal.eq $ max_eq_left r.2
 #align nnreal._root_.real.to_nnreal_coe nnreal._root_.real.to_nnreal_coe
 
 @[simp]
@@ -369,7 +369,7 @@ theorem mk_coe_nat (n : ℕ) : @Eq ℝ≥0 (⟨(n : ℝ), n.cast_nonneg⟩ : ℝ
 
 @[simp]
 theorem to_nnreal_coe_nat (n : ℕ) : Real.toNnreal n = n :=
-  Nnreal.eq <| by simp [Real.coe_to_nnreal]
+  Nnreal.eq $ by simp [Real.coe_to_nnreal]
 #align nnreal.to_nnreal_coe_nat Nnreal.to_nnreal_coe_nat
 
 /-- `real.to_nnreal` and `coe : ℝ≥0 → ℝ` form a Galois insertion. -/
@@ -430,7 +430,7 @@ theorem coe_image {s : Set ℝ≥0} : coe '' s = { x : ℝ | ∃ h : 0 ≤ x, @M
 theorem bdd_above_coe {s : Set ℝ≥0} : BddAbove ((coe : ℝ≥0 → ℝ) '' s) ↔ BddAbove s :=
   Iff.intro
     (fun ⟨b, hb⟩ =>
-      ⟨Real.toNnreal b, fun ⟨y, hy⟩ hys => show y ≤ max b 0 from le_max_of_le_left <| hb <| Set.mem_image_of_mem _ hys⟩)
+      ⟨Real.toNnreal b, fun ⟨y, hy⟩ hys => show y ≤ max b 0 from le_max_of_le_left $ hb $ Set.mem_image_of_mem _ hys⟩)
     fun ⟨b, hb⟩ => ⟨b, fun y ⟨x, hx, Eq⟩ => Eq ▸ hb hx⟩
 #align nnreal.bdd_above_coe Nnreal.bdd_above_coe
 
@@ -443,7 +443,7 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0 :=
 
 @[norm_cast]
 theorem coe_Sup (s : Set ℝ≥0) : (↑(sup s) : ℝ) = sup ((coe : ℝ≥0 → ℝ) '' s) :=
-  Eq.symm <| @subset_Sup_of_within ℝ (Set.ici 0) _ ⟨(0 : ℝ≥0)⟩ s <| (Real.Sup_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
+  Eq.symm $ @subset_Sup_of_within ℝ (Set.ici 0) _ ⟨(0 : ℝ≥0)⟩ s $ Real.Sup_nonneg _ $ fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Sup Nnreal.coe_Sup
 
 @[norm_cast]
@@ -453,7 +453,7 @@ theorem coe_supr {ι : Sort _} (s : ι → ℝ≥0) : (↑(⨆ i, s i) : ℝ) = 
 
 @[norm_cast]
 theorem coe_Inf (s : Set ℝ≥0) : (↑(inf s) : ℝ) = inf ((coe : ℝ≥0 → ℝ) '' s) :=
-  Eq.symm <| @subset_Inf_of_within ℝ (Set.ici 0) _ ⟨(0 : ℝ≥0)⟩ s <| (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
+  Eq.symm $ @subset_Inf_of_within ℝ (Set.ici 0) _ ⟨(0 : ℝ≥0)⟩ s $ Real.Inf_nonneg _ $ fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Inf Nnreal.coe_Inf
 
 @[simp]
@@ -495,7 +495,7 @@ theorem lt_iff_exists_rat_btwn (a b : ℝ≥0) : a < b ↔ ∃ q : ℚ, 0 ≤ q 
   Iff.intro
     (fun h : (↑a : ℝ) < (↑b : ℝ) =>
       let ⟨q, haq, hqb⟩ := exists_rat_btwn h
-      have : 0 ≤ (q : ℝ) := le_trans a.2 <| le_of_lt haq
+      have : 0 ≤ (q : ℝ) := le_trans a.2 $ le_of_lt haq
       ⟨q, Rat.cast_nonneg.1 this, by simp [Real.coe_to_nnreal _ this, nnreal.coe_lt_coe.symm, haq, hqb]⟩)
     fun ⟨q, _, haq, hqb⟩ => lt_trans haq hqb
 #align nnreal.lt_iff_exists_rat_btwn Nnreal.lt_iff_exists_rat_btwn
@@ -505,11 +505,11 @@ theorem bot_eq_zero : (⊥ : ℝ≥0) = 0 :=
 #align nnreal.bot_eq_zero Nnreal.bot_eq_zero
 
 theorem mul_sup (a b c : ℝ≥0) : a * (b ⊔ c) = a * b ⊔ a * c :=
-  mul_max_of_nonneg _ _ <| zero_le a
+  mul_max_of_nonneg _ _ $ zero_le a
 #align nnreal.mul_sup Nnreal.mul_sup
 
 theorem sup_mul (a b c : ℝ≥0) : (a ⊔ b) * c = a * c ⊔ b * c :=
-  max_mul_of_nonneg _ _ <| zero_le c
+  max_mul_of_nonneg _ _ $ zero_le c
 #align nnreal.sup_mul Nnreal.sup_mul
 
 theorem mul_finset_sup {α} (r : ℝ≥0) (s : Finset α) (f : α → ℝ≥0) : r * s.sup f = s.sup fun a => r * f a :=
@@ -592,7 +592,7 @@ theorem to_nnreal_lt_to_nnreal_iff_of_nonneg {r p : ℝ} (hr : 0 ≤ r) : Real.t
 
 @[simp]
 theorem to_nnreal_add {r p : ℝ} (hr : 0 ≤ r) (hp : 0 ≤ p) : Real.toNnreal (r + p) = Real.toNnreal r + Real.toNnreal p :=
-  Nnreal.eq <| by simp [Real.toNnreal, hr, hp, add_nonneg]
+  Nnreal.eq $ by simp [Real.toNnreal, hr, hp, add_nonneg]
 #align real.to_nnreal_add Real.to_nnreal_add
 
 theorem to_nnreal_add_to_nnreal {r p : ℝ} (hr : 0 ≤ r) (hp : 0 ≤ p) :
@@ -605,7 +605,7 @@ theorem to_nnreal_le_to_nnreal {r p : ℝ} (h : r ≤ p) : Real.toNnreal r ≤ R
 #align real.to_nnreal_le_to_nnreal Real.to_nnreal_le_to_nnreal
 
 theorem to_nnreal_add_le {r p : ℝ} : Real.toNnreal (r + p) ≤ Real.toNnreal r + Real.toNnreal p :=
-  Nnreal.coe_le_coe.1 <| max_le (add_le_add (le_max_left _ _) (le_max_left _ _)) Nnreal.zero_le_coe
+  Nnreal.coe_le_coe.1 $ max_le (add_le_add (le_max_left _ _) (le_max_left _ _)) Nnreal.zero_le_coe
 #align real.to_nnreal_add_le Real.to_nnreal_add_le
 
 theorem to_nnreal_le_iff_le_coe {r : ℝ} {p : ℝ≥0} : Real.toNnreal r ≤ p ↔ r ≤ ↑p :=
@@ -617,7 +617,7 @@ theorem le_to_nnreal_iff_coe_le {r : ℝ≥0} {p : ℝ} (hp : 0 ≤ p) : r ≤ R
 #align real.le_to_nnreal_iff_coe_le Real.le_to_nnreal_iff_coe_le
 
 theorem le_to_nnreal_iff_coe_le' {r : ℝ≥0} {p : ℝ} (hr : 0 < r) : r ≤ Real.toNnreal p ↔ ↑r ≤ p :=
-  ((le_or_lt 0 p).elim le_to_nnreal_iff_coe_le) fun hp => by
+  (le_or_lt 0 p).elim le_to_nnreal_iff_coe_le $ fun hp => by
     simp only [(hp.trans_le r.coe_nonneg).not_le, to_nnreal_eq_zero.2 hp.le, hr.not_le]
 #align real.le_to_nnreal_iff_coe_le' Real.le_to_nnreal_iff_coe_le'
 
@@ -792,7 +792,7 @@ theorem div_le_iff {a b r : ℝ≥0} (hr : r ≠ 0) : a / r ≤ b ↔ a ≤ b * 
 #align nnreal.div_le_iff Nnreal.div_le_iff
 
 theorem div_le_iff' {a b r : ℝ≥0} (hr : r ≠ 0) : a / r ≤ b ↔ a ≤ r * b :=
-  @div_le_iff' ℝ _ a r b <| pos_iff_ne_zero.2 hr
+  @div_le_iff' ℝ _ a r b $ pos_iff_ne_zero.2 hr
 #align nnreal.div_le_iff' Nnreal.div_le_iff'
 
 theorem div_le_of_le_mul {a b c : ℝ≥0} (h : a ≤ b * c) : a / c ≤ b :=
@@ -800,15 +800,15 @@ theorem div_le_of_le_mul {a b c : ℝ≥0} (h : a ≤ b * c) : a / c ≤ b :=
 #align nnreal.div_le_of_le_mul Nnreal.div_le_of_le_mul
 
 theorem div_le_of_le_mul' {a b c : ℝ≥0} (h : a ≤ b * c) : a / b ≤ c :=
-  div_le_of_le_mul <| mul_comm b c ▸ h
+  div_le_of_le_mul $ mul_comm b c ▸ h
 #align nnreal.div_le_of_le_mul' Nnreal.div_le_of_le_mul'
 
 theorem le_div_iff {a b r : ℝ≥0} (hr : r ≠ 0) : a ≤ b / r ↔ a * r ≤ b :=
-  @le_div_iff ℝ _ a b r <| pos_iff_ne_zero.2 hr
+  @le_div_iff ℝ _ a b r $ pos_iff_ne_zero.2 hr
 #align nnreal.le_div_iff Nnreal.le_div_iff
 
 theorem le_div_iff' {a b r : ℝ≥0} (hr : r ≠ 0) : a ≤ b / r ↔ r * a ≤ b :=
-  @le_div_iff' ℝ _ a b r <| pos_iff_ne_zero.2 hr
+  @le_div_iff' ℝ _ a b r $ pos_iff_ne_zero.2 hr
 #align nnreal.le_div_iff' Nnreal.le_div_iff'
 
 theorem div_lt_iff {a b r : ℝ≥0} (hr : r ≠ 0) : a / r < b ↔ a < b * r :=
@@ -828,7 +828,7 @@ theorem lt_div_iff' {a b r : ℝ≥0} (hr : r ≠ 0) : a < b / r ↔ r * a < b :
 #align nnreal.lt_div_iff' Nnreal.lt_div_iff'
 
 theorem mul_lt_of_lt_div {a b r : ℝ≥0} (h : a < b / r) : a * r < b := by
-  refine' (lt_div_iff fun hr => False.elim _).1 h
+  refine' (lt_div_iff $ fun hr => False.elim _).1 h
   subst r
   simpa using h
 #align nnreal.mul_lt_of_lt_div Nnreal.mul_lt_of_lt_div
@@ -848,7 +848,7 @@ theorem div_le_div_left {a b c : ℝ≥0} (a0 : 0 < a) (b0 : 0 < b) (c0 : 0 < c)
 #align nnreal.div_le_div_left Nnreal.div_le_div_left
 
 theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0} (h : ∀ a < 1, a * x ≤ y) : x ≤ y :=
-  le_of_forall_ge_of_dense fun a ha => by
+  le_of_forall_ge_of_dense $ fun a ha => by
     have hx : x ≠ 0 := pos_iff_ne_zero.1 (lt_of_le_of_lt (zero_le _) ha)
     have hx' : x⁻¹ ≠ 0 := by rwa [(· ≠ ·), inv_eq_zero]
     have : a * x⁻¹ < 1 := by rwa [← lt_inv_iff_mul_lt hx', inv_inv]
@@ -956,7 +956,7 @@ open Set
 variable {ι : Sort _} {f : ι → ℝ≥0}
 
 theorem le_to_nnreal_of_coe_le {x : ℝ≥0} {y : ℝ} (h : ↑x ≤ y) : x ≤ y.toNnreal :=
-  (le_to_nnreal_iff_coe_le <| x.2.trans h).2 h
+  (le_to_nnreal_iff_coe_le $ x.2.trans h).2 h
 #align nnreal.le_to_nnreal_of_coe_le Nnreal.le_to_nnreal_of_coe_le
 
 theorem Sup_of_not_bdd_above {s : Set ℝ≥0} (hs : ¬BddAbove s) : HasSup.sup s = 0 := by
@@ -1024,11 +1024,11 @@ theorem supr_mul_le {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i,
 #align nnreal.supr_mul_le Nnreal.supr_mul_le
 
 theorem le_infi_mul_infi {a : ℝ≥0} {g h : ι → ℝ≥0} (H : ∀ i j, a ≤ g i * h j) : a ≤ infi g * infi h :=
-  le_infi_mul fun i => le_mul_infi <| H i
+  le_infi_mul $ fun i => le_mul_infi $ H i
 #align nnreal.le_infi_mul_infi Nnreal.le_infi_mul_infi
 
 theorem supr_mul_supr_le {a : ℝ≥0} {g h : ι → ℝ≥0} (H : ∀ i j, g i * h j ≤ a) : supr g * supr h ≤ a :=
-  supr_mul_le fun i => mul_supr_le <| H _
+  supr_mul_le $ fun i => mul_supr_le $ H _
 #align nnreal.supr_mul_supr_le Nnreal.supr_mul_supr_le
 
 end Csupr
@@ -1046,11 +1046,11 @@ theorem preimage_coe_nnreal_real (h : s.OrdConnected) : (coe ⁻¹' s : Set ℝ�
 #align set.ord_connected.preimage_coe_nnreal_real Set.OrdConnected.preimage_coe_nnreal_real
 
 theorem image_coe_nnreal_real (h : t.OrdConnected) : (coe '' t : Set ℝ).OrdConnected :=
-  ⟨ball_image_iff.2 fun x hx => ball_image_iff.2 fun y hy z hz => ⟨⟨z, x.2.trans hz.1⟩, h.out hx hy hz, rfl⟩⟩
+  ⟨ball_image_iff.2 $ fun x hx => ball_image_iff.2 $ fun y hy z hz => ⟨⟨z, x.2.trans hz.1⟩, h.out hx hy hz, rfl⟩⟩
 #align set.ord_connected.image_coe_nnreal_real Set.OrdConnected.image_coe_nnreal_real
 
 theorem image_real_to_nnreal (h : s.OrdConnected) : (Real.toNnreal '' s).OrdConnected := by
-  refine' ⟨ball_image_iff.2 fun x hx => ball_image_iff.2 fun y hy z hz => _⟩
+  refine' ⟨ball_image_iff.2 $ fun x hx => ball_image_iff.2 $ fun y hy z hz => _⟩
   cases' le_total y 0 with hy₀ hy₀
   · rw [mem_Icc, Real.to_nnreal_of_nonpos hy₀, nonpos_iff_eq_zero] at hz
     exact ⟨y, hy, (to_nnreal_of_nonpos hy₀).trans hz.2.symm⟩
@@ -1122,8 +1122,8 @@ private theorem nnreal_coe_pos {r : ℝ≥0} : 0 < r → 0 < (r : ℝ) :=
 /-- Extension for the `positivity` tactic: cast from `ℝ≥0` to `ℝ`. -/
 @[positivity]
 unsafe def positivity_coe_nnreal_real : expr → tactic strictness
-  | quote.1 (@coe _ _ (%%ₓinst) (%%ₓa)) => do
-    unify inst (quote.1 (@coeToLift _ _ <| @coeBase _ _ Nnreal.Real.hasCoe))
+  | q(@coe _ _ $(inst) $(a)) => do
+    unify inst q(@coeToLift _ _ $ @coeBase _ _ Nnreal.Real.hasCoe)
     let strictness_a ← core a
     match strictness_a with
       | positive p => positive <$> mk_app `` nnreal_coe_pos [p]

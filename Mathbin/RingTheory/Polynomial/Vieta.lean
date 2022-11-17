@@ -37,11 +37,14 @@ variable {R : Type _} [CommSemiring R]
 `λ` runs through a multiset `s` is equal to a linear combination of the symmetric functions
 `esymm s` of the `λ`'s .-/
 theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
-    (s.map fun r => X + c r).Prod = ∑ j in Finset.range (s.card + 1), c (s.esymm j) * X ^ (s.card - j) := by
-  classical rw [prod_map_add, antidiagonal_eq_map_powerset, map_map, ← bind_powerset_len, Function.comp, map_bind,
-      sum_bind, Finset.sum_eq_multiset_sum, Finset.range_coe, map_congr (Eq.refl _)]
-    rw [esymm, ← sum_hom', ← sum_map_mul_right, map_congr (Eq.refl _)]
-    rw [mem_powerset_len] at ht
+    (s.map fun r => X + c r).Prod = ∑ j in Finset.range (s.card + 1), c (s.esymm j) * X ^ (s.card - j) := by classical
+  rw [prod_map_add, antidiagonal_eq_map_powerset, map_map, ← bind_powerset_len, Function.comp, map_bind, sum_bind,
+    Finset.sum_eq_multiset_sum, Finset.range_coe, map_congr (Eq.refl _)]
+  intro _ _
+  rw [esymm, ← sum_hom', ← sum_map_mul_right, map_congr (Eq.refl _)]
+  intro _ ht
+  rw [mem_powerset_len] at ht
+  simp [ht, map_const, prod_repeat, prod_hom', map_id', card_sub]
 #align multiset.prod_X_add_C_eq_sum_esymm Multiset.prod_X_add_C_eq_sum_esymm
 
 /-- Vieta's formula for the coefficients of the product of linear terms `X + λ` where `λ` runs

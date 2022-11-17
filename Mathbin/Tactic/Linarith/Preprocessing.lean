@@ -42,34 +42,35 @@ set_option eqn_compiler.max_steps 50000
 For example, if `prf : ¬ a < b`, ``rem_neg prf `(a < b)`` returns a proof of `a ≥ b`.
 -/
 unsafe def rem_neg (prf : expr) : expr → tactic expr
-  | quote.1 (_ ≤ _) => mk_app `` lt_of_not_ge [prf]
-  | quote.1 (_ < _) => mk_app `` le_of_not_gt [prf]
-  | quote.1 (_ > _) => mk_app `` le_of_not_gt [prf]
-  | quote.1 (_ ≥ _) => mk_app `` lt_of_not_ge [prf]
+  | q(_ ≤ _) => mk_app `` lt_of_not_ge [prf]
+  | q(_ < _) => mk_app `` le_of_not_gt [prf]
+  | q(_ > _) => mk_app `` le_of_not_gt [prf]
+  | q(_ ≥ _) => mk_app `` lt_of_not_ge [prf]
   | e => failed
 #align linarith.rem_neg linarith.rem_neg
 
-private unsafe def rearr_comp_aux : expr → expr → tactic expr
-  | prf, quote.1 ((%%ₓa) ≤ 0) => return prf
-  | prf, quote.1 ((%%ₓa) < 0) => return prf
-  | prf, quote.1 ((%%ₓa) = 0) => return prf
-  | prf, quote.1 ((%%ₓa) ≥ 0) => mk_app `` neg_nonpos_of_nonneg [prf]
-  | prf, quote.1 ((%%ₓa) > 0) => mk_app `neg_neg_of_pos [prf]
-  | prf, quote.1 (0 ≥ %%ₓa) => to_expr (pquote.1 (idRhs ((%%ₓa) ≤ 0) (%%ₓprf)))
-  | prf, quote.1 (0 > %%ₓa) => to_expr (pquote.1 (idRhs ((%%ₓa) < 0) (%%ₓprf)))
-  | prf, quote.1 (0 = %%ₓa) => mk_app `eq.symm [prf]
-  | prf, quote.1 (0 ≤ %%ₓa) => mk_app `` neg_nonpos_of_nonneg [prf]
-  | prf, quote.1 (0 < %%ₓa) => mk_app `neg_neg_of_pos [prf]
-  | prf, quote.1 ((%%ₓa) ≤ %%ₓb) => mk_app `` sub_nonpos_of_le [prf]
-  | prf, quote.1 ((%%ₓa) < %%ₓb) => mk_app `sub_neg_of_lt [prf]
-  | prf, quote.1 ((%%ₓa) = %%ₓb) => mk_app `sub_eq_zero_of_eq [prf]
-  | prf, quote.1 ((%%ₓa) > %%ₓb) => mk_app `sub_neg_of_lt [prf]
-  | prf, quote.1 ((%%ₓa) ≥ %%ₓb) => mk_app `` sub_nonpos_of_le [prf]
-  | prf, quote.1 ¬%%ₓt => do
-    let nprf ← rem_neg prf t
-    let tp ← infer_type nprf
-    rearr_comp_aux nprf tp
-  | prf, a => trace a >> fail "couldn't rearrange comp"
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+private unsafe
+  def
+    rearr_comp_aux
+    : expr → expr → tactic expr
+    | prf , q( $ ( a ) ≤ 0 ) => return prf
+      | prf , q( $ ( a ) < 0 ) => return prf
+      | prf , q( $ ( a ) = 0 ) => return prf
+      | prf , q( $ ( a ) ≥ 0 ) => mk_app ` ` neg_nonpos_of_nonneg [ prf ]
+      | prf , q( $ ( a ) > 0 ) => mk_app `neg_neg_of_pos [ prf ]
+      | prf , q( 0 ≥ $ ( a ) ) => to_expr ` `( idRhs ( $ ( a ) ≤ 0 ) $ ( prf ) )
+      | prf , q( 0 > $ ( a ) ) => to_expr ` `( idRhs ( $ ( a ) < 0 ) $ ( prf ) )
+      | prf , q( 0 = $ ( a ) ) => mk_app `eq.symm [ prf ]
+      | prf , q( 0 ≤ $ ( a ) ) => mk_app ` ` neg_nonpos_of_nonneg [ prf ]
+      | prf , q( 0 < $ ( a ) ) => mk_app `neg_neg_of_pos [ prf ]
+      | prf , q( $ ( a ) ≤ $ ( b ) ) => mk_app ` ` sub_nonpos_of_le [ prf ]
+      | prf , q( $ ( a ) < $ ( b ) ) => mk_app `sub_neg_of_lt [ prf ]
+      | prf , q( $ ( a ) = $ ( b ) ) => mk_app `sub_eq_zero_of_eq [ prf ]
+      | prf , q( $ ( a ) > $ ( b ) ) => mk_app `sub_neg_of_lt [ prf ]
+      | prf , q( $ ( a ) ≥ $ ( b ) ) => mk_app ` ` sub_nonpos_of_le [ prf ]
+      | prf , q( ¬ $ ( t ) ) => do let nprf ← rem_neg prf t let tp ← infer_type nprf rearr_comp_aux nprf tp
+      | prf , a => trace a >> fail "couldn't rearrange comp"
 #align linarith.rearr_comp_aux linarith.rearr_comp_aux
 
 /-- `rearr_comp e` takes a proof `e` of an equality, inequality, or negation thereof,
@@ -81,7 +82,7 @@ unsafe def rearr_comp (e : expr) : tactic expr :=
 
 /-- If `e` is of the form `((n : ℕ) : ℤ)`, `is_nat_int_coe e` returns `n : ℕ`. -/
 unsafe def is_nat_int_coe : expr → Option expr
-  | quote.1 (@coe ℕ ℤ (%%ₓ_) (%%ₓn)) => some n
+  | q(@coe ℕ ℤ $(_) $(n)) => some n
   | _ => none
 #align linarith.is_nat_int_coe linarith.is_nat_int_coe
 
@@ -90,40 +91,49 @@ unsafe def mk_coe_nat_nonneg_prf (e : expr) : tactic expr :=
   mk_app `int.coe_nat_nonneg [e]
 #align linarith.mk_coe_nat_nonneg_prf linarith.mk_coe_nat_nonneg_prf
 
-/-- `get_nat_comps e` returns a list of all subexpressions of `e` of the form `((t : ℕ) : ℤ)`. -/
-unsafe def get_nat_comps : expr → List expr
-  | quote.1 ((%%ₓa) + %%ₓb) => (get_nat_comps a).append (get_nat_comps b)
-  | quote.1 ((%%ₓa) * %%ₓb) => (get_nat_comps a).append (get_nat_comps b)
-  | e =>
-    match is_nat_int_coe e with
-    | some e' => [e']
-    | none => []
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- `get_nat_comps e` returns a list of all subexpressions of `e` of the form `((t : ℕ) : ℤ)`. -/ unsafe
+  def
+    get_nat_comps
+    : expr → List expr
+    | q( $ ( a ) + $ ( b ) ) => ( get_nat_comps a ) . append ( get_nat_comps b )
+      | q( $ ( a ) * $ ( b ) ) => ( get_nat_comps a ) . append ( get_nat_comps b )
+      | e => match is_nat_int_coe e with | some e' => [ e' ] | none => [ ]
 #align linarith.get_nat_comps linarith.get_nat_comps
 
-/-- If `pf` is a proof of a strict inequality `(a : ℤ) < b`,
-`mk_non_strict_int_pf_of_strict_int_pf pf` returns a proof of `a + 1 ≤ b`,
-and similarly if `pf` proves a negated weak inequality.
--/
-unsafe def mk_non_strict_int_pf_of_strict_int_pf (pf : expr) : tactic expr := do
-  let tp ← infer_type pf
-  match tp with
-    | quote.1 ((%%ₓa) < %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓpf)))
-    | quote.1 ((%%ₓa) > %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓpf)))
-    | quote.1 ¬(%%ₓa) ≤ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gt (%%ₓpf))))
-    | quote.1 ¬(%%ₓa) ≥ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gt (%%ₓpf))))
-    | _ => fail "mk_non_strict_int_pf_of_strict_int_pf failed: proof is not an inequality"
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      If `pf` is a proof of a strict inequality `(a : ℤ) < b`,
+      `mk_non_strict_int_pf_of_strict_int_pf pf` returns a proof of `a + 1 ≤ b`,
+      and similarly if `pf` proves a negated weak inequality.
+      -/
+    unsafe
+  def
+    mk_non_strict_int_pf_of_strict_int_pf
+    ( pf : expr ) : tactic expr
+    :=
+      do
+        let tp ← infer_type pf
+          match
+            tp
+            with
+            | q( $ ( a ) < $ ( b ) ) => to_expr ` `( Int.add_one_le_iff . mpr $ ( pf ) )
+              | q( $ ( a ) > $ ( b ) ) => to_expr ` `( Int.add_one_le_iff . mpr $ ( pf ) )
+              | q( ¬ $ ( a ) ≤ $ ( b ) ) => to_expr ` `( Int.add_one_le_iff . mpr ( le_of_not_gt $ ( pf ) ) )
+              | q( ¬ $ ( a ) ≥ $ ( b ) ) => to_expr ` `( Int.add_one_le_iff . mpr ( le_of_not_gt $ ( pf ) ) )
+              | _ => fail "mk_non_strict_int_pf_of_strict_int_pf failed: proof is not an inequality"
 #align linarith.mk_non_strict_int_pf_of_strict_int_pf linarith.mk_non_strict_int_pf_of_strict_int_pf
 
 /-- `is_nat_prop tp` is true iff `tp` is an inequality or equality between natural numbers
 or the negation thereof.
 -/
 unsafe def is_nat_prop : expr → Bool
-  | quote.1 (@Eq ℕ (%%ₓ_) _) => true
-  | quote.1 (@LE.le ℕ (%%ₓ_) _ _) => true
-  | quote.1 (@LT.lt ℕ (%%ₓ_) _ _) => true
-  | quote.1 (@GE.ge ℕ (%%ₓ_) _ _) => true
-  | quote.1 (@GT.gt ℕ (%%ₓ_) _ _) => true
-  | quote.1 ¬%%ₓp => is_nat_prop p
+  | q(@Eq ℕ $(_) _) => true
+  | q(@LE.le ℕ $(_) _ _) => true
+  | q(@LT.lt ℕ $(_) _ _) => true
+  | q(@GE.ge ℕ $(_) _ _) => true
+  | q(@GT.gt ℕ $(_) _ _) => true
+  | q(¬$(p)) => is_nat_prop p
   | _ => false
 #align linarith.is_nat_prop linarith.is_nat_prop
 
@@ -131,15 +141,15 @@ unsafe def is_nat_prop : expr → Bool
 or the negation of a weak inequality between integers.
 -/
 unsafe def is_strict_int_prop : expr → Bool
-  | quote.1 (@LT.lt ℤ (%%ₓ_) _ _) => true
-  | quote.1 (@GT.gt ℤ (%%ₓ_) _ _) => true
-  | quote.1 ¬@LE.le ℤ (%%ₓ_) _ _ => true
-  | quote.1 ¬@GE.ge ℤ (%%ₓ_) _ _ => true
+  | q(@LT.lt ℤ $(_) _ _) => true
+  | q(@GT.gt ℤ $(_) _ _) => true
+  | q(¬@LE.le ℤ $(_) _ _) => true
+  | q(¬@GE.ge ℤ $(_) _ _) => true
   | _ => false
 #align linarith.is_strict_int_prop linarith.is_strict_int_prop
 
 private unsafe def filter_comparisons_aux : expr → Bool
-  | quote.1 ¬%%ₓp => p.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge]
+  | q(¬$(p)) => p.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge]
   | tp => tp.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge, `eq]
 #align linarith.filter_comparisons_aux linarith.filter_comparisons_aux
 
@@ -164,7 +174,7 @@ unsafe def remove_negations : preprocessor where
   transform h := do
     let tp ← infer_type h
     match tp with
-      | quote.1 ¬%%ₓp => singleton <$> rem_neg h p
+      | q(¬$(p)) => singleton <$> rem_neg h p
       | _ => return [h]
 #align linarith.remove_negations linarith.remove_negations
 
@@ -178,12 +188,12 @@ unsafe def nat_to_int : global_preprocessor where
   transform l :=-- we lock the tactic state here because a `simplify` call inside of
   -- `zify_proof` corrupts the tactic state when run under `io.run_tactic`.
   do
-    let l ← lock_tactic_state <| l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
+    let l ← lock_tactic_state $ l.mmap $ fun h => infer_type h >>= guardb ∘ is_nat_prop >> zify_proof [] h <|> return h
     let nonnegs ←
       l.mfoldl
           (fun (es : expr_set) h => do
             let (a, b) ← infer_type h >>= get_rel_sides
-            return <| (es (get_nat_comps a)).insert_list (get_nat_comps b))
+            return $ (es (get_nat_comps a)).insert_list (get_nat_comps b))
           mk_rb_set
     (· ++ ·) l <$> nonnegs mk_coe_nat_nonneg_prf
 #align linarith.nat_to_int linarith.nat_to_int
@@ -225,25 +235,27 @@ unsafe def cancel_denoms : preprocessor where
   transform pf :=
     (do
         let some (_, lhs) ← parse_into_comp_and_expr <$> infer_type pf
-        guardb <| lhs (· = `has_div.div)
+        guardb $ lhs (· = `has_div.div)
         singleton <$> normalize_denominators_in_lhs pf lhs) <|>
       return [pf]
 #align linarith.cancel_denoms linarith.cancel_denoms
 
-/-- `find_squares m e` collects all terms of the form `a ^ 2` and `a * a` that appear in `e`
-and adds them to the set `m`.
-A pair `(a, tt)` is added to `m` when `a^2` appears in `e`, and `(a, ff)` is added to `m`
-when `a*a` appears in `e`.  -/
-unsafe def find_squares : rb_set (expr × Bool) → expr → tactic (rb_set <| expr ×ₗ Bool)
-  | s, quote.1 ((%%ₓa) ^ 2) => do
-    let s ← find_squares s a
-    return (s (a, tt))
-  | s, e@(quote.1 ((%%ₓe1) * %%ₓe2)) =>
-    if e1 = e2 then do
-      let s ← find_squares s e1
-      return (s (e1, ff))
-    else e.mfoldl find_squares s
-  | s, e => e.mfoldl find_squares s
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `find_squares m e` collects all terms of the form `a ^ 2` and `a * a` that appear in `e`
+      and adds them to the set `m`.
+      A pair `(a, tt)` is added to `m` when `a^2` appears in `e`, and `(a, ff)` is added to `m`
+      when `a*a` appears in `e`.  -/
+    unsafe
+  def
+    find_squares
+    : rb_set ( expr × Bool ) → expr → tactic ( rb_set $ expr ×ₗ Bool )
+    | s , q( $ ( a ) ^ 2 ) => do let s ← find_squares s a return ( s ( a , tt ) )
+      |
+        s , e @ q( $ ( e1 ) * $ ( e2 ) )
+        =>
+        if e1 = e2 then do let s ← find_squares s e1 return ( s ( e1 , ff ) ) else e . mfoldl find_squares s
+      | s , e => e . mfoldl find_squares s
 #align linarith.find_squares linarith.find_squares
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -260,10 +272,10 @@ unsafe def nlinarith_extras : global_preprocessor where
   transform ls := do
     let s ← ls.mfoldr (fun h s' => infer_type h >>= find_squares s') mk_rb_set
     let new_es ←
-      (s.mfold ([] : List expr)) fun ⟨e, is_sq⟩ new_es =>
+      s.mfold ([] : List expr) $ fun ⟨e, is_sq⟩ new_es =>
           (do
               let p ← mk_app (if is_sq then `` sq_nonneg else `` mul_self_nonneg) [e]
-              return <| p::new_es) <|>
+              return $ p::new_es) <|>
             return new_es
     let new_es ← make_comp_with_zero.globalize.transform new_es
     linarith_trace "nlinarith preprocessing found squares"
@@ -272,9 +284,9 @@ unsafe def nlinarith_extras : global_preprocessor where
     let with_comps ←
       (new_es ++ ls).mmap fun e => do
           let tp ← infer_type e
-          return <| (parse_into_comp_and_expr tp).elim (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
+          return $ (parse_into_comp_and_expr tp).elim (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
     let products ←
-      with_comps.mmapUpperTriangle fun ⟨posa, a⟩ ⟨posb, b⟩ =>
+      with_comps.mmapUpperTriangle $ fun ⟨posa, a⟩ ⟨posb, b⟩ =>
           (some <$>
               match posa, posb with
               | ineq.eq, _ => mk_app `` zero_mul_eq [a, b]
@@ -289,7 +301,7 @@ unsafe def nlinarith_extras : global_preprocessor where
               | ineq.le, ineq.le => mk_app `` mul_nonneg_of_nonpos_of_nonpos [a, b]) <|>
             return none
     let products ← make_comp_with_zero.globalize.transform products.reduceOption
-    return <| new_es ++ ls ++ products
+    return $ new_es ++ ls ++ products
 #align linarith.nlinarith_extras linarith.nlinarith_extras
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -301,13 +313,13 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
       let e ←
         hs.mfind fun e : expr => do
             let e ← infer_type e
-            guard <| e
-      let [(_, ng1), (_, ng2)] ← to_expr (pquote.1 (Or.elim (lt_or_gt_of_ne (%%ₓe)))) >>= apply
+            guard $ e
+      let [(_, ng1), (_, ng2)] ← to_expr ``(Or.elim (lt_or_gt_of_ne $(e))) >>= apply
       let do_goal : expr → tactic (List branch) := fun g => do
           set_goals [g]
           let h ← intro1
-          let ls ← remove_ne_aux <| hs.removeAll [e]
-          return <| ls fun b : branch => (b.1, h::b.2)
+          let ls ← remove_ne_aux $ hs.removeAll [e]
+          return $ ls fun b : branch => (b.1, h::b.2)
         (· ++ ·) <$> do_goal ng1 <*> do_goal ng2) <|>
     do
     let g ← get_goal
@@ -337,7 +349,7 @@ so the size of the list may change.
 -/
 unsafe def preprocess (pps : List global_branching_preprocessor) (l : List expr) : tactic (List branch) := do
   let g ← get_goal
-  pps (fun ls pp => List.join <$> ls fun b => set_goals [b.1] >> pp b.2) [(g, l)]
+  pps (fun ls pp => List.join <$> (ls $ fun b => set_goals [b.1] >> pp b.2)) [(g, l)]
 #align linarith.preprocess linarith.preprocess
 
 end Linarith

@@ -98,7 +98,7 @@ theorem sinh_bijective : Bijective sinh :=
 /-- `arsinh` is the left inverse of `sinh`. -/
 @[simp]
 theorem arsinh_sinh (x : ℝ) : arsinh (sinh x) = x :=
-  right_inverse_of_injective_of_left_inverse sinh_injective sinh_arsinh x
+  rightInverse_of_injective_of_leftInverse sinh_injective sinh_arsinh x
 #align real.arsinh_sinh Real.arsinh_sinh
 
 /-- `real.sinh` as an `equiv`. -/

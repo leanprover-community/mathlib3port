@@ -40,7 +40,7 @@ theorem mem_prod {r : R} {s : S} : (⟨r, s⟩ : R × S) ∈ prod I J ↔ r ∈ 
 
 @[simp]
 theorem prod_top_top : prod (⊤ : Ideal R) (⊤ : Ideal S) = ⊤ :=
-  Ideal.ext <| by simp
+  Ideal.ext $ by simp
 #align ideal.prod_top_top Ideal.prod_top_top
 
 /-- Every ideal of the product ring is of the form `I × J`, where `I` and `J` can be explicitly
@@ -172,7 +172,7 @@ theorem ideal_prod_prime (I : Ideal (R × S)) :
 
 @[simp]
 private def prime_ideals_equiv_impl :
-    Sum { I : Ideal R // I.IsPrime } { J : Ideal S // J.IsPrime } → { K : Ideal (R × S) // K.IsPrime }
+    { I : Ideal R // I.IsPrime } ⊕ { J : Ideal S // J.IsPrime } → { K : Ideal (R × S) // K.IsPrime }
   | Sum.inl ⟨I, hI⟩ => ⟨Ideal.prod I ⊤, is_prime_ideal_prod_top⟩
   | Sum.inr ⟨J, hJ⟩ => ⟨Ideal.prod ⊤ J, is_prime_ideal_prod_top'⟩
 #align ideal.prime_ideals_equiv_impl ideal.prime_ideals_equiv_impl
@@ -184,8 +184,8 @@ variable (R S)
 /-- The prime ideals of `R × S` are in bijection with the disjoint union of the prime ideals
     of `R` and the prime ideals of `S`. -/
 noncomputable def primeIdealsEquiv :
-    { K : Ideal (R × S) // K.IsPrime } ≃ Sum { I : Ideal R // I.IsPrime } { J : Ideal S // J.IsPrime } :=
-  Equiv.symm <|
+    { K : Ideal (R × S) // K.IsPrime } ≃ { I : Ideal R // I.IsPrime } ⊕ { J : Ideal S // J.IsPrime } :=
+  Equiv.symm $
     Equiv.ofBijective primeIdealsEquivImpl
       (by
         constructor

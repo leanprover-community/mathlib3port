@@ -28,7 +28,7 @@ noncomputable section
 
 /-- If `E` is a finite dimensional space over `ℝ`, then `to_euclidean` is a continuous `ℝ`-linear
 equivalence between `E` and the Euclidean space of the same dimension. -/
-def toEuclidean : E ≃L[ℝ] EuclideanSpace ℝ (Fin <| FiniteDimensional.finrank ℝ E) :=
+def toEuclidean : E ≃L[ℝ] EuclideanSpace ℝ (Fin $ FiniteDimensional.finrank ℝ E) :=
   ContinuousLinearEquiv.ofFinrankEq finrank_euclidean_space_fin.symm
 #align to_euclidean toEuclidean
 

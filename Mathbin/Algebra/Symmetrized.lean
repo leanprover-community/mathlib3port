@@ -148,7 +148,7 @@ instance [Add α] [Mul α] [One α] [Invertible (2 : α)] :
     Mul αˢʸᵐ where mul a b := sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a))
 
 @[to_additive]
-instance [Inv α] : Inv αˢʸᵐ where inv a := Sym <| (unsym a)⁻¹
+instance [Inv α] : Inv αˢʸᵐ where inv a := Sym $ (unsym a)⁻¹
 
 instance (R : Type _) [HasSmul R α] : HasSmul R αˢʸᵐ where smul r a := sym (r • unsym a)
 
@@ -237,12 +237,12 @@ theorem sym_eq_one_iff [One α] (a : α) : sym a = 1 ↔ a = 1 :=
 
 @[to_additive]
 theorem unsym_ne_one_iff [One α] (a : αˢʸᵐ) : a.unsym ≠ (1 : α) ↔ a ≠ (1 : αˢʸᵐ) :=
-  not_congr <| unsym_eq_one_iff a
+  not_congr $ unsym_eq_one_iff a
 #align sym_alg.unsym_ne_one_iff SymAlg.unsym_ne_one_iff
 
 @[to_additive]
 theorem sym_ne_one_iff [One α] (a : α) : sym a ≠ (1 : αˢʸᵐ) ↔ a ≠ (1 : α) :=
-  not_congr <| sym_eq_one_iff a
+  not_congr $ sym_eq_one_iff a
 #align sym_alg.sym_ne_one_iff SymAlg.sym_ne_one_iff
 
 instance [AddCommSemigroup α] : AddCommSemigroup αˢʸᵐ :=

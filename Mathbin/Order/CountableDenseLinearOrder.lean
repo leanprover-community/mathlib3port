@@ -65,13 +65,13 @@ theorem exists_between_finsets {α : Type _} [LinearOrder α] [DenselyOrdered α
 
 variable (α β : Type _) [LinearOrder α] [LinearOrder β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (p q «expr ∈ » f) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (p q «expr ∈ » f) -/
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/
 def PartialIso : Type _ :=
   { f : Finset (α × β) //
-    ∀ (p q) (_ : p ∈ f) (_ : q ∈ f), Cmp (Prod.fst p) (Prod.fst q) = Cmp (Prod.snd p) (Prod.snd q) }
+    ∀ (p q) (_ : p ∈ f) (_ : q ∈ f), cmp (Prod.fst p) (Prod.fst q) = cmp (Prod.snd p) (Prod.snd q) }
 #align order.partial_iso Order.PartialIso
 
 namespace PartialIso
@@ -90,7 +90,7 @@ the domain of `f` is `b`'s relation to the image of `f`.
 Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`.
 -/
 theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (f : PartialIso α β) (a : α) :
-    ∃ b : β, ∀ p ∈ f.val, Cmp (Prod.fst p) a = Cmp (Prod.snd p) b := by
+    ∃ b : β, ∀ p ∈ f.val, cmp (Prod.fst p) a = cmp (Prod.snd p) b := by
   by_cases h:∃ b, (a, b) ∈ f.val
   · cases' h with b hb
     exact ⟨b, fun p hp => f.prop _ hp _ hb⟩
@@ -123,8 +123,8 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
 
 /-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
 protected def comm : PartialIso α β → PartialIso β α :=
-  (Subtype.map (Finset.image (Equiv.prodComm _ _))) fun f hf p hp q hq =>
-    Eq.symm <|
+  Subtype.map (Finset.image (Equiv.prodComm _ _)) $ fun f hf p hp q hq =>
+    Eq.symm $
       hf ((Equiv.prodComm α β).symm p)
         (by
           rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hp
@@ -211,17 +211,17 @@ theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [No
   rcases(F a₁).Prop with ⟨f, hf, ha₁⟩
   rcases(F a₂).Prop with ⟨g, hg, ha₂⟩
   rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
-  exact (lt_iff_lt_of_cmp_eq_cmp <| m.prop (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp
+  exact (lt_iff_lt_of_cmp_eq_cmp $ m.prop (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp
 #align order.embedding_from_countable_to_dense Order.embedding_from_countable_to_dense
 
 /-- Any two countable dense, nonempty linear orders without endpoints are order isomorphic. -/
 theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] [Encodable β]
     [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] : Nonempty (α ≃o β) :=
-  let to_cofinal : Sum α β → Cofinal (PartialIso α β) := fun p => Sum.recOn p (definedAtLeft β) (definedAtRight α)
+  let to_cofinal : α ⊕ β → Cofinal (PartialIso α β) := fun p => Sum.recOn p (definedAtLeft β) (definedAtRight α)
   let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default to_cofinal
   let F a := funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inl a))
   let G b := invOfIdeal b our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inr b))
-  ⟨(OrderIso.ofCmpEqCmp (fun a => (F a).val) fun b => (G b).val) fun a b => by
+  ⟨(OrderIso.ofCmpEqCmp (fun a => (F a).val) fun b => (G b).val) $ fun a b => by
       rcases(F a).Prop with ⟨f, hf, ha⟩
       rcases(G b).Prop with ⟨g, hg, hb⟩
       rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩

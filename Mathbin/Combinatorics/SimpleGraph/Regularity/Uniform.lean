@@ -91,7 +91,7 @@ theorem isUniformSingleton (hε : 0 < ε) : G.IsUniform ε {a} {b} := by
 #align simple_graph.is_uniform_singleton SimpleGraph.isUniformSingleton
 
 theorem not_is_uniform_zero : ¬G.IsUniform (0 : 𝕜) s t := fun h =>
-  (abs_nonneg _).not_lt <| h (empty_subset _) (empty_subset _) (by simp) (by simp)
+  (abs_nonneg _).not_lt $ h (empty_subset _) (empty_subset _) (by simp) (by simp)
 #align simple_graph.not_is_uniform_zero SimpleGraph.not_is_uniform_zero
 
 theorem isUniformOne : G.IsUniform (1 : 𝕜) s t := by
@@ -207,7 +207,7 @@ open Classical
 /-- The pairs of parts of a partition `P` which are not `ε`-uniform in a graph `G`. Note that we
 dismiss the diagonal. We do not care whether `s` is `ε`-uniform with itself. -/
 noncomputable def nonUniforms (ε : 𝕜) : Finset (Finset α × Finset α) :=
-  P.parts.offDiag.filter fun uv => ¬G.IsUniform ε uv.1 uv.2
+  P.parts.offDiag.filter $ fun uv => ¬G.IsUniform ε uv.1 uv.2
 #align finpartition.non_uniforms Finpartition.nonUniforms
 
 theorem mk_mem_non_uniforms_iff (u v : Finset α) (ε : 𝕜) :
@@ -216,7 +216,7 @@ theorem mk_mem_non_uniforms_iff (u v : Finset α) (ε : 𝕜) :
 #align finpartition.mk_mem_non_uniforms_iff Finpartition.mk_mem_non_uniforms_iff
 
 theorem non_uniforms_mono {ε ε' : 𝕜} (h : ε ≤ ε') : P.nonUniforms G ε' ⊆ P.nonUniforms G ε :=
-  (monotone_filter_right _) fun uv => mt <| SimpleGraph.IsUniform.mono h
+  monotone_filter_right _ $ fun uv => mt $ SimpleGraph.IsUniform.mono h
 #align finpartition.non_uniforms_mono Finpartition.non_uniforms_mono
 
 theorem non_uniforms_bot (hε : 0 < ε) : (⊥ : Finpartition A).nonUniforms G ε = ∅ := by
@@ -247,29 +247,29 @@ theorem isUniformOne : P.IsUniform G (1 : 𝕜) := by
 variable {P G}
 
 theorem IsUniform.mono {ε ε' : 𝕜} (hP : P.IsUniform G ε) (h : ε ≤ ε') : P.IsUniform G ε' :=
-  ((Nat.cast_le.2 <| card_le_of_subset <| P.non_uniforms_mono G h).trans hP).trans <|
-    mul_le_mul_of_nonneg_left h <| Nat.cast_nonneg _
+  ((Nat.cast_le.2 $ card_le_of_subset $ P.non_uniforms_mono G h).trans hP).trans $
+    mul_le_mul_of_nonneg_left h $ Nat.cast_nonneg _
 #align finpartition.is_uniform.mono Finpartition.IsUniform.mono
 
 theorem isUniformOfEmpty (hP : P.parts = ∅) : P.IsUniform G ε := by simp [is_uniform, hP, non_uniforms]
 #align finpartition.is_uniform_of_empty Finpartition.isUniformOfEmpty
 
 theorem nonempty_of_not_uniform (h : ¬P.IsUniform G ε) : P.parts.Nonempty :=
-  nonempty_of_ne_empty fun h₁ => h <| isUniformOfEmpty h₁
+  nonempty_of_ne_empty $ fun h₁ => h $ isUniformOfEmpty h₁
 #align finpartition.nonempty_of_not_uniform Finpartition.nonempty_of_not_uniform
 
 variable (P G ε) (s : Finset α)
 
 /-- A choice of witnesses of non-uniformity among the parts of a finpartition. -/
 noncomputable def nonuniformWitnesses : Finset (Finset α) :=
-  (P.parts.filter fun t => s ≠ t ∧ ¬G.IsUniform ε s t).image (G.nonuniformWitness ε s)
+  (P.parts.filter $ fun t => s ≠ t ∧ ¬G.IsUniform ε s t).image (G.nonuniformWitness ε s)
 #align finpartition.nonuniform_witnesses Finpartition.nonuniformWitnesses
 
 variable {P G ε s} {t : Finset α}
 
 theorem nonuniform_witness_mem_nonuniform_witnesses (h : ¬G.IsUniform ε s t) (ht : t ∈ P.parts) (hst : s ≠ t) :
     G.nonuniformWitness ε s t ∈ P.nonuniformWitnesses G ε s :=
-  mem_image_of_mem _ <| mem_filter.2 ⟨ht, hst, h⟩
+  mem_image_of_mem _ $ mem_filter.2 ⟨ht, hst, h⟩
 #align finpartition.nonuniform_witness_mem_nonuniform_witnesses Finpartition.nonuniform_witness_mem_nonuniform_witnesses
 
 end Finpartition

@@ -249,11 +249,11 @@ open expNegInvGlue
 
 theorem pos_denom (x) : 0 < expNegInvGlue x + expNegInvGlue (1 - x) :=
   ((@zero_lt_one ℝ _ _).lt_or_lt x).elim (fun hx => add_pos_of_pos_of_nonneg (pos_of_pos hx) (nonneg _)) fun hx =>
-    add_pos_of_nonneg_of_pos (nonneg _) (pos_of_pos <| sub_pos.2 hx)
+    add_pos_of_nonneg_of_pos (nonneg _) (pos_of_pos $ sub_pos.2 hx)
 #align real.smooth_transition.pos_denom Real.smoothTransition.pos_denom
 
 theorem one_of_one_le (h : 1 ≤ x) : smoothTransition x = 1 :=
-  (div_eq_one_iff_eq <| (pos_denom x).ne').2 <| by rw [zero_of_nonpos (sub_nonpos.2 h), add_zero]
+  (div_eq_one_iff_eq $ (pos_denom x).ne').2 $ by rw [zero_of_nonpos (sub_nonpos.2 h), add_zero]
 #align real.smooth_transition.one_of_one_le Real.smoothTransition.one_of_one_le
 
 theorem zero_of_nonpos (h : x ≤ 0) : smoothTransition x = 0 := by rw [smooth_transition, zero_of_nonpos h, zero_div]
@@ -270,7 +270,7 @@ protected theorem one : smoothTransition 1 = 1 :=
 #align real.smooth_transition.one Real.smoothTransition.one
 
 theorem le_one (x : ℝ) : smoothTransition x ≤ 1 :=
-  (div_le_one (pos_denom x)).2 <| le_add_of_nonneg_right (nonneg _)
+  (div_le_one (pos_denom x)).2 $ le_add_of_nonneg_right (nonneg _)
 #align real.smooth_transition.le_one Real.smoothTransition.le_one
 
 theorem nonneg (x : ℝ) : 0 ≤ smoothTransition x :=
@@ -278,7 +278,7 @@ theorem nonneg (x : ℝ) : 0 ≤ smoothTransition x :=
 #align real.smooth_transition.nonneg Real.smoothTransition.nonneg
 
 theorem lt_one_of_lt_one (h : x < 1) : smoothTransition x < 1 :=
-  (div_lt_one <| pos_denom x).2 <| lt_add_of_pos_right _ <| pos_of_pos <| sub_pos.2 h
+  (div_lt_one $ pos_denom x).2 $ lt_add_of_pos_right _ $ pos_of_pos $ sub_pos.2 h
 #align real.smooth_transition.lt_one_of_lt_one Real.smoothTransition.lt_one_of_lt_one
 
 theorem pos_of_pos (h : 0 < x) : 0 < smoothTransition x :=
@@ -286,8 +286,7 @@ theorem pos_of_pos (h : 0 < x) : 0 < smoothTransition x :=
 #align real.smooth_transition.pos_of_pos Real.smoothTransition.pos_of_pos
 
 protected theorem contDiff {n} : ContDiff ℝ n smoothTransition :=
-  (expNegInvGlue.contDiff.div
-      (expNegInvGlue.contDiff.add <| expNegInvGlue.contDiff.comp <| contDiffConst.sub contDiffId))
+  expNegInvGlue.contDiff.div (expNegInvGlue.contDiff.add $ expNegInvGlue.contDiff.comp $ contDiffConst.sub contDiffId) $
     fun x => (pos_denom x).ne'
 #align real.smooth_transition.cont_diff Real.smoothTransition.contDiff
 
@@ -358,7 +357,7 @@ open Real (smoothTransition)
 open Real.smoothTransition Metric
 
 theorem one_of_mem_closed_ball (hx : x ∈ closedBall c f.R) : f x = 1 :=
-  one_of_one_le <| (one_le_div (sub_pos.2 f.r_lt_R)).2 <| sub_le_sub_left hx _
+  one_of_one_le $ (one_le_div (sub_pos.2 f.r_lt_R)).2 $ sub_le_sub_left hx _
 #align cont_diff_bump_of_inner.one_of_mem_closed_ball ContDiffBumpOfInner.one_of_mem_closed_ball
 
 theorem nonneg : 0 ≤ f x :=
@@ -375,15 +374,15 @@ theorem le_one : f x ≤ 1 :=
 #align cont_diff_bump_of_inner.le_one ContDiffBumpOfInner.le_one
 
 theorem pos_of_mem_ball (hx : x ∈ ball c f.r) : 0 < f x :=
-  pos_of_pos <| div_pos (sub_pos.2 hx) (sub_pos.2 f.r_lt_R)
+  pos_of_pos $ div_pos (sub_pos.2 hx) (sub_pos.2 f.r_lt_R)
 #align cont_diff_bump_of_inner.pos_of_mem_ball ContDiffBumpOfInner.pos_of_mem_ball
 
 theorem lt_one_of_lt_dist (h : f.R < dist x c) : f x < 1 :=
-  lt_one_of_lt_one <| (div_lt_one (sub_pos.2 f.r_lt_R)).2 <| sub_lt_sub_left h _
+  lt_one_of_lt_one $ (div_lt_one (sub_pos.2 f.r_lt_R)).2 $ sub_lt_sub_left h _
 #align cont_diff_bump_of_inner.lt_one_of_lt_dist ContDiffBumpOfInner.lt_one_of_lt_dist
 
 theorem zero_of_le_dist (hx : f.r ≤ dist x c) : f x = 0 :=
-  zero_of_nonpos <| div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 hx) (sub_nonneg.2 f.r_lt_R.le)
+  zero_of_nonpos $ div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 hx) (sub_nonneg.2 f.r_lt_R.le)
 #align cont_diff_bump_of_inner.zero_of_le_dist ContDiffBumpOfInner.zero_of_le_dist
 
 theorem support_eq : support (f : E → ℝ) = Metric.ball c f.r := by
@@ -404,7 +403,7 @@ protected theorem has_compact_support [FiniteDimensional ℝ E] : HasCompactSupp
 #align cont_diff_bump_of_inner.has_compact_support ContDiffBumpOfInner.has_compact_support
 
 theorem eventually_eq_one_of_mem_ball (h : x ∈ ball c f.R) : f =ᶠ[𝓝 x] 1 :=
-  ((is_open_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono fun z hz =>
+  ((is_open_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono $ fun z hz =>
     f.one_of_mem_closed_ball (le_of_lt hz)
 #align cont_diff_bump_of_inner.eventually_eq_one_of_mem_ball ContDiffBumpOfInner.eventually_eq_one_of_mem_ball
 
@@ -424,7 +423,7 @@ protected theorem _root_.cont_diff_at.cont_diff_bump {c g : X → E} {f : ∀ x,
     exact cont_diff_at_const.congr_of_eventually_eq this
     
   · refine' real.smooth_transition.cont_diff_at.comp x _
-    refine' (hR.sub <| hg.dist hc hx).div (hR.sub hr) (sub_pos.mpr (f x).r_lt_R).ne'
+    refine' (hR.sub $ hg.dist hc hx).div (hR.sub hr) (sub_pos.mpr (f x).r_lt_R).ne'
     
 #align
   cont_diff_bump_of_inner._root_.cont_diff_at.cont_diff_bump cont_diff_bump_of_inner._root_.cont_diff_at.cont_diff_bump
@@ -465,7 +464,7 @@ theorem normed_def {μ : Measure E} (x : E) : f.normed μ x = f x / ∫ x, f x �
 #align cont_diff_bump_of_inner.normed_def ContDiffBumpOfInner.normed_def
 
 theorem nonneg_normed (x : E) : 0 ≤ f.normed μ x :=
-  div_nonneg f.Nonneg <| integral_nonneg f.nonneg'
+  div_nonneg f.Nonneg $ integral_nonneg f.nonneg'
 #align cont_diff_bump_of_inner.nonneg_normed ContDiffBumpOfInner.nonneg_normed
 
 theorem contDiffNormed {n : ℕ∞} : ContDiff ℝ n (f.normed μ) :=
@@ -616,7 +615,7 @@ theorem eventually_eq_one_of_mem_ball (h : x ∈ Euclidean.ball c f.R) : f =ᶠ[
 #align cont_diff_bump.eventually_eq_one_of_mem_ball ContDiffBump.eventually_eq_one_of_mem_ball
 
 theorem eventually_eq_one : f =ᶠ[𝓝 c] 1 :=
-  f.eventually_eq_one_of_mem_ball <| Euclidean.mem_ball_self f.r_pos
+  f.eventually_eq_one_of_mem_ball $ Euclidean.mem_ball_self f.r_pos
 #align cont_diff_bump.eventually_eq_one ContDiffBump.eventually_eq_one
 
 protected theorem contDiff {n} : ContDiff ℝ n f :=

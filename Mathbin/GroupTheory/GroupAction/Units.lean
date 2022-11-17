@@ -45,7 +45,7 @@ theorem _root_.is_unit.inv_smul [Monoid α] {a : α} (h : IsUnit a) : h.Unit⁻�
 
 @[to_additive]
 instance [Monoid M] [HasSmul M α] [HasFaithfulSmul M α] :
-    HasFaithfulSmul Mˣ α where eq_of_smul_eq_smul u₁ u₂ h := Units.ext <| eq_of_smul_eq_smul h
+    HasFaithfulSmul Mˣ α where eq_of_smul_eq_smul u₁ u₂ h := Units.ext $ eq_of_smul_eq_smul h
 
 @[to_additive]
 instance [Monoid M] [MulAction M α] : MulAction Mˣ α where
@@ -88,8 +88,8 @@ instance mulAction' [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [
   smul g m :=
     ⟨g • (m : M), g⁻¹ • ↑m⁻¹, by rw [smul_mul_smul, Units.mul_inv, mul_right_inv, one_smul], by
       rw [smul_mul_smul, Units.inv_mul, mul_left_inv, one_smul]⟩
-  one_smul m := Units.ext <| one_smul _ _
-  mul_smul g₁ g₂ m := Units.ext <| mul_smul _ _ _
+  one_smul m := Units.ext $ one_smul _ _
+  mul_smul g₁ g₂ m := Units.ext $ mul_smul _ _ _
 #align units.mul_action' Units.mulAction'
 
 @[simp]
@@ -108,13 +108,13 @@ theorem smul_inv [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [IsS
 /-- Transfer `smul_comm_class G H M` to `smul_comm_class G H Mˣ` -/
 instance smul_comm_class' [Group G] [Group H] [Monoid M] [MulAction G M] [SmulCommClass G M M] [MulAction H M]
     [SmulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M] [SmulCommClass G H M] :
-    SmulCommClass G H Mˣ where smul_comm g h m := Units.ext <| smul_comm g h (m : M)
+    SmulCommClass G H Mˣ where smul_comm g h m := Units.ext $ smul_comm g h (m : M)
 #align units.smul_comm_class' Units.smul_comm_class'
 
 /-- Transfer `is_scalar_tower G H M` to `is_scalar_tower G H Mˣ` -/
 instance is_scalar_tower' [HasSmul G H] [Group G] [Group H] [Monoid M] [MulAction G M] [SmulCommClass G M M]
     [MulAction H M] [SmulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M] [IsScalarTower G H M] :
-    IsScalarTower G H Mˣ where smul_assoc g h m := Units.ext <| smul_assoc g h (m : M)
+    IsScalarTower G H Mˣ where smul_assoc g h m := Units.ext $ smul_assoc g h (m : M)
 #align units.is_scalar_tower' Units.is_scalar_tower'
 
 /-- Transfer `is_scalar_tower G M α` to `is_scalar_tower G Mˣ α` -/
@@ -130,8 +130,8 @@ example [Monoid M] [Monoid N] [MulAction M N] [SmulCommClass M N N] [IsScalarTow
 /-- A stronger form of `units.mul_action'`. -/
 instance mulDistribMulAction' [Group G] [Monoid M] [MulDistribMulAction G M] [SmulCommClass G M M]
     [IsScalarTower G M M] : MulDistribMulAction G Mˣ :=
-  { Units.mulAction' with smul := (· • ·), smul_one := fun m => Units.ext <| smul_one _,
-    smul_mul := fun g m₁ m₂ => Units.ext <| smul_mul' _ _ _ }
+  { Units.mulAction' with smul := (· • ·), smul_one := fun m => Units.ext $ smul_one _,
+    smul_mul := fun g m₁ m₂ => Units.ext $ smul_mul' _ _ _ }
 #align units.mul_distrib_mul_action' Units.mulDistribMulAction'
 
 end Units

@@ -70,7 +70,7 @@ theorem map_equiv_refl (α) : mapEquiv f (Equiv.refl α) = Equiv.refl (f α) := 
 
 @[simp]
 theorem map_equiv_symm : (mapEquiv f e).symm = mapEquiv f e.symm :=
-  Equiv.ext <| map_equiv_symm_apply f e
+  Equiv.ext $ map_equiv_symm_apply f e
 #align equiv_functor.map_equiv_symm EquivFunctor.map_equiv_symm
 
 /-- The composition of `map_equiv`s is carried over the `equiv_functor`.
@@ -80,7 +80,7 @@ or `map_comp_map` when not applied.
 @[simp]
 theorem map_equiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
     (mapEquiv f ab).trans (mapEquiv f bc) = mapEquiv f (ab.trans bc) :=
-  Equiv.ext fun x => by simp [map_equiv, map_trans']
+  Equiv.ext $ fun x => by simp [map_equiv, map_trans']
 #align equiv_functor.map_equiv_trans EquivFunctor.map_equiv_trans
 
 end
@@ -98,7 +98,7 @@ instance (priority := 100) ofIsLawfulFunctor (f : Type u₀ → Type u₁) [Func
 
 theorem mapEquiv.injective (f : Type u₀ → Type u₁) [Applicative f] [LawfulApplicative f] {α β : Type u₀}
     (h : ∀ γ, Function.Injective (pure : γ → f γ)) : Function.Injective (@EquivFunctor.mapEquiv f _ α β) :=
-  fun e₁ e₂ H => Equiv.ext fun x => h β (by simpa [EquivFunctor.map] using Equiv.congr_fun H (pure x))
+  fun e₁ e₂ H => Equiv.ext $ fun x => h β (by simpa [EquivFunctor.map] using Equiv.congr_fun H (pure x))
 #align equiv_functor.map_equiv.injective EquivFunctor.mapEquiv.injective
 
 end EquivFunctor

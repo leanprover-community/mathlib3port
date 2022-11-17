@@ -35,6 +35,7 @@ universe u
 
 variable {C : Type u} [SmallCategory C] [HasProducts.{u} C]
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (Z W) -/
 /-- A small category with products is a thin category.
 
 in Lean, a preorder category is one where the morphisms are in Prop, which is weaker than the usual
@@ -42,27 +43,39 @@ notion of a preorder/thin category which says that each homset is subsingleton; 
 rather than providing a `preorder C` instance.
 -/
 instance (priority := 100) : Quiver.IsThin C := fun X Y =>
-  ⟨fun r s => by
-    classical by_contra r_ne_s
-      · rw [Cardinal.two_le_iff]
-        exact ⟨_, _, r_ne_s⟩
+  ⟨fun r s => by classical
+    by_contra r_ne_s
+    have z : (2 : Cardinal) ≤ (#X ⟶ Y) := by
+      rw [Cardinal.two_le_iff]
+      exact ⟨_, _, r_ne_s⟩
+    let md := Σ (Z : C) (W : C), Z ⟶ W
+    let α := #md
+    apply not_le_of_lt (Cardinal.cantor α)
+    let yp : C := ∏ fun f : md => Y
+    trans #X ⟶ yp
+    · apply le_trans (Cardinal.power_le_power_right z)
+      rw [Cardinal.power_def]
+      apply le_of_eq
+      rw [Cardinal.eq]
+      refine' ⟨⟨pi.lift, fun f k => f ≫ pi.π _ k, _, _⟩⟩
+      · intro f
+        ext k
+        simp
         
-      let α := #md
-      let yp : C := ∏ fun f : md => Y
-      · apply le_trans (Cardinal.power_le_power_right z)
-        rw [Cardinal.power_def]
-        apply le_of_eq
-        rw [Cardinal.eq]
-        refine' ⟨⟨pi.lift, fun f k => f ≫ pi.π _ k, _, _⟩⟩
-        · intro f
-          ext k
-          simp
-          
-        · intro f
-          ext ⟨j⟩
-          simp
-          
-        ⟩
+      · intro f
+        ext ⟨j⟩
+        simp
+        
+      
+    · apply Cardinal.mk_le_of_injective _
+      · intro f
+        exact ⟨_, _, f⟩
+        
+      · rintro f g k
+        cases k
+        rfl
+        
+      ⟩
 
 end CategoryTheory
 

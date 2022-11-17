@@ -72,7 +72,7 @@ unsafe def lift_to_z (e : expr) : tactic (expr × expr) := do
   return (e', prf)
 #align zify.lift_to_z zify.lift_to_z
 
-attribute [zify] Int.coe_nat_le_coe_nat_iff Int.coe_nat_lt_coe_nat_iff Int.coe_nat_eq_coe_nat_iff
+attribute [zify] Int.ofNat_le Int.ofNat_lt Int.ofNat_inj
 
 end Zify
 
@@ -102,8 +102,7 @@ unsafe def tactic.zify_proof (extra_lems : List simp_arg_type) (h : expr) : tact
 
 section
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- The `zify` tactic is used to shift propositions from `ℕ` to `ℤ`.
 This is often useful since `ℤ` has well-behaved subtraction.
 

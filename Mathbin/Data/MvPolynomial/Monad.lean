@@ -169,7 +169,7 @@ theorem bind₂_C_left : bind₂ (c : R →+* MvPolynomial σ R) = RingHom.id _ 
 
 @[simp]
 theorem bind₂_comp_C (f : R →+* MvPolynomial σ S) : (bind₂ f).comp c = f :=
-  RingHom.ext <| bind₂_C_right _
+  RingHom.ext $ bind₂_C_right _
 #align mv_polynomial.bind₂_comp_C MvPolynomial.bind₂_comp_C
 
 @[simp]
@@ -179,7 +179,7 @@ theorem join₂_map (f : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) : j
 
 @[simp]
 theorem join₂_comp_map (f : R →+* MvPolynomial σ S) : join₂.comp (map f) = bind₂ f :=
-  RingHom.ext <| join₂_map _
+  RingHom.ext $ join₂_map _
 #align mv_polynomial.join₂_comp_map MvPolynomial.join₂_comp_map
 
 theorem aeval_id_rename (f : σ → MvPolynomial τ R) (p : MvPolynomial σ R) : aeval id (rename f p) = aeval f p := by
@@ -221,13 +221,13 @@ theorem bind₂_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* MvPolynomia
 #align mv_polynomial.bind₂_bind₂ MvPolynomial.bind₂_bind₂
 
 theorem rename_comp_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → υ) :
-    (rename g).comp (bind₁ f) = bind₁ fun i => rename g <| f i := by
+    (rename g).comp (bind₁ f) = bind₁ fun i => rename g $ f i := by
   ext1 i
   simp
 #align mv_polynomial.rename_comp_bind₁ MvPolynomial.rename_comp_bind₁
 
 theorem rename_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → υ) (φ : MvPolynomial σ R) :
-    rename g (bind₁ f φ) = bind₁ (fun i => rename g <| f i) φ :=
+    rename g (bind₁ f φ) = bind₁ (fun i => rename g $ f i) φ :=
   AlgHom.congr_fun (rename_comp_bind₁ f g) φ
 #align mv_polynomial.rename_bind₁ MvPolynomial.rename_bind₁
 

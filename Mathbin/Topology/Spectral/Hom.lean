@@ -68,7 +68,7 @@ section
 /-- `spectral_map_class F α β` states that `F` is a type of spectral maps.
 
 You should extend this class when you extend `spectral_map`. -/
-class SpectralMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
+class SpectralMapClass (F : Type _) (α β : outParam $ Type _) [TopologicalSpace α] [TopologicalSpace β] extends
   FunLike F α fun _ => β where
   map_spectral (f : F) : IsSpectralMap f
 #align spectral_map_class SpectralMapClass
@@ -180,22 +180,22 @@ theorem comp_assoc (f : SpectralMap γ δ) (g : SpectralMap β γ) (h : Spectral
 
 @[simp]
 theorem comp_id (f : SpectralMap α β) : f.comp (SpectralMap.id α) = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align spectral_map.comp_id SpectralMap.comp_id
 
 @[simp]
 theorem id_comp (f : SpectralMap α β) : (SpectralMap.id β).comp f = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align spectral_map.id_comp SpectralMap.id_comp
 
 theorem cancel_right {g₁ g₂ : SpectralMap β γ} {f : SpectralMap α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
 #align spectral_map.cancel_right SpectralMap.cancel_right
 
 theorem cancel_left {g : SpectralMap β γ} {f₁ f₂ : SpectralMap α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align spectral_map.cancel_left SpectralMap.cancel_left
 
 end SpectralMap

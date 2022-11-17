@@ -168,11 +168,11 @@ theorem map_add : ∀ x y, v (x + y) ≤ max (v x) (v y) :=
 #align valuation.map_add Valuation.map_add
 
 theorem map_add_le {x y g} (hx : v x ≤ g) (hy : v y ≤ g) : v (x + y) ≤ g :=
-  le_trans (v.map_add x y) <| max_le hx hy
+  le_trans (v.map_add x y) $ max_le hx hy
 #align valuation.map_add_le Valuation.map_add_le
 
 theorem map_add_lt {x y g} (hx : v x < g) (hy : v y < g) : v (x + y) < g :=
-  lt_of_le_of_lt (v.map_add x y) <| max_lt hx hy
+  lt_of_le_of_lt (v.map_add x y) $ max_lt hx hy
 #align valuation.map_add_lt Valuation.map_add_lt
 
 theorem map_sum_le {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i ∈ s, v (f i) ≤ g) :
@@ -241,12 +241,12 @@ theorem comap_apply {S : Type _} [Ring S] (f : S →+* R) (v : Valuation R Γ₀
 
 @[simp]
 theorem comap_id : v.comap (RingHom.id R) = v :=
-  ext fun r => rfl
+  ext $ fun r => rfl
 #align valuation.comap_id Valuation.comap_id
 
 theorem comap_comp {S₁ : Type _} {S₂ : Type _} [Ring S₁] [Ring S₂] (f : S₁ →+* S₂) (g : S₂ →+* R) :
     v.comap (g.comp f) = (v.comap g).comap f :=
-  ext fun r => rfl
+  ext $ fun r => rfl
 #align valuation.comap_comp Valuation.comap_comp
 
 /-- A `≤`-preserving group homomorphism `Γ₀ → Γ'₀` induces a map `valuation R Γ₀ → valuation R Γ'₀`.
@@ -283,7 +283,7 @@ theorem map_sub_swap (x y : R) : v (x - y) = v (y - x) :=
 theorem map_sub (x y : R) : v (x - y) ≤ max (v x) (v y) :=
   calc
     v (x - y) = v (x + -y) := by rw [sub_eq_add_neg]
-    _ ≤ max (v x) (v <| -y) := v.map_add _ _
+    _ ≤ max (v x) (v $ -y) := v.map_add _ _
     _ = max (v x) (v y) := by rw [map_neg]
     
 #align valuation.map_sub Valuation.map_sub
@@ -304,7 +304,7 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
     apply lt_irrefl (v x)
     calc
       v x = v (x + y - y) := by simp
-      _ ≤ max (v <| x + y) (v y) := map_sub _ _ _
+      _ ≤ max (v $ x + y) (v y) := map_sub _ _ _
       _ < v x := max_lt h' vyx
       
     
@@ -549,7 +549,7 @@ theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀] [
        (Term.typeSpec
         ":"
         (Term.proj
-         («term[_]»
+         (Init.Core.«term[_,»
           "["
           [(Term.app (Term.proj `v "." `IsEquiv) [`v'])
            ","
@@ -558,31 +558,40 @@ theorem is_equiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀] [
             [(Term.implicitBinder "{" [`x] [] "}")]
             []
             ","
-            («term_↔_» («term_≤_» (Term.app `v [`x]) "≤" (num "1")) "↔" («term_≤_» (Term.app `v' [`x]) "≤" (num "1"))))
+            (Init.Logic.«term_↔_»
+             (Init.Core.«term_≤_» (Term.app `v [`x]) " ≤ " (num "1"))
+             " ↔ "
+             (Init.Core.«term_≤_» (Term.app `v' [`x]) " ≤ " (num "1"))))
            ","
            (Term.forall
             "∀"
             [(Term.implicitBinder "{" [`x] [] "}")]
             []
             ","
-            («term_↔_» («term_=_» (Term.app `v [`x]) "=" (num "1")) "↔" («term_=_» (Term.app `v' [`x]) "=" (num "1"))))
+            (Init.Logic.«term_↔_»
+             (Init.Core.«term_=_» (Term.app `v [`x]) " = " (num "1"))
+             " ↔ "
+             (Init.Core.«term_=_» (Term.app `v' [`x]) " = " (num "1"))))
            ","
            (Term.forall
             "∀"
             [(Term.implicitBinder "{" [`x] [] "}")]
             []
             ","
-            («term_↔_» («term_<_» (Term.app `v [`x]) "<" (num "1")) "↔" («term_<_» (Term.app `v' [`x]) "<" (num "1"))))
+            (Init.Logic.«term_↔_»
+             (Init.Core.«term_<_» (Term.app `v [`x]) " < " (num "1"))
+             " ↔ "
+             (Init.Core.«term_<_» (Term.app `v' [`x]) " < " (num "1"))))
            ","
            (Term.forall
             "∀"
             [(Term.implicitBinder "{" [`x] [] "}")]
             []
             ","
-            («term_↔_»
-             («term_<_» (Term.app `v [(«term_-_» `x "-" (num "1"))]) "<" (num "1"))
-             "↔"
-             («term_<_» (Term.app `v' [(«term_-_» `x "-" (num "1"))]) "<" (num "1"))))]
+            (Init.Logic.«term_↔_»
+             (Init.Core.«term_<_» (Term.app `v [(Init.Core.«term_-_» `x " - " (num "1"))]) " < " (num "1"))
+             " ↔ "
+             (Init.Core.«term_<_» (Term.app `v' [(Init.Core.«term_-_» `x " - " (num "1"))]) " < " (num "1"))))]
           "]")
          "."
          `Tfae)))
@@ -729,7 +738,7 @@ def supp : Ideal R where
   carrier := { x | v x = 0 }
   zero_mem' := map_zero v
   add_mem' x y hx hy :=
-    le_zero_iff.mp <|
+    le_zero_iff.mp $
       calc
         v (x + y) ≤ max (v x) (v y) := v.map_add x y
         _ ≤ 0 := max_le (le_zero_iff.mpr hx) (le_zero_iff.mpr hy)
@@ -751,7 +760,7 @@ theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = 0 :=
 /-- The support of a valuation is a prime ideal. -/
 instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
   ⟨fun h : v.supp = ⊤ =>
-    one_ne_zero <|
+    one_ne_zero $
       show (1 : Γ₀) = 0 from
         calc
           1 = v 1 := v.map_one.symm
@@ -781,10 +790,10 @@ theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a := by
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
 Note: it's just the function; the valuation is `on_quot hJ`. -/
 def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
-  (Quotient.liftOn' q v) fun a b h =>
+  Quotient.liftOn' q v $ fun a b h =>
     calc
       v a = v (b + -(-a + b)) := by simp
-      _ = v b := v.map_add_supp b <| (Ideal.neg_mem_iff _).2 <| hJ <| QuotientAddGroup.left_rel_apply.mp h
+      _ = v b := v.map_add_supp b $ (Ideal.neg_mem_iff _).2 $ hJ $ QuotientAddGroup.left_rel_apply.mp h
       
 #align valuation.on_quot_val Valuation.onQuotVal
 
@@ -799,11 +808,11 @@ def onQuot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀ where
 
 @[simp]
 theorem on_quot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) : (v.onQuot hJ).comap (Ideal.Quotient.mk J) = v :=
-  ext fun r => rfl
+  ext $ fun r => rfl
 #align valuation.on_quot_comap_eq Valuation.on_quot_comap_eq
 
 theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) : supp (v.comap f) = Ideal.comap f v.supp :=
-  Ideal.ext fun x => by
+  Ideal.ext $ fun x => by
     rw [mem_supp_iff, Ideal.mem_comap, mem_supp_iff]
     rfl
 #align valuation.comap_supp Valuation.comap_supp
@@ -816,7 +825,7 @@ theorem self_le_supp_comap (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) : J ≤
 @[simp]
 theorem comap_on_quot_eq (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
     (v.comap (Ideal.Quotient.mk J)).onQuot (v.self_le_supp_comap J) = v :=
-  ext <| by
+  ext $ by
     rintro ⟨x⟩
     rfl
 #align valuation.comap_on_quot_eq Valuation.comap_on_quot_eq
@@ -1170,10 +1179,10 @@ end AddValuation
 section ValuationNotation
 
 -- mathport name: nat.multiplicative_zero
-localized [DiscreteValuation] notation "ℕₘ₀" => WithZero (Multiplicative ℕ)
+scoped[DiscreteValuation] notation "ℕₘ₀" => WithZero (Multiplicative ℕ)
 
 -- mathport name: int.multiplicative_zero
-localized [DiscreteValuation] notation "ℤₘ₀" => WithZero (Multiplicative ℤ)
+scoped[DiscreteValuation] notation "ℤₘ₀" => WithZero (Multiplicative ℤ)
 
 end ValuationNotation
 

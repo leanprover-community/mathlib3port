@@ -883,7 +883,7 @@ instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [NonUnitalNonAssocSemiring R
     simp [coeff_order_ne_zero, hx, xy]
 
 instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Ring R] [IsDomain R] : IsDomain (HahnSeries Γ R) :=
-  { HahnSeries.no_zero_divisors, HahnSeries.nontrivial, HahnSeries.ring with }
+  { HahnSeries.noZeroDivisors, HahnSeries.nontrivial, HahnSeries.ring with }
 
 @[simp]
 theorem order_mul {Γ} [LinearOrderedCancelAddCommMonoid Γ] [NonUnitalNonAssocSemiring R] [NoZeroDivisors R]
@@ -1035,7 +1035,7 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiring R] (f : Γ ↪o Γ') (hf : ∀
 
 theorem emb_domain_one [NonAssocSemiring R] (f : Γ ↪o Γ') (hf : f 0 = 0) :
     embDomain f (1 : HahnSeries Γ R) = (1 : HahnSeries Γ' R) :=
-  emb_domain_single.trans <| hf.symm ▸ rfl
+  emb_domain_single.trans $ hf.symm ▸ rfl
 #align hahn_series.emb_domain_one HahnSeries.emb_domain_one
 
 /-- Extending the domain of Hahn series is a ring homomorphism. -/
@@ -1129,9 +1129,12 @@ def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R where
   map_mul' f g := by
     ext n
     simp only [PowerSeries.coeff_mul, PowerSeries.coeff_mk, mul_coeff, is_pwo_support]
-    classical refine' sum_filter_ne_zero.symm.trans (((sum_congr _) fun _ _ => rfl).trans sum_filter_ne_zero)
-      simp only [nat.mem_antidiagonal, mem_add_antidiagonal, and_congr_left_iff, mem_filter, mem_support]
-      rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
+    classical
+    refine' sum_filter_ne_zero.symm.trans ((sum_congr _ $ fun _ _ => rfl).trans sum_filter_ne_zero)
+    ext m
+    simp only [nat.mem_antidiagonal, mem_add_antidiagonal, and_congr_left_iff, mem_filter, mem_support]
+    rintro h
+    rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
 #align hahn_series.to_power_series HahnSeries.toPowerSeries
 
 theorem coeff_to_power_series {f : HahnSeries ℕ R} {n : ℕ} : PowerSeries.coeff R n f.toPowerSeries = f.coeff n :=
@@ -1235,10 +1238,14 @@ def toMvPowerSeries {σ : Type _} [Fintype σ] : HahnSeries (σ →₀ ℕ) R �
   map_mul' f g := by
     ext n
     simp only [MvPowerSeries.coeff_mul]
-    classical change (f * g).coeff n = _
-      refine' sum_filter_ne_zero.symm.trans ((sum_congr _ fun _ _ => rfl).trans sum_filter_ne_zero)
-      simp only [and_congr_left_iff, mem_add_antidiagonal, mem_filter, mem_support, Finsupp.mem_antidiagonal]
-      rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
+    classical
+    change (f * g).coeff n = _
+    simp_rw [mul_coeff]
+    refine' sum_filter_ne_zero.symm.trans ((sum_congr _ fun _ _ => rfl).trans sum_filter_ne_zero)
+    ext m
+    simp only [and_congr_left_iff, mem_add_antidiagonal, mem_filter, mem_support, Finsupp.mem_antidiagonal]
+    rintro h
+    rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
 #align hahn_series.to_mv_power_series HahnSeries.toMvPowerSeries
 
 variable {σ : Type _} [Fintype σ]
@@ -1287,7 +1294,7 @@ def ofPowerSeriesAlg : PowerSeries A →ₐ[R] HahnSeries Γ A :=
 #align hahn_series.of_power_series_alg HahnSeries.ofPowerSeriesAlg
 
 instance powerSeriesAlgebra {S : Type _} [CommSemiring S] [Algebra S (PowerSeries R)] : Algebra S (HahnSeries Γ R) :=
-  RingHom.toAlgebra <| (ofPowerSeries Γ R).comp (algebraMap S (PowerSeries R))
+  RingHom.toAlgebra $ (ofPowerSeries Γ R).comp (algebraMap S (PowerSeries R))
 #align hahn_series.power_series_algebra HahnSeries.powerSeriesAlgebra
 
 variable {R} {S : Type _} [CommSemiring S] [Algebra S (PowerSeries R)]
@@ -1423,7 +1430,7 @@ theorem coe_injective : @Function.Injective (SummableFamily Γ R α) (α → Hah
 
 @[ext.1]
 theorem ext {s t : SummableFamily Γ R α} (h : ∀ a : α, s a = t a) : s = t :=
-  coe_injective <| funext h
+  coe_injective $ funext h
 #align hahn_series.summable_family.ext HahnSeries.SummableFamily.ext
 
 instance : Add (SummableFamily Γ R α) :=
@@ -1657,7 +1664,7 @@ variable [PartialOrder Γ] [AddCommMonoid R] {α : Type _}
 def ofFinsupp (f : α →₀ HahnSeries Γ R) : SummableFamily Γ R α where
   toFun := f
   is_pwo_Union_support' := by
-    apply (f.support.is_pwo_bUnion.2 fun a ha => (f a).is_pwo_support).mono
+    apply (f.support.is_pwo_bUnion.2 $ fun a ha => (f a).is_pwo_support).mono
     refine' Set.Union_subset_iff.2 fun a g hg => _
     have haf : a ∈ f.support := by
       rw [Finsupp.mem_support_iff, ← support_nonempty_iff]

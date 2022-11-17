@@ -240,7 +240,7 @@ theorem taylor_mean_remainder {f : ℝ → ℝ} {g g' : ℝ → ℝ} {x x₀ : �
     (hf : ContDiffOn ℝ n f (icc x₀ x)) (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (icc x₀ x)) (ioo x₀ x))
     (gcont : ContinuousOn g (icc x₀ x)) (gdiff : ∀ x_1 : ℝ, x_1 ∈ ioo x₀ x → HasDerivAt g (g' x_1) x_1)
     (g'_ne : ∀ x_1 : ℝ, x_1 ∈ ioo x₀ x → g' x_1 ≠ 0) :
-    ∃ (x' : ℝ)(hx' : x' ∈ ioo x₀ x),
+    ∃ (x' : ℝ) (hx' : x' ∈ ioo x₀ x),
       f x - taylorWithinEval f n (icc x₀ x) x₀ x =
         ((x - x') ^ n / n ! * (g x - g x₀) / g' x') • iteratedDerivWithin (n + 1) f (icc x₀ x) x' :=
   by
@@ -268,7 +268,7 @@ where $P_n f$ denotes the Taylor polynomial of degree $n$ and $f^{(n+1)}$ is the
 derivative. -/
 theorem taylor_mean_remainder_lagrange {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ} (hx : x₀ < x) (hf : ContDiffOn ℝ n f (icc x₀ x))
     (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (icc x₀ x)) (ioo x₀ x)) :
-    ∃ (x' : ℝ)(hx' : x' ∈ ioo x₀ x),
+    ∃ (x' : ℝ) (hx' : x' ∈ ioo x₀ x),
       f x - taylorWithinEval f n (icc x₀ x) x₀ x =
         iteratedDerivWithin (n + 1) f (icc x₀ x) x' * (x - x₀) ^ (n + 1) / (n + 1)! :=
   by
@@ -301,7 +301,7 @@ where $P_n f$ denotes the Taylor polynomial of degree $n$ and $f^{(n+1)}$ is the
 derivative. -/
 theorem taylor_mean_remainder_cauchy {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ} (hx : x₀ < x) (hf : ContDiffOn ℝ n f (icc x₀ x))
     (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (icc x₀ x)) (ioo x₀ x)) :
-    ∃ (x' : ℝ)(hx' : x' ∈ ioo x₀ x),
+    ∃ (x' : ℝ) (hx' : x' ∈ ioo x₀ x),
       f x - taylorWithinEval f n (icc x₀ x) x₀ x =
         iteratedDerivWithin (n + 1) f (icc x₀ x) x' * (x - x') ^ n / n ! * (x - x₀) :=
   by
@@ -381,6 +381,6 @@ theorem exists_taylor_mean_remainder_bound {f : ℝ → E} {a b : ℝ} {n : ℕ}
   intro x hx
   rw [div_mul_eq_mul_div₀]
   refine' taylor_mean_remainder_bound hab hf hx fun y => _
-  exact (hf.continuous_on_iterated_deriv_within rfl.le <| uniqueDiffOnIcc h).norm.le_Sup_image_Icc
+  exact (hf.continuous_on_iterated_deriv_within rfl.le $ uniqueDiffOnIcc h).norm.le_Sup_image_Icc
 #align exists_taylor_mean_remainder_bound exists_taylor_mean_remainder_bound
 

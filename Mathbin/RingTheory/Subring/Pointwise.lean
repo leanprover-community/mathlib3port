@@ -37,11 +37,11 @@ variable [Monoid M] [Ring R] [MulSemiringAction M R]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction M (Subring R) where
   smul a S := S.map (MulSemiringAction.toRingHom _ _ a)
-  one_smul S := (congr_arg (fun f => S.map f) (RingHom.ext <| one_smul M)).trans S.map_id
-  mul_smul a₁ a₂ S := (congr_arg (fun f => S.map f) (RingHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
+  one_smul S := (congr_arg (fun f => S.map f) (RingHom.ext $ one_smul M)).trans S.map_id
+  mul_smul a₁ a₂ S := (congr_arg (fun f => S.map f) (RingHom.ext $ mul_smul _ _)).trans (S.map_map _ _).symm
 #align subring.pointwise_mul_action Subring.pointwiseMulAction
 
-localized [Pointwise] attribute [instance] Subring.pointwiseMulAction
+scoped[Pointwise] attribute [instance] Subring.pointwiseMulAction
 
 open Pointwise
 
@@ -73,7 +73,7 @@ theorem mem_smul_pointwise_iff_exists (m : M) (r : R) (S : Subring R) : r ∈ m 
 #align subring.mem_smul_pointwise_iff_exists Subring.mem_smul_pointwise_iff_exists
 
 instance pointwise_central_scalar [MulSemiringAction Mᵐᵒᵖ R] [IsCentralScalar M R] : IsCentralScalar M (Subring R) :=
-  ⟨fun a S => (congr_arg fun f => S.map f) <| RingHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f => S.map f) $ RingHom.ext $ op_smul_eq_smul _⟩
 #align subring.pointwise_central_scalar Subring.pointwise_central_scalar
 
 end Monoid

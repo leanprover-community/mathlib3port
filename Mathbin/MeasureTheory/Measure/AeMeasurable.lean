@@ -79,7 +79,7 @@ theorem sumMeasure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AeMeasura
     contrapose! hx
     exact subset_to_measurable _ _ hx
   set g : α → β := (⋂ i, s i).piecewise (const α default) f
-  refine' ⟨g, measurableOfRestrictOfRestrictCompl hsm _ _, ae_sum_iff.mpr fun i => _⟩
+  refine' ⟨g, measurableOfRestrictOfRestrictCompl hsm _ _, ae_sum_iff.mpr $ fun i => _⟩
   · rw [restrict_piecewise]
     simp only [Set.restrict, const]
     exact measurableConst
@@ -88,7 +88,7 @@ theorem sumMeasure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AeMeasura
     intro t ht
     refine'
       ⟨⋃ i, (h i).mk f ⁻¹' t ∩ s iᶜ,
-        MeasurableSet.union fun i => (measurable_mk _ ht).inter (measurable_set_to_measurable _ _).compl, _⟩
+        MeasurableSet.union $ fun i => (measurable_mk _ ht).inter (measurable_set_to_measurable _ _).compl, _⟩
     ext ⟨x, hx⟩
     simp only [mem_preimage, mem_Union, Subtype.coe_mk, Set.restrict, mem_inter_iff, mem_compl_iff] at hx⊢
     constructor
@@ -127,13 +127,13 @@ theorem addMeasure {f : α → β} (hμ : AeMeasurable f μ) (hν : AeMeasurable
 @[measurability]
 protected theorem union [Countable ι] {s : ι → Set α} (h : ∀ i, AeMeasurable f (μ.restrict (s i))) :
     AeMeasurable f (μ.restrict (⋃ i, s i)) :=
-  (sumMeasure h).monoMeasure <| restrict_Union_le
+  (sumMeasure h).monoMeasure $ restrict_Union_le
 #align ae_measurable.Union AeMeasurable.union
 
 @[simp]
 theorem _root_.ae_measurable_Union_iff [Countable ι] {s : ι → Set α} :
     AeMeasurable f (μ.restrict (⋃ i, s i)) ↔ ∀ i, AeMeasurable f (μ.restrict (s i)) :=
-  ⟨fun h i => h.monoMeasure <| restrict_mono (subset_Union _ _) le_rfl, AeMeasurable.union⟩
+  ⟨fun h i => h.monoMeasure $ restrict_mono (subset_Union _ _) le_rfl, AeMeasurable.union⟩
 #align ae_measurable._root_.ae_measurable_Union_iff ae_measurable._root_.ae_measurable_Union_iff
 
 @[simp]
@@ -240,8 +240,8 @@ protected theorem nullMeasurable (h : AeMeasurable f μ) : NullMeasurable f μ :
 end AeMeasurable
 
 theorem ae_measurable_interval_oc_iff [LinearOrder α] {f : α → β} {a b : α} :
-    (AeMeasurable f <| μ.restrict <| Ι a b) ↔
-      (AeMeasurable f <| μ.restrict <| ioc a b) ∧ (AeMeasurable f <| μ.restrict <| ioc b a) :=
+    (AeMeasurable f $ μ.restrict $ Ι a b) ↔
+      (AeMeasurable f $ μ.restrict $ ioc a b) ∧ (AeMeasurable f $ μ.restrict $ ioc b a) :=
   by rw [interval_oc_eq_union, ae_measurable_union_iff]
 #align ae_measurable_interval_oc_iff ae_measurable_interval_oc_iff
 
@@ -333,7 +333,7 @@ theorem ae_measurable_indicator_iff {s} (hs : MeasurableSet s) :
   · intro h
     refine' ⟨indicator s (h.mk f), h.measurable_mk.indicator hs, _⟩
     have A : s.indicator f =ᵐ[μ.restrict s] s.indicator (AeMeasurable.mk f h) :=
-      (indicator_ae_eq_restrict hs).trans (h.ae_eq_mk.trans <| (indicator_ae_eq_restrict hs).symm)
+      (indicator_ae_eq_restrict hs).trans (h.ae_eq_mk.trans $ (indicator_ae_eq_restrict hs).symm)
     have B : s.indicator f =ᵐ[μ.restrict (sᶜ)] s.indicator (AeMeasurable.mk f h) :=
       (indicator_ae_eq_restrict_compl hs).trans (indicator_ae_eq_restrict_compl hs).symm
     exact ae_of_ae_restrict_of_ae_restrict_compl _ A B
@@ -346,14 +346,14 @@ theorem AeMeasurable.indicator (hfm : AeMeasurable f μ) {s} (hs : MeasurableSet
 #align ae_measurable.indicator AeMeasurable.indicator
 
 theorem MeasureTheory.Measure.restrict_map_of_ae_measurable {f : α → δ} (hf : AeMeasurable f μ) {s : Set δ}
-    (hs : MeasurableSet s) : (μ.map f).restrict s = (μ.restrict <| f ⁻¹' s).map f :=
+    (hs : MeasurableSet s) : (μ.map f).restrict s = (μ.restrict $ f ⁻¹' s).map f :=
   calc
     (μ.map f).restrict s = (μ.map (hf.mk f)).restrict s := by
       congr 1
       apply measure.map_congr hf.ae_eq_mk
-    _ = (μ.restrict <| hf.mk f ⁻¹' s).map (hf.mk f) := Measure.restrict_map hf.measurableMk hs
-    _ = (μ.restrict <| hf.mk f ⁻¹' s).map f := Measure.map_congr (ae_restrict_of_ae hf.ae_eq_mk.symm)
-    _ = (μ.restrict <| f ⁻¹' s).map f := by
+    _ = (μ.restrict $ hf.mk f ⁻¹' s).map (hf.mk f) := Measure.restrict_map hf.measurableMk hs
+    _ = (μ.restrict $ hf.mk f ⁻¹' s).map f := Measure.map_congr (ae_restrict_of_ae hf.ae_eq_mk.symm)
+    _ = (μ.restrict $ f ⁻¹' s).map f := by
       apply congr_arg
       ext1 t ht
       simp only [ht, measure.restrict_apply]

@@ -47,10 +47,10 @@ unsafe def get_block_attrs {γ} : sf → tactic (sf × List (attr γ))
 unsafe def insert_explode {γ} : expr → tactic (List (html (action γ)))
   | expr.const n _ =>
     (do
-        pure <|
+        pure $
             [h "button"
                 [cn "pointer ba br3 mr1",
-                  on_click fun _ => action.effect <| widget.effect.insert_text ("#explode_widget " ++ n),
+                  on_click fun _ => action.effect $ widget.effect.insert_text ("#explode_widget " ++ n),
                   attr.val "title" "explode"]
                 ["💥"]]) <|>
       pure []
@@ -72,12 +72,12 @@ unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address
           let gd_btn ← goto_def_button e
           let epld_btn ← insert_explode e
           pure
-              [tooltip <|
+              [tooltip $
                   h "div" []
                     [h "div" [cn "fr"]
                         (gd_btn ++ epld_btn ++
                           [h "button"
-                              [cn "pointer ba br3 mr1", on_click fun _ => action.effect <| widget.effect.copy_text efmt,
+                              [cn "pointer ba br3 mr1", on_click fun _ => action.effect $ widget.effect.copy_text efmt,
                                 attr.val "title" "copy expression to clipboard"]
                               ["📋"],
                             h "button"
@@ -107,37 +107,37 @@ unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address
 /-- Make an interactive expression. -/
 unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
   let tooltip_comp :=
-    (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) <|
+    (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) $
       component.map_action action.on_tooltip_action tooltip
-  (component.filter_map_action fun _ (a : Sum γ widget.effect) => Sum.casesOn a some fun _ => none) <|
-    (component.with_effects fun _ (a : Sum γ widget.effect) =>
+  (component.filter_map_action fun _ (a : γ ⊕ widget.effect) => Sum.casesOn a some fun _ => none) $
+    (component.with_effects fun _ (a : γ ⊕ widget.effect) =>
         match a with
         | Sum.inl g => []
-        | Sum.inr s => [s]) <|
-      tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure <| (none, none))
+        | Sum.inr s => [s]) $
+      tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure $ (none, none))
         (fun e ⟨ca, sa⟩ act =>
-          pure <|
+          pure $
             match act with
             | action.on_mouse_enter ⟨e, ea⟩ => ((ca, some (e, ea)), none)
             | action.on_mouse_leave_all => ((ca, none), none)
             | action.on_click ⟨e, ea⟩ => if some (e, ea) = ca then ((none, sa), none) else ((some (e, ea), sa), none)
-            | action.on_tooltip_action g => ((none, sa), some <| Sum.inl g)
+            | action.on_tooltip_action g => ((none, sa), some $ Sum.inl g)
             | action.on_close_tooltip => ((none, sa), none)
-            | action.effect e => ((ca, sa), some <| Sum.inr <| e))
+            | action.effect e => ((ca, sa), some $ Sum.inr $ e))
         fun e ⟨ca, sa⟩ => do
         let m ← sf.of_eformat <$> tactic.pp_tagged e
         let m := m.elim_part_apps
         let m := m.flatten
         let m := m.tag_expr [] e
         let v ← view tooltip_comp (Prod.snd <$> ca) (Prod.snd <$> sa) ⟨e, []⟩ m
-        pure <| [h "span" [className "expr", key e, on_mouse_leave fun _ => action.on_mouse_leave_all] <| v]
+        pure $ [h "span" [className "expr", key e, on_mouse_leave fun _ => action.on_mouse_leave_all] $ v]
 #align tactic.explode_widget.mk tactic.explode_widget.mk
 
 /-- Render the implicit arguments for an expression in fancy, little pills. -/
-unsafe def implicit_arg_list (tooltip : tc subexpr Empty) (e : expr) : tactic <| html Empty := do
-  let fn ← mk tooltip <| expr.get_app_fn e
-  let args ← List.mapM (mk tooltip) <| expr.get_app_args e
-  pure <|
+unsafe def implicit_arg_list (tooltip : tc subexpr Empty) (e : expr) : tactic $ html Empty := do
+  let fn ← mk tooltip $ expr.get_app_fn e
+  let args ← List.mapM (mk tooltip) $ expr.get_app_args e
+  pure $
       h "div" []
         (h "span" [className "bg-blue br3 ma1 ph2 white"] [fn] ::
           List.map (fun a => h "span" [className "bg-gray br3 ma1 ph2 white"] [a]) args)
@@ -158,7 +158,7 @@ unsafe def type_tooltip : tc subexpr Empty :=
 unsafe def show_type_component : tc expr Empty :=
   tc.stateless fun x => do
     let y ← infer_type x
-    let y_comp ← mk type_tooltip <| y
+    let y_comp ← mk type_tooltip $ y
     pure y_comp
 #align tactic.explode_widget.show_type_component tactic.explode_widget.show_type_component
 
@@ -181,7 +181,7 @@ unsafe def lookup_lines : entries → Nat → entry
 -/
 unsafe def goal_row (e : expr) (show_expr := true) : tactic (List (html Empty)) := do
   let t ← explode_widget.show_type_component e
-  return <|
+  return $
       [h "td" [cn "ba bg-dark-green tc"] "Goal",
         h "td" [cn "ba tc"] (if show_expr then [html.of_name e, " : ", t] else t)]
 #align tactic.explode_widget.goal_row tactic.explode_widget.goal_row
@@ -189,7 +189,7 @@ unsafe def goal_row (e : expr) (show_expr := true) : tactic (List (html Empty)) 
 /-- Render a row that shows the ID of a goal.
 -/
 unsafe def id_row {γ} (l : Nat) : tactic (List (html γ)) :=
-  return <| [h "td" [cn "ba bg-dark-green tc"] "ID", h "td" [cn "ba tc"] (toString l)]
+  return $ [h "td" [cn "ba bg-dark-green tc"] "ID", h "td" [cn "ba tc"] (toString l)]
 #align tactic.explode_widget.id_row tactic.explode_widget.id_row
 
 /-- Render a row that shows the rule or theorem being applied.
@@ -197,8 +197,8 @@ unsafe def id_row {γ} (l : Nat) : tactic (List (html γ)) :=
 unsafe def rule_row : thm → tactic (List (html Empty))
   | thm.expr e => do
     let t ← explode_widget.show_constant_component e
-    return <| [h "td" [cn "ba bg-dark-green tc"] "Rule", h "td" [cn "ba tc"] t]
-  | t => return <| [h "td" [cn "ba bg-dark-green tc"] "Rule", h "td" [cn "ba tc"] t.toString]
+    return $ [h "td" [cn "ba bg-dark-green tc"] "Rule", h "td" [cn "ba tc"] t]
+  | t => return $ [h "td" [cn "ba bg-dark-green tc"] "Rule", h "td" [cn "ba tc"] t.toString]
 #align tactic.explode_widget.rule_row tactic.explode_widget.rule_row
 
 /-- Render a row that contains the sub-proofs, i.e., the proofs of the
@@ -206,7 +206,7 @@ arguments.
 -/
 unsafe def proof_row {γ} (args : List (html γ)) : List (html γ) :=
   [h "td" [cn "ba bg-dark-green tc"] "Proofs",
-    h "td" [cn "ba tc"] [h "details" [] <| h "summary" [attr.style [("color", "orange")]] "Details" :: args]]
+    h "td" [cn "ba tc"] [h "details" [] $ h "summary" [attr.style [("color", "orange")]] "Details" :: args]]
 #align tactic.explode_widget.proof_row tactic.explode_widget.proof_row
 
 /-- Combine the goal row, id row, rule row and proof row to make them a table.
@@ -222,21 +222,21 @@ unsafe def assemble (es : entries) : entry → tactic (html Empty)
   | ⟨e, l, d, status.sintro, t, ref⟩ => do
     let gr ← goal_row e
     let ir ← id_row l
-    let rr ← rule_row <| thm.string "Assumption"
-    return <| assemble_table gr ir rr []
+    let rr ← rule_row $ thm.string "Assumption"
+    return $ assemble_table gr ir rr []
   | ⟨e, l, d, status.intro, t, ref⟩ => do
     let gr ← goal_row e
     let ir ← id_row l
-    let rr ← rule_row <| thm.string "Assumption"
-    return <| assemble_table gr ir rr []
+    let rr ← rule_row $ thm.string "Assumption"
+    return $ assemble_table gr ir rr []
   | ⟨e, l, d, st, t, ref⟩ => do
     let gr ← goal_row e false
     let ir ← id_row l
     let rr ← rule_row t
     let el : List entry := List.map (lookup_lines es) ref
     let ls ← Monad.mapM assemble el
-    let pr := proof_row <| ls.intersperse (h "br" [] [])
-    return <| assemble_table gr ir rr pr
+    let pr := proof_row $ ls.intersperse (h "br" [] [])
+    return $ assemble_table gr ir rr pr
 #align tactic.explode_widget.assemble tactic.explode_widget.assemble
 
 /-- Render a widget from given entries.
@@ -265,20 +265,19 @@ end ExplodeWidget
 
 open ExplodeWidget
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- User command of the explode widget.
 -/
 @[user_command]
-unsafe def explode_widget_cmd (_ : parse <| tk "#explode_widget") : lean.parser Unit := do
+unsafe def explode_widget_cmd (_ : parse $ tk "#explode_widget") : lean.parser Unit := do
   let ⟨li, co⟩ ← cur_pos
   let n ← ident
   let es ← explode_entries n
   let comp ←
     parser.of_tactic do
         let html ← explode_component es
-        let c ← pure <| component.stateless fun _ => [html]
-        pure <| component.ignore_props <| component.ignore_action <| c
+        let c ← pure $ component.stateless fun _ => [html]
+        pure $ component.ignore_props $ component.ignore_action $ c
   save_widget ⟨li, co - "#explode_widget".length - 1⟩ comp
   trace "successfully rendered widget"
   skip

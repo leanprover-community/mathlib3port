@@ -44,7 +44,7 @@ section
 /-- `continuous_order_hom_class F α β` states that `F` is a type of continuous monotone maps.
 
 You should extend this class when you extend `continuous_order_hom`. -/
-class ContinuousOrderHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β] [TopologicalSpace α]
+class ContinuousOrderHomClass (F : Type _) (α β : outParam $ Type _) [Preorder α] [Preorder β] [TopologicalSpace α]
   [TopologicalSpace β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   map_continuous (f : F) : Continuous f
 #align continuous_order_hom_class ContinuousOrderHomClass
@@ -104,7 +104,7 @@ theorem ext {f g : α →Co β} (h : ∀ a, f a = g a) : f = g :=
 /-- Copy of a `continuous_order_hom` with a new `continuous_map` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (f : α →Co β) (f' : α → β) (h : f' = f) : α →Co β :=
-  ⟨f.toOrderHom.copy f' <| h, h.symm.subst f.continuous_to_fun⟩
+  ⟨f.toOrderHom.copy f' $ h, h.symm.subst f.continuous_to_fun⟩
 #align continuous_order_hom.copy ContinuousOrderHom.copy
 
 variable (α)
@@ -151,20 +151,20 @@ theorem comp_assoc (f : γ →Co δ) (g : β →Co γ) (h : α →Co β) : (f.co
 
 @[simp]
 theorem comp_id (f : α →Co β) : f.comp (ContinuousOrderHom.id α) = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align continuous_order_hom.comp_id ContinuousOrderHom.comp_id
 
 @[simp]
 theorem id_comp (f : α →Co β) : (ContinuousOrderHom.id β).comp f = f :=
-  ext fun a => rfl
+  ext $ fun a => rfl
 #align continuous_order_hom.id_comp ContinuousOrderHom.id_comp
 
 theorem cancel_right {g₁ g₂ : β →Co γ} {f : α →Co β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
 #align continuous_order_hom.cancel_right ContinuousOrderHom.cancel_right
 
 theorem cancel_left {g : β →Co γ} {f₁ f₂ : α →Co β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align continuous_order_hom.cancel_left ContinuousOrderHom.cancel_left
 
 instance : Preorder (α →Co β) :=

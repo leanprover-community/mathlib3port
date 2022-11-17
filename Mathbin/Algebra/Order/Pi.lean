@@ -39,7 +39,7 @@ instance orderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedComm
 @[to_additive]
 instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i)] [∀ i, HasExistsMulOfLe (α i)] :
     HasExistsMulOfLe (∀ i, α i) :=
-  ⟨fun a b h => ⟨fun i => (exists_mul_of_le <| h i).some, funext fun i => (exists_mul_of_le <| h i).some_spec⟩⟩
+  ⟨fun a b h => ⟨fun i => (exists_mul_of_le $ h i).some, funext $ fun i => (exists_mul_of_le $ h i).some_spec⟩⟩
 
 /-- The product of a family of canonically ordered monoids is a canonically ordered monoid. -/
 @[to_additive
@@ -48,7 +48,7 @@ instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i
   { Pi.orderBot, Pi.orderedCommMonoid, Pi.has_exists_mul_of_le with le_self_mul := fun f g i => le_self_mul }
 
 @[to_additive]
-instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] : OrderedCancelCommMonoid (∀ i : I, f i) := by
+instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid $ f i] : OrderedCancelCommMonoid (∀ i : I, f i) := by
   refine_struct
       { Pi.partialOrder, Pi.monoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·), lt := (· < ·),
         npow := Monoid.npow } <;>
@@ -56,7 +56,7 @@ instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] : Order
 #align pi.ordered_cancel_comm_monoid Pi.orderedCancelCommMonoid
 
 @[to_additive]
-instance orderedCommGroup [∀ i, OrderedCommGroup <| f i] : OrderedCommGroup (∀ i : I, f i) :=
+instance orderedCommGroup [∀ i, OrderedCommGroup $ f i] : OrderedCommGroup (∀ i : I, f i) :=
   { Pi.commGroup, Pi.orderedCommMonoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·), lt := (· < ·),
     npow := Monoid.npow }
 #align pi.ordered_comm_group Pi.orderedCommGroup
@@ -64,8 +64,8 @@ instance orderedCommGroup [∀ i, OrderedCommGroup <| f i] : OrderedCommGroup (�
 instance [∀ i, OrderedSemiring (f i)] : OrderedSemiring (∀ i, f i) :=
   { Pi.semiring, Pi.partialOrder with add_le_add_left := fun a b hab c i => add_le_add_left (hab _) _,
     zero_le_one := fun _ => zero_le_one,
-    mul_le_mul_of_nonneg_left := fun a b c hab hc i => mul_le_mul_of_nonneg_left (hab _) <| hc _,
-    mul_le_mul_of_nonneg_right := fun a b c hab hc i => mul_le_mul_of_nonneg_right (hab _) <| hc _ }
+    mul_le_mul_of_nonneg_left := fun a b c hab hc i => mul_le_mul_of_nonneg_left (hab _) $ hc _,
+    mul_le_mul_of_nonneg_right := fun a b c hab hc i => mul_le_mul_of_nonneg_right (hab _) $ hc _ }
 
 instance [∀ i, OrderedCommSemiring (f i)] : OrderedCommSemiring (∀ i, f i) :=
   { Pi.commSemiring, Pi.orderedSemiring with }
@@ -138,14 +138,14 @@ private theorem function_const_pos [Preorder α] : 0 < a → 0 < const ι a :=
 input is. -/
 @[positivity]
 unsafe def positivity_const : expr → tactic strictness
-  | quote.1 (Function.const (%%ₓι) (%%ₓa)) => do
+  | q(Function.const $(ι) $(a)) => do
     let strict_a ← core a
     match strict_a with
       | positive p =>
-        positive <$> to_expr (pquote.1 (function_const_pos (%%ₓι) (%%ₓp))) <|>
-          nonnegative <$> to_expr (pquote.1 (function_const_nonneg_of_pos (%%ₓι) (%%ₓp)))
-      | nonnegative p => nonnegative <$> to_expr (pquote.1 (const_nonneg_of_nonneg (%%ₓι) (%%ₓp)))
-      | nonzero p => nonzero <$> to_expr (pquote.1 (function_const_ne_zero (%%ₓι) (%%ₓp)))
+        positive <$> to_expr ``(function_const_pos $(ι) $(p)) <|>
+          nonnegative <$> to_expr ``(function_const_nonneg_of_pos $(ι) $(p))
+      | nonnegative p => nonnegative <$> to_expr ``(const_nonneg_of_nonneg $(ι) $(p))
+      | nonzero p => nonzero <$> to_expr ``(function_const_ne_zero $(ι) $(p))
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` is not of the form `function.const ι a`"
 #align tactic.positivity_const tactic.positivity_const
 

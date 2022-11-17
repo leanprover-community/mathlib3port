@@ -72,9 +72,9 @@ theorem IsAtom.of_is_atom_coe_Iic {a : Set.iic x} (ha : IsAtom a) : IsAtom (a : 
   ⟨fun con => ha.1 (Subtype.ext con), fun b hba => Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.Prop⟩ hba)⟩
 #align is_atom.of_is_atom_coe_Iic IsAtom.of_is_atom_coe_Iic
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
 theorem is_atom_iff {a : α} : IsAtom a ↔ a ≠ ⊥ ∧ ∀ (b) (_ : b ≠ ⊥), b ≤ a → a ≤ b :=
-  and_congr Iff.rfl <| forall_congr' fun b => by simp only [Ne.def, @not_imp_comm (b = ⊥), not_imp, lt_iff_le_not_le]
+  and_congr Iff.rfl $ forall_congr' $ fun b => by simp only [Ne.def, @not_imp_comm (b = ⊥), not_imp, lt_iff_le_not_le]
 #align is_atom_iff is_atom_iff
 
 end Preorder
@@ -89,7 +89,7 @@ theorem IsAtom.le_iff (h : IsAtom a) : x ≤ a ↔ x = ⊥ ∨ x = a := by rw [l
 #align is_atom.le_iff IsAtom.le_iff
 
 theorem IsAtom.Iic_eq (h : IsAtom a) : Set.iic a = {⊥, a} :=
-  Set.ext fun x => h.le_iff
+  Set.ext $ fun x => h.le_iff
 #align is_atom.Iic_eq IsAtom.Iic_eq
 
 @[simp]
@@ -136,7 +136,7 @@ theorem IsCoatom.of_is_coatom_coe_Ici {a : Set.ici x} (ha : IsCoatom a) : IsCoat
   @IsAtom.of_is_atom_coe_Iic αᵒᵈ _ _ x a ha
 #align is_coatom.of_is_coatom_coe_Ici IsCoatom.of_is_coatom_coe_Ici
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
 theorem is_coatom_iff {a : α} : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ (b) (_ : b ≠ ⊤), a ≤ b → b ≤ a :=
   @is_atom_iff αᵒᵈ _ _ _
 #align is_coatom_iff is_coatom_iff
@@ -257,17 +257,17 @@ theorem is_atomic_iff_forall_is_atomic_Iic [OrderBot α] : IsAtomic α ↔ ∀ x
 #align is_atomic_iff_forall_is_atomic_Iic is_atomic_iff_forall_is_atomic_Iic
 
 theorem is_coatomic_iff_forall_is_coatomic_Ici [OrderTop α] : IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.ici x) :=
-  is_atomic_dual_iff_is_coatomic.symm.trans <|
-    is_atomic_iff_forall_is_atomic_Iic.trans <| forall_congr' fun x => is_coatomic_dual_iff_is_atomic.symm.trans Iff.rfl
+  is_atomic_dual_iff_is_coatomic.symm.trans $
+    is_atomic_iff_forall_is_atomic_Iic.trans $ forall_congr' fun x => is_coatomic_dual_iff_is_atomic.symm.trans Iff.rfl
 #align is_coatomic_iff_forall_is_coatomic_Ici is_coatomic_iff_forall_is_coatomic_Ici
 
 section WellFounded
 
 theorem is_atomic_of_order_bot_well_founded_lt [OrderBot α] (h : WellFounded ((· < ·) : α → α → Prop)) : IsAtomic α :=
   ⟨fun a =>
-    or_iff_not_imp_left.2 fun ha =>
+    or_iff_not_imp_left.2 $ fun ha =>
       let ⟨b, hb, hm⟩ := h.has_min { b | b ≠ ⊥ ∧ b ≤ a } ⟨a, ha, le_rfl⟩
-      ⟨b, ⟨hb.1, fun c => not_imp_not.1 fun hc hl => hm c ⟨hc, hl.le.trans hb.2⟩ hl⟩, hb.2⟩⟩
+      ⟨b, ⟨hb.1, fun c => not_imp_not.1 $ fun hc hl => hm c ⟨hc, hl.le.trans hb.2⟩ hl⟩, hb.2⟩⟩
 #align is_atomic_of_order_bot_well_founded_lt is_atomic_of_order_bot_well_founded_lt
 
 theorem is_coatomic_of_order_top_gt_well_founded [OrderTop α] (h : WellFounded ((· > ·) : α → α → Prop)) :
@@ -534,7 +534,7 @@ instance (priority := 200) {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSi
 protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α] [IsSimpleOrder α] : BooleanAlgebra α :=
   { show BoundedOrder α by infer_instance, IsSimpleOrder.distribLattice with compl := fun x => if x = ⊥ then ⊤ else ⊥,
     sdiff := fun x y => if x = ⊤ ∧ y = ⊥ then ⊤ else ⊥,
-    sdiff_eq := fun x y => by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top, Sdiff.sdiff, compl],
+    sdiff_eq := fun x y => by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top, SDiff.sdiff, compl],
     inf_compl_le_bot := fun x => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp
@@ -665,14 +665,14 @@ theorem is_simple_order_iff_is_coatom_bot [PartialOrder α] [BoundedOrder α] : 
 namespace Set
 
 theorem is_simple_order_Iic_iff_is_atom [PartialOrder α] [OrderBot α] {a : α} : IsSimpleOrder (iic a) ↔ IsAtom a :=
-  is_simple_order_iff_is_atom_top.trans <|
+  is_simple_order_iff_is_atom_top.trans $
     and_congr (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_lt ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 #align set.is_simple_order_Iic_iff_is_atom Set.is_simple_order_Iic_iff_is_atom
 
 theorem is_simple_order_Ici_iff_is_coatom [PartialOrder α] [OrderTop α] {a : α} : IsSimpleOrder (ici a) ↔ IsCoatom a :=
-  is_simple_order_iff_is_coatom_bot.trans <|
+  is_simple_order_iff_is_coatom_bot.trans $
     and_congr (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_lt ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
@@ -711,10 +711,10 @@ theorem is_atom_iff [OrderBot α] [IsAtomic α] [OrderBot β] {l : α → β} {u
   refine' ⟨fun hla => _, fun ha => gi.is_atom_of_u_bot hbot ((h_atom a ha).symm ▸ ha)⟩
   obtain ⟨a', ha', hab'⟩ := (eq_bot_or_exists_atom_le (u (l a))).resolve_left (hbot ▸ fun h => hla.1 (gi.u_injective h))
   have :=
-    (hla.le_iff.mp <| (gi.l_u_eq (l a) ▸ gi.gc.monotone_l hab' : l a' ≤ l a)).resolve_left fun h =>
+    (hla.le_iff.mp $ (gi.l_u_eq (l a) ▸ gi.gc.monotone_l hab' : l a' ≤ l a)).resolve_left fun h =>
       ha'.1 (hbot ▸ h_atom a' ha' ▸ congr_arg u h)
   have haa' : a = a' :=
-    (ha'.le_iff.mp <| (gi.gc.le_u_l a).trans_eq (h_atom a' ha' ▸ congr_arg u this.symm)).resolve_left
+    (ha'.le_iff.mp $ (gi.gc.le_u_l a).trans_eq (h_atom a' ha' ▸ congr_arg u this.symm)).resolve_left
       (mt (congr_arg l) (gi.gc.l_bot.symm ▸ hla.1))
   exact haa'.symm ▸ ha'
 #align galois_insertion.is_atom_iff GaloisInsertion.is_atom_iff
@@ -735,7 +735,7 @@ theorem is_coatom_iff [OrderTop α] [IsCoatomic α] [OrderTop β] {l : α → β
   refine' ⟨fun hb => gi.is_coatom_of_image hb, fun hb => _⟩
   obtain ⟨a, ha, hab⟩ :=
     (eq_top_or_exists_le_coatom (u b)).resolve_left fun h =>
-      hb.1 <| (gi.gc.u_top ▸ gi.l_u_eq ⊤ : l ⊤ = ⊤) ▸ gi.l_u_eq b ▸ congr_arg l h
+      hb.1 $ (gi.gc.u_top ▸ gi.l_u_eq ⊤ : l ⊤ = ⊤) ▸ gi.l_u_eq b ▸ congr_arg l h
   have : l a = b :=
     (hb.le_iff.mp (gi.l_u_eq b ▸ gi.gc.monotone_l hab : b ≤ l a)).resolve_left fun hla =>
       ha.1 (gi.gc.u_top ▸ h_coatom a ha ▸ congr_arg u hla)
@@ -782,7 +782,7 @@ variable [PartialOrder α] [PartialOrder β]
 @[simp]
 theorem is_atom_iff [OrderBot α] [OrderBot β] (f : α ≃o β) (a : α) : IsAtom (f a) ↔ IsAtom a :=
   ⟨f.toGaloisCoinsertion.is_atom_of_image, fun ha =>
-    f.toGaloisInsertion.is_atom_of_u_bot (map_bot f.symm) <| (f.symm_apply_apply a).symm ▸ ha⟩
+    f.toGaloisInsertion.is_atom_of_u_bot (map_bot f.symm) $ (f.symm_apply_apply a).symm ▸ ha⟩
 #align order_iso.is_atom_iff OrderIso.is_atom_iff
 
 @[simp]
@@ -820,7 +820,7 @@ variable {a b : α} (hc : IsCompl a b)
 include hc
 
 theorem is_atom_iff_is_coatom : IsAtom a ↔ IsCoatom b :=
-  Set.is_simple_order_Iic_iff_is_atom.symm.trans <|
+  Set.is_simple_order_Iic_iff_is_atom.symm.trans $
     hc.iicOrderIsoIci.is_simple_order_iff.trans Set.is_simple_order_Ici_iff_is_coatom
 #align is_compl.is_atom_iff_is_coatom IsCompl.is_atom_iff_is_coatom
 

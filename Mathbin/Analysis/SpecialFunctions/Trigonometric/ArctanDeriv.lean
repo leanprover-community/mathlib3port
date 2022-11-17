@@ -38,7 +38,7 @@ theorem tendsto_abs_tan_of_cos_eq_zero {x : ℝ} (hx : cos x = 0) : Tendsto (fun
 #align real.tendsto_abs_tan_of_cos_eq_zero Real.tendsto_abs_tan_of_cos_eq_zero
 
 theorem tendsto_abs_tan_at_top (k : ℤ) : Tendsto (fun x => abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) atTop :=
-  tendsto_abs_tan_of_cos_eq_zero <| cos_eq_zero_iff.2 ⟨k, rfl⟩
+  tendsto_abs_tan_of_cos_eq_zero $ cos_eq_zero_iff.2 ⟨k, rfl⟩
 #align real.tendsto_abs_tan_at_top Real.tendsto_abs_tan_at_top
 
 theorem continuous_at_tan {x : ℝ} : ContinuousAt tan x ↔ cos x ≠ 0 := by
@@ -61,7 +61,7 @@ theorem deriv_tan (x : ℝ) : deriv tan x = 1 / cos x ^ 2 :=
 @[simp]
 theorem cont_diff_at_tan {n x} : ContDiffAt ℝ n tan x ↔ cos x ≠ 0 :=
   ⟨fun h => continuous_at_tan.1 h.ContinuousAt, fun h =>
-    (Complex.cont_diff_at_tan.2 <| by exact_mod_cast h).realOfComplex⟩
+    (Complex.cont_diff_at_tan.2 $ by exact_mod_cast h).realOfComplex⟩
 #align real.cont_diff_at_tan Real.cont_diff_at_tan
 
 theorem hasDerivAtTanOfMemIoo {x : ℝ} (h : x ∈ ioo (-(π / 2) : ℝ) (π / 2)) : HasDerivAt tan (1 / cos x ^ 2) x :=
@@ -92,11 +92,11 @@ theorem differentiableArctan : Differentiable ℝ arctan :=
 
 @[simp]
 theorem deriv_arctan : deriv arctan = fun x => 1 / (1 + x ^ 2) :=
-  funext fun x => (hasDerivAtArctan x).deriv
+  funext $ fun x => (hasDerivAtArctan x).deriv
 #align real.deriv_arctan Real.deriv_arctan
 
 theorem contDiffArctan {n : ℕ∞} : ContDiff ℝ n arctan :=
-  cont_diff_iff_cont_diff_at.2 fun x =>
+  cont_diff_iff_cont_diff_at.2 $ fun x =>
     have : cos (arctan x) ≠ 0 := (cos_arctan_pos x).ne'
     tanLocalHomeomorph.contDiffAtSymmDeriv (by simpa) trivial (hasDerivAtTan this) (cont_diff_at_tan.2 this)
 #align real.cont_diff_arctan Real.contDiffArctan

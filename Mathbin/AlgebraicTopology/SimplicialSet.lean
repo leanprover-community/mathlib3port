@@ -53,7 +53,7 @@ def standardSimplex : SimplexCategory ⥤ SSet :=
 #align sSet.standard_simplex SSet.standardSimplex
 
 -- mathport name: standard_simplex
-localized [Simplicial] notation "Δ[" n "]" => SSet.standardSimplex.obj (SimplexCategory.mk n)
+scoped[Simplicial] notation "Δ[" n "]" => SSet.standardSimplex.obj (SimplexCategory.mk n)
 
 instance : Inhabited SSet :=
   ⟨Δ[0]⟩
@@ -81,7 +81,7 @@ def boundary (n : ℕ) : SSet where
 #align sSet.boundary SSet.boundary
 
 -- mathport name: sSet.boundary
-localized [Simplicial] notation "∂Δ[" n "]" => SSet.boundary n
+scoped[Simplicial] notation "∂Δ[" n "]" => SSet.boundary n
 
 /-- The inclusion of the boundary of the `n`-th standard simplex into that standard simplex. -/
 def boundaryInclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] where app m (α : { α : Δ[n].obj m // _ }) := α
@@ -105,7 +105,7 @@ def horn (n : ℕ) (i : Fin (n + 1)) : SSet where
 #align sSet.horn SSet.horn
 
 -- mathport name: sSet.horn
-localized [Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
+scoped[Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
 
 /-- The inclusion of the `i`-th horn of the `n`-th standard simplex into that standard simplex. -/
 def hornInclusion (n : ℕ) (i : Fin (n + 1)) : Λ[n, i] ⟶ Δ[n] where app m (α : { α : Δ[n].obj m // _ }) := α
@@ -117,9 +117,9 @@ open Simplicial
 
 /-- The simplicial circle. -/
 noncomputable def s1 : SSet :=
-  limits.colimit <|
-    Limits.parallelPair (standardSimplex.map <| SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
-      (standardSimplex.map <| SimplexCategory.δ 1)
+  limits.colimit $
+    Limits.parallelPair (standardSimplex.map $ SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
+      (standardSimplex.map $ SimplexCategory.δ 1)
 #align sSet.S1 SSet.s1
 
 end Examples
@@ -135,7 +135,7 @@ def sk (n : ℕ) : SSet ⥤ SSet.Truncated n :=
 #align sSet.sk SSet.sk
 
 instance {n} : Inhabited (SSet.Truncated n) :=
-  ⟨(sk n).obj <| Δ[0]⟩
+  ⟨(sk n).obj $ Δ[0]⟩
 
 /-- The category of augmented simplicial sets, as a particular case of
 augmented simplicial objects. -/

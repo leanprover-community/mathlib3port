@@ -96,21 +96,21 @@ def _root_.mul_equiv.ulift [Mul α] : ULift α ≃* α :=
 
 @[to_additive]
 instance semigroup [Semigroup α] : Semigroup (ULift α) :=
-  (MulEquiv.ulift.Injective.Semigroup _) fun x y => rfl
+  MulEquiv.ulift.Injective.Semigroup _ $ fun x y => rfl
 #align ulift.semigroup ULift.semigroup
 
 @[to_additive]
 instance commSemigroup [CommSemigroup α] : CommSemigroup (ULift α) :=
-  (Equiv.ulift.Injective.CommSemigroup _) fun x y => rfl
+  Equiv.ulift.Injective.CommSemigroup _ $ fun x y => rfl
 #align ulift.comm_semigroup ULift.commSemigroup
 
 @[to_additive]
 instance mulOneClass [MulOneClass α] : MulOneClass (ULift α) :=
-  (Equiv.ulift.Injective.MulOneClass _ rfl) fun x y => rfl
+  Equiv.ulift.Injective.MulOneClass _ rfl $ fun x y => rfl
 #align ulift.mul_one_class ULift.mulOneClass
 
 instance mulZeroOneClass [MulZeroOneClass α] : MulZeroOneClass (ULift α) :=
-  (Equiv.ulift.Injective.MulZeroOneClass _ rfl rfl) fun x y => rfl
+  Equiv.ulift.Injective.MulZeroOneClass _ rfl rfl $ fun x y => rfl
 #align ulift.mul_zero_one_class ULift.mulZeroOneClass
 
 @[to_additive]

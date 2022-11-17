@@ -88,7 +88,7 @@ theorem realize_relabel {t : L.term α} {g : α → β} {v : β → M} : (t.rela
 #align first_order.language.term.realize_relabel FirstOrder.Language.Term.realize_relabel
 
 @[simp]
-theorem realize_lift_at {n n' m : ℕ} {t : L.term (Sum α (Fin n))} {v : Sum α (Fin (n + n')) → M} :
+theorem realize_lift_at {n n' m : ℕ} {t : L.term (α ⊕ Fin n)} {v : α ⊕ Fin (n + n') → M} :
     (t.liftAt n' m).realize v =
       t.realize (v ∘ Sum.map id fun i => if ↑i < m then Fin.castAdd n' i else Fin.addNat n' i) :=
   realize_relabel
@@ -144,7 +144,7 @@ theorem realize_restrict_var [DecidableEq α] {t : L.term α} {s : Set α} (h : 
 #align first_order.language.term.realize_restrict_var FirstOrder.Language.Term.realize_restrict_var
 
 @[simp]
-theorem realize_restrict_var_left [DecidableEq α] {γ : Type _} {t : L.term (Sum α γ)} {s : Set α}
+theorem realize_restrict_var_left [DecidableEq α] {γ : Type _} {t : L.term (α ⊕ γ)} {s : Set α}
     (h : ↑t.varFinsetLeft ⊆ s) {v : α → M} {xs : γ → M} :
     (t.restrictVarLeft (Set.inclusion h)).realize (Sum.elim (v ∘ coe) xs) = t.realize (Sum.elim v xs) := by
   induction' t with a _ _ _ ih
@@ -179,9 +179,8 @@ theorem realize_constants_to_vars [L[[α]].StructureCat M] [(lhomWithConstants L
 #align first_order.language.term.realize_constants_to_vars FirstOrder.Language.Term.realize_constants_to_vars
 
 @[simp]
-theorem realize_vars_to_constants [L[[α]].StructureCat M] [(lhomWithConstants L α).IsExpansionOn M]
-    {t : L.term (Sum α β)} {v : β → M} : t.varsToConstants.realize v = t.realize (Sum.elim (fun a => ↑(L.con a)) v) :=
-  by
+theorem realize_vars_to_constants [L[[α]].StructureCat M] [(lhomWithConstants L α).IsExpansionOn M] {t : L.term (α ⊕ β)}
+    {v : β → M} : t.varsToConstants.realize v = t.realize (Sum.elim (fun a => ↑(L.con a)) v) := by
   induction' t with ab n f ts ih
   · cases ab <;> simp [language.con]
     
@@ -190,7 +189,7 @@ theorem realize_vars_to_constants [L[[α]].StructureCat M] [(lhomWithConstants L
 #align first_order.language.term.realize_vars_to_constants FirstOrder.Language.Term.realize_vars_to_constants
 
 theorem realize_constants_vars_equiv_left [L[[α]].StructureCat M] [(lhomWithConstants L α).IsExpansionOn M] {n}
-    {t : L[[α]].term (Sum β (Fin n))} {v : β → M} {xs : Fin n → M} :
+    {t : L[[α]].term (β ⊕ Fin n)} {v : β → M} {xs : Fin n → M} :
     (constantsVarsEquivLeft t).realize (Sum.elim (Sum.elim (fun a => ↑(L.con a)) v) xs) = t.realize (Sum.elim v xs) :=
   by
   simp only [constants_vars_equiv_left, realize_relabel, Equiv.coe_trans, Function.comp_apply,
@@ -275,7 +274,7 @@ theorem realize_not : φ.Not.realize v xs ↔ ¬φ.realize v xs :=
 #align first_order.language.bounded_formula.realize_not FirstOrder.Language.BoundedFormula.realize_not
 
 @[simp]
-theorem realize_bd_equal (t₁ t₂ : L.term (Sum α (Fin l))) :
+theorem realize_bd_equal (t₁ t₂ : L.term (α ⊕ Fin l)) :
     (t₁.bdEqual t₂).realize v xs ↔ t₁.realize (Sum.elim v xs) = t₂.realize (Sum.elim v xs) :=
   Iff.rfl
 #align first_order.language.bounded_formula.realize_bd_equal FirstOrder.Language.BoundedFormula.realize_bd_equal
@@ -366,11 +365,10 @@ theorem realize_cast_le_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.Bou
 #align
   first_order.language.bounded_formula.realize_cast_le_of_eq FirstOrder.Language.BoundedFormula.realize_cast_le_of_eq
 
-theorem realize_map_term_rel_id [L'.StructureCat M] {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin n))}
+theorem realize_map_term_rel_id [L'.StructureCat M] {ft : ∀ n, L.term (α ⊕ Fin n) → L'.term (β ⊕ Fin n)}
     {fr : ∀ n, L.Relations n → L'.Relations n} {n} {φ : L.BoundedFormula α n} {v : α → M} {v' : β → M} {xs : Fin n → M}
     (h1 :
-      ∀ (n) (t : L.term (Sum α (Fin n))) (xs : Fin n → M),
-        (ft n t).realize (Sum.elim v' xs) = t.realize (Sum.elim v xs))
+      ∀ (n) (t : L.term (α ⊕ Fin n)) (xs : Fin n → M), (ft n t).realize (Sum.elim v' xs) = t.realize (Sum.elim v xs))
     (h2 : ∀ (n) (R : L.Relations n) (x : Fin n → M), RelMap (fr n R) x = RelMap R x) :
     (φ.mapTermRel ft fr fun _ => id).realize v' xs ↔ φ.realize v xs := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih
@@ -388,10 +386,10 @@ theorem realize_map_term_rel_id [L'.StructureCat M] {ft : ∀ n, L.term (Sum α 
   first_order.language.bounded_formula.realize_map_term_rel_id FirstOrder.Language.BoundedFormula.realize_map_term_rel_id
 
 theorem realize_map_term_rel_add_cast_le [L'.StructureCat M] {k : ℕ}
-    {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin (k + n)))} {fr : ∀ n, L.Relations n → L'.Relations n} {n}
+    {ft : ∀ n, L.term (α ⊕ Fin n) → L'.term (β ⊕ Fin (k + n))} {fr : ∀ n, L.Relations n → L'.Relations n} {n}
     {φ : L.BoundedFormula α n} (v : ∀ {n}, (Fin (k + n) → M) → α → M) {v' : β → M} (xs : Fin (k + n) → M)
     (h1 :
-      ∀ (n) (t : L.term (Sum α (Fin n))) (xs' : Fin (k + n) → M),
+      ∀ (n) (t : L.term (α ⊕ Fin n)) (xs' : Fin (k + n) → M),
         (ft n t).realize (Sum.elim v' xs') = t.realize (Sum.elim (v xs') (xs' ∘ Fin.natAdd _)))
     (h2 : ∀ (n) (R : L.Relations n) (x : Fin n → M), RelMap (fr n R) x = RelMap R x)
     (hv : ∀ (n) (xs : Fin (k + n) → M) (x : M), @v (n + 1) (snoc xs x : Fin _ → M) = v xs) :
@@ -412,8 +410,7 @@ theorem realize_map_term_rel_add_cast_le [L'.StructureCat M] {k : ℕ}
 #align
   first_order.language.bounded_formula.realize_map_term_rel_add_cast_le FirstOrder.Language.BoundedFormula.realize_map_term_rel_add_cast_le
 
-theorem realize_relabel {m n : ℕ} {φ : L.BoundedFormula α n} {g : α → Sum β (Fin m)} {v : β → M}
-    {xs : Fin (m + n) → M} :
+theorem realize_relabel {m n : ℕ} {φ : L.BoundedFormula α n} {g : α → β ⊕ Fin m} {v : β → M} {xs : Fin (m + n) → M} :
     (φ.relabel g).realize v xs ↔ φ.realize (Sum.elim v (xs ∘ Fin.castAdd n) ∘ g) (xs ∘ Fin.natAdd m) := by
   rw [relabel, realize_map_term_rel_add_cast_le] <;> intros <;> simp
 #align first_order.language.bounded_formula.realize_relabel FirstOrder.Language.BoundedFormula.realize_relabel
@@ -785,7 +782,7 @@ def ElementarilyEquivalent : Prop :=
 #align first_order.language.elementarily_equivalent FirstOrder.Language.ElementarilyEquivalent
 
 -- mathport name: elementarily_equivalent
-localized [FirstOrder] notation:25 A " ≅[" L "] " B:50 => FirstOrder.Language.ElementarilyEquivalent L A B
+scoped[FirstOrder] notation:25 A " ≅[" L "] " B:50 => FirstOrder.Language.ElementarilyEquivalent L A B
 
 variable {L} {M} {N}
 
@@ -931,7 +928,7 @@ theorem realize_exs {φ : L.BoundedFormula α n} {v : α → M} : φ.exs.realize
 #align first_order.language.bounded_formula.realize_exs FirstOrder.Language.BoundedFormula.realize_exs
 
 @[simp]
-theorem realize_to_formula (φ : L.BoundedFormula α n) (v : Sum α (Fin n) → M) :
+theorem realize_to_formula (φ : L.BoundedFormula α n) (v : α ⊕ Fin n → M) :
     φ.toFormula.realize v ↔ φ.realize (v ∘ Sum.inl) (v ∘ Sum.inr) := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3 a8 a9 a0
   · rfl

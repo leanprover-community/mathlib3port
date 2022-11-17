@@ -91,28 +91,28 @@ variable (lt : α → α → Prop)
 
 @[elab_as_elim]
 theorem ins.induction [DecidableRel lt] {p : Rbnode α → Prop} (t x) (is_leaf : p leaf)
-    (is_red_lt : ∀ (a y b) (hc : CmpUsing lt x y = Ordering.lt) (ih : p a), p (red_node a y b))
-    (is_red_eq : ∀ (a y b) (hc : CmpUsing lt x y = Ordering.eq), p (red_node a y b))
-    (is_red_gt : ∀ (a y b) (hc : CmpUsing lt x y = Ordering.gt) (ih : p b), p (red_node a y b))
+    (is_red_lt : ∀ (a y b) (hc : cmpUsing lt x y = Ordering.lt) (ih : p a), p (red_node a y b))
+    (is_red_eq : ∀ (a y b) (hc : cmpUsing lt x y = Ordering.eq), p (red_node a y b))
+    (is_red_gt : ∀ (a y b) (hc : cmpUsing lt x y = Ordering.gt) (ih : p b), p (red_node a y b))
     (is_black_lt_red :
-      ∀ (a y b) (hc : CmpUsing lt x y = Ordering.lt) (hr : getColor a = red) (ih : p a), p (black_node a y b))
+      ∀ (a y b) (hc : cmpUsing lt x y = Ordering.lt) (hr : getColor a = red) (ih : p a), p (black_node a y b))
     (is_black_lt_not_red :
-      ∀ (a y b) (hc : CmpUsing lt x y = Ordering.lt) (hnr : getColor a ≠ red) (ih : p a), p (black_node a y b))
-    (is_black_eq : ∀ (a y b) (hc : CmpUsing lt x y = Ordering.eq), p (black_node a y b))
+      ∀ (a y b) (hc : cmpUsing lt x y = Ordering.lt) (hnr : getColor a ≠ red) (ih : p a), p (black_node a y b))
+    (is_black_eq : ∀ (a y b) (hc : cmpUsing lt x y = Ordering.eq), p (black_node a y b))
     (is_black_gt_red :
-      ∀ (a y b) (hc : CmpUsing lt x y = Ordering.gt) (hr : getColor b = red) (ih : p b), p (black_node a y b))
+      ∀ (a y b) (hc : cmpUsing lt x y = Ordering.gt) (hr : getColor b = red) (ih : p b), p (black_node a y b))
     (is_black_gt_not_red :
-      ∀ (a y b) (hc : CmpUsing lt x y = Ordering.gt) (hnr : getColor b ≠ red) (ih : p b), p (black_node a y b)) :
+      ∀ (a y b) (hc : cmpUsing lt x y = Ordering.gt) (hnr : getColor b ≠ red) (ih : p b), p (black_node a y b)) :
     p t := by
   induction t
   case leaf => apply is_leaf
   case red_node a y b =>
-  cases h : CmpUsing lt x y
+  cases h : cmpUsing lt x y
   case lt => apply is_red_lt <;> assumption
   case eq => apply is_red_eq <;> assumption
   case gt => apply is_red_gt <;> assumption
   case black_node a y b =>
-  cases h : CmpUsing lt x y
+  cases h : cmpUsing lt x y
   case lt =>
   by_cases get_color a = red
   · apply is_black_lt_red <;> assumption
@@ -253,8 +253,12 @@ theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_mk_insert_result {c t} :
-    IsSearchable lt t none none → IsSearchable lt (mkInsertResult c t) none none := by
-  classical cases c <;> cases t <;> simp [mk_insert_result]
+    IsSearchable lt t none none → IsSearchable lt (mkInsertResult c t) none none := by classical
+  cases c <;> cases t <;> simp [mk_insert_result]
+  · intro h
+    run_tac
+      is_searchable_tactic
+    
 #align rbnode.is_searchable_mk_insert_result Rbnode.is_searchable_mk_insert_result
 
 theorem is_searchable_insert [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
@@ -511,7 +515,7 @@ theorem ite_eq_of_not_lt [DecidableRel lt] [IsStrictOrder α lt] {a b} {β : Typ
 
 attribute [local simp] ite_eq_of_not_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def simp_fi : tactic Unit :=
   sorry
 #align rbnode.simp_fi rbnode.simp_fi
@@ -579,7 +583,7 @@ theorem find_mk_insert_result [DecidableRel lt] (c : Color) (t : Rbnode α) (x :
     find lt (mkInsertResult c t) x = find lt t x := by
   cases t <;> cases c <;> simp [mk_insert_result]
   · simp [find]
-    cases CmpUsing lt x t_val <;> simp [find]
+    cases cmpUsing lt x t_val <;> simp [find]
     
 #align rbnode.find_mk_insert_result Rbnode.find_mk_insert_result
 
@@ -612,21 +616,21 @@ section SimpAuxLemmas
 theorem find_black_eq_find_red [DecidableRel lt] {l y r x} :
     find lt (black_node l y r) x = find lt (red_node l y r) x := by
   simp [find]
-  all_goals cases CmpUsing lt x y <;> simp [find]
+  all_goals cases cmpUsing lt x y <;> simp [find]
 #align rbnode.find_black_eq_find_red Rbnode.find_black_eq_find_red
 
 theorem find_red_of_lt [DecidableRel lt] {l y r x} (h : lt x y) : find lt (red_node l y r) x = find lt l x := by
-  simp [find, CmpUsing, *]
+  simp [find, cmpUsing, *]
 #align rbnode.find_red_of_lt Rbnode.find_red_of_lt
 
 theorem find_red_of_gt [DecidableRel lt] [IsStrictOrder α lt] {l y r x} (h : lt y x) :
     find lt (red_node l y r) x = find lt r x := by
   have := not_lt_of_lt h
-  simp [find, CmpUsing, *]
+  simp [find, cmpUsing, *]
 #align rbnode.find_red_of_gt Rbnode.find_red_of_gt
 
 theorem find_red_of_incomp [DecidableRel lt] {l y r x} (h : ¬lt x y ∧ ¬lt y x) : find lt (red_node l y r) x = some y :=
-  by simp [find, CmpUsing, *]
+  by simp [find, cmpUsing, *]
 #align rbnode.find_red_of_incomp Rbnode.find_red_of_incomp
 
 end SimpAuxLemmas
@@ -659,7 +663,7 @@ theorem find_balance1_lt {l r t v x y lo hi} (h : lt x y) (hl : IsSearchable lt 
     
 #align rbnode.find_balance1_lt Rbnode.find_balance1_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def ins_ne_leaf_tac :=
   sorry
 #align rbnode.ins_ne_leaf_tac rbnode.ins_ne_leaf_tac
@@ -894,7 +898,7 @@ theorem find_ins_of_disj {x y : α} {t : Rbnode α} (hn : lt x y ∨ lt y x) :
   by
   apply ins.induction lt t x <;> intros
   · cases hn
-    all_goals simp [find, ins, CmpUsing, *]
+    all_goals simp [find, ins, cmpUsing, *]
     
   all_goals
   simp at hc
@@ -919,7 +923,7 @@ theorem find_ins_of_disj {x y : α} {t : Rbnode α} (hn : lt x y ∨ lt y x) :
     
   · have ih := ih hs_hs₁ hlt₁ hc
     cases hn
-    · cases hc' : CmpUsing lt y y_1 <;> simp at hc'
+    · cases hc' : cmpUsing lt y y_1 <;> simp at hc'
       · have hsi := is_searchable_ins lt hs_hs₁ hlt₁ (trans_of lt hn hc')
         have := find_balance1_node_lt lt hc' hsi hs_hs₂
         run_tac
@@ -971,7 +975,7 @@ theorem find_ins_of_disj {x y : α} {t : Rbnode α} (hn : lt x y ∨ lt y x) :
       
     · run_tac
         simp_fi
-      cases hc' : CmpUsing lt y y_1 <;> simp at hc'
+      cases hc' : cmpUsing lt y y_1 <;> simp at hc'
       · have hsi := is_searchable_ins lt hs_hs₂ hc hlt₂
         have := find_balance2_node_lt lt hc' hsi hs_hs₁
         run_tac
@@ -1123,7 +1127,9 @@ theorem insert_rb {t : Rbnode α} (x) {c n} (h : IsRedBlack t c n) : InsertRbRes
     
 #align rbnode.insert_rb Rbnode.insert_rb
 
-theorem insert_is_red_black {t : Rbnode α} {c n} (x) : IsRedBlack t c n → ∃ c n, IsRedBlack (insert lt t x) c n := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c n) -/
+theorem insert_is_red_black {t : Rbnode α} {c n} (x) : IsRedBlack t c n → ∃ (c) (n), IsRedBlack (insert lt t x) c n :=
+  by
   intro h
   have := insert_rb lt x h
   cases c <;> simp [insert_rb_result] at this

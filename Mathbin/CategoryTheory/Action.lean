@@ -35,8 +35,8 @@ variable (M : Type _) [Monoid M] (X : Type u) [MulAction M X]
 def actionAsFunctor : SingleObj M ⥤ Type u where
   obj _ := X
   map _ _ := (· • ·)
-  map_id' _ := funext <| MulAction.one_smul
-  map_comp' _ _ _ f g := funext fun x => (smul_smul g f x).symm
+  map_id' _ := funext $ MulAction.one_smul
+  map_comp' _ _ _ f g := funext $ fun x => (smul_smul g f x).symm
 #align category_theory.action_as_functor CategoryTheory.actionAsFunctor
 
 /-- A multiplicative action M ↻ X induces a category strucure on X, where a morphism
@@ -135,8 +135,8 @@ protected theorem comp_val {x y z : ActionCategory M X} (f : x ⟶ y) (g : y ⟶
 #align category_theory.action_category.comp_val CategoryTheory.ActionCategory.comp_val
 
 instance [IsPretransitive M X] [Nonempty X] : IsConnected (ActionCategory M X) :=
-  zigzag_is_connected fun x y =>
-    Relation.ReflTransGen.single <| Or.inl <| nonempty_subtype.mpr (show _ from exists_smul_eq M x.back y.back)
+  zigzag_is_connected $ fun x y =>
+    Relation.ReflTransGen.single $ Or.inl $ nonempty_subtype.mpr (show _ from exists_smul_eq M x.back y.back)
 
 section Group
 
@@ -147,7 +147,7 @@ noncomputable instance : Groupoid (ActionCategory G X) :=
 
 /-- Any subgroup of `G` is a vertex group in its action groupoid. -/
 def endMulEquivSubgroup (H : Subgroup G) : EndCat (objEquiv G (G ⧸ H) ↑(1 : G)) ≃* H :=
-  MulEquiv.trans (stabilizerIsoEnd G ((1 : G) : G ⧸ H)).symm (MulEquiv.subgroupCongr <| stabilizer_quotient H)
+  MulEquiv.trans (stabilizerIsoEnd G ((1 : G) : G ⧸ H)).symm (MulEquiv.subgroupCongr $ stabilizer_quotient H)
 #align category_theory.action_category.End_mul_equiv_subgroup CategoryTheory.ActionCategory.endMulEquivSubgroup
 
 /-- A target vertex `t` and a scalar `g` determine a morphism in the action groupoid. -/

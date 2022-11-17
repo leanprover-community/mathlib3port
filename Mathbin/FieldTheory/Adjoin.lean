@@ -61,9 +61,9 @@ theorem gc : GaloisConnection (adjoin F : Set E → IntermediateField F E) coe :
 
 /-- Galois insertion between `adjoin` and `coe`. -/
 def gi : GaloisInsertion (adjoin F : Set E → IntermediateField F E) coe where
-  choice s hs := (adjoin F s).copy s <| le_antisymm (gc.le_u_l s) hs
+  choice s hs := (adjoin F s).copy s $ le_antisymm (gc.le_u_l s) hs
   gc := IntermediateField.gc
-  le_l_u S := (IntermediateField.gc (S : Set E) (adjoin F S)).1 <| le_rfl
+  le_l_u S := (IntermediateField.gc (S : Set E) (adjoin F S)).1 $ le_rfl
   choice_eq _ _ := copy_eq _ _ _
 #align intermediate_field.gi IntermediateField.gi
 
@@ -135,12 +135,12 @@ theorem coe_Inf (S : Set (IntermediateField F E)) : (↑(inf S) : Set E) = inf (
 
 @[simp]
 theorem Inf_to_subalgebra (S : Set (IntermediateField F E)) : (inf S).toSubalgebra = inf (to_subalgebra '' S) :=
-  SetLike.coe_injective <| by simp [Set.sUnion_image]
+  SetLike.coe_injective $ by simp [Set.sUnion_image]
 #align intermediate_field.Inf_to_subalgebra IntermediateField.Inf_to_subalgebra
 
 @[simp]
 theorem Inf_to_subfield (S : Set (IntermediateField F E)) : (inf S).toSubfield = inf (to_subfield '' S) :=
-  SetLike.coe_injective <| by simp [Set.sUnion_image]
+  SetLike.coe_injective $ by simp [Set.sUnion_image]
 #align intermediate_field.Inf_to_subfield IntermediateField.Inf_to_subfield
 
 @[simp, norm_cast]
@@ -150,12 +150,12 @@ theorem coe_infi {ι : Sort _} (S : ι → IntermediateField F E) : (↑(infi S)
 @[simp]
 theorem infi_to_subalgebra {ι : Sort _} (S : ι → IntermediateField F E) :
     (infi S).toSubalgebra = ⨅ i, (S i).toSubalgebra :=
-  SetLike.coe_injective <| by simp [infi]
+  SetLike.coe_injective $ by simp [infi]
 #align intermediate_field.infi_to_subalgebra IntermediateField.infi_to_subalgebra
 
 @[simp]
 theorem infi_to_subfield {ι : Sort _} (S : ι → IntermediateField F E) : (infi S).toSubfield = ⨅ i, (S i).toSubfield :=
-  SetLike.coe_injective <| by simp [infi]
+  SetLike.coe_injective $ by simp [infi]
 #align intermediate_field.infi_to_subfield IntermediateField.infi_to_subfield
 
 /-- Construct an algebra isomorphism from an equality of intermediate fields -/
@@ -308,7 +308,7 @@ theorem adjoin_empty (F E : Type _) [Field F] [Field E] [Algebra F E] : adjoin F
 
 @[simp]
 theorem adjoin_univ (F E : Type _) [Field F] [Field E] [Algebra F E] : adjoin F (Set.univ : Set E) = ⊤ :=
-  eq_top_iff.mpr <| subset_adjoin _ _
+  eq_top_iff.mpr $ subset_adjoin _ _
 #align intermediate_field.adjoin_univ IntermediateField.adjoin_univ
 
 /-- If `K` is a field with `F ⊆ K` and `S ⊆ K` then `adjoin F S ≤ K`. -/
@@ -583,14 +583,14 @@ theorem exists_finset_of_mem_supr {ι : Type _} {f : ι → IntermediateField F 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem exists_finset_of_mem_supr' {ι : Type _} {f : ι → IntermediateField F E} {x : E} (hx : x ∈ ⨆ i, f i) :
-    ∃ s : Finset (Σi, f i), x ∈ ⨆ i ∈ s, F⟮⟯ :=
+    ∃ s : Finset (Σ i, f i), x ∈ ⨆ i ∈ s, F⟮⟯ :=
   exists_finset_of_mem_supr
     (SetLike.le_def.mp
       (supr_le fun i x h => SetLike.le_def.mp (le_supr_of_le ⟨i, x, h⟩ le_rfl) (mem_adjoin_simple_self F x)) hx)
 #align intermediate_field.exists_finset_of_mem_supr' IntermediateField.exists_finset_of_mem_supr'
 
 theorem exists_finset_of_mem_supr'' {ι : Type _} {f : ι → IntermediateField F E} (h : ∀ i, Algebra.IsAlgebraic F (f i))
-    {x : E} (hx : x ∈ ⨆ i, f i) : ∃ s : Finset (Σi, f i), x ∈ ⨆ i ∈ s, adjoin F ((minpoly F (i.2 : _)).rootSet E) := by
+    {x : E} (hx : x ∈ ⨆ i, f i) : ∃ s : Finset (Σ i, f i), x ∈ ⨆ i ∈ s, adjoin F ((minpoly F (i.2 : _)).rootSet E) := by
   refine'
     exists_finset_of_mem_supr
       (set_like.le_def.mp
@@ -928,7 +928,7 @@ variable (F E K : Type _) [Field F] [Field E] [Field K] [Algebra F E] [Algebra F
 
 /-- Lifts `L → K` of `F → K` -/
 def Lifts :=
-  ΣL : IntermediateField F E, L →ₐ[F] K
+  Σ L : IntermediateField F E, L →ₐ[F] K
 #align intermediate_field.lifts IntermediateField.Lifts
 
 variable {F E K}
@@ -962,7 +962,7 @@ theorem Lifts.eq_of_le {x y : Lifts F E K} (hxy : x ≤ y) (s : x.1) : x.2 s = y
 theorem Lifts.exists_max_two {c : Set (Lifts F E K)} {x y : Lifts F E K} (hc : IsChain (· ≤ ·) c)
     (hx : x ∈ Insert.insert ⊥ c) (hy : y ∈ Insert.insert ⊥ c) :
     ∃ z : Lifts F E K, z ∈ Insert.insert ⊥ c ∧ x ≤ z ∧ y ≤ z := by
-  cases' (hc.insert fun _ _ _ => Or.inl bot_le).Total hx hy with hxy hyx
+  cases' (hc.insert $ fun _ _ _ => Or.inl bot_le).Total hx hy with hxy hyx
   · exact ⟨y, hy, hxy, le_refl y⟩
     
   · exact ⟨x, hx, le_refl x, hyx⟩
@@ -1128,7 +1128,7 @@ theorem sup_to_subalgebra [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional 
       exact (S1 ⊔ S2).zero_mem
       
     · obtain ⟨y, h⟩ := this.mul_inv_cancel hx'
-      exact (congr_arg (· ∈ S1 ⊔ S2) <| eq_inv_of_mul_eq_one_right <| subtype.ext_iff.mp h).mp y.2
+      exact (congr_arg (· ∈ S1 ⊔ S2) $ eq_inv_of_mul_eq_one_right $ subtype.ext_iff.mp h).mp y.2
       
   exact
     isFieldOfIsIntegralOfIsField'
@@ -1178,7 +1178,7 @@ theorem isAlgebraicSupr {ι : Type _} {f : ι → IntermediateField K L} (h : �
   rintro ⟨x, hx⟩
   obtain ⟨s, hx⟩ := exists_finset_of_mem_supr' hx
   rw [is_algebraic_iff, Subtype.coe_mk, ← Subtype.coe_mk x hx, ← is_algebraic_iff]
-  haveI : ∀ i : Σi, f i, FiniteDimensional K K⟮⟯ := fun ⟨i, x⟩ =>
+  haveI : ∀ i : Σ i, f i, FiniteDimensional K K⟮⟯ := fun ⟨i, x⟩ =>
     adjoin.finite_dimensional (is_integral_iff.1 (is_algebraic_iff_is_integral.1 (h i x)))
   apply Algebra.isAlgebraicOfFinite
 #align intermediate_field.is_algebraic_supr IntermediateField.isAlgebraicSupr

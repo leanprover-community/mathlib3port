@@ -149,7 +149,7 @@ theorem id_mem_of_tgt {c d : C} {f : c ⟶ d} (h : f ∈ S.arrows c d) : 𝟙 d 
 
 /-- A subgroupoid seen as a quiver on vertex set `C` -/
 def asWideQuiver : Quiver C :=
-  ⟨fun c d => Subtype <| S.arrows c d⟩
+  ⟨fun c d => Subtype $ S.arrows c d⟩
 #align category_theory.subgroupoid.as_wide_quiver CategoryTheory.Subgroupoid.asWideQuiver
 
 /-- The coercion of a subgroupoid as a groupoid -/
@@ -199,13 +199,15 @@ def vertexSubgroup {c : C} (hc : c ∈ S.objs) : Subgroup (c ⟶ c) where
   inv_mem' f hf := S.inv hf
 #align category_theory.subgroupoid.vertex_subgroup CategoryTheory.Subgroupoid.vertexSubgroup
 
-instance : SetLike (Subgroupoid C) (Σc d : C, c ⟶ d) where
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c d) -/
+instance : SetLike (Subgroupoid C) (Σ (c : C) (d : C), c ⟶ d) where
   coe S := { F | F.2.2 ∈ S.arrows F.1 F.2.1 }
   coe_injective' := fun ⟨S, _, _⟩ ⟨T, _, _⟩ h => by
     ext (c d f)
     apply Set.ext_iff.1 h ⟨c, d, f⟩
 
-theorem mem_iff (S : Subgroupoid C) (F : Σc d, c ⟶ d) : F ∈ S ↔ F.2.2 ∈ S.arrows F.1 F.2.1 :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c d) -/
+theorem mem_iff (S : Subgroupoid C) (F : Σ (c) (d), c ⟶ d) : F ∈ S ↔ F.2.2 ∈ S.arrows F.1 F.2.1 :=
   Iff.rfl
 #align category_theory.subgroupoid.mem_iff CategoryTheory.Subgroupoid.mem_iff
 
@@ -383,7 +385,7 @@ theorem top_is_normal : IsNormal (⊤ : Subgroupoid C) :=
   { wide := fun c => trivial, conj := fun a b c d e => trivial }
 #align category_theory.subgroupoid.top_is_normal CategoryTheory.Subgroupoid.top_is_normal
 
-theorem Inf_is_normal (s : Set <| Subgroupoid C) (sn : ∀ S ∈ s, IsNormal S) : IsNormal (inf s) :=
+theorem Inf_is_normal (s : Set $ Subgroupoid C) (sn : ∀ S ∈ s, IsNormal S) : IsNormal (inf s) :=
   { wide := by
       simp_rw [Inf, mem_Inter₂]
       exact fun c S Ss => (sn S Ss).wide c,
@@ -511,9 +513,10 @@ inductive Map.Arrows (hφ : Function.Injective φ.obj) (S : Subgroupoid C) : ∀
   | im {c d : C} (f : c ⟶ d) (hf : f ∈ S.arrows c d) : map.arrows (φ.obj c) (φ.obj d) (φ.map f)
 #align category_theory.subgroupoid.map.arrows CategoryTheory.Subgroupoid.Map.Arrows
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem Map.arrows_iff (hφ : Function.Injective φ.obj) (S : Subgroupoid C) {c d : D} (f : c ⟶ d) :
     Map.Arrows φ hφ S c d f ↔
-      ∃ (a b : C)(g : a ⟶ b)(ha : φ.obj a = c)(hb : φ.obj b = d)(hg : g ∈ S.arrows a b),
+      ∃ (a : C) (b : C) (g : a ⟶ b) (ha : φ.obj a = c) (hb : φ.obj b = d) (hg : g ∈ S.arrows a b),
         f = eqToHom ha.symm ≫ φ.map g ≫ eqToHom hb :=
   by
   constructor
@@ -545,9 +548,10 @@ def map (hφ : Function.Injective φ.obj) (S : Subgroupoid C) : Subgroupoid D wh
     exact S.mul hf hg
 #align category_theory.subgroupoid.map CategoryTheory.Subgroupoid.map
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem mem_map_iff (hφ : Function.Injective φ.obj) (S : Subgroupoid C) {c d : D} (f : c ⟶ d) :
     f ∈ (map φ hφ S).arrows c d ↔
-      ∃ (a b : C)(g : a ⟶ b)(ha : φ.obj a = c)(hb : φ.obj b = d)(hg : g ∈ S.arrows a b),
+      ∃ (a : C) (b : C) (g : a ⟶ b) (ha : φ.obj a = c) (hb : φ.obj b = d) (hg : g ∈ S.arrows a b),
         f = eqToHom ha.symm ≫ φ.map g ≫ eqToHom hb :=
   Map.arrows_iff φ hφ S f
 #align category_theory.subgroupoid.mem_map_iff CategoryTheory.Subgroupoid.mem_map_iff
@@ -607,9 +611,10 @@ def im (hφ : Function.Injective φ.obj) :=
   map φ hφ ⊤
 #align category_theory.subgroupoid.im CategoryTheory.Subgroupoid.im
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem mem_im_iff (hφ : Function.Injective φ.obj) {c d : D} (f : c ⟶ d) :
     f ∈ (im φ hφ).arrows c d ↔
-      ∃ (a b : C)(g : a ⟶ b)(ha : φ.obj a = c)(hb : φ.obj b = d), f = eqToHom ha.symm ≫ φ.map g ≫ eqToHom hb :=
+      ∃ (a : C) (b : C) (g : a ⟶ b) (ha : φ.obj a = c) (hb : φ.obj b = d), f = eqToHom ha.symm ≫ φ.map g ≫ eqToHom hb :=
   by
   convert map.arrows_iff φ hφ ⊤ f
   simp only [HasTop.top, mem_univ, exists_true_left]
@@ -653,7 +658,7 @@ theorem is_normal_map (hφ : Function.Injective φ.obj) (hφ' : im φ hφ = ⊤)
       cases hφ hb'
       change map.arrows φ hφ S (φ.obj c') (φ.obj c') _
       simp only [eq_to_hom_refl, category.comp_id, category.id_comp, inv_eq_inv]
-      suffices map.arrows φ hφ S (φ.obj c') (φ.obj c') (φ.map <| inv f ≫ γ ≫ f) by
+      suffices map.arrows φ hφ S (φ.obj c') (φ.obj c') (φ.map $ inv f ≫ γ ≫ f) by
         simp only [inv_eq_inv, functor.map_comp, functor.map_inv] at this
         exact this
       · constructor
@@ -749,7 +754,7 @@ def full : Subgroupoid C where
 #align category_theory.subgroupoid.full CategoryTheory.Subgroupoid.full
 
 theorem full_objs : (full D).objs = D :=
-  Set.ext fun _ => ⟨fun ⟨f, h, _⟩ => h, fun h => ⟨𝟙 _, h, h⟩⟩
+  Set.ext $ fun _ => ⟨fun ⟨f, h, _⟩ => h, fun h => ⟨𝟙 _, h, h⟩⟩
 #align category_theory.subgroupoid.full_objs CategoryTheory.Subgroupoid.full_objs
 
 @[simp]

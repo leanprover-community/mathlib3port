@@ -91,7 +91,7 @@ theorem dist_of_re_eq {z w : ℂ} (h : z.re = w.re) : dist z w = dist z.im w.im 
 #align complex.dist_of_re_eq Complex.dist_of_re_eq
 
 theorem nndist_of_re_eq {z w : ℂ} (h : z.re = w.re) : nndist z w = nndist z.im w.im :=
-  Nnreal.eq <| dist_of_re_eq h
+  Nnreal.eq $ dist_of_re_eq h
 #align complex.nndist_of_re_eq Complex.nndist_of_re_eq
 
 theorem edist_of_re_eq {z w : ℂ} (h : z.re = w.re) : edist z w = edist z.im w.im := by
@@ -103,7 +103,7 @@ theorem dist_of_im_eq {z w : ℂ} (h : z.im = w.im) : dist z w = dist z.re w.re 
 #align complex.dist_of_im_eq Complex.dist_of_im_eq
 
 theorem nndist_of_im_eq {z w : ℂ} (h : z.im = w.im) : nndist z w = nndist z.re w.re :=
-  Nnreal.eq <| dist_of_im_eq h
+  Nnreal.eq $ dist_of_im_eq h
 #align complex.nndist_of_im_eq Complex.nndist_of_im_eq
 
 theorem edist_of_im_eq {z w : ℂ} (h : z.im = w.im) : edist z w = edist z.re w.re := by
@@ -116,7 +116,7 @@ theorem dist_conj_self (z : ℂ) : dist (conj z) z = 2 * |z.im| := by
 #align complex.dist_conj_self Complex.dist_conj_self
 
 theorem nndist_conj_self (z : ℂ) : nndist (conj z) z = 2 * Real.nnabs z.im :=
-  Nnreal.eq <| by rw [← dist_nndist, Nnreal.coe_mul, Nnreal.coe_two, Real.coe_nnabs, dist_conj_self]
+  Nnreal.eq $ by rw [← dist_nndist, Nnreal.coe_mul, Nnreal.coe_two, Real.coe_nnabs, dist_conj_self]
 #align complex.nndist_conj_self Complex.nndist_conj_self
 
 theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * |z.im| := by rw [dist_comm, dist_conj_self]
@@ -163,17 +163,17 @@ theorem continuous_norm_sq : Continuous normSq := by simpa [← norm_sq_eq_abs] 
 
 @[simp, norm_cast]
 theorem nnnorm_real (r : ℝ) : ∥(r : ℂ)∥₊ = ∥r∥₊ :=
-  Subtype.ext <| norm_real r
+  Subtype.ext $ norm_real r
 #align complex.nnnorm_real Complex.nnnorm_real
 
 @[simp, norm_cast]
 theorem nnnorm_nat (n : ℕ) : ∥(n : ℂ)∥₊ = n :=
-  Subtype.ext <| by simp
+  Subtype.ext $ by simp
 #align complex.nnnorm_nat Complex.nnnorm_nat
 
 @[simp, norm_cast]
 theorem nnnorm_int (n : ℤ) : ∥(n : ℂ)∥₊ = ∥n∥₊ :=
-  Subtype.ext <| by simp only [coe_nnnorm, norm_int, Int.norm_eq_abs]
+  Subtype.ext $ by simp only [coe_nnnorm, norm_int, Int.norm_eq_abs]
 #align complex.nnnorm_int Complex.nnnorm_int
 
 theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ∥ζ∥₊ = 1 := by
@@ -219,7 +219,7 @@ theorem re_clm_apply (z : ℂ) : (reClm : ℂ → ℝ) z = z.re :=
 
 @[simp]
 theorem re_clm_norm : ∥re_clm∥ = 1 :=
-  le_antisymm (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
+  le_antisymm (LinearMap.mk_continuous_norm_le _ zero_le_one _) $
     calc
       1 = ∥reClm 1∥ := by simp
       _ ≤ ∥re_clm∥ := unit_le_op_norm _ _ (by simp)
@@ -253,7 +253,7 @@ theorem im_clm_apply (z : ℂ) : (imClm : ℂ → ℝ) z = z.im :=
 
 @[simp]
 theorem im_clm_norm : ∥im_clm∥ = 1 :=
-  le_antisymm (LinearMap.mk_continuous_norm_le _ zero_le_one _) <|
+  le_antisymm (LinearMap.mk_continuous_norm_le _ zero_le_one _) $
     calc
       1 = ∥imClm i∥ := by simp
       _ ≤ ∥im_clm∥ := unit_le_op_norm _ _ (by simp)
@@ -313,7 +313,7 @@ theorem dist_conj_comm (z w : ℂ) : dist (conj z) w = dist z (conj w) := by rw 
 #align complex.dist_conj_comm Complex.dist_conj_comm
 
 theorem nndist_conj_comm (z w : ℂ) : nndist (conj z) w = nndist z (conj w) :=
-  Subtype.ext <| dist_conj_comm _ _
+  Subtype.ext $ dist_conj_comm _ _
 #align complex.nndist_conj_comm Complex.nndist_conj_comm
 
 /-- The determinant of `conj_lie`, as a linear map. -/
@@ -339,7 +339,7 @@ theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
 /-- The only continuous ring homomorphisms from `ℂ` to `ℂ` are the identity and the complex
 conjugation. -/
 theorem ring_hom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuous f) : f = RingHom.id ℂ ∨ f = conj := by
-  refine' (real_alg_hom_eq_id_or_conj <| AlgHom.mk' f <| map_real_smul f hf).imp (fun h => _) fun h => _
+  refine' (real_alg_hom_eq_id_or_conj $ AlgHom.mk' f $ map_real_smul f hf).imp (fun h => _) fun h => _
   all_goals
   convert congr_arg AlgHom.toRingHom h
   ext1
@@ -387,7 +387,7 @@ theorem continuous_of_real : Continuous (coe : ℝ → ℂ) :=
 
 /-- The only continuous ring homomorphism from `ℝ` to `ℂ` is the identity. -/
 theorem ring_hom_eq_of_real_of_continuous {f : ℝ →+* ℂ} (h : Continuous f) : f = Complex.ofReal := by
-  convert congr_arg AlgHom.toRingHom (Subsingleton.elim (AlgHom.mk' f <| map_real_smul f h) <| Algebra.ofId ℝ ℂ)
+  convert congr_arg AlgHom.toRingHom (Subsingleton.elim (AlgHom.mk' f $ map_real_smul f h) $ Algebra.ofId ℝ ℂ)
   ext1
   rfl
 #align complex.ring_hom_eq_of_real_of_continuous Complex.ring_hom_eq_of_real_of_continuous
@@ -414,7 +414,7 @@ theorem of_real_clm_norm : ∥of_real_clm∥ = 1 :=
 
 @[simp]
 theorem of_real_clm_nnnorm : ∥of_real_clm∥₊ = 1 :=
-  Subtype.ext <| of_real_clm_norm
+  Subtype.ext $ of_real_clm_norm
 #align complex.of_real_clm_nnnorm Complex.of_real_clm_nnnorm
 
 noncomputable instance : IsROrC ℂ where

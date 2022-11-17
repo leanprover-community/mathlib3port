@@ -93,7 +93,7 @@ instance BoolAlgCat.hasForgetToBoolRing :
 @[simps Functor inverse]
 def boolRingEquivBoolAlg : BoolRingCat ≌ BoolAlgCat :=
   Equivalence.mk (forget₂ BoolRingCat BoolAlgCat) (forget₂ BoolAlgCat BoolRingCat)
-    ((NatIso.ofComponents fun X => BoolRingCat.Iso.mk <| (RingEquiv.asBoolringAsBoolalg X).symm) fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => BoolAlgCat.Iso.mk <| OrderIso.asBoolalgAsBoolring X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => BoolRingCat.Iso.mk $ (RingEquiv.asBoolringAsBoolalg X).symm) $ fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => BoolAlgCat.Iso.mk $ OrderIso.asBoolalgAsBoolring X) $ fun X Y f => rfl)
 #align BoolRing_equiv_BoolAlg boolRingEquivBoolAlg
 

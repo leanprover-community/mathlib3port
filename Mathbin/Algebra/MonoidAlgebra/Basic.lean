@@ -106,9 +106,10 @@ variable [Semiring k] [Mul G]
   whose value at `a` is the sum of `f x * g y` over all pairs `x, y`
   such that `x * y = a`. (Think of the group ring of a group.) -/
 instance : Mul (MonoidAlgebra k G) :=
-  ⟨fun f g => f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => single (a₁ * a₂) (b₁ * b₂)⟩
+  ⟨fun f g => f.Sum $ fun a₁ b₁ => g.Sum $ fun a₂ b₂ => single (a₁ * a₂) (b₁ * b₂)⟩
 
-theorem mul_def {f g : MonoidAlgebra k G} : f * g = f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => single (a₁ * a₂) (b₁ * b₂) :=
+theorem mul_def {f g : MonoidAlgebra k G} :
+    f * g = (f.Sum $ fun a₁ b₁ => g.Sum $ fun a₂ b₂ => single (a₁ * a₂) (b₁ * b₂)) :=
   rfl
 #align monoid_algebra.mul_def MonoidAlgebra.mul_def
 
@@ -204,7 +205,7 @@ variable [Semiring R]
 /-- `lift_nc` as a `ring_hom`, for when `f x` and `g y` commute -/
 def liftNcRingHom (f : k →+* R) (g : G →* R) (h_comm : ∀ x y, Commute (f x) (g y)) : MonoidAlgebra k G →+* R :=
   { liftNc (f : k →+ R) g with toFun := liftNc (f : k →+ R) g, map_one' := lift_nc_one _ _,
-    map_mul' := fun a b => (lift_nc_mul _ _ _ _) fun _ _ _ => h_comm _ _ }
+    map_mul' := fun a b => lift_nc_mul _ _ _ _ $ fun _ _ _ => h_comm _ _ }
 #align monoid_algebra.lift_nc_ring_hom MonoidAlgebra.liftNcRingHom
 
 end Semiring
@@ -301,7 +302,7 @@ variable [Semiring k]
 attribute [local reducible] MonoidAlgebra
 
 theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
-    (f * g) x = f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => if a₁ * a₂ = x then b₁ * b₂ else 0 := by
+    (f * g) x = (f.Sum $ fun a₁ b₁ => g.Sum $ fun a₂ b₂ => if a₁ * a₂ = x then b₁ * b₂ else 0) := by
   rw [mul_def]
   simp only [Finsupp.sum_apply, single_apply]
 #align monoid_algebra.mul_apply MonoidAlgebra.mul_apply
@@ -318,36 +319,39 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        [(Term.instBinder "[" [] (Term.app `Mul [`G]) "]")
         (Term.explicitBinder "(" [`f `g] [":" (Term.app `MonoidAlgebra [`k `G])] [] ")")
         (Term.explicitBinder "(" [`x] [":" `G] [] ")")
-        (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [(«term_×_» `G "×" `G)])] [] ")")
+        (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [(Init.Core.«term_×_» `G " × " `G)])] [] ")")
         (Term.explicitBinder
          "("
          [`hs]
          [":"
           (Term.forall
            "∀"
-           [(Term.implicitBinder "{" [`p] [":" («term_×_» `G "×" `G)] "}")]
+           [(Term.implicitBinder "{" [`p] [":" (Init.Core.«term_×_» `G " × " `G)] "}")]
            []
            ","
-           («term_↔_»
-            («term_∈_» `p "∈" `s)
-            "↔"
-            («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))]
+           (Init.Logic.«term_↔_»
+            (Init.Core.«term_∈_» `p " ∈ " `s)
+            " ↔ "
+            (Init.Core.«term_=_»
+             (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+             " = "
+             `x)))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        («term_=_»
-         (Term.app («term_*_» `f "*" `g) [`x])
-         "="
+        (Init.Core.«term_=_»
+         (Term.app (Init.Core.«term_*_» `f " * " `g) [`x])
+         " = "
          (BigOperators.Algebra.BigOperators.Basic.finset.sum
           "∑"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
           " in "
           `s
           ", "
-          («term_*_»
+          (Init.Core.«term_*_»
            (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-           "*"
+           " * "
            (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))))
       (Command.declValSimple
        ":="
@@ -357,7 +361,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
          (Term.letIdDecl
           `F
           []
-          [(Term.typeSpec ":" (Term.arrow («term_×_» `G "×" `G) "→" `k))]
+          [(Term.typeSpec ":" (Term.arrow (Init.Core.«term_×_» `G " × " `G) "→" `k))]
           ":="
           (Term.fun
            "fun"
@@ -376,14 +380,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                   "exact"
                   (termIfThenElse
                    "if"
-                   («term_=_»
-                    («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
-                    "="
+                   (Init.Core.«term_=_»
+                    (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+                    " = "
                     `x)
                    "then"
-                   («term_*_»
+                   (Init.Core.«term_*_»
                     (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-                    "*"
+                    " * "
                     (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
                    "else"
                    (num "0"))))])))))))
@@ -391,9 +395,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         (calc
          "calc"
          (calcStep
-          («term_=_»
-           (Term.app («term_*_» `f "*" `g) [`x])
-           "="
+          (Init.Core.«term_=_»
+           (Term.app (Init.Core.«term_*_» `f " * " `g) [`x])
+           " = "
            (BigOperators.Algebra.BigOperators.Basic.finset.sum
             "∑"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
@@ -406,13 +410,13 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
              " in "
              (Term.proj `g "." `support)
              ", "
-             (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))))
+             (Term.app `F [(Term.tuple "(" [`a₁ "," [`a₂]] ")")]))))
           ":="
           (Term.app `mul_apply [`f `g `x]))
          [(calcStep
-           («term_=_»
+           (Init.Core.«term_=_»
             (Term.hole "_")
-            "="
+            " = "
             (BigOperators.Algebra.BigOperators.Basic.finset.sum
              "∑"
              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
@@ -423,9 +427,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            ":="
            (Term.proj `Finset.sum_product "." `symm))
           (calcStep
-           («term_=_»
+           (Init.Core.«term_=_»
             (Term.hole "_")
-            "="
+            " = "
             (BigOperators.Algebra.BigOperators.Basic.finset.sum
              "∑"
              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
@@ -439,23 +443,23 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                 "fun"
                 (Term.basicFun
                  [`p]
-                 [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+                 [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
                  "=>"
-                 («term_=_»
-                  («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
-                  "="
+                 (Init.Core.«term_=_»
+                  (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+                  " = "
                   `x)))])
              ", "
-             («term_*_»
+             (Init.Core.«term_*_»
               (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-              "*"
+              " * "
               (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
            ":="
            (Term.proj (Term.app `Finset.sum_filter [(Term.hole "_") (Term.hole "_")]) "." `symm))
           (calcStep
-           («term_=_»
+           (Init.Core.«term_=_»
             (Term.hole "_")
-            "="
+            " = "
             (BigOperators.Algebra.BigOperators.Basic.finset.sum
              "∑"
              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
@@ -466,16 +470,16 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                 "fun"
                 (Term.basicFun
                  [`p]
-                 [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+                 [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
                  "=>"
-                 («term_∧_»
-                  («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
-                  "∧"
-                  («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
+                 (Init.Logic.«term_∧_»
+                  (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "1")) " ∈ " (Term.proj `f "." `support))
+                  " ∧ "
+                  (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "2")) " ∈ " (Term.proj `g "." `support)))))])
              ", "
-             («term_*_»
+             (Init.Core.«term_*_»
               (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-              "*"
+              " * "
               (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
            ":="
            (Term.app
@@ -503,247 +507,24 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                   [])])))
              (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `rfl))]))
           (calcStep
-           («term_=_»
+           (Init.Core.«term_=_»
             (Term.hole "_")
-            "="
+            " = "
             (BigOperators.Algebra.BigOperators.Basic.finset.sum
              "∑"
              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
              " in "
              `s
              ", "
-             («term_*_»
+             (Init.Core.«term_*_»
               (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-              "*"
+              " * "
               (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
            ":="
-           (Term.app
+           (Init.Core.«term_$_»
             (Term.app `sum_subset [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])])
-            [(Term.fun
-              "fun"
-              (Term.basicFun
-               [`p `hps `hp]
-               []
-               "=>"
-               (Term.byTactic
-                "by"
-                (Tactic.tacticSeq
-                 (Tactic.tacticSeq1Indented
-                  [(Tactic.simp
-                    "simp"
-                    []
-                    []
-                    ["only"]
-                    ["["
-                     [(Tactic.simpLemma [] [] `mem_filter)
-                      ","
-                      (Tactic.simpLemma [] [] `mem_support_iff)
-                      ","
-                      (Tactic.simpLemma [] [] `not_and)
-                      ","
-                      (Tactic.simpLemma [] [] `not_not)]
-                     "]"]
-                    [(Tactic.location "at" (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
-                   []
-                   (Classical.«tacticBy_cases_:_»
-                    "by_cases"
-                    [`h1 ":"]
-                    («term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) "=" (num "0")))
-                   []
-                   («tactic___;_»
-                    (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group
-                      (Tactic.rwSeq
-                       "rw"
-                       []
-                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
-                       [])
-                      [])])
-                   []
-                   («tactic___;_»
-                    (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group
-                      (Tactic.rwSeq
-                       "rw"
-                       []
-                       (Tactic.rwRuleSeq
-                        "["
-                        [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
-                        "]")
-                       [])
-                      [])])])))))]))]))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.let
-       "let"
-       (Term.letDecl
-        (Term.letIdDecl
-         `F
-         []
-         [(Term.typeSpec ":" (Term.arrow («term_×_» `G "×" `G) "→" `k))]
-         ":="
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`p]
-           []
-           "=>"
-           (Term.byTactic
-            "by"
-            (Tactic.tacticSeq
-             (Tactic.tacticSeq1Indented
-              [(Tactic.«tactic_<;>_»
-                (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-                "<;>"
-                (Tactic.exact
-                 "exact"
-                 (termIfThenElse
-                  "if"
-                  («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
-                  "then"
-                  («term_*_»
-                   (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-                   "*"
-                   (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
-                  "else"
-                  (num "0"))))])))))))
-       []
-       (calc
-        "calc"
-        (calcStep
-         («term_=_»
-          (Term.app («term_*_» `f "*" `g) [`x])
-          "="
-          (BigOperators.Algebra.BigOperators.Basic.finset.sum
-           "∑"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
-           " in "
-           (Term.proj `f "." `support)
-           ", "
-           (BigOperators.Algebra.BigOperators.Basic.finset.sum
-            "∑"
-            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
-            " in "
-            (Term.proj `g "." `support)
-            ", "
-            (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))))
-         ":="
-         (Term.app `mul_apply [`f `g `x]))
-        [(calcStep
-          («term_=_»
-           (Term.hole "_")
-           "="
-           (BigOperators.Algebra.BigOperators.Basic.finset.sum
-            "∑"
-            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
-            " in "
-            (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
-            ", "
-            (Term.app `F [`p])))
-          ":="
-          (Term.proj `Finset.sum_product "." `symm))
-         (calcStep
-          («term_=_»
-           (Term.hole "_")
-           "="
-           (BigOperators.Algebra.BigOperators.Basic.finset.sum
-            "∑"
-            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
-            " in "
-            (Term.app
-             (Term.proj
-              (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
-              "."
-              `filter)
-             [(Term.fun
-               "fun"
-               (Term.basicFun
-                [`p]
-                [(Term.typeSpec ":" («term_×_» `G "×" `G))]
-                "=>"
-                («term_=_»
-                 («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
-                 "="
-                 `x)))])
-            ", "
-            («term_*_»
-             (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-             "*"
-             (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
-          ":="
-          (Term.proj (Term.app `Finset.sum_filter [(Term.hole "_") (Term.hole "_")]) "." `symm))
-         (calcStep
-          («term_=_»
-           (Term.hole "_")
-           "="
-           (BigOperators.Algebra.BigOperators.Basic.finset.sum
-            "∑"
-            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
-            " in "
-            (Term.app
-             (Term.proj `s "." `filter)
-             [(Term.fun
-               "fun"
-               (Term.basicFun
-                [`p]
-                [(Term.typeSpec ":" («term_×_» `G "×" `G))]
-                "=>"
-                («term_∧_»
-                 («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
-                 "∧"
-                 («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
-            ", "
-            («term_*_»
-             (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-             "*"
-             (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
-          ":="
-          (Term.app
-           `sum_congr
-           [(Term.byTactic
-             "by"
-             (Tactic.tacticSeq
-              (Tactic.tacticSeq1Indented
-               [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
-                []
-                (Tactic.simp
-                 "simp"
-                 []
-                 []
-                 ["only"]
-                 ["["
-                  [(Tactic.simpLemma [] [] `mem_filter)
-                   ","
-                   (Tactic.simpLemma [] [] `mem_product)
-                   ","
-                   (Tactic.simpLemma [] [] `hs)
-                   ","
-                   (Tactic.simpLemma [] [] `and_comm')]
-                  "]"]
-                 [])])))
-            (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `rfl))]))
-         (calcStep
-          («term_=_»
-           (Term.hole "_")
-           "="
-           (BigOperators.Algebra.BigOperators.Basic.finset.sum
-            "∑"
-            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
-            " in "
-            `s
-            ", "
-            («term_*_»
-             (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-             "*"
-             (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
-          ":="
-          (Term.app
-           (Term.app `sum_subset [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])])
-           [(Term.fun
+            " $ "
+            (Term.fun
              "fun"
              (Term.basicFun
               [`p `hps `hp]
@@ -772,7 +553,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                   (Classical.«tacticBy_cases_:_»
                    "by_cases"
                    [`h1 ":"]
-                   («term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) "=" (num "0")))
+                   (Init.Core.«term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) " = " (num "0")))
                   []
                   («tactic___;_»
                    (cdotTk (patternIgnore (token.«·» "·")))
@@ -795,140 +576,183 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                        [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
                        "]")
                       [])
-                     [])])])))))]))]))
+                     [])])])))))))]))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (calc
-       "calc"
-       (calcStep
-        («term_=_»
-         (Term.app («term_*_» `f "*" `g) [`x])
-         "="
-         (BigOperators.Algebra.BigOperators.Basic.finset.sum
-          "∑"
-          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
-          " in "
-          (Term.proj `f "." `support)
-          ", "
-          (BigOperators.Algebra.BigOperators.Basic.finset.sum
-           "∑"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
-           " in "
-           (Term.proj `g "." `support)
-           ", "
-           (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))))
-        ":="
-        (Term.app `mul_apply [`f `g `x]))
-       [(calcStep
-         («term_=_»
-          (Term.hole "_")
-          "="
-          (BigOperators.Algebra.BigOperators.Basic.finset.sum
-           "∑"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
-           " in "
-           (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
-           ", "
-           (Term.app `F [`p])))
+      (Term.let
+       "let"
+       (Term.letDecl
+        (Term.letIdDecl
+         `F
+         []
+         [(Term.typeSpec ":" (Term.arrow (Init.Core.«term_×_» `G " × " `G) "→" `k))]
          ":="
-         (Term.proj `Finset.sum_product "." `symm))
-        (calcStep
-         («term_=_»
-          (Term.hole "_")
-          "="
-          (BigOperators.Algebra.BigOperators.Basic.finset.sum
-           "∑"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
-           " in "
-           (Term.app
-            (Term.proj
-             (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
-             "."
-             `filter)
-            [(Term.fun
-              "fun"
-              (Term.basicFun
-               [`p]
-               [(Term.typeSpec ":" («term_×_» `G "×" `G))]
-               "=>"
-               («term_=_»
-                («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
-                "="
-                `x)))])
-           ", "
-           («term_*_»
-            (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-            "*"
-            (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
-         ":="
-         (Term.proj (Term.app `Finset.sum_filter [(Term.hole "_") (Term.hole "_")]) "." `symm))
-        (calcStep
-         («term_=_»
-          (Term.hole "_")
-          "="
-          (BigOperators.Algebra.BigOperators.Basic.finset.sum
-           "∑"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
-           " in "
-           (Term.app
-            (Term.proj `s "." `filter)
-            [(Term.fun
-              "fun"
-              (Term.basicFun
-               [`p]
-               [(Term.typeSpec ":" («term_×_» `G "×" `G))]
-               "=>"
-               («term_∧_»
-                («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
-                "∧"
-                («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
-           ", "
-           («term_*_»
-            (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-            "*"
-            (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
-         ":="
-         (Term.app
-          `sum_congr
-          [(Term.byTactic
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`p]
+           []
+           "=>"
+           (Term.byTactic
             "by"
             (Tactic.tacticSeq
              (Tactic.tacticSeq1Indented
-              [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
-               []
-               (Tactic.simp
-                "simp"
-                []
-                []
-                ["only"]
-                ["["
-                 [(Tactic.simpLemma [] [] `mem_filter)
-                  ","
-                  (Tactic.simpLemma [] [] `mem_product)
-                  ","
-                  (Tactic.simpLemma [] [] `hs)
-                  ","
-                  (Tactic.simpLemma [] [] `and_comm')]
-                 "]"]
-                [])])))
-           (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `rfl))]))
+              [(Tactic.«tactic_<;>_»
+                (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+                "<;>"
+                (Tactic.exact
+                 "exact"
+                 (termIfThenElse
+                  "if"
+                  (Init.Core.«term_=_»
+                   (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+                   " = "
+                   `x)
+                  "then"
+                  (Init.Core.«term_*_»
+                   (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
+                   " * "
+                   (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
+                  "else"
+                  (num "0"))))])))))))
+       []
+       (calc
+        "calc"
         (calcStep
-         («term_=_»
-          (Term.hole "_")
-          "="
+         (Init.Core.«term_=_»
+          (Term.app (Init.Core.«term_*_» `f " * " `g) [`x])
+          " = "
           (BigOperators.Algebra.BigOperators.Basic.finset.sum
            "∑"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
            " in "
-           `s
+           (Term.proj `f "." `support)
            ", "
-           («term_*_»
-            (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-            "*"
-            (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum
+            "∑"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
+            " in "
+            (Term.proj `g "." `support)
+            ", "
+            (Term.app `F [(Term.tuple "(" [`a₁ "," [`a₂]] ")")]))))
          ":="
-         (Term.app
-          (Term.app `sum_subset [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])])
-          [(Term.fun
+         (Term.app `mul_apply [`f `g `x]))
+        [(calcStep
+          (Init.Core.«term_=_»
+           (Term.hole "_")
+           " = "
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum
+            "∑"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+            " in "
+            (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+            ", "
+            (Term.app `F [`p])))
+          ":="
+          (Term.proj `Finset.sum_product "." `symm))
+         (calcStep
+          (Init.Core.«term_=_»
+           (Term.hole "_")
+           " = "
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum
+            "∑"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+            " in "
+            (Term.app
+             (Term.proj
+              (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+              "."
+              `filter)
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`p]
+                [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
+                "=>"
+                (Init.Core.«term_=_»
+                 (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+                 " = "
+                 `x)))])
+            ", "
+            (Init.Core.«term_*_»
+             (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
+             " * "
+             (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
+          ":="
+          (Term.proj (Term.app `Finset.sum_filter [(Term.hole "_") (Term.hole "_")]) "." `symm))
+         (calcStep
+          (Init.Core.«term_=_»
+           (Term.hole "_")
+           " = "
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum
+            "∑"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+            " in "
+            (Term.app
+             (Term.proj `s "." `filter)
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`p]
+                [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
+                "=>"
+                (Init.Logic.«term_∧_»
+                 (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "1")) " ∈ " (Term.proj `f "." `support))
+                 " ∧ "
+                 (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "2")) " ∈ " (Term.proj `g "." `support)))))])
+            ", "
+            (Init.Core.«term_*_»
+             (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
+             " * "
+             (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
+          ":="
+          (Term.app
+           `sum_congr
+           [(Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+                []
+                (Tactic.simp
+                 "simp"
+                 []
+                 []
+                 ["only"]
+                 ["["
+                  [(Tactic.simpLemma [] [] `mem_filter)
+                   ","
+                   (Tactic.simpLemma [] [] `mem_product)
+                   ","
+                   (Tactic.simpLemma [] [] `hs)
+                   ","
+                   (Tactic.simpLemma [] [] `and_comm')]
+                  "]"]
+                 [])])))
+            (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `rfl))]))
+         (calcStep
+          (Init.Core.«term_=_»
+           (Term.hole "_")
+           " = "
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum
+            "∑"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+            " in "
+            `s
+            ", "
+            (Init.Core.«term_*_»
+             (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
+             " * "
+             (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
+          ":="
+          (Init.Core.«term_$_»
+           (Term.app `sum_subset [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])])
+           " $ "
+           (Term.fun
             "fun"
             (Term.basicFun
              [`p `hps `hp]
@@ -957,7 +781,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                  (Classical.«tacticBy_cases_:_»
                   "by_cases"
                   [`h1 ":"]
-                  («term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) "=" (num "0")))
+                  (Init.Core.«term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) " = " (num "0")))
                  []
                  («tactic___;_»
                   (cdotTk (patternIgnore (token.«·» "·")))
@@ -980,65 +804,250 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                       [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
                       "]")
                      [])
-                    [])])])))))]))])
+                    [])])])))))))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
+      (calc
+       "calc"
+       (calcStep
+        (Init.Core.«term_=_»
+         (Term.app (Init.Core.«term_*_» `f " * " `g) [`x])
+         " = "
+         (BigOperators.Algebra.BigOperators.Basic.finset.sum
+          "∑"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
+          " in "
+          (Term.proj `f "." `support)
+          ", "
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum
+           "∑"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
+           " in "
+           (Term.proj `g "." `support)
+           ", "
+           (Term.app `F [(Term.tuple "(" [`a₁ "," [`a₂]] ")")]))))
+        ":="
+        (Term.app `mul_apply [`f `g `x]))
+       [(calcStep
+         (Init.Core.«term_=_»
+          (Term.hole "_")
+          " = "
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum
+           "∑"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+           " in "
+           (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+           ", "
+           (Term.app `F [`p])))
+         ":="
+         (Term.proj `Finset.sum_product "." `symm))
+        (calcStep
+         (Init.Core.«term_=_»
+          (Term.hole "_")
+          " = "
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum
+           "∑"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+           " in "
+           (Term.app
+            (Term.proj
+             (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+             "."
+             `filter)
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`p]
+               [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
+               "=>"
+               (Init.Core.«term_=_»
+                (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+                " = "
+                `x)))])
+           ", "
+           (Init.Core.«term_*_»
+            (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
+            " * "
+            (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
+         ":="
+         (Term.proj (Term.app `Finset.sum_filter [(Term.hole "_") (Term.hole "_")]) "." `symm))
+        (calcStep
+         (Init.Core.«term_=_»
+          (Term.hole "_")
+          " = "
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum
+           "∑"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+           " in "
+           (Term.app
+            (Term.proj `s "." `filter)
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`p]
+               [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
+               "=>"
+               (Init.Logic.«term_∧_»
+                (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "1")) " ∈ " (Term.proj `f "." `support))
+                " ∧ "
+                (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "2")) " ∈ " (Term.proj `g "." `support)))))])
+           ", "
+           (Init.Core.«term_*_»
+            (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
+            " * "
+            (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
+         ":="
+         (Term.app
+          `sum_congr
+          [(Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+               []
+               (Tactic.simp
+                "simp"
+                []
+                []
+                ["only"]
+                ["["
+                 [(Tactic.simpLemma [] [] `mem_filter)
+                  ","
+                  (Tactic.simpLemma [] [] `mem_product)
+                  ","
+                  (Tactic.simpLemma [] [] `hs)
+                  ","
+                  (Tactic.simpLemma [] [] `and_comm')]
+                 "]"]
+                [])])))
+           (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `rfl))]))
+        (calcStep
+         (Init.Core.«term_=_»
+          (Term.hole "_")
+          " = "
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum
+           "∑"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+           " in "
+           `s
+           ", "
+           (Init.Core.«term_*_»
+            (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
+            " * "
+            (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
+         ":="
+         (Init.Core.«term_$_»
+          (Term.app `sum_subset [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])])
+          " $ "
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`p `hps `hp]
+            []
+            "=>"
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.simp
+                 "simp"
+                 []
+                 []
+                 ["only"]
+                 ["["
+                  [(Tactic.simpLemma [] [] `mem_filter)
+                   ","
+                   (Tactic.simpLemma [] [] `mem_support_iff)
+                   ","
+                   (Tactic.simpLemma [] [] `not_and)
+                   ","
+                   (Tactic.simpLemma [] [] `not_not)]
+                  "]"]
+                 [(Tactic.location "at" (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
+                []
+                (Classical.«tacticBy_cases_:_»
+                 "by_cases"
+                 [`h1 ":"]
+                 (Init.Core.«term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) " = " (num "0")))
+                []
+                («tactic___;_»
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(group
+                   (Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
+                    [])
+                   [])])
+                []
+                («tactic___;_»
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(group
+                   (Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
+                     "]")
+                    [])
+                   [])])])))))))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Init.Core.«term_$_»
        (Term.app `sum_subset [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])])
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [`p `hps `hp]
-          []
-          "=>"
-          (Term.byTactic
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma [] [] `mem_filter)
-                 ","
-                 (Tactic.simpLemma [] [] `mem_support_iff)
-                 ","
-                 (Tactic.simpLemma [] [] `not_and)
-                 ","
-                 (Tactic.simpLemma [] [] `not_not)]
-                "]"]
-               [(Tactic.location "at" (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
+       " $ "
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [`p `hps `hp]
+         []
+         "=>"
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.simp
+              "simp"
               []
-              (Classical.«tacticBy_cases_:_»
-               "by_cases"
-               [`h1 ":"]
-               («term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) "=" (num "0")))
               []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Tactic.rwSeq
-                  "rw"
-                  []
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
-                  [])
-                 [])])
-              []
-              («tactic___;_»
-               (cdotTk (patternIgnore (token.«·» "·")))
-               [(group
-                 (Tactic.rwSeq
-                  "rw"
-                  []
-                  (Tactic.rwRuleSeq
-                   "["
-                   [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
-                   "]")
-                  [])
-                 [])])])))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [] `mem_filter)
+                ","
+                (Tactic.simpLemma [] [] `mem_support_iff)
+                ","
+                (Tactic.simpLemma [] [] `not_and)
+                ","
+                (Tactic.simpLemma [] [] `not_not)]
+               "]"]
+              [(Tactic.location "at" (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
+             []
+             (Classical.«tacticBy_cases_:_»
+              "by_cases"
+              [`h1 ":"]
+              (Init.Core.«term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) " = " (num "0")))
+             []
+             («tactic___;_»
+              (cdotTk (patternIgnore (token.«·» "·")))
+              [(group
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
+                 [])
+                [])])
+             []
+             («tactic___;_»
+              (cdotTk (patternIgnore (token.«·» "·")))
+              [(group
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
+                  "]")
+                 [])
+                [])])]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -1069,7 +1078,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             (Classical.«tacticBy_cases_:_»
              "by_cases"
              [`h1 ":"]
-             («term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) "=" (num "0")))
+             (Init.Core.«term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) " = " (num "0")))
             []
             («tactic___;_»
              (cdotTk (patternIgnore (token.«·» "·")))
@@ -1117,7 +1126,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
           (Classical.«tacticBy_cases_:_»
            "by_cases"
            [`h1 ":"]
-           («term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) "=" (num "0")))
+           (Init.Core.«term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) " = " (num "0")))
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
@@ -1196,9 +1205,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       (Classical.«tacticBy_cases_:_»
        "by_cases"
        [`h1 ":"]
-       («term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) "=" (num "0")))
+       (Init.Core.«term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) " = " (num "0")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) "=" (num "0"))
+      (Init.Core.«term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) " = " (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -1215,7 +1224,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1278,8 +1287,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.app `sum_subset [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
@@ -1301,30 +1310,26 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) []]
+     (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `sum_subset
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     [(Term.app `sum_subset [(Term.paren "(" [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) []] ")")]) []]
-     ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.hole "_")
-       "="
+       " = "
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
         " in "
         `s
         ", "
-        («term_*_»
+        (Init.Core.«term_*_»
          (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-         "*"
+         " * "
          (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -1333,14 +1338,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        " in "
        `s
        ", "
-       («term_*_»
+       (Init.Core.«term_*_»
         (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-        "*"
+        " * "
         (Term.app `g [(Term.proj `p "." (fieldIdx "2"))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_*_»
+      (Init.Core.«term_*_»
        (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-       "*"
+       " * "
        (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `g [(Term.proj `p "." (fieldIdx "2"))])
@@ -1377,7 +1382,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.app
@@ -1492,37 +1497,36 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, tactic) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+     (Term.byTactic
+      "by"
+      (Tactic.tacticSeq
+       (Tactic.tacticSeq1Indented
+        [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+         []
+         (Tactic.simp
+          "simp"
           []
-          (Tactic.simp
-           "simp"
-           []
-           []
-           ["only"]
-           ["["
-            [(Tactic.simpLemma [] [] `mem_filter)
-             ","
-             (Tactic.simpLemma [] [] `mem_product)
-             ","
-             (Tactic.simpLemma [] [] `hs)
-             ","
-             (Tactic.simpLemma [] [] `and_comm')]
-            "]"]
-           [])])))
-      []]
+          []
+          ["only"]
+          ["["
+           [(Tactic.simpLemma [] [] `mem_filter)
+            ","
+            (Tactic.simpLemma [] [] `mem_product)
+            ","
+            (Tactic.simpLemma [] [] `hs)
+            ","
+            (Tactic.simpLemma [] [] `and_comm')]
+           "]"]
+          [])])))
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `sum_congr
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.hole "_")
-       "="
+       " = "
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
@@ -1533,16 +1537,16 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            "fun"
            (Term.basicFun
             [`p]
-            [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+            [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
             "=>"
-            («term_∧_»
-             («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
-             "∧"
-             («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
+            (Init.Logic.«term_∧_»
+             (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "1")) " ∈ " (Term.proj `f "." `support))
+             " ∧ "
+             (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "2")) " ∈ " (Term.proj `g "." `support)))))])
         ", "
-        («term_*_»
+        (Init.Core.«term_*_»
          (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-         "*"
+         " * "
          (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -1555,21 +1559,21 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
           "fun"
           (Term.basicFun
            [`p]
-           [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+           [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
            "=>"
-           («term_∧_»
-            («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
-            "∧"
-            («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
+           (Init.Logic.«term_∧_»
+            (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "1")) " ∈ " (Term.proj `f "." `support))
+            " ∧ "
+            (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "2")) " ∈ " (Term.proj `g "." `support)))))])
        ", "
-       («term_*_»
+       (Init.Core.«term_*_»
         (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-        "*"
+        " * "
         (Term.app `g [(Term.proj `p "." (fieldIdx "2"))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_*_»
+      (Init.Core.«term_*_»
        (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-       "*"
+       " * "
        (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `g [(Term.proj `p "." (fieldIdx "2"))])
@@ -1607,12 +1611,12 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
          "fun"
          (Term.basicFun
           [`p]
-          [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+          [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
           "=>"
-          («term_∧_»
-           («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
-           "∧"
-           («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))])
+          (Init.Logic.«term_∧_»
+           (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "1")) " ∈ " (Term.proj `f "." `support))
+           " ∧ "
+           (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "2")) " ∈ " (Term.proj `g "." `support)))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1620,19 +1624,19 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        "fun"
        (Term.basicFun
         [`p]
-        [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+        [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
         "=>"
-        («term_∧_»
-         («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
-         "∧"
-         («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))))
+        (Init.Logic.«term_∧_»
+         (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "1")) " ∈ " (Term.proj `f "." `support))
+         " ∧ "
+         (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "2")) " ∈ " (Term.proj `g "." `support)))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∧_»
-       («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
-       "∧"
-       («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support)))
+      (Init.Logic.«term_∧_»
+       (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "1")) " ∈ " (Term.proj `f "." `support))
+       " ∧ "
+       (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "2")) " ∈ " (Term.proj `g "." `support)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» (Term.proj `p "." (fieldIdx "2")) "∈" (Term.proj `g "." `support))
+      (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "2")) " ∈ " (Term.proj `g "." `support))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `g "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1644,10 +1648,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 35 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 35, term))
-      («term_∈_» (Term.proj `p "." (fieldIdx "1")) "∈" (Term.proj `f "." `support))
+      (Init.Core.«term_∈_» (Term.proj `p "." (fieldIdx "1")) " ∈ " (Term.proj `f "." `support))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `f "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1659,11 +1663,11 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 36 >? 50, (some 51, term) <=? (some 35, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 35, (some 35, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_×_» `G "×" `G)
+      (Init.Core.«term_×_» `G " × " `G)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `G
 [PrettyPrinter.parenthesize] ...precedences are 35 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -1688,7 +1692,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.proj (Term.app `Finset.sum_filter [(Term.hole "_") (Term.hole "_")]) "." `symm)
@@ -1710,13 +1714,13 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `Finset.sum_filter [(Term.hole "_") (Term.hole "_")]) []]
+     (Term.app `Finset.sum_filter [(Term.hole "_") (Term.hole "_")])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.hole "_")
-       "="
+       " = "
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
@@ -1730,13 +1734,16 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            "fun"
            (Term.basicFun
             [`p]
-            [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+            [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
             "=>"
-            («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))])
+            (Init.Core.«term_=_»
+             (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+             " = "
+             `x)))])
         ", "
-        («term_*_»
+        (Init.Core.«term_*_»
          (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-         "*"
+         " * "
          (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -1752,18 +1759,21 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
           "fun"
           (Term.basicFun
            [`p]
-           [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+           [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
            "=>"
-           («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))])
+           (Init.Core.«term_=_»
+            (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+            " = "
+            `x)))])
        ", "
-       («term_*_»
+       (Init.Core.«term_*_»
         (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-        "*"
+        " * "
         (Term.app `g [(Term.proj `p "." (fieldIdx "2"))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_*_»
+      (Init.Core.«term_*_»
        (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-       "*"
+       " * "
        (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `g [(Term.proj `p "." (fieldIdx "2"))])
@@ -1804,9 +1814,12 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
          "fun"
          (Term.basicFun
           [`p]
-          [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+          [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
           "=>"
-          («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))])
+          (Init.Core.«term_=_»
+           (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+           " = "
+           `x)))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1814,16 +1827,22 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        "fun"
        (Term.basicFun
         [`p]
-        [(Term.typeSpec ":" («term_×_» `G "×" `G))]
+        [(Term.typeSpec ":" (Init.Core.«term_×_» `G " × " `G))]
         "=>"
-        («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))
+        (Init.Core.«term_=_»
+         (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+         " = "
+         `x)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+      (Init.Core.«term_=_»
+       (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+       " = "
+       `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+      (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `p "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1836,10 +1855,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_×_» `G "×" `G)
+      (Init.Core.«term_×_» `G " × " `G)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `G
 [PrettyPrinter.parenthesize] ...precedences are 35 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -1876,14 +1895,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 82, (some 82, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support)) []]
+     (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.proj `Finset.sum_product "." `symm)
@@ -1892,9 +1911,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.hole "_")
-       "="
+       " = "
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
@@ -1939,7 +1958,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.app `mul_apply [`f `g `x])
@@ -1963,9 +1982,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
-       (Term.app («term_*_» `f "*" `g) [`x])
-       "="
+      (Init.Core.«term_=_»
+       (Term.app (Init.Core.«term_*_» `f " * " `g) [`x])
+       " = "
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₁) []))
@@ -1978,7 +1997,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
          " in "
          (Term.proj `g "." `support)
          ", "
-         (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))))
+         (Term.app `F [(Term.tuple "(" [`a₁ "," [`a₂]] ")")]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (BigOperators.Algebra.BigOperators.Basic.finset.sum
        "∑"
@@ -1992,7 +2011,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         " in "
         (Term.proj `g "." `support)
         ", "
-        (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")])))
+        (Term.app `F [(Term.tuple "(" [`a₁ "," [`a₂]] ")")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (BigOperators.Algebra.BigOperators.Basic.finset.sum
        "∑"
@@ -2000,19 +2019,19 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        " in "
        (Term.proj `g "." `support)
        ", "
-       (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")]))
+       (Term.app `F [(Term.tuple "(" [`a₁ "," [`a₂]] ")")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `F [(Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis'
+      (Term.app `F [(Term.tuple "(" [`a₁ "," [`a₂]] ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.tuple', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.tuple', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.paren "(" [`a₁ [(Term.tupleTail "," [`a₂])]] ")")
+      (Term.tuple "(" [`a₁ "," [`a₂]] ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a₂
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a₁
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `F
@@ -2033,14 +2052,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.app («term_*_» `f "*" `g) [`x])
+      (Term.app (Init.Core.«term_*_» `f " * " `g) [`x])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      («term_*_» `f "*" `g)
+      (Init.Core.«term_*_» `f " * " `g)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -2048,8 +2067,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       `f
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 70, (some 71, term) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_*_» `f "*" `g) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Init.Core.«term_*_» `f " * " `g) ")")
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2070,11 +2089,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
               "exact"
               (termIfThenElse
                "if"
-               («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+               (Init.Core.«term_=_»
+                (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+                " = "
+                `x)
                "then"
-               («term_*_»
+               (Init.Core.«term_*_»
                 (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-                "*"
+                " * "
                 (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
                "else"
                (num "0"))))])))))
@@ -2090,11 +2112,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             "exact"
             (termIfThenElse
              "if"
-             («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+             (Init.Core.«term_=_»
+              (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+              " = "
+              `x)
              "then"
-             («term_*_»
+             (Init.Core.«term_*_»
               (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-              "*"
+              " * "
               (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
              "else"
              (num "0"))))])))
@@ -2107,11 +2132,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         "exact"
         (termIfThenElse
          "if"
-         («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+         (Init.Core.«term_=_»
+          (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+          " = "
+          `x)
          "then"
-         («term_*_»
+         (Init.Core.«term_*_»
           (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-          "*"
+          " * "
           (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
          "else"
          (num "0"))))
@@ -2120,22 +2148,28 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        "exact"
        (termIfThenElse
         "if"
-        («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+        (Init.Core.«term_=_»
+         (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+         " = "
+         `x)
         "then"
-        («term_*_»
+        (Init.Core.«term_*_»
          (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-         "*"
+         " * "
          (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
         "else"
         (num "0")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (termIfThenElse
        "if"
-       («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+       (Init.Core.«term_=_»
+        (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+        " = "
+        `x)
        "then"
-       («term_*_»
+       (Init.Core.«term_*_»
         (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-        "*"
+        " * "
         (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
        "else"
        (num "0"))
@@ -2143,9 +2177,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_*_»
+      (Init.Core.«term_*_»
        (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
-       "*"
+       " * "
        (Term.app `g [(Term.proj `p "." (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `g [(Term.proj `p "." (fieldIdx "2"))])
@@ -2177,12 +2211,15 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+      (Init.Core.«term_=_»
+       (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
+       " = "
+       `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+      (Init.Core.«term_*_» (Term.proj `p "." (fieldIdx "1")) " * " (Term.proj `p "." (fieldIdx "2")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `p "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -2195,7 +2232,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -2237,6 +2274,7 @@ theorem
           _ = ∑ p in s , f p . 1 * g p . 2
             :=
             sum_subset filter_subset _ _
+              $
               fun
                 p hps hp
                   =>
@@ -2345,15 +2383,23 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
          "("
          [`H]
          [":"
-          (Term.forall "∀" [`a] [] "," («term_↔_» («term_=_» («term_*_» `a "*" `x) "=" `z) "↔" («term_=_» `a "=" `y)))]
+          (Term.forall
+           "∀"
+           [`a]
+           []
+           ","
+           (Init.Logic.«term_↔_»
+            (Init.Core.«term_=_» (Init.Core.«term_*_» `a " * " `x) " = " `z)
+            " ↔ "
+            (Init.Core.«term_=_» `a " = " `y)))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        («term_=_»
-         (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
-         "="
-         («term_*_» (Term.app `f [`y]) "*" `r))))
+        (Init.Core.«term_=_»
+         (Term.app (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r])) [`z])
+         " = "
+         (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -2377,7 +2423,7 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                    [`a₁ `b₁]
                    []
                    ","
-                   («term_=_»
+                   (Init.Core.«term_=_»
                     (Term.app
                      (Term.proj (Term.app `single [`x `r]) "." `Sum)
                      [(Term.fun
@@ -2388,9 +2434,15 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                         "=>"
                         (Term.app
                          `ite
-                         [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
-                    "="
-                    (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+                         [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+                          (Init.Core.«term_*_» `b₁ " * " `b₂)
+                          (num "0")])))])
+                    " = "
+                    (Term.app
+                     `ite
+                     [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z)
+                      (Init.Core.«term_*_» `b₁ " * " `r)
+                      (num "0")]))))]
                 ":="
                 (Term.fun
                  "fun"
@@ -2398,9 +2450,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                   [`a₁ `b₁]
                   []
                   "=>"
-                  («term_<|_»
+                  (Init.Core.«term_$_»
                    `sum_single_index
-                   "<|"
+                   " $ "
                    (Term.byTactic
                     "by"
                     (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
@@ -2408,9 +2460,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
               (calc
                "calc"
                (calcStep
-                («term_=_»
-                 (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
-                 "="
+                (Init.Core.«term_=_»
+                 (Term.app (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r])) [`z])
+                 " = "
                  (Term.app
                   `Sum
                   [`f
@@ -2420,7 +2472,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                      [`a `b]
                      []
                      "=>"
-                     (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+                     (termIfThenElse
+                      "if"
+                      (Init.Core.«term_=_» `a " = " `y)
+                      "then"
+                      (Init.Core.«term_*_» `b " * " `r)
+                      "else"
+                      (num "0"))))]))
                 ":="
                 (Term.byTactic
                  "by"
@@ -2440,20 +2498,20 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                       "]"]
                      [])]))))
                [(calcStep
-                 («term_=_»
+                 (Init.Core.«term_=_»
                   (Term.hole "_")
-                  "="
+                  " = "
                   (termIfThenElse
                    "if"
-                   («term_∈_» `y "∈" `f.support)
+                   (Init.Core.«term_∈_» `y " ∈ " `f.support)
                    "then"
-                   («term_*_» (Term.app `f [`y]) "*" `r)
+                   (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
                    "else"
                    (num "0")))
                  ":="
                  (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
                 (calcStep
-                 («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `f [`y]) "*" `r))
+                 (Init.Core.«term_=_» (Term.hole "_") " = " (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r))
                  ":="
                  (Term.byTactic
                   "by"
@@ -2493,7 +2551,7 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                   [`a₁ `b₁]
                   []
                   ","
-                  («term_=_»
+                  (Init.Core.«term_=_»
                    (Term.app
                     (Term.proj (Term.app `single [`x `r]) "." `Sum)
                     [(Term.fun
@@ -2504,9 +2562,15 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                        "=>"
                        (Term.app
                         `ite
-                        [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
-                   "="
-                   (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+                        [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+                         (Init.Core.«term_*_» `b₁ " * " `b₂)
+                         (num "0")])))])
+                   " = "
+                   (Term.app
+                    `ite
+                    [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z)
+                     (Init.Core.«term_*_» `b₁ " * " `r)
+                     (num "0")]))))]
                ":="
                (Term.fun
                 "fun"
@@ -2514,9 +2578,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                  [`a₁ `b₁]
                  []
                  "=>"
-                 («term_<|_»
+                 (Init.Core.«term_$_»
                   `sum_single_index
-                  "<|"
+                  " $ "
                   (Term.byTactic
                    "by"
                    (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
@@ -2524,9 +2588,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
              (calc
               "calc"
               (calcStep
-               («term_=_»
-                (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
-                "="
+               (Init.Core.«term_=_»
+                (Term.app (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r])) [`z])
+                " = "
                 (Term.app
                  `Sum
                  [`f
@@ -2536,7 +2600,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                     [`a `b]
                     []
                     "=>"
-                    (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+                    (termIfThenElse
+                     "if"
+                     (Init.Core.«term_=_» `a " = " `y)
+                     "then"
+                     (Init.Core.«term_*_» `b " * " `r)
+                     "else"
+                     (num "0"))))]))
                ":="
                (Term.byTactic
                 "by"
@@ -2556,20 +2626,20 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                      "]"]
                     [])]))))
               [(calcStep
-                («term_=_»
+                (Init.Core.«term_=_»
                  (Term.hole "_")
-                 "="
+                 " = "
                  (termIfThenElse
                   "if"
-                  («term_∈_» `y "∈" `f.support)
+                  (Init.Core.«term_∈_» `y " ∈ " `f.support)
                   "then"
-                  («term_*_» (Term.app `f [`y]) "*" `r)
+                  (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
                   "else"
                   (num "0")))
                 ":="
                 (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
                (calcStep
-                («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `f [`y]) "*" `r))
+                (Init.Core.«term_=_» (Term.hole "_") " = " (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r))
                 ":="
                 (Term.byTactic
                  "by"
@@ -2601,7 +2671,7 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
               [`a₁ `b₁]
               []
               ","
-              («term_=_»
+              (Init.Core.«term_=_»
                (Term.app
                 (Term.proj (Term.app `single [`x `r]) "." `Sum)
                 [(Term.fun
@@ -2610,9 +2680,17 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                    [`a₂ `b₂]
                    []
                    "=>"
-                   (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
-               "="
-               (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+                   (Term.app
+                    `ite
+                    [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+                     (Init.Core.«term_*_» `b₁ " * " `b₂)
+                     (num "0")])))])
+               " = "
+               (Term.app
+                `ite
+                [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z)
+                 (Init.Core.«term_*_» `b₁ " * " `r)
+                 (num "0")]))))]
            ":="
            (Term.fun
             "fun"
@@ -2620,9 +2698,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
              [`a₁ `b₁]
              []
              "=>"
-             («term_<|_»
+             (Init.Core.«term_$_»
               `sum_single_index
-              "<|"
+              " $ "
               (Term.byTactic
                "by"
                (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
@@ -2630,9 +2708,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
          (calc
           "calc"
           (calcStep
-           («term_=_»
-            (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
-            "="
+           (Init.Core.«term_=_»
+            (Term.app (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r])) [`z])
+            " = "
             (Term.app
              `Sum
              [`f
@@ -2642,7 +2720,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                 [`a `b]
                 []
                 "=>"
-                (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+                (termIfThenElse
+                 "if"
+                 (Init.Core.«term_=_» `a " = " `y)
+                 "then"
+                 (Init.Core.«term_*_» `b " * " `r)
+                 "else"
+                 (num "0"))))]))
            ":="
            (Term.byTactic
             "by"
@@ -2658,20 +2742,20 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                  "]"]
                 [])]))))
           [(calcStep
-            («term_=_»
+            (Init.Core.«term_=_»
              (Term.hole "_")
-             "="
+             " = "
              (termIfThenElse
               "if"
-              («term_∈_» `y "∈" `f.support)
+              (Init.Core.«term_∈_» `y " ∈ " `f.support)
               "then"
-              («term_*_» (Term.app `f [`y]) "*" `r)
+              (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
               "else"
               (num "0")))
             ":="
             (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
            (calcStep
-            («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `f [`y]) "*" `r))
+            (Init.Core.«term_=_» (Term.hole "_") " = " (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r))
             ":="
             (Term.byTactic
              "by"
@@ -2699,7 +2783,7 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
              [`a₁ `b₁]
              []
              ","
-             («term_=_»
+             (Init.Core.«term_=_»
               (Term.app
                (Term.proj (Term.app `single [`x `r]) "." `Sum)
                [(Term.fun
@@ -2708,9 +2792,17 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                   [`a₂ `b₂]
                   []
                   "=>"
-                  (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
-              "="
-              (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+                  (Term.app
+                   `ite
+                   [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+                    (Init.Core.«term_*_» `b₁ " * " `b₂)
+                    (num "0")])))])
+              " = "
+              (Term.app
+               `ite
+               [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z)
+                (Init.Core.«term_*_» `b₁ " * " `r)
+                (num "0")]))))]
           ":="
           (Term.fun
            "fun"
@@ -2718,9 +2810,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
             [`a₁ `b₁]
             []
             "=>"
-            («term_<|_»
+            (Init.Core.«term_$_»
              `sum_single_index
-             "<|"
+             " $ "
              (Term.byTactic
               "by"
               (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
@@ -2728,9 +2820,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
         (calc
          "calc"
          (calcStep
-          («term_=_»
-           (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
-           "="
+          (Init.Core.«term_=_»
+           (Term.app (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r])) [`z])
+           " = "
            (Term.app
             `Sum
             [`f
@@ -2740,7 +2832,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                [`a `b]
                []
                "=>"
-               (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+               (termIfThenElse
+                "if"
+                (Init.Core.«term_=_» `a " = " `y)
+                "then"
+                (Init.Core.«term_*_» `b " * " `r)
+                "else"
+                (num "0"))))]))
           ":="
           (Term.byTactic
            "by"
@@ -2756,20 +2854,20 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                 "]"]
                [])]))))
          [(calcStep
-           («term_=_»
+           (Init.Core.«term_=_»
             (Term.hole "_")
-            "="
+            " = "
             (termIfThenElse
              "if"
-             («term_∈_» `y "∈" `f.support)
+             (Init.Core.«term_∈_» `y " ∈ " `f.support)
              "then"
-             («term_*_» (Term.app `f [`y]) "*" `r)
+             (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
              "else"
              (num "0")))
            ":="
            (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
           (calcStep
-           («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `f [`y]) "*" `r))
+           (Init.Core.«term_=_» (Term.hole "_") " = " (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r))
            ":="
            (Term.byTactic
             "by"
@@ -2795,7 +2893,7 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
             [`a₁ `b₁]
             []
             ","
-            («term_=_»
+            (Init.Core.«term_=_»
              (Term.app
               (Term.proj (Term.app `single [`x `r]) "." `Sum)
               [(Term.fun
@@ -2804,9 +2902,17 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                  [`a₂ `b₂]
                  []
                  "=>"
-                 (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
-             "="
-             (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+                 (Term.app
+                  `ite
+                  [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+                   (Init.Core.«term_*_» `b₁ " * " `b₂)
+                   (num "0")])))])
+             " = "
+             (Term.app
+              `ite
+              [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z)
+               (Init.Core.«term_*_» `b₁ " * " `r)
+               (num "0")]))))]
          ":="
          (Term.fun
           "fun"
@@ -2814,9 +2920,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
            [`a₁ `b₁]
            []
            "=>"
-           («term_<|_»
+           (Init.Core.«term_$_»
             `sum_single_index
-            "<|"
+            " $ "
             (Term.byTactic
              "by"
              (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
@@ -2824,9 +2930,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
        (calc
         "calc"
         (calcStep
-         («term_=_»
-          (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
-          "="
+         (Init.Core.«term_=_»
+          (Term.app (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r])) [`z])
+          " = "
           (Term.app
            `Sum
            [`f
@@ -2836,7 +2942,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
               [`a `b]
               []
               "=>"
-              (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+              (termIfThenElse
+               "if"
+               (Init.Core.«term_=_» `a " = " `y)
+               "then"
+               (Init.Core.«term_*_» `b " * " `r)
+               "else"
+               (num "0"))))]))
          ":="
          (Term.byTactic
           "by"
@@ -2852,20 +2964,20 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                "]"]
               [])]))))
         [(calcStep
-          («term_=_»
+          (Init.Core.«term_=_»
            (Term.hole "_")
-           "="
+           " = "
            (termIfThenElse
             "if"
-            («term_∈_» `y "∈" `f.support)
+            (Init.Core.«term_∈_» `y " ∈ " `f.support)
             "then"
-            («term_*_» (Term.app `f [`y]) "*" `r)
+            (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
             "else"
             (num "0")))
           ":="
           (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
          (calcStep
-          («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `f [`y]) "*" `r))
+          (Init.Core.«term_=_» (Term.hole "_") " = " (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r))
           ":="
           (Term.byTactic
            "by"
@@ -2882,9 +2994,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       (calc
        "calc"
        (calcStep
-        («term_=_»
-         (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
-         "="
+        (Init.Core.«term_=_»
+         (Term.app (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r])) [`z])
+         " = "
          (Term.app
           `Sum
           [`f
@@ -2894,7 +3006,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
              [`a `b]
              []
              "=>"
-             (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+             (termIfThenElse
+              "if"
+              (Init.Core.«term_=_» `a " = " `y)
+              "then"
+              (Init.Core.«term_*_» `b " * " `r)
+              "else"
+              (num "0"))))]))
         ":="
         (Term.byTactic
          "by"
@@ -2910,20 +3028,20 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
               "]"]
              [])]))))
        [(calcStep
-         («term_=_»
+         (Init.Core.«term_=_»
           (Term.hole "_")
-          "="
+          " = "
           (termIfThenElse
            "if"
-           («term_∈_» `y "∈" `f.support)
+           (Init.Core.«term_∈_» `y " ∈ " `f.support)
            "then"
-           («term_*_» (Term.app `f [`y]) "*" `r)
+           (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
            "else"
            (num "0")))
          ":="
          (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
         (calcStep
-         («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `f [`y]) "*" `r))
+         (Init.Core.«term_=_» (Term.hole "_") " = " (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r))
          ":="
          (Term.byTactic
           "by"
@@ -2984,9 +3102,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `f [`y]) "*" `r))
+      (Init.Core.«term_=_» (Term.hole "_") " = " (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_*_» (Term.app `f [`y]) "*" `r)
+      (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -3004,7 +3122,7 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")])
@@ -3023,23 +3141,29 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.hole "_")
-       "="
+       " = "
        (termIfThenElse
         "if"
-        («term_∈_» `y "∈" `f.support)
+        (Init.Core.«term_∈_» `y " ∈ " `f.support)
         "then"
-        («term_*_» (Term.app `f [`y]) "*" `r)
+        (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
         "else"
         (num "0")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (termIfThenElse "if" («term_∈_» `y "∈" `f.support) "then" («term_*_» (Term.app `f [`y]) "*" `r) "else" (num "0"))
+      (termIfThenElse
+       "if"
+       (Init.Core.«term_∈_» `y " ∈ " `f.support)
+       "then"
+       (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
+       "else"
+       (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_*_» (Term.app `f [`y]) "*" `r)
+      (Init.Core.«term_*_» (Term.app `f [`y]) " * " `r)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -3056,18 +3180,18 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» `y "∈" `f.support)
+      (Init.Core.«term_∈_» `y " ∈ " `f.support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f.support
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `y
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -3110,9 +3234,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
-       (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
-       "="
+      (Init.Core.«term_=_»
+       (Term.app (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r])) [`z])
+       " = "
        (Term.app
         `Sum
         [`f
@@ -3122,7 +3246,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
            [`a `b]
            []
            "=>"
-           (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+           (termIfThenElse
+            "if"
+            (Init.Core.«term_=_» `a " = " `y)
+            "then"
+            (Init.Core.«term_*_» `b " * " `r)
+            "else"
+            (num "0"))))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `Sum
@@ -3133,7 +3263,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
           [`a `b]
           []
           "=>"
-          (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))])
+          (termIfThenElse
+           "if"
+           (Init.Core.«term_=_» `a " = " `y)
+           "then"
+           (Init.Core.«term_*_» `b " * " `r)
+           "else"
+           (num "0"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3143,14 +3279,20 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
         [`a `b]
         []
         "=>"
-        (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))
+        (termIfThenElse
+         "if"
+         (Init.Core.«term_=_» `a " = " `y)
+         "then"
+         (Init.Core.«term_*_» `b " * " `r)
+         "else"
+         (num "0"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))
+      (termIfThenElse "if" (Init.Core.«term_=_» `a " = " `y) "then" (Init.Core.«term_*_» `b " * " `r) "else" (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_*_» `b "*" `r)
+      (Init.Core.«term_*_» `b " * " `r)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -3159,13 +3301,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» `a "=" `y)
+      (Init.Core.«term_=_» `a " = " `y)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -3191,14 +3333,14 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
+      (Term.app (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r])) [`z])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      («term_*_» `f "*" (Term.app `single [`x `r]))
+      (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `single [`x `r])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -3219,8 +3361,11 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       `f
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 70, (some 71, term) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_*_» `f "*" (Term.app `single [`x `r])) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Init.Core.«term_*_» `f " * " (Term.app `single [`x `r]))
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3230,14 +3375,14 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
         [`a₁ `b₁]
         []
         "=>"
-        («term_<|_»
+        (Init.Core.«term_$_»
          `sum_single_index
-         "<|"
+         " $ "
          (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_»
+      (Init.Core.«term_$_»
        `sum_single_index
-       "<|"
+       " $ "
        (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
@@ -3245,11 +3390,11 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] [] [] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       `sum_single_index
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -3269,7 +3414,7 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
        [`a₁ `b₁]
        []
        ","
-       («term_=_»
+       (Init.Core.«term_=_»
         (Term.app
          (Term.proj (Term.app `single [`x `r]) "." `Sum)
          [(Term.fun
@@ -3278,11 +3423,19 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
             [`a₂ `b₂]
             []
             "=>"
-            (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
-        "="
-        (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")])))
+            (Term.app
+             `ite
+             [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+              (Init.Core.«term_*_» `b₁ " * " `b₂)
+              (num "0")])))])
+        " = "
+        (Term.app
+         `ite
+         [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z)
+          (Init.Core.«term_*_» `b₁ " * " `r)
+          (num "0")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.app
         (Term.proj (Term.app `single [`x `r]) "." `Sum)
         [(Term.fun
@@ -3291,20 +3444,30 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
            [`a₂ `b₂]
            []
            "=>"
-           (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
-       "="
-       (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))
+           (Term.app
+            `ite
+            [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+             (Init.Core.«term_*_» `b₁ " * " `b₂)
+             (num "0")])))])
+       " = "
+       (Term.app
+        `ite
+        [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z)
+         (Init.Core.«term_*_» `b₁ " * " `r)
+         (num "0")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")])
+      (Term.app
+       `ite
+       [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z) (Init.Core.«term_*_» `b₁ " * " `r) (num "0")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_*_» `b₁ "*" `r)
+      (Init.Core.«term_*_» `b₁ " * " `r)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -3312,25 +3475,28 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       `b₁
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 70, (some 71, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_*_» `b₁ "*" `r) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Init.Core.«term_*_» `b₁ " * " `r) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_=_» («term_*_» `a₁ "*" `x) "=" `z)
+      (Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      («term_*_» `a₁ "*" `x)
+      (Init.Core.«term_*_» `a₁ " * " `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `a₁
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `x) " = " `z)
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -3344,7 +3510,11 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
           [`a₂ `b₂]
           []
           "=>"
-          (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
+          (Term.app
+           `ite
+           [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+            (Init.Core.«term_*_» `b₁ " * " `b₂)
+            (num "0")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3354,18 +3524,26 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
         [`a₂ `b₂]
         []
         "=>"
-        (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))
+        (Term.app
+         `ite
+         [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+          (Init.Core.«term_*_» `b₁ " * " `b₂)
+          (num "0")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])
+      (Term.app
+       `ite
+       [(Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+        (Init.Core.«term_*_» `b₁ " * " `b₂)
+        (num "0")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_*_» `b₁ "*" `b₂)
+      (Init.Core.«term_*_» `b₁ " * " `b₂)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b₂
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -3373,25 +3551,28 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       `b₁
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 70, (some 71, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_*_» `b₁ "*" `b₂) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Init.Core.«term_*_» `b₁ " * " `b₂) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_=_» («term_*_» `a₁ "*" `a₂) "=" `z)
+      (Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      («term_*_» `a₁ "*" `a₂)
+      (Init.Core.«term_*_» `a₁ " * " `a₂)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a₂
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `a₁
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z)
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -3427,25 +3608,24 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       `single
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `single [`x `r]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `single [`x `r]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app
-       (Term.proj (Term.paren "(" [(Term.app `single [`x `r]) []] ")") "." `Sum)
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [`a₂ `b₂]
-          []
-          "=>"
-          (Term.app
-           `ite
-           [(Term.paren "(" [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) []] ")")
-            (Term.paren "(" [(«term_*_» `b₁ "*" `b₂) []] ")")
-            (num "0")])))])
-      []]
+     (Term.app
+      (Term.proj (Term.paren "(" (Term.app `single [`x `r]) ")") "." `Sum)
+      [(Term.fun
+        "fun"
+        (Term.basicFun
+         [`a₂ `b₂]
+         []
+         "=>"
+         (Term.app
+          `ite
+          [(Term.paren "(" (Init.Core.«term_=_» (Init.Core.«term_*_» `a₁ " * " `a₂) " = " `z) ")")
+           (Term.paren "(" (Init.Core.«term_*_» `b₁ " * " `b₂) ")")
+           (num "0")])))])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -3476,7 +3656,7 @@ theorem
             A
               : ∀ a₁ b₁ , single x r . Sum fun a₂ b₂ => ite a₁ * a₂ = z b₁ * b₂ 0 = ite a₁ * x = z b₁ * r 0
               :=
-              fun a₁ b₁ => sum_single_index <| by simp
+              fun a₁ b₁ => sum_single_index $ by simp
             calc
               f * single x r z = Sum f fun a b => if a = y then b * r else 0 := by simp only [ mul_apply , A , H ]
               _ = if y ∈ f.support then f y * r else 0 := f.support.sum_ite_eq' _ _
@@ -3484,7 +3664,7 @@ theorem
 #align monoid_algebra.mul_single_apply_aux MonoidAlgebra.mul_single_apply_aux
 
 theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x : G) : (f * single 1 r) x = f x * r :=
-  f.mul_single_apply_aux fun a => by rw [mul_one]
+  f.mul_single_apply_aux $ fun a => by rw [mul_one]
 #align monoid_algebra.mul_single_one_apply MonoidAlgebra.mul_single_one_apply
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -3502,15 +3682,23 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
          "("
          [`H]
          [":"
-          (Term.forall "∀" [`a] [] "," («term_↔_» («term_=_» («term_*_» `x "*" `a) "=" `y) "↔" («term_=_» `a "=" `z)))]
+          (Term.forall
+           "∀"
+           [`a]
+           []
+           ","
+           (Init.Logic.«term_↔_»
+            (Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+            " ↔ "
+            (Init.Core.«term_=_» `a " = " `z)))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        («term_=_»
-         (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
-         "="
-         («term_*_» `r "*" (Term.app `f [`z])))))
+        (Init.Core.«term_=_»
+         (Term.app (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f) [`y])
+         " = "
+         (Init.Core.«term_*_» `r " * " (Term.app `f [`z])))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -3529,7 +3717,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                 []
                 [(Term.typeSpec
                   ":"
-                  («term_=_»
+                  (Init.Core.«term_=_»
                    (Term.app
                     `f.sum
                     [(Term.fun
@@ -3540,8 +3728,10 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                        "=>"
                        (Term.app
                         `ite
-                        [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
-                   "="
+                        [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                         (Init.Core.«term_*_» (num "0") " * " `b)
+                         (num "0")])))])
+                   " = "
                    (num "0")))]
                 ":="
                 (Term.byTactic
@@ -3551,9 +3741,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
               (calc
                "calc"
                (calcStep
-                («term_=_»
-                 (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
-                 "="
+                (Init.Core.«term_=_»
+                 (Term.app (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f) [`y])
+                 " = "
                  (Term.app
                   `Sum
                   [`f
@@ -3563,16 +3753,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                      [`a `b]
                      []
                      "=>"
-                     (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+                     (Term.app
+                      `ite
+                      [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                       (Init.Core.«term_*_» `r " * " `b)
+                       (num "0")])))]))
                 ":="
-                («term_<|_»
+                (Init.Core.«term_$_»
                  (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
-                 "<|"
+                 " $ "
                  (Term.app `sum_single_index [`this])))
                [(calcStep
-                 («term_=_»
+                 (Init.Core.«term_=_»
                   (Term.hole "_")
-                  "="
+                  " = "
                   (Term.app
                    `f.sum
                    [(Term.fun
@@ -3581,7 +3775,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                       [`a `b]
                       []
                       "=>"
-                      (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
+                      (Term.app
+                       `ite
+                       [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])))]))
                  ":="
                  (Term.byTactic
                   "by"
@@ -3589,20 +3785,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                    (Tactic.tacticSeq1Indented
                     [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])]))))
                 (calcStep
-                 («term_=_»
+                 (Init.Core.«term_=_»
                   (Term.hole "_")
-                  "="
+                  " = "
                   (termIfThenElse
                    "if"
-                   («term_∈_» `z "∈" `f.support)
+                   (Init.Core.«term_∈_» `z " ∈ " `f.support)
                    "then"
-                   («term_*_» `r "*" (Term.app `f [`z]))
+                   (Init.Core.«term_*_» `r " * " (Term.app `f [`z]))
                    "else"
                    (num "0")))
                  ":="
                  (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
                 (calcStep
-                 («term_=_» (Term.hole "_") "=" (Term.hole "_"))
+                 (Init.Core.«term_=_» (Term.hole "_") " = " (Term.hole "_"))
                  ":="
                  (Term.byTactic
                   "by"
@@ -3637,7 +3833,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                []
                [(Term.typeSpec
                  ":"
-                 («term_=_»
+                 (Init.Core.«term_=_»
                   (Term.app
                    `f.sum
                    [(Term.fun
@@ -3648,8 +3844,10 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                       "=>"
                       (Term.app
                        `ite
-                       [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
-                  "="
+                       [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                        (Init.Core.«term_*_» (num "0") " * " `b)
+                        (num "0")])))])
+                  " = "
                   (num "0")))]
                ":="
                (Term.byTactic
@@ -3659,9 +3857,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
              (calc
               "calc"
               (calcStep
-               («term_=_»
-                (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
-                "="
+               (Init.Core.«term_=_»
+                (Term.app (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f) [`y])
+                " = "
                 (Term.app
                  `Sum
                  [`f
@@ -3671,16 +3869,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                     [`a `b]
                     []
                     "=>"
-                    (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+                    (Term.app
+                     `ite
+                     [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                      (Init.Core.«term_*_» `r " * " `b)
+                      (num "0")])))]))
                ":="
-               («term_<|_»
+               (Init.Core.«term_$_»
                 (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
-                "<|"
+                " $ "
                 (Term.app `sum_single_index [`this])))
               [(calcStep
-                («term_=_»
+                (Init.Core.«term_=_»
                  (Term.hole "_")
-                 "="
+                 " = "
                  (Term.app
                   `f.sum
                   [(Term.fun
@@ -3689,7 +3891,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                      [`a `b]
                      []
                      "=>"
-                     (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
+                     (Term.app
+                      `ite
+                      [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])))]))
                 ":="
                 (Term.byTactic
                  "by"
@@ -3697,20 +3901,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                   (Tactic.tacticSeq1Indented
                    [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])]))))
                (calcStep
-                («term_=_»
+                (Init.Core.«term_=_»
                  (Term.hole "_")
-                 "="
+                 " = "
                  (termIfThenElse
                   "if"
-                  («term_∈_» `z "∈" `f.support)
+                  (Init.Core.«term_∈_» `z " ∈ " `f.support)
                   "then"
-                  («term_*_» `r "*" (Term.app `f [`z]))
+                  (Init.Core.«term_*_» `r " * " (Term.app `f [`z]))
                   "else"
                   (num "0")))
                 ":="
                 (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
                (calcStep
-                («term_=_» (Term.hole "_") "=" (Term.hole "_"))
+                (Init.Core.«term_=_» (Term.hole "_") " = " (Term.hole "_"))
                 ":="
                 (Term.byTactic
                  "by"
@@ -3737,7 +3941,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
            []
            [(Term.typeSpec
              ":"
-             («term_=_»
+             (Init.Core.«term_=_»
               (Term.app
                `f.sum
                [(Term.fun
@@ -3746,8 +3950,12 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                   [`a `b]
                   []
                   "=>"
-                  (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
-              "="
+                  (Term.app
+                   `ite
+                   [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                    (Init.Core.«term_*_» (num "0") " * " `b)
+                    (num "0")])))])
+              " = "
               (num "0")))]
            ":="
            (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
@@ -3755,9 +3963,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
          (calc
           "calc"
           (calcStep
-           («term_=_»
-            (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
-            "="
+           (Init.Core.«term_=_»
+            (Term.app (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f) [`y])
+            " = "
             (Term.app
              `Sum
              [`f
@@ -3767,16 +3975,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                 [`a `b]
                 []
                 "=>"
-                (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+                (Term.app
+                 `ite
+                 [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                  (Init.Core.«term_*_» `r " * " `b)
+                  (num "0")])))]))
            ":="
-           («term_<|_»
+           (Init.Core.«term_$_»
             (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
-            "<|"
+            " $ "
             (Term.app `sum_single_index [`this])))
           [(calcStep
-            («term_=_»
+            (Init.Core.«term_=_»
              (Term.hole "_")
-             "="
+             " = "
              (Term.app
               `f.sum
               [(Term.fun
@@ -3785,7 +3997,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                  [`a `b]
                  []
                  "=>"
-                 (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
+                 (Term.app `ite [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])))]))
             ":="
             (Term.byTactic
              "by"
@@ -3793,20 +4005,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
               (Tactic.tacticSeq1Indented
                [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])]))))
            (calcStep
-            («term_=_»
+            (Init.Core.«term_=_»
              (Term.hole "_")
-             "="
+             " = "
              (termIfThenElse
               "if"
-              («term_∈_» `z "∈" `f.support)
+              (Init.Core.«term_∈_» `z " ∈ " `f.support)
               "then"
-              («term_*_» `r "*" (Term.app `f [`z]))
+              (Init.Core.«term_*_» `r " * " (Term.app `f [`z]))
               "else"
               (num "0")))
             ":="
             (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
            (calcStep
-            («term_=_» (Term.hole "_") "=" (Term.hole "_"))
+            (Init.Core.«term_=_» (Term.hole "_") " = " (Term.hole "_"))
             ":="
             (Term.byTactic
              "by"
@@ -3829,7 +4041,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
           []
           [(Term.typeSpec
             ":"
-            («term_=_»
+            (Init.Core.«term_=_»
              (Term.app
               `f.sum
               [(Term.fun
@@ -3838,8 +4050,12 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                  [`a `b]
                  []
                  "=>"
-                 (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
-             "="
+                 (Term.app
+                  `ite
+                  [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                   (Init.Core.«term_*_» (num "0") " * " `b)
+                   (num "0")])))])
+             " = "
              (num "0")))]
           ":="
           (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
@@ -3847,9 +4063,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
         (calc
          "calc"
          (calcStep
-          («term_=_»
-           (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
-           "="
+          (Init.Core.«term_=_»
+           (Term.app (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f) [`y])
+           " = "
            (Term.app
             `Sum
             [`f
@@ -3859,16 +4075,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                [`a `b]
                []
                "=>"
-               (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+               (Term.app
+                `ite
+                [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                 (Init.Core.«term_*_» `r " * " `b)
+                 (num "0")])))]))
           ":="
-          («term_<|_»
+          (Init.Core.«term_$_»
            (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
-           "<|"
+           " $ "
            (Term.app `sum_single_index [`this])))
          [(calcStep
-           («term_=_»
+           (Init.Core.«term_=_»
             (Term.hole "_")
-            "="
+            " = "
             (Term.app
              `f.sum
              [(Term.fun
@@ -3877,7 +4097,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                 [`a `b]
                 []
                 "=>"
-                (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
+                (Term.app `ite [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])))]))
            ":="
            (Term.byTactic
             "by"
@@ -3885,20 +4105,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
              (Tactic.tacticSeq1Indented
               [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])]))))
           (calcStep
-           («term_=_»
+           (Init.Core.«term_=_»
             (Term.hole "_")
-            "="
+            " = "
             (termIfThenElse
              "if"
-             («term_∈_» `z "∈" `f.support)
+             (Init.Core.«term_∈_» `z " ∈ " `f.support)
              "then"
-             («term_*_» `r "*" (Term.app `f [`z]))
+             (Init.Core.«term_*_» `r " * " (Term.app `f [`z]))
              "else"
              (num "0")))
            ":="
            (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
           (calcStep
-           («term_=_» (Term.hole "_") "=" (Term.hole "_"))
+           (Init.Core.«term_=_» (Term.hole "_") " = " (Term.hole "_"))
            ":="
            (Term.byTactic
             "by"
@@ -3919,7 +4139,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
          []
          [(Term.typeSpec
            ":"
-           («term_=_»
+           (Init.Core.«term_=_»
             (Term.app
              `f.sum
              [(Term.fun
@@ -3928,8 +4148,12 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                 [`a `b]
                 []
                 "=>"
-                (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
-            "="
+                (Term.app
+                 `ite
+                 [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                  (Init.Core.«term_*_» (num "0") " * " `b)
+                  (num "0")])))])
+            " = "
             (num "0")))]
          ":="
          (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
@@ -3937,9 +4161,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
        (calc
         "calc"
         (calcStep
-         («term_=_»
-          (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
-          "="
+         (Init.Core.«term_=_»
+          (Term.app (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f) [`y])
+          " = "
           (Term.app
            `Sum
            [`f
@@ -3949,16 +4173,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
               [`a `b]
               []
               "=>"
-              (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+              (Term.app
+               `ite
+               [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+                (Init.Core.«term_*_» `r " * " `b)
+                (num "0")])))]))
          ":="
-         («term_<|_»
+         (Init.Core.«term_$_»
           (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
-          "<|"
+          " $ "
           (Term.app `sum_single_index [`this])))
         [(calcStep
-          («term_=_»
+          (Init.Core.«term_=_»
            (Term.hole "_")
-           "="
+           " = "
            (Term.app
             `f.sum
             [(Term.fun
@@ -3967,7 +4195,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                [`a `b]
                []
                "=>"
-               (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
+               (Term.app `ite [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])))]))
           ":="
           (Term.byTactic
            "by"
@@ -3975,20 +4203,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
             (Tactic.tacticSeq1Indented
              [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])]))))
          (calcStep
-          («term_=_»
+          (Init.Core.«term_=_»
            (Term.hole "_")
-           "="
+           " = "
            (termIfThenElse
             "if"
-            («term_∈_» `z "∈" `f.support)
+            (Init.Core.«term_∈_» `z " ∈ " `f.support)
             "then"
-            («term_*_» `r "*" (Term.app `f [`z]))
+            (Init.Core.«term_*_» `r " * " (Term.app `f [`z]))
             "else"
             (num "0")))
           ":="
           (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
          (calcStep
-          («term_=_» (Term.hole "_") "=" (Term.hole "_"))
+          (Init.Core.«term_=_» (Term.hole "_") " = " (Term.hole "_"))
           ":="
           (Term.byTactic
            "by"
@@ -4005,9 +4233,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
       (calc
        "calc"
        (calcStep
-        («term_=_»
-         (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
-         "="
+        (Init.Core.«term_=_»
+         (Term.app (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f) [`y])
+         " = "
          (Term.app
           `Sum
           [`f
@@ -4017,21 +4245,29 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
              [`a `b]
              []
              "=>"
-             (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+             (Term.app
+              `ite
+              [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+               (Init.Core.«term_*_» `r " * " `b)
+               (num "0")])))]))
         ":="
-        («term_<|_»
+        (Init.Core.«term_$_»
          (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
-         "<|"
+         " $ "
          (Term.app `sum_single_index [`this])))
        [(calcStep
-         («term_=_»
+         (Init.Core.«term_=_»
           (Term.hole "_")
-          "="
+          " = "
           (Term.app
            `f.sum
            [(Term.fun
              "fun"
-             (Term.basicFun [`a `b] [] "=>" (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
+             (Term.basicFun
+              [`a `b]
+              []
+              "=>"
+              (Term.app `ite [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])))]))
          ":="
          (Term.byTactic
           "by"
@@ -4039,20 +4275,20 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
            (Tactic.tacticSeq1Indented
             [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])]))))
         (calcStep
-         («term_=_»
+         (Init.Core.«term_=_»
           (Term.hole "_")
-          "="
+          " = "
           (termIfThenElse
            "if"
-           («term_∈_» `z "∈" `f.support)
+           (Init.Core.«term_∈_» `z " ∈ " `f.support)
            "then"
-           («term_*_» `r "*" (Term.app `f [`z]))
+           (Init.Core.«term_*_» `r " * " (Term.app `f [`z]))
            "else"
            (num "0")))
          ":="
          (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")]))
         (calcStep
-         («term_=_» (Term.hole "_") "=" (Term.hole "_"))
+         (Init.Core.«term_=_» (Term.hole "_") " = " (Term.hole "_"))
          ":="
          (Term.byTactic
           "by"
@@ -4113,13 +4349,13 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» (Term.hole "_") "=" (Term.hole "_"))
+      (Init.Core.«term_=_» (Term.hole "_") " = " (Term.hole "_"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.app `f.support.sum_ite_eq' [(Term.hole "_") (Term.hole "_")])
@@ -4138,23 +4374,29 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.hole "_")
-       "="
+       " = "
        (termIfThenElse
         "if"
-        («term_∈_» `z "∈" `f.support)
+        (Init.Core.«term_∈_» `z " ∈ " `f.support)
         "then"
-        («term_*_» `r "*" (Term.app `f [`z]))
+        (Init.Core.«term_*_» `r " * " (Term.app `f [`z]))
         "else"
         (num "0")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (termIfThenElse "if" («term_∈_» `z "∈" `f.support) "then" («term_*_» `r "*" (Term.app `f [`z])) "else" (num "0"))
+      (termIfThenElse
+       "if"
+       (Init.Core.«term_∈_» `z " ∈ " `f.support)
+       "then"
+       (Init.Core.«term_*_» `r " * " (Term.app `f [`z]))
+       "else"
+       (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_*_» `r "*" (Term.app `f [`z]))
+      (Init.Core.«term_*_» `r " * " (Term.app `f [`z]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `f [`z])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -4171,18 +4413,18 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∈_» `z "∈" `f.support)
+      (Init.Core.«term_∈_» `z " ∈ " `f.support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f.support
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `z
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -4200,37 +4442,49 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.hole "_")
-       "="
+       " = "
        (Term.app
         `f.sum
         [(Term.fun
           "fun"
-          (Term.basicFun [`a `b] [] "=>" (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
+          (Term.basicFun
+           [`a `b]
+           []
+           "=>"
+           (Term.app `ite [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `f.sum
        [(Term.fun
          "fun"
-         (Term.basicFun [`a `b] [] "=>" (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))])
+         (Term.basicFun
+          [`a `b]
+          []
+          "=>"
+          (Term.app `ite [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
-       (Term.basicFun [`a `b] [] "=>" (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))
+       (Term.basicFun
+        [`a `b]
+        []
+        "=>"
+        (Term.app `ite [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])
+      (Term.app `ite [(Init.Core.«term_=_» `a " = " `z) (Init.Core.«term_*_» `r " * " `b) (num "0")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_*_» `r "*" `b)
+      (Init.Core.«term_*_» `r " * " `b)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -4238,19 +4492,19 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
       `r
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 70, (some 71, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_*_» `r "*" `b) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Init.Core.«term_*_» `r " * " `b) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_=_» `a "=" `z)
+      (Init.Core.«term_=_» `a " = " `z)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_=_» `a "=" `z) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Init.Core.«term_=_» `a " = " `z) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -4274,12 +4528,12 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
-      («term_<|_»
+      (Init.Core.«term_$_»
        (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
-       "<|"
+       " $ "
        (Term.app `sum_single_index [`this]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `sum_single_index [`this])
@@ -4291,8 +4545,8 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `sum_single_index
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
       (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
@@ -4317,14 +4571,14 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) []]
+     (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
-       (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
-       "="
+      (Init.Core.«term_=_»
+       (Term.app (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f) [`y])
+       " = "
        (Term.app
         `Sum
         [`f
@@ -4334,7 +4588,11 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
            [`a `b]
            []
            "=>"
-           (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+           (Term.app
+            `ite
+            [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+             (Init.Core.«term_*_» `r " * " `b)
+             (num "0")])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `Sum
@@ -4345,7 +4603,11 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
           [`a `b]
           []
           "=>"
-          (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))])
+          (Term.app
+           `ite
+           [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+            (Init.Core.«term_*_» `r " * " `b)
+            (num "0")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4355,18 +4617,24 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
         [`a `b]
         []
         "=>"
-        (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))
+        (Term.app
+         `ite
+         [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+          (Init.Core.«term_*_» `r " * " `b)
+          (num "0")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])
+      (Term.app
+       `ite
+       [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y) (Init.Core.«term_*_» `r " * " `b) (num "0")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_*_» `r "*" `b)
+      (Init.Core.«term_*_» `r " * " `b)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -4374,25 +4642,28 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
       `r
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 70, (some 71, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_*_» `r "*" `b) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Init.Core.«term_*_» `r " * " `b) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_=_» («term_*_» `x "*" `a) "=" `y)
+      (Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      («term_*_» `x "*" `a)
+      (Init.Core.«term_*_» `x " * " `a)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_=_» («term_*_» `x "*" `a) "=" `y) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -4420,14 +4691,14 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
+      (Term.app (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f) [`y])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      («term_*_» (Term.app `single [`x `r]) "*" `f)
+      (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -4448,8 +4719,11 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 70, (some 71, term) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_*_» (Term.app `single [`x `r]) "*" `f) []] ")")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Init.Core.«term_*_» (Term.app `single [`x `r]) " * " `f)
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4460,7 +4734,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
+      (Init.Core.«term_=_»
        (Term.app
         `f.sum
         [(Term.fun
@@ -4469,8 +4743,12 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
            [`a `b]
            []
            "=>"
-           (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
-       "="
+           (Term.app
+            `ite
+            [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+             (Init.Core.«term_*_» (num "0") " * " `b)
+             (num "0")])))])
+       " = "
        (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
@@ -4484,7 +4762,11 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
           [`a `b]
           []
           "=>"
-          (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
+          (Term.app
+           `ite
+           [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+            (Init.Core.«term_*_» (num "0") " * " `b)
+            (num "0")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4494,18 +4776,26 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
         [`a `b]
         []
         "=>"
-        (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))
+        (Term.app
+         `ite
+         [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+          (Init.Core.«term_*_» (num "0") " * " `b)
+          (num "0")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])
+      (Term.app
+       `ite
+       [(Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+        (Init.Core.«term_*_» (num "0") " * " `b)
+        (num "0")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_*_» (num "0") "*" `b)
+      (Init.Core.«term_*_» (num "0") " * " `b)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -4513,25 +4803,28 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 70, (some 71, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_*_» (num "0") "*" `b) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Init.Core.«term_*_» (num "0") " * " `b) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_=_» («term_*_» `x "*" `a) "=" `y)
+      (Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      («term_*_» `x "*" `a)
+      (Init.Core.«term_*_» `x " * " `a)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_=_» («term_*_» `x "*" `a) "=" `y) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y)
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -4552,23 +4845,22 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f.sum
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app
-       `f.sum
-       [(Term.fun
-         "fun"
-         (Term.basicFun
-          [`a `b]
-          []
-          "=>"
-          (Term.app
-           `ite
-           [(Term.paren "(" [(«term_=_» («term_*_» `x "*" `a) "=" `y) []] ")")
-            (Term.paren "(" [(«term_*_» (num "0") "*" `b) []] ")")
-            (num "0")])))])
-      []]
+     (Term.app
+      `f.sum
+      [(Term.fun
+        "fun"
+        (Term.basicFun
+         [`a `b]
+         []
+         "=>"
+         (Term.app
+          `ite
+          [(Term.paren "(" (Init.Core.«term_=_» (Init.Core.«term_*_» `x " * " `a) " = " `y) ")")
+           (Term.paren "(" (Init.Core.«term_*_» (num "0") " * " `b) ")")
+           (num "0")])))])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -4599,14 +4891,14 @@ theorem
             calc
               single x r * f y = Sum f fun a b => ite x * a = y r * b 0
                 :=
-                mul_apply _ _ _ . trans <| sum_single_index this
+                mul_apply _ _ _ . trans $ sum_single_index this
               _ = f.sum fun a b => ite a = z r * b 0 := by simp only [ H ]
                 _ = if z ∈ f.support then r * f z else 0 := f.support.sum_ite_eq' _ _
                 _ = _ := by split_ifs with h <;> simp at h <;> simp [ h ]
 #align monoid_algebra.single_mul_apply_aux MonoidAlgebra.single_mul_apply_aux
 
 theorem single_one_mul_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x : G) : (single 1 r * f) x = r * f x :=
-  f.single_mul_apply_aux fun a => by rw [one_mul]
+  f.single_mul_apply_aux $ fun a => by rw [one_mul]
 #align monoid_algebra.single_one_mul_apply MonoidAlgebra.single_one_mul_apply
 
 theorem lift_nc_smul [MulOneClass G] {R : Type _} [Semiring R] (f : k →+* R) (g : G →* R) (c : k)
@@ -4656,15 +4948,15 @@ variable {A : Type u₃} [NonUnitalNonAssocSemiring A]
 values on the functions `single a 1`. -/
 theorem non_unital_alg_hom_ext [DistribMulAction k A] {φ₁ φ₂ : MonoidAlgebra k G →ₙₐ[k] A}
     (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
-  NonUnitalAlgHom.to_distrib_mul_action_hom_injective <|
-    Finsupp.distrib_mul_action_hom_ext' fun a => DistribMulActionHom.ext_ring (h a)
+  NonUnitalAlgHom.to_distrib_mul_action_hom_injective $
+    Finsupp.distrib_mul_action_hom_ext' $ fun a => DistribMulActionHom.ext_ring (h a)
 #align monoid_algebra.non_unital_alg_hom_ext MonoidAlgebra.non_unital_alg_hom_ext
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem non_unital_alg_hom_ext' [DistribMulAction k A] {φ₁ φ₂ : MonoidAlgebra k G →ₙₐ[k] A}
     (h : φ₁.toMulHom.comp (ofMagma k G) = φ₂.toMulHom.comp (ofMagma k G)) : φ₁ = φ₂ :=
-  non_unital_alg_hom_ext k <| MulHom.congr_fun h
+  non_unital_alg_hom_ext k $ MulHom.congr_fun h
 #align monoid_algebra.non_unital_alg_hom_ext' MonoidAlgebra.non_unital_alg_hom_ext'
 
 /-- The functor `G ↦ monoid_algebra k G`, from the category of magmas to the category of non-unital,
@@ -4736,8 +5028,8 @@ def mapDomainRingHom (k : Type _) {H F : Type _} [Semiring k] [Monoid G] [Monoid
 and `single 1 b`, then they are equal. -/
 theorem ring_hom_ext {R} [Semiring k] [MulOneClass G] [Semiring R] {f g : MonoidAlgebra k G →+* R}
     (h₁ : ∀ b, f (single 1 b) = g (single 1 b)) (h_of : ∀ a, f (single a 1) = g (single a 1)) : f = g :=
-  RingHom.coe_add_monoid_hom_injective <|
-    add_hom_ext fun a b => by
+  RingHom.coe_add_monoid_hom_injective $
+    add_hom_ext $ fun a b => by
       rw [← one_mul a, ← mul_one b, ← single_mul_single, f.coe_add_monoid_hom, g.coe_add_monoid_hom, f.map_mul,
         g.map_mul, h₁, h_of]
 #align monoid_algebra.ring_hom_ext MonoidAlgebra.ring_hom_ext
@@ -4818,14 +5110,14 @@ def liftNcAlgHom (f : A →ₐ[k] B) (g : G →* B) (h_comm : ∀ x y, Commute (
 /-- A `k`-algebra homomorphism from `monoid_algebra k G` is uniquely defined by its
 values on the functions `single a 1`. -/
 theorem alg_hom_ext ⦃φ₁ φ₂ : MonoidAlgebra k G →ₐ[k] A⦄ (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
-  AlgHom.to_linear_map_injective <| Finsupp.lhom_ext' fun a => LinearMap.ext_ring (h a)
+  AlgHom.to_linear_map_injective $ Finsupp.lhom_ext' $ fun a => LinearMap.ext_ring (h a)
 #align monoid_algebra.alg_hom_ext MonoidAlgebra.alg_hom_ext
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem alg_hom_ext' ⦃φ₁ φ₂ : MonoidAlgebra k G →ₐ[k] A⦄
     (h : (φ₁ : MonoidAlgebra k G →* A).comp (of k G) = (φ₂ : MonoidAlgebra k G →* A).comp (of k G)) : φ₁ = φ₂ :=
-  alg_hom_ext <| MonoidHom.congr_fun h
+  alg_hom_ext $ MonoidHom.congr_fun h
 #align monoid_algebra.alg_hom_ext' MonoidAlgebra.alg_hom_ext'
 
 variable (k G A)
@@ -4834,7 +5126,7 @@ variable (k G A)
 `monoid_algebra k G →ₐ[k] A`. -/
 def lift : (G →* A) ≃ (MonoidAlgebra k G →ₐ[k] A) where
   invFun f := (f : MonoidAlgebra k G →* A).comp (of k G)
-  toFun F := (liftNcAlgHom (Algebra.ofId k A) F) fun _ _ => Algebra.commutes _ _
+  toFun F := liftNcAlgHom (Algebra.ofId k A) F $ fun _ _ => Algebra.commutes _ _
   left_inv f := by
     ext
     simp [lift_nc_alg_hom, lift_nc_ring_hom]
@@ -4975,7 +5267,7 @@ attribute [local reducible] MonoidAlgebra
 
 theorem prod_single [CommSemiring k] [CommMonoid G] {s : Finset ι} {a : ι → G} {b : ι → k} :
     (∏ i in s, single (a i) (b i)) = single (∏ i in s, a i) (∏ i in s, b i) :=
-  (Finset.cons_induction_on s rfl) fun a s has ih => by
+  Finset.cons_induction_on s rfl $ fun a s has ih => by
     rw [prod_cons has, ih, single_mul_single, prod_cons has, prod_cons has]
 #align monoid_algebra.prod_single MonoidAlgebra.prod_single
 
@@ -4990,15 +5282,15 @@ attribute [local reducible] MonoidAlgebra
 
 @[simp]
 theorem mul_single_apply (f : MonoidAlgebra k G) (r : k) (x y : G) : (f * single x r) y = f (y * x⁻¹) * r :=
-  f.mul_single_apply_aux fun a => eq_mul_inv_iff_mul_eq.symm
+  f.mul_single_apply_aux $ fun a => eq_mul_inv_iff_mul_eq.symm
 #align monoid_algebra.mul_single_apply MonoidAlgebra.mul_single_apply
 
 @[simp]
 theorem single_mul_apply (r : k) (x : G) (f : MonoidAlgebra k G) (y : G) : (single x r * f) y = r * f (x⁻¹ * y) :=
-  f.single_mul_apply_aux fun z => eq_inv_mul_iff_mul_eq.symm
+  f.single_mul_apply_aux $ fun z => eq_inv_mul_iff_mul_eq.symm
 #align monoid_algebra.single_mul_apply MonoidAlgebra.single_mul_apply
 
-theorem mul_apply_left (f g : MonoidAlgebra k G) (x : G) : (f * g) x = f.Sum fun a b => b * g (a⁻¹ * x) :=
+theorem mul_apply_left (f g : MonoidAlgebra k G) (x : G) : (f * g) x = (f.Sum $ fun a b => b * g (a⁻¹ * x)) :=
   calc
     (f * g) x = Sum f fun a b => (single a b * g) x := by rw [← Finsupp.sum_apply, ← Finsupp.sum_mul, f.sum_single]
     _ = _ := by simp only [single_mul_apply, Finsupp.sum]
@@ -5006,7 +5298,7 @@ theorem mul_apply_left (f g : MonoidAlgebra k G) (x : G) : (f * g) x = f.Sum fun
 #align monoid_algebra.mul_apply_left MonoidAlgebra.mul_apply_left
 
 -- If we'd assumed `comm_semiring`, we could deduce this from `mul_apply_left`.
-theorem mul_apply_right (f g : MonoidAlgebra k G) (x : G) : (f * g) x = g.Sum fun a b => f (x * a⁻¹) * b :=
+theorem mul_apply_right (f g : MonoidAlgebra k G) (x : G) : (f * g) x = (g.Sum $ fun a b => f (x * a⁻¹) * b) :=
   calc
     (f * g) x = Sum g fun a b => (f * single a b) x := by rw [← Finsupp.sum_apply, ← Finsupp.mul_sum, g.sum_single]
     _ = _ := by simp only [mul_single_apply, Finsupp.sum]
@@ -5025,7 +5317,7 @@ variable [Semiring k]
 the `monoid_algebra Rᵐᵒᵖ Iᵐᵒᵖ` over the opposite ring, taking elements to their opposite. -/
 @[simps (config := { simpRhs := true })]
 protected noncomputable def opRingEquiv [Monoid G] : (MonoidAlgebra k G)ᵐᵒᵖ ≃+* MonoidAlgebra kᵐᵒᵖ Gᵐᵒᵖ :=
-  { opAddEquiv.symm.trans <| (Finsupp.mapRange.addEquiv (opAddEquiv : k ≃+ kᵐᵒᵖ)).trans <| Finsupp.domCongr opEquiv with
+  { opAddEquiv.symm.trans $ (Finsupp.mapRange.addEquiv (opAddEquiv : k ≃+ kᵐᵒᵖ)).trans $ Finsupp.domCongr opEquiv with
     map_mul' := by
       dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
       rw [AddMonoidHom.map_mul_iff]
@@ -5106,7 +5398,7 @@ is a ring homomorphism and the range of either `f` or `g` is in center of `R`, t
 ring homomorphism.  If `R` is a `k`-algebra and `f = algebra_map k R`, then the result is an algebra
 homomorphism called `add_monoid_algebra.lift`. -/
 def liftNc (f : k →+ R) (g : Multiplicative G → R) : AddMonoidAlgebra k G →+ R :=
-  liftAddHom fun x : G => (AddMonoidHom.mulRight (g <| Multiplicative.ofAdd x)).comp f
+  liftAddHom fun x : G => (AddMonoidHom.mulRight (g $ Multiplicative.ofAdd x)).comp f
 #align add_monoid_algebra.lift_nc AddMonoidAlgebra.liftNc
 
 @[simp]
@@ -5126,10 +5418,10 @@ variable [Semiring k] [Add G]
   such that `x + y = a`. (Think of the product of multivariate
   polynomials where `α` is the additive monoid of monomial exponents.) -/
 instance : Mul (AddMonoidAlgebra k G) :=
-  ⟨fun f g => f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => single (a₁ + a₂) (b₁ * b₂)⟩
+  ⟨fun f g => f.Sum $ fun a₁ b₁ => g.Sum $ fun a₂ b₂ => single (a₁ + a₂) (b₁ * b₂)⟩
 
 theorem mul_def {f g : AddMonoidAlgebra k G} :
-    f * g = f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => single (a₁ + a₂) (b₁ * b₂) :=
+    f * g = (f.Sum $ fun a₁ b₁ => g.Sum $ fun a₂ b₂ => single (a₁ + a₂) (b₁ * b₂)) :=
   rfl
 #align add_monoid_algebra.mul_def AddMonoidAlgebra.mul_def
 
@@ -5155,7 +5447,7 @@ instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
 variable [Semiring R]
 
 theorem lift_nc_mul {g_hom : Type _} [MulHomClass g_hom (Multiplicative G) R] (f : k →+* R) (g : g_hom)
-    (a b : AddMonoidAlgebra k G) (h_comm : ∀ {x y}, y ∈ a.support → Commute (f (b x)) (g <| Multiplicative.ofAdd y)) :
+    (a b : AddMonoidAlgebra k G) (h_comm : ∀ {x y}, y ∈ a.support → Commute (f (b x)) (g $ Multiplicative.ofAdd y)) :
     liftNc (f : k →+ R) g (a * b) = liftNc (f : k →+ R) g a * liftNc (f : k →+ R) g b :=
   (MonoidAlgebra.lift_nc_mul f g _ _ @h_comm : _)
 #align add_monoid_algebra.lift_nc_mul AddMonoidAlgebra.lift_nc_mul
@@ -5235,13 +5527,13 @@ variable [Semiring R]
 def liftNcRingHom (f : k →+* R) (g : Multiplicative G →* R) (h_comm : ∀ x y, Commute (f x) (g y)) :
     AddMonoidAlgebra k G →+* R :=
   { liftNc (f : k →+ R) g with toFun := liftNc (f : k →+ R) g, map_one' := lift_nc_one _ _,
-    map_mul' := fun a b => (lift_nc_mul _ _ _ _) fun _ _ _ => h_comm _ _ }
+    map_mul' := fun a b => lift_nc_mul _ _ _ _ $ fun _ _ _ => h_comm _ _ }
 #align add_monoid_algebra.lift_nc_ring_hom AddMonoidAlgebra.liftNcRingHom
 
 end Semiring
 
 instance [CommSemiring k] [AddCommSemigroup G] : NonUnitalCommSemiring (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.nonUnitalSemiring with mul_comm := @mul_comm (MonoidAlgebra k <| Multiplicative G) _ }
+  { AddMonoidAlgebra.nonUnitalSemiring with mul_comm := @mul_comm (MonoidAlgebra k $ Multiplicative G) _ }
 
 instance [Semiring k] [Nontrivial k] [Nonempty G] : Nontrivial (AddMonoidAlgebra k G) :=
   Finsupp.nontrivial
@@ -5318,7 +5610,7 @@ section MiscTheorems
 variable [Semiring k]
 
 theorem mul_apply [DecidableEq G] [Add G] (f g : AddMonoidAlgebra k G) (x : G) :
-    (f * g) x = f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => if a₁ + a₂ = x then b₁ * b₂ else 0 :=
+    (f * g) x = (f.Sum $ fun a₁ b₁ => g.Sum $ fun a₂ b₂ => if a₁ + a₂ = x then b₁ * b₂ else 0) :=
   @MonoidAlgebra.mul_apply k (Multiplicative G) _ _ _ _ _ _
 #align add_monoid_algebra.mul_apply AddMonoidAlgebra.mul_apply
 
@@ -5432,7 +5724,7 @@ theorem mul_single_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z :
 
 theorem mul_single_zero_apply [AddZeroClass G] (f : AddMonoidAlgebra k G) (r : k) (x : G) :
     (f * single 0 r) x = f x * r :=
-  (f.mul_single_apply_aux r _ _ _) fun a => by rw [add_zero]
+  f.mul_single_apply_aux r _ _ _ $ fun a => by rw [add_zero]
 #align add_monoid_algebra.mul_single_zero_apply AddMonoidAlgebra.mul_single_zero_apply
 
 theorem single_mul_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z : G) (H : ∀ a, x + a = y ↔ a = z) :
@@ -5442,7 +5734,7 @@ theorem single_mul_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z :
 
 theorem single_zero_mul_apply [AddZeroClass G] (f : AddMonoidAlgebra k G) (r : k) (x : G) :
     (single 0 r * f : AddMonoidAlgebra k G) x = r * f x :=
-  (f.single_mul_apply_aux r _ _ _) fun a => by rw [zero_add]
+  f.single_mul_apply_aux r _ _ _ $ fun a => by rw [zero_add]
 #align add_monoid_algebra.single_zero_mul_apply AddMonoidAlgebra.single_zero_mul_apply
 
 theorem mul_single_apply [AddGroup G] (f : AddMonoidAlgebra k G) (r : k) (x y : G) :
@@ -5688,7 +5980,7 @@ theorem alg_hom_ext ⦃φ₁ φ₂ : AddMonoidAlgebra k G →ₐ[k] A⦄ (h : �
 @[ext.1]
 theorem alg_hom_ext' ⦃φ₁ φ₂ : AddMonoidAlgebra k G →ₐ[k] A⦄
     (h : (φ₁ : AddMonoidAlgebra k G →* A).comp (of k G) = (φ₂ : AddMonoidAlgebra k G →* A).comp (of k G)) : φ₁ = φ₂ :=
-  alg_hom_ext <| MonoidHom.congr_fun h
+  alg_hom_ext $ MonoidHom.congr_fun h
 #align add_monoid_algebra.alg_hom_ext' AddMonoidAlgebra.alg_hom_ext'
 
 variable (k G A)
@@ -5700,7 +5992,7 @@ def lift : (Multiplicative G →* A) ≃ (AddMonoidAlgebra k G →ₐ[k] A) :=
     invFun := fun f => (f : AddMonoidAlgebra k G →* A).comp (of k G),
     toFun := fun F =>
       { @MonoidAlgebra.lift k (Multiplicative G) _ _ A _ _ F with
-        toFun := (liftNcAlgHom (Algebra.ofId k A) F) fun _ _ => Algebra.commutes _ _ } }
+        toFun := liftNcAlgHom (Algebra.ofId k A) F $ fun _ _ => Algebra.commutes _ _ } }
 #align add_monoid_algebra.lift AddMonoidAlgebra.lift
 
 variable {k G A}
@@ -5763,7 +6055,7 @@ variable {ι : Type ui}
 
 theorem prod_single [CommSemiring k] [AddCommMonoid G] {s : Finset ι} {a : ι → G} {b : ι → k} :
     (∏ i in s, single (a i) (b i)) = single (∑ i in s, a i) (∏ i in s, b i) :=
-  (Finset.cons_induction_on s rfl) fun a s has ih => by
+  Finset.cons_induction_on s rfl $ fun a s has ih => by
     rw [prod_cons has, ih, single_mul_single, sum_cons has, prod_cons has]
 #align add_monoid_algebra.prod_single AddMonoidAlgebra.prod_single
 

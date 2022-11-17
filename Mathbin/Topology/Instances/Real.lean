@@ -35,7 +35,7 @@ instance : NoncompactSpace ℝ :=
   Int.closedEmbeddingCoeReal.NoncompactSpace
 
 theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.1 + p.2 :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+  Metric.uniform_continuous_iff.2 $ fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_add_continuous_lemma abs ε0
     ⟨δ, δ0, fun a b h =>
       let ⟨h₁, h₂⟩ := max_lt_iff.1 h
@@ -43,7 +43,7 @@ theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.
 #align real.uniform_continuous_add Real.uniform_continuous_add
 
 theorem Real.uniform_continuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+  Metric.uniform_continuous_iff.2 $ fun ε ε0 =>
     ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
 #align real.uniform_continuous_neg Real.uniform_continuous_neg
 
@@ -72,7 +72,7 @@ theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : 
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
     ⟨ioo q p, by
       simp only [mem_Union]
-      exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
+      exact ⟨q, p, Rat.cast_lt.1 $ hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
 #align real.is_topological_basis_Ioo_rat Real.is_topological_basis_Ioo_rat
 
@@ -93,13 +93,13 @@ theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ closure s ↔ ∀ �
 
 theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀ x ∈ s, r ≤ |x|) :
     UniformContinuous fun p : s => p.1⁻¹ :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+  Metric.uniform_continuous_iff.2 $ fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_inv_continuous_lemma abs ε0 r0
     ⟨δ, δ0, fun a b h => Hδ (H _ a.2) (H _ b.2) h⟩
 #align real.uniform_continuous_inv Real.uniform_continuous_inv
 
 theorem Real.uniform_continuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 => ⟨ε, ε0, fun a b => lt_of_le_of_lt (abs_abs_sub_abs_le_abs_sub _ _)⟩
+  Metric.uniform_continuous_iff.2 $ fun ε ε0 => ⟨ε, ε0, fun a b => lt_of_le_of_lt (abs_abs_sub_abs_le_abs_sub _ _)⟩
 #align real.uniform_continuous_abs Real.uniform_continuous_abs
 
 theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
@@ -111,7 +111,7 @@ theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (�
 #align real.tendsto_inv Real.tendsto_inv
 
 theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val⁻¹ :=
-  continuous_iff_continuous_at.mpr fun ⟨r, hr⟩ =>
+  continuous_iff_continuous_at.mpr $ fun ⟨r, hr⟩ =>
     Tendsto.comp (Real.tendsto_inv hr) (continuous_iff_continuous_at.mp continuous_subtype_val _)
 #align real.continuous_inv Real.continuous_inv
 
@@ -127,7 +127,7 @@ theorem Real.uniform_continuous_const_mul {x : ℝ} : UniformContinuous ((· * �
 
 theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ} (H : ∀ x ∈ s, |(x : ℝ × ℝ).1| < r₁ ∧ |x.2| < r₂) :
     UniformContinuous fun p : s => p.1.1 * p.1.2 :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+  Metric.uniform_continuous_iff.2 $ fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_mul_continuous_lemma abs ε0
     ⟨δ, δ0, fun a b h =>
       let ⟨h₁, h₂⟩ := max_lt_iff.1 h
@@ -136,12 +136,12 @@ theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ} (H 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
-  continuous_iff_continuous_at.2 fun ⟨a₁, a₂⟩ =>
+  continuous_iff_continuous_at.2 $ fun ⟨a₁, a₂⟩ =>
     tendsto_of_uniform_continuous_subtype
       (Real.uniform_continuous_mul ({ x | |x| < |a₁| + 1 } ×ˢ { x | |x| < |a₂| + 1 }) fun x => id)
       (IsOpen.mem_nhds
         (((is_open_gt' (|a₁| + 1)).Preimage continuous_abs).Prod ((is_open_gt' (|a₂| + 1)).Preimage continuous_abs))
-        ⟨lt_add_one (|a₁|), lt_add_one (|a₂|)⟩)
+        ⟨lt_add_one |a₁|, lt_add_one |a₂|⟩)
 #align real.continuous_mul Real.continuous_mul
 
 instance : TopologicalRing ℝ :=
@@ -164,13 +164,13 @@ theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := b
 section
 
 theorem closure_of_rat_image_lt {q : ℚ} : closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
-  (Subset.antisymm
-      ((isClosedGe' _).closure_subset_iff.2 (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h)))
+  Subset.antisymm
+      ((isClosedGe' _).closure_subset_iff.2 (image_subset_iff.2 $ fun p h => le_of_lt $ (@Rat.cast_lt ℝ _ _ _).2 h)) $
     fun x hx =>
-    mem_closure_iff_nhds.2 fun t ht =>
+    mem_closure_iff_nhds.2 $ fun t ht =>
       let ⟨ε, ε0, hε⟩ := Metric.mem_nhds_iff.1 ht
       let ⟨p, h₁, h₂⟩ := exists_rat_btwn ((lt_add_iff_pos_right x).2 ε0)
-      ⟨_, hε (show abs _ < _ by rwa [abs_of_nonneg (le_of_lt <| sub_pos.2 h₁), sub_lt_iff_lt_add']), p,
+      ⟨_, hε (show abs _ < _ by rwa [abs_of_nonneg (le_of_lt $ sub_pos.2 h₁), sub_lt_iff_lt_add']), p,
         Rat.cast_lt.1 (@lt_of_le_of_lt ℝ _ _ _ _ hx h₁), rfl⟩
 #align closure_of_rat_image_lt closure_of_rat_image_lt
 

@@ -63,7 +63,8 @@ theorem coe_mul (p q : SubMulAction R M) : ↑(p * q) = (p * q : Set M) :=
   rfl
 #align sub_mul_action.coe_mul SubMulAction.coe_mul
 
-theorem mem_mul {p q : SubMulAction R M} {x : M} : x ∈ p * q ↔ ∃ y z, y ∈ p ∧ z ∈ q ∧ y * z = x :=
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (y z) -/
+theorem mem_mul {p q : SubMulAction R M} {x : M} : x ∈ p * q ↔ ∃ (y) (z), y ∈ p ∧ z ∈ q ∧ y * z = x :=
   Set.mem_mul
 #align sub_mul_action.mem_mul SubMulAction.mem_mul
 

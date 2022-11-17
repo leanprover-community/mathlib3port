@@ -176,7 +176,7 @@ variable (α : Type u) [Monoid α]
 /-- The units in a monoid are (multiplicatively) equivalent to
 the automorphisms of `star` when we think of the monoid as a single-object category. -/
 def toAut : αˣ ≃* AutCat (SingleObj.star α) :=
-  (Units.mapEquiv (SingleObj.toEnd α)).trans <| AutCat.unitsEndEquivAut _
+  (Units.mapEquiv (SingleObj.toEnd α)).trans $ AutCat.unitsEndEquivAut _
 #align units.to_Aut Units.toAut
 
 @[simp]

@@ -300,8 +300,8 @@ variable (A)
 def Sites.copullback {G : C ⥤ D} (hG : CoverLifting J K G) : SheafCat J A ⥤ SheafCat K A where
   obj ℱ := ⟨(ran G.op).obj ℱ.val, ranIsSheafOfCoverLifting hG ℱ⟩
   map _ _ f := ⟨(ran G.op).map f.val⟩
-  map_id' ℱ := SheafCat.Hom.ext _ _ <| (ran G.op).map_id ℱ.val
-  map_comp' _ _ _ f g := SheafCat.Hom.ext _ _ <| (ran G.op).map_comp f.val g.val
+  map_id' ℱ := SheafCat.Hom.ext _ _ $ (ran G.op).map_id ℱ.val
+  map_comp' _ _ _ f g := SheafCat.Hom.ext _ _ $ (ran G.op).map_comp f.val g.val
 #align category_theory.sites.copullback CategoryTheory.Sites.copullback
 
 /-- Given a functor between sites that is cover-preserving, cover-lifting, and compatible-preserving,
@@ -323,10 +323,10 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
         rw [Equiv.apply_symm_apply] }
   Unit :=
     { app := fun X => ⟨(ran.adjunction A G.op).Unit.app X.val⟩,
-      naturality' := fun _ _ f => SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).Unit.naturality f.val }
+      naturality' := fun _ _ f => SheafCat.Hom.ext _ _ $ (ran.adjunction A G.op).Unit.naturality f.val }
   counit :=
     { app := fun X => ⟨(ran.adjunction A G.op).counit.app X.val⟩,
-      naturality' := fun _ _ f => SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).counit.naturality f.val }
+      naturality' := fun _ _ f => SheafCat.Hom.ext _ _ $ (ran.adjunction A G.op).counit.naturality f.val }
   hom_equiv_unit' X Y f := by
     ext1
     apply (Ran.adjunction A G.op).hom_equiv_unit

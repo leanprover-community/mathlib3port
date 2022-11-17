@@ -67,7 +67,7 @@ theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : �
     (hd : DiffContOnCl ℂ f (ball c R)) (hC : ∀ z ∈ sphere c R, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
   set e : F →L[ℂ] F̂ := UniformSpace.Completion.toComplL
   have : HasDerivAt (e ∘ f) (e (deriv f c)) c :=
-    e.has_fderiv_at.comp_has_deriv_at c (hd.differentiable_at is_open_ball <| mem_ball_self hR).HasDerivAt
+    e.has_fderiv_at.comp_has_deriv_at c (hd.differentiable_at is_open_ball $ mem_ball_self hR).HasDerivAt
   calc
     ∥deriv f c∥ = ∥deriv (e ∘ f) c∥ := by
       rw [this.deriv]
@@ -87,7 +87,7 @@ theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : 
   obtain ⟨C, C₀, hC⟩ : ∃ C > (0 : ℝ), ∀ z, ∥f z∥ ≤ C := by
     rcases bounded_iff_forall_norm_le.1 hb with ⟨C, hC⟩
     exact ⟨max C 1, lt_max_iff.2 (Or.inr zero_lt_one), fun z => (hC (f z) (mem_range_self _)).trans (le_max_left _ _)⟩
-  refine' norm_le_zero_iff.1 (le_of_forall_le_of_dense fun ε ε₀ => _)
+  refine' norm_le_zero_iff.1 (le_of_forall_le_of_dense $ fun ε ε₀ => _)
   calc
     ∥deriv f c∥ ≤ C / (C / ε) :=
       norm_deriv_le_of_forall_mem_sphere_norm_le (div_pos C₀ ε₀) hf.diff_cont_on_cl fun z _ => hC z
@@ -119,7 +119,7 @@ theorem exists_const_forall_eq_of_bounded {f : E → F} (hf : Differentiable ℂ
 /-- **Liouville's theorem**: a complex differentiable bounded function is a constant. -/
 theorem exists_eq_const_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb : Bounded (range f)) :
     ∃ c, f = const E c :=
-  (hf.exists_const_forall_eq_of_bounded hb).imp fun c => funext
+  (hf.exists_const_forall_eq_of_bounded hb).imp $ fun c => funext
 #align differentiable.exists_eq_const_of_bounded Differentiable.exists_eq_const_of_bounded
 
 end Differentiable

@@ -40,7 +40,7 @@ instance from inadverently applying to other sigma types. One should not use thi
 directly. -/
 @[nolint has_nonempty_instance]
 def Multiset.ToType (m : Multiset α) : Type _ :=
-  Σx : α, Fin (m.count x)
+  Σ x : α, Fin (m.count x)
 #align multiset.to_type Multiset.ToType
 
 /-- Create a type that has the same number of elements as the multiset.
@@ -95,7 +95,7 @@ protected theorem Multiset.forall_coe (p : m → Prop) : (∀ x : m, p x) ↔ �
 #align multiset.forall_coe Multiset.forall_coe
 
 @[simp]
-protected theorem Multiset.exists_coe (p : m → Prop) : (∃ x : m, p x) ↔ ∃ (x : α)(i : Fin (m.count x)), p ⟨x, i⟩ :=
+protected theorem Multiset.exists_coe (p : m → Prop) : (∃ x : m, p x) ↔ ∃ (x : α) (i : Fin (m.count x)), p ⟨x, i⟩ :=
   Sigma.exists
 #align multiset.exists_coe Multiset.exists_coe
 
@@ -121,7 +121,7 @@ theorem Multiset.mem_to_enum_finset (m : Multiset α) (p : α × ℕ) : p ∈ m.
 #align multiset.mem_to_enum_finset Multiset.mem_to_enum_finset
 
 theorem Multiset.mem_of_mem_to_enum_finset {p : α × ℕ} (h : p ∈ m.toEnumFinset) : p.1 ∈ m :=
-  Multiset.count_pos.mp <| pos_of_gt <| (m.mem_to_enum_finset p).mp h
+  Multiset.count_pos.mp $ pos_of_gt $ (m.mem_to_enum_finset p).mp h
 #align multiset.mem_of_mem_to_enum_finset Multiset.mem_of_mem_to_enum_finset
 
 @[mono]

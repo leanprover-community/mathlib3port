@@ -44,7 +44,7 @@ variable [NontriviallyNormedField 𝕜] [Module 𝕜 E] [Module 𝕜 F] [HasCont
 /-- Construct a continuous linear map from a linear map `f : E →ₗ[𝕜] F` and the existence of a
 neighborhood of zero that gets mapped into a bounded set in `F`. -/
 def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
-    (h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)) : E →L[𝕜] F :=
+    (h : ∃ (V : Set E) (hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)) : E →L[𝕜] F :=
   ⟨f, by
     -- It suffices to show that `f` is continuous at `0`.
     refine' continuous_of_continuous_at_zero f _
@@ -73,14 +73,14 @@ def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
 #align linear_map.clm_of_exists_bounded_image LinearMap.clmOfExistsBoundedImage
 
 theorem LinearMap.clm_of_exists_bounded_image_coe {f : E →ₗ[𝕜] F}
-    {h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} :
+    {h : ∃ (V : Set E) (hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} :
     (f.clmOfExistsBoundedImage h : E →ₗ[𝕜] F) = f :=
   rfl
 #align linear_map.clm_of_exists_bounded_image_coe LinearMap.clm_of_exists_bounded_image_coe
 
 @[simp]
 theorem LinearMap.clm_of_exists_bounded_image_apply {f : E →ₗ[𝕜] F}
-    {h : ∃ (V : Set E)(hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} {x : E} :
+    {h : ∃ (V : Set E) (hV : V ∈ 𝓝 (0 : E)), Bornology.IsVonNBounded 𝕜 (f '' V)} {x : E} :
     f.clmOfExistsBoundedImage h x = f x :=
   rfl
 #align linear_map.clm_of_exists_bounded_image_apply LinearMap.clm_of_exists_bounded_image_apply
@@ -145,7 +145,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     intro n
     by_cases h:n = 0
     · rw [h, Nat.cast_zero, zero_smul]
-      refine' mem_of_mem_nhds (bE.1.mem_of_mem <| by triv)
+      refine' mem_of_mem_nhds (bE.1.mem_of_mem $ by triv)
       
     rcases hu n h with ⟨y, hy, hu1⟩
     convert hy
@@ -177,7 +177,7 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
 /-- If `E` is first countable, then every locally bounded linear map `E →ₛₗ[σ] F` is continuous. -/
 theorem LinearMap.continuous_of_locally_bounded [UniformAddGroup F] (f : E →ₛₗ[σ] F)
     (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : Continuous f :=
-  (uniform_continuous_of_continuous_at_zero f <| f.continuous_at_zero_of_locally_bounded hf).Continuous
+  (uniform_continuous_of_continuous_at_zero f $ f.continuous_at_zero_of_locally_bounded hf).Continuous
 #align linear_map.continuous_of_locally_bounded LinearMap.continuous_of_locally_bounded
 
 end IsROrC

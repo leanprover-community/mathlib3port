@@ -58,17 +58,17 @@ unsafe def get_ees : eqelim (List Ee) :=
 
 /-- Update the list of equality constraints. -/
 unsafe def set_eqs (eqs : List Term) : eqelim Unit :=
-  modify fun s => { s with eqs }
+  modify $ fun s => { s with eqs }
 #align omega.set_eqs omega.set_eqs
 
 /-- Update the list of inequality constraints. -/
 unsafe def set_les (les : List Term) : eqelim Unit :=
-  modify fun s => { s with les }
+  modify $ fun s => { s with les }
 #align omega.set_les omega.set_les
 
 /-- Update the sequence of equality elimiation steps. -/
 unsafe def set_ees (es : List Ee) : eqelim Unit :=
-  modify fun s => { s with ees := es }
+  modify $ fun s => { s with ees := es }
 #align omega.set_ees omega.set_ees
 
 /-- Add a new step to the sequence of equality elimination steps. -/

@@ -104,7 +104,7 @@ protected noncomputable def orderIso : α ≃o Set.range f where
 
 /-- A strictly monotone surjective function from a linear order is an order isomorphism. -/
 noncomputable def orderIsoOfSurjective : α ≃o β :=
-  (h_mono.OrderIso f).trans <| (OrderIso.setCongr _ _ h_surj.range_eq).trans OrderIso.Set.univ
+  (h_mono.OrderIso f).trans $ (OrderIso.setCongr _ _ h_surj.range_eq).trans OrderIso.Set.univ
 #align strict_mono.order_iso_of_surjective StrictMono.orderIsoOfSurjective
 
 @[simp]

@@ -46,16 +46,16 @@ continuous on `U` and sends each `y ∈ U` to a point of `t y`. Then there exist
 `g : C(X, E)` such that `g x ∈ t x` for all `x`. See also
 `exists_continuous_forall_mem_convex_of_local_const`. -/
 theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t x))
-    (H : ∀ x : X, ∃ U ∈ 𝓝 x, ∃ g : X → E, ContinuousOn g U ∧ ∀ y ∈ U, g y ∈ t y) : ∃ g : C(X, E), ∀ x, g x ∈ t x := by
+    (H : ∀ x : X, ∃ (U ∈ 𝓝 x) (g : X → E), ContinuousOn g U ∧ ∀ y ∈ U, g y ∈ t y) : ∃ g : C(X, E), ∀ x, g x ∈ t x := by
   choose U hU g hgc hgt using H
   obtain ⟨f, hf⟩ :=
     PartitionOfUnity.exists_is_subordinate isClosedUniv (fun x => interior (U x)) (fun x => is_open_interior)
       fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   refine'
     ⟨⟨fun x => ∑ᶠ i, f i x • g i x,
-        (hf.continuous_finsum_smul fun i => is_open_interior) fun i => (hgc i).mono interior_subset⟩,
+        (hf.continuous_finsum_smul fun i => is_open_interior) $ fun i => (hgc i).mono interior_subset⟩,
       fun x => f.finsum_smul_mem_convex (mem_univ x) (fun i hi => hgt _ _ _) (ht _)⟩
-  exact interior_subset (hf _ <| subset_closure hi)
+  exact interior_subset (hf _ $ subset_closure hi)
 #align exists_continuous_forall_mem_convex_of_local exists_continuous_forall_mem_convex_of_local
 
 /-- Let `X` be a normal paracompact topological space (e.g., any extended metric space). Let `E` be
@@ -65,7 +65,7 @@ neighborhood of `x`. Then there exists a continuous map `g : C(X, E)` such that 
 `x`. See also `exists_continuous_forall_mem_convex_of_local`. -/
 theorem exists_continuous_forall_mem_convex_of_local_const (ht : ∀ x, Convex ℝ (t x))
     (H : ∀ x : X, ∃ c : E, ∀ᶠ y in 𝓝 x, c ∈ t y) : ∃ g : C(X, E), ∀ x, g x ∈ t x :=
-  (exists_continuous_forall_mem_convex_of_local ht) fun x =>
+  exists_continuous_forall_mem_convex_of_local ht $ fun x =>
     let ⟨c, hc⟩ := H x
     ⟨_, hc, fun _ => c, continuous_on_const, fun y => id⟩
 #align exists_continuous_forall_mem_convex_of_local_const exists_continuous_forall_mem_convex_of_local_const

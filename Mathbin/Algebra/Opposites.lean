@@ -170,20 +170,20 @@ instance [Add α] : Add αᵐᵒᵖ where add x y := op (unop x + unop y)
 
 instance [Sub α] : Sub αᵐᵒᵖ where sub x y := op (unop x - unop y)
 
-instance [Neg α] : Neg αᵐᵒᵖ where neg x := op <| -unop x
+instance [Neg α] : Neg αᵐᵒᵖ where neg x := op $ -unop x
 
 instance [HasInvolutiveNeg α] : HasInvolutiveNeg αᵐᵒᵖ :=
-  { MulOpposite.hasNeg α with neg_neg := fun a => unop_injective <| neg_neg _ }
+  { MulOpposite.hasNeg α with neg_neg := fun a => unop_injective $ neg_neg _ }
 
 @[to_additive]
 instance [Mul α] : Mul αᵐᵒᵖ where mul x y := op (unop y * unop x)
 
 @[to_additive]
-instance [Inv α] : Inv αᵐᵒᵖ where inv x := op <| (unop x)⁻¹
+instance [Inv α] : Inv αᵐᵒᵖ where inv x := op $ (unop x)⁻¹
 
 @[to_additive]
 instance [HasInvolutiveInv α] : HasInvolutiveInv αᵐᵒᵖ :=
-  { MulOpposite.hasInv α with inv_inv := fun a => unop_injective <| inv_inv _ }
+  { MulOpposite.hasInv α with inv_inv := fun a => unop_injective $ inv_inv _ }
 
 @[to_additive]
 instance (R : Type _) [HasSmul R α] : HasSmul R αᵐᵒᵖ where smul c x := op (c • unop x)
@@ -289,11 +289,11 @@ theorem op_eq_zero_iff [Zero α] (a : α) : op a = (0 : αᵐᵒᵖ) ↔ a = (0 
 #align mul_opposite.op_eq_zero_iff MulOpposite.op_eq_zero_iff
 
 theorem unop_ne_zero_iff [Zero α] (a : αᵐᵒᵖ) : a.unop ≠ (0 : α) ↔ a ≠ (0 : αᵐᵒᵖ) :=
-  not_congr <| unop_eq_zero_iff a
+  not_congr $ unop_eq_zero_iff a
 #align mul_opposite.unop_ne_zero_iff MulOpposite.unop_ne_zero_iff
 
 theorem op_ne_zero_iff [Zero α] (a : α) : op a ≠ (0 : αᵐᵒᵖ) ↔ a ≠ (0 : α) :=
-  not_congr <| op_eq_zero_iff a
+  not_congr $ op_eq_zero_iff a
 #align mul_opposite.op_ne_zero_iff MulOpposite.op_ne_zero_iff
 
 @[simp, to_additive]
@@ -347,7 +347,7 @@ theorem unop_mul [Mul α] (a b : αᵃᵒᵖ) : unop (a * b) = unop a * unop b :
 instance [Inv α] : Inv αᵃᵒᵖ where inv a := op (unop a)⁻¹
 
 instance [HasInvolutiveInv α] : HasInvolutiveInv αᵃᵒᵖ :=
-  { AddOpposite.hasInv with inv_inv := fun a => unop_injective <| inv_inv _ }
+  { AddOpposite.hasInv with inv_inv := fun a => unop_injective $ inv_inv _ }
 
 @[simp]
 theorem op_inv [Inv α] (a : α) : op a⁻¹ = (op a)⁻¹ :=

@@ -73,8 +73,8 @@ for a version over a more general base ring. -/
 @[simps]
 noncomputable def PowerBasis.ofGenMemAdjoin {x : S} (B : PowerBasis K S) (hint : IsIntegral K x)
     (hx : B.gen ∈ adjoin K ({x} : Set S)) : PowerBasis K S :=
-  (Algebra.adjoin.powerBasis hint).map <|
-    (Subalgebra.equivOfEq _ _ <| PowerBasis.adjoin_eq_top_of_gen_mem_adjoin hx).trans Subalgebra.topEquiv
+  (Algebra.adjoin.powerBasis hint).map $
+    (Subalgebra.equivOfEq _ _ $ PowerBasis.adjoin_eq_top_of_gen_mem_adjoin hx).trans Subalgebra.topEquiv
 #align power_basis.of_gen_mem_adjoin PowerBasis.ofGenMemAdjoin
 
 section IsIntegral

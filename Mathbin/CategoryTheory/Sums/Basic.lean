@@ -33,7 +33,7 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 
 /-- `sum C D` gives the direct sum of two categories.
 -/
-instance sum : Category.{v₁} (Sum C D) where
+instance sum : Category.{v₁} (C ⊕ D) where
   Hom X Y :=
     match X, Y with
     | inl X, inl Y => X ⟶ Y
@@ -51,14 +51,14 @@ instance sum : Category.{v₁} (Sum C D) where
 #align category_theory.sum CategoryTheory.sum
 
 @[simp]
-theorem sum_comp_inl {P Q R : C} (f : (inl P : Sum C D) ⟶ inl Q) (g : (inl Q : Sum C D) ⟶ inl R) :
+theorem sum_comp_inl {P Q R : C} (f : (inl P : C ⊕ D) ⟶ inl Q) (g : (inl Q : C ⊕ D) ⟶ inl R) :
     @CategoryStruct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
       @CategoryStruct.comp _ _ (inl P) (inl Q) (inl R) (f : P ⟶ Q) (g : Q ⟶ R) :=
   rfl
 #align category_theory.sum_comp_inl CategoryTheory.sum_comp_inl
 
 @[simp]
-theorem sum_comp_inr {P Q R : D} (f : (inr P : Sum C D) ⟶ inr Q) (g : (inr Q : Sum C D) ⟶ inr R) :
+theorem sum_comp_inr {P Q R : D} (f : (inr P : C ⊕ D) ⟶ inr Q) (g : (inr Q : C ⊕ D) ⟶ inr R) :
     @CategoryStruct.comp _ _ P Q R (f : P ⟶ Q) (g : Q ⟶ R) =
       @CategoryStruct.comp _ _ (inr P) (inr Q) (inr R) (f : P ⟶ Q) (g : Q ⟶ R) :=
   rfl
@@ -73,20 +73,20 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₁) [Category.{v₁} D]
 -- Unfortunate naming here, suggestions welcome.
 /-- `inl_` is the functor `X ↦ inl X`. -/
 @[simps]
-def inl_ : C ⥤ Sum C D where
+def inl_ : C ⥤ C ⊕ D where
   obj X := inl X
   map X Y f := f
 #align category_theory.sum.inl_ CategoryTheory.sum.inl_
 
 /-- `inr_` is the functor `X ↦ inr X`. -/
 @[simps]
-def inr_ : D ⥤ Sum C D where
+def inr_ : D ⥤ C ⊕ D where
   obj X := inr X
   map X Y f := f
 #align category_theory.sum.inr_ CategoryTheory.sum.inr_
 
 /-- The functor exchanging two direct summand categories. -/
-def swap : Sum C D ⥤ Sum D C where
+def swap : C ⊕ D ⥤ D ⊕ C where
   obj X :=
     match X with
     | inl X => inr X
@@ -120,7 +120,7 @@ theorem swap_map_inr {X Y : D} {f : inr X ⟶ inr Y} : (swap C D).map f = f :=
 namespace Swap
 
 /-- `swap` gives an equivalence between `C ⊕ D` and `D ⊕ C`. -/
-def equivalence : Sum C D ≌ Sum D C :=
+def equivalence : C ⊕ D ≌ D ⊕ C :=
   Equivalence.mk (swap C D) (swap D C) (NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy))
     (NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy))
 #align category_theory.sum.swap.equivalence CategoryTheory.sum.swap.equivalence
@@ -130,7 +130,7 @@ instance isEquivalence : IsEquivalence (swap C D) :=
 #align category_theory.sum.swap.is_equivalence CategoryTheory.sum.swap.isEquivalence
 
 /-- The double swap on `C ⊕ D` is naturally isomorphic to the identity functor. -/
-def symmetry : swap C D ⋙ swap D C ≅ 𝟭 (Sum C D) :=
+def symmetry : swap C D ⋙ swap D C ≅ 𝟭 (C ⊕ D) :=
   (equivalence C D).unitIso.symm
 #align category_theory.sum.swap.symmetry CategoryTheory.sum.swap.symmetry
 
@@ -144,7 +144,7 @@ variable {A : Type u₁} [Category.{v₁} A] {B : Type u₁} [Category.{v₁} B]
 namespace Functor
 
 /-- The sum of two functors. -/
-def sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D where
+def sum (F : A ⥤ B) (G : C ⥤ D) : A ⊕ C ⥤ B ⊕ D where
   obj X :=
     match X with
     | inl X => inl (F.obj X)

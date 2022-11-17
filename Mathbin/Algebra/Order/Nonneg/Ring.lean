@@ -88,8 +88,8 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
     (h : sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
-      (Function.funext_iff.1 (@subset_Sup_def α (Set.ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
-        Subtype.eq <| by
+      (Function.funext_iff.1 (@subset_Sup_def α (Set.ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans $
+        Subtype.eq $ by
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2
           · simp [h2.not_le]

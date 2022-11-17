@@ -71,7 +71,7 @@ variable {K : Type _} {n : ℕ}
 
 namespace GeneralizedContinuedFraction
 
-variable {g : GeneralizedContinuedFraction K} {s : Seq <| Pair K}
+variable {g : GeneralizedContinuedFraction K} {s : Seq $ Pair K}
 
 section Squash
 
@@ -91,7 +91,7 @@ combines `⟨aₙ, bₙ⟩` and `⟨aₙ₊₁, bₙ₊₁⟩` at position `n` t
 `squash_seq s 0 = [(a₀, bₒ + a₁ / b₁), (a₁, b₁),...]`.
 If `s.terminated_at (n + 1)`, then `squash_seq s n = s`.
 -/
-def squashSeq (s : Seq <| Pair K) (n : ℕ) : Seq (Pair K) :=
+def squashSeq (s : Seq $ Pair K) (n : ℕ) : Seq (Pair K) :=
   match Prod.mk (s.nth n) (s.nth (n + 1)) with
   | ⟨some gp_n, some gp_succ_n⟩ =>
     Seq.nats.zipWith
@@ -166,7 +166,7 @@ theorem squash_seq_succ_n_tail_eq_squash_seq_tail_n : (squashSeq s (n + 1)).tail
 corresponding squashed sequence at the squashed position. -/
 theorem succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq :
     convergents'Aux s (n + 2) = convergents'Aux (squashSeq s n) (n + 1) := by
-  cases' s_succ_nth_eq : s.nth <| n + 1 with gp_succ_n
+  cases' s_succ_nth_eq : s.nth $ n + 1 with gp_succ_n
   case none =>
     rw [squash_seq_eq_self_of_terminated s_succ_nth_eq, convergents'_aux_stable_step_of_terminated s_succ_nth_eq]
   case some =>
@@ -331,7 +331,7 @@ theorem succ_nth_convergent_eq_squash_gcf_nth_convergent [Field K]
         (b * (pb * pA + pa * ppA) + a * pA) / (b * (pb * pB + pa * ppB) + a * pB)
       by
       obtain ⟨eq1, eq2, eq3, eq4⟩ : pA' = pA ∧ pB' = pB ∧ ppA' = ppA ∧ ppB' = ppB := by
-        simp [*, (continuants_aux_eq_continuants_aux_squash_gcf_of_le <| le_refl <| n' + 1).symm,
+        simp [*, (continuants_aux_eq_continuants_aux_squash_gcf_of_le $ le_refl $ n' + 1).symm,
           (continuants_aux_eq_continuants_aux_squash_gcf_of_le n'.le_succ).symm]
       symm
       simpa only [eq1, eq2, eq3, eq4, mul_div_cancel _ b_ne_zero]
@@ -387,11 +387,11 @@ theorem convergents_eq_convergents' [LinearOrderedField K]
           rwa [this]
         refine' ⟨(s_pos (Nat.lt.step m_lt_n) mth_s_eq).left, _⟩
         refine' add_pos (s_pos (Nat.lt.step m_lt_n) mth_s_eq).right _
-        have : 0 < gp_succ_m.a ∧ 0 < gp_succ_m.b := s_pos (lt_add_one <| m + 1) s_succ_mth_eq
+        have : 0 < gp_succ_m.a ∧ 0 < gp_succ_m.b := s_pos (lt_add_one $ m + 1) s_succ_mth_eq
         exact div_pos this.left this.right
         
       · -- the easy case: before the squashed position, nothing changes
-        refine' s_pos (Nat.lt.step <| Nat.lt.step succ_m_lt_n) _
+        refine' s_pos (Nat.lt.step $ Nat.lt.step succ_m_lt_n) _
         exact Eq.trans (squash_gcf_nth_of_lt succ_m_lt_n).symm s_mth_eq'
         
     -- now the result follows from the fact that the convergents coincide at the squashed position
@@ -421,7 +421,7 @@ theorem convergents_eq_convergents' [LinearOrderedField K] {c : ContinuedFractio
   intro gp m m_lt_n s_nth_eq
   exact
     ⟨zero_lt_one.trans_le ((c : SimpleContinuedFraction K).property m gp.a (part_num_eq_s_a s_nth_eq)).symm.le,
-      c.property m gp.b <| part_denom_eq_s_b s_nth_eq⟩
+      c.property m gp.b $ part_denom_eq_s_b s_nth_eq⟩
 #align continued_fraction.convergents_eq_convergents' ContinuedFraction.convergents_eq_convergents'
 
 end ContinuedFraction

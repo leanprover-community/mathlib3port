@@ -76,8 +76,8 @@ def dual : LinearOrderCat ⥤ LinearOrderCat where
 /-- The equivalence between `LinearOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : LinearOrderCat ≌ LinearOrderCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
 #align LinearOrder.dual_equiv LinearOrderCat.dualEquiv
 
 end LinearOrderCat

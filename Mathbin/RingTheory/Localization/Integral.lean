@@ -261,7 +261,7 @@ theorem isIntegralLocalization' {R S : Type _} [CommRing R] [CommRing S] {f : R 
 variable (M)
 
 theorem IsLocalization.scale_roots_common_denom_mem_lifts (p : Rₘ[X]) (hp : p.leadingCoeff ∈ (algebraMap R Rₘ).range) :
-    p.scaleRoots (algebraMap R Rₘ <| IsLocalization.commonDenom M p.support p.coeff) ∈
+    p.scaleRoots (algebraMap R Rₘ $ IsLocalization.commonDenom M p.support p.coeff) ∈
       Polynomial.lifts (algebraMap R Rₘ) :=
   by
   rw [Polynomial.lifts_iff_coeff_lifts]
@@ -350,7 +350,7 @@ theorem isFractionRingOfFiniteExtension [Algebra K L] [IsScalarTower A K L] [Fin
     IsFractionRing C L :=
   isFractionRingOfAlgebraic A C (IsFractionRing.comap_is_algebraic_iff.mpr (isAlgebraicOfFinite K L)) fun x hx =>
     IsFractionRing.to_map_eq_zero_iff.mp
-      ((map_eq_zero <| algebraMap K L).mp <| (IsScalarTower.algebra_map_apply _ _ _ _).symm.trans hx)
+      ((map_eq_zero $ algebraMap K L).mp $ (IsScalarTower.algebra_map_apply _ _ _ _).symm.trans hx)
 #align is_integral_closure.is_fraction_ring_of_finite_extension IsIntegralClosure.isFractionRingOfFiniteExtension
 
 end IsIntegralClosure

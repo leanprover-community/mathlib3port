@@ -12,8 +12,7 @@ open Tactic Expr Name List
 
 namespace Tactic
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic.Interactive (get_current_field refineStruct)
 
 /-- makes the substructure axiom name from field name, by postfacing with `_mem`-/
@@ -22,22 +21,22 @@ def mkMemName (sub : Name) : Name → Name
   | n => n
 #align tactic.mk_mem_name Tactic.mkMemName
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def derive_field_subtype : tactic Unit := do
   let field ← get_current_field
   let b ← target >>= is_prop
   if b then do
       sorry
       intros
-      andthen (applyc field) assumption
+      applyc field; assumption
     else do
-      let s ← find_local (pquote.1 (Set _))
-      let quote.1 (Set (%%ₓα)) ← infer_type s
+      let s ← find_local ``(Set _)
+      let q(Set $(α)) ← infer_type s
       let e ← mk_const field
-      let expl_arity ← get_expl_arity <| e α
-      let xs ← (iota expl_arity).mmap fun _ => intro1
-      let args ← xs fun x => mk_app `subtype.val [x]
-      let hyps ← xs fun x => mk_app `subtype.property [x]
+      let expl_arity ← get_expl_arity $ e α
+      let xs ← (iota expl_arity).mmap $ fun _ => intro1
+      let args ← xs $ fun x => mk_app `subtype.val [x]
+      let hyps ← xs $ fun x => mk_app `subtype.property [x]
       let val ← mk_app field args
       let subname ←
         local_context >>=
@@ -45,10 +44,10 @@ unsafe def derive_field_subtype : tactic Unit := do
               let (expr.const n _, args) ← get_app_fn_args <$> infer_type h
               is_def_eq s args reducible
               return n
-      let mem_field ← resolve_constant <| mk_mem_name subname field
+      let mem_field ← resolve_constant $ mk_mem_name subname field
       let val_mem ← mk_app mem_field hyps
-      let quote.1 (coeSort (%%ₓs)) ← target >>= instantiate_mvars
-      tactic.refine (pquote.1 (@Subtype.mk _ (%%ₓs) (%%ₓval) (%%ₓval_mem)))
+      let q(coeSort $(s)) ← target >>= instantiate_mvars
+      tactic.refine ``(@Subtype.mk _ $(s) $(val) $(val_mem))
 #align tactic.derive_field_subtype tactic.derive_field_subtype
 
 namespace Interactive
@@ -73,7 +72,7 @@ unsafe def subtype_instance := do
   let src ← find_ancestors cl t.app_arg
   let inst :=
     pexpr.mk_structure_instance { struct := cl, field_values := [], field_names := [], sources := src.map to_pexpr }
-  andthen (refine_struct inst) derive_field_subtype
+  refine_struct inst; derive_field_subtype
 #align tactic.interactive.subtype_instance tactic.interactive.subtype_instance
 
 add_tactic_doc

@@ -96,7 +96,7 @@ theorem Matrix.Represents.congr_fun {A : Matrix ι ι R} {f : Module.EndCat R M}
 
 theorem Matrix.represents_iff {A : Matrix ι ι R} {f : Module.EndCat R M} :
     A.Represents b f ↔ ∀ x, Fintype.total R R b (A.mulVec x) = f (Fintype.total R R b x) :=
-  ⟨fun e x => e.congr_fun x, fun H => LinearMap.ext fun x => H x⟩
+  ⟨fun e x => e.congr_fun x, fun H => LinearMap.ext $ fun x => H x⟩
 #align matrix.represents_iff Matrix.represents_iff
 
 theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.EndCat R M} :
@@ -222,15 +222,25 @@ This is the version found in Eisenbud 4.3, which is slightly weaker than Matsumu
 -/
 theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul [Module.Finite R M]
     (f : Module.EndCat R M) (I : Ideal R) (hI : f.range ≤ I • ⊤) :
-    ∃ p : R[X], p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by
-  classical cases subsingleton_or_nontrivial R
-    obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ := Module.Finite.out
-    refine' ⟨A.1.charpoly, A.1.charpoly_monic, _, _⟩
-    · rw [Polynomial.aeval_alg_hom_apply, ← map_zero (Matrix.isRepresentation.toEnd R coe _)]
-      congr 1
-      ext1
-      rw [Polynomial.aeval_subalgebra_coe, Subtype.val_eq_coe, Matrix.aeval_self_charpoly, Subalgebra.coe_zero]
-      
+    ∃ p : R[X], p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by classical
+  cases subsingleton_or_nontrivial R
+  · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
+    
+  obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ := Module.Finite.out
+  obtain ⟨A, rfl, h⟩ :=
+    Matrix.isRepresentation.to_End_exists_mem_ideal R (coe : s → M)
+      (by rw [Subtype.range_coe_subtype, Finset.set_of_mem, hs]) f I hI
+  refine' ⟨A.1.charpoly, A.1.charpoly_monic, _, _⟩
+  · rw [A.1.charpoly_nat_degree_eq_dim]
+    exact coeff_charpoly_mem_ideal_pow h
+    
+  · rw [Polynomial.aeval_alg_hom_apply, ← map_zero (Matrix.isRepresentation.toEnd R coe _)]
+    congr 1
+    ext1
+    rw [Polynomial.aeval_subalgebra_coe, Subtype.val_eq_coe, Matrix.aeval_self_charpoly, Subalgebra.coe_zero]
+    
+  · infer_instance
+    
 #align
   linear_map.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul
 

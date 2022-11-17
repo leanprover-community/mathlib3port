@@ -85,7 +85,7 @@ theorem spectral_radius_zero : spectralRadius 𝕜 (0 : A) = 0 := by
 #align spectrum.spectral_radius_zero spectrum.spectral_radius_zero
 
 theorem mem_resolvent_set_of_spectral_radius_lt {a : A} {k : 𝕜} (h : spectralRadius 𝕜 a < ∥k∥₊) : k ∈ ρ a :=
-  not_not.mp fun hn => h.not_le <| le_supr₂ k hn
+  not_not.mp $ fun hn => h.not_le $ le_supr₂ k hn
 #align spectrum.mem_resolvent_set_of_spectral_radius_lt spectrum.mem_resolvent_set_of_spectral_radius_lt
 
 variable [CompleteSpace A]
@@ -103,7 +103,7 @@ theorem mem_resolvent_set_of_norm_lt_mul {a : A} {k : 𝕜} (h : ∥a∥ * ∥(1
   nontriviality A
   have hk : k ≠ 0 := ne_zero_of_norm_ne_zero ((mul_nonneg (norm_nonneg _) (norm_nonneg _)).trans_lt h).ne'
   let ku := Units.map ↑ₐ.toMonoidHom (Units.mk0 k hk)
-  rw [← inv_inv ∥(1 : A)∥, mul_inv_lt_iff (inv_pos.2 <| norm_pos_iff.2 (one_ne_zero : (1 : A) ≠ 0))] at h
+  rw [← inv_inv ∥(1 : A)∥, mul_inv_lt_iff (inv_pos.2 $ norm_pos_iff.2 (one_ne_zero : (1 : A) ≠ 0))] at h
   have hku : ∥-a∥ < ∥(↑ku⁻¹ : A)∥⁻¹ := by simpa [ku, norm_algebra_map] using h
   simpa [ku, sub_eq_add_neg, Algebra.algebra_map_eq_smul_one] using (ku.add (-a) hku).IsUnit
 #align spectrum.mem_resolvent_set_of_norm_lt_mul spectrum.mem_resolvent_set_of_norm_lt_mul
@@ -113,11 +113,11 @@ theorem mem_resolvent_set_of_norm_lt [NormOneClass A] {a : A} {k : 𝕜} (h : �
 #align spectrum.mem_resolvent_set_of_norm_lt spectrum.mem_resolvent_set_of_norm_lt
 
 theorem norm_le_norm_mul_of_mem {a : A} {k : 𝕜} (hk : k ∈ σ a) : ∥k∥ ≤ ∥a∥ * ∥(1 : A)∥ :=
-  le_of_not_lt <| mt mem_resolvent_set_of_norm_lt_mul hk
+  le_of_not_lt $ mt mem_resolvent_set_of_norm_lt_mul hk
 #align spectrum.norm_le_norm_mul_of_mem spectrum.norm_le_norm_mul_of_mem
 
 theorem norm_le_norm_of_mem [NormOneClass A] {a : A} {k : 𝕜} (hk : k ∈ σ a) : ∥k∥ ≤ ∥a∥ :=
-  le_of_not_lt <| mt mem_resolvent_set_of_norm_lt hk
+  le_of_not_lt $ mt mem_resolvent_set_of_norm_lt hk
 #align spectrum.norm_le_norm_of_mem spectrum.norm_le_norm_of_mem
 
 theorem subset_closed_ball_norm_mul (a : A) : σ a ⊆ Metric.closedBall (0 : 𝕜) (∥a∥ * ∥(1 : A)∥) := fun k hk => by
@@ -144,12 +144,12 @@ theorem spectral_radius_le_nnnorm [NormOneClass A] (a : A) : spectralRadius 𝕜
 theorem exists_nnnorm_eq_spectral_radius_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty) :
     ∃ k ∈ σ a, (∥k∥₊ : ℝ≥0∞) = spectralRadius 𝕜 a := by
   obtain ⟨k, hk, h⟩ := (spectrum.is_compact a).exists_forall_ge ha continuous_nnnorm.continuous_on
-  exact ⟨k, hk, le_antisymm (le_supr₂ k hk) (supr₂_le <| by exact_mod_cast h)⟩
+  exact ⟨k, hk, le_antisymm (le_supr₂ k hk) (supr₂_le $ by exact_mod_cast h)⟩
 #align spectrum.exists_nnnorm_eq_spectral_radius_of_nonempty spectrum.exists_nnnorm_eq_spectral_radius_of_nonempty
 
 theorem spectral_radius_lt_of_forall_lt_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty) {r : ℝ≥0}
     (hr : ∀ k ∈ σ a, ∥k∥₊ < r) : spectralRadius 𝕜 a < r :=
-  Sup_image.symm.trans_lt <|
+  Sup_image.symm.trans_lt $
     ((spectrum.is_compact a).Sup_lt_iff_of_continuous ha (Ennreal.continuous_coe.comp continuous_nnnorm).ContinuousOn
           (r : ℝ≥0∞)).mpr
       (by exact_mod_cast hr)
@@ -484,7 +484,7 @@ noncomputable def _root_.normed_ring.alg_equiv_complex_of_complete [CompleteSpac
   let nt : Nontrivial A := ⟨⟨1, 0, hA.mp ⟨⟨1, 1, mul_one _, mul_one _⟩, rfl⟩⟩⟩
   { Algebra.ofId ℂ A with toFun := algebraMap ℂ A, invFun := fun a => (@spectrum.nonempty _ _ _ _ nt a).some,
     left_inv := fun z => by
-      simpa only [@scalar_eq _ _ _ _ _ nt _] using (@spectrum.nonempty _ _ _ _ nt <| algebraMap ℂ A z).some_mem,
+      simpa only [@scalar_eq _ _ _ _ _ nt _] using (@spectrum.nonempty _ _ _ _ nt $ algebraMap ℂ A z).some_mem,
     right_inv := fun a => algebra_map_eq_of_mem (@hA) (@spectrum.nonempty _ _ _ _ nt a).some_mem }
 #align
   spectrum._root_.normed_ring.alg_equiv_complex_of_complete spectrum._root_.normed_ring.alg_equiv_complex_of_complete
@@ -542,7 +542,7 @@ automatically bounded). See note [lower instance priority] -/
 instance (priority := 100) [AlgHomClass F 𝕜 A 𝕜] : ContinuousLinearMapClass F 𝕜 A 𝕜 :=
   { AlgHomClass.linearMapClass with
     map_continuous := fun φ =>
-      (AddMonoidHomClass.continuous_of_bound φ ∥(1 : A)∥) fun a =>
+      AddMonoidHomClass.continuous_of_bound φ ∥(1 : A)∥ $ fun a =>
         mul_comm ∥a∥ ∥(1 : A)∥ ▸ spectrum.norm_le_norm_mul_of_mem (apply_mem_spectrum φ _) }
 
 /-- An algebra homomorphism into the base field, as a continuous linear map (since it is
@@ -600,8 +600,8 @@ def equivAlgHom : characterSpace 𝕜 A ≃ (A →ₐ[𝕜] 𝕜) where
       property := by
         rw [eq_set_map_one_map_mul]
         exact ⟨map_one f, map_mul f⟩ }
-  left_inv f := Subtype.ext <| ContinuousLinearMap.ext fun x => rfl
-  right_inv f := AlgHom.ext fun x => rfl
+  left_inv f := Subtype.ext $ ContinuousLinearMap.ext $ fun x => rfl
+  right_inv f := AlgHom.ext $ fun x => rfl
 #align weak_dual.character_space.equiv_alg_hom WeakDual.characterSpace.equivAlgHom
 
 @[simp]

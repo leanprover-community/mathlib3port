@@ -228,17 +228,17 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E} (
   cases nonempty_fintype ι
   simp only [Fintype.linear_independent_iff'] at hf⊢
   rcases LinearMap.exists_antilipschitz_with _ hf with ⟨K, K0, hK⟩
-  have : tendsto (fun g : ι → E => ∑ i, ∥g i - f i∥) (𝓝 f) (𝓝 <| ∑ i, ∥f i - f i∥) :=
-    tendsto_finset_sum _ fun i hi => tendsto.norm <| ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
+  have : tendsto (fun g : ι → E => ∑ i, ∥g i - f i∥) (𝓝 f) (𝓝 $ ∑ i, ∥f i - f i∥) :=
+    tendsto_finset_sum _ fun i hi => tendsto.norm $ ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
   simp only [sub_self, norm_zero, Finset.sum_const_zero] at this
-  refine' (this.eventually (gt_mem_nhds <| inv_pos.2 K0)).mono fun g hg => _
+  refine' (this.eventually (gt_mem_nhds $ inv_pos.2 K0)).mono fun g hg => _
   replace hg : (∑ i, ∥g i - f i∥₊) < K⁻¹
   · rw [← Nnreal.coe_lt_coe]
     push_cast
     exact hg
     
   rw [LinearMap.ker_eq_bot]
-  refine' (hK.add_sub_lipschitz_with (LipschitzWith.ofDistLeMul fun v u => _) hg).Injective
+  refine' (hK.add_sub_lipschitz_with (LipschitzWith.ofDistLeMul $ fun v u => _) hg).Injective
   simp only [dist_eq_norm, LinearMap.lsum_apply, Pi.sub_apply, LinearMap.sum_apply, LinearMap.comp_apply,
     LinearMap.proj_apply, LinearMap.smul_right_apply, LinearMap.id_apply, ← Finset.sum_sub_distrib, ← smul_sub, ←
     sub_smul, Nnreal.coe_sum, coe_nnnorm, Finset.sum_mul]
@@ -248,7 +248,7 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E} (
 #align linear_independent.eventually LinearIndependent.eventually
 
 theorem is_open_set_of_linear_independent {ι : Type _} [Finite ι] : IsOpen { f : ι → E | LinearIndependent 𝕜 f } :=
-  is_open_iff_mem_nhds.2 fun f => LinearIndependent.eventually
+  is_open_iff_mem_nhds.2 $ fun f => LinearIndependent.eventually
 #align is_open_set_of_linear_independent is_open_set_of_linear_independent
 
 theorem is_open_set_of_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ rank (f : E →ₗ[𝕜] F) } := by
@@ -319,12 +319,12 @@ theorem Basis.constrL_basis (v : Basis ι 𝕜 E) (f : ι → F) (i : ι) : (v.c
 
 theorem Basis.op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} (M : ℝ≥0)
     (hu : ∀ i, ∥u (v i)∥₊ ≤ M) : ∥u∥₊ ≤ Fintype.card ι • ∥v.equivFunL.toContinuousLinearMap∥₊ * M :=
-  (u.op_nnnorm_le_bound _) fun e => by
+  u.op_nnnorm_le_bound _ $ fun e => by
     set φ := v.equiv_funL.to_continuous_linear_map
     calc
       ∥u e∥₊ = ∥u (∑ i, v.equiv_fun e i • v i)∥₊ := by rw [v.sum_equiv_fun]
-      _ = ∥∑ i, v.equiv_fun e i • (u <| v i)∥₊ := by simp [u.map_sum, LinearMap.map_smul]
-      _ ≤ ∑ i, ∥v.equiv_fun e i • (u <| v i)∥₊ := nnnorm_sum_le _ _
+      _ = ∥∑ i, v.equiv_fun e i • (u $ v i)∥₊ := by simp [u.map_sum, LinearMap.map_smul]
+      _ ≤ ∑ i, ∥v.equiv_fun e i • (u $ v i)∥₊ := nnnorm_sum_le _ _
       _ = ∑ i, ∥v.equiv_fun e i∥₊ * ∥u (v i)∥₊ := by simp only [nnnorm_smul]
       _ ≤ ∑ i, ∥v.equiv_fun e i∥₊ * M := Finset.sum_le_sum fun i hi => mul_le_mul_of_nonneg_left (hu i) (zero_le _)
       _ = (∑ i, ∥v.equiv_fun e i∥₊) * M := finset.sum_mul.symm
@@ -349,7 +349,7 @@ theorem Basis.exists_op_nnnorm_le {ι : Type _} [Finite ι] (v : Basis ι 𝕜 E
   cases nonempty_fintype ι <;>
     exact
       ⟨max (Fintype.card ι • ∥v.equiv_funL.to_continuous_linear_map∥₊) 1, zero_lt_one.trans_le (le_max_right _ _),
-        fun u M hu => (v.op_nnnorm_le M hu).trans <| mul_le_mul_of_nonneg_right (le_max_left _ _) (zero_le M)⟩
+        fun u M hu => (v.op_nnnorm_le M hu).trans $ mul_le_mul_of_nonneg_right (le_max_left _ _) (zero_le M)⟩
 #align basis.exists_op_nnnorm_le Basis.exists_op_nnnorm_le
 
 /-- A weaker version of `basis.op_norm_le` that abstracts away the value of `C`. -/
@@ -370,7 +370,7 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] : SecondCountabl
     v.exists_op_norm_le
   have h_2C : 0 < 2 * C := mul_pos zero_lt_two C_pos
   have hε2C : 0 < ε / (2 * C) := div_pos ε_pos h_2C
-  have : ∀ φ : E →L[𝕜] F, ∃ n : Fin d → ℕ, ∥φ - (v.constrL <| u ∘ n)∥ ≤ ε / 2 := by
+  have : ∀ φ : E →L[𝕜] F, ∃ n : Fin d → ℕ, ∥φ - (v.constrL $ u ∘ n)∥ ≤ ε / 2 := by
     intro φ
     have : ∀ i, ∃ n, ∥φ (v i) - u n∥ ≤ ε / (2 * C) := by
       simp only [norm_sub_rev]
@@ -383,7 +383,7 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] : SecondCountabl
       exact ⟨n, le_of_lt hn⟩
     choose n hn using this
     use n
-    replace hn : ∀ i : Fin d, ∥(φ - (v.constrL <| u ∘ n)) (v i)∥ ≤ ε / (2 * C)
+    replace hn : ∀ i : Fin d, ∥(φ - (v.constrL $ u ∘ n)) (v i)∥ ≤ ε / (2 * C)
     · simp [hn]
       
     have : C * (ε / (2 * C)) = ε / 2 := by
@@ -391,7 +391,7 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] : SecondCountabl
     specialize hC (le_of_lt hε2C) hn
     rwa [this] at hC
   choose n hn using this
-  set Φ := fun φ : E →L[𝕜] F => v.constrL <| u ∘ n φ
+  set Φ := fun φ : E →L[𝕜] F => v.constrL $ u ∘ n φ
   change ∀ z, dist z (Φ z) ≤ ε / 2 at hn
   use n
   intro x y hxy
@@ -467,7 +467,7 @@ theorem exists_seq_norm_le_one_le_norm_sub' {c : 𝕜} (hc : 1 < ∥c∥) {R : �
 #align exists_seq_norm_le_one_le_norm_sub' exists_seq_norm_le_one_le_norm_sub'
 
 theorem exists_seq_norm_le_one_le_norm_sub (h : ¬FiniteDimensional 𝕜 E) :
-    ∃ (R : ℝ)(f : ℕ → E), 1 < R ∧ (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ := by
+    ∃ (R : ℝ) (f : ℕ → E), 1 < R ∧ (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ := by
   obtain ⟨c, hc⟩ : ∃ c : 𝕜, 1 < ∥c∥ := NormedField.exists_one_lt_norm 𝕜
   have A : ∥c∥ < ∥c∥ + 1 := by linarith
   rcases exists_seq_norm_le_one_le_norm_sub' hc A h with ⟨f, hf⟩
@@ -481,7 +481,7 @@ space, then the space is finite-dimensional. -/
 theorem finiteDimensionalOfIsCompactClosedBall₀ {r : ℝ} (rpos : 0 < r) (h : IsCompact (Metric.closedBall (0 : E) r)) :
     FiniteDimensional 𝕜 E := by
   by_contra hfin
-  obtain ⟨R, f, Rgt, fle, lef⟩ : ∃ (R : ℝ)(f : ℕ → E), 1 < R ∧ (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ :=
+  obtain ⟨R, f, Rgt, fle, lef⟩ : ∃ (R : ℝ) (f : ℕ → E), 1 < R ∧ (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ :=
     exists_seq_norm_le_one_le_norm_sub hfin
   have rRpos : 0 < r / R := div_pos rpos (zero_lt_one.trans Rgt)
   obtain ⟨c, hc⟩ : ∃ c : 𝕜, 0 < ∥c∥ ∧ ∥c∥ < r / R := NormedField.exists_norm_lt _ rRpos
@@ -494,7 +494,7 @@ theorem finiteDimensionalOfIsCompactClosedBall₀ {r : ℝ} (rpos : 0 < r) (h : 
       _ = r := by field_simp [(zero_lt_one.trans Rgt).ne']
       
   obtain ⟨x, hx, φ, φmono, φlim⟩ :
-    ∃ (x : E)(H : x ∈ Metric.closedBall (0 : E) r)(φ : ℕ → ℕ), StrictMono φ ∧ tendsto (g ∘ φ) at_top (𝓝 x) :=
+    ∃ (x : E) (H : x ∈ Metric.closedBall (0 : E) r) (φ : ℕ → ℕ), StrictMono φ ∧ tendsto (g ∘ φ) at_top (𝓝 x) :=
     h.tendsto_subseq A
   have B : CauchySeq (g ∘ φ) := φlim.cauchy_seq
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ n : ℕ, N ≤ n → dist ((g ∘ φ) n) ((g ∘ φ) N) < ∥c∥ := Metric.cauchy_seq_iff'.1 B ∥c∥ hc.1
@@ -534,7 +534,7 @@ theorem HasCompactMulSupport.eq_one_or_finite_dimensional {X : Type _} [Topologi
   obtain ⟨x, hx⟩ : ∃ x, f x ≠ 1
   exact h
   have : Function.mulSupport f ∈ 𝓝 x := h'f.is_open_mul_support.mem_nhds hx
-  obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ)(hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f
+  obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ) (hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f
   exact metric.nhds_basis_closed_ball.mem_iff.1 this
   have : IsCompact (Metric.closedBall x r) :=
     is_compact_of_is_closed_subset hf Metric.isClosedBall (hr.trans (subset_mul_tsupport _))
@@ -556,7 +556,7 @@ theorem LinearEquiv.closedEmbeddingOfInjective {f : E →ₗ[𝕜] F} (hf : f.ke
 theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensional 𝕜 F] (f : E →L[𝕜] F)
     (hf : LinearMap.range f = ⊤) : ∃ g : F →L[𝕜] E, f.comp g = ContinuousLinearMap.id 𝕜 F :=
   let ⟨g, hg⟩ := (f : E →ₗ[𝕜] F).exists_right_inverse_of_surjective hf
-  ⟨g.toContinuousLinearMap, ContinuousLinearMap.ext <| LinearMap.ext_iff.1 hg⟩
+  ⟨g.toContinuousLinearMap, ContinuousLinearMap.ext $ LinearMap.ext_iff.1 hg⟩
 #align continuous_linear_map.exists_right_inverse_of_surjective ContinuousLinearMap.exists_right_inverse_of_surjective
 
 theorem closedEmbeddingSmulLeft {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
@@ -650,7 +650,7 @@ theorem exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedAddCommGr
     ∃ y ∈ frontier s, Metric.infDist x (sᶜ) = dist x y := by
   rcases Metric.exists_mem_closure_inf_dist_eq_dist (nonempty_compl.2 hs) x with ⟨y, hys, hyd⟩
   rw [closure_compl] at hys
-  refine' ⟨y, ⟨Metric.closed_ball_inf_dist_compl_subset_closure hx <| Metric.mem_closed_ball.2 <| ge_of_eq _, hys⟩, hyd⟩
+  refine' ⟨y, ⟨Metric.closed_ball_inf_dist_compl_subset_closure hx $ Metric.mem_closed_ball.2 $ ge_of_eq _, hys⟩, hyd⟩
   rwa [dist_comm]
 #align exists_mem_frontier_inf_dist_compl_eq_dist exists_mem_frontier_inf_dist_compl_eq_dist
 
@@ -687,7 +687,7 @@ theorem summable_norm_iff {α E : Type _} [NormedAddCommGroup E] [NormedSpace �
     set e := v.equiv_funL
     have : Summable fun x => ∥e (f x)∥ := this (e.summable.2 hf)
     refine' summable_of_norm_bounded _ (this.mul_left ↑∥(e.symm : (Fin (finrank ℝ E) → ℝ) →L[ℝ] E)∥₊) fun i => _
-    simpa using (e.symm : (Fin (finrank ℝ E) → ℝ) →L[ℝ] E).le_op_norm (e <| f i)
+    simpa using (e.symm : (Fin (finrank ℝ E) → ℝ) →L[ℝ] E).le_op_norm (e $ f i)
   clear! E
   -- Now we deal with `g : α → fin N → ℝ`
   intro N g hg

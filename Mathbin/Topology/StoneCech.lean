@@ -29,7 +29,7 @@ section Ultrafilter
   it the Stone-Čech compactification of α (viewed as a discrete space). -/
 /-- Basis for the topology on `ultrafilter α`. -/
 def ultrafilterBasis (α : Type u) : Set (Set (Ultrafilter α)) :=
-  range fun s : Set α => { u | s ∈ u }
+  range $ fun s : Set α => { u | s ∈ u }
 #align ultrafilter_basis ultrafilterBasis
 
 variable {α : Type u}
@@ -42,7 +42,7 @@ theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (ultraf
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ u ⟨ua, ub⟩
     refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;>
       apply mem_of_superset hv <;> simp [inter_subset_right a b],
-    eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
+    eq_univ_of_univ_subset $ subset_sUnion_of_mem $ ⟨univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
 #align ultrafilter_basis_is_basis ultrafilter_basis_is_basis
 
 /-- The basic open sets for the topology on ultrafilters are open. -/
@@ -74,11 +74,11 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
 #align ultrafilter_converges_iff ultrafilter_converges_iff
 
 instance ultrafilter_compact : CompactSpace (Ultrafilter α) :=
-  ⟨is_compact_iff_ultrafilter_le_nhds.mpr fun f _ => ⟨joinM f, trivial, ultrafilter_converges_iff.mpr rfl⟩⟩
+  ⟨is_compact_iff_ultrafilter_le_nhds.mpr $ fun f _ => ⟨joinM f, trivial, ultrafilter_converges_iff.mpr rfl⟩⟩
 #align ultrafilter_compact ultrafilter_compact
 
 instance Ultrafilter.t2Space : T2Space (Ultrafilter α) :=
-  t2_iff_ultrafilter.mpr fun x y f fx fy =>
+  t2_iff_ultrafilter.mpr $ fun x y f fx fy =>
     have hx : x = joinM f := ultrafilter_converges_iff.mp fx
     have hy : y = joinM f := ultrafilter_converges_iff.mp fy
     hx.trans hy.symm
@@ -292,11 +292,11 @@ theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x)
 #align convergent_eqv_pure convergent_eqv_pure
 
 theorem continuous_stone_cech_unit : Continuous (stoneCechUnit : α → StoneCech α) :=
-  continuous_iff_ultrafilter.mpr fun x g gx => by
+  continuous_iff_ultrafilter.mpr $ fun x g gx => by
     have : ↑(g.map pure) ≤ 𝓝 g := by rw [ultrafilter_converges_iff] <;> exact (bind_pure _).symm
     have : (g.map stoneCechUnit : Filter (StoneCech α)) ≤ 𝓝 ⟦g⟧ :=
       continuous_at_iff_ultrafilter.mp (continuous_quotient_mk.Tendsto g) _ this
-    rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotient.sound <| convergent_eqv_pure gx] at this
+    rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotient.sound $ convergent_eqv_pure gx] at this
 #align continuous_stone_cech_unit continuous_stone_cech_unit
 
 instance StoneCech.t2Space : T2Space (StoneCech α) := by

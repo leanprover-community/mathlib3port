@@ -110,7 +110,7 @@ theorem ae_eventually_measure_pos [SecondCountableTopology α] : ∀ᵐ x ∂μ,
 /-- For every point `x`, sufficiently small sets in a Vitali family around `x` have finite measure.
 (This is a trivial result, following from the fact that the measure is locally finite). -/
 theorem eventually_measure_lt_top [IsLocallyFiniteMeasure μ] (x : α) : ∀ᶠ a in v.filterAt x, μ a < ∞ := by
-  obtain ⟨ε, εpos, με⟩ : ∃ (ε : ℝ)(hi : 0 < ε), μ (closed_ball x ε) < ∞ :=
+  obtain ⟨ε, εpos, με⟩ : ∃ (ε : ℝ) (hi : 0 < ε), μ (closed_ball x ε) < ∞ :=
     (μ.finite_at_nhds x).exists_mem_basis nhds_basis_closed_ball
   exact v.eventually_filter_at_iff.2 ⟨ε, εpos, fun a ha haε => (measure_mono haε).trans_lt με⟩
 #align vitali_family.eventually_measure_lt_top VitaliFamily.eventually_measure_lt_top
@@ -122,7 +122,7 @@ theorem measure_le_of_frequently_le [SigmaCompactSpace α] [BorelSpace α] {ρ :
   by
   -- this follows from a covering argument using the sets satisfying `ρ a ≤ ν a`.
   apply Ennreal.le_of_forall_pos_le_add fun ε εpos hc => _
-  obtain ⟨U, sU, U_open, νU⟩ : ∃ (U : Set α)(H : s ⊆ U), IsOpen U ∧ ν U ≤ ν s + ε :=
+  obtain ⟨U, sU, U_open, νU⟩ : ∃ (U : Set α) (H : s ⊆ U), IsOpen U ∧ ν U ≤ ν s + ε :=
     exists_is_open_le_add s ν (Ennreal.coe_pos.2 εpos).ne'
   let f : α → Set (Set α) := fun x => { a | ρ a ≤ ν a ∧ a ⊆ U }
   have h : v.fine_subfamily_on f s := by
@@ -266,12 +266,13 @@ theorem ae_tendsto_lim_ratio : ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- Given two thresholds `p < q`, the sets `{x | v.lim_ratio ρ x < p}`
 and `{x | q < v.lim_ratio ρ x}` are obviously disjoint. The key to proving that `v.lim_ratio ρ` is
 almost everywhere measurable is to show that these sets have measurable supersets which are also
 disjoint, up to zero measure. This is the content of this lemma. -/
 theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0} (hpq : p < q) :
-    ∃ a b,
+    ∃ (a) (b),
       MeasurableSet a ∧
         MeasurableSet b ∧ { x | v.limRatio ρ x < p } ⊆ a ∧ { x | (q : ℝ≥0∞) < v.limRatio ρ x } ⊆ b ∧ μ (a ∩ b) = 0 :=
   by

@@ -268,14 +268,14 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
   set k := Nat.find hn with hk₁
   have hk₂ : s ≤[i \ ⋃ l < k, restrict_nonpos_seq s i l] 0 := Nat.find_spec hn
   have hmeas : MeasurableSet (⋃ (l : ℕ) (H : l < k), restrict_nonpos_seq s i l) :=
-    MeasurableSet.union fun _ => MeasurableSet.union fun _ => restrict_nonpos_seq_measurable_set _
+    MeasurableSet.union $ fun _ => MeasurableSet.union fun _ => restrict_nonpos_seq_measurable_set _
   refine' ⟨i \ ⋃ l < k, restrict_nonpos_seq s i l, hi₁.diff hmeas, Set.diff_subset _ _, hk₂, _⟩
   rw [of_diff hmeas hi₁, s.of_disjoint_Union_nat]
   · have h₁ : ∀ l < k, 0 ≤ s (restrict_nonpos_seq s i l) := by
       intro l hl
       refine' le_of_lt (measure_of_restrict_nonpos_seq h _ _)
       refine' mt (restrict_le_zero_subset _ (hi₁.diff _) (Set.Subset.refl _)) (Nat.find_min hn hl)
-      exact MeasurableSet.union fun _ => MeasurableSet.union fun _ => restrict_nonpos_seq_measurable_set _
+      exact MeasurableSet.union $ fun _ => MeasurableSet.union fun _ => restrict_nonpos_seq_measurable_set _
     suffices 0 ≤ ∑' l : ℕ, s (⋃ H : l < k, restrict_nonpos_seq s i l) by
       rw [sub_neg]
       exact lt_of_lt_of_le hi₂ this
@@ -314,7 +314,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
 
 /-- A measurable set of negative measure has a negative subset of negative measure. -/
 theorem exists_subset_restrict_nonpos (hi : s i < 0) : ∃ j : Set α, MeasurableSet j ∧ j ⊆ i ∧ s ≤[j] 0 ∧ s j < 0 := by
-  have hi₁ : MeasurableSet i := Classical.by_contradiction fun h => ne_of_lt hi <| s.not_measurable h
+  have hi₁ : MeasurableSet i := Classical.by_contradiction fun h => ne_of_lt hi $ s.not_measurable h
   by_cases s ≤[i] 0
   · exact ⟨i, hi₁, Set.Subset.refl _, h, hi⟩
     
@@ -476,10 +476,11 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) : ∃ i : Set α, 
 #align
   measure_theory.signed_measure.exists_compl_positive_negative MeasureTheory.SignedMeasure.exists_compl_positive_negative
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- **The Hahn decomposition thoerem**: Given a signed measure `s`, there exist
 complement measurable sets `i` and `j` such that `i` is positive, `j` is negative. -/
 theorem exists_is_compl_positive_negative (s : SignedMeasure α) :
-    ∃ i j : Set α, MeasurableSet i ∧ 0 ≤[i] s ∧ MeasurableSet j ∧ s ≤[j] 0 ∧ IsCompl i j :=
+    ∃ (i : Set α) (j : Set α), MeasurableSet i ∧ 0 ≤[i] s ∧ MeasurableSet j ∧ s ≤[j] 0 ∧ IsCompl i j :=
   let ⟨i, hi₁, hi₂, hi₃⟩ := exists_compl_positive_negative s
   ⟨i, iᶜ, hi₁, hi₂, hi₁.compl, hi₃, is_compl_compl⟩
 #align

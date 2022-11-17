@@ -32,7 +32,7 @@ def totient (n : ℕ) : ℕ :=
 #align nat.totient Nat.totient
 
 -- mathport name: nat.totient
-localized [Nat] notation "φ" => Nat.totient
+scoped notation "φ" => Nat.totient
 
 @[simp]
 theorem totient_zero : φ 0 = 0 :=
@@ -56,9 +56,9 @@ theorem totient_lt (n : ℕ) (hn : 1 < n) : φ n < n :=
 #align nat.totient_lt Nat.totient_lt
 
 theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
-  | 0 => by decide
+  | 0 => dec_trivial
   | 1 => by simp [totient]
-  | n + 2 => fun h => card_pos.2 ⟨1, mem_filter.2 ⟨mem_range.2 (by decide), coprime_one_right _⟩⟩
+  | n + 2 => fun h => card_pos.2 ⟨1, mem_filter.2 ⟨mem_range.2 dec_trivial, coprime_one_right _⟩⟩
 #align nat.totient_pos Nat.totient_pos
 
 theorem filter_coprime_Ico_eq_totient (a n : ℕ) : ((ico n (n + a)).filter (Coprime a)).card = totient a := by
@@ -229,7 +229,7 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Pr
     
   rw [totient_eq_card_coprime, range_eq_Ico, ← Ico_insert_succ_left hp.le, Finset.filter_insert,
     if_neg (not_coprime_of_dvd_of_dvd hp (dvd_refl p) (dvd_zero p)), ← Nat.card_Ico 1 p] at h
-  refine' p.prime_of_coprime hp fun n hn hnz => Finset.filter_card_eq h n <| finset.mem_Ico.mpr ⟨_, hn⟩
+  refine' p.prime_of_coprime hp fun n hn hnz => Finset.filter_card_eq h n $ finset.mem_Ico.mpr ⟨_, hn⟩
   rwa [succ_le_iff, pos_iff_ne_zero]
 #align nat.totient_eq_iff_prime Nat.totient_eq_iff_prime
 
@@ -247,7 +247,7 @@ theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintyp
     suffices Fintype.card ℤˣ ≠ 0 by convert this
     simp
     
-  rw [Zmod.card_units_eq_totient, Nat.totient_eq_iff_prime <| NeZero.pos p]
+  rw [Zmod.card_units_eq_totient, Nat.totient_eq_iff_prime $ NeZero.pos p]
 #align nat.prime_iff_card_units Nat.prime_iff_card_units
 
 @[simp]
@@ -262,7 +262,7 @@ theorem totient_eq_one_iff : ∀ {n : ℕ}, n.totient = 1 ↔ n = 1 ∨ n = 2
   | n + 3 => by
     have : 3 ≤ n + 3 := le_add_self
     simp only [succ_succ_ne_one, false_or_iff]
-    exact ⟨fun h => not_even_one.elim <| h ▸ totient_even this, by rintro ⟨⟩⟩
+    exact ⟨fun h => not_even_one.elim $ h ▸ totient_even this, by rintro ⟨⟩⟩
 #align nat.totient_eq_one_iff Nat.totient_eq_one_iff
 
 /-! ### Euler's product formula for the totient function

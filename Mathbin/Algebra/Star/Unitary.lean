@@ -92,12 +92,12 @@ theorem coe_mul_star_self (U : unitary R) : (U : R) * star U = 1 :=
 
 @[simp]
 theorem star_mul_self (U : unitary R) : star U * U = 1 :=
-  Subtype.ext <| coe_star_mul_self U
+  Subtype.ext $ coe_star_mul_self U
 #align unitary.star_mul_self unitary.star_mul_self
 
 @[simp]
 theorem mul_star_self (U : unitary R) : U * star U = 1 :=
-  Subtype.ext <| coe_mul_star_self U
+  Subtype.ext $ coe_mul_star_self U
 #align unitary.mul_star_self unitary.mul_star_self
 
 instance : Group (unitary R) :=
@@ -133,7 +133,7 @@ def toUnits : unitary R →* Rˣ where
 #align unitary.to_units unitary.toUnits
 
 theorem to_units_injective : Function.Injective (toUnits : unitary R → Rˣ) := fun x y h =>
-  Subtype.ext <| Units.ext_iff.mp h
+  Subtype.ext $ Units.ext_iff.mp h
 #align unitary.to_units_injective unitary.to_units_injective
 
 end Monoid
@@ -146,11 +146,11 @@ instance : CommGroup (unitary R) :=
   { unitary.group, Submonoid.toCommMonoid _ with }
 
 theorem mem_iff_star_mul_self {U : R} : U ∈ unitary R ↔ star U * U = 1 :=
-  mem_iff.trans <| and_iff_left_of_imp fun h => mul_comm (star U) U ▸ h
+  mem_iff.trans $ and_iff_left_of_imp $ fun h => mul_comm (star U) U ▸ h
 #align unitary.mem_iff_star_mul_self unitary.mem_iff_star_mul_self
 
 theorem mem_iff_self_mul_star {U : R} : U ∈ unitary R ↔ U * star U = 1 :=
-  mem_iff.trans <| and_iff_right_of_imp fun h => mul_comm U (star U) ▸ h
+  mem_iff.trans $ and_iff_right_of_imp $ fun h => mul_comm U (star U) ▸ h
 #align unitary.mem_iff_self_mul_star unitary.mem_iff_self_mul_star
 
 end CommMonoid
@@ -161,7 +161,7 @@ variable [GroupWithZero R] [StarSemigroup R]
 
 @[norm_cast]
 theorem coe_inv (U : unitary R) : ↑U⁻¹ = (U⁻¹ : R) :=
-  eq_inv_of_mul_eq_one_right <| coe_mul_star_self _
+  eq_inv_of_mul_eq_one_right $ coe_mul_star_self _
 #align unitary.coe_inv unitary.coe_inv
 
 @[norm_cast]

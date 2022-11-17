@@ -49,8 +49,8 @@ theorem RespectsIso.basic_open_iff (hP : RespectsIso @P) {X Y : SchemeCat} [IsAf
     (r : Y.Presheaf.obj (Opposite.op ⊤)) :
     P (SchemeCat.Γ.map (f ∣_ Y.basicOpen r).op) ↔
       P
-        (@IsLocalization.Away.map (Y.Presheaf.obj (Opposite.op ⊤)) _ (Y.Presheaf.obj (Opposite.op <| Y.basicOpen r)) _ _
-          (X.Presheaf.obj (Opposite.op ⊤)) _ (X.Presheaf.obj (Opposite.op <| X.basicOpen (SchemeCat.Γ.map f.op r))) _ _
+        (@IsLocalization.Away.map (Y.Presheaf.obj (Opposite.op ⊤)) _ (Y.Presheaf.obj (Opposite.op $ Y.basicOpen r)) _ _
+          (X.Presheaf.obj (Opposite.op ⊤)) _ (X.Presheaf.obj (Opposite.op $ X.basicOpen (SchemeCat.Γ.map f.op r))) _ _
           (SchemeCat.Γ.map f.op) r _ _) :=
   by
   rw [Γ_map_morphism_restrict, hP.cancel_left_is_iso, hP.cancel_right_is_iso, ←
@@ -224,10 +224,10 @@ theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : 
 theorem schemeRestrictBasicOpenOfLocalizationPreserves (h₁ : RingHom.RespectsIso @P)
     (h₂ : RingHom.LocalizationPreserves @P) {X Y : SchemeCat} [IsAffine Y] (f : X ⟶ Y) (r : Y.Presheaf.obj (op ⊤))
     (H : sourceAffineLocally (@P) f)
-    (U : (X.restrict ((Opens.map f.1.base).obj <| Y.basicOpen r).OpenEmbedding).affineOpens) :
+    (U : (X.restrict ((Opens.map f.1.base).obj $ Y.basicOpen r).OpenEmbedding).affineOpens) :
     P
       (SchemeCat.Γ.map
-        ((X.restrict ((Opens.map f.1.base).obj <| Y.basicOpen r).OpenEmbedding).ofRestrict U.1.OpenEmbedding ≫
+        ((X.restrict ((Opens.map f.1.base).obj $ Y.basicOpen r).OpenEmbedding).ofRestrict U.1.OpenEmbedding ≫
             f ∣_ Y.basicOpen r).op) :=
   by
   specialize H ⟨_, U.2.image_is_open_immersion (X.of_restrict _)⟩
@@ -245,7 +245,7 @@ theorem schemeRestrictBasicOpenOfLocalizationPreserves (h₁ : RingHom.RespectsI
 #align
   algebraic_geometry.Scheme_restrict_basic_open_of_localization_preserves AlgebraicGeometry.schemeRestrictBasicOpenOfLocalizationPreserves
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (V «expr = » (opens.map f.val.base).obj (Y.basic_open r.val)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (V «expr = » (opens.map f.val.base).obj (Y.basic_open r.val)) -/
 theorem sourceAffineLocallyIsLocal (h₁ : RingHom.RespectsIso @P) (h₂ : RingHom.LocalizationPreserves @P)
     (h₃ : RingHom.OfLocalizationSpan @P) : (sourceAffineLocally @P).IsLocal := by
   constructor
@@ -350,7 +350,7 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
     [∀ i, IsAffine (𝒰.obj i)] (H : ∀ i, P (SchemeCat.Γ.map (𝒰.map i ≫ f).op)) : sourceAffineLocally (@P) f := by
   let S i :=
     (⟨⟨Set.range (𝒰.map i).1.base, (𝒰.is_open i).base_open.open_range⟩,
-      range_is_affine_open_of_open_immersion (𝒰.map i)⟩ :
+        range_is_affine_open_of_open_immersion (𝒰.map i)⟩ :
       X.affine_opens)
   intro U
   apply of_affine_open_cover U
@@ -416,26 +416,29 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Term.app `sourceAffineLocally [(Term.explicit "@" `P) `f])
             ","
-            («term∃_,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.explicitBinders
-              [(Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `𝒰)]
-                ":"
-                (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X])
-                ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent (Term.hole "_"))]
-                ":"
-                (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
-                ")")])
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinderCollection
+               [(Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `𝒰)
+                  [(group ":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X]))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent (Term.hole "_"))
+                  [(group
+                    ":"
+                    (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])])))])
+                 ")")]))
+             ", "
              (Term.forall
               "∀"
               [`i]
@@ -884,17 +887,17 @@ theorem
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Term.app `sourceAffineLocally [(Term.explicit "@" `P) `f])
             ","
-            («term∃_,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.explicitBinders
-              (Lean.unbracketedExplicitBinders
-               [(Lean.binderIdent `𝒰)]
-               [":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X])]))
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `𝒰)
+               [(group ":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X]))]))
+             ", "
              (Term.forall
               "∀"
               [`i]
@@ -1404,7 +1407,7 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_"))) []]
+     (Term.show "show" (Term.hole "_") (Term.fromTerm "from" (Term.hole "_")))
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
@@ -1498,7 +1501,7 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 80, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f) []]
+     (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hP.affine_open_cover_tfae
@@ -1506,13 +1509,12 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app
-       `hP.affine_open_cover_tfae
-       [(Term.paren
-         "("
-         [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f) []]
-         ")")])
-      []]
+     (Term.app
+      `hP.affine_open_cover_tfae
+      [(Term.paren
+        "("
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» (Term.app `𝒰.map [`i.fst]) " ≫ " `f)
+        ")")])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
@@ -1660,7 +1662,7 @@ theorem
       `hP.affine_open_cover_tfae
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `hP.affine_open_cover_tfae [`f]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `hP.affine_open_cover_tfae [`f]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022

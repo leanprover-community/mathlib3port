@@ -260,7 +260,7 @@ instance toChartedSpace : ChartedSpace (ModelProd H F) Z.toVectorBundleCore.Tota
 
 theorem mem_atlas_iff (f : LocalHomeomorph Z.toVectorBundleCore.TotalSpace (ModelProd H F)) :
     f ∈ atlas (ModelProd H F) Z.toVectorBundleCore.TotalSpace ↔
-      ∃ (e : LocalHomeomorph M H)(he : e ∈ atlas H M), f = Z.chart he :=
+      ∃ (e : LocalHomeomorph M H) (he : e ∈ atlas H M), f = Z.chart he :=
   by simp only [atlas, mem_Union, mem_singleton_iff]
 #align basic_smooth_vector_bundle_core.mem_atlas_iff BasicSmoothVectorBundleCore.mem_atlas_iff
 

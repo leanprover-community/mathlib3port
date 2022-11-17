@@ -75,15 +75,15 @@ end
 /-- Reflect a universe-polymorphic name, by searching for `reflected_univ` instances. -/
 unsafe def tactic.interactive.reflect_name : tactic Unit := do
   let tgt ← tactic.target
-  let quote.1 (reflected _ (%%ₓx)) ← pure tgt
+  let q(reflected _ $(x)) ← pure tgt
   let expr.const Name levels ← pure x
   let levels ←
     levels.mmap fun l => do
         let inst ← tactic.mk_instance (expr.const `reflected_univ [l])
-        pure <| expr.app (expr.const `reflect_univ [l]) inst
-  let levels := List.foldr (fun a l => quote.1 (@List.cons level (%%ₓa) (%%ₓl))) (quote.1 (@List.nil level)) levels
-  let e := quote.1 (@expr.const true (%%ₓquote.1 Name) (%%ₓlevels))
-  let e2 := pquote.1 (reflected.of (%%ₓe) : %%ₓtgt)
+        pure $ expr.app (expr.const `reflect_univ [l]) inst
+  let levels := List.foldr (fun a l => q(@List.cons level $(a) $(l))) q(@List.nil level) levels
+  let e := q(@expr.const true $(q(Name)) $(levels))
+  let e2 := ``((reflected.of $(e) : $(tgt)))
   let e2 ← tactic.to_expr e2
   tactic.exact e2
 #align tactic.interactive.reflect_name tactic.interactive.reflect_name
@@ -125,11 +125,11 @@ unsafe instance list.reflect' [reflected_univ.{u}] {α : Type u} [has_reflect α
   | [] =>
     (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
           reflected _ @List.nil.{u}).subst
-      (quote.1 α)
+      q(α)
   | h :: t =>
     (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
           reflected _ @List.cons.{u}).subst₃
-      (quote.1 α) (quote.1 h) (list.reflect' t)
+      q(α) q(h) (list.reflect' t)
 #align list.reflect' list.reflect'
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
@@ -138,6 +138,6 @@ unsafe instance ulift.reflect' [reflected_univ.{u}] [reflected_univ.{v}] {α : T
   | ULift.up x =>
     (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
           reflected _ @ULift.up.{u, v}).subst₂
-      (quote.1 α) (quote.1 x)
+      q(α) q(x)
 #align ulift.reflect' ulift.reflect'
 

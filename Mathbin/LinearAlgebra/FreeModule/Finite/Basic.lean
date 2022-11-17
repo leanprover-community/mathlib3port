@@ -51,13 +51,15 @@ variable {R}
 theorem _root_.module.finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [Module R M] [Finite ι]
     (b : Basis ι R M) : Module.Finite R M := by
   cases nonempty_fintype ι
-  classical refine' ⟨⟨finset.univ.image b, _⟩⟩
+  classical
+  refine' ⟨⟨finset.univ.image b, _⟩⟩
+  simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
 #align module.free._root_.module.finite.of_basis module.free._root_.module.finite.of_basis
 
 instance _root_.module.finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] : Module.Finite R (Matrix ι₁ ι₂ R) := by
   cases nonempty_fintype ι₁
   cases nonempty_fintype ι₂
-  exact Module.Finite.of_basis (Pi.basis fun i => Pi.basisFun R _)
+  exact Module.Finite.of_basis (Pi.basis $ fun i => Pi.basisFun R _)
 #align module.free._root_.module.finite.matrix module.free._root_.module.finite.matrix
 
 end CommRing

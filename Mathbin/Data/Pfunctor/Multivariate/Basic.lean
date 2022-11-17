@@ -35,7 +35,7 @@ variable {n m : ℕ} (P : Mvpfunctor.{u} n)
 
 /-- Applying `P` to an object of `Type` -/
 def Obj (α : Typevec.{u} n) : Type u :=
-  Σa : P.A, P.B a ⟹ α
+  Σ a : P.A, P.B a ⟹ α
 #align mvpfunctor.obj Mvpfunctor.Obj
 
 /-- Applying `P` to a morphism of `Type` -/
@@ -111,8 +111,8 @@ end Const
 
 /-- Functor composition on polynomial functors -/
 def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) : Mvpfunctor m where
-  A := Σa₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1
-  B a i := Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i
+  A := Σ a₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1
+  B a i := Σ (j) (b : P.2 a.1 j), (Q j).2 (a.snd j b) i
 #align mvpfunctor.comp Mvpfunctor.comp
 
 variable {P} {Q : Fin2 n → Mvpfunctor.{u} m} {α β : Typevec.{u} m}
@@ -153,11 +153,12 @@ theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x := by
   rcases x_1 with ⟨a, b, c⟩ <;> rfl
 #align mvpfunctor.comp.mk_get Mvpfunctor.comp.mk_get
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f) -/
 /-
 lifting predicates and relations
 -/
 theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj α) :
-    Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
+    Liftp p x ↔ ∃ (a) (f), x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
   constructor
   · rintro ⟨y, hy⟩
     cases' h : y with a f
@@ -181,8 +182,9 @@ theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (
   repeat' first |constructor|assumption
 #align mvpfunctor.liftp_iff' Mvpfunctor.liftp_iff'
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f₀ f₁) -/
 theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.Obj α) :
-    Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
+    Liftr r x y ↔ ∃ (a) (f₀) (f₁), x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
   constructor
   · rintro ⟨u, xeq, yeq⟩
     cases' h : u with a f

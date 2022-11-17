@@ -82,7 +82,7 @@ protected theorem map (hx : IsPeriodicPt fa n x) {g : α → β} (hg : Semiconj 
 #align function.is_periodic_pt.map Function.IsPeriodicPt.map
 
 theorem apply_iterate (hx : IsPeriodicPt f n x) (m : ℕ) : IsPeriodicPt f n ((f^[m]) x) :=
-  hx.map <| Commute.iterate_self f m
+  hx.map $ Commute.iterate_self f m
 #align function.is_periodic_pt.apply_iterate Function.IsPeriodicPt.apply_iterate
 
 protected theorem apply (hx : IsPeriodicPt f n x) : IsPeriodicPt f n (f x) :=
@@ -140,7 +140,7 @@ theorem comp {g : α → α} (hco : Commute f g) (hf : IsPeriodicPt f n x) (hg :
 
 theorem comp_lcm {g : α → α} (hco : Commute f g) (hf : IsPeriodicPt f m x) (hg : IsPeriodicPt g n x) :
     IsPeriodicPt (f ∘ g) (Nat.lcm m n) x :=
-  (hf.trans_dvd <| Nat.dvd_lcm_left _ _).comp hco (hg.trans_dvd <| Nat.dvd_lcm_right _ _)
+  (hf.trans_dvd $ Nat.dvd_lcm_left _ _).comp hco (hg.trans_dvd $ Nat.dvd_lcm_right _ _)
 #align function.is_periodic_pt.comp_lcm Function.IsPeriodicPt.comp_lcm
 
 theorem left_of_comp {g : α → α} (hco : Commute f g) (hfg : IsPeriodicPt (f ∘ g) n x) (hg : IsPeriodicPt g n x) :
@@ -232,11 +232,11 @@ theorem is_periodic_pt_of_mem_periodic_pts_of_is_periodic_pt_iterate (hx : x ∈
 variable (f)
 
 theorem bUnion_pts_of_period : (⋃ n > 0, ptsOfPeriod f n) = periodicPts f :=
-  Set.ext fun x => by simp [mem_periodic_pts]
+  Set.ext $ fun x => by simp [mem_periodic_pts]
 #align function.bUnion_pts_of_period Function.bUnion_pts_of_period
 
 theorem Union_pnat_pts_of_period : (⋃ n : ℕ+, ptsOfPeriod f n) = periodicPts f :=
-  supr_subtype.trans <| bUnion_pts_of_period f
+  supr_subtype.trans $ bUnion_pts_of_period f
 #align function.Union_pnat_pts_of_period Function.Union_pnat_pts_of_period
 
 theorem bij_on_periodic_pts : BijOn f (periodicPts f) (periodicPts f) :=
@@ -295,11 +295,11 @@ theorem minimal_period_eq_zero_of_nmem_periodic_pts (hx : x ∉ periodicPts f) :
 #align function.minimal_period_eq_zero_of_nmem_periodic_pts Function.minimal_period_eq_zero_of_nmem_periodic_pts
 
 theorem IsPeriodicPt.minimal_period_pos (hn : 0 < n) (hx : IsPeriodicPt f n x) : 0 < minimalPeriod f x :=
-  minimal_period_pos_of_mem_periodic_pts <| mk_mem_periodic_pts hn hx
+  minimal_period_pos_of_mem_periodic_pts $ mk_mem_periodic_pts hn hx
 #align function.is_periodic_pt.minimal_period_pos Function.IsPeriodicPt.minimal_period_pos
 
 theorem minimal_period_pos_iff_mem_periodic_pts : 0 < minimalPeriod f x ↔ x ∈ periodicPts f :=
-  ⟨not_imp_not.1 fun h => by simp only [minimal_period, dif_neg h, lt_irrefl 0, not_false_iff],
+  ⟨not_imp_not.1 $ fun h => by simp only [minimal_period, dif_neg h, lt_irrefl 0, not_false_iff],
     minimal_period_pos_of_mem_periodic_pts⟩
 #align function.minimal_period_pos_iff_mem_periodic_pts Function.minimal_period_pos_iff_mem_periodic_pts
 
@@ -371,7 +371,7 @@ theorem is_fixed_point_iff_minimal_period_eq_one : minimalPeriod f x = 1 ↔ IsF
 #align function.is_fixed_point_iff_minimal_period_eq_one Function.is_fixed_point_iff_minimal_period_eq_one
 
 theorem IsPeriodicPt.eq_zero_of_lt_minimal_period (hx : IsPeriodicPt f n x) (hn : n < minimalPeriod f x) : n = 0 :=
-  Eq.symm <| (eq_or_lt_of_le <| n.zero_le).resolve_right fun hn0 => not_lt.2 (hx.minimal_period_le hn0) hn
+  Eq.symm $ (eq_or_lt_of_le $ n.zero_le).resolve_right $ fun hn0 => not_lt.2 (hx.minimal_period_le hn0) hn
 #align function.is_periodic_pt.eq_zero_of_lt_minimal_period Function.IsPeriodicPt.eq_zero_of_lt_minimal_period
 
 theorem not_is_periodic_pt_of_pos_of_lt_minimal_period :
@@ -381,10 +381,10 @@ theorem not_is_periodic_pt_of_pos_of_lt_minimal_period :
 #align function.not_is_periodic_pt_of_pos_of_lt_minimal_period Function.not_is_periodic_pt_of_pos_of_lt_minimal_period
 
 theorem IsPeriodicPt.minimal_period_dvd (hx : IsPeriodicPt f n x) : minimalPeriod f x ∣ n :=
-  ((eq_or_lt_of_le <| n.zero_le).elim fun hn0 => hn0 ▸ dvd_zero _) fun hn0 =>
-    Nat.dvd_iff_mod_eq_zero.2 <|
-      (hx.mod <| is_periodic_pt_minimal_period f x).eq_zero_of_lt_minimal_period <|
-        Nat.mod_lt _ <| hx.minimal_period_pos hn0
+  ((eq_or_lt_of_le $ n.zero_le).elim fun hn0 => hn0 ▸ dvd_zero _) $ fun hn0 =>
+    Nat.dvd_iff_mod_eq_zero.2 $
+      (hx.mod $ is_periodic_pt_minimal_period f x).eq_zero_of_lt_minimal_period $
+        Nat.mod_lt _ $ hx.minimal_period_pos hn0
 #align function.is_periodic_pt.minimal_period_dvd Function.IsPeriodicPt.minimal_period_dvd
 
 theorem is_periodic_pt_iff_minimal_period_dvd : IsPeriodicPt f n x ↔ minimalPeriod f x ∣ n :=
@@ -457,12 +457,12 @@ private theorem minimal_period_iterate_eq_div_gcd_aux (h : 0 < gcd (minimalPerio
 
 theorem minimal_period_iterate_eq_div_gcd (h : n ≠ 0) :
     minimalPeriod (f^[n]) x = minimalPeriod f x / Nat.gcd (minimalPeriod f x) n :=
-  minimal_period_iterate_eq_div_gcd_aux <| gcd_pos_of_pos_right _ (Nat.pos_of_ne_zero h)
+  minimal_period_iterate_eq_div_gcd_aux $ gcd_pos_of_pos_right _ (Nat.pos_of_ne_zero h)
 #align function.minimal_period_iterate_eq_div_gcd Function.minimal_period_iterate_eq_div_gcd
 
 theorem minimal_period_iterate_eq_div_gcd' (h : x ∈ periodicPts f) :
     minimalPeriod (f^[n]) x = minimalPeriod f x / Nat.gcd (minimalPeriod f x) n :=
-  minimal_period_iterate_eq_div_gcd_aux <| gcd_pos_of_pos_left n (minimal_period_pos_iff_mem_periodic_pts.mpr h)
+  minimal_period_iterate_eq_div_gcd_aux $ gcd_pos_of_pos_left n (minimal_period_pos_iff_mem_periodic_pts.mpr h)
 #align function.minimal_period_iterate_eq_div_gcd' Function.minimal_period_iterate_eq_div_gcd'
 
 /-- The orbit of a periodic point `x` of `f` is the cycle `[x, f x, f (f x), ...]`. Its length is
@@ -528,8 +528,8 @@ theorem nodup_periodic_orbit : (periodicOrbit f x).Nodup := by
 
 theorem periodic_orbit_apply_iterate_eq (hx : x ∈ periodicPts f) (n : ℕ) :
     periodicOrbit f ((f^[n]) x) = periodicOrbit f x :=
-  Eq.symm <|
-    Cycle.coe_eq_coe.2 <|
+  Eq.symm $
+    Cycle.coe_eq_coe.2 $
       ⟨n, by
         apply List.ext_le _ fun m _ _ => _
         · simp [minimal_period_apply_iterate hx]
@@ -595,9 +595,9 @@ theorem pow_smul_eq_iff_minimal_period_dvd {n : ℕ} : a ^ n • b = b ↔ Funct
 theorem zpow_smul_eq_iff_minimal_period_dvd {n : ℤ} : a ^ n • b = b ↔ (Function.minimalPeriod ((· • ·) a) b : ℤ) ∣ n :=
   by
   cases n
-  · rw [Int.of_nat_eq_coe, zpow_coe_nat, Int.coe_nat_dvd, pow_smul_eq_iff_minimal_period_dvd]
+  · rw [Int.ofNat_eq_coe, zpow_coe_nat, Int.coe_nat_dvd, pow_smul_eq_iff_minimal_period_dvd]
     
-  · rw [Int.neg_succ_of_nat_coe, zpow_neg, zpow_coe_nat, inv_smul_eq_iff, eq_comm, dvd_neg, Int.coe_nat_dvd,
+  · rw [Int.negSucc_coe, zpow_neg, zpow_coe_nat, inv_smul_eq_iff, eq_comm, dvd_neg, Int.coe_nat_dvd,
       pow_smul_eq_iff_minimal_period_dvd]
     
 #align mul_action.zpow_smul_eq_iff_minimal_period_dvd MulAction.zpow_smul_eq_iff_minimal_period_dvd

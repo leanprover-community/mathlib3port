@@ -59,7 +59,7 @@ inductive Lists'.{u} (α : Type u) : Bool → Type u
 to an element of `α`, or a "proper" ZFA list, inductively defined from the empty ZFA list and from
 appending a ZFA list to a proper ZFA list. -/
 def Lists (α : Type _) :=
-  Σb, Lists' α b
+  Σ b, Lists' α b
 #align lists Lists
 
 namespace Lists'
@@ -362,10 +362,10 @@ section Decidable
 
 @[simp]
 def Equiv.decidableMeas :
-    (PSum (Σ'l₁ : Lists α, Lists α) <| PSum (Σ'l₁ : Lists' α true, Lists' α true) (Σ'a : Lists α, Lists' α true)) → ℕ
+    (PSum (Σ' l₁ : Lists α, Lists α) $ PSum (Σ' l₁ : Lists' α true, Lists' α true) (Σ' a : Lists α, Lists' α true)) → ℕ
   | PSum.inl ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
-  | PSum.inr <| PSum.inl ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
-  | PSum.inr <| PSum.inr ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
+  | PSum.inr $ PSum.inl ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
+  | PSum.inr $ PSum.inr ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
 #align lists.equiv.decidable_meas Lists.Equiv.decidableMeas
 
 open WellFoundedTactics
@@ -373,7 +373,7 @@ open WellFoundedTactics
 theorem sizeof_pos {b} (l : Lists' α b) : 0 < SizeOf.sizeOf l := by
   cases l <;>
     run_tac
-      andthen unfold_sizeof trivial_nat_lt
+      unfold_sizeof; trivial_nat_lt
 #align lists.sizeof_pos Lists.sizeof_pos
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
@@ -391,9 +391,9 @@ theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
 mutual
   @[instance]
   def Equiv.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists α, Decidable (l₁ ~ l₂)
-    | ⟨ff, l₁⟩, ⟨ff, l₂⟩ => decidable_of_iff' (l₁ = l₂) <| by cases l₁ <;> refine' equiv_atom.trans (by simp [atom])
-    | ⟨ff, l₁⟩, ⟨tt, l₂⟩ => is_false <| by rintro ⟨⟩
-    | ⟨tt, l₁⟩, ⟨ff, l₂⟩ => is_false <| by rintro ⟨⟩
+    | ⟨ff, l₁⟩, ⟨ff, l₂⟩ => decidable_of_iff' (l₁ = l₂) $ by cases l₁ <;> refine' equiv_atom.trans (by simp [atom])
+    | ⟨ff, l₁⟩, ⟨tt, l₂⟩ => is_false $ by rintro ⟨⟩
+    | ⟨tt, l₁⟩, ⟨ff, l₂⟩ => is_false $ by rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨tt, l₂⟩ => by
       haveI :=
         have :
@@ -429,7 +429,7 @@ mutual
       exact decidable_of_iff' _ (@Lists'.cons_subset _ ⟨_, _⟩ _ _)
   @[instance]
   def Mem.decidable [DecidableEq α] : ∀ (a : Lists α) (l : Lists' α true), Decidable (a ∈ l)
-    | a, Lists'.nil => is_false <| by rintro ⟨_, ⟨⟩, _⟩
+    | a, Lists'.nil => is_false $ by rintro ⟨_, ⟨⟩, _⟩
     | a, Lists'.cons' b l₂ => by
       haveI :=
         have :
@@ -465,7 +465,7 @@ theorem mem_of_subset {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) : a �
 #align lists'.mem_of_subset Lists'.mem_of_subset
 
 theorem Subset.trans {l₁ l₂ l₃ : Lists' α true} (h₁ : l₁ ⊆ l₂) (h₂ : l₂ ⊆ l₃) : l₁ ⊆ l₃ :=
-  subset_def.2 fun a₁ m₁ => mem_of_subset h₂ <| mem_of_subset' h₁ m₁
+  subset_def.2 $ fun a₁ m₁ => mem_of_subset h₂ $ mem_of_subset' h₁ m₁
 #align lists'.subset.trans Lists'.Subset.trans
 
 end Lists'

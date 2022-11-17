@@ -159,49 +159,62 @@ theorem target_affine_locally_respects_iso {P : AffineTargetMorphismProperty} (h
 structure AffineTargetMorphismProperty.IsLocal (P : AffineTargetMorphismProperty) : Prop where
   RespectsIso : P.toProperty.RespectsIso
   toBasicOpen :
-    ∀ {X Y : SchemeCat} [IsAffine Y] (f : X ⟶ Y) (r : Y.Presheaf.obj <| op ⊤),
+    ∀ {X Y : SchemeCat} [IsAffine Y] (f : X ⟶ Y) (r : Y.Presheaf.obj $ op ⊤),
       P f → @P (f ∣_ Y.basic_open r) ((top_is_affine_open Y).basic_open_is_affine _)
   ofBasicOpenCover :
-    ∀ {X Y : SchemeCat} [IsAffine Y] (f : X ⟶ Y) (s : Finset (Y.Presheaf.obj <| op ⊤))
-      (hs : Ideal.span (s : Set (Y.Presheaf.obj <| op ⊤)) = ⊤),
+    ∀ {X Y : SchemeCat} [IsAffine Y] (f : X ⟶ Y) (s : Finset (Y.Presheaf.obj $ op ⊤))
+      (hs : Ideal.span (s : Set (Y.Presheaf.obj $ op ⊤)) = ⊤),
       (∀ r : s, @P (f ∣_ Y.basic_open r.1) ((top_is_affine_open Y).basic_open_is_affine _)) → P f
 #align
   algebraic_geometry.affine_target_morphism_property.is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal
 
 theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : P.IsLocal) {X Y : SchemeCat} (f : X ⟶ Y)
     (𝒰 : Y.OpenCover) [∀ i, IsAffine (𝒰.obj i)] (h𝒰 : ∀ i, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) :
-    targetAffineLocally P f := by
-  classical let S i :=
-      (⟨⟨Set.range (𝒰.map i).1.base, (𝒰.is_open i).base_open.open_range⟩,
+    targetAffineLocally P f := by classical
+  let S i :=
+    (⟨⟨Set.range (𝒰.map i).1.base, (𝒰.is_open i).base_open.open_range⟩,
         range_is_affine_open_of_open_immersion (𝒰.map i)⟩ :
-        Y.affine_opens)
-    apply of_affine_open_cover U (Set.range S)
-    · intro U s hs H
-      haveI : is_affine _ := U.2
-      apply hP.3 (f ∣_ U.1) (s.image (Y.presheaf.map (eq_to_hom U.1.open_embedding_obj_top).op))
-      · apply_fun Ideal.comap (Y.presheaf.map (eq_to_hom U.1.open_embedding_obj_top.symm).op)  at hs
-        rw [Ideal.comap_top] at hs
-        rw [← hs]
-        simp only [eq_to_hom_op, eq_to_hom_map, Finset.coe_image]
-        have :
-          ∀ {R S : CommRingCat} (e : S = R) (s : Set S),
-            Ideal.span (eq_to_hom e '' s) = Ideal.comap (eq_to_hom e.symm) (Ideal.span s) :=
-          by
-          intros
-          subst e
-          simpa
-        apply this
-        
-      · rintro ⟨r, hr⟩
-        obtain ⟨r, hr', rfl⟩ := finset.mem_image.mp hr
-        simp_rw [← P.to_property_apply] at H⊢
-        exact (hP.1.arrow_mk_iso_iff (morphism_restrict_restrict_basic_open f _ r)).mpr (H ⟨r, hr'⟩)
-        
+      Y.affine_opens)
+  intro U
+  apply of_affine_open_cover U (Set.range S)
+  · intro U r h
+    haveI : is_affine _ := U.2
+    have := hP.2 (f ∣_ U.1)
+    replace this := this (Y.presheaf.map (eq_to_hom U.1.open_embedding_obj_top).op r) h
+    rw [← P.to_property_apply] at this⊢
+    exact (hP.1.arrow_mk_iso_iff (morphism_restrict_restrict_basic_open f _ r)).mp this
+    
+  · intro U s hs H
+    haveI : is_affine _ := U.2
+    apply hP.3 (f ∣_ U.1) (s.image (Y.presheaf.map (eq_to_hom U.1.open_embedding_obj_top).op))
+    · apply_fun Ideal.comap (Y.presheaf.map (eq_to_hom U.1.open_embedding_obj_top.symm).op)  at hs
+      rw [Ideal.comap_top] at hs
+      rw [← hs]
+      simp only [eq_to_hom_op, eq_to_hom_map, Finset.coe_image]
+      have :
+        ∀ {R S : CommRingCat} (e : S = R) (s : Set S),
+          Ideal.span (eq_to_hom e '' s) = Ideal.comap (eq_to_hom e.symm) (Ideal.span s) :=
+        by
+        intros
+        subst e
+        simpa
+      apply this
       
-    · rintro ⟨_, i, rfl⟩
-      simp_rw [← P.to_property_apply] at h𝒰⊢
-      exact (hP.1.arrow_mk_iso_iff (morphism_restrict_opens_range f _)).mpr (h𝒰 i)
+    · rintro ⟨r, hr⟩
+      obtain ⟨r, hr', rfl⟩ := finset.mem_image.mp hr
+      simp_rw [← P.to_property_apply] at H⊢
+      exact (hP.1.arrow_mk_iso_iff (morphism_restrict_restrict_basic_open f _ r)).mpr (H ⟨r, hr'⟩)
       
+    
+  · rw [Set.eq_univ_iff_forall]
+    simp only [Set.mem_Union]
+    intro x
+    exact ⟨⟨_, ⟨𝒰.f x, rfl⟩⟩, 𝒰.covers x⟩
+    
+  · rintro ⟨_, i, rfl⟩
+    simp_rw [← P.to_property_apply] at h𝒰⊢
+    exact (hP.1.arrow_mk_iso_iff (morphism_restrict_opens_range f _)).mpr (h𝒰 i)
+    
 #align algebraic_geometry.target_affine_locally_of_open_cover AlgebraicGeometry.targetAffineLocallyOfOpenCover
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -219,26 +232,29 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Term.app `targetAffineLocally [`P `f])
             ","
-            («term∃_,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.explicitBinders
-              [(Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `𝒰)]
-                ":"
-                (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`Y])
-                ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent (Term.hole "_"))]
-                ":"
-                (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
-                ")")])
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinderCollection
+               [(Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `𝒰)
+                  [(group ":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`Y]))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent (Term.hole "_"))
+                  [(group
+                    ":"
+                    (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])])))])
+                 ")")]))
+             ", "
              (Term.forall
               "∀"
               [`i]
@@ -246,15 +262,14 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
               ","
               (Term.app
                `P
-               [(Term.paren
+               [(Term.typeAscription
                  "("
-                 [`pullback.snd
-                  [(Term.typeAscription
-                    ":"
-                    [(Combinatorics.Quiver.Basic.«term_⟶_»
-                      (Term.app (Term.proj (Term.app `𝒰.pullback_cover [`f]) "." `obj) [`i])
-                      " ⟶ "
-                      (Term.app `𝒰.obj [`i]))])]]
+                 `pullback.snd
+                 ":"
+                 [(Combinatorics.Quiver.Basic.«term_⟶_»
+                   (Term.app (Term.proj (Term.app `𝒰.pullback_cover [`f]) "." `obj) [`i])
+                   " ⟶ "
+                   (Term.app `𝒰.obj [`i]))]
                  ")")])))
             ","
             (Term.forall
@@ -275,15 +290,14 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
              ","
              (Term.app
               `P
-              [(Term.paren
+              [(Term.typeAscription
                 "("
-                [`pullback.snd
-                 [(Term.typeAscription
-                   ":"
-                   [(Combinatorics.Quiver.Basic.«term_⟶_»
-                     (Term.app (Term.proj (Term.app `𝒰.pullback_cover [`f]) "." `obj) [`i])
-                     " ⟶ "
-                     (Term.app `𝒰.obj [`i]))])]]
+                `pullback.snd
+                ":"
+                [(Combinatorics.Quiver.Basic.«term_⟶_»
+                  (Term.app (Term.proj (Term.app `𝒰.pullback_cover [`f]) "." `obj) [`i])
+                  " ⟶ "
+                  (Term.app `𝒰.obj [`i]))]
                 ")")]))
             ","
             (Term.forall
@@ -296,37 +310,40 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
              ","
              (Term.app
               `P
-              [(Term.paren
+              [(Term.typeAscription
                 "("
-                [`pullback.snd
-                 [(Term.typeAscription
-                   ":"
-                   [(Combinatorics.Quiver.Basic.«term_⟶_» (Term.app `pullback [`f `g]) " ⟶ " `U)])]]
+                `pullback.snd
+                ":"
+                [(Combinatorics.Quiver.Basic.«term_⟶_» (Term.app `pullback [`f `g]) " ⟶ " `U)]
                 ")")]))
             ","
-            («term∃_,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.explicitBinders
-              [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `ι)] ":" (Term.type "Type" [`u]) ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `U)]
-                ":"
-                (Term.arrow `ι "→" (Term.app `Opens [(Term.proj `Y "." `carrier)]))
-                ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `hU)]
-                ":"
-                («term_=_» (Term.app `supr [`U]) "=" (Order.BoundedOrder.«term⊤» "⊤"))
-                ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `hU')]
-                ":"
-                (Term.forall "∀" [`i] [] "," (Term.app `IsAffineOpen [(Term.app `U [`i])]))
-                ")")])
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinderCollection
+               [(Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `ι) [(group ":" (Term.type "Type" [`u]))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `U)
+                  [(group ":" (Term.arrow `ι "→" (Term.app `Opens [(Term.proj `Y "." `carrier)])))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `hU)
+                  [(group ":" (Init.Core.«term_=_» (Term.app `supr [`U]) " = " (Order.BoundedOrder.«term⊤» "⊤")))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `hU')
+                  [(group ":" (Term.forall "∀" [`i] [] "," (Term.app `IsAffineOpen [(Term.app `U [`i])])))])
+                 ")")]))
+             ", "
              (Term.forall
               "∀"
               [`i]
@@ -1035,7 +1052,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
       `Y.affine_cover.map
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Y.affine_cover.map [`x]) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Y.affine_cover.map [`x]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
@@ -1148,7 +1165,7 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
     (hP : P.toProperty.RespectsIso)
     (H :
       ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y),
-        (∃ (𝒰 : SchemeCat.OpenCover.{u} Y)(_ : ∀ i, IsAffine (𝒰.obj i)),
+        (∃ (𝒰 : SchemeCat.OpenCover.{u} Y) (_ : ∀ i, IsAffine (𝒰.obj i)),
             ∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullback_cover f).obj i ⟶ 𝒰.obj i)) →
           ∀ {U : SchemeCat} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g], P (pullback.snd : pullback f g ⟶ U)) :
     P.IsLocal := by
@@ -1283,17 +1300,17 @@ theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal {P : Aff
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Term.app `P [`f])
             ","
-            («term∃_,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.explicitBinders
-              (Lean.unbracketedExplicitBinders
-               [(Lean.binderIdent `𝒰)]
-               [":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`Y])]))
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `𝒰)
+               [(group ":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`Y]))]))
+             ", "
              (Term.forall
               "∀"
               [`i]
@@ -1301,15 +1318,14 @@ theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal {P : Aff
               ","
               (Term.app
                `P
-               [(Term.paren
+               [(Term.typeAscription
                  "("
-                 [`pullback.snd
-                  [(Term.typeAscription
-                    ":"
-                    [(Combinatorics.Quiver.Basic.«term_⟶_»
-                      (Term.app (Term.proj (Term.app (Term.proj `𝒰 "." `pullbackCover) [`f]) "." `obj) [`i])
-                      " ⟶ "
-                      (Term.app (Term.proj `𝒰 "." `obj) [`i]))])]]
+                 `pullback.snd
+                 ":"
+                 [(Combinatorics.Quiver.Basic.«term_⟶_»
+                   (Term.app (Term.proj (Term.app (Term.proj `𝒰 "." `pullbackCover) [`f]) "." `obj) [`i])
+                   " ⟶ "
+                   (Term.app (Term.proj `𝒰 "." `obj) [`i]))]
                  ")")])))
             ","
             (Term.forall
@@ -1325,15 +1341,14 @@ theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal {P : Aff
              ","
              (Term.app
               `P
-              [(Term.paren
+              [(Term.typeAscription
                 "("
-                [`pullback.snd
-                 [(Term.typeAscription
-                   ":"
-                   [(Combinatorics.Quiver.Basic.«term_⟶_»
-                     (Term.app (Term.proj (Term.app (Term.proj `𝒰 "." `pullbackCover) [`f]) "." `obj) [`i])
-                     " ⟶ "
-                     (Term.app (Term.proj `𝒰 "." `obj) [`i]))])]]
+                `pullback.snd
+                ":"
+                [(Combinatorics.Quiver.Basic.«term_⟶_»
+                  (Term.app (Term.proj (Term.app (Term.proj `𝒰 "." `pullbackCover) [`f]) "." `obj) [`i])
+                  " ⟶ "
+                  (Term.app (Term.proj `𝒰 "." `obj) [`i]))]
                 ")")]))
             ","
             (Term.forall
@@ -1352,31 +1367,34 @@ theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal {P : Aff
              ","
              (Term.app
               `P
-              [(Term.paren
+              [(Term.typeAscription
                 "("
-                [`pullback.snd
-                 [(Term.typeAscription
-                   ":"
-                   [(Combinatorics.Quiver.Basic.«term_⟶_» (Term.app `pullback [`f `g]) " ⟶ " `U)])]]
+                `pullback.snd
+                ":"
+                [(Combinatorics.Quiver.Basic.«term_⟶_» (Term.app `pullback [`f `g]) " ⟶ " `U)]
                 ")")]))
             ","
-            («term∃_,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.explicitBinders
-              [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `ι)] ":" (Term.type "Type" [`u]) ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `U)]
-                ":"
-                (Term.arrow `ι "→" (Term.app `Opens [(Term.proj `Y "." `carrier)]))
-                ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `hU)]
-                ":"
-                («term_=_» (Term.app `supr [`U]) "=" (Order.BoundedOrder.«term⊤» "⊤"))
-                ")")])
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinderCollection
+               [(Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `ι) [(group ":" (Term.type "Type" [`u]))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `U)
+                  [(group ":" (Term.arrow `ι "→" (Term.app `Opens [(Term.proj `Y "." `carrier)])))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `hU)
+                  [(group ":" (Init.Core.«term_=_» (Term.app `supr [`U]) " = " (Order.BoundedOrder.«term⊤» "⊤")))])
+                 ")")]))
+             ", "
              (Term.forall
               "∀"
               [`i]
@@ -1889,7 +1907,7 @@ theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal {P : Aff
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     [(Term.app `morphism_restrict_opens_range [`f (Term.hole "_")]) []]
+     (Term.app `morphism_restrict_opens_range [`f (Term.hole "_")])
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.proj `hP "." (fieldIdx "1")) "." `arrow_mk_iso_iff)
@@ -2173,26 +2191,29 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Term.app (Term.proj (Term.app `targetAffineLocally [`P]) "." `diagonal) [`f])
             ","
-            («term∃_,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.explicitBinders
-              [(Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `𝒰)]
-                ":"
-                (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`Y])
-                ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent (Term.hole "_"))]
-                ":"
-                (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
-                ")")])
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinderCollection
+               [(Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `𝒰)
+                  [(group ":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`Y]))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent (Term.hole "_"))
+                  [(group
+                    ":"
+                    (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])])))])
+                 ")")]))
+             ", "
              (Term.forall
               "∀"
               [`i]
@@ -2200,15 +2221,14 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
               ","
               (Term.app
                `P.diagonal
-               [(Term.paren
+               [(Term.typeAscription
                  "("
-                 [`pullback.snd
-                  [(Term.typeAscription
-                    ":"
-                    [(Combinatorics.Quiver.Basic.«term_⟶_»
-                      (Term.app `pullback [`f (Term.app `𝒰.map [`i])])
-                      " ⟶ "
-                      (Term.hole "_"))])]]
+                 `pullback.snd
+                 ":"
+                 [(Combinatorics.Quiver.Basic.«term_⟶_»
+                   (Term.app `pullback [`f (Term.app `𝒰.map [`i])])
+                   " ⟶ "
+                   (Term.hole "_"))]
                  ")")])))
             ","
             (Term.forall
@@ -2229,15 +2249,14 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
              ","
              (Term.app
               `P.diagonal
-              [(Term.paren
+              [(Term.typeAscription
                 "("
-                [`pullback.snd
-                 [(Term.typeAscription
-                   ":"
-                   [(Combinatorics.Quiver.Basic.«term_⟶_»
-                     (Term.app `pullback [`f (Term.app `𝒰.map [`i])])
-                     " ⟶ "
-                     (Term.hole "_"))])]]
+                `pullback.snd
+                ":"
+                [(Combinatorics.Quiver.Basic.«term_⟶_»
+                  (Term.app `pullback [`f (Term.app `𝒰.map [`i])])
+                  " ⟶ "
+                  (Term.hole "_"))]
                 ")")]))
             ","
             (Term.forall
@@ -2250,54 +2269,60 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
              ","
              (Term.app
               `P.diagonal
-              [(Term.paren
+              [(Term.typeAscription
                 "("
-                [`pullback.snd
-                 [(Term.typeAscription
-                   ":"
-                   [(Combinatorics.Quiver.Basic.«term_⟶_» (Term.app `pullback [`f `g]) " ⟶ " (Term.hole "_"))])]]
+                `pullback.snd
+                ":"
+                [(Combinatorics.Quiver.Basic.«term_⟶_» (Term.app `pullback [`f `g]) " ⟶ " (Term.hole "_"))]
                 ")")]))
             ","
-            («term∃_,_»
+            (Init.Logic.«term∃_,_»
              "∃"
-             (Lean.explicitBinders
-              [(Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `𝒰)]
-                ":"
-                (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`Y])
-                ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent (Term.hole "_"))]
-                ":"
-                (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
-                ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent `𝒰')]
-                ":"
-                (Term.forall
-                 "∀"
-                 [`i]
-                 []
-                 ","
-                 (Term.app
-                  (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}")
-                  [(Term.app `pullback [`f (Term.app (Term.proj `𝒰 "." `map) [`i])])]))
-                ")")
-               (Lean.bracketedExplicitBinders
-                "("
-                [(Lean.binderIdent (Term.hole "_"))]
-                ":"
-                (Term.forall
-                 "∀"
-                 [`i `j]
-                 []
-                 ","
-                 (Term.app `IsAffine [(Term.app (Term.proj (Term.app `𝒰' [`i]) "." `obj) [`j])]))
-                ")")])
-             ","
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinderCollection
+               [(Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `𝒰)
+                  [(group ":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`Y]))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent (Term.hole "_"))
+                  [(group
+                    ":"
+                    (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])])))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `𝒰')
+                  [(group
+                    ":"
+                    (Term.forall
+                     "∀"
+                     [`i]
+                     []
+                     ","
+                     (Term.app
+                      (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}")
+                      [(Term.app `pullback [`f (Term.app (Term.proj `𝒰 "." `map) [`i])])])))])
+                 ")")
+                (Std.ExtendedBinder.extBinderParenthesized
+                 "("
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent (Term.hole "_"))
+                  [(group
+                    ":"
+                    (Term.forall
+                     "∀"
+                     [`i `j]
+                     []
+                     ","
+                     (Term.app `IsAffine [(Term.app (Term.proj (Term.app `𝒰' [`i]) "." `obj) [`j])])))])
+                 ")")]))
+             ", "
              (Term.forall
               "∀"
               [`i `j `k]

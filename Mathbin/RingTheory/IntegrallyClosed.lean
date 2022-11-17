@@ -59,7 +59,7 @@ theorem is_integrally_closed_iff : IsIntegrallyClosed R ↔ ∀ {x : K}, IsInteg
 
 /-- `R` is integrally closed iff it is the integral closure of itself in its field of fractions. -/
 theorem is_integrally_closed_iff_is_integral_closure : IsIntegrallyClosed R ↔ IsIntegralClosure R R K :=
-  (is_integrally_closed_iff K).trans <| by
+  (is_integrally_closed_iff K).trans $ by
     let e : K ≃ₐ[R] FractionRing R := IsLocalization.algEquiv R⁰ _ _
     constructor
     · intro cl
@@ -90,9 +90,9 @@ theorem is_integral_iff {x : K} : IsIntegral R x ↔ ∃ y : R, algebraMap R K y
   IsIntegralClosure.is_integral_iff
 #align is_integrally_closed.is_integral_iff IsIntegrallyClosed.is_integral_iff
 
-theorem exists_algebra_map_eq_of_is_integral_pow {x : K} {n : ℕ} (hn : 0 < n) (hx : IsIntegral R <| x ^ n) :
+theorem exists_algebra_map_eq_of_is_integral_pow {x : K} {n : ℕ} (hn : 0 < n) (hx : IsIntegral R $ x ^ n) :
     ∃ y : R, algebraMap R K y = x :=
-  is_integral_iff.mp <| isIntegralOfPow hn hx
+  is_integral_iff.mp $ isIntegralOfPow hn hx
 #align
   is_integrally_closed.exists_algebra_map_eq_of_is_integral_pow IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow
 
@@ -101,7 +101,7 @@ omit iic ifr
 theorem exists_algebra_map_eq_of_pow_mem_subalgebra {K : Type _} [Field K] [Algebra R K] {S : Subalgebra R K}
     [IsIntegrallyClosed S] [IsFractionRing S K] {x : K} {n : ℕ} (hn : 0 < n) (hx : x ^ n ∈ S) :
     ∃ y : S, algebraMap S K y = x :=
-  exists_algebra_map_eq_of_is_integral_pow hn <| is_integral_iff.mpr ⟨⟨x ^ n, hx⟩, rfl⟩
+  exists_algebra_map_eq_of_is_integral_pow hn $ is_integral_iff.mpr ⟨⟨x ^ n, hx⟩, rfl⟩
 #align
   is_integrally_closed.exists_algebra_map_eq_of_pow_mem_subalgebra IsIntegrallyClosed.exists_algebra_map_eq_of_pow_mem_subalgebra
 

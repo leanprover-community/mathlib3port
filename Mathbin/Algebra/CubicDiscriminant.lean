@@ -188,7 +188,7 @@ def equiv : Cubic R ≃ { p : R[X] // p.degree ≤ 3 } where
   right_inv f := by
     ext (_ | _ | _ | _ | n) <;> simp only [Subtype.coe_mk, coeffs]
     have h3 : 3 < n + 4 := by linarith only
-    rw [coeff_gt_three _ h3, (degree_le_iff_coeff_zero (f : R[X]) 3).mp f.2 _ <| with_bot.coe_lt_coe.mpr h3]
+    rw [coeff_gt_three _ h3, (degree_le_iff_coeff_zero (f : R[X]) 3).mp f.2 _ $ with_bot.coe_lt_coe.mpr h3]
 #align cubic.equiv Cubic.equiv
 
 theorem degree (ha : P.a ≠ 0) : P.toPoly.degree = 3 :=
@@ -300,18 +300,19 @@ theorem splits_iff_card_roots (ha : P.a ≠ 0) : Splits φ P.toPoly ↔ (map φ 
   replace ha : (map φ P).a ≠ 0 := (_root_.map_ne_zero φ).mpr ha
   nth_rw_lhs 0 [← RingHom.id_comp φ]
   rw [roots, ← splits_map_iff, ← map_to_poly, splits_iff_card_roots, ←
-    ((degree_eq_iff_nat_degree_eq <| ne_zero_of_a_ne_zero ha).mp <| degree ha : _ = 3)]
+    ((degree_eq_iff_nat_degree_eq $ ne_zero_of_a_ne_zero ha).mp $ degree ha : _ = 3)]
 #align cubic.splits_iff_card_roots Cubic.splits_iff_card_roots
 
-theorem splits_iff_roots_eq_three (ha : P.a ≠ 0) : Splits φ P.toPoly ↔ ∃ x y z : K, (map φ P).roots = {x, y, z} := by
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y z) -/
+theorem splits_iff_roots_eq_three (ha : P.a ≠ 0) :
+    Splits φ P.toPoly ↔ ∃ (x : K) (y : K) (z : K), (map φ P).roots = {x, y, z} := by
   rw [splits_iff_card_roots ha, card_eq_three]
 #align cubic.splits_iff_roots_eq_three Cubic.splits_iff_roots_eq_three
 
 theorem eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     (map φ P).toPoly = c (φ P.a) * (X - c x) * (X - c y) * (X - c z) := by
   rw [map_to_poly,
-    eq_prod_roots_of_splits <|
-      (splits_iff_roots_eq_three ha).mpr <| Exists.intro x <| Exists.intro y <| Exists.intro z h3,
+    eq_prod_roots_of_splits $ (splits_iff_roots_eq_three ha).mpr $ Exists.intro x $ Exists.intro y $ Exists.intro z h3,
     leading_coeff ha, ← map_roots, h3]
   change C (φ P.a) * ((X - C x) ::ₘ (X - C y) ::ₘ {X - C z}).Prod = _
   rw [prod_cons, prod_cons, prod_singleton, mul_assoc, mul_assoc]
@@ -375,7 +376,7 @@ theorem disc_ne_zero_iff_roots_nodup (ha : P.a ≠ 0) (h3 : (map φ P).roots = {
 
 theorem card_roots_of_disc_ne_zero [DecidableEq K] (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) (hd : P.disc ≠ 0) :
     (map φ P).roots.toFinset.card = 3 := by
-  rw [to_finset_card_of_nodup <| (disc_ne_zero_iff_roots_nodup ha h3).mp hd, ← splits_iff_card_roots ha,
+  rw [to_finset_card_of_nodup $ (disc_ne_zero_iff_roots_nodup ha h3).mp hd, ← splits_iff_card_roots ha,
     splits_iff_roots_eq_three ha]
   exact ⟨x, ⟨y, ⟨z, h3⟩⟩⟩
 #align cubic.card_roots_of_disc_ne_zero Cubic.card_roots_of_disc_ne_zero

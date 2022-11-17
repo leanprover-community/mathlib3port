@@ -45,7 +45,7 @@ variable {x y : ℝ≥0}
 /-- Square root of a nonnegative real number. -/
 @[pp_nodot]
 noncomputable def sqrt : ℝ≥0 ≃o ℝ≥0 :=
-  OrderIso.symm <| powOrderIso 2 two_ne_zero
+  OrderIso.symm $ powOrderIso 2 two_ne_zero
 #align nnreal.sqrt Nnreal.sqrt
 
 theorem sqrt_le_sqrt_iff : sqrt x ≤ sqrt y ↔ x ≤ y :=
@@ -70,7 +70,7 @@ theorem le_sqrt_iff : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
 
 @[simp]
 theorem sqrt_eq_zero : sqrt x = 0 ↔ x = 0 :=
-  sqrt_eq_iff_sq_eq.trans <| by rw [eq_comm, sq, zero_mul]
+  sqrt_eq_iff_sq_eq.trans $ by rw [eq_comm, sq, zero_mul]
 #align nnreal.sqrt_eq_zero Nnreal.sqrt_eq_zero
 
 @[simp]
@@ -80,7 +80,7 @@ theorem sqrt_zero : sqrt 0 = 0 :=
 
 @[simp]
 theorem sqrt_one : sqrt 1 = 1 :=
-  sqrt_eq_iff_sq_eq.2 <| one_pow _
+  sqrt_eq_iff_sq_eq.2 $ one_pow _
 #align nnreal.sqrt_one Nnreal.sqrt_one
 
 @[simp]
@@ -131,12 +131,12 @@ def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
   | 0 => Rat.mkNat (f 0).num.toNat.sqrt (f 0).denom.sqrt
   | n + 1 =>
     let s := sqrt_aux n
-    max 0 <| (s + f (n + 1) / s) / 2
+    max 0 $ (s + f (n + 1) / s) / 2
 #align real.sqrt_aux Real.sqrtAux
 
 theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | 0 => by
-    rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.of_nat_nonneg _)
+    rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.ofNat_nonneg _)
   | n + 1 => le_max_left _ _
 #align real.sqrt_aux_nonneg Real.sqrt_aux_nonneg
 
@@ -175,7 +175,7 @@ theorem coe_sqrt {x : ℝ≥0} : (Nnreal.sqrt x : ℝ) = Real.sqrt x := by rw [R
 
 @[continuity]
 theorem continuous_sqrt : Continuous sqrt :=
-  Nnreal.continuous_coe.comp <| Nnreal.sqrt.Continuous.comp continuous_real_to_nnreal
+  Nnreal.continuous_coe.comp $ Nnreal.sqrt.Continuous.comp continuous_real_to_nnreal
 #align real.continuous_sqrt Real.continuous_sqrt
 
 theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : sqrt x = 0 := by simp [sqrt, Real.to_nnreal_eq_zero.2 h]
@@ -293,11 +293,11 @@ theorem sqrt_lt' (hy : 0 < y) : sqrt x < y ↔ x < y ^ 2 := by
 /- note: if you want to conclude `x ≤ sqrt y`, then use `le_sqrt_of_sq_le`.
    if you have `x > 0`, consider using `le_sqrt'` -/
 theorem le_sqrt (hx : 0 ≤ x) (hy : 0 ≤ y) : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
-  le_iff_le_iff_lt_iff_lt.2 <| sqrt_lt hy hx
+  le_iff_le_iff_lt_iff_lt.2 $ sqrt_lt hy hx
 #align real.le_sqrt Real.le_sqrt
 
 theorem le_sqrt' (hx : 0 < x) : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
-  le_iff_le_iff_lt_iff_lt.2 <| sqrt_lt' hx
+  le_iff_le_iff_lt_iff_lt.2 $ sqrt_lt' hx
 #align real.le_sqrt' Real.le_sqrt'
 
 theorem abs_le_sqrt (h : x ^ 2 ≤ y) : |x| ≤ sqrt y := by rw [← sqrt_sq_eq_abs] <;> exact sqrt_le_sqrt h
@@ -353,7 +353,7 @@ open Tactic Tactic.Positivity
 its input is. -/
 @[positivity]
 unsafe def _root_.tactic.positivity_sqrt : expr → tactic strictness
-  | quote.1 (Real.sqrt (%%ₓa)) => do
+  | q(Real.sqrt $(a)) => do
     (-- if can prove `0 < a`, report positivity
         do
           let positive pa ← core a

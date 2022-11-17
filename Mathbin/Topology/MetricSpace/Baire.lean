@@ -43,6 +43,7 @@ class BaireSpace (α : Type _) [TopologicalSpace α] : Prop where
   baire_property : ∀ f : ℕ → Set α, (∀ n, IsOpen (f n)) → (∀ n, Dense (f n)) → Dense (⋂ n, f n)
 #align baire_space BaireSpace
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (y r) -/
 /-- Baire theorems asserts that various topological spaces have the Baire property.
 Two versions of these theorems are given.
 The first states that complete pseudo_emetric spaces are Baire. -/
@@ -58,7 +59,7 @@ instance (priority := 100) baireCategoryTheoremEmetricComplete [PseudoEmetricSpa
     to any n, x, δ, δpos a center and a positive radius such that
     `closed_ball center radius` is included both in `f n` and in `closed_ball x δ`.
     We can also require `radius ≤ (1/2)^(n+1)`, to ensure we get a Cauchy sequence later. -/
-  have : ∀ n x δ, δ ≠ 0 → ∃ y r, 0 < r ∧ r ≤ B (n + 1) ∧ closed_ball y r ⊆ closed_ball x δ ∩ f n := by
+  have : ∀ n x δ, δ ≠ 0 → ∃ (y) (r), 0 < r ∧ r ≤ B (n + 1) ∧ closed_ball y r ⊆ closed_ball x δ ∩ f n := by
     intro n x δ δpos
     have : x ∈ closure (f n) := hd n x
     rcases Emetric.mem_closure_iff.1 this (δ / 2) (Ennreal.half_pos δpos) with ⟨y, ys, xy⟩
@@ -169,12 +170,12 @@ instance (priority := 100) baireCategoryTheoremLocallyCompact [TopologicalSpace 
   let K : ℕ → positive_compacts α := fun n => Nat.recOn n K₀ K_next
   -- This is a decreasing sequence of positive compacts contained in suitable open sets `f n`.
   have hK_decreasing : ∀ n : ℕ, ↑(K (n + 1)) ⊆ f n ∩ K n := fun n =>
-    (hK_next n (K n)).trans <| inter_subset_inter_right _ interior_subset
+    (hK_next n (K n)).trans $ inter_subset_inter_right _ interior_subset
   -- Prove that ̀`⋂ n : ℕ, K n` is inside `U ∩ ⋂ n : ℕ, (f n)`.
   have hK_subset : (⋂ n, K n : Set α) ⊆ U ∩ ⋂ n, f n := by
     intro x hx
     simp only [mem_inter_iff, mem_Inter] at hx⊢
-    exact ⟨hK₀ <| hx 0, fun n => (hK_decreasing n (hx (n + 1))).1⟩
+    exact ⟨hK₀ $ hx 0, fun n => (hK_decreasing n (hx (n + 1))).1⟩
   /- Prove that `⋂ n : ℕ, K n` is not empty, as an intersection of a decreasing sequence
     of nonempty compact subsets.-/
   have hK_nonempty : (⋂ n, K n : Set α).Nonempty :=
@@ -282,7 +283,7 @@ theorem eventually_residual {p : α → Prop} : (∀ᶠ x in residual α, p x) �
   calc
     (∀ᶠ x in residual α, p x) ↔ ∀ᶠ x in ⨅ (t : Set α) (ht : IsGδ t ∧ Dense t), 𝓟 t, p x := by
       simp only [residual, infi_and]
-    _ ↔ ∃ (t : Set α)(ht : IsGδ t ∧ Dense t), ∀ᶠ x in 𝓟 t, p x :=
+    _ ↔ ∃ (t : Set α) (ht : IsGδ t ∧ Dense t), ∀ᶠ x in 𝓟 t, p x :=
       mem_binfi_of_directed
         (fun t₁ h₁ t₂ h₂ => ⟨t₁ ∩ t₂, ⟨h₁.1.inter h₂.1, Dense.inter_of_Gδ h₁.1 h₂.1 h₁.2 h₂.2⟩, by simp⟩)
         ⟨univ, is_Gδ_univ, dense_univ⟩
@@ -290,11 +291,11 @@ theorem eventually_residual {p : α → Prop} : (∀ᶠ x in residual α, p x) �
     
 #align eventually_residual eventually_residual
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
-theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t : _)(_ : t ⊆ s), IsGδ t ∧ Dense t :=
-  (@eventually_residual α _ _ fun x => x ∈ s).trans <|
-    exists_congr fun t => by rw [exists_prop, and_comm' (t ⊆ s), subset_def, and_assoc']
+theorem mem_residual {s : Set α} : s ∈ residual α ↔ ∃ (t) (_ : t ⊆ s), IsGδ t ∧ Dense t :=
+  (@eventually_residual α _ _ fun x => x ∈ s).trans $
+    exists_congr $ fun t => by rw [exists_prop, and_comm' (t ⊆ s), subset_def, and_assoc']
 #align mem_residual mem_residual
 
 theorem dense_of_mem_residual {s : Set α} (hs : s ∈ residual α) : Dense s :=
@@ -326,7 +327,7 @@ theorem IsGδ.dense_Union_interior_of_closed [Encodable ι] {s : Set α} (hs : I
     refine' dense_Inter_of_open hgo fun i x => _
     rw [closure_compl, interior_frontier (hc _)]
     exact id
-  refine' (hd.inter_of_Gδ hs (is_Gδ_Inter fun i => (hgo i).IsGδ) hgd).mono _
+  refine' (hd.inter_of_Gδ hs (is_Gδ_Inter $ fun i => (hgo i).IsGδ) hgd).mono _
   rintro x ⟨hxs, hxg⟩
   rw [mem_Inter] at hxg
   rcases mem_Union.1 (hU hxs) with ⟨i, hi⟩
@@ -345,8 +346,8 @@ theorem IsGδ.dense_bUnion_interior_of_closed {t : Set ι} {s : Set α} (hs : Is
 /-- If a countable family of closed sets cover a dense `Gδ` set, then the union of their interiors
 is dense. Formulated here with `⋃₀`. -/
 theorem IsGδ.dense_sUnion_interior_of_closed {T : Set (Set α)} {s : Set α} (hs : IsGδ s) (hd : Dense s)
-    (hc : T.Countable) (hc' : ∀ t ∈ T, IsClosed t) (hU : s ⊆ ⋃₀T) : Dense (⋃ t ∈ T, interior t) :=
-  hs.dense_bUnion_interior_of_closed hd hc hc' <| by rwa [← sUnion_eq_bUnion]
+    (hc : T.Countable) (hc' : ∀ t ∈ T, IsClosed t) (hU : s ⊆ ⋃₀ T) : Dense (⋃ t ∈ T, interior t) :=
+  hs.dense_bUnion_interior_of_closed hd hc hc' $ by rwa [← sUnion_eq_bUnion]
 #align is_Gδ.dense_sUnion_interior_of_closed IsGδ.dense_sUnion_interior_of_closed
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
@@ -359,7 +360,7 @@ theorem dense_bUnion_interior_of_closed {S : Set β} {f : β → Set α} (hc : �
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with `⋃₀`. -/
 theorem dense_sUnion_interior_of_closed {S : Set (Set α)} (hc : ∀ s ∈ S, IsClosed s) (hS : S.Countable)
-    (hU : ⋃₀S = univ) : Dense (⋃ s ∈ S, interior s) :=
+    (hU : ⋃₀ S = univ) : Dense (⋃ s ∈ S, interior s) :=
   is_Gδ_univ.dense_sUnion_interior_of_closed dense_univ hS hc hU.ge
 #align dense_sUnion_interior_of_closed dense_sUnion_interior_of_closed
 
@@ -373,7 +374,7 @@ theorem dense_Union_interior_of_closed [Encodable β] {f : β → Set α} (hc : 
 /-- One of the most useful consequences of Baire theorem: if a countable union of closed sets
 covers the space, then one of the sets has nonempty interior. -/
 theorem nonempty_interior_of_Union_of_closed [Nonempty α] [Encodable β] {f : β → Set α} (hc : ∀ s, IsClosed (f s))
-    (hU : (⋃ s, f s) = univ) : ∃ s, (interior <| f s).Nonempty := by
+    (hU : (⋃ s, f s) = univ) : ∃ s, (interior $ f s).Nonempty := by
   simpa using (dense_Union_interior_of_closed hc hU).Nonempty
 #align nonempty_interior_of_Union_of_closed nonempty_interior_of_Union_of_closed
 

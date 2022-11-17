@@ -101,7 +101,7 @@ less than the slope of the secant line of `f` on `[x, z]`, then `f` is convex. -
 theorem convex_on_of_slope_mono_adjacent (hs : Convex 𝕜 s)
     (hf : ∀ {x y z : 𝕜}, x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) ≤ (f z - f y) / (z - y)) :
     ConvexOn 𝕜 s f :=
-  (LinearOrder.convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
+  LinearOrder.convex_on_of_lt hs $ fun x hx z hz hxz a b ha hb hab => by
     let y := a * x + b * z
     have hxy : x < y := by
       rw [← one_mul x, ← hab, add_mul]
@@ -141,7 +141,7 @@ strictly less than the slope of the secant line of `f` on `[x, z]`, then `f` is 
 theorem strict_convex_on_of_slope_strict_mono_adjacent (hs : Convex 𝕜 s)
     (hf : ∀ {x y z : 𝕜}, x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) < (f z - f y) / (z - y)) :
     StrictConvexOn 𝕜 s f :=
-  (LinearOrder.strict_convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
+  LinearOrder.strict_convex_on_of_lt hs $ fun x hx z hz hxz a b ha hb hab => by
     let y := a * x + b * z
     have hxy : x < y := by
       rw [← one_mul x, ← hab, add_mul]

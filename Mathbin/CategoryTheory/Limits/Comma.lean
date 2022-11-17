@@ -72,7 +72,7 @@ def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F �
   lift s :=
     { left := t₁.lift ((fst L R).mapCone s), right := t₂.lift ((snd L R).mapCone s),
       w' :=
-        (isLimitOfPreserves R t₂).hom_ext fun j => by
+        (isLimitOfPreserves R t₂).hom_ext $ fun j => by
           rw [cone_of_preserves_X_hom, assoc, assoc, (is_limit_of_preserves R t₂).fac, limit_auxiliary_cone_π_app, ←
             L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp, t₂.fac]
           exact (s.π.app j).w }
@@ -110,7 +110,7 @@ def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Coco
   desc s :=
     { left := t₁.desc ((fst L R).mapCocone s), right := t₂.desc ((snd L R).mapCocone s),
       w' :=
-        (isColimitOfPreserves L t₁).hom_ext fun j => by
+        (isColimitOfPreserves L t₁).hom_ext $ fun j => by
           rw [cocone_of_preserves_X_hom, (is_colimit_of_preserves L t₁).fac_assoc, colimit_auxiliary_cocone_ι_app,
             assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ← L.map_comp_assoc, t₁.fac]
           exact (s.ι.app j).w }
@@ -191,10 +191,10 @@ instance has_limits [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArr
 #align category_theory.structured_arrow.has_limits CategoryTheory.StructuredArrow.has_limits
 
 noncomputable instance createsLimit [i : PreservesLimit (F ⋙ proj X G) G] : CreatesLimit F (proj X G) :=
-  creates_limit_of_reflects_iso fun c t =>
+  creates_limit_of_reflects_iso $ fun c t =>
     { liftedCone := @Comma.coneOfPreserves _ _ _ _ _ i punitCone t,
       makesLimit := Comma.coneOfPreservesIsLimit _ punitConeIsLimit _,
-      validLift := (Cones.ext (Iso.refl _)) fun j => (id_comp _).symm }
+      validLift := Cones.ext (Iso.refl _) $ fun j => (id_comp _).symm }
 #align category_theory.structured_arrow.creates_limit CategoryTheory.StructuredArrow.createsLimit
 
 noncomputable instance createsLimitsOfShape [PreservesLimitsOfShape J G] : CreatesLimitsOfShape J (proj X G) where
@@ -233,10 +233,10 @@ instance has_colimits [HasColimits A] [PreservesColimits G] : HasColimits (Costr
 #align category_theory.costructured_arrow.has_colimits CategoryTheory.CostructuredArrow.has_colimits
 
 noncomputable instance createsColimit [i : PreservesColimit (F ⋙ proj G X) G] : CreatesColimit F (proj G X) :=
-  creates_colimit_of_reflects_iso fun c t =>
+  creates_colimit_of_reflects_iso $ fun c t =>
     { liftedCocone := @Comma.coconeOfPreserves _ _ _ _ _ i t punitCocone,
       makesColimit := Comma.coconeOfPreservesIsColimit _ _ punitCoconeIsColimit,
-      validLift := (Cocones.ext (Iso.refl _)) fun j => comp_id _ }
+      validLift := Cocones.ext (Iso.refl _) $ fun j => comp_id _ }
 #align category_theory.costructured_arrow.creates_colimit CategoryTheory.CostructuredArrow.createsColimit
 
 noncomputable instance createsColimitsOfShape [PreservesColimitsOfShape J G] : CreatesColimitsOfShape J (proj G X) where

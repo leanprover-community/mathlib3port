@@ -25,7 +25,7 @@ namespace Finset
 variable {α β : Type _} (s : Finset α) (t : Finset β)
 
 /-- Disjoint sum of finsets. -/
-def disjSum : Finset (Sum α β) :=
+def disjSum : Finset (α ⊕ β) :=
   ⟨s.1.disjSum t.1, s.2.disjSum t.2⟩
 #align finset.disj_sum Finset.disjSum
 
@@ -36,12 +36,12 @@ theorem val_disj_sum : (s.disjSum t).1 = s.1.disjSum t.1 :=
 
 @[simp]
 theorem empty_disj_sum : (∅ : Finset α).disjSum t = t.map Embedding.inr :=
-  val_inj.1 <| Multiset.zero_disj_sum _
+  val_inj.1 $ Multiset.zero_disj_sum _
 #align finset.empty_disj_sum Finset.empty_disj_sum
 
 @[simp]
 theorem disj_sum_empty : s.disjSum (∅ : Finset β) = s.map Embedding.inl :=
-  val_inj.1 <| Multiset.disj_sum_zero _
+  val_inj.1 $ Multiset.disj_sum_zero _
 #align finset.disj_sum_empty Finset.disj_sum_empty
 
 @[simp]
@@ -60,7 +60,7 @@ theorem map_inl_disj_union_map_inr :
   rfl
 #align finset.map_inl_disj_union_map_inr Finset.map_inl_disj_union_map_inr
 
-variable {s t} {s₁ s₂ : Finset α} {t₁ t₂ : Finset β} {a : α} {b : β} {x : Sum α β}
+variable {s t} {s₁ s₂ : Finset α} {t₁ t₂ : Finset β} {a : α} {b : β} {x : α ⊕ β}
 
 theorem mem_disj_sum : x ∈ s.disjSum t ↔ (∃ a, a ∈ s ∧ inl a = x) ∨ ∃ b, b ∈ t ∧ inr b = x :=
   Multiset.mem_disj_sum
@@ -77,30 +77,30 @@ theorem inr_mem_disj_sum : inr b ∈ s.disjSum t ↔ b ∈ t :=
 #align finset.inr_mem_disj_sum Finset.inr_mem_disj_sum
 
 theorem disj_sum_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁.disjSum t₁ ⊆ s₂.disjSum t₂ :=
-  val_le_iff.1 <| disj_sum_mono (val_le_iff.2 hs) (val_le_iff.2 ht)
+  val_le_iff.1 $ disj_sum_mono (val_le_iff.2 hs) (val_le_iff.2 ht)
 #align finset.disj_sum_mono Finset.disj_sum_mono
 
 theorem disj_sum_mono_left (t : Finset β) : Monotone fun s : Finset α => s.disjSum t := fun s₁ s₂ hs =>
   disj_sum_mono hs Subset.rfl
 #align finset.disj_sum_mono_left Finset.disj_sum_mono_left
 
-theorem disj_sum_mono_right (s : Finset α) : Monotone (s.disjSum : Finset β → Finset (Sum α β)) := fun t₁ t₂ =>
+theorem disj_sum_mono_right (s : Finset α) : Monotone (s.disjSum : Finset β → Finset (α ⊕ β)) := fun t₁ t₂ =>
   disj_sum_mono Subset.rfl
 #align finset.disj_sum_mono_right Finset.disj_sum_mono_right
 
 theorem disj_sum_ssubset_disj_sum_of_ssubset_of_subset (hs : s₁ ⊂ s₂) (ht : t₁ ⊆ t₂) : s₁.disjSum t₁ ⊂ s₂.disjSum t₂ :=
-  val_lt_iff.1 <| disj_sum_lt_disj_sum_of_lt_of_le (val_lt_iff.2 hs) (val_le_iff.2 ht)
+  val_lt_iff.1 $ disj_sum_lt_disj_sum_of_lt_of_le (val_lt_iff.2 hs) (val_le_iff.2 ht)
 #align finset.disj_sum_ssubset_disj_sum_of_ssubset_of_subset Finset.disj_sum_ssubset_disj_sum_of_ssubset_of_subset
 
 theorem disj_sum_ssubset_disj_sum_of_subset_of_ssubset (hs : s₁ ⊆ s₂) (ht : t₁ ⊂ t₂) : s₁.disjSum t₁ ⊂ s₂.disjSum t₂ :=
-  val_lt_iff.1 <| disj_sum_lt_disj_sum_of_le_of_lt (val_le_iff.2 hs) (val_lt_iff.2 ht)
+  val_lt_iff.1 $ disj_sum_lt_disj_sum_of_le_of_lt (val_le_iff.2 hs) (val_lt_iff.2 ht)
 #align finset.disj_sum_ssubset_disj_sum_of_subset_of_ssubset Finset.disj_sum_ssubset_disj_sum_of_subset_of_ssubset
 
 theorem disj_sum_strict_mono_left (t : Finset β) : StrictMono fun s : Finset α => s.disjSum t := fun s₁ s₂ hs =>
   disj_sum_ssubset_disj_sum_of_ssubset_of_subset hs Subset.rfl
 #align finset.disj_sum_strict_mono_left Finset.disj_sum_strict_mono_left
 
-theorem disj_sum_strict_mono_right (s : Finset α) : StrictMono (s.disjSum : Finset β → Finset (Sum α β)) := fun s₁ s₂ =>
+theorem disj_sum_strict_mono_right (s : Finset α) : StrictMono (s.disjSum : Finset β → Finset (α ⊕ β)) := fun s₁ s₂ =>
   disj_sum_ssubset_disj_sum_of_subset_of_ssubset Subset.rfl
 #align finset.disj_sum_strict_mono_right Finset.disj_sum_strict_mono_right
 

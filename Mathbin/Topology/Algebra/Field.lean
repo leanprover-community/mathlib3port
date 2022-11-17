@@ -37,11 +37,11 @@ def topologicalSpaceUnits : TopologicalSpace Rˣ :=
  Another good candidate is the subspace topology of $R \times R$,
  with the units embedded via $u \mapsto (u, u^{-1})$.
  These topologies are not (propositionally) equal in general. -/
-class InducedUnits [t : TopologicalSpace <| Rˣ] : Prop where
+class InducedUnits [t : TopologicalSpace $ Rˣ] : Prop where
   top_eq : t = induced (coe : Rˣ → R) ‹_›
 #align topological_ring.induced_units TopologicalRing.InducedUnits
 
-variable [TopologicalSpace <| Rˣ]
+variable [TopologicalSpace $ Rˣ]
 
 theorem units_topology_eq [InducedUnits R] : ‹TopologicalSpace Rˣ› = induced (coe : Rˣ → R) ‹_› :=
   induced_units.top_eq

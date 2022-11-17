@@ -161,7 +161,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory where
   Functor := i.toEssImage
   inverse := i.essImageInclusion ⋙ (leftAdjoint i : _)
   unitIso :=
-    NatIso.ofComponents (fun X => (as_iso <| (ofRightAdjoint i).counit.app X).symm)
+    NatIso.ofComponents (fun X => (as_iso $ (ofRightAdjoint i).counit.app X).symm)
       (by
         intro X Y f
         dsimp
@@ -170,7 +170,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory where
   counitIso :=
     NatIso.ofComponents
       (fun X => by
-        refine' iso.symm <| as_iso _
+        refine' iso.symm $ as_iso _
         exact (of_right_adjoint i).Unit.app X.obj
         apply (config := { instances := false }) is_iso_of_reflects_iso _ i.ess_image_inclusion
         exact functor.ess_image.unit_is_iso X.property)

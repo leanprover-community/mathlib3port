@@ -365,7 +365,7 @@ theorem shift_shift_neg_inv_shift (n : A) (X : C) : (shiftShiftNeg X n).inv⟦n�
 @[simp]
 theorem shift_shift_neg_shift_eq (n : A) (X : C) :
     (shiftFunctor C n).mapIso (shiftShiftNeg X n) = shiftNegShift (X⟦n⟧) n :=
-  CategoryTheory.Iso.ext <| shift_shift_neg_hom_shift _ _
+  CategoryTheory.Iso.ext $ shift_shift_neg_hom_shift _ _
 #align category_theory.shift_shift_neg_shift_eq CategoryTheory.shift_shift_neg_shift_eq
 
 variable (C)
@@ -398,7 +398,7 @@ variable (X Y : C) (f : X ⟶ Y)
 def shiftComm (i j : A) : X⟦i⟧⟦j⟧ ≅ X⟦j⟧⟦i⟧ :=
   (shiftAdd X i j).symm ≪≫
     ((shiftMonoidalFunctor C A).toFunctor.mapIso
-            (discrete.eq_to_iso <| add_comm i j : (⟨i + j⟩ : Discrete A) ≅ ⟨j + i⟩)).app
+            (discrete.eq_to_iso $ add_comm i j : (⟨i + j⟩ : Discrete A) ≅ ⟨j + i⟩)).app
         X ≪≫
       shiftAdd X j i
 #align category_theory.shift_comm CategoryTheory.shiftComm

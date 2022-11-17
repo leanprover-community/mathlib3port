@@ -49,8 +49,6 @@ theorem Gamma_mem' (N : ℕ) (γ : SL(2, ℤ)) : γ ∈ gamma N ↔ SLMOD(N) γ 
   Iff.rfl
 #align Gamma_mem' Gamma_mem'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 @[simp]
 theorem Gamma_mem (N : ℕ) (γ : SL(2, ℤ)) :
     γ ∈ gamma N ↔
@@ -81,8 +79,6 @@ theorem Gamma_one_top : gamma 1 = ⊤ := by
   simp
 #align Gamma_one_top Gamma_one_top
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:31:4: unsupported: too many args: fin_cases ... #[[]] -/
 theorem Gamma_zero_bot : gamma 0 = ⊥ := by
   ext
   simp only [Gamma_mem, coe_coe, coe_matrix_coe, Int.coe_cast_ring_hom, map_apply, Int.cast_id, Subgroup.mem_bot]

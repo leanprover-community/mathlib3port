@@ -53,11 +53,10 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
     (hf : Tendsto (fun x => ∥f x∥) l atTop) (hfg : deriv f =O[l] g) : ¬IntervalIntegrable g volume a b := by
   intro hgi
   obtain ⟨C, hC₀, s, hsl, hsub, hfd, hg⟩ :
-    ∃ (C : ℝ)(hC₀ : 0 ≤ C),
-      ∃ s ∈ l,
-        (∀ x ∈ s, ∀ y ∈ s, [x, y] ⊆ [a, b]) ∧
-          (∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], DifferentiableAt ℝ f z) ∧
-            ∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], ∥deriv f z∥ ≤ C * ∥g z∥ :=
+    ∃ (C : ℝ) (hC₀ : 0 ≤ C) (s ∈ l),
+      (∀ x ∈ s, ∀ y ∈ s, [x, y] ⊆ [a, b]) ∧
+        (∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], DifferentiableAt ℝ f z) ∧
+          ∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], ∥deriv f z∥ ≤ C * ∥g z∥ :=
     by
     rcases hfg.exists_nonneg with ⟨C, C₀, hC⟩
     have h :
@@ -71,7 +70,7 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
   replace hgi : IntervalIntegrable (fun x => C * ∥g x∥) volume a b
   · convert hgi.norm.smul C
     
-  obtain ⟨c, hc, d, hd, hlt⟩ : ∃ c ∈ s, ∃ d ∈ s, (∥f c∥ + ∫ y in Ι a b, C * ∥g y∥) < ∥f d∥ := by
+  obtain ⟨c, hc, d, hd, hlt⟩ : ∃ (c ∈ s) (d ∈ s), (∥f c∥ + ∫ y in Ι a b, C * ∥g y∥) < ∥f d∥ := by
     rcases Filter.nonempty_of_mem hsl with ⟨c, hc⟩
     have : ∀ᶠ x in l, (∥f c∥ + ∫ y in Ι a b, C * ∥g y∥) < ∥f x∥ := hf.eventually (eventually_gt_at_top _)
     exact ⟨c, hc, (this.and hsl).exists.imp fun d hd => ⟨hd.2, hd.1⟩⟩
@@ -92,7 +91,7 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
     _ ≤ ∫ x in Ι c d, ∥deriv f x∥ := norm_integral_le_integral_norm _
     _ ≤ ∫ x in Ι c d, C * ∥g x∥ := set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurableSetIntervalOc hg
     _ ≤ ∫ x in Ι a b, C * ∥g x∥ :=
-      set_integral_mono_set hgi.def ((ae_of_all _) fun x => mul_nonneg hC₀ (norm_nonneg _)) hsub'.eventually_le
+      set_integral_mono_set hgi.def (ae_of_all _ $ fun x => mul_nonneg hC₀ (norm_nonneg _)) hsub'.eventually_le
     
 #align
   not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter
@@ -150,7 +149,7 @@ theorem not_interval_integrable_of_sub_inv_is_O_punctured {f : ℝ → F} {a b c
     exact ((hasDerivAtId c).sub_const c).tendsto_punctured_nhds one_ne_zero
   exact
     not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_punctured (A.mono fun x hx => hx.DifferentiableAt) B
-      (hf.congr' (A.mono fun x hx => hx.deriv.symm) eventually_eq.rfl) hne hc
+      (hf.congr' (A.mono $ fun x hx => hx.deriv.symm) eventually_eq.rfl) hne hc
 #align not_interval_integrable_of_sub_inv_is_O_punctured not_interval_integrable_of_sub_inv_is_O_punctured
 
 /-- The function `λ x, (x - c)⁻¹` is integrable on `a..b` if and only if `a = b` or `c ∉ [a, b]`. -/
@@ -163,7 +162,7 @@ theorem interval_integrable_sub_inv_iff {a b c : ℝ} :
     
   · rintro (rfl | h₀)
     exacts[IntervalIntegrable.refl,
-      interval_integrable_inv (fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀)
+      interval_integrable_inv (fun x hx => sub_ne_zero.2 $ ne_of_mem_of_not_mem hx h₀)
         (continuous_on_id.sub continuous_on_const)]
     
 #align interval_integrable_sub_inv_iff interval_integrable_sub_inv_iff

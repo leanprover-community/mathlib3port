@@ -142,7 +142,7 @@ instance : IsCommApplicative Finset :=
   { Finset.is_lawful_applicative with
     commutative_prod := fun α β s t => by
       simp_rw [seq_def, fmap_def, sup_image, sup_eq_bUnion]
-      change (s.bUnion fun a => t.image fun b => (a, b)) = t.bUnion fun b => s.image fun a => (a, b)
+      change (s.bUnion fun a => t.image $ fun b => (a, b)) = t.bUnion fun b => s.image $ fun a => (a, b)
       trans s ×ˢ t <;> [rw [product_eq_bUnion], rw [product_eq_bUnion_right]] <;>
         congr <;> ext <;> simp_rw [mem_image] }
 
@@ -207,7 +207,7 @@ open Classical
 
 @[simp]
 theorem map_comp_coe (h : α → β) : Functor.map h ∘ Multiset.toFinset = Multiset.toFinset ∘ Functor.map h :=
-  funext fun s => image_to_finset
+  funext $ fun s => image_to_finset
 #align finset.map_comp_coe Finset.map_comp_coe
 
 theorem map_traverse (g : α → G β) (h : β → γ) (s : Finset α) :

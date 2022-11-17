@@ -156,29 +156,44 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
       
     
   rw [cantor_function_succ f (le_of_lt h1) h3, cantor_function_succ g (le_of_lt h1) h3]
-  rw [hn 0 <| zero_lt_succ n]
+  rw [hn 0 $ zero_lt_succ n]
   apply add_lt_add_left
   rw [mul_lt_mul_left h1]
-  exact ih (fun k hk => hn _ <| Nat.succ_lt_succ hk) fn gn
+  exact ih (fun k hk => hn _ $ Nat.succ_lt_succ hk) fn gn
 #align cardinal.increasing_cantor_function Cardinal.increasing_cantor_function
 
 /-- `cantor_function c` is injective if `0 < c < 1/2`. -/
 theorem cantor_function_injective (h1 : 0 < c) (h2 : c < 1 / 2) : Function.Injective (cantorFunction c) := by
   intro f g hfg
-  classical by_contra h
-    have : ∃ n, f n ≠ g n
-    let n := Nat.find this
-    · intro k hk
-      apply of_not_not
-      exact Nat.find_min this hk
-      
-    · apply ne_of_lt
-      refine' increasing_cantor_function h1 h2 hn fn _
-      apply Bool.eq_true_of_not_eq_false
-      rw [← fn]
-      apply Ne.symm
-      exact Nat.find_spec this
-      
+  classical
+  by_contra h
+  revert hfg
+  have : ∃ n, f n ≠ g n := by
+    rw [← not_forall]
+    intro h'
+    apply h
+    ext
+    apply h'
+  let n := Nat.find this
+  have hn : ∀ k : ℕ, k < n → f k = g k := by
+    intro k hk
+    apply of_not_not
+    exact Nat.find_min this hk
+  cases fn : f n
+  · apply ne_of_lt
+    refine' increasing_cantor_function h1 h2 hn fn _
+    apply Bool.eq_true_of_not_eq_false
+    rw [← fn]
+    apply Ne.symm
+    exact Nat.find_spec this
+    
+  · apply ne_of_gt
+    refine' increasing_cantor_function h1 h2 (fun k hk => (hn k hk).symm) _ fn
+    apply Bool.eq_false_of_not_eq_true
+    rw [← fn]
+    apply Ne.symm
+    exact Nat.find_spec this
+    
 #align cardinal.cantor_function_injective Cardinal.cantor_function_injective
 
 /-- The cardinality of the reals, as a type. -/

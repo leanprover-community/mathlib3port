@@ -47,7 +47,7 @@ theorem differentiableAtExp {x : ℂ} : DifferentiableAt 𝕜 exp x :=
 
 @[simp]
 theorem deriv_exp : deriv exp = exp :=
-  funext fun x => (hasDerivAtExp x).deriv
+  funext $ fun x => (hasDerivAtExp x).deriv
 #align complex.deriv_exp Complex.deriv_exp
 
 @[simp]
@@ -131,7 +131,7 @@ theorem HasFderivWithinAt.cexp (hf : HasFderivWithinAt f f' s x) :
 
 theorem HasFderivAt.cexp (hf : HasFderivAt f f' x) :
     HasFderivAt (fun x => Complex.exp (f x)) (Complex.exp (f x) • f') x :=
-  has_fderiv_within_at_univ.1 <| hf.HasFderivWithinAt.cexp
+  has_fderiv_within_at_univ.1 $ hf.HasFderivWithinAt.cexp
 #align has_fderiv_at.cexp HasFderivAt.cexp
 
 theorem DifferentiableWithinAt.cexp (hf : DifferentiableWithinAt 𝕜 f s x) :
@@ -197,7 +197,7 @@ theorem differentiableAtExp : DifferentiableAt ℝ exp x :=
 
 @[simp]
 theorem deriv_exp : deriv exp = exp :=
-  funext fun x => (hasDerivAtExp x).deriv
+  funext $ fun x => (hasDerivAtExp x).deriv
 #align real.deriv_exp Real.deriv_exp
 
 @[simp]

@@ -96,8 +96,8 @@ theorem card_mul_le_card_mul' [∀ a b, Decidable (r a b)] (hn : ∀ b ∈ t, n 
 
 theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)] (hm : ∀ a ∈ s, (t.bipartiteAbove r a).card = m)
     (hn : ∀ b ∈ t, (s.bipartiteBelow r b).card = n) : s.card * m = t.card * n :=
-  ((card_mul_le_card_mul _ fun a ha => (hm a ha).ge) fun b hb => (hn b hb).le).antisymm <|
-    (card_mul_le_card_mul' _ fun a ha => (hn a ha).ge) fun b hb => (hm b hb).le
+  ((card_mul_le_card_mul _ fun a ha => (hm a ha).ge) $ fun b hb => (hn b hb).le).antisymm $
+    (card_mul_le_card_mul' _ fun a ha => (hn a ha).ge) $ fun b hb => (hm b hb).le
 #align finset.card_mul_eq_card_mul Finset.card_mul_eq_card_mul
 
 end Bipartite

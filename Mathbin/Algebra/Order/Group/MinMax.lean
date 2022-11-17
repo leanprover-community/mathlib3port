@@ -30,12 +30,12 @@ variable {α : Type _} [LinearOrderedCommGroup α] {a b c : α}
 
 @[to_additive min_neg_neg]
 theorem min_inv_inv' (a b : α) : min a⁻¹ b⁻¹ = (max a b)⁻¹ :=
-  Eq.symm <| (@Monotone.map_max α αᵒᵈ _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
+  Eq.symm $ @Monotone.map_max α αᵒᵈ _ _ Inv.inv a b $ fun a b => inv_le_inv_iff.mpr
 #align min_inv_inv' min_inv_inv'
 
 @[to_additive max_neg_neg]
 theorem max_inv_inv' (a b : α) : max a⁻¹ b⁻¹ = (min a b)⁻¹ :=
-  Eq.symm <| (@Monotone.map_min α αᵒᵈ _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
+  Eq.symm $ @Monotone.map_min α αᵒᵈ _ _ Inv.inv a b $ fun a b => inv_le_inv_iff.mpr
 #align max_inv_inv' max_inv_inv'
 
 @[to_additive min_sub_sub_right]
@@ -77,7 +77,7 @@ theorem max_sub_max_le_max (a b c d : α) : max a b - max c d ≤ max (a - c) (b
     
 #align max_sub_max_le_max max_sub_max_le_max
 
-theorem abs_max_sub_max_le_max (a b c d : α) : |max a b - max c d| ≤ max (|a - c|) (|b - d|) := by
+theorem abs_max_sub_max_le_max (a b c d : α) : |max a b - max c d| ≤ max |a - c| |b - d| := by
   refine' abs_sub_le_iff.2 ⟨_, _⟩
   · exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
     
@@ -86,7 +86,7 @@ theorem abs_max_sub_max_le_max (a b c d : α) : |max a b - max c d| ≤ max (|a 
     
 #align abs_max_sub_max_le_max abs_max_sub_max_le_max
 
-theorem abs_min_sub_min_le_max (a b c d : α) : |min a b - min c d| ≤ max (|a - c|) (|b - d|) := by
+theorem abs_min_sub_min_le_max (a b c d : α) : |min a b - min c d| ≤ max |a - c| |b - d| := by
   simpa only [max_neg_neg, neg_sub_neg, abs_sub_comm] using abs_max_sub_max_le_max (-a) (-b) (-c) (-d)
 #align abs_min_sub_min_le_max abs_min_sub_min_le_max
 

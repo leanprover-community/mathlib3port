@@ -213,13 +213,13 @@ theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Un
 #align units.mk0_inj Units.mk0_inj
 
 /-- In a group with zero, an existential over a unit can be rewritten in terms of `units.mk0`. -/
-theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)(hg : g ≠ 0), p (Units.mk0 g hg) :=
+theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀) (hg : g ≠ 0), p (Units.mk0 g hg) :=
   ⟨fun ⟨g, pg⟩ => ⟨g, g.NeZero, (g.mk0_coe g.NeZero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ => ⟨Units.mk0 g hg, pg⟩⟩
 #align units.exists0 Units.exists0
 
 /-- An alternative version of `units.exists0`. This one is useful if Lean cannot
 figure out `p` when using `units.exists0` from right to left. -/
-theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.NeZero :=
+theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀) (hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.NeZero :=
   Iff.trans (by simp_rw [coe_mk0]) exists0.symm
 #align units.exists0' Units.exists0'
 
@@ -256,12 +256,12 @@ alias is_unit_iff_ne_zero ↔ _ Ne.is_unit
 attribute [protected] Ne.is_unit
 
 -- see Note [lower instance priority]
-instance (priority := 10) GroupWithZero.no_zero_divisors : NoZeroDivisors G₀ :=
+instance (priority := 10) GroupWithZero.noZeroDivisors : NoZeroDivisors G₀ :=
   { (‹_› : GroupWithZero G₀) with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h => by
       contrapose! h
       exact (Units.mk0 a h.1 * Units.mk0 b h.2).NeZero }
-#align group_with_zero.no_zero_divisors GroupWithZero.no_zero_divisors
+#align group_with_zero.no_zero_divisors GroupWithZero.noZeroDivisors
 
 -- see Note [lower instance priority]
 instance (priority := 10) GroupWithZero.cancelMonoidWithZero : CancelMonoidWithZero G₀ :=
@@ -351,5 +351,5 @@ noncomputable def commGroupWithZeroOfIsUnitOrEqZero [hM : CommMonoidWithZero M] 
 
 end NoncomputableDefs
 
-/- ./././Mathport/Syntax/Translate/Command.lean:697:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_not_exists -/
 -- Guard against import creep

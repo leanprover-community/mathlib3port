@@ -73,10 +73,10 @@ unsafe inductive match_numeral_result
 
 /-- Unfold the top level constructor of the numeral expression. -/
 unsafe def match_numeral : expr → match_numeral_result
-  | quote.1 (bit0 (%%ₓe)) => match_numeral_result.bit0 e
-  | quote.1 (bit1 (%%ₓe)) => match_numeral_result.bit1 e
-  | quote.1 (@Zero.zero _ _) => match_numeral_result.zero
-  | quote.1 (@One.one _ _) => match_numeral_result.one
+  | q(bit0 $(e)) => match_numeral_result.bit0 e
+  | q(bit1 $(e)) => match_numeral_result.bit1 e
+  | q(@Zero.zero _ _) => match_numeral_result.zero
+  | q(@One.one _ _) => match_numeral_result.one
   | _ => match_numeral_result.other
 #align norm_num.match_numeral norm_num.match_numeral
 
@@ -373,25 +373,28 @@ unsafe def prove_pos_nat (c : instance_cache) : expr → tactic (instance_cache 
 
 end
 
-/-- Given `a` a rational numeral, returns `⊢ 0 < a`. -/
-unsafe def prove_pos (c : instance_cache) : expr → tactic (instance_cache × expr)
-  | quote.1 ((%%ₓe₁) / %%ₓe₂) => do
-    let (c, p₁) ← prove_pos_nat c e₁
-    let (c, p₂) ← prove_pos_nat c e₂
-    c `` div_pos [e₁, e₂, p₁, p₂]
-  | e => prove_pos_nat c e
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Given `a` a rational numeral, returns `⊢ 0 < a`. -/ unsafe
+  def
+    prove_pos
+    ( c : instance_cache ) : expr → tactic ( instance_cache × expr )
+    |
+        q( $ ( e₁ ) / $ ( e₂ ) )
+        =>
+        do let ( c , p₁ ) ← prove_pos_nat c e₁ let ( c , p₂ ) ← prove_pos_nat c e₂ c ` ` div_pos [ e₁ , e₂ , p₁ , p₂ ]
+      | e => prove_pos_nat c e
 #align norm_num.prove_pos norm_num.prove_pos
 
 /-- `match_neg (- e) = some e`, otherwise `none` -/
 unsafe def match_neg : expr → Option expr
-  | quote.1 (-%%ₓe) => some e
+  | q(-$(e)) => some e
   | _ => none
 #align norm_num.match_neg norm_num.match_neg
 
 /-- `match_sign (- e) = inl e`, `match_sign 0 = inr ff`, otherwise `inr tt` -/
-unsafe def match_sign : expr → Sum expr Bool
-  | quote.1 (-%%ₓe) => Sum.inl e
-  | quote.1 Zero.zero => Sum.inr false
+unsafe def match_sign : expr → expr ⊕ Bool
+  | q(-$(e)) => Sum.inl e
+  | q(Zero.zero) => Sum.inr false
   | _ => Sum.inr true
 #align norm_num.match_sign norm_num.match_sign
 
@@ -513,9 +516,9 @@ theorem sle_bit1_bit1 {α} [LinearOrderedSemiring α] (a b : α) (h : a + 1 ≤ 
 
 /-- Given `a` a rational numeral, returns `⊢ 0 ≤ a`. -/
 unsafe def prove_nonneg (ic : instance_cache) : expr → tactic (instance_cache × expr)
-  | e@(quote.1 Zero.zero) => ic.mk_app `` le_refl [e]
+  | e@q(Zero.zero) => ic.mk_app `` le_refl [e]
   | e =>
-    if ic.α = quote.1 ℕ then return (ic, (quote.1 Nat.zero_le).mk_app [e])
+    if ic.α = q(ℕ) then return (ic, q(Nat.zero_le).mk_app [e])
     else do
       let (ic, p) ← prove_pos ic e
       ic `` nonneg_pos [e, p]
@@ -921,22 +924,22 @@ unsafe def prove_ne : instance_cache → expr → expr → ℚ → ℚ → tacti
       let cz_inst ← mk_mapp `` CharZero [ic.α, none] >>= mk_instance
       if na = 1 ∧ nb = 1 then
           if na ≥ 0 ∧ nb ≥ 0 then do
-            guard (ic ≠ quote.1 ℕ)
-            let nc ← mk_instance_cache (quote.1 ℕ)
+            guard (ic ≠ q(ℕ))
+            let nc ← mk_instance_cache q(ℕ)
             let (ic, nc, a', pa) ← prove_nat_uncast ic nc a
             let (ic, nc, b', pb) ← prove_nat_uncast ic nc b
             let (nc, p) ← prove_ne_rat nc a' b' na nb
             ic `` nat_cast_ne [cz_inst, a', b', a, b, pa, pb, p]
           else do
-            guard (ic ≠ quote.1 ℤ)
-            let zc ← mk_instance_cache (quote.1 ℤ)
+            guard (ic ≠ q(ℤ))
+            let zc ← mk_instance_cache q(ℤ)
             let (ic, zc, a', pa) ← prove_int_uncast ic zc a
             let (ic, zc, b', pb) ← prove_int_uncast ic zc b
             let (zc, p) ← prove_ne_rat zc a' b' na nb
             ic `` int_cast_ne [cz_inst, a', b', a, b, pa, pb, p]
         else do
-          guard (ic ≠ quote.1 ℚ)
-          let qc ← mk_instance_cache (quote.1 ℚ)
+          guard (ic ≠ q(ℚ))
+          let qc ← mk_instance_cache q(ℚ)
           let (ic, qc, a', pa) ← prove_rat_uncast ic qc cz_inst a na
           let (ic, qc, b', pb) ← prove_rat_uncast ic qc cz_inst b nb
           let (qc, p) ← prove_ne_rat qc a' b' na nb
@@ -958,7 +961,7 @@ unsafe def prove_clear_denom : instance_cache → expr → expr → ℚ → ℕ 
 
 theorem clear_denom_add {α} [DivisionRing α] (a a' b b' c c' d : α) (h₀ : d ≠ 0) (ha : a * d = a') (hb : b * d = b')
     (hc : c * d = c') (h : a' + b' = c') : a + b = c :=
-  mul_right_cancel₀ h₀ <| by rwa [add_mul, ha, hb, hc]
+  mul_right_cancel₀ h₀ $ by rwa [add_mul, ha, hb, hc]
 #align norm_num.clear_denom_add NormNum.clear_denom_add
 
 /-- Given `a`,`b`,`c` nonnegative rational numerals, returns `⊢ a + b = c`. -/
@@ -1051,8 +1054,8 @@ unsafe def prove_clear_denom_simple (c : instance_cache) (a : expr) (na : ℚ) :
 
 theorem clear_denom_mul {α} [Field α] (a a' b b' c c' d₁ d₂ d : α) (ha : d₁ ≠ 0 ∧ a * d₁ = a')
     (hb : d₂ ≠ 0 ∧ b * d₂ = b') (hc : c * d = c') (hd : d₁ * d₂ = d) (h : a' * b' = c') : a * b = c :=
-  mul_right_cancel₀ ha.1 <|
-    mul_right_cancel₀ hb.1 <| by rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_comm a]
+  mul_right_cancel₀ ha.1 $
+    mul_right_cancel₀ hb.1 $ by rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_comm a]
 #align norm_num.clear_denom_mul NormNum.clear_denom_mul
 
 /-- Given `a`,`b` nonnegative rational numerals, returns `(c, ⊢ a * b = c)`. -/
@@ -1219,7 +1222,7 @@ theorem sub_nat_pos (a b c : ℕ) (h : b + c = a) : a - b = c :=
 #align norm_num.sub_nat_pos NormNum.sub_nat_pos
 
 theorem sub_nat_neg (a b c : ℕ) (h : a + c = b) : a - b = 0 :=
-  tsub_eq_zero_iff_le.mpr <| h ▸ Nat.le_add_right _ _
+  tsub_eq_zero_iff_le.mpr $ h ▸ Nat.le_add_right _ _
 #align norm_num.sub_nat_neg NormNum.sub_nat_neg
 
 /-- Given `a : nat`,`b : nat` natural numerals, returns `(c, ⊢ a - b = c)`. -/
@@ -1229,47 +1232,60 @@ unsafe def prove_sub_nat (ic : instance_cache) (a b : expr) : tactic (expr × ex
   if nb ≤ na then do
       let (ic, c) ← ic (na - nb)
       let (ic, p) ← prove_add_nat ic b c a
-      return (c, (quote.1 sub_nat_pos).mk_app [a, b, c, p])
+      return (c, q(sub_nat_pos).mk_app [a, b, c, p])
     else do
       let (ic, c) ← ic (nb - na)
       let (ic, p) ← prove_add_nat ic a c b
-      return (quote.1 (0 : ℕ), (quote.1 sub_nat_neg).mk_app [a, b, c, p])
+      return (q((0 : ℕ)), q(sub_nat_neg).mk_app [a, b, c, p])
 #align norm_num.prove_sub_nat norm_num.prove_sub_nat
 
-/-- Evaluates the basic field operations `+`,`neg`,`-`,`*`,`inv`,`/` on numerals.
-Also handles nat subtraction. Does not do recursive simplification; that is,
-`1 + 1 + 1` will not simplify but `2 + 1` will. This is handled by the top level
-`simp` call in `norm_num.derive`. -/
-unsafe def eval_field : expr → tactic (expr × expr)
-  | quote.1 ((%%ₓe₁) + %%ₓe₂) => do
-    let n₁ ← e₁.to_rat
-    let n₂ ← e₂.to_rat
-    let c ← infer_type e₁ >>= mk_instance_cache
-    let n₃ := n₁ + n₂
-    let (c, e₃) ← c.of_rat n₃
-    let (_, p) ← prove_add_rat c e₁ e₂ e₃ n₁ n₂ n₃
-    return (e₃, p)
-  | quote.1 ((%%ₓe₁) * %%ₓe₂) => do
-    let n₁ ← e₁.to_rat
-    let n₂ ← e₂.to_rat
-    let c ← infer_type e₁ >>= mk_instance_cache
-    Prod.snd <$> prove_mul_rat c e₁ e₂ n₁ n₂
-  | quote.1 (-%%ₓe) => do
-    let c ← infer_type e >>= mk_instance_cache
-    Prod.snd <$> prove_neg c e
-  | quote.1 (@Sub.sub (%%ₓα) (%%ₓinst) (%%ₓa) (%%ₓb)) => do
-    let c ← mk_instance_cache α
-    if α = quote.1 Nat then prove_sub_nat c a b else Prod.snd <$> prove_sub c a b
-  | quote.1 (Inv.inv (%%ₓe)) => do
-    let n ← e.to_rat
-    let c ← infer_type e >>= mk_instance_cache
-    Prod.snd <$> prove_inv c e n
-  | quote.1 ((%%ₓe₁) / %%ₓe₂) => do
-    let n₁ ← e₁.to_rat
-    let n₂ ← e₂.to_rat
-    let c ← infer_type e₁ >>= mk_instance_cache
-    Prod.snd <$> prove_div c e₁ e₂ n₁ n₂
-  | _ => failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Evaluates the basic field operations `+`,`neg`,`-`,`*`,`inv`,`/` on numerals.
+      Also handles nat subtraction. Does not do recursive simplification; that is,
+      `1 + 1 + 1` will not simplify but `2 + 1` will. This is handled by the top level
+      `simp` call in `norm_num.derive`. -/
+    unsafe
+  def
+    eval_field
+    : expr → tactic ( expr × expr )
+    |
+        q( $ ( e₁ ) + $ ( e₂ ) )
+        =>
+        do
+          let n₁ ← e₁ . to_rat
+            let n₂ ← e₂ . to_rat
+            let c ← infer_type e₁ >>= mk_instance_cache
+            let n₃ := n₁ + n₂
+            let ( c , e₃ ) ← c . of_rat n₃
+            let ( _ , p ) ← prove_add_rat c e₁ e₂ e₃ n₁ n₂ n₃
+            return ( e₃ , p )
+      |
+        q( $ ( e₁ ) * $ ( e₂ ) )
+        =>
+        do
+          let n₁ ← e₁ . to_rat
+            let n₂ ← e₂ . to_rat
+            let c ← infer_type e₁ >>= mk_instance_cache
+            Prod.snd <$> prove_mul_rat c e₁ e₂ n₁ n₂
+      | q( - $ ( e ) ) => do let c ← infer_type e >>= mk_instance_cache Prod.snd <$> prove_neg c e
+      |
+        q( @ Sub.sub $ ( α ) $ ( inst ) $ ( a ) $ ( b ) )
+        =>
+        do let c ← mk_instance_cache α if α = q( Nat ) then prove_sub_nat c a b else Prod.snd <$> prove_sub c a b
+      |
+        q( Inv.inv $ ( e ) )
+        =>
+        do let n ← e . to_rat let c ← infer_type e >>= mk_instance_cache Prod.snd <$> prove_inv c e n
+      |
+        q( $ ( e₁ ) / $ ( e₂ ) )
+        =>
+        do
+          let n₁ ← e₁ . to_rat
+            let n₂ ← e₂ . to_rat
+            let c ← infer_type e₁ >>= mk_instance_cache
+            Prod.snd <$> prove_div c e₁ e₂ n₁ n₂
+      | _ => failed
 #align norm_num.eval_field norm_num.eval_field
 
 theorem pow_bit0 [Monoid α] (a c' c : α) (b : ℕ) (h : a ^ b = c') (h₂ : c' * c' = c) : a ^ bit0 b = c :=
@@ -1345,106 +1361,131 @@ unsafe def prove_zpow (ic zc nc : instance_cache) (a : expr) (na : ℚ) (b : exp
 
 /-- Evaluates expressions of the form `a ^ b`, `monoid.npow a b` or `nat.pow a b`. -/
 unsafe def eval_pow : expr → tactic (expr × expr)
-  | quote.1 (@Pow.pow (%%ₓα) _ (%%ₓm) (%%ₓe₁) (%%ₓe₂)) => do
+  | q(@Pow.pow $(α) _ $(m) $(e₁) $(e₂)) => do
     let n₁ ← e₁.to_rat
     let c ← mk_instance_cache α
     match m with
-      | quote.1 (@Monoid.hasPow (%%ₓ_) (%%ₓ_)) => Prod.snd <$> prove_pow e₁ n₁ c e₂
-      | quote.1 (@DivInvMonoid.hasPow (%%ₓ_) (%%ₓ_)) => do
-        let zc ← mk_instance_cache (quote.1 ℤ)
-        let nc ← mk_instance_cache (quote.1 ℕ)
+      | q(@Monoid.hasPow $(_) $(_)) => Prod.snd <$> prove_pow e₁ n₁ c e₂
+      | q(@DivInvMonoid.hasPow $(_) $(_)) => do
+        let zc ← mk_instance_cache q(ℤ)
+        let nc ← mk_instance_cache q(ℕ)
         (Prod.snd ∘ Prod.snd ∘ Prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂
       | _ => failed
-  | quote.1 (Monoid.npow (%%ₓe₁) (%%ₓe₂)) => do
+  | q(Monoid.npow $(e₁) $(e₂)) => do
     let n₁ ← e₁.to_rat
     let c ← infer_type e₁ >>= mk_instance_cache
     Prod.snd <$> prove_pow e₁ n₁ c e₂
-  | quote.1 (DivInvMonoid.zpow (%%ₓe₁) (%%ₓe₂)) => do
+  | q(DivInvMonoid.zpow $(e₁) $(e₂)) => do
     let n₁ ← e₁.to_rat
     let c ← infer_type e₁ >>= mk_instance_cache
-    let zc ← mk_instance_cache (quote.1 ℤ)
-    let nc ← mk_instance_cache (quote.1 ℕ)
+    let zc ← mk_instance_cache q(ℤ)
+    let nc ← mk_instance_cache q(ℕ)
     (Prod.snd ∘ Prod.snd ∘ Prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂
   | _ => failed
 #align norm_num.eval_pow norm_num.eval_pow
 
 /-- Given `⊢ p`, returns `(true, ⊢ p = true)`. -/
 unsafe def true_intro (p : expr) : tactic (expr × expr) :=
-  Prod.mk (quote.1 True) <$> mk_app `` eq_true [p]
+  Prod.mk q(True) <$> mk_app `` eq_true [p]
 #align norm_num.true_intro norm_num.true_intro
 
 /-- Given `⊢ ¬ p`, returns `(false, ⊢ p = false)`. -/
 unsafe def false_intro (p : expr) : tactic (expr × expr) :=
-  Prod.mk (quote.1 False) <$> mk_app `` eq_false [p]
+  Prod.mk q(False) <$> mk_app `` eq_false [p]
 #align norm_num.false_intro norm_num.false_intro
 
-theorem not_refl_false_intro {α} (a : α) : (a ≠ a) = False :=
-  eq_false <| not_not_intro rfl
+theorem not_refl_false_intro {α} (a : α) : a ≠ a = False :=
+  eq_false $ not_not_intro rfl
 #align norm_num.not_refl_false_intro NormNum.not_refl_false_intro
 
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
-theorem gt_intro {α} [LT α] (a b : α) (c) (h : (a < b) = c) : (b > a) = c :=
+theorem gt_intro {α} [LT α] (a b : α) (c) (h : a < b = c) : b > a = c :=
   h
 #align norm_num.gt_intro NormNum.gt_intro
 
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
-theorem ge_intro {α} [LE α] (a b : α) (c) (h : (a ≤ b) = c) : (b ≥ a) = c :=
+theorem ge_intro {α} [LE α] (a b : α) (c) (h : a ≤ b = c) : b ≥ a = c :=
   h
 #align norm_num.ge_intro NormNum.ge_intro
 
-/-- Evaluates the inequality operations `=`,`<`,`>`,`≤`,`≥`,`≠` on numerals. -/
-unsafe def eval_ineq : expr → tactic (expr × expr)
-  | quote.1 ((%%ₓe₁) < %%ₓe₂) => do
-    let n₁ ← e₁.to_rat
-    let n₂ ← e₂.to_rat
-    let c ← infer_type e₁ >>= mk_instance_cache
-    if n₁ < n₂ then do
-        let (_, p) ← prove_lt_rat c e₁ e₂ n₁ n₂
-        true_intro p
-      else
-        if n₁ = n₂ then do
-          let (_, p) ← c `` lt_irrefl [e₁]
-          false_intro p
-        else do
-          let (c, p') ← prove_lt_rat c e₂ e₁ n₂ n₁
-          let (_, p) ← c `` not_lt_of_gt [e₁, e₂, p']
-          false_intro p
-  | quote.1 ((%%ₓe₁) ≤ %%ₓe₂) => do
-    let n₁ ← e₁.to_rat
-    let n₂ ← e₂.to_rat
-    let c ← infer_type e₁ >>= mk_instance_cache
-    if n₁ ≤ n₂ then do
-        let (_, p) ← if n₁ = n₂ then c `` le_refl [e₁] else prove_le_rat c e₁ e₂ n₁ n₂
-        true_intro p
-      else do
-        let (c, p) ← prove_lt_rat c e₂ e₁ n₂ n₁
-        let (_, p) ← c `` not_le_of_gt [e₁, e₂, p]
-        false_intro p
-  | quote.1 ((%%ₓe₁) = %%ₓe₂) => do
-    let n₁ ← e₁.to_rat
-    let n₂ ← e₂.to_rat
-    let c ← infer_type e₁ >>= mk_instance_cache
-    if n₁ = n₂ then mk_eq_refl e₁ >>= true_intro
-      else do
-        let (_, p) ← prove_ne c e₁ e₂ n₁ n₂
-        false_intro p
-  | quote.1 ((%%ₓe₁) > %%ₓe₂) => do
-    let (e, p) ← mk_app `` LT.lt [e₂, e₁] >>= eval_ineq
-    Prod.mk e <$> mk_app `` gt_intro [e₂, e₁, e, p]
-  | quote.1 ((%%ₓe₁) ≥ %%ₓe₂) => do
-    let (e, p) ← mk_app `` LE.le [e₂, e₁] >>= eval_ineq
-    Prod.mk e <$> mk_app `` ge_intro [e₂, e₁, e, p]
-  | quote.1 ((%%ₓe₁) ≠ %%ₓe₂) => do
-    let n₁ ← e₁.to_rat
-    let n₂ ← e₂.to_rat
-    let c ← infer_type e₁ >>= mk_instance_cache
-    if n₁ = n₂ then Prod.mk (quote.1 False) <$> mk_app `` not_refl_false_intro [e₁]
-      else do
-        let (_, p) ← prove_ne c e₁ e₂ n₁ n₂
-        true_intro p
-  | _ => failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Evaluates the inequality operations `=`,`<`,`>`,`≤`,`≥`,`≠` on numerals. -/ unsafe
+  def
+    eval_ineq
+    : expr → tactic ( expr × expr )
+    |
+        q( $ ( e₁ ) < $ ( e₂ ) )
+        =>
+        do
+          let n₁ ← e₁ . to_rat
+            let n₂ ← e₂ . to_rat
+            let c ← infer_type e₁ >>= mk_instance_cache
+            if
+              n₁ < n₂
+              then
+              do let ( _ , p ) ← prove_lt_rat c e₁ e₂ n₁ n₂ true_intro p
+              else
+              if
+                n₁ = n₂
+                then
+                do let ( _ , p ) ← c ` ` lt_irrefl [ e₁ ] false_intro p
+                else
+                do
+                  let ( c , p' ) ← prove_lt_rat c e₂ e₁ n₂ n₁
+                    let ( _ , p ) ← c ` ` not_lt_of_gt [ e₁ , e₂ , p' ]
+                    false_intro p
+      |
+        q( $ ( e₁ ) ≤ $ ( e₂ ) )
+        =>
+        do
+          let n₁ ← e₁ . to_rat
+            let n₂ ← e₂ . to_rat
+            let c ← infer_type e₁ >>= mk_instance_cache
+            if
+              n₁ ≤ n₂
+              then
+              do let ( _ , p ) ← if n₁ = n₂ then c ` ` le_refl [ e₁ ] else prove_le_rat c e₁ e₂ n₁ n₂ true_intro p
+              else
+              do
+                let ( c , p ) ← prove_lt_rat c e₂ e₁ n₂ n₁
+                  let ( _ , p ) ← c ` ` not_le_of_gt [ e₁ , e₂ , p ]
+                  false_intro p
+      |
+        q( $ ( e₁ ) = $ ( e₂ ) )
+        =>
+        do
+          let n₁ ← e₁ . to_rat
+            let n₂ ← e₂ . to_rat
+            let c ← infer_type e₁ >>= mk_instance_cache
+            if n₁ = n₂ then mk_eq_refl e₁ >>= true_intro else do let ( _ , p ) ← prove_ne c e₁ e₂ n₁ n₂ false_intro p
+      |
+        q( $ ( e₁ ) > $ ( e₂ ) )
+        =>
+        do
+          let ( e , p ) ← mk_app ` ` LT.lt [ e₂ , e₁ ] >>= eval_ineq
+            Prod.mk e <$> mk_app ` ` gt_intro [ e₂ , e₁ , e , p ]
+      |
+        q( $ ( e₁ ) ≥ $ ( e₂ ) )
+        =>
+        do
+          let ( e , p ) ← mk_app ` ` LE.le [ e₂ , e₁ ] >>= eval_ineq
+            Prod.mk e <$> mk_app ` ` ge_intro [ e₂ , e₁ , e , p ]
+      |
+        q( $ ( e₁ ) ≠ $ ( e₂ ) )
+        =>
+        do
+          let n₁ ← e₁ . to_rat
+            let n₂ ← e₂ . to_rat
+            let c ← infer_type e₁ >>= mk_instance_cache
+            if
+              n₁ = n₂
+              then
+              Prod.mk q( False ) <$> mk_app ` ` not_refl_false_intro [ e₁ ]
+              else
+              do let ( _ , p ) ← prove_ne c e₁ e₂ n₁ n₂ true_intro p
+      | _ => failed
 #align norm_num.eval_ineq norm_num.eval_ineq
 
 theorem nat_succ_eq (a b c : ℕ) (h₁ : a = b) (h₂ : b + 1 = c) : Nat.succ a = c := by rwa [h₁]
@@ -1454,12 +1495,12 @@ theorem nat_succ_eq (a b c : ℕ) (h₁ : a = b) (h₂ : b + 1 = c) : Nat.succ a
 (We could also just handle `nat.succ n` here and rely on `simp` to work bottom up, but we figure
 that towers of successors coming from e.g. `induction` are a common case.) -/
 unsafe def prove_nat_succ (ic : instance_cache) : expr → tactic (instance_cache × ℕ × expr × expr)
-  | quote.1 (Nat.succ (%%ₓa)) => do
+  | q(Nat.succ $(a)) => do
     let (ic, n, b, p₁) ← prove_nat_succ a
     let n' := n + 1
     let (ic, c) ← ic.ofNat n'
-    let (ic, p₂) ← prove_add_nat ic b (quote.1 1) c
-    return (ic, n', c, (quote.1 nat_succ_eq).mk_app [a, b, c, p₁, p₂])
+    let (ic, p₂) ← prove_add_nat ic b q(1) c
+    return (ic, n', c, q(nat_succ_eq).mk_app [a, b, c, p₁, p₂])
   | e => do
     let n ← e.toNat
     let p ← mk_eq_refl e
@@ -1469,7 +1510,7 @@ unsafe def prove_nat_succ (ic : instance_cache) : expr → tactic (instance_cach
 theorem int_to_nat_pos (a : ℤ) (b : ℕ)
     (h :
       (haveI := @Nat.castCoe ℤ
-        b :
+          b :
           ℤ) =
         a) :
     a.toNat = b := by rw [← h] <;> simp
@@ -1481,7 +1522,7 @@ theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by simp only [I
 theorem nat_abs_pos (a : ℤ) (b : ℕ)
     (h :
       (haveI := @Nat.castCoe ℤ
-        b :
+          b :
           ℤ) =
         a) :
     a.natAbs = b := by rw [← h] <;> simp
@@ -1490,7 +1531,7 @@ theorem nat_abs_pos (a : ℤ) (b : ℕ)
 theorem nat_abs_neg (a : ℤ) (b : ℕ)
     (h :
       (haveI := @Nat.castCoe ℤ
-        b :
+          b :
           ℤ) =
         a) :
     (-a).natAbs = b := by rw [← h] <;> simp
@@ -1499,57 +1540,57 @@ theorem nat_abs_neg (a : ℤ) (b : ℕ)
 theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
     (h₂ :
       (haveI := @Nat.castCoe ℤ
-        b :
+          b :
           ℤ) =
         c) :
-    -[a+1] = -c := by rw [← h₂, ← h₁] <;> rfl
+    -[1+ a] = -c := by rw [← h₂, ← h₁] <;> rfl
 #align norm_num.neg_succ_of_nat NormNum.neg_succ_of_nat
 
 /-- Evaluates `nat.succ`, `int.to_nat`, `int.nat_abs`, `int.neg_succ_of_nat`. -/
 unsafe def eval_nat_int : expr → tactic (expr × expr)
-  | e@(quote.1 (Nat.succ _)) => do
-    let ic ← mk_instance_cache (quote.1 ℕ)
+  | e@q(Nat.succ _) => do
+    let ic ← mk_instance_cache q(ℕ)
     let (_, _, ep) ← prove_nat_succ ic e
     return ep
-  | quote.1 (Int.toNat (%%ₓa)) => do
+  | q(Int.toNat $(a)) => do
     let n ← a.to_int
-    let ic ← mk_instance_cache (quote.1 ℤ)
+    let ic ← mk_instance_cache q(ℤ)
     if n ≥ 0 then do
-        let nc ← mk_instance_cache (quote.1 ℕ)
+        let nc ← mk_instance_cache q(ℕ)
         let (_, _, b, p) ← prove_nat_uncast ic nc a
-        pure (b, (quote.1 int_to_nat_pos).mk_app [a, b, p])
+        pure (b, q(int_to_nat_pos).mk_app [a, b, p])
       else do
         let a ← match_neg a
         let (_, p) ← prove_pos ic a
-        pure (quote.1 0, (quote.1 int_to_nat_neg).mk_app [a, p])
-  | quote.1 (Int.natAbs (%%ₓa)) => do
+        pure (q(0), q(int_to_nat_neg).mk_app [a, p])
+  | q(Int.natAbs $(a)) => do
     let n ← a.to_int
-    let ic ← mk_instance_cache (quote.1 ℤ)
-    let nc ← mk_instance_cache (quote.1 ℕ)
+    let ic ← mk_instance_cache q(ℤ)
+    let nc ← mk_instance_cache q(ℕ)
     if n ≥ 0 then do
         let (_, _, b, p) ← prove_nat_uncast ic nc a
-        pure (b, (quote.1 nat_abs_pos).mk_app [a, b, p])
+        pure (b, q(nat_abs_pos).mk_app [a, b, p])
       else do
         let a ← match_neg a
         let (_, _, b, p) ← prove_nat_uncast ic nc a
-        pure (b, (quote.1 nat_abs_neg).mk_app [a, b, p])
-  | quote.1 (Int.negSucc (%%ₓa)) => do
+        pure (b, q(nat_abs_neg).mk_app [a, b, p])
+  | q(Int.negSucc $(a)) => do
     let na ← a.toNat
-    let ic ← mk_instance_cache (quote.1 ℤ)
-    let nc ← mk_instance_cache (quote.1 ℕ)
+    let ic ← mk_instance_cache q(ℤ)
+    let nc ← mk_instance_cache q(ℕ)
     let nb := na + 1
     let (nc, b) ← nc.ofNat nb
-    let (nc, p₁) ← prove_add_nat nc a (quote.1 1) b
+    let (nc, p₁) ← prove_add_nat nc a q(1) b
     let (ic, c) ← ic.ofNat nb
     let (_, _, _, p₂) ← prove_nat_uncast ic nc c
-    pure (quote.1 (-%%ₓc : ℤ), (quote.1 neg_succ_of_nat).mk_app [a, b, c, p₁, p₂])
+    pure (q((-$(c) : ℤ)), q(neg_succ_of_nat).mk_app [a, b, c, p₁, p₂])
   | _ => failed
 #align norm_num.eval_nat_int norm_num.eval_nat_int
 
 theorem int_to_nat_cast (a : ℕ) (b : ℤ)
     (h :
       (haveI := @Nat.castCoe ℤ
-        a :
+          a :
           ℤ) =
         b) :
     ↑a = b :=
@@ -1558,12 +1599,12 @@ theorem int_to_nat_cast (a : ℕ) (b : ℤ)
 
 /-- Evaluates the `↑n` cast operation from `ℕ`, `ℤ`, `ℚ` to an arbitrary type `α`. -/
 unsafe def eval_cast : expr → tactic (expr × expr)
-  | quote.1 (@coe ℕ (%%ₓα) (%%ₓinst) (%%ₓa)) => do
+  | q(@coe ℕ $(α) $(inst) $(a)) => do
     if inst `` coeToLift then
         if inst `` Nat.castCoe then do
           let n ← a
           let ic ← mk_instance_cache α
-          let nc ← mk_instance_cache (quote.1 ℕ)
+          let nc ← mk_instance_cache q(ℕ)
           let (ic, b) ← ic n
           let (_, _, _, p) ← prove_nat_uncast ic nc b
           pure (b, p)
@@ -1571,7 +1612,7 @@ unsafe def eval_cast : expr → tactic (expr × expr)
           if inst `` Int.castCoe then do
             let n ← a
             let ic ← mk_instance_cache α
-            let zc ← mk_instance_cache (quote.1 ℤ)
+            let zc ← mk_instance_cache q(ℤ)
             let (ic, b) ← ic n
             let (_, _, _, p) ← prove_int_uncast ic zc b
             pure (b, p)
@@ -1580,19 +1621,19 @@ unsafe def eval_cast : expr → tactic (expr × expr)
               let n ← a
               let cz_inst ← mk_mapp `` CharZero [α, none] >>= mk_instance
               let ic ← mk_instance_cache α
-              let qc ← mk_instance_cache (quote.1 ℚ)
+              let qc ← mk_instance_cache q(ℚ)
               let (ic, b) ← ic n
               let (_, _, _, p) ← prove_rat_uncast ic qc cz_inst b n
               pure (b, p)
             else failed
       else
-        if inst = quote.1 (@coeBase Nat Int Int.hasCoe) then do
+        if inst = q(@coeBase Nat Int Int.hasCoe) then do
           let n ← a
-          let ic ← mk_instance_cache (quote.1 ℤ)
-          let nc ← mk_instance_cache (quote.1 ℕ)
+          let ic ← mk_instance_cache q(ℤ)
+          let nc ← mk_instance_cache q(ℕ)
           let (ic, b) ← ic n
           let (_, _, _, p) ← prove_nat_uncast ic nc b
-          pure (b, (quote.1 int_to_nat_cast).mk_app [a, b, p])
+          pure (b, q(int_to_nat_cast).mk_app [a, b, p])
         else failed
   | _ => failed
 #align norm_num.eval_cast norm_num.eval_cast
@@ -1653,7 +1694,7 @@ unsafe def derive' (step : expr → tactic (expr × expr)) : expr → tactic (ex
       ext_simplify_core () {  } simp_lemmas.mk (fun _ => failed) (fun _ _ _ _ _ => failed)
           (fun _ _ _ _ e => do
             let (new_e, pr) ← step e
-            guard ¬new_e == e
+            guard (¬new_e =ₐ e)
             pure ((), new_e, some pr, tt))
           `eq e
     pure (e', pr)
@@ -1674,9 +1715,9 @@ the basic builtin set of simplifications. -/
 unsafe def tactic.norm_num1 (step : expr → tactic (expr × expr)) (loc : Interactive.Loc) : tactic Unit := do
   let ns ← loc.get_locals
   let success ← tactic.replace_at (norm_num.derive' step) ns loc.include_goal
-  when loc <| try tactic.triv
-  when ¬ns <| try tactic.contradiction
-  Monad.unlessb success <| done <|> fail "norm_num failed to simplify"
+  when loc $ try tactic.triv
+  when (¬ns) $ try tactic.contradiction
+  Monad.unlessb success $ done <|> fail "norm_num failed to simplify"
 #align tactic.norm_num1 tactic.norm_num1
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1685,8 +1726,8 @@ use `get_step` to get the default `norm_num` set and `derive.step` for the basic
 simplifications. -/
 unsafe def tactic.norm_num (step : expr → tactic (expr × expr)) (hs : List simp_arg_type) (l : Interactive.Loc) :
     tactic Unit :=
-  repeat1 <|
-    orelse' (tactic.norm_num1 step l) <|
+  repeat1 $
+    orelse' (tactic.norm_num1 step l) $
       interactive.simp_core {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) false
           (simp_arg_type.except `` one_div::hs) [] l >>
         skip
@@ -1704,7 +1745,7 @@ unsafe def _root_.expr.norm_num (step : expr → tactic (expr × expr)) (no_dflt
       e.simp {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) no_dflt attr_names
           (simp_arg_type.except `` one_div::hs)
     return (e', p)
-  or_refl_conv fun e => do
+  or_refl_conv $ fun e => do
     let (e', p') ← norm_num.derive' step e <|> simp_step e
     let (e'', p'') ← _root_.expr.norm_num e'
     let p ← mk_eq_trans p' p''
@@ -1805,8 +1846,8 @@ and can prove goals of the form `A = B`, `A ≠ B`, `A < B` and `A ≤ B`,
 where `A` and `B` are numerical expressions.
 It also has a relatively simple primality prover. -/
 unsafe def norm_num (hs : parse simp_arg_list) : conv Unit :=
-  repeat1 <|
-    orelse' norm_num1 <|
+  repeat1 $
+    orelse' norm_num1 $
       conv.interactive.simp false (simp_arg_type.except `` one_div::hs) []
         { discharger := tactic.interactive.norm_num1 (Loc.ns [none]) }
 #align conv.interactive.norm_num conv.interactive.norm_num
@@ -1821,8 +1862,7 @@ A user command to run `norm_num`. Mostly copied from the `#simp` command.
 
 namespace Tactic
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 -- With this option, turn off the messages if the result is exactly `true`
 initialize
   registerTraceClass.1 `silence_norm_num_if_true
@@ -1846,21 +1886,21 @@ Unlike `norm_num`, this command does not fail when no simplifications are made.
 introduce parameters.
 -/
 @[user_command]
-unsafe def norm_num_cmd (_ : parse <| tk "#norm_num") : lean.parser Unit := do
+unsafe def norm_num_cmd (_ : parse $ tk "#norm_num") : lean.parser Unit := do
   let no_dflt ← only_flag
   let hs ← simp_arg_list
   let attr_names ← with_ident_list
   let o ← optional (tk ":")
   let e ← texpr
   let-- Retrieve the `pexpr`s parsed as part of the simp args, and collate them into a big list.
-  hs_es := List.join <| hs.map <| Option.toList ∘ simp_arg_type.to_pexpr
+  hs_es := List.join $ hs.map $ Option.toList ∘ simp_arg_type.to_pexpr
   let/- Synthesize a `tactic_state` including local variables as hypotheses under which `expr.simp`
          may be safely called with expected behaviour given the `variables` in the environment. -/
     (ts, mappings)
     ← synthesize_tactic_state_with_variables_as_hyps (e::hs_es)
   let result
     ←-- Enter the `tactic` monad, *critically* using the synthesized tactic state `ts`.
-        lean.parser.of_tactic
+        lean.parser.of_tactic $
         fun _ =>
         (/- Resolve the local variables added by the parser to `e` (when it was parsed) against the local
                  hypotheses added to the `ts : tactic_state` which we are using. -/
@@ -1881,7 +1921,7 @@ unsafe def norm_num_cmd (_ : parse <| tk "#norm_num") : lean.parser Unit := do
                    annotation macros are injected, the direct patten matches in the `simp_lemmas.*` codebase
                    fail, and the lemmas we want don't get added.
                    -/
-            hs := hs.map fun sat => sat.replace_subexprs mappings
+            hs := hs.map $ fun sat => sat.replace_subexprs mappings
             let step
               ←-- Try simplifying the expression.
                 norm_num.get_step
@@ -1937,10 +1977,10 @@ unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tact
     match match_neg b with
     | some b => do
       let (ic, c', p) ← prove_div_mod a b mod
-      if mod then return (ic, c', (quote.1 int_mod_neg).mk_app [a, b, c', p])
+      if mod then return (ic, c', q(int_mod_neg).mk_app [a, b, c', p])
         else do
           let (ic, c, p₂) ← prove_neg ic c'
-          return (ic, c, (quote.1 int_div_neg).mk_app [a, b, c', c, p, p₂])
+          return (ic, c, q(int_div_neg).mk_app [a, b, c', c, p, p₂])
     | none => do
       let nb ← b.toNat
       let na ← a.to_int
@@ -1955,46 +1995,56 @@ unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tact
         (ic, p)
         ← prove_add_rat ic r m a' nr nm na
       let (ic, p') ← prove_lt_nat ic r b
-      if ic = quote.1 Nat then
-          if mod then return (ic, r, (quote.1 nat_mod).mk_app [a, b, q, r, m, pm, p, p'])
-          else return (ic, q, (quote.1 nat_div).mk_app [a, b, q, r, m, pm, p, p'])
+      if ic = q(Nat) then
+          if mod then return (ic, r, q(nat_mod).mk_app [a, b, q, r, m, pm, p, p'])
+          else return (ic, q, q(nat_div).mk_app [a, b, q, r, m, pm, p, p'])
         else
-          if ic = quote.1 Int then do
+          if ic = q(Int) then do
             let (ic, p₀) ← prove_nonneg ic r
-            if mod then return (ic, r, (quote.1 int_mod).mk_app [a, b, q, r, m, pm, p, p₀, p'])
-              else return (ic, q, (quote.1 int_div).mk_app [a, b, q, r, m, pm, p, p₀, p'])
+            if mod then return (ic, r, q(int_mod).mk_app [a, b, q, r, m, pm, p, p₀, p'])
+              else return (ic, q, q(int_div).mk_app [a, b, q, r, m, pm, p, p₀, p'])
           else failed
 #align norm_num.prove_div_mod norm_num.prove_div_mod
 
-theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
-  (propext <| by rw [← h₁, Nat.dvd_iff_mod_eq_zero]).trans h₂
+theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : c = 0 = p) : a ∣ b = p :=
+  (propext $ by rw [← h₁, Nat.dvd_iff_mod_eq_zero]).trans h₂
 #align norm_num.dvd_eq_nat NormNum.dvd_eq_nat
 
-theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
-  (propext <| by rw [← h₁, Int.dvd_iff_mod_eq_zero]).trans h₂
+theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : c = 0 = p) : a ∣ b = p :=
+  (propext $ by rw [← h₁, Int.dvd_iff_mod_eq_zero]).trans h₂
 #align norm_num.dvd_eq_int NormNum.dvd_eq_int
 
-/-- Evaluates some extra numeric operations on `nat` and `int`, specifically
-`/` and `%`, and `∣` (divisibility). -/
-@[norm_num]
-unsafe def eval_nat_int_ext : expr → tactic (expr × expr)
-  | quote.1 ((%%ₓa) / %%ₓb) => do
-    let c ← infer_type a >>= mk_instance_cache
-    Prod.snd <$> prove_div_mod c a b ff
-  | quote.1 ((%%ₓa) % %%ₓb) => do
-    let c ← infer_type a >>= mk_instance_cache
-    Prod.snd <$> prove_div_mod c a b tt
-  | quote.1 ((%%ₓa) ∣ %%ₓb) => do
-    let α ← infer_type a
-    let ic ← mk_instance_cache α
-    let th ←
-      if α = quote.1 Nat then return (quote.1 dvd_eq_nat : expr)
-        else if α = quote.1 Int then return (quote.1 dvd_eq_int) else failed
-    let (ic, c, p₁) ← prove_div_mod ic b a true
-    let (ic, z) ← ic.mk_app `` Zero.zero []
-    let (e', p₂) ← mk_app `` Eq [c, z] >>= eval_ineq
-    return (e', th [a, b, c, e', p₁, p₂])
-  | _ => failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Evaluates some extra numeric operations on `nat` and `int`, specifically
+      `/` and `%`, and `∣` (divisibility). -/
+    @[ norm_num ]
+    unsafe
+  def
+    eval_nat_int_ext
+    : expr → tactic ( expr × expr )
+    | q( $ ( a ) / $ ( b ) ) => do let c ← infer_type a >>= mk_instance_cache Prod.snd <$> prove_div_mod c a b ff
+      | q( $ ( a ) % $ ( b ) ) => do let c ← infer_type a >>= mk_instance_cache Prod.snd <$> prove_div_mod c a b tt
+      |
+        q( $ ( a ) ∣ $ ( b ) )
+        =>
+        do
+          let α ← infer_type a
+            let ic ← mk_instance_cache α
+            let
+              th
+                ←
+                if
+                  α = q( Nat )
+                  then
+                  return ( q( dvd_eq_nat ) : expr )
+                  else
+                  if α = q( Int ) then return q( dvd_eq_int ) else failed
+            let ( ic , c , p₁ ) ← prove_div_mod ic b a true
+            let ( ic , z ) ← ic . mk_app ` ` Zero.zero [ ]
+            let ( e' , p₂ ) ← mk_app ` ` Eq [ c , z ] >>= eval_ineq
+            return ( e' , th [ a , b , c , e' , p₁ , p₂ ] )
+      | _ => failed
 #align norm_num.eval_nat_int_ext norm_num.eval_nat_int_ext
 
 end ElementaryNumberTheory

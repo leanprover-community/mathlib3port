@@ -222,7 +222,7 @@ unsafe def mk_sigma : expr → tactic expr
     let p ← mk_local' n bi d
     let e ← mk_sigma (expr.instantiate_var b p)
     tactic.mk_app `` PSigma [d, bind_lambda e p]
-  | _ => pure (quote.1 Unit)
+  | _ => pure q(Unit)
 #align tactic.derive_fintype.mk_sigma tactic.derive_fintype.mk_sigma
 
 /-- Prove the goal `(Σ' (a:A) (b:B a) (c:C a b), unit) → T`
@@ -233,7 +233,7 @@ to the constructor application and destructure the pi type of the constructor. W
 of `psigma.elim` applications constructed, which is the number of constructor arguments. -/
 unsafe def mk_sigma_elim : expr → expr → tactic ℕ
   | expr.pi n bi d b, c => do
-    refine (pquote.1 (@PSigma.elim (%%ₓd) _ _ _))
+    refine ``(@PSigma.elim $(d) _ _ _)
     let i ← intro_fresh n
     (· + 1) <$> mk_sigma_elim (expr.instantiate_var b i) (c i)
   | _, c => do
@@ -284,15 +284,15 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
     let e := (expr.const c ls).mk_app args
     let t ← infer_type e
     if is_pi t then do
-        to_expr (pquote.1 (FinsetAbove.union (%%ₓreflect k))) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
+        to_expr ``(FinsetAbove.union $(reflect k)) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
         let Γ ← mk_sigma t
-        to_expr (pquote.1 (FinsetIn.mk (%%ₓΓ))) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
+        to_expr ``(FinsetIn.mk $(Γ)) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
         let n ← mk_sigma_elim t e
         intro1 >>= fun x => intro1 >>= mk_sigma_elim_inj n x
         intro1 >>= mk_sigma_elim_eq n
         mk_finset (k + 1) cs
       else do
-        let c ← to_expr (pquote.1 (FinsetAbove.cons (%%ₓreflect k) (%%ₓe))) tt ff
+        let c ← to_expr ``(FinsetAbove.cons $(reflect k) $(e)) tt ff
         apply c { NewGoals := new_goals.all }
         reflexivity
         mk_finset (k + 1) cs
@@ -302,7 +302,7 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Prove the goal `|- Σ' (a:A) (b: B a) (c:C a b), unit` given a list of terms `a, b, c`. -/
 unsafe def mk_sigma_mem : List expr → tactic Unit
-  | x::xs => (fconstructor >> exact x) >> mk_sigma_mem xs
+  | x::xs => fconstructor >> exact x >> mk_sigma_mem xs
   | [] => fconstructor $> ()
 #align tactic.derive_fintype.mk_sigma_mem tactic.derive_fintype.mk_sigma_mem
 
@@ -335,15 +335,15 @@ open Tactic.DeriveFintype
 where all arguments to all constructors are fintypes. -/
 unsafe def mk_fintype_instance : tactic Unit := do
   intros
-  let quote.1 (Fintype (%%ₓe)) ← target >>= whnf
+  let q(Fintype $(e)) ← target >>= whnf
   let (const I ls, args) ← pure (get_app_fn_args e)
   let env ← get_env
   let cs := env.constructors_of I
   guard (env I = 0) <|> fail "@[derive fintype]: inductive indices are not supported"
-  guard ¬env I <|>
+  guard (¬env I) <|>
       fail ("@[derive fintype]: recursive inductive types are " ++ "not supported (they are also usually infinite)")
   applyc `` mk_fintype { NewGoals := new_goals.all }
-  intro1 >>= cases >>= fun gs => gs fun ⟨i, _⟩ => exact (reflect i)
+  intro1 >>= cases >>= fun gs => gs $ fun ⟨i, _⟩ => exact (reflect i)
   mk_finset ls args 0 cs
   intro1 >>= cases >>= mk_finset_total skip
 #align tactic.mk_fintype_instance tactic.mk_fintype_instance

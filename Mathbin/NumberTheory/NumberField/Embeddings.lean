@@ -78,8 +78,10 @@ theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ∥φ x�
   refine'
     coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splitsCodomain _) (minpoly.nat_degree_le hx) (fun z hz => _)
       i
-  classical rw [← Multiset.mem_to_finset] at hz
-    exact h φ
+  classical
+  rw [← Multiset.mem_to_finset] at hz
+  obtain ⟨φ, rfl⟩ := (range_eval_eq_root_set_minpoly K A x).symm.Subset hz
+  exact h φ
 #align number_field.embeddings.coeff_bdd_of_norm_le NumberField.Embeddings.coeff_bdd_of_norm_le
 
 variable (K A)
@@ -97,13 +99,13 @@ theorem finite_of_norm_le (B : ℝ) : { x : K | IsIntegral ℤ x ∧ ∀ φ : K 
     exact minpoly.nat_degree_le (isIntegralOfIsScalarTower hx.1)
     
   rw [mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
-  refine' (Eq.trans_le _ <| coeff_bdd_of_norm_le hx.2 i).trans (Nat.le_ceil _)
+  refine' (Eq.trans_le _ $ coeff_bdd_of_norm_le hx.2 i).trans (Nat.le_ceil _)
   rw [h_map_ℚ_minpoly, coeff_map, eq_int_cast, Int.norm_cast_rat, Int.norm_eq_abs, Int.cast_abs]
 #align number_field.embeddings.finite_of_norm_le NumberField.Embeddings.finite_of_norm_le
 
 /-- An algebraic integer whose conjugates are all of norm one is a root of unity. -/
 theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ : K →+* A, ∥φ x∥ = 1) :
-    ∃ (n : ℕ)(hn : 0 < n), x ^ n = 1 := by
+    ∃ (n : ℕ) (hn : 0 < n), x ^ n = 1 := by
   obtain ⟨a, -, b, -, habne, h⟩ :=
     @Set.Infinite.exists_ne_map_eq_of_maps_to _ _ _ _ ((· ^ ·) x : ℕ → K) Set.infinite_univ _
       (finite_of_norm_le K A (1 : ℝ))

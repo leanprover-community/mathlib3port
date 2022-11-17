@@ -36,7 +36,7 @@ by inserting 0 as the 0th coefficient.
 `verschiebung_fun` is the underlying function of the additive monoid hom `witt_vector.verschiebung`.
 -/
 def verschiebungFun (x : 𝕎 R) : 𝕎 R :=
-  (mk p) fun n => if n = 0 then 0 else x.coeff (n - 1)
+  mk p $ fun n => if n = 0 then 0 else x.coeff (n - 1)
 #align witt_vector.verschiebung_fun WittVector.verschiebungFun
 
 theorem verschiebung_fun_coeff (x : 𝕎 R) (n : ℕ) : (verschiebungFun x).coeff n = if n = 0 then 0 else x.coeff (n - 1) :=
@@ -180,7 +180,7 @@ theorem bind₁_verschiebung_poly_witt_polynomial (n : ℕ) :
   · obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
     rw [Nat.succ_eq_add_one, add_tsub_cancel_right, RingHom.map_mul, map_nat_cast, hom_bind₁]
     calc
-      _ = ghost_component (n + 1) (verschiebung <| mk p x) := _
+      _ = ghost_component (n + 1) (verschiebung $ mk p x) := _
       _ = _ := _
       
     · apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl

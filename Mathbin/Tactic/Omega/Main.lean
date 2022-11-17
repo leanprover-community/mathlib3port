@@ -26,31 +26,40 @@ unsafe def select_domain (t s : tactic (Option Bool)) : tactic (Option Bool) := 
 #align omega.select_domain omega.select_domain
 
 unsafe def type_domain (x : expr) : tactic (Option Bool) :=
-  if x = quote.1 Int then return (some true) else if x = quote.1 Nat then return (some false) else failed
+  if x = q(Int) then return (some true) else if x = q(Nat) then return (some false) else failed
 #align omega.type_domain omega.type_domain
 
-/-- Detects domain of a formula from its expr.
-* Returns none, if domain can be either ℤ or ℕ
-* Returns some tt, if domain is exclusively ℤ
-* Returns some ff, if domain is exclusively ℕ
-* Fails, if domain is neither ℤ nor ℕ -/
-unsafe def form_domain : expr → tactic (Option Bool)
-  | quote.1 ¬%%ₓpx => form_domain px
-  | quote.1 ((%%ₓpx) ∨ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
-  | quote.1 ((%%ₓpx) ∧ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
-  | quote.1 ((%%ₓpx) ↔ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
-  | quote.1 (%%ₓexpr.pi _ _ px qx) =>
-    Monad.cond (if expr.has_var px then return true else is_prop px) (select_domain (form_domain px) (form_domain qx))
-      (select_domain (type_domain px) (form_domain qx))
-  | quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-  | quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-  | quote.1 (@Eq (%%ₓdx) _ _) => type_domain dx
-  | quote.1 (@GE.ge (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-  | quote.1 (@GT.gt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
-  | quote.1 (@Ne (%%ₓdx) _ _) => type_domain dx
-  | quote.1 True => return none
-  | quote.1 False => return none
-  | x => failed
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Detects domain of a formula from its expr.
+      * Returns none, if domain can be either ℤ or ℕ
+      * Returns some tt, if domain is exclusively ℤ
+      * Returns some ff, if domain is exclusively ℕ
+      * Fails, if domain is neither ℤ nor ℕ -/
+    unsafe
+  def
+    form_domain
+    : expr → tactic ( Option Bool )
+    | q( ¬ $ ( px ) ) => form_domain px
+      | q( $ ( px ) ∨ $ ( qx ) ) => select_domain ( form_domain px ) ( form_domain qx )
+      | q( $ ( px ) ∧ $ ( qx ) ) => select_domain ( form_domain px ) ( form_domain qx )
+      | q( $ ( px ) ↔ $ ( qx ) ) => select_domain ( form_domain px ) ( form_domain qx )
+      |
+        q( $ ( expr.pi _ _ px qx ) )
+        =>
+        Monad.cond
+          ( if expr.has_var px then return true else is_prop px )
+            ( select_domain ( form_domain px ) ( form_domain qx ) )
+            ( select_domain ( type_domain px ) ( form_domain qx ) )
+      | q( @ LT.lt $ ( dx ) $ ( h ) _ _ ) => type_domain dx
+      | q( @ LE.le $ ( dx ) $ ( h ) _ _ ) => type_domain dx
+      | q( @ Eq $ ( dx ) _ _ ) => type_domain dx
+      | q( @ GE.ge $ ( dx ) $ ( h ) _ _ ) => type_domain dx
+      | q( @ GT.gt $ ( dx ) $ ( h ) _ _ ) => type_domain dx
+      | q( @ Ne $ ( dx ) _ _ ) => type_domain dx
+      | q( True ) => return none
+      | q( False ) => return none
+      | x => failed
 #align omega.form_domain omega.form_domain
 
 unsafe def goal_domain_aux (x : expr) : tactic Bool :=

@@ -93,7 +93,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
         ":"
         (Term.app
          `Tfae
-         [(«term[_]»
+         [(Init.Core.«term[_,»
            "["
            [(Term.app `SmulInvariantMeasure [`G `α `μ])
             ","
@@ -105,16 +105,16 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              (Term.arrow
               (Term.app `MeasurableSet [`s])
               "→"
-              («term_=_»
+              (Init.Core.«term_=_»
                (Term.app
                 `μ
                 [(Set.Data.Set.Basic.«term_⁻¹'_»
                   (Term.app
-                   (Term.paren "(" [(Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) []] ")")
+                   (Term.paren "(" (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) ")")
                    [`c])
                   " ⁻¹' "
                   `s)])
-               "="
+               " = "
                (Term.app `μ [`s]))))
             ","
             (Term.forall
@@ -125,23 +125,26 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              (Term.arrow
               (Term.app `MeasurableSet [`s])
               "→"
-              («term_=_» (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)]) "=" (Term.app `μ [`s]))))
+              (Init.Core.«term_=_»
+               (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)])
+               " = "
+               (Term.app `μ [`s]))))
             ","
             (Term.forall
              "∀"
              [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
              []
              ","
-             («term_=_»
+             (Init.Core.«term_=_»
               (Term.app
                `μ
                [(Set.Data.Set.Basic.«term_⁻¹'_»
                  (Term.app
-                  (Term.paren "(" [(Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) []] ")")
+                  (Term.paren "(" (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) ")")
                   [`c])
                  " ⁻¹' "
                  `s)])
-              "="
+              " = "
               (Term.app `μ [`s])))
             ","
             (Term.forall
@@ -149,21 +152,21 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
              []
              ","
-             («term_=_» (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)]) "=" (Term.app `μ [`s])))
+             (Init.Core.«term_=_» (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)]) " = " (Term.app `μ [`s])))
             ","
             (Term.forall
              "∀"
              [`c]
              [(Term.typeSpec ":" `G)]
              ","
-             («term_=_»
+             (Init.Core.«term_=_»
               (Term.app
                `Measure.map
                [(Term.app
-                 (Term.paren "(" [(Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) []] ")")
+                 (Term.paren "(" (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) ")")
                  [`c])
                 `μ])
-              "="
+              " = "
               `μ))
             ","
             (Term.forall
@@ -173,9 +176,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              ","
              (Term.app
               `MeasurePreserving
-              [(Term.app
-                (Term.paren "(" [(Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) []] ")")
-                [`c])
+              [(Term.app (Term.paren "(" (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) ")") [`c])
                `μ
                `μ]))]
            "]")])))
@@ -287,7 +288,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
             (cdotTk (patternIgnore (token.«·» "·")))
             [(group (Tactic.intro "intro" [`H `c `s `hs]) [])
              (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") []) [])
-             (group (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])) [])])
+             (group (Tactic.exact "exact" (Term.app `H [(Init.Core.«term_⁻¹» `c "⁻¹") `s `hs])) [])])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -402,7 +403,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
            (cdotTk (patternIgnore (token.«·» "·")))
            [(group (Tactic.intro "intro" [`H `c `s `hs]) [])
             (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") []) [])
-            (group (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])) [])])
+            (group (Tactic.exact "exact" (Term.app `H [(Init.Core.«term_⁻¹» `c "⁻¹") `s `hs])) [])])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -414,11 +415,11 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
        (cdotTk (patternIgnore (token.«·» "·")))
        [(group (Tactic.intro "intro" [`H `c `s `hs]) [])
         (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") []) [])
-        (group (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])) [])])
+        (group (Tactic.exact "exact" (Term.app `H [(Init.Core.«term_⁻¹» `c "⁻¹") `s `hs])) [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs]))
+      (Tactic.exact "exact" (Term.app `H [(Init.Core.«term_⁻¹» `c "⁻¹") `s `hs]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])
+      (Term.app `H [(Init.Core.«term_⁻¹» `c "⁻¹") `s `hs])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -429,10 +430,10 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_⁻¹»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_⁻¹»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_⁻¹_1» `c "⁻¹")
+      (Init.Core.«term_⁻¹» `c "⁻¹")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
@@ -590,8 +591,8 @@ positive on any nonempty open set. In case of a regular measure, one can assume 
 theorem measure_is_open_pos_of_smul_invariant_of_compact_ne_zero (hK : IsCompact K) (hμK : μ K ≠ 0) (hU : IsOpen U)
     (hne : U.Nonempty) : 0 < μ U :=
   let ⟨t, ht⟩ := hK.exists_finite_cover_smul G hU hne
-  pos_iff_ne_zero.2 fun hμU =>
-    hμK <| measure_mono_null ht <| (measure_bUnion_null_iff t.countable_to_set).2 fun _ _ => by rwa [measure_smul_set]
+  pos_iff_ne_zero.2 $ fun hμU =>
+    hμK $ measure_mono_null ht $ (measure_bUnion_null_iff t.countable_to_set).2 $ fun _ _ => by rwa [measure_smul_set]
 #align
   measure_theory.measure_is_open_pos_of_smul_invariant_of_compact_ne_zero MeasureTheory.measure_is_open_pos_of_smul_invariant_of_compact_ne_zero
 
@@ -606,7 +607,7 @@ theorem isLocallyFiniteMeasureOfSmulInvariant (hU : IsOpen U) (hne : U.Nonempty)
   ⟨fun x =>
     let ⟨g, hg⟩ := hU.exists_smul_mem G x hne
     ⟨(· • ·) g ⁻¹' U, (hU.Preimage (continuous_id.const_smul _)).mem_nhds hg,
-      Ne.lt_top <| by rwa [measure_preimage_smul]⟩⟩
+      Ne.lt_top $ by rwa [measure_preimage_smul]⟩⟩
 #align measure_theory.is_locally_finite_measure_of_smul_invariant MeasureTheory.isLocallyFiniteMeasureOfSmulInvariant
 
 variable [Measure.Regular μ]

@@ -137,7 +137,7 @@ instance natCoe [AddMonoidWithOne R] : Coe (ArithmeticFunction ℕ) (ArithmeticF
 
 @[simp]
 theorem nat_coe_nat (f : ArithmeticFunction ℕ) : (↑f : ArithmeticFunction ℕ) = f :=
-  ext fun _ => cast_id _
+  ext $ fun _ => cast_id _
 #align nat.arithmetic_function.nat_coe_nat Nat.ArithmeticFunction.nat_coe_nat
 
 @[simp]
@@ -155,7 +155,7 @@ instance intCoe [AddGroupWithOne R] : Coe (ArithmeticFunction ℤ) (ArithmeticFu
 
 @[simp]
 theorem int_coe_int (f : ArithmeticFunction ℤ) : (↑f : ArithmeticFunction ℤ) = f :=
-  ext fun _ => Int.cast_id _
+  ext $ fun _ => Int.cast_id _
 #align nat.arithmetic_function.int_coe_int Nat.ArithmeticFunction.int_coe_int
 
 @[simp]
@@ -399,7 +399,7 @@ def zeta : ArithmeticFunction ℕ :=
 #align nat.arithmetic_function.zeta Nat.ArithmeticFunction.zeta
 
 -- mathport name: arithmetic_function.zeta
-localized [ArithmeticFunction] notation "ζ" => Nat.ArithmeticFunction.zeta
+scoped[ArithmeticFunction] notation "ζ" => Nat.ArithmeticFunction.zeta
 
 @[simp]
 theorem zeta_apply {x : ℕ} : ζ x = if x = 0 then 0 else 1 :=
@@ -611,10 +611,13 @@ end MonoidWithZero
 
 theorem map_prod {ι : Type _} [CommMonoidWithZero R] (g : ι → ℕ) {f : Nat.ArithmeticFunction R}
     (hf : f.IsMultiplicative) (s : Finset ι) (hs : (s : Set ι).Pairwise (coprime on g)) :
-    f (∏ i in s, g i) = ∏ i in s, f (g i) := by
-  classical induction' s using Finset.induction_on with a s has ih hs
-    rw [coe_insert, Set.pairwise_insert_of_symmetric (coprime.symmetric.comap g)] at hs
-    exact Nat.coprime_prod_right fun i hi => hs.2 _ hi (hi.ne_of_not_mem has).symm
+    f (∏ i in s, g i) = ∏ i in s, f (g i) := by classical
+  induction' s using Finset.induction_on with a s has ih hs
+  · simp [hf]
+    
+  rw [coe_insert, Set.pairwise_insert_of_symmetric (coprime.symmetric.comap g)] at hs
+  rw [prod_insert has, prod_insert has, hf.map_mul_of_coprime, ih hs.1]
+  exact Nat.coprime_prod_right fun i hi => hs.2 _ hi (hi.ne_of_not_mem has).symm
 #align nat.arithmetic_function.is_multiplicative.map_prod Nat.ArithmeticFunction.IsMultiplicative.map_prod
 
 theorem nat_cast {f : ArithmeticFunction ℕ} [Semiring R] (h : f.IsMultiplicative) :
@@ -790,7 +793,7 @@ def sigma (k : ℕ) : ArithmeticFunction ℕ :=
 #align nat.arithmetic_function.sigma Nat.ArithmeticFunction.sigma
 
 -- mathport name: arithmetic_function.sigma
-localized [ArithmeticFunction] notation "σ" => Nat.ArithmeticFunction.sigma
+scoped[ArithmeticFunction] notation "σ" => Nat.ArithmeticFunction.sigma
 
 theorem sigma_apply {k n : ℕ} : σ k n = ∑ d in divisors n, d ^ k :=
   rfl
@@ -861,7 +864,7 @@ def cardFactors : ArithmeticFunction ℕ :=
 #align nat.arithmetic_function.card_factors Nat.ArithmeticFunction.cardFactors
 
 -- mathport name: card_factors
-localized [ArithmeticFunction] notation "Ω" => Nat.ArithmeticFunction.cardFactors
+scoped[ArithmeticFunction] notation "Ω" => Nat.ArithmeticFunction.cardFactors
 
 theorem card_factors_apply {n : ℕ} : Ω n = n.factors.length :=
   rfl
@@ -915,7 +918,7 @@ def cardDistinctFactors : ArithmeticFunction ℕ :=
 #align nat.arithmetic_function.card_distinct_factors Nat.ArithmeticFunction.cardDistinctFactors
 
 -- mathport name: card_distinct_factors
-localized [ArithmeticFunction] notation "ω" => Nat.ArithmeticFunction.cardDistinctFactors
+scoped[ArithmeticFunction] notation "ω" => Nat.ArithmeticFunction.cardDistinctFactors
 
 theorem card_distinct_factors_zero : ω 0 = 0 := by simp
 #align nat.arithmetic_function.card_distinct_factors_zero Nat.ArithmeticFunction.card_distinct_factors_zero
@@ -960,7 +963,7 @@ def moebius : ArithmeticFunction ℤ :=
 #align nat.arithmetic_function.moebius Nat.ArithmeticFunction.moebius
 
 -- mathport name: moebius
-localized [ArithmeticFunction] notation "μ" => Nat.ArithmeticFunction.moebius
+scoped[ArithmeticFunction] notation "μ" => Nat.ArithmeticFunction.moebius
 
 @[simp]
 theorem moebius_apply_of_squarefree {n : ℕ} (h : Squarefree n) : μ n = (-1) ^ cardFactors n :=
@@ -1136,7 +1139,7 @@ theorem sum_eq_iff_sum_mul_moebius_eq [Ring R] {f g : ℕ → R} :
   by
   rw [sum_eq_iff_sum_smul_moebius_eq]
   apply forall_congr'
-  refine' fun a => imp_congr_right fun _ => ((sum_congr rfl) fun x hx => _).congr_left
+  refine' fun a => imp_congr_right fun _ => (sum_congr rfl $ fun x hx => _).congr_left
   rw [zsmul_eq_mul]
 #align nat.arithmetic_function.sum_eq_iff_sum_mul_moebius_eq Nat.ArithmeticFunction.sum_eq_iff_sum_mul_moebius_eq
 

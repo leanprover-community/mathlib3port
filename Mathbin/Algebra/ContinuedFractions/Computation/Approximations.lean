@@ -214,15 +214,15 @@ theorem fib_le_of_continuants_aux_b :
           simpa [fib_add_two, add_comm, continuants_aux_recurrence s_ppred_nth_eq ppconts_eq pconts_eq]
         -- make use of the fact that gp.a = 1
         suffices (fib n : K) + fib (n + 1) ≤ ppconts.b + gp.b * pconts.b by
-          simpa [of_part_num_eq_one <| part_num_eq_s_a s_ppred_nth_eq]
+          simpa [of_part_num_eq_one $ part_num_eq_s_a s_ppred_nth_eq]
         have not_terminated_at_pred_n : ¬g.terminated_at (n - 1) :=
-          mt (terminated_stable <| Nat.sub_le n 1) not_terminated_at_n
+          mt (terminated_stable $ Nat.sub_le n 1) not_terminated_at_n
         have not_terminated_at_ppred_n : ¬terminated_at g (n - 2) :=
           mt (terminated_stable (n - 1).pred_le) not_terminated_at_pred_n
         -- use the IH to get the inequalities for `pconts` and `ppconts`
-        have : (fib (n + 1) : K) ≤ pconts.b := IH _ (Nat.lt.base <| n + 1) (Or.inr not_terminated_at_pred_n)
+        have : (fib (n + 1) : K) ≤ pconts.b := IH _ (Nat.lt.base $ n + 1) (Or.inr not_terminated_at_pred_n)
         have ppred_nth_fib_le_ppconts_B : (fib n : K) ≤ ppconts.b :=
-          IH n (lt_trans (Nat.lt.base n) <| Nat.lt.base <| n + 1) (Or.inr not_terminated_at_ppred_n)
+          IH n (lt_trans (Nat.lt.base n) $ Nat.lt.base $ n + 1) (Or.inr not_terminated_at_ppred_n)
         suffices : (fib (n + 1) : K) ≤ gp.b * pconts.b
         solve_by_elim [add_le_add ppred_nth_fib_le_ppconts_B]
         -- finally use the fact that 1 ≤ gp.b to solve the goal
@@ -242,7 +242,7 @@ theorem succ_nth_fib_le_of_nth_denom (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n -
   rw [denom_eq_conts_b, nth_cont_eq_succ_nth_cont_aux]
   have : n + 1 ≤ 1 ∨ ¬(of v).TerminatedAt (n - 1) := by
     cases n
-    case zero => exact Or.inl <| le_refl 1
+    case zero => exact Or.inl $ le_refl 1
     case succ => exact Or.inr (Or.resolve_left hyp n.succ_ne_zero)
   exact fib_le_of_continuants_aux_b this
 #align
@@ -256,7 +256,7 @@ theorem zero_le_of_continuants_aux_b : 0 ≤ ((of v).continuantsAux n).b := by
   induction' n with n IH
   case zero => rfl
   case succ =>
-  cases' Decidable.em <| g.terminated_at (n - 1) with terminated not_terminated
+  cases' Decidable.em $ g.terminated_at (n - 1) with terminated not_terminated
   · cases n
     -- terminating case
     · simp [zero_le_one]
@@ -284,7 +284,7 @@ theorem zero_le_of_denom : 0 ≤ (of v).denominators n := by
 #align generalized_continued_fraction.zero_le_of_denom GeneralizedContinuedFraction.zero_le_of_denom
 
 theorem le_of_succ_succ_nth_continuants_aux_b {b : K} (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) :
-    b * ((of v).continuantsAux <| n + 1).b ≤ ((of v).continuantsAux <| n + 2).b := by
+    b * ((of v).continuantsAux $ n + 1).b ≤ ((of v).continuantsAux $ n + 2).b := by
   set g := of v with g_eq
   obtain ⟨gp_n, nth_s_eq, gpnb_eq_b⟩ : ∃ gp_n, g.s.nth n = some gp_n ∧ gp_n.b = b
   exact exists_s_b_of_part_denom nth_part_denom_eq
@@ -311,7 +311,7 @@ theorem le_of_succ_nth_denom {b : K} (nth_part_denom_eq : (of v).partialDenomina
 /-- Shows that the sequence of denominators is monotone, that is `Bₙ ≤ Bₙ₊₁`. -/
 theorem of_denom_mono : (of v).denominators n ≤ (of v).denominators (n + 1) := by
   let g := of v
-  cases' Decidable.em <| g.partial_denominators.terminated_at n with terminated not_terminated
+  cases' Decidable.em $ g.partial_denominators.terminated_at n with terminated not_terminated
   · have : g.partial_denominators.nth n = none := by rwa [Seq.TerminatedAt] at terminated
     have : g.terminated_at n := terminated_at_iff_part_denom_none.elim_right (by rwa [Seq.TerminatedAt] at terminated)
     have : g.denominators (n + 1) = g.denominators n := denominators_stable_of_terminated n.le_succ this
@@ -375,14 +375,14 @@ theorem determinant_aux (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
     have pow_succ_n : (-1 : K) ^ (n + 1) = -1 * (-1) ^ n := pow_succ (-1) n
     rw [pow_succ_n, ← this]
     ring
-  exact IH <| Or.inr <| mt (terminated_stable <| n.sub_le 1) not_terminated_at_n
+  exact IH $ Or.inr $ mt (terminated_stable $ n.sub_le 1) not_terminated_at_n
 #align generalized_continued_fraction.determinant_aux GeneralizedContinuedFraction.determinant_aux
 
 /-- The determinant formula `Aₙ * Bₙ₊₁ - Bₙ * Aₙ₊₁ = (-1)^(n + 1)` -/
 theorem determinant (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     (of v).numerators n * (of v).denominators (n + 1) - (of v).denominators n * (of v).numerators (n + 1) =
       (-1) ^ (n + 1) :=
-  determinant_aux <| Or.inr <| not_terminated_at_n
+  determinant_aux $ Or.inr $ not_terminated_at_n
 #align generalized_continued_fraction.determinant GeneralizedContinuedFraction.determinant
 
 end Determinant
@@ -451,7 +451,7 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
         cases' n_eq_zero_or_not_terminated_at_pred_n with n_eq_zero not_terminated_at_pred_n
         · simp [n_eq_zero]
           
-        · exact Or.inr <| mt (terminated_stable (n - 1).pred_le) not_terminated_at_pred_n
+        · exact Or.inr $ mt (terminated_stable (n - 1).pred_le) not_terminated_at_pred_n
           
       fib_le_of_continuants_aux_b this
     have B_ineq : (fib (n + 1) : K) ≤ B :=
@@ -493,7 +493,7 @@ theorem sub_convergents_eq {ifp : IntFractPair K} (stream_nth_eq : IntFractPair.
 
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (Bₙ * Bₙ₊₁)` -/
 theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
-    |v - (of v).convergents n| ≤ 1 / ((of v).denominators n * ((of v).denominators <| n + 1)) := by
+    |v - (of v).convergents n| ≤ 1 / ((of v).denominators n * ((of v).denominators $ n + 1)) := by
   -- shorthand notation
   let g := of v
   let nextConts := g.continuants_aux (n + 2)
@@ -536,7 +536,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     rwa [nextConts_b_eq] at this
   have conts_b_ineq : (fib (n + 1) : K) ≤ conts.b :=
     haveI : ¬g.terminated_at (n - 1) := mt (terminated_stable n.pred_le) not_terminated_at_n
-    fib_le_of_continuants_aux_b <| Or.inr this
+    fib_le_of_continuants_aux_b $ Or.inr this
   have zero_lt_conts_b : 0 < conts.b :=
     haveI : (0 : K) < fib (n + 1) := by exact_mod_cast fib_pos (lt_of_le_of_ne n.succ.zero_le n.succ_ne_zero.symm)
     lt_of_lt_of_le this conts_b_ineq
@@ -548,7 +548,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
         have : 0 ≤ pred_conts.b :=
           haveI : (fib n : K) ≤ pred_conts.b :=
             haveI : ¬g.terminated_at (n - 2) := mt (terminated_stable (n.sub_le 2)) not_terminated_at_n
-            fib_le_of_continuants_aux_b <| Or.inr this
+            fib_le_of_continuants_aux_b $ Or.inr this
           le_trans (by exact_mod_cast (fib n).zero_le) this
         have : 0 < ifp_n.fr⁻¹ :=
           haveI zero_le_ifp_n_fract : 0 ≤ ifp_n.fr := int_fract_pair.nth_stream_fr_nonneg stream_nth_eq
@@ -566,7 +566,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     
   · -- we can cancel multiplication by `conts.b` and addition with `pred_conts.b`
     suffices : gp.b * conts.b ≤ ifp_n.fr⁻¹ * conts.b
-    exact (mul_le_mul_left zero_lt_conts_b).elimRight <| (add_le_add_iff_left pred_conts.b).elimRight this
+    exact (mul_le_mul_left zero_lt_conts_b).elimRight $ (add_le_add_iff_left pred_conts.b).elimRight this
     suffices (ifp_succ_n.b : K) * conts.b ≤ ifp_n.fr⁻¹ * conts.b by rwa [← ifp_succ_n_b_eq_gp_b]
     have : (ifp_succ_n.b : K) ≤ ifp_n.fr⁻¹ :=
       int_fract_pair.succ_nth_stream_b_le_nth_stream_fr_inv stream_nth_eq succ_nth_stream_eq
@@ -592,7 +592,7 @@ theorem abs_sub_convergents_le' {b : K} (nth_part_denom_eq : (of v).partialDenom
   -- derive some inequalities needed to show the claim
   have zero_lt_B : 0 < B :=
     haveI : (fib (n + 1) : K) ≤ B :=
-      succ_nth_fib_le_of_nth_denom (Or.inr <| mt (terminated_stable n.pred_le) not_terminated_at_n)
+      succ_nth_fib_le_of_nth_denom (Or.inr $ mt (terminated_stable n.pred_le) not_terminated_at_n)
     lt_of_lt_of_le (by exact_mod_cast fib_pos (lt_of_le_of_ne n.succ.zero_le n.succ_ne_zero.symm)) this
   have denoms_ineq : b * B * B ≤ B * nB := by
     have : b * B ≤ nB := le_of_succ_nth_denom nth_part_denom_eq

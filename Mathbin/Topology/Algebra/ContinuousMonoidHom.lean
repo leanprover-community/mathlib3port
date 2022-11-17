@@ -119,7 +119,7 @@ def toContinuousMap (f : ContinuousMonoidHom A B) : C(A, B) :=
 
 @[to_additive]
 theorem to_continuous_map_injective : Injective (toContinuousMap : _ → C(A, B)) := fun f g h =>
-  ext <| by convert FunLike.ext_iff.1 h
+  ext $ by convert FunLike.ext_iff.1 h
 #align continuous_monoid_hom.to_continuous_map_injective ContinuousMonoidHom.to_continuous_map_injective
 
 /-- Construct a `continuous_monoid_hom` from a `continuous` `monoid_hom`. -/
@@ -315,20 +315,20 @@ theorem continuous_of_continuous_uncurry {A : Type _} [TopologicalSpace A] (f : 
 @[to_additive]
 theorem continuous_comp [LocallyCompactSpace B] :
     Continuous fun f : ContinuousMonoidHom A B × ContinuousMonoidHom B C => f.2.comp f.1 :=
-  (inducing_to_continuous_map A C).continuous_iff.2 <|
+  (inducing_to_continuous_map A C).continuous_iff.2 $
     ContinuousMap.continuous_comp'.comp
       ((inducing_to_continuous_map A B).prod_mk (inducing_to_continuous_map B C)).Continuous
 #align continuous_monoid_hom.continuous_comp ContinuousMonoidHom.continuous_comp
 
 @[to_additive]
 theorem continuous_comp_left (f : ContinuousMonoidHom A B) : Continuous fun g : ContinuousMonoidHom B C => g.comp f :=
-  (inducing_to_continuous_map A C).continuous_iff.2 <|
+  (inducing_to_continuous_map A C).continuous_iff.2 $
     f.toContinuousMap.continuous_comp_left.comp (inducing_to_continuous_map B C).Continuous
 #align continuous_monoid_hom.continuous_comp_left ContinuousMonoidHom.continuous_comp_left
 
 @[to_additive]
 theorem continuous_comp_right (f : ContinuousMonoidHom B C) : Continuous fun g : ContinuousMonoidHom A B => f.comp g :=
-  (inducing_to_continuous_map A C).continuous_iff.2 <|
+  (inducing_to_continuous_map A C).continuous_iff.2 $
     f.toContinuousMap.continuous_comp.comp (inducing_to_continuous_map A B).Continuous
 #align continuous_monoid_hom.continuous_comp_right ContinuousMonoidHom.continuous_comp_right
 

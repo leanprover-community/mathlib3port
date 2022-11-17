@@ -153,7 +153,7 @@ either side of the equality.
 theorem congr {X Y : PresheafedSpaceCat.{v} C} (α β : X ⟶ Y) (h₁ : α = β) (x x' : X) (h₂ : x = x') :
     stalkMap α x ≫ eqToHom (show X.stalk x = X.stalk x' by rw [h₂]) =
       eqToHom (show Y.stalk (α.base x) = Y.stalk (β.base x') by rw [h₁, h₂]) ≫ stalkMap β x' :=
-  (stalk_hom_ext _) fun U hx => by
+  stalk_hom_ext _ $ fun U hx => by
     subst h₁
     subst h₂
     simp

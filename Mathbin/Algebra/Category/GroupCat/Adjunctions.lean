@@ -152,7 +152,7 @@ end Abelianization
 @[simps]
 def MonCat.units : MonCat.{u} ⥤ GroupCat.{u} where
   obj R := GroupCat.of Rˣ
-  map R S f := GroupCat.ofHom <| Units.map f
+  map R S f := GroupCat.ofHom $ Units.map f
   map_id' X := MonoidHom.ext fun x => Units.ext rfl
   map_comp' X Y Z f g := MonoidHom.ext fun x => Units.ext rfl
 #align Mon.units MonCat.units
@@ -161,13 +161,13 @@ def MonCat.units : MonCat.{u} ⥤ GroupCat.{u} where
 def GroupCat.forget₂MonAdj : forget₂ GroupCat MonCat ⊣ MonCat.units.{u} where
   homEquiv X Y :=
     { toFun := fun f => MonoidHom.toHomUnits f, invFun := fun f => (Units.coeHom Y).comp f,
-      left_inv := fun f => MonoidHom.ext fun _ => rfl, right_inv := fun f => MonoidHom.ext fun _ => Units.ext rfl }
+      left_inv := fun f => MonoidHom.ext $ fun _ => rfl, right_inv := fun f => MonoidHom.ext $ fun _ => Units.ext rfl }
   Unit :=
     { app := fun X => { (@toUnits X _).toMonoidHom with },
-      naturality' := fun X Y f => MonoidHom.ext fun x => Units.ext rfl }
-  counit := { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
-  hom_equiv_unit' X Y f := MonoidHom.ext fun _ => Units.ext rfl
-  hom_equiv_counit' X Y f := MonoidHom.ext fun _ => rfl
+      naturality' := fun X Y f => MonoidHom.ext $ fun x => Units.ext rfl }
+  counit := { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext $ fun x => rfl }
+  hom_equiv_unit' X Y f := MonoidHom.ext $ fun _ => Units.ext rfl
+  hom_equiv_counit' X Y f := MonoidHom.ext $ fun _ => rfl
 #align Group.forget₂_Mon_adj GroupCat.forget₂MonAdj
 
 instance : IsRightAdjoint MonCat.units.{u} :=
@@ -177,7 +177,7 @@ instance : IsRightAdjoint MonCat.units.{u} :=
 @[simps]
 def CommMonCat.units : CommMonCat.{u} ⥤ CommGroupCat.{u} where
   obj R := CommGroupCat.of Rˣ
-  map R S f := CommGroupCat.ofHom <| Units.map f
+  map R S f := CommGroupCat.ofHom $ Units.map f
   map_id' X := MonoidHom.ext fun x => Units.ext rfl
   map_comp' X Y Z f g := MonoidHom.ext fun x => Units.ext rfl
 #align CommMon.units CommMonCat.units
@@ -186,13 +186,13 @@ def CommMonCat.units : CommMonCat.{u} ⥤ CommGroupCat.{u} where
 def CommGroupCat.forget₂CommMonAdj : forget₂ CommGroupCat CommMonCat ⊣ CommMonCat.units.{u} where
   homEquiv X Y :=
     { toFun := fun f => MonoidHom.toHomUnits f, invFun := fun f => (Units.coeHom Y).comp f,
-      left_inv := fun f => MonoidHom.ext fun _ => rfl, right_inv := fun f => MonoidHom.ext fun _ => Units.ext rfl }
+      left_inv := fun f => MonoidHom.ext $ fun _ => rfl, right_inv := fun f => MonoidHom.ext $ fun _ => Units.ext rfl }
   Unit :=
     { app := fun X => { (@toUnits X _).toMonoidHom with },
-      naturality' := fun X Y f => MonoidHom.ext fun x => Units.ext rfl }
-  counit := { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
-  hom_equiv_unit' X Y f := MonoidHom.ext fun _ => Units.ext rfl
-  hom_equiv_counit' X Y f := MonoidHom.ext fun _ => rfl
+      naturality' := fun X Y f => MonoidHom.ext $ fun x => Units.ext rfl }
+  counit := { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext $ fun x => rfl }
+  hom_equiv_unit' X Y f := MonoidHom.ext $ fun _ => Units.ext rfl
+  hom_equiv_counit' X Y f := MonoidHom.ext $ fun _ => rfl
 #align CommGroup.forget₂_CommMon_adj CommGroupCat.forget₂CommMonAdj
 
 instance : IsRightAdjoint CommMonCat.units.{u} :=

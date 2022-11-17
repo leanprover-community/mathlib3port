@@ -48,7 +48,7 @@ unsafe def monom.one : monom :=
 
 /-- Compare monomials by first comparing their keys and then their powers. -/
 @[reducible]
-unsafe def monom.lt : monom → monom → Prop := fun a b => a.keys < b.keys || a.keys = b.keys && a.values < b.values
+unsafe def monom.lt : monom → monom → Prop := fun a b => (a.keys < b.keys) || (a.keys = b.keys) && (a.values < b.values)
 #align linarith.monom.lt linarith.monom.lt
 
 unsafe instance : LT monom :=
@@ -67,12 +67,12 @@ unsafe def sum.one : sum :=
 
 /-- `sum.scale_by_monom s m` multiplies every monomial in `s` by `m`. -/
 unsafe def sum.scale_by_monom (s : sum) (m : monom) : sum :=
-  (s.fold mk_rb_map) fun m' coeff sm => sm.insert (m.add m') coeff
+  s.fold mk_rb_map $ fun m' coeff sm => sm.insert (m.add m') coeff
 #align linarith.sum.scale_by_monom linarith.sum.scale_by_monom
 
 /-- `sum.mul s1 s2` distributes the multiplication of two sums.` -/
 unsafe def sum.mul (s1 s2 : sum) : sum :=
-  (s1.fold mk_rb_map) fun mn coeff sm => sm.add <| (s2.scale_by_monom mn).scale coeff
+  s1.fold mk_rb_map $ fun mn coeff sm => sm.add $ (s2.scale_by_monom mn).scale coeff
 #align linarith.sum.mul linarith.sum.mul
 
 /-- The `n`th power of `s : sum` is the `n`-fold product of `s`, with `s.pow 0 = sum.one`. -/
@@ -120,42 +120,58 @@ unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tac
     return ((e, n)::m, var n)
 #align linarith.linear_form_of_atom linarith.linear_form_of_atom
 
-/-- `linear_form_of_expr red map e` computes the linear form of `e`.
-
-`map` is a lookup map from atomic expressions to variable numbers.
-If a new atomic expression is encountered, it is added to the map with a new number.
-It matches atomic expressions up to reducibility given by `red`.
-
-Because it matches up to definitional equality, this function must be in the `tactic` monad,
-and forces some functions that call it into `tactic` as well.
--/
-unsafe def linear_form_of_expr (red : Transparency) : exmap → expr → tactic (exmap × Sum)
-  | m, e@(quote.1 ((%%ₓe1) * %%ₓe2)) => do
-    let (m', comp1) ← linear_form_of_expr m e1
-    let (m', comp2) ← linear_form_of_expr m' e2
-    return (m', comp1 comp2)
-  | m, quote.1 ((%%ₓe1) + %%ₓe2) => do
-    let (m', comp1) ← linear_form_of_expr m e1
-    let (m', comp2) ← linear_form_of_expr m' e2
-    return (m', comp1 comp2)
-  | m, quote.1 ((%%ₓe1) - %%ₓe2) => do
-    let (m', comp1) ← linear_form_of_expr m e1
-    let (m', comp2) ← linear_form_of_expr m' e2
-    return (m', comp1 (comp2 (-1)))
-  | m, quote.1 (-%%ₓe) => do
-    let (m', comp) ← linear_form_of_expr m e
-    return (m', comp (-1))
-  | m, p@(quote.1 (@Pow.pow _ ℕ _ (%%ₓe) (%%ₓn))) =>
-    match n.toNat with
-    | some k => do
-      let (m', comp) ← linear_form_of_expr m e
-      return (m', comp k)
-    | none => linear_form_of_atom red m p
-  | m, e =>
-    match e.to_int with
-    | some 0 => return ⟨m, mk_rb_map⟩
-    | some z => return ⟨m, scalar z⟩
-    | none => linear_form_of_atom red m e
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      `linear_form_of_expr red map e` computes the linear form of `e`.
+      
+      `map` is a lookup map from atomic expressions to variable numbers.
+      If a new atomic expression is encountered, it is added to the map with a new number.
+      It matches atomic expressions up to reducibility given by `red`.
+      
+      Because it matches up to definitional equality, this function must be in the `tactic` monad,
+      and forces some functions that call it into `tactic` as well.
+      -/
+    unsafe
+  def
+    linear_form_of_expr
+    ( red : Transparency ) : exmap → expr → tactic ( exmap × Sum )
+    |
+        m , e @ q( $ ( e1 ) * $ ( e2 ) )
+        =>
+        do
+          let ( m' , comp1 ) ← linear_form_of_expr m e1
+            let ( m' , comp2 ) ← linear_form_of_expr m' e2
+            return ( m' , comp1 comp2 )
+      |
+        m , q( $ ( e1 ) + $ ( e2 ) )
+        =>
+        do
+          let ( m' , comp1 ) ← linear_form_of_expr m e1
+            let ( m' , comp2 ) ← linear_form_of_expr m' e2
+            return ( m' , comp1 comp2 )
+      |
+        m , q( $ ( e1 ) - $ ( e2 ) )
+        =>
+        do
+          let ( m' , comp1 ) ← linear_form_of_expr m e1
+            let ( m' , comp2 ) ← linear_form_of_expr m' e2
+            return ( m' , comp1 ( comp2 ( - 1 ) ) )
+      | m , q( - $ ( e ) ) => do let ( m' , comp ) ← linear_form_of_expr m e return ( m' , comp ( - 1 ) )
+      |
+        m , p @ q( @ Pow.pow _ ℕ _ $ ( e ) $ ( n ) )
+        =>
+        match
+          n . toNat
+          with
+          | some k => do let ( m' , comp ) ← linear_form_of_expr m e return ( m' , comp k )
+            | none => linear_form_of_atom red m p
+      |
+        m , e
+        =>
+        match
+          e . to_int
+          with
+          | some 0 => return ⟨ m , mk_rb_map ⟩ | some z => return ⟨ m , scalar z ⟩ | none => linear_form_of_atom red m e
 #align linarith.linear_form_of_expr linarith.linear_form_of_expr
 
 /-- `sum_to_lf s map` eliminates the monomial level of the `sum` `s`.
@@ -166,7 +182,7 @@ but each monomial key is replaced with its index according to `map`.
 If any new monomials are encountered, they are assigned variable numbers and `map` is updated.
  -/
 unsafe def sum_to_lf (s : sum) (m : rb_map monom ℕ) : rb_map monom ℕ × rb_map ℕ ℤ :=
-  (s.fold (m, mk_rb_map)) fun mn coeff ⟨map, out⟩ =>
+  s.fold (m, mk_rb_map) $ fun mn coeff ⟨map, out⟩ =>
     match map.find mn with
     | some n => ⟨map, out.insert n coeff⟩
     | none =>

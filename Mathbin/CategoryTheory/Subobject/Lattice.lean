@@ -425,30 +425,35 @@ theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X ⊓ Y
 
 @[simp]
 theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} (f : A ⟶ B) :
-    (s.inf P).Factors f ↔ ∀ i ∈ s, (P i).Factors f := by
-  classical apply Finset.induction_on s
-    · intro i s nm ih
-      simp [ih]
-      
+    (s.inf P).Factors f ↔ ∀ i ∈ s, (P i).Factors f := by classical
+  apply Finset.induction_on s
+  · simp [top_factors]
+    
+  · intro i s nm ih
+    simp [ih]
+    
 #align category_theory.subobject.finset_inf_factors CategoryTheory.Subobject.finset_inf_factors
 
 -- `i` is explicit here because often we'd like to defer a proof of `m`
 theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → Subobject B) (i : I) (m : i ∈ s) :
     (P i).Factors (s.inf P).arrow := by
   revert i m
-  classical apply Finset.induction_on s
-    · intro i s nm ih j m
-      rw [Finset.inf_insert]
-      simp only [Finset.mem_insert] at m
-      rcases m with (rfl | m)
-      · rw [← factor_thru_arrow _ _ (inf_arrow_factors_left _ _)]
-        exact factors_comp_arrow _
-        
-      · rw [← factor_thru_arrow _ _ (inf_arrow_factors_right _ _)]
-        apply factors_of_factors_right
-        exact ih _ m
-        
+  classical
+  apply Finset.induction_on s
+  · rintro _ ⟨⟩
+    
+  · intro i s nm ih j m
+    rw [Finset.inf_insert]
+    simp only [Finset.mem_insert] at m
+    rcases m with (rfl | m)
+    · rw [← factor_thru_arrow _ _ (inf_arrow_factors_left _ _)]
+      exact factors_comp_arrow _
       
+    · rw [← factor_thru_arrow _ _ (inf_arrow_factors_right _ _)]
+      apply factors_of_factors_right
+      exact ih _ m
+      
+    
 #align category_theory.subobject.finset_inf_arrow_factors CategoryTheory.Subobject.finset_inf_arrow_factors
 
 theorem inf_eq_map_pullback' {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
@@ -522,10 +527,20 @@ theorem sup_factors_of_factors_right {A B : C} {X Y : Subobject B} {f : A ⟶ B}
 variable [HasInitial C] [InitialMonoClass C]
 
 theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} {f : A ⟶ B}
-    (h : ∃ i ∈ s, (P i).Factors f) : (s.sup P).Factors f := by
-  classical revert h
-    · rintro ⟨_, ⟨⟨⟩, _⟩⟩
+    (h : ∃ i ∈ s, (P i).Factors f) : (s.sup P).Factors f := by classical
+  revert h
+  apply Finset.induction_on s
+  · rintro ⟨_, ⟨⟨⟩, _⟩⟩
+    
+  · rintro i s nm ih ⟨j, ⟨m, h⟩⟩
+    simp only [Finset.sup_insert]
+    simp at m
+    rcases m with (rfl | m)
+    · exact sup_factors_of_factors_left h
       
+    · exact sup_factors_of_factors_right (ih ⟨j, ⟨m, h⟩⟩)
+      
+    
 #align category_theory.subobject.finset_sup_factors CategoryTheory.Subobject.finset_sup_factors
 
 end SemilatticeSup
@@ -620,7 +635,7 @@ def inf {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (widePullbackι s)
 #align category_theory.subobject.Inf CategoryTheory.Subobject.inf
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (f «expr ∈ » s) -/
 theorem Inf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : inf s ≤ f := by
   fapply le_of_comm
   · refine'
@@ -677,7 +692,7 @@ def sup {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (image.ι (smallCoproductDesc s))
 #align category_theory.subobject.Sup CategoryTheory.Subobject.sup
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:610:2: warning: expanding binder collection (f «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (f «expr ∈ » s) -/
 theorem le_Sup {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : f ≤ sup s := by
   fapply le_of_comm
   · dsimp [Sup]

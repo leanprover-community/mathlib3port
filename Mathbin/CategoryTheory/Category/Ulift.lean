@@ -121,7 +121,7 @@ theorem obj_up_obj_down {C} (A : UliftHom C) : UliftHom.objUp A.objDown = A :=
 #align category_theory.obj_up_obj_down CategoryTheory.obj_up_obj_down
 
 instance : Category.{max v₂ v₁} (UliftHom.{v₂} C) where
-  Hom A B := ULift.{v₂} <| A.objDown ⟶ B.objDown
+  Hom A B := ULift.{v₂} $ A.objDown ⟶ B.objDown
   id A := ⟨𝟙 _⟩
   comp A B C f g := ⟨f.down ≫ g.down⟩
 
@@ -165,7 +165,7 @@ def AsSmall.{w, v, u} (C : Type u) [Category.{v} C] :=
 #align category_theory.as_small CategoryTheory.AsSmall
 
 instance : SmallCategory (AsSmall.{w₁} C) where
-  Hom X Y := ULift.{max w₁ u₁} <| X.down ⟶ Y.down
+  Hom X Y := ULift.{max w₁ u₁} $ X.down ⟶ Y.down
   id X := ⟨𝟙 _⟩
   comp X Y Z f g := ⟨f.down ≫ g.down⟩
 
@@ -192,7 +192,7 @@ def AsSmall.equiv : C ≌ AsSmall C where
   counitIso :=
     NatIso.ofComponents
       (fun X =>
-        eq_to_iso <| by
+        eq_to_iso $ by
           ext
           rfl)
       (by tidy)

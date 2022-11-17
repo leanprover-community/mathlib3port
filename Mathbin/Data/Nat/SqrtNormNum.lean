@@ -29,19 +29,19 @@ unsafe def prove_sqrt (ic : instance_cache) (n : expr) : tactic (instance_cache 
   let (ic, a2, ha2) ← prove_mul_nat ic a a
   let (ic, b) ← ic.ofNat (nn - na * na)
   let (ic, hb) ← prove_add_nat ic a2 b n
-  let (ic, hle) ← prove_le_nat ic b ((quote.1 (bit0 : ℕ → ℕ)).mk_app [a])
-  pure (ic, a, (quote.1 @is_sqrt).mk_app [n, a, a2, b, ha2, hb, hle])
+  let (ic, hle) ← prove_le_nat ic b (q((bit0 : ℕ → ℕ)).mk_app [a])
+  pure (ic, a, q(@is_sqrt).mk_app [n, a, a2, b, ha2, hb, hle])
 #align norm_num.prove_sqrt norm_num.prove_sqrt
 
 /-- A `norm_num` plugin for `sqrt n` when `n` is a numeral. -/
 @[norm_num]
 unsafe def eval_sqrt : expr → tactic (expr × expr)
-  | quote.1 (sqrt (%%ₓen)) => do
+  | q(sqrt $(en)) => do
     let n ← en.toNat
     match n with
-      | 0 => pure (quote.1 (0 : ℕ), quote.1 sqrt_zero)
+      | 0 => pure (q((0 : ℕ)), q(sqrt_zero))
       | _ => do
-        let c ← mk_instance_cache (quote.1 ℕ)
+        let c ← mk_instance_cache q(ℕ)
         Prod.snd <$> prove_sqrt c en
   | _ => failed
 #align norm_num.eval_sqrt norm_num.eval_sqrt

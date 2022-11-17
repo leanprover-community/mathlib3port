@@ -141,11 +141,11 @@ theorem is_max_on_univ_iff : IsMaxOn f univ a ↔ ∀ x, f x ≤ f a :=
   univ_subset_iff.trans eq_univ_iff_forall
 #align is_max_on_univ_iff is_max_on_univ_iff
 
-theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : Tendsto f l (𝓟 <| ici (f a)) :=
+theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : Tendsto f l (𝓟 $ ici (f a)) :=
   tendsto_principal.2 h
 #align is_min_filter.tendsto_principal_Ici IsMinFilter.tendsto_principal_Ici
 
-theorem IsMaxFilter.tendsto_principal_Iic (h : IsMaxFilter f l a) : Tendsto f l (𝓟 <| iic (f a)) :=
+theorem IsMaxFilter.tendsto_principal_Iic (h : IsMaxFilter f l a) : Tendsto f l (𝓟 $ iic (f a)) :=
   tendsto_principal.2 h
 #align is_max_filter.tendsto_principal_Iic IsMaxFilter.tendsto_principal_Iic
 
@@ -172,11 +172,11 @@ theorem IsMaxOn.is_extr (h : IsMaxOn f s a) : IsExtrOn f s a :=
 
 
 theorem is_min_filter_const {b : β} : IsMinFilter (fun _ => b) l a :=
-  univ_mem' fun _ => le_rfl
+  univ_mem' $ fun _ => le_rfl
 #align is_min_filter_const is_min_filter_const
 
 theorem is_max_filter_const {b : β} : IsMaxFilter (fun _ => b) l a :=
-  univ_mem' fun _ => le_rfl
+  univ_mem' $ fun _ => le_rfl
 #align is_max_filter_const is_max_filter_const
 
 theorem is_extr_filter_const {b : β} : IsExtrFilter (fun _ => b) l a :=
@@ -264,15 +264,15 @@ theorem IsExtrFilter.filter_inf (h : IsExtrFilter f l a) (l') : IsExtrFilter f (
 #align is_extr_filter.filter_inf IsExtrFilter.filter_inf
 
 theorem IsMinOn.on_subset (hf : IsMinOn f t a) (h : s ⊆ t) : IsMinOn f s a :=
-  hf.filter_mono <| principal_mono.2 h
+  hf.filter_mono $ principal_mono.2 h
 #align is_min_on.on_subset IsMinOn.on_subset
 
 theorem IsMaxOn.on_subset (hf : IsMaxOn f t a) (h : s ⊆ t) : IsMaxOn f s a :=
-  hf.filter_mono <| principal_mono.2 h
+  hf.filter_mono $ principal_mono.2 h
 #align is_max_on.on_subset IsMaxOn.on_subset
 
 theorem IsExtrOn.on_subset (hf : IsExtrOn f t a) (h : s ⊆ t) : IsExtrOn f s a :=
-  hf.filter_mono <| principal_mono.2 h
+  hf.filter_mono $ principal_mono.2 h
 #align is_extr_on.on_subset IsExtrOn.on_subset
 
 theorem IsMinOn.inter (hf : IsMinOn f s a) (t) : IsMinOn f (s ∩ t) a :=
@@ -291,11 +291,11 @@ theorem IsExtrOn.inter (hf : IsExtrOn f s a) (t) : IsExtrOn f (s ∩ t) a :=
 
 
 theorem IsMinFilter.comp_mono (hf : IsMinFilter f l a) {g : β → γ} (hg : Monotone g) : IsMinFilter (g ∘ f) l a :=
-  (mem_of_superset hf) fun x hx => hg hx
+  mem_of_superset hf $ fun x hx => hg hx
 #align is_min_filter.comp_mono IsMinFilter.comp_mono
 
 theorem IsMaxFilter.comp_mono (hf : IsMaxFilter f l a) {g : β → γ} (hg : Monotone g) : IsMaxFilter (g ∘ f) l a :=
-  (mem_of_superset hf) fun x hx => hg hx
+  mem_of_superset hf $ fun x hx => hg hx
 #align is_max_filter.comp_mono IsMaxFilter.comp_mono
 
 theorem IsExtrFilter.comp_mono (hf : IsExtrFilter f l a) {g : β → γ} (hg : Monotone g) : IsExtrFilter (g ∘ f) l a :=
@@ -340,12 +340,12 @@ theorem IsExtrOn.comp_antitone (hf : IsExtrOn f s a) {g : β → γ} (hg : Antit
 
 theorem IsMinFilter.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsMinFilter f l a) {g : α → γ} (hg : IsMinFilter g l a) : IsMinFilter (fun x => op (f x) (g x)) l a :=
-  (mem_of_superset (inter_mem hf hg)) fun x ⟨hfx, hgx⟩ => hop hfx hgx
+  mem_of_superset (inter_mem hf hg) $ fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_min_filter.bicomp_mono IsMinFilter.bicomp_mono
 
 theorem IsMaxFilter.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
     (hf : IsMaxFilter f l a) {g : α → γ} (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => op (f x) (g x)) l a :=
-  (mem_of_superset (inter_mem hf hg)) fun x ⟨hfx, hgx⟩ => hop hfx hgx
+  mem_of_superset (inter_mem hf hg) $ fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_max_filter.bicomp_mono IsMaxFilter.bicomp_mono
 
 -- No `extr` version because we need `hf` and `hg` to be of the same kind
@@ -378,11 +378,11 @@ theorem IsExtrFilter.comp_tendsto {g : δ → α} {l' : Filter δ} {b : δ} (hf 
 #align is_extr_filter.comp_tendsto IsExtrFilter.comp_tendsto
 
 theorem IsMinOn.on_preimage (g : δ → α) {b : δ} (hf : IsMinOn f s (g b)) : IsMinOn (f ∘ g) (g ⁻¹' s) b :=
-  hf.comp_tendsto (tendsto_principal_principal.mpr <| Subset.refl _)
+  hf.comp_tendsto (tendsto_principal_principal.mpr $ Subset.refl _)
 #align is_min_on.on_preimage IsMinOn.on_preimage
 
 theorem IsMaxOn.on_preimage (g : δ → α) {b : δ} (hf : IsMaxOn f s (g b)) : IsMaxOn (f ∘ g) (g ⁻¹' s) b :=
-  hf.comp_tendsto (tendsto_principal_principal.mpr <| Subset.refl _)
+  hf.comp_tendsto (tendsto_principal_principal.mpr $ Subset.refl _)
 #align is_max_on.on_preimage IsMaxOn.on_preimage
 
 theorem IsExtrOn.on_preimage (g : δ → α) {b : δ} (hf : IsExtrOn f s (g b)) : IsExtrOn (f ∘ g) (g ⁻¹' s) b :=
@@ -400,7 +400,7 @@ theorem IsMaxOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMaxOn
 
 theorem IsExtrOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsExtrOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
     IsExtrOn (f ∘ g) t b :=
-  hf.elim (fun h => Or.inl <| h.comp_maps_to hg ha) fun h => Or.inr <| h.comp_maps_to hg ha
+  hf.elim (fun h => Or.inl $ h.comp_maps_to hg ha) fun h => Or.inr $ h.comp_maps_to hg ha
 #align is_extr_on.comp_maps_to IsExtrOn.comp_maps_to
 
 end Preorder
@@ -578,7 +578,7 @@ section Eventually
 
 theorem Filter.EventuallyLe.is_max_filter {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
     (hle : g ≤ᶠ[l] f) (hfga : f a = g a) (h : IsMaxFilter f l a) : IsMaxFilter g l a := by
-  refine' hle.mp (h.mono fun x hf hgf => _)
+  refine' hle.mp (h.mono $ fun x hf hgf => _)
   rw [← hfga]
   exact le_trans hgf hf
 #align filter.eventually_le.is_max_filter Filter.EventuallyLe.is_max_filter

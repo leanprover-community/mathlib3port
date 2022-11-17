@@ -169,19 +169,19 @@ class Bicategory (B : Type u) extends CategoryStruct.{v} B where
 
 -- mathport name: bicategory.whisker_left
 -- The precedence of the whiskerings is higher than that of the composition `≫`.
-localized [Bicategory] infixr:81 " ◁ " => Bicategory.whiskerLeft
+scoped[Bicategory] infixr:81 " ◁ " => Bicategory.whiskerLeft
 
 -- mathport name: bicategory.whisker_right
-localized [Bicategory] infixl:81 " ▷ " => Bicategory.whiskerRight
+scoped[Bicategory] infixl:81 " ▷ " => Bicategory.whiskerRight
 
 -- mathport name: bicategory.associator
-localized [Bicategory] notation "α_" => Bicategory.associator
+scoped[Bicategory] notation "α_" => Bicategory.associator
 
 -- mathport name: bicategory.left_unitor
-localized [Bicategory] notation "λ_" => Bicategory.leftUnitor
+scoped[Bicategory] notation "λ_" => Bicategory.leftUnitor
 
 -- mathport name: bicategory.right_unitor
-localized [Bicategory] notation "ρ_" => Bicategory.rightUnitor
+scoped[Bicategory] notation "ρ_" => Bicategory.rightUnitor
 
 namespace Bicategory
 

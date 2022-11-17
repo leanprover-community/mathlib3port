@@ -77,7 +77,7 @@ instance contravariant_class_mul_lt {α : Type u} [Mul α] [PartialOrder α] [Co
   lift a to α using left_ne_zero_of_mul this
   lift c to α using right_ne_zero_of_mul this
   induction b using WithZero.recZeroCoe
-  exacts[zero_lt_coe _, coe_lt_coe.mpr (lt_of_mul_lt_mul_left' <| coe_lt_coe.mp h)]
+  exacts[zero_lt_coe _, coe_lt_coe.mpr (lt_of_mul_lt_mul_left' $ coe_lt_coe.mp h)]
 #align with_zero.contravariant_class_mul_lt WithZero.contravariant_class_mul_lt
 
 @[simp]

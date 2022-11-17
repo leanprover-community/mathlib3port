@@ -43,7 +43,7 @@ def invertibleOfCharPNotDvd {p : ℕ} [CharP K p] {t : ℕ} (not_dvd : ¬p ∣ t
 -- warning: this could potentially loop with `ne_zero.invertible` - if there is weird type-class
 -- loops, watch out for that.
 instance invertibleOfPos [CharZero K] (n : ℕ) [NeZero n] : Invertible (n : K) :=
-  invertibleOfNonzero <| NeZero.out
+  invertibleOfNonzero $ NeZero.out
 #align invertible_of_pos invertibleOfPos
 
 end Field
@@ -63,11 +63,11 @@ number when you need its inverse.
 
 
 instance invertibleTwo : Invertible (2 : K) :=
-  invertibleOfNonzero (by exact_mod_cast (by decide : 2 ≠ 0))
+  invertibleOfNonzero (by exact_mod_cast (dec_trivial : 2 ≠ 0))
 #align invertible_two invertibleTwo
 
 instance invertibleThree : Invertible (3 : K) :=
-  invertibleOfNonzero (by exact_mod_cast (by decide : 3 ≠ 0))
+  invertibleOfNonzero (by exact_mod_cast (dec_trivial : 3 ≠ 0))
 #align invertible_three invertibleThree
 
 end DivisionRing

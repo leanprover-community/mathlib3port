@@ -281,28 +281,30 @@ namespace Tactic
 
 open Tactic
 
-setup_tactic_parser
-
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Auxilliary definition of `monoidal_coherence`,
 being careful with namespaces to avoid shadowing.
 -/
 unsafe def mk_project_map_expr (e : expr) : tactic expr :=
-  to_expr
-    (pquote.1
-      (CategoryTheory.FreeMonoidalCategory.projectMap id _ _ (CategoryTheory.MonoidalCategory.LiftHom.lift (%%ₓe))))
+  to_expr ``(CategoryTheory.FreeMonoidalCategory.projectMap id _ _ (CategoryTheory.MonoidalCategory.LiftHom.lift $(e)))
 #align tactic.mk_project_map_expr tactic.mk_project_map_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/-- Coherence tactic for monoidal categories. -/
-unsafe def monoidal_coherence : tactic Unit := do
-  let o ← get_options
-  set_options <| o `class.instance_max_depth 128
-  try sorry
-  let quote.1 ((%%ₓlhs) = %%ₓrhs) ← target
-  let project_map_lhs ← mk_project_map_expr lhs
-  let project_map_rhs ← mk_project_map_expr rhs
-  to_expr (pquote.1 ((%%ₓproject_map_lhs) = %%ₓproject_map_rhs)) >>= tactic.change
-  congr
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/-- Coherence tactic for monoidal categories. -/ unsafe
+  def
+    monoidal_coherence
+    : tactic Unit
+    :=
+      do
+        let o ← get_options
+          set_options $ o `class.instance_max_depth 128
+          try sorry
+          let q( $ ( lhs ) = $ ( rhs ) ) ← target
+          let project_map_lhs ← mk_project_map_expr lhs
+          let project_map_rhs ← mk_project_map_expr rhs
+          to_expr ` `( $ ( project_map_lhs ) = $ ( project_map_rhs ) ) >>= tactic.change
+          congr
 #align tactic.monoidal_coherence tactic.monoidal_coherence
 
 /-- `pure_coherence` uses the coherence theorem for monoidal categories to prove the goal.
@@ -350,9 +352,9 @@ theorem assoc_lift_hom {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] (f : W 
   (Category.assoc _ _ _).symm
 #align tactic.coherence.assoc_lift_hom Tactic.Coherence.assoc_lift_hom
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Internal tactic used in `coherence`.
 
 Rewrites an equation `f = g` as `f₀ ≫ f₁ = g₀ ≫ g₁`,
@@ -361,8 +363,8 @@ which are "liftable" (i.e. expressible as compositions of unitors and associator
 -/
 unsafe def liftable_prefixes : tactic Unit := do
   let o ← get_options
-  set_options <| o `class.instance_max_depth 128
-  (try sorry >> sorry) >> try sorry
+  set_options $ o `class.instance_max_depth 128
+  try sorry >> sorry >> try sorry
 #align tactic.coherence.liftable_prefixes tactic.coherence.liftable_prefixes
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.coherence.liftable_prefixes -/
@@ -382,8 +384,8 @@ end Coherence
 
 open Coherence
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- The main part of `coherence` tactic. -/
 unsafe def coherence_loop : tactic Unit := do
   -- To prove an equality `f = g` in a monoidal category,
@@ -407,14 +409,14 @@ unsafe def coherence_loop : tactic Unit := do
           do
           (-- or that both are compositions,
               do
-                let quote.1 (_ ≫ _ = _) ← target
+                let q(_ ≫ _ = _) ← target
                 skip) <|>
               sorry
           (do
-                let quote.1 (_ = _ ≫ _) ← target
+                let q(_ = _ ≫ _) ← target
                 skip) <|>
               sorry
-          let quote.1 (_ ≫ _ = _ ≫ _) ← target |
+          let q(_ ≫ _ = _ ≫ _) ← target |
             fail "`coherence` tactic failed, non-structural morphisms don't match"
           tactic.congr_core'
           -- with identical first terms,
@@ -424,8 +426,8 @@ unsafe def coherence_loop : tactic Unit := do
             coherence_loop
 #align tactic.coherence_loop tactic.coherence_loop
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:332:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,
 where the two sides only differ by replacing strings of monoidal structural morphisms
 (that is, associators, unitors, and identities)

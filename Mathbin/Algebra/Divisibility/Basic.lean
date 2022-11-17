@@ -60,7 +60,7 @@ attribute [local simp] mul_assoc mul_comm mul_left_comm
 
 @[trans]
 theorem dvd_trans : a ∣ b → b ∣ c → a ∣ c
-  | ⟨d, h₁⟩, ⟨e, h₂⟩ => ⟨d * e, h₁ ▸ h₂.trans <| mul_assoc a d e⟩
+  | ⟨d, h₁⟩, ⟨e, h₂⟩ => ⟨d * e, h₁ ▸ h₂.trans $ mul_assoc a d e⟩
 #align dvd_trans dvd_trans
 
 alias dvd_trans ← Dvd.Dvd.trans

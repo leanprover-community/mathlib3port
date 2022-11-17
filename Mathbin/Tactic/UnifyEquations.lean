@@ -66,11 +66,11 @@ we replace `equ` with `equ : t = u`.
 unsafe def unify_heterogeneous : unification_step := fun equ lhs_type rhs_type lhs rhs _ _ _ =>
   (do
       is_def_eq lhs_type rhs_type
-      let p ← to_expr (pquote.1 (@eq_of_heq (%%ₓlhs_type) (%%ₓlhs) (%%ₓrhs) (%%ₓequ)))
-      let t ← to_expr (pquote.1 (@Eq (%%ₓlhs_type) (%%ₓlhs) (%%ₓrhs)))
+      let p ← to_expr ``(@eq_of_heq $(lhs_type) $(lhs) $(rhs) $(equ))
+      let t ← to_expr ``(@Eq $(lhs_type) $(lhs) $(rhs))
       let equ' ← note equ.local_pp_name t p
       clear equ
-      pure <| simplified [equ']) <|>
+      pure $ simplified [equ']) <|>
     pure not_simplified
 #align tactic.unify_equations.unify_heterogeneous tactic.unify_equations.unify_heterogeneous
 
@@ -80,7 +80,7 @@ unsafe def unify_defeq : unification_step := fun equ lhs_type _ _ _ lhs_whnf rhs
   (do
       is_def_eq lhs_whnf rhs_whnf
       clear equ
-      pure <| simplified []) <|>
+      pure $ simplified []) <|>
     pure not_simplified
 #align tactic.unify_equations.unify_defeq tactic.unify_equations.unify_defeq
 
@@ -91,12 +91,12 @@ unsafe def unify_var : unification_step := fun equ type _ lhs rhs lhs_whnf rhs_w
   (do
       let lhs_is_local := lhs_whnf.is_local_constant
       let rhs_is_local := rhs_whnf.is_local_constant
-      guard <| lhs_is_local ∨ rhs_is_local
+      guard $ lhs_is_local ∨ rhs_is_local
       let t := if lhs_is_local then (const `eq [u]) type lhs_whnf rhs else (const `eq [u]) type lhs rhs_whnf
       change_core t (some equ)
       let equ ← get_local equ.local_pp_name
       subst_core equ
-      pure <| simplified []) <|>
+      pure $ simplified []) <|>
     pure not_simplified
 #align tactic.unify_equations.unify_var tactic.unify_equations.unify_var
 
@@ -111,7 +111,7 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
           let (lhs, rhs) ← match_eq H
           let constructor_left ← get_app_fn_const_whnf lhs semireducible false
           let constructor_right ← get_app_fn_const_whnf rhs semireducible false
-          let inj_name ← resolve_constant <| constructor_left ++ "inj_arrow"
+          let inj_name ← resolve_constant $ constructor_left ++ "inj_arrow"
           pure (lhs, rhs, constructor_left, constructor_right, inj_name)) <|>
         fail
           ("injection tactic failed, argument must be an equality proof where lhs and rhs " ++
@@ -141,9 +141,9 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
       let next
         ←-- The following filters out 'next' hypotheses of type `true`. The
             -- `inj_arrow` lemmas introduce these for nullary constructors.
-            next
+            next $
             fun h => do
-            let quote.1 True ← infer_type h |
+            let q(True) ← infer_type h |
               pure tt
             clear h >> pure ff <|> pure tt
       pure (some next, ns)
@@ -173,11 +173,11 @@ same datatype `I`:
 unsafe def unify_constructor_headed : unification_step := fun equ _ _ _ _ _ _ _ =>
   (do
       let (next, _) ← injection_with' equ [] `_ none
-      try <| clear equ
-      pure <|
+      try $ clear equ
+      pure $
           match next with
           | none => goal_solved
-          | some next => simplified <| next expr.local_pp_name) <|>
+          | some next => simplified $ next expr.local_pp_name) <|>
     pure not_simplified
 #align tactic.unify_equations.unify_constructor_headed tactic.unify_equations.unify_constructor_headed
 
@@ -187,7 +187,7 @@ such constant exists.
 -/
 unsafe def get_sizeof (type : expr) : tactic pexpr := do
   let n ← get_app_fn_const_whnf type semireducible false
-  resolve_name <| n ++ `sizeof
+  resolve_name $ n ++ `sizeof
 #align tactic.unify_equations.get_sizeof tactic.unify_equations.get_sizeof
 
 theorem add_add_one_ne (n m : ℕ) : n + (m + 1) ≠ n := by
@@ -205,60 +205,85 @@ performed up to normalisation with transparency `md`.
 unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n e => do
   let e ← whnf e md
   match e with
-    | quote.1 (Nat.succ (%%ₓe)) => match_n_plus_m (n + 1) e
+    | q(Nat.succ $(e)) => match_n_plus_m (n + 1) e
     | _ => pure (n, e)
 #align tactic.unify_equations.match_n_plus_m tactic.unify_equations.match_n_plus_m
 
-/-- Given `equ : n + m = n` or `equ : n = n + m` with `n` and `m` natural numbers
-and `m` a nonzero literal, this tactic produces a proof of `false`. More
-precisely, the two sides of the equation must be of the form
-`nat.succ (... (nat.succ e)...)` with different numbers of `nat.succ`
-constructors. Matching is performed with transparency `md`.
--/
-unsafe def contradict_n_eq_n_plus_m (md : Transparency) (equ lhs rhs : expr) : tactic expr := do
-  let ⟨lhs_n, lhs_e⟩ ← match_n_plus_m md 0 lhs
-  let ⟨rhs_n, rhs_e⟩ ← match_n_plus_m md 0 rhs
-  is_def_eq lhs_e rhs_e md <|>
-      fail
-        ("contradict_n_eq_n_plus_m:\nexpected {lhs_e} and {rhs_e} to be definitionally " ++
-          "equal at transparency {md}.")
-  let common := lhs_e
-  guard (lhs_n ≠ rhs_n) <|> fail "contradict_n_eq_n_plus_m:\nexpected {lhs_n} and {rhs_n} to be different."
-  let-- Ensure that lhs_n is bigger than rhs_n. Swap lhs and rhs if that's not
-    -- already the case.
-    ⟨equ, lhs_n, rhs_n⟩
-    ←
-    if lhs_n > rhs_n then pure (equ, lhs_n, rhs_n)
-      else do
-        let equ ← to_expr (pquote.1 (Eq.symm (%%ₓequ)))
-        pure (equ, rhs_n, lhs_n)
-  let diff := lhs_n - rhs_n
-  let rhs_n_expr := reflect rhs_n
-  let n ← to_expr (pquote.1 ((%%ₓcommon) + %%ₓrhs_n_expr))
-  let m := reflect (diff - 1)
-  pure (quote.1 (add_add_one_ne (%%ₓn) (%%ₓm) (%%ₓequ)))
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Given `equ : n + m = n` or `equ : n = n + m` with `n` and `m` natural numbers
+      and `m` a nonzero literal, this tactic produces a proof of `false`. More
+      precisely, the two sides of the equation must be of the form
+      `nat.succ (... (nat.succ e)...)` with different numbers of `nat.succ`
+      constructors. Matching is performed with transparency `md`.
+      -/
+    unsafe
+  def
+    contradict_n_eq_n_plus_m
+    ( md : Transparency ) ( equ lhs rhs : expr ) : tactic expr
+    :=
+      do
+        let ⟨ lhs_n , lhs_e ⟩ ← match_n_plus_m md 0 lhs
+          let ⟨ rhs_n , rhs_e ⟩ ← match_n_plus_m md 0 rhs
+          is_def_eq lhs_e rhs_e md
+            <|>
+            fail
+              (
+                "contradict_n_eq_n_plus_m:\nexpected {lhs_e} and {rhs_e} to be definitionally "
+                  ++
+                  "equal at transparency {md}."
+                )
+          let common := lhs_e
+          guard ( lhs_n ≠ rhs_n ) <|> fail "contradict_n_eq_n_plus_m:\nexpected {lhs_n} and {rhs_n} to be different."
+          let
+            ⟨ equ , lhs_n , rhs_n ⟩
+              ←
+              if
+                lhs_n > rhs_n
+                then
+                pure ( equ , lhs_n , rhs_n )
+                else
+                do let equ ← to_expr ` `( Eq.symm $ ( equ ) ) pure ( equ , rhs_n , lhs_n )
+          let diff := lhs_n - rhs_n
+          let rhs_n_expr := reflect rhs_n
+          let n ← to_expr ` `( $ ( common ) + $ ( rhs_n_expr ) )
+          let m := reflect ( diff - 1 )
+          pure q( add_add_one_ne $ ( n ) $ ( m ) $ ( equ ) )
 #align tactic.unify_equations.contradict_n_eq_n_plus_m tactic.unify_equations.contradict_n_eq_n_plus_m
 
-/-- Given `equ : t = u` with `t, u : I` and `I.sizeof t ≠ I.sizeof u`, we solve the
-goal by contradiction.
--/
-unsafe def unify_cyclic : unification_step := fun equ type _ _ _ lhs_whnf rhs_whnf _ =>
-  (-- Establish `sizeof lhs = sizeof rhs`.
-    -- Derive a contradiction (if indeed `sizeof lhs ≠ sizeof rhs`).
-    do
-      let sizeof ← get_sizeof type
-      let hyp_lhs ← to_expr (pquote.1 ((%%ₓSizeOf.sizeOf) (%%ₓlhs_whnf)))
-      let hyp_rhs ← to_expr (pquote.1 ((%%ₓSizeOf.sizeOf) (%%ₓrhs_whnf)))
-      let hyp_type ← to_expr (pquote.1 (@Eq ℕ (%%ₓhyp_lhs) (%%ₓhyp_rhs)))
-      let hyp_proof ←
-        to_expr (pquote.1 (@congr_arg (%%ₓtype) ℕ (%%ₓlhs_whnf) (%%ₓrhs_whnf) (%%ₓSizeOf.sizeOf) (%%ₓequ)))
-      let hyp_name ← mk_fresh_name
-      let hyp ← note hyp_name hyp_type hyp_proof
-      let falso ← contradict_n_eq_n_plus_m semireducible hyp hyp_lhs hyp_rhs
-      exfalso
-      exact falso
-      pure goal_solved) <|>
-    pure not_simplified
+-- failed to format: unknown constant 'term.pseudo.antiquot'
+/--
+      Given `equ : t = u` with `t, u : I` and `I.sizeof t ≠ I.sizeof u`, we solve the
+      goal by contradiction.
+      -/
+    unsafe
+  def
+    unify_cyclic
+    : unification_step
+    :=
+      fun
+        equ type _ _ _ lhs_whnf rhs_whnf _
+          =>
+          (
+              do
+                let sizeof ← get_sizeof type
+                  let hyp_lhs ← to_expr ` `( $ ( SizeOf.sizeOf ) $ ( lhs_whnf ) )
+                  let hyp_rhs ← to_expr ` `( $ ( SizeOf.sizeOf ) $ ( rhs_whnf ) )
+                  let hyp_type ← to_expr ` `( @ Eq ℕ $ ( hyp_lhs ) $ ( hyp_rhs ) )
+                  let
+                    hyp_proof
+                      ←
+                      to_expr
+                        ` `( @ congr_arg $ ( type ) ℕ $ ( lhs_whnf ) $ ( rhs_whnf ) $ ( SizeOf.sizeOf ) $ ( equ ) )
+                  let hyp_name ← mk_fresh_name
+                  let hyp ← note hyp_name hyp_type hyp_proof
+                  let falso ← contradict_n_eq_n_plus_m semireducible hyp hyp_lhs hyp_rhs
+                  exfalso
+                  exact falso
+                  pure goal_solved
+              )
+            <|>
+            pure not_simplified
 #align tactic.unify_equations.unify_cyclic tactic.unify_equations.unify_cyclic
 
 /-- `orelse_step s t` first runs the unification step `s`. If this was successful
@@ -287,9 +312,6 @@ end UnifyEquations
 
 open UnifyEquations
 
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:65:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Tactic/Basic.lean:52:50: missing argument -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg -/
 /-- If `equ` is the display name of a local constant with type `t = u` or `t == u`,
 then `unify_equation_once equ` simplifies it once using
 `unify_equations.unify_homogeneous` or `unify_equations.unify_heterogeneous`.
@@ -309,7 +331,8 @@ unsafe def unify_equation_once (equ : Name) : tactic unification_step_result := 
       let rhs_whnf ← whnf_ginductive rhs
       unify_heterogeneous eque lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf u
     | _ =>
-      "./././Mathport/Syntax/Translate/Expr.lean:389:38: in tactic.fail_macro: ./././Mathport/Syntax/Translate/Tactic/Basic.lean:55:35: expecting parse arg"
+      throwError "Expected {(← equ)} to be an equation, but its type is
+        {← t}."
 #align tactic.unify_equation_once tactic.unify_equation_once
 
 /-- Given a list of display names of local hypotheses that are (homogeneous or
@@ -326,7 +349,7 @@ unsafe def unify_equations : List Name → tactic Bool
   | h :: hs => do
     let res ← unify_equation_once h
     match res with
-      | simplified hs' => unify_equations <| hs' ++ hs
+      | simplified hs' => unify_equations $ hs' ++ hs
       | not_simplified => unify_equations hs
       | goal_solved => pure tt
 #align tactic.unify_equations tactic.unify_equations

@@ -25,6 +25,8 @@ open MeasureTheory Set TopologicalSpace
 
 open Classical Ennreal Nnreal
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (u v) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (u v) -/
 /-- If a function `f : α → β` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p < q`, then `f` is almost-everywhere
 measurable. It is even enough to have this for `p` and `q` in a countable dense set. -/
@@ -36,12 +38,12 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {
       ∀ p ∈ s,
         ∀ q ∈ s,
           p < q →
-            ∃ u v, MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
+            ∃ (u) (v), MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
     AeMeasurable f μ := by
   haveI : Encodable s := s_count.to_encodable
   have h' :
     ∀ p q,
-      ∃ u v,
+      ∃ (u) (v),
         MeasurableSet u ∧
           MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0) :=
     by
@@ -117,6 +119,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {
 #align
   measure_theory.ae_measurable_of_exist_almost_disjoint_supersets MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (u v) -/
 /-- If a function `f : α → ℝ≥0∞` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p` and `q` are finite numbers satisfying
 `p < q`, then `f` is almost-everywhere measurable. -/
@@ -125,7 +128,7 @@ theorem Ennreal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : Me
     (h :
       ∀ (p : ℝ≥0) (q : ℝ≥0),
         p < q →
-          ∃ u v,
+          ∃ (u) (v),
             MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
     AeMeasurable f μ := by
   obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ : ∃ s : Set ℝ≥0∞, s.Countable ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
